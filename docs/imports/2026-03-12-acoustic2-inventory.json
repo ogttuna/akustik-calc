@@ -1,0 +1,160 @@
+{
+  "generatedAt": "2026-03-12T09:48:46.040Z",
+  "upstream": {
+    "branch": "main",
+    "head": "cdfad5936a48bc0228112d43e5ed5703f3227746",
+    "path": "/home/ogttuna/Dev/Machinity/Acoustic2",
+    "statusLines": [
+      "M CALCULATOR_ALGORITHMS.md",
+      " M README.md",
+      " M app.js",
+      " M core.js",
+      " M dynamicCalc/FLOOR_SYSTEM_LIBRARY_SOURCES.md",
+      " M dynamicCalc/LNW_FORMULAS.md",
+      " M dynamicCalc/LNW_INTEGRATION_PLAN.md",
+      " M impact-floor-system-catalog.js",
+      " M index.html",
+      " M tests/impact-family-archetype-estimate.test.js",
+      " M tests/impact-floor-system-catalog.test.js",
+      " M tests/impact-layer-driven-floor-exact.test.js",
+      " M tests/impact-layer-stack-mapping.test.js",
+      " M tests/impact-validation-benchmark.test.js",
+      " M tools/reference-benchmarks-impact-validation-2026.json",
+      "?? tests/impact-family-physical-fallback.test.js"
+    ]
+  },
+  "trackedCounts": {
+    "all": 72,
+    "tests": 20,
+    "tools": 19
+  },
+  "focusFiles": {
+    "benchmarkJson": [
+      "tools/reference-benchmarks-british-gypsum-official-2026.json",
+      "tools/reference-benchmarks-field-generic-holdout-2026.json",
+      "tools/reference-benchmarks-field-official-2026.json",
+      "tools/reference-benchmarks-impact-heavy-floor-2026.json",
+      "tools/reference-benchmarks-impact-open-measured-tuas-2026.json",
+      "tools/reference-benchmarks-impact-planned-scope-2026.json",
+      "tools/reference-benchmarks-impact-validation-2026.json",
+      "tools/reference-benchmarks-masonry-web.json",
+      "tools/reference-benchmarks-official-primary-2026.json",
+      "tools/reference-benchmarks-rw-generic-holdout-2026.json",
+      "tools/reference-benchmarks-secondary-sanity-2026.json",
+      "tools/reference-benchmarks-siniat-official-2026.json",
+      "tools/reference-benchmarks-web-rw.json",
+      "tools/reference-benchmarks.json"
+    ],
+    "impactOrLnwTests": [
+      "tests/impact-benchmark-data.test.js",
+      "tests/impact-family-archetype-estimate.test.js",
+      "tests/impact-family-general-estimate.test.js",
+      "tests/impact-floor-system-catalog.test.js",
+      "tests/impact-formula-notes.test.js",
+      "tests/impact-guide-simple-method.test.js",
+      "tests/impact-isolation.test.js",
+      "tests/impact-layer-driven-floor-exact.test.js",
+      "tests/impact-layer-stack-mapping.test.js",
+      "tests/impact-legacy-review.test.js",
+      "tests/impact-open-measured-benchmark.test.js",
+      "tests/impact-partial-fallback.test.js",
+      "tests/impact-predictor-catalog.test.js",
+      "tests/impact-predictor-formula.test.js",
+      "tests/impact-validation-benchmark.test.js"
+    ]
+  },
+  "core": {
+    "calculators": [
+      {
+        "id": "ks_rw_calibrated",
+        "label": "KS Rw Calibrated"
+      },
+      {
+        "id": "mass_law",
+        "label": "Mass Law"
+      },
+      {
+        "id": "sharp",
+        "label": "Sharp (Simple)"
+      },
+      {
+        "id": "kurtovic",
+        "label": "Kurtovic (Simple)"
+      },
+      {
+        "id": "sevdecalc",
+        "label": "sevdeCalc"
+      },
+      {
+        "id": "sevdecalc_enhanced",
+        "label": "SevdeCalcEnhanced"
+      },
+      {
+        "id": "sevdecalc_ultimate",
+        "label": "SevdeCalcUltimate"
+      },
+      {
+        "id": "gptx_sevdecalc",
+        "label": "GptXSevdeCalc (TMM)"
+      },
+      {
+        "id": "dynamic",
+        "label": "Dynamic Topology"
+      }
+    ],
+    "coreExports": [
+      "BASE_MATERIALS",
+      "CALCULATORS",
+      "RW_FREQS",
+      "RW_OFFSETS",
+      "STC_FREQS",
+      "STC_OFFSETS",
+      "TL_PLOT_FREQS",
+      "applyAssemblyMetaToLayers",
+      "buildAssemblyGraph",
+      "buildImpactPredictorInputFromLayerStack",
+      "buildImpactPredictorStatus",
+      "buildRatingsFromCurve",
+      "buildTransmissionLossCurve",
+      "calculateAssembly",
+      "calculateCalculatorResult",
+      "calculateImpactOnly",
+      "calculateLayerTotals",
+      "calculatorLabel",
+      "clamp",
+      "cleanText",
+      "computeRwFromCurve",
+      "computeSpectrumAdaptationTerm",
+      "computeStcFromCurve",
+      "contourRating",
+      "estimateStudComplianceProfile",
+      "findExplicitSourceRecordMatch",
+      "findImpactPredictorCatalogMatch",
+      "findVerifiedAssemblyMatch",
+      "inferKsType",
+      "ksRound1",
+      "ksRwFromMass",
+      "ksTypeLabel",
+      "layerSurfaceMassKgM2",
+      "log10",
+      "log10Safe",
+      "lookupTurkishGuideImpactHdCorrection",
+      "lookupTurkishGuideImpactKCorrection",
+      "massLawTransmissionLoss",
+      "multilayerTLGptXSevde",
+      "normalizeAssemblyMeta",
+      "normalizeBoardClassValue",
+      "normalizeCalculatorId",
+      "normalizeImpactPredictorInput",
+      "normalizeLayers",
+      "normalizeSourceRecords",
+      "normalizeStudComplianceValue",
+      "parseLayerSpec",
+      "resolveTurkishSimpleGuideCorrections",
+      "sampleLogCurve",
+      "singlePanelTLSevde",
+      "summarizeBoardSystem"
+    ],
+    "materialCount": 90
+  }
+}

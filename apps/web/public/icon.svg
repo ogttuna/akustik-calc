@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <rect width="128" height="128" rx="28" fill="oklch(0.97 0.012 88)" />
+  <path
+    d="M20 79c10-15 20-22 30-22 13 0 19 14 31 14 8 0 16-5 27-18"
+    fill="none"
+    stroke="oklch(0.71 0.14 50)"
+    stroke-linecap="round"
+    stroke-width="12"
+  />
+  <path
+    d="M20 54c9-11 18-16 28-16 13 0 20 12 32 12 8 0 17-4 28-14"
+    fill="none"
+    stroke="oklch(0.23 0.028 176)"
+    stroke-linecap="round"
+    stroke-width="10"
+  />
+</svg>

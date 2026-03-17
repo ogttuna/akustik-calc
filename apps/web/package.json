@@ -1,0 +1,30 @@
+{
+  "name": "@dynecho/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsx ../../tools/dev/run-next-build.ts",
+    "dev": "next dev",
+    "lint": "eslint . --ext .ts,.tsx --ignore-pattern next-env.d.ts --ignore-pattern .next --ignore-pattern '.next-*'",
+    "start": "next start",
+    "test": "vitest run",
+    "typecheck": "tsx ../../tools/dev/run-next-typecheck.ts"
+  },
+  "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.15",
+    "@dynecho/catalogs": "workspace:*",
+    "@dynecho/engine": "workspace:*",
+    "@dynecho/shared": "workspace:*",
+    "@dynecho/ui": "workspace:*",
+    "cmdk": "^1.1.1",
+    "lucide-react": "^0.577.0",
+    "next": "^15.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-resizable-panels": "^4.7.2",
+    "recharts": "^3.8.0",
+    "sonner": "^2.0.7",
+    "zustand": "^5.0.0"
+  }
+}

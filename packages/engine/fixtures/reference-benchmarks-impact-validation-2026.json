@@ -1,0 +1,2261 @@
+{
+  "name": "Acoustic2 Impact Validation Benchmarks (2026-03-11)",
+  "schemaVersion": 1,
+  "description": "Published official or peer-reviewed floor-ceiling references used to validate exact floor-library support, conservative bound handling, and the narrow heavy-concrete formula path.",
+  "cases": [
+    {
+      "id": "knauf_ct30_1c_timber_exact",
+      "mode": "official_floor_system",
+      "source": "https://www.knauf.com/en-AU/systems/system-products/119889/System-data-sheet/",
+      "impactPredictorInput": {
+        "structuralSupportType": "timber_joists",
+        "officialFloorSystemId": "knauf_ct30_1c_timber_lab_2026"
+      },
+      "expected": {
+        "lnwDb": 67.0,
+        "rwDb": 60.0
+      }
+    },
+    {
+      "id": "knauf_ct2g_timber_manual_exact",
+      "mode": "official_floor_system",
+      "source": "https://www.knauf.com/en-AU/systems/system-products/119889/System-data-sheet/",
+      "impactPredictorInput": {
+        "structuralSupportType": "timber_joists",
+        "impactSystemType": "suspended_ceiling_only",
+        "baseSlab": {
+          "thicknessMm": 240
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "engineered_timber"
+        },
+        "lowerTreatment": {
+          "type": "direct_fixed_ceiling",
+          "cavityFillThicknessMm": 90,
+          "boardLayerCount": 1,
+          "boardThicknessMm": 13,
+          "boardMaterialClass": "impactstop_board",
+          "supportClass": "furred_channels"
+        }
+      },
+      "expected": {
+        "lnwDb": 69.0,
+        "rwDb": 54.0
+      }
+    },
+    {
+      "id": "knauf_ct30_2b_carpet_manual_exact",
+      "mode": "official_floor_system",
+      "source": "https://www.knauf.com/en-AU/systems/system-products/119889/System-data-sheet/",
+      "impactPredictorInput": {
+        "structuralSupportType": "timber_joists",
+        "impactSystemType": "combined_upper_lower_system",
+        "baseSlab": {
+          "thicknessMm": 240
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "carpet_with_foam_underlay"
+        },
+        "lowerTreatment": {
+          "type": "direct_fixed_ceiling",
+          "cavityFillThicknessMm": 90,
+          "boardLayerCount": 1,
+          "boardThicknessMm": 16,
+          "boardMaterialClass": "firestop_board",
+          "supportClass": "furred_channels"
+        }
+      },
+      "expected": {
+        "lnwDb": 38.0,
+        "rwDb": 55.0
+      }
+    },
+    {
+      "id": "knauf_ct120_1c_timber_manual_exact",
+      "mode": "official_floor_system",
+      "source": "https://www.knauf.com/en-AU/systems/system-products/119889/System-data-sheet/",
+      "impactPredictorInput": {
+        "structuralSupportType": "timber_joists",
+        "impactSystemType": "combined_upper_lower_system",
+        "baseSlab": {
+          "thicknessMm": 240
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "engineered_timber_with_acoustic_underlay"
+        },
+        "lowerTreatment": {
+          "type": "suspended_ceiling_elastic_hanger",
+          "cavityFillThicknessMm": 145,
+          "boardLayerCount": 3,
+          "boardThicknessMm": 16,
+          "boardMaterialClass": "firestop_board"
+        }
+      },
+      "expected": {
+        "lnwDb": 61.0,
+        "rwDb": 60.0
+      }
+    },
+    {
+      "id": "knauf_cc60_1a_concrete_exact",
+      "mode": "official_floor_system",
+      "source": "https://knauf.com/api/download-center/v1/assets/7f029a44-8459-44db-add0-93dffb817501?country=AU&download=true&locale=en-AU",
+      "impactPredictorInput": {
+        "structuralSupportType": "reinforced_concrete",
+        "officialFloorSystemId": "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026"
+      },
+      "expected": {
+        "lnwDb": 51.0,
+        "rwDb": 63.0
+      }
+    },
+    {
+      "id": "knauf_cc60_1a_concrete_manual_exact",
+      "mode": "official_floor_system",
+      "source": "https://knauf.com/api/download-center/v1/assets/7f029a44-8459-44db-add0-93dffb817501?country=AU&download=true&locale=en-AU",
+      "impactPredictorInput": {
+        "structuralSupportType": "reinforced_concrete",
+        "impactSystemType": "combined_upper_lower_system",
+        "baseSlab": {
+          "materialClass": "heavy_concrete",
+          "thicknessMm": 150
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "engineered_timber_with_acoustic_underlay"
+        },
+        "lowerTreatment": {
+          "type": "suspended_ceiling_elastic_hanger",
+          "cavityDepthMm": 100,
+          "cavityFillThicknessMm": 50,
+          "boardLayerCount": 2,
+          "boardThicknessMm": 13,
+          "boardMaterialClass": "firestop_board"
+        }
+      },
+      "expected": {
+        "lnwDb": 51.0,
+        "rwDb": 63.0
+      }
+    },
+    {
+      "id": "dataholz_gdsnxn01a_timber_frame_exact",
+      "mode": "official_floor_system",
+      "source": "https://www.dataholz.eu/en/components/intermediate-floor/version/kz/gdsnxn01a/nr/00.htm",
+      "impactPredictorInput": {
+        "structuralSupportType": "timber_joists",
+        "officialFloorSystemId": "dataholz_gdsnxn01a_timber_frame_lab_2026"
+      },
+      "expected": {
+        "lnwDb": 52.0,
+        "ciDb": 2.0,
+        "lnwPlusCiDb": 54.0,
+        "rwDb": 68.0
+      }
+    },
+    {
+      "id": "dataholz_gdrnxa01a_timber_frame_manual_exact",
+      "mode": "official_floor_system",
+      "source": "https://www.dataholz.eu/en/components/intermediate-floor/version/kz/gdrnxa01a/nr/01.htm",
+      "impactPredictorInput": {
+        "structuralSupportType": "timber_joists",
+        "impactSystemType": "combined_upper_lower_system",
+        "baseSlab": {
+          "thicknessMm": 200
+        },
+        "resilientLayer": {
+          "thicknessMm": 30
+        },
+        "floatingScreed": {
+          "materialClass": "generic_screed",
+          "thicknessMm": 50
+        },
+        "floorCovering": {
+          "mode": "none"
+        },
+        "lowerTreatment": {
+          "type": "suspended_ceiling_rigid_hanger",
+          "cavityDepthMm": 27,
+          "cavityFillThicknessMm": 100,
+          "boardLayerCount": 1,
+          "boardThicknessMm": 12.5,
+          "boardMaterialClass": "generic_gypsum_board"
+        }
+      },
+      "expected": {
+        "lnwDb": 53.0,
+        "ciDb": 0.0,
+        "lnwPlusCiDb": 53.0,
+        "rwDb": 66.0
+      }
+    },
+    {
+      "id": "dataholz_gdrnxa05b_timber_frame_manual_exact",
+      "mode": "official_floor_system",
+      "source": "https://www.dataholz.eu/en/components/intermediate-floor/version/kz/gdrnxa05b/nr/00.htm",
+      "impactPredictorInput": {
+        "structuralSupportType": "timber_joists",
+        "impactSystemType": "combined_upper_lower_system",
+        "baseSlab": {
+          "thicknessMm": 220,
+          "densityKgM3": 450
+        },
+        "resilientLayer": {
+          "thicknessMm": 30,
+          "dynamicStiffnessMNm3": 10
+        },
+        "floatingScreed": {
+          "materialClass": "generic_screed",
+          "thicknessMm": 50,
+          "densityKgM3": 2200
+        },
+        "floorCovering": {
+          "mode": "none"
+        },
+        "lowerTreatment": {
+          "type": "suspended_ceiling_rigid_hanger",
+          "cavityDepthMm": 27,
+          "cavityFillThicknessMm": 100,
+          "boardLayerCount": 2,
+          "boardThicknessMm": 12.5,
+          "boardMaterialClass": "generic_gypsum_board"
+        }
+      },
+      "expected": {
+        "lnwDb": 60.0,
+        "ciDb": 0.0,
+        "lnwPlusCiDb": 60.0,
+        "rwDb": 58.0
+      }
+    },
+    {
+      "id": "dataholz_gdrnxa07a_timber_frame_manual_exact",
+      "mode": "official_floor_system",
+      "source": "https://www.dataholz.eu/en/components/intermediate-floor/version/kz/gdrnxa07a/nr/00.htm",
+      "impactPredictorInput": {
+        "structuralSupportType": "timber_joists",
+        "impactSystemType": "combined_upper_lower_system",
+        "baseSlab": {
+          "thicknessMm": 220,
+          "densityKgM3": 450
+        },
+        "resilientLayer": {
+          "thicknessMm": 30,
+          "dynamicStiffnessMNm3": 10
+        },
+        "floatingScreed": {
+          "materialClass": "generic_screed",
+          "thicknessMm": 50,
+          "densityKgM3": 2000
+        },
+        "upperFill": {
+          "materialClass": "generic_fill",
+          "thicknessMm": 40,
+          "densityKgM3": 1800
+        },
+        "floorCovering": {
+          "mode": "none"
+        },
+        "lowerTreatment": {
+          "type": "suspended_ceiling_rigid_hanger",
+          "cavityDepthMm": 27,
+          "cavityFillThicknessMm": 120,
+          "boardLayerCount": 1,
+          "boardThicknessMm": 12.5,
+          "boardMaterialClass": "generic_gypsum_board"
+        }
+      },
+      "expected": {
+        "lnwDb": 41.0,
+        "ciDb": 1.0,
+        "lnwPlusCiDb": 42.0,
+        "rwDb": 70.0
+      }
+    },
+    {
+      "id": "dataholz_gdrnxa11a_timber_frame_manual_exact",
+      "mode": "official_floor_system",
+      "source": "https://www.dataholz.eu/en/components/intermediate-floor/version/kz/gdrnxa11a/nr/00.htm",
+      "impactPredictorInput": {
+        "structuralSupportType": "timber_joists",
+        "impactSystemType": "combined_upper_lower_system",
+        "baseSlab": {
+          "thicknessMm": 240
+        },
+        "resilientLayer": {
+          "thicknessMm": 30,
+          "dynamicStiffnessMNm3": 10
+        },
+        "floatingScreed": {
+          "materialClass": "generic_screed",
+          "thicknessMm": 60
+        },
+        "upperFill": {
+          "materialClass": "generic_fill",
+          "thicknessMm": 60
+        },
+        "floorCovering": {
+          "mode": "none"
+        },
+        "lowerTreatment": {
+          "type": "suspended_ceiling_rigid_hanger",
+          "cavityDepthMm": 27,
+          "cavityFillThicknessMm": 100,
+          "boardLayerCount": 1,
+          "boardThicknessMm": 12.5,
+          "boardMaterialClass": "generic_gypsum_board"
+        }
+      },
+      "expected": {
+        "lnwDb": 42.0,
+        "ciDb": 2.0,
+        "lnwPlusCiDb": 44.0,
+        "rwDb": 83.0
+      }
+    },
+    {
+      "id": "dataholz_gdrtxn01a_timber_frame_dry_manual_exact",
+      "mode": "official_floor_system",
+      "source": "https://www.dataholz.eu/en/components/intermediate-floor/version/kz/gdrtxn01a/nr/00.htm",
+      "impactPredictorInput": {
+        "structuralSupportType": "timber_joists",
+        "impactSystemType": "combined_upper_lower_system",
+        "baseSlab": {
+          "thicknessMm": 220
+        },
+        "resilientLayer": {
+          "thicknessMm": 30
+        },
+        "upperFill": {
+          "materialClass": "generic_fill",
+          "thicknessMm": 40
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "dry_floating_gypsum_fiberboard",
+          "thicknessMm": 25,
+          "densityKgM3": 900
+        },
+        "lowerTreatment": {
+          "type": "direct_fixed_ceiling",
+          "cavityFillThicknessMm": 100,
+          "boardLayerCount": 1,
+          "boardThicknessMm": 12.5,
+          "boardMaterialClass": "generic_gypsum_board"
+        }
+      },
+      "expected": {
+        "lnwDb": 58.0,
+        "rwDb": 63.0
+      }
+    },
+    {
+      "id": "dataholz_gdrtxn02b_timber_frame_dry_manual_exact",
+      "mode": "official_floor_system",
+      "source": "https://www.dataholz.eu/en/components/intermediate-floor/version/kz/gdrtxn02b/nr/08.htm",
+      "impactPredictorInput": {
+        "structuralSupportType": "timber_joists",
+        "impactSystemType": "combined_upper_lower_system",
+        "baseSlab": {
+          "thicknessMm": 220
+        },
+        "resilientLayer": {
+          "thicknessMm": 30
+        },
+        "upperFill": {
+          "materialClass": "generic_fill",
+          "thicknessMm": 40,
+          "densityKgM3": 1800
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "dry_floating_gypsum_fiberboard",
+          "thicknessMm": 25,
+          "densityKgM3": 900
+        },
+        "lowerTreatment": {
+          "type": "direct_fixed_ceiling",
+          "cavityFillThicknessMm": 100,
+          "boardLayerCount": 2,
+          "boardThicknessMm": 12.5,
+          "boardMaterialClass": "generic_gypsum_board"
+        }
+      },
+      "expected": {
+        "lnwDb": 62.0,
+        "rwDb": 60.0
+      }
+    },
+    {
+      "id": "dataholz_gdrtxa03b_timber_frame_dry_manual_exact",
+      "mode": "official_floor_system",
+      "source": "https://www.dataholz.eu/en/components/intermediate-floor/version/kz/gdrtxa03b/nr/02.htm",
+      "impactPredictorInput": {
+        "structuralSupportType": "timber_joists",
+        "impactSystemType": "combined_upper_lower_system",
+        "baseSlab": {
+          "thicknessMm": 240
+        },
+        "resilientLayer": {
+          "thicknessMm": 30
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "dry_floating_gypsum_fiberboard",
+          "thicknessMm": 25,
+          "densityKgM3": 900
+        },
+        "lowerTreatment": {
+          "type": "suspended_ceiling_rigid_hanger",
+          "cavityDepthMm": 27,
+          "cavityFillThicknessMm": 100,
+          "boardLayerCount": 2,
+          "boardThicknessMm": 12.5,
+          "boardMaterialClass": "generic_gypsum_board"
+        }
+      },
+      "expected": {
+        "lnwDb": 51.0,
+        "rwDb": 65.0
+      }
+    },
+    {
+      "id": "dataholz_gdrtxa06a_timber_frame_dry_exact",
+      "mode": "official_floor_system",
+      "source": "https://www.dataholz.eu/en/components/intermediate-floor/version/kz/gdrtxa06a/nr/00.htm",
+      "impactPredictorInput": {
+        "structuralSupportType": "timber_joists",
+        "officialFloorSystemId": "dataholz_gdrtxa06a_timber_frame_dry_lab_2026"
+      },
+      "expected": {
+        "lnwDb": 52.0,
+        "rwDb": 66.0
+      }
+    },
+    {
+      "id": "pliteq_hcp200_vinyl_exact",
+      "mode": "official_floor_system",
+      "source": "https://pliteq.com.au/wp-content/uploads/sites/7/AUS-GenieClip-Brochure_Digital.pdf",
+      "impactPredictorInput": {
+        "structuralSupportType": "hollow_core",
+        "officialFloorSystemId": "pliteq_hcp200_vinyl_lab_2026"
+      },
+      "expected": {
+        "lnwDb": 48.0,
+        "rwDb": 62.0
+      }
+    },
+    {
+      "id": "pliteq_hcp200_porcelain_exact",
+      "mode": "official_floor_system",
+      "source": "https://pliteq.com.au/wp-content/uploads/sites/7/AUS-GenieClip-Brochure_Digital.pdf",
+      "impactPredictorInput": {
+        "structuralSupportType": "hollow_core",
+        "officialFloorSystemId": "pliteq_hcp200_porcelain_lab_2026"
+      },
+      "expected": {
+        "lnwDb": 49.0,
+        "rwDb": 60.0
+      }
+    },
+    {
+      "id": "ubiq_fl28_open_web_steel_exact",
+      "mode": "official_floor_system",
+      "source": "https://www.ubiq.au/wp-content/uploads/2023/02/INEX-FLOOR-FLOOR-FIRE-ACOUSTIC.pdf",
+      "impactPredictorInput": {
+        "structuralSupportType": "steel_joists",
+        "officialFloorSystemId": "ubiq_fl28_open_web_steel_300_exact_lab_2026"
+      },
+      "expected": {
+        "lnwDb": 51.0,
+        "rwDb": 64.0
+      }
+    },
+    {
+      "id": "ubiq_fl28_open_web_steel_200_exact",
+      "mode": "official_floor_system",
+      "source": "https://www.ubiq.au/wp-content/uploads/2023/02/INEX-FLOOR-FLOOR-FIRE-ACOUSTIC.pdf",
+      "impactPredictorInput": {
+        "structuralSupportType": "steel_joists",
+        "officialFloorSystemId": "ubiq_fl28_open_web_steel_200_exact_lab_2026"
+      },
+      "expected": {
+        "lnwDb": 52.0,
+        "rwDb": 63.0
+      }
+    },
+    {
+      "id": "ubiq_fl28_open_web_steel_400_exact",
+      "mode": "official_floor_system",
+      "source": "https://www.ubiq.au/wp-content/uploads/2023/02/INEX-FLOOR-FLOOR-FIRE-ACOUSTIC.pdf",
+      "impactPredictorInput": {
+        "structuralSupportType": "steel_joists",
+        "officialFloorSystemId": "ubiq_fl28_open_web_steel_400_exact_lab_2026"
+      },
+      "expected": {
+        "lnwDb": 50.0,
+        "rwDb": 64.0
+      }
+    },
+    {
+      "id": "ubiq_fl28_open_web_steel_manual_exact",
+      "mode": "official_floor_system",
+      "source": "https://www.ubiq.au/wp-content/uploads/2023/02/INEX-FLOOR-FLOOR-FIRE-ACOUSTIC.pdf",
+      "impactPredictorInput": {
+        "structuralSupportType": "steel_joists",
+        "supportForm": "open_web_or_rolled",
+        "impactSystemType": "combined_upper_lower_system",
+        "baseSlab": {
+          "thicknessMm": 300
+        },
+        "floatingScreed": {
+          "thicknessMm": 19
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "engineered_timber_with_acoustic_underlay"
+        },
+        "lowerTreatment": {
+          "type": "suspended_ceiling_elastic_hanger",
+          "cavityDepthMm": 65,
+          "cavityFillThicknessMm": 145,
+          "boardLayerCount": 3,
+          "boardThicknessMm": 16
+        }
+      },
+      "expected": {
+        "lnwDb": 51.0,
+        "rwDb": 64.0
+      }
+    },
+    {
+      "id": "ubiq_fl33_open_web_steel_bound_interpolation",
+      "mode": "family_specific_bound_estimate",
+      "source": "https://www.ubiq.au/wp-content/uploads/2025/05/UBIQ_INEX_FLOOR_2_WAY-FRL_250524.pdf",
+      "impactPredictorInput": {
+        "structuralSupportType": "steel_joists",
+        "supportForm": "open_web_or_rolled",
+        "impactSystemType": "combined_upper_lower_system",
+        "baseSlab": {
+          "thicknessMm": 250
+        },
+        "floatingScreed": {
+          "thicknessMm": 19
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "engineered_timber_with_acoustic_underlay"
+        },
+        "lowerTreatment": {
+          "type": "suspended_ceiling_elastic_hanger",
+          "boardLayerCount": 2,
+          "boardThicknessMm": 16
+        }
+      },
+      "expected": {
+        "rwMinDb": 62.4,
+        "rwMaxDb": 62.6,
+        "rwCtrMinDb": 56.9,
+        "rwCtrMaxDb": 57.1,
+        "lnwUpperBoundMinDb": 51.9,
+        "lnwUpperBoundMaxDb": 52.1
+      }
+    },
+    {
+      "id": "pliteq_hcp200_bare_manual_exact",
+      "mode": "official_floor_system",
+      "source": "https://pliteq.com.au/wp-content/uploads/sites/7/AUS-GenieClip-Brochure_Digital.pdf",
+      "impactPredictorInput": {
+        "structuralSupportType": "hollow_core",
+        "impactSystemType": "suspended_ceiling_only",
+        "baseSlab": {
+          "thicknessMm": 200
+        },
+        "lowerTreatment": {
+          "type": "suspended_ceiling_elastic_hanger",
+          "boardLayerCount": 1,
+          "boardThicknessMm": 16
+        }
+      },
+      "expected": {
+        "lnwDb": 55.0,
+        "rwDb": 62.0
+      }
+    },
+    {
+      "id": "pliteq_hcp200_vinyl_manual_exact",
+      "mode": "official_floor_system",
+      "source": "https://pliteq.com.au/wp-content/uploads/sites/7/AUS-GenieClip-Brochure_Digital.pdf",
+      "impactPredictorInput": {
+        "structuralSupportType": "hollow_core",
+        "impactSystemType": "combined_upper_lower_system",
+        "baseSlab": {
+          "thicknessMm": 200
+        },
+        "resilientLayer": {
+          "productId": "geniemat_rst05",
+          "thicknessMm": 5
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "vinyl_plank",
+          "thicknessMm": 2.5
+        },
+        "lowerTreatment": {
+          "type": "suspended_ceiling_elastic_hanger",
+          "boardLayerCount": 1,
+          "boardThicknessMm": 16
+        }
+      },
+      "expected": {
+        "lnwDb": 48.0,
+        "rwDb": 62.0
+      }
+    },
+    {
+      "id": "pliteq_hcp200_rst05_vinyl_no_ceiling_exact",
+      "mode": "official_floor_system",
+      "source": "https://pliteq.com.au/wp-content/uploads/sites/7/AUS-GenieClip-Brochure_Digital.pdf",
+      "impactPredictorInput": {
+        "structuralSupportType": "hollow_core",
+        "impactSystemType": "bare_floor",
+        "baseSlab": {
+          "thicknessMm": 200
+        },
+        "resilientLayer": {
+          "productId": "geniemat_rst05",
+          "thicknessMm": 5
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "vinyl_flooring",
+          "thicknessMm": 2.5
+        }
+      },
+      "expected": {
+        "lnwDb": 58.0,
+        "rwDb": 53.0
+      }
+    },
+    {
+      "id": "pliteq_hcp200_rst12_porcelain_no_ceiling_exact",
+      "mode": "official_floor_system",
+      "source": "https://pliteq.com.au/wp-content/uploads/sites/7/AUS-GenieClip-Brochure_Digital.pdf",
+      "impactPredictorInput": {
+        "structuralSupportType": "hollow_core",
+        "impactSystemType": "bare_floor",
+        "baseSlab": {
+          "thicknessMm": 200
+        },
+        "resilientLayer": {
+          "productId": "geniemat_rst12",
+          "thicknessMm": 12
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "porcelain_tile",
+          "thicknessMm": 8
+        }
+      },
+      "expected": {
+        "lnwDb": 59.0,
+        "rwDb": 55.0
+      }
+    },
+    {
+      "id": "pliteq_steel_joist_250_rst02_vinyl_exact",
+      "mode": "official_floor_system",
+      "source": "https://pliteq.com.au/wp-content/uploads/sites/7/AUS-GenieClip-Brochure_Digital.pdf",
+      "impactPredictorInput": {
+        "structuralSupportType": "steel_joists",
+        "supportForm": "joist_or_purlin",
+        "impactSystemType": "combined_upper_lower_system",
+        "baseSlab": {
+          "thicknessMm": 250
+        },
+        "resilientLayer": {
+          "productId": "geniemat_rst02",
+          "thicknessMm": 2
+        },
+        "floatingScreed": {
+          "thicknessMm": 19
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "vinyl_flooring",
+          "thicknessMm": 2.5
+        },
+        "lowerTreatment": {
+          "type": "suspended_ceiling_elastic_hanger",
+          "boardLayerCount": 2,
+          "boardThicknessMm": 16
+        }
+      },
+      "expected": {
+        "lnwDb": 58.0,
+        "rwDb": 60.0
+      }
+    },
+    {
+      "id": "pliteq_steel_joist_250_rst02_wood_exact",
+      "mode": "official_floor_system",
+      "source": "https://pliteq.com.au/wp-content/uploads/sites/7/AUS-GenieClip-Brochure_Digital.pdf",
+      "impactPredictorInput": {
+        "structuralSupportType": "steel_joists",
+        "supportForm": "joist_or_purlin",
+        "impactSystemType": "combined_upper_lower_system",
+        "baseSlab": {
+          "thicknessMm": 250
+        },
+        "resilientLayer": {
+          "productId": "geniemat_rst02",
+          "thicknessMm": 2
+        },
+        "floatingScreed": {
+          "thicknessMm": 19
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "engineered_timber_with_acoustic_underlay",
+          "thicknessMm": 15
+        },
+        "lowerTreatment": {
+          "type": "suspended_ceiling_elastic_hanger",
+          "boardLayerCount": 2,
+          "boardThicknessMm": 16
+        }
+      },
+      "expected": {
+        "lnwDb": 57.0,
+        "rwDb": 59.0
+      }
+    },
+    {
+      "id": "pliteq_steel_joist_250_rst12_porcelain_exact",
+      "mode": "official_floor_system",
+      "source": "https://pliteq.com.au/wp-content/uploads/sites/7/AUS-GenieClip-Brochure_Digital.pdf",
+      "impactPredictorInput": {
+        "structuralSupportType": "steel_joists",
+        "supportForm": "joist_or_purlin",
+        "impactSystemType": "combined_upper_lower_system",
+        "baseSlab": {
+          "thicknessMm": 250
+        },
+        "resilientLayer": {
+          "productId": "geniemat_rst12",
+          "thicknessMm": 12
+        },
+        "floatingScreed": {
+          "thicknessMm": 19
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "porcelain_tile",
+          "thicknessMm": 8
+        },
+        "lowerTreatment": {
+          "type": "suspended_ceiling_elastic_hanger",
+          "boardLayerCount": 2,
+          "boardThicknessMm": 16
+        }
+      },
+      "expected": {
+        "lnwDb": 60.0,
+        "rwDb": 62.0
+      }
+    },
+    {
+      "id": "dataholz_gdmnxn06_clt_exact",
+      "mode": "official_floor_system",
+      "source": "https://www.dataholz.eu/en/components/multi-storey-housing/version/kz/gdmnxn06/nr/05.htm",
+      "impactPredictorInput": {
+        "structuralSupportType": "mass_timber_clt",
+        "officialFloorSystemId": "dataholz_gdmnxn06_fill_clt_lab_2026"
+      },
+      "expected": {
+        "lnwDb": 39.0,
+        "ciDb": -1.0,
+        "lnwPlusCiDb": 38.0,
+        "rwDb": 78.0
+      }
+    },
+    {
+      "id": "dataholz_gdmnxn02_clt_manual_exact",
+      "mode": "official_floor_system",
+      "source": "https://www.dataholz.eu/en/components/intermediate-floor/version/kz/gdmnxn02/nr/00.htm",
+      "impactPredictorInput": {
+        "structuralSupportType": "mass_timber_clt",
+        "impactSystemType": "heavy_floating_floor",
+        "baseSlab": {
+          "thicknessMm": 140
+        },
+        "resilientLayer": {
+          "thicknessMm": 30,
+          "dynamicStiffnessMNm3": 35
+        },
+        "upperFill": {
+          "materialClass": "bonded_chippings",
+          "thicknessMm": 60,
+          "densityKgM3": 1800
+        },
+        "floatingScreed": {
+          "materialClass": "generic_screed",
+          "thicknessMm": 60,
+          "densityKgM3": 2000
+        }
+      },
+      "expected": {
+        "lnwDb": 65.0,
+        "ciDb": -2.0,
+        "lnwPlusCiDb": 63.0,
+        "rwDb": 54.0
+      }
+    },
+    {
+      "id": "dataholz_gdmtxa01a_clt_manual_exact",
+      "mode": "official_floor_system",
+      "source": "https://www.dataholz.eu/en/components/intermediate-floor/version/kz/gdmtxa01a/nr/03.htm",
+      "impactPredictorInput": {
+        "structuralSupportType": "mass_timber_clt",
+        "impactSystemType": "combined_upper_lower_system",
+        "baseSlab": {
+          "thicknessMm": 150
+        },
+        "resilientLayer": {
+          "thicknessMm": 10,
+          "dynamicStiffnessMNm3": 102
+        },
+        "upperFill": {
+          "materialClass": "bonded_chippings",
+          "thicknessMm": 60,
+          "densityKgM3": 1500
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "dry_floating_gypsum_fiberboard",
+          "thicknessMm": 20,
+          "densityKgM3": 1200
+        },
+        "lowerTreatment": {
+          "type": "suspended_ceiling_elastic_hanger",
+          "cavityDepthMm": 95,
+          "cavityFillThicknessMm": 75,
+          "boardLayerCount": 1,
+          "boardThicknessMm": 15
+        }
+      },
+      "expected": {
+        "lnwDb": 47.0,
+        "ciDb": 2.0,
+        "lnwPlusCiDb": 49.0,
+        "rwDb": 65.0
+      }
+    },
+    {
+      "id": "pmc_m1_c2x_composite_exact",
+      "mode": "official_floor_system",
+      "source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10004424/",
+      "impactPredictorInput": {
+        "structuralSupportType": "composite_panel",
+        "officialFloorSystemId": "pmc_m1_dry_floating_plus_c2x_lab_2026"
+      },
+      "expected": {
+        "lnwDb": 49.0,
+        "rwDb": 61.0
+      }
+    },
+    {
+      "id": "pmc_m1_bare_composite_exact",
+      "mode": "official_floor_system",
+      "source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10004424/",
+      "impactPredictorInput": {
+        "structuralSupportType": "composite_panel",
+        "officialFloorSystemId": "pmc_m1_bare_composite_lab_2026"
+      },
+      "expected": {
+        "lnwDb": 84.0,
+        "rwDb": 27.0
+      }
+    },
+    {
+      "id": "pmc_m1_dry_composite_exact",
+      "mode": "official_floor_system",
+      "source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10004424/",
+      "impactPredictorInput": {
+        "structuralSupportType": "composite_panel",
+        "officialFloorSystemId": "pmc_m1_dry_floating_floor_lab_2026"
+      },
+      "expected": {
+        "lnwDb": 68.0,
+        "rwDb": 47.0
+      }
+    },
+    {
+      "id": "knauf_ct2g_timber_family_estimate",
+      "mode": "family_archetype_estimate",
+      "source": "https://www.knauf.com/en-AU/systems/system-products/119889/System-data-sheet/",
+      "impactPredictorInput": {
+        "structuralSupportType": "timber_joists",
+        "impactSystemType": "suspended_ceiling_only",
+        "baseSlab": {
+          "thicknessMm": 240
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "engineered_timber"
+        },
+        "lowerTreatment": {
+          "type": "direct_fixed_ceiling",
+          "cavityFillThicknessMm": 45,
+          "boardLayerCount": 1,
+          "boardThicknessMm": 12,
+          "boardMaterialClass": "impactstop_board",
+          "supportClass": "furred_channels"
+        }
+      },
+      "expected": {
+        "lnwMinDb": 67.0,
+        "lnwMaxDb": 71.0,
+        "rwMinDb": 49.0,
+        "rwMaxDb": 54.0
+      }
+    },
+    {
+      "id": "ubiq_fl28_steel_family_estimate",
+      "mode": "family_archetype_estimate",
+      "source": "https://www.ubiq.au/wp-content/uploads/2023/02/INEX-FLOOR-FLOOR-FIRE-ACOUSTIC.pdf",
+      "expectedBasis": "predictor_lightweight_steel_fl28_interpolation_estimate",
+      "impactPredictorInput": {
+        "structuralSupportType": "steel_joists",
+        "supportForm": "open_web_or_rolled",
+        "impactSystemType": "combined_upper_lower_system",
+        "baseSlab": {
+          "thicknessMm": 250
+        },
+        "floatingScreed": {
+          "thicknessMm": 19
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "engineered_timber_with_acoustic_underlay"
+        },
+        "lowerTreatment": {
+          "type": "suspended_ceiling_elastic_hanger",
+          "cavityDepthMm": 65,
+          "cavityFillThicknessMm": 145,
+          "boardLayerCount": 3,
+          "boardThicknessMm": 16
+        }
+      },
+      "expected": {
+        "lnwMinDb": 50.0,
+        "lnwMaxDb": 52.0,
+        "rwMinDb": 63.0,
+        "rwMaxDb": 64.0
+      }
+    },
+    {
+      "id": "dataholz_clt_family_estimate",
+      "mode": "family_archetype_estimate",
+      "source": "https://www.dataholz.eu/en/components/multi-storey-housing/version/kz/gdmnxn06/nr/05.htm",
+      "impactPredictorInput": {
+        "structuralSupportType": "mass_timber_clt",
+        "impactSystemType": "heavy_floating_floor",
+        "baseSlab": {
+          "thicknessMm": 155
+        },
+        "resilientLayer": {
+          "thicknessMm": 35,
+          "dynamicStiffnessMNm3": 8
+        },
+        "upperFill": {
+          "materialClass": "non_bonded_chippings",
+          "thicknessMm": 110,
+          "densityKgM3": 1800
+        },
+        "floatingScreed": {
+          "materialClass": "generic_screed",
+          "thicknessMm": 65,
+          "densityKgM3": 2000
+        }
+      },
+      "expected": {
+        "lnwMinDb": 39.0,
+        "lnwMaxDb": 45.0,
+        "rwMinDb": 74.0,
+        "rwMaxDb": 78.0
+      }
+    },
+    {
+      "id": "tuas_open_box_family_estimate",
+      "mode": "family_archetype_estimate",
+      "source": "https://doi.org/10.17632/y83p8mpryd.2",
+      "impactPredictorInput": {
+        "structuralSupportType": "open_box_timber",
+        "impactSystemType": "combined_upper_lower_system",
+        "baseSlab": {
+          "thicknessMm": 370
+        },
+        "resilientLayer": {
+          "thicknessMm": 3,
+          "dynamicStiffnessMNm3": 64
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "laminate_flooring",
+          "thicknessMm": 8
+        },
+        "lowerTreatment": {
+          "type": "suspended_ceiling_elastic_hanger",
+          "cavityFillThicknessMm": 100,
+          "boardLayerCount": 2,
+          "boardThicknessMm": 13
+        }
+      },
+      "expected": {
+        "lnwMinDb": 72.0,
+        "lnwMaxDb": 72.0,
+        "rwMinDb": 49.0,
+        "rwMaxDb": 49.0
+      }
+    },
+    {
+      "id": "tuas_open_box_dry_floor_family_estimate",
+      "mode": "family_archetype_estimate",
+      "source": "https://doi.org/10.17632/y83p8mpryd.2",
+      "impactPredictorInput": {
+        "structuralSupportType": "open_box_timber",
+        "impactSystemType": "combined_upper_lower_system",
+        "baseSlab": {
+          "thicknessMm": 370
+        },
+        "resilientLayer": {
+          "thicknessMm": 3,
+          "dynamicStiffnessMNm3": 64
+        },
+        "upperFill": {
+          "materialClass": "generic_fill",
+          "thicknessMm": 50
+        },
+        "floatingScreed": {
+          "materialClass": "dry_floating_gypsum_fiberboard",
+          "thicknessMm": 60
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "laminate_flooring",
+          "thicknessMm": 8
+        },
+        "lowerTreatment": {
+          "type": "suspended_ceiling_elastic_hanger",
+          "cavityFillThicknessMm": 100,
+          "boardLayerCount": 2,
+          "boardThicknessMm": 13
+        }
+      },
+      "expected": {
+        "lnwMinDb": 39.0,
+        "lnwMaxDb": 39.0,
+        "rwMinDb": 75.0,
+        "rwMaxDb": 75.0
+      }
+    },
+    {
+      "id": "pmc_bare_composite_family_estimate",
+      "mode": "family_archetype_estimate",
+      "source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10004424/",
+      "impactPredictorInput": {
+        "structuralSupportType": "composite_panel",
+        "impactSystemType": "bare_floor",
+        "baseSlab": {
+          "thicknessMm": 60
+        }
+      },
+      "expected": {
+        "lnwMinDb": 84.0,
+        "lnwMaxDb": 84.0,
+        "rwMinDb": 27.0,
+        "rwMaxDb": 27.0
+      }
+    },
+    {
+      "id": "pmc_dry_composite_physical_estimate",
+      "mode": "family_specific_estimate",
+      "source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10004424/",
+      "expectedBasis": "predictor_composite_panel_published_interaction_estimate",
+      "impactPredictorInput": {
+        "structuralSupportType": "composite_panel",
+        "impactSystemType": "dry_floating_floor",
+        "baseSlab": {
+          "thicknessMm": 65
+        },
+        "resilientLayer": {
+          "thicknessMm": 12
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "dry_floating_gypsum_fiberboard",
+          "thicknessMm": 20,
+          "densityKgM3": 900
+        }
+      },
+      "expected": {
+        "lnwMinDb": 68.5,
+        "lnwMaxDb": 70.5,
+        "rwMinDb": 44.5,
+        "rwMaxDb": 46.0
+      }
+    },
+    {
+      "id": "pmc_combined_composite_physical_estimate",
+      "mode": "family_specific_estimate",
+      "source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10004424/",
+      "expectedBasis": "predictor_composite_panel_published_interaction_estimate",
+      "impactPredictorInput": {
+        "structuralSupportType": "composite_panel",
+        "impactSystemType": "combined_upper_lower_system",
+        "baseSlab": {
+          "thicknessMm": 65
+        },
+        "resilientLayer": {
+          "thicknessMm": 12
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "dry_floating_gypsum_fiberboard",
+          "thicknessMm": 20,
+          "densityKgM3": 900
+        },
+        "lowerTreatment": {
+          "type": "suspended_ceiling_elastic_hanger",
+          "cavityDepthMm": 140,
+          "cavityFillThicknessMm": 120,
+          "boardLayerCount": 1,
+          "boardThicknessMm": 15
+        }
+      },
+      "expected": {
+        "lnwMinDb": 50.5,
+        "lnwMaxDb": 52.0,
+        "rwMinDb": 59.5,
+        "rwMaxDb": 60.5
+      }
+    },
+    {
+      "id": "tuas_clt_bare_interpolation_estimate",
+      "mode": "family_specific_estimate",
+      "source": "https://doi.org/10.17632/y83p8mpryd.2",
+      "expectedBasis": "predictor_mass_timber_clt_bare_interpolation_estimate",
+      "impactPredictorInput": {
+        "structuralSupportType": "mass_timber_clt",
+        "impactSystemType": "bare_floor",
+        "baseSlab": {
+          "thicknessMm": 180
+        },
+        "resilientLayer": {
+          "thicknessMm": 4
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "laminate_flooring",
+          "thicknessMm": 10,
+          "densityKgM3": 850
+        }
+      },
+      "expected": {
+        "lnwMinDb": 67.5,
+        "lnwMaxDb": 68.5,
+        "rwMinDb": 39.0,
+        "rwMaxDb": 40.0
+      }
+    },
+    {
+      "id": "ubiq_fl28_steel_interpolation_estimate",
+      "mode": "family_specific_estimate",
+      "source": "https://www.ubiq.au/wp-content/uploads/2023/02/INEX-FLOOR-FLOOR-FIRE-ACOUSTIC.pdf",
+      "expectedBasis": "predictor_lightweight_steel_fl28_interpolation_estimate",
+      "impactPredictorInput": {
+        "structuralSupportType": "steel_joists",
+        "supportForm": "open_web_or_rolled",
+        "impactSystemType": "combined_upper_lower_system",
+        "baseSlab": {
+          "thicknessMm": 250
+        },
+        "floatingScreed": {
+          "thicknessMm": 20
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "engineered_timber_with_acoustic_underlay"
+        },
+        "lowerTreatment": {
+          "type": "suspended_ceiling_elastic_hanger",
+          "cavityDepthMm": 75,
+          "cavityFillThicknessMm": 145,
+          "boardLayerCount": 3,
+          "boardThicknessMm": 15
+        }
+      },
+      "expected": {
+        "lnwMinDb": 51.0,
+        "lnwMaxDb": 52.0,
+        "rwMinDb": 63.0,
+        "rwMaxDb": 64.0
+      }
+    },
+    {
+      "id": "tuas_clt_dry_family_estimate",
+      "mode": "family_specific_estimate",
+      "source": "https://doi.org/10.17632/y83p8mpryd.2",
+      "expectedBasis": "predictor_mass_timber_clt_dry_interaction_estimate",
+      "impactPredictorInput": {
+        "structuralSupportType": "mass_timber_clt",
+        "impactSystemType": "dry_floating_floor",
+        "baseSlab": {
+          "thicknessMm": 140
+        },
+        "resilientLayer": {
+          "thicknessMm": 3,
+          "dynamicStiffnessMNm3": 64
+        },
+        "upperFill": {
+          "materialClass": "generic_fill",
+          "thicknessMm": 50
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "laminate_flooring",
+          "thicknessMm": 8,
+          "densityKgM3": 850
+        }
+      },
+      "expected": {
+        "lnwMinDb": 49.5,
+        "lnwMaxDb": 50.5,
+        "rwMinDb": 54.5,
+        "rwMaxDb": 55.5
+      }
+    },
+    {
+      "id": "tuas_clt_dry_combined_interaction_estimate",
+      "mode": "family_specific_estimate",
+      "source": "https://doi.org/10.17632/y83p8mpryd.2",
+      "expectedBasis": "predictor_mass_timber_clt_dry_interaction_estimate",
+      "impactPredictorInput": {
+        "structuralSupportType": "mass_timber_clt",
+        "impactSystemType": "combined_upper_lower_system",
+        "baseSlab": {
+          "thicknessMm": 220
+        },
+        "resilientLayer": {
+          "thicknessMm": 4
+        },
+        "upperFill": {
+          "materialClass": "generic_fill",
+          "thicknessMm": 50
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "laminate_flooring",
+          "thicknessMm": 8,
+          "densityKgM3": 850
+        },
+        "lowerTreatment": {
+          "type": "suspended_ceiling_rigid_hanger",
+          "cavityFillThicknessMm": 100,
+          "boardLayerCount": 2,
+          "boardThicknessMm": 13
+        }
+      },
+      "expected": {
+        "lnwMinDb": 24.0,
+        "lnwMaxDb": 25.0,
+        "rwMinDb": 74.0,
+        "rwMaxDb": 75.0
+      }
+    },
+    {
+      "id": "dataholz_clt_dry_dataholz_estimate",
+      "mode": "family_specific_estimate",
+      "source": "https://www.dataholz.eu/en/components/intermediate-floor/version/kz/gdmtxn01/nr/00.htm",
+      "expectedBasis": "predictor_mass_timber_clt_dataholz_dry_estimate",
+      "impactPredictorInput": {
+        "structuralSupportType": "mass_timber_clt",
+        "impactSystemType": "dry_floating_floor",
+        "baseSlab": {
+          "thicknessMm": 145
+        },
+        "resilientLayer": {
+          "thicknessMm": 20,
+          "dynamicStiffnessMNm3": 50
+        },
+        "upperFill": {
+          "materialClass": "elastic_bonded_fill",
+          "thicknessMm": 70,
+          "densityKgM3": 1500
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "dry_floating_gypsum_fiberboard",
+          "thicknessMm": 22,
+          "densityKgM3": 1000
+        }
+      },
+      "expected": {
+        "lnwMinDb": 49.7,
+        "lnwMaxDb": 50.7,
+        "rwMinDb": 61.6,
+        "rwMaxDb": 62.6
+      }
+    },
+    {
+      "id": "dataholz_clt_dry_combined_dataholz_estimate",
+      "mode": "family_specific_estimate",
+      "source": "https://www.dataholz.eu/en/components/intermediate-floor/version/kz/gdmtxa01a/nr/03.htm",
+      "expectedBasis": "predictor_mass_timber_clt_dataholz_dry_estimate",
+      "impactPredictorInput": {
+        "structuralSupportType": "mass_timber_clt",
+        "impactSystemType": "combined_upper_lower_system",
+        "baseSlab": {
+          "thicknessMm": 155
+        },
+        "resilientLayer": {
+          "thicknessMm": 12,
+          "dynamicStiffnessMNm3": 90
+        },
+        "upperFill": {
+          "materialClass": "bonded_chippings",
+          "thicknessMm": 70,
+          "densityKgM3": 1500
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "dry_floating_gypsum_fiberboard",
+          "thicknessMm": 22,
+          "densityKgM3": 1100
+        },
+        "lowerTreatment": {
+          "type": "suspended_ceiling_elastic_hanger",
+          "cavityDepthMm": 100,
+          "cavityFillThicknessMm": 75,
+          "boardLayerCount": 1,
+          "boardThicknessMm": 15
+        }
+      },
+      "expected": {
+        "lnwMinDb": 45.3,
+        "lnwMaxDb": 46.3,
+        "rwMinDb": 65.5,
+        "rwMaxDb": 66.5
+      }
+    },
+    {
+      "id": "regupol_curve8_published_upper_treatment_family_estimate",
+      "mode": "family_specific_estimate",
+      "source": "https://acoustics.regupol.com/fileadmin/user_upload/acoustics/products/documents/technical_data/en/regupol_sonus_curve/regupol_sonus_curve_8/REGUPOL_sonus_curve_8_-_TD-en_072024.pdf",
+      "expectedBasis": "predictor_heavy_concrete_published_upper_treatment_estimate",
+      "impactPredictorInput": {
+        "structuralSupportType": "reinforced_concrete",
+        "impactSystemType": "heavy_floating_floor",
+        "baseSlab": {
+          "materialClass": "heavy_concrete",
+          "thicknessMm": 150,
+          "densityKgM3": 2400
+        },
+        "resilientLayer": {
+          "thicknessMm": 8
+        },
+        "floatingScreed": {
+          "materialClass": "generic_screed",
+          "thicknessMm": 30,
+          "densityKgM3": 2000
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "ceramic_tile",
+          "thicknessMm": 8,
+          "densityKgM3": 2000
+        }
+      },
+      "expected": {
+        "lnwMinDb": 49.9,
+        "lnwMaxDb": 50.1,
+        "rwMinDb": 57.9,
+        "rwMaxDb": 58.1
+      }
+    },
+    {
+      "id": "pliteq_hollow_core_vinyl_family_estimate",
+      "mode": "family_archetype_estimate",
+      "source": "https://pliteq.com.au/wp-content/uploads/sites/7/AUS-GenieClip-Brochure_Digital.pdf",
+      "impactPredictorInput": {
+        "structuralSupportType": "hollow_core",
+        "impactSystemType": "combined_upper_lower_system",
+        "baseSlab": {
+          "thicknessMm": 210
+        },
+        "resilientLayer": {
+          "productId": "geniemat_rst05",
+          "thicknessMm": 5
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "vinyl_flooring",
+          "thicknessMm": 3,
+          "densityKgM3": 1800
+        },
+        "lowerTreatment": {
+          "type": "suspended_ceiling_elastic_hanger",
+          "cavityDepthMm": 16,
+          "boardLayerCount": 1,
+          "boardThicknessMm": 16
+        }
+      },
+      "expected": {
+        "lnwMinDb": 47.5,
+        "lnwMaxDb": 48.5,
+        "rwMinDb": 61.5,
+        "rwMaxDb": 62.5
+      }
+    },
+    {
+      "id": "dataholz_clt_dry_underdescribed_family_general_estimate",
+      "mode": "family_general_estimate",
+      "source": "https://www.dataholz.eu/en/components/intermediate-floor/version/kz/gdmtxn01/nr/00.htm",
+      "expectedBasis": "predictor_floor_system_family_general_estimate",
+      "impactPredictorInput": {
+        "structuralSupportType": "mass_timber_clt",
+        "impactSystemType": "dry_floating_floor",
+        "baseSlab": {
+          "thicknessMm": 145
+        },
+        "resilientLayer": {
+          "thicknessMm": 20
+        },
+        "upperFill": {
+          "materialClass": "generic_fill",
+          "thicknessMm": 70
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "dry_floating_gypsum_fiberboard",
+          "thicknessMm": 22
+        }
+      },
+      "expected": {
+        "lnwMinDb": 51.1,
+        "lnwMaxDb": 51.3,
+        "rwMinDb": 64.3,
+        "rwMaxDb": 64.5
+      }
+    },
+    {
+      "id": "knauf_timber_ceramic_family_general_estimate",
+      "mode": "family_general_estimate",
+      "source": "https://www.knauf.com/en-AU/systems/system-products/119889/System-data-sheet/",
+      "impactPredictorInput": {
+        "structuralSupportType": "timber_joists",
+        "impactSystemType": "suspended_ceiling_only",
+        "baseSlab": {
+          "thicknessMm": 240
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "ceramic_tile",
+          "thicknessMm": 8,
+          "densityKgM3": 2000
+        },
+        "lowerTreatment": {
+          "type": "direct_fixed_ceiling",
+          "cavityFillThicknessMm": 90,
+          "boardLayerCount": 1,
+          "boardThicknessMm": 13,
+          "boardMaterialClass": "firestop_board",
+          "supportClass": "furred_channels"
+        }
+      },
+      "expected": {
+        "lnwMinDb": 68.5,
+        "lnwMaxDb": 70.5,
+        "rwMinDb": 52.0,
+        "rwMaxDb": 54.0
+      }
+    },
+    {
+      "id": "dataholz_timber_dry_integrated_ceiling_archetype_estimate",
+      "mode": "family_archetype_estimate",
+      "source": "https://www.dataholz.eu/en/components/intermediate-floor/version/kz/gdrtxa06a/nr/00.htm",
+      "expectedBasis": "predictor_floor_system_family_archetype_estimate",
+      "impactPredictorInput": {
+        "structuralSupportType": "timber_joists",
+        "impactSystemType": "combined_upper_lower_system",
+        "baseSlab": {
+          "thicknessMm": 200
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "dry_floating_gypsum_fiberboard",
+          "thicknessMm": 65
+        },
+        "lowerTreatment": {
+          "type": "suspended_ceiling_elastic_hanger",
+          "cavityDepthMm": 60,
+          "cavityFillThicknessMm": 200,
+          "boardLayerCount": 1,
+          "boardThicknessMm": 15
+        }
+      },
+      "expected": {
+        "lnwMinDb": 51.9,
+        "lnwMaxDb": 52.1,
+        "rwMinDb": 65.9,
+        "rwMaxDb": 66.1
+      }
+    },
+    {
+      "id": "dataholz_timber_dry_upper_only_family_general_estimate",
+      "mode": "family_general_estimate",
+      "source": "https://www.dataholz.eu/en/components/intermediate-floor/version/kz/gdrtxn02b/nr/08.htm",
+      "expectedBasis": "predictor_floor_system_family_general_estimate",
+      "impactPredictorInput": {
+        "structuralSupportType": "timber_joists",
+        "impactSystemType": "dry_floating_floor",
+        "baseSlab": {
+          "thicknessMm": 220
+        },
+        "resilientLayer": {
+          "thicknessMm": 30
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "dry_floating_gypsum_fiberboard",
+          "thicknessMm": 25,
+          "densityKgM3": 1100
+        }
+      },
+      "expected": {
+        "lnwMinDb": 59.9,
+        "lnwMaxDb": 60.1,
+        "rwMinDb": 61.4,
+        "rwMaxDb": 61.6
+      }
+    },
+    {
+      "id": "ubiq_steel_carpet_family_general_estimate",
+      "mode": "family_general_estimate",
+      "source": "https://www.ubiq.au/wp-content/uploads/2023/02/INEX-FLOOR-FLOOR-FIRE-ACOUSTIC.pdf",
+      "impactPredictorInput": {
+        "structuralSupportType": "steel_joists",
+        "supportForm": "open_web_or_rolled",
+        "impactSystemType": "combined_upper_lower_system",
+        "baseSlab": {
+          "thicknessMm": 300
+        },
+        "floatingScreed": {
+          "thicknessMm": 19
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "carpet_with_foam_underlay",
+          "thicknessMm": 8
+        },
+        "lowerTreatment": {
+          "type": "suspended_ceiling_elastic_hanger",
+          "cavityDepthMm": 65,
+          "cavityFillThicknessMm": 145,
+          "boardLayerCount": 3,
+          "boardThicknessMm": 16
+        }
+      },
+      "expected": {
+        "lnwMinDb": 50.5,
+        "lnwMaxDb": 51.5,
+        "rwMinDb": 63.0,
+        "rwMaxDb": 64.0
+      }
+    },
+    {
+      "id": "ubiq_steel_ceiling_only_family_general_estimate",
+      "mode": "family_general_estimate",
+      "source": "https://www.ubiq.au/wp-content/uploads/2023/02/INEX-FLOOR-FLOOR-FIRE-ACOUSTIC.pdf",
+      "impactPredictorInput": {
+        "structuralSupportType": "steel_joists",
+        "supportForm": "open_web_or_rolled",
+        "impactSystemType": "suspended_ceiling_only",
+        "baseSlab": {
+          "thicknessMm": 250
+        },
+        "lowerTreatment": {
+          "type": "suspended_ceiling_elastic_hanger",
+          "cavityDepthMm": 65,
+          "cavityFillThicknessMm": 145,
+          "boardLayerCount": 3,
+          "boardThicknessMm": 16
+        }
+      },
+      "expected": {
+        "lnwMinDb": 50.9,
+        "lnwMaxDb": 51.1,
+        "rwMinDb": 63.6,
+        "rwMaxDb": 63.8
+      }
+    },
+    {
+      "id": "ubiq_steel_suspended_only_low_confidence_estimate",
+      "mode": "low_confidence_estimate",
+      "source": "https://www.ubiq.au/wp-content/uploads/2023/02/INEX-FLOOR-FLOOR-FIRE-ACOUSTIC.pdf",
+      "expectedBasis": "predictor_floor_system_low_confidence_estimate",
+      "impactPredictorInput": {
+        "structuralSupportType": "steel_joists",
+        "supportForm": "open_web_or_rolled",
+        "impactSystemType": "suspended_ceiling_only",
+        "baseSlab": {
+          "thicknessMm": 250
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "vinyl_flooring",
+          "thicknessMm": 3,
+          "densityKgM3": 1400
+        },
+        "lowerTreatment": {
+          "type": "suspended_ceiling_elastic_hanger",
+          "cavityDepthMm": 120,
+          "cavityFillThicknessMm": 100,
+          "boardLayerCount": 2,
+          "boardThicknessMm": 16
+        }
+      },
+      "expected": {
+        "lnwMinDb": 50.9,
+        "lnwMaxDb": 51.1,
+        "rwMinDb": 63.0,
+        "rwMaxDb": 63.2
+      }
+    },
+    {
+      "id": "pliteq_ubiq_steel_joist_suspended_only_low_confidence_estimate",
+      "mode": "low_confidence_estimate",
+      "source": "https://pliteq.com.au/wp-content/uploads/sites/7/AUS-GenieClip-Brochure_Digital.pdf | https://www.ubiq.au/wp-content/uploads/2023/02/INEX-FLOOR-FLOOR-FIRE-ACOUSTIC.pdf",
+      "expectedBasis": "predictor_floor_system_low_confidence_estimate",
+      "impactPredictorInput": {
+        "structuralSupportType": "steel_joists",
+        "supportForm": "joist_or_purlin",
+        "impactSystemType": "suspended_ceiling_only",
+        "baseSlab": {
+          "thicknessMm": 250,
+          "densityKgM3": 7850
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "vinyl_flooring",
+          "thicknessMm": 3,
+          "densityKgM3": 1400
+        },
+        "lowerTreatment": {
+          "type": "suspended_ceiling_elastic_hanger",
+          "cavityDepthMm": 120,
+          "cavityFillThicknessMm": 100,
+          "boardLayerCount": 2,
+          "boardThicknessMm": 16,
+          "boardMaterialClass": "firestop_board"
+        }
+      },
+      "expected": {
+        "lnwMinDb": 58.2,
+        "lnwMaxDb": 58.4,
+        "rwMinDb": 60.9,
+        "rwMaxDb": 61.1
+      }
+    },
+    {
+      "id": "knauf_dataholz_timber_bare_low_confidence_estimate",
+      "mode": "low_confidence_estimate",
+      "source": "https://www.knauf.com/en-AU/systems/system-products/119889/System-data-sheet/ | https://www.dataholz.eu/en/components/intermediate-floor/version/kz/gdsnxn01a/nr/00.htm",
+      "expectedBasis": "predictor_floor_system_low_confidence_estimate",
+      "impactPredictorInput": {
+        "structuralSupportType": "timber_joists",
+        "impactSystemType": "bare_floor",
+        "baseSlab": {
+          "thicknessMm": 240
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "laminate_flooring",
+          "thicknessMm": 9,
+          "densityKgM3": 850
+        }
+      },
+      "expected": {
+        "lnwMinDb": 61.2,
+        "lnwMaxDb": 61.4,
+        "rwMinDb": 51.5,
+        "rwMaxDb": 51.7
+      }
+    },
+    {
+      "id": "knauf_timber_direct_ceiling_low_confidence_estimate",
+      "mode": "low_confidence_estimate",
+      "source": "https://www.knauf.com/en-AU/systems/system-products/119889/System-data-sheet/",
+      "expectedBasis": "predictor_floor_system_low_confidence_estimate",
+      "impactPredictorInput": {
+        "structuralSupportType": "timber_joists",
+        "supportForm": "joist_or_purlin",
+        "impactSystemType": "suspended_ceiling_only",
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "ceramic_tile",
+          "thicknessMm": 10
+        },
+        "lowerTreatment": {
+          "type": "direct_fixed_ceiling",
+          "supportClass": "direct_to_joists",
+          "boardMaterialClass": "firestop_board"
+        }
+      },
+      "expected": {
+        "lnwMinDb": 69.8,
+        "lnwMaxDb": 70.0,
+        "rwMinDb": 51.7,
+        "rwMaxDb": 51.9
+      }
+    },
+    {
+      "id": "knauf_euracoustics_concrete_combined_low_confidence_estimate",
+      "mode": "low_confidence_estimate",
+      "source": "https://www.knauf.com/en-AU/systems/system-products/119889/System-data-sheet/ | https://dael.euracoustics.org/confs/fa2023/data/articles/001014.pdf",
+      "expectedBasis": "predictor_floor_system_low_confidence_estimate",
+      "impactPredictorInput": {
+        "structuralSupportType": "reinforced_concrete",
+        "impactSystemType": "combined_upper_lower_system",
+        "baseSlab": {
+          "materialClass": "heavy_concrete",
+          "thicknessMm": 180,
+          "densityKgM3": 2400
+        },
+        "resilientLayer": {
+          "thicknessMm": 8,
+          "dynamicStiffnessMNm3": 35
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "vinyl_flooring",
+          "thicknessMm": 3,
+          "densityKgM3": 1400
+        },
+        "lowerTreatment": {
+          "type": "suspended_ceiling_elastic_hanger",
+          "cavityDepthMm": 120,
+          "cavityFillThicknessMm": 100,
+          "boardLayerCount": 2,
+          "boardThicknessMm": 16
+        }
+      },
+      "expected": {
+        "lnwMinDb": 49.9,
+        "lnwMaxDb": 50.1,
+        "rwMinDb": 65.8,
+        "rwMaxDb": 66.0
+      }
+    },
+    {
+      "id": "pmc_composite_ceiling_only_low_confidence_estimate",
+      "mode": "low_confidence_estimate",
+      "source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10004424/",
+      "expectedBasis": "predictor_floor_system_low_confidence_estimate",
+      "impactPredictorInput": {
+        "structuralSupportType": "composite_panel",
+        "impactSystemType": "suspended_ceiling_only",
+        "baseSlab": {
+          "materialClass": "composite_steel_deck",
+          "thicknessMm": 150,
+          "densityKgM3": 2350
+        },
+        "lowerTreatment": {
+          "type": "suspended_ceiling_elastic_hanger",
+          "cavityDepthMm": 150,
+          "cavityFillThicknessMm": 100,
+          "boardLayerCount": 2,
+          "boardThicknessMm": 16
+        }
+      },
+      "expected": {
+        "lnwMinDb": 63.2,
+        "lnwMaxDb": 63.4,
+        "rwMinDb": 48.5,
+        "rwMaxDb": 48.7
+      }
+    },
+    {
+      "id": "ubiq_fl33_steel_bound",
+      "mode": "official_floor_system_bound",
+      "source": "https://www.ubiq.au/wp-content/uploads/2025/05/UBIQ_INEX_FLOOR_2_WAY-FRL_250524.pdf",
+      "impactPredictorInput": {
+        "structuralSupportType": "steel_joists",
+        "officialFloorSystemId": "ubiq_fl33_open_web_steel_300_lab_2026"
+      },
+      "expected": {
+        "rwDb": 63.0,
+        "lnwUpperBoundDb": 51.0
+      }
+    },
+    {
+      "id": "ubiq_fl33_steel_manual_bound",
+      "mode": "official_floor_system_bound",
+      "source": "https://www.ubiq.au/wp-content/uploads/2025/05/UBIQ_INEX_FLOOR_2_WAY-FRL_250524.pdf",
+      "impactPredictorInput": {
+        "structuralSupportType": "steel_joists",
+        "supportForm": "open_web_or_rolled",
+        "impactSystemType": "combined_upper_lower_system",
+        "baseSlab": {
+          "thicknessMm": 300
+        },
+        "floatingScreed": {
+          "thicknessMm": 19
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "engineered_timber_with_acoustic_underlay"
+        },
+        "lowerTreatment": {
+          "type": "suspended_ceiling_elastic_hanger",
+          "boardLayerCount": 2,
+          "boardThicknessMm": 16
+        }
+      },
+      "expected": {
+        "rwDb": 63.0,
+        "lnwUpperBoundDb": 51.0
+      }
+    },
+    {
+      "id": "regupol_curve8_exact_catalog",
+      "mode": "official_catalog_exact",
+      "source": "https://acoustics.regupol.com/fileadmin/user_upload/acoustics/products/documents/technical_data/en/regupol_sonus_curve/regupol_sonus_curve_8/REGUPOL_sonus_curve_8_-_TD-en_072024.pdf",
+      "impactPredictorInput": {
+        "structuralSupportType": "reinforced_concrete",
+        "impactSystemType": "heavy_floating_floor",
+        "referenceFloorType": "heavy_standard",
+        "baseSlab": {
+          "materialClass": "heavy_concrete",
+          "thicknessMm": 150,
+          "densityKgM3": 2400
+        },
+        "resilientLayer": {
+          "productId": "regupol_sonus_curve_8",
+          "thicknessMm": 8,
+          "dynamicStiffnessMNm3": 30
+        },
+        "floatingScreed": {
+          "materialClass": "generic_screed",
+          "thicknessMm": 30,
+          "densityKgM3": 2000
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "ceramic_tile",
+          "thicknessMm": 8,
+          "densityKgM3": 2000
+        }
+      },
+      "expected": {
+        "lnwDb": 50.0,
+        "deltaLwDb": 26.0
+      }
+    },
+    {
+      "id": "regupol_multi45_porcelain_exact_catalog",
+      "mode": "official_catalog_exact",
+      "source": "https://acoustics.regupol.com/fileadmin/user_upload/acoustics/products/documents/technical_data/en/regupol_sonus_multi/regupol_sonus_multi_4-5/REGUPOL_sonus_multi_4.5_-_TD-en_092024.pdf",
+      "impactPredictorInput": {
+        "structuralSupportType": "reinforced_concrete",
+        "impactSystemType": "heavy_floating_floor",
+        "referenceFloorType": "heavy_standard",
+        "baseSlab": {
+          "materialClass": "heavy_concrete",
+          "thicknessMm": 150,
+          "densityKgM3": 2400
+        },
+        "resilientLayer": {
+          "productId": "regupol_sonus_multi_4_5",
+          "thicknessMm": 4.5
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "porcelain_tile",
+          "thicknessMm": 10,
+          "densityKgM3": 2300
+        }
+      },
+      "expected": {
+        "lnwDb": 61.0,
+        "deltaLwDb": 17.0
+      }
+    },
+    {
+      "id": "regupol_curve8_lower_bound_plus_formula",
+      "mode": "formula_plus_lower_bound",
+      "source": "https://acoustics.regupol.com/fileadmin/user_upload/acoustics/products/documents/technical_data/en/regupol_sonus_curve/regupol_sonus_curve_8/REGUPOL_sonus_curve_8_-_TD-en_072024.pdf",
+      "impactPredictorInput": {
+        "structuralSupportType": "reinforced_concrete",
+        "impactSystemType": "heavy_floating_floor",
+        "referenceFloorType": "heavy_standard",
+        "baseSlab": {
+          "materialClass": "heavy_concrete",
+          "thicknessMm": 140,
+          "densityKgM3": 2400
+        },
+        "resilientLayer": {
+          "productId": "regupol_sonus_curve_8",
+          "thicknessMm": 8,
+          "dynamicStiffnessMNm3": 30
+        },
+        "floatingScreed": {
+          "materialClass": "generic_screed",
+          "thicknessMm": 70,
+          "densityKgM3": 2000
+        },
+        "floorCovering": {
+          "mode": "none"
+        }
+      },
+      "expected": {
+        "deltaLwLowerBoundDb": 22.0,
+        "lnwUpperBoundDb": 56.0,
+        "lnwDb": 47.9,
+        "deltaLwDb": 27.7
+      },
+      "tolerances": {
+        "lnwDb": 0.2,
+        "deltaLwDb": 0.2
+      }
+    },
+    {
+      "id": "euracoustics_bare_concrete_formula",
+      "mode": "formula_estimate",
+      "source": "https://dael.euracoustics.org/confs/fa2023/data/articles/001014.pdf",
+      "impactPredictorInput": {
+        "structuralSupportType": "reinforced_concrete",
+        "impactSystemType": "bare_floor",
+        "baseSlab": {
+          "materialClass": "heavy_concrete",
+          "thicknessMm": 140,
+          "densityKgM3": 2400
+        }
+      },
+      "expected": {
+        "lnwDb": 77.0
+      },
+      "tolerances": {
+        "lnwDb": 2.0
+      }
+    },
+    {
+      "id": "regupol_curve8_formula",
+      "mode": "formula_estimate",
+      "source": "https://acoustics.regupol.com/fileadmin/user_upload/acoustics/products/documents/technical_data/en/regupol_sonus_curve/regupol_sonus_curve_8/REGUPOL_sonus_curve_8_-_TD-en_072024.pdf",
+      "impactPredictorInput": {
+        "structuralSupportType": "reinforced_concrete",
+        "impactSystemType": "heavy_floating_floor",
+        "baseSlab": {
+          "materialClass": "heavy_concrete",
+          "thicknessMm": 150,
+          "densityKgM3": 2400
+        },
+        "resilientLayer": {
+          "thicknessMm": 8,
+          "dynamicStiffnessMNm3": 30
+        },
+        "floatingScreed": {
+          "materialClass": "generic_screed",
+          "thicknessMm": 30,
+          "densityKgM3": 2000
+        },
+        "floorCovering": {
+          "mode": "material_layer",
+          "materialClass": "ceramic_tile",
+          "thicknessMm": 8,
+          "densityKgM3": 2000
+        }
+      },
+      "expected": {
+        "lnwDb": 50.0,
+        "deltaLwDb": 26.0
+      },
+      "tolerances": {
+        "lnwDb": 2.0,
+        "deltaLwDb": 3.0
+      }
+    },
+    {
+      "id": "mapei_heavy_floating_field_k_estimate",
+      "mode": "field_explicit_k_estimate",
+      "source": "https://www.mapei.com/it/en/realta-mapei/detail/sound-insulation-of-floors",
+      "assemblyMeta": {
+        "contextMode": "field_between_rooms",
+        "impactFieldKCorrectionDb": 2.0
+      },
+      "targetOutputs": ["L'n,w"],
+      "impactPredictorInput": {
+        "structuralSupportType": "reinforced_concrete",
+        "impactSystemType": "heavy_floating_floor",
+        "referenceFloorType": "heavy_standard",
+        "baseSlab": {
+          "materialClass": "heavy_concrete",
+          "thicknessMm": 125,
+          "densityKgM3": 2400
+        },
+        "resilientLayer": {
+          "thicknessMm": 8,
+          "dynamicStiffnessMNm3": 47
+        },
+        "floatingScreed": {
+          "materialClass": "generic_screed",
+          "thicknessMm": 50,
+          "densityKgM3": 2000
+        },
+        "floorCovering": {
+          "mode": "none"
+        }
+      },
+      "expected": {
+        "lprimeNwDb": 56.5
+      },
+      "tolerances": {
+        "lprimeNwDb": 1.0
+      }
+    },
+    {
+      "id": "dataholz_clt_exact_field_k_estimate",
+      "mode": "field_explicit_k_estimate",
+      "source": "https://www.dataholz.eu/en/components/intermediate-floor/version/kz/gdmtxn01/nr/00.htm",
+      "assemblyMeta": {
+        "contextMode": "field_between_rooms",
+        "impactFieldKCorrectionDb": 2.0
+      },
+      "targetOutputs": ["L'n,w"],
+      "impactPredictorInput": {
+        "structuralSupportType": "mass_timber_clt",
+        "officialFloorSystemId": "dataholz_gdmtxn01_dry_clt_lab_2026"
+      },
+      "expected": {
+        "lprimeNwDb": 52.0
+      },
+      "expectedBasis": "mixed_exact_plus_estimated_field_k_correction",
+      "tolerances": {
+        "lprimeNwDb": 0.1
+      }
+    },
+    {
+      "id": "tuas_open_box_exact_field_volume_standardization",
+      "mode": "field_standardized_volume_estimate",
+      "source": "https://doi.org/10.17632/y83p8mpryd.2",
+      "assemblyMeta": {
+        "contextMode": "field_between_rooms",
+        "impactFieldKCorrectionDb": 2.0,
+        "receivingRoomVolumeM3": 50.0
+      },
+      "targetOutputs": ["L'n,w", "L'nT,w", "L'nT,50"],
+      "impactPredictorInput": {
+        "structuralSupportType": "open_box_timber",
+        "officialFloorSystemId": "tuas_r5b_open_box_timber_measured_2026"
+      },
+      "expected": {
+        "lprimeNwDb": 41.0,
+        "lprimeNTwDb": 39.0,
+        "lprimeNT50Db": 44.0
+      },
+      "expectedBasis": "mixed_exact_plus_estimated_standardized_field_volume_normalization",
+      "tolerances": {
+        "lprimeNwDb": 0.1,
+        "lprimeNTwDb": 0.1,
+        "lprimeNT50Db": 0.1
+      }
+    },
+    {
+      "id": "tuas_open_box_bare_exact_field_volume_standardization",
+      "mode": "field_standardized_volume_estimate",
+      "source": "https://doi.org/10.17632/y83p8mpryd.2",
+      "assemblyMeta": {
+        "contextMode": "field_between_rooms",
+        "impactFieldKCorrectionDb": 2.0,
+        "receivingRoomVolumeM3": 50.0
+      },
+      "targetOutputs": ["L'n,w", "L'nT,w", "L'nT,50"],
+      "impactPredictorInput": {
+        "structuralSupportType": "open_box_timber",
+        "officialFloorSystemId": "tuas_r2a_open_box_timber_measured_2026"
+      },
+      "expected": {
+        "lprimeNwDb": 74.0,
+        "lprimeNTwDb": 72.0,
+        "lprimeNT50Db": 74.0
+      },
+      "expectedBasis": "mixed_exact_plus_estimated_standardized_field_volume_normalization",
+      "tolerances": {
+        "lprimeNwDb": 0.1,
+        "lprimeNTwDb": 0.1,
+        "lprimeNT50Db": 0.1
+      }
+    },
+    {
+      "id": "tuas_clt140_bare_exact_field_volume_standardization",
+      "mode": "field_standardized_volume_estimate",
+      "source": "https://doi.org/10.17632/y83p8mpryd.2",
+      "assemblyMeta": {
+        "contextMode": "field_between_rooms",
+        "impactFieldKCorrectionDb": 2.0,
+        "receivingRoomVolumeM3": 50.0
+      },
+      "targetOutputs": ["L'n,w", "L'nT,w", "L'nT,50"],
+      "impactPredictorInput": {
+        "structuralSupportType": "mass_timber_clt",
+        "officialFloorSystemId": "tuas_x2_clt140_measured_2026"
+      },
+      "expected": {
+        "lprimeNwDb": 72.0,
+        "lprimeNTwDb": 70.0,
+        "lprimeNT50Db": 70.0
+      },
+      "expectedBasis": "mixed_exact_plus_estimated_standardized_field_volume_normalization",
+      "tolerances": {
+        "lprimeNwDb": 0.1,
+        "lprimeNTwDb": 0.1,
+        "lprimeNT50Db": 0.1
+      }
+    },
+    {
+      "id": "tuas_clt140_dry_exact_field_volume_standardization",
+      "mode": "field_standardized_volume_estimate",
+      "source": "https://doi.org/10.17632/y83p8mpryd.2",
+      "assemblyMeta": {
+        "contextMode": "field_between_rooms",
+        "impactFieldKCorrectionDb": 2.0,
+        "receivingRoomVolumeM3": 50.0
+      },
+      "targetOutputs": ["L'n,w", "L'nT,w", "L'nT,50"],
+      "impactPredictorInput": {
+        "structuralSupportType": "mass_timber_clt",
+        "officialFloorSystemId": "tuas_x5_clt140_measured_2026"
+      },
+      "expected": {
+        "lprimeNwDb": 52.0,
+        "lprimeNTwDb": 50.0,
+        "lprimeNT50Db": 58.0
+      },
+      "expectedBasis": "mixed_exact_plus_estimated_standardized_field_volume_normalization",
+      "tolerances": {
+        "lprimeNwDb": 0.1,
+        "lprimeNTwDb": 0.1,
+        "lprimeNT50Db": 0.1
+      }
+    },
+    {
+      "id": "tuas_clt260_bare_exact_field_volume_standardization",
+      "mode": "field_standardized_volume_estimate",
+      "source": "https://doi.org/10.17632/y83p8mpryd.2",
+      "assemblyMeta": {
+        "contextMode": "field_between_rooms",
+        "impactFieldKCorrectionDb": 2.0,
+        "receivingRoomVolumeM3": 50.0
+      },
+      "targetOutputs": ["L'n,w", "L'nT,w", "L'nT,50"],
+      "impactPredictorInput": {
+        "structuralSupportType": "mass_timber_clt",
+        "officialFloorSystemId": "tuas_c2_clt260_measured_2026"
+      },
+      "expected": {
+        "lprimeNwDb": 67.0,
+        "lprimeNTwDb": 65.0,
+        "lprimeNT50Db": 65.0
+      },
+      "expectedBasis": "mixed_exact_plus_estimated_standardized_field_volume_normalization",
+      "tolerances": {
+        "lprimeNwDb": 0.1,
+        "lprimeNTwDb": 0.1,
+        "lprimeNT50Db": 0.1
+      }
+    },
+    {
+      "id": "tuas_clt260_combined_exact_field_volume_standardization",
+      "mode": "field_standardized_volume_estimate",
+      "source": "https://doi.org/10.17632/y83p8mpryd.2",
+      "assemblyMeta": {
+        "contextMode": "field_between_rooms",
+        "impactFieldKCorrectionDb": 2.0,
+        "receivingRoomVolumeM3": 50.0
+      },
+      "targetOutputs": ["L'n,w", "L'nT,w", "L'nT,50"],
+      "impactPredictorInput": {
+        "structuralSupportType": "mass_timber_clt",
+        "officialFloorSystemId": "tuas_c5c_clt260_measured_2026"
+      },
+      "expected": {
+        "lprimeNwDb": 26.0,
+        "lprimeNTwDb": 24.0,
+        "lprimeNT50Db": 40.0
+      },
+      "expectedBasis": "mixed_exact_plus_estimated_standardized_field_volume_normalization",
+      "tolerances": {
+        "lprimeNwDb": 0.1,
+        "lprimeNTwDb": 0.1,
+        "lprimeNT50Db": 0.1
+      }
+    },
+    {
+      "id": "tuas_concrete_bare_exact_field_volume_standardization",
+      "mode": "field_standardized_volume_estimate",
+      "source": "https://doi.org/10.17632/y83p8mpryd.2",
+      "assemblyMeta": {
+        "contextMode": "field_between_rooms",
+        "impactFieldKCorrectionDb": 2.0,
+        "receivingRoomVolumeM3": 50.0
+      },
+      "targetOutputs": ["L'n,w", "L'nT,w", "L'nT,50"],
+      "impactPredictorInput": {
+        "structuralSupportType": "reinforced_concrete",
+        "officialFloorSystemId": "tuas_h2_concrete160_measured_2026"
+      },
+      "expected": {
+        "lprimeNwDb": 61.0,
+        "lprimeNTwDb": 59.0,
+        "lprimeNT50Db": 60.0
+      },
+      "expectedBasis": "mixed_exact_plus_estimated_standardized_field_volume_normalization",
+      "tolerances": {
+        "lprimeNwDb": 0.1,
+        "lprimeNTwDb": 0.1,
+        "lprimeNT50Db": 0.1
+      }
+    },
+    {
+      "id": "tuas_concrete_dry_exact_field_volume_standardization",
+      "mode": "field_standardized_volume_estimate",
+      "source": "https://doi.org/10.17632/y83p8mpryd.2",
+      "assemblyMeta": {
+        "contextMode": "field_between_rooms",
+        "impactFieldKCorrectionDb": 2.0,
+        "receivingRoomVolumeM3": 50.0
+      },
+      "targetOutputs": ["L'n,w", "L'nT,w", "L'nT,50"],
+      "impactPredictorInput": {
+        "structuralSupportType": "reinforced_concrete",
+        "officialFloorSystemId": "tuas_h5_concrete160_measured_2026"
+      },
+      "expected": {
+        "lprimeNwDb": 37.0,
+        "lprimeNTwDb": 35.0,
+        "lprimeNT50Db": 45.0
+      },
+      "expectedBasis": "mixed_exact_plus_estimated_standardized_field_volume_normalization",
+      "tolerances": {
+        "lprimeNwDb": 0.1,
+        "lprimeNTwDb": 0.1,
+        "lprimeNT50Db": 0.1
+      }
+    }
+  ]
+}

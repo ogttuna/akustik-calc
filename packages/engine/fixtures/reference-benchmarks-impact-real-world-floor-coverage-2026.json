@@ -1,0 +1,260 @@
+{
+  "name": "DynEcho Real-World Floor Coverage Benchmarks (2026-03-17)",
+  "schemaVersion": 1,
+  "description": "Representative floor families from the dynamicCalc coverage plan. Each case must resolve to an exact, estimate, or bound lane without returning an empty floor-side result.",
+  "cases": [
+    {
+      "id": "bare_reinforced_concrete_floor",
+      "family": "reinforced_concrete",
+      "kind": "estimate",
+      "source": "ISO 12354-2 heavy bare floor relation + dynamicCalc/REAL_WORLD_FLOOR_COVERAGE.md",
+      "layers": [
+        { "floorRole": "base_structure", "materialId": "concrete", "thicknessMm": 150 }
+      ],
+      "expected": {
+        "floorRwDb": 57,
+        "impactBasis": "predictor_heavy_bare_floor_iso12354_annexc_estimate",
+        "impactMetric": "LnW",
+        "impactValueDb": 74.5
+      },
+      "tolerances": {
+        "floorRwDb": 0,
+        "impactValueDb": 0
+      }
+    },
+    {
+      "id": "heavy_floating_concrete_floor",
+      "family": "reinforced_concrete",
+      "kind": "estimate",
+      "source": "REGUPOL sonus curve 8 official technical data + dynamicCalc/IMPACT_BENCHMARK_SOURCES.md",
+      "layers": [
+        { "floorRole": "floor_covering", "materialId": "ceramic_tile", "thicknessMm": 8 },
+        { "floorRole": "floating_screed", "materialId": "screed", "thicknessMm": 30 },
+        { "floorRole": "resilient_layer", "materialId": "rockwool", "thicknessMm": 8 },
+        { "floorRole": "base_structure", "materialId": "concrete", "thicknessMm": 150 }
+      ],
+      "expected": {
+        "floorRwDb": 58,
+        "impactBasis": "predictor_heavy_concrete_published_upper_treatment_estimate",
+        "impactMetric": "LnW",
+        "impactValueDb": 50
+      },
+      "tolerances": {
+        "floorRwDb": 0,
+        "impactValueDb": 0
+      }
+    },
+    {
+      "id": "timber_frame_dry_family_estimate",
+      "family": "timber_frame",
+      "kind": "estimate",
+      "source": "Dataholz open component library + dynamicCalc/REAL_WORLD_FLOOR_COVERAGE.md",
+      "layers": [
+        { "floorRole": "ceiling_board", "materialId": "gypsum_board", "thicknessMm": 12.5 },
+        { "floorRole": "ceiling_fill", "materialId": "rockwool", "thicknessMm": 100 },
+        { "floorRole": "floor_covering", "materialId": "dry_floating_gypsum_fiberboard", "thicknessMm": 25 },
+        { "floorRole": "resilient_layer", "materialId": "mw_t_impact_layer", "thicknessMm": 30 },
+        { "floorRole": "base_structure", "materialId": "timber_frame_floor", "thicknessMm": 220 }
+      ],
+      "expected": {
+        "floorRwDb": 62.5,
+        "impactBasis": "predictor_floor_system_family_archetype_estimate",
+        "impactMetric": "LnW",
+        "impactValueDb": 57.9
+      },
+      "tolerances": {
+        "floorRwDb": 0.1,
+        "impactValueDb": 0.1
+      }
+    },
+    {
+      "id": "open_box_timber_measured_family",
+      "family": "open_box_timber",
+      "kind": "exact_match",
+      "source": "TUAS open measured dataset + dynamicCalc/REAL_WORLD_FLOOR_COVERAGE.md",
+      "layers": [
+        { "floorRole": "ceiling_board", "materialId": "gypsum_board", "thicknessMm": 13 },
+        { "floorRole": "ceiling_board", "materialId": "gypsum_board", "thicknessMm": 13 },
+        { "floorRole": "ceiling_fill", "materialId": "rockwool", "thicknessMm": 100 },
+        { "floorRole": "ceiling_cavity", "materialId": "resilient_stud_ceiling", "thicknessMm": 25 },
+        { "floorRole": "floor_covering", "materialId": "laminate_flooring", "thicknessMm": 8 },
+        { "floorRole": "resilient_layer", "materialId": "eps_underlay", "thicknessMm": 3 },
+        { "floorRole": "base_structure", "materialId": "open_box_timber_slab", "thicknessMm": 370 }
+      ],
+      "expected": {
+        "floorRwDb": 49,
+        "floorSystemId": "tuas_r2a_open_box_timber_measured_2026",
+        "impactBasis": "open_measured_floor_system_exact_match",
+        "impactMetric": "LnW",
+        "impactValueDb": 72
+      },
+      "tolerances": {
+        "floorRwDb": 0,
+        "impactValueDb": 0
+      }
+    },
+    {
+      "id": "open_box_timber_dry_floor_family_estimate",
+      "family": "open_box_timber",
+      "kind": "estimate",
+      "source": "TUAS open measured dataset + dynamicCalc/REAL_WORLD_FLOOR_COVERAGE.md",
+      "layers": [
+        { "floorRole": "ceiling_board", "materialId": "gypsum_board", "thicknessMm": 13 },
+        { "floorRole": "ceiling_board", "materialId": "gypsum_board", "thicknessMm": 13 },
+        { "floorRole": "ceiling_fill", "materialId": "rockwool", "thicknessMm": 100 },
+        { "floorRole": "ceiling_cavity", "materialId": "resilient_stud_ceiling", "thicknessMm": 25 },
+        { "floorRole": "floor_covering", "materialId": "laminate_flooring", "thicknessMm": 8 },
+        { "floorRole": "floating_screed", "materialId": "dry_floating_gypsum_fiberboard", "thicknessMm": 57 },
+        { "floorRole": "upper_fill", "materialId": "generic_fill", "thicknessMm": 53 },
+        { "floorRole": "resilient_layer", "materialId": "eps_underlay", "thicknessMm": 3 },
+        { "floorRole": "base_structure", "materialId": "open_box_timber_slab", "thicknessMm": 370 }
+      ],
+      "expected": {
+        "floorRwDb": 75,
+        "floorSystemId": "tuas_r5b_open_box_timber_measured_2026",
+        "impactBasis": "predictor_floor_system_family_archetype_estimate",
+        "impactMetric": "LnW",
+        "impactValueDb": 39
+      },
+      "tolerances": {
+        "floorRwDb": 0,
+        "impactValueDb": 0
+      }
+    },
+    {
+      "id": "clt_bare_interpolation_family",
+      "family": "mass_timber_clt",
+      "kind": "estimate",
+      "source": "TUAS open measured dataset + dynamicCalc/REAL_WORLD_FLOOR_COVERAGE.md",
+      "layers": [
+        { "floorRole": "resilient_layer", "materialId": "eps_underlay", "thicknessMm": 4 },
+        { "floorRole": "floor_covering", "materialId": "laminate_flooring", "thicknessMm": 10 },
+        { "floorRole": "base_structure", "materialId": "clt_panel", "thicknessMm": 180 }
+      ],
+      "expected": {
+        "floorRwDb": 40,
+        "impactBasis": "predictor_mass_timber_clt_bare_interpolation_estimate",
+        "impactMetric": "LnW",
+        "impactValueDb": 67.5
+      },
+      "tolerances": {
+        "floorRwDb": 0,
+        "impactValueDb": 0
+      }
+    },
+    {
+      "id": "clt_dry_dataholz_exact_family",
+      "family": "mass_timber_clt",
+      "kind": "exact_match",
+      "source": "https://www.dataholz.eu/en/components/intermediate-floor/version/kz/gdmtxn01/nr/00.htm + dynamicCalc/REAL_WORLD_FLOOR_COVERAGE.md",
+      "layers": [
+        { "floorRole": "floor_covering", "materialId": "dry_floating_gypsum_fiberboard", "thicknessMm": 25 },
+        { "floorRole": "upper_fill", "materialId": "elastic_bonded_fill", "thicknessMm": 60 },
+        { "floorRole": "resilient_layer", "materialId": "mw_t_impact_layer_s40", "thicknessMm": 30 },
+        { "floorRole": "base_structure", "materialId": "clt_panel", "thicknessMm": 140 }
+      ],
+      "expected": {
+        "floorRwDb": 62,
+        "floorSystemId": "dataholz_gdmtxn01_dry_clt_lab_2026",
+        "impactBasis": "official_floor_system_exact_match",
+        "impactMetric": "LnW",
+        "impactValueDb": 50
+      },
+      "tolerances": {
+        "floorRwDb": 0,
+        "impactValueDb": 0
+      }
+    },
+    {
+      "id": "clt_fill_dataholz_exact_family",
+      "family": "mass_timber_clt",
+      "kind": "exact_match",
+      "source": "https://www.dataholz.eu/en/components/multi-storey-housing/version/kz/gdmnxn06/nr/05.htm + dynamicCalc/REAL_WORLD_FLOOR_COVERAGE.md",
+      "layers": [
+        { "floorRole": "floating_screed", "materialId": "screed", "thicknessMm": 60 },
+        { "floorRole": "upper_fill", "materialId": "non_bonded_chippings", "thicknessMm": 120 },
+        { "floorRole": "resilient_layer", "materialId": "mw_t_impact_layer_s6", "thicknessMm": 40 },
+        { "floorRole": "base_structure", "materialId": "clt_panel", "thicknessMm": 160 }
+      ],
+      "expected": {
+        "floorRwDb": 78,
+        "floorSystemId": "dataholz_gdmnxn06_fill_clt_lab_2026",
+        "impactBasis": "official_floor_system_exact_match",
+        "impactMetric": "LnW",
+        "impactValueDb": 39
+      },
+      "tolerances": {
+        "floorRwDb": 0,
+        "impactValueDb": 0
+      }
+    },
+    {
+      "id": "hollow_core_vinyl_exact_family",
+      "family": "hollow_core",
+      "kind": "exact_match",
+      "source": "Pliteq HCP200 official row + dynamicCalc/FLOOR_SYSTEM_LIBRARY_SOURCES.md",
+      "layers": [
+        { "floorRole": "ceiling_board", "materialId": "gypsum_board", "thicknessMm": 16 },
+        { "floorRole": "ceiling_cavity", "materialId": "genieclip_rst", "thicknessMm": 16 },
+        { "floorRole": "floor_covering", "materialId": "vinyl_flooring", "thicknessMm": 5 },
+        { "floorRole": "resilient_layer", "materialId": "geniemat_rst05", "thicknessMm": 5 },
+        { "floorRole": "base_structure", "materialId": "hollow_core_plank", "thicknessMm": 200 }
+      ],
+      "expected": {
+        "floorRwDb": 62,
+        "floorSystemId": "pliteq_hcp200_vinyl_lab_2026",
+        "impactBasis": "official_floor_system_exact_match",
+        "impactMetric": "LnW",
+        "impactValueDb": 48
+      },
+      "tolerances": {
+        "floorRwDb": 0,
+        "impactValueDb": 0
+      }
+    },
+    {
+      "id": "composite_bare_peer_reviewed_family",
+      "family": "composite_panel",
+      "kind": "exact_match",
+      "source": "PMC open-access composite floor study + dynamicCalc/REAL_WORLD_FLOOR_COVERAGE.md",
+      "layers": [
+        { "floorRole": "base_structure", "materialId": "composite_steel_deck", "thicknessMm": 150 }
+      ],
+      "expected": {
+        "floorRwDb": 27,
+        "floorSystemId": "pmc_m1_bare_composite_lab_2026",
+        "impactBasis": "peer_reviewed_floor_system_exact_match",
+        "impactMetric": "LnW",
+        "impactValueDb": 84
+      },
+      "tolerances": {
+        "floorRwDb": 0,
+        "impactValueDb": 0
+      }
+    },
+    {
+      "id": "open_web_steel_bound_family",
+      "family": "lightweight_steel",
+      "kind": "bound_match",
+      "source": "UBIQ published bound-only steel row + dynamicCalc/REAL_WORLD_FLOOR_COVERAGE.md",
+      "layers": [
+        { "floorRole": "ceiling_board", "materialId": "firestop_board", "thicknessMm": 16 },
+        { "floorRole": "ceiling_board", "materialId": "firestop_board", "thicknessMm": 16 },
+        { "floorRole": "ceiling_cavity", "materialId": "ubiq_resilient_ceiling", "thicknessMm": 65 },
+        { "floorRole": "floor_covering", "materialId": "engineered_timber_with_acoustic_underlay", "thicknessMm": 20 },
+        { "floorRole": "floating_screed", "materialId": "inex_floor_panel", "thicknessMm": 19 },
+        { "floorRole": "base_structure", "materialId": "open_web_steel_floor", "thicknessMm": 300 }
+      ],
+      "expected": {
+        "floorRwDb": 63,
+        "floorSystemId": "ubiq_fl33_open_web_steel_300_lab_2026",
+        "lowerBoundBasis": "official_floor_system_bound_support",
+        "lnwUpperBoundDb": 51
+      },
+      "tolerances": {
+        "floorRwDb": 0,
+        "lnwUpperBoundDb": 0
+      }
+    }
+  ]
+}

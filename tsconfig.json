@@ -1,0 +1,16 @@
+{
+  "extends": "./tooling/tsconfig/base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "noEmit": true,
+    "paths": {
+      "@dynecho/catalogs": ["packages/catalogs/src/index.ts"],
+      "@dynecho/engine": ["packages/engine/src/index.ts"],
+      "@dynecho/shared": ["packages/shared/src/index.ts"],
+      "@dynecho/ui": ["packages/ui/src/index.ts"]
+    },
+    "types": ["node"]
+  },
+  "include": ["tools/**/*.ts", "e2e/**/*.ts", "playwright.config.ts"],
+  "exclude": ["node_modules", ".next", ".turbo", "dist"]
+}

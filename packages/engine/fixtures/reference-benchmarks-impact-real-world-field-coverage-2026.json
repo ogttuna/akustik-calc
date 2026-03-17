@@ -1,0 +1,237 @@
+{
+  "name": "DynEcho Real-World Field Continuation Benchmarks (2026-03-17)",
+  "schemaVersion": 1,
+  "description": "Representative field-side continuations for exact, measured, predictor-backed, and bound-only floor families. These cases keep the dynamicCalc field chain inside explicit tolerance windows instead of binary presence checks only.",
+  "cases": [
+    {
+      "id": "knauf_concrete_underlay_field_chain",
+      "family": "reinforced_concrete",
+      "kind": "field_live",
+      "source": "Knauf AU exact family row + ISO 717-2 / ISO 12354-2 continuation",
+      "visibleLayers": [],
+      "options": {
+        "impactFieldContext": {
+          "fieldKDb": 2,
+          "receivingRoomVolumeM3": 50
+        },
+        "officialFloorSystemId": "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026",
+        "targetOutputs": ["L'n,w", "L'nT,w"]
+      },
+      "expected": {
+        "basis": "mixed_exact_plus_estimated_standardized_field_volume_normalization",
+        "lprimeNwDb": 53,
+        "lprimeNTwDb": 51
+      },
+      "tolerances": {
+        "lprimeNwDb": 0,
+        "lprimeNTwDb": 0
+      }
+    },
+    {
+      "id": "pliteq_hollow_core_field_chain",
+      "family": "hollow_core",
+      "kind": "field_live",
+      "source": "Pliteq HCP200 official row + ISO 717-2 / ISO 12354-2 continuation",
+      "visibleLayers": [],
+      "options": {
+        "impactFieldContext": {
+          "fieldKDb": 2,
+          "receivingRoomVolumeM3": 50
+        },
+        "officialFloorSystemId": "pliteq_hcp200_vinyl_lab_2026",
+        "targetOutputs": ["L'n,w", "L'nT,w"]
+      },
+      "expected": {
+        "basis": "mixed_exact_plus_estimated_standardized_field_volume_normalization",
+        "lprimeNwDb": 50,
+        "lprimeNTwDb": 48
+      },
+      "tolerances": {
+        "lprimeNwDb": 0,
+        "lprimeNTwDb": 0
+      }
+    },
+    {
+      "id": "tuas_open_box_field_chain",
+      "family": "open_box_timber",
+      "kind": "field_live",
+      "source": "TUAS open measured dataset + dynamicCalc/REAL_WORLD_FLOOR_COVERAGE.md",
+      "visibleLayers": [],
+      "options": {
+        "impactFieldContext": {
+          "fieldKDb": 2,
+          "receivingRoomVolumeM3": 50
+        },
+        "officialFloorSystemId": "tuas_r2a_open_box_timber_measured_2026",
+        "targetOutputs": ["L'n,w", "L'nT,w", "L'nT,50"]
+      },
+      "expected": {
+        "basis": "mixed_exact_plus_estimated_standardized_field_volume_normalization",
+        "lprimeNwDb": 74,
+        "lprimeNTwDb": 72,
+        "lprimeNT50Db": 74
+      },
+      "tolerances": {
+        "lprimeNwDb": 0,
+        "lprimeNTwDb": 0,
+        "lprimeNT50Db": 0
+      }
+    },
+    {
+      "id": "tuas_open_box_dry_floor_field_chain",
+      "family": "open_box_timber",
+      "kind": "field_live",
+      "source": "TUAS open measured dataset strong dry-floor row + dynamicCalc/REAL_WORLD_FLOOR_COVERAGE.md",
+      "visibleLayers": [],
+      "options": {
+        "impactFieldContext": {
+          "fieldKDb": 2,
+          "receivingRoomVolumeM3": 50
+        },
+        "officialFloorSystemId": "tuas_r5b_open_box_timber_measured_2026",
+        "targetOutputs": ["L'n,w", "L'nT,w", "L'nT,50"]
+      },
+      "expected": {
+        "basis": "mixed_exact_plus_estimated_standardized_field_volume_normalization",
+        "lprimeNwDb": 41,
+        "lprimeNTwDb": 39,
+        "lprimeNT50Db": 44
+      },
+      "tolerances": {
+        "lprimeNwDb": 0,
+        "lprimeNTwDb": 0,
+        "lprimeNT50Db": 0
+      }
+    },
+    {
+      "id": "tuas_clt_dry_field_chain",
+      "family": "mass_timber_clt",
+      "kind": "field_live",
+      "source": "TUAS open measured dataset + dynamicCalc/REAL_WORLD_FLOOR_COVERAGE.md",
+      "visibleLayers": [],
+      "options": {
+        "impactFieldContext": {
+          "fieldKDb": 2,
+          "receivingRoomVolumeM3": 50
+        },
+        "officialFloorSystemId": "tuas_c5c_clt260_measured_2026",
+        "targetOutputs": ["L'n,w", "L'nT,w", "L'nT,50"]
+      },
+      "expected": {
+        "basis": "mixed_exact_plus_estimated_standardized_field_volume_normalization",
+        "lprimeNwDb": 26,
+        "lprimeNTwDb": 24,
+        "lprimeNT50Db": 40
+      },
+      "tolerances": {
+        "lprimeNwDb": 0,
+        "lprimeNTwDb": 0,
+        "lprimeNT50Db": 0
+      }
+    },
+    {
+      "id": "dataholz_clt_dry_local_guide_chain",
+      "family": "mass_timber_clt",
+      "kind": "field_live",
+      "source": "https://www.dataholz.eu/en/components/intermediate-floor/version/kz/gdmtxn01/nr/00.htm + Turkish guide continuation",
+      "visibleLayers": [],
+      "options": {
+        "impactFieldContext": {
+          "fieldKDb": 2,
+          "receivingRoomVolumeM3": 50
+        },
+        "officialFloorSystemId": "dataholz_gdmtxn01_dry_clt_lab_2026",
+        "targetOutputs": ["L'n,w", "L'nT,w", "L'nT,50"]
+      },
+      "expected": {
+        "basis": "mixed_exact_plus_estimated_local_guide",
+        "lprimeNwDb": 52,
+        "lprimeNTwDb": 50,
+        "lprimeNT50Db": 49
+      },
+      "tolerances": {
+        "lprimeNwDb": 0,
+        "lprimeNTwDb": 0,
+        "lprimeNT50Db": 0
+      }
+    },
+    {
+      "id": "dataholz_clt_fill_local_guide_chain",
+      "family": "mass_timber_clt",
+      "kind": "field_live",
+      "source": "https://www.dataholz.eu/en/components/multi-storey-housing/version/kz/gdmnxn06/nr/05.htm + Turkish guide continuation",
+      "visibleLayers": [],
+      "options": {
+        "impactFieldContext": {
+          "fieldKDb": 2,
+          "receivingRoomVolumeM3": 50
+        },
+        "officialFloorSystemId": "dataholz_gdmnxn06_fill_clt_lab_2026",
+        "targetOutputs": ["L'n,w", "L'nT,w", "L'nT,50"]
+      },
+      "expected": {
+        "basis": "mixed_exact_plus_estimated_local_guide",
+        "lprimeNwDb": 41,
+        "lprimeNTwDb": 39,
+        "lprimeNT50Db": 38
+      },
+      "tolerances": {
+        "lprimeNwDb": 0,
+        "lprimeNTwDb": 0,
+        "lprimeNT50Db": 0
+      }
+    },
+    {
+      "id": "bare_concrete_predictor_field_chain",
+      "family": "reinforced_concrete",
+      "kind": "field_live",
+      "source": "ISO 12354-2 heavy bare floor relation + dynamicCalc/LNW_FORMULAS.md",
+      "visibleLayers": [],
+      "options": {
+        "impactFieldContext": {
+          "fieldKDb": 2,
+          "receivingRoomVolumeM3": 50
+        },
+        "sourceLayers": [
+          { "floorRole": "base_structure", "materialId": "concrete", "thicknessMm": 150 }
+        ],
+        "targetOutputs": ["L'n,w", "L'nT,w"]
+      },
+      "expected": {
+        "basis": "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
+        "lprimeNwDb": 76.5,
+        "lprimeNTwDb": 74.5
+      },
+      "tolerances": {
+        "lprimeNwDb": 0,
+        "lprimeNTwDb": 0
+      }
+    },
+    {
+      "id": "ubiq_bound_field_chain",
+      "family": "lightweight_steel",
+      "kind": "field_bound",
+      "source": "UBIQ bound-only steel row + dynamicCalc/REAL_WORLD_FLOOR_COVERAGE.md",
+      "visibleLayers": [],
+      "options": {
+        "impactFieldContext": {
+          "fieldKDb": 2,
+          "receivingRoomVolumeM3": 50
+        },
+        "officialFloorSystemId": "ubiq_fl32_steel_200_lab_2026",
+        "targetOutputs": ["L'n,w", "L'nT,w"]
+      },
+      "expected": {
+        "basis": "mixed_bound_plus_estimated_standardized_field_volume_normalization",
+        "lnwUpperBoundDb": 53,
+        "lprimeNwUpperBoundDb": 55,
+        "lprimeNTwUpperBoundDb": 53
+      },
+      "tolerances": {
+        "lnwUpperBoundDb": 0,
+        "lprimeNwUpperBoundDb": 0,
+        "lprimeNTwUpperBoundDb": 0
+      }
+    }
+  ]
+}

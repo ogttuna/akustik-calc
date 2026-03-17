@@ -1,0 +1,17 @@
+[
+  {
+    "id": "monolithic_concrete",
+    "label": "Monolithic concrete slab",
+    "layers": "concrete:150"
+  },
+  {
+    "id": "seed_wall",
+    "label": "Seed wall preset",
+    "layers": "gypsum_board:12.5,rockwool:50,air_gap:50,concrete:100"
+  },
+  {
+    "id": "seed_floor",
+    "label": "Seed floor preset",
+    "layers": "vinyl_flooring:4,screed:50,air_gap:45,clt_panel:120"
+  }
+]
