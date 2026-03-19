@@ -43,6 +43,7 @@ import { estimateImpactFromLayers } from "./impact-estimate";
 import { buildImpactPredictorStatus } from "./impact-predictor-status";
 import {
   adaptImpactPredictorInput,
+  maybeInferFloorRoleLayerStack,
   maybeBuildImpactPredictorInputFromLayerStack,
   mergePredictorCatalog
 } from "./impact-predictor-input";
@@ -764,10 +765,16 @@ export function calculateAssembly(
   const impactFieldContext = options.impactFieldContext ? ImpactFieldContextSchema.parse(options.impactFieldContext) : null;
   const airborneContext = options.airborneContext ? AirborneContextSchema.parse(options.airborneContext) : null;
   const resolvedLayers = resolveLayers(layers, catalog);
+  const inferredImpactLayers =
+    predictorAdaptation?.sourceLayers.length && !predictorAdaptation.officialFloorSystemId
+      ? null
+      : maybeInferFloorRoleLayerStack(layers, catalog);
   let impactResolvedLayers =
     predictorAdaptation?.sourceLayers.length && !predictorAdaptation.officialFloorSystemId
       ? resolveLayers(predictorAdaptation.sourceLayers, catalog)
-      : resolvedLayers;
+      : inferredImpactLayers
+        ? resolveLayers(inferredImpactLayers, catalog)
+        : resolvedLayers;
   const totalThicknessMm = round1(resolvedLayers.reduce((sum, layer) => sum + layer.thicknessMm, 0));
   const surfaceMassKgM2 = round1(resolvedLayers.reduce((sum, layer) => sum + layer.surfaceMassKgM2, 0));
   const screeningEstimatedRwDb = estimateRwDb(resolvedLayers);
@@ -954,7 +961,12 @@ export function calculateAssembly(
           ? deriveHeavyReferenceImpactFromDeltaLw(derivedPredictorInput.floorCovering.deltaLwDb)
           : null;
       const derivedPredictorSpecificFloorSystemEstimate =
-        derivedExplicitDeltaImpact ? null : derivePredictorSpecificFloorSystemEstimate(derivedPredictorInput);
+        derivedExplicitDeltaImpact ||
+        derivedFloorSystemMatch ||
+        derivedBoundFloorSystemMatch ||
+        derivedImpactCatalogMatch
+          ? null
+          : derivePredictorSpecificFloorSystemEstimate(derivedPredictorInput);
       const derivedNarrowImpact = derivedPredictorAdaptation.officialFloorSystemId
         ? null
         : derivedExplicitDeltaImpact

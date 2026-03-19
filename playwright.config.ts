@@ -17,7 +17,7 @@ export default defineConfig({
     video: "retain-on-failure"
   },
   webServer: {
-    command: `pnpm --filter @dynecho/web exec next dev --hostname ${host} --port ${port}`,
+    command: "tsx tools/dev/run-playwright-web-server.ts",
     reuseExistingServer: false,
     timeout: 120_000,
     url: `${baseURL}/api/health`

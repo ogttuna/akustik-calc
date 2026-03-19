@@ -60,9 +60,11 @@ test("estimate api exposes scoped impact metrics for supported heavy floors", as
 
   expect(payload.ok).toBe(true);
   expect(payload.result.impact).not.toBeNull();
-  expect(payload.result.impact.basis).toBe("predictor_heavy_floating_floor_iso12354_annexc_estimate");
+  expect(payload.result.impact.basis).toBe("predictor_heavy_concrete_published_upper_treatment_estimate");
   expect(payload.result.impact.LnW).toBeGreaterThan(40);
-  expect(payload.result.impact.DeltaLw).toBeGreaterThan(20);
+  expect(payload.result.impact.availableOutputs).toEqual(["Ln,w"]);
+  expect(payload.result.impact.DeltaLw).toBeUndefined();
+  expect(payload.result.floorSystemRatings.Rw).toBe(58);
 });
 
 test("estimate api keeps official lower-bound product support alongside the live heavy-floor metric", async ({ request }) => {
@@ -833,7 +835,10 @@ test("estimate api can carry predictor input while preserving the visible screen
   expect(payload.result.impact.basis).toBe("predictor_lightweight_steel_fl28_interpolation_estimate");
   expect(payload.result.impact.LnW).toBe(51.4);
   expect(payload.result.impact.CI).toBe(-1.6);
-  expect(payload.result.metrics.estimatedRwDb).toBe(25.7);
+  expect(payload.result.impact.LnWPlusCI).toBe(49.8);
+  expect(payload.result.metrics.estimatedRwDb).toBe(26.9);
+  expect(payload.result.floorSystemRatings.Rw).toBe(63.6);
+  expect(payload.result.floorSystemRatings.RwCtr).toBe(58.1);
 });
 
 test("estimate api keeps explicit DeltaLw predictor input on the heavy-reference lane while airborne screening stays visible", async ({
@@ -879,12 +884,13 @@ test("estimate api keeps explicit DeltaLw predictor input on the heavy-reference
   const payload = await response.json();
 
   expect(payload.ok).toBe(true);
-  expect(payload.result.metrics.estimatedRwDb).toBe(25.7);
+  expect(payload.result.metrics.estimatedRwDb).toBe(26.9);
   expect(payload.result.impact.basis).toBe("predictor_explicit_delta_heavy_reference_derived");
   expect(payload.result.impact.LnW).toBe(52);
   expect(payload.result.impact.DeltaLw).toBe(26);
   expect(payload.result.floorSystemRatings.basis).toBe("predictor_heavy_concrete_floor_airborne_companion_estimate");
   expect(payload.result.floorSystemRatings.Rw).toBe(58);
+  expect(payload.result.floorSystemRatings.RwCtr).toBe(-7.3);
 });
 
 test("impact-only api keeps unsupported steel suspended predictor input on the upstream low-confidence family lane", async ({

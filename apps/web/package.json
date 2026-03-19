@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "build": "tsx ../../tools/dev/run-next-build.ts",
-    "dev": "next dev",
+    "dev": "next dev -p 3010",
     "lint": "eslint . --ext .ts,.tsx --ignore-pattern next-env.d.ts --ignore-pattern .next --ignore-pattern '.next-*'",
-    "start": "next start",
+    "start": "tsx ../../tools/dev/run-next-standalone.ts",
     "test": "vitest run",
     "typecheck": "tsx ../../tools/dev/run-next-typecheck.ts"
   },

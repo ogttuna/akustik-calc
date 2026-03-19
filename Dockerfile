@@ -30,7 +30,7 @@ FROM node:22-alpine AS runner
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV PORT=3000
+ENV PORT=3010
 ENV HOSTNAME=0.0.0.0
 
 WORKDIR /app
@@ -39,9 +39,9 @@ COPY --from=build /app/apps/web/.next/standalone ./
 COPY --from=build /app/apps/web/.next/static ./apps/web/.next/static
 COPY --from=build /app/apps/web/public ./apps/web/public
 
-EXPOSE 3000
+EXPOSE 3010
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-  CMD wget -qO- http://127.0.0.1:3000/api/health >/dev/null || exit 1
+  CMD wget -qO- http://127.0.0.1:3010/api/health >/dev/null || exit 1
 
 CMD ["node", "apps/web/server.js"]

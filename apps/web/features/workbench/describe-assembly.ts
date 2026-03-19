@@ -26,7 +26,7 @@ export function describeAssembly(
     `${gapCount > 0 ? "split" : "single-block"} assembly with ` +
     `${insulationCount > 0 ? `${insulationCount} porous fill zone${insulationCount === 1 ? "" : "s"}` : "no porous fill"}.`;
 
-  if (result.impact) {
+  if (studyMode === "floor" && result.impact) {
     if (typeof result.impact.LPrimeNTw === "number") {
       detail += ` Impact output is live at L'nT,w ${result.impact.LPrimeNTw.toFixed(1)} dB.`;
     } else if (typeof result.impact.LPrimeNW === "number") {

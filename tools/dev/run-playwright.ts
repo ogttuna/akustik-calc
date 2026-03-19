@@ -1,5 +1,7 @@
 import { spawn } from "node:child_process";
+import { rm } from "node:fs/promises";
 import { createServer } from "node:net";
+import { join } from "node:path";
 
 const DEFAULT_PORT = 3100;
 const MAX_PORT_PROBES = 50;
@@ -41,10 +43,14 @@ async function main() {
   const preferredPort = Number.isFinite(requestedPort) ? requestedPort : DEFAULT_PORT;
   const port = await findAvailablePort(preferredPort);
   const distDir = `.next-playwright-${port}`;
+  const webDistDir = join(process.cwd(), "apps", "web", distDir);
 
   if (port !== preferredPort) {
     console.log(`[playwright] Port ${preferredPort} is busy. Using ${port} for this run.`);
   }
+
+  // Stale Next dev build output can leave route modules half-updated across interrupted runs.
+  await rm(webDistDir, { force: true, recursive: true });
 
   const child = spawn(getPnpmCommand(), ["exec", "playwright", "test"], {
     cwd: process.cwd(),

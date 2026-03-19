@@ -174,7 +174,9 @@ type WorkbenchStore = {
   setImpactLowerTreatmentReductionDb: (value: string) => void;
   setImpactReferenceDeltaLwDb: (value: string) => void;
   setProjectName: (value: string) => void;
+  setRequestedOutputs: (outputs: RequestedOutputId[]) => void;
   setReportProfile: (value: ReportProfile) => void;
+  startStudyMode: (studyMode: StudyMode) => void;
   setStudyContext: (value: StudyContext) => void;
   setTargetLnwDb: (value: string) => void;
   setTargetRwDb: (value: string) => void;
@@ -366,6 +368,10 @@ function makeDefaultState() {
     targetLnwDb: INITIAL_CRITERIA_PACK.targetLnwDb,
     targetRwDb: INITIAL_CRITERIA_PACK.targetRwDb
   };
+}
+
+function buildDefaultRequestedOutputs(studyMode: StudyMode): RequestedOutputId[] {
+  return studyMode === "floor" ? ["Rw", "Ln,w", "Ln,w+CI", "DeltaLw"] : ["Rw", "STC", "C", "Ctr"];
 }
 
 function makeScenarioName(state: Pick<WorkbenchStore, "activePresetId" | "projectName" | "savedScenarios">): string {
@@ -570,7 +576,16 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
       setImpactLowerTreatmentReductionDb: (value) => set({ impactLowerTreatmentReductionDb: value }),
       setImpactReferenceDeltaLwDb: (value) => set({ impactReferenceDeltaLwDb: value }),
       setProjectName: (value) => set({ projectName: value }),
+      setRequestedOutputs: (requestedOutputs) => set({ requestedOutputs: [...requestedOutputs] }),
       setReportProfile: (value) => set({ reportProfile: value }),
+      startStudyMode: (studyMode) =>
+        set({
+          activePresetId: studyMode === "floor" ? "heavy_concrete_impact_floor" : "concrete_wall",
+          airborneContextMode: "element_lab",
+          requestedOutputs: buildDefaultRequestedOutputs(studyMode),
+          rows: [],
+          studyMode
+        }),
       setStudyContext: (value) => set({ studyContext: value }),
       setTargetLnwDb: (value) => set({ targetLnwDb: value }),
       setTargetRwDb: (value) => set({ targetRwDb: value }),

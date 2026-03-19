@@ -108,6 +108,30 @@ button {
   mask-image: linear-gradient(180deg, rgba(255, 255, 255, 0.8), transparent 90%);
 }
 
+.atelier-panel {
+  position: relative;
+  background:
+    radial-gradient(circle at 18% 18%, color-mix(in oklch, var(--accent) 18%, transparent), transparent 18rem),
+    radial-gradient(circle at 88% 20%, color-mix(in oklch, var(--teal) 10%, transparent), transparent 24rem),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.48), transparent 32%),
+    color-mix(in oklch, var(--panel) 92%, var(--paper));
+  box-shadow:
+    0 30px 60px -44px rgba(17, 34, 35, 0.28),
+    0 1px 0 0 rgba(255, 255, 255, 0.74) inset;
+}
+
+.atelier-panel::before {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  background-image:
+    linear-gradient(rgba(39, 74, 83, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(39, 74, 83, 0.06) 1px, transparent 1px);
+  background-size: 4.25rem 4.25rem;
+  mask-image: radial-gradient(circle at center, rgba(255, 255, 255, 0.92), transparent 92%);
+}
+
 .grain-mask::after {
   position: absolute;
   inset: 0;
@@ -205,6 +229,48 @@ button {
     background-color 220ms ease,
     border-color 220ms ease,
     box-shadow 220ms ease;
+}
+
+.workflow-stage {
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.34), transparent 55%),
+    color-mix(in oklch, var(--paper) 84%, var(--panel));
+  box-shadow:
+    0 12px 26px -24px rgba(17, 34, 35, 0.22),
+    0 1px 0 0 rgba(255, 255, 255, 0.72) inset;
+}
+
+.section-figure {
+  position: relative;
+  overflow: hidden;
+}
+
+.section-figure::before {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.3), transparent 20%),
+    repeating-linear-gradient(
+      180deg,
+      transparent 0,
+      transparent 1.5rem,
+      rgba(39, 74, 83, 0.05) 1.5rem,
+      rgba(39, 74, 83, 0.05) calc(1.5rem + 1px)
+    );
+  mask-image: linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.22));
+}
+
+.result-hero {
+  position: relative;
+  background:
+    radial-gradient(circle at 90% 18%, color-mix(in oklch, var(--accent) 10%, transparent), transparent 16rem),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.36), transparent 24%);
+  box-shadow:
+    0 24px 46px -34px rgba(16, 34, 36, 0.28),
+    0 1px 0 0 rgba(255, 255, 255, 0.72) inset;
 }
 
 .workbench-resize-handle {

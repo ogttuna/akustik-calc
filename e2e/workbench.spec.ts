@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 
 test.beforeEach(async ({ page }) => {
   await page.addInitScript({
@@ -6,44 +6,62 @@ test.beforeEach(async ({ page }) => {
   });
 });
 
-test("workbench supports preset switching and quick insert", async ({ page }) => {
+async function gotoSimpleWorkbench(page: Page) {
   await page.goto("/workbench");
+}
 
-  await expect(page.getByText("Wall mode")).toBeVisible();
-  await expect(page.getByText("212.5 mm", { exact: true })).toBeVisible();
-  await expect(page.getByRole("button", { name: /Remove .* layer/ })).toHaveCount(4);
+async function gotoAdvancedWorkbench(page: Page) {
+  await page.goto("/workbench?view=advanced");
+}
+
+test("workbench supports preset switching and quick insert", async ({ page }) => {
+  await gotoSimpleWorkbench(page);
+
+  await expect(page.getByText("Guided Acoustic Calculator")).toBeVisible();
+  await expect(page.getByText("212.5 mm total thickness", { exact: true }).first()).toBeVisible();
+  await expect(page.getByRole("button", { name: /^Remove$/ })).toHaveCount(4);
+
+  await page.getByRole("button", { name: /Floor Impact and airborne companion metrics/i }).click();
+  await expect(page.getByText("No layers yet").first()).toBeVisible();
 
   await page.getByRole("button", { name: /Floor Study/i }).click();
 
-  await expect(page.getByText("Floor mode")).toBeVisible();
-  await expect(page.getByText("219 mm", { exact: true })).toBeVisible();
+  await expect(page.getByText("Floor", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("219 mm total thickness", { exact: true }).first()).toBeVisible();
+  await expect(page.getByRole("button", { name: /^Remove$/ })).toHaveCount(4);
 
-  await page.getByRole("button", { name: "Add Vinyl Flooring" }).click();
+  await page.getByRole("button", { name: /Vinyl Flooring 4 mm starter thickness/i }).click();
 
-  await expect(page.getByRole("button", { name: /Remove .* layer/ })).toHaveCount(5);
-  await expect(page.getByText("231.5 mm", { exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: /^Remove$/ })).toHaveCount(5);
+  await expect(page.getByText("223 mm total thickness", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("DeltaLw", { exact: true }).first()).toBeVisible();
 });
 
 test("workbench remains usable on a narrow viewport", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/workbench");
+  await gotoSimpleWorkbench(page);
 
-  await expect(page.getByText("Layer editor")).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Screening output" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Build the layer stack" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Read the outputs" })).toBeVisible();
   await expect(page.getByRole("button", { name: /Add layer/i })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Open operator desk/i })).toBeVisible();
 });
 
-test("workbench exposes live curve-backed airborne outputs", async ({ page }) => {
-  await page.goto("/workbench");
+test("workbench keeps the guided flow focused while still exposing the advanced desk", async ({ page }) => {
+  await gotoSimpleWorkbench(page);
 
-  await expect(page.getByRole("heading", { name: "Transmission-loss trace" })).toBeVisible();
-  await expect(page.getByText("Curve-backed ratings")).toBeVisible();
-  await expect(page.getByText("ISO 717 composite")).toBeVisible();
-  await expect(page.getByText("Frequency domain")).toBeVisible();
+  await expect(page.getByText("Current study")).toBeVisible();
+  await expect(page.getByText("Live calculation ledger")).toBeVisible();
+  await expect(page.getByText("Primary wall read")).toBeVisible();
+  await expect(page.getByText("Supporting metrics")).toBeVisible();
+  await expect(page.getByRole("link", { name: /Open operator desk/i })).toHaveAttribute(
+    "href",
+    "/workbench?view=advanced"
+  );
 });
 
 test("workbench can move the wall lane into airborne leakage and field-flanking context", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
   await page.getByLabel("Context mode").selectOption("field_between_rooms");
   await page.getByLabel("Airtightness").selectOption("poor");
@@ -54,7 +72,7 @@ test("workbench can move the wall lane into airborne leakage and field-flanking 
   await page.getByLabel("Electrical boxes").selectOption("back_to_back");
 
   await expect(page.getByText("Airborne trace", { exact: true })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Leakage and flanking overlay lineage" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Dynamic selector and airborne overlay lineage" })).toBeVisible();
   await expect(page.getByText("Leakage overlay", { exact: true })).toBeVisible();
   await expect(page.getByText("Field flanking", { exact: true })).toBeVisible();
   await expect(page.getByText("Junction graph")).toBeVisible();
@@ -62,9 +80,9 @@ test("workbench can move the wall lane into airborne leakage and field-flanking 
 });
 
 test("workbench exposes scoped impact outputs on the heavy floor preset", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
-  await page.getByRole("button", { name: /Impact Floor/i }).click();
+  await page.getByRole("button", { exact: true, name: "Load preset Impact Floor" }).click();
   const lnwCard = page.locator("article").filter({
     has: page.locator("div").filter({ hasText: /^Ln,w$/ })
   }).first();
@@ -86,12 +104,12 @@ test("workbench exposes scoped impact outputs on the heavy floor preset", async 
 });
 
 test("workbench exposes predictor trace with structured solver lineage", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
-  await page.getByRole("button", { name: /Impact Floor/i }).click();
-  const tracePanel = page.locator("section, article, div").filter({
+  await page.getByRole("button", { exact: true, name: "Load preset Impact Floor" }).click();
+  const tracePanel = page.locator("section").filter({
     has: page.getByRole("heading", { name: "Predictor status and evidence trace" })
-  });
+  }).first();
 
   await expect(page.getByRole("heading", { name: "Predictor status and evidence trace" })).toBeVisible();
   await expect(tracePanel.getByText("Derived from visible layers")).toBeVisible();
@@ -103,7 +121,7 @@ test("workbench exposes predictor trace with structured solver lineage", async (
 });
 
 test("workbench keeps research-only ASTM outputs visible without fabricating live support", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
   await page.getByRole("button", {
     name: /IIC: ASTM E989 impact insulation class for lab-side impact bands\./i
@@ -120,7 +138,7 @@ test("workbench keeps research-only ASTM outputs visible without fabricating liv
 });
 
 test("workbench keeps unsupported requested outputs explicit on the current path", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
   await page.getByRole("button", {
     name: /DeltaLw: ISO 717-2 heavy-reference improvement rating for floating-floor systems\./i
@@ -137,9 +155,9 @@ test("workbench keeps unsupported requested outputs explicit on the current path
 });
 
 test("workbench surfaces a curated exact floor-system family match", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
-  await page.getByRole("button", { name: /Dataholz Exact/i }).click();
+  await page.getByRole("button", { exact: true, name: "Load preset Dataholz Exact" }).click();
 
   const familyCard = page.locator("article").filter({
     has: page.locator("div").filter({ hasText: /^Ln,w$/ })
@@ -155,9 +173,9 @@ test("workbench surfaces a curated exact floor-system family match", async ({ pa
 });
 
 test("workbench surfaces a curated Knauf timber family match", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
-  await page.getByRole("button", { name: /Knauf Direct/i }).click();
+  await page.getByRole("button", { exact: true, name: "Load preset Knauf Direct" }).click();
 
   await expect(page.getByText("Curated match active")).toBeVisible();
   await expect(page.getByText("Knauf CT.2G | timber flooring | KI 90G R2.5").first()).toBeVisible();
@@ -166,9 +184,9 @@ test("workbench surfaces a curated Knauf timber family match", async ({ page }) 
 });
 
 test("workbench surfaces a curated Knauf concrete family match", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
-  await page.getByRole("button", { name: /Knauf Concrete/i }).click();
+  await page.getByRole("button", { exact: true, name: "Load preset Knauf Concrete" }).click();
 
   await expect(page.getByText("Curated match active")).toBeVisible();
   await expect(page.getByText("Knauf CC60.1A | 150 mm concrete | timber + acoustic underlay").first()).toBeVisible();
@@ -177,9 +195,9 @@ test("workbench surfaces a curated Knauf concrete family match", async ({ page }
 });
 
 test("workbench surfaces a curated hollow-core vinyl family match", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
-  await page.getByRole("button", { name: /Hollow Core Vinyl/i }).click();
+  await page.getByRole("button", { exact: true, name: "Load preset Hollow Core Vinyl" }).click();
 
   await expect(page.getByText("Curated match active")).toBeVisible();
   await expect(page.getByText("Pliteq HCP 200 | vinyl + GenieMat RST05 | GenieClip ceiling").first()).toBeVisible();
@@ -189,9 +207,9 @@ test("workbench surfaces a curated hollow-core vinyl family match", async ({ pag
 });
 
 test("workbench surfaces a peer-reviewed composite bare family match", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
-  await page.getByRole("button", { name: /Composite Bare/i }).click();
+  await page.getByRole("button", { exact: true, name: "Load preset Composite Bare" }).click();
 
   await expect(page.getByText("Curated match active")).toBeVisible();
   await expect(page.getByText("PMC M1 | bare composite panel floor").first()).toBeVisible();
@@ -201,9 +219,9 @@ test("workbench surfaces a peer-reviewed composite bare family match", async ({ 
 });
 
 test("workbench surfaces a curated Knauf timber mount family match", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
-  await page.getByRole("button", { name: /Knauf Timber Mount/i }).click();
+  await page.getByRole("button", { exact: true, name: "Load preset Knauf Timber Mount" }).click();
 
   await expect(page.getByText("Curated match active")).toBeVisible();
   await expect(page.getByText("Knauf CT30.1C | timber flooring | KI 145G R3.0").first()).toBeVisible();
@@ -212,9 +230,9 @@ test("workbench surfaces a curated Knauf timber mount family match", async ({ pa
 });
 
 test("workbench surfaces a curated Dataholz CLT dry family match", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
-  await page.getByRole("button", { name: /Dataholz CLT Dry/i }).click();
+  await page.getByRole("button", { exact: true, name: "Load preset Dataholz CLT Dry" }).click();
 
   await expect(page.getByText("Curated match active")).toBeVisible();
   await expect(page.getByText("Dataholz GDMTXN01 | CLT floor | dry screed | no lining").first()).toBeVisible();
@@ -224,9 +242,9 @@ test("workbench surfaces a curated Dataholz CLT dry family match", async ({ page
 });
 
 test("workbench surfaces a curated Dataholz CLT wet family match", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
-  await page.getByRole("button", { name: /Dataholz CLT Wet/i }).click();
+  await page.getByRole("button", { exact: true, name: "Load preset Dataholz CLT Wet" }).click();
 
   await expect(page.getByText("Curated match active")).toBeVisible();
   await expect(page.getByText("Dataholz GDMNXN05 | CLT floor | wet screed + fill | no lining").first()).toBeVisible();
@@ -236,9 +254,9 @@ test("workbench surfaces a curated Dataholz CLT wet family match", async ({ page
 });
 
 test("workbench surfaces a measured CLT 260 family match", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
-  await page.getByRole("button", { name: /Measured CLT 260/i }).click();
+  await page.getByRole("button", { exact: true, name: "Load preset Measured CLT 260" }).click();
 
   await expect(page.getByText("Curated match active")).toBeVisible();
   await expect(page.getByText("TUAS C2 | CLT 260 mm | laminate + EPS underlay").first()).toBeVisible();
@@ -247,9 +265,9 @@ test("workbench surfaces a measured CLT 260 family match", async ({ page }) => {
 });
 
 test("workbench surfaces a measured open-box timber family match", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
-  await page.getByRole("button", { name: /Measured Open Box/i }).click();
+  await page.getByRole("button", { exact: true, name: "Load preset Measured Open Box" }).click();
 
   await expect(page.getByText("Curated match active")).toBeVisible();
   await expect(page.getByText("TUAS R2a | open-box timber slab | laminate + EPS underlay | resilient stud ceiling").first()).toBeVisible();
@@ -258,9 +276,9 @@ test("workbench surfaces a measured open-box timber family match", async ({ page
 });
 
 test("workbench surfaces a measured concrete dry-floor family match", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
-  await page.getByRole("button", { name: /Measured Concrete Dry/i }).click();
+  await page.getByRole("button", { exact: true, name: "Load preset Measured Concrete Dry" }).click();
 
   await expect(page.getByText("Curated match active")).toBeVisible();
   await expect(page.getByText("TUAS H5 | 160 mm steel-reinforced concrete | 50 mm glass wool dry floor + laminate").first()).toBeVisible();
@@ -269,9 +287,9 @@ test("workbench surfaces a measured concrete dry-floor family match", async ({ p
 });
 
 test("workbench surfaces a curated UBIQ open-web steel family match", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
-  await page.getByRole("button", { name: /UBIQ Steel 200/i }).click();
+  await page.getByRole("button", { exact: true, name: "Load preset UBIQ Steel 200" }).click();
 
   await expect(page.getByText("Curated match active")).toBeVisible();
   await expect(page.getByText("UBIQ FL-28 | 200 mm open-web steel | INEX FLOOR 19 | 3 x 16 mm resilient ceiling").first()).toBeVisible();
@@ -280,9 +298,9 @@ test("workbench surfaces a curated UBIQ open-web steel family match", async ({ p
 });
 
 test("workbench surfaces a curated UBIQ bound-only family without inventing an exact Ln,w", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
-  await page.getByRole("button", { name: /UBIQ Bound 300/i }).click();
+  await page.getByRole("button", { exact: true, name: "Load preset UBIQ Bound 300" }).click();
   const tracePanel = page.locator("section, article, div").filter({
     has: page.getByRole("heading", { name: "Predictor status and evidence trace" })
   });
@@ -298,11 +316,11 @@ test("workbench surfaces a curated UBIQ bound-only family without inventing an e
 });
 
 test("workbench keeps support-form-unspecified steel stacks on a conservative bound crossover", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
-  await page.getByRole("button", { name: /UBIQ Bound Unspecified/i }).click();
+  await page.getByRole("button", { exact: true, name: "Load preset UBIQ Bound Unspecified" }).click();
 
-  await expect(page.getByText("Bound family estimate")).toBeVisible();
+  await expect(page.getByText("Bound family estimate").first()).toBeVisible();
   await expect(page.getByRole("heading", { name: "Conservative upper-bound support" })).toBeVisible();
   await expect(page.getByText("Bound support live")).toBeVisible();
   await expect(page.getByText(/^<= 51 dB$/).first()).toBeVisible();
@@ -311,7 +329,7 @@ test("workbench keeps support-form-unspecified steel stacks on a conservative bo
 });
 
 test("workbench surfaces an official REGUPOL exact product row", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
   await page.getByRole("button", { exact: true, name: "Load preset REGUPOL Curve 8" }).click();
 
@@ -322,7 +340,7 @@ test("workbench surfaces an official REGUPOL exact product row", async ({ page }
 });
 
 test("workbench keeps REGUPOL wet-screed lower-bound support beside the live heavy-floor metric", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
   await page.getByRole("button", { exact: true, name: "Load preset REGUPOL Wet Bound" }).click();
 
@@ -336,7 +354,7 @@ test("workbench keeps REGUPOL wet-screed lower-bound support beside the live hea
 });
 
 test("workbench surfaces an official Getzner catalog DeltaLw row", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
   await page.getByRole("button", { exact: true, name: "Load preset Getzner AFM 33" }).click();
 
@@ -347,7 +365,7 @@ test("workbench surfaces an official Getzner catalog DeltaLw row", async ({ page
 });
 
 test("workbench suggests closest curated families when an exact match is nearly complete", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
   await page.getByRole("button", { exact: true, name: "Load preset Dataholz Dry" }).click();
   await page.getByRole("button", { name: "Remove Generic Fill layer" }).click();
@@ -358,7 +376,7 @@ test("workbench suggests closest curated families when an exact match is nearly 
 });
 
 test("workbench activates a family estimate for a near-miss Dataholz dry floor", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
   await page.getByRole("button", { exact: true, name: "Load preset Dataholz Dry" }).click();
   await page.getByRole("button", { name: "Remove Generic Fill layer" }).click();
@@ -372,12 +390,12 @@ test("workbench activates a family estimate for a near-miss Dataholz dry floor",
   await expect(page.getByText("Candidate lineage:")).toBeVisible();
   await expect(tracePanel.getByText("Family estimate trace")).toBeVisible();
   await expect(tracePanel.getByText("Estimate tier")).toBeVisible();
-  await expect(tracePanel.getByText("Archetype family")).toBeVisible();
-  await expect(tracePanel.getByText("Candidate rows")).toBeVisible();
+  await expect(tracePanel.getByText("Archetype family", { exact: true }).first()).toBeVisible();
+  await expect(tracePanel.getByText("Candidate rows").first()).toBeVisible();
 });
 
 test("workbench can derive a heavy-reference Ln,w from datasheet DeltaLw", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
   await page.getByLabel("Datasheet DeltaLw (dB)").fill("24");
 
@@ -387,25 +405,29 @@ test("workbench can derive a heavy-reference Ln,w from datasheet DeltaLw", async
 });
 
 test("workbench explains field meaning and whether a guide field is currently used", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
-  await page.getByRole("button", { name: /Impact Floor/i }).click();
+  await page.getByRole("button", { exact: true, name: "Load preset Impact Floor" }).click();
   await page.getByTitle("Explain Receiving room V (m³)").click();
+  const receivingVolumeHelp = page
+    .getByRole("note")
+    .filter({ has: page.getByText(/Room volume standardizes L'nT,w from L'n,w/) })
+    .first();
 
-  await expect(page.getByText("Not used right now")).toBeVisible();
-  await expect(page.getByText(/Room volume standardizes L'nT,w from L'n,w/)).toBeVisible();
+  await expect(receivingVolumeHelp.getByText("Not used right now")).toBeVisible();
+  await expect(receivingVolumeHelp.getByText(/Room volume standardizes L'nT,w from L'n,w/)).toBeVisible();
 
   await page.getByLabel("K (dB)").fill("2");
   await page.getByLabel("Receiving room V (m³)").fill("45");
 
-  await expect(page.getByText("Used in current calculation")).toBeVisible();
-  await expect(page.getByText(/currently active in the standardized field branch/i)).toBeVisible();
+  await expect(receivingVolumeHelp.getByText("Used in current calculation")).toBeVisible();
+  await expect(receivingVolumeHelp.getByText(/currently active in the standardized field branch/i)).toBeVisible();
 });
 
 test("layer editor explains why floor role matters for exact family matching", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
-  await page.getByRole("button", { name: /Floor Study/i }).click();
+  await page.getByRole("button", { exact: true, name: "Load preset Floor Study" }).click();
   await page.getByRole("button", { name: /Add layer/i }).click();
   await page.getByLabel("Floor role").last().selectOption("");
   await page.getByTitle("Explain Floor role").last().click();
@@ -415,12 +437,12 @@ test("layer editor explains why floor role matters for exact family matching", a
 });
 
 test("workbench can import exact lab impact bands and auto-carry CI outputs", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
   await page.getByLabel("Band paste").fill("60 59 58 58 57 56 55 54 53 52 51 50 49 48 47 46 45 44 43");
-  const tracePanel = page.locator("section, article, div").filter({
+  const tracePanel = page.locator("section").filter({
     has: page.getByRole("heading", { name: "Predictor status and evidence trace" })
-  });
+  }).first();
 
   const exactSourceCard = page.locator("div").filter({ hasText: /Parsed exact source/i }).first();
   const primaryImpactCard = page.locator("article").filter({
@@ -442,12 +464,12 @@ test("workbench can import exact lab impact bands and auto-carry CI outputs", as
   await expect(ciCard.getByText(/-3(?:\.0)? dB/)).toBeVisible();
   await expect(ci50Card.getByText(/-1(?:\.0)? dB/)).toBeVisible();
   await expect(lnwCiCard.getByText(/^50 dB$/)).toBeVisible();
-  await expect(tracePanel.getByText("Formula notes", { exact: true })).toBeVisible();
+  await expect(tracePanel.getByText("Formula notes", { exact: true }).first()).toBeVisible();
   await expect(page.getByText(/ISO 717-2 impact contour was used to rate the supplied band curve/i)).toBeVisible();
 });
 
 test("workbench can activate the direct+flanking field path lane on exact impact bands", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
   await page.getByLabel("Band paste").fill("60 59 58 58 57 56 55 54 53 52 51 50 49 48 47 46 45 44 43");
   await page.getByLabel("Direct path offset (dB)").fill("1");
@@ -502,7 +524,7 @@ test("workbench can activate the direct+flanking field path lane on exact impact
 });
 
 test("workbench can derive DeltaLw from an exact heavy-reference improvement curve", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
   await page.getByLabel("Improvement curve paste").fill("20 20 20 20 20 20 20 20 20 20 20 20 20 20 20 20");
 
@@ -512,9 +534,9 @@ test("workbench can derive DeltaLw from an exact heavy-reference improvement cur
 });
 
 test("workbench can derive guide-side CI and L'nT,50 from the live impact lane", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
-  await page.getByRole("button", { name: /Impact Floor/i }).click();
+  await page.getByRole("button", { exact: true, name: "Load preset Impact Floor" }).click();
   await page.getByLabel("CI (dB)").fill("-2");
   await page.getByLabel("K (dB)").fill("3");
   await page.getByLabel("Hd (dB)").fill("1");
@@ -536,9 +558,9 @@ test("workbench can derive guide-side CI and L'nT,50 from the live impact lane",
 });
 
 test("workbench can look up Turkish K and Hd corrections from mass ratio and room volume", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
-  await page.getByRole("button", { name: /Impact Floor/i }).click();
+  await page.getByRole("button", { exact: true, name: "Load preset Impact Floor" }).click();
   await page.getByLabel("CI (dB)").fill("-2");
   await page.getByLabel("a/(b+c+d+e)").fill("3.4");
   await page.getByLabel("Receiving room V (m³)").fill("32");
@@ -561,9 +583,9 @@ test("workbench can look up Turkish K and Hd corrections from mass ratio and roo
 });
 
 test("workbench can derive standardized field-volume outputs from K, V, and CI,50-2500", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
-  await page.getByRole("button", { name: /Impact Floor/i }).click();
+  await page.getByRole("button", { exact: true, name: "Load preset Impact Floor" }).click();
   await page.getByLabel("K (dB)").fill("2");
   await page.getByLabel("Receiving room V (m³)").fill("50");
   await page.getByLabel("CI,50-2500 (dB)").fill("-5");
@@ -585,20 +607,24 @@ test("workbench can derive standardized field-volume outputs from K, V, and CI,5
 });
 
 test("field help explains when the Turkish mass-ratio lookup is active", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
   await page.getByLabel("Band paste").fill("60 59 58 58 57 56 55 54 53 52 51 50 49 48 47 46 45 44 43");
   await page.getByLabel("a/(b+c+d+e)").fill("3.4");
   await page.getByTitle("Explain a/(b+c+d+e)").click();
+  const massRatioHelp = page
+    .getByRole("note")
+    .filter({ has: page.getByText(/using a\/\(b\+c\+d\+e\) = 3\.4 to look up K from Table 2\.7/i) })
+    .first();
 
-  await expect(page.getByText("Used in current calculation")).toBeVisible();
-  await expect(page.getByText(/using a\/\(b\+c\+d\+e\) = 3\.4 to look up K from Table 2\.7/i)).toBeVisible();
+  await expect(massRatioHelp.getByText("Used in current calculation")).toBeVisible();
+  await expect(massRatioHelp.getByText(/using a\/\(b\+c\+d\+e\) = 3\.4 to look up K from Table 2\.7/i)).toBeVisible();
 });
 
 test("workbench carries live-stack field outputs onto the main impact lane", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
-  await page.getByRole("button", { name: /Knauf Concrete/i }).click();
+  await page.getByRole("button", { exact: true, name: "Load preset Knauf Concrete" }).click();
   await page.getByLabel("K (dB)").fill("2");
   await page.getByLabel("Receiving room V (m³)").fill("50");
 
@@ -611,9 +637,9 @@ test("workbench carries live-stack field outputs onto the main impact lane", asy
 });
 
 test("workbench can carry conservative field-side upper bounds from a bound-only floor family", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
-  await page.getByRole("button", { name: /UBIQ Bound 300/i }).click();
+  await page.getByRole("button", { exact: true, name: "Load preset UBIQ Bound 300" }).click();
   await page.getByLabel("K (dB)").fill("2");
   await page.getByLabel("Receiving room V (m³)").fill("50");
 
@@ -624,7 +650,7 @@ test("workbench can carry conservative field-side upper bounds from a bound-only
 });
 
 test("workbench can apply a criteria pack and refresh the brief posture", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
   await page.getByRole("button", { name: /Hotel Quiet/i }).click();
 
@@ -637,29 +663,41 @@ test("workbench can apply a criteria pack and refresh the brief posture", async 
 });
 
 test("workbench can save the live stack as a scenario snapshot", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
   await page.getByRole("button", { name: /Save scenario/i }).click();
+  const savedScenarioCard = page
+    .locator("article")
+    .filter({ has: page.getByRole("button", { exact: true, name: "Load" }) })
+    .filter({ has: page.getByText("DynEcho Operator Deck · Wall Study 01") })
+    .first();
 
   await expect(page.getByText("1 saved scenario", { exact: true })).toBeVisible();
-  await expect(page.getByText("DynEcho Operator Deck · Wall Study 01")).toBeVisible();
-  await expect(page.getByRole("button", { exact: true, name: "Load" })).toBeVisible();
+  await expect(savedScenarioCard).toBeVisible();
+  await expect(savedScenarioCard.getByText("DynEcho Operator Deck · Wall Study 01")).toBeVisible();
+  await expect(savedScenarioCard.getByRole("button", { exact: true, name: "Load" })).toBeVisible();
 });
 
 test("workbench command palette can trigger scenario save", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
   await page.getByRole("button", { exact: true, name: "Open command palette" }).click();
   await expect(page.getByPlaceholder("Search commands, presets, outputs, and saved scenarios...")).toBeVisible();
 
   await page.getByText("Save current scenario", { exact: true }).click();
+  const savedScenarioCard = page
+    .locator("article")
+    .filter({ has: page.getByRole("button", { exact: true, name: "Load" }) })
+    .filter({ has: page.getByText("DynEcho Operator Deck · Wall Study 01") })
+    .first();
 
   await expect(page.getByText("1 saved scenario", { exact: true })).toBeVisible();
-  await expect(page.getByText("DynEcho Operator Deck · Wall Study 01")).toBeVisible();
+  await expect(savedScenarioCard).toBeVisible();
+  await expect(savedScenarioCard.getByText("DynEcho Operator Deck · Wall Study 01")).toBeVisible();
 });
 
 test("workbench exposes a markdown report surface", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
   await expect(page.getByText("dynecho-operator-deck-operator-brief.md")).toBeVisible();
   await expect(page.getByRole("button", { name: "Copy markdown" })).toBeVisible();
@@ -667,7 +705,7 @@ test("workbench exposes a markdown report surface", async ({ page }) => {
 });
 
 test("workbench shows upstream radar and delivery assist surfaces", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
   await expect(page.getByText("Migration scorecard")).toBeVisible();
   await expect(page.getByText("Read-only parity watch")).toBeVisible();
@@ -677,7 +715,7 @@ test("workbench shows upstream radar and delivery assist surfaces", async ({ pag
 });
 
 test("workbench tracks field-risk flags and updates the delivery context", async ({ page }) => {
-  await page.goto("/workbench");
+  await gotoAdvancedWorkbench(page);
 
   await page.getByRole("button", { name: /Perimeter bridge risk/i }).click();
   await page.getByRole("button", { name: /Service penetrations open/i }).click();

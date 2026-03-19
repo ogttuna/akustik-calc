@@ -7,6 +7,7 @@ import type {
 import { ImpactPredictorInputSchema, LayerInputSchema, type ImpactPredictorInput } from "@dynecho/shared";
 
 import { getDefaultMaterialCatalog, resolveMaterial } from "./material-catalog";
+import { ksRound1 } from "./math";
 
 type PredictorAdaptation = {
   catalogAdditions: readonly MaterialDefinition[];
@@ -80,6 +81,70 @@ const UPPER_FILL_MATERIAL_IDS = new Set([
   "non_bonded_chippings"
 ]);
 const CEILING_BOARD_MATERIAL_IDS = new Set(["firestop_board", "gypsum_board", "impactstop_board"]);
+const BASE_STRUCTURE_HINT_MATERIAL_IDS = new Set([
+  "clt_panel",
+  "composite_steel_deck",
+  "concrete",
+  "engineered_timber_structural",
+  "hollow_core_plank",
+  "lightweight_steel_floor",
+  "open_box_timber_slab",
+  "open_web_steel_floor",
+  "open_web_steel_joist",
+  "solid_wood",
+  "steel_deck_composite",
+  "steel_joist_floor",
+  "timber_frame_floor",
+  "timber_joist_floor"
+]);
+const SAFE_BARE_BASE_ROLE_INFERENCE_MATERIAL_IDS = new Set([
+  "clt_panel",
+  "composite_steel_deck",
+  "hollow_core_plank",
+  "steel_deck_composite"
+]);
+const FLOOR_ROLE_INFERENCE_EVIDENCE_ROLES = new Set<NonNullable<LayerInput["floorRole"]>>([
+  "ceiling_board",
+  "ceiling_cavity",
+  "floating_screed",
+  "floor_covering",
+  "resilient_layer",
+  "upper_fill"
+]);
+const FLOOR_ROLE_INFERENCE_HINT_MATERIAL_IDS = new Set([
+  ...CEILING_BOARD_MATERIAL_IDS,
+  ...CEILING_CAVITY_MATERIAL_IDS,
+  ...RESILIENT_LAYER_MATERIAL_IDS,
+  ...FLOATING_SCREED_MATERIAL_IDS,
+  ...UPPER_FILL_MATERIAL_IDS,
+  "carpet_with_foam_underlay",
+  "ceramic_tile",
+  "dry_floating_gypsum_fiberboard",
+  "engineered_timber_flooring",
+  "engineered_timber_with_acoustic_underlay",
+  "gypsum_fiberboard",
+  "laminate_flooring",
+  "particleboard_flooring",
+  "porcelain_tile",
+  "vinyl_flooring"
+]);
+const MERGE_SAFE_IMPACT_LAYER_ROLES = new Set<NonNullable<LayerInput["floorRole"]>>([
+  "base_structure",
+  "ceiling_fill",
+  "floating_screed",
+  "floor_covering",
+  "resilient_layer",
+  "upper_fill"
+]);
+const SINGLE_ENTRY_PREDICTOR_ROLES = new Set<NonNullable<LayerInput["floorRole"]>>([
+  "base_structure",
+  "ceiling_cavity",
+  "ceiling_fill",
+  "floating_screed",
+  "floor_covering",
+  "resilient_layer",
+  "upper_fill"
+]);
 
 function sanitizeIdFragment(input: string): string {
   return input.trim().toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "");
@@ -445,7 +510,7 @@ function normalizeImpactPredictorLayerStack(
     ({ material }) => isPotentialTopFloorFinish(material) && material.id !== "dry_floating_gypsum_fiberboard"
   );
 
-  return parsedEntries.map(({ parsedLayer, material }) => {
+  const normalizedEntries = parsedEntries.map(({ parsedLayer, material }) => {
     const floorRole =
       parsedLayer.floorRole ??
       inferMissingFloorRole(parsedLayer, material, {
@@ -458,6 +523,105 @@ function normalizeImpactPredictorLayerStack(
       material
     };
   });
+
+  return coalesceMergeSafeImpactLayers(normalizedEntries);
+}
+
+function canMergeImpactLayerPair(
+  previous: ResolvedLayerStackEntry | undefined,
+  current: ResolvedLayerStackEntry
+): boolean {
+  if (!previous?.floorRole || !current.floorRole || previous.floorRole !== current.floorRole) {
+    return false;
+  }
+
+  if (!MERGE_SAFE_IMPACT_LAYER_ROLES.has(current.floorRole)) {
+    return false;
+  }
+
+  return previous.material.id === current.material.id;
+}
+
+function coalesceMergeSafeImpactLayers(
+  layers: readonly ResolvedLayerStackEntry[]
+): ResolvedLayerStackEntry[] {
+  const collapsed: ResolvedLayerStackEntry[] = [];
+
+  for (const layer of layers) {
+    const previous = collapsed.at(-1);
+
+    if (!canMergeImpactLayerPair(previous, layer)) {
+      collapsed.push({
+        ...layer,
+        material: { ...layer.material }
+      });
+      continue;
+    }
+
+    const mergedPrevious = previous as ResolvedLayerStackEntry;
+    mergedPrevious.thicknessMm = ksRound1(mergedPrevious.thicknessMm + layer.thicknessMm);
+  }
+
+  return collapsed;
+}
+
+function hasPotentialFloorRoleInferenceEvidence(rawLayers: readonly LayerInput[]): boolean {
+  let hasBaseCandidate = false;
+  let hasExplicitFloorRole = false;
+  let hasAuxiliaryHint = false;
+  let hasSafeBareBaseCandidate = false;
+
+  for (const layer of rawLayers) {
+    if (layer.floorRole) {
+      hasExplicitFloorRole = true;
+      if (layer.floorRole === "base_structure") {
+        hasBaseCandidate = true;
+      } else if (FLOOR_ROLE_INFERENCE_EVIDENCE_ROLES.has(layer.floorRole)) {
+        hasAuxiliaryHint = true;
+      }
+    }
+
+    const materialId = normalizePredictorToken(layer.materialId);
+    if (!materialId) {
+      continue;
+    }
+
+    if (BASE_STRUCTURE_HINT_MATERIAL_IDS.has(materialId)) {
+      hasBaseCandidate = true;
+    }
+
+    if (FLOOR_ROLE_INFERENCE_HINT_MATERIAL_IDS.has(materialId)) {
+      hasAuxiliaryHint = true;
+    }
+
+    if (SAFE_BARE_BASE_ROLE_INFERENCE_MATERIAL_IDS.has(materialId)) {
+      hasSafeBareBaseCandidate = true;
+    }
+  }
+
+  return hasBaseCandidate && (hasExplicitFloorRole || hasAuxiliaryHint || (rawLayers.length === 1 && hasSafeBareBaseCandidate));
+}
+
+export function maybeInferFloorRoleLayerStack(
+  rawLayers: readonly LayerInput[],
+  catalog: readonly MaterialDefinition[] = getDefaultMaterialCatalog()
+): LayerInput[] | null {
+  if (!hasPotentialFloorRoleInferenceEvidence(rawLayers)) {
+    return null;
+  }
+
+  const normalizedLayers = normalizeImpactPredictorLayerStack(rawLayers, catalog);
+  const hasBaseStructure = normalizedLayers.some((layer) => layer.floorRole === "base_structure");
+  const hasExplicitFloorRole = rawLayers.some((layer) => Boolean(layer.floorRole));
+  const hasAuxiliaryFloorEvidence = normalizedLayers.some(
+    (layer) => layer.floorRole && FLOOR_ROLE_INFERENCE_EVIDENCE_ROLES.has(layer.floorRole)
+  );
+
+  if (!hasBaseStructure || (!hasExplicitFloorRole && !hasAuxiliaryFloorEvidence)) {
+    return null;
+  }
+
+  return normalizedLayers.map(({ material: _material, ...layer }) => layer);
 }
 
 function buildDynamicResilientMaterial(dynamicStiffnessMNm3: number): MaterialDefinition {
@@ -846,6 +1010,26 @@ function resolveStructuralSupportFromBaseLayer(
   }
 }
 
+function hasAmbiguousPredictorRoleTopology(layers: readonly ResolvedLayerStackEntry[]): boolean {
+  for (const role of SINGLE_ENTRY_PREDICTOR_ROLES) {
+    if (layersForRole(layers, role).length > 1) {
+      return true;
+    }
+  }
+
+  const ceilingBoards = layersForRole(layers, "ceiling_board");
+  const firstCeilingBoard = ceilingBoards[0];
+
+  if (!firstCeilingBoard || ceilingBoards.length <= 1) {
+    return false;
+  }
+
+  return ceilingBoards.some(
+    (layer) =>
+      layer.material.id !== firstCeilingBoard.material.id || layer.thicknessMm !== firstCeilingBoard.thicknessMm
+  );
+}
+
 function resolveFloorCoveringMaterialClass(input: {
   floorCoveringLayer?: ResolvedLayerStackEntry;
   resilientLayer?: ResolvedLayerStackEntry;
@@ -1193,9 +1377,17 @@ function canDerivePredictorInputFromLayerStack(
   rawLayers: readonly BuildImpactPredictorLayerInput[],
   catalog: readonly MaterialDefinition[] = getDefaultMaterialCatalog()
 ): boolean {
-  return normalizeImpactPredictorLayerStack(rawLayers, catalog).some(
-    (layer) => layer.floorRole === "base_structure"
-  );
+  if (!hasPotentialFloorRoleInferenceEvidence(rawLayers)) {
+    return false;
+  }
+
+  const normalizedLayers = normalizeImpactPredictorLayerStack(rawLayers, catalog);
+
+  if (hasAmbiguousPredictorRoleTopology(normalizedLayers)) {
+    return false;
+  }
+
+  return normalizedLayers.some((layer) => layer.floorRole === "base_structure");
 }
 
 export function maybeBuildImpactPredictorInputFromLayerStack(

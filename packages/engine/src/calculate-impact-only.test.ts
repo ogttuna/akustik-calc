@@ -1269,17 +1269,13 @@ describe("calculateImpactOnly", () => {
     });
 
     expect(result.sourceMode).toBe("predictor_input");
-    expect(result.floorSystemEstimate?.kind).toBe("family_general");
-    expect(result.impact?.basis).toBe("predictor_floor_system_family_general_estimate");
-    expect(result.impact?.LnW).toBe(51.2);
-    expect(result.impact?.CI).toBe(-1.3);
-    expect(result.impact?.LnWPlusCI).toBe(49.9);
-    expect(result.floorSystemRatings?.Rw).toBe(64.4);
-    expect(result.impact?.estimateCandidateIds).toEqual([
-      "dataholz_gdmtxn01_dry_clt_lab_2026",
-      "dataholz_gdmnxn02_wet_clt_lab_2026",
-      "dataholz_gdmnxn06_fill_clt_lab_2026"
-    ]);
+    expect(result.floorSystemEstimate?.kind).toBe("family_archetype");
+    expect(result.impact?.basis).toBe("predictor_mass_timber_clt_dataholz_dry_estimate");
+    expect(result.impact?.LnW).toBe(50);
+    expect(result.impact?.CI).toBe(-1);
+    expect(result.impact?.LnWPlusCI).toBe(49);
+    expect(result.floorSystemRatings?.Rw).toBe(62);
+    expect(result.impact?.estimateCandidateIds).toEqual(["dataholz_gdmtxn01_dry_clt_lab_2026"]);
     expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(true);
     expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
   });

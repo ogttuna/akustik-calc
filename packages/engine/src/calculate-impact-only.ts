@@ -37,6 +37,7 @@ import { estimateImpactFromLayers } from "./impact-estimate";
 import { buildImpactPredictorStatus } from "./impact-predictor-status";
 import {
   adaptImpactPredictorInput,
+  maybeInferFloorRoleLayerStack,
   maybeBuildImpactPredictorInputFromLayerStack,
   mergePredictorCatalog
 } from "./impact-predictor-input";
@@ -128,6 +129,13 @@ export function calculateImpactOnly(
       : visibleLayers;
   const exactImpactSource = options.exactImpactSource ? ExactImpactSourceSchema.parse(options.exactImpactSource) : null;
   const impactFieldContext = options.impactFieldContext ? ImpactFieldContextSchema.parse(options.impactFieldContext) : null;
+  const inferredSourceLayersInput =
+    predictorAdaptation?.sourceLayers.length && !predictorAdaptation.officialFloorSystemId
+      ? null
+      : maybeInferFloorRoleLayerStack(sourceLayersInput, catalog);
+  if (inferredSourceLayersInput) {
+    sourceLayersInput = inferredSourceLayersInput;
+  }
   let resolvedVisibleLayers = resolveLayers(visibleLayers, catalog);
   let resolvedSourceLayers = resolveLayers(sourceLayersInput, catalog);
 
@@ -166,9 +174,6 @@ export function calculateImpactOnly(
         typeof predictorInput.floorCovering.deltaLwDb === "number"
           ? deriveHeavyReferenceImpactFromDeltaLw(predictorInput.floorCovering.deltaLwDb)
           : null;
-      const predictorSpecificFloorSystemEstimate = predictorInput
-        ? derivePredictorSpecificFloorSystemEstimate(predictorInput)
-        : null;
 
       floorSystemMatch = matchExactFloorSystem(resolvedSourceLayers);
       boundFloorSystemMatch = !floorSystemMatch ? matchBoundFloorSystem(resolvedSourceLayers) : null;
@@ -181,6 +186,13 @@ export function calculateImpactOnly(
       const rejectProductDeltaFormulaFallback =
         rawImpactCatalogMatch?.catalog.matchMode === "product_property_delta" &&
         !impactCatalogMatch;
+      const predictorSpecificFloorSystemEstimate =
+        predictorInput &&
+        !floorSystemMatch &&
+        !boundFloorSystemMatch &&
+        !impactCatalogMatch
+          ? derivePredictorSpecificFloorSystemEstimate(predictorInput)
+          : null;
       narrowImpact =
         explicitDeltaImpact || rejectProductDeltaFormulaFallback
           ? null
@@ -259,12 +271,16 @@ export function calculateImpactOnly(
           typeof derivedPredictorInput.floorCovering.deltaLwDb === "number"
             ? deriveHeavyReferenceImpactFromDeltaLw(derivedPredictorInput.floorCovering.deltaLwDb)
             : null;
+        const derivedPredictorSpecificFloorSystemEstimate =
+          derivedExplicitDeltaImpact ||
+          derivedFloorSystemMatch ||
+          derivedBoundFloorSystemMatch ||
+          derivedImpactCatalogMatch
+            ? null
+            : derivePredictorSpecificFloorSystemEstimate(derivedPredictorInput);
         const derivedNarrowImpact = derivedExplicitDeltaImpact
           ? null
           : estimateImpactFromLayers(derivedResolvedSourceLayers);
-        const derivedPredictorSpecificFloorSystemEstimate = derivedExplicitDeltaImpact
-          ? null
-          : derivePredictorSpecificFloorSystemEstimate(derivedPredictorInput);
         const derivedBoundFloorSystemEstimate =
           !derivedFloorSystemMatch &&
           !derivedBoundFloorSystemMatch &&

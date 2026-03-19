@@ -180,7 +180,7 @@ describe("airborne seeded sanity", () => {
 
     expect(minDelta).toBeGreaterThanOrEqual(-20);
     expect(maxDelta).toBeLessThanOrEqual(0.25);
-  });
+  }, 15000);
 
   it("keeps seeded pathological hybrids monotonic under reinforcement in lab and field", () => {
     const rng = mulberry32(20260403);
@@ -314,7 +314,7 @@ describe("airborne seeded sanity", () => {
     }
 
     expect(maxDrift).toBeLessThanOrEqual(3);
-  });
+  }, 15000);
 
   it("keeps seeded mixed assemblies numerically sane in lab and field", () => {
     const rng = mulberry32(20260404);

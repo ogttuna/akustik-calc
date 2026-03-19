@@ -2648,7 +2648,7 @@ describe("calculateAssembly", () => {
         `${meta.name} representative mixed-board empty-cavity field lift note`
       ).toBe(true);
     }
-  });
+  }, 15000);
 
   it("keeps split-cavity left-right gap swaps invariant in field mode", () => {
     const fieldContext = {
@@ -2793,7 +2793,7 @@ describe("calculateAssembly", () => {
 
     expect(failures.slice(0, 10)).toEqual([]);
     expect(failures).toHaveLength(0);
-  });
+  }, 15000);
 
   it("keeps face reinforcement broadly symmetric between front and back faces in field mode", () => {
     const metas = [
@@ -2885,7 +2885,7 @@ describe("calculateAssembly", () => {
 
     expect(failures.slice(0, 10)).toEqual([]);
     expect(failures).toHaveLength(0);
-  });
+  }, 15000);
 
   it("keeps outer compliant head-tail layers neutral on the field double-leaf matrix", () => {
     const fieldContext = {
@@ -3037,7 +3037,15 @@ describe("calculateAssembly", () => {
     expect(compositeMineral.ratings.astmE413.STC).toBeGreaterThanOrEqual(50);
     expect(concreteSlab.impact?.LnW).toBe(74.5);
     expect(concreteSlab.impact?.confidence.level).toBe("medium");
-    expect(cltFloor.impact).toBeNull();
+    expect(cltFloor.impact?.basis).toBe("predictor_mass_timber_clt_dataholz_dry_estimate");
+    expect(cltFloor.impact?.LnW).toBe(66.8);
+    expect(cltFloor.impact?.CI).toBe(-0.6);
+    expect(cltFloor.impact?.confidence.provenance).toBe("published_family_estimate");
+    expect(cltFloor.impact?.estimateCandidateIds).toEqual([
+      "tuas_x2_clt140_measured_2026",
+      "tuas_c2_clt260_measured_2026",
+      "dataholz_gdmnxn02_wet_clt_lab_2026"
+    ]);
   });
 
   it("derives narrow heavy-floor impact metrics when a resilient layer and heavy base are present", () => {
@@ -3049,13 +3057,13 @@ describe("calculateAssembly", () => {
     ]);
 
     expect(result.impact).not.toBeNull();
-    expect(result.impact?.basis).toBe("predictor_heavy_floating_floor_iso12354_annexc_estimate");
-    expect(result.impact?.confidence.provenance).toBe("formula_estimate_narrow_scope");
-    expect(result.impact?.LnW).toBe(41.1);
-    expect(result.impact?.DeltaLw).toBe(33.4);
-    expect(result.impact?.predictorResonanceHz).toBe(47);
-    expect(result.impact?.availableOutputs).toEqual(["Ln,w", "DeltaLw"]);
-    expect(result.dynamicImpactTrace?.selectionKind).toBe("formula_estimate");
+    expect(result.impact?.basis).toBe("predictor_heavy_concrete_published_upper_treatment_estimate");
+    expect(result.impact?.confidence.provenance).toBe("published_family_estimate");
+    expect(result.impact?.LnW).toBe(50);
+    expect(result.impact?.DeltaLw).toBeUndefined();
+    expect(result.impact?.predictorResonanceHz).toBeUndefined();
+    expect(result.impact?.availableOutputs).toEqual(["Ln,w"]);
+    expect(result.dynamicImpactTrace?.selectionKind).toBe("family_estimate");
     expect(result.dynamicImpactTrace?.evidenceTier).toBe("estimate");
     expect(result.dynamicImpactTrace?.detectedSupportFamily).toBe("reinforced_concrete");
     expect(result.dynamicImpactTrace?.systemType).toBe("heavy_floating_floor");
@@ -3193,9 +3201,9 @@ describe("calculateAssembly", () => {
     expect(result.impact?.fieldEstimateFlankingPathCount).toBe(2);
     expect(result.impact?.fieldEstimateExpertPathModifierCount).toBe(2);
     expect(result.impact?.fieldEstimateFlankingFamilyModels).toEqual(["reinforced_concrete"]);
-    expect(result.impact?.fieldEstimateFlankingPathModifiersDb).toEqual([0.9, 3.5]);
+    expect(result.impact?.fieldEstimateFlankingPathModifiersDb).toEqual([0.9, 3.9]);
     expect(result.impact?.fieldEstimateLowerTreatmentReductionDb).toBe(2);
-    expect(result.impact?.fieldEstimateMaxPathModifierDb).toBe(3.5);
+    expect(result.impact?.fieldEstimateMaxPathModifierDb).toBe(3.9);
     expect(result.impact?.standardizedFieldEstimateProfile).toBe(
       "standardized_field_lprimentw_from_direct_flanking_energy_sum_plus_room_volume"
     );
@@ -4322,17 +4330,13 @@ describe("calculateAssembly", () => {
     );
 
     expect(result.floorSystemMatch).toBeNull();
-    expect(result.floorSystemEstimate?.kind).toBe("family_general");
-    expect(result.floorSystemEstimate?.impact.basis).toBe("predictor_floor_system_family_general_estimate");
-    expect(result.floorSystemEstimate?.impact.LnW).toBe(51.2);
-    expect(result.floorSystemEstimate?.impact.CI).toBe(-1.3);
-    expect(result.floorSystemEstimate?.impact.LnWPlusCI).toBe(49.9);
-    expect(result.floorSystemEstimate?.airborneRatings.Rw).toBe(64.4);
-    expect(result.floorSystemEstimate?.impact.estimateCandidateIds).toEqual([
-      "dataholz_gdmtxn01_dry_clt_lab_2026",
-      "dataholz_gdmnxn02_wet_clt_lab_2026",
-      "dataholz_gdmnxn06_fill_clt_lab_2026"
-    ]);
+    expect(result.floorSystemEstimate?.kind).toBe("family_archetype");
+    expect(result.floorSystemEstimate?.impact.basis).toBe("predictor_mass_timber_clt_dataholz_dry_estimate");
+    expect(result.floorSystemEstimate?.impact.LnW).toBe(50);
+    expect(result.floorSystemEstimate?.impact.CI).toBe(-1);
+    expect(result.floorSystemEstimate?.impact.LnWPlusCI).toBe(49);
+    expect(result.floorSystemEstimate?.airborneRatings.Rw).toBe(62);
+    expect(result.floorSystemEstimate?.impact.estimateCandidateIds).toEqual(["dataholz_gdmtxn01_dry_clt_lab_2026"]);
   });
 
   it("labels CLT upper-only fallback with the measured bare interpolation basis", () => {

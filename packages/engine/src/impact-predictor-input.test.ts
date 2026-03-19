@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { buildImpactPredictorInputFromLayerStack } from "./impact-predictor-input";
+import {
+  buildImpactPredictorInputFromLayerStack,
+  maybeBuildImpactPredictorInputFromLayerStack,
+  maybeInferFloorRoleLayerStack
+} from "./impact-predictor-input";
 
 describe("buildImpactPredictorInputFromLayerStack", () => {
   it("infers missing roles from an untagged heavy floating floor stack", () => {
@@ -261,6 +265,243 @@ describe("buildImpactPredictorInputFromLayerStack", () => {
     expect(input.impactSystemType).toBe("dry_floating_floor");
     expect(input.floorCovering?.materialClass).toBe("dry_floating_gypsum_fiberboard");
     expect(input.floorCovering?.thicknessMm).toBe(25);
-    expect(input.floatingScreed).toBeUndefined();
+    expect(input.floatingScreed?.materialClass).toBeUndefined();
+    expect(input.floatingScreed?.thicknessMm).toBeUndefined();
+  });
+
+  it("coalesces merge-safe split upper-fill and floating-screed layers before deriving predictor topology", () => {
+    const normalized = maybeInferFloorRoleLayerStack([
+      { materialId: "gypsum_board", thicknessMm: 13 },
+      { materialId: "gypsum_board", thicknessMm: 13 },
+      { materialId: "rockwool", thicknessMm: 100 },
+      { materialId: "resilient_stud_ceiling", thicknessMm: 25 },
+      { materialId: "laminate_flooring", thicknessMm: 8 },
+      { materialId: "eps_underlay", thicknessMm: 3 },
+      { materialId: "generic_fill", thicknessMm: 20 },
+      { materialId: "generic_fill", thicknessMm: 30 },
+      { materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 30 },
+      { materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 30 },
+      { materialId: "open_box_timber_slab", thicknessMm: 370 }
+    ]);
+
+    expect(normalized).toEqual([
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+      { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: 25 },
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: 50 },
+      { floorRole: "floating_screed", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 60 },
+      { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
+    ]);
+
+    const input = buildImpactPredictorInputFromLayerStack([
+      { materialId: "gypsum_board", thicknessMm: 13 },
+      { materialId: "gypsum_board", thicknessMm: 13 },
+      { materialId: "rockwool", thicknessMm: 100 },
+      { materialId: "resilient_stud_ceiling", thicknessMm: 25 },
+      { materialId: "laminate_flooring", thicknessMm: 8 },
+      { materialId: "eps_underlay", thicknessMm: 3 },
+      { materialId: "generic_fill", thicknessMm: 20 },
+      { materialId: "generic_fill", thicknessMm: 30 },
+      { materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 30 },
+      { materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 30 },
+      { materialId: "open_box_timber_slab", thicknessMm: 370 }
+    ]);
+
+    expect(input.upperFill?.thicknessMm).toBe(50);
+    expect(input.floatingScreed?.thicknessMm).toBe(60);
+  });
+
+  it("coalesces contiguous identical resilient layers before deriving predictor topology", () => {
+    const normalized = maybeInferFloorRoleLayerStack([
+      { materialId: "hollow_core_plank", thicknessMm: 200 },
+      { materialId: "geniemat_rst05", thicknessMm: 2.5 },
+      { materialId: "geniemat_rst05", thicknessMm: 2.5 },
+      { materialId: "vinyl_flooring", thicknessMm: 2.5 },
+      { materialId: "genieclip_rst", thicknessMm: 16 },
+      { materialId: "gypsum_board", thicknessMm: 16 }
+    ]);
+
+    expect(normalized).toEqual([
+      { floorRole: "base_structure", materialId: "hollow_core_plank", thicknessMm: 200 },
+      { floorRole: "resilient_layer", materialId: "geniemat_rst05", thicknessMm: 5 },
+      { floorRole: "floor_covering", materialId: "vinyl_flooring", thicknessMm: 2.5 },
+      { floorRole: "ceiling_cavity", materialId: "genieclip_rst", thicknessMm: 16 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 16 }
+    ]);
+
+    const input = buildImpactPredictorInputFromLayerStack([
+      { materialId: "hollow_core_plank", thicknessMm: 200 },
+      { materialId: "geniemat_rst05", thicknessMm: 2.5 },
+      { materialId: "geniemat_rst05", thicknessMm: 2.5 },
+      { materialId: "vinyl_flooring", thicknessMm: 2.5 },
+      { materialId: "genieclip_rst", thicknessMm: 16 },
+      { materialId: "gypsum_board", thicknessMm: 16 }
+    ]);
+
+    expect(input.resilientLayer?.productId).toBe("geniemat_rst05");
+    expect(input.resilientLayer?.thicknessMm).toBe(5);
+  });
+
+  it("backfills lower-treatment roles for raw ceiling-only concrete floor stacks", () => {
+    const normalized = maybeInferFloorRoleLayerStack([
+      { materialId: "firestop_board", thicknessMm: 13 },
+      { materialId: "firestop_board", thicknessMm: 13 },
+      { materialId: "rockwool", thicknessMm: 100 },
+      { materialId: "furring_channel", thicknessMm: 130 },
+      { materialId: "concrete", thicknessMm: 140 }
+    ]);
+
+    expect(normalized).toEqual([
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 13 },
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+      { floorRole: "ceiling_cavity", materialId: "furring_channel", thicknessMm: 130 },
+      { floorRole: "base_structure", materialId: "concrete", thicknessMm: 140 }
+    ]);
+  });
+
+  it("avoids floor-role backfill for ambiguous bare heavy slabs without floor evidence", () => {
+    expect(
+      maybeInferFloorRoleLayerStack([
+        { materialId: "concrete", thicknessMm: 140 }
+      ])
+    ).toBeNull();
+  });
+
+  it("derives bare-floor predictor inputs for safe single-layer raw base stacks", () => {
+    expect(
+      maybeBuildImpactPredictorInputFromLayerStack([
+        { materialId: "clt_panel", thicknessMm: 140 }
+      ])
+    ).toEqual({
+      baseSlab: {
+        densityKgM3: 470,
+        materialClass: "clt_panel",
+        thicknessMm: 140
+      },
+      floorCovering: {},
+      floatingScreed: {},
+      impactSystemType: "bare_floor",
+      lowerTreatment: {},
+      resilientLayer: {},
+      structuralSupportType: "mass_timber_clt",
+      upperFill: {}
+    });
+
+    expect(
+      maybeBuildImpactPredictorInputFromLayerStack([
+        { materialId: "composite_steel_deck", thicknessMm: 60 }
+      ])
+    ).toEqual({
+      baseSlab: {
+        densityKgM3: 2350,
+        materialClass: "composite_panel",
+        thicknessMm: 60
+      },
+      floorCovering: {},
+      floatingScreed: {},
+      impactSystemType: "bare_floor",
+      lowerTreatment: {},
+      resilientLayer: {},
+      structuralSupportType: "composite_panel",
+      upperFill: {}
+    });
+
+    expect(
+      maybeBuildImpactPredictorInputFromLayerStack([
+        { materialId: "hollow_core_plank", thicknessMm: 200 }
+      ])
+    ).toEqual({
+      baseSlab: {
+        densityKgM3: 2400,
+        materialClass: "hollow_core_plank",
+        thicknessMm: 200
+      },
+      floorCovering: {},
+      floatingScreed: {},
+      impactSystemType: "bare_floor",
+      lowerTreatment: {},
+      resilientLayer: {},
+      structuralSupportType: "hollow_core",
+      upperFill: {}
+    });
+  });
+
+  it("keeps unsafe single-layer bare base stacks fail-closed for auto predictor derivation", () => {
+    expect(
+      maybeBuildImpactPredictorInputFromLayerStack([
+        { materialId: "concrete", thicknessMm: 140 }
+      ])
+    ).toBeNull();
+
+    expect(
+      maybeBuildImpactPredictorInputFromLayerStack([
+        { materialId: "open_box_timber_slab", thicknessMm: 370 }
+      ])
+    ).toBeNull();
+
+    expect(
+      maybeBuildImpactPredictorInputFromLayerStack([
+        { materialId: "open_web_steel_joist", thicknessMm: 300 }
+      ])
+    ).toBeNull();
+  });
+
+  it("keeps ambiguous duplicate predictor roles fail-closed for auto predictor derivation", () => {
+    const cases = [
+      {
+        id: "clt dual finish",
+        layers: [
+          { materialId: "clt_panel", thicknessMm: 140 },
+          { materialId: "vinyl_flooring", thicknessMm: 2.5 },
+          { materialId: "engineered_timber_flooring", thicknessMm: 15 },
+          { materialId: "genieclip_rst", thicknessMm: 16 },
+          { materialId: "gypsum_board", thicknessMm: 16 }
+        ]
+      },
+      {
+        id: "hollow-core dual resilient layer",
+        layers: [
+          { materialId: "hollow_core_plank", thicknessMm: 200 },
+          { materialId: "geniemat_rst05", thicknessMm: 5 },
+          { materialId: "rubber_sheet", thicknessMm: 5 },
+          { materialId: "vinyl_flooring", thicknessMm: 2.5 },
+          { materialId: "genieclip_rst", thicknessMm: 16 },
+          { materialId: "gypsum_board", thicknessMm: 16 }
+        ]
+      },
+      {
+        id: "open-box dual upper fill",
+        layers: [
+          { materialId: "gypsum_board", thicknessMm: 13 },
+          { materialId: "gypsum_board", thicknessMm: 13 },
+          { materialId: "rockwool", thicknessMm: 100 },
+          { materialId: "resilient_stud_ceiling", thicknessMm: 25 },
+          { materialId: "laminate_flooring", thicknessMm: 8 },
+          { materialId: "eps_underlay", thicknessMm: 3 },
+          { materialId: "generic_fill", thicknessMm: 30 },
+          { materialId: "bonded_chippings", thicknessMm: 20 },
+          { materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 60 },
+          { materialId: "open_box_timber_slab", thicknessMm: 370 }
+        ]
+      },
+      {
+        id: "heavy dual floating screed",
+        layers: [
+          { materialId: "concrete", thicknessMm: 150 },
+          { materialId: "generic_resilient_underlay_s30", thicknessMm: 8 },
+          { materialId: "screed", thicknessMm: 30 },
+          { materialId: "inex_floor_panel", thicknessMm: 19 },
+          { materialId: "ceramic_tile", thicknessMm: 8 }
+        ]
+      }
+    ];
+
+    for (const testCase of cases) {
+      expect(maybeBuildImpactPredictorInputFromLayerStack(testCase.layers), testCase.id).toBeNull();
+    }
   });
 });
