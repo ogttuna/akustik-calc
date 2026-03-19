@@ -1,0 +1,132 @@
+{
+  "name": "Acoustic2 Official Field Holdout Surrogates (2026-03-10)",
+  "description": "Official Knauf KOMO field/compliance references collected on 2026-03-10, held out from exact verified matching. Layer stacks are surrogate interpretations of published system notation and are benchmarked against published DnT,A,k values using ratings.field.DnTA as a proxy metric.",
+  "cases": [
+    {
+      "id": "knauf_w111_75_100_60mw_a_field_holdout_2026",
+      "label": "Knauf W111 75/100 60 MW, 1x12.5 A board each side, surrogate field holdout",
+      "source": "https://knauf.com/api/download-center/v1/assets/8b5d23c5-a182-4ac8-81f7-2a6d7c289d12?country=nl&download=true (2026-03-10, Table 6: W111 75/100 60 MW -> DnT,A,k 34 dB; surrogate cavity split inferred from official notation)",
+      "metricPath": "ratings.field.DnTA",
+      "expectedValue": 34.0,
+      "toleranceValue": 3.0,
+      "assemblyMeta": {
+        "contextMode": "field_between_rooms",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good",
+        "perimeterSeal": "good",
+        "penetrationState": "none",
+        "junctionQuality": "good",
+        "sharedTrack": "independent",
+        "electricalBoxes": "none",
+        "panelWidthMm": 3000,
+        "panelHeightMm": 2600,
+        "receivingRoomVolumeM3": 30,
+        "receivingRoomRt60S": 0.5
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 40 },
+        { "materialId": "glasswool", "thicknessMm": 60 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "knauf_w111_100_125_80mw_a_field_holdout_2026",
+      "label": "Knauf W111 100/125 80 MW, 1x12.5 A board each side, surrogate field holdout",
+      "source": "https://knauf.com/api/download-center/v1/assets/8b5d23c5-a182-4ac8-81f7-2a6d7c289d12?country=nl&download=true (2026-03-10, Table 6: W111 100/125 80 MW -> DnT,A,k 38 dB; surrogate cavity split inferred from official notation)",
+      "metricPath": "ratings.field.DnTA",
+      "expectedValue": 38.0,
+      "toleranceValue": 3.0,
+      "assemblyMeta": {
+        "contextMode": "field_between_rooms",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good",
+        "perimeterSeal": "good",
+        "penetrationState": "none",
+        "junctionQuality": "good",
+        "sharedTrack": "independent",
+        "electricalBoxes": "none",
+        "panelWidthMm": 3000,
+        "panelHeightMm": 2600,
+        "receivingRoomVolumeM3": 30,
+        "receivingRoomRt60S": 0.5
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 45 },
+        { "materialId": "glasswool", "thicknessMm": 80 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "knauf_w115_2x75_205_60gw_field_holdout_2026",
+      "label": "Knauf W115 2x75/205 60 GW, 2x12.5 Type A board each side, surrogate field holdout",
+      "source": "https://knauf.com/api/download-center/v1/assets/8b5d23c5-a182-4ac8-81f7-2a6d7c289d12?country=nl&download=true (2026-03-10, Table 6: W115 2x75/205 60 GW -> DnT,A,k 52 dB, note 1 = Type A; split cavity surrogate inferred from official notation)",
+      "metricPath": "ratings.field.DnTA",
+      "expectedValue": 52.0,
+      "toleranceValue": 3.0,
+      "assemblyMeta": {
+        "contextMode": "field_between_rooms",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good",
+        "perimeterSeal": "good",
+        "penetrationState": "none",
+        "junctionQuality": "good",
+        "sharedTrack": "independent",
+        "electricalBoxes": "none",
+        "panelWidthMm": 3000,
+        "panelHeightMm": 2600,
+        "receivingRoomVolumeM3": 30,
+        "receivingRoomRt60S": 0.5
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5, "boardClass": "standard_a_board" },
+        { "materialId": "gypsum", "thicknessMm": 12.5, "boardClass": "standard_a_board" },
+        { "materialId": "air_gap", "thicknessMm": 75 },
+        { "materialId": "glasswool", "thicknessMm": 60 },
+        { "materialId": "air_gap", "thicknessMm": 70 },
+        { "materialId": "gypsum", "thicknessMm": 12.5, "boardClass": "standard_a_board" },
+        { "materialId": "gypsum", "thicknessMm": 12.5, "boardClass": "standard_a_board" }
+      ]
+    },
+    {
+      "id": "knauf_w119_75_75_206_60gw_field_holdout_2026",
+      "label": "Knauf W119 WK2 1.0 75.75/206 60 GW, attack side Security Board + Type A, non-attack side 2x Type A, surrogate field holdout",
+      "source": "https://knauf.com/api/download-center/v1/assets/8b5d23c5-a182-4ac8-81f7-2a6d7c289d12?country=nl&download=true (2026-03-10, Table 6: W119 WK2 1.0 75.75/206 60 GW -> DnT,A,k 52 dB, note 1 = attack side Security Board AKV + Type A, non-attack side 2x Type A; split cavity surrogate inferred from official notation)",
+      "metricPath": "ratings.field.DnTA",
+      "expectedValue": 52.0,
+      "toleranceValue": 3.0,
+      "assemblyMeta": {
+        "contextMode": "field_between_rooms",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good",
+        "perimeterSeal": "good",
+        "penetrationState": "none",
+        "junctionQuality": "good",
+        "sharedTrack": "independent",
+        "electricalBoxes": "none",
+        "panelWidthMm": 3000,
+        "panelHeightMm": 2600,
+        "receivingRoomVolumeM3": 30,
+        "receivingRoomRt60S": 0.5
+      },
+      "layers": [
+        { "materialId": "security_board", "thicknessMm": 12.5, "boardClass": "security_board" },
+        { "materialId": "gypsum", "thicknessMm": 12.5, "boardClass": "standard_a_board" },
+        { "materialId": "air_gap", "thicknessMm": 73 },
+        { "materialId": "glasswool", "thicknessMm": 60 },
+        { "materialId": "air_gap", "thicknessMm": 73 },
+        { "materialId": "gypsum", "thicknessMm": 12.5, "boardClass": "standard_a_board" },
+        { "materialId": "gypsum", "thicknessMm": 12.5, "boardClass": "standard_a_board" }
+      ]
+    }
+  ]
+}

@@ -2,9 +2,15 @@ import { z } from "zod";
 
 export const ExactImpactSourceLabOrFieldSchema = z.enum(["lab", "field"]);
 export const ExactImpactImprovementReferenceFloorTypeSchema = z.enum(["heavy_standard"]);
+export const ExactImpactCompanionRatingsSchema = z
+  .object({
+    DeltaLw: z.number().nonnegative().optional()
+  })
+  .partial();
 
 export const ExactImpactSourceSchema = z
   .object({
+    companionRatings: ExactImpactCompanionRatingsSchema.optional(),
     frequenciesHz: z.array(z.number().positive()).min(5),
     label: z.string().min(1).optional(),
     labOrField: ExactImpactSourceLabOrFieldSchema.default("lab"),
@@ -30,6 +36,7 @@ export const ExactImpactImprovementSourceSchema = z
   );
 
 export type ExactImpactSource = z.infer<typeof ExactImpactSourceSchema>;
+export type ExactImpactCompanionRatings = z.infer<typeof ExactImpactCompanionRatingsSchema>;
 export type ExactImpactImprovementReferenceFloorType = z.infer<typeof ExactImpactImprovementReferenceFloorTypeSchema>;
 export type ExactImpactImprovementSource = z.infer<typeof ExactImpactImprovementSourceSchema>;
 export type ExactImpactSourceLabOrField = z.infer<typeof ExactImpactSourceLabOrFieldSchema>;

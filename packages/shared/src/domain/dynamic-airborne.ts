@@ -2,11 +2,13 @@ import { z } from "zod";
 
 export const DynamicAirborneFamilySchema = z.enum([
   "rigid_massive_wall",
+  "masonry_nonhomogeneous",
   "single_leaf_panel",
   "laminated_single_leaf",
   "double_leaf",
   "lined_massive_wall",
   "stud_wall_system",
+  "double_stud_system",
   "multileaf_multicavity"
 ]);
 export type DynamicAirborneFamily = z.infer<typeof DynamicAirborneFamilySchema>;

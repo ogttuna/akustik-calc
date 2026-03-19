@@ -2,9 +2,15 @@ import { z } from "zod";
 
 export const RequestedOutputSchema = z.enum([
   "Rw",
+  "R'w",
   "STC",
   "C",
   "Ctr",
+  "DnT,w",
+  "DnT,A",
+  "DnT,A,k",
+  "Dn,w",
+  "Dn,A",
   "Ln,w",
   "L'n,w",
   "CI",
@@ -13,6 +19,7 @@ export const RequestedOutputSchema = z.enum([
   "DeltaLw",
   "L'nT,w",
   "L'nT,50",
+  "LnT,A",
   "IIC",
   "AIIC",
   "NISR",

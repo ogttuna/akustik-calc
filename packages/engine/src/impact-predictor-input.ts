@@ -1,6 +1,5 @@
 import { EXACT_FLOOR_SYSTEMS } from "@dynecho/catalogs";
 import type {
-  ExactFloorSystem,
   FloorSystemEstimateMatch,
   LayerInput,
   MaterialDefinition
@@ -43,6 +42,44 @@ const PRODUCT_ID_TO_MATERIAL_ID: Record<string, string> = {
 
 const PREDICTOR_THICKNESS_TOLERANCE_MM = 2;
 const PREDICTOR_DENSITY_TOLERANCE_KG_M3 = 200;
+const CEILING_CAVITY_MATERIAL_IDS = new Set([
+  "acoustic_hanger_ceiling",
+  "air_gap",
+  "furring_channel",
+  "genieclip_rst",
+  "resilient_channel",
+  "resilient_stud_ceiling",
+  "ubiq_resilient_ceiling"
+]);
+const RESILIENT_LAYER_MATERIAL_IDS = new Set([
+  "eps_underlay",
+  "generic_resilient_underlay",
+  "generic_resilient_underlay_s30",
+  "geniemat_rst02",
+  "geniemat_rst05",
+  "geniemat_rst12",
+  "getzner_afm_21",
+  "getzner_afm_23",
+  "getzner_afm_26",
+  "getzner_afm_29",
+  "getzner_afm_33",
+  "getzner_afm_35",
+  "mw_t_impact_layer",
+  "mw_t_impact_layer_s35",
+  "mw_t_impact_layer_s40",
+  "mw_t_impact_layer_s6",
+  "regupol_sonus_curve_8",
+  "regupol_sonus_multi_4_5",
+  "wf_t_impact_layer_s102"
+]);
+const FLOATING_SCREED_MATERIAL_IDS = new Set(["inex_floor_panel", "screed"]);
+const UPPER_FILL_MATERIAL_IDS = new Set([
+  "bonded_chippings",
+  "elastic_bonded_fill",
+  "generic_fill",
+  "non_bonded_chippings"
+]);
+const CEILING_BOARD_MATERIAL_IDS = new Set(["firestop_board", "gypsum_board", "impactstop_board"]);
 
 function sanitizeIdFragment(input: string): string {
   return input.trim().toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "");
@@ -330,6 +367,99 @@ function pushLayer(
   });
 }
 
+function isPotentialTopFloorFinish(material: MaterialDefinition): boolean {
+  return material.category === "finish" && !CEILING_BOARD_MATERIAL_IDS.has(material.id);
+}
+
+function inferMissingFloorRole(
+  layer: LayerInput,
+  material: MaterialDefinition,
+  context: {
+    hasSeparateTopFloorFinish: boolean;
+  }
+): LayerInput["floorRole"] | undefined {
+  if (material.id === "dry_floating_gypsum_fiberboard") {
+    return layer.thicknessMm >= 40 || context.hasSeparateTopFloorFinish
+      ? "floating_screed"
+      : "floor_covering";
+  }
+
+  if (CEILING_CAVITY_MATERIAL_IDS.has(material.id)) {
+    return "ceiling_cavity";
+  }
+
+  if (RESILIENT_LAYER_MATERIAL_IDS.has(material.id)) {
+    return "resilient_layer";
+  }
+
+  if (FLOATING_SCREED_MATERIAL_IDS.has(material.id)) {
+    return "floating_screed";
+  }
+
+  if (UPPER_FILL_MATERIAL_IDS.has(material.id)) {
+    return "upper_fill";
+  }
+
+  if (CEILING_BOARD_MATERIAL_IDS.has(material.id)) {
+    return "ceiling_board";
+  }
+
+  if (material.category === "gap") {
+    return "ceiling_cavity";
+  }
+
+  if (material.category === "insulation") {
+    return "ceiling_fill";
+  }
+
+  if (material.id === "concrete" || material.tags.includes("structural")) {
+    return "base_structure";
+  }
+
+  if (material.category === "finish") {
+    return "floor_covering";
+  }
+
+  if (material.category === "support") {
+    return "resilient_layer";
+  }
+
+  if (material.category === "mass") {
+    return "upper_fill";
+  }
+
+  return undefined;
+}
+
+function normalizeImpactPredictorLayerStack(
+  rawLayers: readonly BuildImpactPredictorLayerInput[],
+  catalog: readonly MaterialDefinition[]
+): ResolvedLayerStackEntry[] {
+  const parsedEntries = rawLayers.map((rawLayer) => {
+    const parsedLayer = LayerInputSchema.parse(rawLayer);
+    const material = resolveMaterial(parsedLayer.materialId, catalog);
+
+    return { parsedLayer, material };
+  });
+  const hasSeparateTopFloorFinish = parsedEntries.some(
+    ({ material }) => isPotentialTopFloorFinish(material) && material.id !== "dry_floating_gypsum_fiberboard"
+  );
+
+  return parsedEntries.map(({ parsedLayer, material }) => {
+    const floorRole =
+      parsedLayer.floorRole ??
+      inferMissingFloorRole(parsedLayer, material, {
+        hasSeparateTopFloorFinish
+      });
+
+    return {
+      ...parsedLayer,
+      floorRole,
+      material
+    };
+  });
+}
+
 function buildDynamicResilientMaterial(dynamicStiffnessMNm3: number): MaterialDefinition {
   const normalized = Number(dynamicStiffnessMNm3.toFixed(3));
   const id = `predictor_resilient_s_${sanitizeIdFragment(normalized.toString())}`;
@@ -390,6 +520,26 @@ function resolveBaseStructureMaterialId(input: ImpactPredictorInput): string | n
       return "composite_steel_deck";
     default:
       return null;
+  }
+}
+
+function inferStructuralSupportTypeFromBaseSlab(
+  input: ImpactPredictorInput
+): Pick<ImpactPredictorInput, "structuralSupportType"> {
+  if (input.structuralSupportType) {
+    return {};
+  }
+
+  const materialClass = input.baseSlab?.materialClass?.trim().toLowerCase();
+
+  switch (materialClass) {
+    case "heavy_concrete":
+    case "concrete":
+      return { structuralSupportType: "reinforced_concrete" };
+    case "hollow_core_plank":
+      return { structuralSupportType: "hollow_core" };
+    default:
+      return {};
   }
 }
 
@@ -581,6 +731,12 @@ function resolveDefaultFloorCoveringThicknessMm(input: ImpactPredictorInput): nu
 function resolveDefaultFloatingScreedThicknessMm(input: ImpactPredictorInput): number | undefined {
   if (typeof input.floatingScreed?.thicknessMm === "number" && input.floatingScreed.thicknessMm > 0) {
     return input.floatingScreed.thicknessMm;
+  }
+
+  if (
+    normalizePredictorMaterialClass(input.floorCovering?.materialClass) === "dry_floating_gypsum_fiberboard"
+  ) {
+    return undefined;
   }
 
   switch (input.impactSystemType) {
@@ -952,16 +1108,12 @@ function mergePredictorInput(
 export function buildImpactPredictorInputFromLayerStack(
   rawLayers: readonly BuildImpactPredictorLayerInput[],
   seedInput: ImpactPredictorInput = {},
-  assemblyMeta?: BuildImpactPredictorAssemblyMeta
+  assemblyMeta?: BuildImpactPredictorAssemblyMeta,
+  catalog: readonly MaterialDefinition[] = getDefaultMaterialCatalog()
 ): ImpactPredictorInput {
   void assemblyMeta;
   const explicitInput = ImpactPredictorInputSchema.parse(seedInput);
-  const catalog = getDefaultMaterialCatalog();
-  const layers = rawLayers.map((layer) => LayerInputSchema.parse(layer));
-  const resolvedLayers: ResolvedLayerStackEntry[] = layers.map((layer) => ({
-    ...layer,
-    material: resolveMaterial(layer.materialId, catalog)
-  }));
+  const resolvedLayers = normalizeImpactPredictorLayerStack(rawLayers, catalog);
 
   const baseStructure = firstLayerForRole(resolvedLayers, "base_structure");
   const resilientLayer = firstLayerForRole(resolvedLayers, "resilient_layer");
@@ -1038,21 +1190,25 @@ export function buildImpactPredictorInputFromLayerStack(
 }
 
 function canDerivePredictorInputFromLayerStack(
-  rawLayers: readonly BuildImpactPredictorLayerInput[]
+  rawLayers: readonly BuildImpactPredictorLayerInput[],
+  catalog: readonly MaterialDefinition[] = getDefaultMaterialCatalog()
 ): boolean {
-  return rawLayers.some((layer) => layer.floorRole === "base_structure");
+  return normalizeImpactPredictorLayerStack(rawLayers, catalog).some(
+    (layer) => layer.floorRole === "base_structure"
+  );
 }
 
 export function maybeBuildImpactPredictorInputFromLayerStack(
   rawLayers: readonly BuildImpactPredictorLayerInput[],
   seedInput: ImpactPredictorInput = {},
-  assemblyMeta?: BuildImpactPredictorAssemblyMeta
+  assemblyMeta?: BuildImpactPredictorAssemblyMeta,
+  catalog: readonly MaterialDefinition[] = getDefaultMaterialCatalog()
 ): ImpactPredictorInput | null {
-  if (!canDerivePredictorInputFromLayerStack(rawLayers)) {
+  if (!canDerivePredictorInputFromLayerStack(rawLayers, catalog)) {
     return null;
   }
 
-  const predictorInput = buildImpactPredictorInputFromLayerStack(rawLayers, seedInput, assemblyMeta);
+  const predictorInput = buildImpactPredictorInputFromLayerStack(rawLayers, seedInput, assemblyMeta, catalog);
 
   if (!predictorInput.structuralSupportType && !predictorInput.officialFloorSystemId) {
     return null;
@@ -1204,7 +1360,10 @@ function buildSourceLayersFromPredictorInput(
 }
 
 export function adaptImpactPredictorInput(rawInput: ImpactPredictorInput): PredictorAdaptation {
-  const input = ImpactPredictorInputSchema.parse(rawInput);
+  const input = ImpactPredictorInputSchema.parse({
+    ...rawInput,
+    ...inferStructuralSupportTypeFromBaseSlab(rawInput)
+  });
   const catalogAdditions: MaterialDefinition[] = [];
   const notes: string[] = [];
 

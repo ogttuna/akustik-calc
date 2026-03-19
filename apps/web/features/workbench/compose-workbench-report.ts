@@ -2,7 +2,6 @@ import {
   formatImpactValidationTolerance,
   getImpactValidationFamilyRegimeById,
   getImpactValidationFamilyIdFromSupportFamily,
-  getImpactValidationModeRegimeById,
   IMPACT_VALIDATION_CORPUS_SUMMARY,
   IMPACT_VALIDATION_FAMILY_MATRIX,
   IMPACT_VALIDATION_MODE_MATRIX,
@@ -18,6 +17,16 @@ import {
 } from "@dynecho/shared";
 
 import type { CriteriaPack } from "./criteria-packs";
+import {
+  DUTCH_DNTAK_REFERENCE_SOURCES,
+  getDutchResidentialDnTAkComplianceReportLines
+} from "./dutch-airborne-compliance";
+import {
+  DUTCH_IMPACT_REFERENCE_SOURCES,
+  getDutchResidentialImpactReferenceRows,
+  getDutchResidentialImpactReferenceReportLines
+} from "./dutch-impact-reference";
+import { getDnTAkReportLine } from "./dntak-source-mode";
 import { FIELD_RISK_BY_ID, summarizeFieldRisk, type FieldRiskId } from "./field-risk-model";
 import {
   formatImpactMetricBasisLabel,
@@ -112,29 +121,11 @@ function buildFloorSystemCompanionLines(
   return lines;
 }
 
-function formatImpactSnippet(impact: ImpactCalculation | null | undefined): string {
-  if (!impact) {
-    return "";
-  }
-
-  if (typeof impact.LPrimeNTw === "number") {
-    return `, L'nT,w ${formatMetric(impact.LPrimeNTw)} dB`;
-  }
-
-  if (typeof impact.LPrimeNW === "number") {
-    return `, L'n,w ${formatMetric(impact.LPrimeNW)} dB`;
-  }
-
-  if (typeof impact.LnW === "number") {
-    return `, Ln,w ${formatMetric(impact.LnW)} dB`;
-  }
-
-  return "";
-}
-
 function listOutputs(outputs: readonly RequestedOutputId[]): string {
   return outputs.map((output) => REQUESTED_OUTPUT_LABELS[output]).join(", ");
 }
+
+const DUTCH_IMPACT_OUTPUTS = new Set<RequestedOutputId>(["Ln,w", "L'n,w", "L'nT,w", "L'nT,50", "LnT,A"]);
 
 function buildImpactMetricBasisLines(impact: ImpactCalculation | null | undefined): string[] {
   return getActiveImpactMetricBasisRows(impact).map(
@@ -265,6 +256,23 @@ export function composeWorkbenchReport({
     currentScenario.warnings.length > 0
       ? currentScenario.warnings.map((warning: string) => `- ${warning}`)
       : ["- No explicit warnings in the live stack."];
+  const dnTAkReportLine = getDnTAkReportLine(currentScenario.result);
+  const dutchDnTAkComplianceLines = getDutchResidentialDnTAkComplianceReportLines(currentScenario.result);
+  const includeDutchImpactReferences =
+    Boolean(currentScenario.result) &&
+    (studyMode === "floor" || requestedOutputs.some((output) => DUTCH_IMPACT_OUTPUTS.has(output)));
+  const dutchImpactReferenceRows = includeDutchImpactReferences
+    ? getDutchResidentialImpactReferenceRows(currentScenario.result)
+    : [];
+  const dutchImpactReferenceLines = includeDutchImpactReferences
+    ? getDutchResidentialImpactReferenceReportLines(currentScenario.result)
+    : [];
+  const hasExactDutchImpactChecks = dutchImpactReferenceRows.some((row) => row.statusLabel !== "Need LnT,A");
+  const dutchReferenceSources = Array.from(
+    new Map(
+      [...DUTCH_DNTAK_REFERENCE_SOURCES, ...DUTCH_IMPACT_REFERENCE_SOURCES].map((source) => [source.url, source])
+    ).values()
+  );
 
   const currentResultBlock = currentScenario.result
     ? [
@@ -272,6 +280,7 @@ export function composeWorkbenchReport({
         `- ISO 717 composite: ${currentScenario.result.ratings.iso717.composite}`,
         `- Spectrum adaptation terms: C ${formatSignedMetric(currentScenario.result.metrics.estimatedCDb)} dB, Ctr ${formatSignedMetric(currentScenario.result.metrics.estimatedCtrDb)} dB`,
         `- STC: ${formatMetric(currentScenario.result.metrics.estimatedStc)} dB`,
+        ...(dnTAkReportLine ? [dnTAkReportLine] : []),
         `- Surface mass: ${formatMetric(currentScenario.result.metrics.surfaceMassKgM2)} kg/m²`,
         `- Total thickness: ${formatMetric(currentScenario.result.metrics.totalThicknessMm)} mm`,
         `- Cavity / insulation count: ${currentScenario.result.metrics.airGapCount} / ${currentScenario.result.metrics.insulationCount}`,
@@ -318,6 +327,9 @@ export function composeWorkbenchReport({
           : []),
         ...(currentScenario.result.impact
           ? [
+              ...(typeof currentScenario.result.impact.LnTA === "number"
+                ? [`- Impact LnT,A: ${formatMetric(currentScenario.result.impact.LnTA)} dB`] 
+                : []),
               ...(typeof currentScenario.result.impact.LnW === "number"
                 ? [`- Impact Ln,w: ${formatMetric(currentScenario.result.impact.LnW)} dB`]
                 : []),
@@ -472,6 +484,25 @@ export function composeWorkbenchReport({
     "",
     "## Targets",
     ...targetLines,
+    ...(dutchDnTAkComplianceLines.length > 0 || dutchImpactReferenceLines.length > 0
+      ? [
+          ...dutchReferenceSources.map((source) => `- Dutch reference source: ${source.label} | ${source.url}`),
+          ...(dutchDnTAkComplianceLines.length > 0
+            ? [
+                "- Dutch DnT,A,k lines below are compliance-reference checks only; they do not convert brochure thresholds into exact benchmark rows.",
+                ...dutchDnTAkComplianceLines
+              ]
+            : []),
+          ...(dutchImpactReferenceLines.length > 0
+            ? [
+                hasExactDutchImpactChecks
+                  ? "- Dutch LnT,A lines below are direct reference checks only on the narrow exact 125..2000 Hz field-octave lane; broader Ln,w / L'n,w / L'nT,w lanes still do not count as Dutch contact-sound compliance verdicts."
+                  : "- Dutch LnT,A lines below stay staged until DynEcho exposes NEN 5077 LnT,A directly; current Ln,w / L'n,w / L'nT,w lanes are not treated as Dutch contact-sound compliance verdicts.",
+                ...dutchImpactReferenceLines
+              ]
+            : [])
+        ]
+      : []),
     "",
     "## Live stack result",
     ...currentResultBlock,

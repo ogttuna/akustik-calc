@@ -60,7 +60,9 @@ export function DeliveryAssistPanel({
   const activeValidationMode = getActiveValidationMode(result);
   const impactHeadline =
     effectiveImpact
-      ? typeof effectiveImpact.LPrimeNTw === "number"
+      ? typeof effectiveImpact.LnTA === "number"
+          ? `LnT,A ${effectiveImpact.LnTA.toFixed(1)} dB`
+          : typeof effectiveImpact.LPrimeNTw === "number"
           ? `L'nT,w ${effectiveImpact.LPrimeNTw.toFixed(1)} dB`
           : typeof effectiveImpact.LPrimeNW === "number"
             ? `L'n,w ${effectiveImpact.LPrimeNW.toFixed(1)} dB`

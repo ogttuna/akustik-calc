@@ -190,6 +190,10 @@ export function buildImpactSupport(input: BuildImpactSupportInput): ImpactSuppor
     pushUnique(formulaNotes, "L'nT,50 was computed as Ln,w+CI + K + Hd.");
   }
 
+  if (input.impact?.metricBasis?.LnTA === "exact_source_dutch_lnta_from_octave_bands") {
+    pushUnique(formulaNotes, "Dutch LnT,A was computed from exact 125..2000 Hz field octave bands as 10 log10(sum 10^(LnT,i/10)) - 15.");
+  }
+
   if (
     typeof input.impact?.fieldEstimateLowerTreatmentReductionDb === "number" &&
     (

@@ -13,6 +13,7 @@
     "docker:build": "docker build -t dynecho-web .",
     "docker:up": "docker compose up --build",
     "e2e": "tsx tools/dev/run-playwright.ts",
+    "engine:benchmark-airborne": "tsx tools/engine/benchmark-airborne.ts",
     "engine:estimate": "tsx tools/engine/estimate.ts",
     "lint": "pnpm lint:repo && turbo run lint",
     "lint:repo": "eslint tools e2e playwright.config.ts",

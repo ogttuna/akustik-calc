@@ -280,6 +280,19 @@ export function ScenarioComparePanel({
                       {liveDecision.briefDeltaLabel ?? "Set Rw or Ln,w brief targets to turn the compare deck into a load decision surface."}
                     </p>
                   </div>
+                  {liveDecision.dutchReferenceStatusLabel && liveDecision.dutchReferenceStatusTone ? (
+                    <div className="mt-3 rounded-[1rem] border hairline bg-[color:var(--paper)]/70 px-3 py-3">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+                          Dutch DnT,A,k refs
+                        </div>
+                        <Pill tone={liveDecision.dutchReferenceStatusTone}>{liveDecision.dutchReferenceStatusLabel}</Pill>
+                      </div>
+                      <p className="mt-2 text-xs leading-6 text-[color:var(--ink-soft)]">
+                        {liveDecision.dutchReferenceDeltaLabel}
+                      </p>
+                    </div>
+                  ) : null}
                 </>
               ) : null}
             </article>
@@ -342,7 +355,9 @@ export function ScenarioComparePanel({
                       {summary.activeModeLabel ? <Pill tone="neutral">{summary.activeModeLabel}</Pill> : null}
                       {summary.fieldContinuationLabel ? <Pill tone="accent">{summary.fieldContinuationLabel}</Pill> : null}
                     </div>
-                    <div className="mt-4 grid gap-3 lg:grid-cols-2">
+                    <div
+                      className={`mt-4 grid gap-3 ${decision.dutchReferenceStatusLabel ? "lg:grid-cols-3" : "lg:grid-cols-2"}`}
+                    >
                       <div className="rounded-[1rem] border hairline bg-black/[0.025] px-3 py-3">
                         <div className="flex flex-wrap items-center justify-between gap-2">
                           <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
@@ -363,6 +378,19 @@ export function ScenarioComparePanel({
                           {decision.briefDeltaLabel ?? "No brief target armed for this comparison."}
                         </p>
                       </div>
+                      {decision.dutchReferenceStatusLabel && decision.dutchReferenceStatusTone ? (
+                        <div className="rounded-[1rem] border hairline bg-[color:var(--paper)]/70 px-3 py-3">
+                          <div className="flex flex-wrap items-center justify-between gap-2">
+                            <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+                              Dutch DnT,A,k refs
+                            </div>
+                            <Pill tone={decision.dutchReferenceStatusTone}>{decision.dutchReferenceStatusLabel}</Pill>
+                          </div>
+                          <p className="mt-2 text-xs leading-6 text-[color:var(--ink-soft)]">
+                            {decision.dutchReferenceDeltaLabel}
+                          </p>
+                        </div>
+                      ) : null}
                     </div>
                   </>
                 ) : null}

@@ -1,0 +1,54 @@
+{
+  "name": "Acoustic2 Web Masonry Rw Reference Set",
+  "description": "AAC + plaster Rw references collected from BIMobject/Xella Ytong technical pages (EN ISO 717-1 context).",
+  "cases": [
+    {
+      "id": "ytong_d700_125_plus_10_10",
+      "label": "Ytong D700: 10 mm plaster + 125 mm block + 10 mm plaster",
+      "source": "https://www.bimobject.com/en/xella-ytong/product/ytong-internal-wall-10-125-10-rw-44-db",
+      "expectedRw": 44.0,
+      "toleranceRw": 2.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialName": "Cement Plaster", "category": "Siva", "density": 1700, "thicknessMm": 10, "youngModulusPa": 8000000000, "poisson": 0.2, "damping": 0.02 },
+        { "materialName": "Ytong AAC D700", "category": "Kagir", "density": 700, "thicknessMm": 125, "youngModulusPa": 3500000000, "poisson": 0.2, "damping": 0.03 },
+        { "materialName": "Cement Plaster", "category": "Siva", "density": 1700, "thicknessMm": 10, "youngModulusPa": 8000000000, "poisson": 0.2, "damping": 0.02 }
+      ]
+    },
+    {
+      "id": "ytong_d700_150_plus_10_10",
+      "label": "Ytong D700: 10 mm plaster + 150 mm block + 10 mm plaster",
+      "source": "https://www.bimobject.com/en/xella-ytong/product/ytong-internal-wall-10-150-10-rw-47-db",
+      "expectedRw": 47.0,
+      "toleranceRw": 2.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialName": "Cement Plaster", "category": "Siva", "density": 1700, "thicknessMm": 10, "youngModulusPa": 8000000000, "poisson": 0.2, "damping": 0.02 },
+        { "materialName": "Ytong AAC D700", "category": "Kagir", "density": 700, "thicknessMm": 150, "youngModulusPa": 3500000000, "poisson": 0.2, "damping": 0.03 },
+        { "materialName": "Cement Plaster", "category": "Siva", "density": 1700, "thicknessMm": 10, "youngModulusPa": 8000000000, "poisson": 0.2, "damping": 0.02 }
+      ]
+    },
+    {
+      "id": "ytong_d700_200_plus_10_10",
+      "label": "Ytong D700: 10 mm plaster + 200 mm block + 10 mm plaster",
+      "source": "https://www.bimobject.com/en/xella-ytong/product/ytong-internal-wall-10-200-10-rw-50-db",
+      "expectedRw": 50.0,
+      "toleranceRw": 2.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialName": "Cement Plaster", "category": "Siva", "density": 1700, "thicknessMm": 10, "youngModulusPa": 8000000000, "poisson": 0.2, "damping": 0.02 },
+        { "materialName": "Ytong AAC D700", "category": "Kagir", "density": 700, "thicknessMm": 200, "youngModulusPa": 3500000000, "poisson": 0.2, "damping": 0.03 },
+        { "materialName": "Cement Plaster", "category": "Siva", "density": 1700, "thicknessMm": 10, "youngModulusPa": 8000000000, "poisson": 0.2, "damping": 0.02 }
+      ]
+    }
+  ]
+}

@@ -56,6 +56,7 @@ export const ImpactConfidenceProvenanceSchema = z.enum([
 export const ImpactMetricBasisLabelSchema = z.union([
   ImpactEstimateBasisSchema,
   z.enum([
+    "exact_source_dutch_lnta_from_octave_bands",
     "estimated_field_lprimenw_from_direct_flanking_energy_sum",
     "estimated_field_lprimenw_from_lnw_plus_k",
     "estimated_local_guide_tr_simple_method_lnwci_plus_k_plus_hd",
@@ -79,6 +80,7 @@ export const ImpactMetricBasisSchema = z
     LPrimeNW: ImpactMetricBasisLabelSchema.optional(),
     LPrimeNT50: ImpactMetricBasisLabelSchema.optional(),
     LPrimeNTw: ImpactMetricBasisLabelSchema.optional(),
+    LnTA: ImpactMetricBasisLabelSchema.optional(),
     LnW: ImpactMetricBasisLabelSchema.optional(),
     LnWPlusCI: ImpactMetricBasisLabelSchema.optional()
   })
@@ -120,6 +122,7 @@ export const ImpactCalculationSchema = z
     LPrimeNW: z.number().positive().optional(),
     LPrimeNT50: z.number().positive().optional(),
     LPrimeNTw: z.number().positive().optional(),
+    LnTA: z.number().positive().optional(),
     LnW: z.number().positive().optional(),
     LnWPlusCI: z.number().optional(),
     availableOutputs: z.array(RequestedOutputSchema).min(1),

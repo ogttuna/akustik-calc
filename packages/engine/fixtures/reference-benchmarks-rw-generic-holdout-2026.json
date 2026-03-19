@@ -1,0 +1,280 @@
+{
+  "name": "Acoustic2 Official Rw Generic Holdout Surrogates (2026-03-10)",
+  "description": "Official Knauf manufacturer references collected on 2026-03-10 and evaluated as element_lab surrogate holdouts. These cases intentionally avoid exact verified matching so they measure generic Rw solver quality rather than catalog anchoring.",
+  "cases": [
+    {
+      "id": "knauf_w111_50_75_a_rw_holdout_2026",
+      "label": "Knauf W111 50/75, 1x12.5 A board each side, generic Rw holdout",
+      "source": "https://knauf.com/api/download-center/v1/assets/8b5d23c5-a182-4ac8-81f7-2a6d7c289d12?country=nl&download=true (2026-03-10, Table 6: W111 50/75 -> Rw 34 dB; element_lab surrogate, exact field override intentionally disabled)",
+      "metricPath": "ratings.iso717.Rw",
+      "expectedValue": 34.0,
+      "toleranceValue": 3.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 75 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "knauf_w111_50_75_40mw_a_rw_holdout_2026",
+      "label": "Knauf W111 50/75 40 MW, 1x12.5 A board each side, generic Rw holdout",
+      "source": "https://knauf.com/api/download-center/v1/assets/8b5d23c5-a182-4ac8-81f7-2a6d7c289d12?country=nl&download=true (2026-03-10, Table 6: W111 50/75 40 MW -> Rw 42 dB; element_lab surrogate, exact field override intentionally disabled)",
+      "metricPath": "ratings.iso717.Rw",
+      "expectedValue": 42.0,
+      "toleranceValue": 3.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 35 },
+        { "materialId": "glasswool", "thicknessMm": 40 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "knauf_w111_75_100_60mw_a_rw_holdout_2026",
+      "label": "Knauf W111 75/100 60 MW, 1x12.5 A board each side, generic Rw holdout",
+      "source": "https://knauf.com/api/download-center/v1/assets/8b5d23c5-a182-4ac8-81f7-2a6d7c289d12?country=nl&download=true (2026-03-10, Table 6: W111 75/100 60 MW -> Rw 43 dB; element_lab surrogate, exact field override intentionally disabled)",
+      "metricPath": "ratings.iso717.Rw",
+      "expectedValue": 43.0,
+      "toleranceValue": 3.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 40 },
+        { "materialId": "glasswool", "thicknessMm": 60 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "knauf_w111_100_125_80mw_a_rw_holdout_2026",
+      "label": "Knauf W111 100/125 80 MW, 1x12.5 A board each side, generic Rw holdout",
+      "source": "https://knauf.com/api/download-center/v1/assets/8b5d23c5-a182-4ac8-81f7-2a6d7c289d12?country=nl&download=true (2026-03-10, Table 6: W111 100/125 80 MW -> Rw 46 dB; element_lab surrogate, exact field override intentionally disabled)",
+      "metricPath": "ratings.iso717.Rw",
+      "expectedValue": 46.0,
+      "toleranceValue": 3.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 45 },
+        { "materialId": "glasswool", "thicknessMm": 80 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "knauf_w112_50_100_a_rw_holdout_2026",
+      "label": "Knauf W112 50/100, 2x12.5 A board each side, generic Rw holdout",
+      "source": "https://knauf.com/api/download-center/v1/assets/8b5d23c5-a182-4ac8-81f7-2a6d7c289d12?country=nl&download=true (2026-03-10, Table 6: W112 50/100 -> Rw 42 dB; element_lab surrogate, exact field override intentionally disabled)",
+      "metricPath": "ratings.iso717.Rw",
+      "expectedValue": 42.0,
+      "toleranceValue": 3.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 100 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "knauf_w112_50_100_40mw_a_rw_holdout_2026",
+      "label": "Knauf W112 50/100 40 MW, 2x12.5 A board each side, generic Rw holdout",
+      "source": "https://knauf.com/api/download-center/v1/assets/8b5d23c5-a182-4ac8-81f7-2a6d7c289d12?country=nl&download=true (2026-03-10, Table 6: W112 50/100 40 MW -> Rw 50 dB; element_lab surrogate, exact field override intentionally disabled)",
+      "metricPath": "ratings.iso717.Rw",
+      "expectedValue": 50.0,
+      "toleranceValue": 3.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 60 },
+        { "materialId": "glasswool", "thicknessMm": 40 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "knauf_w112_75_125_60mw_a_rw_holdout_2026",
+      "label": "Knauf W112 75/125 60 MW, 2x12.5 A board each side, generic Rw holdout",
+      "source": "https://knauf.com/api/download-center/v1/assets/8b5d23c5-a182-4ac8-81f7-2a6d7c289d12?country=nl&download=true (2026-03-10, Table 6: W112 75/125 60 MW -> Rw 51 dB; element_lab surrogate, exact field override intentionally disabled)",
+      "metricPath": "ratings.iso717.Rw",
+      "expectedValue": 51.0,
+      "toleranceValue": 3.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 65 },
+        { "materialId": "glasswool", "thicknessMm": 60 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "knauf_w112_100_150_80mw_a_rw_holdout_2026",
+      "label": "Knauf W112 100/150 80 MW, 2x12.5 A board each side, generic Rw holdout",
+      "source": "https://knauf.com/api/download-center/v1/assets/8b5d23c5-a182-4ac8-81f7-2a6d7c289d12?country=nl&download=true (2026-03-10, Table 6: W112 100/150 80 MW -> Rw 52 dB; element_lab surrogate, exact field override intentionally disabled)",
+      "metricPath": "ratings.iso717.Rw",
+      "expectedValue": 52.0,
+      "toleranceValue": 3.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 70 },
+        { "materialId": "glasswool", "thicknessMm": 80 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "knauf_w113_50_125_40mw_a_rw_holdout_2026",
+      "label": "Knauf W113 50/125 40 MW, 3x12.5 A board each side, generic Rw holdout",
+      "source": "https://knauf.com/api/download-center/v1/assets/8b5d23c5-a182-4ac8-81f7-2a6d7c289d12?country=nl&download=true (2026-03-10, Table 6: W113 50/125 40 MW -> Rw 56 dB; element_lab surrogate, exact field override intentionally disabled)",
+      "metricPath": "ratings.iso717.Rw",
+      "expectedValue": 56.0,
+      "toleranceValue": 3.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 85 },
+        { "materialId": "glasswool", "thicknessMm": 40 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "knauf_w113_75_150_60mw_db_rw_holdout_2026",
+      "label": "Knauf W113 75/150 60 MW, 3x12.5 Diamond Board each side, generic Rw holdout",
+      "source": "https://knauf.com/api/download-center/v1/assets/8b5d23c5-a182-4ac8-81f7-2a6d7c289d12?country=nl&download=true (2026-03-10, Table 6: W113 75/150 60 MW DB -> Rw 66 dB; element_lab surrogate, exact field override intentionally disabled)",
+      "metricPath": "ratings.iso717.Rw",
+      "expectedValue": 66.0,
+      "toleranceValue": 5.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 90 },
+        { "materialId": "glasswool", "thicknessMm": 60 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "knauf_w115_2x75_205_60gw_rw_holdout_2026",
+      "label": "Knauf W115 2x75/205 60 GW, 2x12.5 Type A board each side, generic Rw holdout",
+      "source": "https://knauf.com/api/download-center/v1/assets/8b5d23c5-a182-4ac8-81f7-2a6d7c289d12?country=nl&download=true (2026-03-10, Table 1c: W115 2x75/205 60 GW -> Rw 61 dB, note 1 = Type A; split-cavity surrogate, exact override intentionally disabled)",
+      "metricPath": "ratings.iso717.Rw",
+      "expectedValue": 61.0,
+      "toleranceValue": 4.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good",
+        "sharedTrack": "independent"
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5, "boardClass": "standard_a_board" },
+        { "materialId": "gypsum", "thicknessMm": 12.5, "boardClass": "standard_a_board" },
+        { "materialId": "air_gap", "thicknessMm": 75 },
+        { "materialId": "glasswool", "thicknessMm": 60 },
+        { "materialId": "air_gap", "thicknessMm": 70 },
+        { "materialId": "gypsum", "thicknessMm": 12.5, "boardClass": "standard_a_board" },
+        { "materialId": "gypsum", "thicknessMm": 12.5, "boardClass": "standard_a_board" }
+      ]
+    },
+    {
+      "id": "knauf_w119_75_75_206_60gw_rw_holdout_2026",
+      "label": "Knauf W119 WK2 1.0 75.75/206 60 GW, attack side Security Board + Type A, non-attack side 2x Type A, generic Rw holdout",
+      "source": "https://knauf.com/api/download-center/v1/assets/8b5d23c5-a182-4ac8-81f7-2a6d7c289d12?country=nl&download=true (2026-03-10, Table 1d: W119 WK2 1.0 75.75/206 60 GW -> Rw 61 dB, note 1 = attack side Security Board AKV + Type A, non-attack side 2x Type A; split-cavity surrogate, exact override intentionally disabled)",
+      "metricPath": "ratings.iso717.Rw",
+      "expectedValue": 61.0,
+      "toleranceValue": 4.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good",
+        "sharedTrack": "independent"
+      },
+      "layers": [
+        { "materialId": "security_board", "thicknessMm": 12.5, "boardClass": "security_board" },
+        { "materialId": "gypsum", "thicknessMm": 12.5, "boardClass": "standard_a_board" },
+        { "materialId": "air_gap", "thicknessMm": 73 },
+        { "materialId": "glasswool", "thicknessMm": 60 },
+        { "materialId": "air_gap", "thicknessMm": 73 },
+        { "materialId": "gypsum", "thicknessMm": 12.5, "boardClass": "standard_a_board" },
+        { "materialId": "gypsum", "thicknessMm": 12.5, "boardClass": "standard_a_board" }
+      ]
+    }
+  ]
+}

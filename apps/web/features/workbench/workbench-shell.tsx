@@ -118,12 +118,19 @@ export function WorkbenchShell() {
   const activePresetId = useWorkbenchStore((state) => state.activePresetId);
   const calculatorId = useWorkbenchStore((state) => state.calculatorId);
   const airborneAirtightness = useWorkbenchStore((state) => state.airborneAirtightness);
+  const airborneConnectionType = useWorkbenchStore((state) => state.airborneConnectionType);
   const airborneContextMode = useWorkbenchStore((state) => state.airborneContextMode);
   const airborneElectricalBoxes = useWorkbenchStore((state) => state.airborneElectricalBoxes);
   const airborneJunctionQuality = useWorkbenchStore((state) => state.airborneJunctionQuality);
+  const airbornePanelHeightMm = useWorkbenchStore((state) => state.airbornePanelHeightMm);
+  const airbornePanelWidthMm = useWorkbenchStore((state) => state.airbornePanelWidthMm);
   const airbornePenetrationState = useWorkbenchStore((state) => state.airbornePenetrationState);
   const airbornePerimeterSeal = useWorkbenchStore((state) => state.airbornePerimeterSeal);
+  const airborneReceivingRoomRt60S = useWorkbenchStore((state) => state.airborneReceivingRoomRt60S);
+  const airborneReceivingRoomVolumeM3 = useWorkbenchStore((state) => state.airborneReceivingRoomVolumeM3);
   const airborneSharedTrack = useWorkbenchStore((state) => state.airborneSharedTrack);
+  const airborneStudSpacingMm = useWorkbenchStore((state) => state.airborneStudSpacingMm);
+  const airborneStudType = useWorkbenchStore((state) => state.airborneStudType);
   const briefNote = useWorkbenchStore((state) => state.briefNote);
   const clientName = useWorkbenchStore((state) => state.clientName);
   const criteriaPackId = useWorkbenchStore((state) => state.criteriaPackId);
@@ -191,12 +198,19 @@ export function WorkbenchShell() {
   const loadPreset = useWorkbenchStore((state) => state.loadPreset);
   const reset = useWorkbenchStore((state) => state.reset);
   const setAirborneAirtightness = useWorkbenchStore((state) => state.setAirborneAirtightness);
+  const setAirborneConnectionType = useWorkbenchStore((state) => state.setAirborneConnectionType);
   const setAirborneContextMode = useWorkbenchStore((state) => state.setAirborneContextMode);
   const setAirborneElectricalBoxes = useWorkbenchStore((state) => state.setAirborneElectricalBoxes);
   const setAirborneJunctionQuality = useWorkbenchStore((state) => state.setAirborneJunctionQuality);
+  const setAirbornePanelHeightMm = useWorkbenchStore((state) => state.setAirbornePanelHeightMm);
+  const setAirbornePanelWidthMm = useWorkbenchStore((state) => state.setAirbornePanelWidthMm);
   const setAirbornePenetrationState = useWorkbenchStore((state) => state.setAirbornePenetrationState);
   const setAirbornePerimeterSeal = useWorkbenchStore((state) => state.setAirbornePerimeterSeal);
+  const setAirborneReceivingRoomRt60S = useWorkbenchStore((state) => state.setAirborneReceivingRoomRt60S);
+  const setAirborneReceivingRoomVolumeM3 = useWorkbenchStore((state) => state.setAirborneReceivingRoomVolumeM3);
   const setAirborneSharedTrack = useWorkbenchStore((state) => state.setAirborneSharedTrack);
+  const setAirborneStudSpacingMm = useWorkbenchStore((state) => state.setAirborneStudSpacingMm);
+  const setAirborneStudType = useWorkbenchStore((state) => state.setAirborneStudType);
   const commandPalette = useCommandPalette();
 
   const deferredRows = useDeferredValue(rows);
@@ -245,12 +259,24 @@ export function WorkbenchShell() {
     studyMode === "wall"
       ? {
           airtightness: airborneAirtightness,
+          connectionType: airborneConnectionType,
           contextMode: airborneContextMode,
           electricalBoxes: airborneElectricalBoxes,
           junctionQuality: airborneJunctionQuality,
+          panelHeightMm:
+            airbornePanelHeightMm.trim().length > 0 ? Number(airbornePanelHeightMm) : undefined,
+          panelWidthMm:
+            airbornePanelWidthMm.trim().length > 0 ? Number(airbornePanelWidthMm) : undefined,
           penetrationState: airbornePenetrationState,
           perimeterSeal: airbornePerimeterSeal,
-          sharedTrack: airborneSharedTrack
+          receivingRoomRt60S:
+            airborneReceivingRoomRt60S.trim().length > 0 ? Number(airborneReceivingRoomRt60S) : undefined,
+          receivingRoomVolumeM3:
+            airborneReceivingRoomVolumeM3.trim().length > 0 ? Number(airborneReceivingRoomVolumeM3) : undefined,
+          sharedTrack: airborneSharedTrack,
+          studSpacingMm:
+            airborneStudSpacingMm.trim().length > 0 ? Number(airborneStudSpacingMm) : undefined,
+          studType: airborneStudType
         }
       : null;
   const currentScenario = evaluateScenario({
@@ -333,12 +359,34 @@ export function WorkbenchShell() {
           scenario.studyMode === "wall"
             ? {
                 airtightness: scenario.airborneAirtightness ?? "good",
+                connectionType: scenario.airborneConnectionType ?? "auto",
                 contextMode: scenario.airborneContextMode ?? "element_lab",
                 electricalBoxes: scenario.airborneElectricalBoxes ?? "none",
                 junctionQuality: scenario.airborneJunctionQuality ?? "good",
+                panelHeightMm:
+                  scenario.airbornePanelHeightMm?.trim().length
+                    ? Number(scenario.airbornePanelHeightMm)
+                    : undefined,
+                panelWidthMm:
+                  scenario.airbornePanelWidthMm?.trim().length
+                    ? Number(scenario.airbornePanelWidthMm)
+                    : undefined,
                 penetrationState: scenario.airbornePenetrationState ?? "none",
                 perimeterSeal: scenario.airbornePerimeterSeal ?? "good",
-                sharedTrack: scenario.airborneSharedTrack ?? "independent"
+                receivingRoomRt60S:
+                  scenario.airborneReceivingRoomRt60S?.trim().length
+                    ? Number(scenario.airborneReceivingRoomRt60S)
+                    : undefined,
+                receivingRoomVolumeM3:
+                  scenario.airborneReceivingRoomVolumeM3?.trim().length
+                    ? Number(scenario.airborneReceivingRoomVolumeM3)
+                    : undefined,
+                sharedTrack: scenario.airborneSharedTrack ?? "independent",
+                studSpacingMm:
+                  scenario.airborneStudSpacingMm?.trim().length
+                    ? Number(scenario.airborneStudSpacingMm)
+                    : undefined,
+                studType: scenario.airborneStudType ?? "auto"
               }
             : null,
         calculator: scenario.calculatorId ?? "dynamic",
@@ -727,20 +775,34 @@ export function WorkbenchShell() {
       >
         <AirborneContextPanel
           airtightness={airborneAirtightness}
+          connectionType={airborneConnectionType}
           contextMode={airborneContextMode}
           electricalBoxes={airborneElectricalBoxes}
           junctionQuality={airborneJunctionQuality}
           onAirtightnessChange={setAirborneAirtightness}
+          onConnectionTypeChange={setAirborneConnectionType}
           onContextModeChange={setAirborneContextMode}
           onElectricalBoxesChange={setAirborneElectricalBoxes}
           onJunctionQualityChange={setAirborneJunctionQuality}
+          onPanelHeightMmChange={setAirbornePanelHeightMm}
+          onPanelWidthMmChange={setAirbornePanelWidthMm}
           onPenetrationStateChange={setAirbornePenetrationState}
           onPerimeterSealChange={setAirbornePerimeterSeal}
+          onReceivingRoomRt60SChange={setAirborneReceivingRoomRt60S}
+          onReceivingRoomVolumeM3Change={setAirborneReceivingRoomVolumeM3}
           onSharedTrackChange={setAirborneSharedTrack}
+          onStudSpacingMmChange={setAirborneStudSpacingMm}
+          onStudTypeChange={setAirborneStudType}
           overlay={result?.airborneOverlay ?? null}
+          panelHeightMm={airbornePanelHeightMm}
+          panelWidthMm={airbornePanelWidthMm}
           penetrationState={airbornePenetrationState}
           perimeterSeal={airbornePerimeterSeal}
+          receivingRoomRt60S={airborneReceivingRoomRt60S}
+          receivingRoomVolumeM3={airborneReceivingRoomVolumeM3}
           sharedTrack={airborneSharedTrack}
+          studSpacingMm={airborneStudSpacingMm}
+          studType={airborneStudType}
           studyMode={studyMode}
         />
       </WorkbenchChapter>

@@ -28,6 +28,27 @@ describe("buildExactImpactFromSource", () => {
     expect(result?.metricBasis?.LnWPlusCI).toBe("exact_source_band_curve_iso7172");
   });
 
+  it("carries an exact companion DeltaLw override without replacing the rated lab band curve", () => {
+    const result = buildExactImpactFromSource({
+      companionRatings: {
+        DeltaLw: 18
+      },
+      frequenciesHz: [50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500, 3150],
+      labOrField: "lab",
+      levelsDb: [60, 59, 58, 58, 57, 56, 55, 54, 53, 52, 51, 50, 49, 48, 47, 46, 45, 44, 43],
+      standardMethod: "ISO 10140-3"
+    });
+
+    expect(result).not.toBeNull();
+    expect(result?.basis).toBe("exact_source_band_curve_iso7172");
+    expect(result?.LnW).toBe(53);
+    expect(result?.DeltaLw).toBe(18);
+    expect(result?.availableOutputs).toEqual(["Ln,w", "CI", "CI,50-2500", "Ln,w+CI", "DeltaLw"]);
+    expect(result?.metricBasis?.LnW).toBe("exact_source_band_curve_iso7172");
+    expect(result?.metricBasis?.DeltaLw).toBe("exact_source_rating_override");
+    expect(result?.notes.some((note) => /Exact companion rating override carried DeltaLw/i.test(note))).toBe(true);
+  });
+
   it("derives exact field-side impact ratings from a nominal one-third-octave curve", () => {
     const result = buildExactImpactFromSource({
       frequenciesHz: [50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500, 3150],
@@ -46,6 +67,23 @@ describe("buildExactImpactFromSource", () => {
     expect(result?.availableOutputs).toEqual(["L'nT,w", "CI", "CI,50-2500", "L'nT,50"]);
     expect(result?.metricBasis?.LPrimeNTw).toBe("exact_source_band_curve_iso7172");
     expect(result?.metricBasis?.LPrimeNT50).toBe("exact_source_band_curve_iso7172");
+  });
+
+  it("derives Dutch LnT,A only from exact five-octave field bands", () => {
+    const result = buildExactImpactFromSource({
+      frequenciesHz: [125, 250, 500, 1000, 2000],
+      labOrField: "field",
+      levelsDb: [60.3, 61.7, 63.1, 63.5, 59.2],
+      standardMethod: "NEN 5077 / ISO 16283-2"
+    });
+
+    expect(result).not.toBeNull();
+    expect(result?.LPrimeNTw).toBe(66);
+    expect(result?.CI).toBe(-12);
+    expect(result?.LnTA).toBe(53.8);
+    expect(result?.availableOutputs).toEqual(["L'nT,w", "CI", "LnT,A"]);
+    expect(result?.metricBasis?.LnTA).toBe("exact_source_dutch_lnta_from_octave_bands");
+    expect(result?.notes.some((note) => /Dutch LnT,A was derived directly/i.test(note))).toBe(true);
   });
 
   it("fails closed for off-grid impact bands", () => {

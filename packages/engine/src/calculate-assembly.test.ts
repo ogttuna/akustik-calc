@@ -8,6 +8,13 @@ const EXACT_IMPACT_SOURCE_19 = {
   levelsDb: [60, 59, 58, 58, 57, 56, 55, 54, 53, 52, 51, 50, 49, 48, 47, 46, 45, 44, 43]
 };
 
+const EXACT_FIELD_OCTAVE_SOURCE_5 = {
+  frequenciesHz: [125, 250, 500, 1000, 2000],
+  labOrField: "field" as const,
+  levelsDb: [60.3, 61.7, 63.1, 63.5, 59.2],
+  standardMethod: "NEN 5077 / ISO 16283-2"
+};
+
 const DIRECT_FLANKING_FIELD_CONTEXT = {
   directPathOffsetDb: 1,
   flankingPaths: [
@@ -61,11 +68,2952 @@ describe("calculateAssembly", () => {
     ]);
 
     expect(singleLeaf.metrics.estimatedRwDb).toBe(29.2);
-    expect(splitLeaf.metrics.estimatedRwDb).toBe(25.1);
+    expect(splitLeaf.metrics.estimatedRwDb).toBe(26.3);
     expect(splitLeaf.warnings).toContain(
       "Cavity assemblies are currently screened with a conservative local heuristic."
     );
     expect(splitLeaf.ratings.astmE413.STC).toBeGreaterThan(0);
+  });
+
+  it("keeps symmetric lightweight cavity board systems close to the upstream screening corridor", () => {
+    const singleBoardEmpty = calculateAssembly([
+      { materialId: "gypsum_board", thicknessMm: 12.5 },
+      { materialId: "air_gap", thicknessMm: 75 },
+      { materialId: "gypsum_board", thicknessMm: 12.5 }
+    ]);
+    const doubleBoardEmpty = calculateAssembly([
+      { materialId: "gypsum_board", thicknessMm: 12.5 },
+      { materialId: "gypsum_board", thicknessMm: 12.5 },
+      { materialId: "air_gap", thicknessMm: 100 },
+      { materialId: "gypsum_board", thicknessMm: 12.5 },
+      { materialId: "gypsum_board", thicknessMm: 12.5 }
+    ]);
+    const doubleBoardFilled = calculateAssembly([
+      { materialId: "gypsum_board", thicknessMm: 12.5 },
+      { materialId: "gypsum_board", thicknessMm: 12.5 },
+      { materialId: "air_gap", thicknessMm: 60 },
+      { materialId: "rockwool", thicknessMm: 40 },
+      { materialId: "gypsum_board", thicknessMm: 12.5 },
+      { materialId: "gypsum_board", thicknessMm: 12.5 }
+    ]);
+    const tripleBoardEmpty = calculateAssembly([
+      { materialId: "gypsum_board", thicknessMm: 12.5 },
+      { materialId: "gypsum_board", thicknessMm: 12.5 },
+      { materialId: "gypsum_board", thicknessMm: 12.5 },
+      { materialId: "air_gap", thicknessMm: 92 },
+      { materialId: "gypsum_board", thicknessMm: 12.5 },
+      { materialId: "gypsum_board", thicknessMm: 12.5 },
+      { materialId: "gypsum_board", thicknessMm: 12.5 }
+    ]);
+    const acousticSingleBoardEmpty = calculateAssembly([
+      { materialId: "acoustic_gypsum_board", thicknessMm: 15 },
+      { materialId: "air_gap", thicknessMm: 50 },
+      { materialId: "acoustic_gypsum_board", thicknessMm: 15 }
+    ]);
+    const acousticTripleBoardFilled = calculateAssembly([
+      { materialId: "acoustic_gypsum_board", thicknessMm: 12.5 },
+      { materialId: "acoustic_gypsum_board", thicknessMm: 12.5 },
+      { materialId: "acoustic_gypsum_board", thicknessMm: 12.5 },
+      { materialId: "air_gap", thicknessMm: 85 },
+      { materialId: "rockwool", thicknessMm: 40 },
+      { materialId: "acoustic_gypsum_board", thicknessMm: 12.5 },
+      { materialId: "acoustic_gypsum_board", thicknessMm: 12.5 },
+      { materialId: "acoustic_gypsum_board", thicknessMm: 12.5 }
+    ]);
+    const diamondTripleBoardFilled = calculateAssembly([
+      { materialId: "diamond_board", thicknessMm: 12.5 },
+      { materialId: "diamond_board", thicknessMm: 12.5 },
+      { materialId: "diamond_board", thicknessMm: 12.5 },
+      { materialId: "air_gap", thicknessMm: 85 },
+      { materialId: "rockwool", thicknessMm: 40 },
+      { materialId: "diamond_board", thicknessMm: 12.5 },
+      { materialId: "diamond_board", thicknessMm: 12.5 },
+      { materialId: "diamond_board", thicknessMm: 12.5 }
+    ]);
+
+    expect(singleBoardEmpty.metrics.estimatedRwDb).toBe(25.6);
+    expect(doubleBoardEmpty.metrics.estimatedRwDb).toBe(30.7);
+    expect(doubleBoardFilled.metrics.estimatedRwDb).toBe(31);
+    expect(tripleBoardEmpty.metrics.estimatedRwDb).toBe(33.5);
+    expect(acousticSingleBoardEmpty.metrics.estimatedRwDb).toBe(27.8);
+    expect(acousticTripleBoardFilled.metrics.estimatedRwDb).toBe(36.4);
+    expect(diamondTripleBoardFilled.metrics.estimatedRwDb).toBe(36.4);
+  });
+
+  it("keeps nominal firestop board mass aligned with the upstream screening lane", () => {
+    const firestopSingleBoardEmpty = calculateAssembly([
+      { materialId: "firestop_board", thicknessMm: 15 },
+      { materialId: "air_gap", thicknessMm: 50 },
+      { materialId: "firestop_board", thicknessMm: 15 }
+    ]);
+    const firestopThinSingleBoardEmpty = calculateAssembly([
+      { materialId: "firestop_board", thicknessMm: 12.5 },
+      { materialId: "air_gap", thicknessMm: 50 },
+      { materialId: "firestop_board", thicknessMm: 12.5 }
+    ]);
+
+    expect(firestopSingleBoardEmpty.metrics.totalThicknessMm).toBe(80);
+    expect(firestopSingleBoardEmpty.metrics.surfaceMassKgM2).toBe(26.2);
+    expect(firestopSingleBoardEmpty.metrics.estimatedRwDb).toBe(26.7);
+    expect(firestopThinSingleBoardEmpty.metrics.totalThicknessMm).toBe(75);
+    expect(firestopThinSingleBoardEmpty.metrics.surfaceMassKgM2).toBe(26.2);
+    expect(firestopThinSingleBoardEmpty.metrics.estimatedRwDb).toBe(26.7);
+  });
+
+  it("supports upstream enhanced board profiles without collapsing them onto firestop", () => {
+    const diamondBoard = calculateAssembly([
+      { materialId: "diamond_board", thicknessMm: 12.5 },
+      { materialId: "air_gap", thicknessMm: 50 },
+      { materialId: "diamond_board", thicknessMm: 12.5 }
+    ]);
+    const securityBoard = calculateAssembly([
+      { materialId: "security_board", thicknessMm: 12.5 },
+      { materialId: "air_gap", thicknessMm: 50 },
+      { materialId: "security_board", thicknessMm: 12.5 }
+    ]);
+    const silentBoard = calculateAssembly([
+      { materialId: "silentboard", thicknessMm: 12.5 },
+      { materialId: "air_gap", thicknessMm: 50 },
+      { materialId: "silentboard", thicknessMm: 12.5 }
+    ]);
+
+    expect(diamondBoard.metrics.surfaceMassKgM2).toBe(25.6);
+    expect(securityBoard.metrics.surfaceMassKgM2).toBe(18.4);
+    expect(silentBoard.metrics.surfaceMassKgM2).toBe(36.8);
+  });
+
+  it("keeps security board and silentboard cavity systems close to the upstream board-profile corridor", () => {
+    const securitySingleBoardEmpty = calculateAssembly([
+      { materialId: "security_board", thicknessMm: 12.5 },
+      { materialId: "air_gap", thicknessMm: 50 },
+      { materialId: "security_board", thicknessMm: 12.5 }
+    ]);
+    const securityDoubleBoardFilled = calculateAssembly([
+      { materialId: "security_board", thicknessMm: 12.5 },
+      { materialId: "security_board", thicknessMm: 12.5 },
+      { materialId: "air_gap", thicknessMm: 14 },
+      { materialId: "rockwool", thicknessMm: 50 },
+      { materialId: "security_board", thicknessMm: 12.5 },
+      { materialId: "security_board", thicknessMm: 12.5 }
+    ]);
+    const silentSingleBoardEmpty = calculateAssembly([
+      { materialId: "silentboard", thicknessMm: 12.5 },
+      { materialId: "air_gap", thicknessMm: 50 },
+      { materialId: "silentboard", thicknessMm: 12.5 }
+    ]);
+    const silentDoubleBoardFilled = calculateAssembly([
+      { materialId: "silentboard", thicknessMm: 12.5 },
+      { materialId: "silentboard", thicknessMm: 12.5 },
+      { materialId: "air_gap", thicknessMm: 14 },
+      { materialId: "rockwool", thicknessMm: 50 },
+      { materialId: "silentboard", thicknessMm: 12.5 },
+      { materialId: "silentboard", thicknessMm: 12.5 }
+    ]);
+
+    expect(securitySingleBoardEmpty.metrics.estimatedRwDb).toBe(24.5);
+    expect(securityDoubleBoardFilled.metrics.estimatedRwDb).toBe(30.1);
+    expect(silentSingleBoardEmpty.metrics.estimatedRwDb).toBe(29.6);
+    expect(silentDoubleBoardFilled.metrics.estimatedRwDb).toBe(35.9);
+  });
+
+  it("keeps mixed silentboard split-cavity screening close to the upstream corridor", () => {
+    const silentboardGypsumMixed = calculateAssembly([
+      { materialId: "silentboard", thicknessMm: 12.5 },
+      { materialId: "gypsum", thicknessMm: 12.5 },
+      { materialId: "air_gap", thicknessMm: 73 },
+      { materialId: "glasswool", thicknessMm: 60 },
+      { materialId: "air_gap", thicknessMm: 73 },
+      { materialId: "gypsum", thicknessMm: 12.5 },
+      { materialId: "gypsum", thicknessMm: 12.5 }
+    ]);
+    const silentboardHeavyMixed = calculateAssembly([
+      { materialId: "silentboard", thicknessMm: 12.5 },
+      { materialId: "silentboard", thicknessMm: 12.5 },
+      { materialId: "air_gap", thicknessMm: 73 },
+      { materialId: "glasswool", thicknessMm: 60 },
+      { materialId: "air_gap", thicknessMm: 73 },
+      { materialId: "gypsum", thicknessMm: 12.5 },
+      { materialId: "gypsum", thicknessMm: 12.5 }
+    ]);
+
+    expect(silentboardGypsumMixed.metrics.surfaceMassKgM2).toBe(51.2);
+    expect(silentboardGypsumMixed.metrics.estimatedRwDb).toBe(31.9);
+    expect(silentboardHeavyMixed.metrics.surfaceMassKgM2).toBe(59);
+    expect(silentboardHeavyMixed.metrics.estimatedRwDb).toBe(33.1);
+  });
+
+  it("keeps deeper lightly filled double-board framed holdouts inside the published W112 corridor", () => {
+    const airborneContext = {
+      contextMode: "element_lab",
+      connectionType: "line_connection",
+      studType: "light_steel_stud",
+      studSpacingMm: 600,
+      airtightness: "good"
+    } as const;
+
+    const w112_50_100_40 = calculateAssembly(
+      [
+        { materialId: "gypsum", thicknessMm: 12.5 },
+        { materialId: "gypsum", thicknessMm: 12.5 },
+        { materialId: "air_gap", thicknessMm: 60 },
+        { materialId: "glasswool", thicknessMm: 40 },
+        { materialId: "gypsum", thicknessMm: 12.5 },
+        { materialId: "gypsum", thicknessMm: 12.5 }
+      ],
+      { airborneContext, calculator: "dynamic", targetOutputs: ["Rw"] }
+    );
+    const w112_75_125_60 = calculateAssembly(
+      [
+        { materialId: "gypsum", thicknessMm: 12.5 },
+        { materialId: "gypsum", thicknessMm: 12.5 },
+        { materialId: "air_gap", thicknessMm: 65 },
+        { materialId: "glasswool", thicknessMm: 60 },
+        { materialId: "gypsum", thicknessMm: 12.5 },
+        { materialId: "gypsum", thicknessMm: 12.5 }
+      ],
+      { airborneContext, calculator: "dynamic", targetOutputs: ["Rw"] }
+    );
+    const w112_100_150_80 = calculateAssembly(
+      [
+        { materialId: "gypsum", thicknessMm: 12.5 },
+        { materialId: "gypsum", thicknessMm: 12.5 },
+        { materialId: "air_gap", thicknessMm: 70 },
+        { materialId: "glasswool", thicknessMm: 80 },
+        { materialId: "gypsum", thicknessMm: 12.5 },
+        { materialId: "gypsum", thicknessMm: 12.5 }
+      ],
+      { airborneContext, calculator: "dynamic", targetOutputs: ["Rw"] }
+    );
+
+    expect(w112_50_100_40.ratings.iso717.Rw).toBe(50);
+    expect(w112_75_125_60.ratings.iso717.Rw).toBe(51);
+    expect(w112_100_150_80.ratings.iso717.Rw).toBe(52);
+    expect(w112_100_150_80.dynamicAirborneTrace?.notes.some((note: string) => /deep lightly filled single-cavity double-board trim/i.test(note))).toBe(true);
+  });
+
+  it("keeps compact W111 fills and high-spec W113 acoustic fills on their published lab corridor", () => {
+    const airborneContext = {
+      contextMode: "element_lab",
+      connectionType: "line_connection",
+      studType: "light_steel_stud",
+      studSpacingMm: 600,
+      airtightness: "good"
+    } as const;
+
+    const w111_50_75_40 = calculateAssembly(
+      [
+        { materialId: "gypsum", thicknessMm: 12.5 },
+        { materialId: "air_gap", thicknessMm: 35 },
+        { materialId: "glasswool", thicknessMm: 40 },
+        { materialId: "gypsum", thicknessMm: 12.5 }
+      ],
+      { airborneContext, calculator: "dynamic", targetOutputs: ["Rw"] }
+    );
+    const w113_75_150_60 = calculateAssembly(
+      [
+        { materialId: "acoustic_gypsum_board", thicknessMm: 12.5 },
+        { materialId: "acoustic_gypsum_board", thicknessMm: 12.5 },
+        { materialId: "acoustic_gypsum_board", thicknessMm: 12.5 },
+        { materialId: "air_gap", thicknessMm: 90 },
+        { materialId: "glasswool", thicknessMm: 60 },
+        { materialId: "acoustic_gypsum_board", thicknessMm: 12.5 },
+        { materialId: "acoustic_gypsum_board", thicknessMm: 12.5 },
+        { materialId: "acoustic_gypsum_board", thicknessMm: 12.5 }
+      ],
+      { airborneContext, calculator: "dynamic", targetOutputs: ["Rw"] }
+    );
+
+    expect(w111_50_75_40.ratings.iso717.Rw).toBe(42);
+    expect(w113_75_150_60.ratings.iso717.Rw).toBe(66);
+    expect(w111_50_75_40.dynamicAirborneTrace?.notes.some((note: string) => /compact filled single-board lift/i.test(note))).toBe(true);
+    expect(w113_75_150_60.dynamicAirborneTrace?.notes.some((note: string) => /high-spec acoustic triple-board lift/i.test(note))).toBe(true);
+  });
+
+  it("keeps deeper high-fill single-board framed field holdouts inside the local field corridor", () => {
+    const airborneContext = {
+      contextMode: "field_between_rooms",
+      connectionType: "line_connection",
+      studType: "light_steel_stud",
+      studSpacingMm: 600,
+      airtightness: "good",
+      perimeterSeal: "good",
+      penetrationState: "none",
+      junctionQuality: "good",
+      sharedTrack: "independent",
+      electricalBoxes: "none",
+      panelWidthMm: 3000,
+      panelHeightMm: 2600,
+      receivingRoomVolumeM3: 30,
+      receivingRoomRt60S: 0.5
+    } as const;
+
+    const w111_100_125_80 = calculateAssembly(
+      [
+        { materialId: "gypsum", thicknessMm: 12.5 },
+        { materialId: "air_gap", thicknessMm: 45 },
+        { materialId: "glasswool", thicknessMm: 80 },
+        { materialId: "gypsum", thicknessMm: 12.5 }
+      ],
+      { airborneContext, calculator: "dynamic", targetOutputs: ["R'w", "DnT,w", "DnT,A"] }
+    );
+
+    expect(w111_100_125_80.ratings.field?.DnTA).toBe(38);
+    expect(
+      w111_100_125_80.warnings.some((warning: string) => /high-fill single-board stud field lift/i.test(warning))
+    ).toBe(true);
+  });
+
+  it("keeps explicit framed micro-gap high-fill cavities close to their fill-only equivalents", () => {
+    const cases = [
+      { board: "diamond_board", fill: "rockwool", gap: 10, thicknessMm: 12.5, totalFillMm: 100 },
+      { board: "fire_board", fill: "rockwool", gap: 12, thicknessMm: 12.5, totalFillMm: 100 },
+      { board: "gypsum", fill: "glasswool", gap: 12, thicknessMm: 12.5, totalFillMm: 125 }
+    ] as const;
+    const contexts = [
+      {
+        contextMode: "element_lab",
+        connectionType: "line_connection",
+        studType: "light_steel_stud",
+        studSpacingMm: 600,
+        airtightness: "good"
+      },
+      {
+        contextMode: "field_between_rooms",
+        connectionType: "line_connection",
+        studType: "light_steel_stud",
+        studSpacingMm: 600,
+        airtightness: "good",
+        perimeterSeal: "good",
+        penetrationState: "none",
+        junctionQuality: "good",
+        panelWidthMm: 2800,
+        panelHeightMm: 2600,
+        receivingRoomVolumeM3: 34,
+        receivingRoomRt60S: 0.5
+      }
+    ] as const;
+    let appliedGuardCount = 0;
+
+    for (const airborneContext of contexts) {
+      for (const entry of cases) {
+        const microGap = calculateAssembly(
+          [
+            { materialId: entry.board, thicknessMm: entry.thicknessMm },
+            { materialId: "air_gap", thicknessMm: entry.gap },
+            { materialId: entry.fill, thicknessMm: entry.totalFillMm - entry.gap },
+            { materialId: entry.board, thicknessMm: entry.thicknessMm }
+          ],
+          {
+            airborneContext,
+            calculator: "dynamic",
+            targetOutputs:
+              airborneContext.contextMode === "field_between_rooms"
+                ? ["R'w", "DnT,w", "DnT,A"]
+                : ["Rw"]
+          }
+        );
+        const fillOnly = calculateAssembly(
+          [
+            { materialId: entry.board, thicknessMm: entry.thicknessMm },
+            { materialId: entry.fill, thicknessMm: entry.totalFillMm },
+            { materialId: entry.board, thicknessMm: entry.thicknessMm }
+          ],
+          {
+            airborneContext,
+            calculator: "dynamic",
+            targetOutputs:
+              airborneContext.contextMode === "field_between_rooms"
+                ? ["R'w", "DnT,w", "DnT,A"]
+                : ["Rw"]
+          }
+        );
+
+        const microMetric =
+          airborneContext.contextMode === "field_between_rooms"
+            ? microGap.ratings.iso717.RwPrime
+            : microGap.ratings.iso717.Rw;
+        const fillMetric =
+          airborneContext.contextMode === "field_between_rooms"
+            ? fillOnly.ratings.iso717.RwPrime
+            : fillOnly.ratings.iso717.Rw;
+        const toleranceDb = airborneContext.contextMode === "field_between_rooms" ? 3 : 2;
+
+        expect(Math.abs(microMetric - fillMetric)).toBeLessThanOrEqual(toleranceDb);
+
+        if (airborneContext.contextMode === "field_between_rooms") {
+          expect(
+            Math.abs((microGap.ratings.field?.DnTw ?? 0) - (fillOnly.ratings.field?.DnTw ?? 0))
+          ).toBeLessThanOrEqual(3);
+        }
+
+        if (microGap.warnings.some((warning: string) => /fill-only equivalent field corridor/i.test(warning))) {
+          appliedGuardCount += 1;
+        }
+      }
+    }
+
+    expect(appliedGuardCount).toBeGreaterThan(0);
+  });
+
+  it("keeps premium board face reinforcement monotonic in framed lab and field lanes", () => {
+    const labContext = {
+      contextMode: "element_lab",
+      connectionType: "line_connection",
+      studType: "light_steel_stud",
+      studSpacingMm: 600,
+      airtightness: "good"
+    } as const;
+    const fieldContext = {
+      contextMode: "field_between_rooms",
+      connectionType: "line_connection",
+      studType: "light_steel_stud",
+      studSpacingMm: 600,
+      airtightness: "good",
+      perimeterSeal: "good",
+      penetrationState: "none",
+      junctionQuality: "good",
+      sharedTrack: "independent",
+      electricalBoxes: "none",
+      panelWidthMm: 3000,
+      panelHeightMm: 2600,
+      receivingRoomVolumeM3: 30,
+      receivingRoomRt60S: 0.5
+    } as const;
+    const baseLayers = [
+      { materialId: "diamond_board", thicknessMm: 15 },
+      { materialId: "acoustic_gypsum_board", thicknessMm: 15 },
+      { materialId: "firestop_board", thicknessMm: 15 },
+      { materialId: "air_gap", thicknessMm: 50 },
+      { materialId: "gypsum", thicknessMm: 18 }
+    ] as const;
+    const reinforcedLayers = [
+      { materialId: "silentboard", thicknessMm: 18 },
+      ...baseLayers
+    ] as const;
+
+    const baseLab = calculateAssembly(baseLayers, { airborneContext: labContext, calculator: "dynamic", targetOutputs: ["Rw"] });
+    const reinforcedLab = calculateAssembly(reinforcedLayers, {
+      airborneContext: labContext,
+      calculator: "dynamic",
+      targetOutputs: ["Rw"]
+    });
+    const baseField = calculateAssembly(baseLayers, {
+      airborneContext: fieldContext,
+      calculator: "dynamic",
+      targetOutputs: ["R'w", "DnT,w", "DnT,A"]
+    });
+    const reinforcedField = calculateAssembly(reinforcedLayers, {
+      airborneContext: fieldContext,
+      calculator: "dynamic",
+      targetOutputs: ["R'w", "DnT,w", "DnT,A"]
+    });
+
+    expect(baseLab.ratings.iso717.Rw).toBe(44);
+    expect(reinforcedLab.ratings.iso717.Rw).toBe(44);
+    expect(reinforcedLab.ratings.iso717.Rw).toBeGreaterThanOrEqual(baseLab.ratings.iso717.Rw);
+    expect(baseField.ratings.iso717.RwPrime).toBe(35);
+    expect(reinforcedField.ratings.iso717.RwPrime).toBe(35);
+    expect(baseField.ratings.field?.DnTA).toBe(37.7);
+    expect(reinforcedField.ratings.field?.DnTA).toBe(38.2);
+    expect(reinforcedField.ratings.field?.DnTA).toBeGreaterThanOrEqual(baseField.ratings.field?.DnTA ?? -Infinity);
+    expect(
+      reinforcedLab.dynamicAirborneTrace?.notes.some((note: string) => /target Rw 44\.0 dB/i.test(note))
+    ).toBe(true);
+  });
+
+  it("keeps shallow single-board framed reinforcement monotonic under one-face board additions", () => {
+    const labContext = {
+      contextMode: "element_lab",
+      connectionType: "line_connection",
+      studType: "light_steel_stud",
+      studSpacingMm: 600,
+      airtightness: "good"
+    } as const;
+    const fieldContext = {
+      contextMode: "field_between_rooms",
+      connectionType: "line_connection",
+      studType: "light_steel_stud",
+      studSpacingMm: 600,
+      airtightness: "good",
+      perimeterSeal: "good",
+      penetrationState: "none",
+      junctionQuality: "good",
+      sharedTrack: "independent",
+      electricalBoxes: "none",
+      panelWidthMm: 3000,
+      panelHeightMm: 2600,
+      receivingRoomVolumeM3: 30,
+      receivingRoomRt60S: 0.5
+    } as const;
+    const baseLayers = [
+      { materialId: "gypsum_board", thicknessMm: 12.5 },
+      { materialId: "air_gap", thicknessMm: 50 },
+      { materialId: "gypsum_board", thicknessMm: 12.5 }
+    ] as const;
+    const gypsumReinforcedLayers = [
+      { materialId: "gypsum", thicknessMm: 12.5 },
+      ...baseLayers
+    ] as const;
+    const diamondReinforcedLayers = [
+      { materialId: "diamond_board", thicknessMm: 15 },
+      ...baseLayers
+    ] as const;
+
+    const baseLab = calculateAssembly(baseLayers, { airborneContext: labContext, calculator: "dynamic", targetOutputs: ["Rw"] });
+    const gypsumReinforcedLab = calculateAssembly(gypsumReinforcedLayers, {
+      airborneContext: labContext,
+      calculator: "dynamic",
+      targetOutputs: ["Rw"]
+    });
+    const diamondReinforcedLab = calculateAssembly(diamondReinforcedLayers, {
+      airborneContext: labContext,
+      calculator: "dynamic",
+      targetOutputs: ["Rw"]
+    });
+    const baseField = calculateAssembly(baseLayers, { airborneContext: fieldContext, calculator: "dynamic" });
+    const gypsumReinforcedField = calculateAssembly(gypsumReinforcedLayers, { airborneContext: fieldContext, calculator: "dynamic" });
+    const diamondReinforcedField = calculateAssembly(diamondReinforcedLayers, { airborneContext: fieldContext, calculator: "dynamic" });
+
+    expect(baseLab.ratings.iso717.Rw).toBe(35);
+    expect(gypsumReinforcedLab.ratings.iso717.Rw).toBe(35);
+    expect(diamondReinforcedLab.ratings.iso717.Rw).toBe(35);
+    expect(gypsumReinforcedLab.ratings.iso717.Rw).toBeGreaterThanOrEqual(baseLab.ratings.iso717.Rw);
+    expect(diamondReinforcedLab.ratings.iso717.Rw).toBeGreaterThanOrEqual(baseLab.ratings.iso717.Rw);
+    expect(baseField.ratings.field?.DnTA).toBe(27.2);
+    expect(gypsumReinforcedField.ratings.field?.DnTA).toBe(27.5);
+    expect(diamondReinforcedField.ratings.field?.DnTA).toBe(27.6);
+    expect(gypsumReinforcedField.ratings.field?.DnTA).toBeGreaterThanOrEqual(baseField.ratings.field?.DnTA ?? -Infinity);
+    expect(diamondReinforcedField.ratings.field?.DnTA).toBeGreaterThanOrEqual(baseField.ratings.field?.DnTA ?? -Infinity);
+    expect(
+      gypsumReinforcedLab.dynamicAirborneTrace?.notes.some((note: string) => /framed reinforcement monotonic floor/i.test(note))
+    ).toBe(true);
+    expect(
+      diamondReinforcedLab.dynamicAirborneTrace?.notes.some((note: string) => /framed reinforcement monotonic floor/i.test(note))
+    ).toBe(true);
+  });
+
+  it("keeps split-cavity premium framed reinforcement monotonic on the lab side", () => {
+    const labContext = {
+      contextMode: "element_lab",
+      connectionType: "line_connection",
+      studType: "light_steel_stud",
+      studSpacingMm: 600,
+      airtightness: "good"
+    } as const;
+    const baseLayers = [
+      { materialId: "silentboard", thicknessMm: 12.5 },
+      { materialId: "gypsum", thicknessMm: 12.5 },
+      { materialId: "air_gap", thicknessMm: 45 },
+      { materialId: "glasswool", thicknessMm: 60 },
+      { materialId: "air_gap", thicknessMm: 45 },
+      { materialId: "silentboard", thicknessMm: 12.5 },
+      { materialId: "silentboard", thicknessMm: 15 },
+      { materialId: "gypsum", thicknessMm: 18 }
+    ] as const;
+    const reinforcedLayers = [
+      { materialId: "diamond_board", thicknessMm: 12.5 },
+      ...baseLayers
+    ] as const;
+
+    const base = calculateAssembly(baseLayers, {
+      airborneContext: labContext,
+      calculator: "dynamic",
+      targetOutputs: ["Rw"]
+    });
+    const reinforced = calculateAssembly(reinforcedLayers, {
+      airborneContext: labContext,
+      calculator: "dynamic",
+      targetOutputs: ["Rw"]
+    });
+
+    expect(base.ratings.iso717.Rw).toBe(68);
+    expect(reinforced.ratings.iso717.Rw).toBe(68);
+    expect(reinforced.ratings.iso717.Rw).toBeGreaterThanOrEqual(base.ratings.iso717.Rw);
+    expect(
+      reinforced.dynamicAirborneTrace?.notes.some((note: string) => /split-cavity framing/i.test(note))
+    ).toBe(true);
+    expect(
+      reinforced.dynamicAirborneTrace?.notes.some((note: string) => /framed reinforcement monotonic floor/i.test(note))
+    ).toBe(true);
+  });
+
+  it("keeps mixed premium split-cavity framed walls close to the seeded upstream corridor", () => {
+    const labContext = {
+      contextMode: "element_lab",
+      connectionType: "line_connection",
+      studType: "light_steel_stud",
+      studSpacingMm: 600,
+      airtightness: "good"
+    } as const;
+    const fieldContext = {
+      contextMode: "field_between_rooms",
+      connectionType: "line_connection",
+      studType: "light_steel_stud",
+      studSpacingMm: 600,
+      airtightness: "good",
+      perimeterSeal: "good",
+      penetrationState: "none",
+      junctionQuality: "good",
+      sharedTrack: "independent",
+      electricalBoxes: "none",
+      panelWidthMm: 3000,
+      panelHeightMm: 2600,
+      receivingRoomVolumeM3: 32,
+      receivingRoomRt60S: 0.5
+    } as const;
+    const underReadBeforeFixLayers = [
+      { materialId: "diamond_board", thicknessMm: 15 },
+      { materialId: "air_gap", thicknessMm: 25 },
+      { materialId: "rockwool", thicknessMm: 40 },
+      { materialId: "air_gap", thicknessMm: 25 },
+      { materialId: "silentboard", thicknessMm: 12.5 },
+      { materialId: "silentboard", thicknessMm: 12.5 }
+    ] as const;
+    const overReadBeforeFixLayers = [
+      { materialId: "diamond_board", thicknessMm: 12.5 },
+      { materialId: "air_gap", thicknessMm: 50 },
+      { materialId: "rockwool", thicknessMm: 50 },
+      { materialId: "air_gap", thicknessMm: 50 },
+      { materialId: "fire_board", thicknessMm: 12.5 },
+      { materialId: "gypsum", thicknessMm: 12.5 },
+      { materialId: "diamond_board", thicknessMm: 15 }
+    ] as const;
+
+    const underReadLab = calculateAssembly(underReadBeforeFixLayers, {
+      calculator: "dynamic",
+      airborneContext: labContext,
+      targetOutputs: ["Rw"]
+    });
+    const underReadField = calculateAssembly(underReadBeforeFixLayers, {
+      calculator: "dynamic",
+      airborneContext: fieldContext
+    });
+    const overReadLab = calculateAssembly(overReadBeforeFixLayers, {
+      calculator: "dynamic",
+      airborneContext: labContext,
+      targetOutputs: ["Rw"]
+    });
+    const overReadField = calculateAssembly(overReadBeforeFixLayers, {
+      calculator: "dynamic",
+      airborneContext: fieldContext
+    });
+
+    expect(underReadLab.ratings.iso717.Rw).toBe(51);
+    expect(underReadField.ratings.iso717.RwPrime).toBe(48);
+    expect(underReadField.ratings.field?.DnTw).toBe(49);
+    expect(overReadLab.ratings.iso717.Rw).toBe(49);
+    expect(overReadField.ratings.iso717.RwPrime).toBe(47);
+    expect(overReadField.ratings.field?.DnTw).toBe(48);
+    expect(
+      underReadField.dynamicAirborneTrace?.notes.some((note: string) => /premium mixed-board split-cavity lift/i.test(note))
+    ).toBe(true);
+    expect(
+      overReadField.dynamicAirborneTrace?.notes.some((note: string) => /asymmetrical premium split-cavity trim/i.test(note))
+    ).toBe(true);
+    expect(
+      underReadField.warnings.some((warning: string) => /mixed premium split-cavity field lift/i.test(warning))
+    ).toBe(true);
+    expect(
+      overReadField.warnings.some((warning: string) => /mixed premium split-cavity field lift/i.test(warning))
+    ).toBe(true);
+  });
+
+  it("keeps premium single-board framed walls close to the upstream empty and filled corridor", () => {
+    const steelLabContext = {
+      contextMode: "element_lab",
+      connectionType: "line_connection",
+      studType: "light_steel_stud",
+      studSpacingMm: 600,
+      airtightness: "good"
+    } as const;
+    const resilientLabContext = {
+      contextMode: "element_lab",
+      connectionType: "resilient_channel",
+      studType: "resilient_stud",
+      studSpacingMm: 625,
+      airtightness: "good"
+    } as const;
+    const steelFieldContext = {
+      contextMode: "field_between_rooms",
+      connectionType: "line_connection",
+      studType: "light_steel_stud",
+      studSpacingMm: 600,
+      airtightness: "good",
+      perimeterSeal: "good",
+      penetrationState: "none",
+      junctionQuality: "good",
+      sharedTrack: "independent",
+      electricalBoxes: "none",
+      panelWidthMm: 3000,
+      panelHeightMm: 2600,
+      receivingRoomVolumeM3: 32,
+      receivingRoomRt60S: 0.5
+    } as const;
+    const resilientFieldContext = {
+      contextMode: "field_between_rooms",
+      connectionType: "resilient_channel",
+      studType: "resilient_stud",
+      studSpacingMm: 625,
+      airtightness: "good",
+      perimeterSeal: "good",
+      penetrationState: "none",
+      junctionQuality: "good",
+      sharedTrack: "independent",
+      electricalBoxes: "none",
+      panelWidthMm: 3000,
+      panelHeightMm: 2600,
+      receivingRoomVolumeM3: 32,
+      receivingRoomRt60S: 0.5
+    } as const;
+    const emptyPremiumLayers = [
+      { materialId: "silentboard", thicknessMm: 18 },
+      { materialId: "air_gap", thicknessMm: 42 },
+      { materialId: "gypsum", thicknessMm: 15 }
+    ] as const;
+    const filledPremiumLayers = [
+      { materialId: "silentboard", thicknessMm: 18 },
+      { materialId: "rockwool", thicknessMm: 60 },
+      { materialId: "diamond_board", thicknessMm: 18 }
+    ] as const;
+
+    const emptySteelLab = calculateAssembly(emptyPremiumLayers, {
+      calculator: "dynamic",
+      airborneContext: steelLabContext,
+      targetOutputs: ["Rw"]
+    });
+    const emptyResilientLab = calculateAssembly(emptyPremiumLayers, {
+      calculator: "dynamic",
+      airborneContext: resilientLabContext,
+      targetOutputs: ["Rw"]
+    });
+    const emptySteelField = calculateAssembly(emptyPremiumLayers, {
+      calculator: "dynamic",
+      airborneContext: steelFieldContext
+    });
+    const emptyResilientField = calculateAssembly(emptyPremiumLayers, {
+      calculator: "dynamic",
+      airborneContext: resilientFieldContext
+    });
+    const filledSteelLab = calculateAssembly(filledPremiumLayers, {
+      calculator: "dynamic",
+      airborneContext: steelLabContext,
+      targetOutputs: ["Rw"]
+    });
+    const filledSteelField = calculateAssembly(filledPremiumLayers, {
+      calculator: "dynamic",
+      airborneContext: steelFieldContext
+    });
+    const filledResilientField = calculateAssembly(filledPremiumLayers, {
+      calculator: "dynamic",
+      airborneContext: resilientFieldContext
+    });
+
+    expect(emptySteelLab.ratings.iso717.Rw).toBe(44);
+    expect(emptyResilientLab.ratings.iso717.Rw).toBe(45);
+    expect(emptySteelField.ratings.iso717.RwPrime).toBe(35);
+    expect(emptyResilientField.ratings.iso717.RwPrime).toBe(43);
+    expect(filledSteelLab.ratings.iso717.Rw).toBe(50);
+    expect(filledSteelField.ratings.iso717.RwPrime).toBe(39);
+    expect(filledResilientField.ratings.iso717.RwPrime).toBe(52);
+    expect(
+      emptySteelField.dynamicAirborneTrace?.notes.some((note: string) => /premium single-board framed lift/i.test(note))
+    ).toBe(true);
+    expect(
+      filledResilientField.dynamicAirborneTrace?.notes.some((note: string) => /resilient premium single-board field lift/i.test(note))
+    ).toBe(true);
+    expect(
+      emptySteelField.warnings.some((warning: string) => /premium single-board field trim/i.test(warning))
+    ).toBe(true);
+    expect(
+      filledResilientField.warnings.some((warning: string) => /resilient premium single-board field lift/i.test(warning))
+    ).toBe(true);
+  });
+
+  it("keeps low-mass empty enhanced single-board framed walls close to the upstream fire and diamond corridor", () => {
+    const steelLabContext = {
+      contextMode: "element_lab",
+      connectionType: "line_connection",
+      studType: "light_steel_stud",
+      studSpacingMm: 600,
+      airtightness: "good"
+    } as const;
+    const resilientLabContext = {
+      contextMode: "element_lab",
+      connectionType: "resilient_channel",
+      studType: "resilient_stud",
+      studSpacingMm: 625,
+      airtightness: "good"
+    } as const;
+    const steelFieldContext = {
+      contextMode: "field_between_rooms",
+      connectionType: "line_connection",
+      studType: "light_steel_stud",
+      studSpacingMm: 600,
+      airtightness: "good",
+      perimeterSeal: "good",
+      penetrationState: "none",
+      junctionQuality: "good",
+      sharedTrack: "independent",
+      electricalBoxes: "none",
+      panelWidthMm: 3000,
+      panelHeightMm: 2600,
+      receivingRoomVolumeM3: 32,
+      receivingRoomRt60S: 0.5
+    } as const;
+    const resilientFieldContext = {
+      contextMode: "field_between_rooms",
+      connectionType: "resilient_channel",
+      studType: "resilient_stud",
+      studSpacingMm: 625,
+      airtightness: "good",
+      perimeterSeal: "good",
+      penetrationState: "none",
+      junctionQuality: "good",
+      sharedTrack: "independent",
+      electricalBoxes: "none",
+      panelWidthMm: 3000,
+      panelHeightMm: 2600,
+      receivingRoomVolumeM3: 32,
+      receivingRoomRt60S: 0.5
+    } as const;
+    const diamondFireEmptyLayers = [
+      { materialId: "diamond_board", thicknessMm: 18 },
+      { materialId: "air_gap", thicknessMm: 42 },
+      { materialId: "fire_board", thicknessMm: 15 }
+    ] as const;
+    const fireGypsumEmptyLayers = [
+      { materialId: "fire_board", thicknessMm: 15 },
+      { materialId: "air_gap", thicknessMm: 42 },
+      { materialId: "gypsum", thicknessMm: 15 }
+    ] as const;
+
+    const diamondFireSteelLab = calculateAssembly(diamondFireEmptyLayers, {
+      calculator: "dynamic",
+      airborneContext: steelLabContext,
+      targetOutputs: ["Rw"]
+    });
+    const diamondFireResilientLab = calculateAssembly(diamondFireEmptyLayers, {
+      calculator: "dynamic",
+      airborneContext: resilientLabContext,
+      targetOutputs: ["Rw"]
+    });
+    const diamondFireSteelField = calculateAssembly(diamondFireEmptyLayers, {
+      calculator: "dynamic",
+      airborneContext: steelFieldContext
+    });
+    const diamondFireResilientField = calculateAssembly(diamondFireEmptyLayers, {
+      calculator: "dynamic",
+      airborneContext: resilientFieldContext
+    });
+    const fireGypsumSteelLab = calculateAssembly(fireGypsumEmptyLayers, {
+      calculator: "dynamic",
+      airborneContext: steelLabContext,
+      targetOutputs: ["Rw"]
+    });
+    const fireGypsumResilientLab = calculateAssembly(fireGypsumEmptyLayers, {
+      calculator: "dynamic",
+      airborneContext: resilientLabContext,
+      targetOutputs: ["Rw"]
+    });
+    const fireGypsumSteelField = calculateAssembly(fireGypsumEmptyLayers, {
+      calculator: "dynamic",
+      airborneContext: steelFieldContext
+    });
+    const fireGypsumResilientField = calculateAssembly(fireGypsumEmptyLayers, {
+      calculator: "dynamic",
+      airborneContext: resilientFieldContext
+    });
+
+    expect(diamondFireSteelLab.ratings.iso717.Rw).toBe(43);
+    expect(diamondFireResilientLab.ratings.iso717.Rw).toBe(44);
+    expect(diamondFireSteelField.ratings.field?.DnTA).toBe(33.3);
+    expect(diamondFireResilientField.ratings.field?.DnTA).toBe(42.5);
+    expect(fireGypsumSteelLab.ratings.iso717.Rw).toBe(41);
+    expect(fireGypsumResilientLab.ratings.iso717.Rw).toBe(42);
+    expect(fireGypsumSteelField.ratings.field?.DnTA).toBe(31.1);
+    expect(fireGypsumResilientField.ratings.field?.DnTA).toBe(40.3);
+    expect(
+      diamondFireSteelLab.dynamicAirborneTrace?.notes.some((note: string) => /low-mass empty premium single-board lift/i.test(note))
+    ).toBe(true);
+    expect(
+      diamondFireSteelField.warnings.some((warning: string) => /low-mass premium single-board field trim/i.test(warning))
+    ).toBe(true);
+    expect(
+      fireGypsumResilientField.warnings.some((warning: string) => /resilient low-mass premium single-board field lift/i.test(warning))
+    ).toBe(true);
+  });
+
+  it("keeps low-mass filled enhanced single-board framed walls close to the upstream fire, diamond and silentboard corridor", () => {
+    const steelLabContext = {
+      contextMode: "element_lab",
+      connectionType: "line_connection",
+      studType: "light_steel_stud",
+      studSpacingMm: 600,
+      airtightness: "good"
+    } as const;
+    const resilientLabContext = {
+      contextMode: "element_lab",
+      connectionType: "resilient_channel",
+      studType: "resilient_stud",
+      studSpacingMm: 625,
+      airtightness: "good"
+    } as const;
+    const steelFieldContext = {
+      contextMode: "field_between_rooms",
+      connectionType: "line_connection",
+      studType: "light_steel_stud",
+      studSpacingMm: 600,
+      airtightness: "good",
+      perimeterSeal: "good",
+      penetrationState: "none",
+      junctionQuality: "good",
+      sharedTrack: "independent",
+      electricalBoxes: "none",
+      panelWidthMm: 3000,
+      panelHeightMm: 2600,
+      receivingRoomVolumeM3: 32,
+      receivingRoomRt60S: 0.5
+    } as const;
+    const resilientFieldContext = {
+      contextMode: "field_between_rooms",
+      connectionType: "resilient_channel",
+      studType: "resilient_stud",
+      studSpacingMm: 625,
+      airtightness: "good",
+      perimeterSeal: "good",
+      penetrationState: "none",
+      junctionQuality: "good",
+      sharedTrack: "independent",
+      electricalBoxes: "none",
+      panelWidthMm: 3000,
+      panelHeightMm: 2600,
+      receivingRoomVolumeM3: 32,
+      receivingRoomRt60S: 0.5
+    } as const;
+    const diamondFireFilledLayers = [
+      { materialId: "diamond_board", thicknessMm: 18 },
+      { materialId: "rockwool", thicknessMm: 42 },
+      { materialId: "fire_board", thicknessMm: 15 }
+    ] as const;
+    const acousticDiamondFilledLayers = [
+      { materialId: "acoustic_gypsum_board", thicknessMm: 15 },
+      { materialId: "rockwool", thicknessMm: 60 },
+      { materialId: "diamond_board", thicknessMm: 18 }
+    ] as const;
+    const acousticSilentFilledLayers = [
+      { materialId: "acoustic_gypsum_board", thicknessMm: 15 },
+      { materialId: "rockwool", thicknessMm: 60 },
+      { materialId: "silentboard", thicknessMm: 12.5 }
+    ] as const;
+
+    const diamondFireSteelLab = calculateAssembly(diamondFireFilledLayers, {
+      calculator: "dynamic",
+      airborneContext: steelLabContext,
+      targetOutputs: ["Rw"]
+    });
+    const diamondFireResilientLab = calculateAssembly(diamondFireFilledLayers, {
+      calculator: "dynamic",
+      airborneContext: resilientLabContext,
+      targetOutputs: ["Rw"]
+    });
+    const diamondFireSteelField = calculateAssembly(diamondFireFilledLayers, {
+      calculator: "dynamic",
+      airborneContext: steelFieldContext
+    });
+    const diamondFireResilientField = calculateAssembly(diamondFireFilledLayers, {
+      calculator: "dynamic",
+      airborneContext: resilientFieldContext
+    });
+    const acousticDiamondSteelLab = calculateAssembly(acousticDiamondFilledLayers, {
+      calculator: "dynamic",
+      airborneContext: steelLabContext,
+      targetOutputs: ["Rw"]
+    });
+    const acousticDiamondResilientLab = calculateAssembly(acousticDiamondFilledLayers, {
+      calculator: "dynamic",
+      airborneContext: resilientLabContext,
+      targetOutputs: ["Rw"]
+    });
+    const acousticDiamondSteelField = calculateAssembly(acousticDiamondFilledLayers, {
+      calculator: "dynamic",
+      airborneContext: steelFieldContext
+    });
+    const acousticDiamondResilientField = calculateAssembly(acousticDiamondFilledLayers, {
+      calculator: "dynamic",
+      airborneContext: resilientFieldContext
+    });
+    const acousticSilentSteelLab = calculateAssembly(acousticSilentFilledLayers, {
+      calculator: "dynamic",
+      airborneContext: steelLabContext,
+      targetOutputs: ["Rw"]
+    });
+    const acousticSilentResilientLab = calculateAssembly(acousticSilentFilledLayers, {
+      calculator: "dynamic",
+      airborneContext: resilientLabContext,
+      targetOutputs: ["Rw"]
+    });
+    const acousticSilentSteelField = calculateAssembly(acousticSilentFilledLayers, {
+      calculator: "dynamic",
+      airborneContext: steelFieldContext
+    });
+    const acousticSilentResilientField = calculateAssembly(acousticSilentFilledLayers, {
+      calculator: "dynamic",
+      airborneContext: resilientFieldContext
+    });
+
+    expect(diamondFireSteelLab.ratings.iso717.Rw).toBe(46);
+    expect(diamondFireResilientLab.ratings.iso717.Rw).toBe(51);
+    expect(diamondFireSteelField.ratings.field?.DnTA).toBe(34.9);
+    expect(diamondFireResilientField.ratings.field?.DnTA).toBe(49.2);
+    expect(acousticDiamondSteelLab.ratings.iso717.Rw).toBe(48);
+    expect(acousticDiamondResilientLab.ratings.iso717.Rw).toBe(52);
+    expect(acousticDiamondSteelField.ratings.field?.DnTA).toBe(37.3);
+    expect(acousticDiamondResilientField.ratings.field?.DnTA).toBe(50.8);
+    expect(acousticSilentSteelLab.ratings.iso717.Rw).toBe(49);
+    expect(acousticSilentResilientLab.ratings.iso717.Rw).toBe(52);
+    expect(acousticSilentSteelField.ratings.field?.DnTA).toBe(37.3);
+    expect(acousticSilentResilientField.ratings.field?.DnTA).toBe(50.3);
+    expect(
+      diamondFireSteelLab.dynamicAirborneTrace?.notes.some((note: string) => /mixed enhanced filled single-board corridor/i.test(note))
+    ).toBe(true);
+    expect(
+      diamondFireResilientLab.dynamicAirborneTrace?.notes.some((note: string) => /mixed enhanced filled single-board corridor/i.test(note))
+    ).toBe(true);
+    expect(
+      diamondFireSteelField.warnings.some((warning: string) => /mixed enhanced filled single-board field corridor/i.test(warning))
+    ).toBe(true);
+    expect(
+      diamondFireResilientField.warnings.some((warning: string) => /mixed enhanced filled single-board field corridor/i.test(warning))
+    ).toBe(true);
+    expect(
+      acousticDiamondSteelLab.dynamicAirborneTrace?.notes.some((note: string) => /mixed enhanced filled single-board corridor/i.test(note))
+    ).toBe(true);
+    expect(
+      acousticDiamondSteelField.warnings.some((warning: string) => /low-mass filled premium single-board field trim/i.test(warning))
+    ).toBe(true);
+    expect(
+      acousticDiamondResilientLab.dynamicAirborneTrace?.notes.some((note: string) => /mixed enhanced filled single-board corridor/i.test(note))
+    ).toBe(true);
+    expect(
+      acousticSilentSteelLab.dynamicAirborneTrace?.notes.some((note: string) => /mixed enhanced filled single-board corridor/i.test(note))
+    ).toBe(true);
+    expect(
+      acousticSilentSteelField.warnings.some((warning: string) => /low-mass filled premium single-board/i.test(warning))
+    ).toBe(true);
+    expect(
+      acousticSilentResilientLab.dynamicAirborneTrace?.notes.some((note: string) => /mixed enhanced filled single-board corridor/i.test(note))
+    ).toBe(true);
+  });
+
+  it("keeps silentboard-heavy filled single-board framed walls close to the upstream mixed enhanced corridor", () => {
+    const steelLabContext = {
+      contextMode: "element_lab",
+      connectionType: "line_connection",
+      studType: "light_steel_stud",
+      studSpacingMm: 600,
+      airtightness: "good"
+    } as const;
+    const resilientLabContext = {
+      contextMode: "element_lab",
+      connectionType: "resilient_channel",
+      studType: "resilient_stud",
+      studSpacingMm: 625,
+      airtightness: "good"
+    } as const;
+    const steelFieldContext = {
+      contextMode: "field_between_rooms",
+      connectionType: "line_connection",
+      studType: "light_steel_stud",
+      studSpacingMm: 600,
+      airtightness: "good",
+      perimeterSeal: "good",
+      penetrationState: "none",
+      junctionQuality: "good",
+      sharedTrack: "independent",
+      electricalBoxes: "none",
+      panelWidthMm: 3000,
+      panelHeightMm: 2600,
+      receivingRoomVolumeM3: 32,
+      receivingRoomRt60S: 0.5
+    } as const;
+    const resilientFieldContext = {
+      contextMode: "field_between_rooms",
+      connectionType: "resilient_channel",
+      studType: "resilient_stud",
+      studSpacingMm: 625,
+      airtightness: "good",
+      perimeterSeal: "good",
+      penetrationState: "none",
+      junctionQuality: "good",
+      sharedTrack: "independent",
+      electricalBoxes: "none",
+      panelWidthMm: 3000,
+      panelHeightMm: 2600,
+      receivingRoomVolumeM3: 32,
+      receivingRoomRt60S: 0.5
+    } as const;
+    const cases = [
+      {
+        expected: { resilientFieldDnTA: 50.1, resilientLabRw: 51, steelFieldDnTA: 34.6, steelLabRw: 46 },
+        layers: [
+          { materialId: "diamond_board", thicknessMm: 18 },
+          { materialId: "rockwool", thicknessMm: 35 },
+          { materialId: "silentboard", thicknessMm: 12.5 }
+        ]
+      },
+      {
+        expected: { resilientFieldDnTA: 49.6, resilientLabRw: 50, steelFieldDnTA: 36.6, steelLabRw: 47 },
+        layers: [
+          { materialId: "diamond_board", thicknessMm: 18 },
+          { materialId: "rockwool", thicknessMm: 42 },
+          { materialId: "silentboard", thicknessMm: 12.5 }
+        ]
+      },
+      {
+        expected: { resilientFieldDnTA: 51.3, resilientLabRw: 51, steelFieldDnTA: 37, steelLabRw: 47 },
+        layers: [
+          { materialId: "diamond_board", thicknessMm: 18 },
+          { materialId: "rockwool", thicknessMm: 50 },
+          { materialId: "silentboard", thicknessMm: 12.5 }
+        ]
+      },
+      {
+        expected: { resilientFieldDnTA: 51.8, resilientLabRw: 53, steelFieldDnTA: 38.2, steelLabRw: 49 },
+        layers: [
+          { materialId: "diamond_board", thicknessMm: 18 },
+          { materialId: "rockwool", thicknessMm: 60 },
+          { materialId: "silentboard", thicknessMm: 12.5 }
+        ]
+      },
+      {
+        expected: { resilientFieldDnTA: 50.1, resilientLabRw: 51, steelFieldDnTA: 34.6, steelLabRw: 46 },
+        layers: [
+          { materialId: "silentboard", thicknessMm: 12.5 },
+          { materialId: "rockwool", thicknessMm: 35 },
+          { materialId: "diamond_board", thicknessMm: 18 }
+        ]
+      },
+      {
+        expected: { resilientFieldDnTA: 49.6, resilientLabRw: 50, steelFieldDnTA: 36.6, steelLabRw: 47 },
+        layers: [
+          { materialId: "silentboard", thicknessMm: 12.5 },
+          { materialId: "rockwool", thicknessMm: 42 },
+          { materialId: "diamond_board", thicknessMm: 18 }
+        ]
+      },
+      {
+        expected: { resilientFieldDnTA: 51.3, resilientLabRw: 51, steelFieldDnTA: 37, steelLabRw: 47 },
+        layers: [
+          { materialId: "silentboard", thicknessMm: 12.5 },
+          { materialId: "rockwool", thicknessMm: 50 },
+          { materialId: "diamond_board", thicknessMm: 18 }
+        ]
+      },
+      {
+        expected: { resilientFieldDnTA: 51.8, resilientLabRw: 53, steelFieldDnTA: 38.2, steelLabRw: 49 },
+        layers: [
+          { materialId: "silentboard", thicknessMm: 12.5 },
+          { materialId: "rockwool", thicknessMm: 60 },
+          { materialId: "diamond_board", thicknessMm: 18 }
+        ]
+      },
+    ] as const;
+
+    for (const testCase of cases) {
+      const steelLab = calculateAssembly(testCase.layers, {
+        calculator: "dynamic",
+        airborneContext: steelLabContext,
+        targetOutputs: ["Rw"]
+      });
+      const resilientLab = calculateAssembly(testCase.layers, {
+        calculator: "dynamic",
+        airborneContext: resilientLabContext,
+        targetOutputs: ["Rw"]
+      });
+      const steelField = calculateAssembly(testCase.layers, {
+        calculator: "dynamic",
+        airborneContext: steelFieldContext
+      });
+      const resilientField = calculateAssembly(testCase.layers, {
+        calculator: "dynamic",
+        airborneContext: resilientFieldContext
+      });
+
+      expect(steelLab.ratings.iso717.Rw).toBe(testCase.expected.steelLabRw);
+      expect(resilientLab.ratings.iso717.Rw).toBe(testCase.expected.resilientLabRw);
+      expect(steelField.ratings.field?.DnTA).toBe(testCase.expected.steelFieldDnTA);
+      expect(resilientField.ratings.field?.DnTA).toBe(testCase.expected.resilientFieldDnTA);
+    }
+
+    const representativeSteelLab = calculateAssembly(cases[1].layers, {
+      calculator: "dynamic",
+      airborneContext: steelLabContext,
+      targetOutputs: ["Rw"]
+    });
+    const representativeResilientField = calculateAssembly(cases[1].layers, {
+      calculator: "dynamic",
+      airborneContext: resilientFieldContext
+    });
+
+    expect(
+      representativeSteelLab.dynamicAirborneTrace?.notes.some((note: string) => /mixed enhanced filled single-board corridor/i.test(note))
+    ).toBe(true);
+    expect(
+      representativeResilientField.warnings.some((warning: string) => /silentboard-heavy filled premium/i.test(warning))
+    ).toBe(true);
+  });
+
+  it("keeps symmetric enhanced filled single-board framed walls on the upstream lab and field corridor", () => {
+    const steelLabContext = {
+      contextMode: "element_lab",
+      connectionType: "line_connection",
+      studType: "light_steel_stud",
+      studSpacingMm: 600,
+      airtightness: "good"
+    } as const;
+    const resilientLabContext = {
+      contextMode: "element_lab",
+      connectionType: "resilient_channel",
+      studType: "resilient_stud",
+      studSpacingMm: 625,
+      airtightness: "good"
+    } as const;
+    const steelFieldContext = {
+      contextMode: "field_between_rooms",
+      connectionType: "line_connection",
+      studType: "light_steel_stud",
+      studSpacingMm: 600,
+      airtightness: "good",
+      perimeterSeal: "good",
+      penetrationState: "none",
+      junctionQuality: "good",
+      sharedTrack: "independent",
+      electricalBoxes: "none",
+      panelWidthMm: 3000,
+      panelHeightMm: 2600,
+      receivingRoomVolumeM3: 32,
+      receivingRoomRt60S: 0.5
+    } as const;
+    const resilientFieldContext = {
+      contextMode: "field_between_rooms",
+      connectionType: "resilient_channel",
+      studType: "resilient_stud",
+      studSpacingMm: 625,
+      airtightness: "good",
+      perimeterSeal: "good",
+      penetrationState: "none",
+      junctionQuality: "good",
+      sharedTrack: "independent",
+      electricalBoxes: "none",
+      panelWidthMm: 3000,
+      panelHeightMm: 2600,
+      receivingRoomVolumeM3: 32,
+      receivingRoomRt60S: 0.5
+    } as const;
+    const cases = [
+      {
+        expected: { resilientLabRw: 51, resilientRwPrime: 48, steelLabRw: 47, steelRwPrime: 34 },
+        layers: [
+          { materialId: "silentboard", thicknessMm: 12.5 },
+          { materialId: "rockwool", thicknessMm: 42 },
+          { materialId: "silentboard", thicknessMm: 12.5 }
+        ]
+      },
+      {
+        expected: { resilientLabRw: 51, resilientRwPrime: 49, steelLabRw: 49, steelRwPrime: 37 },
+        layers: [
+          { materialId: "diamond_board", thicknessMm: 18 },
+          { materialId: "rockwool", thicknessMm: 50 },
+          { materialId: "diamond_board", thicknessMm: 18 }
+        ]
+      },
+      {
+        expected: { resilientLabRw: 49, resilientRwPrime: 46, steelLabRw: 46, steelRwPrime: 33 },
+        layers: [
+          { materialId: "acoustic_gypsum_board", thicknessMm: 15 },
+          { materialId: "rockwool", thicknessMm: 42 },
+          { materialId: "acoustic_gypsum_board", thicknessMm: 15 }
+        ]
+      }
+    ] as const;
+
+    for (const testCase of cases) {
+      const steelLab = calculateAssembly(testCase.layers, {
+        calculator: "dynamic",
+        airborneContext: steelLabContext,
+        targetOutputs: ["Rw"]
+      });
+      const resilientLab = calculateAssembly(testCase.layers, {
+        calculator: "dynamic",
+        airborneContext: resilientLabContext,
+        targetOutputs: ["Rw"]
+      });
+      const steelField = calculateAssembly(testCase.layers, {
+        calculator: "dynamic",
+        airborneContext: steelFieldContext
+      });
+      const resilientField = calculateAssembly(testCase.layers, {
+        calculator: "dynamic",
+        airborneContext: resilientFieldContext
+      });
+
+      expect(steelLab.ratings.iso717.Rw).toBe(testCase.expected.steelLabRw);
+      expect(resilientLab.ratings.iso717.Rw).toBe(testCase.expected.resilientLabRw);
+      expect(steelField.ratings.field?.RwPrime).toBe(testCase.expected.steelRwPrime);
+      expect(resilientField.ratings.field?.RwPrime).toBe(testCase.expected.resilientRwPrime);
+    }
+
+    const representativeLab = calculateAssembly(cases[0].layers, {
+      calculator: "dynamic",
+      airborneContext: resilientLabContext,
+      targetOutputs: ["Rw"]
+    });
+    const representativeField = calculateAssembly(cases[0].layers, {
+      calculator: "dynamic",
+      airborneContext: resilientFieldContext
+    });
+
+    expect(
+      representativeLab.dynamicAirborneTrace?.notes.some((note: string) => /symmetric enhanced filled single-board corridor/i.test(note))
+    ).toBe(true);
+    expect(
+      representativeField.warnings.some((warning: string) => /symmetric enhanced filled single-board field corridor/i.test(warning))
+    ).toBe(true);
+  });
+
+  it("keeps mixed plain gypsum plus premium filled single-board framed walls on the upstream field template corridor", () => {
+    const steelLabContext = {
+      contextMode: "element_lab",
+      connectionType: "line_connection",
+      studType: "light_steel_stud",
+      studSpacingMm: 600,
+      airtightness: "good"
+    } as const;
+    const resilientLabContext = {
+      contextMode: "element_lab",
+      connectionType: "resilient_channel",
+      studType: "resilient_stud",
+      studSpacingMm: 625,
+      airtightness: "good"
+    } as const;
+    const steelFieldContext = {
+      contextMode: "field_between_rooms",
+      connectionType: "line_connection",
+      studType: "light_steel_stud",
+      studSpacingMm: 600,
+      airtightness: "good",
+      perimeterSeal: "good",
+      penetrationState: "none",
+      junctionQuality: "good",
+      sharedTrack: "independent",
+      electricalBoxes: "none",
+      panelWidthMm: 3000,
+      panelHeightMm: 2600,
+      receivingRoomVolumeM3: 32,
+      receivingRoomRt60S: 0.5
+    } as const;
+    const resilientFieldContext = {
+      contextMode: "field_between_rooms",
+      connectionType: "resilient_channel",
+      studType: "resilient_stud",
+      studSpacingMm: 625,
+      airtightness: "good",
+      perimeterSeal: "good",
+      penetrationState: "none",
+      junctionQuality: "good",
+      sharedTrack: "independent",
+      electricalBoxes: "none",
+      panelWidthMm: 3000,
+      panelHeightMm: 2600,
+      receivingRoomVolumeM3: 32,
+      receivingRoomRt60S: 0.5
+    } as const;
+    const cases = [
+      {
+        expected: {
+          resilientFieldBaseRw: 45,
+          labToleranceDb: 0,
+          resilientFieldDnTA: 47.8,
+          resilientFieldDnTw: 46,
+          resilientFieldRwPrime: 45,
+          resilientLabRw: 49,
+          steelFieldBaseRw: 30,
+          steelFieldDnTA: 33.8,
+          steelFieldDnTw: 32,
+          steelFieldRwPrime: 30,
+          steelLabRw: 44
+        },
+        label: "gypsum + diamond 35",
+        layers: [
+          { materialId: "gypsum_board", thicknessMm: 12.5 },
+          { materialId: "rockwool", thicknessMm: 35 },
+          { materialId: "diamond_board", thicknessMm: 18 }
+        ]
+      },
+      {
+        expected: {
+          resilientFieldBaseRw: 45,
+          labToleranceDb: 0,
+          resilientFieldDnTA: 47.5,
+          resilientFieldDnTw: 46,
+          resilientFieldRwPrime: 45,
+          resilientLabRw: 47,
+          steelFieldBaseRw: 32,
+          steelFieldDnTA: 34.9,
+          steelFieldDnTw: 34,
+          steelFieldRwPrime: 33,
+          steelLabRw: 44
+        },
+        label: "gypsum + silentboard 35",
+        layers: [
+          { materialId: "gypsum_board", thicknessMm: 12.5 },
+          { materialId: "rockwool", thicknessMm: 35 },
+          { materialId: "silentboard", thicknessMm: 12.5 }
+        ]
+      },
+      {
+        expected: {
+          resilientFieldBaseRw: 46,
+          labToleranceDb: 0,
+          resilientFieldDnTA: 48.2,
+          resilientFieldDnTw: 47,
+          resilientFieldRwPrime: 46,
+          resilientLabRw: 49,
+          steelFieldBaseRw: 32,
+          steelFieldDnTA: 34.8,
+          steelFieldDnTw: 34,
+          steelFieldRwPrime: 32,
+          steelLabRw: 46
+        },
+        label: "gypsum + diamond 42",
+        layers: [
+          { materialId: "gypsum_board", thicknessMm: 12.5 },
+          { materialId: "rockwool", thicknessMm: 42 },
+          { materialId: "diamond_board", thicknessMm: 18 }
+        ]
+      },
+      {
+        expected: {
+          resilientFieldBaseRw: 45,
+          labToleranceDb: 0,
+          resilientFieldDnTA: 48.1,
+          resilientFieldDnTw: 46,
+          resilientFieldRwPrime: 45,
+          resilientLabRw: 48,
+          steelFieldBaseRw: 31,
+          steelFieldDnTA: 34.4,
+          steelFieldDnTw: 33,
+          steelFieldRwPrime: 31,
+          steelLabRw: 44
+        },
+        label: "gypsum + silentboard 42",
+        layers: [
+          { materialId: "gypsum_board", thicknessMm: 12.5 },
+          { materialId: "rockwool", thicknessMm: 42 },
+          { materialId: "silentboard", thicknessMm: 12.5 }
+        ]
+      },
+      {
+        expected: {
+          resilientFieldBaseRw: 47,
+          labToleranceDb: 0,
+          resilientFieldDnTA: 48.8,
+          resilientFieldDnTw: 48,
+          resilientFieldRwPrime: 47,
+          resilientLabRw: 49,
+          steelFieldBaseRw: 33,
+          steelFieldDnTA: 35.7,
+          steelFieldDnTw: 34,
+          steelFieldRwPrime: 33,
+          steelLabRw: 45
+        },
+        label: "gypsum + diamond 50",
+        layers: [
+          { materialId: "gypsum_board", thicknessMm: 12.5 },
+          { materialId: "rockwool", thicknessMm: 50 },
+          { materialId: "diamond_board", thicknessMm: 18 }
+        ]
+      },
+      {
+        expected: {
+          resilientFieldBaseRw: 47,
+          labToleranceDb: 0,
+          resilientFieldDnTA: 48.5,
+          resilientFieldDnTw: 48,
+          resilientFieldRwPrime: 47,
+          resilientLabRw: 50,
+          steelFieldBaseRw: 32,
+          steelFieldDnTA: 35.3,
+          steelFieldDnTw: 33,
+          steelFieldRwPrime: 32,
+          steelLabRw: 45
+        },
+        label: "gypsum + silentboard 50",
+        layers: [
+          { materialId: "gypsum_board", thicknessMm: 12.5 },
+          { materialId: "rockwool", thicknessMm: 50 },
+          { materialId: "silentboard", thicknessMm: 12.5 }
+        ]
+      },
+      {
+        expected: {
+          resilientFieldBaseRw: 48,
+          labToleranceDb: 0,
+          resilientFieldDnTA: 49.4,
+          resilientFieldDnTw: 49,
+          resilientFieldRwPrime: 48,
+          resilientLabRw: 51,
+          steelFieldBaseRw: 34,
+          steelFieldDnTA: 37.1,
+          steelFieldDnTw: 35,
+          steelFieldRwPrime: 34,
+          steelLabRw: 47
+        },
+        label: "gypsum + diamond 60",
+        layers: [
+          { materialId: "gypsum_board", thicknessMm: 12.5 },
+          { materialId: "rockwool", thicknessMm: 60 },
+          { materialId: "diamond_board", thicknessMm: 18 }
+        ]
+      },
+      {
+        expected: {
+          resilientFieldBaseRw: 47,
+          labToleranceDb: 0,
+          resilientFieldDnTA: 49.2,
+          resilientFieldDnTw: 49,
+          resilientFieldRwPrime: 47,
+          resilientLabRw: 50,
+          steelFieldBaseRw: 35,
+          steelFieldDnTA: 36.8,
+          steelFieldDnTw: 36,
+          steelFieldRwPrime: 35,
+          steelLabRw: 47
+        },
+        label: "gypsum + silentboard 60",
+        layers: [
+          { materialId: "gypsum_board", thicknessMm: 12.5 },
+          { materialId: "rockwool", thicknessMm: 60 },
+          { materialId: "silentboard", thicknessMm: 12.5 }
+        ]
+      }
+    ] as const;
+
+    for (const testCase of cases) {
+      const steelLab = calculateAssembly(testCase.layers, {
+        calculator: "dynamic",
+        airborneContext: steelLabContext,
+        targetOutputs: ["Rw"]
+      });
+      const resilientLab = calculateAssembly(testCase.layers, {
+        calculator: "dynamic",
+        airborneContext: resilientLabContext,
+        targetOutputs: ["Rw"]
+      });
+      const steelField = calculateAssembly(testCase.layers, {
+        calculator: "dynamic",
+        airborneContext: steelFieldContext
+      });
+      const resilientField = calculateAssembly(testCase.layers, {
+        calculator: "dynamic",
+        airborneContext: resilientFieldContext
+      });
+
+      expect(Math.abs(steelLab.ratings.iso717.Rw - testCase.expected.steelLabRw)).toBeLessThanOrEqual(testCase.expected.labToleranceDb);
+      expect(Math.abs(resilientLab.ratings.iso717.Rw - testCase.expected.resilientLabRw)).toBeLessThanOrEqual(testCase.expected.labToleranceDb);
+      expect(steelField.airborneOverlay?.baseRwDb).toBe(testCase.expected.steelFieldBaseRw);
+      expect(steelField.ratings.iso717.RwPrime).toBe(testCase.expected.steelFieldRwPrime);
+      expect(steelField.ratings.field?.DnTw).toBe(testCase.expected.steelFieldDnTw);
+      expect(steelField.ratings.field?.DnTA).toBe(testCase.expected.steelFieldDnTA);
+      expect(resilientField.airborneOverlay?.baseRwDb).toBe(testCase.expected.resilientFieldBaseRw);
+      expect(resilientField.ratings.iso717.RwPrime).toBe(testCase.expected.resilientFieldRwPrime);
+      expect(resilientField.ratings.field?.DnTw).toBe(testCase.expected.resilientFieldDnTw);
+      expect(resilientField.ratings.field?.DnTA).toBe(testCase.expected.resilientFieldDnTA);
+    }
+
+    const representativeSteelLab = calculateAssembly(cases[0].layers, {
+      calculator: "dynamic",
+      airborneContext: steelLabContext,
+      targetOutputs: ["Rw"]
+    });
+    const representativeSilentField = calculateAssembly(cases[1].layers, {
+      calculator: "dynamic",
+      airborneContext: resilientFieldContext
+    });
+
+    expect(
+      representativeSteelLab.dynamicAirborneTrace?.notes.some((note: string) => /mixed plain-gypsum \+ diamond filled single-board corridor/i.test(note))
+    ).toBe(true);
+    expect(
+      representativeSilentField.warnings.some((warning: string) => /mixed plain-gypsum \+ silentboard filled single-board field template/i.test(warning))
+    ).toBe(true);
+  });
+
+  it("keeps mixed plain gypsum plus acoustic and fire filled single-board framed walls on the upstream lab and field corridor", () => {
+    const steelLabContext = {
+      contextMode: "element_lab",
+      connectionType: "line_connection",
+      studType: "light_steel_stud",
+      studSpacingMm: 600,
+      airtightness: "good"
+    } as const;
+    const resilientLabContext = {
+      contextMode: "element_lab",
+      connectionType: "resilient_channel",
+      studType: "resilient_stud",
+      studSpacingMm: 625,
+      airtightness: "good"
+    } as const;
+    const steelFieldContext = {
+      contextMode: "field_between_rooms",
+      connectionType: "line_connection",
+      studType: "light_steel_stud",
+      studSpacingMm: 600,
+      airtightness: "good",
+      perimeterSeal: "good",
+      penetrationState: "none",
+      junctionQuality: "good",
+      sharedTrack: "independent",
+      electricalBoxes: "none",
+      panelWidthMm: 3000,
+      panelHeightMm: 2600,
+      receivingRoomVolumeM3: 32,
+      receivingRoomRt60S: 0.5
+    } as const;
+    const resilientFieldContext = {
+      contextMode: "field_between_rooms",
+      connectionType: "resilient_channel",
+      studType: "resilient_stud",
+      studSpacingMm: 625,
+      airtightness: "good",
+      perimeterSeal: "good",
+      penetrationState: "none",
+      junctionQuality: "good",
+      sharedTrack: "independent",
+      electricalBoxes: "none",
+      panelWidthMm: 3000,
+      panelHeightMm: 2600,
+      receivingRoomVolumeM3: 32,
+      receivingRoomRt60S: 0.5
+    } as const;
+    const cases = [
+      {
+        expected: {
+          resilientFieldBaseRw: 45,
+          resilientFieldDnTA: 46.7,
+          resilientFieldDnTw: 46,
+          resilientFieldRwPrime: 45,
+          resilientLabRw: 47,
+          steelFieldBaseRw: 30,
+          steelFieldDnTA: 33.2,
+          steelFieldDnTw: 31,
+          steelFieldRwPrime: 30,
+          steelLabRw: 42
+        },
+        fill: 35,
+        materialId: "acoustic_gypsum_board",
+        thicknessMm: 15
+      },
+      {
+        expected: {
+          resilientFieldBaseRw: 45,
+          resilientFieldDnTA: 47.3,
+          resilientFieldDnTw: 46,
+          resilientFieldRwPrime: 45,
+          resilientLabRw: 47,
+          steelFieldBaseRw: 32,
+          steelFieldDnTA: 34.1,
+          steelFieldDnTw: 34,
+          steelFieldRwPrime: 32,
+          steelLabRw: 45
+        },
+        fill: 42,
+        materialId: "acoustic_gypsum_board",
+        thicknessMm: 15
+      },
+      {
+        expected: {
+          resilientFieldBaseRw: 46,
+          resilientFieldDnTA: 47.8,
+          resilientFieldDnTw: 47,
+          resilientFieldRwPrime: 46,
+          resilientLabRw: 48,
+          steelFieldBaseRw: 32,
+          steelFieldDnTA: 34.9,
+          steelFieldDnTw: 33,
+          steelFieldRwPrime: 32,
+          steelLabRw: 44
+        },
+        fill: 50,
+        materialId: "acoustic_gypsum_board",
+        thicknessMm: 15
+      },
+      {
+        expected: {
+          resilientFieldBaseRw: 47,
+          resilientFieldDnTA: 47.4,
+          resilientFieldDnTw: 48,
+          resilientFieldRwPrime: 47,
+          resilientLabRw: 50,
+          steelFieldBaseRw: 34,
+          steelFieldDnTA: 36.4,
+          steelFieldDnTw: 35,
+          steelFieldRwPrime: 34,
+          steelLabRw: 45
+        },
+        fill: 60,
+        materialId: "acoustic_gypsum_board",
+        thicknessMm: 15
+      },
+      {
+        expected: {
+          resilientFieldBaseRw: 44,
+          resilientFieldDnTA: 45,
+          resilientFieldDnTw: 44,
+          resilientFieldRwPrime: 43,
+          resilientLabRw: 46,
+          steelFieldBaseRw: 28,
+          steelFieldDnTA: 30.4,
+          steelFieldDnTw: 28,
+          steelFieldRwPrime: 27,
+          steelLabRw: 41
+        },
+        fill: 35,
+        materialId: "fire_board",
+        thicknessMm: 15
+      },
+      {
+        expected: {
+          resilientFieldBaseRw: 44,
+          resilientFieldDnTA: 45.5,
+          resilientFieldDnTw: 44,
+          resilientFieldRwPrime: 43,
+          resilientLabRw: 46,
+          steelFieldBaseRw: 30,
+          steelFieldDnTA: 32.3,
+          steelFieldDnTw: 32,
+          steelFieldRwPrime: 30,
+          steelLabRw: 43
+        },
+        fill: 42,
+        materialId: "fire_board",
+        thicknessMm: 15
+      },
+      {
+        expected: {
+          resilientFieldBaseRw: 45,
+          resilientFieldDnTA: 46.1,
+          resilientFieldDnTw: 45,
+          resilientFieldRwPrime: 44,
+          resilientLabRw: 47,
+          steelFieldBaseRw: 30,
+          steelFieldDnTA: 32.2,
+          steelFieldDnTw: 30,
+          steelFieldRwPrime: 29,
+          steelLabRw: 43
+        },
+        fill: 50,
+        materialId: "fire_board",
+        thicknessMm: 15
+      },
+      {
+        expected: {
+          resilientFieldBaseRw: 47,
+          resilientFieldDnTA: 46.7,
+          resilientFieldDnTw: 47,
+          resilientFieldRwPrime: 46,
+          resilientLabRw: 49,
+          steelFieldBaseRw: 32,
+          steelFieldDnTA: 33.7,
+          steelFieldDnTw: 32,
+          steelFieldRwPrime: 31,
+          steelLabRw: 44
+        },
+        fill: 60,
+        materialId: "fire_board",
+        thicknessMm: 15
+      },
+      {
+        expected: {
+          resilientFieldBaseRw: 44,
+          resilientFieldDnTA: 46,
+          resilientFieldDnTw: 45,
+          resilientFieldRwPrime: 44,
+          resilientLabRw: 46,
+          steelFieldBaseRw: 28,
+          steelFieldDnTA: 32.4,
+          steelFieldDnTw: 30,
+          steelFieldRwPrime: 29,
+          steelLabRw: 41
+        },
+        fill: 35,
+        materialId: "firestop_board",
+        thicknessMm: 15
+      },
+      {
+        expected: {
+          resilientFieldBaseRw: 44,
+          resilientFieldDnTA: 46.5,
+          resilientFieldDnTw: 45,
+          resilientFieldRwPrime: 44,
+          resilientLabRw: 46,
+          steelFieldBaseRw: 30,
+          steelFieldDnTA: 31.3,
+          steelFieldDnTw: 31,
+          steelFieldRwPrime: 29,
+          steelLabRw: 43
+        },
+        fill: 42,
+        materialId: "firestop_board",
+        thicknessMm: 15
+      },
+      {
+        expected: {
+          resilientFieldBaseRw: 45,
+          resilientFieldDnTA: 47.1,
+          resilientFieldDnTw: 46,
+          resilientFieldRwPrime: 45,
+          resilientLabRw: 47,
+          steelFieldBaseRw: 30,
+          steelFieldDnTA: 33.2,
+          steelFieldDnTw: 31,
+          steelFieldRwPrime: 30,
+          steelLabRw: 43
+        },
+        fill: 50,
+        materialId: "firestop_board",
+        thicknessMm: 15
+      },
+      {
+        expected: {
+          resilientFieldBaseRw: 47,
+          resilientFieldDnTA: 46.7,
+          resilientFieldDnTw: 47,
+          resilientFieldRwPrime: 46,
+          resilientLabRw: 49,
+          steelFieldBaseRw: 32,
+          steelFieldDnTA: 34.7,
+          steelFieldDnTw: 33,
+          steelFieldRwPrime: 32,
+          steelLabRw: 44
+        },
+        fill: 60,
+        materialId: "firestop_board",
+        thicknessMm: 15
+      }
+    ] as const;
+
+    for (const testCase of cases) {
+      const layers = [
+        { materialId: "gypsum_board", thicknessMm: 12.5 },
+        { materialId: "rockwool", thicknessMm: testCase.fill },
+        { materialId: testCase.materialId, thicknessMm: testCase.thicknessMm }
+      ] as const;
+      const steelLab = calculateAssembly(layers, {
+        calculator: "dynamic",
+        airborneContext: steelLabContext,
+        targetOutputs: ["Rw"]
+      });
+      const resilientLab = calculateAssembly(layers, {
+        calculator: "dynamic",
+        airborneContext: resilientLabContext,
+        targetOutputs: ["Rw"]
+      });
+      const steelField = calculateAssembly(layers, {
+        calculator: "dynamic",
+        airborneContext: steelFieldContext
+      });
+      const resilientField = calculateAssembly(layers, {
+        calculator: "dynamic",
+        airborneContext: resilientFieldContext
+      });
+
+      expect(steelLab.ratings.iso717.Rw).toBe(testCase.expected.steelLabRw);
+      expect(resilientLab.ratings.iso717.Rw).toBe(testCase.expected.resilientLabRw);
+      expect(steelField.airborneOverlay?.baseRwDb).toBe(testCase.expected.steelFieldBaseRw);
+      expect(steelField.ratings.iso717.RwPrime).toBe(testCase.expected.steelFieldRwPrime);
+      expect(steelField.ratings.field?.DnTw).toBe(testCase.expected.steelFieldDnTw);
+      expect(steelField.ratings.field?.DnTA).toBe(testCase.expected.steelFieldDnTA);
+      expect(resilientField.airborneOverlay?.baseRwDb).toBe(testCase.expected.resilientFieldBaseRw);
+      expect(resilientField.ratings.iso717.RwPrime).toBe(testCase.expected.resilientFieldRwPrime);
+      expect(resilientField.ratings.field?.DnTw).toBe(testCase.expected.resilientFieldDnTw);
+      expect(resilientField.ratings.field?.DnTA).toBe(testCase.expected.resilientFieldDnTA);
+    }
+
+    const acousticRepresentativeSteelField = calculateAssembly(
+      [
+        { materialId: "gypsum_board", thicknessMm: 12.5 },
+        { materialId: "rockwool", thicknessMm: 42 },
+        { materialId: "acoustic_gypsum_board", thicknessMm: 15 }
+      ],
+      { calculator: "dynamic", airborneContext: steelFieldContext }
+    );
+    const acousticRepresentativeLab = calculateAssembly(
+      [
+        { materialId: "gypsum_board", thicknessMm: 12.5 },
+        { materialId: "rockwool", thicknessMm: 42 },
+        { materialId: "acoustic_gypsum_board", thicknessMm: 15 }
+      ],
+      { calculator: "dynamic", airborneContext: steelLabContext, targetOutputs: ["Rw"] }
+    );
+
+    expect(
+      acousticRepresentativeLab.dynamicAirborneTrace?.notes.some((note: string) => /mixed plain-gypsum \+ acoustic-gypsum filled single-board lab target/i.test(note))
+    ).toBe(true);
+    expect(
+      acousticRepresentativeSteelField.warnings.some((warning: string) => /mixed plain-gypsum \+ acoustic-gypsum filled single-board field template/i.test(warning))
+    ).toBe(true);
+  });
+
+  it("keeps diamond and silentboard security hybrids on the source-backed security corridor", () => {
+    const steelLabContext = {
+      contextMode: "element_lab",
+      connectionType: "line_connection",
+      studType: "light_steel_stud",
+      studSpacingMm: 600,
+      airtightness: "good"
+    } as const;
+    const resilientLabContext = {
+      contextMode: "element_lab",
+      connectionType: "resilient_channel",
+      studType: "resilient_stud",
+      studSpacingMm: 625,
+      airtightness: "good"
+    } as const;
+    const steelFieldContext = {
+      contextMode: "field_between_rooms",
+      connectionType: "line_connection",
+      studType: "light_steel_stud",
+      studSpacingMm: 600,
+      airtightness: "good",
+      perimeterSeal: "good",
+      penetrationState: "none",
+      junctionQuality: "good",
+      sharedTrack: "independent",
+      electricalBoxes: "none",
+      panelWidthMm: 3000,
+      panelHeightMm: 2600,
+      receivingRoomVolumeM3: 32,
+      receivingRoomRt60S: 0.5
+    } as const;
+    const resilientFieldContext = {
+      contextMode: "field_between_rooms",
+      connectionType: "resilient_channel",
+      studType: "resilient_stud",
+      studSpacingMm: 625,
+      airtightness: "good",
+      perimeterSeal: "good",
+      penetrationState: "none",
+      junctionQuality: "good",
+      sharedTrack: "independent",
+      electricalBoxes: "none",
+      panelWidthMm: 3000,
+      panelHeightMm: 2600,
+      receivingRoomVolumeM3: 32,
+      receivingRoomRt60S: 0.5
+    } as const;
+    const cases = [
+      {
+        expected: { resilientLabRw: 49, resilientRwPrime: 47, steelLabRw: 44, steelRwPrime: 32 },
+        layers: [
+          { materialId: "diamond_board", thicknessMm: 18 },
+          { materialId: "rockwool", thicknessMm: 42 },
+          { materialId: "security_board", thicknessMm: 12.5 }
+        ]
+      },
+      {
+        expected: { resilientLabRw: 49, resilientRwPrime: 46, steelLabRw: 46, steelRwPrime: 34 },
+        layers: [
+          { materialId: "diamond_board", thicknessMm: 18 },
+          { materialId: "rockwool", thicknessMm: 50 },
+          { materialId: "security_board", thicknessMm: 12.5 }
+        ]
+      },
+      {
+        expected: { resilientLabRw: 50, resilientRwPrime: 47, steelLabRw: 46, steelRwPrime: 34 },
+        layers: [
+          { materialId: "diamond_board", thicknessMm: 18 },
+          { materialId: "rockwool", thicknessMm: 60 },
+          { materialId: "security_board", thicknessMm: 12.5 }
+        ]
+      },
+      {
+        expected: { resilientLabRw: 47, resilientRwPrime: 45, steelLabRw: 45, steelRwPrime: 33 },
+        layers: [
+          { materialId: "silentboard", thicknessMm: 12.5 },
+          { materialId: "rockwool", thicknessMm: 42 },
+          { materialId: "security_board", thicknessMm: 12.5 }
+        ]
+      },
+      {
+        expected: { resilientLabRw: 50, resilientRwPrime: 48, steelLabRw: 47, steelRwPrime: 35 },
+        layers: [
+          { materialId: "silentboard", thicknessMm: 12.5 },
+          { materialId: "rockwool", thicknessMm: 60 },
+          { materialId: "security_board", thicknessMm: 12.5 }
+        ]
+      }
+    ] as const;
+
+    for (const testCase of cases) {
+      const steelLab = calculateAssembly(testCase.layers, {
+        calculator: "dynamic",
+        airborneContext: steelLabContext,
+        targetOutputs: ["Rw"]
+      });
+      const resilientLab = calculateAssembly(testCase.layers, {
+        calculator: "dynamic",
+        airborneContext: resilientLabContext,
+        targetOutputs: ["Rw"]
+      });
+      const steelField = calculateAssembly(testCase.layers, {
+        calculator: "dynamic",
+        airborneContext: steelFieldContext
+      });
+      const resilientField = calculateAssembly(testCase.layers, {
+        calculator: "dynamic",
+        airborneContext: resilientFieldContext
+      });
+
+      expect(steelLab.ratings.iso717.Rw).toBe(testCase.expected.steelLabRw);
+      expect(resilientLab.ratings.iso717.Rw).toBe(testCase.expected.resilientLabRw);
+      expect(steelField.ratings.field?.RwPrime).toBe(testCase.expected.steelRwPrime);
+      expect(resilientField.ratings.field?.RwPrime).toBe(testCase.expected.resilientRwPrime);
+    }
+
+    const representativeSteelLab = calculateAssembly(cases[0].layers, {
+      calculator: "dynamic",
+      airborneContext: steelLabContext,
+      targetOutputs: ["Rw"]
+    });
+    expect(
+      representativeSteelLab.dynamicAirborneTrace?.notes.some((note: string) => /security-board filled single-board corridor/i.test(note))
+    ).toBe(true);
+
+    const representativeField = calculateAssembly(cases[0].layers, {
+      calculator: "dynamic",
+      airborneContext: resilientFieldContext
+    });
+    expect(
+      representativeField.warnings.some((warning: string) => /security-board filled single-board field corridor/i.test(warning))
+    ).toBe(true);
+  });
+
+  it("keeps source-backed security-board filled single-board framed walls on the upstream lab and field corridor", () => {
+    const steelLabContext = {
+      contextMode: "element_lab",
+      connectionType: "line_connection",
+      studType: "light_steel_stud",
+      studSpacingMm: 600,
+      airtightness: "good"
+    } as const;
+    const resilientLabContext = {
+      contextMode: "element_lab",
+      connectionType: "resilient_channel",
+      studType: "resilient_stud",
+      studSpacingMm: 625,
+      airtightness: "good"
+    } as const;
+    const steelFieldContext = {
+      contextMode: "field_between_rooms",
+      connectionType: "line_connection",
+      studType: "light_steel_stud",
+      studSpacingMm: 600,
+      airtightness: "good",
+      perimeterSeal: "good",
+      penetrationState: "none",
+      junctionQuality: "good",
+      sharedTrack: "independent",
+      electricalBoxes: "none",
+      panelWidthMm: 3000,
+      panelHeightMm: 2600,
+      receivingRoomVolumeM3: 32,
+      receivingRoomRt60S: 0.5
+    } as const;
+    const resilientFieldContext = {
+      contextMode: "field_between_rooms",
+      connectionType: "resilient_channel",
+      studType: "resilient_stud",
+      studSpacingMm: 625,
+      airtightness: "good",
+      perimeterSeal: "good",
+      penetrationState: "none",
+      junctionQuality: "good",
+      sharedTrack: "independent",
+      electricalBoxes: "none",
+      panelWidthMm: 3000,
+      panelHeightMm: 2600,
+      receivingRoomVolumeM3: 32,
+      receivingRoomRt60S: 0.5
+    } as const;
+    const cases = [
+      {
+        expected: { resilientLabRw: 44, resilientRwPrime: 42, steelLabRw: 40, steelRwPrime: 27 },
+        layers: [
+          { materialId: "gypsum_board", thicknessMm: 12.5 },
+          { materialId: "rockwool", thicknessMm: 35 },
+          { materialId: "security_board", thicknessMm: 12.5 }
+        ]
+      },
+      {
+        expected: { resilientLabRw: 49, resilientRwPrime: 46, steelLabRw: 46, steelRwPrime: 34 },
+        layers: [
+          { materialId: "acoustic_gypsum_board", thicknessMm: 15 },
+          { materialId: "rockwool", thicknessMm: 60 },
+          { materialId: "security_board", thicknessMm: 12.5 }
+        ]
+      },
+      {
+        expected: { resilientLabRw: 47, resilientRwPrime: 45, steelLabRw: 43, steelRwPrime: 30 },
+        layers: [
+          { materialId: "firestop_board", thicknessMm: 15 },
+          { materialId: "rockwool", thicknessMm: 42 },
+          { materialId: "security_board", thicknessMm: 12.5 }
+        ]
+      },
+      {
+        expected: { resilientLabRw: 46, resilientRwPrime: 43, steelLabRw: 43, steelRwPrime: 30 },
+        layers: [
+          { materialId: "security_board", thicknessMm: 12.5 },
+          { materialId: "rockwool", thicknessMm: 50 },
+          { materialId: "security_board", thicknessMm: 12.5 }
+        ]
+      }
+    ] as const;
+
+    for (const testCase of cases) {
+      const steelLab = calculateAssembly(testCase.layers, {
+        calculator: "dynamic",
+        airborneContext: steelLabContext,
+        targetOutputs: ["Rw"]
+      });
+      const resilientLab = calculateAssembly(testCase.layers, {
+        calculator: "dynamic",
+        airborneContext: resilientLabContext,
+        targetOutputs: ["Rw"]
+      });
+      const steelField = calculateAssembly(testCase.layers, {
+        calculator: "dynamic",
+        airborneContext: steelFieldContext
+      });
+      const resilientField = calculateAssembly(testCase.layers, {
+        calculator: "dynamic",
+        airborneContext: resilientFieldContext
+      });
+
+      expect(steelLab.ratings.iso717.Rw).toBe(testCase.expected.steelLabRw);
+      expect(resilientLab.ratings.iso717.Rw).toBe(testCase.expected.resilientLabRw);
+      expect(steelField.ratings.field?.RwPrime).toBe(testCase.expected.steelRwPrime);
+      expect(resilientField.ratings.field?.RwPrime).toBe(testCase.expected.resilientRwPrime);
+    }
+
+    const representativeField = calculateAssembly(cases[2].layers, {
+      calculator: "dynamic",
+      airborneContext: resilientFieldContext
+    });
+    expect(
+      representativeField.warnings.some((warning: string) => /security-board filled single-board field corridor/i.test(warning))
+    ).toBe(true);
+  });
+
+  it("keeps fire-rated filled single-board framed walls on the upstream lab and field corridor", () => {
+    const steelLabContext = {
+      contextMode: "element_lab",
+      connectionType: "line_connection",
+      studType: "light_steel_stud",
+      studSpacingMm: 600,
+      airtightness: "good"
+    } as const;
+    const resilientLabContext = {
+      contextMode: "element_lab",
+      connectionType: "resilient_channel",
+      studType: "resilient_stud",
+      studSpacingMm: 625,
+      airtightness: "good"
+    } as const;
+    const steelFieldContext = {
+      contextMode: "field_between_rooms",
+      connectionType: "line_connection",
+      studType: "light_steel_stud",
+      studSpacingMm: 600,
+      airtightness: "good",
+      perimeterSeal: "good",
+      penetrationState: "none",
+      junctionQuality: "good",
+      sharedTrack: "independent",
+      electricalBoxes: "none",
+      panelWidthMm: 3000,
+      panelHeightMm: 2600,
+      receivingRoomVolumeM3: 32,
+      receivingRoomRt60S: 0.5
+    } as const;
+    const resilientFieldContext = {
+      contextMode: "field_between_rooms",
+      connectionType: "resilient_channel",
+      studType: "resilient_stud",
+      studSpacingMm: 625,
+      airtightness: "good",
+      perimeterSeal: "good",
+      penetrationState: "none",
+      junctionQuality: "good",
+      sharedTrack: "independent",
+      electricalBoxes: "none",
+      panelWidthMm: 3000,
+      panelHeightMm: 2600,
+      receivingRoomVolumeM3: 32,
+      receivingRoomRt60S: 0.5
+    } as const;
+    const cases = [
+      {
+        expected: { resilientLabRw: 46, resilientRwPrime: 44, steelLabRw: 42, steelRwPrime: 30 },
+        layers: [
+          { materialId: "fire_board", thicknessMm: 15 },
+          { materialId: "rockwool", thicknessMm: 35 },
+          { materialId: "fire_board", thicknessMm: 12.5 }
+        ]
+      },
+      {
+        expected: { resilientLabRw: 48, resilientRwPrime: 46, steelLabRw: 44, steelRwPrime: 31 },
+        layers: [
+          { materialId: "fire_board", thicknessMm: 15 },
+          { materialId: "rockwool", thicknessMm: 42 },
+          { materialId: "firestop_board", thicknessMm: 12.5 }
+        ]
+      },
+      {
+        expected: { resilientLabRw: 48, resilientRwPrime: 45, steelLabRw: 45, steelRwPrime: 33 },
+        layers: [
+          { materialId: "firestop_board", thicknessMm: 15 },
+          { materialId: "rockwool", thicknessMm: 50 },
+          { materialId: "fire_board", thicknessMm: 12.5 }
+        ]
+      },
+      {
+        expected: { resilientLabRw: 50, resilientRwPrime: 47, steelLabRw: 45, steelRwPrime: 33 },
+        layers: [
+          { materialId: "firestop_board", thicknessMm: 15 },
+          { materialId: "rockwool", thicknessMm: 60 },
+          { materialId: "firestop_board", thicknessMm: 12.5 }
+        ]
+      }
+    ] as const;
+
+    for (const testCase of cases) {
+      const steelLab = calculateAssembly(testCase.layers, {
+        calculator: "dynamic",
+        airborneContext: steelLabContext,
+        targetOutputs: ["Rw"]
+      });
+      const resilientLab = calculateAssembly(testCase.layers, {
+        calculator: "dynamic",
+        airborneContext: resilientLabContext,
+        targetOutputs: ["Rw"]
+      });
+      const steelField = calculateAssembly(testCase.layers, {
+        calculator: "dynamic",
+        airborneContext: steelFieldContext
+      });
+      const resilientField = calculateAssembly(testCase.layers, {
+        calculator: "dynamic",
+        airborneContext: resilientFieldContext
+      });
+
+      expect(steelLab.ratings.iso717.Rw).toBe(testCase.expected.steelLabRw);
+      expect(resilientLab.ratings.iso717.Rw).toBe(testCase.expected.resilientLabRw);
+      expect(steelField.ratings.field?.RwPrime).toBe(testCase.expected.steelRwPrime);
+      expect(resilientField.ratings.field?.RwPrime).toBe(testCase.expected.resilientRwPrime);
+    }
+
+    const representativeLab = calculateAssembly(cases[1].layers, {
+      calculator: "dynamic",
+      airborneContext: resilientLabContext,
+      targetOutputs: ["Rw"]
+    });
+    const representativeField = calculateAssembly(cases[1].layers, {
+      calculator: "dynamic",
+      airborneContext: resilientFieldContext
+    });
+    expect(
+      representativeLab.dynamicAirborneTrace?.notes.some((note: string) => /fire-rated filled single-board corridor/i.test(note))
+    ).toBe(true);
+    expect(
+      representativeField.warnings.some((warning: string) => /fire-rated filled single-board field corridor/i.test(warning))
+    ).toBe(true);
+  });
+
+  it("keeps mixed plain gypsum plus premium and moderate filled single-board framed walls on the upstream field corridor", () => {
+    const steelFieldContext = {
+      contextMode: "field_between_rooms",
+      connectionType: "line_connection",
+      studType: "light_steel_stud",
+      studSpacingMm: 600,
+      airtightness: "good",
+      perimeterSeal: "good",
+      penetrationState: "none",
+      junctionQuality: "good",
+      sharedTrack: "independent",
+      electricalBoxes: "none",
+      panelWidthMm: 3000,
+      panelHeightMm: 2600,
+      receivingRoomVolumeM3: 32,
+      receivingRoomRt60S: 0.5
+    } as const;
+    const resilientFieldContext = {
+      contextMode: "field_between_rooms",
+      connectionType: "resilient_channel",
+      studType: "resilient_stud",
+      studSpacingMm: 625,
+      airtightness: "good",
+      perimeterSeal: "good",
+      penetrationState: "none",
+      junctionQuality: "good",
+      sharedTrack: "independent",
+      electricalBoxes: "none",
+      panelWidthMm: 3000,
+      panelHeightMm: 2600,
+      receivingRoomVolumeM3: 32,
+      receivingRoomRt60S: 0.5
+    } as const;
+    const cases = [
+      {
+        expected: { resilientDnTA: 48.1, resilientRwPrime: 45, steelDnTA: 34.4, steelRwPrime: 31 },
+        layers: [
+          { materialId: "gypsum_board", thicknessMm: 12.5 },
+          { materialId: "rockwool", thicknessMm: 42 },
+          { materialId: "silentboard", thicknessMm: 12.5 }
+        ]
+      },
+      {
+        expected: { resilientDnTA: 48.8, resilientRwPrime: 47, steelDnTA: 35.7, steelRwPrime: 33 },
+        layers: [
+          { materialId: "gypsum_board", thicknessMm: 12.5 },
+          { materialId: "rockwool", thicknessMm: 50 },
+          { materialId: "diamond_board", thicknessMm: 18 }
+        ]
+      },
+      {
+        expected: { resilientDnTA: 47.3, resilientRwPrime: 45, steelDnTA: 34.1, steelRwPrime: 32 },
+        layers: [
+          { materialId: "acoustic_gypsum_board", thicknessMm: 15 },
+          { materialId: "rockwool", thicknessMm: 42 },
+          { materialId: "gypsum_board", thicknessMm: 12.5 }
+        ]
+      },
+      {
+        expected: { resilientDnTA: 45.5, resilientRwPrime: 43, steelDnTA: 32.3, steelRwPrime: 30 },
+        layers: [
+          { materialId: "gypsum_board", thicknessMm: 12.5 },
+          { materialId: "rockwool", thicknessMm: 42 },
+          { materialId: "fire_board", thicknessMm: 12.5 }
+        ]
+      },
+      {
+        expected: { resilientDnTA: 47.1, resilientRwPrime: 45, steelDnTA: 33.2, steelRwPrime: 30 },
+        layers: [
+          { materialId: "firestop_board", thicknessMm: 12.5 },
+          { materialId: "rockwool", thicknessMm: 50 },
+          { materialId: "gypsum_board", thicknessMm: 12.5 }
+        ]
+      }
+    ] as const;
+
+    for (const testCase of cases) {
+      const steelField = calculateAssembly(testCase.layers, {
+        calculator: "dynamic",
+        airborneContext: steelFieldContext
+      });
+      const resilientField = calculateAssembly(testCase.layers, {
+        calculator: "dynamic",
+        airborneContext: resilientFieldContext
+      });
+
+      expect(steelField.ratings.field?.RwPrime).toBe(testCase.expected.steelRwPrime);
+      expect(steelField.ratings.field?.DnTA).toBe(testCase.expected.steelDnTA);
+      expect(resilientField.ratings.field?.RwPrime).toBe(testCase.expected.resilientRwPrime);
+      expect(resilientField.ratings.field?.DnTA).toBe(testCase.expected.resilientDnTA);
+    }
+
+    const representativeField = calculateAssembly(cases[0].layers, {
+      calculator: "dynamic",
+      airborneContext: steelFieldContext
+    });
+    expect(
+      representativeField.warnings.some((warning: string) => /mixed plain-filled single-board field corridor/i.test(warning))
+    ).toBe(true);
+  });
+
+  it("keeps plain gypsum filled single-board framed walls close to the upstream field and lab corridor", () => {
+    const steelLabContext = {
+      contextMode: "element_lab",
+      connectionType: "line_connection",
+      studType: "light_steel_stud",
+      studSpacingMm: 600,
+      airtightness: "good"
+    } as const;
+    const resilientLabContext = {
+      contextMode: "element_lab",
+      connectionType: "resilient_channel",
+      studType: "resilient_stud",
+      studSpacingMm: 625,
+      airtightness: "good"
+    } as const;
+    const steelFieldContext = {
+      contextMode: "field_between_rooms",
+      connectionType: "line_connection",
+      studType: "light_steel_stud",
+      studSpacingMm: 600,
+      airtightness: "good",
+      perimeterSeal: "good",
+      penetrationState: "none",
+      junctionQuality: "good",
+      sharedTrack: "independent",
+      electricalBoxes: "none",
+      panelWidthMm: 3000,
+      panelHeightMm: 2600,
+      receivingRoomVolumeM3: 32,
+      receivingRoomRt60S: 0.5
+    } as const;
+    const resilientFieldContext = {
+      contextMode: "field_between_rooms",
+      connectionType: "resilient_channel",
+      studType: "resilient_stud",
+      studSpacingMm: 625,
+      airtightness: "good",
+      perimeterSeal: "good",
+      penetrationState: "none",
+      junctionQuality: "good",
+      sharedTrack: "independent",
+      electricalBoxes: "none",
+      panelWidthMm: 3000,
+      panelHeightMm: 2600,
+      receivingRoomVolumeM3: 32,
+      receivingRoomRt60S: 0.5
+    } as const;
+    const cases = [
+      { fillMm: 35, steelRw: 43, resilientRw: 48, steelDnTA: 32.7, resilientDnTA: 46.9 },
+      { fillMm: 42, steelRw: 43, resilientRw: 48, steelDnTA: 33.8, resilientDnTA: 47.5 },
+      { fillMm: 50, steelRw: 44, resilientRw: 49, steelDnTA: 33.9, resilientDnTA: 46.9 },
+      { fillMm: 60, steelRw: 45, resilientRw: 50, steelDnTA: 35.5, resilientDnTA: 47.7 }
+    ] as const;
+
+    for (const testCase of cases) {
+      const layers = [
+        { materialId: "gypsum_board", thicknessMm: 15 },
+        { materialId: "rockwool", thicknessMm: testCase.fillMm },
+        { materialId: "gypsum_board", thicknessMm: 15 }
+      ] as const;
+
+      const steelLab = calculateAssembly(layers, {
+        calculator: "dynamic",
+        airborneContext: steelLabContext,
+        targetOutputs: ["Rw"]
+      });
+      const resilientLab = calculateAssembly(layers, {
+        calculator: "dynamic",
+        airborneContext: resilientLabContext,
+        targetOutputs: ["Rw"]
+      });
+      const steelField = calculateAssembly(layers, {
+        calculator: "dynamic",
+        airborneContext: steelFieldContext
+      });
+      const resilientField = calculateAssembly(layers, {
+        calculator: "dynamic",
+        airborneContext: resilientFieldContext
+      });
+
+      expect(steelLab.ratings.iso717.Rw).toBe(testCase.steelRw);
+      expect(resilientLab.ratings.iso717.Rw).toBe(testCase.resilientRw);
+      expect(steelField.ratings.field?.DnTA).toBe(testCase.steelDnTA);
+      expect(resilientField.ratings.field?.DnTA).toBe(testCase.resilientDnTA);
+    }
+
+    const deepLayers = [
+      { materialId: "gypsum_board", thicknessMm: 15 },
+      { materialId: "rockwool", thicknessMm: 60 },
+      { materialId: "gypsum_board", thicknessMm: 15 }
+    ] as const;
+    const deepSteelLab = calculateAssembly(deepLayers, {
+      calculator: "dynamic",
+      airborneContext: steelLabContext,
+      targetOutputs: ["Rw"]
+    });
+    const deepSteelField = calculateAssembly(deepLayers, {
+      calculator: "dynamic",
+      airborneContext: steelFieldContext
+    });
+    const deepResilientField = calculateAssembly(deepLayers, {
+      calculator: "dynamic",
+      airborneContext: resilientFieldContext
+    });
+
+    expect(
+      deepSteelLab.dynamicAirborneTrace?.notes.some((note: string) => /plain gypsum filled single-board corridor/i.test(note))
+    ).toBe(true);
+    expect(
+      deepSteelField.warnings.some((warning: string) => /plain gypsum filled single-board field trim/i.test(warning))
+    ).toBe(true);
+    expect(
+      deepResilientField.warnings.some((warning: string) => /resilient plain gypsum filled single-board field lift/i.test(warning))
+    ).toBe(true);
+  });
+
+  it("keeps the empty-cavity framed field board-count matrix monotonic on R'w and DnT,w", () => {
+    const metas = [
+      {
+        name: "steel_field",
+        value: {
+          contextMode: "field_between_rooms",
+          airtightness: "good",
+          studType: "light_steel_stud",
+          connectionType: "line_connection",
+          studSpacingMm: 600,
+          perimeterSeal: "good",
+          penetrationState: "none",
+          junctionQuality: "good",
+          sharedTrack: "independent",
+          electricalBoxes: "none",
+          panelWidthMm: 3000,
+          panelHeightMm: 2600,
+          receivingRoomVolumeM3: 30,
+          receivingRoomRt60S: 0.5
+        }
+      },
+      {
+        name: "resilient_field",
+        value: {
+          contextMode: "field_between_rooms",
+          airtightness: "good",
+          studType: "resilient_stud",
+          connectionType: "resilient_channel",
+          studSpacingMm: 600,
+          perimeterSeal: "good",
+          penetrationState: "none",
+          junctionQuality: "good",
+          sharedTrack: "independent",
+          electricalBoxes: "none",
+          panelWidthMm: 3000,
+          panelHeightMm: 2600,
+          receivingRoomVolumeM3: 30,
+          receivingRoomRt60S: 0.5
+        }
+      }
+    ] as const;
+
+    const evaluate = (leftBoards: number, rightBoards: number, meta: (typeof metas)[number]["value"]) => {
+      const layers: Array<{ materialId: string; thicknessMm: number }> = [];
+      for (let index = 0; index < leftBoards; index += 1) {
+        layers.push({ materialId: "gypsum", thicknessMm: 12.5 });
+      }
+      layers.push({ materialId: "air_gap", thicknessMm: 50 });
+      for (let index = 0; index < rightBoards; index += 1) {
+        layers.push({ materialId: "gypsum", thicknessMm: 12.5 });
+      }
+      return calculateAssembly(layers, { calculator: "dynamic", airborneContext: meta });
+    };
+
+    for (const meta of metas) {
+      const grid = new Map<string, ReturnType<typeof evaluate>>();
+
+      for (let left = 1; left <= 4; left += 1) {
+        for (let right = 1; right <= 4; right += 1) {
+          grid.set(`${left}-${right}`, evaluate(left, right, meta.value));
+        }
+      }
+
+      for (let left = 1; left <= 4; left += 1) {
+        for (let right = 1; right <= 4; right += 1) {
+          const base = grid.get(`${left}-${right}`);
+          expect(base, `${meta.name} base ${left}-${right}`).toBeDefined();
+
+          if (left < 4) {
+            const next = grid.get(`${left + 1}-${right}`);
+            expect(next, `${meta.name} left ${left + 1}-${right}`).toBeDefined();
+            expect(next?.ratings.iso717.RwPrime, `${meta.name} left ${left}-${right} -> ${left + 1}-${right} lowered R'w`).toBeGreaterThanOrEqual(base?.ratings.iso717.RwPrime ?? -Infinity);
+            expect(next?.ratings.field?.DnTw, `${meta.name} left ${left}-${right} -> ${left + 1}-${right} lowered DnT,w`).toBeGreaterThanOrEqual(base?.ratings.field?.DnTw ?? -Infinity);
+          }
+
+          if (right < 4) {
+            const next = grid.get(`${left}-${right + 1}`);
+            expect(next, `${meta.name} right ${left}-${right + 1}`).toBeDefined();
+            expect(next?.ratings.iso717.RwPrime, `${meta.name} right ${left}-${right} -> ${left}-${right + 1} lowered R'w`).toBeGreaterThanOrEqual(base?.ratings.iso717.RwPrime ?? -Infinity);
+            expect(next?.ratings.field?.DnTw, `${meta.name} right ${left}-${right} -> ${left}-${right + 1} lowered DnT,w`).toBeGreaterThanOrEqual(base?.ratings.field?.DnTw ?? -Infinity);
+          }
+        }
+      }
+
+      const representative = grid.get("2-3");
+      expect(
+        representative?.dynamicAirborneTrace?.notes.some((note: string) => /mixed-board empty-cavity field midband lift/i.test(note)),
+        `${meta.name} representative mixed-board empty-cavity field lift note`
+      ).toBe(true);
+    }
+  });
+
+  it("keeps split-cavity left-right gap swaps invariant in field mode", () => {
+    const fieldContext = {
+      contextMode: "field_between_rooms",
+      connectionType: "line_connection",
+      studType: "light_steel_stud",
+      studSpacingMm: 600,
+      airtightness: "good",
+      perimeterSeal: "good",
+      penetrationState: "none",
+      junctionQuality: "good",
+      sharedTrack: "independent",
+      electricalBoxes: "none",
+      panelWidthMm: 3000,
+      panelHeightMm: 2600,
+      receivingRoomVolumeM3: 30,
+      receivingRoomRt60S: 0.5
+    } as const;
+    const failures: Array<Record<string, number | string | undefined>> = [];
+
+    for (const board of ["gypsum_board", "firestop_board", "diamond_board", "acoustic_gypsum_board"] as const) {
+      for (const thicknessMm of [12.5, 15] as const) {
+        for (const fillMm of [40, 50, 75] as const) {
+          for (const leftGap of [10, 20, 30, 40] as const) {
+            for (const rightGap of [10, 20, 30, 40] as const) {
+              const forward = calculateAssembly(
+                [
+                  { materialId: board, thicknessMm },
+                  { materialId: "air_gap", thicknessMm: leftGap },
+                  { materialId: "rockwool", thicknessMm: fillMm },
+                  { materialId: "air_gap", thicknessMm: rightGap },
+                  { materialId: board, thicknessMm }
+                ],
+                { calculator: "dynamic", airborneContext: fieldContext }
+              );
+              const reverse = calculateAssembly(
+                [
+                  { materialId: board, thicknessMm },
+                  { materialId: "air_gap", thicknessMm: rightGap },
+                  { materialId: "rockwool", thicknessMm: fillMm },
+                  { materialId: "air_gap", thicknessMm: leftGap },
+                  { materialId: board, thicknessMm }
+                ],
+                { calculator: "dynamic", airborneContext: fieldContext }
+              );
+
+              if (
+                Math.abs((forward.ratings.iso717.RwPrime ?? 0) - (reverse.ratings.iso717.RwPrime ?? 0)) > 0.1 ||
+                forward.dynamicAirborneTrace?.detectedFamily !== reverse.dynamicAirborneTrace?.detectedFamily
+              ) {
+                failures.push({
+                  board,
+                  thicknessMm,
+                  fillMm,
+                  leftGap,
+                  rightGap,
+                  forwardRwPrime: forward.ratings.iso717.RwPrime,
+                  reverseRwPrime: reverse.ratings.iso717.RwPrime,
+                  forwardFamily: forward.dynamicAirborneTrace?.detectedFamily,
+                  reverseFamily: reverse.dynamicAirborneTrace?.detectedFamily
+                });
+              }
+            }
+          }
+        }
+      }
+    }
+
+    expect(failures.slice(0, 10)).toEqual([]);
+    expect(failures).toHaveLength(0);
+  }, 15000);
+
+  it("keeps micro-gap fill ordering inside the field boundary corridor", () => {
+    const fieldContext = {
+      contextMode: "field_between_rooms",
+      connectionType: "line_connection",
+      studType: "light_steel_stud",
+      studSpacingMm: 600,
+      airtightness: "good",
+      perimeterSeal: "good",
+      penetrationState: "none",
+      junctionQuality: "good",
+      sharedTrack: "independent",
+      electricalBoxes: "none",
+      panelWidthMm: 3000,
+      panelHeightMm: 2600,
+      receivingRoomVolumeM3: 30,
+      receivingRoomRt60S: 0.5
+    } as const;
+    const failures: Array<Record<string, number | string | undefined>> = [];
+
+    for (const board of ["gypsum_board", "firestop_board", "diamond_board", "acoustic_gypsum_board"] as const) {
+      for (const thicknessMm of [12.5, 15] as const) {
+        for (const totalFillMm of [75, 100, 125] as const) {
+          for (const gapMm of [5, 10, 15, 20, 25] as const) {
+            if (gapMm >= totalFillMm) {
+              continue;
+            }
+
+            const gapFirst = calculateAssembly(
+              [
+                { materialId: board, thicknessMm },
+                { materialId: "air_gap", thicknessMm: gapMm },
+                { materialId: "rockwool", thicknessMm: totalFillMm - gapMm },
+                { materialId: board, thicknessMm }
+              ],
+              { calculator: "dynamic", airborneContext: fieldContext }
+            );
+            const fillFirst = calculateAssembly(
+              [
+                { materialId: board, thicknessMm },
+                { materialId: "rockwool", thicknessMm: totalFillMm - gapMm },
+                { materialId: "air_gap", thicknessMm: gapMm },
+                { materialId: board, thicknessMm }
+              ],
+              { calculator: "dynamic", airborneContext: fieldContext }
+            );
+            const hasBoundarySignal =
+              gapFirst.dynamicAirborneTrace?.detectedFamily !== fillFirst.dynamicAirborneTrace?.detectedFamily ||
+              gapFirst.warnings.length > 0 ||
+              fillFirst.warnings.length > 0;
+
+            if (
+              Math.abs((gapFirst.ratings.iso717.RwPrime ?? 0) - (fillFirst.ratings.iso717.RwPrime ?? 0)) > 3 &&
+              !hasBoundarySignal
+            ) {
+              failures.push({
+                board,
+                thicknessMm,
+                totalFillMm,
+                gapMm,
+                gapFirstRwPrime: gapFirst.ratings.iso717.RwPrime,
+                fillFirstRwPrime: fillFirst.ratings.iso717.RwPrime,
+                gapFirstFamily: gapFirst.dynamicAirborneTrace?.detectedFamily,
+                fillFirstFamily: fillFirst.dynamicAirborneTrace?.detectedFamily
+              });
+            }
+          }
+        }
+      }
+    }
+
+    expect(failures.slice(0, 10)).toEqual([]);
+    expect(failures).toHaveLength(0);
+  });
+
+  it("keeps face reinforcement broadly symmetric between front and back faces in field mode", () => {
+    const metas = [
+      {
+        name: "steel_field",
+        value: {
+          contextMode: "field_between_rooms",
+          airtightness: "good",
+          studType: "light_steel_stud",
+          connectionType: "line_connection",
+          studSpacingMm: 600,
+          perimeterSeal: "good",
+          penetrationState: "none",
+          junctionQuality: "good",
+          sharedTrack: "independent",
+          electricalBoxes: "none",
+          panelWidthMm: 3000,
+          panelHeightMm: 2600,
+          receivingRoomVolumeM3: 30,
+          receivingRoomRt60S: 0.5
+        }
+      },
+      {
+        name: "resilient_field",
+        value: {
+          contextMode: "field_between_rooms",
+          airtightness: "good",
+          studType: "resilient_stud",
+          connectionType: "resilient_channel",
+          studSpacingMm: 600,
+          perimeterSeal: "good",
+          penetrationState: "none",
+          junctionQuality: "good",
+          sharedTrack: "independent",
+          electricalBoxes: "none",
+          panelWidthMm: 3000,
+          panelHeightMm: 2600,
+          receivingRoomVolumeM3: 30,
+          receivingRoomRt60S: 0.5
+        }
+      }
+    ] as const;
+    const failures: Array<Record<string, number | string | undefined>> = [];
+
+    for (const meta of metas) {
+      for (const board of [
+        "gypsum_board",
+        "firestop_board",
+        "diamond_board",
+        "silentboard",
+        "acoustic_gypsum_board",
+        "security_board"
+      ] as const) {
+        for (const thicknessMm of [12.5, 15] as const) {
+          for (const fillMm of [50, 75, 100] as const) {
+            const baseLayers = [
+              { materialId: board, thicknessMm },
+              { materialId: "rockwool", thicknessMm: fillMm },
+              { materialId: board, thicknessMm }
+            ] as const;
+            const front = calculateAssembly([{ materialId: board, thicknessMm }, ...baseLayers], {
+              calculator: "dynamic",
+              airborneContext: meta.value
+            });
+            const back = calculateAssembly([...baseLayers, { materialId: board, thicknessMm }], {
+              calculator: "dynamic",
+              airborneContext: meta.value
+            });
+
+            if (
+              Math.abs((front.ratings.iso717.RwPrime ?? 0) - (back.ratings.iso717.RwPrime ?? 0)) > 3 ||
+              front.dynamicAirborneTrace?.detectedFamily !== back.dynamicAirborneTrace?.detectedFamily
+            ) {
+              failures.push({
+                meta: meta.name,
+                board,
+                thicknessMm,
+                fillMm,
+                frontRwPrime: front.ratings.iso717.RwPrime,
+                backRwPrime: back.ratings.iso717.RwPrime,
+                frontFamily: front.dynamicAirborneTrace?.detectedFamily,
+                backFamily: back.dynamicAirborneTrace?.detectedFamily
+              });
+            }
+          }
+        }
+      }
+    }
+
+    expect(failures.slice(0, 10)).toEqual([]);
+    expect(failures).toHaveLength(0);
+  });
+
+  it("keeps outer compliant head-tail layers neutral on the field double-leaf matrix", () => {
+    const fieldContext = {
+      contextMode: "field_between_rooms",
+      airtightness: "good",
+      studType: "light_steel_stud",
+      connectionType: "line_connection",
+      studSpacingMm: 600,
+      perimeterSeal: "good",
+      penetrationState: "none",
+      junctionQuality: "good",
+      sharedTrack: "independent",
+      electricalBoxes: "none",
+      panelWidthMm: 3000,
+      panelHeightMm: 2600,
+      receivingRoomVolumeM3: 30,
+      receivingRoomRt60S: 0.5
+    } as const;
+    const failures: Array<Record<string, number | string | undefined>> = [];
+
+    for (const board of ["gypsum_board", "firestop_board", "diamond_board", "acoustic_gypsum_board"] as const) {
+      for (const thicknessMm of [12.5, 15] as const) {
+        for (const fillMm of [50, 75, 100] as const) {
+          const baseLayers = [
+            { materialId: board, thicknessMm },
+            { materialId: "air_gap", thicknessMm: 50 },
+            { materialId: "rockwool", thicknessMm: fillMm },
+            { materialId: board, thicknessMm }
+          ] as const;
+          const base = calculateAssembly(baseLayers, { calculator: "dynamic", airborneContext: fieldContext });
+          const variants = [
+            [{ materialId: "rockwool", thicknessMm: 25 }, ...baseLayers],
+            [...baseLayers, { materialId: "rockwool", thicknessMm: 25 }],
+            [{ materialId: "rockwool", thicknessMm: 25 }, ...baseLayers, { materialId: "rockwool", thicknessMm: 25 }]
+          ] as const;
+
+          for (const layers of variants) {
+            const result = calculateAssembly(layers, { calculator: "dynamic", airborneContext: fieldContext });
+
+            if (
+              result.ratings.iso717.RwPrime !== base.ratings.iso717.RwPrime ||
+              result.dynamicAirborneTrace?.detectedFamily !== base.dynamicAirborneTrace?.detectedFamily
+            ) {
+              failures.push({
+                board,
+                thicknessMm,
+                fillMm,
+                baseRwPrime: base.ratings.iso717.RwPrime,
+                rwPrime: result.ratings.iso717.RwPrime,
+                baseFamily: base.dynamicAirborneTrace?.detectedFamily,
+                family: result.dynamicAirborneTrace?.detectedFamily
+              });
+            }
+          }
+        }
+      }
+    }
+
+    expect(failures.slice(0, 10)).toEqual([]);
+    expect(failures).toHaveLength(0);
+  });
+
+  it("keeps merged thick boards close to split same-material reinforcement in field mode", () => {
+    const fieldContext = {
+      contextMode: "field_between_rooms",
+      airtightness: "good",
+      studType: "light_steel_stud",
+      connectionType: "line_connection",
+      studSpacingMm: 600,
+      perimeterSeal: "good",
+      penetrationState: "none",
+      junctionQuality: "good",
+      sharedTrack: "independent",
+      electricalBoxes: "none",
+      panelWidthMm: 3000,
+      panelHeightMm: 2600,
+      receivingRoomVolumeM3: 30,
+      receivingRoomRt60S: 0.5
+    } as const;
+    const failures: Array<Record<string, number | string | undefined>> = [];
+
+    for (const board of [
+      "gypsum_board",
+      "firestop_board",
+      "diamond_board",
+      "silentboard",
+      "acoustic_gypsum_board"
+    ] as const) {
+      for (const thicknessMm of [12.5, 15] as const) {
+        for (const fillMm of [50, 75, 100, 125] as const) {
+          const split = calculateAssembly(
+            [
+              { materialId: board, thicknessMm },
+              { materialId: "rockwool", thicknessMm: fillMm },
+              { materialId: board, thicknessMm },
+              { materialId: board, thicknessMm }
+            ],
+            { calculator: "dynamic", airborneContext: fieldContext }
+          );
+          const merged = calculateAssembly(
+            [
+              { materialId: board, thicknessMm },
+              { materialId: "rockwool", thicknessMm: fillMm },
+              { materialId: board, thicknessMm: thicknessMm * 2 }
+            ],
+            { calculator: "dynamic", airborneContext: fieldContext }
+          );
+
+          if (
+            Math.abs((split.ratings.iso717.RwPrime ?? 0) - (merged.ratings.iso717.RwPrime ?? 0)) > 3 ||
+            split.dynamicAirborneTrace?.detectedFamily !== merged.dynamicAirborneTrace?.detectedFamily
+          ) {
+            failures.push({
+              board,
+              thicknessMm,
+              fillMm,
+              splitRwPrime: split.ratings.iso717.RwPrime,
+              mergedRwPrime: merged.ratings.iso717.RwPrime,
+              splitFamily: split.dynamicAirborneTrace?.detectedFamily,
+              mergedFamily: merged.dynamicAirborneTrace?.detectedFamily
+            });
+          }
+        }
+      }
+    }
+
+    expect(failures.slice(0, 10)).toEqual([]);
+    expect(failures).toHaveLength(0);
   });
 
   it("stays close to heavy and mixed smoke cases", () => {
@@ -199,6 +3147,25 @@ describe("calculateAssembly", () => {
     expect(result.impact?.LnW).toBeUndefined();
     expect(result.impact?.LPrimeNTw).toBe(56);
     expect(result.impact?.LPrimeNT50).toBe(55);
+  });
+
+  it("surfaces Dutch LnT,A from an exact five-octave field source on the full assembly route", () => {
+    const result = calculateAssembly(
+      [
+        { materialId: "concrete", thicknessMm: 150 },
+        { materialId: "gypsum_board", thicknessMm: 12.5 }
+      ],
+      {
+        exactImpactSource: EXACT_FIELD_OCTAVE_SOURCE_5,
+        targetOutputs: ["LnT,A", "L'nT,w", "CI"]
+      }
+    );
+
+    expect(result.impact?.LnTA).toBe(53.8);
+    expect(result.impact?.metricBasis?.LnTA).toBe("exact_source_dutch_lnta_from_octave_bands");
+    expect(result.supportedTargetOutputs).toEqual(["LnT,A", "L'nT,w", "CI"]);
+    expect(result.supportedImpactOutputs).toEqual(["LnT,A", "L'nT,w", "CI"]);
+    expect(result.unsupportedImpactOutputs).toEqual([]);
   });
 
   it("can re-rate an exact impact source through the direct+flanking field path branch", () => {
@@ -857,9 +3824,396 @@ describe("calculateAssembly", () => {
     expect(result.impact?.LnW).toBe(45);
     expect(result.impact?.DeltaLw).toBe(33);
     expect(result.impact?.confidence.provenance).toBe("official_product_catalog");
-    expect(result.impact?.metricBasis?.LnW).toBe("predictor_explicit_delta_heavy_reference_derived");
-    expect(result.impact?.metricBasis?.DeltaLw).toBe("predictor_explicit_delta_user_input");
+    expect(result.impact?.metricBasis?.LnW).toBe("predictor_catalog_product_delta_heavy_reference_derived");
+    expect(result.impact?.metricBasis?.DeltaLw).toBe("predictor_catalog_product_delta_official");
     expect(result.impactSupport?.formulaNotes.some((note: string) => /Ln,w = 78 - DeltaLw/i.test(note))).toBe(true);
+  });
+
+  it("rejects product-delta catalog support on the assembly route when explicit dynamic stiffness conflicts with the matched product", () => {
+    const result = calculateAssembly([{ materialId: "concrete", thicknessMm: 140 }], {
+      impactPredictorInput: {
+        structuralSupportType: "reinforced_concrete",
+        impactSystemType: "heavy_floating_floor",
+        referenceFloorType: "heavy_standard",
+        baseSlab: {
+          materialClass: "heavy_concrete",
+          thicknessMm: 140,
+          densityKgM3: 2400
+        },
+        resilientLayer: {
+          productId: "getzner_afm_26",
+          dynamicStiffnessMNm3: 35,
+          thicknessMm: 10
+        },
+        floorCovering: {
+          mode: "delta_lw_catalog"
+        }
+      },
+      targetOutputs: ["DeltaLw"]
+    });
+
+    expect(result.impactPredictorStatus?.matchedCatalogCaseId ?? "").toBe("");
+    expect(Number.isFinite(Number(result.impact?.DeltaLw))).toBe(false);
+    expect(result.supportedImpactOutputs).toEqual([]);
+    expect(result.unsupportedImpactOutputs).toEqual(["DeltaLw"]);
+  });
+
+  it("keeps product-delta catalog support fail-closed on the assembly route outside explicit delta catalog mode", () => {
+    const result = calculateAssembly([{ materialId: "concrete", thicknessMm: 140 }], {
+      impactPredictorInput: {
+        structuralSupportType: "reinforced_concrete",
+        impactSystemType: "heavy_floating_floor",
+        referenceFloorType: "heavy_standard",
+        baseSlab: {
+          materialClass: "heavy_concrete",
+          thicknessMm: 140,
+          densityKgM3: 2400
+        },
+        resilientLayer: {
+          productId: "getzner_afm_29",
+          dynamicStiffnessMNm3: 10,
+          thicknessMm: 10
+        },
+        floorCovering: {
+          mode: "material_layer",
+          thicknessMm: 8,
+          densityKgM3: 2000
+        }
+      },
+      targetOutputs: ["DeltaLw"]
+    });
+
+    expect(result.impactPredictorStatus?.matchedCatalogCaseId ?? "").toBe("");
+    expect(Number.isFinite(Number(result.impact?.DeltaLw))).toBe(false);
+    expect(result.supportedImpactOutputs).toEqual([]);
+    expect(result.unsupportedImpactOutputs).toEqual(["DeltaLw"]);
+  });
+
+  it("matches official product-delta support on the assembly route with product identity alone when dynamic stiffness is omitted", () => {
+    const result = calculateAssembly([{ materialId: "concrete", thicknessMm: 140 }], {
+      impactPredictorInput: {
+        structuralSupportType: "reinforced_concrete",
+        impactSystemType: "heavy_floating_floor",
+        referenceFloorType: "heavy_standard",
+        baseSlab: {
+          materialClass: "heavy_concrete",
+          thicknessMm: 140,
+          densityKgM3: 2400
+        },
+        resilientLayer: {
+          productId: "getzner_afm_26",
+          thicknessMm: 10
+        },
+        floorCovering: {
+          mode: "delta_lw_catalog"
+        }
+      },
+      targetOutputs: ["Ln,w", "DeltaLw"]
+    });
+
+    expect(result.impactPredictorStatus?.matchedCatalogCaseId).toBe("getzner_afm26_catalog_2026");
+    expect(result.impact?.basis).toBe("predictor_catalog_product_delta_official");
+    expect(result.impact?.LnW).toBe(52);
+    expect(result.impact?.DeltaLw).toBe(26);
+    expect(result.impact?.metricBasis?.LnW).toBe("predictor_catalog_product_delta_heavy_reference_derived");
+    expect(result.impact?.metricBasis?.DeltaLw).toBe("predictor_catalog_product_delta_official");
+  });
+
+  it("keeps exact lab Ln,w primary while filling missing DeltaLw from compatible product-delta support on the assembly route", () => {
+    const result = calculateAssembly([{ materialId: "concrete", thicknessMm: 140 }], {
+      exactImpactSource: EXACT_IMPACT_SOURCE_19,
+      impactPredictorInput: {
+        structuralSupportType: "reinforced_concrete",
+        impactSystemType: "heavy_floating_floor",
+        referenceFloorType: "heavy_standard",
+        baseSlab: {
+          materialClass: "heavy_concrete",
+          thicknessMm: 140,
+          densityKgM3: 2400
+        },
+        resilientLayer: {
+          productId: "getzner_afm_29",
+          dynamicStiffnessMNm3: 10,
+          thicknessMm: 10
+        },
+        floorCovering: {
+          mode: "delta_lw_catalog"
+        }
+      },
+      targetOutputs: ["Ln,w", "DeltaLw"]
+    });
+
+    expect(result.impactPredictorStatus?.matchedCatalogCaseId).toBe("getzner_afm29_catalog_2026");
+    expect(result.impact?.basis).toBe("exact_source_band_curve_iso7172");
+    expect(result.impact?.LnW).toBe(53);
+    expect(result.impact?.DeltaLw).toBe(29);
+    expect(result.impact?.metricBasis?.LnW).toBe("exact_source_band_curve_iso7172");
+    expect(result.impact?.metricBasis?.DeltaLw).toBe("predictor_catalog_product_delta_official");
+    expect(result.supportedImpactOutputs).toEqual(["Ln,w", "DeltaLw"]);
+    expect(result.unsupportedImpactOutputs).toEqual([]);
+  });
+
+  it("keeps exact source DeltaLw primary over product-property catalog support on the assembly route", () => {
+    const result = calculateAssembly([{ materialId: "concrete", thicknessMm: 140 }], {
+      exactImpactSource: {
+        ...EXACT_IMPACT_SOURCE_19,
+        companionRatings: {
+          DeltaLw: 18
+        }
+      },
+      impactPredictorInput: {
+        structuralSupportType: "reinforced_concrete",
+        impactSystemType: "heavy_floating_floor",
+        referenceFloorType: "heavy_standard",
+        baseSlab: {
+          materialClass: "heavy_concrete",
+          thicknessMm: 140,
+          densityKgM3: 2400
+        },
+        resilientLayer: {
+          productId: "getzner_afm_29",
+          dynamicStiffnessMNm3: 10,
+          thicknessMm: 10
+        },
+        floorCovering: {
+          mode: "delta_lw_catalog"
+        }
+      },
+      targetOutputs: ["DeltaLw"]
+    });
+
+    expect(result.impactPredictorStatus?.matchedCatalogCaseId).toBe("getzner_afm29_catalog_2026");
+    expect(result.impact?.basis).toBe("exact_source_band_curve_iso7172");
+    expect(result.impact?.DeltaLw).toBe(18);
+    expect(result.impact?.metricBasis?.DeltaLw).toBe("exact_source_rating_override");
+    expect(result.supportedImpactOutputs).toEqual(["DeltaLw"]);
+    expect(result.unsupportedImpactOutputs).toEqual([]);
+  });
+
+  it("matches an exact official product-system row from predictor input even when heavy concrete support is only implied by the base slab", () => {
+    const result = calculateAssembly([
+      { materialId: "gypsum_board", thicknessMm: 12.5 },
+      { materialId: "air_gap", thicknessMm: 90 },
+      { materialId: "glasswool", thicknessMm: 90 },
+      { materialId: "gypsum_board", thicknessMm: 12.5 }
+    ], {
+      calculator: "dynamic",
+      impactPredictorInput: {
+        impactSystemType: "heavy_floating_floor",
+        referenceFloorType: "heavy_standard",
+        baseSlab: {
+          materialClass: "heavy_concrete",
+          thicknessMm: 150,
+          densityKgM3: 2400
+        },
+        resilientLayer: {
+          productId: "regupol_sonus_curve_8",
+          thicknessMm: 8
+        },
+        floatingScreed: {
+          materialClass: "generic_screed",
+          thicknessMm: 30,
+          densityKgM3: 2000
+        },
+        floorCovering: {
+          mode: "material_layer",
+          materialClass: "ceramic_tile",
+          thicknessMm: 8,
+          densityKgM3: 2000
+        }
+      },
+      targetOutputs: ["Ln,w", "DeltaLw"]
+    });
+
+    expect(result.impactPredictorStatus?.matchedCatalogCaseId).toBe("regupol_sonus_curve_8_tile_match_2026");
+    expect(result.impact?.basis).toBe("predictor_catalog_exact_match_official");
+    expect(result.impact?.LnW).toBe(50);
+    expect(result.impact?.DeltaLw).toBe(26);
+    expect(result.impact?.metricBasis?.LnW).toBe("predictor_catalog_exact_match_official");
+    expect(result.impact?.metricBasis?.DeltaLw).toBe("predictor_catalog_exact_match_official");
+    expect(result.supportedImpactOutputs).toEqual(["Ln,w", "DeltaLw"]);
+  });
+
+  it("falls back to the narrow heavy-floor estimate on the assembly route when the covering class is missing", () => {
+    const result = calculateAssembly([{ materialId: "concrete", thicknessMm: 140 }], {
+      impactPredictorInput: {
+        impactSystemType: "heavy_floating_floor",
+        referenceFloorType: "heavy_standard",
+        baseSlab: {
+          materialClass: "heavy_concrete",
+          thicknessMm: 150,
+          densityKgM3: 2400
+        },
+        resilientLayer: {
+          productId: "regupol_sonus_curve_8",
+          thicknessMm: 8
+        },
+        floorCovering: {
+          mode: "material_layer",
+          thicknessMm: 8,
+          densityKgM3: 2000
+        }
+      },
+      targetOutputs: ["Ln,w", "DeltaLw"]
+    });
+
+    expect(result.impactPredictorStatus?.matchedCatalogCaseId ?? "").toBe("");
+    expect(result.impact?.basis).toBe("predictor_heavy_floating_floor_iso12354_annexc_estimate");
+    expect(result.impact?.LnW).toBe(59.1);
+    expect(result.impact?.DeltaLw).toBe(15.5);
+    expect(result.impactPredictorStatus?.notes.some((note: string) => /annex c style relation/i.test(note))).toBe(true);
+  });
+
+  it("falls back to the narrow heavy-floor estimate on the assembly route when the covering class conflicts with the official match", () => {
+    const result = calculateAssembly([{ materialId: "concrete", thicknessMm: 140 }], {
+      impactPredictorInput: {
+        impactSystemType: "heavy_floating_floor",
+        referenceFloorType: "heavy_standard",
+        baseSlab: {
+          materialClass: "heavy_concrete",
+          thicknessMm: 150,
+          densityKgM3: 2400
+        },
+        resilientLayer: {
+          productId: "regupol_sonus_curve_8",
+          thicknessMm: 8
+        },
+        floorCovering: {
+          mode: "material_layer",
+          materialClass: "vinyl_flooring",
+          thicknessMm: 8,
+          densityKgM3: 2000
+        }
+      },
+      targetOutputs: ["Ln,w", "DeltaLw"]
+    });
+
+    expect(result.impactPredictorStatus?.matchedCatalogCaseId ?? "").toBe("");
+    expect(result.impact?.basis).toBe("predictor_heavy_floating_floor_iso12354_annexc_estimate");
+    expect(result.impact?.LnW).toBe(61.1);
+    expect(result.impact?.DeltaLw).toBe(13.5);
+  });
+
+  it("matches the porcelain planned-scope row on the assembly route only with the verified porcelain covering class", () => {
+    const result = calculateAssembly([{ materialId: "concrete", thicknessMm: 140 }], {
+      impactPredictorInput: {
+        impactSystemType: "heavy_floating_floor",
+        referenceFloorType: "heavy_standard",
+        baseSlab: {
+          materialClass: "heavy_concrete",
+          thicknessMm: 150,
+          densityKgM3: 2400
+        },
+        resilientLayer: {
+          productId: "regupol_sonus_multi_4_5",
+          thicknessMm: 4.5
+        },
+        floorCovering: {
+          mode: "material_layer",
+          materialClass: "porcelain_tile",
+          thicknessMm: 10,
+          densityKgM3: 2200
+        }
+      },
+      targetOutputs: ["Ln,w", "DeltaLw"]
+    });
+
+    expect(result.impactPredictorStatus?.matchedCatalogCaseId).toBe("regupol_sonus_multi_45_porcelain_match_2026");
+    expect(result.impact?.basis).toBe("predictor_catalog_exact_match_official");
+    expect(result.impact?.LnW).toBe(61);
+    expect(result.impact?.DeltaLw).toBe(17);
+    expect(result.impact?.metricBasis?.LnW).toBe("predictor_catalog_exact_match_official");
+    expect(result.impact?.metricBasis?.DeltaLw).toBe("predictor_catalog_exact_match_official");
+  });
+
+  it("keeps near-miss predictor input on the assembly route on the narrow heavy-floor estimate instead of fabricating catalog-backed outputs", () => {
+    const result = calculateAssembly([{ materialId: "concrete", thicknessMm: 140 }], {
+      impactPredictorInput: {
+        impactSystemType: "heavy_floating_floor",
+        referenceFloorType: "heavy_standard",
+        baseSlab: {
+          materialClass: "heavy_concrete",
+          thicknessMm: 150,
+          densityKgM3: 2400
+        },
+        resilientLayer: {
+          productId: "regupol_sonus_curve_8",
+          thicknessMm: 8
+        },
+        floatingScreed: {
+          materialClass: "generic_screed",
+          thicknessMm: 35,
+          densityKgM3: 2000
+        },
+        floorCovering: {
+          mode: "material_layer",
+          materialClass: "ceramic_tile",
+          thicknessMm: 8,
+          densityKgM3: 2000
+        }
+      },
+      targetOutputs: ["Ln,w", "DeltaLw"]
+    });
+
+    expect(result.impactPredictorStatus?.matchedCatalogCaseId ?? "").toBe("");
+    expect(result.impact?.basis).toBe("predictor_heavy_floating_floor_iso12354_annexc_estimate");
+    expect(result.impact?.LnW).toBe(49.6);
+    expect(result.impact?.DeltaLw).toBe(25);
+    expect(result.supportedImpactOutputs).toEqual(["Ln,w", "DeltaLw"]);
+  });
+
+  it("keeps an exact predictor product-system row lab-side first while carrying field-side derivatives on the assembly route", () => {
+    const result = calculateAssembly([
+      { materialId: "gypsum_board", thicknessMm: 12.5 },
+      { materialId: "air_gap", thicknessMm: 90 },
+      { materialId: "glasswool", thicknessMm: 90 },
+      { materialId: "gypsum_board", thicknessMm: 12.5 }
+    ], {
+      calculator: "dynamic",
+      impactFieldContext: {
+        fieldKDb: 2,
+        receivingRoomVolumeM3: 32
+      },
+      impactPredictorInput: {
+        impactSystemType: "heavy_floating_floor",
+        referenceFloorType: "heavy_standard",
+        baseSlab: {
+          materialClass: "heavy_concrete",
+          thicknessMm: 150,
+          densityKgM3: 2400
+        },
+        resilientLayer: {
+          productId: "regupol_sonus_curve_8",
+          thicknessMm: 8
+        },
+        floatingScreed: {
+          materialClass: "generic_screed",
+          thicknessMm: 30,
+          densityKgM3: 2000
+        },
+        floorCovering: {
+          mode: "material_layer",
+          materialClass: "ceramic_tile",
+          thicknessMm: 8,
+          densityKgM3: 2000
+        }
+      },
+      targetOutputs: ["Ln,w", "DeltaLw"]
+    });
+
+    expect(result.impactPredictorStatus?.matchedCatalogCaseId).toBe("regupol_sonus_curve_8_tile_match_2026");
+    expect(result.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_field_volume_normalization");
+    expect(result.impact?.LnW).toBe(50);
+    expect(result.impact?.DeltaLw).toBe(26);
+    expect(result.impact?.LPrimeNW).toBe(52);
+    expect(result.impact?.LPrimeNTw).toBe(51.9);
+    expect(result.impact?.metricBasis?.LnW).toBe("predictor_catalog_exact_match_official");
+    expect(result.impact?.metricBasis?.DeltaLw).toBe("predictor_catalog_exact_match_official");
+    expect(result.impact?.metricBasis?.LPrimeNW).toBe("estimated_field_lprimenw_from_lnw_plus_k");
+    expect(result.impact?.metricBasis?.LPrimeNTw).toBe("estimated_standardized_field_lprimentw_from_lprimenw_plus_room_volume");
+    expect(result.supportedImpactOutputs).toEqual(["Ln,w", "DeltaLw"]);
+    expect(result.unsupportedImpactOutputs).toEqual([]);
+    expect(result.impactPredictorStatus?.notes.some((note: string) => /lab-side first/i.test(note))).toBe(true);
   });
 
   it("keeps closest family recommendations visible when an exact match is not yet landed", () => {
@@ -1423,7 +4777,7 @@ describe("calculateAssembly", () => {
       }
     );
 
-    expect(result.metrics.estimatedRwDb).toBe(25.7);
+    expect(result.metrics.estimatedRwDb).toBe(26.9);
     expect(result.impact?.basis).toBe("predictor_heavy_floating_floor_iso12354_annexc_estimate");
     expect(result.impact?.LnW).toBe(50.3);
     expect(result.impact?.DeltaLw).toBe(24.3);
@@ -1466,7 +4820,7 @@ describe("calculateAssembly", () => {
       }
     );
 
-    expect(result.metrics.estimatedRwDb).toBe(25.7);
+    expect(result.metrics.estimatedRwDb).toBe(26.9);
     expect(result.impact?.basis).toBe("predictor_explicit_delta_heavy_reference_derived");
     expect(result.impact?.LnW).toBe(52);
     expect(result.impact?.DeltaLw).toBe(26);
@@ -1481,6 +4835,46 @@ describe("calculateAssembly", () => {
     expect(result.floorSystemRatings?.Rw).toBe(58);
     expect(result.supportedImpactOutputs).toEqual(["Ln,w", "DeltaLw"]);
     expect(result.unsupportedImpactOutputs).toEqual([]);
+  });
+
+  it("keeps explicit DeltaLw predictor input primary when a product id would otherwise trigger product-delta catalog support on the assembly route", () => {
+    const result = calculateAssembly(
+      [
+        { materialId: "gypsum_board", thicknessMm: 12.5 },
+        { materialId: "air_gap", thicknessMm: 90 },
+        { materialId: "rockwool", thicknessMm: 90 },
+        { materialId: "gypsum_board", thicknessMm: 12.5 }
+      ],
+      {
+        impactPredictorInput: {
+          structuralSupportType: "reinforced_concrete",
+          impactSystemType: "heavy_floating_floor",
+          referenceFloorType: "heavy_standard",
+          baseSlab: {
+            materialClass: "heavy_concrete",
+            thicknessMm: 140,
+            densityKgM3: 2400
+          },
+          resilientLayer: {
+            productId: "getzner_afm_29",
+            dynamicStiffnessMNm3: 10,
+            thicknessMm: 10
+          },
+          floorCovering: {
+            mode: "delta_lw_catalog",
+            deltaLwDb: 24
+          }
+        },
+        targetOutputs: ["Ln,w", "DeltaLw"]
+      }
+    );
+
+    expect(result.impactPredictorStatus?.matchedCatalogCaseId ?? "").toBe("");
+    expect(result.impact?.basis).toBe("predictor_explicit_delta_heavy_reference_derived");
+    expect(result.impact?.LnW).toBe(54);
+    expect(result.impact?.DeltaLw).toBe(24);
+    expect(result.impact?.metricBasis?.LnW).toBe("predictor_explicit_delta_heavy_reference_derived");
+    expect(result.impact?.metricBasis?.DeltaLw).toBe("predictor_explicit_delta_user_input");
   });
 
   it("keeps explicit DeltaLw predictor input lab-side when field context is present on the assembly route", () => {
@@ -1561,7 +4955,7 @@ describe("calculateAssembly", () => {
       }
     );
 
-    expect(result.metrics.estimatedRwDb).toBe(25.7);
+    expect(result.metrics.estimatedRwDb).toBe(26.9);
     expect(result.impact?.basis).toBe("predictor_composite_panel_published_interaction_estimate");
     expect(result.impact?.LnW).toBe(69.4);
     expect(result.floorSystemRatings?.Rw).toBe(45.1);
@@ -1607,7 +5001,7 @@ describe("calculateAssembly", () => {
       }
     );
 
-    expect(result.metrics.estimatedRwDb).toBe(25.7);
+    expect(result.metrics.estimatedRwDb).toBe(26.9);
     expect(result.impact?.basis).toBe("predictor_heavy_concrete_published_upper_treatment_estimate");
     expect(result.impact?.LnW).toBe(50);
     expect(result.floorSystemRatings?.Rw).toBe(58);
@@ -1783,6 +5177,7 @@ describe("calculateAssembly", () => {
     });
 
     expect(field.metrics.estimatedRwDb).toBeLessThan(lab.metrics.estimatedRwDb);
+    expect(field.metrics.estimatedRwDb).toBeGreaterThanOrEqual(0);
     expect(field.airborneOverlay?.leakagePenaltyApplied).toBe(true);
     expect(field.airborneOverlay?.fieldFlankingPenaltyApplied).toBe(true);
     expect(field.airborneOverlay?.detectedFamily).toBe("cavity_wall_surrogate");
@@ -1791,5 +5186,180 @@ describe("calculateAssembly", () => {
     expect(field.impact).toBeNull();
     expect(field.warnings.some((warning: string) => /Airborne leakage overlay active/i.test(warning))).toBe(true);
     expect(field.warnings.some((warning: string) => /Airborne field-side overlay active/i.test(warning))).toBe(true);
+  });
+
+  it("derives apparent airborne and field level-difference outputs when field geometry is defined", () => {
+    const layers = [
+      { materialId: "gypsum_board", thicknessMm: 12.5 },
+      { materialId: "air_gap", thicknessMm: 75 },
+      { materialId: "rockwool", thicknessMm: 75 },
+      { materialId: "gypsum_board", thicknessMm: 12.5 }
+    ] as const;
+
+    const result = calculateAssembly(layers, {
+      airborneContext: {
+        contextMode: "field_between_rooms",
+        panelWidthMm: 3000,
+        panelHeightMm: 2800,
+        receivingRoomVolumeM3: 42,
+        receivingRoomRt60S: 0.6
+      },
+      targetOutputs: ["R'w", "DnT,w", "DnT,A", "Dn,w", "Dn,A"]
+    });
+
+    expect(result.ratings.iso717.descriptor).toBe("R'w");
+    expect(result.metrics.estimatedRwPrimeDb).toBe(result.ratings.iso717.Rw);
+    expect(result.ratings.field?.RwPrime).toBe(result.metrics.estimatedRwPrimeDb);
+    expect(result.ratings.field?.DnTw).toBe(result.metrics.estimatedDnTwDb);
+    expect(result.ratings.field?.DnTA).toBe(result.metrics.estimatedDnTADb);
+    expect(result.ratings.field?.DnW).toBe(result.metrics.estimatedDnWDb);
+    expect(result.ratings.field?.DnA).toBe(result.metrics.estimatedDnADb);
+    expect(result.metrics.estimatedDnTwDb).toBeGreaterThan(result.metrics.estimatedRwPrimeDb ?? 0);
+    expect(result.metrics.estimatedDnWDb).toBeGreaterThan(0);
+    expect(result.supportedTargetOutputs).toEqual(["R'w", "DnT,w", "DnT,A", "Dn,w", "Dn,A"]);
+    expect(result.unsupportedTargetOutputs).toEqual([]);
+  });
+
+  it("trims mixed security-board double-stud field surrogates without disturbing symmetric siblings", () => {
+    const securityMixedDoubleStud = calculateAssembly([
+      { materialId: "security_board", thicknessMm: 12.5 },
+      { materialId: "gypsum", thicknessMm: 12.5 },
+      { materialId: "air_gap", thicknessMm: 73 },
+      { materialId: "glasswool", thicknessMm: 60 },
+      { materialId: "air_gap", thicknessMm: 73 },
+      { materialId: "gypsum", thicknessMm: 12.5 },
+      { materialId: "gypsum", thicknessMm: 12.5 }
+    ], {
+      airborneContext: {
+        contextMode: "field_between_rooms",
+        connectionType: "line_connection",
+        studType: "light_steel_stud",
+        studSpacingMm: 600,
+        airtightness: "good",
+        perimeterSeal: "good",
+        penetrationState: "none",
+        junctionQuality: "good",
+        sharedTrack: "independent",
+        electricalBoxes: "none",
+        panelWidthMm: 3000,
+        panelHeightMm: 2600,
+        receivingRoomVolumeM3: 30,
+        receivingRoomRt60S: 0.5
+      },
+      calculator: "dynamic",
+      targetOutputs: ["R'w", "DnT,w", "DnT,A"]
+    });
+    const symmetricDoubleStud = calculateAssembly([
+      { materialId: "gypsum", thicknessMm: 12.5 },
+      { materialId: "gypsum", thicknessMm: 12.5 },
+      { materialId: "air_gap", thicknessMm: 75 },
+      { materialId: "glasswool", thicknessMm: 60 },
+      { materialId: "air_gap", thicknessMm: 70 },
+      { materialId: "gypsum", thicknessMm: 12.5 },
+      { materialId: "gypsum", thicknessMm: 12.5 }
+    ], {
+      airborneContext: {
+        contextMode: "field_between_rooms",
+        connectionType: "line_connection",
+        studType: "light_steel_stud",
+        studSpacingMm: 600,
+        airtightness: "good",
+        perimeterSeal: "good",
+        penetrationState: "none",
+        junctionQuality: "good",
+        sharedTrack: "independent",
+        electricalBoxes: "none",
+        panelWidthMm: 3000,
+        panelHeightMm: 2600,
+        receivingRoomVolumeM3: 30,
+        receivingRoomRt60S: 0.5
+      },
+      calculator: "dynamic",
+      targetOutputs: ["R'w", "DnT,w", "DnT,A"]
+    });
+
+    expect(securityMixedDoubleStud.metrics.estimatedDnTADb).toBe(52);
+    expect(securityMixedDoubleStud.dynamicAirborneTrace?.strategy).toContain(
+      "mixed_security_board_double_stud_field_trim"
+    );
+    expect(
+      securityMixedDoubleStud.warnings.some((warning: string) =>
+        /mixed security-board double-stud field trim/i.test(warning)
+      )
+    ).toBe(true);
+    expect(symmetricDoubleStud.metrics.estimatedDnTADb).toBe(52);
+    expect(symmetricDoubleStud.dynamicAirborneTrace?.strategy).not.toContain(
+      "mixed_security_board_double_stud_field_trim"
+    );
+  });
+
+  it("treats Rw as unavailable once the airborne lane is explicitly apparent", () => {
+    const layers = [
+      { materialId: "gypsum_board", thicknessMm: 12.5 },
+      { materialId: "air_gap", thicknessMm: 75 },
+      { materialId: "rockwool", thicknessMm: 75 },
+      { materialId: "gypsum_board", thicknessMm: 12.5 }
+    ] as const;
+
+    const result = calculateAssembly(layers, {
+      airborneContext: {
+        contextMode: "field_between_rooms"
+      },
+      targetOutputs: ["Rw", "R'w", "DnT,w"]
+    });
+
+    expect(result.ratings.iso717.descriptor).toBe("R'w");
+    expect(result.supportedTargetOutputs).toEqual(["R'w"]);
+    expect(result.unsupportedTargetOutputs).toEqual(["Rw", "DnT,w"]);
+    expect(result.warnings.some((warning: string) => /field conversion is incomplete/i.test(warning))).toBe(true);
+  });
+
+  it("keeps Dn,w available from partition geometry even when DnT,w still lacks room volume", () => {
+    const layers = [
+      { materialId: "gypsum_board", thicknessMm: 12.5 },
+      { materialId: "air_gap", thicknessMm: 75 },
+      { materialId: "rockwool", thicknessMm: 75 },
+      { materialId: "gypsum_board", thicknessMm: 12.5 }
+    ] as const;
+
+    const result = calculateAssembly(layers, {
+      airborneContext: {
+        contextMode: "field_between_rooms",
+        panelWidthMm: 3000,
+        panelHeightMm: 2800
+      },
+      targetOutputs: ["Dn,w", "Dn,A", "DnT,w"]
+    });
+
+    expect(result.metrics.estimatedDnWDb).toBeGreaterThan(0);
+    expect(result.metrics.estimatedDnADb).toBeGreaterThan(0);
+    expect(result.metrics.estimatedDnTwDb).toBeUndefined();
+    expect(result.supportedTargetOutputs).toEqual(["Dn,w", "Dn,A"]);
+    expect(result.unsupportedTargetOutputs).toEqual(["DnT,w"]);
+    expect(result.warnings.some((warning: string) => /field conversion is incomplete/i.test(warning))).toBe(true);
+  });
+
+  it("can expose an official approximate DnT,A,k companion even when live DnT,A geometry is still incomplete", () => {
+    const layers = [
+      { materialId: "skim_plaster", thicknessMm: 3 },
+      { materialId: "ytong_separatiepaneel_aac_5_750", thicknessMm: 100 },
+      { materialId: "skim_plaster", thicknessMm: 3 }
+    ] as const;
+
+    const result = calculateAssembly(layers, {
+      airborneContext: {
+        contextMode: "field_between_rooms",
+        airtightness: "good"
+      },
+      targetOutputs: ["DnT,A,k", "DnT,A"]
+    });
+
+    expect(result.metrics.estimatedDnTAkDb).toBe(33);
+    expect(result.ratings.field?.DnTAk).toBe(33);
+    expect(result.metrics.estimatedDnTADb).toBeUndefined();
+    expect(result.supportedTargetOutputs).toEqual(["DnT,A,k"]);
+    expect(result.unsupportedTargetOutputs).toEqual(["DnT,A"]);
+    expect(result.warnings.some((warning: string) => /official approximate airborne field companion available/i.test(warning))).toBe(true);
+    expect(result.warnings.some((warning: string) => /field conversion is incomplete/i.test(warning))).toBe(true);
   });
 });

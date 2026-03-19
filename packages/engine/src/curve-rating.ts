@@ -1,4 +1,4 @@
-import type { AssemblyRatings, TransmissionLossCurve } from "@dynecho/shared";
+import type { AirborneContextMode, AssemblyRatings, FieldAirborneRating, TransmissionLossCurve } from "@dynecho/shared";
 
 import { clamp, ksRound1, log10, log10Safe } from "./math";
 
@@ -9,6 +9,17 @@ const STC_OFFSETS = [-16, -13, -10, -7, -4, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 const ISO_SPECTRUM_C = [-29, -26, -23, -21, -19, -17, -15, -13, -12, -11, -10, -9, -9, -9, -9, -9];
 const ISO_SPECTRUM_CTR = [-20, -20, -18, -16, -14, -12, -10, -9, -8, -9, -10, -11, -13, -15, -17, -19];
 export const TL_PLOT_FREQS = [63, 80, 100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500, 3150, 4000];
+const REFERENCE_ABSORPTION_AREA_M2 = 10;
+const REFERENCE_REVERB_TIME_S = 0.5;
+const SABINE_COEFFICIENT = 0.16;
+
+export type CurveRatingContext = {
+  contextMode?: AirborneContextMode | null;
+  panelHeightMm?: number | null;
+  panelWidthMm?: number | null;
+  receivingRoomRt60S?: number | null;
+  receivingRoomVolumeM3?: number | null;
+};
 
 export function sortUniqueFrequencies(frequencies: readonly number[]): number[] {
   return Array.from(new Set(frequencies.filter((entry) => Number.isFinite(entry) && entry > 0))).sort(
@@ -111,6 +122,151 @@ function computeWeightedApparentReduction(
   return -10 * log10Safe(transmittedEnergy / sourceEnergy);
 }
 
+function applyCurveOffset(valuesDb: readonly number[], offsetDb: number): number[] {
+  if (!Number.isFinite(offsetDb) || Math.abs(offsetDb) < 1e-9) {
+    return [...valuesDb];
+  }
+
+  return valuesDb.map((valueDb) => clamp(valueDb + offsetDb, 0, 95));
+}
+
+function getPanelAreaM2(context?: CurveRatingContext | null): number | null {
+  const panelWidthMm = context?.panelWidthMm;
+  const panelHeightMm = context?.panelHeightMm;
+
+  if (
+    typeof panelWidthMm !== "number" ||
+    typeof panelHeightMm !== "number" ||
+    !Number.isFinite(panelWidthMm) ||
+    !Number.isFinite(panelHeightMm) ||
+    !(panelWidthMm > 0) ||
+    !(panelHeightMm > 0)
+  ) {
+    return null;
+  }
+
+  return (panelWidthMm * panelHeightMm) / 1_000_000;
+}
+
+function computeEquivalentAbsorptionArea(context?: CurveRatingContext | null): {
+  absorptionAreaM2Sabine: number | null;
+  available: boolean;
+} {
+  const receivingRoomVolumeM3 = context?.receivingRoomVolumeM3;
+  const receivingRoomRt60S = context?.receivingRoomRt60S;
+
+  if (
+    typeof receivingRoomVolumeM3 !== "number" ||
+    typeof receivingRoomRt60S !== "number" ||
+    !Number.isFinite(receivingRoomVolumeM3) ||
+    !Number.isFinite(receivingRoomRt60S) ||
+    !(receivingRoomVolumeM3 > 0) ||
+    !(receivingRoomRt60S > 0)
+  ) {
+    return {
+      absorptionAreaM2Sabine: null,
+      available: false
+    };
+  }
+
+  const absorptionAreaM2Sabine = ksRound1((SABINE_COEFFICIENT * receivingRoomVolumeM3) / Math.max(receivingRoomRt60S, 1e-6));
+
+  return {
+    absorptionAreaM2Sabine,
+    available: absorptionAreaM2Sabine > 0
+  };
+}
+
+function buildFieldAirborneRatings(
+  frequenciesHz: readonly number[],
+  transmissionLossDb: readonly number[],
+  context?: CurveRatingContext | null
+): FieldAirborneRating {
+  const rwPrime = computeRwFromCurve(frequenciesHz, transmissionLossDb);
+  const c = computeSpectrumAdaptationTerm(frequenciesHz, transmissionLossDb, ISO_SPECTRUM_C);
+  const ctr = computeSpectrumAdaptationTerm(frequenciesHz, transmissionLossDb, ISO_SPECTRUM_CTR);
+  const partitionAreaM2 = getPanelAreaM2(context);
+  const receivingRoomVolumeM3 =
+    typeof context?.receivingRoomVolumeM3 === "number" && Number.isFinite(context.receivingRoomVolumeM3) && context.receivingRoomVolumeM3 > 0
+      ? context.receivingRoomVolumeM3
+      : null;
+  const field: FieldAirborneRating = {
+    basis: "apparent_curve_overlay",
+    C: c,
+    Ctr: ctr,
+    compositePrime: `${rwPrime} (${c >= 0 ? "+" : ""}${c};${ctr >= 0 ? "+" : ""}${ctr})`,
+    estimated: true,
+    RwPrime: rwPrime
+  };
+
+  if (!(partitionAreaM2 && partitionAreaM2 > 0 && receivingRoomVolumeM3 && receivingRoomVolumeM3 > 0)) {
+    field.geometryMissing = true;
+    field.geometryNeeded = ["panelWidthMm", "panelHeightMm", "receivingRoomVolumeM3"].filter((key) => {
+      if (key === "receivingRoomVolumeM3") {
+        return !(receivingRoomVolumeM3 && receivingRoomVolumeM3 > 0);
+      }
+
+      if (key === "panelWidthMm") {
+        return !(typeof context?.panelWidthMm === "number" && context.panelWidthMm > 0);
+      }
+
+      return !(typeof context?.panelHeightMm === "number" && context.panelHeightMm > 0);
+    });
+  } else {
+    const normalizationDb = ksRound1(
+      10 * log10Safe(((SABINE_COEFFICIENT / REFERENCE_REVERB_TIME_S) * receivingRoomVolumeM3) / partitionAreaM2)
+    );
+    const dntCurveDb = applyCurveOffset(transmissionLossDb, normalizationDb);
+    const dnTw = computeRwFromCurve(frequenciesHz, dntCurveDb);
+    const dnTC = computeSpectrumAdaptationTerm(frequenciesHz, dntCurveDb, ISO_SPECTRUM_C);
+    const dnTCtr = computeSpectrumAdaptationTerm(frequenciesHz, dntCurveDb, ISO_SPECTRUM_CTR);
+
+    field.DnTw = dnTw;
+    field.DnTC = dnTC;
+    field.DnTCtr = dnTCtr;
+    field.DnTA = ksRound1(dnTw + dnTC);
+    field.normalizationDb = normalizationDb;
+    field.partitionAreaM2 = ksRound1(partitionAreaM2);
+    field.receivingRoomVolumeM3 = ksRound1(receivingRoomVolumeM3);
+    field.basis = "apparent_curve_overlay + 10log10(0.32V/S)";
+  }
+
+  if (partitionAreaM2 && partitionAreaM2 > 0) {
+    const dnOffsetDb = ksRound1(10 * log10Safe(REFERENCE_ABSORPTION_AREA_M2 / partitionAreaM2));
+    const dnCurveDb = applyCurveOffset(transmissionLossDb, dnOffsetDb);
+    const dnW = computeRwFromCurve(frequenciesHz, dnCurveDb);
+    const dnC = computeSpectrumAdaptationTerm(frequenciesHz, dnCurveDb, ISO_SPECTRUM_C);
+    const dnCtr = computeSpectrumAdaptationTerm(frequenciesHz, dnCurveDb, ISO_SPECTRUM_CTR);
+
+    field.DnW = dnW;
+    field.DnC = dnC;
+    field.DnCtr = dnCtr;
+    field.DnA = ksRound1(dnW + dnC);
+    field.partitionAreaM2 = ksRound1(partitionAreaM2);
+    field.dnOffsetDb = dnOffsetDb;
+    field.dnBasis = "apparent_curve_overlay + 10log10(A0/S)";
+
+    const absorptionInfo = computeEquivalentAbsorptionArea(context);
+    if (absorptionInfo.available && absorptionInfo.absorptionAreaM2Sabine && absorptionInfo.absorptionAreaM2Sabine > 0) {
+      field.absorptionAreaM2Sabine = absorptionInfo.absorptionAreaM2Sabine;
+      if (typeof context?.receivingRoomRt60S === "number" && context.receivingRoomRt60S > 0) {
+        field.receivingRoomRt60S = ksRound1(context.receivingRoomRt60S);
+      }
+      field.levelDifferenceOffsetDb = ksRound1(
+        10 * log10Safe(absorptionInfo.absorptionAreaM2Sabine / partitionAreaM2)
+      );
+    } else if (!(typeof context?.receivingRoomRt60S === "number" && context.receivingRoomRt60S > 0)) {
+      field.absorptionDataMissing = true;
+      field.absorptionDataNeeded = ["receivingRoomRt60S", "receivingRoomVolumeM3"];
+    }
+  } else {
+    field.absorptionDataMissing = true;
+    field.absorptionDataNeeded = ["panelWidthMm", "panelHeightMm"];
+  }
+
+  return field;
+}
+
 export function computeRwFromCurve(frequenciesHz: readonly number[], transmissionLossDb: readonly number[]): number {
   const samples = sampleLogCurve(frequenciesHz, transmissionLossDb, RW_FREQS);
 
@@ -179,23 +335,36 @@ export function buildCalibratedMassLawCurve(
 
 export function buildRatingsFromCurve(
   frequenciesHz: readonly number[],
-  transmissionLossDb: readonly number[]
+  transmissionLossDb: readonly number[],
+  context?: CurveRatingContext | null
 ): AssemblyRatings {
   const rw = computeRwFromCurve(frequenciesHz, transmissionLossDb);
   const c = computeSpectrumAdaptationTerm(frequenciesHz, transmissionLossDb, ISO_SPECTRUM_C);
   const ctr = computeSpectrumAdaptationTerm(frequenciesHz, transmissionLossDb, ISO_SPECTRUM_CTR);
   const stc = computeStcFromCurve(frequenciesHz, transmissionLossDb);
+  const contextMode = context?.contextMode ?? "element_lab";
+  const apparentMode = contextMode !== "element_lab";
+  const field = apparentMode ? buildFieldAirborneRatings(frequenciesHz, transmissionLossDb, context) : undefined;
 
   return {
     astmE413: {
+      ...(apparentMode
+        ? {
+            ASTC: stc,
+            basis: "apparent_curve",
+            estimated: true
+          }
+        : {}),
       STC: stc
     },
+    ...(field ? { field } : {}),
     iso717: {
       C: c,
       Ctr: ctr,
       Rw: rw,
+      ...(apparentMode ? { RwPrime: rw, apparent: true } : {}),
       composite: `${rw} (${c >= 0 ? "+" : ""}${c};${ctr >= 0 ? "+" : ""}${ctr})`,
-      descriptor: "Rw"
+      descriptor: apparentMode ? "R'w" : "Rw"
     }
   };
 }

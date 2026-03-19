@@ -1,0 +1,317 @@
+[
+  {
+    "id": "monolithic_concrete_150",
+    "label": "Monolithic concrete slab 150 mm",
+    "layers": "concrete:150"
+  },
+  {
+    "id": "monolithic_concrete_120",
+    "label": "Monolithic concrete slab 120 mm",
+    "layers": "concrete:120"
+  },
+  {
+    "id": "monolithic_concrete_140",
+    "label": "Monolithic concrete slab 140 mm",
+    "layers": "concrete:140"
+  },
+  {
+    "id": "monolithic_concrete_160",
+    "label": "Monolithic concrete slab 160 mm",
+    "layers": "concrete:160"
+  },
+  {
+    "id": "seed_wall",
+    "label": "Seed wall preset",
+    "layers": "gypsum_board:12.5,rockwool:50,air_gap:50,concrete:100"
+  },
+  {
+    "id": "concrete_with_single_gypsum_face",
+    "label": "Concrete slab with one gypsum lining face",
+    "layers": "concrete:150,gypsum_board:12.5"
+  },
+  {
+    "id": "concrete_with_double_gypsum_face",
+    "label": "Concrete slab with two gypsum lining boards",
+    "layers": "concrete:150,gypsum_board:12.5,gypsum_board:12.5"
+  },
+  {
+    "id": "concrete_with_cavity_lining",
+    "label": "Concrete slab with air-gap gypsum lining",
+    "layers": "gypsum_board:12.5,air_gap:50,concrete:100"
+  },
+  {
+    "id": "concrete_with_reversed_cavity_lining",
+    "label": "Concrete slab with reversed air-gap gypsum lining order",
+    "layers": "concrete:100,air_gap:50,gypsum_board:12.5"
+  },
+  {
+    "id": "concrete_with_compact_cavity_fill",
+    "label": "Concrete slab with compact insulated cavity lining",
+    "layers": "gypsum_board:12.5,rockwool:25,air_gap:25,concrete:100"
+  },
+  {
+    "id": "seed_floor",
+    "label": "Seed floor preset",
+    "layers": "vinyl_flooring:4,screed:50,air_gap:45,clt_panel:120"
+  },
+  {
+    "id": "clt_panel_100",
+    "label": "Bare CLT panel 100 mm",
+    "layers": "clt_panel:100"
+  },
+  {
+    "id": "clt_panel_120",
+    "label": "Bare CLT panel 120 mm",
+    "layers": "clt_panel:120"
+  },
+  {
+    "id": "clt_panel_140",
+    "label": "Bare CLT panel 140 mm",
+    "layers": "clt_panel:140"
+  },
+  {
+    "id": "clt_panel_160",
+    "label": "Bare CLT panel 160 mm",
+    "layers": "clt_panel:160"
+  },
+  {
+    "id": "vinyl_screed_concrete",
+    "label": "Vinyl over screed on concrete slab",
+    "layers": "vinyl_flooring:4,screed:50,concrete:140"
+  },
+  {
+    "id": "vinyl_thin_screed_concrete",
+    "label": "Vinyl over 30 mm screed on concrete slab",
+    "layers": "vinyl_flooring:4,screed:30,concrete:140"
+  },
+  {
+    "id": "vinyl_medium_screed_concrete",
+    "label": "Vinyl over 40 mm screed on concrete slab",
+    "layers": "vinyl_flooring:4,screed:40,concrete:140"
+  },
+  {
+    "id": "vinyl_thick_screed_concrete",
+    "label": "Vinyl over 60 mm screed on concrete slab",
+    "layers": "vinyl_flooring:4,screed:60,concrete:140"
+  },
+  {
+    "id": "concrete_with_screed",
+    "label": "Concrete slab with screed topping",
+    "layers": "concrete:140,screed:50"
+  },
+  {
+    "id": "double_board_nil_cavity_64",
+    "label": "Double gypsum board each side with 64 mm empty cavity",
+    "layers": "gypsum_board:12.5,gypsum_board:12.5,air_gap:64,gypsum_board:12.5,gypsum_board:12.5"
+  },
+  {
+    "id": "double_board_nil_cavity_92",
+    "label": "Double gypsum board each side with 92 mm empty cavity",
+    "layers": "gypsum_board:12.5,gypsum_board:12.5,air_gap:92,gypsum_board:12.5,gypsum_board:12.5"
+  },
+  {
+    "id": "double_board_nil_cavity_120",
+    "label": "Double gypsum board each side with 120 mm empty cavity",
+    "layers": "gypsum_board:12.5,gypsum_board:12.5,air_gap:120,gypsum_board:12.5,gypsum_board:12.5"
+  },
+  {
+    "id": "single_board_nil_cavity_75",
+    "label": "Single gypsum board each side with 75 mm empty cavity",
+    "layers": "gypsum_board:12.5,air_gap:75,gypsum_board:12.5"
+  },
+  {
+    "id": "single_board_filled_cavity_50_50",
+    "label": "Single gypsum board each side with 50 mm gap and 50 mm rockwool",
+    "layers": "gypsum_board:12.5,air_gap:50,rockwool:50,gypsum_board:12.5"
+  },
+  {
+    "id": "double_board_nil_cavity_100",
+    "label": "Double gypsum board each side with 100 mm empty cavity",
+    "layers": "gypsum_board:12.5,gypsum_board:12.5,air_gap:100,gypsum_board:12.5,gypsum_board:12.5"
+  },
+  {
+    "id": "double_board_filled_cavity_60_40",
+    "label": "Double gypsum board each side with 60 mm gap and 40 mm rockwool",
+    "layers": "gypsum_board:12.5,gypsum_board:12.5,air_gap:60,rockwool:40,gypsum_board:12.5,gypsum_board:12.5"
+  },
+  {
+    "id": "double_board_filled_cavity_70_80",
+    "label": "Double gypsum board each side with 70 mm gap and 80 mm rockwool",
+    "layers": "gypsum_board:12.5,gypsum_board:12.5,air_gap:70,rockwool:80,gypsum_board:12.5,gypsum_board:12.5"
+  },
+  {
+    "id": "triple_board_nil_cavity_92",
+    "label": "Triple gypsum board each side with 92 mm empty cavity",
+    "layers": "gypsum_board:12.5,gypsum_board:12.5,gypsum_board:12.5,air_gap:92,gypsum_board:12.5,gypsum_board:12.5,gypsum_board:12.5"
+  },
+  {
+    "id": "triple_board_filled_cavity_85_40",
+    "label": "Triple gypsum board each side with 85 mm gap and 40 mm rockwool",
+    "layers": "gypsum_board:12.5,gypsum_board:12.5,gypsum_board:12.5,air_gap:85,rockwool:40,gypsum_board:12.5,gypsum_board:12.5,gypsum_board:12.5"
+  },
+  {
+    "id": "acoustic_single_board_filled_cavity_50_50",
+    "label": "Acoustic gypsum board each side with 50 mm gap and 50 mm rockwool",
+    "layers": "acoustic_gypsum_board:15,air_gap:50,rockwool:50,acoustic_gypsum_board:15"
+  },
+  {
+    "id": "acoustic_single_board_nil_cavity_50",
+    "label": "Acoustic gypsum board each side with 50 mm empty cavity",
+    "layers": "acoustic_gypsum_board:15,air_gap:50,acoustic_gypsum_board:15"
+  },
+  {
+    "id": "acoustic_double_board_nil_cavity_64",
+    "label": "Double acoustic gypsum board each side with 64 mm empty cavity",
+    "layers": "acoustic_gypsum_board:12.5,acoustic_gypsum_board:12.5,air_gap:64,acoustic_gypsum_board:12.5,acoustic_gypsum_board:12.5"
+  },
+  {
+    "id": "acoustic_double_board_filled_cavity_14_50",
+    "label": "Double acoustic gypsum board each side with 14 mm gap and 50 mm rockwool",
+    "layers": "acoustic_gypsum_board:12.5,acoustic_gypsum_board:12.5,air_gap:14,rockwool:50,acoustic_gypsum_board:12.5,acoustic_gypsum_board:12.5"
+  },
+  {
+    "id": "acoustic_double_board_filled_cavity_70_80",
+    "label": "Double acoustic gypsum board each side with 70 mm gap and 80 mm rockwool",
+    "layers": "acoustic_gypsum_board:12.5,acoustic_gypsum_board:12.5,air_gap:70,rockwool:80,acoustic_gypsum_board:12.5,acoustic_gypsum_board:12.5"
+  },
+  {
+    "id": "acoustic_triple_board_filled_cavity_85_40",
+    "label": "Triple acoustic gypsum board each side with 85 mm gap and 40 mm rockwool",
+    "layers": "acoustic_gypsum_board:12.5,acoustic_gypsum_board:12.5,acoustic_gypsum_board:12.5,air_gap:85,rockwool:40,acoustic_gypsum_board:12.5,acoustic_gypsum_board:12.5,acoustic_gypsum_board:12.5"
+  },
+  {
+    "id": "diamond_single_board_nil_cavity_50",
+    "label": "Diamond board each side with 50 mm empty cavity",
+    "layers": "diamond_board:12.5,air_gap:50,diamond_board:12.5"
+  },
+  {
+    "id": "diamond_single_board_filled_cavity_50_50",
+    "label": "Diamond board each side with 50 mm gap and 50 mm rockwool",
+    "layers": "diamond_board:12.5,air_gap:50,rockwool:50,diamond_board:12.5"
+  },
+  {
+    "id": "diamond_double_board_nil_cavity_64",
+    "label": "Double diamond board each side with 64 mm empty cavity",
+    "layers": "diamond_board:12.5,diamond_board:12.5,air_gap:64,diamond_board:12.5,diamond_board:12.5"
+  },
+  {
+    "id": "diamond_double_board_filled_cavity_70_80",
+    "label": "Double diamond board each side with 70 mm gap and 80 mm rockwool",
+    "layers": "diamond_board:12.5,diamond_board:12.5,air_gap:70,rockwool:80,diamond_board:12.5,diamond_board:12.5"
+  },
+  {
+    "id": "diamond_triple_board_filled_cavity_85_40",
+    "label": "Triple diamond board each side with 85 mm gap and 40 mm rockwool",
+    "layers": "diamond_board:12.5,diamond_board:12.5,diamond_board:12.5,air_gap:85,rockwool:40,diamond_board:12.5,diamond_board:12.5,diamond_board:12.5"
+  },
+  {
+    "id": "firestop_single_board_nil_cavity_50",
+    "label": "Firestop board each side with 50 mm empty cavity",
+    "layers": "firestop_board:15,air_gap:50,firestop_board:15"
+  },
+  {
+    "id": "firestop_single_board_filled_cavity_50_50",
+    "label": "Firestop board each side with 50 mm gap and 50 mm rockwool",
+    "layers": "firestop_board:15,air_gap:50,rockwool:50,firestop_board:15"
+  },
+  {
+    "id": "firestop_double_board_nil_cavity_64",
+    "label": "Double firestop board each side with 64 mm empty cavity",
+    "layers": "firestop_board:15,firestop_board:15,air_gap:64,firestop_board:15,firestop_board:15"
+  },
+  {
+    "id": "firestop_double_board_filled_cavity_14_50",
+    "label": "Double firestop board each side with 14 mm gap and 50 mm rockwool",
+    "layers": "firestop_board:15,firestop_board:15,air_gap:14,rockwool:50,firestop_board:15,firestop_board:15"
+  },
+  {
+    "id": "firestop_triple_board_filled_cavity_40_50",
+    "label": "Triple firestop board each side with 40 mm gap and 50 mm rockwool",
+    "layers": "firestop_board:15,firestop_board:15,firestop_board:15,air_gap:40,rockwool:50,firestop_board:15,firestop_board:15,firestop_board:15"
+  },
+  {
+    "id": "firestop_12p5_single_board_nil_cavity_50",
+    "label": "12.5 mm firestop board each side with 50 mm empty cavity",
+    "layers": "firestop_board:12.5,air_gap:50,firestop_board:12.5"
+  },
+  {
+    "id": "firestop_12p5_single_board_filled_cavity_50_50",
+    "label": "12.5 mm firestop board each side with 50 mm gap and 50 mm rockwool",
+    "layers": "firestop_board:12.5,air_gap:50,rockwool:50,firestop_board:12.5"
+  },
+  {
+    "id": "firestop_12p5_double_board_nil_cavity_64",
+    "label": "Double 12.5 mm firestop board each side with 64 mm empty cavity",
+    "layers": "firestop_board:12.5,firestop_board:12.5,air_gap:64,firestop_board:12.5,firestop_board:12.5"
+  },
+  {
+    "id": "firestop_12p5_double_board_filled_cavity_14_50",
+    "label": "Double 12.5 mm firestop board each side with 14 mm gap and 50 mm rockwool",
+    "layers": "firestop_board:12.5,firestop_board:12.5,air_gap:14,rockwool:50,firestop_board:12.5,firestop_board:12.5"
+  },
+  {
+    "id": "firestop_12p5_triple_board_filled_cavity_40_50",
+    "label": "Triple 12.5 mm firestop board each side with 40 mm gap and 50 mm rockwool",
+    "layers": "firestop_board:12.5,firestop_board:12.5,firestop_board:12.5,air_gap:40,rockwool:50,firestop_board:12.5,firestop_board:12.5,firestop_board:12.5"
+  },
+  {
+    "id": "security_single_board_nil_cavity_50",
+    "label": "Security board each side with 50 mm empty cavity",
+    "layers": "security_board:12.5,air_gap:50,security_board:12.5"
+  },
+  {
+    "id": "security_single_board_filled_cavity_50_50",
+    "label": "Security board each side with 50 mm gap and 50 mm rockwool",
+    "layers": "security_board:12.5,air_gap:50,rockwool:50,security_board:12.5"
+  },
+  {
+    "id": "security_double_board_nil_cavity_64",
+    "label": "Double security board each side with 64 mm empty cavity",
+    "layers": "security_board:12.5,security_board:12.5,air_gap:64,security_board:12.5,security_board:12.5"
+  },
+  {
+    "id": "security_double_board_filled_cavity_14_50",
+    "label": "Double security board each side with 14 mm gap and 50 mm rockwool",
+    "layers": "security_board:12.5,security_board:12.5,air_gap:14,rockwool:50,security_board:12.5,security_board:12.5"
+  },
+  {
+    "id": "security_triple_board_filled_cavity_40_50",
+    "label": "Triple security board each side with 40 mm gap and 50 mm rockwool",
+    "layers": "security_board:12.5,security_board:12.5,security_board:12.5,air_gap:40,rockwool:50,security_board:12.5,security_board:12.5,security_board:12.5"
+  },
+  {
+    "id": "silent_single_board_nil_cavity_50",
+    "label": "Silentboard each side with 50 mm empty cavity",
+    "layers": "silentboard:12.5,air_gap:50,silentboard:12.5"
+  },
+  {
+    "id": "silent_single_board_filled_cavity_50_50",
+    "label": "Silentboard each side with 50 mm gap and 50 mm rockwool",
+    "layers": "silentboard:12.5,air_gap:50,rockwool:50,silentboard:12.5"
+  },
+  {
+    "id": "silent_double_board_nil_cavity_64",
+    "label": "Double silentboard each side with 64 mm empty cavity",
+    "layers": "silentboard:12.5,silentboard:12.5,air_gap:64,silentboard:12.5,silentboard:12.5"
+  },
+  {
+    "id": "silent_double_board_filled_cavity_14_50",
+    "label": "Double silentboard each side with 14 mm gap and 50 mm rockwool",
+    "layers": "silentboard:12.5,silentboard:12.5,air_gap:14,rockwool:50,silentboard:12.5,silentboard:12.5"
+  },
+  {
+    "id": "silent_triple_board_filled_cavity_40_50",
+    "label": "Triple silentboard each side with 40 mm gap and 50 mm rockwool",
+    "layers": "silentboard:12.5,silentboard:12.5,silentboard:12.5,air_gap:40,rockwool:50,silentboard:12.5,silentboard:12.5,silentboard:12.5"
+  },
+  {
+    "id": "silentboard_double_board_asymmetric_split_cavity",
+    "label": "Double silentboard left leaf against double gypsum right leaf with split cavity",
+    "layers": "silentboard:12.5,silentboard:12.5,air_gap:73,glasswool:60,air_gap:73,gypsum:12.5,gypsum:12.5"
+  },
+  {
+    "id": "silentboard_mixed_double_board_split_cavity",
+    "label": "Silentboard plus gypsum left leaf against double gypsum right leaf with split cavity",
+    "layers": "silentboard:12.5,gypsum:12.5,air_gap:73,glasswool:60,air_gap:73,gypsum:12.5,gypsum:12.5"
+  }
+]

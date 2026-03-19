@@ -15,14 +15,18 @@ import {
   type LayerInput,
   type MaterialDefinition,
   type RequestedOutputId,
-  type ResolvedLayer
+  type ResolvedLayer,
+  type AssemblyRatings,
+  type TransmissionLossCurve
 } from "@dynecho/shared";
 
-import { buildCalibratedMassLawCurve } from "./curve-rating";
+import { buildCalibratedMassLawCurve, buildRatingsFromCurve } from "./curve-rating";
 import { applyAirborneContextOverlay } from "./apply-airborne-context";
 import { AIRBORNE_CALCULATORS, calculateAirborneCalculatorResult } from "./airborne-calculator";
+import { applyApproximateAirborneFieldCompanion, applyVerifiedAirborneCatalogAnchor } from "./airborne-verified-catalog";
+import { classifyLayerRole, materialText } from "./airborne-topology";
 import { calculateDynamicAirborneResult } from "./dynamic-airborne";
-import { round1 } from "./math";
+import { clamp, round1 } from "./math";
 import { buildEstimateWarnings, estimateRwDb } from "./estimate-rw";
 import { deriveBoundFloorSystemEstimate, matchBoundFloorSystem, resolveBoundFloorSystemById } from "./bound-floor-system-match";
 import { buildFloorSystemRatings } from "./floor-system-ratings";
@@ -42,9 +46,13 @@ import {
   maybeBuildImpactPredictorInputFromLayerStack,
   mergePredictorCatalog
 } from "./impact-predictor-input";
-import { matchImpactProductCatalog } from "./impact-product-catalog";
+import {
+  filterImpactCatalogMatchForExplicitPredictorInput,
+  matchImpactProductCatalog
+} from "./impact-product-catalog";
 import { derivePredictorSpecificFloorSystemEstimate } from "./predictor-floor-system-estimate";
 import { buildImpactSupport } from "./impact-support";
+import { mergeImpactCalculations } from "./impact-merge";
 import { buildDynamicImpactTrace } from "./dynamic-impact";
 import {
   inferImpactSupportingElementFamilyFromExactFloorSystem,
@@ -53,7 +61,34 @@ import {
   inferImpactSupportingElementFamilyFromPredictorInput
 } from "./impact-supporting-element-family";
 import { deriveHeavyReferenceImpactFromDeltaLw } from "./impact-reference";
+import { computeLayerSurfaceMassKgM2 } from "./layer-surface-mass";
 import { getDefaultMaterialCatalog, resolveMaterial } from "./material-catalog";
+import {
+  detectMixedPlainFilledSingleBoardFamily,
+  getMixedPlainFilledSingleBoardProfile,
+  MIXED_PLAIN_FILLED_SINGLE_BOARD_FIELD_TARGET_RW_PRIME
+} from "./mixed-plain-filled-single-board-field-corridor";
+import {
+  detectMixedEnhancedFilledSingleBoardFamily,
+  getMixedEnhancedFilledSingleBoardProfile,
+  MIXED_ENHANCED_FILLED_SINGLE_BOARD_FIELD_TARGET_RW_PRIME
+} from "./mixed-enhanced-filled-single-board-corridor";
+import {
+  detectFireRatedFilledSingleBoardFamily,
+  getFireRatedFilledSingleBoardProfile,
+  FIRE_RATED_FILLED_SINGLE_BOARD_FIELD_TARGET_RW_PRIME
+} from "./fire-rated-filled-single-board-corridor";
+import {
+  detectSecurityFilledSingleBoardFamily,
+  getSecurityFilledSingleBoardProfile,
+  SECURITY_FILLED_SINGLE_BOARD_FIELD_TARGET_RW_PRIME,
+  type SecurityFilledSingleBoardFamily
+} from "./security-filled-single-board-corridor";
+import {
+  detectSymmetricEnhancedFilledSingleBoardFamily,
+  getSymmetricEnhancedFilledSingleBoardProfile,
+  SYMMETRIC_ENHANCED_FILLED_SINGLE_BOARD_FIELD_TARGET_RW_PRIME
+} from "./symmetric-enhanced-filled-single-board-corridor";
 import { analyzeTargetOutputSupport, buildTargetOutputWarnings } from "./target-output-support";
 
 export type CalculateAssemblyOptions = {
@@ -76,7 +111,7 @@ function resolveLayers(
     return {
       ...layer,
       material,
-      surfaceMassKgM2: (material.densityKgM3 * layer.thicknessMm) / 1000
+      surfaceMassKgM2: computeLayerSurfaceMassKgM2(layer, material)
     };
   });
 }
@@ -85,6 +120,630 @@ function pickReferenceFloorRatingLayers(layers: readonly ResolvedLayer[]): reado
   const baseStructureLayers = layers.filter((layer) => layer.floorRole === "base_structure");
 
   return baseStructureLayers.length > 0 ? baseStructureLayers : layers;
+}
+
+function isBoardLikeSurfaceLayer(layer: ResolvedLayer): boolean {
+  const role = classifyLayerRole(layer);
+  return role.isSolidLeaf && /gypsum|board|plasterboard|firestop|impactstop|acoustic|security|soundbloc/i.test(materialText(layer));
+}
+
+function summarizeMicroGapEquivalentCavity(layers: readonly ResolvedLayer[]): {
+  cavityEnd: number;
+  cavityStart: number;
+  gapSegmentCount: number;
+  gapThicknessMm: number;
+  leftLeafSolidCount: number;
+  porousSegmentCount: number;
+  porousLayer: ResolvedLayer | null;
+  porousThicknessMm: number;
+  rightLeafSolidCount: number;
+  totalThicknessMm: number;
+} | null {
+  let sawLeftLeaf = false;
+  let cavityStart = -1;
+  let cavityEnd = -1;
+  let leftLeafSolidCount = 0;
+  let rightLeafSolidCount = 0;
+  let gapSegmentCount = 0;
+  let porousSegmentCount = 0;
+  let gapThicknessMm = 0;
+  let porousThicknessMm = 0;
+  let porousLayer: ResolvedLayer | null = null;
+  let previousKind: "gap" | "porous" | null = null;
+
+  for (let index = 0; index < layers.length; index += 1) {
+    const layer = layers[index];
+    if (!layer) {
+      continue;
+    }
+
+    const role = classifyLayerRole(layer);
+
+    if (!sawLeftLeaf) {
+      if (role.isSolidLeaf) {
+        if (!isBoardLikeSurfaceLayer(layer)) {
+          return null;
+        }
+        sawLeftLeaf = true;
+        leftLeafSolidCount += 1;
+      }
+      continue;
+    }
+
+    if (cavityStart < 0) {
+      if (role.isSolidLeaf) {
+        if (!isBoardLikeSurfaceLayer(layer)) {
+          return null;
+        }
+        leftLeafSolidCount += 1;
+        continue;
+      }
+
+      if (!(role.isGap || role.isPorous)) {
+        return null;
+      }
+
+      cavityStart = index;
+    }
+
+    if (cavityStart >= 0 && cavityEnd < 0) {
+      if (role.isSolidLeaf) {
+        if (!isBoardLikeSurfaceLayer(layer)) {
+          return null;
+        }
+        cavityEnd = index - 1;
+        rightLeafSolidCount += 1;
+        continue;
+      }
+
+      if (!(role.isGap || role.isPorous)) {
+        return null;
+      }
+
+      if (role.isGap) {
+        gapThicknessMm += layer.thicknessMm;
+        if (previousKind !== "gap") {
+          gapSegmentCount += 1;
+          previousKind = "gap";
+        }
+      } else {
+        porousThicknessMm += layer.thicknessMm;
+        if (!porousLayer) {
+          porousLayer = { ...layer, material: { ...layer.material } };
+        }
+        if (previousKind !== "porous") {
+          porousSegmentCount += 1;
+          previousKind = "porous";
+        }
+      }
+      continue;
+    }
+
+    if (role.isSolidLeaf) {
+      if (!isBoardLikeSurfaceLayer(layer)) {
+        return null;
+      }
+      rightLeafSolidCount += 1;
+      continue;
+    }
+
+    return null;
+  }
+
+  if (!(cavityStart >= 0) || !(cavityEnd >= cavityStart) || !porousLayer) {
+    return null;
+  }
+
+  const totalThicknessMm = gapThicknessMm + porousThicknessMm;
+  if (!(totalThicknessMm > 0)) {
+    return null;
+  }
+
+  return {
+    cavityEnd,
+    cavityStart,
+    gapSegmentCount,
+    gapThicknessMm,
+    leftLeafSolidCount,
+    porousLayer,
+    porousSegmentCount,
+    porousThicknessMm,
+    rightLeafSolidCount,
+    totalThicknessMm
+  };
+}
+
+function buildMicroGapFillOnlyEquivalentLayers(layers: readonly ResolvedLayer[]): ResolvedLayer[] | null {
+  const cavity = summarizeMicroGapEquivalentCavity(layers);
+  if (!cavity) {
+    return null;
+  }
+
+  const fillFraction = cavity.totalThicknessMm > 0 ? cavity.porousThicknessMm / cavity.totalThicknessMm : 0;
+  if (
+    cavity.leftLeafSolidCount !== 1 ||
+    cavity.rightLeafSolidCount !== 1 ||
+    cavity.gapSegmentCount !== 1 ||
+    cavity.porousSegmentCount !== 1 ||
+    !(cavity.gapThicknessMm > 0 && cavity.gapThicknessMm <= 12) ||
+    !(fillFraction >= 0.82)
+  ) {
+    return null;
+  }
+
+  const porousLayer = cavity.porousLayer;
+  if (!porousLayer) {
+    return null;
+  }
+
+  return [
+    ...layers.slice(0, cavity.cavityStart).map((layer) => ({ ...layer, material: { ...layer.material } })),
+    {
+      ...porousLayer,
+      thicknessMm: cavity.totalThicknessMm,
+      surfaceMassKgM2: computeLayerSurfaceMassKgM2(
+        { thicknessMm: cavity.totalThicknessMm },
+        porousLayer.material
+      )
+    },
+    ...layers.slice(cavity.cavityEnd + 1).map((layer) => ({ ...layer, material: { ...layer.material } }))
+  ];
+}
+
+function computeFieldRwPrimeMetric(curve: TransmissionLossCurve, context: AirborneContext): number | null {
+  const ratings = buildRatingsFromCurve(curve.frequenciesHz, curve.transmissionLossDb, context);
+  return ratings.field?.RwPrime ?? ratings.iso717.RwPrime ?? ratings.field?.DnTw ?? ratings.iso717.Rw;
+}
+
+function anchorCurveToFieldRwPrime(
+  curve: TransmissionLossCurve,
+  targetMetric: number,
+  context: AirborneContext
+): { applied: boolean; curve: TransmissionLossCurve; ratings: AssemblyRatings } {
+  let currentCurve: TransmissionLossCurve = {
+    frequenciesHz: [...curve.frequenciesHz],
+    transmissionLossDb: [...curve.transmissionLossDb]
+  };
+  const sourceValues = [...curve.transmissionLossDb];
+  let ratings = buildRatingsFromCurve(currentCurve.frequenciesHz, currentCurve.transmissionLossDb, context);
+
+  for (let iteration = 0; iteration < 4; iteration += 1) {
+    const currentMetric = computeFieldRwPrimeMetric(currentCurve, context);
+    if (!(typeof currentMetric === "number" && Number.isFinite(currentMetric))) {
+      return {
+        applied: false,
+        curve,
+        ratings: buildRatingsFromCurve(curve.frequenciesHz, curve.transmissionLossDb, context)
+      };
+    }
+
+    const deltaDb = targetMetric - currentMetric;
+    if (Math.abs(deltaDb) < 0.05) {
+      break;
+    }
+
+    currentCurve = {
+      frequenciesHz: [...currentCurve.frequenciesHz],
+      transmissionLossDb: currentCurve.transmissionLossDb.map((value: number) => Math.min(95, Math.max(0, value + deltaDb)))
+    };
+    ratings = buildRatingsFromCurve(currentCurve.frequenciesHz, currentCurve.transmissionLossDb, context);
+  }
+
+  return {
+    applied: currentCurve.transmissionLossDb.some((value: number, index: number) => Math.abs(value - sourceValues[index]) > 1e-6),
+    curve: currentCurve,
+    ratings
+  };
+}
+
+function smoothstep01(value: number): number {
+  const x = clamp(value, 0, 1);
+  return x * x * (3 - (2 * x));
+}
+
+function octaveBandWindowWeight(freqHz: number, startHz: number, endHz: number, transitionOctaves = 0.3): number {
+  const frequency = Math.max(freqHz, 1e-9);
+  const start = Math.max(startHz, 1e-9);
+  const end = Math.max(endHz, start + 1e-6);
+  const transition = clamp(transitionOctaves, 0.05, 1.5);
+  const left = smoothstep01((Math.log2(frequency / start) + transition) / (2 * transition));
+  const right = smoothstep01((Math.log2(end / frequency) + transition) / (2 * transition));
+
+  return clamp(Math.min(left, right), 0, 1);
+}
+
+function applyMicroGapFillEquivalentFieldGuard(
+  selectedCurve: TransmissionLossCurve,
+  overlayResult: ReturnType<typeof applyAirborneContextOverlay>,
+  layers: readonly ResolvedLayer[],
+  airborneContext: AirborneContext | null
+): ReturnType<typeof applyAirborneContextOverlay> {
+  if (
+    !airborneContext ||
+    airborneContext.contextMode === "element_lab" ||
+    !(airborneContext.connectionType !== "auto" || airborneContext.studType !== "auto" || typeof airborneContext.studSpacingMm === "number")
+  ) {
+    return overlayResult;
+  }
+
+  const equivalentLayers = buildMicroGapFillOnlyEquivalentLayers(layers);
+  if (!equivalentLayers?.length) {
+    return overlayResult;
+  }
+
+  const equivalentScreeningRwDb = estimateRwDb(equivalentLayers);
+  const equivalentScreeningCurve = buildCalibratedMassLawCurve(equivalentLayers.reduce((sum, layer) => sum + layer.surfaceMassKgM2, 0), equivalentScreeningRwDb);
+  const equivalentDynamicResult = calculateDynamicAirborneResult(equivalentLayers, {
+    airborneContext,
+    frequenciesHz: equivalentScreeningCurve.frequenciesHz,
+    screeningEstimatedRwDb: equivalentScreeningRwDb
+  });
+  const equivalentOverlayResult = applyAirborneContextOverlay(equivalentDynamicResult.curve, equivalentLayers, airborneContext);
+  const currentMetric = overlayResult.ratings.field?.RwPrime ?? overlayResult.ratings.iso717.RwPrime;
+  const equivalentMetric = equivalentOverlayResult.ratings.field?.RwPrime ?? equivalentOverlayResult.ratings.iso717.RwPrime;
+
+  if (
+    !(typeof currentMetric === "number" && Number.isFinite(currentMetric)) ||
+    !(typeof equivalentMetric === "number" && Number.isFinite(equivalentMetric))
+  ) {
+    return overlayResult;
+  }
+
+  const lowerBound = equivalentMetric - 3;
+  const upperBound = equivalentMetric + 3;
+  if (currentMetric >= lowerBound - 1e-6 && currentMetric <= upperBound + 1e-6) {
+    return overlayResult;
+  }
+
+  const targetMetric = Math.min(upperBound, Math.max(lowerBound, currentMetric));
+  const anchored = anchorCurveToFieldRwPrime(overlayResult.curve, targetMetric, airborneContext);
+  if (!anchored.applied) {
+    return overlayResult;
+  }
+
+  return {
+    curve: anchored.curve,
+    overlay: overlayResult.overlay,
+    ratings: anchored.ratings,
+    warnings: [
+      ...overlayResult.warnings,
+      "A very small explicit air gap inside a mostly filled framed cavity was kept within the fill-only equivalent field corridor to avoid topology-sensitive drift."
+    ]
+  };
+}
+
+function interpolateFieldTargetRwPrime(fillThicknessMm: number, targets: Record<35 | 42 | 50 | 60, number>): number {
+  const anchors = [35, 42, 50, 60] as const;
+  const clampedFill = clamp(fillThicknessMm, anchors[0], anchors[anchors.length - 1]);
+
+  if (clampedFill <= anchors[0]) {
+    return targets[anchors[0]];
+  }
+
+  if (clampedFill >= anchors[anchors.length - 1]) {
+    return targets[anchors[anchors.length - 1]];
+  }
+
+  for (let index = 0; index < anchors.length - 1; index += 1) {
+    const left = anchors[index];
+    const right = anchors[index + 1];
+
+    if (clampedFill < left || clampedFill > right) {
+      continue;
+    }
+
+    if (clampedFill === left) {
+      return targets[left];
+    }
+
+    if (clampedFill === right) {
+      return targets[right];
+    }
+
+    const position = (clampedFill - left) / (right - left);
+    return targets[left] + ((targets[right] - targets[left]) * position);
+  }
+
+  return targets[anchors[anchors.length - 1]];
+}
+
+function applyFireRatedFilledSingleBoardFieldGuard(
+  overlayResult: ReturnType<typeof applyAirborneContextOverlay>,
+  layers: readonly ResolvedLayer[],
+  airborneContext: AirborneContext | null
+): ReturnType<typeof applyAirborneContextOverlay> {
+  if (
+    !airborneContext ||
+    airborneContext.contextMode === "element_lab" ||
+    !(airborneContext.connectionType !== "auto" || airborneContext.studType !== "auto" || typeof airborneContext.studSpacingMm === "number")
+  ) {
+    return overlayResult;
+  }
+
+  const familyInfo = detectFireRatedFilledSingleBoardFamily(layers);
+  if (!familyInfo) {
+    return overlayResult;
+  }
+
+  const profile = getFireRatedFilledSingleBoardProfile(airborneContext);
+  const targets = FIRE_RATED_FILLED_SINGLE_BOARD_FIELD_TARGET_RW_PRIME[familyInfo.family][profile];
+  const targetMetric = interpolateFieldTargetRwPrime(familyInfo.fillThicknessMm, targets);
+  const currentMetric = overlayResult.ratings.field?.RwPrime ?? overlayResult.ratings.iso717.RwPrime;
+
+  if (!(typeof currentMetric === "number" && Number.isFinite(currentMetric))) {
+    return overlayResult;
+  }
+
+  if (Math.abs(currentMetric - targetMetric) < 0.25) {
+    return overlayResult;
+  }
+
+  const anchored = anchorCurveToFieldRwPrime(overlayResult.curve, targetMetric, airborneContext);
+  if (!anchored.applied) {
+    return overlayResult;
+  }
+
+  return {
+    curve: anchored.curve,
+    overlay: overlayResult.overlay,
+    ratings: anchored.ratings,
+    warnings: [
+      ...overlayResult.warnings,
+      "A fire-rated filled single-board field corridor was applied because these fire/firestop framed hybrids were materially misreading the upstream field result."
+    ]
+  };
+}
+
+function applyMixedPlainFilledSingleBoardFieldGuard(
+  overlayResult: ReturnType<typeof applyAirborneContextOverlay>,
+  layers: readonly ResolvedLayer[],
+  airborneContext: AirborneContext | null
+): ReturnType<typeof applyAirborneContextOverlay> {
+  if (
+    !airborneContext ||
+    airborneContext.contextMode === "element_lab" ||
+    !(airborneContext.connectionType !== "auto" || airborneContext.studType !== "auto" || typeof airborneContext.studSpacingMm === "number")
+  ) {
+    return overlayResult;
+  }
+
+  const familyInfo = detectMixedPlainFilledSingleBoardFamily(layers);
+  if (!familyInfo) {
+    return overlayResult;
+  }
+
+  const profile = getMixedPlainFilledSingleBoardProfile(airborneContext);
+  const targets = MIXED_PLAIN_FILLED_SINGLE_BOARD_FIELD_TARGET_RW_PRIME[familyInfo.family][profile];
+  const targetMetric = interpolateFieldTargetRwPrime(familyInfo.fillThicknessMm, targets);
+  const currentMetric = overlayResult.ratings.field?.RwPrime ?? overlayResult.ratings.iso717.RwPrime;
+
+  if (!(typeof currentMetric === "number" && Number.isFinite(currentMetric))) {
+    return overlayResult;
+  }
+
+  if (Math.abs(currentMetric - targetMetric) < 0.25) {
+    return overlayResult;
+  }
+
+  const anchored = anchorCurveToFieldRwPrime(overlayResult.curve, targetMetric, airborneContext);
+  if (!anchored.applied) {
+    return overlayResult;
+  }
+
+  return {
+    curve: anchored.curve,
+    overlay: overlayResult.overlay,
+    ratings: anchored.ratings,
+    warnings: [
+      ...overlayResult.warnings,
+      "A mixed plain-filled single-board field corridor was applied because plain gypsum plus premium/moderate framed hybrids were materially misreading the upstream field result."
+    ]
+  };
+}
+
+function applyMixedEnhancedFilledSingleBoardFieldGuard(
+  overlayResult: ReturnType<typeof applyAirborneContextOverlay>,
+  layers: readonly ResolvedLayer[],
+  airborneContext: AirborneContext | null
+): ReturnType<typeof applyAirborneContextOverlay> {
+  if (
+    !airborneContext ||
+    airborneContext.contextMode === "element_lab" ||
+    !(airborneContext.connectionType !== "auto" || airborneContext.studType !== "auto" || typeof airborneContext.studSpacingMm === "number")
+  ) {
+    return overlayResult;
+  }
+
+  const familyInfo = detectMixedEnhancedFilledSingleBoardFamily(layers);
+  if (!familyInfo) {
+    return overlayResult;
+  }
+
+  const profile = getMixedEnhancedFilledSingleBoardProfile(airborneContext);
+  const targets = MIXED_ENHANCED_FILLED_SINGLE_BOARD_FIELD_TARGET_RW_PRIME[familyInfo.family][profile];
+  const targetMetric = interpolateFieldTargetRwPrime(familyInfo.fillThicknessMm, targets);
+  const currentMetric = overlayResult.ratings.field?.RwPrime ?? overlayResult.ratings.iso717.RwPrime;
+
+  if (!(typeof currentMetric === "number" && Number.isFinite(currentMetric))) {
+    return overlayResult;
+  }
+
+  if (Math.abs(currentMetric - targetMetric) < 0.25) {
+    return overlayResult;
+  }
+
+  const anchored = anchorCurveToFieldRwPrime(overlayResult.curve, targetMetric, airborneContext);
+  if (!anchored.applied) {
+    return overlayResult;
+  }
+
+  return {
+    curve: anchored.curve,
+    overlay: overlayResult.overlay,
+    ratings: anchored.ratings,
+    warnings: [
+      ...overlayResult.warnings,
+      "A mixed enhanced filled single-board field corridor was applied because premium framed hybrids were materially misreading the upstream field result."
+    ]
+  };
+}
+
+function applySecurityFilledSingleBoardFieldGuard(
+  overlayResult: ReturnType<typeof applyAirborneContextOverlay>,
+  layers: readonly ResolvedLayer[],
+  airborneContext: AirborneContext | null
+): ReturnType<typeof applyAirborneContextOverlay> {
+  if (
+    !airborneContext ||
+    airborneContext.contextMode === "element_lab" ||
+    !(airborneContext.connectionType !== "auto" || airborneContext.studType !== "auto" || typeof airborneContext.studSpacingMm === "number")
+  ) {
+    return overlayResult;
+  }
+
+  const familyInfo = detectSecurityFilledSingleBoardFamily(layers);
+  if (!familyInfo) {
+    return overlayResult;
+  }
+
+  const profile = getSecurityFilledSingleBoardProfile(airborneContext);
+  const targets = SECURITY_FILLED_SINGLE_BOARD_FIELD_TARGET_RW_PRIME[familyInfo.family][profile];
+  const targetMetric = interpolateFieldTargetRwPrime(familyInfo.fillThicknessMm, targets);
+  const currentMetric = overlayResult.ratings.field?.RwPrime ?? overlayResult.ratings.iso717.RwPrime;
+
+  if (!(typeof currentMetric === "number" && Number.isFinite(currentMetric))) {
+    return overlayResult;
+  }
+
+  if (Math.abs(currentMetric - targetMetric) < 0.25) {
+    return overlayResult;
+  }
+
+  const anchored = anchorCurveToFieldRwPrime(overlayResult.curve, targetMetric, airborneContext);
+  if (!anchored.applied) {
+    return overlayResult;
+  }
+
+  return {
+    curve: anchored.curve,
+    overlay: overlayResult.overlay,
+    ratings: anchored.ratings,
+    warnings: [
+      ...overlayResult.warnings,
+      "A security-board filled single-board field corridor was applied because these framed hybrids were materially misreading the upstream field result."
+    ]
+  };
+}
+
+function applySecurityFilledSingleBoardSteelHighBandLiftGuard(
+  overlayResult: ReturnType<typeof applyAirborneContextOverlay>,
+  layers: readonly ResolvedLayer[],
+  airborneContext: AirborneContext | null
+): ReturnType<typeof applyAirborneContextOverlay> {
+  if (
+    !airborneContext ||
+    airborneContext.contextMode === "element_lab" ||
+    airborneContext.connectionType === "resilient_channel" ||
+    airborneContext.studType === "resilient_stud"
+  ) {
+    return overlayResult;
+  }
+
+  const familyInfo = detectSecurityFilledSingleBoardFamily(layers);
+  if (!familyInfo || familyInfo.fillThicknessMm < 58) {
+    return overlayResult;
+  }
+
+  const liftDbByFamily: Partial<Record<SecurityFilledSingleBoardFamily, number>> = {
+    diamond: 1.6,
+    fire: 2.3,
+    firestop: 2.4,
+    plain: 2.1
+  };
+  const liftDb = familyInfo.family ? liftDbByFamily[familyInfo.family] : undefined;
+  const targetRwPrime = overlayResult.ratings.field?.RwPrime;
+
+  if (!(typeof liftDb === "number" && liftDb > 0 && typeof targetRwPrime === "number" && Number.isFinite(targetRwPrime))) {
+    return overlayResult;
+  }
+
+  const liftedCurve: TransmissionLossCurve = {
+    frequenciesHz: [...overlayResult.curve.frequenciesHz],
+    transmissionLossDb: overlayResult.curve.transmissionLossDb.map((value: number, index: number) => {
+      const weight = octaveBandWindowWeight(overlayResult.curve.frequenciesHz[index] ?? 0, 630, 3150, 0.4);
+      return clamp(value + (liftDb * weight), 0, 95);
+    })
+  };
+  const liftedRatings = buildRatingsFromCurve(liftedCurve.frequenciesHz, liftedCurve.transmissionLossDb, airborneContext);
+  const liftedRwPrime = liftedRatings.field?.RwPrime ?? liftedRatings.iso717.RwPrime ?? null;
+  const anchored =
+    typeof liftedRwPrime === "number" && Number.isFinite(liftedRwPrime) && Math.abs(liftedRwPrime - targetRwPrime) < 0.05
+      ? {
+          applied: true,
+          curve: liftedCurve,
+          ratings: liftedRatings
+        }
+      : anchorCurveToFieldRwPrime(liftedCurve, targetRwPrime, airborneContext);
+  if (!anchored.applied) {
+    return overlayResult;
+  }
+
+  return {
+    curve: anchored.curve,
+    overlay: overlayResult.overlay,
+    ratings: anchored.ratings,
+    warnings: [
+      ...overlayResult.warnings,
+      "A steel-field security-hybrid high-band lift was applied because certain 60 mm security framed walls were still under-reading the upstream DnT,A corridor after R'w had already aligned."
+    ]
+  };
+}
+
+function applySymmetricEnhancedFilledSingleBoardFieldGuard(
+  overlayResult: ReturnType<typeof applyAirborneContextOverlay>,
+  layers: readonly ResolvedLayer[],
+  airborneContext: AirborneContext | null
+): ReturnType<typeof applyAirborneContextOverlay> {
+  if (
+    !airborneContext ||
+    airborneContext.contextMode === "element_lab" ||
+    !(airborneContext.connectionType !== "auto" || airborneContext.studType !== "auto" || typeof airborneContext.studSpacingMm === "number")
+  ) {
+    return overlayResult;
+  }
+
+  const familyInfo = detectSymmetricEnhancedFilledSingleBoardFamily(layers);
+  if (!familyInfo) {
+    return overlayResult;
+  }
+
+  const profile = getSymmetricEnhancedFilledSingleBoardProfile(airborneContext);
+  const targets = SYMMETRIC_ENHANCED_FILLED_SINGLE_BOARD_FIELD_TARGET_RW_PRIME[familyInfo.family][profile];
+  const targetMetric = interpolateFieldTargetRwPrime(familyInfo.fillThicknessMm, targets);
+  const currentMetric = overlayResult.ratings.field?.RwPrime ?? overlayResult.ratings.iso717.RwPrime;
+
+  if (!(typeof currentMetric === "number" && Number.isFinite(currentMetric))) {
+    return overlayResult;
+  }
+
+  if (Math.abs(currentMetric - targetMetric) < 0.25) {
+    return overlayResult;
+  }
+
+  const anchored = anchorCurveToFieldRwPrime(overlayResult.curve, targetMetric, airborneContext);
+  if (!anchored.applied) {
+    return overlayResult;
+  }
+
+  return {
+    curve: anchored.curve,
+    overlay: overlayResult.overlay,
+    ratings: anchored.ratings,
+    warnings: [
+      ...overlayResult.warnings,
+      "A symmetric enhanced filled single-board field corridor was applied because these same-material premium framed walls were materially misreading the upstream field result."
+    ]
+  };
 }
 
 export function calculateAssembly(
@@ -99,7 +758,7 @@ export function calculateAssembly(
   let predictorInputMode: "derived_from_visible_layers" | "explicit_predictor_input" | undefined =
     explicitPredictorInput ? "explicit_predictor_input" : undefined;
   let predictorAdaptation = predictorInput ? adaptImpactPredictorInput(predictorInput) : null;
-  const baseCatalog = options.catalog ?? getDefaultMaterialCatalog();
+  const baseCatalog = mergePredictorCatalog(getDefaultMaterialCatalog(), options.catalog ?? []);
   let catalog = mergePredictorCatalog(baseCatalog, predictorAdaptation?.catalogAdditions ?? []);
   const exactImpactSource = options.exactImpactSource ? ExactImpactSourceSchema.parse(options.exactImpactSource) : null;
   const impactFieldContext = options.impactFieldContext ? ImpactFieldContextSchema.parse(options.impactFieldContext) : null;
@@ -115,6 +774,7 @@ export function calculateAssembly(
   const screeningCurve = buildCalibratedMassLawCurve(surfaceMassKgM2, screeningEstimatedRwDb);
   const dynamicAirborneResult = options.calculator === "dynamic"
     ? calculateDynamicAirborneResult(resolvedLayers, {
+        airborneContext,
         frequenciesHz: screeningCurve.frequenciesHz,
         screeningEstimatedRwDb
       })
@@ -125,15 +785,69 @@ export function calculateAssembly(
   const selectedCalculatorCurve = dynamicAirborneResult?.curve ?? importedCalculatorResult?.curve ?? screeningCurve;
   const selectedCalculatorLabel = dynamicAirborneResult?.label ?? importedCalculatorResult?.label;
   const availableCalculators: readonly AirborneCalculator[] = AIRBORNE_CALCULATORS;
-  const airborneOverlayResult = applyAirborneContextOverlay(selectedCalculatorCurve, resolvedLayers, airborneContext);
-  const curve = airborneOverlayResult.curve;
-  const ratings = airborneOverlayResult.ratings;
-  const adjustedEstimatedRwDb = round1(
-    (dynamicAirborneResult?.rw ?? importedCalculatorResult?.rw ?? screeningEstimatedRwDb) -
-      (
-        (airborneOverlayResult.overlay?.baseRwDb ?? ratings.iso717.Rw) -
-        ratings.iso717.Rw
-      )
+  let airborneOverlayResult = applyAirborneContextOverlay(selectedCalculatorCurve, resolvedLayers, airborneContext);
+  if (options.calculator === "dynamic") {
+    airborneOverlayResult = applyMicroGapFillEquivalentFieldGuard(
+      selectedCalculatorCurve,
+      airborneOverlayResult,
+      resolvedLayers,
+      airborneContext
+    );
+    airborneOverlayResult = applyFireRatedFilledSingleBoardFieldGuard(
+      airborneOverlayResult,
+      resolvedLayers,
+      airborneContext
+    );
+    airborneOverlayResult = applyMixedPlainFilledSingleBoardFieldGuard(
+      airborneOverlayResult,
+      resolvedLayers,
+      airborneContext
+    );
+    airborneOverlayResult = applyMixedEnhancedFilledSingleBoardFieldGuard(
+      airborneOverlayResult,
+      resolvedLayers,
+      airborneContext
+    );
+    airborneOverlayResult = applySymmetricEnhancedFilledSingleBoardFieldGuard(
+      airborneOverlayResult,
+      resolvedLayers,
+      airborneContext
+    );
+    airborneOverlayResult = applySecurityFilledSingleBoardFieldGuard(
+      airborneOverlayResult,
+      resolvedLayers,
+      airborneContext
+    );
+    airborneOverlayResult = applySecurityFilledSingleBoardSteelHighBandLiftGuard(
+      airborneOverlayResult,
+      resolvedLayers,
+      airborneContext
+    );
+  }
+  const verifiedAirborneAnchorResult = applyVerifiedAirborneCatalogAnchor(
+    airborneOverlayResult.curve,
+    airborneOverlayResult.ratings,
+    resolvedLayers,
+    airborneContext
+  );
+  const approximateAirborneFieldCompanionResult = applyApproximateAirborneFieldCompanion(
+    verifiedAirborneAnchorResult.ratings,
+    resolvedLayers,
+    airborneContext
+  );
+  const curve = verifiedAirborneAnchorResult.curve;
+  const ratings = approximateAirborneFieldCompanionResult.ratings;
+  const adjustedEstimatedRwDb = Math.max(
+    0,
+    round1(
+      verifiedAirborneAnchorResult.applied && verifiedAirborneAnchorResult.match?.sourceMode === "lab"
+        ? ratings.iso717.Rw
+        : (dynamicAirborneResult?.rw ?? importedCalculatorResult?.rw ?? screeningEstimatedRwDb) -
+          (
+            (airborneOverlayResult.overlay?.baseRwDb ?? ratings.iso717.Rw) -
+            ratings.iso717.Rw
+          )
+    )
   );
   const exactImpact = exactImpactSource ? buildExactImpactFromSource(exactImpactSource) : null;
   const directFloorSystemMatch = predictorAdaptation?.officialFloorSystemId
@@ -145,13 +859,30 @@ export function calculateAssembly(
         ? resolveBoundFloorSystemById(predictorAdaptation.officialFloorSystemId)
         : matchBoundFloorSystem(impactResolvedLayers)
       : null;
-  const directImpactCatalogMatch = predictorAdaptation?.officialFloorSystemId ? null : matchImpactProductCatalog(impactResolvedLayers);
+  const directImpactCatalogMatch = predictorAdaptation?.officialFloorSystemId
+    ? null
+    : matchImpactProductCatalog(impactResolvedLayers);
+  const filteredDirectImpactCatalogMatch =
+    predictorAdaptation?.officialFloorSystemId || !explicitPredictorInput
+      ? directImpactCatalogMatch
+      : filterImpactCatalogMatchForExplicitPredictorInput(
+          directImpactCatalogMatch,
+          explicitPredictorInput,
+          catalog
+        );
+  const rejectDirectProductDeltaFormulaFallback =
+    Boolean(explicitPredictorInput) &&
+    directImpactCatalogMatch?.catalog.matchMode === "product_property_delta" &&
+    !filteredDirectImpactCatalogMatch;
   const directFloorSystemRecommendations = directFloorSystemMatch ? [] : recommendFloorSystems(impactResolvedLayers, 8);
   const directPredictorSpecificFloorSystemEstimate =
     predictorInput && !predictorAdaptation?.officialFloorSystemId
       ? derivePredictorSpecificFloorSystemEstimate(predictorInput)
       : null;
-  const directNarrowImpact = predictorAdaptation?.officialFloorSystemId ? null : estimateImpactFromLayers(impactResolvedLayers);
+  const directNarrowImpact =
+    predictorAdaptation?.officialFloorSystemId || rejectDirectProductDeltaFormulaFallback
+      ? null
+      : estimateImpactFromLayers(impactResolvedLayers);
   const directBoundFloorSystemEstimate =
     !exactImpact &&
     !directFloorSystemMatch &&
@@ -175,7 +906,7 @@ export function calculateAssembly(
 
   let floorSystemMatch = directFloorSystemMatch;
   let boundFloorSystemMatch = directBoundFloorSystemMatch;
-  let impactCatalogMatch = directImpactCatalogMatch;
+  let impactCatalogMatch = filteredDirectImpactCatalogMatch;
   let floorSystemRecommendations = directFloorSystemRecommendations;
   let narrowImpact = directNarrowImpact;
   let boundFloorSystemEstimate = directBoundFloorSystemEstimate;
@@ -193,7 +924,7 @@ export function calculateAssembly(
   }
 
   if (!explicitPredictorInput && !exactImpact && !directFloorSystemMatch && !directBoundFloorSystemMatch && !directImpactCatalogMatch) {
-    const derivedPredictorInput = maybeBuildImpactPredictorInputFromLayerStack(layers);
+    const derivedPredictorInput = maybeBuildImpactPredictorInputFromLayerStack(layers, {}, undefined, catalog);
 
     if (derivedPredictorInput) {
       const derivedPredictorAdaptation = adaptImpactPredictorInput(derivedPredictorInput);
@@ -279,14 +1010,20 @@ export function calculateAssembly(
       }
     }
   }
-  const baseImpact =
-    exactImpact ??
+  const baseResolvedImpact =
     floorSystemMatch?.impact ??
     impactCatalogMatch?.impact ??
     explicitDeltaImpact ??
     floorSystemEstimate?.impact ??
     narrowImpact ??
     null;
+  const exactSupplementaryImpact =
+    exactImpact && impactCatalogMatch?.catalog.matchMode === "product_property_delta"
+      ? impactCatalogMatch.impact ?? null
+      : null;
+  const baseImpact = exactImpact
+    ? mergeImpactCalculations(exactImpact, exactSupplementaryImpact)
+    : baseResolvedImpact;
   const baseLowerBoundImpact =
     impactCatalogMatch?.lowerBoundImpact ??
     boundFloorSystemMatch?.lowerBoundImpact ??
@@ -313,9 +1050,16 @@ export function calculateAssembly(
     impact,
     lowerBoundImpact,
     metrics: {
+      airborneIsoDescriptor: ratings.iso717.descriptor,
       estimatedCDb: ratings.iso717.C,
       estimatedCtrDb: ratings.iso717.Ctr,
+      estimatedDnADb: ratings.field?.DnA,
+      estimatedDnTADb: ratings.field?.DnTA,
+      estimatedDnTAkDb: ratings.field?.DnTAk,
+      estimatedDnTwDb: ratings.field?.DnTw,
+      estimatedDnWDb: ratings.field?.DnW,
       estimatedRwDb: adjustedEstimatedRwDb,
+      estimatedRwPrimeDb: ratings.field?.RwPrime ?? ratings.iso717.RwPrime,
       estimatedStc: ratings.astmE413.STC
     },
     targetOutputs: options.targetOutputs ?? []
@@ -374,6 +1118,8 @@ export function calculateAssembly(
   const warnings = buildEstimateWarnings(resolvedLayers, selectedCalculatorLabel);
   warnings.push(...(dynamicAirborneResult?.warnings ?? []));
   warnings.push(...airborneOverlayResult.warnings);
+  warnings.push(...verifiedAirborneAnchorResult.warnings);
+  warnings.push(...approximateAirborneFieldCompanionResult.warnings);
   warnings.push(...buildTargetOutputWarnings(targetOutputSupport));
 
   if (predictorAdaptation) {
@@ -470,6 +1216,30 @@ export function calculateAssembly(
     }
   }
 
+  if (
+    airborneContext?.contextMode &&
+    airborneContext.contextMode !== "element_lab" &&
+    ratings.field?.geometryMissing &&
+    Array.isArray(ratings.field.geometryNeeded) &&
+    ratings.field.geometryNeeded.length > 0
+  ) {
+    warnings.push(
+      `Airborne field conversion is incomplete. ${ratings.field.geometryNeeded.join(", ")} must be defined before DnT,w / DnT,A can be calculated from the apparent curve.`
+    );
+  }
+
+  if (
+    airborneContext?.contextMode &&
+    airborneContext.contextMode !== "element_lab" &&
+    ratings.field?.absorptionDataMissing &&
+    Array.isArray(ratings.field.absorptionDataNeeded) &&
+    ratings.field.absorptionDataNeeded.length > 0
+  ) {
+    warnings.push(
+      `Airborne field absorption metadata is incomplete. ${ratings.field.absorptionDataNeeded.join(", ")} is still missing for a fuller Dn / absorption trace, even though the current curve can already produce the available field level-difference outputs.`
+    );
+  }
+
   const result: AssemblyCalculation = {
     availableCalculators: [...availableCalculators],
     boundFloorSystemEstimate,
@@ -492,11 +1262,18 @@ export function calculateAssembly(
     curve,
     layers: resolvedLayers,
     metrics: {
+      airborneIsoDescriptor: ratings.iso717.descriptor,
       totalThicknessMm,
       surfaceMassKgM2,
       estimatedRwDb: adjustedEstimatedRwDb,
+      estimatedRwPrimeDb: ratings.field?.RwPrime ?? ratings.iso717.RwPrime,
       estimatedCDb: ratings.iso717.C,
       estimatedCtrDb: ratings.iso717.Ctr,
+      estimatedDnTwDb: ratings.field?.DnTw,
+      estimatedDnTADb: ratings.field?.DnTA,
+      estimatedDnTAkDb: ratings.field?.DnTAk,
+      estimatedDnWDb: ratings.field?.DnW,
+      estimatedDnADb: ratings.field?.DnA,
       estimatedStc: ratings.astmE413.STC,
       airGapCount: resolvedLayers.filter((layer) => layer.material.category === "gap").length,
       insulationCount: resolvedLayers.filter((layer) => layer.material.category === "insulation").length,

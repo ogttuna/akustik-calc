@@ -163,6 +163,13 @@ export function ImpactResultPanel({ result }: ImpactResultPanelProps) {
                 }
               />
             ) : null}
+            {typeof impact.LnTA === "number" ? (
+              <MetricCard
+                label="LnT,A"
+                value={`${formatDecimal(impact.LnTA)} dB`}
+                detail="Dutch NEN 5077 A-weighted contact-sound companion derived from exact 125..2000 Hz field octave bands"
+              />
+            ) : null}
             {typeof impact.baseSurfaceMassKgM2 === "number" ? (
               <MetricCard
                 label="Base surface mass"

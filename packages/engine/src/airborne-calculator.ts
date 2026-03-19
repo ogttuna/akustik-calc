@@ -28,7 +28,7 @@ const TL_PLOT_FREQS = [63, 80, 100, 125, 160, 200, 250, 315, 400, 500, 630, 800,
 
 type KsType = 0 | 3 | 4 | 5 | 6 | 15;
 
-type PanelProperties = {
+export type PanelProperties = {
   damping: number;
   mass: number;
   nu: number;
@@ -55,6 +55,41 @@ type MechanicalProps = {
 };
 
 const MATERIAL_MECHANICAL_OVERRIDES: Record<string, MechanicalProps> = {
+  cement_plaster: {
+    damping: 0.02,
+    nu: 0.2,
+    youngModulusPa: 8e9
+  },
+  dense_plaster: {
+    damping: 0.02,
+    nu: 0.2,
+    youngModulusPa: 8e9
+  },
+  celcon_high_strength: {
+    damping: 0.03,
+    nu: 0.2,
+    youngModulusPa: 3.5e9
+  },
+  celcon_dense_plaster: {
+    damping: 0.02,
+    nu: 0.2,
+    youngModulusPa: 8e9
+  },
+  celcon_lwt_plaster: {
+    damping: 0.03,
+    nu: 0.22,
+    youngModulusPa: 3e9
+  },
+  celcon_solar_grade: {
+    damping: 0.03,
+    nu: 0.2,
+    youngModulusPa: 3.5e9
+  },
+  celcon_standard_grade: {
+    damping: 0.03,
+    nu: 0.2,
+    youngModulusPa: 3.5e9
+  },
   concrete: {
     damping: 0.01,
     nu: 0.2,
@@ -65,6 +100,26 @@ const MATERIAL_MECHANICAL_OVERRIDES: Record<string, MechanicalProps> = {
     nu: 0.25,
     youngModulusPa: 2.5e9
   },
+  heluz_14_brushed: {
+    damping: 0.025,
+    nu: 0.2,
+    youngModulusPa: 8e9
+  },
+  heluz_aku_115: {
+    damping: 0.025,
+    nu: 0.2,
+    youngModulusPa: 8e9
+  },
+  heluz_aku_200_p15: {
+    damping: 0.025,
+    nu: 0.2,
+    youngModulusPa: 8e9
+  },
+  heluz_aku_300_333_p20: {
+    damping: 0.025,
+    nu: 0.2,
+    youngModulusPa: 8e9
+  },
   heavy_concrete: {
     damping: 0.01,
     nu: 0.2,
@@ -74,6 +129,91 @@ const MATERIAL_MECHANICAL_OVERRIDES: Record<string, MechanicalProps> = {
     damping: 0.015,
     nu: 0.2,
     youngModulusPa: 12e9
+  },
+  lime_cement_plaster_1300: {
+    damping: 0.02,
+    nu: 0.2,
+    youngModulusPa: 7e9
+  },
+  lime_cement_plaster_1700: {
+    damping: 0.02,
+    nu: 0.2,
+    youngModulusPa: 8e9
+  },
+  lime_cement_plaster_1780: {
+    damping: 0.02,
+    nu: 0.2,
+    youngModulusPa: 8e9
+  },
+  pumice_block: {
+    damping: 0.025,
+    nu: 0.2,
+    youngModulusPa: 5e9
+  },
+  porotherm_pls_100: {
+    damping: 0.02,
+    nu: 0.2,
+    youngModulusPa: 8e9
+  },
+  porotherm_pls_140: {
+    damping: 0.02,
+    nu: 0.2,
+    youngModulusPa: 8e9
+  },
+  porotherm_pls_190: {
+    damping: 0.02,
+    nu: 0.2,
+    youngModulusPa: 8e9
+  },
+  silka_cs_block: {
+    damping: 0.02,
+    nu: 0.2,
+    youngModulusPa: 12e9
+  },
+  skim_plaster: {
+    damping: 0.02,
+    nu: 0.2,
+    youngModulusPa: 8e9
+  },
+  lightweight_plaster: {
+    damping: 0.03,
+    nu: 0.22,
+    youngModulusPa: 3e9
+  },
+  ytong_aac_d700: {
+    damping: 0.03,
+    nu: 0.2,
+    youngModulusPa: 3.5e9
+  },
+  ytong_separatiepaneel_aac_4_600: {
+    damping: 0.03,
+    nu: 0.2,
+    youngModulusPa: 3.1e9
+  },
+  ytong_separatiepaneel_aac_5_750: {
+    damping: 0.03,
+    nu: 0.2,
+    youngModulusPa: 3.5e9
+  },
+  ytong_cellenbetonblok_g4_600: {
+    damping: 0.03,
+    nu: 0.2,
+    youngModulusPa: 3.1e9
+  },
+  ytong_cellenbetonblok_g5_800: {
+    damping: 0.03,
+    nu: 0.2,
+    youngModulusPa: 3.5e9
+  },
+  ytong_massief_g2_300: {
+    damping: 0.035,
+    nu: 0.2,
+    youngModulusPa: 2.2e9
+  },
+  ytong_g5_800: {
+    damping: 0.03,
+    nu: 0.2,
+    youngModulusPa: 3.5e9
   }
 };
 
@@ -205,7 +345,7 @@ function inferLayerMechanicalProps(layer: ResolvedLayer): MechanicalProps {
   };
 }
 
-function buildPanelProperties(layers: readonly ResolvedLayer[], totals: LayerTotals): PanelProperties {
+export function buildPanelProperties(layers: readonly ResolvedLayer[], totals: LayerTotals): PanelProperties {
   let weightedYoungModulusPa = 0;
   let weightedDamping = 0;
   let weightedNu = 0;
@@ -322,14 +462,14 @@ function bendingStiffness(panel: PanelProperties): number {
   return Math.max((youngModulusPa * Math.pow(thicknessM, 3)) / (12 * (1 - (nu * nu))), 1e-12);
 }
 
-function estimateCriticalFrequency(panel: PanelProperties): number {
+export function estimateCriticalFrequency(panel: PanelProperties): number {
   const mass = Math.max(panel.mass, 1e-9);
   const bending = Math.max(bendingStiffness(panel), 1e-12);
   const criticalFrequencyHz = (SOUND_SPEED * SOUND_SPEED / (2 * Math.PI)) * Math.sqrt(mass / bending);
   return Number.isFinite(criticalFrequencyHz) && criticalFrequencyHz > 0 ? Math.max(criticalFrequencyHz, 40) : 40;
 }
 
-function finitePanelRadiationEfficiency(frequencyHz: number, panelWidthM = 2.7, panelHeightM = 4): number {
+export function finitePanelRadiationEfficiency(frequencyHz: number, panelWidthM = 2.7, panelHeightM = 4): number {
   const frequency = Math.max(frequencyHz, 1e-9);
   const widthM = Math.max(panelWidthM, 0.2);
   const heightM = Math.max(panelHeightM, 0.2);

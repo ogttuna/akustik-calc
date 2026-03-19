@@ -16,6 +16,7 @@ import {
   getActiveValidationMode
 } from "./validation-regime";
 import type { ValidationPosture } from "./validation-regime";
+import { getDnTAkLiveLabel } from "./dntak-source-mode";
 
 export type TargetOutputStatus = {
   kind:
@@ -41,7 +42,7 @@ export type TargetOutputCorridor = {
 };
 
 const FIELD_OUTPUTS = new Set<RequestedOutputId>(["L'n,w", "L'nT,w", "L'nT,50"]);
-const IMPACT_CORRIDOR_OUTPUTS = new Set<RequestedOutputId>(["Ln,w", "DeltaLw", "CI", "CI,50-2500", "Ln,w+CI"]);
+const IMPACT_CORRIDOR_OUTPUTS = new Set<RequestedOutputId>(["Ln,w", "DeltaLw", "CI", "CI,50-2500", "Ln,w+CI", "LnT,A"]);
 
 function hasGuideValue(
   output: RequestedOutputId,
@@ -115,6 +116,10 @@ function hasEngineBoundValue(output: RequestedOutputId, result: AssemblyCalculat
 }
 
 function getEngineLiveLabel(output: RequestedOutputId, result: AssemblyCalculation): string {
+  if (output === "DnT,A,k" && typeof result.ratings.field?.DnTAk === "number") {
+    return getDnTAkLiveLabel(result);
+  }
+
   if (LIVE_OUTPUTS.has(output)) {
     return "Live";
   }
@@ -144,7 +149,27 @@ function getEngineLiveLabel(output: RequestedOutputId, result: AssemblyCalculati
 
 function getPendingLabel(output: RequestedOutputId): string {
   if (LIVE_OUTPUTS.has(output)) {
+    if (output === "R'w") {
+      return "Need field mode";
+    }
+
+    if (output === "DnT,A,k") {
+      return "Need field source";
+    }
+
+    if (output === "DnT,w" || output === "DnT,A") {
+      return "Need geometry + V";
+    }
+
+    if (output === "Dn,w" || output === "Dn,A") {
+      return "Need geometry";
+    }
+
     return "Need valid stack";
+  }
+
+  if (output === "LnT,A") {
+    return "Need exact octave field bands";
   }
 
   if (SCOPED_OUTPUTS.has(output)) {

@@ -40,10 +40,16 @@ import {
   maybeBuildImpactPredictorInputFromLayerStack,
   mergePredictorCatalog
 } from "./impact-predictor-input";
-import { matchImpactProductCatalog, resolveImpactProductCatalogById } from "./impact-product-catalog";
+import {
+  filterImpactCatalogMatchForExplicitPredictorInput,
+  matchImpactProductCatalog,
+  resolveImpactProductCatalogById
+} from "./impact-product-catalog";
 import { deriveHeavyReferenceImpactFromDeltaLw } from "./impact-reference";
+import { computeLayerSurfaceMassKgM2 } from "./layer-surface-mass";
 import { derivePredictorSpecificFloorSystemEstimate } from "./predictor-floor-system-estimate";
 import { buildImpactSupport } from "./impact-support";
+import { mergeImpactCalculations } from "./impact-merge";
 import { buildDynamicImpactTrace } from "./dynamic-impact";
 import {
   inferImpactSupportingElementFamilyFromExactFloorSystem,
@@ -75,7 +81,7 @@ function resolveLayers(
     return {
       ...layer,
       material,
-      surfaceMassKgM2: (material.densityKgM3 * layer.thicknessMm) / 1000
+      surfaceMassKgM2: computeLayerSurfaceMassKgM2(layer, material)
     };
   });
 }
@@ -113,7 +119,7 @@ export function calculateImpactOnly(
   let predictorInputMode: "derived_from_visible_layers" | "explicit_predictor_input" | undefined =
     explicitPredictorInput ? "explicit_predictor_input" : undefined;
   let predictorAdaptation = predictorInput ? adaptImpactPredictorInput(predictorInput) : null;
-  const baseCatalog = options.catalog ?? getDefaultMaterialCatalog();
+  const baseCatalog = mergePredictorCatalog(getDefaultMaterialCatalog(), options.catalog ?? []);
   let catalog = mergePredictorCatalog(baseCatalog, predictorAdaptation?.catalogAdditions ?? []);
   let sourceLayersInput = predictorAdaptation?.sourceLayers.length
     ? predictorAdaptation.sourceLayers.map((layer) => LayerInputSchema.parse(layer))
@@ -166,8 +172,19 @@ export function calculateImpactOnly(
 
       floorSystemMatch = matchExactFloorSystem(resolvedSourceLayers);
       boundFloorSystemMatch = !floorSystemMatch ? matchBoundFloorSystem(resolvedSourceLayers) : null;
-      impactCatalogMatch = matchImpactProductCatalog(resolvedSourceLayers);
-      narrowImpact = explicitDeltaImpact ? null : estimateImpactFromLayers(resolvedSourceLayers);
+      const rawImpactCatalogMatch = matchImpactProductCatalog(resolvedSourceLayers);
+      impactCatalogMatch = filterImpactCatalogMatchForExplicitPredictorInput(
+        rawImpactCatalogMatch,
+        predictorInput,
+        catalog
+      );
+      const rejectProductDeltaFormulaFallback =
+        rawImpactCatalogMatch?.catalog.matchMode === "product_property_delta" &&
+        !impactCatalogMatch;
+      narrowImpact =
+        explicitDeltaImpact || rejectProductDeltaFormulaFallback
+          ? null
+          : estimateImpactFromLayers(resolvedSourceLayers);
       boundFloorSystemEstimate =
         !floorSystemMatch &&
         !boundFloorSystemMatch &&
@@ -196,60 +213,112 @@ export function calculateImpactOnly(
     boundFloorSystemMatch = !floorSystemMatch ? matchBoundFloorSystem(resolvedSourceLayers) : null;
     impactCatalogMatch = matchImpactProductCatalog(resolvedSourceLayers);
     narrowImpact = estimateImpactFromLayers(resolvedSourceLayers);
-    const shouldDerivePredictorFallback =
+    const directBoundFloorSystemEstimate =
+      !floorSystemMatch && !boundFloorSystemMatch && !impactCatalogMatch && !narrowImpact
+        ? deriveBoundFloorSystemEstimate(resolvedSourceLayers)
+        : null;
+    const directFloorSystemEstimate =
+      !floorSystemMatch &&
+      !boundFloorSystemMatch &&
+      !directBoundFloorSystemEstimate &&
+      !impactCatalogMatch &&
+      !narrowImpact
+        ? deriveFloorSystemEstimate(resolvedSourceLayers, recommendFloorSystems(resolvedSourceLayers, 8))
+        : null;
+
+    boundFloorSystemEstimate = directBoundFloorSystemEstimate;
+    floorSystemEstimate = directFloorSystemEstimate;
+
+    const canTryDerivedPredictor =
       !options.sourceLayers &&
       !options.officialFloorSystemId &&
       !options.officialImpactCatalogId &&
       !exactImpactSource &&
       !floorSystemMatch &&
       !boundFloorSystemMatch &&
-      !impactCatalogMatch &&
-      !narrowImpact;
+      !impactCatalogMatch;
 
-    if (shouldDerivePredictorFallback) {
-      const derivedPredictorInput = maybeBuildImpactPredictorInputFromLayerStack(visibleLayers);
+    if (canTryDerivedPredictor) {
+      const derivedPredictorInput = maybeBuildImpactPredictorInputFromLayerStack(visibleLayers, {}, undefined, catalog);
 
       if (derivedPredictorInput) {
-        predictorInput = derivedPredictorInput;
-        predictorInputMode = "derived_from_visible_layers";
-        predictorAdaptation = adaptImpactPredictorInput(derivedPredictorInput);
-        catalog = mergePredictorCatalog(baseCatalog, predictorAdaptation.catalogAdditions);
-        resolvedVisibleLayers = resolveLayers(visibleLayers, catalog);
-        sourceLayersInput = predictorAdaptation.sourceLayers.map((layer) => LayerInputSchema.parse(layer));
-        resolvedSourceLayers = resolveLayers(sourceLayersInput, catalog);
-        sourceMode = "predictor_input";
-        floorSystemMatch = matchExactFloorSystem(resolvedSourceLayers);
-        boundFloorSystemMatch = !floorSystemMatch ? matchBoundFloorSystem(resolvedSourceLayers) : null;
-        impactCatalogMatch = matchImpactProductCatalog(resolvedSourceLayers);
-        explicitDeltaImpact =
+        const derivedPredictorAdaptation = adaptImpactPredictorInput(derivedPredictorInput);
+        const derivedCatalog = mergePredictorCatalog(baseCatalog, derivedPredictorAdaptation.catalogAdditions);
+        const derivedResolvedVisibleLayers = resolveLayers(visibleLayers, derivedCatalog);
+        const derivedSourceLayersInput = derivedPredictorAdaptation.sourceLayers.map((layer) =>
+          LayerInputSchema.parse(layer)
+        );
+        const derivedResolvedSourceLayers = resolveLayers(derivedSourceLayersInput, derivedCatalog);
+        const derivedFloorSystemMatch = matchExactFloorSystem(derivedResolvedSourceLayers);
+        const derivedBoundFloorSystemMatch = !derivedFloorSystemMatch
+          ? matchBoundFloorSystem(derivedResolvedSourceLayers)
+          : null;
+        const derivedImpactCatalogMatch = matchImpactProductCatalog(derivedResolvedSourceLayers);
+        const derivedExplicitDeltaImpact =
           derivedPredictorInput.floorCovering?.mode === "delta_lw_catalog" &&
           typeof derivedPredictorInput.floorCovering.deltaLwDb === "number"
             ? deriveHeavyReferenceImpactFromDeltaLw(derivedPredictorInput.floorCovering.deltaLwDb)
             : null;
-        narrowImpact = explicitDeltaImpact ? null : estimateImpactFromLayers(resolvedSourceLayers);
-        const predictorSpecificFloorSystemEstimate = derivePredictorSpecificFloorSystemEstimate(derivedPredictorInput);
-        boundFloorSystemEstimate =
-          !floorSystemMatch &&
-          !boundFloorSystemMatch &&
-          !impactCatalogMatch &&
-          !explicitDeltaImpact &&
-          !predictorSpecificFloorSystemEstimate &&
-          !narrowImpact
-            ? deriveBoundFloorSystemEstimate(resolvedSourceLayers)
+        const derivedNarrowImpact = derivedExplicitDeltaImpact
+          ? null
+          : estimateImpactFromLayers(derivedResolvedSourceLayers);
+        const derivedPredictorSpecificFloorSystemEstimate = derivedExplicitDeltaImpact
+          ? null
+          : derivePredictorSpecificFloorSystemEstimate(derivedPredictorInput);
+        const derivedBoundFloorSystemEstimate =
+          !derivedFloorSystemMatch &&
+          !derivedBoundFloorSystemMatch &&
+          !derivedImpactCatalogMatch &&
+          !derivedExplicitDeltaImpact &&
+          !derivedPredictorSpecificFloorSystemEstimate &&
+          !derivedNarrowImpact
+            ? deriveBoundFloorSystemEstimate(derivedResolvedSourceLayers)
             : null;
-        floorSystemEstimate =
-          explicitDeltaImpact
+        const derivedFloorSystemEstimate =
+          derivedExplicitDeltaImpact
             ? null
-            : predictorSpecificFloorSystemEstimate ??
-          (
-            !floorSystemMatch &&
-            !boundFloorSystemMatch &&
-            !boundFloorSystemEstimate &&
-            !impactCatalogMatch &&
-            !narrowImpact
-              ? deriveFloorSystemEstimate(resolvedSourceLayers, recommendFloorSystems(resolvedSourceLayers, 8))
-              : null
-          );
+            : derivedPredictorSpecificFloorSystemEstimate ??
+              (
+                !derivedFloorSystemMatch &&
+                !derivedBoundFloorSystemMatch &&
+                !derivedBoundFloorSystemEstimate &&
+                !derivedImpactCatalogMatch &&
+                !derivedNarrowImpact
+                  ? deriveFloorSystemEstimate(
+                      derivedResolvedSourceLayers,
+                      recommendFloorSystems(derivedResolvedSourceLayers, 8)
+                    )
+                  : null
+              );
+        const shouldUseDerived =
+          Boolean(
+            derivedFloorSystemMatch ||
+              derivedBoundFloorSystemMatch ||
+              derivedImpactCatalogMatch ||
+              derivedPredictorSpecificFloorSystemEstimate
+          ) ||
+          (!narrowImpact &&
+            !directFloorSystemEstimate &&
+            !directBoundFloorSystemEstimate &&
+            Boolean(derivedNarrowImpact || derivedFloorSystemEstimate || derivedBoundFloorSystemEstimate));
+
+        if (shouldUseDerived) {
+          predictorInput = derivedPredictorInput;
+          predictorInputMode = "derived_from_visible_layers";
+          predictorAdaptation = derivedPredictorAdaptation;
+          catalog = derivedCatalog;
+          resolvedVisibleLayers = derivedResolvedVisibleLayers;
+          sourceLayersInput = derivedSourceLayersInput;
+          resolvedSourceLayers = derivedResolvedSourceLayers;
+          sourceMode = "predictor_input";
+          floorSystemMatch = derivedFloorSystemMatch;
+          boundFloorSystemMatch = derivedBoundFloorSystemMatch;
+          impactCatalogMatch = derivedImpactCatalogMatch;
+          explicitDeltaImpact = derivedExplicitDeltaImpact;
+          narrowImpact = derivedNarrowImpact;
+          boundFloorSystemEstimate = derivedBoundFloorSystemEstimate;
+          floorSystemEstimate = derivedFloorSystemEstimate;
+        }
       }
     }
 
@@ -265,14 +334,34 @@ export function calculateImpactOnly(
     }
   }
 
-  const baseImpact =
-    (exactImpactSource ? buildExactImpactFromSource(exactImpactSource) : null) ??
+  if (
+    exactImpactSource &&
+    predictorAdaptation &&
+    !options.officialFloorSystemId &&
+    !options.officialImpactCatalogId
+  ) {
+    impactCatalogMatch = filterImpactCatalogMatchForExplicitPredictorInput(
+      matchImpactProductCatalog(resolvedSourceLayers),
+      predictorInput,
+      catalog
+    );
+  }
+
+  const exactImpact = exactImpactSource ? buildExactImpactFromSource(exactImpactSource) : null;
+  const baseResolvedImpact =
     floorSystemMatch?.impact ??
     impactCatalogMatch?.impact ??
     explicitDeltaImpact ??
     floorSystemEstimate?.impact ??
     narrowImpact ??
     null;
+  const exactSupplementaryImpact =
+    exactImpact && impactCatalogMatch?.catalog.matchMode === "product_property_delta"
+      ? impactCatalogMatch.impact ?? null
+      : null;
+  const baseImpact = exactImpact
+    ? mergeImpactCalculations(exactImpact, exactSupplementaryImpact)
+    : baseResolvedImpact;
   const baseLowerBoundImpact =
     impactCatalogMatch?.lowerBoundImpact ??
     boundFloorSystemMatch?.lowerBoundImpact ??

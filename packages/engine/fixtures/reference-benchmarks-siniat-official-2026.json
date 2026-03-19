@@ -1,0 +1,155 @@
+{
+  "name": "Acoustic2 Siniat Official Secondary Set (2026-03-11)",
+  "description": "Official Siniat metal partition web pages checked on 2026-03-11. These are manufacturer web references used as secondary lab sanity cases.",
+  "cases": [
+    {
+      "id": "siniat_cs70r_15st_official_2026",
+      "label": "CS70/R/15St",
+      "source": "https://www.siniat.co.uk/en-gb/systems/metal-partitions/cs70r-15st/ (2026-03-11, Rw 39 dB)",
+      "expectedRw": 39.0,
+      "toleranceRw": 4.0,
+      "weight": 1.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 15 },
+        { "materialId": "air_gap", "thicknessMm": 70 },
+        { "materialId": "gypsum", "thicknessMm": 15 }
+      ]
+    },
+    {
+      "id": "siniat_cs70r_15db_official_2026",
+      "label": "CS70/R/15dB",
+      "source": "https://www.siniat.co.uk/en-gb/systems/metal-partitions/cs70r-15db/ (2026-03-11, Rw 42 dB)",
+      "expectedRw": 42.0,
+      "toleranceRw": 4.0,
+      "weight": 1.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 15 },
+        { "materialId": "air_gap", "thicknessMm": 70 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 15 }
+      ]
+    },
+    {
+      "id": "siniat_cs70r_15db_50g_official_2026",
+      "label": "CS70/R/15dB/50G",
+      "source": "https://www.siniat.co.uk/en-gb/systems/metal-partitions/cs70r-15db-50g/ (2026-03-11, Rw 50 dB)",
+      "expectedRw": 50.0,
+      "toleranceRw": 4.0,
+      "weight": 1.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 15 },
+        { "materialId": "air_gap", "thicknessMm": 20 },
+        { "materialId": "glasswool", "thicknessMm": 50 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 15 }
+      ]
+    },
+    {
+      "id": "siniat_as70r_212db_50g_official_2026",
+      "label": "AS70/R/2x12.5dB/50G",
+      "source": "https://www.siniat.co.uk/en-gb/systems/metal-partitions/as70r-212db-50g/ (2026-03-11, Rw 56 dB)",
+      "expectedRw": 56.0,
+      "toleranceRw": 4.0,
+      "weight": 1.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "resilient_channel",
+        "studType": "resilient_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 20 },
+        { "materialId": "glasswool", "thicknessMm": 50 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "siniat_as90r_212db_50g_official_2026",
+      "label": "AS90/R/2x12.5dB/50G",
+      "source": "https://www.siniat.co.uk/en-gb/systems/metal-partitions/as90r-212db-50g/ (2026-03-11, Rw 58 dB)",
+      "expectedRw": 58.0,
+      "toleranceRw": 4.0,
+      "weight": 1.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "resilient_channel",
+        "studType": "resilient_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 40 },
+        { "materialId": "glasswool", "thicknessMm": 50 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "siniat_cs70r_15db_25g_official_live_2026",
+      "label": "CS70R-15dB-25G",
+      "source": "https://media.siniat.co.uk/pi859850/original/-2094514222/siniat-drywall-manual-bk2-partitions-v2.2.0-july25.pdf (checked 2026-03-11 via official search result snippet: CS70R-15dB-25G -> Rw 46 dB)",
+      "expectedRw": 46.0,
+      "toleranceRw": 4.0,
+      "weight": 1.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 15 },
+        { "materialId": "air_gap", "thicknessMm": 45 },
+        { "materialId": "glasswool", "thicknessMm": 25 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 15 }
+      ]
+    },
+    {
+      "id": "siniat_cs90r_15db_25g_official_live_2026",
+      "label": "CS90R-15dB-25G",
+      "source": "https://media.siniat.co.uk/pi859850/original/-2094514222/siniat-drywall-manual-bk2-partitions-v2.2.0-july25.pdf (checked 2026-03-11 via official search result snippet: CS90R-15dB-25G -> Rw 48 dB)",
+      "expectedRw": 48.0,
+      "toleranceRw": 4.0,
+      "weight": 1.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 15 },
+        { "materialId": "air_gap", "thicknessMm": 65 },
+        { "materialId": "glasswool", "thicknessMm": 25 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 15 }
+      ]
+    }
+  ]
+}

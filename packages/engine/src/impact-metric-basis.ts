@@ -7,6 +7,7 @@ const IMPACT_METRIC_KEYS = [
   "LPrimeNW",
   "LPrimeNT50",
   "LPrimeNTw",
+  "LnTA",
   "LnW",
   "LnWPlusCI"
 ] as const;

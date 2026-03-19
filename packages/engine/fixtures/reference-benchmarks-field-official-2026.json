@@ -1,0 +1,406 @@
+{
+  "name": "Acoustic2 Official Field Reference Set (2026-03-10)",
+  "description": "Official Knauf KOMO field/compliance references collected on 2026-03-10. Benchmark metric uses ratings.field.DnTA as a proxy for published DnT,A,k single-number values until a dedicated k-correction layer exists.",
+  "cases": [
+    {
+      "id": "knauf_w111_50_75_a_field_2026",
+      "label": "Knauf W111 50/75, 1x12.5 A board each side, no mineral wool",
+      "source": "https://knauf.com/api/download-center/v1/assets/8b5d23c5-a182-4ac8-81f7-2a6d7c289d12?country=nl&download=true (2026-03-10, Table 6: W111 50/75 -> DnT,A,k 27 dB)",
+      "metricPath": "ratings.field.DnTA",
+      "expectedValue": 27.0,
+      "toleranceValue": 3.0,
+      "assemblyMeta": {
+        "contextMode": "field_between_rooms",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good",
+        "perimeterSeal": "good",
+        "penetrationState": "none",
+        "junctionQuality": "good",
+        "sharedTrack": "independent",
+        "electricalBoxes": "none",
+        "panelWidthMm": 3000,
+        "panelHeightMm": 2600,
+        "receivingRoomVolumeM3": 30
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 75 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "knauf_w111_50_75_40mw_a_field_2026",
+      "label": "Knauf W111 50/75 40 MW, 1x12.5 A board each side",
+      "source": "https://knauf.com/api/download-center/v1/assets/8b5d23c5-a182-4ac8-81f7-2a6d7c289d12?country=nl&download=true (2026-03-10, Table 6: W111 50/75 40 MW -> DnT,A,k 34 dB)",
+      "metricPath": "ratings.field.DnTA",
+      "expectedValue": 34.0,
+      "toleranceValue": 3.0,
+      "assemblyMeta": {
+        "contextMode": "field_between_rooms",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good",
+        "perimeterSeal": "good",
+        "penetrationState": "none",
+        "junctionQuality": "good",
+        "sharedTrack": "independent",
+        "electricalBoxes": "none",
+        "panelWidthMm": 3000,
+        "panelHeightMm": 2600,
+        "receivingRoomVolumeM3": 30
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 35 },
+        { "materialId": "glasswool", "thicknessMm": 40 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "knauf_w112_50_100_a_field_2026",
+      "label": "Knauf W112 50/100, 2x12.5 A board each side, no mineral wool",
+      "source": "https://knauf.com/api/download-center/v1/assets/8b5d23c5-a182-4ac8-81f7-2a6d7c289d12?country=nl&download=true (2026-03-10, Table 6: W112 50/100 -> DnT,A,k 35 dB)",
+      "metricPath": "ratings.field.DnTA",
+      "expectedValue": 35.0,
+      "toleranceValue": 3.0,
+      "assemblyMeta": {
+        "contextMode": "field_between_rooms",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good",
+        "perimeterSeal": "good",
+        "penetrationState": "none",
+        "junctionQuality": "good",
+        "sharedTrack": "independent",
+        "electricalBoxes": "none",
+        "panelWidthMm": 3000,
+        "panelHeightMm": 2600,
+        "receivingRoomVolumeM3": 30
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 100 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "knauf_w112_50_100_40mw_a_field_2026",
+      "label": "Knauf W112 50/100 40 MW, 2x12.5 A board each side",
+      "source": "https://knauf.com/api/download-center/v1/assets/8b5d23c5-a182-4ac8-81f7-2a6d7c289d12?country=nl&download=true (2026-03-10, Table 6: W112 50/100 40 MW -> DnT,A,k 43 dB)",
+      "metricPath": "ratings.field.DnTA",
+      "expectedValue": 43.0,
+      "toleranceValue": 3.0,
+      "assemblyMeta": {
+        "contextMode": "field_between_rooms",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good",
+        "perimeterSeal": "good",
+        "penetrationState": "none",
+        "junctionQuality": "good",
+        "sharedTrack": "independent",
+        "electricalBoxes": "none",
+        "panelWidthMm": 3000,
+        "panelHeightMm": 2600,
+        "receivingRoomVolumeM3": 30
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 60 },
+        { "materialId": "glasswool", "thicknessMm": 40 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "knauf_w112_75_125_60mw_a_field_2026",
+      "label": "Knauf W112 75/125 60 MW, 2x12.5 A board each side",
+      "source": "https://knauf.com/api/download-center/v1/assets/8b5d23c5-a182-4ac8-81f7-2a6d7c289d12?country=nl&download=true (2026-03-10, Table 6: W112 75/125 60 MW -> DnT,A,k 44 dB)",
+      "metricPath": "ratings.field.DnTA",
+      "expectedValue": 44.0,
+      "toleranceValue": 3.0,
+      "assemblyMeta": {
+        "contextMode": "field_between_rooms",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good",
+        "perimeterSeal": "good",
+        "penetrationState": "none",
+        "junctionQuality": "good",
+        "sharedTrack": "independent",
+        "electricalBoxes": "none",
+        "panelWidthMm": 3000,
+        "panelHeightMm": 2600,
+        "receivingRoomVolumeM3": 30
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 65 },
+        { "materialId": "glasswool", "thicknessMm": 60 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "knauf_w112_100_150_80mw_a_field_2026",
+      "label": "Knauf W112 100/150 80 MW, 2x12.5 A board each side",
+      "source": "https://knauf.com/api/download-center/v1/assets/8b5d23c5-a182-4ac8-81f7-2a6d7c289d12?country=nl&download=true (2026-03-10, Table 6: W112 100/150 80 MW -> DnT,A,k 44 dB)",
+      "metricPath": "ratings.field.DnTA",
+      "expectedValue": 44.0,
+      "toleranceValue": 3.0,
+      "assemblyMeta": {
+        "contextMode": "field_between_rooms",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good",
+        "perimeterSeal": "good",
+        "penetrationState": "none",
+        "junctionQuality": "good",
+        "sharedTrack": "independent",
+        "electricalBoxes": "none",
+        "panelWidthMm": 3000,
+        "panelHeightMm": 2600,
+        "receivingRoomVolumeM3": 30
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 70 },
+        { "materialId": "glasswool", "thicknessMm": 80 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "knauf_w112_50_100_db_field_2026",
+      "label": "Knauf W112 50/100, 2x12.5 Diamond Board each side, no mineral wool",
+      "source": "https://knauf.com/api/download-center/v1/assets/8b5d23c5-a182-4ac8-81f7-2a6d7c289d12?country=nl&download=true (2026-03-10, Table 6: W112 50/100 DB -> DnT,A,k 35 dB)",
+      "metricPath": "ratings.field.DnTA",
+      "expectedValue": 35.0,
+      "toleranceValue": 3.0,
+      "assemblyMeta": {
+        "contextMode": "field_between_rooms",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good",
+        "perimeterSeal": "good",
+        "penetrationState": "none",
+        "junctionQuality": "good",
+        "sharedTrack": "independent",
+        "electricalBoxes": "none",
+        "panelWidthMm": 3000,
+        "panelHeightMm": 2600,
+        "receivingRoomVolumeM3": 30
+      },
+      "layers": [
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 100 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "knauf_w112_50_100_40mw_db_field_2026",
+      "label": "Knauf W112 50/100 40 MW, 2x12.5 Diamond Board each side",
+      "source": "https://knauf.com/api/download-center/v1/assets/8b5d23c5-a182-4ac8-81f7-2a6d7c289d12?country=nl&download=true (2026-03-10, Table 6: W112 50/100 DB 40 MW -> DnT,A,k 50 dB)",
+      "metricPath": "ratings.field.DnTA",
+      "expectedValue": 50.0,
+      "toleranceValue": 3.0,
+      "assemblyMeta": {
+        "contextMode": "field_between_rooms",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good",
+        "perimeterSeal": "good",
+        "penetrationState": "none",
+        "junctionQuality": "good",
+        "sharedTrack": "independent",
+        "electricalBoxes": "none",
+        "panelWidthMm": 3000,
+        "panelHeightMm": 2600,
+        "receivingRoomVolumeM3": 30
+      },
+      "layers": [
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 60 },
+        { "materialId": "glasswool", "thicknessMm": 40 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "knauf_w112_75_125_60mw_db_field_2026",
+      "label": "Knauf W112 75/125 60 MW, 2x12.5 Diamond Board each side",
+      "source": "https://knauf.com/api/download-center/v1/assets/8b5d23c5-a182-4ac8-81f7-2a6d7c289d12?country=nl&download=true (2026-03-10, Table 6: W112 75/125 DB 60 MW -> DnT,A,k 52 dB)",
+      "metricPath": "ratings.field.DnTA",
+      "expectedValue": 52.0,
+      "toleranceValue": 3.0,
+      "assemblyMeta": {
+        "contextMode": "field_between_rooms",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good",
+        "perimeterSeal": "good",
+        "penetrationState": "none",
+        "junctionQuality": "good",
+        "sharedTrack": "independent",
+        "electricalBoxes": "none",
+        "panelWidthMm": 3000,
+        "panelHeightMm": 2600,
+        "receivingRoomVolumeM3": 30
+      },
+      "layers": [
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 65 },
+        { "materialId": "glasswool", "thicknessMm": 60 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "knauf_w112_100_150_80mw_db_field_2026",
+      "label": "Knauf W112 100/150 80 MW, 2x12.5 Diamond Board each side",
+      "source": "https://knauf.com/api/download-center/v1/assets/8b5d23c5-a182-4ac8-81f7-2a6d7c289d12?country=nl&download=true (2026-03-10, Table 6: W112 100/150 DB 80 MW -> DnT,A,k 53 dB)",
+      "metricPath": "ratings.field.DnTA",
+      "expectedValue": 53.0,
+      "toleranceValue": 3.0,
+      "assemblyMeta": {
+        "contextMode": "field_between_rooms",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good",
+        "perimeterSeal": "good",
+        "penetrationState": "none",
+        "junctionQuality": "good",
+        "sharedTrack": "independent",
+        "electricalBoxes": "none",
+        "panelWidthMm": 3000,
+        "panelHeightMm": 2600,
+        "receivingRoomVolumeM3": 30
+      },
+      "layers": [
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 70 },
+        { "materialId": "glasswool", "thicknessMm": 80 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "knauf_w113_50_125_40mw_a_field_2026",
+      "label": "Knauf W113 50/125 40 MW, 3x12.5 A board each side",
+      "source": "https://knauf.com/api/download-center/v1/assets/8b5d23c5-a182-4ac8-81f7-2a6d7c289d12?country=nl&download=true (2026-03-10, Table 6: W113 50/125 40 MW -> DnT,A,k 49 dB)",
+      "metricPath": "ratings.field.DnTA",
+      "expectedValue": 49.0,
+      "toleranceValue": 3.0,
+      "assemblyMeta": {
+        "contextMode": "field_between_rooms",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good",
+        "perimeterSeal": "good",
+        "penetrationState": "none",
+        "junctionQuality": "good",
+        "sharedTrack": "independent",
+        "electricalBoxes": "none",
+        "panelWidthMm": 3000,
+        "panelHeightMm": 2600,
+        "receivingRoomVolumeM3": 30
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 85 },
+        { "materialId": "glasswool", "thicknessMm": 40 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "knauf_w113_75_150_60mw_db_field_2026",
+      "label": "Knauf W113 75/150 60 MW, 3x12.5 Diamond Board each side",
+      "source": "https://knauf.com/api/download-center/v1/assets/8b5d23c5-a182-4ac8-81f7-2a6d7c289d12?country=nl&download=true (2026-03-10, Table 6: W113 75/150 DB 60 MW -> DnT,A,k 57 dB)",
+      "metricPath": "ratings.field.DnTA",
+      "expectedValue": 57.0,
+      "toleranceValue": 3.0,
+      "assemblyMeta": {
+        "contextMode": "field_between_rooms",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good",
+        "perimeterSeal": "good",
+        "penetrationState": "none",
+        "junctionQuality": "good",
+        "sharedTrack": "independent",
+        "electricalBoxes": "none",
+        "panelWidthMm": 3000,
+        "panelHeightMm": 2600,
+        "receivingRoomVolumeM3": 30
+      },
+      "layers": [
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 90 },
+        { "materialId": "glasswool", "thicknessMm": 60 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "knauf_w118_wk2_1_0_50_101_40gw_a_field_2026",
+      "label": "Knauf W118 WK2 1.0 50/101 40 GW, 2x12.5 A board each side",
+      "source": "https://knauf.com/api/download-center/v1/assets/8b5d23c5-a182-4ac8-81f7-2a6d7c289d12?country=nl&download=true (2026-03-10, Table 6: W118 WK2 1.0 50/101 40 GW -> DnT,A,k 43 dB)",
+      "metricPath": "ratings.field.DnTA",
+      "expectedValue": 43.0,
+      "toleranceValue": 3.0,
+      "assemblyMeta": {
+        "contextMode": "field_between_rooms",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good",
+        "perimeterSeal": "good",
+        "penetrationState": "none",
+        "junctionQuality": "good",
+        "sharedTrack": "independent",
+        "electricalBoxes": "none",
+        "panelWidthMm": 3000,
+        "panelHeightMm": 2600,
+        "receivingRoomVolumeM3": 30
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 61 },
+        { "materialId": "glasswool", "thicknessMm": 40 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    }
+  ]
+}

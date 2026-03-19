@@ -1,0 +1,97 @@
+{
+  "name": "Acoustic2 British Gypsum Official Secondary Set (2026-03-11)",
+  "description": "Official British Gypsum technical specification PDFs checked on 2026-03-11. These are assumption-driven secondary lab sanity cases used to widen manufacturer coverage without calibrating against exact catalog anchors.",
+  "cases": [
+    {
+      "id": "bg_a206a281_official_2026",
+      "label": "A206A281",
+      "source": "https://www.british-gypsum.com/documents/technical-specification/british-gypsum-ts-a206a281-b-en.pdf (checked 2026-03-11, Rw 45 dB)",
+      "expectedRw": 45.0,
+      "toleranceRw": 6.0,
+      "weight": 1.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 15 },
+        { "materialId": "air_gap", "thicknessMm": 92 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 15 }
+      ]
+    },
+    {
+      "id": "bg_a316011_official_2026",
+      "label": "A316011",
+      "source": "https://www.british-gypsum.com/documents/technical-specification/british-gypsum-ts-a316011-en.pdf (checked 2026-03-11, Rw 63 dB)",
+      "expectedRw": 63.0,
+      "toleranceRw": 8.0,
+      "weight": 1.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "resilient_channel",
+        "studType": "resilient_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 19 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 36 },
+        { "materialId": "glasswool", "thicknessMm": 50 },
+        { "materialId": "gypsum", "thicknessMm": 19 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "bg_a316017s_official_2026",
+      "label": "A316017S",
+      "source": "https://www.british-gypsum.com/documents/technical-specification/british-gypsum-ts-a316017s-en.pdf (checked 2026-03-11, Rw 63 dB)",
+      "expectedRw": 63.0,
+      "toleranceRw": 8.0,
+      "weight": 1.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "resilient_channel",
+        "studType": "resilient_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 15 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 15 },
+        { "materialId": "air_gap", "thicknessMm": 96 },
+        { "materialId": "glasswool", "thicknessMm": 50 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 15 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 15 }
+      ]
+    },
+    {
+      "id": "bg_a326001_official_2026",
+      "label": "A326001",
+      "source": "https://www.british-gypsum.com/documents/technical-specification/british-gypsum-ts-a326001-a-en.pdf (checked 2026-03-11, Rw 67 dB)",
+      "expectedRw": 67.0,
+      "toleranceRw": 8.0,
+      "weight": 1.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "sharedTrack": "independent",
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 75 },
+        { "materialId": "glasswool", "thicknessMm": 100 },
+        { "materialId": "air_gap", "thicknessMm": 75 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 }
+      ]
+    }
+  ]
+}

@@ -6,17 +6,17 @@ const VALUE_ONLY_BAND_SETS = {
   five_octave_125_2000: {
     frequenciesHz: [125, 250, 500, 1000, 2000],
     label: "Octave 125..2000 Hz",
-    summary: "Ln,w + CI only"
+    summary: "Exact octave impact curve"
   },
   one_third_octave_100_3150: {
     frequenciesHz: [100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500, 3150],
     label: "One-third octave 100..3150 Hz",
-    summary: "Ln,w + CI"
+    summary: "Exact one-third-octave impact curve"
   },
   one_third_octave_50_3150: {
     frequenciesHz: [50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500, 3150],
     label: "One-third octave 50..3150 Hz",
-    summary: "Ln,w + CI + CI,50-2500"
+    summary: "Extended exact one-third-octave impact curve"
   }
 } as const;
 
@@ -48,6 +48,21 @@ function detectBandSet(
   }
 
   return null;
+}
+
+function getBandSetSummary(
+  bandSetId: keyof typeof VALUE_ONLY_BAND_SETS,
+  labOrField: ExactImpactSourceLabOrField
+): string {
+  if (bandSetId === "five_octave_125_2000") {
+    return labOrField === "field" ? "L'nT,w + CI + LnT,A" : "Ln,w + CI";
+  }
+
+  if (bandSetId === "one_third_octave_100_3150") {
+    return labOrField === "field" ? "L'nT,w + CI" : "Ln,w + CI";
+  }
+
+  return labOrField === "field" ? "L'nT,w + CI + CI,50-2500 + L'nT,50" : "Ln,w + CI + CI,50-2500";
 }
 
 function parseExactPairs(text: string): { frequenciesHz: number[]; levelsDb: number[] } | null {
@@ -127,7 +142,7 @@ export function parseImpactBandImport(input: {
         levelsDb: parsedBands.levelsDb,
         standardMethod: input.labOrField === "field" ? "ISO 16283-2" : "ISO 10140-3"
       },
-      summary: detectedBandSet.summary,
+      summary: getBandSetSummary(detectedBandSet.id, input.labOrField),
       valueCount: parsedBands.levelsDb.length
     }
   };

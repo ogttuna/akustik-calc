@@ -9,6 +9,11 @@ export const REQUESTED_OUTPUT_LABELS: Record<RequestedOutputId, string> = {
   "CI,50-2500": "CI,50-2500",
   "Ctr": "Ctr",
   "DeltaLw": "DeltaLw",
+  "Dn,w": "Dn,w",
+  "Dn,A": "Dn,A",
+  "DnT,w": "DnT,w",
+  "DnT,A": "DnT,A",
+  "DnT,A,k": "DnT,A,k",
   "HIIC": "HIIC",
   "IIC": "IIC",
   "ISR": "ISR",
@@ -19,8 +24,10 @@ export const REQUESTED_OUTPUT_LABELS: Record<RequestedOutputId, string> = {
   "L'n,w": "L'n,w",
   "L'nT,w": "L'nT,w",
   "L'nT,50": "L'nT,50",
+  "LnT,A": "LnT,A",
   "NISR": "NISR",
   "Rw": "Rw",
+  "R'w": "R'w",
   "STC": "STC"
 };
 
@@ -31,6 +38,11 @@ export const REQUESTED_OUTPUT_DESCRIPTIONS: Record<RequestedOutputId, string> = 
   "CI,50-2500": "Extended ISO 717-2 impact companion term when 50..2500 Hz data exists.",
   "Ctr": "ISO 717 airborne low-frequency spectrum adaptation term.",
   "DeltaLw": "ISO 717-2 heavy-reference improvement rating for floating-floor systems.",
+  "Dn,w": "Weighted normalized airborne level difference derived from the apparent field curve and separating area.",
+  "Dn,A": "A-weighted airborne level difference companion derived as Dn,w + C.",
+  "DnT,w": "Weighted standardized airborne level difference using the apparent field curve, receiving-room volume, and separating area.",
+  "DnT,A": "A-weighted standardized airborne level difference derived as DnT,w + C.",
+  "DnT,A,k": "Published field-side airborne single number carried either as an exact field proxy anchor or as a separate approximate companion, depending on what the official source actually states.",
   "HIIC": "ASTM E3222 high-frequency impact companion family.",
   "IIC": "ASTM E989 impact insulation class for lab-side impact bands.",
   "ISR": "ASTM field impact sound rating family derived from field-side impact bands.",
@@ -41,8 +53,10 @@ export const REQUESTED_OUTPUT_DESCRIPTIONS: Record<RequestedOutputId, string> = 
   "L'n,w": "Field-side weighted normalized impact sound pressure level using explicit K carry-over.",
   "L'nT,w": "Standardized field-side weighted impact rating with room-volume normalization.",
   "L'nT,50": "Standardized field-side weighted impact rating with the 50..2500 Hz companion term.",
+  "LnT,A": "Dutch NEN 5077 A-weighted normalized impact sound pressure level from exact 125..2000 Hz field octave bands.",
   "NISR": "ASTM normalized impact sound rating from field-side impact bands.",
   "Rw": "ISO 717 weighted airborne sound reduction index.",
+  "R'w": "ISO 717 apparent on-site weighted sound reduction index derived from the final field curve.",
   "STC": "ASTM E413 single-number airborne rating."
 };
 
@@ -53,6 +67,11 @@ export const REQUESTED_OUTPUT_SUPPORT_NOTES: Record<RequestedOutputId, string> =
   "CI,50-2500": "Live when exact impact data or curated family data carries the extended low-frequency companion.",
   "Ctr": "Live from the calibrated airborne curve.",
   "DeltaLw": "Live on exact improvement curves, official product evidence, curated families, and the narrow heavy-floor path.",
+  "Dn,w": "Live when airborne field/building mode has separating-element geometry; the current lane derives it from the apparent field curve and partition area.",
+  "Dn,A": "Live when Dn,w is available on the airborne field/building lane.",
+  "DnT,w": "Live when airborne field/building mode has partition width, partition height, and receiving-room volume.",
+  "DnT,A": "Live when DnT,w geometry is complete on the airborne field/building lane.",
+  "DnT,A,k": "Live only when a curated official source publishes DnT,A,k for the current airborne assembly. Exact field tables stay source-anchored through the local DnT,A proxy lane; project-dependent values stay separate as approximate companions.",
   "HIIC": "Tracked as a future ASTM E3222 high-frequency lane; not fabricated today.",
   "IIC": "Requested and tracked, but intentionally unsupported until an ASTM E989 lab adapter is implemented.",
   "ISR": "Requested and tracked, but intentionally unsupported until an ASTM field-impact adapter is implemented.",
@@ -63,13 +82,15 @@ export const REQUESTED_OUTPUT_SUPPORT_NOTES: Record<RequestedOutputId, string> =
   "L'n,w": "Live when exact or predictor-backed impact lanes carry explicit K into field-side normalization.",
   "L'nT,w": "Live when explicit room-volume or Turkish small-room normalization is available.",
   "L'nT,50": "Live when CI,50-2500 is present together with standardized field normalization or the Turkish simple guide.",
+  "LnT,A": "Live only on the narrow Dutch exact-band lane when an exact field source is imported on the 125..2000 Hz octave grid.",
   "NISR": "Requested and tracked, but intentionally unsupported until an ASTM field-impact adapter is implemented.",
   "Rw": "Live from the calibrated airborne curve and curated floor-family companions.",
+  "R'w": "Live when the airborne lane is explicitly in field/building mode and the visible curve is being treated as apparent performance.",
   "STC": "Live from the calibrated airborne curve."
 };
 
-export const LIVE_OUTPUTS = new Set<RequestedOutputId>(["Rw", "STC", "C", "Ctr"]);
-export const SCOPED_OUTPUTS = new Set<RequestedOutputId>(["Ln,w", "DeltaLw"]);
+export const LIVE_OUTPUTS = new Set<RequestedOutputId>(["Rw", "R'w", "STC", "C", "Ctr", "DnT,w", "DnT,A", "DnT,A,k", "Dn,w", "Dn,A"]);
+export const SCOPED_OUTPUTS = new Set<RequestedOutputId>(["Ln,w", "DeltaLw", "LnT,A"]);
 export const GUIDE_OUTPUTS = new Set<RequestedOutputId>(["CI", "CI,50-2500", "Ln,w+CI", "L'n,w", "L'nT,w", "L'nT,50"]);
 export const UPSTREAM_ONLY_OUTPUTS = new Set<RequestedOutputId>([]);
 export const RESEARCH_OUTPUTS = new Set<RequestedOutputId>(["IIC", "AIIC", "NISR", "ISR", "LIIC", "LIR", "HIIC"]);

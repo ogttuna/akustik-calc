@@ -1,7 +1,9 @@
 "use client";
 
 import type {
+  AirborneConnectionType,
   AirborneContextMode,
+  AirborneStudType,
   AirborneOverlay,
   AirtightnessClass,
   ElectricalBoxState,
@@ -62,6 +64,23 @@ const electricalBoxOptions: { label: string; value: ElectricalBoxState }[] = [
   { label: "Many", value: "many" }
 ];
 
+const connectionTypeOptions: { label: string; value: AirborneConnectionType }[] = [
+  { label: "Auto", value: "auto" },
+  { label: "None", value: "none" },
+  { label: "Line connection", value: "line_connection" },
+  { label: "Point connection", value: "point_connection" },
+  { label: "Mixed connection", value: "mixed_connection" },
+  { label: "Direct fix", value: "direct_fix" },
+  { label: "Resilient channel", value: "resilient_channel" }
+];
+
+const studTypeOptions: { label: string; value: AirborneStudType }[] = [
+  { label: "Auto", value: "auto" },
+  { label: "Light steel stud", value: "light_steel_stud" },
+  { label: "Resilient stud", value: "resilient_stud" },
+  { label: "Wood stud", value: "wood_stud" }
+];
+
 type SelectFieldProps<T extends string> = {
   id: string;
   onValueChange: (value: T) => void;
@@ -86,41 +105,90 @@ function SelectField<T extends string>({ id, onValueChange, options, value }: Se
   );
 }
 
+type NumericFieldProps = {
+  id: string;
+  onValueChange: (value: string) => void;
+  placeholder: string;
+  value: string;
+};
+
+function NumericField({ id, onValueChange, placeholder, value }: NumericFieldProps) {
+  return (
+    <input
+      className="focus-ring touch-target rounded-2xl border hairline bg-[color:var(--paper)] px-4 py-3"
+      id={id}
+      inputMode="decimal"
+      onChange={(event) => onValueChange(event.target.value)}
+      placeholder={placeholder}
+      type="text"
+      value={value}
+    />
+  );
+}
+
 type AirborneContextPanelProps = {
   airtightness: AirtightnessClass;
+  connectionType: AirborneConnectionType;
   contextMode: AirborneContextMode;
   electricalBoxes: ElectricalBoxState;
   junctionQuality: JunctionQuality;
   onAirtightnessChange: (value: AirtightnessClass) => void;
+  onConnectionTypeChange: (value: AirborneConnectionType) => void;
   onContextModeChange: (value: AirborneContextMode) => void;
   onElectricalBoxesChange: (value: ElectricalBoxState) => void;
   onJunctionQualityChange: (value: JunctionQuality) => void;
+  onPanelHeightMmChange: (value: string) => void;
+  onPanelWidthMmChange: (value: string) => void;
   onPenetrationStateChange: (value: PenetrationState) => void;
   onPerimeterSealChange: (value: PerimeterSealClass) => void;
+  onReceivingRoomRt60SChange: (value: string) => void;
+  onReceivingRoomVolumeM3Change: (value: string) => void;
   onSharedTrackChange: (value: SharedTrackClass) => void;
+  onStudSpacingMmChange: (value: string) => void;
+  onStudTypeChange: (value: AirborneStudType) => void;
   overlay: AirborneOverlay | null;
+  panelHeightMm: string;
+  panelWidthMm: string;
   penetrationState: PenetrationState;
   perimeterSeal: PerimeterSealClass;
+  receivingRoomRt60S: string;
+  receivingRoomVolumeM3: string;
   sharedTrack: SharedTrackClass;
+  studSpacingMm: string;
+  studType: AirborneStudType;
   studyMode: StudyMode;
 };
 
 export function AirborneContextPanel({
   airtightness,
+  connectionType,
   contextMode,
   electricalBoxes,
   junctionQuality,
   onAirtightnessChange,
+  onConnectionTypeChange,
   onContextModeChange,
   onElectricalBoxesChange,
   onJunctionQualityChange,
+  onPanelHeightMmChange,
+  onPanelWidthMmChange,
   onPenetrationStateChange,
   onPerimeterSealChange,
+  onReceivingRoomRt60SChange,
+  onReceivingRoomVolumeM3Change,
   onSharedTrackChange,
+  onStudSpacingMmChange,
+  onStudTypeChange,
   overlay,
+  panelHeightMm,
+  panelWidthMm,
   penetrationState,
   perimeterSeal,
+  receivingRoomRt60S,
+  receivingRoomVolumeM3,
   sharedTrack,
+  studSpacingMm,
+  studType,
   studyMode
 }: AirborneContextPanelProps) {
   const guides = buildAirborneFieldGuides({
@@ -202,6 +270,52 @@ export function AirborneContextPanel({
         <FieldGuide guide={guides.electricalBoxes} hint="Optional weak-point assumption for box placement." inputId="airborne-electrical-boxes" label="Electrical boxes">
           <SelectField id="airborne-electrical-boxes" onValueChange={onElectricalBoxesChange} options={electricalBoxOptions} value={electricalBoxes} />
         </FieldGuide>
+      </div>
+
+      <div className="mt-5 rounded-[1.3rem] border hairline bg-[color:var(--panel-strong)] px-4 py-4">
+        <div className="text-sm font-semibold text-[color:var(--ink)]">Framed wall metadata</div>
+        <p className="mt-2 text-sm leading-7 text-[color:var(--ink-soft)]">
+          Simple cavity stacks can drift badly when the engine cannot tell whether they are plain double-leaf, light-steel stud, resilient channel, or resilient-stud walls. These inputs activate the framed-wall calibration corridor.
+        </p>
+        <div className="mt-4 grid gap-3 md:grid-cols-3">
+          <label className="space-y-2 text-sm text-[color:var(--ink-soft)]" htmlFor="airborne-connection-type">
+            <span className="block font-medium text-[color:var(--ink)]">Connection type</span>
+            <SelectField id="airborne-connection-type" onValueChange={onConnectionTypeChange} options={connectionTypeOptions} value={connectionType} />
+          </label>
+          <label className="space-y-2 text-sm text-[color:var(--ink-soft)]" htmlFor="airborne-stud-type">
+            <span className="block font-medium text-[color:var(--ink)]">Stud type</span>
+            <SelectField id="airborne-stud-type" onValueChange={onStudTypeChange} options={studTypeOptions} value={studType} />
+          </label>
+          <label className="space-y-2 text-sm text-[color:var(--ink-soft)]" htmlFor="airborne-stud-spacing-mm">
+            <span className="block font-medium text-[color:var(--ink)]">Stud spacing (mm)</span>
+            <NumericField id="airborne-stud-spacing-mm" onValueChange={onStudSpacingMmChange} placeholder="e.g. 600" value={studSpacingMm} />
+          </label>
+        </div>
+      </div>
+
+      <div className="mt-5 rounded-[1.3rem] border hairline bg-black/[0.025] px-4 py-4">
+        <div className="text-sm font-semibold text-[color:var(--ink)]">Field conversion inputs</div>
+        <p className="mt-2 text-sm leading-7 text-[color:var(--ink-soft)]">
+          These values do not change the apparent wall curve itself. They unlock `DnT,w / DnT,A` and `Dn,w / Dn,A` from the final apparent airborne curve when field or building mode is active.
+        </p>
+        <div className="mt-4 grid gap-3 md:grid-cols-2">
+          <label className="space-y-2 text-sm text-[color:var(--ink-soft)]" htmlFor="airborne-panel-width-mm">
+            <span className="block font-medium text-[color:var(--ink)]">Panel width (mm)</span>
+            <NumericField id="airborne-panel-width-mm" onValueChange={onPanelWidthMmChange} placeholder="e.g. 3000" value={panelWidthMm} />
+          </label>
+          <label className="space-y-2 text-sm text-[color:var(--ink-soft)]" htmlFor="airborne-panel-height-mm">
+            <span className="block font-medium text-[color:var(--ink)]">Panel height (mm)</span>
+            <NumericField id="airborne-panel-height-mm" onValueChange={onPanelHeightMmChange} placeholder="e.g. 2800" value={panelHeightMm} />
+          </label>
+          <label className="space-y-2 text-sm text-[color:var(--ink-soft)]" htmlFor="airborne-room-volume-m3">
+            <span className="block font-medium text-[color:var(--ink)]">Receiving room volume (m3)</span>
+            <NumericField id="airborne-room-volume-m3" onValueChange={onReceivingRoomVolumeM3Change} placeholder="e.g. 42" value={receivingRoomVolumeM3} />
+          </label>
+          <label className="space-y-2 text-sm text-[color:var(--ink-soft)]" htmlFor="airborne-room-rt60-s">
+            <span className="block font-medium text-[color:var(--ink)]">Receiving room RT60 (s)</span>
+            <NumericField id="airborne-room-rt60-s" onValueChange={onReceivingRoomRt60SChange} placeholder="e.g. 0.55" value={receivingRoomRt60S} />
+          </label>
+        </div>
       </div>
 
       <div className="mt-5 grid gap-3 md:grid-cols-2">

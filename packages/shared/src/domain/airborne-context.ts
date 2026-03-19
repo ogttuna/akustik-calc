@@ -21,16 +21,40 @@ export type SharedTrackClass = z.infer<typeof SharedTrackClassSchema>;
 export const ElectricalBoxStateSchema = z.enum(["unknown", "none", "separated", "back_to_back", "many"]);
 export type ElectricalBoxState = z.infer<typeof ElectricalBoxStateSchema>;
 
+export const AirborneConnectionTypeSchema = z.enum([
+  "auto",
+  "none",
+  "line_connection",
+  "point_connection",
+  "mixed_connection",
+  "direct_fix",
+  "resilient_channel"
+]);
+export type AirborneConnectionType = z.infer<typeof AirborneConnectionTypeSchema>;
+
+export const AirborneStudTypeSchema = z.enum([
+  "auto",
+  "light_steel_stud",
+  "resilient_stud",
+  "wood_stud"
+]);
+export type AirborneStudType = z.infer<typeof AirborneStudTypeSchema>;
+
 const AirborneContextShape = {
   airtightness: AirtightnessClassSchema.optional(),
+  connectionType: AirborneConnectionTypeSchema.optional(),
   contextMode: AirborneContextModeSchema.optional(),
   electricalBoxes: ElectricalBoxStateSchema.optional(),
   junctionQuality: JunctionQualitySchema.optional(),
+  panelHeightMm: z.number().positive().optional(),
+  panelWidthMm: z.number().positive().optional(),
   penetrationState: PenetrationStateSchema.optional(),
   perimeterSeal: PerimeterSealClassSchema.optional(),
   receivingRoomRt60S: z.number().positive().optional(),
   receivingRoomVolumeM3: z.number().positive().optional(),
-  sharedTrack: SharedTrackClassSchema.optional()
+  sharedTrack: SharedTrackClassSchema.optional(),
+  studSpacingMm: z.number().positive().optional(),
+  studType: AirborneStudTypeSchema.optional()
 } satisfies z.ZodRawShape;
 
 const AirborneContextSchemaInternal = z.object(AirborneContextShape);

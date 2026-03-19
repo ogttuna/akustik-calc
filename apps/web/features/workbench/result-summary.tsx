@@ -6,6 +6,7 @@ import { MetricCard, Pill, SurfacePanel } from "@dynecho/ui";
 
 import { formatDecimal } from "@/lib/format";
 
+import { getDnTAkDetail } from "./dntak-source-mode";
 import { getImpactLaneKind, getImpactLanePillLabel } from "./impact-lane-view";
 import { ResultMeter } from "./result-meter";
 
@@ -25,6 +26,18 @@ export function ResultSummary({ result, warnings }: ResultSummaryProps) {
   const dynamicTrace = result?.dynamicAirborneTrace ?? null;
   const dynamicImpactTrace = result?.dynamicImpactTrace ?? null;
   const activeCalculatorLabel = result?.calculatorLabel ?? "Screening Seed";
+  const primaryAirborneValue =
+    result?.airborneOverlay?.contextMode === "building_prediction" && typeof result?.metrics.estimatedDnTwDb === "number"
+      ? result.metrics.estimatedDnTwDb
+      : typeof result?.metrics.estimatedRwPrimeDb === "number" && result?.ratings.iso717.descriptor === "R'w"
+        ? result.metrics.estimatedRwPrimeDb
+        : result?.metrics.estimatedRwDb ?? 0;
+  const primaryAirborneLabel =
+    result?.airborneOverlay?.contextMode === "building_prediction" && typeof result?.metrics.estimatedDnTwDb === "number"
+      ? "DnT,w estimate"
+      : result?.ratings.iso717.descriptor === "R'w"
+        ? "R'w estimate"
+        : "Rw estimate";
 
   return (
     <SurfacePanel className="px-5 py-5">
@@ -73,12 +86,12 @@ export function ResultSummary({ result, warnings }: ResultSummaryProps) {
       {result ? (
         <>
           <div className="mt-6 rounded-[1.45rem] border hairline bg-[color:var(--panel-strong)] px-4 py-5">
-            <ResultMeter value={result.metrics.estimatedRwDb} />
+            <ResultMeter value={primaryAirborneValue} />
           </div>
           <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
             <MetricCard
-              label="Rw estimate"
-              value={`${formatDecimal(result.metrics.estimatedRwDb)} dB`}
+              label={primaryAirborneLabel}
+              value={`${formatDecimal(primaryAirborneValue)} dB`}
               detail={
                 <span className="inline-flex items-center gap-2">
                   <Gauge className="h-4 w-4" />
@@ -112,6 +125,55 @@ export function ResultSummary({ result, warnings }: ResultSummaryProps) {
                 </span>
               }
             />
+            {typeof result.metrics.estimatedRwPrimeDb === "number" && result.ratings.iso717.descriptor === "R'w" ? (
+              <MetricCard
+                label="R'w"
+                value={`${formatDecimal(result.metrics.estimatedRwPrimeDb)} dB`}
+                detail="Apparent airborne rating from the final field-side curve"
+              />
+            ) : null}
+            {typeof result.metrics.estimatedDnTwDb === "number" ? (
+              <MetricCard
+                label="DnT,w"
+                value={`${formatDecimal(result.metrics.estimatedDnTwDb)} dB`}
+                detail="Standardized field level difference from partition area and receiving-room volume"
+              />
+            ) : null}
+            {typeof result.metrics.estimatedDnTADb === "number" ? (
+              <MetricCard
+                label="DnT,A"
+                value={`${formatDecimal(result.metrics.estimatedDnTADb)} dB`}
+                detail="Field A-weighted companion derived as DnT,w + C"
+              />
+            ) : null}
+            {typeof result.ratings.field?.DnTAk === "number" ? (
+              <MetricCard
+                label="DnT,A,k"
+                value={`${formatDecimal(result.ratings.field.DnTAk)} dB`}
+                detail={getDnTAkDetail(result)}
+              />
+            ) : null}
+            {typeof result.metrics.estimatedDnWDb === "number" ? (
+              <MetricCard
+                label="Dn,w"
+                value={`${formatDecimal(result.metrics.estimatedDnWDb)} dB`}
+                detail="Normalized field level difference from the apparent curve and partition area"
+              />
+            ) : null}
+            {typeof result.metrics.estimatedDnADb === "number" ? (
+              <MetricCard
+                label="Dn,A"
+                value={`${formatDecimal(result.metrics.estimatedDnADb)} dB`}
+                detail="A-weighted companion derived as Dn,w + C"
+              />
+            ) : null}
+            {typeof result.impact?.LnTA === "number" ? (
+              <MetricCard
+                label="LnT,A"
+                value={`${formatDecimal(result.impact.LnTA)} dB`}
+                detail="Dutch NEN 5077 impact companion from exact 125..2000 Hz field octave bands"
+              />
+            ) : null}
             <MetricCard
               label="STC"
               value={`${formatDecimal(result.metrics.estimatedStc)} dB`}

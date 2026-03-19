@@ -13,9 +13,16 @@ export type TargetOutputSupportInput = {
   lowerBoundImpact: ImpactBoundCalculation | null;
   targetOutputs: readonly RequestedOutputId[];
   metrics?: {
+    airborneIsoDescriptor?: string | null;
     estimatedCDb?: number | null;
     estimatedCtrDb?: number | null;
+    estimatedDnADb?: number | null;
+    estimatedDnTADb?: number | null;
+    estimatedDnTwDb?: number | null;
+    estimatedDnWDb?: number | null;
+    estimatedDnTAkDb?: number | null;
     estimatedRwDb?: number | null;
+    estimatedRwPrimeDb?: number | null;
     estimatedStc?: number | null;
   };
 };
@@ -37,6 +44,7 @@ const IMPACT_OUTPUTS = new Set<RequestedOutputId>([
   "DeltaLw",
   "L'nT,w",
   "L'nT,50",
+  "LnT,A",
   "IIC",
   "AIIC",
   "NISR",
@@ -58,11 +66,23 @@ function hasAvailableImpactOutput(
 }
 
 function getCarrierRw(input: TargetOutputSupportInput): number | null {
-  if (isFiniteNumber(input.metrics?.estimatedRwDb)) {
+  if (input.metrics?.airborneIsoDescriptor !== "R'w" && isFiniteNumber(input.metrics?.estimatedRwDb)) {
     return input.metrics?.estimatedRwDb ?? null;
   }
 
   return isFiniteNumber(input.floorCarrier?.Rw) ? input.floorCarrier?.Rw ?? null : null;
+}
+
+function getCarrierRwPrime(input: TargetOutputSupportInput): number | null {
+  if (isFiniteNumber(input.metrics?.estimatedRwPrimeDb)) {
+    return input.metrics?.estimatedRwPrimeDb ?? null;
+  }
+
+  if (input.metrics?.airborneIsoDescriptor === "R'w" && isFiniteNumber(input.metrics?.estimatedRwDb)) {
+    return input.metrics?.estimatedRwDb ?? null;
+  }
+
+  return null;
 }
 
 function getCarrierCtr(input: TargetOutputSupportInput): number | null {
@@ -92,12 +112,24 @@ function isTargetOutputAvailable(
   switch (output) {
     case "Rw":
       return isFiniteNumber(getCarrierRw(input));
+    case "R'w":
+      return isFiniteNumber(getCarrierRwPrime(input));
     case "STC":
       return isFiniteNumber(input.metrics?.estimatedStc);
     case "C":
       return isFiniteNumber(input.metrics?.estimatedCDb);
     case "Ctr":
       return isFiniteNumber(getCarrierCtr(input));
+    case "DnT,w":
+      return isFiniteNumber(input.metrics?.estimatedDnTwDb);
+    case "DnT,A":
+      return isFiniteNumber(input.metrics?.estimatedDnTADb);
+    case "DnT,A,k":
+      return isFiniteNumber(input.metrics?.estimatedDnTAkDb);
+    case "Dn,w":
+      return isFiniteNumber(input.metrics?.estimatedDnWDb);
+    case "Dn,A":
+      return isFiniteNumber(input.metrics?.estimatedDnADb);
     case "Ln,w":
       return (
         hasAvailableImpactOutput(input.impact, output) ||
@@ -125,6 +157,8 @@ function isTargetOutputAvailable(
         (countBoundSupportAsSupported && isFiniteNumber(input.lowerBoundImpact?.LPrimeNTwUpperBound))
       );
     case "L'nT,50":
+      return hasAvailableImpactOutput(input.impact, output);
+    case "LnT,A":
       return hasAvailableImpactOutput(input.impact, output);
     case "IIC":
     case "AIIC":

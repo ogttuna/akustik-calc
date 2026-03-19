@@ -6,15 +6,19 @@ import type {
   ImpactCatalogMatchResult,
   ImpactProductCatalogEntry,
   ImpactProductRoleCriteria,
+  ImpactPredictorInput,
+  MaterialDefinition,
   ResolvedLayer
 } from "@dynecho/shared";
 
 import { getImpactConfidenceForBasis } from "./impact-confidence";
 import { createImpactMetricBasis } from "./impact-metric-basis";
+import { resolveMaterial } from "./material-catalog";
 import { deriveHeavyReferenceImpactFromDeltaLw } from "./impact-reference";
 import { ksRound1 } from "./math";
 
 const THICKNESS_TOLERANCE_MM = 2;
+const PRODUCT_DELTA_DYNAMIC_STIFFNESS_TOLERANCE_MNM3 = 5;
 
 const ROLE_LABELS: Record<FloorRole, string> = {
   base_structure: "base structure",
@@ -125,8 +129,11 @@ function buildImpactFromCatalog(entry: ImpactProductCatalogEntry): ImpactCalcula
     basis: "predictor_catalog_product_delta_official",
     confidence: getImpactConfidenceForBasis("predictor_catalog_product_delta_official"),
     metricBasis: createImpactMetricBasis({
-      DeltaLw: typeof derived.DeltaLw === "number" ? "predictor_explicit_delta_user_input" : undefined,
-      LnW: typeof derived.LnW === "number" ? "predictor_explicit_delta_heavy_reference_derived" : undefined
+      DeltaLw: typeof derived.DeltaLw === "number" ? "predictor_catalog_product_delta_official" : undefined,
+      LnW:
+        typeof derived.LnW === "number"
+          ? "predictor_catalog_product_delta_heavy_reference_derived"
+          : undefined
     }),
     notes: [
       `${entry.label} matched an official product DeltaLw row in the curated impact catalog.`,
@@ -292,4 +299,46 @@ export function matchImpactProductCatalog(layers: readonly ResolvedLayer[]): Imp
 
   const best = exactMatches[0];
   return best ? toMatchResult(best) : null;
+}
+
+export function filterImpactCatalogMatchForExplicitPredictorInput(
+  match: ImpactCatalogMatchResult | null,
+  predictorInput: ImpactPredictorInput | null,
+  catalog: readonly MaterialDefinition[]
+): ImpactCatalogMatchResult | null {
+  if (!match || match.catalog.matchMode !== "product_property_delta") {
+    return match;
+  }
+
+  if (!predictorInput) {
+    return null;
+  }
+
+  if (
+    predictorInput.floorCovering?.mode !== "delta_lw_catalog" ||
+    predictorInput.referenceFloorType !== "heavy_standard"
+  ) {
+    return null;
+  }
+
+  if (typeof predictorInput.floorCovering?.deltaLwDb === "number") {
+    return null;
+  }
+
+  const expectedMaterialId = match.catalog.match.resilientLayer?.materialIds?.[0];
+  const expectedDynamicStiffnessMNm3 = expectedMaterialId
+    ? resolveMaterial(expectedMaterialId, catalog).impact?.dynamicStiffnessMNm3
+    : undefined;
+  const actualDynamicStiffnessMNm3 = predictorInput.resilientLayer?.dynamicStiffnessMNm3;
+
+  if (
+    typeof actualDynamicStiffnessMNm3 === "number" &&
+    typeof expectedDynamicStiffnessMNm3 === "number" &&
+    Math.abs(actualDynamicStiffnessMNm3 - expectedDynamicStiffnessMNm3) >
+      PRODUCT_DELTA_DYNAMIC_STIFFNESS_TOLERANCE_MNM3
+  ) {
+    return null;
+  }
+
+  return match;
 }

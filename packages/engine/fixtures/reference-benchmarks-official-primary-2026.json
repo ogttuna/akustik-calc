@@ -1,0 +1,153 @@
+{
+  "name": "Acoustic2 Official Primary Reference Set (2026-03-10)",
+  "description": "Current official manufacturer / lab-report references collected from Knauf and Xella primary sources on 2026-03-10. Intended for dynamic-calculator regression tracking.",
+  "cases": [
+    {
+      "id": "knauf_sqp2a_nil_92_primary_2026",
+      "label": "Knauf SQP.2A, 2x12.5 each side, Quietstud 92, no insulation",
+      "source": "https://knauf.com/api/download-center/v1/assets/844d89d6-948a-408d-9da3-f6f1a238cf45?download=true (Systems+ search result on 2026-03-10: SQP.2A Quietstud 92 Nil = Rw 49 dB)",
+      "expectedRw": 49.0,
+      "toleranceRw": 4.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "resilient_channel",
+        "studType": "resilient_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 92 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "knauf_sqp2a_ki50_92_primary_2026",
+      "label": "Knauf SQP.2A, 2x12.5 each side, Quietstud 92, KI 50",
+      "source": "https://knauf.com/api/download-center/v1/assets/844d89d6-948a-408d-9da3-f6f1a238cf45?download=true (Systems+ search result on 2026-03-10: SQP.2A Quietstud 92 KI50 = Rw 55 dB)",
+      "expectedRw": 55.0,
+      "toleranceRw": 4.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "resilient_channel",
+        "studType": "resilient_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 42 },
+        { "materialId": "glasswool", "thicknessMm": 50 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "knauf_sqp2a_ki75_92_primary_2026",
+      "label": "Knauf SQP.2A, 2x12.5 each side, Quietstud 92, KI 75",
+      "source": "https://knauf.com/api/download-center/v1/assets/844d89d6-948a-408d-9da3-f6f1a238cf45?download=true (Systems+ search result on 2026-03-10: SQP.2A Quietstud 92 KI75 = Rw 56 dB)",
+      "expectedRw": 56.0,
+      "toleranceRw": 4.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "resilient_channel",
+        "studType": "resilient_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 17 },
+        { "materialId": "glasswool", "thicknessMm": 75 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "knauf_sqp2a_ki90_92_primary_2026",
+      "label": "Knauf SQP.2A, 2x12.5 each side, Quietstud 92, KI 90",
+      "source": "https://knauf.com/api/download-center/v1/assets/844d89d6-948a-408d-9da3-f6f1a238cf45?download=true (Systems+ search result on 2026-03-10: SQP.2A Quietstud 92 KI90 = Rw 57 dB)",
+      "expectedRw": 57.0,
+      "toleranceRw": 4.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "resilient_channel",
+        "studType": "resilient_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 2 },
+        { "materialId": "glasswool", "thicknessMm": 90 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "knauf_lab_416702_primary_2026",
+      "label": "Knauf accredited lab report 416702, W112 GKB + Deciwool 70 C75",
+      "source": "https://knauf.com/api/download-center/v1/assets/8a433020-0f2e-45f0-a84c-3f5f315ea0ff?download=true (search result on 2026-03-10: W112 2x GKB 12.5 each side + Deciwool 70 C75 -> Rw 50 dB)",
+      "expectedRw": 50.0,
+      "toleranceRw": 4.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 5 },
+        { "materialId": "glasswool", "thicknessMm": 70 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "knauf_lab_416889_primary_2026",
+      "label": "Knauf accredited lab report 416889, W112 Diamant + Deciwool 70 C75",
+      "source": "https://knauf.com/api/download-center/v1/assets/cfb8a2df-f402-4ef8-baef-acdecc69f641?download=true (search result on 2026-03-10: W112 2x Diamant 12.5 each side + Deciwool 70 C75 -> Rw 55 dB)",
+      "expectedRw": 55.0,
+      "toleranceRw": 4.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 5 },
+        { "materialId": "glasswool", "thicknessMm": 70 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "xella_ytong_g5_800_100_skim4_primary_2026",
+      "label": "Xella Ytong G5/800 100 mm panel + 4 mm skim plaster both sides",
+      "source": "https://storefrontapi.commerce.xella.com/occ/v2/uk/catalogs/ukContentCatalog/versions/Online/xellamedia/Xella-Modular-building-system.pdf (downloaded 2026-03-10; page text: 100 mm panels in G5/800 with 4 mm skim plaster on both sides -> 40 dB RW)",
+      "expectedRw": 40.0,
+      "toleranceRw": 4.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialName": "Skim Plaster", "category": "Siva", "density": 1700, "thicknessMm": 4, "youngModulusPa": 8000000000, "poisson": 0.2, "damping": 0.02 },
+        { "materialName": "Ytong G5/800", "category": "Kagir", "density": 800, "thicknessMm": 100, "youngModulusPa": 3500000000, "poisson": 0.2, "damping": 0.03 },
+        { "materialName": "Skim Plaster", "category": "Siva", "density": 1700, "thicknessMm": 4, "youngModulusPa": 8000000000, "poisson": 0.2, "damping": 0.02 }
+      ]
+    }
+  ]
+}

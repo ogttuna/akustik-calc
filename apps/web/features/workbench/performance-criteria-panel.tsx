@@ -9,6 +9,14 @@ import { Pill, SurfacePanel } from "@dynecho/ui";
 import { formatDecimal } from "@/lib/format";
 
 import type { CriteriaPack } from "./criteria-packs";
+import {
+  DUTCH_DNTAK_REFERENCE_SOURCES,
+  getDutchResidentialDnTAkComplianceRows
+} from "./dutch-airborne-compliance";
+import {
+  DUTCH_IMPACT_REFERENCE_SOURCES,
+  getDutchResidentialImpactReferenceRows
+} from "./dutch-impact-reference";
 import type { StudyMode } from "./preset-definitions";
 import {
   REQUESTED_OUTPUT_LABELS,
@@ -36,6 +44,8 @@ type PerformanceCriteriaPanelProps = {
   targetLnwDb: string;
   targetRwDb: string;
 };
+
+const DUTCH_IMPACT_OUTPUTS = new Set<RequestedOutputId>(["Ln,w", "L'n,w", "L'nT,w", "L'nT,50", "LnT,A"]);
 
 function parseNumberInput(value: string): number | null {
   if (value.trim().length === 0) {
@@ -94,6 +104,15 @@ export function PerformanceCriteriaPanel({
     result?.floorSystemMatch?.impact.LnW ??
     result?.floorSystemEstimate?.impact.LnW ??
     null;
+  const dutchDnTAkComplianceRows = getDutchResidentialDnTAkComplianceRows(result);
+  const dutchImpactReferenceRows = getDutchResidentialImpactReferenceRows(result);
+  const showDutchImpactReferences =
+    studyMode === "floor" || requestedOutputs.some((output) => DUTCH_IMPACT_OUTPUTS.has(output));
+  const dutchReferenceSources = Array.from(
+    new Map(
+      [...DUTCH_DNTAK_REFERENCE_SOURCES, ...DUTCH_IMPACT_REFERENCE_SOURCES].map((source) => [source.url, source])
+    ).values()
+  );
   const currentLnwUpperBound = result?.lowerBoundImpact?.LnWUpperBound ?? null;
   const rwDelta = currentRw !== null && targetRw !== null ? Number((currentRw - targetRw).toFixed(1)) : null;
   const lnwDelta =
@@ -270,6 +289,103 @@ export function PerformanceCriteriaPanel({
           </div>
         </article>
       </div>
+
+      {dutchDnTAkComplianceRows.length > 0 || (showDutchImpactReferences && dutchImpactReferenceRows.length > 0) ? (
+        <div className="mt-5 grid gap-3">
+          <article className="rounded-[1.3rem] border hairline bg-[color:var(--panel-strong)] px-4 py-4">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+                  Dutch residential references
+                </div>
+                <p className="mt-2 max-w-3xl text-sm leading-7 text-[color:var(--ink-soft)]">
+                  These checks stay separate from the live solver. Airborne rows compare published DnT,A,k against
+                  Dutch residential reference thresholds. Contact-sound rows read as direct checks only when an exact
+                  125..2000 Hz field octave source yields Dutch LnT,A; otherwise they stay staged.
+                </p>
+              </div>
+              <div className="flex flex-col items-start gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-soft)]">
+                {dutchReferenceSources.map((source) => (
+                  <a
+                    className="underline decoration-black/15 underline-offset-4"
+                    href={source.url}
+                    key={source.url}
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    {source.label}
+                  </a>
+                ))}
+              </div>
+            </div>
+            {dutchDnTAkComplianceRows.length > 0 ? (
+              <div className="mt-4">
+                <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+                  Airborne (DnT,A,k)
+                </div>
+                <div className="mt-3 grid gap-3 md:grid-cols-2">
+                  {dutchDnTAkComplianceRows.map((row) => (
+                    <article
+                      className={`rounded-[1.05rem] border px-4 py-4 ${getTonePanelClass(row.tone)}`}
+                      key={row.id}
+                      title={`${row.label}: ${row.detail}`}
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <div className="text-sm font-semibold text-[color:var(--ink)]">{row.label}</div>
+                          <div className="mt-1 text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">
+                            {row.scope}
+                          </div>
+                        </div>
+                        <Pill tone={row.tone}>{row.statusLabel}</Pill>
+                      </div>
+                      <p className="mt-3 text-sm leading-7 text-[color:var(--ink-soft)]">
+                        Threshold: DnT,A,k &gt;= {formatDecimal(row.thresholdDb)} dB. Current value: {formatDecimal(row.valueDb)} dB.
+                      </p>
+                      <p className="mt-2 text-xs leading-6 text-[color:var(--ink-faint)]">Source: {row.sourceLabel}</p>
+                      <p className="mt-2 text-xs leading-6 text-[color:var(--ink-faint)]">{row.detail}</p>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+            {showDutchImpactReferences && dutchImpactReferenceRows.length > 0 ? (
+              <div className="mt-4">
+                <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+                  {dutchImpactReferenceRows.some((row) => row.statusLabel !== "Need LnT,A")
+                    ? "Contact sound (LnT,A)"
+                    : "Contact sound (LnT,A staged)"}
+                </div>
+                <div className="mt-3 grid gap-3 md:grid-cols-2">
+                  {dutchImpactReferenceRows.map((row) => (
+                    <article
+                      className={`rounded-[1.05rem] border px-4 py-4 ${getTonePanelClass(row.tone)}`}
+                      key={row.id}
+                      title={`${row.label}: ${row.detail}`}
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <div className="text-sm font-semibold text-[color:var(--ink)]">{row.label}</div>
+                          <div className="mt-1 text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">
+                            {row.scope}
+                          </div>
+                        </div>
+                        <Pill tone={row.tone}>{row.statusLabel}</Pill>
+                      </div>
+                      <p className="mt-3 text-sm leading-7 text-[color:var(--ink-soft)]">
+                        Threshold: LnT,A &lt;= {formatDecimal(row.thresholdDb)} dB.
+                        {typeof row.valueDb === "number" ? ` Current value: ${formatDecimal(row.valueDb)} dB.` : ""}
+                      </p>
+                      <p className="mt-2 text-xs leading-6 text-[color:var(--ink-faint)]">Source: {row.sourceLabel}</p>
+                      <p className="mt-2 text-xs leading-6 text-[color:var(--ink-faint)]">{row.detail}</p>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+          </article>
+        </div>
+      ) : null}
 
       <div className="mt-5 grid gap-3">
         <article className="rounded-[1.3rem] border hairline px-4 py-4">

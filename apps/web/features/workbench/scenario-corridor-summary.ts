@@ -9,6 +9,7 @@ import {
   getActiveValidationMode
 } from "./validation-regime";
 import type { ValidationPosture } from "./validation-regime";
+import { getDutchResidentialDnTAkComplianceSummary } from "./dutch-airborne-compliance";
 
 export type ScenarioCorridorSummary = {
   activeFamilyLabel?: string;
@@ -26,6 +27,9 @@ export type ScenarioDecisionSummary = {
   briefDeltaLabel?: string;
   briefStatusLabel: string;
   briefStatusTone: "accent" | "neutral" | "success" | "warning";
+  dutchReferenceDeltaLabel?: string;
+  dutchReferenceStatusLabel?: string;
+  dutchReferenceStatusTone?: "accent" | "success" | "warning";
   liveDeltaLabel: string;
   liveStatusLabel: string;
   liveStatusTone: "accent" | "neutral" | "success" | "warning";
@@ -66,7 +70,9 @@ export function getScenarioCorridorSummary(
       : undefined;
 
   const impactHeadline =
-    typeof result?.impact?.LnW === "number"
+    typeof result?.impact?.LnTA === "number"
+      ? `LnT,A ${formatDecimal(result.impact.LnTA)} dB`
+      : typeof result?.impact?.LnW === "number"
       ? `Ln,w ${formatDecimal(result.impact.LnW)} dB`
       : typeof result?.impact?.LPrimeNTw === "number"
         ? `L'nT,w ${formatDecimal(result.impact.LPrimeNTw)} dB`
@@ -106,9 +112,16 @@ function parseTarget(value: string | null | undefined): number | null {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
-function getImpactComparableMetric(result: AssemblyCalculation | null | undefined):
+function getImpactComparableMetric(
+  result: AssemblyCalculation | null | undefined,
+  options: { preferDutchExact?: boolean } = {}
+):
   | { label: string; value: number }
   | null {
+  if (options.preferDutchExact && typeof result?.impact?.LnTA === "number") {
+    return { label: "LnT,A", value: result.impact.LnTA };
+  }
+
   if (typeof result?.impact?.LnW === "number") {
     return { label: "Ln,w", value: result.impact.LnW };
   }
@@ -204,8 +217,9 @@ export function getScenarioDecisionSummary(input: {
   const { baselineResult, candidateResult, targetLnwDb, targetRwDb } = input;
   const candidateRw = candidateResult?.metrics.estimatedRwDb ?? null;
   const baselineRw = baselineResult?.metrics.estimatedRwDb ?? null;
-  const candidateImpact = getImpactComparableMetric(candidateResult);
-  const baselineImpact = getImpactComparableMetric(baselineResult);
+  const candidateImpact = getImpactComparableMetric(candidateResult, { preferDutchExact: true });
+  const baselineImpact = getImpactComparableMetric(baselineResult, { preferDutchExact: true });
+  const candidateBriefImpact = getImpactComparableMetric(candidateResult);
   const targetRw = parseTarget(targetRwDb);
   const targetLnw = parseTarget(targetLnwDb);
   const liveStates: ComparisonState[] = [];
@@ -247,9 +261,9 @@ export function getScenarioDecisionSummary(input: {
   }
 
   if (targetLnw !== null) {
-    if (candidateImpact) {
-      const impactBriefDelta = targetLnw - candidateImpact.value;
-      briefParts.push(`${candidateImpact.label} ${formatSignedDb(impactBriefDelta)}`);
+    if (candidateBriefImpact) {
+      const impactBriefDelta = targetLnw - candidateBriefImpact.value;
+      briefParts.push(`${candidateBriefImpact.label} ${formatSignedDb(impactBriefDelta)}`);
       briefStates.push({ delta: impactBriefDelta, kind: "numeric" });
     } else {
       briefStates.push({ kind: "unavailable" });
@@ -265,6 +279,7 @@ export function getScenarioDecisionSummary(input: {
     hasTargets: targetRw !== null || targetLnw !== null,
     states: briefStates
   });
+  const dutchReferenceSummary = getDutchResidentialDnTAkComplianceSummary(candidateResult ?? null);
 
   return {
     briefDeltaLabel:
@@ -273,6 +288,9 @@ export function getScenarioDecisionSummary(input: {
         : undefined,
     briefStatusLabel: briefStatus.label,
     briefStatusTone: briefStatus.tone,
+    dutchReferenceDeltaLabel: dutchReferenceSummary?.detail,
+    dutchReferenceStatusLabel: dutchReferenceSummary?.statusLabel,
+    dutchReferenceStatusTone: dutchReferenceSummary?.tone,
     liveDeltaLabel: `Vs live: ${liveParts.join(" · ")}`,
     liveStatusLabel: liveStatus.label,
     liveStatusTone: liveStatus.tone

@@ -21,14 +21,19 @@ type AirborneContextOverlayResult = {
 
 type NormalizedAirborneContext = {
   airtightness: NonNullable<AirborneContext["airtightness"]>;
+  connectionType: NonNullable<NonNullable<AirborneContext["connectionType"]>>;
   contextMode: NonNullable<AirborneContext["contextMode"]>;
   electricalBoxes: NonNullable<AirborneContext["electricalBoxes"]>;
   junctionQuality: NonNullable<AirborneContext["junctionQuality"]>;
+  panelHeightMm?: number;
+  panelWidthMm?: number;
   penetrationState: NonNullable<AirborneContext["penetrationState"]>;
   perimeterSeal: NonNullable<AirborneContext["perimeterSeal"]>;
   receivingRoomRt60S?: number;
   receivingRoomVolumeM3?: number;
   sharedTrack: NonNullable<AirborneContext["sharedTrack"]>;
+  studSpacingMm?: number;
+  studType: NonNullable<NonNullable<AirborneContext["studType"]>>;
 };
 
 function normalizeAirborneContext(input: AirborneContext | null | undefined): NormalizedAirborneContext | null {
@@ -38,14 +43,22 @@ function normalizeAirborneContext(input: AirborneContext | null | undefined): No
 
   return {
     airtightness: input.airtightness ?? "unknown",
+    connectionType: input.connectionType ?? "auto",
     contextMode: input.contextMode ?? "element_lab",
     electricalBoxes: input.electricalBoxes ?? "unknown",
     junctionQuality: input.junctionQuality ?? "unknown",
+    panelHeightMm: input.panelHeightMm,
+    panelWidthMm: input.panelWidthMm,
     penetrationState: input.penetrationState ?? "unknown",
     perimeterSeal: input.perimeterSeal ?? "unknown",
     receivingRoomRt60S: input.receivingRoomRt60S,
     receivingRoomVolumeM3: input.receivingRoomVolumeM3,
-    sharedTrack: input.sharedTrack ?? "unknown"
+    sharedTrack: input.sharedTrack ?? "unknown",
+    studSpacingMm:
+      typeof input.studSpacingMm === "number" && Number.isFinite(input.studSpacingMm) && input.studSpacingMm > 0
+        ? input.studSpacingMm
+        : undefined,
+    studType: input.studType ?? "auto"
   };
 }
 
@@ -64,8 +77,21 @@ function octaveBandWindowWeight(freqHz: number, startHz: number, endHz: number, 
   return clamp(Math.min(left, right), 0, 1);
 }
 
-function detectAirborneFamily(layers: readonly ResolvedLayer[]): AirborneDetectedFamily {
+function detectAirborneFamily(
+  layers: readonly ResolvedLayer[],
+  context: NormalizedAirborneContext
+): AirborneDetectedFamily {
   const gapCount = layers.filter((layer) => layer.material.category === "gap").length;
+  const framedHint =
+    context.connectionType !== "auto" ||
+    context.studType !== "auto" ||
+    typeof context.studSpacingMm === "number";
+
+  if (framedHint && gapCount >= 1) {
+    return context.connectionType === "resilient_channel" || context.studType === "resilient_stud"
+      ? "double_stud_surrogate"
+      : "cavity_wall_surrogate";
+  }
 
   if (gapCount >= 2) {
     return "double_stud_surrogate";
@@ -139,16 +165,43 @@ function buildJunctionFlankingGraph(
   }
 
   let frameCouplingPenaltyDb = 0;
+  const framedMetadataActive =
+    context.connectionType !== "auto" ||
+    context.studType !== "auto" ||
+    typeof context.studSpacingMm === "number";
 
   if (family === "double_stud_surrogate") {
-    frameCouplingPenaltyDb = 0.15;
-    if (context.sharedTrack === "shared") frameCouplingPenaltyDb += 1.1;
-    else if (context.sharedTrack === "unknown") frameCouplingPenaltyDb += 0.4;
-    else if (context.sharedTrack === "independent") frameCouplingPenaltyDb = Math.max(frameCouplingPenaltyDb - 0.2, 0);
+    frameCouplingPenaltyDb = framedMetadataActive ? 5.6 : 0.15;
+    if (framedMetadataActive) {
+      if (context.sharedTrack === "shared") frameCouplingPenaltyDb += 0.7;
+      else if (context.sharedTrack === "independent") frameCouplingPenaltyDb -= 0.6;
+      if (context.connectionType === "resilient_channel" || context.studType === "resilient_stud") {
+        frameCouplingPenaltyDb -= 0.6;
+      }
+      if (typeof context.studSpacingMm === "number" && context.studSpacingMm >= 600) {
+        frameCouplingPenaltyDb += 0.2;
+      }
+      frameCouplingPenaltyDb = clamp(frameCouplingPenaltyDb, 4.6, 7.2);
+    } else {
+      if (context.sharedTrack === "shared") frameCouplingPenaltyDb += 1.1;
+      else if (context.sharedTrack === "unknown") frameCouplingPenaltyDb += 0.4;
+      else if (context.sharedTrack === "independent") frameCouplingPenaltyDb = Math.max(frameCouplingPenaltyDb - 0.2, 0);
+    }
   } else if (family === "cavity_wall_surrogate") {
-    frameCouplingPenaltyDb = 0.8;
-    if (context.sharedTrack === "shared") frameCouplingPenaltyDb += 0.8;
-    else if (context.sharedTrack === "independent") frameCouplingPenaltyDb = Math.max(frameCouplingPenaltyDb - 0.15, 0);
+    frameCouplingPenaltyDb = framedMetadataActive ? 6.8 : 0.8;
+    if (framedMetadataActive) {
+      if (context.studType === "light_steel_stud") frameCouplingPenaltyDb += 0.4;
+      if (context.studType === "wood_stud") frameCouplingPenaltyDb -= 0.4;
+      if (context.sharedTrack === "shared") frameCouplingPenaltyDb += 0.5;
+      else if (context.sharedTrack === "independent") frameCouplingPenaltyDb -= 0.3;
+      if (typeof context.studSpacingMm === "number" && context.studSpacingMm >= 600) {
+        frameCouplingPenaltyDb += 0.2;
+      }
+      frameCouplingPenaltyDb = clamp(frameCouplingPenaltyDb, 5.6, 8.2);
+    } else {
+      if (context.sharedTrack === "shared") frameCouplingPenaltyDb += 0.8;
+      else if (context.sharedTrack === "independent") frameCouplingPenaltyDb = Math.max(frameCouplingPenaltyDb - 0.15, 0);
+    }
   }
 
   addPath(
@@ -205,7 +258,13 @@ function buildJunctionFlankingGraph(
 
   const totalPenaltyDb = clamp(
     paths.reduce((sum, path) => sum + (path.active ? path.severityDb : 0), 0),
-    family === "double_stud_surrogate" ? 0.45 : 1.8,
+    framedMetadataActive
+      ? family === "double_stud_surrogate"
+        ? 4.6
+        : 5.6
+      : family === "double_stud_surrogate"
+        ? 0.45
+        : 1.8,
     family === "single_leaf_surrogate" ? 10 : 14.5
   );
 
@@ -260,7 +319,7 @@ export function applyAirborneContextOverlay(
   input: AirborneContext | null | undefined
 ): AirborneContextOverlayResult {
   const context = normalizeAirborneContext(input);
-  const baseRatings = buildRatingsFromCurve(curve.frequenciesHz, curve.transmissionLossDb);
+  const baseRatings = buildRatingsFromCurve(curve.frequenciesHz, curve.transmissionLossDb, context);
 
   if (!context) {
     return {
@@ -271,7 +330,7 @@ export function applyAirborneContextOverlay(
     };
   }
 
-  const family = detectAirborneFamily(layers);
+  const family = detectAirborneFamily(layers, context);
   const leakage = applyAirtightnessPenalty(curve, context);
   const afterLeakageCurve: TransmissionLossCurve = {
     frequenciesHz: [...curve.frequenciesHz],
@@ -282,7 +341,7 @@ export function applyAirborneContextOverlay(
     frequenciesHz: [...curve.frequenciesHz],
     transmissionLossDb: field.transmissionLossDb
   };
-  const finalRatings = buildRatingsFromCurve(finalCurve.frequenciesHz, finalCurve.transmissionLossDb);
+  const finalRatings = buildRatingsFromCurve(finalCurve.frequenciesHz, finalCurve.transmissionLossDb, context);
   const notes: string[] = [];
   const warnings: string[] = [];
 

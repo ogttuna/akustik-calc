@@ -4,6 +4,8 @@ import { materialCatalogById } from "@dynecho/catalogs";
 import type { ImpactGuideSource } from "@dynecho/engine";
 import type {
   AirborneCalculatorId,
+  AirborneConnectionType,
+  AirborneStudType,
   AirtightnessClass,
   AirborneContextMode,
   ElectricalBoxState,
@@ -43,12 +45,19 @@ type LayerDraft = {
 type ScenarioSnapshot = {
   calculatorId: AirborneCalculatorId;
   airborneAirtightness: AirtightnessClass;
+  airborneConnectionType: AirborneConnectionType;
   airborneContextMode: AirborneContextMode;
   airborneElectricalBoxes: ElectricalBoxState;
   airborneJunctionQuality: JunctionQuality;
+  airbornePanelHeightMm: string;
+  airbornePanelWidthMm: string;
   airbornePenetrationState: PenetrationState;
   airbornePerimeterSeal: PerimeterSealClass;
+  airborneReceivingRoomRt60S: string;
+  airborneReceivingRoomVolumeM3: string;
   airborneSharedTrack: SharedTrackClass;
+  airborneStudSpacingMm: string;
+  airborneStudType: AirborneStudType;
   criteriaPackId: CriteriaPackId;
   fieldRiskIds: FieldRiskId[];
   impactDirectPathOffsetDb: string;
@@ -81,12 +90,19 @@ type WorkbenchStore = {
   activePresetId: PresetId;
   calculatorId: AirborneCalculatorId;
   airborneAirtightness: AirtightnessClass;
+  airborneConnectionType: AirborneConnectionType;
   airborneContextMode: AirborneContextMode;
   airborneElectricalBoxes: ElectricalBoxState;
   airborneJunctionQuality: JunctionQuality;
+  airbornePanelHeightMm: string;
+  airbornePanelWidthMm: string;
   airbornePenetrationState: PenetrationState;
   airbornePerimeterSeal: PerimeterSealClass;
+  airborneReceivingRoomRt60S: string;
+  airborneReceivingRoomVolumeM3: string;
   airborneSharedTrack: SharedTrackClass;
+  airborneStudSpacingMm: string;
+  airborneStudType: AirborneStudType;
   briefNote: string;
   clientName: string;
   criteriaPackId: CriteriaPackId;
@@ -127,12 +143,19 @@ type WorkbenchStore = {
   saveCurrentScenario: () => void;
   setCalculatorId: (value: AirborneCalculatorId) => void;
   setAirborneAirtightness: (value: AirtightnessClass) => void;
+  setAirborneConnectionType: (value: AirborneConnectionType) => void;
   setAirborneContextMode: (value: AirborneContextMode) => void;
   setAirborneElectricalBoxes: (value: ElectricalBoxState) => void;
   setAirborneJunctionQuality: (value: JunctionQuality) => void;
+  setAirbornePanelHeightMm: (value: string) => void;
+  setAirbornePanelWidthMm: (value: string) => void;
   setAirbornePenetrationState: (value: PenetrationState) => void;
   setAirbornePerimeterSeal: (value: PerimeterSealClass) => void;
+  setAirborneReceivingRoomRt60S: (value: string) => void;
+  setAirborneReceivingRoomVolumeM3: (value: string) => void;
   setAirborneSharedTrack: (value: SharedTrackClass) => void;
+  setAirborneStudSpacingMm: (value: string) => void;
+  setAirborneStudType: (value: AirborneStudType) => void;
   setClientName: (value: string) => void;
   setBriefNote: (value: string) => void;
   setImpactDirectPathOffsetDb: (value: string) => void;
@@ -301,12 +324,19 @@ function makeDefaultState() {
     activePresetId: INITIAL_PRESET.id,
     calculatorId: "dynamic" as const,
     airborneAirtightness: "good" as const,
+    airborneConnectionType: "auto" as const,
     airborneContextMode: "element_lab" as const,
     airborneElectricalBoxes: "none" as const,
     airborneJunctionQuality: "good" as const,
+    airbornePanelHeightMm: "",
+    airbornePanelWidthMm: "",
     airbornePenetrationState: "none" as const,
     airbornePerimeterSeal: "good" as const,
+    airborneReceivingRoomRt60S: "",
+    airborneReceivingRoomVolumeM3: "",
     airborneSharedTrack: "independent" as const,
+    airborneStudSpacingMm: "",
+    airborneStudType: "auto" as const,
     briefNote: "Record assumptions, flanking risks, and report caveats here.",
     clientName: "Internal study",
     criteriaPackId: INITIAL_CRITERIA_PACK.id,
@@ -398,12 +428,19 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
             activePresetId: scenario.presetId,
             calculatorId: scenario.calculatorId ?? "dynamic",
             airborneAirtightness: scenario.airborneAirtightness ?? "good",
+            airborneConnectionType: scenario.airborneConnectionType ?? "auto",
             airborneContextMode: scenario.airborneContextMode ?? "element_lab",
             airborneElectricalBoxes: scenario.airborneElectricalBoxes ?? "none",
             airborneJunctionQuality: scenario.airborneJunctionQuality ?? "good",
+            airbornePanelHeightMm: scenario.airbornePanelHeightMm ?? "",
+            airbornePanelWidthMm: scenario.airbornePanelWidthMm ?? "",
             airbornePenetrationState: scenario.airbornePenetrationState ?? "none",
             airbornePerimeterSeal: scenario.airbornePerimeterSeal ?? "good",
+            airborneReceivingRoomRt60S: scenario.airborneReceivingRoomRt60S ?? "",
+            airborneReceivingRoomVolumeM3: scenario.airborneReceivingRoomVolumeM3 ?? "",
             airborneSharedTrack: scenario.airborneSharedTrack ?? "independent",
+            airborneStudSpacingMm: scenario.airborneStudSpacingMm ?? "",
+            airborneStudType: scenario.airborneStudType ?? "auto",
             criteriaPackId: criteriaPack.id,
             fieldRiskIds: [...(scenario.fieldRiskIds ?? [])],
             impactDirectPathOffsetDb: scenario.impactDirectPathOffsetDb ?? "",
@@ -459,12 +496,19 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
               id: crypto.randomUUID(),
               criteriaPackId: state.criteriaPackId,
               airborneAirtightness: state.airborneAirtightness,
+              airborneConnectionType: state.airborneConnectionType,
               airborneContextMode: state.airborneContextMode,
               airborneElectricalBoxes: state.airborneElectricalBoxes,
               airborneJunctionQuality: state.airborneJunctionQuality,
+              airbornePanelHeightMm: state.airbornePanelHeightMm,
+              airbornePanelWidthMm: state.airbornePanelWidthMm,
               airbornePenetrationState: state.airbornePenetrationState,
               airbornePerimeterSeal: state.airbornePerimeterSeal,
+              airborneReceivingRoomRt60S: state.airborneReceivingRoomRt60S,
+              airborneReceivingRoomVolumeM3: state.airborneReceivingRoomVolumeM3,
               airborneSharedTrack: state.airborneSharedTrack,
+              airborneStudSpacingMm: state.airborneStudSpacingMm,
+              airborneStudType: state.airborneStudType,
               fieldRiskIds: [...state.fieldRiskIds],
               impactDirectPathOffsetDb: state.impactDirectPathOffsetDb,
               impactGuideCi50_2500Db: state.impactGuideCi50_2500Db,
@@ -495,12 +539,19 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
         })),
       setCalculatorId: (value) => set({ calculatorId: value }),
       setAirborneAirtightness: (value) => set({ airborneAirtightness: value }),
+      setAirborneConnectionType: (value) => set({ airborneConnectionType: value }),
       setAirborneContextMode: (value) => set({ airborneContextMode: value }),
       setAirborneElectricalBoxes: (value) => set({ airborneElectricalBoxes: value }),
       setAirborneJunctionQuality: (value) => set({ airborneJunctionQuality: value }),
+      setAirbornePanelHeightMm: (value) => set({ airbornePanelHeightMm: value }),
+      setAirbornePanelWidthMm: (value) => set({ airbornePanelWidthMm: value }),
       setAirbornePenetrationState: (value) => set({ airbornePenetrationState: value }),
       setAirbornePerimeterSeal: (value) => set({ airbornePerimeterSeal: value }),
+      setAirborneReceivingRoomRt60S: (value) => set({ airborneReceivingRoomRt60S: value }),
+      setAirborneReceivingRoomVolumeM3: (value) => set({ airborneReceivingRoomVolumeM3: value }),
       setAirborneSharedTrack: (value) => set({ airborneSharedTrack: value }),
+      setAirborneStudSpacingMm: (value) => set({ airborneStudSpacingMm: value }),
+      setAirborneStudType: (value) => set({ airborneStudType: value }),
       setBriefNote: (value) => set({ briefNote: value }),
       setClientName: (value) => set({ clientName: value }),
       setImpactDirectPathOffsetDb: (value) => set({ impactDirectPathOffsetDb: value }),

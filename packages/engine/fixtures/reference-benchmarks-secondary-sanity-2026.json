@@ -1,0 +1,129 @@
+{
+  "name": "Acoustic2 Secondary Sanity Set (2026-03-10)",
+  "description": "Secondary/public sanity corpus. Includes guide-derived surrogate Rw targets and public web/manufacturer examples with assumption-driven layer mappings. This set is useful for drift detection, not primary calibration truth.",
+  "cases": [
+    {
+      "id": "guide_a1_rw_surrogate",
+      "label": "Guide A1 surrogate (Rw ~= DnT,w - 2)",
+      "source": "/home/ogttuna/Dev/Machinity/Acoustic2/dynamicCalc/helpfullDocs/14.09_%20Kilavuz%20(1).pdf",
+      "expectedRw": 41.0,
+      "toleranceRw": 2.0,
+      "weight": 1.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "glasswool", "thicknessMm": 75 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "guide_a5_rw_surrogate",
+      "label": "Guide A5 surrogate (Rw ~= DnT,w - 2)",
+      "source": "/home/ogttuna/Dev/Machinity/Acoustic2/dynamicCalc/helpfullDocs/14.09_%20Kilavuz%20(1).pdf",
+      "expectedRw": 45.0,
+      "toleranceRw": 2.0,
+      "weight": 1.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "glasswool", "thicknessMm": 50 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "guide_a8_rw_surrogate",
+      "label": "Guide A8 surrogate (Rw ~= DnT,w - 2)",
+      "source": "/home/ogttuna/Dev/Machinity/Acoustic2/dynamicCalc/helpfullDocs/14.09_%20Kilavuz%20(1).pdf",
+      "expectedRw": 47.0,
+      "toleranceRw": 2.0,
+      "weight": 1.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 15 },
+        { "materialId": "glasswool", "thicknessMm": 100 },
+        { "materialId": "gypsum", "thicknessMm": 15 }
+      ]
+    },
+    {
+      "id": "dbcover_public_example_2_secondary",
+      "label": "dBcover / INSUL public example 2 (measured 43 dB)",
+      "source": "https://dbcover.com/airborne-sound-insulation/",
+      "expectedRw": 43.0,
+      "toleranceRw": 3.0,
+      "weight": 1.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 13 },
+        { "materialId": "rockwool", "thicknessMm": 90 },
+        { "materialId": "gypsum", "thicknessMm": 13 }
+      ]
+    },
+    {
+      "id": "dbcover_public_example_3_twin_frame_secondary",
+      "label": "dBcover / INSUL public twin-frame example 3",
+      "source": "https://dbcover.com/airborne-sound-insulation/",
+      "expectedRw": 58.0,
+      "toleranceRw": 8.0,
+      "weight": 0.6,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good",
+        "sharedTrack": "independent"
+      },
+      "layers": [
+        { "materialId": "fire_board", "thicknessMm": 15 },
+        { "materialId": "air_gap", "thicknessMm": 55 },
+        { "materialId": "rockwool", "thicknessMm": 90 },
+        { "materialId": "air_gap", "thicknessMm": 55 },
+        { "materialId": "fire_board", "thicknessMm": 15 }
+      ]
+    },
+    {
+      "id": "siniat_cs50r_15db_secondary",
+      "label": "Siniat CS50R-15dB public system page",
+      "source": "https://www.siniat.co.uk/en-gb/systems/metal-partitions/cs50r-15db/",
+      "expectedRw": 40.0,
+      "toleranceRw": 4.0,
+      "weight": 0.7,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 15 },
+        { "materialId": "air_gap", "thicknessMm": 50 },
+        { "materialId": "acoustic_gypsum_board", "thicknessMm": 15 }
+      ]
+    }
+  ]
+}

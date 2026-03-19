@@ -33,11 +33,18 @@ export const AssemblyMethodSchema = z.enum([
 export type AssemblyMethod = z.infer<typeof AssemblyMethodSchema>;
 
 const AssemblyMetricsShape = {
+  airborneIsoDescriptor: z.string().min(1).optional(),
   totalThicknessMm: z.number().nonnegative(),
   surfaceMassKgM2: z.number().nonnegative(),
   estimatedRwDb: z.number().nonnegative(),
+  estimatedRwPrimeDb: z.number().nonnegative().optional(),
   estimatedCDb: z.number(),
   estimatedCtrDb: z.number(),
+  estimatedDnTwDb: z.number().optional(),
+  estimatedDnTADb: z.number().optional(),
+  estimatedDnTAkDb: z.number().optional(),
+  estimatedDnWDb: z.number().optional(),
+  estimatedDnADb: z.number().optional(),
   estimatedStc: z.number().nonnegative(),
   airGapCount: z.number().int().nonnegative(),
   insulationCount: z.number().int().nonnegative(),

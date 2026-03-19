@@ -7,6 +7,7 @@ type ImpactMetricKey =
   | "LPrimeNW"
   | "LPrimeNT50"
   | "LPrimeNTw"
+  | "LnTA"
   | "LnW"
   | "LnWPlusCI";
 
@@ -25,6 +26,7 @@ const IMPACT_METRIC_ORDER: readonly ImpactMetricKey[] = [
   "LnWPlusCI",
   "LPrimeNW",
   "LPrimeNTw",
+  "LnTA",
   "LPrimeNT50"
 ];
 
@@ -42,6 +44,8 @@ export function formatImpactMetricLabel(metric: ImpactMetricKey): string {
       return "L'nT,50";
     case "LPrimeNTw":
       return "L'nT,w";
+    case "LnTA":
+      return "LnT,A";
     case "LnW":
       return "Ln,w";
     case "LnWPlusCI":
@@ -53,6 +57,8 @@ export function formatImpactMetricBasisLabel(basis: ImpactMetricBasisLabel): str
   switch (basis) {
     case "exact_source_band_curve_iso7172":
       return "Exact ISO 717-2 band rating";
+    case "exact_source_dutch_lnta_from_octave_bands":
+      return "Exact Dutch LnT,A";
     case "exact_source_improvement_curve_iso7172":
       return "Exact heavy-reference improvement rating";
     case "exact_source_rating_override":
@@ -96,6 +102,8 @@ export function describeImpactMetricBasis(metric: ImpactMetricKey, basis: Impact
   switch (basis) {
     case "exact_source_band_curve_iso7172":
       return `${formatImpactMetricLabel(metric)} was rated directly from imported ISO 717-2 impact bands.`;
+    case "exact_source_dutch_lnta_from_octave_bands":
+      return `${formatImpactMetricLabel(metric)} was derived from exact 125..2000 Hz field octave bands with the Dutch NEN 5077 A-weighted contact-sound formula.`;
     case "exact_source_improvement_curve_iso7172":
       return `${formatImpactMetricLabel(metric)} came from an imported improvement curve against the ISO heavy reference floor.`;
     case "exact_source_rating_override":
@@ -111,7 +119,7 @@ export function describeImpactMetricBasis(metric: ImpactMetricKey, basis: Impact
     case "predictor_explicit_delta_heavy_reference_derived":
       return `${formatImpactMetricLabel(metric)} was derived against the fixed ISO heavy reference floor.`;
     case "predictor_explicit_delta_user_input":
-      return `${formatImpactMetricLabel(metric)} came directly from the supplied or catalog-backed DeltaLw input.`;
+      return `${formatImpactMetricLabel(metric)} came directly from the supplied DeltaLw input.`;
     case "estimated_field_lprimenw_from_lnw_plus_k":
       return `${formatImpactMetricLabel(metric)} was derived as Ln,w + K on the active lane.`;
     case "estimated_standardized_field_lprimentw_from_lprimenw_plus_room_volume":

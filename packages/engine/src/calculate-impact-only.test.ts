@@ -8,6 +8,13 @@ const EXACT_IMPACT_SOURCE_19 = {
   levelsDb: [60, 59, 58, 58, 57, 56, 55, 54, 53, 52, 51, 50, 49, 48, 47, 46, 45, 44, 43]
 };
 
+const EXACT_FIELD_OCTAVE_SOURCE_5 = {
+  frequenciesHz: [125, 250, 500, 1000, 2000],
+  labOrField: "field" as const,
+  levelsDb: [60.3, 61.7, 63.1, 63.5, 59.2],
+  standardMethod: "NEN 5077 / ISO 16283-2"
+};
+
 const DIRECT_FLANKING_FIELD_CONTEXT = {
   directPathOffsetDb: 1,
   flankingPaths: [
@@ -59,6 +66,22 @@ describe("calculateImpactOnly", () => {
     );
     expect(result.visibleLayers).toHaveLength(1);
     expect(result.sourceLayers).toHaveLength(1);
+  });
+
+  it("supports Dutch LnT,A only on the exact five-octave field lane", () => {
+    const result = calculateImpactOnly([{ materialId: "air_gap", thicknessMm: 90 }], {
+      exactImpactSource: EXACT_FIELD_OCTAVE_SOURCE_5,
+      targetOutputs: ["LnT,A", "L'nT,w", "CI"]
+    });
+
+    expect(result.sourceMode).toBe("exact_band_source");
+    expect(result.impact?.LPrimeNTw).toBe(66);
+    expect(result.impact?.CI).toBe(-12);
+    expect(result.impact?.LnTA).toBe(53.8);
+    expect(result.supportedTargetOutputs).toEqual(["LnT,A", "L'nT,w", "CI"]);
+    expect(result.supportedImpactOutputs).toEqual(["LnT,A", "L'nT,w", "CI"]);
+    expect(result.unsupportedImpactOutputs).toEqual([]);
+    expect(result.impactSupport?.formulaNotes.some((note: string) => /Dutch LnT,A was computed/i.test(note))).toBe(true);
   });
 
   it("surfaces companion floor-carrier outputs without fabricating unsupported impact metrics", () => {
@@ -164,6 +187,433 @@ describe("calculateImpactOnly", () => {
     expect(result.impact?.metricBasis?.DeltaLw).toBe("predictor_catalog_exact_match_official");
   });
 
+  it("keeps official DeltaLw catalog provenance separate from explicit heavy-reference input", () => {
+    const result = calculateImpactOnly([], {
+      officialImpactCatalogId: "getzner_afm29_catalog_2026",
+      targetOutputs: ["Ln,w", "DeltaLw"]
+    });
+
+    expect(result.sourceMode).toBe("official_product_catalog");
+    expect(result.impactCatalogMatch?.catalog.id).toBe("getzner_afm29_catalog_2026");
+    expect(result.impact?.basis).toBe("predictor_catalog_product_delta_official");
+    expect(result.impact?.DeltaLw).toBe(29);
+    expect(result.impact?.LnW).toBe(49);
+    expect(result.impact?.metricBasis?.DeltaLw).toBe("predictor_catalog_product_delta_official");
+    expect(result.impact?.metricBasis?.LnW).toBe("predictor_catalog_product_delta_heavy_reference_derived");
+  });
+
+  it("rejects official product-delta catalog support when explicit dynamic stiffness conflicts with the matched product", () => {
+    const result = calculateImpactOnly([], {
+      impactPredictorInput: {
+        structuralSupportType: "reinforced_concrete",
+        impactSystemType: "heavy_floating_floor",
+        referenceFloorType: "heavy_standard",
+        baseSlab: {
+          materialClass: "heavy_concrete",
+          thicknessMm: 140,
+          densityKgM3: 2400
+        },
+        resilientLayer: {
+          productId: "getzner_afm_26",
+          dynamicStiffnessMNm3: 35,
+          thicknessMm: 10
+        },
+        floorCovering: {
+          mode: "delta_lw_catalog"
+        }
+      },
+      targetOutputs: ["DeltaLw"]
+    });
+
+    expect(result.impactPredictorStatus?.matchedCatalogCaseId ?? "").toBe("");
+    expect(Number.isFinite(Number(result.impact?.DeltaLw))).toBe(false);
+    expect(result.supportedImpactOutputs).toEqual([]);
+    expect(result.unsupportedImpactOutputs).toEqual(["DeltaLw"]);
+  });
+
+  it("keeps product-delta catalog support fail-closed outside explicit delta catalog mode", () => {
+    const result = calculateImpactOnly([], {
+      impactPredictorInput: {
+        structuralSupportType: "reinforced_concrete",
+        impactSystemType: "heavy_floating_floor",
+        referenceFloorType: "heavy_standard",
+        baseSlab: {
+          materialClass: "heavy_concrete",
+          thicknessMm: 140,
+          densityKgM3: 2400
+        },
+        resilientLayer: {
+          productId: "getzner_afm_29",
+          dynamicStiffnessMNm3: 10,
+          thicknessMm: 10
+        },
+        floorCovering: {
+          mode: "material_layer",
+          thicknessMm: 8,
+          densityKgM3: 2000
+        }
+      },
+      targetOutputs: ["DeltaLw"]
+    });
+
+    expect(result.impactPredictorStatus?.matchedCatalogCaseId ?? "").toBe("");
+    expect(Number.isFinite(Number(result.impact?.DeltaLw))).toBe(false);
+    expect(result.supportedImpactOutputs).toEqual([]);
+    expect(result.unsupportedImpactOutputs).toEqual(["DeltaLw"]);
+  });
+
+  it("matches official product-delta support with product identity alone when dynamic stiffness is omitted", () => {
+    const result = calculateImpactOnly([], {
+      impactPredictorInput: {
+        structuralSupportType: "reinforced_concrete",
+        impactSystemType: "heavy_floating_floor",
+        referenceFloorType: "heavy_standard",
+        baseSlab: {
+          materialClass: "heavy_concrete",
+          thicknessMm: 140,
+          densityKgM3: 2400
+        },
+        resilientLayer: {
+          productId: "getzner_afm_26",
+          thicknessMm: 10
+        },
+        floorCovering: {
+          mode: "delta_lw_catalog"
+        }
+      },
+      targetOutputs: ["Ln,w", "DeltaLw"]
+    });
+
+    expect(result.impactPredictorStatus?.matchedCatalogCaseId).toBe("getzner_afm26_catalog_2026");
+    expect(result.impact?.basis).toBe("predictor_catalog_product_delta_official");
+    expect(result.impact?.LnW).toBe(52);
+    expect(result.impact?.DeltaLw).toBe(26);
+    expect(result.impact?.metricBasis?.LnW).toBe("predictor_catalog_product_delta_heavy_reference_derived");
+    expect(result.impact?.metricBasis?.DeltaLw).toBe("predictor_catalog_product_delta_official");
+  });
+
+  it("keeps exact lab Ln,w primary while filling missing DeltaLw from compatible product-delta support", () => {
+    const result = calculateImpactOnly([], {
+      exactImpactSource: EXACT_IMPACT_SOURCE_19,
+      impactPredictorInput: {
+        structuralSupportType: "reinforced_concrete",
+        impactSystemType: "heavy_floating_floor",
+        referenceFloorType: "heavy_standard",
+        baseSlab: {
+          materialClass: "heavy_concrete",
+          thicknessMm: 140,
+          densityKgM3: 2400
+        },
+        resilientLayer: {
+          productId: "getzner_afm_29",
+          dynamicStiffnessMNm3: 10,
+          thicknessMm: 10
+        },
+        floorCovering: {
+          mode: "delta_lw_catalog"
+        }
+      },
+      targetOutputs: ["Ln,w", "DeltaLw"]
+    });
+
+    expect(result.impactPredictorStatus?.matchedCatalogCaseId).toBe("getzner_afm29_catalog_2026");
+    expect(result.impact?.basis).toBe("exact_source_band_curve_iso7172");
+    expect(result.impact?.LnW).toBe(53);
+    expect(result.impact?.DeltaLw).toBe(29);
+    expect(result.impact?.metricBasis?.LnW).toBe("exact_source_band_curve_iso7172");
+    expect(result.impact?.metricBasis?.DeltaLw).toBe("predictor_catalog_product_delta_official");
+    expect(result.supportedImpactOutputs).toEqual(["Ln,w", "DeltaLw"]);
+    expect(result.unsupportedImpactOutputs).toEqual([]);
+  });
+
+  it("keeps exact source DeltaLw primary over product-property catalog support", () => {
+    const result = calculateImpactOnly([], {
+      exactImpactSource: {
+        ...EXACT_IMPACT_SOURCE_19,
+        companionRatings: {
+          DeltaLw: 18
+        }
+      },
+      impactPredictorInput: {
+        structuralSupportType: "reinforced_concrete",
+        impactSystemType: "heavy_floating_floor",
+        referenceFloorType: "heavy_standard",
+        baseSlab: {
+          materialClass: "heavy_concrete",
+          thicknessMm: 140,
+          densityKgM3: 2400
+        },
+        resilientLayer: {
+          productId: "getzner_afm_29",
+          dynamicStiffnessMNm3: 10,
+          thicknessMm: 10
+        },
+        floorCovering: {
+          mode: "delta_lw_catalog"
+        }
+      },
+      targetOutputs: ["DeltaLw"]
+    });
+
+    expect(result.impactPredictorStatus?.matchedCatalogCaseId).toBe("getzner_afm29_catalog_2026");
+    expect(result.impact?.basis).toBe("exact_source_band_curve_iso7172");
+    expect(result.impact?.DeltaLw).toBe(18);
+    expect(result.impact?.metricBasis?.DeltaLw).toBe("exact_source_rating_override");
+    expect(result.supportedImpactOutputs).toEqual(["DeltaLw"]);
+    expect(result.unsupportedImpactOutputs).toEqual([]);
+  });
+
+  it("matches an exact official product-system row from predictor input even when heavy concrete support is only implied by the base slab", () => {
+    const result = calculateImpactOnly([], {
+      impactPredictorInput: {
+        impactSystemType: "heavy_floating_floor",
+        referenceFloorType: "heavy_standard",
+        baseSlab: {
+          materialClass: "heavy_concrete",
+          thicknessMm: 150,
+          densityKgM3: 2400
+        },
+        resilientLayer: {
+          productId: "regupol_sonus_curve_8",
+          thicknessMm: 8
+        },
+        floatingScreed: {
+          materialClass: "generic_screed",
+          thicknessMm: 30,
+          densityKgM3: 2000
+        },
+        floorCovering: {
+          mode: "material_layer",
+          materialClass: "ceramic_tile",
+          thicknessMm: 8,
+          densityKgM3: 2000
+        }
+      },
+      targetOutputs: ["Ln,w", "DeltaLw"]
+    });
+
+    expect(result.impactPredictorStatus?.matchedCatalogCaseId).toBe("regupol_sonus_curve_8_tile_match_2026");
+    expect(result.impact?.basis).toBe("predictor_catalog_exact_match_official");
+    expect(result.impact?.LnW).toBe(50);
+    expect(result.impact?.DeltaLw).toBe(26);
+    expect(result.impact?.metricBasis?.LnW).toBe("predictor_catalog_exact_match_official");
+    expect(result.impact?.metricBasis?.DeltaLw).toBe("predictor_catalog_exact_match_official");
+    expect(result.supportedImpactOutputs).toEqual(["Ln,w", "DeltaLw"]);
+  });
+
+  it("falls back to the narrow heavy-floor estimate when the covering class is missing", () => {
+    const result = calculateImpactOnly([], {
+      impactPredictorInput: {
+        impactSystemType: "heavy_floating_floor",
+        referenceFloorType: "heavy_standard",
+        baseSlab: {
+          materialClass: "heavy_concrete",
+          thicknessMm: 150,
+          densityKgM3: 2400
+        },
+        resilientLayer: {
+          productId: "regupol_sonus_curve_8",
+          thicknessMm: 8
+        },
+        floorCovering: {
+          mode: "material_layer",
+          thicknessMm: 8,
+          densityKgM3: 2000
+        }
+      },
+      targetOutputs: ["Ln,w", "DeltaLw"]
+    });
+
+    expect(result.impactPredictorStatus?.matchedCatalogCaseId ?? "").toBe("");
+    expect(result.impact?.basis).toBe("predictor_heavy_floating_floor_iso12354_annexc_estimate");
+    expect(result.impact?.LnW).toBe(59.1);
+    expect(result.impact?.DeltaLw).toBe(15.5);
+    expect(result.impactPredictorStatus?.notes.some((note: string) => /annex c style relation/i.test(note))).toBe(true);
+  });
+
+  it("falls back to the narrow heavy-floor estimate when the covering class conflicts with the official match", () => {
+    const result = calculateImpactOnly([], {
+      impactPredictorInput: {
+        impactSystemType: "heavy_floating_floor",
+        referenceFloorType: "heavy_standard",
+        baseSlab: {
+          materialClass: "heavy_concrete",
+          thicknessMm: 150,
+          densityKgM3: 2400
+        },
+        resilientLayer: {
+          productId: "regupol_sonus_curve_8",
+          thicknessMm: 8
+        },
+        floorCovering: {
+          mode: "material_layer",
+          materialClass: "vinyl_flooring",
+          thicknessMm: 8,
+          densityKgM3: 2000
+        }
+      },
+      targetOutputs: ["Ln,w", "DeltaLw"]
+    });
+
+    expect(result.impactPredictorStatus?.matchedCatalogCaseId ?? "").toBe("");
+    expect(result.impact?.basis).toBe("predictor_heavy_floating_floor_iso12354_annexc_estimate");
+    expect(result.impact?.LnW).toBe(61.1);
+    expect(result.impact?.DeltaLw).toBe(13.5);
+  });
+
+  it("matches the porcelain planned-scope row only with the verified porcelain covering class", () => {
+    const result = calculateImpactOnly([], {
+      impactPredictorInput: {
+        impactSystemType: "heavy_floating_floor",
+        referenceFloorType: "heavy_standard",
+        baseSlab: {
+          materialClass: "heavy_concrete",
+          thicknessMm: 150,
+          densityKgM3: 2400
+        },
+        resilientLayer: {
+          productId: "regupol_sonus_multi_4_5",
+          thicknessMm: 4.5
+        },
+        floorCovering: {
+          mode: "material_layer",
+          materialClass: "porcelain_tile",
+          thicknessMm: 10,
+          densityKgM3: 2200
+        }
+      },
+      targetOutputs: ["Ln,w", "DeltaLw"]
+    });
+
+    expect(result.impactPredictorStatus?.matchedCatalogCaseId).toBe("regupol_sonus_multi_45_porcelain_match_2026");
+    expect(result.impact?.basis).toBe("predictor_catalog_exact_match_official");
+    expect(result.impact?.LnW).toBe(61);
+    expect(result.impact?.DeltaLw).toBe(17);
+    expect(result.impact?.metricBasis?.LnW).toBe("predictor_catalog_exact_match_official");
+    expect(result.impact?.metricBasis?.DeltaLw).toBe("predictor_catalog_exact_match_official");
+  });
+
+  it("keeps lower-bound wet-screed support visible on the impact-only route while the live metric stays on the narrow heavy-floor lane", () => {
+    const result = calculateImpactOnly([], {
+      impactPredictorInput: {
+        impactSystemType: "heavy_floating_floor",
+        referenceFloorType: "heavy_standard",
+        baseSlab: {
+          materialClass: "heavy_concrete",
+          thicknessMm: 140,
+          densityKgM3: 2400
+        },
+        resilientLayer: {
+          productId: "regupol_sonus_curve_8",
+          thicknessMm: 8,
+          dynamicStiffnessMNm3: 30
+        },
+        floatingScreed: {
+          materialClass: "generic_screed",
+          thicknessMm: 70,
+          densityKgM3: 2000
+        },
+        floorCovering: {
+          mode: "none"
+        }
+      },
+      targetOutputs: ["Ln,w", "DeltaLw"]
+    });
+
+    expect(result.impactPredictorStatus?.matchedCatalogCaseId).toBe("regupol_sonus_curve_8_wet_screed_lower_bound_2026");
+    expect(result.impactPredictorStatus?.lowerBoundImpact?.DeltaLwLowerBound).toBe(22);
+    expect(result.impactPredictorStatus?.lowerBoundImpact?.LnWUpperBound).toBe(56);
+    expect(result.impact?.basis).toBe("predictor_heavy_floating_floor_iso12354_annexc_estimate");
+    expect(result.impact?.LnW).toBe(47.9);
+    expect(result.impact?.DeltaLw).toBe(27.7);
+    expect(result.impactPredictorStatus?.notes.some((note: string) => /lower-bound catalog support/i.test(note))).toBe(true);
+    expect(result.impactSupport?.notes.some((note: string) => /annex c style estimate/i.test(note))).toBe(true);
+  });
+
+  it("keeps near-miss predictor input on the narrow heavy-floor estimate instead of fabricating catalog-backed outputs", () => {
+    const result = calculateImpactOnly([], {
+      impactPredictorInput: {
+        impactSystemType: "heavy_floating_floor",
+        referenceFloorType: "heavy_standard",
+        baseSlab: {
+          materialClass: "heavy_concrete",
+          thicknessMm: 150,
+          densityKgM3: 2400
+        },
+        resilientLayer: {
+          productId: "regupol_sonus_curve_8",
+          thicknessMm: 8
+        },
+        floatingScreed: {
+          materialClass: "generic_screed",
+          thicknessMm: 35,
+          densityKgM3: 2000
+        },
+        floorCovering: {
+          mode: "material_layer",
+          materialClass: "ceramic_tile",
+          thicknessMm: 8,
+          densityKgM3: 2000
+        }
+      },
+      targetOutputs: ["Ln,w", "DeltaLw"]
+    });
+
+    expect(result.impactPredictorStatus?.matchedCatalogCaseId ?? "").toBe("");
+    expect(result.impact?.basis).toBe("predictor_heavy_floating_floor_iso12354_annexc_estimate");
+    expect(result.impact?.LnW).toBe(49.6);
+    expect(result.impact?.DeltaLw).toBe(25);
+    expect(result.supportedImpactOutputs).toEqual(["Ln,w", "DeltaLw"]);
+  });
+
+  it("keeps an exact predictor product-system row lab-side first while carrying field-side derivatives", () => {
+    const result = calculateImpactOnly([], {
+      impactFieldContext: {
+        fieldKDb: 2,
+        receivingRoomVolumeM3: 32
+      },
+      impactPredictorInput: {
+        impactSystemType: "heavy_floating_floor",
+        referenceFloorType: "heavy_standard",
+        baseSlab: {
+          materialClass: "heavy_concrete",
+          thicknessMm: 150,
+          densityKgM3: 2400
+        },
+        resilientLayer: {
+          productId: "regupol_sonus_curve_8",
+          thicknessMm: 8
+        },
+        floatingScreed: {
+          materialClass: "generic_screed",
+          thicknessMm: 30,
+          densityKgM3: 2000
+        },
+        floorCovering: {
+          mode: "material_layer",
+          materialClass: "ceramic_tile",
+          thicknessMm: 8,
+          densityKgM3: 2000
+        }
+      },
+      targetOutputs: ["Ln,w", "DeltaLw"]
+    });
+
+    expect(result.impactPredictorStatus?.matchedCatalogCaseId).toBe("regupol_sonus_curve_8_tile_match_2026");
+    expect(result.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_field_volume_normalization");
+    expect(result.impact?.LnW).toBe(50);
+    expect(result.impact?.DeltaLw).toBe(26);
+    expect(result.impact?.LPrimeNW).toBe(52);
+    expect(result.impact?.LPrimeNTw).toBe(51.9);
+    expect(result.impact?.metricBasis?.LnW).toBe("predictor_catalog_exact_match_official");
+    expect(result.impact?.metricBasis?.DeltaLw).toBe("predictor_catalog_exact_match_official");
+    expect(result.impact?.metricBasis?.LPrimeNW).toBe("estimated_field_lprimenw_from_lnw_plus_k");
+    expect(result.impact?.metricBasis?.LPrimeNTw).toBe("estimated_standardized_field_lprimentw_from_lprimenw_plus_room_volume");
+    expect(result.supportedImpactOutputs).toEqual(["Ln,w", "DeltaLw"]);
+    expect(result.unsupportedImpactOutputs).toEqual([]);
+    expect(result.impactPredictorStatus?.notes.some((note: string) => /lab-side first/i.test(note))).toBe(true);
+  });
+
   it("can resolve the narrow heavy concrete formula path from dedicated source layers while preserving a gap-only visible stack", () => {
     const result = calculateImpactOnly([{ materialId: "air_gap", thicknessMm: 90 }], {
       sourceLayers: [
@@ -189,6 +639,29 @@ describe("calculateImpactOnly", () => {
     expect(result.impactSupport?.formulaNotes.some((note: string) => /f0 .* sqrt\(s'\/m'load\)/i.test(note))).toBe(true);
     expect(result.impact?.metricBasis?.LnW).toBe("predictor_heavy_floating_floor_iso12354_annexc_estimate");
     expect(result.impact?.metricBasis?.DeltaLw).toBe("predictor_heavy_floating_floor_iso12354_annexc_estimate");
+  });
+
+  it("promotes visible heavy floating floor-role stacks to the richer predictor family lane when it adds support", () => {
+    const result = calculateImpactOnly(
+      [
+        { materialId: "concrete", thicknessMm: 150, floorRole: "base_structure" },
+        { materialId: "generic_resilient_underlay_s30", thicknessMm: 8, floorRole: "resilient_layer" },
+        { materialId: "screed", thicknessMm: 30, floorRole: "floating_screed" },
+        { materialId: "ceramic_tile", thicknessMm: 8, floorRole: "floor_covering" }
+      ],
+      {
+        targetOutputs: ["Ln,w", "Rw"]
+      }
+    );
+
+    expect(result.sourceMode).toBe("predictor_input");
+    expect(result.impact?.basis).toBe("predictor_heavy_concrete_published_upper_treatment_estimate");
+    expect(result.impact?.LnW).toBe(50);
+    expect(result.floorSystemRatings?.basis).toBe("predictor_heavy_concrete_published_upper_treatment_estimate");
+    expect(result.floorSystemRatings?.Rw).toBe(58);
+    expect(result.impactPredictorStatus?.inputMode).toBe("derived_from_visible_layers");
+    expect(result.supportedTargetOutputs).toEqual(["Ln,w", "Rw"]);
+    expect(result.impactSupport?.notes.some((note: string) => /Published floor-system family estimate is active: reinforced concrete/i.test(note))).toBe(true);
   });
 
   it("can auto-derive predictor topology from visible floor-role layers on the impact-only route", () => {
@@ -403,6 +876,38 @@ describe("calculateImpactOnly", () => {
     expect(result.boundFloorSystemEstimate).toBeNull();
     expect(result.supportedImpactOutputs).toEqual(["Ln,w", "DeltaLw"]);
     expect(result.unsupportedImpactOutputs).toEqual([]);
+  });
+
+  it("keeps explicit DeltaLw heavy-reference input primary when a product id would otherwise trigger product-delta catalog support", () => {
+    const result = calculateImpactOnly([], {
+      impactPredictorInput: {
+        structuralSupportType: "reinforced_concrete",
+        impactSystemType: "heavy_floating_floor",
+        referenceFloorType: "heavy_standard",
+        baseSlab: {
+          materialClass: "heavy_concrete",
+          thicknessMm: 140,
+          densityKgM3: 2400
+        },
+        resilientLayer: {
+          productId: "getzner_afm_29",
+          dynamicStiffnessMNm3: 10,
+          thicknessMm: 10
+        },
+        floorCovering: {
+          mode: "delta_lw_catalog",
+          deltaLwDb: 24
+        }
+      },
+      targetOutputs: ["Ln,w", "DeltaLw"]
+    });
+
+    expect(result.impactPredictorStatus?.matchedCatalogCaseId ?? "").toBe("");
+    expect(result.impact?.basis).toBe("predictor_explicit_delta_heavy_reference_derived");
+    expect(result.impact?.LnW).toBe(54);
+    expect(result.impact?.DeltaLw).toBe(24);
+    expect(result.impact?.metricBasis?.LnW).toBe("predictor_explicit_delta_heavy_reference_derived");
+    expect(result.impact?.metricBasis?.DeltaLw).toBe("predictor_explicit_delta_user_input");
   });
 
   it("keeps explicit DeltaLw heavy-reference input lab-side when field context is present", () => {

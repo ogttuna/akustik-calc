@@ -1,0 +1,302 @@
+{
+  "name": "Acoustic2 Web Rw Reference Set",
+  "description": "Rw references extracted from Knauf Systems+ wall tables and Knauf Ultracoustic partition example (EN ISO 717-1 context).",
+  "cases": [
+    {
+      "id": "sqp1a_nil_92",
+      "label": "SQP.1A, 1x12.5 each side, stud 92, no insulation",
+      "source": "https://knauf.com/api/download-center/v1/assets/844d89d6-948a-408d-9da3-f6f1a238cf45?download=true (P50 SQP.1A: Nil 43)",
+      "expectedRw": 43.0,
+      "toleranceRw": 4.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "resilient_channel",
+        "studType": "resilient_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 92 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "sqp1a_ki50_92",
+      "label": "SQP.1A, 1x12.5 each side, stud 92, KI 50",
+      "source": "https://knauf.com/api/download-center/v1/assets/844d89d6-948a-408d-9da3-f6f1a238cf45?download=true (P50 SQP.1A: KI 50G11 = 50)",
+      "expectedRw": 50.0,
+      "toleranceRw": 4.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "resilient_channel",
+        "studType": "resilient_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 42 },
+        { "materialId": "glasswool", "thicknessMm": 50 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "sqp1a_ki75_92",
+      "label": "SQP.1A, 1x12.5 each side, stud 92, KI 75",
+      "source": "https://knauf.com/api/download-center/v1/assets/844d89d6-948a-408d-9da3-f6f1a238cf45?download=true (P50 SQP.1A: KI 75G11 = 51)",
+      "expectedRw": 51.0,
+      "toleranceRw": 4.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "resilient_channel",
+        "studType": "resilient_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 17 },
+        { "materialId": "glasswool", "thicknessMm": 75 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "sqp1a_ki90_92",
+      "label": "SQP.1A, 1x12.5 each side, stud 92, KI 90",
+      "source": "https://knauf.com/api/download-center/v1/assets/844d89d6-948a-408d-9da3-f6f1a238cf45?download=true (P50 SQP.1A: KI 90G11 = 51)",
+      "expectedRw": 51.0,
+      "toleranceRw": 4.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "resilient_channel",
+        "studType": "resilient_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 2 },
+        { "materialId": "glasswool", "thicknessMm": 90 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "sqp2a_nil_92",
+      "label": "SQP.2A, 2x12.5 each side, stud 92, no insulation",
+      "source": "https://knauf.com/api/download-center/v1/assets/844d89d6-948a-408d-9da3-f6f1a238cf45?download=true (P50 SQP.2A: Nil 49)",
+      "expectedRw": 49.0,
+      "toleranceRw": 4.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "resilient_channel",
+        "studType": "resilient_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 92 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "sqp2a_ki50_92",
+      "label": "SQP.2A, 2x12.5 each side, stud 92, KI 50",
+      "source": "https://knauf.com/api/download-center/v1/assets/844d89d6-948a-408d-9da3-f6f1a238cf45?download=true (P50 SQP.2A: KI 50G11 = 55)",
+      "expectedRw": 55.0,
+      "toleranceRw": 4.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "resilient_channel",
+        "studType": "resilient_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 42 },
+        { "materialId": "glasswool", "thicknessMm": 50 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "sqp2a_ki75_92",
+      "label": "SQP.2A, 2x12.5 each side, stud 92, KI 75",
+      "source": "https://knauf.com/api/download-center/v1/assets/844d89d6-948a-408d-9da3-f6f1a238cf45?download=true (P50 SQP.2A: KI 75G11 = 56)",
+      "expectedRw": 56.0,
+      "toleranceRw": 4.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "resilient_channel",
+        "studType": "resilient_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 17 },
+        { "materialId": "glasswool", "thicknessMm": 75 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "sqp2a_ki90_92",
+      "label": "SQP.2A, 2x12.5 each side, stud 92, KI 90",
+      "source": "https://knauf.com/api/download-center/v1/assets/844d89d6-948a-408d-9da3-f6f1a238cf45?download=true (P50 SQP.2A: KI 90G11 = 57)",
+      "expectedRw": 57.0,
+      "toleranceRw": 4.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "resilient_channel",
+        "studType": "resilient_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 2 },
+        { "materialId": "glasswool", "thicknessMm": 90 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "sbp2a_nil_64",
+      "label": "SBP.2A, 2x12.5 each side, stud 64, no insulation",
+      "source": "https://knauf.com/api/download-center/v1/assets/844d89d6-948a-408d-9da3-f6f1a238cf45?download=true (P31 SBP.2A: Nil 46)",
+      "expectedRw": 46.0,
+      "toleranceRw": 4.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 64 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "sbp2a_ki50_64",
+      "label": "SBP.2A, 2x12.5 each side, stud 64, KI 50",
+      "source": "https://knauf.com/api/download-center/v1/assets/844d89d6-948a-408d-9da3-f6f1a238cf45?download=true (P31 SBP.2A: KI 50G11 = 52)",
+      "expectedRw": 52.0,
+      "toleranceRw": 4.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 14 },
+        { "materialId": "glasswool", "thicknessMm": 50 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "sbp2a_nil_76",
+      "label": "SBP.2A, 2x12.5 each side, stud 76, no insulation",
+      "source": "https://knauf.com/api/download-center/v1/assets/844d89d6-948a-408d-9da3-f6f1a238cf45?download=true (P31 SBP.2A: Nil 47)",
+      "expectedRw": 47.0,
+      "toleranceRw": 4.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 76 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "sbp2a_ki50_76",
+      "label": "SBP.2A, 2x12.5 each side, stud 76, KI 50",
+      "source": "https://knauf.com/api/download-center/v1/assets/844d89d6-948a-408d-9da3-f6f1a238cf45?download=true (P31 SBP.2A: KI 50G11 = 53)",
+      "expectedRw": 53.0,
+      "toleranceRw": 4.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 26 },
+        { "materialId": "glasswool", "thicknessMm": 50 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "sbp2a_ki75_76",
+      "label": "SBP.2A, 2x12.5 each side, stud 76, KI 75",
+      "source": "https://knauf.com/api/download-center/v1/assets/844d89d6-948a-408d-9da3-f6f1a238cf45?download=true (P31 SBP.2A: KI 75G11 = 54)",
+      "expectedRw": 54.0,
+      "toleranceRw": 4.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 1 },
+        { "materialId": "glasswool", "thicknessMm": 75 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    },
+    {
+      "id": "knauf_9848_ba13x2_ultracoustic45",
+      "label": "98/48 partition, 2x BA13 each side + 45 mm Ultracoustic",
+      "source": "https://knauf.com/en-DZ/knauf-insulation/competencies/applications/partitions (lines 79-82: Rw(C;Ctr)=50(-4;-10))",
+      "expectedRw": 50.0,
+      "toleranceRw": 4.0,
+      "assemblyMeta": {
+        "contextMode": "element_lab",
+        "connectionType": "line_connection",
+        "studType": "light_steel_stud",
+        "studSpacingMm": 600,
+        "airtightness": "good"
+      },
+      "layers": [
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "air_gap", "thicknessMm": 3 },
+        { "materialId": "glasswool", "thicknessMm": 45 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 },
+        { "materialId": "gypsum", "thicknessMm": 12.5 }
+      ]
+    }
+  ]
+}

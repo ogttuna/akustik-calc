@@ -403,6 +403,37 @@ function getImpactMetricBasisValue(
   return source.metricBasis[metric] ?? null;
 }
 
+function normalizeImpactMetricBasis(
+  metric: ImpactMetricKey,
+  rawBasis: string | null,
+  context: { catalogId?: string | null } = {}
+): string | null {
+  if (!rawBasis) {
+    return null;
+  }
+
+  if (context.catalogId) {
+    if (
+      metric === "DeltaLw" &&
+      (rawBasis === "predictor_catalog_product_delta_official" || rawBasis === "predictor_explicit_delta_user_input")
+    ) {
+      return "delta_lw_product_or_explicit_equivalent";
+    }
+
+    if (
+      metric === "LnW" &&
+      (
+        rawBasis === "predictor_catalog_product_delta_heavy_reference_derived" ||
+        rawBasis === "predictor_explicit_delta_heavy_reference_derived"
+      )
+    ) {
+      return "lnw_heavy_reference_delta_equivalent";
+    }
+  }
+
+  return rawBasis;
+}
+
 function areFieldCarryBasesSemanticallyEquivalent(
   fixture: ImpactParityCase,
   localImpact: ComparableImpact | null,
@@ -492,8 +523,12 @@ function compareImpactParityCase(
       pushStringMismatch(
         mismatches,
         `impact.metricBasis.${metric}`,
-        getImpactMetricBasisValue(local.impact, metric),
-        getImpactMetricBasisValue(upstream.impact, metric)
+        normalizeImpactMetricBasis(metric, getImpactMetricBasisValue(local.impact, metric), {
+          catalogId: local.matchedCatalogId
+        }),
+        normalizeImpactMetricBasis(metric, getImpactMetricBasisValue(upstream.impact, metric), {
+          catalogId: upstream.matchedCatalogCaseId ?? upstream.impact?.predictorCatalogCaseId
+        })
       );
     }
   }
