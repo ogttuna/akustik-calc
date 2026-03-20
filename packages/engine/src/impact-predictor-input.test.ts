@@ -135,6 +135,49 @@ describe("buildImpactPredictorInputFromLayerStack", () => {
     });
   });
 
+  it("treats concrete acoustic-underlay finish stacks as dry floating floors instead of bare slabs", () => {
+    const input = buildImpactPredictorInputFromLayerStack([
+      { materialId: "concrete", thicknessMm: 150, floorRole: "base_structure" },
+      { materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: 20, floorRole: "floor_covering" }
+    ]);
+
+    expect(input.structuralSupportType).toBe("reinforced_concrete");
+    expect(input.impactSystemType).toBe("dry_floating_floor");
+    expect(input.floorCovering?.materialClass).toBe("engineered_timber_with_acoustic_underlay");
+  });
+
+  it("treats hollow-core resilient-cover plus ceiling stacks as combined upper and lower systems", () => {
+    const input = buildImpactPredictorInputFromLayerStack([
+      { materialId: "hollow_core_plank", thicknessMm: 200, floorRole: "base_structure" },
+      { materialId: "geniemat_rst05", thicknessMm: 5, floorRole: "resilient_layer" },
+      { materialId: "vinyl_flooring", thicknessMm: 2.5, floorRole: "floor_covering" },
+      { materialId: "genieclip_rst", thicknessMm: 16, floorRole: "ceiling_cavity" },
+      { materialId: "gypsum_board", thicknessMm: 16, floorRole: "ceiling_board" }
+    ]);
+
+    expect(input.structuralSupportType).toBe("hollow_core");
+    expect(input.impactSystemType).toBe("combined_upper_lower_system");
+    expect(input.resilientLayer?.productId).toBe("geniemat_rst05");
+    expect(input.floorCovering?.materialClass).toBe("vinyl_flooring");
+    expect(input.lowerTreatment?.type).toBe("suspended_ceiling_elastic_hanger");
+  });
+
+  it("treats concrete acoustic-underlay plus ceiling stacks as combined upper and lower systems", () => {
+    const input = buildImpactPredictorInputFromLayerStack([
+      { materialId: "concrete", thicknessMm: 150, floorRole: "base_structure" },
+      { materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: 20, floorRole: "floor_covering" },
+      { materialId: "resilient_channel", thicknessMm: 130, floorRole: "ceiling_cavity" },
+      { materialId: "rockwool", thicknessMm: 100, floorRole: "ceiling_fill" },
+      { materialId: "firestop_board", thicknessMm: 13, floorRole: "ceiling_board" },
+      { materialId: "firestop_board", thicknessMm: 13, floorRole: "ceiling_board" }
+    ]);
+
+    expect(input.structuralSupportType).toBe("reinforced_concrete");
+    expect(input.impactSystemType).toBe("combined_upper_lower_system");
+    expect(input.floorCovering?.materialClass).toBe("engineered_timber_with_acoustic_underlay");
+    expect(input.lowerTreatment?.type).toBe("suspended_ceiling_elastic_hanger");
+  });
+
   it("infers steel support form, product id, engineered-timber-underlay covering, and elastic ceiling semantics", () => {
     const input = buildImpactPredictorInputFromLayerStack([
       { materialId: "open_web_steel_joist", thicknessMm: 300, floorRole: "base_structure" },

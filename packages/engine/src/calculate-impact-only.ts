@@ -102,6 +102,15 @@ function pickFloorCarrier(input: {
   );
 }
 
+function shouldHideLowConfidenceProxyAirborne(
+  floorSystemEstimate: FloorSystemEstimateResult | null | undefined
+): boolean {
+  return Boolean(
+    floorSystemEstimate?.kind === "low_confidence" &&
+      floorSystemEstimate.impact.basis === "predictor_floor_system_low_confidence_estimate"
+  );
+}
+
 function pickReferenceFloorRatingLayers(layers: readonly ResolvedLayer[]): readonly ResolvedLayer[] {
   const baseStructureLayers = layers.filter((layer) => layer.floorRole === "base_structure");
 
@@ -400,7 +409,10 @@ export function calculateImpactOnly(
           resolvedLayers: resolvedSourceLayers
         });
   const lowerBoundImpact = applyImpactFieldContextToBoundImpact(baseLowerBoundImpact, impactFieldContext);
-  const floorCarrier = pickFloorCarrier({
+  const hideLowConfidenceProxyAirborne = shouldHideLowConfidenceProxyAirborne(floorSystemEstimate);
+  const floorCarrier = hideLowConfidenceProxyAirborne
+    ? null
+    : pickFloorCarrier({
     boundFloorSystemEstimate,
     boundFloorSystemMatch,
     floorSystemEstimate,
@@ -413,16 +425,18 @@ export function calculateImpactOnly(
     lowerBoundImpact,
     targetOutputs: options.targetOutputs ?? []
   });
-  const floorSystemRatings = buildFloorSystemRatings({
-    boundFloorSystemEstimate,
-    boundFloorSystemMatch,
-    floorCarrier,
-    floorSystemEstimate,
-    floorSystemMatch,
-    impact,
-    lowerBoundImpact,
-    screeningLayers: explicitDeltaImpact ? pickReferenceFloorRatingLayers(resolvedSourceLayers) : resolvedSourceLayers
-  });
+  const floorSystemRatings = hideLowConfidenceProxyAirborne
+    ? null
+    : buildFloorSystemRatings({
+        boundFloorSystemEstimate,
+        boundFloorSystemMatch,
+        floorCarrier,
+        floorSystemEstimate,
+        floorSystemMatch,
+        impact,
+        lowerBoundImpact,
+        screeningLayers: explicitDeltaImpact ? pickReferenceFloorRatingLayers(resolvedSourceLayers) : resolvedSourceLayers
+      });
   const impactPredictorStatus = buildImpactPredictorStatus({
     boundFloorSystemEstimate,
     boundFloorSystemMatch,
@@ -468,6 +482,12 @@ export function calculateImpactOnly(
 
   if (sourceMode === "predictor_input") {
     warnings.push(...(predictorAdaptation?.notes ?? []));
+  }
+
+  if (hideLowConfidenceProxyAirborne) {
+    warnings.push(
+      "Low-confidence timber bare-floor predictor support is currently impact-only. DynEcho kept proxy airborne companions hidden instead of presenting nil-ceiling family rows as supported Rw / Ctr outputs."
+    );
   }
 
   if (predictorInputMode === "derived_from_visible_layers") {

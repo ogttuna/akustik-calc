@@ -6,6 +6,7 @@ import { MetricCard, Pill, SurfacePanel } from "@dynecho/ui";
 
 import { formatDecimal } from "@/lib/format";
 
+import { buildWorkbenchWarningNotes } from "./workbench-warning-notes";
 import { getDnTAkDetail } from "./dntak-source-mode";
 import { getImpactLaneKind, getImpactLanePillLabel } from "./impact-lane-view";
 import { ResultMeter } from "./result-meter";
@@ -20,7 +21,7 @@ function formatSignedDb(value: number): string {
 }
 
 export function ResultSummary({ result, warnings }: ResultSummaryProps) {
-  const noteLines = Array.from(new Set<string>([...(result?.warnings ?? []), ...warnings]));
+  const noteLines = buildWorkbenchWarningNotes(result, [...(result?.warnings ?? []), ...warnings]);
   const lowerBoundImpact = result?.lowerBoundImpact ?? null;
   const impactLaneKind = getImpactLaneKind({ impact: result?.impact, lowerBoundImpact });
   const dynamicTrace = result?.dynamicAirborneTrace ?? null;

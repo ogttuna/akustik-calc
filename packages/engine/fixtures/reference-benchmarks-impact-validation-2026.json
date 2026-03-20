@@ -1604,10 +1604,10 @@
       }
     },
     {
-      "id": "ubiq_steel_suspended_only_low_confidence_estimate",
-      "mode": "low_confidence_estimate",
+      "id": "ubiq_steel_suspended_only_family_general_estimate",
+      "mode": "family_general_estimate",
       "source": "https://www.ubiq.au/wp-content/uploads/2023/02/INEX-FLOOR-FLOOR-FIRE-ACOUSTIC.pdf",
-      "expectedBasis": "predictor_floor_system_low_confidence_estimate",
+      "expectedBasis": "predictor_floor_system_family_general_estimate",
       "impactPredictorInput": {
         "structuralSupportType": "steel_joists",
         "supportForm": "open_web_or_rolled",
@@ -1637,10 +1637,10 @@
       }
     },
     {
-      "id": "pliteq_ubiq_steel_joist_suspended_only_low_confidence_estimate",
-      "mode": "low_confidence_estimate",
-      "source": "https://pliteq.com.au/wp-content/uploads/sites/7/AUS-GenieClip-Brochure_Digital.pdf | https://www.ubiq.au/wp-content/uploads/2023/02/INEX-FLOOR-FLOOR-FIRE-ACOUSTIC.pdf",
-      "expectedBasis": "predictor_floor_system_low_confidence_estimate",
+      "id": "pliteq_steel_joist_suspended_only_family_general_estimate",
+      "mode": "family_general_estimate",
+      "source": "https://pliteq.com.au/wp-content/uploads/sites/7/AUS-GenieClip-Brochure_Digital.pdf",
+      "expectedBasis": "predictor_floor_system_family_general_estimate",
       "impactPredictorInput": {
         "structuralSupportType": "steel_joists",
         "supportForm": "joist_or_purlin",
@@ -1665,16 +1665,16 @@
         }
       },
       "expected": {
-        "lnwMinDb": 58.2,
-        "lnwMaxDb": 58.4,
-        "rwMinDb": 60.9,
-        "rwMaxDb": 61.1
+        "lnwMinDb": 57.9,
+        "lnwMaxDb": 58.1,
+        "rwMinDb": 59.9,
+        "rwMaxDb": 60.1
       }
     },
     {
-      "id": "knauf_dataholz_timber_bare_low_confidence_estimate",
+      "id": "knauf_timber_nil_bare_low_confidence_estimate",
       "mode": "low_confidence_estimate",
-      "source": "https://www.knauf.com/en-AU/systems/system-products/119889/System-data-sheet/ | https://www.dataholz.eu/en/components/intermediate-floor/version/kz/gdsnxn01a/nr/00.htm",
+      "source": "https://www.knauf.com/en-AU/systems/system-products/119889/System-data-sheet/",
       "expectedBasis": "predictor_floor_system_low_confidence_estimate",
       "impactPredictorInput": {
         "structuralSupportType": "timber_joists",
@@ -1690,17 +1690,17 @@
         }
       },
       "expected": {
-        "lnwMinDb": 61.2,
-        "lnwMaxDb": 61.4,
-        "rwMinDb": 51.5,
-        "rwMaxDb": 51.7
+        "lnwMinDb": 70.3,
+        "lnwMaxDb": 70.5,
+        "rwMinDb": 48.7,
+        "rwMaxDb": 48.9
       }
     },
     {
-      "id": "knauf_timber_direct_ceiling_low_confidence_estimate",
-      "mode": "low_confidence_estimate",
+      "id": "knauf_timber_direct_ceiling_family_general_estimate",
+      "mode": "family_general_estimate",
       "source": "https://www.knauf.com/en-AU/systems/system-products/119889/System-data-sheet/",
-      "expectedBasis": "predictor_floor_system_low_confidence_estimate",
+      "expectedBasis": "predictor_floor_system_family_general_estimate",
       "impactPredictorInput": {
         "structuralSupportType": "timber_joists",
         "supportForm": "joist_or_purlin",
@@ -1724,10 +1724,10 @@
       }
     },
     {
-      "id": "knauf_euracoustics_concrete_combined_low_confidence_estimate",
-      "mode": "low_confidence_estimate",
+      "id": "knauf_euracoustics_concrete_combined_family_general_estimate",
+      "mode": "family_general_estimate",
       "source": "https://www.knauf.com/en-AU/systems/system-products/119889/System-data-sheet/ | https://dael.euracoustics.org/confs/fa2023/data/articles/001014.pdf",
-      "expectedBasis": "predictor_floor_system_low_confidence_estimate",
+      "expectedBasis": "predictor_floor_system_family_general_estimate",
       "impactPredictorInput": {
         "structuralSupportType": "reinforced_concrete",
         "impactSystemType": "combined_upper_lower_system",
@@ -1762,10 +1762,10 @@
       }
     },
     {
-      "id": "pmc_composite_ceiling_only_low_confidence_estimate",
-      "mode": "low_confidence_estimate",
+      "id": "pmc_composite_ceiling_only_family_specific_estimate",
+      "mode": "family_specific_estimate",
       "source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10004424/",
-      "expectedBasis": "predictor_floor_system_low_confidence_estimate",
+      "expectedBasis": "predictor_composite_panel_published_interaction_estimate",
       "impactPredictorInput": {
         "structuralSupportType": "composite_panel",
         "impactSystemType": "suspended_ceiling_only",

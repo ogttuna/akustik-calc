@@ -17,6 +17,14 @@ import {
 } from "./validation-regime";
 import type { ValidationPosture } from "./validation-regime";
 import { getDnTAkLiveLabel } from "./dntak-source-mode";
+import {
+  IMPACT_ONLY_LOW_CONFIDENCE_CTR_DETAIL,
+  IMPACT_ONLY_LOW_CONFIDENCE_LNW_DETAIL,
+  IMPACT_ONLY_LOW_CONFIDENCE_RW_DETAIL,
+  IMPACT_ONLY_LOW_CONFIDENCE_UNAVAILABLE_DETAIL,
+  isImpactOnlyLowConfidenceFloorLane,
+  isImpactOnlyLowConfidenceUnavailableOutput
+} from "./impact-only-low-confidence-floor-lane";
 
 export type TargetOutputStatus = {
   kind:
@@ -260,6 +268,7 @@ export function getTargetOutputStatus(input: {
   const { guideResult, output, result } = input;
   const guideState = hasGuideValue(output, guideResult);
   const supportNote = REQUESTED_OUTPUT_SUPPORT_NOTES[output];
+  const isImpactOnlyLowConfidenceLane = isImpactOnlyLowConfidenceFloorLane(result);
 
   if (RESEARCH_OUTPUTS.has(output)) {
     return {
@@ -273,14 +282,23 @@ export function getTargetOutputStatus(input: {
 
   if (result?.supportedTargetOutputs.includes(output)) {
     const label = getEngineLiveLabel(output, result);
+    const customImpactOnlyNote =
+      isImpactOnlyLowConfidenceLane && output === "Ln,w"
+        ? IMPACT_ONLY_LOW_CONFIDENCE_LNW_DETAIL
+        : isImpactOnlyLowConfidenceLane && output === "Rw"
+          ? IMPACT_ONLY_LOW_CONFIDENCE_RW_DETAIL
+          : isImpactOnlyLowConfidenceLane && output === "Ctr"
+            ? IMPACT_ONLY_LOW_CONFIDENCE_CTR_DETAIL
+            : null;
 
     return {
       kind: hasEngineBoundValue(output, result) ? "engine_bound" : "engine_live",
       label,
       note:
-        label === "Bound support"
+        customImpactOnlyNote ??
+        (label === "Bound support"
           ? `${supportNote} The current stack only resolves a conservative bound for this output.`
-          : supportNote,
+          : supportNote),
       output,
       tone: hasEngineBoundValue(output, result) ? "accent" : "success"
     };
@@ -304,8 +322,14 @@ export function getTargetOutputStatus(input: {
   if (result?.unsupportedTargetOutputs.includes(output)) {
     return {
       kind: "unavailable",
-      label: "Unavailable on current path",
-      note: `${supportNote} DynEcho is keeping this requested output explicit instead of inventing a number for the current stack/path.`,
+      label:
+        isImpactOnlyLowConfidenceLane && isImpactOnlyLowConfidenceUnavailableOutput(output)
+          ? "Impact-only fallback"
+          : "Unavailable on current path",
+      note:
+        isImpactOnlyLowConfidenceLane && isImpactOnlyLowConfidenceUnavailableOutput(output)
+          ? IMPACT_ONLY_LOW_CONFIDENCE_UNAVAILABLE_DETAIL
+          : `${supportNote} DynEcho is keeping this requested output explicit instead of inventing a number for the current stack/path.`,
       output,
       tone: "warning"
     };

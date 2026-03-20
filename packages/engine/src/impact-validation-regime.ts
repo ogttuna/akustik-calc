@@ -93,7 +93,7 @@ export const IMPACT_VALIDATION_MODE_MATRIX: readonly ImpactValidationModeRegime[
     posture: "bound"
   },
   {
-    caseCount: 9,
+    caseCount: 10,
     id: "family_specific_estimate",
     label: "Family-specific estimate",
     note: "Narrow family branches such as CLT, composite, steel, or published heavy-concrete treatment estimates before broad averaging.",
@@ -114,14 +114,14 @@ export const IMPACT_VALIDATION_MODE_MATRIX: readonly ImpactValidationModeRegime[
     posture: "estimate"
   },
   {
-    caseCount: 5,
+    caseCount: 9,
     id: "family_general_estimate",
     label: "Family general estimate",
     note: "Broader same-family estimate layer used only after stricter exact and archetype corridors fail.",
     posture: "estimate"
   },
   {
-    caseCount: 6,
+    caseCount: 1,
     id: "low_confidence_estimate",
     label: "Low-confidence family fallback",
     note: "Last-resort published-family blend that keeps the result non-empty without pretending it is a narrow same-family fit.",
@@ -204,11 +204,11 @@ export const IMPACT_VALIDATION_FAMILY_MATRIX: readonly ImpactValidationFamilyReg
       { caseCount: 2, id: "formula_estimate" },
       { caseCount: 1, id: "formula_plus_lower_bound" },
       { caseCount: 1, id: "family_specific_estimate" },
-      { caseCount: 1, id: "low_confidence_estimate" },
+      { caseCount: 1, id: "family_general_estimate" },
       { caseCount: 1, id: "field_explicit_k_estimate" },
       { caseCount: 2, id: "field_standardized_volume_estimate" }
     ],
-    note: "Bare heavy slabs, published upper-treatment rows, and the last-resort combined concrete fallback are guarded, while the field chain still covers both predictor-backed and exact continuation."
+    note: "Bare heavy slabs, published upper-treatment rows, and the combined vinyl-plus-elastic-ceiling corridor are guarded before any low-confidence escape hatch, while the field chain still covers both predictor-backed and exact continuation."
   }),
   createImpactValidationFamilyRegime({
     fieldCaseCount: 1,
@@ -225,8 +225,8 @@ export const IMPACT_VALIDATION_FAMILY_MATRIX: readonly ImpactValidationFamilyReg
     note: "Product-aware plank rows stay exact on floor-side output and continue cleanly into explicit K plus room-volume field normalization."
   }),
   createImpactValidationFamilyRegime({
-    fieldCaseCount: 0,
-    fieldCoverage: "staged",
+    fieldCaseCount: 1,
+    fieldCoverage: "live",
     floorCaseCount: 1,
     floorCoverage: "estimate",
     id: "timber_frame",
@@ -235,10 +235,10 @@ export const IMPACT_VALIDATION_FAMILY_MATRIX: readonly ImpactValidationFamilyReg
     modeDistribution: [
       { caseCount: 13, id: "official_floor_system" },
       { caseCount: 2, id: "family_archetype_estimate" },
-      { caseCount: 2, id: "family_general_estimate" },
-      { caseCount: 2, id: "low_confidence_estimate" }
+      { caseCount: 3, id: "family_general_estimate" },
+      { caseCount: 1, id: "low_confidence_estimate" }
     ],
-    note: "Dry timber-frame floor estimates and the remaining broad bare/direct-ceiling timber fallbacks are guarded, but the real-world field continuation corpus is still narrower than the floor-side family coverage."
+    note: "Dry timber-frame floor estimates are guarded; the remaining bare-floor timber fallback now stays inside the Knauf nil-ceiling corridor instead of mixing in wet-screed references, but it is exposed as an impact-only low-confidence lane so proxy nil-ceiling airborne companions do not masquerade as supported Rw / Ctr outputs. The direct-to-joists ceramic ceiling route already resolves into a narrower published family blend, and the real-world field continuation corpus now includes a predictor-backed dry-family carry-over instead of leaving timber field coverage fully staged."
   }),
   createImpactValidationFamilyRegime({
     fieldCaseCount: 2,
@@ -286,26 +286,24 @@ export const IMPACT_VALIDATION_FAMILY_MATRIX: readonly ImpactValidationFamilyReg
       { caseCount: 1, id: "family_specific_estimate" },
       { caseCount: 1, id: "family_specific_bound_estimate" },
       { caseCount: 1, id: "family_archetype_estimate" },
-      { caseCount: 2, id: "family_general_estimate" },
-      { caseCount: 2, id: "low_confidence_estimate" }
+      { caseCount: 4, id: "family_general_estimate" }
     ],
-    note: "Published UBIQ and Pliteq support remains conservative on both lab and field chains; the engine now also tracks both final steel low-confidence fallbacks separately from the narrower exact, bound, and family-estimate corridors."
+    note: "Published UBIQ and Pliteq support remains conservative on both lab and field chains; the remaining steel predictor fallbacks now resolve into narrower same-family general estimates instead of broad low-confidence blends."
   }),
   createImpactValidationFamilyRegime({
-    fieldCaseCount: 0,
-    fieldCoverage: "staged",
+    fieldCaseCount: 1,
+    fieldCoverage: "live",
     floorCaseCount: 1,
     floorCoverage: "exact",
     id: "composite_panel",
     label: "composite panel",
-    maxToleranceDb: 0,
+    maxToleranceDb: 0.1,
     modeDistribution: [
       { caseCount: 3, id: "official_floor_system" },
-      { caseCount: 2, id: "family_specific_estimate" },
-      { caseCount: 1, id: "family_archetype_estimate" },
-      { caseCount: 1, id: "low_confidence_estimate" }
+      { caseCount: 3, id: "family_specific_estimate" },
+      { caseCount: 1, id: "family_archetype_estimate" }
     ],
-    note: "Composite families are covered on the floor-side corpus, including the remaining ceiling-only low-confidence fallback, but the real-world field continuation pack still needs broader composite anchors."
+    note: "Composite families are covered on the floor-side corpus, and the suspended-ceiling-only predictor lane now resolves into the narrower PMC published interaction estimate instead of a broad low-confidence fallback. The real-world field continuation pack now includes a live composite ceiling-only chain, so composite no longer sits in a fully staged field posture."
   })
 ] as const;
 

@@ -42,6 +42,8 @@ type LayerDraft = {
   thicknessMm: string;
 };
 
+type AppendLayerDraftInput = Pick<LayerDraft, "floorRole" | "materialId" | "thicknessMm">;
+
 type ScenarioSnapshot = {
   calculatorId: AirborneCalculatorId;
   airborneAirtightness: AirtightnessClass;
@@ -133,6 +135,7 @@ type WorkbenchStore = {
   targetRwDb: string;
   addRow: () => void;
   appendMaterial: (materialId: string, thicknessMm: string) => void;
+  appendRows: (rows: readonly AppendLayerDraftInput[]) => void;
   applyCriteriaPack: (criteriaPackId: CriteriaPackId) => void;
   deleteSavedScenario: (scenarioId: string) => void;
   loadPreset: (presetId: PresetId) => void;
@@ -400,6 +403,15 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
             rows: [...state.rows, makeRow(materialId, thicknessMm, floorRole)]
           };
         }),
+      appendRows: (rows) =>
+        set((state) => ({
+          rows: [
+            ...state.rows,
+            ...rows.map((row) =>
+              makeRow(row.materialId, row.thicknessMm, row.floorRole ?? inferFloorRole(row.materialId, state.studyMode))
+            )
+          ]
+        })),
       applyCriteriaPack: (criteriaPackId) => {
         const criteriaPack = getCriteriaPackById(criteriaPackId);
         set({

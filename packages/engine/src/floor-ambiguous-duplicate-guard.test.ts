@@ -8,7 +8,8 @@ type AmbiguousDuplicateCase = {
   layers: readonly LayerInput[];
 };
 
-const FIELD_OUTPUTS: readonly RequestedOutputId[] = ["Rw", "R'w", "DnT,w", "Ln,w", "Ln,w+CI", "L'n,w"];
+const FIELD_OUTPUTS = ["Rw", "R'w", "DnT,w", "Ln,w", "Ln,w+CI", "L'n,w"] as const satisfies readonly RequestedOutputId[];
+type FieldOutputId = (typeof FIELD_OUTPUTS)[number];
 
 const AIRBORNE_FIELD_CONTEXT = {
   contextMode: "field_between_rooms" as const,
@@ -121,7 +122,7 @@ const CASES: readonly AmbiguousDuplicateCase[] = [
   }
 ];
 
-const OUTPUT_VALUE_GETTERS: Record<RequestedOutputId, (result: ReturnType<typeof calculateAssembly>) => number | null | undefined> =
+const OUTPUT_VALUE_GETTERS: Record<FieldOutputId, (result: ReturnType<typeof calculateAssembly>) => number | null | undefined> =
   {
     "DnT,w": (result) => result.metrics.estimatedDnTwDb,
     "L'n,w": (result) => result.impact?.LPrimeNW,
@@ -148,7 +149,11 @@ function assertFiniteSupportedOutputs(
   }
 
   for (const output of result.supportedTargetOutputs) {
-    const value = OUTPUT_VALUE_GETTERS[output]?.(result);
+    if (!FIELD_OUTPUTS.includes(output as FieldOutputId)) {
+      continue;
+    }
+
+    const value = OUTPUT_VALUE_GETTERS[output as FieldOutputId]?.(result);
 
     if (!(typeof value === "number" && Number.isFinite(value) && value >= 20 && value <= 90)) {
       failures.push(`${label}: supported output ${output} should stay finite and in a broad sane corridor, got ${String(value)}`);
@@ -181,7 +186,7 @@ describe("floor ambiguous duplicate guard", () => {
         failures.push(`${testCase.id}: ambiguous stack should not activate visible-layer derived predictor input mode`);
       }
 
-      if (result.warnings.some((warning) => warning.includes("Impact predictor topology was derived from visible floor-role layers"))) {
+      if (result.warnings.some((warning: string) => warning.includes("Impact predictor topology was derived from visible floor-role layers"))) {
         failures.push(`${testCase.id}: ambiguous stack should not emit the visible-layer derived predictor warning`);
       }
 

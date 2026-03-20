@@ -123,6 +123,15 @@ function pickReferenceFloorRatingLayers(layers: readonly ResolvedLayer[]): reado
   return baseStructureLayers.length > 0 ? baseStructureLayers : layers;
 }
 
+function shouldHideLowConfidenceProxyAirborne(
+  floorSystemEstimate: AssemblyCalculation["floorSystemEstimate"] | null | undefined
+): boolean {
+  return Boolean(
+    floorSystemEstimate?.kind === "low_confidence" &&
+      floorSystemEstimate.impact.basis === "predictor_floor_system_low_confidence_estimate"
+  );
+}
+
 function isBoardLikeSurfaceLayer(layer: ResolvedLayer): boolean {
   const role = classifyLayerRole(layer);
   return role.isSolidLeaf && /gypsum|board|plasterboard|firestop|impactstop|acoustic|security|soundbloc/i.test(materialText(layer));
@@ -1058,6 +1067,7 @@ export function calculateAssembly(
           resolvedLayers: impactResolvedLayers
         });
   const lowerBoundImpact = applyImpactFieldContextToBoundImpact(baseLowerBoundImpact, impactFieldContext);
+  const hideLowConfidenceProxyAirborne = shouldHideLowConfidenceProxyAirborne(floorSystemEstimate);
   const targetOutputSupport = analyzeTargetOutputSupport({
     impact,
     lowerBoundImpact,
@@ -1076,22 +1086,24 @@ export function calculateAssembly(
     },
     targetOutputs: options.targetOutputs ?? []
   });
-  const floorSystemRatings = buildFloorSystemRatings({
-    boundFloorSystemEstimate,
-    boundFloorSystemMatch,
-    floorSystemEstimate,
-    floorSystemMatch,
-    impact,
-    lowerBoundImpact,
-    screeningBasis: explicitPredictorInput ? undefined : "screening_mass_law_curve_seed_v3",
-    screeningLayers: explicitPredictorInput
-      ? explicitDeltaImpact
-        ? pickReferenceFloorRatingLayers(impactResolvedLayers)
-        : impactResolvedLayers
-      : undefined,
-    screeningRwDb: explicitPredictorInput ? null : ratings.iso717.Rw,
-    screeningRwPlusCtrDb: explicitPredictorInput ? null : round1(ratings.iso717.Rw + ratings.iso717.Ctr)
-  });
+  const floorSystemRatings = hideLowConfidenceProxyAirborne
+    ? null
+    : buildFloorSystemRatings({
+        boundFloorSystemEstimate,
+        boundFloorSystemMatch,
+        floorSystemEstimate,
+        floorSystemMatch,
+        impact,
+        lowerBoundImpact,
+        screeningBasis: explicitPredictorInput ? undefined : "screening_mass_law_curve_seed_v3",
+        screeningLayers: explicitPredictorInput
+          ? explicitDeltaImpact
+            ? pickReferenceFloorRatingLayers(impactResolvedLayers)
+            : impactResolvedLayers
+          : undefined,
+        screeningRwDb: explicitPredictorInput ? null : ratings.iso717.Rw,
+        screeningRwPlusCtrDb: explicitPredictorInput ? null : round1(ratings.iso717.Rw + ratings.iso717.Ctr)
+      });
   const impactPredictorStatus = buildImpactPredictorStatus({
     boundFloorSystemEstimate,
     boundFloorSystemMatch,
@@ -1136,6 +1148,12 @@ export function calculateAssembly(
 
   if (predictorAdaptation) {
     warnings.push(...predictorAdaptation.notes);
+  }
+
+  if (hideLowConfidenceProxyAirborne) {
+    warnings.push(
+      "Low-confidence timber bare-floor predictor support is currently impact-only. DynEcho kept proxy airborne companions hidden instead of presenting nil-ceiling family rows as supported Rw / Ctr outputs."
+    );
   }
 
   if (predictorInputMode === "derived_from_visible_layers") {

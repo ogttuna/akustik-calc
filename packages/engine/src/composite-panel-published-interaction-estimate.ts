@@ -23,6 +23,20 @@ function surfaceMassKgM2(thicknessMm: number | undefined, densityKgM3: number | 
   return (thicknessMm * density) / 1000;
 }
 
+function hasUpperPackageContent(input: ImpactPredictorInput): boolean {
+  return Boolean(
+    input.floorCovering?.materialClass ||
+      typeof input.floorCovering?.thicknessMm === "number" ||
+      input.resilientLayer?.productId ||
+      typeof input.resilientLayer?.thicknessMm === "number" ||
+      typeof input.resilientLayer?.dynamicStiffnessMNm3 === "number" ||
+      input.upperFill?.materialClass ||
+      typeof input.upperFill?.thicknessMm === "number" ||
+      input.floatingScreed?.materialClass ||
+      typeof input.floatingScreed?.thicknessMm === "number"
+  );
+}
+
 export function deriveCompositePanelPublishedInteractionEstimate(
   input: ImpactPredictorInput
 ): FloorSystemEstimateResult | null {
@@ -30,8 +44,107 @@ export function deriveCompositePanelPublishedInteractionEstimate(
     return null;
   }
 
-  if (input.impactSystemType !== "dry_floating_floor" && input.impactSystemType !== "combined_upper_lower_system") {
+  if (
+    input.impactSystemType !== "dry_floating_floor" &&
+    input.impactSystemType !== "combined_upper_lower_system" &&
+    input.impactSystemType !== "suspended_ceiling_only"
+  ) {
     return null;
+  }
+
+  if (input.impactSystemType === "suspended_ceiling_only") {
+    if (input.lowerTreatment?.type !== "suspended_ceiling_elastic_hanger" || hasUpperPackageContent(input)) {
+      return null;
+    }
+
+    const bareRow = getExactFloorSystem(PMC_BARE_ID);
+    const c1Row = getExactFloorSystem(PMC_C1_ID);
+    const c2Row = getExactFloorSystem(PMC_C2_ID);
+    const baseThicknessMm = input.baseSlab?.thicknessMm;
+    const boardLayerCount = input.lowerTreatment.boardLayerCount;
+    const boardThicknessMm = input.lowerTreatment.boardThicknessMm;
+    const cavityDepthMm = input.lowerTreatment.cavityDepthMm;
+    const cavityFillThicknessMm = input.lowerTreatment.cavityFillThicknessMm ?? 0;
+
+    if (
+      !bareRow ||
+      !c1Row ||
+      !c2Row ||
+      !(typeof baseThicknessMm === "number" && baseThicknessMm >= 120 && baseThicknessMm <= 180) ||
+      !(typeof boardLayerCount === "number" && boardLayerCount > 0) ||
+      !(typeof boardThicknessMm === "number" && boardThicknessMm > 0) ||
+      !(typeof cavityDepthMm === "number" && cavityDepthMm > 0)
+    ) {
+      return null;
+    }
+
+    const boardCountBlend = clamp(boardLayerCount - 1, 0, 1);
+    const ceilingLnW =
+      c1Row.impactRatings.LnW + ((c2Row.impactRatings.LnW - c1Row.impactRatings.LnW) * boardCountBlend);
+    const ceilingRw =
+      c1Row.airborneRatings.Rw + ((c2Row.airborneRatings.Rw - c1Row.airborneRatings.Rw) * boardCountBlend);
+    const boardAssemblyFactor = clamp((boardLayerCount * boardThicknessMm) / 25, 0.7, 1.35);
+    const cavityCoverageFactor = clamp(
+      (cavityDepthMm + Math.min(cavityFillThicknessMm, cavityDepthMm)) / 300,
+      0.55,
+      1.15
+    );
+    const impactShare = clamp(
+      0.56 + (0.08 * (boardAssemblyFactor - 1)) + (0.1 * (cavityCoverageFactor - 0.75)),
+      0.48,
+      0.68
+    );
+    const airborneShare = clamp(
+      0.613 + (0.05 * (boardAssemblyFactor - 1)) + (0.1 * (cavityCoverageFactor - 0.75)),
+      0.54,
+      0.76
+    );
+    const baseThicknessDelta = clamp((baseThicknessMm - 150) / 40, -1, 1);
+    const lnW = bareRow.impactRatings.LnW + ((ceilingLnW - bareRow.impactRatings.LnW) * impactShare) - (1.5 * baseThicknessDelta);
+    const rw = bareRow.airborneRatings.Rw + ((ceilingRw - bareRow.airborneRatings.Rw) * airborneShare) + (1.2 * baseThicknessDelta);
+    const fitPercent = round1(
+      clamp(
+        100 -
+          (Math.abs(baseThicknessDelta) * 12) -
+          (Math.abs(boardAssemblyFactor - 1) * 18) -
+          (Math.abs(cavityCoverageFactor - 0.83) * 22),
+        60,
+        92
+      )
+    );
+    const notes = [
+      "Published composite-panel ceiling-only estimate stayed inside the peer-reviewed PMC M1 family.",
+      `Ceiling-only scaling blended bare M1 with the C1x/C2x suspended-ceiling rows using ${boardLayerCount} board layer(s), ${ksRound1(boardThicknessMm)} mm boards, and ${ksRound1(cavityDepthMm)} mm cavity depth.`,
+      `Ceiling-fill coverage used ${ksRound1(Math.min(cavityFillThicknessMm, cavityDepthMm))} mm mineral fill inside the suspended ceiling.`,
+      "This ceiling-only lane remains a published-family interaction estimate, not an exact measured ceiling-only row."
+    ];
+
+    return {
+      airborneRatings: {
+        Rw: ksRound1(rw)
+      },
+      fitPercent,
+      impact: {
+        LnW: ksRound1(lnW),
+        availableOutputs: ["Ln,w"],
+        basis: "predictor_composite_panel_published_interaction_estimate",
+        confidence: getImpactConfidenceForBasis("predictor_composite_panel_published_interaction_estimate"),
+        estimateCandidateIds: [c2Row.id, c1Row.id, bareRow.id],
+        labOrField: "lab",
+        metricBasis: buildUniformImpactMetricBasis(
+          {
+            LnW: ksRound1(lnW)
+          },
+          "predictor_composite_panel_published_interaction_estimate"
+        ),
+        notes,
+        scope: "family_estimate"
+      },
+      kind: "family_general",
+      notes,
+      sourceSystems: [c2Row, c1Row, bareRow],
+      structuralFamily: "composite panel"
+    };
   }
 
   if (input.floorCovering?.mode !== "material_layer" || input.floorCovering.materialClass !== "dry_floating_gypsum_fiberboard") {

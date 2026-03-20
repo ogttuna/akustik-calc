@@ -23,6 +23,8 @@ export type PresetId =
   | "ubiq_open_web_200_exact"
   | "ubiq_open_web_400_exact"
   | "ubiq_open_web_300_bound"
+  | "steel_suspended_fallback"
+  | "timber_bare_impact_only_fallback"
   | "ubiq_steel_250_bound"
   | "ubiq_steel_300_unspecified_bound"
   | "regupol_curve_8_exact"
@@ -198,6 +200,32 @@ export const WORKBENCH_PRESETS: readonly PresetDefinition[] = [
       { materialId: "vinyl_flooring", thicknessMm: "5", floorRole: "floor_covering" },
       { materialId: "geniemat_rst05", thicknessMm: "5", floorRole: "resilient_layer" },
       { materialId: "hollow_core_plank", thicknessMm: "200", floorRole: "base_structure" }
+    ]
+  },
+  {
+    id: "steel_suspended_fallback",
+    label: "Steel Suspended Family",
+    note: "vinyl + suspended ceiling + joist floor family-general lane",
+    summary: "A narrow lightweight-steel sample so the guided shell can show how DynEcho behaves when the stack lands on a supported suspended-ceiling family lane without an exact floor-system match.",
+    studyMode: "floor",
+    rows: [
+      { materialId: "firestop_board", thicknessMm: "16", floorRole: "ceiling_board" },
+      { materialId: "firestop_board", thicknessMm: "16", floorRole: "ceiling_board" },
+      { materialId: "rockwool", thicknessMm: "100", floorRole: "ceiling_fill" },
+      { materialId: "ubiq_resilient_ceiling", thicknessMm: "120", floorRole: "ceiling_cavity" },
+      { materialId: "vinyl_flooring", thicknessMm: "3", floorRole: "floor_covering" },
+      { materialId: "steel_joist_floor", thicknessMm: "250", floorRole: "base_structure" }
+    ]
+  },
+  {
+    id: "timber_bare_impact_only_fallback",
+    label: "Timber Bare Impact-Only",
+    note: "laminate + joist low-confidence impact-only lane",
+    summary: "A deliberate low-confidence timber bare-floor sample so the guided shell can show that Ln,w stays on the impact fallback while Rw / Ctr remain on the separate airborne screening lane.",
+    studyMode: "floor",
+    rows: [
+      { materialId: "laminate_flooring", thicknessMm: "9", floorRole: "floor_covering" },
+      { materialId: "timber_joist_floor", thicknessMm: "240", floorRole: "base_structure" }
     ]
   },
   {

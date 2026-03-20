@@ -4,9 +4,344 @@ import type {
 } from "@dynecho/shared";
 
 import { buildPredictorFamilyEstimateCase, normalizePredictorToken } from "./predictor-family-estimate-shared";
+import { clamp } from "./math";
 
 function thicknessNear(value: number | undefined, target: number, tolerance = 3): boolean {
   return typeof value === "number" && Math.abs(value - target) <= tolerance;
+}
+
+function calculateCandidateScore(value: number, target: number, scale: number): number {
+  return Math.abs(value - target) / scale;
+}
+
+function hasUpperPackageContent(input: ImpactPredictorInput): boolean {
+  return Boolean(
+    input.resilientLayer?.productId ||
+      typeof input.resilientLayer?.thicknessMm === "number" ||
+      typeof input.resilientLayer?.dynamicStiffnessMNm3 === "number" ||
+      input.upperFill?.materialClass ||
+      typeof input.upperFill?.thicknessMm === "number" ||
+      input.floatingScreed?.materialClass ||
+      typeof input.floatingScreed?.thicknessMm === "number"
+  );
+}
+
+function hasOnlyGenericResilientUnderlay(input: ImpactPredictorInput): boolean {
+  return Boolean(
+    typeof input.resilientLayer?.thicknessMm === "number" &&
+      !input.resilientLayer?.productId &&
+      typeof input.resilientLayer?.dynamicStiffnessMNm3 !== "number" &&
+      !input.upperFill?.materialClass &&
+      typeof input.upperFill?.thicknessMm !== "number" &&
+      !input.floatingScreed?.materialClass &&
+      typeof input.floatingScreed?.thicknessMm !== "number"
+  );
+}
+
+function deriveKnaufConcreteCombinedPublishedFamilyEstimate(
+  input: ImpactPredictorInput
+): FloorSystemEstimateResult | null {
+  if (
+    input.structuralSupportType !== "reinforced_concrete" ||
+    input.impactSystemType !== "combined_upper_lower_system" ||
+    !(
+      input.lowerTreatment?.type === "suspended_ceiling_elastic_hanger" ||
+      input.lowerTreatment?.type === "suspended_ceiling_rigid_hanger"
+    ) ||
+    input.lowerTreatment.boardLayerCount !== 2 ||
+    hasUpperPackageContent(input)
+  ) {
+    return null;
+  }
+
+  const boardMaterialClass = normalizePredictorToken(input.lowerTreatment.boardMaterialClass);
+  if (boardMaterialClass && boardMaterialClass !== "firestop_board") {
+    return null;
+  }
+
+  const baseThicknessMm = input.baseSlab?.thicknessMm;
+  const cavityDepthMm = input.lowerTreatment.cavityDepthMm;
+  const cavityFillThicknessMm = input.lowerTreatment.cavityFillThicknessMm;
+  const boardThicknessMm = input.lowerTreatment.boardThicknessMm;
+
+  if (
+    !thicknessNear(baseThicknessMm, 150, 25) ||
+    !thicknessNear(cavityDepthMm, 100, 25) ||
+    !thicknessNear(cavityFillThicknessMm, 50, 20) ||
+    !thicknessNear(boardThicknessMm, 13, 2)
+  ) {
+    return null;
+  }
+
+  const candidateScore =
+    0.7 +
+    calculateCandidateScore(baseThicknessMm ?? 150, 150, 25) +
+    calculateCandidateScore(cavityDepthMm ?? 100, 100, 25) +
+    calculateCandidateScore(cavityFillThicknessMm ?? 50, 50, 20) +
+    calculateCandidateScore(boardThicknessMm ?? 13, 13, 4);
+
+  const floorMaterial = normalizePredictorToken(input.floorCovering?.materialClass);
+
+  if (floorMaterial === "engineered_timber_with_acoustic_underlay") {
+    return buildPredictorFamilyEstimateCase({
+      airborneRatings: {
+        Rw: 63,
+        RwCtr: 57,
+        RwCtrSemantic: "rw_plus_ctr"
+      },
+      candidateIds: ["knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026"],
+      candidateScores: [candidateScore],
+      impactRatings: {
+        LnW: 51
+      },
+      kind: "family_archetype",
+      noteLabel: "Knauf concrete timber-underlay archetype estimate",
+      structuralFamily: "reinforced concrete"
+    });
+  }
+
+  if (floorMaterial === "carpet_with_foam_underlay") {
+    return buildPredictorFamilyEstimateCase({
+      airborneRatings: {
+        Rw: 63,
+        RwCtr: 57,
+        RwCtrSemantic: "rw_plus_ctr"
+      },
+      candidateIds: ["knauf_cc60_1a_concrete150_carpet_lab_2026"],
+      candidateScores: [candidateScore],
+      impactRatings: {
+        LnW: 31
+      },
+      kind: "family_archetype",
+      noteLabel: "Knauf concrete carpet archetype estimate",
+      structuralFamily: "reinforced concrete"
+    });
+  }
+
+  return null;
+}
+
+function deriveKnaufConcreteCombinedTilePublishedFamilyEstimate(
+  input: ImpactPredictorInput
+): FloorSystemEstimateResult | null {
+  if (
+    input.structuralSupportType !== "reinforced_concrete" ||
+    input.impactSystemType !== "combined_upper_lower_system" ||
+    !(
+      input.lowerTreatment?.type === "suspended_ceiling_elastic_hanger" ||
+      input.lowerTreatment?.type === "suspended_ceiling_rigid_hanger"
+    ) ||
+    input.lowerTreatment.boardLayerCount !== 2 ||
+    !hasOnlyGenericResilientUnderlay(input)
+  ) {
+    return null;
+  }
+
+  const floorMaterial = normalizePredictorToken(input.floorCovering?.materialClass);
+  const boardMaterialClass = normalizePredictorToken(input.lowerTreatment.boardMaterialClass);
+  const resilientThicknessMm = input.resilientLayer?.thicknessMm;
+
+  if (floorMaterial !== "ceramic_tile") {
+    return null;
+  }
+
+  if (boardMaterialClass && boardMaterialClass !== "firestop_board") {
+    return null;
+  }
+
+  const baseThicknessMm = input.baseSlab?.thicknessMm;
+  const cavityDepthMm = input.lowerTreatment.cavityDepthMm;
+  const cavityFillThicknessMm = input.lowerTreatment.cavityFillThicknessMm;
+  const boardThicknessMm = input.lowerTreatment.boardThicknessMm;
+
+  if (
+    !thicknessNear(baseThicknessMm, 200, 30) ||
+    !thicknessNear(resilientThicknessMm, 5, 4) ||
+    !thicknessNear(cavityDepthMm, 300, 40) ||
+    !thicknessNear(cavityFillThicknessMm, 50, 20) ||
+    !thicknessNear(boardThicknessMm, 13, 2)
+  ) {
+    return null;
+  }
+
+  const candidateScore =
+    0.8 +
+    calculateCandidateScore(baseThicknessMm ?? 200, 200, 30) +
+    calculateCandidateScore(resilientThicknessMm ?? 5, 5, 4) +
+    calculateCandidateScore(cavityDepthMm ?? 300, 300, 40) +
+    calculateCandidateScore(cavityFillThicknessMm ?? 50, 50, 20) +
+    calculateCandidateScore(boardThicknessMm ?? 13, 13, 4);
+
+  return buildPredictorFamilyEstimateCase({
+    airborneRatings: {
+      Rw: 69,
+      RwCtr: 64,
+      RwCtrSemantic: "rw_plus_ctr"
+    },
+    candidateIds: ["knauf_cc60_1b_concrete200_tile_acoustic_underlay_lab_2026"],
+    candidateScores: [candidateScore],
+    impactRatings: {
+      LnW: 45
+    },
+    kind: "family_archetype",
+    noteLabel: "Knauf concrete tile-underlay combined archetype estimate",
+    structuralFamily: "reinforced concrete"
+  });
+}
+
+function deriveKnaufConcreteSuspendedTilePublishedFamilyEstimate(
+  input: ImpactPredictorInput
+): FloorSystemEstimateResult | null {
+  if (
+    input.structuralSupportType !== "reinforced_concrete" ||
+    input.impactSystemType !== "suspended_ceiling_only" ||
+    !(
+      input.lowerTreatment?.type === "suspended_ceiling_elastic_hanger" ||
+      input.lowerTreatment?.type === "suspended_ceiling_rigid_hanger"
+    ) ||
+    input.lowerTreatment.boardLayerCount !== 2 ||
+    hasUpperPackageContent(input)
+  ) {
+    return null;
+  }
+
+  const floorMaterial = normalizePredictorToken(input.floorCovering?.materialClass);
+  const boardMaterialClass = normalizePredictorToken(input.lowerTreatment.boardMaterialClass);
+
+  if (floorMaterial !== "ceramic_tile") {
+    return null;
+  }
+
+  if (boardMaterialClass && boardMaterialClass !== "firestop_board") {
+    return null;
+  }
+
+  const baseThicknessMm = input.baseSlab?.thicknessMm;
+  const cavityDepthMm = input.lowerTreatment.cavityDepthMm;
+  const cavityFillThicknessMm = input.lowerTreatment.cavityFillThicknessMm;
+  const boardThicknessMm = input.lowerTreatment.boardThicknessMm;
+
+  if (
+    !thicknessNear(baseThicknessMm, 200, 30) ||
+    !thicknessNear(cavityDepthMm, 300, 40) ||
+    !thicknessNear(cavityFillThicknessMm, 50, 20) ||
+    !thicknessNear(boardThicknessMm, 13, 2)
+  ) {
+    return null;
+  }
+
+  const candidateScore =
+    0.9 +
+    calculateCandidateScore(baseThicknessMm ?? 200, 200, 30) +
+    calculateCandidateScore(cavityDepthMm ?? 300, 300, 40) +
+    calculateCandidateScore(cavityFillThicknessMm ?? 50, 50, 20) +
+    calculateCandidateScore(boardThicknessMm ?? 13, 13, 4);
+
+  return buildPredictorFamilyEstimateCase({
+    airborneRatings: {
+      Rw: 69,
+      RwCtr: 64,
+      RwCtrSemantic: "rw_plus_ctr"
+    },
+    candidateIds: ["knauf_cc60_1b_concrete200_tile_acoustic_underlay_lab_2026"],
+    candidateScores: [candidateScore],
+    impactRatings: {
+      LnW: 45
+    },
+    kind: "family_archetype",
+    noteLabel: "Knauf concrete tile-underlay archetype estimate",
+    structuralFamily: "reinforced concrete"
+  });
+}
+
+function deriveConcreteCombinedVinylElasticCeilingEstimate(
+  input: ImpactPredictorInput
+): FloorSystemEstimateResult | null {
+  if (
+    input.structuralSupportType !== "reinforced_concrete" ||
+    input.impactSystemType !== "combined_upper_lower_system" ||
+    input.lowerTreatment?.type !== "suspended_ceiling_elastic_hanger" ||
+    normalizePredictorToken(input.floorCovering?.materialClass) !== "vinyl_flooring"
+  ) {
+    return null;
+  }
+
+  const baseThicknessMm = input.baseSlab?.thicknessMm;
+  const resilientThicknessMm = input.resilientLayer?.thicknessMm;
+  const floorCoveringThicknessMm = input.floorCovering?.thicknessMm;
+  const cavityDepthMm = input.lowerTreatment.cavityDepthMm;
+  const cavityFillThicknessMm = input.lowerTreatment.cavityFillThicknessMm;
+  const boardThicknessMm = input.lowerTreatment.boardThicknessMm;
+  const boardLayerCount = input.lowerTreatment.boardLayerCount;
+
+  if (
+    !(typeof baseThicknessMm === "number" && baseThicknessMm >= 140 && baseThicknessMm <= 190) ||
+    !(typeof resilientThicknessMm === "number" && resilientThicknessMm > 0) ||
+    !(typeof floorCoveringThicknessMm === "number" && floorCoveringThicknessMm > 0) ||
+    !(typeof cavityDepthMm === "number" && cavityDepthMm > 0) ||
+    !(typeof cavityFillThicknessMm === "number" && cavityFillThicknessMm >= 0) ||
+    !(typeof boardThicknessMm === "number" && boardThicknessMm > 0) ||
+    boardLayerCount !== 2
+  ) {
+    return null;
+  }
+
+  if (input.floatingScreed?.materialClass || input.upperFill?.materialClass) {
+    return null;
+  }
+
+  const boardMaterialClass = normalizePredictorToken(input.lowerTreatment.boardMaterialClass);
+  if (boardMaterialClass && boardMaterialClass !== "firestop_board") {
+    return null;
+  }
+
+  if (
+    !thicknessNear(resilientThicknessMm, 8, 4) ||
+    !thicknessNear(floorCoveringThicknessMm, 3, 2) ||
+    !thicknessNear(cavityDepthMm, 120, 30) ||
+    !thicknessNear(cavityFillThicknessMm, 100, 35) ||
+    !thicknessNear(boardThicknessMm, 16, 3)
+  ) {
+    return null;
+  }
+
+  const baseThicknessDelta = clamp((baseThicknessMm - 150) / 30, -1, 1);
+  const upperPackageFactor = clamp(((resilientThicknessMm / 8) + (floorCoveringThicknessMm / 3)) / 2, 0.75, 1.3);
+  const ceilingFactor = clamp(
+    ((cavityDepthMm / 120) + (Math.min(cavityFillThicknessMm, cavityDepthMm) / 100) + (boardThicknessMm / 16)) / 3,
+    0.75,
+    1.25
+  );
+  const lnW = 50.6 - (0.6 * baseThicknessDelta) - (0.8 * (upperPackageFactor - 1)) - (0.8 * (ceilingFactor - 1));
+  const rw = 64.9 + baseThicknessDelta + (0.6 * (ceilingFactor - 1)) - (0.2 * (upperPackageFactor - 1));
+  const candidateScore =
+    1.5 +
+    calculateCandidateScore(baseThicknessMm, 150, 30) +
+    calculateCandidateScore(resilientThicknessMm, 8, 4) +
+    calculateCandidateScore(floorCoveringThicknessMm, 3, 2) +
+    calculateCandidateScore(cavityDepthMm, 120, 30) +
+    calculateCandidateScore(cavityFillThicknessMm, 100, 35) +
+    calculateCandidateScore(boardThicknessMm, 16, 3);
+
+  return buildPredictorFamilyEstimateCase({
+    airborneRatings: {
+      Rw: Number(rw.toFixed(1)),
+      RwCtr: 57,
+      RwCtrSemantic: "rw_plus_ctr"
+    },
+    candidateIds: [
+      "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026",
+      "euracoustics_f2_elastic_ceiling_concrete_lab_2026",
+      "euracoustics_f1_rigid_ceiling_concrete_lab_2026"
+    ],
+    candidateScores: [candidateScore, candidateScore + 0.4, candidateScore + 1.2],
+    impactRatings: {
+      LnW: Number(lnW.toFixed(1))
+    },
+    kind: "family_general",
+    noteLabel: "Reinforced-concrete vinyl plus elastic-ceiling family estimate",
+    structuralFamily: "reinforced concrete"
+  });
 }
 
 function deriveOpenBoxPublishedFamilyEstimate(
@@ -249,14 +584,11 @@ function deriveKnaufTimberPublishedFamilyEstimate(
   if (boardMaterial === "firestop_board" && floorMaterial === "ceramic_tile") {
     const supportClass = normalizePredictorToken(input.lowerTreatment?.supportClass);
 
-    if (
-      supportClass === "direct_to_joists" &&
-      normalizePredictorToken(input.supportForm) !== "joist_or_purlin"
-    ) {
+    if (supportClass === "direct_to_joists") {
       return buildPredictorFamilyEstimateCase({
         airborneRatings: {
-          Rw: 51.5,
-          RwCtr: 45,
+          Rw: 51.8,
+          RwCtr: 45.1,
           RwCtrSemantic: "rw_plus_ctr"
         },
         candidateIds: [
@@ -273,10 +605,6 @@ function deriveKnaufTimberPublishedFamilyEstimate(
         noteLabel: "Knauf timber direct-to-joists family blend",
         structuralFamily: "timber frame / joist"
       });
-    }
-
-    if (supportClass === "direct_to_joists") {
-      return null;
     }
 
     return buildPredictorFamilyEstimateCase({
@@ -395,6 +723,126 @@ function deriveCltWetPublishedFamilyEstimate(
   });
 }
 
+function derivePliteqSteelJoistSuspendedVinylEstimate(
+  input: ImpactPredictorInput
+): FloorSystemEstimateResult | null {
+  if (
+    input.structuralSupportType !== "steel_joists" ||
+    normalizePredictorToken(input.supportForm) !== "joist_or_purlin" ||
+    input.impactSystemType !== "suspended_ceiling_only" ||
+    input.lowerTreatment?.type !== "suspended_ceiling_elastic_hanger" ||
+    input.lowerTreatment.boardLayerCount !== 2 ||
+    normalizePredictorToken(input.floorCovering?.materialClass) !== "vinyl_flooring"
+  ) {
+    return null;
+  }
+
+  const boardMaterialClass = normalizePredictorToken(input.lowerTreatment.boardMaterialClass);
+
+  if (boardMaterialClass && boardMaterialClass !== "firestop_board") {
+    return null;
+  }
+
+  const baseThicknessMm = input.baseSlab?.thicknessMm;
+  const cavityDepthMm = input.lowerTreatment.cavityDepthMm;
+  const cavityFillThicknessMm = input.lowerTreatment.cavityFillThicknessMm;
+  const boardThicknessMm = input.lowerTreatment.boardThicknessMm;
+  const floorCoveringThicknessMm = input.floorCovering?.thicknessMm;
+
+  if (
+    !thicknessNear(baseThicknessMm, 250, 35) ||
+    !thicknessNear(cavityDepthMm, 120, 25) ||
+    !thicknessNear(cavityFillThicknessMm, 100, 25) ||
+    !thicknessNear(boardThicknessMm, 16, 2) ||
+    !thicknessNear(floorCoveringThicknessMm, 2.5, 1.5)
+  ) {
+    return null;
+  }
+
+  const candidateScores = [
+    0.8 +
+      calculateCandidateScore(baseThicknessMm ?? 250, 250, 35) +
+      calculateCandidateScore(cavityDepthMm ?? 120, 120, 25) +
+      calculateCandidateScore(cavityFillThicknessMm ?? 100, 100, 25) +
+      calculateCandidateScore(boardThicknessMm ?? 16, 16, 3) +
+      calculateCandidateScore(floorCoveringThicknessMm ?? 2.5, 2.5, 2),
+    2.2,
+    3.1
+  ] as const;
+
+  return buildPredictorFamilyEstimateCase({
+    airborneRatings: {
+      Rw: 60
+    },
+    candidateIds: [
+      "pliteq_steel_joist_250_rst02_vinyl_lab_2026",
+      "pliteq_steel_joist_250_rst02_wood_lab_2026",
+      "pliteq_steel_joist_250_rst12_porcelain_lab_2026"
+    ],
+    candidateScores,
+    impactRatings: {
+      LnW: 58
+    },
+    kind: "family_general",
+    noteLabel: "Pliteq steel-joist vinyl suspended family estimate",
+    structuralFamily: "lightweight steel"
+  });
+}
+
+function deriveUbiqOpenWebSuspendedVinylEstimate(
+  input: ImpactPredictorInput
+): FloorSystemEstimateResult | null {
+  if (
+    input.structuralSupportType !== "steel_joists" ||
+    normalizePredictorToken(input.supportForm) !== "open_web_or_rolled" ||
+    input.impactSystemType !== "suspended_ceiling_only" ||
+    input.lowerTreatment?.type !== "suspended_ceiling_elastic_hanger" ||
+    normalizePredictorToken(input.floorCovering?.materialClass) !== "vinyl_flooring"
+  ) {
+    return null;
+  }
+
+  if (
+    !thicknessNear(input.baseSlab?.thicknessMm, 250, 60) ||
+    !thicknessNear(input.lowerTreatment?.cavityDepthMm, 120, 35) ||
+    !thicknessNear(input.lowerTreatment?.cavityFillThicknessMm, 100, 45) ||
+    !thicknessNear(input.lowerTreatment?.boardLayerCount, 2, 0) ||
+    !thicknessNear(input.lowerTreatment?.boardThicknessMm, 16, 2) ||
+    !thicknessNear(input.floorCovering?.thicknessMm, 3, 2)
+  ) {
+    return null;
+  }
+
+  return buildPredictorFamilyEstimateCase({
+    airborneRatings: {
+      Rw: 63.1,
+      RwCtr: 57.7,
+      RwCtrSemantic: "rw_plus_ctr"
+    },
+    candidateIds: [
+      "ubiq_fl33_open_web_steel_200_lab_2026",
+      "ubiq_fl33_open_web_steel_300_lab_2026",
+      "ubiq_fl28_open_web_steel_200_exact_lab_2026",
+      "ubiq_fl28_open_web_steel_300_exact_lab_2026",
+      "ubiq_fl28_open_web_steel_400_exact_lab_2026"
+    ],
+    candidateScores: [2.1, 2.1, 2.9, 2.9, 3.4],
+    impactRatings: {
+      CI: -1.7,
+      LnW: 51,
+      LnWPlusCI: 49.3
+    },
+    kind: "family_general",
+    noteLabel: "UBIQ open-web steel suspended-vinyl family estimate",
+    sourceSystemIds: [
+      "ubiq_fl28_open_web_steel_200_exact_lab_2026",
+      "ubiq_fl28_open_web_steel_300_exact_lab_2026",
+      "ubiq_fl28_open_web_steel_400_exact_lab_2026"
+    ],
+    structuralFamily: "lightweight steel"
+  });
+}
+
 function deriveSteelPublishedFamilyEstimate(
   input: ImpactPredictorInput
 ): FloorSystemEstimateResult | null {
@@ -434,6 +882,12 @@ export function derivePredictorPublishedFamilyEstimate(
   input: ImpactPredictorInput
 ): FloorSystemEstimateResult | null {
   return (
+    deriveKnaufConcreteCombinedPublishedFamilyEstimate(input) ??
+    deriveKnaufConcreteCombinedTilePublishedFamilyEstimate(input) ??
+    deriveKnaufConcreteSuspendedTilePublishedFamilyEstimate(input) ??
+    deriveConcreteCombinedVinylElasticCeilingEstimate(input) ??
+    derivePliteqSteelJoistSuspendedVinylEstimate(input) ??
+    deriveUbiqOpenWebSuspendedVinylEstimate(input) ??
     deriveOpenBoxPublishedFamilyEstimate(input) ??
     deriveCltDryPublishedFamilyEstimate(input) ??
     deriveDataholzCltDryPublishedEstimate(input) ??

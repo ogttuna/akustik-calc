@@ -621,7 +621,11 @@ export function maybeInferFloorRoleLayerStack(
     return null;
   }
 
-  return normalizedLayers.map(({ material: _material, ...layer }) => layer);
+  return normalizedLayers.map((layer) => ({
+    floorRole: layer.floorRole,
+    materialId: layer.materialId,
+    thicknessMm: layer.thicknessMm
+  }));
 }
 
 function buildDynamicResilientMaterial(dynamicStiffnessMNm3: number): MaterialDefinition {
@@ -1192,15 +1196,19 @@ function impactCoverClassActsAsUpperTreatment(materialClass: string | undefined)
 
 function resolveImpactSystemType(input: ImpactPredictorInput): ImpactPredictorInput["impactSystemType"] {
   const hasLowerTreatment = Boolean(input.lowerTreatment?.type);
-  const hasMassiveUpperTreatment = Boolean(
+  const hasResilientUpperLayer = Boolean(
     input.resilientLayer?.productId ||
       typeof input.resilientLayer?.dynamicStiffnessMNm3 === "number" ||
-      typeof input.resilientLayer?.thicknessMm === "number" ||
-      typeof input.floatingScreed?.thicknessMm === "number" ||
-      typeof input.upperFill?.thicknessMm === "number"
+      typeof input.resilientLayer?.thicknessMm === "number"
+  );
+  const hasFloatingMassPackage = Boolean(
+    typeof input.floatingScreed?.thicknessMm === "number" || typeof input.upperFill?.thicknessMm === "number"
   );
   const hasFloorCovering = input.floorCovering?.mode === "material_layer";
   const coverActsAsUpperTreatment = impactCoverClassActsAsUpperTreatment(input.floorCovering?.materialClass);
+  const hasLightUpperTreatment = Boolean(
+    hasFloorCovering && (coverActsAsUpperTreatment || hasResilientUpperLayer) && !hasFloatingMassPackage
+  );
   const thinResilientCoverOnLightOrHollowBase =
     Boolean(input.resilientLayer?.thicknessMm) &&
     hasFloorCovering &&
@@ -1215,8 +1223,16 @@ function resolveImpactSystemType(input: ImpactPredictorInput): ImpactPredictorIn
     ].includes(input.structuralSupportType || "");
 
   if (input.structuralSupportType === "reinforced_concrete" || input.structuralSupportType === "hollow_core") {
-    if (hasMassiveUpperTreatment) {
+    if (hasLowerTreatment && (hasFloatingMassPackage || hasLightUpperTreatment)) {
+      return "combined_upper_lower_system";
+    }
+
+    if (hasFloatingMassPackage) {
       return "heavy_floating_floor";
+    }
+
+    if (hasLightUpperTreatment) {
+      return "dry_floating_floor";
     }
 
     return hasLowerTreatment ? "suspended_ceiling_only" : "bare_floor";
@@ -1231,7 +1247,7 @@ function resolveImpactSystemType(input: ImpactPredictorInput): ImpactPredictorIn
 
   if (
     hasLowerTreatment &&
-    (hasMassiveUpperTreatment || coverActsAsUpperTreatment || thinResilientCoverOnLightOrHollowBase)
+    (hasFloatingMassPackage || hasResilientUpperLayer || coverActsAsUpperTreatment || thinResilientCoverOnLightOrHollowBase)
   ) {
     return "combined_upper_lower_system";
   }

@@ -5,6 +5,10 @@ import {
   normalizePredictorToken
 } from "./predictor-family-estimate-shared";
 
+function thicknessNear(value: number | undefined, target: number, tolerance = 3): boolean {
+  return typeof value === "number" && Math.abs(value - target) <= tolerance;
+}
+
 function deriveConcreteCombinedLowConfidenceEstimate(
   input: ImpactPredictorInput
 ): FloorSystemEstimateResult | null {
@@ -14,6 +18,23 @@ function deriveConcreteCombinedLowConfidenceEstimate(
     normalizePredictorToken(input.floorCovering?.materialClass) !== "vinyl_flooring" ||
     input.lowerTreatment?.type !== "suspended_ceiling_elastic_hanger"
   ) {
+    return null;
+  }
+
+  const isNarrowConcreteVinylElasticCeilingFit =
+    thicknessNear(input.baseSlab?.thicknessMm, 150, 40) &&
+    thicknessNear(input.resilientLayer?.thicknessMm, 8, 4) &&
+    thicknessNear(input.floorCovering?.thicknessMm, 3, 2) &&
+    thicknessNear(input.lowerTreatment?.cavityDepthMm, 120, 30) &&
+    thicknessNear(input.lowerTreatment?.cavityFillThicknessMm, 100, 35) &&
+    thicknessNear(input.lowerTreatment?.boardLayerCount, 2, 0) &&
+    thicknessNear(input.lowerTreatment?.boardThicknessMm, 16, 3) &&
+    [
+      "",
+      "firestop_board"
+    ].includes(normalizePredictorToken(input.lowerTreatment?.boardMaterialClass));
+
+  if (isNarrowConcreteVinylElasticCeilingFit) {
     return null;
   }
 
@@ -53,6 +74,31 @@ function deriveSteelSuspendedLowConfidenceEstimate(
   }
 
   const supportForm = normalizePredictorToken(input.supportForm);
+
+  const isNarrowPliteqVinylFamilyFit =
+    supportForm === "joist_or_purlin" &&
+    thicknessNear(input.baseSlab?.thicknessMm, 250, 35) &&
+    thicknessNear(input.lowerTreatment?.cavityDepthMm, 120, 25) &&
+    thicknessNear(input.lowerTreatment?.cavityFillThicknessMm, 100, 25) &&
+    thicknessNear(input.lowerTreatment?.boardThicknessMm, 16, 2) &&
+    thicknessNear(input.floorCovering?.thicknessMm, 2.5, 1.5) &&
+    [
+      "",
+      "firestop_board"
+    ].includes(normalizePredictorToken(input.lowerTreatment?.boardMaterialClass));
+
+  const isNarrowUbiqOpenWebVinylFamilyFit =
+    supportForm === "open_web_or_rolled" &&
+    thicknessNear(input.baseSlab?.thicknessMm, 250, 60) &&
+    thicknessNear(input.lowerTreatment?.cavityDepthMm, 120, 35) &&
+    thicknessNear(input.lowerTreatment?.cavityFillThicknessMm, 100, 45) &&
+    thicknessNear(input.lowerTreatment?.boardLayerCount, 2, 0) &&
+    thicknessNear(input.lowerTreatment?.boardThicknessMm, 16, 2) &&
+    thicknessNear(input.floorCovering?.thicknessMm, 3, 2);
+
+  if (isNarrowPliteqVinylFamilyFit || isNarrowUbiqOpenWebVinylFamilyFit) {
+    return null;
+  }
 
   if (supportForm === "open_web_or_rolled") {
     return buildPredictorFamilyEstimateCase({
@@ -130,63 +176,23 @@ function deriveTimberBareLowConfidenceEstimate(
 
   return buildPredictorFamilyEstimateCase({
     airborneRatings: {
-      Rw: 51.6,
-      RwCtr: 31.1,
+      Rw: 48.8,
+      RwCtr: 42.8,
       RwCtrSemantic: "rw_plus_ctr"
     },
     candidateIds: [
-      "dataholz_gdsnxn01a_timber_frame_lab_2026",
+      "knauf_ct2g_timber_nil_lab_2026",
+      "knauf_ct2h_timber_nil_lab_2026",
       "knauf_ct3b_timber_nil_lab_2026",
       "knauf_ct2a_timber_nil_lab_2026",
-      "knauf_ct2a_carpet_nil_lab_2026",
       "knauf_ct2d_timber_nil_lab_2026"
     ],
-    candidateScores: [5.7, 5.8, 6, 6, 6],
+    candidateScores: [4.8, 5.1, 5.5, 5.9, 6.1],
     impactRatings: {
-      CI: 2,
-      LnW: 61.3,
-      LnWPlusCI: 63.3
+      LnW: 70.4
     },
     kind: "low_confidence",
-    noteLabel: "Timber bare-floor low-confidence fallback",
-    structuralFamily: "timber frame / joist"
-  });
-}
-
-function deriveTimberSuspendedLowConfidenceEstimate(
-  input: ImpactPredictorInput
-): FloorSystemEstimateResult | null {
-  if (
-    input.structuralSupportType !== "timber_joists" ||
-    normalizePredictorToken(input.supportForm) !== "joist_or_purlin" ||
-    input.impactSystemType !== "suspended_ceiling_only" ||
-    input.lowerTreatment?.type !== "direct_fixed_ceiling" ||
-    normalizePredictorToken(input.lowerTreatment?.supportClass) !== "direct_to_joists" ||
-    normalizePredictorToken(input.lowerTreatment?.boardMaterialClass) !== "firestop_board" ||
-    normalizePredictorToken(input.floorCovering?.materialClass) !== "ceramic_tile"
-  ) {
-    return null;
-  }
-
-  return buildPredictorFamilyEstimateCase({
-    airborneRatings: {
-      Rw: 51.8,
-      RwCtr: 45.1,
-      RwCtrSemantic: "rw_plus_ctr"
-    },
-    candidateIds: [
-      "knauf_ct30_1a_timber_lab_2026",
-      "knauf_ct30_2a_timber_lab_2026",
-      "knauf_ct30_1b_timber_lab_2026",
-      "knauf_ct30_2b_timber_lab_2026",
-      "knauf_ct2d_timber_r25_lab_2026"
-    ],
-    candidateScores: [2.1, 2.4, 3, 3.3, 3.9],
-    impactRatings: {
-      LnW: 69.9
-    },
-    kind: "low_confidence",
-    noteLabel: "Timber direct-ceiling low-confidence fallback",
+    noteLabel: "Timber bare-floor nil-ceiling low-confidence fallback",
     structuralFamily: "timber frame / joist"
   });
 }
@@ -199,6 +205,26 @@ function deriveCompositeCeilingOnlyLowConfidenceEstimate(
     input.impactSystemType !== "suspended_ceiling_only" ||
     input.lowerTreatment?.type !== "suspended_ceiling_elastic_hanger"
   ) {
+    return null;
+  }
+
+  const isNarrowPublishedCompositeCeilingFit =
+    !input.floorCovering?.materialClass &&
+    typeof input.floorCovering?.thicknessMm !== "number" &&
+    !input.resilientLayer?.productId &&
+    typeof input.resilientLayer?.thicknessMm !== "number" &&
+    typeof input.resilientLayer?.dynamicStiffnessMNm3 !== "number" &&
+    !input.upperFill?.materialClass &&
+    typeof input.upperFill?.thicknessMm !== "number" &&
+    !input.floatingScreed?.materialClass &&
+    typeof input.floatingScreed?.thicknessMm !== "number" &&
+    thicknessNear(input.baseSlab?.thicknessMm, 150, 30) &&
+    [1, 2].includes(input.lowerTreatment.boardLayerCount ?? 0) &&
+    thicknessNear(input.lowerTreatment.boardThicknessMm, 12.5, 4) &&
+    thicknessNear(input.lowerTreatment.cavityDepthMm, 150, 40) &&
+    thicknessNear(input.lowerTreatment.cavityFillThicknessMm, 100, 60);
+
+  if (isNarrowPublishedCompositeCeilingFit) {
     return null;
   }
 
@@ -228,7 +254,6 @@ export function derivePredictorLowConfidenceFamilyEstimate(
   return (
     deriveConcreteCombinedLowConfidenceEstimate(input) ??
     deriveSteelSuspendedLowConfidenceEstimate(input) ??
-    deriveTimberSuspendedLowConfidenceEstimate(input) ??
     deriveTimberBareLowConfidenceEstimate(input) ??
     deriveCompositeCeilingOnlyLowConfidenceEstimate(input) ??
     null

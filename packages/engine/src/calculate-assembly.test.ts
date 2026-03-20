@@ -4550,6 +4550,84 @@ describe("calculateAssembly", () => {
     ]);
   });
 
+  it("keeps near-match concrete timber-underlay visible-layer stacks on the Knauf concrete archetype lane", () => {
+    const result = calculateAssembly([
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 13 },
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 60 },
+      { floorRole: "ceiling_cavity", materialId: "furring_channel", thicknessMm: 110 },
+      { floorRole: "floor_covering", materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: 18 },
+      { floorRole: "base_structure", materialId: "concrete", thicknessMm: 165 }
+    ]);
+
+    expect(result.floorSystemMatch).toBeNull();
+    expect(result.floorSystemEstimate?.kind).toBe("family_archetype");
+    expect(result.impact?.basis).toBe("predictor_floor_system_family_archetype_estimate");
+    expect(result.impact?.LnW).toBe(51);
+    expect(result.floorSystemRatings?.Rw).toBe(63);
+    expect(result.floorSystemRatings?.RwCtr).toBe(57);
+    expect(result.impact?.estimateCandidateIds).toEqual([
+      "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026"
+    ]);
+    expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(true);
+    expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
+  });
+
+  it("keeps near-match concrete tile-ceiling visible-layer stacks on the Knauf tile archetype lane", () => {
+    const result = calculateAssembly([
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 13 },
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 50 },
+      { floorRole: "ceiling_cavity", materialId: "furring_channel", thicknessMm: 310 },
+      { floorRole: "floor_covering", materialId: "ceramic_tile", thicknessMm: 8 },
+      { floorRole: "base_structure", materialId: "concrete", thicknessMm: 205 }
+    ]);
+
+    expect(result.floorSystemMatch).toBeNull();
+    expect(result.floorSystemEstimate?.kind).toBe("family_archetype");
+    expect(result.impact?.basis).toBe("predictor_floor_system_family_archetype_estimate");
+    expect(result.impact?.LnW).toBe(45);
+    expect(result.floorSystemRatings?.Rw).toBe(69);
+    expect(result.floorSystemRatings?.RwCtr).toBe(64);
+    expect(result.impact?.estimateCandidateIds).toEqual([
+      "knauf_cc60_1b_concrete200_tile_acoustic_underlay_lab_2026"
+    ]);
+    expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(true);
+    expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
+  });
+
+  it("keeps near-match concrete tile-underlay ceiling visible-layer stacks on the combined Knauf tile archetype lane", () => {
+    const result = calculateAssembly(
+      [
+        { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 13 },
+        { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 13 },
+        { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 50 },
+        { floorRole: "ceiling_cavity", materialId: "furring_channel", thicknessMm: 310 },
+        { floorRole: "floor_covering", materialId: "ceramic_tile", thicknessMm: 8 },
+        { floorRole: "resilient_layer", materialId: "generic_resilient_underlay", thicknessMm: 5 },
+        { floorRole: "base_structure", materialId: "concrete", thicknessMm: 205 }
+      ],
+      {
+        targetOutputs: ["Ln,w", "DeltaLw"]
+      }
+    );
+
+    expect(result.floorSystemMatch).toBeNull();
+    expect(result.floorSystemEstimate?.kind).toBe("family_archetype");
+    expect(result.impact?.basis).toBe("predictor_floor_system_family_archetype_estimate");
+    expect(result.impact?.LnW).toBe(45);
+    expect(result.impact?.DeltaLw).toBeUndefined();
+    expect(result.floorSystemRatings?.Rw).toBe(69);
+    expect(result.floorSystemRatings?.RwCtr).toBe(64);
+    expect(result.impact?.estimateCandidateIds).toEqual([
+      "knauf_cc60_1b_concrete200_tile_acoustic_underlay_lab_2026"
+    ]);
+    expect(result.supportedImpactOutputs).toEqual(["Ln,w"]);
+    expect(result.unsupportedImpactOutputs).toEqual(["DeltaLw"]);
+    expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(true);
+    expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
+  });
+
   it("carries exact family rows into direct standardized field outputs on the main impact lane", () => {
     const result = calculateAssembly(
       [
@@ -4596,6 +4674,79 @@ describe("calculateAssembly", () => {
     expect(result.impact?.metricBasis?.LnW).toBe("predictor_bare_massive_floor_iso12354_annexc_estimate");
     expect(result.impact?.metricBasis?.LPrimeNW).toBe("estimated_field_lprimenw_from_lnw_plus_k");
     expect(result.impact?.metricBasis?.LPrimeNTw).toBe("estimated_standardized_field_lprimentw_from_lprimenw_plus_room_volume");
+  });
+
+  it("carries predictor-backed timber dry-family estimates into live field continuation on the main impact lane", () => {
+    const result = calculateAssembly(
+      [
+        { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 12.5 },
+        { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+        { floorRole: "floor_covering", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 25 },
+        { floorRole: "resilient_layer", materialId: "mw_t_impact_layer", thicknessMm: 30 },
+        { floorRole: "base_structure", materialId: "timber_frame_floor", thicknessMm: 220 }
+      ],
+      {
+        impactFieldContext: {
+          fieldKDb: 2,
+          receivingRoomVolumeM3: 50
+        },
+        targetOutputs: ["L'n,w", "L'nT,w", "L'nT,50"]
+      }
+    );
+
+    expect(result.floorSystemEstimate?.kind).toBe("family_archetype");
+    expect(result.impact?.basis).toBe("mixed_predicted_plus_estimated_local_guide");
+    expect(result.impact?.LnW).toBe(57.9);
+    expect(result.impact?.LPrimeNW).toBe(59.9);
+    expect(result.impact?.LPrimeNTw).toBe(57.9);
+    expect(result.impact?.LPrimeNT50).toBe(61.4);
+    expect(result.impact?.estimateCandidateIds).toEqual([
+      "dataholz_gdrtxn01a_timber_frame_dry_lab_2026",
+      "dataholz_gdrtxn02b_timber_frame_dry_lab_2026",
+      "dataholz_gdrtxa03b_timber_frame_dry_lab_2026"
+    ]);
+    expect(result.impact?.metricBasis?.LnW).toBe("predictor_floor_system_family_archetype_estimate");
+    expect(result.impact?.metricBasis?.LPrimeNW).toBe("estimated_field_lprimenw_from_lnw_plus_k");
+    expect(result.impact?.metricBasis?.LPrimeNTw).toBe("estimated_standardized_field_lprimentw_from_lprimenw_plus_room_volume");
+    expect(result.impact?.metricBasis?.LPrimeNT50).toBe("estimated_local_guide_tr_simple_method_lnwci_plus_k_plus_hd");
+    expect(result.supportedImpactOutputs).toEqual(["L'n,w", "L'nT,w", "L'nT,50"]);
+    expect(result.unsupportedImpactOutputs).toEqual([]);
+  });
+
+  it("carries predictor-backed composite ceiling-only estimates into live standardized field continuation", () => {
+    const result = calculateAssembly(
+      [
+        { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 15 },
+        { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 15 },
+        { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 50 },
+        { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: 150 },
+        { floorRole: "base_structure", materialId: "composite_steel_deck", thicknessMm: 150 }
+      ],
+      {
+        impactFieldContext: {
+          fieldKDb: 2,
+          receivingRoomVolumeM3: 50
+        },
+        targetOutputs: ["L'n,w", "L'nT,w"]
+      }
+    );
+
+    expect(result.floorSystemEstimate?.kind).toBe("family_general");
+    expect(result.impact?.basis).toBe("mixed_predicted_plus_estimated_standardized_field_volume_normalization");
+    expect(result.impact?.LnW).toBe(64.1);
+    expect(result.impact?.LPrimeNW).toBe(66.1);
+    expect(result.impact?.LPrimeNTw).toBe(64.1);
+    expect(result.impact?.LPrimeNT50).toBeUndefined();
+    expect(result.impact?.estimateCandidateIds).toEqual([
+      "pmc_m1_dry_floating_plus_c2x_lab_2026",
+      "pmc_m1_dry_floating_plus_c1x_lab_2026",
+      "pmc_m1_bare_composite_lab_2026"
+    ]);
+    expect(result.impact?.metricBasis?.LnW).toBe("predictor_composite_panel_published_interaction_estimate");
+    expect(result.impact?.metricBasis?.LPrimeNW).toBe("estimated_field_lprimenw_from_lnw_plus_k");
+    expect(result.impact?.metricBasis?.LPrimeNTw).toBe("estimated_standardized_field_lprimentw_from_lprimenw_plus_room_volume");
+    expect(result.supportedImpactOutputs).toEqual(["L'n,w", "L'nT,w"]);
+    expect(result.unsupportedImpactOutputs).toEqual([]);
   });
 
   it("carries exact family CI,50-2500 into direct L'nT,50 on the main impact lane", () => {
@@ -5078,7 +5229,7 @@ describe("calculateAssembly", () => {
     expect(result.floorSystemEstimate?.airborneRatings.Rw).toBe(63.6);
   });
 
-  it("keeps layer-driven steel joist stacks on the upstream low-confidence fallback lane", () => {
+  it("keeps layer-driven steel joist vinyl stacks on the narrower Pliteq family lane", () => {
     const result = calculateAssembly(
       [
         { floorRole: "base_structure", materialId: "steel_joist_floor", thicknessMm: 250 },
@@ -5109,19 +5260,49 @@ describe("calculateAssembly", () => {
             boardMaterialClass: "firestop_board"
           }
         },
-        targetOutputs: ["Ln,w"]
+        targetOutputs: ["Ln,w", "Rw", "Ctr"]
       }
     );
 
-    expect(result.impact?.basis).toBe("predictor_floor_system_low_confidence_estimate");
-    expect(result.impact?.LnW).toBe(58.3);
-    expect(result.floorSystemRatings?.Rw).toBe(61);
-    expect(result.floorSystemRatings?.RwCtr).toBe(57);
+    expect(result.floorSystemEstimate?.kind).toBe("family_general");
+    expect(result.impact?.basis).toBe("predictor_floor_system_family_general_estimate");
+    expect(result.impact?.LnW).toBe(58);
+    expect(result.floorSystemRatings?.Rw).toBe(60);
+    expect(result.floorSystemRatings?.RwCtr).toBeUndefined();
+    expect(result.impact?.estimateCandidateIds).toEqual([
+      "pliteq_steel_joist_250_rst02_vinyl_lab_2026",
+      "pliteq_steel_joist_250_rst02_wood_lab_2026",
+      "pliteq_steel_joist_250_rst12_porcelain_lab_2026"
+    ]);
     expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(true);
-    expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(true);
+    expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
+    expect(result.supportedTargetOutputs).toEqual(["Ln,w", "Rw", "Ctr"]);
+    expect(result.unsupportedTargetOutputs).toEqual([]);
   });
 
-  it("keeps combined reinforced-concrete predictor input on the upstream low-confidence fallback lane", () => {
+  it("keeps timber bare-floor laminate layer stacks impact-only on the low-confidence lane while leaving airborne screening separate", () => {
+    const result = calculateAssembly(
+      [
+        { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 9 },
+        { floorRole: "base_structure", materialId: "timber_joist_floor", thicknessMm: 240 }
+      ],
+      {
+        targetOutputs: ["Rw", "Ctr", "Ln,w", "CI", "Ln,w+CI"]
+      }
+    );
+
+    expect(result.floorSystemEstimate?.kind).toBe("low_confidence");
+    expect(result.impact?.basis).toBe("predictor_floor_system_low_confidence_estimate");
+    expect(result.impact?.LnW).toBe(70.4);
+    expect(result.floorSystemRatings).toBeNull();
+    expect(result.supportedTargetOutputs).toEqual(["Rw", "Ctr", "Ln,w"]);
+    expect(result.unsupportedTargetOutputs).toEqual(["CI", "Ln,w+CI"]);
+    expect(result.warnings).toContain(
+      "Low-confidence timber bare-floor predictor support is currently impact-only. DynEcho kept proxy airborne companions hidden instead of presenting nil-ceiling family rows as supported Rw / Ctr outputs."
+    );
+  });
+
+  it("keeps combined reinforced-concrete predictor input on the narrower family-general lane", () => {
     const result = calculateAssembly(
       [
         { materialId: "gypsum_board", thicknessMm: 12.5 },
@@ -5148,12 +5329,12 @@ describe("calculateAssembly", () => {
       }
     );
 
-    expect(result.impact?.basis).toBe("predictor_floor_system_low_confidence_estimate");
+    expect(result.impact?.basis).toBe("predictor_floor_system_family_general_estimate");
     expect(result.impact?.LnW).toBe(50);
     expect(result.floorSystemRatings?.Rw).toBe(65.9);
     expect(result.floorSystemRatings?.RwCtr).toBe(57);
     expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(true);
-    expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(true);
+    expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
   });
 
   it("applies structured airborne leakage and field-flanking overlays without altering the impact lane", () => {

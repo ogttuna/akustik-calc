@@ -208,6 +208,66 @@
       }
     },
     {
+      "id": "dataholz_timber_frame_dry_family_field_chain",
+      "family": "timber_frame",
+      "kind": "field_live",
+      "source": "Dataholz dry timber frame family blend + dynamicCalc/Turkish guide continuation",
+      "visibleLayers": [
+        { "floorRole": "ceiling_board", "materialId": "gypsum_board", "thicknessMm": 12.5 },
+        { "floorRole": "ceiling_fill", "materialId": "rockwool", "thicknessMm": 100 },
+        { "floorRole": "floor_covering", "materialId": "dry_floating_gypsum_fiberboard", "thicknessMm": 25 },
+        { "floorRole": "resilient_layer", "materialId": "mw_t_impact_layer", "thicknessMm": 30 },
+        { "floorRole": "base_structure", "materialId": "timber_frame_floor", "thicknessMm": 220 }
+      ],
+      "options": {
+        "impactFieldContext": {
+          "fieldKDb": 2,
+          "receivingRoomVolumeM3": 50
+        },
+        "targetOutputs": ["L'n,w", "L'nT,w", "L'nT,50"]
+      },
+      "expected": {
+        "basis": "mixed_predicted_plus_estimated_local_guide",
+        "lprimeNwDb": 59.9,
+        "lprimeNTwDb": 57.9,
+        "lprimeNT50Db": 61.4
+      },
+      "tolerances": {
+        "lprimeNwDb": 0.1,
+        "lprimeNTwDb": 0.1,
+        "lprimeNT50Db": 0.1
+      }
+    },
+    {
+      "id": "pmc_composite_ceiling_only_family_field_chain",
+      "family": "composite_panel",
+      "kind": "field_live",
+      "source": "PMC open-access composite panel floor study + dynamicCalc standardized field continuation",
+      "visibleLayers": [
+        { "floorRole": "ceiling_board", "materialId": "firestop_board", "thicknessMm": 15 },
+        { "floorRole": "ceiling_board", "materialId": "firestop_board", "thicknessMm": 15 },
+        { "floorRole": "ceiling_fill", "materialId": "rockwool", "thicknessMm": 50 },
+        { "floorRole": "ceiling_cavity", "materialId": "resilient_stud_ceiling", "thicknessMm": 150 },
+        { "floorRole": "base_structure", "materialId": "composite_steel_deck", "thicknessMm": 150 }
+      ],
+      "options": {
+        "impactFieldContext": {
+          "fieldKDb": 2,
+          "receivingRoomVolumeM3": 50
+        },
+        "targetOutputs": ["L'n,w", "L'nT,w"]
+      },
+      "expected": {
+        "basis": "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
+        "lprimeNwDb": 66.1,
+        "lprimeNTwDb": 64.1
+      },
+      "tolerances": {
+        "lprimeNwDb": 0.1,
+        "lprimeNTwDb": 0.1
+      }
+    },
+    {
       "id": "ubiq_bound_field_chain",
       "family": "lightweight_steel",
       "kind": "field_bound",

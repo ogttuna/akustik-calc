@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 
 import {
   formatValidationFamilyBenchmarkMix,
+  getValidationCoverageSnapshotRows,
+  getValidationHardeningTasks,
   getValidationFamilyModeRows,
   IMPACT_VALIDATION_FAMILY_MATRIX
 } from "./validation-regime";
@@ -11,7 +13,7 @@ describe("validation regime helpers", () => {
     const family = IMPACT_VALIDATION_FAMILY_MATRIX.find((entry) => entry.id === "reinforced_concrete");
 
     expect(family).toBeTruthy();
-    expect(formatValidationFamilyBenchmarkMix(family!)).toBe("4 exact · 3 estimate · 1 low confidence · 1 bound · 3 field");
+    expect(formatValidationFamilyBenchmarkMix(family!)).toBe("4 exact · 4 estimate · 1 bound · 3 field");
   });
 
   it("surfaces family mode rows with benchmark counts for bound-heavy families", () => {
@@ -21,10 +23,10 @@ describe("validation regime helpers", () => {
 
     const rows = getValidationFamilyModeRows(family!);
 
-    expect(formatValidationFamilyBenchmarkMix(family!)).toBe("7 exact · 4 estimate · 2 low confidence · 3 bound");
+    expect(formatValidationFamilyBenchmarkMix(family!)).toBe("7 exact · 6 estimate · 3 bound");
     expect(rows.find((row) => row.id === "official_floor_system_bound")?.caseCount).toBe(2);
     expect(rows.find((row) => row.id === "family_specific_bound_estimate")?.caseCount).toBe(1);
-    expect(rows.find((row) => row.id === "low_confidence_estimate")?.caseCount).toBe(2);
+    expect(rows.find((row) => row.id === "family_general_estimate")?.caseCount).toBe(4);
     expect(rows.find((row) => row.id === "official_floor_system")?.label).toMatch(/official floor-system exact/i);
   });
 
@@ -32,10 +34,10 @@ describe("validation regime helpers", () => {
     const family = IMPACT_VALIDATION_FAMILY_MATRIX.find((entry) => entry.id === "timber_frame");
 
     expect(family).toBeTruthy();
-    expect(formatValidationFamilyBenchmarkMix(family!)).toBe("13 exact · 4 estimate · 2 low confidence");
+    expect(formatValidationFamilyBenchmarkMix(family!)).toBe("13 exact · 5 estimate · 1 low confidence");
     expect(getValidationFamilyModeRows(family!).find((row) => row.id === "family_archetype_estimate")?.caseCount).toBe(2);
-    expect(getValidationFamilyModeRows(family!).find((row) => row.id === "family_general_estimate")?.caseCount).toBe(2);
-    expect(getValidationFamilyModeRows(family!).find((row) => row.id === "low_confidence_estimate")?.caseCount).toBe(2);
+    expect(getValidationFamilyModeRows(family!).find((row) => row.id === "family_general_estimate")?.caseCount).toBe(3);
+    expect(getValidationFamilyModeRows(family!).find((row) => row.id === "low_confidence_estimate")?.caseCount).toBe(1);
   });
 
   it("tracks the broader dry CLT blend separately from the family-specific CLT lanes", () => {
@@ -54,5 +56,28 @@ describe("validation regime helpers", () => {
     expect(formatValidationFamilyBenchmarkMix(family!)).toBe("2 estimate · 2 field");
     expect(getValidationFamilyModeRows(family!).find((row) => row.id === "family_archetype_estimate")?.caseCount).toBe(2);
     expect(getValidationFamilyModeRows(family!).find((row) => row.id === "field_standardized_volume_estimate")?.caseCount).toBe(2);
+  });
+
+  it("builds a coverage snapshot row that flags the remaining timber fallback while releasing composite from staged field-only status", () => {
+    const rows = getValidationCoverageSnapshotRows();
+    const timberRow = rows.find((row) => row.id === "timber_frame");
+    const compositeRow = rows.find((row) => row.id === "composite_panel");
+
+    expect(timberRow).toBeTruthy();
+    expect(timberRow?.focusLabel).toBe("Remaining low-confidence lane");
+    expect(timberRow?.benchmarkMix).toBe("13 exact · 5 estimate · 1 low confidence");
+
+    expect(compositeRow).toBeTruthy();
+    expect(compositeRow?.focusLabel).toBe("Broadly covered");
+  });
+
+  it("derives next hardening tasks directly from the current family matrix", () => {
+    const tasks = getValidationHardeningTasks();
+
+    expect(tasks.find((task) => task.id === "retire-low-confidence")?.familyLabels).toContain("timber frame / joist families");
+    expect(tasks.find((task) => task.id === "expand-field-continuation")).toBeUndefined();
+    expect(tasks.find((task) => task.id === "replace-bound-corridors")?.familyLabels).toContain(
+      "lightweight steel / open-web joists"
+    );
   });
 });

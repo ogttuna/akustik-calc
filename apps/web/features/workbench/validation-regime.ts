@@ -17,6 +17,23 @@ export type ValidationPosture = {
   posture: "bound" | "estimate" | "exact" | "inactive" | "low_confidence";
 };
 
+export type ValidationCoverageSnapshotRow = {
+  benchmarkMix: string;
+  fieldCoverageLabel: string;
+  floorCoverageLabel: string;
+  focusDetail: string;
+  focusLabel: string;
+  id: string;
+  label: string;
+};
+
+export type ValidationHardeningTask = {
+  detail: string;
+  familyLabels: string[];
+  id: string;
+  label: string;
+};
+
 export function describeImpactValidationPosture(result: AssemblyCalculation | null): ValidationPosture {
   if (!result) {
     return {
@@ -272,6 +289,96 @@ export function formatValidationFamilyBenchmarkMix(
   ].filter((part): part is string => Boolean(part));
 
   return parts.length > 0 ? parts.join(" · ") : "No tracked benchmark mix";
+}
+
+export function getValidationCoverageSnapshotRows(): ValidationCoverageSnapshotRow[] {
+  return IMPACT_VALIDATION_FAMILY_MATRIX.map((entry) => {
+    let focusLabel = "Broadly covered";
+    let focusDetail = "Exact, estimate, and field evidence are already separated without a live low-confidence escape hatch.";
+
+    if (entry.postureCaseCounts.low_confidence > 0) {
+      focusLabel = "Remaining low-confidence lane";
+      focusDetail = `${entry.postureCaseCounts.low_confidence} benchmark case still needs the final fallback lane, so this family remains the sharpest place to tighten topology support next.`;
+    } else if (entry.fieldCoverage === "staged") {
+      focusLabel = "Field continuation staged";
+      focusDetail = "Floor-side coverage exists, but the in-situ continuation corpus is not live yet for this family.";
+    } else if (entry.floorCoverage === "estimate" && entry.postureCaseCounts.exact === 0) {
+      focusLabel = "Estimate-led floor corridor";
+      focusDetail = "This family is already guarded, but the floor-side corpus still leans on family estimates rather than exact anchors.";
+    } else if (entry.floorCoverage === "bound" || entry.fieldCoverage === "bound") {
+      focusLabel = "Conservative bound corridor";
+      focusDetail = "Part of this family still resolves through a bound-only guard instead of a live same-family result.";
+    }
+
+    return {
+      benchmarkMix: formatValidationFamilyBenchmarkMix(entry),
+      fieldCoverageLabel: formatFieldCoverageLabel(entry.fieldCoverage),
+      floorCoverageLabel: formatFloorCoverageLabel(entry.floorCoverage),
+      focusDetail,
+      focusLabel,
+      id: entry.id,
+      label: entry.label
+    };
+  });
+}
+
+export function getValidationHardeningTasks(): ValidationHardeningTask[] {
+  const lowConfidenceFamilies = IMPACT_VALIDATION_FAMILY_MATRIX.filter(
+    (entry) => entry.postureCaseCounts.low_confidence > 0
+  ).map((entry) => entry.label);
+  const stagedFieldFamilies = IMPACT_VALIDATION_FAMILY_MATRIX.filter(
+    (entry) => entry.fieldCoverage === "staged"
+  ).map((entry) => entry.label);
+  const estimateLedFamilies = IMPACT_VALIDATION_FAMILY_MATRIX.filter(
+    (entry) => entry.floorCoverage === "estimate" && entry.postureCaseCounts.exact === 0
+  ).map((entry) => entry.label);
+  const boundFamilies = IMPACT_VALIDATION_FAMILY_MATRIX.filter(
+    (entry) => entry.floorCoverage === "bound" || entry.fieldCoverage === "bound"
+  ).map((entry) => entry.label);
+
+  const tasks: ValidationHardeningTask[] = [];
+
+  if (lowConfidenceFamilies.length > 0) {
+    tasks.push({
+      detail:
+        "Retire the last low-confidence family lane or keep shrinking its scope until no published-family fallback is needed for that topology.",
+      familyLabels: lowConfidenceFamilies,
+      id: "retire-low-confidence",
+      label: "Retire the remaining low-confidence lane"
+    });
+  }
+
+  if (stagedFieldFamilies.length > 0) {
+    tasks.push({
+      detail:
+        "Add real field continuation anchors so L'n,w and L'nT,w coverage stops lagging behind the floor-side family map.",
+      familyLabels: stagedFieldFamilies,
+      id: "expand-field-continuation",
+      label: "Expand staged field continuation families"
+    });
+  }
+
+  if (estimateLedFamilies.length > 0) {
+    tasks.push({
+      detail:
+        "Tighten the estimate-led floor corridors with narrower archetypes or exact anchors before broad family estimates become the default read.",
+      familyLabels: estimateLedFamilies,
+      id: "tighten-estimate-led-floor",
+      label: "Tighten estimate-led floor corridors"
+    });
+  }
+
+  if (boundFamilies.length > 0) {
+    tasks.push({
+      detail:
+        "Replace conservative bound-only support with live same-family evidence where possible, especially on lab-to-field continuation edges.",
+      familyLabels: boundFamilies,
+      id: "replace-bound-corridors",
+      label: "Replace bound-only support where possible"
+    });
+  }
+
+  return tasks;
 }
 
 export function getValidationFamilyModeRows(

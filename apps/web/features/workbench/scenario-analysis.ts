@@ -10,6 +10,8 @@ import type {
 
 import { normalizeRows } from "./normalize-rows";
 import type { StudyMode } from "./preset-definitions";
+import { collectScenarioInputWarnings } from "./input-sanity";
+import { buildWorkbenchWarningNotes } from "./workbench-warning-notes";
 import type { LayerDraft } from "./workbench-store";
 
 export type EvaluatedScenario = {
@@ -37,6 +39,13 @@ export function evaluateScenario(input: {
   targetOutputs?: readonly RequestedOutputId[];
 }): EvaluatedScenario {
   const normalized = normalizeRows(input.rows);
+  const inputWarnings = collectScenarioInputWarnings({
+    airborneContext: input.airborneContext ?? null,
+    impactFieldContext: input.impactFieldContext ?? null,
+    rows: input.rows,
+    studyMode: input.studyMode,
+    targetOutputs: input.targetOutputs ?? []
+  });
   const result =
     normalized.layers.length > 0
       ? calculateAssembly(normalized.layers, {
@@ -51,6 +60,8 @@ export function evaluateScenario(input: {
   return {
     ...input,
     result,
-    warnings: result ? [...normalized.warnings, ...result.warnings] : normalized.warnings
+    warnings: result
+      ? buildWorkbenchWarningNotes(result, [...normalized.warnings, ...inputWarnings, ...result.warnings])
+      : [...normalized.warnings, ...inputWarnings]
   };
 }

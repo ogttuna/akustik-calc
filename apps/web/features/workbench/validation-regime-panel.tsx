@@ -15,6 +15,8 @@ import {
   formatValidationModePostureLabel,
   getActiveValidationFamily,
   getActiveValidationMode,
+  getValidationCoverageSnapshotRows,
+  getValidationHardeningTasks,
   getValidationFamilyModeRows,
   IMPACT_VALIDATION_CORPUS_SUMMARY,
   IMPACT_VALIDATION_FAMILY_MATRIX,
@@ -70,6 +72,8 @@ export function ValidationRegimePanel({ result }: ValidationRegimePanelProps) {
   const activeMode = getActiveValidationMode(result);
   const impactTone = getPostureTone(impactPosture.posture);
   const airborneTone = getPostureTone(airbornePosture.posture);
+  const coverageSnapshotRows = getValidationCoverageSnapshotRows();
+  const hardeningTasks = getValidationHardeningTasks();
   const StatusIcon =
     impactPosture.posture === "exact"
       ? ShieldCheck
@@ -234,6 +238,93 @@ export function ValidationRegimePanel({ result }: ValidationRegimePanelProps) {
               </article>
             );
           })}
+        </div>
+      </div>
+
+      <div className="mt-5 rounded-[1.3rem] border hairline bg-[color:var(--paper)] px-4 py-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">
+              Coverage snapshot
+            </div>
+            <p className="mt-2 max-w-3xl text-sm leading-7 text-[color:var(--ink-soft)]">
+              This is the compact current-state table behind dynamic calc. It shows which family is broadly covered,
+              which one is still estimate-led, and where the last true fallback or staged field gap still lives.
+            </p>
+          </div>
+          <Pill tone="neutral">{coverageSnapshotRows.length} tracked families</Pill>
+        </div>
+
+        <div className="mt-4 overflow-hidden rounded-[1.1rem] border hairline">
+          <div className="hidden gap-3 bg-black/[0.04] px-4 py-3 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)] xl:grid xl:grid-cols-[1.35fr_0.8fr_0.8fr_1.15fr]">
+            <div>Family</div>
+            <div>Floor</div>
+            <div>Field</div>
+            <div>Current focus</div>
+          </div>
+          {coverageSnapshotRows.map((row) => (
+            <article
+              className="grid gap-3 border-t border-black/8 px-4 py-3 first:border-t-0 xl:grid-cols-[1.35fr_0.8fr_0.8fr_1.15fr]"
+              key={`coverage-${row.id}`}
+            >
+              <div className="min-w-0">
+                <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)] xl:hidden">
+                  Family
+                </div>
+                <div className="text-sm font-semibold capitalize text-[color:var(--ink)]">{row.label}</div>
+                <p className="mt-1 text-xs leading-6 text-[color:var(--ink-soft)]">{row.benchmarkMix}</p>
+              </div>
+              <div className="min-w-0">
+                <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)] xl:hidden">
+                  Floor
+                </div>
+                <div className="text-sm font-semibold text-[color:var(--ink)]">{row.floorCoverageLabel}</div>
+              </div>
+              <div className="min-w-0">
+                <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)] xl:hidden">
+                  Field
+                </div>
+                <div className="text-sm font-semibold text-[color:var(--ink)]">{row.fieldCoverageLabel}</div>
+              </div>
+              <div className="min-w-0">
+                <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)] xl:hidden">
+                  Current focus
+                </div>
+                <div className="text-sm font-semibold text-[color:var(--ink)]">{row.focusLabel}</div>
+                <p className="mt-1 text-xs leading-6 text-[color:var(--ink-soft)]">{row.focusDetail}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-5 rounded-[1.3rem] border hairline bg-[color:var(--paper)] px-4 py-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">
+              Next hardening
+            </div>
+            <p className="mt-2 max-w-3xl text-sm leading-7 text-[color:var(--ink-soft)]">
+              These are the next engine jobs implied by the current validation matrix, not generic roadmap filler.
+            </p>
+          </div>
+          <Pill tone="warning">{hardeningTasks.length} active tracks</Pill>
+        </div>
+
+        <div className="mt-4 grid gap-3 xl:grid-cols-2">
+          {hardeningTasks.map((task) => (
+            <article className="rounded-[1.1rem] border hairline bg-black/[0.025] px-4 py-4" key={task.id}>
+              <div className="flex flex-wrap items-center gap-2">
+                <Pill tone="warning">Next</Pill>
+                <Pill tone="neutral">{task.familyLabels.length} families</Pill>
+              </div>
+              <div className="mt-3 text-sm font-semibold text-[color:var(--ink)]">{task.label}</div>
+              <p className="mt-2 text-sm leading-7 text-[color:var(--ink-soft)]">{task.detail}</p>
+              <p className="mt-3 text-xs leading-6 text-[color:var(--ink-faint)]">
+                {task.familyLabels.join(" · ")}
+              </p>
+            </article>
+          ))}
         </div>
       </div>
 

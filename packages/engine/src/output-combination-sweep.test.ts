@@ -1,7 +1,6 @@
 import { BOUND_FLOOR_SYSTEMS, EXACT_FLOOR_SYSTEMS } from "@dynecho/catalogs";
 import {
   getFloorSystemDerivedRwPlusCtr,
-  type ExactFloorSystem,
   type FloorRole,
   type FloorSystemMatchCriteria,
   type FloorSystemRoleCriteria,
