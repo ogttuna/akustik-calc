@@ -87,11 +87,17 @@ export function deriveGuidedRouteSignals(input: {
               value: "Tag floor roles"
             }
           : validationPosture === "bound"
-            ? {
-                detail: "The current lane is conservative support only. Prefer an exact or narrower supported family before treating this as a delivery-ready result.",
-                tone: "warning",
-                value: "Prefer exact evidence"
-              }
+            ? topologyGap
+              ? {
+                  detail: topologyGap.detail,
+                  tone: "warning",
+                  value: topologyGap.value
+                }
+              : {
+                  detail: "The current lane is conservative support only. Prefer an exact or narrower supported family before treating this as a delivery-ready result.",
+                  tone: "warning",
+                  value: "Prefer exact evidence"
+                }
             : validationPosture === "low_confidence"
               ? {
                   detail:

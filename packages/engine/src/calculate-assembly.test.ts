@@ -3750,6 +3750,30 @@ describe("calculateAssembly", () => {
     ).toBe(true);
   });
 
+  it("collapses lightweight-steel support-form ambiguity when both official bound families converge", () => {
+    const result = calculateAssembly([
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+      { floorRole: "ceiling_cavity", materialId: "ubiq_resilient_ceiling", thicknessMm: 65 },
+      { floorRole: "floor_covering", materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: 20 },
+      { floorRole: "floating_screed", materialId: "inex_floor_panel", thicknessMm: 19 },
+      { floorRole: "base_structure", materialId: "lightweight_steel_floor", thicknessMm: 200 }
+    ]);
+
+    expect(result.impact).toBeNull();
+    expect(result.boundFloorSystemMatch).toBeNull();
+    expect(result.boundFloorSystemEstimate?.kind).toBe("bound_interpolation");
+    expect(result.lowerBoundImpact?.basis).toBe("predictor_lightweight_steel_bound_interpolation_estimate");
+    expect(result.lowerBoundImpact?.LnWUpperBound).toBe(53);
+    expect(result.boundFloorSystemEstimate?.airborneRatings.Rw).toBe(62);
+    expect(result.boundFloorSystemEstimate?.airborneRatings.RwCtr).toBe(56);
+    expect(result.boundFloorSystemEstimate?.sourceSystems.map((system: { id: string }) => system.id)).toEqual([
+      "ubiq_fl32_steel_200_lab_2026",
+      "ubiq_fl33_open_web_steel_200_lab_2026"
+    ]);
+    expect(result.warnings.some((warning: string) => /support form was left unspecified/i.test(warning))).toBe(false);
+  });
+
   it("interpolates the lightweight-steel FL-28 family before falling back to a broad steel blend", () => {
     const result = calculateAssembly([
       { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },

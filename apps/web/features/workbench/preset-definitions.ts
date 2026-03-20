@@ -26,6 +26,7 @@ export type PresetId =
   | "steel_suspended_fallback"
   | "timber_bare_impact_only_fallback"
   | "ubiq_steel_250_bound"
+  | "ubiq_steel_200_unspecified_bound"
   | "ubiq_steel_300_unspecified_bound"
   | "regupol_curve_8_exact"
   | "regupol_curve_8_wet_bound"
@@ -397,6 +398,22 @@ export const WORKBENCH_PRESETS: readonly PresetDefinition[] = [
       { materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: "20", floorRole: "floor_covering" },
       { materialId: "inex_floor_panel", thicknessMm: "19", floorRole: "floating_screed" },
       { materialId: "steel_joist_floor", thicknessMm: "250", floorRole: "base_structure" }
+    ]
+  },
+  {
+    id: "ubiq_steel_200_unspecified_bound",
+    label: "UBIQ Bound Unified 200",
+    note: "lightweight steel + INEX 19 + 2 x 16 mm ceiling where both support families converge",
+    summary:
+      "A lightweight-steel bound preset with the carrier still left as generic lightweight steel, but at 200 mm both official UBIQ bound families publish the same support envelope so DynEcho does not need the conservative crossover warning.",
+    studyMode: "floor",
+    rows: [
+      { materialId: "firestop_board", thicknessMm: "16", floorRole: "ceiling_board" },
+      { materialId: "firestop_board", thicknessMm: "16", floorRole: "ceiling_board" },
+      { materialId: "ubiq_resilient_ceiling", thicknessMm: "65", floorRole: "ceiling_cavity" },
+      { materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: "20", floorRole: "floor_covering" },
+      { materialId: "inex_floor_panel", thicknessMm: "19", floorRole: "floating_screed" },
+      { materialId: "lightweight_steel_floor", thicknessMm: "200", floorRole: "base_structure" }
     ]
   },
   {

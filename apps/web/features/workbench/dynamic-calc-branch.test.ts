@@ -64,6 +64,21 @@ describe("getDynamicCalcBranchSummary", () => {
     expect(summary.detail).toContain("Published family blend estimate");
   });
 
+  it("keeps support-form-unspecified lightweight steel bounds explicit as crossover support", () => {
+    const scenario = evaluatePreset("ubiq_steel_300_unspecified_bound");
+
+    const summary = getDynamicCalcBranchSummary({
+      result: scenario.result,
+      studyMode: "floor"
+    });
+
+    expect(summary.value).toBe("Combined upper and lower system");
+    expect(summary.tone).toBe("warning");
+    expect(summary.detail).toContain("Bound family estimate is active through");
+    expect(summary.detail).toContain("support form is still open");
+    expect(summary.detail).toContain("open-web / rolled steel");
+  });
+
   it("surfaces impact-only low-confidence timber bare-floor fallback without claiming a floor-family airborne companion", () => {
     const scenario = evaluatePreset("timber_bare_impact_only_fallback");
 

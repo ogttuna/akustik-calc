@@ -4,6 +4,7 @@ import { getPresetById, type PresetId } from "./preset-definitions";
 import { IMPACT_ONLY_LOW_CONFIDENCE_TOPOLOGY_GAP_VALUE } from "./impact-only-low-confidence-floor-lane";
 import { evaluateScenario } from "./scenario-analysis";
 import { getGuidedTopologyGap } from "./guided-topology-gap";
+import { STEEL_BOUND_SUPPORT_FORM_GAP_VALUE } from "./steel-bound-support-form-lane";
 
 function evaluatePreset(presetId: PresetId) {
   const preset = getPresetById(presetId);
@@ -47,6 +48,20 @@ describe("getGuidedTopologyGap", () => {
     });
 
     expect(gap).toBeNull();
+  });
+
+  it("explains when lightweight steel stays on the missing-support-form crossover bound", () => {
+    const { preset, scenario } = evaluatePreset("ubiq_steel_300_unspecified_bound");
+
+    const gap = getGuidedTopologyGap({
+      result: scenario.result,
+      rows: preset.rows.map((row, index) => ({ ...row, id: `${preset.id}-${index + 1}` })),
+      studyMode: "floor"
+    });
+
+    expect(gap?.value).toBe(STEEL_BOUND_SUPPORT_FORM_GAP_VALUE);
+    expect(gap?.detail).toContain("steel joist / purlin");
+    expect(gap?.detail).toContain("open-web / rolled steel");
   });
 
   it("stays quiet on wall routes", () => {

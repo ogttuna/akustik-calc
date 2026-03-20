@@ -22,6 +22,48 @@ function evaluatePreset(presetId: PresetId) {
 }
 
 describe("getTargetOutputStatus", () => {
+  it("keeps lightweight-steel crossover bounds explicit on both impact and airborne companion cards", () => {
+    const scenario = evaluatePreset("ubiq_steel_300_unspecified_bound");
+
+    const lnwStatus = getTargetOutputStatus({
+      guideResult: null,
+      output: "Ln,w",
+      result: scenario.result
+    });
+    const rwStatus = getTargetOutputStatus({
+      guideResult: null,
+      output: "Rw",
+      result: scenario.result
+    });
+
+    expect(lnwStatus.kind).toBe("engine_bound");
+    expect(lnwStatus.label).toBe("Crossover bound");
+    expect(lnwStatus.note).toContain("carrier is open");
+    expect(rwStatus.kind).toBe("engine_live");
+    expect(rwStatus.note).toContain("carrier stays unspecified");
+  });
+
+  it("keeps converged lightweight-steel bound interpolation off the crossover label", () => {
+    const scenario = evaluatePreset("ubiq_steel_200_unspecified_bound");
+
+    const lnwStatus = getTargetOutputStatus({
+      guideResult: null,
+      output: "Ln,w",
+      result: scenario.result
+    });
+    const rwStatus = getTargetOutputStatus({
+      guideResult: null,
+      output: "Rw",
+      result: scenario.result
+    });
+
+    expect(lnwStatus.kind).toBe("engine_bound");
+    expect(lnwStatus.label).toBe("Bound support");
+    expect(lnwStatus.note).not.toContain("carrier is open");
+    expect(rwStatus.kind).toBe("engine_live");
+    expect(rwStatus.note).not.toContain("carrier stays unspecified");
+  });
+
   it("keeps timber bare-floor low-confidence airborne outputs explicit as separate screening companions", () => {
     const scenario = evaluatePreset("timber_bare_impact_only_fallback");
 

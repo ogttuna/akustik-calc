@@ -6,6 +6,11 @@ import {
   IMPACT_ONLY_LOW_CONFIDENCE_TOPOLOGY_GAP_VALUE,
   isImpactOnlyLowConfidenceFloorLane
 } from "./impact-only-low-confidence-floor-lane";
+import {
+  isSteelBoundSupportFormLane,
+  STEEL_BOUND_SUPPORT_FORM_GAP_DETAIL,
+  STEEL_BOUND_SUPPORT_FORM_GAP_VALUE
+} from "./steel-bound-support-form-lane";
 
 export type GuidedTopologyGap = {
   detail: string;
@@ -35,6 +40,13 @@ export function getGuidedTopologyGap(input: {
 }): GuidedTopologyGap | null {
   if (input.studyMode !== "floor") {
     return null;
+  }
+
+  if (isSteelBoundSupportFormLane(input.result)) {
+    return {
+      detail: STEEL_BOUND_SUPPORT_FORM_GAP_DETAIL,
+      value: STEEL_BOUND_SUPPORT_FORM_GAP_VALUE
+    };
   }
 
   const trace = input.result?.dynamicImpactTrace ?? null;

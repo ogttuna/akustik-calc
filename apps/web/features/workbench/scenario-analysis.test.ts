@@ -316,4 +316,50 @@ describe("scenario analysis", () => {
     expect(scenario.result?.floorSystemRatings?.Rw).toBe(49.8);
     expect(scenario.warnings).not.toContain(IMPACT_ONLY_LOW_CONFIDENCE_FLOOR_FAMILY_NOTE);
   });
+
+  it("moves the lightweight-steel crossover bound into a narrower supported steel lane once the carrier is fixed", () => {
+    const preset = getPresetById("ubiq_steel_300_unspecified_bound");
+    const baseRows = preset.rows.map((row, index) => ({ ...row, id: `${preset.id}-${index + 1}` }));
+    const unspecifiedScenario = evaluateScenario({
+      id: preset.id,
+      name: preset.label,
+      rows: baseRows,
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: ["Rw", "Ln,w", "Ln,w+CI"]
+    });
+    const narrowedScenario = evaluateScenario({
+      id: `${preset.id}-open-web`,
+      name: `${preset.label} narrowed`,
+      rows: baseRows.map((row) =>
+        row.floorRole === "base_structure" ? { ...row, materialId: "open_web_steel_floor" } : row
+      ),
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: ["Rw", "Ln,w", "Ln,w+CI"]
+    });
+
+    expect(unspecifiedScenario.result?.lowerBoundImpact?.basis).toBe(
+      "predictor_lightweight_steel_missing_support_form_bound_estimate"
+    );
+    expect(narrowedScenario.result?.lowerBoundImpact?.basis).toBe("official_floor_system_bound_support");
+    expect(narrowedScenario.warnings.some((warning) => /support form was left unspecified/i.test(warning))).toBe(false);
+  });
+
+  it("keeps converged 200 mm lightweight-steel support envelopes off the crossover warning lane", () => {
+    const preset = getPresetById("ubiq_steel_200_unspecified_bound");
+    const scenario = evaluateScenario({
+      id: preset.id,
+      name: preset.label,
+      rows: preset.rows.map((row, index) => ({ ...row, id: `${preset.id}-${index + 1}` })),
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: ["Rw", "Ln,w", "Ln,w+CI"]
+    });
+
+    expect(scenario.result?.lowerBoundImpact?.basis).toBe("predictor_lightweight_steel_bound_interpolation_estimate");
+    expect(scenario.result?.lowerBoundImpact?.LnWUpperBound).toBe(53);
+    expect(scenario.result?.floorSystemRatings?.Rw).toBe(62);
+    expect(scenario.warnings.some((warning) => /support form was left unspecified/i.test(warning))).toBe(false);
+  });
 });

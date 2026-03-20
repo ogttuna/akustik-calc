@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  adaptImpactPredictorInput,
   buildImpactPredictorInputFromLayerStack,
   maybeBuildImpactPredictorInputFromLayerStack,
   maybeInferFloorRoleLayerStack
@@ -273,6 +274,37 @@ describe("buildImpactPredictorInputFromLayerStack", () => {
       supportClass: undefined,
       type: "suspended_ceiling_elastic_hanger"
     });
+  });
+
+  it("accepts inex floor panel as an explicit steel predictor floating deck alias", () => {
+    const adaptation = adaptImpactPredictorInput({
+      structuralSupportType: "steel_joists",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: { thicknessMm: 200 },
+      floatingScreed: {
+        materialClass: "inex_floor_panel",
+        thicknessMm: 19
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "engineered_timber_with_acoustic_underlay",
+        thicknessMm: 20
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_elastic_hanger",
+        cavityDepthMm: 65,
+        boardLayerCount: 2,
+        boardThicknessMm: 16,
+        boardMaterialClass: "firestop_board"
+      }
+    });
+
+    expect(adaptation.sourceLayers).toEqual(
+      expect.arrayContaining([
+        { floorRole: "floating_screed", materialId: "inex_floor_panel", thicknessMm: 19 },
+        { floorRole: "base_structure", materialId: "lightweight_steel_floor", thicknessMm: 200 }
+      ])
+    );
   });
 
   it("treats thick gypsum-fiber dry decks as floating screeds when a separate top finish is present", () => {

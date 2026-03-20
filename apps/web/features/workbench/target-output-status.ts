@@ -25,6 +25,11 @@ import {
   isImpactOnlyLowConfidenceFloorLane,
   isImpactOnlyLowConfidenceUnavailableOutput
 } from "./impact-only-low-confidence-floor-lane";
+import {
+  isSteelBoundSupportFormLane,
+  STEEL_BOUND_SUPPORT_FORM_AIRBORNE_DETAIL,
+  STEEL_BOUND_SUPPORT_FORM_LNW_DETAIL
+} from "./steel-bound-support-form-lane";
 
 export type TargetOutputStatus = {
   kind:
@@ -126,6 +131,10 @@ function hasEngineBoundValue(output: RequestedOutputId, result: AssemblyCalculat
 function getEngineLiveLabel(output: RequestedOutputId, result: AssemblyCalculation): string {
   if (output === "DnT,A,k" && typeof result.ratings.field?.DnTAk === "number") {
     return getDnTAkLiveLabel(result);
+  }
+
+  if (output === "Ln,w" && hasEngineBoundValue(output, result) && isSteelBoundSupportFormLane(result)) {
+    return "Crossover bound";
   }
 
   if (LIVE_OUTPUTS.has(output)) {
@@ -269,6 +278,7 @@ export function getTargetOutputStatus(input: {
   const guideState = hasGuideValue(output, guideResult);
   const supportNote = REQUESTED_OUTPUT_SUPPORT_NOTES[output];
   const isImpactOnlyLowConfidenceLane = isImpactOnlyLowConfidenceFloorLane(result);
+  const isSteelSupportFormBoundLane = isSteelBoundSupportFormLane(result);
 
   if (RESEARCH_OUTPUTS.has(output)) {
     return {
@@ -289,6 +299,10 @@ export function getTargetOutputStatus(input: {
           ? IMPACT_ONLY_LOW_CONFIDENCE_RW_DETAIL
           : isImpactOnlyLowConfidenceLane && output === "Ctr"
             ? IMPACT_ONLY_LOW_CONFIDENCE_CTR_DETAIL
+            : isSteelSupportFormBoundLane && output === "Ln,w"
+              ? STEEL_BOUND_SUPPORT_FORM_LNW_DETAIL
+              : isSteelSupportFormBoundLane && (output === "Rw" || output === "Ctr")
+                ? STEEL_BOUND_SUPPORT_FORM_AIRBORNE_DETAIL
             : null;
 
     return {

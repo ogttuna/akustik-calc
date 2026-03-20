@@ -751,6 +751,7 @@ function resolveFloatingMassMaterialId(input: ImpactPredictorInput): string | nu
       break;
     case "generic_screed":
       return "screed";
+    case "inex_floor_panel":
     case "dry_floating_gypsum_fiberboard":
     case "lightweight_dry_deck":
       return input.structuralSupportType === "steel_joists" ? "inex_floor_panel" : "dry_floating_gypsum_fiberboard";

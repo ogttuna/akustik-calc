@@ -78,6 +78,20 @@ describe("getGuidedValidationSummary", () => {
     expect(summary.detail).toContain("supported floor estimate");
   });
 
+  it("calls out missing support-form detail on conservative steel crossover bounds", () => {
+    const scenario = evaluatePreset("ubiq_steel_300_unspecified_bound");
+
+    const summary = getGuidedValidationSummary({
+      result: scenario.result,
+      studyMode: "floor"
+    });
+
+    expect(summary.value).toBe("Conservative bound");
+    expect(summary.tone).toBe("warning");
+    expect(summary.detail).toContain("support form is still open");
+    expect(summary.detail).toContain("steel joist / purlin");
+  });
+
   it("calls out impact-only low-confidence timber bare-floor lanes explicitly", () => {
     const scenario = evaluatePreset("timber_bare_impact_only_fallback");
 

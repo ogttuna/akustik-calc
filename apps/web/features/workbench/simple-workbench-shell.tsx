@@ -54,6 +54,7 @@ import {
 import { normalizeRows } from "./normalize-rows";
 import { evaluateScenario } from "./scenario-analysis";
 import { ResultSummary } from "./result-summary";
+import { isSteelBoundSupportFormLane } from "./steel-bound-support-form-lane";
 import {
   FLOOR_ROLE_LABELS,
   REQUESTED_OUTPUT_LABELS,
@@ -102,6 +103,8 @@ const MODE_PRESETS: Record<StudyMode, readonly PresetId[]> = {
     "clt_floor",
     "dataholz_clt_dry_exact",
     "ubiq_open_web_300_bound",
+    "ubiq_steel_200_unspecified_bound",
+    "ubiq_steel_300_unspecified_bound",
     "steel_suspended_fallback",
     "timber_bare_impact_only_fallback"
   ],
@@ -148,6 +151,21 @@ const TIMBER_IMPACT_ONLY_GUIDED_ACTIONS: readonly GuidedTopologyAction[] = [
       { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: "90" },
       { floorRole: "ceiling_board", materialId: "impactstop_board", thicknessMm: "13" }
     ]
+  }
+] as const;
+
+const STEEL_BOUND_SUPPORT_FORM_ACTIONS = [
+  {
+    id: "set-steel-joist-purlin-carrier",
+    label: "Set steel joist / purlin carrier",
+    materialId: "steel_joist_floor",
+    note: "Switch the base row to steel joist / purlin so DynEcho can leave the crossover bound and stay inside the narrower FL-32 family."
+  },
+  {
+    id: "set-open-web-carrier",
+    label: "Set open-web / rolled carrier",
+    materialId: "open_web_steel_floor",
+    note: "Switch the base row to open-web / rolled steel so DynEcho can leave the crossover bound and stay inside the narrower FL-33 family."
   }
 ] as const;
 
@@ -2573,6 +2591,10 @@ export function SimpleWorkbenchShell() {
   });
   const dynamicCalcBranch = getDynamicCalcBranchSummary({ result, studyMode });
   const showTimberImpactOnlyGuidedActions = studyMode === "floor" && isImpactOnlyLowConfidenceFloorLane(result);
+  const lightweightSteelBaseRow =
+    studyMode === "floor" ? rows.find((row) => row.floorRole === "base_structure" && row.materialId === "lightweight_steel_floor") : null;
+  const showSteelBoundSupportFormActions =
+    studyMode === "floor" && isSteelBoundSupportFormLane(result) && Boolean(lightweightSteelBaseRow);
 
   return (
     <div className="grid min-w-0 gap-6">
@@ -2785,6 +2807,38 @@ export function SimpleWorkbenchShell() {
                             className="focus-ring flex min-w-0 flex-col items-start gap-2 rounded-[1rem] border hairline bg-[color:var(--paper)] px-4 py-4 text-left hover:bg-black/[0.03]"
                             key={action.id}
                             onClick={() => appendRows(action.rows)}
+                            type="button"
+                          >
+                            <span className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
+                              <Plus className="h-4 w-4" />
+                              {action.label}
+                            </span>
+                            <span className="text-sm leading-6 text-[color:var(--ink-soft)]">{action.note}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  ) : null}
+
+                  {showSteelBoundSupportFormActions && lightweightSteelBaseRow ? (
+                    <div className="mt-3 rounded-[1.1rem] border hairline bg-black/[0.025] p-4">
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <div>
+                          <div className="text-sm font-semibold text-[color:var(--ink)]">Lock the steel support form</div>
+                          <p className="mt-1 text-sm leading-6 text-[color:var(--ink-soft)]">
+                            These helpers keep the floor and ceiling package intact but pin the base carrier to joist / purlin or open-web /
+                            rolled steel so the crossover bound can collapse into a narrower UBIQ family corridor.
+                          </p>
+                        </div>
+                        <DetailTag>Support-form helpers</DetailTag>
+                      </div>
+
+                      <div className="mt-4 grid gap-3 xl:grid-cols-2">
+                        {STEEL_BOUND_SUPPORT_FORM_ACTIONS.map((action) => (
+                          <button
+                            className="focus-ring flex min-w-0 flex-col items-start gap-2 rounded-[1rem] border hairline bg-[color:var(--paper)] px-4 py-4 text-left hover:bg-black/[0.03]"
+                            key={action.id}
+                            onClick={() => updateMaterial(lightweightSteelBaseRow.id, action.materialId)}
                             type="button"
                           >
                             <span className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">

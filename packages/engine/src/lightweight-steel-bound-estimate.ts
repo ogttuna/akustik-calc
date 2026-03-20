@@ -11,8 +11,14 @@ import { fitPercentFromEvaluation } from "./floor-system-evaluation";
 import { clamp, round1 } from "./math";
 
 type LightweightSteelBoundFamily = "open_web_or_rolled" | "steel_joist_or_purlin";
+type InterpolatedBoundSupport = {
+  lnWUpperBound: number;
+  rw: number;
+  rwCtr: number;
+};
 
 const UNSPECIFIED_LIGHTWEIGHT_STEEL_ID = "lightweight_steel_floor";
+const SUPPORT_EQUIVALENCE_TOLERANCE_DB = 0.05;
 
 function rowsForFamily(family: LightweightSteelBoundFamily): BoundFloorSystem[] {
   return BOUND_FLOOR_SYSTEMS.filter((system) =>
@@ -73,11 +79,7 @@ function interpolateRowPair(
   row200: BoundFloorSystem,
   row300: BoundFloorSystem,
   blend: number
-): {
-  lnWUpperBound: number;
-  rw: number;
-  rwCtr: number;
-} | null {
+): InterpolatedBoundSupport | null {
   const row200Upper = row200.impactBounds.LnWUpperBound;
   const row300Upper = row300.impactBounds.LnWUpperBound;
   const row200Rw = row200.airborneRatings.Rw;
@@ -101,6 +103,33 @@ function interpolateRowPair(
     rw: interpolate(row200Rw, row300Rw, blend),
     rwCtr: interpolate(row200RwCtr as number, row300RwCtr as number, blend)
   };
+}
+
+function supportEnvelopesEquivalent(
+  left: InterpolatedBoundSupport,
+  right: InterpolatedBoundSupport
+): boolean {
+  return (
+    Math.abs(left.lnWUpperBound - right.lnWUpperBound) <= SUPPORT_EQUIVALENCE_TOLERANCE_DB &&
+    Math.abs(left.rw - right.rw) <= SUPPORT_EQUIVALENCE_TOLERANCE_DB &&
+    Math.abs(left.rwCtr - right.rwCtr) <= SUPPORT_EQUIVALENCE_TOLERANCE_DB
+  );
+}
+
+function dedupeSystems(systems: readonly BoundFloorSystem[]): BoundFloorSystem[] {
+  const seen = new Set<string>();
+  const unique: BoundFloorSystem[] = [];
+
+  for (const system of systems) {
+    if (seen.has(system.id)) {
+      continue;
+    }
+
+    seen.add(system.id);
+    unique.push(system);
+  }
+
+  return unique;
 }
 
 function getRowPair(family: LightweightSteelBoundFamily): {
@@ -210,6 +239,41 @@ export function deriveMissingSupportFormLightweightSteelBoundEstimate(
   const fl33 = interpolateRowPair(fl33RowPair.row200, fl33RowPair.row300, blend);
   if (!fl32 || !fl33) {
     return null;
+  }
+
+  if (supportEnvelopesEquivalent(fl32, fl33)) {
+    const exactEndpointSourceSystems =
+      blend <= SUPPORT_EQUIVALENCE_TOLERANCE_DB
+        ? [fl32RowPair.row200, fl33RowPair.row200]
+        : Math.abs(blend - 1) <= SUPPORT_EQUIVALENCE_TOLERANCE_DB
+          ? [fl32RowPair.row300, fl33RowPair.row300]
+          : [fl32RowPair.row200, fl32RowPair.row300, fl33RowPair.row200, fl33RowPair.row300];
+    const sourceSystems = dedupeSystems(exactEndpointSourceSystems);
+    const basis = "predictor_lightweight_steel_bound_interpolation_estimate" as const;
+
+    return {
+      airborneRatings: {
+        Rw: round1(fl32.rw),
+        RwCtr: round1(fl32.rwCtr)
+      },
+      fitPercent: fitPercentFromEvaluation({
+        score: 6,
+        totalSignalCount: 7
+      }),
+      kind: "bound_interpolation",
+      lowerBoundImpact: buildLowerBoundImpact(
+        basis,
+        fl32.lnWUpperBound,
+        `Official UBIQ FL-32 and FL-33 rows converge at the current ${round1(baseThicknessMm as number)} mm carrier depth, so DynEcho kept the same family-bound support without the conservative crossover lane. Ln,w remains an upper bound only and stays at or below ${round1(fl32.lnWUpperBound)} dB.`
+      ),
+      notes: [
+        "Official lightweight-steel bound support converged across both candidate support forms at the current thickness.",
+        "UBIQ FL-32 and FL-33 publish the same airborne companions and Ln,w upper bound here, so DynEcho did not need the conservative crossover lane.",
+        `Source rows: ${sourceSystems.map((system) => system.id).join(", ")}.`
+      ],
+      sourceSystems,
+      structuralFamily: "lightweight steel"
+    };
   }
 
   const basis = "predictor_lightweight_steel_missing_support_form_bound_estimate" as const;

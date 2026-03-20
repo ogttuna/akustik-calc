@@ -273,6 +273,41 @@ test("guided bound floor presets keep the next action on evidence tightening", a
   ).toBeVisible();
 });
 
+test("guided steel crossover bound can lock the support form into a narrower family corridor", async ({ page }) => {
+  await openFloorGuidedFlow(page);
+  await page.getByLabel("Sample assembly").selectOption("ubiq_steel_300_unspecified_bound");
+  await page.getByRole("button", { name: /Load sample/i }).click();
+
+  await expect(page.getByText("Conservative bound", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("Fix support form", { exact: true }).first()).toBeVisible();
+  await expect(
+    page.getByText(
+      "This lightweight-steel bound lane is still conservative because the live stack leaves the carrier open between steel joist / purlin and open-web / rolled steel. Fix the base-structure row to one support form so DynEcho can stay inside the narrower FL-32 or FL-33 family-bound corridor."
+    ).first()
+  ).toBeVisible();
+  await expect(page.getByRole("button", { name: "Set open-web / rolled carrier" })).toBeVisible();
+
+  await page.getByRole("button", { name: "Set open-web / rolled carrier" }).click();
+
+  await expect(page.getByText("Fix support form", { exact: true })).toHaveCount(0);
+  await expect(page.getByText("Topology gap", { exact: true })).toHaveCount(0);
+  await expect(page.getByText("Prefer exact evidence", { exact: true }).first()).toBeVisible();
+  await expect(page.getByRole("button", { name: "Set open-web / rolled carrier" })).toHaveCount(0);
+});
+
+test("guided converged 200 mm steel bound stays off the support-form gap lane", async ({ page }) => {
+  await openFloorGuidedFlow(page);
+  await page.getByLabel("Sample assembly").selectOption("ubiq_steel_200_unspecified_bound");
+  await page.getByRole("button", { name: /Load sample/i }).click();
+
+  await expect(page.getByText("Conservative bound", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("Prefer exact evidence", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("Fix support form", { exact: true })).toHaveCount(0);
+  await expect(page.getByText("Topology gap", { exact: true })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Set open-web / rolled carrier" })).toHaveCount(0);
+  await expect(page.getByText(/support form was left unspecified/i)).toHaveCount(0);
+});
+
 test("guided steel suspended preset stays on a scoped published-family lane", async ({ page }) => {
   await openFloorGuidedFlow(page);
   await page.getByLabel("Sample assembly").selectOption("steel_suspended_fallback");

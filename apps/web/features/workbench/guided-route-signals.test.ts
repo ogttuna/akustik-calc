@@ -107,6 +107,26 @@ describe("deriveGuidedRouteSignals", () => {
     expect(signals.nextAction.tone).toBe("warning");
   });
 
+  it("uses a more specific next action when a bound lane still needs its support form fixed", () => {
+    const signals = deriveGuidedRouteSignals({
+      missingFloorRoleCount: 0,
+      primaryReadyCard: { label: "Ln,w", value: "<= 51 dB" },
+      rowsLength: 6,
+      studyMode: "floor",
+      topologyGap: {
+        detail: "This lightweight-steel bound lane is still conservative because the live stack leaves the carrier open between steel joist / purlin and open-web / rolled steel.",
+        value: "Fix support form"
+      },
+      validationPosture: "bound",
+      validThicknessCount: 6,
+      warningCount: 0
+    });
+
+    expect(signals.nextAction.value).toBe("Fix support form");
+    expect(signals.nextAction.detail).toContain("open-web / rolled steel");
+    expect(signals.nextAction.tone).toBe("warning");
+  });
+
   it("keeps low-confidence lanes on topology tightening instead of a read-the-outputs prompt", () => {
     const signals = deriveGuidedRouteSignals({
       missingFloorRoleCount: 0,

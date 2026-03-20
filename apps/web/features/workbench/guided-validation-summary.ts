@@ -6,6 +6,10 @@ import {
 } from "./impact-only-low-confidence-floor-lane";
 import type { StudyMode } from "./preset-definitions";
 import {
+  isSteelBoundSupportFormLane,
+  STEEL_BOUND_SUPPORT_FORM_ROUTE_NOTE
+} from "./steel-bound-support-form-lane";
+import {
   describeAirborneValidationPosture,
   describeImpactValidationPosture,
   type ValidationPosture
@@ -68,6 +72,9 @@ function buildGuidedValidationDetail(input: {
       }
       return `${posture.label} is active. This is the final published-family fallback, so treat it as a last-resort estimate rather than a narrow solver match.`;
     case "bound":
+      if (studyMode === "floor" && isSteelBoundSupportFormLane(result)) {
+        return `${posture.label} is active. ${STEEL_BOUND_SUPPORT_FORM_ROUTE_NOTE}`;
+      }
       return `${posture.label} is active. This route is conservative support only, so the current number should be read as a bound instead of a delivery-ready claim.`;
     case "inactive":
     default:

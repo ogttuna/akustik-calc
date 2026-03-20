@@ -171,6 +171,45 @@ describe("calculateImpactOnly", () => {
     expect(result.unsupportedImpactOutputs).toEqual(["Ln,w", "L'n,w", "L'nT,w"]);
   });
 
+  it("collapses the lightweight-steel missing-support-form bound when both official families publish the same 200 mm support envelope", () => {
+    const result = calculateImpactOnly([], {
+      impactPredictorInput: {
+        structuralSupportType: "steel_joists",
+        impactSystemType: "combined_upper_lower_system",
+        baseSlab: { thicknessMm: 200 },
+        floatingScreed: {
+          materialClass: "inex_floor_panel",
+          thicknessMm: 19
+        },
+        floorCovering: {
+          mode: "material_layer",
+          materialClass: "engineered_timber_with_acoustic_underlay",
+          thicknessMm: 20
+        },
+        lowerTreatment: {
+          type: "suspended_ceiling_elastic_hanger",
+          cavityDepthMm: 65,
+          boardLayerCount: 2,
+          boardThicknessMm: 16,
+          boardMaterialClass: "firestop_board"
+        }
+      },
+      targetOutputs: ["Rw", "Ln,w"]
+    });
+
+    expect(result.boundFloorSystemMatch).toBeNull();
+    expect(result.boundFloorSystemEstimate?.kind).toBe("bound_interpolation");
+    expect(result.lowerBoundImpact?.basis).toBe("predictor_lightweight_steel_bound_interpolation_estimate");
+    expect(result.lowerBoundImpact?.LnWUpperBound).toBe(53);
+    expect(result.floorCarrier?.Rw).toBe(62);
+    expect(result.floorSystemRatings?.RwCtr).toBe(56);
+    expect(result.boundFloorSystemEstimate?.sourceSystems.map((system: { id: string }) => system.id)).toEqual([
+      "ubiq_fl32_steel_200_lab_2026",
+      "ubiq_fl33_open_web_steel_200_lab_2026"
+    ]);
+    expect(result.warnings.some((warning: string) => /support form was left unspecified/i.test(warning))).toBe(false);
+  });
+
   it("resolves a direct official impact-product row without needing visible floor layers", () => {
     const result = calculateImpactOnly([], {
       officialImpactCatalogId: "regupol_sonus_curve_8_tile_match_2026"

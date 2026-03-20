@@ -2,6 +2,7 @@ import type { AssemblyCalculation } from "@dynecho/shared";
 
 import { IMPACT_ONLY_LOW_CONFIDENCE_FLOOR_FAMILY_NOTE, isImpactOnlyLowConfidenceFloorLane } from "./impact-only-low-confidence-floor-lane";
 import type { StudyMode } from "./preset-definitions";
+import { isSteelBoundSupportFormLane, STEEL_BOUND_SUPPORT_FORM_ROUTE_NOTE } from "./steel-bound-support-form-lane";
 
 export type DynamicCalcBranchSummary = {
   detail: string;
@@ -60,6 +61,14 @@ export function getDynamicCalcBranchSummary(input: {
       if (trace.selectionKind === "formula_estimate") {
         return {
           detail: `${trace.selectedLabel} is active. ${trace.impactBasisLabel} on the ${trace.systemTypeLabel?.toLowerCase() ?? "current"} topology.`,
+          tone: "warning",
+          value: trace.systemTypeLabel ?? trace.selectionKindLabel
+        };
+      }
+
+      if (isSteelBoundSupportFormLane(result)) {
+        return {
+          detail: `${trace.selectionKindLabel} is active through ${trace.selectedLabel}. ${STEEL_BOUND_SUPPORT_FORM_ROUTE_NOTE}`,
           tone: "warning",
           value: trace.systemTypeLabel ?? trace.selectionKindLabel
         };
