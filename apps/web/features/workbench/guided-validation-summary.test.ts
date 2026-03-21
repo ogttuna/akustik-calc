@@ -64,7 +64,7 @@ describe("getGuidedValidationSummary", () => {
     expect(summary.detail).toContain("supported wall estimate");
   });
 
-  it("keeps the steel suspended sample on a scoped estimate posture", () => {
+  it("keeps the steel suspended sample on a low-confidence fallback posture", () => {
     const scenario = evaluatePreset("steel_suspended_fallback");
 
     const summary = getGuidedValidationSummary({
@@ -72,10 +72,10 @@ describe("getGuidedValidationSummary", () => {
       studyMode: "floor"
     });
 
-    expect(summary.value).toBe("Scoped estimate");
-    expect(summary.tone).toBe("neutral");
-    expect(summary.detail).toContain("Published family estimate is active.");
-    expect(summary.detail).toContain("supported floor estimate");
+    expect(summary.value).toBe("Low-confidence fallback");
+    expect(summary.tone).toBe("warning");
+    expect(summary.detail).toContain("final published-family fallback");
+    expect(summary.detail).toContain("last-resort estimate");
   });
 
   it("calls out missing support-form detail on conservative steel crossover bounds", () => {
@@ -92,7 +92,7 @@ describe("getGuidedValidationSummary", () => {
     expect(summary.detail).toContain("steel joist / purlin");
   });
 
-  it("calls out impact-only low-confidence timber bare-floor lanes explicitly", () => {
+  it("calls out timber bare-floor low-confidence lanes as broad fallbacks that still need a ceiling package", () => {
     const scenario = evaluatePreset("timber_bare_impact_only_fallback");
 
     const summary = getGuidedValidationSummary({
@@ -102,8 +102,9 @@ describe("getGuidedValidationSummary", () => {
 
     expect(summary.value).toBe("Low-confidence fallback");
     expect(summary.tone).toBe("warning");
-    expect(summary.detail).toContain("impact-only");
-    expect(summary.detail).toContain("separate airborne screening lane");
+    expect(summary.detail).toContain("same low-confidence lane");
+    expect(summary.detail).toContain("ceiling package");
+    expect(summary.detail).toContain("narrower Knauf corridor");
   });
 
   it("waits for a supported lane when no result exists yet", () => {

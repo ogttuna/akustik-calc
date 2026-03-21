@@ -92,7 +92,7 @@ export function getImpactLaneNarrative(kind: ImpactLaneKind, hasExactFamilyCompa
             : kind === "bound_only"
               ? "Some official rows publish conservative impact support only, such as Ln,w upper bounds or DeltaLw lower bounds. DynEcho now carries those bounds honestly instead of inventing a precise live metric."
               : kind === "scoped_formula"
-                ? "This lane stays honest: current DynEcho impact support is still limited to the narrow heavy-concrete estimate path. Curated exact floor-system families now sit in their own lane below, while broad timber, CLT, steel, and predictor-family coverage still live upstream."
+                ? "This lane stays honest: the local formula and predictor branch still covers the narrow heavy-floor estimate path, while exact families, official rows, exact imports, and labeled published-family fallbacks can light up their own evidence lanes when the topology supports them. Broader family import and deeper field-side continuations still need more adoption work."
                 : "The current stack does not yet hit a supported impact lane.";
 
   return hasExactFamilyCompanion ? `${narrative} A curated exact family match is active below, so use that lane for family-published Ln,w and companion terms.` : narrative;

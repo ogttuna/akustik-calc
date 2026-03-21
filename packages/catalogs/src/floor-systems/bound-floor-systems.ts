@@ -1,6 +1,8 @@
 import type { BoundFloorSystem } from "@dynecho/shared";
 
-export const BOUND_FLOOR_SYSTEMS: readonly BoundFloorSystem[] = [
+import { withFloorSystemSourceUrls } from "./source-url";
+
+export const BOUND_FLOOR_SYSTEMS: readonly BoundFloorSystem[] = withFloorSystemSourceUrls([
   {
     id: "ubiq_fl32_steel_200_lab_2026",
     label: "UBIQ FL-32 | 200 mm steel joist / purlin | INEX FLOOR 19 | 2 x 16 mm resilient ceiling",
@@ -165,4 +167,4 @@ export const BOUND_FLOOR_SYSTEMS: readonly BoundFloorSystem[] = [
       RwCtr: 58
     }
   }
-];
+]);

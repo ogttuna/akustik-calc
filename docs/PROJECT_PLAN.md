@@ -1,5 +1,10 @@
 # DynEcho Project Plan
 
+Latest implementation snapshot:
+
+- `docs/STATUS_2026-03-21.md`
+- previous snapshot: `docs/STATUS_2026-03-20.md`
+
 ## 1. Product Direction
 
 DynEcho will be built as a web product first.

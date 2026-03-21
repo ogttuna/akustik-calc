@@ -220,9 +220,9 @@ export const WORKBENCH_PRESETS: readonly PresetDefinition[] = [
   },
   {
     id: "timber_bare_impact_only_fallback",
-    label: "Timber Bare Impact-Only",
-    note: "laminate + joist low-confidence impact-only lane",
-    summary: "A deliberate low-confidence timber bare-floor sample so the guided shell can show that Ln,w stays on the impact fallback while Rw / Ctr remain on the separate airborne screening lane.",
+    label: "Timber Bare Low-Confidence",
+    note: "laminate + joist low-confidence timber bare-floor lane",
+    summary: "A deliberate low-confidence timber bare-floor sample so the guided shell can show the broad fallback lane, its exposed airborne companions, and the missing ceiling package that would move it into a narrower Knauf corridor.",
     studyMode: "floor",
     rows: [
       { materialId: "laminate_flooring", thicknessMm: "9", floorRole: "floor_covering" },

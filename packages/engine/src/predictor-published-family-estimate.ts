@@ -583,12 +583,13 @@ function deriveKnaufTimberPublishedFamilyEstimate(
 
   if (boardMaterial === "firestop_board" && floorMaterial === "ceramic_tile") {
     const supportClass = normalizePredictorToken(input.lowerTreatment?.supportClass);
+    const supportForm = normalizePredictorToken(input.supportForm);
 
     if (supportClass === "direct_to_joists") {
       return buildPredictorFamilyEstimateCase({
         airborneRatings: {
-          Rw: 51.8,
-          RwCtr: 45.1,
+          Rw: supportForm === "joist_or_purlin" ? 51.8 : 51.5,
+          RwCtr: supportForm === "joist_or_purlin" ? 45.1 : 45,
           RwCtrSemantic: "rw_plus_ctr"
         },
         candidateIds: [

@@ -53,12 +53,28 @@ describe("getGuidedOutputUnlocks", () => {
     });
 
     expect(unlocks.map((group) => group.title)).toEqual([
-      "Enter airborne room volume and RT60",
+      "Enter airborne room volume",
       "Enter impact room volume",
       "Choose a CI-capable impact lane"
     ]);
     expect(formatUnlockOutputs(unlocks[0]?.outputs ?? [])).toBe("DnT,w");
     expect(formatUnlockOutputs(unlocks[1]?.outputs ?? [])).toBe("L'nT,w");
     expect(formatUnlockOutputs(unlocks[2]?.outputs ?? [])).toBe("Ln,w+CI");
+  });
+
+  it("does not block standardized airborne outputs on RT60 alone once room volume is present", () => {
+    const unlocks = getGuidedOutputUnlocks({
+      airborneContextMode: "building_prediction",
+      airbornePanelHeightMm: "2800",
+      airbornePanelWidthMm: "3600",
+      airborneReceivingRoomRt60S: "",
+      airborneReceivingRoomVolumeM3: "42",
+      impactGuideKDb: "",
+      impactGuideReceivingRoomVolumeM3: "",
+      parkedOutputs: ["DnT,w"],
+      studyMode: "wall"
+    });
+
+    expect(unlocks).toEqual([]);
   });
 });

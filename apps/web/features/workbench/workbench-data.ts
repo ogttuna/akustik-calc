@@ -155,9 +155,9 @@ export const CAPABILITY_ROWS = [
     status: "live" as const
   },
   {
-    detail: "Impact is live only for the narrow heavy-concrete path with an explicit resilient layer and dynamic-stiffness data. Timber, CLT, steel, and ceiling-driven families stay upstream.",
+    detail: "Impact is now live across the narrow heavy-concrete predictor lane, curated exact floor families, official product rows, exact imported band sources, and labeled low-confidence published-family fallbacks for the remaining timber, concrete, steel, and composite corridors. Wider family import and richer field-side continuation still need more upstream adoption work.",
     family: "Scoped impact",
-    label: "Ln,w, DeltaLw",
+    label: "Ln,w, DeltaLw, family-backed companions",
     status: "scoped" as const
   },
   {

@@ -128,7 +128,8 @@ function shouldHideLowConfidenceProxyAirborne(
 ): boolean {
   return Boolean(
     floorSystemEstimate?.kind === "low_confidence" &&
-      floorSystemEstimate.impact.basis === "predictor_floor_system_low_confidence_estimate"
+      floorSystemEstimate.impact.basis === "predictor_floor_system_low_confidence_estimate" &&
+      typeof floorSystemEstimate.airborneRatings?.Rw !== "number"
   );
 }
 
@@ -1152,7 +1153,7 @@ export function calculateAssembly(
 
   if (hideLowConfidenceProxyAirborne) {
     warnings.push(
-      "Low-confidence timber bare-floor predictor support is currently impact-only. DynEcho kept proxy airborne companions hidden instead of presenting nil-ceiling family rows as supported Rw / Ctr outputs."
+      "Low-confidence published-family fallback is active without finite airborne companions. DynEcho kept unavailable proxy airborne outputs hidden instead of fabricating supported Rw / Ctr values."
     );
   }
 

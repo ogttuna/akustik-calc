@@ -2,6 +2,7 @@ import { formatDecimal } from "@/lib/format";
 
 import type { AssemblyCalculation } from "@dynecho/shared";
 
+import { getFieldAirborneProvenanceSummary } from "./field-airborne-provenance";
 import {
   describeAirborneValidationPosture,
   describeImpactValidationPosture,
@@ -15,6 +16,8 @@ export type ScenarioCorridorSummary = {
   activeFamilyLabel?: string;
   activeModeLabel?: string;
   airborneLabel: string;
+  airborneProvenanceDetail?: string;
+  airborneProvenanceLabel?: string;
   impactHeadline: string;
   impactLabel: string;
   impactPosture: ReturnType<typeof describeImpactValidationPosture>;
@@ -64,6 +67,7 @@ export function getScenarioCorridorSummary(
   const airbornePosture = describeAirborneValidationPosture(result ?? null);
   const activeFamily = getActiveValidationFamily(result ?? null);
   const activeMode = getActiveValidationMode(result ?? null);
+  const airborneProvenance = getFieldAirborneProvenanceSummary(result ?? null);
   const fieldContinuationLabel =
     result?.dynamicImpactTrace && result.dynamicImpactTrace.fieldContinuation !== "none"
       ? result.dynamicImpactTrace.fieldContinuationLabel
@@ -86,6 +90,8 @@ export function getScenarioCorridorSummary(
     activeFamilyLabel: activeFamily?.label,
     activeModeLabel: activeMode?.label,
     airborneLabel: airbornePosture.label,
+    airborneProvenanceDetail: airborneProvenance?.detail,
+    airborneProvenanceLabel: airborneProvenance?.label,
     airbornePosture,
     fieldContinuationLabel,
     impactHeadline,
@@ -95,7 +101,9 @@ export function getScenarioCorridorSummary(
       ? "No live scenario result yet."
       : `Impact corridor is ${activeMode?.label ?? impactPosture.label}${
           activeFamily ? ` on ${activeFamily.label}` : ""
-        }. Airborne lane is ${airbornePosture.label}.`
+        }. Airborne lane is ${airbornePosture.label}${
+          airborneProvenance ? ` with ${airborneProvenance.label.toLowerCase()}` : ""
+        }.`
   };
 }
 

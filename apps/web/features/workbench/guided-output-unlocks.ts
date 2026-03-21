@@ -72,25 +72,12 @@ export function getGuidedOutputUnlocks(input: {
       } else {
         const parkedStandardizedAirborneOutputs = selectOutputs(parkedFieldAirborneOutputs, (output) => STANDARDIZED_AIRBORNE_OUTPUTS.has(output));
         const needsAirborneVolume = parkedStandardizedAirborneOutputs.length > 0 && !parsePositiveNumber(input.airborneReceivingRoomVolumeM3);
-        const needsRt60 = parkedStandardizedAirborneOutputs.length > 0 && !parsePositiveNumber(input.airborneReceivingRoomRt60S);
 
-        if (needsAirborneVolume && needsRt60) {
+        if (needsAirborneVolume) {
           groups.push({
-            detail: "Standardized airborne outputs need both the receiving-room volume and RT60 once geometry is already in place.",
-            outputs: parkedStandardizedAirborneOutputs,
-            title: "Enter airborne room volume and RT60"
-          });
-        } else if (needsAirborneVolume) {
-          groups.push({
-            detail: "Standardized airborne outputs still need the receiving-room volume on this route.",
+            detail: "Standardized airborne outputs still need the receiving-room volume once partition geometry is already in place.",
             outputs: parkedStandardizedAirborneOutputs,
             title: "Enter airborne room volume"
-          });
-        } else if (needsRt60) {
-          groups.push({
-            detail: "Standardized airborne outputs still need RT60 on this route.",
-            outputs: parkedStandardizedAirborneOutputs,
-            title: "Enter RT60"
           });
         }
       }

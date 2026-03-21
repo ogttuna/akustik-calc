@@ -260,12 +260,12 @@ describe("scenario analysis", () => {
     });
   }
 
-  it("keeps the steel suspended sample on the published family estimate lane without using the low-confidence warning copy", () => {
+  it("keeps the steel suspended sample on the low-confidence fallback lane with explicit warning copy", () => {
     const scenario = evaluatePresetScenario("steel_suspended_fallback");
 
     expect(scenario.result).not.toBeNull();
-    expect(scenario.result?.dynamicImpactTrace?.estimateTier).toBe("family_general");
-    expect(scenario.warnings).not.toContain(LOW_CONFIDENCE_FLOOR_FAMILY_NOTE);
+    expect(scenario.result?.dynamicImpactTrace?.estimateTier).toBe("low_confidence");
+    expect(scenario.warnings).toContain(LOW_CONFIDENCE_FLOOR_FAMILY_NOTE);
     expect(scenario.warnings).toContain(
       "Screening estimate only. This result is coming from the local calibrated seed lane."
     );
@@ -274,18 +274,19 @@ describe("scenario analysis", () => {
     );
   });
 
-  it("keeps timber bare-floor low-confidence lane impact-only while leaving airborne screening explicit", () => {
+  it("keeps timber bare-floor low-confidence lane live with exposed airborne companions on the same fallback family", () => {
     const scenario = evaluatePresetScenario("timber_bare_impact_only_fallback");
 
     expect(scenario.result).not.toBeNull();
     expect(scenario.result?.dynamicImpactTrace?.estimateTier).toBe("low_confidence");
-    expect(scenario.result?.floorSystemRatings).toBeNull();
-    expect(scenario.result?.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "STC", "C", "Ctr"]);
-    expect(scenario.result?.unsupportedTargetOutputs).toEqual(["Ln,w+CI"]);
+    expect(scenario.result?.floorSystemRatings).toEqual({
+      Rw: 51.6,
+      RwCtr: 31.1,
+      basis: "predictor_floor_system_low_confidence_estimate"
+    });
+    expect(scenario.result?.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "Ln,w+CI", "STC", "C", "Ctr"]);
+    expect(scenario.result?.unsupportedTargetOutputs).toEqual([]);
     expect(scenario.warnings).toContain(IMPACT_ONLY_LOW_CONFIDENCE_FLOOR_FAMILY_NOTE);
-    expect(scenario.warnings).not.toContain(
-      "Low-confidence timber bare-floor predictor support is currently impact-only. DynEcho kept proxy airborne companions hidden instead of presenting nil-ceiling family rows as supported Rw / Ctr outputs."
-    );
     expect(scenario.warnings).toContain(
       "Screening estimate only. This result is coming from the local calibrated seed lane."
     );

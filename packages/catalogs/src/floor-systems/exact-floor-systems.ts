@@ -4,8 +4,9 @@ import { EURACOUSTICS_CONCRETE_ROWS } from "./euracoustics-concrete-rows";
 import { KNAUF_AU_LOW_CONFIDENCE_ROWS } from "./knauf-au-low-confidence-rows";
 import { KNAUF_AU_TIMBER_FAMILY_ROWS } from "./knauf-au-timber-family-rows";
 import { PLITEQ_STEEL_JOIST_ROWS } from "./pliteq-steel-joist-rows";
+import { withFloorSystemSourceUrls } from "./source-url";
 
-export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = [
+export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemSourceUrls([
   ...EURACOUSTICS_CONCRETE_ROWS,
   ...KNAUF_AU_LOW_CONFIDENCE_ROWS,
   ...KNAUF_AU_TIMBER_FAMILY_ROWS,
@@ -2430,4 +2431,4 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = [
       RwCtr: 59
     }
   }
-];
+]);

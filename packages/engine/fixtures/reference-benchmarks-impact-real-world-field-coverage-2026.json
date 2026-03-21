@@ -259,8 +259,8 @@
       },
       "expected": {
         "basis": "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
-        "lprimeNwDb": 66.1,
-        "lprimeNTwDb": 64.1
+        "lprimeNwDb": 65.3,
+        "lprimeNTwDb": 63.3
       },
       "tolerances": {
         "lprimeNwDb": 0.1,

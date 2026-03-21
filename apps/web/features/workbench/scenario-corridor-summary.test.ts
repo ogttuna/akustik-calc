@@ -53,6 +53,29 @@ describe("getScenarioCorridorSummary", () => {
     expect(summary.impactLabel.length).toBeGreaterThan(0);
   });
 
+  it("carries field-airborne provenance into the corridor narrative when room-to-room outputs are live", () => {
+    const scenario = evaluateScenario({
+      airborneContext: {
+        contextMode: "field_between_rooms",
+        panelHeightMm: 2800,
+        panelWidthMm: 3000,
+        receivingRoomVolumeM3: 42
+      },
+      id: "wall-field-corridor",
+      name: "Wall field corridor",
+      rows: makeRows("concrete_wall"),
+      source: "saved",
+      studyMode: "wall",
+      targetOutputs: ["R'w", "Dn,w", "DnT,w"]
+    });
+
+    const summary = getScenarioCorridorSummary(scenario.result);
+
+    expect(summary.airborneProvenanceLabel).toBe("Room-standardized apparent derivation");
+    expect(summary.airborneProvenanceDetail).toContain("receiving-room volume");
+    expect(summary.narrative).toContain("room-standardized apparent derivation");
+  });
+
   it("reports missing-result state without inventing a lane", () => {
     const summary = getScenarioCorridorSummary(null);
 

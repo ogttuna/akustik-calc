@@ -10,6 +10,7 @@ import {
   REPORT_PROFILE_LABELS,
   STUDY_CONTEXT_LABELS
 } from "./workbench-data";
+import { getFieldAirborneProvenanceSummary } from "./field-airborne-provenance";
 import { describeConfidence, formatConfidenceLevel } from "./impact-confidence-view";
 import { getImpactLaneKind } from "./impact-lane-view";
 import { summarizeTargetOutputs } from "./target-output-status";
@@ -58,6 +59,7 @@ export function DeliveryAssistPanel({
   const airborneValidationPosture = describeAirborneValidationPosture(result);
   const activeValidationFamily = getActiveValidationFamily(result);
   const activeValidationMode = getActiveValidationMode(result);
+  const fieldAirborneProvenance = getFieldAirborneProvenanceSummary(result);
   const impactHeadline =
     effectiveImpact
       ? typeof effectiveImpact.LnTA === "number"
@@ -126,6 +128,9 @@ export function DeliveryAssistPanel({
     result
       ? `Airborne corridor is ${airborneValidationPosture.label}. ${airborneValidationPosture.detail}`
       : "Airborne corridor will stay provisional until the stack resolves into a valid curve-backed result.",
+    fieldAirborneProvenance
+      ? `Field-airborne lane is currently ${fieldAirborneProvenance.label.toLowerCase()}. ${fieldAirborneProvenance.detail}`
+      : "No field-airborne provenance lane is active yet.",
     studyContext === "pre_tender"
       ? "Pre-tender mode should freeze candidate stacks and export a disciplined brief."
       : "Concept and coordination modes can stay comparative and exploratory."

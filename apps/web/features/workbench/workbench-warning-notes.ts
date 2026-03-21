@@ -17,9 +17,10 @@ const EXACT_MATCH_SUPPRESSED_WARNING_PATTERNS = [
   /^Lightweight assemblies remain less reliable than dense mineral constructions in the current seed engine\.$/,
   /^Lightweight assemblies still need broader local family coverage before the selected airborne lane can be treated as the highest-confidence path\.$/
 ];
-const LOW_CONFIDENCE_FAMILY_ESTIMATE_PATTERN = /^Published family estimate active: .* low confidence at \d+% fit\.$/;
+const LOW_CONFIDENCE_FAMILY_ESTIMATE_PATTERN =
+  /^Published family estimate active: .* low confidence at \d+(?:\.\d+)?% fit\.$/;
 const IMPACT_ONLY_LOW_CONFIDENCE_FLOOR_WARNING_PATTERN =
-  /^Low-confidence timber bare-floor predictor support is currently impact-only\./;
+  /^Low-confidence .* (?:proxy airborne companions hidden|unavailable proxy airborne outputs hidden)/;
 
 export const EXACT_FLOOR_FAMILY_CURVE_NOTE =
   "Primary floor-family Rw and Ln,w companions come from the curated exact match. STC, C, and Ctr stay on the local airborne curve when shown, so read them as curve-derived companions.";

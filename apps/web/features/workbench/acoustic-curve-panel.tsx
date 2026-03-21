@@ -6,7 +6,6 @@ import {
   CartesianGrid,
   Line,
   LineChart,
-  ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis
@@ -16,7 +15,7 @@ import { Pill, SurfacePanel } from "@dynecho/ui";
 
 import { formatDecimal } from "@/lib/format";
 
-import { useHasMounted } from "./use-has-mounted";
+import { ChartSurface } from "./chart-surface";
 
 type AcousticCurvePanelProps = {
   result: AssemblyCalculation | null;
@@ -42,7 +41,6 @@ function formatFrequencyLabel(frequencyHz: number): string {
 }
 
 export function AcousticCurvePanel({ result }: AcousticCurvePanelProps) {
-  const hasMounted = useHasMounted();
   const chartData: CurvePoint[] =
     result?.curve.frequenciesHz.map((frequencyHz: number, index: number) => ({
       frequencyHz,
@@ -80,10 +78,9 @@ export function AcousticCurvePanel({ result }: AcousticCurvePanelProps) {
       {result ? (
         <>
           <div className="mt-5 chart-frame rounded-[1.35rem] border hairline bg-[color:var(--paper)] px-3 py-3">
-            <div className="h-[18rem] sm:h-[20rem]">
-              {hasMounted ? (
-                <ResponsiveContainer height="100%" width="100%">
-                  <LineChart data={chartData} margin={{ left: 0, right: 8, top: 12, bottom: 0 }}>
+            <ChartSurface className="h-[18rem] sm:h-[20rem]" placeholder="Preparing curve surface...">
+              {(size) => (
+                  <LineChart data={chartData} height={size.height} margin={{ left: 0, right: 8, top: 12, bottom: 0 }} width={size.width}>
                     <CartesianGrid horizontal stroke="rgba(39, 74, 83, 0.08)" strokeDasharray="4 4" />
                     <XAxis
                       axisLine={false}
@@ -113,13 +110,8 @@ export function AcousticCurvePanel({ result }: AcousticCurvePanelProps) {
                       type="monotone"
                     />
                   </LineChart>
-                </ResponsiveContainer>
-              ) : (
-                <div className="flex h-full items-center justify-center rounded-[1rem] bg-black/[0.02] text-sm text-[color:var(--ink-soft)]">
-                  Preparing curve surface...
-                </div>
               )}
-            </div>
+            </ChartSurface>
           </div>
 
           <div className="mt-5 grid gap-3 sm:grid-cols-3">

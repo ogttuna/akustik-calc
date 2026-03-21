@@ -271,7 +271,7 @@ export function PerformanceCriteriaPanel({
               : currentLnwUpperBound !== null && lnwDelta !== null
                 ? `${meetsLnwTarget ? "Within brief conservatively" : "Upper-bound gap to brief"}: ${lnwDelta > 0 ? "+" : ""}${formatDecimal(lnwDelta)} dB. Current curated support is Ln,w <= ${formatDecimal(currentLnwUpperBound)} dB.`
               : studyMode === "floor"
-                ? "Ln,w is available from the narrow heavy-concrete impact path, curated exact floor families, or an exact imported lab-side impact source."
+                ? "Ln,w can arrive from the local heavy-floor predictor, curated exact floor families, official product evidence, exact imported impact bands, or a labeled published-family fallback when the topology is still broad."
                 : "Impact targets can still be tracked even in wall-focused sessions for later package import."}
           </p>
           <div className="mt-3">
@@ -284,7 +284,7 @@ export function PerformanceCriteriaPanel({
                   ? meetsLnwTarget
                     ? "Bound target met"
                     : "Bound target open"
-                  : "Scoped impact only"}
+                  : "Awaiting impact lane"}
             </Pill>
           </div>
         </article>

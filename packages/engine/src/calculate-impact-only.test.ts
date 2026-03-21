@@ -1572,7 +1572,7 @@ describe("calculateImpactOnly", () => {
     expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
   });
 
-  it("keeps open-web steel suspended-only predictor input on the narrower UBIQ family-general lane", () => {
+  it("keeps open-web steel suspended-only predictor input on the upstream low-confidence UBIQ lane", () => {
     const result = calculateImpactOnly([], {
       impactPredictorInput: {
         structuralSupportType: "steel_joists",
@@ -1597,8 +1597,8 @@ describe("calculateImpactOnly", () => {
     });
 
     expect(result.sourceMode).toBe("predictor_input");
-    expect(result.floorSystemEstimate?.kind).toBe("family_general");
-    expect(result.impact?.basis).toBe("predictor_floor_system_family_general_estimate");
+    expect(result.floorSystemEstimate?.kind).toBe("low_confidence");
+    expect(result.impact?.basis).toBe("predictor_floor_system_low_confidence_estimate");
     expect(result.impact?.LnW).toBe(51);
     expect(result.impact?.CI).toBe(-1.7);
     expect(result.impact?.LnWPlusCI).toBe(49.3);
@@ -1612,10 +1612,10 @@ describe("calculateImpactOnly", () => {
       "ubiq_fl28_open_web_steel_400_exact_lab_2026"
     ]);
     expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(true);
-    expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
+    expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(true);
   });
 
-  it("keeps joist-or-purlin steel suspended-only predictor input on the narrower Pliteq family lane", () => {
+  it("keeps joist-or-purlin steel suspended-only predictor input on the upstream low-confidence Pliteq lane", () => {
     const result = calculateImpactOnly([], {
       impactPredictorInput: {
         structuralSupportType: "steel_joists",
@@ -1641,20 +1641,22 @@ describe("calculateImpactOnly", () => {
     });
 
     expect(result.sourceMode).toBe("predictor_input");
-    expect(result.floorSystemEstimate?.kind).toBe("family_general");
-    expect(result.impact?.basis).toBe("predictor_floor_system_family_general_estimate");
-    expect(result.impact?.LnW).toBe(58);
-    expect(result.floorSystemRatings?.Rw).toBe(60);
-    expect(result.floorSystemRatings?.RwCtr).toBeUndefined();
+    expect(result.floorSystemEstimate?.kind).toBe("low_confidence");
+    expect(result.impact?.basis).toBe("predictor_floor_system_low_confidence_estimate");
+    expect(result.impact?.LnW).toBe(58.3);
+    expect(result.floorSystemRatings?.Rw).toBe(61);
+    expect(result.floorSystemRatings?.RwCtr).toBe(57);
     expect(result.impact?.estimateCandidateIds).toEqual([
       "pliteq_steel_joist_250_rst02_vinyl_lab_2026",
-      "pliteq_steel_joist_250_rst02_wood_lab_2026",
-      "pliteq_steel_joist_250_rst12_porcelain_lab_2026"
+      "ubiq_fl32_steel_200_lab_2026",
+      "ubiq_fl32_steel_300_lab_2026",
+      "pliteq_steel_joist_250_rst12_porcelain_lab_2026",
+      "pliteq_steel_joist_250_rst02_wood_lab_2026"
     ]);
     expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(true);
-    expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
-    expect(result.supportedTargetOutputs).toEqual(["Ln,w", "Rw"]);
-    expect(result.unsupportedTargetOutputs).toEqual(["Ctr"]);
+    expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(true);
+    expect(result.supportedTargetOutputs).toEqual(["Ln,w", "Rw", "Ctr"]);
+    expect(result.unsupportedTargetOutputs).toEqual([]);
   });
 
   it("keeps bare timber laminate predictor input on the upstream low-confidence fallback lane", () => {
@@ -1678,29 +1680,27 @@ describe("calculateImpactOnly", () => {
     expect(result.sourceMode).toBe("predictor_input");
     expect(result.floorSystemEstimate?.kind).toBe("low_confidence");
     expect(result.impact?.basis).toBe("predictor_floor_system_low_confidence_estimate");
-    expect(result.impact?.LnW).toBe(70.4);
-    expect(result.impact?.CI).toBeUndefined();
-    expect(result.impact?.LnWPlusCI).toBeUndefined();
-    expect(result.floorSystemRatings).toBeNull();
+    expect(result.impact?.LnW).toBe(61.3);
+    expect(result.impact?.CI).toBe(2);
+    expect(result.impact?.LnWPlusCI).toBe(63.3);
+    expect(result.floorSystemRatings?.Rw).toBe(51.6);
+    expect(result.floorSystemRatings?.RwCtr).toBe(31.1);
     expect(result.impact?.estimateCandidateIds).toEqual([
-      "knauf_ct2g_timber_nil_lab_2026",
-      "knauf_ct2h_timber_nil_lab_2026",
+      "dataholz_gdsnxn01a_timber_frame_lab_2026",
       "knauf_ct3b_timber_nil_lab_2026",
       "knauf_ct2a_timber_nil_lab_2026",
+      "knauf_ct2a_carpet_nil_lab_2026",
       "knauf_ct2d_timber_nil_lab_2026"
     ]);
     expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(true);
     expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(true);
-    expect(result.supportedTargetOutputs).toEqual(["Ln,w"]);
-    expect(result.unsupportedTargetOutputs).toEqual(["Rw", "Ctr", "CI", "Ln,w+CI"]);
-    expect(result.supportedImpactOutputs).toEqual(["Ln,w"]);
-    expect(result.unsupportedImpactOutputs).toEqual(["CI", "Ln,w+CI"]);
-    expect(result.warnings).toContain(
-      "Low-confidence timber bare-floor predictor support is currently impact-only. DynEcho kept proxy airborne companions hidden instead of presenting nil-ceiling family rows as supported Rw / Ctr outputs."
-    );
+    expect(result.supportedTargetOutputs).toEqual(["Rw", "Ctr", "Ln,w", "CI", "Ln,w+CI"]);
+    expect(result.unsupportedTargetOutputs).toEqual([]);
+    expect(result.supportedImpactOutputs).toEqual(["Ln,w", "CI", "Ln,w+CI"]);
+    expect(result.unsupportedImpactOutputs).toEqual([]);
   });
 
-  it("keeps direct-to-joists timber ceramic predictor input on the narrower Knauf family-general lane", () => {
+  it("keeps direct-to-joists timber ceramic predictor input on the upstream low-confidence Knauf lane", () => {
     const result = calculateImpactOnly([], {
       impactPredictorInput: {
         structuralSupportType: "timber_joists",
@@ -1721,8 +1721,8 @@ describe("calculateImpactOnly", () => {
     });
 
     expect(result.sourceMode).toBe("predictor_input");
-    expect(result.floorSystemEstimate?.kind).toBe("family_general");
-    expect(result.impact?.basis).toBe("predictor_floor_system_family_general_estimate");
+    expect(result.floorSystemEstimate?.kind).toBe("low_confidence");
+    expect(result.impact?.basis).toBe("predictor_floor_system_low_confidence_estimate");
     expect(result.impact?.LnW).toBe(69.9);
     expect(result.floorSystemRatings?.Rw).toBe(51.8);
     expect(result.floorSystemRatings?.RwCtr).toBe(45.1);
@@ -1730,13 +1730,14 @@ describe("calculateImpactOnly", () => {
       "knauf_ct30_1a_timber_lab_2026",
       "knauf_ct30_2a_timber_lab_2026",
       "knauf_ct30_1b_timber_lab_2026",
-      "knauf_ct30_2b_timber_lab_2026"
+      "knauf_ct30_2b_timber_lab_2026",
+      "knauf_ct2d_timber_r25_lab_2026"
     ]);
     expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(true);
-    expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
+    expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(true);
   });
 
-  it("keeps reinforced-concrete combined predictor input on the narrower family-general lane", () => {
+  it("keeps reinforced-concrete combined predictor input on the upstream low-confidence lane", () => {
     const result = calculateImpactOnly([], {
       impactPredictorInput: {
         structuralSupportType: "reinforced_concrete",
@@ -1756,21 +1757,23 @@ describe("calculateImpactOnly", () => {
     });
 
     expect(result.sourceMode).toBe("predictor_input");
-    expect(result.floorSystemEstimate?.kind).toBe("family_general");
-    expect(result.impact?.basis).toBe("predictor_floor_system_family_general_estimate");
+    expect(result.floorSystemEstimate?.kind).toBe("low_confidence");
+    expect(result.impact?.basis).toBe("predictor_floor_system_low_confidence_estimate");
     expect(result.impact?.LnW).toBe(50);
     expect(result.floorSystemRatings?.Rw).toBe(65.9);
     expect(result.floorSystemRatings?.RwCtr).toBe(57);
     expect(result.impact?.estimateCandidateIds).toEqual([
       "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026",
+      "knauf_cc60_1a_concrete150_carpet_lab_2026",
       "euracoustics_f2_elastic_ceiling_concrete_lab_2026",
+      "euracoustics_f0_bare_concrete_lab_2026",
       "euracoustics_f1_rigid_ceiling_concrete_lab_2026"
     ]);
     expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(true);
-    expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
+    expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(true);
   });
 
-  it("promotes composite suspended-ceiling predictor input onto the published interaction lane", () => {
+  it("keeps composite suspended-ceiling predictor input on the upstream low-confidence lane", () => {
     const result = calculateImpactOnly([], {
       impactPredictorInput: {
         structuralSupportType: "composite_panel",
@@ -1788,17 +1791,18 @@ describe("calculateImpactOnly", () => {
     });
 
     expect(result.sourceMode).toBe("predictor_input");
-    expect(result.floorSystemEstimate?.kind).toBe("family_general");
-    expect(result.impact?.basis).toBe("predictor_composite_panel_published_interaction_estimate");
+    expect(result.floorSystemEstimate?.kind).toBe("low_confidence");
+    expect(result.impact?.basis).toBe("predictor_floor_system_low_confidence_estimate");
     expect(result.impact?.LnW).toBe(63.3);
     expect(result.floorSystemRatings?.Rw).toBe(48.6);
     expect(result.impact?.estimateCandidateIds).toEqual([
+      "pmc_m1_bare_composite_lab_2026",
       "pmc_m1_dry_floating_plus_c2x_lab_2026",
       "pmc_m1_dry_floating_plus_c1x_lab_2026",
-      "pmc_m1_bare_composite_lab_2026"
+      "pmc_m1_dry_floating_floor_lab_2026"
     ]);
     expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(true);
-    expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
+    expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(true);
   });
 
   it("promotes near-match hollow-core resilient-cover ceiling stacks onto the combined published-family lane", () => {

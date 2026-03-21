@@ -380,7 +380,8 @@ describe("impact validation benchmark corpus", () => {
         }
 
         if (
-          entry.mode !== "low_confidence_estimate" &&
+          entry.expected.rwMinDb !== undefined &&
+          entry.expected.rwMaxDb !== undefined &&
           (
             rw === null ||
             rw < Number(entry.expected.rwMinDb) ||
@@ -398,12 +399,6 @@ describe("impact validation benchmark corpus", () => {
 
         if (!result.impactPredictorStatus?.implementedFamilyEstimate) {
           errors.push(`${entry.id}: expected family estimate path to be active`);
-        }
-
-        if (entry.mode === "low_confidence_estimate") {
-          if (rw !== null) {
-            errors.push(`${entry.id}: low-confidence timber bare-floor lane should not expose proxy floor Rw support`);
-          }
         }
       }
     }

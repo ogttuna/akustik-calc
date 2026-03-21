@@ -50,7 +50,7 @@ describe("getDynamicCalcBranchSummary", () => {
     expect(summary.detail).toContain("Dry floating floor topology");
   });
 
-  it("keeps the steel suspended sample on the narrower published family lane", () => {
+  it("keeps the steel suspended sample on the upstream low-confidence lane", () => {
     const scenario = evaluatePreset("steel_suspended_fallback");
 
     const summary = getDynamicCalcBranchSummary({
@@ -59,9 +59,9 @@ describe("getDynamicCalcBranchSummary", () => {
     });
 
     expect(summary.value).toBe("Suspended ceiling only");
-    expect(summary.tone).toBe("neutral");
-    expect(summary.detail).toContain("Published family estimate is active through Published family blend · lightweight steel.");
-    expect(summary.detail).toContain("Published family blend estimate");
+    expect(summary.tone).toBe("warning");
+    expect(summary.detail).toContain("Low-confidence fallback · lightweight steel is active.");
+    expect(summary.detail).toContain("Final published-family fallback");
   });
 
   it("keeps support-form-unspecified lightweight steel bounds explicit as crossover support", () => {
@@ -79,7 +79,7 @@ describe("getDynamicCalcBranchSummary", () => {
     expect(summary.detail).toContain("open-web / rolled steel");
   });
 
-  it("surfaces impact-only low-confidence timber bare-floor fallback without claiming a floor-family airborne companion", () => {
+  it("surfaces timber bare-floor low-confidence fallback as a broad lane that still needs a ceiling package", () => {
     const scenario = evaluatePreset("timber_bare_impact_only_fallback");
 
     const summary = getDynamicCalcBranchSummary({
@@ -90,8 +90,9 @@ describe("getDynamicCalcBranchSummary", () => {
     expect(summary.value).toBe("Bare floor");
     expect(summary.tone).toBe("warning");
     expect(summary.detail).toContain("Low-confidence fallback · timber frame / joist is active.");
-    expect(summary.detail).toContain("impact-only");
-    expect(summary.detail).toContain("separate airborne screening lane");
+    expect(summary.detail).toContain("same low-confidence lane");
+    expect(summary.detail).toContain("ceiling package");
+    expect(summary.detail).toContain("narrower Knauf corridor");
   });
 
   it("keeps wall screening explicit when no dynamic airborne family has locked yet", () => {

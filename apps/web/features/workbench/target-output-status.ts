@@ -10,13 +10,21 @@ import {
   UPSTREAM_ONLY_OUTPUTS
 } from "./workbench-data";
 import {
+  getFieldAirborneBlockingRequirement,
+  getFieldAirborneLiveDetail,
+  getFieldAirborneModeLabel,
+  getFieldAirbornePendingDetail,
+  getFieldAirbornePendingLabel,
+  getFieldAirborneStatusLabel,
+  isFieldAirborneOutput
+} from "./field-airborne-output";
+import {
   describeAirborneValidationPosture,
   describeImpactValidationPosture,
   getActiveValidationFamily,
   getActiveValidationMode
 } from "./validation-regime";
 import type { ValidationPosture } from "./validation-regime";
-import { getDnTAkLiveLabel } from "./dntak-source-mode";
 import {
   IMPACT_ONLY_LOW_CONFIDENCE_CTR_DETAIL,
   IMPACT_ONLY_LOW_CONFIDENCE_LNW_DETAIL,
@@ -129,8 +137,8 @@ function hasEngineBoundValue(output: RequestedOutputId, result: AssemblyCalculat
 }
 
 function getEngineLiveLabel(output: RequestedOutputId, result: AssemblyCalculation): string {
-  if (output === "DnT,A,k" && typeof result.ratings.field?.DnTAk === "number") {
-    return getDnTAkLiveLabel(result);
+  if (isFieldAirborneOutput(output)) {
+    return getFieldAirborneStatusLabel(output, result);
   }
 
   if (output === "Ln,w" && hasEngineBoundValue(output, result) && isSteelBoundSupportFormLane(result)) {
@@ -164,7 +172,11 @@ function getEngineLiveLabel(output: RequestedOutputId, result: AssemblyCalculati
   return "Live";
 }
 
-function getPendingLabel(output: RequestedOutputId): string {
+function getPendingLabel(output: RequestedOutputId, result: AssemblyCalculation | null): string {
+  if (isFieldAirborneOutput(output)) {
+    return getFieldAirbornePendingLabel(output, result);
+  }
+
   if (LIVE_OUTPUTS.has(output)) {
     if (output === "R'w") {
       return "Need field mode";
@@ -279,6 +291,9 @@ export function getTargetOutputStatus(input: {
   const supportNote = REQUESTED_OUTPUT_SUPPORT_NOTES[output];
   const isImpactOnlyLowConfidenceLane = isImpactOnlyLowConfidenceFloorLane(result);
   const isSteelSupportFormBoundLane = isSteelBoundSupportFormLane(result);
+  const fieldAirborneRequirement = isFieldAirborneOutput(output)
+    ? getFieldAirborneBlockingRequirement(output, result)
+    : null;
 
   if (RESEARCH_OUTPUTS.has(output)) {
     return {
@@ -292,24 +307,25 @@ export function getTargetOutputStatus(input: {
 
   if (result?.supportedTargetOutputs.includes(output)) {
     const label = getEngineLiveLabel(output, result);
-    const customImpactOnlyNote =
-      isImpactOnlyLowConfidenceLane && output === "Ln,w"
+    const customEngineLiveNote = isFieldAirborneOutput(output)
+      ? getFieldAirborneLiveDetail(output, result)
+      : isImpactOnlyLowConfidenceLane && output === "Ln,w"
         ? IMPACT_ONLY_LOW_CONFIDENCE_LNW_DETAIL
         : isImpactOnlyLowConfidenceLane && output === "Rw"
           ? IMPACT_ONLY_LOW_CONFIDENCE_RW_DETAIL
           : isImpactOnlyLowConfidenceLane && output === "Ctr"
             ? IMPACT_ONLY_LOW_CONFIDENCE_CTR_DETAIL
             : isSteelSupportFormBoundLane && output === "Ln,w"
-              ? STEEL_BOUND_SUPPORT_FORM_LNW_DETAIL
-              : isSteelSupportFormBoundLane && (output === "Rw" || output === "Ctr")
-                ? STEEL_BOUND_SUPPORT_FORM_AIRBORNE_DETAIL
-            : null;
+            ? STEEL_BOUND_SUPPORT_FORM_LNW_DETAIL
+            : isSteelSupportFormBoundLane && (output === "Rw" || output === "Ctr")
+              ? STEEL_BOUND_SUPPORT_FORM_AIRBORNE_DETAIL
+              : null;
 
     return {
       kind: hasEngineBoundValue(output, result) ? "engine_bound" : "engine_live",
       label,
       note:
-        customImpactOnlyNote ??
+        customEngineLiveNote ??
         (label === "Bound support"
           ? `${supportNote} The current stack only resolves a conservative bound for this output.`
           : supportNote),
@@ -334,6 +350,16 @@ export function getTargetOutputStatus(input: {
   }
 
   if (result?.unsupportedTargetOutputs.includes(output)) {
+    if (fieldAirborneRequirement) {
+      return {
+        kind: "pending_input",
+        label: getFieldAirbornePendingLabel(output, result),
+        note: getFieldAirbornePendingDetail(output, result),
+        output,
+        tone: "warning"
+      };
+    }
+
     return {
       kind: "unavailable",
       label:
@@ -361,8 +387,8 @@ export function getTargetOutputStatus(input: {
 
   return {
     kind: "pending_input",
-    label: getPendingLabel(output),
-    note: supportNote,
+    label: getPendingLabel(output, result),
+    note: isFieldAirborneOutput(output) ? getFieldAirbornePendingDetail(output, result) : supportNote,
     output,
     tone: GUIDE_OUTPUTS.has(output) || SCOPED_OUTPUTS.has(output) ? "accent" : "warning"
   };
@@ -383,6 +409,28 @@ export function getTargetOutputCorridor(input: {
       detail: "No standards-backed ASTM adapter is live for this output yet.",
       laneLabel: "Research scope",
       tone: "neutral"
+    };
+  }
+
+  if (isFieldAirborneOutput(output)) {
+    return {
+      detail:
+        status.kind === "engine_live"
+          ? getFieldAirborneLiveDetail(output, result)
+          : status.note,
+      familyLabel: result?.dynamicAirborneTrace?.detectedFamilyLabel,
+      laneLabel: "Field airborne lane",
+      modeLabel:
+        result?.airborneOverlay?.contextMode === "field_between_rooms" ||
+        result?.airborneOverlay?.contextMode === "building_prediction"
+          ? getFieldAirborneModeLabel(result)
+          : status.label,
+      tone:
+        status.label === "Exact source"
+          ? "success"
+          : status.kind === "pending_input" || status.kind === "unavailable"
+            ? status.tone
+            : "accent"
     };
   }
 

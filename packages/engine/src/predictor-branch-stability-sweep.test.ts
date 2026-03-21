@@ -33,12 +33,14 @@ function expectInsideRange(
 
 const BRANCH_SWEEP_CASES: readonly BranchSweepCase[] = [
   {
-    id: "concrete_combined_vinyl_elastic_family_general",
-    expectedKind: "family_general",
-    expectedBasis: "predictor_floor_system_family_general_estimate",
+    id: "concrete_combined_vinyl_elastic_low_confidence",
+    expectedKind: "low_confidence",
+    expectedBasis: "predictor_floor_system_low_confidence_estimate",
     expectedCandidateIds: [
       "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026",
+      "knauf_cc60_1a_concrete150_carpet_lab_2026",
       "euracoustics_f2_elastic_ceiling_concrete_lab_2026",
+      "euracoustics_f0_bare_concrete_lab_2026",
       "euracoustics_f1_rigid_ceiling_concrete_lab_2026"
     ],
     targetOutputs: ["Rw", "Ctr", "Ln,w", "CI", "Ln,w+CI"],
@@ -90,8 +92,8 @@ const BRANCH_SWEEP_CASES: readonly BranchSweepCase[] = [
             boardMaterialClass: "firestop_board"
           }
         },
-        lnwRange: [50.3, 50.5],
-        rwRange: [65.2, 65.4]
+        lnwRange: [50.0, 50.0],
+        rwRange: [65.9, 65.9]
       },
       {
         id: "deeper_ceiling_and_softer_resilient_package",
@@ -115,15 +117,15 @@ const BRANCH_SWEEP_CASES: readonly BranchSweepCase[] = [
             boardMaterialClass: "firestop_board"
           }
         },
-        lnwRange: [50.6, 50.7],
-        rwRange: [64.6, 64.8]
+        lnwRange: [50.0, 50.0],
+        rwRange: [65.9, 65.9]
       }
     ]
   },
   {
-    id: "open_web_steel_suspended_vinyl_family_general",
-    expectedKind: "family_general",
-    expectedBasis: "predictor_floor_system_family_general_estimate",
+    id: "open_web_steel_suspended_vinyl_low_confidence",
+    expectedKind: "low_confidence",
+    expectedBasis: "predictor_floor_system_low_confidence_estimate",
     expectedCandidateIds: [
       "ubiq_fl33_open_web_steel_200_lab_2026",
       "ubiq_fl33_open_web_steel_300_lab_2026",
@@ -194,13 +196,14 @@ const BRANCH_SWEEP_CASES: readonly BranchSweepCase[] = [
     ]
   },
   {
-    id: "composite_suspended_ceiling_published_interaction",
-    expectedKind: "family_general",
-    expectedBasis: "predictor_composite_panel_published_interaction_estimate",
+    id: "composite_suspended_ceiling_low_confidence",
+    expectedKind: "low_confidence",
+    expectedBasis: "predictor_floor_system_low_confidence_estimate",
     expectedCandidateIds: [
+      "pmc_m1_bare_composite_lab_2026",
       "pmc_m1_dry_floating_plus_c2x_lab_2026",
       "pmc_m1_dry_floating_plus_c1x_lab_2026",
-      "pmc_m1_bare_composite_lab_2026"
+      "pmc_m1_dry_floating_floor_lab_2026"
     ],
     targetOutputs: ["Rw", "Ctr", "Ln,w", "CI", "Ln,w+CI"],
     expectedSupportedTargetOutputs: ["Rw", "Ln,w"],
@@ -236,8 +239,8 @@ const BRANCH_SWEEP_CASES: readonly BranchSweepCase[] = [
             boardThicknessMm: 12.5
           }
         },
-        lnwRange: [67.2, 67.2],
-        rwRange: [46.6, 46.6]
+        lnwRange: [63.3, 63.3],
+        rwRange: [48.6, 48.6]
       },
       {
         id: "deeper_ceiling_variant",
@@ -253,8 +256,8 @@ const BRANCH_SWEEP_CASES: readonly BranchSweepCase[] = [
             boardThicknessMm: 15
           }
         },
-        lnwRange: [61.8, 61.8],
-        rwRange: [50.0, 50.0]
+        lnwRange: [63.3, 63.3],
+        rwRange: [48.6, 48.6]
       }
     ]
   },
@@ -263,14 +266,14 @@ const BRANCH_SWEEP_CASES: readonly BranchSweepCase[] = [
     expectedKind: "low_confidence",
     expectedBasis: "predictor_floor_system_low_confidence_estimate",
     expectedCandidateIds: [
-      "knauf_ct2g_timber_nil_lab_2026",
-      "knauf_ct2h_timber_nil_lab_2026",
+      "dataholz_gdsnxn01a_timber_frame_lab_2026",
       "knauf_ct3b_timber_nil_lab_2026",
       "knauf_ct2a_timber_nil_lab_2026",
+      "knauf_ct2a_carpet_nil_lab_2026",
       "knauf_ct2d_timber_nil_lab_2026"
     ],
     targetOutputs: ["Rw", "Ctr", "Ln,w", "CI", "Ln,w+CI"],
-    expectedSupportedTargetOutputs: ["Ln,w"],
+    expectedSupportedTargetOutputs: ["Rw", "Ctr", "Ln,w", "CI", "Ln,w+CI"],
     variants: [
       {
         id: "baseline",
@@ -285,7 +288,8 @@ const BRANCH_SWEEP_CASES: readonly BranchSweepCase[] = [
             densityKgM3: 850
           }
         },
-        lnwRange: [70.4, 70.4]
+        lnwRange: [61.3, 61.3],
+        rwRange: [51.6, 51.6]
       },
       {
         id: "lighter_laminate_variant",
@@ -300,7 +304,8 @@ const BRANCH_SWEEP_CASES: readonly BranchSweepCase[] = [
             densityKgM3: 820
           }
         },
-        lnwRange: [70.4, 70.4]
+        lnwRange: [61.3, 61.3],
+        rwRange: [51.6, 51.6]
       },
       {
         id: "thicker_laminate_variant",
@@ -315,7 +320,8 @@ const BRANCH_SWEEP_CASES: readonly BranchSweepCase[] = [
             densityKgM3: 900
           }
         },
-        lnwRange: [70.4, 70.4]
+        lnwRange: [61.3, 61.3],
+        rwRange: [51.6, 51.6]
       }
     ]
   }

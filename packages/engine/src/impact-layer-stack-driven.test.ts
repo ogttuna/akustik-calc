@@ -31,7 +31,7 @@ describe("layer-driven impact parity", () => {
     expect(result.impactPredictorStatus?.matchedFloorSystemId).toBe("knauf_ct30_1a_timber_lab_2026");
   });
 
-  it("keeps generic joist-tagged Knauf timber ceramic direct ceiling on the published family-general lane", () => {
+  it("keeps generic joist-tagged Knauf timber ceramic direct ceiling on the upstream low-confidence lane", () => {
     const result = calculateFloorLayers([
       { materialId: "timber_joist_floor", thicknessMm: 240, floorRole: "base_structure" },
       { materialId: "ceramic_tile", thicknessMm: 8, floorRole: "floor_covering" },
@@ -40,7 +40,7 @@ describe("layer-driven impact parity", () => {
     ]);
 
     expect(result.ok).toBe(true);
-    expect(result.impact?.basis).toBe("predictor_floor_system_family_general_estimate");
+    expect(result.impact?.basis).toBe("predictor_floor_system_low_confidence_estimate");
     expect(result.impact?.LnW).toBe(69.9);
     expect(result.floorSystemRatings?.Rw).toBe(51.8);
     expect(result.floorSystemRatings?.RwCtr).toBe(45.1);
@@ -48,7 +48,8 @@ describe("layer-driven impact parity", () => {
       "knauf_ct30_1a_timber_lab_2026",
       "knauf_ct30_2a_timber_lab_2026",
       "knauf_ct30_1b_timber_lab_2026",
-      "knauf_ct30_2b_timber_lab_2026"
+      "knauf_ct30_2b_timber_lab_2026",
+      "knauf_ct2d_timber_r25_lab_2026"
     ]);
   });
 
@@ -63,8 +64,8 @@ describe("layer-driven impact parity", () => {
     expect(result.ok).toBe(true);
     expect(result.impact?.basis).toBe("predictor_floor_system_family_general_estimate");
     expect(result.impact?.LnW).toBe(69.9);
-    expect(result.floorSystemRatings?.Rw).toBe(51.8);
-    expect(result.floorSystemRatings?.RwCtr).toBe(45.1);
+    expect(result.floorSystemRatings?.Rw).toBe(51.5);
+    expect(result.floorSystemRatings?.RwCtr).toBe(45);
     expect(result.impact?.estimateCandidateIds).toEqual([
       "knauf_ct30_1a_timber_lab_2026",
       "knauf_ct30_2a_timber_lab_2026",
@@ -144,7 +145,7 @@ describe("layer-driven impact parity", () => {
     expect(result.impactPredictorStatus?.matchedFloorSystemId).toBe("pmc_m1_dry_floating_floor_lab_2026");
   });
 
-  it("keeps composite suspended-ceiling-only layer stacks on the published interaction lane", () => {
+  it("keeps composite suspended-ceiling-only layer stacks on the upstream low-confidence lane", () => {
     const result = calculateFloorLayers([
       { materialId: "steel_deck_composite", thicknessMm: 150, floorRole: "base_structure" },
       { materialId: "resilient_channel", thicknessMm: 150, floorRole: "ceiling_cavity" },
@@ -154,13 +155,14 @@ describe("layer-driven impact parity", () => {
     ]);
 
     expect(result.ok).toBe(true);
-    expect(result.impact?.basis).toBe("predictor_composite_panel_published_interaction_estimate");
+    expect(result.impact?.basis).toBe("predictor_floor_system_low_confidence_estimate");
     expect(result.impact?.LnW).toBe(63.3);
     expect(result.floorSystemRatings?.Rw).toBe(48.6);
     expect(result.impact?.estimateCandidateIds).toEqual([
+      "pmc_m1_bare_composite_lab_2026",
       "pmc_m1_dry_floating_plus_c2x_lab_2026",
       "pmc_m1_dry_floating_plus_c1x_lab_2026",
-      "pmc_m1_bare_composite_lab_2026"
+      "pmc_m1_dry_floating_floor_lab_2026"
     ]);
   });
 });

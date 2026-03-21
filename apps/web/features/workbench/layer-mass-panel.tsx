@@ -2,13 +2,13 @@
 
 import type { AssemblyCalculation } from "@dynecho/shared";
 import { Layers3 } from "lucide-react";
-import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, Cell, Tooltip, XAxis, YAxis } from "recharts";
 
 import { SurfacePanel } from "@dynecho/ui";
 
 import { formatDecimal } from "@/lib/format";
 
-import { useHasMounted } from "./use-has-mounted";
+import { ChartSurface } from "./chart-surface";
 
 type LayerMassPanelProps = {
   result: AssemblyCalculation | null;
@@ -22,7 +22,6 @@ type LayerMassChartEntry = {
 const BAR_COLORS = ["#c97342", "#2e8a7b", "#274a53", "#ccac66", "#7d8d64", "#865644"];
 
 export function LayerMassPanel({ result }: LayerMassPanelProps) {
-  const hasMounted = useHasMounted();
   const chartData: LayerMassChartEntry[] =
     result?.layers.map((layer: AssemblyCalculation["layers"][number], index: number) => ({
       label: `${index + 1}. ${layer.material.name}`,
@@ -43,10 +42,12 @@ export function LayerMassPanel({ result }: LayerMassPanelProps) {
 
       {chartData.length > 0 ? (
         <div className="mt-5">
-          <div className="chart-frame h-[18rem] rounded-[1.35rem] border hairline bg-[color:var(--paper)] px-3 py-3">
-            {hasMounted ? (
-              <ResponsiveContainer height="100%" width="100%">
-                <BarChart data={chartData} layout="vertical" margin={{ left: 12, right: 12, top: 8, bottom: 8 }}>
+          <ChartSurface
+            className="chart-frame h-[18rem] rounded-[1.35rem] border hairline bg-[color:var(--paper)] px-3 py-3"
+            placeholder="Preparing chart surface..."
+          >
+            {(size) => (
+                <BarChart data={chartData} height={size.height} layout="vertical" margin={{ left: 12, right: 12, top: 8, bottom: 8 }} width={size.width}>
                   <CartesianGrid horizontal stroke="rgba(39, 74, 83, 0.08)" strokeDasharray="4 4" />
                   <XAxis axisLine={false} dataKey="value" tickLine={false} type="number" />
                   <YAxis axisLine={false} dataKey="label" tickLine={false} type="category" width={110} />
@@ -66,13 +67,8 @@ export function LayerMassPanel({ result }: LayerMassPanelProps) {
                     ))}
                   </Bar>
                 </BarChart>
-              </ResponsiveContainer>
-            ) : (
-              <div className="flex h-full items-center justify-center rounded-[1rem] bg-black/[0.02] text-sm text-[color:var(--ink-soft)]">
-                Preparing chart surface...
-              </div>
             )}
-          </div>
+          </ChartSurface>
           <p className="mt-3 text-sm leading-7 text-[color:var(--ink-soft)]">
             Surface-mass contribution by layer helps show where the current Rw estimate is really coming from.
           </p>

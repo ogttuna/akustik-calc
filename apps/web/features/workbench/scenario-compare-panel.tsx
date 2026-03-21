@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { BookmarkPlus, RotateCcw, Trash2 } from "lucide-react";
-import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, Cell, Tooltip, XAxis, YAxis } from "recharts";
 
 import { Pill, SurfacePanel } from "@dynecho/ui";
 
@@ -16,7 +16,7 @@ import {
   getScenarioDecisionSummary,
   getValidationPostureTone
 } from "./scenario-corridor-summary";
-import { useHasMounted } from "./use-has-mounted";
+import { ChartSurface } from "./chart-surface";
 
 type MetricKey = "estimatedRwDb" | "estimatedStc" | "estimatedLnwDb" | "surfaceMassKgM2" | "totalThicknessMm";
 
@@ -90,7 +90,6 @@ export function ScenarioComparePanel({
   targetLnwDb,
   targetRwDb
 }: ScenarioComparePanelProps) {
-  const hasMounted = useHasMounted();
   const [metric, setMetric] = useState<MetricKey>("estimatedRwDb");
   const scenarios = [currentScenario, ...savedScenarios];
   const hasImpactScenario = scenarios.some((scenario) => typeof scenario.result?.impact?.LnW === "number");
@@ -205,10 +204,9 @@ export function ScenarioComparePanel({
       </div>
 
       <div className="mt-5 chart-frame rounded-[1.35rem] border hairline bg-[color:var(--paper)] px-3 py-3">
-        <div className="h-[19rem]">
-          {hasMounted ? (
-            <ResponsiveContainer height="100%" width="100%">
-              <BarChart data={chartData} layout="vertical" margin={{ left: 8, right: 12, top: 8, bottom: 8 }}>
+        <ChartSurface className="h-[19rem]" placeholder="Preparing chart surface...">
+          {(size) => (
+              <BarChart data={chartData} height={size.height} layout="vertical" margin={{ left: 8, right: 12, top: 8, bottom: 8 }} width={size.width}>
                 <CartesianGrid horizontal stroke="rgba(39, 74, 83, 0.08)" strokeDasharray="4 4" />
                 <XAxis axisLine={false} tickLine={false} type="number" />
                 <YAxis axisLine={false} dataKey="label" tickLine={false} type="category" width={140} />
@@ -230,13 +228,8 @@ export function ScenarioComparePanel({
                   ))}
                 </Bar>
               </BarChart>
-            </ResponsiveContainer>
-          ) : (
-            <div className="flex h-full items-center justify-center rounded-[1rem] bg-black/[0.02] text-sm text-[color:var(--ink-soft)]">
-              Preparing chart surface...
-            </div>
           )}
-        </div>
+        </ChartSurface>
       </div>
 
       <div className="mt-5 grid gap-3">

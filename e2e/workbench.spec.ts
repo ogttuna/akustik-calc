@@ -238,6 +238,121 @@ test("guided workbench reports live and parked row counts in the stack summary",
   await expect(page.getByText("1 parked row stays visible in the draft stack but does not affect this read.").first()).toBeVisible();
 });
 
+test("guided workbench packages the live result into a client-facing proposal surface", async ({ page }) => {
+  await openFloorGuidedFlow(page);
+  await loadGuidedSample(page, "Impact Floor");
+
+  await page.getByRole("tab", { name: "Proposal" }).click();
+  await expect(page.getByRole("heading", { name: "Package the proposal" })).toBeVisible();
+  await page.getByLabel("Project name").fill("Riverside Residences");
+  await page.getByLabel("Client name").fill("Machinity Acoustics");
+  await page.getByLabel("Consultant company").fill("Machinity Acoustic Consultants");
+  await page.getByLabel("Prepared by").fill("O. Tuna");
+  await page.getByLabel("Issued to").fill("Riverside Development Team");
+  await page.getByLabel("Attention").fill("Design Coordination Team");
+  await page.getByLabel("Subject line").fill("Riverside Residences floor acoustic proposal");
+  await page.getByLabel("Proposal reference").fill("MAC-2026-014");
+  await page.getByLabel("Revision").fill("Rev 01");
+  await page.getByLabel("Consultant note").fill("Issue with explicit flanking caveat.");
+
+  await expect(page.getByText("Formal acoustic offer sheet")).toBeVisible();
+  await expect(page.getByText("Riverside Residences").first()).toBeVisible();
+  await expect(page.getByText("Machinity Acoustics").first()).toBeVisible();
+  await expect(page.getByText("Machinity Acoustic Consultants").first()).toBeVisible();
+  await expect(page.getByText("O. Tuna").first()).toBeVisible();
+  await expect(page.getByText("Riverside Development Team").first()).toBeVisible();
+  await expect(page.getByText("Design Coordination Team").first()).toBeVisible();
+  await expect(page.getByText("Riverside Residences floor acoustic proposal").first()).toBeVisible();
+  await expect(page.getByText("MAC-2026-014").first()).toBeVisible();
+  await expect(page.getByText("Rev 01").first()).toBeVisible();
+  await expect(page.getByText("Executive summary", { exact: true })).toBeVisible();
+  await expect(page.getByText("Recommended next steps", { exact: true })).toBeVisible();
+  await expect(page.getByText("Assumption register", { exact: true })).toBeVisible();
+  await expect(page.getByText("Decision trail", { exact: true })).toBeVisible();
+  await expect(page.getByText("Issue authority", { exact: true })).toBeVisible();
+  await expect(page.getByText("Source citations", { exact: true })).toBeVisible();
+  await expect(page.getByText("Output coverage register", { exact: true })).toBeVisible();
+  await expect(page.getByText("Issue sequence register", { exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Reserve next issue no/i })).toBeVisible();
+  await expect(page.getByText(/ready · .* parked · .* unsupported/i).first()).toBeVisible();
+  await expect(page.getByText(/Dynamic airborne anchor|Exact floor family|Source posture/).first()).toBeVisible();
+  await expect(page.getByRole("button", { name: /Download branded PDF/i })).toBeEnabled();
+  await expect(page.getByRole("button", { name: /Open print view/i })).toBeEnabled();
+  await expect(page.getByRole("button", { name: /Copy proposal summary/i })).toBeEnabled();
+  await expect(page.getByRole("button", { name: /Print \/ save PDF/i })).toBeEnabled();
+
+  const pdfResponsePromise = page.waitForResponse(
+    (response) => response.url().includes("/api/proposal-pdf") && response.request().method() === "POST"
+  );
+  await page.getByRole("button", { name: /Download branded PDF/i }).click();
+  const pdfResponse = await pdfResponsePromise;
+  expect(pdfResponse.status()).toBe(200);
+  expect(pdfResponse.headers()["content-type"]).toContain("application/pdf");
+
+  const printViewPromise = page.waitForEvent("popup");
+  await page.getByRole("button", { name: /Open print view/i }).click();
+  const printView = await printViewPromise;
+  await printView.waitForLoadState("domcontentloaded");
+
+  await expect(printView.getByRole("heading", { name: "Official issue preview" })).toBeVisible();
+  await expect(printView.getByText("Riverside Residences").first()).toBeVisible();
+  await expect(printView.getByText("MAC-2026-014").first()).toBeVisible();
+  await expect(printView.getByTitle("Proposal print preview frame")).toBeVisible();
+  await expect(printView.getByRole("button", { name: /Download branded PDF/i })).toBeEnabled();
+  await expect(
+    printView.frameLocator('iframe[title="Proposal print preview frame"]').getByText("Output Coverage Register", { exact: true })
+  ).toBeVisible();
+  await expect(
+    printView.frameLocator('iframe[title="Proposal print preview frame"]').getByText("Signature and Issue Authority", { exact: true })
+  ).toBeVisible();
+  await expect(
+    printView.frameLocator('iframe[title="Proposal print preview frame"]').getByText("Citation Appendix", { exact: true })
+  ).toBeVisible();
+  await expect(
+    printView.frameLocator('iframe[title="Proposal print preview frame"]').getByText("Riverside Development Team").first()
+  ).toBeVisible();
+  await expect(
+    printView.frameLocator('iframe[title="Proposal print preview frame"]').getByText("Riverside Residences floor acoustic proposal").first()
+  ).toBeVisible();
+});
+
+test("guided workbench can reserve the next proposal issue number from the local sequence register", async ({ page }) => {
+  await openFloorGuidedFlow(page);
+  await loadGuidedSample(page, "Impact Floor");
+
+  await page.getByRole("tab", { name: "Proposal" }).click();
+  await page.getByLabel("Project name").fill("Riverside Residences");
+  await page.getByLabel("Consultant company").fill("Machinity Acoustic Consultants");
+
+  await expect(page.getByText(/^MAC-RR-\d{8}-01$/)).toBeVisible();
+
+  await page.getByRole("button", { name: /Reserve next issue no/i }).click();
+  await expect(page.getByLabel("Proposal reference")).toHaveValue(/MAC-RR-\d{8}-01/);
+  await expect(page.getByLabel("Revision")).toHaveValue("Rev 00");
+  await expect(page.getByText(/Last reserved on this browser: MAC-RR-\d{8}-01\./)).toBeVisible();
+  await expect(page.getByText(/^MAC-RR-\d{8}-02$/)).toBeVisible();
+
+  await page.getByRole("button", { name: /Reserve next issue no/i }).click();
+  await expect(page.getByLabel("Proposal reference")).toHaveValue(/MAC-RR-\d{8}-02/);
+  await expect(page.getByText(/Last reserved on this browser: MAC-RR-\d{8}-02\./)).toBeVisible();
+  await expect(page.getByText(/^MAC-RR-\d{8}-03$/)).toBeVisible();
+});
+
+test("guided workbench exposes method detail for why the dynamic route and parked outputs look the way they do", async ({ page }) => {
+  await openFloorGuidedFlow(page);
+  await loadGuidedSample(page, "Impact Floor");
+  await page.getByLabel("Project context").selectOption("building_prediction");
+
+  await page.getByRole("tab", { name: "Method detail" }).click();
+
+  await expect(page.getByRole("heading", { name: "Why this route is active" })).toBeVisible();
+  await expect(page.getByText("What still blocks parked outputs")).toBeVisible();
+  await expect(page.getByText("Enter partition width and height").first()).toBeVisible();
+  await expect(page.getByText("Enter impact K correction").first()).toBeVisible();
+  await expect(page.getByText("Current caution log")).toBeVisible();
+  await expect(page.getByText("Reading discipline")).toBeVisible();
+});
+
 test("guided exact floor presets keep exact-family notes visible without generic screening-only copy", async ({ page }) => {
   await openFloorGuidedFlow(page);
   await page.getByLabel("Sample assembly").selectOption("dataholz_clt_dry_exact");
@@ -258,6 +373,11 @@ test("guided exact floor presets keep exact-family notes visible without generic
   await expect(
     page.getByText("Screening estimate only. This result is coming from the local calibrated seed lane.", { exact: true })
   ).toHaveCount(0);
+
+  await page.getByRole("tab", { name: "Proposal" }).click();
+  await expect(page.getByText("Source citations", { exact: true })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Open source" }).first()).toBeVisible();
+  await expect(page.getByRole("link", { name: "Open source" }).first()).toHaveAttribute("href", /dataholz\.eu|https?:\/\//);
 });
 
 test("guided bound floor presets keep the next action on evidence tightening", async ({ page }) => {

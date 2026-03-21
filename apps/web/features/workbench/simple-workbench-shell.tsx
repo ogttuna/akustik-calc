@@ -31,6 +31,13 @@ import { formatDecimal } from "@/lib/format";
 
 import { describeAssembly, getMaterialCategoryLabel } from "./describe-assembly";
 import { getDynamicCalcBranchSummary } from "./dynamic-calc-branch";
+import {
+  FIELD_AIRBORNE_OUTPUTS,
+  getFieldAirborneBlockingRequirement,
+  getFieldAirborneLiveDetail,
+  getFieldAirbornePendingDetail,
+  STANDARDIZED_AIRBORNE_OUTPUTS
+} from "./field-airborne-output";
 import { formatUnlockOutputs, getGuidedOutputUnlocks } from "./guided-output-unlocks";
 import { getGuidedTopologyGap } from "./guided-topology-gap";
 import { deriveGuidedRouteSignals } from "./guided-route-signals";
@@ -53,12 +60,17 @@ import {
 } from "./input-sanity";
 import { normalizeRows } from "./normalize-rows";
 import { evaluateScenario } from "./scenario-analysis";
+import { buildSimpleWorkbenchEvidencePacket } from "./simple-workbench-evidence";
+import { SimpleWorkbenchMethodPanel } from "./simple-workbench-method-panel";
 import { ResultSummary } from "./result-summary";
+import { SimpleWorkbenchProposalPanel } from "./simple-workbench-proposal-panel";
 import { isSteelBoundSupportFormLane } from "./steel-bound-support-form-lane";
 import {
   FLOOR_ROLE_LABELS,
+  REPORT_PROFILE_LABELS,
   REQUESTED_OUTPUT_LABELS,
-  REQUESTED_OUTPUT_SUPPORT_NOTES
+  REQUESTED_OUTPUT_SUPPORT_NOTES,
+  STUDY_CONTEXT_LABELS
 } from "./workbench-data";
 import { getPresetById, type PresetId, type StudyMode } from "./preset-definitions";
 import type { LayerDraft } from "./workbench-store";
@@ -96,6 +108,25 @@ type GuidedTopologyAction = {
 };
 
 type FieldRelevanceTone = "optional" | "required";
+type ReviewTabId = "diagnostics" | "method" | "proposal";
+
+const REVIEW_TABS: readonly { id: ReviewTabId; label: string; note: string }[] = [
+  {
+    id: "proposal",
+    label: "Proposal",
+    note: "Shape the live dynamic result into a client-facing offer sheet with issue control metadata."
+  },
+  {
+    id: "method",
+    label: "Method detail",
+    note: "Explain why the current route is active, which outputs are defensible, and what is still parked."
+  },
+  {
+    id: "diagnostics",
+    label: "Diagnostics",
+    note: "Keep provenance, confidence, and advanced traces visible without leaving the guided flow."
+  }
+] as const;
 
 const MODE_PRESETS: Record<StudyMode, readonly PresetId[]> = {
   floor: [
@@ -475,9 +506,7 @@ const AUTOMATIC_OUTPUTS: Record<StudyMode, Record<AirborneContextMode, readonly 
   }
 };
 
-const FIELD_AIRBORNE_OUTPUTS = new Set<RequestedOutputId>(["R'w", "DnT,w", "DnT,A", "Dn,w", "Dn,A", "DnT,A,k"]);
 const FIELD_IMPACT_OUTPUTS = new Set<RequestedOutputId>(["L'n,w", "L'nT,w", "L'nT,50", "LnT,A"]);
-const STANDARDIZED_AIRBORNE_OUTPUTS = new Set<RequestedOutputId>(["DnT,w", "DnT,A"]);
 
 function defaultThicknessFor(material: MaterialDefinition): string {
   switch (material.id) {
@@ -625,18 +654,6 @@ function getEnvironmentLabel(contextMode: AirborneContextMode): string {
   return AIRBORNE_CONTEXT_OPTIONS.find((option) => option.value === contextMode)?.label ?? "Lab element";
 }
 
-function joinLabels(items: readonly string[]): string {
-  if (!items.length) {
-    return "";
-  }
-
-  if (items.length === 1) {
-    return items[0]!;
-  }
-
-  return `${items.slice(0, -1).join(", ")} and ${items[items.length - 1]}`;
-}
-
 function sumThickness(rows: readonly LayerDraft[]): number {
   return rows.reduce((total, row) => total + (parsePositiveNumber(row.thicknessMm) ?? 0), 0);
 }
@@ -739,12 +756,11 @@ function layerStrokeClass(material: MaterialDefinition): string {
 }
 
 function buildUnavailableOutputDetail(input: {
-  airborneContextMode: AirborneContextMode;
   output: RequestedOutputId;
   result: AssemblyCalculation | null;
   studyMode: StudyMode;
 }): string {
-  const { airborneContextMode, output, result, studyMode } = input;
+  const { output, result, studyMode } = input;
   const isImpactOnlyLowConfidenceLane = isImpactOnlyLowConfidenceFloorLane(result);
 
   if (!result) {
@@ -752,16 +768,10 @@ function buildUnavailableOutputDetail(input: {
   }
 
   if (FIELD_AIRBORNE_OUTPUTS.has(output)) {
-    if (airborneContextMode === "element_lab") {
-      return "Switch the airborne environment out of lab mode for field-side airborne metrics.";
-    }
+    const pendingDetail = getFieldAirbornePendingDetail(output, result);
 
-    const geometryNeeded = result.ratings.field?.geometryNeeded ?? [];
-    const absorptionNeeded = result.ratings.field?.absorptionDataNeeded ?? [];
-    const needed = Array.from(new Set([...geometryNeeded, ...absorptionNeeded]));
-
-    if (needed.length) {
-      return `Need ${joinLabels(needed)} to derive this output.`;
+    if (pendingDetail) {
+      return pendingDetail;
     }
   }
 
@@ -791,26 +801,18 @@ function buildUnavailableOutputDetail(input: {
 }
 
 function isRouteBlockedOutput(input: {
-  airborneContextMode: AirborneContextMode;
   output: RequestedOutputId;
   result: AssemblyCalculation | null;
   studyMode: StudyMode;
 }): boolean {
-  const { airborneContextMode, output, result, studyMode } = input;
+  const { output, result, studyMode } = input;
 
   if (!result) {
     return true;
   }
 
   if (FIELD_AIRBORNE_OUTPUTS.has(output)) {
-    if (airborneContextMode === "element_lab") {
-      return true;
-    }
-
-    const geometryNeeded = result.ratings.field?.geometryNeeded ?? [];
-    const absorptionNeeded = result.ratings.field?.absorptionDataNeeded ?? [];
-
-    return geometryNeeded.length > 0 || absorptionNeeded.length > 0;
+    return getFieldAirborneBlockingRequirement(output, result) !== null;
   }
 
   if (FIELD_IMPACT_OUTPUTS.has(output) && studyMode === "floor") {
@@ -821,12 +823,11 @@ function isRouteBlockedOutput(input: {
 }
 
 function buildOutputCard(input: {
-  airborneContextMode: AirborneContextMode;
   output: RequestedOutputId;
   result: AssemblyCalculation | null;
   studyMode: StudyMode;
 }): OutputCardModel {
-  const { airborneContextMode, output, result, studyMode } = input;
+  const { output, result, studyMode } = input;
   const fieldRatings = result?.ratings.field;
   const isImpactOnlyLowConfidenceLane = isImpactOnlyLowConfidenceFloorLane(result);
 
@@ -855,7 +856,7 @@ function buildOutputCard(input: {
     case "R'w":
       if (typeof result?.metrics.estimatedRwPrimeDb === "number") {
         return {
-          detail: "Apparent on-site airborne rating from the field/building route.",
+          detail: getFieldAirborneLiveDetail("R'w", result),
           label: "R'w",
           output,
           status: "live",
@@ -899,7 +900,7 @@ function buildOutputCard(input: {
     case "DnT,w":
       if (typeof result?.metrics.estimatedDnTwDb === "number") {
         return {
-          detail: "Standardized field airborne level difference.",
+          detail: getFieldAirborneLiveDetail("DnT,w", result),
           label: "DnT,w",
           output,
           status: "live",
@@ -910,7 +911,7 @@ function buildOutputCard(input: {
     case "DnT,A":
       if (typeof result?.metrics.estimatedDnTADb === "number") {
         return {
-          detail: "A-weighted standardized field airborne companion.",
+          detail: getFieldAirborneLiveDetail("DnT,A", result),
           label: "DnT,A",
           output,
           status: "live",
@@ -921,7 +922,7 @@ function buildOutputCard(input: {
     case "DnT,A,k":
       if (typeof fieldRatings?.DnTAk === "number" || typeof result?.metrics.estimatedDnTAkDb === "number") {
         return {
-          detail: "Published or exact-field carried DnT,A,k companion.",
+          detail: getFieldAirborneLiveDetail("DnT,A,k", result),
           label: "DnT,A,k",
           output,
           status: "live",
@@ -932,7 +933,7 @@ function buildOutputCard(input: {
     case "Dn,w":
       if (typeof result?.metrics.estimatedDnWDb === "number") {
         return {
-          detail: "Normalized field airborne level difference.",
+          detail: getFieldAirborneLiveDetail("Dn,w", result),
           label: "Dn,w",
           output,
           status: "live",
@@ -943,7 +944,7 @@ function buildOutputCard(input: {
     case "Dn,A":
       if (typeof result?.metrics.estimatedDnADb === "number") {
         return {
-          detail: "A-weighted normalized field airborne companion.",
+          detail: getFieldAirborneLiveDetail("Dn,A", result),
           label: "Dn,A",
           output,
           status: "live",
@@ -1105,10 +1106,10 @@ function buildOutputCard(input: {
   }
 
   return {
-    detail: buildUnavailableOutputDetail({ airborneContextMode, output, result, studyMode }),
+    detail: buildUnavailableOutputDetail({ output, result, studyMode }),
     label: REQUESTED_OUTPUT_LABELS[output],
     output,
-    status: isRouteBlockedOutput({ airborneContextMode, output, result, studyMode }) ? "needs_input" : "unsupported",
+    status: isRouteBlockedOutput({ output, result, studyMode }) ? "needs_input" : "unsupported",
     value: "Not ready"
   };
 }
@@ -2316,9 +2317,52 @@ function SimpleLayerRow(props: {
   );
 }
 
+function ReviewTabButton(props: {
+  active: boolean;
+  controlsId: string;
+  id: ReviewTabId;
+  label: string;
+  onSelect: (id: ReviewTabId) => void;
+}) {
+  const { active, controlsId, id, label, onSelect } = props;
+
+  return (
+    <button
+      aria-controls={controlsId}
+      aria-selected={active}
+      className={`focus-ring inline-flex items-center rounded-full border px-3 py-2 text-sm font-semibold transition ${
+        active
+          ? "border-[color:color-mix(in_oklch,var(--accent)_28%,var(--line))] bg-[color:color-mix(in_oklch,var(--accent)_14%,var(--paper))] text-[color:var(--ink)]"
+          : "hairline bg-[color:var(--paper)]/74 text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+      }`}
+      id={`guided-review-tab-${id}`}
+      onClick={() => onSelect(id)}
+      role="tab"
+      type="button"
+    >
+      {label}
+    </button>
+  );
+}
+
 export function SimpleWorkbenchShell() {
+  const briefNote = useWorkbenchStore((state) => state.briefNote);
+  const clientName = useWorkbenchStore((state) => state.clientName);
+  const consultantAddress = useWorkbenchStore((state) => state.consultantAddress);
+  const consultantCompany = useWorkbenchStore((state) => state.consultantCompany);
+  const consultantEmail = useWorkbenchStore((state) => state.consultantEmail);
+  const consultantPhone = useWorkbenchStore((state) => state.consultantPhone);
+  const approverTitle = useWorkbenchStore((state) => state.approverTitle);
+  const preparedBy = useWorkbenchStore((state) => state.preparedBy);
+  const proposalAttention = useWorkbenchStore((state) => state.proposalAttention);
+  const proposalRecipient = useWorkbenchStore((state) => state.proposalRecipient);
   const projectName = useWorkbenchStore((state) => state.projectName);
+  const proposalReference = useWorkbenchStore((state) => state.proposalReference);
+  const proposalRevision = useWorkbenchStore((state) => state.proposalRevision);
+  const proposalSubject = useWorkbenchStore((state) => state.proposalSubject);
+  const reportProfile = useWorkbenchStore((state) => state.reportProfile);
   const rows = useWorkbenchStore((state) => state.rows);
+  const studyContext = useWorkbenchStore((state) => state.studyContext);
   const studyMode = useWorkbenchStore((state) => state.studyMode);
   const calculatorId = useWorkbenchStore((state) => state.calculatorId);
   const requestedOutputs = useWorkbenchStore((state) => state.requestedOutputs);
@@ -2360,9 +2404,23 @@ export function SimpleWorkbenchShell() {
   const setAirborneSharedTrack = useWorkbenchStore((state) => state.setAirborneSharedTrack);
   const setAirborneStudSpacingMm = useWorkbenchStore((state) => state.setAirborneStudSpacingMm);
   const setAirborneStudType = useWorkbenchStore((state) => state.setAirborneStudType);
+  const setBriefNote = useWorkbenchStore((state) => state.setBriefNote);
   const setCalculatorId = useWorkbenchStore((state) => state.setCalculatorId);
+  const setClientName = useWorkbenchStore((state) => state.setClientName);
+  const setConsultantAddress = useWorkbenchStore((state) => state.setConsultantAddress);
+  const setConsultantCompany = useWorkbenchStore((state) => state.setConsultantCompany);
+  const setConsultantEmail = useWorkbenchStore((state) => state.setConsultantEmail);
+  const setConsultantPhone = useWorkbenchStore((state) => state.setConsultantPhone);
   const setImpactGuideKDb = useWorkbenchStore((state) => state.setImpactGuideKDb);
   const setImpactGuideReceivingRoomVolumeM3 = useWorkbenchStore((state) => state.setImpactGuideReceivingRoomVolumeM3);
+  const setApproverTitle = useWorkbenchStore((state) => state.setApproverTitle);
+  const setPreparedBy = useWorkbenchStore((state) => state.setPreparedBy);
+  const setProposalAttention = useWorkbenchStore((state) => state.setProposalAttention);
+  const setProposalRecipient = useWorkbenchStore((state) => state.setProposalRecipient);
+  const setProjectName = useWorkbenchStore((state) => state.setProjectName);
+  const setProposalReference = useWorkbenchStore((state) => state.setProposalReference);
+  const setProposalRevision = useWorkbenchStore((state) => state.setProposalRevision);
+  const setProposalSubject = useWorkbenchStore((state) => state.setProposalSubject);
   const setRequestedOutputs = useWorkbenchStore((state) => state.setRequestedOutputs);
   const startStudyMode = useWorkbenchStore((state) => state.startStudyMode);
   const updateFloorRole = useWorkbenchStore((state) => state.updateFloorRole);
@@ -2380,6 +2438,7 @@ export function SimpleWorkbenchShell() {
   const [selectedPresetId, setSelectedPresetId] = useState<PresetId>(modePresets[0]?.id ?? MODE_PRESETS[studyMode][0]!);
   const [quickAddMaterialId, setQuickAddMaterialId] = useState<string>(quickPickMaterials[0]?.id ?? MODE_QUICK_PICK_IDS[studyMode][0]!);
   const [activeRowId, setActiveRowId] = useState<string | null>(null);
+  const [activeReviewTab, setActiveReviewTab] = useState<ReviewTabId>("proposal");
 
   useEffect(() => {
     if (sameRequestedOutputs(requestedOutputs, automaticOutputs)) {
@@ -2462,7 +2521,7 @@ export function SimpleWorkbenchShell() {
   const fieldAirborneRequested = automaticOutputs.some((output) => FIELD_AIRBORNE_OUTPUTS.has(output));
   const fieldImpactRequested = automaticOutputs.some((output) => FIELD_IMPACT_OUTPUTS.has(output));
   const geometryActive = airborneContextMode !== "element_lab" && fieldAirborneRequested;
-  const absorptionActive = geometryActive && automaticOutputs.some((output) => STANDARDIZED_AIRBORNE_OUTPUTS.has(output));
+  const standardizedAirborneActive = geometryActive && automaticOutputs.some((output) => STANDARDIZED_AIRBORNE_OUTPUTS.has(output));
   const wallModifiersActive = studyMode === "wall" && airborneContextMode !== "element_lab";
   const impactFieldActive = studyMode === "floor" && fieldImpactRequested;
   const standardizedImpactOutputsActive = automaticOutputs.includes("L'nT,w") || automaticOutputs.includes("L'nT,50");
@@ -2490,7 +2549,7 @@ export function SimpleWorkbenchShell() {
         })
       : null;
   const airborneVolumeSanityWarning =
-    geometryActive && absorptionActive
+    geometryActive && standardizedAirborneActive
       ? getGuidedNumericSanityWarning({
           band: GUIDED_INPUT_SANITY_BANDS.receivingRoomVolumeM3,
           label: "Receiving-room volume",
@@ -2499,7 +2558,7 @@ export function SimpleWorkbenchShell() {
         })
       : null;
   const rt60SanityWarning =
-    absorptionActive
+    standardizedAirborneActive
       ? getGuidedNumericSanityWarning({
           band: GUIDED_INPUT_SANITY_BANDS.receivingRoomRt60S,
           label: "RT60",
@@ -2532,8 +2591,10 @@ export function SimpleWorkbenchShell() {
         ? "Lab mode ignores room geometry, RT60, and field normalization inputs."
         : "The current output set does not need extra airborne geometry fields."
     );
-  } else if (!absorptionActive) {
-    contextNotes.push("RT60 is parked because the current route stays on apparent field outputs rather than standardized DnT reads.");
+  } else if (!standardizedAirborneActive) {
+    contextNotes.push("Receiving-room volume stays parked because the current route stops at apparent field outputs such as R'w and Dn,w.");
+  } else {
+    contextNotes.push("RT60 stays optional here. DnT outputs standardize with partition geometry and receiving-room volume; RT60 only feeds absorption-aware sidecars.");
   }
 
   if (studyMode === "floor") {
@@ -2548,7 +2609,7 @@ export function SimpleWorkbenchShell() {
     contextNotes.push("Wall leakage modifiers only matter on wall field or building reads, so they stay out of the main path here.");
   }
 
-  const outputCards = automaticOutputs.map((output) => buildOutputCard({ airborneContextMode, output, result, studyMode }));
+  const outputCards = automaticOutputs.map((output) => buildOutputCard({ output, result, studyMode }));
   const readyCards = outputCards.filter((card) => card.status === "live" || card.status === "bound");
   const pendingCards = outputCards.filter((card) => card.status !== "live" && card.status !== "bound");
   const liveOutputCards = outputCards.filter((card) => card.status === "live");
@@ -2576,7 +2637,7 @@ export function SimpleWorkbenchShell() {
       : `${validThicknessCount}/${rows.length} rows currently contribute live thickness.${studyMode === "floor" ? ` ${assignedFloorRoleCount}/${rows.length} rows are tagged for exact floor matching.` : ""}`;
   const routeCoverageLabel =
     scenario.warnings.length > 0 ? `${scenario.warnings.length} warning${scenario.warnings.length === 1 ? "" : "s"}` : "No active warnings";
-  const hasOptionalContextFields = (geometryActive && !absorptionActive) || (impactFieldActive && !standardizedImpactOutputsActive);
+  const hasOptionalContextFields = geometryActive || (impactFieldActive && !standardizedImpactOutputsActive);
   const validationSummary = getGuidedValidationSummary({ result, studyMode });
   const topologyGap = getGuidedTopologyGap({ result, rows, studyMode });
   const routeSignals = deriveGuidedRouteSignals({
@@ -2595,6 +2656,65 @@ export function SimpleWorkbenchShell() {
     studyMode === "floor" ? rows.find((row) => row.floorRole === "base_structure" && row.materialId === "lightweight_steel_floor") : null;
   const showSteelBoundSupportFormActions =
     studyMode === "floor" && isSteelBoundSupportFormLane(result) && Boolean(lightweightSteelBaseRow);
+  const proposalIssuedOnLabel = new Intl.DateTimeFormat("en-GB", {
+    dateStyle: "long"
+  }).format(new Date());
+  const proposalIssuedOnIso = new Date().toISOString();
+  const outputUnlockActionById = new Map<RequestedOutputId, string>();
+  for (const group of outputUnlockGroups) {
+    for (const output of group.outputs) {
+      if (!outputUnlockActionById.has(output)) {
+        outputUnlockActionById.set(output, group.title);
+      }
+    }
+  }
+  const proposalMetrics = readyCards.map((card) => ({
+    detail: card.detail,
+    label: card.label,
+    value: card.value
+  }));
+  const proposalCoverageItems = outputCards.map((card) => ({
+    detail: card.detail,
+    label: card.label,
+    nextStep: card.status === "needs_input" ? outputUnlockActionById.get(card.output) : undefined,
+    status: card.status,
+    value: card.value
+  }));
+  const proposalLayers = rows.map((row, index) => {
+    const material = materials.find((entry) => entry.id === row.materialId);
+
+    return {
+      categoryLabel: material ? getMaterialCategoryLabel(material) : "Uncatalogued layer",
+      index: index + 1,
+      label: material?.name ?? row.materialId,
+      roleLabel: studyMode === "floor" && row.floorRole ? FLOOR_ROLE_LABELS[row.floorRole] : undefined,
+      thicknessLabel: `${row.thicknessMm.trim().length > 0 ? row.thicknessMm : "?"} mm`
+    };
+  });
+  const methodReadyMetrics = readyCards.map((card) => ({
+    detail: card.detail,
+    label: card.label,
+    value: card.value
+  }));
+  const methodUnlocks = outputUnlockGroups.map((group) => ({
+    detail: group.detail,
+    outputsLabel: formatUnlockOutputs(group.outputs),
+    title: group.title
+  }));
+  const methodStackDetail =
+    parkedRowCount > 0
+      ? `${formatCountLabel(liveRowCount, "live row")} currently resolve to ${formatCountLabel(solverLayerCount, "solver layer")}. ${formatCountLabel(parkedRowCount, "parked row")} stay visible but do not affect the live route.`
+      : collapsedLiveRowCount > 0
+        ? `${formatCountLabel(liveRowCount, "live row")} collapse to ${formatCountLabel(solverLayerCount, "solver layer")} before calculation because adjacent identical live rows are merged.`
+        : `${formatCountLabel(liveRowCount, "live row")} feed ${formatCountLabel(solverLayerCount, "solver layer")} directly on the active route.`;
+  const proposalEvidence = buildSimpleWorkbenchEvidencePacket({
+    briefNote,
+    outputs: automaticOutputs,
+    result,
+    warnings: scenario.warnings
+  });
+  const activeReviewTabConfig = REVIEW_TABS.find((tab) => tab.id === activeReviewTab) ?? REVIEW_TABS[0]!;
+  const activeReviewPanelId = `guided-review-panel-${activeReviewTab}`;
 
   return (
     <div className="grid min-w-0 gap-6">
@@ -2888,8 +3008,8 @@ export function SimpleWorkbenchShell() {
                       {geometryActive ? (
                         <ContextSubsection
                           note={
-                            absorptionActive
-                              ? "Field airborne normalization is active, so geometry, room volume, and RT60 all matter now."
+                            standardizedAirborneActive
+                              ? "Standardized airborne outputs are active, so partition geometry and receiving-room volume are required. RT60 stays optional for absorption-aware sidecars."
                               : "Apparent airborne field reads are active, so element geometry is required before the stack can be trusted."
                           }
                           title="Airborne route"
@@ -2930,44 +3050,24 @@ export function SimpleWorkbenchShell() {
                             />
                           </FieldShell>
 
-                          {absorptionActive ? (
-                            <>
-                              <FieldShell
-                                advisory={`Guided sanity band ${formatGuidedSanityBand(GUIDED_INPUT_SANITY_BANDS.receivingRoomVolumeM3)}.`}
-                                label="Receiving room volume (m³)"
-                                note="Use the real receiving-room volume when available."
-                                relevance="required"
-                                usage="DnT,w, DnT,A and floor-side L'nT,w when requested"
-                                warning={airborneVolumeSanityWarning}
-                              >
-                                <input
-                                  aria-invalid={Boolean(airborneVolumeSanityWarning)}
-                                  className={getTextInputClassName(Boolean(airborneVolumeSanityWarning))}
-                                  inputMode="decimal"
-                                  onChange={(event) => setAirborneReceivingRoomVolumeM3(event.target.value)}
-                                  placeholder="e.g. 42"
-                                  value={airborneReceivingRoomVolumeM3}
-                                />
-                              </FieldShell>
-
-                              <FieldShell
-                                advisory={`Guided sanity band ${formatGuidedSanityBand(GUIDED_INPUT_SANITY_BANDS.receivingRoomRt60S)}.`}
-                                label="RT60 (s)"
-                                note="Only needed on absorption-aware standardized reads."
-                                relevance="required"
-                                usage="DnT,w and DnT,A building-style normalization"
-                                warning={rt60SanityWarning}
-                              >
-                                <input
-                                  aria-invalid={Boolean(rt60SanityWarning)}
-                                  className={getTextInputClassName(Boolean(rt60SanityWarning))}
-                                  inputMode="decimal"
-                                  onChange={(event) => setAirborneReceivingRoomRt60S(event.target.value)}
-                                  placeholder="e.g. 0.6"
-                                  value={airborneReceivingRoomRt60S}
-                                />
-                              </FieldShell>
-                            </>
+                          {standardizedAirborneActive ? (
+                            <FieldShell
+                              advisory={`Guided sanity band ${formatGuidedSanityBand(GUIDED_INPUT_SANITY_BANDS.receivingRoomVolumeM3)}.`}
+                              label="Receiving room volume (m³)"
+                              note="Use the real receiving-room volume when standardized DnT outputs are required."
+                              relevance="required"
+                              usage="DnT,w and DnT,A"
+                              warning={airborneVolumeSanityWarning}
+                            >
+                              <input
+                                aria-invalid={Boolean(airborneVolumeSanityWarning)}
+                                className={getTextInputClassName(Boolean(airborneVolumeSanityWarning))}
+                                inputMode="decimal"
+                                onChange={(event) => setAirborneReceivingRoomVolumeM3(event.target.value)}
+                                placeholder="e.g. 42"
+                                value={airborneReceivingRoomVolumeM3}
+                              />
+                            </FieldShell>
                           ) : null}
                         </ContextSubsection>
                       ) : null}
@@ -3028,7 +3128,7 @@ export function SimpleWorkbenchShell() {
                       title="Optional now"
                       tone="optional"
                     >
-                      {geometryActive && !absorptionActive ? (
+                      {geometryActive && !standardizedAirborneActive ? (
                         <ContextSubsection
                           note="Keep these parked until the route moves from apparent field reads into standardized airborne normalization."
                           title="Airborne route"
@@ -3048,6 +3148,31 @@ export function SimpleWorkbenchShell() {
                               onChange={(event) => setAirborneReceivingRoomVolumeM3(event.target.value)}
                               placeholder="e.g. 42"
                               value={airborneReceivingRoomVolumeM3}
+                            />
+                          </FieldShell>
+                        </ContextSubsection>
+                      ) : null}
+
+                      {geometryActive && standardizedAirborneActive ? (
+                        <ContextSubsection
+                          note="RT60 is optional on the current DnT lane. It supports absorption-aware sidecars, but it does not block DnT,w or DnT,A."
+                          title="Airborne route"
+                        >
+                          <FieldShell
+                            advisory={`Guided sanity band ${formatGuidedSanityBand(GUIDED_INPUT_SANITY_BANDS.receivingRoomRt60S)}.`}
+                            label="RT60 (s)"
+                            note="Optional reverberation-time context for absorption-aware sidecars."
+                            relevance="optional"
+                            usage="Absorption-aware field sidecars"
+                            warning={rt60SanityWarning}
+                          >
+                            <input
+                              aria-invalid={Boolean(rt60SanityWarning)}
+                              className={getTextInputClassName(Boolean(rt60SanityWarning))}
+                              inputMode="decimal"
+                              onChange={(event) => setAirborneReceivingRoomRt60S(event.target.value)}
+                              placeholder="e.g. 0.6"
+                              value={airborneReceivingRoomRt60S}
                             />
                           </FieldShell>
                         </ContextSubsection>
@@ -3578,30 +3703,150 @@ export function SimpleWorkbenchShell() {
         </div>
       </section>
 
-      <details className="rounded-[1.5rem] border hairline bg-[color:var(--panel)]/85 px-5 py-5">
-        <summary className="cursor-pointer list-none">
-          <div className="flex flex-wrap items-center justify-between gap-4">
+      <section className="grid gap-4">
+        <SurfacePanel className="px-5 py-5 sm:px-6">
+          <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
-              <div className="eyebrow">Diagnostics</div>
+              <div className="eyebrow">Review Deck</div>
               <h2 className="mt-1 font-display text-[1.4rem] leading-none tracking-[-0.04em] text-[color:var(--ink)]">
-                Provenance, confidence, and advanced traces
+                Method, diagnostics, and proposal tabs
               </h2>
+              <p className="mt-2 max-w-3xl text-sm leading-7 text-[color:var(--ink-soft)]">{activeReviewTabConfig.note}</p>
             </div>
-            <Link
-              className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-3 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
-              href="/workbench?view=advanced"
-            >
-              Open operator desk
-              <ChevronRight className="h-4 w-4" />
-            </Link>
+            <div className="grid gap-2 text-right text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+              <div>{`${proposalMetrics.length} live metric${proposalMetrics.length === 1 ? "" : "s"}`}</div>
+              <div>{`${proposalLayers.length} visible row${proposalLayers.length === 1 ? "" : "s"}`}</div>
+              <div>{scenario.warnings.length > 0 ? `${scenario.warnings.length} warning${scenario.warnings.length === 1 ? "" : "s"}` : "No live warnings"}</div>
+            </div>
           </div>
-        </summary>
 
-        <div className="mt-5 grid gap-6">
-          <ResultSummary result={result} warnings={scenario.warnings} />
-          {studyMode === "floor" ? <ImpactResultPanel result={result} /> : null}
-        </div>
-      </details>
+          <div
+            aria-label="Guided review sections"
+            className="mt-5 flex flex-wrap gap-2"
+            role="tablist"
+          >
+            {REVIEW_TABS.map((tab) => (
+              <ReviewTabButton
+                active={tab.id === activeReviewTab}
+                controlsId={`guided-review-panel-${tab.id}`}
+                id={tab.id}
+                key={tab.id}
+                label={tab.label}
+                onSelect={setActiveReviewTab}
+              />
+            ))}
+          </div>
+        </SurfacePanel>
+
+        {activeReviewTab === "method" ? (
+          <div
+            aria-labelledby="guided-review-tab-method"
+            id={activeReviewPanelId}
+            role="tabpanel"
+          >
+            <SimpleWorkbenchMethodPanel
+              branchDetail={dynamicCalcBranch.detail}
+              branchLabel={dynamicCalcBranch.value}
+              contextLabel={getEnvironmentLabel(airborneContextMode)}
+              readyMetrics={methodReadyMetrics}
+              stackDetail={methodStackDetail}
+              unlocks={methodUnlocks}
+              validationDetail={validationSummary.detail}
+              validationLabel={validationSummary.value}
+              warnings={scenario.warnings}
+            />
+          </div>
+        ) : null}
+
+        {activeReviewTab === "diagnostics" ? (
+          <div
+            aria-labelledby="guided-review-tab-diagnostics"
+            id={activeReviewPanelId}
+            role="tabpanel"
+          >
+            <SurfacePanel className="px-5 py-5">
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                  <div className="eyebrow">Diagnostics</div>
+                  <h2 className="mt-1 font-display text-[1.4rem] leading-none tracking-[-0.04em] text-[color:var(--ink)]">
+                    Provenance, confidence, and advanced traces
+                  </h2>
+                </div>
+                <Link
+                  className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-3 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+                  href="/workbench?view=advanced"
+                >
+                  Open operator desk
+                  <ChevronRight className="h-4 w-4" />
+                </Link>
+              </div>
+
+              <div className="mt-5 grid gap-6">
+                <ResultSummary result={result} warnings={scenario.warnings} />
+                {studyMode === "floor" ? <ImpactResultPanel result={result} /> : null}
+              </div>
+            </SurfacePanel>
+          </div>
+        ) : null}
+
+        {activeReviewTab === "proposal" ? (
+          <div
+            aria-labelledby="guided-review-tab-proposal"
+            id={activeReviewPanelId}
+            role="tabpanel"
+          >
+            <SimpleWorkbenchProposalPanel
+              assemblyHeadline={heroHeadline}
+              briefNote={briefNote}
+              clientName={clientName}
+              consultantAddress={consultantAddress}
+              citations={proposalEvidence.citations}
+              consultantCompany={consultantCompany}
+              consultantEmail={consultantEmail}
+              consultantPhone={consultantPhone}
+              contextLabel={getEnvironmentLabel(airborneContextMode)}
+              coverageItems={proposalCoverageItems}
+              decisionTrailHeadline={proposalEvidence.decisionTrailHeadline}
+              decisionTrailItems={proposalEvidence.decisionTrailItems}
+              dynamicBranchDetail={dynamicCalcBranch.detail}
+              dynamicBranchLabel={dynamicCalcBranch.value}
+              issuedOnLabel={proposalIssuedOnLabel}
+              issuedOnIso={proposalIssuedOnIso}
+              layers={proposalLayers}
+              metrics={proposalMetrics}
+              onApproverTitleChange={setApproverTitle}
+              onBriefNoteChange={setBriefNote}
+              onClientNameChange={setClientName}
+              onConsultantAddressChange={setConsultantAddress}
+              onConsultantCompanyChange={setConsultantCompany}
+              onConsultantEmailChange={setConsultantEmail}
+              onConsultantPhoneChange={setConsultantPhone}
+              onPreparedByChange={setPreparedBy}
+              onProposalAttentionChange={setProposalAttention}
+              onProposalRecipientChange={setProposalRecipient}
+              onProjectNameChange={setProjectName}
+              onProposalReferenceChange={setProposalReference}
+              onProposalRevisionChange={setProposalRevision}
+              onProposalSubjectChange={setProposalSubject}
+              approverTitle={approverTitle}
+              preparedBy={preparedBy}
+              proposalAttention={proposalAttention}
+              proposalRecipient={proposalRecipient}
+              projectName={projectName}
+              proposalReference={proposalReference}
+              proposalRevision={proposalRevision}
+              proposalSubject={proposalSubject}
+              reportProfileLabel={REPORT_PROFILE_LABELS[reportProfile]}
+              studyModeLabel={getStudyModeLabel(studyMode)}
+              studyContextLabel={STUDY_CONTEXT_LABELS[studyContext]}
+              validationDetail={validationSummary.detail}
+              validationLabel={validationSummary.value}
+              validationTone={validationSummary.tone}
+              warnings={scenario.warnings}
+            />
+          </div>
+        ) : null}
+      </section>
     </div>
   );
 }

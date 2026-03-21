@@ -3,19 +3,19 @@ import type { AssemblyCalculation, RequestedOutputId } from "@dynecho/shared";
 const IMPACT_ONLY_LOW_FREQUENCY_OUTPUTS = new Set<RequestedOutputId>(["CI", "CI,50-2500", "Ln,w+CI"]);
 
 export const IMPACT_ONLY_LOW_CONFIDENCE_FLOOR_FAMILY_NOTE =
-  "Low-confidence timber bare-floor fallback is currently impact-only. Ln,w stays source-backed on the published-family lane, while Rw / Ctr stay on the separate airborne screening lane and nil-ceiling floor-family companions stay hidden.";
+  "Low-confidence timber bare-floor fallback is active. DynEcho is now exposing the published-family airborne companions on the same low-confidence lane, but this stack still needs a ceiling package before it can move into a narrower Knauf corridor.";
 
 export const IMPACT_ONLY_LOW_CONFIDENCE_LNW_DETAIL =
-  "Source-backed low-confidence impact fallback. This timber bare-floor branch stays impact-only while airborne screening companions remain separate.";
+  "Source-backed low-confidence timber bare-floor fallback. Ln,w is live, but the stack still needs a ceiling package before DynEcho can move into a narrower Knauf corridor.";
 
 export const IMPACT_ONLY_LOW_CONFIDENCE_RW_DETAIL =
-  "Weighted airborne element rating from the separate screening lane. The low-confidence timber bare-floor impact branch stays impact-only, so DynEcho is not presenting this as a floor-family companion.";
+  "Weighted airborne companion from the same low-confidence published-family fallback. Add the ceiling package to replace this broad timber bare-floor lane with a narrower Knauf corridor.";
 
 export const IMPACT_ONLY_LOW_CONFIDENCE_CTR_DETAIL =
-  "Traffic-noise adaptation term from the separate airborne screening lane. The low-confidence timber bare-floor impact branch stays impact-only, so DynEcho is not presenting this as a floor-family companion.";
+  "Traffic-noise adaptation companion from the same low-confidence published-family fallback. Add the ceiling package to replace this broad timber bare-floor lane with a narrower Knauf corridor.";
 
 export const IMPACT_ONLY_LOW_CONFIDENCE_UNAVAILABLE_DETAIL =
-  "This timber bare-floor fallback is impact-only. Ln,w stays live, but low-frequency companion terms are not defended on this lane.";
+  "This timber bare-floor fallback stays on the broad low-confidence published-family lane. Add the ceiling package before treating unsupported companion outputs as in-scope.";
 
 export const IMPACT_ONLY_LOW_CONFIDENCE_TOPOLOGY_GAP_VALUE = "Add the ceiling package";
 
@@ -27,10 +27,11 @@ export function isImpactOnlyLowConfidenceFloorLane(result: AssemblyCalculation |
     result?.floorSystemEstimate?.kind === "low_confidence" &&
       result.impact?.basis === "predictor_floor_system_low_confidence_estimate" &&
       result.dynamicImpactTrace?.estimateTier === "low_confidence" &&
-      !result.floorSystemRatings
+      result.dynamicImpactTrace?.systemType === "bare_floor" &&
+      result.dynamicImpactTrace?.detectedSupportFamily === "timber_joists"
   );
 }
 
 export function isImpactOnlyLowConfidenceUnavailableOutput(output: RequestedOutputId): boolean {
-  return IMPACT_ONLY_LOW_FREQUENCY_OUTPUTS.has(output);
+  return IMPACT_ONLY_LOW_FREQUENCY_OUTPUTS.has(output) && output === "CI,50-2500";
 }

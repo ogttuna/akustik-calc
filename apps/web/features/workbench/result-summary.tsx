@@ -6,8 +6,9 @@ import { MetricCard, Pill, SurfacePanel } from "@dynecho/ui";
 
 import { formatDecimal } from "@/lib/format";
 
+import { getFieldAirborneProvenanceSummary } from "./field-airborne-provenance";
 import { buildWorkbenchWarningNotes } from "./workbench-warning-notes";
-import { getDnTAkDetail } from "./dntak-source-mode";
+import { getFieldAirborneLiveDetail } from "./field-airborne-output";
 import { getImpactLaneKind, getImpactLanePillLabel } from "./impact-lane-view";
 import { ResultMeter } from "./result-meter";
 
@@ -26,6 +27,7 @@ export function ResultSummary({ result, warnings }: ResultSummaryProps) {
   const impactLaneKind = getImpactLaneKind({ impact: result?.impact, lowerBoundImpact });
   const dynamicTrace = result?.dynamicAirborneTrace ?? null;
   const dynamicImpactTrace = result?.dynamicImpactTrace ?? null;
+  const fieldAirborneProvenance = getFieldAirborneProvenanceSummary(result);
   const activeCalculatorLabel = result?.calculatorLabel ?? "Screening Seed";
   const primaryAirborneValue =
     result?.airborneOverlay?.contextMode === "building_prediction" && typeof result?.metrics.estimatedDnTwDb === "number"
@@ -53,6 +55,7 @@ export function ResultSummary({ result, warnings }: ResultSummaryProps) {
         ) : null}
         {result?.airborneOverlay?.leakagePenaltyApplied ? <Pill tone="warning">Leakage overlay</Pill> : null}
         {result?.airborneOverlay?.fieldFlankingPenaltyApplied ? <Pill tone="warning">Field flanking</Pill> : null}
+        {fieldAirborneProvenance ? <Pill tone="accent">{fieldAirborneProvenance.label}</Pill> : null}
         {result?.impact ? <Pill tone="accent">{getImpactLanePillLabel(impactLaneKind)}</Pill> : null}
         {!result?.impact && lowerBoundImpact ? <Pill tone="neutral">Bound impact live</Pill> : null}
         {dynamicImpactTrace ? (
@@ -116,6 +119,13 @@ export function ResultSummary({ result, warnings }: ResultSummaryProps) {
                 detail={`${dynamicTrace.confidenceClass} confidence · ${dynamicTrace.solverSpreadRwDb} dB solver spread`}
               />
             ) : null}
+            {fieldAirborneProvenance ? (
+              <MetricCard
+                label="Field airborne provenance"
+                value={fieldAirborneProvenance.label}
+                detail={fieldAirborneProvenance.detail}
+              />
+            ) : null}
             <MetricCard
               label="ISO 717 composite"
               value={result.ratings.iso717.composite}
@@ -130,42 +140,42 @@ export function ResultSummary({ result, warnings }: ResultSummaryProps) {
               <MetricCard
                 label="R'w"
                 value={`${formatDecimal(result.metrics.estimatedRwPrimeDb)} dB`}
-                detail="Apparent airborne rating from the final field-side curve"
+                detail={getFieldAirborneLiveDetail("R'w", result)}
               />
             ) : null}
             {typeof result.metrics.estimatedDnTwDb === "number" ? (
               <MetricCard
                 label="DnT,w"
                 value={`${formatDecimal(result.metrics.estimatedDnTwDb)} dB`}
-                detail="Standardized field level difference from partition area and receiving-room volume"
+                detail={getFieldAirborneLiveDetail("DnT,w", result)}
               />
             ) : null}
             {typeof result.metrics.estimatedDnTADb === "number" ? (
               <MetricCard
                 label="DnT,A"
                 value={`${formatDecimal(result.metrics.estimatedDnTADb)} dB`}
-                detail="Field A-weighted companion derived as DnT,w + C"
+                detail={getFieldAirborneLiveDetail("DnT,A", result)}
               />
             ) : null}
             {typeof result.ratings.field?.DnTAk === "number" ? (
               <MetricCard
                 label="DnT,A,k"
                 value={`${formatDecimal(result.ratings.field.DnTAk)} dB`}
-                detail={getDnTAkDetail(result)}
+                detail={getFieldAirborneLiveDetail("DnT,A,k", result)}
               />
             ) : null}
             {typeof result.metrics.estimatedDnWDb === "number" ? (
               <MetricCard
                 label="Dn,w"
                 value={`${formatDecimal(result.metrics.estimatedDnWDb)} dB`}
-                detail="Normalized field level difference from the apparent curve and partition area"
+                detail={getFieldAirborneLiveDetail("Dn,w", result)}
               />
             ) : null}
             {typeof result.metrics.estimatedDnADb === "number" ? (
               <MetricCard
                 label="Dn,A"
                 value={`${formatDecimal(result.metrics.estimatedDnADb)} dB`}
-                detail="A-weighted companion derived as Dn,w + C"
+                detail={getFieldAirborneLiveDetail("Dn,A", result)}
               />
             ) : null}
             {typeof result.impact?.LnTA === "number" ? (

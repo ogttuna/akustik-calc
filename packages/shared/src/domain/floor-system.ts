@@ -142,6 +142,7 @@ export const ExactFloorSystemSchema = z.object({
   manualMatch: z.boolean().optional(),
   match: FloorSystemMatchCriteriaSchema,
   sourceLabel: z.string().min(1),
+  sourceUrl: z.string().url().optional(),
   sourceType: FloorSystemSourceTypeSchema,
   systemSummary: FloorSystemSummarySchema,
   trustTier: FloorSystemTrustTierSchema
@@ -154,6 +155,7 @@ export const BoundFloorSystemSchema = z.object({
   label: z.string().min(1),
   match: FloorSystemMatchCriteriaSchema,
   sourceLabel: z.string().min(1),
+  sourceUrl: z.string().url().optional(),
   sourceType: FloorSystemSourceTypeSchema,
   systemSummary: FloorSystemSummarySchema,
   trustTier: FloorSystemTrustTierSchema

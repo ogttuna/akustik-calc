@@ -4737,7 +4737,7 @@ describe("calculateAssembly", () => {
     expect(result.unsupportedImpactOutputs).toEqual([]);
   });
 
-  it("carries predictor-backed composite ceiling-only estimates into live standardized field continuation", () => {
+  it("carries predictor-backed composite ceiling-only low-confidence estimates into live standardized field continuation", () => {
     const result = calculateAssembly(
       [
         { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 15 },
@@ -4755,18 +4755,19 @@ describe("calculateAssembly", () => {
       }
     );
 
-    expect(result.floorSystemEstimate?.kind).toBe("family_general");
+    expect(result.floorSystemEstimate?.kind).toBe("low_confidence");
     expect(result.impact?.basis).toBe("mixed_predicted_plus_estimated_standardized_field_volume_normalization");
-    expect(result.impact?.LnW).toBe(64.1);
-    expect(result.impact?.LPrimeNW).toBe(66.1);
-    expect(result.impact?.LPrimeNTw).toBe(64.1);
+    expect(result.impact?.LnW).toBe(63.3);
+    expect(result.impact?.LPrimeNW).toBe(65.3);
+    expect(result.impact?.LPrimeNTw).toBe(63.3);
     expect(result.impact?.LPrimeNT50).toBeUndefined();
     expect(result.impact?.estimateCandidateIds).toEqual([
+      "pmc_m1_bare_composite_lab_2026",
       "pmc_m1_dry_floating_plus_c2x_lab_2026",
       "pmc_m1_dry_floating_plus_c1x_lab_2026",
-      "pmc_m1_bare_composite_lab_2026"
+      "pmc_m1_dry_floating_floor_lab_2026"
     ]);
-    expect(result.impact?.metricBasis?.LnW).toBe("predictor_composite_panel_published_interaction_estimate");
+    expect(result.impact?.metricBasis?.LnW).toBe("predictor_floor_system_low_confidence_estimate");
     expect(result.impact?.metricBasis?.LPrimeNW).toBe("estimated_field_lprimenw_from_lnw_plus_k");
     expect(result.impact?.metricBasis?.LPrimeNTw).toBe("estimated_standardized_field_lprimentw_from_lprimenw_plus_room_volume");
     expect(result.supportedImpactOutputs).toEqual(["L'n,w", "L'nT,w"]);
@@ -5253,7 +5254,7 @@ describe("calculateAssembly", () => {
     expect(result.floorSystemEstimate?.airborneRatings.Rw).toBe(63.6);
   });
 
-  it("keeps layer-driven steel joist vinyl stacks on the narrower Pliteq family lane", () => {
+  it("keeps layer-driven steel joist vinyl stacks on the upstream low-confidence Pliteq lane", () => {
     const result = calculateAssembly(
       [
         { floorRole: "base_structure", materialId: "steel_joist_floor", thicknessMm: 250 },
@@ -5288,23 +5289,25 @@ describe("calculateAssembly", () => {
       }
     );
 
-    expect(result.floorSystemEstimate?.kind).toBe("family_general");
-    expect(result.impact?.basis).toBe("predictor_floor_system_family_general_estimate");
-    expect(result.impact?.LnW).toBe(58);
-    expect(result.floorSystemRatings?.Rw).toBe(60);
-    expect(result.floorSystemRatings?.RwCtr).toBeUndefined();
+    expect(result.floorSystemEstimate?.kind).toBe("low_confidence");
+    expect(result.impact?.basis).toBe("predictor_floor_system_low_confidence_estimate");
+    expect(result.impact?.LnW).toBe(58.3);
+    expect(result.floorSystemRatings?.Rw).toBe(61);
+    expect(result.floorSystemRatings?.RwCtr).toBe(57);
     expect(result.impact?.estimateCandidateIds).toEqual([
       "pliteq_steel_joist_250_rst02_vinyl_lab_2026",
-      "pliteq_steel_joist_250_rst02_wood_lab_2026",
-      "pliteq_steel_joist_250_rst12_porcelain_lab_2026"
+      "ubiq_fl32_steel_200_lab_2026",
+      "ubiq_fl32_steel_300_lab_2026",
+      "pliteq_steel_joist_250_rst12_porcelain_lab_2026",
+      "pliteq_steel_joist_250_rst02_wood_lab_2026"
     ]);
     expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(true);
-    expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
+    expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(true);
     expect(result.supportedTargetOutputs).toEqual(["Ln,w", "Rw", "Ctr"]);
     expect(result.unsupportedTargetOutputs).toEqual([]);
   });
 
-  it("keeps timber bare-floor laminate layer stacks impact-only on the low-confidence lane while leaving airborne screening separate", () => {
+  it("keeps timber bare-floor laminate layer stacks on the upstream low-confidence lane with airborne companions exposed", () => {
     const result = calculateAssembly(
       [
         { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 9 },
@@ -5317,16 +5320,16 @@ describe("calculateAssembly", () => {
 
     expect(result.floorSystemEstimate?.kind).toBe("low_confidence");
     expect(result.impact?.basis).toBe("predictor_floor_system_low_confidence_estimate");
-    expect(result.impact?.LnW).toBe(70.4);
-    expect(result.floorSystemRatings).toBeNull();
-    expect(result.supportedTargetOutputs).toEqual(["Rw", "Ctr", "Ln,w"]);
-    expect(result.unsupportedTargetOutputs).toEqual(["CI", "Ln,w+CI"]);
-    expect(result.warnings).toContain(
-      "Low-confidence timber bare-floor predictor support is currently impact-only. DynEcho kept proxy airborne companions hidden instead of presenting nil-ceiling family rows as supported Rw / Ctr outputs."
-    );
+    expect(result.impact?.LnW).toBe(61.3);
+    expect(result.impact?.CI).toBe(2);
+    expect(result.impact?.LnWPlusCI).toBe(63.3);
+    expect(result.floorSystemRatings?.Rw).toBe(51.6);
+    expect(result.floorSystemRatings?.RwCtr).toBe(31.1);
+    expect(result.supportedTargetOutputs).toEqual(["Rw", "Ctr", "Ln,w", "CI", "Ln,w+CI"]);
+    expect(result.unsupportedTargetOutputs).toEqual([]);
   });
 
-  it("keeps combined reinforced-concrete predictor input on the narrower family-general lane", () => {
+  it("keeps combined reinforced-concrete predictor input on the upstream low-confidence lane", () => {
     const result = calculateAssembly(
       [
         { materialId: "gypsum_board", thicknessMm: 12.5 },
@@ -5353,12 +5356,12 @@ describe("calculateAssembly", () => {
       }
     );
 
-    expect(result.impact?.basis).toBe("predictor_floor_system_family_general_estimate");
+    expect(result.impact?.basis).toBe("predictor_floor_system_low_confidence_estimate");
     expect(result.impact?.LnW).toBe(50);
     expect(result.floorSystemRatings?.Rw).toBe(65.9);
     expect(result.floorSystemRatings?.RwCtr).toBe(57);
     expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(true);
-    expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
+    expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(true);
   });
 
   it("applies structured airborne leakage and field-flanking overlays without altering the impact lane", () => {

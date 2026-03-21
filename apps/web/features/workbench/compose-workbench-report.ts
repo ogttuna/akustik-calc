@@ -21,12 +21,14 @@ import {
   DUTCH_DNTAK_REFERENCE_SOURCES,
   getDutchResidentialDnTAkComplianceReportLines
 } from "./dutch-airborne-compliance";
+import { getConsultantDecisionTrailReportLines } from "./consultant-decision-trail";
 import {
   DUTCH_IMPACT_REFERENCE_SOURCES,
   getDutchResidentialImpactReferenceRows,
   getDutchResidentialImpactReferenceReportLines
 } from "./dutch-impact-reference";
 import { getDnTAkReportLine } from "./dntak-source-mode";
+import { getFieldAirborneReportLines } from "./field-airborne-provenance";
 import { FIELD_RISK_BY_ID, summarizeFieldRisk, type FieldRiskId } from "./field-risk-model";
 import {
   formatImpactMetricBasisLabel,
@@ -166,6 +168,8 @@ function buildScenarioReportLines(input: {
     ...(decision.briefDeltaLabel ? [`- Brief gap: ${decision.briefDeltaLabel.replace(/^Brief gap: /, "")}`] : []),
     `- Scenario reading: ${summary.impactPosture.detail}`,
     `- Airborne reading: ${summary.airbornePosture.detail}`,
+    ...(summary.airborneProvenanceLabel ? [`- Airborne field provenance: ${summary.airborneProvenanceLabel}`] : []),
+    ...(summary.airborneProvenanceDetail ? [`- Airborne field reading: ${summary.airborneProvenanceDetail}`] : []),
     `- Corridor summary: ${summary.narrative}`,
     ""
   ];
@@ -281,6 +285,7 @@ export function composeWorkbenchReport({
         `- Spectrum adaptation terms: C ${formatSignedMetric(currentScenario.result.metrics.estimatedCDb)} dB, Ctr ${formatSignedMetric(currentScenario.result.metrics.estimatedCtrDb)} dB`,
         `- STC: ${formatMetric(currentScenario.result.metrics.estimatedStc)} dB`,
         ...(dnTAkReportLine ? [dnTAkReportLine] : []),
+        ...getFieldAirborneReportLines(currentScenario.result),
         `- Surface mass: ${formatMetric(currentScenario.result.metrics.surfaceMassKgM2)} kg/m²`,
         `- Total thickness: ${formatMetric(currentScenario.result.metrics.totalThicknessMm)} mm`,
         `- Cavity / insulation count: ${currentScenario.result.metrics.airGapCount} / ${currentScenario.result.metrics.insulationCount}`,
@@ -421,6 +426,13 @@ export function composeWorkbenchReport({
       (status) => `- ${REQUESTED_OUTPUT_LABELS[status.output]}: ${status.label}. ${status.note}`
     )
   ];
+  const consultantDecisionTrailLines = getConsultantDecisionTrailReportLines({
+    briefNote,
+    guideResult: impactGuide,
+    outputs: requestedOutputs,
+    result: currentScenario.result,
+    warnings: currentScenario.warnings
+  });
 
   return [
     `# ${projectName}`,
@@ -446,6 +458,9 @@ export function composeWorkbenchReport({
           "- Research-only outputs are kept visible for briefing and auditability, but DynEcho does not fabricate ASTM or low-frequency ratings before their standards-backed adapters ship."
         ]
       : []),
+    "",
+    "## Decision trail",
+    ...consultantDecisionTrailLines,
     "",
     "## Migration scorecard",
     "- UI / workbench migration: ~95%",
@@ -642,6 +657,7 @@ export function composeWorkbenchReport({
       ? [
           `- Matched family: ${currentExactFloorSystem.system.label}`,
           `- Source: ${currentExactFloorSystem.system.sourceLabel}`,
+          ...(currentExactFloorSystem.system.sourceUrl ? [`- Source URL: ${currentExactFloorSystem.system.sourceUrl}`] : []),
           `- Exact Ln,w: ${formatMetric(currentExactFloorSystem.impact.LnW ?? 0)} dB`,
           `- Exact Rw: ${formatMetric(currentExactFloorSystem.system.airborneRatings.Rw)} dB`,
           ...buildFloorSystemCompanionLines("Exact", currentExactFloorSystem.system.airborneRatings),
@@ -660,6 +676,7 @@ export function composeWorkbenchReport({
         ? [
             `- Bound family: ${currentBoundFloorSystem.system.label}`,
             `- Source: ${currentBoundFloorSystem.system.sourceLabel}`,
+            ...(currentBoundFloorSystem.system.sourceUrl ? [`- Source URL: ${currentBoundFloorSystem.system.sourceUrl}`] : []),
             ...(typeof currentBoundFloorSystem.lowerBoundImpact.LnWUpperBound === "number"
               ? [`- Exact Ln,w upper bound: <= ${formatMetric(currentBoundFloorSystem.lowerBoundImpact.LnWUpperBound)} dB`]
               : []),

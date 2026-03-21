@@ -884,13 +884,17 @@ export function WorkbenchShell() {
         />
         <FieldRiskPanel fieldRiskIds={fieldRiskIds} onToggleFieldRisk={toggleFieldRisk} />
         <ReportExportPanel
+          briefNote={briefNote}
           exportStatus={reportExport.status}
           fileName={reportFilename}
+          guideResult={impactGuide}
           onCopyReport={reportExport.copyReport}
           onDownloadReport={reportExport.downloadReport}
           result={result}
+          requestedOutputs={requestedOutputs}
           requestedOutputCount={requestedOutputs.length}
           savedScenarioCount={savedScenarios.length}
+          warnings={currentScenario.warnings}
         />
         <DeliveryAssistPanel
           activeCriteriaPack={activeCriteriaPack}
