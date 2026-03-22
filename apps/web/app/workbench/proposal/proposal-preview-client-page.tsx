@@ -13,6 +13,7 @@ import {
   buildSimpleWorkbenchProposalText,
   type SimpleWorkbenchProposalDocument
 } from "@/features/workbench/simple-workbench-proposal";
+import { SimpleWorkbenchProposalConstructionFigure } from "@/features/workbench/simple-workbench-proposal-construction-figure";
 import { buildSimpleWorkbenchProposalDossier } from "@/features/workbench/simple-workbench-proposal-dossier";
 import { getSimpleWorkbenchProposalBranding } from "@/features/workbench/simple-workbench-proposal-branding";
 import { downloadSimpleWorkbenchProposalPdf } from "@/features/workbench/simple-workbench-proposal-pdf";
@@ -381,6 +382,31 @@ export function ProposalPreviewClientPage() {
               </SurfacePanel>
             </>
           ) : null}
+
+          <SurfacePanel className="px-5 py-5 sm:px-6">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+                  Construction section
+                </div>
+                <h2 className="mt-1 font-display text-[1.55rem] leading-none tracking-[-0.05em] text-[color:var(--ink)]">
+                  Visible layer stack in solver order
+                </h2>
+              </div>
+              <div className="rounded-full border hairline bg-[color:var(--paper)]/76 px-3 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+                {proposalDocument.layers.length} visible row{proposalDocument.layers.length === 1 ? "" : "s"}
+              </div>
+            </div>
+            <p className="mt-3 max-w-4xl text-sm leading-7 text-[color:var(--ink-soft)]">
+              The same stack that drives the live dynamic read is drawn here as the client-facing technical section and then repeated in the branded PDF schedule page.
+            </p>
+            <div className="mt-4">
+              <SimpleWorkbenchProposalConstructionFigure
+                layers={proposalDocument.layers}
+                studyModeLabel={proposalDocument.studyModeLabel}
+              />
+            </div>
+          </SurfacePanel>
 
           <section className="rounded-[1.5rem] border hairline bg-[color:var(--panel)] p-3 sm:p-4">
             <iframe

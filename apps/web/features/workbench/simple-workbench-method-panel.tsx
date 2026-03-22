@@ -9,6 +9,7 @@ import {
   type SimpleWorkbenchMethodTraceGroup
 } from "./simple-workbench-method-dossier";
 import { buildSimpleWorkbenchCorridorDossier } from "./simple-workbench-corridor-dossier";
+import { SimpleWorkbenchProposalConstructionFigure } from "./simple-workbench-proposal-construction-figure";
 import type { StudyMode } from "./preset-definitions";
 import type {
   SimpleWorkbenchProposalCoverageItem,
@@ -178,32 +179,17 @@ export function SimpleWorkbenchMethodPanel({
           <div className="flex flex-wrap items-center justify-between gap-2 text-sm font-semibold text-[color:var(--ink)]">
             <div className="inline-flex items-center gap-2">
               <Layers3 className="h-4 w-4" />
-              Visible stack on this route
+              Technical section on this route
             </div>
             <div className="text-[0.72rem] uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
               {layers.length} row{layers.length === 1 ? "" : "s"}
             </div>
           </div>
-          <div className="mt-4 grid gap-2">
-            {layers.length > 0 ? (
-              layers.map((layer) => (
-                <div
-                  className="grid gap-2 rounded-[0.95rem] border hairline bg-[color:var(--paper)] px-3 py-3 sm:grid-cols-[auto_minmax(0,1fr)_auto]"
-                  key={`${layer.index}-${layer.label}-${layer.thicknessLabel}`}
-                >
-                  <div className="text-sm font-semibold text-[color:var(--ink)]">{String(layer.index).padStart(2, "0")}</div>
-                  <div className="min-w-0">
-                    <div className="text-sm font-semibold text-[color:var(--ink)]">{layer.label}</div>
-                    <div className="text-xs leading-5 text-[color:var(--ink-soft)]">{layer.roleLabel ?? layer.categoryLabel}</div>
-                  </div>
-                  <div className="text-sm text-[color:var(--ink-soft)]">{layer.thicknessLabel}</div>
-                </div>
-              ))
-            ) : (
-              <div className="rounded-[1rem] border border-dashed hairline px-4 py-4 text-sm leading-6 text-[color:var(--ink-soft)]">
-                No visible rows are active yet.
-              </div>
-            )}
+          <p className="mt-3 max-w-4xl text-sm leading-7 text-[color:var(--ink-soft)]">
+            {stackDetail} The same solver-order section travels into the client-facing proposal so the lane narrative and issue package stay on the same stack reading.
+          </p>
+          <div className="mt-4">
+            <SimpleWorkbenchProposalConstructionFigure layers={layers} studyModeLabel={studyModeLabel} />
           </div>
         </section>
 

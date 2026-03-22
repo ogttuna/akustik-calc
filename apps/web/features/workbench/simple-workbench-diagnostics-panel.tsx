@@ -11,12 +11,14 @@ import { ImpactResultPanel } from "./impact-result-panel";
 import { ImpactTracePanel } from "./impact-trace-panel";
 import { ResultSummary } from "./result-summary";
 import { buildSimpleWorkbenchDiagnosticsDossier } from "./simple-workbench-diagnostics-dossier";
+import { SimpleWorkbenchProposalConstructionFigure } from "./simple-workbench-proposal-construction-figure";
 import type {
   SimpleWorkbenchProposalCitation,
   SimpleWorkbenchProposalDecisionItem
 } from "./simple-workbench-evidence";
 import type { SimpleWorkbenchMethodTraceGroup } from "./simple-workbench-method-dossier";
 import type { StudyMode } from "./preset-definitions";
+import type { SimpleWorkbenchProposalLayer } from "./simple-workbench-proposal";
 import { ValidationRegimePanel } from "./validation-regime-panel";
 
 type SimpleWorkbenchDiagnosticsPanelProps = {
@@ -24,8 +26,10 @@ type SimpleWorkbenchDiagnosticsPanelProps = {
   citations: readonly SimpleWorkbenchProposalCitation[];
   decisionTrailHeadline: string;
   decisionTrailItems: readonly SimpleWorkbenchProposalDecisionItem[];
+  layers: readonly SimpleWorkbenchProposalLayer[];
   result: AssemblyCalculation | null;
   studyMode: StudyMode;
+  studyModeLabel: string;
   traceGroups: readonly SimpleWorkbenchMethodTraceGroup[];
   validationDetail: string;
   validationLabel: string;
@@ -195,6 +199,23 @@ export function SimpleWorkbenchDiagnosticsPanel(props: SimpleWorkbenchDiagnostic
             </div>
           </section>
         ) : null}
+
+        <section className="mt-5 rounded-[1.25rem] border hairline bg-[color:var(--paper)]/76 px-4 py-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <div className="text-sm font-semibold text-[color:var(--ink)]">Visible stack section</div>
+              <p className="mt-2 max-w-3xl text-sm leading-6 text-[color:var(--ink-soft)]">
+                Keep the trace and provenance boards anchored to the same solver-order section that now ships in the proposal and branded PDF.
+              </p>
+            </div>
+            <div className="text-[0.72rem] uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+              {props.layers.length} row{props.layers.length === 1 ? "" : "s"}
+            </div>
+          </div>
+          <div className="mt-4">
+            <SimpleWorkbenchProposalConstructionFigure layers={props.layers} studyModeLabel={props.studyModeLabel} />
+          </div>
+        </section>
 
         <div className="mt-5 grid gap-3 md:grid-cols-2">
           <div className="rounded-[1.15rem] border hairline bg-[color:var(--paper)]/72 px-4 py-4">

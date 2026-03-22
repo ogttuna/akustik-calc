@@ -67,6 +67,8 @@ import { evaluateScenario } from "./scenario-analysis";
 import { buildSimpleWorkbenchEvidencePacket } from "./simple-workbench-evidence";
 import { buildSimpleWorkbenchMethodDossier } from "./simple-workbench-method-dossier";
 import { SimpleWorkbenchMethodPanel } from "./simple-workbench-method-panel";
+import { buildSimpleWorkbenchOutputPosture } from "./simple-workbench-output-posture";
+import { SimpleWorkbenchProposalConstructionFigure } from "./simple-workbench-proposal-construction-figure";
 import { SimpleWorkbenchProposalPanel } from "./simple-workbench-proposal-panel";
 import { isSteelBoundSupportFormLane } from "./steel-bound-support-form-lane";
 import {
@@ -96,12 +98,18 @@ type ControlOption<T extends string> = {
   value: T;
 };
 
-type OutputCardModel = {
+type BaseOutputCardModel = {
   detail: string;
   label: string;
   output: RequestedOutputId;
   status: "bound" | "live" | "needs_input" | "unsupported";
   value: string;
+};
+
+type OutputCardModel = BaseOutputCardModel & {
+  postureDetail: string;
+  postureLabel: string;
+  postureTone: "accent" | "neutral" | "success" | "warning";
 };
 
 type GuidedTopologyAction = {
@@ -830,7 +838,7 @@ function buildOutputCard(input: {
   output: RequestedOutputId;
   result: AssemblyCalculation | null;
   studyMode: StudyMode;
-}): OutputCardModel {
+}): BaseOutputCardModel {
   const { output, result, studyMode } = input;
   const fieldRatings = result?.ratings.field;
   const isImpactOnlyLowConfidenceLane = isImpactOnlyLowConfidenceFloorLane(result);
@@ -1118,6 +1126,25 @@ function buildOutputCard(input: {
   };
 }
 
+function addOutputCardPosture(
+  card: BaseOutputCardModel,
+  input: { result: AssemblyCalculation | null; studyMode: StudyMode }
+): OutputCardModel {
+  const posture = buildSimpleWorkbenchOutputPosture({
+    output: card.output,
+    result: input.result,
+    status: card.status,
+    studyMode: input.studyMode
+  });
+
+  return {
+    ...card,
+    postureDetail: posture.detail,
+    postureLabel: posture.label,
+    postureTone: posture.tone
+  };
+}
+
 function statusLabel(status: OutputCardModel["status"] | "ignored" | "used"): string {
   switch (status) {
     case "live":
@@ -1160,6 +1187,34 @@ function outputStatusTextClass(status: OutputCardModel["status"]): string {
     case "unsupported":
     default:
       return "text-[color:var(--warning-ink)]";
+  }
+}
+
+function outputPostureTextClass(tone: OutputCardModel["postureTone"]): string {
+  switch (tone) {
+    case "success":
+      return "text-[color:var(--success-ink)]";
+    case "warning":
+      return "text-[color:var(--warning-ink)]";
+    case "accent":
+      return "text-[color:var(--accent-ink)]";
+    case "neutral":
+    default:
+      return "text-[color:var(--ink)]";
+  }
+}
+
+function outputPosturePanelClass(tone: OutputCardModel["postureTone"]): string {
+  switch (tone) {
+    case "success":
+      return "border-[color:color-mix(in_oklch,var(--success)_34%,var(--line))] bg-[color:color-mix(in_oklch,var(--success)_8%,var(--paper))]";
+    case "warning":
+      return "border-[color:color-mix(in_oklch,var(--warning)_34%,var(--line))] bg-[color:color-mix(in_oklch,var(--warning)_10%,var(--paper))]";
+    case "accent":
+      return "border-[color:color-mix(in_oklch,var(--accent)_24%,var(--line))] bg-[color:color-mix(in_oklch,var(--accent)_8%,var(--paper))]";
+    case "neutral":
+    default:
+      return "border-[color:var(--line)] bg-[color:var(--paper)]/72";
   }
 }
 
@@ -1352,6 +1407,66 @@ function GuidedDecisionBasisStrip(props: {
       <p className="mt-4 max-w-3xl text-sm leading-6 text-[color:var(--ink-soft)]">
         The same selected route notes stay aligned across method detail, diagnostics, and the client-facing PDF appendix.
       </p>
+    </section>
+  );
+}
+
+function GuidedConstructionSnapshot(props: {
+  activeReviewTab: ReviewTabId;
+  layers: readonly {
+    categoryLabel: string;
+    index: number;
+    label: string;
+    roleLabel?: string;
+    thicknessLabel: string;
+  }[];
+  onOpenReviewTab: (tabId: ReviewTabId) => void;
+  studyModeLabel: string;
+}) {
+  const { activeReviewTab, layers, onOpenReviewTab, studyModeLabel } = props;
+  const activeReviewTabLabel = REVIEW_TABS.find((tab) => tab.id === activeReviewTab)?.label ?? "Proposal";
+
+  return (
+    <section className="mt-5 overflow-hidden rounded-[1.35rem] border hairline bg-[linear-gradient(180deg,rgba(255,253,248,0.96),rgba(255,249,242,0.92))] px-4 py-4">
+      <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_auto] xl:items-start">
+        <div className="min-w-0">
+          <div className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">
+            Construction snapshot
+          </div>
+          <h3 className="mt-2 font-display text-[1.45rem] leading-none tracking-[-0.04em] text-[color:var(--ink)]">
+            Solver-order section on the live result
+          </h3>
+          <p className="mt-3 max-w-3xl text-sm leading-7 text-[color:var(--ink-soft)]">
+            The same layer section now stays visible on the guided result, method detail, diagnostics, and the branded proposal so the
+            stack reading does not drift between operator and client-facing surfaces.
+          </p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <GuidedFactChip>{`${layers.length} visible row${layers.length === 1 ? "" : "s"}`}</GuidedFactChip>
+            <GuidedFactChip>{`Review deck: ${activeReviewTabLabel}`}</GuidedFactChip>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap gap-2 xl:justify-end">
+          <button
+            className="focus-ring inline-flex items-center justify-center rounded-full border hairline bg-[color:var(--paper)]/84 px-3 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+            onClick={() => onOpenReviewTab("method")}
+            type="button"
+          >
+            Review in method tab
+          </button>
+          <button
+            className="focus-ring inline-flex items-center justify-center rounded-full border hairline bg-[color:var(--paper)]/84 px-3 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+            onClick={() => onOpenReviewTab("proposal")}
+            type="button"
+          >
+            Review in proposal tab
+          </button>
+        </div>
+      </div>
+
+      <div className="mt-4">
+        <SimpleWorkbenchProposalConstructionFigure layers={layers} studyModeLabel={studyModeLabel} />
+      </div>
     </section>
   );
 }
@@ -1747,6 +1862,8 @@ function MaterialPickerField(props: {
 
 function OutputCard(props: { card: OutputCardModel }) {
   const { card } = props;
+  const postureTextClass = outputPostureTextClass(card.postureTone);
+  const posturePanelClass = outputPosturePanelClass(card.postureTone);
 
   return (
     <article
@@ -1763,6 +1880,11 @@ function OutputCard(props: { card: OutputCardModel }) {
         </span>
       </div>
       <p className="mt-4 text-sm leading-6 text-[color:var(--ink-soft)]">{card.detail}</p>
+      <div className={`mt-4 rounded-[1rem] border px-3 py-3 ${posturePanelClass}`}>
+        <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Evidence class</div>
+        <div className={`mt-2 text-sm font-semibold ${postureTextClass}`}>{card.postureLabel}</div>
+        <p className="mt-1 text-sm leading-6 text-[color:var(--ink-soft)]">{card.postureDetail}</p>
+      </div>
     </article>
   );
 }
@@ -1900,6 +2022,7 @@ function PrimaryResultCard(props: {
       : validationSummary.tone === "warning"
         ? "text-[color:var(--warning-ink)]"
         : "text-[color:var(--ink)]";
+  const postureValueClass = outputPostureTextClass(card.postureTone);
 
   return (
     <article className={`result-hero min-w-0 overflow-hidden rounded-[1.65rem] border px-5 py-5 ${outputStatusClass(card.status)}`}>
@@ -1931,6 +2054,11 @@ function PrimaryResultCard(props: {
               : "This is the lead airborne metric available from the current wall stack."}
           </div>
           <div className="border-t hairline pt-3">
+            <div className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">Evidence class</div>
+            <div className={`mt-2 text-sm font-semibold ${postureValueClass}`}>{card.postureLabel}</div>
+            <div className="mt-1 text-sm leading-6 text-[color:var(--ink-soft)]">{card.postureDetail}</div>
+          </div>
+          <div className="border-t hairline pt-3">
             <div className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">Live stack basis</div>
             <div className="mt-2 text-sm font-semibold text-[color:var(--ink)]">{liveStackValue}</div>
             <div className="mt-1 text-sm leading-6 text-[color:var(--ink-soft)]">{liveStackDetail}</div>
@@ -1948,6 +2076,7 @@ function PrimaryResultCard(props: {
 
 function PendingOutputRow(props: { card: OutputCardModel }) {
   const { card } = props;
+  const postureTextClass = outputPostureTextClass(card.postureTone);
 
   return (
     <article className="rounded-[1.15rem] border hairline bg-[color:color-mix(in_oklch,var(--paper)_82%,transparent)] px-4 py-4">
@@ -1958,6 +2087,10 @@ function PendingOutputRow(props: { card: OutputCardModel }) {
         </span>
       </div>
       <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">{card.detail}</p>
+      <div className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">
+        <span className="font-semibold text-[color:var(--ink)]">Evidence class:</span>{" "}
+        <span className={`font-semibold ${postureTextClass}`}>{card.postureLabel}</span>. {card.postureDetail}
+      </div>
     </article>
   );
 }
@@ -2716,7 +2849,9 @@ export function SimpleWorkbenchShell() {
     contextNotes.push("Wall leakage modifiers only matter on wall field or building reads, so they stay out of the main path here.");
   }
 
-  const outputCards = automaticOutputs.map((output) => buildOutputCard({ output, result, studyMode }));
+  const outputCards = automaticOutputs.map((output) =>
+    addOutputCardPosture(buildOutputCard({ output, result, studyMode }), { result, studyMode })
+  );
   const readyCards = outputCards.filter((card) => card.status === "live" || card.status === "bound");
   const pendingCards = outputCards.filter((card) => card.status !== "live" && card.status !== "bound");
   const liveOutputCards = outputCards.filter((card) => card.status === "live");
@@ -2784,6 +2919,9 @@ export function SimpleWorkbenchShell() {
     detail: card.detail,
     label: card.label,
     nextStep: card.status === "needs_input" ? outputUnlockActionById.get(card.output) : undefined,
+    postureDetail: card.postureDetail,
+    postureLabel: card.postureLabel,
+    postureTone: card.postureTone,
     status: card.status,
     value: card.value
   }));
@@ -3813,6 +3951,15 @@ export function SimpleWorkbenchShell() {
               />
             ) : null}
 
+            {proposalLayers.length > 0 ? (
+              <GuidedConstructionSnapshot
+                activeReviewTab={activeReviewTab}
+                layers={proposalLayers}
+                onOpenReviewTab={openReviewTab}
+                studyModeLabel={getStudyModeLabel(studyMode)}
+              />
+            ) : null}
+
             <PendingOutputGroup
               cards={needsInputCards}
               countLabel={`${needsInputCards.length} parked`}
@@ -3913,8 +4060,10 @@ export function SimpleWorkbenchShell() {
               citations={proposalEvidence.citations}
               decisionTrailHeadline={proposalEvidence.decisionTrailHeadline}
               decisionTrailItems={proposalEvidence.decisionTrailItems}
+              layers={proposalLayers}
               result={result}
               studyMode={studyMode}
+              studyModeLabel={getStudyModeLabel(studyMode)}
               traceGroups={methodDossier.traceGroups}
               validationDetail={validationSummary.detail}
               validationLabel={validationSummary.value}

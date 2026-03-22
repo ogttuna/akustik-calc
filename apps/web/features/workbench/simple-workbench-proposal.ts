@@ -8,8 +8,13 @@ import {
   getSimpleWorkbenchProposalBranding,
   inferSimpleWorkbenchReportProfile
 } from "./simple-workbench-proposal-branding";
+import { buildSimpleWorkbenchProposalConstructionSection } from "./simple-workbench-proposal-construction-section";
 import { buildSimpleWorkbenchProposalDossier } from "./simple-workbench-proposal-dossier";
 import type { SimpleWorkbenchProposalBriefItem } from "./simple-workbench-proposal-brief";
+import {
+  getFallbackSimpleWorkbenchOutputPosture,
+  type SimpleWorkbenchOutputPostureTone
+} from "./simple-workbench-output-posture";
 import {
   DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_ISSUE_PURPOSE,
   DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_VALIDITY_NOTE
@@ -35,6 +40,9 @@ export type SimpleWorkbenchProposalCoverageItem = {
   detail: string;
   label: string;
   nextStep?: string;
+  postureDetail: string;
+  postureLabel: string;
+  postureTone: SimpleWorkbenchOutputPostureTone;
   status: SimpleWorkbenchProposalCoverageStatus;
   value: string;
 };
@@ -126,13 +134,53 @@ function isStringArray(value: unknown): value is string[] {
   return Array.isArray(value) && value.every((entry) => typeof entry === "string");
 }
 
+function normalizeCoverageItem(value: unknown): SimpleWorkbenchProposalCoverageItem | null {
+  if (!isObjectRecord(value)) {
+    return null;
+  }
+
+  if (
+    typeof value.detail !== "string" ||
+    typeof value.label !== "string" ||
+    typeof value.status !== "string" ||
+    typeof value.value !== "string"
+  ) {
+    return null;
+  }
+
+  const status =
+    value.status === "live" || value.status === "bound" || value.status === "needs_input" || value.status === "unsupported"
+      ? value.status
+      : "unsupported";
+  const fallbackPosture = getFallbackSimpleWorkbenchOutputPosture(status);
+
+  return {
+    detail: value.detail,
+    label: value.label,
+    nextStep: typeof value.nextStep === "string" ? value.nextStep : undefined,
+    postureDetail: typeof value.postureDetail === "string" ? value.postureDetail : fallbackPosture.detail,
+    postureLabel: typeof value.postureLabel === "string" ? value.postureLabel : fallbackPosture.label,
+    postureTone:
+      value.postureTone === "accent" ||
+      value.postureTone === "neutral" ||
+      value.postureTone === "success" ||
+      value.postureTone === "warning"
+        ? value.postureTone
+        : fallbackPosture.tone,
+    status,
+    value: value.value
+  };
+}
+
 export function parseSimpleWorkbenchProposalDocument(value: unknown): SimpleWorkbenchProposalDocument | null {
   if (!isObjectRecord(value)) {
     return null;
   }
 
   const approverTitle = typeof value.approverTitle === "string" ? value.approverTitle : "Acoustic Consultant";
-  const coverageItems = Array.isArray(value.coverageItems) ? value.coverageItems : [];
+  const coverageItems = Array.isArray(value.coverageItems)
+    ? value.coverageItems.map((item) => normalizeCoverageItem(item)).filter((item): item is SimpleWorkbenchProposalCoverageItem => item !== null)
+    : [];
   const issueRegisterItems = Array.isArray(value.issueRegisterItems) ? value.issueRegisterItems : [];
   const methodDossierCards = Array.isArray(value.methodDossierCards) ? value.methodDossierCards : [];
   const methodTraceGroups = Array.isArray(value.methodTraceGroups) ? value.methodTraceGroups : [];
@@ -385,8 +433,9 @@ function renderCoverageRows(items: readonly SimpleWorkbenchProposalCoverageItem[
         <tr>
           <td>${escapeHtml(item.label)}</td>
           <td>${escapeHtml(formatCoverageStatus(item.status))}</td>
+          <td>${escapeHtml(item.postureLabel)}</td>
           <td>${escapeHtml(item.value)}</td>
-          <td>${escapeHtml(item.detail)}${nextStep}</td>
+          <td>${escapeHtml(item.detail)}${nextStep} Evidence class: ${escapeHtml(item.postureDetail)}</td>
         </tr>
       `;
     })
@@ -439,6 +488,72 @@ function renderLayerRows(layers: readonly SimpleWorkbenchProposalLayer[]): strin
     .join("");
 }
 
+function renderConstructionFigure(document: SimpleWorkbenchProposalDocument): string {
+  const section = buildSimpleWorkbenchProposalConstructionSection(document.layers, document.studyModeLabel);
+
+  if (section.bands.length === 0) {
+    return `
+      <div class="method-box">
+        <h3>Construction section unavailable</h3>
+        <p>No visible rows are packaged yet, so DynEcho cannot draw the client-facing construction section.</p>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="construction-grid">
+      <div class="construction-figure">
+        <div class="construction-axis">
+          <span>${escapeHtml(section.anchorFromLabel)}</span>
+          <span>${escapeHtml(section.headline)}</span>
+        </div>
+        <div class="construction-stack ${section.isWall ? "construction-stack-wall" : "construction-stack-floor"}">
+          ${section.bands
+            .map(
+              (band) => `
+                <div class="construction-band construction-band-${band.tone}" style="flex-grow: ${band.flexGrow};">
+                  <div class="construction-index">${escapeHtml(band.indexLabel)}</div>
+                  <div class="construction-copy">
+                    <strong>${escapeHtml(band.label)}</strong>
+                    <small>${escapeHtml(band.thicknessLabel)}</small>
+                  </div>
+                </div>
+              `
+            )
+            .join("")}
+        </div>
+        <div class="construction-axis">
+          <span>${escapeHtml(section.anchorToLabel)}</span>
+          <span>${escapeHtml(section.totalThicknessLabel)}</span>
+        </div>
+      </div>
+      <div class="construction-legend">
+        <div class="method-box">
+          <div class="eyebrow" style="margin-bottom: 8px;">Technical schedule legend</div>
+          <h3>${escapeHtml(section.totalThicknessLabel)}</h3>
+          <p>${escapeHtml(section.headline)}</p>
+        </div>
+        <div class="construction-legend-grid">
+          ${section.bands
+            .map(
+              (band) => `
+                <div class="construction-legend-row">
+                  <span>${escapeHtml(band.indexLabel)}</span>
+                  <div>
+                    <strong>${escapeHtml(band.label)}</strong>
+                    <small>${escapeHtml(band.metaLabel)}</small>
+                  </div>
+                  <small>${escapeHtml(band.thicknessLabel)}</small>
+                </div>
+              `
+            )
+            .join("")}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
 function buildIssueAuthorityText(document: SimpleWorkbenchProposalDocument): string {
   return `${document.preparedBy}, ${document.approverTitle}, is issuing ${document.proposalReference} ${document.proposalRevision} on behalf of ${document.consultantCompany} for ${document.clientName}.`;
 }
@@ -460,6 +575,7 @@ export function buildSimpleWorkbenchProposalText(document: SimpleWorkbenchPropos
     reportProfileLabel: document.reportProfileLabel
   });
   const dossier = buildSimpleWorkbenchProposalDossier(document);
+  const constructionSection = buildSimpleWorkbenchProposalConstructionSection(document.layers, document.studyModeLabel);
   const warningLines =
     document.warnings.length > 0
       ? document.warnings.map((warning) => `- ${warning}`)
@@ -516,6 +632,12 @@ export function buildSimpleWorkbenchProposalText(document: SimpleWorkbenchPropos
     "Assembly summary",
     `${document.assemblyHeadline}`,
     "",
+    "Construction section",
+    `${constructionSection.anchorFromLabel} -> ${constructionSection.anchorToLabel} | ${constructionSection.totalThicknessLabel}`,
+    ...constructionSection.bands.map(
+      (band) => `- ${band.indexLabel}. ${band.label} | ${band.thicknessLabel} | ${band.metaLabel}`
+    ),
+    "",
     "Solver route",
     `${document.dynamicBranchLabel}: ${document.dynamicBranchDetail}`,
     "",
@@ -554,7 +676,7 @@ export function buildSimpleWorkbenchProposalText(document: SimpleWorkbenchPropos
     "Output coverage register",
     ...document.coverageItems.map(
       (item) =>
-        `- ${item.label}: ${formatCoverageStatus(item.status)} | ${item.value} | ${item.detail}${item.nextStep ? ` | Next action: ${item.nextStep}` : ""}`
+        `- ${item.label}: ${formatCoverageStatus(item.status)} | ${item.postureLabel} | ${item.value} | ${item.detail}${item.nextStep ? ` | Next action: ${item.nextStep}` : ""} | Evidence class: ${item.postureDetail}`
     ),
     "",
     "Live outputs",
@@ -585,6 +707,7 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
     reportProfileLabel: document.reportProfileLabel
   });
   const dossier = buildSimpleWorkbenchProposalDossier(document);
+  const constructionSection = buildSimpleWorkbenchProposalConstructionSection(document.layers, document.studyModeLabel);
   const warningItems =
     document.warnings.length > 0
       ? renderListItems(document.warnings)
@@ -865,6 +988,130 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
         color: var(--ink);
       }
 
+      .construction-grid {
+        display: grid;
+        gap: 14px;
+        grid-template-columns: minmax(0, 0.68fr) minmax(0, 1fr);
+      }
+
+      .construction-figure {
+        border: 1px solid var(--line);
+        background: color-mix(in srgb, var(--accent) 7%, var(--paper));
+        padding: 16px;
+      }
+
+      .construction-axis {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        font: 700 10px/1.4 Arial, sans-serif;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--ink-faint);
+      }
+
+      .construction-stack {
+        margin-top: 14px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.54), rgba(255, 255, 255, 0.12));
+      }
+
+      .construction-stack-floor {
+        min-height: 220px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .construction-stack-wall {
+        min-height: 130px;
+        display: flex;
+      }
+
+      .construction-band {
+        display: grid;
+        gap: 10px;
+        min-width: 0;
+        padding: 12px;
+        border-right: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .construction-band:last-child {
+        border-right: 0;
+        border-bottom: 0;
+      }
+
+      .construction-band-leading {
+        background: color-mix(in srgb, var(--accent) 14%, var(--paper));
+      }
+
+      .construction-band-interior {
+        background: rgba(255, 253, 248, 0.82);
+      }
+
+      .construction-band-trailing {
+        background: color-mix(in srgb, var(--ink) 8%, var(--paper));
+      }
+
+      .construction-index {
+        width: 24px;
+        height: 24px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--line);
+        background: rgba(255, 253, 248, 0.86);
+        font: 700 10px/1 Arial, sans-serif;
+        color: var(--ink);
+      }
+
+      .construction-copy strong,
+      .construction-legend-row strong {
+        display: block;
+        font: 700 13px/1.45 Arial, sans-serif;
+        color: var(--ink);
+      }
+
+      .construction-copy small,
+      .construction-legend-row small {
+        display: block;
+        margin-top: 4px;
+        font: 400 11px/1.5 Arial, sans-serif;
+        color: var(--ink-soft);
+      }
+
+      .construction-legend {
+        display: grid;
+        gap: 12px;
+      }
+
+      .construction-legend-grid {
+        display: grid;
+        gap: 10px;
+      }
+
+      .construction-legend-row {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        gap: 12px;
+        align-items: center;
+        border: 1px solid var(--line);
+        background: rgba(255, 253, 248, 0.86);
+        padding: 12px;
+      }
+
+      .construction-legend-row > span:first-child {
+        font: 700 13px/1 Arial, sans-serif;
+        color: var(--ink);
+      }
+
+      .construction-legend-row > small:last-child {
+        margin-top: 0;
+        text-align: right;
+      }
+
       .cover-kicker {
         margin: 10px 0 0;
         font: 400 15px/1.8 Arial, sans-serif;
@@ -1014,8 +1261,17 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
         .summary-grid,
         .detail-grid,
         .page-header-grid,
-        .signature-grid {
+        .signature-grid,
+        .construction-grid {
           grid-template-columns: 1fr;
+        }
+
+        .construction-legend-row {
+          grid-template-columns: auto minmax(0, 1fr);
+        }
+
+        .construction-legend-row > small:last-child {
+          text-align: left;
         }
       }
 
@@ -1274,6 +1530,7 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
               <tr>
                 <th>Metric</th>
                 <th>Status</th>
+                <th>Evidence class</th>
                 <th>Current state</th>
                 <th>Audit reading</th>
               </tr>
@@ -1323,6 +1580,17 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
           </div>
           <div class="detail-grid" style="padding: 12px 0 0;">
             ${renderDecisionTrailItems(document.decisionTrailItems)}
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="eyebrow" style="margin: 18px 0 8px;">Construction Section</div>
+          <div class="method-box">
+            <h3>Visible layer stack in solver order</h3>
+            <p>${escapeHtml(constructionSection.anchorFromLabel)} to ${escapeHtml(constructionSection.anchorToLabel)}. ${escapeHtml(constructionSection.totalThicknessLabel)} stays visible so the client-facing issue can read the build-up without opening the operator desk.</p>
+          </div>
+          <div style="padding-top: 12px;">
+            ${renderConstructionFigure(document)}
           </div>
         </section>
 

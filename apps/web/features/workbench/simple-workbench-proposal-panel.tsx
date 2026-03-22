@@ -17,6 +17,7 @@ import {
   type SimpleWorkbenchProposalMethodTraceGroup,
   type SimpleWorkbenchProposalMetric
 } from "./simple-workbench-proposal";
+import { SimpleWorkbenchProposalConstructionFigure } from "./simple-workbench-proposal-construction-figure";
 import { buildSimpleWorkbenchProposalDossier } from "./simple-workbench-proposal-dossier";
 import type {
   SimpleWorkbenchProposalCitation,
@@ -151,6 +152,13 @@ function getEffectiveProposalIssuePurpose(value: string): string {
 
 function getEffectiveProposalValidityNote(value: string): string {
   return value.trim().length > 0 ? value.trim() : DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_VALIDITY_NOTE;
+}
+
+function getStudyModeAwareProposalSubject(projectName: string, studyModeLabel: string): string {
+  const projectLabel = projectName.trim() || "Untitled project";
+  const modeLabel = studyModeLabel.trim().toLowerCase();
+
+  return modeLabel.length > 0 ? `${projectLabel} ${modeLabel} acoustic proposal` : `${projectLabel} acoustic proposal`;
 }
 
 const GENERIC_PROPOSAL_IDENTITY = {
@@ -295,8 +303,38 @@ function coverageStatusLabel(status: SimpleWorkbenchProposalCoverageItem["status
   }
 }
 
+function coveragePostureTextClass(tone: SimpleWorkbenchProposalCoverageItem["postureTone"]): string {
+  switch (tone) {
+    case "success":
+      return "text-[color:var(--success-ink)]";
+    case "warning":
+      return "text-[color:var(--warning-ink)]";
+    case "accent":
+      return "text-[color:var(--accent-ink)]";
+    case "neutral":
+    default:
+      return "text-[color:var(--ink)]";
+  }
+}
+
+function coveragePosturePanelClass(tone: SimpleWorkbenchProposalCoverageItem["postureTone"]): string {
+  switch (tone) {
+    case "success":
+      return "border-[color:color-mix(in_oklch,var(--success)_34%,var(--line))] bg-[color:color-mix(in_oklch,var(--success)_8%,var(--paper))]";
+    case "warning":
+      return "border-[color:color-mix(in_oklch,var(--warning)_34%,var(--line))] bg-[color:color-mix(in_oklch,var(--warning)_10%,var(--paper))]";
+    case "accent":
+      return "border-[color:color-mix(in_oklch,var(--accent)_24%,var(--line))] bg-[color:color-mix(in_oklch,var(--accent)_8%,var(--paper))]";
+    case "neutral":
+    default:
+      return "border-[color:var(--line)] bg-[color:var(--paper)]/72";
+  }
+}
+
 function CoverageCard(props: SimpleWorkbenchProposalCoverageItem) {
-  const { detail, label, nextStep, status, value } = props;
+  const { detail, label, nextStep, postureDetail, postureLabel, postureTone, status, value } = props;
+  const postureTextClass = coveragePostureTextClass(postureTone);
+  const posturePanelClass = coveragePosturePanelClass(postureTone);
 
   return (
     <article className="rounded-[1rem] border hairline bg-[color:var(--paper)]/78 px-4 py-4">
@@ -308,6 +346,11 @@ function CoverageCard(props: SimpleWorkbenchProposalCoverageItem) {
       </div>
       <div className="mt-3 text-lg font-semibold text-[color:var(--ink)]">{value}</div>
       <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">{detail}</p>
+      <div className={`mt-3 rounded-[0.95rem] border px-3 py-3 ${posturePanelClass}`}>
+        <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Evidence class</div>
+        <div className={`mt-2 text-sm font-semibold ${postureTextClass}`}>{postureLabel}</div>
+        <p className="mt-1 text-sm leading-6 text-[color:var(--ink-soft)]">{postureDetail}</p>
+      </div>
       {nextStep ? (
         <p className="mt-2 text-sm leading-6 text-[color:var(--ink)]">
           <span className="font-semibold">Next action:</span> {nextStep}
@@ -383,7 +426,7 @@ function buildProposalDocument(
   const proposalSubject =
     props.proposalSubject.trim().length > 0
       ? props.proposalSubject.trim()
-      : `${props.projectName.trim() || "Untitled project"} acoustic proposal`;
+      : getStudyModeAwareProposalSubject(props.projectName, props.studyModeLabel);
   const proposalIssuePurpose =
     props.proposalIssuePurpose.trim().length > 0
       ? props.proposalIssuePurpose.trim()
@@ -1395,7 +1438,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
                 label="Subject line"
                 note="Document title shown as the cover subject and print summary."
                 onChange={props.onProposalSubjectChange}
-                placeholder="e.g. Riverside Residences floor acoustic proposal"
+                placeholder={`e.g. ${getStudyModeAwareProposalSubject("Riverside Residences", props.studyModeLabel)}`}
                 value={props.proposalSubject}
               />
               <ProposalField
@@ -1669,6 +1712,9 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
                   key={`${item.label}-${item.status}-${item.value}`}
                   label={item.label}
                   nextStep={item.nextStep}
+                  postureDetail={item.postureDetail}
+                  postureLabel={item.postureLabel}
+                  postureTone={item.postureTone}
                   status={item.status}
                   value={item.value}
                 />
@@ -1763,30 +1809,16 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
 
           <div className="mt-4 rounded-[1rem] border hairline bg-[color:var(--paper)]/72 px-4 py-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <div className="text-sm font-semibold text-[color:var(--ink)]">Layer schedule preview</div>
+              <div className="text-sm font-semibold text-[color:var(--ink)]">Construction section</div>
               <div className="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
                 {props.layers.length} visible row{props.layers.length === 1 ? "" : "s"}
               </div>
             </div>
-            <div className="mt-3 grid gap-2">
-              {props.layers.slice(0, 6).map((layer) => (
-                <div
-                  className="grid gap-2 rounded-[0.95rem] border hairline bg-[color:var(--paper)] px-3 py-3 sm:grid-cols-[auto_minmax(0,1fr)_auto]"
-                  key={`${layer.index}-${layer.label}`}
-                >
-                  <div className="text-sm font-semibold text-[color:var(--ink)]">{String(layer.index).padStart(2, "0")}</div>
-                  <div className="min-w-0">
-                    <div className="text-sm font-semibold text-[color:var(--ink)]">{layer.label}</div>
-                    <div className="text-xs leading-5 text-[color:var(--ink-soft)]">{layer.roleLabel ?? layer.categoryLabel}</div>
-                  </div>
-                  <div className="text-sm text-[color:var(--ink-soft)]">{layer.thicknessLabel}</div>
-                </div>
-              ))}
-              {props.layers.length > 6 ? (
-                <div className="text-sm leading-6 text-[color:var(--ink-soft)]">
-                  The printed sheet includes all {props.layers.length} rows, not only the preview slice.
-                </div>
-              ) : null}
+            <p className="mt-2 max-w-4xl text-sm leading-7 text-[color:var(--ink-soft)]">
+              The official issue now carries a visual construction section alongside the row-by-row schedule so the solver order stays readable without opening the operator desk.
+            </p>
+            <div className="mt-4">
+              <SimpleWorkbenchProposalConstructionFigure layers={props.layers} studyModeLabel={props.studyModeLabel} />
             </div>
           </div>
 
