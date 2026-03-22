@@ -13,6 +13,8 @@ import {
   buildSimpleWorkbenchProposalText,
   type SimpleWorkbenchProposalDocument
 } from "@/features/workbench/simple-workbench-proposal";
+import { buildSimpleWorkbenchProposalDossier } from "@/features/workbench/simple-workbench-proposal-dossier";
+import { getSimpleWorkbenchProposalBranding } from "@/features/workbench/simple-workbench-proposal-branding";
 import { downloadSimpleWorkbenchProposalPdf } from "@/features/workbench/simple-workbench-proposal-pdf";
 import { readSimpleWorkbenchProposalPreview } from "@/features/workbench/simple-workbench-proposal-preview-storage";
 
@@ -46,6 +48,31 @@ export function ProposalPreviewClientPage() {
   );
   const proposalText = useMemo(
     () => (proposalDocument ? buildSimpleWorkbenchProposalText(proposalDocument) : ""),
+    [proposalDocument]
+  );
+  const proposalBranding = useMemo(
+    () =>
+      proposalDocument
+        ? getSimpleWorkbenchProposalBranding({
+            consultantCompany: proposalDocument.consultantCompany,
+            consultantWordmarkLine: proposalDocument.consultantWordmarkLine,
+            projectName: proposalDocument.projectName,
+            reportProfile: proposalDocument.reportProfile,
+            reportProfileLabel: proposalDocument.reportProfileLabel
+          })
+        : null,
+    [proposalDocument]
+  );
+  const proposalDossier = useMemo(
+    () => (proposalDocument ? buildSimpleWorkbenchProposalDossier(proposalDocument) : null),
+    [proposalDocument]
+  );
+  const methodTraceNoteCount = useMemo(
+    () => proposalDocument?.methodTraceGroups.reduce((count, group) => count + group.notes.length, 0) ?? 0,
+    [proposalDocument]
+  );
+  const corridorCardCount = useMemo(
+    () => proposalDocument?.corridorDossierCards.length ?? 0,
     [proposalDocument]
   );
   const shouldAutoPrint = searchParams.get("autoprint") === "1";
@@ -200,13 +227,21 @@ export function ProposalPreviewClientPage() {
                 <div className="mt-2 text-sm font-semibold text-[color:var(--ink)]">
                   {proposalDocument.proposalReference} · {proposalDocument.proposalRevision}
                 </div>
-                <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">{proposalDocument.issuedOnLabel}</p>
+                <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">
+                  {proposalDocument.issuedOnLabel}
+                  <br />
+                  Prefix {proposalDocument.issueCodePrefix.trim() || "Auto from consultant"}
+                </p>
               </div>
               <div className="rounded-[1rem] border hairline bg-[color:var(--paper)]/78 px-4 py-4">
                 <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Transmittal</div>
                 <div className="mt-2 text-sm font-semibold text-[color:var(--ink)]">{proposalDocument.proposalRecipient}</div>
                 <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">
                   {proposalDocument.proposalAttention}
+                  <br />
+                  {proposalDocument.proposalIssuePurpose}
+                  <br />
+                  {proposalDocument.proposalValidityNote}
                 </p>
               </div>
               <div className="rounded-[1rem] border hairline bg-[color:var(--paper)]/78 px-4 py-4">
@@ -217,14 +252,135 @@ export function ProposalPreviewClientPage() {
                 </p>
               </div>
             </div>
-            <div className="mt-3 rounded-[1rem] border hairline bg-[color:var(--paper)]/78 px-4 py-4">
-              <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Subject</div>
-              <div className="mt-2 text-sm font-semibold text-[color:var(--ink)]">{proposalDocument.proposalSubject}</div>
-              <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">
-                {frameReady ? "Preview frame ready" : "Loading preview frame"}
-              </p>
+            <div className="mt-3 grid gap-3 md:grid-cols-2">
+              <div className="rounded-[1rem] border hairline bg-[color:var(--paper)]/78 px-4 py-4">
+                <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Subject</div>
+                <div className="mt-2 text-sm font-semibold text-[color:var(--ink)]">{proposalDocument.proposalSubject}</div>
+                <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">
+                  {frameReady ? "Preview frame ready" : "Loading preview frame"}
+                </p>
+              </div>
+              {proposalBranding ? (
+                <div
+                  className="rounded-[1rem] border px-4 py-4"
+                  style={{
+                    background: `linear-gradient(135deg, ${proposalBranding.heroFrom}, ${proposalBranding.heroTo})`,
+                    borderColor: proposalBranding.line
+                  }}
+                >
+                  <div className="flex items-center gap-3">
+                    {proposalDocument.consultantLogoDataUrl ? (
+                      <img
+                        alt={`${proposalDocument.consultantCompany} logo`}
+                        className="h-12 w-12 rounded-[0.95rem] border bg-white object-contain p-2"
+                        src={proposalDocument.consultantLogoDataUrl}
+                        style={{ borderColor: proposalBranding.line }}
+                      />
+                    ) : (
+                      <div
+                        className="flex h-12 w-12 items-center justify-center rounded-[0.95rem] text-sm font-semibold uppercase tracking-[0.2em] text-[#fff8f2]"
+                        style={{ backgroundColor: proposalBranding.accentStrong }}
+                      >
+                        {proposalBranding.monogram}
+                      </div>
+                    )}
+                    <div className="min-w-0">
+                      <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Template</div>
+                      <div className="mt-1 text-sm font-semibold text-[color:var(--ink)]">{proposalBranding.templateLabel}</div>
+                      <p className="mt-1 text-sm leading-6 text-[color:var(--ink-soft)]">{proposalBranding.wordmarkSecondary}</p>
+                      <p className="mt-1 text-sm leading-6 text-[color:var(--ink-soft)]">{proposalBranding.profileDetail}</p>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
             </div>
           </SurfacePanel>
+
+          {proposalDossier ? (
+            <SurfacePanel className="px-5 py-5 sm:px-6">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Issue dossier</div>
+                  <h2 className="mt-1 font-display text-[1.55rem] leading-none tracking-[-0.05em] text-[color:var(--ink)]">
+                    Audit posture at a glance
+                  </h2>
+                </div>
+                <div className="rounded-full border hairline bg-[color:var(--paper)]/76 px-3 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+                  {proposalDossier.linkedCitationCount} linked source{proposalDossier.linkedCitationCount === 1 ? "" : "s"} · {proposalDossier.warningCount} warning
+                  {proposalDossier.warningCount === 1 ? "" : "s"}
+                </div>
+              </div>
+              <p className="mt-3 max-w-4xl text-sm leading-7 text-[color:var(--ink-soft)]">{proposalDossier.headline}</p>
+              <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+                {proposalDossier.items.map((item) => (
+                  <div className="rounded-[1rem] border hairline bg-[color:var(--paper)]/78 px-4 py-4" key={`${item.label}-${item.value}`}>
+                    <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">{item.label}</div>
+                    <div className="mt-2 text-sm font-semibold text-[color:var(--ink)]">{item.value}</div>
+                    <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">{item.detail}</p>
+                  </div>
+                ))}
+              </div>
+            </SurfacePanel>
+          ) : null}
+
+          {proposalDocument.methodDossierCards.length > 0 || proposalDocument.methodTraceGroups.length > 0 ? (
+            <>
+              {proposalDocument.corridorDossierCards.length > 0 ? (
+                <SurfacePanel className="px-5 py-5 sm:px-6">
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                      <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+                        Validation corridor package
+                      </div>
+                      <h2 className="mt-1 font-display text-[1.55rem] leading-none tracking-[-0.05em] text-[color:var(--ink)]">
+                        Benchmarked family and mode posture
+                      </h2>
+                    </div>
+                    <div className="rounded-full border hairline bg-[color:var(--paper)]/76 px-3 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+                      {corridorCardCount} card{corridorCardCount === 1 ? "" : "s"}
+                    </div>
+                  </div>
+                  <p className="mt-3 max-w-4xl text-sm leading-7 text-[color:var(--ink-soft)]">{proposalDocument.corridorDossierHeadline}</p>
+                  <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+                    {proposalDocument.corridorDossierCards.map((item) => (
+                      <div className="rounded-[1rem] border hairline bg-[color:var(--paper)]/78 px-4 py-4" key={`${item.label}-${item.value}`}>
+                        <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">{item.label}</div>
+                        <div className="mt-2 text-sm font-semibold text-[color:var(--ink)]">{item.value}</div>
+                        <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">{item.detail}</p>
+                      </div>
+                    ))}
+                  </div>
+                </SurfacePanel>
+              ) : null}
+
+              <SurfacePanel className="px-5 py-5 sm:px-6">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div>
+                    <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+                      Solver rationale package
+                    </div>
+                    <h2 className="mt-1 font-display text-[1.55rem] leading-none tracking-[-0.05em] text-[color:var(--ink)]">
+                      Packaged lane narrative
+                    </h2>
+                  </div>
+                  <div className="rounded-full border hairline bg-[color:var(--paper)]/76 px-3 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+                    {proposalDocument.methodTraceGroups.length} trace group{proposalDocument.methodTraceGroups.length === 1 ? "" : "s"} · {methodTraceNoteCount} selected note
+                    {methodTraceNoteCount === 1 ? "" : "s"}
+                  </div>
+                </div>
+                <p className="mt-3 max-w-4xl text-sm leading-7 text-[color:var(--ink-soft)]">{proposalDocument.methodDossierHeadline}</p>
+                <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+                  {proposalDocument.methodDossierCards.map((item) => (
+                    <div className="rounded-[1rem] border hairline bg-[color:var(--paper)]/78 px-4 py-4" key={`${item.label}-${item.value}`}>
+                      <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">{item.label}</div>
+                      <div className="mt-2 text-sm font-semibold text-[color:var(--ink)]">{item.value}</div>
+                      <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">{item.detail}</p>
+                    </div>
+                  ))}
+                </div>
+              </SurfacePanel>
+            </>
+          ) : null}
 
           <section className="rounded-[1.5rem] border hairline bg-[color:var(--panel)] p-3 sm:p-4">
             <iframe

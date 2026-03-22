@@ -32,6 +32,11 @@ import { formatDecimal } from "@/lib/format";
 import { describeAssembly, getMaterialCategoryLabel } from "./describe-assembly";
 import { getDynamicCalcBranchSummary } from "./dynamic-calc-branch";
 import {
+  buildSimpleWorkbenchCorridorDossier,
+  type SimpleWorkbenchCorridorDossierCard
+} from "./simple-workbench-corridor-dossier";
+import { SimpleWorkbenchDiagnosticsPanel } from "./simple-workbench-diagnostics-panel";
+import {
   FIELD_AIRBORNE_OUTPUTS,
   getFieldAirborneBlockingRequirement,
   getFieldAirborneLiveDetail,
@@ -50,7 +55,6 @@ import {
   isImpactOnlyLowConfidenceFloorLane,
   isImpactOnlyLowConfidenceUnavailableOutput
 } from "./impact-only-low-confidence-floor-lane";
-import { ImpactResultPanel } from "./impact-result-panel";
 import {
   formatGuidedSanityBand,
   getGuidedNumericSanityWarning,
@@ -61,8 +65,8 @@ import {
 import { normalizeRows } from "./normalize-rows";
 import { evaluateScenario } from "./scenario-analysis";
 import { buildSimpleWorkbenchEvidencePacket } from "./simple-workbench-evidence";
+import { buildSimpleWorkbenchMethodDossier } from "./simple-workbench-method-dossier";
 import { SimpleWorkbenchMethodPanel } from "./simple-workbench-method-panel";
-import { ResultSummary } from "./result-summary";
 import { SimpleWorkbenchProposalPanel } from "./simple-workbench-proposal-panel";
 import { isSteelBoundSupportFormLane } from "./steel-bound-support-form-lane";
 import {
@@ -1260,6 +1264,98 @@ function RouteSignalCard(props: {
   );
 }
 
+function GuidedDecisionBasisCard(props: SimpleWorkbenchCorridorDossierCard) {
+  const { detail, label, tone, value } = props;
+  const containerClass =
+    tone === "success"
+      ? "border-[color:color-mix(in_oklch,var(--success)_34%,var(--line))] bg-[color:color-mix(in_oklch,var(--success)_10%,var(--paper))]"
+      : tone === "warning"
+        ? "border-[color:color-mix(in_oklch,var(--warning)_34%,var(--line))] bg-[color:color-mix(in_oklch,var(--warning)_12%,var(--paper))]"
+        : tone === "accent"
+          ? "border-[color:color-mix(in_oklch,var(--accent)_30%,var(--line))] bg-[color:color-mix(in_oklch,var(--accent)_10%,var(--paper))]"
+          : "hairline bg-[color:var(--paper)]/82";
+  const valueClass =
+    tone === "success"
+      ? "text-[color:var(--success-ink)]"
+      : tone === "warning"
+        ? "text-[color:var(--warning-ink)]"
+        : tone === "accent"
+          ? "text-[color:var(--accent-ink)]"
+          : "text-[color:var(--ink)]";
+  const toneLabel =
+    tone === "success" ? "Locked" : tone === "warning" ? "Caution" : tone === "accent" ? "Live" : "Explicit";
+
+  return (
+    <article className={`grid gap-2 rounded-[1rem] border px-3 py-3 ${containerClass}`}>
+      <div className="flex items-center justify-between gap-3">
+        <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">{label}</div>
+        <DetailTag tone={tone === "warning" ? "required" : tone === "accent" ? "optional" : "neutral"}>{toneLabel}</DetailTag>
+      </div>
+      <div className={`text-sm font-semibold ${valueClass}`}>{value}</div>
+      <p className="text-sm leading-6 text-[color:var(--ink-soft)]">{detail}</p>
+    </article>
+  );
+}
+
+function GuidedDecisionBasisStrip(props: {
+  activeReviewTab: ReviewTabId;
+  cards: readonly SimpleWorkbenchCorridorDossierCard[];
+  headline: string;
+  onOpenReviewTab: (tabId: ReviewTabId) => void;
+  selectedTraceNoteCount: number;
+  traceGroupCount: number;
+}) {
+  const { activeReviewTab, cards, headline, onOpenReviewTab, selectedTraceNoteCount, traceGroupCount } = props;
+  const activeReviewTabLabel = REVIEW_TABS.find((tab) => tab.id === activeReviewTab)?.label ?? "Proposal";
+
+  return (
+    <section className="mt-6 overflow-hidden rounded-[1.35rem] border hairline bg-[color:color-mix(in_oklch,var(--accent)_8%,var(--paper))] px-4 py-4">
+      <div className="grid gap-4 xl:grid-cols-[minmax(0,1.06fr)_auto] xl:items-start">
+        <div className="min-w-0">
+          <div className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">Decision basis</div>
+          <h3 className="mt-2 font-display text-[1.45rem] leading-none tracking-[-0.04em] text-[color:var(--ink)]">
+            Validation corridor at a glance
+          </h3>
+          <p className="mt-3 max-w-3xl text-sm leading-7 text-[color:var(--ink-soft)]">{headline}</p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <GuidedFactChip>{`${traceGroupCount} trace group${traceGroupCount === 1 ? "" : "s"}`}</GuidedFactChip>
+            <GuidedFactChip>{`${selectedTraceNoteCount} selected route note${selectedTraceNoteCount === 1 ? "" : "s"}`}</GuidedFactChip>
+            <GuidedFactChip>{`Review deck: ${activeReviewTabLabel}`}</GuidedFactChip>
+          </div>
+        </div>
+
+        <div className="grid gap-2 sm:grid-cols-3 xl:grid-cols-1 xl:justify-items-end">
+          {REVIEW_TABS.map((tab) => (
+            <button
+              aria-pressed={activeReviewTab === tab.id}
+              className={`focus-ring inline-flex items-center justify-center rounded-full border px-3 py-2 text-sm font-semibold ${
+                activeReviewTab === tab.id
+                  ? "border-[color:color-mix(in_oklch,var(--accent)_34%,var(--line))] bg-[color:color-mix(in_oklch,var(--accent)_14%,var(--paper))] text-[color:var(--accent-ink)]"
+                  : "hairline bg-[color:var(--paper)]/82 text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+              }`}
+              key={`review-jump-${tab.id}`}
+              onClick={() => onOpenReviewTab(tab.id)}
+              type="button"
+            >
+              {`Open ${tab.label.toLowerCase()}`}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-4 grid gap-3 md:grid-cols-2">
+        {cards.map((card) => (
+          <GuidedDecisionBasisCard {...card} key={`decision-basis-${card.label}-${card.value}`} />
+        ))}
+      </div>
+
+      <p className="mt-4 max-w-3xl text-sm leading-6 text-[color:var(--ink-soft)]">
+        The same selected route notes stay aligned across method detail, diagnostics, and the client-facing PDF appendix.
+      </p>
+    </section>
+  );
+}
+
 function GuidedSelectField(props: {
   children: ReactNode;
   label: string;
@@ -2351,15 +2447,20 @@ export function SimpleWorkbenchShell() {
   const consultantAddress = useWorkbenchStore((state) => state.consultantAddress);
   const consultantCompany = useWorkbenchStore((state) => state.consultantCompany);
   const consultantEmail = useWorkbenchStore((state) => state.consultantEmail);
+  const consultantLogoDataUrl = useWorkbenchStore((state) => state.consultantLogoDataUrl);
   const consultantPhone = useWorkbenchStore((state) => state.consultantPhone);
+  const consultantWordmarkLine = useWorkbenchStore((state) => state.consultantWordmarkLine);
   const approverTitle = useWorkbenchStore((state) => state.approverTitle);
   const preparedBy = useWorkbenchStore((state) => state.preparedBy);
+  const proposalIssueCodePrefix = useWorkbenchStore((state) => state.proposalIssueCodePrefix);
   const proposalAttention = useWorkbenchStore((state) => state.proposalAttention);
+  const proposalIssuePurpose = useWorkbenchStore((state) => state.proposalIssuePurpose);
   const proposalRecipient = useWorkbenchStore((state) => state.proposalRecipient);
   const projectName = useWorkbenchStore((state) => state.projectName);
   const proposalReference = useWorkbenchStore((state) => state.proposalReference);
   const proposalRevision = useWorkbenchStore((state) => state.proposalRevision);
   const proposalSubject = useWorkbenchStore((state) => state.proposalSubject);
+  const proposalValidityNote = useWorkbenchStore((state) => state.proposalValidityNote);
   const reportProfile = useWorkbenchStore((state) => state.reportProfile);
   const rows = useWorkbenchStore((state) => state.rows);
   const studyContext = useWorkbenchStore((state) => state.studyContext);
@@ -2410,18 +2511,24 @@ export function SimpleWorkbenchShell() {
   const setConsultantAddress = useWorkbenchStore((state) => state.setConsultantAddress);
   const setConsultantCompany = useWorkbenchStore((state) => state.setConsultantCompany);
   const setConsultantEmail = useWorkbenchStore((state) => state.setConsultantEmail);
+  const setConsultantLogoDataUrl = useWorkbenchStore((state) => state.setConsultantLogoDataUrl);
   const setConsultantPhone = useWorkbenchStore((state) => state.setConsultantPhone);
+  const setConsultantWordmarkLine = useWorkbenchStore((state) => state.setConsultantWordmarkLine);
   const setImpactGuideKDb = useWorkbenchStore((state) => state.setImpactGuideKDb);
   const setImpactGuideReceivingRoomVolumeM3 = useWorkbenchStore((state) => state.setImpactGuideReceivingRoomVolumeM3);
   const setApproverTitle = useWorkbenchStore((state) => state.setApproverTitle);
   const setPreparedBy = useWorkbenchStore((state) => state.setPreparedBy);
+  const setProposalIssueCodePrefix = useWorkbenchStore((state) => state.setProposalIssueCodePrefix);
   const setProposalAttention = useWorkbenchStore((state) => state.setProposalAttention);
+  const setProposalIssuePurpose = useWorkbenchStore((state) => state.setProposalIssuePurpose);
   const setProposalRecipient = useWorkbenchStore((state) => state.setProposalRecipient);
   const setProjectName = useWorkbenchStore((state) => state.setProjectName);
   const setProposalReference = useWorkbenchStore((state) => state.setProposalReference);
   const setProposalRevision = useWorkbenchStore((state) => state.setProposalRevision);
   const setProposalSubject = useWorkbenchStore((state) => state.setProposalSubject);
+  const setProposalValidityNote = useWorkbenchStore((state) => state.setProposalValidityNote);
   const setRequestedOutputs = useWorkbenchStore((state) => state.setRequestedOutputs);
+  const setReportProfile = useWorkbenchStore((state) => state.setReportProfile);
   const startStudyMode = useWorkbenchStore((state) => state.startStudyMode);
   const updateFloorRole = useWorkbenchStore((state) => state.updateFloorRole);
   const updateMaterial = useWorkbenchStore((state) => state.updateMaterial);
@@ -2707,6 +2814,21 @@ export function SimpleWorkbenchShell() {
       : collapsedLiveRowCount > 0
         ? `${formatCountLabel(liveRowCount, "live row")} collapse to ${formatCountLabel(solverLayerCount, "solver layer")} before calculation because adjacent identical live rows are merged.`
         : `${formatCountLabel(liveRowCount, "live row")} feed ${formatCountLabel(solverLayerCount, "solver layer")} directly on the active route.`;
+  const methodDossier = buildSimpleWorkbenchMethodDossier({
+    branchDetail: dynamicCalcBranch.detail,
+    branchLabel: dynamicCalcBranch.value,
+    contextLabel: getEnvironmentLabel(airborneContextMode),
+    coverageItems: proposalCoverageItems,
+    layers: proposalLayers,
+    result: scenario.result,
+    stackDetail: methodStackDetail,
+    studyModeLabel: getStudyModeLabel(studyMode),
+    validationDetail: validationSummary.detail,
+    validationLabel: validationSummary.value,
+    warnings: scenario.warnings
+  });
+  const corridorDossier = buildSimpleWorkbenchCorridorDossier(scenario.result, studyMode);
+  const selectedTraceNoteCount = methodDossier.traceGroups.reduce((count, group) => count + group.notes.length, 0);
   const proposalEvidence = buildSimpleWorkbenchEvidencePacket({
     briefNote,
     outputs: automaticOutputs,
@@ -2715,6 +2837,12 @@ export function SimpleWorkbenchShell() {
   });
   const activeReviewTabConfig = REVIEW_TABS.find((tab) => tab.id === activeReviewTab) ?? REVIEW_TABS[0]!;
   const activeReviewPanelId = `guided-review-panel-${activeReviewTab}`;
+  const openReviewTab = (tabId: ReviewTabId) => {
+    setActiveReviewTab(tabId);
+    requestAnimationFrame(() => {
+      document.getElementById("guided-review-deck")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  };
 
   return (
     <div className="grid min-w-0 gap-6">
@@ -3674,6 +3802,17 @@ export function SimpleWorkbenchShell() {
               </div>
             )}
 
+            {rows.length > 0 ? (
+              <GuidedDecisionBasisStrip
+                activeReviewTab={activeReviewTab}
+                cards={corridorDossier.cards}
+                headline={corridorDossier.headline}
+                onOpenReviewTab={openReviewTab}
+                selectedTraceNoteCount={selectedTraceNoteCount}
+                traceGroupCount={methodDossier.traceGroups.length}
+              />
+            ) : null}
+
             <PendingOutputGroup
               cards={needsInputCards}
               countLabel={`${needsInputCards.length} parked`}
@@ -3703,7 +3842,7 @@ export function SimpleWorkbenchShell() {
         </div>
       </section>
 
-      <section className="grid gap-4">
+      <section className="grid gap-4" id="guided-review-deck">
         <SurfacePanel className="px-5 py-5 sm:px-6">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
@@ -3747,9 +3886,14 @@ export function SimpleWorkbenchShell() {
             <SimpleWorkbenchMethodPanel
               branchDetail={dynamicCalcBranch.detail}
               branchLabel={dynamicCalcBranch.value}
+              coverageItems={proposalCoverageItems}
               contextLabel={getEnvironmentLabel(airborneContextMode)}
+              layers={proposalLayers}
               readyMetrics={methodReadyMetrics}
+              result={scenario.result}
               stackDetail={methodStackDetail}
+              studyMode={studyMode}
+              studyModeLabel={getStudyModeLabel(studyMode)}
               unlocks={methodUnlocks}
               validationDetail={validationSummary.detail}
               validationLabel={validationSummary.value}
@@ -3764,28 +3908,18 @@ export function SimpleWorkbenchShell() {
             id={activeReviewPanelId}
             role="tabpanel"
           >
-            <SurfacePanel className="px-5 py-5">
-              <div className="flex flex-wrap items-center justify-between gap-4">
-                <div>
-                  <div className="eyebrow">Diagnostics</div>
-                  <h2 className="mt-1 font-display text-[1.4rem] leading-none tracking-[-0.04em] text-[color:var(--ink)]">
-                    Provenance, confidence, and advanced traces
-                  </h2>
-                </div>
-                <Link
-                  className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-3 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
-                  href="/workbench?view=advanced"
-                >
-                  Open operator desk
-                  <ChevronRight className="h-4 w-4" />
-                </Link>
-              </div>
-
-              <div className="mt-5 grid gap-6">
-                <ResultSummary result={result} warnings={scenario.warnings} />
-                {studyMode === "floor" ? <ImpactResultPanel result={result} /> : null}
-              </div>
-            </SurfacePanel>
+            <SimpleWorkbenchDiagnosticsPanel
+              branchLabel={dynamicCalcBranch.value}
+              citations={proposalEvidence.citations}
+              decisionTrailHeadline={proposalEvidence.decisionTrailHeadline}
+              decisionTrailItems={proposalEvidence.decisionTrailItems}
+              result={result}
+              studyMode={studyMode}
+              traceGroups={methodDossier.traceGroups}
+              validationDetail={validationSummary.detail}
+              validationLabel={validationSummary.value}
+              warnings={scenario.warnings}
+            />
           </div>
         ) : null}
 
@@ -3803,9 +3937,13 @@ export function SimpleWorkbenchShell() {
               citations={proposalEvidence.citations}
               consultantCompany={consultantCompany}
               consultantEmail={consultantEmail}
+              consultantLogoDataUrl={consultantLogoDataUrl}
               consultantPhone={consultantPhone}
+              consultantWordmarkLine={consultantWordmarkLine}
               contextLabel={getEnvironmentLabel(airborneContextMode)}
               coverageItems={proposalCoverageItems}
+              corridorDossierCards={corridorDossier.cards}
+              corridorDossierHeadline={corridorDossier.headline}
               decisionTrailHeadline={proposalEvidence.decisionTrailHeadline}
               decisionTrailItems={proposalEvidence.decisionTrailItems}
               dynamicBranchDetail={dynamicCalcBranch.detail}
@@ -3814,28 +3952,41 @@ export function SimpleWorkbenchShell() {
               issuedOnIso={proposalIssuedOnIso}
               layers={proposalLayers}
               metrics={proposalMetrics}
+              methodDossierCards={methodDossier.cards}
+              methodDossierHeadline={methodDossier.headline}
+              methodTraceGroups={methodDossier.traceGroups}
               onApproverTitleChange={setApproverTitle}
               onBriefNoteChange={setBriefNote}
               onClientNameChange={setClientName}
               onConsultantAddressChange={setConsultantAddress}
               onConsultantCompanyChange={setConsultantCompany}
               onConsultantEmailChange={setConsultantEmail}
+              onConsultantLogoDataUrlChange={setConsultantLogoDataUrl}
               onConsultantPhoneChange={setConsultantPhone}
+              onConsultantWordmarkLineChange={setConsultantWordmarkLine}
               onPreparedByChange={setPreparedBy}
+              onIssueCodePrefixChange={setProposalIssueCodePrefix}
               onProposalAttentionChange={setProposalAttention}
+              onProposalIssuePurposeChange={setProposalIssuePurpose}
               onProposalRecipientChange={setProposalRecipient}
               onProjectNameChange={setProjectName}
               onProposalReferenceChange={setProposalReference}
               onProposalRevisionChange={setProposalRevision}
               onProposalSubjectChange={setProposalSubject}
+              onProposalValidityNoteChange={setProposalValidityNote}
+              onReportProfileChange={setReportProfile}
               approverTitle={approverTitle}
               preparedBy={preparedBy}
+              issueCodePrefix={proposalIssueCodePrefix}
               proposalAttention={proposalAttention}
+              proposalIssuePurpose={proposalIssuePurpose}
               proposalRecipient={proposalRecipient}
               projectName={projectName}
               proposalReference={proposalReference}
               proposalRevision={proposalRevision}
               proposalSubject={proposalSubject}
+              proposalValidityNote={proposalValidityNote}
+              reportProfile={reportProfile}
               reportProfileLabel={REPORT_PROFILE_LABELS[reportProfile]}
               studyModeLabel={getStudyModeLabel(studyMode)}
               studyContextLabel={STUDY_CONTEXT_LABELS[studyContext]}

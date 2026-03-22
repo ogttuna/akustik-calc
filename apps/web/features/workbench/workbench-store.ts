@@ -34,6 +34,10 @@ import {
   type CriteriaPackId
 } from "./criteria-packs";
 import type { FieldRiskId } from "./field-risk-model";
+import {
+  DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_ISSUE_PURPOSE,
+  DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_VALIDITY_NOTE
+} from "./simple-workbench-proposal-policy-presets";
 
 type LayerDraft = {
   floorRole?: FloorRole;
@@ -66,7 +70,9 @@ type ScenarioSnapshot = {
   criteriaPackId: CriteriaPackId;
   consultantCompany: string;
   consultantEmail: string;
+  consultantLogoDataUrl: string;
   consultantPhone: string;
+  consultantWordmarkLine: string;
   fieldRiskIds: FieldRiskId[];
   impactDirectPathOffsetDb: string;
   impactGuideCi50_2500Db: string;
@@ -86,7 +92,9 @@ type ScenarioSnapshot = {
   id: string;
   name: string;
   preparedBy: string;
+  proposalIssueCodePrefix: string;
   proposalAttention: string;
+  proposalIssuePurpose: string;
   proposalRecipient: string;
   approverTitle: string;
   presetId: PresetId;
@@ -94,6 +102,8 @@ type ScenarioSnapshot = {
   proposalReference: string;
   proposalRevision: string;
   proposalSubject: string;
+  proposalValidityNote: string;
+  reportProfile: ReportProfile;
   requestedOutputs: RequestedOutputId[];
   rows: LayerDraft[];
   savedAtIso: string;
@@ -124,7 +134,9 @@ type WorkbenchStore = {
   consultantAddress: string;
   consultantCompany: string;
   consultantEmail: string;
+  consultantLogoDataUrl: string;
   consultantPhone: string;
+  consultantWordmarkLine: string;
   criteriaPackId: CriteriaPackId;
   fieldRiskIds: FieldRiskId[];
   impactDirectPathOffsetDb: string;
@@ -144,12 +156,15 @@ type WorkbenchStore = {
   impactReferenceDeltaLwDb: string;
   approverTitle: string;
   preparedBy: string;
+  proposalIssueCodePrefix: string;
   proposalAttention: string;
+  proposalIssuePurpose: string;
   proposalRecipient: string;
   projectName: string;
   proposalReference: string;
   proposalRevision: string;
   proposalSubject: string;
+  proposalValidityNote: string;
   reportProfile: ReportProfile;
   requestedOutputs: RequestedOutputId[];
   rows: LayerDraft[];
@@ -189,7 +204,9 @@ type WorkbenchStore = {
   setConsultantCompany: (value: string) => void;
   setConsultantAddress: (value: string) => void;
   setConsultantEmail: (value: string) => void;
+  setConsultantLogoDataUrl: (value: string) => void;
   setConsultantPhone: (value: string) => void;
+  setConsultantWordmarkLine: (value: string) => void;
   setImpactDirectPathOffsetDb: (value: string) => void;
   setImpactGuideCi50_2500Db: (value: string) => void;
   setImpactGuideCiDb: (value: string) => void;
@@ -206,13 +223,16 @@ type WorkbenchStore = {
   setImpactLowerTreatmentReductionDb: (value: string) => void;
   setImpactReferenceDeltaLwDb: (value: string) => void;
   setPreparedBy: (value: string) => void;
+  setProposalIssueCodePrefix: (value: string) => void;
   setApproverTitle: (value: string) => void;
   setProposalAttention: (value: string) => void;
+  setProposalIssuePurpose: (value: string) => void;
   setProposalRecipient: (value: string) => void;
   setProjectName: (value: string) => void;
   setProposalReference: (value: string) => void;
   setProposalRevision: (value: string) => void;
   setProposalSubject: (value: string) => void;
+  setProposalValidityNote: (value: string) => void;
   setRequestedOutputs: (outputs: RequestedOutputId[]) => void;
   setReportProfile: (value: ReportProfile) => void;
   startStudyMode: (studyMode: StudyMode) => void;
@@ -384,7 +404,9 @@ function makeDefaultState() {
     consultantAddress: "Office address not entered",
     consultantCompany: "DynEcho Acoustic Consulting",
     consultantEmail: "Contact email not entered",
+    consultantLogoDataUrl: "",
     consultantPhone: "Contact phone not entered",
+    consultantWordmarkLine: "",
     criteriaPackId: INITIAL_CRITERIA_PACK.id,
     fieldRiskIds: [] as FieldRiskId[],
     impactDirectPathOffsetDb: "",
@@ -403,12 +425,15 @@ function makeDefaultState() {
     impactLowerTreatmentReductionDb: "",
     impactReferenceDeltaLwDb: "",
     preparedBy: "DynEcho Operator",
+    proposalIssueCodePrefix: "",
     proposalAttention: "Attention line not entered",
+    proposalIssuePurpose: DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_ISSUE_PURPOSE,
     proposalRecipient: "Client delivery team",
     projectName: "DynEcho Operator Deck",
     proposalReference: "DEC-2026-001",
     proposalRevision: "Rev 00",
     proposalSubject: "Acoustic performance proposal",
+    proposalValidityNote: DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_VALIDITY_NOTE,
     reportProfile: "consultant" as const,
     requestedOutputs: [...INITIAL_CRITERIA_PACK.requestedOutputs],
     rows: buildPresetRows(INITIAL_PRESET.id),
@@ -512,7 +537,9 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
             consultantAddress: scenario.consultantAddress ?? "Office address not entered",
             consultantCompany: scenario.consultantCompany ?? "DynEcho Acoustic Consulting",
             consultantEmail: scenario.consultantEmail ?? "Contact email not entered",
+            consultantLogoDataUrl: scenario.consultantLogoDataUrl ?? "",
             consultantPhone: scenario.consultantPhone ?? "Contact phone not entered",
+            consultantWordmarkLine: scenario.consultantWordmarkLine ?? "",
             criteriaPackId: criteriaPack.id,
             fieldRiskIds: [...(scenario.fieldRiskIds ?? [])],
             impactDirectPathOffsetDb: scenario.impactDirectPathOffsetDb ?? "",
@@ -531,12 +558,16 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
             impactLowerTreatmentReductionDb: scenario.impactLowerTreatmentReductionDb ?? "",
             impactReferenceDeltaLwDb: scenario.impactReferenceDeltaLwDb ?? "",
             preparedBy: scenario.preparedBy ?? "DynEcho Operator",
+            proposalIssueCodePrefix: scenario.proposalIssueCodePrefix ?? "",
             proposalAttention: scenario.proposalAttention ?? "Attention line not entered",
+            proposalIssuePurpose: scenario.proposalIssuePurpose ?? DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_ISSUE_PURPOSE,
             proposalRecipient: scenario.proposalRecipient ?? "Client delivery team",
             projectName: scenario.projectName ?? "DynEcho Operator Deck",
             proposalReference: scenario.proposalReference ?? "DEC-2026-001",
             proposalRevision: scenario.proposalRevision ?? "Rev 00",
             proposalSubject: scenario.proposalSubject ?? "Acoustic performance proposal",
+            proposalValidityNote: scenario.proposalValidityNote ?? DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_VALIDITY_NOTE,
+            reportProfile: scenario.reportProfile ?? "consultant",
             requestedOutputs: [...(scenario.requestedOutputs ?? criteriaPack.requestedOutputs)],
             rows: duplicateRows(scenario.rows),
             studyMode: scenario.studyMode,
@@ -594,7 +625,9 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
               consultantAddress: state.consultantAddress,
               consultantCompany: state.consultantCompany,
               consultantEmail: state.consultantEmail,
+              consultantLogoDataUrl: state.consultantLogoDataUrl,
               consultantPhone: state.consultantPhone,
+              consultantWordmarkLine: state.consultantWordmarkLine,
               fieldRiskIds: [...state.fieldRiskIds],
               impactDirectPathOffsetDb: state.impactDirectPathOffsetDb,
               impactGuideCi50_2500Db: state.impactGuideCi50_2500Db,
@@ -613,13 +646,17 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
               impactReferenceDeltaLwDb: state.impactReferenceDeltaLwDb,
               name: makeScenarioName(state),
               preparedBy: state.preparedBy,
+              proposalIssueCodePrefix: state.proposalIssueCodePrefix,
               proposalAttention: state.proposalAttention,
+              proposalIssuePurpose: state.proposalIssuePurpose,
               proposalRecipient: state.proposalRecipient,
               presetId: state.activePresetId,
               projectName: state.projectName,
               proposalReference: state.proposalReference,
               proposalRevision: state.proposalRevision,
               proposalSubject: state.proposalSubject,
+              proposalValidityNote: state.proposalValidityNote,
+              reportProfile: state.reportProfile,
               requestedOutputs: [...state.requestedOutputs],
               rows: duplicateRows(state.rows),
               savedAtIso: new Date().toISOString(),
@@ -650,7 +687,9 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
       setConsultantAddress: (value) => set({ consultantAddress: value }),
       setConsultantCompany: (value) => set({ consultantCompany: value }),
       setConsultantEmail: (value) => set({ consultantEmail: value }),
+      setConsultantLogoDataUrl: (value) => set({ consultantLogoDataUrl: value }),
       setConsultantPhone: (value) => set({ consultantPhone: value }),
+      setConsultantWordmarkLine: (value) => set({ consultantWordmarkLine: value }),
       setImpactDirectPathOffsetDb: (value) => set({ impactDirectPathOffsetDb: value }),
       setImpactGuideCi50_2500Db: (value) => set({ impactGuideCi50_2500Db: value }),
       setImpactGuideCiDb: (value) => set({ impactGuideCiDb: value }),
@@ -668,12 +707,15 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
       setImpactReferenceDeltaLwDb: (value) => set({ impactReferenceDeltaLwDb: value }),
       setApproverTitle: (value) => set({ approverTitle: value }),
       setPreparedBy: (value) => set({ preparedBy: value }),
+      setProposalIssueCodePrefix: (value) => set({ proposalIssueCodePrefix: value }),
       setProposalAttention: (value) => set({ proposalAttention: value }),
+      setProposalIssuePurpose: (value) => set({ proposalIssuePurpose: value }),
       setProposalRecipient: (value) => set({ proposalRecipient: value }),
       setProjectName: (value) => set({ projectName: value }),
       setProposalReference: (value) => set({ proposalReference: value }),
       setProposalRevision: (value) => set({ proposalRevision: value }),
       setProposalSubject: (value) => set({ proposalSubject: value }),
+      setProposalValidityNote: (value) => set({ proposalValidityNote: value }),
       setRequestedOutputs: (requestedOutputs) => set({ requestedOutputs: [...requestedOutputs] }),
       setReportProfile: (value) => set({ reportProfile: value }),
       startStudyMode: (studyMode) =>

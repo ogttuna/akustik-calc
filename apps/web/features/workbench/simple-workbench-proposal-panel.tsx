@@ -1,22 +1,38 @@
 "use client";
 
+import type { ReportProfile } from "@dynecho/shared";
 import { SurfacePanel } from "@dynecho/ui";
-import { Building2, Copy, Download, FileText, Printer, ScrollText } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Building2, Copy, Download, FileText, LibraryBig, Printer, Save, ScrollText, Star, Trash2, Upload } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import {
   buildSimpleWorkbenchProposalText,
+  type SimpleWorkbenchProposalCorridorDossierCard,
   type SimpleWorkbenchProposalCoverageItem,
   type SimpleWorkbenchProposalDocument,
   type SimpleWorkbenchProposalIssueRegisterItem,
   type SimpleWorkbenchProposalLayer,
+  type SimpleWorkbenchProposalMethodDossierCard,
+  type SimpleWorkbenchProposalMethodTraceGroup,
   type SimpleWorkbenchProposalMetric
 } from "./simple-workbench-proposal";
+import { buildSimpleWorkbenchProposalDossier } from "./simple-workbench-proposal-dossier";
 import type {
   SimpleWorkbenchProposalCitation,
   SimpleWorkbenchProposalDecisionItem
 } from "./simple-workbench-evidence";
+import {
+  deleteSimpleWorkbenchProposalCompanyProfile,
+  exportSimpleWorkbenchProposalCompanyProfiles,
+  getDefaultSimpleWorkbenchProposalCompanyProfile,
+  importSimpleWorkbenchProposalCompanyProfiles,
+  matchesSimpleWorkbenchProposalCompanyProfile,
+  readSimpleWorkbenchProposalCompanyProfiles,
+  saveSimpleWorkbenchProposalCompanyProfile,
+  setDefaultSimpleWorkbenchProposalCompanyProfile,
+  type SimpleWorkbenchProposalCompanyProfile
+} from "./simple-workbench-proposal-company-profiles";
 import {
   buildSimpleWorkbenchProposalBrief,
   type SimpleWorkbenchProposalBrief,
@@ -27,8 +43,17 @@ import {
   reserveSimpleWorkbenchIssueSequence,
   type SimpleWorkbenchIssueSequenceSnapshot
 } from "./simple-workbench-issue-sequence";
+import {
+  DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_ISSUE_PURPOSE,
+  DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_VALIDITY_NOTE,
+  matchSimpleWorkbenchProposalPolicyPreset,
+  SIMPLE_WORKBENCH_PROPOSAL_POLICY_PRESETS,
+  type SimpleWorkbenchProposalPolicyPreset
+} from "./simple-workbench-proposal-policy-presets";
+import { getSimpleWorkbenchProposalBranding } from "./simple-workbench-proposal-branding";
 import { downloadSimpleWorkbenchProposalPdf } from "./simple-workbench-proposal-pdf";
 import { storeSimpleWorkbenchProposalPreview } from "./simple-workbench-proposal-preview-storage";
+import { REPORT_PROFILE_LABELS } from "./workbench-data";
 
 type SimpleWorkbenchProposalPanelProps = {
   approverTitle: string;
@@ -39,38 +64,55 @@ type SimpleWorkbenchProposalPanelProps = {
   citations: readonly SimpleWorkbenchProposalCitation[];
   consultantCompany: string;
   consultantEmail: string;
+  consultantLogoDataUrl: string;
   consultantPhone: string;
+  consultantWordmarkLine: string;
   contextLabel: string;
   coverageItems: readonly SimpleWorkbenchProposalCoverageItem[];
+  corridorDossierCards: readonly SimpleWorkbenchProposalCorridorDossierCard[];
+  corridorDossierHeadline: string;
   decisionTrailHeadline: string;
   decisionTrailItems: readonly SimpleWorkbenchProposalDecisionItem[];
   dynamicBranchDetail: string;
   dynamicBranchLabel: string;
+  issueCodePrefix: string;
   issuedOnLabel: string;
   issuedOnIso: string;
   layers: readonly SimpleWorkbenchProposalLayer[];
   metrics: readonly SimpleWorkbenchProposalMetric[];
+  methodDossierCards: readonly SimpleWorkbenchProposalMethodDossierCard[];
+  methodDossierHeadline: string;
+  methodTraceGroups: readonly SimpleWorkbenchProposalMethodTraceGroup[];
   onApproverTitleChange: (value: string) => void;
   onBriefNoteChange: (value: string) => void;
   onClientNameChange: (value: string) => void;
   onConsultantAddressChange: (value: string) => void;
   onConsultantCompanyChange: (value: string) => void;
   onConsultantEmailChange: (value: string) => void;
+  onConsultantLogoDataUrlChange: (value: string) => void;
   onConsultantPhoneChange: (value: string) => void;
+  onConsultantWordmarkLineChange: (value: string) => void;
   onPreparedByChange: (value: string) => void;
+  onReportProfileChange: (value: ReportProfile) => void;
+  onIssueCodePrefixChange: (value: string) => void;
   onProposalAttentionChange: (value: string) => void;
+  onProposalIssuePurposeChange: (value: string) => void;
   onProposalRecipientChange: (value: string) => void;
   onProjectNameChange: (value: string) => void;
   onProposalReferenceChange: (value: string) => void;
   onProposalRevisionChange: (value: string) => void;
   onProposalSubjectChange: (value: string) => void;
+  onProposalValidityNoteChange: (value: string) => void;
   preparedBy: string;
   proposalAttention: string;
+  proposalIssuePurpose: string;
   proposalRecipient: string;
   projectName: string;
   proposalReference: string;
   proposalRevision: string;
   proposalSubject: string;
+  proposalValidityNote: string;
+  reportProfile: ReportProfile;
   reportProfileLabel: string;
   studyModeLabel: string;
   studyContextLabel: string;
@@ -88,6 +130,7 @@ function buildProposalBriefInput(props: SimpleWorkbenchProposalPanelProps) {
     contextLabel: props.contextLabel,
     dynamicBranchDetail: props.dynamicBranchDetail,
     dynamicBranchLabel: props.dynamicBranchLabel,
+    issueCodePrefix: props.issueCodePrefix.trim(),
     issuedOnIso: props.issuedOnIso,
     primaryMetricLabel: props.metrics[0]?.label ?? "Primary read",
     primaryMetricValue: props.metrics[0]?.value ?? "Waiting for supported output",
@@ -100,6 +143,43 @@ function buildProposalBriefInput(props: SimpleWorkbenchProposalPanelProps) {
     validationTone: props.validationTone,
     warnings: props.warnings
   };
+}
+
+function getEffectiveProposalIssuePurpose(value: string): string {
+  return value.trim().length > 0 ? value.trim() : DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_ISSUE_PURPOSE;
+}
+
+function getEffectiveProposalValidityNote(value: string): string {
+  return value.trim().length > 0 ? value.trim() : DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_VALIDITY_NOTE;
+}
+
+const GENERIC_PROPOSAL_IDENTITY = {
+  approverTitle: "Acoustic Consultant",
+  consultantAddress: "Office address not entered",
+  consultantCompany: "DynEcho Acoustic Consulting",
+  consultantEmail: "Contact email not entered",
+  consultantPhone: "Contact phone not entered",
+  preparedBy: "DynEcho Operator"
+} as const;
+
+function isBlankOrDefaultIdentityValue(value: string, fallback: string): boolean {
+  const normalizedValue = value.trim();
+  return normalizedValue.length === 0 || normalizedValue === fallback;
+}
+
+function isSystemProposalIdentity(props: SimpleWorkbenchProposalPanelProps): boolean {
+  return (
+    isBlankOrDefaultIdentityValue(props.approverTitle, GENERIC_PROPOSAL_IDENTITY.approverTitle) &&
+    isBlankOrDefaultIdentityValue(props.consultantAddress, GENERIC_PROPOSAL_IDENTITY.consultantAddress) &&
+    isBlankOrDefaultIdentityValue(props.consultantCompany, GENERIC_PROPOSAL_IDENTITY.consultantCompany) &&
+    isBlankOrDefaultIdentityValue(props.consultantEmail, GENERIC_PROPOSAL_IDENTITY.consultantEmail) &&
+    props.consultantLogoDataUrl.trim().length === 0 &&
+    isBlankOrDefaultIdentityValue(props.consultantPhone, GENERIC_PROPOSAL_IDENTITY.consultantPhone) &&
+    props.consultantWordmarkLine.trim().length === 0 &&
+    props.issueCodePrefix.trim().length === 0 &&
+    isBlankOrDefaultIdentityValue(props.preparedBy, GENERIC_PROPOSAL_IDENTITY.preparedBy) &&
+    props.reportProfile === "consultant"
+  );
 }
 
 function ProposalField(props: {
@@ -304,6 +384,14 @@ function buildProposalDocument(
     props.proposalSubject.trim().length > 0
       ? props.proposalSubject.trim()
       : `${props.projectName.trim() || "Untitled project"} acoustic proposal`;
+  const proposalIssuePurpose =
+    props.proposalIssuePurpose.trim().length > 0
+      ? props.proposalIssuePurpose.trim()
+      : DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_ISSUE_PURPOSE;
+  const proposalValidityNote =
+    props.proposalValidityNote.trim().length > 0
+      ? props.proposalValidityNote.trim()
+      : DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_VALIDITY_NOTE;
 
   return {
     approverTitle: props.approverTitle.trim() || "Acoustic Consultant",
@@ -315,7 +403,11 @@ function buildProposalDocument(
     citations: props.citations,
     consultantCompany: props.consultantCompany.trim() || "DynEcho Acoustic Consulting",
     consultantEmail: props.consultantEmail.trim() || "Contact email not entered",
+    consultantLogoDataUrl: props.consultantLogoDataUrl.trim(),
     consultantPhone: props.consultantPhone.trim() || "Contact phone not entered",
+    consultantWordmarkLine: props.consultantWordmarkLine.trim(),
+    corridorDossierCards: props.corridorDossierCards,
+    corridorDossierHeadline: props.corridorDossierHeadline,
     contextLabel: props.contextLabel,
     coverageItems: props.coverageItems,
     decisionTrailHeadline: props.decisionTrailHeadline,
@@ -326,6 +418,7 @@ function buildProposalDocument(
     issuedOnLabel: props.issuedOnLabel,
     issuedOnIso: props.issuedOnIso,
     issueBaseReference: issueSequenceSnapshot.baseReference,
+    issueCodePrefix: props.issueCodePrefix.trim(),
     issueNextReference: issueSequenceSnapshot.nextReference,
     issueRegisterItems: buildIssueRegisterItems({
       currentReference: proposalReference,
@@ -334,6 +427,9 @@ function buildProposalDocument(
       issuedOnLabel: props.issuedOnLabel
     }),
     layers: props.layers,
+    methodDossierCards: props.methodDossierCards,
+    methodDossierHeadline: props.methodDossierHeadline,
+    methodTraceGroups: props.methodTraceGroups,
     metrics:
       props.metrics.length > 0
         ? props.metrics
@@ -349,11 +445,14 @@ function buildProposalDocument(
     primaryMetricValue: primaryMetric.value,
     projectName: props.projectName.trim() || "Untitled acoustic proposal",
     proposalAttention,
+    proposalIssuePurpose,
     proposalRecipient,
     proposalReference,
     proposalRevision,
     proposalSubject,
+    proposalValidityNote,
     recommendationItems: proposalBrief.recommendationItems,
+    reportProfile: props.reportProfile,
     reportProfileLabel: props.reportProfileLabel,
     studyModeLabel: props.studyModeLabel,
     studyContextLabel: props.studyContextLabel,
@@ -364,18 +463,69 @@ function buildProposalDocument(
 }
 
 export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanelProps) {
+  const {
+    onApproverTitleChange,
+    onConsultantAddressChange,
+    onConsultantCompanyChange,
+    onConsultantEmailChange,
+    onConsultantLogoDataUrlChange,
+    onConsultantPhoneChange,
+    onConsultantWordmarkLineChange,
+    onIssueCodePrefixChange,
+    onPreparedByChange,
+    onProposalIssuePurposeChange,
+    onProposalValidityNoteChange,
+    onReportProfileChange
+  } = props;
   const [isDownloadingPdf, setIsDownloadingPdf] = useState(false);
+  const [companyProfiles, setCompanyProfiles] = useState<readonly SimpleWorkbenchProposalCompanyProfile[]>([]);
+  const [profileDraftLabel, setProfileDraftLabel] = useState(() => props.consultantCompany.trim() || "Current office profile");
+  const importProfilesInputRef = useRef<HTMLInputElement | null>(null);
   const proposalBrief = buildSimpleWorkbenchProposalBrief(buildProposalBriefInput(props));
   const suggestedIssue = proposalBrief.suggestedIssue;
   const [issueSequenceSnapshot, setIssueSequenceSnapshot] = useState<SimpleWorkbenchIssueSequenceSnapshot>(() =>
     readSimpleWorkbenchIssueSequence(suggestedIssue.reference)
   );
   const proposalDocument = buildProposalDocument(props, proposalBrief, suggestedIssue, issueSequenceSnapshot);
+  const proposalBranding = getSimpleWorkbenchProposalBranding({
+    consultantCompany: proposalDocument.consultantCompany,
+    consultantWordmarkLine: proposalDocument.consultantWordmarkLine,
+    projectName: proposalDocument.projectName,
+    reportProfile: proposalDocument.reportProfile,
+    reportProfileLabel: proposalDocument.reportProfileLabel
+  });
+  const proposalDossier = buildSimpleWorkbenchProposalDossier(proposalDocument);
   const proposalText = buildSimpleWorkbenchProposalText(proposalDocument);
   const exportReady = props.layers.length > 0 && props.metrics.length > 0;
-  const readyCoverageCount = props.coverageItems.filter((item) => item.status === "live" || item.status === "bound").length;
-  const parkedCoverageCount = props.coverageItems.filter((item) => item.status === "needs_input").length;
-  const unsupportedCoverageCount = props.coverageItems.filter((item) => item.status === "unsupported").length;
+  const effectiveProposalIssuePurpose = getEffectiveProposalIssuePurpose(props.proposalIssuePurpose);
+  const effectiveProposalValidityNote = getEffectiveProposalValidityNote(props.proposalValidityNote);
+  const activeProposalPolicyPreset = matchSimpleWorkbenchProposalPolicyPreset({
+    issuePurpose: effectiveProposalIssuePurpose,
+    validityNote: effectiveProposalValidityNote
+  });
+  const defaultCompanyProfile =
+    companyProfiles.find((profile) => profile.isDefault) ?? getDefaultSimpleWorkbenchProposalCompanyProfile();
+  const activeCompanyProfile =
+    companyProfiles.find((profile) =>
+      matchesSimpleWorkbenchProposalCompanyProfile(profile, {
+        approverTitle: props.approverTitle,
+        consultantAddress: props.consultantAddress,
+        consultantCompany: props.consultantCompany,
+        consultantEmail: props.consultantEmail,
+        consultantLogoDataUrl: props.consultantLogoDataUrl,
+        consultantPhone: props.consultantPhone,
+        consultantWordmarkLine: props.consultantWordmarkLine,
+        issueCodePrefix: props.issueCodePrefix,
+        preparedBy: props.preparedBy,
+        preferredReportProfile: props.reportProfile
+      })
+    ) ?? null;
+  const systemProposalIdentity = isSystemProposalIdentity(props);
+  const readyCoverageCount = proposalDossier.readyCoverageCount;
+  const parkedCoverageCount = proposalDossier.parkedCoverageCount;
+  const unsupportedCoverageCount = proposalDossier.unsupportedCoverageCount;
+  const methodTraceNoteCount = proposalDocument.methodTraceGroups.reduce((count, group) => count + group.notes.length, 0);
+  const corridorCardCount = proposalDocument.corridorDossierCards.length;
   const warningToneClass =
     props.warnings.length > 0
       ? "border-[color:color-mix(in_oklch,var(--warning)_30%,var(--line))] bg-[color:color-mix(in_oklch,var(--warning)_12%,var(--paper))] text-[color:var(--warning-ink)]"
@@ -384,6 +534,63 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
   useEffect(() => {
     setIssueSequenceSnapshot(readSimpleWorkbenchIssueSequence(suggestedIssue.reference));
   }, [suggestedIssue.reference]);
+
+  useEffect(() => {
+    setCompanyProfiles(readSimpleWorkbenchProposalCompanyProfiles());
+  }, []);
+
+  useEffect(() => {
+    if (profileDraftLabel.trim().length === 0 && props.consultantCompany.trim().length > 0) {
+      setProfileDraftLabel(props.consultantCompany.trim());
+    }
+  }, [profileDraftLabel, props.consultantCompany]);
+
+  useEffect(() => {
+    if (!defaultCompanyProfile) {
+      return;
+    }
+
+    if (activeCompanyProfile?.id === defaultCompanyProfile.id) {
+      return;
+    }
+
+    if (!systemProposalIdentity) {
+      return;
+    }
+
+    onConsultantCompanyChange(defaultCompanyProfile.consultantCompany);
+    onPreparedByChange(defaultCompanyProfile.preparedBy);
+    onApproverTitleChange(defaultCompanyProfile.approverTitle);
+    onConsultantEmailChange(defaultCompanyProfile.consultantEmail);
+    onConsultantLogoDataUrlChange(defaultCompanyProfile.consultantLogoDataUrl);
+    onConsultantPhoneChange(defaultCompanyProfile.consultantPhone);
+    onConsultantWordmarkLineChange(defaultCompanyProfile.consultantWordmarkLine);
+    onIssueCodePrefixChange(defaultCompanyProfile.issueCodePrefix);
+    onProposalIssuePurposeChange(defaultCompanyProfile.proposalIssuePurpose);
+    onProposalValidityNoteChange(defaultCompanyProfile.proposalValidityNote);
+    onReportProfileChange(defaultCompanyProfile.preferredReportProfile);
+    onConsultantAddressChange(defaultCompanyProfile.consultantAddress);
+    setProfileDraftLabel(defaultCompanyProfile.label);
+    toast.success("Default office loaded", {
+      description: `${defaultCompanyProfile.label} replaced the generic DynEcho identity so this issue sheet opens on your saved office preset.`
+    });
+  }, [
+    activeCompanyProfile?.id,
+    defaultCompanyProfile,
+    onApproverTitleChange,
+    onConsultantAddressChange,
+    onConsultantCompanyChange,
+    onConsultantEmailChange,
+    onConsultantLogoDataUrlChange,
+    onConsultantPhoneChange,
+    onConsultantWordmarkLineChange,
+    onIssueCodePrefixChange,
+    onPreparedByChange,
+    onProposalIssuePurposeChange,
+    onProposalValidityNoteChange,
+    onReportProfileChange,
+    systemProposalIdentity
+  ]);
 
   async function handleCopySummary() {
     try {
@@ -445,6 +652,226 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
     props.onProposalRevisionChange("Rev 00");
     toast.success("Issue number reserved", {
       description: `${reservation.reservedReference} is now applied. The next available issue number is ${reservation.nextReference}.`
+    });
+  }
+
+  function handleApplyCompanyProfile(
+    profile: SimpleWorkbenchProposalCompanyProfile,
+    mode: "autoload" | "manual" = "manual"
+  ) {
+    props.onConsultantCompanyChange(profile.consultantCompany);
+    props.onPreparedByChange(profile.preparedBy);
+    props.onApproverTitleChange(profile.approverTitle);
+    props.onConsultantEmailChange(profile.consultantEmail);
+    props.onConsultantLogoDataUrlChange(profile.consultantLogoDataUrl);
+    props.onConsultantPhoneChange(profile.consultantPhone);
+    props.onConsultantWordmarkLineChange(profile.consultantWordmarkLine);
+    props.onIssueCodePrefixChange(profile.issueCodePrefix);
+    props.onProposalIssuePurposeChange(profile.proposalIssuePurpose);
+    props.onProposalValidityNoteChange(profile.proposalValidityNote);
+    props.onReportProfileChange(profile.preferredReportProfile);
+    props.onConsultantAddressChange(profile.consultantAddress);
+    setProfileDraftLabel(profile.label);
+    toast.success(mode === "autoload" ? "Default office loaded" : "Company profile applied", {
+      description:
+        mode === "autoload"
+          ? `${profile.label} replaced the generic DynEcho identity so this issue sheet opens on your saved office preset.`
+          : `${profile.label} is now driving the consultant identity block, template profile, issue coding, and default clause policy.`
+    });
+  }
+
+  function handleApplyPolicyPreset(preset: SimpleWorkbenchProposalPolicyPreset) {
+    props.onProposalIssuePurposeChange(preset.issuePurpose);
+    props.onProposalValidityNoteChange(preset.validityNote);
+    toast.success("Clause preset applied", {
+      description: `${preset.label} is now driving the issue purpose and validity wording for this proposal.`
+    });
+  }
+
+  function handleSaveCurrentCompanyProfile() {
+    if (props.consultantCompany.trim().length === 0) {
+      toast.error("Company name required", {
+        description: "Enter the issuing consultant company before saving a reusable local profile."
+      });
+      return;
+    }
+
+    const result = saveSimpleWorkbenchProposalCompanyProfile({
+      approverTitle: props.approverTitle,
+      consultantAddress: props.consultantAddress,
+      consultantCompany: props.consultantCompany,
+      consultantEmail: props.consultantEmail,
+      consultantLogoDataUrl: props.consultantLogoDataUrl,
+      consultantPhone: props.consultantPhone,
+      consultantWordmarkLine: props.consultantWordmarkLine,
+      issueCodePrefix: props.issueCodePrefix,
+      label: profileDraftLabel,
+      preparedBy: props.preparedBy,
+      preferredReportProfile: props.reportProfile,
+      proposalIssuePurpose: props.proposalIssuePurpose,
+      proposalValidityNote: props.proposalValidityNote
+    });
+    setCompanyProfiles(result.profiles);
+    setProfileDraftLabel(result.savedProfile.label);
+    toast.success(result.action === "created" ? "Company profile saved" : "Company profile updated", {
+      description: `${result.savedProfile.label} is now available in the local proposal library.`
+    });
+  }
+
+  function handleDeleteCompanyProfile(profile: SimpleWorkbenchProposalCompanyProfile) {
+    const profiles = deleteSimpleWorkbenchProposalCompanyProfile(profile.id);
+    setCompanyProfiles(profiles);
+    toast.success("Company profile removed", {
+      description: `${profile.label} was removed from the local proposal library.`
+    });
+  }
+
+  function handleSetDefaultCompanyProfile(profile: SimpleWorkbenchProposalCompanyProfile) {
+    const profiles = setDefaultSimpleWorkbenchProposalCompanyProfile(profile.id);
+    setCompanyProfiles(profiles);
+    toast.success("Default office profile updated", {
+      description: `${profile.label} is now the default office preset for this browser.`
+    });
+  }
+
+  function handleApplyDefaultCompanyProfile() {
+    const defaultProfile = companyProfiles.find((profile) => profile.isDefault);
+    if (!defaultProfile) {
+      toast.error("No default office profile", {
+        description: "Mark one saved company profile as the default office preset first."
+      });
+      return;
+    }
+
+    handleApplyCompanyProfile(defaultProfile);
+  }
+
+  function handleExportCompanyProfiles() {
+    if (companyProfiles.length === 0) {
+      toast.error("No company profiles to export", {
+        description: "Save at least one office profile before exporting the proposal library."
+      });
+      return;
+    }
+
+    const blob = new Blob([exportSimpleWorkbenchProposalCompanyProfiles()], {
+      type: "application/json"
+    });
+    const objectUrl = window.URL.createObjectURL(blob);
+    const anchor = window.document.createElement("a");
+
+    anchor.href = objectUrl;
+    anchor.download = "dynecho-proposal-company-profiles.json";
+    anchor.click();
+
+    window.setTimeout(() => {
+      window.URL.revokeObjectURL(objectUrl);
+    }, 0);
+
+    toast.success("Company profile library exported", {
+      description: `${companyProfiles.length} office profile${companyProfiles.length === 1 ? "" : "s"} packaged as JSON.`
+    });
+  }
+
+  async function handleImportCompanyProfiles(fileList: FileList | null) {
+    const file = fileList?.[0] ?? null;
+    if (!file) {
+      return;
+    }
+
+    const rawJson = await new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = () => reject(new Error("The selected JSON file could not be read."));
+      reader.onload = () => {
+        if (typeof reader.result === "string") {
+          resolve(reader.result);
+          return;
+        }
+
+        reject(new Error("The selected JSON file did not produce text content."));
+      };
+      reader.readAsText(file);
+    }).catch((error) => {
+      toast.error("Company library import failed", {
+        description: error instanceof Error ? error.message : "The selected file could not be read."
+      });
+      return null;
+    });
+
+    if (!rawJson) {
+      return;
+    }
+
+    try {
+      const result = importSimpleWorkbenchProposalCompanyProfiles(rawJson);
+      setCompanyProfiles(result.profiles);
+      toast.success("Company profile library imported", {
+        description: `${result.importedCount} profile${result.importedCount === 1 ? "" : "s"} merged into the local office library.`
+      });
+    } catch (error) {
+      toast.error("Company library import failed", {
+        description: error instanceof Error ? error.message : "The JSON file could not be parsed."
+      });
+    } finally {
+      if (importProfilesInputRef.current) {
+        importProfilesInputRef.current.value = "";
+      }
+    }
+  }
+
+  async function handleConsultantLogoChange(fileList: FileList | null) {
+    const file = fileList?.[0] ?? null;
+    if (!file) {
+      return;
+    }
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Unsupported logo file", {
+        description: "Upload a PNG, JPEG, SVG, or WebP image for the proposal cover."
+      });
+      return;
+    }
+
+    if (file.size > 600_000) {
+      toast.error("Logo file too large", {
+        description: "Keep the logo under 600 KB so proposal previews and browser-local profiles stay lightweight."
+      });
+      return;
+    }
+
+    const dataUrl = await new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = () => reject(new Error("Logo upload could not be read."));
+      reader.onload = () => {
+        if (typeof reader.result === "string") {
+          resolve(reader.result);
+          return;
+        }
+
+        reject(new Error("Logo upload produced an invalid data URL."));
+      };
+      reader.readAsDataURL(file);
+    }).catch((error) => {
+      toast.error("Logo upload failed", {
+        description: error instanceof Error ? error.message : "The selected file could not be read."
+      });
+      return null;
+    });
+
+    if (!dataUrl) {
+      return;
+    }
+
+    props.onConsultantLogoDataUrlChange(dataUrl);
+    toast.success("Logo uploaded", {
+      description: "The proposal preview and branded PDF now use the uploaded company logo."
+    });
+  }
+
+  function handleClearConsultantLogo() {
+    props.onConsultantLogoDataUrlChange("");
+    toast.success("Logo cleared", {
+      description: "The proposal cover returned to the monogram-only brand mark."
     });
   }
 
@@ -572,6 +999,211 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
 
           <div className="rounded-[1.35rem] border hairline bg-[color:var(--paper)]/78 px-4 py-4">
             <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
+              <LibraryBig className="h-4 w-4" />
+              Company profile library
+            </div>
+            <div className="mt-4 grid gap-4">
+              <ProposalField
+                label="Profile label"
+                note="Save the current consultant identity block as a reusable local office or company profile."
+                onChange={setProfileDraftLabel}
+                placeholder="e.g. Machinity Istanbul office"
+                value={profileDraftLabel}
+              />
+              <div className="flex flex-wrap gap-2">
+                <button
+                  className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+                  onClick={handleSaveCurrentCompanyProfile}
+                  type="button"
+                >
+                  <Save className="h-4 w-4" />
+                  Save current profile
+                </button>
+                <button
+                  className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03] disabled:cursor-not-allowed disabled:opacity-50"
+                  disabled={!companyProfiles.some((profile) => profile.isDefault)}
+                  onClick={handleApplyDefaultCompanyProfile}
+                  type="button"
+                >
+                  <Star className="h-4 w-4" />
+                  Apply default office
+                </button>
+                <button
+                  className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03] disabled:cursor-not-allowed disabled:opacity-50"
+                  disabled={companyProfiles.length === 0}
+                  onClick={handleExportCompanyProfiles}
+                  type="button"
+                >
+                  <Download className="h-4 w-4" />
+                  Export library JSON
+                </button>
+                <button
+                  className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+                  onClick={() => importProfilesInputRef.current?.click()}
+                  type="button"
+                >
+                  <Upload className="h-4 w-4" />
+                  Import library JSON
+                </button>
+                <input
+                  accept="application/json,.json"
+                  className="hidden"
+                  onChange={(event) => void handleImportCompanyProfiles(event.target.files)}
+                  ref={importProfilesInputRef}
+                  type="file"
+                />
+              </div>
+            </div>
+            <div className="mt-4 rounded-[1rem] border border-[color:color-mix(in_oklch,var(--accent)_20%,var(--line))] bg-[color:color-mix(in_oklch,var(--accent)_8%,var(--paper))] px-4 py-4">
+              <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+                Current office identity
+              </div>
+              <div className="mt-2 flex flex-wrap items-center gap-2">
+                <div className="text-sm font-semibold text-[color:var(--ink)]">
+                  {activeCompanyProfile ? activeCompanyProfile.label : defaultCompanyProfile ? defaultCompanyProfile.label : "Unsaved local identity"}
+                </div>
+                {activeCompanyProfile ? (
+                  <div className="rounded-full border hairline bg-[color:var(--paper)] px-2 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-soft)]">
+                    Active on this issue
+                  </div>
+                ) : null}
+                {defaultCompanyProfile?.isDefault ? (
+                  <div className="rounded-full border hairline bg-[color:var(--paper)] px-2 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-soft)]">
+                    Default office
+                  </div>
+                ) : null}
+              </div>
+              <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">
+                {activeCompanyProfile
+                  ? `${activeCompanyProfile.label} currently owns the consultant block, template profile, issue prefix, and default clause policy used by this printable issue sheet.`
+                  : defaultCompanyProfile
+                    ? "A default office preset is saved for this browser. DynEcho will preload it whenever the issue sheet falls back to the generic consultant identity and generic clause policy."
+                    : "Save one reusable office preset and mark it as the default when this browser should always open proposal drafting on the same consultant identity and standard clause wording."}
+              </p>
+            </div>
+            <div className="mt-4 grid gap-3">
+              {companyProfiles.length > 0 ? (
+                companyProfiles.map((profile) => (
+                  <div
+                    className={`grid gap-3 rounded-[1rem] border px-4 py-4 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)_auto] ${
+                      activeCompanyProfile?.id === profile.id
+                        ? "border-[color:color-mix(in_oklch,var(--accent)_26%,var(--line))] bg-[color:color-mix(in_oklch,var(--accent)_10%,var(--paper))]"
+                        : "hairline bg-[color:var(--paper)]"
+                    }`}
+                    key={profile.id}
+                  >
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+                          {profile.label}
+                        </div>
+                        {activeCompanyProfile?.id === profile.id ? (
+                          <div className="rounded-full border hairline bg-[color:var(--paper)] px-2 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-soft)]">
+                            Active on this issue
+                          </div>
+                        ) : null}
+                        {profile.isDefault ? (
+                          <div className="rounded-full border hairline bg-[color:var(--paper)] px-2 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-soft)]">
+                            Default office
+                          </div>
+                        ) : null}
+                      </div>
+                      <div className="mt-2 text-sm font-semibold text-[color:var(--ink)]">{profile.consultantCompany}</div>
+                      <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">
+                        {profile.preparedBy} · {profile.approverTitle}
+                      </p>
+                    </div>
+                    <div className="min-w-0 text-sm leading-6 text-[color:var(--ink-soft)]">
+                      <div>{profile.consultantWordmarkLine || "No wordmark line saved"}</div>
+                      <div>{REPORT_PROFILE_LABELS[profile.preferredReportProfile]}</div>
+                      <div>{profile.issueCodePrefix ? `Issue prefix ${profile.issueCodePrefix}` : "Issue prefix auto from company"}</div>
+                      <div>
+                        {matchSimpleWorkbenchProposalPolicyPreset({
+                          issuePurpose: profile.proposalIssuePurpose,
+                          validityNote: profile.proposalValidityNote
+                        })?.label ?? "Custom clause pair"}
+                      </div>
+                      <div>{profile.proposalIssuePurpose || "Default issue purpose not saved"}</div>
+                      <div>{profile.proposalValidityNote || "Default validity note not saved"}</div>
+                      <div>{profile.consultantEmail || "No email saved"}</div>
+                      <div>{profile.consultantPhone || "No phone saved"}</div>
+                      <div>{profile.consultantAddress || "No address saved"}</div>
+                    </div>
+                    <div className="flex flex-wrap items-start justify-end gap-2">
+                      <button
+                        className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-3 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+                        onClick={() => handleApplyCompanyProfile(profile)}
+                        type="button"
+                      >
+                        Apply profile
+                      </button>
+                      <button
+                        className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-3 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+                        onClick={() => handleSetDefaultCompanyProfile(profile)}
+                        type="button"
+                      >
+                        <Star className="h-4 w-4" />
+                        {profile.isDefault ? "Default office" : "Set default"}
+                      </button>
+                      {profile.consultantLogoDataUrl ? (
+                        <div className="rounded-full border hairline bg-[color:var(--paper)] px-3 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-soft)]">
+                          Logo saved
+                        </div>
+                      ) : null}
+                      <button
+                        className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-3 py-2 text-sm font-semibold text-[color:var(--warning-ink)] hover:bg-[color:var(--warning-soft)]"
+                        onClick={() => handleDeleteCompanyProfile(profile)}
+                        type="button"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="rounded-[1rem] border border-dashed hairline px-4 py-4 text-sm leading-6 text-[color:var(--ink-soft)]">
+                  No local company profiles yet. Save the current consultant identity block and office-level clause wording, then export it as JSON if the same acoustic office needs to reuse the branded preset on another browser.
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="rounded-[1.35rem] border hairline bg-[color:var(--paper)]/78 px-4 py-4">
+            <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
+              <FileText className="h-4 w-4" />
+              Template and issue coding
+            </div>
+            <div className="mt-4 grid gap-4 md:grid-cols-2">
+              <label className="grid gap-2">
+                <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Template profile</span>
+                <p className="text-sm leading-6 text-[color:var(--ink-soft)]">
+                  Choose whether this issue should read like a consultant offer, developer memo, or lab-ready brief.
+                </p>
+                <select
+                  className="focus-ring rounded-[1rem] border hairline bg-[color:var(--paper)] px-3 py-3 text-sm text-[color:var(--ink)]"
+                  onChange={(event) => props.onReportProfileChange(event.target.value as ReportProfile)}
+                  value={props.reportProfile}
+                >
+                  {Object.entries(REPORT_PROFILE_LABELS).map(([value, label]) => (
+                    <option key={value} value={value}>
+                      {label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <ProposalField
+                label="Issue code prefix"
+                note="Optional override for the first code block in suggested references, e.g. MAC, MIA, or LAB. Leave blank to derive it from the issuing office name."
+                onChange={props.onIssueCodePrefixChange}
+                placeholder="e.g. MAC"
+                value={props.issueCodePrefix}
+              />
+            </div>
+          </div>
+
+          <div className="rounded-[1.35rem] border hairline bg-[color:var(--paper)]/78 px-4 py-4">
+            <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
               <Building2 className="h-4 w-4" />
               Consultant identity
             </div>
@@ -604,6 +1236,59 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
                 placeholder="e.g. Maslak, Istanbul, Turkiye"
                 value={props.consultantAddress}
               />
+              <ProposalField
+                label="Wordmark line"
+                note="Optional brand line shown below the company name on the cover and template header."
+                onChange={props.onConsultantWordmarkLineChange}
+                placeholder="e.g. Building Acoustics and Vibration Control"
+                value={props.consultantWordmarkLine}
+              />
+            </div>
+            <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
+              <label className="grid gap-2">
+                <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Company logo</span>
+                <p className="text-sm leading-6 text-[color:var(--ink-soft)]">
+                  Upload a lightweight logo so the branded print preview and PDF use the company mark instead of the generated monogram.
+                </p>
+                <input
+                  accept="image/png,image/jpeg,image/webp,image/svg+xml"
+                  className="focus-ring rounded-[1rem] border hairline bg-[color:var(--paper)] px-3 py-3 text-sm text-[color:var(--ink)]"
+                  onChange={(event) => void handleConsultantLogoChange(event.target.files)}
+                  type="file"
+                />
+              </label>
+              <div className="rounded-[1rem] border hairline bg-[color:var(--paper)]/78 px-4 py-4">
+                <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Current brand mark</div>
+                <div className="mt-3 flex items-center gap-3">
+                  {props.consultantLogoDataUrl ? (
+                    <img
+                      alt={`${props.consultantCompany || "Consultant"} logo preview`}
+                      className="h-16 w-16 rounded-[1rem] border hairline bg-white object-contain p-2"
+                      src={props.consultantLogoDataUrl}
+                    />
+                  ) : (
+                    <div
+                      className="flex h-16 w-16 items-center justify-center rounded-[1rem] text-lg font-semibold uppercase tracking-[0.2em] text-[#fff8f2]"
+                      style={{ backgroundColor: proposalBranding.accentStrong }}
+                    >
+                      {proposalBranding.monogram}
+                    </div>
+                  )}
+                  <div className="min-w-0">
+                    <div className="text-sm font-semibold text-[color:var(--ink)]">{proposalDocument.consultantCompany}</div>
+                    <p className="mt-1 text-sm leading-6 text-[color:var(--ink-soft)]">{proposalBranding.wordmarkSecondary}</p>
+                  </div>
+                </div>
+                {props.consultantLogoDataUrl ? (
+                  <button
+                    className="focus-ring mt-4 inline-flex items-center gap-2 rounded-full border hairline px-3 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+                    onClick={handleClearConsultantLogo}
+                    type="button"
+                  >
+                    Clear logo
+                  </button>
+                ) : null}
+              </div>
             </div>
           </div>
 
@@ -644,6 +1329,54 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
               Transmittal details
             </div>
             <div className="mt-4 grid gap-4">
+              <div className="rounded-[1rem] border border-[color:color-mix(in_oklch,var(--accent)_20%,var(--line))] bg-[color:color-mix(in_oklch,var(--accent)_8%,var(--paper))] px-4 py-4">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div>
+                    <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+                      Clause library
+                    </div>
+                    <div className="mt-2 text-sm font-semibold text-[color:var(--ink)]">
+                      {activeProposalPolicyPreset ? activeProposalPolicyPreset.label : "Custom wording active"}
+                    </div>
+                    <p className="mt-2 max-w-3xl text-sm leading-6 text-[color:var(--ink-soft)]">
+                      {activeProposalPolicyPreset
+                        ? activeProposalPolicyPreset.note
+                        : "The current issue purpose and validity pair no longer matches a saved standard clause. Keep the custom wording or reapply one preset below."}
+                    </p>
+                  </div>
+                  <div className="rounded-full border hairline bg-[color:var(--paper)] px-3 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-soft)]">
+                    {activeProposalPolicyPreset ? "Matched preset" : "Custom pair"}
+                  </div>
+                </div>
+                <div className="mt-4 grid gap-3 md:grid-cols-2">
+                  {SIMPLE_WORKBENCH_PROPOSAL_POLICY_PRESETS.map((preset) => {
+                    const active = activeProposalPolicyPreset?.id === preset.id;
+
+                    return (
+                      <button
+                        className={`focus-ring grid gap-2 rounded-[1rem] border px-4 py-4 text-left transition ${
+                          active
+                            ? "border-[color:color-mix(in_oklch,var(--accent)_28%,var(--line))] bg-[color:color-mix(in_oklch,var(--accent)_12%,var(--paper))]"
+                            : "hairline bg-[color:var(--paper)]/76 hover:bg-black/[0.03]"
+                        }`}
+                        key={preset.id}
+                        onClick={() => handleApplyPolicyPreset(preset)}
+                        type="button"
+                      >
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <div className="text-sm font-semibold text-[color:var(--ink)]">{preset.label}</div>
+                          <div className="rounded-full border hairline bg-[color:var(--paper)] px-2.5 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-soft)]">
+                            {active ? "Active" : "Apply"}
+                          </div>
+                        </div>
+                        <div className="text-sm leading-6 text-[color:var(--ink-soft)]">{preset.note}</div>
+                        <div className="text-sm font-semibold text-[color:var(--ink)]">{preset.issuePurpose}</div>
+                        <div className="text-sm leading-6 text-[color:var(--ink-soft)]">{preset.validityNote}</div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
               <ProposalField
                 label="Issued to"
                 note="Recipient line printed on the cover and transmittal summary."
@@ -665,6 +1398,20 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
                 placeholder="e.g. Riverside Residences floor acoustic proposal"
                 value={props.proposalSubject}
               />
+              <ProposalField
+                label="Issue purpose"
+                note="Formal reason this issue is being sent, such as client review, tender pricing, or laboratory follow-up."
+                onChange={props.onProposalIssuePurposeChange}
+                placeholder="e.g. Client review and acoustic coordination"
+                value={props.proposalIssuePurpose}
+              />
+              <ProposalField
+                label="Validity note"
+                note="Commercial or administrative validity note carried into the formal proposal and PDF package."
+                onChange={props.onProposalValidityNoteChange}
+                placeholder="e.g. Valid for 30 calendar days unless superseded"
+                value={props.proposalValidityNote}
+              />
             </div>
           </div>
 
@@ -675,8 +1422,13 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
             </div>
             <div className="mt-3 grid gap-2 text-sm leading-6 text-[color:var(--ink-soft)]">
               <div>Cover page with executive reading, issue authority, and signature-ready transmittal blocks</div>
+              <div>Profile-templated cover identity that switches between consultant issue, developer memo, and lab-ready brief posture</div>
+              <div>Optional uploaded logo and custom wordmark line carried into preview and branded PDF output</div>
+              <div>Optional issue code prefix override for disciplined company-specific document numbering</div>
+              <div>Standard clause library for issue-purpose and validity wording, with custom text still allowed when the preset library is too narrow</div>
+              <div>Reusable local office presets that can be marked as default, exchanged as JSON between browsers, and carry office-level clause wording</div>
               <div>Project, client, consultant, prepared-by, role, and company contact identity</div>
-              <div>Issued-to, attention, and subject lines so the sheet reads like a formal transmittal</div>
+              <div>Issued-to, attention, subject, purpose, and validity lines so the sheet reads like a formal transmittal</div>
               <div>Base document code plus browser-local proposal sequence for issue control</div>
               <div>Executive summary, technical schedule, and recommendation register for memo-grade reading</div>
               <div>Layer-by-layer schedule with role/category labels and live dynamic outputs</div>
@@ -691,15 +1443,51 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
             <div>
               <div className="eyebrow">Client Preview</div>
               <h3 className="mt-1 font-display text-[1.9rem] leading-none tracking-[-0.05em] text-[color:var(--ink)]">
-                Formal acoustic offer sheet
+                {proposalBranding.coverTitle}
               </h3>
               <p className="mt-3 max-w-2xl text-sm leading-7 text-[color:var(--ink-soft)]">
-                The print layout stays closer to a consultant issue sheet than a raw calculator dump. It keeps the main
-                metric prominent but still shows how the current dynamic route was chosen and what remains conditional.
+                {proposalBranding.coverKicker}
               </p>
             </div>
             <div className="rounded-full border hairline bg-[color:var(--paper)]/74 px-3 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-soft)]">
               {props.issuedOnLabel}
+            </div>
+          </div>
+
+          <div
+            className="mt-4 flex flex-wrap items-center justify-between gap-4 rounded-[1.25rem] border px-4 py-4"
+            style={{
+              background: `linear-gradient(135deg, ${proposalBranding.heroFrom}, ${proposalBranding.heroTo})`,
+              borderColor: proposalBranding.line
+            }}
+          >
+            <div className="flex items-center gap-3">
+              {proposalDocument.consultantLogoDataUrl ? (
+                <img
+                  alt={`${proposalDocument.consultantCompany} logo`}
+                  className="h-14 w-14 rounded-[1rem] border bg-white object-contain p-2"
+                  src={proposalDocument.consultantLogoDataUrl}
+                  style={{ borderColor: proposalBranding.line }}
+                />
+              ) : (
+                <div
+                  className="flex h-14 w-14 items-center justify-center rounded-[1rem] text-lg font-semibold uppercase tracking-[0.2em] text-[#fff8f2]"
+                  style={{ backgroundColor: proposalBranding.accentStrong }}
+                >
+                  {proposalBranding.monogram}
+                </div>
+              )}
+              <div>
+                <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+                  Template profile
+                </div>
+                <div className="mt-1 text-lg font-semibold text-[color:var(--ink)]">{proposalBranding.wordmarkPrimary}</div>
+                <p className="mt-1 text-sm leading-6 text-[color:var(--ink-soft)]">{proposalBranding.wordmarkSecondary}</p>
+                <p className="mt-1 text-sm leading-6 text-[color:var(--ink-soft)]">{proposalBranding.profileDetail}</p>
+              </div>
+            </div>
+            <div className="rounded-full bg-[color:var(--paper)]/76 px-3 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-soft)]">
+              {proposalBranding.templateLabel}
             </div>
           </div>
 
@@ -718,6 +1506,8 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
                 <div className="mt-2 text-sm font-semibold text-[color:var(--ink)]">{proposalDocument.proposalRecipient}</div>
                 <div className="mt-1 text-sm text-[color:var(--ink-soft)]">{proposalDocument.proposalAttention}</div>
                 <div className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">{proposalDocument.proposalSubject}</div>
+                <div className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">{proposalDocument.proposalIssuePurpose}</div>
+                <div className="mt-1 text-sm leading-6 text-[color:var(--ink-soft)]">{proposalDocument.proposalValidityNote}</div>
               </div>
               <div className="mt-4 grid gap-2 text-sm text-[color:var(--ink-soft)] sm:grid-cols-2">
                 <div>{proposalDocument.studyModeLabel}</div>
@@ -750,6 +1540,8 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
             <IssueMetaCard detail="Professional title shown on the issue authority block." label="Role" value={proposalDocument.approverTitle} />
             <IssueMetaCard detail="Formal issue identifier." label="Reference" value={proposalDocument.proposalReference} />
             <IssueMetaCard detail="Current issue status." label="Revision" value={proposalDocument.proposalRevision} />
+            <IssueMetaCard detail="Reason this issue is being released." label="Purpose" value={proposalDocument.proposalIssuePurpose} />
+            <IssueMetaCard detail="Commercial or administrative validity note." label="Validity" value={proposalDocument.proposalValidityNote} />
           </div>
 
           <div className="mt-4 rounded-[1rem] border border-[color:color-mix(in_oklch,var(--accent)_26%,var(--line))] bg-[color:color-mix(in_oklch,var(--accent)_8%,var(--paper))] px-4 py-4">
@@ -763,6 +1555,9 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
             </p>
             <p className="mt-3 max-w-4xl text-sm leading-7 text-[color:var(--ink-soft)]">
               The current transmittal is addressed to {proposalDocument.proposalRecipient}. {proposalDocument.proposalAttention}. Subject: {proposalDocument.proposalSubject}.
+            </p>
+            <p className="mt-3 max-w-4xl text-sm leading-7 text-[color:var(--ink-soft)]">
+              Purpose: {proposalDocument.proposalIssuePurpose}. Validity: {proposalDocument.proposalValidityNote}
             </p>
           </div>
 
@@ -794,6 +1589,61 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
           <div className="mt-4 rounded-[1rem] border border-[color:color-mix(in_oklch,var(--accent)_26%,var(--line))] bg-[color:color-mix(in_oklch,var(--accent)_9%,var(--paper))] px-4 py-4">
             <div className="text-sm font-semibold text-[color:var(--ink)]">Executive summary</div>
             <p className="mt-3 max-w-4xl text-sm leading-7 text-[color:var(--ink-soft)]">{proposalDocument.executiveSummary}</p>
+          </div>
+
+          <div className="mt-4 rounded-[1rem] border hairline bg-[color:var(--paper)]/72 px-4 py-4">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="text-sm font-semibold text-[color:var(--ink)]">Issue dossier</div>
+              <div className="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+                {proposalDossier.linkedCitationCount} linked source{proposalDossier.linkedCitationCount === 1 ? "" : "s"} · {proposalDossier.warningCount} warning
+                {proposalDossier.warningCount === 1 ? "" : "s"}
+              </div>
+            </div>
+            <p className="mt-2 max-w-4xl text-sm leading-7 text-[color:var(--ink-soft)]">{proposalDossier.headline}</p>
+            <div className="mt-3 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+              {proposalDossier.items.map((item) => (
+                <IssueMetaCard detail={item.detail} key={`${item.label}-${item.value}`} label={item.label} value={item.value} />
+              ))}
+            </div>
+          </div>
+
+          {proposalDocument.corridorDossierCards.length > 0 ? (
+            <div className="mt-4 rounded-[1rem] border hairline bg-[color:var(--paper)]/72 px-4 py-4">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="text-sm font-semibold text-[color:var(--ink)]">Validation corridor package</div>
+                <div className="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+                  {corridorCardCount} card{corridorCardCount === 1 ? "" : "s"}
+                </div>
+              </div>
+              <p className="mt-2 max-w-4xl text-sm leading-7 text-[color:var(--ink-soft)]">{proposalDocument.corridorDossierHeadline}</p>
+              <div className="mt-3 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+                {proposalDocument.corridorDossierCards.map((item) => (
+                  <IssueMetaCard detail={item.detail} key={`${item.label}-${item.value}`} label={item.label} value={item.value} />
+                ))}
+              </div>
+            </div>
+          ) : null}
+
+          <div className="mt-4 rounded-[1rem] border hairline bg-[color:var(--paper)]/72 px-4 py-4">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="text-sm font-semibold text-[color:var(--ink)]">Solver rationale package</div>
+              <div className="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+                {proposalDocument.methodTraceGroups.length} trace group{proposalDocument.methodTraceGroups.length === 1 ? "" : "s"} · {methodTraceNoteCount} selected note
+                {methodTraceNoteCount === 1 ? "" : "s"}
+              </div>
+            </div>
+            <p className="mt-2 max-w-4xl text-sm leading-7 text-[color:var(--ink-soft)]">{proposalDocument.methodDossierHeadline}</p>
+            <div className="mt-3 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+              {proposalDocument.methodDossierCards.map((item) => (
+                <IssueMetaCard detail={item.detail} key={`${item.label}-${item.value}`} label={item.label} value={item.value} />
+              ))}
+            </div>
+            {proposalDocument.methodTraceGroups.length > 0 ? (
+              <div className="mt-3 text-sm leading-6 text-[color:var(--ink-soft)]">
+                The branded PDF now carries {methodTraceNoteCount} selected solver note{methodTraceNoteCount === 1 ? "" : "s"} across{" "}
+                {proposalDocument.methodTraceGroups.length} trace group{proposalDocument.methodTraceGroups.length === 1 ? "" : "s"} inside the solver rationale appendix.
+              </div>
+            ) : null}
           </div>
 
           <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">

@@ -7,6 +7,8 @@ import { MetricCard, Pill, SurfacePanel } from "@dynecho/ui";
 
 import { formatDecimal } from "@/lib/format";
 
+import { selectSimpleWorkbenchTraceNotes } from "./simple-workbench-trace-notes";
+
 type AirborneTracePanelProps = {
   result: AssemblyCalculation | null;
 };
@@ -18,6 +20,9 @@ function formatDetectedFamily(value: string): string {
 export function AirborneTracePanel({ result }: AirborneTracePanelProps) {
   const overlay = result?.airborneOverlay ?? null;
   const dynamicTrace = result?.dynamicAirborneTrace ?? null;
+  const dynamicNoteSelection = selectSimpleWorkbenchTraceNotes(dynamicTrace?.notes ?? []);
+  const overlayNoteSelection = selectSimpleWorkbenchTraceNotes(overlay?.notes ?? []);
+  const hiddenNoteCount = dynamicNoteSelection.hiddenCount + overlayNoteSelection.hiddenCount;
 
   if (!overlay && !dynamicTrace) {
     return null;
@@ -114,7 +119,7 @@ export function AirborneTracePanel({ result }: AirborneTracePanelProps) {
         </div>
       ) : null}
 
-      {(dynamicTrace?.notes.length ?? 0) > 0 || (overlay?.notes.length ?? 0) > 0 ? (
+      {dynamicNoteSelection.totalCount > 0 || overlayNoteSelection.totalCount > 0 ? (
         <div className="mt-5 rounded-[1.2rem] border hairline bg-[color:var(--paper)] px-4 py-4">
           <div className="flex flex-wrap items-center gap-3">
             <Pill tone="accent">Formula notes</Pill>
@@ -127,13 +132,18 @@ export function AirborneTracePanel({ result }: AirborneTracePanelProps) {
             <Network className="h-4 w-4 text-[color:var(--ink-soft)]" />
           </div>
           <ul className="mt-3 space-y-2 text-sm leading-7 text-[color:var(--ink-soft)]">
-            {(dynamicTrace?.notes ?? []).map((note: string) => (
+            {dynamicNoteSelection.notes.map((note: string) => (
               <li key={note}>- {note}</li>
             ))}
-            {(overlay?.notes ?? []).map((note: string) => (
+            {overlayNoteSelection.notes.map((note: string) => (
               <li key={note}>- {note}</li>
             ))}
           </ul>
+          {hiddenNoteCount > 0 ? (
+            <p className="mt-3 text-xs uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+              {hiddenNoteCount} additional raw note{hiddenNoteCount === 1 ? "" : "s"} remain available on the advanced desk.
+            </p>
+          ) : null}
         </div>
       ) : null}
     </SurfacePanel>

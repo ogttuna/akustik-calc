@@ -13,6 +13,7 @@ import {
   formatConfidenceProvenance,
   formatConfidenceScore
 } from "./impact-confidence-view";
+import { selectSimpleWorkbenchTraceNotes } from "./simple-workbench-trace-notes";
 
 type ImpactTracePanelProps = {
   result: AssemblyCalculation | null;
@@ -91,6 +92,15 @@ export function ImpactTracePanel({ result }: ImpactTracePanelProps) {
   const sourceLineageLabels =
     familyEstimate?.sourceSystems.map((system: FamilyEstimateSourceSystem) => system.label) ?? [];
   const hiddenCandidateCount = Math.max(0, candidateRowCount - sourceLineageLabels.length);
+  const dynamicNoteSelection = selectSimpleWorkbenchTraceNotes(dynamicImpactTrace?.notes ?? []);
+  const boundNoteSelection = selectSimpleWorkbenchTraceNotes(lowerBoundImpact?.notes ?? []);
+  const statusNoteSelection = selectSimpleWorkbenchTraceNotes(status?.notes ?? [], {
+    fallbackNotes: ["No structured predictor-status notes on the current lane."]
+  });
+  const supportNoteSelection = selectSimpleWorkbenchTraceNotes(support?.notes ?? [], {
+    fallbackNotes: ["No structured impact-support notes on the current lane."]
+  });
+  const formulaNoteSelection = selectSimpleWorkbenchTraceNotes(support?.formulaNotes ?? []);
 
   if (!status && !support && !floorSystemRatings && !lowerBoundImpact && !familyEstimate && !dynamicImpactTrace) {
     return null;
@@ -222,10 +232,15 @@ export function ImpactTracePanel({ result }: ImpactTracePanelProps) {
           </div>
 
           <ul className="mt-4 space-y-2 text-sm leading-7 text-[color:var(--ink-soft)]">
-            {dynamicImpactTrace.notes.map((line: string) => (
+            {dynamicNoteSelection.notes.map((line: string) => (
               <li key={line}>- {line}</li>
             ))}
           </ul>
+          {dynamicNoteSelection.hiddenCount > 0 ? (
+            <p className="mt-3 text-xs uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+              {dynamicNoteSelection.hiddenCount} additional raw note{dynamicNoteSelection.hiddenCount === 1 ? "" : "s"} remain available on the advanced desk.
+            </p>
+          ) : null}
         </div>
       ) : null}
 
@@ -283,10 +298,15 @@ export function ImpactTracePanel({ result }: ImpactTracePanelProps) {
           </div>
 
           <ul className="mt-4 space-y-2 text-sm leading-7 text-[color:var(--ink-soft)]">
-            {lowerBoundImpact.notes.map((line: string) => (
+            {boundNoteSelection.notes.map((line: string) => (
               <li key={line}>- {line}</li>
             ))}
           </ul>
+          {boundNoteSelection.hiddenCount > 0 ? (
+            <p className="mt-3 text-xs uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+              {boundNoteSelection.hiddenCount} additional raw note{boundNoteSelection.hiddenCount === 1 ? "" : "s"} remain available on the advanced desk.
+            </p>
+          ) : null}
         </div>
       ) : null}
 
@@ -457,7 +477,7 @@ export function ImpactTracePanel({ result }: ImpactTracePanelProps) {
             <div className="text-sm font-semibold text-[color:var(--ink)]">Status notes</div>
           </div>
           <ul className="mt-3 space-y-2 text-sm leading-7 text-[color:var(--ink-soft)]">
-            {(status?.notes.length ? status.notes : ["No structured predictor-status notes on the current lane."]).map((line: string) => (
+            {statusNoteSelection.notes.map((line: string) => (
               <li key={line}>- {line}</li>
             ))}
             {(status?.warnings ?? []).map((line: string) => (
@@ -466,6 +486,11 @@ export function ImpactTracePanel({ result }: ImpactTracePanelProps) {
               </li>
             ))}
           </ul>
+          {statusNoteSelection.hiddenCount > 0 ? (
+            <p className="mt-3 text-xs uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+              {statusNoteSelection.hiddenCount} additional raw note{statusNoteSelection.hiddenCount === 1 ? "" : "s"} remain available on the advanced desk.
+            </p>
+          ) : null}
         </article>
 
         <article className="rounded-[1.2rem] border hairline bg-black/[0.025] px-4 py-4">
@@ -474,13 +499,18 @@ export function ImpactTracePanel({ result }: ImpactTracePanelProps) {
             <div className="text-sm font-semibold text-[color:var(--ink)]">Support notes</div>
           </div>
           <ul className="mt-3 space-y-2 text-sm leading-7 text-[color:var(--ink-soft)]">
-            {(support?.notes.length ? support.notes : ["No structured impact-support notes on the current lane."]).map((line: string) => (
+            {supportNoteSelection.notes.map((line: string) => (
               <li key={line}>- {line}</li>
             ))}
             {support?.labOrField ? <li>- Lane context: {support.labOrField}</li> : null}
             {support?.referenceFloorType ? <li>- Reference floor: {support.referenceFloorType}</li> : null}
           </ul>
-          {support?.formulaNotes?.length ? (
+          {supportNoteSelection.hiddenCount > 0 ? (
+            <p className="mt-3 text-xs uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+              {supportNoteSelection.hiddenCount} additional raw note{supportNoteSelection.hiddenCount === 1 ? "" : "s"} remain available on the advanced desk.
+            </p>
+          ) : null}
+          {formulaNoteSelection.totalCount > 0 ? (
             <div className="mt-4 rounded-[1rem] border hairline bg-[color:var(--paper)] px-4 py-4">
               <div className="flex items-center gap-2">
                 <Pill tone="accent">Formula notes</Pill>
@@ -489,10 +519,15 @@ export function ImpactTracePanel({ result }: ImpactTracePanelProps) {
                 </span>
               </div>
               <ul className="mt-3 space-y-2 text-sm leading-7 text-[color:var(--ink-soft)]">
-                {support.formulaNotes.map((line: string) => (
+                {formulaNoteSelection.notes.map((line: string) => (
                   <li key={line}>- {line}</li>
                 ))}
               </ul>
+              {formulaNoteSelection.hiddenCount > 0 ? (
+                <p className="mt-3 text-xs uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+                  {formulaNoteSelection.hiddenCount} additional raw note{formulaNoteSelection.hiddenCount === 1 ? "" : "s"} remain available on the advanced desk.
+                </p>
+              ) : null}
             </div>
           ) : null}
         </article>

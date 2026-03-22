@@ -1,8 +1,19 @@
+import type { ReportProfile } from "@dynecho/shared";
+
 import type {
   SimpleWorkbenchProposalCitation,
   SimpleWorkbenchProposalDecisionItem
 } from "./simple-workbench-evidence";
+import {
+  getSimpleWorkbenchProposalBranding,
+  inferSimpleWorkbenchReportProfile
+} from "./simple-workbench-proposal-branding";
+import { buildSimpleWorkbenchProposalDossier } from "./simple-workbench-proposal-dossier";
 import type { SimpleWorkbenchProposalBriefItem } from "./simple-workbench-proposal-brief";
+import {
+  DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_ISSUE_PURPOSE,
+  DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_VALIDITY_NOTE
+} from "./simple-workbench-proposal-policy-presets";
 
 export type SimpleWorkbenchProposalMetric = {
   detail: string;
@@ -36,6 +47,23 @@ export type SimpleWorkbenchProposalIssueRegisterItem = {
   statusLabel: string;
 };
 
+export type SimpleWorkbenchProposalMethodDossierCard = {
+  detail: string;
+  label: string;
+  tone: "accent" | "neutral" | "success" | "warning";
+  value: string;
+};
+
+export type SimpleWorkbenchProposalMethodTraceGroup = {
+  detail: string;
+  label: string;
+  notes: readonly string[];
+  tone: "accent" | "neutral" | "success" | "warning";
+  value: string;
+};
+
+export type SimpleWorkbenchProposalCorridorDossierCard = SimpleWorkbenchProposalMethodDossierCard;
+
 export type SimpleWorkbenchProposalDocument = {
   assemblyHeadline: string;
   assumptionItems: readonly SimpleWorkbenchProposalBriefItem[];
@@ -45,7 +73,11 @@ export type SimpleWorkbenchProposalDocument = {
   consultantAddress: string;
   consultantCompany: string;
   consultantEmail: string;
+  consultantLogoDataUrl: string;
   consultantPhone: string;
+  consultantWordmarkLine: string;
+  corridorDossierCards: readonly SimpleWorkbenchProposalCorridorDossierCard[];
+  corridorDossierHeadline: string;
   contextLabel: string;
   coverageItems: readonly SimpleWorkbenchProposalCoverageItem[];
   dynamicBranchDetail: string;
@@ -61,16 +93,23 @@ export type SimpleWorkbenchProposalDocument = {
   issueBaseReference: string;
   issueNextReference: string;
   issueRegisterItems: readonly SimpleWorkbenchProposalIssueRegisterItem[];
+  methodDossierCards: readonly SimpleWorkbenchProposalMethodDossierCard[];
+  methodDossierHeadline: string;
+  methodTraceGroups: readonly SimpleWorkbenchProposalMethodTraceGroup[];
   preparedBy: string;
   primaryMetricLabel: string;
   primaryMetricValue: string;
   projectName: string;
   proposalAttention: string;
+  issueCodePrefix: string;
+  proposalIssuePurpose: string;
   proposalRecipient: string;
   proposalReference: string;
   proposalRevision: string;
   proposalSubject: string;
+  proposalValidityNote: string;
   recommendationItems: readonly SimpleWorkbenchProposalBriefItem[];
+  reportProfile: ReportProfile;
   reportProfileLabel: string;
   studyModeLabel: string;
   studyContextLabel: string;
@@ -95,12 +134,20 @@ export function parseSimpleWorkbenchProposalDocument(value: unknown): SimpleWork
   const approverTitle = typeof value.approverTitle === "string" ? value.approverTitle : "Acoustic Consultant";
   const coverageItems = Array.isArray(value.coverageItems) ? value.coverageItems : [];
   const issueRegisterItems = Array.isArray(value.issueRegisterItems) ? value.issueRegisterItems : [];
+  const methodDossierCards = Array.isArray(value.methodDossierCards) ? value.methodDossierCards : [];
+  const methodTraceGroups = Array.isArray(value.methodTraceGroups) ? value.methodTraceGroups : [];
+  const corridorDossierCards = Array.isArray(value.corridorDossierCards) ? value.corridorDossierCards : [];
   const consultantAddress =
     typeof value.consultantAddress === "string" ? value.consultantAddress : "Office address not entered";
   const consultantEmail =
     typeof value.consultantEmail === "string" ? value.consultantEmail : "Contact email not entered";
+  const consultantLogoDataUrl =
+    typeof value.consultantLogoDataUrl === "string" ? value.consultantLogoDataUrl : "";
   const consultantPhone =
     typeof value.consultantPhone === "string" ? value.consultantPhone : "Contact phone not entered";
+  const consultantWordmarkLine =
+    typeof value.consultantWordmarkLine === "string" ? value.consultantWordmarkLine : "";
+  const issueCodePrefix = typeof value.issueCodePrefix === "string" ? value.issueCodePrefix : "";
 
   if (
     typeof value.assemblyHeadline !== "string" ||
@@ -141,7 +188,17 @@ export function parseSimpleWorkbenchProposalDocument(value: unknown): SimpleWork
     approverTitle,
     consultantAddress,
     consultantEmail,
+    consultantLogoDataUrl,
     consultantPhone,
+    consultantWordmarkLine,
+    corridorDossierCards:
+      corridorDossierCards.length > 0
+        ? (corridorDossierCards as SimpleWorkbenchProposalCorridorDossierCard[])
+        : [],
+    corridorDossierHeadline:
+      typeof value.corridorDossierHeadline === "string"
+        ? value.corridorDossierHeadline
+        : "No validation corridor snapshot was packaged with this legacy proposal preview.",
     coverageItems,
     issueBaseReference:
       typeof value.issueBaseReference === "string"
@@ -167,7 +224,24 @@ export function parseSimpleWorkbenchProposalDocument(value: unknown): SimpleWork
               statusLabel: typeof value.proposalRevision === "string" ? value.proposalRevision : "Rev 00"
             }
           ],
+    methodDossierCards:
+      methodDossierCards.length > 0
+        ? (methodDossierCards as SimpleWorkbenchProposalMethodDossierCard[])
+        : [],
+    methodDossierHeadline:
+      typeof value.methodDossierHeadline === "string"
+        ? value.methodDossierHeadline
+        : "No solver rationale snapshot was packaged with this legacy proposal preview.",
+    methodTraceGroups:
+      methodTraceGroups.length > 0
+        ? (methodTraceGroups as SimpleWorkbenchProposalMethodTraceGroup[])
+        : [],
     proposalAttention: typeof value.proposalAttention === "string" ? value.proposalAttention : "Attention line not entered",
+    issueCodePrefix,
+    proposalIssuePurpose:
+      typeof value.proposalIssuePurpose === "string"
+        ? value.proposalIssuePurpose
+        : DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_ISSUE_PURPOSE,
     proposalRecipient:
       typeof value.proposalRecipient === "string"
         ? value.proposalRecipient
@@ -179,7 +253,18 @@ export function parseSimpleWorkbenchProposalDocument(value: unknown): SimpleWork
         ? value.proposalSubject
         : typeof value.projectName === "string"
           ? `${value.projectName} acoustic proposal`
-          : "Acoustic performance proposal"
+          : "Acoustic performance proposal",
+    proposalValidityNote:
+      typeof value.proposalValidityNote === "string"
+        ? value.proposalValidityNote
+        : DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_VALIDITY_NOTE,
+    reportProfile:
+      typeof value.reportProfile === "string" &&
+      (value.reportProfile === "consultant" || value.reportProfile === "developer" || value.reportProfile === "lab_ready")
+        ? value.reportProfile
+        : inferSimpleWorkbenchReportProfile(
+            typeof value.reportProfileLabel === "string" ? value.reportProfileLabel : ""
+          )
   };
 }
 
@@ -245,6 +330,35 @@ function renderCitationItems(citations: readonly SimpleWorkbenchProposalCitation
         </div>
       `;
     })
+    .join("");
+}
+
+function renderDossierItems(items: readonly { detail: string; label: string; value: string }[]): string {
+  return items
+    .map(
+      (item) => `
+        <div class="method-box">
+          <div class="eyebrow" style="margin-bottom: 8px;">${escapeHtml(item.label)}</div>
+          <h3>${escapeHtml(item.value)}</h3>
+          <p>${escapeHtml(item.detail)}</p>
+        </div>
+      `
+    )
+    .join("");
+}
+
+function renderMethodTraceGroups(groups: readonly SimpleWorkbenchProposalMethodTraceGroup[]): string {
+  return groups
+    .map(
+      (group) => `
+        <div class="method-box">
+          <div class="eyebrow" style="margin-bottom: 8px;">${escapeHtml(group.label)}</div>
+          <h3>${escapeHtml(group.value)}</h3>
+          <p>${escapeHtml(group.detail)}</p>
+          ${group.notes.length > 0 ? `<ul style="margin-top: 12px;">${renderListItems(group.notes)}</ul>` : ""}
+        </div>
+      `
+    )
     .join("");
 }
 
@@ -329,11 +443,23 @@ function buildIssueAuthorityText(document: SimpleWorkbenchProposalDocument): str
   return `${document.preparedBy}, ${document.approverTitle}, is issuing ${document.proposalReference} ${document.proposalRevision} on behalf of ${document.consultantCompany} for ${document.clientName}.`;
 }
 
+function buildIssueCodePrefixLabel(document: SimpleWorkbenchProposalDocument): string {
+  return document.issueCodePrefix.trim().length > 0 ? document.issueCodePrefix.trim() : "Auto from consultant";
+}
+
 export function buildSimpleWorkbenchProposalFilename(projectName: string): string {
   return `${slugify(projectName) || "dynecho-acoustic-proposal"}-proposal`;
 }
 
 export function buildSimpleWorkbenchProposalText(document: SimpleWorkbenchProposalDocument): string {
+  const branding = getSimpleWorkbenchProposalBranding({
+    consultantCompany: document.consultantCompany,
+    consultantWordmarkLine: document.consultantWordmarkLine,
+    projectName: document.projectName,
+    reportProfile: document.reportProfile,
+    reportProfileLabel: document.reportProfileLabel
+  });
+  const dossier = buildSimpleWorkbenchProposalDossier(document);
   const warningLines =
     document.warnings.length > 0
       ? document.warnings.map((warning) => `- ${warning}`)
@@ -349,18 +475,43 @@ export function buildSimpleWorkbenchProposalText(document: SimpleWorkbenchPropos
     `Consultant: ${document.consultantCompany}`,
     `Prepared by: ${document.preparedBy}`,
     `Role: ${document.approverTitle}`,
+    `Brand line: ${branding.wordmarkSecondary}`,
     `Contact: ${document.consultantEmail} | ${document.consultantPhone}`,
     `Office: ${document.consultantAddress}`,
     `Issued to: ${document.proposalRecipient}`,
     `Attention: ${document.proposalAttention}`,
     `Subject: ${document.proposalSubject}`,
+    `Issue purpose: ${document.proposalIssuePurpose}`,
+    `Validity: ${document.proposalValidityNote}`,
     `Issue: ${document.proposalReference} | ${document.proposalRevision}`,
     `Issued: ${document.issuedOnLabel}`,
+    `Issue code prefix: ${buildIssueCodePrefixLabel(document)}`,
     `Study: ${document.studyModeLabel} | ${document.contextLabel} | ${document.studyContextLabel} | ${document.reportProfileLabel}`,
+    `Template: ${branding.templateLabel} | ${branding.coverTitle} | ${branding.wordmarkPrimary}`,
     `Primary read: ${document.primaryMetricLabel} ${document.primaryMetricValue}`,
     "",
     "Executive summary",
     document.executiveSummary,
+    "",
+    "Issue dossier",
+    `Headline: ${dossier.headline}`,
+    ...dossier.items.map((item) => `- ${item.label}: ${item.value} | ${item.detail}`),
+    "",
+    ...(document.corridorDossierCards.length > 0
+      ? [
+          "Validation corridor package",
+          `Headline: ${document.corridorDossierHeadline}`,
+          ...document.corridorDossierCards.map((item) => `- ${item.label}: ${item.value} | ${item.detail}`),
+          ""
+        ]
+      : []),
+    "Solver rationale appendix",
+    `Headline: ${document.methodDossierHeadline}`,
+    ...document.methodDossierCards.map((item) => `- ${item.label}: ${item.value} | ${item.detail}`),
+    ...document.methodTraceGroups.flatMap((group) => [
+      `- ${group.label}: ${group.value} | ${group.detail}`,
+      ...group.notes.map((note) => `  * ${note}`)
+    ]),
     "",
     "Assembly summary",
     `${document.assemblyHeadline}`,
@@ -374,8 +525,11 @@ export function buildSimpleWorkbenchProposalText(document: SimpleWorkbenchPropos
     "Issue authority",
     buildIssueAuthorityText(document),
     `Issued: ${document.issuedOnLabel}`,
+    `Purpose: ${document.proposalIssuePurpose}`,
+    `Validity: ${document.proposalValidityNote}`,
     "",
     "Issue control register",
+    `Issue code prefix: ${buildIssueCodePrefixLabel(document)}`,
     `Base reference: ${document.issueBaseReference}`,
     `Next available issue no: ${document.issueNextReference}`,
     ...document.issueRegisterItems.map(
@@ -423,6 +577,14 @@ export function buildSimpleWorkbenchProposalText(document: SimpleWorkbenchPropos
 }
 
 export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchProposalDocument): string {
+  const branding = getSimpleWorkbenchProposalBranding({
+    consultantCompany: document.consultantCompany,
+    consultantWordmarkLine: document.consultantWordmarkLine,
+    projectName: document.projectName,
+    reportProfile: document.reportProfile,
+    reportProfileLabel: document.reportProfileLabel
+  });
+  const dossier = buildSimpleWorkbenchProposalDossier(document);
   const warningItems =
     document.warnings.length > 0
       ? renderListItems(document.warnings)
@@ -431,9 +593,9 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
     document.briefNote.trim().length > 0
       ? escapeHtml(document.briefNote.trim())
       : "No additional consultant note entered.";
-  const liveCoverageCount = document.coverageItems.filter((item) => item.status === "live" || item.status === "bound").length;
-  const parkedCoverageCount = document.coverageItems.filter((item) => item.status === "needs_input").length;
-  const unsupportedCoverageCount = document.coverageItems.filter((item) => item.status === "unsupported").length;
+  const liveCoverageCount = dossier.readyCoverageCount;
+  const parkedCoverageCount = dossier.parkedCoverageCount;
+  const unsupportedCoverageCount = dossier.unsupportedCoverageCount;
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -449,8 +611,12 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
         --line: #d6ddd8;
         --paper: #f6f4ef;
         --panel: #fffdf8;
-        --accent: #9d6a32;
-        --accent-soft: #f1e5d6;
+        --accent: ${branding.accent};
+        --accent-soft: ${branding.accentSoft};
+        --brand-hero-from: ${branding.heroFrom};
+        --brand-hero-to: ${branding.heroTo};
+        --brand-strong: ${branding.accentStrong};
+        --brand-line: ${branding.line};
         --warning: #a05a3a;
         --warning-soft: #f6e7de;
       }
@@ -487,7 +653,7 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
         padding: 12mm 12mm 9mm;
         border-bottom: 1px solid var(--line);
         background:
-          linear-gradient(135deg, rgba(157, 106, 50, 0.1), rgba(157, 106, 50, 0) 60%),
+          linear-gradient(135deg, color-mix(in srgb, var(--accent) 16%, transparent), transparent 60%),
           linear-gradient(180deg, rgba(22, 42, 39, 0.03), rgba(22, 42, 39, 0));
       }
 
@@ -573,7 +739,7 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
       }
 
       .primary-metric {
-        border-color: rgba(157, 106, 50, 0.32);
+        border-color: color-mix(in srgb, var(--accent) 32%, transparent);
         background: var(--accent-soft);
       }
 
@@ -605,8 +771,8 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
         padding: 16mm 12mm 14mm;
         border-bottom: 1px solid var(--line);
         background:
-          radial-gradient(circle at top right, rgba(157, 106, 50, 0.16), rgba(157, 106, 50, 0) 45%),
-          linear-gradient(180deg, rgba(22, 42, 39, 0.06), rgba(22, 42, 39, 0));
+          radial-gradient(circle at top right, color-mix(in srgb, var(--accent) 18%, transparent), transparent 45%),
+          linear-gradient(135deg, var(--brand-hero-from), var(--brand-hero-to));
       }
 
       .cover-grid,
@@ -630,6 +796,73 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
         font-size: 44px;
         line-height: 0.94;
         letter-spacing: -0.05em;
+      }
+
+      .brand-hero-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 18px;
+      }
+
+      .brand-mark {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .brand-monogram {
+        width: 68px;
+        height: 68px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--brand-line);
+        background: var(--brand-strong);
+        color: #fff8f2;
+        font: 700 24px/1 Arial, sans-serif;
+        letter-spacing: 0.16em;
+      }
+
+      .brand-logo {
+        width: 68px;
+        height: 68px;
+        object-fit: contain;
+        border: 1px solid var(--brand-line);
+        background: rgba(255, 253, 248, 0.88);
+        padding: 8px;
+      }
+
+      .brand-stack strong {
+        display: block;
+        font: 700 19px/1.3 Arial, sans-serif;
+        color: var(--ink);
+      }
+
+      .brand-stack small {
+        display: block;
+        margin-top: 6px;
+        font: 400 12px/1.6 Arial, sans-serif;
+        color: var(--ink-soft);
+      }
+
+      .template-pill {
+        display: inline-flex;
+        align-items: center;
+        border: 1px solid var(--brand-line);
+        background: rgba(255, 253, 248, 0.82);
+        padding: 8px 12px;
+        font: 700 10px/1.4 Arial, sans-serif;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--ink-soft);
+      }
+
+      .template-pill span {
+        margin-left: 8px;
+        letter-spacing: 0.08em;
+        color: var(--ink);
       }
 
       .cover-kicker {
@@ -691,7 +924,7 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
       .appendix-strip {
         display: grid;
         gap: 12px;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
         margin-top: 16px;
       }
 
@@ -801,10 +1034,28 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
     <main class="sheet">
       <section class="frame cover-frame page">
         <header class="cover-hero">
-          <div class="eyebrow">DynEcho Dynamic Calculator</div>
-          <h1 class="cover-title">Acoustic Proposal</h1>
+          <div class="brand-hero-row">
+            <div class="brand-mark">
+              ${
+                document.consultantLogoDataUrl
+                  ? `<img alt="${escapeHtml(document.consultantCompany)} logo" class="brand-logo" src="${escapeHtml(document.consultantLogoDataUrl)}" />`
+                  : `<div class="brand-monogram">${escapeHtml(branding.monogram)}</div>`
+              }
+              <div class="brand-stack">
+                <div class="eyebrow">${escapeHtml(branding.coverLabel)}</div>
+                <strong>${escapeHtml(branding.wordmarkPrimary)}</strong>
+                <small>${escapeHtml(branding.wordmarkSecondary)}</small>
+              </div>
+            </div>
+            <div class="template-pill">
+              Template
+              <span>${escapeHtml(branding.templateLabel)}</span>
+            </div>
+          </div>
+          <div class="eyebrow" style="margin-top: 20px;">DynEcho Dynamic Calculator</div>
+          <h1 class="cover-title">${escapeHtml(branding.coverTitle)}</h1>
           <p class="cover-kicker">
-            Formal consultant issue sheet for the current dynamic calculation. This package preserves route choice, evidence posture, and unsupported lanes instead of flattening them into sales copy.
+            ${escapeHtml(branding.coverKicker)}
           </p>
           <div class="cover-grid">
             <div class="cover-stack">
@@ -816,10 +1067,11 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
               <div class="card">
                 <strong>Issued to</strong>
                 <span>${escapeHtml(document.proposalRecipient)}</span>
-                <small>${escapeHtml(document.proposalAttention)}<br />${escapeHtml(document.proposalSubject)}</small>
+                <small>${escapeHtml(document.proposalAttention)}<br />${escapeHtml(document.proposalSubject)}<br />${escapeHtml(document.proposalIssuePurpose)}<br />${escapeHtml(document.proposalValidityNote)}</small>
               </div>
               <div class="cover-summary">
-                <div class="eyebrow">Executive reading</div>
+                <div class="eyebrow">${escapeHtml(branding.coverLabel)}</div>
+                <h3 style="margin: 10px 0 0;">${escapeHtml(branding.profileDetail)}</h3>
                 <p>${escapeHtml(document.executiveSummary)}</p>
               </div>
             </div>
@@ -832,7 +1084,7 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
               <div class="card">
                 <strong>Issue</strong>
                 <span>${escapeHtml(document.proposalReference)}</span>
-                <small>${escapeHtml(document.proposalRevision)} | ${escapeHtml(document.issuedOnLabel)}<br />Base ${escapeHtml(document.issueBaseReference)}</small>
+                <small>${escapeHtml(document.proposalRevision)} | ${escapeHtml(document.issuedOnLabel)}<br />Prefix ${escapeHtml(buildIssueCodePrefixLabel(document))} · Base ${escapeHtml(document.issueBaseReference)}</small>
               </div>
               <div class="card">
                 <strong>Consultant</strong>
@@ -863,12 +1115,12 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
             <div class="method-box">
               <div class="eyebrow" style="margin-bottom: 8px;">Issue register</div>
               <h3>Revision control snapshot</h3>
-              <p>Base reference ${escapeHtml(document.issueBaseReference)} is active. Next browser-local issue number currently reads ${escapeHtml(document.issueNextReference)}.</p>
+              <p>Code prefix ${escapeHtml(buildIssueCodePrefixLabel(document))} is feeding the base stem. Base reference ${escapeHtml(document.issueBaseReference)} is active. Next browser-local issue number currently reads ${escapeHtml(document.issueNextReference)}.</p>
             </div>
             <div class="method-box">
               <div class="eyebrow" style="margin-bottom: 8px;">Transmittal</div>
               <h3>Recipient and subject</h3>
-              <p>Issued to ${escapeHtml(document.proposalRecipient)}. ${escapeHtml(document.proposalAttention)}. Subject: ${escapeHtml(document.proposalSubject)}.</p>
+              <p>Issued to ${escapeHtml(document.proposalRecipient)}. ${escapeHtml(document.proposalAttention)}. Subject: ${escapeHtml(document.proposalSubject)}. Purpose: ${escapeHtml(document.proposalIssuePurpose)}. Validity: ${escapeHtml(document.proposalValidityNote)}.</p>
             </div>
           </div>
         </section>
@@ -890,6 +1142,7 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
               <p>Issued on ${escapeHtml(document.issuedOnLabel)} for ${escapeHtml(document.clientName)}.</p>
               <p class="signature-meta">Primary issue contact: ${escapeHtml(document.consultantEmail)} · ${escapeHtml(document.consultantPhone)}</p>
               <p class="signature-meta">Issued to: ${escapeHtml(document.proposalRecipient)} · ${escapeHtml(document.proposalAttention)}</p>
+              <p class="signature-meta">Purpose: ${escapeHtml(document.proposalIssuePurpose)} · ${escapeHtml(document.proposalValidityNote)}</p>
               <div class="signature-line">Issue date and transmittal confirmation</div>
             </div>
           </div>
@@ -939,6 +1192,49 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
           </div>
         </section>
 
+        <section class="section">
+          <div class="eyebrow" style="margin: 18px 0 8px;">Issue Dossier</div>
+          <div class="method-box">
+            <h3>Audit posture</h3>
+            <p>${escapeHtml(dossier.headline)}</p>
+          </div>
+          <div class="detail-grid" style="padding: 12px 0 0;">
+            ${renderDossierItems(dossier.items)}
+          </div>
+        </section>
+
+        ${
+          document.corridorDossierCards.length > 0
+            ? `
+        <section class="section">
+          <div class="eyebrow" style="margin: 18px 0 8px;">Validation Corridor Package</div>
+          <div class="method-box">
+            <h3>Benchmarked family and mode posture</h3>
+            <p>${escapeHtml(document.corridorDossierHeadline)}</p>
+          </div>
+          <div class="detail-grid" style="padding: 12px 0 0;">
+            ${renderDossierItems(document.corridorDossierCards)}
+          </div>
+        </section>`
+            : ""
+        }
+
+        <section class="section">
+          <div class="eyebrow" style="margin: 18px 0 8px;">Solver Rationale Appendix</div>
+          <div class="method-box">
+            <h3>Why DynEcho is reading the stack this way</h3>
+            <p>${escapeHtml(document.methodDossierHeadline)}</p>
+          </div>
+          <div class="detail-grid" style="padding: 12px 0 0;">
+            ${renderDossierItems(document.methodDossierCards)}
+          </div>
+          ${
+            document.methodTraceGroups.length > 0
+              ? `<div class="detail-grid" style="padding: 12px 0 0;">${renderMethodTraceGroups(document.methodTraceGroups)}</div>`
+              : ""
+          }
+        </section>
+
         <section class="detail-grid">
           <div class="method-box">
             <div class="eyebrow" style="margin-bottom: 8px;">Recipient</div>
@@ -950,6 +1246,8 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
             <div class="eyebrow" style="margin-bottom: 8px;">Subject</div>
             <h3>Issue subject line</h3>
             <p>${escapeHtml(document.proposalSubject)}</p>
+            <p style="margin-top: 8px;">Purpose: ${escapeHtml(document.proposalIssuePurpose)}</p>
+            <p style="margin-top: 8px;">Validity: ${escapeHtml(document.proposalValidityNote)}</p>
           </div>
         </section>
 
@@ -1085,6 +1383,16 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
               <small>Referenced source lines and active links.</small>
             </div>
             <div class="metric">
+              <strong>Solver notes</strong>
+              <span>${document.methodTraceGroups.length}</span>
+              <small>Dynamic lane groups carried from the method tab.</small>
+            </div>
+            <div class="metric">
+              <strong>Corridor cards</strong>
+              <span>${document.corridorDossierCards.length}</span>
+              <small>Benchmarked family, mode, tolerance, and field posture lines.</small>
+            </div>
+            <div class="metric">
               <strong>Issue history</strong>
               <span>${document.issueRegisterItems.length}</span>
               <small>Current issue plus recent browser-local reservations on this base code.</small>
@@ -1104,6 +1412,38 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
           <div class="detail-grid" style="padding: 0;">
             ${renderMemoItems(document.assumptionItems)}
           </div>
+        </section>
+
+        ${
+          document.corridorDossierCards.length > 0
+            ? `
+        <section class="section">
+          <div class="eyebrow" style="margin: 18px 0 8px;">Validation Corridor Package</div>
+          <div class="method-box">
+            <h3>Benchmarked family and mode posture</h3>
+            <p>${escapeHtml(document.corridorDossierHeadline)}</p>
+          </div>
+          <div class="detail-grid" style="padding: 12px 0 0;">
+            ${renderDossierItems(document.corridorDossierCards)}
+          </div>
+        </section>`
+            : ""
+        }
+
+        <section class="section">
+          <div class="eyebrow" style="margin: 18px 0 8px;">Solver Rationale Appendix</div>
+          <div class="method-box">
+            <h3>Packaged method narrative</h3>
+            <p>${escapeHtml(document.methodDossierHeadline)}</p>
+          </div>
+          <div class="detail-grid" style="padding: 12px 0 0;">
+            ${renderDossierItems(document.methodDossierCards)}
+          </div>
+          ${
+            document.methodTraceGroups.length > 0
+              ? `<div class="detail-grid" style="padding: 12px 0 0;">${renderMethodTraceGroups(document.methodTraceGroups)}</div>`
+              : ""
+          }
         </section>
 
         <section class="section">

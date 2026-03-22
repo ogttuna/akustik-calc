@@ -60,6 +60,12 @@ function getCompactIssueDate(issuedOnIso: string): string {
   return "00000000";
 }
 
+function sanitizeIssueCodePrefix(issueCodePrefix: string): string {
+  return tokenize(issueCodePrefix)
+    .join("")
+    .slice(0, 6);
+}
+
 function buildCompanyCode(consultantCompany: string): string {
   const tokens = tokenize(consultantCompany).filter((token) => !TOKEN_STOP_WORDS.has(token));
 
@@ -99,15 +105,19 @@ function buildProjectCode(projectName: string): string {
 
 function buildSuggestedIssue(input: {
   consultantCompany: string;
+  issueCodePrefix?: string;
   issuedOnIso: string;
   projectName: string;
 }): SimpleWorkbenchSuggestedIssue {
-  const consultantCode = buildCompanyCode(input.consultantCompany);
+  const consultantCode = sanitizeIssueCodePrefix(input.issueCodePrefix ?? "") || buildCompanyCode(input.consultantCompany);
   const projectCode = buildProjectCode(input.projectName);
   const compactDate = getCompactIssueDate(input.issuedOnIso);
 
   return {
-    detail: "Suggested from consultant, project, and issue date so the offer sheet can carry a disciplined document code immediately.",
+    detail:
+      consultantCode === sanitizeIssueCodePrefix(input.issueCodePrefix ?? "")
+        ? "Suggested from the profile issue code prefix, project, and issue date so the offer sheet can carry a disciplined document code immediately."
+        : "Suggested from consultant, project, and issue date so the offer sheet can carry a disciplined document code immediately.",
     reference: `${consultantCode}-${projectCode}-${compactDate}`,
     revision: "Rev 00"
   };
@@ -166,6 +176,7 @@ export function buildSimpleWorkbenchProposalBrief(input: {
   contextLabel: string;
   dynamicBranchDetail: string;
   dynamicBranchLabel: string;
+  issueCodePrefix?: string;
   issuedOnIso: string;
   primaryMetricLabel: string;
   primaryMetricValue: string;
@@ -180,6 +191,7 @@ export function buildSimpleWorkbenchProposalBrief(input: {
 }): SimpleWorkbenchProposalBrief {
   const suggestedIssue = buildSuggestedIssue({
     consultantCompany: input.consultantCompany,
+    issueCodePrefix: input.issueCodePrefix,
     issuedOnIso: input.issuedOnIso,
     projectName: input.projectName
   });
