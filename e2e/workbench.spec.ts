@@ -89,7 +89,7 @@ test("guided floor flow exposes floor roles and marks only the relevant context 
   await expect(requiredBucket.getByText("Partition width (mm)", { exact: true })).toBeVisible();
   await expect(requiredBucket.getByText("Partition height (mm)", { exact: true })).toBeVisible();
   await expect(optionalBucket.getByText("Receiving room volume (m³)", { exact: true }).first()).toBeVisible();
-  await expect(page.getByText(/RT60 is parked because the current route stays on apparent field outputs/i)).toBeVisible();
+  await expect(page.getByLabel("RT60 (s)")).toHaveCount(0);
 });
 
 test("guided floor flow surfaces material-aware thickness guidance inline", async ({ page }) => {
@@ -130,7 +130,8 @@ test("guided result rail explains which next inputs unlock parked outputs", asyn
 
   await expect(page.getByText("Enter partition width and height", { exact: true })).toHaveCount(0);
   await expect(page.getByText("Enter impact K correction", { exact: true })).toHaveCount(0);
-  await expect(page.getByText("Enter airborne room volume and RT60", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("Enter airborne room volume", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("Enter airborne room volume and RT60", { exact: true })).toHaveCount(0);
   await expect(page.getByText("Enter impact room volume", { exact: true }).first()).toBeVisible();
 });
 
@@ -239,6 +240,7 @@ test("guided workbench reports live and parked row counts in the stack summary",
 });
 
 test("guided workbench packages the live result into a client-facing proposal surface", async ({ page }) => {
+  test.slow();
   await openFloorGuidedFlow(page);
   await loadGuidedSample(page, "Impact Floor");
 
@@ -251,11 +253,15 @@ test("guided workbench packages the live result into a client-facing proposal su
   await page.getByLabel("Issued to").fill("Riverside Development Team");
   await page.getByLabel("Attention").fill("Design Coordination Team");
   await page.getByLabel("Subject line").fill("Riverside Residences floor acoustic proposal");
+  await page.getByLabel("Issue purpose").fill("Client review and acoustic coordination");
+  await page.getByLabel("Validity note").fill("Valid for 30 calendar days unless superseded by a later issue.");
   await page.getByLabel("Proposal reference").fill("MAC-2026-014");
   await page.getByLabel("Revision").fill("Rev 01");
   await page.getByLabel("Consultant note").fill("Issue with explicit flanking caveat.");
 
-  await expect(page.getByText("Formal acoustic offer sheet")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Acoustic Proposal" })).toBeVisible();
+  await expect(page.getByText("Template profile", { exact: true }).first()).toBeVisible();
+  await expect(page.locator("div, span, p").filter({ hasText: /^Consultant issue$/ }).first()).toBeVisible();
   await expect(page.getByText("Riverside Residences").first()).toBeVisible();
   await expect(page.getByText("Machinity Acoustics").first()).toBeVisible();
   await expect(page.getByText("Machinity Acoustic Consultants").first()).toBeVisible();
@@ -263,6 +269,8 @@ test("guided workbench packages the live result into a client-facing proposal su
   await expect(page.getByText("Riverside Development Team").first()).toBeVisible();
   await expect(page.getByText("Design Coordination Team").first()).toBeVisible();
   await expect(page.getByText("Riverside Residences floor acoustic proposal").first()).toBeVisible();
+  await expect(page.getByText("Client review and acoustic coordination").first()).toBeVisible();
+  await expect(page.getByText("Valid for 30 calendar days unless superseded by a later issue.").first()).toBeVisible();
   await expect(page.getByText("MAC-2026-014").first()).toBeVisible();
   await expect(page.getByText("Rev 01").first()).toBeVisible();
   await expect(page.getByText("Executive summary", { exact: true })).toBeVisible();
@@ -296,9 +304,12 @@ test("guided workbench packages the live result into a client-facing proposal su
 
   await expect(printView.getByRole("heading", { name: "Official issue preview" })).toBeVisible();
   await expect(printView.getByText("Riverside Residences").first()).toBeVisible();
-  await expect(printView.getByText("MAC-2026-014").first()).toBeVisible();
+  await expect(printView.getByText("Consultant issue", { exact: true }).first()).toBeVisible();
   await expect(printView.getByTitle("Proposal print preview frame")).toBeVisible();
   await expect(printView.getByRole("button", { name: /Download branded PDF/i })).toBeEnabled();
+  await expect(
+    printView.frameLocator('iframe[title="Proposal print preview frame"]').getByText("MAC-2026-014").first()
+  ).toBeVisible();
   await expect(
     printView.frameLocator('iframe[title="Proposal print preview frame"]').getByText("Output Coverage Register", { exact: true })
   ).toBeVisible();
@@ -312,7 +323,16 @@ test("guided workbench packages the live result into a client-facing proposal su
     printView.frameLocator('iframe[title="Proposal print preview frame"]').getByText("Riverside Development Team").first()
   ).toBeVisible();
   await expect(
+    printView.frameLocator('iframe[title="Proposal print preview frame"]').getByText("Machinity Acoustic Consultants").first()
+  ).toBeVisible();
+  await expect(
     printView.frameLocator('iframe[title="Proposal print preview frame"]').getByText("Riverside Residences floor acoustic proposal").first()
+  ).toBeVisible();
+  await expect(
+    printView.frameLocator('iframe[title="Proposal print preview frame"]').getByText("Client review and acoustic coordination").first()
+  ).toBeVisible();
+  await expect(
+    printView.frameLocator('iframe[title="Proposal print preview frame"]').getByText("Valid for 30 calendar days unless superseded by a later issue.").first()
   ).toBeVisible();
 });
 
@@ -323,19 +343,96 @@ test("guided workbench can reserve the next proposal issue number from the local
   await page.getByRole("tab", { name: "Proposal" }).click();
   await page.getByLabel("Project name").fill("Riverside Residences");
   await page.getByLabel("Consultant company").fill("Machinity Acoustic Consultants");
+  await page.getByLabel("Issue code prefix").fill("MIA");
 
-  await expect(page.getByText(/^MAC-RR-\d{8}-01$/)).toBeVisible();
+  await expect(page.getByText(/^MIA-RR-\d{8}-01$/)).toBeVisible();
 
   await page.getByRole("button", { name: /Reserve next issue no/i }).click();
-  await expect(page.getByLabel("Proposal reference")).toHaveValue(/MAC-RR-\d{8}-01/);
+  await expect(page.getByLabel("Proposal reference")).toHaveValue(/MIA-RR-\d{8}-01/);
   await expect(page.getByLabel("Revision")).toHaveValue("Rev 00");
-  await expect(page.getByText(/Last reserved on this browser: MAC-RR-\d{8}-01\./)).toBeVisible();
-  await expect(page.getByText(/^MAC-RR-\d{8}-02$/)).toBeVisible();
+  await expect(page.getByText(/Last reserved on this browser: MIA-RR-\d{8}-01\./)).toBeVisible();
+  await expect(page.getByText(/^MIA-RR-\d{8}-02$/)).toBeVisible();
 
   await page.getByRole("button", { name: /Reserve next issue no/i }).click();
-  await expect(page.getByLabel("Proposal reference")).toHaveValue(/MAC-RR-\d{8}-02/);
-  await expect(page.getByText(/Last reserved on this browser: MAC-RR-\d{8}-02\./)).toBeVisible();
-  await expect(page.getByText(/^MAC-RR-\d{8}-03$/)).toBeVisible();
+  await expect(page.getByLabel("Proposal reference")).toHaveValue(/MIA-RR-\d{8}-02/);
+  await expect(page.getByText(/Last reserved on this browser: MIA-RR-\d{8}-02\./)).toBeVisible();
+  await expect(page.getByText(/^MIA-RR-\d{8}-03$/)).toBeVisible();
+});
+
+test("guided workbench can save and reapply local company profiles on the proposal surface", async ({ page }) => {
+  test.slow();
+  await openFloorGuidedFlow(page);
+  await loadGuidedSample(page, "Impact Floor");
+
+  await page.getByRole("tab", { name: "Proposal" }).click();
+  await page.getByLabel("Consultant company").fill("Machinity Acoustic Consultants");
+  await page.getByLabel("Template profile").selectOption("developer");
+  await page.getByLabel("Prepared by").fill("O. Tuna");
+  await page.getByLabel("Approver title").fill("Lead Acoustic Consultant");
+  await page.getByLabel("Contact email").fill("offers@machinity-acoustics.com");
+  await page.getByLabel("Contact phone").fill("+90 212 000 00 00");
+  await page.getByLabel("Office address").fill("Maslak District, Istanbul, Turkiye");
+  await page.getByLabel("Wordmark line").fill("Building Acoustics and Vibration Control");
+  await page.getByLabel("Issue code prefix").fill("MIA");
+  await page.getByRole("button", { name: /Tender pricing/i }).click();
+  await expect(page.getByText("Matched preset", { exact: true })).toBeVisible();
+  await expect(page.getByLabel("Issue purpose")).toHaveValue("Tender review and design coordination");
+  await expect(page.getByLabel("Validity note")).toHaveValue("Budget pricing valid for 21 calendar days.");
+  await page.getByLabel("Company logo").setInputFiles({
+    buffer: Buffer.from(
+      "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='#6f402a'/><path d='M8 22V10h4l4 8 4-8h4v12h-3V15l-4 8h-2l-4-8v7H8Z' fill='#fff7ef'/></svg>"
+    ),
+    mimeType: "image/svg+xml",
+    name: "machinity-logo.svg"
+  });
+  await page.getByLabel("Profile label").fill("Machinity Istanbul office");
+  await page.getByRole("button", { name: /Save current profile/i }).click();
+
+  await expect(page.getByText("Machinity Istanbul office", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("Logo saved", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: /Set default/i }).click();
+  await expect(page.getByText("Default office", { exact: true }).first()).toBeVisible();
+
+  await page.getByLabel("Consultant company").fill("Temporary Lab Identity");
+  await page.getByLabel("Template profile").selectOption("lab_ready");
+  await page.getByLabel("Prepared by").fill("Temp Operator");
+  await page.getByLabel("Contact email").fill("temp@example.com");
+  await page.getByLabel("Wordmark line").fill("Temporary wordmark");
+  await page.getByLabel("Issue code prefix").fill("TMP");
+  await page.getByLabel("Issue purpose").fill("Temporary issue purpose");
+  await page.getByLabel("Validity note").fill("Temporary validity note");
+  await expect(page.getByText("Custom wording active", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: /Clear logo/i }).click();
+
+  await page.getByRole("button", { name: /Apply default office/i }).click();
+
+  await expect(page.getByLabel("Consultant company")).toHaveValue("Machinity Acoustic Consultants");
+  await expect(page.getByLabel("Template profile")).toHaveValue("developer");
+  await expect(page.getByLabel("Prepared by")).toHaveValue("O. Tuna");
+  await expect(page.getByLabel("Contact email")).toHaveValue("offers@machinity-acoustics.com");
+  await expect(page.getByLabel("Wordmark line")).toHaveValue("Building Acoustics and Vibration Control");
+  await expect(page.getByLabel("Issue code prefix")).toHaveValue("MIA");
+  await expect(page.getByText("Matched preset", { exact: true }).first()).toBeVisible();
+  await expect(page.getByLabel("Issue purpose")).toHaveValue("Tender review and design coordination");
+  await expect(page.getByLabel("Validity note")).toHaveValue("Budget pricing valid for 21 calendar days.");
+  await expect(page.getByText(/^MIA-[A-Z0-9]{2,4}-\d{8}$/).first()).toBeVisible();
+  await expect(page.getByText("Active on this issue", { exact: true }).first()).toBeVisible();
+  await expect(page.locator('img[alt*="logo preview"]')).toBeVisible();
+
+  await page.getByRole("button", { name: "Reset" }).click();
+  await page.getByRole("tab", { name: "Proposal" }).click();
+
+  await expect(page.getByLabel("Consultant company")).toHaveValue("Machinity Acoustic Consultants");
+  await expect(page.getByLabel("Template profile")).toHaveValue("developer");
+  await expect(page.getByLabel("Prepared by")).toHaveValue("O. Tuna");
+  await expect(page.getByLabel("Issue code prefix")).toHaveValue("MIA");
+  await expect(page.getByText("Matched preset", { exact: true }).first()).toBeVisible();
+  await expect(page.getByLabel("Issue purpose")).toHaveValue("Tender review and design coordination");
+  await expect(page.getByLabel("Validity note")).toHaveValue("Budget pricing valid for 21 calendar days.");
+  await expect(page.getByText("Active on this issue", { exact: true }).first()).toBeVisible();
+
+  await page.getByRole("button", { name: /Delete/i }).first().click({ force: true });
+  await expect(page.getByText("No local company profiles yet.")).toBeVisible();
 });
 
 test("guided workbench exposes method detail for why the dynamic route and parked outputs look the way they do", async ({ page }) => {
@@ -428,22 +525,30 @@ test("guided converged 200 mm steel bound stays off the support-form gap lane", 
   await expect(page.getByText(/support form was left unspecified/i)).toHaveCount(0);
 });
 
-test("guided steel suspended preset stays on a scoped published-family lane", async ({ page }) => {
+test("guided steel suspended preset keeps the fallback posture explicit while flagging the remaining topology gap", async ({ page }) => {
   await openFloorGuidedFlow(page);
   await page.getByLabel("Sample assembly").selectOption("steel_suspended_fallback");
   await page.getByRole("button", { name: /Load sample/i }).click();
 
   await expect(page.getByText("Validation posture", { exact: true }).first()).toBeVisible();
-  await expect(page.getByText("Scoped estimate", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("Low-confidence fallback", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("Scoped estimate", { exact: true })).toHaveCount(0);
   await expect(page.getByText("Solver branch", { exact: true }).first()).toBeVisible();
   await expect(page.getByText("Suspended ceiling only", { exact: true }).first()).toBeVisible();
   await expect(
-    page.getByText("Published family estimate is active. Read this as a supported floor estimate, not as a measured claim.").first()
+    page.getByText(/This is the final published-family fallback, so treat it as a last-resort estimate rather than a narrow solver match\./i).first()
   ).toBeVisible();
-  await expect(page.getByText("Topology gap", { exact: true })).toHaveCount(0);
+  await expect(
+    page.getByText(/Final published-family fallback on the suspended ceiling only topology/i).first()
+  ).toBeVisible();
+  await expect(page.getByText("Topology gap", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("Topology still broad", { exact: true }).first()).toBeVisible();
+  await expect(
+    page.getByText(/model the resilient layer as its own live row and add the dry-deck, screed, or upper-fill package above the support/i).first()
+  ).toBeVisible();
 });
 
-test("guided timber bare low-confidence preset keeps the impact lane explicit and leaves airborne screening separate", async ({ page }) => {
+test("guided timber bare low-confidence preset keeps the broad fallback and exposed companions explicit", async ({ page }) => {
   await openFloorGuidedFlow(page);
   await page.getByLabel("Sample assembly").selectOption("timber_bare_impact_only_fallback");
   await page.getByRole("button", { name: /Load sample/i }).click();
@@ -454,17 +559,13 @@ test("guided timber bare low-confidence preset keeps the impact lane explicit an
   await expect(page.getByText("Bare floor", { exact: true }).first()).toBeVisible();
   await expect(
     page.getByText(
-      "Low-confidence timber bare-floor fallback is currently impact-only. Ln,w stays source-backed on the published-family lane, while Rw / Ctr stay on the separate airborne screening lane and nil-ceiling floor-family companions stay hidden."
+      /DynEcho is now exposing the published-family airborne companions on the same low-confidence lane/i
     ).first()
   ).toBeVisible();
   await expect(
-    page.getByText(
-      "Weighted airborne element rating from the separate screening lane. The low-confidence timber bare-floor impact branch stays impact-only, so DynEcho is not presenting this as a floor-family companion."
-    ).first()
+    page.getByText("Airborne companion carried on the active floor lane.").first()
   ).toBeVisible();
-  await expect(
-    page.getByText("This timber bare-floor fallback is impact-only. Ln,w stays live, but low-frequency companion terms are not defended on this lane.").first()
-  ).toBeVisible();
+  await expect(page.getByText("Combined weighted impact result with CI carry-over.").first()).toBeVisible();
   await expect(page.getByText("Add the ceiling package", { exact: true }).first()).toBeVisible();
   await expect(
     page.getByText(
@@ -571,6 +672,7 @@ test("workbench remains usable on a narrow viewport", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Build the layer stack" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Read the outputs" })).toBeVisible();
   await expect(page.getByRole("button", { name: /Add layer/i })).toBeVisible();
+  await page.getByRole("tab", { name: "Diagnostics" }).click();
   await expect(page.getByRole("link", { name: /Open operator desk/i })).toBeVisible();
 });
 
@@ -581,6 +683,7 @@ test("workbench keeps the guided flow focused while still exposing the advanced 
   await expect(page.getByText("Live calculation ledger")).toBeVisible();
   await expect(page.getByText("Primary wall read")).toBeVisible();
   await expect(page.getByText("Supporting metrics")).toBeVisible();
+  await page.getByRole("tab", { name: "Diagnostics" }).click();
   await expect(page.getByRole("link", { name: /Open operator desk/i })).toHaveAttribute(
     "href",
     "/workbench?view=advanced"
