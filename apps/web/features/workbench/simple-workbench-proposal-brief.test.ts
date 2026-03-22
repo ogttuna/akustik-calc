@@ -18,6 +18,7 @@ describe("simple workbench proposal brief", () => {
       contextLabel: "Building prediction",
       dynamicBranchDetail: "Published family estimate is active through reinforced concrete.",
       dynamicBranchLabel: "Heavy floating floor",
+      issueCodePrefix: "MIA",
       issuedOnIso: "2026-03-21T09:30:00.000Z",
       primaryMetricLabel: "Rw",
       primaryMetricValue: "61 dB",
@@ -36,7 +37,8 @@ describe("simple workbench proposal brief", () => {
     expect(brief.assumptionItems.some((item) => item.label === "Citation coverage")).toBe(true);
     expect(brief.recommendationItems.some((item) => item.label === "Issue as estimate, not measurement")).toBe(true);
     expect(brief.recommendationItems.some((item) => item.label === "Protect issue control")).toBe(true);
-    expect(brief.suggestedIssue.reference).toBe("MAC-RR-20260321");
+    expect(brief.suggestedIssue.reference).toBe("MIA-RR-20260321");
     expect(brief.suggestedIssue.revision).toBe("Rev 00");
+    expect(brief.suggestedIssue.detail).toContain("profile issue code prefix");
   });
 });

@@ -13,7 +13,19 @@ const DOCUMENT: SimpleWorkbenchProposalDocument = {
   consultantAddress: "Maslak District, Istanbul, Turkiye",
   consultantCompany: "Machinity Acoustic Consultants",
   consultantEmail: "offers@machinity-acoustics.com",
+  consultantLogoDataUrl: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'></svg>",
   consultantPhone: "+90 212 000 00 00",
+  consultantWordmarkLine: "Building Acoustics and Vibration Control",
+  corridorDossierCards: [
+    {
+      detail: "Estimated floor lane · field continuation live across the reinforced concrete benchmark family.",
+      label: "Active family",
+      tone: "accent",
+      value: "reinforced concrete"
+    }
+  ],
+  corridorDossierHeadline:
+    "Family-specific estimate is the active benchmark mode on reinforced concrete. 0 dB tolerance remains attached to this route. Standardized room volume is live on the field-side chain.",
   contextLabel: "Building prediction",
   coverageItems: [],
   decisionTrailHeadline: "Scoped estimate is active.",
@@ -32,6 +44,25 @@ const DOCUMENT: SimpleWorkbenchProposalDocument = {
       statusLabel: "Rev 01"
     }
   ],
+  methodDossierCards: [
+    {
+      detail: "Heavy floating floor route is active in building prediction context.",
+      label: "Route choice",
+      tone: "accent",
+      value: "Heavy floating floor"
+    }
+  ],
+  methodDossierHeadline:
+    "Floor calculation is currently reading the stack through heavy floating floor in building prediction context. 1 output is already defensible while 0 outputs remain parked and 0 lanes stay unsupported.",
+  methodTraceGroups: [
+    {
+      detail: "Screening Seed remains active on the airborne side through mass law. No family-aware airborne trace has locked yet.",
+      label: "Airborne lane",
+      notes: ["ISO 717 composite stays on Rw + C / Ctr."],
+      tone: "neutral",
+      value: "Screening Seed"
+    }
+  ],
   issuedOnIso: "2026-03-21T09:30:00.000Z",
   issuedOnLabel: "21 March 2026",
   layers: [],
@@ -40,12 +71,16 @@ const DOCUMENT: SimpleWorkbenchProposalDocument = {
   primaryMetricLabel: "Rw",
   primaryMetricValue: "61 dB",
   projectName: "Riverside Residences",
+  issueCodePrefix: "MAC",
   proposalAttention: "Design Coordination Team",
+  proposalIssuePurpose: "Client review and acoustic coordination",
   proposalRecipient: "Riverside Development Team",
   proposalReference: "MAC-2026-014",
   proposalRevision: "Rev 01",
   proposalSubject: "Riverside Residences floor acoustic proposal",
+  proposalValidityNote: "Valid for 30 calendar days unless superseded by a later issue.",
   recommendationItems: [],
+  reportProfile: "consultant",
   reportProfileLabel: "Consultant issue",
   studyContextLabel: "Pre-tender",
   studyModeLabel: "Floor",

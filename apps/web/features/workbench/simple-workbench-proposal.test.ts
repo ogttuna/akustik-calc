@@ -5,6 +5,8 @@ import {
   buildSimpleWorkbenchProposalText
 } from "./simple-workbench-proposal";
 
+const LOGO_DATA_URL = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'></svg>";
+
 const BASE_DOCUMENT = {
   assemblyHeadline: "3 live rows, heavy floating floor estimate active.",
   assumptionItems: [
@@ -38,7 +40,37 @@ const BASE_DOCUMENT = {
   ],
   consultantCompany: "Machinity Acoustic Consultants",
   consultantEmail: "offers@machinity-acoustics.com",
+  consultantLogoDataUrl: LOGO_DATA_URL,
   consultantPhone: "+90 212 000 00 00",
+  consultantWordmarkLine: "Building Acoustics and Vibration Control",
+  corridorDossierCards: [
+    {
+      detail: "Estimated floor lane · field continuation live. 4 exact · 3 estimate · 1 low confidence · 1 bound · 3 field across 12 tracked benchmark cases.",
+      label: "Active family",
+      tone: "accent",
+      value: "reinforced concrete"
+    },
+    {
+      detail: "Estimate benchmark mode with 1 tracked case. Family-specific reinforced-concrete estimate stays benchmark-guarded.",
+      label: "Benchmark mode",
+      tone: "accent",
+      value: "Family-specific estimate"
+    },
+    {
+      detail: "0 dB tolerance across 2 floor and 2 field cases on the active family.",
+      label: "Tolerance band",
+      tone: "success",
+      value: "0 dB tolerance"
+    },
+    {
+      detail: "Standardized room volume is active on the impact side. Room-to-room field route is active and remains explicit.",
+      label: "Field continuation",
+      tone: "accent",
+      value: "Standardized room volume"
+    }
+  ],
+  corridorDossierHeadline:
+    "Family-specific estimate is the active benchmark mode on reinforced concrete. 0 dB tolerance remains attached to this route. Standardized room volume is live on the field-side chain.",
   contextLabel: "Building prediction",
   coverageItems: [
     {
@@ -96,6 +128,41 @@ const BASE_DOCUMENT = {
       statusLabel: "Rev 00"
     }
   ],
+  methodDossierCards: [
+    {
+      detail: "Heavy floating floor route is active in building prediction context.",
+      label: "Route choice",
+      tone: "accent",
+      value: "Heavy floating floor"
+    },
+    {
+      detail: "1 ready, 1 parked, 1 unsupported. 1 live warning remains explicit on the issue sheet.",
+      label: "Output posture",
+      tone: "warning",
+      value: "1 ready / 1 parked"
+    }
+  ],
+  methodDossierHeadline:
+    "Floor calculation is currently reading the stack through heavy floating floor in building prediction context. 1 output is already defensible while 1 output remains parked and 1 lane stays unsupported.",
+  methodTraceGroups: [
+    {
+      detail: "Screening Seed remains active on the airborne side through mass law. No family-aware airborne trace has locked yet.",
+      label: "Airborne lane",
+      notes: [
+        "ISO 717 composite stays on Rw + C / Ctr.",
+        "Surface mass 450 kg/m² and total thickness 192 mm are feeding the current screening curve."
+      ],
+      tone: "neutral",
+      value: "Screening Seed"
+    },
+    {
+      detail: "Estimate using resilient floating floor basis. Heavy floating floor. Standardized room volume.",
+      label: "Impact lane",
+      notes: ["Published family estimate stayed active at 81% fit.", "Standardized room volume keeps Ln,w and field companions on the active lane."],
+      tone: "accent",
+      value: "Published family estimate · reinforced concrete"
+    }
+  ],
   issuedOnLabel: "21 March 2026",
   issuedOnIso: "2026-03-21T09:30:00.000Z",
   layers: [
@@ -130,11 +197,14 @@ const BASE_DOCUMENT = {
   primaryMetricLabel: "Rw",
   primaryMetricValue: "61 dB",
   projectName: "Riverside Residences",
+  issueCodePrefix: "MAC",
   proposalAttention: "Design Coordination Team",
+  proposalIssuePurpose: "Client review and acoustic coordination",
   proposalRecipient: "Riverside Development Team",
   proposalReference: "MAC-2026-014",
   proposalRevision: "Rev 01",
   proposalSubject: "Riverside Residences floor acoustic proposal",
+  proposalValidityNote: "Valid for 30 calendar days unless superseded by a later issue.",
   recommendationItems: [
     {
       detail: "Keep estimate wording and avoid calling this a measured result.",
@@ -147,6 +217,7 @@ const BASE_DOCUMENT = {
       tone: "success"
     }
   ],
+  reportProfile: "consultant",
   reportProfileLabel: "Consultant issue",
   studyModeLabel: "Floor",
   studyContextLabel: "Pre-tender",
@@ -164,16 +235,46 @@ describe("simple workbench proposal helpers", () => {
     expect(text).toContain("Consultant: Machinity Acoustic Consultants");
     expect(text).toContain("Prepared by: O. Tuna");
     expect(text).toContain("Role: Lead Acoustic Consultant");
+    expect(text).toContain("Brand line: Building Acoustics and Vibration Control");
     expect(text).toContain("Contact: offers@machinity-acoustics.com | +90 212 000 00 00");
     expect(text).toContain("Office: Maslak District, Istanbul, Turkiye");
     expect(text).toContain("Issued to: Riverside Development Team");
     expect(text).toContain("Attention: Design Coordination Team");
     expect(text).toContain("Subject: Riverside Residences floor acoustic proposal");
+    expect(text).toContain("Issue purpose: Client review and acoustic coordination");
+    expect(text).toContain("Validity: Valid for 30 calendar days unless superseded by a later issue.");
     expect(text).toContain("Issue: MAC-2026-014 | Rev 01");
+    expect(text).toContain("Issue code prefix: MAC");
     expect(text).toContain("Study: Floor | Building prediction | Pre-tender | Consultant issue");
+    expect(text).toContain("Template: Consultant issue | Acoustic Proposal | Machinity Acoustic Consultants");
     expect(text).toContain("Primary read: Rw 61 dB");
     expect(text).toContain("Executive summary");
     expect(text).toContain("Riverside Residences currently reads Rw 61 dB.");
+    expect(text).toContain("Issue dossier");
+    expect(text).toContain(
+      "Headline: Scoped estimate stays explicit on the heavy floating floor route. 1 ready output travels with 1 parked output and 1 unsupported lane."
+    );
+    expect(text).toContain(
+      "Evidence posture: Scoped estimate | Published family estimate is active. Read this as a supported floor estimate, not as a measured claim. 1 live warning remains explicit on the issue sheet."
+    );
+    expect(text).toContain("Audit package: 2 decisions / 2 assumptions | 2 citations, 1 linked source, and 2 recommended actions travel with the issue package.");
+    expect(text).toContain("Validation corridor package");
+    expect(text).toContain(
+      "Headline: Family-specific estimate is the active benchmark mode on reinforced concrete. 0 dB tolerance remains attached to this route. Standardized room volume is live on the field-side chain."
+    );
+    expect(text).toContain(
+      "Active family: reinforced concrete | Estimated floor lane · field continuation live. 4 exact · 3 estimate · 1 low confidence · 1 bound · 3 field across 12 tracked benchmark cases."
+    );
+    expect(text).toContain("Solver rationale appendix");
+    expect(text).toContain(
+      "Headline: Floor calculation is currently reading the stack through heavy floating floor in building prediction context. 1 output is already defensible while 1 output remains parked and 1 lane stays unsupported."
+    );
+    expect(text).toContain(
+      "Airborne lane: Screening Seed | Screening Seed remains active on the airborne side through mass law. No family-aware airborne trace has locked yet."
+    );
+    expect(text).toContain(
+      "Impact lane: Published family estimate · reinforced concrete | Estimate using resilient floating floor basis. Heavy floating floor. Standardized room volume."
+    );
     expect(text).toContain("Decision trail");
     expect(text).toContain("Headline: Scoped estimate on the heavy floating floor corridor is the current floor-side posture.");
     expect(text).toContain("Assumption register");
@@ -194,7 +295,10 @@ describe("simple workbench proposal helpers", () => {
     expect(text).toContain(
       "O. Tuna, Lead Acoustic Consultant, is issuing MAC-2026-014 Rev 01 on behalf of Machinity Acoustic Consultants for Machinity Acoustics."
     );
+    expect(text).toContain("Purpose: Client review and acoustic coordination");
+    expect(text).toContain("Validity: Valid for 30 calendar days unless superseded by a later issue.");
     expect(text).toContain("Issue control register");
+    expect(text).toContain("Issue code prefix: MAC");
     expect(text).toContain("Base reference: MAC-RR-20260321");
     expect(text).toContain("Next available issue no: MAC-RR-20260321-03");
     expect(text).toContain(
@@ -211,6 +315,7 @@ describe("simple workbench proposal helpers", () => {
     expect(html).toContain("Riverside Residences");
     expect(html).toContain("Machinity Acoustics");
     expect(html).toContain("Machinity Acoustic Consultants");
+    expect(html).toContain("Building Acoustics and Vibration Control");
     expect(html).toContain("O. Tuna");
     expect(html).toContain("Lead Acoustic Consultant");
     expect(html).toContain("offers@machinity-acoustics.com");
@@ -218,8 +323,26 @@ describe("simple workbench proposal helpers", () => {
     expect(html).toContain("Maslak District, Istanbul, Turkiye");
     expect(html).toContain("MAC-2026-014");
     expect(html).toContain("Rev 01");
+    expect(html).toContain("Client review and acoustic coordination");
+    expect(html).toContain("Valid for 30 calendar days unless superseded by a later issue.");
     expect(html).toContain("Executive Summary");
+    expect(html).toContain("Issue Dossier");
+    expect(html).toContain("Validation Corridor Package");
+    expect(html).toContain("Benchmarked family and mode posture");
+    expect(html).toContain("reinforced concrete");
+    expect(html).toContain("Family-specific estimate");
+    expect(html).toContain("Solver Rationale Appendix");
+    expect(html).toContain("Why DynEcho is reading the stack this way");
+    expect(html).toContain("Packaged method narrative");
+    expect(html).toContain("Airborne lane");
+    expect(html).toContain("Impact lane");
+    expect(html).toContain("Audit posture");
+    expect(html).toContain("Coverage posture");
+    expect(html).toContain("Audit package");
     expect(html).toContain("Memo-grade reading");
+    expect(html).toContain("Template");
+    expect(html).toContain("Building Acoustics and Vibration Control");
+    expect(html).toContain('alt="Machinity Acoustic Consultants logo"');
     expect(html).toContain("Signature and Issue Authority");
     expect(html).toContain("Prepared for client review");
     expect(html).toContain("Authorized consultant signature");
@@ -235,8 +358,10 @@ describe("simple workbench proposal helpers", () => {
     expect(html).toContain("Revision control snapshot");
     expect(html).toContain("Issue Control Register");
     expect(html).toContain("Issue History Appendix");
+    expect(html).toContain("Prefix MAC");
     expect(html).toContain("MAC-RR-20260321");
     expect(html).toContain("MAC-RR-20260321-03");
+    expect(html).toContain('class="brand-logo"');
     expect(html).toContain("Recommendation Register");
     expect(html).toContain("Assumption Register");
     expect(html).toContain("Decision Trail");

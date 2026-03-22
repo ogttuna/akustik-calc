@@ -222,14 +222,20 @@ describe("workbench store", () => {
     useWorkbenchStore.getState().setConsultantCompany("Machinity Acoustic Consultants");
     useWorkbenchStore.getState().setConsultantAddress("Maslak District, Istanbul, Turkiye");
     useWorkbenchStore.getState().setConsultantEmail("offers@machinity-acoustics.com");
+    useWorkbenchStore.getState().setConsultantLogoDataUrl("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'></svg>");
     useWorkbenchStore.getState().setConsultantPhone("+90 212 000 00 00");
+    useWorkbenchStore.getState().setConsultantWordmarkLine("Building Acoustics and Vibration Control");
     useWorkbenchStore.getState().setPreparedBy("O. Tuna");
+    useWorkbenchStore.getState().setProposalIssueCodePrefix("MAC");
     useWorkbenchStore.getState().setApproverTitle("Lead Acoustic Consultant");
+    useWorkbenchStore.getState().setProposalIssuePurpose("Client review and acoustic coordination");
     useWorkbenchStore.getState().setProposalRecipient("Riverside Development Team");
     useWorkbenchStore.getState().setProposalAttention("Design Coordination Team");
     useWorkbenchStore.getState().setProposalReference("MAC-2026-014");
     useWorkbenchStore.getState().setProposalRevision("Rev 01");
     useWorkbenchStore.getState().setProposalSubject("Riverside Residences floor acoustic proposal");
+    useWorkbenchStore.getState().setProposalValidityNote("Valid for 30 calendar days unless superseded by a later issue.");
+    useWorkbenchStore.getState().setReportProfile("developer");
     useWorkbenchStore.getState().setBriefNote("Issue with explicit flanking caveat.");
 
     useWorkbenchStore.getState().saveCurrentScenario();
@@ -241,14 +247,20 @@ describe("workbench store", () => {
     useWorkbenchStore.getState().setConsultantCompany("Other consultant");
     useWorkbenchStore.getState().setConsultantAddress("Other office");
     useWorkbenchStore.getState().setConsultantEmail("other@example.com");
+    useWorkbenchStore.getState().setConsultantLogoDataUrl("");
     useWorkbenchStore.getState().setConsultantPhone("+90 000 000 00 00");
+    useWorkbenchStore.getState().setConsultantWordmarkLine("Other wordmark");
     useWorkbenchStore.getState().setPreparedBy("Other author");
+    useWorkbenchStore.getState().setProposalIssueCodePrefix("OTH");
     useWorkbenchStore.getState().setApproverTitle("Other title");
+    useWorkbenchStore.getState().setProposalIssuePurpose("Other purpose");
     useWorkbenchStore.getState().setProposalRecipient("Other recipient");
     useWorkbenchStore.getState().setProposalAttention("Other attention");
     useWorkbenchStore.getState().setProposalReference("OTHER-001");
     useWorkbenchStore.getState().setProposalRevision("Rev 99");
     useWorkbenchStore.getState().setProposalSubject("Other subject");
+    useWorkbenchStore.getState().setProposalValidityNote("Other validity");
+    useWorkbenchStore.getState().setReportProfile("consultant");
     useWorkbenchStore.getState().setBriefNote("Other note");
 
     useWorkbenchStore.getState().loadSavedScenario(savedScenarioId!);
@@ -259,14 +271,20 @@ describe("workbench store", () => {
     expect(reloadedState.consultantCompany).toBe("Machinity Acoustic Consultants");
     expect(reloadedState.consultantAddress).toBe("Maslak District, Istanbul, Turkiye");
     expect(reloadedState.consultantEmail).toBe("offers@machinity-acoustics.com");
+    expect(reloadedState.consultantLogoDataUrl).toContain("data:image/svg+xml");
     expect(reloadedState.consultantPhone).toBe("+90 212 000 00 00");
+    expect(reloadedState.consultantWordmarkLine).toBe("Building Acoustics and Vibration Control");
     expect(reloadedState.preparedBy).toBe("O. Tuna");
+    expect(reloadedState.proposalIssueCodePrefix).toBe("MAC");
     expect(reloadedState.approverTitle).toBe("Lead Acoustic Consultant");
+    expect(reloadedState.proposalIssuePurpose).toBe("Client review and acoustic coordination");
     expect(reloadedState.proposalRecipient).toBe("Riverside Development Team");
     expect(reloadedState.proposalAttention).toBe("Design Coordination Team");
     expect(reloadedState.proposalReference).toBe("MAC-2026-014");
     expect(reloadedState.proposalRevision).toBe("Rev 01");
     expect(reloadedState.proposalSubject).toBe("Riverside Residences floor acoustic proposal");
+    expect(reloadedState.proposalValidityNote).toBe("Valid for 30 calendar days unless superseded by a later issue.");
+    expect(reloadedState.reportProfile).toBe("developer");
     expect(reloadedState.briefNote).toBe("Issue with explicit flanking caveat.");
   });
 

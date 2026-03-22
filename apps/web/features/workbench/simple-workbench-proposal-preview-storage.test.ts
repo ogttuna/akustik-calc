@@ -42,7 +42,19 @@ const DOCUMENT: SimpleWorkbenchProposalDocument = {
   consultantAddress: "Maslak District, Istanbul, Turkiye",
   consultantCompany: "Machinity Acoustic Consultants",
   consultantEmail: "offers@machinity-acoustics.com",
+  consultantLogoDataUrl: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'></svg>",
   consultantPhone: "+90 212 000 00 00",
+  consultantWordmarkLine: "Building Acoustics and Vibration Control",
+  corridorDossierCards: [
+    {
+      detail: "Estimated floor lane · field continuation live across the reinforced concrete benchmark family.",
+      label: "Active family",
+      tone: "accent",
+      value: "reinforced concrete"
+    }
+  ],
+  corridorDossierHeadline:
+    "Family-specific estimate is the active benchmark mode on reinforced concrete. 0 dB tolerance remains attached to this route. Standardized room volume is live on the field-side chain.",
   contextLabel: "Building prediction",
   coverageItems: [],
   decisionTrailHeadline: "Scoped estimate is active.",
@@ -61,6 +73,25 @@ const DOCUMENT: SimpleWorkbenchProposalDocument = {
       statusLabel: "Rev 01"
     }
   ],
+  methodDossierCards: [
+    {
+      detail: "Heavy floating floor route is active in building prediction context.",
+      label: "Route choice",
+      tone: "accent",
+      value: "Heavy floating floor"
+    }
+  ],
+  methodDossierHeadline:
+    "Floor calculation is currently reading the stack through heavy floating floor in building prediction context. 1 output is already defensible while 0 outputs remain parked and 0 lanes stay unsupported.",
+  methodTraceGroups: [
+    {
+      detail: "Screening Seed remains active on the airborne side through mass law. No family-aware airborne trace has locked yet.",
+      label: "Airborne lane",
+      notes: ["ISO 717 composite stays on Rw + C / Ctr."],
+      tone: "neutral",
+      value: "Screening Seed"
+    }
+  ],
   issuedOnIso: "2026-03-21T09:30:00.000Z",
   issuedOnLabel: "21 March 2026",
   layers: [],
@@ -69,12 +100,16 @@ const DOCUMENT: SimpleWorkbenchProposalDocument = {
   primaryMetricLabel: "Rw",
   primaryMetricValue: "61 dB",
   projectName: "Riverside Residences",
+  issueCodePrefix: "MAC",
   proposalAttention: "Design Coordination Team",
+  proposalIssuePurpose: "Client review and acoustic coordination",
   proposalRecipient: "Riverside Development Team",
   proposalReference: "MAC-2026-014",
   proposalRevision: "Rev 01",
   proposalSubject: "Riverside Residences floor acoustic proposal",
+  proposalValidityNote: "Valid for 30 calendar days unless superseded by a later issue.",
   recommendationItems: [],
+  reportProfile: "consultant",
   reportProfileLabel: "Consultant issue",
   studyContextLabel: "Pre-tender",
   studyModeLabel: "Floor",
@@ -102,10 +137,19 @@ describe("simple workbench proposal preview storage", () => {
     expect(loaded?.document.proposalReference).toBe("MAC-2026-014");
     expect(loaded?.document.approverTitle).toBe("Lead Acoustic Consultant");
     expect(loaded?.document.consultantEmail).toBe("offers@machinity-acoustics.com");
+    expect(loaded?.document.consultantLogoDataUrl).toContain("data:image/svg+xml");
     expect(loaded?.document.issueBaseReference).toBe("MAC-RR-20260321");
+    expect(loaded?.document.issueCodePrefix).toBe("MAC");
     expect(loaded?.document.issueRegisterItems).toHaveLength(1);
+    expect(loaded?.document.corridorDossierCards).toHaveLength(1);
+    expect(loaded?.document.corridorDossierHeadline).toContain("reinforced concrete");
+    expect(loaded?.document.methodDossierHeadline).toContain("heavy floating floor");
+    expect(loaded?.document.methodTraceGroups).toHaveLength(1);
+    expect(loaded?.document.proposalIssuePurpose).toBe("Client review and acoustic coordination");
     expect(loaded?.document.proposalRecipient).toBe("Riverside Development Team");
     expect(loaded?.document.proposalSubject).toBe("Riverside Residences floor acoustic proposal");
+    expect(loaded?.document.proposalValidityNote).toBe("Valid for 30 calendar days unless superseded by a later issue.");
+    expect(loaded?.document.reportProfile).toBe("consultant");
     expect(loaded?.savedAtIso).toMatch(/^20/);
   });
 
@@ -114,13 +158,24 @@ describe("simple workbench proposal preview storage", () => {
     delete legacyDocument.approverTitle;
     delete legacyDocument.consultantAddress;
     delete legacyDocument.consultantEmail;
+    delete legacyDocument.consultantLogoDataUrl;
     delete legacyDocument.consultantPhone;
+    delete legacyDocument.consultantWordmarkLine;
+    delete legacyDocument.corridorDossierCards;
+    delete legacyDocument.corridorDossierHeadline;
     delete legacyDocument.issueBaseReference;
+    delete legacyDocument.issueCodePrefix;
     delete legacyDocument.issueNextReference;
     delete legacyDocument.issueRegisterItems;
+    delete legacyDocument.methodDossierCards;
+    delete legacyDocument.methodDossierHeadline;
+    delete legacyDocument.methodTraceGroups;
     delete legacyDocument.proposalAttention;
+    delete legacyDocument.proposalIssuePurpose;
     delete legacyDocument.proposalRecipient;
     delete legacyDocument.proposalSubject;
+    delete legacyDocument.proposalValidityNote;
+    delete legacyDocument.reportProfile;
 
     localStorage.setItem(
       "dynecho:proposal-preview:v1",
@@ -135,12 +190,25 @@ describe("simple workbench proposal preview storage", () => {
     expect(loaded?.document.approverTitle).toBe("Acoustic Consultant");
     expect(loaded?.document.consultantAddress).toBe("Office address not entered");
     expect(loaded?.document.consultantEmail).toBe("Contact email not entered");
+    expect(loaded?.document.consultantLogoDataUrl).toBe("");
     expect(loaded?.document.consultantPhone).toBe("Contact phone not entered");
+    expect(loaded?.document.consultantWordmarkLine).toBe("");
+    expect(loaded?.document.corridorDossierCards).toHaveLength(0);
+    expect(loaded?.document.corridorDossierHeadline).toBe(
+      "No validation corridor snapshot was packaged with this legacy proposal preview."
+    );
     expect(loaded?.document.issueBaseReference).toBe("MAC-2026-014");
+    expect(loaded?.document.issueCodePrefix).toBe("");
     expect(loaded?.document.issueRegisterItems).toHaveLength(1);
+    expect(loaded?.document.methodDossierCards).toHaveLength(0);
+    expect(loaded?.document.methodTraceGroups).toHaveLength(0);
+    expect(loaded?.document.methodDossierHeadline).toBe("No solver rationale snapshot was packaged with this legacy proposal preview.");
+    expect(loaded?.document.proposalIssuePurpose).toBe("Client review and acoustic coordination");
     expect(loaded?.document.proposalRecipient).toBe("Machinity Acoustics");
     expect(loaded?.document.proposalAttention).toBe("Attention line not entered");
     expect(loaded?.document.proposalSubject).toBe("Riverside Residences acoustic proposal");
+    expect(loaded?.document.proposalValidityNote).toBe("Valid for 30 calendar days unless superseded by a later issue.");
+    expect(loaded?.document.reportProfile).toBe("consultant");
   });
 
   it("clears the stored proposal snapshot", () => {

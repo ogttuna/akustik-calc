@@ -239,6 +239,22 @@ test("guided workbench reports live and parked row counts in the stack summary",
   await expect(page.getByText("1 parked row stays visible in the draft stack but does not affect this read.").first()).toBeVisible();
 });
 
+test("guided workbench keeps the decision basis rail visible on the main result surface", async ({ page }) => {
+  await openFloorGuidedFlow(page);
+  await loadGuidedSample(page, "Impact Floor");
+  await page.getByLabel("Project context").selectOption("building_prediction");
+
+  await expect(page.getByRole("heading", { name: "Validation corridor at a glance" })).toBeVisible();
+  await expect(page.getByText("Decision basis", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText(/selected route note/i).first()).toBeVisible();
+  await expect(page.getByRole("button", { name: /Open method detail/i })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Open diagnostics/i })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Open proposal/i })).toBeVisible();
+
+  await page.getByRole("button", { name: /Open method detail/i }).click();
+  await expect(page.getByRole("heading", { name: "Why this route is active" })).toBeVisible();
+});
+
 test("guided workbench packages the live result into a client-facing proposal surface", async ({ page }) => {
   test.slow();
   await openFloorGuidedFlow(page);
@@ -274,6 +290,9 @@ test("guided workbench packages the live result into a client-facing proposal su
   await expect(page.getByText("MAC-2026-014").first()).toBeVisible();
   await expect(page.getByText("Rev 01").first()).toBeVisible();
   await expect(page.getByText("Executive summary", { exact: true })).toBeVisible();
+  await expect(page.getByText("Issue dossier", { exact: true })).toBeVisible();
+  await expect(page.getByText("Validation corridor package", { exact: true })).toBeVisible();
+  await expect(page.getByText("Solver rationale package", { exact: true })).toBeVisible();
   await expect(page.getByText("Recommended next steps", { exact: true })).toBeVisible();
   await expect(page.getByText("Assumption register", { exact: true })).toBeVisible();
   await expect(page.getByText("Decision trail", { exact: true })).toBeVisible();
@@ -303,12 +322,36 @@ test("guided workbench packages the live result into a client-facing proposal su
   await printView.waitForLoadState("domcontentloaded");
 
   await expect(printView.getByRole("heading", { name: "Official issue preview" })).toBeVisible();
+  await expect(printView.getByText("Issue dossier", { exact: true })).toBeVisible();
+  await expect(printView.getByRole("heading", { name: "Audit posture at a glance" })).toBeVisible();
+  await expect(printView.getByText("Validation corridor package", { exact: true })).toBeVisible();
   await expect(printView.getByText("Riverside Residences").first()).toBeVisible();
   await expect(printView.getByText("Consultant issue", { exact: true }).first()).toBeVisible();
   await expect(printView.getByTitle("Proposal print preview frame")).toBeVisible();
   await expect(printView.getByRole("button", { name: /Download branded PDF/i })).toBeEnabled();
   await expect(
     printView.frameLocator('iframe[title="Proposal print preview frame"]').getByText("MAC-2026-014").first()
+  ).toBeVisible();
+  await expect(
+    printView.frameLocator('iframe[title="Proposal print preview frame"]').getByText("Validation Corridor Package", { exact: true }).first()
+  ).toBeVisible();
+  await expect(
+    printView.frameLocator('iframe[title="Proposal print preview frame"]').getByText("Solver Rationale Appendix", { exact: true }).first()
+  ).toBeVisible();
+  await expect(
+    printView.frameLocator('iframe[title="Proposal print preview frame"]').getByText("Airborne lane", { exact: true }).first()
+  ).toBeVisible();
+  await expect(
+    printView.frameLocator('iframe[title="Proposal print preview frame"]').getByText("Impact lane", { exact: true }).first()
+  ).toBeVisible();
+  await expect(
+    printView.frameLocator('iframe[title="Proposal print preview frame"]').getByText("Issue Dossier", { exact: true })
+  ).toBeVisible();
+  await expect(
+    printView.getByText("Solver rationale package", { exact: true })
+  ).toBeVisible();
+  await expect(
+    printView.getByText("Audit posture at a glance")
   ).toBeVisible();
   await expect(
     printView.frameLocator('iframe[title="Proposal print preview frame"]').getByText("Output Coverage Register", { exact: true })
@@ -435,6 +478,69 @@ test("guided workbench can save and reapply local company profiles on the propos
   await expect(page.getByText("No local company profiles yet.")).toBeVisible();
 });
 
+test("guided workbench can export and re-import the proposal company profile library", async ({ page }, testInfo) => {
+  test.slow();
+  await openFloorGuidedFlow(page);
+  await loadGuidedSample(page, "Impact Floor");
+
+  await page.getByRole("tab", { name: "Proposal" }).click();
+  await page.getByLabel("Consultant company").fill("Machinity Acoustic Consultants");
+  await page.getByLabel("Template profile").selectOption("developer");
+  await page.getByLabel("Prepared by").fill("O. Tuna");
+  await page.getByLabel("Approver title").fill("Lead Acoustic Consultant");
+  await page.getByLabel("Contact email").fill("offers@machinity-acoustics.com");
+  await page.getByLabel("Contact phone").fill("+90 212 000 00 00");
+  await page.getByLabel("Office address").fill("Maslak District, Istanbul, Turkiye");
+  await page.getByLabel("Wordmark line").fill("Building Acoustics and Vibration Control");
+  await page.getByLabel("Issue code prefix").fill("MIA");
+  await page.getByRole("button", { name: /Tender pricing/i }).click();
+  await page.getByLabel("Company logo").setInputFiles({
+    buffer: Buffer.from(
+      "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='#6f402a'/><path d='M8 22V10h4l4 8 4-8h4v12h-3V15l-4 8h-2l-4-8v7H8Z' fill='#fff7ef'/></svg>"
+    ),
+    mimeType: "image/svg+xml",
+    name: "machinity-logo.svg"
+  });
+  await page.getByLabel("Profile label").fill("Machinity Export Office");
+  await page.getByRole("button", { name: /Save current profile/i }).click();
+  await expect(page.getByText("Machinity Export Office", { exact: true }).first()).toBeVisible();
+
+  const [download] = await Promise.all([
+    page.waitForEvent("download"),
+    page.getByRole("button", { name: /Export library JSON/i }).click()
+  ]);
+  expect(download.suggestedFilename()).toBe("dynecho-proposal-company-profiles.json");
+  const exportedLibraryPath = testInfo.outputPath("dynecho-proposal-company-profiles.json");
+  await download.saveAs(exportedLibraryPath);
+  await expect(page.getByText("Company profile library exported", { exact: true })).toBeVisible();
+
+  await page.getByRole("button", { name: /Delete/i }).first().click({ force: true });
+  await expect(page.getByText("No local company profiles yet.")).toBeVisible();
+
+  await page.getByLabel("Consultant company").fill("Temporary Import Check");
+  await page.getByLabel("Template profile").selectOption("lab_ready");
+  await page.getByLabel("Prepared by").fill("Temporary Operator");
+  await page.getByLabel("Issue purpose").fill("Temporary import purpose");
+  await page.getByLabel("Validity note").fill("Temporary import validity");
+  await page.getByRole("button", { name: /Clear logo/i }).click();
+
+  await page.locator('input[type="file"][accept="application/json,.json"]').setInputFiles(exportedLibraryPath);
+  await expect(page.getByText("Company profile library imported", { exact: true })).toBeVisible();
+  await expect(page.getByText("Machinity Export Office", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("Logo saved", { exact: true }).first()).toBeVisible();
+
+  await page.getByRole("button", { name: /Apply profile/i }).first().click();
+
+  await expect(page.getByLabel("Consultant company")).toHaveValue("Machinity Acoustic Consultants");
+  await expect(page.getByLabel("Template profile")).toHaveValue("developer");
+  await expect(page.getByLabel("Prepared by")).toHaveValue("O. Tuna");
+  await expect(page.getByLabel("Issue code prefix")).toHaveValue("MIA");
+  await expect(page.getByLabel("Issue purpose")).toHaveValue("Tender review and design coordination");
+  await expect(page.getByLabel("Validity note")).toHaveValue("Budget pricing valid for 21 calendar days.");
+  await expect(page.getByText("Active on this issue", { exact: true }).first()).toBeVisible();
+  await expect(page.locator('img[alt*="logo preview"]')).toBeVisible();
+});
+
 test("guided workbench exposes method detail for why the dynamic route and parked outputs look the way they do", async ({ page }) => {
   await openFloorGuidedFlow(page);
   await loadGuidedSample(page, "Impact Floor");
@@ -443,11 +549,33 @@ test("guided workbench exposes method detail for why the dynamic route and parke
   await page.getByRole("tab", { name: "Method detail" }).click();
 
   await expect(page.getByRole("heading", { name: "Why this route is active" })).toBeVisible();
+  await expect(page.getByText("Validation corridor", { exact: true })).toBeVisible();
+  await expect(page.getByText("Active lane notes", { exact: true })).toBeVisible();
+  await expect(page.getByText("Visible stack on this route", { exact: true })).toBeVisible();
+  await expect(page.getByText("Airborne lane", { exact: true })).toBeVisible();
+  await expect(page.getByText("Impact lane", { exact: true })).toBeVisible();
   await expect(page.getByText("What still blocks parked outputs")).toBeVisible();
   await expect(page.getByText("Enter partition width and height").first()).toBeVisible();
   await expect(page.getByText("Enter impact K correction").first()).toBeVisible();
   await expect(page.getByText("Current caution log")).toBeVisible();
   await expect(page.getByText("Reading discipline")).toBeVisible();
+});
+
+test("guided diagnostics keeps provenance and trace surfaces visible without leaving the guided flow", async ({ page }) => {
+  await openFloorGuidedFlow(page);
+  await loadGuidedSample(page, "Impact Floor");
+  await page.getByLabel("Project context").selectOption("building_prediction");
+
+  await page.getByRole("tab", { name: "Diagnostics" }).click();
+
+  await expect(page.getByRole("heading", { name: "Provenance, confidence, and advanced traces" })).toBeVisible();
+  await expect(page.getByText("Validation corridor package", { exact: true })).toBeVisible();
+  await expect(page.getByText("Decision trail signal", { exact: true })).toBeVisible();
+  await expect(page.getByText("Source posture board", { exact: true })).toBeVisible();
+  await expect(page.getByText("Selected route notes", { exact: true })).toBeVisible();
+  await expect(page.getByText("Validation posture", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("Predictor trace", { exact: true })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Open operator desk/i })).toHaveAttribute("href", "/workbench?view=advanced");
 });
 
 test("guided exact floor presets keep exact-family notes visible without generic screening-only copy", async ({ page }) => {
@@ -663,6 +791,28 @@ test("guided wall flow keeps the wall lane explicit and floor-only controls out 
   await expect(page.getByText("Row 1 starts on Side A.").first()).toBeVisible();
   await expect(page.getByText("Preview row 4 of 4", { exact: true })).toBeVisible();
   await expect(page.getByText("Review warnings", { exact: true }).first()).toBeVisible();
+});
+
+test("guided wall field routes keep airborne corridor language explicit instead of floor-family copy", async ({ page }) => {
+  await openWallGuidedFlow(page);
+  await loadGuidedSample(page, "Wall Study");
+  await page.getByLabel("Project context").selectOption("field_between_rooms");
+
+  const decisionBasis = page.locator("section").filter({
+    has: page.getByRole("heading", { name: "Validation corridor at a glance" })
+  }).first();
+
+  await expect(decisionBasis.getByText("Airborne lane", { exact: true })).toBeVisible();
+  await expect(decisionBasis.getByText("Route posture", { exact: true })).toBeVisible();
+  await expect(decisionBasis.getByText("Solver spread", { exact: true })).toBeVisible();
+  await expect(decisionBasis.getByText("Field route", { exact: true })).toBeVisible();
+  await expect(decisionBasis.getByText("Active family", { exact: true })).toHaveCount(0);
+  await expect(decisionBasis.getByText("Tolerance band", { exact: true })).toHaveCount(0);
+
+  await page.getByRole("button", { name: /Open method detail/i }).click();
+  await expect(page.getByRole("heading", { name: "Why this route is active" })).toBeVisible();
+  await expect(page.getByText("Field route", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("Active family", { exact: true })).toHaveCount(0);
 });
 
 test("workbench remains usable on a narrow viewport", async ({ page }) => {
