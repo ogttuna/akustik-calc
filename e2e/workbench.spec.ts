@@ -247,6 +247,12 @@ test("guided workbench keeps the decision basis rail visible on the main result 
   await expect(page.getByRole("heading", { name: "Validation corridor at a glance" })).toBeVisible();
   await expect(page.getByText("Decision basis", { exact: true }).first()).toBeVisible();
   await expect(page.getByText(/selected route note/i).first()).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Solver-order section on the live result" })).toBeVisible();
+  await expect(page.getByText("Construction snapshot", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("Evidence class", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("Walking side", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("Ceiling side", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("Technical schedule legend", { exact: true }).first()).toBeVisible();
   await expect(page.getByRole("button", { name: /Open method detail/i })).toBeVisible();
   await expect(page.getByRole("button", { name: /Open diagnostics/i })).toBeVisible();
   await expect(page.getByRole("button", { name: /Open proposal/i })).toBeVisible();
@@ -298,7 +304,14 @@ test("guided workbench packages the live result into a client-facing proposal su
   await expect(page.getByText("Decision trail", { exact: true })).toBeVisible();
   await expect(page.getByText("Issue authority", { exact: true })).toBeVisible();
   await expect(page.getByText("Source citations", { exact: true })).toBeVisible();
+  await expect(page.getByText("Construction section", { exact: true })).toBeVisible();
+  await expect(
+    page.getByText(
+      "The official issue now carries a visual construction section alongside the row-by-row schedule so the solver order stays readable without opening the operator desk."
+    )
+  ).toBeVisible();
   await expect(page.getByText("Output coverage register", { exact: true })).toBeVisible();
+  await expect(page.getByText("Evidence class", { exact: true }).first()).toBeVisible();
   await expect(page.getByText("Issue sequence register", { exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: /Reserve next issue no/i })).toBeVisible();
   await expect(page.getByText(/ready · .* parked · .* unsupported/i).first()).toBeVisible();
@@ -325,6 +338,8 @@ test("guided workbench packages the live result into a client-facing proposal su
   await expect(printView.getByText("Issue dossier", { exact: true })).toBeVisible();
   await expect(printView.getByRole("heading", { name: "Audit posture at a glance" })).toBeVisible();
   await expect(printView.getByText("Validation corridor package", { exact: true })).toBeVisible();
+  await expect(printView.getByText("Construction section", { exact: true })).toBeVisible();
+  await expect(printView.getByRole("heading", { name: "Visible layer stack in solver order" })).toBeVisible();
   await expect(printView.getByText("Riverside Residences").first()).toBeVisible();
   await expect(printView.getByText("Consultant issue", { exact: true }).first()).toBeVisible();
   await expect(printView.getByTitle("Proposal print preview frame")).toBeVisible();
@@ -337,6 +352,15 @@ test("guided workbench packages the live result into a client-facing proposal su
   ).toBeVisible();
   await expect(
     printView.frameLocator('iframe[title="Proposal print preview frame"]').getByText("Solver Rationale Appendix", { exact: true }).first()
+  ).toBeVisible();
+  await expect(
+    printView.frameLocator('iframe[title="Proposal print preview frame"]').getByText("Construction Section", { exact: true }).first()
+  ).toBeVisible();
+  await expect(
+    printView.frameLocator('iframe[title="Proposal print preview frame"]').getByText("Walking side", { exact: true }).first()
+  ).toBeVisible();
+  await expect(
+    printView.frameLocator('iframe[title="Proposal print preview frame"]').getByText("Ceiling side", { exact: true }).first()
   ).toBeVisible();
   await expect(
     printView.frameLocator('iframe[title="Proposal print preview frame"]').getByText("Airborne lane", { exact: true }).first()
@@ -355,6 +379,9 @@ test("guided workbench packages the live result into a client-facing proposal su
   ).toBeVisible();
   await expect(
     printView.frameLocator('iframe[title="Proposal print preview frame"]').getByText("Output Coverage Register", { exact: true })
+  ).toBeVisible();
+  await expect(
+    printView.frameLocator('iframe[title="Proposal print preview frame"]').getByText("Evidence class", { exact: true }).first()
   ).toBeVisible();
   await expect(
     printView.frameLocator('iframe[title="Proposal print preview frame"]').getByText("Signature and Issue Authority", { exact: true })
@@ -551,7 +578,10 @@ test("guided workbench exposes method detail for why the dynamic route and parke
   await expect(page.getByRole("heading", { name: "Why this route is active" })).toBeVisible();
   await expect(page.getByText("Validation corridor", { exact: true })).toBeVisible();
   await expect(page.getByText("Active lane notes", { exact: true })).toBeVisible();
-  await expect(page.getByText("Visible stack on this route", { exact: true })).toBeVisible();
+  await expect(page.getByText("Technical section on this route", { exact: true })).toBeVisible();
+  await expect(page.getByText("Walking side", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("Ceiling side", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("Technical schedule legend", { exact: true }).first()).toBeVisible();
   await expect(page.getByText("Airborne lane", { exact: true })).toBeVisible();
   await expect(page.getByText("Impact lane", { exact: true })).toBeVisible();
   await expect(page.getByText("What still blocks parked outputs")).toBeVisible();
@@ -573,6 +603,9 @@ test("guided diagnostics keeps provenance and trace surfaces visible without lea
   await expect(page.getByText("Decision trail signal", { exact: true })).toBeVisible();
   await expect(page.getByText("Source posture board", { exact: true })).toBeVisible();
   await expect(page.getByText("Selected route notes", { exact: true })).toBeVisible();
+  await expect(page.getByText("Visible stack section", { exact: true })).toBeVisible();
+  await expect(page.getByText("Walking side", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("Ceiling side", { exact: true }).first()).toBeVisible();
   await expect(page.getByText("Validation posture", { exact: true }).first()).toBeVisible();
   await expect(page.getByText("Predictor trace", { exact: true })).toBeVisible();
   await expect(page.getByRole("link", { name: /Open operator desk/i })).toHaveAttribute("href", "/workbench?view=advanced");
@@ -813,6 +846,54 @@ test("guided wall field routes keep airborne corridor language explicit instead 
   await expect(page.getByRole("heading", { name: "Why this route is active" })).toBeVisible();
   await expect(page.getByText("Field route", { exact: true }).first()).toBeVisible();
   await expect(page.getByText("Active family", { exact: true })).toHaveCount(0);
+});
+
+test("guided wall proposal surfaces keep Side A to Side B semantics explicit through print preview", async ({ page }) => {
+  await openWallGuidedFlow(page);
+  await loadGuidedSample(page, "Wall Study");
+
+  await page.getByRole("tab", { name: "Proposal" }).click();
+  await expect(page.getByLabel("Subject line")).toHaveAttribute("placeholder", "e.g. Riverside Residences wall acoustic proposal");
+
+  await page.getByLabel("Project name").fill("Atrium Offices");
+  await page.getByLabel("Client name").fill("Machinity Acoustics");
+  await page.getByLabel("Consultant company").fill("Machinity Acoustic Consultants");
+
+  await expect(page.getByText("Construction section", { exact: true })).toBeVisible();
+  await expect(page.getByText("Evidence class", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("Side A", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("Side B", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("Walking side", { exact: true })).toHaveCount(0);
+  await expect(page.getByText("Ceiling side", { exact: true })).toHaveCount(0);
+
+  const printViewPromise = page.waitForEvent("popup");
+  await page.getByRole("button", { name: /Open print view/i }).click();
+  const printView = await printViewPromise;
+  await printView.waitForLoadState("domcontentloaded");
+
+  await expect(printView.getByText("Construction section", { exact: true })).toBeVisible();
+  await expect(printView.getByText("Side A", { exact: true }).first()).toBeVisible();
+  await expect(printView.getByText("Side B", { exact: true }).first()).toBeVisible();
+  await expect(printView.getByText("Walking side", { exact: true })).toHaveCount(0);
+  await expect(printView.getByText("Ceiling side", { exact: true })).toHaveCount(0);
+  await expect(
+    printView.frameLocator('iframe[title="Proposal print preview frame"]').getByText("Construction Section", { exact: true }).first()
+  ).toBeVisible();
+  await expect(
+    printView.frameLocator('iframe[title="Proposal print preview frame"]').getByText("Side A", { exact: true }).first()
+  ).toBeVisible();
+  await expect(
+    printView.frameLocator('iframe[title="Proposal print preview frame"]').getByText("Evidence class", { exact: true }).first()
+  ).toBeVisible();
+  await expect(
+    printView.frameLocator('iframe[title="Proposal print preview frame"]').getByText("Side B", { exact: true }).first()
+  ).toBeVisible();
+  await expect(
+    printView.frameLocator('iframe[title="Proposal print preview frame"]').getByText("Walking side", { exact: true })
+  ).toHaveCount(0);
+  await expect(
+    printView.frameLocator('iframe[title="Proposal print preview frame"]').getByText("Ceiling side", { exact: true })
+  ).toHaveCount(0);
 });
 
 test("workbench remains usable on a narrow viewport", async ({ page }) => {

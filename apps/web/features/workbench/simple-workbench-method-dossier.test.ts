@@ -36,12 +36,18 @@ describe("simple workbench method dossier", () => {
         {
           detail: "Weighted airborne element rating from the active airborne lane.",
           label: "Rw",
+          postureDetail: "The active floor lane is a benchmark-backed estimate.",
+          postureLabel: "Benchmark-backed estimate",
+          postureTone: "accent",
           status: "live",
           value: "61 dB"
         },
         {
           detail: "Weighted impact metric from the active impact lane.",
           label: "Ln,w",
+          postureDetail: "The active floor lane is a benchmark-backed estimate.",
+          postureLabel: "Benchmark-backed estimate",
+          postureTone: "accent",
           status: "live",
           value: "49 dB"
         },
@@ -49,12 +55,18 @@ describe("simple workbench method dossier", () => {
           detail: "Standardized airborne output still needs receiving-room volume.",
           label: "DnT,w",
           nextStep: "Enter airborne room volume",
+          postureDetail: "The field route is recognized, but it still needs project-specific field inputs.",
+          postureLabel: "Awaiting field input",
+          postureTone: "warning",
           status: "needs_input",
           value: "Not ready"
         },
         {
           detail: "The current lane cannot defend this companion on the active topology.",
           label: "LnT,A",
+          postureDetail: "The active topology does not expose a defensible solver lane for this metric.",
+          postureLabel: "Unsupported on route",
+          postureTone: "neutral",
           status: "unsupported",
           value: "Not ready"
         }

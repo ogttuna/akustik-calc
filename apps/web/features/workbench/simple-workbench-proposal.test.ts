@@ -76,6 +76,10 @@ const BASE_DOCUMENT = {
     {
       detail: "Weighted airborne element rating from the active airborne calculator.",
       label: "Rw",
+      postureDetail:
+        "The active floor lane is a scoped estimate. It is benchmark-guarded, but it still needs explicit source citation or tolerance notes before it is presented as a final acoustic claim.",
+      postureLabel: "Benchmark-backed estimate",
+      postureTone: "accent",
       status: "live",
       value: "61 dB"
     },
@@ -83,12 +87,20 @@ const BASE_DOCUMENT = {
       detail: "Need partition width and height before the room-standardized field lane can defend this output.",
       label: "DnT,w",
       nextStep: "Enter partition width and height",
+      postureDetail:
+        "The field route is recognized, but it still needs geometry, room-volume, K, or imported field evidence before this metric can be defended.",
+      postureLabel: "Awaiting field input",
+      postureTone: "warning",
       status: "needs_input",
       value: "Not ready"
     },
     {
       detail: "The current solver lane cannot defend this metric on the active topology.",
       label: "LnT,A",
+      postureDetail:
+        "The active topology does not expose a defensible solver lane for this metric. Keep it visible, but frame it as out of scope on the current route.",
+      postureLabel: "Unsupported on route",
+      postureTone: "neutral",
       status: "unsupported",
       value: "Not ready"
     }
@@ -275,6 +287,8 @@ describe("simple workbench proposal helpers", () => {
     expect(text).toContain(
       "Impact lane: Published family estimate · reinforced concrete | Estimate using resilient floating floor basis. Heavy floating floor. Standardized room volume."
     );
+    expect(text).toContain("Construction section");
+    expect(text).toContain("Walking side -> Ceiling side | 184 mm total");
     expect(text).toContain("Decision trail");
     expect(text).toContain("Headline: Scoped estimate on the heavy floating floor corridor is the current floor-side posture.");
     expect(text).toContain("Assumption register");
@@ -285,11 +299,15 @@ describe("simple workbench proposal helpers", () => {
     expect(text).toContain("Exact floor family: Knauf CT30 1C");
     expect(text).toContain("https://example.com/source");
     expect(text).toContain("Output coverage register");
-    expect(text).toContain("Rw: Live now | 61 dB | Weighted airborne element rating from the active airborne calculator.");
     expect(text).toContain(
-      "DnT,w: Needs input | Not ready | Need partition width and height before the room-standardized field lane can defend this output. | Next action: Enter partition width and height"
+      "Rw: Live now | Benchmark-backed estimate | 61 dB | Weighted airborne element rating from the active airborne calculator. | Evidence class: The active floor lane is a scoped estimate. It is benchmark-guarded, but it still needs explicit source citation or tolerance notes before it is presented as a final acoustic claim."
     );
-    expect(text).toContain("LnT,A: Unsupported on lane | Not ready | The current solver lane cannot defend this metric on the active topology.");
+    expect(text).toContain(
+      "DnT,w: Needs input | Awaiting field input | Not ready | Need partition width and height before the room-standardized field lane can defend this output. | Next action: Enter partition width and height | Evidence class: The field route is recognized, but it still needs geometry, room-volume, K, or imported field evidence before this metric can be defended."
+    );
+    expect(text).toContain(
+      "LnT,A: Unsupported on lane | Unsupported on route | Not ready | The current solver lane cannot defend this metric on the active topology. | Evidence class: The active topology does not expose a defensible solver lane for this metric. Keep it visible, but frame it as out of scope on the current route."
+    );
     expect(text).toContain("Heavy floating floor: Published family estimate is active through reinforced concrete.");
     expect(text).toContain("Issue authority");
     expect(text).toContain(
@@ -336,6 +354,12 @@ describe("simple workbench proposal helpers", () => {
     expect(html).toContain("Packaged method narrative");
     expect(html).toContain("Airborne lane");
     expect(html).toContain("Impact lane");
+    expect(html).toContain("Construction Section");
+    expect(html).toContain("Visible layer stack in solver order");
+    expect(html).toContain("Walking side");
+    expect(html).toContain("Ceiling side");
+    expect(html).toContain("Technical schedule legend");
+    expect(html).toContain("construction-grid");
     expect(html).toContain("Audit posture");
     expect(html).toContain("Coverage posture");
     expect(html).toContain("Audit package");
@@ -368,6 +392,9 @@ describe("simple workbench proposal helpers", () => {
     expect(html).toContain("Citation Appendix");
     expect(html).toContain("Source Citation Appendix");
     expect(html).toContain("Output Coverage Register");
+    expect(html).toContain("Evidence class");
+    expect(html).toContain("Benchmark-backed estimate");
+    expect(html).toContain("Awaiting field input");
     expect(html).toContain("Needs input");
     expect(html).toContain("Unsupported on lane");
     expect(html).toContain("Enter partition width and height");

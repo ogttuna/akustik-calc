@@ -54,12 +54,18 @@ const DOCUMENT: SimpleWorkbenchProposalDocument = {
     {
       detail: "Weighted airborne element rating from the active airborne calculator.",
       label: "Rw",
+      postureDetail: "The active floor lane is a benchmark-backed estimate.",
+      postureLabel: "Benchmark-backed estimate",
+      postureTone: "accent",
       status: "live",
       value: "61 dB"
     },
     {
       detail: "Weighted impact rating from the active impact calculator.",
       label: "Ln,w",
+      postureDetail: "DynEcho is intentionally packaging this as a one-sided support value.",
+      postureLabel: "Conservative bound",
+      postureTone: "warning",
       status: "bound",
       value: "49 dB"
     },
@@ -67,12 +73,18 @@ const DOCUMENT: SimpleWorkbenchProposalDocument = {
       detail: "Need receiving-room volume before the room-standardized field lane can defend this output.",
       label: "DnT,w",
       nextStep: "Enter receiving-room volume",
+      postureDetail: "The field route is recognized, but it still needs project-specific field inputs.",
+      postureLabel: "Awaiting field input",
+      postureTone: "warning",
       status: "needs_input",
       value: "Not ready"
     },
     {
       detail: "The current lane cannot defend this metric.",
       label: "LnT,A",
+      postureDetail: "The active topology does not expose a defensible solver lane for this metric.",
+      postureLabel: "Unsupported on route",
+      postureTone: "neutral",
       status: "unsupported",
       value: "Not ready"
     }
