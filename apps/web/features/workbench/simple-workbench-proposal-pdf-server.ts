@@ -1,3 +1,5 @@
+import { existsSync } from "node:fs";
+
 import { chromium } from "playwright";
 
 import {
@@ -11,6 +13,22 @@ const PROPOSAL_PDF_VIEWPORT = {
   width: 1240
 } as const;
 
+function resolveChromiumExecutablePath() {
+  if (process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH) {
+    return process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH;
+  }
+
+  if (existsSync("/usr/bin/chromium-browser")) {
+    return "/usr/bin/chromium-browser";
+  }
+
+  if (existsSync("/usr/bin/chromium")) {
+    return "/usr/bin/chromium";
+  }
+
+  return undefined;
+}
+
 export async function renderSimpleWorkbenchProposalPdf(
   proposalDocument: SimpleWorkbenchProposalDocument,
   options?: {
@@ -18,8 +36,10 @@ export async function renderSimpleWorkbenchProposalPdf(
   }
 ): Promise<Buffer> {
   const style = options?.style === "simple" ? "simple" : "branded";
+  const executablePath = resolveChromiumExecutablePath();
   const browser = await chromium.launch({
     args: ["--disable-dev-shm-usage", "--no-sandbox"],
+    ...(executablePath ? { executablePath } : {}),
     headless: true
   });
 

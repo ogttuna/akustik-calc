@@ -32,8 +32,16 @@ ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=3010
 ENV HOSTNAME=0.0.0.0
+ENV PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium-browser
 
 WORKDIR /app
+
+RUN apk add --no-cache \
+  chromium \
+  freetype \
+  harfbuzz \
+  nss \
+  ttf-freefont
 
 COPY --from=build /app/apps/web/.next/standalone ./
 COPY --from=build /app/apps/web/.next/static ./apps/web/.next/static
