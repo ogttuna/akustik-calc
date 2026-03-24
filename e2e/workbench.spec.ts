@@ -62,17 +62,43 @@ async function loadGuidedSample(page: Page, label: string) {
   await page.waitForTimeout(100);
 }
 
+async function openGuidedWorkspacePanel(page: Page, label: "Assembly" | "Details" | "Results" | "Setup") {
+  const button = page.getByRole("button", { name: label, exact: true }).first();
+  if ((await button.getAttribute("aria-pressed")) !== "true") {
+    await button.click();
+  }
+}
+
+async function openGuidedAssemblyTool(page: Page, tool: "composer" | "library" | "preview") {
+  const labels =
+    tool === "composer"
+      ? { hide: "Hide add layer", open: "Add layer form" }
+      : tool === "library"
+        ? { hide: "Hide library", open: "Custom materials" }
+        : { hide: "Hide preview", open: "Section preview" };
+
+  const hideButton = page.getByRole("button", { name: labels.hide, exact: true }).first();
+  if (await hideButton.isVisible()) {
+    return;
+  }
+
+  await page.getByRole("button", { name: labels.open, exact: true }).first().click();
+}
+
 async function openGuidedReviewTab(page: Page, label: "Proposal" | "Method detail" | "Diagnostics") {
+  await openGuidedWorkspacePanel(page, "Results");
   const reviewButton = page.getByRole("button", { name: label, exact: true }).first();
   if (await reviewButton.isVisible()) {
     await reviewButton.click();
     return;
   }
 
+  await openGuidedWorkspacePanel(page, "Details");
   await page.getByRole("tab", { name: label, exact: true }).click();
 }
 
 async function readPrimaryGuidedMetric(page: Page, label: "Primary floor read" | "Primary wall read") {
+  await openGuidedWorkspacePanel(page, "Results");
   const card = page.locator("article").filter({
     has: page.getByText(label, { exact: true })
   }).first();
@@ -81,6 +107,7 @@ async function readPrimaryGuidedMetric(page: Page, label: "Primary floor read" |
 }
 
 async function ensureGuidedToolsOpen(page: Page, actionName: string) {
+  await openGuidedWorkspacePanel(page, "Setup");
   const actionButton = page.getByRole("button", { name: actionName });
   if (await actionButton.isVisible()) {
     return;
@@ -109,6 +136,20 @@ function visibleGuidedSectionPreview(page: Page) {
 
 function visibleTestId(page: Page, testId: string) {
   return page.locator(`[data-testid="${testId}"]:visible`).first();
+}
+
+async function ensureGuidedRowExpanded(page: Page, index: number) {
+  const row = visibleTestId(page, `editor-row-${index}`);
+  if ((await row.getByLabel("Material").count()) > 0) {
+    return row;
+  }
+
+  const toggle = row.getByRole("button", { name: "Edit row", exact: true });
+  await toggle.scrollIntoViewIfNeeded();
+  await toggle.click({ force: true });
+  await expect(row.getByRole("button", { name: "Hide details", exact: true })).toBeVisible();
+  await expect(row.getByLabel("Material")).toBeVisible();
+  return row;
 }
 
 function escapeRegExp(value: string) {
@@ -153,30 +194,32 @@ test("workbench supports preset switching and inline layer editing", async ({ pa
 
   await expect(page.getByRole("heading", { name: "Floor calculator" })).toBeVisible();
   await expect(page.getByRole("button", { name: /^Remove$/ })).toHaveCount(4);
+  await openGuidedAssemblyTool(page, "preview");
   await expect(page.getByText("Section preview", { exact: true })).toBeVisible();
-  await expect(page.getByText("Edit layers in place.", { exact: false }).first()).toBeVisible();
+  await openGuidedAssemblyTool(page, "composer");
+  await expect(page.getByText("Edit one row at a time and open only the side panel you need.", { exact: false }).first()).toBeVisible();
   await expect(page.getByText("Add the next layer here", { exact: true })).toBeVisible();
+
+  const firstRow = await ensureGuidedRowExpanded(page, 1);
+  await selectMaterialFromPicker(firstRow, "Material", "Carpet + Foam Underlay", "carpet");
+  await expect(firstRow).toContainText("Carpet + Foam Underlay");
 
   await page.getByRole("button", { name: /^Add layer$/ }).click();
 
   await expect(page.getByRole("button", { name: /^Remove$/ })).toHaveCount(5);
   await expect(page.getByText("5 rows", { exact: true }).first()).toBeVisible();
-  const addedRow = visibleTestId(page, "editor-row-5");
-  await expect(addedRow.getByLabel("Material")).toBeVisible();
-  await expect(addedRow.getByLabel("Thickness")).toHaveValue("4");
-
-  await selectMaterialFromPicker(addedRow, "Material", "Carpet + Foam Underlay", "carpet");
-  await expect(addedRow).toContainText("Carpet + Foam Underlay");
+  await expect(visibleTestId(page, "editor-row-5")).toContainText("4 mm");
+  await expect(visibleTestId(page, "editor-row-5")).toContainText("Floor covering");
 });
 
 test("guided floor flow exposes floor roles and marks only the relevant context inputs", async ({ page }) => {
   await openFloorGuidedFlow(page);
   await loadGuidedSample(page, "Floor Study");
 
-  await expect(page.getByLabel("Floor role")).toHaveCount(4);
-  await expect(page.getByLabel("Floor role").first()).toHaveValue("floor_covering");
+  await expect((await ensureGuidedRowExpanded(page, 1)).getByLabel("Floor role")).toHaveValue("floor_covering");
 
   await selectGuidedProjectContext(page, "field_between_rooms");
+  await openGuidedWorkspacePanel(page, "Setup");
 
   await expect(page.getByText("Required now").first()).toBeVisible();
   await expect(page.getByText("Optional now").first()).toBeVisible();
@@ -198,12 +241,13 @@ test("guided floor flow surfaces material-aware thickness guidance inline", asyn
   await openFloorGuidedFlow(page);
   await loadGuidedSample(page, "Impact Floor");
 
-  await expect(page.getByText("Typical band 25 to 90 mm for Mineral Screed in the floating screed role.").first()).toBeVisible();
+  const screedRow = await ensureGuidedRowExpanded(page, 2);
+  await expect(screedRow.getByText("Typical band 25 to 90 mm for Mineral Screed in the floating screed role.").first()).toBeVisible();
 
-  await page.getByLabel("Thickness").nth(1).fill("8");
+  await screedRow.getByLabel("Thickness").fill("8");
 
   await expect(
-    page.getByText(
+    screedRow.getByText(
       "Layer 2 thickness 8 mm is outside the guided sanity band of 25 to 90 mm for Mineral Screed in the floating screed role. Check units, role assignment, or split the build-up into separate layers if needed."
     ).first()
   ).toBeVisible();
@@ -213,7 +257,7 @@ test("guided floor rows let density overrides change the live layer mass without
   await openFloorGuidedFlow(page);
   await loadGuidedSample(page, "Impact Floor");
 
-  const screedRow = visibleTestId(page, "editor-row-2");
+  const screedRow = await ensureGuidedRowExpanded(page, 2);
   await screedRow.getByLabel("Density").fill("1800");
 
   await expect(screedRow).toContainText("1,800 kg/m³ (manual)");
@@ -225,6 +269,7 @@ test("guided workbench can create a local custom material and use it as a new la
   await openFloorGuidedFlow(page);
   await loadGuidedSample(page, "Impact Floor");
 
+  await openGuidedAssemblyTool(page, "library");
   await page.getByRole("button", { name: "Create custom material", exact: true }).click();
   const customMaterialPanel = page.getByRole("button", { name: "Close custom material", exact: true }).locator("xpath=ancestor::section[1]");
   const customMaterialPreview = visibleTestId(page, "custom-material-preview");
@@ -240,11 +285,13 @@ test("guided workbench can create a local custom material and use it as a new la
   await expect(customMaterialPreview).toContainText("720 kg/m³");
   await customMaterialPanel.getByRole("button", { name: "Save material", exact: true }).click();
 
+  await openGuidedAssemblyTool(page, "library");
   await expect(page.getByRole("button", { name: "Create custom material", exact: true })).toBeVisible();
   const savedMaterialCard = visibleTestId(page, "custom-material-card-custom_cork_finish_qa");
   await expect(savedMaterialCard).toContainText("Cork Finish QA");
   await expect(savedMaterialCard).toContainText("Finish");
   await expect(savedMaterialCard).toContainText("720 kg/m³");
+  await openGuidedAssemblyTool(page, "composer");
   await expect(page.getByLabel("New layer material")).toContainText("Cork Finish QA");
   await expect(page.getByLabel("New layer thickness")).toHaveValue("12.5");
   await expect(page.getByLabel("New layer role")).toHaveValue("floor_covering");
@@ -253,6 +300,7 @@ test("guided workbench can create a local custom material and use it as a new la
 
   await expect(page.getByText("5 rows", { exact: true }).first()).toBeVisible();
   await expect(visibleTestId(page, "editor-row-5")).toContainText("Cork Finish QA");
+  await openGuidedWorkspacePanel(page, "Results");
   await expect(page.getByText("Primary floor read", { exact: true })).toBeVisible();
 });
 
@@ -260,12 +308,14 @@ test("guided workbench exposes the expanded legacy catalog in both floor and wal
   await openFloorGuidedFlow(page);
   await loadGuidedSample(page, "Impact Floor");
 
+  await openGuidedAssemblyTool(page, "composer");
   await selectMaterialFromPicker(page, "New layer material", "OSB", "osb");
   await expect(page.getByLabel("New layer material")).toContainText("OSB");
   await page.getByRole("button", { name: /^Add layer$/ }).click();
   await expect(page.locator("[data-row-id]:visible").last()).toContainText("OSB");
 
   await openWallGuidedFlow(page);
+  await openGuidedAssemblyTool(page, "composer");
   await selectMaterialFromPicker(page, "New layer material", "Fire Board", "fire board");
   await expect(page.getByLabel("New layer material")).toContainText("Fire Board");
   await page.getByRole("button", { name: /^Add layer$/ }).click();
@@ -354,83 +404,46 @@ test("guided workbench stays usable with a 10-layer stack", async ({ page }) => 
   await expect(page.getByRole("heading", { name: "Results" })).toBeVisible();
 });
 
-test("guided floor layout keeps editor controls and result summaries inside their cards on desktop widths", async ({
+test("guided floor layout keeps a single desktop workspace visible and within roughly one-and-a-half screens", async ({
   page
 }) => {
-  await page.setViewportSize({ width: 1366, height: 1600 });
+  await page.setViewportSize({ width: 1366, height: 900 });
   await openFloorGuidedFlow(page);
-  await page.getByRole("button", { name: /^Add layer$/ }).click();
+  await loadGuidedSample(page, "Floor Study");
 
-  const rowLayout = await visibleTestId(page, "editor-row-1").evaluate((node) => {
-    const fieldGrid = node.querySelector(":scope > div:nth-of-type(2)");
-    const fields = Array.from(fieldGrid?.children ?? []).map((field) => {
-      const rect = field.getBoundingClientRect();
-      return {
-        bottom: rect.bottom,
-        clientHeight: (field as HTMLElement).clientHeight,
-        clientWidth: (field as HTMLElement).clientWidth,
-        left: rect.left,
-        right: rect.right,
-        scrollHeight: (field as HTMLElement).scrollHeight,
-        scrollWidth: (field as HTMLElement).scrollWidth,
-        top: rect.top
-      };
-    });
+  const assemblyMetrics = await page.evaluate(() => ({
+    scrollHeight: document.documentElement.scrollHeight,
+    viewportHeight: window.innerHeight,
+    visibleHeadings: Array.from(document.querySelectorAll("h2"))
+      .filter((node) => {
+        const style = window.getComputedStyle(node);
+        const rect = node.getBoundingClientRect();
+        return style.display !== "none" && style.visibility !== "hidden" && rect.width > 0 && rect.height > 0;
+      })
+      .map((node) => node.textContent?.trim())
+      .filter(Boolean)
+  }));
 
-    return {
-      fieldCount: fields.length,
-      fields,
-      gridTemplateColumns: fieldGrid ? getComputedStyle(fieldGrid).gridTemplateColumns : "",
-      uniqueFieldRows: new Set(fields.map((field) => Math.round(field.top))).size
-    };
-  });
+  expect(assemblyMetrics.visibleHeadings).toEqual(["Assembly"]);
+  expect(assemblyMetrics.scrollHeight).toBeLessThanOrEqual(Math.round(assemblyMetrics.viewportHeight * 1.4));
 
-  expect(rowLayout.fieldCount).toBe(5);
-  expect(rowLayout.gridTemplateColumns.split(" ").filter(Boolean)).toHaveLength(2);
-  expect(rowLayout.uniqueFieldRows).toBe(3);
+  await openGuidedWorkspacePanel(page, "Results");
 
-  for (const field of rowLayout.fields) {
-    expect(field.clientWidth).toBeGreaterThan(180);
-    expect(field.scrollWidth).toBeLessThanOrEqual(field.clientWidth + 1);
-    expect(field.scrollHeight).toBeLessThanOrEqual(field.clientHeight + 1);
-  }
+  const resultsMetrics = await page.evaluate(() => ({
+    scrollHeight: document.documentElement.scrollHeight,
+    viewportHeight: window.innerHeight,
+    visibleHeadings: Array.from(document.querySelectorAll("h2"))
+      .filter((node) => {
+        const style = window.getComputedStyle(node);
+        const rect = node.getBoundingClientRect();
+        return style.display !== "none" && style.visibility !== "hidden" && rect.width > 0 && rect.height > 0;
+      })
+      .map((node) => node.textContent?.trim())
+      .filter(Boolean)
+  }));
 
-  for (let index = 0; index < rowLayout.fields.length; index += 1) {
-    for (let compareIndex = index + 1; compareIndex < rowLayout.fields.length; compareIndex += 1) {
-      expect(rectsOverlap(rowLayout.fields[index], rowLayout.fields[compareIndex])).toBe(false);
-    }
-  }
-
-  const resultLayout = await page.locator(".result-hero").first().evaluate((node) => {
-    const summaryGrid = Array.from(node.querySelectorAll("div")).find((candidate) => {
-      const childCount = candidate.children.length;
-      return (
-        childCount === 4 &&
-        ["Evidence class", "Stack basis", "Read posture", "Lane"].every((label) =>
-          candidate.textContent?.includes(label)
-        )
-      );
-    });
-    const cards = Array.from(summaryGrid?.children ?? []).map((card) => ({
-      clientHeight: card.clientHeight,
-      clientWidth: card.clientWidth,
-      scrollHeight: card.scrollHeight,
-      scrollWidth: card.scrollWidth
-    }));
-
-    return {
-      cards,
-      gridTemplateColumns: summaryGrid ? getComputedStyle(summaryGrid).gridTemplateColumns : ""
-    };
-  });
-
-  expect(resultLayout.cards).toHaveLength(4);
-  expect(resultLayout.gridTemplateColumns.split(" ").filter(Boolean)).toHaveLength(2);
-
-  for (const card of resultLayout.cards) {
-    expect(card.scrollWidth).toBeLessThanOrEqual(card.clientWidth + 1);
-    expect(card.scrollHeight).toBeLessThanOrEqual(card.clientHeight + 1);
-  }
+  expect(resultsMetrics.visibleHeadings).toEqual(["Results"]);
+  expect(resultsMetrics.scrollHeight).toBeLessThanOrEqual(Math.round(resultsMetrics.viewportHeight * 1.6));
 });
 
 test("guided workbench keeps the live result stable when an incomplete extra row is left in the stack", async ({ page }) => {
@@ -482,13 +495,15 @@ test("guided workbench keeps the decision basis rail visible on the main result 
   await openFloorGuidedFlow(page);
   await loadGuidedSample(page, "Impact Floor");
   await selectGuidedProjectContext(page, "building_prediction");
+  await openGuidedWorkspacePanel(page, "Results");
 
   await expect(page.getByRole("heading", { name: "Results" })).toBeVisible();
-  await expect(page.getByText("Details when needed", { exact: true })).toBeVisible();
-  await expect(page.getByText("Evidence class", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("Open detail deck", { exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "Method detail", exact: true }).first()).toBeVisible();
   await expect(page.getByRole("button", { name: "Diagnostics", exact: true }).first()).toBeVisible();
   await expect(page.getByRole("button", { name: "Proposal", exact: true }).first()).toBeVisible();
+  await page.getByRole("button", { name: "Proposal", exact: true }).first().click();
+  await expect(visibleProposalPanel(page).getByText("Evidence class", { exact: true }).first()).toBeVisible();
 
   await openGuidedReviewTab(page, "Method detail");
   await expect(page.getByRole("heading", { name: "Validation corridor at a glance" })).toBeVisible();
@@ -546,7 +561,7 @@ test("guided workbench packages the live result into a client-facing proposal su
     )
   ).toBeVisible();
   await expect(page.getByText("Output coverage register", { exact: true })).toBeVisible();
-  await expect(page.getByText("Evidence class", { exact: true }).first()).toBeVisible();
+  await expect(visibleProposalPanel(page).getByText("Evidence class", { exact: true }).first()).toBeVisible();
   await expect(page.getByText("Issue sequence register", { exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: /Reserve next issue no/i })).toBeVisible();
   await expect(page.getByText(/ready · .* parked · .* unsupported/i).first()).toBeVisible();
@@ -838,6 +853,7 @@ test("guided workbench exposes method detail for why the dynamic route and parke
   await selectGuidedProjectContext(page, "building_prediction");
 
   await openGuidedReviewTab(page, "Method detail");
+  const methodPanel = page.getByRole("tabpanel", { name: "Method detail" }).first();
 
   await expect(page.getByRole("heading", { name: "Why this route is active" })).toBeVisible();
   await expect(page.getByText("Route audit steps", { exact: true })).toBeVisible();
@@ -850,8 +866,10 @@ test("guided workbench exposes method detail for why the dynamic route and parke
   await expect(page.getByText("Airborne lane", { exact: true })).toBeVisible();
   await expect(page.getByText("Impact lane", { exact: true })).toBeVisible();
   await expect(page.getByText("Open blockers before parked outputs go live")).toBeVisible();
-  await expect(page.getByText("Enter partition width and height").first()).toBeVisible();
-  await expect(page.getByText("Enter impact K correction").first()).toBeVisible();
+  await expect(methodPanel.getByText("Enter partition width and height").first()).toBeVisible();
+  await expect(methodPanel.getByText("Enter impact K correction").first()).toBeVisible();
+  await expect(page.getByText("Evidence sources in force", { exact: true })).toBeVisible();
+  await expect(page.getByText("Assumptions in force", { exact: true })).toBeVisible();
   await expect(page.getByText("Current caution log")).toBeVisible();
   await expect(page.getByText("Reading rule")).toBeVisible();
   await expect(page.getByText("Open notes").first()).toBeVisible();
@@ -880,18 +898,17 @@ test("guided diagnostics keeps provenance and trace surfaces visible without lea
 test("guided exact floor presets keep exact-family notes visible without generic screening-only copy", async ({ page }) => {
   await openFloorGuidedFlow(page);
   await page.getByLabel("Example stack").selectOption("dataholz_clt_dry_exact");
+  await openGuidedWorkspacePanel(page, "Setup");
   const routeSummary = visibleGuidedRouteSummary(page);
 
   await expect(routeSummary).toContainText("Validation");
   await expect(routeSummary).toContainText("Exact evidence");
   await expect(routeSummary).toContainText("Exact floor family");
   await expect(routeSummary).toContainText(/anchored by exact or official source evidence/i);
-  await expect(
-    page.getByText(
-      "Primary floor-family Rw and Ln,w companions come from the curated exact match. STC, C, and Ctr stay on the local airborne curve when shown, so read them as curve-derived companions."
-    ).first()
-  ).toBeVisible();
-  await expect(page.getByText(/^Curated exact floor-system match active:/).first()).toBeVisible();
+  await expect(routeSummary).toContainText(
+    "Primary floor-family Rw and Ln,w companions come from the curated exact match. STC, C, and Ctr stay on the local airborne curve when shown, so read them as curve-derived companions."
+  );
+  await expect(routeSummary).toContainText(/Curated exact floor-system match active:/);
   await expect(
     page.getByText("Screening estimate only. This result is coming from the local calibrated seed lane.", { exact: true })
   ).toHaveCount(0);
@@ -1169,8 +1186,11 @@ test("workbench remains usable on a narrow viewport", async ({ page }) => {
 test("workbench keeps the guided flow focused while still exposing the advanced desk", async ({ page }) => {
   await gotoSimpleWorkbench(page);
 
-  await expect(page.getByRole("heading", { name: "Route" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Assembly" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Route" })).toHaveCount(0);
+  await expect(page.getByRole("heading", { name: "Results" })).toHaveCount(0);
+
+  await openGuidedWorkspacePanel(page, "Results");
   await expect(page.getByRole("heading", { name: "Results" })).toBeVisible();
   await expect(page.getByText("Primary wall read")).toBeVisible();
   await expect(page.getByText("Supporting metrics")).toBeVisible();

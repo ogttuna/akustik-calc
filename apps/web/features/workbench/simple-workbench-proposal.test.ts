@@ -427,20 +427,27 @@ describe("simple workbench proposal helpers", () => {
   it("builds a lightweight summary html for the simple pdf path", () => {
     const html = buildSimpleWorkbenchProposalSimpleHtml(BASE_DOCUMENT);
 
-    expect(html).toContain("Calculation Summary");
-    expect(html).toContain("Simple PDF");
-    expect(html).toContain("Project & Issue");
-    expect(html).toContain("Deliverable Basis");
-    expect(html).toContain("Live Outputs");
-    expect(html).toContain("Output Coverage");
-    expect(html).toContain("Layer Schedule");
-    expect(html).toContain("Method & References");
-    expect(html).toContain("Warnings");
+    expect(html).toContain("Acoustic Summary Sheet");
+    expect(html).toContain("Short-form acoustic issue");
+    expect(html).toContain("Layer illustration");
+    expect(html).toContain("Measured / predicted indices");
+    expect(html).toContain("Visible layer schedule");
+    expect(html).toContain("Output coverage register");
+    expect(html).toContain("Reference basis");
+    expect(html).toContain("Consultant note and assumption register");
+    expect(html).toContain("Warnings and issue guardrails");
+    expect(html).toContain("ISO 717-1");
+    expect(html).toContain("ISO 717-2");
+    expect(html).toContain("ISO 16283-1");
+    expect(html).toContain("ISO 12354-2");
+    expect(html).toContain("Prediction route posture");
     expect(html).toContain("Vinyl Flooring");
+    expect(html).toContain("Walking side");
+    expect(html).toContain("Ceiling side");
     expect(html).toContain("Rw");
     expect(html).toContain("Ln,w");
     expect(html).toContain("Riverside Development Team");
     expect(html).toContain("Published family estimate is active through reinforced concrete.");
-    expect(html).toContain("Prepared from the DynEcho dynamic calculator.");
+    expect(html).toContain("Prepared from the DynEcho dynamic calculator as a short-form issue sheet.");
   });
 });

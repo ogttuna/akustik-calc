@@ -11,6 +11,8 @@ import {
 } from "./simple-workbench-method-dossier";
 import { buildSimpleWorkbenchCorridorDossier } from "./simple-workbench-corridor-dossier";
 import { SimpleWorkbenchProposalConstructionFigure } from "./simple-workbench-proposal-construction-figure";
+import type { SimpleWorkbenchProposalBriefItem } from "./simple-workbench-proposal-brief";
+import type { SimpleWorkbenchProposalCitation } from "./simple-workbench-evidence";
 import type { StudyMode } from "./preset-definitions";
 import type {
   SimpleWorkbenchProposalCoverageItem,
@@ -30,8 +32,10 @@ type SimpleWorkbenchMethodUnlock = {
 };
 
 type SimpleWorkbenchMethodPanelProps = {
+  assumptionItems: readonly SimpleWorkbenchProposalBriefItem[];
   branchDetail: string;
   branchLabel: string;
+  citations: readonly SimpleWorkbenchProposalCitation[];
   coverageItems: readonly SimpleWorkbenchProposalCoverageItem[];
   contextLabel: string;
   layers: readonly SimpleWorkbenchProposalLayer[];
@@ -130,9 +134,43 @@ function TraceGroupCard(props: SimpleWorkbenchMethodTraceGroup & { index: number
   );
 }
 
+function MethodCitationCard(props: SimpleWorkbenchProposalCitation) {
+  const { detail, href, label, tone } = props;
+
+  return (
+    <article className={`rounded-[1rem] border px-4 py-4 ${getToneShellClass(tone)}`}>
+      <div className="text-[0.72rem] font-semibold text-[color:var(--ink)]">{label}</div>
+      <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">{detail}</p>
+      {href ? (
+        <a
+          className="focus-ring mt-3 inline-flex items-center gap-2 rounded-full border hairline px-3 py-1.5 text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+          href={href}
+          rel="noreferrer"
+          target="_blank"
+        >
+          Open source
+        </a>
+      ) : null}
+    </article>
+  );
+}
+
+function MethodAssumptionCard(props: SimpleWorkbenchProposalBriefItem) {
+  const { detail, label, tone } = props;
+
+  return (
+    <article className={`rounded-[1rem] border px-4 py-4 ${getToneShellClass(tone)}`}>
+      <div className="text-[0.72rem] font-semibold text-[color:var(--ink)]">{label}</div>
+      <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">{detail}</p>
+    </article>
+  );
+}
+
 export function SimpleWorkbenchMethodPanel({
+  assumptionItems,
   branchDetail,
   branchLabel,
+  citations,
   coverageItems,
   contextLabel,
   layers,
@@ -161,6 +199,7 @@ export function SimpleWorkbenchMethodPanel({
   });
   const corridorDossier = buildSimpleWorkbenchCorridorDossier(result, studyMode);
   const selectedTraceNoteCount = methodDossier.traceGroups.reduce((count, group) => count + group.notes.length, 0);
+  const visibleCitations = citations.slice(0, 4);
 
   return (
     <SurfacePanel className="px-5 py-5">
@@ -325,6 +364,57 @@ export function SimpleWorkbenchMethodPanel({
           </section>
 
           <div className="grid gap-4">
+            <section className="rounded-[1.2rem] border hairline bg-[color:var(--paper)]/74 px-4 py-4">
+              <div className="flex flex-wrap items-center justify-between gap-2 text-sm font-semibold text-[color:var(--ink)]">
+                <div className="inline-flex items-center gap-2">
+                  <ScrollText className="h-4 w-4" />
+                  Evidence sources in force
+                </div>
+                <div className="text-[0.72rem] uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+                  {citations.length} citation{citations.length === 1 ? "" : "s"}
+                </div>
+              </div>
+              <div className="mt-4 grid gap-3">
+                {visibleCitations.length > 0 ? (
+                  visibleCitations.map((citation) => (
+                    <MethodCitationCard
+                      detail={citation.detail}
+                      href={citation.href}
+                      key={`${citation.label}-${citation.href ?? citation.detail}`}
+                      label={citation.label}
+                      tone={citation.tone}
+                    />
+                  ))
+                ) : (
+                  <div className="rounded-[1rem] border border-dashed hairline px-4 py-4 text-sm leading-6 text-[color:var(--ink-soft)]">
+                    No linked source is active yet. Keep the current route framed as a scoped solver read until a cited family, catalog, or imported source is attached.
+                  </div>
+                )}
+              </div>
+              {citations.length > visibleCitations.length ? (
+                <p className="mt-3 text-sm leading-6 text-[color:var(--ink-soft)]">
+                  Diagnostics and proposal surfaces still carry all {citations.length} citation lines.
+                </p>
+              ) : null}
+            </section>
+
+            <section className="rounded-[1.2rem] border hairline bg-[color:var(--paper)]/74 px-4 py-4">
+              <div className="flex flex-wrap items-center justify-between gap-2 text-sm font-semibold text-[color:var(--ink)]">
+                <div className="inline-flex items-center gap-2">
+                  <ListChecks className="h-4 w-4" />
+                  Assumptions in force
+                </div>
+                <div className="text-[0.72rem] uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+                  {assumptionItems.length} line{assumptionItems.length === 1 ? "" : "s"}
+                </div>
+              </div>
+              <div className="mt-4 grid gap-3">
+                {assumptionItems.map((item) => (
+                  <MethodAssumptionCard detail={item.detail} key={`${item.label}-${item.detail}`} label={item.label} tone={item.tone} />
+                ))}
+              </div>
+            </section>
+
             <section className="rounded-[1.2rem] border hairline bg-[color:var(--paper)]/74 px-4 py-4">
               <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
                 <ListChecks className="h-4 w-4" />
