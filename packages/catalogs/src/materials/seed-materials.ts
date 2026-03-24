@@ -12,6 +12,22 @@ const BASE_SEED_MATERIALS: readonly MaterialDefinition[] = [
     tags: ["structural", "baseline", "heavy-base"]
   },
   {
+    id: "lightweight_concrete",
+    name: "Lightweight Concrete",
+    category: "mass",
+    densityKgM3: 1800,
+    notes: "Ported from the Acoustic2 base catalog for lighter mineral slab and wall studies.",
+    tags: ["structural", "concrete", "masonry", "lightweight-mineral"]
+  },
+  {
+    id: "heavy_concrete",
+    name: "Heavy Concrete",
+    category: "mass",
+    densityKgM3: 3000,
+    notes: "Ported from the Acoustic2 base catalog for dense mineral slab studies and heavy support comparisons.",
+    tags: ["structural", "concrete", "masonry", "heavy-base", "dense-mineral"]
+  },
+  {
     id: "gypsum_board",
     name: "Gypsum Board",
     category: "finish",
@@ -49,6 +65,30 @@ const BASE_SEED_MATERIALS: readonly MaterialDefinition[] = [
     densityKgM3: 1472,
     notes: "Curated Silentboard entry aligned to the upstream Acoustic2 silentboard profile at 18.4 kg/m² for 12.5 mm.",
     tags: ["lining", "board", "silentboard", "enhanced-board"]
+  },
+  {
+    id: "fire_board",
+    name: "Fire Board",
+    category: "finish",
+    densityKgM3: 820,
+    notes: "Ported from the Acoustic2 board catalog and aligned to the 20 mm fire-board reference mass of 16.4 kg/m².",
+    tags: ["lining", "board", "fire-board", "enhanced-board", "df-board"]
+  },
+  {
+    id: "sheetrock_one",
+    name: "Sheetrock One",
+    category: "finish",
+    densityKgM3: 800,
+    notes: "Ported from the Acoustic2 board catalog for lighter single-board wall and ceiling studies.",
+    tags: ["lining", "board", "sheetrock", "single-board", "standard-board"]
+  },
+  {
+    id: "cement_board",
+    name: "Cement Board",
+    category: "finish",
+    densityKgM3: 1400,
+    notes: "Ported from the Acoustic2 board catalog for dense cementitious lining layers.",
+    tags: ["lining", "board", "cement-board", "dense-board", "wet-area-board"]
   },
   {
     id: "cement_plaster",
@@ -121,6 +161,22 @@ const BASE_SEED_MATERIALS: readonly MaterialDefinition[] = [
     densityKgM3: 1845,
     notes: "Curated 13 mm dense plaster layer for the official H+H Celcon finished-aircrete acoustic table; density inferred from the published wall-mass deltas.",
     tags: ["plaster", "dense-plaster", "aircrete-finish", "celcon", "masonry-finish"]
+  },
+  {
+    id: "gypsum_plaster",
+    name: "Gypsum Plaster",
+    category: "finish",
+    densityKgM3: 1000,
+    notes: "Ported from the Acoustic2 base catalog for lighter wet plaster finish studies.",
+    tags: ["plaster", "gypsum-plaster", "mineral-finish", "lightweight-finish"]
+  },
+  {
+    id: "lime_plaster",
+    name: "Lime Plaster",
+    category: "finish",
+    densityKgM3: 1600,
+    notes: "Ported from the Acoustic2 base catalog for traditional lime-finish wall studies.",
+    tags: ["plaster", "lime-plaster", "mineral-finish", "masonry-finish"]
   },
   {
     id: "ytong_aac_d700",
@@ -223,6 +279,30 @@ const BASE_SEED_MATERIALS: readonly MaterialDefinition[] = [
     tags: ["silicate", "calcium-silicate", "sand-lime", "silka", "block", "masonry", "dense-mineral"]
   },
   {
+    id: "solid_brick",
+    name: "Solid Brick",
+    category: "mass",
+    densityKgM3: 1800,
+    notes: "Ported from the Acoustic2 masonry catalog for solid fired-clay leaf studies.",
+    tags: ["clay", "brick", "block", "masonry", "solid", "dense-mineral"]
+  },
+  {
+    id: "hollow_brick",
+    name: "Hollow Brick",
+    category: "mass",
+    densityKgM3: 1200,
+    notes: "Ported from the Acoustic2 masonry catalog for perforated clay block studies outside the verified manufacturer slices.",
+    tags: ["clay", "brick", "block", "masonry", "perforated", "hollow"]
+  },
+  {
+    id: "aac",
+    name: "AAC Block",
+    category: "mass",
+    densityKgM3: 500,
+    notes: "Ported from the Acoustic2 base catalog as a generic AAC option when a branded density class is not known.",
+    tags: ["aac", "autoclaved-aerated-concrete", "block", "masonry", "lightweight-mineral"]
+  },
+  {
     id: "porotherm_pls_100",
     name: "Porotherm PLS 100",
     category: "mass",
@@ -293,6 +373,38 @@ const BASE_SEED_MATERIALS: readonly MaterialDefinition[] = [
     tags: ["floor", "mass"]
   },
   {
+    id: "anhydrite_screed",
+    name: "Anhydrite Screed",
+    category: "mass",
+    densityKgM3: 2050,
+    notes: "Ported from the Acoustic2 floor catalog for calcium-sulfate floating screed build-ups.",
+    tags: ["floor", "mass", "screed", "anhydrite"]
+  },
+  {
+    id: "particleboard_flooring",
+    name: "Particleboard Flooring",
+    category: "mass",
+    densityKgM3: 700,
+    notes: "Ported from the Acoustic2 floor catalog for dry deck and subfloor build-ups.",
+    tags: ["floor", "deck", "subfloor", "wood-board", "chipboard"]
+  },
+  {
+    id: "osb",
+    name: "OSB",
+    category: "mass",
+    densityKgM3: 650,
+    notes: "Ported from the Acoustic2 timber catalog for deck, sheathing, and subfloor layers.",
+    tags: ["deck", "subfloor", "wood-board", "structural", "timber"]
+  },
+  {
+    id: "plywood",
+    name: "Plywood",
+    category: "mass",
+    densityKgM3: 600,
+    notes: "Ported from the Acoustic2 timber catalog for deck and sheathing layers.",
+    tags: ["deck", "subfloor", "wood-board", "structural", "timber"]
+  },
+  {
     id: "vinyl_flooring",
     name: "Vinyl Flooring",
     category: "finish",
@@ -307,11 +419,67 @@ const BASE_SEED_MATERIALS: readonly MaterialDefinition[] = [
     tags: ["finish", "hard-floor", "floor"]
   },
   {
+    id: "mlv",
+    name: "MLV Sound Barrier",
+    category: "finish",
+    densityKgM3: 1900,
+    notes: "Ported from the Acoustic2 membrane catalog for limp-mass barrier layers and local custom stack studies.",
+    tags: ["membrane", "barrier", "limp-mass", "acoustic-barrier"]
+  },
+  {
+    id: "bitumen_membrane",
+    name: "Bitumen Membrane",
+    category: "finish",
+    densityKgM3: 1100,
+    notes: "Ported from the Acoustic2 membrane catalog for bituminous isolation and barrier layers.",
+    tags: ["membrane", "barrier", "bitumen", "acoustic-barrier"]
+  },
+  {
     id: "rockwool",
     name: "Rock Wool",
     category: "insulation",
     densityKgM3: 45,
     tags: ["cavity-fill", "porous"]
+  },
+  {
+    id: "high_density_rockwool",
+    name: "High Density Rock Wool",
+    category: "insulation",
+    densityKgM3: 90,
+    notes: "Ported from the Acoustic2 infill catalog for denser cavity-fill and board-style mineral wool studies.",
+    tags: ["cavity-fill", "porous", "rockwool", "high-density", "board-insulation"]
+  },
+  {
+    id: "glasswool_board",
+    name: "Glass Wool Board",
+    category: "insulation",
+    densityKgM3: 30,
+    notes: "Ported from the Acoustic2 infill catalog for semi-rigid glass wool slab studies.",
+    tags: ["cavity-fill", "porous", "glasswool", "board-insulation"]
+  },
+  {
+    id: "cellulose_fill",
+    name: "Cellulose Fill",
+    category: "insulation",
+    densityKgM3: 45,
+    notes: "Ported from the Acoustic2 infill catalog for blown cellulose cavity studies.",
+    tags: ["cavity-fill", "porous", "cellulose", "blown-in"]
+  },
+  {
+    id: "wood_wool_panel",
+    name: "Wood Wool Panel",
+    category: "insulation",
+    densityKgM3: 400,
+    notes: "Ported from the Acoustic2 infill catalog for wood-wool acoustic board layers.",
+    tags: ["cavity-fill", "wood-wool", "board-insulation", "porous"]
+  },
+  {
+    id: "pet_felt",
+    name: "PET Acoustic Felt",
+    category: "insulation",
+    densityKgM3: 180,
+    notes: "Ported from the Acoustic2 infill catalog for recycled polyester felt layers.",
+    tags: ["cavity-fill", "felt", "polyester", "porous"]
   },
   {
     id: "air_gap",
@@ -326,6 +494,22 @@ const BASE_SEED_MATERIALS: readonly MaterialDefinition[] = [
     category: "support",
     densityKgM3: 0,
     tags: ["support"]
+  },
+  {
+    id: "acoustic_mount_clip",
+    name: "Acoustic Mount Clip",
+    category: "support",
+    densityKgM3: 0,
+    notes: "Ported from the Acoustic2 support catalog for resilient clip-supported linings and ceilings.",
+    tags: ["support", "resilient", "ceiling-support", "clip"]
+  },
+  {
+    id: "spring_hanger_track",
+    name: "Spring Hanger Track",
+    category: "support",
+    densityKgM3: 0,
+    notes: "Ported from the Acoustic2 support catalog for spring-hung ceiling and service-zone build-ups.",
+    tags: ["support", "resilient", "ceiling-support", "hanger-track"]
   },
   {
     id: "generic_resilient_underlay",

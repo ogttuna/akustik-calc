@@ -1,6 +1,6 @@
 "use client";
 
-import { MATERIAL_CATALOG_SEED, MATERIAL_SOURCE_NOTE } from "@dynecho/catalogs";
+import { MATERIAL_SOURCE_NOTE } from "@dynecho/catalogs";
 import {
   buildExactImpactImprovementReference,
   deriveHeavyReferenceImpactFromDeltaLw,
@@ -55,6 +55,7 @@ import { WorkbenchCommandDeck } from "./workbench-command-deck";
 import { WorkbenchChapter } from "./workbench-chapter";
 import { WorkbenchHeader } from "./workbench-header";
 import { WorkbenchFlowMap } from "./workbench-flow-map";
+import { buildWorkbenchMaterialCatalog } from "./workbench-materials";
 import { WorkbenchRailLayout } from "./workbench-rail-layout";
 import { useWorkbenchStore } from "./workbench-store";
 
@@ -134,6 +135,7 @@ export function WorkbenchShell() {
   const briefNote = useWorkbenchStore((state) => state.briefNote);
   const clientName = useWorkbenchStore((state) => state.clientName);
   const criteriaPackId = useWorkbenchStore((state) => state.criteriaPackId);
+  const customMaterials = useWorkbenchStore((state) => state.customMaterials);
   const deleteSavedScenario = useWorkbenchStore((state) => state.deleteSavedScenario);
   const fieldRiskIds = useWorkbenchStore((state) => state.fieldRiskIds);
   const impactDirectPathOffsetDb = useWorkbenchStore((state) => state.impactDirectPathOffsetDb);
@@ -192,6 +194,7 @@ export function WorkbenchShell() {
   const appendMaterial = useWorkbenchStore((state) => state.appendMaterial);
   const moveRow = useWorkbenchStore((state) => state.moveRow);
   const removeRow = useWorkbenchStore((state) => state.removeRow);
+  const updateDensity = useWorkbenchStore((state) => state.updateDensity);
   const updateFloorRole = useWorkbenchStore((state) => state.updateFloorRole);
   const updateMaterial = useWorkbenchStore((state) => state.updateMaterial);
   const updateThickness = useWorkbenchStore((state) => state.updateThickness);
@@ -212,11 +215,12 @@ export function WorkbenchShell() {
   const setAirborneStudSpacingMm = useWorkbenchStore((state) => state.setAirborneStudSpacingMm);
   const setAirborneStudType = useWorkbenchStore((state) => state.setAirborneStudType);
   const commandPalette = useCommandPalette();
+  const materials = buildWorkbenchMaterialCatalog(customMaterials);
 
   const deferredRows = useDeferredValue(rows);
   const activeCriteriaPack = getCriteriaPackById(criteriaPackId);
   const fieldRiskSummary = summarizeFieldRisk(fieldRiskIds);
-  const normalized = normalizeRows(deferredRows);
+  const normalized = normalizeRows(deferredRows, materials);
   const validThicknessRowCount = rows.filter((row) => {
     const thickness = Number(row.thicknessMm);
     return Number.isFinite(thickness) && thickness > 0;
@@ -282,6 +286,7 @@ export function WorkbenchShell() {
   const currentScenario = evaluateScenario({
     airborneContext: liveAirborneContext,
     calculator: calculatorId,
+    customMaterials,
     exactImpactSource: exactImpactImport.parsed?.source ?? null,
     id: "current",
     impactFieldContext: liveImpactFieldContext,
@@ -390,6 +395,7 @@ export function WorkbenchShell() {
               }
             : null,
         calculator: scenario.calculatorId ?? "dynamic",
+        customMaterials: scenario.customMaterials ?? [],
         exactImpactSource: parsedScenarioExactImpact.parsed?.source ?? null,
         id: scenario.id,
         impactFieldContext:
@@ -677,7 +683,8 @@ export function WorkbenchShell() {
         title="Compose the assembly"
       >
         <LayerEditor
-          materials={MATERIAL_CATALOG_SEED}
+          materials={materials}
+          onDensityChange={updateDensity}
           onAddRow={addRow}
           onFloorRoleChange={updateFloorRole}
           onMaterialChange={updateMaterial}
@@ -687,7 +694,7 @@ export function WorkbenchShell() {
           rows={rows}
           studyMode={studyMode}
         />
-        <MaterialLibraryPanel materials={MATERIAL_CATALOG_SEED} onAppendMaterial={appendMaterial} />
+        <MaterialLibraryPanel materials={materials} onAppendMaterial={appendMaterial} />
       </WorkbenchChapter>
 
       <WorkbenchChapter

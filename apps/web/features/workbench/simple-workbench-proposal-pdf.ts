@@ -5,6 +5,8 @@ import {
   type SimpleWorkbenchProposalDocument
 } from "./simple-workbench-proposal";
 
+type SimpleWorkbenchProposalPdfStyle = "branded" | "simple";
+
 function parseErrorMessage(value: unknown): string | null {
   if (typeof value !== "object" || value === null) {
     return null;
@@ -15,9 +17,14 @@ function parseErrorMessage(value: unknown): string | null {
 }
 
 export async function downloadSimpleWorkbenchProposalPdf(
-  proposalDocument: SimpleWorkbenchProposalDocument
+  proposalDocument: SimpleWorkbenchProposalDocument,
+  options?: {
+    style?: SimpleWorkbenchProposalPdfStyle;
+  }
 ): Promise<void> {
-  const response = await fetch("/api/proposal-pdf", {
+  const style = options?.style === "simple" ? "simple" : "branded";
+  const route = style === "simple" ? "/api/proposal-pdf?style=simple" : "/api/proposal-pdf";
+  const response = await fetch(route, {
     body: JSON.stringify(proposalDocument),
     headers: {
       "content-type": "application/json"
@@ -26,7 +33,10 @@ export async function downloadSimpleWorkbenchProposalPdf(
   });
 
   if (!response.ok) {
-    let message = "DynEcho could not generate the branded PDF on the server.";
+    let message =
+      style === "simple"
+        ? "DynEcho could not generate the simple PDF on the server."
+        : "DynEcho could not generate the branded PDF on the server.";
 
     try {
       const payload = (await response.json()) as unknown;
@@ -42,7 +52,7 @@ export async function downloadSimpleWorkbenchProposalPdf(
   const objectUrl = window.URL.createObjectURL(blob);
   const anchor = window.document.createElement("a");
   anchor.href = objectUrl;
-  anchor.download = `${buildSimpleWorkbenchProposalFilename(proposalDocument.projectName)}.pdf`;
+  anchor.download = `${buildSimpleWorkbenchProposalFilename(proposalDocument.projectName)}${style === "simple" ? "-simple" : ""}.pdf`;
   anchor.click();
   window.setTimeout(() => window.URL.revokeObjectURL(objectUrl), 0);
 }

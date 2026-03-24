@@ -12,6 +12,7 @@ import {
   type ImpactBoundCalculation,
   type ImpactCalculation,
   type ImpactCatalogMatchResult,
+  type MaterialDefinition,
   type ImpactPredictorInput,
   type ImpactPredictorInputMode,
   type ResolvedLayer
@@ -37,6 +38,7 @@ type BuildDynamicImpactTraceInput = {
   lowerBoundImpact: ImpactBoundCalculation | null;
   predictorInput?: ImpactPredictorInput | null;
   predictorInputMode?: ImpactPredictorInputMode;
+  catalog?: readonly MaterialDefinition[];
   resolvedLayers: readonly ResolvedLayer[];
 };
 
@@ -421,7 +423,7 @@ export function buildDynamicImpactTrace(
   }
 
   const resolvedPredictorInput =
-    input.predictorInput ?? maybeBuildImpactPredictorInputFromLayerStack(input.resolvedLayers) ?? null;
+    input.predictorInput ?? maybeBuildImpactPredictorInputFromLayerStack(input.resolvedLayers, {}, undefined, input.catalog) ?? null;
   const fallbackSupportFamily = inferSupportFamilyFromUnscopedLayers(input.resolvedLayers);
   const supportFamily =
     inferImpactSupportingElementFamilyFromExactFloorSystem(input.floorSystemMatch?.system) ??

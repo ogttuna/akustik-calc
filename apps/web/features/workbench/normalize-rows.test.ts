@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { normalizeRows } from "./normalize-rows";
+import { buildCustomMaterialDefinition, createEmptyCustomMaterialDraft } from "./workbench-materials";
 
 describe("normalizeRows", () => {
   it("collapses adjacent live rows with the same material and floor role into one solver layer", () => {
@@ -59,6 +60,90 @@ describe("normalizeRows", () => {
       { floorRole: "floor_covering", materialId: "ceramic_tile", thicknessMm: 8 },
       { floorRole: "floating_screed", materialId: "screed", thicknessMm: 100 },
       { floorRole: "resilient_layer", materialId: "generic_resilient_underlay", thicknessMm: 8 }
+    ]);
+  });
+
+  it("collapses adjacent rows that share the same effective dynamic stiffness override", () => {
+    const normalized = normalizeRows([
+      { floorRole: "resilient_layer", id: "a", materialId: "generic_resilient_underlay", thicknessMm: "4", dynamicStiffnessMNm3: "35" },
+      { floorRole: "resilient_layer", id: "b", materialId: "generic_resilient_underlay", thicknessMm: "4", dynamicStiffnessMNm3: "35" }
+    ]);
+
+    expect(normalized.warnings).toEqual([]);
+    expect(normalized.runtimeMaterials).toHaveLength(1);
+    expect(normalized.layers).toEqual([
+      { floorRole: "resilient_layer", materialId: "generic_resilient_underlay__dyn_35", thicknessMm: 8 }
+    ]);
+  });
+
+  it("collapses adjacent rows that share the same effective density override", () => {
+    const normalized = normalizeRows([
+      { floorRole: "floating_screed", id: "a", materialId: "screed", thicknessMm: "40", densityKgM3: "1800" },
+      { floorRole: "floating_screed", id: "b", materialId: "screed", thicknessMm: "60", densityKgM3: "1800" }
+    ]);
+
+    expect(normalized.warnings).toEqual([]);
+    expect(normalized.runtimeMaterials).toHaveLength(1);
+    expect(normalized.runtimeMaterials[0]?.densityKgM3).toBe(1800);
+    expect(normalized.layers).toEqual([{ floorRole: "floating_screed", materialId: "screed__rho_1800", thicknessMm: 100 }]);
+  });
+
+  it("warns and falls back to the catalog material when the dynamic stiffness override is invalid", () => {
+    const normalized = normalizeRows([
+      { floorRole: "resilient_layer", id: "a", materialId: "generic_resilient_underlay", thicknessMm: "8", dynamicStiffnessMNm3: "abc" }
+    ]);
+
+    expect(normalized.warnings).toContain(
+      "Layer 1 has an invalid dynamic stiffness override. Enter a positive MN/m³ value or leave it blank."
+    );
+    expect(normalized.runtimeMaterials).toEqual([]);
+    expect(normalized.layers).toEqual([
+      { floorRole: "resilient_layer", materialId: "generic_resilient_underlay", thicknessMm: 8 }
+    ]);
+  });
+
+  it("warns and falls back to the catalog material when the density override is invalid", () => {
+    const normalized = normalizeRows([
+      { floorRole: "floating_screed", id: "a", materialId: "screed", thicknessMm: "50", densityKgM3: "0" }
+    ]);
+
+    expect(normalized.warnings).toContain(
+      "Layer 1 has an invalid density override. Enter a non-negative kg/m³ value, use zero only for gap or support layers, or leave it blank."
+    );
+    expect(normalized.runtimeMaterials).toEqual([]);
+    expect(normalized.layers).toEqual([{ floorRole: "floating_screed", materialId: "screed", thicknessMm: 50 }]);
+  });
+
+  it("resolves custom materials and still builds runtime override materials for them", () => {
+    const customMaterial = buildCustomMaterialDefinition({
+      draft: {
+        ...createEmptyCustomMaterialDraft(),
+        category: "support",
+        densityKgM3: "680",
+        dynamicStiffnessMNm3: "18",
+        name: "Custom resilient mat"
+      },
+      existingMaterials: []
+    });
+
+    const normalized = normalizeRows(
+      [
+        {
+          dynamicStiffnessMNm3: "35",
+          floorRole: "resilient_layer",
+          id: "a",
+          materialId: customMaterial.id,
+          thicknessMm: "6"
+        }
+      ],
+      [customMaterial]
+    );
+
+    expect(normalized.warnings).toEqual([]);
+    expect(normalized.runtimeMaterials).toHaveLength(1);
+    expect(normalized.runtimeMaterials[0]?.impact?.dynamicStiffnessMNm3).toBe(35);
+    expect(normalized.layers).toEqual([
+      { floorRole: "resilient_layer", materialId: `${customMaterial.id}__dyn_35`, thicknessMm: 6 }
     ]);
   });
 });

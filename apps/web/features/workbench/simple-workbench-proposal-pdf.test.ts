@@ -137,6 +137,20 @@ describe("simple workbench proposal pdf helper", () => {
     expect(window.URL.createObjectURL).toHaveBeenCalledTimes(1);
   });
 
+  it("posts the proposal snapshot to the simple pdf route when requested", async () => {
+    await downloadSimpleWorkbenchProposalPdf(DOCUMENT, {
+      style: "simple"
+    });
+
+    expect(fetch).toHaveBeenCalledWith("/api/proposal-pdf?style=simple", {
+      body: JSON.stringify(DOCUMENT),
+      headers: {
+        "content-type": "application/json"
+      },
+      method: "POST"
+    });
+  });
+
   it("surfaces the server error message when generation fails", async () => {
     vi.stubGlobal(
       "fetch",

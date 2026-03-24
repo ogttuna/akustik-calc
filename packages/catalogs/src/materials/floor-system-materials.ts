@@ -113,7 +113,10 @@ export const FLOOR_SYSTEM_MATERIALS: readonly MaterialDefinition[] = [
     name: "GenieMat RST02",
     category: "support",
     densityKgM3: 760,
-    notes: "Official Pliteq resilient underlayment lane for lighter-finish steel-joist floor variants.",
+    impact: {
+      dynamicStiffnessMNm3: 157
+    },
+    notes: "Official Pliteq resilient underlayment lane for lighter-finish steel-joist floor variants. Average dynamic stiffness follows the Pliteq GenieMat RST brochure.",
     tags: ["resilient", "pliteq", "steel", "floor-system"]
   },
   {
@@ -121,7 +124,10 @@ export const FLOOR_SYSTEM_MATERIALS: readonly MaterialDefinition[] = [
     name: "GenieMat RST05",
     category: "support",
     densityKgM3: 760,
-    notes: "Official Pliteq resilient underlayment lane for hollow-core floor variants.",
+    impact: {
+      dynamicStiffnessMNm3: 105
+    },
+    notes: "Official Pliteq resilient underlayment lane for hollow-core floor variants. Average dynamic stiffness follows the Pliteq GenieMat RST brochure.",
     tags: ["resilient", "pliteq", "hollow-core", "floor-system"]
   },
   {
@@ -129,7 +135,10 @@ export const FLOOR_SYSTEM_MATERIALS: readonly MaterialDefinition[] = [
     name: "GenieMat RST12",
     category: "support",
     densityKgM3: 760,
-    notes: "Official Pliteq resilient underlayment lane for harder-finish hollow-core floor variants.",
+    impact: {
+      dynamicStiffnessMNm3: 60
+    },
+    notes: "Official Pliteq resilient underlayment lane for harder-finish hollow-core floor variants. Average dynamic stiffness follows the Pliteq GenieMat RST brochure.",
     tags: ["resilient", "pliteq", "hollow-core", "floor-system"]
   },
   {

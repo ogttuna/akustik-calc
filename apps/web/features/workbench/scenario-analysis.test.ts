@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 
 import { getPresetById, type PresetId } from "./preset-definitions";
 import { evaluateScenario } from "./scenario-analysis";
+import { buildCustomMaterialDefinition, createEmptyCustomMaterialDraft } from "./workbench-materials";
 import { IMPACT_ONLY_LOW_CONFIDENCE_FLOOR_FAMILY_NOTE } from "./impact-only-low-confidence-floor-lane";
 import { EXACT_FLOOR_FAMILY_CURVE_NOTE, LOW_CONFIDENCE_FLOOR_FAMILY_NOTE } from "./workbench-warning-notes";
 
@@ -109,6 +110,131 @@ describe("scenario analysis", () => {
     expect(mergedScenario.result).not.toBeNull();
     expect(splitScenario.result).not.toBeNull();
     expect(resultSnapshot(splitScenario.result!)).toEqual(resultSnapshot(mergedScenario.result!));
+  });
+
+  it("keeps the same heavy-floor result when an overridden resilient layer is split into adjacent rows with the same final stiffness", () => {
+    const mergedRows = [
+      { floorRole: "floor_covering" as const, id: "a", materialId: "ceramic_tile", thicknessMm: "8" },
+      {
+        dynamicStiffnessMNm3: "35",
+        floorRole: "resilient_layer" as const,
+        id: "b",
+        materialId: "generic_resilient_underlay",
+        thicknessMm: "8"
+      },
+      { floorRole: "floating_screed" as const, id: "c", materialId: "screed", thicknessMm: "50" },
+      { floorRole: "base_structure" as const, id: "d", materialId: "concrete", thicknessMm: "150" }
+    ];
+    const splitRows = [
+      mergedRows[0]!,
+      {
+        dynamicStiffnessMNm3: "35",
+        floorRole: "resilient_layer" as const,
+        id: "b1",
+        materialId: "generic_resilient_underlay",
+        thicknessMm: "4"
+      },
+      {
+        dynamicStiffnessMNm3: "35",
+        floorRole: "resilient_layer" as const,
+        id: "b2",
+        materialId: "generic_resilient_underlay",
+        thicknessMm: "4"
+      },
+      mergedRows[2]!,
+      mergedRows[3]!
+    ];
+
+    const mergedScenario = evaluateScenario({
+      id: "merged-override",
+      name: "merged override",
+      rows: mergedRows,
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+    const splitScenario = evaluateScenario({
+      id: "split-override",
+      name: "split override",
+      rows: splitRows,
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+
+    expect(mergedScenario.result).not.toBeNull();
+    expect(splitScenario.result).not.toBeNull();
+    expect(resultSnapshot(splitScenario.result!)).toEqual(resultSnapshot(mergedScenario.result!));
+  });
+
+  it("lets a manual dynamic stiffness override activate the explicit heavy-floor route for catalog materials without a listed value", () => {
+    const baseRows = [
+      { floorRole: "floor_covering" as const, id: "a", materialId: "ceramic_tile", thicknessMm: "8" },
+      { floorRole: "floating_screed" as const, id: "b", materialId: "screed", thicknessMm: "50" },
+      { floorRole: "resilient_layer" as const, id: "c", materialId: "resilient_support", thicknessMm: "8" },
+      { floorRole: "base_structure" as const, id: "d", materialId: "concrete", thicknessMm: "150" }
+    ];
+
+    const withoutOverride = evaluateScenario({
+      id: "without-override",
+      name: "without override",
+      rows: baseRows,
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+    const withOverride = evaluateScenario({
+      id: "with-override",
+      name: "with override",
+      rows: baseRows.map((row) =>
+        row.id === "c"
+          ? {
+              ...row,
+              dynamicStiffnessMNm3: "35"
+            }
+          : row
+      ),
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+
+    expect(withoutOverride.result).not.toBeNull();
+    expect(withOverride.result).not.toBeNull();
+    expect(withoutOverride.result?.impact?.DeltaLw ?? null).toBeNull();
+    expect(withOverride.result?.impact?.DeltaLw ?? null).not.toBeNull();
+    expect(withOverride.result?.impact?.LnW ?? null).not.toBeNull();
+  });
+
+  it("evaluates floor scenarios that use a local custom material in the live stack", () => {
+    const customMaterial = buildCustomMaterialDefinition({
+      draft: {
+        ...createEmptyCustomMaterialDraft(),
+        category: "finish",
+        densityKgM3: "1650",
+        name: "Custom cork finish"
+      },
+      existingMaterials: []
+    });
+
+    const scenario = evaluateScenario({
+      customMaterials: [customMaterial],
+      id: "custom-floor",
+      name: "custom floor",
+      rows: [
+        { floorRole: "floor_covering", id: "a", materialId: customMaterial.id, thicknessMm: "8" },
+        { floorRole: "floating_screed", id: "b", materialId: "screed", thicknessMm: "50" },
+        { floorRole: "resilient_layer", id: "c", materialId: "generic_resilient_underlay", thicknessMm: "8" },
+        { floorRole: "base_structure", id: "d", materialId: "concrete", thicknessMm: "150" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+
+    expect(scenario.result).not.toBeNull();
+    expect(scenario.warnings).not.toContain(expect.stringContaining("Unknown material"));
+    expect(scenario.result?.impact?.LnW ?? null).not.toBeNull();
   });
 
   it("surfaces soft sanity warnings for out-of-band guided inputs without blocking calculation", () => {

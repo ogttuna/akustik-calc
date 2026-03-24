@@ -4,6 +4,7 @@ import {
   buildSimpleWorkbenchProposalHtml,
   type SimpleWorkbenchProposalDocument
 } from "./simple-workbench-proposal";
+import { buildSimpleWorkbenchProposalSimpleHtml } from "./simple-workbench-proposal-simple";
 
 const PROPOSAL_PDF_VIEWPORT = {
   height: 1754,
@@ -11,8 +12,12 @@ const PROPOSAL_PDF_VIEWPORT = {
 } as const;
 
 export async function renderSimpleWorkbenchProposalPdf(
-  proposalDocument: SimpleWorkbenchProposalDocument
+  proposalDocument: SimpleWorkbenchProposalDocument,
+  options?: {
+    style?: "branded" | "simple";
+  }
 ): Promise<Buffer> {
+  const style = options?.style === "simple" ? "simple" : "branded";
   const browser = await chromium.launch({
     args: ["--disable-dev-shm-usage", "--no-sandbox"],
     headless: true
@@ -23,9 +28,14 @@ export async function renderSimpleWorkbenchProposalPdf(
       viewport: PROPOSAL_PDF_VIEWPORT
     });
 
-    await page.setContent(buildSimpleWorkbenchProposalHtml(proposalDocument), {
+    await page.setContent(
+      style === "simple"
+        ? buildSimpleWorkbenchProposalSimpleHtml(proposalDocument)
+        : buildSimpleWorkbenchProposalHtml(proposalDocument),
+      {
       waitUntil: "load"
-    });
+      }
+    );
     await page.emulateMedia({
       media: "print"
     });

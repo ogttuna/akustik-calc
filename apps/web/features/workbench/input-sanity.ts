@@ -1,7 +1,8 @@
-import { materialCatalogById } from "@dynecho/catalogs";
+import { MATERIAL_CATALOG_SEED } from "@dynecho/catalogs";
 import type { AirborneContext, FloorRole, ImpactFieldContext, MaterialDefinition, RequestedOutputId } from "@dynecho/shared";
 
 import type { StudyMode } from "./preset-definitions";
+import { getWorkbenchMaterialById } from "./workbench-materials";
 import type { LayerDraft } from "./workbench-store";
 
 type GuidedSanityBand = {
@@ -36,13 +37,20 @@ const LAYER_ROLE_THICKNESS_BANDS: Partial<Record<FloorRole, GuidedSanityBand>> =
 };
 
 const MATERIAL_THICKNESS_BANDS: Record<string, GuidedSanityBand> = {
+  aac: { max: 300, min: 75, unit: "mm" },
   air_gap: { max: 200, min: 15, unit: "mm" },
+  anhydrite_screed: { max: 90, min: 25, unit: "mm" },
+  bitumen_membrane: { max: 8, min: 2, unit: "mm" },
+  cellulose_fill: { max: 200, min: 50, unit: "mm" },
   ceramic_tile: { max: 20, min: 4, unit: "mm" },
+  cement_board: { max: 20, min: 10, unit: "mm" },
   clt_panel: { max: 300, min: 100, unit: "mm" },
   composite_steel_deck: { max: 250, min: 120, unit: "mm" },
   concrete: { max: 250, min: 80, unit: "mm" },
   dry_floating_gypsum_fiberboard: { max: 35, min: 18, unit: "mm" },
   eps_underlay: { max: 8, min: 2, unit: "mm" },
+  fire_board: { max: 25, min: 15, unit: "mm" },
+  glasswool_board: { max: 120, min: 20, unit: "mm" },
   generic_fill: { max: 150, min: 30, unit: "mm" },
   generic_resilient_underlay: { max: 30, min: 3, unit: "mm" },
   generic_resilient_underlay_s30: { max: 30, min: 3, unit: "mm" },
@@ -51,26 +59,38 @@ const MATERIAL_THICKNESS_BANDS: Record<string, GuidedSanityBand> = {
   geniemat_rst05: { max: 20, min: 2, unit: "mm" },
   geniemat_rst12: { max: 20, min: 2, unit: "mm" },
   glasswool: { max: 200, min: 20, unit: "mm" },
+  heavy_concrete: { max: 300, min: 100, unit: "mm" },
+  high_density_rockwool: { max: 150, min: 20, unit: "mm" },
   hollow_core_plank: { max: 400, min: 120, unit: "mm" },
   inex_floor_panel: { max: 35, min: 18, unit: "mm" },
   laminate_flooring: { max: 14, min: 6, unit: "mm" },
+  lightweight_concrete: { max: 250, min: 80, unit: "mm" },
   lightweight_steel_floor: { max: 350, min: 160, unit: "mm" },
+  lime_plaster: { max: 25, min: 5, unit: "mm" },
+  mlv: { max: 10, min: 2, unit: "mm" },
   mw_t_impact_layer: { max: 40, min: 3, unit: "mm" },
   mw_t_impact_layer_s35: { max: 40, min: 3, unit: "mm" },
   mw_t_impact_layer_s40: { max: 40, min: 3, unit: "mm" },
   mw_t_impact_layer_s6: { max: 40, min: 3, unit: "mm" },
   open_box_timber_slab: { max: 350, min: 120, unit: "mm" },
   open_web_steel_floor: { max: 450, min: 180, unit: "mm" },
+  osb: { max: 30, min: 12, unit: "mm" },
+  particleboard_flooring: { max: 30, min: 18, unit: "mm" },
+  pet_felt: { max: 25, min: 3, unit: "mm" },
+  plywood: { max: 30, min: 12, unit: "mm" },
   regupol_sonus_curve_8: { max: 20, min: 4, unit: "mm" },
   regupol_sonus_multi_4_5: { max: 12, min: 3, unit: "mm" },
   resilient_channel: { max: 180, min: 15, unit: "mm" },
   rockwool: { max: 200, min: 20, unit: "mm" },
   screed: { max: 90, min: 25, unit: "mm" },
+  sheetrock_one: { max: 13, min: 9, unit: "mm" },
+  solid_brick: { max: 300, min: 75, unit: "mm" },
   steel_joist_floor: { max: 350, min: 180, unit: "mm" },
   timber_frame_floor: { max: 300, min: 120, unit: "mm" },
   timber_joist_floor: { max: 350, min: 150, unit: "mm" },
   ubiq_resilient_ceiling: { max: 180, min: 15, unit: "mm" },
   vinyl_flooring: { max: 8, min: 2, unit: "mm" },
+  wood_wool_panel: { max: 40, min: 15, unit: "mm" },
   wf_t_impact_layer_s102: { max: 50, min: 10, unit: "mm" }
 };
 
@@ -144,8 +164,12 @@ function getMaterialThicknessGuidance(
   return categoryBand ? buildLayerThicknessGuidance(categoryBand, subject) : null;
 }
 
-export function getLayerThicknessGuidance(row: Pick<LayerDraft, "floorRole" | "materialId">): LayerThicknessGuidance {
-  const material = materialCatalogById[row.materialId];
+export function getLayerThicknessGuidance(
+  row: Pick<LayerDraft, "floorRole" | "materialId">,
+  materials: readonly MaterialDefinition[] = MATERIAL_CATALOG_SEED
+): LayerThicknessGuidance {
+  const customMaterials = materials === MATERIAL_CATALOG_SEED ? [] : materials;
+  const material = getWorkbenchMaterialById(row.materialId, customMaterials);
   const materialGuidance = material ? getMaterialThicknessGuidance(material, row.floorRole) : null;
   if (materialGuidance) {
     return materialGuidance;
@@ -161,8 +185,11 @@ export function getLayerThicknessGuidance(row: Pick<LayerDraft, "floorRole" | "m
   return buildLayerThicknessGuidance(GUIDED_INPUT_SANITY_BANDS.layerThicknessMm, "this layer");
 }
 
-export function getLayerThicknessGuidanceHint(row: Pick<LayerDraft, "floorRole" | "materialId">): string | null {
-  const guidance = getLayerThicknessGuidance(row);
+export function getLayerThicknessGuidanceHint(
+  row: Pick<LayerDraft, "floorRole" | "materialId">,
+  materials: readonly MaterialDefinition[] = MATERIAL_CATALOG_SEED
+): string | null {
+  const guidance = getLayerThicknessGuidance(row, materials);
   return guidance.subject === "this layer" ? null : `Typical band ${formatGuidedSanityBand(guidance.band)} for ${guidance.subject}.`;
 }
 
@@ -190,14 +217,15 @@ export function getGuidedNumericSanityWarning(input: {
 
 export function getLayerThicknessSanityWarning(
   row: Pick<LayerDraft, "floorRole" | "materialId" | "thicknessMm">,
-  layerIndex: number
+  layerIndex: number,
+  materials: readonly MaterialDefinition[] = MATERIAL_CATALOG_SEED
 ): string | null {
   const parsed = parseFiniteNumber(row.thicknessMm);
   if (typeof parsed !== "number" || parsed <= 0) {
     return null;
   }
 
-  const guidance = getLayerThicknessGuidance(row);
+  const guidance = getLayerThicknessGuidance(row, materials);
   if (parsed >= guidance.band.min && parsed <= guidance.band.max) {
     return null;
   }
@@ -208,6 +236,7 @@ export function getLayerThicknessSanityWarning(
 export function collectScenarioInputWarnings(input: {
   airborneContext?: AirborneContext | null;
   impactFieldContext?: ImpactFieldContext | null;
+  materials?: readonly MaterialDefinition[];
   rows: readonly LayerDraft[];
   studyMode: StudyMode;
   targetOutputs?: readonly RequestedOutputId[];
@@ -222,9 +251,10 @@ export function collectScenarioInputWarnings(input: {
   const fieldImpactRequested = input.studyMode === "floor" && requestedOutputs.some((output) => FIELD_IMPACT_OUTPUTS.has(output));
   const standardizedImpactRequested =
     fieldImpactRequested && requestedOutputs.some((output) => STANDARDIZED_IMPACT_OUTPUTS.has(output));
+  const materials = input.materials ?? MATERIAL_CATALOG_SEED;
 
   input.rows.forEach((row, index) => {
-    const warning = getLayerThicknessSanityWarning(row, index + 1);
+    const warning = getLayerThicknessSanityWarning(row, index + 1, materials);
     if (warning) {
       warnings.push(warning);
     }

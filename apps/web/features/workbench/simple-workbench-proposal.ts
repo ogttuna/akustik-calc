@@ -28,9 +28,11 @@ export type SimpleWorkbenchProposalMetric = {
 
 export type SimpleWorkbenchProposalLayer = {
   categoryLabel: string;
+  densityLabel?: string;
   index: number;
   label: string;
   roleLabel?: string;
+  surfaceMassLabel?: string;
   thicknessLabel: string;
 };
 
@@ -472,6 +474,41 @@ function renderMetricRows(metrics: readonly SimpleWorkbenchProposalMetric[]): st
     .join("");
 }
 
+function renderMethodBasisRows(document: SimpleWorkbenchProposalDocument): string {
+  return [
+    {
+      basis: document.dynamicBranchLabel,
+      detail: document.dynamicBranchDetail,
+      label: "Dynamic route"
+    },
+    {
+      basis: document.validationLabel,
+      detail: document.validationDetail,
+      label: "Validation posture"
+    },
+    {
+      basis: `${document.studyModeLabel} · ${document.contextLabel}`,
+      detail: `${document.studyContextLabel} workflow running under the ${document.reportProfileLabel.toLowerCase()} profile.`,
+      label: "Study scope"
+    },
+    {
+      basis: document.proposalIssuePurpose,
+      detail: `Issued to ${document.proposalRecipient}. ${document.proposalValidityNote}`,
+      label: "Deliverable basis"
+    }
+  ]
+    .map(
+      (item) => `
+        <tr>
+          <td>${escapeHtml(item.label)}</td>
+          <td>${escapeHtml(item.basis)}</td>
+          <td>${escapeHtml(item.detail)}</td>
+        </tr>
+      `
+    )
+    .join("");
+}
+
 function renderLayerRows(layers: readonly SimpleWorkbenchProposalLayer[]): string {
   return layers
     .map(
@@ -480,6 +517,8 @@ function renderLayerRows(layers: readonly SimpleWorkbenchProposalLayer[]): strin
           <td>${layer.index}</td>
           <td>${escapeHtml(layer.label)}</td>
           <td>${escapeHtml(layer.thicknessLabel)}</td>
+          <td>${escapeHtml(layer.densityLabel ?? "Not listed")}</td>
+          <td>${escapeHtml(layer.surfaceMassLabel ?? "Not listed")}</td>
           <td>${escapeHtml(layer.roleLabel ?? layer.categoryLabel)}</td>
           <td>${escapeHtml(layer.categoryLabel)}</td>
         </tr>
@@ -682,10 +721,16 @@ export function buildSimpleWorkbenchProposalText(document: SimpleWorkbenchPropos
     "Live outputs",
     ...document.metrics.map((metric) => `- ${metric.label}: ${metric.value} (${metric.detail})`),
     "",
+    "Applied method and deliverable basis",
+    `- Dynamic route: ${document.dynamicBranchLabel} | ${document.dynamicBranchDetail}`,
+    `- Validation posture: ${document.validationLabel} | ${document.validationDetail}`,
+    `- Study scope: ${document.studyModeLabel} | ${document.contextLabel} | ${document.studyContextLabel} | ${document.reportProfileLabel}`,
+    `- Deliverable basis: ${document.proposalIssuePurpose} | Issued to ${document.proposalRecipient} | ${document.proposalValidityNote}`,
+    "",
     "Layer schedule",
     ...document.layers.map(
       (layer) =>
-        `${layer.index}. ${layer.label} | ${layer.thicknessLabel} | ${layer.roleLabel ?? layer.categoryLabel} | ${layer.categoryLabel}`
+        `${layer.index}. ${layer.label} | ${layer.thicknessLabel} | ${layer.densityLabel ?? "Not listed"} | ${layer.surfaceMassLabel ?? "Not listed"} | ${layer.roleLabel ?? layer.categoryLabel} | ${layer.categoryLabel}`
     ),
     "",
     "Assumptions and warnings",
@@ -719,6 +764,10 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
   const liveCoverageCount = dossier.readyCoverageCount;
   const parkedCoverageCount = dossier.parkedCoverageCount;
   const unsupportedCoverageCount = dossier.unsupportedCoverageCount;
+  const stackDensityCount = document.layers.filter((layer) => typeof layer.densityLabel === "string" && layer.densityLabel.trim().length > 0).length;
+  const stackSurfaceMassCount = document.layers.filter(
+    (layer) => typeof layer.surfaceMassLabel === "string" && layer.surfaceMassLabel.trim().length > 0
+  ).length;
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -1449,6 +1498,32 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
         </section>
 
         <section class="section">
+          <div class="eyebrow" style="margin: 18px 0 8px;">Issue Snapshot</div>
+          <div class="summary-grid" style="margin-top: 0;">
+            <div class="metric">
+              <strong>Primary read</strong>
+              <span>${escapeHtml(document.primaryMetricLabel)} ${escapeHtml(document.primaryMetricValue)}</span>
+              <small>${escapeHtml(document.assemblyHeadline)}</small>
+            </div>
+            <div class="metric">
+              <strong>Route</strong>
+              <span>${escapeHtml(document.dynamicBranchLabel)}</span>
+              <small>${escapeHtml(document.dynamicBranchDetail)}</small>
+            </div>
+            <div class="metric">
+              <strong>Validation</strong>
+              <span>${escapeHtml(document.validationLabel)}</span>
+              <small>${escapeHtml(document.validationDetail)}</small>
+            </div>
+            <div class="metric">
+              <strong>Stack</strong>
+              <span>${escapeHtml(constructionSection.totalThicknessLabel)}</span>
+              <small>${document.layers.length} visible row${document.layers.length === 1 ? "" : "s"} · ${stackDensityCount} density line${stackDensityCount === 1 ? "" : "s"} · ${stackSurfaceMassCount} surface-mass line${stackSurfaceMassCount === 1 ? "" : "s"}</small>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
           <div class="eyebrow" style="margin: 18px 0 8px;">Issue Dossier</div>
           <div class="method-box">
             <h3>Audit posture</h3>
@@ -1519,6 +1594,22 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
             </thead>
             <tbody>
               ${renderMetricRows(document.metrics)}
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section">
+          <div class="eyebrow" style="margin: 18px 0 8px;">Applied Method &amp; Deliverable Basis</div>
+          <table>
+            <thead>
+              <tr>
+                <th>Basis</th>
+                <th>Current reading</th>
+                <th>Issue note</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${renderMethodBasisRows(document)}
             </tbody>
           </table>
         </section>
@@ -1602,6 +1693,8 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
                 <th>#</th>
                 <th>Layer</th>
                 <th>Thickness</th>
+                <th>Density</th>
+                <th>Surface Mass</th>
                 <th>Assigned role</th>
                 <th>Category</th>
               </tr>

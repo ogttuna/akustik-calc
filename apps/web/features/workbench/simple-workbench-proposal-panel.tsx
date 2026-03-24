@@ -202,8 +202,12 @@ function ProposalField(props: {
 
   return (
     <label className="grid gap-2">
-      <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">{label}</span>
-      <p className="text-sm leading-6 text-[color:var(--ink-soft)]">{note}</p>
+      <div className="grid gap-1">
+        <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">{label}</span>
+        {note.trim().length > 0 ? (
+          <p className="max-w-[34rem] text-[0.78rem] leading-5 text-[color:var(--ink-soft)]">{note}</p>
+        ) : null}
+      </div>
       {multiline ? (
         <textarea
           className="focus-ring min-h-28 rounded-[1rem] border hairline bg-[color:var(--paper)] px-3 py-3 text-sm leading-6 text-[color:var(--ink)]"
@@ -227,10 +231,10 @@ function PreviewMetric(props: { detail: string; label: string; value: string }) 
   const { detail, label, value } = props;
 
   return (
-    <article className="rounded-[1rem] border hairline bg-[color:var(--paper)]/78 px-4 py-4">
+    <article className="min-w-0 rounded-[1rem] border hairline bg-[color:var(--paper)]/78 px-4 py-4">
       <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">{label}</div>
-      <div className="mt-2 text-lg font-semibold text-[color:var(--ink)]">{value}</div>
-      <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">{detail}</p>
+      <div className="mt-2 break-words text-lg font-semibold text-[color:var(--ink)]">{value}</div>
+      <p className="mt-2 text-[0.82rem] leading-5 text-[color:var(--ink-soft)]">{detail}</p>
     </article>
   );
 }
@@ -239,10 +243,10 @@ function IssueMetaCard(props: { detail: string; label: string; value: string }) 
   const { detail, label, value } = props;
 
   return (
-    <article className="rounded-[1rem] border hairline bg-[color:var(--paper)]/78 px-4 py-4">
+    <article className="min-w-0 rounded-[1rem] border hairline bg-[color:var(--paper)]/78 px-4 py-4">
       <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">{label}</div>
-      <div className="mt-2 text-sm font-semibold text-[color:var(--ink)]">{value}</div>
-      <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">{detail}</p>
+      <div className="mt-2 break-words text-sm font-semibold text-[color:var(--ink)]">{value}</div>
+      <p className="mt-2 text-[0.82rem] leading-5 text-[color:var(--ink-soft)]">{detail}</p>
     </article>
   );
 }
@@ -648,20 +652,25 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
     }
   }
 
-  async function handleDownloadPdf() {
+  async function handleDownloadPdf(style: "branded" | "simple" = "branded") {
     setIsDownloadingPdf(true);
 
     try {
-      await downloadSimpleWorkbenchProposalPdf(proposalDocument);
-      toast.success("Branded PDF downloaded", {
-        description: "DynEcho prepared the formal proposal PDF on the server."
+      await downloadSimpleWorkbenchProposalPdf(proposalDocument, {
+        style
+      });
+      toast.success(style === "simple" ? "Simple PDF downloaded" : "Branded PDF downloaded", {
+        description:
+          style === "simple"
+            ? "DynEcho prepared the lightweight calculation-summary PDF on the server."
+            : "DynEcho prepared the formal proposal PDF on the server."
       });
     } catch (error) {
-      toast.error("PDF generation failed", {
+      toast.error(style === "simple" ? "Simple PDF failed" : "PDF generation failed", {
         description:
           error instanceof Error
             ? error.message
-            : "DynEcho could not generate the branded PDF on the server. Use the print view as a fallback."
+            : `DynEcho could not generate the ${style === "simple" ? "simple" : "branded"} PDF on the server. Use the print view as a fallback.`
       });
     } finally {
       setIsDownloadingPdf(false);
@@ -926,10 +935,19 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
           <h2 className="mt-1 font-display text-[1.4rem] leading-none tracking-[-0.04em] text-[color:var(--ink)]">
             Package the proposal
           </h2>
-          <p className="mt-2 max-w-3xl text-sm leading-7 text-[color:var(--ink-soft)]">
-            Capture the client-facing identifiers, then export the live dynamic result as a print-ready offer sheet with
-            the active layer structure, supported outputs, solver branch, and caution notes.
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-[color:var(--ink-soft)]">
+            Set the issue identity, then export the live stack as a formal offer sheet.
           </p>
+          <div className="mt-3 flex flex-wrap gap-2 text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+            <div className="rounded-full border hairline bg-[color:var(--paper)]/72 px-3 py-1.5">{props.reportProfileLabel}</div>
+            <div className="rounded-full border hairline bg-[color:var(--paper)]/72 px-3 py-1.5">
+              {props.metrics.length} live metric{props.metrics.length === 1 ? "" : "s"}
+            </div>
+            <div className="rounded-full border hairline bg-[color:var(--paper)]/72 px-3 py-1.5">
+              {props.layers.length} visible row{props.layers.length === 1 ? "" : "s"}
+            </div>
+            <div className="rounded-full border hairline bg-[color:var(--paper)]/72 px-3 py-1.5">{props.studyModeLabel}</div>
+          </div>
         </div>
         <div
           className={`inline-flex items-center rounded-full border px-3 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.16em] ${warningToneClass}`}
@@ -948,28 +966,28 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
             <div className="mt-4 grid gap-4 md:grid-cols-2">
               <ProposalField
                 label="Consultant company"
-                note="The issuing company that appears on the formal proposal sheet."
+                note="Issuer shown on the sheet."
                 onChange={props.onConsultantCompanyChange}
                 placeholder="e.g. Machinity Acoustic Consultants"
                 value={props.consultantCompany}
               />
               <ProposalField
                 label="Prepared by"
-                note="The responsible consultant or proposal owner."
+                note="Issue owner."
                 onChange={props.onPreparedByChange}
                 placeholder="e.g. O. Tuna"
                 value={props.preparedBy}
               />
               <ProposalField
                 label="Proposal reference"
-                note="Formal issue identifier used in transmittals and PDF filenames."
+                note="Formal issue code."
                 onChange={props.onProposalReferenceChange}
                 placeholder="e.g. MAC-2026-014"
                 value={props.proposalReference}
               />
               <ProposalField
                 label="Revision"
-                note="Current issue status shown on the client-facing sheet."
+                note="Current issue status."
                 onChange={props.onProposalRevisionChange}
                 placeholder="e.g. Rev 01"
                 value={props.proposalRevision}
@@ -1004,8 +1022,8 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
                   <div className="mt-2 text-sm font-semibold text-[color:var(--ink)]">
                     {issueSequenceSnapshot.nextReference}
                   </div>
-                  <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">
-                    DynEcho keeps a browser-local running issue number for this consultant, project, and issue-date stem.
+                  <p className="mt-2 text-[0.82rem] leading-5 text-[color:var(--ink-soft)]">
+                    Browser-local running issue number for this office, project, and date stem.
                     {issueSequenceSnapshot.lastIssuedReference
                       ? ` Last reserved on this browser: ${issueSequenceSnapshot.lastIssuedReference}.`
                       : " No issue number has been reserved on this browser yet."}
@@ -1048,7 +1066,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
             <div className="mt-4 grid gap-4">
               <ProposalField
                 label="Profile label"
-                note="Save the current consultant identity block as a reusable local office or company profile."
+                note="Save the current identity as a reusable local office preset."
                 onChange={setProfileDraftLabel}
                 placeholder="e.g. Machinity Istanbul office"
                 value={profileDraftLabel}
@@ -1118,10 +1136,10 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
               </div>
               <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">
                 {activeCompanyProfile
-                  ? `${activeCompanyProfile.label} currently owns the consultant block, template profile, issue prefix, and default clause policy used by this printable issue sheet.`
+                  ? `${activeCompanyProfile.label} is driving the consultant block, template profile, issue prefix, and clause wording for this issue.`
                   : defaultCompanyProfile
-                    ? "A default office preset is saved for this browser. DynEcho will preload it whenever the issue sheet falls back to the generic consultant identity and generic clause policy."
-                    : "Save one reusable office preset and mark it as the default when this browser should always open proposal drafting on the same consultant identity and standard clause wording."}
+                    ? "A default office preset is saved for this browser and will preload when the sheet falls back to the generic identity."
+                    : "Save one office preset and mark it as default if this browser should always open on the same consultant identity."}
               </p>
             </div>
             <div className="mt-4 grid gap-3">
@@ -1166,11 +1184,8 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
                           validityNote: profile.proposalValidityNote
                         })?.label ?? "Custom clause pair"}
                       </div>
-                      <div>{profile.proposalIssuePurpose || "Default issue purpose not saved"}</div>
-                      <div>{profile.proposalValidityNote || "Default validity note not saved"}</div>
                       <div>{profile.consultantEmail || "No email saved"}</div>
                       <div>{profile.consultantPhone || "No phone saved"}</div>
-                      <div>{profile.consultantAddress || "No address saved"}</div>
                     </div>
                     <div className="flex flex-wrap items-start justify-end gap-2">
                       <button
@@ -1220,8 +1235,8 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
             <div className="mt-4 grid gap-4 md:grid-cols-2">
               <label className="grid gap-2">
                 <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Template profile</span>
-                <p className="text-sm leading-6 text-[color:var(--ink-soft)]">
-                  Choose whether this issue should read like a consultant offer, developer memo, or lab-ready brief.
+                <p className="text-[0.78rem] leading-5 text-[color:var(--ink-soft)]">
+                  Choose the proposal voice.
                 </p>
                 <select
                   className="focus-ring rounded-[1rem] border hairline bg-[color:var(--paper)] px-3 py-3 text-sm text-[color:var(--ink)]"
@@ -1237,7 +1252,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
               </label>
               <ProposalField
                 label="Issue code prefix"
-                note="Optional override for the first code block in suggested references, e.g. MAC, MIA, or LAB. Leave blank to derive it from the issuing office name."
+                note="Optional first code block override."
                 onChange={props.onIssueCodePrefixChange}
                 placeholder="e.g. MAC"
                 value={props.issueCodePrefix}
@@ -1253,35 +1268,35 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
             <div className="mt-4 grid gap-4 md:grid-cols-2">
               <ProposalField
                 label="Approver title"
-                note="Professional role shown on the signature-ready cover and issue authority block."
+                note="Shown on issue authority."
                 onChange={props.onApproverTitleChange}
                 placeholder="e.g. Lead Acoustic Consultant"
                 value={props.approverTitle}
               />
               <ProposalField
                 label="Contact email"
-                note="Proposal contact shown on the branded PDF cover and appendix footer."
+                note="Printed on cover and footer."
                 onChange={props.onConsultantEmailChange}
                 placeholder="e.g. proposals@machinity-acoustics.com"
                 value={props.consultantEmail}
               />
               <ProposalField
                 label="Contact phone"
-                note="Primary company contact number carried on the issue sheet."
+                note="Primary proposal contact."
                 onChange={props.onConsultantPhoneChange}
                 placeholder="e.g. +90 212 000 00 00"
                 value={props.consultantPhone}
               />
               <ProposalField
                 label="Office address"
-                note="Postal or office line printed as the company identity block."
+                note="Office identity on the sheet."
                 onChange={props.onConsultantAddressChange}
                 placeholder="e.g. Maslak, Istanbul, Turkiye"
                 value={props.consultantAddress}
               />
               <ProposalField
                 label="Wordmark line"
-                note="Optional brand line shown below the company name on the cover and template header."
+                note="Optional line under company name."
                 onChange={props.onConsultantWordmarkLineChange}
                 placeholder="e.g. Building Acoustics and Vibration Control"
                 value={props.consultantWordmarkLine}
@@ -1290,8 +1305,8 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
             <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
               <label className="grid gap-2">
                 <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Company logo</span>
-                <p className="text-sm leading-6 text-[color:var(--ink-soft)]">
-                  Upload a lightweight logo so the branded print preview and PDF use the company mark instead of the generated monogram.
+                <p className="text-[0.78rem] leading-5 text-[color:var(--ink-soft)]">
+                  Optional mark for preview and PDF.
                 </p>
                 <input
                   accept="image/png,image/jpeg,image/webp,image/svg+xml"
@@ -1343,14 +1358,14 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
             <div className="mt-4 grid gap-4">
               <ProposalField
                 label="Project name"
-                note="This title is used on the proposal sheet and in the print file name."
+                note="Used on the cover and file name."
                 onChange={props.onProjectNameChange}
                 placeholder="e.g. Riverside Residences acoustic study"
                 value={props.projectName}
               />
               <ProposalField
                 label="Client name"
-                note="Client or recipient shown on the formal PDF/print issue."
+                note="Client shown on the sheet."
                 onChange={props.onClientNameChange}
                 placeholder="e.g. Riverside Development"
                 value={props.clientName}
@@ -1358,7 +1373,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
               <ProposalField
                 label="Consultant note"
                 multiline
-                note="Record scope notes, exclusions, or delivery caveats that should travel with the estimate."
+                note="Scope notes or caveats that should travel with the issue."
                 onChange={props.onBriefNoteChange}
                 placeholder="Summarize assumptions, exclusions, and next-step advice."
                 value={props.briefNote}
@@ -1381,10 +1396,10 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
                     <div className="mt-2 text-sm font-semibold text-[color:var(--ink)]">
                       {activeProposalPolicyPreset ? activeProposalPolicyPreset.label : "Custom wording active"}
                     </div>
-                    <p className="mt-2 max-w-3xl text-sm leading-6 text-[color:var(--ink-soft)]">
+                    <p className="mt-2 max-w-3xl text-[0.82rem] leading-5 text-[color:var(--ink-soft)]">
                       {activeProposalPolicyPreset
                         ? activeProposalPolicyPreset.note
-                        : "The current issue purpose and validity pair no longer matches a saved standard clause. Keep the custom wording or reapply one preset below."}
+                        : "Current purpose and validity text do not match a saved preset."}
                     </p>
                   </div>
                   <div className="rounded-full border hairline bg-[color:var(--paper)] px-3 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-soft)]">
@@ -1422,35 +1437,35 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
               </div>
               <ProposalField
                 label="Issued to"
-                note="Recipient line printed on the cover and transmittal summary."
+                note="Recipient line."
                 onChange={props.onProposalRecipientChange}
                 placeholder="e.g. Riverside Development Team"
                 value={props.proposalRecipient}
               />
               <ProposalField
                 label="Attention"
-                note="Named recipient, department, or reviewer line for the formal sheet."
+                note="Named reviewer or team."
                 onChange={props.onProposalAttentionChange}
                 placeholder="e.g. Attention: Design Coordination Team"
                 value={props.proposalAttention}
               />
               <ProposalField
                 label="Subject line"
-                note="Document title shown as the cover subject and print summary."
+                note="Document title."
                 onChange={props.onProposalSubjectChange}
                 placeholder={`e.g. ${getStudyModeAwareProposalSubject("Riverside Residences", props.studyModeLabel)}`}
                 value={props.proposalSubject}
               />
               <ProposalField
                 label="Issue purpose"
-                note="Formal reason this issue is being sent, such as client review, tender pricing, or laboratory follow-up."
+                note="Why this issue is being sent."
                 onChange={props.onProposalIssuePurposeChange}
                 placeholder="e.g. Client review and acoustic coordination"
                 value={props.proposalIssuePurpose}
               />
               <ProposalField
                 label="Validity note"
-                note="Commercial or administrative validity note carried into the formal proposal and PDF package."
+                note="Commercial or admin validity wording."
                 onChange={props.onProposalValidityNoteChange}
                 placeholder="e.g. Valid for 30 calendar days unless superseded"
                 value={props.proposalValidityNote}
@@ -1461,22 +1476,29 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
           <div className="rounded-[1.35rem] border hairline bg-black/[0.025] px-4 py-4">
             <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
               <ScrollText className="h-4 w-4" />
-              What the sheet carries
+              Sheet contents
             </div>
-            <div className="mt-3 grid gap-2 text-sm leading-6 text-[color:var(--ink-soft)]">
-              <div>Cover page with executive reading, issue authority, and signature-ready transmittal blocks</div>
-              <div>Profile-templated cover identity that switches between consultant issue, developer memo, and lab-ready brief posture</div>
-              <div>Optional uploaded logo and custom wordmark line carried into preview and branded PDF output</div>
-              <div>Optional issue code prefix override for disciplined company-specific document numbering</div>
-              <div>Standard clause library for issue-purpose and validity wording, with custom text still allowed when the preset library is too narrow</div>
-              <div>Reusable local office presets that can be marked as default, exchanged as JSON between browsers, and carry office-level clause wording</div>
-              <div>Project, client, consultant, prepared-by, role, and company contact identity</div>
-              <div>Issued-to, attention, subject, purpose, and validity lines so the sheet reads like a formal transmittal</div>
-              <div>Base document code plus browser-local proposal sequence for issue control</div>
-              <div>Executive summary, technical schedule, and recommendation register for memo-grade reading</div>
-              <div>Layer-by-layer schedule with role/category labels and live dynamic outputs</div>
-              <div>Output coverage register with live, bound, parked, and unsupported posture kept separate</div>
-              <div>Solver branch, validation posture, decision trail, source citation appendix, assumption register, warnings, and consultant notes</div>
+            <div className="mt-3 grid gap-3 sm:grid-cols-2">
+              <IssueMetaCard
+                detail="Project, recipient, subject, purpose, and validity lines so the sheet reads like a formal transmittal."
+                label="Cover + transmittal"
+                value="Identity, recipient, subject"
+              />
+              <IssueMetaCard
+                detail="Live metrics, technical section, and row schedule stay visible together."
+                label="Metric + schedule"
+                value={`${props.metrics.length} metric${props.metrics.length === 1 ? "" : "s"} · ${props.layers.length} row${props.layers.length === 1 ? "" : "s"}`}
+              />
+              <IssueMetaCard
+                detail="Validation corridor, solver rationale, decision trail, and assumptions stay packaged."
+                label="Method + evidence"
+                value={`${proposalDocument.methodTraceGroups.length} trace group${proposalDocument.methodTraceGroups.length === 1 ? "" : "s"}`}
+              />
+              <IssueMetaCard
+                detail="Server PDF, browser print view, and proposal summary copy are available from the same package."
+                label="Delivery"
+                value="PDF, print, and summary"
+              />
             </div>
           </div>
         </div>
@@ -1556,7 +1578,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
                 <div>{proposalDocument.studyModeLabel}</div>
                 <div>{proposalDocument.contextLabel}</div>
               </div>
-              <p className="mt-4 text-sm leading-7 text-[color:var(--ink-soft)]">{props.assemblyHeadline}</p>
+              <p className="mt-4 text-[0.82rem] leading-5 text-[color:var(--ink-soft)]">{props.assemblyHeadline}</p>
             </div>
 
             <div className="rounded-[1.2rem] border border-[color:color-mix(in_oklch,var(--accent)_30%,var(--line))] bg-[color:color-mix(in_oklch,var(--accent)_10%,var(--paper))] px-4 py-4">
@@ -1588,20 +1610,34 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
           </div>
 
           <div className="mt-4 rounded-[1rem] border border-[color:color-mix(in_oklch,var(--accent)_26%,var(--line))] bg-[color:color-mix(in_oklch,var(--accent)_8%,var(--paper))] px-4 py-4">
-            <div className="text-sm font-semibold text-[color:var(--ink)]">Issue authority</div>
-            <p className="mt-3 max-w-4xl text-sm leading-7 text-[color:var(--ink-soft)]">
-              {proposalDocument.preparedBy}, {proposalDocument.approverTitle}, is issuing {proposalDocument.proposalReference}{" "}
-              {proposalDocument.proposalRevision} on behalf of {proposalDocument.consultantCompany} for {proposalDocument.clientName}. The branded PDF now packages this on a dedicated cover page with signature-ready transmittal blocks.
-            </p>
-            <p className="mt-3 max-w-4xl text-sm leading-7 text-[color:var(--ink-soft)]">
-              Base stem {proposalDocument.issueBaseReference} remains visible, and the next browser-local issue number is {proposalDocument.issueNextReference}.
-            </p>
-            <p className="mt-3 max-w-4xl text-sm leading-7 text-[color:var(--ink-soft)]">
-              The current transmittal is addressed to {proposalDocument.proposalRecipient}. {proposalDocument.proposalAttention}. Subject: {proposalDocument.proposalSubject}.
-            </p>
-            <p className="mt-3 max-w-4xl text-sm leading-7 text-[color:var(--ink-soft)]">
-              Purpose: {proposalDocument.proposalIssuePurpose}. Validity: {proposalDocument.proposalValidityNote}
-            </p>
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="text-sm font-semibold text-[color:var(--ink)]">Issue authority</div>
+              <div className="rounded-full border hairline bg-[color:var(--paper)]/76 px-3 py-1.5 text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-soft)]">
+                {proposalDocument.proposalReference} · {proposalDocument.proposalRevision}
+              </div>
+            </div>
+            <div className="mt-3 grid gap-3 md:grid-cols-2">
+              <IssueMetaCard
+                detail={`${proposalDocument.consultantCompany} · ${proposalDocument.clientName}`}
+                label="Issuer"
+                value={`${proposalDocument.preparedBy} · ${proposalDocument.approverTitle}`}
+              />
+              <IssueMetaCard
+                detail={`${proposalDocument.proposalAttention} · ${proposalDocument.proposalSubject}`}
+                label="Recipient"
+                value={proposalDocument.proposalRecipient}
+              />
+              <IssueMetaCard
+                detail={`Base ${proposalDocument.issueBaseReference} · Next local no ${proposalDocument.issueNextReference}`}
+                label="Governance"
+                value="Revision control active"
+              />
+              <IssueMetaCard
+                detail={proposalDocument.proposalValidityNote}
+                label="Terms"
+                value={proposalDocument.proposalIssuePurpose}
+              />
+            </div>
           </div>
 
           <div className="mt-4 grid gap-3 md:grid-cols-3">
@@ -1702,8 +1738,8 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
                 {readyCoverageCount} ready · {parkedCoverageCount} parked · {unsupportedCoverageCount} unsupported
               </div>
             </div>
-            <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">
-              The issue sheet keeps active outputs separate from parked and unsupported lanes so a client-facing PDF does not hide solver limits.
+            <p className="mt-2 text-[0.82rem] leading-5 text-[color:var(--ink-soft)]">
+              Ready, parked, and unsupported lanes stay separate so the sheet does not hide solver limits.
             </p>
             <div className="mt-3 grid gap-3 md:grid-cols-2">
               {proposalDocument.coverageItems.map((item) => (
@@ -1843,6 +1879,15 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
             </button>
             <button
               className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03] disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={!exportReady || isDownloadingPdf}
+              onClick={() => void handleDownloadPdf("simple")}
+              type="button"
+            >
+              <Download className="h-4 w-4" />
+              {isDownloadingPdf ? "Generating PDF..." : "Simple PDF"}
+            </button>
+            <button
+              className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03] disabled:cursor-not-allowed disabled:opacity-50"
               disabled={!exportReady}
               onClick={() => openProposalPrintView(false)}
               type="button"
@@ -1872,9 +1917,8 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
               <FileText className="h-4 w-4" />
               Delivery note
             </div>
-            <p className="mt-2 text-sm leading-7 text-[color:var(--ink-soft)]">
-              DynEcho can now generate a branded server-side PDF directly from the packaged proposal, while the dedicated print view remains available
-              as a browser fallback. The export now carries a formal cover page, signature-ready issue blocks, a technical schedule page, and a citation appendix.
+            <p className="mt-2 text-[0.82rem] leading-5 text-[color:var(--ink-soft)]">
+              Server PDF, browser print fallback, cover page, technical schedule, and citation appendix are all generated from the same packaged issue.
             </p>
           </div>
         </article>

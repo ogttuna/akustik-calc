@@ -32,7 +32,7 @@ export function WorkbenchClientPage() {
   const view = searchParams.get("view");
 
   return (
-    <main className="ui-shell flex min-h-screen flex-col gap-8 overflow-x-clip px-4 pb-16 pt-4 sm:px-6 lg:px-8">
+    <main className="flex min-h-screen flex-col gap-6 overflow-x-clip px-[clamp(0.75rem,1.6vw,1.5rem)] pb-10 pt-4">
       {view === "advanced" ? <WorkbenchShell /> : <SimpleWorkbenchShell />}
     </main>
   );

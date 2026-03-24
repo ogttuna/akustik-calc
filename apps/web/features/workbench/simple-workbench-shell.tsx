@@ -1,8 +1,5 @@
 "use client";
 
-import * as Dialog from "@radix-ui/react-dialog";
-import { MATERIAL_CATALOG_SEED } from "@dynecho/catalogs";
-import { Command } from "cmdk";
 import type {
   AirborneCalculatorId,
   AirborneConnectionType,
@@ -15,6 +12,7 @@ import type {
   FloorRole,
   ImpactFieldContext,
   JunctionQuality,
+  MaterialCategory,
   MaterialDefinition,
   PenetrationState,
   PerimeterSealClass,
@@ -22,14 +20,28 @@ import type {
   SharedTrackClass
 } from "@dynecho/shared";
 import { SurfacePanel } from "@dynecho/ui";
-import { ArrowDown, ArrowUp, Check, ChevronRight, ChevronsUpDown, Layers3, Plus, RotateCcw, Search } from "lucide-react";
+import { ArrowDown, ArrowUp, ChevronRight, Layers3, Plus, RotateCcw } from "lucide-react";
 import Link from "next/link";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { useEffect, useState } from "react";
 
 import { formatDecimal } from "@/lib/format";
 
 import { describeAssembly, getMaterialCategoryLabel } from "./describe-assembly";
+import {
+  getCatalogDynamicStiffness,
+  getEffectiveDynamicStiffness,
+  hasDynamicStiffnessOverrideInput,
+  hasEffectiveDynamicStiffnessOverride,
+  parseDynamicStiffnessOverride
+} from "./dynamic-stiffness";
+import {
+  getCatalogDensity,
+  getEffectiveDensity,
+  hasDensityOverrideInput,
+  hasEffectiveDensityOverride,
+  parseDensityOverride
+} from "./material-density";
 import { getDynamicCalcBranchSummary } from "./dynamic-calc-branch";
 import {
   buildSimpleWorkbenchCorridorDossier,
@@ -78,18 +90,25 @@ import {
   REQUESTED_OUTPUT_SUPPORT_NOTES,
   STUDY_CONTEXT_LABELS
 } from "./workbench-data";
+import {
+  buildCustomMaterialDefinition,
+  buildWorkbenchMaterialCatalog,
+  createEmptyCustomMaterialDraft,
+  CUSTOM_MATERIAL_CATEGORY_OPTIONS,
+  defaultThicknessForMaterial,
+  isCustomWorkbenchMaterial,
+  validateCustomMaterialDraft,
+  type CustomMaterialDraft,
+  type CustomMaterialDraftErrors
+} from "./workbench-materials";
+import { WorkbenchMaterialPicker, type WorkbenchMaterialOptionGroup } from "./workbench-material-picker";
 import { getPresetById, type PresetId, type StudyMode } from "./preset-definitions";
 import type { LayerDraft } from "./workbench-store";
-import { useWorkbenchStore } from "./workbench-store";
+import { inferFloorRole, useWorkbenchStore } from "./workbench-store";
 
 type MaterialIdGroup = {
   ids: readonly string[];
   label: string;
-};
-
-type MaterialOptionGroup = {
-  label: string;
-  materials: readonly MaterialDefinition[];
 };
 
 type ControlOption<T extends string> = {
@@ -119,8 +138,48 @@ type GuidedTopologyAction = {
   rows: ReadonlyArray<{ floorRole?: FloorRole; materialId: string; thicknessMm: string }>;
 };
 
+type NewLayerDraft = {
+  densityKgM3: string;
+  dynamicStiffnessMNm3: string;
+  floorRole?: FloorRole;
+  materialId: string;
+  thicknessMm: string;
+};
+
+const SIMPLE_WORKBENCH_THEME = {
+  "--paper": "oklch(0.985 0.004 255)",
+  "--paper-strong": "oklch(0.972 0.006 255)",
+  "--panel": "color-mix(in oklch, var(--paper) 94%, oklch(0.88 0.01 244))",
+  "--panel-strong": "color-mix(in oklch, var(--paper) 88%, oklch(0.84 0.012 244))",
+  "--line": "oklch(0.87 0.01 248)",
+  "--line-strong": "oklch(0.73 0.016 248)",
+  "--ink": "oklch(0.28 0.024 255)",
+  "--ink-soft": "oklch(0.48 0.016 252)",
+  "--ink-faint": "oklch(0.65 0.012 252)",
+  "--accent": "oklch(0.61 0.09 242)",
+  "--accent-soft": "color-mix(in oklch, var(--accent) 10%, var(--paper))",
+  "--accent-ink": "oklch(0.39 0.07 242)",
+  "--route": "oklch(0.72 0.05 244)",
+  "--route-ink": "oklch(0.37 0.05 244)",
+  "--assembly": "oklch(0.75 0.05 160)",
+  "--assembly-ink": "oklch(0.38 0.045 160)",
+  "--results": "oklch(0.81 0.055 78)",
+  "--results-ink": "oklch(0.46 0.05 76)",
+  "--review": "oklch(0.78 0.018 235)",
+  "--review-ink": "oklch(0.39 0.018 235)",
+  "--warning": "oklch(0.8 0.08 80)",
+  "--warning-soft": "color-mix(in oklch, var(--warning) 10%, var(--paper))",
+  "--warning-ink": "oklch(0.49 0.056 76)",
+  "--success": "oklch(0.68 0.085 160)",
+  "--success-soft": "color-mix(in oklch, var(--success) 10%, var(--paper))",
+  "--success-ink": "oklch(0.43 0.065 160)",
+  "--shadow-color": "rgba(25, 40, 72, 0.14)"
+} as CSSProperties;
+
 type FieldRelevanceTone = "optional" | "required";
 type ReviewTabId = "diagnostics" | "method" | "proposal";
+type WorkbenchSectionTone = "assembly" | "results" | "review" | "route";
+type WorkspacePanelId = "results" | "review" | "setup" | "stack";
 
 const REVIEW_TABS: readonly { id: ReviewTabId; label: string; note: string }[] = [
   {
@@ -152,21 +211,6 @@ const MODE_PRESETS: Record<StudyMode, readonly PresetId[]> = {
     "timber_bare_impact_only_fallback"
   ],
   wall: ["concrete_wall"]
-};
-
-const MODE_QUICK_PICK_IDS: Record<StudyMode, readonly string[]> = {
-  floor: [
-    "ceramic_tile",
-    "laminate_flooring",
-    "vinyl_flooring",
-    "screed",
-    "generic_resilient_underlay",
-    "mw_t_impact_layer",
-    "clt_panel",
-    "concrete",
-    "hollow_core_plank"
-  ],
-  wall: ["gypsum_board", "acoustic_gypsum_board", "rockwool", "air_gap", "concrete", "clt_panel"]
 };
 
 const TIMBER_IMPACT_ONLY_GUIDED_ACTIONS: readonly GuidedTopologyAction[] = [
@@ -223,6 +267,8 @@ const MODE_MATERIAL_GROUPS: Record<StudyMode, readonly MaterialIdGroup[]> = {
         "engineered_timber_flooring",
         "engineered_timber_with_acoustic_underlay",
         "carpet_with_foam_underlay",
+        "mlv",
+        "bitumen_membrane",
         "dry_floating_gypsum_fiberboard",
         "impactstop_board",
         "firestop_board"
@@ -254,12 +300,25 @@ const MODE_MATERIAL_GROUPS: Record<StudyMode, readonly MaterialIdGroup[]> = {
       label: "Resilient and impact layer"
     },
     {
-      ids: ["screed", "bonded_chippings", "non_bonded_chippings", "elastic_bonded_fill", "generic_fill", "inex_floor_panel"],
+      ids: [
+        "screed",
+        "anhydrite_screed",
+        "bonded_chippings",
+        "non_bonded_chippings",
+        "elastic_bonded_fill",
+        "generic_fill",
+        "particleboard_flooring",
+        "osb",
+        "plywood",
+        "inex_floor_panel"
+      ],
       label: "Build-up and deck"
     },
     {
       ids: [
         "concrete",
+        "lightweight_concrete",
+        "heavy_concrete",
         "clt_panel",
         "hollow_core_plank",
         "composite_steel_deck",
@@ -275,11 +334,18 @@ const MODE_MATERIAL_GROUPS: Record<StudyMode, readonly MaterialIdGroup[]> = {
     {
       ids: [
         "rockwool",
+        "high_density_rockwool",
         "glasswool",
+        "glasswool_board",
+        "cellulose_fill",
+        "wood_wool_panel",
+        "pet_felt",
         "air_gap",
         "resilient_channel",
         "ubiq_resilient_ceiling",
         "genieclip_rst",
+        "acoustic_mount_clip",
+        "spring_hanger_track",
         "acoustic_hanger_ceiling",
         "resilient_stud_ceiling",
         "furring_channel",
@@ -296,7 +362,12 @@ const MODE_MATERIAL_GROUPS: Record<StudyMode, readonly MaterialIdGroup[]> = {
         "diamond_board",
         "security_board",
         "silentboard",
+        "fire_board",
+        "sheetrock_one",
+        "cement_board",
         "cement_plaster",
+        "gypsum_plaster",
+        "lime_plaster",
         "dense_plaster",
         "lightweight_plaster",
         "lime_cement_plaster_1300",
@@ -304,14 +375,21 @@ const MODE_MATERIAL_GROUPS: Record<StudyMode, readonly MaterialIdGroup[]> = {
         "lime_cement_plaster_1780",
         "skim_plaster",
         "celcon_lwt_plaster",
-        "celcon_dense_plaster"
+        "celcon_dense_plaster",
+        "mlv",
+        "bitumen_membrane"
       ],
       label: "Board and plaster finish"
     },
     {
       ids: [
         "concrete",
+        "lightweight_concrete",
+        "heavy_concrete",
         "clt_panel",
+        "solid_brick",
+        "hollow_brick",
+        "aac",
         "ytong_aac_d700",
         "ytong_g5_800",
         "ytong_separatiepaneel_aac_4_600",
@@ -335,7 +413,21 @@ const MODE_MATERIAL_GROUPS: Record<StudyMode, readonly MaterialIdGroup[]> = {
       label: "Core mass"
     },
     {
-      ids: ["rockwool", "glasswool", "air_gap", "resilient_support", "resilient_channel", "furring_channel"],
+      ids: [
+        "rockwool",
+        "high_density_rockwool",
+        "glasswool",
+        "glasswool_board",
+        "cellulose_fill",
+        "wood_wool_panel",
+        "pet_felt",
+        "air_gap",
+        "resilient_support",
+        "resilient_channel",
+        "acoustic_mount_clip",
+        "spring_hanger_track",
+        "furring_channel"
+      ],
       label: "Cavity and support"
     },
     {
@@ -391,6 +483,11 @@ const MODE_MATERIAL_GROUPS: Record<StudyMode, readonly MaterialIdGroup[]> = {
       label: "Other catalog materials"
     }
   ]
+};
+
+const REMAINDER_MATERIAL_GROUP_LABEL: Record<StudyMode, string> = {
+  floor: "More catalog materials",
+  wall: "More catalog materials"
 };
 
 const CALCULATOR_OPTIONS: readonly ControlOption<AirborneCalculatorId>[] = [
@@ -520,48 +617,10 @@ const AUTOMATIC_OUTPUTS: Record<StudyMode, Record<AirborneContextMode, readonly 
 
 const FIELD_IMPACT_OUTPUTS = new Set<RequestedOutputId>(["L'n,w", "L'nT,w", "L'nT,50", "LnT,A"]);
 
-function defaultThicknessFor(material: MaterialDefinition): string {
-  switch (material.id) {
-    case "gypsum_board":
-      return "12.5";
-    case "rockwool":
-      return "50";
-    case "air_gap":
-      return "50";
-    case "concrete":
-      return "150";
-    case "clt_panel":
-      return "140";
-    case "hollow_core_plank":
-      return "200";
-    case "ceramic_tile":
-      return "8";
-    case "laminate_flooring":
-      return "8";
-    case "vinyl_flooring":
-      return "4";
-    case "screed":
-      return "50";
-    case "generic_resilient_underlay":
-      return "8";
-    case "mw_t_impact_layer":
-      return "30";
-    default:
-      switch (material.category) {
-        case "finish":
-          return "12";
-        case "gap":
-          return "50";
-        case "insulation":
-          return "50";
-        case "support":
-          return "10";
-        case "mass":
-        default:
-          return "100";
-      }
-  }
-}
+const DEFAULT_NEW_LAYER_BY_MODE: Record<StudyMode, { materialId: string; thicknessMm: string }> = {
+  floor: { materialId: "vinyl_flooring", thicknessMm: "4" },
+  wall: { materialId: "gypsum_board", thicknessMm: "12.5" }
+};
 
 function formatSignedDb(value: number | null | undefined): string {
   if (typeof value !== "number" || !Number.isFinite(value)) {
@@ -581,6 +640,52 @@ function isThicknessReady(thicknessMm: string): boolean {
   return typeof parsePositiveNumber(thicknessMm) === "number";
 }
 
+function getDynamicStiffnessInputWarning(value: string | undefined): string | null {
+  if (!hasDynamicStiffnessOverrideInput(value)) {
+    return null;
+  }
+
+  return parseDynamicStiffnessOverride(value) ? null : "Dynamic stiffness override must be a positive number in MN/m³.";
+}
+
+function getDensityInputWarning(material: MaterialDefinition, value: string | undefined): string | null {
+  if (!hasDensityOverrideInput(value)) {
+    return null;
+  }
+
+  return parseDensityOverride({
+    material,
+    value
+  })
+    ? null
+    : "Density override must be non-negative in kg/m³. Use zero only for gap or support layers.";
+}
+
+function formatDynamicStiffnessLabel(material: MaterialDefinition, overrideValue: string | undefined): string {
+  const effectiveDynamicStiffness = getEffectiveDynamicStiffness({
+    material,
+    overrideValue
+  });
+
+  if (typeof effectiveDynamicStiffness !== "number") {
+    return hasDynamicStiffnessOverrideInput(overrideValue) ? "Invalid override" : "Not listed";
+  }
+
+  return `${formatDecimal(effectiveDynamicStiffness)} MN/m³${
+    hasEffectiveDynamicStiffnessOverride({ material, overrideValue }) ? " (manual)" : ""
+  }`;
+}
+
+function formatDensityValue(densityKgM3: number | undefined): string | null {
+  if (!(typeof densityKgM3 === "number" && Number.isFinite(densityKgM3) && densityKgM3 >= 0)) {
+    return null;
+  }
+
+  const valueLabel = Number.isInteger(densityKgM3) ? densityKgM3.toLocaleString("en-US") : formatDecimal(densityKgM3);
+
+  return `${valueLabel} kg/m³`;
+}
+
 function uniqueMaterialsById(materials: readonly MaterialDefinition[]): MaterialDefinition[] {
   const seen = new Set<string>();
 
@@ -598,7 +703,7 @@ function buildMaterialGroups(
   studyMode: StudyMode,
   allMaterials: readonly MaterialDefinition[],
   selectedMaterialId: string
-): MaterialOptionGroup[] {
+): WorkbenchMaterialOptionGroup[] {
   const materialById = new Map(allMaterials.map((material) => [material.id, material]));
   const groups = MODE_MATERIAL_GROUPS[studyMode]
     .map((group) => ({
@@ -606,18 +711,44 @@ function buildMaterialGroups(
       materials: group.ids
         .map((id) => materialById.get(id))
         .filter((material): material is MaterialDefinition => Boolean(material))
-    }))
+  }))
     .filter((group) => group.materials.length > 0);
 
   const includedIds = new Set(groups.flatMap((group) => group.materials.map((material) => material.id)));
+  const customMaterials = uniqueMaterialsById(
+    allMaterials
+      .filter((material) => !includedIds.has(material.id) && isCustomWorkbenchMaterial(material))
+      .sort((left, right) => left.name.localeCompare(right.name, "en"))
+  );
+  if (customMaterials.length > 0) {
+    groups.unshift({
+      label: "Custom materials",
+      materials: customMaterials
+    });
+  }
+
   if (!includedIds.has(selectedMaterialId)) {
     const selectedMaterial = materialById.get(selectedMaterialId);
-    if (selectedMaterial) {
+    if (selectedMaterial && !isCustomWorkbenchMaterial(selectedMaterial)) {
+      includedIds.add(selectedMaterial.id);
       groups.unshift({
         label: "Current row material",
         materials: [selectedMaterial]
       });
     }
+  }
+
+  const remainderMaterials = uniqueMaterialsById(
+    allMaterials
+      .filter((material) => !includedIds.has(material.id) && !isCustomWorkbenchMaterial(material))
+      .sort((left, right) => left.name.localeCompare(right.name, "en"))
+  );
+
+  if (remainderMaterials.length > 0) {
+    groups.push({
+      label: REMAINDER_MATERIAL_GROUP_LABEL[studyMode],
+      materials: remainderMaterials
+    });
   }
 
   return groups.map((group) => ({
@@ -678,14 +809,14 @@ function formatCountLabel(count: number, singular: string): string {
   return `${count} ${singular}${count === 1 ? "" : "s"}`;
 }
 
-function getRowActivityCounts(rows: readonly LayerDraft[]): {
+function getRowActivityCounts(rows: readonly LayerDraft[], materials?: readonly MaterialDefinition[]): {
   collapsedLiveRowCount: number;
   liveRowCount: number;
   parkedRowCount: number;
   solverLayerCount: number;
 } {
   const liveRowCount = countValidThicknessRows(rows);
-  const solverLayerCount = normalizeRows(rows).layers.length;
+  const solverLayerCount = normalizeRows(rows, materials).layers.length;
 
   return {
     collapsedLiveRowCount: Math.max(liveRowCount - solverLayerCount, 0),
@@ -764,6 +895,108 @@ function layerStrokeClass(material: MaterialDefinition): string {
     case "mass":
     default:
       return "border-[color:color-mix(in_oklab,var(--ink)_18%,transparent)]";
+  }
+}
+
+type LayerVisualSurface = {
+  frontStyle: CSSProperties;
+  sideStyle: CSSProperties;
+  topStyle: CSSProperties;
+};
+
+function buildLayerFaceStyle(input: {
+  backgroundColor: string;
+  backgroundImage?: string;
+  backgroundSize?: string;
+}): CSSProperties {
+  return {
+    backgroundColor: input.backgroundColor,
+    backgroundImage: input.backgroundImage,
+    backgroundSize: input.backgroundSize
+  };
+}
+
+function getLayerVisualSurface(material: MaterialDefinition): LayerVisualSurface {
+  switch (material.category) {
+    case "finish":
+      return {
+        frontStyle: buildLayerFaceStyle({
+          backgroundColor: "color-mix(in oklch,var(--accent) 18%, var(--paper))",
+          backgroundImage: "linear-gradient(135deg, rgba(255,255,255,0.28), rgba(255,255,255,0.04))"
+        }),
+        sideStyle: buildLayerFaceStyle({
+          backgroundColor: "color-mix(in oklch,var(--accent-ink) 22%, var(--paper))",
+          backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.08), rgba(0,0,0,0.04))"
+        }),
+        topStyle: buildLayerFaceStyle({
+          backgroundColor: "color-mix(in oklch,var(--accent) 12%, white)",
+          backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.36), rgba(255,255,255,0.06))"
+        })
+      };
+    case "insulation":
+      return {
+        frontStyle: buildLayerFaceStyle({
+          backgroundColor: "color-mix(in oklch,var(--success) 20%, var(--paper))",
+          backgroundImage:
+            "repeating-linear-gradient(135deg, rgba(255,255,255,0.16) 0 10px, rgba(255,255,255,0.02) 10px 20px)"
+        }),
+        sideStyle: buildLayerFaceStyle({
+          backgroundColor: "color-mix(in oklch,var(--success-ink) 24%, var(--paper))",
+          backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.1), rgba(0,0,0,0.05))"
+        }),
+        topStyle: buildLayerFaceStyle({
+          backgroundColor: "color-mix(in oklch,var(--success) 12%, white)",
+          backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.34), rgba(255,255,255,0.05))"
+        })
+      };
+    case "gap":
+      return {
+        frontStyle: buildLayerFaceStyle({
+          backgroundColor: "color-mix(in oklch,var(--ink) 6%, var(--paper))",
+          backgroundImage: "radial-gradient(circle at 1px 1px, rgba(52,64,90,0.16) 1px, transparent 0)",
+          backgroundSize: "10px 10px"
+        }),
+        sideStyle: buildLayerFaceStyle({
+          backgroundColor: "color-mix(in oklch,var(--ink) 12%, var(--paper))",
+          backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.08), rgba(0,0,0,0.03))"
+        }),
+        topStyle: buildLayerFaceStyle({
+          backgroundColor: "color-mix(in oklch,var(--ink) 4%, white)",
+          backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.34), rgba(255,255,255,0.08))"
+        })
+      };
+    case "support":
+      return {
+        frontStyle: buildLayerFaceStyle({
+          backgroundColor: "color-mix(in oklch,var(--warning) 20%, var(--paper))",
+          backgroundImage:
+            "repeating-linear-gradient(135deg, rgba(124,89,22,0.18) 0 8px, rgba(255,255,255,0.04) 8px 16px)"
+        }),
+        sideStyle: buildLayerFaceStyle({
+          backgroundColor: "color-mix(in oklch,var(--warning-ink) 22%, var(--paper))",
+          backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.1), rgba(0,0,0,0.05))"
+        }),
+        topStyle: buildLayerFaceStyle({
+          backgroundColor: "color-mix(in oklch,var(--warning) 13%, white)",
+          backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.34), rgba(255,255,255,0.05))"
+        })
+      };
+    case "mass":
+    default:
+      return {
+        frontStyle: buildLayerFaceStyle({
+          backgroundColor: "color-mix(in oklch,var(--ink) 14%, var(--paper))",
+          backgroundImage: "linear-gradient(145deg, rgba(255,255,255,0.14), rgba(255,255,255,0.02))"
+        }),
+        sideStyle: buildLayerFaceStyle({
+          backgroundColor: "color-mix(in oklch,var(--ink) 24%, var(--paper))",
+          backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.08), rgba(0,0,0,0.06))"
+        }),
+        topStyle: buildLayerFaceStyle({
+          backgroundColor: "color-mix(in oklch,var(--ink) 9%, white)",
+          backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.26), rgba(255,255,255,0.04))"
+        })
+      };
   }
 }
 
@@ -1218,104 +1451,149 @@ function outputPosturePanelClass(tone: OutputCardModel["postureTone"]): string {
   }
 }
 
-function SectionLead(props: { description?: string; step?: string; title: string }) {
-  const { description, step, title } = props;
-
-  return (
-    <div className="min-w-0">
-      {step ? <div className="eyebrow">{step}</div> : null}
-      <h2 className="mt-1 font-display text-[1.3rem] leading-none tracking-[-0.03em] text-[color:var(--ink)]">{title}</h2>
-      {description ? <p className="mt-1.5 max-w-2xl text-sm leading-6 text-[color:var(--ink-soft)]">{description}</p> : null}
-    </div>
-  );
+function workbenchSectionPanelClass(tone: WorkbenchSectionTone): string {
+  switch (tone) {
+    case "assembly":
+      return "border-[color:color-mix(in_oklch,var(--assembly)_34%,var(--line-strong))] bg-[linear-gradient(180deg,color-mix(in_oklch,var(--assembly)_11%,var(--paper))_0%,color-mix(in_oklch,var(--assembly)_7%,var(--paper))_100%)] ring-1 ring-inset ring-[color:color-mix(in_oklch,var(--assembly)_12%,transparent)] shadow-[0_18px_46px_-28px_color-mix(in_oklch,var(--assembly)_34%,transparent)]";
+    case "results":
+      return "border-[color:color-mix(in_oklch,var(--results)_38%,var(--line-strong))] bg-[linear-gradient(180deg,color-mix(in_oklch,var(--results)_13%,var(--paper))_0%,color-mix(in_oklch,var(--results)_8%,var(--paper))_100%)] ring-1 ring-inset ring-[color:color-mix(in_oklch,var(--results)_14%,transparent)] shadow-[0_18px_46px_-28px_color-mix(in_oklch,var(--results)_38%,transparent)]";
+    case "review":
+      return "border-[color:color-mix(in_oklch,var(--review)_32%,var(--line-strong))] bg-[linear-gradient(180deg,color-mix(in_oklch,var(--review)_12%,var(--paper))_0%,color-mix(in_oklch,var(--review)_8%,var(--paper))_100%)] ring-1 ring-inset ring-[color:color-mix(in_oklch,var(--review)_12%,transparent)] shadow-[0_16px_38px_-28px_color-mix(in_oklch,var(--review)_28%,transparent)]";
+    case "route":
+    default:
+      return "border-[color:color-mix(in_oklch,var(--route)_36%,var(--line-strong))] bg-[linear-gradient(180deg,color-mix(in_oklch,var(--route)_12%,var(--paper))_0%,color-mix(in_oklch,var(--route)_8%,var(--paper))_100%)] ring-1 ring-inset ring-[color:color-mix(in_oklch,var(--route)_14%,transparent)] shadow-[0_18px_46px_-28px_color-mix(in_oklch,var(--route)_36%,transparent)]";
+  }
 }
 
-function WorkflowStage(props: { index: string; note: string; title: string }) {
-  const { index, note, title } = props;
-
-  return (
-    <article className="workflow-stage rounded-[1.35rem] border hairline px-4 py-4">
-      <div className="flex items-center gap-3">
-        <span className="inline-flex h-8 w-8 items-center justify-center rounded-full border hairline bg-[color:var(--paper)]/88 text-[0.72rem] font-semibold tracking-[0.14em] text-[color:var(--ink)]">
-          {index}
-        </span>
-        <div className="min-w-0">
-          <div className="text-sm font-semibold text-[color:var(--ink)]">{title}</div>
-          <p className="mt-1 text-sm leading-6 text-[color:var(--ink-soft)]">{note}</p>
-        </div>
-      </div>
-    </article>
-  );
+function workbenchSectionCardClass(tone: WorkbenchSectionTone): string {
+  switch (tone) {
+    case "assembly":
+      return "border-[color:color-mix(in_oklch,var(--assembly)_30%,var(--line))] bg-[color:color-mix(in_oklch,var(--assembly)_10%,var(--paper))] ring-1 ring-inset ring-[color:color-mix(in_oklch,var(--assembly)_8%,transparent)]";
+    case "results":
+      return "border-[color:color-mix(in_oklch,var(--results)_32%,var(--line))] bg-[color:color-mix(in_oklch,var(--results)_12%,var(--paper))] ring-1 ring-inset ring-[color:color-mix(in_oklch,var(--results)_10%,transparent)]";
+    case "review":
+      return "border-[color:color-mix(in_oklch,var(--review)_28%,var(--line))] bg-[color:color-mix(in_oklch,var(--review)_11%,var(--paper))] ring-1 ring-inset ring-[color:color-mix(in_oklch,var(--review)_8%,transparent)]";
+    case "route":
+    default:
+      return "border-[color:color-mix(in_oklch,var(--route)_30%,var(--line))] bg-[color:color-mix(in_oklch,var(--route)_10%,var(--paper))] ring-1 ring-inset ring-[color:color-mix(in_oklch,var(--route)_8%,transparent)]";
+  }
 }
 
-function StudyLedgerRow(props: { detail: string; label: string; value: string }) {
-  const { detail, label, value } = props;
+function workbenchSectionMutedCardClass(tone: WorkbenchSectionTone): string {
+  switch (tone) {
+    case "assembly":
+      return "border-[color:color-mix(in_oklch,var(--assembly)_24%,var(--line))] bg-[color:color-mix(in_oklch,var(--assembly)_8%,var(--paper-strong))]";
+    case "results":
+      return "border-[color:color-mix(in_oklch,var(--results)_26%,var(--line))] bg-[color:color-mix(in_oklch,var(--results)_9%,var(--paper-strong))]";
+    case "review":
+      return "border-[color:color-mix(in_oklch,var(--review)_24%,var(--line))] bg-[color:color-mix(in_oklch,var(--review)_8%,var(--paper-strong))]";
+    case "route":
+    default:
+      return "border-[color:color-mix(in_oklch,var(--route)_24%,var(--line))] bg-[color:color-mix(in_oklch,var(--route)_8%,var(--paper-strong))]";
+  }
+}
+
+function workbenchSectionAccentRailClass(tone: WorkbenchSectionTone): string {
+  switch (tone) {
+    case "assembly":
+      return "bg-[linear-gradient(180deg,color-mix(in_oklch,var(--assembly-ink)_92%,white)_0%,color-mix(in_oklch,var(--assembly)_72%,white)_100%)]";
+    case "results":
+      return "bg-[linear-gradient(180deg,color-mix(in_oklch,var(--results-ink)_92%,white)_0%,color-mix(in_oklch,var(--results)_74%,white)_100%)]";
+    case "review":
+      return "bg-[linear-gradient(180deg,color-mix(in_oklch,var(--review-ink)_92%,white)_0%,color-mix(in_oklch,var(--review)_74%,white)_100%)]";
+    case "route":
+    default:
+      return "bg-[linear-gradient(180deg,color-mix(in_oklch,var(--route-ink)_92%,white)_0%,color-mix(in_oklch,var(--route)_74%,white)_100%)]";
+  }
+}
+
+function workbenchSectionTitleClass(tone: WorkbenchSectionTone): string {
+  switch (tone) {
+    case "assembly":
+      return "text-[color:var(--assembly-ink)]";
+    case "results":
+      return "text-[color:var(--results-ink)]";
+    case "review":
+      return "text-[color:var(--review-ink)]";
+    case "route":
+    default:
+      return "text-[color:var(--route-ink)]";
+  }
+}
+
+function workbenchSectionEyebrowClass(tone: WorkbenchSectionTone): string {
+  switch (tone) {
+    case "assembly":
+      return "text-[color:color-mix(in_oklch,var(--assembly-ink)_72%,var(--ink-faint))]";
+    case "results":
+      return "text-[color:color-mix(in_oklch,var(--results-ink)_72%,var(--ink-faint))]";
+    case "review":
+      return "text-[color:color-mix(in_oklch,var(--review-ink)_72%,var(--ink-faint))]";
+    case "route":
+    default:
+      return "text-[color:color-mix(in_oklch,var(--route-ink)_72%,var(--ink-faint))]";
+  }
+}
+
+function SectionLead(props: { description?: string; step?: string; title: string; tone?: WorkbenchSectionTone }) {
+  const { description, step, title, tone = "route" } = props;
+  const eyebrowClass = workbenchSectionEyebrowClass(tone);
+  const titleClass = workbenchSectionTitleClass(tone);
+  const railClass = workbenchSectionAccentRailClass(tone);
 
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-4 border-b hairline py-3 last:border-b-0 last:pb-0 first:pt-0">
+    <div className="flex min-w-0 items-start gap-3">
+      <span aria-hidden="true" className={`mt-0.5 h-11 w-1.5 shrink-0 rounded-full ${railClass}`} />
       <div className="min-w-0">
-        <div className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">{label}</div>
-        <p className="mt-1 text-sm leading-6 text-[color:var(--ink-soft)]">{detail}</p>
-      </div>
-      <div className="text-right">
-        <div className="font-display text-[1.5rem] leading-none tracking-[-0.04em] text-[color:var(--ink)]">{value}</div>
-      </div>
-    </div>
-  );
-}
-
-function GuidedRouteRow(props: { detail: string; label: string; value: string }) {
-  const { detail, label, value } = props;
-
-  return (
-    <div className="grid gap-2 border-b hairline py-3 last:border-b-0 last:pb-0 first:pt-0 sm:grid-cols-[minmax(0,10rem)_minmax(0,1fr)] sm:gap-4">
-      <div>
-        <div className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">{label}</div>
-        <div className="mt-1 text-sm font-semibold text-[color:var(--ink)]">{value}</div>
-      </div>
-      <div className="min-w-0">
-        <p className="text-sm leading-6 text-[color:var(--ink-soft)]">{detail}</p>
+        {step ? (
+          <div className={`text-[0.68rem] font-semibold uppercase tracking-[0.14em] ${eyebrowClass}`}>{step}</div>
+        ) : null}
+        <h2 className={`mt-1 text-[1rem] font-semibold leading-tight ${titleClass}`}>{title}</h2>
+        {description ? <p className="mt-1 max-w-2xl text-[0.82rem] leading-5 text-[color:var(--ink-soft)]">{description}</p> : null}
       </div>
     </div>
   );
 }
 
-function RouteSignalCard(props: {
-  detail: string;
+function WorkspacePanelButton(props: {
+  active: boolean;
   label: string;
-  tone?: "neutral" | "ready" | "warning";
-  value: string;
+  onClick: () => void;
 }) {
-  const { detail, label, tone = "neutral", value } = props;
-  const containerClass =
-    tone === "ready"
-      ? "border-[color:color-mix(in_oklch,var(--success)_34%,var(--line))] bg-[color:color-mix(in_oklch,var(--success)_10%,var(--paper))]"
-      : tone === "warning"
-        ? "border-[color:color-mix(in_oklch,var(--warning)_34%,var(--line))] bg-[color:color-mix(in_oklch,var(--warning)_12%,var(--paper))]"
-        : "hairline bg-[color:var(--paper)]/82";
-  const valueClass =
-    tone === "ready"
-      ? "text-[color:var(--success-ink)]"
-      : tone === "warning"
-        ? "text-[color:var(--warning-ink)]"
-        : "text-[color:var(--ink)]";
-  const toneLabel = tone === "warning" ? "Action" : "Route";
+  const { active, label, onClick } = props;
 
   return (
-    <article className={`grid gap-2 rounded-[1rem] border px-3 py-3 ${containerClass}`}>
-      <div className="flex items-center justify-between gap-3">
-        <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">{label}</div>
-        {tone === "ready" ? (
-          <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border hairline bg-[color:var(--paper)]/82 text-[color:var(--success-ink)]">
-            <Check className="h-3.5 w-3.5" />
-          </span>
-        ) : (
-          <DetailTag tone={tone === "warning" ? "required" : "neutral"}>{toneLabel}</DetailTag>
-        )}
+    <button
+      aria-pressed={active}
+      className={`focus-ring inline-flex items-center justify-center rounded-[0.7rem] border px-3 py-2 text-sm font-medium ${
+        active
+          ? "border-[color:var(--ink)] bg-[color:var(--ink)] text-[color:var(--paper)]"
+          : "border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[color:var(--paper)] text-[color:var(--ink-soft)]"
+      }`}
+      onClick={onClick}
+      type="button"
+    >
+      {label}
+    </button>
+  );
+}
+
+function GuidedRouteRow(props: { detail: string; label: string; value: string; tone?: WorkbenchSectionTone }) {
+  const { detail, label, value, tone = "route" } = props;
+  const shellClass = workbenchSectionMutedCardClass(tone);
+  const eyebrowClass = workbenchSectionEyebrowClass(tone);
+  const titleClass = workbenchSectionTitleClass(tone);
+  const railClass = workbenchSectionAccentRailClass(tone);
+
+  return (
+    <div className={`grid grid-cols-[0.3rem_minmax(0,1fr)] gap-x-3 gap-y-1 rounded-[0.7rem] border px-3 py-2.5 ${shellClass}`}>
+      <span aria-hidden="true" className={`row-span-2 rounded-full ${railClass}`} />
+      <div className="flex min-w-0 items-start justify-between gap-3">
+        <div className={`text-[0.64rem] font-semibold uppercase tracking-[0.14em] ${eyebrowClass}`}>{label}</div>
+        <div className={`min-w-0 truncate text-right text-[0.84rem] font-semibold leading-5 ${titleClass}`}>{value}</div>
       </div>
-      <div className={`text-sm font-semibold ${valueClass}`}>{value}</div>
-      <p className="text-sm leading-6 text-[color:var(--ink-soft)]">{detail}</p>
-    </article>
+      <p className="line-clamp-1 text-[0.72rem] leading-5 text-[color:var(--ink-soft)]">{detail}</p>
+    </div>
   );
 }
 
@@ -1364,15 +1642,15 @@ function GuidedDecisionBasisStrip(props: {
   const activeReviewTabLabel = REVIEW_TABS.find((tab) => tab.id === activeReviewTab)?.label ?? "Proposal";
 
   return (
-    <section className="mt-6 overflow-hidden rounded-[1.35rem] border hairline bg-[color:color-mix(in_oklch,var(--accent)_8%,var(--paper))] px-4 py-4">
-      <div className="grid gap-4 xl:grid-cols-[minmax(0,1.06fr)_auto] xl:items-start">
+    <section className={`mt-4 overflow-hidden rounded-[1.1rem] border px-4 py-4 ${workbenchSectionCardClass("review")}`}>
+      <div className="grid gap-3 xl:grid-cols-[minmax(0,1.06fr)_auto] xl:items-start">
         <div className="min-w-0">
           <div className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">Decision basis</div>
-          <h3 className="mt-2 font-display text-[1.45rem] leading-none tracking-[-0.04em] text-[color:var(--ink)]">
+          <h3 className="mt-1.5 text-[1.02rem] font-semibold leading-tight text-[color:var(--ink)]">
             Validation corridor at a glance
           </h3>
-          <p className="mt-3 max-w-3xl text-sm leading-7 text-[color:var(--ink-soft)]">{headline}</p>
-          <div className="mt-4 flex flex-wrap gap-2">
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-[color:var(--ink-soft)]">{headline}</p>
+          <div className="mt-3 flex flex-wrap gap-2">
             <GuidedFactChip>{`${traceGroupCount} trace group${traceGroupCount === 1 ? "" : "s"}`}</GuidedFactChip>
             <GuidedFactChip>{`${selectedTraceNoteCount} selected route note${selectedTraceNoteCount === 1 ? "" : "s"}`}</GuidedFactChip>
             <GuidedFactChip>{`Review deck: ${activeReviewTabLabel}`}</GuidedFactChip>
@@ -1383,7 +1661,7 @@ function GuidedDecisionBasisStrip(props: {
           {REVIEW_TABS.map((tab) => (
             <button
               aria-pressed={activeReviewTab === tab.id}
-              className={`focus-ring inline-flex items-center justify-center rounded-full border px-3 py-2 text-sm font-semibold ${
+              className={`focus-ring inline-flex items-center justify-center rounded-[0.85rem] border px-3 py-2 text-sm font-semibold ${
                 activeReviewTab === tab.id
                   ? "border-[color:color-mix(in_oklch,var(--accent)_34%,var(--line))] bg-[color:color-mix(in_oklch,var(--accent)_14%,var(--paper))] text-[color:var(--accent-ink)]"
                   : "hairline bg-[color:var(--paper)]/82 text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
@@ -1398,15 +1676,11 @@ function GuidedDecisionBasisStrip(props: {
         </div>
       </div>
 
-      <div className="mt-4 grid gap-3 md:grid-cols-2">
+      <div className="mt-3 grid gap-2 md:grid-cols-2">
         {cards.map((card) => (
           <GuidedDecisionBasisCard {...card} key={`decision-basis-${card.label}-${card.value}`} />
         ))}
       </div>
-
-      <p className="mt-4 max-w-3xl text-sm leading-6 text-[color:var(--ink-soft)]">
-        The same selected route notes stay aligned across method detail, diagnostics, and the client-facing PDF appendix.
-      </p>
     </section>
   );
 }
@@ -1427,20 +1701,19 @@ function GuidedConstructionSnapshot(props: {
   const activeReviewTabLabel = REVIEW_TABS.find((tab) => tab.id === activeReviewTab)?.label ?? "Proposal";
 
   return (
-    <section className="mt-5 overflow-hidden rounded-[1.35rem] border hairline bg-[linear-gradient(180deg,rgba(255,253,248,0.96),rgba(255,249,242,0.92))] px-4 py-4">
-      <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_auto] xl:items-start">
+    <section className={`mt-4 overflow-hidden rounded-[1.1rem] border px-4 py-4 ${workbenchSectionCardClass("assembly")}`}>
+      <div className="grid gap-3 xl:grid-cols-[minmax(0,1fr)_auto] xl:items-start">
         <div className="min-w-0">
           <div className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">
             Construction snapshot
           </div>
-          <h3 className="mt-2 font-display text-[1.45rem] leading-none tracking-[-0.04em] text-[color:var(--ink)]">
+          <h3 className="mt-1.5 text-[1.02rem] font-semibold leading-tight text-[color:var(--ink)]">
             Solver-order section on the live result
           </h3>
-          <p className="mt-3 max-w-3xl text-sm leading-7 text-[color:var(--ink-soft)]">
-            The same layer section now stays visible on the guided result, method detail, diagnostics, and the branded proposal so the
-            stack reading does not drift between operator and client-facing surfaces.
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-[color:var(--ink-soft)]">
+            One technical section stays aligned across the live read, method notes, and proposal output.
           </p>
-          <div className="mt-4 flex flex-wrap gap-2">
+          <div className="mt-3 flex flex-wrap gap-2">
             <GuidedFactChip>{`${layers.length} visible row${layers.length === 1 ? "" : "s"}`}</GuidedFactChip>
             <GuidedFactChip>{`Review deck: ${activeReviewTabLabel}`}</GuidedFactChip>
           </div>
@@ -1448,18 +1721,18 @@ function GuidedConstructionSnapshot(props: {
 
         <div className="flex flex-wrap gap-2 xl:justify-end">
           <button
-            className="focus-ring inline-flex items-center justify-center rounded-full border hairline bg-[color:var(--paper)]/84 px-3 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+            className="focus-ring inline-flex items-center justify-center rounded-[0.85rem] border hairline bg-[color:var(--paper)]/84 px-3 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
             onClick={() => onOpenReviewTab("method")}
             type="button"
           >
-            Review in method tab
+            Open method detail
           </button>
           <button
-            className="focus-ring inline-flex items-center justify-center rounded-full border hairline bg-[color:var(--paper)]/84 px-3 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+            className="focus-ring inline-flex items-center justify-center rounded-[0.85rem] border hairline bg-[color:var(--paper)]/84 px-3 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
             onClick={() => onOpenReviewTab("proposal")}
             type="button"
           >
-            Review in proposal tab
+            Open proposal
           </button>
         </div>
       </div>
@@ -1482,7 +1755,7 @@ function GuidedSelectField(props: {
     <label className="grid min-w-0 gap-2">
       <div className="min-w-0">
         <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">{label}</span>
-        <p className="mt-1 text-sm leading-6 text-[color:var(--ink-soft)]">{note}</p>
+        <p className="mt-1 text-[0.78rem] leading-5 text-[color:var(--ink-soft)]">{note}</p>
       </div>
       {children}
     </label>
@@ -1497,7 +1770,7 @@ function GuidedFactChip(props: { children: ReactNode; tone?: "neutral" | "warnin
       : "hairline bg-[color:var(--paper)]/82 text-[color:var(--ink-soft)]";
 
   return (
-    <span className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[0.72rem] font-medium ${toneClass}`}>
+    <span className={`inline-flex items-center rounded-[0.7rem] border px-2.5 py-1 text-[0.72rem] font-medium ${toneClass}`}>
       {children}
     </span>
   );
@@ -1513,7 +1786,7 @@ function DetailTag(props: { children: ReactNode; tone?: "neutral" | FieldRelevan
         : "border hairline bg-[color:var(--paper)]/72 text-[color:var(--ink-soft)]";
 
   return (
-    <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.16em] ${toneClass}`}>
+    <span className={`inline-flex items-center rounded-[0.7rem] px-2.5 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.16em] ${toneClass}`}>
       {children}
     </span>
   );
@@ -1523,51 +1796,100 @@ function InlinePair(props: { label: string; value: string }) {
   const { label, value } = props;
 
   return (
-    <div className="grid gap-1 rounded-[1rem] border hairline bg-[color:var(--paper)]/72 px-3 py-3">
-      <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">{label}</div>
-      <div className="text-sm font-semibold text-[color:var(--ink)]">{value}</div>
+    <div className="grid min-w-0 gap-1 overflow-hidden rounded-[0.95rem] border hairline bg-[color:var(--paper)]/72 px-3 py-2.5">
+      <div className="break-words text-[0.68rem] font-semibold uppercase leading-4 tracking-[0.16em] text-[color:var(--ink-faint)]">
+        {label}
+      </div>
+      <div className="min-w-0 break-words text-[0.98rem] font-semibold leading-6 text-[color:var(--ink)]">{value}</div>
     </div>
   );
 }
 
 function formatMaterialDensity(material: MaterialDefinition): string | null {
-  if (!(material.densityKgM3 > 0)) {
-    return null;
+  return formatDensityValue(getCatalogDensity(material));
+}
+
+function formatDensityLabel(material: MaterialDefinition, overrideValue: string | undefined): string {
+  const effectiveDensity = getEffectiveDensity({
+    material,
+    overrideValue
+  });
+
+  if (typeof effectiveDensity !== "number") {
+    return hasDensityOverrideInput(overrideValue) ? "Invalid override" : "Not listed";
   }
 
-  return `${material.densityKgM3.toLocaleString("en-US")} kg/m³`;
+  return `${formatDensityValue(effectiveDensity)}${hasEffectiveDensityOverride({ material, overrideValue }) ? " (manual)" : ""}`;
 }
 
 function compactValues(values: Array<string | null | undefined>): string[] {
   return values.filter((value): value is string => Boolean(value && value.trim().length > 0));
 }
 
+function getCustomMaterialNotePreview(notes: string | undefined): string | null {
+  const cleaned = notes?.replace(/Local custom workbench material\./gu, "").replace(/\s+/gu, " ").trim();
+  return cleaned && cleaned.length > 0 ? cleaned : null;
+}
+
+function getCustomMaterialCategoryLabel(category: MaterialCategory): string {
+  return CUSTOM_MATERIAL_CATEGORY_OPTIONS.find((option) => option.value === category)?.label ?? category;
+}
+
 function getTextInputClassName(hasWarning = false): string {
-  return `focus-ring touch-target w-full min-w-0 rounded-[1rem] border px-3 py-3 ${
+  return `focus-ring touch-target w-full min-w-0 rounded-[0.9rem] border px-3 py-2.5 ${
     hasWarning
       ? "border-[color:var(--warning-ink)]/34 bg-[color:var(--warning-soft)]/48"
       : "hairline bg-[color:var(--paper)]"
   }`;
 }
 
-function buildMaterialFacts(material: MaterialDefinition, thicknessMm: string): string[] {
+function buildMaterialFacts(input: {
+  densityOverride?: string;
+  dynamicStiffnessOverride?: string;
+  material: MaterialDefinition;
+  thicknessMm: string;
+}): string[] {
   const facts: string[] = [];
-  const density = formatMaterialDensity(material);
-  const thickness = parsePositiveNumber(thicknessMm);
+  const density = getEffectiveDensity({
+    material: input.material,
+    overrideValue: input.densityOverride
+  });
+  const densityLabel = formatDensityValue(density);
+  const thickness = parsePositiveNumber(input.thicknessMm);
+  const dynamicStiffness = getEffectiveDynamicStiffness({
+    material: input.material,
+    overrideValue: input.dynamicStiffnessOverride
+  });
 
-  if (density) {
-    facts.push(density);
+  if (densityLabel) {
+    facts.push(`${densityLabel}${hasEffectiveDensityOverride({ material: input.material, overrideValue: input.densityOverride }) ? " (manual)" : ""}`);
   }
 
-  if (density && thickness && thickness > 0) {
-    facts.push(`${formatDecimal((material.densityKgM3 * thickness) / 1000)} kg/m² at this layer`);
+  if (typeof density === "number" && thickness && thickness > 0) {
+    facts.push(`${formatDecimal((density * thickness) / 1000)} kg/m² at this layer`);
   }
 
-  if (typeof material.impact?.dynamicStiffnessMNm3 === "number" && material.impact.dynamicStiffnessMNm3 > 0) {
-    facts.push(`${formatDecimal(material.impact.dynamicStiffnessMNm3)} MN/m³ dynamic stiffness`);
+  if (typeof dynamicStiffness === "number") {
+    facts.push(
+      `${formatDecimal(dynamicStiffness)} MN/m³ dynamic stiffness${
+        hasEffectiveDynamicStiffnessOverride({ material: input.material, overrideValue: input.dynamicStiffnessOverride }) ? " (manual)" : ""
+      }`
+    );
   }
 
   return facts;
+}
+
+function buildDefaultNewLayerDraft(studyMode: StudyMode): NewLayerDraft {
+  const defaults = DEFAULT_NEW_LAYER_BY_MODE[studyMode];
+
+  return {
+    densityKgM3: "",
+    dynamicStiffnessMNm3: "",
+    floorRole: inferFloorRole(defaults.materialId, studyMode),
+    materialId: defaults.materialId,
+    thicknessMm: defaults.thicknessMm
+  };
 }
 
 function FieldShell(props: {
@@ -1581,17 +1903,26 @@ function FieldShell(props: {
 }) {
   const { advisory, children, label, note, relevance = "optional", usage, warning } = props;
   const relevanceLabel = relevance === "required" ? "Required now" : "Optional now";
-  const relevanceNote =
-    relevance === "required" ? `Needed now for ${usage}.` : `Used when ${usage}.`;
+  const advisoryLabel = advisory?.replace(/^Guided sanity band\s*/u, "").trim() ?? null;
 
   return (
-    <div className="grid min-w-0 gap-2" title={`${note} Used for: ${usage}`}>
+    <div className="grid min-w-0 gap-2 rounded-[0.8rem] border border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[color:var(--paper)] px-3 py-3" title={`${note} Used for: ${usage}`}>
       <div className="flex min-w-0 items-start justify-between gap-3">
         <div className="min-w-0">
-          <span className="text-sm font-medium text-[color:var(--ink)]">{label}</span>
-          <p className="mt-1 text-xs leading-5 text-[color:var(--ink-faint)]">{note}</p>
-          <p className="mt-1 text-[0.72rem] leading-5 text-[color:var(--ink-soft)]">{relevanceNote}</p>
-          {advisory ? <p className="mt-1 text-[0.72rem] leading-5 text-[color:var(--ink-soft)]">{advisory}</p> : null}
+          <span className="text-[0.82rem] font-semibold text-[color:var(--ink)]">{label}</span>
+          <p className="mt-1 text-[0.72rem] leading-5 text-[color:var(--ink-soft)]">{note}</p>
+          <div className="mt-1 grid gap-1 text-[0.68rem] leading-5 text-[color:var(--ink-faint)]">
+            <div>
+              <span className="mr-1 font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Feeds</span>
+              {usage}
+            </div>
+            {advisoryLabel ? (
+              <div>
+                <span className="mr-1 font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Sanity</span>
+                {advisoryLabel}
+              </div>
+            ) : null}
+          </div>
           {warning ? <p className="mt-1 text-[0.72rem] leading-5 text-[color:var(--warning-ink)]">{warning}</p> : null}
         </div>
         <DetailTag tone={relevance}>{relevanceLabel}</DetailTag>
@@ -1611,24 +1942,24 @@ function ContextBucket(props: {
   const { children, description, hasContent, title, tone } = props;
   const shellClass =
     tone === "required"
-      ? "border-[color:color-mix(in_oklch,var(--warning)_24%,var(--line))] bg-[color:color-mix(in_oklch,var(--warning)_8%,var(--paper))]"
-      : "hairline bg-[color:var(--paper)]/72";
+      ? "border-[color:color-mix(in_oklch,var(--warning)_24%,var(--line))] bg-[color:color-mix(in_oklch,var(--warning)_6%,var(--paper))]"
+      : workbenchSectionMutedCardClass("route");
 
   return (
-    <section className={`rounded-[1.2rem] border px-4 py-4 ${shellClass}`}>
+    <section className={`rounded-[0.9rem] border px-3 py-3 ${shellClass}`}>
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <div className="text-sm font-semibold text-[color:var(--ink)]">{title}</div>
-          <p className="mt-1 text-sm leading-6 text-[color:var(--ink-soft)]">{description}</p>
+          <div className="text-[0.84rem] font-semibold text-[color:var(--ink)]">{title}</div>
+          <p className="mt-1 text-[0.74rem] leading-5 text-[color:var(--ink-soft)]">{description}</p>
         </div>
         <DetailTag tone={tone}>{title}</DetailTag>
       </div>
 
       {hasContent ? (
-        <div className="mt-4 grid gap-4">{children}</div>
+        <div className="mt-3 grid gap-3">{children}</div>
       ) : (
         <div className="mt-4 rounded-[1rem] border border-dashed hairline bg-black/[0.02] px-4 py-3 text-sm leading-6 text-[color:var(--ink-soft)]">
-          No parked fields on this route.
+          No extra fields on this route.
         </div>
       )}
     </section>
@@ -1643,247 +1974,41 @@ function ContextSubsection(props: {
   const { children, note, title } = props;
 
   return (
-    <div className="grid gap-3 rounded-[1rem] border hairline bg-[color:var(--paper)]/74 px-4 py-4">
+    <div className={`grid gap-3 rounded-[0.8rem] border px-3 py-3 ${workbenchSectionMutedCardClass("route")}`}>
       <div>
-        <div className="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">{title}</div>
-        <p className="mt-1 text-sm leading-6 text-[color:var(--ink-soft)]">{note}</p>
+        <div className="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">{title}</div>
+        <p className="mt-1 text-[0.74rem] leading-5 text-[color:var(--ink-soft)]">{note}</p>
       </div>
       <div className="grid gap-3">{children}</div>
     </div>
   );
 }
 
-function StackOrderPanel(props: {
-  rows: readonly LayerDraft[];
-  studyMode: StudyMode;
-}) {
-  const { rows, studyMode } = props;
-  const boundary = getStackBoundaryLabels(studyMode);
-  const orderNarrative =
-    studyMode === "floor"
-      ? "Solver order follows the list exactly, from walking side to ceiling side."
-      : "Solver order follows the list exactly, from Side A to Side B.";
-
-  return (
-    <section className="rounded-[1.25rem] border hairline bg-[color:var(--paper)]/72 px-4 py-4">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <div className="text-sm font-semibold text-[color:var(--ink)]">Stack order</div>
-          <p className="mt-1 text-sm leading-6 text-[color:var(--ink-soft)]">{orderNarrative}</p>
-        </div>
-        <DetailTag>{rows.length ? `${rows.length} visible row${rows.length === 1 ? "" : "s"}` : "Waiting for rows"}</DetailTag>
-      </div>
-
-      <div className="mt-4 grid gap-3 lg:grid-cols-[minmax(0,11rem)_minmax(0,1fr)_minmax(0,11rem)] lg:items-center">
-        <div className="grid gap-1 rounded-[1rem] border hairline bg-[color:var(--paper)]/82 px-3 py-3">
-          <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Row 1</div>
-          <div className="text-sm font-semibold text-[color:var(--ink)]">{boundary.start}</div>
-        </div>
-
-        <div className="flex min-w-0 items-center gap-3 text-sm leading-6 text-[color:var(--ink-soft)]">
-          <span className="h-px flex-1 bg-[color:color-mix(in_oklch,var(--line)_82%,transparent)]" />
-          <span className="min-w-0 text-center">{rows.length ? "Move rows only when the physical build-up changes." : "Start from the exposed side of the assembly."}</span>
-          <span className="h-px flex-1 bg-[color:color-mix(in_oklch,var(--line)_82%,transparent)]" />
-        </div>
-
-        <div className="grid gap-1 rounded-[1rem] border hairline bg-[color:var(--paper)]/82 px-3 py-3">
-          <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Last row</div>
-          <div className="text-sm font-semibold text-[color:var(--ink)]">{boundary.end}</div>
-        </div>
-      </div>
-
-      <div className="mt-3 flex flex-wrap gap-2">
-        <GuidedFactChip>Blank thickness rows stay parked until they are valid.</GuidedFactChip>
-        <GuidedFactChip>Adjacent identical live rows collapse into one solver layer.</GuidedFactChip>
-        <GuidedFactChip>{studyMode === "floor" ? "Floor roles sharpen exact family matching." : "Wall rows are read straight across the partition."}</GuidedFactChip>
-      </div>
-    </section>
-  );
-}
-
-function LayerPositionRail(props: {
-  index: number;
-  studyMode: StudyMode;
-  totalRows: number;
-}) {
-  const { index, studyMode, totalRows } = props;
-  const boundary = getStackBoundaryLabels(studyMode);
-  const edgeLabel = getStackEdgeLabel(studyMode, index, totalRows);
-  const progress = totalRows <= 1 ? 50 : (index / Math.max(totalRows - 1, 1)) * 100;
-  const positionLabel = totalRows <= 1 ? "Only row" : edgeLabel ?? "Interior row";
-
-  return (
-    <div className="rounded-[1rem] border hairline bg-[color:var(--paper)]/74 px-3 py-3">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
-          {`Preview row ${index + 1} of ${totalRows}`}
-        </div>
-        <DetailTag>{positionLabel}</DetailTag>
-      </div>
-
-      <div className="mt-3 grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">
-        <span>{boundary.start}</span>
-        <div className="relative h-2 rounded-full bg-[color:color-mix(in_oklch,var(--line)_82%,transparent)]">
-          <span className="absolute inset-0 rounded-full bg-[linear-gradient(90deg,rgba(17,57,52,0.12),rgba(17,57,52,0.03))]" />
-          <span
-            className="absolute top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full border hairline bg-[color:var(--paper)] shadow-[0_8px_18px_-12px_rgba(18,34,34,0.4)]"
-            style={{ left: `${progress}%` }}
-          >
-            <span className="absolute inset-[3px] rounded-full bg-[color:var(--ink)]" />
-          </span>
-        </div>
-        <span className="text-right">{boundary.end}</span>
-      </div>
-
-      <p className="mt-2 text-[0.78rem] leading-5 text-[color:var(--ink-soft)]">
-        {`${getLayerPositionNarrative(studyMode, index, totalRows)} Editor row numbers match the section preview.`}
-      </p>
-    </div>
-  );
-}
-
-function MaterialPickerField(props: {
-  material: MaterialDefinition;
-  materialGroups: readonly MaterialOptionGroup[];
-  onSelect: (materialId: string) => void;
-  thicknessMm: string;
-}) {
-  const { material, materialGroups, onSelect, thicknessMm } = props;
-  const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState("");
-
-  useEffect(() => {
-    if (!open) {
-      setSearch("");
-    }
-  }, [open]);
-
-  const selectedGroup =
-    materialGroups.find((group) => group.materials.some((entry) => entry.id === material.id))?.label ?? getMaterialCategoryLabel(material);
-  const selectedFacts = buildMaterialFacts(material, thicknessMm);
-
-  return (
-    <div className="grid min-w-0 gap-2">
-      <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Material</span>
-
-      <button
-        className="focus-ring flex min-w-0 items-center justify-between gap-3 rounded-[1rem] border hairline bg-[color:var(--paper)] px-3 py-3 text-left"
-        onClick={() => setOpen(true)}
-        type="button"
-      >
-        <div className="min-w-0 flex-1">
-          <div className="truncate text-sm font-semibold text-[color:var(--ink)]">{material.name}</div>
-          <div className="mt-1 truncate text-xs text-[color:var(--ink-soft)]">
-            {compactValues([selectedGroup, selectedFacts[0]]).join(" · ")}
-          </div>
-        </div>
-        <ChevronsUpDown className="h-4 w-4 shrink-0 text-[color:var(--ink-faint)]" />
-      </button>
-
-      <Command.Dialog label="Select material" loop onOpenChange={setOpen} open={open}>
-        <Dialog.Title className="sr-only">Select material</Dialog.Title>
-        <Dialog.Description className="sr-only">
-          Search and choose a catalog material for the active layer.
-        </Dialog.Description>
-
-        <div className="command-shell">
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b hairline px-4 py-4">
-            <div>
-              <div className="eyebrow">Material picker</div>
-              <div className="mt-1 font-display text-[1.3rem] leading-none tracking-[-0.03em] text-[color:var(--ink)]">
-                Choose a layer material
-              </div>
-            </div>
-            <DetailTag>{selectedGroup}</DetailTag>
-          </div>
-
-          <div className="flex items-center gap-3 border-b hairline px-4 py-3">
-            <Search className="h-4 w-4 text-[color:var(--ink-faint)]" />
-            <Command.Input
-              className="w-full bg-transparent text-sm text-[color:var(--ink)] outline-none placeholder:text-[color:var(--ink-faint)]"
-              onValueChange={setSearch}
-              placeholder="Search material, category, or density..."
-              value={search}
-            />
-          </div>
-
-          <Command.List className="max-h-[26rem] overflow-y-auto px-3 py-3">
-            <Command.Empty className="px-3 py-8 text-center text-sm text-[color:var(--ink-soft)]">
-              No matching material.
-            </Command.Empty>
-
-            {materialGroups.map((group) => (
-              <Command.Group heading={group.label} key={group.label}>
-                {group.materials.map((entry) => {
-                  const isSelected = entry.id === material.id;
-                  const facts = buildMaterialFacts(entry, thicknessMm);
-                  const keywords = compactValues([
-                    group.label,
-                    getMaterialCategoryLabel(entry),
-                    formatMaterialDensity(entry),
-                    entry.name
-                  ]);
-
-                  return (
-                    <Command.Item
-                      key={entry.id}
-                      keywords={keywords}
-                      onSelect={() => {
-                        onSelect(entry.id);
-                        setOpen(false);
-                      }}
-                      value={[entry.name, ...keywords].join(" ")}
-                    >
-                      <div className={`h-10 w-2 shrink-0 rounded-full border ${layerFillClass(entry)} ${layerStrokeClass(entry)}`} />
-                      <div className="min-w-0 flex-1">
-                        <div className="flex min-w-0 flex-wrap items-center gap-2">
-                          <span className="truncate font-semibold">{entry.name}</span>
-                          {isSelected ? <DetailTag>Current</DetailTag> : null}
-                        </div>
-                        <div className="mt-1 flex min-w-0 flex-wrap gap-1.5 text-[0.72rem] leading-5 text-[color:var(--ink-soft)]">
-                          <span>{group.label}</span>
-                          {facts.slice(0, 2).map((fact) => (
-                            <span key={fact}>{fact}</span>
-                          ))}
-                        </div>
-                      </div>
-                      {isSelected ? <Check className="h-4 w-4 shrink-0 text-[color:var(--accent-ink)]" /> : null}
-                    </Command.Item>
-                  );
-                })}
-              </Command.Group>
-            ))}
-          </Command.List>
-        </div>
-      </Command.Dialog>
-    </div>
-  );
-}
-
 function OutputCard(props: { card: OutputCardModel }) {
   const { card } = props;
-  const postureTextClass = outputPostureTextClass(card.postureTone);
-  const posturePanelClass = outputPosturePanelClass(card.postureTone);
 
   return (
     <article
-      className={`min-w-0 rounded-[1.25rem] border px-4 py-4 ${outputStatusClass(card.status)}`}
+      className={`min-w-0 rounded-[1rem] border px-4 py-4 ${outputStatusClass(card.status)}`}
       title={card.detail}
     >
-      <div className="flex min-w-0 items-start justify-between gap-3">
+      <div className="flex min-w-0 flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
-          <div className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">{card.label}</div>
-          <div className="mt-3 text-[1.9rem] font-display leading-none tracking-[-0.05em] text-[color:var(--ink)]">{card.value}</div>
+          <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">{card.label}</div>
+          <div className="mt-2 text-[1.65rem] font-semibold leading-none tracking-[-0.04em] text-[color:var(--ink)]">{card.value}</div>
         </div>
-        <span className={`text-[0.72rem] font-semibold uppercase tracking-[0.16em] ${outputStatusTextClass(card.status)}`}>
+        <span className={`text-[0.7rem] font-semibold uppercase tracking-[0.16em] ${outputStatusTextClass(card.status)}`}>
           {statusLabel(card.status)}
         </span>
       </div>
-      <p className="mt-4 text-sm leading-6 text-[color:var(--ink-soft)]">{card.detail}</p>
-      <div className={`mt-4 rounded-[1rem] border px-3 py-3 ${posturePanelClass}`}>
+      <div className="mt-3 flex flex-wrap gap-2">
+        <GuidedFactChip>{card.postureLabel}</GuidedFactChip>
+        <GuidedFactChip>{card.label}</GuidedFactChip>
+      </div>
+      <p className="mt-3 text-[0.8rem] leading-5 text-[color:var(--ink-soft)]">{card.detail}</p>
+      <div className="mt-3 rounded-[0.9rem] border hairline bg-[color:var(--paper)]/78 px-3 py-3">
         <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Evidence class</div>
-        <div className={`mt-2 text-sm font-semibold ${postureTextClass}`}>{card.postureLabel}</div>
-        <p className="mt-1 text-sm leading-6 text-[color:var(--ink-soft)]">{card.postureDetail}</p>
+        <p className="mt-1 text-[0.78rem] leading-5 text-[color:var(--ink-soft)]">{card.postureDetail}</p>
       </div>
     </article>
   );
@@ -1900,32 +2025,32 @@ function OutputCoverageSummary(props: {
   const { boundCount, liveCount, parkedCount, readyCount, totalCount, unsupportedCount } = props;
 
   return (
-    <div className="grid gap-3 rounded-[1.25rem] border hairline bg-[color:var(--paper)]/72 px-4 py-4 sm:grid-cols-3">
-      <div>
-        <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Ready now</div>
-        <div className="mt-2 text-lg font-semibold text-[color:var(--ink)]">{`${readyCount}/${totalCount}`}</div>
-        <p className="mt-1 text-sm leading-6 text-[color:var(--ink-soft)]">
+    <div className={`grid gap-2 rounded-[0.8rem] border p-2 md:grid-cols-3 ${workbenchSectionCardClass("results")}`}>
+      <div className="min-w-0 rounded-[0.6rem] border border-[color:color-mix(in_oklch,var(--success)_26%,var(--line))] bg-[color:color-mix(in_oklch,var(--success)_7%,var(--paper))] px-3 py-2.5">
+        <div className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Ready</div>
+        <div className="mt-1 text-[0.98rem] font-semibold text-[color:var(--ink)]">{`${readyCount}/${totalCount}`}</div>
+        <p className="mt-1 text-[0.72rem] leading-5 text-[color:var(--ink-soft)]">
           {boundCount > 0
-            ? `${liveCount} live output${liveCount === 1 ? "" : "s"} and ${boundCount} bound support output${boundCount === 1 ? "" : "s"} are currently readable.`
-            : `${liveCount} live output${liveCount === 1 ? "" : "s"} are currently readable on this route.`}
+            ? `${liveCount} live, ${boundCount} bound support.`
+            : `${liveCount} live on this route.`}
         </p>
       </div>
-      <div>
-        <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Parked by route</div>
-        <div className="mt-2 text-lg font-semibold text-[color:var(--ink)]">{parkedCount}</div>
-        <p className="mt-1 text-sm leading-6 text-[color:var(--ink-soft)]">
+      <div className="min-w-0 rounded-[0.6rem] border border-[color:color-mix(in_oklch,var(--results)_24%,var(--line))] bg-[color:color-mix(in_oklch,var(--results)_8%,var(--paper))] px-3 py-2.5">
+        <div className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Parked</div>
+        <div className="mt-1 text-[0.98rem] font-semibold text-[color:var(--ink)]">{parkedCount}</div>
+        <p className="mt-1 text-[0.72rem] leading-5 text-[color:var(--ink-soft)]">
           {parkedCount > 0
-            ? "These outputs belong to a nearby route or still need context inputs."
-            : "No route-dependent outputs are parked right now."}
+            ? "Nearby route or context still missing."
+            : "No parked outputs."}
         </p>
       </div>
-      <div>
-        <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Unsupported on lane</div>
-        <div className="mt-2 text-lg font-semibold text-[color:var(--ink)]">{unsupportedCount}</div>
-        <p className="mt-1 text-sm leading-6 text-[color:var(--ink-soft)]">
+      <div className="min-w-0 rounded-[0.6rem] border border-[color:color-mix(in_oklch,var(--review)_24%,var(--line))] bg-[color:color-mix(in_oklch,var(--review)_8%,var(--paper))] px-3 py-2.5">
+        <div className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Unsupported</div>
+        <div className="mt-1 text-[0.98rem] font-semibold text-[color:var(--ink)]">{unsupportedCount}</div>
+        <p className="mt-1 text-[0.72rem] leading-5 text-[color:var(--ink-soft)]">
           {unsupportedCount > 0
-            ? "These outputs stay explicit, but the current topology cannot defend them."
-            : "No outputs are currently outside the supported lane."}
+            ? "Visible, but not defensible on this lane."
+            : "All visible outputs are inside the active lane."}
         </p>
       </div>
     </div>
@@ -1950,9 +2075,7 @@ function OutputUnlockRail(props: {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <div className="text-sm font-semibold text-[color:var(--ink)]">Unlock parked outputs</div>
-          <p className="mt-1 text-sm leading-6 text-[color:var(--ink-soft)]">
-            The route is close. These are the next concrete inputs or evidence upgrades that will unlock the parked metrics.
-          </p>
+          <p className="mt-1 text-sm leading-6 text-[color:var(--ink-soft)]">These are the next concrete upgrades that move parked metrics live.</p>
         </div>
         <div className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">
           {formatCountLabel(groups.length, "next step")}
@@ -1967,9 +2090,10 @@ function OutputUnlockRail(props: {
           >
             <div className="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--warning-ink)]">Next unlock</div>
             <div className="mt-2 text-base font-semibold text-[color:var(--ink)]">{group.title}</div>
-            <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">{group.detail}</p>
-            <div className="mt-3 text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Unlocks</div>
-            <div className="mt-2 text-sm leading-6 text-[color:var(--ink)]">{formatUnlockOutputs(group.outputs)}</div>
+            <div className="mt-2 flex flex-wrap gap-2">
+              <GuidedFactChip tone="warning">{formatUnlockOutputs(group.outputs)}</GuidedFactChip>
+            </div>
+            <p className="mt-3 text-sm leading-6 text-[color:var(--ink-soft)]">{group.detail}</p>
           </article>
         ))}
       </div>
@@ -2025,48 +2149,55 @@ function PrimaryResultCard(props: {
   const postureValueClass = outputPostureTextClass(card.postureTone);
 
   return (
-    <article className={`result-hero min-w-0 overflow-hidden rounded-[1.65rem] border px-5 py-5 ${outputStatusClass(card.status)}`}>
+    <article className={`result-hero min-w-0 overflow-hidden rounded-[0.9rem] border px-4 py-4 ${outputStatusClass(card.status)}`}>
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="min-w-0">
-          <div className="eyebrow">{studyMode === "floor" ? "Primary floor read" : "Primary wall read"}</div>
-          <h3 className="mt-2 max-w-xl font-display text-[1.65rem] leading-none tracking-[-0.05em] text-[color:var(--ink)]">
-            {heroHeadline}
-          </h3>
+          <div className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">
+            {studyMode === "floor" ? "Primary floor read" : "Primary wall read"}
+          </div>
+          <div className="mt-2 flex flex-wrap gap-2">
+            <GuidedFactChip>{card.label}</GuidedFactChip>
+            <GuidedFactChip>{heroHeadline}</GuidedFactChip>
+          </div>
         </div>
         <DetailTag>{contextLabel}</DetailTag>
       </div>
 
-      <div className="mt-8 grid gap-6 md:grid-cols-[minmax(0,1fr)_14rem] md:items-end">
-        <div className="min-w-0">
-          <div className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">{card.label}</div>
-          <div className="mt-3 font-display text-[clamp(3rem,7vw,5.5rem)] leading-[0.88] tracking-[-0.07em] text-[color:var(--ink)]">
-            {card.value}
+      <div className={`mt-4 grid gap-3 rounded-[0.8rem] border px-3 py-3 ${workbenchSectionCardClass("results")}`}>
+        <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
+          <div className="min-w-0">
+            <div className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">{card.label}</div>
+            <p className="mt-2 max-w-2xl text-[0.78rem] leading-5 text-[color:var(--ink-soft)]">{card.detail}</p>
           </div>
-          <p className="mt-4 max-w-2xl text-sm leading-7 text-[color:var(--ink-soft)]">{card.detail}</p>
+          <div className={`min-w-0 rounded-[0.75rem] border px-4 py-3 text-right ${workbenchSectionMutedCardClass("results")}`}>
+            <div className="text-[clamp(2rem,3.5vw,2.9rem)] font-semibold leading-[0.92] tracking-[-0.04em] text-[color:var(--ink)]">
+              {card.value}
+            </div>
+            <div className={`mt-1 text-[0.72rem] font-semibold uppercase tracking-[0.14em] ${outputStatusTextClass(card.status)}`}>
+              {statusLabel(card.status)}
+            </div>
+          </div>
         </div>
 
-        <div className="grid gap-3 rounded-[1.25rem] border hairline bg-[color:var(--paper)]/68 p-4">
-          <div className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">State</div>
-          <div className={`text-sm font-semibold uppercase tracking-[0.14em] ${outputStatusTextClass(card.status)}`}>{statusLabel(card.status)}</div>
-          <div className="text-sm leading-6 text-[color:var(--ink-soft)]">
-            {studyMode === "floor"
-              ? "This is the most decision-shaping floor metric available from the current stack."
-              : "This is the lead airborne metric available from the current wall stack."}
+        <div className="grid gap-2 sm:grid-cols-2 2xl:grid-cols-4">
+          <InlinePair label="Evidence class" value={card.postureLabel} />
+          <InlinePair label="Stack basis" value={liveStackValue} />
+          <InlinePair label="Read posture" value={validationSummary.value} />
+          <InlinePair label="Lane" value={contextLabel} />
+        </div>
+
+        <div className="grid gap-2 md:grid-cols-2">
+          <div className={`rounded-[0.75rem] border px-3 py-2.5 ${workbenchSectionMutedCardClass("results")}`}>
+            <div className={`text-[0.72rem] font-semibold ${postureValueClass}`}>{card.postureLabel}</div>
+            <div className="mt-1 text-[0.76rem] leading-5 text-[color:var(--ink-soft)]">{card.postureDetail}</div>
           </div>
-          <div className="border-t hairline pt-3">
-            <div className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">Evidence class</div>
-            <div className={`mt-2 text-sm font-semibold ${postureValueClass}`}>{card.postureLabel}</div>
-            <div className="mt-1 text-sm leading-6 text-[color:var(--ink-soft)]">{card.postureDetail}</div>
+          <div className={`rounded-[0.75rem] border px-3 py-2.5 ${workbenchSectionMutedCardClass("review")}`}>
+            <div className={`text-[0.72rem] font-semibold ${validationValueClass}`}>{validationSummary.value}</div>
+            <div className="mt-1 text-[0.76rem] leading-5 text-[color:var(--ink-soft)]">{validationSummary.detail}</div>
           </div>
-          <div className="border-t hairline pt-3">
-            <div className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">Live stack basis</div>
-            <div className="mt-2 text-sm font-semibold text-[color:var(--ink)]">{liveStackValue}</div>
-            <div className="mt-1 text-sm leading-6 text-[color:var(--ink-soft)]">{liveStackDetail}</div>
-          </div>
-          <div className="border-t hairline pt-3">
-            <div className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">Read posture</div>
-            <div className={`mt-2 text-sm font-semibold ${validationValueClass}`}>{validationSummary.value}</div>
-            <div className="mt-1 text-sm leading-6 text-[color:var(--ink-soft)]">{validationSummary.detail}</div>
+          <div className={`rounded-[0.75rem] border px-3 py-2.5 md:col-span-2 ${workbenchSectionMutedCardClass("results")}`}>
+            <div className="text-[0.72rem] font-semibold text-[color:var(--ink)]">Stack note</div>
+            <div className="mt-1 text-[0.76rem] leading-5 text-[color:var(--ink-soft)]">{liveStackDetail}</div>
           </div>
         </div>
       </div>
@@ -2079,15 +2210,15 @@ function PendingOutputRow(props: { card: OutputCardModel }) {
   const postureTextClass = outputPostureTextClass(card.postureTone);
 
   return (
-    <article className="rounded-[1.15rem] border hairline bg-[color:color-mix(in_oklch,var(--paper)_82%,transparent)] px-4 py-4">
+    <article className="rounded-[0.9rem] border border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[color:var(--paper)] px-3 py-3">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="text-sm font-semibold text-[color:var(--ink)]">{card.label}</div>
         <span className={`text-[0.72rem] font-semibold uppercase tracking-[0.16em] ${outputStatusTextClass(card.status)}`}>
           {statusLabel(card.status)}
         </span>
       </div>
-      <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">{card.detail}</p>
-      <div className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">
+      <p className="mt-2 text-[0.82rem] leading-5 text-[color:var(--ink-soft)]">{card.detail}</p>
+      <div className="mt-2 text-[0.82rem] leading-5 text-[color:var(--ink-soft)]">
         <span className="font-semibold text-[color:var(--ink)]">Evidence class:</span>{" "}
         <span className={`font-semibold ${postureTextClass}`}>{card.postureLabel}</span>. {card.postureDetail}
       </div>
@@ -2134,40 +2265,39 @@ function LayerLegendRow(props: {
   studyMode: StudyMode;
 }) {
   const { active, index, material, ready, row, studyMode } = props;
-  const facts = buildMaterialFacts(material, row.thicknessMm);
+  const facts = buildMaterialFacts({
+    densityOverride: row.densityKgM3,
+    dynamicStiffnessOverride: row.dynamicStiffnessMNm3,
+    material,
+    thicknessMm: row.thicknessMm
+  });
 
   return (
     <article
-      className={`rounded-[1.1rem] border px-3 py-3 shadow-[0_10px_20px_-20px_rgba(18,34,34,0.3)] ${
+      className={`rounded-[0.75rem] border px-3 py-2 ${
         active
-          ? "border-[color:color-mix(in_oklch,var(--accent)_34%,var(--line))] bg-[color:color-mix(in_oklch,var(--accent)_10%,var(--paper))]"
+          ? "border-[color:var(--ink)] bg-[color:color-mix(in_oklch,var(--ink)_4%,var(--paper))]"
           : ready
-            ? "hairline bg-[color:var(--paper)]/76"
-            : "border-[color:color-mix(in_oklch,var(--warning)_28%,var(--line))] bg-[color:color-mix(in_oklch,var(--warning)_10%,var(--paper))]"
+            ? "border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[color:var(--paper)]"
+            : "border-[color:color-mix(in_oklch,var(--warning)_28%,var(--line))] bg-[color:color-mix(in_oklch,var(--warning)_8%,var(--paper))]"
       }`}
       data-active={active ? "true" : "false"}
       data-ready={ready ? "true" : "false"}
       data-testid={`legend-row-${index + 1}`}
     >
-      <div className="flex items-start gap-3">
-        <div
-          className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-sm font-semibold ${layerFillClass(material)} ${layerStrokeClass(material)}`}
-        >
+      <div className="flex items-center gap-2.5">
+        <div className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-[0.68rem] font-semibold ${layerFillClass(material)} ${layerStrokeClass(material)}`}>
           {index + 1}
         </div>
         <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <div className="truncate text-sm font-semibold text-[color:var(--ink)]">{material.name}</div>
+          <div className="flex flex-wrap items-center gap-1.5">
+            <div className="truncate text-[0.82rem] font-semibold text-[color:var(--ink)]">{material.name}</div>
             <DetailTag>{row.thicknessMm || "?"} mm</DetailTag>
-            <DetailTag tone={ready ? "neutral" : "required"}>{ready ? "Live row" : "Parked"}</DetailTag>
             {studyMode === "floor" && row.floorRole ? <DetailTag>{FLOOR_ROLE_LABELS[row.floorRole]}</DetailTag> : null}
           </div>
-          <div className="mt-1 text-[0.72rem] uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
-            {getMaterialCategoryLabel(material)}
+          <div className="mt-0.5 text-[0.68rem] leading-5 text-[color:var(--ink-soft)]">
+            {compactValues([getMaterialCategoryLabel(material), facts[0], ready ? "Live row" : "Parked"]).join(" · ")}
           </div>
-          {facts.length ? (
-            <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">{facts.slice(0, 2).join(" · ")}</p>
-          ) : null}
         </div>
       </div>
     </article>
@@ -2183,50 +2313,83 @@ function FloorStackFigure(props: {
 }) {
   const { activeRowId, rows } = props;
   const totalThickness = rows.reduce((sum, entry) => sum + (parsePositiveNumber(entry.row.thicknessMm) ?? 0), 0);
+  const topFacePx = 12;
+  const sideDepthPx = 16;
 
   return (
-    <div className="section-figure rounded-[1.5rem] border hairline bg-[color:var(--paper)]/84 px-4 py-4">
-      <div className="flex items-center justify-between text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">
+    <div className="section-figure rounded-[0.95rem] border border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[color:var(--paper)] px-3 py-3">
+      <div className="flex items-center justify-between text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">
         <span>Walking side</span>
         <span>{rows.length} layers</span>
       </div>
 
-      <div className="mt-4 flex min-h-[18rem] flex-col overflow-hidden rounded-[1.25rem] border hairline bg-[linear-gradient(180deg,rgba(255,255,255,0.54),rgba(255,255,255,0.12))]">
-        {rows.map(({ material, row }, index) => {
-          const thickness = parsePositiveNumber(row.thicknessMm) ?? 10;
-          const active = row.id === activeRowId;
-          const ready = isThicknessReady(row.thicknessMm);
-          return (
-            <div
-              className={`relative flex min-h-10 items-center justify-between gap-3 border-b px-3 py-3 last:border-b-0 ${layerFillClass(material)} ${
-                active
-                  ? "border-[color:color-mix(in_oklch,var(--accent)_34%,var(--line))] shadow-[inset_0_0_0_1px_color-mix(in_oklch,var(--accent)_26%,transparent)]"
-                  : ready
-                    ? "hairline"
-                    : "border-[color:color-mix(in_oklch,var(--warning)_28%,var(--line))] opacity-75"
-              }`}
-              data-active={active ? "true" : "false"}
-              data-ready={ready ? "true" : "false"}
-              data-testid={`preview-row-${index + 1}`}
-              key={row.id}
-              style={{ flexBasis: 0, flexGrow: Math.max(thickness, 10) }}
-              title={`${material.name} · ${row.thicknessMm || "?"} mm`}
-            >
-              <div className="flex min-w-0 items-center gap-2">
-                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border hairline bg-[color:var(--paper)]/76 text-[0.72rem] font-semibold text-[color:var(--ink)]">
-                  {index + 1}
+      <div className="mt-3 overflow-x-auto overflow-y-visible rounded-[0.8rem] border border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[linear-gradient(180deg,color-mix(in_oklch,var(--assembly)_6%,white),color-mix(in_oklch,var(--ink)_3%,var(--paper)))] px-3 py-6">
+        <div className="mx-auto w-full min-w-[16rem]" style={{ perspective: "1400px" }}>
+          <div
+            className="mx-auto flex w-full max-w-[28rem] flex-col"
+            style={{ transform: "rotateX(58deg) rotateZ(-12deg)", transformStyle: "preserve-3d" }}
+          >
+          {rows.map(({ material, row }, index) => {
+            const thickness = parsePositiveNumber(row.thicknessMm) ?? 10;
+            const active = row.id === activeRowId;
+            const ready = isThicknessReady(row.thicknessMm);
+            const surface = getLayerVisualSurface(material);
+            const heightPx = Math.max(20, Math.min(72, thickness * 0.72));
+            return (
+              <div
+                className="relative flex-shrink-0"
+                data-active={active ? "true" : "false"}
+                data-ready={ready ? "true" : "false"}
+                data-testid={`preview-row-${index + 1}`}
+                key={row.id}
+                style={{ height: `${heightPx}px`, transformStyle: "preserve-3d" }}
+                title={`${material.name} · ${row.thicknessMm || "?"} mm`}
+              >
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-x-0 bottom-full rounded-t-[0.35rem]"
+                  style={{
+                    ...surface.topStyle,
+                    height: `${topFacePx}px`,
+                    transform: "rotateX(-90deg)",
+                    transformOrigin: "bottom"
+                  }}
+                />
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-y-0 left-full rounded-r-[0.4rem]"
+                  style={{
+                    ...surface.sideStyle,
+                    transform: "rotateY(90deg)",
+                    transformOrigin: "left",
+                    width: `${sideDepthPx}px`
+                  }}
+                />
+                <div
+                  className={`relative flex h-full items-center justify-between overflow-hidden rounded-[0.55rem] border px-3 py-2 ${
+                    active
+                      ? "border-[color:color-mix(in_oklch,var(--accent)_34%,var(--line-strong))] shadow-[0_0_0_1px_color-mix(in_oklch,var(--accent)_22%,transparent),0_18px_30px_rgba(31,43,68,0.12)]"
+                      : ready
+                        ? "border-[color:color-mix(in_oklch,var(--line-strong)_78%,transparent)] shadow-[0_14px_22px_rgba(31,43,68,0.08)]"
+                        : "border-[color:color-mix(in_oklch,var(--warning)_34%,var(--line))] opacity-80"
+                  }`}
+                  style={surface.frontStyle}
+                >
+                  <div className="inline-flex h-6 min-w-[1.5rem] items-center justify-center rounded-full border border-black/10 bg-white/86 px-1.5 text-[0.66rem] font-semibold text-[color:var(--ink)]">
+                    {index + 1}
+                  </div>
+                  <div className="rounded-full border border-black/10 bg-white/84 px-2 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-soft)]">
+                    {ready ? `${row.thicknessMm} mm` : "Parked"}
+                  </div>
                 </div>
-                <div className="truncate text-sm font-semibold text-[color:var(--ink)]">{material.name}</div>
               </div>
-              <div className="shrink-0 text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-soft)]">
-                {ready ? `${row.thicknessMm} mm` : "Parked"}
-              </div>
-            </div>
-          );
-        })}
+            );
+          })}
+          </div>
+        </div>
       </div>
 
-      <div className="mt-4 flex items-center justify-between text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">
+      <div className="mt-3 flex items-center justify-between text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">
         <span>Ceiling side</span>
         <span>{formatDecimal(totalThickness)} mm total</span>
       </div>
@@ -2243,52 +2406,86 @@ function WallStackFigure(props: {
 }) {
   const { activeRowId, rows } = props;
   const totalThickness = rows.reduce((sum, entry) => sum + (parsePositiveNumber(entry.row.thicknessMm) ?? 0), 0);
+  const topFacePx = 12;
+  const sideDepthPx = 16;
 
   return (
-    <div className="section-figure rounded-[1.5rem] border hairline bg-[color:var(--paper)]/84 px-4 py-4">
-      <div className="flex items-center justify-between text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">
+    <div className="section-figure rounded-[0.95rem] border border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[color:var(--paper)] px-3 py-3">
+      <div className="flex items-center justify-between text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">
         <span>Side A</span>
         <span>{rows.length} layers</span>
       </div>
 
-      <div className="mt-4 overflow-hidden rounded-[1.25rem] border hairline bg-[linear-gradient(180deg,rgba(255,255,255,0.54),rgba(255,255,255,0.12))]">
-        <div className="flex min-h-[14rem]">
+      <div className="mt-3 overflow-x-auto overflow-y-visible rounded-[0.8rem] border border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[linear-gradient(180deg,color-mix(in_oklch,var(--assembly)_6%,white),color-mix(in_oklch,var(--ink)_3%,var(--paper)))] px-4 py-5">
+        <div className="mx-auto w-full min-w-[18rem]" style={{ perspective: "1400px" }}>
+          <div
+            className="mx-auto flex min-h-[10.5rem] w-fit items-stretch"
+            style={{ transform: "rotateX(-6deg) rotateY(-14deg)", transformStyle: "preserve-3d" }}
+          >
           {rows.map(({ material, row }, index) => {
             const thickness = parsePositiveNumber(row.thicknessMm) ?? 10;
             const active = row.id === activeRowId;
             const ready = isThicknessReady(row.thicknessMm);
+            const surface = getLayerVisualSurface(material);
+            const widthPx = Math.max(26, Math.min(112, thickness * 0.55));
             return (
               <div
-                className={`flex min-w-0 basis-0 flex-col justify-between border-r px-2 py-3 last:border-r-0 ${layerFillClass(material)} ${
-                  active
-                    ? "border-[color:color-mix(in_oklch,var(--accent)_34%,var(--line))] shadow-[inset_0_0_0_1px_color-mix(in_oklch,var(--accent)_26%,transparent)]"
-                    : ready
-                      ? "hairline"
-                      : "border-[color:color-mix(in_oklch,var(--warning)_28%,var(--line))] opacity-75"
-                }`}
+                className="relative flex-shrink-0"
                 data-active={active ? "true" : "false"}
                 data-ready={ready ? "true" : "false"}
                 data-testid={`preview-row-${index + 1}`}
                 key={row.id}
-                style={{ flexGrow: Math.max(thickness, 10) }}
+                style={{ height: "10rem", transformStyle: "preserve-3d", width: `${widthPx}px` }}
                 title={`${material.name} · ${row.thicknessMm || "?"} mm`}
               >
-                <div className="flex h-6 w-6 items-center justify-center rounded-full border hairline bg-[color:var(--paper)]/76 text-[0.72rem] font-semibold text-[color:var(--ink)]">
-                  {index + 1}
-                </div>
-                <div className="min-w-0">
-                  <div className="truncate text-[0.72rem] font-semibold text-[color:var(--ink)]">{material.name}</div>
-                  <div className="mt-1 text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-soft)]">
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-x-0 bottom-full rounded-t-[0.35rem]"
+                  style={{
+                    ...surface.topStyle,
+                    height: `${topFacePx}px`,
+                    transform: "rotateX(-90deg)",
+                    transformOrigin: "bottom"
+                  }}
+                />
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-y-0 left-full rounded-r-[0.4rem]"
+                  style={{
+                    ...surface.sideStyle,
+                    transform: "rotateY(90deg)",
+                    transformOrigin: "left",
+                    width: `${sideDepthPx}px`
+                  }}
+                />
+                <div
+                  className={`relative flex h-full flex-col items-center justify-between overflow-hidden rounded-[0.55rem] border px-2 py-3 ${
+                    active
+                      ? "border-[color:color-mix(in_oklch,var(--accent)_34%,var(--line-strong))] shadow-[0_0_0_1px_color-mix(in_oklch,var(--accent)_22%,transparent),0_18px_30px_rgba(31,43,68,0.12)]"
+                      : ready
+                        ? "border-[color:color-mix(in_oklch,var(--line-strong)_78%,transparent)] shadow-[0_14px_22px_rgba(31,43,68,0.08)]"
+                        : "border-[color:color-mix(in_oklch,var(--warning)_34%,var(--line))] opacity-80"
+                  }`}
+                  style={surface.frontStyle}
+                >
+                  <div className="inline-flex h-6 min-w-[1.5rem] items-center justify-center rounded-full border border-black/10 bg-white/86 px-1.5 text-[0.66rem] font-semibold text-[color:var(--ink)]">
+                    {index + 1}
+                  </div>
+                  <div
+                    className="rounded-full border border-black/10 bg-white/84 px-2 py-1 text-[0.58rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-soft)]"
+                    style={{ writingMode: widthPx < 48 ? "vertical-rl" : "horizontal-tb" }}
+                  >
                     {ready ? `${row.thicknessMm} mm` : "Parked"}
                   </div>
                 </div>
               </div>
             );
           })}
+          </div>
         </div>
       </div>
 
-      <div className="mt-4 flex items-center justify-between text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">
+      <div className="mt-3 flex items-center justify-between text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">
         <span>Side B</span>
         <span>{formatDecimal(totalThickness)} mm total</span>
       </div>
@@ -2305,70 +2502,73 @@ function LayerStackDiagram(props: {
 }) {
   const { activeRowId, materials, result, rows, studyMode } = props;
   const totalThickness = sumThickness(rows);
-  const { collapsedLiveRowCount, liveRowCount, parkedRowCount, solverLayerCount } = getRowActivityCounts(rows);
+  const { collapsedLiveRowCount, liveRowCount, parkedRowCount, solverLayerCount } = getRowActivityCounts(rows, materials);
   const resolved = rows.map((row) => ({
     material: materials.find((entry) => entry.id === row.materialId) ?? materials[0]!,
     row
   }));
 
   return (
-    <section className="atelier-panel min-w-0 overflow-hidden rounded-[1.75rem] border hairline">
-      <div className="border-b hairline px-5 py-5">
-        <div className="eyebrow">Section preview</div>
-        <div className="mt-2 flex flex-wrap items-end justify-between gap-4">
+    <section className={`min-w-0 overflow-hidden rounded-[0.85rem] border ${workbenchSectionCardClass("assembly")}`}>
+      <div className="border-b border-[color:color-mix(in_oklch,var(--assembly)_18%,var(--line))] px-4 py-3">
+        <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="min-w-0">
-            <h2 className="font-display text-[1.5rem] leading-none tracking-[-0.04em] text-[color:var(--ink)]">
-              {studyMode === "floor" ? "Layered floor build-up" : "Layered wall build-up"}
+            <div className={`text-[0.66rem] font-semibold uppercase tracking-[0.14em] ${workbenchSectionEyebrowClass("assembly")}`}>Section preview</div>
+            <h2 className={`mt-1 text-[0.92rem] font-semibold leading-tight ${workbenchSectionTitleClass("assembly")}`}>
+              {studyMode === "floor" ? "Walking side to ceiling side" : "Side A to Side B"}
             </h2>
-            <p className="mt-2 max-w-xl text-sm leading-6 text-[color:var(--ink-soft)]">
-              {studyMode === "floor"
-                ? "Read from the walking side down to the ceiling side."
-                : "Read from Side A across to Side B."}
+            <p className="mt-1 text-[0.74rem] leading-5 text-[color:var(--ink-soft)]">
+              {rows.length ? `${solverLayerCount} solver layers shown as a technical section and live schedule.` : "Add layers to generate the section preview."}
             </p>
-            <div className="mt-3 flex flex-wrap gap-2">
-              <GuidedFactChip>Editor row numbers match preview row numbers.</GuidedFactChip>
-              <GuidedFactChip>{studyMode === "floor" ? "Row 1 starts on the walking side." : "Row 1 starts on Side A."}</GuidedFactChip>
-              <GuidedFactChip>{activeRowId ? "Focused editor row is spotlighted here." : "Hover or focus a row to spotlight it here."}</GuidedFactChip>
-              <GuidedFactChip>{rows.length ? formatCountLabel(liveRowCount, "live row") : "No live rows yet"}</GuidedFactChip>
-              <GuidedFactChip tone={collapsedLiveRowCount > 0 ? "warning" : "neutral"}>
-                {rows.length
-                  ? `${solverLayerCount} solver layer${solverLayerCount === 1 ? "" : "s"}`
-                  : "No solver layers yet"}
-              </GuidedFactChip>
-              <GuidedFactChip tone={parkedRowCount > 0 ? "warning" : "neutral"}>
-                {parkedRowCount > 0 ? formatCountLabel(parkedRowCount, "parked row") : "No parked rows"}
-              </GuidedFactChip>
-            </div>
           </div>
-          <div className="grid gap-1 text-right text-sm text-[color:var(--ink-soft)]">
-            <span>{rows.length ? `${rows.length} editor rows` : "No layers yet"}</span>
-            <span>{rows.length ? `${solverLayerCount} solver layers` : "Solver layers pending"}</span>
-            <span>{totalThickness > 0 ? `${formatDecimal(totalThickness)} mm total thickness` : "Thickness pending"}</span>
-            <span>{result ? `${formatDecimal(result.metrics.surfaceMassKgM2)} kg/m² surface mass` : "Surface mass pending"}</span>
+          <div className="grid gap-2 sm:grid-cols-2 2xl:grid-cols-4">
+            <InlinePair label="Rows" value={rows.length ? `${rows.length}` : "0"} />
+            <InlinePair label="Thickness" value={totalThickness > 0 ? `${formatDecimal(totalThickness)} mm` : "Pending"} />
+            <InlinePair label="Mass" value={result ? `${formatDecimal(result.metrics.surfaceMassKgM2)} kg/m²` : "Pending"} />
+            <InlinePair label="Live" value={parkedRowCount > 0 ? `${liveRowCount}/${rows.length}` : `${liveRowCount}`} />
           </div>
         </div>
       </div>
 
       {rows.length ? (
-        <div className="grid gap-5 p-5 xl:grid-cols-[minmax(0,1.05fr)_minmax(18rem,0.95fr)]">
+        <div className="grid gap-3 p-3">
           <div>{studyMode === "floor" ? <FloorStackFigure activeRowId={activeRowId} rows={resolved} /> : <WallStackFigure activeRowId={activeRowId} rows={resolved} />}</div>
-          <div className="grid gap-2.5">
-            {resolved.map(({ material, row }, index) => (
-              <LayerLegendRow
-                active={row.id === activeRowId}
-                index={index}
-                key={row.id}
-                material={material}
-                ready={isThicknessReady(row.thicknessMm)}
-                row={row}
-                studyMode={studyMode}
-              />
-            ))}
+          <div className="grid gap-2">
+            <div className="flex items-center justify-between gap-3">
+              <div className="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+                Technical layer schedule
+              </div>
+              <div className="text-[0.72rem] font-semibold text-[color:var(--ink-soft)]">
+                {`${solverLayerCount} solver layer${solverLayerCount === 1 ? "" : "s"}`}
+              </div>
+            </div>
+            <div className="grid gap-2 xl:grid-cols-2">
+              {resolved.map(({ material, row }, index) => (
+                <LayerLegendRow
+                  active={row.id === activeRowId}
+                  index={index}
+                  key={row.id}
+                  material={material}
+                  ready={isThicknessReady(row.thicknessMm)}
+                  row={row}
+                  studyMode={studyMode}
+                />
+              ))}
+            </div>
+          </div>
+          <div className="text-[0.72rem] leading-5 text-[color:var(--ink-soft)]">
+            {collapsedLiveRowCount > 0
+              ? `${collapsedLiveRowCount} adjacent live row${collapsedLiveRowCount === 1 ? "" : "s"} collapse before calculation.`
+              : activeRowId
+                ? "Focused row is highlighted in the section."
+                : studyMode === "floor"
+                  ? "Row 1 starts on the walking side."
+                  : "Row 1 starts on Side A."}
           </div>
         </div>
       ) : (
-        <div className="px-5 py-6">
-          <div className="rounded-[1.25rem] border border-dashed hairline px-4 py-6 text-sm leading-6 text-[color:var(--ink-soft)]">
+        <div className="px-4 py-4">
+          <div className="rounded-[0.9rem] border border-dashed border-[color:color-mix(in_oklch,var(--assembly)_24%,var(--line))] bg-[color:color-mix(in_oklch,var(--assembly)_4%,var(--paper))] px-4 py-5 text-[0.82rem] leading-6 text-[color:var(--ink-soft)]">
             Add layers in physical order to generate the section preview and live stack metrics.
           </div>
         </div>
@@ -2380,7 +2580,11 @@ function LayerStackDiagram(props: {
 function SimpleLayerRow(props: {
   active: boolean;
   index: number;
-  materialGroups: readonly MaterialOptionGroup[];
+  materials: readonly MaterialDefinition[];
+  onDensityChange: (id: string, densityKgM3: string) => void;
+  onDynamicStiffnessChange: (id: string, dynamicStiffnessMNm3: string) => void;
+  materialGroups: readonly WorkbenchMaterialOptionGroup[];
+  moveFlashDirection?: "down" | "up";
   onActiveRowChange: (rowId: string | null) => void;
   onFloorRoleChange: (id: string, floorRole?: FloorRole) => void;
   onMaterialChange: (id: string, materialId: string) => void;
@@ -2391,17 +2595,47 @@ function SimpleLayerRow(props: {
   studyMode: StudyMode;
   totalRows: number;
 }) {
-  const { active, index, materialGroups, onActiveRowChange, onFloorRoleChange, onMaterialChange, onMoveRow, onRemoveRow, onThicknessChange, row, studyMode, totalRows } = props;
+  const {
+    active,
+    index,
+    materials: allMaterials,
+    materialGroups,
+    moveFlashDirection,
+    onActiveRowChange,
+    onDensityChange,
+    onDynamicStiffnessChange,
+    onFloorRoleChange,
+    onMaterialChange,
+    onMoveRow,
+    onRemoveRow,
+    onThicknessChange,
+    row,
+    studyMode,
+    totalRows
+  } = props;
 
   const materials = uniqueMaterialsById(materialGroups.flatMap((group) => group.materials));
-  const material = materials.find((entry) => entry.id === row.materialId) ?? materials[0]!;
+  const material = materials.find((entry) => entry.id === row.materialId) ?? allMaterials[0]!;
   const edgeLabel = getStackEdgeLabel(studyMode, index, totalRows);
   const canMoveUp = index > 0;
   const canMoveDown = index < totalRows - 1;
-  const materialFacts = buildMaterialFacts(material, row.thicknessMm);
   const thicknessReady = isThicknessReady(row.thicknessMm);
-  const thicknessGuidanceHint = getLayerThicknessGuidanceHint(row);
-  const thicknessSanityWarning = getLayerThicknessSanityWarning(row, index + 1);
+  const thicknessGuidanceHint = getLayerThicknessGuidanceHint(row, allMaterials);
+  const thicknessSanityWarning = getLayerThicknessSanityWarning(row, index + 1, allMaterials);
+  const densityWarning = getDensityInputWarning(material, row.densityKgM3);
+  const dynamicStiffnessWarning = getDynamicStiffnessInputWarning(row.dynamicStiffnessMNm3);
+  const categoryLabel = getMaterialCategoryLabel(material);
+  const densityLabel = formatDensityLabel(material, row.densityKgM3);
+  const surfaceMassLabel =
+    buildMaterialFacts({
+      densityOverride: row.densityKgM3,
+      dynamicStiffnessOverride: row.dynamicStiffnessMNm3,
+      material,
+      thicknessMm: row.thicknessMm
+    }).find((fact) => fact.includes("kg/m²")) ?? "Pending thickness";
+  const dynamicStiffnessLabel = formatDynamicStiffnessLabel(material, row.dynamicStiffnessMNm3);
+  const catalogDynamicStiffness = getCatalogDynamicStiffness(material);
+  const catalogDensity = getCatalogDensity(material);
   const floorRoleNote =
     studyMode !== "floor"
       ? null
@@ -2411,14 +2645,16 @@ function SimpleLayerRow(props: {
 
   return (
     <article
-      className={`min-w-0 rounded-[1.15rem] border bg-[color:var(--panel)]/90 px-3 py-3 shadow-[0_18px_32px_-32px_rgba(20,37,36,0.42)] sm:px-4 ${
+      className={`workbench-row min-w-0 rounded-[0.75rem] border px-3 py-3 ${
         active
-          ? "border-[color:color-mix(in_oklch,var(--accent)_34%,var(--line))] shadow-[0_20px_40px_-34px_rgba(20,37,36,0.42),inset_0_0_0_1px_color-mix(in_oklch,var(--accent)_22%,transparent)]"
+          ? "border-[color:color-mix(in_oklch,var(--assembly)_36%,var(--assembly-ink))] bg-[color:color-mix(in_oklch,var(--assembly)_8%,var(--paper))]"
           : thicknessReady
-            ? "hairline"
-            : "border-[color:color-mix(in_oklch,var(--warning)_28%,var(--line))] bg-[color:color-mix(in_oklch,var(--warning)_8%,var(--panel))]"
+            ? "border-[color:color-mix(in_oklch,var(--assembly)_18%,var(--line))] bg-[color:color-mix(in_oklch,var(--assembly)_4%,var(--paper))]"
+            : "border-[color:color-mix(in_oklch,var(--warning)_28%,var(--line))] bg-[color:color-mix(in_oklch,var(--warning)_8%,var(--paper))]"
       }`}
       data-active={active ? "true" : "false"}
+      data-move-flash={moveFlashDirection ?? "idle"}
+      data-row-id={row.id}
       data-ready={thicknessReady ? "true" : "false"}
       data-testid={`editor-row-${index + 1}`}
       onBlurCapture={(event) => {
@@ -2430,28 +2666,25 @@ function SimpleLayerRow(props: {
       onMouseEnter={() => onActiveRowChange(row.id)}
       onMouseLeave={() => onActiveRowChange(null)}
     >
-      <div className="flex min-w-0 items-start gap-3">
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border hairline bg-[color:var(--panel-strong)] text-sm font-semibold text-[color:var(--ink)]">
-          {index + 1}
-        </div>
-
-        <div className="min-w-0 flex-1">
-          <div className="flex min-w-0 flex-wrap items-center gap-2">
-            <div className="truncate text-[0.98rem] font-semibold text-[color:var(--ink)]">{material.name}</div>
-            {edgeLabel ? <DetailTag>{edgeLabel}</DetailTag> : null}
-            <DetailTag tone={thicknessReady ? "neutral" : "required"}>{thicknessReady ? "Live row" : "Parked"}</DetailTag>
-            {studyMode === "floor" && row.floorRole ? <DetailTag>{FLOOR_ROLE_LABELS[row.floorRole]}</DetailTag> : null}
+      <div className="flex min-w-0 flex-wrap items-start justify-between gap-3">
+        <div className="flex min-w-0 flex-wrap items-center gap-2">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[color:color-mix(in_oklch,var(--ink)_3%,var(--paper))] text-xs font-semibold text-[color:var(--ink)]">
+            {index + 1}
           </div>
-          <div className="mt-1 text-[0.68rem] uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
-            {getMaterialCategoryLabel(material)}
+          <div className="min-w-0">
+            <div className="truncate text-[0.9rem] font-semibold text-[color:var(--ink)]">{material.name}</div>
+            <div className="mt-1 flex min-w-0 flex-wrap gap-2">
+              {edgeLabel ? <DetailTag>{edgeLabel}</DetailTag> : null}
+              <DetailTag tone={thicknessReady ? "neutral" : "required"}>{thicknessReady ? "Live row" : "Parked"}</DetailTag>
+              {studyMode === "floor" && row.floorRole ? <DetailTag>{FLOOR_ROLE_LABELS[row.floorRole]}</DetailTag> : null}
+            </div>
           </div>
-          {floorRoleNote ? <p className="mt-2 text-[0.78rem] leading-5 text-[color:var(--ink-soft)]">{floorRoleNote}</p> : null}
         </div>
 
         <div className="flex shrink-0 items-center gap-1">
           <button
             aria-label={`Move layer ${index + 1} up`}
-            className="focus-ring inline-flex h-8 w-8 items-center justify-center rounded-full border hairline text-[color:var(--ink-soft)] enabled:hover:bg-black/[0.04] disabled:cursor-not-allowed disabled:opacity-35"
+            className="focus-ring inline-flex h-7 w-7 items-center justify-center rounded-[0.6rem] border border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] text-[color:var(--ink-soft)] enabled:hover:bg-black/[0.04] disabled:cursor-not-allowed disabled:opacity-35"
             disabled={!canMoveUp}
             onClick={() => onMoveRow(row.id, "up")}
             type="button"
@@ -2460,7 +2693,7 @@ function SimpleLayerRow(props: {
           </button>
           <button
             aria-label={`Move layer ${index + 1} down`}
-            className="focus-ring inline-flex h-8 w-8 items-center justify-center rounded-full border hairline text-[color:var(--ink-soft)] enabled:hover:bg-black/[0.04] disabled:cursor-not-allowed disabled:opacity-35"
+            className="focus-ring inline-flex h-7 w-7 items-center justify-center rounded-[0.6rem] border border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] text-[color:var(--ink-soft)] enabled:hover:bg-black/[0.04] disabled:cursor-not-allowed disabled:opacity-35"
             disabled={!canMoveDown}
             onClick={() => onMoveRow(row.id, "down")}
             type="button"
@@ -2468,7 +2701,7 @@ function SimpleLayerRow(props: {
             <ArrowDown className="h-4 w-4" />
           </button>
           <button
-            className="focus-ring rounded-full px-2.5 py-1.5 text-sm font-medium text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+            className="focus-ring rounded-[0.6rem] px-2.5 py-1.5 text-sm font-medium text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
             onClick={() => onRemoveRow(row.id)}
             type="button"
           >
@@ -2477,16 +2710,12 @@ function SimpleLayerRow(props: {
         </div>
       </div>
 
-      <div
-        className={`mt-3 grid min-w-0 items-end gap-3 ${
-          studyMode === "floor" ? "sm:grid-cols-[minmax(0,1fr)_7rem_minmax(10rem,12rem)]" : "sm:grid-cols-[minmax(0,1fr)_7rem]"
-        }`}
-      >
-        <MaterialPickerField
-          material={material}
-          materialGroups={materialGroups}
+      <div className={`mt-3 grid min-w-0 gap-3 ${studyMode === "floor" ? "md:grid-cols-2" : "md:grid-cols-3"}`}>
+        <WorkbenchMaterialPicker
+          currentMaterial={material}
+          groups={materialGroups}
+          label="Material"
           onSelect={(materialId) => onMaterialChange(row.id, materialId)}
-          thicknessMm={row.thicknessMm}
         />
 
         <label className="grid min-w-0 gap-2">
@@ -2499,19 +2728,41 @@ function SimpleLayerRow(props: {
             placeholder="mm"
             value={row.thicknessMm}
           />
-          {thicknessGuidanceHint ? (
-            <p className="text-[0.72rem] leading-5 text-[color:var(--ink-soft)]">{thicknessGuidanceHint}</p>
-          ) : null}
-          {thicknessSanityWarning ? (
-            <p className="text-[0.72rem] leading-5 text-[color:var(--warning-ink)]">{thicknessSanityWarning}</p>
-          ) : null}
         </label>
+
+        <label className="grid min-w-0 gap-2">
+          <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Density</span>
+          <input
+            aria-invalid={Boolean(densityWarning)}
+            aria-label={`Layer ${index + 1} density`}
+            className={getTextInputClassName(Boolean(densityWarning))}
+            inputMode="decimal"
+            onChange={(event) => onDensityChange(row.id, event.target.value)}
+            placeholder={typeof catalogDensity === "number" ? formatDecimal(catalogDensity) : "kg/m³"}
+            value={row.densityKgM3 ?? ""}
+          />
+        </label>
+
+        {studyMode === "floor" ? (
+          <label className="grid min-w-0 gap-2">
+            <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Dynamic stiffness</span>
+            <input
+              aria-invalid={Boolean(dynamicStiffnessWarning)}
+              aria-label={`Layer ${index + 1} dynamic stiffness`}
+              className={getTextInputClassName(Boolean(dynamicStiffnessWarning))}
+              inputMode="decimal"
+              onChange={(event) => onDynamicStiffnessChange(row.id, event.target.value)}
+              placeholder={typeof catalogDynamicStiffness === "number" ? formatDecimal(catalogDynamicStiffness) : "MN/m³"}
+              value={row.dynamicStiffnessMNm3 ?? ""}
+            />
+          </label>
+        ) : null}
 
         {studyMode === "floor" ? (
           <label className="grid min-w-0 gap-2">
             <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Floor role</span>
             <select
-              className="focus-ring touch-target w-full min-w-0 rounded-[1rem] border hairline bg-[color:var(--paper)] px-3 py-3"
+              className="focus-ring touch-target w-full min-w-0 rounded-[0.9rem] border border-[color:color-mix(in_oklch,var(--assembly)_22%,var(--line))] bg-[color:var(--paper)] px-3 py-2.5"
               onChange={(event) => onFloorRoleChange(row.id, event.target.value ? (event.target.value as FloorRole) : undefined)}
               value={row.floorRole ?? ""}
             >
@@ -2526,23 +2777,428 @@ function SimpleLayerRow(props: {
         ) : null}
       </div>
 
-      <div className="mt-3">
-        <LayerPositionRail index={index} studyMode={studyMode} totalRows={totalRows} />
+      <div className="mt-3 grid gap-2 sm:grid-cols-2 2xl:grid-cols-4">
+        <InlinePair label="Category" value={categoryLabel} />
+        <InlinePair label="Density" value={densityLabel} />
+        <InlinePair label="Layer mass" value={surfaceMassLabel} />
+        <InlinePair label="Dynamic stiffness" value={dynamicStiffnessLabel} />
       </div>
 
-      {materialFacts.length ? (
-        <div className="mt-3 flex min-w-0 flex-wrap gap-2">
-          {materialFacts.map((fact) => (
-            <span
-              className="rounded-full border hairline px-2.5 py-1 text-[0.72rem] font-medium text-[color:var(--ink-soft)]"
-              key={fact}
-            >
-              {fact}
-            </span>
-          ))}
+      {material.notes ? (
+        <div className={`mt-3 rounded-[0.8rem] border px-3 py-2.5 text-[0.74rem] leading-5 text-[color:var(--ink-soft)] ${workbenchSectionMutedCardClass("assembly")}`}>
+          <span className="font-semibold text-[color:var(--ink)]">Material note:</span> {material.notes}
+        </div>
+      ) : null}
+
+      {floorRoleNote || thicknessGuidanceHint || thicknessSanityWarning || densityWarning || dynamicStiffnessWarning ? (
+        <div className="mt-3 grid gap-1 text-[0.7rem] leading-5">
+          {floorRoleNote ? <div className="text-[color:var(--ink-soft)]">{floorRoleNote}</div> : null}
+          {thicknessGuidanceHint ? <div className="text-[color:var(--ink-soft)]">{thicknessGuidanceHint}</div> : null}
+          {thicknessSanityWarning ? <div className="text-[color:var(--warning-ink)]">{thicknessSanityWarning}</div> : null}
+          {densityWarning ? <div className="text-[color:var(--warning-ink)]">{densityWarning}</div> : null}
+          {dynamicStiffnessWarning ? <div className="text-[color:var(--warning-ink)]">{dynamicStiffnessWarning}</div> : null}
         </div>
       ) : null}
     </article>
+  );
+}
+
+function CustomMaterialComposer(props: {
+  customMaterials: readonly MaterialDefinition[];
+  draft: CustomMaterialDraft;
+  errors: CustomMaterialDraftErrors;
+  expanded: boolean;
+  onCreate: () => void;
+  onDraftChange: <Field extends keyof CustomMaterialDraft>(field: Field, value: CustomMaterialDraft[Field]) => void;
+  onExpandedChange: (expanded: boolean) => void;
+}) {
+  const { customMaterials, draft, errors, expanded, onCreate, onDraftChange, onExpandedChange } = props;
+  const canCreate =
+    draft.name.trim().length > 0 &&
+    draft.densityKgM3.trim().length > 0 &&
+    Object.values(errors).every((value) => !value);
+  const draftName = draft.name.trim() || "New local material";
+  const draftCategoryLabel = getCustomMaterialCategoryLabel(draft.category);
+  const draftDensityLabel = draft.densityKgM3.trim().length > 0 ? `${draft.densityKgM3.trim()} kg/m³` : "Pending";
+  const draftDynamicLabel =
+    draft.dynamicStiffnessMNm3.trim().length > 0 ? `${draft.dynamicStiffnessMNm3.trim()} MN/m³` : "Not listed";
+  const draftNotePreview = draft.notes.trim().length > 0 ? draft.notes.trim() : null;
+
+  return (
+    <section className={`rounded-[0.9rem] border px-3 py-3 ${workbenchSectionCardClass("assembly")}`}>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="min-w-0">
+          <div className="text-[0.84rem] font-semibold text-[color:var(--ink)]">Custom material library</div>
+          <p className="mt-1 text-[0.76rem] leading-5 text-[color:var(--ink-soft)]">
+            Add proprietary products or missing catalog rows once, then reuse them in any guided or advanced layer stack.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <GuidedFactChip>{`${customMaterials.length} saved`}</GuidedFactChip>
+            <GuidedFactChip>Guided + advanced</GuidedFactChip>
+            <GuidedFactChip>Browser-local</GuidedFactChip>
+          </div>
+        </div>
+        <button
+          aria-expanded={expanded}
+          className={`focus-ring inline-flex items-center justify-center rounded-[0.75rem] border px-3 py-2 text-sm font-semibold ${
+            expanded
+              ? "border-[color:color-mix(in_oklch,var(--assembly)_28%,var(--line))] bg-[color:color-mix(in_oklch,var(--assembly)_12%,var(--paper))] text-[color:var(--assembly-ink)]"
+              : "border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[color:var(--paper)] text-[color:var(--ink-soft)]"
+          }`}
+          onClick={() => onExpandedChange(!expanded)}
+          type="button"
+        >
+          {expanded ? "Close custom material" : "Create custom material"}
+        </button>
+      </div>
+
+      {customMaterials.length ? (
+        <div className="mt-3 grid gap-2 xl:grid-cols-2">
+          {customMaterials.map((material) => {
+            const notePreview = getCustomMaterialNotePreview(material.notes);
+
+            return (
+              <article
+                className={`grid gap-2 rounded-[0.9rem] border px-3 py-3 ${workbenchSectionMutedCardClass("assembly")}`}
+                data-testid={`custom-material-card-${material.id}`}
+                key={material.id}
+              >
+                <div className="flex min-w-0 items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="truncate text-sm font-semibold text-[color:var(--ink)]">{material.name}</div>
+                    <div className="mt-1 flex flex-wrap gap-2">
+                      <DetailTag>Local</DetailTag>
+                      <DetailTag>{getMaterialCategoryLabel(material)}</DetailTag>
+                    </div>
+                  </div>
+                  {typeof material.impact?.dynamicStiffnessMNm3 === "number" ? (
+                    <GuidedFactChip>{`${formatDecimal(material.impact.dynamicStiffnessMNm3)} MN/m³`}</GuidedFactChip>
+                  ) : null}
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <GuidedFactChip>{`${formatDecimal(material.densityKgM3)} kg/m³`}</GuidedFactChip>
+                  {typeof material.impact?.dynamicStiffnessMNm3 === "number" ? <GuidedFactChip>s&apos; listed</GuidedFactChip> : null}
+                </div>
+                {notePreview ? (
+                  <p className="line-clamp-2 text-[0.74rem] leading-5 text-[color:var(--ink-soft)]">{notePreview}</p>
+                ) : (
+                  <p className="text-[0.74rem] leading-5 text-[color:var(--ink-soft)]">
+                    Ready in every layer picker for this browser profile.
+                  </p>
+                )}
+              </article>
+            );
+          })}
+        </div>
+      ) : (
+        <div className={`mt-3 grid gap-2 rounded-[0.8rem] border px-3 py-3 ${workbenchSectionMutedCardClass("assembly")}`}>
+          <div className="text-[0.78rem] font-semibold text-[color:var(--ink)]">No local materials yet</div>
+          <p className="text-[0.76rem] leading-5 text-[color:var(--ink-soft)]">
+            Add one product card here and it will appear in guided and advanced layer pickers immediately.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <GuidedFactChip>Local only</GuidedFactChip>
+            <GuidedFactChip>Instant in pickers</GuidedFactChip>
+          </div>
+        </div>
+      )}
+
+      {expanded ? (
+        <div className="mt-4 grid gap-3">
+          <div
+            className={`grid gap-3 rounded-[0.95rem] border px-3 py-3 ${workbenchSectionMutedCardClass("assembly")}`}
+            data-testid="custom-material-preview"
+          >
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Composer brief</div>
+                <div className="mt-1 text-sm font-semibold text-[color:var(--ink)]">Required fields first, product note second</div>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <GuidedFactChip tone={errors.name || errors.densityKgM3 ? "warning" : "neutral"}>Required: name, category, density</GuidedFactChip>
+                <GuidedFactChip>Optional: s&apos;, note</GuidedFactChip>
+                <GuidedFactChip>Appears in layer pickers immediately</GuidedFactChip>
+              </div>
+            </div>
+            <div className="grid gap-2 sm:grid-cols-3">
+              <InlinePair label="Preview name" value={draftName} />
+              <InlinePair label="Category" value={draftCategoryLabel} />
+              <InlinePair label="Storage" value="This browser" />
+            </div>
+            <div className="grid gap-2 sm:grid-cols-2">
+              <InlinePair label="Density" value={draftDensityLabel} />
+              <InlinePair label="Dynamic stiffness" value={draftDynamicLabel} />
+            </div>
+            <p className="text-[0.76rem] leading-5 text-[color:var(--ink-soft)]">
+              {draftNotePreview ?? "Optional product note or data-sheet reference for future reviewers."}
+            </p>
+          </div>
+
+          <div className="grid gap-3 md:grid-cols-2">
+            <label className="grid min-w-0 gap-2">
+              <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Custom material name</span>
+              <input
+                aria-invalid={Boolean(errors.name)}
+                className={getTextInputClassName(Boolean(errors.name))}
+                onChange={(event) => onDraftChange("name", event.target.value)}
+                placeholder="e.g. EPDM resilient mat"
+                value={draft.name}
+              />
+              {errors.name ? <span className="text-[0.72rem] leading-5 text-[color:var(--warning-ink)]">{errors.name}</span> : null}
+            </label>
+
+            <label className="grid min-w-0 gap-2">
+              <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Category</span>
+              <select
+                className="focus-ring touch-target w-full min-w-0 rounded-[0.9rem] border border-[color:color-mix(in_oklch,var(--assembly)_22%,var(--line))] bg-[color:var(--paper)] px-3 py-2.5"
+                onChange={(event) => onDraftChange("category", event.target.value as MaterialCategory)}
+                value={draft.category}
+              >
+                {CUSTOM_MATERIAL_CATEGORY_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label className="grid min-w-0 gap-2">
+              <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Density</span>
+              <input
+                aria-invalid={Boolean(errors.densityKgM3)}
+                className={getTextInputClassName(Boolean(errors.densityKgM3))}
+                inputMode="decimal"
+                onChange={(event) => onDraftChange("densityKgM3", event.target.value)}
+                placeholder="kg/m³"
+                value={draft.densityKgM3}
+              />
+              {errors.densityKgM3 ? (
+                <span className="text-[0.72rem] leading-5 text-[color:var(--warning-ink)]">{errors.densityKgM3}</span>
+              ) : (
+                <span className="text-[0.72rem] leading-5 text-[color:var(--ink-soft)]">Required for surface mass. Use `0` only for true gaps or support-only layers.</span>
+              )}
+            </label>
+
+            <label className="grid min-w-0 gap-2">
+              <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Dynamic stiffness</span>
+              <input
+                aria-invalid={Boolean(errors.dynamicStiffnessMNm3)}
+                className={getTextInputClassName(Boolean(errors.dynamicStiffnessMNm3))}
+                inputMode="decimal"
+                onChange={(event) => onDraftChange("dynamicStiffnessMNm3", event.target.value)}
+                placeholder="MN/m³"
+                value={draft.dynamicStiffnessMNm3}
+              />
+              {errors.dynamicStiffnessMNm3 ? (
+                <span className="text-[0.72rem] leading-5 text-[color:var(--warning-ink)]">{errors.dynamicStiffnessMNm3}</span>
+              ) : (
+                <span className="text-[0.72rem] leading-5 text-[color:var(--ink-soft)]">Optional. Fill this when the product sheet publishes a resilient-layer stiffness.</span>
+              )}
+            </label>
+          </div>
+
+          <label className="grid min-w-0 gap-2">
+            <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Material note</span>
+            <textarea
+              className="focus-ring min-h-[5.5rem] rounded-[0.9rem] border border-[color:color-mix(in_oklch,var(--assembly)_22%,var(--line))] bg-[color:var(--paper)] px-3 py-2.5 text-sm text-[color:var(--ink)]"
+              onChange={(event) => onDraftChange("notes", event.target.value)}
+              placeholder="Optional source note, product sheet reference, or consultant remark."
+              value={draft.notes}
+            />
+          </label>
+
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex flex-wrap gap-2">
+              <GuidedFactChip tone={errors.name || errors.densityKgM3 ? "warning" : "neutral"}>
+                {canCreate ? "Ready to save" : "Missing required fields"}
+              </GuidedFactChip>
+              <GuidedFactChip>{`Library size after save: ${customMaterials.length + (canCreate ? 1 : 0)}`}</GuidedFactChip>
+            </div>
+            <button
+              className="focus-ring inline-flex items-center justify-center gap-2 rounded-[0.75rem] bg-[color:var(--assembly-ink)] px-4 py-2 text-sm font-semibold text-[color:var(--paper)] disabled:cursor-not-allowed disabled:opacity-45"
+              disabled={!canCreate}
+              onClick={onCreate}
+              type="button"
+            >
+              <Plus className="h-4 w-4" />
+              Save material
+            </button>
+          </div>
+        </div>
+      ) : null}
+    </section>
+  );
+}
+
+function NewLayerComposer(props: {
+  draft: NewLayerDraft;
+  materials: readonly MaterialDefinition[];
+  onDensityChange: (densityKgM3: string) => void;
+  materialGroups: readonly WorkbenchMaterialOptionGroup[];
+  onAdd: () => void;
+  onDynamicStiffnessChange: (dynamicStiffnessMNm3: string) => void;
+  onFloorRoleChange: (floorRole?: FloorRole) => void;
+  onMaterialChange: (materialId: string) => void;
+  onThicknessChange: (thicknessMm: string) => void;
+  studyMode: StudyMode;
+}) {
+  const {
+    draft,
+    materials: allMaterials,
+    materialGroups,
+    onAdd,
+    onDensityChange,
+    onDynamicStiffnessChange,
+    onFloorRoleChange,
+    onMaterialChange,
+    onThicknessChange,
+    studyMode
+  } = props;
+  const materials = uniqueMaterialsById(materialGroups.flatMap((group) => group.materials));
+  const material = materials.find((entry) => entry.id === draft.materialId) ?? allMaterials[0]!;
+  const categoryLabel = getMaterialCategoryLabel(material);
+  const densityLabel = formatDensityLabel(material, draft.densityKgM3);
+  const surfaceMassLabel =
+    buildMaterialFacts({
+      densityOverride: draft.densityKgM3,
+      dynamicStiffnessOverride: draft.dynamicStiffnessMNm3,
+      material,
+      thicknessMm: draft.thicknessMm
+    }).find((fact) => fact.includes("kg/m²")) ?? "Pending thickness";
+  const dynamicStiffnessLabel = formatDynamicStiffnessLabel(material, draft.dynamicStiffnessMNm3);
+  const densityWarning = getDensityInputWarning(material, draft.densityKgM3);
+  const dynamicStiffnessWarning = getDynamicStiffnessInputWarning(draft.dynamicStiffnessMNm3);
+  const catalogDynamicStiffness = getCatalogDynamicStiffness(material);
+  const catalogDensity = getCatalogDensity(material);
+  const thicknessWarning = getLayerThicknessSanityWarning(
+    {
+      floorRole: draft.floorRole,
+      materialId: draft.materialId,
+      thicknessMm: draft.thicknessMm
+    },
+    0,
+    allMaterials
+  );
+  const thicknessHint = getLayerThicknessGuidanceHint(
+    {
+      floorRole: draft.floorRole,
+      materialId: draft.materialId
+    },
+    allMaterials
+  );
+  const canAdd = Boolean(parsePositiveNumber(draft.thicknessMm));
+
+  return (
+    <div className={`rounded-[0.9rem] border px-3 py-3 ${workbenchSectionCardClass("assembly")}`}>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <div className="text-[0.84rem] font-semibold text-[color:var(--ink)]">Add the next layer here</div>
+          <p className="mt-1 text-[0.76rem] leading-5 text-[color:var(--ink-soft)]">
+            Pick the material and thickness, then append it to the stack.
+          </p>
+        </div>
+        <button
+          className="focus-ring inline-flex items-center justify-center gap-2 rounded-[0.75rem] bg-[color:var(--assembly-ink)] px-4 py-2 text-sm font-semibold text-[color:var(--paper)] disabled:cursor-not-allowed disabled:opacity-45"
+          disabled={!canAdd}
+          onClick={onAdd}
+          type="button"
+        >
+          <Plus className="h-4 w-4" />
+          Add layer
+        </button>
+      </div>
+
+      <div className={`mt-3 grid min-w-0 gap-3 ${studyMode === "floor" ? "md:grid-cols-2" : "md:grid-cols-3"}`}>
+        <WorkbenchMaterialPicker
+          currentMaterial={material}
+          groups={materialGroups}
+          label="New layer material"
+          onSelect={onMaterialChange}
+        />
+
+        <label className="grid min-w-0 gap-2">
+          <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">New layer thickness</span>
+          <input
+            aria-invalid={Boolean(thicknessWarning)}
+            aria-label="New layer thickness"
+            className={getTextInputClassName(Boolean(thicknessWarning))}
+            inputMode="decimal"
+            onChange={(event) => onThicknessChange(event.target.value)}
+            placeholder="mm"
+            value={draft.thicknessMm}
+          />
+        </label>
+
+        <label className="grid min-w-0 gap-2">
+          <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">New layer density</span>
+          <input
+            aria-invalid={Boolean(densityWarning)}
+            aria-label="New layer density"
+            className={getTextInputClassName(Boolean(densityWarning))}
+            inputMode="decimal"
+            onChange={(event) => onDensityChange(event.target.value)}
+            placeholder={typeof catalogDensity === "number" ? formatDecimal(catalogDensity) : "kg/m³"}
+            value={draft.densityKgM3}
+          />
+        </label>
+
+        {studyMode === "floor" ? (
+          <label className="grid min-w-0 gap-2">
+            <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">New layer dynamic stiffness</span>
+            <input
+              aria-invalid={Boolean(dynamicStiffnessWarning)}
+              aria-label="New layer dynamic stiffness"
+              className={getTextInputClassName(Boolean(dynamicStiffnessWarning))}
+              inputMode="decimal"
+              onChange={(event) => onDynamicStiffnessChange(event.target.value)}
+              placeholder={typeof catalogDynamicStiffness === "number" ? formatDecimal(catalogDynamicStiffness) : "MN/m³"}
+              value={draft.dynamicStiffnessMNm3}
+            />
+          </label>
+        ) : null}
+
+        {studyMode === "floor" ? (
+          <label className="grid min-w-0 gap-2">
+            <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">New layer role</span>
+            <select
+              aria-label="New layer role"
+              className="focus-ring touch-target w-full min-w-0 rounded-[0.9rem] border border-[color:color-mix(in_oklch,var(--assembly)_22%,var(--line))] bg-[color:var(--paper)] px-3 py-2.5"
+              onChange={(event) => onFloorRoleChange(event.target.value ? (event.target.value as FloorRole) : undefined)}
+              value={draft.floorRole ?? ""}
+            >
+              <option value="">Unassigned</option>
+              {Object.entries(FLOOR_ROLE_LABELS).map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </select>
+          </label>
+        ) : null}
+      </div>
+
+      <div className="mt-3 grid gap-2 sm:grid-cols-2 2xl:grid-cols-4">
+        <InlinePair label="Category" value={categoryLabel} />
+        <InlinePair label="Density" value={densityLabel} />
+        <InlinePair label="Layer mass" value={surfaceMassLabel} />
+        <InlinePair label="Dynamic stiffness" value={dynamicStiffnessLabel} />
+      </div>
+
+      {material.notes ? (
+        <div className={`mt-3 rounded-[0.8rem] border px-3 py-2.5 text-[0.74rem] leading-5 text-[color:var(--ink-soft)] ${workbenchSectionMutedCardClass("assembly")}`}>
+          <span className="font-semibold text-[color:var(--ink)]">Material note:</span> {material.notes}
+        </div>
+      ) : null}
+
+      {thicknessHint || thicknessWarning || densityWarning || dynamicStiffnessWarning ? (
+        <div className="mt-3 grid gap-1 text-[0.7rem] leading-5">
+          {thicknessHint ? <div className="text-[color:var(--ink-soft)]">{thicknessHint}</div> : null}
+          {thicknessWarning ? <div className="text-[color:var(--warning-ink)]">{thicknessWarning}</div> : null}
+          {densityWarning ? <div className="text-[color:var(--warning-ink)]">{densityWarning}</div> : null}
+          {dynamicStiffnessWarning ? <div className="text-[color:var(--warning-ink)]">{dynamicStiffnessWarning}</div> : null}
+        </div>
+      ) : null}
+    </div>
   );
 }
 
@@ -2559,7 +3215,7 @@ function ReviewTabButton(props: {
     <button
       aria-controls={controlsId}
       aria-selected={active}
-      className={`focus-ring inline-flex items-center rounded-full border px-3 py-2 text-sm font-semibold transition ${
+      className={`focus-ring inline-flex items-center rounded-[0.8rem] border px-3 py-2 text-sm font-semibold transition ${
         active
           ? "border-[color:color-mix(in_oklch,var(--accent)_28%,var(--line))] bg-[color:color-mix(in_oklch,var(--accent)_14%,var(--paper))] text-[color:var(--ink)]"
           : "hairline bg-[color:var(--paper)]/74 text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
@@ -2575,6 +3231,7 @@ function ReviewTabButton(props: {
 }
 
 export function SimpleWorkbenchShell() {
+  const addCustomMaterial = useWorkbenchStore((state) => state.addCustomMaterial);
   const briefNote = useWorkbenchStore((state) => state.briefNote);
   const clientName = useWorkbenchStore((state) => state.clientName);
   const consultantAddress = useWorkbenchStore((state) => state.consultantAddress);
@@ -2583,6 +3240,7 @@ export function SimpleWorkbenchShell() {
   const consultantLogoDataUrl = useWorkbenchStore((state) => state.consultantLogoDataUrl);
   const consultantPhone = useWorkbenchStore((state) => state.consultantPhone);
   const consultantWordmarkLine = useWorkbenchStore((state) => state.consultantWordmarkLine);
+  const customMaterials = useWorkbenchStore((state) => state.customMaterials);
   const approverTitle = useWorkbenchStore((state) => state.approverTitle);
   const preparedBy = useWorkbenchStore((state) => state.preparedBy);
   const proposalIssueCodePrefix = useWorkbenchStore((state) => state.proposalIssueCodePrefix);
@@ -2617,8 +3275,6 @@ export function SimpleWorkbenchShell() {
   const impactGuideKDb = useWorkbenchStore((state) => state.impactGuideKDb);
   const impactGuideReceivingRoomVolumeM3 = useWorkbenchStore((state) => state.impactGuideReceivingRoomVolumeM3);
 
-  const addRow = useWorkbenchStore((state) => state.addRow);
-  const appendMaterial = useWorkbenchStore((state) => state.appendMaterial);
   const appendRows = useWorkbenchStore((state) => state.appendRows);
   const loadPreset = useWorkbenchStore((state) => state.loadPreset);
   const moveRow = useWorkbenchStore((state) => state.moveRow);
@@ -2663,22 +3319,26 @@ export function SimpleWorkbenchShell() {
   const setRequestedOutputs = useWorkbenchStore((state) => state.setRequestedOutputs);
   const setReportProfile = useWorkbenchStore((state) => state.setReportProfile);
   const startStudyMode = useWorkbenchStore((state) => state.startStudyMode);
+  const updateDensity = useWorkbenchStore((state) => state.updateDensity);
+  const updateDynamicStiffness = useWorkbenchStore((state) => state.updateDynamicStiffness);
   const updateFloorRole = useWorkbenchStore((state) => state.updateFloorRole);
   const updateMaterial = useWorkbenchStore((state) => state.updateMaterial);
   const updateThickness = useWorkbenchStore((state) => state.updateThickness);
 
-  const materials = MATERIAL_CATALOG_SEED;
-  const quickPickMaterials = MODE_QUICK_PICK_IDS[studyMode]
-    .map((materialId) => materials.find((entry) => entry.id === materialId) ?? null)
-    .filter((entry): entry is MaterialDefinition => entry !== null);
+  const materials = buildWorkbenchMaterialCatalog(customMaterials);
   const modePresets = MODE_PRESETS[studyMode].map((presetId) => getPresetById(presetId));
   const automaticOutputs = getAutomaticOutputs(studyMode, airborneContextMode);
   const totalThickness = sumThickness(rows);
-  const { collapsedLiveRowCount, liveRowCount, parkedRowCount, solverLayerCount } = getRowActivityCounts(rows);
+  const { collapsedLiveRowCount, liveRowCount, parkedRowCount, solverLayerCount } = getRowActivityCounts(rows, materials);
   const [selectedPresetId, setSelectedPresetId] = useState<PresetId>(modePresets[0]?.id ?? MODE_PRESETS[studyMode][0]!);
-  const [quickAddMaterialId, setQuickAddMaterialId] = useState<string>(quickPickMaterials[0]?.id ?? MODE_QUICK_PICK_IDS[studyMode][0]!);
+  const [newLayerDraft, setNewLayerDraft] = useState<NewLayerDraft>(() => buildDefaultNewLayerDraft(studyMode));
+  const [customMaterialDraft, setCustomMaterialDraft] = useState<CustomMaterialDraft>(() => createEmptyCustomMaterialDraft());
+  const [customMaterialExpanded, setCustomMaterialExpanded] = useState(false);
   const [activeRowId, setActiveRowId] = useState<string | null>(null);
-  const [activeReviewTab, setActiveReviewTab] = useState<ReviewTabId>("proposal");
+  const [movedRowFlash, setMovedRowFlash] = useState<{ direction: "down" | "up"; rowId: string } | null>(null);
+  const [activeReviewTab, setActiveReviewTab] = useState<ReviewTabId>("method");
+  const [activeWorkspacePanel, setActiveWorkspacePanel] = useState<WorkspacePanelId>("setup");
+  const [reviewExpanded, setReviewExpanded] = useState(false);
 
   useEffect(() => {
     if (sameRequestedOutputs(requestedOutputs, automaticOutputs)) {
@@ -2696,11 +3356,8 @@ export function SimpleWorkbenchShell() {
   }, [modePresets, selectedPresetId, studyMode]);
 
   useEffect(() => {
-    const fallbackMaterialId = quickPickMaterials[0]?.id ?? MODE_QUICK_PICK_IDS[studyMode][0]!;
-    if (!quickPickMaterials.some((material) => material.id === quickAddMaterialId)) {
-      setQuickAddMaterialId(fallbackMaterialId);
-    }
-  }, [quickAddMaterialId, quickPickMaterials, studyMode]);
+    setNewLayerDraft(buildDefaultNewLayerDraft(studyMode));
+  }, [studyMode]);
 
   useEffect(() => {
     if (activeRowId && !rows.some((row) => row.id === activeRowId)) {
@@ -2708,15 +3365,23 @@ export function SimpleWorkbenchShell() {
     }
   }, [activeRowId, rows]);
 
+  useEffect(() => {
+    if (!movedRowFlash) {
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setMovedRowFlash((current) => (current?.rowId === movedRowFlash.rowId ? null : current));
+    }, 520);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [movedRowFlash]);
+
   const selectedPreset = modePresets.find((preset) => preset.id === selectedPresetId) ?? modePresets[0]!;
-  const selectedQuickAddMaterial =
-    quickPickMaterials.find((material) => material.id === quickAddMaterialId) ?? quickPickMaterials[0]!;
   const selectedContextOption =
     AIRBORNE_CONTEXT_OPTIONS.find((option) => option.value === airborneContextMode) ?? AIRBORNE_CONTEXT_OPTIONS[0]!;
-  const selectedStudyModeNote =
-    studyMode === "floor"
-      ? "Use this when the assembly includes coverings, resilient layers, screeds, slabs, or suspended ceiling packages."
-      : "Use this when the calculator should read airborne separation across a wall or partition assembly.";
+  const newLayerMaterialGroups = buildMaterialGroups(studyMode, materials, newLayerDraft.materialId);
+  const customMaterialErrors = validateCustomMaterialDraft(customMaterialDraft, materials);
 
   const liveAirborneContext: AirborneContext = {
     airtightness: airborneAirtightness,
@@ -2747,6 +3412,7 @@ export function SimpleWorkbenchShell() {
   const scenario = evaluateScenario({
     airborneContext: liveAirborneContext,
     calculator: calculatorId,
+    customMaterials,
     id: "simple-current",
     impactFieldContext: liveImpactFieldContext,
     name: projectName,
@@ -2878,7 +3544,7 @@ export function SimpleWorkbenchShell() {
       ? "No layers yet. Start the stack below."
       : `${validThicknessCount}/${rows.length} rows currently contribute live thickness.${studyMode === "floor" ? ` ${assignedFloorRoleCount}/${rows.length} rows are tagged for exact floor matching.` : ""}`;
   const routeCoverageLabel =
-    scenario.warnings.length > 0 ? `${scenario.warnings.length} warning${scenario.warnings.length === 1 ? "" : "s"}` : "No active warnings";
+    rows.length === 0 ? "Stack empty" : `${validThicknessCount}/${rows.length} layer${rows.length === 1 ? "" : "s"} ready`;
   const hasOptionalContextFields = geometryActive || (impactFieldActive && !standardizedImpactOutputsActive);
   const validationSummary = getGuidedValidationSummary({ result, studyMode });
   const topologyGap = getGuidedTopologyGap({ result, rows, studyMode });
@@ -2927,12 +3593,26 @@ export function SimpleWorkbenchShell() {
   }));
   const proposalLayers = rows.map((row, index) => {
     const material = materials.find((entry) => entry.id === row.materialId);
+    const effectiveDensity = material
+      ? getEffectiveDensity({
+          material,
+          overrideValue: row.densityKgM3
+        })
+      : undefined;
+    const densityLabel = material ? formatDensityLabel(material, row.densityKgM3) : "Not listed";
+    const layerThicknessMm = parsePositiveNumber(row.thicknessMm);
+    const surfaceMassLabel =
+      typeof effectiveDensity === "number" && typeof layerThicknessMm === "number"
+        ? `${formatDecimal((effectiveDensity * layerThicknessMm) / 1000)} kg/m²`
+        : undefined;
 
     return {
       categoryLabel: material ? getMaterialCategoryLabel(material) : "Uncatalogued layer",
+      densityLabel,
       index: index + 1,
       label: material?.name ?? row.materialId,
       roleLabel: studyMode === "floor" && row.floorRole ? FLOOR_ROLE_LABELS[row.floorRole] : undefined,
+      surfaceMassLabel,
       thicknessLabel: `${row.thicknessMm.trim().length > 0 ? row.thicknessMm : "?"} mm`
     };
   });
@@ -2975,298 +3655,222 @@ export function SimpleWorkbenchShell() {
   });
   const activeReviewTabConfig = REVIEW_TABS.find((tab) => tab.id === activeReviewTab) ?? REVIEW_TABS[0]!;
   const activeReviewPanelId = `guided-review-panel-${activeReviewTab}`;
-  const openReviewTab = (tabId: ReviewTabId) => {
+  const selectReviewTab = (tabId: ReviewTabId) => {
     setActiveReviewTab(tabId);
+    setReviewExpanded(true);
+    setActiveWorkspacePanel("review");
+  };
+  const openReviewTab = (tabId: ReviewTabId) => {
+    selectReviewTab(tabId);
     requestAnimationFrame(() => {
       document.getElementById("guided-review-deck")?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   };
+  const appendConfiguredLayer = () => {
+    if (!parsePositiveNumber(newLayerDraft.thicknessMm)) {
+      return;
+    }
+
+    appendRows([
+      {
+        densityKgM3: newLayerDraft.densityKgM3,
+        dynamicStiffnessMNm3: newLayerDraft.dynamicStiffnessMNm3,
+        floorRole: studyMode === "floor" ? newLayerDraft.floorRole : undefined,
+        materialId: newLayerDraft.materialId,
+        thicknessMm: newLayerDraft.thicknessMm
+      }
+    ]);
+    setNewLayerDraft(buildDefaultNewLayerDraft(studyMode));
+  };
+  const createCustomMaterial = () => {
+    const errors = validateCustomMaterialDraft(customMaterialDraft, materials);
+    if (Object.values(errors).some((value) => value)) {
+      return;
+    }
+
+    const material = buildCustomMaterialDefinition({
+      draft: customMaterialDraft,
+      existingMaterials: materials
+    });
+
+    addCustomMaterial(material);
+    setCustomMaterialDraft(createEmptyCustomMaterialDraft());
+    setCustomMaterialExpanded(false);
+    setNewLayerDraft({
+      densityKgM3: "",
+      dynamicStiffnessMNm3: "",
+      floorRole: inferFloorRole(material.id, studyMode, [...customMaterials, material]),
+      materialId: material.id,
+      thicknessMm: defaultThicknessForMaterial(material)
+    });
+    setActiveWorkspacePanel("stack");
+  };
+  const moveRowWithFeedback = (rowId: string, direction: "up" | "down") => {
+    moveRow(rowId, direction);
+    setActiveRowId(rowId);
+    setMovedRowFlash({ direction, rowId });
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        document.querySelector<HTMLElement>(`[data-row-id="${rowId}"]`)?.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest"
+        });
+      });
+    });
+  };
 
   return (
-    <div className="grid min-w-0 gap-6">
-      <section className="atelier-panel grain-mask stage-enter overflow-hidden rounded-[2rem] border hairline px-5 py-6 sm:px-7 sm:py-7">
-        <div className="grid gap-8 xl:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)] xl:items-end">
+    <div
+      className="grid min-w-0 gap-4 rounded-[1rem] bg-[color:color-mix(in_oklch,var(--paper)_88%,transparent)] pb-4"
+      style={SIMPLE_WORKBENCH_THEME}
+    >
+      <SurfacePanel className="stage-enter overflow-hidden px-4 py-4 sm:px-5">
+        <div className="grid gap-4 xl:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] xl:items-end">
           <div className="min-w-0">
-            <div className="eyebrow">Guided Acoustic Calculator</div>
-            <h1 className="mt-3 max-w-4xl font-display text-[clamp(2.35rem,4.5vw,4.4rem)] leading-[0.92] tracking-[-0.05em] text-[color:var(--ink)]">
-              Build the assembly first. The calculator shows the outputs it can actually defend.
+            <div className="text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Acoustic workbench</div>
+            <h1 className="mt-1 text-[clamp(1.15rem,2vw,1.45rem)] font-semibold leading-tight text-[color:var(--ink)]">
+              {`${getStudyModeLabel(studyMode)} calculator`}
             </h1>
-            <p className="mt-4 max-w-3xl text-sm leading-7 text-[color:var(--ink-soft)] sm:text-[1rem]">
-              Start with <span className="font-semibold text-[color:var(--ink)]">floor</span> or{" "}
-              <span className="font-semibold text-[color:var(--ink)]">wall</span>, choose the project context, then enter the layer
-              stack. Result cards update from the current inputs instead of asking you to manage expert output switches first.
-            </p>
-
-            <div className="mt-6 grid gap-3 md:grid-cols-3">
-              <WorkflowStage index="01" note="Choose whether the assembly is a floor or a wall." title="Set the surface" />
-              <WorkflowStage index="02" note="Tell the calculator if the read is lab-side, room-to-room, or building-side." title="Frame the context" />
-              <WorkflowStage index="03" note="Enter the layers in order and let the engine expose only supportable metrics." title="Build and read" />
+            <div className="mt-3 flex flex-wrap gap-2">
+              <GuidedFactChip>{selectedContextOption.label}</GuidedFactChip>
+              <GuidedFactChip>{`${readyOutputCount}/${automaticOutputs.length} outputs ready`}</GuidedFactChip>
+              <GuidedFactChip>{`${rows.length} visible row${rows.length === 1 ? "" : "s"}`}</GuidedFactChip>
+              <GuidedFactChip>{selectedPreset.label}</GuidedFactChip>
             </div>
           </div>
 
-          <aside className="rounded-[1.7rem] border hairline bg-[color:var(--paper)]/68 p-5 shadow-[0_24px_44px_-34px_rgba(20,36,35,0.32)]">
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <div className="eyebrow">Current study</div>
-                <div className="mt-2 font-display text-[1.3rem] leading-none tracking-[-0.04em] text-[color:var(--ink)]">
-                  Live calculation ledger
+          <div className="grid gap-3 xl:grid-cols-[11rem_12rem_minmax(0,1fr)_auto_auto] xl:items-end">
+            <label className="grid gap-2">
+              <span className="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Study type</span>
+              <select
+                className="focus-ring touch-target min-w-0 rounded-[0.75rem] border border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[color:var(--paper)] px-3 py-2.5 text-sm text-[color:var(--ink)]"
+                onChange={(event) => startStudyMode(event.target.value as StudyMode)}
+                value={studyMode}
+              >
+                <option value="floor">Floor</option>
+                <option value="wall">Wall</option>
+              </select>
+            </label>
+
+            <label className="grid gap-2">
+              <span className="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Project context</span>
+              <select
+                className="focus-ring touch-target min-w-0 rounded-[0.75rem] border border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[color:var(--paper)] px-3 py-2.5 text-sm text-[color:var(--ink)]"
+                onChange={(event) => setAirborneContextMode(event.target.value as AirborneContextMode)}
+                value={airborneContextMode}
+              >
+                {AIRBORNE_CONTEXT_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+              <div className="grid gap-2">
+                <div className="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Example stack</div>
+                <div className="flex min-w-0 gap-2">
+                  <select
+                    aria-label="Example stack"
+                    className="focus-ring touch-target min-w-0 flex-1 rounded-[0.75rem] border border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[color:var(--paper)] px-3 py-2.5 text-sm text-[color:var(--ink)]"
+                    onChange={(event) => {
+                      const nextPresetId = event.target.value as PresetId;
+                      setSelectedPresetId(nextPresetId);
+                      loadPreset(nextPresetId);
+                    }}
+                    value={selectedPresetId}
+                  >
+                    {modePresets.map((preset) => (
+                      <option key={preset.id} value={preset.id}>
+                        {preset.label}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
-              <DetailTag>{readyOutputCount} ready</DetailTag>
-            </div>
 
-            <div className="mt-5 grid gap-0">
-              <StudyLedgerRow detail="Current assembly type" label="Surface" value={getStudyModeLabel(studyMode)} />
-              <StudyLedgerRow detail="How the result should be interpreted" label="Context" value={getEnvironmentLabel(airborneContextMode)} />
-              <StudyLedgerRow
-                detail={totalThickness > 0 ? `${formatDecimal(totalThickness)} mm total thickness` : "No stack entered yet"}
-                label="Layer stack"
-                value={`${rows.length}`}
-              />
-              <StudyLedgerRow
-                detail={automaticOutputs.map((output) => REQUESTED_OUTPUT_LABELS[output]).join(" · ")}
-                label="Outputs ready"
-                value={`${readyOutputCount}/${automaticOutputs.length}`}
-              />
-            </div>
-          </aside>
+            <button
+              className="focus-ring inline-flex items-center justify-center gap-2 rounded-[0.75rem] border border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[color:var(--paper)] px-3 py-2.5 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+              onClick={() => reset()}
+              type="button"
+            >
+              <RotateCcw className="h-4 w-4" />
+              Reset
+            </button>
+
+            <Link
+              className="focus-ring inline-flex items-center justify-center gap-2 rounded-[0.75rem] border border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[color:var(--paper)] px-3 py-2.5 text-sm font-semibold text-[color:var(--ink)] hover:bg-black/[0.03]"
+              href="/workbench?view=advanced"
+            >
+              Open advanced view
+              <ChevronRight className="h-4 w-4" />
+            </Link>
+          </div>
         </div>
-      </section>
+      </SurfacePanel>
 
-      <section className="grid min-w-0 gap-6 xl:grid-cols-[minmax(0,1.05fr)_minmax(22rem,0.95fr)]">
-        <div className="grid min-w-0 gap-6">
-          <SurfacePanel className="stage-enter-2 min-w-0 overflow-hidden px-5 py-6 sm:px-6">
-            <div className="flex min-w-0 flex-wrap items-start justify-between gap-4">
-              <SectionLead
-                description="Keep the decision path linear: choose the surface, set the project context, and only then expose extra technical inputs."
-                step="01 / 02"
-                title="Set the study"
-              />
-              <button
-                className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-3 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
-                onClick={() => reset()}
-                type="button"
-              >
-                <RotateCcw className="h-4 w-4" />
-                Reset
-              </button>
-            </div>
+      <div className="grid gap-2 xl:hidden">
+        <div className="grid grid-cols-4 gap-2">
+          <WorkspacePanelButton active={activeWorkspacePanel === "setup"} label="Setup" onClick={() => setActiveWorkspacePanel("setup")} />
+          <WorkspacePanelButton active={activeWorkspacePanel === "stack"} label="Assembly" onClick={() => setActiveWorkspacePanel("stack")} />
+          <WorkspacePanelButton active={activeWorkspacePanel === "results"} label="Results" onClick={() => setActiveWorkspacePanel("results")} />
+          <WorkspacePanelButton
+            active={activeWorkspacePanel === "review"}
+            label="Details"
+            onClick={() => {
+              setActiveWorkspacePanel("review");
+              setReviewExpanded(true);
+            }}
+          />
+        </div>
+      </div>
 
-            <div className="mt-6 grid gap-6">
-              <div className="grid gap-4 xl:grid-cols-[minmax(0,19rem)_minmax(0,1fr)]">
-                <div className="grid gap-4 rounded-[1.45rem] border hairline bg-[color:var(--paper)]/72 p-4">
-                  <GuidedSelectField
-                    label="Surface type"
-                    note="Start by telling the calculator whether the assembly is a floor build-up or a wall partition."
-                  >
-                    <select
-                      aria-label="Surface type"
-                      className="focus-ring touch-target w-full min-w-0 rounded-[1rem] border hairline bg-[color:var(--paper)] px-3 py-3"
-                      onChange={(event) => startStudyMode(event.target.value as StudyMode)}
-                      value={studyMode}
-                    >
-                      <option value="floor">Floor</option>
-                      <option value="wall">Wall</option>
-                    </select>
-                  </GuidedSelectField>
+      <section className="grid min-w-0 gap-4 xl:grid-cols-[20rem_minmax(0,1.75fr)_minmax(25rem,1.1fr)] xl:items-start">
+        <SurfacePanel
+          className={`stage-enter-2 min-w-0 overflow-hidden px-4 py-4 sm:px-5 ${
+            activeWorkspacePanel === "setup" ? "block" : "hidden xl:block"
+          } ${workbenchSectionPanelClass("route")}`}
+        >
+          <div className="flex flex-col">
+            <SectionLead description="Pick the route, then fill only the inputs that unlock the current lane." title="Route" tone="route" />
 
-                  <GuidedSelectField
-                    label="Project context"
-                    note="Choose the interpretation route before you touch the stack, so only relevant inputs and outputs appear."
-                  >
-                    <select
-                      aria-label="Project context"
-                      className="focus-ring touch-target w-full min-w-0 rounded-[1rem] border hairline bg-[color:var(--paper)] px-3 py-3"
-                      onChange={(event) => setAirborneContextMode(event.target.value as AirborneContextMode)}
-                      value={airborneContextMode}
-                    >
-                      {AIRBORNE_CONTEXT_OPTIONS.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                  </GuidedSelectField>
-
-                  <div className="flex flex-wrap gap-2">
-                    <GuidedFactChip>{REQUESTED_OUTPUT_LABELS[automaticOutputs[0]!]}</GuidedFactChip>
-                    {automaticOutputs.length > 1 ? (
-                      <GuidedFactChip>{`${automaticOutputs.length - 1} more auto outputs`}</GuidedFactChip>
-                    ) : null}
-                    <GuidedFactChip tone={scenario.warnings.length ? "warning" : "neutral"}>{routeCoverageLabel}</GuidedFactChip>
-                  </div>
+            <div className="mt-4 space-y-4">
+              <section className={`rounded-[0.85rem] border px-3 py-3 ${workbenchSectionCardClass("route")}`}>
+                <div className={`text-[0.68rem] font-semibold uppercase tracking-[0.14em] ${workbenchSectionEyebrowClass("route")}`}>Route summary</div>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  <GuidedFactChip>{getEnvironmentLabel(airborneContextMode)}</GuidedFactChip>
+                  <GuidedFactChip>{selectedPreset.label}</GuidedFactChip>
+                  <GuidedFactChip>{`${readyOutputCount}/${automaticOutputs.length} ready`}</GuidedFactChip>
+                  <GuidedFactChip>{`${liveRowCount} live / ${parkedRowCount} parked`}</GuidedFactChip>
                 </div>
+                <p className="mt-3 text-[0.8rem] leading-5 text-[color:var(--ink-soft)]">{selectedContextOption.note}</p>
+                <div className="mt-3 grid gap-2 md:grid-cols-2">
+                  <GuidedRouteRow detail={routeSignals.primaryRead.detail} label="Primary output" tone="route" value={routeSignals.primaryRead.value} />
+                  <GuidedRouteRow detail={dynamicCalcBranch.detail} label="Solver lane" tone="route" value={dynamicCalcBranch.value} />
+                  <GuidedRouteRow detail={validationSummary.detail} label="Validation" tone="route" value={validationSummary.value} />
+                  <GuidedRouteRow detail={routeSignals.nextAction.detail} label="Next step" tone="route" value={routeSignals.nextAction.value} />
+                  {topologyGap ? <GuidedRouteRow detail={topologyGap.detail} label="Topology gap" tone="route" value={topologyGap.value} /> : null}
+                </div>
+              </section>
 
-                <div className="rounded-[1.45rem] border hairline bg-[color:var(--paper)]/72 p-4 sm:p-5">
+              {geometryActive || impactFieldActive ? (
+                <section className={`rounded-[0.9rem] border px-3 py-3 ${workbenchSectionCardClass("route")}`}>
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
-                      <div className="text-sm font-semibold text-[color:var(--ink)]">Current route</div>
-                      <p className="mt-1 text-sm leading-6 text-[color:var(--ink-soft)]">
-                        The guided shell keeps this route explicit, then reveals only the context inputs and outputs that belong to it.
-                      </p>
+                      <div className="text-[0.84rem] font-semibold text-[color:var(--ink)]">Input map</div>
+                      <p className="mt-1 text-[0.76rem] leading-5 text-[color:var(--ink-soft)]">Only the fields that move this lane are live.</p>
                     </div>
-                    <DetailTag>{selectedContextOption.label}</DetailTag>
-                  </div>
-
-                  <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                    <InlinePair label="Surface" value={getStudyModeLabel(studyMode)} />
-                    <InlinePair label="Context" value={selectedContextOption.label} />
-                  </div>
-
-                  <div className="mt-4 grid gap-0">
-                    <GuidedRouteRow
-                      detail={selectedStudyModeNote}
-                      label="Assembly lane"
-                      value={getStudyModeLabel(studyMode)}
-                    />
-                    <GuidedRouteRow
-                      detail={selectedContextOption.note}
-                      label="Context meaning"
-                      value={selectedContextOption.label}
-                    />
-                    <GuidedRouteRow
-                      detail={automaticOutputs.map((output) => REQUESTED_OUTPUT_LABELS[output]).join(" · ")}
-                      label="Auto outputs"
-                      value={`${readyOutputCount}/${automaticOutputs.length} ready`}
-                    />
-                    <GuidedRouteRow
-                      detail={routeReadinessDetail}
-                      label="Stack readiness"
-                      value={rows.length ? `${rows.length} rows` : "Waiting"}
-                    />
-                  </div>
-
-                  <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
-                    <RouteSignalCard
-                      detail={routeSignals.stackStatus.detail}
-                      label="Stack status"
-                      tone={routeSignals.stackStatus.tone}
-                      value={routeSignals.stackStatus.value}
-                    />
-                    <RouteSignalCard
-                      detail={routeSignals.primaryRead.detail}
-                      label="Primary read"
-                      tone={routeSignals.primaryRead.tone}
-                      value={routeSignals.primaryRead.value}
-                    />
-                    <RouteSignalCard
-                      detail={routeSignals.nextAction.detail}
-                      label="Next action"
-                      tone={routeSignals.nextAction.tone}
-                      value={routeSignals.nextAction.value}
-                    />
-                    <RouteSignalCard
-                      detail={dynamicCalcBranch.detail}
-                      label="Solver branch"
-                      tone={dynamicCalcBranch.tone}
-                      value={dynamicCalcBranch.value}
-                    />
-                    <RouteSignalCard
-                      detail={validationSummary.detail}
-                      label="Validation posture"
-                      tone={validationSummary.tone}
-                      value={validationSummary.value}
-                    />
-                  </div>
-
-                  {topologyGap ? (
-                    <div className="mt-3">
-                      <RouteSignalCard detail={topologyGap.detail} label="Topology gap" tone="warning" value={topologyGap.value} />
+                    <div className="flex flex-wrap gap-2">
+                      <DetailTag>{getEnvironmentLabel(airborneContextMode)}</DetailTag>
+                      {geometryActive ? <GuidedFactChip>Airborne route live</GuidedFactChip> : null}
+                      {impactFieldActive ? <GuidedFactChip>Impact route live</GuidedFactChip> : null}
                     </div>
-                  ) : null}
-
-                  {showTimberImpactOnlyGuidedActions ? (
-                    <div className="mt-3 rounded-[1.1rem] border hairline bg-black/[0.025] p-4">
-                      <div className="flex flex-wrap items-center justify-between gap-3">
-                        <div>
-                          <div className="text-sm font-semibold text-[color:var(--ink)]">Quick path into a narrower timber lane</div>
-                          <p className="mt-1 text-sm leading-6 text-[color:var(--ink-soft)]">
-                            These helpers append ceiling-side rows in solver order so the stack can move out of the broad bare-floor fallback without rebuilding the assembly by hand.
-                          </p>
-                        </div>
-                        <DetailTag>Ceiling-side helpers</DetailTag>
-                      </div>
-
-                      <div className="mt-4 grid gap-3 xl:grid-cols-3">
-                        {TIMBER_IMPACT_ONLY_GUIDED_ACTIONS.map((action) => (
-                          <button
-                            className="focus-ring flex min-w-0 flex-col items-start gap-2 rounded-[1rem] border hairline bg-[color:var(--paper)] px-4 py-4 text-left hover:bg-black/[0.03]"
-                            key={action.id}
-                            onClick={() => appendRows(action.rows)}
-                            type="button"
-                          >
-                            <span className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
-                              <Plus className="h-4 w-4" />
-                              {action.label}
-                            </span>
-                            <span className="text-sm leading-6 text-[color:var(--ink-soft)]">{action.note}</span>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  ) : null}
-
-                  {showSteelBoundSupportFormActions && lightweightSteelBaseRow ? (
-                    <div className="mt-3 rounded-[1.1rem] border hairline bg-black/[0.025] p-4">
-                      <div className="flex flex-wrap items-center justify-between gap-3">
-                        <div>
-                          <div className="text-sm font-semibold text-[color:var(--ink)]">Lock the steel support form</div>
-                          <p className="mt-1 text-sm leading-6 text-[color:var(--ink-soft)]">
-                            These helpers keep the floor and ceiling package intact but pin the base carrier to joist / purlin or open-web /
-                            rolled steel so the crossover bound can collapse into a narrower UBIQ family corridor.
-                          </p>
-                        </div>
-                        <DetailTag>Support-form helpers</DetailTag>
-                      </div>
-
-                      <div className="mt-4 grid gap-3 xl:grid-cols-2">
-                        {STEEL_BOUND_SUPPORT_FORM_ACTIONS.map((action) => (
-                          <button
-                            className="focus-ring flex min-w-0 flex-col items-start gap-2 rounded-[1rem] border hairline bg-[color:var(--paper)] px-4 py-4 text-left hover:bg-black/[0.03]"
-                            key={action.id}
-                            onClick={() => updateMaterial(lightweightSteelBaseRow.id, action.materialId)}
-                            type="button"
-                          >
-                            <span className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
-                              <Plus className="h-4 w-4" />
-                              {action.label}
-                            </span>
-                            <span className="text-sm leading-6 text-[color:var(--ink-soft)]">{action.note}</span>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  ) : null}
-
-                  <p className="mt-4 text-sm leading-6 text-[color:var(--ink-soft)]">{getAutomaticOutputNarrative(studyMode, airborneContextMode)}</p>
-                </div>
-              </div>
-
-              <section className="rounded-[1.45rem] border hairline bg-[color:var(--paper)]/76 px-4 py-4">
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <div>
-                    <div className="text-sm font-semibold text-[color:var(--ink)]">
-                      {geometryActive || impactFieldActive ? "Context-dependent inputs" : "No extra context inputs needed"}
-                    </div>
-                    <p className="mt-1 text-sm leading-6 text-[color:var(--ink-soft)]">
-                      {geometryActive || impactFieldActive
-                        ? "Only the fields that unlock additional outputs are shown here, split into required and parked groups."
-                        : "The current route is already complete enough to start reading core outputs from the visible stack."}
-                    </p>
                   </div>
-                  <DetailTag>{getEnvironmentLabel(airborneContextMode)}</DetailTag>
-                </div>
 
-                {contextNotes.length ? (
-                  <div className="mt-4 rounded-[1.05rem] border hairline bg-black/[0.02] px-4 py-3 text-sm leading-6 text-[color:var(--ink-soft)]">
-                    {contextNotes.join(" ")}
-                  </div>
-                ) : null}
-
-                {geometryActive || impactFieldActive ? (
-                  <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
+                  <div className="mt-3 grid gap-3">
                     <ContextBucket
-                      description="These values are on the active route and directly change whether the current read is defensible."
+                      description="Directly gates the live read."
                       hasContent={geometryActive || impactFieldActive}
                       title="Required now"
                       tone="required"
@@ -3275,15 +3879,15 @@ export function SimpleWorkbenchShell() {
                         <ContextSubsection
                           note={
                             standardizedAirborneActive
-                              ? "Standardized airborne outputs are active, so partition geometry and receiving-room volume are required. RT60 stays optional for absorption-aware sidecars."
-                              : "Apparent airborne field reads are active, so element geometry is required before the stack can be trusted."
+                              ? "Geometry and room volume are live for DnT."
+                              : "Geometry is live for apparent airborne reads."
                           }
                           title="Airborne route"
                         >
                           <FieldShell
                             advisory={`Guided sanity band ${formatGuidedSanityBand(GUIDED_INPUT_SANITY_BANDS.panelWidthMm)}.`}
                             label="Partition width (mm)"
-                            note="Width of the separating element."
+                            note="Clear width of the separating element."
                             relevance="required"
                             usage="Dn,w, Dn,A, DnT,w, DnT,A"
                             warning={panelWidthSanityWarning}
@@ -3301,7 +3905,7 @@ export function SimpleWorkbenchShell() {
                           <FieldShell
                             advisory={`Guided sanity band ${formatGuidedSanityBand(GUIDED_INPUT_SANITY_BANDS.panelHeightMm)}.`}
                             label="Partition height (mm)"
-                            note="Height of the separating element."
+                            note="Clear height of the separating element."
                             relevance="required"
                             usage="Dn,w, Dn,A, DnT,w, DnT,A"
                             warning={panelHeightSanityWarning}
@@ -3319,8 +3923,8 @@ export function SimpleWorkbenchShell() {
                           {standardizedAirborneActive ? (
                             <FieldShell
                               advisory={`Guided sanity band ${formatGuidedSanityBand(GUIDED_INPUT_SANITY_BANDS.receivingRoomVolumeM3)}.`}
-                              label="Receiving room volume (m³)"
-                              note="Use the real receiving-room volume when standardized DnT outputs are required."
+                              label="Airborne room volume (m³)"
+                              note="Receiving room volume for standardized DnT."
                               relevance="required"
                               usage="DnT,w and DnT,A"
                               warning={airborneVolumeSanityWarning}
@@ -3342,15 +3946,15 @@ export function SimpleWorkbenchShell() {
                         <ContextSubsection
                           note={
                             standardizedImpactOutputsActive
-                              ? "Field impact and standardized floor-side reads are active, so both K and receiving-room volume are required."
-                              : "Only direct field-side impact correction is active right now, so K is the minimum required input."
+                              ? "K and room volume are live for standardized impact reads."
+                              : "K is the only live field carry-over input."
                           }
                           title="Impact route"
                         >
                           <FieldShell
                             advisory={`Guided sanity band ${formatGuidedSanityBand(GUIDED_INPUT_SANITY_BANDS.fieldKDb)}.`}
-                            label="K correction (dB)"
-                            note="Field K is the simplest direct supplement for L'n,w."
+                            label="Impact K correction (dB)"
+                            note="Direct field K carry-over."
                             relevance="required"
                             usage="L'n,w, L'nT,w and L'nT,50"
                             warning={impactKSanityWarning}
@@ -3368,8 +3972,8 @@ export function SimpleWorkbenchShell() {
                           {standardizedImpactOutputsActive ? (
                             <FieldShell
                               advisory={`Guided sanity band ${formatGuidedSanityBand(GUIDED_INPUT_SANITY_BANDS.receivingRoomVolumeM3)}.`}
-                              label="Receiving room volume (m³)"
-                              note="Needed for standardized floor-side impact outputs."
+                              label="Impact room volume (m³)"
+                              note="Receiving room volume for standardized impact reads."
                               relevance="required"
                               usage="L'nT,w and L'nT,50"
                               warning={impactVolumeSanityWarning}
@@ -3389,20 +3993,20 @@ export function SimpleWorkbenchShell() {
                     </ContextBucket>
 
                     <ContextBucket
-                      description="These inputs are relevant on nearby routes, but they do not block the current core read."
+                      description="Keep nearby for the next route upgrade."
                       hasContent={hasOptionalContextFields}
                       title="Optional now"
                       tone="optional"
                     >
                       {geometryActive && !standardizedAirborneActive ? (
                         <ContextSubsection
-                          note="Keep these parked until the route moves from apparent field reads into standardized airborne normalization."
+                          note="Room volume can wait until this route upgrades to DnT."
                           title="Airborne route"
                         >
                           <FieldShell
                             advisory={`Guided sanity band ${formatGuidedSanityBand(GUIDED_INPUT_SANITY_BANDS.receivingRoomVolumeM3)}.`}
-                            label="Receiving room volume (m³)"
-                            note="Use the real receiving-room volume when available."
+                            label="Airborne room volume (m³)"
+                            note="Keep the receiving room volume ready for DnT."
                             relevance="optional"
                             usage="DnT,w, DnT,A and floor-side L'nT,w when requested"
                             warning={airborneVolumeSanityWarning}
@@ -3421,13 +4025,13 @@ export function SimpleWorkbenchShell() {
 
                       {geometryActive && standardizedAirborneActive ? (
                         <ContextSubsection
-                          note="RT60 is optional on the current DnT lane. It supports absorption-aware sidecars, but it does not block DnT,w or DnT,A."
+                          note="RT60 only feeds absorption-aware sidecars."
                           title="Airborne route"
                         >
                           <FieldShell
                             advisory={`Guided sanity band ${formatGuidedSanityBand(GUIDED_INPUT_SANITY_BANDS.receivingRoomRt60S)}.`}
                             label="RT60 (s)"
-                            note="Optional reverberation-time context for absorption-aware sidecars."
+                            note="Use only when absorption-aware sidecars matter."
                             relevance="optional"
                             usage="Absorption-aware field sidecars"
                             warning={rt60SanityWarning}
@@ -3446,13 +4050,13 @@ export function SimpleWorkbenchShell() {
 
                       {impactFieldActive && !standardizedImpactOutputsActive ? (
                         <ContextSubsection
-                          note="Room volume can stay parked until the route upgrades from L'n,w into standardized L'nT outputs."
+                          note="Room volume can wait until this route upgrades to L'nT."
                           title="Impact route"
                         >
                           <FieldShell
                             advisory={`Guided sanity band ${formatGuidedSanityBand(GUIDED_INPUT_SANITY_BANDS.receivingRoomVolumeM3)}.`}
-                            label="Receiving room volume (m³)"
-                            note="Needed for standardized floor-side impact outputs."
+                            label="Impact room volume (m³)"
+                            note="Keep the receiving room volume ready for standardized impact reads."
                             relevance="optional"
                             usage="L'nT,w and L'nT,50"
                             warning={impactVolumeSanityWarning}
@@ -3470,427 +4074,428 @@ export function SimpleWorkbenchShell() {
                       ) : null}
                     </ContextBucket>
                   </div>
-                ) : null}
-              </section>
-
-              <section className="grid gap-3">
-                <div className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">
-                  Sample starting points
+                </section>
+              ) : (
+                <div className={`rounded-[0.85rem] border px-3 py-3 text-[0.8rem] leading-5 text-[color:var(--ink-soft)] ${workbenchSectionCardClass("route")}`}>
+                  {contextNotes[0] ?? "No additional route inputs are needed for this context."}
                 </div>
-                <div className="rounded-[1.25rem] border hairline bg-[color:var(--paper)]/76 px-4 py-4">
-                  <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
-                    <label className="grid min-w-0 gap-2">
-                      <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Sample assembly</span>
-                      <select
-                        className="focus-ring touch-target w-full min-w-0 rounded-[1rem] border hairline bg-[color:var(--paper)] px-3 py-3"
-                        onChange={(event) => setSelectedPresetId(event.target.value as PresetId)}
-                        value={selectedPresetId}
-                      >
-                        {modePresets.map((preset) => (
-                          <option key={preset.id} value={preset.id}>
-                            {preset.label}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
+              )}
 
-                    <button
-                      className="focus-ring inline-flex items-center justify-center gap-2 rounded-full border hairline px-4 py-3 text-sm font-semibold text-[color:var(--ink)] hover:bg-black/[0.03]"
-                      onClick={() => loadPreset(selectedPreset.id)}
-                      type="button"
-                    >
-                      Load sample
-                      <ChevronRight className="h-4 w-4" />
-                    </button>
-                  </div>
-
-                  <div className="mt-3 rounded-[1rem] border hairline bg-black/[0.02] px-4 py-3">
-                    <div className="text-sm font-semibold text-[color:var(--ink)]">{selectedPreset.label}</div>
-                    <p className="mt-1 text-sm leading-6 text-[color:var(--ink-soft)]">{selectedPreset.summary}</p>
-                    <p className="mt-2 text-[0.78rem] leading-5 text-[color:var(--ink-faint)]">{selectedPreset.note}</p>
-                  </div>
-                </div>
-              </section>
-
-              <details className="rounded-[1.35rem] border hairline bg-[color:var(--paper)]/62 px-4 py-4">
+              <details className={`rounded-[0.85rem] border px-3 py-3 ${workbenchSectionMutedCardClass("route")}`}>
                 <summary className="cursor-pointer list-none">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
-                      <div className="text-sm font-semibold text-[color:var(--ink)]">Expert options</div>
-                      <p className="mt-1 text-sm leading-6 text-[color:var(--ink-soft)]">
-                        Solver choice and wall leakage assumptions stay out of the main flow unless the current route actually uses them.
+                      <div className="text-[0.84rem] font-semibold text-[color:var(--ink)]">Tools</div>
+                      <p className="mt-1 text-[0.76rem] leading-5 text-[color:var(--ink-soft)]">
+                        Preset notes, helper inserts, and expert-only controls.
                       </p>
                     </div>
-                    {expertInputsActive ? <DetailTag tone="optional">Active</DetailTag> : <DetailTag>Not used now</DetailTag>}
+                    <DetailTag>{selectedPreset.label}</DetailTag>
                   </div>
                 </summary>
 
-                <div className="mt-4 grid gap-5">
-                  <div className="grid gap-3 md:grid-cols-2">
-                    <FieldShell
-                      label="Calculator"
-                      note="This selector chooses the airborne solver family."
-                      relevance="optional"
-                      usage="Rw, R'w, STC, C, Ctr, Dn* outputs and any airborne companion on floor studies"
-                    >
-                      <select
-                        className="focus-ring touch-target rounded-[1rem] border hairline bg-[color:var(--paper)] px-3 py-3"
-                        onChange={(event) => setCalculatorId(event.target.value as AirborneCalculatorId)}
-                        value={calculatorId}
-                      >
-                        {CALCULATOR_OPTIONS.map((option) => (
-                          <option key={option.value} value={option.value}>
-                            {option.label}
-                          </option>
-                        ))}
-                      </select>
-                    </FieldShell>
-
-                    <div className="rounded-[1.1rem] border hairline bg-black/[0.02] px-4 py-4">
-                      <div className="text-sm font-semibold text-[color:var(--ink)]">Full expert desk</div>
-                      <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">
-                        Use the advanced workbench for explicit output curation, imported bands, field paths, provenance, and diagnostics.
-                      </p>
-                      <Link
-                        className="focus-ring mt-4 inline-flex items-center gap-2 rounded-full border hairline px-3 py-2 text-sm font-semibold text-[color:var(--ink)] hover:bg-black/[0.03]"
-                        href="/workbench?view=advanced"
-                      >
-                        Open advanced view
-                        <ChevronRight className="h-4 w-4" />
-                      </Link>
+                <div className="mt-4 grid gap-4">
+                  <div className={`rounded-[0.8rem] border px-3 py-3 text-[0.8rem] leading-5 text-[color:var(--ink-soft)] ${workbenchSectionMutedCardClass("route")}`}>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <div className="font-semibold text-[color:var(--ink)]">{selectedPreset.label}</div>
+                      <GuidedFactChip>{`${rows.length} visible row${rows.length === 1 ? "" : "s"}`}</GuidedFactChip>
                     </div>
+                    <p className="mt-1">{selectedPreset.summary}</p>
+                    <p className="mt-1 text-[0.74rem] leading-5 text-[color:var(--ink-faint)]">{selectedPreset.note}</p>
                   </div>
 
-                  {wallModifiersActive ? (
-                    <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-                      <FieldShell
-                        label="Connection path"
-                        note="Choose a known connection only if it is clear."
-                        relevance="optional"
-                        usage="Wall-family detection and airborne overlays"
-                      >
-                        <select
-                          className="focus-ring touch-target rounded-[1rem] border hairline bg-[color:var(--paper)] px-3 py-3"
-                          onChange={(event) => setAirborneConnectionType(event.target.value as AirborneConnectionType)}
-                          value={airborneConnectionType}
+                  {showTimberImpactOnlyGuidedActions ? (
+                    <div className="grid gap-2">
+                      {TIMBER_IMPACT_ONLY_GUIDED_ACTIONS.map((action) => (
+                        <button
+                          className="focus-ring flex min-w-0 flex-col items-start gap-1.5 rounded-[0.75rem] border border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[color:var(--paper)] px-3 py-3 text-left hover:bg-black/[0.03]"
+                          key={action.id}
+                          onClick={() => appendRows(action.rows)}
+                          type="button"
                         >
-                          {CONNECTION_OPTIONS.map((option) => (
-                            <option key={option.value} value={option.value}>
-                              {option.label}
-                            </option>
-                          ))}
-                        </select>
-                      </FieldShell>
-
-                      <FieldShell
-                        label="Stud family"
-                        note="Set this only when the framing type is known."
-                        relevance="optional"
-                        usage="Framed-wall family matching and resilient framing penalties"
-                      >
-                        <select
-                          className="focus-ring touch-target rounded-[1rem] border hairline bg-[color:var(--paper)] px-3 py-3"
-                          onChange={(event) => setAirborneStudType(event.target.value as AirborneStudType)}
-                          value={airborneStudType}
-                        >
-                          {STUD_TYPE_OPTIONS.map((option) => (
-                            <option key={option.value} value={option.value}>
-                              {option.label}
-                            </option>
-                          ))}
-                        </select>
-                      </FieldShell>
-
-                      <FieldShell
-                        label="Stud spacing (mm)"
-                        note="Leave blank if spacing is unknown."
-                        relevance="optional"
-                        usage="Framed wall family matching when stud spacing is part of the evidence"
-                      >
-                        <input
-                          className="focus-ring touch-target rounded-[1rem] border hairline bg-[color:var(--paper)] px-3 py-3"
-                          inputMode="decimal"
-                          onChange={(event) => setAirborneStudSpacingMm(event.target.value)}
-                          value={airborneStudSpacingMm}
-                        />
-                      </FieldShell>
-
-                      <FieldShell
-                        label="Airtightness"
-                        note="One of the main leakage penalty drivers."
-                        relevance="optional"
-                        usage="Field/building airborne overlays"
-                      >
-                        <select
-                          className="focus-ring touch-target rounded-[1rem] border hairline bg-[color:var(--paper)] px-3 py-3"
-                          onChange={(event) => setAirborneAirtightness(event.target.value as AirtightnessClass)}
-                          value={airborneAirtightness}
-                        >
-                          {AIRTIGHTNESS_OPTIONS.map((option) => (
-                            <option key={option.value} value={option.value}>
-                              {option.label}
-                            </option>
-                          ))}
-                        </select>
-                      </FieldShell>
-
-                      <FieldShell
-                        label="Perimeter seal"
-                        note="Expected seal quality around the element."
-                        relevance="optional"
-                        usage="Leakage overlay on the airborne field/building route"
-                      >
-                        <select
-                          className="focus-ring touch-target rounded-[1rem] border hairline bg-[color:var(--paper)] px-3 py-3"
-                          onChange={(event) => setAirbornePerimeterSeal(event.target.value as PerimeterSealClass)}
-                          value={airbornePerimeterSeal}
-                        >
-                          {SEAL_OPTIONS.map((option) => (
-                            <option key={option.value} value={option.value}>
-                              {option.label}
-                            </option>
-                          ))}
-                        </select>
-                      </FieldShell>
-
-                      <FieldShell
-                        label="Penetrations"
-                        note="Reflects service cut-through and opening intensity."
-                        relevance="optional"
-                        usage="Airborne leakage penalty on field/building reads"
-                      >
-                        <select
-                          className="focus-ring touch-target rounded-[1rem] border hairline bg-[color:var(--paper)] px-3 py-3"
-                          onChange={(event) => setAirbornePenetrationState(event.target.value as PenetrationState)}
-                          value={airbornePenetrationState}
-                        >
-                          {PENETRATION_OPTIONS.map((option) => (
-                            <option key={option.value} value={option.value}>
-                              {option.label}
-                            </option>
-                          ))}
-                        </select>
-                      </FieldShell>
-
-                      <FieldShell
-                        label="Junction quality"
-                        note="Use this when flanking quality differs from a clean build."
-                        relevance="optional"
-                        usage="Field flanking overlay and conservative airborne penalties"
-                      >
-                        <select
-                          className="focus-ring touch-target rounded-[1rem] border hairline bg-[color:var(--paper)] px-3 py-3"
-                          onChange={(event) => setAirborneJunctionQuality(event.target.value as JunctionQuality)}
-                          value={airborneJunctionQuality}
-                        >
-                          {JUNCTION_OPTIONS.map((option) => (
-                            <option key={option.value} value={option.value}>
-                              {option.label}
-                            </option>
-                          ))}
-                        </select>
-                      </FieldShell>
-
-                      <FieldShell
-                        label="Electrical boxes"
-                        note="Only set this when back boxes are a real concern."
-                        relevance="optional"
-                        usage="Wall field/building leakage penalties"
-                      >
-                        <select
-                          className="focus-ring touch-target rounded-[1rem] border hairline bg-[color:var(--paper)] px-3 py-3"
-                          onChange={(event) => setAirborneElectricalBoxes(event.target.value as ElectricalBoxState)}
-                          value={airborneElectricalBoxes}
-                        >
-                          {ELECTRICAL_BOX_OPTIONS.map((option) => (
-                            <option key={option.value} value={option.value}>
-                              {option.label}
-                            </option>
-                          ))}
-                        </select>
-                      </FieldShell>
-
-                      <FieldShell
-                        label="Shared support track"
-                        note="Use this when adjacent leaves or supports are clearly shared."
-                        relevance="optional"
-                        usage="Conservative flanking posture on field/building overlays"
-                      >
-                        <select
-                          className="focus-ring touch-target rounded-[1rem] border hairline bg-[color:var(--paper)] px-3 py-3"
-                          onChange={(event) => setAirborneSharedTrack(event.target.value as SharedTrackClass)}
-                          value={airborneSharedTrack}
-                        >
-                          {TRACK_OPTIONS.map((option) => (
-                            <option key={option.value} value={option.value}>
-                              {option.label}
-                            </option>
-                          ))}
-                        </select>
-                      </FieldShell>
+                          <span className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
+                            <Plus className="h-4 w-4" />
+                            {action.label}
+                          </span>
+                          <span className="text-[0.76rem] leading-5 text-[color:var(--ink-soft)]">{action.note}</span>
+                        </button>
+                      ))}
                     </div>
                   ) : null}
+
+                  {showSteelBoundSupportFormActions && lightweightSteelBaseRow ? (
+                    <div className="grid gap-2">
+                      {STEEL_BOUND_SUPPORT_FORM_ACTIONS.map((action) => (
+                        <button
+                          className="focus-ring flex min-w-0 flex-col items-start gap-1.5 rounded-[0.75rem] border border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[color:var(--paper)] px-3 py-3 text-left hover:bg-black/[0.03]"
+                          key={action.id}
+                          onClick={() => updateMaterial(lightweightSteelBaseRow.id, action.materialId)}
+                          type="button"
+                        >
+                          <span className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
+                            <Plus className="h-4 w-4" />
+                            {action.label}
+                          </span>
+                          <span className="text-[0.76rem] leading-5 text-[color:var(--ink-soft)]">{action.note}</span>
+                        </button>
+                      ))}
+                    </div>
+                  ) : null}
+
+                  <details className={`rounded-[0.8rem] border px-3 py-3 ${workbenchSectionMutedCardClass("route")}`}>
+                    <summary className="cursor-pointer list-none">
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <div>
+                          <div className="text-[0.82rem] font-semibold text-[color:var(--ink)]">Advanced controls</div>
+                          <p className="mt-1 text-[0.74rem] leading-5 text-[color:var(--ink-soft)]">
+                            Solver selector and wall-only modifiers.
+                          </p>
+                        </div>
+                        {expertInputsActive ? <DetailTag tone="optional">Active</DetailTag> : <DetailTag>Hidden</DetailTag>}
+                      </div>
+                    </summary>
+
+                    <div className="mt-4 grid gap-5">
+                      <div className="grid gap-3">
+                        <FieldShell
+                          label="Calculator"
+                          note="This selector chooses the airborne solver family."
+                          relevance="optional"
+                          usage="Rw, R'w, STC, C, Ctr, Dn* outputs and any airborne companion on floor studies"
+                          >
+                            <select
+                              className="focus-ring touch-target rounded-[0.8rem] border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                              onChange={(event) => setCalculatorId(event.target.value as AirborneCalculatorId)}
+                            value={calculatorId}
+                          >
+                            {CALCULATOR_OPTIONS.map((option) => (
+                              <option key={option.value} value={option.value}>
+                                {option.label}
+                              </option>
+                            ))}
+                            </select>
+                          </FieldShell>
+                      </div>
+
+                      {wallModifiersActive ? (
+                        <div className="grid gap-3">
+                          <FieldShell
+                            label="Connection path"
+                            note="Choose a known connection only if it is clear."
+                            relevance="optional"
+                            usage="Wall-family detection and airborne overlays"
+                          >
+                            <select
+                              className="focus-ring touch-target rounded-[0.8rem] border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                              onChange={(event) => setAirborneConnectionType(event.target.value as AirborneConnectionType)}
+                              value={airborneConnectionType}
+                            >
+                              {CONNECTION_OPTIONS.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                  {option.label}
+                                </option>
+                              ))}
+                            </select>
+                          </FieldShell>
+
+                          <FieldShell
+                            label="Stud family"
+                            note="Set this only when the framing type is known."
+                            relevance="optional"
+                            usage="Framed-wall family matching and resilient framing penalties"
+                          >
+                            <select
+                              className="focus-ring touch-target rounded-[0.8rem] border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                              onChange={(event) => setAirborneStudType(event.target.value as AirborneStudType)}
+                              value={airborneStudType}
+                            >
+                              {STUD_TYPE_OPTIONS.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                  {option.label}
+                                </option>
+                              ))}
+                            </select>
+                          </FieldShell>
+
+                          <FieldShell
+                            label="Stud spacing (mm)"
+                            note="Leave blank if spacing is unknown."
+                            relevance="optional"
+                            usage="Framed wall family matching when stud spacing is part of the evidence"
+                          >
+                            <input
+                              className="focus-ring touch-target rounded-[0.8rem] border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                              inputMode="decimal"
+                              onChange={(event) => setAirborneStudSpacingMm(event.target.value)}
+                              value={airborneStudSpacingMm}
+                            />
+                          </FieldShell>
+
+                          <FieldShell
+                            label="Airtightness"
+                            note="One of the main leakage penalty drivers."
+                            relevance="optional"
+                            usage="Field/building airborne overlays"
+                          >
+                            <select
+                              className="focus-ring touch-target rounded-[0.8rem] border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                              onChange={(event) => setAirborneAirtightness(event.target.value as AirtightnessClass)}
+                              value={airborneAirtightness}
+                            >
+                              {AIRTIGHTNESS_OPTIONS.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                  {option.label}
+                                </option>
+                              ))}
+                            </select>
+                          </FieldShell>
+
+                          <FieldShell
+                            label="Perimeter seal"
+                            note="Expected seal quality around the element."
+                            relevance="optional"
+                            usage="Leakage overlay on the airborne field/building route"
+                          >
+                            <select
+                              className="focus-ring touch-target rounded-[0.8rem] border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                              onChange={(event) => setAirbornePerimeterSeal(event.target.value as PerimeterSealClass)}
+                              value={airbornePerimeterSeal}
+                            >
+                              {SEAL_OPTIONS.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                  {option.label}
+                                </option>
+                              ))}
+                            </select>
+                          </FieldShell>
+
+                          <FieldShell
+                            label="Penetrations"
+                            note="Reflects service cut-through and opening intensity."
+                            relevance="optional"
+                            usage="Airborne leakage penalty on field/building reads"
+                          >
+                            <select
+                              className="focus-ring touch-target rounded-[0.8rem] border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                              onChange={(event) => setAirbornePenetrationState(event.target.value as PenetrationState)}
+                              value={airbornePenetrationState}
+                            >
+                              {PENETRATION_OPTIONS.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                  {option.label}
+                                </option>
+                              ))}
+                            </select>
+                          </FieldShell>
+
+                          <FieldShell
+                            label="Junction quality"
+                            note="Use this when flanking quality differs from a clean build."
+                            relevance="optional"
+                            usage="Field flanking overlay and conservative airborne penalties"
+                          >
+                            <select
+                              className="focus-ring touch-target rounded-[0.8rem] border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                              onChange={(event) => setAirborneJunctionQuality(event.target.value as JunctionQuality)}
+                              value={airborneJunctionQuality}
+                            >
+                              {JUNCTION_OPTIONS.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                  {option.label}
+                                </option>
+                              ))}
+                            </select>
+                          </FieldShell>
+
+                          <FieldShell
+                            label="Electrical boxes"
+                            note="Only set this when back boxes are a real concern."
+                            relevance="optional"
+                            usage="Wall field/building leakage penalties"
+                          >
+                            <select
+                              className="focus-ring touch-target rounded-[0.8rem] border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                              onChange={(event) => setAirborneElectricalBoxes(event.target.value as ElectricalBoxState)}
+                              value={airborneElectricalBoxes}
+                            >
+                              {ELECTRICAL_BOX_OPTIONS.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                  {option.label}
+                                </option>
+                              ))}
+                            </select>
+                          </FieldShell>
+
+                          <FieldShell
+                            label="Shared support track"
+                            note="Use this when adjacent leaves or supports are clearly shared."
+                            relevance="optional"
+                            usage="Conservative flanking posture on field/building overlays"
+                          >
+                            <select
+                              className="focus-ring touch-target rounded-[0.8rem] border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                              onChange={(event) => setAirborneSharedTrack(event.target.value as SharedTrackClass)}
+                              value={airborneSharedTrack}
+                            >
+                              {TRACK_OPTIONS.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                  {option.label}
+                                </option>
+                              ))}
+                            </select>
+                          </FieldShell>
+                        </div>
+                      ) : null}
+                    </div>
+                  </details>
                 </div>
               </details>
             </div>
-          </SurfacePanel>
+          </div>
+        </SurfacePanel>
 
-          <SurfacePanel className="stage-enter-2 min-w-0 overflow-hidden px-5 py-6 sm:px-6">
-            <div className="flex min-w-0 flex-wrap items-start justify-between gap-4">
-              <SectionLead
-                description="Add layers in physical order, set thickness, and tag floor roles when they matter. The stack stays visible on the right so the current build-up never disappears while editing."
-                step="03"
-                title="Build the layer stack"
+        <SurfacePanel
+          className={`stage-enter-2 min-w-0 overflow-hidden px-4 py-4 sm:px-5 ${
+            activeWorkspacePanel === "stack" ? "block" : "hidden xl:block"
+          } ${workbenchSectionPanelClass("assembly")}`}
+        >
+          <div className="flex flex-col">
+            <SectionLead description="Edit the build-up in physical order." title="Assembly" tone="assembly" />
+
+            <div className="mt-4 flex flex-wrap items-center gap-2 text-[0.78rem] leading-5 text-[color:var(--ink-soft)]">
+              <span>{rows.length ? `${rows.length} rows` : "No rows yet"}</span>
+              <span className="text-[color:var(--ink-faint)]">•</span>
+              <span>{rows.length ? `${liveRowCount} live / ${parkedRowCount} parked` : "Start with the first visible layer"}</span>
+              <span className="text-[color:var(--ink-faint)]">•</span>
+              <span>{rows.length ? `${formatDecimal(totalThickness)} mm total` : "Thickness pending"}</span>
+              {studyMode === "floor" ? (
+                <>
+                  <span className="text-[color:var(--ink-faint)]">•</span>
+                  <span>
+                    {missingFloorRoleCount > 0
+                      ? `${missingFloorRoleCount} floor role${missingFloorRoleCount === 1 ? "" : "s"} missing`
+                      : `${assignedFloorRoleCount}/${rows.length || 0} roles tagged`}
+                  </span>
+                </>
+              ) : null}
+            </div>
+
+            <div className={`mt-3 rounded-[0.85rem] border px-3 py-3 text-[0.8rem] leading-5 text-[color:var(--ink-soft)] ${workbenchSectionCardClass("assembly")}`}>
+              Edit layers in place. Material, thickness, density, stiffness, and role stay on the same row.
+            </div>
+
+            <div className="mt-4 space-y-3">
+              <LayerStackDiagram activeRowId={activeRowId} materials={materials} result={result} rows={rows} studyMode={studyMode} />
+
+              {rows.length ? (
+                <div className={`hidden items-center gap-3 rounded-[0.75rem] border px-3 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)] 2xl:grid 2xl:grid-cols-[2.5rem_minmax(0,1.5fr)_7rem_10rem_auto] ${workbenchSectionMutedCardClass("assembly")}`}>
+                  <span>#</span>
+                  <span>Layer</span>
+                  <span>Thickness</span>
+                  {studyMode === "floor" ? <span>Role</span> : <span>State</span>}
+                  <span className="text-right">Actions</span>
+                </div>
+              ) : null}
+
+              <div className="grid min-w-0 gap-3">
+                {rows.length ? (
+                  rows.map((row, index) => (
+                    <SimpleLayerRow
+                      active={row.id === activeRowId}
+                      index={index}
+                      key={row.id}
+                      materials={materials}
+                      materialGroups={buildMaterialGroups(studyMode, materials, row.materialId)}
+                      moveFlashDirection={movedRowFlash?.rowId === row.id ? movedRowFlash.direction : undefined}
+                      onActiveRowChange={setActiveRowId}
+                      onDensityChange={updateDensity}
+                      onDynamicStiffnessChange={updateDynamicStiffness}
+                      onFloorRoleChange={updateFloorRole}
+                      onMaterialChange={updateMaterial}
+                      onMoveRow={moveRowWithFeedback}
+                      onRemoveRow={removeRow}
+                      onThicknessChange={updateThickness}
+                      row={row}
+                      studyMode={studyMode}
+                      totalRows={rows.length}
+                    />
+                  ))
+                ) : (
+                  <div className={`rounded-[0.95rem] border border-dashed px-4 py-8 text-center ${workbenchSectionMutedCardClass("assembly")}`}>
+                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-[color:color-mix(in_oklch,var(--assembly)_28%,var(--line))] bg-[color:color-mix(in_oklch,var(--assembly)_12%,var(--paper))]">
+                      <Layers3 className="h-5 w-5 text-[color:var(--ink)]" />
+                    </div>
+                    <div className="mt-4 text-base font-semibold text-[color:var(--ink)]">No layers yet</div>
+                    <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">
+                      Add the first layer, or apply one of the example stacks above.
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              <CustomMaterialComposer
+                customMaterials={customMaterials}
+                draft={customMaterialDraft}
+                errors={customMaterialErrors}
+                expanded={customMaterialExpanded}
+                onCreate={createCustomMaterial}
+                onDraftChange={(field, value) =>
+                  setCustomMaterialDraft((current) => ({
+                    ...current,
+                    [field]: value
+                  }))
+                }
+                onExpandedChange={setCustomMaterialExpanded}
               />
-              <button
-                className="focus-ring inline-flex items-center gap-2 rounded-full bg-[color:var(--ink)] px-4 py-2 text-sm font-semibold text-[color:var(--paper)]"
-                onClick={() => addRow()}
+
+              <NewLayerComposer
+                draft={newLayerDraft}
+                materials={materials}
+                materialGroups={newLayerMaterialGroups}
+                onAdd={appendConfiguredLayer}
+                onDensityChange={(densityKgM3) => setNewLayerDraft((current) => ({ ...current, densityKgM3 }))}
+                onDynamicStiffnessChange={(dynamicStiffnessMNm3) =>
+                  setNewLayerDraft((current) => ({ ...current, dynamicStiffnessMNm3 }))
+                }
+                onFloorRoleChange={(floorRole) => setNewLayerDraft((current) => ({ ...current, floorRole }))}
+                onMaterialChange={(materialId) =>
+                  setNewLayerDraft((current) => ({
+                    ...current,
+                    densityKgM3: "",
+                    dynamicStiffnessMNm3: "",
+                    floorRole: inferFloorRole(materialId, studyMode, customMaterials),
+                    materialId
+                  }))
+                }
+                onThicknessChange={(thicknessMm) => setNewLayerDraft((current) => ({ ...current, thicknessMm }))}
+                studyMode={studyMode}
+              />
+            </div>
+          </div>
+        </SurfacePanel>
+
+        <SurfacePanel
+          className={`stage-enter-3 min-w-0 overflow-hidden px-4 py-4 sm:px-5 ${
+            activeWorkspacePanel === "results" ? "block" : "hidden xl:block"
+          } ${workbenchSectionPanelClass("results")}`}
+        >
+          <div className="flex flex-col">
+              <div className="flex min-w-0 flex-wrap items-start justify-between gap-4">
+                <SectionLead description="Read the live outputs and keep parked outputs explicit." title="Results" tone="results" />
+                <button
+                  className={`focus-ring inline-flex items-center justify-center rounded-[0.75rem] border px-3 py-2 text-sm font-semibold text-[color:var(--results-ink)] ${workbenchSectionMutedCardClass("results")}`}
+                onClick={() => {
+                  setReviewExpanded((current) => !current);
+                  setActiveWorkspacePanel("review");
+                }}
                 type="button"
               >
-                <Plus className="h-4 w-4" />
-                Add layer
+                {reviewExpanded ? "Hide details" : "Open details"}
               </button>
             </div>
 
-            <div className="mt-6 grid gap-3 rounded-[1.25rem] border hairline bg-[color:var(--paper)]/72 px-4 py-4 sm:grid-cols-3">
-              <div>
-                <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Rows</div>
-                <div className="mt-2 text-lg font-semibold text-[color:var(--ink)]">{rows.length}</div>
-                <p className="mt-1 text-sm leading-6 text-[color:var(--ink-soft)]">
-                  {rows.length
-                    ? collapsedLiveRowCount > 0
-                      ? `Visible order still defines solver order, but ${formatCountLabel(collapsedLiveRowCount, "adjacent duplicate live row")} ${collapsedLiveRowCount === 1 ? "collapses" : "collapse"} before calculation.`
-                      : "Visible order is sent straight through to the solver."
-                    : "Start with the topmost visible layer."}
-                </p>
-              </div>
-              <div>
-                <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Thickness ready</div>
-                <div className="mt-2 text-lg font-semibold text-[color:var(--ink)]">
-                  {rows.length ? `${liveRowCount} live · ${parkedRowCount} parked` : "No rows yet"}
-                </div>
-                <p className="mt-1 text-sm leading-6 text-[color:var(--ink-soft)]">
-                  {rows.length
-                    ? parkedRowCount > 0
-                      ? `${formatCountLabel(liveRowCount, "live row")} currently ${liveRowCount === 1 ? "feeds" : "feed"} ${formatCountLabel(solverLayerCount, "solver layer")}. ${formatCountLabel(parkedRowCount, "parked row")} ${parkedRowCount === 1 ? "stays" : "stay"} visible but ${parkedRowCount === 1 ? "does" : "do"} not affect the live calculation.`
-                      : collapsedLiveRowCount > 0
-                        ? `${formatCountLabel(liveRowCount, "live row")} collapse${liveRowCount === 1 ? "s" : ""} to ${formatCountLabel(solverLayerCount, "solver layer")} before the live calculation.`
-                        : "Every visible row currently feeds the solver."
-                    : "Missing or zero thickness keeps a row parked until it is ready for the live calculation."}
-                </p>
-              </div>
-              <div>
-                <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
-                  {studyMode === "floor" ? "Role coverage" : "Role coverage"}
-                </div>
-                <div className="mt-2 text-lg font-semibold text-[color:var(--ink)]">
-                  {studyMode === "floor" ? `${assignedFloorRoleCount}/${rows.length || 0}` : "N/A"}
-                </div>
-                <p className="mt-1 text-sm leading-6 text-[color:var(--ink-soft)]">
-                  {studyMode === "floor"
-                    ? missingFloorRoleCount > 0
-                      ? `${missingFloorRoleCount} row still needs a floor role for clean exact family and product matching.`
-                      : "Every row is explicitly tagged for exact family and product lanes."
-                    : "Floor-role tagging only matters on floor studies."}
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-6">
-              <StackOrderPanel rows={rows} studyMode={studyMode} />
-            </div>
-
-            <div className="mt-6 grid gap-3">
-              <div className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">
-                Quick add common layers
-              </div>
-              <div className="rounded-[1.25rem] border hairline bg-[color:var(--paper)]/74 px-4 py-4">
-                <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
-                  <label className="grid min-w-0 gap-2">
-                    <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Common layer</span>
-                    <select
-                      className="focus-ring touch-target w-full min-w-0 rounded-[1rem] border hairline bg-[color:var(--paper)] px-3 py-3"
-                      onChange={(event) => setQuickAddMaterialId(event.target.value)}
-                      value={quickAddMaterialId}
-                    >
-                      {quickPickMaterials.map((material) => (
-                        <option key={material.id} value={material.id}>
-                          {material.name}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-
-                  <button
-                    className="focus-ring inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--ink)] px-4 py-3 text-sm font-semibold text-[color:var(--paper)]"
-                    onClick={() => appendMaterial(selectedQuickAddMaterial.id, defaultThicknessFor(selectedQuickAddMaterial))}
-                    type="button"
-                  >
-                    Add common layer
-                    <Plus className="h-4 w-4" />
-                  </button>
-                </div>
-
-                <div className="mt-3 flex flex-wrap items-center gap-2 text-sm text-[color:var(--ink-soft)]">
-                  <span>{`${defaultThicknessFor(selectedQuickAddMaterial)} mm starter thickness`}</span>
-                  <span className="text-[color:var(--ink-faint)]">•</span>
-                  <span>{getMaterialCategoryLabel(selectedQuickAddMaterial)}</span>
-                  {formatMaterialDensity(selectedQuickAddMaterial) ? (
-                    <>
-                      <span className="text-[color:var(--ink-faint)]">•</span>
-                      <span>{formatMaterialDensity(selectedQuickAddMaterial)}</span>
-                    </>
-                  ) : null}
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-6 grid min-w-0 gap-3">
-              {rows.length ? (
-                rows.map((row, index) => (
-                  <SimpleLayerRow
-                    active={row.id === activeRowId}
-                    index={index}
-                    key={row.id}
-                    materialGroups={buildMaterialGroups(studyMode, materials, row.materialId)}
-                    onActiveRowChange={setActiveRowId}
-                    onFloorRoleChange={updateFloorRole}
-                    onMaterialChange={updateMaterial}
-                    onMoveRow={moveRow}
-                    onRemoveRow={removeRow}
-                    onThicknessChange={updateThickness}
-                    row={row}
-                    studyMode={studyMode}
-                    totalRows={rows.length}
-                  />
-                ))
-              ) : (
-                <div className="rounded-[1.35rem] border border-dashed hairline bg-black/[0.02] px-4 py-8 text-center">
-                  <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border hairline bg-[color:var(--panel-strong)]">
-                    <Layers3 className="h-5 w-5 text-[color:var(--ink)]" />
-                  </div>
-                  <div className="mt-4 text-lg font-semibold text-[color:var(--ink)]">No layers yet</div>
-                  <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">
-                    Add the first layer, or start from one of the sample assemblies above.
-                  </p>
-                </div>
-              )}
-            </div>
-          </SurfacePanel>
-        </div>
-
-        <div className="grid min-w-0 gap-6 self-start xl:sticky xl:top-4">
-          <LayerStackDiagram activeRowId={activeRowId} materials={materials} result={result} rows={rows} studyMode={studyMode} />
-
-          <SurfacePanel className="stage-enter-3 min-w-0 overflow-hidden px-5 py-6 sm:px-6">
-            <SectionLead
-              description="Result cards are automatic. The calculator shows what is already supported and what still needs more data."
-              step="04"
-              title="Read the outputs"
-            />
-
-            <div className="mt-5">
-              <OutputCoverageSummary
+              <div className="mt-4 space-y-4">
+                <OutputCoverageSummary
                 boundCount={boundOutputCards.length}
                 liveCount={liveOutputCards.length}
                 parkedCount={needsInputCards.length}
@@ -3898,14 +4503,16 @@ export function SimpleWorkbenchShell() {
                 totalCount={automaticOutputs.length}
                 unsupportedCount={unsupportedCards.length}
               />
-            </div>
 
-            <OutputUnlockRail groups={outputUnlockGroups} />
+                <div className="flex flex-wrap gap-2 text-[0.72rem] leading-5 text-[color:var(--ink-soft)]">
+                  <GuidedFactChip>{routeCoverageLabel}</GuidedFactChip>
+                  <GuidedFactChip>{`${readyOutputCount}/${automaticOutputs.length} outputs readable`}</GuidedFactChip>
+                  {scenario.warnings.length ? <GuidedFactChip tone="warning">{`${scenario.warnings.length} warning${scenario.warnings.length === 1 ? "" : "s"}`}</GuidedFactChip> : null}
+                </div>
 
-            {primaryReadyCard ? (
-              <>
-                <div className="mt-5">
-                  <PrimaryResultCard
+                {primaryReadyCard ? (
+                  <>
+                    <PrimaryResultCard
                     card={primaryReadyCard}
                     collapsedLiveRowCount={collapsedLiveRowCount}
                     contextLabel={getEnvironmentLabel(airborneContextMode)}
@@ -3916,88 +4523,128 @@ export function SimpleWorkbenchShell() {
                     studyMode={studyMode}
                     validationSummary={validationSummary}
                   />
-                </div>
 
-                {secondaryReadyCards.length ? (
-                  <div className="mt-5">
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                      <div className="text-sm font-semibold text-[color:var(--ink)]">Supporting metrics</div>
-                      <div className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">
-                        {secondaryReadyCards.length} companion values
+                  {secondaryReadyCards.length ? (
+                    <section>
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <div className="text-sm font-semibold text-[color:var(--ink)]">Supporting metrics</div>
+                        <div className="text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+                          {secondaryReadyCards.length} companion values
+                        </div>
                       </div>
-                    </div>
-                    <div className="mt-3 grid gap-3 md:grid-cols-2">
-                      {secondaryReadyCards.map((card) => (
-                        <OutputCard card={card} key={`ready-${card.label}`} />
-                      ))}
-                    </div>
+                      <div className="mt-3 grid gap-2">
+                        {secondaryReadyCards.map((card) => (
+                          <OutputCard card={card} key={`ready-${card.label}`} />
+                        ))}
+                      </div>
+                    </section>
+                  ) : null}
+                </>
+              ) : (
+                <div className={`rounded-[0.9rem] border border-dashed px-4 py-5 text-sm leading-6 text-[color:var(--ink-soft)] ${workbenchSectionMutedCardClass("results")}`}>
+                  Build a valid stack to populate the result cards.
+                </div>
+              )}
+
+              <OutputUnlockRail groups={outputUnlockGroups} />
+
+              {scenario.warnings.length ? (
+                <div className="rounded-[0.85rem] border border-[color:color-mix(in_oklch,var(--warning)_28%,var(--line))] bg-[color:var(--warning-soft)] px-4 py-4 text-sm leading-6 text-[color:var(--warning-ink)]">
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div className="font-semibold">Check these inputs before trusting the read.</div>
+                    <GuidedFactChip tone="warning">{`${scenario.warnings.length} warning${scenario.warnings.length === 1 ? "" : "s"}`}</GuidedFactChip>
                   </div>
-                ) : null}
-              </>
-            ) : (
-              <div className="mt-5 rounded-[1.25rem] border border-dashed hairline px-4 py-5 text-sm leading-6 text-[color:var(--ink-soft)]">
-                Build a valid stack to populate the result cards.
-              </div>
-            )}
+                  <div className="mt-2 grid gap-2">
+                    {scenario.warnings.slice(0, 3).map((warning) => (
+                      <div key={warning}>{warning}</div>
+                    ))}
+                    {scenario.warnings.length > 3 ? <div>{`+${scenario.warnings.length - 3} more warning${scenario.warnings.length - 3 === 1 ? "" : "s"} in diagnostics.`}</div> : null}
+                  </div>
+                </div>
+              ) : null}
 
-            {rows.length > 0 ? (
-              <GuidedDecisionBasisStrip
-                activeReviewTab={activeReviewTab}
-                cards={corridorDossier.cards}
-                headline={corridorDossier.headline}
-                onOpenReviewTab={openReviewTab}
-                selectedTraceNoteCount={selectedTraceNoteCount}
-                traceGroupCount={methodDossier.traceGroups.length}
-              />
-            ) : null}
+              {needsInputCards.length ? (
+                <details className="rounded-[0.85rem] border border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[color:var(--paper)] px-3 py-3">
+                  <summary className="cursor-pointer list-none">
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                      <div>
+                        <div className="text-sm font-semibold text-[color:var(--ink)]">Parked by current route</div>
+                        <p className="mt-1 text-[0.76rem] leading-5 text-[color:var(--ink-soft)]">
+                          Still in scope, but this route is not complete enough to unlock them.
+                        </p>
+                      </div>
+                      <DetailTag>{`${needsInputCards.length} parked`}</DetailTag>
+                    </div>
+                  </summary>
+                  <div className="mt-3 grid gap-3">
+                    {needsInputCards.map((card) => (
+                      <PendingOutputRow card={card} key={`pending-route-${card.label}`} />
+                    ))}
+                  </div>
+                </details>
+              ) : null}
 
-            {proposalLayers.length > 0 ? (
-              <GuidedConstructionSnapshot
-                activeReviewTab={activeReviewTab}
-                layers={proposalLayers}
-                onOpenReviewTab={openReviewTab}
-                studyModeLabel={getStudyModeLabel(studyMode)}
-              />
-            ) : null}
+              {unsupportedCards.length ? (
+                <details className="rounded-[0.85rem] border border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[color:var(--paper)] px-3 py-3">
+                  <summary className="cursor-pointer list-none">
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                      <div>
+                        <div className="text-sm font-semibold text-[color:var(--ink)]">Unsupported on this lane</div>
+                        <p className="mt-1 text-[0.76rem] leading-5 text-[color:var(--ink-soft)]">
+                          Visible for review, but not defensible on this topology.
+                        </p>
+                      </div>
+                      <DetailTag>{`${unsupportedCards.length} unsupported`}</DetailTag>
+                    </div>
+                  </summary>
+                  <div className="mt-3 grid gap-3">
+                    {unsupportedCards.map((card) => (
+                      <PendingOutputRow card={card} key={`pending-unsupported-${card.label}`} />
+                    ))}
+                  </div>
+                </details>
+              ) : null}
 
-            <PendingOutputGroup
-              cards={needsInputCards}
-              countLabel={`${needsInputCards.length} parked`}
-              detail="These outputs are still in scope, but the current route or context inputs are not complete enough to unlock them."
-              title="Parked by current route"
-            />
-
-            <PendingOutputGroup
-              cards={unsupportedCards}
-              countLabel={`${unsupportedCards.length} unsupported`}
-              detail="These outputs stay visible, but the current solver lane cannot defend them on this topology."
-              title="Unsupported on this lane"
-            />
-
-            {scenario.warnings.length ? (
-              <div className="mt-6 rounded-[1.2rem] border hairline bg-[color:var(--warning-soft)] px-4 py-4 text-sm leading-6 text-[color:var(--warning-ink)]">
-                <div className="font-semibold">Check these inputs before trusting the read.</div>
-                <div className="mt-2 grid gap-2">
-                  {scenario.warnings.slice(0, 3).map((warning) => (
-                    <div key={warning}>{warning}</div>
+              <div className={`rounded-[0.85rem] border px-3 py-3 ${workbenchSectionMutedCardClass("review")}`}>
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div>
+                    <div className="text-sm font-semibold text-[color:var(--ink)]">Details when needed</div>
+                    <p className="mt-1 text-[0.76rem] leading-5 text-[color:var(--ink-soft)]">
+                      Method notes, diagnostics, validation corridor, and proposal stay in this deck.
+                    </p>
+                  </div>
+                  <DetailTag>{activeReviewTabConfig.label}</DetailTag>
+                </div>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {REVIEW_TABS.map((tab) => (
+                    <button
+                      className={`focus-ring inline-flex items-center justify-center rounded-[0.75rem] border px-3 py-2 text-sm font-semibold ${
+                        activeReviewTab === tab.id
+                          ? "border-[color:color-mix(in_oklch,var(--accent)_28%,var(--line))] bg-[color:color-mix(in_oklch,var(--accent)_12%,var(--paper))] text-[color:var(--ink)]"
+                          : "border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[color:var(--paper)] text-[color:var(--ink-soft)]"
+                      }`}
+                      key={`result-review-${tab.id}`}
+                      onClick={() => openReviewTab(tab.id)}
+                      type="button"
+                    >
+                      {tab.label}
+                    </button>
                   ))}
-                  {scenario.warnings.length > 3 ? <div>{`+${scenario.warnings.length - 3} more warning${scenario.warnings.length - 3 === 1 ? "" : "s"} in diagnostics.`}</div> : null}
                 </div>
               </div>
-            ) : null}
-          </SurfacePanel>
-        </div>
+            </div>
+          </div>
+        </SurfacePanel>
       </section>
 
-      <section className="grid gap-4" id="guided-review-deck">
-        <SurfacePanel className="px-5 py-5 sm:px-6">
+      {reviewExpanded ? (
+        <section className={`${activeWorkspacePanel === "review" ? "grid" : "hidden lg:grid"} gap-4`} id="guided-review-deck">
+        <SurfacePanel className={`px-4 py-4 sm:px-5 ${workbenchSectionPanelClass("review")}`}>
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
-              <div className="eyebrow">Review Deck</div>
-              <h2 className="mt-1 font-display text-[1.4rem] leading-none tracking-[-0.04em] text-[color:var(--ink)]">
-                Method, diagnostics, and proposal tabs
-              </h2>
-              <p className="mt-2 max-w-3xl text-sm leading-7 text-[color:var(--ink-soft)]">{activeReviewTabConfig.note}</p>
+              <div className="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Review tabs</div>
+              <h2 className="mt-1 text-[1.05rem] font-semibold leading-tight text-[color:var(--ink)]">Method, diagnostics, and proposal</h2>
+              <p className="mt-1.5 max-w-3xl text-sm leading-6 text-[color:var(--ink-soft)]">{activeReviewTabConfig.note}</p>
             </div>
             <div className="grid gap-2 text-right text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
               <div>{`${proposalMetrics.length} live metric${proposalMetrics.length === 1 ? "" : "s"}`}</div>
@@ -4008,7 +4655,7 @@ export function SimpleWorkbenchShell() {
 
           <div
             aria-label="Guided review sections"
-            className="mt-5 flex flex-wrap gap-2"
+            className="mt-4 flex flex-wrap gap-2"
             role="tablist"
           >
             {REVIEW_TABS.map((tab) => (
@@ -4018,13 +4665,46 @@ export function SimpleWorkbenchShell() {
                 id={tab.id}
                 key={tab.id}
                 label={tab.label}
-                onSelect={setActiveReviewTab}
+                onSelect={selectReviewTab}
               />
             ))}
           </div>
+
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t hairline pt-4">
+            <div className="text-[0.82rem] leading-5 text-[color:var(--ink-soft)]">
+              Keep this area closed unless you need method rationale, diagnostics, or the proposal package.
+            </div>
+            <button
+              className="focus-ring inline-flex items-center justify-center rounded-[0.8rem] border hairline px-3 py-2 text-sm font-semibold text-[color:var(--ink-soft)]"
+              onClick={() => setReviewExpanded((current) => !current)}
+              type="button"
+            >
+              {reviewExpanded ? "Hide review" : "Show review"}
+            </button>
+          </div>
         </SurfacePanel>
 
-        {activeReviewTab === "method" ? (
+        {reviewExpanded && rows.length > 0 ? (
+          <GuidedDecisionBasisStrip
+            activeReviewTab={activeReviewTab}
+            cards={corridorDossier.cards}
+            headline={corridorDossier.headline}
+            onOpenReviewTab={openReviewTab}
+            selectedTraceNoteCount={selectedTraceNoteCount}
+            traceGroupCount={methodDossier.traceGroups.length}
+          />
+        ) : null}
+
+        {reviewExpanded && proposalLayers.length > 0 ? (
+          <GuidedConstructionSnapshot
+            activeReviewTab={activeReviewTab}
+            layers={proposalLayers}
+            onOpenReviewTab={openReviewTab}
+            studyModeLabel={getStudyModeLabel(studyMode)}
+          />
+        ) : null}
+
+        {reviewExpanded && activeReviewTab === "method" ? (
           <div
             aria-labelledby="guided-review-tab-method"
             id={activeReviewPanelId}
@@ -4049,7 +4729,7 @@ export function SimpleWorkbenchShell() {
           </div>
         ) : null}
 
-        {activeReviewTab === "diagnostics" ? (
+        {reviewExpanded && activeReviewTab === "diagnostics" ? (
           <div
             aria-labelledby="guided-review-tab-diagnostics"
             id={activeReviewPanelId}
@@ -4072,7 +4752,7 @@ export function SimpleWorkbenchShell() {
           </div>
         ) : null}
 
-        {activeReviewTab === "proposal" ? (
+        {reviewExpanded && activeReviewTab === "proposal" ? (
           <div
             aria-labelledby="guided-review-tab-proposal"
             id={activeReviewPanelId}
@@ -4146,7 +4826,8 @@ export function SimpleWorkbenchShell() {
             />
           </div>
         ) : null}
-      </section>
+        </section>
+      ) : null}
     </div>
   );
 }

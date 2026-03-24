@@ -10,6 +10,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
+  const style = request.nextUrl.searchParams.get("style") === "simple" ? "simple" : "branded";
   let payload: unknown;
 
   try {
@@ -39,13 +40,16 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const pdfBuffer = await renderSimpleWorkbenchProposalPdf(proposalDocument);
+    const pdfBuffer = await renderSimpleWorkbenchProposalPdf(proposalDocument, {
+      style
+    });
     const pdfBytes = new Uint8Array(pdfBuffer);
+    const filename = `${buildSimpleWorkbenchProposalFilename(proposalDocument.projectName)}${style === "simple" ? "-simple" : ""}.pdf`;
 
     return new NextResponse(pdfBytes, {
       headers: {
         "cache-control": "no-store",
-        "content-disposition": `attachment; filename="${buildSimpleWorkbenchProposalFilename(proposalDocument.projectName)}.pdf"`,
+        "content-disposition": `attachment; filename="${filename}"`,
         "content-type": "application/pdf"
       }
     });
@@ -55,8 +59,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         error: detail
-          ? `DynEcho could not generate the branded PDF on the server. ${detail}`
-          : "DynEcho could not generate the branded PDF on the server."
+          ? `DynEcho could not generate the ${style === "simple" ? "simple" : "branded"} PDF on the server. ${detail}`
+          : `DynEcho could not generate the ${style === "simple" ? "simple" : "branded"} PDF on the server.`
       },
       {
         status: 500

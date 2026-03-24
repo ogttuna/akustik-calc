@@ -1115,6 +1115,10 @@ function resolveResilientDynamicStiffness(
     return undefined;
   }
 
+  if (layer.material.tags.includes("runtime-dynamic-stiffness-override")) {
+    return layer.material.impact?.dynamicStiffnessMNm3;
+  }
+
   const materialId = layer.material.id;
   if (
     materialId.startsWith("mw_t_") ||

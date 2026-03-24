@@ -524,6 +524,69 @@ button {
   }
 }
 
+.workbench-row {
+  transition:
+    background-color 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform, box-shadow;
+}
+
+.workbench-row[data-move-flash="up"] {
+  animation: workbench-row-move-up 440ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.workbench-row[data-move-flash="down"] {
+  animation: workbench-row-move-down 440ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes workbench-row-move-up {
+  0% {
+    transform: translateY(18px);
+    box-shadow:
+      0 0 0 0 color-mix(in oklab, var(--accent) 0%, transparent),
+      0 16px 28px -24px color-mix(in oklab, var(--accent) 0%, transparent);
+  }
+
+  35% {
+    transform: translateY(-4px);
+    box-shadow:
+      0 0 0 2px color-mix(in oklab, var(--accent) 24%, transparent),
+      0 20px 32px -22px color-mix(in oklab, var(--accent) 28%, transparent);
+  }
+
+  100% {
+    transform: translateY(0);
+    box-shadow:
+      0 0 0 0 color-mix(in oklab, var(--accent) 0%, transparent),
+      0 0 0 0 color-mix(in oklab, var(--accent) 0%, transparent);
+  }
+}
+
+@keyframes workbench-row-move-down {
+  0% {
+    transform: translateY(-18px);
+    box-shadow:
+      0 0 0 0 color-mix(in oklab, var(--accent) 0%, transparent),
+      0 16px 28px -24px color-mix(in oklab, var(--accent) 0%, transparent);
+  }
+
+  35% {
+    transform: translateY(4px);
+    box-shadow:
+      0 0 0 2px color-mix(in oklab, var(--accent) 24%, transparent),
+      0 20px 32px -22px color-mix(in oklab, var(--accent) 28%, transparent);
+  }
+
+  100% {
+    transform: translateY(0);
+    box-shadow:
+      0 0 0 0 color-mix(in oklab, var(--accent) 0%, transparent),
+      0 0 0 0 color-mix(in oklab, var(--accent) 0%, transparent);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -532,7 +595,8 @@ button {
   .stage-enter,
   .stage-enter-2,
   .stage-enter-3,
-  .pointer-card {
+  .pointer-card,
+  .workbench-row {
     animation: none;
     transition: none;
   }

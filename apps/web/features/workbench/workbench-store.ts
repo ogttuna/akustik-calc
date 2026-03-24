@@ -1,6 +1,5 @@
 "use client";
 
-import { materialCatalogById } from "@dynecho/catalogs";
 import type { ImpactGuideSource } from "@dynecho/engine";
 import type {
   AirborneCalculatorId,
@@ -12,6 +11,7 @@ import type {
   ExactImpactSourceLabOrField,
   FloorRole,
   JunctionQuality,
+  MaterialDefinition,
   PerimeterSealClass,
   PenetrationState,
   ReportProfile,
@@ -38,15 +38,18 @@ import {
   DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_ISSUE_PURPOSE,
   DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_VALIDITY_NOTE
 } from "./simple-workbench-proposal-policy-presets";
+import { getWorkbenchMaterialById } from "./workbench-materials";
 
 type LayerDraft = {
+  densityKgM3?: string;
+  dynamicStiffnessMNm3?: string;
   floorRole?: FloorRole;
   id: string;
   materialId: string;
   thicknessMm: string;
 };
 
-type AppendLayerDraftInput = Pick<LayerDraft, "floorRole" | "materialId" | "thicknessMm">;
+type AppendLayerDraftInput = Pick<LayerDraft, "densityKgM3" | "dynamicStiffnessMNm3" | "floorRole" | "materialId" | "thicknessMm">;
 
 type ScenarioSnapshot = {
   calculatorId: AirborneCalculatorId;
@@ -66,6 +69,7 @@ type ScenarioSnapshot = {
   airborneStudType: AirborneStudType;
   briefNote: string;
   clientName: string;
+  customMaterials: MaterialDefinition[];
   consultantAddress: string;
   criteriaPackId: CriteriaPackId;
   consultantCompany: string;
@@ -131,6 +135,7 @@ type WorkbenchStore = {
   airborneStudType: AirborneStudType;
   briefNote: string;
   clientName: string;
+  customMaterials: MaterialDefinition[];
   consultantAddress: string;
   consultantCompany: string;
   consultantEmail: string;
@@ -176,6 +181,7 @@ type WorkbenchStore = {
   addRow: () => void;
   appendMaterial: (materialId: string, thicknessMm: string) => void;
   appendRows: (rows: readonly AppendLayerDraftInput[]) => void;
+  addCustomMaterial: (material: MaterialDefinition) => void;
   applyCriteriaPack: (criteriaPackId: CriteriaPackId) => void;
   deleteSavedScenario: (scenarioId: string) => void;
   loadPreset: (presetId: PresetId) => void;
@@ -241,20 +247,29 @@ type WorkbenchStore = {
   setTargetRwDb: (value: string) => void;
   toggleFieldRisk: (fieldRiskId: FieldRiskId) => void;
   toggleRequestedOutput: (output: RequestedOutputId) => void;
+  updateDensity: (id: string, densityKgM3: string) => void;
+  updateDynamicStiffness: (id: string, dynamicStiffnessMNm3: string) => void;
   updateFloorRole: (id: string, floorRole?: FloorRole) => void;
   updateMaterial: (id: string, materialId: string) => void;
   updateThickness: (id: string, thicknessMm: string) => void;
 };
 
-function inferFloorRole(materialId: string, studyMode: StudyMode): FloorRole | undefined {
+export function inferFloorRole(
+  materialId: string,
+  studyMode: StudyMode,
+  customMaterials: readonly MaterialDefinition[] = []
+): FloorRole | undefined {
   if (studyMode !== "floor") {
     return undefined;
   }
 
-  const material = materialCatalogById[materialId];
+  const material = getWorkbenchMaterialById(materialId, customMaterials);
   if (!material) {
     return undefined;
   }
+
+  const materialName = material.name.toLocaleLowerCase("en-US");
+  const materialTags = new Set(material.tags);
 
   if (materialId === "resilient_channel") {
     return "ceiling_cavity";
@@ -300,11 +315,15 @@ function inferFloorRole(materialId: string, studyMode: StudyMode): FloorRole | u
     return "resilient_layer";
   }
 
+  if (typeof material.impact?.dynamicStiffnessMNm3 === "number") {
+    return "resilient_layer";
+  }
+
   if (materialId === "generic_resilient_underlay" || material.category === "support") {
     return "resilient_layer";
   }
 
-  if (materialId === "screed") {
+  if (materialId === "screed" || /screed/iu.test(materialName)) {
     return "floating_screed";
   }
 
@@ -325,11 +344,11 @@ function inferFloorRole(materialId: string, studyMode: StudyMode): FloorRole | u
     return "ceiling_board";
   }
 
-  if (materialId === "impactstop_board" || materialId === "firestop_board") {
+  if (materialId === "impactstop_board" || materialId === "firestop_board" || materialTags.has("board")) {
     return "ceiling_board";
   }
 
-  if (materialId === "rockwool") {
+  if (materialId === "rockwool" || materialTags.has("cavity-fill")) {
     return "ceiling_fill";
   }
 
@@ -345,7 +364,7 @@ function inferFloorRole(materialId: string, studyMode: StudyMode): FloorRole | u
     return "ceiling_fill";
   }
 
-  if (material.id === "concrete" || material.tags.includes("structural")) {
+  if (material.id === "concrete" || materialTags.has("structural")) {
     return "base_structure";
   }
 
@@ -359,9 +378,13 @@ function inferFloorRole(materialId: string, studyMode: StudyMode): FloorRole | u
 function makeRow(
   materialId = "concrete",
   thicknessMm = "100",
-  floorRole?: FloorRole
+  floorRole?: FloorRole,
+  densityKgM3?: string,
+  dynamicStiffnessMNm3?: string
 ): LayerDraft {
   return {
+    densityKgM3,
+    dynamicStiffnessMNm3,
     floorRole,
     id: crypto.randomUUID(),
     materialId,
@@ -370,7 +393,7 @@ function makeRow(
 }
 
 function duplicateRows(rows: readonly LayerDraft[]): LayerDraft[] {
-  return rows.map((row) => makeRow(row.materialId, row.thicknessMm, row.floorRole));
+  return rows.map((row) => makeRow(row.materialId, row.thicknessMm, row.floorRole, row.densityKgM3, row.dynamicStiffnessMNm3));
 }
 
 function buildPresetRows(presetId: PresetId): LayerDraft[] {
@@ -401,6 +424,7 @@ function makeDefaultState() {
     approverTitle: "Acoustic Consultant",
     briefNote: "Record assumptions, flanking risks, and report caveats here.",
     clientName: "Internal study",
+    customMaterials: [] as MaterialDefinition[],
     consultantAddress: "Office address not entered",
     consultantCompany: "DynEcho Acoustic Consulting",
     consultantEmail: "Contact email not entered",
@@ -467,9 +491,19 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
               : makeRow("gypsum_board", "12.5")
           ]
         })),
+      addCustomMaterial: (material) =>
+        set((state) => {
+          if (state.customMaterials.some((entry) => entry.id === material.id)) {
+            return state;
+          }
+
+          return {
+            customMaterials: [...state.customMaterials, material].sort((left, right) => left.name.localeCompare(right.name, "en"))
+          };
+        }),
       appendMaterial: (materialId, thicknessMm) =>
         set((state) => {
-          const floorRole = inferFloorRole(materialId, state.studyMode);
+          const floorRole = inferFloorRole(materialId, state.studyMode, state.customMaterials);
 
           return {
             rows: [...state.rows, makeRow(materialId, thicknessMm, floorRole)]
@@ -480,7 +514,13 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
           rows: [
             ...state.rows,
             ...rows.map((row) =>
-              makeRow(row.materialId, row.thicknessMm, row.floorRole ?? inferFloorRole(row.materialId, state.studyMode))
+              makeRow(
+                row.materialId,
+                row.thicknessMm,
+                row.floorRole ?? inferFloorRole(row.materialId, state.studyMode, state.customMaterials),
+                row.densityKgM3,
+                row.dynamicStiffnessMNm3
+              )
             )
           ]
         })),
@@ -534,6 +574,7 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
             approverTitle: scenario.approverTitle ?? "Acoustic Consultant",
             briefNote: scenario.briefNote ?? "Record assumptions, flanking risks, and report caveats here.",
             clientName: scenario.clientName ?? "Internal study",
+            customMaterials: mergeCustomMaterials(state.customMaterials, scenario.customMaterials ?? []),
             consultantAddress: scenario.consultantAddress ?? "Office address not entered",
             consultantCompany: scenario.consultantCompany ?? "DynEcho Acoustic Consulting",
             consultantEmail: scenario.consultantEmail ?? "Contact email not entered",
@@ -597,7 +638,11 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
         set((state) => ({
           rows: state.rows.filter((row) => row.id !== id)
         })),
-      reset: () => set(makeDefaultState()),
+      reset: () =>
+        set((state) => ({
+          ...makeDefaultState(),
+          customMaterials: state.customMaterials
+        })),
       saveCurrentScenario: () =>
         set((state) => ({
           savedScenarios: [
@@ -622,6 +667,7 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
               approverTitle: state.approverTitle,
               briefNote: state.briefNote,
               clientName: state.clientName,
+              customMaterials: [...state.customMaterials],
               consultantAddress: state.consultantAddress,
               consultantCompany: state.consultantCompany,
               consultantEmail: state.consultantEmail,
@@ -741,17 +787,33 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
             ? state.requestedOutputs.filter((entry) => entry !== output)
             : [...state.requestedOutputs, output]
         })),
+      updateDensity: (id, densityKgM3) =>
+        set((state) => ({
+          rows: state.rows.map((row) => (row.id === id ? { ...row, densityKgM3 } : row))
+        })),
+      updateDynamicStiffness: (id, dynamicStiffnessMNm3) =>
+        set((state) => ({
+          rows: state.rows.map((row) => (row.id === id ? { ...row, dynamicStiffnessMNm3 } : row))
+        })),
       updateFloorRole: (id, floorRole) =>
         set((state) => ({
           rows: state.rows.map((row) => (row.id === id ? { ...row, floorRole } : row))
         })),
       updateMaterial: (id, materialId) =>
         set((state) => {
-          const floorRole = inferFloorRole(materialId, state.studyMode);
+          const floorRole = inferFloorRole(materialId, state.studyMode, state.customMaterials);
 
           return {
             rows: state.rows.map((row) =>
-              row.id === id ? { ...row, floorRole: state.studyMode === "floor" ? floorRole : undefined, materialId } : row
+              row.id === id
+                ? {
+                    ...row,
+                    densityKgM3: "",
+                    dynamicStiffnessMNm3: "",
+                    floorRole: state.studyMode === "floor" ? floorRole : undefined,
+                    materialId
+                  }
+                : row
             )
           };
         }),
@@ -768,3 +830,20 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
 );
 
 export type { LayerDraft, ScenarioSnapshot };
+
+function mergeCustomMaterials(
+  currentMaterials: readonly MaterialDefinition[],
+  nextMaterials: readonly MaterialDefinition[]
+): MaterialDefinition[] {
+  const byId = new Map<string, MaterialDefinition>();
+
+  for (const material of currentMaterials) {
+    byId.set(material.id, material);
+  }
+
+  for (const material of nextMaterials) {
+    byId.set(material.id, material);
+  }
+
+  return Array.from(byId.values()).sort((left, right) => left.name.localeCompare(right.name, "en"));
+}

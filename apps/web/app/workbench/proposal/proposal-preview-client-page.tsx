@@ -13,6 +13,7 @@ import {
   buildSimpleWorkbenchProposalText,
   type SimpleWorkbenchProposalDocument
 } from "@/features/workbench/simple-workbench-proposal";
+import { buildSimpleWorkbenchProposalConstructionSection } from "@/features/workbench/simple-workbench-proposal-construction-section";
 import { SimpleWorkbenchProposalConstructionFigure } from "@/features/workbench/simple-workbench-proposal-construction-figure";
 import { buildSimpleWorkbenchProposalDossier } from "@/features/workbench/simple-workbench-proposal-dossier";
 import { getSimpleWorkbenchProposalBranding } from "@/features/workbench/simple-workbench-proposal-branding";
@@ -29,6 +30,51 @@ function formatSavedAtLabel(savedAtIso: string): string {
     dateStyle: "long",
     timeStyle: "short"
   }).format(new Date(savedAtIso));
+}
+
+function PreviewFactCard(props: { detail: string; label: string; value: string }) {
+  const { detail, label, value } = props;
+
+  return (
+    <div className="min-w-0 rounded-[1rem] border hairline bg-[color:var(--paper)]/82 px-4 py-4">
+      <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">{label}</div>
+      <div className="mt-2 break-words text-sm font-semibold text-[color:var(--ink)]">{value}</div>
+      <p className="mt-2 text-[0.82rem] leading-5 text-[color:var(--ink-soft)]">{detail}</p>
+    </div>
+  );
+}
+
+function ProposalLayerScheduleTable(props: { layers: SimpleWorkbenchProposalDocument["layers"] }) {
+  const { layers } = props;
+
+  return (
+    <div className="overflow-x-auto rounded-[1rem] border hairline bg-[color:var(--paper)]/82">
+      <table className="min-w-full border-collapse text-sm">
+        <thead>
+          <tr className="border-b hairline text-left text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+            <th className="px-4 py-3">#</th>
+            <th className="px-4 py-3">Layer</th>
+            <th className="px-4 py-3">Thickness</th>
+            <th className="px-4 py-3">Density</th>
+            <th className="px-4 py-3">Surface Mass</th>
+            <th className="px-4 py-3">Role</th>
+          </tr>
+        </thead>
+        <tbody>
+          {layers.map((layer) => (
+            <tr className="border-b hairline last:border-b-0" key={`${layer.index}-${layer.label}`}>
+              <td className="px-4 py-3 font-semibold text-[color:var(--ink-soft)]">{layer.index}</td>
+              <td className="px-4 py-3 font-semibold text-[color:var(--ink)]">{layer.label}</td>
+              <td className="px-4 py-3 text-[color:var(--ink-soft)]">{layer.thicknessLabel}</td>
+              <td className="px-4 py-3 text-[color:var(--ink-soft)]">{layer.densityLabel ?? "Not listed"}</td>
+              <td className="px-4 py-3 text-[color:var(--ink-soft)]">{layer.surfaceMassLabel ?? "Not listed"}</td>
+              <td className="px-4 py-3 text-[color:var(--ink-soft)]">{layer.roleLabel ?? layer.categoryLabel}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
 }
 
 export function ProposalPreviewClientPage() {
@@ -68,12 +114,25 @@ export function ProposalPreviewClientPage() {
     () => (proposalDocument ? buildSimpleWorkbenchProposalDossier(proposalDocument) : null),
     [proposalDocument]
   );
+  const constructionSection = useMemo(
+    () => (proposalDocument ? buildSimpleWorkbenchProposalConstructionSection(proposalDocument.layers, proposalDocument.studyModeLabel) : null),
+    [proposalDocument]
+  );
   const methodTraceNoteCount = useMemo(
     () => proposalDocument?.methodTraceGroups.reduce((count, group) => count + group.notes.length, 0) ?? 0,
     [proposalDocument]
   );
   const corridorCardCount = useMemo(
     () => proposalDocument?.corridorDossierCards.length ?? 0,
+    [proposalDocument]
+  );
+  const densityLineCount = useMemo(
+    () => proposalDocument?.layers.filter((layer) => typeof layer.densityLabel === "string" && layer.densityLabel.trim().length > 0).length ?? 0,
+    [proposalDocument]
+  );
+  const surfaceMassLineCount = useMemo(
+    () =>
+      proposalDocument?.layers.filter((layer) => typeof layer.surfaceMassLabel === "string" && layer.surfaceMassLabel.trim().length > 0).length ?? 0,
     [proposalDocument]
   );
   const shouldAutoPrint = searchParams.get("autoprint") === "1";
@@ -112,7 +171,7 @@ export function ProposalPreviewClientPage() {
     }
   }
 
-  async function handleDownloadPdf() {
+  async function handleDownloadPdf(style: "branded" | "simple" = "branded") {
     if (!proposalDocument) {
       toast.error("No proposal loaded", {
         description: "Return to the workbench and package a proposal first."
@@ -123,16 +182,21 @@ export function ProposalPreviewClientPage() {
     setIsDownloadingPdf(true);
 
     try {
-      await downloadSimpleWorkbenchProposalPdf(proposalDocument);
-      toast.success("Branded PDF downloaded", {
-        description: "DynEcho prepared the formal proposal PDF on the server."
+      await downloadSimpleWorkbenchProposalPdf(proposalDocument, {
+        style
+      });
+      toast.success(style === "simple" ? "Simple PDF downloaded" : "Branded PDF downloaded", {
+        description:
+          style === "simple"
+            ? "DynEcho prepared the lightweight calculation-summary PDF on the server."
+            : "DynEcho prepared the formal proposal PDF on the server."
       });
     } catch (error) {
-      toast.error("PDF generation failed", {
+      toast.error(style === "simple" ? "Simple PDF failed" : "PDF generation failed", {
         description:
           error instanceof Error
             ? error.message
-            : "DynEcho could not generate the branded PDF on the server."
+            : `DynEcho could not generate the ${style === "simple" ? "simple" : "branded"} PDF on the server.`
       });
     } finally {
       setIsDownloadingPdf(false);
@@ -165,8 +229,8 @@ export function ProposalPreviewClientPage() {
             <h1 className="mt-1 font-display text-[2rem] leading-none tracking-[-0.05em] text-[color:var(--ink)]">
               Official issue preview
             </h1>
-            <p className="mt-3 max-w-3xl text-sm leading-7 text-[color:var(--ink-soft)]">
-              Review the branded proposal sheet in a dedicated print route, then use the browser print dialog to save it as PDF.
+            <p className="mt-3 max-w-3xl text-sm leading-6 text-[color:var(--ink-soft)]">
+              Review the branded issue sheet, then print or save PDF from a dedicated route.
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -203,6 +267,15 @@ export function ProposalPreviewClientPage() {
               {isDownloadingPdf ? "Generating PDF..." : "Download branded PDF"}
             </button>
             <button
+              className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03] disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={!proposalDocument || isDownloadingPdf}
+              onClick={() => void handleDownloadPdf("simple")}
+              type="button"
+            >
+              <Download className="h-4 w-4" />
+              {isDownloadingPdf ? "Generating PDF..." : "Simple PDF"}
+            </button>
+            <button
               className="focus-ring inline-flex items-center gap-2 rounded-full bg-[color:var(--ink)] px-4 py-2 text-sm font-semibold text-[color:var(--paper)]"
               onClick={handlePrint}
               type="button"
@@ -217,83 +290,93 @@ export function ProposalPreviewClientPage() {
       {proposalDocument ? (
         <>
           <SurfacePanel className="px-5 py-5 sm:px-6">
-            <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-              <div className="rounded-[1rem] border hairline bg-[color:var(--paper)]/78 px-4 py-4">
-                <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Project</div>
-                <div className="mt-2 text-sm font-semibold text-[color:var(--ink)]">{proposalDocument.projectName}</div>
-                <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">{proposalDocument.clientName}</p>
-              </div>
-              <div className="rounded-[1rem] border hairline bg-[color:var(--paper)]/78 px-4 py-4">
-                <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Issue</div>
-                <div className="mt-2 text-sm font-semibold text-[color:var(--ink)]">
-                  {proposalDocument.proposalReference} · {proposalDocument.proposalRevision}
-                </div>
-                <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">
-                  {proposalDocument.issuedOnLabel}
-                  <br />
-                  Prefix {proposalDocument.issueCodePrefix.trim() || "Auto from consultant"}
-                </p>
-              </div>
-              <div className="rounded-[1rem] border hairline bg-[color:var(--paper)]/78 px-4 py-4">
-                <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Transmittal</div>
-                <div className="mt-2 text-sm font-semibold text-[color:var(--ink)]">{proposalDocument.proposalRecipient}</div>
-                <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">
-                  {proposalDocument.proposalAttention}
-                  <br />
-                  {proposalDocument.proposalIssuePurpose}
-                  <br />
-                  {proposalDocument.proposalValidityNote}
-                </p>
-              </div>
-              <div className="rounded-[1rem] border hairline bg-[color:var(--paper)]/78 px-4 py-4">
-                <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Snapshot</div>
-                <div className="mt-2 text-sm font-semibold text-[color:var(--ink)]">{formatSavedAtLabel(loadedPreview!.savedAtIso)}</div>
-                <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">
-                  {buildSimpleWorkbenchProposalFilename(proposalDocument.projectName)}.html
-                </p>
-              </div>
-            </div>
-            <div className="mt-3 grid gap-3 md:grid-cols-2">
-              <div className="rounded-[1rem] border hairline bg-[color:var(--paper)]/78 px-4 py-4">
-                <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Subject</div>
-                <div className="mt-2 text-sm font-semibold text-[color:var(--ink)]">{proposalDocument.proposalSubject}</div>
-                <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">
-                  {frameReady ? "Preview frame ready" : "Loading preview frame"}
-                </p>
-              </div>
-              {proposalBranding ? (
-                <div
-                  className="rounded-[1rem] border px-4 py-4"
-                  style={{
-                    background: `linear-gradient(135deg, ${proposalBranding.heroFrom}, ${proposalBranding.heroTo})`,
-                    borderColor: proposalBranding.line
-                  }}
-                >
-                  <div className="flex items-center gap-3">
+            <div className="grid gap-4 xl:grid-cols-[1.2fr_0.8fr]">
+              <div
+                className="rounded-[1.3rem] border px-5 py-5"
+                style={
+                  proposalBranding
+                    ? {
+                        background: `linear-gradient(135deg, ${proposalBranding.heroFrom}, ${proposalBranding.heroTo})`,
+                        borderColor: proposalBranding.line
+                      }
+                    : undefined
+                }
+              >
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                  <div className="min-w-0">
+                    <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+                      {proposalDocument.reportProfileLabel}
+                    </div>
+                    <h2 className="mt-2 font-display text-[1.9rem] leading-none tracking-[-0.05em] text-[color:var(--ink)]">
+                      {proposalDocument.projectName}
+                    </h2>
+                    <p className="mt-3 max-w-2xl text-sm leading-7 text-[color:var(--ink-soft)]">{proposalDocument.executiveSummary}</p>
+                  </div>
+                  <div className="shrink-0">
                     {proposalDocument.consultantLogoDataUrl ? (
                       <img
                         alt={`${proposalDocument.consultantCompany} logo`}
-                        className="h-12 w-12 rounded-[0.95rem] border bg-white object-contain p-2"
+                        className="h-14 w-14 rounded-[1rem] border bg-white object-contain p-2"
                         src={proposalDocument.consultantLogoDataUrl}
-                        style={{ borderColor: proposalBranding.line }}
+                        style={{ borderColor: proposalBranding?.line }}
                       />
-                    ) : (
+                    ) : proposalBranding ? (
                       <div
-                        className="flex h-12 w-12 items-center justify-center rounded-[0.95rem] text-sm font-semibold uppercase tracking-[0.2em] text-[#fff8f2]"
+                        className="flex h-14 w-14 items-center justify-center rounded-[1rem] text-sm font-semibold uppercase tracking-[0.2em] text-[#fff8f2]"
                         style={{ backgroundColor: proposalBranding.accentStrong }}
                       >
                         {proposalBranding.monogram}
                       </div>
-                    )}
-                    <div className="min-w-0">
-                      <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Template</div>
-                      <div className="mt-1 text-sm font-semibold text-[color:var(--ink)]">{proposalBranding.templateLabel}</div>
-                      <p className="mt-1 text-sm leading-6 text-[color:var(--ink-soft)]">{proposalBranding.wordmarkSecondary}</p>
-                      <p className="mt-1 text-sm leading-6 text-[color:var(--ink-soft)]">{proposalBranding.profileDetail}</p>
-                    </div>
+                    ) : null}
                   </div>
                 </div>
-              ) : null}
+
+                <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                  <PreviewFactCard
+                    detail={`${proposalDocument.clientName} · ${proposalDocument.proposalRecipient}`}
+                    label="Issue"
+                    value={`${proposalDocument.proposalReference} · ${proposalDocument.proposalRevision}`}
+                  />
+                  <PreviewFactCard
+                    detail={proposalDocument.dynamicBranchDetail}
+                    label="Primary read"
+                    value={`${proposalDocument.primaryMetricLabel} ${proposalDocument.primaryMetricValue}`}
+                  />
+                  <PreviewFactCard
+                    detail={proposalDocument.validationDetail}
+                    label="Validation"
+                    value={proposalDocument.validationLabel}
+                  />
+                  <PreviewFactCard
+                    detail={`${proposalDocument.consultantCompany} · ${proposalDocument.preparedBy}`}
+                    label="Snapshot"
+                    value={formatSavedAtLabel(loadedPreview!.savedAtIso)}
+                  />
+                </div>
+              </div>
+
+              <div className="grid gap-3">
+                <PreviewFactCard
+                  detail={`${proposalDocument.proposalAttention} · ${proposalDocument.proposalIssuePurpose}`}
+                  label="Transmittal"
+                  value={proposalDocument.proposalRecipient}
+                />
+                <PreviewFactCard
+                  detail={`${proposalDocument.studyContextLabel} · ${proposalDocument.reportProfileLabel}`}
+                  label="Route"
+                  value={`${proposalDocument.studyModeLabel} · ${proposalDocument.contextLabel}`}
+                />
+                <PreviewFactCard
+                  detail={`${densityLineCount} density line${densityLineCount === 1 ? "" : "s"} · ${surfaceMassLineCount} surface-mass line${surfaceMassLineCount === 1 ? "" : "s"}`}
+                  label="Stack"
+                  value={constructionSection?.totalThicknessLabel ?? "Thickness pending"}
+                />
+                <PreviewFactCard
+                  detail={frameReady ? "Preview frame ready for print." : "Preview frame is still loading."}
+                  label="Subject"
+                  value={proposalDocument.proposalSubject}
+                />
+              </div>
             </div>
           </SurfacePanel>
 
@@ -311,7 +394,7 @@ export function ProposalPreviewClientPage() {
                   {proposalDossier.warningCount === 1 ? "" : "s"}
                 </div>
               </div>
-              <p className="mt-3 max-w-4xl text-sm leading-7 text-[color:var(--ink-soft)]">{proposalDossier.headline}</p>
+              <p className="mt-3 max-w-4xl text-sm leading-6 text-[color:var(--ink-soft)]">{proposalDossier.headline}</p>
               <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
                 {proposalDossier.items.map((item) => (
                   <div className="rounded-[1rem] border hairline bg-[color:var(--paper)]/78 px-4 py-4" key={`${item.label}-${item.value}`}>
@@ -341,7 +424,7 @@ export function ProposalPreviewClientPage() {
                       {corridorCardCount} card{corridorCardCount === 1 ? "" : "s"}
                     </div>
                   </div>
-                  <p className="mt-3 max-w-4xl text-sm leading-7 text-[color:var(--ink-soft)]">{proposalDocument.corridorDossierHeadline}</p>
+                  <p className="mt-3 max-w-4xl text-sm leading-6 text-[color:var(--ink-soft)]">{proposalDocument.corridorDossierHeadline}</p>
                   <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
                     {proposalDocument.corridorDossierCards.map((item) => (
                       <div className="rounded-[1rem] border hairline bg-[color:var(--paper)]/78 px-4 py-4" key={`${item.label}-${item.value}`}>
@@ -369,7 +452,7 @@ export function ProposalPreviewClientPage() {
                     {methodTraceNoteCount === 1 ? "" : "s"}
                   </div>
                 </div>
-                <p className="mt-3 max-w-4xl text-sm leading-7 text-[color:var(--ink-soft)]">{proposalDocument.methodDossierHeadline}</p>
+                <p className="mt-3 max-w-4xl text-sm leading-6 text-[color:var(--ink-soft)]">{proposalDocument.methodDossierHeadline}</p>
                 <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
                   {proposalDocument.methodDossierCards.map((item) => (
                     <div className="rounded-[1rem] border hairline bg-[color:var(--paper)]/78 px-4 py-4" key={`${item.label}-${item.value}`}>
@@ -397,14 +480,36 @@ export function ProposalPreviewClientPage() {
                 {proposalDocument.layers.length} visible row{proposalDocument.layers.length === 1 ? "" : "s"}
               </div>
             </div>
-            <p className="mt-3 max-w-4xl text-sm leading-7 text-[color:var(--ink-soft)]">
-              The same stack that drives the live dynamic read is drawn here as the client-facing technical section and then repeated in the branded PDF schedule page.
+            <p className="mt-3 max-w-4xl text-sm leading-6 text-[color:var(--ink-soft)]">
+              The live stack is shown here as the client-facing technical section and repeated in the branded PDF schedule.
             </p>
             <div className="mt-4">
               <SimpleWorkbenchProposalConstructionFigure
                 layers={proposalDocument.layers}
                 studyModeLabel={proposalDocument.studyModeLabel}
               />
+            </div>
+          </SurfacePanel>
+
+          <SurfacePanel className="px-5 py-5 sm:px-6">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+                  Technical layer schedule
+                </div>
+                <h2 className="mt-1 font-display text-[1.55rem] leading-none tracking-[-0.05em] text-[color:var(--ink)]">
+                  Density and surface-mass register
+                </h2>
+              </div>
+              <div className="rounded-full border hairline bg-[color:var(--paper)]/76 px-3 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+                {proposalDocument.layers.length} row{proposalDocument.layers.length === 1 ? "" : "s"} · {constructionSection?.totalThicknessLabel ?? "Thickness pending"}
+              </div>
+            </div>
+            <p className="mt-3 max-w-4xl text-sm leading-6 text-[color:var(--ink-soft)]">
+              Density and surface-mass lines stay visible beside the client-facing section so the schedule reads like a formal issue sheet.
+            </p>
+            <div className="mt-4">
+              <ProposalLayerScheduleTable layers={proposalDocument.layers} />
             </div>
           </SurfacePanel>
 

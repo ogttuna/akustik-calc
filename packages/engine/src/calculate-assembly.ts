@@ -1130,6 +1130,7 @@ export function calculateAssembly(
   const dynamicImpactTrace = buildDynamicImpactTrace({
     boundFloorSystemEstimate,
     boundFloorSystemMatch,
+    catalog,
     floorSystemEstimate,
     floorSystemMatch,
     hasFieldContext: Boolean(impactFieldContext),

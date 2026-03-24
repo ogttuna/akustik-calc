@@ -1,5 +1,18 @@
-import type { LayerInput } from "@dynecho/shared";
+import { MATERIAL_CATALOG_SEED } from "@dynecho/catalogs";
+import type { LayerInput, MaterialDefinition } from "@dynecho/shared";
 
+import {
+  buildDynamicStiffnessOverrideMaterial,
+  hasDynamicStiffnessOverrideInput,
+  hasEffectiveDynamicStiffnessOverride,
+  parseDynamicStiffnessOverride
+} from "./dynamic-stiffness";
+import {
+  buildDensityOverrideMaterial,
+  hasDensityOverrideInput,
+  hasEffectiveDensityOverride,
+  parseDensityOverride
+} from "./material-density";
 import type { LayerDraft } from "./workbench-store";
 
 const SOLVER_CONTINUUM_MATERIAL_IDS = new Set<string>([
@@ -36,18 +49,29 @@ const SOLVER_CONTINUUM_MATERIAL_IDS = new Set<string>([
   "concrete"
 ]);
 
+function getContinuumMaterialId(materialId: string): string {
+  return materialId.split("__")[0] ?? materialId;
+}
+
 function canCollapseAtSolverBoundary(previousLayer: LayerInput | undefined, nextLayer: LayerInput): boolean {
+  const continuumMaterialId = getContinuumMaterialId(nextLayer.materialId);
+
   return Boolean(
     previousLayer &&
       previousLayer.materialId === nextLayer.materialId &&
       previousLayer.floorRole === nextLayer.floorRole &&
-      SOLVER_CONTINUUM_MATERIAL_IDS.has(nextLayer.materialId)
+      SOLVER_CONTINUUM_MATERIAL_IDS.has(continuumMaterialId)
   );
 }
 
-export function normalizeRows(rows: readonly LayerDraft[]) {
+export function normalizeRows(
+  rows: readonly LayerDraft[],
+  catalog: readonly MaterialDefinition[] = MATERIAL_CATALOG_SEED
+) {
   const warnings: string[] = [];
   const layers: LayerInput[] = [];
+  const runtimeMaterials = new Map<string, MaterialDefinition>();
+  const materialById = new Map(catalog.map((material) => [material.id, material]));
 
   rows.forEach((row, index) => {
     const parsedThickness = Number(row.thicknessMm);
@@ -56,9 +80,55 @@ export function normalizeRows(rows: readonly LayerDraft[]) {
       return;
     }
 
+    const material = materialById.get(row.materialId);
+    let resolvedMaterial = material;
+    let resolvedMaterialId = row.materialId;
+
+    if (
+      hasDensityOverrideInput(row.densityKgM3) &&
+      !parseDensityOverride({
+        material,
+        value: row.densityKgM3
+      })
+    ) {
+      warnings.push(
+        `Layer ${index + 1} has an invalid density override. Enter a non-negative kg/m³ value, use zero only for gap or support layers, or leave it blank.`
+      );
+    } else if (material && hasEffectiveDensityOverride({ material, overrideValue: row.densityKgM3 })) {
+      const densityKgM3 = parseDensityOverride({
+        material,
+        value: row.densityKgM3
+      });
+
+      if (typeof densityKgM3 === "number") {
+        resolvedMaterial = buildDensityOverrideMaterial({
+          baseMaterial: material,
+          densityKgM3
+        });
+        resolvedMaterialId = resolvedMaterial.id;
+        runtimeMaterials.set(resolvedMaterial.id, resolvedMaterial);
+      }
+    }
+
+    if (hasDynamicStiffnessOverrideInput(row.dynamicStiffnessMNm3) && !parseDynamicStiffnessOverride(row.dynamicStiffnessMNm3)) {
+      warnings.push(`Layer ${index + 1} has an invalid dynamic stiffness override. Enter a positive MN/m³ value or leave it blank.`);
+    } else if (resolvedMaterial && hasEffectiveDynamicStiffnessOverride({ material: resolvedMaterial, overrideValue: row.dynamicStiffnessMNm3 })) {
+      const dynamicStiffnessMNm3 = parseDynamicStiffnessOverride(row.dynamicStiffnessMNm3);
+
+      if (typeof dynamicStiffnessMNm3 === "number") {
+        const runtimeMaterial = buildDynamicStiffnessOverrideMaterial({
+          baseMaterial: resolvedMaterial,
+          dynamicStiffnessMNm3
+        });
+
+        resolvedMaterialId = runtimeMaterial.id;
+        runtimeMaterials.set(runtimeMaterial.id, runtimeMaterial);
+      }
+    }
+
     const nextLayer: LayerInput = {
       floorRole: row.floorRole,
-      materialId: row.materialId,
+      materialId: resolvedMaterialId,
       thicknessMm: parsedThickness
     };
     const previousLayer = layers.at(-1);
@@ -71,5 +141,5 @@ export function normalizeRows(rows: readonly LayerDraft[]) {
     layers.push(nextLayer);
   });
 
-  return { layers, warnings };
+  return { layers, runtimeMaterials: Array.from(runtimeMaterials.values()), warnings };
 }

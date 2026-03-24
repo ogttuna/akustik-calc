@@ -7,15 +7,54 @@ import { SurfacePanel } from "@dynecho/ui";
 import { getMaterialCategoryLabel } from "./describe-assembly";
 import { FieldUsageBoard } from "./field-usage-board";
 import { FieldGuide } from "./field-guide";
+import { getCatalogDensity } from "./material-density";
 import type { StudyMode } from "./preset-definitions";
 import { FLOOR_ROLE_LABELS } from "./workbench-data";
+import { WorkbenchMaterialPicker, type WorkbenchMaterialOptionGroup } from "./workbench-material-picker";
 import type { LayerDraft } from "./workbench-store";
+
+function buildLayerEditorMaterialGroups(materials: readonly MaterialDefinition[]): WorkbenchMaterialOptionGroup[] {
+  const grouped = new Map<string, MaterialDefinition[]>();
+  const categoryOrder = {
+    finish: 0,
+    mass: 1,
+    insulation: 2,
+    support: 3,
+    gap: 4
+  } as const;
+
+  for (const material of materials) {
+    const label = getMaterialCategoryLabel(material);
+    const bucket = grouped.get(label);
+
+    if (bucket) {
+      bucket.push(material);
+    } else {
+      grouped.set(label, [material]);
+    }
+  }
+
+  return Array.from(grouped.entries())
+    .sort(([leftLabel, leftMaterials], [rightLabel, rightMaterials]) => {
+      const leftCategory = leftMaterials[0]?.category ?? "mass";
+      const rightCategory = rightMaterials[0]?.category ?? "mass";
+      const leftOrder = categoryOrder[leftCategory] ?? 99;
+      const rightOrder = categoryOrder[rightCategory] ?? 99;
+
+      return leftOrder - rightOrder || leftLabel.localeCompare(rightLabel, "en");
+    })
+    .map(([label, groupMaterials]) => ({
+      label,
+      materials: [...groupMaterials].sort((left, right) => left.name.localeCompare(right.name, "en"))
+    }));
+}
 
 type LayerEditorProps = {
   materials: readonly MaterialDefinition[];
   studyMode: StudyMode;
   rows: readonly LayerDraft[];
   onAddRow: () => void;
+  onDensityChange: (id: string, densityKgM3: string) => void;
   onFloorRoleChange: (id: string, floorRole?: FloorRole) => void;
   onMaterialChange: (id: string, materialId: string) => void;
   onMoveRow: (id: string, direction: "up" | "down") => void;
@@ -28,12 +67,14 @@ export function LayerEditor({
   studyMode,
   rows,
   onAddRow,
+  onDensityChange,
   onFloorRoleChange,
   onMaterialChange,
   onMoveRow,
   onRemoveRow,
   onThicknessChange
 }: LayerEditorProps) {
+  const materialGroups = buildLayerEditorMaterialGroups(materials);
   const rowLabel = rows.length === 1 ? "layer" : "layers";
   const validThicknessCount = rows.filter((row) => {
     const thickness = Number(row.thicknessMm);
@@ -191,7 +232,7 @@ export function LayerEditor({
               </div>
               <div
                 className={`mt-4 grid gap-3 ${
-                  studyMode === "floor" ? "md:grid-cols-[1.15fr_0.55fr_0.8fr]" : "md:grid-cols-[1.35fr_0.7fr]"
+                  studyMode === "floor" ? "md:grid-cols-[1.1fr_0.5fr_0.55fr_0.8fr]" : "md:grid-cols-[1.2fr_0.6fr_0.65fr]"
                 }`}
               >
                 <FieldGuide
@@ -205,18 +246,13 @@ export function LayerEditor({
                   inputId={`layer-material-${row.id}`}
                   label="Material"
                 >
-                  <select
-                    className="focus-ring touch-target rounded-2xl border hairline bg-[color:var(--paper)] px-4 py-3"
+                  <WorkbenchMaterialPicker
+                    buttonClassName="hairline bg-[color:var(--paper)]"
+                    currentMaterial={material}
+                    groups={materialGroups}
                     id={`layer-material-${row.id}`}
-                    onChange={(event) => onMaterialChange(row.id, event.target.value)}
-                    value={row.materialId}
-                  >
-                    {materials.map((material) => (
-                      <option key={material.id} value={material.id}>
-                        {material.name}
-                      </option>
-                    ))}
-                  </select>
+                    onSelect={(materialId) => onMaterialChange(row.id, materialId)}
+                  />
                 </FieldGuide>
                 <FieldGuide
                   guide={{
@@ -237,6 +273,30 @@ export function LayerEditor({
                     inputMode="decimal"
                     onChange={(event) => onThicknessChange(row.id, event.target.value)}
                     value={row.thicknessMm}
+                  />
+                </FieldGuide>
+                <FieldGuide
+                  guide={{
+                    currentUse:
+                      row.densityKgM3?.trim().length
+                        ? "Manual density override is active for this stack row. It changes surface mass and family fit without touching the catalog material."
+                        : "Catalog density is active. Leave this blank unless the project uses a justified alternate density for this layer.",
+                    kind: row.densityKgM3?.trim().length ? "active" : "conditional",
+                    meaning: "Density drives surface mass and can shift which exact or bounded family the live stack belongs to."
+                  }}
+                  hint="This override is row-local. It does not rewrite the shared material catalog."
+                  inputId={`layer-density-${row.id}`}
+                  label="Density (kg/m³)"
+                >
+                  <input
+                    className="focus-ring touch-target rounded-2xl border hairline bg-[color:var(--paper)] px-4 py-3"
+                    id={`layer-density-${row.id}`}
+                    inputMode="decimal"
+                    onChange={(event) => onDensityChange(row.id, event.target.value)}
+                    placeholder={
+                      typeof getCatalogDensity(material) === "number" ? String(getCatalogDensity(material)) : "Catalog density"
+                    }
+                    value={row.densityKgM3 ?? ""}
                   />
                 </FieldGuide>
                 {studyMode === "floor" ? (

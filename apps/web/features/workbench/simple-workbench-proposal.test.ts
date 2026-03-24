@@ -4,6 +4,7 @@ import {
   buildSimpleWorkbenchProposalHtml,
   buildSimpleWorkbenchProposalText
 } from "./simple-workbench-proposal";
+import { buildSimpleWorkbenchProposalSimpleHtml } from "./simple-workbench-proposal-simple";
 
 const LOGO_DATA_URL = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'></svg>";
 
@@ -180,16 +181,20 @@ const BASE_DOCUMENT = {
   layers: [
     {
       categoryLabel: "Top finish",
+      densityLabel: "1,400 kg/m³",
       index: 1,
       label: "Vinyl Flooring",
       roleLabel: "Floor covering",
+      surfaceMassLabel: "5.6 kg/m²",
       thicknessLabel: "4 mm"
     },
     {
       categoryLabel: "Base structure",
+      densityLabel: "2,400 kg/m³",
       index: 2,
       label: "Concrete",
       roleLabel: "Base structure",
+      surfaceMassLabel: "432 kg/m²",
       thicknessLabel: "180 mm"
     }
   ],
@@ -322,7 +327,11 @@ describe("simple workbench proposal helpers", () => {
     expect(text).toContain(
       "Current issue: MAC-2026-014 | Rev 01 | 21 March 2026 | Active issue line currently applied to the printable consultant sheet."
     );
-    expect(text).toContain("1. Vinyl Flooring | 4 mm | Floor covering | Top finish");
+    expect(text).toContain("Applied method and deliverable basis");
+    expect(text).toContain(
+      "- Deliverable basis: Client review and acoustic coordination | Issued to Riverside Development Team | Valid for 30 calendar days unless superseded by a later issue."
+    );
+    expect(text).toContain("1. Vinyl Flooring | 4 mm | 1,400 kg/m³ | 5.6 kg/m² | Floor covering | Top finish");
     expect(text).toContain("Check flanking <risk> before tender issue.");
   });
 
@@ -382,6 +391,8 @@ describe("simple workbench proposal helpers", () => {
     expect(html).toContain("Revision control snapshot");
     expect(html).toContain("Issue Control Register");
     expect(html).toContain("Issue History Appendix");
+    expect(html).toContain("Issue Snapshot");
+    expect(html).toContain("Applied Method &amp; Deliverable Basis");
     expect(html).toContain("Prefix MAC");
     expect(html).toContain("MAC-RR-20260321");
     expect(html).toContain("MAC-RR-20260321-03");
@@ -404,8 +415,32 @@ describe("simple workbench proposal helpers", () => {
     expect(html).toContain("Ln,w");
     expect(html).toContain("Vinyl Flooring");
     expect(html).toContain("Concrete");
+    expect(html).toContain("Density");
+    expect(html).toContain("Surface Mass");
+    expect(html).toContain("1,400 kg/m³");
+    expect(html).toContain("432 kg/m²");
     expect(html).toContain("Check flanking &lt;risk&gt; before tender issue.");
     expect(html).not.toContain("Check flanking <risk> before tender issue.");
+    expect(html).toContain("Prepared from the DynEcho dynamic calculator.");
+  });
+
+  it("builds a lightweight summary html for the simple pdf path", () => {
+    const html = buildSimpleWorkbenchProposalSimpleHtml(BASE_DOCUMENT);
+
+    expect(html).toContain("Calculation Summary");
+    expect(html).toContain("Simple PDF");
+    expect(html).toContain("Project & Issue");
+    expect(html).toContain("Deliverable Basis");
+    expect(html).toContain("Live Outputs");
+    expect(html).toContain("Output Coverage");
+    expect(html).toContain("Layer Schedule");
+    expect(html).toContain("Method & References");
+    expect(html).toContain("Warnings");
+    expect(html).toContain("Vinyl Flooring");
+    expect(html).toContain("Rw");
+    expect(html).toContain("Ln,w");
+    expect(html).toContain("Riverside Development Team");
+    expect(html).toContain("Published family estimate is active through reinforced concrete.");
     expect(html).toContain("Prepared from the DynEcho dynamic calculator.");
   });
 });
