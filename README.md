@@ -31,6 +31,7 @@ Working principles:
 Run locally:
 
 - `pnpm install`
+- set `DYNECHO_AUTH_USERNAME`, `DYNECHO_AUTH_PASSWORD`, and `DYNECHO_AUTH_SECRET` first
 - `pnpm dev`
 - `pnpm check`
 - `pnpm build`
@@ -54,6 +55,12 @@ Useful endpoints:
 
 - `GET /api/health`
 - `POST /api/estimate`
+
+Authentication:
+
+- the landing page remains public
+- `/workbench`, `/workbench/proposal`, `POST /api/estimate`, `POST /api/impact-only`, and `POST /api/proposal-pdf` now require sign-in
+- copy [`apps/web/.env.example`](./apps/web/.env.example) into your local env setup and replace the placeholder credentials before starting the web app
 
 Read-only upstream tooling:
 
