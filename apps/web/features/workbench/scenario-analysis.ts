@@ -53,23 +53,32 @@ export function evaluateScenario(input: {
     studyMode: input.studyMode,
     targetOutputs: input.targetOutputs ?? []
   });
-  const result =
-    normalized.layers.length > 0
-      ? calculateAssembly(normalized.layers, {
-          airborneContext: input.airborneContext ?? null,
-          calculator: input.calculator ?? null,
-          catalog: runtimeCatalog,
-          exactImpactSource: input.exactImpactSource ?? null,
-          impactFieldContext: input.impactFieldContext ?? null,
-          targetOutputs: input.targetOutputs ?? []
-        })
-      : null;
+  const scenarioWarnings = [...normalized.warnings, ...inputWarnings];
+  let result: AssemblyCalculation | null = null;
+
+  if (normalized.layers.length > 0) {
+    try {
+      result = calculateAssembly(normalized.layers, {
+        airborneContext: input.airborneContext ?? null,
+        calculator: input.calculator ?? null,
+        catalog: runtimeCatalog,
+        exactImpactSource: input.exactImpactSource ?? null,
+        impactFieldContext: input.impactFieldContext ?? null,
+        targetOutputs: input.targetOutputs ?? []
+      });
+    } catch (error) {
+      const detail = error instanceof Error && error.message.trim().length > 0 ? error.message.trim() : "Unknown evaluation error.";
+      scenarioWarnings.push(
+        `DynEcho could not evaluate the current scenario and kept the workspace live instead of crashing. ${detail}`
+      );
+    }
+  }
 
   return {
     ...input,
     result,
     warnings: result
-      ? buildWorkbenchWarningNotes(result, [...normalized.warnings, ...inputWarnings, ...result.warnings])
-      : [...normalized.warnings, ...inputWarnings]
+      ? buildWorkbenchWarningNotes(result, [...scenarioWarnings, ...result.warnings])
+      : scenarioWarnings
   };
 }

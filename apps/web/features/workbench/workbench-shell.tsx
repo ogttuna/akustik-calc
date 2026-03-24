@@ -115,6 +115,15 @@ const WorkbenchCommandPalette = dynamic(
   }
 );
 
+function parseFiniteNumber(value: string | null | undefined): number | undefined {
+  if (!value || value.trim().length === 0) {
+    return undefined;
+  }
+
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : undefined;
+}
+
 export function WorkbenchShell() {
   const activePresetId = useWorkbenchStore((state) => state.activePresetId);
   const calculatorId = useWorkbenchStore((state) => state.calculatorId);
@@ -232,9 +241,23 @@ export function WorkbenchShell() {
   });
   const flankingPathImport = parseImpactFieldPathInput(impactFlankingPathsInput);
   const exactImprovementImport = parseImpactImprovementImport(impactImprovementBandInput);
+  const parsedImpactReferenceDeltaLwDb = parseFiniteNumber(impactReferenceDeltaLwDb);
+  const parsedImpactDirectPathOffsetDb = parseFiniteNumber(impactDirectPathOffsetDb);
+  const parsedImpactGuideKDb = parseFiniteNumber(impactGuideKDb);
+  const parsedImpactGuideHdDb = parseFiniteNumber(impactGuideHdDb);
+  const parsedImpactGuideMassRatio = parseFiniteNumber(impactGuideMassRatio);
+  const parsedImpactGuideReceivingRoomVolumeM3 = parseFiniteNumber(impactGuideReceivingRoomVolumeM3);
+  const parsedImpactLowerTreatmentReductionDb = parseFiniteNumber(impactLowerTreatmentReductionDb);
+  const parsedImpactGuideCi50_2500Db = parseFiniteNumber(impactGuideCi50_2500Db);
+  const parsedImpactGuideCiDb = parseFiniteNumber(impactGuideCiDb);
+  const parsedAirbornePanelHeightMm = parseFiniteNumber(airbornePanelHeightMm);
+  const parsedAirbornePanelWidthMm = parseFiniteNumber(airbornePanelWidthMm);
+  const parsedAirborneReceivingRoomRt60S = parseFiniteNumber(airborneReceivingRoomRt60S);
+  const parsedAirborneReceivingRoomVolumeM3 = parseFiniteNumber(airborneReceivingRoomVolumeM3);
+  const parsedAirborneStudSpacingMm = parseFiniteNumber(airborneStudSpacingMm);
   const manualReferenceImpact =
-    impactReferenceDeltaLwDb.trim().length > 0
-      ? deriveHeavyReferenceImpactFromDeltaLw(Number(impactReferenceDeltaLwDb))
+    typeof parsedImpactReferenceDeltaLwDb === "number"
+      ? deriveHeavyReferenceImpactFromDeltaLw(parsedImpactReferenceDeltaLwDb)
       : null;
   const improvementReferenceImpact = exactImprovementImport.parsed
     ? buildExactImpactImprovementReference(exactImprovementImport.parsed.source)
@@ -242,22 +265,14 @@ export function WorkbenchShell() {
   const referenceImpact = improvementReferenceImpact ?? manualReferenceImpact;
   const liveImpactFieldContext =
     {
-      directPathOffsetDb:
-        impactDirectPathOffsetDb.trim().length > 0 ? Number(impactDirectPathOffsetDb) : undefined,
+      directPathOffsetDb: parsedImpactDirectPathOffsetDb,
       enableSmallRoomEstimate: impactGuideSource === "live_stack" ? impactGuideSmallRoomMode : undefined,
-      fieldKDb:
-        impactGuideSource === "live_stack" && impactGuideKDb.trim().length > 0 ? Number(impactGuideKDb) : undefined,
+      fieldKDb: impactGuideSource === "live_stack" ? parsedImpactGuideKDb : undefined,
       flankingPaths: flankingPathImport.parsed?.paths ?? [],
-      guideHdDb:
-        impactGuideSource === "live_stack" && impactGuideHdDb.trim().length > 0 ? Number(impactGuideHdDb) : undefined,
-      guideMassRatio:
-        impactGuideSource === "live_stack" && impactGuideMassRatio.trim().length > 0
-          ? Number(impactGuideMassRatio)
-          : undefined,
-      lowerTreatmentReductionDb:
-        impactLowerTreatmentReductionDb.trim().length > 0 ? Number(impactLowerTreatmentReductionDb) : undefined,
-      receivingRoomVolumeM3:
-        impactGuideReceivingRoomVolumeM3.trim().length > 0 ? Number(impactGuideReceivingRoomVolumeM3) : undefined
+      guideHdDb: impactGuideSource === "live_stack" ? parsedImpactGuideHdDb : undefined,
+      guideMassRatio: impactGuideSource === "live_stack" ? parsedImpactGuideMassRatio : undefined,
+      lowerTreatmentReductionDb: parsedImpactLowerTreatmentReductionDb,
+      receivingRoomVolumeM3: parsedImpactGuideReceivingRoomVolumeM3
     };
   const liveAirborneContext =
     studyMode === "wall"
@@ -267,19 +282,14 @@ export function WorkbenchShell() {
           contextMode: airborneContextMode,
           electricalBoxes: airborneElectricalBoxes,
           junctionQuality: airborneJunctionQuality,
-          panelHeightMm:
-            airbornePanelHeightMm.trim().length > 0 ? Number(airbornePanelHeightMm) : undefined,
-          panelWidthMm:
-            airbornePanelWidthMm.trim().length > 0 ? Number(airbornePanelWidthMm) : undefined,
+          panelHeightMm: parsedAirbornePanelHeightMm,
+          panelWidthMm: parsedAirbornePanelWidthMm,
           penetrationState: airbornePenetrationState,
           perimeterSeal: airbornePerimeterSeal,
-          receivingRoomRt60S:
-            airborneReceivingRoomRt60S.trim().length > 0 ? Number(airborneReceivingRoomRt60S) : undefined,
-          receivingRoomVolumeM3:
-            airborneReceivingRoomVolumeM3.trim().length > 0 ? Number(airborneReceivingRoomVolumeM3) : undefined,
+          receivingRoomRt60S: parsedAirborneReceivingRoomRt60S,
+          receivingRoomVolumeM3: parsedAirborneReceivingRoomVolumeM3,
           sharedTrack: airborneSharedTrack,
-          studSpacingMm:
-            airborneStudSpacingMm.trim().length > 0 ? Number(airborneStudSpacingMm) : undefined,
+          studSpacingMm: parsedAirborneStudSpacingMm,
           studType: airborneStudType
         }
       : null;
@@ -332,23 +342,22 @@ export function WorkbenchShell() {
           baseLnW: guideBaseLnW,
           baseLnWUpperBound: guideBaseLnWUpperBound,
           ci50_2500Db:
-            impactGuideCi50_2500Db.trim().length > 0
-              ? Number(impactGuideCi50_2500Db)
+            typeof parsedImpactGuideCi50_2500Db === "number"
+              ? parsedImpactGuideCi50_2500Db
               : typeof guideBaseImpact?.CI50_2500 === "number"
                 ? guideBaseImpact.CI50_2500
                 : null,
           ciDb:
-            impactGuideCiDb.trim().length > 0
-              ? Number(impactGuideCiDb)
+            typeof parsedImpactGuideCiDb === "number"
+              ? parsedImpactGuideCiDb
               : typeof guideBaseImpact?.CI === "number"
                 ? guideBaseImpact.CI
                 : null,
           enableSmallRoomEstimate: impactGuideSmallRoomMode,
-          hdDb: impactGuideHdDb.trim().length > 0 ? Number(impactGuideHdDb) : null,
-          kDb: impactGuideKDb.trim().length > 0 ? Number(impactGuideKDb) : null,
-          massRatio: impactGuideMassRatio.trim().length > 0 ? Number(impactGuideMassRatio) : null,
-          receivingRoomVolumeM3:
-            impactGuideReceivingRoomVolumeM3.trim().length > 0 ? Number(impactGuideReceivingRoomVolumeM3) : null,
+          hdDb: parsedImpactGuideHdDb ?? null,
+          kDb: parsedImpactGuideKDb ?? null,
+          massRatio: parsedImpactGuideMassRatio ?? null,
+          receivingRoomVolumeM3: parsedImpactGuideReceivingRoomVolumeM3 ?? null,
           source: impactGuideSource
         })
       : null;
@@ -368,29 +377,14 @@ export function WorkbenchShell() {
                 contextMode: scenario.airborneContextMode ?? "element_lab",
                 electricalBoxes: scenario.airborneElectricalBoxes ?? "none",
                 junctionQuality: scenario.airborneJunctionQuality ?? "good",
-                panelHeightMm:
-                  scenario.airbornePanelHeightMm?.trim().length
-                    ? Number(scenario.airbornePanelHeightMm)
-                    : undefined,
-                panelWidthMm:
-                  scenario.airbornePanelWidthMm?.trim().length
-                    ? Number(scenario.airbornePanelWidthMm)
-                    : undefined,
+                panelHeightMm: parseFiniteNumber(scenario.airbornePanelHeightMm),
+                panelWidthMm: parseFiniteNumber(scenario.airbornePanelWidthMm),
                 penetrationState: scenario.airbornePenetrationState ?? "none",
                 perimeterSeal: scenario.airbornePerimeterSeal ?? "good",
-                receivingRoomRt60S:
-                  scenario.airborneReceivingRoomRt60S?.trim().length
-                    ? Number(scenario.airborneReceivingRoomRt60S)
-                    : undefined,
-                receivingRoomVolumeM3:
-                  scenario.airborneReceivingRoomVolumeM3?.trim().length
-                    ? Number(scenario.airborneReceivingRoomVolumeM3)
-                    : undefined,
+                receivingRoomRt60S: parseFiniteNumber(scenario.airborneReceivingRoomRt60S),
+                receivingRoomVolumeM3: parseFiniteNumber(scenario.airborneReceivingRoomVolumeM3),
                 sharedTrack: scenario.airborneSharedTrack ?? "independent",
-                studSpacingMm:
-                  scenario.airborneStudSpacingMm?.trim().length
-                    ? Number(scenario.airborneStudSpacingMm)
-                    : undefined,
+                studSpacingMm: parseFiniteNumber(scenario.airborneStudSpacingMm),
                 studType: scenario.airborneStudType ?? "auto"
               }
             : null,
@@ -402,16 +396,10 @@ export function WorkbenchShell() {
           scenario.impactGuideSource === "live_stack"
             ? {
                 enableSmallRoomEstimate: scenario.impactGuideSmallRoomMode,
-                fieldKDb:
-                  scenario.impactGuideKDb.trim().length > 0 ? Number(scenario.impactGuideKDb) : undefined,
-                guideHdDb:
-                  scenario.impactGuideHdDb.trim().length > 0 ? Number(scenario.impactGuideHdDb) : undefined,
-                guideMassRatio:
-                  scenario.impactGuideMassRatio.trim().length > 0 ? Number(scenario.impactGuideMassRatio) : undefined,
-                receivingRoomVolumeM3:
-                  scenario.impactGuideReceivingRoomVolumeM3.trim().length > 0
-                    ? Number(scenario.impactGuideReceivingRoomVolumeM3)
-                    : undefined
+                fieldKDb: parseFiniteNumber(scenario.impactGuideKDb),
+                guideHdDb: parseFiniteNumber(scenario.impactGuideHdDb),
+                guideMassRatio: parseFiniteNumber(scenario.impactGuideMassRatio),
+                receivingRoomVolumeM3: parseFiniteNumber(scenario.impactGuideReceivingRoomVolumeM3)
               }
             : null,
         name: scenario.name,

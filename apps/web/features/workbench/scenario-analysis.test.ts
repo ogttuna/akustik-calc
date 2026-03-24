@@ -489,4 +489,31 @@ describe("scenario analysis", () => {
     expect(scenario.result?.floorSystemRatings?.Rw).toBe(62);
     expect(scenario.warnings.some((warning) => /support form was left unspecified/i.test(warning))).toBe(false);
   });
+
+  it("keeps the workspace live when a field-context number is invalid instead of crashing scenario evaluation", () => {
+    const scenario = evaluateScenario({
+      id: "invalid-field-context",
+      impactFieldContext: {
+        directPathOffsetDb: Number.NaN
+      },
+      name: "invalid field context",
+      rows: [
+        { floorRole: "floor_covering", id: "a", materialId: "ceramic_tile", thicknessMm: "8" },
+        { floorRole: "floating_screed", id: "b", materialId: "screed", thicknessMm: "50" },
+        { floorRole: "resilient_layer", id: "c", materialId: "generic_resilient_underlay", thicknessMm: "8" },
+        { floorRole: "base_structure", id: "d", materialId: "concrete", thicknessMm: "150" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+
+    expect(scenario.result).toBeNull();
+    expect(
+      scenario.warnings.some((warning) =>
+        warning.includes("DynEcho could not evaluate the current scenario and kept the workspace live instead of crashing.")
+      )
+    ).toBe(true);
+    expect(scenario.warnings.some((warning) => warning.includes("Expected number, received nan"))).toBe(true);
+  });
 });

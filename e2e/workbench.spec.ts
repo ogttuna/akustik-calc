@@ -1176,6 +1176,34 @@ test("advanced workbench shows the current coverage snapshot and next hardening 
   await expect(page.getByText("Replace bound-only support where possible", { exact: true }).first()).toBeVisible();
 });
 
+test("advanced workbench keeps invalid decimal draft input from turning into a persistent client-side crash", async ({
+  page
+}) => {
+  const pageErrors: string[] = [];
+  page.on("pageerror", (error) => {
+    pageErrors.push(String(error));
+  });
+
+  await gotoAdvancedWorkbench(page);
+
+  const directPathOffsetInput = page.getByLabel("Direct path offset (dB)");
+  await expect(directPathOffsetInput).toBeVisible();
+  await directPathOffsetInput.fill(".");
+  await directPathOffsetInput.blur();
+
+  await expect(page.getByRole("heading", { name: "DynEcho Operator Deck" })).toBeVisible();
+  await expect(directPathOffsetInput).toHaveValue(".");
+
+  await page.reload();
+
+  await expect(page.getByRole("heading", { name: "DynEcho Operator Deck" })).toBeVisible();
+  const reloadedDirectPathOffsetInput = page.getByLabel("Direct path offset (dB)");
+  await expect(reloadedDirectPathOffsetInput).toBeVisible();
+  await reloadedDirectPathOffsetInput.fill("1.5");
+  await expect(reloadedDirectPathOffsetInput).toHaveValue("1.5");
+  expect(pageErrors).toEqual([]);
+});
+
 test("workbench can move the wall lane into airborne leakage and field-flanking context", async ({ page }) => {
   await gotoAdvancedWorkbench(page);
 
