@@ -1,4 +1,49 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type APIRequestContext } from "@playwright/test";
+
+const TEST_USERNAME = process.env.DYNECHO_AUTH_USERNAME ?? "consultant";
+const TEST_PASSWORD = process.env.DYNECHO_AUTH_PASSWORD ?? "change-me";
+
+async function signIn(request: APIRequestContext) {
+  const response = await request.post("/api/auth/login", {
+    data: {
+      nextPath: "/workbench",
+      password: TEST_PASSWORD,
+      username: TEST_USERNAME
+    }
+  });
+
+  expect(response.ok()).toBeTruthy();
+}
+
+test("estimate api rejects unauthenticated requests", async () => {
+  const baseUrl = test.info().project.use.baseURL;
+
+  if (typeof baseUrl !== "string") {
+    throw new Error("Playwright baseURL is required for the unauthenticated API check.");
+  }
+
+  const response = await fetch(`${baseUrl}/api/estimate`, {
+    body: JSON.stringify({
+      layers: [{ materialId: "gypsum_board", thicknessMm: 12.5 }]
+    }),
+    headers: {
+      "content-type": "application/json"
+    },
+    method: "POST"
+  });
+
+  expect(response.status).toBe(401);
+
+  const payload = (await response.json()) as { error?: string; ok?: boolean };
+
+  expect(payload.ok).toBe(false);
+  expect(payload.error).toBe("Authentication required.");
+});
+
+test.describe("authenticated api", () => {
+  test.beforeEach(async ({ request }) => {
+    await signIn(request);
+  });
 
 test("estimate api returns screening result", async ({ request }) => {
   const response = await request.post("/api/estimate", {
@@ -1079,4 +1124,5 @@ test("estimate api can carry structured airborne leakage and field overlays on a
   expect(payload.result.airborneOverlay.detectedFamily).toBe("cavity_wall_surrogate");
   expect(payload.result.airborneOverlay.junctionFlankingGraph.totalPenaltyDb).toBeGreaterThan(0);
   expect(payload.result.metrics.estimatedRwDb).toBeLessThan(30);
+});
 });

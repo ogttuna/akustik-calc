@@ -5,11 +5,39 @@ import {
   parseSimpleWorkbenchProposalDocument
 } from "@/features/workbench/simple-workbench-proposal";
 import { renderSimpleWorkbenchProposalPdf } from "@/features/workbench/simple-workbench-proposal-pdf-server";
+import {
+  buildAuthConfigurationErrorMessage,
+  getAuthState
+} from "@/lib/auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
+  const authState = await getAuthState();
+
+  if (!authState.configured) {
+    return NextResponse.json(
+      {
+        error: buildAuthConfigurationErrorMessage(authState.missingKeys)
+      },
+      {
+        status: 503
+      }
+    );
+  }
+
+  if (!authState.session) {
+    return NextResponse.json(
+      {
+        error: "Authentication required."
+      },
+      {
+        status: 401
+      }
+    );
+  }
+
   const style = request.nextUrl.searchParams.get("style") === "simple" ? "simple" : "branded";
   let payload: unknown;
 

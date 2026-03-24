@@ -5,6 +5,20 @@ const GUIDED_CONTEXT_LABELS = {
   element_lab: "Lab element",
   field_between_rooms: "Between rooms"
 } as const;
+const TEST_USERNAME = process.env.DYNECHO_AUTH_USERNAME ?? "consultant";
+const TEST_PASSWORD = process.env.DYNECHO_AUTH_PASSWORD ?? "change-me";
+
+async function signIn(page: Page, nextPath = "/workbench") {
+  const response = await page.request.post("/api/auth/login", {
+    data: {
+      nextPath,
+      password: TEST_PASSWORD,
+      username: TEST_USERNAME
+    }
+  });
+
+  expect(response.ok()).toBeTruthy();
+}
 
 async function selectGuidedSurface(page: Page, surface: "floor" | "wall") {
   await page.getByLabel("Study type").selectOption(surface);
@@ -15,9 +29,11 @@ async function selectGuidedProjectContext(page: Page, context: keyof typeof GUID
 }
 
 test.beforeEach(async ({ page }) => {
+  await page.context().clearCookies();
   await page.addInitScript({
     content: "window.localStorage.clear(); window.sessionStorage.clear();"
   });
+  await signIn(page);
 });
 
 async function gotoSimpleWorkbench(page: Page) {
