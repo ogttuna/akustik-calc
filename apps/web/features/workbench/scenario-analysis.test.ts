@@ -237,6 +237,56 @@ describe("scenario analysis", () => {
     expect(scenario.result?.impact?.LnW ?? null).not.toBeNull();
   });
 
+  it("lets a row-level density override change the live result for local custom concrete base materials", () => {
+    const customMaterial = buildCustomMaterialDefinition({
+      draft: {
+        ...createEmptyCustomMaterialDraft(),
+        category: "mass",
+        densityKgM3: "2400",
+        name: "Custom Concrete QA"
+      },
+      existingMaterials: []
+    });
+
+    const evaluateWithDensity = (densityKgM3?: string) =>
+      evaluateScenario({
+        customMaterials: [customMaterial],
+        id: `custom-concrete-${densityKgM3 ?? "catalog"}`,
+        name: "custom concrete density",
+        rows: [
+          { floorRole: "floor_covering", id: "a", materialId: "ceramic_tile", thicknessMm: "8" },
+          { floorRole: "floating_screed", id: "b", materialId: "screed", thicknessMm: "50" },
+          {
+            dynamicStiffnessMNm3: "35",
+            floorRole: "resilient_layer",
+            id: "c",
+            materialId: "generic_resilient_underlay",
+            thicknessMm: "8"
+          },
+          {
+            densityKgM3,
+            floorRole: "base_structure",
+            id: "d",
+            materialId: customMaterial.id,
+            thicknessMm: "150"
+          }
+        ],
+        source: "current",
+        studyMode: "floor",
+        targetOutputs: TARGET_OUTPUTS
+      });
+
+    const catalogScenario = evaluateWithDensity();
+    const lighterScenario = evaluateWithDensity("1200");
+
+    expect(catalogScenario.result).not.toBeNull();
+    expect(lighterScenario.result).not.toBeNull();
+    expect(catalogScenario.result?.impact?.basis).toBe("predictor_heavy_floating_floor_iso12354_annexc_estimate");
+    expect(lighterScenario.result?.impact?.basis).toBe("predictor_heavy_floating_floor_iso12354_annexc_estimate");
+    expect(lighterScenario.result?.impact?.LnW ?? -Infinity).toBeGreaterThan(catalogScenario.result?.impact?.LnW ?? Infinity);
+    expect(lighterScenario.result?.floorSystemRatings?.Rw ?? Infinity).toBeLessThan(catalogScenario.result?.floorSystemRatings?.Rw ?? -Infinity);
+  });
+
   it("surfaces soft sanity warnings for out-of-band guided inputs without blocking calculation", () => {
     const scenario = evaluateScenario({
       airborneContext: {

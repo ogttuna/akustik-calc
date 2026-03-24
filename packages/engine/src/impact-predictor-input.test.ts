@@ -1,3 +1,4 @@
+import type { MaterialDefinition } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -6,6 +7,7 @@ import {
   maybeBuildImpactPredictorInputFromLayerStack,
   maybeInferFloorRoleLayerStack
 } from "./impact-predictor-input";
+import { getDefaultMaterialCatalog } from "./material-catalog";
 
 describe("buildImpactPredictorInputFromLayerStack", () => {
   it("infers missing roles from an untagged heavy floating floor stack", () => {
@@ -177,6 +179,40 @@ describe("buildImpactPredictorInputFromLayerStack", () => {
     expect(input.impactSystemType).toBe("combined_upper_lower_system");
     expect(input.floorCovering?.materialClass).toBe("engineered_timber_with_acoustic_underlay");
     expect(input.lowerTreatment?.type).toBe("suspended_ceiling_elastic_hanger");
+  });
+
+  it("recognizes custom concrete base materials as reinforced-concrete support", () => {
+    const customConcrete: MaterialDefinition = {
+      category: "mass",
+      densityKgM3: 1800,
+      id: "custom_concrete_qa",
+      name: "Custom Concrete QA",
+      tags: ["custom-workbench-material", "mass", "concrete", "structural"]
+    };
+
+    const input = buildImpactPredictorInputFromLayerStack(
+      [
+        { materialId: customConcrete.id, thicknessMm: 150, floorRole: "base_structure" },
+        { materialId: "generic_resilient_underlay", thicknessMm: 8, floorRole: "resilient_layer" },
+        { materialId: "screed", thicknessMm: 30, floorRole: "floating_screed" },
+        { materialId: "ceramic_tile", thicknessMm: 8, floorRole: "floor_covering" }
+      ],
+      {
+        referenceFloorType: "heavy_standard"
+      },
+      {
+        contextMode: "element_lab"
+      },
+      [customConcrete, ...getDefaultMaterialCatalog()]
+    );
+
+    expect(input.structuralSupportType).toBe("reinforced_concrete");
+    expect(input.impactSystemType).toBe("heavy_floating_floor");
+    expect(input.baseSlab).toEqual({
+      densityKgM3: 1800,
+      materialClass: "heavy_concrete",
+      thicknessMm: 150
+    });
   });
 
   it("infers steel support form, product id, engineered-timber-underlay covering, and elastic ceiling semantics", () => {

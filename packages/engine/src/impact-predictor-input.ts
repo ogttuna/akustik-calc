@@ -8,6 +8,11 @@ import { ImpactPredictorInputSchema, LayerInputSchema, type ImpactPredictorInput
 
 import { getDefaultMaterialCatalog, resolveMaterial } from "./material-catalog";
 import { ksRound1 } from "./math";
+import {
+  inferBaseSlabMaterialClassFromMaterial,
+  inferStructuralSupportTypeFromMaterial,
+  inferSupportFormFromMaterial
+} from "./structural-material-classification";
 
 type PredictorAdaptation = {
   catalogAdditions: readonly MaterialDefinition[];
@@ -939,80 +944,23 @@ function resolveStructuralSupportFromBaseLayer(
     thicknessMm: layer.thicknessMm
   };
   const rawMaterialId = (layer.materialId || "").trim().toLowerCase();
+  const structuralSupportType = inferStructuralSupportTypeFromMaterial(layer.material);
+  const materialClass = inferBaseSlabMaterialClassFromMaterial(layer.material);
+  const supportForm =
+    layer.material.id === "timber_joist_floor" && rawMaterialId === "timber_joist_floor"
+      ? "joist_or_purlin"
+      : inferSupportFormFromMaterial(layer.material);
 
-  switch (layer.material.id) {
-    case "concrete":
-      return {
-        baseSlab: {
+  return {
+    baseSlab: materialClass
+      ? {
           ...baseSlab,
-          materialClass: "heavy_concrete"
-        },
-        structuralSupportType: "reinforced_concrete"
-      };
-    case "hollow_core_plank":
-      return {
-        baseSlab: {
-          ...baseSlab,
-          materialClass: "hollow_core_plank"
-        },
-        structuralSupportType: "hollow_core"
-      };
-    case "open_web_steel_floor":
-      return {
-        baseSlab,
-        structuralSupportType: "steel_joists",
-        supportForm: "open_web_or_rolled"
-      };
-    case "steel_joist_floor":
-      return {
-        baseSlab,
-        structuralSupportType: "steel_joists",
-        supportForm: "joist_or_purlin"
-      };
-    case "lightweight_steel_floor":
-      return {
-        baseSlab,
-        structuralSupportType: "steel_joists"
-      };
-    case "timber_frame_floor":
-    case "timber_joist_floor":
-      return {
-        baseSlab: {
-          ...baseSlab,
-          materialClass: layer.material.id
-        },
-        structuralSupportType: "timber_joists",
-        supportForm: rawMaterialId === "timber_joist_floor" ? "joist_or_purlin" : undefined
-      };
-    case "open_box_timber_slab":
-      return {
-        baseSlab: {
-          ...baseSlab,
-          materialClass: "open_box_timber_slab"
-        },
-        structuralSupportType: "open_box_timber"
-      };
-    case "clt_panel":
-      return {
-        baseSlab: {
-          ...baseSlab,
-          materialClass: "clt_panel"
-        },
-        structuralSupportType: "mass_timber_clt"
-      };
-    case "composite_steel_deck":
-      return {
-        baseSlab: {
-          ...baseSlab,
-          materialClass: "composite_panel"
-        },
-        structuralSupportType: "composite_panel"
-      };
-    default:
-      return {
-        baseSlab
-      };
-  }
+          materialClass
+        }
+      : baseSlab,
+    structuralSupportType,
+    supportForm
+  };
 }
 
 function hasAmbiguousPredictorRoleTopology(layers: readonly ResolvedLayerStackEntry[]): boolean {

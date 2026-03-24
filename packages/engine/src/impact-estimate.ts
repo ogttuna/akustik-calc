@@ -3,11 +3,15 @@ import type { ImpactCalculation, ResolvedLayer } from "@dynecho/shared";
 import { getImpactConfidenceForBasis } from "./impact-confidence";
 import { buildUniformImpactMetricBasis } from "./impact-metric-basis";
 import { ksRound1, log10Safe, round1 } from "./math";
+import { inferStructuralSupportTypeFromMaterial } from "./structural-material-classification";
 
 const IMPACT_LOAD_ROLES = new Set(["floating_screed", "upper_fill", "floor_covering"]);
 
 function isHeavyConcreteBase(layer: ResolvedLayer): boolean {
-  return layer.material.id === "concrete" || layer.material.tags.includes("heavy-base");
+  return (
+    inferStructuralSupportTypeFromMaterial(layer.material) === "reinforced_concrete" ||
+    layer.material.tags.includes("heavy-base")
+  );
 }
 
 function isResilientSeparator(layer: ResolvedLayer): boolean {

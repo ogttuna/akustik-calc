@@ -7,6 +7,7 @@ import type {
   ImpactSupportingElementFamily,
   ResolvedLayer
 } from "@dynecho/shared";
+import { inferImpactSupportingElementFamilyFromMaterial } from "./structural-material-classification";
 
 const MATERIAL_ID_TO_SUPPORTING_FAMILY: Record<string, ImpactSupportingElementFamily> = {
   clt_panel: "mass_timber_clt",
@@ -73,7 +74,10 @@ export function inferImpactSupportingElementFamilyFromLayers(
   layers: readonly ResolvedLayer[] | null | undefined
 ): ImpactSupportingElementFamily | null {
   const baseStructure = layers?.find((layer) => layer.floorRole === "base_structure");
-  return supportingFamilyFromMaterialIds(baseStructure ? [baseStructure.material.id] : undefined);
+  return (
+    inferImpactSupportingElementFamilyFromMaterial(baseStructure?.material) ??
+    supportingFamilyFromMaterialIds(baseStructure ? [baseStructure.material.id] : undefined)
+  );
 }
 
 export function inferImpactSupportingElementFamilyFromExactFloorSystem(

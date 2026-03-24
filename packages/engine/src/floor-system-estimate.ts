@@ -14,6 +14,7 @@ import { getImpactConfidenceForBasis } from "./impact-confidence";
 import { buildUniformImpactMetricBasis } from "./impact-metric-basis";
 import { deriveLightweightSteelFl28Estimate } from "./lightweight-steel-fl28-estimate";
 import { round1 } from "./math";
+import { inferStructuralSupportTypeFromMaterial } from "./structural-material-classification";
 
 type StructuralFamily =
   | "composite_panel"
@@ -71,11 +72,30 @@ function getSystemStructuralFamily(system: ExactFloorSystem): StructuralFamily {
 }
 
 function getLayerStructuralFamily(layers: readonly ResolvedLayer[]): StructuralFamily {
-  const baseMaterialIds = layers
-    .filter((layer) => layer.floorRole === "base_structure")
-    .map((layer) => layer.material.id);
+  for (const layer of layers) {
+    if (layer.floorRole !== "base_structure") {
+      continue;
+    }
 
-  return structuralFamilyFromMaterialIds(baseMaterialIds);
+    switch (inferStructuralSupportTypeFromMaterial(layer.material)) {
+      case "reinforced_concrete":
+        return "reinforced_concrete";
+      case "hollow_core":
+        return "hollow_core_precast";
+      case "steel_joists":
+        return "lightweight_steel";
+      case "timber_joists":
+        return "timber_frame";
+      case "open_box_timber":
+        return "open_box_timber";
+      case "mass_timber_clt":
+        return "mass_timber_clt";
+      case "composite_panel":
+        return "composite_panel";
+    }
+  }
+
+  return "unknown";
 }
 
 function getProfile(hasUpper: boolean, hasLower: boolean, hasFloatingScreed: boolean): FloorProfile {
