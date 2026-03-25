@@ -185,7 +185,7 @@ export function LayerEditor({
           const materialName = material.name;
 
           return (
-            <article className="pointer-card rounded-[1.45rem] border hairline p-4" key={row.id}>
+            <article className="pointer-card rounded-lg border hairline p-4" key={row.id}>
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full border hairline bg-[color:var(--panel-strong)]">

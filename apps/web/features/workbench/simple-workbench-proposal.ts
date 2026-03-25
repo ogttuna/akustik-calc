@@ -19,6 +19,10 @@ import {
   DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_ISSUE_PURPOSE,
   DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_VALIDITY_NOTE
 } from "./simple-workbench-proposal-policy-presets";
+import type {
+  WorkbenchResponseCurveFigure,
+  WorkbenchResponseCurveSeries
+} from "./response-curve-model";
 
 export type SimpleWorkbenchProposalMetric = {
   detail: string;
@@ -121,6 +125,7 @@ export type SimpleWorkbenchProposalDocument = {
   recommendationItems: readonly SimpleWorkbenchProposalBriefItem[];
   reportProfile: ReportProfile;
   reportProfileLabel: string;
+  responseCurves?: readonly WorkbenchResponseCurveFigure[];
   studyModeLabel: string;
   studyContextLabel: string;
   validationDetail: string;
@@ -134,6 +139,69 @@ function isObjectRecord(value: unknown): value is Record<string, unknown> {
 
 function isStringArray(value: unknown): value is string[] {
   return Array.isArray(value) && value.every((entry) => typeof entry === "string");
+}
+
+function isNumberArray(value: unknown): value is number[] {
+  return Array.isArray(value) && value.every((entry) => typeof entry === "number" && Number.isFinite(entry));
+}
+
+function normalizeResponseCurveSeries(value: unknown): WorkbenchResponseCurveSeries | null {
+  if (!isObjectRecord(value)) {
+    return null;
+  }
+
+  if (
+    typeof value.id !== "string" ||
+    typeof value.label !== "string" ||
+    typeof value.active !== "boolean" ||
+    !isNumberArray(value.frequenciesHz) ||
+    !isNumberArray(value.valuesDb) ||
+    value.frequenciesHz.length === 0 ||
+    value.frequenciesHz.length !== value.valuesDb.length
+  ) {
+    return null;
+  }
+
+  return {
+    active: value.active,
+    frequenciesHz: value.frequenciesHz,
+    id: value.id,
+    label: value.label,
+    valuesDb: value.valuesDb
+  };
+}
+
+function normalizeResponseCurveFigure(value: unknown): WorkbenchResponseCurveFigure | null {
+  if (!isObjectRecord(value) || !Array.isArray(value.series)) {
+    return null;
+  }
+
+  const series = value.series
+    .map((entry) => normalizeResponseCurveSeries(entry))
+    .filter((entry): entry is WorkbenchResponseCurveSeries => entry !== null);
+
+  if (
+    series.length === 0 ||
+    typeof value.id !== "string" ||
+    (value.id !== "airborne" && value.id !== "impact") ||
+    typeof value.title !== "string" ||
+    typeof value.note !== "string" ||
+    typeof value.domainLabel !== "string" ||
+    typeof value.direction !== "string" ||
+    (value.direction !== "higher_better" && value.direction !== "lower_better")
+  ) {
+    return null;
+  }
+
+  return {
+    activeSeriesId: typeof value.activeSeriesId === "string" ? value.activeSeriesId : undefined,
+    direction: value.direction,
+    domainLabel: value.domainLabel,
+    id: value.id,
+    note: value.note,
+    series,
+    title: value.title
+  };
 }
 
 function normalizeCoverageItem(value: unknown): SimpleWorkbenchProposalCoverageItem | null {
@@ -187,6 +255,11 @@ export function parseSimpleWorkbenchProposalDocument(value: unknown): SimpleWork
   const methodDossierCards = Array.isArray(value.methodDossierCards) ? value.methodDossierCards : [];
   const methodTraceGroups = Array.isArray(value.methodTraceGroups) ? value.methodTraceGroups : [];
   const corridorDossierCards = Array.isArray(value.corridorDossierCards) ? value.corridorDossierCards : [];
+  const responseCurves = Array.isArray(value.responseCurves)
+    ? value.responseCurves
+        .map((entry) => normalizeResponseCurveFigure(entry))
+        .filter((entry): entry is WorkbenchResponseCurveFigure => entry !== null)
+    : [];
   const consultantAddress =
     typeof value.consultantAddress === "string" ? value.consultantAddress : "Office address not entered";
   const consultantEmail =
@@ -314,7 +387,8 @@ export function parseSimpleWorkbenchProposalDocument(value: unknown): SimpleWork
         ? value.reportProfile
         : inferSimpleWorkbenchReportProfile(
             typeof value.reportProfileLabel === "string" ? value.reportProfileLabel : ""
-          )
+          ),
+    responseCurves: responseCurves.length > 0 ? responseCurves : undefined
   };
 }
 
@@ -424,6 +498,547 @@ function formatCoverageStatus(status: SimpleWorkbenchProposalCoverageStatus): st
     default:
       return "Unsupported on lane";
   }
+}
+
+type ProposalReportStandardReference = {
+  code: string;
+  detail: string;
+  label: string;
+};
+
+type ProposalMetricDirection = "higher" | "lower" | "neutral";
+
+type ProposalMetricChartRow = {
+  detail: string;
+  direction: ProposalMetricDirection;
+  label: string;
+  markerPercent: string;
+  valueLabel: string;
+};
+
+const PROPOSAL_GRAPH_MIN_DB = 30;
+const PROPOSAL_GRAPH_MAX_DB = 80;
+
+function normalizeMetricSlug(label: string): string {
+  return label
+    .trim()
+    .toLowerCase()
+    .replace(/[’']/gu, "'")
+    .replace(/\s+/gu, "");
+}
+
+function proposalHasMetric(document: SimpleWorkbenchProposalDocument, matchers: readonly RegExp[]): boolean {
+  return [...document.metrics, ...document.coverageItems].some((item) =>
+    matchers.some((matcher) => matcher.test(normalizeMetricSlug(item.label)))
+  );
+}
+
+function proposalJoinedNarrative(document: SimpleWorkbenchProposalDocument): string {
+  return [
+    document.contextLabel,
+    document.dynamicBranchLabel,
+    document.dynamicBranchDetail,
+    document.validationLabel,
+    document.validationDetail,
+    document.executiveSummary,
+    document.studyModeLabel,
+    document.studyContextLabel,
+    document.methodDossierHeadline,
+    document.corridorDossierHeadline,
+    ...document.citations.map((citation) => `${citation.label} ${citation.detail}`),
+    ...document.methodTraceGroups.flatMap((group) => [group.label, group.detail, ...group.notes])
+  ]
+    .join(" ")
+    .toLowerCase();
+}
+
+function inferProposalStandardReferences(
+  document: SimpleWorkbenchProposalDocument
+): readonly ProposalReportStandardReference[] {
+  const hasAirborne = proposalHasMetric(document, [/^(rw|r'w|dnt,w|dnt,a|stc|c|ctr)$/u]);
+  const hasImpact = proposalHasMetric(document, [/^(ln,w|l'n,w|l'nt,w|l'nt,50|lnt,a|l'nt,a|ci|ci,50-2500|deltalw)$/u]);
+  const joinedNarrative = proposalJoinedNarrative(document);
+  const references: ProposalReportStandardReference[] = [];
+
+  if (hasAirborne) {
+    references.push({
+      code: "ISO 717-1",
+      detail:
+        "Weighted airborne ratings on this issue are stated using ISO 717-1 single-number language, including airborne adaptation terms only when the active route can defend them.",
+      label: "Weighted airborne rating basis"
+    });
+  }
+
+  if (hasImpact) {
+    references.push({
+      code: "ISO 717-2",
+      detail:
+        "Weighted impact ratings on this issue are stated using ISO 717-2 language. DynEcho only presents Ln,w, L'n,w, L'nT,w, CI, or DeltaLw when the active route exposes them defensibly.",
+      label: "Weighted impact rating basis"
+    });
+  }
+
+  if (joinedNarrative.includes("field airborne") || joinedNarrative.includes("room-to-room field") || joinedNarrative.includes("field route")) {
+    references.push({
+      code: "ISO 16283-1",
+      detail:
+        "Where field airborne continuation is active, the report keeps the room-to-room measurement posture explicit and does not relabel the result as a laboratory claim.",
+      label: "Field airborne continuation"
+    });
+  }
+
+  if (
+    joinedNarrative.includes("field impact") ||
+    joinedNarrative.includes("field-side") ||
+    joinedNarrative.includes("standardized room volume") ||
+    joinedNarrative.includes("field continuation")
+  ) {
+    references.push({
+      code: "ISO 16283-2",
+      detail:
+        "Where field impact continuation is active, the report keeps field-side normalization posture explicit and avoids presenting it as direct laboratory evidence.",
+      label: "Field impact continuation"
+    });
+  }
+
+  if (
+    joinedNarrative.includes("estimate") ||
+    joinedNarrative.includes("predict") ||
+    joinedNarrative.includes("floating floor") ||
+    joinedNarrative.includes("standardized room volume")
+  ) {
+    references.push({
+      code: document.studyModeLabel.trim().toLowerCase().includes("wall") ? "ISO 12354-1" : "ISO 12354-2",
+      detail:
+        "Prediction routes remain labelled as estimates on this sheet. DAC output is transparent about solver posture and is not presented as an accredited laboratory or field certificate.",
+      label: "Prediction route posture"
+    });
+  }
+
+  if (references.length === 0) {
+    references.push({
+      code: "Method basis",
+      detail:
+        "The report keeps route choice, validation posture, and cited evidence explicit so the packaged result can be reviewed without overstating confidence.",
+      label: "Explicit route disclosure"
+    });
+  }
+
+  return references;
+}
+
+function parseProposalMetricNumericValue(value: string): number | null {
+  const match = value.match(/-?\d+(?:[.,]\d+)?/u);
+
+  if (!match) {
+    return null;
+  }
+
+  const parsed = Number(match[0].replace(",", "."));
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+function inferProposalMetricDirection(label: string): ProposalMetricDirection {
+  const slug = normalizeMetricSlug(label);
+
+  if (/^(rw|r'w|dnt,w|dnt,a|stc|deltalw)$/u.test(slug)) {
+    return "higher";
+  }
+
+  if (/^(ln,w|l'n,w|l'nt,w|l'nt,50|lnt,a|l'nt,a|ci|ci,50-2500)$/u.test(slug)) {
+    return "lower";
+  }
+
+  return "neutral";
+}
+
+function buildProposalMetricChartRows(document: SimpleWorkbenchProposalDocument): readonly ProposalMetricChartRow[] {
+  const primaryMetricSlug = normalizeMetricSlug(document.primaryMetricLabel);
+  const rows: ProposalMetricChartRow[] = [];
+  const seenLabels = new Set<string>();
+  const orderedMetrics = [...document.metrics].sort((left, right) => {
+    const leftPrimary = normalizeMetricSlug(left.label) === primaryMetricSlug ? 1 : 0;
+    const rightPrimary = normalizeMetricSlug(right.label) === primaryMetricSlug ? 1 : 0;
+    return rightPrimary - leftPrimary;
+  });
+
+  for (const metric of orderedMetrics) {
+    const metricSlug = normalizeMetricSlug(metric.label);
+    const numericValue = parseProposalMetricNumericValue(metric.value);
+
+    if (seenLabels.has(metricSlug) || numericValue === null) {
+      continue;
+    }
+
+    const direction = inferProposalMetricDirection(metric.label);
+
+    if (direction === "neutral" && rows.length >= 4) {
+      continue;
+    }
+
+    const markerPercent = `${Math.max(
+      0,
+      Math.min(100, ((numericValue - PROPOSAL_GRAPH_MIN_DB) / (PROPOSAL_GRAPH_MAX_DB - PROPOSAL_GRAPH_MIN_DB)) * 100)
+    ).toFixed(2)}%`;
+
+    rows.push({
+      detail: metric.detail,
+      direction,
+      label: metric.label,
+      markerPercent,
+      valueLabel: metric.value
+    });
+    seenLabels.add(metricSlug);
+
+    if (rows.length >= 4) {
+      break;
+    }
+  }
+
+  return rows;
+}
+
+function renderProposalMetricPlotSvg(rows: readonly ProposalMetricChartRow[]): string {
+  if (rows.length === 0) {
+    return "";
+  }
+
+  const width = 620;
+  const height = 288;
+  const marginTop = 18;
+  const marginRight = 22;
+  const marginBottom = 56;
+  const marginLeft = 52;
+  const plotWidth = width - marginLeft - marginRight;
+  const plotHeight = height - marginTop - marginBottom;
+  const valueRange = PROPOSAL_GRAPH_MAX_DB - PROPOSAL_GRAPH_MIN_DB;
+  const points = rows.map((row, index) => {
+    const numericValue = parseProposalMetricNumericValue(row.valueLabel) ?? PROPOSAL_GRAPH_MIN_DB;
+    const x =
+      rows.length === 1 ? marginLeft + plotWidth / 2 : marginLeft + (plotWidth * index) / Math.max(1, rows.length - 1);
+    const y = marginTop + ((PROPOSAL_GRAPH_MAX_DB - numericValue) / valueRange) * plotHeight;
+    return {
+      ...row,
+      x,
+      y
+    };
+  });
+  const polylinePoints = points.map((point) => `${point.x.toFixed(2)},${point.y.toFixed(2)}`).join(" ");
+  const gridValues = Array.from({ length: valueRange / 10 + 1 }, (_, index) => PROPOSAL_GRAPH_MIN_DB + index * 10);
+
+  return `
+    <svg class="result-plot" viewBox="0 0 ${width} ${height}" role="img" aria-label="Weighted acoustic result plot">
+      ${gridValues
+        .map((value) => {
+          const y = marginTop + ((PROPOSAL_GRAPH_MAX_DB - value) / valueRange) * plotHeight;
+          return `
+            <line class="plot-grid-line" x1="${marginLeft}" x2="${width - marginRight}" y1="${y.toFixed(2)}" y2="${y.toFixed(2)}"></line>
+            <text class="plot-axis-label" x="${marginLeft - 10}" y="${(y + 4).toFixed(2)}" text-anchor="end">${value}</text>
+          `;
+        })
+        .join("")}
+      <line class="plot-frame-line" x1="${marginLeft}" x2="${marginLeft}" y1="${marginTop}" y2="${height - marginBottom}"></line>
+      <line class="plot-frame-line" x1="${marginLeft}" x2="${width - marginRight}" y1="${height - marginBottom}" y2="${height - marginBottom}"></line>
+      ${
+        points.length > 1
+          ? `<polyline class="plot-series-line" fill="none" points="${polylinePoints}"></polyline>`
+          : ""
+      }
+      ${points
+        .map((point) => {
+          const directionClass =
+            point.direction === "higher"
+              ? "plot-point-higher"
+              : point.direction === "lower"
+                ? "plot-point-lower"
+                : "plot-point-neutral";
+          const labelY = point.y - 12;
+          const xLabel = point.x;
+          return `
+            <circle class="plot-point ${directionClass}" cx="${point.x.toFixed(2)}" cy="${point.y.toFixed(2)}" r="6"></circle>
+            <rect class="plot-tag ${directionClass}" x="${(xLabel - 26).toFixed(2)}" y="${(labelY - 14).toFixed(2)}" width="52" height="20" rx="0"></rect>
+            <text class="plot-tag-label" x="${xLabel.toFixed(2)}" y="${(labelY).toFixed(2)}" text-anchor="middle">${escapeHtml(point.valueLabel)}</text>
+            <text class="plot-metric-label" x="${point.x.toFixed(2)}" y="${(height - marginBottom + 22).toFixed(2)}" text-anchor="middle">${escapeHtml(point.label)}</text>
+          `;
+        })
+        .join("")}
+    </svg>
+  `;
+}
+
+function renderProposalMetricHighlights(metrics: readonly SimpleWorkbenchProposalMetric[]): string {
+  const visibleMetrics = metrics.slice(0, 4);
+
+  if (visibleMetrics.length === 0) {
+    return `
+      <div class="method-box">
+        <h3>No live result set packaged</h3>
+        <p>Build a supported stack and active route first so DAC can issue a numeric result schedule.</p>
+      </div>
+    `;
+  }
+
+  return visibleMetrics
+    .map(
+      (metric) => `
+        <div class="result-chip">
+          <strong>${escapeHtml(metric.label)}</strong>
+          <span>${escapeHtml(metric.value)}</span>
+          <small>${escapeHtml(metric.detail)}</small>
+        </div>
+      `
+    )
+    .join("");
+}
+
+function renderProposalStandardPills(standards: readonly ProposalReportStandardReference[]): string {
+  return standards
+    .slice(0, 4)
+    .map(
+      (standard) => `
+        <div class="standard-pill">
+          <strong>${escapeHtml(standard.code)}</strong>
+          <span>${escapeHtml(standard.label)}</span>
+        </div>
+      `
+    )
+    .join("");
+}
+
+function renderProposalStandardCards(standards: readonly ProposalReportStandardReference[]): string {
+  return standards
+    .map(
+      (standard) => `
+        <div class="standard-card">
+          <div class="eyebrow" style="margin-bottom: 8px;">${escapeHtml(standard.code)}</div>
+          <h3>${escapeHtml(standard.label)}</h3>
+          <p>${escapeHtml(standard.detail)}</p>
+        </div>
+      `
+    )
+    .join("");
+}
+
+function renderProposalMetricGraph(document: SimpleWorkbenchProposalDocument): string {
+  const rows = buildProposalMetricChartRows(document);
+
+  if (rows.length === 0) {
+    return `
+      <div class="result-chart-card">
+        <div class="result-chart-head">
+          <div>
+            <div class="eyebrow">Weighted Result Graph</div>
+            <h3>Acoustic result profile</h3>
+            <p>No numeric weighted indices are packaged on this issue yet.</p>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="result-chart-card">
+      <div class="result-chart-head">
+        <div>
+          <div class="eyebrow">Weighted Result Graph</div>
+          <h3>Acoustic result profile</h3>
+          <p>Primary answer first. Weighted airborne ratings read higher-is-better; weighted impact ratings read lower-is-better on the shared dB reference band.</p>
+        </div>
+        <div class="chart-meta">${PROPOSAL_GRAPH_MIN_DB} to ${PROPOSAL_GRAPH_MAX_DB} dB reference band</div>
+      </div>
+      <div class="plot-shell">
+        ${renderProposalMetricPlotSvg(rows)}
+      </div>
+      <div class="result-legend-strip">
+        ${rows
+          .map((row) => {
+            const directionLabel =
+              row.direction === "higher"
+                ? "Higher is better"
+                : row.direction === "lower"
+                  ? "Lower is better"
+                  : "Reference scale";
+
+            return `
+              <div class="result-legend-row">
+                <div class="result-row-copy">
+                  <strong>${escapeHtml(row.label)}</strong>
+                  <span>${escapeHtml(row.valueLabel)}</span>
+                  <small>${escapeHtml(directionLabel)} · ${escapeHtml(row.detail)}</small>
+                </div>
+              </div>
+            `;
+          })
+          .join("")}
+      </div>
+    </div>
+  `;
+}
+
+function formatCurveFrequencyLabel(frequencyHz: number): string {
+  if (frequencyHz >= 1000) {
+    const kiloHertz = frequencyHz / 1000;
+    return `${Number.isInteger(kiloHertz) ? kiloHertz : kiloHertz.toFixed(kiloHertz >= 2 ? 1 : 2)}k`;
+  }
+
+  return String(frequencyHz);
+}
+
+function buildCurveFrequencyAxis(figure: WorkbenchResponseCurveFigure): number[] {
+  return Array.from(new Set(figure.series.flatMap((series) => series.frequenciesHz))).sort((left, right) => left - right);
+}
+
+function buildCurveValueDomain(figure: WorkbenchResponseCurveFigure): { max: number; min: number } {
+  const values = figure.series.flatMap((series) => series.valuesDb);
+
+  if (values.length === 0) {
+    return { max: 80, min: 0 };
+  }
+
+  return {
+    max: Math.ceil(Math.max(...values) / 5) * 5 + 5,
+    min: Math.max(0, Math.floor(Math.min(...values) / 5) * 5 - 5)
+  };
+}
+
+function renderProposalResponseCurveSvg(figure: WorkbenchResponseCurveFigure): string {
+  const frequencies = buildCurveFrequencyAxis(figure);
+
+  if (frequencies.length === 0) {
+    return "";
+  }
+
+  const width = 620;
+  const height = 288;
+  const marginTop = 18;
+  const marginRight = 16;
+  const marginBottom = 44;
+  const marginLeft = 50;
+  const plotWidth = width - marginLeft - marginRight;
+  const plotHeight = height - marginTop - marginBottom;
+  const minFrequency = Math.min(...frequencies);
+  const maxFrequency = Math.max(...frequencies);
+  const minLog = Math.log10(minFrequency);
+  const maxLog = Math.log10(maxFrequency);
+  const valueDomain = buildCurveValueDomain(figure);
+  const valueRange = Math.max(1, valueDomain.max - valueDomain.min);
+  const gridValues = Array.from(
+    { length: Math.floor((valueDomain.max - valueDomain.min) / 10) + 1 },
+    (_, index) => valueDomain.min + index * 10
+  );
+
+  const getX = (frequencyHz: number) => {
+    if (maxLog === minLog) {
+      return marginLeft + plotWidth / 2;
+    }
+
+    return marginLeft + ((Math.log10(frequencyHz) - minLog) / (maxLog - minLog)) * plotWidth;
+  };
+  const getY = (valueDb: number) => marginTop + ((valueDomain.max - valueDb) / valueRange) * plotHeight;
+
+  return `
+    <svg class="result-plot" viewBox="0 0 ${width} ${height}" role="img" aria-label="${escapeHtml(figure.title)}">
+      ${gridValues
+        .map((value) => {
+          const y = getY(value);
+          return `
+            <line class="plot-grid-line" x1="${marginLeft}" x2="${width - marginRight}" y1="${y.toFixed(2)}" y2="${y.toFixed(2)}"></line>
+            <text class="plot-axis-label" x="${marginLeft - 10}" y="${(y + 4).toFixed(2)}" text-anchor="end">${value}</text>
+          `;
+        })
+        .join("")}
+      ${frequencies
+        .map((frequencyHz) => {
+          const x = getX(frequencyHz);
+          return `
+            <line class="plot-grid-line plot-grid-line-vertical" x1="${x.toFixed(2)}" x2="${x.toFixed(2)}" y1="${marginTop}" y2="${height - marginBottom}"></line>
+            <text class="plot-axis-label" x="${x.toFixed(2)}" y="${(height - marginBottom + 18).toFixed(2)}" text-anchor="middle">${escapeHtml(formatCurveFrequencyLabel(frequencyHz))}</text>
+          `;
+        })
+        .join("")}
+      <line class="plot-frame-line" x1="${marginLeft}" x2="${marginLeft}" y1="${marginTop}" y2="${height - marginBottom}"></line>
+      <line class="plot-frame-line" x1="${marginLeft}" x2="${width - marginRight}" y1="${height - marginBottom}" y2="${height - marginBottom}"></line>
+      ${figure.series
+        .map((series) => {
+          const points = series.frequenciesHz
+            .map((frequencyHz, index) => {
+              const value = series.valuesDb[index];
+
+              if (!Number.isFinite(value)) {
+                return null;
+              }
+
+              return `${getX(frequencyHz).toFixed(2)},${getY(value).toFixed(2)}`;
+            })
+            .filter((point): point is string => point !== null)
+            .join(" ");
+          const seriesClass = `curve-series-line curve-series-line-${escapeHtml(series.id)}${series.active ? " curve-series-line-active" : ""}`;
+
+          return `
+            <polyline class="${seriesClass}" fill="none" points="${points}"></polyline>
+            ${series.frequenciesHz
+              .map((frequencyHz, index) => {
+                const value = series.valuesDb[index];
+
+                if (!Number.isFinite(value)) {
+                  return "";
+                }
+
+                return `<circle class="curve-series-point curve-series-point-${escapeHtml(series.id)}${series.active ? " curve-series-point-active" : ""}" cx="${getX(frequencyHz).toFixed(2)}" cy="${getY(value).toFixed(2)}" r="${series.active ? "3.4" : "2.4"}"></circle>`;
+              })
+              .join("")}
+          `;
+        })
+        .join("")}
+      <text class="plot-axis-title" x="${(marginLeft + plotWidth / 2).toFixed(2)}" y="${(height - 8).toFixed(2)}" text-anchor="middle">Frequency (Hz)</text>
+      <text class="plot-axis-title" transform="translate(14 ${(marginTop + plotHeight / 2).toFixed(2)}) rotate(-90)" text-anchor="middle">Level (dB)</text>
+    </svg>
+  `;
+}
+
+function renderProposalResponseCurves(document: SimpleWorkbenchProposalDocument): string {
+  const figures = document.responseCurves ?? [];
+
+  if (figures.length === 0) {
+    return renderProposalMetricGraph(document);
+  }
+
+  return `
+    <div class="response-curve-grid">
+      ${figures
+        .map((figure) => `
+          <div class="result-chart-card">
+            <div class="result-chart-head">
+              <div>
+                <div class="eyebrow">${figure.id === "impact" ? "Impact Curve" : "Airborne Curve"}</div>
+                <h3>${escapeHtml(figure.title)}</h3>
+                <p>${escapeHtml(figure.note)}</p>
+              </div>
+              <div class="chart-meta">${escapeHtml(figure.domainLabel)}</div>
+            </div>
+            <div class="plot-shell">
+              ${renderProposalResponseCurveSvg(figure)}
+            </div>
+            <div class="result-legend-strip">
+              ${figure.series
+                .map(
+                  (series) => `
+                    <div class="result-legend-row">
+                      <div class="curve-legend-swatch curve-legend-swatch-${escapeHtml(series.id)}"></div>
+                      <div class="result-row-copy">
+                        <strong>${escapeHtml(series.label)}</strong>
+                        <small>${series.active ? "Active answer curve on this lane." : "Supporting comparison curve."}</small>
+                      </div>
+                    </div>
+                  `
+                )
+                .join("")}
+            </div>
+          </div>
+        `)
+        .join("")}
+    </div>
+  `;
 }
 
 function renderCoverageRows(items: readonly SimpleWorkbenchProposalCoverageItem[]): string {
@@ -764,6 +1379,7 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
   const liveCoverageCount = dossier.readyCoverageCount;
   const parkedCoverageCount = dossier.parkedCoverageCount;
   const unsupportedCoverageCount = dossier.unsupportedCoverageCount;
+  const standardReferences = inferProposalStandardReferences(document);
   const stackDensityCount = document.layers.filter((layer) => typeof layer.densityLabel === "string" && layer.densityLabel.trim().length > 0).length;
   const stackSurfaceMassCount = document.layers.filter(
     (layer) => typeof layer.surfaceMassLabel === "string" && layer.surfaceMassLabel.trim().length > 0
@@ -778,11 +1394,12 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
     <style>
       :root {
         color-scheme: light;
-        --ink: #17302d;
-        --ink-soft: #49625e;
-        --line: #d6ddd8;
-        --paper: #f6f4ef;
-        --panel: #fffdf8;
+        --ink: #193246;
+        --ink-faint: #74879a;
+        --ink-soft: #456079;
+        --line: #c6d1dc;
+        --paper: #edf2f6;
+        --panel: #ffffff;
         --accent: ${branding.accent};
         --accent-soft: ${branding.accentSoft};
         --brand-hero-from: ${branding.heroFrom};
@@ -806,7 +1423,7 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
         margin: 0;
         color: var(--ink);
         background: var(--paper);
-        font-family: "Georgia", "Times New Roman", serif;
+        font-family: Arial, "Helvetica Neue", sans-serif;
       }
 
       .sheet {
@@ -817,7 +1434,7 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
       }
 
       .frame {
-        border: 1px solid var(--line);
+        border: 1.4px solid var(--ink);
         background: var(--panel);
       }
 
@@ -838,9 +1455,9 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
 
       h1 {
         margin: 14px 0 6px;
-        font-size: 30px;
-        line-height: 1;
-        letter-spacing: -0.04em;
+        font-size: 28px;
+        line-height: 1.06;
+        letter-spacing: -0.03em;
       }
 
       .lede {
@@ -881,7 +1498,7 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
       .metric,
       .note-box {
         border: 1px solid var(--line);
-        background: #fffdfa;
+        background: #ffffff;
         padding: 12px 14px;
       }
 
@@ -911,8 +1528,9 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
       }
 
       .primary-metric {
-        border-color: color-mix(in srgb, var(--accent) 32%, transparent);
-        background: var(--accent-soft);
+        border-left: 4px solid var(--accent);
+        border-color: var(--line);
+        background: color-mix(in srgb, var(--accent) 8%, white);
       }
 
       .section {
@@ -941,10 +1559,10 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
 
       .cover-hero {
         padding: 16mm 12mm 14mm;
-        border-bottom: 1px solid var(--line);
+        border-bottom: 1.4px solid var(--ink);
         background:
-          radial-gradient(circle at top right, color-mix(in srgb, var(--accent) 18%, transparent), transparent 45%),
-          linear-gradient(135deg, var(--brand-hero-from), var(--brand-hero-to));
+          linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 251, 253, 0.98)),
+          linear-gradient(90deg, color-mix(in srgb, var(--accent) 10%, transparent), transparent 30%);
       }
 
       .cover-grid,
@@ -963,11 +1581,11 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
       }
 
       .cover-title {
-        max-width: 11ch;
+        max-width: none;
         margin: 18px 0 0;
-        font-size: 44px;
-        line-height: 0.94;
-        letter-spacing: -0.05em;
+        font-size: 38px;
+        line-height: 0.98;
+        letter-spacing: -0.04em;
       }
 
       .brand-hero-row {
@@ -990,9 +1608,9 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
         display: flex;
         align-items: center;
         justify-content: center;
-        border: 1px solid var(--brand-line);
-        background: var(--brand-strong);
-        color: #fff8f2;
+        border: 1px solid var(--ink);
+        background: var(--ink);
+        color: #ffffff;
         font: 700 24px/1 Arial, sans-serif;
         letter-spacing: 0.16em;
       }
@@ -1001,8 +1619,8 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
         width: 68px;
         height: 68px;
         object-fit: contain;
-        border: 1px solid var(--brand-line);
-        background: rgba(255, 253, 248, 0.88);
+        border: 1px solid var(--ink);
+        background: #ffffff;
         padding: 8px;
       }
 
@@ -1022,8 +1640,8 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
       .template-pill {
         display: inline-flex;
         align-items: center;
-        border: 1px solid var(--brand-line);
-        background: rgba(255, 253, 248, 0.82);
+        border: 1px solid var(--ink);
+        background: #ffffff;
         padding: 8px 12px;
         font: 700 10px/1.4 Arial, sans-serif;
         letter-spacing: 0.18em;
@@ -1037,6 +1655,352 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
         color: var(--ink);
       }
 
+      .report-kicker-row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-top: 20px;
+      }
+
+      .dac-mark {
+        width: 70px;
+        height: 70px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--ink);
+        background: var(--ink);
+        color: #ffffff;
+        font: 700 28px/1 Arial, sans-serif;
+        letter-spacing: 0.14em;
+      }
+
+      .report-series {
+        margin-top: 6px;
+        font: 600 11px/1.6 Arial, sans-serif;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--ink-soft);
+      }
+
+      .cover-standard-strip {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        margin-top: 18px;
+      }
+
+      .standard-pill {
+        min-width: 0;
+        border: 1px solid var(--line);
+        background: #ffffff;
+        padding: 10px 12px;
+      }
+
+      .standard-pill strong {
+        display: block;
+        font: 700 11px/1.2 Arial, sans-serif;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--ink);
+      }
+
+      .standard-pill span {
+        display: block;
+        margin-top: 6px;
+        font: 400 11px/1.5 Arial, sans-serif;
+        color: var(--ink-soft);
+      }
+
+      .result-board,
+      .standards-grid {
+        display: grid;
+        gap: 14px;
+      }
+
+      .result-board {
+        grid-template-columns: minmax(0, 0.68fr) minmax(0, 1fr);
+        align-items: start;
+      }
+
+      .standards-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .result-brief {
+        display: grid;
+        gap: 12px;
+      }
+
+      .result-chip-grid {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .result-chip,
+      .standard-card {
+        border: 1px solid var(--line);
+        background: #ffffff;
+        padding: 14px;
+      }
+
+      .result-chip strong,
+      .standard-card h3 {
+        display: block;
+        color: var(--ink);
+      }
+
+      .result-chip strong {
+        font: 700 11px/1.4 Arial, sans-serif;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      .result-chip span {
+        display: block;
+        margin-top: 7px;
+        font: 700 18px/1.25 Arial, sans-serif;
+        color: var(--ink);
+      }
+
+      .result-chip small,
+      .standard-card p {
+        display: block;
+        margin-top: 8px;
+        font: 400 12px/1.6 Arial, sans-serif;
+        color: var(--ink-soft);
+      }
+
+      .standard-card h3 {
+        margin: 0;
+        font-size: 16px;
+        line-height: 1.3;
+      }
+
+      .result-chart-card {
+        border: 1px solid var(--line);
+        background: #ffffff;
+        padding: 18px;
+      }
+
+      .result-chart-head {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .result-chart-head h3 {
+        margin: 8px 0 0;
+        font-size: 20px;
+        letter-spacing: -0.03em;
+      }
+
+      .result-chart-head p {
+        margin: 8px 0 0;
+        font: 400 12px/1.7 Arial, sans-serif;
+        color: var(--ink-soft);
+      }
+
+      .chart-meta {
+        flex-shrink: 0;
+        font: 700 10px/1.4 Arial, sans-serif;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--ink-faint);
+      }
+
+      .plot-shell {
+        margin-top: 14px;
+        border: 1px solid var(--line);
+        background: linear-gradient(180deg, rgba(246, 249, 252, 0.86), rgba(255, 255, 255, 0.98));
+        padding: 12px;
+      }
+
+      .result-plot {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      .plot-grid-line {
+        stroke: rgba(116, 135, 154, 0.35);
+        stroke-width: 1;
+      }
+
+      .plot-grid-line-vertical {
+        stroke: rgba(116, 135, 154, 0.18);
+      }
+
+      .plot-frame-line {
+        stroke: var(--ink);
+        stroke-width: 1.2;
+      }
+
+      .plot-axis-label,
+      .plot-metric-label,
+      .plot-tag-label {
+        font-family: Arial, "Helvetica Neue", sans-serif;
+      }
+
+      .plot-axis-label {
+        fill: var(--ink-faint);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+      }
+
+      .plot-axis-title {
+        fill: var(--ink-faint);
+        font: 700 10px/1.4 Arial, sans-serif;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .plot-series-line {
+        stroke: color-mix(in srgb, var(--accent) 44%, var(--ink));
+        stroke-width: 2.4;
+        stroke-dasharray: 4 4;
+      }
+
+      .plot-point {
+        stroke: var(--ink);
+        stroke-width: 2;
+      }
+
+      .plot-point-higher {
+        fill: color-mix(in srgb, var(--accent) 60%, white);
+      }
+
+      .plot-point-lower {
+        fill: color-mix(in srgb, var(--ink) 18%, white);
+      }
+
+      .plot-point-neutral {
+        fill: #ffffff;
+      }
+
+      .plot-tag {
+        stroke: var(--ink);
+        stroke-width: 1;
+        fill: rgba(255, 255, 255, 0.96);
+      }
+
+      .plot-tag-label {
+        fill: var(--ink);
+        font-size: 10px;
+        font-weight: 700;
+      }
+
+      .plot-metric-label {
+        fill: var(--ink);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+      }
+
+      .response-curve-grid {
+        display: grid;
+        gap: 14px;
+      }
+
+      .curve-series-line {
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-dasharray: 5 5;
+      }
+
+      .curve-series-line-active {
+        stroke-width: 2.8;
+        stroke-dasharray: none;
+      }
+
+      .curve-series-line-airborne,
+      .curve-series-point-airborne,
+      .curve-legend-swatch-airborne {
+        stroke: #c97342;
+        fill: #c97342;
+        background: #c97342;
+      }
+
+      .curve-series-line-source,
+      .curve-series-point-source,
+      .curve-legend-swatch-source {
+        stroke: #264653;
+        fill: #264653;
+        background: #264653;
+      }
+
+      .curve-series-line-field,
+      .curve-series-point-field,
+      .curve-legend-swatch-field {
+        stroke: #bc6c25;
+        fill: #bc6c25;
+        background: #bc6c25;
+      }
+
+      .curve-series-line-standardized,
+      .curve-series-point-standardized,
+      .curve-legend-swatch-standardized {
+        stroke: #2a9d8f;
+        fill: #2a9d8f;
+        background: #2a9d8f;
+      }
+
+      .curve-series-point {
+        stroke: #ffffff;
+        stroke-width: 1.4;
+      }
+
+      .curve-series-point-active {
+        stroke-width: 1.8;
+      }
+
+      .result-row-copy strong {
+        display: block;
+        font: 700 13px/1.4 Arial, sans-serif;
+        color: var(--ink);
+      }
+
+      .result-row-copy span {
+        display: block;
+        margin-top: 4px;
+        font: 700 18px/1.2 Arial, sans-serif;
+        color: var(--ink);
+      }
+
+      .result-row-copy small {
+        display: block;
+        margin-top: 6px;
+        font: 400 11px/1.6 Arial, sans-serif;
+        color: var(--ink-soft);
+      }
+
+      .result-legend-strip {
+        display: grid;
+        gap: 10px;
+        margin-top: 14px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .result-legend-row {
+        display: flex;
+        align-items: start;
+        gap: 10px;
+        border: 1px solid var(--line);
+        background: #ffffff;
+        padding: 10px 12px;
+      }
+
+      .curve-legend-swatch {
+        flex: 0 0 12px;
+        width: 12px;
+        height: 12px;
+        margin-top: 3px;
+      }
+
       .construction-grid {
         display: grid;
         gap: 14px;
@@ -1045,7 +2009,7 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
 
       .construction-figure {
         border: 1px solid var(--line);
-        background: color-mix(in srgb, var(--accent) 7%, var(--paper));
+        background: #f8fbfd;
         padding: 16px;
       }
 
@@ -1174,7 +2138,7 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
 
       .cover-summary {
         border: 1px solid var(--line);
-        background: var(--accent-soft);
+        background: #f8fbfd;
         padding: 18px;
       }
 
@@ -1187,7 +2151,7 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
       .signature-box {
         min-height: 128px;
         border: 1px solid var(--line);
-        background: #fffdfa;
+        background: #ffffff;
         padding: 16px 16px 14px;
       }
 
@@ -1207,8 +2171,8 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
 
       .page-header {
         padding: 10mm 12mm 8mm;
-        border-bottom: 1px solid var(--line);
-        background: linear-gradient(180deg, rgba(22, 42, 39, 0.03), rgba(22, 42, 39, 0));
+        border-bottom: 1.4px solid var(--ink);
+        background: linear-gradient(180deg, rgba(248, 251, 253, 0.98), rgba(255, 255, 255, 0.98));
       }
 
       .page-header-grid {
@@ -1258,7 +2222,7 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
 
       .method-box {
         border: 1px solid var(--line);
-        background: #fffdfa;
+        background: #ffffff;
         padding: 14px;
         break-inside: avoid;
       }
@@ -1305,9 +2269,14 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
       @media (max-width: 900px) {
         .hero-grid,
         .cover-grid,
+        .cover-standard-strip,
         .issue-grid,
         .appendix-strip,
+        .result-board,
+        .result-chip-grid,
+        .result-legend-strip,
         .summary-grid,
+        .standards-grid,
         .detail-grid,
         .page-header-grid,
         .signature-grid,
@@ -1357,11 +2326,20 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
               <span>${escapeHtml(branding.templateLabel)}</span>
             </div>
           </div>
-          <div class="eyebrow" style="margin-top: 20px;">DynEcho Dynamic Calculator</div>
+          <div class="report-kicker-row">
+            <div class="dac-mark">DAC</div>
+            <div>
+              <div class="eyebrow">DynEcho Dynamic Calculator</div>
+              <div class="report-series">ISO-aligned acoustic calculation issue</div>
+            </div>
+          </div>
           <h1 class="cover-title">${escapeHtml(branding.coverTitle)}</h1>
           <p class="cover-kicker">
             ${escapeHtml(branding.coverKicker)}
           </p>
+          <div class="cover-standard-strip">
+            ${renderProposalStandardPills(standardReferences)}
+          </div>
           <div class="cover-grid">
             <div class="cover-stack">
               <div class="card">
@@ -1456,7 +2434,7 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
 
       <section class="frame page">
         <header class="page-header">
-          <div class="eyebrow">DynEcho Dynamic Calculator</div>
+          <div class="eyebrow">DAC | DynEcho Dynamic Calculator</div>
           <div class="page-header-grid">
             <div>
               <h1 style="margin-top: 8px;">Technical Schedule</h1>
@@ -1520,6 +2498,38 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
               <span>${escapeHtml(constructionSection.totalThicknessLabel)}</span>
               <small>${document.layers.length} visible row${document.layers.length === 1 ? "" : "s"} · ${stackDensityCount} density line${stackDensityCount === 1 ? "" : "s"} · ${stackSurfaceMassCount} surface-mass line${stackSurfaceMassCount === 1 ? "" : "s"}</small>
             </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="eyebrow" style="margin: 18px 0 8px;">Acoustic Result Profile</div>
+          <div class="result-board">
+            <div class="result-brief">
+              <div class="method-box">
+                <h3>DAC technical reading</h3>
+                <p>${escapeHtml(document.primaryMetricLabel)} ${escapeHtml(document.primaryMetricValue)} is the current headline answer. Single-number ratings on this issue are expressed in the active ISO rating language, while route choice and validation posture remain explicit below.</p>
+              </div>
+              <div class="result-chip-grid">
+                ${renderProposalMetricHighlights(document.metrics)}
+              </div>
+              <div class="method-box">
+                <div class="eyebrow" style="margin-bottom: 8px;">Result interpretation</div>
+                <h3>Consultant-facing answer set</h3>
+                <p>Weighted airborne ratings target higher values; weighted impact ratings target lower values. Where the active lane exposes real band data, DAC plots the actual response curve instead of a proxy summary chart.</p>
+              </div>
+            </div>
+            ${renderProposalResponseCurves(document)}
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="eyebrow" style="margin: 18px 0 8px;">ISO &amp; Method Basis</div>
+          <div class="method-box">
+            <h3>ISO-aligned calculation basis</h3>
+            <p>Calculations and single-number ratings are expressed using the active ISO basis relevant to the current route. DAC output keeps prediction, field continuation, and evidence posture explicit instead of presenting the result as an accredited test certificate.</p>
+          </div>
+          <div class="standards-grid" style="padding-top: 12px;">
+            ${renderProposalStandardCards(standardReferences)}
           </div>
         </section>
 
@@ -1722,7 +2732,7 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
 
       <section class="frame page">
         <header class="page-header">
-          <div class="eyebrow">DynEcho Dynamic Calculator</div>
+          <div class="eyebrow">DAC | DynEcho Dynamic Calculator</div>
           <h1 style="margin-top: 8px;">Citation Appendix</h1>
           <p class="lede">
             Appendix page for assumptions, recommendations, cited sources, and project notes that travel with the formal issue.
@@ -1835,7 +2845,7 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
         <section class="footer">
           <div class="note-box">
             <p>
-              Prepared from the DynEcho dynamic calculator. This sheet summarizes a project estimate and should be read together with the visible solver posture, assumptions, and any required laboratory or site verification.
+              Prepared from the DynEcho dynamic calculator. This DAC sheet summarizes a project estimate and should be read together with the visible solver posture, ISO basis, assumptions, and any required laboratory or site verification.
             </p>
             <p style="margin-top: 8px;">
               ${escapeHtml(document.consultantCompany)} · ${escapeHtml(document.preparedBy)} · ${escapeHtml(document.approverTitle)} · ${escapeHtml(document.consultantEmail)} · ${escapeHtml(document.consultantPhone)} · ${escapeHtml(document.consultantAddress)}

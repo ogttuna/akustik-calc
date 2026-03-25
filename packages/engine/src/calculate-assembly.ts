@@ -54,6 +54,7 @@ import {
 import { derivePredictorSpecificFloorSystemEstimate } from "./predictor-floor-system-estimate";
 import { buildImpactSupport } from "./impact-support";
 import { mergeImpactCalculations } from "./impact-merge";
+import { attachImpactTraceFromExactSource } from "./impact-trace";
 import { buildDynamicImpactTrace } from "./dynamic-impact";
 import {
   inferImpactSupportingElementFamilyFromExactFloorSystem,
@@ -1059,14 +1060,16 @@ export function calculateAssembly(
     null;
   const exactImpactSourceForFieldContext =
     exactImpactSource ?? resolveExactFloorSystemImpactSource(floorSystemMatch?.system);
-  const impact =
+  const impact = attachImpactTraceFromExactSource(
     baseImpact?.basis === "predictor_explicit_delta_heavy_reference_derived"
       ? baseImpact
       : applyImpactFieldContextToImpact(baseImpact, impactFieldContext, {
           defaultSupportingElementFamily,
           exactImpactSource: exactImpactSourceForFieldContext,
           resolvedLayers: impactResolvedLayers
-        });
+        }),
+    exactImpactSourceForFieldContext
+  );
   const lowerBoundImpact = applyImpactFieldContextToBoundImpact(baseLowerBoundImpact, impactFieldContext);
   const hideLowConfidenceProxyAirborne = shouldHideLowConfidenceProxyAirborne(floorSystemEstimate);
   const targetOutputSupport = analyzeTargetOutputSupport({

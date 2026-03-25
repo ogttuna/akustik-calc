@@ -99,7 +99,7 @@ export function ImpactFieldPathPanel({
           label="Flanking Paths (JSON)"
         >
           <textarea
-            className="focus-ring min-h-40 rounded-[1.35rem] border hairline bg-[color:var(--paper)] px-4 py-4 text-sm leading-7"
+            className="focus-ring min-h-40 rounded-lg border hairline bg-[color:var(--paper)] px-4 py-4 text-sm leading-7"
             id="impact-flanking-paths-json"
             onChange={(event) => onFlankingPathsInputChange(event.target.value)}
             placeholder={`[\n  { "id": "f1", "levelOffsetDb": -6, "pathType": "wall" },\n  { "id": "f2", "levelOffsetDb": -10, "pathCount": 2 }\n]`}
@@ -109,7 +109,7 @@ export function ImpactFieldPathPanel({
       </div>
 
       <div className="mt-5 grid gap-3 md:grid-cols-2">
-        <article className="rounded-[1.3rem] border hairline bg-[color:var(--panel-strong)] px-4 py-4">
+        <article className="rounded-lg border hairline bg-[color:var(--panel-strong)] px-4 py-4">
           <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
             <Route className="h-4 w-4" />
             Supported path fields
@@ -121,7 +121,7 @@ export function ImpactFieldPathPanel({
           </div>
         </article>
 
-        <article className="rounded-[1.3rem] border hairline bg-black/[0.025] px-4 py-4">
+        <article className="rounded-lg border hairline bg-black/[0.025] px-4 py-4">
           <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
             <Cable className="h-4 w-4" />
             Operator intent
@@ -134,7 +134,7 @@ export function ImpactFieldPathPanel({
       </div>
 
       {parsed ? (
-        <div className="mt-5 rounded-[1.35rem] border hairline bg-[color:var(--success-soft)] px-4 py-4 text-sm leading-7 text-[color:var(--success-ink)]">
+        <div className="mt-5 rounded-lg border hairline bg-[color:var(--success-soft)] px-4 py-4 text-sm leading-7 text-[color:var(--success-ink)]">
           <div className="flex items-center gap-2 font-semibold">
             <ShieldCheck className="h-4 w-4" />
             Parsed flanking path set
@@ -142,7 +142,7 @@ export function ImpactFieldPathPanel({
           <div className="mt-2">{parsed.summary}</div>
         </div>
       ) : flankingPathsInput.trim().length > 0 && parseError ? (
-        <div className="mt-5 rounded-[1.35rem] border hairline bg-[color:var(--warning-soft)] px-4 py-4 text-sm leading-7 text-[color:var(--warning-ink)]">
+        <div className="mt-5 rounded-lg border hairline bg-[color:var(--warning-soft)] px-4 py-4 text-sm leading-7 text-[color:var(--warning-ink)]">
           <div className="flex items-center gap-2 font-semibold">
             <ShieldAlert className="h-4 w-4" />
             Path set not active
@@ -150,7 +150,7 @@ export function ImpactFieldPathPanel({
           <div className="mt-2">{parseError}</div>
         </div>
       ) : (
-        <div className="mt-5 rounded-[1.35rem] border border-dashed hairline px-4 py-6 text-sm leading-7 text-[color:var(--ink-soft)]">
+        <div className="mt-5 rounded-lg border border-dashed hairline px-4 py-6 text-sm leading-7 text-[color:var(--ink-soft)]">
           Add an explicit flanking path set if you want the field lane to move beyond `Ln,w + K` style correction and show direct-path plus parallel-path assumptions explicitly.
         </div>
       )}

@@ -127,7 +127,7 @@ export function ProjectBriefPanel({
             Assumptions and caveats
           </span>
           <textarea
-            className="focus-ring min-h-32 rounded-[1.35rem] border hairline bg-[color:var(--paper)] px-4 py-3"
+            className="focus-ring min-h-32 rounded-lg border hairline bg-[color:var(--paper)] px-4 py-3"
             onChange={(event) => onBriefNoteChange(event.target.value)}
             placeholder="Capture scope assumptions, benchmark sources, flanking caveats, or delivery notes."
             value={briefNote}
@@ -170,7 +170,7 @@ export function ProjectBriefPanel({
         </label>
       </div>
 
-      <div className="mt-5 rounded-[1.35rem] border hairline bg-black/[0.025] px-4 py-4">
+      <div className="mt-5 rounded-lg border hairline bg-black/[0.025] px-4 py-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
             <Target className="h-4 w-4" />

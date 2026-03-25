@@ -2,6 +2,7 @@ import type { ExactImpactSource, ImpactCalculation, RequestedOutputId } from "@d
 
 import { getImpactConfidenceForBasis } from "./impact-confidence";
 import { buildUniformImpactMetricBasis, createImpactMetricBasis, mergeImpactMetricBasis } from "./impact-metric-basis";
+import { buildImpactTraceFromExactSource } from "./impact-trace";
 import { computeDutchLnTAFromBands } from "./impact-dutch";
 import {
   computeImpactSpectrumAdaptationTerms,
@@ -133,6 +134,7 @@ export function buildExactImpactFromSource(source: ExactImpactSource): ImpactCal
           : [])
     ],
     scope: "exact_band_curve",
-    standardMethod: source.standardMethod
+    standardMethod: source.standardMethod,
+    trace: buildImpactTraceFromExactSource(source)
   };
 }

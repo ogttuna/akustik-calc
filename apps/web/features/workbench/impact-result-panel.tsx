@@ -17,6 +17,7 @@ import {
   formatImpactMetricBasisLabel,
   getActiveImpactMetricBasisRows
 } from "./impact-metric-basis-view";
+import { ImpactMetricChart } from "./impact-metric-chart";
 import {
   getImpactLaneHeadline,
   getImpactLaneKind,
@@ -73,6 +74,8 @@ export function ImpactResultPanel({ result }: ImpactResultPanelProps) {
 
       {impact ? (
         <>
+          {!impact.trace ? <ImpactMetricChart impact={impact} /> : null}
+
           <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
             <MetricCard
               label={primaryMetricLabel}
@@ -191,12 +194,12 @@ export function ImpactResultPanel({ result }: ImpactResultPanelProps) {
             />
           </div>
 
-          <div className="mt-5 rounded-[1.2rem] border hairline bg-[color:var(--panel-strong)] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
+          <div className="mt-5 rounded-md border hairline bg-[color:var(--panel-strong)] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
             <span className="font-semibold text-[color:var(--ink)]">Trust note:</span> {impact.confidence.summary}
           </div>
 
           {metricBasisRows.length ? (
-            <div className="mt-5 rounded-[1.2rem] border hairline bg-[color:var(--paper)] px-4 py-4">
+            <div className="mt-5 rounded-md border hairline bg-[color:var(--paper)] px-4 py-4">
               <div className="flex flex-wrap items-center gap-3">
                 <Pill tone="accent">Metric provenance</Pill>
                 <span className="text-xs uppercase tracking-[0.24em] text-[color:var(--ink-soft)]">
@@ -207,7 +210,7 @@ export function ImpactResultPanel({ result }: ImpactResultPanelProps) {
               <div className="mt-4 grid gap-3 lg:grid-cols-2">
                 {metricBasisRows.map((row) => (
                   <article
-                    className="rounded-[1.1rem] border hairline bg-black/[0.025] px-4 py-4"
+                    className="rounded-md border hairline bg-black/[0.025] px-4 py-4"
                     key={`${row.metric}-${row.basis}`}
                   >
                     <div className="flex flex-wrap items-center justify-between gap-2">
@@ -224,7 +227,7 @@ export function ImpactResultPanel({ result }: ImpactResultPanelProps) {
           ) : null}
 
           {impact.estimateCandidateIds?.length ? (
-            <div className="mt-3 rounded-[1.2rem] border hairline bg-black/[0.025] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
+            <div className="mt-3 rounded-md border hairline bg-black/[0.025] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
               <span className="font-semibold text-[color:var(--ink)]">Candidate lineage:</span>{" "}
               {impact.estimateCandidateIds.join(", ")}
             </div>
@@ -232,7 +235,7 @@ export function ImpactResultPanel({ result }: ImpactResultPanelProps) {
 
           {lowerBoundImpact ? (
             <>
-              <div className="mt-5 rounded-[1.2rem] border hairline bg-[color:var(--paper)] px-4 py-4">
+              <div className="mt-5 rounded-md border hairline bg-[color:var(--paper)] px-4 py-4">
                 <div className="flex flex-wrap items-center gap-3">
                   <Pill tone="neutral">Conservative support</Pill>
                   <Pill tone={getConfidenceTone(lowerBoundImpact.confidence.level)}>
@@ -275,7 +278,7 @@ export function ImpactResultPanel({ result }: ImpactResultPanelProps) {
               .notes
               .concat(lowerBoundImpact ? lowerBoundImpact.notes : [])
               .map((note: string) => (
-              <article className="rounded-[1.2rem] border hairline bg-black/[0.025] px-4 py-4" key={note}>
+              <article className="rounded-md border hairline bg-black/[0.025] px-4 py-4" key={note}>
                 {note}
               </article>
               ))}
@@ -311,20 +314,20 @@ export function ImpactResultPanel({ result }: ImpactResultPanelProps) {
             />
           </div>
 
-          <div className="mt-5 rounded-[1.2rem] border hairline bg-[color:var(--panel-strong)] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
+          <div className="mt-5 rounded-md border hairline bg-[color:var(--panel-strong)] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
             <span className="font-semibold text-[color:var(--ink)]">Trust note:</span> {lowerBoundImpact.confidence.summary}
           </div>
 
           <div className="mt-5 grid gap-3 text-sm leading-7 text-[color:var(--ink-soft)]">
             {lowerBoundImpact.notes.map((note: string) => (
-              <article className="rounded-[1.2rem] border hairline bg-black/[0.025] px-4 py-4" key={note}>
+              <article className="rounded-md border hairline bg-black/[0.025] px-4 py-4" key={note}>
                 {note}
               </article>
             ))}
           </div>
         </>
       ) : (
-        <div className="mt-5 rounded-[1.3rem] border border-dashed hairline px-4 py-6">
+        <div className="mt-5 rounded-lg border border-dashed hairline px-4 py-6">
           <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
             <ShieldAlert className="h-4 w-4" />
             Why no live impact estimate?

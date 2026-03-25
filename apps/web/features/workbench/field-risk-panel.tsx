@@ -65,7 +65,7 @@ export function FieldRiskPanel({ fieldRiskIds, onToggleFieldRisk }: FieldRiskPan
           return (
             <button
               aria-pressed={isActive}
-              className={`focus-ring rounded-[1.3rem] border px-4 py-4 text-left transition ${
+              className={`focus-ring rounded-lg border px-4 py-4 text-left transition ${
                 isActive
                   ? "border-[color:var(--accent)] bg-[color:var(--accent-soft)] text-[color:var(--accent-ink)]"
                   : "hairline bg-[color:var(--paper)] text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
@@ -89,7 +89,7 @@ export function FieldRiskPanel({ fieldRiskIds, onToggleFieldRisk }: FieldRiskPan
         })}
       </div>
 
-      <div className="mt-5 rounded-[1.3rem] border hairline bg-[color:var(--panel-strong)] px-4 py-4">
+      <div className="mt-5 rounded-lg border hairline bg-[color:var(--panel-strong)] px-4 py-4">
         <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
           <AlertTriangle className="h-4 w-4" />
           Risk reading
@@ -97,7 +97,7 @@ export function FieldRiskPanel({ fieldRiskIds, onToggleFieldRisk }: FieldRiskPan
         <p className="mt-3 text-sm leading-7 text-[color:var(--ink-soft)]">{summary.summary}</p>
         <div className="mt-4 grid gap-3">
           {summary.actions.map((action) => (
-            <div className="rounded-[1rem] border hairline bg-[color:var(--paper)] px-4 py-3 text-sm leading-7 text-[color:var(--ink-soft)]" key={action}>
+            <div className="rounded-md border hairline bg-[color:var(--paper)] px-4 py-3 text-sm leading-7 text-[color:var(--ink-soft)]" key={action}>
               {action}
             </div>
           ))}

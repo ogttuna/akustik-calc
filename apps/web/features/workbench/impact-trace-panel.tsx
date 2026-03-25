@@ -182,7 +182,7 @@ export function ImpactTracePanel({ result }: ImpactTracePanelProps) {
       </div>
 
       {dynamicImpactTrace ? (
-        <div className="mt-5 rounded-[1.2rem] border hairline bg-[color:var(--panel-strong)] px-4 py-4">
+        <div className="mt-5 rounded-md border hairline bg-[color:var(--panel-strong)] px-4 py-4">
           <div className="flex flex-wrap items-center gap-3">
             <Pill tone="accent">Dynamic impact trace</Pill>
             <span className="text-xs uppercase tracking-[0.24em] text-[color:var(--ink-soft)]">
@@ -245,7 +245,7 @@ export function ImpactTracePanel({ result }: ImpactTracePanelProps) {
       ) : null}
 
       {lowerBoundImpact ? (
-        <div className="mt-5 rounded-[1.2rem] border hairline bg-[color:var(--panel-strong)] px-4 py-4">
+        <div className="mt-5 rounded-md border hairline bg-[color:var(--panel-strong)] px-4 py-4">
           <div className="flex flex-wrap items-center gap-3">
             <Pill tone="neutral">Support envelope</Pill>
             <span className="text-xs uppercase tracking-[0.24em] text-[color:var(--ink-soft)]">
@@ -311,7 +311,7 @@ export function ImpactTracePanel({ result }: ImpactTracePanelProps) {
       ) : null}
 
       {floorSystemRatings ? (
-        <div className="mt-5 rounded-[1.2rem] border hairline bg-[color:var(--paper)] px-4 py-4">
+        <div className="mt-5 rounded-md border hairline bg-[color:var(--paper)] px-4 py-4">
           <div className="flex flex-wrap items-center gap-3">
             <Pill tone="accent">Companion airborne trace</Pill>
             <span className="text-xs uppercase tracking-[0.24em] text-[color:var(--ink-soft)]">
@@ -353,7 +353,7 @@ export function ImpactTracePanel({ result }: ImpactTracePanelProps) {
       ) : null}
 
       {familyEstimate ? (
-        <div className="mt-5 rounded-[1.2rem] border hairline bg-[color:var(--paper)] px-4 py-4">
+        <div className="mt-5 rounded-md border hairline bg-[color:var(--paper)] px-4 py-4">
           <div className="flex flex-wrap items-center gap-3">
             <Pill tone="accent">Family estimate trace</Pill>
             <span className="text-xs uppercase tracking-[0.24em] text-[color:var(--ink-soft)]">
@@ -390,18 +390,18 @@ export function ImpactTracePanel({ result }: ImpactTracePanelProps) {
           </div>
 
           {sourceLineageLabels.length ? (
-            <div className="mt-4 rounded-[1rem] border hairline bg-[color:var(--panel-strong)] px-4 py-4">
+            <div className="mt-4 rounded-md border hairline bg-[color:var(--panel-strong)] px-4 py-4">
               <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
                 Candidate lineage
               </div>
               <ul className="mt-3 grid gap-2 text-sm leading-7 text-[color:var(--ink-soft)]">
                 {sourceLineageLabels.map((label: string) => (
-                  <li className="rounded-[0.95rem] border hairline bg-[color:var(--paper)] px-3 py-3" key={label}>
+                  <li className="rounded border hairline bg-[color:var(--paper)] px-3 py-3" key={label}>
                     {label}
                   </li>
                 ))}
                 {hiddenCandidateCount > 0 ? (
-                  <li className="rounded-[0.95rem] border hairline bg-[color:var(--paper)] px-3 py-3">
+                  <li className="rounded border hairline bg-[color:var(--paper)] px-3 py-3">
                     +{hiddenCandidateCount} more ranked candidate row{hiddenCandidateCount === 1 ? "" : "s"} in the solver trace
                   </li>
                 ) : null}
@@ -412,7 +412,7 @@ export function ImpactTracePanel({ result }: ImpactTracePanelProps) {
       ) : null}
 
       {impact?.fieldEstimateProfile === "direct_flanking_energy_sum" ? (
-        <div className="mt-5 rounded-[1.2rem] border hairline bg-[color:var(--panel-strong)] px-4 py-4">
+        <div className="mt-5 rounded-md border hairline bg-[color:var(--panel-strong)] px-4 py-4">
           <div className="flex flex-wrap items-center gap-3">
             <Pill tone="accent">Field path trace</Pill>
             <span className="text-xs uppercase tracking-[0.24em] text-[color:var(--ink-soft)]">
@@ -471,7 +471,7 @@ export function ImpactTracePanel({ result }: ImpactTracePanelProps) {
       ) : null}
 
       <div className="mt-5 grid gap-4 xl:grid-cols-2">
-        <article className="rounded-[1.2rem] border hairline bg-black/[0.025] px-4 py-4">
+        <article className="rounded-md border hairline bg-black/[0.025] px-4 py-4">
           <div className="flex items-center gap-2">
             <Orbit className="h-4 w-4 text-[color:var(--accent)]" />
             <div className="text-sm font-semibold text-[color:var(--ink)]">Status notes</div>
@@ -493,7 +493,7 @@ export function ImpactTracePanel({ result }: ImpactTracePanelProps) {
           ) : null}
         </article>
 
-        <article className="rounded-[1.2rem] border hairline bg-black/[0.025] px-4 py-4">
+        <article className="rounded-md border hairline bg-black/[0.025] px-4 py-4">
           <div className="flex items-center gap-2">
             <Route className="h-4 w-4 text-[color:var(--accent)]" />
             <div className="text-sm font-semibold text-[color:var(--ink)]">Support notes</div>
@@ -511,7 +511,7 @@ export function ImpactTracePanel({ result }: ImpactTracePanelProps) {
             </p>
           ) : null}
           {formulaNoteSelection.totalCount > 0 ? (
-            <div className="mt-4 rounded-[1rem] border hairline bg-[color:var(--paper)] px-4 py-4">
+            <div className="mt-4 rounded-md border hairline bg-[color:var(--paper)] px-4 py-4">
               <div className="flex items-center gap-2">
                 <Pill tone="accent">Formula notes</Pill>
                 <span className="text-xs uppercase tracking-[0.24em] text-[color:var(--ink-soft)]">

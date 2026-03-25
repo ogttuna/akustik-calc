@@ -89,7 +89,7 @@ export function WorkbenchHeader({
             onCalculatorChange={onCalculatorChange}
             studyMode={studyMode}
           />
-          <article className="rounded-[1.35rem] border hairline bg-[color:var(--panel-strong)] px-4 py-4">
+          <article className="rounded-lg border hairline bg-[color:var(--panel-strong)] px-4 py-4">
             <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
               <LaptopMinimalCheck className="h-4 w-4" />
               Live shell
@@ -98,7 +98,7 @@ export function WorkbenchHeader({
               Responsive editor, local solver selection, curated exact families, explicit field carry-over, and export-ready reporting in one workspace.
             </p>
           </article>
-          <article className="rounded-[1.35rem] border hairline bg-black/[0.025] px-4 py-4">
+          <article className="rounded-lg border hairline bg-black/[0.025] px-4 py-4">
             <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
               <Waypoints className="h-4 w-4" />
               Current preset
@@ -107,7 +107,7 @@ export function WorkbenchHeader({
               {activePreset.label}: {activePreset.note}
             </p>
           </article>
-          <article className="rounded-[1.35rem] border hairline bg-black/[0.025] px-4 py-4">
+          <article className="rounded-lg border hairline bg-black/[0.025] px-4 py-4">
             <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
               <ShieldBan className="h-4 w-4" />
               Upstream lock

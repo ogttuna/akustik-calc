@@ -90,7 +90,7 @@ export function ImpactReferencePanel({
             value={deltaLwInput}
           />
         </FieldGuide>
-        <div className="rounded-[1.3rem] border hairline bg-black/[0.025] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
+        <div className="rounded-lg border hairline bg-black/[0.025] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
           <div className="font-semibold text-[color:var(--ink)]">Boundary</div>
           <p className="mt-2">
             This shortcut assumes a bare heavy-floor reference of 78 dB. It is useful for datasheet triage, not for
@@ -153,20 +153,20 @@ export function ImpactReferencePanel({
             />
           </div>
 
-          <div className="mt-5 rounded-[1.2rem] border hairline bg-[color:var(--panel-strong)] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
+          <div className="mt-5 rounded-md border hairline bg-[color:var(--panel-strong)] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
             <span className="font-semibold text-[color:var(--ink)]">Trust note:</span> {referenceImpact.confidence.summary}
           </div>
 
           <div className="mt-5 grid gap-3 text-sm leading-7 text-[color:var(--ink-soft)]">
             {referenceImpact.notes.map((note) => (
-              <article className="rounded-[1.2rem] border hairline bg-[color:var(--accent-soft)] px-4 py-4" key={note}>
+              <article className="rounded-md border hairline bg-[color:var(--accent-soft)] px-4 py-4" key={note}>
                 {note}
               </article>
             ))}
           </div>
         </>
       ) : (
-        <div className="mt-5 rounded-[1.3rem] border border-dashed hairline px-4 py-6 text-sm leading-7 text-[color:var(--ink-soft)]">
+        <div className="mt-5 rounded-lg border border-dashed hairline px-4 py-6 text-sm leading-7 text-[color:var(--ink-soft)]">
           {deltaLwInput.trim()
             ? "Enter a valid non-negative DeltaLw value to derive a heavy-reference Ln,w."
             : "Paste a product-sheet DeltaLw value to open the quick heavy-reference lane."}

@@ -19,7 +19,7 @@ export function CapabilityMapPanel() {
 
       <div className="mt-5 grid gap-3">
         {CAPABILITY_ROWS.map((row) => (
-          <article className="pointer-card rounded-[1.3rem] border hairline px-4 py-4" key={row.label}>
+          <article className="pointer-card rounded-lg border hairline px-4 py-4" key={row.label}>
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="text-sm font-semibold text-[color:var(--ink)]">{row.family}</div>
               <Pill
@@ -44,14 +44,14 @@ export function CapabilityMapPanel() {
         ))}
       </div>
 
-      <div className="mt-6 rounded-[1.3rem] border hairline bg-black/[0.025] px-4 py-4">
+      <div className="mt-6 rounded-lg border hairline bg-black/[0.025] px-4 py-4">
         <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
           <Sparkles className="h-4 w-4" />
           Acoustic calculators need more than formulas
         </div>
         <div className="mt-4 grid gap-3">
           {SYSTEM_TOOL_ROWS.map((row) => (
-            <article className="rounded-[1.1rem] border hairline bg-[color:var(--paper)] px-4 py-4" key={row.title}>
+            <article className="rounded-md border hairline bg-[color:var(--paper)] px-4 py-4" key={row.title}>
               <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
                 <FileSearch className="h-4 w-4" />
                 {row.title}

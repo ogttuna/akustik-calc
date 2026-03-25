@@ -55,7 +55,7 @@ export function AirborneTracePanel({ result }: AirborneTracePanelProps) {
       </div>
 
       {dynamicTrace ? (
-        <div className="mt-5 rounded-[1.2rem] border hairline bg-[color:var(--panel-strong)] px-4 py-4">
+        <div className="mt-5 rounded-md border hairline bg-[color:var(--panel-strong)] px-4 py-4">
           <div className="flex flex-wrap items-center gap-3">
             <Pill tone="accent">Dynamic selector</Pill>
             <span className="text-xs uppercase tracking-[0.24em] text-[color:var(--ink-soft)]">
@@ -92,7 +92,7 @@ export function AirborneTracePanel({ result }: AirborneTracePanelProps) {
       ) : null}
 
       {overlay?.junctionFlankingGraph ? (
-        <div className="mt-5 rounded-[1.2rem] border hairline bg-[color:var(--panel-strong)] px-4 py-4">
+        <div className="mt-5 rounded-md border hairline bg-[color:var(--panel-strong)] px-4 py-4">
           <div className="flex flex-wrap items-center gap-3">
             <Pill tone="neutral">Junction graph</Pill>
             <span className="text-xs uppercase tracking-[0.24em] text-[color:var(--ink-soft)]">
@@ -120,7 +120,7 @@ export function AirborneTracePanel({ result }: AirborneTracePanelProps) {
       ) : null}
 
       {dynamicNoteSelection.totalCount > 0 || overlayNoteSelection.totalCount > 0 ? (
-        <div className="mt-5 rounded-[1.2rem] border hairline bg-[color:var(--paper)] px-4 py-4">
+        <div className="mt-5 rounded-md border hairline bg-[color:var(--paper)] px-4 py-4">
           <div className="flex flex-wrap items-center gap-3">
             <Pill tone="accent">Formula notes</Pill>
             {overlay && (overlay.fieldFlankingPenaltyApplied || overlay.leakagePenaltyApplied) ? (

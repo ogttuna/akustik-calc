@@ -1,7 +1,6 @@
 "use client";
 
 import type { AssemblyCalculation } from "@dynecho/shared";
-import { Layers3 } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, Cell, Tooltip, XAxis, YAxis } from "recharts";
 
 import { SurfacePanel } from "@dynecho/ui";
@@ -19,7 +18,7 @@ type LayerMassChartEntry = {
   value: number;
 };
 
-const BAR_COLORS = ["#c97342", "#2e8a7b", "#274a53", "#ccac66", "#7d8d64", "#865644"];
+const BAR_COLORS = ["var(--accent)", "var(--success)", "var(--ink)", "var(--warning)", "var(--line-strong)", "var(--accent-ink)"];
 
 export function LayerMassPanel({ result }: LayerMassPanelProps) {
   const chartData: LayerMassChartEntry[] =
@@ -29,39 +28,32 @@ export function LayerMassPanel({ result }: LayerMassPanelProps) {
     })) ?? [];
 
   return (
-    <SurfacePanel className="px-5 py-5">
-      <div className="flex items-start gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full border hairline bg-[color:var(--panel-strong)]">
-          <Layers3 className="h-4 w-4 text-[color:var(--ink)]" />
-        </div>
-        <div>
-          <div className="eyebrow">Mass readout</div>
-          <h2 className="mt-1 font-display text-[1.85rem] leading-none tracking-[-0.04em]">Layer contribution</h2>
-        </div>
-      </div>
+    <SurfacePanel className="px-4 py-4">
+      <h2 className="text-sm font-semibold text-[color:var(--ink)]">Layer mass contribution</h2>
 
       {chartData.length > 0 ? (
-        <div className="mt-5">
+        <div className="mt-4 rounded border border-[color:var(--line)] bg-[color:var(--panel-strong)] px-3 py-3">
           <ChartSurface
-            className="chart-frame h-[18rem] rounded-[1.35rem] border hairline bg-[color:var(--paper)] px-3 py-3"
-            placeholder="Preparing chart surface..."
+            className="h-[16rem]"
+            placeholder="Preparing chart..."
           >
             {(size) => (
                 <BarChart data={chartData} height={size.height} layout="vertical" margin={{ left: 12, right: 12, top: 8, bottom: 8 }} width={size.width}>
-                  <CartesianGrid horizontal stroke="rgba(39, 74, 83, 0.08)" strokeDasharray="4 4" />
-                  <XAxis axisLine={false} dataKey="value" tickLine={false} type="number" />
-                  <YAxis axisLine={false} dataKey="label" tickLine={false} type="category" width={110} />
+                  <CartesianGrid horizontal stroke="var(--line)" strokeDasharray="3 3" />
+                  <XAxis axisLine={false} dataKey="value" tickLine={false} type="number" style={{ fontSize: "0.7rem" }} />
+                  <YAxis axisLine={false} dataKey="label" tickLine={false} type="category" width={110} style={{ fontSize: "0.7rem" }} />
                   <Tooltip
                     contentStyle={{
-                      background: "rgba(250, 247, 240, 0.97)",
-                      border: "1px solid rgba(39, 74, 83, 0.16)",
-                      borderRadius: "18px",
-                      color: "var(--ink)"
+                      background: "var(--paper)",
+                      border: "1px solid var(--line)",
+                      borderRadius: "0.375rem",
+                      color: "var(--ink)",
+                      fontSize: "0.8rem"
                     }}
-                    cursor={{ fill: "rgba(39, 74, 83, 0.05)" }}
+                    cursor={{ fill: "rgba(0, 0, 0, 0.03)" }}
                     formatter={(value) => [`${formatDecimal(Number(value ?? 0))} kg/m²`, "Surface mass"]}
                   />
-                  <Bar dataKey="value" radius={[999, 999, 999, 999]}>
+                  <Bar dataKey="value" radius={[4, 4, 4, 4]} maxBarSize={24}>
                     {chartData.map((entry: LayerMassChartEntry, index: number) => (
                       <Cell fill={BAR_COLORS[index % BAR_COLORS.length]} key={entry.label} />
                     ))}
@@ -69,13 +61,10 @@ export function LayerMassPanel({ result }: LayerMassPanelProps) {
                 </BarChart>
             )}
           </ChartSurface>
-          <p className="mt-3 text-sm leading-7 text-[color:var(--ink-soft)]">
-            Surface-mass contribution by layer helps show where the current Rw estimate is really coming from.
-          </p>
         </div>
       ) : (
-        <div className="mt-5 rounded-[1.35rem] border border-dashed hairline px-4 py-6 text-sm leading-7 text-[color:var(--ink-soft)]">
-          Add a valid stack to inspect per-layer mass contribution.
+        <div className="mt-4 rounded border border-dashed border-[color:var(--line)] px-4 py-5 text-sm text-[color:var(--ink-soft)]">
+          Add a valid stack to see mass contribution.
         </div>
       )}
     </SurfacePanel>

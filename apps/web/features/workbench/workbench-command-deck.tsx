@@ -60,7 +60,7 @@ export function WorkbenchCommandDeck({
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2">
-          <article className="pointer-card rounded-[1.45rem] border hairline bg-[color:var(--panel-strong)] px-4 py-4">
+          <article className="pointer-card rounded-lg border hairline bg-[color:var(--panel-strong)] px-4 py-4">
             <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
               <Layers2 className="h-4 w-4" />
               Requested outputs
@@ -73,7 +73,7 @@ export function WorkbenchCommandDeck({
               ))}
             </div>
           </article>
-          <article className="pointer-card rounded-[1.45rem] border hairline bg-black/[0.03] px-4 py-4">
+          <article className="pointer-card rounded-lg border hairline bg-black/[0.03] px-4 py-4">
             <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
               <Command className="h-4 w-4" />
               Command center
@@ -91,7 +91,7 @@ export function WorkbenchCommandDeck({
               Open command palette
             </button>
           </article>
-          <article className="rounded-[1.45rem] border hairline bg-[color:var(--accent-soft)] px-4 py-4">
+          <article className="rounded-lg border hairline bg-[color:var(--accent-soft)] px-4 py-4">
             <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--accent-ink)]">
               <BellRing className="h-4 w-4" />
               Snapshot current scheme
@@ -108,7 +108,7 @@ export function WorkbenchCommandDeck({
               Save scenario
             </button>
           </article>
-          <article className="pointer-card rounded-[1.45rem] border hairline bg-black/[0.03] px-4 py-4 sm:col-span-2">
+          <article className="pointer-card rounded-lg border hairline bg-black/[0.03] px-4 py-4 sm:col-span-2">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
@@ -136,7 +136,7 @@ export function WorkbenchCommandDeck({
                     });
 
                     return (
-                      <div className="rounded-[1.1rem] border hairline bg-[color:var(--paper)] px-3 py-3" key={scenario.id}>
+                      <div className="rounded-md border hairline bg-[color:var(--paper)] px-3 py-3" key={scenario.id}>
                         <div className="flex flex-wrap items-start justify-between gap-2">
                           <div>
                             <div className="text-sm font-semibold text-[color:var(--ink)]">{scenario.name}</div>
@@ -150,7 +150,7 @@ export function WorkbenchCommandDeck({
                           <Pill tone={getValidationPostureTone(summary.airbornePosture.posture)}>{summary.airborneLabel}</Pill>
                           {summary.fieldContinuationLabel ? <Pill tone="accent">{summary.fieldContinuationLabel}</Pill> : null}
                         </div>
-                        <div className="mt-3 rounded-[0.95rem] border hairline bg-black/[0.02] px-3 py-3">
+                        <div className="mt-3 rounded border hairline bg-black/[0.02] px-3 py-3">
                           <div className="flex flex-wrap items-center justify-between gap-2">
                             <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
                               Decision snapshot

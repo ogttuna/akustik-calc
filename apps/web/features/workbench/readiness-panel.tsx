@@ -26,7 +26,7 @@ export function ReadinessPanel() {
       <div className="eyebrow">Readiness</div>
       <div className="mt-5 grid gap-3">
         {READINESS_ROWS.map(({ icon: Icon, title, body }) => (
-          <article className="pointer-card rounded-[1.25rem] border hairline px-4 py-4" key={title}>
+          <article className="pointer-card rounded-md border hairline px-4 py-4" key={title}>
             <div className="flex items-center gap-3">
               <Icon className="h-5 w-5 text-[color:var(--ink)]" />
               <div className="font-semibold text-[color:var(--ink)]">{title}</div>

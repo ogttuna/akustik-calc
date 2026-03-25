@@ -8,7 +8,6 @@ import {
 } from "@dynecho/engine";
 import { SurfacePanel } from "@dynecho/ui";
 import dynamic from "next/dynamic";
-import { useDeferredValue } from "react";
 import { toast } from "sonner";
 
 import { AirborneContextPanel } from "./airborne-context-panel";
@@ -71,12 +70,12 @@ const LayerMassPanel = dynamic(
   }
 );
 
-const AcousticCurvePanel = dynamic(
-  () => import("./acoustic-curve-panel").then((module) => module.AcousticCurvePanel),
+const ResponseCurvesPanel = dynamic(
+  () => import("./response-curves-panel").then((module) => module.ResponseCurvesPanel),
   {
     loading: () => (
       <PanelPlaceholder
-        description="Frequency-domain screening is loading in a separate chart lane."
+        description="Frequency-domain response curves are loading in a separate chart lane."
         title="Curve lane loading"
       />
     )
@@ -226,10 +225,9 @@ export function WorkbenchShell() {
   const commandPalette = useCommandPalette();
   const materials = buildWorkbenchMaterialCatalog(customMaterials);
 
-  const deferredRows = useDeferredValue(rows);
   const activeCriteriaPack = getCriteriaPackById(criteriaPackId);
   const fieldRiskSummary = summarizeFieldRisk(fieldRiskIds);
-  const normalized = normalizeRows(deferredRows, materials);
+  const normalized = normalizeRows(rows, materials);
   const validThicknessRowCount = rows.filter((row) => {
     const thickness = Number(row.thicknessMm);
     return Number.isFinite(thickness) && thickness > 0;
@@ -301,7 +299,7 @@ export function WorkbenchShell() {
     id: "current",
     impactFieldContext: liveImpactFieldContext,
     name: projectName,
-    rows: deferredRows,
+    rows,
     source: "current",
     studyMode,
     targetOutputs: requestedOutputs
@@ -717,12 +715,12 @@ export function WorkbenchShell() {
         statusTone={liveSolverStatus.tone}
         title={studyMode === "wall" ? "Live wall-side solver" : "Live floor-side solver"}
       >
-        <ResultSummary result={result} warnings={normalized.warnings} />
+        <ResultSummary result={result} targetLnwDb={targetLnwDb} targetRwDb={targetRwDb} warnings={normalized.warnings} />
         <ValidationRegimePanel result={result} />
         <ImpactResultPanel result={result} />
         <AirborneTracePanel result={result} />
         <ImpactTracePanel result={result} />
-        <AcousticCurvePanel result={result} />
+        <ResponseCurvesPanel result={result} />
       </WorkbenchChapter>
 
       <WorkbenchChapter

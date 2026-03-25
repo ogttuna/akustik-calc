@@ -159,7 +159,7 @@ export function DeliveryAssistPanel({
       </div>
 
       <div className="mt-5 grid gap-3">
-        <article className="rounded-[1.3rem] border hairline bg-[color:var(--panel-strong)] px-4 py-4">
+        <article className="rounded-lg border hairline bg-[color:var(--panel-strong)] px-4 py-4">
           <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
             <RadioTower className="h-4 w-4" />
             Evidence ladder
@@ -174,7 +174,7 @@ export function DeliveryAssistPanel({
           </p>
         </article>
 
-        <article className="rounded-[1.3rem] border hairline bg-black/[0.03] px-4 py-4">
+        <article className="rounded-lg border hairline bg-black/[0.03] px-4 py-4">
           <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
             <NotebookText className="h-4 w-4" />
             Project memory
@@ -184,7 +184,7 @@ export function DeliveryAssistPanel({
           </p>
         </article>
 
-        <article className="rounded-[1.3rem] border hairline bg-black/[0.025] px-4 py-4">
+        <article className="rounded-lg border hairline bg-black/[0.025] px-4 py-4">
           <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
             <ShieldCheck className="h-4 w-4" />
             Validation corridor
@@ -210,14 +210,14 @@ export function DeliveryAssistPanel({
           </div>
         </article>
 
-        <article className="rounded-[1.3rem] border hairline bg-black/[0.025] px-4 py-4">
+        <article className="rounded-lg border hairline bg-black/[0.025] px-4 py-4">
           <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
             <Route className="h-4 w-4" />
             Recommended next moves
           </div>
           <ul className="mt-3 grid gap-3 text-sm leading-7 text-[color:var(--ink-soft)]">
             {nextMoves.map((move) => (
-              <li className="rounded-[1rem] border hairline bg-[color:var(--paper)] px-4 py-3" key={move}>
+              <li className="rounded-md border hairline bg-[color:var(--paper)] px-4 py-3" key={move}>
                 {move}
               </li>
             ))}
@@ -225,7 +225,7 @@ export function DeliveryAssistPanel({
         </article>
       </div>
 
-      <div className="mt-5 rounded-[1.3rem] border hairline bg-[color:var(--warning-soft)] px-4 py-4 text-sm leading-7 text-[color:var(--warning-ink)]">
+      <div className="mt-5 rounded-lg border hairline bg-[color:var(--warning-soft)] px-4 py-4 text-sm leading-7 text-[color:var(--warning-ink)]">
         <div className="flex items-center gap-2 font-semibold">
           <FileWarning className="h-4 w-4" />
           Useful acoustic systems need more than a number

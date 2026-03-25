@@ -64,7 +64,7 @@ export function ParityScorecardPanel() {
 
       <div className="mt-5 grid gap-3">
         {SCORECARD_ROWS.map((row) => (
-          <article className="rounded-[1.3rem] border hairline bg-[color:var(--paper)] px-4 py-4" key={row.label}>
+          <article className="rounded-lg border hairline bg-[color:var(--paper)] px-4 py-4" key={row.label}>
             <div className="flex items-center justify-between gap-3">
               <div className="text-sm font-semibold text-[color:var(--ink)]">{row.label}</div>
               <Pill tone={getScoreTone(row.score)}>{row.score}%</Pill>
@@ -81,7 +81,7 @@ export function ParityScorecardPanel() {
       </div>
 
       <div className="mt-5 grid gap-3 md:grid-cols-3">
-        <article className="rounded-[1.2rem] border hairline bg-[color:var(--panel-strong)] px-4 py-4">
+        <article className="rounded-md border hairline bg-[color:var(--panel-strong)] px-4 py-4">
           <div className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
             <Sigma className="h-4 w-4" />
             Upstream core
@@ -91,7 +91,7 @@ export function ParityScorecardPanel() {
             and {GENERATED_UPSTREAM_SNAPSHOT.focus.impactOrLnwTestCount} impact/Ln,w tests are currently tracked upstream.
           </p>
         </article>
-        <article className="rounded-[1.2rem] border hairline bg-[color:var(--panel-strong)] px-4 py-4">
+        <article className="rounded-md border hairline bg-[color:var(--panel-strong)] px-4 py-4">
           <div className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
             <Radar className="h-4 w-4" />
             Current web scope
@@ -100,7 +100,7 @@ export function ParityScorecardPanel() {
             {calculatorCoverage}. Dynamic airborne selection is live, comparison calculators are live, exact impact-band import is live, exact DeltaLw reference import is live, official product catalog rows and lower-bound support are live, curated timber, concrete, hollow-core, CLT, composite, measured open-box/dry-floor, open-web steel, and FL-28 steel interpolation families are landing, heavy-floor impact is scoped, field-side outputs are partly guide/manual, and the main floor families now sit under explicit fixture-backed coverage guards instead of presence-only checks.
           </p>
         </article>
-        <article className="rounded-[1.2rem] border hairline bg-[color:var(--panel-strong)] px-4 py-4">
+        <article className="rounded-md border hairline bg-[color:var(--panel-strong)] px-4 py-4">
           <div className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
             <Layers2 className="h-4 w-4" />
             Catalog reach

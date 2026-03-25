@@ -31,7 +31,7 @@ export function WorkflowRail() {
       <div className="eyebrow">Operator lanes</div>
       <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
         {STEPS.map(({ icon: Icon, label, body }, index) => (
-          <article className="pointer-card rounded-[1.35rem] border hairline bg-black/[0.02] px-4 py-4" key={label}>
+          <article className="pointer-card rounded-lg border hairline bg-black/[0.02] px-4 py-4" key={label}>
             <div className="flex items-center justify-between gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-full border hairline bg-[color:var(--panel-strong)]">
                 <Icon className="h-4 w-4 text-[color:var(--ink)]" />

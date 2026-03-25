@@ -25,7 +25,7 @@ export function MaterialLibraryPanel({ materials, onAppendMaterial }: MaterialLi
       </div>
       <div className="mt-5 grid gap-3">
         {materials.map((material) => (
-          <article className="pointer-card grid gap-3 rounded-[1.25rem] border hairline px-4 py-4 md:grid-cols-[1fr_auto]" key={material.id}>
+          <article className="pointer-card grid gap-3 rounded-md border hairline px-4 py-4 md:grid-cols-[1fr_auto]" key={material.id}>
             <div className="space-y-2">
               <div className="flex flex-wrap items-center gap-2">
                 <div className="font-semibold text-[color:var(--ink)]">{material.name}</div>

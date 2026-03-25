@@ -72,7 +72,7 @@ export function ImpactImprovementSourcePanel({
           label="Improvement curve paste"
         >
           <textarea
-            className="focus-ring min-h-36 rounded-[1.35rem] border hairline bg-[color:var(--paper)] px-4 py-4 text-sm leading-7"
+            className="focus-ring min-h-36 rounded-lg border hairline bg-[color:var(--paper)] px-4 py-4 text-sm leading-7"
             id="impact-improvement-source-input"
             onChange={(event) => onInputChange(event.target.value)}
             placeholder={"100 20\n125 20\n160 20\n...\n\nor just 16 values:\n20 20 20 20 20 20 ..."}
@@ -81,14 +81,14 @@ export function ImpactImprovementSourcePanel({
         </FieldGuide>
 
         <div className="grid gap-3">
-          <article className="rounded-[1.25rem] border hairline bg-[color:var(--panel-strong)] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
+          <article className="rounded-md border hairline bg-[color:var(--panel-strong)] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
             <div className="font-semibold text-[color:var(--ink)]">Boundary</div>
             <p className="mt-2">
               This lane is exact only for the heavy-reference workflow. It does not replace a full floor-system model
               and does not override the live stack impact lane.
             </p>
           </article>
-          <article className="rounded-[1.25rem] border hairline bg-black/[0.025] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
+          <article className="rounded-md border hairline bg-black/[0.025] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
             <div className="font-semibold text-[color:var(--ink)]">Quick format</div>
             <p className="mt-2">
               Either paste 16 freq/value rows or 16 improvement values. DynEcho assumes the ISO heavy-reference floor
@@ -100,7 +100,7 @@ export function ImpactImprovementSourcePanel({
 
       {referenceImpact ? (
         <>
-          <div className="mt-5 rounded-[1.35rem] border hairline bg-[color:var(--success-soft)] px-4 py-4 text-sm leading-7 text-[color:var(--success-ink)]">
+          <div className="mt-5 rounded-lg border hairline bg-[color:var(--success-soft)] px-4 py-4 text-sm leading-7 text-[color:var(--success-ink)]">
             <div className="flex items-center gap-2 font-semibold">
               <ShieldCheck className="h-4 w-4" />
               Parsed exact improvement source
@@ -148,12 +148,12 @@ export function ImpactImprovementSourcePanel({
             />
           </div>
 
-          <div className="mt-5 rounded-[1.2rem] border hairline bg-[color:var(--panel-strong)] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
+          <div className="mt-5 rounded-md border hairline bg-[color:var(--panel-strong)] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
             <span className="font-semibold text-[color:var(--ink)]">Trust note:</span> {referenceImpact.confidence.summary}
           </div>
         </>
       ) : input.trim() ? (
-        <div className="mt-5 rounded-[1.35rem] border hairline bg-[color:var(--warning-soft)] px-4 py-4 text-sm leading-7 text-[color:var(--warning-ink)]">
+        <div className="mt-5 rounded-lg border hairline bg-[color:var(--warning-soft)] px-4 py-4 text-sm leading-7 text-[color:var(--warning-ink)]">
           <div className="flex items-center gap-2 font-semibold">
             <ShieldX className="h-4 w-4" />
             Improvement source not active
@@ -161,7 +161,7 @@ export function ImpactImprovementSourcePanel({
           <div className="mt-2">{parseError ?? "The improvement curve could not be resolved on the heavy-reference grid."}</div>
         </div>
       ) : (
-        <div className="mt-5 rounded-[1.35rem] border border-dashed hairline px-4 py-6 text-sm leading-7 text-[color:var(--ink-soft)]">
+        <div className="mt-5 rounded-lg border border-dashed hairline px-4 py-6 text-sm leading-7 text-[color:var(--ink-soft)]">
           Paste a measured improvement curve if you want an exact `DeltaLw` reference lane beyond the manual datasheet shortcut.
         </div>
       )}

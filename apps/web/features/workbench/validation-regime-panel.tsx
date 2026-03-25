@@ -108,7 +108,7 @@ export function ValidationRegimePanel({ result }: ValidationRegimePanelProps) {
       </div>
 
       <div className="mt-5 grid gap-3 xl:grid-cols-[1.1fr_0.9fr]">
-        <section className="rounded-[1.3rem] border hairline bg-[color:var(--panel-strong)] px-4 py-4">
+        <section className="rounded-lg border hairline bg-[color:var(--panel-strong)] px-4 py-4">
           <div className="flex flex-wrap items-center gap-2">
             <Pill tone={impactTone}>Impact posture</Pill>
             {result?.dynamicImpactTrace ? <Pill tone="neutral">{result.dynamicImpactTrace.evidenceTierLabel}</Pill> : null}
@@ -124,7 +124,7 @@ export function ValidationRegimePanel({ result }: ValidationRegimePanelProps) {
           </div>
         </section>
 
-        <section className="rounded-[1.3rem] border hairline bg-[color:var(--paper)] px-4 py-4">
+        <section className="rounded-lg border hairline bg-[color:var(--paper)] px-4 py-4">
           <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">
             Benchmark guardrails
           </div>
@@ -133,7 +133,7 @@ export function ValidationRegimePanel({ result }: ValidationRegimePanelProps) {
               const Icon = band.icon;
 
               return (
-                <article className="rounded-[1.05rem] border hairline bg-black/[0.025] px-4 py-3" key={band.label}>
+                <article className="rounded-md border hairline bg-black/[0.025] px-4 py-3" key={band.label}>
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex min-w-0 items-start gap-3">
                       <div className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-black/8 bg-white/70">
@@ -155,7 +155,7 @@ export function ValidationRegimePanel({ result }: ValidationRegimePanelProps) {
         </section>
       </div>
 
-      <div className="mt-5 rounded-[1.3rem] border hairline bg-[color:var(--paper)] px-4 py-4">
+      <div className="mt-5 rounded-lg border hairline bg-[color:var(--paper)] px-4 py-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">
@@ -175,7 +175,7 @@ export function ValidationRegimePanel({ result }: ValidationRegimePanelProps) {
 
             return (
               <article
-                className={`rounded-[1.1rem] border px-4 py-4 ${
+                className={`rounded-md border px-4 py-4 ${
                   isActive
                     ? "border-[color:var(--accent)]/35 bg-[color:var(--accent-soft)]/24"
                     : "hairline bg-black/[0.025]"
@@ -204,7 +204,7 @@ export function ValidationRegimePanel({ result }: ValidationRegimePanelProps) {
                   <Pill tone="neutral">{formatImpactValidationTolerance(entry.maxToleranceDb)}</Pill>
                 </div>
 
-                <div className="mt-4 rounded-[1rem] border hairline bg-[color:var(--paper)]/70 px-3 py-3">
+                <div className="mt-4 rounded-md border hairline bg-[color:var(--paper)]/70 px-3 py-3">
                   <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
                     Benchmark mix
                   </div>
@@ -241,7 +241,7 @@ export function ValidationRegimePanel({ result }: ValidationRegimePanelProps) {
         </div>
       </div>
 
-      <div className="mt-5 rounded-[1.3rem] border hairline bg-[color:var(--paper)] px-4 py-4">
+      <div className="mt-5 rounded-lg border hairline bg-[color:var(--paper)] px-4 py-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">
@@ -255,7 +255,7 @@ export function ValidationRegimePanel({ result }: ValidationRegimePanelProps) {
           <Pill tone="neutral">{coverageSnapshotRows.length} tracked families</Pill>
         </div>
 
-        <div className="mt-4 overflow-hidden rounded-[1.1rem] border hairline">
+        <div className="mt-4 overflow-hidden rounded-md border hairline">
           <div className="hidden gap-3 bg-black/[0.04] px-4 py-3 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)] xl:grid xl:grid-cols-[1.35fr_0.8fr_0.8fr_1.15fr]">
             <div>Family</div>
             <div>Floor</div>
@@ -298,7 +298,7 @@ export function ValidationRegimePanel({ result }: ValidationRegimePanelProps) {
         </div>
       </div>
 
-      <div className="mt-5 rounded-[1.3rem] border hairline bg-[color:var(--paper)] px-4 py-4">
+      <div className="mt-5 rounded-lg border hairline bg-[color:var(--paper)] px-4 py-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">
@@ -313,7 +313,7 @@ export function ValidationRegimePanel({ result }: ValidationRegimePanelProps) {
 
         <div className="mt-4 grid gap-3 xl:grid-cols-2">
           {hardeningTasks.map((task) => (
-            <article className="rounded-[1.1rem] border hairline bg-black/[0.025] px-4 py-4" key={task.id}>
+            <article className="rounded-md border hairline bg-black/[0.025] px-4 py-4" key={task.id}>
               <div className="flex flex-wrap items-center gap-2">
                 <Pill tone="warning">Next</Pill>
                 <Pill tone="neutral">{task.familyLabels.length} families</Pill>
@@ -328,7 +328,7 @@ export function ValidationRegimePanel({ result }: ValidationRegimePanelProps) {
         </div>
       </div>
 
-      <div className="mt-5 rounded-[1.3rem] border hairline bg-[color:var(--paper)] px-4 py-4">
+      <div className="mt-5 rounded-lg border hairline bg-[color:var(--paper)] px-4 py-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">
@@ -361,7 +361,7 @@ export function ValidationRegimePanel({ result }: ValidationRegimePanelProps) {
 
             return (
               <article
-                className={`rounded-[1.1rem] border px-4 py-4 ${
+                className={`rounded-md border px-4 py-4 ${
                   isActive
                     ? "border-[color:var(--accent)]/35 bg-[color:var(--accent-soft)]/24"
                     : "hairline bg-black/[0.025]"

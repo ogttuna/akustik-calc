@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReportProfile } from "@dynecho/shared";
+import type { AssemblyCalculation, ReportProfile } from "@dynecho/shared";
 import { SurfacePanel } from "@dynecho/ui";
 import { Building2, Copy, Download, FileText, LibraryBig, Printer, Save, ScrollText, Star, Trash2, Upload } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -54,6 +54,7 @@ import {
 import { getSimpleWorkbenchProposalBranding } from "./simple-workbench-proposal-branding";
 import { downloadSimpleWorkbenchProposalPdf } from "./simple-workbench-proposal-pdf";
 import { storeSimpleWorkbenchProposalPreview } from "./simple-workbench-proposal-preview-storage";
+import { buildWorkbenchResponseCurveFigures } from "./response-curve-model";
 import { REPORT_PROFILE_LABELS } from "./workbench-data";
 
 type SimpleWorkbenchProposalPanelProps = {
@@ -115,6 +116,7 @@ type SimpleWorkbenchProposalPanelProps = {
   proposalValidityNote: string;
   reportProfile: ReportProfile;
   reportProfileLabel: string;
+  result: AssemblyCalculation | null;
   studyModeLabel: string;
   studyContextLabel: string;
   validationDetail: string;
@@ -210,14 +212,14 @@ function ProposalField(props: {
       </div>
       {multiline ? (
         <textarea
-          className="focus-ring min-h-28 rounded-[1rem] border hairline bg-[color:var(--paper)] px-3 py-3 text-sm leading-6 text-[color:var(--ink)]"
+          className="focus-ring min-h-28 rounded-md border hairline bg-[color:var(--paper)] px-3 py-3 text-sm leading-6 text-[color:var(--ink)]"
           onChange={(event) => onChange(event.target.value)}
           placeholder={placeholder}
           value={value}
         />
       ) : (
         <input
-          className="focus-ring rounded-[1rem] border hairline bg-[color:var(--paper)] px-3 py-3 text-sm text-[color:var(--ink)]"
+          className="focus-ring rounded-md border hairline bg-[color:var(--paper)] px-3 py-3 text-sm text-[color:var(--ink)]"
           onChange={(event) => onChange(event.target.value)}
           placeholder={placeholder}
           value={value}
@@ -231,7 +233,7 @@ function PreviewMetric(props: { detail: string; label: string; value: string }) 
   const { detail, label, value } = props;
 
   return (
-    <article className="min-w-0 rounded-[1rem] border hairline bg-[color:var(--paper)]/78 px-4 py-4">
+    <article className="min-w-0 rounded-md border hairline bg-[color:var(--paper)]/78 px-4 py-4">
       <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">{label}</div>
       <div className="mt-2 break-words text-lg font-semibold text-[color:var(--ink)]">{value}</div>
       <p className="mt-2 text-[0.82rem] leading-5 text-[color:var(--ink-soft)]">{detail}</p>
@@ -243,7 +245,7 @@ function IssueMetaCard(props: { detail: string; label: string; value: string }) 
   const { detail, label, value } = props;
 
   return (
-    <article className="min-w-0 rounded-[1rem] border hairline bg-[color:var(--paper)]/78 px-4 py-4">
+    <article className="min-w-0 rounded-md border hairline bg-[color:var(--paper)]/78 px-4 py-4">
       <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">{label}</div>
       <div className="mt-2 break-words text-sm font-semibold text-[color:var(--ink)]">{value}</div>
       <p className="mt-2 text-[0.82rem] leading-5 text-[color:var(--ink-soft)]">{detail}</p>
@@ -259,7 +261,7 @@ function CitationCard(props: SimpleWorkbenchProposalCitation) {
   const { detail, href, label, tone } = props;
 
   return (
-    <article className="rounded-[1rem] border hairline bg-[color:var(--paper)]/78 px-4 py-4">
+    <article className="rounded-md border hairline bg-[color:var(--paper)]/78 px-4 py-4">
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">{label}</div>
         <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">{tone}</div>
@@ -341,7 +343,7 @@ function CoverageCard(props: SimpleWorkbenchProposalCoverageItem) {
   const posturePanelClass = coveragePosturePanelClass(postureTone);
 
   return (
-    <article className="rounded-[1rem] border hairline bg-[color:var(--paper)]/78 px-4 py-4">
+    <article className="rounded-md border hairline bg-[color:var(--paper)]/78 px-4 py-4">
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div className="text-sm font-semibold text-[color:var(--ink)]">{label}</div>
         <div className={`inline-flex rounded-full border px-2.5 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.16em] ${coverageToneClass(status)}`}>
@@ -350,7 +352,7 @@ function CoverageCard(props: SimpleWorkbenchProposalCoverageItem) {
       </div>
       <div className="mt-3 text-lg font-semibold text-[color:var(--ink)]">{value}</div>
       <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">{detail}</p>
-      <div className={`mt-3 rounded-[0.95rem] border px-3 py-3 ${posturePanelClass}`}>
+      <div className={`mt-3 rounded border px-3 py-3 ${posturePanelClass}`}>
         <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Evidence class</div>
         <div className={`mt-2 text-sm font-semibold ${postureTextClass}`}>{postureLabel}</div>
         <p className="mt-1 text-sm leading-6 text-[color:var(--ink-soft)]">{postureDetail}</p>
@@ -501,6 +503,7 @@ function buildProposalDocument(
     recommendationItems: proposalBrief.recommendationItems,
     reportProfile: props.reportProfile,
     reportProfileLabel: props.reportProfileLabel,
+    responseCurves: buildWorkbenchResponseCurveFigures(props.result),
     studyModeLabel: props.studyModeLabel,
     studyContextLabel: props.studyContextLabel,
     validationDetail: props.validationDetail,
@@ -958,7 +961,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
 
       <div className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,0.94fr)_minmax(0,1.06fr)]">
         <div className="grid gap-4">
-          <div className="rounded-[1.35rem] border hairline bg-[color:var(--paper)]/78 px-4 py-4">
+          <div className="rounded-lg border hairline bg-[color:var(--paper)]/78 px-4 py-4">
             <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
               <Building2 className="h-4 w-4" />
               Issue register
@@ -993,7 +996,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
                 value={props.proposalRevision}
               />
             </div>
-            <div className="mt-4 rounded-[1rem] border border-[color:color-mix(in_oklch,var(--accent)_26%,var(--line))] bg-[color:color-mix(in_oklch,var(--accent)_10%,var(--paper))] px-4 py-4">
+            <div className="mt-4 rounded-md border border-[color:color-mix(in_oklch,var(--accent)_26%,var(--line))] bg-[color:color-mix(in_oklch,var(--accent)_10%,var(--paper))] px-4 py-4">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
@@ -1013,7 +1016,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
                 </button>
               </div>
             </div>
-            <div className="mt-4 rounded-[1rem] border border-[color:color-mix(in_oklch,var(--accent)_20%,var(--line))] bg-[color:var(--paper)] px-4 py-4">
+            <div className="mt-4 rounded-md border border-[color:color-mix(in_oklch,var(--accent)_20%,var(--line))] bg-[color:var(--paper)] px-4 py-4">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
@@ -1040,7 +1043,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
               <div className="mt-4 grid gap-2">
                 {proposalDocument.issueRegisterItems.map((item) => (
                   <div
-                    className="grid gap-2 rounded-[0.95rem] border hairline bg-[color:var(--paper)]/78 px-3 py-3 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)_auto]"
+                    className="grid gap-2 rounded border hairline bg-[color:var(--paper)]/78 px-3 py-3 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)_auto]"
                     key={`${item.label}-${item.reference}-${item.issuedOnLabel}`}
                   >
                     <div className="min-w-0">
@@ -1058,7 +1061,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
             </div>
           </div>
 
-          <div className="rounded-[1.35rem] border hairline bg-[color:var(--paper)]/78 px-4 py-4">
+          <div className="rounded-lg border hairline bg-[color:var(--paper)]/78 px-4 py-4">
             <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
               <LibraryBig className="h-4 w-4" />
               Company profile library
@@ -1115,7 +1118,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
                 />
               </div>
             </div>
-            <div className="mt-4 rounded-[1rem] border border-[color:color-mix(in_oklch,var(--accent)_20%,var(--line))] bg-[color:color-mix(in_oklch,var(--accent)_8%,var(--paper))] px-4 py-4">
+            <div className="mt-4 rounded-md border border-[color:color-mix(in_oklch,var(--accent)_20%,var(--line))] bg-[color:color-mix(in_oklch,var(--accent)_8%,var(--paper))] px-4 py-4">
               <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
                 Current office identity
               </div>
@@ -1146,7 +1149,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
               {companyProfiles.length > 0 ? (
                 companyProfiles.map((profile) => (
                   <div
-                    className={`grid gap-3 rounded-[1rem] border px-4 py-4 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)_auto] ${
+                    className={`grid gap-3 rounded-md border px-4 py-4 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)_auto] ${
                       activeCompanyProfile?.id === profile.id
                         ? "border-[color:color-mix(in_oklch,var(--accent)_26%,var(--line))] bg-[color:color-mix(in_oklch,var(--accent)_10%,var(--paper))]"
                         : "hairline bg-[color:var(--paper)]"
@@ -1220,14 +1223,14 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
                   </div>
                 ))
               ) : (
-                <div className="rounded-[1rem] border border-dashed hairline px-4 py-4 text-sm leading-6 text-[color:var(--ink-soft)]">
+                <div className="rounded-md border border-dashed hairline px-4 py-4 text-sm leading-6 text-[color:var(--ink-soft)]">
                   No local company profiles yet. Save the current consultant identity block and office-level clause wording, then export it as JSON if the same acoustic office needs to reuse the branded preset on another browser.
                 </div>
               )}
             </div>
           </div>
 
-          <div className="rounded-[1.35rem] border hairline bg-[color:var(--paper)]/78 px-4 py-4">
+          <div className="rounded-lg border hairline bg-[color:var(--paper)]/78 px-4 py-4">
             <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
               <FileText className="h-4 w-4" />
               Template and issue coding
@@ -1239,7 +1242,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
                   Choose the proposal voice.
                 </p>
                 <select
-                  className="focus-ring rounded-[1rem] border hairline bg-[color:var(--paper)] px-3 py-3 text-sm text-[color:var(--ink)]"
+                  className="focus-ring rounded-md border hairline bg-[color:var(--paper)] px-3 py-3 text-sm text-[color:var(--ink)]"
                   onChange={(event) => props.onReportProfileChange(event.target.value as ReportProfile)}
                   value={props.reportProfile}
                 >
@@ -1260,7 +1263,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
             </div>
           </div>
 
-          <div className="rounded-[1.35rem] border hairline bg-[color:var(--paper)]/78 px-4 py-4">
+          <div className="rounded-lg border hairline bg-[color:var(--paper)]/78 px-4 py-4">
             <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
               <Building2 className="h-4 w-4" />
               Consultant identity
@@ -1310,23 +1313,23 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
                 </p>
                 <input
                   accept="image/png,image/jpeg,image/webp,image/svg+xml"
-                  className="focus-ring rounded-[1rem] border hairline bg-[color:var(--paper)] px-3 py-3 text-sm text-[color:var(--ink)]"
+                  className="focus-ring rounded-md border hairline bg-[color:var(--paper)] px-3 py-3 text-sm text-[color:var(--ink)]"
                   onChange={(event) => void handleConsultantLogoChange(event.target.files)}
                   type="file"
                 />
               </label>
-              <div className="rounded-[1rem] border hairline bg-[color:var(--paper)]/78 px-4 py-4">
+              <div className="rounded-md border hairline bg-[color:var(--paper)]/78 px-4 py-4">
                 <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Current brand mark</div>
                 <div className="mt-3 flex items-center gap-3">
                   {props.consultantLogoDataUrl ? (
                     <img
                       alt={`${props.consultantCompany || "Consultant"} logo preview`}
-                      className="h-16 w-16 rounded-[1rem] border hairline bg-white object-contain p-2"
+                      className="h-16 w-16 rounded-md border hairline bg-white object-contain p-2"
                       src={props.consultantLogoDataUrl}
                     />
                   ) : (
                     <div
-                      className="flex h-16 w-16 items-center justify-center rounded-[1rem] text-lg font-semibold uppercase tracking-[0.2em] text-[#fff8f2]"
+                      className="flex h-16 w-16 items-center justify-center rounded-md text-lg font-semibold uppercase tracking-[0.2em] text-[#fff8f2]"
                       style={{ backgroundColor: proposalBranding.accentStrong }}
                     >
                       {proposalBranding.monogram}
@@ -1350,7 +1353,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
             </div>
           </div>
 
-          <div className="rounded-[1.35rem] border hairline bg-[color:var(--paper)]/78 px-4 py-4">
+          <div className="rounded-lg border hairline bg-[color:var(--paper)]/78 px-4 py-4">
             <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
               <ScrollText className="h-4 w-4" />
               Project information
@@ -1381,13 +1384,13 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
             </div>
           </div>
 
-          <div className="rounded-[1.35rem] border hairline bg-[color:var(--paper)]/78 px-4 py-4">
+          <div className="rounded-lg border hairline bg-[color:var(--paper)]/78 px-4 py-4">
             <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
               <FileText className="h-4 w-4" />
               Transmittal details
             </div>
             <div className="mt-4 grid gap-4">
-              <div className="rounded-[1rem] border border-[color:color-mix(in_oklch,var(--accent)_20%,var(--line))] bg-[color:color-mix(in_oklch,var(--accent)_8%,var(--paper))] px-4 py-4">
+              <div className="rounded-md border border-[color:color-mix(in_oklch,var(--accent)_20%,var(--line))] bg-[color:color-mix(in_oklch,var(--accent)_8%,var(--paper))] px-4 py-4">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
@@ -1412,7 +1415,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
 
                     return (
                       <button
-                        className={`focus-ring grid gap-2 rounded-[1rem] border px-4 py-4 text-left transition ${
+                        className={`focus-ring grid gap-2 rounded-md border px-4 py-4 text-left transition ${
                           active
                             ? "border-[color:color-mix(in_oklch,var(--accent)_28%,var(--line))] bg-[color:color-mix(in_oklch,var(--accent)_12%,var(--paper))]"
                             : "hairline bg-[color:var(--paper)]/76 hover:bg-black/[0.03]"
@@ -1473,7 +1476,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
             </div>
           </div>
 
-          <div className="rounded-[1.35rem] border hairline bg-black/[0.025] px-4 py-4">
+          <div className="rounded-lg border hairline bg-black/[0.025] px-4 py-4">
             <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
               <ScrollText className="h-4 w-4" />
               Sheet contents
@@ -1503,7 +1506,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
           </div>
         </div>
 
-        <article className="rounded-[1.55rem] border hairline bg-[color:var(--panel-strong)] px-4 py-4 sm:px-5">
+        <article className="rounded-lg border hairline bg-[color:var(--panel-strong)] px-4 py-4 sm:px-5">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
               <div className="eyebrow">Client Preview</div>
@@ -1520,7 +1523,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
           </div>
 
           <div
-            className="mt-4 flex flex-wrap items-center justify-between gap-4 rounded-[1.25rem] border px-4 py-4"
+            className="mt-4 flex flex-wrap items-center justify-between gap-4 rounded-md border px-4 py-4"
             style={{
               background: `linear-gradient(135deg, ${proposalBranding.heroFrom}, ${proposalBranding.heroTo})`,
               borderColor: proposalBranding.line
@@ -1530,13 +1533,13 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
               {proposalDocument.consultantLogoDataUrl ? (
                 <img
                   alt={`${proposalDocument.consultantCompany} logo`}
-                  className="h-14 w-14 rounded-[1rem] border bg-white object-contain p-2"
+                  className="h-14 w-14 rounded-md border bg-white object-contain p-2"
                   src={proposalDocument.consultantLogoDataUrl}
                   style={{ borderColor: proposalBranding.line }}
                 />
               ) : (
                 <div
-                  className="flex h-14 w-14 items-center justify-center rounded-[1rem] text-lg font-semibold uppercase tracking-[0.2em] text-[#fff8f2]"
+                  className="flex h-14 w-14 items-center justify-center rounded-md text-lg font-semibold uppercase tracking-[0.2em] text-[#fff8f2]"
                   style={{ backgroundColor: proposalBranding.accentStrong }}
                 >
                   {proposalBranding.monogram}
@@ -1557,14 +1560,14 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
           </div>
 
           <div className="mt-5 grid gap-3 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
-            <div className="rounded-[1.2rem] border hairline bg-[color:var(--paper)]/8 px-4 py-4">
+            <div className="rounded-md border hairline bg-[color:var(--paper)]/8 px-4 py-4">
               <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
                 Issue header
               </div>
               <div className="mt-2 text-xl font-semibold text-[color:var(--ink)]">{proposalDocument.projectName}</div>
               <div className="mt-1 text-sm text-[color:var(--ink-soft)]">{proposalDocument.clientName}</div>
               <div className="mt-2 text-sm text-[color:var(--ink-soft)]">{proposalDocument.consultantCompany}</div>
-              <div className="mt-3 rounded-[0.95rem] border hairline bg-[color:var(--paper)]/68 px-3 py-3">
+              <div className="mt-3 rounded border hairline bg-[color:var(--paper)]/68 px-3 py-3">
                 <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
                   Issued to
                 </div>
@@ -1581,7 +1584,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
               <p className="mt-4 text-[0.82rem] leading-5 text-[color:var(--ink-soft)]">{props.assemblyHeadline}</p>
             </div>
 
-            <div className="rounded-[1.2rem] border border-[color:color-mix(in_oklch,var(--accent)_30%,var(--line))] bg-[color:color-mix(in_oklch,var(--accent)_10%,var(--paper))] px-4 py-4">
+            <div className="rounded-md border border-[color:color-mix(in_oklch,var(--accent)_30%,var(--line))] bg-[color:color-mix(in_oklch,var(--accent)_10%,var(--paper))] px-4 py-4">
               <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
                 Lead metric
               </div>
@@ -1609,7 +1612,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
             <IssueMetaCard detail="Commercial or administrative validity note." label="Validity" value={proposalDocument.proposalValidityNote} />
           </div>
 
-          <div className="mt-4 rounded-[1rem] border border-[color:color-mix(in_oklch,var(--accent)_26%,var(--line))] bg-[color:color-mix(in_oklch,var(--accent)_8%,var(--paper))] px-4 py-4">
+          <div className="mt-4 rounded-md border border-[color:color-mix(in_oklch,var(--accent)_26%,var(--line))] bg-[color:color-mix(in_oklch,var(--accent)_8%,var(--paper))] px-4 py-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="text-sm font-semibold text-[color:var(--ink)]">Issue authority</div>
               <div className="rounded-full border hairline bg-[color:var(--paper)]/76 px-3 py-1.5 text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-soft)]">
@@ -1646,7 +1649,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
             <IssueMetaCard detail="Office identity carried on the issue cover." label="Office" value={proposalDocument.consultantAddress} />
           </div>
 
-          <div className="mt-4 rounded-[1rem] border hairline bg-[color:var(--paper)]/72 px-4 py-4">
+          <div className="mt-4 rounded-md border hairline bg-[color:var(--paper)]/72 px-4 py-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="text-sm font-semibold text-[color:var(--ink)]">Issue control register</div>
               <div className="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
@@ -1665,12 +1668,12 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
             </div>
           </div>
 
-          <div className="mt-4 rounded-[1rem] border border-[color:color-mix(in_oklch,var(--accent)_26%,var(--line))] bg-[color:color-mix(in_oklch,var(--accent)_9%,var(--paper))] px-4 py-4">
+          <div className="mt-4 rounded-md border border-[color:color-mix(in_oklch,var(--accent)_26%,var(--line))] bg-[color:color-mix(in_oklch,var(--accent)_9%,var(--paper))] px-4 py-4">
             <div className="text-sm font-semibold text-[color:var(--ink)]">Executive summary</div>
             <p className="mt-3 max-w-4xl text-sm leading-7 text-[color:var(--ink-soft)]">{proposalDocument.executiveSummary}</p>
           </div>
 
-          <div className="mt-4 rounded-[1rem] border hairline bg-[color:var(--paper)]/72 px-4 py-4">
+          <div className="mt-4 rounded-md border hairline bg-[color:var(--paper)]/72 px-4 py-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="text-sm font-semibold text-[color:var(--ink)]">Issue dossier</div>
               <div className="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
@@ -1687,7 +1690,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
           </div>
 
           {proposalDocument.corridorDossierCards.length > 0 ? (
-            <div className="mt-4 rounded-[1rem] border hairline bg-[color:var(--paper)]/72 px-4 py-4">
+            <div className="mt-4 rounded-md border hairline bg-[color:var(--paper)]/72 px-4 py-4">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div className="text-sm font-semibold text-[color:var(--ink)]">Validation corridor package</div>
                 <div className="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
@@ -1703,7 +1706,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
             </div>
           ) : null}
 
-          <div className="mt-4 rounded-[1rem] border hairline bg-[color:var(--paper)]/72 px-4 py-4">
+          <div className="mt-4 rounded-md border hairline bg-[color:var(--paper)]/72 px-4 py-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="text-sm font-semibold text-[color:var(--ink)]">Solver rationale package</div>
               <div className="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
@@ -1731,7 +1734,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
             ))}
           </div>
 
-          <div className="mt-4 rounded-[1rem] border hairline bg-[color:var(--paper)]/72 px-4 py-4">
+          <div className="mt-4 rounded-md border hairline bg-[color:var(--paper)]/72 px-4 py-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="text-sm font-semibold text-[color:var(--ink)]">Output coverage register</div>
               <div className="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
@@ -1758,7 +1761,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
             </div>
           </div>
 
-          <div className="mt-4 rounded-[1rem] border hairline bg-[color:var(--paper)]/72 px-4 py-4">
+          <div className="mt-4 rounded-md border hairline bg-[color:var(--paper)]/72 px-4 py-4">
             <div className="text-sm font-semibold text-[color:var(--ink)]">Decision trail</div>
             <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">{proposalDocument.decisionTrailHeadline}</p>
             <div className="mt-3 grid gap-3 md:grid-cols-2">
@@ -1774,14 +1777,14 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
           </div>
 
           <div className="mt-4 grid gap-3 md:grid-cols-2">
-            <div className="rounded-[1rem] border hairline bg-[color:var(--paper)]/76 px-4 py-4">
+            <div className="rounded-md border hairline bg-[color:var(--paper)]/76 px-4 py-4">
               <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
                 Dynamic branch
               </div>
               <div className="mt-2 text-sm font-semibold text-[color:var(--ink)]">{props.dynamicBranchLabel}</div>
               <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">{props.dynamicBranchDetail}</p>
             </div>
-            <div className="rounded-[1rem] border hairline bg-[color:var(--paper)]/76 px-4 py-4">
+            <div className="rounded-md border hairline bg-[color:var(--paper)]/76 px-4 py-4">
               <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
                 Validation posture
               </div>
@@ -1790,7 +1793,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
             </div>
           </div>
 
-          <div className="mt-4 rounded-[1rem] border hairline bg-[color:var(--paper)]/72 px-4 py-4">
+          <div className="mt-4 rounded-md border hairline bg-[color:var(--paper)]/72 px-4 py-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="text-sm font-semibold text-[color:var(--ink)]">Recommended next steps</div>
               <div className="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
@@ -1804,7 +1807,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
             </div>
           </div>
 
-          <div className="mt-4 rounded-[1rem] border hairline bg-[color:var(--paper)]/72 px-4 py-4">
+          <div className="mt-4 rounded-md border hairline bg-[color:var(--paper)]/72 px-4 py-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="text-sm font-semibold text-[color:var(--ink)]">Source citations</div>
               <div className="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
@@ -1829,7 +1832,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
             ) : null}
           </div>
 
-          <div className="mt-4 rounded-[1rem] border hairline bg-[color:var(--paper)]/72 px-4 py-4">
+          <div className="mt-4 rounded-md border hairline bg-[color:var(--paper)]/72 px-4 py-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="text-sm font-semibold text-[color:var(--ink)]">Assumption register</div>
               <div className="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
@@ -1843,7 +1846,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
             </div>
           </div>
 
-          <div className="mt-4 rounded-[1rem] border hairline bg-[color:var(--paper)]/72 px-4 py-4">
+          <div className="mt-4 rounded-md border hairline bg-[color:var(--paper)]/72 px-4 py-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="text-sm font-semibold text-[color:var(--ink)]">Construction section</div>
               <div className="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
@@ -1907,12 +1910,12 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
           </div>
 
           {!exportReady ? (
-            <div className="mt-3 rounded-[1rem] border border-dashed hairline px-4 py-3 text-sm leading-6 text-[color:var(--ink-soft)]">
+            <div className="mt-3 rounded-md border border-dashed hairline px-4 py-3 text-sm leading-6 text-[color:var(--ink-soft)]">
               Build a valid stack and expose at least one supported output before generating the formal proposal sheet.
             </div>
           ) : null}
 
-          <div className="mt-4 rounded-[1rem] border hairline bg-black/[0.02] px-4 py-4">
+          <div className="mt-4 rounded-md border hairline bg-black/[0.02] px-4 py-4">
             <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
               <FileText className="h-4 w-4" />
               Delivery note

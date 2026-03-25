@@ -129,7 +129,7 @@ export function ReportExportPanel({
       </div>
 
       <div className="mt-5 grid gap-3 xl:grid-cols-[1.2fr_0.8fr]">
-        <article className="rounded-[1.3rem] border hairline bg-[color:var(--panel-strong)] px-4 py-4">
+        <article className="rounded-lg border hairline bg-[color:var(--panel-strong)] px-4 py-4">
           <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
             <FileText className="h-4 w-4" />
             Decision trail
@@ -139,7 +139,7 @@ export function ReportExportPanel({
           </p>
           <div className="mt-4 grid gap-2">
             {decisionTrail.items.map((item) => (
-              <div className="rounded-[1rem] border hairline bg-[color:var(--paper)] px-3 py-3" key={`${item.label}-${item.detail}`}>
+              <div className="rounded-md border hairline bg-[color:var(--paper)] px-3 py-3" key={`${item.label}-${item.detail}`}>
                 <div className="flex flex-wrap items-center gap-2">
                   <div className="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
                     {item.label}
@@ -158,7 +158,7 @@ export function ReportExportPanel({
           </div>
         </article>
         <div className="grid gap-3">
-          <article className="rounded-[1.3rem] border hairline bg-black/[0.03] px-4 py-4">
+          <article className="rounded-lg border hairline bg-black/[0.03] px-4 py-4">
             <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
               <ShieldCheck className="h-4 w-4" />
               Validation carried into file
@@ -181,7 +181,7 @@ export function ReportExportPanel({
           </article>
 
           {fieldAirborneProvenance ? (
-            <article className="rounded-[1.3rem] border hairline bg-black/[0.025] px-4 py-4">
+            <article className="rounded-lg border hairline bg-black/[0.025] px-4 py-4">
               <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
                 <Radar className="h-4 w-4" />
                 Airborne field provenance
@@ -194,7 +194,7 @@ export function ReportExportPanel({
             </article>
           ) : null}
 
-          <article className="rounded-[1.3rem] border hairline bg-black/[0.025] px-4 py-4">
+          <article className="rounded-lg border hairline bg-black/[0.025] px-4 py-4">
             <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
               <ScrollText className="h-4 w-4" />
               Still staged
@@ -208,7 +208,7 @@ export function ReportExportPanel({
         </div>
       </div>
 
-      <div className="mt-5 rounded-[1.3rem] border hairline bg-black/[0.025] px-4 py-4">
+      <div className="mt-5 rounded-lg border hairline bg-black/[0.025] px-4 py-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <div className="text-sm font-semibold text-[color:var(--ink)]">{fileName}</div>

@@ -74,7 +74,7 @@ export function FieldUsageBoard({ description, items, title }: FieldUsageBoardPr
   const stagedCount = countByKind(items, "conditional");
 
   return (
-    <div className="rounded-[1.45rem] border hairline bg-[color:var(--panel-strong)] px-4 py-4">
+    <div className="rounded-lg border hairline bg-[color:var(--panel-strong)] px-4 py-4">
       <div className="flex flex-wrap items-center gap-3">
         <Pill tone="accent">Input usage map</Pill>
         <Pill tone={engagedCount > 0 ? "success" : "neutral"}>{engagedCount} engaged</Pill>
@@ -100,7 +100,7 @@ export function FieldUsageBoard({ description, items, title }: FieldUsageBoardPr
 
           return (
             <section
-              className={`rounded-[1.25rem] border px-4 py-4 ${group.wrapperClassName}`}
+              className={`rounded-md border px-4 py-4 ${group.wrapperClassName}`}
               key={kind}
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
@@ -120,7 +120,7 @@ export function FieldUsageBoard({ description, items, title }: FieldUsageBoardPr
                 <div className="mt-4 space-y-3">
                   {entries.map((item) => (
                     <article
-                      className="rounded-[1.05rem] border border-black/8 bg-white/60 px-4 py-3"
+                      className="rounded-md border border-black/8 bg-white/60 px-4 py-3"
                       key={item.id}
                     >
                       <div className="flex flex-wrap items-center gap-2">

@@ -84,6 +84,43 @@ describe("calculateImpactOnly", () => {
     expect(result.impactSupport?.formulaNotes.some((note: string) => /Dutch LnT,A was computed/i.test(note))).toBe(true);
   });
 
+  it("surfaces the exact impact band trace on the exact source lane", () => {
+    const result = calculateImpactOnly([{ materialId: "air_gap", thicknessMm: 90 }], {
+      exactImpactSource: EXACT_IMPACT_SOURCE_19
+    });
+
+    expect(result.impact?.trace?.activeSeriesId).toBe("source");
+    expect(result.impact?.trace?.series).toEqual([
+      expect.objectContaining({
+        id: "source",
+        label: "Exact lab band curve"
+      })
+    ]);
+    expect(result.impact?.trace?.series[0]?.curve.frequenciesHz).toEqual(EXACT_IMPACT_SOURCE_19.frequenciesHz);
+    expect(result.impact?.trace?.series[0]?.curve.levelsDb).toEqual(EXACT_IMPACT_SOURCE_19.levelsDb);
+  });
+
+  it("keeps real field and standardized curves when exact bands are continued through a direct path only", () => {
+    const result = calculateImpactOnly([{ materialId: "air_gap", thicknessMm: 90 }], {
+      exactImpactSource: EXACT_IMPACT_SOURCE_19,
+      impactFieldContext: {
+        directPathOffsetDb: 1,
+        flankingPaths: [],
+        lowerTreatmentReductionDb: 2,
+        receivingRoomVolumeM3: 50
+      },
+      targetOutputs: ["L'n,w", "L'nT,w"]
+    });
+
+    expect(result.impact?.trace?.activeSeriesId).toBe("standardized");
+    expect(result.impact?.trace?.series.map((series: { id: string }) => series.id)).toEqual(["source", "field", "standardized"]);
+    expect(result.impact?.trace?.series[1]?.curve.levelsDb).not.toEqual(EXACT_IMPACT_SOURCE_19.levelsDb);
+    expect(result.impact?.metricBasis?.LPrimeNW).toBe("estimated_field_lprimenw_from_direct_flanking_energy_sum");
+    expect(result.impact?.metricBasis?.LPrimeNTw).toBe(
+      "estimated_standardized_field_lprimentw_from_direct_flanking_energy_sum_plus_room_volume"
+    );
+  });
+
   it("surfaces companion floor-carrier outputs without fabricating unsupported impact metrics", () => {
     const result = calculateImpactOnly([{ materialId: "air_gap", thicknessMm: 90 }], {
       officialFloorSystemId: "knauf_ct30_1c_timber_lab_2026",
@@ -108,16 +145,18 @@ describe("calculateImpactOnly", () => {
 
   it("resolves an exact curated floor-system id with no visible wall stack at all", () => {
     const result = calculateImpactOnly([], {
-      officialFloorSystemId: "dataholz_gdmtxn01_dry_clt_lab_2026"
+      officialFloorSystemId: "tuas_x5_clt140_measured_2026"
     });
 
     expect(result.sourceMode).toBe("official_floor_system");
-    expect(result.floorSystemMatch?.system.id).toBe("dataholz_gdmtxn01_dry_clt_lab_2026");
+    expect(result.floorSystemMatch?.system.id).toBe("tuas_x5_clt140_measured_2026");
     expect(result.impact?.LnW).toBe(50);
-    expect(result.impact?.metricBasis?.LnW).toBe("official_floor_system_exact_match");
-    expect(result.floorCarrier?.Rw).toBe(62);
+    expect(result.impact?.metricBasis?.LnW).toBe("open_measured_floor_system_exact_match");
+    expect(result.floorCarrier?.Rw).toBe(55);
     expect(result.visibleLayers).toHaveLength(0);
     expect(result.sourceLayers).toHaveLength(0);
+    expect(result.impact?.trace?.activeSeriesId).toBe("source");
+    expect(result.impact?.trace?.series[0]?.curve.frequenciesHz.length).toBeGreaterThan(10);
   });
 
   it("carries exact CLT dry rows into the Turkish local-guide continuation on the impact-only route", () => {
@@ -816,7 +855,7 @@ describe("calculateImpactOnly", () => {
     expect(result.impactSupport?.formulaNotes.some((note: string) => /Family-aware flanking path models were applied for: open box timber/i.test(note))).toBe(true);
   });
 
-  it("applies explicit ΔLd before the impact-only guide-side K correction and field standardization", () => {
+  it("applies explicit ΔLd before direct-path curve continuation and field standardization on the impact-only route", () => {
     const result = calculateImpactOnly([{ materialId: "concrete", thicknessMm: 140 }], {
       impactFieldContext: {
         fieldKDb: 2,
@@ -827,13 +866,14 @@ describe("calculateImpactOnly", () => {
       targetOutputs: ["L'n,w", "L'nT,w"]
     });
 
-    expect(result.impact?.fieldEstimateProfile).toBe("explicit_field_lprimenw_from_lnw_plus_k");
-    expect(result.impact?.fieldEstimateKCorrectionDb).toBe(2);
+    expect(result.impact?.fieldEstimateProfile).toBe("direct_flanking_energy_sum");
+    expect(result.impact?.fieldEstimateDirectOffsetDb).toBe(2);
     expect(result.impact?.fieldEstimateLowerTreatmentReductionDb).toBe(6);
     expect(result.impact?.LPrimeNW).toBe(35);
     expect(result.impact?.LPrimeNTw).toBe(33);
-    expect(result.impactSupport?.formulaNotes.some((note: string) => /L'n,w = Ln,w \+ K/i.test(note))).toBe(true);
-    expect(result.impactSupport?.formulaNotes.some((note: string) => /ΔLd = 6 dB was applied before the field-side K correction/i.test(note))).toBe(true);
+    expect(result.impactSupport?.formulaNotes.some((note: string) => /direct\+flanking path energy sum/i.test(note))).toBe(true);
+    expect(result.impactSupport?.formulaNotes.some((note: string) => /Current direct-path offset is 2 dB/i.test(note))).toBe(true);
+    expect(result.impactSupport?.formulaNotes.some((note: string) => /ΔLd = 6 dB was applied to the direct path before energy summation/i.test(note))).toBe(true);
     expect(result.impactSupport?.formulaNotes.some((note: string) => /applied before field standardization/i.test(note))).toBe(true);
   });
 

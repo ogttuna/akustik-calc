@@ -10,10 +10,12 @@ import { getFieldAirborneProvenanceSummary } from "./field-airborne-provenance";
 import { buildWorkbenchWarningNotes } from "./workbench-warning-notes";
 import { getFieldAirborneLiveDetail } from "./field-airborne-output";
 import { getImpactLaneKind, getImpactLanePillLabel } from "./impact-lane-view";
-import { ResultMeter } from "./result-meter";
+import { ResultAnswerChart } from "./result-answer-chart";
 
 type ResultSummaryProps = {
   result: AssemblyCalculation | null;
+  targetLnwDb?: string | null;
+  targetRwDb?: string | null;
   warnings: readonly string[];
 };
 
@@ -21,7 +23,7 @@ function formatSignedDb(value: number): string {
   return `${value >= 0 ? "+" : ""}${formatDecimal(value)} dB`;
 }
 
-export function ResultSummary({ result, warnings }: ResultSummaryProps) {
+export function ResultSummary({ result, targetLnwDb, targetRwDb, warnings }: ResultSummaryProps) {
   const noteLines = buildWorkbenchWarningNotes(result, [...(result?.warnings ?? []), ...warnings]);
   const lowerBoundImpact = result?.lowerBoundImpact ?? null;
   const impactLaneKind = getImpactLaneKind({ impact: result?.impact, lowerBoundImpact });
@@ -89,8 +91,8 @@ export function ResultSummary({ result, warnings }: ResultSummaryProps) {
       </div>
       {result ? (
         <>
-          <div className="mt-6 rounded-[1.45rem] border hairline bg-[color:var(--panel-strong)] px-4 py-5">
-            <ResultMeter value={primaryAirborneValue} />
+          <div className="mt-6 rounded-lg border hairline bg-[color:var(--panel-strong)] px-4 py-5">
+            <ResultAnswerChart result={result} targetLnwDb={targetLnwDb} targetRwDb={targetRwDb} />
           </div>
           <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
             <MetricCard
@@ -275,7 +277,7 @@ export function ResultSummary({ result, warnings }: ResultSummaryProps) {
           </div>
         </>
       ) : (
-        <div className="mt-6 rounded-[1.35rem] border border-dashed hairline px-4 py-6 text-sm leading-7 text-[color:var(--ink-soft)]">
+        <div className="mt-6 rounded-lg border border-dashed hairline px-4 py-6 text-sm leading-7 text-[color:var(--ink-soft)]">
           Add at least one valid layer to generate a screening result.
         </div>
       )}
@@ -283,7 +285,7 @@ export function ResultSummary({ result, warnings }: ResultSummaryProps) {
         <div className="eyebrow">Notes</div>
         <ul className="grid gap-3 text-sm leading-7 text-[color:var(--ink-soft)]">
           {noteLines.map((warning) => (
-            <li className="rounded-[1.2rem] border hairline bg-black/[0.025] px-4 py-3" key={warning}>
+            <li className="rounded-md border hairline bg-black/[0.025] px-4 py-3" key={warning}>
               {warning}
             </li>
           ))}

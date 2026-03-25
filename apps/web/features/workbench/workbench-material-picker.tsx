@@ -138,8 +138,8 @@ export function WorkbenchMaterialPicker(props: WorkbenchMaterialPickerProps) {
       <button
         aria-controls={panelId}
         aria-expanded={open}
-        className={`focus-ring flex min-h-[3.1rem] w-full min-w-0 items-center justify-between gap-3 rounded-[0.9rem] border px-3 py-2.5 text-left ${
-          buttonClassName ?? "border-[color:color-mix(in_oklch,var(--assembly)_22%,var(--line))] bg-[color:var(--paper)]"
+        className={`focus-ring flex min-h-[3.1rem] w-full min-w-0 items-center justify-between gap-3 rounded border px-3 py-2.5 text-left ${
+          buttonClassName ?? "border-[color:var(--line)] bg-[color:var(--paper)]"
         }`}
         id={triggerId}
         onClick={() => {
@@ -165,14 +165,14 @@ export function WorkbenchMaterialPicker(props: WorkbenchMaterialPickerProps) {
 
       {open ? (
         <div
-          className="grid gap-3 rounded-[0.95rem] border border-[color:color-mix(in_oklch,var(--assembly)_18%,var(--line))] bg-[color:color-mix(in_oklch,var(--assembly)_5%,var(--paper))] p-3"
+          className="grid gap-3 rounded-md border border-[color:var(--line)] bg-[color:var(--panel)] p-3"
           id={panelId}
         >
           <label className="relative block">
             <span className="sr-only">Search materials</span>
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[color:var(--ink-faint)]" />
             <input
-              className="focus-ring w-full rounded-[0.8rem] border border-[color:color-mix(in_oklch,var(--assembly)_18%,var(--line))] bg-[color:var(--paper)] py-2.5 pl-9 pr-3 text-sm text-[color:var(--ink)]"
+              className="focus-ring w-full rounded border border-[color:var(--line)] bg-[color:var(--paper)] py-2 pl-9 pr-3 text-sm text-[color:var(--ink)]"
               onChange={(event) => setQuery(event.target.value)}
               placeholder={searchPlaceholder}
               ref={searchRef}
@@ -181,7 +181,7 @@ export function WorkbenchMaterialPicker(props: WorkbenchMaterialPickerProps) {
           </label>
 
           {filteredGroups.length > 0 ? (
-            <div className="max-h-72 overflow-y-auto rounded-[0.85rem] border border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[color:var(--paper)] p-2">
+            <div className="max-h-72 overflow-y-auto rounded border border-[color:var(--line)] bg-[color:var(--paper)] p-2">
               <div className="grid gap-3">
                 {filteredGroups.map((group) => (
                   <section className="grid gap-2" key={group.label}>
@@ -197,10 +197,10 @@ export function WorkbenchMaterialPicker(props: WorkbenchMaterialPickerProps) {
 
                         return (
                           <button
-                            className={`focus-ring flex min-w-0 items-center justify-between gap-3 rounded-[0.8rem] border px-3 py-2.5 text-left ${
+                            className={`focus-ring flex min-w-0 items-center justify-between gap-3 rounded border px-3 py-2.5 text-left ${
                               selected
-                                ? "border-[color:color-mix(in_oklch,var(--assembly)_34%,var(--assembly-ink))] bg-[color:color-mix(in_oklch,var(--assembly)_12%,var(--paper))]"
-                                : "border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[color:var(--paper)] hover:bg-black/[0.02]"
+                                ? "border-[color:var(--accent)] bg-[color:var(--accent-soft)]"
+                                : "border-[color:var(--line)] bg-[color:var(--paper)] hover:bg-black/[0.02]"
                             }`}
                             key={material.id}
                             onClick={() => {
@@ -218,7 +218,7 @@ export function WorkbenchMaterialPicker(props: WorkbenchMaterialPickerProps) {
                                 <span className="truncate">{getMaterialBadge(material)}</span>
                               </span>
                             </span>
-                            {selected ? <Check className="h-4 w-4 shrink-0 text-[color:var(--assembly-ink)]" /> : null}
+                            {selected ? <Check className="h-4 w-4 shrink-0 text-[color:var(--accent)]" /> : null}
                           </button>
                         );
                       })}
@@ -228,7 +228,7 @@ export function WorkbenchMaterialPicker(props: WorkbenchMaterialPickerProps) {
               </div>
             </div>
           ) : (
-            <div className="rounded-[0.85rem] border border-dashed border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[color:var(--paper)] px-4 py-6 text-center text-sm leading-6 text-[color:var(--ink-soft)]">
+            <div className="rounded border border-dashed border-[color:var(--line)] bg-[color:var(--paper)] px-4 py-6 text-center text-sm leading-6 text-[color:var(--ink-soft)]">
               {emptyMessage}
             </div>
           )}

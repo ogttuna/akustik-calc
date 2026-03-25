@@ -28,7 +28,7 @@ export function AssemblyNarrativePanel({ result, studyMode }: AssemblyNarrativeP
           <p className="mt-3 text-sm leading-7 text-[color:var(--ink-soft)]">{narrative.detail}</p>
         </div>
       </div>
-      <div className="mt-5 rounded-[1.25rem] border hairline bg-black/[0.025] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
+      <div className="mt-5 rounded-md border hairline bg-black/[0.025] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
         <div className="flex items-center gap-2 font-semibold text-[color:var(--ink)]">
           <WavesLadder className="h-4 w-4" />
           Interpretation boundary

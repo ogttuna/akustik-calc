@@ -20,7 +20,7 @@ import type {
   SharedTrackClass
 } from "@dynecho/shared";
 import { SurfacePanel } from "@dynecho/ui";
-import { ArrowDown, ArrowUp, ChevronRight, Layers3, Plus, RotateCcw } from "lucide-react";
+import { ArrowDown, ArrowUp, ChevronRight, Layers3, Moon, Plus, RotateCcw, Sun } from "lucide-react";
 import Link from "next/link";
 import type { CSSProperties, ReactNode } from "react";
 import { useEffect, useState } from "react";
@@ -75,6 +75,7 @@ import {
   GUIDED_INPUT_SANITY_BANDS
 } from "./input-sanity";
 import { normalizeRows } from "./normalize-rows";
+import { useTheme } from "./use-theme";
 import { evaluateScenario } from "./scenario-analysis";
 import { buildSimpleWorkbenchEvidencePacket } from "./simple-workbench-evidence";
 import { buildSimpleWorkbenchMethodDossier } from "./simple-workbench-method-dossier";
@@ -147,35 +148,7 @@ type NewLayerDraft = {
   thicknessMm: string;
 };
 
-const SIMPLE_WORKBENCH_THEME = {
-  "--paper": "oklch(0.985 0.004 255)",
-  "--paper-strong": "oklch(0.972 0.006 255)",
-  "--panel": "color-mix(in oklch, var(--paper) 94%, oklch(0.88 0.01 244))",
-  "--panel-strong": "color-mix(in oklch, var(--paper) 88%, oklch(0.84 0.012 244))",
-  "--line": "oklch(0.87 0.01 248)",
-  "--line-strong": "oklch(0.73 0.016 248)",
-  "--ink": "oklch(0.28 0.024 255)",
-  "--ink-soft": "oklch(0.48 0.016 252)",
-  "--ink-faint": "oklch(0.65 0.012 252)",
-  "--accent": "oklch(0.61 0.09 242)",
-  "--accent-soft": "color-mix(in oklch, var(--accent) 10%, var(--paper))",
-  "--accent-ink": "oklch(0.39 0.07 242)",
-  "--route": "oklch(0.72 0.05 244)",
-  "--route-ink": "oklch(0.37 0.05 244)",
-  "--assembly": "oklch(0.75 0.05 160)",
-  "--assembly-ink": "oklch(0.38 0.045 160)",
-  "--results": "oklch(0.81 0.055 78)",
-  "--results-ink": "oklch(0.46 0.05 76)",
-  "--review": "oklch(0.78 0.018 235)",
-  "--review-ink": "oklch(0.39 0.018 235)",
-  "--warning": "oklch(0.8 0.08 80)",
-  "--warning-soft": "color-mix(in oklch, var(--warning) 10%, var(--paper))",
-  "--warning-ink": "oklch(0.49 0.056 76)",
-  "--success": "oklch(0.68 0.085 160)",
-  "--success-soft": "color-mix(in oklch, var(--success) 10%, var(--paper))",
-  "--success-ink": "oklch(0.43 0.065 160)",
-  "--shadow-color": "rgba(25, 40, 72, 0.14)"
-} as CSSProperties;
+const SIMPLE_WORKBENCH_THEME = {} as CSSProperties;
 
 type FieldRelevanceTone = "optional" | "required";
 type ReviewTabId = "diagnostics" | "method" | "proposal";
@@ -887,16 +860,16 @@ function layerFillClass(material: MaterialDefinition): string {
 function layerStrokeClass(material: MaterialDefinition): string {
   switch (material.category) {
     case "finish":
-      return "border-[color:color-mix(in_oklab,var(--accent)_28%,transparent)]";
+      return "border-[color:color-mix(in_oklab,var(--accent)_50%,var(--line))]";
     case "insulation":
-      return "border-[color:color-mix(in_oklab,var(--success)_30%,transparent)]";
+      return "border-[color:color-mix(in_oklab,var(--success)_50%,var(--line))]";
     case "gap":
-      return "border-[color:color-mix(in_oklab,var(--ink)_12%,transparent)]";
+      return "border-[color:color-mix(in_oklab,var(--ink)_22%,var(--line))]";
     case "support":
-      return "border-[color:color-mix(in_oklab,var(--warning)_30%,transparent)]";
+      return "border-[color:color-mix(in_oklab,var(--warning)_50%,var(--line))]";
     case "mass":
     default:
-      return "border-[color:color-mix(in_oklab,var(--ink)_18%,transparent)]";
+      return "border-[color:color-mix(in_oklab,var(--ink)_35%,var(--line))]";
   }
 }
 
@@ -923,80 +896,83 @@ function getLayerVisualSurface(material: MaterialDefinition): LayerVisualSurface
     case "finish":
       return {
         frontStyle: buildLayerFaceStyle({
-          backgroundColor: "color-mix(in oklch,var(--accent) 18%, var(--paper))",
-          backgroundImage: "linear-gradient(135deg, rgba(255,255,255,0.28), rgba(255,255,255,0.04))"
+          backgroundColor: "color-mix(in oklch,var(--accent) 48%, var(--paper))",
+          backgroundImage: "linear-gradient(170deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0) 60%)"
         }),
         sideStyle: buildLayerFaceStyle({
-          backgroundColor: "color-mix(in oklch,var(--accent-ink) 22%, var(--paper))",
-          backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.08), rgba(0,0,0,0.04))"
+          backgroundColor: "color-mix(in oklch,var(--accent-ink) 58%, var(--paper))",
+          backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.10), rgba(0,0,0,0.10))"
         }),
         topStyle: buildLayerFaceStyle({
-          backgroundColor: "color-mix(in oklch,var(--accent) 12%, white)",
-          backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.36), rgba(255,255,255,0.06))"
+          backgroundColor: "color-mix(in oklch,var(--accent) 36%, var(--paper))",
+          backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.24), rgba(255,255,255,0.04))"
         })
       };
     case "insulation":
       return {
         frontStyle: buildLayerFaceStyle({
-          backgroundColor: "color-mix(in oklch,var(--success) 20%, var(--paper))",
+          backgroundColor: "color-mix(in oklch,var(--success) 44%, var(--paper))",
           backgroundImage:
-            "repeating-linear-gradient(135deg, rgba(255,255,255,0.16) 0 10px, rgba(255,255,255,0.02) 10px 20px)"
+            "repeating-linear-gradient(45deg, transparent 0 6px, rgba(255,255,255,0.28) 6px 7px, transparent 7px 13px)"
         }),
         sideStyle: buildLayerFaceStyle({
-          backgroundColor: "color-mix(in oklch,var(--success-ink) 24%, var(--paper))",
-          backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.1), rgba(0,0,0,0.05))"
+          backgroundColor: "color-mix(in oklch,var(--success-ink) 54%, var(--paper))",
+          backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.12), rgba(0,0,0,0.10))"
         }),
         topStyle: buildLayerFaceStyle({
-          backgroundColor: "color-mix(in oklch,var(--success) 12%, white)",
-          backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.34), rgba(255,255,255,0.05))"
+          backgroundColor: "color-mix(in oklch,var(--success) 30%, var(--paper))",
+          backgroundImage:
+            "repeating-linear-gradient(45deg, transparent 0 6px, rgba(255,255,255,0.20) 6px 7px, transparent 7px 13px)"
         })
       };
     case "gap":
       return {
         frontStyle: buildLayerFaceStyle({
-          backgroundColor: "color-mix(in oklch,var(--ink) 6%, var(--paper))",
-          backgroundImage: "radial-gradient(circle at 1px 1px, rgba(52,64,90,0.16) 1px, transparent 0)",
-          backgroundSize: "10px 10px"
+          backgroundColor: "color-mix(in oklch,var(--ink) 10%, var(--paper))",
+          backgroundImage: "radial-gradient(circle at 1.5px 1.5px, var(--ink-faint) 1px, transparent 0)",
+          backgroundSize: "8px 8px"
         }),
         sideStyle: buildLayerFaceStyle({
-          backgroundColor: "color-mix(in oklch,var(--ink) 12%, var(--paper))",
-          backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.08), rgba(0,0,0,0.03))"
+          backgroundColor: "color-mix(in oklch,var(--ink) 18%, var(--paper))",
+          backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.06))"
         }),
         topStyle: buildLayerFaceStyle({
-          backgroundColor: "color-mix(in oklch,var(--ink) 4%, white)",
-          backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.34), rgba(255,255,255,0.08))"
+          backgroundColor: "color-mix(in oklch,var(--ink) 8%, var(--paper))",
+          backgroundImage: "radial-gradient(circle at 1.5px 1.5px, var(--ink-faint) 0.8px, transparent 0)",
+          backgroundSize: "8px 8px"
         })
       };
     case "support":
       return {
         frontStyle: buildLayerFaceStyle({
-          backgroundColor: "color-mix(in oklch,var(--warning) 20%, var(--paper))",
+          backgroundColor: "color-mix(in oklch,var(--warning) 44%, var(--paper))",
           backgroundImage:
-            "repeating-linear-gradient(135deg, rgba(124,89,22,0.18) 0 8px, rgba(255,255,255,0.04) 8px 16px)"
+            "repeating-linear-gradient(135deg, rgba(0,0,0,0.08) 0 6px, transparent 6px 12px)"
         }),
         sideStyle: buildLayerFaceStyle({
-          backgroundColor: "color-mix(in oklch,var(--warning-ink) 22%, var(--paper))",
-          backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.1), rgba(0,0,0,0.05))"
+          backgroundColor: "color-mix(in oklch,var(--warning-ink) 54%, var(--paper))",
+          backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.12), rgba(0,0,0,0.10))"
         }),
         topStyle: buildLayerFaceStyle({
-          backgroundColor: "color-mix(in oklch,var(--warning) 13%, white)",
-          backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.34), rgba(255,255,255,0.05))"
+          backgroundColor: "color-mix(in oklch,var(--warning) 30%, var(--paper))",
+          backgroundImage:
+            "repeating-linear-gradient(135deg, rgba(0,0,0,0.06) 0 6px, transparent 6px 12px)"
         })
       };
     case "mass":
     default:
       return {
         frontStyle: buildLayerFaceStyle({
-          backgroundColor: "color-mix(in oklch,var(--ink) 14%, var(--paper))",
-          backgroundImage: "linear-gradient(145deg, rgba(255,255,255,0.14), rgba(255,255,255,0.02))"
+          backgroundColor: "color-mix(in oklch,var(--ink) 32%, var(--paper))",
+          backgroundImage: "linear-gradient(170deg, rgba(255,255,255,0.14) 0%, rgba(0,0,0,0.04) 100%)"
         }),
         sideStyle: buildLayerFaceStyle({
-          backgroundColor: "color-mix(in oklch,var(--ink) 24%, var(--paper))",
-          backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.08), rgba(0,0,0,0.06))"
+          backgroundColor: "color-mix(in oklch,var(--ink) 46%, var(--paper))",
+          backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.10))"
         }),
         topStyle: buildLayerFaceStyle({
-          backgroundColor: "color-mix(in oklch,var(--ink) 9%, white)",
-          backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.26), rgba(255,255,255,0.04))"
+          backgroundColor: "color-mix(in oklch,var(--ink) 22%, var(--paper))",
+          backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.16), rgba(0,0,0,0.02))"
         })
       };
   }
@@ -1405,7 +1381,7 @@ function outputStatusClass(status: OutputCardModel["status"]): string {
     case "bound":
       return "border-[color:color-mix(in_oklch,var(--ink)_16%,var(--line))] bg-[color:var(--paper)]/88";
     case "needs_input":
-      return "border-[color:color-mix(in_oklch,var(--warning)_34%,var(--line))] bg-[color:color-mix(in_oklch,var(--warning)_12%,var(--paper))]";
+      return "border-[color:color-mix(in_oklch,var(--warning)_34%,var(--line))] bg-[color:var(--warning-soft)]";
     case "unsupported":
     default:
       return "border-[color:color-mix(in_oklch,var(--warning)_24%,var(--line))] bg-[color:var(--paper)]/80";
@@ -1453,106 +1429,40 @@ function outputPosturePanelClass(tone: OutputCardModel["postureTone"]): string {
   }
 }
 
-function workbenchSectionPanelClass(tone: WorkbenchSectionTone): string {
-  switch (tone) {
-    case "assembly":
-      return "border-[color:color-mix(in_oklch,var(--assembly)_34%,var(--line-strong))] bg-[linear-gradient(180deg,color-mix(in_oklch,var(--assembly)_11%,var(--paper))_0%,color-mix(in_oklch,var(--assembly)_7%,var(--paper))_100%)] ring-1 ring-inset ring-[color:color-mix(in_oklch,var(--assembly)_12%,transparent)] shadow-[0_18px_46px_-28px_color-mix(in_oklch,var(--assembly)_34%,transparent)]";
-    case "results":
-      return "border-[color:color-mix(in_oklch,var(--results)_38%,var(--line-strong))] bg-[linear-gradient(180deg,color-mix(in_oklch,var(--results)_13%,var(--paper))_0%,color-mix(in_oklch,var(--results)_8%,var(--paper))_100%)] ring-1 ring-inset ring-[color:color-mix(in_oklch,var(--results)_14%,transparent)] shadow-[0_18px_46px_-28px_color-mix(in_oklch,var(--results)_38%,transparent)]";
-    case "review":
-      return "border-[color:color-mix(in_oklch,var(--review)_32%,var(--line-strong))] bg-[linear-gradient(180deg,color-mix(in_oklch,var(--review)_12%,var(--paper))_0%,color-mix(in_oklch,var(--review)_8%,var(--paper))_100%)] ring-1 ring-inset ring-[color:color-mix(in_oklch,var(--review)_12%,transparent)] shadow-[0_16px_38px_-28px_color-mix(in_oklch,var(--review)_28%,transparent)]";
-    case "route":
-    default:
-      return "border-[color:color-mix(in_oklch,var(--route)_36%,var(--line-strong))] bg-[linear-gradient(180deg,color-mix(in_oklch,var(--route)_12%,var(--paper))_0%,color-mix(in_oklch,var(--route)_8%,var(--paper))_100%)] ring-1 ring-inset ring-[color:color-mix(in_oklch,var(--route)_14%,transparent)] shadow-[0_18px_46px_-28px_color-mix(in_oklch,var(--route)_36%,transparent)]";
-  }
+function workbenchSectionPanelClass(_tone: WorkbenchSectionTone): string {
+  return "border-[color:var(--line)] bg-[color:var(--paper)]";
 }
 
-function workbenchSectionCardClass(tone: WorkbenchSectionTone): string {
-  switch (tone) {
-    case "assembly":
-      return "border-[color:color-mix(in_oklch,var(--assembly)_30%,var(--line))] bg-[color:color-mix(in_oklch,var(--assembly)_10%,var(--paper))] ring-1 ring-inset ring-[color:color-mix(in_oklch,var(--assembly)_8%,transparent)]";
-    case "results":
-      return "border-[color:color-mix(in_oklch,var(--results)_32%,var(--line))] bg-[color:color-mix(in_oklch,var(--results)_12%,var(--paper))] ring-1 ring-inset ring-[color:color-mix(in_oklch,var(--results)_10%,transparent)]";
-    case "review":
-      return "border-[color:color-mix(in_oklch,var(--review)_28%,var(--line))] bg-[color:color-mix(in_oklch,var(--review)_11%,var(--paper))] ring-1 ring-inset ring-[color:color-mix(in_oklch,var(--review)_8%,transparent)]";
-    case "route":
-    default:
-      return "border-[color:color-mix(in_oklch,var(--route)_30%,var(--line))] bg-[color:color-mix(in_oklch,var(--route)_10%,var(--paper))] ring-1 ring-inset ring-[color:color-mix(in_oklch,var(--route)_8%,transparent)]";
-  }
+function workbenchSectionCardClass(_tone: WorkbenchSectionTone): string {
+  return "border-[color:var(--line)] bg-[color:var(--panel)]";
 }
 
-function workbenchSectionMutedCardClass(tone: WorkbenchSectionTone): string {
-  switch (tone) {
-    case "assembly":
-      return "border-[color:color-mix(in_oklch,var(--assembly)_24%,var(--line))] bg-[color:color-mix(in_oklch,var(--assembly)_8%,var(--paper-strong))]";
-    case "results":
-      return "border-[color:color-mix(in_oklch,var(--results)_26%,var(--line))] bg-[color:color-mix(in_oklch,var(--results)_9%,var(--paper-strong))]";
-    case "review":
-      return "border-[color:color-mix(in_oklch,var(--review)_24%,var(--line))] bg-[color:color-mix(in_oklch,var(--review)_8%,var(--paper-strong))]";
-    case "route":
-    default:
-      return "border-[color:color-mix(in_oklch,var(--route)_24%,var(--line))] bg-[color:color-mix(in_oklch,var(--route)_8%,var(--paper-strong))]";
-  }
+function workbenchSectionMutedCardClass(_tone: WorkbenchSectionTone): string {
+  return "border-[color:var(--line)] bg-[color:var(--paper-strong)]";
 }
 
-function workbenchSectionAccentRailClass(tone: WorkbenchSectionTone): string {
-  switch (tone) {
-    case "assembly":
-      return "bg-[linear-gradient(180deg,color-mix(in_oklch,var(--assembly-ink)_92%,white)_0%,color-mix(in_oklch,var(--assembly)_72%,white)_100%)]";
-    case "results":
-      return "bg-[linear-gradient(180deg,color-mix(in_oklch,var(--results-ink)_92%,white)_0%,color-mix(in_oklch,var(--results)_74%,white)_100%)]";
-    case "review":
-      return "bg-[linear-gradient(180deg,color-mix(in_oklch,var(--review-ink)_92%,white)_0%,color-mix(in_oklch,var(--review)_74%,white)_100%)]";
-    case "route":
-    default:
-      return "bg-[linear-gradient(180deg,color-mix(in_oklch,var(--route-ink)_92%,white)_0%,color-mix(in_oklch,var(--route)_74%,white)_100%)]";
-  }
+function workbenchSectionAccentRailClass(_tone: WorkbenchSectionTone): string {
+  return "bg-[color:var(--accent)]";
 }
 
-function workbenchSectionTitleClass(tone: WorkbenchSectionTone): string {
-  switch (tone) {
-    case "assembly":
-      return "text-[color:var(--assembly-ink)]";
-    case "results":
-      return "text-[color:var(--results-ink)]";
-    case "review":
-      return "text-[color:var(--review-ink)]";
-    case "route":
-    default:
-      return "text-[color:var(--route-ink)]";
-  }
+function workbenchSectionTitleClass(_tone: WorkbenchSectionTone): string {
+  return "text-[color:var(--ink)]";
 }
 
-function workbenchSectionEyebrowClass(tone: WorkbenchSectionTone): string {
-  switch (tone) {
-    case "assembly":
-      return "text-[color:color-mix(in_oklch,var(--assembly-ink)_72%,var(--ink-faint))]";
-    case "results":
-      return "text-[color:color-mix(in_oklch,var(--results-ink)_72%,var(--ink-faint))]";
-    case "review":
-      return "text-[color:color-mix(in_oklch,var(--review-ink)_72%,var(--ink-faint))]";
-    case "route":
-    default:
-      return "text-[color:color-mix(in_oklch,var(--route-ink)_72%,var(--ink-faint))]";
-  }
+function workbenchSectionEyebrowClass(_tone: WorkbenchSectionTone): string {
+  return "text-[color:var(--ink-faint)]";
 }
 
 function SectionLead(props: { description?: string; step?: string; title: string; tone?: WorkbenchSectionTone }) {
-  const { description, step, title, tone = "route" } = props;
-  const eyebrowClass = workbenchSectionEyebrowClass(tone);
-  const titleClass = workbenchSectionTitleClass(tone);
-  const railClass = workbenchSectionAccentRailClass(tone);
+  const { description, step, title } = props;
 
   return (
-    <div className="flex min-w-0 items-start gap-3">
-      <span aria-hidden="true" className={`mt-0.5 h-11 w-1.5 shrink-0 rounded-full ${railClass}`} />
-      <div className="min-w-0">
-        {step ? (
-          <div className={`text-[0.68rem] font-semibold uppercase tracking-[0.14em] ${eyebrowClass}`}>{step}</div>
-        ) : null}
-        <h2 className={`mt-1 text-[1rem] font-semibold leading-tight ${titleClass}`}>{title}</h2>
-        {description ? <p className="mt-1 max-w-2xl text-[0.82rem] leading-5 text-[color:var(--ink-soft)]">{description}</p> : null}
-      </div>
+    <div className="min-w-0">
+      {step ? (
+        <div className="text-[0.68rem] font-medium uppercase tracking-[0.1em] text-[color:var(--ink-faint)]">{step}</div>
+      ) : null}
+      <h2 className="text-sm font-semibold text-[color:var(--ink)]">{title}</h2>
+      {description ? <p className="mt-0.5 max-w-2xl text-[0.8rem] leading-5 text-[color:var(--ink-soft)]">{description}</p> : null}
     </div>
   );
 }
@@ -1567,10 +1477,10 @@ function WorkspacePanelButton(props: {
   return (
     <button
       aria-pressed={active}
-      className={`focus-ring inline-flex items-center justify-center rounded-[0.7rem] border px-3 py-2 text-sm font-medium ${
+      className={`focus-ring inline-flex items-center justify-center border-b-2 px-3 py-2 text-sm font-medium transition-colors ${
         active
-          ? "border-[color:var(--ink)] bg-[color:var(--ink)] text-[color:var(--paper)]"
-          : "border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[color:var(--paper)] text-[color:var(--ink-soft)]"
+          ? "border-[color:var(--accent)] text-[color:var(--ink)]"
+          : "border-transparent text-[color:var(--ink-faint)] hover:text-[color:var(--ink-soft)]"
       }`}
       onClick={onClick}
       type="button"
@@ -1581,53 +1491,38 @@ function WorkspacePanelButton(props: {
 }
 
 function GuidedRouteRow(props: { detail: string; label: string; value: string; tone?: WorkbenchSectionTone }) {
-  const { detail, label, value, tone = "route" } = props;
-  const shellClass = workbenchSectionMutedCardClass(tone);
-  const eyebrowClass = workbenchSectionEyebrowClass(tone);
-  const titleClass = workbenchSectionTitleClass(tone);
-  const railClass = workbenchSectionAccentRailClass(tone);
+  const { detail, label, value } = props;
 
   return (
-    <div className={`grid grid-cols-[0.3rem_minmax(0,1fr)] gap-x-3 gap-y-1 rounded-[0.7rem] border px-3 py-2.5 ${shellClass}`}>
-      <span aria-hidden="true" className={`row-span-2 rounded-full ${railClass}`} />
-      <div className="flex min-w-0 items-start justify-between gap-3">
-        <div className={`text-[0.64rem] font-semibold uppercase tracking-[0.14em] ${eyebrowClass}`}>{label}</div>
-        <div className={`min-w-0 truncate text-right text-[0.84rem] font-semibold leading-5 ${titleClass}`}>{value}</div>
+    <div className="flex min-w-0 items-baseline justify-between gap-3 rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-3 py-2">
+      <div className="min-w-0">
+        <div className="text-[0.64rem] font-medium uppercase tracking-[0.1em] text-[color:var(--ink-faint)]">{label}</div>
+        <p className="mt-0.5 line-clamp-1 text-[0.72rem] leading-5 text-[color:var(--ink-soft)]">{detail}</p>
       </div>
-      <p className="line-clamp-1 text-[0.72rem] leading-5 text-[color:var(--ink-soft)]">{detail}</p>
+      <div className="shrink-0 text-right text-[0.84rem] font-semibold leading-5 text-[color:var(--ink)]">{value}</div>
     </div>
   );
 }
 
 function GuidedDecisionBasisCard(props: SimpleWorkbenchCorridorDossierCard) {
   const { detail, label, tone, value } = props;
-  const containerClass =
-    tone === "success"
-      ? "border-[color:color-mix(in_oklch,var(--success)_34%,var(--line))] bg-[color:color-mix(in_oklch,var(--success)_10%,var(--paper))]"
-      : tone === "warning"
-        ? "border-[color:color-mix(in_oklch,var(--warning)_34%,var(--line))] bg-[color:color-mix(in_oklch,var(--warning)_12%,var(--paper))]"
-        : tone === "accent"
-          ? "border-[color:color-mix(in_oklch,var(--accent)_30%,var(--line))] bg-[color:color-mix(in_oklch,var(--accent)_10%,var(--paper))]"
-          : "hairline bg-[color:var(--paper)]/82";
   const valueClass =
     tone === "success"
       ? "text-[color:var(--success-ink)]"
       : tone === "warning"
         ? "text-[color:var(--warning-ink)]"
-        : tone === "accent"
-          ? "text-[color:var(--accent-ink)]"
-          : "text-[color:var(--ink)]";
+        : "text-[color:var(--ink)]";
   const toneLabel =
     tone === "success" ? "Locked" : tone === "warning" ? "Caution" : tone === "accent" ? "Live" : "Explicit";
 
   return (
-    <article className={`grid gap-2 rounded-[1rem] border px-3 py-3 ${containerClass}`}>
+    <article className="grid gap-1.5 rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-3 py-2.5">
       <div className="flex items-center justify-between gap-3">
-        <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">{label}</div>
+        <div className="text-[0.68rem] font-medium uppercase tracking-[0.1em] text-[color:var(--ink-faint)]">{label}</div>
         <DetailTag tone={tone === "warning" ? "required" : tone === "accent" ? "optional" : "neutral"}>{toneLabel}</DetailTag>
       </div>
       <div className={`text-sm font-semibold ${valueClass}`}>{value}</div>
-      <p className="text-sm leading-6 text-[color:var(--ink-soft)]">{detail}</p>
+      <p className="text-[0.8rem] leading-5 text-[color:var(--ink-soft)]">{detail}</p>
     </article>
   );
 }
@@ -1644,7 +1539,7 @@ function GuidedDecisionBasisStrip(props: {
   const activeReviewTabLabel = REVIEW_TABS.find((tab) => tab.id === activeReviewTab)?.label ?? "Proposal";
 
   return (
-    <section className={`mt-4 overflow-hidden rounded-[1.1rem] border px-4 py-4 ${workbenchSectionCardClass("review")}`}>
+    <section className={`mt-4 overflow-hidden rounded-lg border px-4 py-4 ${workbenchSectionCardClass("review")}`}>
       <div className="grid gap-3 xl:grid-cols-[minmax(0,1.06fr)_auto] xl:items-start">
         <div className="min-w-0">
           <div className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">Decision basis</div>
@@ -1663,10 +1558,10 @@ function GuidedDecisionBasisStrip(props: {
           {REVIEW_TABS.map((tab) => (
             <button
               aria-pressed={activeReviewTab === tab.id}
-              className={`focus-ring inline-flex items-center justify-center rounded-[0.85rem] border px-3 py-2 text-sm font-semibold ${
+              className={`focus-ring inline-flex items-center justify-center rounded border px-3 py-2 text-sm font-semibold ${
                 activeReviewTab === tab.id
-                  ? "border-[color:color-mix(in_oklch,var(--accent)_34%,var(--line))] bg-[color:color-mix(in_oklch,var(--accent)_14%,var(--paper))] text-[color:var(--accent-ink)]"
-                  : "hairline bg-[color:var(--paper)]/82 text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+                  ? "border-[color:var(--accent)] bg-[color:var(--accent-soft)] text-[color:var(--accent-ink)]"
+                  : "hairline bg-[color:var(--paper)]/82 text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
               }`}
               key={`review-jump-${tab.id}`}
               onClick={() => onOpenReviewTab(tab.id)}
@@ -1703,7 +1598,7 @@ function GuidedConstructionSnapshot(props: {
   const activeReviewTabLabel = REVIEW_TABS.find((tab) => tab.id === activeReviewTab)?.label ?? "Proposal";
 
   return (
-    <section className={`mt-4 overflow-hidden rounded-[1.1rem] border px-4 py-4 ${workbenchSectionCardClass("assembly")}`}>
+    <section className={`mt-4 overflow-hidden rounded-lg border px-4 py-4 ${workbenchSectionCardClass("assembly")}`}>
       <div className="grid gap-3 xl:grid-cols-[minmax(0,1fr)_auto] xl:items-start">
         <div className="min-w-0">
           <div className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">
@@ -1723,14 +1618,14 @@ function GuidedConstructionSnapshot(props: {
 
         <div className="flex flex-wrap gap-2 xl:justify-end">
           <button
-            className="focus-ring inline-flex items-center justify-center rounded-[0.85rem] border hairline bg-[color:var(--paper)]/84 px-3 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+            className="focus-ring inline-flex items-center justify-center rounded border hairline bg-[color:var(--paper)]/84 px-3 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
             onClick={() => onOpenReviewTab("method")}
             type="button"
           >
             Open method detail
           </button>
           <button
-            className="focus-ring inline-flex items-center justify-center rounded-[0.85rem] border hairline bg-[color:var(--paper)]/84 px-3 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+            className="focus-ring inline-flex items-center justify-center rounded border hairline bg-[color:var(--paper)]/84 px-3 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
             onClick={() => onOpenReviewTab("proposal")}
             type="button"
           >
@@ -1768,11 +1663,11 @@ function GuidedFactChip(props: { children: ReactNode; tone?: "neutral" | "warnin
   const { children, tone = "neutral" } = props;
   const toneClass =
     tone === "warning"
-      ? "border-[color:color-mix(in_oklch,var(--warning)_34%,var(--line))] bg-[color:color-mix(in_oklch,var(--warning)_12%,var(--paper))] text-[color:var(--warning-ink)]"
-      : "hairline bg-[color:var(--paper)]/82 text-[color:var(--ink-soft)]";
+      ? "border-[color:var(--warning)] bg-[color:var(--warning-soft)] text-[color:var(--warning-ink)]"
+      : "border-[color:var(--line)] bg-[color:var(--paper)] text-[color:var(--ink-soft)]";
 
   return (
-    <span className={`inline-flex items-center rounded-[0.7rem] border px-2.5 py-1 text-[0.72rem] font-medium ${toneClass}`}>
+    <span className={`inline-flex items-center rounded border px-2 py-0.5 text-[0.7rem] font-medium ${toneClass}`}>
       {children}
     </span>
   );
@@ -1782,13 +1677,13 @@ function DetailTag(props: { children: ReactNode; tone?: "neutral" | FieldRelevan
   const { children, tone = "neutral" } = props;
   const toneClass =
     tone === "required"
-      ? "border border-[color:color-mix(in_oklch,var(--warning)_34%,var(--line))] bg-[color:color-mix(in_oklch,var(--warning)_14%,var(--paper))] text-[color:var(--warning-ink)]"
+      ? "border border-[color:var(--warning)] bg-[color:var(--warning-soft)] text-[color:var(--warning-ink)]"
       : tone === "optional"
-        ? "border border-[color:color-mix(in_oklch,var(--accent)_26%,var(--line))] bg-[color:color-mix(in_oklch,var(--accent)_10%,var(--paper))] text-[color:var(--accent-ink)]"
-        : "border hairline bg-[color:var(--paper)]/72 text-[color:var(--ink-soft)]";
+        ? "border border-[color:var(--accent)] bg-[color:var(--accent-soft)] text-[color:var(--accent-ink)]"
+        : "border border-[color:var(--line)] bg-[color:var(--paper)] text-[color:var(--ink-soft)]";
 
   return (
-    <span className={`inline-flex items-center rounded-[0.7rem] px-2.5 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.16em] ${toneClass}`}>
+    <span className={`inline-flex items-center rounded px-2 py-0.5 text-[0.68rem] font-medium uppercase tracking-[0.1em] ${toneClass}`}>
       {children}
     </span>
   );
@@ -1798,7 +1693,7 @@ function InlinePair(props: { label: string; value: string }) {
   const { label, value } = props;
 
   return (
-    <div className="grid min-w-0 gap-1 overflow-hidden rounded-[0.95rem] border hairline bg-[color:var(--paper)]/72 px-3 py-2.5">
+    <div className="grid min-w-0 gap-1 overflow-hidden rounded-md border hairline bg-[color:var(--paper)]/72 px-3 py-2.5">
       <div className="break-words text-[0.68rem] font-semibold uppercase leading-4 tracking-[0.16em] text-[color:var(--ink-faint)]">
         {label}
       </div>
@@ -1838,7 +1733,7 @@ function getCustomMaterialCategoryLabel(category: MaterialCategory): string {
 }
 
 function getTextInputClassName(hasWarning = false): string {
-  return `focus-ring touch-target w-full min-w-0 rounded-[0.9rem] border px-3 py-2.5 ${
+  return `focus-ring touch-target w-full min-w-0 rounded border px-3 py-2.5 ${
     hasWarning
       ? "border-[color:var(--warning-ink)]/34 bg-[color:var(--warning-soft)]/48"
       : "hairline bg-[color:var(--paper)]"
@@ -1903,32 +1798,12 @@ function FieldShell(props: {
   usage: string;
   warning?: string | null;
 }) {
-  const { advisory, children, label, note, relevance = "optional", usage, warning } = props;
-  const relevanceLabel = relevance === "required" ? "Required now" : "Optional now";
-  const advisoryLabel = advisory?.replace(/^Guided sanity band\s*/u, "").trim() ?? null;
+  const { children, label, warning } = props;
 
   return (
-    <div className="grid min-w-0 gap-2 rounded-[0.8rem] border border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[color:var(--paper)] px-3 py-3" title={`${note} Used for: ${usage}`}>
-      <div className="flex min-w-0 items-start justify-between gap-3">
-        <div className="min-w-0">
-          <span className="text-[0.82rem] font-semibold text-[color:var(--ink)]">{label}</span>
-          <p className="mt-1 text-[0.72rem] leading-5 text-[color:var(--ink-soft)]">{note}</p>
-          <div className="mt-1 grid gap-1 text-[0.68rem] leading-5 text-[color:var(--ink-faint)]">
-            <div>
-              <span className="mr-1 font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Feeds</span>
-              {usage}
-            </div>
-            {advisoryLabel ? (
-              <div>
-                <span className="mr-1 font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Sanity</span>
-                {advisoryLabel}
-              </div>
-            ) : null}
-          </div>
-          {warning ? <p className="mt-1 text-[0.72rem] leading-5 text-[color:var(--warning-ink)]">{warning}</p> : null}
-        </div>
-        <DetailTag tone={relevance}>{relevanceLabel}</DetailTag>
-      </div>
+    <div className="grid min-w-0 gap-1.5 rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-3 py-2.5">
+      <span className="text-[0.82rem] font-semibold text-[color:var(--ink)]">{label}</span>
+      {warning ? <p className="text-[0.72rem] leading-5 text-[color:var(--warning-ink)]">{warning}</p> : null}
       {children}
     </div>
   );
@@ -1948,22 +1823,15 @@ function ContextBucket(props: {
       : workbenchSectionMutedCardClass("route");
 
   return (
-    <section className={`rounded-[0.9rem] border px-3 py-3 ${shellClass}`}>
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <div className="text-[0.84rem] font-semibold text-[color:var(--ink)]">{title}</div>
-          <p className="mt-1 text-[0.74rem] leading-5 text-[color:var(--ink-soft)]">{description}</p>
-        </div>
+    <section className={`rounded border px-3 py-3 ${shellClass}`}>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="text-[0.84rem] font-semibold text-[color:var(--ink)]">{title}</div>
         <DetailTag tone={tone}>{title}</DetailTag>
       </div>
 
       {hasContent ? (
         <div className="mt-3 grid gap-3">{children}</div>
-      ) : (
-        <div className="mt-4 rounded-[1rem] border border-dashed hairline bg-black/[0.02] px-4 py-3 text-sm leading-6 text-[color:var(--ink-soft)]">
-          No extra fields on this route.
-        </div>
-      )}
+      ) : null}
     </section>
   );
 }
@@ -1976,11 +1844,8 @@ function ContextSubsection(props: {
   const { children, note, title } = props;
 
   return (
-    <div className={`grid gap-3 rounded-[0.8rem] border px-3 py-3 ${workbenchSectionMutedCardClass("route")}`}>
-      <div>
-        <div className="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">{title}</div>
-        <p className="mt-1 text-[0.74rem] leading-5 text-[color:var(--ink-soft)]">{note}</p>
-      </div>
+    <div className={`grid gap-3 rounded border px-3 py-3 ${workbenchSectionMutedCardClass("route")}`}>
+      <div className="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">{title}</div>
       <div className="grid gap-3">{children}</div>
     </div>
   );
@@ -1991,7 +1856,7 @@ function OutputCard(props: { card: OutputCardModel }) {
 
   return (
     <article
-      className={`min-w-0 rounded-[1rem] border px-4 py-4 ${outputStatusClass(card.status)}`}
+      className={`min-w-0 rounded-md border px-4 py-4 ${outputStatusClass(card.status)}`}
       title={card.detail}
     >
       <div className="flex min-w-0 flex-wrap items-start justify-between gap-3">
@@ -2003,17 +1868,7 @@ function OutputCard(props: { card: OutputCardModel }) {
           {statusLabel(card.status)}
         </span>
       </div>
-      <div className="mt-3 flex flex-wrap gap-2">
-        <GuidedFactChip>{card.postureLabel}</GuidedFactChip>
-        <GuidedFactChip>{card.label}</GuidedFactChip>
-      </div>
-      <p className="mt-3 line-clamp-2 text-[0.78rem] leading-5 text-[color:var(--ink-soft)]">{card.detail}</p>
-      <details className="mt-3 rounded-[0.85rem] border hairline bg-[color:var(--paper)]/78 px-3 py-2.5">
-        <summary className="cursor-pointer list-none text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
-          Evidence class
-        </summary>
-        <p className="mt-2 text-[0.76rem] leading-5 text-[color:var(--ink-soft)]">{card.postureDetail}</p>
-      </details>
+      <div className="mt-2 text-[0.72rem] font-medium text-[color:var(--ink-soft)]">{card.postureLabel}</div>
     </article>
   );
 }
@@ -2029,12 +1884,9 @@ function OutputCoverageSummary(props: {
   const { boundCount, liveCount, parkedCount, readyCount, totalCount, unsupportedCount } = props;
 
   return (
-    <section className={`rounded-[0.8rem] border px-3 py-3 ${workbenchSectionCardClass("results")}`}>
+    <section className={`rounded border px-3 py-3 ${workbenchSectionCardClass("results")}`}>
       <div className="flex min-w-0 flex-wrap items-center justify-between gap-3">
-        <div className="min-w-0">
-          <div className="text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Coverage</div>
-          <p className="mt-1 text-[0.78rem] leading-5 text-[color:var(--ink-soft)]">Keep the current lane readable before opening the secondary deck.</p>
-        </div>
+        <div className="text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Coverage</div>
         <div className="flex flex-wrap gap-2">
           <GuidedFactChip>{`${readyCount}/${totalCount} ready`}</GuidedFactChip>
           <GuidedFactChip>{boundCount > 0 ? `${liveCount} live + ${boundCount} bound` : `${liveCount} live`}</GuidedFactChip>
@@ -2060,13 +1912,10 @@ function OutputUnlockRail(props: {
   }
 
   return (
-    <details className="rounded-[1rem] border hairline bg-[color:var(--paper)]/72 px-4 py-3">
+    <details className="rounded-md border hairline bg-[color:var(--paper)]/72 px-4 py-3">
       <summary className="cursor-pointer list-none">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <div className="text-sm font-semibold text-[color:var(--ink)]">Unlock parked outputs</div>
-            <p className="mt-1 text-[0.76rem] leading-5 text-[color:var(--ink-soft)]">Open only when you need the next concrete route upgrade.</p>
-          </div>
+          <div className="text-sm font-semibold text-[color:var(--ink)]">Unlock parked outputs</div>
           <div className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">
             {formatCountLabel(groups.length, "next step")}
           </div>
@@ -2076,7 +1925,7 @@ function OutputUnlockRail(props: {
       <div className="mt-4 grid gap-3 md:grid-cols-2">
         {groups.map((group) => (
           <article
-            className="rounded-[0.95rem] border hairline bg-[color:color-mix(in_oklch,var(--warning)_8%,var(--paper))] px-4 py-3"
+            className="rounded-md border hairline bg-[color:color-mix(in_oklch,var(--warning)_8%,var(--paper))] px-4 py-3"
             key={`unlock-${group.title}`}
           >
             <div className="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--warning-ink)]">Next unlock</div>
@@ -2140,7 +1989,7 @@ function PrimaryResultCard(props: {
   const postureValueClass = outputPostureTextClass(card.postureTone);
 
   return (
-    <article className={`result-hero min-w-0 overflow-hidden rounded-[0.9rem] border px-4 py-4 ${outputStatusClass(card.status)}`}>
+    <article className={`result-hero min-w-0 overflow-hidden rounded border px-4 py-4 ${outputStatusClass(card.status)}`}>
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="min-w-0">
           <div className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">
@@ -2155,7 +2004,7 @@ function PrimaryResultCard(props: {
       </div>
 
       <div className="mt-4 grid gap-4 lg:grid-cols-[auto_minmax(0,1fr)] lg:items-start">
-        <div className={`min-w-0 rounded-[0.8rem] border px-4 py-4 text-right ${workbenchSectionCardClass("results")}`}>
+        <div className={`min-w-0 rounded border px-4 py-4 text-right ${workbenchSectionCardClass("results")}`}>
           <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">{card.label}</div>
           <div className="mt-2 text-[clamp(2.4rem,4vw,3.2rem)] font-semibold leading-[0.92] tracking-[-0.05em] text-[color:var(--ink)]">
             {card.value}
@@ -2165,36 +2014,14 @@ function PrimaryResultCard(props: {
           </div>
         </div>
 
-        <div className="min-w-0">
-          <p className="text-[0.82rem] leading-5 text-[color:var(--ink-soft)]">{card.detail}</p>
-          <div className="mt-3 flex flex-wrap gap-2">
+        <div className="min-w-0 grid gap-2">
+          <div className="flex flex-wrap gap-2">
             <GuidedFactChip>{card.postureLabel}</GuidedFactChip>
-            <GuidedFactChip>{liveStackValue}</GuidedFactChip>
             <GuidedFactChip>{validationSummary.value}</GuidedFactChip>
-            <GuidedFactChip>{contextLabel}</GuidedFactChip>
+            <GuidedFactChip>{liveStackValue}</GuidedFactChip>
           </div>
         </div>
       </div>
-
-      <details className={`mt-4 rounded-[0.8rem] border px-3 py-2.5 ${workbenchSectionMutedCardClass("results")}`}>
-        <summary className="cursor-pointer list-none text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
-          Read notes
-        </summary>
-        <div className="mt-3 grid gap-2 md:grid-cols-3">
-          <div className={`rounded-[0.75rem] border px-3 py-2.5 ${workbenchSectionMutedCardClass("results")}`}>
-            <div className={`text-[0.72rem] font-semibold ${postureValueClass}`}>{card.postureLabel}</div>
-            <div className="mt-1 text-[0.76rem] leading-5 text-[color:var(--ink-soft)]">{card.postureDetail}</div>
-          </div>
-          <div className={`rounded-[0.75rem] border px-3 py-2.5 ${workbenchSectionMutedCardClass("review")}`}>
-            <div className={`text-[0.72rem] font-semibold ${validationValueClass}`}>{validationSummary.value}</div>
-            <div className="mt-1 text-[0.76rem] leading-5 text-[color:var(--ink-soft)]">{validationSummary.detail}</div>
-          </div>
-          <div className={`rounded-[0.75rem] border px-3 py-2.5 ${workbenchSectionMutedCardClass("results")}`}>
-            <div className="text-[0.72rem] font-semibold text-[color:var(--ink)]">Stack note</div>
-            <div className="mt-1 text-[0.76rem] leading-5 text-[color:var(--ink-soft)]">{liveStackDetail}</div>
-          </div>
-        </div>
-      </details>
     </article>
   );
 }
@@ -2204,18 +2031,14 @@ function PendingOutputRow(props: { card: OutputCardModel }) {
   const postureTextClass = outputPostureTextClass(card.postureTone);
 
   return (
-    <article className="rounded-[0.9rem] border border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[color:var(--paper)] px-3 py-3">
+    <article className="rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-3 py-3">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="text-sm font-semibold text-[color:var(--ink)]">{card.label}</div>
         <span className={`text-[0.72rem] font-semibold uppercase tracking-[0.16em] ${outputStatusTextClass(card.status)}`}>
           {statusLabel(card.status)}
         </span>
       </div>
-      <p className="mt-2 text-[0.82rem] leading-5 text-[color:var(--ink-soft)]">{card.detail}</p>
-      <div className="mt-2 text-[0.82rem] leading-5 text-[color:var(--ink-soft)]">
-        <span className="font-semibold text-[color:var(--ink)]">Evidence class:</span>{" "}
-        <span className={`font-semibold ${postureTextClass}`}>{card.postureLabel}</span>. {card.postureDetail}
-      </div>
+      <div className={`mt-1 text-[0.72rem] font-medium ${postureTextClass}`}>{card.postureLabel}</div>
     </article>
   );
 }
@@ -2235,10 +2058,7 @@ function PendingOutputGroup(props: {
   return (
     <div className="mt-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <div className="text-sm font-semibold text-[color:var(--ink)]">{title}</div>
-          <p className="mt-1 text-sm leading-6 text-[color:var(--ink-soft)]">{detail}</p>
-        </div>
+        <div className="text-sm font-semibold text-[color:var(--ink)]">{title}</div>
         <div className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">{countLabel}</div>
       </div>
       <div className="mt-3 grid gap-3">
@@ -2268,12 +2088,12 @@ function LayerLegendRow(props: {
 
   return (
     <article
-      className={`rounded-[0.75rem] border px-3 py-2 ${
+      className={`rounded border px-3 py-2 ${
         active
           ? "border-[color:var(--ink)] bg-[color:color-mix(in_oklch,var(--ink)_4%,var(--paper))]"
           : ready
-            ? "border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[color:var(--paper)]"
-            : "border-[color:color-mix(in_oklch,var(--warning)_28%,var(--line))] bg-[color:color-mix(in_oklch,var(--warning)_8%,var(--paper))]"
+            ? "border-[color:var(--line)] bg-[color:var(--paper)]"
+            : "border-[color:var(--warning)] bg-[color:color-mix(in_oklch,var(--warning)_8%,var(--paper))]"
       }`}
       data-active={active ? "true" : "false"}
       data-ready={ready ? "true" : "false"}
@@ -2307,79 +2127,87 @@ function FloorStackFigure(props: {
 }) {
   const { activeRowId, rows } = props;
   const totalThickness = rows.reduce((sum, entry) => sum + (parsePositiveNumber(entry.row.thicknessMm) ?? 0), 0);
-  const topFacePx = 12;
-  const sideDepthPx = 16;
+  const depthPx = 32;
 
   return (
-    <div className="section-figure rounded-[0.95rem] border border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[color:var(--paper)] px-3 py-3">
+    <div className="section-figure rounded-md border border-[color:var(--line)] bg-[color:var(--panel-strong)] px-3 py-3">
       <div className="flex items-center justify-between text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">
         <span>Walking side</span>
         <span>{rows.length} layers</span>
       </div>
 
-      <div className="mt-3 overflow-x-auto overflow-y-visible rounded-[0.8rem] border border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[linear-gradient(180deg,color-mix(in_oklch,var(--assembly)_6%,white),color-mix(in_oklch,var(--ink)_3%,var(--paper)))] px-3 py-6">
-        <div className="mx-auto w-full min-w-[16rem]" style={{ perspective: "1400px" }}>
-          <div
-            className="mx-auto flex w-full max-w-[28rem] flex-col"
-            style={{ transform: "rotateX(58deg) rotateZ(-12deg)", transformStyle: "preserve-3d" }}
-          >
+      <div className="mt-3 rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-4 pb-4 pt-6">
+        <div className="mx-auto max-w-[32rem]" style={{ paddingRight: `${depthPx}px` }}>
           {rows.map(({ material, row }, index) => {
             const thickness = parsePositiveNumber(row.thicknessMm) ?? 10;
             const active = row.id === activeRowId;
             const ready = isThicknessReady(row.thicknessMm);
             const surface = getLayerVisualSurface(material);
-            const heightPx = Math.max(20, Math.min(72, thickness * 0.72));
+            const heightPx = Math.max(28, Math.min(72, thickness * 0.7));
+            const isFirst = index === 0;
             return (
               <div
-                className="relative flex-shrink-0"
+                className="relative"
                 data-active={active ? "true" : "false"}
                 data-ready={ready ? "true" : "false"}
                 data-testid={`preview-row-${index + 1}`}
                 key={row.id}
-                style={{ height: `${heightPx}px`, transformStyle: "preserve-3d" }}
+                style={{ height: `${heightPx}px`, marginTop: index === 0 ? 0 : -1 }}
                 title={`${material.name} · ${row.thicknessMm || "?"} mm`}
               >
+                {/* Top face — only on first layer */}
+                {isFirst ? (
+                  <div
+                    aria-hidden="true"
+                    className="absolute inset-x-0 bottom-full origin-bottom"
+                    style={{
+                      ...surface.topStyle,
+                      height: `${depthPx}px`,
+                      transform: "skewX(-40deg)",
+                      transformOrigin: "bottom left",
+                      borderTopLeftRadius: "0.25rem",
+                      borderTopRightRadius: "0.25rem",
+                      borderTop: "1px solid var(--line-strong)",
+                      borderRight: "1px solid var(--line)",
+                      marginLeft: `${depthPx * 0.84}px`
+                    }}
+                  />
+                ) : null}
+                {/* Right face */}
                 <div
                   aria-hidden="true"
-                  className="absolute inset-x-0 bottom-full rounded-t-[0.35rem]"
-                  style={{
-                    ...surface.topStyle,
-                    height: `${topFacePx}px`,
-                    transform: "rotateX(-90deg)",
-                    transformOrigin: "bottom"
-                  }}
-                />
-                <div
-                  aria-hidden="true"
-                  className="absolute inset-y-0 left-full rounded-r-[0.4rem]"
+                  className="absolute inset-y-0 left-full"
                   style={{
                     ...surface.sideStyle,
-                    transform: "rotateY(90deg)",
-                    transformOrigin: "left",
-                    width: `${sideDepthPx}px`
+                    width: `${depthPx}px`,
+                    transform: "skewY(-50deg)",
+                    transformOrigin: "top left",
+                    borderRight: "1px solid var(--line-strong)"
                   }}
                 />
+                {/* Front face */}
                 <div
-                  className={`relative flex h-full items-center justify-between overflow-hidden rounded-[0.55rem] border px-3 py-2 ${
+                  className={`relative flex h-full items-center justify-between overflow-hidden border-x border-b px-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.12),inset_0_-1px_0_rgba(0,0,0,0.06)] ${
+                    isFirst ? "rounded-tl-sm border-t" : ""
+                  } ${index === rows.length - 1 ? "rounded-bl-sm" : ""} ${
                     active
-                      ? "border-[color:color-mix(in_oklch,var(--accent)_34%,var(--line-strong))] shadow-[0_0_0_1px_color-mix(in_oklch,var(--accent)_22%,transparent),0_18px_30px_rgba(31,43,68,0.12)]"
+                      ? "border-[color:color-mix(in_oklch,var(--accent)_40%,var(--line-strong))] shadow-[inset_0_0_0_1px_color-mix(in_oklch,var(--accent)_18%,transparent)]"
                       : ready
-                        ? "border-[color:color-mix(in_oklch,var(--line-strong)_78%,transparent)] shadow-[0_14px_22px_rgba(31,43,68,0.08)]"
-                        : "border-[color:color-mix(in_oklch,var(--warning)_34%,var(--line))] opacity-80"
+                        ? "border-[color:color-mix(in_oklch,var(--line-strong)_60%,transparent)]"
+                        : "border-[color:color-mix(in_oklch,var(--warning)_30%,var(--line))] opacity-75"
                   }`}
                   style={surface.frontStyle}
                 >
-                  <div className="inline-flex h-6 min-w-[1.5rem] items-center justify-center rounded-full border border-black/10 bg-white/86 px-1.5 text-[0.66rem] font-semibold text-[color:var(--ink)]">
+                  <span className="inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded bg-[color:var(--paper)] px-1 text-[0.6rem] font-bold tabular-nums text-[color:var(--ink)] shadow-[0_1px_2px_rgba(0,0,0,0.06)]">
                     {index + 1}
-                  </div>
-                  <div className="rounded-full border border-black/10 bg-white/84 px-2 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-soft)]">
+                  </span>
+                  <span className="rounded bg-[color:var(--paper-strong)] px-1.5 py-0.5 text-[0.58rem] font-semibold tabular-nums text-[color:var(--ink-soft)] shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
                     {ready ? `${row.thicknessMm} mm` : "Parked"}
-                  </div>
+                  </span>
                 </div>
               </div>
             );
           })}
-          </div>
         </div>
       </div>
 
@@ -2400,28 +2228,25 @@ function WallStackFigure(props: {
 }) {
   const { activeRowId, rows } = props;
   const totalThickness = rows.reduce((sum, entry) => sum + (parsePositiveNumber(entry.row.thicknessMm) ?? 0), 0);
-  const topFacePx = 12;
-  const sideDepthPx = 16;
+  const depthPx = 24;
+  const wallHeight = 150;
 
   return (
-    <div className="section-figure rounded-[0.95rem] border border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[color:var(--paper)] px-3 py-3">
+    <div className="section-figure rounded-md border border-[color:var(--line)] bg-[color:var(--panel-strong)] px-3 py-3">
       <div className="flex items-center justify-between text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">
         <span>Side A</span>
         <span>{rows.length} layers</span>
       </div>
 
-      <div className="mt-3 overflow-x-auto overflow-y-visible rounded-[0.8rem] border border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[linear-gradient(180deg,color-mix(in_oklch,var(--assembly)_6%,white),color-mix(in_oklch,var(--ink)_3%,var(--paper)))] px-4 py-5">
-        <div className="mx-auto w-full min-w-[18rem]" style={{ perspective: "1400px" }}>
-          <div
-            className="mx-auto flex min-h-[10.5rem] w-fit items-stretch"
-            style={{ transform: "rotateX(-6deg) rotateY(-14deg)", transformStyle: "preserve-3d" }}
-          >
+      <div className="mt-3 overflow-x-auto rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-4 pb-4 pt-2">
+        <div className="mx-auto flex w-fit items-end" style={{ paddingTop: `${depthPx + 4}px` }}>
           {rows.map(({ material, row }, index) => {
             const thickness = parsePositiveNumber(row.thicknessMm) ?? 10;
             const active = row.id === activeRowId;
             const ready = isThicknessReady(row.thicknessMm);
             const surface = getLayerVisualSurface(material);
-            const widthPx = Math.max(26, Math.min(112, thickness * 0.55));
+            const widthPx = Math.max(38, Math.min(110, thickness * 0.6));
+            const isFirst = index === 0;
             return (
               <div
                 className="relative flex-shrink-0"
@@ -2429,53 +2254,48 @@ function WallStackFigure(props: {
                 data-ready={ready ? "true" : "false"}
                 data-testid={`preview-row-${index + 1}`}
                 key={row.id}
-                style={{ height: "10rem", transformStyle: "preserve-3d", width: `${widthPx}px` }}
+                style={{ height: `${wallHeight}px`, width: `${widthPx}px`, marginLeft: index === 0 ? 0 : -1 }}
                 title={`${material.name} · ${row.thicknessMm || "?"} mm`}
               >
+                {/* Top face */}
                 <div
                   aria-hidden="true"
-                  className="absolute inset-x-0 bottom-full rounded-t-[0.35rem]"
+                  className="absolute inset-x-0 bottom-full"
                   style={{
                     ...surface.topStyle,
-                    height: `${topFacePx}px`,
-                    transform: "rotateX(-90deg)",
-                    transformOrigin: "bottom"
+                    height: `${depthPx}px`,
+                    transform: "skewX(40deg)",
+                    transformOrigin: "bottom left",
+                    borderTop: "1px solid var(--line-strong)",
+                    ...(isFirst ? { borderLeft: "1px solid var(--line)", borderTopLeftRadius: "0.2rem" } : {})
                   }}
                 />
+                {/* Front face */}
                 <div
-                  aria-hidden="true"
-                  className="absolute inset-y-0 left-full rounded-r-[0.4rem]"
-                  style={{
-                    ...surface.sideStyle,
-                    transform: "rotateY(90deg)",
-                    transformOrigin: "left",
-                    width: `${sideDepthPx}px`
-                  }}
-                />
-                <div
-                  className={`relative flex h-full flex-col items-center justify-between overflow-hidden rounded-[0.55rem] border px-2 py-3 ${
+                  className={`relative flex h-full flex-col items-center justify-between overflow-hidden border-y px-1.5 py-2.5 shadow-[inset_1px_0_0_rgba(255,255,255,0.12),inset_-1px_0_0_rgba(0,0,0,0.06)] ${
+                    isFirst ? "rounded-bl-sm border-l" : ""
+                  } ${index === rows.length - 1 ? "rounded-br-sm border-r" : "border-r"} ${
                     active
-                      ? "border-[color:color-mix(in_oklch,var(--accent)_34%,var(--line-strong))] shadow-[0_0_0_1px_color-mix(in_oklch,var(--accent)_22%,transparent),0_18px_30px_rgba(31,43,68,0.12)]"
+                      ? "border-[color:color-mix(in_oklch,var(--accent)_40%,var(--line-strong))] shadow-[inset_0_0_0_1px_color-mix(in_oklch,var(--accent)_18%,transparent)]"
                       : ready
-                        ? "border-[color:color-mix(in_oklch,var(--line-strong)_78%,transparent)] shadow-[0_14px_22px_rgba(31,43,68,0.08)]"
-                        : "border-[color:color-mix(in_oklch,var(--warning)_34%,var(--line))] opacity-80"
+                        ? "border-[color:color-mix(in_oklch,var(--line-strong)_60%,transparent)]"
+                        : "border-[color:color-mix(in_oklch,var(--warning)_30%,var(--line))] opacity-75"
                   }`}
                   style={surface.frontStyle}
                 >
-                  <div className="inline-flex h-6 min-w-[1.5rem] items-center justify-center rounded-full border border-black/10 bg-white/86 px-1.5 text-[0.66rem] font-semibold text-[color:var(--ink)]">
+                  <span className="inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded bg-[color:var(--paper)] px-1 text-[0.6rem] font-bold tabular-nums text-[color:var(--ink)] shadow-[0_1px_2px_rgba(0,0,0,0.06)]">
                     {index + 1}
-                  </div>
-                  <div
-                    className="rounded-full border border-black/10 bg-white/84 px-2 py-1 text-[0.58rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-soft)]"
-                    style={{ writingMode: widthPx < 48 ? "vertical-rl" : "horizontal-tb" }}
+                  </span>
+                  <span
+                    className="rounded bg-[color:var(--paper-strong)] px-1 py-0.5 text-[0.54rem] font-semibold tabular-nums text-[color:var(--ink-soft)] shadow-[0_1px_2px_rgba(0,0,0,0.04)]"
+                    style={{ writingMode: widthPx < 44 ? "vertical-rl" : "horizontal-tb" }}
                   >
-                    {ready ? `${row.thicknessMm} mm` : "Parked"}
-                  </div>
+                    {ready ? `${row.thicknessMm} mm` : "?"}
+                  </span>
                 </div>
               </div>
             );
           })}
-          </div>
         </div>
       </div>
 
@@ -2503,24 +2323,15 @@ function LayerStackDiagram(props: {
   }));
 
   return (
-    <section className={`min-w-0 overflow-hidden rounded-[0.85rem] border ${workbenchSectionCardClass("assembly")}`}>
-      <div className="border-b border-[color:color-mix(in_oklch,var(--assembly)_18%,var(--line))] px-4 py-3">
-        <div className="flex flex-wrap items-start justify-between gap-3">
-          <div className="min-w-0">
-            <div className={`text-[0.66rem] font-semibold uppercase tracking-[0.14em] ${workbenchSectionEyebrowClass("assembly")}`}>Section preview</div>
-            <h2 className={`mt-1 text-[0.92rem] font-semibold leading-tight ${workbenchSectionTitleClass("assembly")}`}>
-              {studyMode === "floor" ? "Walking side to ceiling side" : "Side A to Side B"}
-            </h2>
-            <p className="mt-1 text-[0.74rem] leading-5 text-[color:var(--ink-soft)]">
-              {rows.length ? `${solverLayerCount} solver layers shown as a technical section and live schedule.` : "Add layers to generate the section preview."}
-            </p>
-          </div>
-          <div className="grid gap-2 sm:grid-cols-2 2xl:grid-cols-4">
-            <InlinePair label="Rows" value={rows.length ? `${rows.length}` : "0"} />
-            <InlinePair label="Thickness" value={totalThickness > 0 ? `${formatDecimal(totalThickness)} mm` : "Pending"} />
-            <InlinePair label="Mass" value={result ? `${formatDecimal(result.metrics.surfaceMassKgM2)} kg/m²` : "Pending"} />
-            <InlinePair label="Live" value={parkedRowCount > 0 ? `${liveRowCount}/${rows.length}` : `${liveRowCount}`} />
-          </div>
+    <section className={`min-w-0 overflow-hidden rounded border ${workbenchSectionCardClass("assembly")}`}>
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[color:var(--line)] px-4 py-3">
+        <div className={`text-[0.68rem] font-semibold uppercase tracking-[0.14em] ${workbenchSectionEyebrowClass("assembly")}`}>
+          {studyMode === "floor" ? "Floor section" : "Wall section"}
+        </div>
+        <div className="flex flex-wrap gap-3 text-[0.68rem] tabular-nums text-[color:var(--ink-faint)]">
+          <span>{rows.length} rows</span>
+          <span>{totalThickness > 0 ? `${formatDecimal(totalThickness)} mm` : "—"}</span>
+          <span>{result ? `${formatDecimal(result.metrics.surfaceMassKgM2)} kg/m²` : "—"}</span>
         </div>
       </div>
 
@@ -2550,19 +2361,15 @@ function LayerStackDiagram(props: {
               ))}
             </div>
           </div>
-          <div className="text-[0.72rem] leading-5 text-[color:var(--ink-soft)]">
-            {collapsedLiveRowCount > 0
-              ? `${collapsedLiveRowCount} adjacent live row${collapsedLiveRowCount === 1 ? "" : "s"} collapse before calculation.`
-              : activeRowId
-                ? "Focused row is highlighted in the section."
-                : studyMode === "floor"
-                  ? "Row 1 starts on the walking side."
-                  : "Row 1 starts on Side A."}
-          </div>
+          {collapsedLiveRowCount > 0 ? (
+            <div className="text-[0.72rem] text-[color:var(--ink-faint)]">
+              {`${collapsedLiveRowCount} adjacent row${collapsedLiveRowCount === 1 ? "" : "s"} collapse before calculation.`}
+            </div>
+          ) : null}
         </div>
       ) : (
         <div className="px-4 py-4">
-          <div className="rounded-[0.9rem] border border-dashed border-[color:color-mix(in_oklch,var(--assembly)_24%,var(--line))] bg-[color:color-mix(in_oklch,var(--assembly)_4%,var(--paper))] px-4 py-5 text-[0.82rem] leading-6 text-[color:var(--ink-soft)]">
+          <div className="rounded border border-dashed border-[color:var(--line)] bg-[color:var(--paper)] px-4 py-5 text-[0.82rem] leading-6 text-[color:var(--ink-soft)]">
             Add layers in physical order to generate the section preview and live stack metrics.
           </div>
         </div>
@@ -2645,12 +2452,12 @@ function SimpleLayerRow(props: {
 
   return (
     <article
-      className={`workbench-row min-w-0 rounded-[0.75rem] border px-3 py-3 ${
+      className={`workbench-row min-w-0 rounded border px-3 py-3 ${
         active
-          ? "border-[color:color-mix(in_oklch,var(--assembly)_36%,var(--assembly-ink))] bg-[color:color-mix(in_oklch,var(--assembly)_8%,var(--paper))]"
+          ? "border-[color:var(--line-strong)] bg-[color:var(--panel)]"
           : thicknessReady
-            ? "border-[color:color-mix(in_oklch,var(--assembly)_18%,var(--line))] bg-[color:color-mix(in_oklch,var(--assembly)_4%,var(--paper))]"
-            : "border-[color:color-mix(in_oklch,var(--warning)_28%,var(--line))] bg-[color:color-mix(in_oklch,var(--warning)_8%,var(--paper))]"
+            ? "border-[color:var(--line)] bg-[color:var(--paper)]"
+            : "border-[color:var(--warning)] bg-[color:color-mix(in_oklch,var(--warning)_8%,var(--paper))]"
       }`}
       data-active={active ? "true" : "false"}
       data-move-flash={moveFlashDirection ?? "idle"}
@@ -2668,7 +2475,7 @@ function SimpleLayerRow(props: {
     >
       <div className="flex min-w-0 flex-wrap items-start justify-between gap-3">
         <div className="flex min-w-0 flex-wrap items-center gap-2">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[color:color-mix(in_oklch,var(--ink)_3%,var(--paper))] text-xs font-semibold text-[color:var(--ink)]">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[color:var(--line)] bg-[color:color-mix(in_oklch,var(--ink)_3%,var(--paper))] text-xs font-semibold text-[color:var(--ink)]">
             {index + 1}
           </div>
           <div className="min-w-0">
@@ -2680,7 +2487,7 @@ function SimpleLayerRow(props: {
         <div className="flex shrink-0 items-center gap-1">
           <button
             aria-label={`Move layer ${index + 1} up`}
-            className="focus-ring inline-flex h-7 w-7 items-center justify-center rounded-[0.6rem] border border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] text-[color:var(--ink-soft)] enabled:hover:bg-black/[0.04] disabled:cursor-not-allowed disabled:opacity-35"
+            className="focus-ring inline-flex h-7 w-7 items-center justify-center rounded border border-[color:var(--line)] text-[color:var(--ink-soft)] enabled:hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-35"
             disabled={!canMoveUp}
             onClick={() => onMoveRow(row.id, "up")}
             type="button"
@@ -2689,7 +2496,7 @@ function SimpleLayerRow(props: {
           </button>
           <button
             aria-label={`Move layer ${index + 1} down`}
-            className="focus-ring inline-flex h-7 w-7 items-center justify-center rounded-[0.6rem] border border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] text-[color:var(--ink-soft)] enabled:hover:bg-black/[0.04] disabled:cursor-not-allowed disabled:opacity-35"
+            className="focus-ring inline-flex h-7 w-7 items-center justify-center rounded border border-[color:var(--line)] text-[color:var(--ink-soft)] enabled:hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-35"
             disabled={!canMoveDown}
             onClick={() => onMoveRow(row.id, "down")}
             type="button"
@@ -2697,7 +2504,7 @@ function SimpleLayerRow(props: {
             <ArrowDown className="h-4 w-4" />
           </button>
           <button
-            className="focus-ring rounded-[0.6rem] px-2.5 py-1.5 text-sm font-medium text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+            className="focus-ring rounded px-2.5 py-1.5 text-sm font-medium text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
             onClick={() => onRemoveRow(row.id)}
             type="button"
           >
@@ -2706,7 +2513,7 @@ function SimpleLayerRow(props: {
           <button
             aria-label={expanded ? "Hide details" : "Edit row"}
             aria-expanded={expanded}
-            className="focus-ring inline-flex items-center justify-center rounded-[0.6rem] border border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] px-2.5 py-1.5 text-sm font-medium text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+            className="focus-ring inline-flex items-center justify-center rounded border border-[color:var(--line)] px-2.5 py-1.5 text-sm font-medium text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
             onClick={() => onExpandedChange(expanded ? null : row.id)}
             type="button"
           >
@@ -2776,7 +2583,7 @@ function SimpleLayerRow(props: {
               <label className="grid min-w-0 gap-2">
                 <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Floor role</span>
                 <select
-                  className="focus-ring touch-target w-full min-w-0 rounded-[0.9rem] border border-[color:color-mix(in_oklch,var(--assembly)_22%,var(--line))] bg-[color:var(--paper)] px-3 py-2.5"
+                  className="focus-ring touch-target w-full min-w-0 rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-3 py-2.5"
                   onChange={(event) => onFloorRoleChange(row.id, event.target.value ? (event.target.value as FloorRole) : undefined)}
                   value={row.floorRole ?? ""}
                 >
@@ -2798,7 +2605,7 @@ function SimpleLayerRow(props: {
           </div>
 
           {material.notes ? (
-            <div className={`rounded-[0.8rem] border px-3 py-2.5 text-[0.74rem] leading-5 text-[color:var(--ink-soft)] ${workbenchSectionMutedCardClass("assembly")}`}>
+            <div className={`rounded border px-3 py-2.5 text-[0.74rem] leading-5 text-[color:var(--ink-soft)] ${workbenchSectionMutedCardClass("assembly")}`}>
               <span className="font-semibold text-[color:var(--ink)]">Material note:</span> {material.notes}
             </div>
           ) : null}
@@ -2840,25 +2647,18 @@ function CustomMaterialComposer(props: {
   const draftNotePreview = draft.notes.trim().length > 0 ? draft.notes.trim() : null;
 
   return (
-    <section className={`rounded-[0.9rem] border px-3 py-3 ${workbenchSectionCardClass("assembly")}`}>
+    <section className={`rounded border px-3 py-3 ${workbenchSectionCardClass("assembly")}`}>
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="text-[0.84rem] font-semibold text-[color:var(--ink)]">Custom material library</div>
-          <p className="mt-1 text-[0.76rem] leading-5 text-[color:var(--ink-soft)]">
-            Add proprietary products or missing catalog rows once, then reuse them in any guided or advanced layer stack.
-          </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <GuidedFactChip>{`${customMaterials.length} saved`}</GuidedFactChip>
-            <GuidedFactChip>Guided + advanced</GuidedFactChip>
-            <GuidedFactChip>Browser-local</GuidedFactChip>
-          </div>
+          <div className="mt-1 text-[0.72rem] text-[color:var(--ink-faint)]">{`${customMaterials.length} saved`}</div>
         </div>
         <button
           aria-expanded={expanded}
-          className={`focus-ring inline-flex items-center justify-center rounded-[0.75rem] border px-3 py-2 text-sm font-semibold ${
+          className={`focus-ring inline-flex items-center justify-center rounded border px-3 py-2 text-sm font-semibold ${
             expanded
-              ? "border-[color:color-mix(in_oklch,var(--assembly)_28%,var(--line))] bg-[color:color-mix(in_oklch,var(--assembly)_12%,var(--paper))] text-[color:var(--assembly-ink)]"
-              : "border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[color:var(--paper)] text-[color:var(--ink-soft)]"
+              ? "border-[color:var(--line)] bg-[color:var(--panel)] text-[color:var(--ink)]"
+              : "border-[color:var(--line)] bg-[color:var(--paper)] text-[color:var(--ink-soft)]"
           }`}
           onClick={() => onExpandedChange(!expanded)}
           type="button"
@@ -2874,7 +2674,7 @@ function CustomMaterialComposer(props: {
 
             return (
               <article
-                className={`grid gap-2 rounded-[0.9rem] border px-3 py-3 ${workbenchSectionMutedCardClass("assembly")}`}
+                className={`grid gap-2 rounded border px-3 py-3 ${workbenchSectionMutedCardClass("assembly")}`}
                 data-testid={`custom-material-card-${material.id}`}
                 key={material.id}
               >
@@ -2890,63 +2690,34 @@ function CustomMaterialComposer(props: {
                     <GuidedFactChip>{`${formatDecimal(material.impact.dynamicStiffnessMNm3)} MN/m³`}</GuidedFactChip>
                   ) : null}
                 </div>
-                <div className="flex flex-wrap gap-2">
-                  <GuidedFactChip>{`${formatDecimal(material.densityKgM3)} kg/m³`}</GuidedFactChip>
-                  {typeof material.impact?.dynamicStiffnessMNm3 === "number" ? <GuidedFactChip>s&apos; listed</GuidedFactChip> : null}
-                </div>
+                <div className="text-[0.72rem] text-[color:var(--ink-faint)]">{`${formatDecimal(material.densityKgM3)} kg/m³`}</div>
                 {notePreview ? (
                   <p className="line-clamp-2 text-[0.74rem] leading-5 text-[color:var(--ink-soft)]">{notePreview}</p>
-                ) : (
-                  <p className="text-[0.74rem] leading-5 text-[color:var(--ink-soft)]">
-                    Ready in every layer picker for this browser profile.
-                  </p>
-                )}
+                ) : null}
               </article>
             );
           })}
         </div>
       ) : (
-        <div className={`mt-3 grid gap-2 rounded-[0.8rem] border px-3 py-3 ${workbenchSectionMutedCardClass("assembly")}`}>
-          <div className="text-[0.78rem] font-semibold text-[color:var(--ink)]">No local materials yet</div>
-          <p className="text-[0.76rem] leading-5 text-[color:var(--ink-soft)]">
-            Add one product card here and it will appear in guided and advanced layer pickers immediately.
-          </p>
-          <div className="flex flex-wrap gap-2">
-            <GuidedFactChip>Local only</GuidedFactChip>
-            <GuidedFactChip>Instant in pickers</GuidedFactChip>
-          </div>
+        <div className={`mt-3 rounded border px-3 py-3 text-[0.78rem] text-[color:var(--ink-soft)] ${workbenchSectionMutedCardClass("assembly")}`}>
+          No local materials yet.
         </div>
       )}
 
       {expanded ? (
         <div className="mt-4 grid gap-3">
           <div
-            className={`grid gap-3 rounded-[0.95rem] border px-3 py-3 ${workbenchSectionMutedCardClass("assembly")}`}
+            className={`grid gap-2 rounded-md border px-3 py-3 ${workbenchSectionMutedCardClass("assembly")}`}
             data-testid="custom-material-preview"
           >
-            <div className="flex flex-wrap items-start justify-between gap-3">
-              <div>
-                <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Composer brief</div>
-                <div className="mt-1 text-sm font-semibold text-[color:var(--ink)]">Required fields first, product note second</div>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                <GuidedFactChip tone={errors.name || errors.densityKgM3 ? "warning" : "neutral"}>Required: name, category, density</GuidedFactChip>
-                <GuidedFactChip>Optional: s&apos;, note</GuidedFactChip>
-                <GuidedFactChip>Appears in layer pickers immediately</GuidedFactChip>
-              </div>
-            </div>
-            <div className="grid gap-2 sm:grid-cols-3">
-              <InlinePair label="Preview name" value={draftName} />
-              <InlinePair label="Category" value={draftCategoryLabel} />
-              <InlinePair label="Storage" value="This browser" />
-            </div>
+            <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Preview</div>
             <div className="grid gap-2 sm:grid-cols-2">
+              <InlinePair label="Name" value={draftName} />
+              <InlinePair label="Category" value={draftCategoryLabel} />
               <InlinePair label="Density" value={draftDensityLabel} />
               <InlinePair label="Dynamic stiffness" value={draftDynamicLabel} />
             </div>
-            <p className="text-[0.76rem] leading-5 text-[color:var(--ink-soft)]">
-              {draftNotePreview ?? "Optional product note or data-sheet reference for future reviewers."}
-            </p>
+            {draftNotePreview ? <p className="text-[0.76rem] leading-5 text-[color:var(--ink-soft)]">{draftNotePreview}</p> : null}
           </div>
 
           <div className="grid gap-3 md:grid-cols-2">
@@ -2965,7 +2736,7 @@ function CustomMaterialComposer(props: {
             <label className="grid min-w-0 gap-2">
               <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Category</span>
               <select
-                className="focus-ring touch-target w-full min-w-0 rounded-[0.9rem] border border-[color:color-mix(in_oklch,var(--assembly)_22%,var(--line))] bg-[color:var(--paper)] px-3 py-2.5"
+                className="focus-ring touch-target w-full min-w-0 rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-3 py-2.5"
                 onChange={(event) => onDraftChange("category", event.target.value as MaterialCategory)}
                 value={draft.category}
               >
@@ -3015,7 +2786,7 @@ function CustomMaterialComposer(props: {
           <label className="grid min-w-0 gap-2">
             <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Material note</span>
             <textarea
-              className="focus-ring min-h-[5.5rem] rounded-[0.9rem] border border-[color:color-mix(in_oklch,var(--assembly)_22%,var(--line))] bg-[color:var(--paper)] px-3 py-2.5 text-sm text-[color:var(--ink)]"
+              className="focus-ring min-h-[5.5rem] rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-3 py-2.5 text-sm text-[color:var(--ink)]"
               onChange={(event) => onDraftChange("notes", event.target.value)}
               placeholder="Optional source note, product sheet reference, or consultant remark."
               value={draft.notes}
@@ -3030,7 +2801,7 @@ function CustomMaterialComposer(props: {
               <GuidedFactChip>{`Library size after save: ${customMaterials.length + (canCreate ? 1 : 0)}`}</GuidedFactChip>
             </div>
             <button
-              className="focus-ring inline-flex items-center justify-center gap-2 rounded-[0.75rem] bg-[color:var(--assembly-ink)] px-4 py-2 text-sm font-semibold text-[color:var(--paper)] disabled:cursor-not-allowed disabled:opacity-45"
+              className="focus-ring inline-flex items-center justify-center gap-2 rounded bg-[color:var(--accent)] px-4 py-2 text-sm font-semibold text-[color:var(--paper)] disabled:cursor-not-allowed disabled:opacity-45"
               disabled={!canCreate}
               onClick={onCreate}
               type="button"
@@ -3104,7 +2875,7 @@ function NewLayerComposer(props: {
   const canAdd = Boolean(parsePositiveNumber(draft.thicknessMm));
 
   return (
-    <div className={`rounded-[0.9rem] border px-3 py-3 ${workbenchSectionCardClass("assembly")}`}>
+    <div className={`rounded border px-3 py-3 ${workbenchSectionCardClass("assembly")}`}>
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <div className="text-[0.84rem] font-semibold text-[color:var(--ink)]">Add the next layer here</div>
@@ -3113,7 +2884,7 @@ function NewLayerComposer(props: {
           </p>
         </div>
         <button
-          className="focus-ring inline-flex items-center justify-center gap-2 rounded-[0.75rem] bg-[color:var(--assembly-ink)] px-4 py-2 text-sm font-semibold text-[color:var(--paper)] disabled:cursor-not-allowed disabled:opacity-45"
+          className="focus-ring inline-flex items-center justify-center gap-2 rounded bg-[color:var(--accent)] px-4 py-2 text-sm font-semibold text-[color:var(--paper)] disabled:cursor-not-allowed disabled:opacity-45"
           disabled={!canAdd}
           onClick={onAdd}
           type="button"
@@ -3177,7 +2948,7 @@ function NewLayerComposer(props: {
             <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">New layer role</span>
             <select
               aria-label="New layer role"
-              className="focus-ring touch-target w-full min-w-0 rounded-[0.9rem] border border-[color:color-mix(in_oklch,var(--assembly)_22%,var(--line))] bg-[color:var(--paper)] px-3 py-2.5"
+              className="focus-ring touch-target w-full min-w-0 rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-3 py-2.5"
               onChange={(event) => onFloorRoleChange(event.target.value ? (event.target.value as FloorRole) : undefined)}
               value={draft.floorRole ?? ""}
             >
@@ -3200,7 +2971,7 @@ function NewLayerComposer(props: {
       </div>
 
       {material.notes ? (
-        <div className={`mt-3 rounded-[0.8rem] border px-3 py-2.5 text-[0.74rem] leading-5 text-[color:var(--ink-soft)] ${workbenchSectionMutedCardClass("assembly")}`}>
+        <div className={`mt-3 rounded border px-3 py-2.5 text-[0.74rem] leading-5 text-[color:var(--ink-soft)] ${workbenchSectionMutedCardClass("assembly")}`}>
           <span className="font-semibold text-[color:var(--ink)]">Material note:</span> {material.notes}
         </div>
       ) : null}
@@ -3230,10 +3001,10 @@ function ReviewTabButton(props: {
     <button
       aria-controls={controlsId}
       aria-selected={active}
-      className={`focus-ring inline-flex items-center rounded-[0.8rem] border px-3 py-2 text-sm font-semibold transition ${
+      className={`focus-ring inline-flex items-center rounded border px-3 py-2 text-sm font-semibold transition ${
         active
-          ? "border-[color:color-mix(in_oklch,var(--accent)_28%,var(--line))] bg-[color:color-mix(in_oklch,var(--accent)_14%,var(--paper))] text-[color:var(--ink)]"
-          : "hairline bg-[color:var(--paper)]/74 text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+          ? "border-[color:var(--accent)] bg-[color:var(--accent-soft)] text-[color:var(--ink)]"
+          : "hairline bg-[color:var(--paper)]/74 text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
       }`}
       id={`guided-review-tab-${id}`}
       onClick={() => onSelect(id)}
@@ -3356,6 +3127,16 @@ export function SimpleWorkbenchShell() {
   const [activeReviewTab, setActiveReviewTab] = useState<ReviewTabId>("method");
   const [activeWorkspacePanel, setActiveWorkspacePanel] = useState<WorkspacePanelId>(() => (rows.length > 0 ? "stack" : "setup"));
   const [reviewExpanded, setReviewExpanded] = useState(false);
+  const { theme, toggle: toggleTheme } = useTheme();
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(min-width: 1280px)");
+    const sync = () => setIsDesktop(mediaQuery.matches);
+    sync();
+    mediaQuery.addEventListener("change", sync);
+    return () => mediaQuery.removeEventListener("change", sync);
+  }, []);
 
   useEffect(() => {
     if (sameRequestedOutputs(requestedOutputs, automaticOutputs)) {
@@ -3779,96 +3560,97 @@ export function SimpleWorkbenchShell() {
 
   return (
     <div
-      className="grid min-w-0 gap-4 rounded-[1rem] bg-[color:color-mix(in_oklch,var(--paper)_88%,transparent)] pb-4"
+      className="grid min-w-0 gap-0"
       style={SIMPLE_WORKBENCH_THEME}
     >
-      <SurfacePanel className="stage-enter overflow-hidden px-4 py-4 sm:px-5">
-        <div className="grid gap-4 xl:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] xl:items-end">
-          <div className="min-w-0">
-            <div className="text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Acoustic workbench</div>
-            <h1 className="mt-1 text-[clamp(1.15rem,2vw,1.45rem)] font-semibold leading-tight text-[color:var(--ink)]">
-              {`${getStudyModeLabel(studyMode)} calculator`}
-            </h1>
-            <div className="mt-3 flex flex-wrap gap-2">
-              <GuidedFactChip>{selectedContextOption.label}</GuidedFactChip>
-              <GuidedFactChip>{`${readyOutputCount}/${automaticOutputs.length} outputs ready`}</GuidedFactChip>
-              <GuidedFactChip>{`${rows.length} visible row${rows.length === 1 ? "" : "s"}`}</GuidedFactChip>
-              <GuidedFactChip>{selectedPreset.label}</GuidedFactChip>
-            </div>
+      {/* ── Compact toolbar ── */}
+      <div className="stage-enter border-b border-[color:var(--line)] bg-[color:var(--paper)] px-4 py-2.5">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+          <h1 className="shrink-0 text-sm font-semibold text-[color:var(--ink)]">
+            {`${getStudyModeLabel(studyMode)} calculator`}
+          </h1>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <select
+              aria-label="Study type"
+              className="focus-ring h-8 min-w-0 rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-2 text-[0.8rem] text-[color:var(--ink)]"
+              onChange={(event) => startStudyMode(event.target.value as StudyMode)}
+              value={studyMode}
+            >
+              <option value="floor">Floor</option>
+              <option value="wall">Wall</option>
+            </select>
+
+            <select
+              aria-label="Project context"
+              className="focus-ring h-8 min-w-0 rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-2 text-[0.8rem] text-[color:var(--ink)]"
+              onChange={(event) => setAirborneContextMode(event.target.value as AirborneContextMode)}
+              value={airborneContextMode}
+            >
+              {AIRBORNE_CONTEXT_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+
+            <select
+              aria-label="Example stack"
+              className="focus-ring h-8 min-w-0 rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-2 text-[0.8rem] text-[color:var(--ink)]"
+              onChange={(event) => {
+                const nextPresetId = event.target.value as PresetId;
+                setSelectedPresetId(nextPresetId);
+                loadPreset(nextPresetId);
+              }}
+              value={selectedPresetId}
+            >
+              {modePresets.map((preset) => (
+                <option key={preset.id} value={preset.id}>
+                  {preset.label}
+                </option>
+              ))}
+            </select>
           </div>
 
-          <div className="grid gap-3 xl:grid-cols-[11rem_12rem_minmax(0,1fr)_auto_auto] xl:items-end">
-            <label className="grid gap-2">
-              <span className="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Study type</span>
-              <select
-                className="focus-ring touch-target min-w-0 rounded-[0.75rem] border border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[color:var(--paper)] px-3 py-2.5 text-sm text-[color:var(--ink)]"
-                onChange={(event) => startStudyMode(event.target.value as StudyMode)}
-                value={studyMode}
-              >
-                <option value="floor">Floor</option>
-                <option value="wall">Wall</option>
-              </select>
-            </label>
-
-            <label className="grid gap-2">
-              <span className="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Project context</span>
-              <select
-                className="focus-ring touch-target min-w-0 rounded-[0.75rem] border border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[color:var(--paper)] px-3 py-2.5 text-sm text-[color:var(--ink)]"
-                onChange={(event) => setAirborneContextMode(event.target.value as AirborneContextMode)}
-                value={airborneContextMode}
-              >
-                {AIRBORNE_CONTEXT_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </label>
-
-              <div className="grid gap-2">
-                <div className="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Example stack</div>
-                <div className="flex min-w-0 gap-2">
-                  <select
-                    aria-label="Example stack"
-                    className="focus-ring touch-target min-w-0 flex-1 rounded-[0.75rem] border border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[color:var(--paper)] px-3 py-2.5 text-sm text-[color:var(--ink)]"
-                    onChange={(event) => {
-                      const nextPresetId = event.target.value as PresetId;
-                      setSelectedPresetId(nextPresetId);
-                      loadPreset(nextPresetId);
-                    }}
-                    value={selectedPresetId}
-                  >
-                    {modePresets.map((preset) => (
-                      <option key={preset.id} value={preset.id}>
-                        {preset.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
+          <div className="flex items-center gap-2">
             <button
-              className="focus-ring inline-flex items-center justify-center gap-2 rounded-[0.75rem] border border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[color:var(--paper)] px-3 py-2.5 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+              className="focus-ring inline-flex h-8 items-center gap-1.5 rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-2.5 text-[0.8rem] font-medium text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
               onClick={() => reset()}
               type="button"
             >
-              <RotateCcw className="h-4 w-4" />
+              <RotateCcw className="h-3.5 w-3.5" />
               Reset
             </button>
 
             <Link
-              className="focus-ring inline-flex items-center justify-center gap-2 rounded-[0.75rem] border border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[color:var(--paper)] px-3 py-2.5 text-sm font-semibold text-[color:var(--ink)] hover:bg-black/[0.03]"
+              className="focus-ring inline-flex h-8 items-center gap-1.5 rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-2.5 text-[0.8rem] font-medium text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
               href="/workbench?view=advanced"
             >
-              Open advanced view
-              <ChevronRight className="h-4 w-4" />
+              Advanced
+              <ChevronRight className="h-3.5 w-3.5" />
             </Link>
+
+            <button
+              aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+              className="focus-ring inline-flex h-8 w-8 items-center justify-center rounded border border-[color:var(--line)] bg-[color:var(--paper)] text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
+              onClick={toggleTheme}
+              type="button"
+            >
+              {theme === "dark" ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
+            </button>
+          </div>
+
+          <div className="ml-auto flex items-center gap-1.5 text-[0.72rem] text-[color:var(--ink-faint)]">
+            <span>{`${readyOutputCount}/${automaticOutputs.length} ready`}</span>
+            <span className="text-[color:var(--line)]">|</span>
+            <span>{`${rows.length} row${rows.length === 1 ? "" : "s"}`}</span>
           </div>
         </div>
-      </SurfacePanel>
+      </div>
 
-      <div className="grid gap-2">
-        <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
+      {/* ── Tab navigation (mobile only) ── */}
+      {!isDesktop ? (
+        <div className="flex border-b border-[color:var(--line)] bg-[color:var(--paper)] px-4">
           <WorkspacePanelButton active={activeWorkspacePanel === "setup"} label="Setup" onClick={() => openWorkspacePanel("setup")} />
           <WorkspacePanelButton active={activeWorkspacePanel === "stack"} label="Assembly" onClick={() => openWorkspacePanel("stack")} />
           <WorkspacePanelButton active={activeWorkspacePanel === "results"} label="Results" onClick={() => openWorkspacePanel("results")} />
@@ -3878,19 +3660,21 @@ export function SimpleWorkbenchShell() {
             onClick={() => openWorkspacePanel("review")}
           />
         </div>
-      </div>
+      ) : null}
 
-      <section className="grid min-w-0 gap-4">
-        <SurfacePanel
-          className={`stage-enter-2 min-w-0 overflow-hidden px-4 py-4 sm:px-5 ${
-            activeWorkspacePanel === "setup" ? "block" : "hidden"
-          } ${workbenchSectionPanelClass("route")}`}
+      {/* ── Panel content ── */}
+      <section className={`grid min-w-0 ${isDesktop ? "grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]" : ""}`}>
+        <div
+          className={isDesktop
+            ? "col-start-1 row-start-1 min-w-0 border-r border-[color:var(--line)] px-4 py-4"
+            : `stage-enter-2 min-w-0 overflow-hidden px-4 py-4 ${activeWorkspacePanel === "setup" ? "block" : "hidden"}`
+          }
         >
           <div className="flex flex-col">
-            <SectionLead description="Pick the route, then fill only the inputs that unlock the current lane." title="Route" tone="route" />
+            <SectionLead title="Route" tone="route" />
 
             <div className="mt-4 space-y-4">
-              <section className={`rounded-[0.85rem] border px-3 py-3 ${workbenchSectionCardClass("route")}`}>
+              <section className={`rounded border px-3 py-3 ${workbenchSectionCardClass("route")}`}>
                 <div className={`text-[0.68rem] font-semibold uppercase tracking-[0.14em] ${workbenchSectionEyebrowClass("route")}`}>Route summary</div>
                 <div className="mt-2 flex flex-wrap gap-2">
                   <GuidedFactChip>{getEnvironmentLabel(airborneContextMode)}</GuidedFactChip>
@@ -3909,17 +3693,10 @@ export function SimpleWorkbenchShell() {
               </section>
 
               {geometryActive || impactFieldActive ? (
-                <section className={`rounded-[0.9rem] border px-3 py-3 ${workbenchSectionCardClass("route")}`}>
+                <section className={`rounded border px-3 py-3 ${workbenchSectionCardClass("route")}`}>
                   <div className="flex flex-wrap items-start justify-between gap-3">
-                    <div>
-                      <div className="text-[0.84rem] font-semibold text-[color:var(--ink)]">Input map</div>
-                      <p className="mt-1 text-[0.76rem] leading-5 text-[color:var(--ink-soft)]">Only the fields that move this lane are live.</p>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      <DetailTag>{getEnvironmentLabel(airborneContextMode)}</DetailTag>
-                      {geometryActive ? <GuidedFactChip>Airborne route live</GuidedFactChip> : null}
-                      {impactFieldActive ? <GuidedFactChip>Impact route live</GuidedFactChip> : null}
-                    </div>
+                    <div className="text-[0.84rem] font-semibold text-[color:var(--ink)]">Input map</div>
+                    <DetailTag>{getEnvironmentLabel(airborneContextMode)}</DetailTag>
                   </div>
 
                   <div className="mt-3 grid gap-3">
@@ -4130,26 +3907,21 @@ export function SimpleWorkbenchShell() {
                   </div>
                 </section>
               ) : (
-                <div className={`rounded-[0.85rem] border px-3 py-3 text-[0.8rem] leading-5 text-[color:var(--ink-soft)] ${workbenchSectionCardClass("route")}`}>
+                <div className={`rounded border px-3 py-3 text-[0.8rem] leading-5 text-[color:var(--ink-soft)] ${workbenchSectionCardClass("route")}`}>
                   {contextNotes[0] ?? "No additional route inputs are needed for this context."}
                 </div>
               )}
 
-              <details className={`rounded-[0.85rem] border px-3 py-3 ${workbenchSectionMutedCardClass("route")}`}>
+              <details className={`rounded border px-3 py-3 ${workbenchSectionMutedCardClass("route")}`}>
                 <summary className="cursor-pointer list-none">
                   <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div>
-                      <div className="text-[0.84rem] font-semibold text-[color:var(--ink)]">Tools</div>
-                      <p className="mt-1 text-[0.76rem] leading-5 text-[color:var(--ink-soft)]">
-                        Preset notes, helper inserts, and expert-only controls.
-                      </p>
-                    </div>
+                    <div className="text-[0.84rem] font-semibold text-[color:var(--ink)]">Tools</div>
                     <DetailTag>{selectedPreset.label}</DetailTag>
                   </div>
                 </summary>
 
                 <div className="mt-4 grid gap-4">
-                  <div className={`rounded-[0.8rem] border px-3 py-3 text-[0.8rem] leading-5 text-[color:var(--ink-soft)] ${workbenchSectionMutedCardClass("route")}`}>
+                  <div className={`rounded border px-3 py-3 text-[0.8rem] leading-5 text-[color:var(--ink-soft)] ${workbenchSectionMutedCardClass("route")}`}>
                     <div className="flex flex-wrap items-center gap-2">
                       <div className="font-semibold text-[color:var(--ink)]">{selectedPreset.label}</div>
                       <GuidedFactChip>{`${rows.length} visible row${rows.length === 1 ? "" : "s"}`}</GuidedFactChip>
@@ -4162,7 +3934,7 @@ export function SimpleWorkbenchShell() {
                     <div className="grid gap-2">
                       {TIMBER_IMPACT_ONLY_GUIDED_ACTIONS.map((action) => (
                         <button
-                          className="focus-ring flex min-w-0 flex-col items-start gap-1.5 rounded-[0.75rem] border border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[color:var(--paper)] px-3 py-3 text-left hover:bg-black/[0.03]"
+                          className="focus-ring flex min-w-0 flex-col items-start gap-1.5 rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-3 py-3 text-left hover:bg-[color:var(--panel)]"
                           key={action.id}
                           onClick={() => appendRows(action.rows)}
                           type="button"
@@ -4181,7 +3953,7 @@ export function SimpleWorkbenchShell() {
                     <div className="grid gap-2">
                       {STEEL_BOUND_SUPPORT_FORM_ACTIONS.map((action) => (
                         <button
-                          className="focus-ring flex min-w-0 flex-col items-start gap-1.5 rounded-[0.75rem] border border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[color:var(--paper)] px-3 py-3 text-left hover:bg-black/[0.03]"
+                          className="focus-ring flex min-w-0 flex-col items-start gap-1.5 rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-3 py-3 text-left hover:bg-[color:var(--panel)]"
                           key={action.id}
                           onClick={() => updateMaterial(lightweightSteelBaseRow.id, action.materialId)}
                           type="button"
@@ -4196,15 +3968,10 @@ export function SimpleWorkbenchShell() {
                     </div>
                   ) : null}
 
-                  <details className={`rounded-[0.8rem] border px-3 py-3 ${workbenchSectionMutedCardClass("route")}`}>
+                  <details className={`rounded border px-3 py-3 ${workbenchSectionMutedCardClass("route")}`}>
                     <summary className="cursor-pointer list-none">
                       <div className="flex flex-wrap items-center justify-between gap-3">
-                        <div>
-                          <div className="text-[0.82rem] font-semibold text-[color:var(--ink)]">Advanced controls</div>
-                          <p className="mt-1 text-[0.74rem] leading-5 text-[color:var(--ink-soft)]">
-                            Solver selector and wall-only modifiers.
-                          </p>
-                        </div>
+                        <div className="text-[0.82rem] font-semibold text-[color:var(--ink)]">Advanced controls</div>
                         {expertInputsActive ? <DetailTag tone="optional">Active</DetailTag> : <DetailTag>Hidden</DetailTag>}
                       </div>
                     </summary>
@@ -4218,7 +3985,7 @@ export function SimpleWorkbenchShell() {
                           usage="Rw, R'w, STC, C, Ctr, Dn* outputs and any airborne companion on floor studies"
                           >
                             <select
-                              className="focus-ring touch-target rounded-[0.8rem] border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                              className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
                               onChange={(event) => setCalculatorId(event.target.value as AirborneCalculatorId)}
                             value={calculatorId}
                           >
@@ -4240,7 +4007,7 @@ export function SimpleWorkbenchShell() {
                             usage="Wall-family detection and airborne overlays"
                           >
                             <select
-                              className="focus-ring touch-target rounded-[0.8rem] border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                              className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
                               onChange={(event) => setAirborneConnectionType(event.target.value as AirborneConnectionType)}
                               value={airborneConnectionType}
                             >
@@ -4259,7 +4026,7 @@ export function SimpleWorkbenchShell() {
                             usage="Framed-wall family matching and resilient framing penalties"
                           >
                             <select
-                              className="focus-ring touch-target rounded-[0.8rem] border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                              className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
                               onChange={(event) => setAirborneStudType(event.target.value as AirborneStudType)}
                               value={airborneStudType}
                             >
@@ -4278,7 +4045,7 @@ export function SimpleWorkbenchShell() {
                             usage="Framed wall family matching when stud spacing is part of the evidence"
                           >
                             <input
-                              className="focus-ring touch-target rounded-[0.8rem] border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                              className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
                               inputMode="decimal"
                               onChange={(event) => setAirborneStudSpacingMm(event.target.value)}
                               value={airborneStudSpacingMm}
@@ -4292,7 +4059,7 @@ export function SimpleWorkbenchShell() {
                             usage="Field/building airborne overlays"
                           >
                             <select
-                              className="focus-ring touch-target rounded-[0.8rem] border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                              className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
                               onChange={(event) => setAirborneAirtightness(event.target.value as AirtightnessClass)}
                               value={airborneAirtightness}
                             >
@@ -4311,7 +4078,7 @@ export function SimpleWorkbenchShell() {
                             usage="Leakage overlay on the airborne field/building route"
                           >
                             <select
-                              className="focus-ring touch-target rounded-[0.8rem] border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                              className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
                               onChange={(event) => setAirbornePerimeterSeal(event.target.value as PerimeterSealClass)}
                               value={airbornePerimeterSeal}
                             >
@@ -4330,7 +4097,7 @@ export function SimpleWorkbenchShell() {
                             usage="Airborne leakage penalty on field/building reads"
                           >
                             <select
-                              className="focus-ring touch-target rounded-[0.8rem] border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                              className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
                               onChange={(event) => setAirbornePenetrationState(event.target.value as PenetrationState)}
                               value={airbornePenetrationState}
                             >
@@ -4349,7 +4116,7 @@ export function SimpleWorkbenchShell() {
                             usage="Field flanking overlay and conservative airborne penalties"
                           >
                             <select
-                              className="focus-ring touch-target rounded-[0.8rem] border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                              className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
                               onChange={(event) => setAirborneJunctionQuality(event.target.value as JunctionQuality)}
                               value={airborneJunctionQuality}
                             >
@@ -4368,7 +4135,7 @@ export function SimpleWorkbenchShell() {
                             usage="Wall field/building leakage penalties"
                           >
                             <select
-                              className="focus-ring touch-target rounded-[0.8rem] border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                              className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
                               onChange={(event) => setAirborneElectricalBoxes(event.target.value as ElectricalBoxState)}
                               value={airborneElectricalBoxes}
                             >
@@ -4387,7 +4154,7 @@ export function SimpleWorkbenchShell() {
                             usage="Conservative flanking posture on field/building overlays"
                           >
                             <select
-                              className="focus-ring touch-target rounded-[0.8rem] border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                              className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
                               onChange={(event) => setAirborneSharedTrack(event.target.value as SharedTrackClass)}
                               value={airborneSharedTrack}
                             >
@@ -4406,56 +4173,93 @@ export function SimpleWorkbenchShell() {
               </details>
             </div>
           </div>
-        </SurfacePanel>
-
-        <SurfacePanel
-          className={`stage-enter-2 min-w-0 overflow-hidden px-4 py-4 sm:px-5 ${
-            activeWorkspacePanel === "stack" ? "block" : "hidden"
-          } ${workbenchSectionPanelClass("assembly")}`}
+        </div>
+        <div
+          className={isDesktop
+            ? "col-start-1 row-start-2 min-w-0 border-r border-[color:var(--line)] px-4 pb-4"
+            : `stage-enter-2 min-w-0 overflow-hidden px-4 py-4 ${activeWorkspacePanel === "stack" ? "block" : "hidden"}`
+          }
         >
           <div className="flex flex-col">
             <SectionLead title="Assembly" tone="assembly" />
 
-            <div className={`mt-4 rounded-[0.85rem] border px-3 py-3 ${workbenchSectionCardClass("assembly")}`}>
-              <div className="flex flex-wrap items-center gap-2">
-                <GuidedFactChip>{rows.length ? `${rows.length} rows` : "No rows yet"}</GuidedFactChip>
-                <GuidedFactChip>{rows.length ? `${liveRowCount} live / ${parkedRowCount} parked` : "Start with one layer"}</GuidedFactChip>
-                <GuidedFactChip>{rows.length ? `${formatDecimal(totalThickness)} mm total` : "Thickness pending"}</GuidedFactChip>
-                {studyMode === "floor" ? (
-                  <GuidedFactChip tone={missingFloorRoleCount > 0 ? "warning" : "neutral"}>
-                    {missingFloorRoleCount > 0
-                      ? `${missingFloorRoleCount} role missing`
-                      : `${assignedFloorRoleCount}/${rows.length || 0} roles tagged`}
-                  </GuidedFactChip>
-                ) : null}
-              </div>
-              <p className="mt-3 text-[0.76rem] leading-5 text-[color:var(--ink-soft)]">Edit one row at a time and open only the side panel you need.</p>
+            <div className="mt-2 flex flex-wrap items-center gap-2 text-[0.72rem] text-[color:var(--ink-faint)]">
+              <span>{rows.length ? `${rows.length} rows` : "No rows"}</span>
+              {rows.length ? (
+                <>
+                  <span className="text-[color:var(--line)]">·</span>
+                  <span>{`${formatDecimal(totalThickness)} mm`}</span>
+                  <span className="text-[color:var(--line)]">·</span>
+                  <span>{`${liveRowCount} live / ${parkedRowCount} parked`}</span>
+                  {studyMode === "floor" && missingFloorRoleCount > 0 ? (
+                    <>
+                      <span className="text-[color:var(--line)]">·</span>
+                      <span className="text-[color:var(--warning-ink)]">{`${missingFloorRoleCount} role missing`}</span>
+                    </>
+                  ) : null}
+                </>
+              ) : null}
             </div>
 
             <div className="mt-4 space-y-3">
-              <div className={`grid gap-2 rounded-[0.85rem] border px-3 py-3 ${workbenchSectionMutedCardClass("assembly")}`}>
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <div className="text-[0.76rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Tool panels</div>
-                  <DetailTag>{activeAssemblyTool ? activeAssemblyTool : "Rows only"}</DetailTag>
-                </div>
-                <div className="grid gap-2 md:grid-cols-3">
-                  <WorkspacePanelButton
-                    active={activeAssemblyTool === "composer"}
-                    label={activeAssemblyTool === "composer" ? "Hide add layer" : "Add layer form"}
-                    onClick={() => setActiveAssemblyTool((current) => (current === "composer" ? null : "composer"))}
-                  />
-                  <WorkspacePanelButton
-                    active={activeAssemblyTool === "preview"}
-                    label={activeAssemblyTool === "preview" ? "Hide preview" : "Section preview"}
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  aria-pressed={activeAssemblyTool === "composer"}
+                  className={`focus-ring inline-flex h-8 items-center gap-1.5 rounded px-3 text-[0.8rem] font-semibold ${
+                    activeAssemblyTool === "composer"
+                      ? "bg-[color:var(--accent)] text-[color:var(--paper)]"
+                      : "border border-[color:var(--accent)] text-[color:var(--accent-ink)] hover:bg-[color:var(--accent-soft)]"
+                  }`}
+                  onClick={() => setActiveAssemblyTool((current) => (current === "composer" ? null : "composer"))}
+                  type="button"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  {activeAssemblyTool === "composer" ? "Close" : "Add layer"}
+                </button>
+                <button
+                  aria-pressed={activeAssemblyTool === "library"}
+                  className={`focus-ring inline-flex h-8 items-center gap-1.5 rounded border px-3 text-[0.8rem] font-medium ${
+                    activeAssemblyTool === "library"
+                      ? "border-[color:var(--accent)] bg-[color:var(--accent-soft)] text-[color:var(--accent-ink)]"
+                      : "border-[color:var(--line)] text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
+                  }`}
+                  onClick={() => setActiveAssemblyTool((current) => (current === "library" ? null : "library"))}
+                  type="button"
+                >
+                  {`Custom materials${customMaterials.length ? ` (${customMaterials.length})` : ""}`}
+                </button>
+                {!isDesktop ? (
+                  <button
+                    aria-pressed={activeAssemblyTool === "preview"}
+                    className={`focus-ring inline-flex h-8 items-center gap-1.5 rounded border px-3 text-[0.8rem] font-medium ${
+                      activeAssemblyTool === "preview"
+                        ? "border-[color:var(--accent)] bg-[color:var(--accent-soft)] text-[color:var(--accent-ink)]"
+                        : "border-[color:var(--line)] text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
+                    }`}
                     onClick={() => setActiveAssemblyTool((current) => (current === "preview" ? null : "preview"))}
-                  />
-                  <WorkspacePanelButton
-                    active={activeAssemblyTool === "library"}
-                    label={activeAssemblyTool === "library" ? "Hide library" : "Custom materials"}
-                    onClick={() => setActiveAssemblyTool((current) => (current === "library" ? null : "library"))}
-                  />
-                </div>
+                    type="button"
+                  >
+                    Preview
+                  </button>
+                ) : null}
               </div>
+
+              {activeAssemblyTool === "library" ? (
+                <CustomMaterialComposer
+                  customMaterials={customMaterials}
+                  draft={customMaterialDraft}
+                  errors={customMaterialErrors}
+                  expanded={customMaterialExpanded}
+                  onCreate={createCustomMaterial}
+                  onDraftChange={(field, value) =>
+                    setCustomMaterialDraft((current) => ({
+                      ...current,
+                      [field]: value
+                    }))
+                  }
+                  onExpandedChange={setCustomMaterialExpanded}
+                />
+              ) : null}
 
               {activeAssemblyTool === "composer" ? (
                 <NewLayerComposer
@@ -4482,12 +4286,12 @@ export function SimpleWorkbenchShell() {
                 />
               ) : null}
 
-              {activeAssemblyTool === "preview" ? (
+              {!isDesktop && activeAssemblyTool === "preview" ? (
                 <LayerStackDiagram activeRowId={activeRowId} materials={materials} result={result} rows={rows} studyMode={studyMode} />
               ) : null}
 
               {rows.length ? (
-                <div className={`hidden items-center gap-3 rounded-[0.75rem] border px-3 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)] 2xl:grid 2xl:grid-cols-[2.5rem_minmax(0,1.5fr)_7rem_10rem_auto] ${workbenchSectionMutedCardClass("assembly")}`}>
+                <div className={`hidden items-center gap-3 rounded border px-3 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)] 2xl:grid 2xl:grid-cols-[2.5rem_minmax(0,1.5fr)_7rem_10rem_auto] ${workbenchSectionMutedCardClass("assembly")}`}>
                   <span>#</span>
                   <span>Layer</span>
                   <span>Thickness</span>
@@ -4522,48 +4326,32 @@ export function SimpleWorkbenchShell() {
                     />
                   ))
                 ) : (
-                  <div className={`rounded-[0.95rem] border border-dashed px-4 py-8 text-center ${workbenchSectionMutedCardClass("assembly")}`}>
-                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-[color:color-mix(in_oklch,var(--assembly)_28%,var(--line))] bg-[color:color-mix(in_oklch,var(--assembly)_12%,var(--paper))]">
-                      <Layers3 className="h-5 w-5 text-[color:var(--ink)]" />
-                    </div>
-                    <div className="mt-4 text-base font-semibold text-[color:var(--ink)]">No layers yet</div>
-                    <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">
-                      Add the first layer, or apply one of the example stacks above.
-                    </p>
+                  <div className="rounded border border-dashed border-[color:var(--line)] px-4 py-6 text-center text-sm text-[color:var(--ink-soft)]">
+                    No layers yet. Use <strong className="font-semibold text-[color:var(--ink)]">Add layer</strong> or pick an example stack.
                   </div>
                 )}
               </div>
 
-              {activeAssemblyTool === "library" ? (
-                <CustomMaterialComposer
-                  customMaterials={customMaterials}
-                  draft={customMaterialDraft}
-                  errors={customMaterialErrors}
-                  expanded={customMaterialExpanded}
-                  onCreate={createCustomMaterial}
-                  onDraftChange={(field, value) =>
-                    setCustomMaterialDraft((current) => ({
-                      ...current,
-                      [field]: value
-                    }))
-                  }
-                  onExpandedChange={setCustomMaterialExpanded}
-                />
-              ) : null}
             </div>
           </div>
-        </SurfacePanel>
-
-        <SurfacePanel
-          className={`stage-enter-3 min-w-0 overflow-hidden px-4 py-4 sm:px-5 ${
-            activeWorkspacePanel === "results" ? "block" : "hidden"
-          } ${workbenchSectionPanelClass("results")}`}
+        </div>
+        {/* ── Right column on desktop: Section preview + Results ── */}
+        <div
+          className={isDesktop
+            ? "col-start-2 row-start-1 row-span-2 min-w-0 overflow-y-auto px-4 py-4 sticky top-0 self-start max-h-screen"
+            : `stage-enter-3 min-w-0 overflow-hidden px-4 py-4 ${activeWorkspacePanel === "results" ? "block" : "hidden"}`
+          }
         >
+          {isDesktop ? (
+            <div className="mb-4">
+              <LayerStackDiagram activeRowId={activeRowId} materials={materials} result={result} rows={rows} studyMode={studyMode} />
+            </div>
+          ) : null}
           <div className="flex flex-col">
               <div className="flex min-w-0 flex-wrap items-start justify-between gap-4">
-                <SectionLead description="Read the live outputs and keep parked outputs explicit." title="Results" tone="results" />
+                <SectionLead title="Results" tone="results" />
                 <button
-                  className={`focus-ring inline-flex items-center justify-center rounded-[0.75rem] border px-3 py-2 text-sm font-semibold text-[color:var(--results-ink)] ${workbenchSectionMutedCardClass("results")}`}
+                  className={`focus-ring inline-flex items-center justify-center rounded border px-3 py-1.5 text-sm font-medium text-[color:var(--ink-soft)] ${workbenchSectionMutedCardClass("results")}`}
                 onClick={() => openWorkspacePanel("review")}
                 type="button"
               >
@@ -4601,15 +4389,10 @@ export function SimpleWorkbenchShell() {
                   />
 
                   {secondaryReadyCards.length ? (
-                    <details className={`rounded-[0.85rem] border px-3 py-3 ${workbenchSectionMutedCardClass("results")}`}>
+                    <details className={`rounded border px-3 py-3 ${workbenchSectionMutedCardClass("results")}`}>
                       <summary className="cursor-pointer list-none">
                         <div className="flex flex-wrap items-center justify-between gap-3">
-                          <div>
-                            <div className="text-sm font-semibold text-[color:var(--ink)]">Supporting metrics</div>
-                            <p className="mt-1 text-[0.76rem] leading-5 text-[color:var(--ink-soft)]">
-                              Open companion values only when you need the secondary reads.
-                            </p>
-                          </div>
+                          <div className="text-sm font-semibold text-[color:var(--ink)]">Supporting metrics</div>
                           <div className="text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
                             {secondaryReadyCards.length} companion values
                           </div>
@@ -4624,7 +4407,7 @@ export function SimpleWorkbenchShell() {
                   ) : null}
                 </>
               ) : (
-                <div className={`rounded-[0.9rem] border border-dashed px-4 py-5 text-sm leading-6 text-[color:var(--ink-soft)] ${workbenchSectionMutedCardClass("results")}`}>
+                <div className={`rounded border border-dashed px-4 py-5 text-sm leading-6 text-[color:var(--ink-soft)] ${workbenchSectionMutedCardClass("results")}`}>
                   Build a valid stack to populate the result cards.
                 </div>
               )}
@@ -4632,15 +4415,10 @@ export function SimpleWorkbenchShell() {
               <OutputUnlockRail groups={outputUnlockGroups} />
 
               {scenario.warnings.length ? (
-                <details className="rounded-[0.85rem] border border-[color:color-mix(in_oklch,var(--warning)_28%,var(--line))] bg-[color:var(--warning-soft)] px-4 py-3 text-[color:var(--warning-ink)]">
+                <details className="rounded border border-[color:var(--warning)] bg-[color:var(--warning-soft)] px-4 py-3 text-[color:var(--warning-ink)]">
                   <summary className="cursor-pointer list-none">
                     <div className="flex flex-wrap items-center justify-between gap-3">
-                      <div>
-                        <div className="font-semibold">Check these inputs before trusting the read.</div>
-                        <p className="mt-1 text-[0.76rem] leading-5 text-[color:var(--warning-ink)]">
-                          Open for the live warning list or move straight to diagnostics.
-                        </p>
-                      </div>
+                      <div className="font-semibold">Check these inputs before trusting the read.</div>
                       <GuidedFactChip tone="warning">{`${scenario.warnings.length} warning${scenario.warnings.length === 1 ? "" : "s"}`}</GuidedFactChip>
                     </div>
                   </summary>
@@ -4654,15 +4432,10 @@ export function SimpleWorkbenchShell() {
               ) : null}
 
               {needsInputCards.length ? (
-                <details className="rounded-[0.85rem] border border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[color:var(--paper)] px-3 py-3">
+                <details className="rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-3 py-3">
                   <summary className="cursor-pointer list-none">
                     <div className="flex flex-wrap items-center justify-between gap-3">
-                      <div>
-                        <div className="text-sm font-semibold text-[color:var(--ink)]">Parked by current route</div>
-                        <p className="mt-1 text-[0.76rem] leading-5 text-[color:var(--ink-soft)]">
-                          Still in scope, but this route is not complete enough to unlock them.
-                        </p>
-                      </div>
+                      <div className="text-sm font-semibold text-[color:var(--ink)]">Parked by current route</div>
                       <DetailTag>{`${needsInputCards.length} parked`}</DetailTag>
                     </div>
                   </summary>
@@ -4675,15 +4448,10 @@ export function SimpleWorkbenchShell() {
               ) : null}
 
               {unsupportedCards.length ? (
-                <details className="rounded-[0.85rem] border border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[color:var(--paper)] px-3 py-3">
+                <details className="rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-3 py-3">
                   <summary className="cursor-pointer list-none">
                     <div className="flex flex-wrap items-center justify-between gap-3">
-                      <div>
-                        <div className="text-sm font-semibold text-[color:var(--ink)]">Unsupported on this lane</div>
-                        <p className="mt-1 text-[0.76rem] leading-5 text-[color:var(--ink-soft)]">
-                          Visible for review, but not defensible on this topology.
-                        </p>
-                      </div>
+                      <div className="text-sm font-semibold text-[color:var(--ink)]">Unsupported on this lane</div>
                       <DetailTag>{`${unsupportedCards.length} unsupported`}</DetailTag>
                     </div>
                   </summary>
@@ -4695,21 +4463,18 @@ export function SimpleWorkbenchShell() {
                 </details>
               ) : null}
 
-              <div className={`rounded-[0.85rem] border px-3 py-3 ${workbenchSectionMutedCardClass("review")}`}>
+              <div className={`rounded border px-3 py-3 ${workbenchSectionMutedCardClass("review")}`}>
                 <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div>
-                    <div className="text-sm font-semibold text-[color:var(--ink)]">Open detail deck</div>
-                    <p className="mt-1 text-[0.76rem] leading-5 text-[color:var(--ink-soft)]">Method, diagnostics, validation corridor, and proposal.</p>
-                  </div>
+                  <div className="text-sm font-semibold text-[color:var(--ink)]">Open detail deck</div>
                   <DetailTag>{activeReviewTabConfig.label}</DetailTag>
                 </div>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {REVIEW_TABS.map((tab) => (
                     <button
-                      className={`focus-ring inline-flex items-center justify-center rounded-[0.75rem] border px-3 py-2 text-sm font-semibold ${
+                      className={`focus-ring inline-flex items-center justify-center rounded border px-3 py-2 text-sm font-semibold ${
                         activeReviewTab === tab.id
-                          ? "border-[color:color-mix(in_oklch,var(--accent)_28%,var(--line))] bg-[color:color-mix(in_oklch,var(--accent)_12%,var(--paper))] text-[color:var(--ink)]"
-                          : "border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] bg-[color:var(--paper)] text-[color:var(--ink-soft)]"
+                          ? "border-[color:var(--accent)] bg-[color:var(--accent-soft)] text-[color:var(--ink)]"
+                          : "border-[color:var(--line)] bg-[color:var(--paper)] text-[color:var(--ink-soft)]"
                       }`}
                       key={`result-review-${tab.id}`}
                       onClick={() => openReviewTab(tab.id)}
@@ -4722,19 +4487,15 @@ export function SimpleWorkbenchShell() {
               </div>
             </div>
           </div>
-        </SurfacePanel>
+        </div>
       </section>
 
       {reviewExpanded ? (
-        <section className={`${activeWorkspacePanel === "review" ? "grid" : "hidden"} gap-4`} id="guided-review-deck">
-        <SurfacePanel className={`px-4 py-4 sm:px-5 ${workbenchSectionPanelClass("review")}`}>
+        <section className={`${isDesktop || activeWorkspacePanel === "review" ? "grid" : "hidden"} gap-4 px-4 py-4`} id="guided-review-deck">
+        <div className="border-b border-[color:var(--line)] pb-4">
           <div className="flex flex-wrap items-start justify-between gap-4">
-            <div>
-              <div className="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Review tabs</div>
-              <h2 className="mt-1 text-[1.05rem] font-semibold leading-tight text-[color:var(--ink)]">Method, diagnostics, and proposal</h2>
-              <p className="mt-1.5 max-w-3xl text-sm leading-6 text-[color:var(--ink-soft)]">{activeReviewTabConfig.note}</p>
-            </div>
-            <div className="grid gap-2 text-right text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+            <h2 className="text-sm font-semibold text-[color:var(--ink)]">Review</h2>
+            <div className="flex gap-3 text-[0.72rem] font-medium text-[color:var(--ink-faint)]">
               <div>{`${proposalMetrics.length} live metric${proposalMetrics.length === 1 ? "" : "s"}`}</div>
               <div>{`${proposalLayers.length} visible row${proposalLayers.length === 1 ? "" : "s"}`}</div>
               <div>{scenario.warnings.length > 0 ? `${scenario.warnings.length} warning${scenario.warnings.length === 1 ? "" : "s"}` : "No live warnings"}</div>
@@ -4758,19 +4519,16 @@ export function SimpleWorkbenchShell() {
             ))}
           </div>
 
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t hairline pt-4">
-            <div className="text-[0.82rem] leading-5 text-[color:var(--ink-soft)]">
-              Keep this area closed unless you need method rationale, diagnostics, or the proposal package.
-            </div>
+          <div className="mt-3 flex items-center justify-end">
             <button
-              className="focus-ring inline-flex items-center justify-center rounded-[0.8rem] border hairline px-3 py-2 text-sm font-semibold text-[color:var(--ink-soft)]"
+              className="focus-ring inline-flex items-center justify-center rounded border border-[color:var(--line)] px-2.5 py-1.5 text-[0.8rem] font-medium text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
               onClick={closeReviewPanel}
               type="button"
             >
               Hide review
             </button>
           </div>
-        </SurfacePanel>
+        </div>
 
         {reviewExpanded && rows.length > 0 ? (
           <GuidedDecisionBasisStrip
@@ -4907,6 +4665,7 @@ export function SimpleWorkbenchShell() {
               proposalValidityNote={proposalValidityNote}
               reportProfile={reportProfile}
               reportProfileLabel={REPORT_PROFILE_LABELS[reportProfile]}
+              result={result}
               studyModeLabel={getStudyModeLabel(studyMode)}
               studyContextLabel={STUDY_CONTEXT_LABELS[studyContext]}
               validationDetail={validationSummary.detail}

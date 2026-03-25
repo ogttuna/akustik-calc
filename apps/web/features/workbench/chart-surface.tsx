@@ -65,7 +65,7 @@ export function ChartSurface({ children, className, placeholder }: ChartSurfaceP
       {size ? (
         children(size)
       ) : (
-        <div className="flex h-full items-center justify-center rounded-[1rem] bg-black/[0.02] text-sm text-[color:var(--ink-soft)]">
+        <div className="flex h-full items-center justify-center rounded-md bg-[color:var(--panel)] text-sm text-[color:var(--ink-soft)]">
           {placeholder}
         </div>
       )}

@@ -98,6 +98,29 @@ export const ImpactScopeSchema = z.enum([
 
 export const ImpactLabOrFieldSchema = z.enum(["lab", "field"]);
 
+export const ImpactTraceSeriesIdSchema = z.enum(["source", "field", "standardized"]);
+
+export const ImpactBandCurveSchema = z
+  .object({
+    frequenciesHz: z.array(z.number().positive()).min(5),
+    levelsDb: z.array(z.number())
+  })
+  .refine(
+    (value) => value.frequenciesHz.length === value.levelsDb.length,
+    "Impact curve frequencies and values must have the same length."
+  );
+
+export const ImpactTraceSeriesSchema = z.object({
+  curve: ImpactBandCurveSchema,
+  id: ImpactTraceSeriesIdSchema,
+  label: z.string().min(1)
+});
+
+export const ImpactTraceSchema = z.object({
+  activeSeriesId: ImpactTraceSeriesIdSchema.optional(),
+  series: z.array(ImpactTraceSeriesSchema).min(1)
+});
+
 export const ImpactConfidenceSchema = z.object({
   level: ImpactConfidenceLevelSchema,
   provenance: ImpactConfidenceProvenanceSchema,
@@ -156,6 +179,7 @@ export const ImpactCalculationSchema = z
     resilientDynamicStiffnessMNm3: z.number().positive().optional(),
     scope: ImpactScopeSchema,
     standardMethod: z.string().min(1).optional(),
+    trace: ImpactTraceSchema.optional(),
     standardizedFieldEstimateProfile: z
       .enum([
         "standardized_field_lprimentw_from_direct_flanking_energy_sum_plus_room_volume",
@@ -179,8 +203,12 @@ export type ImpactEstimateBasis = z.infer<typeof ImpactEstimateBasisSchema>;
 export type ImpactConfidence = z.infer<typeof ImpactConfidenceSchema>;
 export type ImpactConfidenceLevel = z.infer<typeof ImpactConfidenceLevelSchema>;
 export type ImpactConfidenceProvenance = z.infer<typeof ImpactConfidenceProvenanceSchema>;
+export type ImpactBandCurve = z.infer<typeof ImpactBandCurveSchema>;
 export type ImpactCalculation = z.infer<typeof ImpactCalculationSchema>;
 export type ImpactLabOrField = z.infer<typeof ImpactLabOrFieldSchema>;
 export type ImpactMetricBasis = z.infer<typeof ImpactMetricBasisSchema>;
 export type ImpactMetricBasisLabel = z.infer<typeof ImpactMetricBasisLabelSchema>;
 export type ImpactScope = z.infer<typeof ImpactScopeSchema>;
+export type ImpactTrace = z.infer<typeof ImpactTraceSchema>;
+export type ImpactTraceSeries = z.infer<typeof ImpactTraceSeriesSchema>;
+export type ImpactTraceSeriesId = z.infer<typeof ImpactTraceSeriesIdSchema>;

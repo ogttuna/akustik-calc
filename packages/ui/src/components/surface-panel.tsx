@@ -10,7 +10,7 @@ export function SurfacePanel({ children, className, ...props }: SurfacePanelProp
   return (
     <section
       className={cx(
-        "surface-shadow rounded-[1.7rem] border bg-[color:var(--panel)] p-5 hairline",
+        "surface-shadow rounded-lg border bg-[color:var(--panel)] p-4 hairline",
         className
       )}
       {...props}

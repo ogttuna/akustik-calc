@@ -1,29 +1,52 @@
 @import "tailwindcss";
 
-:root {
-  --paper: oklch(0.978 0.009 78);
-  --paper-strong: oklch(0.947 0.013 78);
-  --panel: color-mix(in oklch, var(--paper) 88%, oklch(0.88 0.02 168));
-  --panel-strong: color-mix(in oklch, var(--paper) 78%, oklch(0.84 0.025 168));
-  --line: oklch(0.82 0.013 170);
-  --line-strong: oklch(0.68 0.019 170);
-  --ink: oklch(0.24 0.025 175);
-  --ink-soft: oklch(0.47 0.018 175);
-  --ink-faint: oklch(0.62 0.013 175);
-  --accent: oklch(0.72 0.128 49);
-  --accent-soft: color-mix(in oklch, var(--accent) 12%, var(--paper));
-  --accent-ink: oklch(0.38 0.09 47);
-  --teal: oklch(0.56 0.07 184);
-  --teal-soft: color-mix(in oklch, var(--teal) 10%, var(--paper));
-  --warning: oklch(0.78 0.098 82);
-  --warning-soft: color-mix(in oklch, var(--warning) 10%, var(--paper));
-  --warning-ink: oklch(0.46 0.07 79);
-  --success: oklch(0.66 0.11 154);
-  --success-soft: color-mix(in oklch, var(--success) 10%, var(--paper));
-  --success-ink: oklch(0.4 0.08 154);
-  --navy: oklch(0.33 0.045 240);
-  --navy-soft: color-mix(in oklch, var(--navy) 8%, var(--paper));
-  --shadow-color: rgba(13, 38, 36, 0.16);
+/* ── Light mode: steel-blue engineering ── */
+:root,
+[data-theme="light"] {
+  --paper: oklch(0.96 0.006 240);
+  --paper-strong: oklch(0.925 0.010 240);
+  --panel: oklch(0.905 0.012 240);
+  --panel-strong: oklch(0.87 0.016 240);
+  --line: oklch(0.78 0.018 240);
+  --line-strong: oklch(0.60 0.024 240);
+  --ink: oklch(0.16 0.028 240);
+  --ink-soft: oklch(0.35 0.020 240);
+  --ink-faint: oklch(0.50 0.016 240);
+  --accent: oklch(0.52 0.16 250);
+  --accent-soft: color-mix(in oklch, var(--accent) 14%, var(--paper));
+  --accent-ink: oklch(0.30 0.12 250);
+  --warning: oklch(0.72 0.16 70);
+  --warning-soft: color-mix(in oklch, var(--warning) 14%, var(--paper));
+  --warning-ink: oklch(0.36 0.12 70);
+  --success: oklch(0.52 0.15 160);
+  --success-soft: color-mix(in oklch, var(--success) 14%, var(--paper));
+  --success-ink: oklch(0.32 0.12 160);
+  --shadow-color: rgba(10, 18, 42, 0.18);
+  color-scheme: light;
+}
+
+/* ── Dark mode: deep slate engineering ── */
+[data-theme="dark"] {
+  --paper: oklch(0.20 0.014 240);
+  --paper-strong: oklch(0.23 0.016 240);
+  --panel: oklch(0.26 0.018 240);
+  --panel-strong: oklch(0.30 0.020 240);
+  --line: oklch(0.36 0.020 240);
+  --line-strong: oklch(0.48 0.022 240);
+  --ink: oklch(0.92 0.008 240);
+  --ink-soft: oklch(0.74 0.010 240);
+  --ink-faint: oklch(0.58 0.012 240);
+  --accent: oklch(0.62 0.16 250);
+  --accent-soft: color-mix(in oklch, var(--accent) 16%, var(--paper));
+  --accent-ink: oklch(0.76 0.12 250);
+  --warning: oklch(0.76 0.16 70);
+  --warning-soft: color-mix(in oklch, var(--warning) 16%, var(--paper));
+  --warning-ink: oklch(0.82 0.10 70);
+  --success: oklch(0.62 0.15 160);
+  --success-soft: color-mix(in oklch, var(--success) 16%, var(--paper));
+  --success-ink: oklch(0.76 0.10 160);
+  --shadow-color: rgba(0, 0, 0, 0.40);
+  color-scheme: dark;
 }
 
 @theme inline {
@@ -36,31 +59,13 @@
 }
 
 html {
-  background:
-    radial-gradient(circle at top left, color-mix(in oklch, var(--accent) 10%, transparent), transparent 26rem),
-    radial-gradient(circle at top right, color-mix(in oklch, var(--teal) 8%, transparent), transparent 30rem),
-    linear-gradient(180deg, var(--paper), var(--paper-strong));
+  background: var(--paper);
   scroll-behavior: smooth;
 }
 
 body {
   min-height: 100vh;
-  background:
-    linear-gradient(rgba(17, 54, 49, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(17, 54, 49, 0.04) 1px, transparent 1px);
-  background-size: 4rem 4rem;
   color: var(--ink);
-}
-
-body::before {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  content: "";
-  background:
-    radial-gradient(circle at 85% 8%, rgba(212, 117, 57, 0.14), transparent 22rem),
-    radial-gradient(circle at 12% 85%, rgba(25, 87, 78, 0.11), transparent 27rem);
-  opacity: 0.88;
 }
 
 a {
@@ -80,68 +85,17 @@ button {
 }
 
 ::selection {
-  background: color-mix(in oklch, var(--accent) 35%, white);
+  background: color-mix(in oklch, var(--accent) 30%, var(--paper));
   color: var(--ink);
 }
 
-.grain-mask {
-  position: relative;
-}
-
 .panel-mesh {
-  position: relative;
-  background:
-    radial-gradient(circle at top right, color-mix(in oklch, var(--accent) 16%, transparent), transparent 18rem),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.4), transparent 35%),
-    var(--panel);
-}
-
-.panel-mesh::before {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  content: "";
-  background-image:
-    linear-gradient(rgba(39, 74, 83, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(39, 74, 83, 0.06) 1px, transparent 1px);
-  background-size: 2.75rem 2.75rem;
-  mask-image: linear-gradient(180deg, rgba(255, 255, 255, 0.8), transparent 90%);
+  background: var(--panel);
 }
 
 .atelier-panel {
-  position: relative;
-  background:
-    radial-gradient(circle at 18% 18%, color-mix(in oklch, var(--accent) 18%, transparent), transparent 18rem),
-    radial-gradient(circle at 88% 20%, color-mix(in oklch, var(--teal) 10%, transparent), transparent 24rem),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.48), transparent 32%),
-    color-mix(in oklch, var(--panel) 92%, var(--paper));
-  box-shadow:
-    0 30px 60px -44px rgba(17, 34, 35, 0.28),
-    0 1px 0 0 rgba(255, 255, 255, 0.74) inset;
-}
-
-.atelier-panel::before {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  content: "";
-  background-image:
-    linear-gradient(rgba(39, 74, 83, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(39, 74, 83, 0.06) 1px, transparent 1px);
-  background-size: 4.25rem 4.25rem;
-  mask-image: radial-gradient(circle at center, rgba(255, 255, 255, 0.92), transparent 92%);
-}
-
-.grain-mask::after {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  content: "";
-  opacity: 0.1;
-  background-image:
-    radial-gradient(circle at 1px 1px, rgba(0, 0, 0, 0.15) 1px, transparent 0);
-  background-size: 10px 10px;
-  mix-blend-mode: multiply;
+  background: var(--panel);
+  box-shadow: 0 1px 3px 0 var(--shadow-color);
 }
 
 .focus-ring {
@@ -150,8 +104,8 @@ button {
 
 .focus-ring:focus-visible {
   box-shadow:
-    0 0 0 3px color-mix(in oklch, var(--accent) 35%, white),
-    0 0 0 6px color-mix(in oklch, var(--accent) 10%, transparent);
+    0 0 0 3px color-mix(in oklch, var(--accent) 35%, var(--paper)),
+    0 0 0 6px color-mix(in oklch, var(--accent) 12%, transparent);
 }
 
 .ui-shell {
@@ -174,15 +128,11 @@ button {
 }
 
 .surface-shadow {
-  box-shadow:
-    0 18px 50px -34px var(--shadow-color),
-    0 2px 0 0 rgba(255, 255, 255, 0.65) inset;
+  box-shadow: 0 1px 3px 0 var(--shadow-color);
 }
 
 .chart-frame {
-  box-shadow:
-    0 20px 40px -36px rgba(16, 34, 36, 0.25),
-    0 1px 0 0 rgba(255, 255, 255, 0.72) inset;
+  box-shadow: 0 1px 2px 0 var(--shadow-color);
 }
 
 .hairline {
@@ -194,15 +144,15 @@ button {
 }
 
 .stage-enter {
-  animation: stage-enter 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: stage-enter 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .stage-enter-2 {
-  animation: stage-enter 820ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: stage-enter 340ms cubic-bezier(0.22, 1, 0.36, 1) 40ms both;
 }
 
 .stage-enter-3 {
-  animation: stage-enter 940ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: stage-enter 340ms cubic-bezier(0.22, 1, 0.36, 1) 80ms both;
 }
 
 .text-balance {
@@ -224,21 +174,12 @@ button {
 }
 
 .pointer-card {
-  transition:
-    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
-    background-color 220ms ease,
-    border-color 220ms ease,
-    box-shadow 220ms ease;
+  transition: border-color 150ms ease, background-color 150ms ease;
 }
 
 .workflow-stage {
-  position: relative;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.34), transparent 55%),
-    color-mix(in oklch, var(--paper) 84%, var(--panel));
-  box-shadow:
-    0 12px 26px -24px rgba(17, 34, 35, 0.22),
-    0 1px 0 0 rgba(255, 255, 255, 0.72) inset;
+  background: var(--paper);
+  box-shadow: 0 1px 2px 0 var(--shadow-color);
 }
 
 .section-figure {
@@ -246,31 +187,9 @@ button {
   overflow: hidden;
 }
 
-.section-figure::before {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  content: "";
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.3), transparent 20%),
-    repeating-linear-gradient(
-      180deg,
-      transparent 0,
-      transparent 1.5rem,
-      rgba(39, 74, 83, 0.05) 1.5rem,
-      rgba(39, 74, 83, 0.05) calc(1.5rem + 1px)
-    );
-  mask-image: linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.22));
-}
-
 .result-hero {
-  position: relative;
-  background:
-    radial-gradient(circle at 90% 18%, color-mix(in oklch, var(--accent) 10%, transparent), transparent 16rem),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.36), transparent 24%);
-  box-shadow:
-    0 24px 46px -34px rgba(16, 34, 36, 0.28),
-    0 1px 0 0 rgba(255, 255, 255, 0.72) inset;
+  background: var(--paper);
+  box-shadow: 0 1px 2px 0 var(--shadow-color);
 }
 
 .workbench-resize-handle {
@@ -289,22 +208,15 @@ button {
   min-height: 4rem;
   border: 1px solid var(--line);
   border-radius: 999px;
-  background: color-mix(in oklch, var(--panel) 88%, var(--paper));
+  background: var(--panel);
   color: var(--ink-faint);
-  box-shadow:
-    0 10px 24px -20px rgba(16, 34, 36, 0.28),
-    0 1px 0 0 rgba(255, 255, 255, 0.72) inset;
-  transition:
-    transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 180ms ease,
-    background-color 180ms ease;
+  transition: border-color 150ms ease, background-color 150ms ease;
 }
 
 .workbench-resize-handle[data-resize-handle-active] .workbench-resize-grip,
 .workbench-resize-handle:hover .workbench-resize-grip {
-  transform: scale(1.04);
   border-color: var(--line-strong);
-  background: color-mix(in oklch, var(--accent) 8%, var(--paper));
+  background: var(--panel-strong);
 }
 
 .workbench-chapter {
@@ -333,72 +245,45 @@ button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 2.75rem;
-  border: 1px solid color-mix(in oklch, var(--accent) 25%, var(--line));
-  border-radius: 999px;
-  background:
-    linear-gradient(135deg, color-mix(in oklch, var(--accent) 12%, var(--paper)), color-mix(in oklch, var(--paper) 88%, var(--teal-soft))),
-    var(--paper);
-  color: var(--accent-ink);
+  min-height: 2.25rem;
+  border: 1px solid var(--line);
+  border-radius: 0.375rem;
+  background: var(--paper);
+  color: var(--ink-soft);
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  box-shadow:
-    0 14px 28px -24px rgba(16, 34, 36, 0.24),
-    0 1px 0 0 rgba(255, 255, 255, 0.72) inset;
 }
 
 .workbench-flow-map {
-  position: relative;
-  background:
-    linear-gradient(180deg, color-mix(in oklch, var(--paper) 85%, var(--accent-soft)), var(--paper)),
-    var(--paper);
-}
-
-.workbench-flow-map::before {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  content: "";
-  background:
-    radial-gradient(circle at top right, color-mix(in oklch, var(--accent) 12%, transparent), transparent 17rem),
-    linear-gradient(90deg, rgba(39, 74, 83, 0.05) 1px, transparent 1px);
-  background-size: auto, 2.75rem 2.75rem;
-  mask-image: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.42));
+  background: var(--paper);
 }
 
 .workbench-flow-link {
-  position: relative;
   display: block;
   border: 1px solid var(--line);
-  border-radius: 1.4rem;
-  background: color-mix(in oklch, var(--paper) 90%, var(--panel));
-  padding: 1rem 1rem 1rem 0.95rem;
-  transition:
-    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 220ms ease,
-    background-color 220ms ease,
-    box-shadow 220ms ease;
+  border-radius: 0.5rem;
+  background: var(--paper);
+  padding: 0.75rem;
+  transition: border-color 150ms ease, background-color 150ms ease;
 }
 
 .workbench-flow-link:hover,
 .workbench-flow-link:focus-visible {
-  transform: translateY(-1px);
   border-color: var(--line-strong);
-  background: color-mix(in oklch, var(--accent) 6%, var(--paper));
-  box-shadow: 0 18px 28px -24px rgba(16, 34, 36, 0.24);
+  background: var(--panel);
 }
 
 .workbench-flow-stage {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 3rem;
-  min-height: 3rem;
-  border-radius: 1rem;
-  background: color-mix(in oklch, var(--navy) 10%, var(--paper));
-  color: var(--navy);
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+  border-radius: 0.375rem;
+  background: var(--panel-strong);
+  color: var(--ink-soft);
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.18em;
@@ -425,13 +310,9 @@ button {
 .command-shell {
   overflow: hidden;
   border: 1px solid var(--line);
-  border-radius: 1.8rem;
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.42), transparent 30%),
-    var(--panel);
-  box-shadow:
-    0 32px 70px -40px rgba(16, 34, 36, 0.45),
-    0 1px 0 0 rgba(255, 255, 255, 0.72) inset;
+  border-radius: 0.75rem;
+  background: var(--paper);
+  box-shadow: 0 4px 16px -4px var(--shadow-color);
 }
 
 [cmdk-list] {
@@ -451,18 +332,18 @@ button {
   display: flex;
   align-items: center;
   gap: 0.8rem;
-  min-height: 3rem;
-  margin-bottom: 0.2rem;
+  min-height: 2.5rem;
+  margin-bottom: 0.1rem;
   border: 1px solid transparent;
-  border-radius: 1rem;
-  padding: 0.8rem 0.9rem;
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.75rem;
   color: var(--ink);
-  font-size: 0.92rem;
+  font-size: 0.88rem;
 }
 
 [cmdk-item][data-selected="true"] {
   border-color: var(--line);
-  background: color-mix(in oklch, var(--accent) 8%, var(--paper));
+  background: var(--panel);
 }
 
 [cmdk-item][data-disabled="true"] {
@@ -488,10 +369,8 @@ button {
 }
 
 [data-sonner-toast][data-styled="true"] {
-  border-radius: 1.2rem;
-  box-shadow:
-    0 22px 42px -34px rgba(16, 34, 36, 0.38),
-    0 1px 0 0 rgba(255, 255, 255, 0.72) inset;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px -2px var(--shadow-color);
 }
 
 [data-sonner-toast][data-styled="true"] [data-title] {
@@ -507,8 +386,8 @@ button {
 
 @media (hover: hover) {
   .pointer-card:hover {
-    transform: translateY(-2px);
     border-color: var(--line-strong);
+    background-color: var(--panel);
   }
 }
 

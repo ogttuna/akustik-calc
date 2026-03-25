@@ -70,7 +70,7 @@ export function ImpactProductCatalogPanel({ result }: ImpactProductCatalogPanelP
 
       {match ? (
         <>
-          <div className="mt-5 rounded-[1.3rem] border hairline bg-[color:var(--panel-strong)] px-4 py-4">
+          <div className="mt-5 rounded-lg border hairline bg-[color:var(--panel-strong)] px-4 py-4">
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
                 <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
@@ -147,21 +147,21 @@ export function ImpactProductCatalogPanel({ result }: ImpactProductCatalogPanelP
           </div>
 
           {primaryConfidence ? (
-            <div className="mt-5 rounded-[1.2rem] border hairline bg-black/[0.025] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
+            <div className="mt-5 rounded-md border hairline bg-black/[0.025] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
               <span className="font-semibold text-[color:var(--ink)]">Trust note:</span> {primaryConfidence.summary}
             </div>
           ) : null}
 
           <div className="mt-5 grid gap-3 text-sm leading-7 text-[color:var(--ink-soft)]">
             {match.notes.concat(liveImpact?.notes ?? []).concat(lowerBoundImpact?.notes ?? []).map((note: string) => (
-              <article className="rounded-[1.2rem] border hairline bg-[color:var(--paper)] px-4 py-4" key={note}>
+              <article className="rounded-md border hairline bg-[color:var(--paper)] px-4 py-4" key={note}>
                 {note}
               </article>
             ))}
           </div>
         </>
       ) : (
-        <div className="mt-5 rounded-[1.3rem] border border-dashed hairline px-4 py-6 text-sm leading-7 text-[color:var(--ink-soft)]">
+        <div className="mt-5 rounded-lg border border-dashed hairline px-4 py-6 text-sm leading-7 text-[color:var(--ink-soft)]">
           <div className="flex items-center gap-2 font-semibold text-[color:var(--ink)]">
             <ShieldX className="h-4 w-4" />
             No official product row matched the current stack
@@ -182,7 +182,7 @@ export function ImpactProductCatalogPanel({ result }: ImpactProductCatalogPanelP
           {OFFICIAL_IMPACT_PRODUCT_CATALOG.map((entry: ImpactProductCatalogEntry) => {
             const isActive = match?.catalog.id === entry.id;
             return (
-              <article className="rounded-[1.2rem] border hairline bg-[color:var(--paper)] px-4 py-4" key={entry.id}>
+              <article className="rounded-md border hairline bg-[color:var(--paper)] px-4 py-4" key={entry.id}>
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <div className="font-semibold text-[color:var(--ink)]">{entry.label}</div>

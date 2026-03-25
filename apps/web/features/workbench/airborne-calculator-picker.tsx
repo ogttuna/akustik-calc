@@ -46,7 +46,7 @@ export function AirborneCalculatorPicker({
   const activeOption = CALCULATOR_OPTIONS.find((option) => option.id === activeCalculatorId) ?? CALCULATOR_OPTIONS[0];
 
   return (
-    <article className="rounded-[1.35rem] border hairline bg-[color:var(--panel-strong)] px-4 py-4">
+    <article className="rounded-lg border hairline bg-[color:var(--panel-strong)] px-4 py-4">
       <FieldGuide
         guide={{
           currentUse:
@@ -68,7 +68,7 @@ export function AirborneCalculatorPicker({
 
             return (
               <button
-                className={`focus-ring rounded-[1.1rem] border px-4 py-3 text-left transition ${featured ? "sm:col-span-2" : ""} ${getButtonClasses(active, featured)}`}
+                className={`focus-ring rounded-md border px-4 py-3 text-left transition ${featured ? "sm:col-span-2" : ""} ${getButtonClasses(active, featured)}`}
                 key={option.id}
                 onClick={() => onCalculatorChange(option.id)}
                 title={option.blurb}

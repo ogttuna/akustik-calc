@@ -141,7 +141,7 @@ export function PerformanceCriteriaPanel({
       </div>
 
       <div className="mt-5 grid gap-3 sm:grid-cols-2">
-        <article className="rounded-[1.3rem] border hairline bg-[color:var(--panel-strong)] px-4 py-4 sm:col-span-2">
+        <article className="rounded-lg border hairline bg-[color:var(--panel-strong)] px-4 py-4 sm:col-span-2">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
@@ -170,7 +170,7 @@ export function PerformanceCriteriaPanel({
               <Pill tone="accent">{effectiveRequestedOutputs.length} output lanes</Pill>
             </div>
           </div>
-          <div className="mt-4 rounded-[1.1rem] border hairline bg-black/[0.03] px-4 py-4">
+          <div className="mt-4 rounded-md border hairline bg-black/[0.03] px-4 py-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
@@ -207,7 +207,7 @@ export function PerformanceCriteriaPanel({
 
               return (
                 <article
-                  className={`rounded-[1.05rem] border px-4 py-4 ${getTonePanelClass(coverage.tone)}`}
+                  className={`rounded-md border px-4 py-4 ${getTonePanelClass(coverage.tone)}`}
                   key={output}
                   title={`${REQUESTED_OUTPUT_LABELS[output]}: ${coverage.label}. ${corridor.detail}`}
                 >
@@ -239,7 +239,7 @@ export function PerformanceCriteriaPanel({
           </div>
         </article>
 
-        <article className="rounded-[1.3rem] border hairline bg-[color:var(--panel-strong)] px-4 py-4">
+        <article className="rounded-lg border hairline bg-[color:var(--panel-strong)] px-4 py-4">
           <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
             Airborne target
           </div>
@@ -258,7 +258,7 @@ export function PerformanceCriteriaPanel({
           </div>
         </article>
 
-        <article className="rounded-[1.3rem] border hairline bg-black/[0.03] px-4 py-4">
+        <article className="rounded-lg border hairline bg-black/[0.03] px-4 py-4">
           <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
             Impact target
           </div>
@@ -292,7 +292,7 @@ export function PerformanceCriteriaPanel({
 
       {dutchDnTAkComplianceRows.length > 0 || (showDutchImpactReferences && dutchImpactReferenceRows.length > 0) ? (
         <div className="mt-5 grid gap-3">
-          <article className="rounded-[1.3rem] border hairline bg-[color:var(--panel-strong)] px-4 py-4">
+          <article className="rounded-lg border hairline bg-[color:var(--panel-strong)] px-4 py-4">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
@@ -326,7 +326,7 @@ export function PerformanceCriteriaPanel({
                 <div className="mt-3 grid gap-3 md:grid-cols-2">
                   {dutchDnTAkComplianceRows.map((row) => (
                     <article
-                      className={`rounded-[1.05rem] border px-4 py-4 ${getTonePanelClass(row.tone)}`}
+                      className={`rounded-md border px-4 py-4 ${getTonePanelClass(row.tone)}`}
                       key={row.id}
                       title={`${row.label}: ${row.detail}`}
                     >
@@ -359,7 +359,7 @@ export function PerformanceCriteriaPanel({
                 <div className="mt-3 grid gap-3 md:grid-cols-2">
                   {dutchImpactReferenceRows.map((row) => (
                     <article
-                      className={`rounded-[1.05rem] border px-4 py-4 ${getTonePanelClass(row.tone)}`}
+                      className={`rounded-md border px-4 py-4 ${getTonePanelClass(row.tone)}`}
                       key={row.id}
                       title={`${row.label}: ${row.detail}`}
                     >
@@ -388,7 +388,7 @@ export function PerformanceCriteriaPanel({
       ) : null}
 
       <div className="mt-5 grid gap-3">
-        <article className="rounded-[1.3rem] border hairline px-4 py-4">
+        <article className="rounded-lg border hairline px-4 py-4">
           <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
             <ShieldAlert className="h-4 w-4" />
             Engine-live outputs
@@ -408,7 +408,7 @@ export function PerformanceCriteriaPanel({
           </div>
         </article>
 
-        <article className="rounded-[1.3rem] border hairline bg-[color:var(--accent-soft)] px-4 py-4">
+        <article className="rounded-lg border hairline bg-[color:var(--accent-soft)] px-4 py-4">
           <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--accent-ink)]">
             <WavesLadder className="h-4 w-4" />
             Bound-support outputs
@@ -434,7 +434,7 @@ export function PerformanceCriteriaPanel({
           ) : null}
         </article>
 
-        <article className="rounded-[1.3rem] border hairline bg-[color:var(--panel-strong)] px-4 py-4">
+        <article className="rounded-lg border hairline bg-[color:var(--panel-strong)] px-4 py-4">
           <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
             <WavesLadder className="h-4 w-4" />
             Guide/manual outputs
@@ -461,7 +461,7 @@ export function PerformanceCriteriaPanel({
           ) : null}
         </article>
 
-        <article className="rounded-[1.3rem] border hairline bg-black/[0.025] px-4 py-4">
+        <article className="rounded-lg border hairline bg-black/[0.025] px-4 py-4">
           <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
             <WavesLadder className="h-4 w-4" />
             Explicitly unresolved outputs
@@ -488,7 +488,7 @@ export function PerformanceCriteriaPanel({
         </article>
       </div>
 
-      <div className="mt-5 rounded-[1.3rem] border hairline bg-[color:var(--warning-soft)] px-4 py-4 text-sm leading-7 text-[color:var(--warning-ink)]">
+      <div className="mt-5 rounded-lg border hairline bg-[color:var(--warning-soft)] px-4 py-4 text-sm leading-7 text-[color:var(--warning-ink)]">
         <div className="flex items-center gap-2 font-semibold">
           <AlertTriangle className="h-4 w-4" />
           Reading rule

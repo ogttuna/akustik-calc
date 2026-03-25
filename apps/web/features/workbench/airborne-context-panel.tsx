@@ -272,7 +272,7 @@ export function AirborneContextPanel({
         </FieldGuide>
       </div>
 
-      <div className="mt-5 rounded-[1.3rem] border hairline bg-[color:var(--panel-strong)] px-4 py-4">
+      <div className="mt-5 rounded-lg border hairline bg-[color:var(--panel-strong)] px-4 py-4">
         <div className="text-sm font-semibold text-[color:var(--ink)]">Framed wall metadata</div>
         <p className="mt-2 text-sm leading-7 text-[color:var(--ink-soft)]">
           Simple cavity stacks can drift badly when the engine cannot tell whether they are plain double-leaf, light-steel stud, resilient channel, or resilient-stud walls. These inputs activate the framed-wall calibration corridor.
@@ -293,7 +293,7 @@ export function AirborneContextPanel({
         </div>
       </div>
 
-      <div className="mt-5 rounded-[1.3rem] border hairline bg-black/[0.025] px-4 py-4">
+      <div className="mt-5 rounded-lg border hairline bg-black/[0.025] px-4 py-4">
         <div className="text-sm font-semibold text-[color:var(--ink)]">Field conversion inputs</div>
         <p className="mt-2 text-sm leading-7 text-[color:var(--ink-soft)]">
           These values do not change the apparent wall curve itself. They unlock `DnT,w / DnT,A` and `Dn,w / Dn,A` from the final apparent airborne curve when field or building mode is active.
@@ -319,7 +319,7 @@ export function AirborneContextPanel({
       </div>
 
       <div className="mt-5 grid gap-3 md:grid-cols-2">
-        <article className="rounded-[1.3rem] border hairline bg-[color:var(--panel-strong)] px-4 py-4">
+        <article className="rounded-lg border hairline bg-[color:var(--panel-strong)] px-4 py-4">
           <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
             <Waves className="h-4 w-4" />
             Current lane intent
@@ -330,7 +330,7 @@ export function AirborneContextPanel({
           </div>
         </article>
 
-        <article className="rounded-[1.3rem] border hairline bg-black/[0.025] px-4 py-4">
+        <article className="rounded-lg border hairline bg-black/[0.025] px-4 py-4">
           <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
             {overlay?.fieldFlankingPenaltyApplied || overlay?.leakagePenaltyApplied ? (
               <ShieldAlert className="h-4 w-4" />

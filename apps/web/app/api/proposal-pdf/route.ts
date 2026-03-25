@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 import {
   buildSimpleWorkbenchProposalFilename,
@@ -11,9 +11,8 @@ import {
 } from "@/lib/auth";
 
 export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   const authState = await getAuthState();
 
   if (!authState.configured) {
@@ -38,7 +37,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const style = request.nextUrl.searchParams.get("style") === "simple" ? "simple" : "branded";
+  const style = new URL(request.url).searchParams.get("style") === "simple" ? "simple" : "branded";
   let payload: unknown;
 
   try {

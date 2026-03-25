@@ -1,6 +1,7 @@
 import type { ImpactCalculation } from "@dynecho/shared";
 
 import { mergeImpactMetricBasis } from "./impact-metric-basis";
+import { cloneImpactTrace } from "./impact-trace";
 
 const NUMERIC_IMPACT_KEYS = [
   "CI",
@@ -19,7 +20,8 @@ function cloneImpact(impact: ImpactCalculation): ImpactCalculation {
     ...impact,
     availableOutputs: [...impact.availableOutputs],
     metricBasis: impact.metricBasis ? { ...impact.metricBasis } : undefined,
-    notes: [...impact.notes]
+    notes: [...impact.notes],
+    trace: impact.trace ? cloneImpactTrace(impact.trace) : undefined
   };
 }
 

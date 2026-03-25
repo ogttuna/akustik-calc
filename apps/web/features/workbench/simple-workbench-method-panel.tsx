@@ -78,7 +78,7 @@ function AuditStepCard(props: SimpleWorkbenchMethodDossierCard & { index: number
   const { detail, index, label, tone, value } = props;
 
   return (
-    <article className={`grid gap-3 rounded-[1rem] border px-4 py-4 ${getToneShellClass(tone)}`}>
+    <article className={`grid gap-3 rounded-md border px-4 py-4 ${getToneShellClass(tone)}`}>
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="inline-flex h-8 w-8 items-center justify-center rounded-full border hairline bg-[color:var(--paper)]/82 text-[0.74rem] font-semibold text-[color:var(--ink)]">
           {String(index + 1).padStart(2, "0")}
@@ -97,7 +97,7 @@ function TraceGroupCard(props: SimpleWorkbenchMethodTraceGroup & { index: number
   const { detail, index, label, notes, tone, value } = props;
 
   return (
-    <details className={`group rounded-[1rem] border px-4 py-4 ${getToneShellClass(tone)}`} data-testid={`method-trace-group-${index + 1}`} open={index === 0}>
+    <details className={`group rounded-md border px-4 py-4 ${getToneShellClass(tone)}`} data-testid={`method-trace-group-${index + 1}`} open={index === 0}>
       <summary className="flex cursor-pointer list-none flex-wrap items-start justify-between gap-3 [&::-webkit-details-marker]:hidden">
         <div className="grid min-w-0 flex-1 gap-2">
           <div className="flex flex-wrap items-center gap-2">
@@ -120,7 +120,7 @@ function TraceGroupCard(props: SimpleWorkbenchMethodTraceGroup & { index: number
       <div className="mt-4 grid gap-2 border-t border-[color:color-mix(in_oklch,var(--line)_88%,transparent)] pt-4">
         {notes.map((note, noteIndex) => (
           <div
-            className="grid grid-cols-[2.2rem_minmax(0,1fr)] gap-3 rounded-[0.95rem] border hairline bg-[color:var(--paper)]/82 px-3 py-3"
+            className="grid grid-cols-[2.2rem_minmax(0,1fr)] gap-3 rounded border hairline bg-[color:var(--paper)]/82 px-3 py-3"
             key={`${label}-${note}`}
           >
             <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
@@ -138,7 +138,7 @@ function MethodCitationCard(props: SimpleWorkbenchProposalCitation) {
   const { detail, href, label, tone } = props;
 
   return (
-    <article className={`rounded-[1rem] border px-4 py-4 ${getToneShellClass(tone)}`}>
+    <article className={`rounded-md border px-4 py-4 ${getToneShellClass(tone)}`}>
       <div className="text-[0.72rem] font-semibold text-[color:var(--ink)]">{label}</div>
       <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">{detail}</p>
       {href ? (
@@ -159,7 +159,7 @@ function MethodAssumptionCard(props: SimpleWorkbenchProposalBriefItem) {
   const { detail, label, tone } = props;
 
   return (
-    <article className={`rounded-[1rem] border px-4 py-4 ${getToneShellClass(tone)}`}>
+    <article className={`rounded-md border px-4 py-4 ${getToneShellClass(tone)}`}>
       <div className="text-[0.72rem] font-semibold text-[color:var(--ink)]">{label}</div>
       <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">{detail}</p>
     </article>
@@ -233,7 +233,7 @@ export function SimpleWorkbenchMethodPanel({
       <div className="mt-5 grid gap-6">
         <section className="grid gap-4 xl:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)]">
           <div className="grid gap-4">
-            <div className="rounded-[1.2rem] border hairline bg-[color:var(--paper)]/76 px-4 py-4">
+            <div className="rounded-md border hairline bg-[color:var(--paper)]/76 px-4 py-4">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
                   <ScrollText className="h-4 w-4" />
@@ -250,7 +250,7 @@ export function SimpleWorkbenchMethodPanel({
               </div>
             </div>
 
-            <div className="rounded-[1.2rem] border hairline bg-[color:var(--paper)]/76 px-4 py-4">
+            <div className="rounded-md border hairline bg-[color:var(--paper)]/76 px-4 py-4">
               <div className="flex flex-wrap items-center justify-between gap-2 text-sm font-semibold text-[color:var(--ink)]">
                 <div className="inline-flex items-center gap-2">
                   <ShieldCheck className="h-4 w-4" />
@@ -269,7 +269,7 @@ export function SimpleWorkbenchMethodPanel({
             </div>
           </div>
 
-          <section className="rounded-[1.2rem] border hairline bg-[color:var(--paper)]/76 px-4 py-4">
+          <section className="rounded-md border hairline bg-[color:var(--paper)]/76 px-4 py-4">
             <div className="flex flex-wrap items-center justify-between gap-2 text-sm font-semibold text-[color:var(--ink)]">
               <div className="inline-flex items-center gap-2">
                 <ScrollText className="h-4 w-4" />
@@ -286,7 +286,7 @@ export function SimpleWorkbenchMethodPanel({
               {methodDossier.traceGroups.length > 0 ? (
                 methodDossier.traceGroups.map((group, index) => <TraceGroupCard {...group} index={index} key={`${group.label}-${group.value}`} />)
               ) : (
-                <div className="rounded-[1rem] border border-dashed hairline px-4 py-4 text-sm leading-6 text-[color:var(--ink-soft)]">
+                <div className="rounded-md border border-dashed hairline px-4 py-4 text-sm leading-6 text-[color:var(--ink-soft)]">
                   No explicit dynamic trace notes are available yet. Build a supported route first so DynEcho can expose the lane rationale.
                 </div>
               )}
@@ -295,7 +295,7 @@ export function SimpleWorkbenchMethodPanel({
         </section>
 
         <section className="grid gap-4 xl:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
-          <section className="rounded-[1.2rem] border hairline bg-[color:var(--paper)]/76 px-4 py-4">
+          <section className="rounded-md border hairline bg-[color:var(--paper)]/76 px-4 py-4">
             <div className="flex flex-wrap items-center justify-between gap-2 text-sm font-semibold text-[color:var(--ink)]">
               <div className="inline-flex items-center gap-2">
                 <Layers3 className="h-4 w-4" />
@@ -313,7 +313,7 @@ export function SimpleWorkbenchMethodPanel({
             </div>
           </section>
 
-          <section className="rounded-[1.2rem] border hairline bg-[color:var(--paper)]/76 px-4 py-4">
+          <section className="rounded-md border hairline bg-[color:var(--paper)]/76 px-4 py-4">
             <div className="flex flex-wrap items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
               <ShieldCheck className="h-4 w-4" />
               Already defensible on this route
@@ -321,7 +321,7 @@ export function SimpleWorkbenchMethodPanel({
             <div className="mt-4 grid gap-3">
               {readyMetrics.length > 0 ? (
                 readyMetrics.map((metric) => (
-                  <article className="rounded-[1rem] border hairline bg-[color:var(--paper)] px-4 py-4" key={`${metric.label}-${metric.value}`}>
+                  <article className="rounded-md border hairline bg-[color:var(--paper)] px-4 py-4" key={`${metric.label}-${metric.value}`}>
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <div className="text-sm font-semibold text-[color:var(--ink)]">{metric.label}</div>
                       <Pill tone="success">{metric.value}</Pill>
@@ -330,7 +330,7 @@ export function SimpleWorkbenchMethodPanel({
                   </article>
                 ))
               ) : (
-                <div className="rounded-[1rem] border border-dashed hairline px-4 py-4 text-sm leading-6 text-[color:var(--ink-soft)]">
+                <div className="rounded-md border border-dashed hairline px-4 py-4 text-sm leading-6 text-[color:var(--ink-soft)]">
                   No live metric is defensible yet. Complete the stack and route inputs first.
                 </div>
               )}
@@ -339,7 +339,7 @@ export function SimpleWorkbenchMethodPanel({
         </section>
 
         <section className="grid gap-4 xl:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)]">
-          <section className="rounded-[1.2rem] border hairline bg-[color:var(--paper)]/74 px-4 py-4">
+          <section className="rounded-md border hairline bg-[color:var(--paper)]/74 px-4 py-4">
             <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
               <Radar className="h-4 w-4" />
               Open blockers before parked outputs go live
@@ -347,7 +347,7 @@ export function SimpleWorkbenchMethodPanel({
             <div className="mt-4 grid gap-3">
               {unlocks.length > 0 ? (
                 unlocks.map((unlock) => (
-                  <article className="rounded-[1rem] border hairline bg-[color:var(--paper)] px-4 py-4" key={`${unlock.title}-${unlock.outputsLabel}`}>
+                  <article className="rounded-md border hairline bg-[color:var(--paper)] px-4 py-4" key={`${unlock.title}-${unlock.outputsLabel}`}>
                     <div className="flex flex-wrap items-center gap-2">
                       <div className="text-sm font-semibold text-[color:var(--ink)]">{unlock.title}</div>
                       <Pill tone="warning">{unlock.outputsLabel}</Pill>
@@ -356,7 +356,7 @@ export function SimpleWorkbenchMethodPanel({
                   </article>
                 ))
               ) : (
-                <div className="rounded-[1rem] border hairline bg-[color:var(--paper)] px-4 py-4 text-sm leading-6 text-[color:var(--ink-soft)]">
+                <div className="rounded-md border hairline bg-[color:var(--paper)] px-4 py-4 text-sm leading-6 text-[color:var(--ink-soft)]">
                   No parked-output blockers are active right now.
                 </div>
               )}
@@ -364,7 +364,7 @@ export function SimpleWorkbenchMethodPanel({
           </section>
 
           <div className="grid gap-4">
-            <section className="rounded-[1.2rem] border hairline bg-[color:var(--paper)]/74 px-4 py-4">
+            <section className="rounded-md border hairline bg-[color:var(--paper)]/74 px-4 py-4">
               <div className="flex flex-wrap items-center justify-between gap-2 text-sm font-semibold text-[color:var(--ink)]">
                 <div className="inline-flex items-center gap-2">
                   <ScrollText className="h-4 w-4" />
@@ -386,7 +386,7 @@ export function SimpleWorkbenchMethodPanel({
                     />
                   ))
                 ) : (
-                  <div className="rounded-[1rem] border border-dashed hairline px-4 py-4 text-sm leading-6 text-[color:var(--ink-soft)]">
+                  <div className="rounded-md border border-dashed hairline px-4 py-4 text-sm leading-6 text-[color:var(--ink-soft)]">
                     No linked source is active yet. Keep the current route framed as a scoped solver read until a cited family, catalog, or imported source is attached.
                   </div>
                 )}
@@ -398,7 +398,7 @@ export function SimpleWorkbenchMethodPanel({
               ) : null}
             </section>
 
-            <section className="rounded-[1.2rem] border hairline bg-[color:var(--paper)]/74 px-4 py-4">
+            <section className="rounded-md border hairline bg-[color:var(--paper)]/74 px-4 py-4">
               <div className="flex flex-wrap items-center justify-between gap-2 text-sm font-semibold text-[color:var(--ink)]">
                 <div className="inline-flex items-center gap-2">
                   <ListChecks className="h-4 w-4" />
@@ -415,7 +415,7 @@ export function SimpleWorkbenchMethodPanel({
               </div>
             </section>
 
-            <section className="rounded-[1.2rem] border hairline bg-[color:var(--paper)]/74 px-4 py-4">
+            <section className="rounded-md border hairline bg-[color:var(--paper)]/74 px-4 py-4">
               <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
                 <ListChecks className="h-4 w-4" />
                 Current caution log
@@ -423,19 +423,19 @@ export function SimpleWorkbenchMethodPanel({
               <div className="mt-4 grid gap-3">
                 {warnings.length > 0 ? (
                   warnings.map((warning) => (
-                    <div className="rounded-[1rem] border hairline bg-[color:var(--warning-soft)]/62 px-4 py-4 text-sm leading-6 text-[color:var(--warning-ink)]" key={warning}>
+                    <div className="rounded-md border hairline bg-[color:var(--warning-soft)]/62 px-4 py-4 text-sm leading-6 text-[color:var(--warning-ink)]" key={warning}>
                       {warning}
                     </div>
                   ))
                 ) : (
-                  <div className="rounded-[1rem] border hairline bg-[color:var(--paper)] px-4 py-4 text-sm leading-6 text-[color:var(--ink-soft)]">
+                  <div className="rounded-md border hairline bg-[color:var(--paper)] px-4 py-4 text-sm leading-6 text-[color:var(--ink-soft)]">
                     No live warning notes are active on the current route.
                   </div>
                 )}
               </div>
             </section>
 
-            <section className="rounded-[1.2rem] border hairline bg-black/[0.025] px-4 py-4">
+            <section className="rounded-md border hairline bg-black/[0.025] px-4 py-4">
               <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
                 <Wrench className="h-4 w-4" />
                 Reading rule

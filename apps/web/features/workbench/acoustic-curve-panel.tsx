@@ -1,7 +1,6 @@
 "use client";
 
 import type { AssemblyCalculation } from "@dynecho/shared";
-import { AudioLines, SlidersHorizontal, Waves } from "lucide-react";
 import {
   CartesianGrid,
   Line,
@@ -60,53 +59,49 @@ export function AcousticCurvePanel({ result }: AcousticCurvePanelProps) {
   const highBand = chartData.find((entry: CurvePoint) => entry.frequencyHz >= 2000);
 
   return (
-    <SurfacePanel className="px-5 py-5">
-      <div className="flex flex-wrap items-center gap-3">
-        <Pill tone="accent">Frequency domain</Pill>
-        <Pill tone="neutral">63-4000 Hz</Pill>
-      </div>
-
-      <div className="mt-5">
-        <div className="eyebrow">Curve view</div>
-        <h2 className="mt-1 font-display text-[1.95rem] leading-none tracking-[-0.04em]">Transmission-loss trace</h2>
-        <p className="mt-3 max-w-2xl text-sm leading-7 text-[color:var(--ink-soft)]">
-          Acoustic decisions need band behavior, not only a headline rating. This trace shows how the current stack is
-          screening across the main octave points used in consultant review.
-        </p>
+    <SurfacePanel className="px-4 py-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h2 className="text-sm font-semibold text-[color:var(--ink)]">Transmission-loss trace</h2>
+        <div className="flex flex-wrap gap-2">
+          <Pill tone="accent">Frequency domain</Pill>
+          <Pill tone="neutral">63 – 4000 Hz</Pill>
+        </div>
       </div>
 
       {result ? (
         <>
-          <div className="mt-5 chart-frame rounded-[1.35rem] border hairline bg-[color:var(--paper)] px-3 py-3">
-            <ChartSurface className="h-[18rem] sm:h-[20rem]" placeholder="Preparing curve surface...">
+          <div className="mt-4 rounded border border-[color:var(--line)] bg-[color:var(--panel-strong)] px-3 py-3">
+            <ChartSurface className="h-[16rem] sm:h-[18rem]" placeholder="Preparing curve...">
               {(size) => (
                   <LineChart data={chartData} height={size.height} margin={{ left: 0, right: 8, top: 12, bottom: 0 }} width={size.width}>
-                    <CartesianGrid horizontal stroke="rgba(39, 74, 83, 0.08)" strokeDasharray="4 4" />
+                    <CartesianGrid horizontal stroke="var(--line)" strokeDasharray="3 3" />
                     <XAxis
                       axisLine={false}
                       dataKey="label"
                       minTickGap={12}
                       tickLine={false}
-                      tickMargin={10}
+                      tickMargin={8}
+                      style={{ fontSize: "0.7rem" }}
                     />
-                    <YAxis axisLine={false} domain={yDomain} tickFormatter={(value) => `${value}`} tickLine={false} width={40} />
+                    <YAxis axisLine={false} domain={yDomain} tickFormatter={(value) => `${value}`} tickLine={false} width={36} style={{ fontSize: "0.7rem" }} />
                     <Tooltip
                       contentStyle={{
-                        background: "rgba(250, 247, 240, 0.97)",
-                        border: "1px solid rgba(39, 74, 83, 0.16)",
-                        borderRadius: "18px",
-                        color: "var(--ink)"
+                        background: "var(--paper)",
+                        border: "1px solid var(--line)",
+                        borderRadius: "0.375rem",
+                        color: "var(--ink)",
+                        fontSize: "0.8rem"
                       }}
                       formatter={(value) => [`${formatDecimal(Number(value ?? 0))} dB`, "Transmission loss"]}
                       labelFormatter={(label) => `${label} Hz`}
                     />
                     <Line
                       dataKey="transmissionLossDb"
-                      dot={{ fill: "#c97342", r: 3, stroke: "#faf7f0", strokeWidth: 1.5 }}
-                      stroke="#c97342"
+                      dot={{ fill: "var(--accent)", r: 2.5, stroke: "var(--paper)", strokeWidth: 1.5 }}
+                      stroke="var(--accent)"
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      strokeWidth={2.5}
+                      strokeWidth={2}
                       type="monotone"
                     />
                   </LineChart>
@@ -114,44 +109,30 @@ export function AcousticCurvePanel({ result }: AcousticCurvePanelProps) {
             </ChartSurface>
           </div>
 
-          <div className="mt-5 grid gap-3 sm:grid-cols-3">
-            <article className="rounded-[1.2rem] border hairline bg-[color:var(--panel-strong)] px-4 py-4">
-              <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
-                <Waves className="h-4 w-4" />
-                Low-band check
+          <div className="mt-3 grid gap-2 sm:grid-cols-3">
+            <div className="rounded border border-[color:var(--line)] bg-[color:var(--panel-strong)] px-3 py-2.5">
+              <div className="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Low band</div>
+              <div className="mt-1 text-[0.82rem] font-semibold tabular-nums text-[color:var(--ink)]">
+                {lowBand ? `${formatDecimal(lowBand.transmissionLossDb)} dB @ ${lowBand.label} Hz` : "—"}
               </div>
-              <p className="mt-3 text-sm leading-7 text-[color:var(--ink-soft)]">
-                {lowBand
-                  ? `${lowBand.label} Hz point sits at ${formatDecimal(lowBand.transmissionLossDb)} dB.`
-                  : "Low-band screening point not available in the live curve."}
-              </p>
-            </article>
-            <article className="rounded-[1.2rem] border hairline bg-black/[0.03] px-4 py-4">
-              <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
-                <AudioLines className="h-4 w-4" />
-                Rating package
+            </div>
+            <div className="rounded border border-[color:var(--line)] bg-[color:var(--panel-strong)] px-3 py-2.5">
+              <div className="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Rating</div>
+              <div className="mt-1 text-[0.82rem] font-semibold tabular-nums text-[color:var(--ink)]">
+                {result.ratings.iso717.composite}
               </div>
-              <p className="mt-3 text-sm leading-7 text-[color:var(--ink-soft)]">
-                {result.ratings.iso717.composite} with STC {formatDecimal(result.metrics.estimatedStc)} dB and C/Ctr{" "}
-                {formatSignedDb(result.metrics.estimatedCDb)} / {formatSignedDb(result.metrics.estimatedCtrDb)}.
-              </p>
-            </article>
-            <article className="rounded-[1.2rem] border hairline bg-black/[0.025] px-4 py-4">
-              <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
-                <SlidersHorizontal className="h-4 w-4" />
-                Screening note
+            </div>
+            <div className="rounded border border-[color:var(--line)] bg-[color:var(--panel-strong)] px-3 py-2.5">
+              <div className="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Speech band</div>
+              <div className="mt-1 text-[0.82rem] font-semibold tabular-nums text-[color:var(--ink)]">
+                {speechBand ? `${formatDecimal(speechBand.transmissionLossDb)} dB @ 500 Hz` : "—"}
               </div>
-              <p className="mt-3 text-sm leading-7 text-[color:var(--ink-soft)]">
-                {speechBand && highBand
-                  ? `Speech band reaches ${formatDecimal(speechBand.transmissionLossDb)} dB at 500 Hz and upper-band screening reaches ${formatDecimal(highBand.transmissionLossDb)} dB by ${highBand.label} Hz.`
-                  : "Curve-backed screening is available, but some commentary points are not populated yet."}
-              </p>
-            </article>
+            </div>
           </div>
         </>
       ) : (
-        <div className="mt-5 rounded-[1.35rem] border border-dashed hairline px-4 py-6 text-sm leading-7 text-[color:var(--ink-soft)]">
-          Add a valid assembly to unlock the live transmission-loss trace and derived rating package.
+        <div className="mt-4 rounded border border-dashed border-[color:var(--line)] px-4 py-5 text-sm text-[color:var(--ink-soft)]">
+          Add a valid assembly to see the transmission-loss curve.
         </div>
       )}
     </SurfacePanel>

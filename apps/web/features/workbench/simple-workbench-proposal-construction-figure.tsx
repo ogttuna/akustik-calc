@@ -32,7 +32,7 @@ export function SimpleWorkbenchProposalConstructionFigure({
 
   if (section.bands.length === 0) {
     return (
-      <div className="rounded-[1.1rem] border border-dashed hairline bg-black/[0.02] px-4 py-6 text-sm leading-6 text-[color:var(--ink-soft)]">
+      <div className="rounded-md border border-dashed hairline bg-black/[0.02] px-4 py-6 text-sm leading-6 text-[color:var(--ink-soft)]">
         No visible rows are packaged on this proposal yet. Build a supported stack first so DynEcho can draw the construction section.
       </div>
     );
@@ -40,14 +40,14 @@ export function SimpleWorkbenchProposalConstructionFigure({
 
   return (
     <div className="grid gap-4 xl:grid-cols-[minmax(15rem,0.66fr)_minmax(0,1fr)]">
-      <div className="rounded-[1.1rem] border hairline bg-[color:color-mix(in_oklch,var(--accent)_7%,var(--paper))] px-4 py-4">
+      <div className="rounded-md border hairline bg-[color:color-mix(in_oklch,var(--accent)_7%,var(--paper))] px-4 py-4">
         <div className="flex items-center justify-between text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">
           <span>{section.anchorFromLabel}</span>
           <span>{section.headline}</span>
         </div>
 
         <div
-          className={`mt-4 overflow-hidden rounded-[1.05rem] border hairline bg-[linear-gradient(180deg,rgba(255,255,255,0.54),rgba(255,255,255,0.12))] ${
+          className={`mt-4 overflow-hidden rounded-md border hairline bg-[linear-gradient(180deg,rgba(255,255,255,0.54),rgba(255,255,255,0.12))] ${
             section.isWall ? "flex min-h-[10rem]" : "flex min-h-[20rem] flex-col"
           }`}
         >
@@ -80,7 +80,7 @@ export function SimpleWorkbenchProposalConstructionFigure({
         </div>
       </div>
 
-      <div className="rounded-[1.1rem] border hairline bg-[color:var(--paper)]/78 px-4 py-4">
+      <div className="rounded-md border hairline bg-[color:var(--paper)]/78 px-4 py-4">
         <div className="flex items-center justify-between gap-3">
           <div className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
             <Layers3 className="h-4 w-4" />
@@ -94,7 +94,7 @@ export function SimpleWorkbenchProposalConstructionFigure({
         <div className="mt-4 grid gap-2">
           {section.bands.map((band) => (
             <div
-              className="grid gap-2 rounded-[0.95rem] border hairline bg-[color:var(--paper)] px-3 py-3 sm:grid-cols-[auto_minmax(0,1fr)_auto]"
+              className="grid gap-2 rounded border hairline bg-[color:var(--paper)] px-3 py-3 sm:grid-cols-[auto_minmax(0,1fr)_auto]"
               key={`legend-${band.indexLabel}-${band.label}-${band.thicknessLabel}`}
             >
               <div className="text-sm font-semibold text-[color:var(--ink)]">{band.indexLabel}</div>

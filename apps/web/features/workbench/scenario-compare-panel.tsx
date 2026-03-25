@@ -39,8 +39,8 @@ const METRIC_COPY: Record<MetricKey, { label: string; suffix: string }> = {
 };
 
 const CHART_COLORS = {
-  current: "#c97342",
-  saved: "#2e8a7b"
+  current: "var(--accent)",
+  saved: "var(--success)"
 };
 
 function formatImpactSnippet(scenario: EvaluatedScenario): string {
@@ -73,7 +73,7 @@ function getScenarioSurfaceClass(
     case "bound":
       return "border-[color:var(--warning)]/25 bg-[color:var(--warning-soft)]/40";
     case "estimate":
-      return "border-[color:var(--accent)]/18 bg-black/[0.02]";
+      return "border-[color:var(--accent)]/18 bg-[color:var(--panel)]";
     case "low_confidence":
       return "border-[color:var(--warning)]/18 bg-[color:var(--warning-soft)]/28";
     case "inactive":
@@ -140,59 +140,34 @@ export function ScenarioComparePanel({
   });
 
   return (
-    <SurfacePanel className="px-5 py-5">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <div className="eyebrow">Option studies</div>
-          <h2 className="mt-1 font-display text-[2rem] leading-none tracking-[-0.04em]">Scenario compare</h2>
-          <p className="mt-3 max-w-2xl text-sm leading-7 text-[color:var(--ink-soft)]">
-            Acoustic workflows need saved options and clear deltas. Keep candidate stacks visible while you iterate, and
-            compare their evidence class instead of ranking every number as if it came from the same solver corridor.
-          </p>
-        </div>
+    <SurfacePanel className="px-4 py-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h2 className="text-sm font-semibold text-[color:var(--ink)]">Scenario compare</h2>
         <button
-          className="focus-ring touch-target inline-flex items-center gap-2 rounded-full bg-[color:var(--ink)] px-4 py-2 text-sm font-semibold text-[color:var(--paper)]"
+          className="focus-ring inline-flex h-8 items-center gap-1.5 rounded bg-[color:var(--ink)] px-3 text-[0.8rem] font-semibold text-[color:var(--paper)]"
           onClick={onSaveScenario}
           type="button"
         >
-          <BookmarkPlus className="h-4 w-4" />
+          <BookmarkPlus className="h-3.5 w-3.5" />
           Save live stack
         </button>
       </div>
 
-      <div className="mt-5 rounded-[1.25rem] border hairline bg-black/[0.03] px-4 py-4">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
-              Comparison rule
-            </div>
-            <p className="mt-2 max-w-3xl text-sm leading-7 text-[color:var(--ink-soft)]">
-              Scenario deltas now carry solver corridor labels. Exact floor rows, benchmark-guarded estimates, bound-only
-              support, and airborne comparison anchors stay visible directly on the scenario cards below.
-            </p>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {activeBriefTargets.length > 0 ? (
-                activeBriefTargets.map((target) => (
-                  <Pill key={target} tone="accent">
-                    {target}
-                  </Pill>
-                ))
-              ) : (
-                <Pill tone="neutral">No brief target armed</Pill>
-              )}
-            </div>
-          </div>
-          <Pill tone="neutral">{metricOptions.length} compare lenses</Pill>
+      {activeBriefTargets.length > 0 ? (
+        <div className="mt-3 flex flex-wrap gap-2">
+          {activeBriefTargets.map((target) => (
+            <Pill key={target} tone="accent">{target}</Pill>
+          ))}
         </div>
-      </div>
+      ) : null}
 
-      <div className="mt-5 flex flex-wrap gap-2">
+      <div className="mt-4 flex flex-wrap gap-2">
         {metricOptions.map((entry) => (
           <button
-            className={`focus-ring touch-target rounded-full border px-3 py-2 text-xs font-semibold uppercase tracking-[0.18em] transition ${
+            className={`focus-ring inline-flex h-8 items-center rounded border px-3 text-[0.78rem] font-semibold transition ${
               metric === entry
                 ? "border-[color:var(--accent)] bg-[color:var(--accent-soft)] text-[color:var(--accent-ink)]"
-                : "hairline bg-[color:var(--paper)] text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+                : "border-[color:var(--line)] text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
             }`}
             key={entry}
             onClick={() => setMetric(entry)}
@@ -203,26 +178,27 @@ export function ScenarioComparePanel({
         ))}
       </div>
 
-      <div className="mt-5 chart-frame rounded-[1.35rem] border hairline bg-[color:var(--paper)] px-3 py-3">
-        <ChartSurface className="h-[19rem]" placeholder="Preparing chart surface...">
+      <div className="mt-4 rounded border border-[color:var(--line)] bg-[color:var(--panel-strong)] px-3 py-3">
+        <ChartSurface className="h-[16rem]" placeholder="Preparing chart...">
           {(size) => (
               <BarChart data={chartData} height={size.height} layout="vertical" margin={{ left: 8, right: 12, top: 8, bottom: 8 }} width={size.width}>
-                <CartesianGrid horizontal stroke="rgba(39, 74, 83, 0.08)" strokeDasharray="4 4" />
-                <XAxis axisLine={false} tickLine={false} type="number" />
-                <YAxis axisLine={false} dataKey="label" tickLine={false} type="category" width={140} />
+                <CartesianGrid horizontal stroke="var(--line)" strokeDasharray="3 3" />
+                <XAxis axisLine={false} tickLine={false} type="number" style={{ fontSize: "0.7rem" }} />
+                <YAxis axisLine={false} dataKey="label" tickLine={false} type="category" width={120} style={{ fontSize: "0.7rem" }} />
                 <Tooltip
                   contentStyle={{
-                    background: "rgba(250, 247, 240, 0.97)",
-                    border: "1px solid rgba(39, 74, 83, 0.16)",
-                    borderRadius: "18px",
-                    color: "var(--ink)"
+                    background: "var(--paper)",
+                    border: "1px solid var(--line)",
+                    borderRadius: "0.375rem",
+                    color: "var(--ink)",
+                    fontSize: "0.8rem"
                   }}
                   formatter={(value) => [
                     `${formatDecimal(Number(value ?? 0))} ${METRIC_COPY[metric].suffix}`,
                     METRIC_COPY[metric].label
                   ]}
                 />
-                <Bar dataKey="value" radius={[999, 999, 999, 999]}>
+                <Bar dataKey="value" radius={[4, 4, 4, 4]} maxBarSize={24}>
                   {chartData.map((entry) => (
                     <Cell fill={entry.accent} key={entry.label} />
                   ))}
@@ -237,7 +213,7 @@ export function ScenarioComparePanel({
           const summary = getScenarioCorridorSummary(currentScenario.result);
 
           return (
-            <article className={`rounded-[1.3rem] border px-4 py-4 ${getScenarioSurfaceClass(currentScenario, summary.impactPosture.posture)}`}>
+            <article className={`rounded-lg border px-4 py-4 ${getScenarioSurfaceClass(currentScenario, summary.impactPosture.posture)}`}>
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <div className="text-sm font-semibold text-[color:var(--ink)]">Live stack</div>
@@ -262,7 +238,7 @@ export function ScenarioComparePanel({
                     {summary.activeModeLabel ? <Pill tone="neutral">{summary.activeModeLabel}</Pill> : null}
                     {summary.fieldContinuationLabel ? <Pill tone="accent">{summary.fieldContinuationLabel}</Pill> : null}
                   </div>
-                  <div className="mt-4 rounded-[1rem] border hairline bg-black/[0.025] px-3 py-3">
+                  <div className="mt-4 rounded-md border hairline bg-[color:var(--panel)] px-3 py-3">
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
                         Current brief line
@@ -274,7 +250,7 @@ export function ScenarioComparePanel({
                     </p>
                   </div>
                   {liveDecision.dutchReferenceStatusLabel && liveDecision.dutchReferenceStatusTone ? (
-                    <div className="mt-3 rounded-[1rem] border hairline bg-[color:var(--paper)]/70 px-3 py-3">
+                    <div className="mt-3 rounded-md border hairline bg-[color:var(--paper)]/70 px-3 py-3">
                       <div className="flex flex-wrap items-center justify-between gap-2">
                         <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
                           Dutch DnT,A,k refs
@@ -304,7 +280,7 @@ export function ScenarioComparePanel({
 
             return (
               <article
-                className={`pointer-card rounded-[1.3rem] border px-4 py-4 ${getScenarioSurfaceClass(scenario, summary.impactPosture.posture)}`}
+                className={`pointer-card rounded-lg border px-4 py-4 ${getScenarioSurfaceClass(scenario, summary.impactPosture.posture)}`}
                 key={scenario.id}
               >
                 <div className="flex flex-wrap items-start justify-between gap-3">
@@ -321,20 +297,20 @@ export function ScenarioComparePanel({
                   </div>
                   <div className="flex items-center gap-2">
                     <button
-                      className="focus-ring touch-target inline-flex items-center gap-2 rounded-full border hairline px-3 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+                      className="focus-ring inline-flex h-8 items-center gap-1.5 rounded border border-[color:var(--line)] px-3 text-[0.78rem] font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
                       onClick={() => onLoadScenario(scenario.id)}
                       type="button"
                     >
-                      <RotateCcw className="h-4 w-4" />
+                      <RotateCcw className="h-3.5 w-3.5" />
                       Load
                     </button>
                     <button
                       aria-label={`Delete ${scenario.name}`}
-                      className="focus-ring touch-target inline-flex items-center justify-center rounded-full border hairline px-3 py-2 text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+                      className="focus-ring inline-flex h-8 items-center justify-center rounded border border-[color:var(--line)] px-2 text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
                       onClick={() => onDeleteScenario(scenario.id)}
                       type="button"
                     >
-                      <Trash2 className="h-4 w-4" />
+                      <Trash2 className="h-3.5 w-3.5" />
                     </button>
                   </div>
                 </div>
@@ -351,7 +327,7 @@ export function ScenarioComparePanel({
                     <div
                       className={`mt-4 grid gap-3 ${decision.dutchReferenceStatusLabel ? "lg:grid-cols-3" : "lg:grid-cols-2"}`}
                     >
-                      <div className="rounded-[1rem] border hairline bg-black/[0.025] px-3 py-3">
+                      <div className="rounded-md border hairline bg-[color:var(--panel)] px-3 py-3">
                         <div className="flex flex-wrap items-center justify-between gap-2">
                           <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
                             Load effect
@@ -360,7 +336,7 @@ export function ScenarioComparePanel({
                         </div>
                         <p className="mt-2 text-xs leading-6 text-[color:var(--ink-soft)]">{decision.liveDeltaLabel}</p>
                       </div>
-                      <div className="rounded-[1rem] border hairline bg-[color:var(--paper)]/70 px-3 py-3">
+                      <div className="rounded-md border hairline bg-[color:var(--paper)]/70 px-3 py-3">
                         <div className="flex flex-wrap items-center justify-between gap-2">
                           <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
                             Brief fit
@@ -372,7 +348,7 @@ export function ScenarioComparePanel({
                         </p>
                       </div>
                       {decision.dutchReferenceStatusLabel && decision.dutchReferenceStatusTone ? (
-                        <div className="rounded-[1rem] border hairline bg-[color:var(--paper)]/70 px-3 py-3">
+                        <div className="rounded-md border hairline bg-[color:var(--paper)]/70 px-3 py-3">
                           <div className="flex flex-wrap items-center justify-between gap-2">
                             <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
                               Dutch DnT,A,k refs
@@ -391,9 +367,8 @@ export function ScenarioComparePanel({
             );
           })
         ) : (
-          <div className="rounded-[1.3rem] border border-dashed hairline px-4 py-6 text-sm leading-7 text-[color:var(--ink-soft)]">
-            Save at least one scenario to compare option studies, preserve consultant alternatives, and prep report-ready
-            recommendations.
+          <div className="rounded border border-dashed border-[color:var(--line)] px-4 py-5 text-sm text-[color:var(--ink-soft)]">
+            Save a scenario to start comparing.
           </div>
         )}
       </div>

@@ -22,7 +22,7 @@ function getStatusClasses(kind: WorkbenchFieldStatusKind): string {
     case "conditional":
       return "border-[color:var(--accent)] bg-[color:var(--accent-soft)] text-[color:var(--accent-ink)]";
     case "anchored":
-      return "border-[color:var(--navy)] bg-[color:var(--navy-soft)] text-[color:var(--navy)]";
+      return "border-[color:var(--ink-faint)] bg-[color:var(--panel)] text-[color:var(--ink-soft)]";
     case "ignored":
       return "border-[color:var(--line)] bg-black/[0.03] text-[color:var(--ink-soft)]";
   }
@@ -31,7 +31,7 @@ function getStatusClasses(kind: WorkbenchFieldStatusKind): string {
 function FieldStatusChip({ kind }: { kind: WorkbenchFieldStatusKind }) {
   return (
     <span
-      className={`inline-flex items-center rounded-full border px-3 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] ${getStatusClasses(kind)}`}
+      className={`inline-flex items-center rounded border px-3 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] ${getStatusClasses(kind)}`}
     >
       {formatWorkbenchFieldStatusLabel(kind)}
     </span>
@@ -90,7 +90,7 @@ export function FieldGuide({ children, guide, hint, inputId, label }: FieldGuide
             aria-controls={panelId}
             aria-expanded={open}
             aria-label="Show field help"
-            className="focus-ring inline-flex h-9 w-9 items-center justify-center rounded-full border hairline bg-[color:var(--paper)] text-[color:var(--ink-soft)] transition hover:bg-black/[0.03] hover:text-[color:var(--ink)]"
+            className="focus-ring inline-flex h-9 w-9 items-center justify-center rounded border hairline bg-[color:var(--paper)] text-[color:var(--ink-soft)] transition hover:bg-black/[0.03] hover:text-[color:var(--ink)]"
             onClick={() => setPinned((value) => !value)}
             title={`Explain ${label}`}
             type="button"
@@ -102,7 +102,7 @@ export function FieldGuide({ children, guide, hint, inputId, label }: FieldGuide
 
       {open ? (
         <div
-          className="rounded-[1.15rem] border hairline bg-[color:var(--panel-strong)] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]"
+          className="rounded-md border hairline bg-[color:var(--panel-strong)] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]"
           id={panelId}
           role="note"
         >

@@ -38,14 +38,14 @@ export function CriteriaPackPanel({
         </div>
       </div>
 
-      <div className="mt-5 rounded-[1.4rem] border hairline bg-[color:var(--panel-strong)] px-4 py-4">
+      <div className="mt-5 rounded-lg border hairline bg-[color:var(--panel-strong)] px-4 py-4">
         <div className="flex flex-wrap items-center gap-2">
           <Pill tone="accent">{activePack.label}</Pill>
           <Pill tone="neutral">{activePack.audience}</Pill>
         </div>
         <p className="mt-3 text-sm leading-7 text-[color:var(--ink-soft)]">{activePack.description}</p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
-          <div className="rounded-[1.1rem] border hairline bg-[color:var(--paper)] px-4 py-3">
+          <div className="rounded-md border hairline bg-[color:var(--paper)] px-4 py-3">
             <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
               <Target className="h-3.5 w-3.5" />
               Headline targets
@@ -59,7 +59,7 @@ export function CriteriaPackPanel({
               </span>
             </div>
           </div>
-          <div className="rounded-[1.1rem] border hairline bg-[color:var(--paper)] px-4 py-3">
+          <div className="rounded-md border hairline bg-[color:var(--paper)] px-4 py-3">
             <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
               <Sparkles className="h-3.5 w-3.5" />
               Emphasis
@@ -82,7 +82,7 @@ export function CriteriaPackPanel({
 
           return (
             <button
-              className={`focus-ring rounded-[1.25rem] border px-4 py-4 text-left transition ${
+              className={`focus-ring rounded-md border px-4 py-4 text-left transition ${
                 isActive
                   ? "border-[color:var(--accent)] bg-[color:var(--accent-soft)] text-[color:var(--accent-ink)]"
                   : "hairline bg-[color:var(--paper)] hover:bg-black/[0.03]"
@@ -127,7 +127,7 @@ export function CriteriaPackPanel({
         })}
       </div>
 
-      <div className="mt-5 rounded-[1.3rem] border hairline bg-black/[0.025] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
+      <div className="mt-5 rounded-lg border hairline bg-black/[0.025] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
         These are internal brief templates, not jurisdictional code defaults. Apply one to start faster, then tune the
         targets or requested outputs to match the actual project brief.
       </div>

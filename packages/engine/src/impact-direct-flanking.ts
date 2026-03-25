@@ -11,6 +11,7 @@ import { getImpactConfidenceForBasis } from "./impact-confidence";
 import { computeImpactSpectrumAdaptationTerms, computeImpactWeightedRating } from "./impact-iso717";
 import { createImpactMetricBasis, mergeImpactMetricBasis } from "./impact-metric-basis";
 import { inferImpactSupportingElementFamilyFromLayers } from "./impact-supporting-element-family";
+import { buildImpactTraceFromDerivedCurves } from "./impact-trace";
 import { clamp, ksRound1, log10Safe } from "./math";
 
 type DirectFlankingResult = {
@@ -305,12 +306,14 @@ function sumImpactCurves(curves: readonly number[][]): number[] | null {
   });
 }
 
-function hasDirectFlankingContext(fieldContext: ImpactFieldContext | null | undefined): boolean {
+function hasDirectFlankingContext(
+  fieldContext: ImpactFieldContext | null | undefined,
+  allowDirectOnly: boolean
+): boolean {
   return Boolean(
     fieldContext &&
       (typeof fieldContext.directPathOffsetDb === "number" || typeof fieldContext.fieldKDb === "number") &&
-      Array.isArray(fieldContext.flankingPaths) &&
-      fieldContext.flankingPaths.length > 0
+      (allowDirectOnly || (Array.isArray(fieldContext.flankingPaths) && fieldContext.flankingPaths.length > 0))
   );
 }
 
@@ -407,7 +410,7 @@ function buildCurveDerivedFieldMetrics(
 export function applyDirectFlankingFieldEstimate(
   input: DirectFlankingCandidateInput
 ): DirectFlankingResult | null {
-  if (!hasDirectFlankingContext(input.fieldContext)) {
+  if (!hasDirectFlankingContext(input.fieldContext, Boolean(input.exactImpactSource))) {
     return null;
   }
 
@@ -463,11 +466,13 @@ export function applyDirectFlankingFieldEstimate(
         )
       )
     : [];
-  const summedCurve =
-    exactCurve && flankingCurves.length > 0 ? sumImpactCurves([exactCurve, ...flankingCurves]) : null;
+  const exactFieldCurve =
+    exactCurve && flankingCurves.length > 0
+      ? sumImpactCurves([exactCurve, ...flankingCurves])
+      : exactCurve;
   const standardizedCurve =
-    summedCurve && typeof standardizedOffsetDb === "number"
-      ? buildShiftedCurve(summedCurve, standardizedOffsetDb)
+    exactFieldCurve && typeof standardizedOffsetDb === "number"
+      ? buildShiftedCurve(exactFieldCurve, standardizedOffsetDb)
       : null;
 
   const singleNumberDirect = typeof input.impact.LnW === "number"
@@ -484,8 +489,8 @@ export function applyDirectFlankingFieldEstimate(
       : undefined;
 
   const derivedCurveMetrics =
-    input.exactImpactSource && summedCurve
-      ? buildCurveDerivedFieldMetrics(input.exactImpactSource, summedCurve, standardizedCurve)
+    input.exactImpactSource && exactFieldCurve
+      ? buildCurveDerivedFieldMetrics(input.exactImpactSource, exactFieldCurve, standardizedCurve)
       : null;
 
   const lPrimeNW =
@@ -522,7 +527,7 @@ export function applyDirectFlankingFieldEstimate(
     fieldEstimateDirectOffsetDb: directOffsetDb,
     fieldEstimateExpertPathModifierCount: expertModifiedCount > 0 ? expertModifiedCount : undefined,
     fieldEstimateFlankingFamilyModels: familyModels.length > 0 ? familyModels : undefined,
-    fieldEstimateFlankingPathCount: flankingPaths.length,
+    fieldEstimateFlankingPathCount: flankingPaths.length > 0 ? flankingPaths.length : undefined,
     fieldEstimateFlankingPathModifiersDb: pathModifierValues.length > 0 ? pathModifierValues : undefined,
     fieldEstimateLowerTreatmentBandReduction: false,
     fieldEstimateLowerTreatmentReductionDb: lowerTreatmentReductionDb,
@@ -551,6 +556,14 @@ export function applyDirectFlankingFieldEstimate(
         ? [`Family-aware flanking path models stayed active for: ${familyModels.join(", ")}.`]
         : [])
     ],
+    trace:
+      input.exactImpactSource && exactFieldCurve
+        ? buildImpactTraceFromDerivedCurves({
+            exactImpactSource: input.exactImpactSource,
+            fieldCurveDb: exactFieldCurve,
+            standardizedCurveDb: standardizedCurve
+          })
+        : input.impact.trace,
     standardizedFieldEstimateProfile:
       typeof lPrimeNTw === "number"
         ? "standardized_field_lprimentw_from_direct_flanking_energy_sum_plus_room_volume"

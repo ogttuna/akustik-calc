@@ -236,6 +236,56 @@ const BASE_DOCUMENT = {
   ],
   reportProfile: "consultant",
   reportProfileLabel: "Consultant issue",
+  responseCurves: [
+    {
+      activeSeriesId: "airborne",
+      direction: "higher_better",
+      domainLabel: "125..2000 Hz",
+      id: "airborne",
+      note: "Higher dB is better. This is the active airborne transmission-loss curve behind the current weighted answer.",
+      series: [
+        {
+          active: true,
+          frequenciesHz: [125, 250, 500, 1000, 2000],
+          id: "airborne",
+          label: "Active transmission-loss curve",
+          valuesDb: [46, 53, 61, 67, 71]
+        }
+      ],
+      title: "Airborne response curve"
+    },
+    {
+      activeSeriesId: "standardized",
+      direction: "lower_better",
+      domainLabel: "50..3150 Hz",
+      id: "impact",
+      note: "Lower dB is better. Standardized field continuation is the active impact curve on this lane; source and continuation curves stay overlaid for comparison.",
+      series: [
+        {
+          active: false,
+          frequenciesHz: [50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500, 3150],
+          id: "source",
+          label: "Exact lab band curve",
+          valuesDb: [60, 59, 58, 58, 57, 56, 55, 54, 53, 52, 51, 50, 49, 48, 47, 46, 45, 44, 43]
+        },
+        {
+          active: false,
+          frequenciesHz: [50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500, 3150],
+          id: "field",
+          label: "Derived field continuation",
+          valuesDb: [56, 55, 54, 54, 53, 52, 51, 50, 49, 48, 47, 46, 45, 44, 43, 42, 41, 40, 39]
+        },
+        {
+          active: true,
+          frequenciesHz: [50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500, 3150],
+          id: "standardized",
+          label: "Standardized field continuation",
+          valuesDb: [54, 53, 52, 52, 51, 50, 49, 48, 47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 37]
+        }
+      ],
+      title: "Impact response curve"
+    }
+  ],
   studyModeLabel: "Floor",
   studyContextLabel: "Pre-tender",
   validationDetail: "Published family estimate is active. Read this as a supported floor estimate, not as a measured claim.",
@@ -374,8 +424,27 @@ describe("simple workbench proposal helpers", () => {
     expect(html).toContain("Audit package");
     expect(html).toContain("Memo-grade reading");
     expect(html).toContain("Template");
+    expect(html).toContain("DAC");
+    expect(html).toContain("DAC | DynEcho Dynamic Calculator");
+    expect(html).toContain("ISO-aligned acoustic calculation issue");
     expect(html).toContain("Building Acoustics and Vibration Control");
     expect(html).toContain('alt="Machinity Acoustic Consultants logo"');
+    expect(html).toContain("Acoustic Result Profile");
+    expect(html).toContain("Airborne Curve");
+    expect(html).toContain("Airborne response curve");
+    expect(html).toContain("Impact Curve");
+    expect(html).toContain("Impact response curve");
+    expect(html).toContain("Consultant-facing answer set");
+    expect(html).toContain("Higher dB is better");
+    expect(html).toContain("Lower dB is better");
+    expect(html).toContain("ISO &amp; Method Basis");
+    expect(html).toContain("ISO-aligned calculation basis");
+    expect(html).toContain("ISO 717-1");
+    expect(html).toContain("ISO 717-2");
+    expect(html).toContain("ISO 16283-1");
+    expect(html).toContain("ISO 16283-2");
+    expect(html).toContain("ISO 12354-2");
+    expect(html).toContain("Prediction route posture");
     expect(html).toContain("Signature and Issue Authority");
     expect(html).toContain("Prepared for client review");
     expect(html).toContain("Authorized consultant signature");
@@ -422,6 +491,7 @@ describe("simple workbench proposal helpers", () => {
     expect(html).toContain("Check flanking &lt;risk&gt; before tender issue.");
     expect(html).not.toContain("Check flanking <risk> before tender issue.");
     expect(html).toContain("Prepared from the DynEcho dynamic calculator.");
+    expect(html).toContain("This DAC sheet summarizes a project estimate");
   });
 
   it("builds a lightweight summary html for the simple pdf path", () => {

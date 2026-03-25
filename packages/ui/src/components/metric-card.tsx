@@ -8,12 +8,12 @@ type MetricCardProps = {
 
 export function MetricCard({ label, value, detail }: MetricCardProps) {
   return (
-    <article className="pointer-card rounded-[1.35rem] border hairline bg-black/[0.025] p-4">
-      <div className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-[color:var(--ink-faint)]">
+    <article className="rounded-md border hairline bg-[color:var(--paper)] px-3 py-2.5">
+      <div className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">
         {label}
       </div>
-      <div className="metric-number mt-3 font-display text-3xl text-[color:var(--ink)]">{value}</div>
-      {detail ? <div className="mt-2 text-sm text-[color:var(--ink-soft)]">{detail}</div> : null}
+      <div className="metric-number mt-1.5 text-2xl font-semibold text-[color:var(--ink)]">{value}</div>
+      {detail ? <div className="mt-1 text-[0.8rem] leading-5 text-[color:var(--ink-soft)]">{detail}</div> : null}
     </article>
   );
 }

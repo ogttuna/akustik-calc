@@ -237,7 +237,7 @@ export function ImpactGuidePanel({
           label="Enable TR small-room estimate"
         >
           <label
-            className="flex items-center justify-between gap-4 rounded-[1.2rem] border hairline bg-[color:var(--panel-strong)] px-4 py-3 text-sm leading-7 text-[color:var(--ink-soft)]"
+            className="flex items-center justify-between gap-4 rounded-md border hairline bg-[color:var(--panel-strong)] px-4 py-3 text-sm leading-7 text-[color:var(--ink-soft)]"
             htmlFor="impact-guide-small-room"
           >
             <div>
@@ -259,17 +259,17 @@ export function ImpactGuidePanel({
       </div>
 
       {baseImpact && baseLnW !== null ? (
-        <div className="mt-5 rounded-[1.3rem] border hairline bg-[color:var(--panel-strong)] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
+        <div className="mt-5 rounded-lg border hairline bg-[color:var(--panel-strong)] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
           Selected base is <strong className="text-[color:var(--ink)]">{SOURCE_LABELS[selectedSource]}</strong> at{" "}
           <strong className="text-[color:var(--ink)]">{formatDecimal(baseLnW)} dB</strong>. Basis: {baseImpact.basis}.
         </div>
       ) : baseLowerBoundImpact && baseLnWUpperBound !== null ? (
-        <div className="mt-5 rounded-[1.3rem] border hairline bg-[color:var(--panel-strong)] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
+        <div className="mt-5 rounded-lg border hairline bg-[color:var(--panel-strong)] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
           Selected base is <strong className="text-[color:var(--ink)]">{SOURCE_LABELS[selectedSource]}</strong> at{" "}
           <strong className="text-[color:var(--ink)]">&lt;= {formatDecimal(baseLnWUpperBound)} dB</strong>. Basis: {baseLowerBoundImpact.basis}.
         </div>
       ) : (
-        <div className="mt-5 rounded-[1.3rem] border border-dashed hairline px-4 py-6 text-sm leading-7 text-[color:var(--ink-soft)]">
+        <div className="mt-5 rounded-lg border border-dashed hairline px-4 py-6 text-sm leading-7 text-[color:var(--ink-soft)]">
           The selected guide base has no Ln,w yet. Use the live impact lane or the heavy-reference shortcut first.
         </div>
       )}
@@ -383,13 +383,13 @@ export function ImpactGuidePanel({
             />
           </div>
 
-          <div className="mt-5 rounded-[1.2rem] border hairline bg-[color:var(--panel-strong)] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
+          <div className="mt-5 rounded-md border hairline bg-[color:var(--panel-strong)] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
             <span className="font-semibold text-[color:var(--ink)]">Trust note:</span> {guideResult.confidence.summary}
           </div>
 
           <div className="mt-5 grid gap-3 text-sm leading-7 text-[color:var(--ink-soft)]">
             {guideResult.notes.map((note) => (
-              <article className="rounded-[1.2rem] border hairline bg-black/[0.025] px-4 py-4" key={note}>
+              <article className="rounded-md border hairline bg-black/[0.025] px-4 py-4" key={note}>
                 <div className="inline-flex items-center gap-2">
                   <Orbit className="h-4 w-4 text-[color:var(--ink-faint)]" />
                   <span>{note}</span>

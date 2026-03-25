@@ -40,7 +40,7 @@ function DiagnosticCard(props: { detail: string; label: string; tone: "accent" |
   const { detail, label, tone, value } = props;
 
   return (
-    <article className="rounded-[1rem] border hairline bg-[color:var(--paper)]/78 px-4 py-4">
+    <article className="rounded-md border hairline bg-[color:var(--paper)]/78 px-4 py-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">{label}</div>
         <Pill tone={tone}>{value}</Pill>
@@ -54,7 +54,7 @@ function DiagnosticTraceGroupCard(props: SimpleWorkbenchMethodTraceGroup) {
   const { detail, label, notes, tone, value } = props;
 
   return (
-    <article className="rounded-[1rem] border hairline bg-[color:var(--paper)] px-4 py-4">
+    <article className="rounded-md border hairline bg-[color:var(--paper)] px-4 py-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="text-sm font-semibold text-[color:var(--ink)]">{label}</div>
         <Pill tone={tone}>{value}</Pill>
@@ -62,7 +62,7 @@ function DiagnosticTraceGroupCard(props: SimpleWorkbenchMethodTraceGroup) {
       <p className="mt-3 text-sm leading-6 text-[color:var(--ink-soft)]">{detail}</p>
       <div className="mt-4 grid gap-2">
         {notes.map((note) => (
-          <div className="rounded-[0.95rem] border hairline bg-black/[0.025] px-3 py-3 text-sm leading-6 text-[color:var(--ink-soft)]" key={`${label}-${note}`}>
+          <div className="rounded border hairline bg-black/[0.025] px-3 py-3 text-sm leading-6 text-[color:var(--ink-soft)]" key={`${label}-${note}`}>
             {note}
           </div>
         ))}
@@ -111,7 +111,7 @@ export function SimpleWorkbenchDiagnosticsPanel(props: SimpleWorkbenchDiagnostic
           ))}
         </div>
 
-        <section className="mt-5 rounded-[1.25rem] border hairline bg-[color:var(--paper)]/76 px-4 py-4">
+        <section className="mt-5 rounded-md border hairline bg-[color:var(--paper)]/76 px-4 py-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <div className="text-sm font-semibold text-[color:var(--ink)]">Validation corridor package</div>
@@ -129,7 +129,7 @@ export function SimpleWorkbenchDiagnosticsPanel(props: SimpleWorkbenchDiagnostic
         </section>
 
         <div className="mt-5 grid gap-4 xl:grid-cols-[minmax(0,1.02fr)_minmax(0,0.98fr)]">
-          <section className="rounded-[1.25rem] border hairline bg-[color:var(--paper)]/76 px-4 py-4">
+          <section className="rounded-md border hairline bg-[color:var(--paper)]/76 px-4 py-4">
             <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
               <ClipboardList className="h-4 w-4" />
               Decision trail signal
@@ -137,7 +137,7 @@ export function SimpleWorkbenchDiagnosticsPanel(props: SimpleWorkbenchDiagnostic
             <p className="mt-3 text-sm leading-7 text-[color:var(--ink-soft)]">{props.decisionTrailHeadline}</p>
             <div className="mt-4 grid gap-3">
               {props.decisionTrailItems.slice(0, 4).map((item) => (
-                <div className="rounded-[0.95rem] border hairline bg-[color:var(--paper)] px-4 py-4" key={`${item.label}-${item.detail}`}>
+                <div className="rounded border hairline bg-[color:var(--paper)] px-4 py-4" key={`${item.label}-${item.detail}`}>
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div className="text-sm font-semibold text-[color:var(--ink)]">{item.label}</div>
                     <Pill tone={item.tone}>{item.tone.replaceAll("_", " ")}</Pill>
@@ -148,14 +148,14 @@ export function SimpleWorkbenchDiagnosticsPanel(props: SimpleWorkbenchDiagnostic
             </div>
           </section>
 
-          <section className="rounded-[1.25rem] border hairline bg-[color:var(--paper)]/76 px-4 py-4">
+          <section className="rounded-md border hairline bg-[color:var(--paper)]/76 px-4 py-4">
             <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
               <Library className="h-4 w-4" />
               Source posture board
             </div>
             <div className="mt-4 grid gap-3">
               {props.citations.slice(0, 4).map((citation) => (
-                <article className="rounded-[0.95rem] border hairline bg-[color:var(--paper)] px-4 py-4" key={`${citation.label}-${citation.href ?? citation.detail}`}>
+                <article className="rounded border hairline bg-[color:var(--paper)] px-4 py-4" key={`${citation.label}-${citation.href ?? citation.detail}`}>
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div className="text-sm font-semibold text-[color:var(--ink)]">{citation.label}</div>
                     <Pill tone={citation.tone}>{citation.tone}</Pill>
@@ -178,7 +178,7 @@ export function SimpleWorkbenchDiagnosticsPanel(props: SimpleWorkbenchDiagnostic
         </div>
 
         {props.traceGroups.length > 0 ? (
-          <section className="mt-5 rounded-[1.25rem] border hairline bg-[color:var(--paper)]/76 px-4 py-4">
+          <section className="mt-5 rounded-md border hairline bg-[color:var(--paper)]/76 px-4 py-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <div className="text-sm font-semibold text-[color:var(--ink)]">Selected route notes</div>
@@ -200,7 +200,7 @@ export function SimpleWorkbenchDiagnosticsPanel(props: SimpleWorkbenchDiagnostic
           </section>
         ) : null}
 
-        <section className="mt-5 rounded-[1.25rem] border hairline bg-[color:var(--paper)]/76 px-4 py-4">
+        <section className="mt-5 rounded-md border hairline bg-[color:var(--paper)]/76 px-4 py-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <div className="text-sm font-semibold text-[color:var(--ink)]">Visible stack section</div>
@@ -218,7 +218,7 @@ export function SimpleWorkbenchDiagnosticsPanel(props: SimpleWorkbenchDiagnostic
         </section>
 
         <div className="mt-5 grid gap-3 md:grid-cols-2">
-          <div className="rounded-[1.15rem] border hairline bg-[color:var(--paper)]/72 px-4 py-4">
+          <div className="rounded-md border hairline bg-[color:var(--paper)]/72 px-4 py-4">
             <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
               <Activity className="h-4 w-4" />
               Trace availability
@@ -228,7 +228,7 @@ export function SimpleWorkbenchDiagnosticsPanel(props: SimpleWorkbenchDiagnostic
             </p>
           </div>
           <div
-            className={`rounded-[1.15rem] border px-4 py-4 ${
+            className={`rounded-md border px-4 py-4 ${
               props.warnings.length > 0
                 ? "border-[color:color-mix(in_oklch,var(--warning)_28%,var(--line))] bg-[color:var(--warning-soft)]/70"
                 : "hairline bg-[color:var(--paper)]/72"
