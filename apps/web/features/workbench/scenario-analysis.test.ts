@@ -1,4 +1,4 @@
-import type { RequestedOutputId } from "@dynecho/shared";
+import type { FloorRole, RequestedOutputId } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
 import { getPresetById, type PresetId } from "./preset-definitions";
@@ -8,6 +8,15 @@ import { IMPACT_ONLY_LOW_CONFIDENCE_FLOOR_FAMILY_NOTE } from "./impact-only-low-
 import { EXACT_FLOOR_FAMILY_CURVE_NOTE, LOW_CONFIDENCE_FLOOR_FAMILY_NOTE } from "./workbench-warning-notes";
 
 const TARGET_OUTPUTS: readonly RequestedOutputId[] = ["Rw", "Ln,w", "Ln,w+CI", "DeltaLw", "L'n,w", "L'nT,w"];
+const SINGLE_ENTRY_ROLE_SPLIT_PREFERENCE: readonly FloorRole[] = [
+  "floor_covering",
+  "resilient_layer",
+  "upper_fill",
+  "floating_screed",
+  "ceiling_cavity",
+  "ceiling_fill",
+  "base_structure"
+];
 
 function resultSnapshot(result: NonNullable<ReturnType<typeof evaluateScenario>["result"]>) {
   return {
@@ -33,6 +42,62 @@ function evaluatePresetScenario(presetId: PresetId) {
     studyMode: preset.studyMode,
     targetOutputs: ["Rw", "Ln,w", "Ln,w+CI", "STC", "C", "Ctr"]
   });
+}
+
+function buildDisjointSplitRows(
+  rows: ReadonlyArray<{ floorRole?: FloorRole; id: string; materialId: string; thicknessMm: string }>
+): Array<{ floorRole?: FloorRole; id: string; materialId: string; thicknessMm: string }> | null {
+  for (const role of SINGLE_ENTRY_ROLE_SPLIT_PREFERENCE) {
+    const roleIndices = rows.flatMap((row, index) => (row.floorRole === role ? [index] : []));
+    if (roleIndices.length !== 1) {
+      continue;
+    }
+
+    const roleIndex = roleIndices[0]!;
+    const originalRow = rows[roleIndex]!;
+    const originalThicknessMm = Number(originalRow.thicknessMm);
+    if (!(Number.isFinite(originalThicknessMm) && originalThicknessMm > 0)) {
+      continue;
+    }
+
+    const firstHalfThicknessMm = Number((originalThicknessMm / 2).toFixed(3));
+    const secondHalfThicknessMm = Number((originalThicknessMm - firstHalfThicknessMm).toFixed(3));
+    if (!(firstHalfThicknessMm > 0 && secondHalfThicknessMm > 0)) {
+      continue;
+    }
+
+    const nextDifferentRoleIndex = rows.findIndex((row, index) => index > roleIndex && row.floorRole !== role);
+    let previousDifferentRoleIndex = -1;
+    for (let index = roleIndex - 1; index >= 0; index -= 1) {
+      if (rows[index]?.floorRole !== role) {
+        previousDifferentRoleIndex = index;
+        break;
+      }
+    }
+
+    if (nextDifferentRoleIndex === -1 && previousDifferentRoleIndex === -1) {
+      continue;
+    }
+
+    const splitRows = rows.map((row, index) =>
+      index === roleIndex ? { ...row, thicknessMm: firstHalfThicknessMm.toString() } : { ...row }
+    );
+    const trailingHalf = {
+      ...originalRow,
+      id: `${originalRow.id}-split-b`,
+      thicknessMm: secondHalfThicknessMm.toString()
+    };
+
+    if (nextDifferentRoleIndex !== -1) {
+      splitRows.splice(nextDifferentRoleIndex + 1, 0, trailingHalf);
+      return splitRows;
+    }
+
+    splitRows.splice(previousDifferentRoleIndex, 0, trailingHalf);
+    return splitRows;
+  }
+
+  return null;
 }
 
 describe("scenario analysis", () => {
@@ -701,6 +766,121 @@ describe("scenario analysis", () => {
     );
   });
 
+  it("warns when duplicate single-entry floor roles keep visible-layer predictor matching parked", () => {
+    const scenario = evaluateScenario({
+      id: "duplicate-upper-fill-role",
+      name: "duplicate-upper-fill-role",
+      rows: [
+        { floorRole: "ceiling_board", id: "a", materialId: "gypsum_board", thicknessMm: "13" },
+        { floorRole: "ceiling_board", id: "b", materialId: "gypsum_board", thicknessMm: "13" },
+        { floorRole: "ceiling_fill", id: "c", materialId: "rockwool", thicknessMm: "100" },
+        { floorRole: "ceiling_cavity", id: "d", materialId: "resilient_stud_ceiling", thicknessMm: "25" },
+        { floorRole: "floor_covering", id: "e", materialId: "laminate_flooring", thicknessMm: "8" },
+        { floorRole: "resilient_layer", id: "f", materialId: "eps_underlay", thicknessMm: "3" },
+        { floorRole: "upper_fill", id: "g", materialId: "generic_fill", thicknessMm: "30" },
+        { floorRole: "upper_fill", id: "h", materialId: "bonded_chippings", thicknessMm: "20" },
+        { floorRole: "floating_screed", id: "i", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: "60" },
+        { floorRole: "base_structure", id: "j", materialId: "open_box_timber_slab", thicknessMm: "370" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+
+    expect(scenario.result).not.toBeNull();
+    expect(scenario.result?.floorSystemMatch).toBeNull();
+    expect(scenario.result?.floorSystemEstimate?.kind).not.toBe("family_archetype");
+    expect(scenario.result?.floorSystemEstimate?.fitPercent).toBe(54);
+    expect(scenario.result?.floorSystemEstimate?.notes.some((note: string) => /Archetype-level family matching was withheld/i.test(note))).toBe(
+      true
+    );
+    expect(
+      scenario.result?.floorSystemEstimate?.notes.some((note: string) =>
+        /Displayed fit was capped from 87.5% to 54%/i.test(note)
+      )
+    ).toBe(true);
+    expect(
+      scenario.warnings.some((warning) =>
+        /Visible-layer predictor matching is parked because single-entry floor roles are duplicated: upper fill x2/i.test(
+          warning
+        )
+      )
+    ).toBe(true);
+  });
+
+  it("keeps split same-material upper-fill schedules off the archetype lane", () => {
+    const scenario = evaluateScenario({
+      id: "split-same-upper-fill-role",
+      name: "split-same-upper-fill-role",
+      rows: [
+        { floorRole: "ceiling_board", id: "a", materialId: "gypsum_board", thicknessMm: "13" },
+        { floorRole: "ceiling_board", id: "b", materialId: "gypsum_board", thicknessMm: "13" },
+        { floorRole: "ceiling_fill", id: "c", materialId: "rockwool", thicknessMm: "100" },
+        { floorRole: "ceiling_cavity", id: "d", materialId: "resilient_stud_ceiling", thicknessMm: "25" },
+        { floorRole: "floor_covering", id: "e", materialId: "laminate_flooring", thicknessMm: "8" },
+        { floorRole: "upper_fill", id: "f", materialId: "generic_fill", thicknessMm: "30" },
+        { floorRole: "resilient_layer", id: "g", materialId: "eps_underlay", thicknessMm: "3" },
+        { floorRole: "upper_fill", id: "h", materialId: "generic_fill", thicknessMm: "20" },
+        { floorRole: "floating_screed", id: "i", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: "60" },
+        { floorRole: "base_structure", id: "j", materialId: "open_box_timber_slab", thicknessMm: "370" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+
+    expect(scenario.result).not.toBeNull();
+    expect(scenario.result?.floorSystemMatch).toBeNull();
+    expect(scenario.result?.floorSystemEstimate?.kind).toBe("family_general");
+    expect(scenario.result?.floorSystemEstimate?.fitPercent).toBe(54);
+    expect(
+      scenario.result?.floorSystemEstimate?.notes.some((note: string) =>
+        /single-entry roles are duplicated or split in the visible stack: upper fill x2 \(Generic Fill\)/i.test(note)
+      )
+    ).toBe(true);
+    expect(
+      scenario.warnings.some((warning) =>
+        /Visible-layer predictor matching is parked because single-entry floor roles are duplicated: upper fill x2 \(Generic Fill\)/i.test(
+          warning
+        )
+      )
+    ).toBe(true);
+  });
+
+  it("keeps split same-material resilient schedules off the curated exact lane", () => {
+    const scenario = evaluateScenario({
+      id: "split-same-resilient-role",
+      name: "split-same-resilient-role",
+      rows: [
+        { floorRole: "ceiling_board", id: "a", materialId: "gypsum_board", thicknessMm: "13" },
+        { floorRole: "ceiling_board", id: "b", materialId: "gypsum_board", thicknessMm: "13" },
+        { floorRole: "ceiling_fill", id: "c", materialId: "rockwool", thicknessMm: "100" },
+        { floorRole: "ceiling_cavity", id: "d", materialId: "resilient_stud_ceiling", thicknessMm: "25" },
+        { floorRole: "floor_covering", id: "e", materialId: "laminate_flooring", thicknessMm: "8" },
+        { floorRole: "resilient_layer", id: "f", materialId: "eps_underlay", thicknessMm: "1.5" },
+        { floorRole: "upper_fill", id: "g", materialId: "generic_fill", thicknessMm: "50" },
+        { floorRole: "resilient_layer", id: "h", materialId: "eps_underlay", thicknessMm: "1.5" },
+        { floorRole: "floating_screed", id: "i", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: "60" },
+        { floorRole: "base_structure", id: "j", materialId: "open_box_timber_slab", thicknessMm: "370" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+
+    expect(scenario.result).not.toBeNull();
+    expect(scenario.result?.floorSystemMatch).toBeNull();
+    expect(scenario.result?.floorSystemEstimate?.kind).toBe("family_general");
+    expect(scenario.result?.floorSystemEstimate?.fitPercent).toBe(54);
+    expect(
+      scenario.warnings.some((warning) =>
+        /Visible-layer predictor matching is parked because single-entry floor roles are duplicated: resilient layer x2 \(EPS Underlay\)/i.test(
+          warning
+        )
+      )
+    ).toBe(true);
+  });
+
   const publishedExactBenchmarks = [
     {
       presetId: "knauf_acoustic_mount_exact" as const,
@@ -765,6 +945,66 @@ describe("scenario analysis", () => {
       }
     });
   }
+
+  it("keeps published exact and bound presets off curated lanes when a single-entry role is split into a disjoint second schedule", () => {
+    const failures: string[] = [];
+    const presetIds: readonly PresetId[] = [
+      ...publishedExactBenchmarks.map((benchmark) => benchmark.presetId),
+      "ubiq_open_web_300_bound",
+      "ubiq_steel_200_unspecified_bound",
+      "ubiq_steel_300_unspecified_bound"
+    ];
+
+    for (const presetId of presetIds) {
+      const preset = getPresetById(presetId);
+      const baselineRows = preset.rows.map((row, index) => ({ ...row, id: `${preset.id}-${index + 1}` }));
+      const splitRows = buildDisjointSplitRows(baselineRows);
+      if (!splitRows) {
+        failures.push(`${presetId}: could not build a disjoint split regression row set`);
+        continue;
+      }
+
+      const baselineScenario = evaluateScenario({
+        id: preset.id,
+        name: preset.label,
+        rows: baselineRows,
+        source: "current",
+        studyMode: "floor",
+        targetOutputs: ["Rw", "Ln,w", "Ln,w+CI"]
+      });
+      const splitScenario = evaluateScenario({
+        id: `${preset.id}-split-regression`,
+        name: `${preset.label} split regression`,
+        rows: splitRows,
+        source: "current",
+        studyMode: "floor",
+        targetOutputs: ["Rw", "Ln,w", "Ln,w+CI"]
+      });
+
+      if (!baselineScenario.result || !splitScenario.result) {
+        failures.push(`${presetId}: expected both baseline and split scenarios to evaluate`);
+        continue;
+      }
+
+      if (!baselineScenario.result.floorSystemMatch && !baselineScenario.result.lowerBoundImpact) {
+        failures.push(`${presetId}: expected baseline preset to begin on an exact or bound lane`);
+      }
+
+      if (splitScenario.result.floorSystemMatch) {
+        failures.push(`${presetId}: disjoint split should not keep the curated exact lane live`);
+      }
+
+      if (splitScenario.result.boundFloorSystemMatch || splitScenario.result.boundFloorSystemEstimate || splitScenario.result.lowerBoundImpact) {
+        failures.push(`${presetId}: disjoint split should not keep the curated or published bound lane live`);
+      }
+
+      if (!splitScenario.warnings.some((warning) => /single-entry floor roles are duplicated/i.test(warning))) {
+        failures.push(`${presetId}: expected predictor blocker warning after disjoint split`);
+      }
+    }
+
+    expect(failures).toEqual([]);
+  });
 
   it("keeps the steel suspended sample on the low-confidence fallback lane with explicit warning copy", () => {
     const scenario = evaluatePresetScenario("steel_suspended_fallback");
@@ -868,6 +1108,50 @@ describe("scenario analysis", () => {
     expect(scenario.result?.lowerBoundImpact?.LnWUpperBound).toBe(53);
     expect(scenario.result?.floorSystemRatings?.Rw).toBe(62);
     expect(scenario.warnings.some((warning) => /support form was left unspecified/i.test(warning))).toBe(false);
+  });
+
+  it("withholds the converged 200 mm lightweight-steel bound lane when floor covering is duplicated into a disjoint second schedule", () => {
+    const preset = getPresetById("ubiq_steel_200_unspecified_bound");
+    const baseRows = preset.rows.map((row, index) => ({ ...row, id: `${preset.id}-${index + 1}` }));
+    const ambiguousRows = [
+      ...baseRows.slice(0, 5),
+      {
+        floorRole: "floor_covering" as const,
+        id: `${preset.id}-dup-cover`,
+        materialId: "engineered_timber_with_acoustic_underlay",
+        thicknessMm: "20"
+      },
+      baseRows[5]!
+    ];
+
+    const baselineScenario = evaluateScenario({
+      id: preset.id,
+      name: preset.label,
+      rows: baseRows,
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: ["Rw", "Ln,w", "Ln,w+CI"]
+    });
+    const ambiguousScenario = evaluateScenario({
+      id: `${preset.id}-duplicate-covering`,
+      name: `${preset.label} duplicate covering`,
+      rows: ambiguousRows,
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: ["Rw", "Ln,w", "Ln,w+CI"]
+    });
+
+    expect(baselineScenario.result?.lowerBoundImpact?.basis).toBe("predictor_lightweight_steel_bound_interpolation_estimate");
+    expect(ambiguousScenario.result?.lowerBoundImpact).toBeNull();
+    expect(ambiguousScenario.result?.boundFloorSystemEstimate).toBeNull();
+    expect(ambiguousScenario.result?.floorSystemEstimate?.kind).toBe("family_general");
+    expect(
+      ambiguousScenario.warnings.some((warning) =>
+        /Visible-layer predictor matching is parked because single-entry floor roles are duplicated: floor covering x2 \(Engineered Timber \+ Acoustic Underlay\)/i.test(
+          warning
+        )
+      )
+    ).toBe(true);
   });
 
   it("keeps the workspace live when a field-context number is invalid instead of crashing scenario evaluation", () => {

@@ -1,5 +1,5 @@
 import { spawn } from "node:child_process";
-import { access, cp, mkdir, rm, symlink } from "node:fs/promises";
+import { access, cp, mkdir, rm } from "node:fs/promises";
 import path from "node:path";
 
 const DEFAULT_PORT = "3010";
@@ -26,13 +26,9 @@ async function mirrorIntoStandalone(sourcePath: string, targetPath: string): Pro
     recursive: true
   });
 
-  try {
-    await symlink(sourcePath, targetPath, "junction");
-  } catch {
-    await cp(sourcePath, targetPath, {
-      recursive: true
-    });
-  }
+  await cp(sourcePath, targetPath, {
+    recursive: true
+  });
 }
 
 async function main() {

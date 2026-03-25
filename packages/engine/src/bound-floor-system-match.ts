@@ -10,6 +10,8 @@ import type {
 import { getImpactConfidenceForBasis } from "./impact-confidence";
 import {
   evaluateMatchedFloorSystem,
+  hasAmbiguousSingleEntryRoleTopology,
+  hasSplitSingleEntryRoleSchedules,
   THICKNESS_TOLERANCE_MM
 } from "./floor-system-evaluation";
 import {
@@ -74,6 +76,10 @@ export function resolveBoundFloorSystemById(id: string): FloorSystemBoundMatchRe
 }
 
 export function matchBoundFloorSystem(layers: readonly ResolvedLayer[]): FloorSystemBoundMatchResult | null {
+  if (hasSplitSingleEntryRoleSchedules(layers)) {
+    return null;
+  }
+
   const exactMatches = BOUND_FLOOR_SYSTEMS.map((system) => evaluateMatchedFloorSystem(layers, system))
     .filter((evaluation) => evaluation.exact)
     .sort((left, right) => right.score - left.score);
@@ -85,6 +91,10 @@ export function matchBoundFloorSystem(layers: readonly ResolvedLayer[]): FloorSy
 export function deriveBoundFloorSystemEstimate(
   layers: readonly ResolvedLayer[]
 ): FloorSystemBoundEstimateResult | null {
+  if (hasAmbiguousSingleEntryRoleTopology(layers)) {
+    return null;
+  }
+
   return (
     deriveSpecificLightweightSteelBoundEstimate(layers) ??
     deriveMissingSupportFormLightweightSteelBoundEstimate(layers)

@@ -10,6 +10,10 @@ import { describe, expect, it } from "vitest";
 
 import { calculateAssembly } from "./calculate-assembly";
 import { deriveImpactGuideMetrics } from "./impact-guide";
+import {
+  getVisibleLayerPredictorBlockerWarning,
+  maybeBuildImpactPredictorInputFromLayerStack
+} from "./impact-predictor-input";
 
 const MATCH_ROLE_ENTRIES: Array<[FloorRole, keyof FloorSystemMatchCriteria]> = [
   ["ceiling_board", "ceilingBoard"],
@@ -23,6 +27,15 @@ const MATCH_ROLE_ENTRIES: Array<[FloorRole, keyof FloorSystemMatchCriteria]> = [
 ];
 const MERGE_SAFE_PACKED_ROLES = new Set<FloorRole>([
   "base_structure",
+  "ceiling_fill",
+  "floating_screed",
+  "floor_covering",
+  "resilient_layer",
+  "upper_fill"
+]);
+const SINGLE_ENTRY_SCHEDULE_ROLES = new Set<FloorRole>([
+  "base_structure",
+  "ceiling_cavity",
   "ceiling_fill",
   "floating_screed",
   "floor_covering",
@@ -202,6 +215,66 @@ function buildHighSplitLayersFromCriteria(
   return layers;
 }
 
+function buildDisjointSplitLayersFromCriteria(
+  match: FloorSystemMatchCriteria,
+  roleToSplit: FloorRole
+): LayerInput[] | null {
+  if (!SINGLE_ENTRY_SCHEDULE_ROLES.has(roleToSplit)) {
+    return null;
+  }
+
+  const layers = buildLayersFromCriteria(match);
+  const roleIndices = layers.flatMap((layer, index) => (layer.floorRole === roleToSplit ? [index] : []));
+
+  if (roleIndices.length !== 1) {
+    return null;
+  }
+
+  const roleIndex = roleIndices[0]!;
+  const originalLayer = layers[roleIndex]!;
+  const firstHalfThicknessMm = Math.round((originalLayer.thicknessMm / 2) * 1000) / 1000;
+  const secondHalfThicknessMm = Math.round((originalLayer.thicknessMm - firstHalfThicknessMm) * 1000) / 1000;
+
+  if (!(firstHalfThicknessMm > 0 && secondHalfThicknessMm > 0)) {
+    return null;
+  }
+
+  const nextDifferentRoleIndex = layers.findIndex((layer, index) => index > roleIndex && layer.floorRole !== roleToSplit);
+  let previousDifferentRoleIndex = -1;
+
+  for (let index = roleIndex - 1; index >= 0; index -= 1) {
+    if (layers[index]?.floorRole !== roleToSplit) {
+      previousDifferentRoleIndex = index;
+      break;
+    }
+  }
+
+  if (nextDifferentRoleIndex === -1 && previousDifferentRoleIndex === -1) {
+    return null;
+  }
+
+  const splitLayers = layers.map((layer, index) =>
+    index === roleIndex
+      ? {
+          ...layer,
+          thicknessMm: firstHalfThicknessMm
+        }
+      : layer
+  );
+  const trailingHalf: LayerInput = {
+    ...originalLayer,
+    thicknessMm: secondHalfThicknessMm
+  };
+
+  if (nextDifferentRoleIndex !== -1) {
+    splitLayers.splice(nextDifferentRoleIndex + 1, 0, trailingHalf);
+    return splitLayers;
+  }
+
+  splitLayers.splice(previousDifferentRoleIndex, 0, trailingHalf);
+  return splitLayers;
+}
+
 function buildExactSystemResult(system: ExactFloorSystem, options?: Parameters<typeof calculateAssembly>[1]) {
   if (system.manualMatch === false) {
     return calculateAssembly([], {
@@ -256,6 +329,62 @@ describe("curated floor-library sweep", () => {
 
       if (result.impact?.LnW !== system.impactRatings.LnW) {
         failures.push(`${system.id}: expected Ln,w ${system.impactRatings.LnW}, got ${result.impact?.LnW ?? "none"}`);
+      }
+    }
+
+    expect(failures).toEqual([]);
+  });
+
+  it("disjoint split schedules do not sneak back into the curated exact floor-system lane", () => {
+    const failures: string[] = [];
+
+    for (const system of EXACT_FLOOR_SYSTEMS.filter((entry) => entry.manualMatch !== false)) {
+      for (const [role, key] of MATCH_ROLE_ENTRIES) {
+        const criteria = system.match[key] as FloorSystemRoleCriteria | undefined;
+        if (!criteria || !SINGLE_ENTRY_SCHEDULE_ROLES.has(role)) {
+          continue;
+        }
+
+        const disjointSplitLayers = buildDisjointSplitLayersFromCriteria(system.match, role);
+        if (!disjointSplitLayers) {
+          continue;
+        }
+
+        const result = calculateAssembly(disjointSplitLayers);
+        if (result.floorSystemMatch?.system.id) {
+          failures.push(`${system.id} role ${role}: expected no exact match after disjoint split, got ${result.floorSystemMatch.system.id}`);
+        }
+      }
+    }
+
+    expect(failures).toEqual([]);
+  });
+
+  it("disjoint split schedules keep auto predictor derivation fail-closed across curated floor-library rows", () => {
+    const failures: string[] = [];
+
+    for (const system of [...EXACT_FLOOR_SYSTEMS.filter((entry) => entry.manualMatch !== false), ...BOUND_FLOOR_SYSTEMS]) {
+      for (const [role, key] of MATCH_ROLE_ENTRIES) {
+        const criteria = system.match[key] as FloorSystemRoleCriteria | undefined;
+        if (!criteria || !SINGLE_ENTRY_SCHEDULE_ROLES.has(role)) {
+          continue;
+        }
+
+        const disjointSplitLayers = buildDisjointSplitLayersFromCriteria(system.match, role);
+        if (!disjointSplitLayers) {
+          continue;
+        }
+
+        const predictorInput = maybeBuildImpactPredictorInputFromLayerStack(disjointSplitLayers);
+        const blockerWarning = getVisibleLayerPredictorBlockerWarning(disjointSplitLayers);
+
+        if (predictorInput) {
+          failures.push(`${system.id} role ${role}: expected predictor derivation to stay fail-closed after disjoint split`);
+        }
+
+        if (!blockerWarning || !/single-entry floor roles are duplicated/i.test(blockerWarning)) {
+          failures.push(`${system.id} role ${role}: expected predictor blocker warning after disjoint split`);
+        }
       }
     }
 
@@ -416,6 +545,33 @@ describe("curated floor-library sweep", () => {
         failures.push(
           `${system.id}: expected Ln,w upper bound ${system.impactBounds.LnWUpperBound}, got ${result.lowerBoundImpact?.LnWUpperBound ?? "none"}`
         );
+      }
+    }
+
+    expect(failures).toEqual([]);
+  });
+
+  it("disjoint split schedules do not sneak back into the curated bound-only floor-system lane", () => {
+    const failures: string[] = [];
+
+    for (const system of BOUND_FLOOR_SYSTEMS) {
+      for (const [role, key] of MATCH_ROLE_ENTRIES) {
+        const criteria = system.match[key] as FloorSystemRoleCriteria | undefined;
+        if (!criteria || !SINGLE_ENTRY_SCHEDULE_ROLES.has(role)) {
+          continue;
+        }
+
+        const disjointSplitLayers = buildDisjointSplitLayersFromCriteria(system.match, role);
+        if (!disjointSplitLayers) {
+          continue;
+        }
+
+        const result = calculateAssembly(disjointSplitLayers);
+        if (result.boundFloorSystemMatch?.system.id) {
+          failures.push(
+            `${system.id} role ${role}: expected no bound-only exact match after disjoint split, got ${result.boundFloorSystemMatch.system.id}`
+          );
+        }
       }
     }
 

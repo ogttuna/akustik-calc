@@ -31,6 +31,12 @@ type BuildImpactPredictorAssemblyMeta = {
   contextMode?: string;
 };
 
+type PredictorRoleConflict = {
+  count: number;
+  materialLabels: string[];
+  role: NonNullable<LayerInput["floorRole"]>;
+};
+
 type ResolvedLayerStackEntry = LayerInput & {
   material: MaterialDefinition;
 };
@@ -983,6 +989,56 @@ function hasAmbiguousPredictorRoleTopology(layers: readonly ResolvedLayerStackEn
   );
 }
 
+function collectPredictorRoleConflicts(
+  layers: readonly ResolvedLayerStackEntry[]
+): PredictorRoleConflict[] {
+  const conflicts: PredictorRoleConflict[] = [];
+
+  for (const role of SINGLE_ENTRY_PREDICTOR_ROLES) {
+    const roleLayers = layersForRole(layers, role);
+    if (roleLayers.length <= 1) {
+      continue;
+    }
+
+    conflicts.push({
+      count: roleLayers.length,
+      materialLabels: Array.from(new Set(roleLayers.map((layer) => layer.material.name))),
+      role
+    });
+  }
+
+  const ceilingBoards = layersForRole(layers, "ceiling_board");
+  const firstCeilingBoard = ceilingBoards[0];
+  const hasConflictingCeilingBoardSchedule =
+    Boolean(firstCeilingBoard) &&
+    ceilingBoards.length > 1 &&
+    ceilingBoards.some(
+      (layer) =>
+        layer.material.id !== firstCeilingBoard.material.id || layer.thicknessMm !== firstCeilingBoard.thicknessMm
+    );
+
+  if (hasConflictingCeilingBoardSchedule) {
+    conflicts.push({
+      count: ceilingBoards.length,
+      materialLabels: Array.from(new Set(ceilingBoards.map((layer) => layer.material.name))),
+      role: "ceiling_board"
+    });
+  }
+
+  return conflicts;
+}
+
+function formatPredictorRoleLabel(role: NonNullable<LayerInput["floorRole"]>): string {
+  return role.replaceAll("_", " ");
+}
+
+function formatPredictorRoleConflict(conflict: PredictorRoleConflict): string {
+  const materialsLabel =
+    conflict.materialLabels.length > 0 ? ` (${conflict.materialLabels.join(", ")})` : "";
+
+  return `${formatPredictorRoleLabel(conflict.role)} x${conflict.count}${materialsLabel}`;
+}
+
 function resolveFloorCoveringMaterialClass(input: {
   floorCoveringLayer?: ResolvedLayerStackEntry;
   resilientLayer?: ResolvedLayerStackEntry;
@@ -1376,6 +1432,27 @@ export function maybeBuildImpactPredictorInputFromLayerStack(
   }
 
   return predictorInput;
+}
+
+export function getVisibleLayerPredictorBlockerWarning(
+  rawLayers: readonly BuildImpactPredictorLayerInput[],
+  catalog: readonly MaterialDefinition[] = getDefaultMaterialCatalog()
+): string | null {
+  if (!hasPotentialFloorRoleInferenceEvidence(rawLayers)) {
+    return null;
+  }
+
+  const normalizedLayers = normalizeImpactPredictorLayerStack(rawLayers, catalog);
+  if (!normalizedLayers.some((layer) => layer.floorRole === "base_structure")) {
+    return null;
+  }
+
+  const conflicts = collectPredictorRoleConflicts(normalizedLayers);
+  if (conflicts.length === 0) {
+    return null;
+  }
+
+  return `Visible-layer predictor matching is parked because single-entry floor roles are duplicated: ${conflicts.map(formatPredictorRoleConflict).join("; ")}. DynEcho stayed on the broader layer-scoring lane instead of collapsing that topology into a false family/exact match.`;
 }
 
 function createPredictorCustomLayerMaterial(input: {

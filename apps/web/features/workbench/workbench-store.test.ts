@@ -3,6 +3,24 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const FLOOR_TARGET_OUTPUTS: readonly RequestedOutputId[] = ["Rw", "Ln,w", "Ln,w+CI", "DeltaLw", "L'n,w", "L'nT,w"];
 const WALL_TARGET_OUTPUTS: readonly RequestedOutputId[] = ["Rw", "STC", "C", "Ctr", "R'w", "Dn,w", "DnT,w"];
+const SINGLE_ENTRY_ROLE_SPLIT_PREFERENCE = [
+  "floor_covering",
+  "resilient_layer",
+  "upper_fill",
+  "floating_screed",
+  "ceiling_cavity",
+  "ceiling_fill",
+  "base_structure"
+] as const;
+const PUBLISHED_FLOOR_AMBIGUITY_PRESET_IDS = [
+  "knauf_acoustic_mount_exact",
+  "dataholz_dry_floor_exact",
+  "hollow_core_vinyl_exact",
+  "knauf_concrete_exact",
+  "ubiq_open_web_300_bound",
+  "ubiq_steel_200_unspecified_bound",
+  "ubiq_steel_300_unspecified_bound"
+] as const;
 
 const EDIT_PATH_PARITY_CASES = [
   {
@@ -163,6 +181,31 @@ function moveCurrentRowToIndex(useWorkbenchStore: {
 
     useWorkbenchStore.getState().moveRow(rowId, currentIndex > targetIndex ? "up" : "down");
   }
+}
+
+function resolveSingleEntrySplitCandidate(
+  rows: Array<{ floorRole?: string; id: string; materialId: string; thicknessMm: string }>
+) {
+  for (const role of SINGLE_ENTRY_ROLE_SPLIT_PREFERENCE) {
+    const roleIndices = rows.flatMap((row, index) => (row.floorRole === role ? [index] : []));
+    if (roleIndices.length !== 1) {
+      continue;
+    }
+
+    const index = roleIndices[0]!;
+    const nextDifferentRoleIndex = rows.findIndex((row, rowIndex) => rowIndex > index && row.floorRole !== role);
+    if (nextDifferentRoleIndex === -1) {
+      continue;
+    }
+
+    return {
+      nextDifferentRoleIndex,
+      role,
+      row: rows[index]!
+    };
+  }
+
+  return null;
 }
 
 describe("workbench store", () => {
@@ -814,6 +857,193 @@ describe("workbench store", () => {
         warnings: directScenario.warnings
       })
     );
+  });
+
+  it("keeps duplicated floor-covering edit-and-move flows off the converged lightweight-steel bound lane", async () => {
+    const { evaluateScenario } = await import("./scenario-analysis");
+    const { useWorkbenchStore } = await import("./workbench-store");
+
+    const evaluateCurrentScenario = () => {
+      const state = useWorkbenchStore.getState();
+
+      return evaluateScenario({
+        id: "current",
+        name: "duplicate floor covering regression",
+        rows: state.rows,
+        source: "current",
+        studyMode: state.studyMode,
+        targetOutputs: FLOOR_TARGET_OUTPUTS
+      });
+    };
+
+    useWorkbenchStore.getState().reset();
+    useWorkbenchStore.getState().loadPreset("ubiq_steel_200_unspecified_bound");
+
+    const baselineScenario = evaluateCurrentScenario();
+    expect(baselineScenario.result?.lowerBoundImpact?.basis).toBe("predictor_lightweight_steel_bound_interpolation_estimate");
+
+    useWorkbenchStore.getState().addRow();
+    const duplicateRowId = useWorkbenchStore.getState().rows.at(-1)?.id;
+    expect(duplicateRowId).toBeTruthy();
+
+    useWorkbenchStore.getState().updateMaterial(duplicateRowId!, "engineered_timber_with_acoustic_underlay");
+    useWorkbenchStore.getState().updateFloorRole(duplicateRowId!, "floor_covering");
+    useWorkbenchStore.getState().updateThickness(duplicateRowId!, "20");
+    useWorkbenchStore.getState().moveRow(duplicateRowId!, "up");
+
+    const ambiguousScenario = evaluateCurrentScenario();
+    expect(ambiguousScenario.result).not.toBeNull();
+    expect(ambiguousScenario.result?.lowerBoundImpact).toBeNull();
+    expect(ambiguousScenario.result?.boundFloorSystemEstimate).toBeNull();
+    expect(ambiguousScenario.result?.floorSystemEstimate?.kind).toBe("family_general");
+    expect(
+      ambiguousScenario.warnings.some((warning) =>
+        /Visible-layer predictor matching is parked because single-entry floor roles are duplicated: floor covering x2 \(Engineered Timber \+ Acoustic Underlay\)/i.test(
+          warning
+        )
+      )
+    ).toBe(true);
+  });
+
+  it("keeps duplicated floor-covering edit-and-move flows off the curated exact lane", async () => {
+    const { evaluateScenario } = await import("./scenario-analysis");
+    const { useWorkbenchStore } = await import("./workbench-store");
+
+    const evaluateCurrentScenario = () => {
+      const state = useWorkbenchStore.getState();
+
+      return evaluateScenario({
+        id: "current",
+        name: "duplicate floor covering exact regression",
+        rows: state.rows,
+        source: "current",
+        studyMode: state.studyMode,
+        targetOutputs: FLOOR_TARGET_OUTPUTS
+      });
+    };
+
+    useWorkbenchStore.getState().reset();
+    useWorkbenchStore.getState().loadPreset("knauf_concrete_exact");
+
+    const baselineScenario = evaluateCurrentScenario();
+    expect(baselineScenario.result?.floorSystemMatch?.system.id).toBe("knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026");
+
+    useWorkbenchStore.getState().addRow();
+    const duplicateRowId = useWorkbenchStore.getState().rows.at(-1)?.id;
+    expect(duplicateRowId).toBeTruthy();
+
+    useWorkbenchStore.getState().updateMaterial(duplicateRowId!, "engineered_timber_with_acoustic_underlay");
+    useWorkbenchStore.getState().updateFloorRole(duplicateRowId!, "floor_covering");
+    useWorkbenchStore.getState().updateThickness(duplicateRowId!, "20");
+
+    for (let step = 0; step < 3; step += 1) {
+      useWorkbenchStore.getState().moveRow(duplicateRowId!, "up");
+    }
+
+    const ambiguousScenario = evaluateCurrentScenario();
+    expect(ambiguousScenario.result).not.toBeNull();
+    expect(ambiguousScenario.result?.floorSystemMatch).toBeNull();
+    expect(ambiguousScenario.result?.lowerBoundImpact).toBeNull();
+    expect(
+      ambiguousScenario.warnings.some((warning) =>
+        /Visible-layer predictor matching is parked because single-entry floor roles are duplicated: floor covering x2 \(Engineered Timber \+ Acoustic Underlay\)/i.test(
+          warning
+        )
+      )
+    ).toBe(true);
+  });
+
+  it("keeps published exact and bound presets off curated lanes when a single-entry role is split and moved through the store", async () => {
+    const { evaluateScenario } = await import("./scenario-analysis");
+    const { useWorkbenchStore } = await import("./workbench-store");
+
+    const evaluateCurrentScenario = () => {
+      const state = useWorkbenchStore.getState();
+
+      return evaluateScenario({
+        id: "current",
+        name: "preset ambiguity store regression",
+        rows: state.rows,
+        source: "current",
+        studyMode: state.studyMode,
+        targetOutputs: FLOOR_TARGET_OUTPUTS
+      });
+    };
+
+    const failures: string[] = [];
+
+    for (const presetId of PUBLISHED_FLOOR_AMBIGUITY_PRESET_IDS) {
+      useWorkbenchStore.getState().reset();
+      useWorkbenchStore.getState().loadPreset(presetId);
+
+      const baselineScenario = evaluateCurrentScenario();
+      if (!(baselineScenario.result?.floorSystemMatch || baselineScenario.result?.lowerBoundImpact)) {
+        failures.push(`${presetId}: baseline preset should start on an exact or bound lane`);
+        continue;
+      }
+
+      const candidate = resolveSingleEntrySplitCandidate(useWorkbenchStore.getState().rows);
+      if (!candidate) {
+        failures.push(`${presetId}: could not resolve a single-entry split candidate`);
+        continue;
+      }
+
+      const baseThickness = Number.parseFloat(candidate.row.thicknessMm);
+      if (!(Number.isFinite(baseThickness) && baseThickness > 0)) {
+        failures.push(`${presetId}: candidate thickness is not numeric`);
+        continue;
+      }
+
+      useWorkbenchStore.getState().duplicateRow(candidate.row.id);
+
+      const rowsAfterDuplicate = useWorkbenchStore.getState().rows;
+      const originalIndex = rowsAfterDuplicate.findIndex((row) => row.id === candidate.row.id);
+      const duplicateRowId = rowsAfterDuplicate[originalIndex + 1]?.id;
+      if (!(originalIndex >= 0 && duplicateRowId)) {
+        failures.push(`${presetId}: duplicate row was not inserted next to the source row`);
+        continue;
+      }
+
+      const firstHalf = Number((baseThickness / 2).toFixed(3));
+      const secondHalf = Number((baseThickness - firstHalf).toFixed(3));
+      useWorkbenchStore.getState().updateThickness(candidate.row.id, formatThicknessMm(firstHalf));
+      useWorkbenchStore.getState().updateThickness(duplicateRowId, formatThicknessMm(secondHalf));
+
+      const updatedRows = useWorkbenchStore.getState().rows;
+      const nextDifferentRoleIndex = updatedRows.findIndex(
+        (row, index) => index > originalIndex + 1 && row.floorRole !== candidate.role
+      );
+      if (nextDifferentRoleIndex === -1) {
+        failures.push(`${presetId}: could not create a disjoint moved split for role ${candidate.role}`);
+        continue;
+      }
+
+      moveCurrentRowToIndex(useWorkbenchStore, duplicateRowId, nextDifferentRoleIndex);
+
+      const ambiguousScenario = evaluateCurrentScenario();
+      if (!ambiguousScenario.result) {
+        failures.push(`${presetId}: split-and-move scenario should still evaluate`);
+        continue;
+      }
+
+      if (ambiguousScenario.result.floorSystemMatch) {
+        failures.push(`${presetId}: split-and-move scenario should not keep the curated exact lane live`);
+      }
+
+      if (
+        ambiguousScenario.result.boundFloorSystemMatch ||
+        ambiguousScenario.result.boundFloorSystemEstimate ||
+        ambiguousScenario.result.lowerBoundImpact
+      ) {
+        failures.push(`${presetId}: split-and-move scenario should not keep the curated or published bound lane live`);
+      }
+
+      if (!ambiguousScenario.warnings.some((warning) => /single-entry floor roles are duplicated/i.test(warning))) {
+        failures.push(`${presetId}: split-and-move scenario should emit the predictor blocker warning`);
+      }
+    }
+
+    expect(failures).toEqual([]);
   });
 
   it("keeps the same heavy-floor result when override rows detour through other materials before the final stack is restored", async () => {

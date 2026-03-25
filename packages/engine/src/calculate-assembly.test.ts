@@ -3979,6 +3979,25 @@ describe("calculateAssembly", () => {
     expect(result.boundFloorSystemEstimate?.airborneRatings.RwCtr).toBe(57);
   });
 
+  it("withholds lightweight-steel bound interpolation when single-entry roles are duplicated in the visible stack", () => {
+    const result = calculateAssembly([
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+      { floorRole: "ceiling_cavity", materialId: "ubiq_resilient_ceiling", thicknessMm: 65 },
+      { floorRole: "floor_covering", materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: 20 },
+      { floorRole: "floating_screed", materialId: "inex_floor_panel", thicknessMm: 19 },
+      { floorRole: "base_structure", materialId: "steel_joist_floor", thicknessMm: 250 },
+      { floorRole: "floor_covering", materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: 20 }
+    ]);
+
+    expect(result.boundFloorSystemMatch).toBeNull();
+    expect(result.boundFloorSystemEstimate).toBeNull();
+    expect(result.lowerBoundImpact).toBeNull();
+    expect(
+      result.warnings.some((warning: string) => /single-entry floor roles are duplicated: floor covering x2/i.test(warning))
+    ).toBe(true);
+  });
+
   it("keeps lightweight-steel support-form ambiguity on a conservative crossover bound lane", () => {
     const result = calculateAssembly([
       { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
@@ -4674,6 +4693,115 @@ describe("calculateAssembly", () => {
     expect(result.floorSystemEstimate?.airborneRatings.Rw).toBe(75);
     expect(result.floorSystemEstimate?.airborneRatings.RwCtr).toBe(66.84359068531064);
     expect(result.floorSystemEstimate?.impact.estimateCandidateIds).toEqual(["tuas_r5b_open_box_timber_measured_2026"]);
+  });
+
+  it("caps displayed family fit when mixed single-entry roles keep the open-box dry-floor topology ambiguous", () => {
+    const result = calculateAssembly([
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+      { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: 25 },
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: 30 },
+      { floorRole: "upper_fill", materialId: "bonded_chippings", thicknessMm: 20 },
+      { floorRole: "floating_screed", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 60 },
+      { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
+    ]);
+
+    expect(result.floorSystemMatch).toBeNull();
+    expect(result.floorSystemEstimate?.kind).toBe("family_general");
+    expect(result.floorSystemEstimate?.fitPercent).toBe(54);
+    expect(result.floorSystemEstimate?.notes.some((note: string) => /Archetype-level family matching was withheld/i.test(note))).toBe(
+      true
+    );
+    expect(result.floorSystemEstimate?.notes.some((note: string) => /Displayed fit was capped from 87.5% to 54%/i.test(note))).toBe(
+      true
+    );
+    expect(
+      result.warnings.some((warning: string) =>
+        /Visible-layer predictor matching is parked because single-entry floor roles are duplicated: upper fill x2/i.test(
+          warning
+        )
+      )
+    ).toBe(true);
+  });
+
+  it("withholds the open-box archetype lane when upper fill is split into multiple same-material schedules", () => {
+    const result = calculateAssembly([
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+      { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: 25 },
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: 30 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: 20 },
+      { floorRole: "floating_screed", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 60 },
+      { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
+    ]);
+
+    expect(result.floorSystemMatch).toBeNull();
+    expect(result.floorSystemEstimate?.kind).toBe("family_general");
+    expect(result.floorSystemEstimate?.fitPercent).toBe(54);
+    expect(
+      result.floorSystemEstimate?.notes.some((note: string) =>
+        /single-entry roles are duplicated or split in the visible stack: upper fill x2 \(Generic Fill\)/i.test(note)
+      )
+    ).toBe(true);
+    expect(
+      result.warnings.some((warning: string) =>
+        /Visible-layer predictor matching is parked because single-entry floor roles are duplicated: upper fill x2 \(Generic Fill\)/i.test(
+          warning
+        )
+      )
+    ).toBe(true);
+  });
+
+  it("refuses curated exact matching when resilient layer is split across disjoint same-material schedules", () => {
+    const result = calculateAssembly([
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+      { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: 25 },
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 1.5 },
+      { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: 50 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 1.5 },
+      { floorRole: "floating_screed", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 60 },
+      { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
+    ]);
+
+    expect(result.floorSystemMatch).toBeNull();
+    expect(result.floorSystemEstimate?.kind).toBe("family_general");
+    expect(result.floorSystemEstimate?.fitPercent).toBe(54);
+    expect(
+      result.warnings.some((warning: string) =>
+        /Visible-layer predictor matching is parked because single-entry floor roles are duplicated: resilient layer x2 \(EPS Underlay\)/i.test(
+          warning
+        )
+      )
+    ).toBe(true);
+  });
+
+  it("still allows exact matching when a single-entry role is only split contiguously into the same material package", () => {
+    const result = calculateAssembly([
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+      { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: 25 },
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 1.5 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 1.5 },
+      { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: 50 },
+      { floorRole: "floating_screed", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 60 },
+      { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
+    ]);
+
+    expect(result.floorSystemMatch?.system.id).toBe("tuas_r5b_open_box_timber_measured_2026");
+    expect(
+      result.warnings.some((warning: string) => /Visible-layer predictor matching is parked because single-entry floor roles are duplicated/i.test(warning))
+    ).toBe(false);
   });
 
   it("keeps generic steel-joist ceiling-only stacks on a non-empty lightweight-steel family path", () => {

@@ -19,6 +19,15 @@ export const ROLE_LABELS: Record<FloorRole, string> = {
   resilient_layer: "resilient layer",
   upper_fill: "upper fill"
 };
+const SINGLE_ENTRY_SCHEDULE_ROLES = new Set<FloorRole>([
+  "base_structure",
+  "ceiling_cavity",
+  "ceiling_fill",
+  "floating_screed",
+  "floor_covering",
+  "resilient_layer",
+  "upper_fill"
+]);
 
 export type EvaluatedMatchedFloorSystem<TSystem extends ExactFloorSystem | BoundFloorSystem> = {
   exact: boolean;
@@ -30,6 +39,60 @@ export type EvaluatedMatchedFloorSystem<TSystem extends ExactFloorSystem | Bound
 
 function layersForRole(layers: readonly ResolvedLayer[], role: FloorRole): ResolvedLayer[] {
   return layers.filter((layer) => layer.floorRole === role);
+}
+
+function countRoleScheduleSegments(
+  layers: readonly ResolvedLayer[],
+  role: FloorRole
+): number {
+  let segments = 0;
+  let insideRoleSegment = false;
+
+  for (const layer of layers) {
+    const isRoleLayer = layer.floorRole === role;
+
+    if (isRoleLayer && !insideRoleSegment) {
+      segments += 1;
+    }
+
+    insideRoleSegment = isRoleLayer;
+  }
+
+  return segments;
+}
+
+export function hasAmbiguousSingleEntryRoleTopology(
+  layers: readonly ResolvedLayer[]
+): boolean {
+  for (const role of SINGLE_ENTRY_SCHEDULE_ROLES) {
+    if (layersForRole(layers, role).length > 1) {
+      return true;
+    }
+  }
+
+  const ceilingBoards = layersForRole(layers, "ceiling_board");
+  const firstCeilingBoard = ceilingBoards[0];
+
+  if (!firstCeilingBoard || ceilingBoards.length <= 1) {
+    return false;
+  }
+
+  return ceilingBoards.some(
+    (layer) =>
+      layer.material.id !== firstCeilingBoard.material.id || layer.thicknessMm !== firstCeilingBoard.thicknessMm
+  );
+}
+
+export function hasSplitSingleEntryRoleSchedules(
+  layers: readonly ResolvedLayer[]
+): boolean {
+  for (const role of SINGLE_ENTRY_SCHEDULE_ROLES) {
+    if (countRoleScheduleSegments(layers, role) > 1) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 function thicknessMatches(actual: number, expected: number): boolean {

@@ -43,6 +43,7 @@ import { estimateImpactFromLayers } from "./impact-estimate";
 import { buildImpactPredictorStatus } from "./impact-predictor-status";
 import {
   adaptImpactPredictorInput,
+  getVisibleLayerPredictorBlockerWarning,
   maybeInferFloorRoleLayerStack,
   maybeBuildImpactPredictorInputFromLayerStack,
   mergePredictorCatalog
@@ -934,6 +935,14 @@ export function calculateAssembly(
     typeof predictorInput.floorCovering.deltaLwDb === "number"
       ? deriveHeavyReferenceImpactFromDeltaLw(predictorInput.floorCovering.deltaLwDb)
       : null;
+  const visibleLayerPredictorBlockerWarning =
+    !explicitPredictorInput &&
+    !exactImpact &&
+    !directFloorSystemMatch &&
+    !directBoundFloorSystemMatch &&
+    !directImpactCatalogMatch
+      ? getVisibleLayerPredictorBlockerWarning(layers, catalog)
+      : null;
 
   if (explicitDeltaImpact) {
     narrowImpact = null;
@@ -1165,6 +1174,8 @@ export function calculateAssembly(
     warnings.push(
       "Impact predictor topology was derived from visible floor-role layers, so curated family and predictor lanes can activate without a hidden selector."
     );
+  } else if (visibleLayerPredictorBlockerWarning) {
+    warnings.push(visibleLayerPredictorBlockerWarning);
   }
 
   if (exactImpact) {

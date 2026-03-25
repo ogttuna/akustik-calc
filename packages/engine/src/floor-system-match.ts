@@ -16,6 +16,7 @@ import { getImpactConfidenceForBasis } from "./impact-confidence";
 import { buildUniformImpactMetricBasis } from "./impact-metric-basis";
 import {
   evaluateMatchedFloorSystem,
+  hasSplitSingleEntryRoleSchedules,
   fitPercentFromEvaluation,
   THICKNESS_TOLERANCE_MM
 } from "./floor-system-evaluation";
@@ -165,6 +166,10 @@ function toRecommendation(
 }
 
 export function matchExactFloorSystem(layers: readonly ResolvedLayer[]): FloorSystemMatchResult | null {
+  if (hasSplitSingleEntryRoleSchedules(layers)) {
+    return null;
+  }
+
   const exactMatches = EXACT_FLOOR_SYSTEMS.filter(canManualExactMatch)
     .map((system) => evaluateMatchedFloorSystem(layers, system))
     .filter((evaluation) => evaluation.exact)

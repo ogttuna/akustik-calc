@@ -27,9 +27,24 @@ type StructuralFamily =
   | "unknown";
 
 type FloorProfile = "bare" | "combined" | "heavy_floating" | "lower_only" | "upper_only";
+type AmbiguousSingleEntryRole = Exclude<FloorRole, "ceiling_board">;
+type AmbiguousSingleEntryRoleConflict = {
+  count: number;
+  materialLabels: string[];
+  role: AmbiguousSingleEntryRole;
+};
 
 const UPPER_ROLES: FloorRole[] = ["floating_screed", "floor_covering", "resilient_layer", "upper_fill"];
 const LOWER_ROLES: FloorRole[] = ["ceiling_board", "ceiling_cavity", "ceiling_fill"];
+const SINGLE_ENTRY_ESTIMATE_ROLES: readonly AmbiguousSingleEntryRole[] = [
+  "base_structure",
+  "ceiling_cavity",
+  "ceiling_fill",
+  "floating_screed",
+  "floor_covering",
+  "resilient_layer",
+  "upper_fill"
+];
 
 function structuralFamilyFromMaterialIds(materialIds: readonly string[]): StructuralFamily {
   if (
@@ -126,6 +141,67 @@ function getLayerProfile(layers: readonly ResolvedLayer[]): FloorProfile {
   return getProfile(hasUpper, hasLower, hasFloatingScreed);
 }
 
+function collectAmbiguousSingleEntryRoleConflicts(
+  layers: readonly ResolvedLayer[]
+): AmbiguousSingleEntryRoleConflict[] {
+  const conflicts: AmbiguousSingleEntryRoleConflict[] = [];
+
+  for (const role of SINGLE_ENTRY_ESTIMATE_ROLES) {
+    const roleLayers = layers.filter((layer) => layer.floorRole === role);
+    if (roleLayers.length <= 1) {
+      continue;
+    }
+
+    const distinctMaterialIds = new Set(roleLayers.map((layer) => layer.material.id));
+    let scheduleSegments = 0;
+    let insideRoleSegment = false;
+
+    for (const layer of layers) {
+      const isRoleLayer = layer.floorRole === role;
+
+      if (isRoleLayer && !insideRoleSegment) {
+        scheduleSegments += 1;
+      }
+
+      insideRoleSegment = isRoleLayer;
+    }
+
+    if (distinctMaterialIds.size <= 1 && scheduleSegments <= 1) {
+      continue;
+    }
+
+    conflicts.push({
+      count: roleLayers.length,
+      materialLabels: Array.from(new Set(roleLayers.map((layer) => layer.material.name))),
+      role
+    });
+  }
+
+  return conflicts;
+}
+
+function formatAmbiguousSingleEntryRoleConflict(
+  conflict: AmbiguousSingleEntryRoleConflict
+): string {
+  const materialsLabel = conflict.materialLabels.length > 0 ? ` (${conflict.materialLabels.join(", ")})` : "";
+
+  return `${conflict.role.replaceAll("_", " ")} x${conflict.count}${materialsLabel}`;
+}
+
+function capFitPercentForEstimateTier(
+  fitPercent: number,
+  kind: FloorSystemEstimateKind
+): number {
+  switch (kind) {
+    case "family_archetype":
+      return fitPercent;
+    case "family_general":
+      return Math.min(fitPercent, 54);
+    case "low_confidence":
+      return Math.min(fitPercent, 29);
+  }
+}
+
 function getSystemProfile(system: ExactFloorSystem): FloorProfile {
   const hasUpper = Boolean(
     system.match.resilientLayer ||
@@ -176,6 +252,7 @@ function getImpactBasis(kind: FloorSystemEstimateKind): ImpactCalculation["basis
 }
 
 function resolveSpecificFamilyEstimateBasis(input: {
+  allowSpecificBasis?: boolean;
   family: StructuralFamily;
   currentProfile: FloorProfile;
   kind: FloorSystemEstimateKind;
@@ -184,6 +261,18 @@ function resolveSpecificFamilyEstimateBasis(input: {
   basis: ImpactCalculation["basis"];
   label: string;
 } {
+  if (input.allowSpecificBasis === false) {
+    return {
+      basis: getImpactBasis(input.kind),
+      label:
+        input.kind === "family_archetype"
+          ? "Same-family archetype estimate"
+          : input.kind === "family_general"
+            ? "Published family blend estimate"
+            : "Low-confidence family fallback"
+    };
+  }
+
   const sourceIds = input.sources.map((entry) => entry.system.id);
   const hasPrefix = (prefix: string) => sourceIds.some((id) => id.startsWith(prefix));
 
@@ -343,9 +432,11 @@ function buildImpactEstimate(
   kind: FloorSystemEstimateKind,
   family: StructuralFamily,
   currentProfile: FloorProfile,
-  sources: readonly FloorSystemRecommendation[]
+  sources: readonly FloorSystemRecommendation[],
+  options: { allowSpecificBasis?: boolean } = {}
 ): ImpactCalculation {
   const basisInfo = resolveSpecificFamilyEstimateBasis({
+    allowSpecificBasis: options.allowSpecificBasis,
     currentProfile,
     family,
     kind,
@@ -412,6 +503,7 @@ export function deriveFloorSystemEstimate(
     return null;
   }
   const currentProfile = getLayerProfile(layers);
+  const ambiguousSingleEntryRoleConflicts = collectAmbiguousSingleEntryRoleConflicts(layers);
   const familyPool = getFamilyEstimatePool(structuralFamily, recommendations);
   const profileAligned = familyPool.filter((entry) => compatibleProfiles(currentProfile, getSystemProfile(entry.system)));
 
@@ -422,7 +514,10 @@ export function deriveFloorSystemEstimate(
     }
   }
 
-  const archetypeCandidates = profileAligned.filter((entry) => entry.fitPercent >= 55).slice(0, 3);
+  const archetypeCandidates =
+    ambiguousSingleEntryRoleConflicts.length === 0
+      ? profileAligned.filter((entry) => entry.fitPercent >= 55).slice(0, 3)
+      : [];
   const generalCandidates = familyPool.filter((entry) => entry.fitPercent >= 30).slice(0, 3);
   const lowConfidenceCandidates = recommendations.filter((entry) => entry.fitPercent >= 20).slice(0, 3);
 
@@ -441,9 +536,13 @@ export function deriveFloorSystemEstimate(
     return null;
   }
 
-  const fitPercent = round1(
+  const rawFitPercent = round1(
     activeKindAndSources.sources.reduce((sum, entry) => sum + entry.fitPercent, 0) / activeKindAndSources.sources.length
   );
+  const fitPercent =
+    ambiguousSingleEntryRoleConflicts.length > 0
+      ? round1(capFitPercentForEstimateTier(rawFitPercent, activeKindAndSources.kind))
+      : rawFitPercent;
   const airborneRw = weightedAverage(activeKindAndSources.sources, (entry) => entry.system.airborneRatings.Rw);
   const companionSemantic = getStableCompanionSemantic(activeKindAndSources.sources);
   const airborneCompanion =
@@ -461,12 +560,26 @@ export function deriveFloorSystemEstimate(
       RwCtrSemantic: companionSemantic
     },
     fitPercent,
-    impact: buildImpactEstimate(activeKindAndSources.kind, structuralFamily, currentProfile, activeKindAndSources.sources),
+    impact: buildImpactEstimate(activeKindAndSources.kind, structuralFamily, currentProfile, activeKindAndSources.sources, {
+      allowSpecificBasis: ambiguousSingleEntryRoleConflicts.length === 0
+    }),
     kind: activeKindAndSources.kind,
     notes: [
       `Active family: ${formatStructuralFamily(structuralFamily)}.`,
       `Current profile: ${currentProfile.replaceAll("_", " ")}.`,
       `Estimate fit: ${fitPercent}%.`,
+      ...(ambiguousSingleEntryRoleConflicts.length > 0
+        ? [
+            `Archetype-level family matching was withheld because single-entry roles are duplicated or split in the visible stack: ${ambiguousSingleEntryRoleConflicts
+              .map(formatAmbiguousSingleEntryRoleConflict)
+              .join(", ")}.`
+          ]
+        : []),
+      ...(fitPercent < rawFitPercent
+        ? [
+            `Displayed fit was capped from ${rawFitPercent}% to ${fitPercent}% so the estimate posture stays inside the active ${activeKindAndSources.kind.replaceAll("_", " ")} tier.`
+          ]
+        : []),
       ...(companionSemantic === "ctr_term"
         ? ["Published airborne companion remains a Ctr adaptation term from Rw(C;Ctr) family rows."]
         : companionSemantic === "rw_plus_ctr"

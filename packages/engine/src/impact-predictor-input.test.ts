@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import {
   adaptImpactPredictorInput,
   buildImpactPredictorInputFromLayerStack,
+  getVisibleLayerPredictorBlockerWarning,
   maybeBuildImpactPredictorInputFromLayerStack,
   maybeInferFloorRoleLayerStack
 } from "./impact-predictor-input";
@@ -614,5 +615,58 @@ describe("buildImpactPredictorInputFromLayerStack", () => {
     for (const testCase of cases) {
       expect(maybeBuildImpactPredictorInputFromLayerStack(testCase.layers), testCase.id).toBeNull();
     }
+  });
+
+  it("keeps disjoint same-material single-entry roles fail-closed and surfaces the blocker warning", () => {
+    const layers = [
+      { floorRole: "base_structure" as const, materialId: "concrete", thicknessMm: 150 },
+      { floorRole: "floor_covering" as const, materialId: "ceramic_tile", thicknessMm: 4 },
+      { floorRole: "resilient_layer" as const, materialId: "generic_resilient_underlay_s30", thicknessMm: 8 },
+      { floorRole: "floor_covering" as const, materialId: "ceramic_tile", thicknessMm: 4 }
+    ];
+
+    expect(maybeBuildImpactPredictorInputFromLayerStack(layers)).toBeNull();
+    expect(getVisibleLayerPredictorBlockerWarning(layers)).toMatch(
+      /single-entry floor roles are duplicated: floor covering x2 \(Ceramic Tile\)/i
+    );
+  });
+
+  it("still derives predictor input when a merge-safe role is only split contiguously into the same material package", () => {
+    const layers = [
+      { floorRole: "base_structure" as const, materialId: "concrete", thicknessMm: 150 },
+      { floorRole: "resilient_layer" as const, materialId: "generic_resilient_underlay_s30", thicknessMm: 8 },
+      { floorRole: "floating_screed" as const, materialId: "screed", thicknessMm: 15 },
+      { floorRole: "floating_screed" as const, materialId: "screed", thicknessMm: 15 },
+      { floorRole: "floor_covering" as const, materialId: "ceramic_tile", thicknessMm: 8 }
+    ];
+
+    expect(getVisibleLayerPredictorBlockerWarning(layers)).toBeNull();
+    expect(maybeBuildImpactPredictorInputFromLayerStack(layers)).toEqual({
+      baseSlab: {
+        densityKgM3: 2400,
+        materialClass: "heavy_concrete",
+        thicknessMm: 150
+      },
+      floorCovering: {
+        densityKgM3: 2000,
+        materialClass: "ceramic_tile",
+        mode: "material_layer",
+        thicknessMm: 8
+      },
+      floatingScreed: {
+        densityKgM3: 2000,
+        materialClass: "generic_screed",
+        thicknessMm: 30
+      },
+      impactSystemType: "heavy_floating_floor",
+      lowerTreatment: {},
+      resilientLayer: {
+        dynamicStiffnessMNm3: undefined,
+        productId: undefined,
+        thicknessMm: 8
+      },
+      structuralSupportType: "reinforced_concrete",
+      upperFill: {}
+    });
   });
 });

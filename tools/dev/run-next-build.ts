@@ -1,5 +1,5 @@
 import { spawn } from "node:child_process";
-import { rm } from "node:fs/promises";
+import { access, cp, mkdir, rm } from "node:fs/promises";
 import path from "node:path";
 
 const DEFAULT_DIST_DIR = ".next";
@@ -8,17 +8,60 @@ function getPnpmCommand(): string {
   return process.platform === "win32" ? "pnpm.cmd" : "pnpm";
 }
 
+async function pathExists(targetPath: string): Promise<boolean> {
+  try {
+    await access(targetPath);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function mirrorIntoStandalone(sourcePath: string, targetPath: string): Promise<void> {
+  await rm(targetPath, {
+    force: true,
+    recursive: true
+  });
+  await mkdir(path.dirname(targetPath), {
+    recursive: true
+  });
+
+  await cp(sourcePath, targetPath, {
+    recursive: true
+  });
+}
+
+async function syncStandaloneAssets(appDir: string, distDir: string): Promise<void> {
+  const standaloneAppDir = path.resolve(appDir, distDir, "standalone/apps/web");
+  const standaloneServerPath = path.join(standaloneAppDir, "server.js");
+  const staticSourcePath = path.resolve(appDir, distDir, "static");
+  const staticTargetPath = path.join(standaloneAppDir, ".next/static");
+  const publicSourcePath = path.resolve(appDir, "public");
+  const publicTargetPath = path.join(standaloneAppDir, "public");
+
+  if (!(await pathExists(standaloneServerPath)) || !(await pathExists(staticSourcePath))) {
+    return;
+  }
+
+  await mirrorIntoStandalone(staticSourcePath, staticTargetPath);
+
+  if (await pathExists(publicSourcePath)) {
+    await mirrorIntoStandalone(publicSourcePath, publicTargetPath);
+  }
+}
+
 async function main() {
+  const appDir = process.cwd();
   const configuredDistDir = process.env.NEXT_DIST_DIR?.trim();
   const distDir = configuredDistDir && configuredDistDir.length > 0 ? configuredDistDir : DEFAULT_DIST_DIR;
 
-  await rm(path.resolve(process.cwd(), distDir), {
+  await rm(path.resolve(appDir, distDir), {
     force: true,
     recursive: true
   });
 
   const child = spawn(getPnpmCommand(), ["exec", "next", "build"], {
-    cwd: process.cwd(),
+    cwd: appDir,
     env: {
       ...process.env,
       NEXT_DIST_DIR: distDir
@@ -26,14 +69,23 @@ async function main() {
     stdio: "inherit"
   });
 
-  child.on("exit", (code, signal) => {
-    if (signal) {
-      process.kill(process.pid, signal);
-      return;
-    }
+  const exitCode = await new Promise<number>((resolve, reject) => {
+    child.on("error", reject);
+    child.on("exit", (code, signal) => {
+      if (signal) {
+        process.kill(process.pid, signal);
+        return;
+      }
 
-    process.exit(code ?? 1);
+      resolve(code ?? 1);
+    });
   });
+
+  if (exitCode !== 0) {
+    process.exit(exitCode);
+  }
+
+  await syncStandaloneAssets(appDir, distDir);
 }
 
 void main().catch((error: unknown) => {

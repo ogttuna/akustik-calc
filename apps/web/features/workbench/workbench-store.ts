@@ -186,6 +186,7 @@ type WorkbenchStore = {
   deleteSavedScenario: (scenarioId: string) => void;
   loadPreset: (presetId: PresetId) => void;
   loadSavedScenario: (scenarioId: string) => void;
+  duplicateRow: (id: string) => void;
   moveRow: (id: string, direction: "up" | "down") => void;
   removeRow: (id: string) => void;
   reset: () => void;
@@ -619,6 +620,27 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
             targetLnwDb: scenario.targetLnwDb ?? criteriaPack.targetLnwDb,
             targetRwDb: scenario.targetRwDb ?? criteriaPack.targetRwDb
           };
+        }),
+      duplicateRow: (id) =>
+        set((state) => {
+          const index = state.rows.findIndex((row) => row.id === id);
+          if (index === -1) {
+            return state;
+          }
+
+          const source = state.rows[index];
+          const clone = makeRow(
+            source.materialId,
+            source.thicknessMm,
+            source.floorRole,
+            source.densityKgM3,
+            source.dynamicStiffnessMNm3
+          );
+
+          const rows = [...state.rows];
+          rows.splice(index + 1, 0, clone);
+
+          return { rows };
         }),
       moveRow: (id, direction) =>
         set((state) => {

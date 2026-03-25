@@ -78,6 +78,18 @@ input,
 select,
 textarea {
   font: inherit;
+  color: inherit;
+}
+
+select,
+input,
+textarea {
+  color-scheme: inherit;
+}
+
+option {
+  background: var(--paper);
+  color: var(--ink);
 }
 
 button {

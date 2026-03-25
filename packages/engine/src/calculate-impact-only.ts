@@ -37,6 +37,7 @@ import { estimateImpactFromLayers } from "./impact-estimate";
 import { buildImpactPredictorStatus } from "./impact-predictor-status";
 import {
   adaptImpactPredictorInput,
+  getVisibleLayerPredictorBlockerWarning,
   maybeInferFloorRoleLayerStack,
   maybeBuildImpactPredictorInputFromLayerStack,
   mergePredictorCatalog
@@ -160,6 +161,7 @@ export function calculateImpactOnly(
   let boundFloorSystemEstimate: FloorSystemBoundEstimateResult | null = null;
   let narrowImpact: ImpactCalculation | null = null;
   let explicitDeltaImpact: ImpactCalculation | null = null;
+  let visibleLayerPredictorBlockerWarning: string | null = null;
 
   if (exactImpactSource) {
     sourceMode = "exact_band_source";
@@ -262,6 +264,7 @@ export function calculateImpactOnly(
       !impactCatalogMatch;
 
     if (canTryDerivedPredictor) {
+      visibleLayerPredictorBlockerWarning = getVisibleLayerPredictorBlockerWarning(visibleLayers, catalog);
       const derivedPredictorInput = maybeBuildImpactPredictorInputFromLayerStack(visibleLayers, {}, undefined, catalog);
 
       if (derivedPredictorInput) {
@@ -498,6 +501,8 @@ export function calculateImpactOnly(
     warnings.push(
       "Impact-only predictor topology was derived from visible floor-role layers, so curated family and predictor lanes can activate without a hidden selector."
     );
+  } else if (visibleLayerPredictorBlockerWarning) {
+    warnings.push(visibleLayerPredictorBlockerWarning);
   }
 
   if (sourceMode === "official_floor_system" && typeof options.officialFloorSystemId === "string") {
