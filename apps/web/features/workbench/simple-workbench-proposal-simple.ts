@@ -1,7 +1,4 @@
-import type {
-  SimpleWorkbenchProposalCoverageStatus,
-  SimpleWorkbenchProposalDocument
-} from "./simple-workbench-proposal";
+import type { SimpleWorkbenchProposalDocument } from "./simple-workbench-proposal";
 import { buildSimpleWorkbenchProposalFilename } from "./simple-workbench-proposal";
 import { buildSimpleWorkbenchProposalConstructionSection } from "./simple-workbench-proposal-construction-section";
 
@@ -15,7 +12,6 @@ type SimpleCurveFigure = NonNullable<SimpleWorkbenchProposalDocument["responseCu
 type SimpleCurveSeries = SimpleCurveFigure["series"][number];
 
 const MAX_SIMPLE_CITATIONS = 4;
-const MAX_SIMPLE_COVERAGE_ITEMS = 6;
 const MAX_SIMPLE_LAYER_ROWS = 8;
 const MAX_SIMPLE_ASSUMPTIONS = 5;
 const MAX_SIMPLE_WARNINGS = 5;
@@ -28,20 +24,6 @@ function escapeHtml(value: string): string {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
-}
-
-function formatCoverageStatus(status: SimpleWorkbenchProposalCoverageStatus): string {
-  switch (status) {
-    case "live":
-      return "Live now";
-    case "bound":
-      return "Bound";
-    case "needs_input":
-      return "Needs input";
-    case "unsupported":
-    default:
-      return "Unsupported";
-  }
 }
 
 function slugMetricLabels(document: SimpleWorkbenchProposalDocument): string[] {
@@ -123,8 +105,7 @@ function inferStandardReferences(document: SimpleWorkbenchProposalDocument): Sim
   if (hasAirborne) {
     standards.push({
       code: "ISO 717-1",
-      detail:
-        "Weighted airborne indices on this sheet are stated in ISO 717-1 single-number rating language, including airborne adaptation terms where the active route supports them.",
+      detail: "Weighted airborne sound insulation rating",
       label: "Weighted airborne ratings"
     });
   }
@@ -132,8 +113,7 @@ function inferStandardReferences(document: SimpleWorkbenchProposalDocument): Sim
   if (hasImpact) {
     standards.push({
       code: "ISO 717-2",
-      detail:
-        "Impact indices on this sheet are stated in ISO 717-2 rating language, including Ln,w, L'n,w, L'nT,w, CI, or DeltaLw only when the active route can defend them.",
+      detail: "Weighted impact sound insulation rating",
       label: "Weighted impact ratings"
     });
   }
@@ -141,8 +121,7 @@ function inferStandardReferences(document: SimpleWorkbenchProposalDocument): Sim
   if (fieldAirborne) {
     standards.push({
       code: "ISO 16283-1",
-      detail:
-        "Where field airborne continuation is active, the packaged issue keeps the room-to-room field posture explicit instead of relabeling the result as a laboratory claim.",
+      detail: "Field measurement of airborne sound insulation",
       label: "Field airborne route"
     });
   }
@@ -150,8 +129,7 @@ function inferStandardReferences(document: SimpleWorkbenchProposalDocument): Sim
   if (fieldImpact) {
     standards.push({
       code: "ISO 16283-2",
-      detail:
-        "Where field impact continuation is active, the sheet keeps the field-side normalization posture explicit and does not present it as direct laboratory evidence.",
+      detail: "Field measurement of impact sound insulation",
       label: "Field impact route"
     });
   }
@@ -165,17 +143,15 @@ function inferStandardReferences(document: SimpleWorkbenchProposalDocument): Sim
   ) {
     standards.push({
       code: document.studyModeLabel.trim().toLowerCase().includes("wall") ? "ISO 12354-1" : "ISO 12354-2",
-      detail:
-        "Prediction or normalization routes remain labelled as estimates on this summary sheet. DynEcho does not present these paths as accredited measurements.",
-      label: "Prediction route posture"
+      detail: "Building acoustics prediction model",
+      label: "Prediction route"
     });
   }
 
   if (standards.length === 0) {
     standards.push({
-      code: "Standards posture",
-      detail:
-        "This short-form sheet keeps the active calculator route, evidence posture, and source trail explicit so the packaged result can be reviewed without overstating confidence.",
+      code: "Standards",
+      detail: "Explicit route disclosure",
       label: "Explicit route disclosure"
     });
   }
@@ -187,11 +163,7 @@ function renderConstructionFigure(document: SimpleWorkbenchProposalDocument): st
   const section = buildSimpleWorkbenchProposalConstructionSection(document.layers, document.studyModeLabel);
 
   if (section.bands.length === 0) {
-    return `
-      <div class="construction-empty">
-        No visible rows are packaged on this summary sheet yet. Build a supported stack first so DynEcho can draw the solver-order section.
-      </div>
-    `;
+    return `<div class="construction-empty">No construction data available.</div>`;
   }
 
   return `
@@ -360,7 +332,7 @@ function renderSimpleCurveFigures(document: SimpleWorkbenchProposalDocument): st
   const figures = (document.responseCurves ?? []).slice(0, 2);
 
   if (figures.length === 0) {
-    return `<div class="curve-empty">No frequency-response graph is available on the active route for this issue snapshot.</div>`;
+    return "";
   }
 
   return figures
@@ -383,16 +355,12 @@ function renderSimpleCurveFigures(document: SimpleWorkbenchProposalDocument): st
                 (series) => `
                   <div class="curve-legend-row">
                     <span class="curve-swatch" style="background:${getCurveSeriesColor(series)};"></span>
-                    <div>
-                      <strong>${escapeHtml(series.label)}</strong>
-                      <small>${series.active ? "Active plotted answer" : "Supporting comparison curve"}</small>
-                    </div>
+                    <strong>${escapeHtml(series.label)}</strong>
                   </div>
                 `
               )
               .join("")}
           </div>
-          <p class="curve-note">${escapeHtml(figure.note)}</p>
         </article>
       `
     )
@@ -402,17 +370,17 @@ function renderSimpleCurveFigures(document: SimpleWorkbenchProposalDocument): st
 export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbenchProposalDocument): string {
   const standardReferences = inferStandardReferences(document);
   const visibleMetrics = document.metrics.slice(0, MAX_SIMPLE_METRICS);
-  const visibleCoverageItems = document.coverageItems.slice(0, MAX_SIMPLE_COVERAGE_ITEMS);
   const visibleLayers = document.layers.slice(0, MAX_SIMPLE_LAYER_ROWS);
   const visibleCitations = document.citations.slice(0, MAX_SIMPLE_CITATIONS);
   const visibleAssumptions = document.assumptionItems.slice(0, MAX_SIMPLE_ASSUMPTIONS);
   const visibleWarnings = document.warnings.slice(0, MAX_SIMPLE_WARNINGS);
-  const hasSecondPage =
-    document.layers.length > 0 ||
-    visibleCoverageItems.length > 0 ||
+
+  const hasNotes =
     visibleCitations.length > 0 ||
     visibleAssumptions.length > 0 ||
-    visibleWarnings.length > 0;
+    document.briefNote.trim().length > 0;
+  const hasSecondPage =
+    document.layers.length > 0 || hasNotes || visibleWarnings.length > 0;
 
   const metricRows =
     visibleMetrics.length > 0
@@ -421,37 +389,13 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
             (metric) => `
               <tr>
                 <td>${escapeHtml(metric.label)}</td>
-                <td>${escapeHtml(metric.value)}</td>
+                <td><strong>${escapeHtml(metric.value)}</strong></td>
                 <td>${escapeHtml(metric.detail)}</td>
               </tr>
             `
           )
           .join("")
-      : `
-          <tr>
-            <td colspan="3">No live outputs are packaged on this short-form issue yet.</td>
-          </tr>
-        `;
-
-  const coverageRows =
-    visibleCoverageItems.length > 0
-      ? visibleCoverageItems
-          .map(
-            (item) => `
-              <tr>
-                <td>${escapeHtml(item.label)}</td>
-                <td>${escapeHtml(formatCoverageStatus(item.status))}</td>
-                <td>${escapeHtml(item.value)}</td>
-                <td>${escapeHtml(item.postureLabel)}</td>
-              </tr>
-            `
-          )
-          .join("")
-      : `
-          <tr>
-            <td colspan="4">No additional coverage register rows are packaged on this summary sheet.</td>
-          </tr>
-        `;
+      : `<tr><td colspan="3" style="color:var(--ink-faint)">—</td></tr>`;
 
   const layerRows =
     visibleLayers.length > 0
@@ -462,116 +406,16 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
                 <td>${layer.index}</td>
                 <td>${escapeHtml(layer.label)}</td>
                 <td>${escapeHtml(layer.thicknessLabel)}</td>
-                <td>${escapeHtml(layer.densityLabel ?? "Not listed")}</td>
-                <td>${escapeHtml(layer.surfaceMassLabel ?? "Not listed")}</td>
                 <td>${escapeHtml(layer.roleLabel ?? layer.categoryLabel)}</td>
               </tr>
             `
           )
           .join("")
-      : `
-          <tr>
-            <td colspan="6">No layer schedule is packaged on this issue yet.</td>
-          </tr>
-        `;
+      : "";
 
-  const citationItems =
-    visibleCitations.length > 0
-      ? visibleCitations
-          .map(
-            (citation) => `
-              <li>
-                <strong>${escapeHtml(citation.label)}</strong>
-                <span>${escapeHtml(citation.detail)}</span>
-                ${citation.href ? `<span class="source-link">${escapeHtml(citation.href)}</span>` : ""}
-              </li>
-            `
-          )
-          .join("")
-      : "<li><strong>Source posture</strong><span>No explicit source citation is packaged on this issue.</span></li>";
+  const standardCodes = standardReferences.map((r) => r.code).join(" · ");
 
-  const assumptionItems =
-    visibleAssumptions.length > 0
-      ? visibleAssumptions
-          .map(
-            (item) => `
-              <li>
-                <strong>${escapeHtml(item.label)}</strong>
-                <span>${escapeHtml(item.detail)}</span>
-              </li>
-            `
-          )
-          .join("")
-      : "<li><strong>Assumption posture</strong><span>No explicit assumption lines are packaged on this issue.</span></li>";
-
-  const consultantNote =
-    document.briefNote.trim().length > 0
-      ? escapeHtml(document.briefNote.trim())
-      : "No additional consultant note entered for this short-form issue.";
-
-  const supportRows =
-    visibleCoverageItems.length > 0
-      ? visibleCoverageItems
-          .map(
-            (item) => `
-              <tr>
-                <td>${escapeHtml(item.label)}</td>
-                <td>${escapeHtml(formatCoverageStatus(item.status))}</td>
-                <td>${escapeHtml(item.value)}</td>
-              </tr>
-            `
-          )
-          .join("")
-      : `
-          <tr>
-            <td colspan="3">No additional coverage posture rows are packaged on this issue.</td>
-          </tr>
-        `;
-
-  const methodBasisRows = [
-    {
-      detail: document.dynamicBranchDetail,
-      label: "Route",
-      value: document.dynamicBranchLabel
-    },
-    {
-      detail: document.validationDetail,
-      label: "Validation",
-      value: document.validationLabel
-    },
-    {
-      detail: `${document.studyModeLabel} · ${document.contextLabel} · ${document.studyContextLabel}`,
-      label: "Scope",
-      value: document.reportProfileLabel
-    },
-    {
-      detail: `Issued to ${document.proposalRecipient}. ${document.proposalValidityNote}`,
-      label: "Issue basis",
-      value: document.proposalIssuePurpose
-    }
-  ]
-    .map(
-      (row) => `
-        <tr>
-          <td>${escapeHtml(row.label)}</td>
-          <td>${escapeHtml(row.value)}</td>
-          <td>${escapeHtml(row.detail)}</td>
-        </tr>
-      `
-    )
-    .join("");
-
-  const standardsRows = standardReferences
-    .map(
-      (reference) => `
-        <tr>
-          <td>${escapeHtml(reference.code)}</td>
-          <td>${escapeHtml(reference.label)}</td>
-          <td>${escapeHtml(reference.detail)}</td>
-        </tr>
-      `
-    )
-    .join("");
+  const curvesHtml = renderSimpleCurveFigures(document);
 
   const sourceItems =
     visibleCitations.length > 0
@@ -586,10 +430,12 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
             `
           )
           .join("")
-      : "<li><strong>Source posture</strong><span>No citation line is packaged on this short report.</span></li>";
+      : "";
 
   const noteAndAssumptionItems = [
-    `<li><strong>Consultant note</strong><span>${consultantNote}</span></li>`,
+    ...(document.briefNote.trim().length > 0
+      ? [`<li><strong>Consultant note</strong><span>${escapeHtml(document.briefNote.trim())}</span></li>`]
+      : []),
     ...visibleAssumptions.map(
       (item) => `<li><strong>${escapeHtml(item.label)}</strong><span>${escapeHtml(item.detail)}</span></li>`
     )
@@ -598,7 +444,7 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
   const warningItems =
     visibleWarnings.length > 0
       ? visibleWarnings.map((warning) => `<li><strong>Warning</strong><span>${escapeHtml(warning)}</span></li>`).join("")
-      : "<li><strong>Warnings</strong><span>No live warning flags remain on the active route.</span></li>";
+      : "";
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -647,7 +493,7 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
 
       .page {
         display: grid;
-        gap: 5mm;
+        gap: 4mm;
         page-break-after: always;
       }
 
@@ -657,13 +503,13 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
 
       .report-header {
         display: grid;
-        gap: 3mm;
+        gap: 2.5mm;
         border-bottom: 1.2px solid var(--ink);
-        padding-bottom: 4mm;
+        padding-bottom: 3mm;
       }
 
       .report-kicker {
-        font-size: 9px;
+        font-size: 8px;
         font-weight: 700;
         letter-spacing: 0.18em;
         text-transform: uppercase;
@@ -686,22 +532,22 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
 
       h1 {
         margin: 0;
-        font-size: 26px;
-        line-height: 1.05;
+        font-size: 22px;
+        line-height: 1.1;
         letter-spacing: -0.03em;
       }
 
       .report-subject {
         margin: 0;
-        font-size: 12px;
-        line-height: 1.5;
+        font-size: 11px;
+        line-height: 1.4;
         color: var(--ink-soft);
       }
 
       .report-meta {
         display: grid;
         grid-template-columns: repeat(6, minmax(0, 1fr));
-        gap: 3mm;
+        gap: 2mm;
       }
 
       .meta-item strong,
@@ -709,7 +555,7 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
       .table-title {
         display: block;
         margin: 0;
-        font-size: 9px;
+        font-size: 8px;
         font-weight: 700;
         letter-spacing: 0.14em;
         text-transform: uppercase;
@@ -718,30 +564,31 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
 
       .meta-item span {
         display: block;
-        margin-top: 1.2mm;
-        font-size: 11px;
-        line-height: 1.45;
+        margin-top: 1mm;
+        font-size: 10px;
+        line-height: 1.4;
         color: var(--ink);
       }
 
       .result-strip {
         display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 3mm;
+        grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr));
+        gap: 2.5mm;
       }
 
-      .result-card,
-      .panel,
-      .table-panel,
-      .notes-panel {
+      .result-card {
         border: 1px solid var(--line);
         background: #ffffff;
-        padding: 3.2mm;
+        padding: 2.5mm;
+      }
+
+      .result-card-primary {
+        border-color: var(--ink);
       }
 
       .result-card strong {
         display: block;
-        font-size: 9px;
+        font-size: 8px;
         font-weight: 700;
         letter-spacing: 0.14em;
         text-transform: uppercase;
@@ -750,47 +597,51 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
 
       .result-card span {
         display: block;
-        margin-top: 1.4mm;
-        font-size: 16px;
+        margin-top: 1mm;
+        font-size: 15px;
         line-height: 1.15;
         font-weight: 700;
       }
 
       .result-card small {
         display: block;
-        margin-top: 1.4mm;
-        font-size: 10.5px;
-        line-height: 1.45;
+        margin-top: 1mm;
+        font-size: 9.5px;
+        line-height: 1.4;
         color: var(--ink-soft);
       }
 
       .page-grid {
         display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 3mm;
+      }
+
+      .page-grid-wide {
         grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
-        gap: 4mm;
       }
 
       .curve-grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 4mm;
+        gap: 3mm;
       }
 
       .curve-card {
         border: 1px solid var(--line);
-        padding: 3mm;
+        padding: 2.5mm;
       }
 
       .curve-head {
         display: flex;
         justify-content: space-between;
-        gap: 4mm;
+        gap: 3mm;
         align-items: start;
       }
 
       .curve-head strong {
         display: block;
-        font-size: 11px;
+        font-size: 10px;
         line-height: 1.3;
         color: var(--ink);
       }
@@ -799,15 +650,15 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
       .curve-head small,
       .curve-note {
         display: block;
-        font-size: 10.5px;
-        line-height: 1.45;
+        font-size: 9px;
+        line-height: 1.4;
         color: var(--ink-soft);
       }
 
       .curve-shell {
-        margin-top: 2.5mm;
+        margin-top: 2mm;
         border: 1px solid var(--line);
-        padding: 2mm;
+        padding: 1.5mm;
       }
 
       .curve-plot {
@@ -843,35 +694,27 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
       }
 
       .curve-legend {
-        display: grid;
-        gap: 1.6mm;
-        margin-top: 2.5mm;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 3mm;
+        margin-top: 2mm;
       }
 
       .curve-legend-row {
         display: flex;
-        gap: 2mm;
-        align-items: start;
+        gap: 1.5mm;
+        align-items: center;
       }
 
       .curve-legend-row strong {
-        display: block;
-        font-size: 10px;
-        line-height: 1.35;
-      }
-
-      .curve-legend-row small {
-        display: block;
         font-size: 9px;
-        line-height: 1.35;
-        color: var(--ink-soft);
+        line-height: 1.3;
       }
 
       .curve-swatch {
-        width: 10px;
-        height: 10px;
-        flex: 0 0 10px;
-        margin-top: 2px;
+        width: 8px;
+        height: 8px;
+        flex: 0 0 8px;
       }
 
       .construction-axis {
@@ -879,7 +722,7 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
         align-items: center;
         justify-content: space-between;
         gap: 3mm;
-        font-size: 9px;
+        font-size: 8px;
         font-weight: 700;
         letter-spacing: 0.16em;
         text-transform: uppercase;
@@ -887,7 +730,7 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
       }
 
       .construction-stack {
-        margin: 3.5mm 0;
+        margin: 3mm 0;
         overflow: hidden;
         border: 1px solid var(--line-strong);
         background: #ffffff;
@@ -896,22 +739,22 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
       .construction-stack-floor {
         display: flex;
         flex-direction: column;
-        min-height: 62mm;
+        min-height: 52mm;
       }
 
       .construction-stack-wall {
         display: flex;
-        min-height: 44mm;
+        min-height: 38mm;
       }
 
       .construction-band {
         display: grid;
         grid-template-columns: auto minmax(0, 1fr);
-        gap: 3mm;
+        gap: 2.5mm;
         align-items: center;
         border-bottom: 1px solid rgba(18, 37, 35, 0.14);
         border-right: 1px solid rgba(18, 37, 35, 0.14);
-        padding: 3mm;
+        padding: 2.5mm;
       }
 
       .construction-band:last-child {
@@ -935,59 +778,66 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 6mm;
-        height: 6mm;
+        width: 5mm;
+        height: 5mm;
         border: 1px solid rgba(18, 37, 35, 0.2);
         background: #ffffff;
-        font-size: 9px;
+        font-size: 8px;
         font-weight: 700;
       }
 
       .construction-band-copy strong {
         display: block;
-        font-size: 11px;
+        font-size: 10px;
         line-height: 1.2;
       }
 
       .construction-band-copy small {
         display: block;
-        margin-top: 1mm;
-        font-size: 9.5px;
-        line-height: 1.4;
+        margin-top: 0.5mm;
+        font-size: 9px;
+        line-height: 1.3;
         color: var(--ink-soft);
       }
 
       .construction-empty {
         border: 1px dashed var(--line);
-        padding: 6mm 5mm;
-        font-size: 11px;
-        line-height: 1.55;
+        padding: 4mm;
+        font-size: 10px;
         color: var(--ink-soft);
       }
 
       .notes-grid {
         display: grid;
         grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-        gap: 4mm;
+        gap: 3mm;
+      }
+
+      .panel,
+      .table-panel,
+      .notes-panel {
+        border: 1px solid var(--line);
+        background: #ffffff;
+        padding: 2.5mm;
       }
 
       table {
         width: 100%;
         border-collapse: collapse;
-        font-size: 11px;
+        font-size: 10px;
       }
 
       th,
       td {
         border: 1px solid var(--line);
-        padding: 2.4mm;
+        padding: 1.8mm;
         text-align: left;
         vertical-align: top;
       }
 
       th {
         background: var(--panel-soft);
-        font-size: 9px;
+        font-size: 8px;
         font-weight: 700;
         letter-spacing: 0.16em;
         text-transform: uppercase;
@@ -995,34 +845,30 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
       }
 
       td {
-        line-height: 1.5;
-      }
-
-      .notes-panel {
-        padding: 3.2mm;
+        line-height: 1.4;
       }
 
       ul {
         margin: 0;
-        padding-left: 4.5mm;
+        padding-left: 4mm;
         display: grid;
-        gap: 2.2mm;
+        gap: 1.8mm;
       }
 
       li {
-        line-height: 1.52;
+        line-height: 1.45;
       }
 
       li strong {
         display: block;
-        font-size: 11px;
+        font-size: 10px;
         line-height: 1.3;
       }
 
       li span {
         display: block;
-        margin-top: 0.8mm;
-        font-size: 10.5px;
+        margin-top: 0.5mm;
+        font-size: 9.5px;
         color: var(--ink-soft);
       }
 
@@ -1032,9 +878,9 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
       }
 
       .footnote {
-        font-size: 10.5px;
-        line-height: 1.6;
-        color: var(--ink-soft);
+        font-size: 9px;
+        line-height: 1.5;
+        color: var(--ink-faint);
       }
 
       .page-footer {
@@ -1044,8 +890,8 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
         gap: 4mm;
         padding-top: 2mm;
         border-top: 1px solid var(--line);
-        font-size: 10px;
-        line-height: 1.45;
+        font-size: 9px;
+        line-height: 1.4;
         color: var(--ink-faint);
       }
 
@@ -1069,7 +915,7 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
           <div class="report-title-row">
             <div>
               <h1>Acoustic Summary Sheet</h1>
-              <p class="report-subject">${escapeHtml(document.proposalSubject)}</p>
+              <p class="report-subject">${escapeHtml(document.projectName)} · ${escapeHtml(document.proposalSubject)}</p>
             </div>
             ${document.consultantLogoDataUrl ? `<img class="report-logo" src="${escapeHtml(document.consultantLogoDataUrl)}" alt="${escapeHtml(document.consultantCompany)} logo" />` : ""}
           </div>
@@ -1080,7 +926,7 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
             </div>
             <div class="meta-item">
               <strong>Project</strong>
-              <span>${escapeHtml(document.projectName)}</span>
+              <span>${escapeHtml(document.reportProfileLabel)}</span>
             </div>
             <div class="meta-item">
               <strong>Issue</strong>
@@ -1096,13 +942,13 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
             </div>
             <div class="meta-item">
               <strong>Prepared by</strong>
-              <span>${escapeHtml(document.preparedBy)} · ${escapeHtml(document.approverTitle)}</span>
+              <span>${escapeHtml(document.preparedBy)}</span>
             </div>
           </div>
         </header>
 
         <section class="result-strip">
-          <article class="result-card">
+          <article class="result-card result-card-primary">
             <strong>Primary answer</strong>
             <span>${escapeHtml(document.primaryMetricLabel)} ${escapeHtml(document.primaryMetricValue)}</span>
             <small>${escapeHtml(document.executiveSummary)}</small>
@@ -1110,36 +956,35 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
           <article class="result-card">
             <strong>Route</strong>
             <span>${escapeHtml(document.dynamicBranchLabel)}</span>
-            <small>${escapeHtml(document.dynamicBranchDetail)}</small>
           </article>
           <article class="result-card">
             <strong>Validation</strong>
             <span>${escapeHtml(document.validationLabel)}</span>
-            <small>${escapeHtml(document.validationDetail)}</small>
           </article>
           <article class="result-card">
             <strong>Assembly</strong>
-            <span>${document.layers.length} rows</span>
-            <small>${escapeHtml(document.assemblyHeadline)}</small>
+            <span>${document.layers.length} layer${document.layers.length === 1 ? "" : "s"}</span>
           </article>
         </section>
 
+        ${curvesHtml ? `
         <section class="panel">
-          <div class="panel-title">Frequency response curves</div>
+          <div class="panel-title">Frequency response</div>
           <div class="curve-grid">
-            ${renderSimpleCurveFigures(document)}
+            ${curvesHtml}
           </div>
         </section>
+        ` : ""}
 
         <section class="page-grid">
           <section class="table-panel">
-            <div class="table-title">Measured / predicted indices</div>
+            <div class="table-title">Calculated indices</div>
             <table>
               <thead>
                 <tr>
-                  <th>Metric</th>
+                  <th>Index</th>
                   <th>Value</th>
-                  <th>Reading note</th>
+                  <th>Note</th>
                 </tr>
               </thead>
               <tbody>
@@ -1148,42 +993,46 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
             </table>
           </section>
 
+          ${layerRows ? `
           <section class="table-panel">
-            <div class="table-title">Method basis</div>
+            <div class="table-title">Layer schedule</div>
             <table>
               <thead>
                 <tr>
-                  <th>Basis</th>
-                  <th>Active reading</th>
-                  <th>Note</th>
+                  <th>#</th>
+                  <th>Material</th>
+                  <th>Thickness</th>
+                  <th>Role</th>
                 </tr>
               </thead>
               <tbody>
-                ${methodBasisRows}
+                ${layerRows}
               </tbody>
             </table>
           </section>
-        </section>
-
-        <section class="table-panel">
-          <div class="table-title">Reference basis</div>
-          <table>
-            <thead>
-              <tr>
-                <th>Standard</th>
-                <th>Use on this report</th>
-                <th>Note</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${standardsRows}
-            </tbody>
-          </table>
+          ` : `
+          <section class="table-panel">
+            <div class="table-title">Method</div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Parameter</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Route</td><td>${escapeHtml(document.dynamicBranchLabel)}</td></tr>
+                <tr><td>Validation</td><td>${escapeHtml(document.validationLabel)}</td></tr>
+                <tr><td>Scope</td><td>${escapeHtml(document.studyModeLabel)} · ${escapeHtml(document.contextLabel)}</td></tr>
+              </tbody>
+            </table>
+          </section>
+          `}
         </section>
 
         <footer class="page-footer">
           <span>${escapeHtml(document.consultantCompany)} · ${escapeHtml(document.reportProfileLabel)}</span>
-          <span>${escapeHtml(document.proposalReference)} · ${escapeHtml(document.issuedOnLabel)}</span>
+          <span>${escapeHtml(standardCodes)} · ${escapeHtml(document.proposalReference)}</span>
         </footer>
       </section>
 
@@ -1191,74 +1040,74 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
         hasSecondPage
           ? `
         <section class="page">
-          <section class="page-grid">
+          ${document.layers.length > 0 ? `
+          <section class="page-grid page-grid-wide">
             <section class="panel">
-              <div class="panel-title">Layer illustration</div>
+              <div class="panel-title">Construction section</div>
               ${renderConstructionFigure(document)}
             </section>
             <section class="table-panel">
-              <div class="table-title">Visible layer schedule</div>
+              <div class="table-title">Layer detail</div>
               <table>
                 <thead>
                   <tr>
                     <th>#</th>
-                    <th>Layer</th>
+                    <th>Material</th>
                     <th>Thickness</th>
                     <th>Density</th>
                     <th>Surface mass</th>
-                    <th>Role</th>
                   </tr>
                 </thead>
                 <tbody>
-                  ${layerRows}
+                  ${visibleLayers
+                    .map(
+                      (layer) => `
+                        <tr>
+                          <td>${layer.index}</td>
+                          <td>${escapeHtml(layer.label)}</td>
+                          <td>${escapeHtml(layer.thicknessLabel)}</td>
+                          <td>${escapeHtml(layer.densityLabel ?? "—")}</td>
+                          <td>${escapeHtml(layer.surfaceMassLabel ?? "—")}</td>
+                        </tr>
+                      `
+                    )
+                    .join("")}
                 </tbody>
               </table>
             </section>
           </section>
+          ` : ""}
 
-          ${
-            visibleCoverageItems.length > 0
-              ? `
-          <section class="table-panel">
-            <div class="table-title">Output coverage register</div>
-            <table>
-              <thead>
-                <tr>
-                  <th>Metric</th>
-                  <th>Status</th>
-                  <th>Value</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${supportRows}
-              </tbody>
-            </table>
-          </section>`
-              : ""
-          }
-
+          ${hasNotes ? `
           <section class="notes-grid">
+            ${sourceItems ? `
             <section class="notes-panel">
-              <div class="table-title">Source notes</div>
+              <div class="table-title">Sources</div>
               <ul>${sourceItems}</ul>
             </section>
+            ` : ""}
+            ${noteAndAssumptionItems ? `
             <section class="notes-panel">
-              <div class="table-title">Consultant note and assumptions</div>
+              <div class="table-title">Notes &amp; assumptions</div>
               <ul>${noteAndAssumptionItems}</ul>
             </section>
+            ` : ""}
           </section>
+          ` : ""}
 
+          ${warningItems ? `
           <section class="notes-panel">
-            <div class="table-title">Warnings and issue guardrails</div>
+            <div class="table-title">Warnings</div>
             <ul>${warningItems}</ul>
           </section>
+          ` : ""}
 
-          <section class="footnote">
-            Prepared from the DynEcho dynamic calculator as a short-form report. This sheet summarizes a project estimate and does not replace accredited laboratory or site measurements.
-          </section>
+          <p class="footnote">
+            This sheet summarises a calculator estimate and does not replace accredited laboratory or field measurements.
+          </p>
 
           <footer class="page-footer">
-            <span>${escapeHtml(document.issueBaseReference)} · next ${escapeHtml(document.issueNextReference)}</span>
+            <span>${escapeHtml(document.issueBaseReference)}</span>
             <span>${escapeHtml(document.consultantCompany)} · Simple issue</span>
           </footer>
         </section>

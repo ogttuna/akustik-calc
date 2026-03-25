@@ -1502,12 +1502,12 @@ function GuidedRouteRow(props: { detail: string; label: string; value: string; t
   const { detail, label, value } = props;
 
   return (
-    <div className="flex min-w-0 items-baseline justify-between gap-3 rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-3 py-2">
+    <div className="flex min-w-0 items-baseline justify-between gap-3 px-1 py-1.5">
       <div className="min-w-0">
         <div className="text-[0.64rem] font-medium uppercase tracking-[0.1em] text-[color:var(--ink-faint)]">{label}</div>
         <p className="mt-0.5 line-clamp-1 text-[0.72rem] leading-5 text-[color:var(--ink-soft)]">{detail}</p>
       </div>
-      <div className="shrink-0 text-right text-[0.84rem] font-semibold leading-5 text-[color:var(--ink)]">{value}</div>
+      <div className="shrink-0 text-right text-[0.84rem] font-semibold tabular-nums leading-5 text-[color:var(--ink)]">{value}</div>
     </div>
   );
 }
@@ -1524,7 +1524,7 @@ function GuidedDecisionBasisCard(props: SimpleWorkbenchCorridorDossierCard) {
     tone === "success" ? "Locked" : tone === "warning" ? "Caution" : tone === "accent" ? "Live" : "Explicit";
 
   return (
-    <article className="grid gap-1.5 rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-3 py-2.5">
+    <article className="grid gap-1 rounded-md bg-[color:var(--panel)] px-3 py-2.5">
       <div className="flex items-center justify-between gap-3">
         <div className="text-[0.68rem] font-medium uppercase tracking-[0.1em] text-[color:var(--ink-faint)]">{label}</div>
         <DetailTag tone={tone === "warning" ? "required" : tone === "accent" ? "optional" : "neutral"}>{toneLabel}</DetailTag>
@@ -1536,48 +1536,21 @@ function GuidedDecisionBasisCard(props: SimpleWorkbenchCorridorDossierCard) {
 }
 
 function GuidedDecisionBasisStrip(props: {
-  activeReviewTab: ReviewTabId;
   cards: readonly SimpleWorkbenchCorridorDossierCard[];
   headline: string;
-  onOpenReviewTab: (tabId: ReviewTabId) => void;
   selectedTraceNoteCount: number;
   traceGroupCount: number;
 }) {
-  const { activeReviewTab, cards, headline, onOpenReviewTab, selectedTraceNoteCount, traceGroupCount } = props;
-  const activeReviewTabLabel = REVIEW_TABS.find((tab) => tab.id === activeReviewTab)?.label ?? "Proposal";
+  const { cards, headline, selectedTraceNoteCount, traceGroupCount } = props;
 
   return (
     <section className={`mt-4 overflow-hidden rounded-lg border px-4 py-4 ${workbenchSectionCardClass("review")}`}>
-      <div className="grid gap-3 xl:grid-cols-[minmax(0,1.06fr)_auto] xl:items-start">
-        <div className="min-w-0">
-          <div className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">Decision basis</div>
-          <h3 className="mt-1.5 text-[1.02rem] font-semibold leading-tight text-[color:var(--ink)]">
-            Validation corridor at a glance
-          </h3>
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-[color:var(--ink-soft)]">{headline}</p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <GuidedFactChip>{`${traceGroupCount} trace group${traceGroupCount === 1 ? "" : "s"}`}</GuidedFactChip>
-            <GuidedFactChip>{`${selectedTraceNoteCount} selected route note${selectedTraceNoteCount === 1 ? "" : "s"}`}</GuidedFactChip>
-            <GuidedFactChip>{`Review deck: ${activeReviewTabLabel}`}</GuidedFactChip>
-          </div>
-        </div>
-
-        <div className="grid gap-2 sm:grid-cols-3 xl:grid-cols-1 xl:justify-items-end">
-          {REVIEW_TABS.map((tab) => (
-            <button
-              aria-pressed={activeReviewTab === tab.id}
-              className={`focus-ring inline-flex items-center justify-center rounded border px-3 py-2 text-sm font-semibold ${
-                activeReviewTab === tab.id
-                  ? "border-[color:var(--accent)] bg-[color:var(--accent-soft)] text-[color:var(--accent-ink)]"
-                  : "hairline bg-[color:var(--paper)]/82 text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
-              }`}
-              key={`review-jump-${tab.id}`}
-              onClick={() => onOpenReviewTab(tab.id)}
-              type="button"
-            >
-              {`Open ${tab.label.toLowerCase()}`}
-            </button>
-          ))}
+      <div>
+        <div className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">Decision basis</div>
+        <p className="mt-1.5 max-w-3xl text-sm leading-6 text-[color:var(--ink-soft)]">{headline}</p>
+        <div className="mt-2 flex flex-wrap gap-2">
+          <GuidedFactChip>{`${traceGroupCount} trace group${traceGroupCount === 1 ? "" : "s"}`}</GuidedFactChip>
+          <GuidedFactChip>{`${selectedTraceNoteCount} note${selectedTraceNoteCount === 1 ? "" : "s"}`}</GuidedFactChip>
         </div>
       </div>
 
@@ -1591,7 +1564,6 @@ function GuidedDecisionBasisStrip(props: {
 }
 
 function GuidedConstructionSnapshot(props: {
-  activeReviewTab: ReviewTabId;
   layers: readonly {
     categoryLabel: string;
     index: number;
@@ -1599,50 +1571,20 @@ function GuidedConstructionSnapshot(props: {
     roleLabel?: string;
     thicknessLabel: string;
   }[];
-  onOpenReviewTab: (tabId: ReviewTabId) => void;
   studyModeLabel: string;
 }) {
-  const { activeReviewTab, layers, onOpenReviewTab, studyModeLabel } = props;
-  const activeReviewTabLabel = REVIEW_TABS.find((tab) => tab.id === activeReviewTab)?.label ?? "Proposal";
+  const { layers, studyModeLabel } = props;
 
   return (
     <section className={`mt-4 overflow-hidden rounded-lg border px-4 py-4 ${workbenchSectionCardClass("assembly")}`}>
-      <div className="grid gap-3 xl:grid-cols-[minmax(0,1fr)_auto] xl:items-start">
-        <div className="min-w-0">
-          <div className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">
-            Construction snapshot
-          </div>
-          <h3 className="mt-1.5 text-[1.02rem] font-semibold leading-tight text-[color:var(--ink)]">
-            Solver-order section on the live result
-          </h3>
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-[color:var(--ink-soft)]">
-            One technical section stays aligned across the live read, method notes, and proposal output.
-          </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <GuidedFactChip>{`${layers.length} visible row${layers.length === 1 ? "" : "s"}`}</GuidedFactChip>
-            <GuidedFactChip>{`Review deck: ${activeReviewTabLabel}`}</GuidedFactChip>
-          </div>
+      <div className="flex items-center justify-between gap-3">
+        <div className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">
+          Construction snapshot
         </div>
-
-        <div className="flex flex-wrap gap-2 xl:justify-end">
-          <button
-            className="focus-ring inline-flex items-center justify-center rounded border hairline bg-[color:var(--paper)]/84 px-3 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
-            onClick={() => onOpenReviewTab("method")}
-            type="button"
-          >
-            Open method detail
-          </button>
-          <button
-            className="focus-ring inline-flex items-center justify-center rounded border hairline bg-[color:var(--paper)]/84 px-3 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
-            onClick={() => onOpenReviewTab("proposal")}
-            type="button"
-          >
-            Open proposal
-          </button>
-        </div>
+        <GuidedFactChip>{`${layers.length} row${layers.length === 1 ? "" : "s"}`}</GuidedFactChip>
       </div>
 
-      <div className="mt-4">
+      <div className="mt-3">
         <SimpleWorkbenchProposalConstructionFigure layers={layers} studyModeLabel={studyModeLabel} />
       </div>
     </section>
@@ -1809,9 +1751,9 @@ function FieldShell(props: {
   const { children, label, warning } = props;
 
   return (
-    <div className="grid min-w-0 gap-1.5 rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-3 py-2.5">
-      <span className="text-[0.82rem] font-semibold text-[color:var(--ink)]">{label}</span>
-      {warning ? <p className="text-[0.72rem] leading-5 text-[color:var(--warning-ink)]">{warning}</p> : null}
+    <div className="grid min-w-0 gap-1">
+      <span className="text-[0.78rem] font-medium text-[color:var(--ink)]">{label}</span>
+      {warning ? <p className="text-[0.68rem] leading-4 text-[color:var(--warning-ink)]">{warning}</p> : null}
       {children}
     </div>
   );
@@ -1824,23 +1766,20 @@ function ContextBucket(props: {
   title: string;
   tone: FieldRelevanceTone;
 }) {
-  const { children, description, hasContent, title, tone } = props;
-  const shellClass =
-    tone === "required"
-      ? "border-[color:color-mix(in_oklch,var(--warning)_24%,var(--line))] bg-[color:color-mix(in_oklch,var(--warning)_6%,var(--paper))]"
-      : workbenchSectionMutedCardClass("route");
+  const { children, hasContent, title, tone } = props;
 
   return (
-    <section className={`rounded border px-3 py-3 ${shellClass}`}>
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="text-[0.84rem] font-semibold text-[color:var(--ink)]">{title}</div>
-        <DetailTag tone={tone}>{title}</DetailTag>
+    <div>
+      <div className="flex items-center gap-2">
+        <div className="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">{title}</div>
+        <div className="h-px flex-1 bg-[color:var(--line)]" />
+        <DetailTag tone={tone}>{tone === "required" ? "Required" : "Optional"}</DetailTag>
       </div>
 
       {hasContent ? (
         <div className="mt-3 grid gap-3">{children}</div>
       ) : null}
-    </section>
+    </div>
   );
 }
 
@@ -1849,11 +1788,11 @@ function ContextSubsection(props: {
   note: string;
   title: string;
 }) {
-  const { children, note, title } = props;
+  const { children, title } = props;
 
   return (
-    <div className={`grid gap-3 rounded border px-3 py-3 ${workbenchSectionMutedCardClass("route")}`}>
-      <div className="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">{title}</div>
+    <div className="grid gap-3">
+      <div className="text-[0.66rem] font-medium uppercase tracking-[0.12em] text-[color:var(--ink-faint)]">{title}</div>
       <div className="grid gap-3">{children}</div>
     </div>
   );
@@ -1930,19 +1869,15 @@ function OutputUnlockRail(props: {
         </div>
       </summary>
 
-      <div className="mt-4 grid gap-3 md:grid-cols-2">
+      <div className="mt-3 grid gap-2 md:grid-cols-2">
         {groups.map((group) => (
-          <article
-            className="rounded-md border hairline bg-[color:color-mix(in_oklch,var(--warning)_8%,var(--paper))] px-4 py-3"
-            key={`unlock-${group.title}`}
-          >
-            <div className="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--warning-ink)]">Next unlock</div>
-            <div className="mt-2 text-sm font-semibold text-[color:var(--ink)]">{group.title}</div>
-            <div className="mt-2 flex flex-wrap gap-2">
-              <GuidedFactChip tone="warning">{formatUnlockOutputs(group.outputs)}</GuidedFactChip>
+          <div className="flex items-start gap-3 px-1 py-2" key={`unlock-${group.title}`}>
+            <div className="min-w-0 flex-1">
+              <div className="text-[0.78rem] font-semibold text-[color:var(--ink)]">{group.title}</div>
+              <p className="mt-0.5 text-[0.72rem] leading-4 text-[color:var(--ink-soft)]">{group.detail}</p>
             </div>
-            <p className="mt-2 text-[0.78rem] leading-5 text-[color:var(--ink-soft)]">{group.detail}</p>
-          </article>
+            <GuidedFactChip tone="warning">{formatUnlockOutputs(group.outputs)}</GuidedFactChip>
+          </div>
         ))}
       </div>
     </details>
@@ -2012,9 +1947,9 @@ function PrimaryResultCard(props: {
       </div>
 
       <div className="mt-4 grid gap-4 lg:grid-cols-[auto_minmax(0,1fr)] lg:items-start">
-        <div className={`min-w-0 rounded border px-4 py-4 text-right ${workbenchSectionCardClass("results")}`}>
+        <div className="min-w-0 text-right">
           <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">{card.label}</div>
-          <div className="mt-2 text-[clamp(2.4rem,4vw,3.2rem)] font-semibold leading-[0.92] tracking-[-0.05em] text-[color:var(--ink)]">
+          <div className="mt-1 text-[clamp(2.4rem,4vw,3.2rem)] font-semibold leading-[0.92] tracking-[-0.05em] text-[color:var(--ink)]">
             {card.value}
           </div>
           <div className={`mt-1 text-[0.72rem] font-semibold uppercase tracking-[0.14em] ${outputStatusTextClass(card.status)}`}>
@@ -2039,15 +1974,15 @@ function PendingOutputRow(props: { card: OutputCardModel }) {
   const postureTextClass = outputPostureTextClass(card.postureTone);
 
   return (
-    <article className="rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-3 py-3">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="text-sm font-semibold text-[color:var(--ink)]">{card.label}</div>
-        <span className={`text-[0.72rem] font-semibold uppercase tracking-[0.16em] ${outputStatusTextClass(card.status)}`}>
-          {statusLabel(card.status)}
-        </span>
+    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[color:var(--line)] px-1 py-2 last:border-b-0">
+      <div className="min-w-0">
+        <div className="text-[0.78rem] font-semibold text-[color:var(--ink)]">{card.label}</div>
+        <div className={`mt-0.5 text-[0.68rem] font-medium ${postureTextClass}`}>{card.postureLabel}</div>
       </div>
-      <div className={`mt-1 text-[0.72rem] font-medium ${postureTextClass}`}>{card.postureLabel}</div>
-    </article>
+      <span className={`text-[0.68rem] font-semibold uppercase tracking-[0.16em] ${outputStatusTextClass(card.status)}`}>
+        {statusLabel(card.status)}
+      </span>
+    </div>
   );
 }
 
@@ -3492,7 +3427,7 @@ export function SimpleWorkbenchShell() {
     validationTone: validationSummary.tone,
     warnings: scenario.warnings
   }).assumptionItems;
-  const activeReviewTabConfig = REVIEW_TABS.find((tab) => tab.id === activeReviewTab) ?? REVIEW_TABS[0]!;
+
   const activeReviewPanelId = `guided-review-panel-${activeReviewTab}`;
   const openWorkspacePanel = (panelId: WorkspacePanelId) => {
     setActiveWorkspacePanel(panelId);
@@ -3508,12 +3443,6 @@ export function SimpleWorkbenchShell() {
     setActiveReviewTab(tabId);
     setReviewExpanded(true);
     setActiveWorkspacePanel("review");
-  };
-  const openReviewTab = (tabId: ReviewTabId) => {
-    selectReviewTab(tabId);
-    requestAnimationFrame(() => {
-      document.getElementById("guided-review-deck")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
   };
   const appendConfiguredLayer = () => {
     if (!parsePositiveNumber(newLayerDraft.thicknessMm)) {
@@ -3933,15 +3862,8 @@ export function SimpleWorkbenchShell() {
                   </div>
                 </summary>
 
-                <div className="mt-4 grid gap-4">
-                  <div className={`rounded border px-3 py-3 text-[0.8rem] leading-5 text-[color:var(--ink-soft)] ${workbenchSectionMutedCardClass("route")}`}>
-                    <div className="flex flex-wrap items-center gap-2">
-                      <div className="font-semibold text-[color:var(--ink)]">{selectedPreset.label}</div>
-                      <GuidedFactChip>{`${rows.length} visible row${rows.length === 1 ? "" : "s"}`}</GuidedFactChip>
-                    </div>
-                    <p className="mt-1">{selectedPreset.summary}</p>
-                    <p className="mt-1 text-[0.74rem] leading-5 text-[color:var(--ink-faint)]">{selectedPreset.note}</p>
-                  </div>
+                <div className="mt-3 grid gap-4">
+                  <p className="text-[0.8rem] leading-5 text-[color:var(--ink-soft)]">{selectedPreset.summary}</p>
 
                   {showTimberImpactOnlyGuidedActions ? (
                     <div className="grid gap-2">
@@ -4363,13 +4285,6 @@ export function SimpleWorkbenchShell() {
           <div className="flex flex-col">
               <div className="flex min-w-0 flex-wrap items-start justify-between gap-4">
                 <SectionLead title="Results" tone="results" />
-                <button
-                  className={`focus-ring inline-flex items-center justify-center rounded border px-3 py-1.5 text-sm font-medium text-[color:var(--ink-soft)] ${workbenchSectionMutedCardClass("results")}`}
-                onClick={() => openWorkspacePanel("review")}
-                type="button"
-              >
-                Open details
-              </button>
             </div>
 
               <div className="mt-4 space-y-4">
@@ -4476,28 +4391,6 @@ export function SimpleWorkbenchShell() {
                 </details>
               ) : null}
 
-              <div className={`rounded border px-3 py-3 ${workbenchSectionMutedCardClass("review")}`}>
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div className="text-sm font-semibold text-[color:var(--ink)]">Open detail deck</div>
-                  <DetailTag>{activeReviewTabConfig.label}</DetailTag>
-                </div>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {REVIEW_TABS.map((tab) => (
-                    <button
-                      className={`focus-ring inline-flex items-center justify-center rounded border px-3 py-2 text-sm font-semibold ${
-                        activeReviewTab === tab.id
-                          ? "border-[color:var(--accent)] bg-[color:var(--accent-soft)] text-[color:var(--ink)]"
-                          : "border-[color:var(--line)] bg-[color:var(--paper)] text-[color:var(--ink-soft)]"
-                      }`}
-                      key={`result-review-${tab.id}`}
-                      onClick={() => openReviewTab(tab.id)}
-                      type="button"
-                    >
-                      {tab.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -4545,10 +4438,8 @@ export function SimpleWorkbenchShell() {
 
         {reviewExpanded && rows.length > 0 ? (
           <GuidedDecisionBasisStrip
-            activeReviewTab={activeReviewTab}
             cards={corridorDossier.cards}
             headline={corridorDossier.headline}
-            onOpenReviewTab={openReviewTab}
             selectedTraceNoteCount={selectedTraceNoteCount}
             traceGroupCount={methodDossier.traceGroups.length}
           />
@@ -4556,9 +4447,7 @@ export function SimpleWorkbenchShell() {
 
         {reviewExpanded && proposalLayers.length > 0 ? (
           <GuidedConstructionSnapshot
-            activeReviewTab={activeReviewTab}
             layers={proposalLayers}
-            onOpenReviewTab={openReviewTab}
             studyModeLabel={getStudyModeLabel(studyMode)}
           />
         ) : null}
