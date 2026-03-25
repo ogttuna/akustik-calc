@@ -1,6 +1,11 @@
 import type { SimpleWorkbenchProposalDocument } from "./simple-workbench-proposal";
 import { buildSimpleWorkbenchProposalFilename } from "./simple-workbench-proposal";
-import { buildSimpleWorkbenchProposalConstructionSection } from "./simple-workbench-proposal-construction-section";
+import {
+  buildSimpleWorkbenchProposalConstructionRender,
+  SIMPLE_WORKBENCH_REPORT_MARK,
+  SIMPLE_WORKBENCH_REPORT_PRODUCT_NAME,
+  SIMPLE_WORKBENCH_REPORT_SERIES
+} from "./simple-workbench-proposal-reporting";
 
 type SimplePdfStandardReference = {
   code: string;
@@ -160,39 +165,8 @@ function inferStandardReferences(document: SimpleWorkbenchProposalDocument): Sim
 }
 
 function renderConstructionFigure(document: SimpleWorkbenchProposalDocument): string {
-  const section = buildSimpleWorkbenchProposalConstructionSection(document.layers, document.studyModeLabel);
-
-  if (section.bands.length === 0) {
-    return `<div class="construction-empty">No construction data available.</div>`;
-  }
-
-  return `
-    <div class="construction-sheet">
-      <div class="construction-axis">
-        <span>${escapeHtml(section.anchorFromLabel)}</span>
-        <span>${escapeHtml(section.totalThicknessLabel)}</span>
-      </div>
-      <div class="construction-stack ${section.isWall ? "construction-stack-wall" : "construction-stack-floor"}">
-        ${section.bands
-          .map(
-            (band) => `
-              <div class="construction-band construction-band-${band.tone}" style="flex-grow:${band.flexGrow};">
-                <div class="construction-band-index">${escapeHtml(band.indexLabel)}</div>
-                <div class="construction-band-copy">
-                  <strong>${escapeHtml(band.label)}</strong>
-                  <small>${escapeHtml(band.metaLabel)} · ${escapeHtml(band.thicknessLabel)}</small>
-                </div>
-              </div>
-            `
-          )
-          .join("")}
-      </div>
-      <div class="construction-axis">
-        <span>${escapeHtml(section.anchorToLabel)}</span>
-        <span>${escapeHtml(section.headline)}</span>
-      </div>
-    </div>
-  `;
+  const construction = buildSimpleWorkbenchProposalConstructionRender(document.layers, document.studyModeLabel);
+  return construction.section.bands.length > 0 ? construction.svgMarkup : "";
 }
 
 function collectCurveFrequencies(figure: SimpleCurveFigure): number[] {
@@ -375,13 +349,6 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
   const visibleAssumptions = document.assumptionItems.slice(0, MAX_SIMPLE_ASSUMPTIONS);
   const visibleWarnings = document.warnings.slice(0, MAX_SIMPLE_WARNINGS);
 
-  const hasNotes =
-    visibleCitations.length > 0 ||
-    visibleAssumptions.length > 0 ||
-    document.briefNote.trim().length > 0;
-  const hasSecondPage =
-    document.layers.length > 0 || hasNotes || visibleWarnings.length > 0;
-
   const metricRows =
     visibleMetrics.length > 0
       ? visibleMetrics
@@ -416,10 +383,55 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
   const standardCodes = standardReferences.map((r) => r.code).join(" · ");
 
   const curvesHtml = renderSimpleCurveFigures(document);
+  const construction = buildSimpleWorkbenchProposalConstructionRender(document.layers, document.studyModeLabel);
+  const methodSnapshotItems = [
+    {
+      detail: document.dynamicBranchDetail,
+      label: "Dynamic route",
+      value: document.dynamicBranchLabel
+    },
+    {
+      detail: document.validationDetail,
+      label: "Validation posture",
+      value: document.validationLabel
+    },
+    {
+      detail: `${document.studyModeLabel} · ${document.contextLabel} · ${document.reportProfileLabel}`,
+      label: "Study scope",
+      value: document.primaryMetricLabel
+    }
+  ];
+  const methodSnapshotHtml = methodSnapshotItems
+    .map(
+      (item) => `
+        <li>
+          <strong>${escapeHtml(item.label)}</strong>
+          <span>${escapeHtml(item.value)} · ${escapeHtml(item.detail)}</span>
+        </li>
+      `
+    )
+    .join("");
+  const referenceBasisHtml = standardReferences
+    .map(
+      (reference) => `
+        <li>
+          <strong>${escapeHtml(reference.code)} · ${escapeHtml(reference.label)}</strong>
+          <span>${escapeHtml(reference.detail)}</span>
+        </li>
+      `
+    )
+    .join("");
 
+  const INTERNAL_SOURCE_PATTERNS = [
+    /anchor/i, /delegate/i, /screening seed/i, /topology/i, /solver/i,
+    /confidence/i, /sharp \(simple\)/i, /dynamic airborne/i, /operator/i
+  ];
+  const clientCitations = visibleCitations.filter(
+    (citation) => !INTERNAL_SOURCE_PATTERNS.some((pattern) => pattern.test(citation.label) || pattern.test(citation.detail))
+  );
   const sourceItems =
-    visibleCitations.length > 0
-      ? visibleCitations
+    clientCitations.length > 0
+      ? clientCitations
           .map(
             (citation) => `
               <li>
@@ -432,19 +444,32 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
           .join("")
       : "";
 
+  const INTERNAL_ASSUMPTION_PATTERNS = [
+    /evidence posture/i, /active route/i, /issue frame/i, /live warning/i,
+    /anchor is active/i, /sharp \(simple\)/i, /dynamic topology/i,
+    /screening seed/i, /solver/i, /delegate/i, /operator deck/i
+  ];
+  const clientAssumptions = visibleAssumptions.filter(
+    (item) => !INTERNAL_ASSUMPTION_PATTERNS.some((pattern) => pattern.test(item.label) || pattern.test(item.detail))
+  );
   const noteAndAssumptionItems = [
     ...(document.briefNote.trim().length > 0
       ? [`<li><strong>Consultant note</strong><span>${escapeHtml(document.briefNote.trim())}</span></li>`]
       : []),
-    ...visibleAssumptions.map(
+    ...clientAssumptions.map(
       (item) => `<li><strong>${escapeHtml(item.label)}</strong><span>${escapeHtml(item.detail)}</span></li>`
     )
   ].join("");
 
+  const hasNotes =
+    clientCitations.length > 0 ||
+    clientAssumptions.length > 0 ||
+    document.briefNote.trim().length > 0;
   const warningItems =
     visibleWarnings.length > 0
-      ? visibleWarnings.map((warning) => `<li><strong>Warning</strong><span>${escapeHtml(warning)}</span></li>`).join("")
-      : "";
+      ? visibleWarnings.map((warning) => `<li><strong>Issue note</strong><span>${escapeHtml(warning)}</span></li>`).join("")
+      : `<li><strong>Issue note</strong><span>No live warning flags are currently attached to the active route.</span></li>`;
+  const hasSecondPage = true;
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -455,15 +480,17 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
     <style>
       :root {
         color-scheme: light;
-        --paper: #ffffff;
+        --paper: #fcfcfb;
         --panel: #ffffff;
-        --panel-soft: #f5f5f5;
-        --ink: #111111;
-        --ink-soft: #444444;
-        --ink-faint: #6a6a6a;
-        --line: #cfcfcf;
-        --line-strong: #9a9a9a;
-        --accent: #1d3557;
+        --panel-soft: #f3f5f7;
+        --ink: #182634;
+        --ink-soft: #4b6177;
+        --ink-faint: #738598;
+        --line: #cfd7df;
+        --line-strong: #8997a5;
+        --accent: #31546d;
+        --accent-soft: #edf3f7;
+        --accent-strong: #20394c;
       }
 
       @page {
@@ -484,7 +511,7 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
       }
 
       body {
-        font-family: Arial, Helvetica, sans-serif;
+        font-family: "Avenir Next", "Helvetica Neue", Arial, sans-serif;
       }
 
       .document {
@@ -509,6 +536,43 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
       }
 
       .report-kicker {
+        display: flex;
+        align-items: center;
+        gap: 4mm;
+        margin-bottom: 3mm;
+      }
+
+      .report-kicker-mark {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        border: 1.4px solid color-mix(in srgb, var(--accent) 44%, var(--accent-strong));
+        border-radius: 12px;
+        background:
+          radial-gradient(circle at 30% 30%, rgba(255,255,255,0.28), transparent 48%),
+          linear-gradient(180deg, color-mix(in srgb, var(--accent) 14%, white), color-mix(in srgb, var(--accent) 78%, var(--accent-strong)));
+        box-shadow: inset 0 0 0 1px rgba(255,255,255,0.22);
+        font-size: 15px;
+        font-weight: 800;
+        font-family: Georgia, "Times New Roman", serif;
+        letter-spacing: 0.14em;
+        color: #ffffff;
+        flex-shrink: 0;
+      }
+
+      .report-kicker-text {
+        font-size: 9px;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--ink);
+        line-height: 1.5;
+      }
+
+      .report-kicker-series {
+        margin-top: 0.7mm;
         font-size: 8px;
         font-weight: 700;
         letter-spacing: 0.18em;
@@ -532,13 +596,14 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
 
       h1 {
         margin: 0;
-        font-size: 22px;
-        line-height: 1.1;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 24px;
+        line-height: 1.06;
         letter-spacing: -0.03em;
       }
 
       .report-subject {
-        margin: 0;
+        margin: 1mm 0 0;
         font-size: 11px;
         line-height: 1.4;
         color: var(--ink-soft);
@@ -583,7 +648,8 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
       }
 
       .result-card-primary {
-        border-color: var(--ink);
+        border-color: color-mix(in srgb, var(--accent) 45%, var(--ink));
+        background: linear-gradient(180deg, #ffffff, var(--accent-soft));
       }
 
       .result-card strong {
@@ -629,6 +695,7 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
 
       .curve-card {
         border: 1px solid var(--line);
+        background: #ffffff;
         padding: 2.5mm;
       }
 
@@ -717,93 +784,42 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
         flex: 0 0 8px;
       }
 
-      .construction-axis {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 3mm;
+      .construction-figure-note {
+        margin-top: 1.5mm;
+        font-size: 9px;
+        line-height: 1.5;
+        color: var(--ink-soft);
+      }
+
+      .construction-summary {
+        margin-top: 2mm;
+        border: 1px solid var(--line);
+        background: var(--panel-soft);
+        padding: 2mm 2.4mm;
+      }
+
+      .construction-summary strong {
+        display: block;
         font-size: 8px;
         font-weight: 700;
-        letter-spacing: 0.16em;
+        letter-spacing: 0.14em;
         text-transform: uppercase;
         color: var(--ink-faint);
       }
 
-      .construction-stack {
-        margin: 3mm 0;
-        overflow: hidden;
-        border: 1px solid var(--line-strong);
-        background: #ffffff;
-      }
-
-      .construction-stack-floor {
-        display: flex;
-        flex-direction: column;
-        min-height: 52mm;
-      }
-
-      .construction-stack-wall {
-        display: flex;
-        min-height: 38mm;
-      }
-
-      .construction-band {
-        display: grid;
-        grid-template-columns: auto minmax(0, 1fr);
-        gap: 2.5mm;
-        align-items: center;
-        border-bottom: 1px solid rgba(18, 37, 35, 0.14);
-        border-right: 1px solid rgba(18, 37, 35, 0.14);
-        padding: 2.5mm;
-      }
-
-      .construction-band:last-child {
-        border-bottom: 0;
-        border-right: 0;
-      }
-
-      .construction-band-leading {
-        background: #f2f2f2;
-      }
-
-      .construction-band-interior {
-        background: #ffffff;
-      }
-
-      .construction-band-trailing {
-        background: #ebebeb;
-      }
-
-      .construction-band-index {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 5mm;
-        height: 5mm;
-        border: 1px solid rgba(18, 37, 35, 0.2);
-        background: #ffffff;
-        font-size: 8px;
+      .construction-summary span {
+        display: block;
+        margin-top: 0.8mm;
+        font-size: 13px;
         font-weight: 700;
+        color: var(--ink);
       }
 
-      .construction-band-copy strong {
+      .construction-summary small {
         display: block;
-        font-size: 10px;
-        line-height: 1.2;
-      }
-
-      .construction-band-copy small {
-        display: block;
-        margin-top: 0.5mm;
+        margin-top: 0.8mm;
         font-size: 9px;
-        line-height: 1.3;
-        color: var(--ink-soft);
-      }
-
-      .construction-empty {
-        border: 1px dashed var(--line);
-        padding: 4mm;
-        font-size: 10px;
+        line-height: 1.5;
         color: var(--ink-soft);
       }
 
@@ -819,6 +835,24 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
         border: 1px solid var(--line);
         background: #ffffff;
         padding: 2.5mm;
+        break-inside: avoid;
+      }
+
+      .standards-inline {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        margin-top: 2mm;
+      }
+
+      .standard-tag {
+        display: inline-block;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 1.2mm 2.5mm;
+        font: 600 8px/1.4 Arial, sans-serif;
+        color: var(--ink-soft);
+        background: var(--panel-soft);
       }
 
       table {
@@ -911,10 +945,16 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
     <main class="document">
       <section class="page">
         <header class="report-header">
-          <div class="report-kicker">DAC Acoustic Report · Simple Issue</div>
+          <div class="report-kicker">
+            <div class="report-kicker-mark">${escapeHtml(SIMPLE_WORKBENCH_REPORT_MARK)}</div>
+            <div>
+              <div class="report-kicker-text">${escapeHtml(SIMPLE_WORKBENCH_REPORT_PRODUCT_NAME)}</div>
+              <div class="report-kicker-series">${escapeHtml(SIMPLE_WORKBENCH_REPORT_SERIES)}</div>
+            </div>
+          </div>
           <div class="report-title-row">
             <div>
-              <h1>Acoustic Summary Sheet</h1>
+              <h1>${escapeHtml(SIMPLE_WORKBENCH_REPORT_PRODUCT_NAME)}</h1>
               <p class="report-subject">${escapeHtml(document.projectName)} · ${escapeHtml(document.proposalSubject)}</p>
             </div>
             ${document.consultantLogoDataUrl ? `<img class="report-logo" src="${escapeHtml(document.consultantLogoDataUrl)}" alt="${escapeHtml(document.consultantCompany)} logo" />` : ""}
@@ -925,7 +965,7 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
               <span>${escapeHtml(document.consultantCompany)}</span>
             </div>
             <div class="meta-item">
-              <strong>Project</strong>
+              <strong>Profile</strong>
               <span>${escapeHtml(document.reportProfileLabel)}</span>
             </div>
             <div class="meta-item">
@@ -954,22 +994,31 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
             <small>${escapeHtml(document.executiveSummary)}</small>
           </article>
           <article class="result-card">
-            <strong>Route</strong>
+            <strong>Dynamic route</strong>
             <span>${escapeHtml(document.dynamicBranchLabel)}</span>
+            <small>${escapeHtml(document.dynamicBranchDetail)}</small>
           </article>
           <article class="result-card">
             <strong>Validation</strong>
             <span>${escapeHtml(document.validationLabel)}</span>
+            <small>${escapeHtml(document.validationDetail)}</small>
           </article>
           <article class="result-card">
-            <strong>Assembly</strong>
-            <span>${document.layers.length} layer${document.layers.length === 1 ? "" : "s"}</span>
+            <strong>Reference basis</strong>
+            <span>${escapeHtml(standardCodes || "Explicit route disclosure")}</span>
+            <small>${escapeHtml(document.studyModeLabel)} · ${escapeHtml(document.contextLabel)}</small>
           </article>
         </section>
 
+        ${standardReferences.length > 0 ? `
+        <div class="standards-inline">
+          ${standardReferences.map((r) => `<span class="standard-tag">${escapeHtml(r.code)}</span>`).join(" ")}
+        </div>
+        ` : ""}
+
         ${curvesHtml ? `
         <section class="panel">
-          <div class="panel-title">Frequency response</div>
+          <div class="panel-title">Frequency response curves</div>
           <div class="curve-grid">
             ${curvesHtml}
           </div>
@@ -978,7 +1027,7 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
 
         <section class="page-grid">
           <section class="table-panel">
-            <div class="table-title">Calculated indices</div>
+            <div class="table-title">Measured / predicted indices</div>
             <table>
               <thead>
                 <tr>
@@ -995,7 +1044,7 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
 
           ${layerRows ? `
           <section class="table-panel">
-            <div class="table-title">Layer schedule</div>
+            <div class="table-title">Visible layer schedule</div>
             <table>
               <thead>
                 <tr>
@@ -1012,7 +1061,7 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
           </section>
           ` : `
           <section class="table-panel">
-            <div class="table-title">Method</div>
+            <div class="table-title">Method snapshot</div>
             <table>
               <thead>
                 <tr>
@@ -1032,7 +1081,7 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
 
         <footer class="page-footer">
           <span>${escapeHtml(document.consultantCompany)} · ${escapeHtml(document.reportProfileLabel)}</span>
-          <span>${escapeHtml(standardCodes)} · ${escapeHtml(document.proposalReference)}</span>
+          <span>${escapeHtml(standardCodes || SIMPLE_WORKBENCH_REPORT_SERIES)} · ${escapeHtml(document.proposalReference)}</span>
         </footer>
       </section>
 
@@ -1040,41 +1089,56 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
         hasSecondPage
           ? `
         <section class="page">
+          <section class="page-grid">
+            <section class="notes-panel">
+              <div class="table-title">Method basis</div>
+              <ul>${methodSnapshotHtml}</ul>
+            </section>
+            <section class="notes-panel">
+              <div class="table-title">Reference basis</div>
+              <ul>${referenceBasisHtml}</ul>
+            </section>
+          </section>
+
           ${document.layers.length > 0 ? `
-          <section class="page-grid page-grid-wide">
-            <section class="panel">
-              <div class="panel-title">Construction section</div>
-              ${renderConstructionFigure(document)}
-            </section>
-            <section class="table-panel">
-              <div class="table-title">Layer detail</div>
-              <table>
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Material</th>
-                    <th>Thickness</th>
-                    <th>Density</th>
-                    <th>Surface mass</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${visibleLayers
-                    .map(
-                      (layer) => `
-                        <tr>
-                          <td>${layer.index}</td>
-                          <td>${escapeHtml(layer.label)}</td>
-                          <td>${escapeHtml(layer.thicknessLabel)}</td>
-                          <td>${escapeHtml(layer.densityLabel ?? "—")}</td>
-                          <td>${escapeHtml(layer.surfaceMassLabel ?? "—")}</td>
-                        </tr>
-                      `
-                    )
-                    .join("")}
-                </tbody>
-              </table>
-            </section>
+          <section class="panel">
+            <div class="panel-title">Construction section</div>
+            ${renderConstructionFigure(document)}
+            <div class="construction-summary">
+              <strong>Total thickness</strong>
+              <span>${escapeHtml(construction.section.totalThicknessLabel)}</span>
+              <small>${escapeHtml(construction.section.anchorFromLabel)} to ${escapeHtml(construction.section.anchorToLabel)} in solver order.</small>
+            </div>
+          </section>
+
+          <section class="table-panel">
+            <div class="table-title">Layer detail</div>
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Material</th>
+                  <th>Thickness</th>
+                  <th>Density</th>
+                  <th>Surface mass</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${visibleLayers
+                  .map(
+                    (layer) => `
+                      <tr>
+                        <td>${layer.index}</td>
+                        <td>${escapeHtml(layer.label)}</td>
+                        <td>${escapeHtml(layer.thicknessLabel)}</td>
+                        <td>${escapeHtml(layer.densityLabel ?? "—")}</td>
+                        <td>${escapeHtml(layer.surfaceMassLabel ?? "—")}</td>
+                      </tr>
+                    `
+                  )
+                  .join("")}
+              </tbody>
+            </table>
           </section>
           ` : ""}
 
@@ -1082,33 +1146,31 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
           <section class="notes-grid">
             ${sourceItems ? `
             <section class="notes-panel">
-              <div class="table-title">Sources</div>
+              <div class="table-title">Source notes</div>
               <ul>${sourceItems}</ul>
             </section>
             ` : ""}
             ${noteAndAssumptionItems ? `
             <section class="notes-panel">
-              <div class="table-title">Notes &amp; assumptions</div>
+              <div class="table-title">Consultant note and assumptions</div>
               <ul>${noteAndAssumptionItems}</ul>
             </section>
             ` : ""}
           </section>
           ` : ""}
 
-          ${warningItems ? `
           <section class="notes-panel">
-            <div class="table-title">Warnings</div>
+            <div class="table-title">Warnings and issue guardrails</div>
             <ul>${warningItems}</ul>
           </section>
-          ` : ""}
 
           <p class="footnote">
-            This sheet summarises a calculator estimate and does not replace accredited laboratory or field measurements.
+            This short-form report summarises the current ${escapeHtml(SIMPLE_WORKBENCH_REPORT_PRODUCT_NAME)} reading. It states the active ISO basis, route posture, and visible build-up, but does not replace accredited laboratory or field measurements.
           </p>
 
           <footer class="page-footer">
             <span>${escapeHtml(document.issueBaseReference)}</span>
-            <span>${escapeHtml(document.consultantCompany)} · Simple issue</span>
+            <span>${escapeHtml(document.consultantCompany)} · Short-form issue</span>
           </footer>
         </section>
       `

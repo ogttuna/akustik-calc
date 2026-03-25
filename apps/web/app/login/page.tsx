@@ -4,7 +4,6 @@ import { redirect } from "next/navigation";
 import { LoginForm } from "./login-form";
 
 import {
-  buildAuthConfigurationErrorMessage,
   getAuthState,
   normalizeNextPath
 } from "@/lib/auth";
@@ -24,11 +23,9 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
   const nextPath = normalizeNextPath(pickSingleValue(params.next));
   const authState = await getAuthState();
 
-  if (authState.configured && authState.session) {
+  if (!authState.configured || authState.session) {
     redirect(nextPath);
   }
-
-  const configurationMessage = authState.configured ? null : buildAuthConfigurationErrorMessage(authState.missingKeys);
 
   return (
     <main className="ui-shell flex min-h-screen items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
@@ -43,7 +40,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           </div>
         </div>
 
-        <LoginForm authConfigured={authState.configured} configurationMessage={configurationMessage} nextPath={nextPath} />
+        <LoginForm authConfigured={authState.configured} configurationMessage={null} nextPath={nextPath} />
 
         <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-[color:var(--ink-soft)]">
           <Link className="focus-ring rounded-full px-3 py-2 font-semibold hover:bg-black/[0.04]" href="/">

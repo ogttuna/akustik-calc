@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export const AUTH_COOKIE_NAME = "dynecho-auth-session";
+export const PUBLIC_PREVIEW_USERNAME = "Preview mode";
 
 const DEFAULT_SESSION_TTL_HOURS = 12;
 
@@ -185,7 +186,7 @@ export async function getAuthState(): Promise<
   | {
       configured: false;
       missingKeys: string[];
-      session: null;
+      session: AuthSession;
     }
   | {
       configured: true;
@@ -198,7 +199,10 @@ export async function getAuthState(): Promise<
     return {
       configured: false,
       missingKeys: config.missingKeys,
-      session: null
+      session: {
+        expiresAt: Number.MAX_SAFE_INTEGER,
+        username: PUBLIC_PREVIEW_USERNAME
+      }
     };
   }
 
@@ -216,7 +220,7 @@ export async function requireAuthenticatedPage(nextPath: string) {
   const normalizedNextPath = normalizeNextPath(nextPath);
 
   if (!authState.configured) {
-    redirect(`/login?next=${encodeURIComponent(normalizedNextPath)}&reason=config`);
+    return authState.session;
   }
 
   if (!authState.session) {

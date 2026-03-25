@@ -5,28 +5,14 @@ import {
   parseSimpleWorkbenchProposalDocument
 } from "@/features/workbench/simple-workbench-proposal";
 import { renderSimpleWorkbenchProposalPdf } from "@/features/workbench/simple-workbench-proposal-pdf-server";
-import {
-  buildAuthConfigurationErrorMessage,
-  getAuthState
-} from "@/lib/auth";
+import { getAuthState } from "@/lib/auth";
 
 export const runtime = "nodejs";
 
 export async function POST(request: Request) {
   const authState = await getAuthState();
 
-  if (!authState.configured) {
-    return NextResponse.json(
-      {
-        error: buildAuthConfigurationErrorMessage(authState.missingKeys)
-      },
-      {
-        status: 503
-      }
-    );
-  }
-
-  if (!authState.session) {
+  if (authState.configured && !authState.session) {
     return NextResponse.json(
       {
         error: "Authentication required."

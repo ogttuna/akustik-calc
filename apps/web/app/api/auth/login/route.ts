@@ -38,11 +38,8 @@ export async function POST(request: Request) {
   if (!loginState.configured) {
     return NextResponse.json(
       {
-        error: buildAuthConfigurationErrorMessage(loginState.missingKeys),
-        ok: false
-      },
-      {
-        status: 503
+        ok: true,
+        redirectTo: nextPath
       }
     );
   }

@@ -10,6 +10,12 @@ import {
 } from "./simple-workbench-proposal-branding";
 import { buildSimpleWorkbenchProposalConstructionSection } from "./simple-workbench-proposal-construction-section";
 import { buildSimpleWorkbenchProposalDossier } from "./simple-workbench-proposal-dossier";
+import {
+  buildSimpleWorkbenchProposalConstructionRender,
+  SIMPLE_WORKBENCH_REPORT_MARK,
+  SIMPLE_WORKBENCH_REPORT_PRODUCT_NAME,
+  SIMPLE_WORKBENCH_REPORT_SERIES
+} from "./simple-workbench-proposal-reporting";
 import type { SimpleWorkbenchProposalBriefItem } from "./simple-workbench-proposal-brief";
 import {
   getFallbackSimpleWorkbenchOutputPosture,
@@ -426,37 +432,6 @@ function renderDecisionTrailItems(items: readonly SimpleWorkbenchProposalDecisio
     .join("");
 }
 
-function renderMemoItems(items: readonly SimpleWorkbenchProposalBriefItem[]): string {
-  return items
-    .map(
-      (item) => `
-        <div class="method-box">
-          <div class="eyebrow" style="margin-bottom: 8px;">${escapeHtml(item.label)}</div>
-          <p>${escapeHtml(item.detail)}</p>
-        </div>
-      `
-    )
-    .join("");
-}
-
-function renderCitationItems(citations: readonly SimpleWorkbenchProposalCitation[]): string {
-  return citations
-    .map((citation) => {
-      const hrefLine = citation.href
-        ? `<p class="citation-link"><a href="${escapeHtml(citation.href)}">${escapeHtml(citation.href)}</a></p>`
-        : "";
-
-      return `
-        <div class="method-box">
-          <div class="eyebrow" style="margin-bottom: 8px;">${escapeHtml(citation.label)}</div>
-          <p>${escapeHtml(citation.detail)}</p>
-          ${hrefLine}
-        </div>
-      `;
-    })
-    .join("");
-}
-
 function renderDossierItems(items: readonly { detail: string; label: string; value: string }[]): string {
   return items
     .map(
@@ -468,6 +443,52 @@ function renderDossierItems(items: readonly { detail: string; label: string; val
         </div>
       `
     )
+    .join("");
+}
+
+function renderCompactBriefList(
+  items: readonly SimpleWorkbenchProposalBriefItem[],
+  fallback: string
+): string {
+  const visibleItems = items.slice(0, 3);
+
+  if (visibleItems.length === 0) {
+    return `<li>${escapeHtml(fallback)}</li>`;
+  }
+
+  return visibleItems
+    .map(
+      (item) => `
+        <li>
+          <strong>${escapeHtml(item.label)}</strong>
+          <span>${escapeHtml(item.detail)}</span>
+        </li>
+      `
+    )
+    .join("");
+}
+
+function renderCompactCitationList(
+  citations: readonly SimpleWorkbenchProposalCitation[],
+  fallback: string
+): string {
+  const visibleCitations = citations.slice(0, 3);
+
+  if (visibleCitations.length === 0) {
+    return `<li>${escapeHtml(fallback)}</li>`;
+  }
+
+  return visibleCitations
+    .map((citation) => {
+      const href = citation.href ? ` ${citation.href}` : "";
+
+      return `
+        <li>
+          <strong>${escapeHtml(citation.label)}</strong>
+          <span>${escapeHtml(`${citation.detail}${href}`)}</span>
+        </li>
+      `;
+    })
     .join("");
 }
 
@@ -1143,65 +1164,27 @@ function renderLayerRows(layers: readonly SimpleWorkbenchProposalLayer[]): strin
 }
 
 function renderConstructionFigure(document: SimpleWorkbenchProposalDocument): string {
-  const section = buildSimpleWorkbenchProposalConstructionSection(document.layers, document.studyModeLabel);
+  const construction = buildSimpleWorkbenchProposalConstructionRender(document.layers, document.studyModeLabel);
 
-  if (section.bands.length === 0) {
-    return `
-      <div class="method-box">
-        <h3>Construction section unavailable</h3>
-        <p>No visible rows are packaged yet, so DynEcho cannot draw the client-facing construction section.</p>
-      </div>
-    `;
+  if (construction.section.bands.length === 0) {
+    return `<div class="method-box"><h3>Construction section unavailable</h3><p>Add layers to produce the construction cross-section.</p></div>`;
   }
 
   return `
     <div class="construction-grid">
       <div class="construction-figure">
-        <div class="construction-axis">
-          <span>${escapeHtml(section.anchorFromLabel)}</span>
-          <span>${escapeHtml(section.headline)}</span>
-        </div>
-        <div class="construction-stack ${section.isWall ? "construction-stack-wall" : "construction-stack-floor"}">
-          ${section.bands
-            .map(
-              (band) => `
-                <div class="construction-band construction-band-${band.tone}" style="flex-grow: ${band.flexGrow};">
-                  <div class="construction-index">${escapeHtml(band.indexLabel)}</div>
-                  <div class="construction-copy">
-                    <strong>${escapeHtml(band.label)}</strong>
-                    <small>${escapeHtml(band.thicknessLabel)}</small>
-                  </div>
-                </div>
-              `
-            )
-            .join("")}
-        </div>
-        <div class="construction-axis">
-          <span>${escapeHtml(section.anchorToLabel)}</span>
-          <span>${escapeHtml(section.totalThicknessLabel)}</span>
-        </div>
+        ${construction.svgMarkup}
+        <div class="construction-figure-note">Indicative build-up section drawn from the visible solver stack. Thin finish and resilient layers use a minimum graphic width so the sheet stays readable in print.</div>
       </div>
       <div class="construction-legend">
-        <div class="method-box">
-          <div class="eyebrow" style="margin-bottom: 8px;">Technical schedule legend</div>
-          <h3>${escapeHtml(section.totalThicknessLabel)}</h3>
-          <p>${escapeHtml(section.headline)}</p>
-        </div>
-        <div class="construction-legend-grid">
-          ${section.bands
-            .map(
-              (band) => `
-                <div class="construction-legend-row">
-                  <span>${escapeHtml(band.indexLabel)}</span>
-                  <div>
-                    <strong>${escapeHtml(band.label)}</strong>
-                    <small>${escapeHtml(band.metaLabel)}</small>
-                  </div>
-                  <small>${escapeHtml(band.thicknessLabel)}</small>
-                </div>
-              `
-            )
-            .join("")}
+        <table class="construction-table">
+          <thead><tr><th>#</th><th>Layer</th><th>Thickness</th></tr></thead>
+          <tbody>${construction.legendRowsHtml}</tbody>
+        </table>
+        <div class="construction-summary-card">
+          <strong>Total thickness</strong>
+          <span>${escapeHtml(construction.section.totalThicknessLabel)}</span>
+          <small>${escapeHtml(construction.section.anchorFromLabel)} to ${escapeHtml(construction.section.anchorToLabel)} in solver order.</small>
         </div>
       </div>
     </div>
@@ -1354,7 +1337,7 @@ export function buildSimpleWorkbenchProposalText(document: SimpleWorkbenchPropos
     "Consultant note",
     noteLine,
     "",
-    "Prepared from the DynEcho dynamic calculator. This sheet summarizes a project estimate and does not replace accredited laboratory or site measurements."
+    `Prepared from the ${SIMPLE_WORKBENCH_REPORT_PRODUCT_NAME}. This sheet summarizes a project estimate and does not replace accredited laboratory or site measurements.`
   ].join("\n");
 }
 
@@ -1384,6 +1367,18 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
   const stackSurfaceMassCount = document.layers.filter(
     (layer) => typeof layer.surfaceMassLabel === "string" && layer.surfaceMassLabel.trim().length > 0
   ).length;
+  const compactRecommendationList = renderCompactBriefList(
+    document.recommendationItems,
+    "No additional recommendation lines are packaged on this issue."
+  );
+  const compactAssumptionList = renderCompactBriefList(
+    document.assumptionItems,
+    "No additional assumption lines are packaged on this issue."
+  );
+  const compactCitationList = renderCompactCitationList(
+    document.citations,
+    "No external source line is packaged on this issue."
+  );
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -1583,8 +1578,9 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
       .cover-title {
         max-width: none;
         margin: 18px 0 0;
-        font-size: 38px;
-        line-height: 0.98;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 42px;
+        line-height: 1.02;
         letter-spacing: -0.04em;
       }
 
@@ -1626,7 +1622,7 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
 
       .brand-stack strong {
         display: block;
-        font: 700 19px/1.3 Arial, sans-serif;
+        font: 700 20px/1.2 Georgia, "Times New Roman", serif;
         color: var(--ink);
       }
 
@@ -1668,11 +1664,15 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        border: 1px solid var(--ink);
-        background: var(--ink);
+        border: 1.2px solid color-mix(in srgb, var(--accent) 44%, var(--ink));
+        border-radius: 18px;
+        background:
+          radial-gradient(circle at 30% 30%, rgba(255,255,255,0.3), transparent 48%),
+          linear-gradient(180deg, color-mix(in srgb, var(--accent) 24%, white), color-mix(in srgb, var(--accent) 72%, var(--ink)));
+        box-shadow: inset 0 0 0 1px rgba(255,255,255,0.22);
         color: #ffffff;
-        font: 700 28px/1 Arial, sans-serif;
-        letter-spacing: 0.14em;
+        font: 700 24px/1 Georgia, "Times New Roman", serif;
+        letter-spacing: 0.18em;
       }
 
       .report-series {
@@ -1743,6 +1743,7 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
         border: 1px solid var(--line);
         background: #ffffff;
         padding: 14px;
+        break-inside: avoid;
       }
 
       .result-chip strong,
@@ -2009,120 +2010,85 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
 
       .construction-figure {
         border: 1px solid var(--line);
-        background: #f8fbfd;
-        padding: 16px;
-      }
-
-      .construction-axis {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        font: 700 10px/1.4 Arial, sans-serif;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-        color: var(--ink-faint);
-      }
-
-      .construction-stack {
-        margin-top: 14px;
-        overflow: hidden;
-        border: 1px solid var(--line);
-        background: linear-gradient(180deg, rgba(255, 255, 255, 0.54), rgba(255, 255, 255, 0.12));
-      }
-
-      .construction-stack-floor {
-        min-height: 220px;
-        display: flex;
-        flex-direction: column;
-      }
-
-      .construction-stack-wall {
-        min-height: 130px;
-        display: flex;
-      }
-
-      .construction-band {
+        background: linear-gradient(180deg, #ffffff, #f7fafc);
+        padding: 14px;
         display: grid;
         gap: 10px;
-        min-width: 0;
-        padding: 12px;
-        border-right: 1px solid var(--line);
-        border-bottom: 1px solid var(--line);
-      }
-
-      .construction-band:last-child {
-        border-right: 0;
-        border-bottom: 0;
-      }
-
-      .construction-band-leading {
-        background: color-mix(in srgb, var(--accent) 14%, var(--paper));
-      }
-
-      .construction-band-interior {
-        background: rgba(255, 253, 248, 0.82);
-      }
-
-      .construction-band-trailing {
-        background: color-mix(in srgb, var(--ink) 8%, var(--paper));
-      }
-
-      .construction-index {
-        width: 24px;
-        height: 24px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid var(--line);
-        background: rgba(255, 253, 248, 0.86);
         font: 700 10px/1 Arial, sans-serif;
         color: var(--ink);
       }
 
-      .construction-copy strong,
-      .construction-legend-row strong {
-        display: block;
-        font: 700 13px/1.45 Arial, sans-serif;
-        color: var(--ink);
-      }
-
-      .construction-copy small,
-      .construction-legend-row small {
-        display: block;
-        margin-top: 4px;
-        font: 400 11px/1.5 Arial, sans-serif;
+      .construction-figure-note {
+        font: 400 11px/1.6 Arial, sans-serif;
         color: var(--ink-soft);
       }
 
       .construction-legend {
         display: grid;
-        gap: 12px;
-      }
-
-      .construction-legend-grid {
-        display: grid;
         gap: 10px;
       }
 
-      .construction-legend-row {
-        display: grid;
-        grid-template-columns: auto minmax(0, 1fr) auto;
-        gap: 12px;
-        align-items: center;
-        border: 1px solid var(--line);
-        background: rgba(255, 253, 248, 0.86);
-        padding: 12px;
+      .construction-table {
+        width: 100%;
+        border-collapse: collapse;
+        font: 400 11px/1.5 Arial, sans-serif;
       }
 
-      .construction-legend-row > span:first-child {
-        font: 700 13px/1 Arial, sans-serif;
+      .construction-table th {
+        background: #f5f5f5;
+        font-weight: 700;
+        font-size: 9px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        text-align: left;
+        padding: 6px 8px;
+        border-bottom: 1.5px solid var(--line);
+      }
+
+      .construction-table td {
+        padding: 5px 8px;
+        border-bottom: 1px solid #e8e8e8;
+        vertical-align: top;
+      }
+
+      .construction-table td strong {
+        display: block;
         color: var(--ink);
       }
 
-      .construction-legend-row > small:last-child {
-        margin-top: 0;
-        text-align: right;
+      .construction-table td span {
+        display: block;
+        margin-top: 3px;
+        color: var(--ink-soft);
+        font-size: 10px;
+      }
+
+      .construction-summary-card {
+        border: 1px solid var(--line);
+        background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(244,247,250,0.98));
+        padding: 12px 14px;
+      }
+
+      .construction-summary-card strong {
+        display: block;
+        font: 700 10px/1.4 Arial, sans-serif;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--ink-faint);
+      }
+
+      .construction-summary-card span {
+        display: block;
+        margin-top: 6px;
+        font: 700 20px/1.2 Georgia, "Times New Roman", serif;
+        color: var(--ink);
+      }
+
+      .construction-summary-card small {
+        display: block;
+        margin-top: 8px;
+        font: 400 11px/1.6 Arial, sans-serif;
+        color: var(--ink-soft);
       }
 
       .cover-kicker {
@@ -2192,6 +2158,7 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
         width: 100%;
         border-collapse: collapse;
         font: 400 12px/1.6 Arial, sans-serif;
+        break-inside: avoid;
       }
 
       th,
@@ -2284,13 +2251,6 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
           grid-template-columns: 1fr;
         }
 
-        .construction-legend-row {
-          grid-template-columns: auto minmax(0, 1fr);
-        }
-
-        .construction-legend-row > small:last-child {
-          text-align: left;
-        }
       }
 
       @media print {
@@ -2329,8 +2289,8 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
           <div class="report-kicker-row">
             <div class="dac-mark">DAC</div>
             <div>
-              <div class="eyebrow">DynEcho Dynamic Calculator</div>
-              <div class="report-series">ISO-aligned acoustic calculation issue</div>
+              <div class="eyebrow">${escapeHtml(SIMPLE_WORKBENCH_REPORT_PRODUCT_NAME)}</div>
+              <div class="report-series">${escapeHtml(SIMPLE_WORKBENCH_REPORT_SERIES)}</div>
             </div>
           </div>
           <h1 class="cover-title">${escapeHtml(branding.coverTitle)}</h1>
@@ -2434,7 +2394,7 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
 
       <section class="frame page">
         <header class="page-header">
-          <div class="eyebrow">DAC | DynEcho Dynamic Calculator</div>
+          <div class="eyebrow">${escapeHtml(SIMPLE_WORKBENCH_REPORT_MARK)} | ${escapeHtml(SIMPLE_WORKBENCH_REPORT_PRODUCT_NAME)}</div>
           <div class="page-header-grid">
             <div>
               <h1 style="margin-top: 8px;">Technical Schedule</h1>
@@ -2526,7 +2486,7 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
           <div class="eyebrow" style="margin: 18px 0 8px;">ISO &amp; Method Basis</div>
           <div class="method-box">
             <h3>ISO-aligned calculation basis</h3>
-            <p>Calculations and single-number ratings are expressed using the active ISO basis relevant to the current route. DAC output keeps prediction, field continuation, and evidence posture explicit instead of presenting the result as an accredited test certificate.</p>
+            <p>Calculations and single-number ratings are expressed using the active ISO basis relevant to the current route. ${escapeHtml(SIMPLE_WORKBENCH_REPORT_MARK)} output keeps prediction, field continuation, and evidence posture explicit instead of presenting the result as an accredited test certificate.</p>
           </div>
           <div class="standards-grid" style="padding-top: 12px;">
             ${renderProposalStandardCards(standardReferences)}
@@ -2563,7 +2523,7 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
         <section class="section">
           <div class="eyebrow" style="margin: 18px 0 8px;">Solver Rationale Appendix</div>
           <div class="method-box">
-            <h3>Why DynEcho is reading the stack this way</h3>
+            <h3>Why the calculator is reading the stack this way</h3>
             <p>${escapeHtml(document.methodDossierHeadline)}</p>
           </div>
           <div class="detail-grid" style="padding: 12px 0 0;">
@@ -2728,124 +2688,23 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
           </div>
         </section>
 
-      </section>
-
-      <section class="frame page">
-        <header class="page-header">
-          <div class="eyebrow">DAC | DynEcho Dynamic Calculator</div>
-          <h1 style="margin-top: 8px;">Citation Appendix</h1>
-          <p class="lede">
-            Appendix page for assumptions, recommendations, cited sources, and project notes that travel with the formal issue.
-          </p>
-          <div class="appendix-strip">
-            <div class="metric">
-              <strong>Recommendations</strong>
-              <span>${document.recommendationItems.length}</span>
-              <small>Next actions carried in the issue package.</small>
-            </div>
-            <div class="metric">
-              <strong>Assumptions</strong>
-              <span>${document.assumptionItems.length}</span>
-              <small>Explicit posture lines for audit follow-up.</small>
-            </div>
-            <div class="metric">
-              <strong>Sources</strong>
-              <span>${document.citations.length}</span>
-              <small>Referenced source lines and active links.</small>
-            </div>
-            <div class="metric">
-              <strong>Solver notes</strong>
-              <span>${document.methodTraceGroups.length}</span>
-              <small>Dynamic lane groups carried from the method tab.</small>
-            </div>
-            <div class="metric">
-              <strong>Corridor cards</strong>
-              <span>${document.corridorDossierCards.length}</span>
-              <small>Benchmarked family, mode, tolerance, and field posture lines.</small>
-            </div>
-            <div class="metric">
-              <strong>Issue history</strong>
-              <span>${document.issueRegisterItems.length}</span>
-              <small>Current issue plus recent browser-local reservations on this base code.</small>
-            </div>
-          </div>
-        </header>
-
-        <section class="section">
-          <div class="eyebrow" style="margin: 18px 0 8px;">Recommendation Register</div>
-          <div class="detail-grid" style="padding: 0;">
-            ${renderMemoItems(document.recommendationItems)}
-          </div>
-        </section>
-
-        <section class="section">
-          <div class="eyebrow" style="margin: 18px 0 8px;">Assumption Register</div>
-          <div class="detail-grid" style="padding: 0;">
-            ${renderMemoItems(document.assumptionItems)}
-          </div>
-        </section>
-
-        ${
-          document.corridorDossierCards.length > 0
-            ? `
-        <section class="section">
-          <div class="eyebrow" style="margin: 18px 0 8px;">Validation Corridor Package</div>
+        <section class="detail-grid" style="padding-top: 12px;">
           <div class="method-box">
-            <h3>Benchmarked family and mode posture</h3>
-            <p>${escapeHtml(document.corridorDossierHeadline)}</p>
+            <div class="eyebrow" style="margin-bottom: 8px;">Project Notes</div>
+            <h3>Key actions and assumptions</h3>
+            <ul>${compactRecommendationList}${compactAssumptionList}</ul>
           </div>
-          <div class="detail-grid" style="padding: 12px 0 0;">
-            ${renderDossierItems(document.corridorDossierCards)}
-          </div>
-        </section>`
-            : ""
-        }
-
-        <section class="section">
-          <div class="eyebrow" style="margin: 18px 0 8px;">Solver Rationale Appendix</div>
           <div class="method-box">
-            <h3>Packaged method narrative</h3>
-            <p>${escapeHtml(document.methodDossierHeadline)}</p>
-          </div>
-          <div class="detail-grid" style="padding: 12px 0 0;">
-            ${renderDossierItems(document.methodDossierCards)}
-          </div>
-          ${
-            document.methodTraceGroups.length > 0
-              ? `<div class="detail-grid" style="padding: 12px 0 0;">${renderMethodTraceGroups(document.methodTraceGroups)}</div>`
-              : ""
-          }
-        </section>
-
-        <section class="section">
-          <div class="eyebrow" style="margin: 18px 0 8px;">Issue History Appendix</div>
-          <table>
-            <thead>
-              <tr>
-                <th>Line</th>
-                <th>Reference</th>
-                <th>Status</th>
-                <th>Date</th>
-                <th>Reading</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${renderIssueRegisterRows(document.issueRegisterItems)}
-            </tbody>
-          </table>
-        </section>
-
-        <section class="section">
-          <div class="eyebrow" style="margin: 18px 0 8px;">Source Citation Appendix</div>
-          <div class="detail-grid" style="padding: 0;">
-            ${renderCitationItems(document.citations)}
+            <div class="eyebrow" style="margin-bottom: 8px;">Sources</div>
+            <h3>Packaged reference lines</h3>
+            <ul>${compactCitationList}</ul>
           </div>
         </section>
 
         <section class="footer">
           <div class="note-box">
             <p>
-              Prepared from the DynEcho dynamic calculator. This DAC sheet summarizes a project estimate and should be read together with the visible solver posture, ISO basis, assumptions, and any required laboratory or site verification.
+              Prepared from the ${escapeHtml(SIMPLE_WORKBENCH_REPORT_PRODUCT_NAME)}. This ${escapeHtml(SIMPLE_WORKBENCH_REPORT_MARK)} sheet summarizes a project estimate and should be read together with the visible solver posture, ISO basis, assumptions, and any required laboratory or site verification.
             </p>
             <p style="margin-top: 8px;">
               ${escapeHtml(document.consultantCompany)} · ${escapeHtml(document.preparedBy)} · ${escapeHtml(document.approverTitle)} · ${escapeHtml(document.consultantEmail)} · ${escapeHtml(document.consultantPhone)} · ${escapeHtml(document.consultantAddress)}

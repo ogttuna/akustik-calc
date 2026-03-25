@@ -31,18 +31,24 @@ describe("simple workbench proposal construction section", () => {
     expect(section.headline).toBe("2 visible rows in solver order.");
     expect(section.bands).toEqual([
       {
+        category: "top finish",
         flexGrow: 12,
         indexLabel: "01",
         label: "Vinyl flooring",
+        materialFamily: "board",
         metaLabel: "Floor covering",
+        thicknessMm: 4,
         thicknessLabel: "4 mm",
         tone: "leading"
       },
       {
+        category: "base structure",
         flexGrow: 180,
         indexLabel: "02",
         label: "Concrete slab",
+        materialFamily: "mass",
         metaLabel: "Base structure",
+        thicknessMm: 180,
         thicknessLabel: "180 mm",
         tone: "trailing"
       }
@@ -84,7 +90,9 @@ describe("simple workbench proposal construction section", () => {
     expect(section.bands.map((band) => band.tone)).toEqual(["leading", "interior", "trailing"]);
     expect(section.bands[1]).toMatchObject({
       indexLabel: "02",
+      materialFamily: "insulation",
       metaLabel: "Insulation",
+      thicknessMm: 75,
       thicknessLabel: "75 mm"
     });
   });

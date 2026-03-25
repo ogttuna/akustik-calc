@@ -2,25 +2,12 @@ import { calculateImpactOnly } from "@dynecho/engine";
 import { ImpactOnlyRequestSchema } from "@dynecho/shared";
 import { NextResponse } from "next/server";
 
-import {
-  buildAuthConfigurationErrorMessage,
-  getAuthState
-} from "@/lib/auth";
+import { getAuthState } from "@/lib/auth";
 
 export async function POST(request: Request) {
   const authState = await getAuthState();
 
-  if (!authState.configured) {
-    return NextResponse.json(
-      {
-        ok: false,
-        error: buildAuthConfigurationErrorMessage(authState.missingKeys)
-      },
-      { status: 503 }
-    );
-  }
-
-  if (!authState.session) {
+  if (authState.configured && !authState.session) {
     return NextResponse.json(
       {
         ok: false,
