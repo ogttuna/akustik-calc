@@ -497,14 +497,20 @@ describe("simple workbench proposal helpers", () => {
   it("builds a lightweight summary html for the simple pdf path", () => {
     const html = buildSimpleWorkbenchProposalSimpleHtml(BASE_DOCUMENT);
 
+    expect(html).toContain("DAC Acoustic Report");
     expect(html).toContain("Acoustic Summary Sheet");
-    expect(html).toContain("Short-form acoustic issue");
+    expect(html).toContain("Simple Issue");
+    expect(html).toContain("Frequency response curves");
+    expect(html).toContain("Airborne response curve");
+    expect(html).toContain("Impact response curve");
     expect(html).toContain("Layer illustration");
     expect(html).toContain("Measured / predicted indices");
+    expect(html).toContain("Method basis");
     expect(html).toContain("Visible layer schedule");
     expect(html).toContain("Output coverage register");
     expect(html).toContain("Reference basis");
-    expect(html).toContain("Consultant note and assumption register");
+    expect(html).toContain("Source notes");
+    expect(html).toContain("Consultant note and assumptions");
     expect(html).toContain("Warnings and issue guardrails");
     expect(html).toContain("ISO 717-1");
     expect(html).toContain("ISO 717-2");
@@ -518,6 +524,8 @@ describe("simple workbench proposal helpers", () => {
     expect(html).toContain("Ln,w");
     expect(html).toContain("Riverside Development Team");
     expect(html).toContain("Published family estimate is active through reinforced concrete.");
-    expect(html).toContain("Prepared from the DynEcho dynamic calculator as a short-form issue sheet.");
+    expect(html).toContain("Prepared from the DynEcho dynamic calculator as a short-form report.");
+    expect(html).not.toContain("linear-gradient");
+    expect(html).not.toContain("radial-gradient");
   });
 });
