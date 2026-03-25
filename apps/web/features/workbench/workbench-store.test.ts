@@ -629,6 +629,110 @@ describe("workbench store", () => {
     expect(failures).toEqual([]);
   });
 
+  it("keeps an override-heavy split floor stack stable when it is entered in reverse order and then reordered into place", async () => {
+    const { evaluateScenario } = await import("./scenario-analysis");
+    const { useWorkbenchStore } = await import("./workbench-store");
+
+    const finalRows = [
+      { floorRole: "floor_covering" as const, materialId: "ceramic_tile", thicknessMm: "8" },
+      ...Array.from({ length: 5 }, () => ({
+        densityKgM3: "1800",
+        floorRole: "floating_screed" as const,
+        materialId: "screed",
+        thicknessMm: "16"
+      })),
+      ...Array.from({ length: 5 }, () => ({
+        dynamicStiffnessMNm3: "35",
+        floorRole: "resilient_layer" as const,
+        materialId: "generic_resilient_underlay",
+        thicknessMm: "4"
+      })),
+      { floorRole: "base_structure" as const, materialId: "concrete", thicknessMm: "46.667" },
+      { floorRole: "base_structure" as const, materialId: "concrete", thicknessMm: "46.667" },
+      { floorRole: "base_structure" as const, materialId: "concrete", thicknessMm: "46.666" }
+    ] as const;
+
+    const evaluateCurrentScenario = () => {
+      const state = useWorkbenchStore.getState();
+
+      return evaluateScenario({
+        id: "current",
+        name: "reverse entry parity",
+        rows: state.rows,
+        source: "current",
+        studyMode: state.studyMode,
+        targetOutputs: FLOOR_TARGET_OUTPUTS
+      });
+    };
+
+    const moveRowToIndex = (rowId: string, targetIndex: number) => {
+      while (true) {
+        const currentIndex = useWorkbenchStore.getState().rows.findIndex((row) => row.id === rowId);
+
+        expect(currentIndex).toBeGreaterThanOrEqual(0);
+
+        if (currentIndex === targetIndex) {
+          return;
+        }
+
+        useWorkbenchStore.getState().moveRow(rowId, currentIndex > targetIndex ? "up" : "down");
+      }
+    };
+
+    useWorkbenchStore.getState().reset();
+    useWorkbenchStore.getState().startStudyMode("floor");
+    useWorkbenchStore.getState().appendRows(finalRows);
+
+    const directScenario = evaluateCurrentScenario();
+    expect(directScenario.result).not.toBeNull();
+
+    useWorkbenchStore.getState().reset();
+    useWorkbenchStore.getState().startStudyMode("floor");
+
+    const reverseEntryIds: string[] = [];
+
+    for (const row of [...finalRows].reverse()) {
+      useWorkbenchStore.getState().addRow();
+      const draftRowId = useWorkbenchStore.getState().rows.at(-1)?.id;
+
+      expect(draftRowId).toBeTruthy();
+
+      reverseEntryIds.push(draftRowId!);
+      useWorkbenchStore.getState().updateMaterial(draftRowId!, row.materialId);
+      useWorkbenchStore.getState().updateFloorRole(draftRowId!, row.floorRole);
+      useWorkbenchStore.getState().updateThickness(draftRowId!, row.thicknessMm);
+
+      if ("densityKgM3" in row && typeof row.densityKgM3 === "string") {
+        useWorkbenchStore.getState().updateDensity(draftRowId!, row.densityKgM3);
+      }
+
+      if ("dynamicStiffnessMNm3" in row && typeof row.dynamicStiffnessMNm3 === "string") {
+        useWorkbenchStore.getState().updateDynamicStiffness(draftRowId!, row.dynamicStiffnessMNm3);
+      }
+    }
+
+    reverseEntryIds
+      .slice()
+      .reverse()
+      .forEach((rowId, targetIndex) => {
+        moveRowToIndex(rowId, targetIndex);
+      });
+
+    const reverseOrderedScenario = evaluateCurrentScenario();
+    expect(reverseOrderedScenario.result).not.toBeNull();
+    expect(
+      evaluatedScenarioSnapshot({
+        result: reverseOrderedScenario.result as ResultSnapshotSource | null,
+        warnings: reverseOrderedScenario.warnings
+      })
+    ).toEqual(
+      evaluatedScenarioSnapshot({
+        result: directScenario.result as ResultSnapshotSource | null,
+        warnings: directScenario.warnings
+      })
+    );
+  });
+
   it("keeps the same heavy-floor result when the final dynamic stiffness override is reached through stepped and direct edits", async () => {
     const { evaluateScenario } = await import("./scenario-analysis");
     const { useWorkbenchStore } = await import("./workbench-store");

@@ -36,6 +36,29 @@ function thicknessMatches(actual: number, expected: number): boolean {
   return Math.abs(actual - expected) <= THICKNESS_TOLERANCE_MM;
 }
 
+function hasMergeSafePackedRoleEquivalent(
+  layers: readonly ResolvedLayer[],
+  criteria: FloorSystemRoleCriteria
+): boolean {
+  if (!(criteria.layerCount && typeof criteria.thicknessMm === "number") || layers.length === 0) {
+    return false;
+  }
+
+  const firstMaterialId = layers[0]?.material.id;
+  if (!firstMaterialId || !layers.every((layer) => layer.material.id === firstMaterialId)) {
+    return false;
+  }
+
+  if (criteria.materialIds && !criteria.materialIds.includes(firstMaterialId)) {
+    return false;
+  }
+
+  const totalThicknessMm = layers.reduce((sum, layer) => sum + layer.thicknessMm, 0);
+  const expectedPackedThicknessMm = criteria.layerCount * criteria.thicknessMm;
+
+  return thicknessMatches(totalThicknessMm, expectedPackedThicknessMm);
+}
+
 function scoreRoleCriteria(criteria: FloorSystemRoleCriteria): number {
   return (criteria.layerCount ? 1 : 0) + (criteria.materialIds ? 1 : 0) + (typeof criteria.thicknessMm === "number" ? 1 : 0);
 }
@@ -52,10 +75,11 @@ function evaluateRoleCriteria(
   const roleLabel = ROLE_LABELS[role];
   const totalSignals = scoreRoleCriteria(criteria);
   const missingSignals: string[] = [];
+  const packedEquivalent = hasMergeSafePackedRoleEquivalent(layers, criteria);
   let matchedSignals = 0;
 
   if (criteria.layerCount) {
-    if (layers.length === criteria.layerCount) {
+    if (layers.length === criteria.layerCount || packedEquivalent) {
       matchedSignals += 1;
     } else {
       missingSignals.push(`Set ${roleLabel} layers to ${criteria.layerCount}.`);
@@ -77,7 +101,7 @@ function evaluateRoleCriteria(
   if (typeof criteria.thicknessMm === "number") {
     if (layers.length === 0) {
       missingSignals.push(`Add ${roleLabel} around ${criteria.thicknessMm} mm.`);
-    } else if (layers.every((layer) => thicknessMatches(layer.thicknessMm, criteria.thicknessMm as number))) {
+    } else if (packedEquivalent || layers.every((layer) => thicknessMatches(layer.thicknessMm, criteria.thicknessMm as number))) {
       matchedSignals += 1;
     } else {
       missingSignals.push(`Tune ${roleLabel} to about ${criteria.thicknessMm} mm.`);

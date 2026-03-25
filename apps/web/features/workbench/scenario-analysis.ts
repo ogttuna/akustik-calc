@@ -49,6 +49,7 @@ export function evaluateScenario(input: {
     airborneContext: input.airborneContext ?? null,
     impactFieldContext: input.impactFieldContext ?? null,
     materials: runtimeCatalog,
+    normalizedLayers: normalized.layers,
     rows: input.rows,
     studyMode: input.studyMode,
     targetOutputs: input.targetOutputs ?? []

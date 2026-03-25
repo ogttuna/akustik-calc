@@ -76,6 +76,28 @@ describe("normalizeRows", () => {
     ]);
   });
 
+  it("builds a runtime override material when a listed dynamic stiffness value is changed manually", () => {
+    const normalized = normalizeRows([
+      { floorRole: "resilient_layer", id: "a", materialId: "mw_t_impact_layer_s40", thicknessMm: "30", dynamicStiffnessMNm3: "20" }
+    ]);
+
+    expect(normalized.warnings).toEqual([]);
+    expect(normalized.runtimeMaterials).toHaveLength(1);
+    expect(normalized.runtimeMaterials[0]?.impact?.dynamicStiffnessMNm3).toBe(20);
+    expect(normalized.layers).toEqual([{ floorRole: "resilient_layer", materialId: "mw_t_impact_layer_s40__dyn_20", thicknessMm: 30 }]);
+  });
+
+  it("builds a runtime override material when a listed density value is changed manually", () => {
+    const normalized = normalizeRows([
+      { floorRole: "floating_screed", id: "a", materialId: "screed", thicknessMm: "50", densityKgM3: "1400" }
+    ]);
+
+    expect(normalized.warnings).toEqual([]);
+    expect(normalized.runtimeMaterials).toHaveLength(1);
+    expect(normalized.runtimeMaterials[0]?.densityKgM3).toBe(1400);
+    expect(normalized.layers).toEqual([{ floorRole: "floating_screed", materialId: "screed__rho_1400", thicknessMm: 50 }]);
+  });
+
   it("collapses adjacent rows that share the same effective density override", () => {
     const normalized = normalizeRows([
       { floorRole: "floating_screed", id: "a", materialId: "screed", thicknessMm: "40", densityKgM3: "1800" },

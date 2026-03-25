@@ -5,6 +5,7 @@ import { clamp, log10, round1 } from "./math";
 type LayerAnalysis = {
   airGapCount: number;
   leafSurfaceMassesKgM2: number[];
+  solidMaterialIdCount: number;
   solidLayerCount: number;
   totalSurfaceMassKgM2: number;
   weightedSolidDensityKgM3: number;
@@ -26,6 +27,7 @@ function analyzeLayers(layers: readonly ResolvedLayer[]): LayerAnalysis {
   let weightedDensityAccumulator = 0;
   let solidLayerCount = 0;
   const leafSurfaceMassesKgM2: number[] = [];
+  const solidMaterialIds = new Set<string>();
 
   for (const layer of layers) {
     if (layer.material.category === "gap") {
@@ -42,6 +44,7 @@ function analyzeLayers(layers: readonly ResolvedLayer[]): LayerAnalysis {
     }
 
     solidLayerCount += 1;
+    solidMaterialIds.add(layer.material.id);
     currentLeafSurfaceMassKgM2 += layer.surfaceMassKgM2;
     solidSurfaceMassKgM2 += layer.surfaceMassKgM2;
     weightedDensityAccumulator += layer.material.densityKgM3 * layer.surfaceMassKgM2;
@@ -54,6 +57,7 @@ function analyzeLayers(layers: readonly ResolvedLayer[]): LayerAnalysis {
   return {
     airGapCount: layers.filter((layer) => layer.material.category === "gap").length,
     leafSurfaceMassesKgM2,
+    solidMaterialIdCount: solidMaterialIds.size,
     solidLayerCount,
     totalSurfaceMassKgM2: layers.reduce((sum, layer) => sum + layer.surfaceMassKgM2, 0),
     weightedSolidDensityKgM3:
@@ -321,7 +325,9 @@ function mixedSilentboardSplitCavityPenaltyAdjustmentDb(
 }
 
 function heavyCompositeBonusDb(analysis: LayerAnalysis): number {
-  if (analysis.airGapCount > 0 || analysis.solidLayerCount < 2) {
+  // Treat this as a layered dense-build bonus, not a reward for typing the
+  // same monolithic slab as many adjacent slices.
+  if (analysis.airGapCount > 0 || analysis.solidMaterialIdCount < 2) {
     return 0;
   }
 

@@ -112,6 +112,229 @@ describe("scenario analysis", () => {
     expect(resultSnapshot(splitScenario.result!)).toEqual(resultSnapshot(mergedScenario.result!));
   });
 
+  it("keeps the same heavy-floor result and warning set when one merge-safe live layer is entered as ten rows", () => {
+    const mergedRows = [
+      { floorRole: "floor_covering" as const, id: "a", materialId: "ceramic_tile", thicknessMm: "8" },
+      { floorRole: "floating_screed" as const, id: "b", materialId: "screed", thicknessMm: "80" },
+      { floorRole: "resilient_layer" as const, id: "c", materialId: "generic_resilient_underlay", thicknessMm: "8" },
+      { floorRole: "base_structure" as const, id: "d", materialId: "concrete", thicknessMm: "150" }
+    ];
+    const splitRows = [
+      mergedRows[0]!,
+      ...Array.from({ length: 10 }, (_, index) => ({
+        floorRole: "floating_screed" as const,
+        id: `b-${index + 1}`,
+        materialId: "screed",
+        thicknessMm: "8"
+      })),
+      mergedRows[2]!,
+      mergedRows[3]!
+    ];
+
+    const mergedScenario = evaluateScenario({
+      id: "merged-ten-way",
+      name: "merged ten way",
+      rows: mergedRows,
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+    const splitScenario = evaluateScenario({
+      id: "split-ten-way",
+      name: "split ten way",
+      rows: splitRows,
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+
+    expect(mergedScenario.result).not.toBeNull();
+    expect(splitScenario.result).not.toBeNull();
+    expect(resultSnapshot(splitScenario.result!)).toEqual(resultSnapshot(mergedScenario.result!));
+    expect(splitScenario.warnings).toEqual(mergedScenario.warnings);
+  });
+
+  it("keeps the same bare exact floor result when one base slab is entered as ten rows", () => {
+    const mergedRows = [
+      { floorRole: "base_structure" as const, id: "a", materialId: "concrete", thicknessMm: "140" }
+    ];
+    const splitRows = Array.from({ length: 10 }, (_, index) => ({
+      floorRole: "base_structure" as const,
+      id: `a-${index + 1}`,
+      materialId: "concrete",
+      thicknessMm: "14"
+    }));
+
+    const mergedScenario = evaluateScenario({
+      id: "merged-bare-exact",
+      name: "merged bare exact",
+      rows: mergedRows,
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+    const splitScenario = evaluateScenario({
+      id: "split-bare-exact",
+      name: "split bare exact",
+      rows: splitRows,
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+
+    expect(mergedScenario.result).not.toBeNull();
+    expect(splitScenario.result).not.toBeNull();
+    expect(resultSnapshot(splitScenario.result!)).toEqual(resultSnapshot(mergedScenario.result!));
+    expect(splitScenario.warnings).toEqual(mergedScenario.warnings);
+  });
+
+  it("keeps merged and high-split floor rows stable across bare, density-override, and dynamic-stiffness cases", () => {
+    const splitCounts = [2, 3, 5, 10, 20] as const;
+    const cases = [
+      {
+        id: "bare-base",
+        mergedRows: [{ floorRole: "base_structure" as const, id: "a", materialId: "concrete", thicknessMm: "140" }],
+        buildSplitRows: (splitCount: number) =>
+          Array.from({ length: splitCount }, (_, index) => ({
+            floorRole: "base_structure" as const,
+            id: `a-${index + 1}`,
+            materialId: "concrete",
+            thicknessMm: String(140 / splitCount)
+          }))
+      },
+      {
+        id: "density-override",
+        mergedRows: [
+          { floorRole: "floor_covering" as const, id: "a", materialId: "ceramic_tile", thicknessMm: "8" },
+          { densityKgM3: "1800", floorRole: "floating_screed" as const, id: "b", materialId: "screed", thicknessMm: "80" },
+          { floorRole: "resilient_layer" as const, id: "c", materialId: "generic_resilient_underlay", thicknessMm: "8" },
+          { floorRole: "base_structure" as const, id: "d", materialId: "concrete", thicknessMm: "150" }
+        ],
+        buildSplitRows: (splitCount: number) => [
+          { floorRole: "floor_covering" as const, id: "a", materialId: "ceramic_tile", thicknessMm: "8" },
+          ...Array.from({ length: splitCount }, (_, index) => ({
+            densityKgM3: "1800",
+            floorRole: "floating_screed" as const,
+            id: `b-${index + 1}`,
+            materialId: "screed",
+            thicknessMm: String(80 / splitCount)
+          })),
+          { floorRole: "resilient_layer" as const, id: "c", materialId: "generic_resilient_underlay", thicknessMm: "8" },
+          { floorRole: "base_structure" as const, id: "d", materialId: "concrete", thicknessMm: "150" }
+        ]
+      },
+      {
+        id: "dynamic-override",
+        mergedRows: [
+          { floorRole: "floor_covering" as const, id: "a", materialId: "ceramic_tile", thicknessMm: "8" },
+          { floorRole: "floating_screed" as const, id: "b", materialId: "screed", thicknessMm: "50" },
+          {
+            dynamicStiffnessMNm3: "35",
+            floorRole: "resilient_layer" as const,
+            id: "c",
+            materialId: "generic_resilient_underlay",
+            thicknessMm: "20"
+          },
+          { floorRole: "base_structure" as const, id: "d", materialId: "concrete", thicknessMm: "150" }
+        ],
+        buildSplitRows: (splitCount: number) => [
+          { floorRole: "floor_covering" as const, id: "a", materialId: "ceramic_tile", thicknessMm: "8" },
+          { floorRole: "floating_screed" as const, id: "b", materialId: "screed", thicknessMm: "50" },
+          ...Array.from({ length: splitCount }, (_, index) => ({
+            dynamicStiffnessMNm3: "35",
+            floorRole: "resilient_layer" as const,
+            id: `c-${index + 1}`,
+            materialId: "generic_resilient_underlay",
+            thicknessMm: String(20 / splitCount)
+          })),
+          { floorRole: "base_structure" as const, id: "d", materialId: "concrete", thicknessMm: "150" }
+        ]
+      }
+    ] as const;
+
+    const failures: string[] = [];
+
+    for (const testCase of cases) {
+      const mergedScenario = evaluateScenario({
+        id: `${testCase.id}-merged`,
+        name: `${testCase.id} merged`,
+        rows: testCase.mergedRows,
+        source: "current",
+        studyMode: "floor",
+        targetOutputs: TARGET_OUTPUTS
+      });
+
+      expect(mergedScenario.result).not.toBeNull();
+
+      for (const splitCount of splitCounts) {
+        const splitScenario = evaluateScenario({
+          id: `${testCase.id}-split-${splitCount}`,
+          name: `${testCase.id} split ${splitCount}`,
+          rows: testCase.buildSplitRows(splitCount),
+          source: "current",
+          studyMode: "floor",
+          targetOutputs: TARGET_OUTPUTS
+        });
+
+        expect(splitScenario.result).not.toBeNull();
+
+        if (JSON.stringify(resultSnapshot(splitScenario.result!)) !== JSON.stringify(resultSnapshot(mergedScenario.result!))) {
+          failures.push(
+            `${testCase.id}: split x${splitCount} result drift merged=${JSON.stringify(resultSnapshot(mergedScenario.result!))} split=${JSON.stringify(resultSnapshot(splitScenario.result!))}`
+          );
+        }
+
+        if (JSON.stringify(splitScenario.warnings) !== JSON.stringify(mergedScenario.warnings)) {
+          failures.push(
+            `${testCase.id}: split x${splitCount} warning drift merged=${JSON.stringify(mergedScenario.warnings)} split=${JSON.stringify(splitScenario.warnings)}`
+          );
+        }
+      }
+    }
+
+    expect(failures).toEqual([]);
+  });
+
+  it("collapses ten split screed rows into the same single sanity warning as the packed version", () => {
+    const mergedRows = [
+      { floorRole: "floor_covering" as const, id: "a", materialId: "ceramic_tile", thicknessMm: "8" },
+      { floorRole: "floating_screed" as const, id: "b", materialId: "screed", thicknessMm: "100" },
+      { floorRole: "resilient_layer" as const, id: "c", materialId: "generic_resilient_underlay", thicknessMm: "8" },
+      { floorRole: "base_structure" as const, id: "d", materialId: "concrete", thicknessMm: "150" }
+    ];
+    const splitRows = [
+      mergedRows[0]!,
+      ...Array.from({ length: 10 }, (_, index) => ({
+        floorRole: "floating_screed" as const,
+        id: `b-${index + 1}`,
+        materialId: "screed",
+        thicknessMm: "10"
+      })),
+      mergedRows[2]!,
+      mergedRows[3]!
+    ];
+
+    const mergedScenario = evaluateScenario({
+      id: "merged-warning",
+      name: "merged warning",
+      rows: mergedRows,
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+    const splitScenario = evaluateScenario({
+      id: "split-warning",
+      name: "split warning",
+      rows: splitRows,
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+
+    expect(mergedScenario.warnings.filter((warning) => warning.includes("guided sanity band"))).toHaveLength(1);
+    expect(splitScenario.warnings).toEqual(mergedScenario.warnings);
+  });
+
   it("keeps the same heavy-floor result when an overridden resilient layer is split into adjacent rows with the same final stiffness", () => {
     const mergedRows = [
       { floorRole: "floor_covering" as const, id: "a", materialId: "ceramic_tile", thicknessMm: "8" },
@@ -204,6 +427,91 @@ describe("scenario analysis", () => {
     expect(withoutOverride.result?.impact?.DeltaLw ?? null).toBeNull();
     expect(withOverride.result?.impact?.DeltaLw ?? null).not.toBeNull();
     expect(withOverride.result?.impact?.LnW ?? null).not.toBeNull();
+  });
+
+  it("uses a manual dynamic stiffness override instead of the catalog value when the material already has one", () => {
+    const baseRows = [
+      { floorRole: "floor_covering" as const, id: "a", materialId: "ceramic_tile", thicknessMm: "8" },
+      { floorRole: "floating_screed" as const, id: "b", materialId: "screed", thicknessMm: "50" },
+      { floorRole: "resilient_layer" as const, id: "c", materialId: "mw_t_impact_layer_s40", thicknessMm: "30" },
+      { floorRole: "base_structure" as const, id: "d", materialId: "concrete", thicknessMm: "150" }
+    ];
+
+    const catalogScenario = evaluateScenario({
+      id: "catalog-dynamic-stiffness",
+      name: "catalog dynamic stiffness",
+      rows: baseRows,
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+    const overriddenScenario = evaluateScenario({
+      id: "overridden-dynamic-stiffness",
+      name: "overridden dynamic stiffness",
+      rows: baseRows.map((row) =>
+        row.id === "c"
+          ? {
+              ...row,
+              dynamicStiffnessMNm3: "20"
+            }
+          : row
+      ),
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+
+    expect(catalogScenario.result).not.toBeNull();
+    expect(overriddenScenario.result).not.toBeNull();
+    expect(catalogScenario.result?.impact?.basis).toBe("predictor_heavy_floating_floor_iso12354_annexc_estimate");
+    expect(overriddenScenario.result?.impact?.basis).toBe("predictor_heavy_floating_floor_iso12354_annexc_estimate");
+    expect(overriddenScenario.result?.impact?.DeltaLw ?? null).not.toBe(catalogScenario.result?.impact?.DeltaLw ?? null);
+    expect(overriddenScenario.result?.impact?.LnW ?? null).not.toBe(catalogScenario.result?.impact?.LnW ?? null);
+  });
+
+  it("uses a manual density override instead of the catalog value when the material already has one", () => {
+    const baseRows = [
+      { floorRole: "floor_covering" as const, id: "a", materialId: "ceramic_tile", thicknessMm: "8" },
+      {
+        densityKgM3: "1400",
+        floorRole: "floating_screed" as const,
+        id: "b",
+        materialId: "screed",
+        thicknessMm: "50"
+      },
+      {
+        dynamicStiffnessMNm3: "35",
+        floorRole: "resilient_layer" as const,
+        id: "c",
+        materialId: "generic_resilient_underlay",
+        thicknessMm: "8"
+      },
+      { floorRole: "base_structure" as const, id: "d", materialId: "concrete", thicknessMm: "150" }
+    ];
+
+    const catalogScenario = evaluateScenario({
+      id: "catalog-density",
+      name: "catalog density",
+      rows: baseRows.map((row) => (row.id === "b" ? { ...row, densityKgM3: undefined } : row)),
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+    const overriddenScenario = evaluateScenario({
+      id: "overridden-density",
+      name: "overridden density",
+      rows: baseRows,
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+
+    expect(catalogScenario.result).not.toBeNull();
+    expect(overriddenScenario.result).not.toBeNull();
+    expect(catalogScenario.result?.impact?.basis).toBe("predictor_heavy_floating_floor_iso12354_annexc_estimate");
+    expect(overriddenScenario.result?.impact?.basis).toBe("predictor_heavy_floating_floor_iso12354_annexc_estimate");
+    expect(overriddenScenario.result?.impact?.DeltaLw ?? null).not.toBe(catalogScenario.result?.impact?.DeltaLw ?? null);
+    expect(overriddenScenario.result?.impact?.LnW ?? null).not.toBe(catalogScenario.result?.impact?.LnW ?? null);
   });
 
   it("evaluates floor scenarios that use a local custom material in the live stack", () => {

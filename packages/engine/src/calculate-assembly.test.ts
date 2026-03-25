@@ -3113,6 +3113,24 @@ describe("calculateAssembly", () => {
     expect(result.warnings.some((warning: string) => /exact lab impact-band source/i.test(warning))).toBe(true);
   });
 
+  it("surfaces the exact impact band trace on the full assembly route", () => {
+    const result = calculateAssembly(
+      [
+        { materialId: "ceramic_tile", thicknessMm: 8 },
+        { materialId: "screed", thicknessMm: 50 },
+        { materialId: "generic_resilient_underlay", thicknessMm: 8 },
+        { materialId: "concrete", thicknessMm: 150 }
+      ],
+      {
+        exactImpactSource: EXACT_IMPACT_SOURCE_19
+      }
+    );
+
+    expect(result.impact?.trace?.activeSeriesId).toBe("source");
+    expect(result.impact?.trace?.series[0]?.curve.frequenciesHz).toEqual(EXACT_IMPACT_SOURCE_19.frequenciesHz);
+    expect(result.impact?.trace?.series[0]?.curve.levelsDb).toEqual(EXACT_IMPACT_SOURCE_19.levelsDb);
+  });
+
   it("surfaces supported and unsupported target outputs without fabricating missing impact ratings", () => {
     const result = calculateAssembly(
       [
@@ -3233,6 +3251,31 @@ describe("calculateAssembly", () => {
     );
   });
 
+  it("keeps real field and standardized traces when exact bands continue through a direct path only", () => {
+    const result = calculateAssembly(
+      [
+        { materialId: "ceramic_tile", thicknessMm: 8 },
+        { materialId: "screed", thicknessMm: 50 },
+        { materialId: "generic_resilient_underlay", thicknessMm: 8 },
+        { materialId: "concrete", thicknessMm: 150 }
+      ],
+      {
+        exactImpactSource: EXACT_IMPACT_SOURCE_19,
+        impactFieldContext: {
+          directPathOffsetDb: 1,
+          flankingPaths: [],
+          lowerTreatmentReductionDb: 2,
+          receivingRoomVolumeM3: 50
+        },
+        targetOutputs: ["L'n,w", "L'nT,w"]
+      }
+    );
+
+    expect(result.impact?.trace?.activeSeriesId).toBe("standardized");
+    expect(result.impact?.trace?.series.map((series: { id: string }) => series.id)).toEqual(["source", "field", "standardized"]);
+    expect(result.impact?.trace?.series[1]?.curve.levelsDb).not.toEqual(EXACT_IMPACT_SOURCE_19.levelsDb);
+  });
+
   it("can infer the default supporting family from an exact floor row during direct+flanking field estimation", () => {
     const result = calculateAssembly(
       [{ materialId: "concrete", thicknessMm: 140 }],
@@ -3267,7 +3310,7 @@ describe("calculateAssembly", () => {
     expect(result.impactSupport?.formulaNotes.some((note: string) => /Family-aware flanking path models were applied for: open box timber/i.test(note))).toBe(true);
   });
 
-  it("applies explicit ΔLd before the guide-side K correction and field standardization", () => {
+  it("applies explicit ΔLd before direct-path curve continuation and field standardization", () => {
     const result = calculateAssembly(
       [{ materialId: "concrete", thicknessMm: 140 }],
       {
@@ -3284,13 +3327,14 @@ describe("calculateAssembly", () => {
       }
     );
 
-    expect(result.impact?.fieldEstimateProfile).toBe("explicit_field_lprimenw_from_lnw_plus_k");
-    expect(result.impact?.fieldEstimateKCorrectionDb).toBe(2);
+    expect(result.impact?.fieldEstimateProfile).toBe("direct_flanking_energy_sum");
+    expect(result.impact?.fieldEstimateDirectOffsetDb).toBe(2);
     expect(result.impact?.fieldEstimateLowerTreatmentReductionDb).toBe(6);
     expect(result.impact?.LPrimeNW).toBe(35);
     expect(result.impact?.LPrimeNTw).toBe(33);
-    expect(result.impactSupport?.formulaNotes.some((note: string) => /L'n,w = Ln,w \+ K/i.test(note))).toBe(true);
-    expect(result.impactSupport?.formulaNotes.some((note: string) => /ΔLd = 6 dB was applied before the field-side K correction/i.test(note))).toBe(true);
+    expect(result.impactSupport?.formulaNotes.some((note: string) => /direct\+flanking path energy sum/i.test(note))).toBe(true);
+    expect(result.impactSupport?.formulaNotes.some((note: string) => /Current direct-path offset is 2 dB/i.test(note))).toBe(true);
+    expect(result.impactSupport?.formulaNotes.some((note: string) => /ΔLd = 6 dB was applied to the direct path before energy summation/i.test(note))).toBe(true);
     expect(result.impactSupport?.formulaNotes.some((note: string) => /applied before field standardization/i.test(note))).toBe(true);
   });
 
@@ -3378,6 +3422,22 @@ describe("calculateAssembly", () => {
     const result = calculateAssembly([
       { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 12.5 },
       { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 12.5 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+      { floorRole: "floor_covering", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 25 },
+      { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: 40 },
+      { floorRole: "resilient_layer", materialId: "mw_t_impact_layer", thicknessMm: 30 },
+      { floorRole: "base_structure", materialId: "timber_frame_floor", thicknessMm: 220 }
+    ]);
+
+    expect(result.floorSystemMatch?.system.id).toBe("dataholz_gdrtxn02b_timber_frame_dry_lab_2026");
+    expect(result.floorSystemMatch?.impact.LnW).toBe(62);
+    expect(result.floorSystemMatch?.impact.CI).toBe(2);
+    expect(result.floorSystemMatch?.system.airborneRatings.Rw).toBe(60);
+  });
+
+  it("keeps the curated Dataholz dry-floor family exact match when two 12.5 mm gypsum boards are entered as one 25 mm layer", () => {
+    const result = calculateAssembly([
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 25 },
       { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
       { floorRole: "floor_covering", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 25 },
       { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: 40 },
@@ -3583,6 +3643,23 @@ describe("calculateAssembly", () => {
     const result = calculateAssembly([
       { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
       { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+      { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: 25 },
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
+    ]);
+
+    expect(result.floorSystemMatch?.system.id).toBe("tuas_r2a_open_box_timber_measured_2026");
+    expect(result.floorSystemMatch?.impact.LnW).toBe(72);
+    expect(result.floorSystemMatch?.impact.CI50_2500).toBe(2);
+    expect(result.floorSystemMatch?.system.airborneRatings.Rw).toBe(49);
+    expect(result.floorSystemMatch?.system.airborneRatings.RwCtr).toBeCloseTo(37.465233062145899, 5);
+  });
+
+  it("keeps the measured TUAS open-box timber family exact match when two 13 mm gypsum boards are entered as one 26 mm layer", () => {
+    const result = calculateAssembly([
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 26 },
       { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
       { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: 25 },
       { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },

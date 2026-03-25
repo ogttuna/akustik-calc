@@ -1,5 +1,5 @@
 import { MATERIAL_CATALOG_SEED } from "@dynecho/catalogs";
-import type { AirborneContext, FloorRole, ImpactFieldContext, MaterialDefinition, RequestedOutputId } from "@dynecho/shared";
+import type { AirborneContext, FloorRole, ImpactFieldContext, LayerInput, MaterialDefinition, RequestedOutputId } from "@dynecho/shared";
 
 import type { StudyMode } from "./preset-definitions";
 import { getWorkbenchMaterialById } from "./workbench-materials";
@@ -237,6 +237,7 @@ export function collectScenarioInputWarnings(input: {
   airborneContext?: AirborneContext | null;
   impactFieldContext?: ImpactFieldContext | null;
   materials?: readonly MaterialDefinition[];
+  normalizedLayers?: readonly LayerInput[];
   rows: readonly LayerDraft[];
   studyMode: StudyMode;
   targetOutputs?: readonly RequestedOutputId[];
@@ -252,9 +253,24 @@ export function collectScenarioInputWarnings(input: {
   const standardizedImpactRequested =
     fieldImpactRequested && requestedOutputs.some((output) => STANDARDIZED_IMPACT_OUTPUTS.has(output));
   const materials = input.materials ?? MATERIAL_CATALOG_SEED;
+  const thicknessWarningLayers =
+    input.normalizedLayers ??
+    input.rows.map((row) => ({
+      floorRole: row.floorRole,
+      materialId: row.materialId,
+      thicknessMm: parseFiniteNumber(row.thicknessMm) ?? Number.NaN
+    }));
 
-  input.rows.forEach((row, index) => {
-    const warning = getLayerThicknessSanityWarning(row, index + 1, materials);
+  thicknessWarningLayers.forEach((layer, index) => {
+    const warning = getLayerThicknessSanityWarning(
+      {
+        floorRole: layer.floorRole,
+        materialId: layer.materialId,
+        thicknessMm: String(layer.thicknessMm)
+      },
+      index + 1,
+      materials
+    );
     if (warning) {
       warnings.push(warning);
     }

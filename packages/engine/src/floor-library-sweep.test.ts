@@ -21,6 +21,40 @@ const MATCH_ROLE_ENTRIES: Array<[FloorRole, keyof FloorSystemMatchCriteria]> = [
   ["resilient_layer", "resilientLayer"],
   ["base_structure", "baseStructure"]
 ];
+const MERGE_SAFE_PACKED_ROLES = new Set<FloorRole>([
+  "base_structure",
+  "ceiling_fill",
+  "floating_screed",
+  "floor_covering",
+  "resilient_layer",
+  "upper_fill"
+]);
+const HIGH_SPLIT_LAYER_COUNTS = [2, 3, 5, 10, 20] as const;
+const LAB_OUTPUTS = ["Rw", "Ln,w", "Ln,w+CI"] as const;
+const FIELD_OUTPUTS = [
+  "Rw",
+  "R'w",
+  "DnT,w",
+  "DnT,A",
+  "Dn,w",
+  "Dn,A",
+  "Ln,w",
+  "Ln,w+CI",
+  "L'n,w",
+  "L'nT,w",
+  "L'nT,50"
+] as const;
+const AIRBORNE_FIELD_CONTEXT = {
+  contextMode: "field_between_rooms" as const,
+  partitionHeightM: 4,
+  partitionWidthM: 4.5,
+  receivingRoomVolumeM3: 55,
+  separatingAreaM2: 18
+};
+const IMPACT_FIELD_CONTEXT = {
+  fieldKDb: 2,
+  receivingRoomVolumeM3: 55
+};
 
 function getDefaultThicknessMm(role: FloorRole): number {
   switch (role) {
@@ -73,6 +107,101 @@ function buildLayersFromCriteria(match: FloorSystemMatchCriteria): LayerInput[] 
   return layers;
 }
 
+function buildPackedLayersFromCriteria(match: FloorSystemMatchCriteria): LayerInput[] {
+  const layers: LayerInput[] = [];
+
+  for (const [role, key] of MATCH_ROLE_ENTRIES) {
+    const criteria = match[key] as FloorSystemRoleCriteria | undefined;
+
+    if (!criteria) {
+      continue;
+    }
+
+    const materialId = criteria.materialIds?.[0];
+    if (!materialId) {
+      throw new Error(`Cannot build ${role} layer without at least one material id.`);
+    }
+
+    const layerCount = criteria.layerCount ?? 1;
+    const thicknessMm = criteria.thicknessMm ?? getDefaultThicknessMm(role);
+    const canPackRole = layerCount > 1 && criteria.materialIds?.length === 1 && MERGE_SAFE_PACKED_ROLES.has(role);
+
+    if (canPackRole) {
+      layers.push({
+        floorRole: role,
+        materialId,
+        thicknessMm: thicknessMm * layerCount
+      });
+      continue;
+    }
+
+    for (let index = 0; index < layerCount; index += 1) {
+      layers.push({
+        floorRole: role,
+        materialId,
+        thicknessMm
+      });
+    }
+  }
+
+  return layers;
+}
+
+function buildHighSplitLayersFromCriteria(
+  match: FloorSystemMatchCriteria,
+  splitLayerCount: number
+): LayerInput[] {
+  const layers: LayerInput[] = [];
+
+  for (const [role, key] of MATCH_ROLE_ENTRIES) {
+    const criteria = match[key] as FloorSystemRoleCriteria | undefined;
+
+    if (!criteria) {
+      continue;
+    }
+
+    const materialId = criteria.materialIds?.[0];
+    if (!materialId) {
+      throw new Error(`Cannot build ${role} layer without at least one material id.`);
+    }
+
+    const layerCount = criteria.layerCount ?? 1;
+    const thicknessMm = criteria.thicknessMm ?? getDefaultThicknessMm(role);
+    const canSplitRole = criteria.materialIds?.length === 1 && MERGE_SAFE_PACKED_ROLES.has(role);
+
+    if (canSplitRole) {
+      for (let layerIndex = 0; layerIndex < layerCount; layerIndex += 1) {
+        const splitThicknessMm = Math.round((thicknessMm / splitLayerCount) * 1000) / 1000;
+        let usedThicknessMm = 0;
+
+        for (let splitIndex = 0; splitIndex < splitLayerCount; splitIndex += 1) {
+          const remainingThicknessMm = Math.round((thicknessMm - usedThicknessMm) * 1000) / 1000;
+          const nextThicknessMm = splitIndex === splitLayerCount - 1 ? remainingThicknessMm : splitThicknessMm;
+          usedThicknessMm = Math.round((usedThicknessMm + nextThicknessMm) * 1000) / 1000;
+
+          layers.push({
+            floorRole: role,
+            materialId,
+            thicknessMm: nextThicknessMm
+          });
+        }
+      }
+
+      continue;
+    }
+
+    for (let index = 0; index < layerCount; index += 1) {
+      layers.push({
+        floorRole: role,
+        materialId,
+        thicknessMm
+      });
+    }
+  }
+
+  return layers;
+}
+
 function buildExactSystemResult(system: ExactFloorSystem, options?: Parameters<typeof calculateAssembly>[1]) {
   if (system.manualMatch === false) {
     return calculateAssembly([], {
@@ -84,6 +213,33 @@ function buildExactSystemResult(system: ExactFloorSystem, options?: Parameters<t
   }
 
   return calculateAssembly(buildLayersFromCriteria(system.match), options);
+}
+
+function resultSnapshot(result: ReturnType<typeof calculateAssembly>) {
+  return {
+    basis: result.impact?.basis ?? null,
+    boundFloorSystemMatchId: result.boundFloorSystemMatch?.system.id ?? null,
+    dnA: result.metrics.estimatedDnADb ?? null,
+    dnTw: result.metrics.estimatedDnTwDb ?? null,
+    dnTA: result.metrics.estimatedDnTADb ?? null,
+    dnW: result.metrics.estimatedDnWDb ?? null,
+    floorSystemEstimateBasis: result.floorSystemEstimate?.impact.basis ?? null,
+    floorSystemMatchId: result.floorSystemMatch?.system.id ?? null,
+    lPrimeNT50: result.impact?.LPrimeNT50 ?? null,
+    lPrimeNTw: result.impact?.LPrimeNTw ?? null,
+    lPrimeNW: result.impact?.LPrimeNW ?? null,
+    lnW: result.impact?.LnW ?? null,
+    lnWPlusCI: result.impact?.LnWPlusCI ?? null,
+    lowerBoundLnWUpperBound: result.lowerBoundImpact?.LnWUpperBound ?? null,
+    rw: result.floorSystemRatings?.Rw ?? null,
+    rwCtr: result.floorSystemRatings?.RwCtr ?? null,
+    rwDb: result.metrics.estimatedRwDb ?? null,
+    rwPrimeDb: result.metrics.estimatedRwPrimeDb ?? null,
+    supportedImpactOutputs: result.supportedImpactOutputs,
+    supportedTargetOutputs: result.supportedTargetOutputs,
+    unsupportedImpactOutputs: result.unsupportedImpactOutputs,
+    unsupportedTargetOutputs: result.unsupportedTargetOutputs
+  };
 }
 
 describe("curated floor-library sweep", () => {
@@ -100,6 +256,104 @@ describe("curated floor-library sweep", () => {
 
       if (result.impact?.LnW !== system.impactRatings.LnW) {
         failures.push(`${system.id}: expected Ln,w ${system.impactRatings.LnW}, got ${result.impact?.LnW ?? "none"}`);
+      }
+    }
+
+    expect(failures).toEqual([]);
+  });
+
+  it("every merge-safe manual exact and bound floor-system row stays stable when counted roles are packed into one layer in the lab bundle", () => {
+    const failures: string[] = [];
+
+    for (const system of [...EXACT_FLOOR_SYSTEMS.filter((entry) => entry.manualMatch !== false), ...BOUND_FLOOR_SYSTEMS]) {
+      const canonicalResult = calculateAssembly(buildLayersFromCriteria(system.match), {
+        targetOutputs: LAB_OUTPUTS
+      });
+      const packedResult = calculateAssembly(buildPackedLayersFromCriteria(system.match), {
+        targetOutputs: LAB_OUTPUTS
+      });
+
+      if (JSON.stringify(resultSnapshot(canonicalResult)) !== JSON.stringify(resultSnapshot(packedResult))) {
+        failures.push(
+          `${system.id}: expected packed-layer lab parity, canonical=${JSON.stringify(resultSnapshot(canonicalResult))} packed=${JSON.stringify(resultSnapshot(packedResult))}`
+        );
+      }
+    }
+
+    expect(failures).toEqual([]);
+  });
+
+  it("every merge-safe manual exact and bound floor-system row stays stable when counted roles are packed into one layer in the field bundle", () => {
+    const failures: string[] = [];
+
+    for (const system of [...EXACT_FLOOR_SYSTEMS.filter((entry) => entry.manualMatch !== false), ...BOUND_FLOOR_SYSTEMS]) {
+      const canonicalResult = calculateAssembly(buildLayersFromCriteria(system.match), {
+        airborneContext: AIRBORNE_FIELD_CONTEXT,
+        impactFieldContext: IMPACT_FIELD_CONTEXT,
+        targetOutputs: FIELD_OUTPUTS
+      });
+      const packedResult = calculateAssembly(buildPackedLayersFromCriteria(system.match), {
+        airborneContext: AIRBORNE_FIELD_CONTEXT,
+        impactFieldContext: IMPACT_FIELD_CONTEXT,
+        targetOutputs: FIELD_OUTPUTS
+      });
+
+      if (JSON.stringify(resultSnapshot(canonicalResult)) !== JSON.stringify(resultSnapshot(packedResult))) {
+        failures.push(
+          `${system.id}: expected packed-layer field parity, canonical=${JSON.stringify(resultSnapshot(canonicalResult))} packed=${JSON.stringify(resultSnapshot(packedResult))}`
+        );
+      }
+    }
+
+    expect(failures).toEqual([]);
+  });
+
+  it("every merge-safe manual exact and bound floor-system row stays stable across multiple high split counts in the lab bundle", () => {
+    const failures: string[] = [];
+
+    for (const system of [...EXACT_FLOOR_SYSTEMS.filter((entry) => entry.manualMatch !== false), ...BOUND_FLOOR_SYSTEMS]) {
+      const canonicalResult = calculateAssembly(buildLayersFromCriteria(system.match), {
+        targetOutputs: LAB_OUTPUTS
+      });
+
+      for (const splitLayerCount of HIGH_SPLIT_LAYER_COUNTS) {
+        const splitResult = calculateAssembly(buildHighSplitLayersFromCriteria(system.match, splitLayerCount), {
+          targetOutputs: LAB_OUTPUTS
+        });
+
+        if (JSON.stringify(resultSnapshot(canonicalResult)) !== JSON.stringify(resultSnapshot(splitResult))) {
+          failures.push(
+            `${system.id}: expected split-layer lab parity at x${splitLayerCount}, canonical=${JSON.stringify(resultSnapshot(canonicalResult))} split=${JSON.stringify(resultSnapshot(splitResult))}`
+          );
+        }
+      }
+    }
+
+    expect(failures).toEqual([]);
+  });
+
+  it("every merge-safe manual exact and bound floor-system row stays stable across multiple high split counts in the field bundle", () => {
+    const failures: string[] = [];
+
+    for (const system of [...EXACT_FLOOR_SYSTEMS.filter((entry) => entry.manualMatch !== false), ...BOUND_FLOOR_SYSTEMS]) {
+      const canonicalResult = calculateAssembly(buildLayersFromCriteria(system.match), {
+        airborneContext: AIRBORNE_FIELD_CONTEXT,
+        impactFieldContext: IMPACT_FIELD_CONTEXT,
+        targetOutputs: FIELD_OUTPUTS
+      });
+
+      for (const splitLayerCount of HIGH_SPLIT_LAYER_COUNTS) {
+        const splitResult = calculateAssembly(buildHighSplitLayersFromCriteria(system.match, splitLayerCount), {
+          airborneContext: AIRBORNE_FIELD_CONTEXT,
+          impactFieldContext: IMPACT_FIELD_CONTEXT,
+          targetOutputs: FIELD_OUTPUTS
+        });
+
+        if (JSON.stringify(resultSnapshot(canonicalResult)) !== JSON.stringify(resultSnapshot(splitResult))) {
+          failures.push(
+            `${system.id}: expected split-layer field parity at x${splitLayerCount}, canonical=${JSON.stringify(resultSnapshot(canonicalResult))} split=${JSON.stringify(resultSnapshot(splitResult))}`
+          );
+        }
       }
     }
 
