@@ -179,7 +179,7 @@ export function ExactFloorSystemPanel({ result }: ExactFloorSystemPanelProps) {
             />
           </div>
 
-          <div className="mt-5 rounded-md border hairline bg-black/[0.025] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
+          <div className="mt-5 rounded-md border hairline bg-[color:var(--panel)] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
             <span className="font-semibold text-[color:var(--ink)]">Carrier:</span> {match.system.systemSummary.carrier}
             <br />
             <span className="font-semibold text-[color:var(--ink)]">Ceiling:</span> {match.system.systemSummary.ceiling}
@@ -187,7 +187,7 @@ export function ExactFloorSystemPanel({ result }: ExactFloorSystemPanelProps) {
 
           <div className="mt-5 grid gap-3 text-sm leading-7 text-[color:var(--ink-soft)]">
             {match.notes.concat(match.impact.notes).map((note: string) => (
-              <article className="rounded-md border hairline bg-black/[0.025] px-4 py-4" key={note}>
+              <article className="rounded-md border hairline bg-[color:var(--panel)] px-4 py-4" key={note}>
                 {note}
               </article>
             ))}
@@ -239,7 +239,7 @@ export function ExactFloorSystemPanel({ result }: ExactFloorSystemPanelProps) {
             />
           </div>
 
-          <div className="mt-5 rounded-md border hairline bg-black/[0.025] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
+          <div className="mt-5 rounded-md border hairline bg-[color:var(--panel)] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
             <span className="font-semibold text-[color:var(--ink)]">Carrier:</span> {boundMatch.system.systemSummary.carrier}
             <br />
             <span className="font-semibold text-[color:var(--ink)]">Ceiling:</span> {boundMatch.system.systemSummary.ceiling}
@@ -247,7 +247,7 @@ export function ExactFloorSystemPanel({ result }: ExactFloorSystemPanelProps) {
 
           <div className="mt-5 grid gap-3 text-sm leading-7 text-[color:var(--ink-soft)]">
             {boundMatch.notes.concat(boundMatch.lowerBoundImpact.notes).map((note: string) => (
-              <article className="rounded-md border hairline bg-black/[0.025] px-4 py-4" key={note}>
+              <article className="rounded-md border hairline bg-[color:var(--panel)] px-4 py-4" key={note}>
                 {note}
               </article>
             ))}
@@ -320,7 +320,7 @@ export function ExactFloorSystemPanel({ result }: ExactFloorSystemPanelProps) {
 
           <div className="mt-5 grid gap-3 text-sm leading-7 text-[color:var(--ink-soft)]">
             {estimate.notes.map((note: string) => (
-              <article className="rounded-md border hairline bg-black/[0.025] px-4 py-4" key={note}>
+              <article className="rounded-md border hairline bg-[color:var(--panel)] px-4 py-4" key={note}>
                 {note}
               </article>
             ))}
@@ -355,7 +355,7 @@ export function ExactFloorSystemPanel({ result }: ExactFloorSystemPanelProps) {
             <div className="mt-5 space-y-3">
               <div className="eyebrow">Closest curated families</div>
               {recommendations.map((recommendation: FloorSystemRecommendation) => (
-                <article className="rounded-md border hairline bg-black/[0.025] px-4 py-4" key={recommendation.system.id}>
+                <article className="rounded-md border hairline bg-[color:var(--panel)] px-4 py-4" key={recommendation.system.id}>
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
                       <div className="font-semibold text-[color:var(--ink)]">{recommendation.system.label}</div>
@@ -429,7 +429,7 @@ export function ExactFloorSystemPanel({ result }: ExactFloorSystemPanelProps) {
 
           <div className="mt-5 grid gap-3 text-sm leading-7 text-[color:var(--ink-soft)]">
             {boundEstimate.notes.map((note: string) => (
-              <article className="rounded-md border hairline bg-black/[0.025] px-4 py-4" key={note}>
+              <article className="rounded-md border hairline bg-[color:var(--panel)] px-4 py-4" key={note}>
                 {note}
               </article>
             ))}
@@ -455,7 +455,7 @@ export function ExactFloorSystemPanel({ result }: ExactFloorSystemPanelProps) {
             <div className="space-y-3">
               <div className="eyebrow">Closest curated families</div>
               {recommendations.map((recommendation: FloorSystemRecommendation) => (
-                <article className="rounded-md border hairline bg-black/[0.025] px-4 py-4" key={recommendation.system.id}>
+                <article className="rounded-md border hairline bg-[color:var(--panel)] px-4 py-4" key={recommendation.system.id}>
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
                       <div className="font-semibold text-[color:var(--ink)]">{recommendation.system.label}</div>
@@ -528,7 +528,7 @@ export function ExactFloorSystemPanel({ result }: ExactFloorSystemPanelProps) {
                   <Pill tone="neutral">{companion.pillText}</Pill>
                 </div>
                 {recommendation ? (
-                  <div className="mt-3 rounded-md border hairline bg-black/[0.025] px-3 py-3 text-sm leading-7 text-[color:var(--ink-soft)]">
+                  <div className="mt-3 rounded-md border hairline bg-[color:var(--panel)] px-3 py-3 text-sm leading-7 text-[color:var(--ink-soft)]">
                     Missing signals: {recommendation.missingSignals.join(" ")}
                   </div>
                 ) : null}

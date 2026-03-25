@@ -158,7 +158,7 @@ export function ReportExportPanel({
           </div>
         </article>
         <div className="grid gap-3">
-          <article className="rounded-lg border hairline bg-black/[0.03] px-4 py-4">
+          <article className="rounded-lg border hairline bg-[color:var(--panel)] px-4 py-4">
             <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
               <ShieldCheck className="h-4 w-4" />
               Validation carried into file
@@ -181,7 +181,7 @@ export function ReportExportPanel({
           </article>
 
           {fieldAirborneProvenance ? (
-            <article className="rounded-lg border hairline bg-black/[0.025] px-4 py-4">
+            <article className="rounded-lg border hairline bg-[color:var(--panel)] px-4 py-4">
               <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
                 <Radar className="h-4 w-4" />
                 Airborne field provenance
@@ -194,7 +194,7 @@ export function ReportExportPanel({
             </article>
           ) : null}
 
-          <article className="rounded-lg border hairline bg-black/[0.025] px-4 py-4">
+          <article className="rounded-lg border hairline bg-[color:var(--panel)] px-4 py-4">
             <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
               <ScrollText className="h-4 w-4" />
               Still staged
@@ -208,7 +208,7 @@ export function ReportExportPanel({
         </div>
       </div>
 
-      <div className="mt-5 rounded-lg border hairline bg-black/[0.025] px-4 py-4">
+      <div className="mt-5 rounded-lg border hairline bg-[color:var(--panel)] px-4 py-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <div className="text-sm font-semibold text-[color:var(--ink)]">{fileName}</div>
@@ -223,7 +223,7 @@ export function ReportExportPanel({
           </div>
           <div className="flex flex-wrap gap-2">
             <button
-              className="focus-ring touch-target inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+              className="focus-ring touch-target inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
               onClick={() => void onCopyReport()}
               type="button"
             >

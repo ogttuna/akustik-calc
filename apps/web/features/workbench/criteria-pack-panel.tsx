@@ -85,7 +85,7 @@ export function CriteriaPackPanel({
               className={`focus-ring rounded-md border px-4 py-4 text-left transition ${
                 isActive
                   ? "border-[color:var(--accent)] bg-[color:var(--accent-soft)] text-[color:var(--accent-ink)]"
-                  : "hairline bg-[color:var(--paper)] hover:bg-black/[0.03]"
+                  : "hairline bg-[color:var(--paper)] hover:bg-[color:var(--panel)]"
               }`}
               key={pack.id}
               onClick={() => onApplyCriteriaPack(pack.id)}
@@ -127,7 +127,7 @@ export function CriteriaPackPanel({
         })}
       </div>
 
-      <div className="mt-5 rounded-lg border hairline bg-black/[0.025] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
+      <div className="mt-5 rounded-lg border hairline bg-[color:var(--panel)] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
         These are internal brief templates, not jurisdictional code defaults. Apply one to start faster, then tune the
         targets or requested outputs to match the actual project brief.
       </div>

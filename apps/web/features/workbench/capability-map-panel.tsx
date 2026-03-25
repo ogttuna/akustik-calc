@@ -44,7 +44,7 @@ export function CapabilityMapPanel() {
         ))}
       </div>
 
-      <div className="mt-6 rounded-lg border hairline bg-black/[0.025] px-4 py-4">
+      <div className="mt-6 rounded-lg border hairline bg-[color:var(--panel)] px-4 py-4">
         <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
           <Sparkles className="h-4 w-4" />
           Acoustic calculators need more than formulas

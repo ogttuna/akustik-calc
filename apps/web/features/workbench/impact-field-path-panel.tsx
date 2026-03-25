@@ -121,7 +121,7 @@ export function ImpactFieldPathPanel({
           </div>
         </article>
 
-        <article className="rounded-lg border hairline bg-black/[0.025] px-4 py-4">
+        <article className="rounded-lg border hairline bg-[color:var(--panel)] px-4 py-4">
           <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
             <Cable className="h-4 w-4" />
             Operator intent

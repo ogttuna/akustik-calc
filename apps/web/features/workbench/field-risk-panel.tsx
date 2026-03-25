@@ -68,7 +68,7 @@ export function FieldRiskPanel({ fieldRiskIds, onToggleFieldRisk }: FieldRiskPan
               className={`focus-ring rounded-lg border px-4 py-4 text-left transition ${
                 isActive
                   ? "border-[color:var(--accent)] bg-[color:var(--accent-soft)] text-[color:var(--accent-ink)]"
-                  : "hairline bg-[color:var(--paper)] text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+                  : "hairline bg-[color:var(--paper)] text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
               }`}
               key={risk.id}
               onClick={() => onToggleFieldRisk(risk.id)}

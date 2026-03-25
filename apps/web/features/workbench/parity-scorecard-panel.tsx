@@ -69,7 +69,7 @@ export function ParityScorecardPanel() {
               <div className="text-sm font-semibold text-[color:var(--ink)]">{row.label}</div>
               <Pill tone={getScoreTone(row.score)}>{row.score}%</Pill>
             </div>
-            <div className="mt-3 h-2 overflow-hidden rounded-full bg-black/[0.06]">
+            <div className="mt-3 h-2 overflow-hidden rounded-full bg-[color:var(--panel-strong)]">
               <div
                 className="h-full rounded-full bg-[color:var(--accent)] transition-[width]"
                 style={{ width: `${row.score}%` }}

@@ -24,7 +24,7 @@ function getStatusClasses(kind: WorkbenchFieldStatusKind): string {
     case "anchored":
       return "border-[color:var(--ink-faint)] bg-[color:var(--panel)] text-[color:var(--ink-soft)]";
     case "ignored":
-      return "border-[color:var(--line)] bg-black/[0.03] text-[color:var(--ink-soft)]";
+      return "border-[color:var(--line)] bg-[color:var(--panel)] text-[color:var(--ink-soft)]";
   }
 }
 
@@ -90,7 +90,7 @@ export function FieldGuide({ children, guide, hint, inputId, label }: FieldGuide
             aria-controls={panelId}
             aria-expanded={open}
             aria-label="Show field help"
-            className="focus-ring inline-flex h-9 w-9 items-center justify-center rounded border hairline bg-[color:var(--paper)] text-[color:var(--ink-soft)] transition hover:bg-black/[0.03] hover:text-[color:var(--ink)]"
+            className="focus-ring inline-flex h-9 w-9 items-center justify-center rounded border hairline bg-[color:var(--paper)] text-[color:var(--ink-soft)] transition hover:bg-[color:var(--panel)] hover:text-[color:var(--ink)]"
             onClick={() => setPinned((value) => !value)}
             title={`Explain ${label}`}
             type="button"

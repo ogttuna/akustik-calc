@@ -73,7 +73,7 @@ export function WorkbenchCommandDeck({
               ))}
             </div>
           </article>
-          <article className="pointer-card rounded-lg border hairline bg-black/[0.03] px-4 py-4">
+          <article className="pointer-card rounded-lg border hairline bg-[color:var(--panel)] px-4 py-4">
             <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
               <Command className="h-4 w-4" />
               Command center
@@ -83,7 +83,7 @@ export function WorkbenchCommandDeck({
               actions instantly.
             </p>
             <button
-              className="focus-ring touch-target mt-4 inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+              className="focus-ring touch-target mt-4 inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
               onClick={onOpenCommands}
               type="button"
             >
@@ -108,7 +108,7 @@ export function WorkbenchCommandDeck({
               Save scenario
             </button>
           </article>
-          <article className="pointer-card rounded-lg border hairline bg-black/[0.03] px-4 py-4 sm:col-span-2">
+          <article className="pointer-card rounded-lg border hairline bg-[color:var(--panel)] px-4 py-4 sm:col-span-2">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
@@ -150,7 +150,7 @@ export function WorkbenchCommandDeck({
                           <Pill tone={getValidationPostureTone(summary.airbornePosture.posture)}>{summary.airborneLabel}</Pill>
                           {summary.fieldContinuationLabel ? <Pill tone="accent">{summary.fieldContinuationLabel}</Pill> : null}
                         </div>
-                        <div className="mt-3 rounded border hairline bg-black/[0.02] px-3 py-3">
+                        <div className="mt-3 rounded border hairline bg-[color:var(--panel)] px-3 py-3">
                           <div className="flex flex-wrap items-center justify-between gap-2">
                             <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
                               Decision snapshot

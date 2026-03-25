@@ -285,7 +285,7 @@ export function ResultSummary({ result, targetLnwDb, targetRwDb, warnings }: Res
         <div className="eyebrow">Notes</div>
         <ul className="grid gap-3 text-sm leading-7 text-[color:var(--ink-soft)]">
           {noteLines.map((warning) => (
-            <li className="rounded-md border hairline bg-black/[0.025] px-4 py-3" key={warning}>
+            <li className="rounded-md border hairline bg-[color:var(--panel)] px-4 py-3" key={warning}>
               {warning}
             </li>
           ))}

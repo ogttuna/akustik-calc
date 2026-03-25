@@ -90,7 +90,7 @@ export function ImpactReferencePanel({
             value={deltaLwInput}
           />
         </FieldGuide>
-        <div className="rounded-lg border hairline bg-black/[0.025] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
+        <div className="rounded-lg border hairline bg-[color:var(--panel)] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
           <div className="font-semibold text-[color:var(--ink)]">Boundary</div>
           <p className="mt-2">
             This shortcut assumes a bare heavy-floor reference of 78 dB. It is useful for datasheet triage, not for

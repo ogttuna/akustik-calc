@@ -146,6 +146,25 @@ function buildShiftedThicknessPath(thicknessMm: string, rowIndex: number) {
   };
 }
 
+function moveCurrentRowToIndex(useWorkbenchStore: {
+  getState: () => {
+    moveRow: (id: string, direction: "up" | "down") => void;
+    rows: Array<{ id: string }>;
+  };
+}, rowId: string, targetIndex: number) {
+  while (true) {
+    const currentIndex = useWorkbenchStore.getState().rows.findIndex((row) => row.id === rowId);
+
+    expect(currentIndex).toBeGreaterThanOrEqual(0);
+
+    if (currentIndex === targetIndex) {
+      return;
+    }
+
+    useWorkbenchStore.getState().moveRow(rowId, currentIndex > targetIndex ? "up" : "down");
+  }
+}
+
 describe("workbench store", () => {
   beforeEach(() => {
     vi.resetModules();
@@ -629,6 +648,84 @@ describe("workbench store", () => {
     expect(failures).toEqual([]);
   });
 
+  it("keeps every preset stable when the same assembly is entered in reverse order and then reordered into place", async () => {
+    const { evaluateScenario } = await import("./scenario-analysis");
+    const { WORKBENCH_PRESETS } = await import("./preset-definitions");
+    const { useWorkbenchStore } = await import("./workbench-store");
+
+    const evaluateCurrentScenario = () => {
+      const state = useWorkbenchStore.getState();
+
+      return evaluateScenario({
+        customMaterials: state.customMaterials,
+        id: "current",
+        name: "reverse-entry parity sweep",
+        rows: state.rows,
+        source: "current",
+        studyMode: state.studyMode,
+        targetOutputs: state.studyMode === "floor" ? FLOOR_TARGET_OUTPUTS : WALL_TARGET_OUTPUTS
+      });
+    };
+
+    const failures: string[] = [];
+
+    for (const preset of WORKBENCH_PRESETS) {
+      useWorkbenchStore.getState().reset();
+      useWorkbenchStore.getState().loadPreset(preset.id);
+
+      const directScenario = evaluateCurrentScenario();
+
+      useWorkbenchStore.getState().reset();
+      useWorkbenchStore.getState().startStudyMode(preset.studyMode);
+
+      const reverseEntryIds: string[] = [];
+
+      for (const row of [...preset.rows].reverse()) {
+        useWorkbenchStore.getState().addRow();
+        const draftRowId = useWorkbenchStore.getState().rows.at(-1)?.id;
+
+        expect(draftRowId).toBeTruthy();
+
+        reverseEntryIds.push(draftRowId!);
+        useWorkbenchStore.getState().updateThickness(draftRowId!, "");
+        useWorkbenchStore.getState().updateMaterial(draftRowId!, row.materialId);
+        if (preset.studyMode === "floor") {
+          useWorkbenchStore.getState().updateFloorRole(draftRowId!, row.floorRole);
+        }
+        if ("densityKgM3" in row && typeof row.densityKgM3 === "string") {
+          useWorkbenchStore.getState().updateDensity(draftRowId!, row.densityKgM3);
+        }
+        if ("dynamicStiffnessMNm3" in row && typeof row.dynamicStiffnessMNm3 === "string") {
+          useWorkbenchStore.getState().updateDynamicStiffness(draftRowId!, row.dynamicStiffnessMNm3);
+        }
+        useWorkbenchStore.getState().updateThickness(draftRowId!, row.thicknessMm);
+      }
+
+      reverseEntryIds
+        .slice()
+        .reverse()
+        .forEach((rowId, targetIndex) => {
+          moveCurrentRowToIndex(useWorkbenchStore, rowId, targetIndex);
+        });
+
+      const reverseOrderedScenario = evaluateCurrentScenario();
+      const directSnapshot = evaluatedScenarioSnapshot({
+        result: directScenario.result as ResultSnapshotSource | null,
+        warnings: directScenario.warnings
+      });
+      const reverseSnapshot = evaluatedScenarioSnapshot({
+        result: reverseOrderedScenario.result as ResultSnapshotSource | null,
+        warnings: reverseOrderedScenario.warnings
+      });
+
+      if (JSON.stringify(directSnapshot) !== JSON.stringify(reverseSnapshot)) {
+        failures.push(`${preset.id}: direct=${JSON.stringify(directSnapshot)} reverse=${JSON.stringify(reverseSnapshot)}`);
+      }
+    }
+
+    expect(failures).toEqual([]);
+  });
+
   it("keeps an override-heavy split floor stack stable when it is entered in reverse order and then reordered into place", async () => {
     const { evaluateScenario } = await import("./scenario-analysis");
     const { useWorkbenchStore } = await import("./workbench-store");
@@ -663,20 +760,6 @@ describe("workbench store", () => {
         studyMode: state.studyMode,
         targetOutputs: FLOOR_TARGET_OUTPUTS
       });
-    };
-
-    const moveRowToIndex = (rowId: string, targetIndex: number) => {
-      while (true) {
-        const currentIndex = useWorkbenchStore.getState().rows.findIndex((row) => row.id === rowId);
-
-        expect(currentIndex).toBeGreaterThanOrEqual(0);
-
-        if (currentIndex === targetIndex) {
-          return;
-        }
-
-        useWorkbenchStore.getState().moveRow(rowId, currentIndex > targetIndex ? "up" : "down");
-      }
     };
 
     useWorkbenchStore.getState().reset();
@@ -715,7 +798,7 @@ describe("workbench store", () => {
       .slice()
       .reverse()
       .forEach((rowId, targetIndex) => {
-        moveRowToIndex(rowId, targetIndex);
+        moveCurrentRowToIndex(useWorkbenchStore, rowId, targetIndex);
       });
 
     const reverseOrderedScenario = evaluateCurrentScenario();
@@ -724,6 +807,85 @@ describe("workbench store", () => {
       evaluatedScenarioSnapshot({
         result: reverseOrderedScenario.result as ResultSnapshotSource | null,
         warnings: reverseOrderedScenario.warnings
+      })
+    ).toEqual(
+      evaluatedScenarioSnapshot({
+        result: directScenario.result as ResultSnapshotSource | null,
+        warnings: directScenario.warnings
+      })
+    );
+  });
+
+  it("keeps the same heavy-floor result when override rows detour through other materials before the final stack is restored", async () => {
+    const { evaluateScenario } = await import("./scenario-analysis");
+    const { useWorkbenchStore } = await import("./workbench-store");
+
+    const evaluateCurrentScenario = () => {
+      const state = useWorkbenchStore.getState();
+
+      return evaluateScenario({
+        customMaterials: state.customMaterials,
+        id: "override-detour parity",
+        name: "override-detour parity",
+        rows: state.rows,
+        source: "current",
+        studyMode: state.studyMode,
+        targetOutputs: FLOOR_TARGET_OUTPUTS
+      });
+    };
+
+    const resolveRows = () => {
+      const state = useWorkbenchStore.getState();
+      const screedRow = state.rows.find((entry) => entry.floorRole === "floating_screed" && entry.materialId === "screed");
+      const resilientRow = state.rows.find(
+        (entry) => entry.floorRole === "resilient_layer" && entry.materialId === "generic_resilient_underlay"
+      );
+
+      expect(screedRow).toBeTruthy();
+      expect(resilientRow).toBeTruthy();
+
+      return {
+        resilientRow: resilientRow!,
+        screedRow: screedRow!
+      };
+    };
+
+    useWorkbenchStore.getState().reset();
+    useWorkbenchStore.getState().loadPreset("heavy_concrete_impact_floor");
+
+    let { resilientRow, screedRow } = resolveRows();
+    useWorkbenchStore.getState().updateDensity(screedRow.id, "1800");
+    useWorkbenchStore.getState().updateDynamicStiffness(resilientRow.id, "35");
+
+    const directScenario = evaluateCurrentScenario();
+
+    useWorkbenchStore.getState().reset();
+    useWorkbenchStore.getState().loadPreset("heavy_concrete_impact_floor");
+
+    ({ resilientRow, screedRow } = resolveRows());
+
+    useWorkbenchStore.getState().updateDensity(screedRow.id, "1500");
+    useWorkbenchStore.getState().updateMaterial(screedRow.id, "concrete");
+    useWorkbenchStore.getState().updateMaterial(screedRow.id, "screed");
+    useWorkbenchStore.getState().updateFloorRole(screedRow.id, "floating_screed");
+    useWorkbenchStore.getState().updateThickness(screedRow.id, "50");
+    useWorkbenchStore.getState().updateDensity(screedRow.id, "1800");
+
+    useWorkbenchStore.getState().updateDynamicStiffness(resilientRow.id, "20");
+    useWorkbenchStore.getState().updateMaterial(resilientRow.id, "eps_underlay");
+    useWorkbenchStore.getState().updateMaterial(resilientRow.id, "generic_resilient_underlay");
+    useWorkbenchStore.getState().updateFloorRole(resilientRow.id, "resilient_layer");
+    useWorkbenchStore.getState().updateThickness(resilientRow.id, "8");
+    useWorkbenchStore.getState().updateDynamicStiffness(resilientRow.id, "35");
+
+    const detourScenario = evaluateCurrentScenario();
+
+    expect(detourScenario.result).not.toBeNull();
+    expect(directScenario.result).not.toBeNull();
+    expect(
+      evaluatedScenarioSnapshot({
+        result: detourScenario.result as ResultSnapshotSource | null,
+        warnings: detourScenario.warnings
       })
     ).toEqual(
       evaluatedScenarioSnapshot({

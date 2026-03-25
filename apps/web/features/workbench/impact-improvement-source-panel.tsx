@@ -88,7 +88,7 @@ export function ImpactImprovementSourcePanel({
               and does not override the live stack impact lane.
             </p>
           </article>
-          <article className="rounded-md border hairline bg-black/[0.025] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
+          <article className="rounded-md border hairline bg-[color:var(--panel)] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
             <div className="font-semibold text-[color:var(--ink)]">Quick format</div>
             <p className="mt-2">
               Either paste 16 freq/value rows or 16 improvement values. DynEcho assumes the ISO heavy-reference floor

@@ -38,7 +38,7 @@ export function MaterialLibraryPanel({ materials, onAppendMaterial }: MaterialLi
             </div>
             <button
               aria-label={`Add ${material.name}`}
-              className="focus-ring touch-target inline-flex items-center justify-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink)] hover:bg-black/[0.035]"
+              className="focus-ring touch-target inline-flex items-center justify-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink)] hover:bg-[color:var(--panel)]"
               onClick={() => onAppendMaterial(material.id, defaultThicknessForMaterial(material))}
               type="button"
             >

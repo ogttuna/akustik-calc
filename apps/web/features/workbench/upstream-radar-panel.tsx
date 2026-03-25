@@ -62,7 +62,7 @@ export function UpstreamRadarPanel() {
             {snapshot.core.calculatorCount} calculators, {snapshot.core.materialCount} materials, {snapshot.core.exportCount} exported core symbols.
           </p>
         </article>
-        <article className="rounded-lg border hairline bg-black/[0.03] px-4 py-4">
+        <article className="rounded-lg border hairline bg-[color:var(--panel)] px-4 py-4">
           <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
             <TestTube2 className="h-4 w-4" />
             Impact watch
@@ -73,7 +73,7 @@ export function UpstreamRadarPanel() {
         </article>
       </div>
 
-      <div className="mt-5 rounded-lg border hairline bg-black/[0.025] px-4 py-4">
+      <div className="mt-5 rounded-lg border hairline bg-[color:var(--panel)] px-4 py-4">
         <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
           <FolderSearch2 className="h-4 w-4" />
           Current watchlines

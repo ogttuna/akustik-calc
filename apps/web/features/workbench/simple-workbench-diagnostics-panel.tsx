@@ -62,7 +62,7 @@ function DiagnosticTraceGroupCard(props: SimpleWorkbenchMethodTraceGroup) {
       <p className="mt-3 text-sm leading-6 text-[color:var(--ink-soft)]">{detail}</p>
       <div className="mt-4 grid gap-2">
         {notes.map((note) => (
-          <div className="rounded border hairline bg-black/[0.025] px-3 py-3 text-sm leading-6 text-[color:var(--ink-soft)]" key={`${label}-${note}`}>
+          <div className="rounded border hairline bg-[color:var(--panel)] px-3 py-3 text-sm leading-6 text-[color:var(--ink-soft)]" key={`${label}-${note}`}>
             {note}
           </div>
         ))}
@@ -97,7 +97,7 @@ export function SimpleWorkbenchDiagnosticsPanel(props: SimpleWorkbenchDiagnostic
             <p className="mt-3 max-w-3xl text-sm leading-7 text-[color:var(--ink-soft)]">{dossier.headline}</p>
           </div>
           <Link
-            className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-3 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+            className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-3 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
             href="/workbench?view=advanced"
           >
             Open operator desk

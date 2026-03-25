@@ -200,7 +200,7 @@ export function WorkbenchMaterialPicker(props: WorkbenchMaterialPickerProps) {
                             className={`focus-ring flex min-w-0 items-center justify-between gap-3 rounded border px-3 py-2.5 text-left ${
                               selected
                                 ? "border-[color:var(--accent)] bg-[color:var(--accent-soft)]"
-                                : "border-[color:var(--line)] bg-[color:var(--paper)] hover:bg-black/[0.02]"
+                                : "border-[color:var(--line)] bg-[color:var(--paper)] hover:bg-[color:var(--panel)]"
                             }`}
                             key={material.id}
                             onClick={() => {

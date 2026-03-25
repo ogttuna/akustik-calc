@@ -1008,7 +1008,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
                   <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">{suggestedIssue.detail}</p>
                 </div>
                 <button
-                  className="focus-ring inline-flex items-center rounded-full border hairline px-3 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+                  className="focus-ring inline-flex items-center rounded-full border hairline px-3 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
                   onClick={handleApplySuggestedIssue}
                   type="button"
                 >
@@ -1033,7 +1033,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
                   </p>
                 </div>
                 <button
-                  className="focus-ring inline-flex items-center rounded-full border hairline px-3 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+                  className="focus-ring inline-flex items-center rounded-full border hairline px-3 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
                   onClick={handleReserveIssueSequence}
                   type="button"
                 >
@@ -1076,7 +1076,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
               />
               <div className="flex flex-wrap gap-2">
                 <button
-                  className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+                  className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
                   onClick={handleSaveCurrentCompanyProfile}
                   type="button"
                 >
@@ -1084,7 +1084,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
                   Save current profile
                 </button>
                 <button
-                  className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03] disabled:cursor-not-allowed disabled:opacity-50"
+                  className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"
                   disabled={!companyProfiles.some((profile) => profile.isDefault)}
                   onClick={handleApplyDefaultCompanyProfile}
                   type="button"
@@ -1093,7 +1093,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
                   Apply default office
                 </button>
                 <button
-                  className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03] disabled:cursor-not-allowed disabled:opacity-50"
+                  className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"
                   disabled={companyProfiles.length === 0}
                   onClick={handleExportCompanyProfiles}
                   type="button"
@@ -1102,7 +1102,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
                   Export library JSON
                 </button>
                 <button
-                  className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+                  className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
                   onClick={() => importProfilesInputRef.current?.click()}
                   type="button"
                 >
@@ -1192,14 +1192,14 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
                     </div>
                     <div className="flex flex-wrap items-start justify-end gap-2">
                       <button
-                        className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-3 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+                        className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-3 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
                         onClick={() => handleApplyCompanyProfile(profile)}
                         type="button"
                       >
                         Apply profile
                       </button>
                       <button
-                        className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-3 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+                        className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-3 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
                         onClick={() => handleSetDefaultCompanyProfile(profile)}
                         type="button"
                       >
@@ -1324,7 +1324,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
                   {props.consultantLogoDataUrl ? (
                     <img
                       alt={`${props.consultantCompany || "Consultant"} logo preview`}
-                      className="h-16 w-16 rounded-md border hairline bg-white object-contain p-2"
+                      className="h-16 w-16 rounded-md border hairline bg-[color:var(--paper)] object-contain p-2"
                       src={props.consultantLogoDataUrl}
                     />
                   ) : (
@@ -1342,7 +1342,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
                 </div>
                 {props.consultantLogoDataUrl ? (
                   <button
-                    className="focus-ring mt-4 inline-flex items-center gap-2 rounded-full border hairline px-3 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+                    className="focus-ring mt-4 inline-flex items-center gap-2 rounded-full border hairline px-3 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
                     onClick={handleClearConsultantLogo}
                     type="button"
                   >
@@ -1418,7 +1418,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
                         className={`focus-ring grid gap-2 rounded-md border px-4 py-4 text-left transition ${
                           active
                             ? "border-[color:color-mix(in_oklch,var(--accent)_28%,var(--line))] bg-[color:color-mix(in_oklch,var(--accent)_12%,var(--paper))]"
-                            : "hairline bg-[color:var(--paper)]/76 hover:bg-black/[0.03]"
+                            : "hairline bg-[color:var(--paper)]/76 hover:bg-[color:var(--panel)]"
                         }`}
                         key={preset.id}
                         onClick={() => handleApplyPolicyPreset(preset)}
@@ -1476,7 +1476,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
             </div>
           </div>
 
-          <div className="rounded-lg border hairline bg-black/[0.025] px-4 py-4">
+          <div className="rounded-lg border hairline bg-[color:var(--panel)] px-4 py-4">
             <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
               <ScrollText className="h-4 w-4" />
               Sheet contents
@@ -1533,7 +1533,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
               {proposalDocument.consultantLogoDataUrl ? (
                 <img
                   alt={`${proposalDocument.consultantCompany} logo`}
-                  className="h-14 w-14 rounded-md border bg-white object-contain p-2"
+                  className="h-14 w-14 rounded-md border bg-[color:var(--paper)] object-contain p-2"
                   src={proposalDocument.consultantLogoDataUrl}
                   style={{ borderColor: proposalBranding.line }}
                 />
@@ -1863,7 +1863,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
 
           <div className="mt-5 flex flex-wrap gap-2">
             <button
-              className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03] disabled:cursor-not-allowed disabled:opacity-50"
+              className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"
               disabled={!exportReady}
               onClick={() => void handleCopySummary()}
               type="button"
@@ -1872,7 +1872,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
               Copy proposal summary
             </button>
             <button
-              className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03] disabled:cursor-not-allowed disabled:opacity-50"
+              className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"
               disabled={!exportReady || isDownloadingPdf}
               onClick={() => void handleDownloadPdf()}
               type="button"
@@ -1881,7 +1881,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
               {isDownloadingPdf ? "Generating PDF..." : "Download branded PDF"}
             </button>
             <button
-              className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03] disabled:cursor-not-allowed disabled:opacity-50"
+              className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"
               disabled={!exportReady || isDownloadingPdf}
               onClick={() => void handleDownloadPdf("simple")}
               type="button"
@@ -1890,7 +1890,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
               {isDownloadingPdf ? "Generating PDF..." : "Simple PDF"}
             </button>
             <button
-              className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03] disabled:cursor-not-allowed disabled:opacity-50"
+              className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"
               disabled={!exportReady}
               onClick={() => openProposalPrintView(false)}
               type="button"
@@ -1915,7 +1915,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
             </div>
           ) : null}
 
-          <div className="mt-4 rounded-md border hairline bg-black/[0.02] px-4 py-4">
+          <div className="mt-4 rounded-md border hairline bg-[color:var(--panel)] px-4 py-4">
             <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
               <FileText className="h-4 w-4" />
               Delivery note

@@ -60,7 +60,7 @@ function getGroupCopy(kind: WorkbenchFieldStatusKind): {
         icon: EyeOff,
         pillTone: "neutral",
         title: "Parked now",
-        wrapperClassName: "border-[color:var(--line)] bg-black/[0.03]"
+        wrapperClassName: "border-[color:var(--line)] bg-[color:var(--panel)]"
       };
   }
 }
@@ -105,7 +105,7 @@ export function FieldUsageBoard({ description, items, title }: FieldUsageBoardPr
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="flex min-w-0 items-start gap-3">
-                  <div className="mt-0.5 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-black/10 bg-white/65 text-[color:var(--ink)]">
+                  <div className="mt-0.5 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[color:var(--line)] bg-[color:var(--paper)] text-[color:var(--ink)]">
                     <Icon className="h-4 w-4" />
                   </div>
                   <div className="min-w-0">
@@ -120,13 +120,13 @@ export function FieldUsageBoard({ description, items, title }: FieldUsageBoardPr
                 <div className="mt-4 space-y-3">
                   {entries.map((item) => (
                     <article
-                      className="rounded-md border border-black/8 bg-white/60 px-4 py-3"
+                      className="rounded-md border border-[color:var(--line)] bg-[color:var(--paper)] px-4 py-3"
                       key={item.id}
                     >
                       <div className="flex flex-wrap items-center gap-2">
                         <div className="text-sm font-semibold text-[color:var(--ink)]">{item.label}</div>
                         {item.section ? (
-                          <span className="rounded-full border border-black/8 px-2 py-0.5 text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+                          <span className="rounded-full border border-[color:var(--line)] px-2 py-0.5 text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
                             {item.section}
                           </span>
                         ) : null}

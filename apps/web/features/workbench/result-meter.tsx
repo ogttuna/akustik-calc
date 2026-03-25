@@ -11,7 +11,7 @@ export function ResultMeter({ value }: ResultMeterProps) {
         <span>Screening band</span>
         <span className="metric-number">{value.toFixed(1)} dB</span>
       </div>
-      <div className="relative h-3 rounded-full bg-black/[0.06]">
+      <div className="relative h-3 rounded-full bg-[color:var(--panel-strong)]">
         <div
           className="absolute inset-y-0 left-0 rounded-full bg-[linear-gradient(90deg,var(--warning),var(--accent),var(--success))]"
           style={{ width: "100%" }}

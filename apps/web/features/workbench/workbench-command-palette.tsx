@@ -59,7 +59,7 @@ function PaletteTag({
         ? "bg-[color:var(--warning-soft)] text-[color:var(--warning-ink)]"
         : tone === "accent"
           ? "bg-[color:var(--accent-soft)] text-[color:var(--accent-ink)]"
-          : "bg-black/[0.04] text-[color:var(--ink-soft)]";
+          : "bg-[color:var(--panel-strong)] text-[color:var(--ink-soft)]";
 
   return (
     <span

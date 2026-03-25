@@ -210,7 +210,7 @@ export function ImpactResultPanel({ result }: ImpactResultPanelProps) {
               <div className="mt-4 grid gap-3 lg:grid-cols-2">
                 {metricBasisRows.map((row) => (
                   <article
-                    className="rounded-md border hairline bg-black/[0.025] px-4 py-4"
+                    className="rounded-md border hairline bg-[color:var(--panel)] px-4 py-4"
                     key={`${row.metric}-${row.basis}`}
                   >
                     <div className="flex flex-wrap items-center justify-between gap-2">
@@ -227,7 +227,7 @@ export function ImpactResultPanel({ result }: ImpactResultPanelProps) {
           ) : null}
 
           {impact.estimateCandidateIds?.length ? (
-            <div className="mt-3 rounded-md border hairline bg-black/[0.025] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
+            <div className="mt-3 rounded-md border hairline bg-[color:var(--panel)] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
               <span className="font-semibold text-[color:var(--ink)]">Candidate lineage:</span>{" "}
               {impact.estimateCandidateIds.join(", ")}
             </div>
@@ -278,7 +278,7 @@ export function ImpactResultPanel({ result }: ImpactResultPanelProps) {
               .notes
               .concat(lowerBoundImpact ? lowerBoundImpact.notes : [])
               .map((note: string) => (
-              <article className="rounded-md border hairline bg-black/[0.025] px-4 py-4" key={note}>
+              <article className="rounded-md border hairline bg-[color:var(--panel)] px-4 py-4" key={note}>
                 {note}
               </article>
               ))}
@@ -320,7 +320,7 @@ export function ImpactResultPanel({ result }: ImpactResultPanelProps) {
 
           <div className="mt-5 grid gap-3 text-sm leading-7 text-[color:var(--ink-soft)]">
             {lowerBoundImpact.notes.map((note: string) => (
-              <article className="rounded-md border hairline bg-black/[0.025] px-4 py-4" key={note}>
+              <article className="rounded-md border hairline bg-[color:var(--panel)] px-4 py-4" key={note}>
                 {note}
               </article>
             ))}

@@ -147,7 +147,7 @@ export function ImpactProductCatalogPanel({ result }: ImpactProductCatalogPanelP
           </div>
 
           {primaryConfidence ? (
-            <div className="mt-5 rounded-md border hairline bg-black/[0.025] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
+            <div className="mt-5 rounded-md border hairline bg-[color:var(--panel)] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
               <span className="font-semibold text-[color:var(--ink)]">Trust note:</span> {primaryConfidence.summary}
             </div>
           ) : null}

@@ -115,7 +115,7 @@ export function ValidationRegimePanel({ result }: ValidationRegimePanelProps) {
           </div>
           <div className="mt-3 text-lg font-semibold tracking-[-0.03em] text-[color:var(--ink)]">{impactPosture.label}</div>
           <p className="mt-2 text-sm leading-7 text-[color:var(--ink-soft)]">{impactPosture.detail}</p>
-          <div className="mt-4 border-t border-black/8 pt-4">
+          <div className="mt-4 border-t border-[color:var(--line)] pt-4">
             <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">
               Airborne posture
             </div>
@@ -133,10 +133,10 @@ export function ValidationRegimePanel({ result }: ValidationRegimePanelProps) {
               const Icon = band.icon;
 
               return (
-                <article className="rounded-md border hairline bg-black/[0.025] px-4 py-3" key={band.label}>
+                <article className="rounded-md border hairline bg-[color:var(--panel)] px-4 py-3" key={band.label}>
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex min-w-0 items-start gap-3">
-                      <div className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-black/8 bg-white/70">
+                      <div className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[color:var(--line)] bg-[color:var(--paper)]">
                         <Icon className="h-4 w-4 text-[color:var(--ink)]" />
                       </div>
                       <div className="min-w-0">
@@ -144,7 +144,7 @@ export function ValidationRegimePanel({ result }: ValidationRegimePanelProps) {
                         <p className="mt-1 text-sm leading-7 text-[color:var(--ink-soft)]">{band.detail}</p>
                       </div>
                     </div>
-                    <span className="rounded-full border border-black/8 px-2 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+                    <span className="rounded-full border border-[color:var(--line)] px-2 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
                       {band.value}
                     </span>
                   </div>
@@ -178,7 +178,7 @@ export function ValidationRegimePanel({ result }: ValidationRegimePanelProps) {
                 className={`rounded-md border px-4 py-4 ${
                   isActive
                     ? "border-[color:var(--accent)]/35 bg-[color:var(--accent-soft)]/24"
-                    : "hairline bg-black/[0.025]"
+                    : "hairline bg-[color:var(--panel)]"
                 }`}
                 key={entry.id}
               >
@@ -256,7 +256,7 @@ export function ValidationRegimePanel({ result }: ValidationRegimePanelProps) {
         </div>
 
         <div className="mt-4 overflow-hidden rounded-md border hairline">
-          <div className="hidden gap-3 bg-black/[0.04] px-4 py-3 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)] xl:grid xl:grid-cols-[1.35fr_0.8fr_0.8fr_1.15fr]">
+          <div className="hidden gap-3 bg-[color:var(--panel-strong)] px-4 py-3 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)] xl:grid xl:grid-cols-[1.35fr_0.8fr_0.8fr_1.15fr]">
             <div>Family</div>
             <div>Floor</div>
             <div>Field</div>
@@ -264,7 +264,7 @@ export function ValidationRegimePanel({ result }: ValidationRegimePanelProps) {
           </div>
           {coverageSnapshotRows.map((row) => (
             <article
-              className="grid gap-3 border-t border-black/8 px-4 py-3 first:border-t-0 xl:grid-cols-[1.35fr_0.8fr_0.8fr_1.15fr]"
+              className="grid gap-3 border-t border-[color:var(--line)] px-4 py-3 first:border-t-0 xl:grid-cols-[1.35fr_0.8fr_0.8fr_1.15fr]"
               key={`coverage-${row.id}`}
             >
               <div className="min-w-0">
@@ -313,7 +313,7 @@ export function ValidationRegimePanel({ result }: ValidationRegimePanelProps) {
 
         <div className="mt-4 grid gap-3 xl:grid-cols-2">
           {hardeningTasks.map((task) => (
-            <article className="rounded-md border hairline bg-black/[0.025] px-4 py-4" key={task.id}>
+            <article className="rounded-md border hairline bg-[color:var(--panel)] px-4 py-4" key={task.id}>
               <div className="flex flex-wrap items-center gap-2">
                 <Pill tone="warning">Next</Pill>
                 <Pill tone="neutral">{task.familyLabels.length} families</Pill>
@@ -364,7 +364,7 @@ export function ValidationRegimePanel({ result }: ValidationRegimePanelProps) {
                 className={`rounded-md border px-4 py-4 ${
                   isActive
                     ? "border-[color:var(--accent)]/35 bg-[color:var(--accent-soft)]/24"
-                    : "hairline bg-black/[0.025]"
+                    : "hairline bg-[color:var(--panel)]"
                 }`}
                 key={entry.id}
               >

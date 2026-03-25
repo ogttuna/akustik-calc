@@ -28,7 +28,7 @@ function getButtonClasses(active: boolean, featured: boolean): string {
     return "border-[color:var(--ink)] bg-[color:var(--panel-strong)] text-[color:var(--ink)]";
   }
 
-  return "border-[color:var(--line)] bg-[color:var(--paper)] text-[color:var(--ink-soft)] hover:bg-black/[0.03]";
+  return "border-[color:var(--line)] bg-[color:var(--paper)] text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]";
 }
 
 type AirborneCalculatorPickerProps = {

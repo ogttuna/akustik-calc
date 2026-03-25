@@ -74,7 +74,7 @@ export function ProjectBriefPanel({
     isActive: boolean
   ): string {
     if (!isActive) {
-      return "hairline bg-[color:var(--paper)] text-[color:var(--ink-soft)] hover:bg-black/[0.03]";
+      return "hairline bg-[color:var(--paper)] text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]";
     }
 
     switch (tone) {
@@ -83,7 +83,7 @@ export function ProjectBriefPanel({
       case "warning":
         return "border-[color:var(--warning-ink)]/28 bg-[color:var(--warning-soft)]/65 text-[color:var(--warning-ink)]";
       case "neutral":
-        return "border-black/10 bg-[color:var(--panel-strong)] text-[color:var(--ink)]";
+        return "border-[color:var(--line)] bg-[color:var(--panel-strong)] text-[color:var(--ink)]";
       case "accent":
         return "border-[color:var(--accent)] bg-[color:var(--accent-soft)] text-[color:var(--accent-ink)]";
     }
@@ -170,7 +170,7 @@ export function ProjectBriefPanel({
         </label>
       </div>
 
-      <div className="mt-5 rounded-lg border hairline bg-black/[0.025] px-4 py-4">
+      <div className="mt-5 rounded-lg border hairline bg-[color:var(--panel)] px-4 py-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
             <Target className="h-4 w-4" />

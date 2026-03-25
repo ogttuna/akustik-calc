@@ -32,7 +32,7 @@ export function SimpleWorkbenchProposalConstructionFigure({
 
   if (section.bands.length === 0) {
     return (
-      <div className="rounded-md border border-dashed hairline bg-black/[0.02] px-4 py-6 text-sm leading-6 text-[color:var(--ink-soft)]">
+      <div className="rounded-md border border-dashed hairline bg-[color:var(--panel)] px-4 py-6 text-sm leading-6 text-[color:var(--ink-soft)]">
         No visible rows are packaged on this proposal yet. Build a supported stack first so DynEcho can draw the construction section.
       </div>
     );

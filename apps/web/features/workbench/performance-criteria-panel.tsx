@@ -170,7 +170,7 @@ export function PerformanceCriteriaPanel({
               <Pill tone="accent">{effectiveRequestedOutputs.length} output lanes</Pill>
             </div>
           </div>
-          <div className="mt-4 rounded-md border hairline bg-black/[0.03] px-4 py-4">
+          <div className="mt-4 rounded-md border hairline bg-[color:var(--panel)] px-4 py-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
@@ -258,7 +258,7 @@ export function PerformanceCriteriaPanel({
           </div>
         </article>
 
-        <article className="rounded-lg border hairline bg-black/[0.03] px-4 py-4">
+        <article className="rounded-lg border hairline bg-[color:var(--panel)] px-4 py-4">
           <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
             Impact target
           </div>
@@ -461,7 +461,7 @@ export function PerformanceCriteriaPanel({
           ) : null}
         </article>
 
-        <article className="rounded-lg border hairline bg-black/[0.025] px-4 py-4">
+        <article className="rounded-lg border hairline bg-[color:var(--panel)] px-4 py-4">
           <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
             <WavesLadder className="h-4 w-4" />
             Explicitly unresolved outputs

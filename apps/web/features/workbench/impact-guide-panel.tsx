@@ -389,7 +389,7 @@ export function ImpactGuidePanel({
 
           <div className="mt-5 grid gap-3 text-sm leading-7 text-[color:var(--ink-soft)]">
             {guideResult.notes.map((note) => (
-              <article className="rounded-md border hairline bg-black/[0.025] px-4 py-4" key={note}>
+              <article className="rounded-md border hairline bg-[color:var(--panel)] px-4 py-4" key={note}>
                 <div className="inline-flex items-center gap-2">
                   <Orbit className="h-4 w-4 text-[color:var(--ink-faint)]" />
                   <span>{note}</span>

@@ -189,7 +189,7 @@ describe("scenario analysis", () => {
   });
 
   it("keeps merged and high-split floor rows stable across bare, density-override, and dynamic-stiffness cases", () => {
-    const splitCounts = [2, 3, 5, 10, 20] as const;
+    const splitCounts = [2, 3, 5, 10, 20, 29] as const;
     const cases = [
       {
         id: "bare-base",

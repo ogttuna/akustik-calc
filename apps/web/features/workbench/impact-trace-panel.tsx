@@ -471,7 +471,7 @@ export function ImpactTracePanel({ result }: ImpactTracePanelProps) {
       ) : null}
 
       <div className="mt-5 grid gap-4 xl:grid-cols-2">
-        <article className="rounded-md border hairline bg-black/[0.025] px-4 py-4">
+        <article className="rounded-md border hairline bg-[color:var(--panel)] px-4 py-4">
           <div className="flex items-center gap-2">
             <Orbit className="h-4 w-4 text-[color:var(--accent)]" />
             <div className="text-sm font-semibold text-[color:var(--ink)]">Status notes</div>
@@ -493,7 +493,7 @@ export function ImpactTracePanel({ result }: ImpactTracePanelProps) {
           ) : null}
         </article>
 
-        <article className="rounded-md border hairline bg-black/[0.025] px-4 py-4">
+        <article className="rounded-md border hairline bg-[color:var(--panel)] px-4 py-4">
           <div className="flex items-center gap-2">
             <Route className="h-4 w-4 text-[color:var(--accent)]" />
             <div className="text-sm font-semibold text-[color:var(--ink)]">Support notes</div>

@@ -29,7 +29,7 @@ const MERGE_SAFE_PACKED_ROLES = new Set<FloorRole>([
   "resilient_layer",
   "upper_fill"
 ]);
-const HIGH_SPLIT_LAYER_COUNTS = [2, 3, 5, 10, 20] as const;
+const HIGH_SPLIT_LAYER_COUNTS = [2, 3, 5, 10, 20, 29] as const;
 const LAB_OUTPUTS = ["Rw", "Ln,w", "Ln,w+CI"] as const;
 const FIELD_OUTPUTS = [
   "Rw",

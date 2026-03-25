@@ -206,7 +206,7 @@ export function LayerEditor({
                 <div className="flex items-center gap-2">
                   <button
                     aria-label={`Move ${materialName} layer up`}
-                    className="focus-ring touch-target inline-flex items-center justify-center rounded-full border hairline px-3 py-2 text-[color:var(--ink-soft)] hover:bg-black/[0.04]"
+                    className="focus-ring touch-target inline-flex items-center justify-center rounded-full border hairline px-3 py-2 text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
                     onClick={() => onMoveRow(row.id, "up")}
                     type="button"
                   >
@@ -214,7 +214,7 @@ export function LayerEditor({
                   </button>
                   <button
                     aria-label={`Move ${materialName} layer down`}
-                    className="focus-ring touch-target inline-flex items-center justify-center rounded-full border hairline px-3 py-2 text-[color:var(--ink-soft)] hover:bg-black/[0.04]"
+                    className="focus-ring touch-target inline-flex items-center justify-center rounded-full border hairline px-3 py-2 text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
                     onClick={() => onMoveRow(row.id, "down")}
                     type="button"
                   >

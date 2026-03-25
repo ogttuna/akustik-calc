@@ -143,7 +143,7 @@ function MethodCitationCard(props: SimpleWorkbenchProposalCitation) {
       <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">{detail}</p>
       {href ? (
         <a
-          className="focus-ring mt-3 inline-flex items-center gap-2 rounded-full border hairline px-3 py-1.5 text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+          className="focus-ring mt-3 inline-flex items-center gap-2 rounded-full border hairline px-3 py-1.5 text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
           href={href}
           rel="noreferrer"
           target="_blank"
@@ -435,7 +435,7 @@ export function SimpleWorkbenchMethodPanel({
               </div>
             </section>
 
-            <section className="rounded-md border hairline bg-black/[0.025] px-4 py-4">
+            <section className="rounded-md border hairline bg-[color:var(--panel)] px-4 py-4">
               <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
                 <Wrench className="h-4 w-4" />
                 Reading rule

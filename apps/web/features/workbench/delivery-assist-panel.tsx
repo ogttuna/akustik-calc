@@ -174,7 +174,7 @@ export function DeliveryAssistPanel({
           </p>
         </article>
 
-        <article className="rounded-lg border hairline bg-black/[0.03] px-4 py-4">
+        <article className="rounded-lg border hairline bg-[color:var(--panel)] px-4 py-4">
           <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
             <NotebookText className="h-4 w-4" />
             Project memory
@@ -184,7 +184,7 @@ export function DeliveryAssistPanel({
           </p>
         </article>
 
-        <article className="rounded-lg border hairline bg-black/[0.025] px-4 py-4">
+        <article className="rounded-lg border hairline bg-[color:var(--panel)] px-4 py-4">
           <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
             <ShieldCheck className="h-4 w-4" />
             Validation corridor
@@ -210,7 +210,7 @@ export function DeliveryAssistPanel({
           </div>
         </article>
 
-        <article className="rounded-lg border hairline bg-black/[0.025] px-4 py-4">
+        <article className="rounded-lg border hairline bg-[color:var(--panel)] px-4 py-4">
           <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
             <Route className="h-4 w-4" />
             Recommended next moves

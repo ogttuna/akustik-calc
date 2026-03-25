@@ -12,7 +12,7 @@ type PresetStripProps = {
 
 export function PresetStrip({ activePresetId, onPreset, onReset }: PresetStripProps) {
   return (
-    <div className="rounded-lg border hairline bg-black/[0.025] px-3 py-3">
+    <div className="rounded-lg border hairline bg-[color:var(--panel)] px-3 py-3">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <div className="eyebrow">Preset lane</div>
@@ -36,7 +36,7 @@ export function PresetStrip({ activePresetId, onPreset, onReset }: PresetStripPr
             className={`focus-ring touch-target w-[17.5rem] shrink-0 snap-start rounded-md border px-4 py-3 text-left text-sm transition sm:w-auto ${
               activePresetId === preset.id
                 ? "border-[color:var(--accent)] bg-[color:var(--accent-soft)] text-[color:var(--accent-ink)]"
-                : "hairline bg-black/[0.03] text-[color:var(--ink-soft)] hover:bg-black/[0.05]"
+                : "hairline bg-[color:var(--panel)] text-[color:var(--ink-soft)] hover:bg-[color:var(--panel-strong)]"
             }`}
             key={preset.id}
             onClick={() => {

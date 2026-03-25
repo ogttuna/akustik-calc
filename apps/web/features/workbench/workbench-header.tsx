@@ -57,7 +57,7 @@ export function WorkbenchHeader({
         <div className="flex flex-wrap items-center gap-2">
           <button
             aria-haspopup="dialog"
-            className="focus-ring touch-target inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+            className="focus-ring touch-target inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
             onClick={onOpenCommands}
             type="button"
           >
@@ -67,7 +67,7 @@ export function WorkbenchHeader({
               Ctrl K
             </span>
           </button>
-          <Link className="focus-ring touch-target inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold hover:bg-black/[0.04]" href="/">
+          <Link className="focus-ring touch-target inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold hover:bg-[color:var(--panel)]" href="/">
             <ArrowLeft className="h-4 w-4" />
             Back to overview
           </Link>
@@ -98,7 +98,7 @@ export function WorkbenchHeader({
               Responsive editor, local solver selection, curated exact families, explicit field carry-over, and export-ready reporting in one workspace.
             </p>
           </article>
-          <article className="rounded-lg border hairline bg-black/[0.025] px-4 py-4">
+          <article className="rounded-lg border hairline bg-[color:var(--panel)] px-4 py-4">
             <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
               <Waypoints className="h-4 w-4" />
               Current preset
@@ -107,7 +107,7 @@ export function WorkbenchHeader({
               {activePreset.label}: {activePreset.note}
             </p>
           </article>
-          <article className="rounded-lg border hairline bg-black/[0.025] px-4 py-4">
+          <article className="rounded-lg border hairline bg-[color:var(--panel)] px-4 py-4">
             <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
               <ShieldBan className="h-4 w-4" />
               Upstream lock
