@@ -74,6 +74,7 @@ import {
   getLayerThicknessSanityWarning,
   GUIDED_INPUT_SANITY_BANDS
 } from "./input-sanity";
+import { prependRecommendedMaterialGroup } from "./material-picker-recommendations";
 import { normalizeRows } from "./normalize-rows";
 import { useTheme } from "./use-theme";
 import { evaluateScenario } from "./scenario-analysis";
@@ -677,7 +678,8 @@ function uniqueMaterialsById(materials: readonly MaterialDefinition[]): Material
 function buildMaterialGroups(
   studyMode: StudyMode,
   allMaterials: readonly MaterialDefinition[],
-  selectedMaterialId: string
+  selectedMaterialId: string,
+  floorRole?: FloorRole
 ): WorkbenchMaterialOptionGroup[] {
   const materialById = new Map(allMaterials.map((material) => [material.id, material]));
   const groups = MODE_MATERIAL_GROUPS[studyMode]
@@ -726,10 +728,16 @@ function buildMaterialGroups(
     });
   }
 
-  return groups.map((group) => ({
-    label: group.label,
-    materials: uniqueMaterialsById(group.materials)
-  }));
+  return prependRecommendedMaterialGroup({
+    floorRole,
+    groups: groups.map((group) => ({
+      label: group.label,
+      materials: uniqueMaterialsById(group.materials)
+    })),
+    materials: allMaterials,
+    selectedMaterialId,
+    studyMode
+  });
 }
 
 function getStackEdgeLabel(studyMode: StudyMode, index: number, totalRows: number): string | null {
@@ -3186,7 +3194,12 @@ export function SimpleWorkbenchShell() {
   const selectedPreset = modePresets.find((preset) => preset.id === selectedPresetId) ?? modePresets[0]!;
   const selectedContextOption =
     AIRBORNE_CONTEXT_OPTIONS.find((option) => option.value === airborneContextMode) ?? AIRBORNE_CONTEXT_OPTIONS[0]!;
-  const newLayerMaterialGroups = buildMaterialGroups(studyMode, materials, newLayerDraft.materialId);
+  const newLayerMaterialGroups = buildMaterialGroups(
+    studyMode,
+    materials,
+    newLayerDraft.materialId,
+    newLayerDraft.floorRole
+  );
   const customMaterialErrors = validateCustomMaterialDraft(customMaterialDraft, materials);
 
   const liveAirborneContext: AirborneContext = {
@@ -4309,7 +4322,7 @@ export function SimpleWorkbenchShell() {
                       index={index}
                       key={row.id}
                       materials={materials}
-                      materialGroups={buildMaterialGroups(studyMode, materials, row.materialId)}
+                      materialGroups={buildMaterialGroups(studyMode, materials, row.materialId, row.floorRole)}
                       moveFlashDirection={movedRowFlash?.rowId === row.id ? movedRowFlash.direction : undefined}
                       onActiveRowChange={setActiveRowId}
                       onExpandedChange={setExpandedRowId}

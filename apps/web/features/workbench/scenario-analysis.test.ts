@@ -679,6 +679,28 @@ describe("scenario analysis", () => {
     );
   });
 
+  it("explains when an official product stays off the active lane because only exact-row support exists locally", () => {
+    const scenario = evaluateScenario({
+      id: "official-product-near-miss",
+      name: "official-product-near-miss",
+      rows: [
+        { floorRole: "floor_covering", id: "a", materialId: "ceramic_tile", thicknessMm: "8" },
+        { floorRole: "floating_screed", id: "b", materialId: "screed", thicknessMm: "50" },
+        { floorRole: "resilient_layer", id: "c", materialId: "regupol_sonus_multi_4_5", thicknessMm: "8" },
+        { floorRole: "base_structure", id: "d", materialId: "concrete", thicknessMm: "150" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+
+    expect(scenario.result).not.toBeNull();
+    expect(scenario.result?.impactCatalogMatch).toBeNull();
+    expect(scenario.warnings).toContain(
+      "REGUPOL sonus multi 4.5 is in the stack, but no official product row matched the current topology and no generic dynamic stiffness fallback is available for this product. DynEcho kept the result on the broader predictor/family lane instead of inventing product-backed impact credit."
+    );
+  });
+
   const publishedExactBenchmarks = [
     {
       presetId: "knauf_acoustic_mount_exact" as const,

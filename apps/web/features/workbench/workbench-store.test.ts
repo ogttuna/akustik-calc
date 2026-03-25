@@ -1031,6 +1031,26 @@ describe("workbench store", () => {
     expect(updatedRow?.dynamicStiffnessMNm3 ?? "").toBe("");
   });
 
+  it("reclassifies ceiling-support products onto the ceiling side when the row material changes", async () => {
+    const { useWorkbenchStore } = await import("./workbench-store");
+
+    useWorkbenchStore.getState().reset();
+    useWorkbenchStore.getState().loadPreset("heavy_concrete_impact_floor");
+
+    const row = useWorkbenchStore
+      .getState()
+      .rows.find((entry) => entry.floorRole === "resilient_layer" && entry.materialId === "generic_resilient_underlay");
+
+    expect(row).toBeTruthy();
+
+    useWorkbenchStore.getState().updateMaterial(row!.id, "acoustic_mount_clip");
+
+    const updatedRow = useWorkbenchStore.getState().rows.find((entry) => entry.id === row!.id);
+
+    expect(updatedRow?.materialId).toBe("acoustic_mount_clip");
+    expect(updatedRow?.floorRole).toBe("ceiling_cavity");
+  });
+
   it("clears the manual density override when the row material changes", async () => {
     const { useWorkbenchStore } = await import("./workbench-store");
 

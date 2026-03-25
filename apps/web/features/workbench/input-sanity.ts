@@ -276,6 +276,19 @@ export function collectScenarioInputWarnings(input: {
     }
   });
 
+  if (input.studyMode === "floor") {
+    const hasCeilingBoard = thicknessWarningLayers.some((layer) => layer.floorRole === "ceiling_board");
+    const hasCeilingSideSupport = thicknessWarningLayers.some(
+      (layer) => layer.floorRole === "ceiling_cavity" || layer.floorRole === "ceiling_fill"
+    );
+
+    if (hasCeilingSideSupport && !hasCeilingBoard) {
+      warnings.push(
+        "Ceiling-side support or fill layers are present without any ceiling board. DynEcho keeps the lower-treatment lane inactive, so these products may not change the result until at least one ceiling board is added."
+      );
+    }
+  }
+
   if (fieldAirborneRequested) {
     const panelWidthWarning = getGuidedNumericSanityWarning({
       band: GUIDED_INPUT_SANITY_BANDS.panelWidthMm,

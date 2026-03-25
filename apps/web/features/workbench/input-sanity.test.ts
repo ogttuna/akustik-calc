@@ -91,4 +91,57 @@ describe("input sanity", () => {
       "Layer 1 thickness 100 mm is outside the guided sanity band of 25 to 90 mm for Mineral Screed in the floating screed role. Check units, role assignment, or split the build-up into separate layers if needed."
     ]);
   });
+
+  it("warns when ceiling-side support is present without any ceiling board to activate it", () => {
+    const warnings = collectScenarioInputWarnings({
+      materials: [
+        {
+          category: "finish",
+          densityKgM3: 2000,
+          id: "ceramic_tile",
+          name: "Ceramic Tile",
+          tags: ["floor-finish"]
+        },
+        {
+          category: "mass",
+          densityKgM3: 2000,
+          id: "screed",
+          name: "Mineral Screed",
+          tags: ["screed"]
+        },
+        {
+          category: "support",
+          densityKgM3: 0,
+          id: "acoustic_mount_clip",
+          name: "Acoustic Mount Clip",
+          tags: ["support", "ceiling-support", "clip"]
+        },
+        {
+          category: "mass",
+          densityKgM3: 2400,
+          id: "concrete",
+          name: "Concrete",
+          tags: ["structural"]
+        }
+      ],
+      normalizedLayers: [
+        { floorRole: "floor_covering", materialId: "ceramic_tile", thicknessMm: 8 },
+        { floorRole: "floating_screed", materialId: "screed", thicknessMm: 50 },
+        { floorRole: "ceiling_cavity", materialId: "acoustic_mount_clip", thicknessMm: 20 },
+        { floorRole: "base_structure", materialId: "concrete", thicknessMm: 150 }
+      ],
+      rows: [
+        { floorRole: "floor_covering", id: "a", materialId: "ceramic_tile", thicknessMm: "8" },
+        { floorRole: "floating_screed", id: "b", materialId: "screed", thicknessMm: "50" },
+        { floorRole: "ceiling_cavity", id: "c", materialId: "acoustic_mount_clip", thicknessMm: "20" },
+        { floorRole: "base_structure", id: "d", materialId: "concrete", thicknessMm: "150" }
+      ],
+      studyMode: "floor",
+      targetOutputs: []
+    });
+
+    expect(warnings).toContain(
+      "Ceiling-side support or fill layers are present without any ceiling board. DynEcho keeps the lower-treatment lane inactive, so these products may not change the result until at least one ceiling board is added."
+    );
+  });
 });

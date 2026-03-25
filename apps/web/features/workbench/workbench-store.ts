@@ -271,6 +271,10 @@ export function inferFloorRole(
   const materialName = material.name.toLocaleLowerCase("en-US");
   const materialTags = new Set(material.tags);
 
+  if (materialTags.has("ceiling-support")) {
+    return "ceiling_cavity";
+  }
+
   if (materialId === "resilient_channel") {
     return "ceiling_cavity";
   }

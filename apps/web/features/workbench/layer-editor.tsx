@@ -7,13 +7,19 @@ import { SurfacePanel } from "@dynecho/ui";
 import { getMaterialCategoryLabel } from "./describe-assembly";
 import { FieldUsageBoard } from "./field-usage-board";
 import { FieldGuide } from "./field-guide";
+import { prependRecommendedMaterialGroup } from "./material-picker-recommendations";
 import { getCatalogDensity } from "./material-density";
 import type { StudyMode } from "./preset-definitions";
 import { FLOOR_ROLE_LABELS } from "./workbench-data";
 import { WorkbenchMaterialPicker, type WorkbenchMaterialOptionGroup } from "./workbench-material-picker";
 import type { LayerDraft } from "./workbench-store";
 
-function buildLayerEditorMaterialGroups(materials: readonly MaterialDefinition[]): WorkbenchMaterialOptionGroup[] {
+function buildLayerEditorMaterialGroups(input: {
+  floorRole?: FloorRole;
+  materials: readonly MaterialDefinition[];
+  selectedMaterialId: string;
+  studyMode: StudyMode;
+}): WorkbenchMaterialOptionGroup[] {
   const grouped = new Map<string, MaterialDefinition[]>();
   const categoryOrder = {
     finish: 0,
@@ -23,7 +29,7 @@ function buildLayerEditorMaterialGroups(materials: readonly MaterialDefinition[]
     gap: 4
   } as const;
 
-  for (const material of materials) {
+  for (const material of input.materials) {
     const label = getMaterialCategoryLabel(material);
     const bucket = grouped.get(label);
 
@@ -34,7 +40,7 @@ function buildLayerEditorMaterialGroups(materials: readonly MaterialDefinition[]
     }
   }
 
-  return Array.from(grouped.entries())
+  const groups = Array.from(grouped.entries())
     .sort(([leftLabel, leftMaterials], [rightLabel, rightMaterials]) => {
       const leftCategory = leftMaterials[0]?.category ?? "mass";
       const rightCategory = rightMaterials[0]?.category ?? "mass";
@@ -47,6 +53,14 @@ function buildLayerEditorMaterialGroups(materials: readonly MaterialDefinition[]
       label,
       materials: [...groupMaterials].sort((left, right) => left.name.localeCompare(right.name, "en"))
     }));
+
+  return prependRecommendedMaterialGroup({
+    floorRole: input.floorRole,
+    groups,
+    materials: input.materials,
+    selectedMaterialId: input.selectedMaterialId,
+    studyMode: input.studyMode
+  });
 }
 
 type LayerEditorProps = {
@@ -74,7 +88,6 @@ export function LayerEditor({
   onRemoveRow,
   onThicknessChange
 }: LayerEditorProps) {
-  const materialGroups = buildLayerEditorMaterialGroups(materials);
   const rowLabel = rows.length === 1 ? "layer" : "layers";
   const validThicknessCount = rows.filter((row) => {
     const thickness = Number(row.thicknessMm);
@@ -183,6 +196,12 @@ export function LayerEditor({
         {rows.map((row, index) => {
           const material = materials.find((entry) => entry.id === row.materialId) ?? materials[0]!;
           const materialName = material.name;
+          const materialGroups = buildLayerEditorMaterialGroups({
+            floorRole: row.floorRole,
+            materials,
+            selectedMaterialId: row.materialId,
+            studyMode
+          });
 
           return (
             <article className="pointer-card rounded-lg border hairline p-4" key={row.id}>
