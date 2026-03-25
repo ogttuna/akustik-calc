@@ -953,6 +953,70 @@ function summarizePrimaryCavitySegments(layers: readonly ResolvedLayer[]): Prima
   };
 }
 
+function compareReinforcementCandidatePriority(left: ResolvedLayer, right: ResolvedLayer): number {
+  const enhancedDelta = Number(isEnhancedBoardLayer(right)) - Number(isEnhancedBoardLayer(left));
+  if (enhancedDelta !== 0) {
+    return enhancedDelta;
+  }
+
+  const surfaceMassDelta = right.surfaceMassKgM2 - left.surfaceMassKgM2;
+  if (Math.abs(surfaceMassDelta) > 1e-6) {
+    return surfaceMassDelta;
+  }
+
+  const thicknessDelta = right.thicknessMm - left.thicknessMm;
+  if (Math.abs(thicknessDelta) > 1e-6) {
+    return thicknessDelta;
+  }
+
+  const densityDelta = right.material.densityKgM3 - left.material.densityKgM3;
+  if (Math.abs(densityDelta) > 1e-6) {
+    return densityDelta;
+  }
+
+  const idCompare = left.material.id.localeCompare(right.material.id);
+  if (idCompare !== 0) {
+    return -idCompare;
+  }
+
+  return -left.material.name.localeCompare(right.material.name);
+}
+
+function findOuterLeafReinforcementCandidateIndex(
+  layers: readonly ResolvedLayer[],
+  side: "leading" | "trailing"
+): number | null {
+  const indexes =
+    side === "leading"
+      ? Array.from({ length: layers.length }, (_, index) => index)
+      : Array.from({ length: layers.length }, (_, offset) => layers.length - 1 - offset);
+  let bestIndex: number | null = null;
+  let bestLayer: ResolvedLayer | null = null;
+
+  for (const index of indexes) {
+    const layer = layers[index];
+    if (!layer) {
+      continue;
+    }
+
+    const role = classifyLayerRole(layer);
+    if (!role.isSolidLeaf) {
+      break;
+    }
+
+    if (!isBoardLikeLayer(layer)) {
+      continue;
+    }
+
+    if (!bestLayer || compareReinforcementCandidatePriority(bestLayer, layer) > 0) {
+      bestLayer = layer;
+      bestIndex = index;
+    }
+  }
+
+  return bestIndex;
+}
+
 function isMicroGapHighFillEquivalentCavity(
   layers: readonly ResolvedLayer[],
   topology: ReturnType<typeof summarizeAirborneTopology>
@@ -3829,16 +3893,14 @@ function applyFramedReinforcementMonotonicFloor(
   }
 
   const candidateIndexes: number[] = [];
-  if (layers[0] && isBoardLikeLayer(layers[0])) {
-    candidateIndexes.push(0);
+  const leadingCandidateIndex = findOuterLeafReinforcementCandidateIndex(layers, "leading");
+  const trailingCandidateIndex = findOuterLeafReinforcementCandidateIndex(layers, "trailing");
+
+  if (leadingCandidateIndex !== null) {
+    candidateIndexes.push(leadingCandidateIndex);
   }
-  if (
-    layers.length > 1 &&
-    layers[layers.length - 1] &&
-    isBoardLikeLayer(layers[layers.length - 1]) &&
-    layers.length - 1 !== candidateIndexes[0]
-  ) {
-    candidateIndexes.push(layers.length - 1);
+  if (trailingCandidateIndex !== null && trailingCandidateIndex !== leadingCandidateIndex) {
+    candidateIndexes.push(trailingCandidateIndex);
   }
 
   if (!candidateIndexes.length) {

@@ -3016,6 +3016,180 @@ describe("calculateAssembly", () => {
     expect(failures).toHaveLength(0);
   });
 
+  it("keeps same-face board reorder neutral on framed reinforcement sibling comparisons", () => {
+    const fieldContext = {
+      contextMode: "field_between_rooms",
+      airtightness: "good",
+      studType: "light_steel_stud",
+      connectionType: "line_connection",
+      studSpacingMm: 600,
+      perimeterSeal: "good",
+      penetrationState: "none",
+      junctionQuality: "good",
+      sharedTrack: "independent",
+      electricalBoxes: "none",
+      panelWidthMm: 3000,
+      panelHeightMm: 2600,
+      receivingRoomVolumeM3: 30,
+      receivingRoomRt60S: 0.5
+    } as const;
+    const baseLayers = [
+      { materialId: "firestop_board", thicknessMm: 12.5 },
+      { materialId: "gypsum_board", thicknessMm: 12.5 },
+      { materialId: "gypsum_board", thicknessMm: 12.5 },
+      { materialId: "rockwool", thicknessMm: 50 },
+      { materialId: "air_gap", thicknessMm: 40 },
+      { materialId: "diamond_board", thicknessMm: 12.5 },
+      { materialId: "gypsum_board", thicknessMm: 12.5 },
+      { materialId: "firestop_board", thicknessMm: 12.5 },
+      { materialId: "gypsum_board", thicknessMm: 12.5 },
+      { materialId: "gypsum_board", thicknessMm: 12.5 }
+    ] as const;
+    const reorderedSameFaceLayers = [
+      ...baseLayers.slice(0, 7),
+      baseLayers[8]!,
+      baseLayers[7]!,
+      baseLayers[9]!
+    ] as const;
+
+    const base = calculateAssembly(baseLayers, {
+      airborneContext: fieldContext,
+      calculator: "dynamic",
+      targetOutputs: ["R'w", "DnT,w"]
+    });
+    const reordered = calculateAssembly(reorderedSameFaceLayers, {
+      airborneContext: fieldContext,
+      calculator: "dynamic",
+      targetOutputs: ["R'w", "DnT,w"]
+    });
+
+    expect(reordered.ratings.iso717.RwPrime).toBe(base.ratings.iso717.RwPrime);
+    expect(reordered.ratings.field?.DnTw).toBe(base.ratings.field?.DnTw);
+    expect(reordered.dynamicAirborneTrace?.detectedFamily).toBe(base.dynamicAirborneTrace?.detectedFamily);
+    expect(reordered.dynamicAirborneTrace?.strategy).toBe(base.dynamicAirborneTrace?.strategy);
+    expect(
+      reordered.dynamicAirborneTrace?.notes.find((note: string) => /framed reinforcement monotonic floor/i.test(note))
+    ).toContain("target 59.0 dB");
+    expect(
+      base.dynamicAirborneTrace?.notes.find((note: string) => /framed reinforcement monotonic floor/i.test(note))
+    ).toContain("target 59.0 dB");
+  });
+
+  it("keeps same-face board reorder neutral across representative framed field walls", () => {
+    const fieldContext = {
+      contextMode: "field_between_rooms",
+      airtightness: "good",
+      studType: "light_steel_stud",
+      connectionType: "line_connection",
+      studSpacingMm: 600,
+      perimeterSeal: "good",
+      penetrationState: "none",
+      junctionQuality: "good",
+      sharedTrack: "independent",
+      electricalBoxes: "none",
+      panelWidthMm: 3000,
+      panelHeightMm: 2600,
+      receivingRoomVolumeM3: 30,
+      receivingRoomRt60S: 0.5
+    } as const;
+    const cases = [
+      {
+        name: "single-cavity-double-board",
+        layers: [
+          { materialId: "firestop_board", thicknessMm: 12.5 },
+          { materialId: "gypsum_board", thicknessMm: 12.5 },
+          { materialId: "air_gap", thicknessMm: 75 },
+          { materialId: "rockwool", thicknessMm: 50 },
+          { materialId: "diamond_board", thicknessMm: 12.5 },
+          { materialId: "gypsum_board", thicknessMm: 12.5 }
+        ] as const,
+        swaps: [[0, 1], [4, 5]] as const
+      },
+      {
+        name: "mixed-premium-split",
+        layers: [
+          { materialId: "diamond_board", thicknessMm: 12.5 },
+          { materialId: "gypsum_board", thicknessMm: 12.5 },
+          { materialId: "air_gap", thicknessMm: 70 },
+          { materialId: "rockwool", thicknessMm: 50 },
+          { materialId: "air_gap", thicknessMm: 70 },
+          { materialId: "gypsum_board", thicknessMm: 12.5 },
+          { materialId: "firestop_board", thicknessMm: 12.5 }
+        ] as const,
+        swaps: [[0, 1], [5, 6]] as const
+      },
+      {
+        name: "shallow-one-face-reinforcement",
+        layers: [
+          { materialId: "diamond_board", thicknessMm: 15 },
+          { materialId: "gypsum_board", thicknessMm: 12.5 },
+          { materialId: "air_gap", thicknessMm: 50 },
+          { materialId: "gypsum_board", thicknessMm: 12.5 }
+        ] as const,
+        swaps: [[0, 1]] as const
+      },
+      {
+        name: "ten-layer-reinforced",
+        layers: [
+          { materialId: "firestop_board", thicknessMm: 12.5 },
+          { materialId: "gypsum_board", thicknessMm: 12.5 },
+          { materialId: "gypsum_board", thicknessMm: 12.5 },
+          { materialId: "rockwool", thicknessMm: 50 },
+          { materialId: "air_gap", thicknessMm: 40 },
+          { materialId: "diamond_board", thicknessMm: 12.5 },
+          { materialId: "gypsum_board", thicknessMm: 12.5 },
+          { materialId: "firestop_board", thicknessMm: 12.5 },
+          { materialId: "gypsum_board", thicknessMm: 12.5 },
+          { materialId: "gypsum_board", thicknessMm: 12.5 }
+        ] as const,
+        swaps: [[0, 1], [7, 8]] as const
+      }
+    ] as const;
+    const failures: Array<Record<string, number | string | null | undefined>> = [];
+
+    for (const testCase of cases) {
+      const base = calculateAssembly(testCase.layers, {
+        airborneContext: fieldContext,
+        calculator: "dynamic",
+        targetOutputs: ["R'w", "DnT,w"]
+      });
+
+      for (const [leftIndex, rightIndex] of testCase.swaps) {
+        const reordered = [...testCase.layers];
+        [reordered[leftIndex], reordered[rightIndex]] = [reordered[rightIndex]!, reordered[leftIndex]!];
+
+        const result = calculateAssembly(reordered, {
+          airborneContext: fieldContext,
+          calculator: "dynamic",
+          targetOutputs: ["R'w", "DnT,w"]
+        });
+
+        if (
+          result.ratings.iso717.RwPrime !== base.ratings.iso717.RwPrime ||
+          result.ratings.field?.DnTw !== base.ratings.field?.DnTw ||
+          result.dynamicAirborneTrace?.detectedFamily !== base.dynamicAirborneTrace?.detectedFamily ||
+          result.dynamicAirborneTrace?.strategy !== base.dynamicAirborneTrace?.strategy
+        ) {
+          failures.push({
+            case: testCase.name,
+            swap: `${leftIndex + 1}<->${rightIndex + 1}`,
+            baseRwPrime: base.ratings.iso717.RwPrime,
+            rwPrime: result.ratings.iso717.RwPrime,
+            baseDnTw: base.ratings.field?.DnTw,
+            dnTw: result.ratings.field?.DnTw,
+            baseFamily: base.dynamicAirborneTrace?.detectedFamily,
+            family: result.dynamicAirborneTrace?.detectedFamily,
+            baseStrategy: base.dynamicAirborneTrace?.strategy,
+            strategy: result.dynamicAirborneTrace?.strategy
+          });
+        }
+      }
+    }
+
+    expect(failures.slice(0, 10)).toEqual([]);
+    expect(failures).toHaveLength(0);
+  });
+
   it("stays close to heavy and mixed smoke cases", () => {
     const concreteSlab = calculateAssembly([{ materialId: "concrete", thicknessMm: 150 }]);
     const cltFloor = calculateAssembly([
