@@ -310,10 +310,14 @@ function hasDirectFlankingContext(
   fieldContext: ImpactFieldContext | null | undefined,
   allowDirectOnly: boolean
 ): boolean {
+  const hasFlankingPaths = Array.isArray(fieldContext?.flankingPaths) && fieldContext.flankingPaths.length > 0;
+  const hasExplicitDirectOffset = typeof fieldContext?.directPathOffsetDb === "number";
+  const hasFlankingDrivenOffset = hasFlankingPaths && typeof fieldContext?.fieldKDb === "number";
+
   return Boolean(
     fieldContext &&
-      (typeof fieldContext.directPathOffsetDb === "number" || typeof fieldContext.fieldKDb === "number") &&
-      (allowDirectOnly || (Array.isArray(fieldContext.flankingPaths) && fieldContext.flankingPaths.length > 0))
+      (hasExplicitDirectOffset || hasFlankingDrivenOffset) &&
+      (hasFlankingPaths || (allowDirectOnly && hasExplicitDirectOffset))
   );
 }
 

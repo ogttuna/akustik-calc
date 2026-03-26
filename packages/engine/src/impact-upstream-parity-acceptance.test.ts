@@ -1,4 +1,4 @@
-import { execFileSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
@@ -15,7 +15,7 @@ type ParityResult = {
 };
 
 function runParityScript(scriptPath: string): ParityResult[] {
-  const stdout = execFileSync(
+  const result = spawnSync(
     "pnpm",
     ["exec", "tsx", scriptPath, "--path", UPSTREAM_PATH, "--json"],
     {
@@ -28,7 +28,27 @@ function runParityScript(scriptPath: string): ParityResult[] {
     }
   );
 
-  return JSON.parse(stdout) as ParityResult[];
+  if (result.error) {
+    throw result.error;
+  }
+
+  const stdout = typeof result.stdout === "string" ? result.stdout.trim() : "";
+  if (!stdout) {
+    const stderr = typeof result.stderr === "string" ? result.stderr.trim() : "";
+    throw new Error(
+      `Parity script did not return JSON output for ${scriptPath}.${stderr ? `\n${stderr}` : ""}`
+    );
+  }
+
+  try {
+    return JSON.parse(stdout) as ParityResult[];
+  } catch (error) {
+    const stderr = typeof result.stderr === "string" ? result.stderr.trim() : "";
+    throw new Error(
+      `Failed to parse parity JSON for ${scriptPath}.${stderr ? `\n${stderr}` : ""}\n${stdout}`,
+      { cause: error }
+    );
+  }
 }
 
 describe.skipIf(!existsSync(UPSTREAM_PATH))("impact upstream parity acceptance", () => {

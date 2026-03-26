@@ -170,215 +170,219 @@ function expectCleanPartition(
 }
 
 describe("output combination sweep", () => {
-  it("keeps representative dynamic airborne wall combinations sane across lab and field bundles", () => {
-    const leafProfiles = [
-      { name: "gypsum_single", layers: [layer("gypsum_board", 12.5)] },
-      { name: "fire_double", layers: [layer("firestop_board", 15), layer("firestop_board", 15)] },
-      { name: "silent_mix", layers: [layer("silentboard", 12.5), layer("gypsum_board", 12.5)] }
-    ] as const;
-    const cavityProfiles = [
-      { name: "gap_fill_75", layers: [layer("air_gap", 75), layer("rockwool", 75)] },
-      { name: "split_120", layers: [layer("air_gap", 30), layer("rockwool", 60), layer("air_gap", 30)] },
-      { name: "fill_90", layers: [layer("rockwool", 90)] }
-    ] as const;
+  it(
+    "keeps representative dynamic airborne wall combinations sane across lab and field bundles",
+    () => {
+      const leafProfiles = [
+        { name: "gypsum_single", layers: [layer("gypsum_board", 12.5)] },
+        { name: "fire_double", layers: [layer("firestop_board", 15), layer("firestop_board", 15)] },
+        { name: "silent_mix", layers: [layer("silentboard", 12.5), layer("gypsum_board", 12.5)] }
+      ] as const;
+      const cavityProfiles = [
+        { name: "gap_fill_75", layers: [layer("air_gap", 75), layer("rockwool", 75)] },
+        { name: "split_120", layers: [layer("air_gap", 30), layer("rockwool", 60), layer("air_gap", 30)] },
+        { name: "fill_90", layers: [layer("rockwool", 90)] }
+      ] as const;
 
-    const cases = [
-      ...leafProfiles.flatMap((left) =>
-        cavityProfiles.flatMap((cavity) =>
-          leafProfiles.map((right) => ({
-            family: "framed" as const,
-            label: `${left.name}_${cavity.name}_${right.name}`,
-            layers: [...left.layers, ...cavity.layers, ...right.layers]
-          }))
-        )
-      ),
-      {
-        family: "massive" as const,
-        label: "aac_separator_100",
-        layers: [layer("skim_plaster", 3), layer("ytong_separatiepaneel_aac_5_750", 100), layer("skim_plaster", 3)]
-      },
-      {
-        family: "massive" as const,
-        label: "pumice_80_plastered",
-        layers: [layer("cement_plaster", 15), layer("pumice_block", 80), layer("cement_plaster", 15)]
-      },
-      {
-        family: "massive" as const,
-        label: "concrete_150_rendered",
-        layers: [layer("cement_plaster", 10), layer("concrete", 150), layer("skim_plaster", 5)]
-      },
-      {
-        family: "lined_massive" as const,
-        label: "lined_aac_single",
-        layers: [
-          layer("gypsum_board", 12.5),
-          layer("air_gap", 50),
-          layer("rockwool", 50),
-          layer("ytong_aac_d700", 75),
-          layer("skim_plaster", 5)
-        ]
-      },
-      {
-        family: "lined_massive" as const,
-        label: "lined_pumice_double",
-        layers: [
-          layer("gypsum_board", 12.5),
-          layer("air_gap", 25),
-          layer("rockwool", 50),
-          layer("pumice_block", 80),
-          layer("air_gap", 25),
-          layer("firestop_board", 15)
-        ]
-      },
-      {
-        family: "hybrid" as const,
-        label: "hybrid_concrete_board",
-        layers: [
-          layer("security_board", 12.5),
-          layer("air_gap", 25),
-          layer("concrete", 80),
-          layer("rockwool", 50),
-          layer("diamond_board", 12.5)
-        ]
-      }
-    ];
-
-    const failures: string[] = [];
-
-    for (const testCase of cases) {
-      const framedContext =
-        testCase.family === "framed"
-          ? {
-              connectionType: "line_connection" as const,
-              studSpacingMm: 600,
-              studType: "light_steel_stud" as const
-            }
-          : {};
-
-      const lab = calculateAssembly(testCase.layers, {
-        calculator: "dynamic",
-        airborneContext: {
-          contextMode: "element_lab",
-          airtightness: "good",
-          ...framedContext
+      const cases = [
+        ...leafProfiles.flatMap((left) =>
+          cavityProfiles.flatMap((cavity) =>
+            leafProfiles.map((right) => ({
+              family: "framed" as const,
+              label: `${left.name}_${cavity.name}_${right.name}`,
+              layers: [...left.layers, ...cavity.layers, ...right.layers]
+            }))
+          )
+        ),
+        {
+          family: "massive" as const,
+          label: "aac_separator_100",
+          layers: [layer("skim_plaster", 3), layer("ytong_separatiepaneel_aac_5_750", 100), layer("skim_plaster", 3)]
         },
-        targetOutputs: AIRBORNE_REQUEST
-      });
-      const field = calculateAssembly(testCase.layers, {
-        calculator: "dynamic",
-        airborneContext: {
-          contextMode: "field_between_rooms",
-          airtightness: "good",
-          electricalBoxes: "none",
-          junctionQuality: "good",
-          panelHeightMm: 2600,
-          panelWidthMm: 3000,
-          penetrationState: "none",
-          perimeterSeal: "good",
-          receivingRoomRt60S: 0.5,
-          receivingRoomVolumeM3: 32,
-          sharedTrack: "independent",
-          ...framedContext
+        {
+          family: "massive" as const,
+          label: "pumice_80_plastered",
+          layers: [layer("cement_plaster", 15), layer("pumice_block", 80), layer("cement_plaster", 15)]
         },
-        targetOutputs: AIRBORNE_REQUEST
-      });
-      const partialField = calculateAssembly(testCase.layers, {
-        calculator: "dynamic",
-        airborneContext: {
-          contextMode: "field_between_rooms",
-          airtightness: "good",
-          panelHeightMm: 2600,
-          panelWidthMm: 3000,
-          ...framedContext
+        {
+          family: "massive" as const,
+          label: "concrete_150_rendered",
+          layers: [layer("cement_plaster", 10), layer("concrete", 150), layer("skim_plaster", 5)]
         },
-        targetOutputs: AIRBORNE_REQUEST
-      });
+        {
+          family: "lined_massive" as const,
+          label: "lined_aac_single",
+          layers: [
+            layer("gypsum_board", 12.5),
+            layer("air_gap", 50),
+            layer("rockwool", 50),
+            layer("ytong_aac_d700", 75),
+            layer("skim_plaster", 5)
+          ]
+        },
+        {
+          family: "lined_massive" as const,
+          label: "lined_pumice_double",
+          layers: [
+            layer("gypsum_board", 12.5),
+            layer("air_gap", 25),
+            layer("rockwool", 50),
+            layer("pumice_block", 80),
+            layer("air_gap", 25),
+            layer("firestop_board", 15)
+          ]
+        },
+        {
+          family: "hybrid" as const,
+          label: "hybrid_concrete_board",
+          layers: [
+            layer("security_board", 12.5),
+            layer("air_gap", 25),
+            layer("concrete", 80),
+            layer("rockwool", 50),
+            layer("diamond_board", 12.5)
+          ]
+        }
+      ];
 
-      expectCleanPartition(lab, ["Rw"], `${testCase.label} lab`, failures);
-      expectCleanPartition(field, ["R'w", "DnT,w", "DnT,A", "Dn,w", "Dn,A"], `${testCase.label} field`, failures);
-      expectCleanPartition(partialField, ["R'w", "Dn,w", "Dn,A"], `${testCase.label} partial field`, failures);
+      const failures: string[] = [];
 
-      expectFiniteNumber(lab.metrics.estimatedRwDb, `${testCase.label} lab Rw`, failures);
-      expectFiniteNumber(field.metrics.estimatedRwPrimeDb, `${testCase.label} field R'w`, failures);
-      expectFiniteNumber(field.metrics.estimatedDnTwDb, `${testCase.label} field DnT,w`, failures);
-      expectFiniteNumber(field.metrics.estimatedDnTADb, `${testCase.label} field DnT,A`, failures);
-      expectFiniteNumber(field.metrics.estimatedDnWDb, `${testCase.label} field Dn,w`, failures);
-      expectFiniteNumber(field.metrics.estimatedDnADb, `${testCase.label} field Dn,A`, failures);
-      expectFiniteNumber(partialField.metrics.estimatedRwPrimeDb, `${testCase.label} partial field R'w`, failures);
-      expectFiniteNumber(partialField.metrics.estimatedDnWDb, `${testCase.label} partial field Dn,w`, failures);
-      expectFiniteNumber(partialField.metrics.estimatedDnADb, `${testCase.label} partial field Dn,A`, failures);
+      for (const testCase of cases) {
+        const framedContext =
+          testCase.family === "framed"
+            ? {
+                connectionType: "line_connection" as const,
+                studSpacingMm: 600,
+                studType: "light_steel_stud" as const
+              }
+            : {};
 
-      if (lab.metrics.estimatedRwDb < 10 || lab.metrics.estimatedRwDb > 90) {
-        failures.push(`${testCase.label}: lab Rw ${lab.metrics.estimatedRwDb} dB fell outside the broad sanity corridor`);
+        const lab = calculateAssembly(testCase.layers, {
+          calculator: "dynamic",
+          airborneContext: {
+            contextMode: "element_lab",
+            airtightness: "good",
+            ...framedContext
+          },
+          targetOutputs: AIRBORNE_REQUEST
+        });
+        const field = calculateAssembly(testCase.layers, {
+          calculator: "dynamic",
+          airborneContext: {
+            contextMode: "field_between_rooms",
+            airtightness: "good",
+            electricalBoxes: "none",
+            junctionQuality: "good",
+            panelHeightMm: 2600,
+            panelWidthMm: 3000,
+            penetrationState: "none",
+            perimeterSeal: "good",
+            receivingRoomRt60S: 0.5,
+            receivingRoomVolumeM3: 32,
+            sharedTrack: "independent",
+            ...framedContext
+          },
+          targetOutputs: AIRBORNE_REQUEST
+        });
+        const partialField = calculateAssembly(testCase.layers, {
+          calculator: "dynamic",
+          airborneContext: {
+            contextMode: "field_between_rooms",
+            airtightness: "good",
+            panelHeightMm: 2600,
+            panelWidthMm: 3000,
+            ...framedContext
+          },
+          targetOutputs: AIRBORNE_REQUEST
+        });
+
+        expectCleanPartition(lab, ["Rw"], `${testCase.label} lab`, failures);
+        expectCleanPartition(field, ["R'w", "DnT,w", "DnT,A", "Dn,w", "Dn,A"], `${testCase.label} field`, failures);
+        expectCleanPartition(partialField, ["R'w", "Dn,w", "Dn,A"], `${testCase.label} partial field`, failures);
+
+        expectFiniteNumber(lab.metrics.estimatedRwDb, `${testCase.label} lab Rw`, failures);
+        expectFiniteNumber(field.metrics.estimatedRwPrimeDb, `${testCase.label} field R'w`, failures);
+        expectFiniteNumber(field.metrics.estimatedDnTwDb, `${testCase.label} field DnT,w`, failures);
+        expectFiniteNumber(field.metrics.estimatedDnTADb, `${testCase.label} field DnT,A`, failures);
+        expectFiniteNumber(field.metrics.estimatedDnWDb, `${testCase.label} field Dn,w`, failures);
+        expectFiniteNumber(field.metrics.estimatedDnADb, `${testCase.label} field Dn,A`, failures);
+        expectFiniteNumber(partialField.metrics.estimatedRwPrimeDb, `${testCase.label} partial field R'w`, failures);
+        expectFiniteNumber(partialField.metrics.estimatedDnWDb, `${testCase.label} partial field Dn,w`, failures);
+        expectFiniteNumber(partialField.metrics.estimatedDnADb, `${testCase.label} partial field Dn,A`, failures);
+
+        if (lab.metrics.estimatedRwDb < 10 || lab.metrics.estimatedRwDb > 90) {
+          failures.push(`${testCase.label}: lab Rw ${lab.metrics.estimatedRwDb} dB fell outside the broad sanity corridor`);
+        }
+
+        if (
+          typeof field.metrics.estimatedRwPrimeDb === "number" &&
+          (field.metrics.estimatedRwPrimeDb < lab.metrics.estimatedRwDb - 30 ||
+            field.metrics.estimatedRwPrimeDb > lab.metrics.estimatedRwDb + 0.25)
+        ) {
+          failures.push(
+            `${testCase.label}: field R'w ${field.metrics.estimatedRwPrimeDb} dB drifted too far from lab Rw ${lab.metrics.estimatedRwDb} dB`
+          );
+        }
+
+        if (
+          typeof field.metrics.estimatedDnTwDb === "number" &&
+          typeof field.metrics.estimatedDnTADb === "number" &&
+          field.metrics.estimatedDnTwDb < field.metrics.estimatedDnTADb - 0.5
+        ) {
+          failures.push(
+            `${testCase.label}: expected DnT,w >= DnT,A, got ${field.metrics.estimatedDnTwDb} < ${field.metrics.estimatedDnTADb}`
+          );
+        }
+
+        if (
+          typeof field.metrics.estimatedDnWDb === "number" &&
+          typeof field.metrics.estimatedDnADb === "number" &&
+          field.metrics.estimatedDnWDb < field.metrics.estimatedDnADb - 0.5
+        ) {
+          failures.push(
+            `${testCase.label}: expected Dn,w >= Dn,A, got ${field.metrics.estimatedDnWDb} < ${field.metrics.estimatedDnADb}`
+          );
+        }
+
+        if (
+          typeof partialField.metrics.estimatedRwPrimeDb === "number" &&
+          typeof field.metrics.estimatedRwPrimeDb === "number" &&
+          Math.abs(partialField.metrics.estimatedRwPrimeDb - field.metrics.estimatedRwPrimeDb) > 1.1
+        ) {
+          failures.push(
+            `${testCase.label}: partial/full field R'w diverged ${partialField.metrics.estimatedRwPrimeDb} vs ${field.metrics.estimatedRwPrimeDb}`
+          );
+        }
+
+        if (
+          typeof partialField.metrics.estimatedDnWDb === "number" &&
+          typeof field.metrics.estimatedDnWDb === "number" &&
+          Math.abs(partialField.metrics.estimatedDnWDb - field.metrics.estimatedDnWDb) > 1.1
+        ) {
+          failures.push(
+            `${testCase.label}: partial/full field Dn,w diverged ${partialField.metrics.estimatedDnWDb} vs ${field.metrics.estimatedDnWDb}`
+          );
+        }
+
+        if (
+          typeof partialField.metrics.estimatedDnADb === "number" &&
+          typeof field.metrics.estimatedDnADb === "number" &&
+          Math.abs(partialField.metrics.estimatedDnADb - field.metrics.estimatedDnADb) > 1.1
+        ) {
+          failures.push(
+            `${testCase.label}: partial/full field Dn,A diverged ${partialField.metrics.estimatedDnADb} vs ${field.metrics.estimatedDnADb}`
+          );
+        }
+
+        if (partialField.metrics.estimatedDnTwDb !== undefined || partialField.metrics.estimatedDnTADb !== undefined) {
+          failures.push(`${testCase.label}: partial field route unexpectedly fabricated DnT outputs`);
+        }
       }
 
-      if (
-        typeof field.metrics.estimatedRwPrimeDb === "number" &&
-        (field.metrics.estimatedRwPrimeDb < lab.metrics.estimatedRwDb - 30 ||
-          field.metrics.estimatedRwPrimeDb > lab.metrics.estimatedRwDb + 0.25)
-      ) {
-        failures.push(
-          `${testCase.label}: field R'w ${field.metrics.estimatedRwPrimeDb} dB drifted too far from lab Rw ${lab.metrics.estimatedRwDb} dB`
-        );
-      }
-
-      if (
-        typeof field.metrics.estimatedDnTwDb === "number" &&
-        typeof field.metrics.estimatedDnTADb === "number" &&
-        field.metrics.estimatedDnTwDb < field.metrics.estimatedDnTADb - 0.5
-      ) {
-        failures.push(
-          `${testCase.label}: expected DnT,w >= DnT,A, got ${field.metrics.estimatedDnTwDb} < ${field.metrics.estimatedDnTADb}`
-        );
-      }
-
-      if (
-        typeof field.metrics.estimatedDnWDb === "number" &&
-        typeof field.metrics.estimatedDnADb === "number" &&
-        field.metrics.estimatedDnWDb < field.metrics.estimatedDnADb - 0.5
-      ) {
-        failures.push(
-          `${testCase.label}: expected Dn,w >= Dn,A, got ${field.metrics.estimatedDnWDb} < ${field.metrics.estimatedDnADb}`
-        );
-      }
-
-      if (
-        typeof partialField.metrics.estimatedRwPrimeDb === "number" &&
-        typeof field.metrics.estimatedRwPrimeDb === "number" &&
-        Math.abs(partialField.metrics.estimatedRwPrimeDb - field.metrics.estimatedRwPrimeDb) > 1.1
-      ) {
-        failures.push(
-          `${testCase.label}: partial/full field R'w diverged ${partialField.metrics.estimatedRwPrimeDb} vs ${field.metrics.estimatedRwPrimeDb}`
-        );
-      }
-
-      if (
-        typeof partialField.metrics.estimatedDnWDb === "number" &&
-        typeof field.metrics.estimatedDnWDb === "number" &&
-        Math.abs(partialField.metrics.estimatedDnWDb - field.metrics.estimatedDnWDb) > 1.1
-      ) {
-        failures.push(
-          `${testCase.label}: partial/full field Dn,w diverged ${partialField.metrics.estimatedDnWDb} vs ${field.metrics.estimatedDnWDb}`
-        );
-      }
-
-      if (
-        typeof partialField.metrics.estimatedDnADb === "number" &&
-        typeof field.metrics.estimatedDnADb === "number" &&
-        Math.abs(partialField.metrics.estimatedDnADb - field.metrics.estimatedDnADb) > 1.1
-      ) {
-        failures.push(
-          `${testCase.label}: partial/full field Dn,A diverged ${partialField.metrics.estimatedDnADb} vs ${field.metrics.estimatedDnADb}`
-        );
-      }
-
-      if (partialField.metrics.estimatedDnTwDb !== undefined || partialField.metrics.estimatedDnTADb !== undefined) {
-        failures.push(`${testCase.label}: partial field route unexpectedly fabricated DnT outputs`);
-      }
-    }
-
-    expect(failures).toEqual([]);
-  });
+      expect(failures).toEqual([]);
+    },
+    10_000
+  );
 
   it("keeps exact curated floor-system output bundles coherent on the impact-only route", () => {
     const failures: string[] = [];

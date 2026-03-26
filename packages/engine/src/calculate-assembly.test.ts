@@ -3445,9 +3445,49 @@ describe("calculateAssembly", () => {
       }
     );
 
+    expect(result.impact?.fieldEstimateProfile).toBe("direct_flanking_energy_sum");
+    expect(result.impact?.fieldEstimateDirectOffsetDb).toBe(1);
     expect(result.impact?.trace?.activeSeriesId).toBe("standardized");
     expect(result.impact?.trace?.series.map((series: { id: string }) => series.id)).toEqual(["source", "field", "standardized"]);
     expect(result.impact?.trace?.series[1]?.curve.levelsDb).not.toEqual(EXACT_IMPACT_SOURCE_19.levelsDb);
+    expect(result.impact?.metricBasis?.LPrimeNW).toBe("estimated_field_lprimenw_from_direct_flanking_energy_sum");
+    expect(result.impact?.metricBasis?.LPrimeNTw).toBe(
+      "estimated_standardized_field_lprimentw_from_direct_flanking_energy_sum_plus_room_volume"
+    );
+  });
+
+  it("lets explicit flanking paths promote a K-corrected exact impact source onto the direct+flanking lane on the assembly route", () => {
+    const result = calculateAssembly(
+      [
+        { materialId: "ceramic_tile", thicknessMm: 8 },
+        { materialId: "screed", thicknessMm: 50 },
+        { materialId: "generic_resilient_underlay", thicknessMm: 8 },
+        { materialId: "concrete", thicknessMm: 150 }
+      ],
+      {
+        exactImpactSource: EXACT_IMPACT_SOURCE_19,
+        impactFieldContext: {
+          fieldKDb: 2,
+          flankingPaths: [
+            {
+              id: "f1",
+              levelOffsetDb: -6,
+              pathCount: 1
+            }
+          ],
+          receivingRoomVolumeM3: 50
+        },
+        targetOutputs: ["L'n,w", "L'nT,w"]
+      }
+    );
+
+    expect(result.impact?.fieldEstimateProfile).toBe("direct_flanking_energy_sum");
+    expect(result.impact?.fieldEstimateDirectOffsetDb).toBe(2);
+    expect(result.impact?.fieldEstimateFlankingPathCount).toBe(1);
+    expect(result.impact?.metricBasis?.LPrimeNW).toBe("estimated_field_lprimenw_from_direct_flanking_energy_sum");
+    expect(result.impact?.metricBasis?.LPrimeNTw).toBe(
+      "estimated_standardized_field_lprimentw_from_direct_flanking_energy_sum_plus_room_volume"
+    );
   });
 
   it("can infer the default supporting family from an exact floor row during direct+flanking field estimation", () => {
@@ -3484,7 +3524,7 @@ describe("calculateAssembly", () => {
     expect(result.impactSupport?.formulaNotes.some((note: string) => /Family-aware flanking path models were applied for: open box timber/i.test(note))).toBe(true);
   });
 
-  it("applies explicit ΔLd before direct-path curve continuation and field standardization", () => {
+  it("applies explicit ΔLd before field-side K correction and standardization", () => {
     const result = calculateAssembly(
       [{ materialId: "concrete", thicknessMm: 140 }],
       {
@@ -3501,14 +3541,14 @@ describe("calculateAssembly", () => {
       }
     );
 
-    expect(result.impact?.fieldEstimateProfile).toBe("direct_flanking_energy_sum");
-    expect(result.impact?.fieldEstimateDirectOffsetDb).toBe(2);
+    expect(result.impact?.fieldEstimateProfile).not.toBe("direct_flanking_energy_sum");
+    expect(result.impact?.metricBasis?.LPrimeNW).toBe("estimated_field_lprimenw_from_lnw_plus_k");
+    expect(result.impact?.metricBasis?.LPrimeNTw).toBe("estimated_standardized_field_lprimentw_from_lprimenw_plus_room_volume");
     expect(result.impact?.fieldEstimateLowerTreatmentReductionDb).toBe(6);
     expect(result.impact?.LPrimeNW).toBe(35);
     expect(result.impact?.LPrimeNTw).toBe(33);
-    expect(result.impactSupport?.formulaNotes.some((note: string) => /direct\+flanking path energy sum/i.test(note))).toBe(true);
-    expect(result.impactSupport?.formulaNotes.some((note: string) => /Current direct-path offset is 2 dB/i.test(note))).toBe(true);
-    expect(result.impactSupport?.formulaNotes.some((note: string) => /ΔLd = 6 dB was applied to the direct path before energy summation/i.test(note))).toBe(true);
+    expect(result.impactSupport?.formulaNotes.some((note: string) => /L'n,w = Ln,w \+ K/i.test(note))).toBe(true);
+    expect(result.impactSupport?.formulaNotes.some((note: string) => /ΔLd = 6 dB was applied before the field-side K correction/i.test(note))).toBe(true);
     expect(result.impactSupport?.formulaNotes.some((note: string) => /applied before field standardization/i.test(note))).toBe(true);
   });
 

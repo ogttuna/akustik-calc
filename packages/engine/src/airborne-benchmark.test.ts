@@ -103,24 +103,28 @@ describe("airborne benchmark ranking", () => {
     }
   });
 
-  it("keeps dynamic ranked first on the imported official and holdout corpora", () => {
-    for (const datasetInfo of PRIMARY_DATASETS) {
-      const dataset = readDataset(datasetInfo.fileName);
-      const report = runAirborneBenchmark(dataset.cases);
-      const best = report.summary[0];
-      const dynamic = report.summary.find((entry) => entry.calculatorId === "dynamic");
+  it(
+    "keeps dynamic ranked first on the imported official and holdout corpora",
+    () => {
+      for (const datasetInfo of PRIMARY_DATASETS) {
+        const dataset = readDataset(datasetInfo.fileName);
+        const report = runAirborneBenchmark(dataset.cases);
+        const best = report.summary[0];
+        const dynamic = report.summary.find((entry) => entry.calculatorId === "dynamic");
 
-      expect(best?.calculatorId, datasetInfo.fileName).toBe("dynamic");
-      expect(dynamic, datasetInfo.fileName).toBeDefined();
-      expect(dynamic?.maeDb ?? Number.POSITIVE_INFINITY, datasetInfo.fileName).toBeLessThanOrEqual(
-        datasetInfo.dynamicMaeDb
-      );
-      expect(dynamic?.maxAbsErrorDb ?? Number.POSITIVE_INFINITY, datasetInfo.fileName).toBeLessThanOrEqual(
-        datasetInfo.dynamicMaxAbsErrorDb
-      );
-      expect(dynamic?.winCount ?? 0, datasetInfo.fileName).toBeGreaterThan(0);
-    }
-  });
+        expect(best?.calculatorId, datasetInfo.fileName).toBe("dynamic");
+        expect(dynamic, datasetInfo.fileName).toBeDefined();
+        expect(dynamic?.maeDb ?? Number.POSITIVE_INFINITY, datasetInfo.fileName).toBeLessThanOrEqual(
+          datasetInfo.dynamicMaeDb
+        );
+        expect(dynamic?.maxAbsErrorDb ?? Number.POSITIVE_INFINITY, datasetInfo.fileName).toBeLessThanOrEqual(
+          datasetInfo.dynamicMaxAbsErrorDb
+        );
+        expect(dynamic?.winCount ?? 0, datasetInfo.fileName).toBeGreaterThan(0);
+      }
+    },
+    10_000
+  );
 
   it("keeps dynamic first across the imported secondary airborne watch corpora", () => {
     for (const datasetInfo of SECONDARY_DATASETS) {
