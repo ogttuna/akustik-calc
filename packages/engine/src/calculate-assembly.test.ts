@@ -3456,6 +3456,35 @@ describe("calculateAssembly", () => {
     );
   });
 
+  it("keeps K-only exact impact sources on the guide and standardized field-volume lane on the assembly route", () => {
+    const result = calculateAssembly(
+      [
+        { materialId: "ceramic_tile", thicknessMm: 8 },
+        { materialId: "screed", thicknessMm: 50 },
+        { materialId: "generic_resilient_underlay", thicknessMm: 8 },
+        { materialId: "concrete", thicknessMm: 150 }
+      ],
+      {
+        exactImpactSource: EXACT_IMPACT_SOURCE_19,
+        impactFieldContext: {
+          fieldKDb: 2,
+          receivingRoomVolumeM3: 50
+        },
+        targetOutputs: ["L'n,w", "L'nT,w", "L'nT,50"]
+      }
+    );
+
+    expect(result.impact?.fieldEstimateProfile).toBe("explicit_field_lprimenw_from_lnw_plus_k");
+    expect(result.impact?.fieldEstimateDirectOffsetDb).toBeUndefined();
+    expect(result.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_field_volume_normalization");
+    expect(result.impact?.LPrimeNW).toBe(55);
+    expect(result.impact?.LPrimeNTw).toBe(53);
+    expect(result.impact?.LPrimeNT50).toBe(52);
+    expect(result.impact?.metricBasis?.LPrimeNW).toBe("estimated_field_lprimenw_from_lnw_plus_k");
+    expect(result.impact?.metricBasis?.LPrimeNTw).toBe("estimated_standardized_field_lprimentw_from_lprimenw_plus_room_volume");
+    expect(result.impact?.metricBasis?.LPrimeNT50).toBe("estimated_standardized_field_lpriment50_from_lprimentw_plus_ci50_2500");
+  });
+
   it("lets explicit flanking paths promote a K-corrected exact impact source onto the direct+flanking lane on the assembly route", () => {
     const result = calculateAssembly(
       [
@@ -3488,6 +3517,33 @@ describe("calculateAssembly", () => {
     expect(result.impact?.metricBasis?.LPrimeNTw).toBe(
       "estimated_standardized_field_lprimentw_from_direct_flanking_energy_sum_plus_room_volume"
     );
+  });
+
+  it("keeps K-only exact floor rows on the guide and standardized field-volume lane on the assembly route", () => {
+    const result = calculateAssembly(
+      [{ materialId: "concrete", thicknessMm: 140 }],
+      {
+        impactPredictorInput: {
+          officialFloorSystemId: "tuas_r5b_open_box_timber_measured_2026",
+          structuralSupportType: "open_box_timber"
+        },
+        impactFieldContext: {
+          fieldKDb: 2,
+          receivingRoomVolumeM3: 50
+        },
+        targetOutputs: ["L'n,w", "L'nT,w", "L'nT,50"]
+      }
+    );
+
+    expect(result.impact?.fieldEstimateProfile).toBe("explicit_field_lprimenw_from_lnw_plus_k");
+    expect(result.impact?.fieldEstimateDirectOffsetDb).toBeUndefined();
+    expect(result.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_field_volume_normalization");
+    expect(result.impact?.LPrimeNW).toBe(41);
+    expect(result.impact?.LPrimeNTw).toBe(39);
+    expect(result.impact?.LPrimeNT50).toBe(44);
+    expect(result.impact?.metricBasis?.LPrimeNW).toBe("estimated_field_lprimenw_from_lnw_plus_k");
+    expect(result.impact?.metricBasis?.LPrimeNTw).toBe("estimated_standardized_field_lprimentw_from_lprimenw_plus_room_volume");
+    expect(result.impact?.metricBasis?.LPrimeNT50).toBe("estimated_standardized_field_lpriment50_from_lprimentw_plus_ci50_2500");
   });
 
   it("can infer the default supporting family from an exact floor row during direct+flanking field estimation", () => {

@@ -3,9 +3,10 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
+    ".next-typecheck/types/**/*.ts",
     ".next/types/**/*.ts",
     "next-env.d.ts",
-    ".next-typecheck/types/**/*.ts"
+    ".next-debug-3124/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

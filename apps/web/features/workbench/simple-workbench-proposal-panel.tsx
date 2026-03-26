@@ -1899,7 +1899,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
               Open print view
             </button>
             <button
-              className="focus-ring inline-flex items-center gap-2 rounded-full bg-[color:var(--ink)] px-4 py-2 text-sm font-semibold text-[color:var(--paper)] disabled:cursor-not-allowed disabled:opacity-50"
+              className="focus-ring ink-button-solid inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-50"
               disabled={!exportReady}
               onClick={() => openProposalPrintView(true)}
               type="button"

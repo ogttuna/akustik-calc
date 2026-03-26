@@ -23,6 +23,7 @@ type Point = {
 
 type MaterialAppearance = {
   accent: string;
+  detail: "air_gap" | "board_panel" | "concrete_core" | "fiber_batt" | "foam_mat" | "service_fill";
   definition: string;
   fill: string;
   sideFill: string;
@@ -55,8 +56,18 @@ function createArrowHead(id: string, fill: string): string {
   `;
 }
 
-function polygonPoints(points: readonly Point[]): string {
-  return points.map((point) => `${point.x.toFixed(2)},${point.y.toFixed(2)}`).join(" ");
+function createSectionSheenDefs(prefix: string): string {
+  return `
+    <linearGradient id="${prefix}-front-sheen" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.42)"></stop>
+      <stop offset="38%" stop-color="rgba(255,255,255,0.08)"></stop>
+      <stop offset="100%" stop-color="rgba(20,31,42,0.12)"></stop>
+    </linearGradient>
+    <linearGradient id="${prefix}-front-sidewash" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.22)"></stop>
+      <stop offset="100%" stop-color="rgba(20,31,42,0.08)"></stop>
+    </linearGradient>
+  `;
 }
 
 function multilineText(value: string, limit: number): string[] {
@@ -153,58 +164,69 @@ function getMaterialAppearance(
   switch (family) {
     case "mass":
       return {
-        accent: "#616a74",
+        accent: "#5f686f",
+        detail: "concrete_core",
         definition: `
           <pattern id="${id}-fill" width="18" height="18" patternUnits="userSpaceOnUse">
-            <rect width="18" height="18" fill="#ddd7cd"></rect>
-            <path d="M0 18 L18 0" stroke="#bdb4a8" stroke-width="0.9"></path>
-            <path d="M-4 4 L4 -4 M14 22 L22 14" stroke="#cdc6bb" stroke-width="0.75"></path>
-            <circle cx="5" cy="6" r="0.9" fill="#958d81"></circle>
-            <circle cx="12" cy="11" r="0.9" fill="#a49c90"></circle>
+            <rect width="18" height="18" fill="#d7d8d5"></rect>
+            <path d="M0 18 L18 0" stroke="#b6bbb9" stroke-width="0.9"></path>
+            <path d="M-4 4 L4 -4 M14 22 L22 14" stroke="#c9cccc" stroke-width="0.75"></path>
+            <ellipse cx="5" cy="6" rx="1.1" ry="0.8" fill="#8f9596"></ellipse>
+            <ellipse cx="12" cy="11" rx="1" ry="0.75" fill="#a2a7a8"></ellipse>
+            <ellipse cx="9" cy="15" rx="0.9" ry="0.7" fill="#c3c7c6"></ellipse>
           </pattern>
         `,
         fill: `url(#${id}-fill)`,
-        sideFill: "#c9c1b5",
-        stroke: "#66717b",
-        topFill: "#eee9df"
+        sideFill: "#b5bbbd",
+        stroke: "#7f878a",
+        topFill: "#e2e5e4"
       };
     case "insulation":
       return {
-        accent: "#8b7345",
+        accent: "#8b7240",
+        detail: "fiber_batt",
         definition: `
           <pattern id="${id}-fill" width="28" height="18" patternUnits="userSpaceOnUse">
-            <rect width="28" height="18" fill="#f1e7d0"></rect>
-            <path d="M0 12 C4 4, 10 4, 14 12 S24 20, 28 12" fill="none" stroke="#c0a062" stroke-width="1"></path>
-            <path d="M0 7 C4 15, 10 15, 14 7 S24 -1, 28 7" fill="none" stroke="#dcc28d" stroke-width="0.85"></path>
+            <rect width="28" height="18" fill="#f0e4c1"></rect>
+            <path d="M0 12 C4 4, 10 4, 14 12 S24 20, 28 12" fill="none" stroke="#bea15b" stroke-width="1"></path>
+            <path d="M0 7 C4 15, 10 15, 14 7 S24 -1, 28 7" fill="none" stroke="#ddc78e" stroke-width="0.85"></path>
+            <path d="M4 18L11 11L17 18 M12 0L17 5L22 0" fill="none" stroke="#f8efd7" stroke-width="0.8"></path>
+            <circle cx="8" cy="5" r="0.8" fill="#f9f2e4"></circle>
           </pattern>
         `,
         fill: `url(#${id}-fill)`,
-        sideFill: "#dec89f",
-        stroke: "#8c7547",
-        topFill: "#f7edd7"
+        sideFill: "#b59b58",
+        stroke: "#8e7440",
+        topFill: "#e9d89e"
       };
     case "resilient":
       return {
-        accent: "#4d7274",
+        accent: "#5a8578",
+        detail: "foam_mat",
         definition: `
           <pattern id="${id}-fill" width="20" height="12" patternUnits="userSpaceOnUse">
-            <rect width="20" height="12" fill="#d8ebe8"></rect>
+            <rect width="20" height="12" fill="#d4e7df"></rect>
             <path d="M0 7 H4 L6 3 L10 9 L14 3 L16 9 L20 7" fill="none" stroke="#6d9a9a" stroke-width="1"></path>
+            <path d="M0 10 C4 8, 6 12, 10 10 S16 8, 20 10" fill="none" stroke="#eef8f7" stroke-width="0.8"></path>
+            <rect x="2.4" y="2.2" width="7.2" height="4.6" rx="2.3" fill="none" stroke="#eef8f7" stroke-width="0.7"></rect>
+            <rect x="11.2" y="7" width="6.1" height="3.8" rx="1.9" fill="none" stroke="#6a9f91" stroke-opacity="0.25" stroke-width="0.7"></rect>
           </pattern>
         `,
         fill: `url(#${id}-fill)`,
-        sideFill: "#bedbda",
-        stroke: "#4d7476",
-        topFill: "#edf7f6"
+        sideFill: "#79a493",
+        stroke: "#5a8578",
+        topFill: "#c6ddd6"
       };
     case "gap":
       return {
         accent: "#6e8290",
+        detail: "air_gap",
         definition: `
           <pattern id="${id}-fill" width="14" height="14" patternUnits="userSpaceOnUse">
             <rect width="14" height="14" fill="#f2f5f8"></rect>
             <path d="M2 7 H12" stroke="#91a5b5" stroke-width="0.9" stroke-dasharray="3 2"></path>
             <circle cx="7" cy="7" r="0.85" fill="#c6d2db"></circle>
+            <circle cx="4" cy="4" r="0.55" fill="#e7eef3"></circle>
           </pattern>
         `,
         fill: `url(#${id}-fill)`,
@@ -214,26 +236,32 @@ function getMaterialAppearance(
       };
     case "board":
       return {
-        accent: "#9a6c48",
+        accent: "#7f7367",
+        detail: "board_panel",
         definition: `
-          <pattern id="${id}-fill" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-            <rect width="12" height="12" fill="#efe2d3"></rect>
-            <path d="M0 0 V12" stroke="#c49c79" stroke-width="1"></path>
+          <pattern id="${id}-fill" width="24" height="18" patternUnits="userSpaceOnUse">
+            <rect width="24" height="18" fill="#e1ddd3"></rect>
+            <path d="M0 3H24 M0 15H24" stroke="#faf7f2" stroke-width="0.95"></path>
+            <path d="M0 6H24 M0 12H24" stroke="#9f968b" stroke-opacity="0.08" stroke-width="0.8"></path>
+            <circle cx="7" cy="9" r="0.8" fill="#a39a8d" fill-opacity="0.12"></circle>
+            <circle cx="18" cy="8" r="0.9" fill="#ffffff" fill-opacity="0.18"></circle>
           </pattern>
         `,
         fill: `url(#${id}-fill)`,
-        sideFill: "#dfc3a7",
-        stroke: "#9d6f4a",
-        topFill: "#f7eadc"
+        sideFill: "#c6baab",
+        stroke: "#938779",
+        topFill: "#ece7de"
       };
     case "generic":
     default:
       return {
         accent: "#6d7782",
+        detail: "service_fill",
         definition: `
           <pattern id="${id}-fill" width="12" height="12" patternUnits="userSpaceOnUse">
             <rect width="12" height="12" fill="#e9edf0"></rect>
             <path d="M0 12 L12 0 M-2 2 L2 -2 M10 14 L14 10" stroke="#bcc4cb" stroke-width="0.9"></path>
+            <circle cx="8" cy="9" r="0.7" fill="#cfd7de"></circle>
           </pattern>
         `,
         fill: `url(#${id}-fill)`,
@@ -241,6 +269,96 @@ function getMaterialAppearance(
         stroke: "#717c88",
         topFill: "#f7f9fb"
       };
+  }
+}
+
+function buildMaterialOverlayMarkup(input: {
+  appearance: MaterialAppearance;
+  clipId: string;
+  height: number;
+  width: number;
+  x: number;
+  y: number;
+}): string {
+  const { appearance, clipId, height, width, x, y } = input;
+  const insetX = x + Math.min(14, Math.max(6, width * 0.06));
+  const insetY = y + Math.min(10, Math.max(4, height * 0.18));
+  const insetRight = Math.min(14, Math.max(6, width * 0.06));
+  const insetBottom = Math.min(8, Math.max(4, height * 0.14));
+  const innerWidth = Math.max(0, width - (insetX - x) - insetRight);
+  const innerHeight = Math.max(0, height - (insetY - y) - insetBottom);
+
+  if (innerWidth < 12 || innerHeight < 8) {
+    return "";
+  }
+
+  const midY = insetY + innerHeight / 2;
+
+  switch (appearance.detail) {
+    case "board_panel":
+      return `
+        <g clip-path="url(#${clipId})" opacity="0.7">
+          <line x1="${insetX}" y1="${insetY + 2.5}" x2="${insetX + innerWidth}" y2="${insetY + 2.5}" stroke="#ffffff" stroke-opacity="0.34" stroke-width="1.05"></line>
+          <line x1="${insetX}" y1="${insetY + 6.5}" x2="${insetX + innerWidth}" y2="${insetY + 6.5}" stroke="${appearance.stroke}" stroke-opacity="0.14" stroke-width="0.85"></line>
+          <line x1="${insetX}" y1="${insetY + innerHeight - 2.5}" x2="${insetX + innerWidth}" y2="${insetY + innerHeight - 2.5}" stroke="#ffffff" stroke-opacity="0.28" stroke-width="0.95"></line>
+          <line x1="${insetX}" y1="${insetY + innerHeight - 6.5}" x2="${insetX + innerWidth}" y2="${insetY + innerHeight - 6.5}" stroke="${appearance.stroke}" stroke-opacity="0.12" stroke-width="0.8"></line>
+          ${
+            innerHeight > 28
+              ? `<line x1="${insetX + innerWidth * 0.42}" y1="${insetY}" x2="${insetX + innerWidth * 0.42}" y2="${insetY + innerHeight}" stroke="${appearance.stroke}" stroke-opacity="0.16" stroke-dasharray="5 4" stroke-width="0.9"></line>`
+              : ""
+          }
+          <ellipse cx="${insetX + innerWidth * 0.22}" cy="${midY}" rx="1.6" ry="1" fill="${appearance.stroke}" fill-opacity="0.12"></ellipse>
+          <ellipse cx="${insetX + innerWidth * 0.74}" cy="${midY + innerHeight * 0.08}" rx="1.2" ry="0.9" fill="#ffffff" fill-opacity="0.18"></ellipse>
+        </g>
+      `;
+    case "air_gap":
+      return `
+        <g clip-path="url(#${clipId})" opacity="0.82">
+          <line x1="${insetX}" y1="${midY}" x2="${insetX + innerWidth}" y2="${midY}" stroke="${appearance.stroke}" stroke-opacity="0.3" stroke-dasharray="5 4" stroke-width="1.1"></line>
+          <circle cx="${insetX + innerWidth * 0.28}" cy="${midY}" r="1.6" fill="${appearance.stroke}" fill-opacity="0.18"></circle>
+          <circle cx="${insetX + innerWidth * 0.72}" cy="${midY}" r="1.4" fill="#ffffff" fill-opacity="0.28"></circle>
+        </g>
+      `;
+    case "fiber_batt":
+      return `
+        <g clip-path="url(#${clipId})" opacity="0.76">
+          <path d="M ${insetX - 2} ${insetY + innerHeight - 2} L ${insetX + innerWidth * 0.32} ${insetY + innerHeight * 0.35} L ${insetX + innerWidth * 0.6} ${insetY + innerHeight * 0.72} L ${insetX + innerWidth + 2} ${insetY + 2}" fill="none" stroke="${appearance.stroke}" stroke-opacity="0.24" stroke-width="1.1"></path>
+          <path d="M ${insetX + innerWidth * 0.1} ${insetY - 1} L ${insetX + innerWidth * 0.44} ${insetY + innerHeight * 0.42} L ${insetX + innerWidth * 0.7} ${insetY + innerHeight * 0.12} L ${insetX + innerWidth + 1} ${insetY + innerHeight * 0.52}" fill="none" stroke="#ffffff" stroke-opacity="0.26" stroke-width="0.95"></path>
+          <path d="M ${insetX} ${midY} C ${insetX + innerWidth * 0.16} ${midY - innerHeight * 0.12}, ${insetX + innerWidth * 0.34} ${midY + innerHeight * 0.14}, ${insetX + innerWidth * 0.54} ${midY - innerHeight * 0.02} S ${insetX + innerWidth * 0.84} ${midY + innerHeight * 0.16}, ${insetX + innerWidth} ${midY - innerHeight * 0.04}" fill="none" stroke="${appearance.stroke}" stroke-opacity="0.14" stroke-width="0.9"></path>
+          <circle cx="${insetX + innerWidth * 0.28}" cy="${midY - innerHeight * 0.12}" r="1" fill="#ffffff" fill-opacity="0.22"></circle>
+          <circle cx="${insetX + innerWidth * 0.68}" cy="${midY + innerHeight * 0.1}" r="0.9" fill="${appearance.stroke}" fill-opacity="0.14"></circle>
+        </g>
+      `;
+    case "concrete_core":
+      return `
+        <g clip-path="url(#${clipId})" opacity="0.74">
+          <ellipse cx="${insetX + innerWidth * 0.22}" cy="${insetY + innerHeight * 0.36}" rx="3.2" ry="2.3" fill="${appearance.stroke}" fill-opacity="0.18"></ellipse>
+          <ellipse cx="${insetX + innerWidth * 0.58}" cy="${insetY + innerHeight * 0.58}" rx="2.4" ry="1.7" fill="#ffffff" fill-opacity="0.22"></ellipse>
+          <ellipse cx="${insetX + innerWidth * 0.82}" cy="${insetY + innerHeight * 0.3}" rx="2.1" ry="1.4" fill="${appearance.stroke}" fill-opacity="0.12"></ellipse>
+          <ellipse cx="${insetX + innerWidth * 0.32}" cy="${insetY + innerHeight * 0.74}" rx="2.6" ry="1.8" fill="${appearance.stroke}" fill-opacity="0.14"></ellipse>
+          <ellipse cx="${insetX + innerWidth * 0.12}" cy="${insetY + innerHeight * 0.58}" rx="2.4" ry="1.5" fill="${appearance.stroke}" fill-opacity="0.12"></ellipse>
+          <path d="M ${insetX + innerWidth * 0.06} ${insetY + innerHeight * 0.18} C ${insetX + innerWidth * 0.22} ${insetY + innerHeight * 0.12}, ${insetX + innerWidth * 0.38} ${insetY + innerHeight * 0.24}, ${insetX + innerWidth * 0.56} ${insetY + innerHeight * 0.16}" fill="none" stroke="#ffffff" stroke-opacity="0.18" stroke-width="0.8"></path>
+        </g>
+      `;
+    case "foam_mat":
+      return `
+        <g clip-path="url(#${clipId})" opacity="0.8">
+          <path d="M ${insetX} ${midY} C ${insetX + innerWidth * 0.15} ${midY - innerHeight * 0.28}, ${insetX + innerWidth * 0.34} ${midY + innerHeight * 0.28}, ${insetX + innerWidth * 0.5} ${midY} S ${insetX + innerWidth * 0.84} ${midY - innerHeight * 0.28}, ${insetX + innerWidth} ${midY}" fill="none" stroke="${appearance.stroke}" stroke-opacity="0.28" stroke-width="1.25"></path>
+          <path d="M ${insetX} ${midY + innerHeight * 0.18} C ${insetX + innerWidth * 0.18} ${midY - innerHeight * 0.06}, ${insetX + innerWidth * 0.36} ${midY + innerHeight * 0.36}, ${insetX + innerWidth * 0.54} ${midY + innerHeight * 0.12} S ${insetX + innerWidth * 0.84} ${midY + innerHeight * 0.02}, ${insetX + innerWidth} ${midY + innerHeight * 0.18}" fill="none" stroke="#ffffff" stroke-opacity="0.26" stroke-width="1"></path>
+          <rect x="${insetX + innerWidth * 0.18}" y="${midY - innerHeight * 0.34}" width="${Math.max(10, innerWidth * 0.22)}" height="${Math.max(5, innerHeight * 0.18)}" rx="${Math.max(2.2, innerHeight * 0.09)}" fill="none" stroke="${appearance.stroke}" stroke-opacity="0.16" stroke-width="0.9"></rect>
+          <rect x="${insetX + innerWidth * 0.58}" y="${midY + innerHeight * 0.12}" width="${Math.max(9, innerWidth * 0.18)}" height="${Math.max(4, innerHeight * 0.14)}" rx="${Math.max(2, innerHeight * 0.07)}" fill="none" stroke="#ffffff" stroke-opacity="0.22" stroke-width="0.8"></rect>
+        </g>
+      `;
+    case "service_fill":
+      return `
+        <g clip-path="url(#${clipId})" opacity="0.74">
+          <line x1="${insetX}" y1="${insetY + innerHeight * 0.34}" x2="${insetX + innerWidth}" y2="${insetY + innerHeight * 0.34}" stroke="${appearance.stroke}" stroke-opacity="0.18" stroke-width="0.95"></line>
+          <line x1="${insetX + innerWidth * 0.18}" y1="${insetY + innerHeight * 0.62}" x2="${insetX + innerWidth * 0.82}" y2="${insetY + innerHeight * 0.62}" stroke="#ffffff" stroke-opacity="0.24" stroke-width="0.9"></line>
+          <circle cx="${insetX + innerWidth * 0.68}" cy="${insetY + innerHeight * 0.22}" r="1.4" fill="${appearance.stroke}" fill-opacity="0.12"></circle>
+        </g>
+      `;
+    default:
+      return "";
   }
 }
 
@@ -280,30 +398,28 @@ function buildFloorSvg(section: SimpleWorkbenchProposalConstructionSection): str
     "proposalFloor"
   );
   const rawTotalHeight = rawAllocations.reduce((sum, allocation) => sum + allocation.sizePx, 0);
-  const scale = rawTotalHeight > 0 ? 232 / rawTotalHeight : 1;
+  const scale = rawTotalHeight > 0 ? 236 / rawTotalHeight : 1;
   const allocations = rawAllocations.map((allocation) => ({
     ...allocation,
     sizePx: Math.round(allocation.sizePx * scale * 10) / 10
   }));
   const width = 860;
-  const height = 370;
-  const sectionX = 150;
-  const sectionY = 82;
-  const sectionWidth = 210;
-  const depthX = 118;
-  const depthY = -34;
+  const height = 380;
+  const sectionX = 148;
+  const sectionY = 76;
+  const sectionWidth = 214;
   const totalHeight = allocations.reduce((sum, allocation) => sum + allocation.sizePx, 0);
-  const rowX = 560;
-  const rowWidth = 232;
+  const rowX = 550;
+  const rowWidth = 240;
   const rowTargets = allocations.map((_, index) => {
     const offset = allocations.slice(0, index).reduce((sum, entry) => sum + entry.sizePx, 0);
     return sectionY + offset + allocations[index]!.sizePx / 2;
   });
-  const rowYs = distributeAxisPositions(rowTargets, 50, 104, height - 92);
+  const rowYs = distributeAxisPositions(rowTargets, 48, 98, height - 88);
 
   let defs = createArrowHead("construction-arrow-floor", "#223241");
+  defs += createSectionSheenDefs("construction-floor");
   let frontFaces = "";
-  let sideFaces = "";
   let leaders = "";
   let currentY = sectionY;
 
@@ -314,23 +430,31 @@ function buildFloorSvg(section: SimpleWorkbenchProposalConstructionSection): str
     const bandHeight = allocations[index]!.sizePx;
     const centerY = currentY + bandHeight / 2;
     const rowY = rowYs[index]!;
-    const sidePolygon = [
-      { x: sectionX + sectionWidth, y: currentY },
-      { x: sectionX + sectionWidth + depthX, y: currentY + depthY },
-      { x: sectionX + sectionWidth + depthX, y: currentY + depthY + bandHeight },
-      { x: sectionX + sectionWidth, y: currentY + bandHeight }
-    ];
-
-    sideFaces += `
-      <polygon points="${polygonPoints(sidePolygon)}" fill="${appearance.sideFill}" stroke="${appearance.stroke}" stroke-width="1.1"></polygon>
-    `;
+    const clipId = `construction-floor-band-${index}-clip`;
+    const edgeWidth = Math.min(14, Math.max(8, sectionWidth * 0.05));
+    const topCapHeight = Math.min(7, Math.max(3, bandHeight * 0.16));
+    const seamHeight = Math.min(6, Math.max(2, bandHeight * 0.14));
+    defs += `<clipPath id="${clipId}"><rect x="${sectionX}" y="${currentY.toFixed(2)}" width="${sectionWidth}" height="${bandHeight.toFixed(2)}"></rect></clipPath>`;
     frontFaces += `
       <rect x="${sectionX}" y="${currentY.toFixed(2)}" width="${sectionWidth}" height="${bandHeight.toFixed(2)}" fill="${appearance.fill}" stroke="${appearance.stroke}" stroke-width="1.15"></rect>
+      <rect x="${sectionX}" y="${currentY.toFixed(2)}" width="${edgeWidth}" height="${bandHeight.toFixed(2)}" fill="${appearance.sideFill}" opacity="0.8"></rect>
+      <rect x="${sectionX}" y="${currentY.toFixed(2)}" width="${sectionWidth}" height="${topCapHeight.toFixed(2)}" fill="${appearance.topFill}" opacity="0.92"></rect>
+      ${buildMaterialOverlayMarkup({
+        appearance,
+        clipId,
+        height: bandHeight,
+        width: sectionWidth,
+        x: sectionX,
+        y: currentY
+      })}
+      <rect x="${sectionX}" y="${currentY.toFixed(2)}" width="${sectionWidth}" height="${bandHeight.toFixed(2)}" fill="url(#construction-floor-front-sheen)" opacity="0.55"></rect>
+      <rect x="${sectionX}" y="${(currentY + bandHeight - seamHeight).toFixed(2)}" width="${sectionWidth}" height="${seamHeight.toFixed(2)}" fill="rgba(35,49,63,0.08)" opacity="0.78"></rect>
+      <line x1="${sectionX + 1}" y1="${(currentY + 1).toFixed(2)}" x2="${sectionX + sectionWidth - 1}" y2="${(currentY + 1).toFixed(2)}" stroke="rgba(255,255,255,0.34)" stroke-width="1"></line>
     `;
 
     leaders += `
       <path d="${buildElbowLeader(
-        { x: sectionX + sectionWidth + depthX + 8, y: centerY + depthY / 2 },
+        { x: sectionX + sectionWidth + 10, y: centerY },
         { x: rowX - 12, y: rowY },
         rowX - 30
       )}" fill="none" stroke="#83919d" stroke-width="1"></path>
@@ -349,32 +473,26 @@ function buildFloorSvg(section: SimpleWorkbenchProposalConstructionSection): str
     return axisBand;
   });
 
-  const topBand = axisBands[0];
-  const topPolygon =
-    topBand
-      ? [
-          { x: sectionX, y: sectionY },
-          { x: sectionX + sectionWidth, y: sectionY },
-          { x: sectionX + sectionWidth + depthX, y: sectionY + depthY },
-          { x: sectionX + depthX, y: sectionY + depthY }
-        ]
-      : null;
-  const totalDimX = sectionX - 64;
+  const totalDimX = sectionX - 50;
   const totalCenterY = sectionY + totalHeight / 2;
 
   return `
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" style="display:block;width:100%;height:auto;max-height:340px;">
       <defs>${defs}</defs>
+      <rect x="48" y="34" width="760" height="306" rx="26" fill="#faf7f1" stroke="#e4e8eb" stroke-width="1.2"></rect>
+      <rect x="62" y="48" width="732" height="278" rx="20" fill="#fffdfa" stroke="#ece7de" stroke-width="1"></rect>
+      <rect x="${sectionX - 2}" y="${sectionY + 8}" width="${sectionWidth + 22}" height="${totalHeight + 18}" rx="18" fill="rgba(79,64,48,0.08)"></rect>
+      ${Array.from({ length: 6 })
+        .map(
+          (_, index) =>
+            `<line x1="86" y1="${76 + index * 40}" x2="514" y2="${76 + index * 40}" stroke="rgba(142,128,112,0.12)" stroke-dasharray="3 7" stroke-width="1"></line>`
+        )
+        .join("")}
       <text x="${sectionX - 2}" y="${sectionY - 28}" font-family="Arial, Helvetica Neue, sans-serif" font-size="10.8" font-weight="700" letter-spacing="1.8" fill="#5a6a79">${escapeMarkup(section.anchorFromLabel.toUpperCase())}</text>
       <text x="${sectionX - 2}" y="${sectionY + totalHeight + 44}" font-family="Arial, Helvetica Neue, sans-serif" font-size="10.8" font-weight="700" letter-spacing="1.8" fill="#5a6a79">${escapeMarkup(section.anchorToLabel.toUpperCase())}</text>
-      <line x1="${sectionX - 22}" y1="${sectionY - 14}" x2="${sectionX + sectionWidth + depthX + 18}" y2="${sectionY - 14}" stroke="#dce3e9" stroke-width="1"></line>
-      <line x1="${sectionX - 22}" y1="${sectionY + totalHeight + 22}" x2="${sectionX + sectionWidth + depthX + 18}" y2="${sectionY + totalHeight + 22}" stroke="#dce3e9" stroke-width="1"></line>
-      ${sideFaces}
-      ${
-        topPolygon && topBand
-          ? `<polygon points="${polygonPoints(topPolygon)}" fill="${topBand.appearance.topFill}" stroke="${topBand.appearance.stroke}" stroke-width="1.15"></polygon>`
-          : ""
-      }
+      <line x1="${sectionX - 22}" y1="${sectionY - 14}" x2="${sectionX + sectionWidth + 18}" y2="${sectionY - 14}" stroke="#dce3e9" stroke-width="1"></line>
+      <line x1="${sectionX - 22}" y1="${sectionY + totalHeight + 22}" x2="${sectionX + sectionWidth + 18}" y2="${sectionY + totalHeight + 22}" stroke="#dce3e9" stroke-width="1"></line>
+      <rect x="${sectionX - 10}" y="${sectionY - 10}" width="${sectionWidth + 20}" height="${totalHeight + 20}" rx="16" fill="rgba(255,255,255,0.46)" stroke="rgba(137,121,99,0.18)" stroke-width="1.2"></rect>
       ${frontFaces}
       <rect x="${sectionX}" y="${sectionY}" width="${sectionWidth}" height="${totalHeight}" fill="none" stroke="#243545" stroke-width="1.2"></rect>
       ${leaders}
@@ -393,7 +511,7 @@ function buildWallSvg(section: SimpleWorkbenchProposalConstructionSection): stri
     "proposalWall"
   );
   const rawTotalWidth = rawAllocations.reduce((sum, allocation) => sum + allocation.sizePx, 0);
-  const scale = rawTotalWidth > 0 ? 264 / rawTotalWidth : 1;
+  const scale = rawTotalWidth > 0 ? 274 / rawTotalWidth : 1;
   const allocations = rawAllocations.map((allocation) => ({
     ...allocation,
     sizePx: Math.round(allocation.sizePx * scale * 10) / 10
@@ -401,22 +519,17 @@ function buildWallSvg(section: SimpleWorkbenchProposalConstructionSection): stri
   const width = 860;
   const height = 326;
   const sectionX = 104;
-  const sectionY = 110;
-  const sectionHeight = 154;
-  const depthX = 52;
-  const depthY = -18;
+  const sectionY = 108;
+  const sectionHeight = 146;
   const totalWidth = allocations.reduce((sum, allocation) => sum + allocation.sizePx, 0);
   const rowX = 564;
   const rowWidth = 228;
-  const rowTargets = allocations.map((_, index) => {
-    const offset = allocations.slice(0, index).reduce((sum, entry) => sum + entry.sizePx, 0);
-    return 78 + index * 42;
-  });
+  const rowTargets = allocations.map((_, index) => 78 + index * 42);
   const rowYs = distributeAxisPositions(rowTargets, 42, 72, height - 64);
 
   let defs = createArrowHead("construction-arrow-wall", "#223241");
+  defs += createSectionSheenDefs("construction-wall");
   let frontFaces = "";
-  let topFaces = "";
   let leaders = "";
   let currentX = sectionX;
 
@@ -427,22 +540,31 @@ function buildWallSvg(section: SimpleWorkbenchProposalConstructionSection): stri
     const bandWidth = allocations[index]!.sizePx;
     const centerX = currentX + bandWidth / 2;
     const rowY = rowYs[index]!;
-    const topPolygon = [
-      { x: currentX, y: sectionY },
-      { x: currentX + bandWidth, y: sectionY },
-      { x: currentX + bandWidth + depthX, y: sectionY + depthY },
-      { x: currentX + depthX, y: sectionY + depthY }
-    ];
-
-    topFaces += `
-      <polygon points="${polygonPoints(topPolygon)}" fill="${appearance.topFill}" stroke="${appearance.stroke}" stroke-width="1.1"></polygon>
-    `;
+    const clipId = `construction-wall-band-${index}-clip`;
+    const leadStripWidth = Math.min(8, Math.max(3, bandWidth * 0.18));
+    const trailingStripWidth = Math.min(10, Math.max(4, bandWidth * 0.16));
+    const topCapHeight = Math.min(7, Math.max(3, sectionHeight * 0.08));
+    defs += `<clipPath id="${clipId}"><rect x="${currentX.toFixed(2)}" y="${sectionY}" width="${bandWidth.toFixed(2)}" height="${sectionHeight}"></rect></clipPath>`;
     frontFaces += `
       <rect x="${currentX.toFixed(2)}" y="${sectionY}" width="${bandWidth.toFixed(2)}" height="${sectionHeight}" fill="${appearance.fill}" stroke="${appearance.stroke}" stroke-width="1.15"></rect>
+      <rect x="${currentX.toFixed(2)}" y="${sectionY}" width="${leadStripWidth.toFixed(2)}" height="${sectionHeight}" fill="${appearance.topFill}" opacity="0.78"></rect>
+      <rect x="${(currentX + bandWidth - trailingStripWidth).toFixed(2)}" y="${sectionY}" width="${trailingStripWidth.toFixed(2)}" height="${sectionHeight}" fill="${appearance.sideFill}" opacity="0.58"></rect>
+      <rect x="${currentX.toFixed(2)}" y="${sectionY}" width="${bandWidth.toFixed(2)}" height="${topCapHeight.toFixed(2)}" fill="${appearance.topFill}" opacity="0.92"></rect>
+      ${buildMaterialOverlayMarkup({
+        appearance,
+        clipId,
+        height: sectionHeight,
+        width: bandWidth,
+        x: currentX,
+        y: sectionY
+      })}
+      <rect x="${currentX.toFixed(2)}" y="${sectionY}" width="${bandWidth.toFixed(2)}" height="${sectionHeight}" fill="url(#construction-wall-front-sheen)" opacity="0.44"></rect>
+      <rect x="${currentX.toFixed(2)}" y="${sectionY}" width="${bandWidth.toFixed(2)}" height="${sectionHeight}" fill="url(#construction-wall-front-sidewash)" opacity="0.4"></rect>
+      <line x1="${(currentX + 1).toFixed(2)}" y1="${sectionY + 1}" x2="${(currentX + bandWidth - 1).toFixed(2)}" y2="${sectionY + 1}" stroke="rgba(255,255,255,0.3)" stroke-width="1"></line>
     `;
     leaders += `
       <path d="${buildVerticalLeader(
-        { x: centerX + depthX * 0.5, y: sectionY + depthY * 0.5 - 4 },
+        { x: centerX, y: sectionY - 10 },
         { x: rowX - 12, y: rowY },
         rowY
       )}" fill="none" stroke="#83919d" stroke-width="1"></path>
@@ -461,26 +583,24 @@ function buildWallSvg(section: SimpleWorkbenchProposalConstructionSection): stri
     return axisBand;
   });
 
-  const trailingBand = axisBands.at(-1);
-  const trailingSide =
-    trailingBand
-      ? [
-          { x: sectionX + totalWidth, y: sectionY },
-          { x: sectionX + totalWidth + depthX, y: sectionY + depthY },
-          { x: sectionX + totalWidth + depthX, y: sectionY + depthY + sectionHeight },
-          { x: sectionX + totalWidth, y: sectionY + sectionHeight }
-        ]
-      : null;
   const totalDimY = sectionY + sectionHeight + 48;
 
   return `
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" style="display:block;width:100%;height:auto;max-height:300px;">
       <defs>${defs}</defs>
+      <rect x="48" y="30" width="760" height="262" rx="26" fill="#faf7f1" stroke="#e4e8eb" stroke-width="1.2"></rect>
+      <rect x="62" y="44" width="732" height="234" rx="20" fill="#fffdfa" stroke="#ece7de" stroke-width="1"></rect>
+      <rect x="${sectionX + 10}" y="${sectionY + 8}" width="${totalWidth + 18}" height="${sectionHeight + 16}" rx="18" fill="rgba(79,64,48,0.07)"></rect>
+      ${Array.from({ length: 7 })
+        .map(
+          (_, index) =>
+            `<line x1="${72 + index * 64}" y1="56" x2="${72 + index * 64}" y2="278" stroke="rgba(142,128,112,0.12)" stroke-dasharray="3 7" stroke-width="1"></line>`
+        )
+        .join("")}
       <text x="${sectionX}" y="${sectionY - 54}" font-family="Arial, Helvetica Neue, sans-serif" font-size="10.8" font-weight="700" letter-spacing="1.8" fill="#5a6a79">${escapeMarkup(section.anchorFromLabel.toUpperCase())}</text>
-      <text x="${sectionX + totalWidth + depthX}" y="${sectionY - 54}" text-anchor="end" font-family="Arial, Helvetica Neue, sans-serif" font-size="10.8" font-weight="700" letter-spacing="1.8" fill="#5a6a79">${escapeMarkup(section.anchorToLabel.toUpperCase())}</text>
-      <line x1="${sectionX - 10}" y1="${sectionY - 20}" x2="${sectionX + totalWidth + depthX + 12}" y2="${sectionY - 20}" stroke="#dce3e9" stroke-width="1"></line>
-      ${trailingSide && trailingBand ? `<polygon points="${polygonPoints(trailingSide)}" fill="${trailingBand.appearance.sideFill}" stroke="${trailingBand.appearance.stroke}" stroke-width="1.1"></polygon>` : ""}
-      ${topFaces}
+      <text x="${sectionX + totalWidth}" y="${sectionY - 54}" text-anchor="end" font-family="Arial, Helvetica Neue, sans-serif" font-size="10.8" font-weight="700" letter-spacing="1.8" fill="#5a6a79">${escapeMarkup(section.anchorToLabel.toUpperCase())}</text>
+      <line x1="${sectionX - 10}" y1="${sectionY - 20}" x2="${sectionX + totalWidth + 12}" y2="${sectionY - 20}" stroke="#dce3e9" stroke-width="1"></line>
+      <rect x="${sectionX - 10}" y="${sectionY - 10}" width="${totalWidth + 20}" height="${sectionHeight + 20}" rx="16" fill="rgba(255,255,255,0.46)" stroke="rgba(137,121,99,0.18)" stroke-width="1.2"></rect>
       ${frontFaces}
       <rect x="${sectionX}" y="${sectionY}" width="${totalWidth}" height="${sectionHeight}" fill="none" stroke="#243545" stroke-width="1.2"></rect>
       ${leaders}

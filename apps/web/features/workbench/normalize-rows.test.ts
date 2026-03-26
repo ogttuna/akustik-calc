@@ -136,6 +136,23 @@ describe("normalizeRows", () => {
     expect(normalized.layers).toEqual([{ floorRole: "floating_screed", materialId: "screed", thicknessMm: 50 }]);
   });
 
+  it.each([
+    { label: "comma decimal", thicknessMm: "8,0" },
+    { label: "zero thickness", thicknessMm: "0" }
+  ])("drops $label rows instead of inventing a malformed solver layer", ({ thicknessMm }) => {
+    const normalized = normalizeRows([
+      { floorRole: "floor_covering", id: "a", materialId: "ceramic_tile", thicknessMm },
+      { floorRole: "resilient_layer", id: "b", materialId: "generic_resilient_underlay", thicknessMm: "8" },
+      { floorRole: "base_structure", id: "c", materialId: "concrete", thicknessMm: "150" }
+    ]);
+
+    expect(normalized.warnings).toContain("Layer 1 is missing a valid thickness.");
+    expect(normalized.layers).toEqual([
+      { floorRole: "resilient_layer", materialId: "generic_resilient_underlay", thicknessMm: 8 },
+      { floorRole: "base_structure", materialId: "concrete", thicknessMm: 150 }
+    ]);
+  });
+
   it("resolves custom materials and still builds runtime override materials for them", () => {
     const customMaterial = buildCustomMaterialDefinition({
       draft: {

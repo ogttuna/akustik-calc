@@ -100,7 +100,7 @@ export function WorkbenchCommandDeck({
               Save the current assembly as a comparison candidate before you pivot the stack.
             </p>
             <button
-              className="focus-ring touch-target mt-4 inline-flex items-center gap-2 rounded-full bg-[color:var(--ink)] px-4 py-2 text-sm font-semibold text-[color:var(--paper)]"
+              className="focus-ring ink-button-solid touch-target mt-4 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold"
               onClick={onSaveScenario}
               type="button"
             >

@@ -1,11 +1,12 @@
 import type { SimpleWorkbenchProposalDocument } from "./simple-workbench-proposal";
 import { buildSimpleWorkbenchProposalFilename } from "./simple-workbench-proposal";
+import { getSimpleWorkbenchProposalBranding } from "./simple-workbench-proposal-branding";
 import {
   buildSimpleWorkbenchProposalConstructionRender,
-  SIMPLE_WORKBENCH_REPORT_MARK,
   SIMPLE_WORKBENCH_REPORT_PRODUCT_NAME,
   SIMPLE_WORKBENCH_REPORT_SERIES
 } from "./simple-workbench-proposal-reporting";
+import { buildSimpleWorkbenchReportMarkSvgMarkup } from "./simple-workbench-report-mark";
 
 type SimplePdfStandardReference = {
   code: string;
@@ -15,12 +16,44 @@ type SimplePdfStandardReference = {
 
 type SimpleCurveFigure = NonNullable<SimpleWorkbenchProposalDocument["responseCurves"]>[number];
 type SimpleCurveSeries = SimpleCurveFigure["series"][number];
+type SimpleCurveReadout = {
+  label: string;
+  note: string;
+  valueLabel: string;
+};
 
 const MAX_SIMPLE_CITATIONS = 4;
 const MAX_SIMPLE_LAYER_ROWS = 8;
 const MAX_SIMPLE_ASSUMPTIONS = 5;
 const MAX_SIMPLE_WARNINGS = 5;
 const MAX_SIMPLE_METRICS = 6;
+
+const SIMPLE_CURVE_BANDS = [
+  {
+    fill: "rgba(189, 109, 63, 0.08)",
+    id: "low",
+    label: "Low",
+    note: "63-250 Hz",
+    x1: 63,
+    x2: 250
+  },
+  {
+    fill: "rgba(44, 127, 118, 0.08)",
+    id: "speech",
+    label: "Speech",
+    note: "500-1k Hz",
+    x1: 500,
+    x2: 1000
+  },
+  {
+    fill: "rgba(163, 108, 54, 0.08)",
+    id: "high",
+    label: "High",
+    note: "2k-4k Hz",
+    x1: 2000,
+    x2: 4000
+  }
+] as const;
 
 function escapeHtml(value: string): string {
   return value
@@ -188,22 +221,103 @@ function buildCurveValueDomain(figure: SimpleCurveFigure) {
   };
 }
 
-function getCurveSeriesColor(series: SimpleCurveSeries): string {
-  if (series.active) {
-    return "#111111";
+function formatCurveFrequencyLabel(frequencyHz: number): string {
+  if (frequencyHz >= 1000) {
+    const kiloHertz = frequencyHz / 1000;
+    return `${Number.isInteger(kiloHertz) ? kiloHertz : kiloHertz.toFixed(kiloHertz >= 2 ? 1 : 2)}k`;
   }
 
+  return String(frequencyHz);
+}
+
+function getCurveSeriesColor(series: SimpleCurveSeries): string {
   switch (series.id) {
     case "airborne":
-      return "#4b4b4b";
+      return "#bd6d3f";
     case "field":
-      return "#8a8a8a";
+      return "#a36c36";
     case "standardized":
-      return "#262626";
+      return "#2c7f76";
     case "source":
     default:
-      return "#6a6a6a";
+      return series.active ? "#233a4a" : "#526a78";
   }
+}
+
+function getActiveSimpleCurveSeries(figure: SimpleCurveFigure): SimpleCurveSeries | null {
+  return figure.series.find((series) => series.id === figure.activeSeriesId) ?? figure.series[0] ?? null;
+}
+
+function findClosestSimpleCurvePoint(series: SimpleCurveSeries, targetHz: number): { frequencyHz: number; valueDb: number } | null {
+  const pair = series.frequenciesHz
+    .map((frequencyHz, index) => ({
+      distance: Math.abs(frequencyHz - targetHz),
+      frequencyHz,
+      valueDb: series.valuesDb[index]
+    }))
+    .filter((entry) => Number.isFinite(entry.valueDb))
+    .sort((left, right) => left.distance - right.distance)[0];
+
+  if (!pair || !Number.isFinite(pair.valueDb)) {
+    return null;
+  }
+
+  return {
+    frequencyHz: pair.frequencyHz,
+    valueDb: pair.valueDb
+  };
+}
+
+function buildSimpleCurveReadouts(figure: SimpleCurveFigure): SimpleCurveReadout[] {
+  const activeSeries = getActiveSimpleCurveSeries(figure);
+
+  if (!activeSeries) {
+    return [];
+  }
+
+  return [
+    { label: "Low band", targetHz: 125 },
+    { label: "Speech band", targetHz: 500 },
+    { label: "High band", targetHz: 2000 }
+  ]
+    .map(({ label, targetHz }) => {
+      const point = findClosestSimpleCurvePoint(activeSeries, targetHz);
+
+      if (!point) {
+        return null;
+      }
+
+      return {
+        label,
+        note: `${formatCurveFrequencyLabel(point.frequencyHz)} Hz`,
+        valueLabel: `${point.valueDb.toFixed(1)} dB`
+      };
+    })
+    .filter((entry): entry is SimpleCurveReadout => entry !== null);
+}
+
+function renderSimpleCurveReadoutStrip(figure: SimpleCurveFigure): string {
+  const readouts = buildSimpleCurveReadouts(figure);
+
+  if (readouts.length === 0) {
+    return "";
+  }
+
+  return `
+    <div class="curve-readouts">
+      ${readouts
+        .map(
+          (readout) => `
+            <div class="curve-readout-card">
+              <strong>${escapeHtml(readout.label)}</strong>
+              <span>${escapeHtml(readout.valueLabel)}</span>
+              <small>${escapeHtml(readout.note)}</small>
+            </div>
+          `
+        )
+        .join("")}
+    </div>
+  `;
 }
 
 function renderSimpleCurveSvg(figure: SimpleCurveFigure): string {
@@ -242,6 +356,24 @@ function renderSimpleCurveSvg(figure: SimpleCurveFigure): string {
 
   return `
     <svg class="curve-plot" viewBox="0 0 ${width} ${height}" role="img" aria-label="${escapeHtml(figure.title)}">
+      ${SIMPLE_CURVE_BANDS
+        .map((band) => {
+          const startFrequency = Math.max(Math.min(...frequencies), band.x1);
+          const endFrequency = Math.min(Math.max(...frequencies), band.x2);
+
+          if (endFrequency <= startFrequency) {
+            return "";
+          }
+
+          const x = getX(startFrequency);
+          const bandWidth = Math.max(0, getX(endFrequency) - x);
+
+          return `
+            <rect fill="${band.fill}" x="${x.toFixed(2)}" y="${marginTop}" width="${bandWidth.toFixed(2)}" height="${plotHeight.toFixed(2)}"></rect>
+            <text class="curve-band-label" x="${(x + bandWidth / 2).toFixed(2)}" y="${(marginTop + 10).toFixed(2)}" text-anchor="middle">${escapeHtml(band.label)}</text>
+          `;
+        })
+        .join("")}
       ${gridValues
         .map((value) => {
           const y = getY(value);
@@ -258,7 +390,7 @@ function renderSimpleCurveSvg(figure: SimpleCurveFigure): string {
 
           return `
             <line class="curve-grid-line curve-grid-line-vertical" x1="${x.toFixed(2)}" x2="${x.toFixed(2)}" y1="${marginTop}" y2="${height - marginBottom}"></line>
-            <text class="curve-axis-label" x="${x.toFixed(2)}" y="${(height - marginBottom + 16).toFixed(2)}" text-anchor="middle">${escapeHtml(String(frequencyHz))}</text>
+            <text class="curve-axis-label" x="${x.toFixed(2)}" y="${(height - marginBottom + 16).toFixed(2)}" text-anchor="middle">${escapeHtml(formatCurveFrequencyLabel(frequencyHz))}</text>
           `;
         })
         .join("")}
@@ -320,9 +452,13 @@ function renderSimpleCurveFigures(document: SimpleWorkbenchProposalDocument): st
             </div>
             <small>${escapeHtml(figure.direction === "lower_better" ? "Lower is better" : "Higher is better")}</small>
           </div>
+          <div class="curve-band-strip">
+            ${SIMPLE_CURVE_BANDS.map((band) => `<span class="curve-band-pill curve-band-pill-${band.id}">${escapeHtml(band.label)} · ${escapeHtml(band.note)}</span>`).join("")}
+          </div>
           <div class="curve-shell">
             ${renderSimpleCurveSvg(figure)}
           </div>
+          ${renderSimpleCurveReadoutStrip(figure)}
           <div class="curve-legend">
             ${figure.series
               .map(
@@ -342,6 +478,20 @@ function renderSimpleCurveFigures(document: SimpleWorkbenchProposalDocument): st
 }
 
 export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbenchProposalDocument): string {
+  const branding = getSimpleWorkbenchProposalBranding({
+    consultantCompany: document.consultantCompany,
+    consultantWordmarkLine: document.consultantWordmarkLine,
+    projectName: document.projectName,
+    reportProfile: document.reportProfile,
+    reportProfileLabel: document.reportProfileLabel
+  });
+  const reportMarkSvg = buildSimpleWorkbenchReportMarkSvgMarkup({
+    accent: branding.accent,
+    accentStrong: branding.accentStrong,
+    ink: "#1c2f40",
+    panel: "#fffdf9",
+    variant: "symbol"
+  });
   const standardReferences = inferStandardReferences(document);
   const visibleMetrics = document.metrics.slice(0, MAX_SIMPLE_METRICS);
   const visibleLayers = document.layers.slice(0, MAX_SIMPLE_LAYER_ROWS);
@@ -488,9 +638,9 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
         --ink-faint: #738598;
         --line: #cfd7df;
         --line-strong: #8997a5;
-        --accent: #31546d;
-        --accent-soft: #edf3f7;
-        --accent-strong: #20394c;
+        --accent: ${branding.accent};
+        --accent-soft: ${branding.accentSoft};
+        --accent-strong: ${branding.accentStrong};
       }
 
       @page {
@@ -543,23 +693,9 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
       }
 
       .report-kicker-mark {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 42px;
-        height: 42px;
-        border: 1.4px solid color-mix(in srgb, var(--accent) 44%, var(--accent-strong));
-        border-radius: 12px;
-        background:
-          radial-gradient(circle at 30% 30%, rgba(255,255,255,0.28), transparent 48%),
-          linear-gradient(180deg, color-mix(in srgb, var(--accent) 14%, white), color-mix(in srgb, var(--accent) 78%, var(--accent-strong)));
-        box-shadow: inset 0 0 0 1px rgba(255,255,255,0.22);
-        font-size: 15px;
-        font-weight: 800;
-        font-family: Georgia, "Times New Roman", serif;
-        letter-spacing: 0.14em;
-        color: #ffffff;
-        flex-shrink: 0;
+        width: 60px;
+        height: 60px;
+        flex: 0 0 auto;
       }
 
       .report-kicker-text {
@@ -695,7 +831,8 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
 
       .curve-card {
         border: 1px solid var(--line);
-        background: #ffffff;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(247, 249, 251, 0.94));
+        border-radius: 3.4mm;
         padding: 2.5mm;
       }
 
@@ -722,9 +859,45 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
         color: var(--ink-soft);
       }
 
+      .curve-band-strip {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5mm;
+        margin-top: 1.8mm;
+      }
+
+      .curve-band-pill {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.8mm 1.5mm;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.88);
+        font-size: 8px;
+        line-height: 1.3;
+        color: var(--ink-soft);
+      }
+
+      .curve-band-pill-low {
+        border-color: rgba(189, 109, 63, 0.2);
+        background: rgba(189, 109, 63, 0.08);
+      }
+
+      .curve-band-pill-speech {
+        border-color: rgba(44, 127, 118, 0.18);
+        background: rgba(44, 127, 118, 0.08);
+      }
+
+      .curve-band-pill-high {
+        border-color: rgba(163, 108, 54, 0.18);
+        background: rgba(163, 108, 54, 0.08);
+      }
+
       .curve-shell {
         margin-top: 2mm;
         border: 1px solid var(--line);
+        border-radius: 2.6mm;
+        background: linear-gradient(180deg, rgba(247, 249, 251, 0.92), rgba(255, 255, 255, 0.98));
         padding: 1.5mm;
       }
 
@@ -735,12 +908,13 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
       }
 
       .curve-grid-line {
-        stroke: #dddddd;
+        stroke: #d6dde3;
         stroke-width: 1;
+        stroke-dasharray: 3 6;
       }
 
       .curve-grid-line-vertical {
-        stroke: #eeeeee;
+        stroke: #ebeff2;
       }
 
       .curve-frame-line {
@@ -758,6 +932,54 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
       .curve-axis-title {
         letter-spacing: 0.08em;
         text-transform: uppercase;
+      }
+
+      .curve-band-label {
+        fill: #7a8792;
+        font-size: 8px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .curve-readouts {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1.8mm;
+        margin-top: 1.8mm;
+      }
+
+      .curve-readout-card {
+        border: 1px solid var(--line);
+        border-radius: 2.4mm;
+        background: rgba(255, 255, 255, 0.84);
+        padding: 1.4mm 1.6mm;
+      }
+
+      .curve-readout-card strong {
+        display: block;
+        font-size: 7.8px;
+        line-height: 1.3;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--ink-faint);
+      }
+
+      .curve-readout-card span {
+        display: block;
+        margin-top: 0.8mm;
+        font-size: 10.5px;
+        line-height: 1.2;
+        font-weight: 700;
+        color: var(--ink);
+      }
+
+      .curve-readout-card small {
+        display: block;
+        margin-top: 0.6mm;
+        font-size: 8px;
+        line-height: 1.35;
+        color: var(--ink-soft);
       }
 
       .curve-legend {
@@ -946,7 +1168,7 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
       <section class="page">
         <header class="report-header">
           <div class="report-kicker">
-            <div class="report-kicker-mark">${escapeHtml(SIMPLE_WORKBENCH_REPORT_MARK)}</div>
+            <div class="report-kicker-mark">${reportMarkSvg}</div>
             <div>
               <div class="report-kicker-text">${escapeHtml(SIMPLE_WORKBENCH_REPORT_PRODUCT_NAME)}</div>
               <div class="report-kicker-series">${escapeHtml(SIMPLE_WORKBENCH_REPORT_SERIES)}</div>

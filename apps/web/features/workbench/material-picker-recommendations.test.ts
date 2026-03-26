@@ -12,7 +12,9 @@ const TEST_MATERIAL_IDS = [
   "furring_channel",
   "concrete",
   "screed",
-  "ceramic_tile"
+  "ceramic_tile",
+  "vinyl_flooring",
+  "cement_plaster"
 ] as const;
 
 const TEST_MATERIALS = buildWorkbenchMaterialCatalog([]).filter((material) =>
@@ -66,5 +68,41 @@ describe("material picker recommendations", () => {
     });
 
     expect(groups).toEqual([{ label: "All materials", materials: TEST_MATERIALS }]);
+  });
+
+  it("keeps plaster-like wall finishes out of floor-cover recommendations and parks them in a caution group", () => {
+    const groups = prependRecommendedMaterialGroup({
+      floorRole: "floor_covering",
+      groups: [{ label: "All materials", materials: TEST_MATERIALS }],
+      materials: TEST_MATERIALS,
+      selectedMaterialId: "vinyl_flooring",
+      studyMode: "floor"
+    });
+
+    expect(groups[0]?.label).toBe("Recommended for Floor covering");
+    expect(groups[0]?.materials.map((material) => material.id)).toEqual([
+      "vinyl_flooring",
+      "ceramic_tile"
+    ]);
+    expect(groups.at(-1)?.label).toBe("Not recommended for Floor covering");
+    expect(groups.at(-1)?.materials.map((material) => material.id)).toEqual(["cement_plaster"]);
+  });
+
+  it("keeps a currently selected plaster-like finish visible through the caution group", () => {
+    const groups = prependRecommendedMaterialGroup({
+      floorRole: "floor_covering",
+      groups: [{ label: "Current row material", materials: TEST_MATERIALS.filter((material) => material.id === "cement_plaster") }],
+      materials: TEST_MATERIALS,
+      selectedMaterialId: "cement_plaster",
+      studyMode: "floor"
+    });
+
+    expect(groups[0]?.label).toBe("Recommended for Floor covering");
+    expect(groups[0]?.materials.map((material) => material.id)).toEqual([
+      "vinyl_flooring",
+      "ceramic_tile"
+    ]);
+    expect(groups.at(-1)?.label).toBe("Not recommended for Floor covering");
+    expect(groups.at(-1)?.materials.map((material) => material.id)).toEqual(["cement_plaster"]);
   });
 });

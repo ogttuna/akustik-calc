@@ -13,9 +13,9 @@ import { buildSimpleWorkbenchProposalDossier } from "./simple-workbench-proposal
 import {
   buildSimpleWorkbenchProposalConstructionRender,
   SIMPLE_WORKBENCH_REPORT_MARK,
-  SIMPLE_WORKBENCH_REPORT_PRODUCT_NAME,
-  SIMPLE_WORKBENCH_REPORT_SERIES
+  SIMPLE_WORKBENCH_REPORT_PRODUCT_NAME
 } from "./simple-workbench-proposal-reporting";
+import { buildSimpleWorkbenchReportMarkSvgMarkup } from "./simple-workbench-report-mark";
 import type { SimpleWorkbenchProposalBriefItem } from "./simple-workbench-proposal-brief";
 import {
   getFallbackSimpleWorkbenchOutputPosture,
@@ -532,6 +532,7 @@ type ProposalMetricDirection = "higher" | "lower" | "neutral";
 type ProposalMetricChartRow = {
   detail: string;
   direction: ProposalMetricDirection;
+  isPrimary: boolean;
   label: string;
   markerPercent: string;
   valueLabel: string;
@@ -705,6 +706,7 @@ function buildProposalMetricChartRows(document: SimpleWorkbenchProposalDocument)
     rows.push({
       detail: metric.detail,
       direction,
+      isPrimary: metricSlug === primaryMetricSlug,
       label: metric.label,
       markerPercent,
       valueLabel: metric.value
@@ -749,6 +751,23 @@ function renderProposalMetricPlotSvg(rows: readonly ProposalMetricChartRow[]): s
 
   return `
     <svg class="result-plot" viewBox="0 0 ${width} ${height}" role="img" aria-label="Weighted acoustic result plot">
+      ${points
+        .map((point, index) => {
+          const laneWidth = rows.length === 1 ? plotWidth * 0.7 : plotWidth / Math.max(1, rows.length);
+          const laneX = rows.length === 1 ? marginLeft + plotWidth * 0.15 : point.x - laneWidth / 2;
+          const laneTone =
+            point.direction === "higher"
+              ? "rgba(201, 115, 66, 0.07)"
+              : point.direction === "lower"
+                ? "rgba(42, 157, 143, 0.07)"
+                : "rgba(38, 70, 83, 0.05)";
+
+          return `
+            <rect class="plot-lane-band${point.isPrimary ? " plot-lane-band-primary" : ""}" x="${Math.max(marginLeft, laneX).toFixed(2)}" y="${marginTop}" width="${Math.min(laneWidth, width - marginRight - Math.max(marginLeft, laneX)).toFixed(2)}" height="${plotHeight.toFixed(2)}" fill="${laneTone}"></rect>
+            <text class="plot-lane-index" x="${point.x.toFixed(2)}" y="${(marginTop + 12).toFixed(2)}" text-anchor="middle">${index + 1}</text>
+          `;
+        })
+        .join("")}
       ${gridValues
         .map((value) => {
           const y = marginTop + ((PROPOSAL_GRAPH_MAX_DB - value) / valueRange) * plotHeight;
@@ -773,11 +792,14 @@ function renderProposalMetricPlotSvg(rows: readonly ProposalMetricChartRow[]): s
               : point.direction === "lower"
                 ? "plot-point-lower"
                 : "plot-point-neutral";
-          const labelY = point.y - 12;
+          const labelY = point.y - 16;
           const xLabel = point.x;
+          const tagWidth = point.isPrimary ? 64 : 56;
+          const tagX = xLabel - tagWidth / 2;
           return `
-            <circle class="plot-point ${directionClass}" cx="${point.x.toFixed(2)}" cy="${point.y.toFixed(2)}" r="6"></circle>
-            <rect class="plot-tag ${directionClass}" x="${(xLabel - 26).toFixed(2)}" y="${(labelY - 14).toFixed(2)}" width="52" height="20" rx="0"></rect>
+            <line class="plot-drop-line" x1="${point.x.toFixed(2)}" x2="${point.x.toFixed(2)}" y1="${point.y.toFixed(2)}" y2="${(height - marginBottom).toFixed(2)}"></line>
+            <circle class="plot-point ${directionClass}${point.isPrimary ? " plot-point-primary" : ""}" cx="${point.x.toFixed(2)}" cy="${point.y.toFixed(2)}" r="${point.isPrimary ? "7.5" : "6"}"></circle>
+            <rect class="plot-tag ${directionClass}${point.isPrimary ? " plot-tag-primary" : ""}" x="${tagX.toFixed(2)}" y="${(labelY - 14).toFixed(2)}" width="${tagWidth}" height="22" rx="11"></rect>
             <text class="plot-tag-label" x="${xLabel.toFixed(2)}" y="${(labelY).toFixed(2)}" text-anchor="middle">${escapeHtml(point.valueLabel)}</text>
             <text class="plot-metric-label" x="${point.x.toFixed(2)}" y="${(height - marginBottom + 22).toFixed(2)}" text-anchor="middle">${escapeHtml(point.label)}</text>
           `;
@@ -865,7 +887,15 @@ function renderProposalMetricGraph(document: SimpleWorkbenchProposalDocument): s
           <h3>Acoustic result profile</h3>
           <p>Primary answer first. Weighted airborne ratings read higher-is-better; weighted impact ratings read lower-is-better on the shared dB reference band.</p>
         </div>
-        <div class="chart-meta">${PROPOSAL_GRAPH_MIN_DB} to ${PROPOSAL_GRAPH_MAX_DB} dB reference band</div>
+        <div class="chart-meta-stack">
+          <div class="chart-meta chart-meta-accent">${PROPOSAL_GRAPH_MIN_DB} to ${PROPOSAL_GRAPH_MAX_DB} dB reference band</div>
+          <div class="chart-meta">Primary metric first</div>
+        </div>
+      </div>
+      <div class="chart-band-strip">
+        <span class="chart-band-pill">Weighted indices</span>
+        <span class="chart-band-pill">Shared dB ruler</span>
+        <span class="chart-band-pill">Route-aware interpretation</span>
       </div>
       <div class="plot-shell">
         ${renderProposalMetricPlotSvg(rows)}
@@ -922,6 +952,136 @@ function buildCurveValueDomain(figure: WorkbenchResponseCurveFigure): { max: num
   };
 }
 
+const PROPOSAL_CURVE_BANDS = [
+  {
+    fill: "rgba(201, 115, 66, 0.08)",
+    id: "low",
+    label: "Low",
+    note: "63-250 Hz",
+    x1: 63,
+    x2: 250
+  },
+  {
+    fill: "rgba(42, 157, 143, 0.08)",
+    id: "speech",
+    label: "Speech",
+    note: "500-1k Hz",
+    x1: 500,
+    x2: 1000
+  },
+  {
+    fill: "rgba(188, 108, 37, 0.08)",
+    id: "high",
+    label: "High",
+    note: "2k-4k Hz",
+    x1: 2000,
+    x2: 4000
+  }
+] as const;
+
+type ProposalCurveReadout = {
+  label: string;
+  note: string;
+  valueLabel: string;
+};
+
+function getProposalCurveDirectionLabel(direction: WorkbenchResponseCurveFigure["direction"]): string {
+  return direction === "lower_better" ? "Lower is better" : "Higher is better";
+}
+
+function getProposalCurveSeriesColor(seriesId: string): string {
+  switch (seriesId) {
+    case "airborne":
+      return "#c97342";
+    case "field":
+      return "#bc6c25";
+    case "standardized":
+      return "#2a9d8f";
+    case "source":
+    default:
+      return "#264653";
+  }
+}
+
+function getActiveProposalCurveSeries(figure: WorkbenchResponseCurveFigure): WorkbenchResponseCurveSeries | null {
+  return figure.series.find((series) => series.id === figure.activeSeriesId) ?? figure.series[0] ?? null;
+}
+
+function findClosestProposalCurvePoint(
+  series: WorkbenchResponseCurveSeries,
+  targetHz: number
+): { frequencyHz: number; valueDb: number } | null {
+  const pair = series.frequenciesHz
+    .map((frequencyHz, index) => ({
+      distance: Math.abs(frequencyHz - targetHz),
+      frequencyHz,
+      valueDb: series.valuesDb[index]
+    }))
+    .filter((entry) => Number.isFinite(entry.valueDb))
+    .sort((left, right) => left.distance - right.distance)[0];
+
+  if (!pair || !Number.isFinite(pair.valueDb)) {
+    return null;
+  }
+
+  return {
+    frequencyHz: pair.frequencyHz,
+    valueDb: pair.valueDb
+  };
+}
+
+function buildProposalCurveReadouts(figure: WorkbenchResponseCurveFigure): ProposalCurveReadout[] {
+  const activeSeries = getActiveProposalCurveSeries(figure);
+
+  if (!activeSeries) {
+    return [];
+  }
+
+  return [
+    { label: "Low band", targetHz: 125 },
+    { label: "Speech band", targetHz: 500 },
+    { label: "High band", targetHz: 2000 }
+  ]
+    .map(({ label, targetHz }) => {
+      const point = findClosestProposalCurvePoint(activeSeries, targetHz);
+
+      if (!point) {
+        return null;
+      }
+
+      return {
+        label,
+        note: `${formatCurveFrequencyLabel(point.frequencyHz)} Hz anchor`,
+        valueLabel: `${point.valueDb.toFixed(1)} dB`
+      };
+    })
+    .filter((entry): entry is ProposalCurveReadout => entry !== null);
+}
+
+function renderProposalCurveReadoutStrip(figure: WorkbenchResponseCurveFigure): string {
+  const readouts = buildProposalCurveReadouts(figure);
+
+  if (readouts.length === 0) {
+    return "";
+  }
+
+  return `
+    <div class="curve-readout-grid">
+      ${readouts
+        .map(
+          (readout) => `
+            <div class="curve-readout-card">
+              <strong>${escapeHtml(readout.label)}</strong>
+              <span>${escapeHtml(readout.valueLabel)}</span>
+              <small>${escapeHtml(readout.note)}</small>
+            </div>
+          `
+        )
+        .join("")}
+    </div>
+  `;
+}
+
 function renderProposalResponseCurveSvg(figure: WorkbenchResponseCurveFigure): string {
   const frequencies = buildCurveFrequencyAxis(figure);
 
@@ -959,6 +1119,24 @@ function renderProposalResponseCurveSvg(figure: WorkbenchResponseCurveFigure): s
 
   return `
     <svg class="result-plot" viewBox="0 0 ${width} ${height}" role="img" aria-label="${escapeHtml(figure.title)}">
+      ${PROPOSAL_CURVE_BANDS
+        .map((band) => {
+          const startFrequency = Math.max(minFrequency, band.x1);
+          const endFrequency = Math.min(maxFrequency, band.x2);
+
+          if (endFrequency <= startFrequency) {
+            return "";
+          }
+
+          const x = getX(startFrequency);
+          const bandWidth = Math.max(0, getX(endFrequency) - x);
+
+          return `
+            <rect class="curve-band curve-band-${band.id}" fill="${band.fill}" x="${x.toFixed(2)}" y="${marginTop}" width="${bandWidth.toFixed(2)}" height="${plotHeight.toFixed(2)}"></rect>
+            <text class="curve-band-label" x="${(x + bandWidth / 2).toFixed(2)}" y="${(marginTop + 12).toFixed(2)}" text-anchor="middle">${escapeHtml(band.label)}</text>
+          `;
+        })
+        .join("")}
       ${gridValues
         .map((value) => {
           const y = getY(value);
@@ -994,9 +1172,10 @@ function renderProposalResponseCurveSvg(figure: WorkbenchResponseCurveFigure): s
             .filter((point): point is string => point !== null)
             .join(" ");
           const seriesClass = `curve-series-line curve-series-line-${escapeHtml(series.id)}${series.active ? " curve-series-line-active" : ""}`;
+          const seriesStroke = getProposalCurveSeriesColor(series.id);
 
           return `
-            <polyline class="${seriesClass}" fill="none" points="${points}"></polyline>
+            <polyline class="${seriesClass}" fill="none" points="${points}" style="stroke:${seriesStroke};"></polyline>
             ${series.frequenciesHz
               .map((frequencyHz, index) => {
                 const value = series.valuesDb[index];
@@ -1005,7 +1184,7 @@ function renderProposalResponseCurveSvg(figure: WorkbenchResponseCurveFigure): s
                   return "";
                 }
 
-                return `<circle class="curve-series-point curve-series-point-${escapeHtml(series.id)}${series.active ? " curve-series-point-active" : ""}" cx="${getX(frequencyHz).toFixed(2)}" cy="${getY(value).toFixed(2)}" r="${series.active ? "3.4" : "2.4"}"></circle>`;
+                return `<circle class="curve-series-point curve-series-point-${escapeHtml(series.id)}${series.active ? " curve-series-point-active" : ""}" cx="${getX(frequencyHz).toFixed(2)}" cy="${getY(value).toFixed(2)}" r="${series.active ? "3.4" : "2.4"}" style="fill:${seriesStroke};"></circle>`;
               })
               .join("")}
           `;
@@ -1035,11 +1214,18 @@ function renderProposalResponseCurves(document: SimpleWorkbenchProposalDocument)
                 <h3>${escapeHtml(figure.title)}</h3>
                 <p>${escapeHtml(figure.note)}</p>
               </div>
-              <div class="chart-meta">${escapeHtml(figure.domainLabel)}</div>
+              <div class="chart-meta-stack">
+                <div class="chart-meta chart-meta-accent">${escapeHtml(figure.domainLabel)}</div>
+                <div class="chart-meta">${escapeHtml(getProposalCurveDirectionLabel(figure.direction))}</div>
+              </div>
+            </div>
+            <div class="chart-band-strip">
+              ${PROPOSAL_CURVE_BANDS.map((band) => `<span class="chart-band-pill chart-band-pill-${band.id}">${escapeHtml(band.label)} · ${escapeHtml(band.note)}</span>`).join("")}
             </div>
             <div class="plot-shell">
               ${renderProposalResponseCurveSvg(figure)}
             </div>
+            ${renderProposalCurveReadoutStrip(figure)}
             <div class="result-legend-strip">
               ${figure.series
                 .map(
@@ -1367,6 +1553,13 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
   const stackSurfaceMassCount = document.layers.filter(
     (layer) => typeof layer.surfaceMassLabel === "string" && layer.surfaceMassLabel.trim().length > 0
   ).length;
+  const reportMarkSvg = buildSimpleWorkbenchReportMarkSvgMarkup({
+    accent: branding.accent,
+    accentStrong: branding.accentStrong,
+    ink: "#1c2f40",
+    panel: "#fffdf9",
+    variant: "cover"
+  });
   const compactRecommendationList = renderCompactBriefList(
     document.recommendationItems,
     "No additional recommendation lines are packaged on this issue."
@@ -1654,33 +1847,14 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
       .report-kicker-row {
         display: flex;
         align-items: center;
-        gap: 14px;
-        margin-top: 20px;
+        gap: 18px;
+        margin-top: 24px;
       }
 
       .dac-mark {
-        width: 70px;
-        height: 70px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        border: 1.2px solid color-mix(in srgb, var(--accent) 44%, var(--ink));
-        border-radius: 18px;
-        background:
-          radial-gradient(circle at 30% 30%, rgba(255,255,255,0.3), transparent 48%),
-          linear-gradient(180deg, color-mix(in srgb, var(--accent) 24%, white), color-mix(in srgb, var(--accent) 72%, var(--ink)));
-        box-shadow: inset 0 0 0 1px rgba(255,255,255,0.22);
-        color: #ffffff;
-        font: 700 24px/1 Georgia, "Times New Roman", serif;
-        letter-spacing: 0.18em;
-      }
-
-      .report-series {
-        margin-top: 6px;
-        font: 600 11px/1.6 Arial, sans-serif;
-        letter-spacing: 0.16em;
-        text-transform: uppercase;
-        color: var(--ink-soft);
+        width: 282px;
+        height: 102px;
+        flex: 0 0 auto;
       }
 
       .cover-standard-strip {
@@ -1781,13 +1955,14 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
 
       .result-chart-card {
         border: 1px solid var(--line);
-        background: #ffffff;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(247, 250, 252, 0.92));
+        border-radius: 18px;
         padding: 18px;
       }
 
       .result-chart-head {
         display: flex;
-        align-items: end;
+        align-items: start;
         justify-content: space-between;
         gap: 16px;
       }
@@ -1812,10 +1987,58 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
         color: var(--ink-faint);
       }
 
+      .chart-meta-stack {
+        display: grid;
+        gap: 6px;
+        justify-items: end;
+      }
+
+      .chart-meta-accent {
+        padding: 6px 10px;
+        border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--line));
+        border-radius: 999px;
+        background: color-mix(in srgb, var(--accent) 10%, white);
+        color: var(--accent-ink);
+      }
+
+      .chart-band-strip {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .chart-band-pill {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 10px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.88);
+        font: 600 10px/1.4 Arial, sans-serif;
+        color: var(--ink-soft);
+      }
+
+      .chart-band-pill-low {
+        border-color: rgba(201, 115, 66, 0.22);
+        background: rgba(201, 115, 66, 0.08);
+      }
+
+      .chart-band-pill-speech {
+        border-color: rgba(42, 157, 143, 0.2);
+        background: rgba(42, 157, 143, 0.08);
+      }
+
+      .chart-band-pill-high {
+        border-color: rgba(188, 108, 37, 0.2);
+        background: rgba(188, 108, 37, 0.08);
+      }
+
       .plot-shell {
         margin-top: 14px;
         border: 1px solid var(--line);
-        background: linear-gradient(180deg, rgba(246, 249, 252, 0.86), rgba(255, 255, 255, 0.98));
+        border-radius: 16px;
+        background: linear-gradient(180deg, rgba(246, 249, 252, 0.9), rgba(255, 255, 255, 0.98));
         padding: 12px;
       }
 
@@ -1826,12 +2049,28 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
       }
 
       .plot-grid-line {
-        stroke: rgba(116, 135, 154, 0.35);
+        stroke: rgba(116, 135, 154, 0.3);
         stroke-width: 1;
+        stroke-dasharray: 3 7;
       }
 
       .plot-grid-line-vertical {
-        stroke: rgba(116, 135, 154, 0.18);
+        stroke: rgba(116, 135, 154, 0.16);
+      }
+
+      .plot-lane-band {
+        rx: 18px;
+      }
+
+      .plot-lane-band-primary {
+        stroke: rgba(38, 70, 83, 0.08);
+        stroke-width: 1;
+      }
+
+      .plot-lane-index {
+        fill: var(--ink-faint);
+        font: 700 9px/1 Arial, sans-serif;
+        letter-spacing: 0.14em;
       }
 
       .plot-frame-line {
@@ -1859,15 +2098,32 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
         text-transform: uppercase;
       }
 
+      .curve-band-label {
+        fill: var(--ink-faint);
+        font: 700 9px/1.4 Arial, sans-serif;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
       .plot-series-line {
         stroke: color-mix(in srgb, var(--accent) 44%, var(--ink));
         stroke-width: 2.4;
         stroke-dasharray: 4 4;
       }
 
+      .plot-drop-line {
+        stroke: rgba(38, 70, 83, 0.18);
+        stroke-width: 1.2;
+        stroke-dasharray: 3 6;
+      }
+
       .plot-point {
         stroke: var(--ink);
         stroke-width: 2;
+      }
+
+      .plot-point-primary {
+        stroke-width: 2.4;
       }
 
       .plot-point-higher {
@@ -1886,6 +2142,10 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
         stroke: var(--ink);
         stroke-width: 1;
         fill: rgba(255, 255, 255, 0.96);
+      }
+
+      .plot-tag-primary {
+        stroke-width: 1.2;
       }
 
       .plot-tag-label {
@@ -1907,14 +2167,14 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
       }
 
       .curve-series-line {
-        stroke-width: 2;
+        stroke-width: 2.2;
         stroke-linecap: round;
         stroke-linejoin: round;
-        stroke-dasharray: 5 5;
+        stroke-dasharray: 6 5;
       }
 
       .curve-series-line-active {
-        stroke-width: 2.8;
+        stroke-width: 3;
         stroke-dasharray: none;
       }
 
@@ -1984,6 +2244,42 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
         gap: 10px;
         margin-top: 14px;
         grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .curve-readout-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .curve-readout-card {
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.82);
+        padding: 10px 12px;
+      }
+
+      .curve-readout-card strong {
+        display: block;
+        font: 700 10px/1.4 Arial, sans-serif;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--ink-faint);
+      }
+
+      .curve-readout-card span {
+        display: block;
+        margin-top: 6px;
+        font: 700 18px/1.15 Arial, sans-serif;
+        color: var(--ink);
+      }
+
+      .curve-readout-card small {
+        display: block;
+        margin-top: 6px;
+        font: 400 11px/1.5 Arial, sans-serif;
+        color: var(--ink-soft);
       }
 
       .result-legend-row {
@@ -2287,11 +2583,7 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
             </div>
           </div>
           <div class="report-kicker-row">
-            <div class="dac-mark">DAC</div>
-            <div>
-              <div class="eyebrow">${escapeHtml(SIMPLE_WORKBENCH_REPORT_PRODUCT_NAME)}</div>
-              <div class="report-series">${escapeHtml(SIMPLE_WORKBENCH_REPORT_SERIES)}</div>
-            </div>
+            <div class="dac-mark">${reportMarkSvg}</div>
           </div>
           <h1 class="cover-title">${escapeHtml(branding.coverTitle)}</h1>
           <p class="cover-kicker">

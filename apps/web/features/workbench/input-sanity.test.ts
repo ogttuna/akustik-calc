@@ -144,4 +144,61 @@ describe("input sanity", () => {
       "Ceiling-side support or fill layers are present without any ceiling board. DynEcho keeps the lower-treatment lane inactive, so these products may not change the result until at least one ceiling board is added."
     );
   });
+
+  it("warns when plaster-like wall finishes are assigned to the floor covering role", () => {
+    const warnings = collectScenarioInputWarnings({
+      materials: [
+        {
+          category: "finish",
+          densityKgM3: 1700,
+          id: "cement_plaster",
+          name: "Cement Plaster",
+          tags: ["plaster", "render", "masonry-finish"]
+        },
+        {
+          category: "mass",
+          densityKgM3: 2400,
+          id: "concrete",
+          name: "Concrete",
+          tags: ["structural"]
+        }
+      ],
+      normalizedLayers: [
+        { floorRole: "floor_covering", materialId: "cement_plaster", thicknessMm: 4 },
+        { floorRole: "base_structure", materialId: "concrete", thicknessMm: 180 }
+      ],
+      rows: [
+        { floorRole: "floor_covering", id: "a", materialId: "cement_plaster", thicknessMm: "4" },
+        { floorRole: "base_structure", id: "b", materialId: "concrete", thicknessMm: "180" }
+      ],
+      studyMode: "floor",
+      targetOutputs: []
+    });
+
+    expect(warnings).toContain(
+      "Cement Plaster is tagged as a plaster or masonry finish but is currently assigned to the floor covering role. DynEcho will keep the run live, but this is not treated like a validated trafficable floor cover. Recheck the role assignment or switch to a tested floor build-up before trusting impact outputs."
+    );
+  });
+
+  it("raises a screening-only warning when a plaster-like floor covering is used without any base structure", () => {
+    const warnings = collectScenarioInputWarnings({
+      materials: [
+        {
+          category: "finish",
+          densityKgM3: 1700,
+          id: "cement_plaster",
+          name: "Cement Plaster",
+          tags: ["plaster", "render", "masonry-finish"]
+        }
+      ],
+      normalizedLayers: [{ floorRole: "floor_covering", materialId: "cement_plaster", thicknessMm: 4 }],
+      rows: [{ floorRole: "floor_covering", id: "a", materialId: "cement_plaster", thicknessMm: "4" }],
+      studyMode: "floor",
+      targetOutputs: []
+    });
+
+    expect(warnings).toContain(
+      "Cement Plaster is tagged as a plaster or masonry finish but is currently assigned to the floor covering role with no base structure in the stack. DynEcho will keep the run live as a broad screening estimate only; add the structural floor or switch to a tested floor-cover path before trusting impact outputs."
+    );
+  });
 });

@@ -118,6 +118,7 @@ const FIELD_AIRBORNE_OUTPUTS = new Set<RequestedOutputId>(["R'w", "DnT,w", "DnT,
 const FIELD_IMPACT_OUTPUTS = new Set<RequestedOutputId>(["L'n,w", "L'nT,w", "L'nT,50", "LnT,A"]);
 const STANDARDIZED_AIRBORNE_OUTPUTS = new Set<RequestedOutputId>(["DnT,w", "DnT,A", "DnT,A,k"]);
 const STANDARDIZED_IMPACT_OUTPUTS = new Set<RequestedOutputId>(["L'nT,w", "L'nT,50", "LnT,A"]);
+const PLASTER_LIKE_FLOOR_COVER_TAGS = ["plaster", "render", "masonry-finish"] as const;
 
 function formatBandValue(value: number): string {
   return Number.isInteger(value) ? String(value) : value.toFixed(1).replace(/\.0$/, "");
@@ -233,6 +234,31 @@ export function getLayerThicknessSanityWarning(
   return `Layer ${layerIndex} thickness ${formatBandValue(parsed)} mm is outside the guided sanity band of ${formatGuidedSanityBand(guidance.band)} for ${guidance.subject}. Check units, role assignment, or split the build-up into separate layers if needed.`;
 }
 
+function getFloorCoverRoleSanityWarning(input: {
+  hasBaseStructure: boolean;
+  materialId: string;
+  materials: readonly MaterialDefinition[];
+}): string | null {
+  const customMaterials = input.materials === MATERIAL_CATALOG_SEED ? [] : input.materials;
+  const material = getWorkbenchMaterialById(input.materialId, customMaterials);
+
+  if (!material) {
+    return null;
+  }
+
+  const isPlasterLikeFloorFinish = PLASTER_LIKE_FLOOR_COVER_TAGS.some((tag) => material.tags.includes(tag));
+
+  if (!isPlasterLikeFloorFinish) {
+    return null;
+  }
+
+  if (!input.hasBaseStructure) {
+    return `${material.name} is tagged as a plaster or masonry finish but is currently assigned to the floor covering role with no base structure in the stack. DynEcho will keep the run live as a broad screening estimate only; add the structural floor or switch to a tested floor-cover path before trusting impact outputs.`;
+  }
+
+  return `${material.name} is tagged as a plaster or masonry finish but is currently assigned to the floor covering role. DynEcho will keep the run live, but this is not treated like a validated trafficable floor cover. Recheck the role assignment or switch to a tested floor build-up before trusting impact outputs.`;
+}
+
 export function collectScenarioInputWarnings(input: {
   airborneContext?: AirborneContext | null;
   impactFieldContext?: ImpactFieldContext | null;
@@ -260,6 +286,7 @@ export function collectScenarioInputWarnings(input: {
       materialId: row.materialId,
       thicknessMm: parseFiniteNumber(row.thicknessMm) ?? Number.NaN
     }));
+  const hasBaseStructure = thicknessWarningLayers.some((layer) => layer.floorRole === "base_structure");
 
   thicknessWarningLayers.forEach((layer, index) => {
     const warning = getLayerThicknessSanityWarning(
@@ -277,6 +304,23 @@ export function collectScenarioInputWarnings(input: {
   });
 
   if (input.studyMode === "floor") {
+    const floorCoverRoleWarnings = Array.from(
+      new Set(
+        thicknessWarningLayers
+          .filter((layer) => layer.floorRole === "floor_covering")
+          .map((layer) =>
+            getFloorCoverRoleSanityWarning({
+              hasBaseStructure,
+              materialId: layer.materialId,
+              materials
+            })
+          )
+          .filter((warning): warning is string => Boolean(warning))
+      )
+    );
+
+    warnings.push(...floorCoverRoleWarnings);
+
     const hasCeilingBoard = thicknessWarningLayers.some((layer) => layer.floorRole === "ceiling_board");
     const hasCeilingSideSupport = thicknessWarningLayers.some(
       (layer) => layer.floorRole === "ceiling_cavity" || layer.floorRole === "ceiling_fill"

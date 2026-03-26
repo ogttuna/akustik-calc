@@ -8,7 +8,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import {
-  buildSimpleWorkbenchProposalFilename,
   buildSimpleWorkbenchProposalHtml,
   buildSimpleWorkbenchProposalText,
   type SimpleWorkbenchProposalDocument
@@ -276,7 +275,7 @@ export function ProposalPreviewClientPage() {
               {isDownloadingPdf ? "Generating PDF..." : "Simple PDF"}
             </button>
             <button
-              className="focus-ring inline-flex items-center gap-2 rounded-full bg-[color:var(--ink)] px-4 py-2 text-sm font-semibold text-[color:var(--paper)]"
+              className="focus-ring ink-button-solid inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold"
               onClick={handlePrint}
               type="button"
             >

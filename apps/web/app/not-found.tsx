@@ -14,7 +14,7 @@ export default function NotFoundPage() {
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
           <Link
-            className="focus-ring inline-flex items-center justify-center rounded-full bg-[color:var(--ink)] px-4 py-2 text-sm font-semibold text-[color:var(--paper)]"
+            className="focus-ring ink-button-solid inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-semibold"
             href="/workbench"
           >
             Open workbench

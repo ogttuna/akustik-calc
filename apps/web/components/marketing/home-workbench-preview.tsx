@@ -29,7 +29,7 @@ export function HomeWorkbenchPreview() {
             description="The goal is not just prettier controls. It is a more legible sequence: choose a study, assemble the stack, inspect the estimate, then understand what is still pending upstream."
           />
           <Link
-            className="focus-ring touch-target inline-flex items-center gap-2 rounded-full bg-[color:var(--ink)] px-5 py-3 text-sm font-semibold text-[color:var(--paper)]"
+            className="focus-ring ink-button-solid touch-target inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold"
             href="/workbench"
           >
             Enter the workbench

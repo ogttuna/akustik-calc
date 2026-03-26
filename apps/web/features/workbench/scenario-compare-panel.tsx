@@ -144,7 +144,7 @@ export function ScenarioComparePanel({
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-sm font-semibold text-[color:var(--ink)]">Scenario compare</h2>
         <button
-          className="focus-ring inline-flex h-8 items-center gap-1.5 rounded bg-[color:var(--ink)] px-3 text-[0.8rem] font-semibold text-[color:var(--paper)]"
+          className="focus-ring ink-button-solid inline-flex h-8 items-center gap-1.5 rounded px-3 text-[0.8rem] font-semibold"
           onClick={onSaveScenario}
           type="button"
         >

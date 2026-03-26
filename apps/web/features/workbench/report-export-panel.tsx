@@ -231,7 +231,7 @@ export function ReportExportPanel({
               Copy markdown
             </button>
             <button
-              className="focus-ring touch-target inline-flex items-center gap-2 rounded-full bg-[color:var(--ink)] px-4 py-2 text-sm font-semibold text-[color:var(--paper)]"
+              className="focus-ring ink-button-solid touch-target inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold"
               onClick={onDownloadReport}
               type="button"
             >

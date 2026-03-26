@@ -610,6 +610,100 @@ describe("scenario analysis", () => {
     expect(scenario.result?.impact?.LnW ?? null).not.toBeNull();
   });
 
+  it("treats a blank density override on a local custom finish as no override", () => {
+    const customMaterial = buildCustomMaterialDefinition({
+      draft: {
+        ...createEmptyCustomMaterialDraft(),
+        category: "finish",
+        densityKgM3: "1650",
+        name: "Custom cork finish blank density QA"
+      },
+      existingMaterials: []
+    });
+
+    const baselineScenario = evaluateScenario({
+      customMaterials: [customMaterial],
+      id: "custom-finish-blank-density-baseline",
+      name: "custom finish blank density baseline",
+      rows: [
+        { floorRole: "floor_covering", id: "a", materialId: customMaterial.id, thicknessMm: "8" },
+        { floorRole: "floating_screed", id: "b", materialId: "screed", thicknessMm: "50" },
+        { floorRole: "resilient_layer", id: "c", materialId: "generic_resilient_underlay", thicknessMm: "8" },
+        { floorRole: "base_structure", id: "d", materialId: "concrete", thicknessMm: "150" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+    const blankScenario = evaluateScenario({
+      customMaterials: [customMaterial],
+      id: "custom-finish-blank-density",
+      name: "custom finish blank density",
+      rows: [
+        { densityKgM3: "", floorRole: "floor_covering", id: "a", materialId: customMaterial.id, thicknessMm: "8" },
+        { floorRole: "floating_screed", id: "b", materialId: "screed", thicknessMm: "50" },
+        { floorRole: "resilient_layer", id: "c", materialId: "generic_resilient_underlay", thicknessMm: "8" },
+        { floorRole: "base_structure", id: "d", materialId: "concrete", thicknessMm: "150" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+
+    expect(baselineScenario.result).not.toBeNull();
+    expect(blankScenario.result).not.toBeNull();
+    expect(resultSnapshot(blankScenario.result!)).toEqual(resultSnapshot(baselineScenario.result!));
+    expect(blankScenario.warnings.some((warning) => /invalid density override/i.test(warning))).toBe(false);
+  });
+
+  it("falls back to the custom material catalog value when a local custom finish density override uses a comma decimal", () => {
+    const customMaterial = buildCustomMaterialDefinition({
+      draft: {
+        ...createEmptyCustomMaterialDraft(),
+        category: "finish",
+        densityKgM3: "1650",
+        name: "Custom cork finish comma density QA"
+      },
+      existingMaterials: []
+    });
+
+    const baselineScenario = evaluateScenario({
+      customMaterials: [customMaterial],
+      id: "custom-finish-comma-density-baseline",
+      name: "custom finish comma density baseline",
+      rows: [
+        { floorRole: "floor_covering", id: "a", materialId: customMaterial.id, thicknessMm: "8" },
+        { floorRole: "floating_screed", id: "b", materialId: "screed", thicknessMm: "50" },
+        { floorRole: "resilient_layer", id: "c", materialId: "generic_resilient_underlay", thicknessMm: "8" },
+        { floorRole: "base_structure", id: "d", materialId: "concrete", thicknessMm: "150" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+    const invalidScenario = evaluateScenario({
+      customMaterials: [customMaterial],
+      id: "custom-finish-comma-density",
+      name: "custom finish comma density",
+      rows: [
+        { densityKgM3: "1650,0", floorRole: "floor_covering", id: "a", materialId: customMaterial.id, thicknessMm: "8" },
+        { floorRole: "floating_screed", id: "b", materialId: "screed", thicknessMm: "50" },
+        { floorRole: "resilient_layer", id: "c", materialId: "generic_resilient_underlay", thicknessMm: "8" },
+        { floorRole: "base_structure", id: "d", materialId: "concrete", thicknessMm: "150" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+
+    expect(baselineScenario.result).not.toBeNull();
+    expect(invalidScenario.result).not.toBeNull();
+    expect(resultSnapshot(invalidScenario.result!)).toEqual(resultSnapshot(baselineScenario.result!));
+    expect(invalidScenario.warnings).toContain(
+      "Layer 1 has an invalid density override. Enter a non-negative kg/m³ value, use zero only for gap or support layers, or leave it blank."
+    );
+  });
+
   it("lets a row-level density override change the live result for local custom concrete base materials", () => {
     const customMaterial = buildCustomMaterialDefinition({
       draft: {
@@ -658,6 +752,102 @@ describe("scenario analysis", () => {
     expect(lighterScenario.result?.impact?.basis).toBe("predictor_heavy_floating_floor_iso12354_annexc_estimate");
     expect(lighterScenario.result?.impact?.LnW ?? -Infinity).toBeGreaterThan(catalogScenario.result?.impact?.LnW ?? Infinity);
     expect(lighterScenario.result?.floorSystemRatings?.Rw ?? Infinity).toBeLessThan(catalogScenario.result?.floorSystemRatings?.Rw ?? -Infinity);
+  });
+
+  it("treats a blank dynamic stiffness override on a local custom resilient layer as no override", () => {
+    const customMaterial = buildCustomMaterialDefinition({
+      draft: {
+        ...createEmptyCustomMaterialDraft(),
+        category: "support",
+        densityKgM3: "120",
+        dynamicStiffnessMNm3: "15",
+        name: "Custom resilient mat blank dyn QA"
+      },
+      existingMaterials: []
+    });
+
+    const baselineScenario = evaluateScenario({
+      customMaterials: [customMaterial],
+      id: "custom-resilient-blank-dyn-baseline",
+      name: "custom resilient blank dyn baseline",
+      rows: [
+        { floorRole: "floor_covering", id: "a", materialId: "ceramic_tile", thicknessMm: "8" },
+        { floorRole: "floating_screed", id: "b", materialId: "screed", thicknessMm: "50" },
+        { floorRole: "resilient_layer", id: "c", materialId: customMaterial.id, thicknessMm: "8" },
+        { floorRole: "base_structure", id: "d", materialId: "concrete", thicknessMm: "150" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+    const blankScenario = evaluateScenario({
+      customMaterials: [customMaterial],
+      id: "custom-resilient-blank-dyn",
+      name: "custom resilient blank dyn",
+      rows: [
+        { floorRole: "floor_covering", id: "a", materialId: "ceramic_tile", thicknessMm: "8" },
+        { floorRole: "floating_screed", id: "b", materialId: "screed", thicknessMm: "50" },
+        { dynamicStiffnessMNm3: "", floorRole: "resilient_layer", id: "c", materialId: customMaterial.id, thicknessMm: "8" },
+        { floorRole: "base_structure", id: "d", materialId: "concrete", thicknessMm: "150" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+
+    expect(baselineScenario.result).not.toBeNull();
+    expect(blankScenario.result).not.toBeNull();
+    expect(resultSnapshot(blankScenario.result!)).toEqual(resultSnapshot(baselineScenario.result!));
+    expect(blankScenario.warnings.some((warning) => /invalid dynamic stiffness override/i.test(warning))).toBe(false);
+  });
+
+  it("falls back to the custom resilient catalog value when dynamic stiffness override uses a comma decimal", () => {
+    const customMaterial = buildCustomMaterialDefinition({
+      draft: {
+        ...createEmptyCustomMaterialDraft(),
+        category: "support",
+        densityKgM3: "120",
+        dynamicStiffnessMNm3: "15",
+        name: "Custom resilient mat comma dyn QA"
+      },
+      existingMaterials: []
+    });
+
+    const baselineScenario = evaluateScenario({
+      customMaterials: [customMaterial],
+      id: "custom-resilient-comma-dyn-baseline",
+      name: "custom resilient comma dyn baseline",
+      rows: [
+        { floorRole: "floor_covering", id: "a", materialId: "ceramic_tile", thicknessMm: "8" },
+        { floorRole: "floating_screed", id: "b", materialId: "screed", thicknessMm: "50" },
+        { floorRole: "resilient_layer", id: "c", materialId: customMaterial.id, thicknessMm: "8" },
+        { floorRole: "base_structure", id: "d", materialId: "concrete", thicknessMm: "150" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+    const invalidScenario = evaluateScenario({
+      customMaterials: [customMaterial],
+      id: "custom-resilient-comma-dyn",
+      name: "custom resilient comma dyn",
+      rows: [
+        { floorRole: "floor_covering", id: "a", materialId: "ceramic_tile", thicknessMm: "8" },
+        { floorRole: "floating_screed", id: "b", materialId: "screed", thicknessMm: "50" },
+        { dynamicStiffnessMNm3: "15,5", floorRole: "resilient_layer", id: "c", materialId: customMaterial.id, thicknessMm: "8" },
+        { floorRole: "base_structure", id: "d", materialId: "concrete", thicknessMm: "150" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+
+    expect(baselineScenario.result).not.toBeNull();
+    expect(invalidScenario.result).not.toBeNull();
+    expect(resultSnapshot(invalidScenario.result!)).toEqual(resultSnapshot(baselineScenario.result!));
+    expect(invalidScenario.warnings).toContain(
+      "Layer 3 has an invalid dynamic stiffness override. Enter a positive MN/m³ value or leave it blank."
+    );
   });
 
   it("surfaces soft sanity warnings for out-of-band guided inputs without blocking calculation", () => {
@@ -764,6 +954,217 @@ describe("scenario analysis", () => {
     expect(scenario.warnings).toContain(
       "REGUPOL sonus multi 4.5 is in the stack, but no official product row matched the current topology and no generic dynamic stiffness fallback is available for this product. DynEcho kept the result on the broader predictor/family lane instead of inventing product-backed impact credit."
     );
+  });
+
+  it("keeps plaster-like floor coverings on a warning-first lane without blocking the run", () => {
+    const scenario = evaluateScenario({
+      id: "plaster-floor-cover-warning",
+      name: "plaster-floor-cover-warning",
+      rows: [
+        { floorRole: "floor_covering", id: "a", materialId: "vinyl_flooring", thicknessMm: "4" },
+        { floorRole: "floor_covering", id: "b", materialId: "cement_plaster", thicknessMm: "4" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+
+    expect(scenario.result).not.toBeNull();
+    expect(scenario.result?.impact?.LnW).toBeCloseTo(76.4, 1);
+    expect(scenario.warnings).toContain(
+      "Cement Plaster is tagged as a plaster or masonry finish but is currently assigned to the floor covering role with no base structure in the stack. DynEcho will keep the run live as a broad screening estimate only; add the structural floor or switch to a tested floor-cover path before trusting impact outputs."
+    );
+  });
+
+  for (const [materialName, densityKgM3, scenarioId] of [
+    ["Custom Lime Plaster QA", "1600", "custom-lime-plaster-floor-cover-warning"],
+    ["Custom Acoustic Render QA", "1700", "custom-acoustic-render-floor-cover-warning"]
+  ] as const) {
+    it(`keeps ${materialName} on the warning-first broad lane when a user treats it like a floor covering`, () => {
+      const customMaterial = buildCustomMaterialDefinition({
+        draft: {
+          ...createEmptyCustomMaterialDraft(),
+          category: "finish",
+          densityKgM3,
+          name: materialName
+        },
+        existingMaterials: []
+      });
+
+      const scenario = evaluateScenario({
+        customMaterials: [customMaterial],
+        id: scenarioId,
+        name: scenarioId,
+        rows: [{ floorRole: "floor_covering", id: "a", materialId: customMaterial.id, thicknessMm: "5" }],
+        source: "current",
+        studyMode: "floor",
+        targetOutputs: TARGET_OUTPUTS
+      });
+
+      expect(scenario.result).not.toBeNull();
+      expect(scenario.warnings).not.toContain(expect.stringContaining("Unknown material"));
+      expect(scenario.result?.floorSystemMatch).toBeNull();
+      expect(scenario.result?.floorSystemEstimate?.kind).toBe("family_general");
+      expect(scenario.result?.impact?.basis).toBe("predictor_floor_system_family_general_estimate");
+      expect(scenario.result?.impact?.LnW).toBeCloseTo(76.4, 1);
+      expect(scenario.result?.floorSystemRatings?.Rw).toBeCloseTo(43.6, 1);
+      expect(
+        scenario.warnings.some(
+          (warning) =>
+            warning.includes(materialName) &&
+            /plaster or masonry finish/i.test(warning) &&
+            /broad screening estimate only/i.test(warning)
+        )
+      ).toBe(true);
+    });
+  }
+
+  it("keeps a custom structural deck name on the conservative heavy bare-floor lane instead of fabricating a curated family", () => {
+    const customMaterial = buildCustomMaterialDefinition({
+      draft: {
+        ...createEmptyCustomMaterialDraft(),
+        category: "mass",
+        densityKgM3: "2400",
+        name: "Custom Structural Concrete Deck QA"
+      },
+      existingMaterials: []
+    });
+
+    const scenario = evaluateScenario({
+      customMaterials: [customMaterial],
+      id: "custom-structural-deck-screening",
+      name: "custom structural deck screening",
+      rows: [
+        { floorRole: "base_structure", id: "a", materialId: customMaterial.id, thicknessMm: "150" },
+        { floorRole: "floor_covering", id: "b", materialId: "vinyl_flooring", thicknessMm: "4" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+
+    expect(scenario.result).not.toBeNull();
+    expect(scenario.warnings).not.toContain(expect.stringContaining("Unknown material"));
+    expect(scenario.result?.floorSystemMatch).toBeNull();
+    expect(scenario.result?.floorSystemEstimate).toBeNull();
+    expect(scenario.result?.impact?.basis).toBe("predictor_heavy_bare_floor_iso12354_annexc_estimate");
+    expect(scenario.result?.impact?.LnW).toBe(74.5);
+    expect(scenario.result?.floorSystemRatings?.Rw).toBe(58);
+    expect(scenario.result?.supportedTargetOutputs).toEqual(["Rw", "Ln,w"]);
+    expect(scenario.warnings).toContain("Screening estimate only. This result is coming from the local calibrated seed lane.");
+  });
+
+  it("keeps a custom air-gap helper on the conservative cavity-screening lane instead of inventing lower-treatment credit", () => {
+    const customMaterial = buildCustomMaterialDefinition({
+      draft: {
+        ...createEmptyCustomMaterialDraft(),
+        category: "gap",
+        densityKgM3: "0",
+        name: "Custom Air Gap QA"
+      },
+      existingMaterials: []
+    });
+
+    const scenario = evaluateScenario({
+      customMaterials: [customMaterial],
+      id: "custom-air-gap-screening",
+      name: "custom air gap screening",
+      rows: [
+        { floorRole: "ceiling_cavity", id: "a", materialId: customMaterial.id, thicknessMm: "100" },
+        { floorRole: "ceiling_board", id: "b", materialId: "firestop_board", thicknessMm: "13" },
+        { floorRole: "base_structure", id: "c", materialId: "concrete", thicknessMm: "150" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+
+    expect(scenario.result).not.toBeNull();
+    expect(scenario.warnings).not.toContain(expect.stringContaining("Unknown material"));
+    expect(scenario.result?.floorSystemMatch).toBeNull();
+    expect(scenario.result?.floorSystemEstimate).toBeNull();
+    expect(scenario.result?.impact?.basis).toBe("predictor_heavy_bare_floor_iso12354_annexc_estimate");
+    expect(scenario.result?.impact?.LnW).toBe(74);
+    expect(scenario.result?.floorSystemRatings?.Rw).toBe(56);
+    expect(scenario.result?.supportedTargetOutputs).toEqual(["Rw", "Ln,w"]);
+    expect(scenario.warnings).toContain("Cavity assemblies are currently screened with a conservative local heuristic.");
+  });
+
+  it("keeps a custom board-like finish on the lightweight family-general lane instead of fabricating an exact system", () => {
+    const customMaterial = buildCustomMaterialDefinition({
+      draft: {
+        ...createEmptyCustomMaterialDraft(),
+        category: "finish",
+        densityKgM3: "800",
+        name: "Custom Board QA"
+      },
+      existingMaterials: []
+    });
+
+    const scenario = evaluateScenario({
+      customMaterials: [customMaterial],
+      id: "custom-board-family-general",
+      name: "custom board family general",
+      rows: [
+        { floorRole: "ceiling_board", id: "a", materialId: customMaterial.id, thicknessMm: "13" },
+        { floorRole: "ceiling_fill", id: "b", materialId: "rockwool", thicknessMm: "90" },
+        { floorRole: "base_structure", id: "c", materialId: "timber_joist_floor", thicknessMm: "240" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+
+    expect(scenario.result).not.toBeNull();
+    expect(scenario.warnings).not.toContain(expect.stringContaining("Unknown material"));
+    expect(scenario.result?.floorSystemMatch).toBeNull();
+    expect(scenario.result?.floorSystemEstimate?.kind).toBe("family_general");
+    expect(scenario.result?.impact?.basis).toBe("predictor_floor_system_family_general_estimate");
+    expect(scenario.result?.impact?.LnW).toBeCloseTo(70.7, 1);
+    expect(scenario.result?.floorSystemRatings?.Rw).toBeCloseTo(51.7, 1);
+    expect(scenario.result?.supportedTargetOutputs).toEqual(["Rw", "Ln,w"]);
+    expect(scenario.warnings).toContain(
+      "Lightweight assemblies remain less reliable than dense mineral constructions in the current seed engine."
+    );
+  });
+
+  it("keeps a custom laminate mimic off the measured open-box exact lane", () => {
+    const customMaterial = buildCustomMaterialDefinition({
+      draft: {
+        ...createEmptyCustomMaterialDraft(),
+        category: "finish",
+        densityKgM3: "900",
+        name: "Custom Laminate Flooring QA"
+      },
+      existingMaterials: []
+    });
+
+    const scenario = evaluateScenario({
+      customMaterials: [customMaterial],
+      id: "custom-laminate-open-box-fallback",
+      name: "custom laminate open box fallback",
+      rows: [
+        { floorRole: "ceiling_board", id: "a", materialId: "gypsum_board", thicknessMm: "13" },
+        { floorRole: "ceiling_board", id: "b", materialId: "gypsum_board", thicknessMm: "13" },
+        { floorRole: "ceiling_fill", id: "c", materialId: "rockwool", thicknessMm: "100" },
+        { floorRole: "ceiling_cavity", id: "d", materialId: "resilient_stud_ceiling", thicknessMm: "25" },
+        { floorRole: "floor_covering", id: "e", materialId: customMaterial.id, thicknessMm: "8" },
+        { floorRole: "resilient_layer", id: "f", materialId: "eps_underlay", thicknessMm: "3" },
+        { floorRole: "base_structure", id: "g", materialId: "open_box_timber_slab", thicknessMm: "370" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+
+    expect(scenario.result).not.toBeNull();
+    expect(scenario.warnings).not.toContain(expect.stringContaining("Unknown material"));
+    expect(scenario.result?.floorSystemMatch).toBeNull();
+    expect(scenario.result?.floorSystemEstimate?.kind).toBe("family_archetype");
+    expect(scenario.result?.impact?.basis).toBe("predictor_floor_system_family_archetype_estimate");
+    expect(scenario.result?.impact?.LnW).toBeCloseTo(68.7, 1);
+    expect(scenario.result?.floorSystemRatings?.Rw).toBeCloseTo(51.6, 1);
+    expect(scenario.warnings).toContain("Screening estimate only. This result is coming from the local calibrated seed lane.");
   });
 
   it("warns when duplicate single-entry floor roles keep visible-layer predictor matching parked", () => {
@@ -1179,5 +1580,685 @@ describe("scenario analysis", () => {
       )
     ).toBe(true);
     expect(scenario.warnings.some((warning) => warning.includes("Expected number, received nan"))).toBe(true);
+  });
+
+  it.each([
+    {
+      id: "invalid-field-k",
+      impactFieldContext: { fieldKDb: Number.NaN },
+      label: "field K correction"
+    },
+    {
+      id: "invalid-impact-volume",
+      impactFieldContext: { receivingRoomVolumeM3: Number.NaN },
+      label: "impact receiving-room volume"
+    },
+    {
+      id: "invalid-local-guide-mass-ratio",
+      impactFieldContext: { guideMassRatio: Number.NaN },
+      label: "local-guide mass ratio"
+    },
+    {
+      id: "invalid-local-guide-hd",
+      impactFieldContext: { guideHdDb: Number.NaN },
+      label: "local-guide Hd correction"
+    }
+  ])("keeps the workspace live when $label is NaN instead of crashing scenario evaluation", ({ id, impactFieldContext }) => {
+    const scenario = evaluateScenario({
+      id,
+      impactFieldContext,
+      name: id,
+      rows: [
+        { floorRole: "floor_covering", id: "a", materialId: "ceramic_tile", thicknessMm: "8" },
+        { floorRole: "floating_screed", id: "b", materialId: "screed", thicknessMm: "50" },
+        { floorRole: "resilient_layer", id: "c", materialId: "generic_resilient_underlay", thicknessMm: "8" },
+        { floorRole: "base_structure", id: "d", materialId: "concrete", thicknessMm: "150" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+
+    expect(scenario.result).toBeNull();
+    expect(
+      scenario.warnings.some((warning) =>
+        warning.includes("DynEcho could not evaluate the current scenario and kept the workspace live instead of crashing.")
+      )
+    ).toBe(true);
+    expect(scenario.warnings.some((warning) => warning.includes("Expected number, received nan"))).toBe(true);
+  });
+
+  it.each([
+    { label: "comma decimal", thicknessMm: "8,0" },
+    { label: "zero thickness", thicknessMm: "0" }
+  ])("treats $label floor-covering thickness as a dropped row instead of a fake layer", ({ thicknessMm }) => {
+    const baselineScenario = evaluateScenario({
+      id: `invalid-thickness-baseline-${thicknessMm}`,
+      name: "invalid thickness baseline",
+      rows: [
+        { floorRole: "resilient_layer", id: "b", materialId: "generic_resilient_underlay", thicknessMm: "8" },
+        { floorRole: "base_structure", id: "c", materialId: "concrete", thicknessMm: "150" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+    const invalidScenario = evaluateScenario({
+      id: `invalid-thickness-${thicknessMm}`,
+      name: "invalid thickness",
+      rows: [
+        { floorRole: "floor_covering", id: "a", materialId: "ceramic_tile", thicknessMm },
+        { floorRole: "resilient_layer", id: "b", materialId: "generic_resilient_underlay", thicknessMm: "8" },
+        { floorRole: "base_structure", id: "c", materialId: "concrete", thicknessMm: "150" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+
+    expect(baselineScenario.result).not.toBeNull();
+    expect(invalidScenario.result).not.toBeNull();
+    expect(resultSnapshot(invalidScenario.result!)).toEqual(resultSnapshot(baselineScenario.result!));
+    expect(invalidScenario.warnings).toContain("Layer 1 is missing a valid thickness.");
+  });
+
+  it.each(["abc", "0", "-5"])(
+    "falls back to the catalog resilient layer when dynamic stiffness override %s is invalid",
+    (dynamicStiffnessMNm3) => {
+      const baselineScenario = evaluateScenario({
+        id: `invalid-dyn-baseline-${dynamicStiffnessMNm3}`,
+        name: "invalid dyn baseline",
+        rows: [
+          { floorRole: "floor_covering", id: "a", materialId: "ceramic_tile", thicknessMm: "8" },
+          { floorRole: "floating_screed", id: "b", materialId: "screed", thicknessMm: "50" },
+          { floorRole: "resilient_layer", id: "c", materialId: "generic_resilient_underlay", thicknessMm: "8" },
+          { floorRole: "base_structure", id: "d", materialId: "concrete", thicknessMm: "150" }
+        ],
+        source: "current",
+        studyMode: "floor",
+        targetOutputs: TARGET_OUTPUTS
+      });
+      const invalidScenario = evaluateScenario({
+        id: `invalid-dyn-${dynamicStiffnessMNm3}`,
+        name: "invalid dyn",
+        rows: [
+          { floorRole: "floor_covering", id: "a", materialId: "ceramic_tile", thicknessMm: "8" },
+          { floorRole: "floating_screed", id: "b", materialId: "screed", thicknessMm: "50" },
+          {
+            dynamicStiffnessMNm3,
+            floorRole: "resilient_layer",
+            id: "c",
+            materialId: "generic_resilient_underlay",
+            thicknessMm: "8"
+          },
+          { floorRole: "base_structure", id: "d", materialId: "concrete", thicknessMm: "150" }
+        ],
+        source: "current",
+        studyMode: "floor",
+        targetOutputs: TARGET_OUTPUTS
+      });
+
+      expect(baselineScenario.result).not.toBeNull();
+      expect(invalidScenario.result).not.toBeNull();
+      expect(resultSnapshot(invalidScenario.result!)).toEqual(resultSnapshot(baselineScenario.result!));
+      expect(invalidScenario.warnings).toContain(
+        "Layer 3 has an invalid dynamic stiffness override. Enter a positive MN/m³ value or leave it blank."
+      );
+    }
+  );
+
+  it("treats a blank dynamic stiffness override as no override instead of warning", () => {
+    const baselineScenario = evaluateScenario({
+      id: "blank-dyn-baseline",
+      name: "blank dyn baseline",
+      rows: [
+        { floorRole: "floor_covering", id: "a", materialId: "ceramic_tile", thicknessMm: "8" },
+        { floorRole: "floating_screed", id: "b", materialId: "screed", thicknessMm: "50" },
+        { floorRole: "resilient_layer", id: "c", materialId: "generic_resilient_underlay", thicknessMm: "8" },
+        { floorRole: "base_structure", id: "d", materialId: "concrete", thicknessMm: "150" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+    const blankScenario = evaluateScenario({
+      id: "blank-dyn",
+      name: "blank dyn",
+      rows: [
+        { floorRole: "floor_covering", id: "a", materialId: "ceramic_tile", thicknessMm: "8" },
+        { floorRole: "floating_screed", id: "b", materialId: "screed", thicknessMm: "50" },
+        {
+          dynamicStiffnessMNm3: "",
+          floorRole: "resilient_layer",
+          id: "c",
+          materialId: "generic_resilient_underlay",
+          thicknessMm: "8"
+        },
+        { floorRole: "base_structure", id: "d", materialId: "concrete", thicknessMm: "150" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+
+    expect(baselineScenario.result).not.toBeNull();
+    expect(blankScenario.result).not.toBeNull();
+    expect(resultSnapshot(blankScenario.result!)).toEqual(resultSnapshot(baselineScenario.result!));
+    expect(blankScenario.warnings.some((warning) => /invalid dynamic stiffness override/i.test(warning))).toBe(false);
+  });
+
+  it("falls back to the catalog resilient layer when dynamic stiffness override uses a comma decimal", () => {
+    const baselineScenario = evaluateScenario({
+      id: "comma-dyn-baseline",
+      name: "comma dyn baseline",
+      rows: [
+        { floorRole: "floor_covering", id: "a", materialId: "ceramic_tile", thicknessMm: "8" },
+        { floorRole: "floating_screed", id: "b", materialId: "screed", thicknessMm: "50" },
+        { floorRole: "resilient_layer", id: "c", materialId: "generic_resilient_underlay", thicknessMm: "8" },
+        { floorRole: "base_structure", id: "d", materialId: "concrete", thicknessMm: "150" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+    const invalidScenario = evaluateScenario({
+      id: "comma-dyn",
+      name: "comma dyn",
+      rows: [
+        { floorRole: "floor_covering", id: "a", materialId: "ceramic_tile", thicknessMm: "8" },
+        { floorRole: "floating_screed", id: "b", materialId: "screed", thicknessMm: "50" },
+        {
+          dynamicStiffnessMNm3: "18,5",
+          floorRole: "resilient_layer",
+          id: "c",
+          materialId: "generic_resilient_underlay",
+          thicknessMm: "8"
+        },
+        { floorRole: "base_structure", id: "d", materialId: "concrete", thicknessMm: "150" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+
+    expect(baselineScenario.result).not.toBeNull();
+    expect(invalidScenario.result).not.toBeNull();
+    expect(resultSnapshot(invalidScenario.result!)).toEqual(resultSnapshot(baselineScenario.result!));
+    expect(invalidScenario.warnings).toContain(
+      "Layer 3 has an invalid dynamic stiffness override. Enter a positive MN/m³ value or leave it blank."
+    );
+  });
+
+  it.each(["abc", "0", "-10"])("falls back to the catalog screed when density override %s is invalid", (densityKgM3) => {
+    const baselineScenario = evaluateScenario({
+      id: `invalid-density-baseline-${densityKgM3}`,
+      name: "invalid density baseline",
+      rows: [
+        { floorRole: "floor_covering", id: "a", materialId: "ceramic_tile", thicknessMm: "8" },
+        { floorRole: "floating_screed", id: "b", materialId: "screed", thicknessMm: "50" },
+        { floorRole: "resilient_layer", id: "c", materialId: "generic_resilient_underlay", thicknessMm: "8" },
+        { floorRole: "base_structure", id: "d", materialId: "concrete", thicknessMm: "150" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+    const invalidScenario = evaluateScenario({
+      id: `invalid-density-${densityKgM3}`,
+      name: "invalid density",
+      rows: [
+        { floorRole: "floor_covering", id: "a", materialId: "ceramic_tile", thicknessMm: "8" },
+        {
+          densityKgM3,
+          floorRole: "floating_screed",
+          id: "b",
+          materialId: "screed",
+          thicknessMm: "50"
+        },
+        { floorRole: "resilient_layer", id: "c", materialId: "generic_resilient_underlay", thicknessMm: "8" },
+        { floorRole: "base_structure", id: "d", materialId: "concrete", thicknessMm: "150" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+
+    expect(baselineScenario.result).not.toBeNull();
+    expect(invalidScenario.result).not.toBeNull();
+    expect(resultSnapshot(invalidScenario.result!)).toEqual(resultSnapshot(baselineScenario.result!));
+    expect(invalidScenario.warnings).toContain(
+      "Layer 2 has an invalid density override. Enter a non-negative kg/m³ value, use zero only for gap or support layers, or leave it blank."
+    );
+  });
+
+  it("treats a blank density override as no override instead of warning", () => {
+    const baselineScenario = evaluateScenario({
+      id: "blank-density-baseline",
+      name: "blank density baseline",
+      rows: [
+        { floorRole: "floor_covering", id: "a", materialId: "ceramic_tile", thicknessMm: "8" },
+        { floorRole: "floating_screed", id: "b", materialId: "screed", thicknessMm: "50" },
+        { floorRole: "resilient_layer", id: "c", materialId: "generic_resilient_underlay", thicknessMm: "8" },
+        { floorRole: "base_structure", id: "d", materialId: "concrete", thicknessMm: "150" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+    const blankScenario = evaluateScenario({
+      id: "blank-density",
+      name: "blank density",
+      rows: [
+        { floorRole: "floor_covering", id: "a", materialId: "ceramic_tile", thicknessMm: "8" },
+        { densityKgM3: "", floorRole: "floating_screed", id: "b", materialId: "screed", thicknessMm: "50" },
+        { floorRole: "resilient_layer", id: "c", materialId: "generic_resilient_underlay", thicknessMm: "8" },
+        { floorRole: "base_structure", id: "d", materialId: "concrete", thicknessMm: "150" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+
+    expect(baselineScenario.result).not.toBeNull();
+    expect(blankScenario.result).not.toBeNull();
+    expect(resultSnapshot(blankScenario.result!)).toEqual(resultSnapshot(baselineScenario.result!));
+    expect(blankScenario.warnings.some((warning) => /invalid density override/i.test(warning))).toBe(false);
+  });
+
+  it("falls back to the catalog screed when density override uses a comma decimal", () => {
+    const baselineScenario = evaluateScenario({
+      id: "comma-density-baseline",
+      name: "comma density baseline",
+      rows: [
+        { floorRole: "floor_covering", id: "a", materialId: "ceramic_tile", thicknessMm: "8" },
+        { floorRole: "floating_screed", id: "b", materialId: "screed", thicknessMm: "50" },
+        { floorRole: "resilient_layer", id: "c", materialId: "generic_resilient_underlay", thicknessMm: "8" },
+        { floorRole: "base_structure", id: "d", materialId: "concrete", thicknessMm: "150" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+    const invalidScenario = evaluateScenario({
+      id: "comma-density",
+      name: "comma density",
+      rows: [
+        { floorRole: "floor_covering", id: "a", materialId: "ceramic_tile", thicknessMm: "8" },
+        { densityKgM3: "1800,0", floorRole: "floating_screed", id: "b", materialId: "screed", thicknessMm: "50" },
+        { floorRole: "resilient_layer", id: "c", materialId: "generic_resilient_underlay", thicknessMm: "8" },
+        { floorRole: "base_structure", id: "d", materialId: "concrete", thicknessMm: "150" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+
+    expect(baselineScenario.result).not.toBeNull();
+    expect(invalidScenario.result).not.toBeNull();
+    expect(resultSnapshot(invalidScenario.result!)).toEqual(resultSnapshot(baselineScenario.result!));
+    expect(invalidScenario.warnings).toContain(
+      "Layer 2 has an invalid density override. Enter a non-negative kg/m³ value, use zero only for gap or support layers, or leave it blank."
+    );
+  });
+
+  it("falls back and warns when zero density override is entered on a ceiling-support helper row", () => {
+    const baselineScenario = evaluateScenario({
+      id: "support-zero-density-baseline",
+      name: "support zero density baseline",
+      rows: [
+        { floorRole: "floor_covering", id: "a", materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: "20" },
+        { floorRole: "ceiling_cavity", id: "b", materialId: "furring_channel", thicknessMm: "100" },
+        { floorRole: "ceiling_board", id: "c", materialId: "firestop_board", thicknessMm: "13" },
+        { floorRole: "base_structure", id: "d", materialId: "concrete", thicknessMm: "150" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+    const zeroDensityScenario = evaluateScenario({
+      id: "support-zero-density-override",
+      name: "support zero density override",
+      rows: [
+        { floorRole: "floor_covering", id: "a", materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: "20" },
+        { densityKgM3: "0", floorRole: "ceiling_cavity", id: "b", materialId: "furring_channel", thicknessMm: "100" },
+        { floorRole: "ceiling_board", id: "c", materialId: "firestop_board", thicknessMm: "13" },
+        { floorRole: "base_structure", id: "d", materialId: "concrete", thicknessMm: "150" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+
+    expect(baselineScenario.result).not.toBeNull();
+    expect(zeroDensityScenario.result).not.toBeNull();
+    expect(resultSnapshot(zeroDensityScenario.result!)).toEqual(resultSnapshot(baselineScenario.result!));
+    expect(zeroDensityScenario.warnings).toContain(
+      "Layer 2 has an invalid density override. Enter a non-negative kg/m³ value, use zero only for gap or support layers, or leave it blank."
+    );
+  });
+
+  it("keeps duplicate base-structure stacks on the broad family lane with an explicit blocker warning", () => {
+    const scenario = evaluateScenario({
+      id: "duplicate-base-structure-role",
+      name: "duplicate base structure role",
+      rows: [
+        { floorRole: "floor_covering", id: "a", materialId: "laminate_flooring", thicknessMm: "8" },
+        { floorRole: "resilient_layer", id: "b", materialId: "eps_underlay", thicknessMm: "3" },
+        { floorRole: "base_structure", id: "c", materialId: "concrete", thicknessMm: "150" },
+        { floorRole: "base_structure", id: "d", materialId: "timber_joist_floor", thicknessMm: "240" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+
+    expect(scenario.result).not.toBeNull();
+    expect(scenario.result?.floorSystemMatch).toBeNull();
+    expect(scenario.result?.floorSystemEstimate?.kind).toBe("family_general");
+    expect(scenario.result?.impact?.basis).toBe("predictor_floor_system_family_general_estimate");
+    expect(scenario.result?.impact?.LnW).toBeCloseTo(60.3, 1);
+    expect(scenario.result?.floorSystemRatings?.Rw).toBeCloseTo(52.7, 1);
+    expect(
+      scenario.warnings.some((warning) =>
+        /Visible-layer predictor matching is parked because single-entry floor roles are duplicated: base structure x2 \(Concrete, Timber Joist Floor\)/i.test(
+          warning
+        )
+      )
+    ).toBe(true);
+  });
+
+  it("keeps ceiling-side helper rows inactive until a ceiling board exists", () => {
+    const scenario = evaluateScenario({
+      id: "ceiling-helper-without-board",
+      name: "ceiling helper without board",
+      rows: [
+        { floorRole: "floor_covering", id: "a", materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: "20" },
+        { floorRole: "ceiling_cavity", id: "b", materialId: "furring_channel", thicknessMm: "100" },
+        { floorRole: "base_structure", id: "c", materialId: "concrete", thicknessMm: "150" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+
+    expect(scenario.result).not.toBeNull();
+    expect(scenario.result?.floorSystemMatch).toBeNull();
+    expect(scenario.result?.impact?.basis).toBe("predictor_heavy_bare_floor_iso12354_annexc_estimate");
+    expect(scenario.result?.supportedTargetOutputs).toEqual(["Rw", "Ln,w"]);
+    expect(scenario.result?.unsupportedTargetOutputs).toEqual(["Ln,w+CI", "DeltaLw", "L'n,w", "L'nT,w"]);
+    expect(scenario.warnings).toContain(
+      "Ceiling-side support or fill layers are present without any ceiling board. DynEcho keeps the lower-treatment lane inactive, so these products may not change the result until at least one ceiling board is added."
+    );
+    expect(scenario.warnings).toContain(
+      "No curated exact floor-system landed. Closest family candidate is Knauf CC60.1A | 150 mm concrete | timber + acoustic underlay."
+    );
+  });
+
+  it("keeps mixed real-cover plus plaster no-base stacks on the warning-first broad lane", () => {
+    const scenario = evaluateScenario({
+      id: "plaster-plus-real-cover-no-base",
+      name: "plaster plus real cover no base",
+      rows: [
+        { floorRole: "floor_covering", id: "a", materialId: "vinyl_flooring", thicknessMm: "4" },
+        { floorRole: "floor_covering", id: "b", materialId: "cement_plaster", thicknessMm: "4" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+
+    expect(scenario.result).not.toBeNull();
+    expect(scenario.result?.floorSystemMatch).toBeNull();
+    expect(scenario.result?.floorSystemEstimate?.kind).toBe("family_general");
+    expect(scenario.result?.impact?.basis).toBe("predictor_floor_system_family_general_estimate");
+    expect(scenario.result?.impact?.LnW).toBeCloseTo(76.4, 1);
+    expect(scenario.result?.floorSystemRatings?.Rw).toBeCloseTo(43.6, 1);
+    expect(scenario.warnings).toContain(
+      "Cement Plaster is tagged as a plaster or masonry finish but is currently assigned to the floor covering role with no base structure in the stack. DynEcho will keep the run live as a broad screening estimate only; add the structural floor or switch to a tested floor-cover path before trusting impact outputs."
+    );
+  });
+
+  it("carries explicit flanking paths into the direct+flanking field lane on the web scenario route", () => {
+    const scenario = evaluateScenario({
+      id: "open-box-direct-flanking-web",
+      impactFieldContext: {
+        fieldKDb: 2,
+        directPathOffsetDb: 1,
+        flankingPaths: [
+          {
+            id: "edge_path",
+            pathType: "edge",
+            levelOffsetDb: -6,
+            pathCount: 1,
+            junctionLengthM: 4,
+            edgeIsolationClass: "rigid",
+            shortCircuitRisk: "high",
+            kijDb: 2
+          }
+        ]
+      },
+      name: "open box direct flanking web",
+      rows: [
+        { floorRole: "ceiling_board", id: "a", materialId: "gypsum_board", thicknessMm: "13" },
+        { floorRole: "ceiling_board", id: "b", materialId: "gypsum_board", thicknessMm: "13" },
+        { floorRole: "ceiling_fill", id: "c", materialId: "rockwool", thicknessMm: "100" },
+        { floorRole: "ceiling_cavity", id: "d", materialId: "resilient_stud_ceiling", thicknessMm: "25" },
+        { floorRole: "floor_covering", id: "e", materialId: "laminate_flooring", thicknessMm: "8" },
+        { floorRole: "resilient_layer", id: "f", materialId: "eps_underlay", thicknessMm: "3" },
+        { floorRole: "upper_fill", id: "g", materialId: "generic_fill", thicknessMm: "50" },
+        { floorRole: "floating_screed", id: "h", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: "60" },
+        { floorRole: "base_structure", id: "i", materialId: "open_box_timber_slab", thicknessMm: "370" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: ["L'n,w", "L'nT,w"]
+    });
+
+    expect(scenario.result).not.toBeNull();
+    expect(scenario.result?.impact?.basis).toBe("mixed_exact_plus_estimated_direct_flanking_energy_sum");
+    expect(scenario.result?.impact?.fieldEstimateProfile).toBe("direct_flanking_energy_sum");
+    expect(scenario.result?.impact?.LPrimeNW).toBe(44);
+    expect(scenario.result?.impact?.LPrimeNTw).toBeUndefined();
+    expect(
+      scenario.result?.impactSupport?.formulaNotes.some((note) => /Family-aware flanking path models were applied for: open box timber/i.test(note))
+    ).toBe(true);
+  });
+
+  it("keeps exact bands on the direct-path-only lane when no flanking paths are active on the web scenario route", () => {
+    const scenario = evaluateScenario({
+      id: "open-box-direct-only-web",
+      impactFieldContext: {
+        directPathOffsetDb: 2,
+        receivingRoomVolumeM3: 50
+      },
+      name: "open box direct only web",
+      rows: [
+        { floorRole: "ceiling_board", id: "a", materialId: "gypsum_board", thicknessMm: "13" },
+        { floorRole: "ceiling_board", id: "b", materialId: "gypsum_board", thicknessMm: "13" },
+        { floorRole: "ceiling_fill", id: "c", materialId: "rockwool", thicknessMm: "100" },
+        { floorRole: "ceiling_cavity", id: "d", materialId: "resilient_stud_ceiling", thicknessMm: "25" },
+        { floorRole: "floor_covering", id: "e", materialId: "laminate_flooring", thicknessMm: "8" },
+        { floorRole: "resilient_layer", id: "f", materialId: "eps_underlay", thicknessMm: "3" },
+        { floorRole: "upper_fill", id: "g", materialId: "generic_fill", thicknessMm: "50" },
+        { floorRole: "floating_screed", id: "h", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: "60" },
+        { floorRole: "base_structure", id: "i", materialId: "open_box_timber_slab", thicknessMm: "370" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: ["L'n,w", "L'nT,w", "L'nT,50"]
+    });
+
+    expect(scenario.result).not.toBeNull();
+    expect(scenario.result?.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_direct_flanking_energy_sum");
+    expect(scenario.result?.impact?.fieldEstimateProfile).toBe("direct_flanking_energy_sum");
+    expect(scenario.result?.impact?.LPrimeNW).toBe(41);
+    expect(scenario.result?.impact?.LPrimeNTw).toBe(39);
+    expect(scenario.result?.impact?.LPrimeNT50).toBe(44);
+    expect(scenario.result?.impactSupport?.formulaNotes.some((note) => /Current direct-path offset is 2 dB/i.test(note))).toBe(true);
+  });
+
+  it("keeps K=0 standardized field continuation neutral on L'n,w while still applying room-volume standardization", () => {
+    const scenario = evaluateScenario({
+      id: "open-box-k-zero-web",
+      impactFieldContext: {
+        fieldKDb: 0,
+        receivingRoomVolumeM3: 50
+      },
+      name: "open box k zero web",
+      rows: [
+        { floorRole: "ceiling_board", id: "a", materialId: "gypsum_board", thicknessMm: "13" },
+        { floorRole: "ceiling_board", id: "b", materialId: "gypsum_board", thicknessMm: "13" },
+        { floorRole: "ceiling_fill", id: "c", materialId: "rockwool", thicknessMm: "100" },
+        { floorRole: "ceiling_cavity", id: "d", materialId: "resilient_stud_ceiling", thicknessMm: "25" },
+        { floorRole: "floor_covering", id: "e", materialId: "laminate_flooring", thicknessMm: "8" },
+        { floorRole: "resilient_layer", id: "f", materialId: "eps_underlay", thicknessMm: "3" },
+        { floorRole: "upper_fill", id: "g", materialId: "generic_fill", thicknessMm: "50" },
+        { floorRole: "floating_screed", id: "h", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: "60" },
+        { floorRole: "base_structure", id: "i", materialId: "open_box_timber_slab", thicknessMm: "370" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: ["Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]
+    });
+
+    expect(scenario.result).not.toBeNull();
+    expect(scenario.result?.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_field_volume_normalization");
+    expect(scenario.result?.impact?.fieldEstimateProfile).toBe("explicit_field_lprimenw_from_lnw_plus_k");
+    expect(scenario.result?.impact?.LnW).toBe(39);
+    expect(scenario.result?.impact?.LPrimeNW).toBe(39);
+    expect(scenario.result?.impact?.LPrimeNTw).toBe(37);
+    expect(scenario.result?.impact?.LPrimeNT50).toBe(42);
+  });
+
+  it("lets negative K lower the carried field impact metrics without leaving the standardized field lane", () => {
+    const scenario = evaluateScenario({
+      id: "open-box-k-negative-web",
+      impactFieldContext: {
+        fieldKDb: -3,
+        receivingRoomVolumeM3: 50
+      },
+      name: "open box k negative web",
+      rows: [
+        { floorRole: "ceiling_board", id: "a", materialId: "gypsum_board", thicknessMm: "13" },
+        { floorRole: "ceiling_board", id: "b", materialId: "gypsum_board", thicknessMm: "13" },
+        { floorRole: "ceiling_fill", id: "c", materialId: "rockwool", thicknessMm: "100" },
+        { floorRole: "ceiling_cavity", id: "d", materialId: "resilient_stud_ceiling", thicknessMm: "25" },
+        { floorRole: "floor_covering", id: "e", materialId: "laminate_flooring", thicknessMm: "8" },
+        { floorRole: "resilient_layer", id: "f", materialId: "eps_underlay", thicknessMm: "3" },
+        { floorRole: "upper_fill", id: "g", materialId: "generic_fill", thicknessMm: "50" },
+        { floorRole: "floating_screed", id: "h", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: "60" },
+        { floorRole: "base_structure", id: "i", materialId: "open_box_timber_slab", thicknessMm: "370" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: ["Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]
+    });
+
+    expect(scenario.result).not.toBeNull();
+    expect(scenario.result?.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_field_volume_normalization");
+    expect(scenario.result?.impact?.fieldEstimateProfile).toBe("explicit_field_lprimenw_from_lnw_plus_k");
+    expect(scenario.result?.impact?.LnW).toBe(39);
+    expect(scenario.result?.impact?.LPrimeNW).toBe(36);
+    expect(scenario.result?.impact?.LPrimeNTw).toBe(34);
+    expect(scenario.result?.impact?.LPrimeNT50).toBe(39);
+  });
+
+  it("keeps direct-path-only continuation stable when the direct offset is zero", () => {
+    const scenario = evaluateScenario({
+      id: "open-box-direct-zero-web",
+      impactFieldContext: {
+        directPathOffsetDb: 0,
+        receivingRoomVolumeM3: 50
+      },
+      name: "open box direct zero web",
+      rows: [
+        { floorRole: "ceiling_board", id: "a", materialId: "gypsum_board", thicknessMm: "13" },
+        { floorRole: "ceiling_board", id: "b", materialId: "gypsum_board", thicknessMm: "13" },
+        { floorRole: "ceiling_fill", id: "c", materialId: "rockwool", thicknessMm: "100" },
+        { floorRole: "ceiling_cavity", id: "d", materialId: "resilient_stud_ceiling", thicknessMm: "25" },
+        { floorRole: "floor_covering", id: "e", materialId: "laminate_flooring", thicknessMm: "8" },
+        { floorRole: "resilient_layer", id: "f", materialId: "eps_underlay", thicknessMm: "3" },
+        { floorRole: "upper_fill", id: "g", materialId: "generic_fill", thicknessMm: "50" },
+        { floorRole: "floating_screed", id: "h", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: "60" },
+        { floorRole: "base_structure", id: "i", materialId: "open_box_timber_slab", thicknessMm: "370" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: ["Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]
+    });
+
+    expect(scenario.result).not.toBeNull();
+    expect(scenario.result?.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_direct_flanking_energy_sum");
+    expect(scenario.result?.impact?.fieldEstimateProfile).toBe("direct_flanking_energy_sum");
+    expect(scenario.result?.impact?.LPrimeNW).toBe(39);
+    expect(scenario.result?.impact?.LPrimeNTw).toBe(37);
+    expect(scenario.result?.impact?.LPrimeNT50).toBe(42);
+    expect(scenario.result?.impactSupport?.formulaNotes.some((note) => /Current direct-path offset is 0 dB/i.test(note))).toBe(true);
+  });
+
+  it("lets a negative direct-path offset reduce the carried direct-path-only field metrics without changing the lane", () => {
+    const scenario = evaluateScenario({
+      id: "open-box-direct-negative-web",
+      impactFieldContext: {
+        directPathOffsetDb: -2,
+        receivingRoomVolumeM3: 50
+      },
+      name: "open box direct negative web",
+      rows: [
+        { floorRole: "ceiling_board", id: "a", materialId: "gypsum_board", thicknessMm: "13" },
+        { floorRole: "ceiling_board", id: "b", materialId: "gypsum_board", thicknessMm: "13" },
+        { floorRole: "ceiling_fill", id: "c", materialId: "rockwool", thicknessMm: "100" },
+        { floorRole: "ceiling_cavity", id: "d", materialId: "resilient_stud_ceiling", thicknessMm: "25" },
+        { floorRole: "floor_covering", id: "e", materialId: "laminate_flooring", thicknessMm: "8" },
+        { floorRole: "resilient_layer", id: "f", materialId: "eps_underlay", thicknessMm: "3" },
+        { floorRole: "upper_fill", id: "g", materialId: "generic_fill", thicknessMm: "50" },
+        { floorRole: "floating_screed", id: "h", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: "60" },
+        { floorRole: "base_structure", id: "i", materialId: "open_box_timber_slab", thicknessMm: "370" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: ["Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]
+    });
+
+    expect(scenario.result).not.toBeNull();
+    expect(scenario.result?.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_direct_flanking_energy_sum");
+    expect(scenario.result?.impact?.fieldEstimateProfile).toBe("direct_flanking_energy_sum");
+    expect(scenario.result?.impact?.LPrimeNW).toBe(37);
+    expect(scenario.result?.impact?.LPrimeNTw).toBe(35);
+    expect(scenario.result?.impact?.LPrimeNT50).toBe(40);
+    expect(scenario.result?.impactSupport?.formulaNotes.some((note) => /Current direct-path offset is -2 dB/i.test(note))).toBe(true);
+  });
+
+  it("applies explicit ΔLd before field-side K correction and standardization on the web scenario route", () => {
+    const scenario = evaluateScenario({
+      id: "open-box-lowered-web",
+      impactFieldContext: {
+        fieldKDb: 2,
+        lowerTreatmentReductionDb: 6,
+        receivingRoomVolumeM3: 50
+      },
+      name: "open box lowered web",
+      rows: [
+        { floorRole: "ceiling_board", id: "a", materialId: "gypsum_board", thicknessMm: "13" },
+        { floorRole: "ceiling_board", id: "b", materialId: "gypsum_board", thicknessMm: "13" },
+        { floorRole: "ceiling_fill", id: "c", materialId: "rockwool", thicknessMm: "100" },
+        { floorRole: "ceiling_cavity", id: "d", materialId: "resilient_stud_ceiling", thicknessMm: "25" },
+        { floorRole: "floor_covering", id: "e", materialId: "laminate_flooring", thicknessMm: "8" },
+        { floorRole: "resilient_layer", id: "f", materialId: "eps_underlay", thicknessMm: "3" },
+        { floorRole: "upper_fill", id: "g", materialId: "generic_fill", thicknessMm: "50" },
+        { floorRole: "floating_screed", id: "h", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: "60" },
+        { floorRole: "base_structure", id: "i", materialId: "open_box_timber_slab", thicknessMm: "370" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: ["L'n,w", "L'nT,w"]
+    });
+
+    expect(scenario.result).not.toBeNull();
+    expect(scenario.result?.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_field_volume_normalization");
+    expect(scenario.result?.impact?.fieldEstimateProfile).toBe("explicit_field_lprimenw_from_lnw_plus_k");
+    expect(scenario.result?.impact?.fieldEstimateLowerTreatmentReductionDb).toBe(6);
+    expect(scenario.result?.impact?.LPrimeNW).toBe(35);
+    expect(scenario.result?.impact?.LPrimeNTw).toBe(33);
   });
 });

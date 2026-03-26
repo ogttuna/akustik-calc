@@ -2,7 +2,6 @@
 
 import type {
   AirborneContext,
-  AirborneContextMode,
   ImpactFieldContext,
   RequestedOutputId
 } from "@dynecho/shared";
@@ -27,7 +26,7 @@ import { deriveGuidedRouteSignals } from "./guided-route-signals";
 import { getGuidedValidationSummary } from "./guided-validation-summary";
 import { isImpactOnlyLowConfidenceFloorLane } from "./impact-only-low-confidence-floor-lane";
 import { getGuidedNumericSanityWarning, GUIDED_INPUT_SANITY_BANDS } from "./input-sanity";
-import { getPresetById, type PresetId, type StudyMode } from "./preset-definitions";
+import { getPresetById, type PresetId } from "./preset-definitions";
 import { evaluateScenario } from "./scenario-analysis";
 import { buildSimpleWorkbenchEvidencePacket } from "./simple-workbench-evidence";
 import { buildSimpleWorkbenchMethodDossier } from "./simple-workbench-method-dossier";
@@ -122,6 +121,8 @@ export function SimpleWorkbenchShell() {
   const rows = useWorkbenchStore((state) => state.rows);
   const studyContext = useWorkbenchStore((state) => state.studyContext);
   const studyMode = useWorkbenchStore((state) => state.studyMode);
+  const targetLnwDb = useWorkbenchStore((state) => state.targetLnwDb);
+  const targetRwDb = useWorkbenchStore((state) => state.targetRwDb);
   const calculatorId = useWorkbenchStore((state) => state.calculatorId);
   const requestedOutputs = useWorkbenchStore((state) => state.requestedOutputs);
   const airborneContextMode = useWorkbenchStore((state) => state.airborneContextMode);
@@ -411,6 +412,7 @@ export function SimpleWorkbenchShell() {
   const methodAssumptionItems = proposalBrief.assumptionItems;
   const activeReviewPanelId = `guided-review-panel-${activeReviewTab}`;
   const exportReady = proposalLayers.length > 0 && proposalMetrics.length > 0;
+  const responseCurveFigures = buildWorkbenchResponseCurveFigures(result);
 
   // ── Callbacks ────────────────────────────────────────────────────────────
   const openWorkspacePanel = (panelId: WorkspacePanelId) => {
@@ -483,7 +485,7 @@ export function SimpleWorkbenchShell() {
         proposalSubject: proposalSubject.trim() || `${projectName.trim() || "Untitled project"} ${getStudyModeLabel(studyMode).toLowerCase()} acoustic proposal`,
         proposalValidityNote: proposalValidityNote.trim() || DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_VALIDITY_NOTE,
         recommendationItems: proposalBrief.recommendationItems, reportProfile,
-        reportProfileLabel: REPORT_PROFILE_LABELS[reportProfile], responseCurves: buildWorkbenchResponseCurveFigures(result),
+        reportProfileLabel: REPORT_PROFILE_LABELS[reportProfile], responseCurves: responseCurveFigures,
         studyModeLabel: getStudyModeLabel(studyMode), studyContextLabel: STUDY_CONTEXT_LABELS[studyContext],
         validationDetail: validationSummary.detail, validationLabel: validationSummary.value, warnings: scenario.warnings
       };
@@ -662,11 +664,14 @@ export function SimpleWorkbenchShell() {
           primaryReadyCard={primaryReadyCard}
           readyCardCount={readyCards.length}
           result={result}
+          responseCurves={responseCurveFigures}
           routeCoverageLabel={routeCoverageLabel}
           rows={rows}
           secondaryReadyCards={secondaryReadyCards}
           solverLayerCount={solverLayerCount}
           studyMode={studyMode}
+          targetLnwDb={targetLnwDb}
+          targetRwDb={targetRwDb}
           totalOutputCount={automaticOutputs.length}
           unsupportedCards={unsupportedCards}
           validationSummary={validationSummary}

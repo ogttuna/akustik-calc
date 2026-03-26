@@ -37,7 +37,7 @@ export function HomeHero() {
           </div>
           <div className="flex flex-wrap gap-3">
             <Link
-              className="focus-ring touch-target inline-flex items-center gap-2 rounded-full bg-[color:var(--ink)] px-5 py-3 text-sm font-semibold text-[color:var(--paper)] transition hover:translate-y-[-1px]"
+              className="focus-ring ink-button-solid touch-target inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition hover:translate-y-[-1px]"
               href="/workbench"
             >
               Open workbench
