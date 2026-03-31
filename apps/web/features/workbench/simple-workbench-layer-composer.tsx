@@ -234,7 +234,9 @@ export function NewLayerComposer(props: {
   onDynamicStiffnessChange: (dynamicStiffnessMNm3: string) => void;
   onFloorRoleChange: (floorRole?: FloorRole) => void;
   onMaterialChange: (materialId: string) => void;
+  onReplaceBase?: () => void;
   onThicknessChange: (thicknessMm: string) => void;
+  replaceBaseAvailable?: boolean;
   studyMode: StudyMode;
 }) {
   const {
@@ -246,7 +248,9 @@ export function NewLayerComposer(props: {
     onDynamicStiffnessChange,
     onFloorRoleChange,
     onMaterialChange,
+    onReplaceBase,
     onThicknessChange,
+    replaceBaseAvailable = false,
     studyMode
   } = props;
   const materials = uniqueMaterialsById(materialGroups.flatMap((group) => group.materials));
@@ -289,18 +293,32 @@ export function NewLayerComposer(props: {
         <div>
           <div className="text-[0.84rem] font-semibold text-[color:var(--ink)]">Add the next layer here</div>
           <p className="mt-1 text-[0.76rem] leading-5 text-[color:var(--ink-soft)]">
-            Pick the material and thickness, then append it to the stack.
+            {replaceBaseAvailable && draft.floorRole === "base_structure"
+              ? "Pick the material and thickness, then append it or replace the current base row cleanly."
+              : "Pick the material and thickness, then append it to the stack."}
           </p>
         </div>
-        <button
-          className="focus-ring inline-flex items-center justify-center gap-2 rounded bg-[color:var(--accent)] px-4 py-2 text-sm font-semibold text-[color:var(--paper)] disabled:cursor-not-allowed disabled:opacity-45"
-          disabled={!canAdd}
-          onClick={onAdd}
-          type="button"
-        >
-          <Plus className="h-4 w-4" />
-          Add layer
-        </button>
+        <div className="flex flex-wrap items-center justify-end gap-2">
+          {replaceBaseAvailable && onReplaceBase ? (
+            <button
+              className="focus-ring inline-flex items-center justify-center rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] disabled:cursor-not-allowed disabled:opacity-45"
+              disabled={!canAdd}
+              onClick={onReplaceBase}
+              type="button"
+            >
+              Replace base
+            </button>
+          ) : null}
+          <button
+            className="focus-ring inline-flex items-center justify-center gap-2 rounded bg-[color:var(--accent)] px-4 py-2 text-sm font-semibold text-[color:var(--paper)] disabled:cursor-not-allowed disabled:opacity-45"
+            disabled={!canAdd}
+            onClick={onAdd}
+            type="button"
+          >
+            <Plus className="h-4 w-4" />
+            Add layer
+          </button>
+        </div>
       </div>
 
       <div className={`mt-3 grid min-w-0 gap-3 ${studyMode === "floor" ? "md:grid-cols-2" : "md:grid-cols-3"}`}>

@@ -749,7 +749,11 @@ describe("scenario analysis", () => {
     expect(catalogScenario.result).not.toBeNull();
     expect(lighterScenario.result).not.toBeNull();
     expect(catalogScenario.result?.impact?.basis).toBe("predictor_heavy_floating_floor_iso12354_annexc_estimate");
-    expect(lighterScenario.result?.impact?.basis).toBe("predictor_heavy_floating_floor_iso12354_annexc_estimate");
+    expect(lighterScenario.result?.impact?.basis).toBe("predictor_floor_system_family_general_estimate");
+    expect(lighterScenario.result?.impact?.estimateCandidateIds).toEqual([
+      "tuas_h2_concrete160_measured_2026",
+      "euracoustics_f0_bare_concrete_lab_2026"
+    ]);
     expect(lighterScenario.result?.impact?.LnW ?? -Infinity).toBeGreaterThan(catalogScenario.result?.impact?.LnW ?? Infinity);
     expect(lighterScenario.result?.floorSystemRatings?.Rw ?? Infinity).toBeLessThan(catalogScenario.result?.floorSystemRatings?.Rw ?? -Infinity);
   });
@@ -1052,6 +1056,28 @@ describe("scenario analysis", () => {
     expect(scenario.result?.floorSystemRatings?.Rw).toBe(58);
     expect(scenario.result?.supportedTargetOutputs).toEqual(["Rw", "Ln,w"]);
     expect(scenario.warnings).toContain("Screening estimate only. This result is coming from the local calibrated seed lane.");
+  });
+
+  it("fails closed in floor scenarios when a non-structural helper is tagged as base_structure", () => {
+    const scenario = evaluateScenario({
+      id: "invalid-floor-base-structure-helper",
+      name: "invalid floor base structure helper",
+      rows: [
+        { floorRole: "floor_covering", id: "a", materialId: "ceramic_tile", thicknessMm: "8" },
+        { floorRole: "floating_screed", id: "b", materialId: "screed", thicknessMm: "50" },
+        { floorRole: "resilient_layer", id: "c", materialId: "generic_resilient_underlay", thicknessMm: "8" },
+        { floorRole: "base_structure", id: "d", materialId: "gypsum_board", thicknessMm: "100" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+
+    expect(scenario.result).not.toBeNull();
+    expect(scenario.result?.impact).toBeNull();
+    expect(scenario.result?.floorSystemEstimate).toBeNull();
+    expect(scenario.result?.supportedImpactOutputs).toEqual([]);
+    expect(scenario.result?.unsupportedImpactOutputs).toContain("Ln,w");
   });
 
   it("keeps a custom air-gap helper on the conservative cavity-screening lane instead of inventing lower-treatment credit", () => {

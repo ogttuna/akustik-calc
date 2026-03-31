@@ -241,7 +241,7 @@ export function LayerEditor({
                   </button>
                   <button
                     aria-label={`Remove ${materialName} layer`}
-                    className="focus-ring touch-target rounded-full px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] underline decoration-black/15 underline-offset-4"
+                    className="focus-ring touch-target underline-muted rounded-full px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] underline underline-offset-4"
                     onClick={() => onRemoveRow(row.id)}
                     type="button"
                   >
@@ -323,7 +323,7 @@ export function LayerEditor({
                     guide={{
                       currentUse: row.floorRole
                         ? "This role is active in exact floor-family matching, official product rows, and scoped impact logic."
-                        : "No floor role is assigned yet. Screening can still run, but exact family and product lanes may stay inactive.",
+                        : "No floor role is assigned yet. This row still stays in the visible stack, so remove it for a true replacement. Screening can still run, but exact family and product lanes may stay inactive.",
                       kind: row.floorRole ? "active" : "conditional",
                       meaning: "Floor role tells the impact engine whether a layer acts as structure, resilient layer, screed, fill, covering, or ceiling."
                     }}
