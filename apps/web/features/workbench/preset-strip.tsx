@@ -21,7 +21,7 @@ export function PresetStrip({ activePresetId, onPreset, onReset }: PresetStripPr
           </p>
         </div>
         <button
-          className="focus-ring touch-target shrink-0 rounded-full px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] underline decoration-black/15 underline-offset-4"
+          className="focus-ring touch-target underline-muted shrink-0 rounded-full px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] underline underline-offset-4"
           onClick={onReset}
           type="button"
         >

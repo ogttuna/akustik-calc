@@ -19,17 +19,17 @@ export function HomeHero() {
             description="The product layer is being rebuilt around strong boundaries: portable calculations, typed catalogs, and a workbench UI designed for decision-making instead of DOM sprawl."
           />
           <div className="grid gap-4 text-sm leading-7 text-[color:var(--ink-soft)] md:grid-cols-3">
-            <div className="section-rule rounded-[1.4rem] border hairline bg-black/[0.025] px-4 py-4">
+            <div className="section-rule surface-subtle rounded-[1.4rem] border hairline px-4 py-4">
               <div className="eyebrow">01</div>
               <div className="mt-4 font-medium text-[color:var(--ink)]">Portable engine first</div>
               <p className="mt-2">No React, no DOM, no persistence concerns inside the calculation boundary.</p>
             </div>
-            <div className="section-rule rounded-[1.4rem] border hairline bg-black/[0.025] px-4 py-4">
+            <div className="section-rule surface-subtle rounded-[1.4rem] border hairline px-4 py-4">
               <div className="eyebrow">02</div>
               <div className="mt-4 font-medium text-[color:var(--ink)]">Useful workbench second</div>
               <p className="mt-2">The UI is being organized around compose, inspect, and trust, not around whatever the legacy controller happened to expose.</p>
             </div>
-            <div className="section-rule rounded-[1.4rem] border hairline bg-black/[0.025] px-4 py-4">
+            <div className="section-rule surface-subtle rounded-[1.4rem] border hairline px-4 py-4">
               <div className="eyebrow">03</div>
               <div className="mt-4 font-medium text-[color:var(--ink)]">Upstream discipline always</div>
               <p className="mt-2">`Acoustic2` stays read-only while Ln,w work continues there. This repo ports intentionally.</p>
@@ -44,7 +44,7 @@ export function HomeHero() {
               <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
-              className="focus-ring touch-target inline-flex items-center rounded-full border hairline px-5 py-3 text-sm font-semibold text-[color:var(--ink)] transition hover:bg-black/[0.035]"
+              className="focus-ring surface-subtle-hover touch-target inline-flex items-center rounded-full border hairline px-5 py-3 text-sm font-semibold text-[color:var(--ink)] transition"
               href="/#phase-plan"
             >
               View rollout
@@ -80,7 +80,7 @@ export function HomeHero() {
               There is already a live workbench route, responsive layout behavior, and Docker-backed deployment flow.
             </p>
           </div>
-          <div className="pointer-card rounded-[1.5rem] border hairline bg-black/[0.025] px-4 py-4">
+          <div className="pointer-card surface-subtle rounded-[1.5rem] border hairline px-4 py-4">
             <div className="flex items-center gap-3">
               <ShieldCheck className="h-5 w-5 text-[color:var(--success-ink)]" />
               <div className="text-sm font-semibold text-[color:var(--ink)]">Source discipline is visible</div>

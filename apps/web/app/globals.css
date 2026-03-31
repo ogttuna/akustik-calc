@@ -15,6 +15,8 @@
   --accent: oklch(0.52 0.16 250);
   --accent-soft: color-mix(in oklch, var(--accent) 14%, var(--paper));
   --accent-ink: oklch(0.30 0.12 250);
+  --teal: oklch(0.62 0.08 195);
+  --teal-soft: color-mix(in oklch, var(--teal) 16%, var(--paper));
   --warning: oklch(0.72 0.16 70);
   --warning-soft: color-mix(in oklch, var(--warning) 14%, var(--paper));
   --warning-ink: oklch(0.36 0.12 70);
@@ -39,6 +41,8 @@
   --accent: oklch(0.62 0.16 250);
   --accent-soft: color-mix(in oklch, var(--accent) 16%, var(--paper));
   --accent-ink: oklch(0.76 0.12 250);
+  --teal: oklch(0.72 0.08 195);
+  --teal-soft: color-mix(in oklch, var(--teal) 18%, var(--paper));
   --warning: oklch(0.76 0.16 70);
   --warning-soft: color-mix(in oklch, var(--warning) 16%, var(--paper));
   --warning-ink: oklch(0.82 0.10 70);
@@ -78,7 +82,6 @@ input,
 select,
 textarea {
   font: inherit;
-  color: inherit;
 }
 
 select,
@@ -153,6 +156,7 @@ button {
 
 .touch-target {
   min-height: 44px;
+  min-width: 44px;
 }
 
 .ink-button-solid {
@@ -162,6 +166,22 @@ button {
 
 .ink-button-solid svg {
   color: inherit;
+}
+
+.surface-subtle {
+  background: color-mix(in oklch, var(--ink) 3%, var(--paper));
+}
+
+.surface-subtle-hover {
+  transition: background-color 150ms ease;
+}
+
+.surface-subtle-hover:hover {
+  background: color-mix(in oklch, var(--ink) 4%, var(--paper));
+}
+
+.underline-muted {
+  text-decoration-color: color-mix(in oklch, var(--line-strong) 36%, transparent);
 }
 
 .stage-enter {
@@ -505,6 +525,7 @@ button {
 @media (pointer: coarse) {
   .touch-target {
     min-height: 48px;
+    min-width: 48px;
   }
 }
 

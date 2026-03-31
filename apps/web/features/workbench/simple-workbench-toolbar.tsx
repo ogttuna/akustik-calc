@@ -57,7 +57,7 @@ export function SimpleWorkbenchToolbar({
         <div className="flex flex-wrap items-center gap-2">
           <select
             aria-label="Study type"
-            className="focus-ring h-8 min-w-0 rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-2 text-[0.8rem] text-[color:var(--ink)]"
+            className="focus-ring touch-target h-8 min-w-0 rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-2 text-[0.8rem] text-[color:var(--ink)]"
             onChange={(event) => onStudyModeChange(event.target.value as StudyMode)}
             value={studyMode}
           >
@@ -67,7 +67,7 @@ export function SimpleWorkbenchToolbar({
 
           <select
             aria-label="Project context"
-            className="focus-ring h-8 min-w-0 rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-2 text-[0.8rem] text-[color:var(--ink)]"
+            className="focus-ring touch-target h-8 min-w-0 rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-2 text-[0.8rem] text-[color:var(--ink)]"
             onChange={(event) => onContextModeChange(event.target.value as AirborneContextMode)}
             value={airborneContextMode}
           >
@@ -80,7 +80,7 @@ export function SimpleWorkbenchToolbar({
 
           <select
             aria-label="Example stack"
-            className="focus-ring h-8 min-w-0 rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-2 text-[0.8rem] text-[color:var(--ink)]"
+            className="focus-ring touch-target h-8 min-w-0 rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-2 text-[0.8rem] text-[color:var(--ink)]"
             onChange={(event) => onPresetChange(event.target.value as PresetId)}
             value={selectedPresetId}
           >
@@ -94,7 +94,7 @@ export function SimpleWorkbenchToolbar({
 
         <div className="flex items-center gap-2">
           <button
-            className="focus-ring inline-flex h-8 items-center gap-1.5 rounded border border-[color:var(--accent)] bg-[color:var(--accent-soft)] px-2.5 text-[0.8rem] font-semibold text-[color:var(--accent-ink)] hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50"
+            className="focus-ring touch-target inline-flex h-8 items-center gap-1.5 rounded border border-[color:var(--accent)] bg-[color:var(--accent-soft)] px-2.5 text-[0.8rem] font-semibold text-[color:var(--accent-ink)] hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50"
             disabled={!exportReady || isExportingPdf}
             onClick={onExportBrandedPdf}
             type="button"
@@ -103,7 +103,7 @@ export function SimpleWorkbenchToolbar({
             {isExportingPdf ? "Exporting..." : "PDF"}
           </button>
           <button
-            className="focus-ring inline-flex h-8 items-center gap-1.5 rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-2.5 text-[0.8rem] font-medium text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"
+            className="focus-ring touch-target inline-flex h-8 items-center gap-1.5 rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-2.5 text-[0.8rem] font-medium text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"
             disabled={!exportReady || isExportingPdf}
             onClick={onExportSimplePdf}
             type="button"
@@ -112,7 +112,7 @@ export function SimpleWorkbenchToolbar({
           </button>
 
           <button
-            className="focus-ring inline-flex h-8 items-center gap-1.5 rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-2.5 text-[0.8rem] font-medium text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
+            className="focus-ring touch-target inline-flex h-8 items-center gap-1.5 rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-2.5 text-[0.8rem] font-medium text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
             onClick={onReset}
             type="button"
           >
@@ -121,7 +121,7 @@ export function SimpleWorkbenchToolbar({
           </button>
 
           <Link
-            className="focus-ring inline-flex h-8 items-center gap-1.5 rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-2.5 text-[0.8rem] font-medium text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
+            className="focus-ring touch-target inline-flex h-8 items-center gap-1.5 rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-2.5 text-[0.8rem] font-medium text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
             href="/workbench?view=advanced"
           >
             Advanced
@@ -130,7 +130,7 @@ export function SimpleWorkbenchToolbar({
 
           <button
             aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-            className="focus-ring inline-flex h-8 w-8 items-center justify-center rounded border border-[color:var(--line)] bg-[color:var(--paper)] text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
+            className="focus-ring touch-target inline-flex h-8 w-8 items-center justify-center rounded border border-[color:var(--line)] bg-[color:var(--paper)] text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
             onClick={onToggleTheme}
             type="button"
           >

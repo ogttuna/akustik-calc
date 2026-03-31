@@ -39,7 +39,7 @@ export function HomeStack() {
             className="pointer-card grid gap-4 rounded-[1.35rem] border hairline px-4 py-4 sm:grid-cols-[auto_0.7fr_1fr]"
             key={label}
           >
-            <div className="flex h-11 w-11 items-center justify-center rounded-full border hairline bg-black/[0.035]">
+            <div className="surface-subtle flex h-11 w-11 items-center justify-center rounded-full border hairline">
               <Icon className="h-5 w-5 text-[color:var(--ink)]" />
             </div>
             <div className="text-[0.75rem] font-semibold uppercase tracking-[0.2em] text-[color:var(--ink-faint)]">

@@ -32,7 +32,7 @@ export function HomePhases() {
       />
       <div className="mt-8 grid gap-3 md:grid-cols-2 xl:grid-cols-5">
         {PHASES.map((phase) => (
-          <div className="pointer-card rounded-[1.45rem] border hairline bg-black/[0.025] p-4 text-sm leading-7" key={phase.title}>
+          <div className="pointer-card surface-subtle rounded-[1.45rem] border hairline p-4 text-sm leading-7" key={phase.title}>
             <div className="eyebrow">{phase.title}</div>
             <p className="mt-4 text-[color:var(--ink-soft)]">{phase.body}</p>
           </div>
@@ -41,4 +41,3 @@ export function HomePhases() {
     </SurfacePanel>
   );
 }
-

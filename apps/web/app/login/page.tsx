@@ -43,7 +43,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
         <LoginForm authConfigured={authState.configured} configurationMessage={null} nextPath={nextPath} />
 
         <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-[color:var(--ink-soft)]">
-          <Link className="focus-ring rounded-full px-3 py-2 font-semibold hover:bg-black/[0.04]" href="/">
+          <Link className="focus-ring surface-subtle-hover rounded-full px-3 py-2 font-semibold" href="/">
             Back to overview
           </Link>
           <div className="text-right">

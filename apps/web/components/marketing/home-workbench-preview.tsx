@@ -47,7 +47,7 @@ export function HomeWorkbenchPreview() {
                 The assembly stack is treated as the primary object, not a side effect of unrelated form sections.
               </p>
             </div>
-            <div className="rounded-[1.45rem] border hairline bg-black/[0.025] p-4">
+            <div className="surface-subtle rounded-[1.45rem] border hairline p-4">
               <div className="flex items-center gap-3">
                 <Waypoints className="h-5 w-5 text-[color:var(--accent-ink)]" />
                 <div className="font-semibold text-[color:var(--ink)]">Migration-aware output</div>

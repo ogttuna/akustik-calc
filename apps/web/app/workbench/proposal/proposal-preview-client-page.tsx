@@ -234,14 +234,14 @@ export function ProposalPreviewClientPage() {
           </div>
           <div className="flex flex-wrap gap-2">
             <Link
-              className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+              className="focus-ring surface-subtle-hover inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)]"
               href="/workbench"
             >
               <ArrowLeft className="h-4 w-4" />
               Back to workbench
             </Link>
             <button
-              className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+              className="focus-ring surface-subtle-hover inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)]"
               onClick={() => void handleCopySummary()}
               type="button"
             >
@@ -249,7 +249,7 @@ export function ProposalPreviewClientPage() {
               Copy summary
             </button>
             <button
-              className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03]"
+              className="focus-ring surface-subtle-hover inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)]"
               onClick={handleReload}
               type="button"
             >
@@ -257,7 +257,7 @@ export function ProposalPreviewClientPage() {
               Reload snapshot
             </button>
             <button
-              className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03] disabled:cursor-not-allowed disabled:opacity-50"
+              className="focus-ring surface-subtle-hover inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] disabled:cursor-not-allowed disabled:opacity-50"
               disabled={!proposalDocument || isDownloadingPdf}
               onClick={() => void handleDownloadPdf()}
               type="button"
@@ -266,7 +266,7 @@ export function ProposalPreviewClientPage() {
               {isDownloadingPdf ? "Generating PDF..." : "Download branded PDF"}
             </button>
             <button
-              className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-black/[0.03] disabled:cursor-not-allowed disabled:opacity-50"
+              className="focus-ring surface-subtle-hover inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] disabled:cursor-not-allowed disabled:opacity-50"
               disabled={!proposalDocument || isDownloadingPdf}
               onClick={() => void handleDownloadPdf("simple")}
               type="button"
