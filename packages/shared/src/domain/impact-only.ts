@@ -59,19 +59,31 @@ const ImpactOnlyCalculationBaseSchema: z.ZodObject<typeof ImpactOnlyCalculationS
 
 const ImpactOnlyCalculationSchemaInternal: z.ZodEffects<typeof ImpactOnlyCalculationBaseSchema> = ImpactOnlyCalculationBaseSchema
   .superRefine((value, ctx) => {
-    if (
-      !value.impact &&
-      !value.lowerBoundImpact &&
-      !value.floorSystemMatch &&
-      !value.boundFloorSystemMatch &&
-      !value.floorSystemEstimate &&
-      !value.boundFloorSystemEstimate &&
-      !value.impactCatalogMatch
-    ) {
+    const hasResolvedImpactLane = Boolean(
+      value.impact ||
+      value.lowerBoundImpact ||
+      value.floorSystemMatch ||
+      value.boundFloorSystemMatch ||
+      value.floorSystemEstimate ||
+      value.boundFloorSystemEstimate ||
+      value.impactCatalogMatch
+    );
+
+    if (!hasResolvedImpactLane && value.supportedImpactOutputs.length > 0) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "Impact-only calculation requires an exact, predicted, bound, or catalog-backed impact lane."
+        message: "Impact-only calculation cannot advertise supported impact outputs without a resolved impact lane."
       });
+      return;
+    }
+
+    if (
+      !hasResolvedImpactLane &&
+      !value.floorCarrier &&
+      !value.floorSystemRatings &&
+      !value.impactSupport
+    ) {
+      return;
     }
   });
 

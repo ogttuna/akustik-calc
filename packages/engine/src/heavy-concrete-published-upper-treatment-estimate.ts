@@ -1,5 +1,6 @@
 import type { ExactFloorSystem, FloorSystemEstimateResult, ImpactPredictorInput } from "@dynecho/shared";
 
+import { isPredictorHeavyConcreteCarrierEligible } from "./heavy-concrete-carrier-eligibility";
 import { getImpactConfidenceForBasis } from "./impact-confidence";
 import { buildUniformImpactMetricBasis } from "./impact-metric-basis";
 import { clamp, ksRound1, round1 } from "./math";
@@ -52,6 +53,10 @@ export function deriveHeavyConcretePublishedUpperTreatmentEstimate(
   }
 
   if (input.lowerTreatment?.type || input.impactSystemType !== "heavy_floating_floor") {
+    return null;
+  }
+
+  if (!isPredictorHeavyConcreteCarrierEligible(input.baseSlab)) {
     return null;
   }
 

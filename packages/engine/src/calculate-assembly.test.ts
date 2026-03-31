@@ -5664,6 +5664,51 @@ describe("calculateAssembly", () => {
     expect(result.floorSystemEstimate?.impact.estimateCandidateIds).toEqual(["regupol_curve8_concrete_tile_lab_2026"]);
   });
 
+  it("keeps lightweight-concrete floating floors off the heavy-concrete-specific impact lanes", () => {
+    const result = calculateAssembly(
+      [
+        { materialId: "ceramic_tile", thicknessMm: 8, floorRole: "floor_covering" },
+        { materialId: "screed", thicknessMm: 50, floorRole: "floating_screed" },
+        { materialId: "generic_resilient_underlay", thicknessMm: 8, floorRole: "resilient_layer" },
+        { materialId: "lightweight_concrete", thicknessMm: 150, floorRole: "base_structure" }
+      ],
+      {
+        targetOutputs: ["Rw", "Ln,w", "DeltaLw"]
+      }
+    );
+
+    expect(result.impact?.basis).toBe("predictor_floor_system_family_general_estimate");
+    expect(result.impact?.LnW).toBe(69.4);
+    expect(result.floorSystemRatings?.Rw).toBe(53);
+    expect(result.floorSystemEstimate?.kind).toBe("family_general");
+    expect(result.floorSystemEstimate?.impact.estimateCandidateIds).toEqual([
+      "tuas_h2_concrete160_measured_2026",
+      "euracoustics_f0_bare_concrete_lab_2026"
+    ]);
+  });
+
+  it("fails closed on the assembly route when base_structure is assigned to a non-structural floor helper", () => {
+    const gypsumBaseResult = calculateAssembly(
+      [{ materialId: "gypsum_board", thicknessMm: 100, floorRole: "base_structure" }],
+      { targetOutputs: ["Rw", "Ln,w"] }
+    );
+
+    expect(gypsumBaseResult.impact).toBeNull();
+    expect(gypsumBaseResult.floorSystemEstimate).toBeNull();
+    expect(gypsumBaseResult.supportedImpactOutputs).toEqual([]);
+    expect(gypsumBaseResult.unsupportedImpactOutputs).toEqual(["Ln,w"]);
+
+    const airGapBaseResult = calculateAssembly(
+      [{ materialId: "air_gap", thicknessMm: 100, floorRole: "base_structure" }],
+      { targetOutputs: ["Rw", "Ln,w"] }
+    );
+
+    expect(airGapBaseResult.impact).toBeNull();
+    expect(airGapBaseResult.floorSystemEstimate).toBeNull();
+    expect(airGapBaseResult.supportedImpactOutputs).toEqual([]);
+    expect(airGapBaseResult.unsupportedImpactOutputs).toEqual(["Ln,w"]);
+  });
+
   it("can resolve curated floor-system ids from predictor input on the assembly route", () => {
     const result = calculateAssembly(
       [
@@ -6048,5 +6093,17 @@ describe("calculateAssembly", () => {
     expect(result.unsupportedTargetOutputs).toEqual(["DnT,A"]);
     expect(result.warnings.some((warning: string) => /official approximate airborne field companion available/i.test(warning))).toBe(true);
     expect(result.warnings.some((warning: string) => /field conversion is incomplete/i.test(warning))).toBe(true);
+  });
+
+  it("keeps raw AAC base structures off the narrow heavy-concrete impact lane", () => {
+    const result = calculateAssembly(
+      [{ floorRole: "base_structure", materialId: "ytong_aac_d700", thicknessMm: 150 }],
+      { targetOutputs: ["Ln,w", "Rw"] }
+    );
+
+    expect(result.impact).toBeNull();
+    expect(result.floorSystemEstimate).toBeNull();
+    expect(result.supportedTargetOutputs).toEqual(["Rw"]);
+    expect(result.unsupportedTargetOutputs).toEqual(["Ln,w"]);
   });
 });

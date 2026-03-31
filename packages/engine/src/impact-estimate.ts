@@ -1,17 +1,26 @@
 import type { ImpactCalculation, ResolvedLayer } from "@dynecho/shared";
 
+import { isResolvedHeavyConcreteCarrierEligible } from "./heavy-concrete-carrier-eligibility";
 import { getImpactConfidenceForBasis } from "./impact-confidence";
 import { buildUniformImpactMetricBasis } from "./impact-metric-basis";
 import { ksRound1, log10Safe, round1 } from "./math";
 import { inferStructuralSupportTypeFromMaterial } from "./structural-material-classification";
 
 const IMPACT_LOAD_ROLES = new Set(["floating_screed", "upper_fill", "floor_covering"]);
+const MIN_HEAVY_CONCRETE_BASE_SURFACE_MASS_KG_M2 = 120;
 
 function isHeavyConcreteBase(layer: ResolvedLayer): boolean {
   return (
-    inferStructuralSupportTypeFromMaterial(layer.material) === "reinforced_concrete" ||
-    layer.material.tags.includes("heavy-base")
+    (
+      inferStructuralSupportTypeFromMaterial(layer.material) === "reinforced_concrete" ||
+      layer.material.tags.includes("heavy-base")
+    ) &&
+    isResolvedHeavyConcreteCarrierEligible(layer)
   );
+}
+
+function meetsHeavyConcreteBaseSurfaceMassThreshold(surfaceMassKgM2: number): boolean {
+  return surfaceMassKgM2 >= MIN_HEAVY_CONCRETE_BASE_SURFACE_MASS_KG_M2;
 }
 
 function isResilientSeparator(layer: ResolvedLayer): boolean {
@@ -75,6 +84,10 @@ export function estimateImpactFromLayers(layers: readonly ResolvedLayer[]): Impa
   const baseIndex = findBaseIndex(layers);
   const baseLayer = layers[baseIndex];
   if (!baseLayer || !isHeavyConcreteBase(baseLayer)) {
+    return null;
+  }
+  const baseLayerSurfaceMassKgM2 = round1(baseLayer.surfaceMassKgM2);
+  if (!meetsHeavyConcreteBaseSurfaceMassThreshold(baseLayerSurfaceMassKgM2)) {
     return null;
   }
 
@@ -144,7 +157,7 @@ export function estimateImpactFromLayers(layers: readonly ResolvedLayer[]): Impa
     loadLayers.reduce((sum, layer) => sum + (layer.material.category === "finish" ? layer.surfaceMassKgM2 : 0), 0)
   );
   const floatingLoadSurfaceMassKgM2 = round1(floatingScreedSurfaceMassKgM2 + floorCoveringSurfaceMassKgM2);
-  const baseSurfaceMassKgM2 = round1(baseLayer.surfaceMassKgM2);
+  const baseSurfaceMassKgM2 = baseLayerSurfaceMassKgM2;
 
   if (!(floatingLoadSurfaceMassKgM2 > 0) || !(baseSurfaceMassKgM2 > 0)) {
     return null;

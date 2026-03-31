@@ -4,7 +4,8 @@ import { MATERIAL_SOURCE_NOTE } from "@dynecho/catalogs";
 import {
   buildExactImpactImprovementReference,
   deriveHeavyReferenceImpactFromDeltaLw,
-  deriveImpactGuideMetrics
+  deriveImpactGuideMetrics,
+  isMaterialEligibleFloorBaseStructure
 } from "@dynecho/engine";
 import { SurfacePanel } from "@dynecho/ui";
 import dynamic from "next/dynamic";
@@ -56,7 +57,7 @@ import { WorkbenchHeader } from "./workbench-header";
 import { WorkbenchFlowMap } from "./workbench-flow-map";
 import { buildWorkbenchMaterialCatalog } from "./workbench-materials";
 import { WorkbenchRailLayout } from "./workbench-rail-layout";
-import { useWorkbenchStore } from "./workbench-store";
+import { inferFloorRole, useWorkbenchStore } from "./workbench-store";
 
 const LayerMassPanel = dynamic(
   () => import("./layer-mass-panel").then((module) => module.LayerMassPanel),
@@ -202,6 +203,7 @@ export function WorkbenchShell() {
   const appendMaterial = useWorkbenchStore((state) => state.appendMaterial);
   const moveRow = useWorkbenchStore((state) => state.moveRow);
   const removeRow = useWorkbenchStore((state) => state.removeRow);
+  const replaceSingleBaseStructure = useWorkbenchStore((state) => state.replaceSingleBaseStructure);
   const updateDensity = useWorkbenchStore((state) => state.updateDensity);
   const updateFloorRole = useWorkbenchStore((state) => state.updateFloorRole);
   const updateMaterial = useWorkbenchStore((state) => state.updateMaterial);
@@ -233,6 +235,17 @@ export function WorkbenchShell() {
     return Number.isFinite(thickness) && thickness > 0;
   }).length;
   const assignedFloorRoleCount = rows.filter((row) => typeof row.floorRole === "string").length;
+  const explicitBaseStructureCount = rows.filter((row) => row.floorRole === "base_structure").length;
+  const replaceBaseMaterialIds =
+    studyMode === "floor" && explicitBaseStructureCount === 1
+      ? materials
+          .filter(
+            (material) =>
+              inferFloorRole(material.id, studyMode, customMaterials) === "base_structure" &&
+              isMaterialEligibleFloorBaseStructure(material)
+          )
+          .map((material) => material.id)
+      : [];
   const exactImpactImport = parseImpactBandImport({
     labOrField: impactExactLabOrField,
     text: impactExactBandInput
@@ -501,7 +514,7 @@ export function WorkbenchShell() {
       airborneSharedTrack !== "independent"
   );
   const fieldCarryoverActive = Boolean(
-    result?.dynamicImpactTrace?.fieldContinuation !== "none" ||
+    (result?.dynamicImpactTrace && result.dynamicImpactTrace.fieldContinuation !== "none") ||
       impactGuide ||
       flankingPathImport.parsed ||
       impactDirectPathOffsetDb.trim().length > 0 ||
@@ -680,7 +693,12 @@ export function WorkbenchShell() {
           rows={rows}
           studyMode={studyMode}
         />
-        <MaterialLibraryPanel materials={materials} onAppendMaterial={appendMaterial} />
+        <MaterialLibraryPanel
+          materials={materials}
+          onAppendMaterial={appendMaterial}
+          onReplaceBaseStructure={replaceSingleBaseStructure}
+          replaceBaseMaterialIds={replaceBaseMaterialIds}
+        />
       </WorkbenchChapter>
 
       <WorkbenchChapter

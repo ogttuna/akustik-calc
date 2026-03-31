@@ -1,5 +1,5 @@
 import { MATERIAL_CATALOG_SEED, materialCatalogById } from "@dynecho/catalogs";
-import type { MaterialCategory, MaterialDefinition } from "@dynecho/shared";
+import type { FloorRole, MaterialCategory, MaterialDefinition } from "@dynecho/shared";
 
 export const CUSTOM_WORKBENCH_MATERIAL_TAG = "custom-workbench-material";
 
@@ -20,6 +20,41 @@ export type CustomMaterialDraft = {
 };
 
 export type CustomMaterialDraftErrors = Partial<Record<keyof CustomMaterialDraft, string>>;
+
+const BASE_STRUCTURE_DEFAULT_THICKNESS_BANDS: Readonly<Record<string, { max: number; min: number }>> = {
+  clt_panel: { max: 300, min: 100 },
+  composite_steel_deck: { max: 250, min: 120 },
+  concrete: { max: 250, min: 80 },
+  heavy_concrete: { max: 300, min: 100 },
+  hollow_core_plank: { max: 400, min: 120 },
+  lightweight_concrete: { max: 250, min: 80 },
+  lightweight_steel_floor: { max: 350, min: 160 },
+  open_box_timber_slab: { max: 350, min: 120 },
+  open_web_steel_floor: { max: 450, min: 180 },
+  steel_joist_floor: { max: 350, min: 180 },
+  timber_frame_floor: { max: 300, min: 120 },
+  timber_joist_floor: { max: 350, min: 150 }
+};
+
+function formatThicknessValue(value: number): string {
+  return Number.isInteger(value) ? String(value) : value.toFixed(1).replace(/\.0$/u, "");
+}
+
+function parseThicknessValue(value: string): number | null {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+function thicknessValuesMatch(left: string, right: string): boolean {
+  const leftValue = parseThicknessValue(left);
+  const rightValue = parseThicknessValue(right);
+
+  if (leftValue === null || rightValue === null) {
+    return left.trim() === right.trim();
+  }
+
+  return Math.abs(leftValue - rightValue) < 0.05;
+}
 
 function compactNoteLines(...values: Array<string | undefined>): string | undefined {
   const compacted = values
@@ -444,4 +479,59 @@ export function defaultThicknessForMaterial(material: MaterialDefinition): strin
     default:
       return "100";
   }
+}
+
+export function defaultThicknessForMaterialInRole(
+  material: MaterialDefinition,
+  floorRole?: FloorRole
+): string {
+  const baseDefault = defaultThicknessForMaterial(material);
+
+  if (floorRole !== "base_structure") {
+    return baseDefault;
+  }
+
+  const band = BASE_STRUCTURE_DEFAULT_THICKNESS_BANDS[material.id];
+  const parsed = parseThicknessValue(baseDefault);
+
+  if (!band || parsed === null) {
+    return baseDefault;
+  }
+
+  if (parsed < band.min) {
+    return formatThicknessValue(band.min);
+  }
+
+  if (parsed > band.max) {
+    return formatThicknessValue(band.max);
+  }
+
+  return baseDefault;
+}
+
+export function resolveThicknessForMaterialChange(input: {
+  currentThicknessMm: string;
+  nextFloorRole?: FloorRole;
+  nextMaterial: MaterialDefinition;
+  previousDefaultThicknessMm?: string;
+  previousFloorRole?: FloorRole;
+  previousMaterial?: MaterialDefinition | null;
+}): string {
+  const nextDefault = defaultThicknessForMaterialInRole(input.nextMaterial, input.nextFloorRole);
+  const currentThickness = input.currentThicknessMm.trim();
+
+  if (currentThickness.length === 0) {
+    return nextDefault;
+  }
+
+  if (!input.previousMaterial) {
+    return currentThickness;
+  }
+
+  const previousDefault = defaultThicknessForMaterialInRole(input.previousMaterial, input.previousFloorRole);
+  const comparisonDefaults = [input.previousDefaultThicknessMm, previousDefault].filter(
+    (value): value is string => typeof value === "string" && value.trim().length > 0
+  );
+
+  return comparisonDefaults.some((value) => thicknessValuesMatch(currentThickness, value)) ? nextDefault : currentThickness;
 }

@@ -11,6 +11,10 @@ function buildSearchText(material: Pick<MaterialDefinition, "id" | "name" | "tag
     .toLowerCase();
 }
 
+function isAacLikeMaterial(searchText: string): boolean {
+  return /\baac\b|autoclaved[\s_-]*aerated[\s_-]*concrete|aircrete|gazbeton|porenbeton/.test(searchText);
+}
+
 export function inferStructuralSupportTypeFromMaterial(
   material: Pick<MaterialDefinition, "id" | "name" | "tags">
 ): ImpactPredictorInput["structuralSupportType"] | undefined {
@@ -65,6 +69,10 @@ export function inferStructuralSupportTypeFromMaterial(
 
   if (/timber[\s_-]*(frame|joist)|wood[\s_-]*joist|engineered[\s_-]*timber|solid[\s_-]*wood/.test(searchText)) {
     return "timber_joists";
+  }
+
+  if (isAacLikeMaterial(searchText)) {
+    return undefined;
   }
 
   if (/reinforced[\s_-]*concrete|\bheavy[\s_-]*base\b|\bconcrete\b|\brc\b/.test(searchText)) {

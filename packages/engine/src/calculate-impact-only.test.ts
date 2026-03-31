@@ -1,3 +1,4 @@
+import { EXACT_FLOOR_SYSTEMS } from "@dynecho/catalogs";
 import { describe, expect, it } from "vitest";
 
 import { calculateImpactOnly } from "./calculate-impact-only";
@@ -229,6 +230,49 @@ describe("calculateImpactOnly", () => {
     expect(result.impact?.guideEstimateProfile).toBe("tr_simple_method_lnt50_from_lnwci_plus_k_plus_hd");
     expect(result.impact?.guideEstimateHdCorrectionDb).toBe(-2);
     expect(result.impact?.metricBasis?.LPrimeNT50).toBe("estimated_local_guide_tr_simple_method_lnwci_plus_k_plus_hd");
+  });
+
+  it("rejects non-positive receiving-room volume on the impact field context", () => {
+    expect(() =>
+      calculateImpactOnly([{ materialId: "air_gap", thicknessMm: 90 }], {
+        exactImpactSource: EXACT_IMPACT_SOURCE_19,
+        impactFieldContext: {
+          fieldKDb: 2,
+          receivingRoomVolumeM3: 0
+        },
+        targetOutputs: ["L'n,w", "L'nT,w", "L'nT,50"]
+      })
+    ).toThrow(/greater than 0/i);
+  });
+
+  it("keeps exact floor-system field-basis semantics aligned with the available companion ratings", () => {
+    for (const system of EXACT_FLOOR_SYSTEMS) {
+      const result = calculateImpactOnly([], {
+        officialFloorSystemId: system.id,
+        impactFieldContext: {
+          fieldKDb: 2,
+          receivingRoomVolumeM3: 50
+        },
+        targetOutputs: ["Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]
+      });
+
+      const impact = result.impact;
+      expect(impact, system.id).not.toBeNull();
+
+      if (impact?.basis === "mixed_exact_plus_estimated_local_guide") {
+        expect(impact.LnWPlusCI, system.id).toEqual(expect.any(Number));
+        expect(impact.CI50_2500, system.id).toBeUndefined();
+        expect(impact.LPrimeNT50, system.id).toEqual(expect.any(Number));
+        expect(impact.guideEstimateProfile, system.id).toBe("tr_simple_method_lnt50_from_lnwci_plus_k_plus_hd");
+      }
+
+      if (
+        impact?.basis === "mixed_exact_plus_estimated_standardized_field_volume_normalization" &&
+        typeof impact.CI50_2500 !== "number"
+      ) {
+        expect(impact.LPrimeNT50, system.id).toBeUndefined();
+      }
+    }
   });
 
   it("resolves a bound-only curated floor-system id and can carry field-side upper bounds", () => {
@@ -1310,6 +1354,77 @@ describe("calculateImpactOnly", () => {
     expect(result.impact?.estimateCandidateIds).toEqual(["regupol_curve8_concrete_tile_lab_2026"]);
     expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(true);
     expect(result.impactPredictorStatus?.implementedFormulaEstimate).toBe(true);
+  });
+
+  it("keeps low-density reinforced-concrete predictor input off the heavy-concrete-specific upper-treatment lanes", () => {
+    const result = calculateImpactOnly([], {
+      impactPredictorInput: {
+        structuralSupportType: "reinforced_concrete",
+        impactSystemType: "heavy_floating_floor",
+        baseSlab: {
+          materialClass: "heavy_concrete",
+          thicknessMm: 150,
+          densityKgM3: 1800
+        },
+        resilientLayer: {
+          thicknessMm: 8
+        },
+        floatingScreed: {
+          materialClass: "generic_screed",
+          thicknessMm: 30,
+          densityKgM3: 2000
+        },
+        floorCovering: {
+          mode: "material_layer",
+          materialClass: "ceramic_tile",
+          thicknessMm: 8,
+          densityKgM3: 2000
+        }
+      },
+      targetOutputs: ["Ln,w", "Rw"]
+    });
+
+    expect(result.sourceMode).toBe("predictor_input");
+    expect(result.sourceLayers.at(-1)?.material.id).toBe("lightweight_concrete");
+    expect(result.impact?.basis).toBe("predictor_floor_system_family_general_estimate");
+    expect(result.impact?.LnW).toBe(69.4);
+    expect(result.floorSystemRatings?.Rw).toBe(53);
+    expect(result.impact?.estimateCandidateIds).toEqual([
+      "tuas_h2_concrete160_measured_2026",
+      "euracoustics_f0_bare_concrete_lab_2026"
+    ]);
+    expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(true);
+    expect(result.impactPredictorStatus?.implementedFormulaEstimate).toBe(false);
+  });
+
+  it("fails closed on impact-only when the visible base_structure is not a structural floor carrier", () => {
+    const gypsumBaseResult = calculateImpactOnly(
+      [{ materialId: "gypsum_board", thicknessMm: 100, floorRole: "base_structure" }],
+      { targetOutputs: ["Rw", "Ln,w"] }
+    );
+
+    expect(gypsumBaseResult.impact).toBeNull();
+    expect(gypsumBaseResult.floorSystemEstimate).toBeNull();
+    expect(gypsumBaseResult.floorCarrier).toBeNull();
+    expect(gypsumBaseResult.supportedImpactOutputs).toEqual([]);
+    expect(gypsumBaseResult.supportedTargetOutputs).toEqual([]);
+    expect(gypsumBaseResult.unsupportedImpactOutputs).toEqual(["Ln,w"]);
+    expect(gypsumBaseResult.unsupportedTargetOutputs).toEqual(["Rw", "Ln,w"]);
+    expect(gypsumBaseResult.floorSystemRatings?.basis).toBe("screening_mass_law_curve_seed_v3");
+
+    const airGapBaseResult = calculateImpactOnly(
+      [{ materialId: "air_gap", thicknessMm: 100, floorRole: "base_structure" }],
+      { targetOutputs: ["Rw", "Ln,w"] }
+    );
+
+    expect(airGapBaseResult.impact).toBeNull();
+    expect(airGapBaseResult.floorSystemEstimate).toBeNull();
+    expect(airGapBaseResult.floorCarrier).toBeNull();
+    expect(airGapBaseResult.floorSystemRatings).toBeNull();
+    expect(airGapBaseResult.supportedImpactOutputs).toEqual([]);
+    expect(airGapBaseResult.supportedTargetOutputs).toEqual([]);
+    expect(airGapBaseResult.unsupportedImpactOutputs).toEqual(["Ln,w"]);
+    expect(airGapBaseResult.unsupportedTargetOutputs).toEqual(["Rw", "Ln,w"]);
   });
 
   it("can resolve curated floor-system ids through predictor input without fabricating visible source layers", () => {

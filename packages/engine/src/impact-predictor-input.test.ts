@@ -216,6 +216,56 @@ describe("buildImpactPredictorInputFromLayerStack", () => {
     });
   });
 
+  it("rejects non-structural base_structure layers instead of forcing them through predictor input", () => {
+    expect(() =>
+      buildImpactPredictorInputFromLayerStack([{ materialId: "gypsum_board", thicknessMm: 100, floorRole: "base_structure" }])
+    ).toThrow(/recognized structural floor carrier/i);
+
+    expect(
+      maybeBuildImpactPredictorInputFromLayerStack([
+        { materialId: "gypsum_board", thicknessMm: 100, floorRole: "base_structure" }
+      ])
+    ).toBeNull();
+
+    expect(
+      maybeBuildImpactPredictorInputFromLayerStack([
+        { materialId: "air_gap", thicknessMm: 100, floorRole: "base_structure" }
+      ])
+    ).toBeNull();
+  });
+
+  it("maps low-density reinforced-concrete predictor bases onto lightweight-concrete source layers", () => {
+    const adaptation = adaptImpactPredictorInput({
+      structuralSupportType: "reinforced_concrete",
+      impactSystemType: "heavy_floating_floor",
+      baseSlab: {
+        densityKgM3: 1800,
+        materialClass: "heavy_concrete",
+        thicknessMm: 150
+      },
+      resilientLayer: {
+        thicknessMm: 8
+      },
+      floatingScreed: {
+        densityKgM3: 2000,
+        materialClass: "generic_screed",
+        thicknessMm: 30
+      },
+      floorCovering: {
+        densityKgM3: 2000,
+        materialClass: "ceramic_tile",
+        mode: "material_layer",
+        thicknessMm: 8
+      }
+    });
+
+    expect(adaptation.sourceLayers.at(-1)).toEqual({
+      floorRole: "base_structure",
+      materialId: "lightweight_concrete",
+      thicknessMm: 150
+    });
+  });
+
   it("infers steel support form, product id, engineered-timber-underlay covering, and elastic ceiling semantics", () => {
     const input = buildImpactPredictorInputFromLayerStack([
       { materialId: "open_web_steel_joist", thicknessMm: 300, floorRole: "base_structure" },

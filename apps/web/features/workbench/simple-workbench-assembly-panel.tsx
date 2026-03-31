@@ -13,8 +13,13 @@ import { LayerStackDiagram } from "./simple-workbench-layer-diagram";
 import { workbenchSectionMutedCardClass } from "./simple-workbench-layer-visuals";
 import { SimpleLayerRow } from "./simple-workbench-layer-row";
 import { SectionLead } from "./simple-workbench-primitives";
-import { buildMaterialGroups } from "./simple-workbench-utils";
-import type { CustomMaterialDraft, CustomMaterialDraftErrors } from "./workbench-materials";
+import { buildDefaultNewLayerDraft, buildMaterialGroups } from "./simple-workbench-utils";
+import {
+  getWorkbenchMaterialById,
+  resolveThicknessForMaterialChange,
+  type CustomMaterialDraft,
+  type CustomMaterialDraftErrors
+} from "./workbench-materials";
 import type { WorkbenchMaterialOptionGroup } from "./workbench-material-picker";
 import { inferFloorRole } from "./workbench-store";
 import type { LayerDraft } from "./workbench-store";
@@ -40,6 +45,8 @@ export function SimpleWorkbenchAssemblyPanel(props: {
   newLayerDraft: NewLayerDraft;
   newLayerMaterialGroups: readonly WorkbenchMaterialOptionGroup[];
   parkedRowCount: number;
+  replaceConfiguredBaseLayer: () => void;
+  replaceConfiguredBaseLayerAvailable: boolean;
   removeRow: (id: string) => void;
   result: AssemblyCalculation | null;
   rows: readonly LayerDraft[];
@@ -78,6 +85,8 @@ export function SimpleWorkbenchAssemblyPanel(props: {
     newLayerDraft,
     newLayerMaterialGroups,
     parkedRowCount,
+    replaceConfiguredBaseLayer,
+    replaceConfiguredBaseLayerAvailable,
     removeRow,
     result,
     rows,
@@ -196,15 +205,36 @@ export function SimpleWorkbenchAssemblyPanel(props: {
               }
               onFloorRoleChange={(floorRole) => setNewLayerDraft((current) => ({ ...current, floorRole }))}
               onMaterialChange={(materialId) =>
-                setNewLayerDraft((current) => ({
-                  ...current,
-                  densityKgM3: "",
-                  dynamicStiffnessMNm3: "",
-                  floorRole: inferFloorRole(materialId, studyMode, customMaterials),
-                  materialId
-                }))
+                setNewLayerDraft((current) => {
+                  const nextFloorRole = inferFloorRole(materialId, studyMode, customMaterials);
+                  const nextMaterial = getWorkbenchMaterialById(materialId, customMaterials);
+                  const previousMaterial = getWorkbenchMaterialById(current.materialId, customMaterials);
+                  const baselineDraft = buildDefaultNewLayerDraft(studyMode);
+
+                  return {
+                    ...current,
+                    densityKgM3: "",
+                    dynamicStiffnessMNm3: "",
+                    floorRole: nextFloorRole,
+                    materialId,
+                    thicknessMm:
+                      nextMaterial
+                        ? resolveThicknessForMaterialChange({
+                            currentThicknessMm: current.thicknessMm,
+                            nextFloorRole,
+                            nextMaterial,
+                            previousDefaultThicknessMm:
+                              current.materialId === baselineDraft.materialId ? baselineDraft.thicknessMm : undefined,
+                            previousFloorRole: current.floorRole,
+                            previousMaterial
+                          })
+                        : current.thicknessMm
+                  };
+                })
               }
+              onReplaceBase={replaceConfiguredBaseLayer}
               onThicknessChange={(thicknessMm) => setNewLayerDraft((current) => ({ ...current, thicknessMm }))}
+              replaceBaseAvailable={replaceConfiguredBaseLayerAvailable}
               studyMode={studyMode}
             />
           ) : null}

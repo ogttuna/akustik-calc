@@ -1,10 +1,6 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
 
-const GUIDED_CONTEXT_LABELS = {
-  building_prediction: "Building prediction",
-  element_lab: "Lab element",
-  field_between_rooms: "Between rooms"
-} as const;
+type GuidedContextKey = "building_prediction" | "element_lab" | "field_between_rooms";
 const TEST_USERNAME = process.env.DYNECHO_AUTH_USERNAME ?? "consultant";
 const TEST_PASSWORD = process.env.DYNECHO_AUTH_PASSWORD ?? "change-me";
 
@@ -24,7 +20,7 @@ async function selectGuidedSurface(page: Page, surface: "floor" | "wall") {
   await page.getByLabel("Study type").selectOption(surface);
 }
 
-async function selectGuidedProjectContext(page: Page, context: keyof typeof GUIDED_CONTEXT_LABELS) {
+async function selectGuidedProjectContext(page: Page, context: GuidedContextKey) {
   await page.getByLabel("Project context").selectOption(context);
 }
 
@@ -140,12 +136,108 @@ async function ensureGuidedToolsOpen(page: Page, actionName: string) {
   await page.locator("summary").filter({ has: page.getByText("Tools", { exact: true }) }).first().click();
 }
 
+async function loadAdvancedPreset(page: Page, label: string) {
+  await page.getByRole("button", { exact: true, name: `Load preset ${label}` }).click();
+  await page.waitForTimeout(100);
+}
+
+type WorkbenchEstimateResponse = {
+  baseRow: {
+    floorRole?: string;
+    materialId: string;
+    thicknessMm: string;
+  } | null;
+  json: {
+    ok?: boolean;
+    result?: {
+      impact?: {
+        LPrimeNT50?: number;
+        LPrimeNTw?: number;
+        LPrimeNW?: number;
+        LnW?: number;
+      };
+      ratings?: {
+        iso717?: {
+          Rw?: number;
+        };
+      };
+    };
+  };
+  rowCount: number;
+  status: number;
+};
+
+async function estimateCurrentWorkbenchState(page: Page): Promise<WorkbenchEstimateResponse> {
+  return page.evaluate(async () => {
+    const rawStore = window.localStorage.getItem("dynecho-workbench-store");
+    if (!rawStore) {
+      throw new Error("Workbench state is missing from localStorage.");
+    }
+
+    const parsed = JSON.parse(rawStore) as {
+      state: {
+        calculatorId?: string;
+        rows: Array<{
+          densityKgM3?: string;
+          dynamicStiffnessMNm3?: string;
+          floorRole?: string;
+          materialId: string;
+          thicknessMm: string;
+        }>;
+      };
+    };
+    const state = parsed.state;
+    const layers = state.rows.map((row) => ({
+      densityKgM3:
+        typeof row.densityKgM3 === "string" && row.densityKgM3.trim().length > 0 ? Number(row.densityKgM3) : undefined,
+      dynamicStiffnessMNPerM3:
+        typeof row.dynamicStiffnessMNm3 === "string" && row.dynamicStiffnessMNm3.trim().length > 0
+          ? Number(row.dynamicStiffnessMNm3)
+          : undefined,
+      floorRole: row.floorRole,
+      materialId: row.materialId,
+      thicknessMm: Number(row.thicknessMm)
+    }));
+    const payload = {
+      calculator: state.calculatorId,
+      impactFieldContext: {
+        fieldKDb: 2,
+        receivingRoomVolumeM3: 50
+      },
+      layers,
+      targetOutputs: ["Rw", "Ln,w", "L'n,w", "L'nT,w", "L'nT,50", "CI", "Ln,w+CI"]
+    };
+    const response = await window.fetch("/api/estimate", {
+      body: JSON.stringify(payload),
+      headers: {
+        "content-type": "application/json"
+      },
+      method: "POST"
+    });
+    const json = (await response.json()) as WorkbenchEstimateResponse["json"];
+
+    return {
+      baseRow: state.rows.find((row) => row.floorRole === "base_structure") ?? null,
+      json,
+      rowCount: state.rows.length,
+      status: response.status
+    };
+  });
+}
+
 function visibleGuidedRouteSummary(page: Page) {
   return page
     .locator("section:visible")
     .filter({
       has: page.getByText("Route summary", { exact: true })
     })
+    .first();
+}
+
+function visibleGuidedComposer(page: Page) {
+  return page
+    .locator("div:visible")
+    .filter({ has: page.getByText("Add the next layer here", { exact: true }) })
     .first();
 }
 
@@ -192,10 +284,7 @@ async function appendGuidedLayer(
   await openGuidedWorkspacePanel(page, "Assembly");
   await openGuidedAssemblyTool(page, "composer");
 
-  const composer = page
-    .locator("div:visible")
-    .filter({ has: page.getByText("Add the next layer here", { exact: true }) })
-    .first();
+  const composer = visibleGuidedComposer(page);
 
   await expect(composer).toBeVisible();
 
@@ -243,13 +332,6 @@ function proposalCompanyProfileCard(page: Page, label: string) {
     .locator("xpath=ancestor::div[.//button[normalize-space()='Delete']][1]");
 }
 
-function rectsOverlap(
-  a: { bottom: number; left: number; right: number; top: number },
-  b: { bottom: number; left: number; right: number; top: number }
-) {
-  return !(a.right <= b.left || b.right <= a.left || a.bottom <= b.top || b.bottom <= a.top);
-}
-
 test("workbench supports preset switching and inline layer editing", async ({ page }) => {
   await gotoSimpleWorkbench(page);
 
@@ -281,6 +363,94 @@ test("workbench supports preset switching and inline layer editing", async ({ pa
   await expect(page.getByText("5 rows", { exact: true }).first()).toBeVisible();
   await expect(visibleTestId(page, "editor-row-5")).toContainText("4 mm");
   await expect(visibleTestId(page, "editor-row-5")).toContainText("Floor covering");
+});
+
+test("guided floor composer normalizes structural carrier draft defaults instead of inheriting the vinyl starter thickness", async ({
+  page
+}) => {
+  await openFloorGuidedFlow(page);
+  await openGuidedWorkspacePanel(page, "Assembly");
+  await openGuidedAssemblyTool(page, "composer");
+
+  const composer = visibleGuidedComposer(page);
+  const cases = [
+    {
+      materialName: "Steel Joist Floor",
+      query: "steel joist",
+      thickness: "180",
+      typicalBand: "Typical band 180 to 350 mm for Steel Joist Floor in the base structure role."
+    },
+    {
+      materialName: "Lightweight Steel Floor",
+      query: "lightweight steel",
+      thickness: "160",
+      typicalBand: "Typical band 160 to 350 mm for Lightweight Steel Floor in the base structure role."
+    },
+    {
+      materialName: "Composite Steel Deck",
+      query: "composite",
+      thickness: "120",
+      typicalBand: "Typical band 120 to 250 mm for Composite Steel Deck in the base structure role."
+    },
+    {
+      materialName: "Hollow-core Plank",
+      query: "hollow",
+      thickness: "120",
+      typicalBand: "Typical band 120 to 400 mm for Hollow-core Plank in the base structure role."
+    },
+    {
+      materialName: "Open-box Timber Slab",
+      query: "open-box",
+      thickness: "350",
+      typicalBand: "Typical band 120 to 350 mm for Open-box Timber Slab in the base structure role."
+    }
+  ] as const;
+
+  for (const floorCase of cases) {
+    await selectMaterialFromPicker(composer, "New layer material", floorCase.materialName, floorCase.query);
+    await expect(composer.getByLabel("New layer material")).toContainText(floorCase.materialName);
+    await expect(composer.getByLabel("New layer thickness")).toHaveValue(floorCase.thickness);
+    await expect(composer.getByLabel("New layer role")).toHaveValue("base_structure");
+    await expect(composer.getByText(floorCase.typicalBand, { exact: true })).toBeVisible();
+    await expect(composer.getByText(/outside the guided sanity band/i)).toHaveCount(0);
+  }
+});
+
+test("guided floor composer only exposes replace base for eligible carriers and keeps the CLT replacement on the clean lane", async ({
+  page
+}) => {
+  await openFloorGuidedFlow(page);
+  await loadGuidedSample(page, "Impact Floor");
+  await openGuidedWorkspacePanel(page, "Assembly");
+  await openGuidedAssemblyTool(page, "composer");
+
+  const composer = visibleGuidedComposer(page);
+
+  await selectMaterialFromPicker(composer, "New layer material", "OSB", "osb");
+  await expect(composer.getByRole("button", { exact: true, name: "Replace base" })).toHaveCount(0);
+
+  await selectMaterialFromPicker(composer, "New layer material", "CLT Panel", "clt");
+  await expect(composer.getByLabel("New layer thickness")).toHaveValue("140");
+  await expect(composer.getByLabel("New layer role")).toHaveValue("base_structure");
+  await expect(composer.getByRole("button", { exact: true, name: "Replace base" })).toBeVisible();
+
+  await composer.getByRole("button", { exact: true, name: "Replace base" }).click();
+
+  await expect(page.getByText("4 rows", { exact: true }).first()).toBeVisible();
+  await expect(visibleTestId(page, "editor-row-4")).toContainText("CLT Panel");
+  await expect(page.getByText(/single-entry floor roles are duplicated: base structure x2/i)).toHaveCount(0);
+
+  const estimate = await estimateCurrentWorkbenchState(page);
+  expect(estimate.status).toBe(200);
+  expect(estimate.json.ok).toBe(true);
+  expect(estimate.rowCount).toBe(4);
+  expect(estimate.baseRow?.materialId).toBe("clt_panel");
+  expect(estimate.baseRow?.thicknessMm).toBe("140");
+  expect(estimate.json.result?.ratings?.iso717?.Rw).toBeCloseTo(49, 1);
+  expect(estimate.json.result?.impact?.LnW).toBeCloseTo(68, 1);
+  expect(estimate.json.result?.impact?.LPrimeNW).toBeCloseTo(70, 1);
+  expect(estimate.json.result?.impact?.LPrimeNTw).toBeCloseTo(68, 1);
+  expect(estimate.json.result?.impact?.LPrimeNT50).toBeCloseTo(68, 1);
 });
 
 test("guided floor flow exposes floor roles and marks only the relevant context inputs", async ({ page }) => {
@@ -1961,6 +2131,55 @@ test("workbench shows upstream radar and delivery assist surfaces", async ({ pag
   await expect(page.getByText("Field risk board")).toBeVisible();
   await expect(page.getByText("From result to spec-ready action")).toBeVisible();
   await expect(page.getByText(/dirty file/)).toBeVisible();
+});
+
+test("advanced impact-floor replace base matrix keeps the visible structural carriers on sane defaults", async ({ page }) => {
+  test.slow();
+
+  const cases = [
+    { buttonLabel: "Concrete", materialId: "concrete", thickness: "150", rw: 59, lPrimeNT50: null, lPrimeNTw: 50, lPrimeNw: 52, lnw: 50 },
+    { buttonLabel: "Lightweight Concrete", materialId: "lightweight_concrete", thickness: "140", rw: 54, lPrimeNT50: 71.9, lPrimeNTw: 70.9, lPrimeNw: 72.9, lnw: 70.9 },
+    { buttonLabel: "Heavy Concrete", materialId: "heavy_concrete", thickness: "180", rw: 62, lPrimeNT50: null, lPrimeNTw: 50, lPrimeNw: 52, lnw: 50 },
+    { buttonLabel: "CLT Panel", materialId: "clt_panel", thickness: "140", rw: 49, lPrimeNT50: 68, lPrimeNTw: 68, lPrimeNw: 70, lnw: 68 },
+    { buttonLabel: "Hollow-core Plank", materialId: "hollow_core_plank", thickness: "120", rw: 57, lPrimeNT50: null, lPrimeNTw: 58.5, lPrimeNw: 60.5, lnw: 58.5 },
+    { buttonLabel: "Composite Steel Deck", materialId: "composite_steel_deck", thickness: "120", rw: 59, lPrimeNT50: null, lPrimeNTw: 68, lPrimeNw: 70, lnw: 68 },
+    { buttonLabel: "Steel Joist Floor", materialId: "steel_joist_floor", thickness: "180", rw: 73, lPrimeNT50: 67.7, lPrimeNTw: 67.7, lPrimeNw: 69.7, lnw: 67.7 },
+    { buttonLabel: "Lightweight Steel Floor", materialId: "lightweight_steel_floor", thickness: "160", rw: 72, lPrimeNT50: 60, lPrimeNTw: 59, lPrimeNw: 61, lnw: 59 },
+    { buttonLabel: "Timber Joist Floor", materialId: "timber_joist_floor", thickness: "240", rw: 53, lPrimeNT50: null, lPrimeNTw: 69, lPrimeNw: 71, lnw: 69 },
+    { buttonLabel: "Timber Frame Floor", materialId: "timber_frame_floor", thickness: "220", rw: 52, lPrimeNT50: 55.7, lPrimeNTw: 54.3, lPrimeNw: 56.3, lnw: 54.3 },
+    { buttonLabel: "Open-box Timber Slab", materialId: "open_box_timber_slab", thickness: "350", rw: 55, lPrimeNT50: 67.7, lPrimeNTw: 67.7, lPrimeNw: 69.7, lnw: 67.7 },
+    { buttonLabel: "Open-web Steel Floor", materialId: "open_web_steel_floor", thickness: "200", rw: 75, lPrimeNT50: null, lPrimeNTw: 61.1, lPrimeNw: 63.1, lnw: 61.1 }
+  ] as const;
+
+  await gotoAdvancedWorkbench(page);
+  await expect(page.getByRole("button", { name: "Replace base with OSB" })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Replace base with Plywood" })).toHaveCount(0);
+
+  for (const floorCase of cases) {
+    await gotoAdvancedWorkbench(page);
+    await loadAdvancedPreset(page, "Impact Floor");
+    await page.getByRole("button", { name: `Replace base with ${floorCase.buttonLabel}` }).click();
+    await page.waitForTimeout(100);
+
+    await expect(page.getByText(/outside the guided sanity band/i)).toHaveCount(0);
+
+    const estimate = await estimateCurrentWorkbenchState(page);
+    expect(estimate.status).toBe(200);
+    expect(estimate.json.ok).toBe(true);
+    expect(estimate.rowCount).toBe(4);
+    expect(estimate.baseRow?.materialId).toBe(floorCase.materialId);
+    expect(estimate.baseRow?.thicknessMm).toBe(floorCase.thickness);
+    expect(estimate.json.result?.ratings?.iso717?.Rw).toBeCloseTo(floorCase.rw, 1);
+    expect(estimate.json.result?.impact?.LnW).toBeCloseTo(floorCase.lnw, 1);
+    expect(estimate.json.result?.impact?.LPrimeNW).toBeCloseTo(floorCase.lPrimeNw, 1);
+    expect(estimate.json.result?.impact?.LPrimeNTw).toBeCloseTo(floorCase.lPrimeNTw, 1);
+
+    if (floorCase.lPrimeNT50 === null) {
+      expect(estimate.json.result?.impact?.LPrimeNT50 ?? null).toBeNull();
+    } else {
+      expect(estimate.json.result?.impact?.LPrimeNT50).toBeCloseTo(floorCase.lPrimeNT50, 1);
+    }
+  }
 });
 
 test("workbench tracks field-risk flags and updates the delivery context", async ({ page }) => {

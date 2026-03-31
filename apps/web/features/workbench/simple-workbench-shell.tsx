@@ -1,11 +1,12 @@
 "use client";
 
+import { isMaterialEligibleFloorBaseStructure } from "@dynecho/engine";
 import type {
   AirborneContext,
   ImpactFieldContext,
   RequestedOutputId
 } from "@dynecho/shared";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import { formatDecimal } from "@/lib/format";
@@ -50,7 +51,8 @@ import {
   buildCustomMaterialDefinition,
   buildWorkbenchMaterialCatalog,
   createEmptyCustomMaterialDraft,
-  defaultThicknessForMaterial,
+  defaultThicknessForMaterialInRole,
+  resolveThicknessForMaterialChange,
   validateCustomMaterialDraft,
   type CustomMaterialDraft
 } from "./workbench-materials";
@@ -186,6 +188,7 @@ export function SimpleWorkbenchShell() {
   const setProposalValidityNote = useWorkbenchStore((state) => state.setProposalValidityNote);
   const setRequestedOutputs = useWorkbenchStore((state) => state.setRequestedOutputs);
   const setReportProfile = useWorkbenchStore((state) => state.setReportProfile);
+  const replaceSingleBaseStructure = useWorkbenchStore((state) => state.replaceSingleBaseStructure);
   const startStudyMode = useWorkbenchStore((state) => state.startStudyMode);
   const updateDensity = useWorkbenchStore((state) => state.updateDensity);
   const updateDynamicStiffness = useWorkbenchStore((state) => state.updateDynamicStiffness);
@@ -216,6 +219,15 @@ export function SimpleWorkbenchShell() {
   const [isDesktop, setIsDesktop] = useState(false);
   const [isExportingPdf, setIsExportingPdf] = useState(false);
   const [resetDialogOpen, setResetDialogOpen] = useState(false);
+  const previousNewLayerDraftRef = useRef(newLayerDraft);
+  const draftMaterial = materials.find((material) => material.id === newLayerDraft.materialId) ?? null;
+  const draftMaterialEligibleForBaseReplacement = draftMaterial ? isMaterialEligibleFloorBaseStructure(draftMaterial) : false;
+  const explicitBaseStructureCount = rows.filter((row) => row.floorRole === "base_structure").length;
+  const replaceConfiguredBaseLayerAvailable =
+    studyMode === "floor" &&
+    newLayerDraft.floorRole === "base_structure" &&
+    explicitBaseStructureCount === 1 &&
+    draftMaterialEligibleForBaseReplacement;
 
   // ── Effects ──────────────────────────────────────────────────────────────
   useEffect(() => {
@@ -230,6 +242,50 @@ export function SimpleWorkbenchShell() {
     if (sameRequestedOutputs(requestedOutputs, automaticOutputs)) return;
     setRequestedOutputs(automaticOutputs);
   }, [automaticOutputs, requestedOutputs, setRequestedOutputs]);
+
+  useEffect(() => {
+    const previousDraft = previousNewLayerDraftRef.current;
+    const materialOrRoleChanged =
+      previousDraft.materialId !== newLayerDraft.materialId || previousDraft.floorRole !== newLayerDraft.floorRole;
+
+    if (!materialOrRoleChanged) {
+      previousNewLayerDraftRef.current = newLayerDraft;
+      return;
+    }
+
+    const nextMaterial = materials.find((material) => material.id === newLayerDraft.materialId) ?? null;
+    const previousMaterial = materials.find((material) => material.id === previousDraft.materialId) ?? null;
+
+    if (!nextMaterial) {
+      previousNewLayerDraftRef.current = newLayerDraft;
+      return;
+    }
+
+    const baselineDraft = buildDefaultNewLayerDraft(studyMode);
+    const nextThickness = resolveThicknessForMaterialChange({
+      currentThicknessMm: newLayerDraft.thicknessMm,
+      nextFloorRole: newLayerDraft.floorRole,
+      nextMaterial,
+      previousDefaultThicknessMm:
+        previousDraft.materialId === baselineDraft.materialId ? baselineDraft.thicknessMm : undefined,
+      previousFloorRole: previousDraft.floorRole,
+      previousMaterial
+    });
+
+    if (nextThickness !== newLayerDraft.thicknessMm) {
+      previousNewLayerDraftRef.current = { ...newLayerDraft, thicknessMm: nextThickness };
+      setNewLayerDraft((current) =>
+        current.materialId === newLayerDraft.materialId &&
+        current.floorRole === newLayerDraft.floorRole &&
+        current.thicknessMm === newLayerDraft.thicknessMm
+          ? { ...current, thicknessMm: nextThickness }
+          : current
+      );
+      return;
+    }
+
+    previousNewLayerDraftRef.current = newLayerDraft;
+  }, [materials, newLayerDraft, setNewLayerDraft, studyMode]);
 
   useEffect(() => {
     const fallbackPresetId = modePresets[0]?.id ?? MODE_PRESETS[studyMode][0]!;
@@ -438,6 +494,12 @@ export function SimpleWorkbenchShell() {
     setNewLayerDraft(buildDefaultNewLayerDraft(studyMode));
     setActiveAssemblyTool(null);
   };
+  const replaceConfiguredBaseLayer = () => {
+    if (!(replaceConfiguredBaseLayerAvailable && parsePositiveNumber(newLayerDraft.thicknessMm))) return;
+    replaceSingleBaseStructure(newLayerDraft.materialId, newLayerDraft.thicknessMm);
+    setNewLayerDraft(buildDefaultNewLayerDraft(studyMode));
+    setActiveAssemblyTool(null);
+  };
   const createCustomMaterial = () => {
     const errors = validateCustomMaterialDraft(customMaterialDraft, materials);
     if (Object.values(errors).some((value) => value)) return;
@@ -446,10 +508,12 @@ export function SimpleWorkbenchShell() {
     setCustomMaterialDraft(createEmptyCustomMaterialDraft());
     setCustomMaterialExpanded(false);
     setActiveAssemblyTool("composer");
+    const inferredFloorRole = inferFloorRole(material.id, studyMode, [...customMaterials, material]);
     setNewLayerDraft({
       densityKgM3: "", dynamicStiffnessMNm3: "",
-      floorRole: inferFloorRole(material.id, studyMode, [...customMaterials, material]),
-      materialId: material.id, thicknessMm: defaultThicknessForMaterial(material)
+      floorRole: inferredFloorRole,
+      materialId: material.id,
+      thicknessMm: defaultThicknessForMaterialInRole(material, inferredFloorRole)
     });
     setActiveWorkspacePanel("stack");
   };
@@ -629,6 +693,8 @@ export function SimpleWorkbenchShell() {
           newLayerDraft={newLayerDraft}
           newLayerMaterialGroups={newLayerMaterialGroups}
           parkedRowCount={parkedRowCount}
+          replaceConfiguredBaseLayer={replaceConfiguredBaseLayer}
+          replaceConfiguredBaseLayerAvailable={replaceConfiguredBaseLayerAvailable}
           removeRow={removeRow}
           result={result}
           rows={rows}

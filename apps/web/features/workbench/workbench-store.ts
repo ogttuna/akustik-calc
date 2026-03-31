@@ -1,6 +1,9 @@
 "use client";
 
-import type { ImpactGuideSource } from "@dynecho/engine";
+import {
+  isMaterialEligibleFloorBaseStructure,
+  type ImpactGuideSource
+} from "@dynecho/engine";
 import type {
   AirborneCalculatorId,
   AirborneConnectionType,
@@ -189,6 +192,7 @@ type WorkbenchStore = {
   duplicateRow: (id: string) => void;
   moveRow: (id: string, direction: "up" | "down") => void;
   removeRow: (id: string) => void;
+  replaceSingleBaseStructure: (materialId: string, thicknessMm: string) => void;
   reset: () => void;
   saveCurrentScenario: () => void;
   setCalculatorId: (value: AirborneCalculatorId) => void;
@@ -405,6 +409,47 @@ function buildPresetRows(presetId: PresetId): LayerDraft[] {
   return getPresetById(presetId).rows.map((row) => makeRow(row.materialId, row.thicknessMm, row.floorRole));
 }
 
+function replaceSingleBaseStructureRow(args: {
+  customMaterials: readonly MaterialDefinition[];
+  materialId: string;
+  rows: readonly LayerDraft[];
+  studyMode: StudyMode;
+  thicknessMm: string;
+}): LayerDraft[] {
+  const { customMaterials, materialId, rows, studyMode, thicknessMm } = args;
+  const material = getWorkbenchMaterialById(materialId, customMaterials);
+  const floorRole = inferFloorRole(materialId, studyMode, customMaterials);
+  const nextRow = makeRow(materialId, thicknessMm, floorRole);
+
+  if (studyMode !== "floor" || floorRole !== "base_structure") {
+    return [...rows, nextRow];
+  }
+
+  if (!material || !isMaterialEligibleFloorBaseStructure(material)) {
+    return [...rows];
+  }
+
+  const explicitBaseIndices = rows.flatMap((row, index) => (row.floorRole === "base_structure" ? [index] : []));
+  if (explicitBaseIndices.length !== 1) {
+    return [...rows, nextRow];
+  }
+
+  const [baseIndex] = explicitBaseIndices;
+
+  return rows.map((row, index) =>
+    index === baseIndex
+      ? {
+          ...row,
+          densityKgM3: "",
+          dynamicStiffnessMNm3: "",
+          floorRole: "base_structure",
+          materialId,
+          thicknessMm
+        }
+      : row
+  );
+}
+
 const INITIAL_PRESET = getPresetById(DEFAULT_PRESET_ID);
 const INITIAL_CRITERIA_PACK = getCriteriaPackById(DEFAULT_CRITERIA_PACK_ID);
 
@@ -514,6 +559,16 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
             rows: [...state.rows, makeRow(materialId, thicknessMm, floorRole)]
           };
         }),
+      replaceSingleBaseStructure: (materialId, thicknessMm) =>
+        set((state) => ({
+          rows: replaceSingleBaseStructureRow({
+            customMaterials: state.customMaterials,
+            materialId,
+            rows: state.rows,
+            studyMode: state.studyMode,
+            thicknessMm
+          })
+        })),
       appendRows: (rows) =>
         set((state) => ({
           rows: [

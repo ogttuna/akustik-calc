@@ -8,6 +8,7 @@ export * from "./curve-rating";
 export * from "./dynamic-airborne";
 export * from "./dynamic-impact";
 export * from "./estimate-rw";
+export * from "./floor-base-structure-eligibility";
 export * from "./floor-system-ratings";
 export * from "./floor-system-evaluation";
 export * from "./floor-system-match";

@@ -953,6 +953,131 @@ describe("workbench store", () => {
     ).toBe(true);
   });
 
+  it("replaces the single explicit base row cleanly instead of leaving a duplicate structural carrier behind", async () => {
+    const { evaluateScenario } = await import("./scenario-analysis");
+    const { useWorkbenchStore } = await import("./workbench-store");
+
+    const evaluateCurrentScenario = () => {
+      const state = useWorkbenchStore.getState();
+
+      return evaluateScenario({
+        id: "current",
+        name: "replace base structure regression",
+        rows: state.rows,
+        source: "current",
+        studyMode: state.studyMode,
+        targetOutputs: FLOOR_TARGET_OUTPUTS
+      });
+    };
+
+    useWorkbenchStore.getState().reset();
+    useWorkbenchStore.getState().loadPreset("heavy_concrete_impact_floor");
+    useWorkbenchStore.getState().replaceSingleBaseStructure("clt_panel", "140");
+
+    const replacedScenario = evaluateCurrentScenario();
+    expect(replacedScenario.result).not.toBeNull();
+    expect(replacedScenario.result?.floorSystemEstimate?.kind).toBe("family_archetype");
+    expect(replacedScenario.result?.impact?.basis).toBe("predictor_floor_system_family_archetype_estimate");
+    expect(replacedScenario.result?.impact?.LnW).toBeCloseTo(68, 1);
+    expect(replacedScenario.result?.floorSystemRatings?.Rw).toBeCloseTo(39.6, 1);
+    expect(
+      replacedScenario.warnings.some((warning) =>
+        /Visible-layer predictor matching is parked because single-entry floor roles are duplicated: base structure x2/i.test(
+          warning
+        )
+      )
+    ).toBe(false);
+  });
+
+  it("refuses ineligible base replacements and keeps the original structural carrier intact", async () => {
+    const { evaluateScenario } = await import("./scenario-analysis");
+    const { useWorkbenchStore } = await import("./workbench-store");
+
+    const evaluateCurrentScenario = () => {
+      const state = useWorkbenchStore.getState();
+
+      return evaluateScenario({
+        id: "current",
+        name: "ineligible base replacement regression",
+        rows: state.rows,
+        source: "current",
+        studyMode: state.studyMode,
+        targetOutputs: FLOOR_TARGET_OUTPUTS
+      });
+    };
+
+    useWorkbenchStore.getState().reset();
+    useWorkbenchStore.getState().loadPreset("heavy_concrete_impact_floor");
+    const beforeRows = useWorkbenchStore.getState().rows.map((row) => ({
+      floorRole: row.floorRole,
+      materialId: row.materialId,
+      thicknessMm: row.thicknessMm
+    }));
+
+    useWorkbenchStore.getState().replaceSingleBaseStructure("osb", "18");
+
+    const afterRows = useWorkbenchStore.getState().rows.map((row) => ({
+      floorRole: row.floorRole,
+      materialId: row.materialId,
+      thicknessMm: row.thicknessMm
+    }));
+    expect(afterRows).toEqual(beforeRows);
+
+    const scenario = evaluateCurrentScenario();
+    expect(scenario.result?.impact?.basis).toBe("predictor_heavy_concrete_published_upper_treatment_estimate");
+    expect(scenario.result?.impact?.LnW).toBeCloseTo(50, 1);
+    expect(
+      scenario.warnings.some((warning) =>
+        /Visible-layer predictor matching is parked because single-entry floor roles are duplicated: base structure x2/i.test(
+          warning
+        )
+      )
+    ).toBe(false);
+  });
+
+  it("keeps replace-base structural defaults inside guided sanity bands", async () => {
+    const { evaluateScenario } = await import("./scenario-analysis");
+    const { useWorkbenchStore } = await import("./workbench-store");
+    const { defaultThicknessForMaterialInRole, getWorkbenchMaterialById } = await import("./workbench-materials");
+
+    const affectedMaterialIds = [
+      "hollow_core_plank",
+      "steel_joist_floor",
+      "lightweight_steel_floor",
+      "composite_steel_deck",
+      "open_box_timber_slab"
+    ] as const;
+
+    for (const materialId of affectedMaterialIds) {
+      const material = getWorkbenchMaterialById(materialId);
+
+      expect(material).toBeDefined();
+
+      useWorkbenchStore.getState().reset();
+      useWorkbenchStore.getState().loadPreset("heavy_concrete_impact_floor");
+
+      const replacementThickness = defaultThicknessForMaterialInRole(material!, "base_structure");
+      useWorkbenchStore.getState().replaceSingleBaseStructure(materialId, replacementThickness);
+
+      const state = useWorkbenchStore.getState();
+      const baseRow = state.rows.find((row) => row.floorRole === "base_structure");
+
+      expect(baseRow?.materialId).toBe(materialId);
+      expect(baseRow?.thicknessMm).toBe(replacementThickness);
+
+      const scenario = evaluateScenario({
+        id: materialId,
+        name: `replace ${materialId}`,
+        rows: state.rows,
+        source: "current",
+        studyMode: state.studyMode,
+        targetOutputs: FLOOR_TARGET_OUTPUTS
+      });
+
+      expect(scenario.warnings.filter((warning) => /outside the guided sanity band/i.test(warning))).toEqual([]);
+    }
+  });
+
   it("keeps published exact and bound presets off curated lanes when a single-entry role is split and moved through the store", async () => {
     const { evaluateScenario } = await import("./scenario-analysis");
     const { useWorkbenchStore } = await import("./workbench-store");

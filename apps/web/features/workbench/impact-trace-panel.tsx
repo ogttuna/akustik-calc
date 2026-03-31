@@ -121,7 +121,9 @@ export function ImpactTracePanel({ result }: ImpactTracePanelProps) {
         {status?.implementedLowConfidenceEstimate ? <Pill tone="warning">Low confidence</Pill> : null}
         {lowerBoundImpact ? <Pill tone="neutral">Upper-bound support</Pill> : null}
         {dynamicImpactTrace ? <Pill tone={getEvidenceTone(dynamicImpactTrace.evidenceTier)}>{dynamicImpactTrace.evidenceTierLabel}</Pill> : null}
-        {dynamicImpactTrace?.fieldContinuation !== "none" ? <Pill tone="accent">{dynamicImpactTrace.fieldContinuationLabel}</Pill> : null}
+        {dynamicImpactTrace && dynamicImpactTrace.fieldContinuation !== "none" ? (
+          <Pill tone="accent">{dynamicImpactTrace.fieldContinuationLabel}</Pill>
+        ) : null}
         {support?.primaryCurveUnaffected ? <Pill tone="neutral">Airborne curve untouched</Pill> : null}
       </div>
 

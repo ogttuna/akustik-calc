@@ -6,6 +6,7 @@ import type {
 } from "@dynecho/shared";
 import { ImpactPredictorInputSchema, LayerInputSchema, type ImpactPredictorInput } from "@dynecho/shared";
 
+import { hasInvalidExplicitFloorBaseStructure } from "./floor-base-structure-eligibility";
 import { getDefaultMaterialCatalog, resolveMaterial } from "./material-catalog";
 import { ksRound1 } from "./math";
 import {
@@ -13,6 +14,7 @@ import {
   inferStructuralSupportTypeFromMaterial,
   inferSupportFormFromMaterial
 } from "./structural-material-classification";
+import { isHeavyConcreteCarrierDensityEligible } from "./heavy-concrete-carrier-eligibility";
 
 type PredictorAdaptation = {
   catalogAdditions: readonly MaterialDefinition[];
@@ -680,7 +682,7 @@ function buildCustomMaterial(input: {
 function resolveBaseStructureMaterialId(input: ImpactPredictorInput): string | null {
   switch (input.structuralSupportType) {
     case "reinforced_concrete":
-      return "concrete";
+      return isHeavyConcreteCarrierDensityEligible(input.baseSlab?.densityKgM3) ? "concrete" : "lightweight_concrete";
     case "hollow_core":
       return "hollow_core_plank";
     case "steel_joists":
@@ -1324,6 +1326,12 @@ export function buildImpactPredictorInputFromLayerStack(
   const explicitInput = ImpactPredictorInputSchema.parse(seedInput);
   const resolvedLayers = normalizeImpactPredictorLayerStack(rawLayers, catalog);
 
+  if (hasInvalidExplicitFloorBaseStructure(resolvedLayers)) {
+    throw new Error(
+      "Visible layer stack cannot be reduced to impact predictor input because the base_structure layer is not a recognized structural floor carrier."
+    );
+  }
+
   const baseStructure = firstLayerForRole(resolvedLayers, "base_structure");
   const resilientLayer = firstLayerForRole(resolvedLayers, "resilient_layer");
   const floatingScreed = firstLayerForRole(resolvedLayers, "floating_screed");
@@ -1409,6 +1417,10 @@ function canDerivePredictorInputFromLayerStack(
   const normalizedLayers = normalizeImpactPredictorLayerStack(rawLayers, catalog);
 
   if (hasAmbiguousPredictorRoleTopology(normalizedLayers)) {
+    return false;
+  }
+
+  if (hasInvalidExplicitFloorBaseStructure(normalizedLayers)) {
     return false;
   }
 

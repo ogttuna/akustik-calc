@@ -10,8 +10,10 @@ import type {
 } from "@dynecho/shared";
 import { getFloorSystemCompanionSemantic } from "@dynecho/shared";
 
+import { hasInvalidExplicitFloorBaseStructure } from "./floor-base-structure-eligibility";
 import { getImpactConfidenceForBasis } from "./impact-confidence";
 import { buildUniformImpactMetricBasis } from "./impact-metric-basis";
+import { isResolvedHeavyConcreteCarrierEligible } from "./heavy-concrete-carrier-eligibility";
 import { deriveLightweightSteelFl28Estimate } from "./lightweight-steel-fl28-estimate";
 import { round1 } from "./math";
 import { inferStructuralSupportTypeFromMaterial } from "./structural-material-classification";
@@ -254,6 +256,7 @@ function getImpactBasis(kind: FloorSystemEstimateKind): ImpactCalculation["basis
 function resolveSpecificFamilyEstimateBasis(input: {
   allowSpecificBasis?: boolean;
   family: StructuralFamily;
+  heavyConcreteCarrierEligible: boolean;
   currentProfile: FloorProfile;
   kind: FloorSystemEstimateKind;
   sources: readonly FloorSystemRecommendation[];
@@ -289,6 +292,7 @@ function resolveSpecificFamilyEstimateBasis(input: {
 
   if (
     input.family === "reinforced_concrete" &&
+    input.heavyConcreteCarrierEligible &&
     (input.currentProfile === "upper_only" || input.currentProfile === "heavy_floating" || input.currentProfile === "combined")
   ) {
     return {
@@ -433,12 +437,13 @@ function buildImpactEstimate(
   family: StructuralFamily,
   currentProfile: FloorProfile,
   sources: readonly FloorSystemRecommendation[],
-  options: { allowSpecificBasis?: boolean } = {}
+  options: { allowSpecificBasis?: boolean; heavyConcreteCarrierEligible?: boolean } = {}
 ): ImpactCalculation {
   const basisInfo = resolveSpecificFamilyEstimateBasis({
     allowSpecificBasis: options.allowSpecificBasis,
     currentProfile,
     family,
+    heavyConcreteCarrierEligible: options.heavyConcreteCarrierEligible ?? false,
     kind,
     sources
   });
@@ -497,7 +502,13 @@ export function deriveFloorSystemEstimate(
     return null;
   }
 
+  if (hasInvalidExplicitFloorBaseStructure(layers)) {
+    return null;
+  }
+
   const structuralFamily = getLayerStructuralFamily(layers);
+  const baseStructureLayer = layers.find((layer) => layer.floorRole === "base_structure");
+  const heavyConcreteCarrierEligible = isResolvedHeavyConcreteCarrierEligible(baseStructureLayer);
   const hasExplicitFloorRoles = layers.some((layer) => Boolean(layer.floorRole));
   if (structuralFamily === "unknown" && !hasExplicitFloorRoles) {
     return null;
@@ -561,7 +572,8 @@ export function deriveFloorSystemEstimate(
     },
     fitPercent,
     impact: buildImpactEstimate(activeKindAndSources.kind, structuralFamily, currentProfile, activeKindAndSources.sources, {
-      allowSpecificBasis: ambiguousSingleEntryRoleConflicts.length === 0
+      allowSpecificBasis: ambiguousSingleEntryRoleConflicts.length === 0,
+      heavyConcreteCarrierEligible
     }),
     kind: activeKindAndSources.kind,
     notes: [
