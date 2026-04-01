@@ -332,7 +332,7 @@ function proposalCompanyProfileCard(page: Page, label: string) {
     .locator("xpath=ancestor::div[.//button[normalize-space()='Delete']][1]");
 }
 
-test("workbench supports preset switching and inline layer editing", async ({ page }) => {
+test("workbench supports study-mode preset switching and inline layer editing", async ({ page }) => {
   await gotoSimpleWorkbench(page);
 
   await expect(page.getByRole("heading", { name: "Wall calculator" })).toBeVisible();
@@ -340,7 +340,10 @@ test("workbench supports preset switching and inline layer editing", async ({ pa
   await expect(page.getByRole("button", { name: /^Remove$/ })).toHaveCount(4);
 
   await selectGuidedSurface(page, "floor");
-  await expect(page.getByText("No layers yet").first()).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Floor calculator" })).toBeVisible();
+  await expect(page.getByLabel("Example stack")).toHaveValue("heavy_concrete_impact_floor");
+  await expect(page.getByText("4 rows", { exact: true }).first()).toBeVisible();
+  await expect(page.getByRole("button", { name: /^Remove$/ })).toHaveCount(4);
 
   await loadGuidedSample(page, "Floor Study");
 
@@ -363,6 +366,26 @@ test("workbench supports preset switching and inline layer editing", async ({ pa
   await expect(page.getByText("5 rows", { exact: true }).first()).toBeVisible();
   await expect(visibleTestId(page, "editor-row-5")).toContainText("4 mm");
   await expect(visibleTestId(page, "editor-row-5")).toContainText("Floor covering");
+});
+
+test("guided study-type switching keeps the default preset and rows in sync", async ({ page }) => {
+  await gotoSimpleWorkbench(page);
+
+  await expect(page.getByRole("heading", { name: "Wall calculator" })).toBeVisible();
+  await expect(page.getByLabel("Example stack")).toHaveValue("concrete_wall");
+  await expect(page.getByText("4 rows", { exact: true }).first()).toBeVisible();
+
+  await selectGuidedSurface(page, "floor");
+  await expect(page.getByRole("heading", { name: "Floor calculator" })).toBeVisible();
+  await expect(page.getByLabel("Example stack")).toHaveValue("heavy_concrete_impact_floor");
+  await expect(page.getByText("4 rows", { exact: true }).first()).toBeVisible();
+  await expect(page.getByRole("button", { name: /^Remove$/ })).toHaveCount(4);
+
+  await selectGuidedSurface(page, "wall");
+  await expect(page.getByRole("heading", { name: "Wall calculator" })).toBeVisible();
+  await expect(page.getByLabel("Example stack")).toHaveValue("concrete_wall");
+  await expect(page.getByText("4 rows", { exact: true }).first()).toBeVisible();
+  await expect(page.getByRole("button", { name: /^Remove$/ })).toHaveCount(4);
 });
 
 test("guided floor composer normalizes structural carrier draft defaults instead of inheriting the vinyl starter thickness", async ({

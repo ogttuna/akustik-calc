@@ -27,7 +27,7 @@ import { deriveGuidedRouteSignals } from "./guided-route-signals";
 import { getGuidedValidationSummary } from "./guided-validation-summary";
 import { isImpactOnlyLowConfidenceFloorLane } from "./impact-only-low-confidence-floor-lane";
 import { getGuidedNumericSanityWarning, GUIDED_INPUT_SANITY_BANDS } from "./input-sanity";
-import { getPresetById, type PresetId } from "./preset-definitions";
+import { getPresetById } from "./preset-definitions";
 import { evaluateScenario } from "./scenario-analysis";
 import { buildSimpleWorkbenchEvidencePacket } from "./simple-workbench-evidence";
 import { buildSimpleWorkbenchMethodDossier } from "./simple-workbench-method-dossier";
@@ -123,6 +123,7 @@ export function SimpleWorkbenchShell() {
   const rows = useWorkbenchStore((state) => state.rows);
   const studyContext = useWorkbenchStore((state) => state.studyContext);
   const studyMode = useWorkbenchStore((state) => state.studyMode);
+  const activePresetId = useWorkbenchStore((state) => state.activePresetId);
   const targetLnwDb = useWorkbenchStore((state) => state.targetLnwDb);
   const targetRwDb = useWorkbenchStore((state) => state.targetRwDb);
   const calculatorId = useWorkbenchStore((state) => state.calculatorId);
@@ -189,7 +190,6 @@ export function SimpleWorkbenchShell() {
   const setRequestedOutputs = useWorkbenchStore((state) => state.setRequestedOutputs);
   const setReportProfile = useWorkbenchStore((state) => state.setReportProfile);
   const replaceSingleBaseStructure = useWorkbenchStore((state) => state.replaceSingleBaseStructure);
-  const startStudyMode = useWorkbenchStore((state) => state.startStudyMode);
   const updateDensity = useWorkbenchStore((state) => state.updateDensity);
   const updateDynamicStiffness = useWorkbenchStore((state) => state.updateDynamicStiffness);
   const updateFloorRole = useWorkbenchStore((state) => state.updateFloorRole);
@@ -204,7 +204,6 @@ export function SimpleWorkbenchShell() {
   const { collapsedLiveRowCount, liveRowCount, parkedRowCount, solverLayerCount } = getRowActivityCounts(rows, materials);
 
   // ── Local state ──────────────────────────────────────────────────────────
-  const [selectedPresetId, setSelectedPresetId] = useState<PresetId>(modePresets[0]?.id ?? MODE_PRESETS[studyMode][0]!);
   const [newLayerDraft, setNewLayerDraft] = useState<NewLayerDraft>(() => buildDefaultNewLayerDraft(studyMode));
   const [customMaterialDraft, setCustomMaterialDraft] = useState<CustomMaterialDraft>(() => createEmptyCustomMaterialDraft());
   const [customMaterialExpanded, setCustomMaterialExpanded] = useState(false);
@@ -287,13 +286,6 @@ export function SimpleWorkbenchShell() {
     previousNewLayerDraftRef.current = newLayerDraft;
   }, [materials, newLayerDraft, setNewLayerDraft, studyMode]);
 
-  useEffect(() => {
-    const fallbackPresetId = modePresets[0]?.id ?? MODE_PRESETS[studyMode][0]!;
-    if (!modePresets.some((preset) => preset.id === selectedPresetId)) {
-      setSelectedPresetId(fallbackPresetId);
-    }
-  }, [modePresets, selectedPresetId, studyMode]);
-
   useEffect(() => { setNewLayerDraft(buildDefaultNewLayerDraft(studyMode)); }, [studyMode]);
 
   useEffect(() => {
@@ -314,7 +306,7 @@ export function SimpleWorkbenchShell() {
   }, [movedRowFlash]);
 
   // ── Computed values ──────────────────────────────────────────────────────
-  const selectedPreset = modePresets.find((preset) => preset.id === selectedPresetId) ?? modePresets[0]!;
+  const selectedPreset = modePresets.find((preset) => preset.id === activePresetId) ?? modePresets[0]!;
   const selectedContextOption = AIRBORNE_CONTEXT_OPTIONS.find((option) => option.value === airborneContextMode) ?? AIRBORNE_CONTEXT_OPTIONS[0]!;
   const newLayerMaterialGroups = buildMaterialGroups(studyMode, materials, newLayerDraft.materialId, newLayerDraft.floorRole);
   const customMaterialErrors = validateCustomMaterialDraft(customMaterialDraft, materials);
@@ -572,6 +564,12 @@ export function SimpleWorkbenchShell() {
     });
   };
 
+  const handleStudyModeChange = (nextStudyMode: "floor" | "wall") => {
+    const nextPresetId = MODE_PRESETS[nextStudyMode][0]!;
+    setAirborneContextMode("element_lab");
+    loadPreset(nextPresetId);
+  };
+
   // ── Render ───────────────────────────────────────────────────────────────
   return (
     <div className="grid min-w-0 gap-0" style={SIMPLE_WORKBENCH_THEME}>
@@ -584,13 +582,13 @@ export function SimpleWorkbenchShell() {
         onContextModeChange={setAirborneContextMode}
         onExportBrandedPdf={() => void handleQuickPdf("branded")}
         onExportSimplePdf={() => void handleQuickPdf("simple")}
-        onPresetChange={(presetId) => { setSelectedPresetId(presetId); loadPreset(presetId); }}
+        onPresetChange={loadPreset}
         onReset={() => setResetDialogOpen(true)}
-        onStudyModeChange={startStudyMode}
+        onStudyModeChange={handleStudyModeChange}
         onToggleTheme={toggleTheme}
         readyOutputCount={readyOutputCount}
         rowCount={rows.length}
-        selectedPresetId={selectedPresetId}
+        selectedPresetId={selectedPreset.id}
         studyMode={studyMode}
         theme={theme}
       />
