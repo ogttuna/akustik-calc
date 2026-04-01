@@ -882,21 +882,29 @@ function deriveSteelPublishedFamilyEstimate(
 export function derivePredictorPublishedFamilyEstimate(
   input: ImpactPredictorInput
 ): FloorSystemEstimateResult | null {
-  return (
-    deriveKnaufConcreteCombinedPublishedFamilyEstimate(input) ??
-    deriveKnaufConcreteCombinedTilePublishedFamilyEstimate(input) ??
-    deriveKnaufConcreteSuspendedTilePublishedFamilyEstimate(input) ??
-    deriveConcreteCombinedVinylElasticCeilingEstimate(input) ??
-    derivePliteqSteelJoistSuspendedVinylEstimate(input) ??
-    deriveUbiqOpenWebSuspendedVinylEstimate(input) ??
-    deriveOpenBoxPublishedFamilyEstimate(input) ??
-    deriveCltDryPublishedFamilyEstimate(input) ??
-    deriveDataholzCltDryPublishedEstimate(input) ??
-    derivePliteqHollowCorePublishedFamilyEstimate(input) ??
-    deriveDataholzTimberDryPublishedEstimate(input) ??
-    deriveKnaufTimberPublishedFamilyEstimate(input) ??
-    deriveCltWetPublishedFamilyEstimate(input) ??
-    deriveSteelPublishedFamilyEstimate(input) ??
-    null
-  );
+  const publishedFamilyRules: readonly ((input: ImpactPredictorInput) => FloorSystemEstimateResult | null)[] = [
+    deriveKnaufConcreteCombinedPublishedFamilyEstimate,
+    deriveKnaufConcreteCombinedTilePublishedFamilyEstimate,
+    deriveKnaufConcreteSuspendedTilePublishedFamilyEstimate,
+    deriveConcreteCombinedVinylElasticCeilingEstimate,
+    derivePliteqSteelJoistSuspendedVinylEstimate,
+    deriveUbiqOpenWebSuspendedVinylEstimate,
+    deriveOpenBoxPublishedFamilyEstimate,
+    deriveCltDryPublishedFamilyEstimate,
+    deriveDataholzCltDryPublishedEstimate,
+    derivePliteqHollowCorePublishedFamilyEstimate,
+    deriveDataholzTimberDryPublishedEstimate,
+    deriveKnaufTimberPublishedFamilyEstimate,
+    deriveCltWetPublishedFamilyEstimate,
+    deriveSteelPublishedFamilyEstimate
+  ];
+
+  for (const derive of publishedFamilyRules) {
+    const estimate = derive(input);
+    if (estimate) {
+      return estimate;
+    }
+  }
+
+  return null;
 }

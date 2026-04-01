@@ -2216,6 +2216,71 @@ describe("calculateAssembly", () => {
     ).toBe(true);
   });
 
+  it("applies the steel-field security high-band lift only on supported 60 mm security hybrids", () => {
+    const steelFieldContext = {
+      contextMode: "field_between_rooms",
+      connectionType: "line_connection",
+      studType: "light_steel_stud",
+      studSpacingMm: 600,
+      airtightness: "good",
+      perimeterSeal: "good",
+      penetrationState: "none",
+      junctionQuality: "good",
+      sharedTrack: "independent",
+      electricalBoxes: "none",
+      panelWidthMm: 3000,
+      panelHeightMm: 2600,
+      receivingRoomVolumeM3: 32,
+      receivingRoomRt60S: 0.5
+    } as const;
+
+    const diamondSecurity = calculateAssembly(
+      [
+        { materialId: "diamond_board", thicknessMm: 18 },
+        { materialId: "rockwool", thicknessMm: 60 },
+        { materialId: "security_board", thicknessMm: 12.5 }
+      ],
+      {
+        calculator: "dynamic",
+        airborneContext: steelFieldContext
+      }
+    );
+    const fireSecurity = calculateAssembly(
+      [
+        { materialId: "firestop_board", thicknessMm: 15 },
+        { materialId: "rockwool", thicknessMm: 60 },
+        { materialId: "security_board", thicknessMm: 12.5 }
+      ],
+      {
+        calculator: "dynamic",
+        airborneContext: steelFieldContext
+      }
+    );
+    const acousticSecurity = calculateAssembly(
+      [
+        { materialId: "acoustic_gypsum_board", thicknessMm: 15 },
+        { materialId: "rockwool", thicknessMm: 60 },
+        { materialId: "security_board", thicknessMm: 12.5 }
+      ],
+      {
+        calculator: "dynamic",
+        airborneContext: steelFieldContext
+      }
+    );
+
+    expect(diamondSecurity.ratings.field?.RwPrime).toBe(34);
+    expect(diamondSecurity.ratings.field?.DnTA).toBe(35.6);
+    expect(
+      diamondSecurity.warnings.some((warning: string) => /steel-field security-hybrid high-band lift/i.test(warning))
+    ).toBe(true);
+    expect(
+      fireSecurity.warnings.some((warning: string) => /steel-field security-hybrid high-band lift/i.test(warning))
+    ).toBe(true);
+    expect(
+      acousticSecurity.warnings.some((warning: string) => /steel-field security-hybrid high-band lift/i.test(warning))
+    ).toBe(false);
+  });
+
   it("keeps fire-rated filled single-board framed walls on the upstream lab and field corridor", () => {
     const steelLabContext = {
       contextMode: "element_lab",

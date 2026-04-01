@@ -16,7 +16,7 @@ import {
 } from "./structural-material-classification";
 import { isHeavyConcreteCarrierDensityEligible } from "./heavy-concrete-carrier-eligibility";
 
-type PredictorAdaptation = {
+export type PredictorAdaptation = {
   catalogAdditions: readonly MaterialDefinition[];
   notes: readonly string[];
   officialFloorSystemId: string | null;

@@ -28,19 +28,8 @@ import { classifyLayerRole, materialText } from "./airborne-topology";
 import { calculateDynamicAirborneResult } from "./dynamic-airborne";
 import { clamp, round1 } from "./math";
 import { buildEstimateWarnings, estimateRwDb } from "./estimate-rw";
-import { deriveBoundFloorSystemEstimate, matchBoundFloorSystem, resolveBoundFloorSystemById } from "./bound-floor-system-match";
 import { buildFloorSystemRatings } from "./floor-system-ratings";
-import { deriveFloorSystemEstimate } from "./floor-system-estimate";
-import {
-  matchExactFloorSystem,
-  recommendFloorSystems,
-  resolveExactFloorSystemById,
-  resolveExactFloorSystemImpactSource
-} from "./floor-system-match";
 import { buildExactImpactFromSource } from "./impact-exact";
-import { applyImpactFieldContextToBoundImpact, applyImpactFieldContextToImpact } from "./impact-field-context";
-import { estimateImpactFromLayers } from "./impact-estimate";
-import { buildImpactPredictorStatus } from "./impact-predictor-status";
 import {
   adaptImpactPredictorInput,
   getVisibleLayerPredictorBlockerWarning,
@@ -49,21 +38,10 @@ import {
   mergePredictorCatalog
 } from "./impact-predictor-input";
 import {
-  filterImpactCatalogMatchForExplicitPredictorInput,
-  matchImpactProductCatalog
-} from "./impact-product-catalog";
-import { derivePredictorSpecificFloorSystemEstimate } from "./predictor-floor-system-estimate";
-import { buildImpactSupport } from "./impact-support";
-import { mergeImpactCalculations, mergePublishedUpperTreatmentDeltaCompanion } from "./impact-merge";
-import { attachImpactTraceFromExactSource } from "./impact-trace";
-import { buildDynamicImpactTrace } from "./dynamic-impact";
-import {
-  inferImpactSupportingElementFamilyFromExactFloorSystem,
-  inferImpactSupportingElementFamilyFromFloorSystemEstimate,
-  inferImpactSupportingElementFamilyFromImpactCatalogMatch,
-  inferImpactSupportingElementFamilyFromPredictorInput
-} from "./impact-supporting-element-family";
-import { deriveHeavyReferenceImpactFromDeltaLw } from "./impact-reference";
+  buildResolvedImpactArtifacts,
+  finalizeResolvedImpactLane,
+  resolveLayerBasedImpactLane
+} from "./impact-lane";
 import { computeLayerSurfaceMassKgM2 } from "./layer-surface-mass";
 import { getDefaultMaterialCatalog, resolveMaterial } from "./material-catalog";
 import {
@@ -123,16 +101,6 @@ function pickReferenceFloorRatingLayers(layers: readonly ResolvedLayer[]): reado
   const baseStructureLayers = layers.filter((layer) => layer.floorRole === "base_structure");
 
   return baseStructureLayers.length > 0 ? baseStructureLayers : layers;
-}
-
-function shouldHideLowConfidenceProxyAirborne(
-  floorSystemEstimate: AssemblyCalculation["floorSystemEstimate"] | null | undefined
-): boolean {
-  return Boolean(
-    floorSystemEstimate?.kind === "low_confidence" &&
-      floorSystemEstimate.impact.basis === "predictor_floor_system_low_confidence_estimate" &&
-      typeof floorSystemEstimate.airborneRatings?.Rw !== "number"
-  );
 }
 
 function isBoardLikeSurfaceLayer(layer: ResolvedLayer): boolean {
@@ -365,17 +333,88 @@ function octaveBandWindowWeight(freqHz: number, startHz: number, endHz: number, 
   return clamp(Math.min(left, right), 0, 1);
 }
 
+type AirborneOverlayResult = ReturnType<typeof applyAirborneContextOverlay>;
+type FieldRwPrimeTargets = Record<35 | 42 | 50 | 60, number>;
+
+type DynamicAirborneGuardInput = {
+  airborneContext: AirborneContext | null;
+  layers: readonly ResolvedLayer[];
+  overlayResult: AirborneOverlayResult;
+  selectedCurve: TransmissionLossCurve;
+};
+
+type DynamicAirborneGuard = {
+  apply: (input: DynamicAirborneGuardInput) => AirborneOverlayResult;
+  id: string;
+  priority: number;
+};
+
+function hasExplicitFieldFramingContext(airborneContext: AirborneContext | null): airborneContext is AirborneContext {
+  return Boolean(
+    airborneContext &&
+      airborneContext.contextMode !== "element_lab" &&
+      (
+        airborneContext.connectionType !== "auto" ||
+        airborneContext.studType !== "auto" ||
+        typeof airborneContext.studSpacingMm === "number"
+      )
+  );
+}
+
+function applyFieldRwPrimeTargetGuard<FamilyInfo extends { fillThicknessMm: number }>(
+  overlayResult: AirborneOverlayResult,
+  layers: readonly ResolvedLayer[],
+  airborneContext: AirborneContext | null,
+  detectFamily: (layers: readonly ResolvedLayer[]) => FamilyInfo | null,
+  resolveTargets: (familyInfo: FamilyInfo, airborneContext: AirborneContext) => FieldRwPrimeTargets,
+  warning: string
+): AirborneOverlayResult {
+  if (!hasExplicitFieldFramingContext(airborneContext)) {
+    return overlayResult;
+  }
+
+  const familyInfo = detectFamily(layers);
+  if (!familyInfo) {
+    return overlayResult;
+  }
+
+  const targetMetric = interpolateFieldTargetRwPrime(
+    familyInfo.fillThicknessMm,
+    resolveTargets(familyInfo, airborneContext)
+  );
+  const currentMetric = overlayResult.ratings.field?.RwPrime ?? overlayResult.ratings.iso717.RwPrime;
+
+  if (!(typeof currentMetric === "number" && Number.isFinite(currentMetric))) {
+    return overlayResult;
+  }
+
+  if (Math.abs(currentMetric - targetMetric) < 0.25) {
+    return overlayResult;
+  }
+
+  const anchored = anchorCurveToFieldRwPrime(overlayResult.curve, targetMetric, airborneContext);
+  if (!anchored.applied) {
+    return overlayResult;
+  }
+
+  return {
+    curve: anchored.curve,
+    overlay: overlayResult.overlay,
+    ratings: anchored.ratings,
+    warnings: [
+      ...overlayResult.warnings,
+      warning
+    ]
+  };
+}
+
 function applyMicroGapFillEquivalentFieldGuard(
   selectedCurve: TransmissionLossCurve,
-  overlayResult: ReturnType<typeof applyAirborneContextOverlay>,
+  overlayResult: AirborneOverlayResult,
   layers: readonly ResolvedLayer[],
   airborneContext: AirborneContext | null
-): ReturnType<typeof applyAirborneContextOverlay> {
-  if (
-    !airborneContext ||
-    airborneContext.contextMode === "element_lab" ||
-    !(airborneContext.connectionType !== "auto" || airborneContext.studType !== "auto" || typeof airborneContext.studSpacingMm === "number")
-  ) {
+): AirborneOverlayResult {
+  if (!hasExplicitFieldFramingContext(airborneContext)) {
     return overlayResult;
   }
 
@@ -461,198 +500,74 @@ function interpolateFieldTargetRwPrime(fillThicknessMm: number, targets: Record<
 }
 
 function applyFireRatedFilledSingleBoardFieldGuard(
-  overlayResult: ReturnType<typeof applyAirborneContextOverlay>,
+  overlayResult: AirborneOverlayResult,
   layers: readonly ResolvedLayer[],
   airborneContext: AirborneContext | null
-): ReturnType<typeof applyAirborneContextOverlay> {
-  if (
-    !airborneContext ||
-    airborneContext.contextMode === "element_lab" ||
-    !(airborneContext.connectionType !== "auto" || airborneContext.studType !== "auto" || typeof airborneContext.studSpacingMm === "number")
-  ) {
-    return overlayResult;
-  }
-
-  const familyInfo = detectFireRatedFilledSingleBoardFamily(layers);
-  if (!familyInfo) {
-    return overlayResult;
-  }
-
-  const profile = getFireRatedFilledSingleBoardProfile(airborneContext);
-  const targets = FIRE_RATED_FILLED_SINGLE_BOARD_FIELD_TARGET_RW_PRIME[familyInfo.family][profile];
-  const targetMetric = interpolateFieldTargetRwPrime(familyInfo.fillThicknessMm, targets);
-  const currentMetric = overlayResult.ratings.field?.RwPrime ?? overlayResult.ratings.iso717.RwPrime;
-
-  if (!(typeof currentMetric === "number" && Number.isFinite(currentMetric))) {
-    return overlayResult;
-  }
-
-  if (Math.abs(currentMetric - targetMetric) < 0.25) {
-    return overlayResult;
-  }
-
-  const anchored = anchorCurveToFieldRwPrime(overlayResult.curve, targetMetric, airborneContext);
-  if (!anchored.applied) {
-    return overlayResult;
-  }
-
-  return {
-    curve: anchored.curve,
-    overlay: overlayResult.overlay,
-    ratings: anchored.ratings,
-    warnings: [
-      ...overlayResult.warnings,
-      "A fire-rated filled single-board field corridor was applied because these fire/firestop framed hybrids were materially misreading the upstream field result."
-    ]
-  };
+): AirborneOverlayResult {
+  return applyFieldRwPrimeTargetGuard(
+    overlayResult,
+    layers,
+    airborneContext,
+    detectFireRatedFilledSingleBoardFamily,
+    (familyInfo, context) =>
+      FIRE_RATED_FILLED_SINGLE_BOARD_FIELD_TARGET_RW_PRIME[familyInfo.family][getFireRatedFilledSingleBoardProfile(context)],
+    "A fire-rated filled single-board field corridor was applied because these fire/firestop framed hybrids were materially misreading the upstream field result."
+  );
 }
 
 function applyMixedPlainFilledSingleBoardFieldGuard(
-  overlayResult: ReturnType<typeof applyAirborneContextOverlay>,
+  overlayResult: AirborneOverlayResult,
   layers: readonly ResolvedLayer[],
   airborneContext: AirborneContext | null
-): ReturnType<typeof applyAirborneContextOverlay> {
-  if (
-    !airborneContext ||
-    airborneContext.contextMode === "element_lab" ||
-    !(airborneContext.connectionType !== "auto" || airborneContext.studType !== "auto" || typeof airborneContext.studSpacingMm === "number")
-  ) {
-    return overlayResult;
-  }
-
-  const familyInfo = detectMixedPlainFilledSingleBoardFamily(layers);
-  if (!familyInfo) {
-    return overlayResult;
-  }
-
-  const profile = getMixedPlainFilledSingleBoardProfile(airborneContext);
-  const targets = MIXED_PLAIN_FILLED_SINGLE_BOARD_FIELD_TARGET_RW_PRIME[familyInfo.family][profile];
-  const targetMetric = interpolateFieldTargetRwPrime(familyInfo.fillThicknessMm, targets);
-  const currentMetric = overlayResult.ratings.field?.RwPrime ?? overlayResult.ratings.iso717.RwPrime;
-
-  if (!(typeof currentMetric === "number" && Number.isFinite(currentMetric))) {
-    return overlayResult;
-  }
-
-  if (Math.abs(currentMetric - targetMetric) < 0.25) {
-    return overlayResult;
-  }
-
-  const anchored = anchorCurveToFieldRwPrime(overlayResult.curve, targetMetric, airborneContext);
-  if (!anchored.applied) {
-    return overlayResult;
-  }
-
-  return {
-    curve: anchored.curve,
-    overlay: overlayResult.overlay,
-    ratings: anchored.ratings,
-    warnings: [
-      ...overlayResult.warnings,
-      "A mixed plain-filled single-board field corridor was applied because plain gypsum plus premium/moderate framed hybrids were materially misreading the upstream field result."
-    ]
-  };
+): AirborneOverlayResult {
+  return applyFieldRwPrimeTargetGuard(
+    overlayResult,
+    layers,
+    airborneContext,
+    detectMixedPlainFilledSingleBoardFamily,
+    (familyInfo, context) =>
+      MIXED_PLAIN_FILLED_SINGLE_BOARD_FIELD_TARGET_RW_PRIME[familyInfo.family][getMixedPlainFilledSingleBoardProfile(context)],
+    "A mixed plain-filled single-board field corridor was applied because plain gypsum plus premium/moderate framed hybrids were materially misreading the upstream field result."
+  );
 }
 
 function applyMixedEnhancedFilledSingleBoardFieldGuard(
-  overlayResult: ReturnType<typeof applyAirborneContextOverlay>,
+  overlayResult: AirborneOverlayResult,
   layers: readonly ResolvedLayer[],
   airborneContext: AirborneContext | null
-): ReturnType<typeof applyAirborneContextOverlay> {
-  if (
-    !airborneContext ||
-    airborneContext.contextMode === "element_lab" ||
-    !(airborneContext.connectionType !== "auto" || airborneContext.studType !== "auto" || typeof airborneContext.studSpacingMm === "number")
-  ) {
-    return overlayResult;
-  }
-
-  const familyInfo = detectMixedEnhancedFilledSingleBoardFamily(layers);
-  if (!familyInfo) {
-    return overlayResult;
-  }
-
-  const profile = getMixedEnhancedFilledSingleBoardProfile(airborneContext);
-  const targets = MIXED_ENHANCED_FILLED_SINGLE_BOARD_FIELD_TARGET_RW_PRIME[familyInfo.family][profile];
-  const targetMetric = interpolateFieldTargetRwPrime(familyInfo.fillThicknessMm, targets);
-  const currentMetric = overlayResult.ratings.field?.RwPrime ?? overlayResult.ratings.iso717.RwPrime;
-
-  if (!(typeof currentMetric === "number" && Number.isFinite(currentMetric))) {
-    return overlayResult;
-  }
-
-  if (Math.abs(currentMetric - targetMetric) < 0.25) {
-    return overlayResult;
-  }
-
-  const anchored = anchorCurveToFieldRwPrime(overlayResult.curve, targetMetric, airborneContext);
-  if (!anchored.applied) {
-    return overlayResult;
-  }
-
-  return {
-    curve: anchored.curve,
-    overlay: overlayResult.overlay,
-    ratings: anchored.ratings,
-    warnings: [
-      ...overlayResult.warnings,
-      "A mixed enhanced filled single-board field corridor was applied because premium framed hybrids were materially misreading the upstream field result."
-    ]
-  };
+): AirborneOverlayResult {
+  return applyFieldRwPrimeTargetGuard(
+    overlayResult,
+    layers,
+    airborneContext,
+    detectMixedEnhancedFilledSingleBoardFamily,
+    (familyInfo, context) =>
+      MIXED_ENHANCED_FILLED_SINGLE_BOARD_FIELD_TARGET_RW_PRIME[familyInfo.family][getMixedEnhancedFilledSingleBoardProfile(context)],
+    "A mixed enhanced filled single-board field corridor was applied because premium framed hybrids were materially misreading the upstream field result."
+  );
 }
 
 function applySecurityFilledSingleBoardFieldGuard(
-  overlayResult: ReturnType<typeof applyAirborneContextOverlay>,
+  overlayResult: AirborneOverlayResult,
   layers: readonly ResolvedLayer[],
   airborneContext: AirborneContext | null
-): ReturnType<typeof applyAirborneContextOverlay> {
-  if (
-    !airborneContext ||
-    airborneContext.contextMode === "element_lab" ||
-    !(airborneContext.connectionType !== "auto" || airborneContext.studType !== "auto" || typeof airborneContext.studSpacingMm === "number")
-  ) {
-    return overlayResult;
-  }
-
-  const familyInfo = detectSecurityFilledSingleBoardFamily(layers);
-  if (!familyInfo) {
-    return overlayResult;
-  }
-
-  const profile = getSecurityFilledSingleBoardProfile(airborneContext);
-  const targets = SECURITY_FILLED_SINGLE_BOARD_FIELD_TARGET_RW_PRIME[familyInfo.family][profile];
-  const targetMetric = interpolateFieldTargetRwPrime(familyInfo.fillThicknessMm, targets);
-  const currentMetric = overlayResult.ratings.field?.RwPrime ?? overlayResult.ratings.iso717.RwPrime;
-
-  if (!(typeof currentMetric === "number" && Number.isFinite(currentMetric))) {
-    return overlayResult;
-  }
-
-  if (Math.abs(currentMetric - targetMetric) < 0.25) {
-    return overlayResult;
-  }
-
-  const anchored = anchorCurveToFieldRwPrime(overlayResult.curve, targetMetric, airborneContext);
-  if (!anchored.applied) {
-    return overlayResult;
-  }
-
-  return {
-    curve: anchored.curve,
-    overlay: overlayResult.overlay,
-    ratings: anchored.ratings,
-    warnings: [
-      ...overlayResult.warnings,
-      "A security-board filled single-board field corridor was applied because these framed hybrids were materially misreading the upstream field result."
-    ]
-  };
+): AirborneOverlayResult {
+  return applyFieldRwPrimeTargetGuard(
+    overlayResult,
+    layers,
+    airborneContext,
+    detectSecurityFilledSingleBoardFamily,
+    (familyInfo, context) =>
+      SECURITY_FILLED_SINGLE_BOARD_FIELD_TARGET_RW_PRIME[familyInfo.family][getSecurityFilledSingleBoardProfile(context)],
+    "A security-board filled single-board field corridor was applied because these framed hybrids were materially misreading the upstream field result."
+  );
 }
 
 function applySecurityFilledSingleBoardSteelHighBandLiftGuard(
-  overlayResult: ReturnType<typeof applyAirborneContextOverlay>,
+  overlayResult: AirborneOverlayResult,
   layers: readonly ResolvedLayer[],
   airborneContext: AirborneContext | null
-): ReturnType<typeof applyAirborneContextOverlay> {
+): AirborneOverlayResult {
   if (
     !airborneContext ||
     airborneContext.contextMode === "element_lab" ||
@@ -713,50 +628,89 @@ function applySecurityFilledSingleBoardSteelHighBandLiftGuard(
 }
 
 function applySymmetricEnhancedFilledSingleBoardFieldGuard(
-  overlayResult: ReturnType<typeof applyAirborneContextOverlay>,
+  overlayResult: AirborneOverlayResult,
   layers: readonly ResolvedLayer[],
   airborneContext: AirborneContext | null
-): ReturnType<typeof applyAirborneContextOverlay> {
-  if (
-    !airborneContext ||
-    airborneContext.contextMode === "element_lab" ||
-    !(airborneContext.connectionType !== "auto" || airborneContext.studType !== "auto" || typeof airborneContext.studSpacingMm === "number")
-  ) {
-    return overlayResult;
+): AirborneOverlayResult {
+  return applyFieldRwPrimeTargetGuard(
+    overlayResult,
+    layers,
+    airborneContext,
+    detectSymmetricEnhancedFilledSingleBoardFamily,
+    (familyInfo, context) =>
+      SYMMETRIC_ENHANCED_FILLED_SINGLE_BOARD_FIELD_TARGET_RW_PRIME[familyInfo.family][getSymmetricEnhancedFilledSingleBoardProfile(context)],
+    "A symmetric enhanced filled single-board field corridor was applied because these same-material premium framed walls were materially misreading the upstream field result."
+  );
+}
+
+const DYNAMIC_AIRBORNE_GUARDS: readonly DynamicAirborneGuard[] = [
+  {
+    id: "micro_gap_fill_equivalent",
+    priority: 10,
+    apply: (input: DynamicAirborneGuardInput) =>
+      applyMicroGapFillEquivalentFieldGuard(
+        input.selectedCurve,
+        input.overlayResult,
+        input.layers,
+        input.airborneContext
+      )
+  },
+  {
+    id: "fire_rated_single_board_field_corridor",
+    priority: 20,
+    apply: (input: DynamicAirborneGuardInput) =>
+      applyFireRatedFilledSingleBoardFieldGuard(input.overlayResult, input.layers, input.airborneContext)
+  },
+  {
+    id: "mixed_plain_single_board_field_corridor",
+    priority: 30,
+    apply: (input: DynamicAirborneGuardInput) =>
+      applyMixedPlainFilledSingleBoardFieldGuard(input.overlayResult, input.layers, input.airborneContext)
+  },
+  {
+    id: "mixed_enhanced_single_board_field_corridor",
+    priority: 40,
+    apply: (input: DynamicAirborneGuardInput) =>
+      applyMixedEnhancedFilledSingleBoardFieldGuard(input.overlayResult, input.layers, input.airborneContext)
+  },
+  {
+    id: "symmetric_enhanced_single_board_field_corridor",
+    priority: 50,
+    apply: (input: DynamicAirborneGuardInput) =>
+      applySymmetricEnhancedFilledSingleBoardFieldGuard(input.overlayResult, input.layers, input.airborneContext)
+  },
+  {
+    id: "security_single_board_field_corridor",
+    priority: 60,
+    apply: (input: DynamicAirborneGuardInput) =>
+      applySecurityFilledSingleBoardFieldGuard(input.overlayResult, input.layers, input.airborneContext)
+  },
+  {
+    id: "security_single_board_steel_high_band_lift",
+    priority: 70,
+    apply: (input: DynamicAirborneGuardInput) =>
+      applySecurityFilledSingleBoardSteelHighBandLiftGuard(input.overlayResult, input.layers, input.airborneContext)
+  }
+].sort((left, right) => left.priority - right.priority);
+
+function applyDynamicAirborneGuards(
+  selectedCurve: TransmissionLossCurve,
+  overlayResult: AirborneOverlayResult,
+  layers: readonly ResolvedLayer[],
+  airborneContext: AirborneContext | null
+): AirborneOverlayResult {
+  let nextOverlayResult = overlayResult;
+
+  for (const guard of DYNAMIC_AIRBORNE_GUARDS) {
+    nextOverlayResult = guard.apply({
+      airborneContext,
+      layers,
+      overlayResult: nextOverlayResult,
+      selectedCurve
+    });
   }
 
-  const familyInfo = detectSymmetricEnhancedFilledSingleBoardFamily(layers);
-  if (!familyInfo) {
-    return overlayResult;
-  }
-
-  const profile = getSymmetricEnhancedFilledSingleBoardProfile(airborneContext);
-  const targets = SYMMETRIC_ENHANCED_FILLED_SINGLE_BOARD_FIELD_TARGET_RW_PRIME[familyInfo.family][profile];
-  const targetMetric = interpolateFieldTargetRwPrime(familyInfo.fillThicknessMm, targets);
-  const currentMetric = overlayResult.ratings.field?.RwPrime ?? overlayResult.ratings.iso717.RwPrime;
-
-  if (!(typeof currentMetric === "number" && Number.isFinite(currentMetric))) {
-    return overlayResult;
-  }
-
-  if (Math.abs(currentMetric - targetMetric) < 0.25) {
-    return overlayResult;
-  }
-
-  const anchored = anchorCurveToFieldRwPrime(overlayResult.curve, targetMetric, airborneContext);
-  if (!anchored.applied) {
-    return overlayResult;
-  }
-
-  return {
-    curve: anchored.curve,
-    overlay: overlayResult.overlay,
-    ratings: anchored.ratings,
-    warnings: [
-      ...overlayResult.warnings,
-      "A symmetric enhanced filled single-board field corridor was applied because these same-material premium framed walls were materially misreading the upstream field result."
-    ]
-  };
+  return nextOverlayResult;
 }
 
 export function calculateAssembly(
@@ -806,38 +760,8 @@ export function calculateAssembly(
   const availableCalculators: readonly AirborneCalculator[] = AIRBORNE_CALCULATORS;
   let airborneOverlayResult = applyAirborneContextOverlay(selectedCalculatorCurve, resolvedLayers, airborneContext);
   if (options.calculator === "dynamic") {
-    airborneOverlayResult = applyMicroGapFillEquivalentFieldGuard(
+    airborneOverlayResult = applyDynamicAirborneGuards(
       selectedCalculatorCurve,
-      airborneOverlayResult,
-      resolvedLayers,
-      airborneContext
-    );
-    airborneOverlayResult = applyFireRatedFilledSingleBoardFieldGuard(
-      airborneOverlayResult,
-      resolvedLayers,
-      airborneContext
-    );
-    airborneOverlayResult = applyMixedPlainFilledSingleBoardFieldGuard(
-      airborneOverlayResult,
-      resolvedLayers,
-      airborneContext
-    );
-    airborneOverlayResult = applyMixedEnhancedFilledSingleBoardFieldGuard(
-      airborneOverlayResult,
-      resolvedLayers,
-      airborneContext
-    );
-    airborneOverlayResult = applySymmetricEnhancedFilledSingleBoardFieldGuard(
-      airborneOverlayResult,
-      resolvedLayers,
-      airborneContext
-    );
-    airborneOverlayResult = applySecurityFilledSingleBoardFieldGuard(
-      airborneOverlayResult,
-      resolvedLayers,
-      airborneContext
-    );
-    airborneOverlayResult = applySecurityFilledSingleBoardSteelHighBandLiftGuard(
       airborneOverlayResult,
       resolvedLayers,
       airborneContext
@@ -869,88 +793,39 @@ export function calculateAssembly(
     )
   );
   const exactImpact = exactImpactSource ? buildExactImpactFromSource(exactImpactSource) : null;
-  const directFloorSystemMatch = predictorAdaptation?.officialFloorSystemId
-    ? resolveExactFloorSystemById(predictorAdaptation.officialFloorSystemId)
-    : matchExactFloorSystem(impactResolvedLayers);
-  const directBoundFloorSystemMatch =
-    !exactImpact && !directFloorSystemMatch
-      ? predictorAdaptation?.officialFloorSystemId
-        ? resolveBoundFloorSystemById(predictorAdaptation.officialFloorSystemId)
-        : matchBoundFloorSystem(impactResolvedLayers)
-      : null;
-  const directImpactCatalogMatch = predictorAdaptation?.officialFloorSystemId
-    ? null
-    : matchImpactProductCatalog(impactResolvedLayers);
-  const filteredDirectImpactCatalogMatch =
-    predictorAdaptation?.officialFloorSystemId || !explicitPredictorInput
-      ? directImpactCatalogMatch
-      : filterImpactCatalogMatchForExplicitPredictorInput(
-          directImpactCatalogMatch,
-          explicitPredictorInput,
-          catalog
-        );
-  const rejectDirectProductDeltaFormulaFallback =
-    Boolean(explicitPredictorInput) &&
-    directImpactCatalogMatch?.catalog.matchMode === "product_property_delta" &&
-    !filteredDirectImpactCatalogMatch;
-  const directFloorSystemRecommendations = directFloorSystemMatch ? [] : recommendFloorSystems(impactResolvedLayers, 8);
-  const directPredictorSpecificFloorSystemEstimate =
-    predictorInput && !predictorAdaptation?.officialFloorSystemId
-      ? derivePredictorSpecificFloorSystemEstimate(predictorInput)
-      : null;
-  const directNarrowImpact =
-    predictorAdaptation?.officialFloorSystemId || rejectDirectProductDeltaFormulaFallback
-      ? null
-      : estimateImpactFromLayers(impactResolvedLayers);
-  const directBoundFloorSystemEstimate =
-    !exactImpact &&
-    !directFloorSystemMatch &&
-    !directBoundFloorSystemMatch &&
-    !directImpactCatalogMatch &&
-    !directPredictorSpecificFloorSystemEstimate &&
-    !directNarrowImpact
-      ? deriveBoundFloorSystemEstimate(impactResolvedLayers)
-      : null;
-  const directFloorSystemEstimate =
-    directPredictorSpecificFloorSystemEstimate ??
-    (
-      !exactImpact &&
-      !directBoundFloorSystemMatch &&
-      !directBoundFloorSystemEstimate &&
-      !directImpactCatalogMatch &&
-      !directNarrowImpact
-        ? deriveFloorSystemEstimate(impactResolvedLayers, directFloorSystemRecommendations)
-        : null
-    );
-
-  let floorSystemMatch = directFloorSystemMatch;
-  let boundFloorSystemMatch = directBoundFloorSystemMatch;
-  let impactCatalogMatch = filteredDirectImpactCatalogMatch;
-  let floorSystemRecommendations = directFloorSystemRecommendations;
-  let narrowImpact = directNarrowImpact;
-  let boundFloorSystemEstimate = directBoundFloorSystemEstimate;
-  let floorSystemEstimate = directFloorSystemEstimate;
-  let explicitDeltaImpact =
-    predictorInput?.floorCovering?.mode === "delta_lw_catalog" &&
-    typeof predictorInput.floorCovering.deltaLwDb === "number"
-      ? deriveHeavyReferenceImpactFromDeltaLw(predictorInput.floorCovering.deltaLwDb)
-      : null;
+  const directImpactLane = resolveLayerBasedImpactLane({
+    catalog,
+    exactImpact,
+    explicitPredictorInput,
+    predictorInput,
+    officialFloorSystemId: predictorAdaptation?.officialFloorSystemId ?? null,
+    resolvedLayers: impactResolvedLayers
+  });
+  const directNarrowImpact = directImpactLane.narrowImpact;
+  let floorSystemMatch = directImpactLane.floorSystemMatch;
+  let boundFloorSystemMatch = directImpactLane.boundFloorSystemMatch;
+  let impactCatalogMatch = directImpactLane.impactCatalogMatch;
+  let floorSystemRecommendations = directImpactLane.floorSystemRecommendations;
+  let narrowImpact = directImpactLane.narrowImpact;
+  let boundFloorSystemEstimate = directImpactLane.boundFloorSystemEstimate;
+  let floorSystemEstimate = directImpactLane.floorSystemEstimate;
+  let explicitDeltaImpact = directImpactLane.explicitDeltaImpact;
   const visibleLayerPredictorBlockerWarning =
     !explicitPredictorInput &&
     !exactImpact &&
-    !directFloorSystemMatch &&
-    !directBoundFloorSystemMatch &&
-    !directImpactCatalogMatch
+    !directImpactLane.floorSystemMatch &&
+    !directImpactLane.boundFloorSystemMatch &&
+    !directImpactLane.impactCatalogMatch
       ? getVisibleLayerPredictorBlockerWarning(layers, catalog)
       : null;
 
-  if (explicitDeltaImpact) {
-    narrowImpact = null;
-    boundFloorSystemEstimate = null;
-    floorSystemEstimate = null;
-  }
-
-  if (!explicitPredictorInput && !exactImpact && !directFloorSystemMatch && !directBoundFloorSystemMatch && !directImpactCatalogMatch) {
+  if (
+    !explicitPredictorInput &&
+    !exactImpact &&
+    !directImpactLane.floorSystemMatch &&
+    !directImpactLane.boundFloorSystemMatch &&
+    !directImpactLane.impactCatalogMatch
+  ) {
     const derivedPredictorInput = maybeBuildImpactPredictorInputFromLayerStack(layers, {}, undefined, catalog);
 
     if (derivedPredictorInput) {
@@ -960,70 +835,28 @@ export function calculateAssembly(
         derivedPredictorAdaptation.sourceLayers.length && !derivedPredictorAdaptation.officialFloorSystemId
           ? resolveLayers(derivedPredictorAdaptation.sourceLayers, derivedCatalog)
           : resolvedLayers;
-      const derivedFloorSystemMatch = derivedPredictorAdaptation.officialFloorSystemId
-        ? resolveExactFloorSystemById(derivedPredictorAdaptation.officialFloorSystemId)
-        : matchExactFloorSystem(derivedImpactResolvedLayers);
-      const derivedBoundFloorSystemMatch =
-        !derivedFloorSystemMatch
-          ? derivedPredictorAdaptation.officialFloorSystemId
-            ? resolveBoundFloorSystemById(derivedPredictorAdaptation.officialFloorSystemId)
-            : matchBoundFloorSystem(derivedImpactResolvedLayers)
-          : null;
-      const derivedImpactCatalogMatch = derivedPredictorAdaptation.officialFloorSystemId
-        ? null
-        : matchImpactProductCatalog(derivedImpactResolvedLayers);
-      const derivedFloorSystemRecommendations = derivedFloorSystemMatch
-        ? []
-        : recommendFloorSystems(derivedImpactResolvedLayers, 8);
-      const derivedExplicitDeltaImpact =
-        derivedPredictorInput.floorCovering?.mode === "delta_lw_catalog" &&
-        typeof derivedPredictorInput.floorCovering.deltaLwDb === "number"
-          ? deriveHeavyReferenceImpactFromDeltaLw(derivedPredictorInput.floorCovering.deltaLwDb)
-          : null;
-      const derivedPredictorSpecificFloorSystemEstimate =
-        derivedExplicitDeltaImpact ||
-        derivedFloorSystemMatch ||
-        derivedBoundFloorSystemMatch ||
-        derivedImpactCatalogMatch
-          ? null
-          : derivePredictorSpecificFloorSystemEstimate(derivedPredictorInput);
-      const derivedNarrowImpact = derivedPredictorAdaptation.officialFloorSystemId
-        ? null
-        : derivedExplicitDeltaImpact
-          ? null
-        : estimateImpactFromLayers(derivedImpactResolvedLayers);
-      const derivedBoundFloorSystemEstimate =
-        !derivedFloorSystemMatch &&
-        !derivedBoundFloorSystemMatch &&
-        !derivedImpactCatalogMatch &&
-        !derivedExplicitDeltaImpact &&
-        !derivedPredictorSpecificFloorSystemEstimate &&
-        !derivedNarrowImpact
-          ? deriveBoundFloorSystemEstimate(derivedImpactResolvedLayers)
-          : null;
-      const derivedFloorSystemEstimate =
-        derivedExplicitDeltaImpact
-          ? null
-          : derivedPredictorSpecificFloorSystemEstimate ??
-        (
-          !derivedBoundFloorSystemMatch &&
-          !derivedBoundFloorSystemEstimate &&
-          !derivedImpactCatalogMatch &&
-          !derivedNarrowImpact
-            ? deriveFloorSystemEstimate(derivedImpactResolvedLayers, derivedFloorSystemRecommendations)
-            : null
-        );
+      const derivedImpactLane = resolveLayerBasedImpactLane({
+        catalog: derivedCatalog,
+        exactImpact,
+        predictorInput: derivedPredictorInput,
+        officialFloorSystemId: derivedPredictorAdaptation.officialFloorSystemId,
+        resolvedLayers: derivedImpactResolvedLayers
+      });
       const shouldUseDerived =
         Boolean(
-          derivedFloorSystemMatch ||
-            derivedBoundFloorSystemMatch ||
-            derivedImpactCatalogMatch ||
-            derivedPredictorSpecificFloorSystemEstimate
+          derivedImpactLane.floorSystemMatch ||
+            derivedImpactLane.boundFloorSystemMatch ||
+            derivedImpactLane.impactCatalogMatch ||
+            derivedImpactLane.predictorSpecificFloorSystemEstimate
         ) ||
         (!directNarrowImpact &&
-          !directFloorSystemEstimate &&
-          !directBoundFloorSystemEstimate &&
-          Boolean(derivedNarrowImpact || derivedFloorSystemEstimate || derivedBoundFloorSystemEstimate));
+          !directImpactLane.floorSystemEstimate &&
+          !directImpactLane.boundFloorSystemEstimate &&
+          Boolean(
+            derivedImpactLane.narrowImpact ||
+              derivedImpactLane.floorSystemEstimate ||
+              derivedImpactLane.boundFloorSystemEstimate
+          ));
 
       if (shouldUseDerived) {
         predictorInput = derivedPredictorInput;
@@ -1031,61 +864,32 @@ export function calculateAssembly(
         predictorAdaptation = derivedPredictorAdaptation;
         catalog = derivedCatalog;
         impactResolvedLayers = derivedImpactResolvedLayers;
-        floorSystemMatch = derivedFloorSystemMatch;
-        boundFloorSystemMatch = derivedBoundFloorSystemMatch;
-        impactCatalogMatch = derivedImpactCatalogMatch;
-        floorSystemRecommendations = derivedFloorSystemRecommendations;
-        narrowImpact = derivedNarrowImpact;
-        boundFloorSystemEstimate = derivedBoundFloorSystemEstimate;
-        floorSystemEstimate = derivedFloorSystemEstimate;
-        explicitDeltaImpact = derivedExplicitDeltaImpact;
+        floorSystemMatch = derivedImpactLane.floorSystemMatch;
+        boundFloorSystemMatch = derivedImpactLane.boundFloorSystemMatch;
+        impactCatalogMatch = derivedImpactLane.impactCatalogMatch;
+        floorSystemRecommendations = derivedImpactLane.floorSystemRecommendations;
+        narrowImpact = derivedImpactLane.narrowImpact;
+        boundFloorSystemEstimate = derivedImpactLane.boundFloorSystemEstimate;
+        floorSystemEstimate = derivedImpactLane.floorSystemEstimate;
+        explicitDeltaImpact = derivedImpactLane.explicitDeltaImpact;
       }
     }
   }
-  const exactSupplementaryImpact =
-    exactImpact && impactCatalogMatch?.catalog.matchMode === "product_property_delta"
-      ? impactCatalogMatch.impact ?? null
-      : null;
-  const floorEstimateImpact = mergePublishedUpperTreatmentDeltaCompanion(
-    floorSystemEstimate?.impact ?? null,
-    directNarrowImpact,
-    narrowImpact
-  );
-  const baseImpact = exactImpact
-    ? mergeImpactCalculations(exactImpact, exactSupplementaryImpact)
-    : (
-        floorSystemMatch?.impact ??
-        impactCatalogMatch?.impact ??
-        explicitDeltaImpact ??
-        floorEstimateImpact ??
-        narrowImpact ??
-        null
-      );
-  const baseLowerBoundImpact =
-    impactCatalogMatch?.lowerBoundImpact ??
-    boundFloorSystemMatch?.lowerBoundImpact ??
-    boundFloorSystemEstimate?.lowerBoundImpact ??
-    null;
-  const defaultSupportingElementFamily =
-    inferImpactSupportingElementFamilyFromExactFloorSystem(floorSystemMatch?.system) ??
-    inferImpactSupportingElementFamilyFromFloorSystemEstimate(floorSystemEstimate) ??
-    inferImpactSupportingElementFamilyFromImpactCatalogMatch(impactCatalogMatch) ??
-    inferImpactSupportingElementFamilyFromPredictorInput(predictorInput) ??
-    null;
-  const exactImpactSourceForFieldContext =
-    exactImpactSource ?? resolveExactFloorSystemImpactSource(floorSystemMatch?.system);
-  const impact = attachImpactTraceFromExactSource(
-    baseImpact?.basis === "predictor_explicit_delta_heavy_reference_derived"
-      ? baseImpact
-      : applyImpactFieldContextToImpact(baseImpact, impactFieldContext, {
-          defaultSupportingElementFamily,
-          exactImpactSource: exactImpactSourceForFieldContext,
-          resolvedLayers: impactResolvedLayers
-        }),
-    exactImpactSourceForFieldContext
-  );
-  const lowerBoundImpact = applyImpactFieldContextToBoundImpact(baseLowerBoundImpact, impactFieldContext);
-  const hideLowConfidenceProxyAirborne = shouldHideLowConfidenceProxyAirborne(floorSystemEstimate);
+  const { impact, lowerBoundImpact } = finalizeResolvedImpactLane({
+    boundFloorSystemEstimate,
+    boundFloorSystemMatch,
+    exactImpactSource,
+    explicitDeltaImpact,
+    fallbackSupplementaryImpact: narrowImpact,
+    floorSystemEstimate,
+    floorSystemMatch,
+    impactCatalogMatch,
+    impactFieldContext,
+    narrowImpact,
+    predictorInput,
+    preferredSupplementaryImpact: directNarrowImpact,
+    resolvedLayers: impactResolvedLayers
+  });
   const targetOutputSupport = analyzeTargetOutputSupport({
     impact,
     lowerBoundImpact,
@@ -1103,6 +907,26 @@ export function calculateAssembly(
       estimatedStc: ratings.astmE413.STC
     },
     targetOutputs: options.targetOutputs ?? []
+  });
+  const {
+    dynamicImpactTrace,
+    hideLowConfidenceProxyAirborne,
+    impactPredictorStatus,
+    impactSupport
+  } = buildResolvedImpactArtifacts({
+    boundFloorSystemEstimate,
+    boundFloorSystemMatch,
+    catalog,
+    floorSystemEstimate,
+    floorSystemMatch,
+    impact,
+    impactCatalogMatch,
+    impactFieldContext,
+    lowerBoundImpact,
+    predictorInput,
+    predictorInputMode,
+    resolvedLayers: impactResolvedLayers,
+    targetOutputSupport
   });
   const floorSystemRatings = hideLowConfidenceProxyAirborne
     ? null
@@ -1122,42 +946,6 @@ export function calculateAssembly(
         screeningRwDb: explicitPredictorInput ? null : ratings.iso717.Rw,
         screeningRwPlusCtrDb: explicitPredictorInput ? null : round1(ratings.iso717.Rw + ratings.iso717.Ctr)
       });
-  const impactPredictorStatus = buildImpactPredictorStatus({
-    boundFloorSystemEstimate,
-    boundFloorSystemMatch,
-    floorSystemEstimate,
-    floorSystemMatch,
-    hasImpactContext: Boolean(impactFieldContext),
-    impact,
-    impactCatalogMatch,
-    lowerBoundImpact,
-    predictorInputMode,
-    predictorInputActive: Boolean(predictorInput),
-    targetOutputSupport
-  });
-  const impactSupport = buildImpactSupport({
-    boundFloorSystemEstimate,
-    boundFloorSystemMatch,
-    floorSystemEstimate,
-    floorSystemMatch,
-    impact,
-    impactCatalogMatch,
-    lowerBoundImpact
-  });
-  const dynamicImpactTrace = buildDynamicImpactTrace({
-    boundFloorSystemEstimate,
-    boundFloorSystemMatch,
-    catalog,
-    floorSystemEstimate,
-    floorSystemMatch,
-    hasFieldContext: Boolean(impactFieldContext),
-    impact,
-    impactCatalogMatch,
-    lowerBoundImpact,
-    predictorInput,
-    predictorInputMode,
-    resolvedLayers: impactResolvedLayers
-  });
   const warnings = buildEstimateWarnings(resolvedLayers, selectedCalculatorLabel);
   warnings.push(...(dynamicAirborneResult?.warnings ?? []));
   warnings.push(...airborneOverlayResult.warnings);
