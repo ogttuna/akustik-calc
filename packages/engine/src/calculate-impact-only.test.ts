@@ -834,24 +834,28 @@ describe("calculateImpactOnly", () => {
   it("promotes visible heavy floating floor-role stacks to the richer predictor family lane when it adds support", () => {
     const result = calculateImpactOnly(
       [
-        { materialId: "concrete", thicknessMm: 150, floorRole: "base_structure" },
-        { materialId: "generic_resilient_underlay_s30", thicknessMm: 8, floorRole: "resilient_layer" },
+        { materialId: "ceramic_tile", thicknessMm: 8, floorRole: "floor_covering" },
         { materialId: "screed", thicknessMm: 30, floorRole: "floating_screed" },
-        { materialId: "ceramic_tile", thicknessMm: 8, floorRole: "floor_covering" }
+        { materialId: "generic_resilient_underlay_s30", thicknessMm: 8, floorRole: "resilient_layer" },
+        { materialId: "concrete", thicknessMm: 150, floorRole: "base_structure" }
       ],
       {
-        targetOutputs: ["Ln,w", "Rw"]
+        targetOutputs: ["Ln,w", "DeltaLw", "Rw"]
       }
     );
 
     expect(result.sourceMode).toBe("predictor_input");
     expect(result.impact?.basis).toBe("predictor_heavy_concrete_published_upper_treatment_estimate");
     expect(result.impact?.LnW).toBe(50);
+    expect(result.impact?.DeltaLw).toBe(24.3);
+    expect(result.impact?.metricBasis?.LnW).toBe("predictor_heavy_concrete_published_upper_treatment_estimate");
+    expect(result.impact?.metricBasis?.DeltaLw).toBe("predictor_heavy_floating_floor_iso12354_annexc_estimate");
     expect(result.floorSystemRatings?.basis).toBe("predictor_heavy_concrete_published_upper_treatment_estimate");
     expect(result.floorSystemRatings?.Rw).toBe(58);
     expect(result.impactPredictorStatus?.inputMode).toBe("derived_from_visible_layers");
-    expect(result.supportedTargetOutputs).toEqual(["Ln,w", "Rw"]);
+    expect(result.supportedTargetOutputs).toEqual(["Ln,w", "DeltaLw", "Rw"]);
     expect(result.impactSupport?.notes.some((note: string) => /Published floor-system family estimate is active: reinforced concrete/i.test(note))).toBe(true);
+    expect(result.impactSupport?.notes.some((note: string) => /same-stack Annex C style DeltaLw companion/i.test(note))).toBe(true);
   });
 
   it("can auto-derive predictor topology from visible floor-role layers on the impact-only route", () => {

@@ -79,3 +79,54 @@ export function mergeImpactCalculations(
 
   return merged;
 }
+
+function canSupplementPublishedUpperTreatmentDelta(
+  impact: ImpactCalculation | null
+): impact is ImpactCalculation {
+  return (
+    impact?.basis === "predictor_heavy_floating_floor_iso12354_annexc_estimate" &&
+    typeof impact.DeltaLw === "number"
+  );
+}
+
+export function mergePublishedUpperTreatmentDeltaCompanion(
+  primaryImpact: ImpactCalculation | null,
+  preferredSupplementaryImpact: ImpactCalculation | null,
+  fallbackSupplementaryImpact: ImpactCalculation | null = null
+): ImpactCalculation | null {
+  if (!primaryImpact) {
+    return null;
+  }
+
+  if (
+    primaryImpact.basis !== "predictor_heavy_concrete_published_upper_treatment_estimate" ||
+    typeof primaryImpact.DeltaLw === "number"
+  ) {
+    return cloneImpact(primaryImpact);
+  }
+
+  const supplementaryImpact = canSupplementPublishedUpperTreatmentDelta(preferredSupplementaryImpact)
+    ? preferredSupplementaryImpact
+    : canSupplementPublishedUpperTreatmentDelta(fallbackSupplementaryImpact)
+      ? fallbackSupplementaryImpact
+      : null;
+
+  if (!supplementaryImpact) {
+    return cloneImpact(primaryImpact);
+  }
+
+  const merged = mergeImpactCalculations(primaryImpact, supplementaryImpact);
+
+  if (!merged) {
+    return null;
+  }
+
+  const note =
+    "DeltaLw companion was carried from the same-stack ISO 12354 floating-floor screening path while Ln,w stayed on the published heavy-concrete upper-treatment lane.";
+
+  if (!merged.notes.includes(note)) {
+    merged.notes.push(note);
+  }
+
+  return merged;
+}

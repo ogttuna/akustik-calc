@@ -103,6 +103,17 @@ export function buildImpactSupport(input: BuildImpactSupportInput): ImpactSuppor
     }
   }
 
+  if (
+    input.impact?.basis === "predictor_heavy_concrete_published_upper_treatment_estimate" &&
+    input.impact?.metricBasis?.DeltaLw === "predictor_heavy_floating_floor_iso12354_annexc_estimate"
+  ) {
+    notes.push("Published heavy-concrete Ln,w estimate is carrying a same-stack Annex C style DeltaLw companion.");
+    pushUnique(formulaNotes, "DeltaLw companion followed 13 log10(m'load) - 14.2 log10(s') + 20.8 on the same visible stack.");
+    if (typeof input.impact.predictorResonanceHz === "number") {
+      pushUnique(formulaNotes, "The carried DeltaLw companion kept the floating-floor resonance cross-check f0 ~= 160 * sqrt(s'/m'load).");
+    }
+  }
+
   if (input.impact && (input.impact.basis === "exact_source_band_curve_iso7172" || hasMetricBasis(input.impact, "exact_source_band_curve_iso7172"))) {
     pushUnique(formulaNotes, "ISO 717-2 impact contour was used to rate the supplied band curve.");
   }

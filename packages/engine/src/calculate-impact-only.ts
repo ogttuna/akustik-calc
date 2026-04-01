@@ -51,7 +51,7 @@ import { deriveHeavyReferenceImpactFromDeltaLw } from "./impact-reference";
 import { computeLayerSurfaceMassKgM2 } from "./layer-surface-mass";
 import { derivePredictorSpecificFloorSystemEstimate } from "./predictor-floor-system-estimate";
 import { buildImpactSupport } from "./impact-support";
-import { mergeImpactCalculations } from "./impact-merge";
+import { mergeImpactCalculations, mergePublishedUpperTreatmentDeltaCompanion } from "./impact-merge";
 import { attachImpactTraceFromExactSource } from "./impact-trace";
 import { buildDynamicImpactTrace } from "./dynamic-impact";
 import {
@@ -160,6 +160,7 @@ export function calculateImpactOnly(
   let floorSystemEstimate: FloorSystemEstimateResult | null = null;
   let boundFloorSystemEstimate: FloorSystemBoundEstimateResult | null = null;
   let narrowImpact: ImpactCalculation | null = null;
+  let directVisibleNarrowImpact: ImpactCalculation | null = null;
   let explicitDeltaImpact: ImpactCalculation | null = null;
   let visibleLayerPredictorBlockerWarning: string | null = null;
 
@@ -238,6 +239,7 @@ export function calculateImpactOnly(
     boundFloorSystemMatch = !floorSystemMatch ? matchBoundFloorSystem(resolvedSourceLayers) : null;
     impactCatalogMatch = matchImpactProductCatalog(resolvedSourceLayers);
     narrowImpact = estimateImpactFromLayers(resolvedSourceLayers);
+    directVisibleNarrowImpact = narrowImpact;
     const directBoundFloorSystemEstimate =
       !floorSystemMatch && !boundFloorSystemMatch && !impactCatalogMatch && !narrowImpact
         ? deriveBoundFloorSystemEstimate(resolvedSourceLayers)
@@ -378,20 +380,25 @@ export function calculateImpactOnly(
   }
 
   const exactImpact = exactImpactSource ? buildExactImpactFromSource(exactImpactSource) : null;
-  const baseResolvedImpact =
-    floorSystemMatch?.impact ??
-    impactCatalogMatch?.impact ??
-    explicitDeltaImpact ??
-    floorSystemEstimate?.impact ??
-    narrowImpact ??
-    null;
   const exactSupplementaryImpact =
     exactImpact && impactCatalogMatch?.catalog.matchMode === "product_property_delta"
       ? impactCatalogMatch.impact ?? null
       : null;
+  const floorEstimateImpact = mergePublishedUpperTreatmentDeltaCompanion(
+    floorSystemEstimate?.impact ?? null,
+    directVisibleNarrowImpact,
+    narrowImpact
+  );
   const baseImpact = exactImpact
     ? mergeImpactCalculations(exactImpact, exactSupplementaryImpact)
-    : baseResolvedImpact;
+    : (
+        floorSystemMatch?.impact ??
+        impactCatalogMatch?.impact ??
+        explicitDeltaImpact ??
+        floorEstimateImpact ??
+        narrowImpact ??
+        null
+      );
   const baseLowerBoundImpact =
     impactCatalogMatch?.lowerBoundImpact ??
     boundFloorSystemMatch?.lowerBoundImpact ??

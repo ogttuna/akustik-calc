@@ -3234,13 +3234,17 @@ describe("calculateAssembly", () => {
     expect(result.impact?.basis).toBe("predictor_heavy_concrete_published_upper_treatment_estimate");
     expect(result.impact?.confidence.provenance).toBe("published_family_estimate");
     expect(result.impact?.LnW).toBe(50);
-    expect(result.impact?.DeltaLw).toBeUndefined();
-    expect(result.impact?.predictorResonanceHz).toBeUndefined();
-    expect(result.impact?.availableOutputs).toEqual(["Ln,w"]);
+    expect(result.impact?.DeltaLw).toBe(33.4);
+    expect(result.impact?.predictorResonanceHz).toBe(47);
+    expect(result.impact?.resilientDynamicStiffnessMNm3).toBe(10);
+    expect(result.impact?.availableOutputs).toEqual(["Ln,w", "DeltaLw"]);
+    expect(result.impact?.metricBasis?.LnW).toBe("predictor_heavy_concrete_published_upper_treatment_estimate");
+    expect(result.impact?.metricBasis?.DeltaLw).toBe("predictor_heavy_floating_floor_iso12354_annexc_estimate");
     expect(result.dynamicImpactTrace?.selectionKind).toBe("family_estimate");
     expect(result.dynamicImpactTrace?.evidenceTier).toBe("estimate");
     expect(result.dynamicImpactTrace?.detectedSupportFamily).toBe("reinforced_concrete");
     expect(result.dynamicImpactTrace?.systemType).toBe("heavy_floating_floor");
+    expect(result.impactSupport?.notes.some((note: string) => /same-stack Annex C style DeltaLw companion/i.test(note))).toBe(true);
   });
 
   it("keeps impact parsing stable when floor roles isolate the base from a ceiling package", () => {
