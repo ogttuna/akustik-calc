@@ -489,9 +489,12 @@ describe("scenario analysis", () => {
 
     expect(withoutOverride.result).not.toBeNull();
     expect(withOverride.result).not.toBeNull();
-    expect(withoutOverride.result?.impact?.DeltaLw ?? null).toBeNull();
+    expect(withoutOverride.result?.impact?.basis).toBe("predictor_heavy_concrete_published_upper_treatment_estimate");
+    expect(withoutOverride.result?.impact?.DeltaLw ?? null).toBe(33.4);
     expect(withOverride.result?.impact?.DeltaLw ?? null).not.toBeNull();
     expect(withOverride.result?.impact?.LnW ?? null).not.toBeNull();
+    expect(withOverride.result?.impact?.basis).toBe("predictor_heavy_floating_floor_iso12354_annexc_estimate");
+    expect(withOverride.result?.impact?.DeltaLw ?? null).toBe(25.7);
   });
 
   it("uses a manual dynamic stiffness override instead of the catalog value when the material already has one", () => {

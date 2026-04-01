@@ -1508,7 +1508,7 @@ test("workbench exposes scoped impact outputs on the heavy floor preset", async 
 
   await expect(page.getByText("Metric provenance", { exact: true })).toBeVisible();
   await expect(lnwCard.getByText(/^50 dB$/)).toBeVisible();
-  await expect(deltaLwCard.getByText(/^N\/A$/)).toBeVisible();
+  await expect(deltaLwCard.getByText(/^33\.4 dB$/)).toBeVisible();
   await expect(page.getByLabel("Floor role").nth(2)).toHaveValue("resilient_layer");
   await expect(page.getByLabel("Floor role").nth(3)).toHaveValue("base_structure");
   const provenancePanel = page.locator("section, article, div").filter({

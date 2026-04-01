@@ -107,8 +107,12 @@ test("estimate api exposes scoped impact metrics for supported heavy floors", as
   expect(payload.result.impact).not.toBeNull();
   expect(payload.result.impact.basis).toBe("predictor_heavy_concrete_published_upper_treatment_estimate");
   expect(payload.result.impact.LnW).toBeGreaterThan(40);
-  expect(payload.result.impact.availableOutputs).toEqual(["Ln,w"]);
-  expect(payload.result.impact.DeltaLw).toBeUndefined();
+  expect(payload.result.impact.availableOutputs).toEqual(["Ln,w", "DeltaLw"]);
+  expect(payload.result.impact.DeltaLw).toBe(33.4);
+  expect(payload.result.impact.metricBasis).toEqual({
+    DeltaLw: "predictor_heavy_floating_floor_iso12354_annexc_estimate",
+    LnW: "predictor_heavy_concrete_published_upper_treatment_estimate"
+  });
   expect(payload.result.floorSystemRatings.Rw).toBe(58);
 });
 

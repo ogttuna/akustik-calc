@@ -278,7 +278,8 @@ const COMMON_FLOOR_CASES: readonly CommonFloorCase[] = [
       basis: "predictor_heavy_concrete_published_upper_treatment_estimate",
       lnw: { min: 48, max: 53 },
       rw: { min: 58, max: 58 },
-      supportedTargetOutputs: ["Ln,w", "Rw"]
+      deltaLw: { min: 23, max: 25 },
+      supportedTargetOutputs: ["Ln,w", "DeltaLw", "Rw"]
     }
   },
   {
