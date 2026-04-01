@@ -2089,7 +2089,9 @@ describe("scenario analysis", () => {
     expect(scenario.result?.impact?.LPrimeNW).toBe(44);
     expect(scenario.result?.impact?.LPrimeNTw).toBeUndefined();
     expect(
-      scenario.result?.impactSupport?.formulaNotes.some((note) => /Family-aware flanking path models were applied for: open box timber/i.test(note))
+      scenario.result?.impactSupport?.formulaNotes.some((note: string) =>
+        /Family-aware flanking path models were applied for: open box timber/i.test(note)
+      )
     ).toBe(true);
   });
 
@@ -2123,7 +2125,9 @@ describe("scenario analysis", () => {
     expect(scenario.result?.impact?.LPrimeNW).toBe(41);
     expect(scenario.result?.impact?.LPrimeNTw).toBe(39);
     expect(scenario.result?.impact?.LPrimeNT50).toBe(44);
-    expect(scenario.result?.impactSupport?.formulaNotes.some((note) => /Current direct-path offset is 2 dB/i.test(note))).toBe(true);
+    expect(
+      scenario.result?.impactSupport?.formulaNotes.some((note: string) => /Current direct-path offset is 2 dB/i.test(note))
+    ).toBe(true);
   });
 
   it("keeps K=0 standardized field continuation neutral on L'n,w while still applying room-volume standardization", () => {
@@ -2222,7 +2226,9 @@ describe("scenario analysis", () => {
     expect(scenario.result?.impact?.LPrimeNW).toBe(39);
     expect(scenario.result?.impact?.LPrimeNTw).toBe(37);
     expect(scenario.result?.impact?.LPrimeNT50).toBe(42);
-    expect(scenario.result?.impactSupport?.formulaNotes.some((note) => /Current direct-path offset is 0 dB/i.test(note))).toBe(true);
+    expect(
+      scenario.result?.impactSupport?.formulaNotes.some((note: string) => /Current direct-path offset is 0 dB/i.test(note))
+    ).toBe(true);
   });
 
   it("lets a negative direct-path offset reduce the carried direct-path-only field metrics without changing the lane", () => {
@@ -2255,7 +2261,9 @@ describe("scenario analysis", () => {
     expect(scenario.result?.impact?.LPrimeNW).toBe(37);
     expect(scenario.result?.impact?.LPrimeNTw).toBe(35);
     expect(scenario.result?.impact?.LPrimeNT50).toBe(40);
-    expect(scenario.result?.impactSupport?.formulaNotes.some((note) => /Current direct-path offset is -2 dB/i.test(note))).toBe(true);
+    expect(
+      scenario.result?.impactSupport?.formulaNotes.some((note: string) => /Current direct-path offset is -2 dB/i.test(note))
+    ).toBe(true);
   });
 
   it("applies explicit ΔLd before field-side K correction and standardization on the web scenario route", () => {

@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { evaluateScenario } from "./scenario-analysis";
 import type { LayerDraft } from "./workbench-store";
 
-type SupportedLabOutput = "DeltaLw" | "Ln,w" | "Rw";
+type SupportedLabOutput = "DeltaLw" | "Ln,w" | "Ln,w+CI" | "Rw";
 
 type NumericRange = {
   max: number;
