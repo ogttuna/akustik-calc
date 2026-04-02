@@ -497,6 +497,66 @@ test("guided floor flow exposes floor roles and marks only the relevant context 
   await expect(page.getByLabel("RT60 (s)")).toHaveCount(0);
 });
 
+test("guided building-prediction route inputs are label-accessible and unlock field impact continuations", async ({
+  page
+}) => {
+  await openFloorGuidedFlow(page);
+  await loadGuidedSample(page, "Impact Floor");
+  await selectGuidedProjectContext(page, "building_prediction");
+
+  await page.getByLabel("Partition width (mm)").fill("4200");
+  await page.getByLabel("Partition height (mm)").fill("3000");
+  await page.getByLabel("Airborne room volume (m³)").fill("55");
+  await page.getByLabel("Impact K correction (dB)").fill("3");
+  await page.getByLabel("Impact room volume (m³)").fill("60");
+  await page.getByLabel("RT60 (s)").fill("0.7");
+
+  const routeState = await page.evaluate(() => {
+    const rawStore = (globalThis as { localStorage?: { getItem: (key: string) => string | null } }).localStorage?.getItem(
+      "dynecho-workbench-store"
+    );
+    const state = rawStore ? JSON.parse(rawStore).state : null;
+
+    return state
+      ? {
+          airbornePanelHeightMm: state.airbornePanelHeightMm,
+          airbornePanelWidthMm: state.airbornePanelWidthMm,
+          airborneReceivingRoomRt60S: state.airborneReceivingRoomRt60S,
+          airborneReceivingRoomVolumeM3: state.airborneReceivingRoomVolumeM3,
+          impactGuideKDb: state.impactGuideKDb,
+          impactGuideReceivingRoomVolumeM3: state.impactGuideReceivingRoomVolumeM3
+        }
+      : null;
+  });
+
+  expect(routeState).toEqual({
+    airbornePanelHeightMm: "3000",
+    airbornePanelWidthMm: "4200",
+    airborneReceivingRoomRt60S: "0.7",
+    airborneReceivingRoomVolumeM3: "55",
+    impactGuideKDb: "3",
+    impactGuideReceivingRoomVolumeM3: "60"
+  });
+
+  await openGuidedWorkspacePanel(page, "Results");
+  const supportingMetrics = page.locator("summary").filter({ hasText: "Supporting metrics" }).first();
+  await expect(supportingMetrics).toBeVisible();
+  await supportingMetrics.click();
+
+  const resultsText = await page.evaluate(() => {
+    const main = (globalThis as { document?: { querySelector: (selector: string) => { querySelectorAll: (selector: string) => unknown[] } | null } }).document?.querySelector("main");
+    const resultsSection = (Array.from(main?.querySelectorAll("section") ?? []) as Array<{ innerText?: string }>).find(
+      (section) => (section.innerText ?? "").includes("GUIDED FLOOR ANSWER")
+    );
+
+    return resultsSection?.innerText ?? "";
+  });
+
+  expect(resultsText).toMatch(/DNT,W\s+58 dB/i);
+  expect(resultsText).toMatch(/L'N,W\s+53 dB/i);
+  expect(resultsText).toMatch(/L'NT,W\s+50\.2 dB/i);
+});
+
 test("guided floor flow surfaces material-aware thickness guidance inline", async ({ page }) => {
   await openFloorGuidedFlow(page);
   await loadGuidedSample(page, "Impact Floor");

@@ -2,7 +2,7 @@
 
 import type { AssemblyCalculation } from "@dynecho/shared";
 import { ChevronRight } from "lucide-react";
-import type { ReactNode } from "react";
+import { cloneElement, isValidElement, type ReactElement, type ReactNode, useId } from "react";
 
 import { formatDecimal } from "@/lib/format";
 
@@ -113,12 +113,38 @@ export function FieldShell(props: {
   warning?: string | null;
 }) {
   const { children, label, warning } = props;
+  const fallbackControlId = useId();
+  const warningId = warning ? `${fallbackControlId}-warning` : undefined;
+  const existingControlId =
+    isValidElement(children) && typeof children.props.id === "string" && children.props.id.trim().length > 0
+      ? children.props.id
+      : null;
+  const controlId = existingControlId ?? fallbackControlId;
+  const describedBy =
+    isValidElement(children) && typeof children.props["aria-describedby"] === "string"
+      ? [children.props["aria-describedby"], warningId].filter(Boolean).join(" ")
+      : warningId;
+  const control =
+    isValidElement(children)
+      ? cloneElement(
+          children as ReactElement<{
+            "aria-describedby"?: string;
+            id?: string;
+          }>,
+          {
+            "aria-describedby": describedBy || undefined,
+            id: controlId
+          }
+        )
+      : children;
 
   return (
     <div className="grid min-w-0 gap-1">
-      <span className="text-[0.78rem] font-medium text-[color:var(--ink)]">{label}</span>
-      {warning ? <p className="text-[0.68rem] leading-4 text-[color:var(--warning-ink)]">{warning}</p> : null}
-      {children}
+      <label className="text-[0.78rem] font-medium text-[color:var(--ink)]" htmlFor={controlId}>
+        {label}
+      </label>
+      {warning ? <p className="text-[0.68rem] leading-4 text-[color:var(--warning-ink)]" id={warningId}>{warning}</p> : null}
+      {control}
     </div>
   );
 }
