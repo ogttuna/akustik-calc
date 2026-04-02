@@ -13,7 +13,7 @@ type GuidedProfile = {
 const WALL_LAB_OUTPUTS: readonly RequestedOutputId[] = ["Rw", "STC", "C", "Ctr"];
 const WALL_FIELD_OUTPUTS: readonly RequestedOutputId[] = ["R'w", "Dn,w", "DnT,w", "DnT,A"];
 const FLOOR_LAB_OUTPUTS: readonly RequestedOutputId[] = ["Rw", "Ln,w", "DeltaLw", "Ln,w+CI"];
-const FLOOR_FIELD_OUTPUTS: readonly RequestedOutputId[] = ["Rw", "Ln,w", "L'n,w", "L'nT,w"];
+const FLOOR_FIELD_OUTPUTS: readonly RequestedOutputId[] = ["Rw", "Ln,w", "Ln,w+CI", "L'n,w", "L'nT,w"];
 
 const WALL_FIELD_CONTEXT = {
   contextMode: "building_prediction" as const,

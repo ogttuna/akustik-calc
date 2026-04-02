@@ -111,6 +111,7 @@ describe("floor output availability matrix", () => {
     expect(fieldCards.get("R'w")?.status).toBe("live");
     expect(fieldCards.get("R'w")?.value).toBe("58 dB");
     expect(fieldCards.get("DnT,w")?.status).toBe("needs_input");
+    expect(fieldCards.get("Ln,w+CI")?.status).toBe("unsupported");
     expect(fieldCards.get("L'n,w")?.status).toBe("needs_input");
     expect(fieldCards.get("L'nT,w")?.status).toBe("needs_input");
 
@@ -124,6 +125,63 @@ describe("floor output availability matrix", () => {
     expect(buildingCards.get("L'nT,w")?.status).toBe("live");
     expect(buildingCards.get("L'nT,w")?.value).toBe("50.2 dB");
     expect(buildingCards.get("L'nT,50")?.status).toBe("needs_input");
+  });
+
+  it("keeps room-to-room field routes honest about low-frequency companions across exact, bound, and fallback floors", () => {
+    const exactCards = buildCardMap({
+      airborneContext: FIELD_BETWEEN_ROOMS_CONTEXT,
+      id: "dataholz-clt-dry-field",
+      presetId: "dataholz_clt_dry_exact"
+    });
+    const boundCards = buildCardMap({
+      airborneContext: FIELD_BETWEEN_ROOMS_CONTEXT,
+      id: "ubiq-bound-field",
+      presetId: "ubiq_open_web_300_bound"
+    });
+    const lowConfidenceCards = buildCardMap({
+      airborneContext: FIELD_BETWEEN_ROOMS_CONTEXT,
+      id: "timber-bare-field",
+      presetId: "timber_bare_impact_only_fallback"
+    });
+
+    expect(exactCards.get("Ln,w+CI")).toEqual(
+      expect.objectContaining({
+        status: "live",
+        value: "49 dB"
+      })
+    );
+    expect(exactCards.get("L'n,w")).toEqual(
+      expect.objectContaining({
+        status: "needs_input",
+        value: "Not ready"
+      })
+    );
+
+    expect(boundCards.get("Ln,w")).toEqual(
+      expect.objectContaining({
+        status: "bound",
+        value: "<= 51 dB"
+      })
+    );
+    expect(boundCards.get("Ln,w+CI")).toEqual(
+      expect.objectContaining({
+        status: "unsupported",
+        value: "Not ready"
+      })
+    );
+
+    expect(lowConfidenceCards.get("Ln,w+CI")).toEqual(
+      expect.objectContaining({
+        status: "live",
+        value: "63.3 dB"
+      })
+    );
+    expect(lowConfidenceCards.get("L'n,w")).toEqual(
+      expect.objectContaining({
+        status: "needs_input",
+        value: "Not ready"
+      })
+    );
   });
 
   it("keeps bound-only UBIQ families explicit while airborne companions and field airborne reads stay live", () => {

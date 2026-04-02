@@ -8,6 +8,7 @@ import { buildOutputCard } from "./simple-workbench-output-model";
 const BUILDING_OUTPUTS: readonly RequestedOutputId[] = [
   "Rw",
   "R'w",
+  "Dn,w",
   "DnT,w",
   "Ln,w",
   "DeltaLw",
@@ -28,6 +29,14 @@ const BUILDING_CONTEXT: AirborneContext = {
 const BUILDING_IMPACT_FIELD: ImpactFieldContext = {
   fieldKDb: 3,
   receivingRoomVolumeM3: 60
+};
+
+const FIELD_OUTPUTS: readonly RequestedOutputId[] = ["Rw", "R'w", "Dn,w", "Ln,w", "DeltaLw", "Ln,w+CI", "L'n,w"];
+
+const FIELD_CONTEXT: AirborneContext = {
+  contextMode: "field_between_rooms",
+  panelHeightMm: 3000,
+  panelWidthMm: 4200
 };
 
 const LOW_FREQUENCY_CAPABLE_PRESET_IDS = new Set<PresetId>([
@@ -86,6 +95,38 @@ function cardMapForPreset(presetId: PresetId) {
   return {
     cards: new Map(
       BUILDING_OUTPUTS.map((output) => [
+        output,
+        buildOutputCard({
+          output,
+          result,
+          studyMode: "floor"
+        })
+      ])
+    ),
+    result
+  };
+}
+
+function cardMapForFieldPreset(presetId: PresetId) {
+  const preset = getPresetById(presetId);
+  const rows = preset.rows.map((row, index) => ({
+    ...row,
+    id: `${preset.id}-${index + 1}`
+  }));
+  const result = evaluateScenario({
+    airborneContext: FIELD_CONTEXT,
+    id: `${preset.id}-field`,
+    impactFieldContext: null,
+    name: preset.label,
+    rows,
+    source: "current",
+    studyMode: "floor",
+    targetOutputs: FIELD_OUTPUTS
+  }).result;
+
+  return {
+    cards: new Map(
+      FIELD_OUTPUTS.map((output) => [
         output,
         buildOutputCard({
           output,
@@ -167,6 +208,63 @@ describe("floor full preset contract matrix", () => {
         }
       } else if (deltaCard.status === "live") {
         failures.push(`${preset.id}: unexpected live DeltaLw outside the curated heavy-floor/delta corridors`);
+      }
+    }
+
+    expect(failures).toEqual([]);
+  });
+
+  it("keeps every floor preset numerically sane on the room-to-room field route and only surfaces Ln,w+CI on CI-capable lanes", () => {
+    const failures: string[] = [];
+
+    for (const preset of WORKBENCH_PRESETS.filter((preset) => preset.studyMode === "floor")) {
+      const { cards, result } = cardMapForFieldPreset(preset.id);
+
+      if (!result) {
+        failures.push(`${preset.id}: result should stay available on field route`);
+        continue;
+      }
+
+      const lnwCard = cards.get("Ln,w")!;
+      const lnwPlusCiCard = cards.get("Ln,w+CI")!;
+      const deltaCard = cards.get("DeltaLw")!;
+      const lPrimeNwCard = cards.get("L'n,w")!;
+
+      for (const output of FIELD_OUTPUTS) {
+        const card = cards.get(output)!;
+
+        if ((card.status === "live" || card.status === "bound") && /not ready/i.test(card.value)) {
+          failures.push(`${preset.id}: ${output} should not show Not ready while ${card.status}`);
+        }
+      }
+
+      if (LOW_FREQUENCY_CAPABLE_PRESET_IDS.has(preset.id)) {
+        if (lnwPlusCiCard.status !== "live") {
+          failures.push(`${preset.id}: expected Ln,w+CI to stay live on the field route`);
+        }
+      } else if (lnwPlusCiCard.status === "live") {
+        failures.push(`${preset.id}: Ln,w+CI should not be fabricated on the field route`);
+      }
+
+      if (BOUND_ONLY_PRESET_IDS.has(preset.id)) {
+        if (lnwCard.status !== "bound") {
+          failures.push(`${preset.id}: bound-only families should keep Ln,w conservative on the field route`);
+        }
+        if (lnwPlusCiCard.status === "live") {
+          failures.push(`${preset.id}: bound-only families should fail closed on Ln,w+CI`);
+        }
+      }
+
+      if (DELTA_LIVE_PRESET_IDS.has(preset.id)) {
+        if (deltaCard.status !== "live") {
+          failures.push(`${preset.id}: expected DeltaLw to stay live on the field route`);
+        }
+      } else if (deltaCard.status === "live") {
+        failures.push(`${preset.id}: unexpected live DeltaLw on the room-to-room field route`);
+      }
+
+      if (lPrimeNwCard.status === "live" || lPrimeNwCard.status === "bound") {
+        failures.push(`${preset.id}: L'n,w should stay parked until explicit K is supplied`);
       }
     }
 

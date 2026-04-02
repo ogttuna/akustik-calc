@@ -186,8 +186,15 @@ type WorkbenchEstimateResponse = {
         };
       };
       metrics?: {
+        estimatedCDb?: number;
+        estimatedCtrDb?: number;
+        estimatedDnADb?: number;
+        estimatedDnWDb?: number;
         estimatedDnTwDb?: number;
+        estimatedDnTADb?: number;
+        estimatedRwDb?: number;
         estimatedRwPrimeDb?: number;
+        estimatedStc?: number;
       };
       warnings?: string[];
     };
@@ -350,6 +357,11 @@ async function estimateWorkbenchStateFromStore(
 
 function formatGuidedDb(value: number) {
   return `${Number.isInteger(value) ? String(value) : value.toFixed(1)} dB`;
+}
+
+function formatGuidedSignedDb(value: number) {
+  const formatted = Number.isInteger(value) ? String(value) : value.toFixed(1);
+  return `${value > 0 ? "+" : ""}${formatted} dB`;
 }
 
 function visibleGuidedRouteSummary(page: Page) {
@@ -811,6 +823,36 @@ test("guided exact floor presets surface Ln,w+CI when the live lane already carr
   await expectGuidedMetricCardValue(page, "Ln,w", formatGuidedDb(estimate.json.result?.impact?.LnW ?? 0));
   await expectGuidedMetricCardValue(page, "Ln,w+CI", formatGuidedDb(estimate.json.result?.impact?.LnWPlusCI ?? 0));
   await expectGuidedMetricCardValue(page, "L'nT,50", formatGuidedDb(estimate.json.result?.impact?.LPrimeNT50 ?? 0));
+});
+
+test("guided exact floor presets keep Ln,w+CI visible on the room-to-room field route when CI is already live", async ({
+  page
+}) => {
+  await openFloorGuidedFlow(page);
+  await loadGuidedSample(page, "Dataholz CLT Dry");
+  await selectGuidedProjectContext(page, "field_between_rooms");
+
+  await page.getByLabel("Partition width (mm)").fill("4200");
+  await page.getByLabel("Partition height (mm)").fill("3000");
+
+  await openGuidedWorkspacePanel(page, "Results");
+  const supportingMetrics = page.locator("summary").filter({ hasText: "Supporting metrics" }).first();
+  await expect(supportingMetrics).toBeVisible();
+  await supportingMetrics.click();
+
+  const estimate = await estimateWorkbenchStateFromStore(page, {
+    targetOutputs: ["Rw", "R'w", "Dn,w", "Ln,w", "Ln,w+CI", "L'n,w"]
+  });
+
+  expect(estimate.status).toBe(200);
+  expect(estimate.json.ok).toBe(true);
+  expect(estimate.json.result?.impact?.LnW).toBe(50);
+  expect(estimate.json.result?.impact?.LnWPlusCI).toBe(49);
+  expect(estimate.json.result?.impact?.LPrimeNW ?? null).toBeNull();
+
+  await expectGuidedMetricCardValue(page, "Ln,w", formatGuidedDb(estimate.json.result?.impact?.LnW ?? 0));
+  await expectGuidedMetricCardValue(page, "Ln,w+CI", formatGuidedDb(estimate.json.result?.impact?.LnWPlusCI ?? 0));
+  await expect(visibleGuidedMetricCard(page, "L'n,w")).toHaveCount(0);
 });
 
 test("guided floor flow surfaces material-aware thickness guidance inline", async ({ page }) => {
@@ -1883,6 +1925,41 @@ test("guided wall field routes keep airborne corridor language explicit instead 
   await expect(page.locator("article:visible").filter({ has: page.getByText("Field route", { exact: true }) }).first()).toBeVisible();
   await expect(page.locator("article:visible").filter({ has: page.getByText("Active family", { exact: true }) })).toHaveCount(0);
   await expect(page.locator("article:visible").filter({ has: page.getByText("Tolerance band", { exact: true }) })).toHaveCount(0);
+});
+
+test("guided wall building routes keep UI cards aligned with the live airborne estimate payload", async ({ page }) => {
+  await openWallGuidedFlow(page);
+  await loadGuidedSample(page, "Wall Study");
+  await selectGuidedProjectContext(page, "building_prediction");
+
+  await page.getByLabel("Partition width (mm)").fill("4200");
+  await page.getByLabel("Partition height (mm)").fill("3000");
+  await page.getByLabel("Airborne room volume (m³)").fill("55");
+  await page.getByLabel("RT60 (s)").fill("0.7");
+
+  await openGuidedWorkspacePanel(page, "Results");
+  const supportingMetrics = page.locator("summary").filter({ hasText: "Supporting metrics" }).first();
+  await expect(supportingMetrics).toBeVisible();
+  await supportingMetrics.click();
+
+  const estimate = await estimateWorkbenchStateFromStore(page, {
+    targetOutputs: ["Rw", "R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "STC", "C", "Ctr"]
+  });
+
+  expect(estimate.status).toBe(200);
+  expect(estimate.json.ok).toBe(true);
+
+  await expectGuidedMetricCardValue(page, "Rw", formatGuidedDb(estimate.json.result?.metrics?.estimatedRwDb ?? 0));
+  await expectGuidedMetricCardValue(page, "R'w", formatGuidedDb(estimate.json.result?.metrics?.estimatedRwPrimeDb ?? 0));
+  await expectGuidedMetricCardValue(page, "Dn,w", formatGuidedDb(estimate.json.result?.metrics?.estimatedDnWDb ?? 0));
+  await expectGuidedMetricCardValue(page, "Dn,A", formatGuidedDb(estimate.json.result?.metrics?.estimatedDnADb ?? 0));
+  await expectGuidedMetricCardValue(page, "DnT,w", formatGuidedDb(estimate.json.result?.metrics?.estimatedDnTwDb ?? 0));
+  await expectGuidedMetricCardValue(page, "DnT,A", formatGuidedDb(estimate.json.result?.metrics?.estimatedDnTADb ?? 0));
+  await expectGuidedMetricCardValue(page, "STC", formatGuidedDb(estimate.json.result?.metrics?.estimatedStc ?? 0));
+  await expectGuidedMetricCardValue(page, "Ctr", formatGuidedSignedDb(estimate.json.result?.metrics?.estimatedCtrDb ?? 0));
+  await expect(page.locator("main")).toContainText(
+    `C / Ctr ${formatGuidedSignedDb(estimate.json.result?.metrics?.estimatedCDb ?? 0)} / ${formatGuidedSignedDb(estimate.json.result?.metrics?.estimatedCtrDb ?? 0)}`
+  );
 });
 
 test("guided wall proposal surfaces keep Side A to Side B semantics explicit through print preview", async ({ page }) => {
