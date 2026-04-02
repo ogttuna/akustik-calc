@@ -1161,6 +1161,60 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     }
   },
   {
+    id: "dataholz_gdrnxa03b_timber_frame_lab_2026",
+    label: "Dataholz GDRNXA03B | timber frame | wet screed + elastic bonded fill | resilient channel ceiling",
+    sourceLabel: "Dataholz open component library",
+    sourceType: "official_open_component_library",
+    trustTier: "official_manufacturer",
+    match: {
+      absentRoles: ["floor_covering"],
+      baseStructure: {
+        materialIds: ["timber_frame_floor"],
+        thicknessMm: 240
+      },
+      resilientLayer: {
+        materialIds: ["mw_t_impact_layer"],
+        thicknessMm: 30
+      },
+      floatingScreed: {
+        materialIds: ["screed"],
+        thicknessMm: 60
+      },
+      upperFill: {
+        materialIds: ["elastic_bonded_fill"],
+        thicknessMm: 60
+      },
+      ceilingCavity: {
+        materialIds: ["resilient_channel"],
+        thicknessMm: 27
+      },
+      ceilingFill: {
+        materialIds: ["rockwool"],
+        thicknessMm: 100
+      },
+      ceilingBoard: {
+        layerCount: 1,
+        materialIds: ["gypsum_board"],
+        thicknessMm: 25
+      }
+    },
+    systemSummary: {
+      carrier: "240 mm timber frame joists @ 625 mm centres with OSB deck and elastic bonded fill",
+      floorBuildUp: "60 mm cement screed + 30 mm impact subflooring MW-T [s'=10 MN/m3] + 60 mm elastic bonded (PUR) chippings",
+      ceiling: "27 mm resilient channel ceiling with 1 x 25 mm gypsum plasterboard type DF or gypsum fibre board and 100 mm mineral wool"
+    },
+    impactRatings: {
+      CI: 0,
+      LnW: 47,
+      LnWPlusCI: 47
+    },
+    airborneRatings: {
+      Rw: 74,
+      RwCtr: -12,
+      RwCtrSemantic: "ctr_term"
+    }
+  },
+  {
     id: "dataholz_gdrtxn01a_timber_frame_dry_lab_2026",
     label: "Dataholz GDRTXN01A | timber frame | dry floor + fill | direct lining",
     sourceLabel: "Dataholz open component library",

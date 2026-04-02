@@ -4010,6 +4010,37 @@ describe("calculateAssembly", () => {
     expect(result.impact?.metricBasis?.LPrimeNT50).toBe("estimated_standardized_field_lpriment50_from_lprimentw_plus_ci50_2500");
   });
 
+  it("matches the curated Dataholz GDRNXA03B timber-frame row on the exact lane with local-guide L'nT,50 carry-over", () => {
+    const result = calculateAssembly([
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 25 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+      { floorRole: "ceiling_cavity", materialId: "resilient_channel", thicknessMm: 27 },
+      { floorRole: "upper_fill", materialId: "elastic_bonded_fill", thicknessMm: 60 },
+      { floorRole: "floating_screed", materialId: "screed", thicknessMm: 60 },
+      { floorRole: "resilient_layer", materialId: "mw_t_impact_layer", thicknessMm: 30 },
+      { floorRole: "base_structure", materialId: "timber_frame_floor", thicknessMm: 240 }
+    ], {
+      impactFieldContext: {
+        fieldKDb: 2,
+        receivingRoomVolumeM3: 50
+      },
+      targetOutputs: ["Ln,w", "CI", "Ln,w+CI", "L'n,w", "L'nT,w", "L'nT,50"]
+    });
+
+    expect(result.floorSystemMatch?.system.id).toBe("dataholz_gdrnxa03b_timber_frame_lab_2026");
+    expect(result.floorSystemMatch?.impact.LnW).toBe(47);
+    expect(result.floorSystemMatch?.impact.CI).toBe(0);
+    expect(result.floorSystemMatch?.impact.CI50_2500).toBeUndefined();
+    expect(result.floorSystemMatch?.impact.LnWPlusCI).toBe(47);
+    expect(result.floorSystemMatch?.system.airborneRatings.Rw).toBe(74);
+    expect(result.floorSystemMatch?.system.airborneRatings.RwCtr).toBe(-12);
+    expect(result.floorSystemMatch?.system.airborneRatings.RwCtrSemantic).toBe("ctr_term");
+    expect(result.impact?.LPrimeNW).toBe(49);
+    expect(result.impact?.LPrimeNTw).toBe(47);
+    expect(result.impact?.LPrimeNT50).toBe(47);
+    expect(result.impact?.guideEstimateProfile).toBe("tr_simple_method_lnt50_from_lnwci_plus_k_plus_hd");
+  });
+
   it("matches the measured TUAS CLT 260 family", () => {
     const result = calculateAssembly([
       { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
