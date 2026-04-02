@@ -46,4 +46,38 @@ describe("exact floor companion audit", () => {
       );
     }
   });
+
+  it("keeps exact rows without CI50 fail-closed on the local-guide L'nT,50 path", () => {
+    const officialRowsWithoutCi50 = EXACT_FLOOR_SYSTEMS.filter((row) => {
+      const impactRatings = row.impactRatings;
+      return (
+        String(row.sourceType ?? "").startsWith("official") &&
+        typeof impactRatings?.CI === "number" &&
+        typeof impactRatings.CI50_2500 !== "number"
+      );
+    });
+
+    expect(officialRowsWithoutCi50.length).toBeGreaterThan(0);
+
+    for (const row of officialRowsWithoutCi50) {
+      const result = calculateImpactOnly([], {
+        officialFloorSystemId: row.id,
+        impactFieldContext: {
+          fieldKDb: 2,
+          receivingRoomVolumeM3: 50
+        }
+      });
+
+      if (typeof result.impact?.LPrimeNT50 !== "number") {
+        continue;
+      }
+
+      expect(result.impact?.metricBasis?.LPrimeNT50, row.id).toBe(
+        "estimated_local_guide_tr_simple_method_lnwci_plus_k_plus_hd"
+      );
+      expect(result.impact?.guideEstimateProfile, row.id).toBe(
+        "tr_simple_method_lnt50_from_lnwci_plus_k_plus_hd"
+      );
+    }
+  });
 });
