@@ -1816,6 +1816,59 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     }
   },
   {
+    id: "dataholz_gdmtxa04a_clt_lab_2026",
+    label: "Dataholz GDMTXA04A | CLT floor | dry floor + fill + acoustic direct hanger ceiling",
+    sourceLabel: "Dataholz open component library",
+    sourceType: "official_open_component_library",
+    sourceUrl: "https://www.dataholz.eu/en/index/download/en/gdmtxa04a-0.pdf",
+    trustTier: "official_manufacturer",
+    manualMatch: false,
+    match: {
+      absentRoles: ["floating_screed", "resilient_layer"],
+      baseStructure: {
+        materialIds: ["clt_panel"],
+        thicknessMm: 160
+      },
+      upperFill: {
+        materialIds: ["non_bonded_chippings"],
+        thicknessMm: 60
+      },
+      floorCovering: {
+        materialIds: ["dry_floating_gypsum_fiberboard"],
+        thicknessMm: 65
+      },
+      ceilingCavity: {
+        materialIds: ["acoustic_hanger_ceiling"],
+        thicknessMm: 70
+      },
+      ceilingFill: {
+        materialIds: ["rockwool"],
+        thicknessMm: 50
+      },
+      ceilingBoard: {
+        layerCount: 1,
+        materialIds: ["gypsum_board"],
+        thicknessMm: 12.5
+      }
+    },
+    systemSummary: {
+      carrier: "160 mm cross laminated timber, first layer minimum 40 mm",
+      floorBuildUp: "65 mm dry floor element + 60 mm non-bonded chippings",
+      ceiling: "70 mm acoustic direct hanger ceiling with 50 mm mineral wool and 1 x 12.5 mm gypsum board"
+    },
+    impactRatings: {
+      CI: 4,
+      CI50_2500: 9,
+      LnW: 49,
+      LnWPlusCI: 53
+    },
+    airborneRatings: {
+      Rw: 70,
+      RwCtr: -19,
+      RwCtrSemantic: "ctr_term"
+    }
+  },
+  {
     id: "tuas_x2_clt140_measured_2026",
     label: "TUAS X2 | CLT 140 mm | laminate + EPS underlay",
     sourceLabel: "TUAS open measured dataset",
