@@ -3803,6 +3803,8 @@ describe("calculateAssembly", () => {
 
     expect(result.floorSystemMatch?.system.id).toBe("dataholz_gdrtxa03b_timber_frame_dry_lab_2026");
     expect(result.floorSystemMatch?.impact.LnW).toBe(51);
+    expect(result.floorSystemMatch?.impact.CI).toBe(2);
+    expect(result.floorSystemMatch?.impact.LnWPlusCI).toBe(53);
     expect(result.floorSystemMatch?.system.airborneRatings.Rw).toBe(65);
     expect(result.floorSystemMatch?.system.airborneRatings.RwCtr).toBe(-9);
     expect(result.floorSystemMatch?.system.airborneRatings.RwCtrSemantic).toBe("ctr_term");
@@ -5265,9 +5267,11 @@ describe("calculateAssembly", () => {
     expect(result.floorSystemEstimate?.kind).toBe("family_archetype");
     expect(result.impact?.basis).toBe("mixed_predicted_plus_estimated_local_guide");
     expect(result.impact?.LnW).toBe(57.9);
+    expect(result.impact?.CI).toBe(2);
+    expect(result.impact?.LnWPlusCI).toBe(59.9);
     expect(result.impact?.LPrimeNW).toBe(59.9);
     expect(result.impact?.LPrimeNTw).toBe(57.9);
-    expect(result.impact?.LPrimeNT50).toBe(61.4);
+    expect(result.impact?.LPrimeNT50).toBe(59.9);
     expect(result.impact?.estimateCandidateIds).toEqual([
       "dataholz_gdrtxn01a_timber_frame_dry_lab_2026",
       "dataholz_gdrtxn02b_timber_frame_dry_lab_2026",
@@ -5403,9 +5407,9 @@ describe("calculateAssembly", () => {
     expect(result.impact?.basis).toBe("mixed_predicted_plus_estimated_local_guide");
     expect(result.impact?.LnW).toBe(57.9);
     expect(result.impact?.CI).toBe(2);
-    expect(result.impact?.LnWPlusCI).toBe(61.4);
+    expect(result.impact?.LnWPlusCI).toBe(59.9);
     expect(result.impact?.LPrimeNW).toBe(61.9);
-    expect(result.impact?.LPrimeNT50).toBe(65.4);
+    expect(result.impact?.LPrimeNT50).toBe(63.9);
     expect(result.impact?.guideEstimateProfile).toBe("tr_simple_method_lnt50_from_lnwci_plus_k_plus_hd");
     expect(result.impact?.guideEstimateKSource).toBe("lookup_from_mass_ratio");
     expect(result.impact?.guideEstimateHdSource).toBe("explicit_input");

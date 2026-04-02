@@ -184,6 +184,64 @@ describe("floor output availability matrix", () => {
     );
   });
 
+  it("surfaces the imported CI companion on Dataholz Dry RC without fabricating standardized CI,50-2500", () => {
+    const fieldCards = buildCardMap({
+      airborneContext: FIELD_BETWEEN_ROOMS_CONTEXT,
+      id: "dataholz-dry-rc-field",
+      presetId: "dataholz_dry_rc_exact"
+    });
+    const buildingCards = buildCardMap({
+      airborneContext: BUILDING_PREDICTION_CONTEXT,
+      id: "dataholz-dry-rc-building",
+      impactFieldContext: BUILDING_PREDICTION_IMPACT_FIELD,
+      presetId: "dataholz_dry_rc_exact"
+    });
+
+    expect(fieldCards.get("Ln,w+CI")).toEqual(
+      expect.objectContaining({
+        status: "live",
+        value: "53 dB"
+      })
+    );
+    expect(fieldCards.get("L'n,w")).toEqual(
+      expect.objectContaining({
+        status: "needs_input",
+        value: "Not ready"
+      })
+    );
+
+    expect(buildingCards.get("Ln,w")).toEqual(
+      expect.objectContaining({
+        status: "live",
+        value: "51 dB"
+      })
+    );
+    expect(buildingCards.get("Ln,w+CI")).toEqual(
+      expect.objectContaining({
+        status: "live",
+        value: "53 dB"
+      })
+    );
+    expect(buildingCards.get("L'n,w")).toEqual(
+      expect.objectContaining({
+        status: "live",
+        value: "54 dB"
+      })
+    );
+    expect(buildingCards.get("L'nT,w")).toEqual(
+      expect.objectContaining({
+        status: "live",
+        value: "51.2 dB"
+      })
+    );
+    expect(buildingCards.get("L'nT,50")).toEqual(
+      expect.objectContaining({
+        status: "live",
+        value: "54 dB"
+      })
+    );
+  });
+
   it("keeps bound-only UBIQ families explicit while airborne companions and field airborne reads stay live", () => {
     const cards = buildCardMap({
       airborneContext: BUILDING_PREDICTION_CONTEXT,

@@ -230,7 +230,7 @@
         "basis": "mixed_predicted_plus_estimated_local_guide",
         "lprimeNwDb": 59.9,
         "lprimeNTwDb": 57.9,
-        "lprimeNT50Db": 61.4
+        "lprimeNT50Db": 59.9
       },
       "tolerances": {
         "lprimeNwDb": 0.1,

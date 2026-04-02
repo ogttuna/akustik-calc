@@ -43,6 +43,7 @@ const LOW_FREQUENCY_CAPABLE_PRESET_IDS = new Set<PresetId>([
   "clt_floor",
   "dataholz_timber_frame_exact",
   "dataholz_dry_floor_exact",
+  "dataholz_dry_rc_exact",
   "dataholz_clt_wet_fill_exact",
   "dataholz_clt_dry_exact",
   "dataholz_clt_fill_exact",

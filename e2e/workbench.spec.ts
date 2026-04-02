@@ -855,6 +855,32 @@ test("guided exact floor presets keep Ln,w+CI visible on the room-to-room field 
   await expect(visibleGuidedMetricCard(page, "L'n,w")).toHaveCount(0);
 });
 
+test("workbench can carry imported Dataholz Dry RC CI companions into the guide-side L'nT,50 path", async ({
+  page
+}) => {
+  await gotoAdvancedWorkbench(page);
+
+  await page.getByRole("button", { exact: true, name: "Load preset Dataholz Dry RC" }).click();
+  await page.getByLabel("K (dB)").fill("3");
+  await page.getByLabel("Receiving room V (m³)").fill("60");
+
+  const lnwCiCard = page.locator("article").filter({
+    has: page.locator("div").filter({ hasText: /^Ln,w\+CI$/ })
+  }).first();
+  const lprimeNwCard = page.locator("article").filter({
+    has: page.locator("div").filter({ hasText: /^L'n,w$/ })
+  }).first();
+  const lprimeNT50Card = page.locator("article").filter({
+    has: page.locator("div").filter({ hasText: /^L'nT,50$/ })
+  }).first();
+
+  await expect(page.getByText("Curated match active")).toBeVisible();
+  await expect(page.getByText("Dataholz GDRTXA03B | timber frame | dry floor | resilient channel ceiling").first()).toBeVisible();
+  await expect(lnwCiCard.getByText(/^53 dB$/)).toBeVisible();
+  await expect(lprimeNwCard.getByText(/^54 dB$/)).toBeVisible();
+  await expect(lprimeNT50Card.getByText(/^54 dB$/)).toBeVisible();
+});
+
 test("guided floor flow surfaces material-aware thickness guidance inline", async ({ page }) => {
   await openFloorGuidedFlow(page);
   await loadGuidedSample(page, "Impact Floor");

@@ -489,9 +489,10 @@ describe("floor family regressions", () => {
     expect(scenario.result?.floorSystemEstimate?.kind).toBe("family_archetype");
     expect(scenario.result?.impact?.basis).toBe("mixed_predicted_plus_estimated_local_guide");
     expect(scenario.result?.impact?.LnW).toBe(57.9);
+    expect(scenario.result?.impact?.LnWPlusCI).toBe(59.9);
     expect(scenario.result?.impact?.LPrimeNW).toBe(59.9);
     expect(scenario.result?.impact?.LPrimeNTw).toBe(57.9);
-    expect(scenario.result?.impact?.LPrimeNT50).toBe(61.4);
+    expect(scenario.result?.impact?.LPrimeNT50).toBe(59.9);
   });
 
   it("keeps the curated UBIQ open-web steel 300 row exact on the web scenario route", () => {

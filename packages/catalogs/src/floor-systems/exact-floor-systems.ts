@@ -1378,7 +1378,9 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
       ceiling: "27 mm resilient channel ceiling with 2 x 12.5 mm gypsum board and 100 mm mineral wool"
     },
     impactRatings: {
-      LnW: 51
+      CI: 2,
+      LnW: 51,
+      LnWPlusCI: 53
     },
     airborneRatings: {
       Rw: 65,
