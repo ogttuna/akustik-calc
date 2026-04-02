@@ -11,6 +11,10 @@ import { getCatalogDynamicStiffness } from "./dynamic-stiffness";
 import { getLayerThicknessGuidanceHint, getLayerThicknessSanityWarning } from "./input-sanity";
 import type { StudyMode } from "./preset-definitions";
 import type { NewLayerDraft } from "./simple-workbench-constants";
+import {
+  describeSimpleWorkbenchSingleEntryFloorRoleConflict,
+  findSimpleWorkbenchSingleEntryFloorRoleConflict
+} from "./simple-workbench-floor-role-conflicts";
 import { workbenchSectionCardClass, workbenchSectionMutedCardClass } from "./simple-workbench-layer-visuals";
 import { DetailTag, GuidedFactChip, InlinePair } from "./simple-workbench-primitives";
 import {
@@ -236,6 +240,7 @@ export function NewLayerComposer(props: {
   onReplaceBase?: () => void;
   onThicknessChange: (thicknessMm: string) => void;
   replaceBaseAvailable?: boolean;
+  rows: readonly { floorRole?: FloorRole; id: string }[];
   studyMode: StudyMode;
 }) {
   const {
@@ -250,6 +255,7 @@ export function NewLayerComposer(props: {
     onReplaceBase,
     onThicknessChange,
     replaceBaseAvailable = false,
+    rows,
     studyMode
   } = props;
   const materials = uniqueMaterialsById(materialGroups.flatMap((group) => group.materials));
@@ -284,6 +290,16 @@ export function NewLayerComposer(props: {
     },
     allMaterials
   );
+  const floorRoleConflict =
+    studyMode === "floor"
+      ? findSimpleWorkbenchSingleEntryFloorRoleConflict(rows, draft.floorRole)
+      : null;
+  const floorRoleConflictWarning = floorRoleConflict
+    ? describeSimpleWorkbenchSingleEntryFloorRoleConflict(floorRoleConflict, {
+        context: "composer",
+        replaceBaseAvailable
+      })
+    : null;
   const canAdd = Boolean(parsePositiveNumber(draft.thicknessMm));
 
   return (
@@ -402,9 +418,10 @@ export function NewLayerComposer(props: {
         </div>
       ) : null}
 
-      {thicknessHint || thicknessWarning || densityWarning || dynamicStiffnessWarning ? (
+      {thicknessHint || floorRoleConflictWarning || thicknessWarning || densityWarning || dynamicStiffnessWarning ? (
         <div className="mt-3 grid gap-1 text-[0.7rem] leading-5">
           {thicknessHint ? <div className="text-[color:var(--ink-soft)]">{thicknessHint}</div> : null}
+          {floorRoleConflictWarning ? <div className="text-[color:var(--warning-ink)]">{floorRoleConflictWarning}</div> : null}
           {thicknessWarning ? <div className="text-[color:var(--warning-ink)]">{thicknessWarning}</div> : null}
           {densityWarning ? <div className="text-[color:var(--warning-ink)]">{densityWarning}</div> : null}
           {dynamicStiffnessWarning ? <div className="text-[color:var(--warning-ink)]">{dynamicStiffnessWarning}</div> : null}

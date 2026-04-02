@@ -10,6 +10,10 @@ import { getCatalogDynamicStiffness } from "./dynamic-stiffness";
 import { getLayerThicknessGuidanceHint, getLayerThicknessSanityWarning } from "./input-sanity";
 import { getCatalogDensity } from "./material-density";
 import type { StudyMode } from "./preset-definitions";
+import {
+  describeSimpleWorkbenchSingleEntryFloorRoleConflict,
+  findSimpleWorkbenchSingleEntryFloorRoleConflict
+} from "./simple-workbench-floor-role-conflicts";
 import { workbenchSectionMutedCardClass } from "./simple-workbench-layer-visuals";
 import { GuidedFactChip } from "./simple-workbench-primitives";
 import {
@@ -47,6 +51,7 @@ export function SimpleLayerRow(props: {
   onRemoveRow: (id: string) => void;
   onThicknessChange: (id: string, thicknessMm: string) => void;
   row: LayerDraft;
+  rows: readonly LayerDraft[];
   studyMode: StudyMode;
   totalRows: number;
 }) {
@@ -68,6 +73,7 @@ export function SimpleLayerRow(props: {
     onRemoveRow,
     onThicknessChange,
     row,
+    rows,
     studyMode,
     totalRows
   } = props;
@@ -100,6 +106,15 @@ export function SimpleLayerRow(props: {
       : row.floorRole
         ? null
         : "Assign a floor role when this row should participate in exact floor matching.";
+  const floorRoleConflict =
+    studyMode === "floor"
+      ? findSimpleWorkbenchSingleEntryFloorRoleConflict(rows, row.floorRole, { ignoreRowId: row.id })
+      : null;
+  const floorRoleConflictWarning = floorRoleConflict
+    ? describeSimpleWorkbenchSingleEntryFloorRoleConflict(floorRoleConflict, {
+        context: "editor"
+      })
+    : null;
   const stateLabel = thicknessReady ? "Live row" : "Parked";
   const rowMeta = compactValues([edgeLabel, stateLabel, studyMode === "floor" && row.floorRole ? FLOOR_ROLE_LABELS[row.floorRole] : null]).join(" • ");
 
@@ -272,9 +287,15 @@ export function SimpleLayerRow(props: {
             </div>
           ) : null}
 
-          {floorRoleNote || thicknessGuidanceHint || thicknessSanityWarning || densityWarning || dynamicStiffnessWarning ? (
+          {floorRoleNote ||
+          floorRoleConflictWarning ||
+          thicknessGuidanceHint ||
+          thicknessSanityWarning ||
+          densityWarning ||
+          dynamicStiffnessWarning ? (
             <div className="grid gap-1 text-[0.7rem] leading-5">
               {floorRoleNote ? <div className="text-[color:var(--ink-soft)]">{floorRoleNote}</div> : null}
+              {floorRoleConflictWarning ? <div className="text-[color:var(--warning-ink)]">{floorRoleConflictWarning}</div> : null}
               {thicknessGuidanceHint ? <div className="text-[color:var(--ink-soft)]">{thicknessGuidanceHint}</div> : null}
               {thicknessSanityWarning ? <div className="text-[color:var(--warning-ink)]">{thicknessSanityWarning}</div> : null}
               {densityWarning ? <div className="text-[color:var(--warning-ink)]">{densityWarning}</div> : null}

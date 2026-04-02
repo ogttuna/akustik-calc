@@ -235,6 +235,7 @@ export function SimpleWorkbenchAssemblyPanel(props: {
               onReplaceBase={replaceConfiguredBaseLayer}
               onThicknessChange={(thicknessMm) => setNewLayerDraft((current) => ({ ...current, thicknessMm }))}
               replaceBaseAvailable={replaceConfiguredBaseLayerAvailable}
+              rows={rows}
               studyMode={studyMode}
             />
           ) : null}
@@ -275,6 +276,7 @@ export function SimpleWorkbenchAssemblyPanel(props: {
                   onRemoveRow={removeRow}
                   onThicknessChange={updateThickness}
                   row={row}
+                  rows={rows}
                   studyMode={studyMode}
                   totalRows={rows.length}
                 />
