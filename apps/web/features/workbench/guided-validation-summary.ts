@@ -75,7 +75,7 @@ function buildGuidedValidationDetail(input: {
       if (studyMode === "floor" && isSteelBoundSupportFormLane(result)) {
         return `${posture.label} is active. ${STEEL_BOUND_SUPPORT_FORM_ROUTE_NOTE}`;
       }
-      return `${posture.label} is active. This route is conservative support only, so the current number should be read as a bound instead of a delivery-ready claim.`;
+      return `${posture.label} is active. This route is conservative support only, so the current impact number should be read as a bound instead of a delivery-ready claim. Airborne companions can still stay live on the same floor lane.`;
     case "inactive":
     default:
       return studyMode === "floor"

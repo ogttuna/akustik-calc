@@ -4,6 +4,26 @@ import { describe, expect, it } from "vitest";
 import { buildSimpleWorkbenchOutputPosture, getFallbackSimpleWorkbenchOutputPosture } from "./simple-workbench-output-posture";
 
 describe("simple workbench output posture", () => {
+  it("labels floor Rw as a companion airborne value instead of a primary live route", () => {
+    const companionRw = buildSimpleWorkbenchOutputPosture({
+      output: "Rw",
+      result: {
+        floorSystemRatings: {
+          Rw: 63,
+          RwCtr: 56,
+          RwCtrSemantic: "rw_plus_ctr",
+          basis: "official_floor_system_bound_support"
+        }
+      } as AssemblyCalculation,
+      status: "live",
+      studyMode: "floor"
+    });
+
+    expect(companionRw).toMatchObject({ label: "Companion airborne", tone: "neutral" });
+    expect(companionRw.detail).toMatch(/active floor lane/i);
+    expect(companionRw.detail).toMatch(/differ from the live airborne estimate/i);
+  });
+
   it("distinguishes exact, estimated, and low-confidence floor lanes", () => {
     const exact = buildSimpleWorkbenchOutputPosture({
       output: "Ln,w",
@@ -78,5 +98,24 @@ describe("simple workbench output posture", () => {
       label: "Unsupported on route",
       tone: "neutral"
     });
+  });
+
+  it("keeps bound posture explicit as one-sided support even when other live companions remain visible", () => {
+    const bound = buildSimpleWorkbenchOutputPosture({
+      output: "Ln,w",
+      result: {
+        boundFloorSystemMatch: {
+          system: {
+            id: "ubiq_fl33_open_web_steel_300_lab_2026"
+          }
+        }
+      } as AssemblyCalculation,
+      status: "bound",
+      studyMode: "floor"
+    });
+
+    expect(bound).toMatchObject({ label: "Conservative bound", tone: "warning" });
+    expect(bound.detail).toMatch(/one-sided support value/i);
+    expect(bound.detail).toMatch(/other live cards can still stay visible/i);
   });
 });

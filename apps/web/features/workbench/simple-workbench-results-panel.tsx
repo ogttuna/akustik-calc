@@ -210,8 +210,8 @@ export function SimpleWorkbenchResultsPanel(props: {
                             <summary className="cursor-pointer list-none">
                               <div className="flex flex-wrap items-center justify-between gap-3">
                                 <div className="text-sm font-semibold text-[color:var(--ink)]">Supporting metrics</div>
-                                <div className="text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
-                                  {secondaryReadyCards.length} companion values
+                              <div className="text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+                                  {secondaryReadyCards.length} supporting values
                                 </div>
                               </div>
                             </summary>

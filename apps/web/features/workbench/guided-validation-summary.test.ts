@@ -92,6 +92,21 @@ describe("getGuidedValidationSummary", () => {
     expect(summary.detail).toContain("steel joist / purlin");
   });
 
+  it("explains that generic bound lanes keep impact outputs conservative even while airborne companions can remain live", () => {
+    const scenario = evaluatePreset("ubiq_open_web_300_bound");
+
+    const summary = getGuidedValidationSummary({
+      result: scenario.result,
+      studyMode: "floor"
+    });
+
+    expect(summary.value).toBe("Conservative bound");
+    expect(summary.tone).toBe("warning");
+    expect(summary.detail).toContain("conservative support only");
+    expect(summary.detail).toContain("impact number should be read as a bound");
+    expect(summary.detail).toContain("Airborne companions can still stay live");
+  });
+
   it("calls out timber bare-floor low-confidence lanes as broad fallbacks that still need a ceiling package", () => {
     const scenario = evaluatePreset("timber_bare_impact_only_fallback");
 

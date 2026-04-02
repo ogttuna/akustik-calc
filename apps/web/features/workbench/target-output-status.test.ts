@@ -71,6 +71,57 @@ describe("getTargetOutputStatus", () => {
     expect(rwStatus.note).not.toContain("carrier stays unspecified");
   });
 
+  it("keeps bound-only field carry-over explicit on L'n,w and L'nT,w once K and room volume are present", () => {
+    const preset = getPresetById("ubiq_open_web_300_bound");
+    const scenario = evaluateScenario({
+      airborneContext: {
+        contextMode: "building_prediction",
+        panelHeightMm: 3000,
+        panelWidthMm: 4200,
+        receivingRoomVolumeM3: 55
+      },
+      id: `${preset.id}-field-bound-status`,
+      impactFieldContext: {
+        fieldKDb: 2,
+        receivingRoomVolumeM3: 50
+      },
+      name: preset.label,
+      rows: preset.rows.map((row, index) => ({ ...row, id: `${preset.id}-${index + 1}` })),
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: ["Ln,w", "L'n,w", "L'nT,w", "Rw", "DnT,w"]
+    });
+
+    const lnwStatus = getTargetOutputStatus({
+      guideResult: null,
+      output: "Ln,w",
+      result: scenario.result
+    });
+    const lPrimeNwStatus = getTargetOutputStatus({
+      guideResult: null,
+      output: "L'n,w",
+      result: scenario.result
+    });
+    const lPrimeNTwStatus = getTargetOutputStatus({
+      guideResult: null,
+      output: "L'nT,w",
+      result: scenario.result
+    });
+    const rwStatus = getTargetOutputStatus({
+      guideResult: null,
+      output: "Rw",
+      result: scenario.result
+    });
+
+    expect(lnwStatus.kind).toBe("engine_bound");
+    expect(lnwStatus.label).toBe("Bound support");
+    expect(lPrimeNwStatus.kind).toBe("engine_bound");
+    expect(lPrimeNwStatus.note).toContain("conservative bound");
+    expect(lPrimeNTwStatus.kind).toBe("engine_bound");
+    expect(lPrimeNTwStatus.note).toContain("conservative bound");
+    expect(rwStatus.kind).toBe("unavailable");
+  });
+
   it("keeps timber bare-floor low-confidence airborne outputs explicit on the same published-family fallback lane", () => {
     const scenario = evaluatePreset("timber_bare_impact_only_fallback");
 

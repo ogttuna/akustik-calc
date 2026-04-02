@@ -234,7 +234,8 @@ export function buildOutputCard(input: {
 
       if (typeof result?.lowerBoundImpact?.LnWUpperBound === "number") {
         return {
-          detail: "Conservative upper bound from a bound-only floor family lane.",
+          detail:
+            "Conservative upper bound from a bound-only floor family lane. DynEcho keeps this separate from any live airborne companion still shown on the same route.",
           label: "Ln,w",
           output,
           status: "bound",
@@ -255,7 +256,7 @@ export function buildOutputCard(input: {
 
       if (typeof result?.lowerBoundImpact?.LPrimeNWUpperBound === "number") {
         return {
-          detail: "Conservative field-side impact upper bound.",
+          detail: "Conservative field-side impact upper bound carried from the same bound-only lane.",
           label: "L'n,w",
           output,
           status: "bound",
@@ -330,7 +331,7 @@ export function buildOutputCard(input: {
 
       if (typeof result?.lowerBoundImpact?.LPrimeNTwUpperBound === "number") {
         return {
-          detail: "Conservative standardized field impact upper bound.",
+          detail: "Conservative standardized field impact upper bound carried from the same bound-only lane.",
           label: "L'nT,w",
           output,
           status: "bound",

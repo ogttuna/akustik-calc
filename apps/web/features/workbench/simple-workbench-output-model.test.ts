@@ -83,4 +83,48 @@ describe("simple workbench output model", () => {
       })
     );
   });
+
+  it("keeps bound-only Ln,w cards explicit as conservative upper bounds instead of live reads", () => {
+    const card = buildOutputCard({
+      output: "Ln,w",
+      result: buildFixture({
+        lowerBoundImpact: {
+          LnWUpperBound: 51
+        }
+      }),
+      studyMode: "floor"
+    });
+
+    expect(card).toEqual(
+      expect.objectContaining({
+        detail:
+          "Conservative upper bound from a bound-only floor family lane. DynEcho keeps this separate from any live airborne companion still shown on the same route.",
+        label: "Ln,w",
+        status: "bound",
+        value: "<= 51 dB"
+      })
+    );
+  });
+
+  it("keeps standardized field-side bounds explicit when only the conservative carry-over is available", () => {
+    const card = buildOutputCard({
+      output: "L'nT,w",
+      result: buildFixture({
+        lowerBoundImpact: {
+          LPrimeNTwUpperBound: 51
+        }
+      }),
+      studyMode: "floor"
+    });
+
+    expect(card).toEqual(
+      expect.objectContaining({
+        detail:
+          "Conservative standardized field impact upper bound carried from the same bound-only lane.",
+        label: "L'nT,w",
+        status: "bound",
+        value: "<= 51 dB"
+      })
+    );
+  });
 });
