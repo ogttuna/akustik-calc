@@ -80,4 +80,38 @@ describe("exact floor companion audit", () => {
       );
     }
   });
+
+  it("keeps Knauf official exact rows fail-closed without imported impact companions", () => {
+    const knaufRows = EXACT_FLOOR_SYSTEMS.filter(
+      (row) => row.sourceLabel === "Knauf AU official system table"
+    );
+
+    expect(knaufRows.length).toBeGreaterThan(0);
+
+    for (const row of knaufRows) {
+      expect(row.impactRatings?.CI, row.id).toBeUndefined();
+      expect(row.impactRatings?.CI50_2500, row.id).toBeUndefined();
+      expect(row.impactRatings?.LnWPlusCI, row.id).toBeUndefined();
+      expect(typeof row.impactRatings?.LnW, row.id).toBe("number");
+    }
+  });
+
+  it("keeps UBIQ official exact rows on the CI-only companion policy", () => {
+    const ubiqRows = EXACT_FLOOR_SYSTEMS.filter(
+      (row) => row.sourceLabel === "UBIQ official system table PDF"
+    );
+
+    expect(ubiqRows.length).toBeGreaterThan(0);
+
+    for (const row of ubiqRows) {
+      expect(typeof row.impactRatings?.CI, row.id).toBe("number");
+      expect(typeof row.impactRatings?.LnW, row.id).toBe("number");
+      expect(typeof row.impactRatings?.LnWPlusCI, row.id).toBe("number");
+      expect(row.impactRatings?.LnWPlusCI, row.id).toBeCloseTo(
+        (row.impactRatings?.LnW as number) + (row.impactRatings?.CI as number),
+        6
+      );
+      expect(row.impactRatings?.CI50_2500, row.id).toBeUndefined();
+    }
+  });
 });
