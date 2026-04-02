@@ -156,10 +156,16 @@ type WorkbenchEstimateResponse = {
     result?: {
       impact?: {
         basis?: string;
+        DeltaLw?: number;
         LPrimeNT50?: number;
         LPrimeNTw?: number;
         LPrimeNW?: number;
         LnW?: number;
+      };
+      lowerBoundImpact?: {
+        LnWUpperBound?: number;
+        LPrimeNTwUpperBound?: number;
+        LPrimeNWUpperBound?: number;
       };
       floorSystemEstimate?: {
         fitPercent?: number;
@@ -177,6 +183,10 @@ type WorkbenchEstimateResponse = {
         iso717?: {
           Rw?: number;
         };
+      };
+      metrics?: {
+        estimatedDnTwDb?: number;
+        estimatedRwPrimeDb?: number;
       };
       warnings?: string[];
     };
@@ -232,6 +242,115 @@ async function estimateCurrentWorkbenchState(page: Page): Promise<WorkbenchEstim
   })()`);
 }
 
+type WorkbenchStoreEstimateOptions = {
+  targetOutputs: string[];
+};
+
+async function estimateWorkbenchStateFromStore(
+  page: Page,
+  options: WorkbenchStoreEstimateOptions
+): Promise<WorkbenchEstimateResponse> {
+  return page.evaluate<WorkbenchEstimateResponse, WorkbenchStoreEstimateOptions>(
+    async ({ targetOutputs }) => {
+      const rawStore = globalThis.localStorage.getItem("dynecho-workbench-store");
+      if (!rawStore) {
+        throw new Error("Workbench state is missing from localStorage.");
+      }
+
+      const parsed = JSON.parse(rawStore) as {
+        state: {
+          airborneContextMode: string;
+          airbornePanelHeightMm: string;
+          airbornePanelWidthMm: string;
+          airborneReceivingRoomRt60S: string;
+          airborneReceivingRoomVolumeM3: string;
+          calculatorId: string;
+          impactGuideKDb: string;
+          impactGuideReceivingRoomVolumeM3: string;
+          rows: Array<{
+            densityKgM3?: string;
+            dynamicStiffnessMNm3?: string;
+            floorRole?: string;
+            materialId: string;
+            thicknessMm: string;
+          }>;
+        };
+      };
+      const state = parsed.state;
+
+      const parseFinite = (value: string | undefined) => {
+        if (typeof value !== "string" || value.trim().length === 0) {
+          return undefined;
+        }
+
+        const numeric = Number(value);
+        return Number.isFinite(numeric) ? numeric : undefined;
+      };
+
+      const layers = state.rows.map((row) => ({
+        densityKgM3: parseFinite(row.densityKgM3),
+        dynamicStiffnessMNPerM3: parseFinite(row.dynamicStiffnessMNm3),
+        floorRole: row.floorRole,
+        materialId: row.materialId,
+        thicknessMm: Number(row.thicknessMm)
+      }));
+
+      const airborneContext =
+        state.airborneContextMode !== "element_lab" ||
+        typeof parseFinite(state.airbornePanelHeightMm) === "number" ||
+        typeof parseFinite(state.airbornePanelWidthMm) === "number" ||
+        typeof parseFinite(state.airborneReceivingRoomRt60S) === "number" ||
+        typeof parseFinite(state.airborneReceivingRoomVolumeM3) === "number"
+          ? {
+              contextMode: state.airborneContextMode,
+              panelHeightMm: parseFinite(state.airbornePanelHeightMm),
+              panelWidthMm: parseFinite(state.airbornePanelWidthMm),
+              receivingRoomRt60S: parseFinite(state.airborneReceivingRoomRt60S),
+              receivingRoomVolumeM3: parseFinite(state.airborneReceivingRoomVolumeM3)
+            }
+          : undefined;
+
+      const impactFieldContext =
+        typeof parseFinite(state.impactGuideKDb) === "number" ||
+        typeof parseFinite(state.impactGuideReceivingRoomVolumeM3) === "number"
+          ? {
+              fieldKDb: parseFinite(state.impactGuideKDb),
+              receivingRoomVolumeM3: parseFinite(state.impactGuideReceivingRoomVolumeM3)
+            }
+          : undefined;
+
+      const payload = {
+        airborneContext,
+        calculator: state.calculatorId,
+        impactFieldContext,
+        layers,
+        targetOutputs
+      };
+
+      const response = await globalThis.fetch("/api/estimate", {
+        body: JSON.stringify(payload),
+        headers: {
+          "content-type": "application/json"
+        },
+        method: "POST"
+      });
+      const json = (await response.json()) as WorkbenchEstimateResponse["json"];
+
+      return {
+        baseRow: state.rows.find((row) => row.floorRole === "base_structure") ?? null,
+        json,
+        rowCount: state.rows.length,
+        status: response.status
+      };
+    },
+    options
+  );
+}
+
+function formatGuidedDb(value: number) {
+  return `${Number.isInteger(value) ? String(value) : value.toFixed(1)} dB`;
+}
+
 function visibleGuidedRouteSummary(page: Page) {
   return page
     .locator("section:visible")
@@ -257,6 +376,10 @@ function visibleGuidedMetricCard(page: Page, label: string) {
       has: page.locator("div").filter({ hasText: new RegExp(`^${escapeRegex(label)}$`) })
     })
     .first();
+}
+
+async function expectGuidedMetricCardValue(page: Page, label: string, value: string) {
+  await expect(visibleGuidedMetricCard(page, label)).toContainText(value);
 }
 
 function visibleGuidedComposer(page: Page) {
@@ -612,6 +735,48 @@ test("guided impact floor unlocks field-impact outputs step by step as K and roo
   await expect(lPrimeNT50Card).toHaveCount(0);
 });
 
+test("guided impact floor keeps UI cards aligned with the live estimate payload on the full field chain", async ({
+  page
+}) => {
+  await openFloorGuidedFlow(page);
+  await loadGuidedSample(page, "Impact Floor");
+  await selectGuidedProjectContext(page, "building_prediction");
+
+  await page.getByLabel("Partition width (mm)").fill("4200");
+  await page.getByLabel("Partition height (mm)").fill("3000");
+  await page.getByLabel("Airborne room volume (m³)").fill("55");
+  await page.getByLabel("Impact K correction (dB)").fill("3");
+  await page.getByLabel("Impact room volume (m³)").fill("60");
+  await page.getByLabel("RT60 (s)").fill("0.7");
+
+  await openGuidedWorkspacePanel(page, "Results");
+  const supportingMetrics = page.locator("summary").filter({ hasText: "Supporting metrics" }).first();
+  await expect(supportingMetrics).toBeVisible();
+  await supportingMetrics.click();
+
+  const estimate = await estimateWorkbenchStateFromStore(page, {
+    targetOutputs: ["Rw", "R'w", "DnT,w", "Ln,w", "DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"]
+  });
+
+  expect(estimate.status).toBe(200);
+  expect(estimate.json.ok).toBe(true);
+  expect(estimate.json.result?.floorSystemRatings?.Rw).toBe(58);
+  expect(estimate.json.result?.impact?.LnW).toBe(50);
+  expect(estimate.json.result?.impact?.DeltaLw).toBe(33.4);
+  expect(estimate.json.result?.impact?.LPrimeNW).toBe(53);
+  expect(estimate.json.result?.impact?.LPrimeNTw).toBe(50.2);
+  expect(estimate.json.result?.impact?.LPrimeNT50 ?? null).toBeNull();
+
+  await expectGuidedMetricCardValue(page, "Ln,w", formatGuidedDb(estimate.json.result?.impact?.LnW ?? 0));
+  await expectGuidedMetricCardValue(page, "DeltaLw", formatGuidedDb(estimate.json.result?.impact?.DeltaLw ?? 0));
+  await expectGuidedMetricCardValue(page, "Rw", formatGuidedDb(estimate.json.result?.floorSystemRatings?.Rw ?? 0));
+  await expectGuidedMetricCardValue(page, "R'w", formatGuidedDb(estimate.json.result?.metrics?.estimatedRwPrimeDb ?? 0));
+  await expectGuidedMetricCardValue(page, "DnT,w", formatGuidedDb(estimate.json.result?.metrics?.estimatedDnTwDb ?? 0));
+  await expectGuidedMetricCardValue(page, "L'n,w", formatGuidedDb(estimate.json.result?.impact?.LPrimeNW ?? 0));
+  await expectGuidedMetricCardValue(page, "L'nT,w", formatGuidedDb(estimate.json.result?.impact?.LPrimeNTw ?? 0));
+  await expect(visibleGuidedMetricCard(page, "L'nT,50")).toHaveCount(0);
+});
+
 test("guided floor flow surfaces material-aware thickness guidance inline", async ({ page }) => {
   await openFloorGuidedFlow(page);
   await loadGuidedSample(page, "Impact Floor");
@@ -745,6 +910,60 @@ test("guided floor duplicate-base stress stays computable on the broader reinfor
       /Published family estimate active: reinforced concrete family general/i.test(warning)
     )
   ).toBe(true);
+});
+
+test("guided UBIQ bound floor keeps UI cards aligned with live airborne metrics and conservative impact bounds", async ({
+  page
+}) => {
+  await openFloorGuidedFlow(page);
+  await loadGuidedSample(page, "UBIQ Bound 300");
+  await selectGuidedProjectContext(page, "building_prediction");
+
+  await page.getByLabel("Partition width (mm)").fill("4200");
+  await page.getByLabel("Partition height (mm)").fill("3000");
+  await page.getByLabel("Airborne room volume (m³)").fill("55");
+  await page.getByLabel("Impact K correction (dB)").fill("3");
+  await page.getByLabel("Impact room volume (m³)").fill("60");
+  await page.getByLabel("RT60 (s)").fill("0.7");
+
+  await openGuidedWorkspacePanel(page, "Results");
+  const supportingMetrics = page.locator("summary").filter({ hasText: "Supporting metrics" }).first();
+  await expect(supportingMetrics).toBeVisible();
+  await supportingMetrics.click();
+
+  const estimate = await estimateWorkbenchStateFromStore(page, {
+    targetOutputs: ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]
+  });
+
+  expect(estimate.status).toBe(200);
+  expect(estimate.json.ok).toBe(true);
+  expect(estimate.json.result?.floorSystemRatings?.Rw).toBe(63);
+  expect(estimate.json.result?.lowerBoundImpact?.LnWUpperBound).toBe(51);
+  expect(estimate.json.result?.lowerBoundImpact?.LPrimeNWUpperBound).toBe(54);
+  expect(estimate.json.result?.lowerBoundImpact?.LPrimeNTwUpperBound).toBe(51.2);
+
+  await expectGuidedMetricCardValue(page, "Rw", formatGuidedDb(estimate.json.result?.floorSystemRatings?.Rw ?? 0));
+  await expectGuidedMetricCardValue(page, "R'w", formatGuidedDb(estimate.json.result?.metrics?.estimatedRwPrimeDb ?? 0));
+  await expectGuidedMetricCardValue(page, "DnT,w", formatGuidedDb(estimate.json.result?.metrics?.estimatedDnTwDb ?? 0));
+  await expectGuidedMetricCardValue(
+    page,
+    "Ln,w",
+    `<= ${formatGuidedDb(estimate.json.result?.lowerBoundImpact?.LnWUpperBound ?? 0)}`
+  );
+  await expectGuidedMetricCardValue(
+    page,
+    "L'n,w",
+    `<= ${formatGuidedDb(estimate.json.result?.lowerBoundImpact?.LPrimeNWUpperBound ?? 0)}`
+  );
+  await expectGuidedMetricCardValue(
+    page,
+    "L'nT,w",
+    `<= ${formatGuidedDb(estimate.json.result?.lowerBoundImpact?.LPrimeNTwUpperBound ?? 0)}`
+  );
+  await expect(visibleGuidedMetricCard(page, "L'nT,50")).toHaveCount(0);
+  await expect(visibleGuidedRouteSummary(page)).toContainText(
+    "Airborne companions can still stay live on the same floor lane."
+  );
 });
 
 test("guided workbench can create a local custom material and use it as a new layer", async ({ page }) => {
