@@ -468,7 +468,15 @@ export const WALL_OUTPUT_PRESET_LAB: readonly RequestedOutputId[] = ["Rw", "STC"
 export const WALL_OUTPUT_PRESET_FIELD: readonly RequestedOutputId[] = ["Rw", "R'w", "Dn,w", "Dn,A", "STC", "Ctr"];
 export const WALL_OUTPUT_PRESET_BUILDING: readonly RequestedOutputId[] = ["Rw", "R'w", "DnT,w", "DnT,A", "Dn,w", "Dn,A", "STC", "Ctr"];
 export const FLOOR_OUTPUT_PRESET_LAB: readonly RequestedOutputId[] = ["Rw", "Ln,w", "Ln,w+CI", "DeltaLw"];
-export const FLOOR_OUTPUT_PRESET_FIELD: readonly RequestedOutputId[] = ["Ln,w", "DeltaLw", "Rw", "R'w", "L'n,w", "Dn,w"];
+export const FLOOR_OUTPUT_PRESET_FIELD: readonly RequestedOutputId[] = [
+  "Ln,w",
+  "DeltaLw",
+  "Ln,w+CI",
+  "Rw",
+  "R'w",
+  "L'n,w",
+  "Dn,w"
+];
 export const FLOOR_OUTPUT_PRESET_BUILDING: readonly RequestedOutputId[] = [
   "Ln,w",
   "DeltaLw",
