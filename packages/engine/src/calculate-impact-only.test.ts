@@ -257,6 +257,33 @@ describe("calculateImpactOnly", () => {
     expect(result.impact?.metricBasis?.LPrimeNT50).toBe("estimated_standardized_field_lpriment50_from_lprimentw_plus_ci50_2500");
   });
 
+  it("carries the exact Dataholz GDMNXN02-05 wet CLT row into the standardized field-side L'nT,50 lane", () => {
+    const result = calculateImpactOnly([], {
+      impactFieldContext: {
+        fieldKDb: 2,
+        receivingRoomVolumeM3: 50
+      },
+      officialFloorSystemId: "dataholz_gdmnxn02_05_wet_clt_lab_2026",
+      targetOutputs: ["Ln,w", "CI", "CI,50-2500", "Ln,w+CI", "L'n,w", "L'nT,w", "L'nT,50"]
+    });
+
+    expect(result.sourceMode).toBe("official_floor_system");
+    expect(result.floorSystemMatch?.system.id).toBe("dataholz_gdmnxn02_05_wet_clt_lab_2026");
+    expect(result.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_field_volume_normalization");
+    expect(result.impact?.LnW).toBe(47);
+    expect(result.impact?.CI).toBe(2);
+    expect(result.impact?.CI50_2500).toBe(4);
+    expect(result.impact?.LnWPlusCI).toBe(49);
+    expect(result.impact?.LPrimeNW).toBe(49);
+    expect(result.impact?.LPrimeNTw).toBe(47);
+    expect(result.impact?.LPrimeNT50).toBe(51);
+    expect(result.impact?.guideEstimateProfile).toBeUndefined();
+    expect(result.floorSystemRatings?.Rw).toBe(74);
+    expect(result.floorSystemRatings?.RwCtr).toBe(-7);
+    expect(result.impact?.metricBasis?.CI50_2500).toBe("official_floor_system_exact_match");
+    expect(result.impact?.metricBasis?.LPrimeNT50).toBe("estimated_standardized_field_lpriment50_from_lprimentw_plus_ci50_2500");
+  });
+
   it("rejects non-positive receiving-room volume on the impact field context", () => {
     expect(() =>
       calculateImpactOnly([{ materialId: "air_gap", thicknessMm: 90 }], {

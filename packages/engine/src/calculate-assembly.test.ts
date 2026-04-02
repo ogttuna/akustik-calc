@@ -3982,6 +3982,34 @@ describe("calculateAssembly", () => {
     expect(result.floorSystemMatch?.system.airborneRatings.RwCtr).toBeUndefined();
   });
 
+  it("matches the curated Dataholz wet CLT 05 family with CI50 on the exact lane", () => {
+    const result = calculateAssembly([
+      { floorRole: "floating_screed", materialId: "screed", thicknessMm: 60 },
+      { floorRole: "upper_fill", materialId: "non_bonded_chippings", thicknessMm: 60 },
+      { floorRole: "resilient_layer", materialId: "mw_t_impact_layer", thicknessMm: 30 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 160 }
+    ], {
+      impactFieldContext: {
+        fieldKDb: 2,
+        receivingRoomVolumeM3: 50
+      },
+      targetOutputs: ["Ln,w", "CI", "CI,50-2500", "Ln,w+CI", "L'n,w", "L'nT,w", "L'nT,50"]
+    });
+
+    expect(result.floorSystemMatch?.system.id).toBe("dataholz_gdmnxn02_05_wet_clt_lab_2026");
+    expect(result.floorSystemMatch?.impact.LnW).toBe(47);
+    expect(result.floorSystemMatch?.impact.CI).toBe(2);
+    expect(result.floorSystemMatch?.impact.CI50_2500).toBe(4);
+    expect(result.floorSystemMatch?.impact.LnWPlusCI).toBe(49);
+    expect(result.floorSystemMatch?.system.airborneRatings.Rw).toBe(74);
+    expect(result.floorSystemMatch?.system.airborneRatings.RwCtr).toBe(-7);
+    expect(result.floorSystemMatch?.system.airborneRatings.RwCtrSemantic).toBe("ctr_term");
+    expect(result.impact?.LPrimeNW).toBe(49);
+    expect(result.impact?.LPrimeNTw).toBe(47);
+    expect(result.impact?.LPrimeNT50).toBe(51);
+    expect(result.impact?.metricBasis?.LPrimeNT50).toBe("estimated_standardized_field_lpriment50_from_lprimentw_plus_ci50_2500");
+  });
+
   it("matches the measured TUAS CLT 260 family", () => {
     const result = calculateAssembly([
       { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },

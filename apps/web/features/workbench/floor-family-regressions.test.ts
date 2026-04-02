@@ -304,6 +304,50 @@ describe("floor family regressions", () => {
     expect(scenario.result?.floorSystemRatings?.Rw).toBe(74);
   });
 
+  it("keeps the curated Dataholz wet CLT 05 row exact on the web scenario route", () => {
+    const scenario = evaluateFloorScenario({
+      id: "dataholz-wet-clt-05-exact",
+      rows: [
+        { floorRole: "floating_screed", materialId: "screed", thicknessMm: "60" },
+        { floorRole: "upper_fill", materialId: "non_bonded_chippings", thicknessMm: "60" },
+        { floorRole: "resilient_layer", materialId: "mw_t_impact_layer", thicknessMm: "30" },
+        { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: "160" }
+      ],
+      targetOutputs: LAB_OUTPUTS
+    });
+
+    expect(scenario.result?.floorSystemMatch?.system.id).toBe("dataholz_gdmnxn02_05_wet_clt_lab_2026");
+    expect(scenario.result?.impact?.LnW).toBe(47);
+    expect(scenario.result?.impact?.CI).toBe(2);
+    expect(scenario.result?.impact?.CI50_2500).toBe(4);
+    expect(scenario.result?.impact?.LnWPlusCI).toBe(49);
+    expect(scenario.result?.floorSystemRatings?.Rw).toBe(74);
+    expect(scenario.result?.floorSystemRatings?.RwCtr).toBe(-7);
+  });
+
+  it("carries the curated Dataholz wet CLT 05 row into standardized field outputs on the web scenario route", () => {
+    const scenario = evaluateFloorScenario({
+      id: "dataholz-wet-clt-05-field",
+      impactFieldContext: {
+        fieldKDb: 2,
+        receivingRoomVolumeM3: 50
+      },
+      rows: [
+        { floorRole: "floating_screed", materialId: "screed", thicknessMm: "60" },
+        { floorRole: "upper_fill", materialId: "non_bonded_chippings", thicknessMm: "60" },
+        { floorRole: "resilient_layer", materialId: "mw_t_impact_layer", thicknessMm: "30" },
+        { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: "160" }
+      ],
+      targetOutputs: FIELD_OUTPUTS
+    });
+
+    expect(scenario.result?.floorSystemMatch?.system.id).toBe("dataholz_gdmnxn02_05_wet_clt_lab_2026");
+    expect(scenario.result?.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_field_volume_normalization");
+    expect(scenario.result?.impact?.LPrimeNW).toBe(49);
+    expect(scenario.result?.impact?.LPrimeNTw).toBe(47);
+    expect(scenario.result?.impact?.LPrimeNT50).toBe(51);
+  });
+
   it("keeps CLT upper-only stacks on the bare interpolation fallback lane", () => {
     const scenario = evaluateFloorScenario({
       id: "clt-upper-only-fallback",

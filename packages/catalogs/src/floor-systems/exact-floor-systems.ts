@@ -1518,6 +1518,49 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     }
   },
   {
+    id: "dataholz_gdmnxn02_05_wet_clt_lab_2026",
+    label: "Dataholz GDMNXN02-05 | CLT floor | wet screed + fill | no lining",
+    sourceLabel: "Dataholz open component library",
+    sourceType: "official_open_component_library",
+    sourceUrl: "https://www.dataholz.eu/en/components/intermediate-floor/version/kz/gdmnxn02/nr/05.htm",
+    trustTier: "official_manufacturer",
+    match: {
+      absentRoles: ["ceiling_board", "ceiling_cavity", "ceiling_fill", "floor_covering"],
+      baseStructure: {
+        materialIds: ["clt_panel"],
+        thicknessMm: 160
+      },
+      resilientLayer: {
+        materialIds: ["mw_t_impact_layer"],
+        thicknessMm: 30
+      },
+      floatingScreed: {
+        materialIds: ["screed"],
+        thicknessMm: 60
+      },
+      upperFill: {
+        materialIds: ["non_bonded_chippings"],
+        thicknessMm: 60
+      }
+    },
+    systemSummary: {
+      carrier: "160 mm CLT, minimum 40 mm first layer",
+      floorBuildUp: "60 mm cement screed + 30 mm MW-T impact layer [s'=10 MN/m3] + 60 mm non-bonded chippings",
+      ceiling: "No lining below"
+    },
+    impactRatings: {
+      CI: 2,
+      CI50_2500: 4,
+      LnW: 47,
+      LnWPlusCI: 49
+    },
+    airborneRatings: {
+      Rw: 74,
+      RwCtr: -7,
+      RwCtrSemantic: "ctr_term"
+    }
+  },
+  {
     id: "dataholz_gdmnxn05_wet_clt_lab_2026",
     label: "Dataholz GDMNXN05 | CLT floor | wet screed + fill | no lining",
     sourceLabel: "Dataholz open component library",
