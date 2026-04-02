@@ -4,6 +4,10 @@ type GuidedContextKey = "building_prediction" | "element_lab" | "field_between_r
 const TEST_USERNAME = process.env.DYNECHO_AUTH_USERNAME ?? "consultant";
 const TEST_PASSWORD = process.env.DYNECHO_AUTH_PASSWORD ?? "change-me";
 
+function escapeRegex(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 async function signIn(page: Page, nextPath = "/workbench") {
   const response = await page.request.post("/api/auth/login", {
     data: {
@@ -233,6 +237,24 @@ function visibleGuidedRouteSummary(page: Page) {
     .locator("section:visible")
     .filter({
       has: page.getByText("Route summary", { exact: true })
+    })
+    .first();
+}
+
+function visibleGuidedResultsSection(page: Page) {
+  return page
+    .locator("section:visible")
+    .filter({
+      has: page.getByText(/Guided (floor|wall) answer/i)
+    })
+    .first();
+}
+
+function visibleGuidedMetricCard(page: Page, label: string) {
+  return page
+    .locator("article:visible")
+    .filter({
+      has: page.locator("div").filter({ hasText: new RegExp(`^${escapeRegex(label)}$`) })
     })
     .first();
 }
@@ -555,6 +577,39 @@ test("guided building-prediction route inputs are label-accessible and unlock fi
   expect(resultsText).toMatch(/DNT,W\s+58 dB/i);
   expect(resultsText).toMatch(/L'N,W\s+53 dB/i);
   expect(resultsText).toMatch(/L'NT,W\s+50\.2 dB/i);
+});
+
+test("guided impact floor unlocks field-impact outputs step by step as K and room volume are supplied", async ({
+  page
+}) => {
+  await openFloorGuidedFlow(page);
+  await loadGuidedSample(page, "Impact Floor");
+  await selectGuidedProjectContext(page, "building_prediction");
+
+  await page.getByLabel("Partition width (mm)").fill("4200");
+  await page.getByLabel("Partition height (mm)").fill("3000");
+  await page.getByLabel("Airborne room volume (m³)").fill("55");
+
+  await openGuidedWorkspacePanel(page, "Results");
+  const supportingMetrics = page.locator("summary").filter({ hasText: "Supporting metrics" }).first();
+  await expect(supportingMetrics).toBeVisible();
+  await supportingMetrics.click();
+  const dntwCard = visibleGuidedMetricCard(page, "DnT,w");
+  const lPrimeNwCard = visibleGuidedMetricCard(page, "L'n,w");
+  const lPrimeNTwCard = visibleGuidedMetricCard(page, "L'nT,w");
+  const lPrimeNT50Card = visibleGuidedMetricCard(page, "L'nT,50");
+
+  await expect(dntwCard).toContainText("58 dB");
+  await expect(lPrimeNwCard).toHaveCount(0);
+  await expect(lPrimeNTwCard).toHaveCount(0);
+
+  await page.getByLabel("Impact K correction (dB)").fill("3");
+  await expect(lPrimeNwCard).toContainText("53 dB");
+  await expect(lPrimeNTwCard).toHaveCount(0);
+
+  await page.getByLabel("Impact room volume (m³)").fill("60");
+  await expect(lPrimeNTwCard).toContainText("50.2 dB");
+  await expect(lPrimeNT50Card).toHaveCount(0);
 });
 
 test("guided floor flow surfaces material-aware thickness guidance inline", async ({ page }) => {
@@ -1361,6 +1416,39 @@ test("guided bound floor presets keep the next action on evidence tightening", a
   await expect(routeSummary).toContainText("Conservative bound");
   await expect(routeSummary).toContainText("Prefer exact evidence");
   await expect(routeSummary).toContainText(/should be read as a bound instead of a delivery-ready claim/i);
+  await expect(routeSummary).toContainText(/airborne companions can still stay live/i);
+});
+
+test("guided bound floor presets keep live airborne companions separate from conservative impact bounds", async ({
+  page
+}) => {
+  await openFloorGuidedFlow(page);
+  await page.getByLabel("Example stack").selectOption("ubiq_open_web_300_bound");
+  await selectGuidedProjectContext(page, "building_prediction");
+
+  await page.getByLabel("Partition width (mm)").fill("4200");
+  await page.getByLabel("Partition height (mm)").fill("3000");
+  await page.getByLabel("Airborne room volume (m³)").fill("55");
+  await page.getByLabel("Impact K correction (dB)").fill("2");
+  await page.getByLabel("Impact room volume (m³)").fill("50");
+
+  await openGuidedWorkspacePanel(page, "Results");
+  const resultsSection = visibleGuidedResultsSection(page);
+  const supportingMetrics = page.locator("summary").filter({ hasText: "Supporting metrics" }).first();
+  await expect(supportingMetrics).toBeVisible();
+  await supportingMetrics.click();
+
+  await expect(resultsSection).toContainText("Ln,w");
+  await expect(resultsSection).toContainText("<= 51 dB");
+  await expect(resultsSection).toContainText("Conservative bound");
+  await expect(resultsSection).toContainText("Rw");
+  await expect(resultsSection).toContainText("63 dB");
+  await expect(resultsSection).toContainText("Companion airborne");
+  await expect(resultsSection).toContainText("L'n,w");
+  await expect(resultsSection).toContainText("<= 53 dB");
+  await expect(resultsSection).toContainText("L'nT,w");
+  await expect(resultsSection).toContainText("Supporting metrics");
+  await expect(resultsSection).toContainText("supporting values");
 });
 
 test("guided steel crossover bound can lock the support form into a narrower family corridor", async ({ page }) => {
