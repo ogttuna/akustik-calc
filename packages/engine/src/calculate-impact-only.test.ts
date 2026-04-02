@@ -1818,6 +1818,31 @@ describe("calculateImpactOnly", () => {
     expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
   });
 
+  it("carries the exact Dataholz GDMNXN06 CLT fill row into standardized field outputs once the official CI50 companion is present", () => {
+    const result = calculateImpactOnly([], {
+      impactFieldContext: {
+        fieldKDb: 2,
+        receivingRoomVolumeM3: 50
+      },
+      officialFloorSystemId: "dataholz_gdmnxn06_fill_clt_lab_2026",
+      targetOutputs: ["Ln,w", "CI", "CI,50-2500", "Ln,w+CI", "L'n,w", "L'nT,w", "L'nT,50"]
+    });
+
+    expect(result.sourceMode).toBe("official_floor_system");
+    expect(result.floorSystemMatch?.system.id).toBe("dataholz_gdmnxn06_fill_clt_lab_2026");
+    expect(result.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_field_volume_normalization");
+    expect(result.impact?.LnW).toBe(39);
+    expect(result.impact?.CI).toBe(-1);
+    expect(result.impact?.CI50_2500).toBe(7);
+    expect(result.impact?.LnWPlusCI).toBe(38);
+    expect(result.impact?.LPrimeNW).toBe(41);
+    expect(result.impact?.LPrimeNTw).toBe(39);
+    expect(result.impact?.LPrimeNT50).toBe(46);
+    expect(result.floorSystemRatings?.Rw).toBe(78);
+    expect(result.impact?.metricBasis?.LnWPlusCI).toBe("official_floor_system_exact_match");
+    expect(result.impact?.metricBasis?.LPrimeNT50).toBe("estimated_standardized_field_lpriment50_from_lprimentw_plus_ci50_2500");
+  });
+
   it("can resolve the higher-performance TUAS open-box dry-floor lane instead of collapsing to the weaker open-box estimate", () => {
     const result = calculateImpactOnly([], {
       impactPredictorInput: {

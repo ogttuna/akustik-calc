@@ -3964,7 +3964,33 @@ describe("calculateAssembly", () => {
     expect(result.floorSystemMatch?.system.id).toBe("dataholz_gdmnxn06_fill_clt_lab_2026");
     expect(result.floorSystemMatch?.impact.LnW).toBe(39);
     expect(result.floorSystemMatch?.impact.CI).toBe(-1);
+    expect(result.floorSystemMatch?.impact.CI50_2500).toBe(7);
     expect(result.floorSystemMatch?.system.airborneRatings.Rw).toBe(78);
+  });
+
+  it("carries the curated Dataholz wet CLT fill row into standardized L'nT,50 once the official CI50 companion is present", () => {
+    const result = calculateAssembly([
+      { floorRole: "floating_screed", materialId: "screed", thicknessMm: 60 },
+      { floorRole: "upper_fill", materialId: "non_bonded_chippings", thicknessMm: 120 },
+      { floorRole: "resilient_layer", materialId: "mw_t_impact_layer_s6", thicknessMm: 40 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 160 }
+    ], {
+      impactFieldContext: {
+        fieldKDb: 2,
+        receivingRoomVolumeM3: 50
+      },
+      targetOutputs: ["Ln,w", "CI", "CI,50-2500", "Ln,w+CI", "L'n,w", "L'nT,w", "L'nT,50"]
+    });
+
+    expect(result.floorSystemMatch?.system.id).toBe("dataholz_gdmnxn06_fill_clt_lab_2026");
+    expect(result.floorSystemMatch?.impact.LnW).toBe(39);
+    expect(result.floorSystemMatch?.impact.CI).toBe(-1);
+    expect(result.floorSystemMatch?.impact.CI50_2500).toBe(7);
+    expect(result.floorSystemMatch?.impact.LnWPlusCI).toBe(38);
+    expect(result.impact?.LPrimeNW).toBe(41);
+    expect(result.impact?.LPrimeNTw).toBe(39);
+    expect(result.impact?.LPrimeNT50).toBe(46);
+    expect(result.impact?.metricBasis?.LPrimeNT50).toBe("estimated_standardized_field_lpriment50_from_lprimentw_plus_ci50_2500");
   });
 
   it("matches the curated Dataholz wet CLT no-lining family", () => {

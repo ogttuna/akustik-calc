@@ -298,7 +298,26 @@ describe("floor family regressions", () => {
     expect(scenario.result?.floorSystemMatch?.system.id).toBe("dataholz_gdmnxn06_fill_clt_lab_2026");
     expect(scenario.result?.impact?.LnW).toBe(39);
     expect(scenario.result?.impact?.CI).toBe(-1);
+    expect(scenario.result?.impact?.CI50_2500).toBe(7);
     expect(scenario.result?.floorSystemRatings?.Rw).toBe(78);
+  });
+
+  it("carries the curated Dataholz wet CLT fill row into standardized field outputs on the web scenario route once CI50 is published", () => {
+    const scenario = evaluateFloorScenario({
+      id: "dataholz-wet-clt-fill-field",
+      impactFieldContext: {
+        fieldKDb: 2,
+        receivingRoomVolumeM3: 50
+      },
+      rows: DATAHOLZ_WET_FILL_EXACT_ROWS,
+      targetOutputs: FIELD_OUTPUTS
+    });
+
+    expect(scenario.result?.floorSystemMatch?.system.id).toBe("dataholz_gdmnxn06_fill_clt_lab_2026");
+    expect(scenario.result?.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_field_volume_normalization");
+    expect(scenario.result?.impact?.LPrimeNW).toBe(41);
+    expect(scenario.result?.impact?.LPrimeNTw).toBe(39);
+    expect(scenario.result?.impact?.LPrimeNT50).toBe(46);
   });
 
   it("keeps the curated Dataholz wet CLT no-lining row exact on the web scenario route", () => {

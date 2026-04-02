@@ -159,7 +159,7 @@
       "id": "dataholz_clt_fill_local_guide_chain",
       "family": "mass_timber_clt",
       "kind": "field_live",
-      "source": "https://www.dataholz.eu/en/components/multi-storey-housing/version/kz/gdmnxn06/nr/05.htm + Turkish guide continuation",
+      "source": "https://www.dataholz.eu/en/components/multi-storey-housing/version/kz/gdmnxn06/nr/05.htm + official CI50 companion",
       "visibleLayers": [],
       "options": {
         "impactFieldContext": {
@@ -170,10 +170,10 @@
         "targetOutputs": ["L'n,w", "L'nT,w", "L'nT,50"]
       },
       "expected": {
-        "basis": "mixed_exact_plus_estimated_local_guide",
+        "basis": "mixed_exact_plus_estimated_standardized_field_volume_normalization",
         "lprimeNwDb": 41,
         "lprimeNTwDb": 39,
-        "lprimeNT50Db": 38
+        "lprimeNT50Db": 46
       },
       "tolerances": {
         "lprimeNwDb": 0,

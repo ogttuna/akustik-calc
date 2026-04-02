@@ -303,7 +303,7 @@ const COMMON_FLOOR_CASES: readonly CommonFloorCase[] = [
   {
     id: "dataholz_wet_fill_clt_exact",
     source: DATAHOLZ_WET_CLT_URL,
-    expectedFieldBasis: "mixed_exact_plus_estimated_local_guide",
+    expectedFieldBasis: "mixed_exact_plus_estimated_standardized_field_volume_normalization",
     rows: [
       { floorRole: "floating_screed", materialId: "screed", thicknessMm: "60" },
       { floorRole: "upper_fill", materialId: "non_bonded_chippings", thicknessMm: "120" },

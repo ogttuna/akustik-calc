@@ -1697,6 +1697,7 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     label: "Dataholz GDMNXN06 | CLT floor | wet screed + resilient fill | no lining",
     sourceLabel: "Dataholz open component library",
     sourceType: "official_open_component_library",
+    sourceUrl: "https://www.dataholz.eu/en/components/multi-storey-housing/version/kz/gdmnxn06/nr/05.htm",
     trustTier: "official_manufacturer",
     match: {
       absentRoles: ["ceiling_board", "ceiling_cavity", "ceiling_fill", "floor_covering"],
@@ -1724,6 +1725,7 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     impactRatings: {
       CI: -1,
+      CI50_2500: 7,
       LnW: 39,
       LnWPlusCI: 38
     },
