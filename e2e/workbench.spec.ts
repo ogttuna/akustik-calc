@@ -151,16 +151,30 @@ type WorkbenchEstimateResponse = {
     ok?: boolean;
     result?: {
       impact?: {
+        basis?: string;
         LPrimeNT50?: number;
         LPrimeNTw?: number;
         LPrimeNW?: number;
         LnW?: number;
+      };
+      floorSystemEstimate?: {
+        fitPercent?: number;
+        kind?: string;
+      };
+      floorSystemMatch?: {
+        system?: {
+          id?: string;
+        };
+      };
+      floorSystemRatings?: {
+        Rw?: number;
       };
       ratings?: {
         iso717?: {
           Rw?: number;
         };
       };
+      warnings?: string[];
     };
   };
   rowCount: number;
@@ -529,6 +543,93 @@ test("guided floor composer demotes plaster-like finishes and surfaces the live 
   await page.getByText("Check these inputs before trusting the read.").first().click();
   await expect(page.locator("div:visible").filter({ hasText: /Cement Plaster is tagged as a plaster or masonry finish/i }).first()).toBeVisible();
   await expect(page.locator("div:visible").filter({ hasText: /not treated like a validated trafficable floor cover/i }).first()).toBeVisible();
+});
+
+test("guided floor composer surfaces duplicate single-entry role warnings before the broader fallback lane is used", async ({
+  page
+}) => {
+  await openFloorGuidedFlow(page);
+  await loadGuidedSample(page, "Impact Floor");
+  await openGuidedAssemblyTool(page, "composer");
+
+  const composer = visibleGuidedComposer(page);
+  await selectMaterialFromPicker(composer, "New layer material", "REGUPOL sonus curve 8", "regupol");
+  await composer.getByLabel("New layer role").selectOption("resilient_layer");
+  await composer.getByLabel("New layer thickness").fill("8");
+
+  await expect(
+    composer.getByText(
+      "Resilient layer is already assigned in this stack. Adding another one is allowed, but visible-layer predictor matching will stay on the broader layer-scoring lane instead of a family or exact match.",
+      { exact: true }
+    )
+  ).toBeVisible();
+
+  await composer.getByRole("button", { name: /^Add layer$/ }).click();
+
+  await expect(page.getByText("5 rows", { exact: true }).first()).toBeVisible();
+  await expect(visibleGuidedRouteSummary(page)).toContainText("Review warnings");
+
+  const estimate = await estimateCurrentWorkbenchState(page);
+  expect(
+    estimate.json.result?.warnings?.some((warning) =>
+      /single-entry floor roles are duplicated: resilient layer x2/i.test(warning)
+    )
+  ).toBe(true);
+
+  const duplicatedRow = await ensureGuidedRowExpanded(page, 5);
+  await expect(
+    duplicatedRow.getByText(
+      "Resilient layer is already used by another row. Keeping this duplicate role is allowed, but visible-layer predictor matching will stay on the broader layer-scoring lane instead of a family or exact match.",
+      { exact: true }
+    )
+  ).toBeVisible();
+});
+
+test("guided impact floor keeps its weighted floor read stable while field contexts unlock companion airborne reads", async ({
+  page
+}) => {
+  await openFloorGuidedFlow(page);
+  await loadGuidedSample(page, "Impact Floor");
+  await openGuidedWorkspacePanel(page, "Results");
+
+  await expect(page.locator("main")).toContainText("59 dB");
+  expect(await readPrimaryGuidedMetric(page, "Primary floor read")).toBe("50 dB");
+
+  await selectGuidedProjectContext(page, "field_between_rooms");
+  await expect(page.locator("main")).toContainText("57 dB");
+  expect(await readPrimaryGuidedMetric(page, "Primary floor read")).toBe("50 dB");
+
+  await selectGuidedProjectContext(page, "building_prediction");
+  await expect(page.locator("main")).toContainText("57 dB");
+  expect(await readPrimaryGuidedMetric(page, "Primary floor read")).toBe("50 dB");
+  await expect(page.getByText("DeltaLw 33.4 dB", { exact: true })).toBeVisible();
+  await expect(visibleGuidedRouteSummary(page)).toContainText("Published family estimate is active");
+});
+
+test("guided floor duplicate-base stress stays computable on the broader reinforced-concrete family lane", async ({
+  page
+}) => {
+  await openFloorGuidedFlow(page);
+  await loadGuidedSample(page, "Impact Floor");
+  await selectGuidedProjectContext(page, "field_between_rooms");
+
+  await page.getByRole("button", { name: "Duplicate layer 4" }).click();
+  await openGuidedWorkspacePanel(page, "Results");
+  await expect(page.getByRole("heading", { name: "Results" })).toBeVisible();
+  await expect(page.locator("main")).toContainText("64 dB");
+  expect(await readPrimaryGuidedMetric(page, "Primary floor read")).toBe("50 dB");
+
+  const estimate = await estimateCurrentWorkbenchState(page);
+  expect(estimate.status).toBe(200);
+  expect(estimate.json.ok).toBe(true);
+  expect(estimate.rowCount).toBe(5);
+  expect(estimate.json.result?.ratings?.iso717?.Rw).toBeCloseTo(66, 1);
+  expect(estimate.json.result?.impact?.LnW).toBeCloseTo(50, 1);
+  expect(
+    estimate.json.result?.warnings?.some((warning) =>
+      /Published family estimate active: reinforced concrete family general/i.test(warning)
+    )
+  ).toBe(true);
 });
 
 test("guided workbench can create a local custom material and use it as a new layer", async ({ page }) => {
@@ -1708,6 +1809,41 @@ test("workbench surfaces a measured open-box timber family match", async ({ page
   await expect(page.getByText("TUAS R2a | open-box timber slab | laminate + EPS underlay | resilient stud ceiling").first()).toBeVisible();
   await expect(page.getByText(/^72 dB$/).first()).toBeVisible();
   await expect(page.getByText(/^49 dB$/).first()).toBeVisible();
+});
+
+test("workbench keeps open-box dry exact metrics stable when the slab depth falls back onto the family archetype lane", async ({
+  page
+}) => {
+  await gotoAdvancedWorkbench(page);
+
+  await loadAdvancedPreset(page, "Open Box Dry");
+  const exactEstimate = await estimateCurrentWorkbenchState(page);
+  expect(exactEstimate.status).toBe(200);
+  expect(exactEstimate.json.ok).toBe(true);
+  expect(exactEstimate.rowCount).toBe(9);
+  expect(exactEstimate.json.result?.floorSystemMatch?.system?.id).toBe("tuas_r5b_open_box_timber_measured_2026");
+  expect(exactEstimate.json.result?.floorSystemRatings?.Rw ?? exactEstimate.json.result?.ratings?.iso717?.Rw).toBe(75);
+  expect(exactEstimate.json.result?.impact?.LnW).toBe(39);
+  expect(exactEstimate.json.result?.impact?.LPrimeNW).toBe(41);
+  expect(exactEstimate.json.result?.impact?.LPrimeNTw).toBe(39);
+  expect(exactEstimate.json.result?.impact?.LPrimeNT50).toBe(44);
+
+  await page.locator('input[value="370"]').first().fill("375");
+  await page.keyboard.press("Tab");
+  await page.waitForTimeout(200);
+
+  const fallbackEstimate = await estimateCurrentWorkbenchState(page);
+  expect(fallbackEstimate.status).toBe(200);
+  expect(fallbackEstimate.json.ok).toBe(true);
+  expect(fallbackEstimate.json.result?.floorSystemMatch ?? null).toBeNull();
+  expect(fallbackEstimate.json.result?.floorSystemEstimate?.kind).toBe("family_archetype");
+  expect(fallbackEstimate.json.result?.impact?.basis).toBe("mixed_predicted_plus_estimated_standardized_field_volume_normalization");
+  expect(fallbackEstimate.json.result?.floorSystemRatings?.Rw ?? fallbackEstimate.json.result?.ratings?.iso717?.Rw).toBe(75);
+  expect(fallbackEstimate.json.result?.impact?.LnW).toBe(39);
+  expect(fallbackEstimate.json.result?.impact?.LPrimeNW).toBe(41);
+  expect(fallbackEstimate.json.result?.impact?.LPrimeNTw).toBe(39);
+  expect(fallbackEstimate.json.result?.impact?.LPrimeNT50).toBe(44);
+  await expect(page.getByText(/Published family estimate active: open-box timber family archetype/i)).toBeVisible();
 });
 
 test("workbench surfaces a measured concrete dry-floor family match", async ({ page }) => {
