@@ -115,27 +115,27 @@ export function FieldShell(props: {
   const { children, label, warning } = props;
   const fallbackControlId = useId();
   const warningId = warning ? `${fallbackControlId}-warning` : undefined;
+  const childElement = isValidElement(children)
+    ? (children as ReactElement<{
+        "aria-describedby"?: string;
+        id?: string;
+      }>)
+    : null;
   const existingControlId =
-    isValidElement(children) && typeof children.props.id === "string" && children.props.id.trim().length > 0
-      ? children.props.id
+    childElement && typeof childElement.props.id === "string" && childElement.props.id.trim().length > 0
+      ? childElement.props.id
       : null;
   const controlId = existingControlId ?? fallbackControlId;
   const describedBy =
-    isValidElement(children) && typeof children.props["aria-describedby"] === "string"
-      ? [children.props["aria-describedby"], warningId].filter(Boolean).join(" ")
+    childElement && typeof childElement.props["aria-describedby"] === "string"
+      ? [childElement.props["aria-describedby"], warningId].filter(Boolean).join(" ")
       : warningId;
   const control =
-    isValidElement(children)
-      ? cloneElement(
-          children as ReactElement<{
-            "aria-describedby"?: string;
-            id?: string;
-          }>,
-          {
-            "aria-describedby": describedBy || undefined,
-            id: controlId
-          }
-        )
+    childElement
+      ? cloneElement(childElement, {
+          "aria-describedby": describedBy || undefined,
+          id: controlId
+        })
       : children;
 
   return (
