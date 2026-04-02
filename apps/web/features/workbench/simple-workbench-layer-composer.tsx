@@ -2,7 +2,6 @@
 
 import type { FloorRole, MaterialCategory, MaterialDefinition } from "@dynecho/shared";
 import { Plus } from "lucide-react";
-import type { ReactNode } from "react";
 
 import { formatDecimal } from "@/lib/format";
 

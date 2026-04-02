@@ -18,9 +18,7 @@ import {
 } from "./dutch-impact-reference";
 import type { StudyMode } from "./preset-definitions";
 import {
-  REQUESTED_OUTPUT_LABELS,
-  RESEARCH_OUTPUTS,
-  REQUESTED_OUTPUT_SUPPORT_NOTES
+  REQUESTED_OUTPUT_LABELS
 } from "./workbench-data";
 import {
   getTargetOutputCorridor,
@@ -108,7 +106,6 @@ export function PerformanceCriteriaPanel({
     result?.floorSystemEstimate?.airborneRatings.Rw ??
     result?.metrics.estimatedRwDb ??
     null;
-  const currentStc = result?.metrics.estimatedStc ?? null;
   const currentLnw =
     result?.impact?.LnW ??
     result?.floorSystemMatch?.impact.LnW ??

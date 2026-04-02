@@ -3,7 +3,6 @@
 import { Pill } from "@dynecho/ui";
 
 import type { WorkbenchFieldStatus, WorkbenchFieldStatusKind } from "./workbench-field-status";
-import { formatWorkbenchFieldStatusLabel } from "./workbench-field-status";
 
 export type FieldUsageBoardItem = {
   guide: WorkbenchFieldStatus;

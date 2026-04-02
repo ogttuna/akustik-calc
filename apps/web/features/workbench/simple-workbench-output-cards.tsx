@@ -1,12 +1,10 @@
 "use client";
 
 import type { RequestedOutputId } from "@dynecho/shared";
-import type { ReactNode } from "react";
 
 import type { GuidedValidationSummary } from "./guided-validation-summary";
 import { formatUnlockOutputs } from "./guided-output-unlocks";
 import type { StudyMode } from "./preset-definitions";
-import type { WorkbenchSectionTone } from "./simple-workbench-constants";
 import { workbenchSectionCardClass } from "./simple-workbench-layer-visuals";
 import type { OutputCardModel } from "./simple-workbench-output-model";
 import {
@@ -136,21 +134,8 @@ export function PrimaryResultCard(props: {
   studyMode: StudyMode;
   validationSummary: GuidedValidationSummary;
 }) {
-  const { card, collapsedLiveRowCount, contextLabel, heroHeadline, liveRowCount, parkedRowCount, solverLayerCount, studyMode, validationSummary } = props;
+  const { card, contextLabel, heroHeadline, liveRowCount, studyMode, validationSummary } = props;
   const liveStackValue = `${formatCountLabel(liveRowCount, "live row")} used`;
-  const liveStackDetail =
-    parkedRowCount > 0
-      ? `${formatCountLabel(liveRowCount, "live row")} currently resolve to ${formatCountLabel(solverLayerCount, "solver layer")}. ${formatCountLabel(parkedRowCount, "parked row")} ${parkedRowCount === 1 ? "stays" : "stay"} visible in the draft stack but ${parkedRowCount === 1 ? "does" : "do"} not affect this read.`
-      : collapsedLiveRowCount > 0
-        ? `${formatCountLabel(liveRowCount, "live row")} collapse to ${formatCountLabel(solverLayerCount, "solver layer")} before this read is calculated.`
-        : "Every visible row currently contributes to this read.";
-  const validationValueClass =
-    validationSummary.tone === "ready"
-      ? "text-[color:var(--success-ink)]"
-      : validationSummary.tone === "warning"
-        ? "text-[color:var(--warning-ink)]"
-        : "text-[color:var(--ink)]";
-  const postureValueClass = outputPostureTextClass(card.postureTone);
 
   return (
     <article className={`result-hero min-w-0 overflow-hidden rounded border border-l-4 border-l-[color:var(--accent)] px-4 py-4 ${outputStatusClass(card.status)}`}>
@@ -213,7 +198,7 @@ export function PendingOutputGroup(props: {
   detail: string;
   title: string;
 }) {
-  const { cards, countLabel, detail, title } = props;
+  const { cards, countLabel, title } = props;
 
   if (!cards.length) {
     return null;

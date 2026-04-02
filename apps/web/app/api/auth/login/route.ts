@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 
 import {
   applySessionCookie,
-  buildAuthConfigurationErrorMessage,
   normalizeNextPath,
   validateLoginCredentials
 } from "@/lib/auth";

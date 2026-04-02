@@ -168,24 +168,13 @@ type WorkbenchEstimateResponse = {
 };
 
 async function estimateCurrentWorkbenchState(page: Page): Promise<WorkbenchEstimateResponse> {
-  return page.evaluate(async () => {
+  return page.evaluate<WorkbenchEstimateResponse>(`(async () => {
     const rawStore = window.localStorage.getItem("dynecho-workbench-store");
     if (!rawStore) {
       throw new Error("Workbench state is missing from localStorage.");
     }
 
-    const parsed = JSON.parse(rawStore) as {
-      state: {
-        calculatorId?: string;
-        rows: Array<{
-          densityKgM3?: string;
-          dynamicStiffnessMNm3?: string;
-          floorRole?: string;
-          materialId: string;
-          thicknessMm: string;
-        }>;
-      };
-    };
+    const parsed = JSON.parse(rawStore);
     const state = parsed.state;
     const layers = state.rows.map((row) => ({
       densityKgM3:
@@ -214,7 +203,7 @@ async function estimateCurrentWorkbenchState(page: Page): Promise<WorkbenchEstim
       },
       method: "POST"
     });
-    const json = (await response.json()) as WorkbenchEstimateResponse["json"];
+    const json = await response.json();
 
     return {
       baseRow: state.rows.find((row) => row.floorRole === "base_structure") ?? null,
@@ -222,7 +211,7 @@ async function estimateCurrentWorkbenchState(page: Page): Promise<WorkbenchEstim
       rowCount: state.rows.length,
       status: response.status
     };
-  });
+  })()`);
 }
 
 function visibleGuidedRouteSummary(page: Page) {
@@ -710,7 +699,11 @@ test("guided floor layout keeps a single desktop workspace visible and within ro
   await openFloorGuidedFlow(page);
   await loadGuidedSample(page, "Floor Study");
 
-  const assemblyMetrics = await page.evaluate(() => ({
+  const assemblyMetrics = await page.evaluate<{
+    scrollHeight: number;
+    viewportHeight: number;
+    visibleHeadings: string[];
+  }>(`(() => ({
     scrollHeight: document.documentElement.scrollHeight,
     viewportHeight: window.innerHeight,
     visibleHeadings: Array.from(document.querySelectorAll("h2"))
@@ -721,14 +714,18 @@ test("guided floor layout keeps a single desktop workspace visible and within ro
       })
       .map((node) => node.textContent?.trim())
       .filter(Boolean)
-  }));
+  }))()`);
 
   expect(assemblyMetrics.visibleHeadings).toEqual(["Route", "Assembly", "Results"]);
   expect(assemblyMetrics.scrollHeight).toBeLessThanOrEqual(Math.round(assemblyMetrics.viewportHeight * 1.9));
 
   await openGuidedWorkspacePanel(page, "Details");
 
-  const resultsMetrics = await page.evaluate(() => ({
+  const resultsMetrics = await page.evaluate<{
+    scrollHeight: number;
+    viewportHeight: number;
+    visibleHeadings: string[];
+  }>(`(() => ({
     scrollHeight: document.documentElement.scrollHeight,
     viewportHeight: window.innerHeight,
     visibleHeadings: Array.from(document.querySelectorAll("h2"))
@@ -739,7 +736,7 @@ test("guided floor layout keeps a single desktop workspace visible and within ro
       })
       .map((node) => node.textContent?.trim())
       .filter(Boolean)
-  }));
+  }))()`);
 
   expect(resultsMetrics.visibleHeadings).toEqual(["Route", "Assembly", "Results"]);
   expect(resultsMetrics.scrollHeight).toBeLessThanOrEqual(Math.round(resultsMetrics.viewportHeight * 3));

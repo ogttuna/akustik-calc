@@ -26,10 +26,6 @@ type CurvePoint = {
   transmissionLossDb: number;
 };
 
-function formatSignedDb(value: number): string {
-  return `${value >= 0 ? "+" : ""}${formatDecimal(value)} dB`;
-}
-
 function formatFrequencyLabel(frequencyHz: number): string {
   if (frequencyHz >= 1000) {
     const kiloHertz = frequencyHz / 1000;
@@ -56,7 +52,6 @@ export function AcousticCurvePanel({ result }: AcousticCurvePanelProps) {
 
   const lowBand = chartData.find((entry: CurvePoint) => entry.frequencyHz >= 125 && entry.frequencyHz <= 250);
   const speechBand = chartData.find((entry: CurvePoint) => entry.frequencyHz === 500);
-  const highBand = chartData.find((entry: CurvePoint) => entry.frequencyHz >= 2000);
 
   return (
     <SurfacePanel className="px-4 py-4">

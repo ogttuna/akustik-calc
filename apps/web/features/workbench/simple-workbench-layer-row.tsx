@@ -2,7 +2,6 @@
 
 import type { FloorRole, MaterialDefinition } from "@dynecho/shared";
 import { ArrowDown, ArrowUp, Copy } from "lucide-react";
-import type { ReactNode } from "react";
 
 import { formatDecimal } from "@/lib/format";
 

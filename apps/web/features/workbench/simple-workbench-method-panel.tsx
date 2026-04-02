@@ -124,7 +124,6 @@ export function SimpleWorkbenchMethodPanel({
   readyMetrics,
   result,
   stackDetail,
-  studyMode,
   studyModeLabel,
   unlocks,
   validationDetail,

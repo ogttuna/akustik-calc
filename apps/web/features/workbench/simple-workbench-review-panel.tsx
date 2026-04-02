@@ -3,7 +3,7 @@
 import type { ComponentProps } from "react";
 
 import { GuidedDecisionBasisStrip, GuidedConstructionSnapshot } from "./simple-workbench-decision-cards";
-import { ReviewTabButton, GuidedFactChip } from "./simple-workbench-primitives";
+import { ReviewTabButton } from "./simple-workbench-primitives";
 import { REVIEW_TABS, type ReviewTabId } from "./simple-workbench-constants";
 import type { WorkspacePanelId } from "./simple-workbench-constants";
 import { SimpleWorkbenchMethodPanel } from "./simple-workbench-method-panel";
