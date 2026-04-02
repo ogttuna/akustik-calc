@@ -114,4 +114,49 @@ describe("exact floor companion audit", () => {
       expect(row.impactRatings?.CI50_2500, row.id).toBeUndefined();
     }
   });
+
+  it("keeps Euracoustics concrete study rows fail-closed without imported companions", () => {
+    const euracousticsRows = EXACT_FLOOR_SYSTEMS.filter(
+      (row) => row.sourceLabel === "Euracoustics FA2023 concrete ceiling study"
+    );
+
+    expect(euracousticsRows.length).toBeGreaterThan(0);
+
+    for (const row of euracousticsRows) {
+      expect(row.impactRatings?.CI, row.id).toBeUndefined();
+      expect(row.impactRatings?.CI50_2500, row.id).toBeUndefined();
+      expect(row.impactRatings?.LnWPlusCI, row.id).toBeUndefined();
+      expect(typeof row.impactRatings?.LnW, row.id).toBe("number");
+    }
+  });
+
+  it("keeps PMC composite study rows fail-closed without imported companions", () => {
+    const pmcRows = EXACT_FLOOR_SYSTEMS.filter(
+      (row) => row.sourceLabel === "PMC open-access composite panel floor study"
+    );
+
+    expect(pmcRows.length).toBeGreaterThan(0);
+
+    for (const row of pmcRows) {
+      expect(row.impactRatings?.CI, row.id).toBeUndefined();
+      expect(row.impactRatings?.CI50_2500, row.id).toBeUndefined();
+      expect(row.impactRatings?.LnWPlusCI, row.id).toBeUndefined();
+      expect(typeof row.impactRatings?.LnW, row.id).toBe("number");
+    }
+  });
+
+  it("keeps Pliteq brochure rows fail-closed without imported companions", () => {
+    const pliteqRows = EXACT_FLOOR_SYSTEMS.filter(
+      (row) => row.sourceLabel === "Pliteq Australia GenieClip brochure"
+    );
+
+    expect(pliteqRows.length).toBeGreaterThan(0);
+
+    for (const row of pliteqRows) {
+      expect(row.impactRatings?.CI, row.id).toBeUndefined();
+      expect(row.impactRatings?.CI50_2500, row.id).toBeUndefined();
+      expect(row.impactRatings?.LnWPlusCI, row.id).toBeUndefined();
+      expect(typeof row.impactRatings?.LnW, row.id).toBe("number");
+    }
+  });
 });
