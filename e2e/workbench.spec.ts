@@ -161,6 +161,7 @@ type WorkbenchEstimateResponse = {
         LPrimeNTw?: number;
         LPrimeNW?: number;
         LnW?: number;
+        LnWPlusCI?: number;
       };
       lowerBoundImpact?: {
         LnWUpperBound?: number;
@@ -755,7 +756,7 @@ test("guided impact floor keeps UI cards aligned with the live estimate payload 
   await supportingMetrics.click();
 
   const estimate = await estimateWorkbenchStateFromStore(page, {
-    targetOutputs: ["Rw", "R'w", "DnT,w", "Ln,w", "DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"]
+    targetOutputs: ["Rw", "R'w", "DnT,w", "Ln,w", "DeltaLw", "Ln,w+CI", "L'n,w", "L'nT,w", "L'nT,50"]
   });
 
   expect(estimate.status).toBe(200);
@@ -763,18 +764,53 @@ test("guided impact floor keeps UI cards aligned with the live estimate payload 
   expect(estimate.json.result?.floorSystemRatings?.Rw).toBe(58);
   expect(estimate.json.result?.impact?.LnW).toBe(50);
   expect(estimate.json.result?.impact?.DeltaLw).toBe(33.4);
+  expect(estimate.json.result?.impact?.LnWPlusCI ?? null).toBeNull();
   expect(estimate.json.result?.impact?.LPrimeNW).toBe(53);
   expect(estimate.json.result?.impact?.LPrimeNTw).toBe(50.2);
   expect(estimate.json.result?.impact?.LPrimeNT50 ?? null).toBeNull();
 
   await expectGuidedMetricCardValue(page, "Ln,w", formatGuidedDb(estimate.json.result?.impact?.LnW ?? 0));
   await expectGuidedMetricCardValue(page, "DeltaLw", formatGuidedDb(estimate.json.result?.impact?.DeltaLw ?? 0));
+  await expect(visibleGuidedMetricCard(page, "Ln,w+CI")).toHaveCount(0);
   await expectGuidedMetricCardValue(page, "Rw", formatGuidedDb(estimate.json.result?.floorSystemRatings?.Rw ?? 0));
   await expectGuidedMetricCardValue(page, "R'w", formatGuidedDb(estimate.json.result?.metrics?.estimatedRwPrimeDb ?? 0));
   await expectGuidedMetricCardValue(page, "DnT,w", formatGuidedDb(estimate.json.result?.metrics?.estimatedDnTwDb ?? 0));
   await expectGuidedMetricCardValue(page, "L'n,w", formatGuidedDb(estimate.json.result?.impact?.LPrimeNW ?? 0));
   await expectGuidedMetricCardValue(page, "L'nT,w", formatGuidedDb(estimate.json.result?.impact?.LPrimeNTw ?? 0));
   await expect(visibleGuidedMetricCard(page, "L'nT,50")).toHaveCount(0);
+});
+
+test("guided exact floor presets surface Ln,w+CI when the live lane already carries a low-frequency companion", async ({
+  page
+}) => {
+  await openFloorGuidedFlow(page);
+  await loadGuidedSample(page, "Dataholz CLT Dry");
+  await selectGuidedProjectContext(page, "building_prediction");
+
+  await page.getByLabel("Partition width (mm)").fill("4200");
+  await page.getByLabel("Partition height (mm)").fill("3000");
+  await page.getByLabel("Airborne room volume (m³)").fill("55");
+  await page.getByLabel("Impact K correction (dB)").fill("3");
+  await page.getByLabel("Impact room volume (m³)").fill("60");
+
+  await openGuidedWorkspacePanel(page, "Results");
+  const supportingMetrics = page.locator("summary").filter({ hasText: "Supporting metrics" }).first();
+  await expect(supportingMetrics).toBeVisible();
+  await supportingMetrics.click();
+
+  const estimate = await estimateWorkbenchStateFromStore(page, {
+    targetOutputs: ["Rw", "R'w", "DnT,w", "Ln,w", "Ln,w+CI", "L'n,w", "L'nT,w", "L'nT,50"]
+  });
+
+  expect(estimate.status).toBe(200);
+  expect(estimate.json.ok).toBe(true);
+  expect(estimate.json.result?.impact?.LnW).toBe(50);
+  expect(estimate.json.result?.impact?.LnWPlusCI).toBe(49);
+  expect(estimate.json.result?.impact?.LPrimeNT50).toBe(50);
+
+  await expectGuidedMetricCardValue(page, "Ln,w", formatGuidedDb(estimate.json.result?.impact?.LnW ?? 0));
+  await expectGuidedMetricCardValue(page, "Ln,w+CI", formatGuidedDb(estimate.json.result?.impact?.LnWPlusCI ?? 0));
+  await expectGuidedMetricCardValue(page, "L'nT,50", formatGuidedDb(estimate.json.result?.impact?.LPrimeNT50 ?? 0));
 });
 
 test("guided floor flow surfaces material-aware thickness guidance inline", async ({ page }) => {

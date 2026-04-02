@@ -11,6 +11,7 @@ const FLOOR_MATRIX_OUTPUTS: readonly RequestedOutputId[] = [
   "DnT,w",
   "Ln,w",
   "DeltaLw",
+  "Ln,w+CI",
   "L'n,w",
   "L'nT,w",
   "L'nT,50"
@@ -101,6 +102,7 @@ describe("floor output availability matrix", () => {
     expect(labCards.get("Rw")?.value).toBe("58 dB");
     expect(labCards.get("Ln,w")?.status).toBe("live");
     expect(labCards.get("DeltaLw")?.value).toBe("33.4 dB");
+    expect(labCards.get("Ln,w+CI")?.status).toBe("unsupported");
     expect(labCards.get("R'w")?.status).toBe("needs_input");
     expect(labCards.get("DnT,w")?.status).toBe("needs_input");
     expect(labCards.get("L'n,w")?.status).toBe("needs_input");
@@ -116,6 +118,7 @@ describe("floor output availability matrix", () => {
     expect(buildingCards.get("R'w")?.status).toBe("live");
     expect(buildingCards.get("DnT,w")?.status).toBe("live");
     expect(buildingCards.get("DnT,w")?.value).toBe("60 dB");
+    expect(buildingCards.get("Ln,w+CI")?.status).toBe("unsupported");
     expect(buildingCards.get("L'n,w")?.status).toBe("live");
     expect(buildingCards.get("L'n,w")?.value).toBe("53 dB");
     expect(buildingCards.get("L'nT,w")?.status).toBe("live");
@@ -153,6 +156,12 @@ describe("floor output availability matrix", () => {
       expect.objectContaining({
         status: "bound",
         value: "<= 51 dB"
+      })
+    );
+    expect(cards.get("Ln,w+CI")).toEqual(
+      expect.objectContaining({
+        status: "unsupported",
+        value: "Not ready"
       })
     );
     expect(cards.get("L'n,w")).toEqual(
@@ -207,6 +216,12 @@ describe("floor output availability matrix", () => {
         value: "50 dB"
       })
     );
+    expect(exactCards.get("Ln,w+CI")).toEqual(
+      expect.objectContaining({
+        status: "live",
+        value: "49 dB"
+      })
+    );
     expect(exactCards.get("L'nT,50")).toEqual(
       expect.objectContaining({
         status: "live",
@@ -218,6 +233,12 @@ describe("floor output availability matrix", () => {
       expect.objectContaining({
         status: "live",
         value: "58.3 dB"
+      })
+    );
+    expect(familyCards.get("Ln,w+CI")).toEqual(
+      expect.objectContaining({
+        status: "unsupported",
+        value: "Not ready"
       })
     );
     expect(familyCards.get("L'nT,w")).toEqual(
@@ -243,6 +264,12 @@ describe("floor output availability matrix", () => {
       expect.objectContaining({
         status: "live",
         value: "61.3 dB"
+      })
+    );
+    expect(lowConfidenceCards.get("Ln,w+CI")).toEqual(
+      expect.objectContaining({
+        status: "live",
+        value: "63.3 dB"
       })
     );
     expect(lowConfidenceCards.get("L'nT,50")).toEqual(
