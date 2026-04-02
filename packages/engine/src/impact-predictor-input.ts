@@ -7,6 +7,13 @@ import type {
 import { ImpactPredictorInputSchema, LayerInputSchema, type ImpactPredictorInput } from "@dynecho/shared";
 
 import { hasInvalidExplicitFloorBaseStructure } from "./floor-base-structure-eligibility";
+import {
+  collectCeilingBoardScheduleConflict,
+  collectSingleEntryRoleConflicts,
+  hasAmbiguousSingleEntryRoleTopology,
+  type CeilingBoardScheduleConflict,
+  type SingleEntryRoleConflict
+} from "./floor-role-topology";
 import { getDefaultMaterialCatalog, resolveMaterial } from "./material-catalog";
 import { ksRound1 } from "./math";
 import {
@@ -33,11 +40,7 @@ type BuildImpactPredictorAssemblyMeta = {
   contextMode?: string;
 };
 
-type PredictorRoleConflict = {
-  count: number;
-  materialLabels: string[];
-  role: NonNullable<LayerInput["floorRole"]>;
-};
+type PredictorRoleConflict = SingleEntryRoleConflict | CeilingBoardScheduleConflict;
 
 type ResolvedLayerStackEntry = LayerInput & {
   material: MaterialDefinition;
@@ -149,16 +152,6 @@ const MERGE_SAFE_IMPACT_LAYER_ROLES = new Set<NonNullable<LayerInput["floorRole"
   "resilient_layer",
   "upper_fill"
 ]);
-const SINGLE_ENTRY_PREDICTOR_ROLES = new Set<NonNullable<LayerInput["floorRole"]>>([
-  "base_structure",
-  "ceiling_cavity",
-  "ceiling_fill",
-  "floating_screed",
-  "floor_covering",
-  "resilient_layer",
-  "upper_fill"
-]);
-
 function sanitizeIdFragment(input: string): string {
   return input.trim().toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "");
 }
@@ -971,63 +964,13 @@ function resolveStructuralSupportFromBaseLayer(
   };
 }
 
-function hasAmbiguousPredictorRoleTopology(layers: readonly ResolvedLayerStackEntry[]): boolean {
-  for (const role of SINGLE_ENTRY_PREDICTOR_ROLES) {
-    if (layersForRole(layers, role).length > 1) {
-      return true;
-    }
-  }
-
-  const ceilingBoards = layersForRole(layers, "ceiling_board");
-  const firstCeilingBoard = ceilingBoards[0];
-
-  if (!firstCeilingBoard || ceilingBoards.length <= 1) {
-    return false;
-  }
-
-  return ceilingBoards.some(
-    (layer) =>
-      layer.material.id !== firstCeilingBoard.material.id || layer.thicknessMm !== firstCeilingBoard.thicknessMm
-  );
-}
-
 function collectPredictorRoleConflicts(
   layers: readonly ResolvedLayerStackEntry[]
 ): PredictorRoleConflict[] {
-  const conflicts: PredictorRoleConflict[] = [];
+  const conflicts = collectSingleEntryRoleConflicts(layers);
+  const ceilingBoardConflict = collectCeilingBoardScheduleConflict(layers);
 
-  for (const role of SINGLE_ENTRY_PREDICTOR_ROLES) {
-    const roleLayers = layersForRole(layers, role);
-    if (roleLayers.length <= 1) {
-      continue;
-    }
-
-    conflicts.push({
-      count: roleLayers.length,
-      materialLabels: Array.from(new Set(roleLayers.map((layer) => layer.material.name))),
-      role
-    });
-  }
-
-  const ceilingBoards = layersForRole(layers, "ceiling_board");
-  const firstCeilingBoard = ceilingBoards[0];
-  const hasConflictingCeilingBoardSchedule =
-    Boolean(firstCeilingBoard) &&
-    ceilingBoards.length > 1 &&
-    ceilingBoards.some(
-      (layer) =>
-        layer.material.id !== firstCeilingBoard.material.id || layer.thicknessMm !== firstCeilingBoard.thicknessMm
-    );
-
-  if (hasConflictingCeilingBoardSchedule) {
-    conflicts.push({
-      count: ceilingBoards.length,
-      materialLabels: Array.from(new Set(ceilingBoards.map((layer) => layer.material.name))),
-      role: "ceiling_board"
-    });
-  }
-
-  return conflicts;
+  return ceilingBoardConflict ? [...conflicts, ceilingBoardConflict] : conflicts;
 }
 
 function formatPredictorRoleLabel(role: NonNullable<LayerInput["floorRole"]>): string {
@@ -1416,7 +1359,10 @@ function canDerivePredictorInputFromLayerStack(
 
   const normalizedLayers = normalizeImpactPredictorLayerStack(rawLayers, catalog);
 
-  if (hasAmbiguousPredictorRoleTopology(normalizedLayers)) {
+  if (
+    hasAmbiguousSingleEntryRoleTopology(normalizedLayers) ||
+    collectCeilingBoardScheduleConflict(normalizedLayers)
+  ) {
     return false;
   }
 

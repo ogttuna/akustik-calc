@@ -1,8 +1,49 @@
 import { describe, expect, it } from "vitest";
 
-import { derivePredictorPublishedFamilyEstimate } from "./predictor-published-family-estimate";
+import {
+  derivePredictorPublishedFamilyEstimate,
+  PREDICTOR_PUBLISHED_FAMILY_RULES
+} from "./predictor-published-family-estimate";
 
 describe("derivePredictorPublishedFamilyEstimate", () => {
+  it("keeps published-family rule ids and priorities stable", () => {
+    expect(PREDICTOR_PUBLISHED_FAMILY_RULES.map((rule) => rule.id)).toEqual([
+      "knauf_concrete_combined",
+      "knauf_concrete_combined_tile",
+      "knauf_concrete_suspended_tile",
+      "concrete_combined_vinyl_elastic_ceiling",
+      "pliteq_steel_joist_suspended_vinyl",
+      "ubiq_open_web_suspended_vinyl",
+      "open_box",
+      "clt_dry",
+      "dataholz_clt_dry",
+      "pliteq_hollow_core",
+      "dataholz_timber_dry",
+      "knauf_timber",
+      "clt_wet",
+      "steel_open_web_carpet"
+    ]);
+    expect(PREDICTOR_PUBLISHED_FAMILY_RULES.map((rule) => rule.priority)).toEqual([
+      10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140
+    ]);
+    expect(PREDICTOR_PUBLISHED_FAMILY_RULES.map((rule) => rule.implementationKind)).toEqual([
+      "scored_candidates",
+      "scored_candidates",
+      "scored_candidates",
+      "computed_metrics",
+      "scored_candidates",
+      "fixed_output",
+      "fixed_output",
+      "fixed_output",
+      "fixed_output",
+      "fixed_output",
+      "fixed_output",
+      "fixed_output",
+      "fixed_output",
+      "fixed_output"
+    ]);
+  });
+
   it("keeps near-match Knauf concrete timber-underlay stacks on the concrete archetype lane", () => {
     const result = derivePredictorPublishedFamilyEstimate({
       structuralSupportType: "reinforced_concrete",
@@ -246,6 +287,107 @@ describe("derivePredictorPublishedFamilyEstimate", () => {
       "ubiq_fl28_open_web_steel_300_exact_lab_2026",
       "ubiq_fl28_open_web_steel_400_exact_lab_2026"
     ]);
+  });
+
+  it("keeps open-box dry-floor predictor inputs on the stronger TUAS dry lane", () => {
+    const result = derivePredictorPublishedFamilyEstimate({
+      structuralSupportType: "open_box_timber",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        thicknessMm: 370
+      },
+      resilientLayer: {
+        thicknessMm: 3,
+        dynamicStiffnessMNm3: 64
+      },
+      upperFill: {
+        materialClass: "generic_fill",
+        thicknessMm: 50
+      },
+      floatingScreed: {
+        materialClass: "dry_floating_gypsum_fiberboard",
+        thicknessMm: 60
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "laminate_flooring",
+        thicknessMm: 8
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_elastic_hanger",
+        cavityFillThicknessMm: 100,
+        boardLayerCount: 2,
+        boardThicknessMm: 13
+      }
+    });
+
+    expect(result?.kind).toBe("family_archetype");
+    expect(result?.impact.basis).toBe("predictor_floor_system_family_archetype_estimate");
+    expect(result?.impact.LnW).toBe(39);
+    expect(result?.impact.CI).toBe(2);
+    expect(result?.impact.LnWPlusCI).toBe(41);
+    expect(result?.airborneRatings.Rw).toBe(75);
+    expect(result?.airborneRatings.RwCtr).toBe(66.84359068531064);
+    expect(result?.impact.estimateCandidateIds).toEqual(["tuas_r5b_open_box_timber_measured_2026"]);
+  });
+
+  it("keeps open-box predictor inputs without the dry package on the weaker TUAS basic lane", () => {
+    const result = derivePredictorPublishedFamilyEstimate({
+      structuralSupportType: "open_box_timber",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        thicknessMm: 370
+      },
+      resilientLayer: {
+        thicknessMm: 3
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "laminate_flooring",
+        thicknessMm: 8
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_elastic_hanger",
+        cavityFillThicknessMm: 100,
+        boardLayerCount: 2,
+        boardThicknessMm: 13
+      }
+    });
+
+    expect(result?.kind).toBe("family_archetype");
+    expect(result?.impact.basis).toBe("predictor_floor_system_family_archetype_estimate");
+    expect(result?.impact.LnW).toBe(72);
+    expect(result?.impact.CI).toBe(2);
+    expect(result?.impact.LnWPlusCI).toBe(74);
+    expect(result?.airborneRatings.Rw).toBe(49);
+    expect(result?.airborneRatings.RwCtr).toBe(37.465233062145899);
+    expect(result?.impact.estimateCandidateIds).toEqual(["tuas_r2a_open_box_timber_measured_2026"]);
+  });
+
+  it("keeps open-box predictor inputs off the published-family lane when the common gate is broken", () => {
+    const result = derivePredictorPublishedFamilyEstimate({
+      structuralSupportType: "open_box_timber",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        thicknessMm: 370
+      },
+      resilientLayer: {
+        thicknessMm: 3
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "vinyl_flooring",
+        thicknessMm: 3
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_elastic_hanger",
+        cavityFillThicknessMm: 100,
+        boardLayerCount: 2,
+        boardThicknessMm: 13
+      }
+    });
+
+    expect(result).toBeNull();
   });
 
   it("keeps direct-to-joists timber tile ceilings on the Knauf family-general lane even when support form is explicit", () => {

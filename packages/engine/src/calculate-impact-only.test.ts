@@ -1787,6 +1787,45 @@ describe("calculateImpactOnly", () => {
     expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
   });
 
+  it("can resolve the weaker TUAS open-box lane when the dry-floor package is not present", () => {
+    const result = calculateImpactOnly([], {
+      impactPredictorInput: {
+        structuralSupportType: "open_box_timber",
+        impactSystemType: "combined_upper_lower_system",
+        baseSlab: {
+          thicknessMm: 370
+        },
+        resilientLayer: {
+          thicknessMm: 3
+        },
+        floorCovering: {
+          mode: "material_layer",
+          materialClass: "laminate_flooring",
+          thicknessMm: 8
+        },
+        lowerTreatment: {
+          type: "suspended_ceiling_elastic_hanger",
+          cavityFillThicknessMm: 100,
+          boardLayerCount: 2,
+          boardThicknessMm: 13
+        }
+      },
+      targetOutputs: ["Ln,w", "CI", "Ln,w+CI", "Rw"]
+    });
+
+    expect(result.sourceMode).toBe("predictor_input");
+    expect(result.floorSystemEstimate?.kind).toBe("family_archetype");
+    expect(result.impact?.basis).toBe("predictor_floor_system_family_archetype_estimate");
+    expect(result.impact?.LnW).toBe(72);
+    expect(result.impact?.CI).toBe(2);
+    expect(result.impact?.LnWPlusCI).toBe(74);
+    expect(result.floorSystemRatings?.Rw).toBe(49);
+    expect(result.floorSystemRatings?.RwCtr).toBe(37.465233062145899);
+    expect(result.impact?.estimateCandidateIds).toEqual(["tuas_r2a_open_box_timber_measured_2026"]);
+    expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(true);
+    expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
+  });
+
   it("can resolve an under-described Dataholz dry CLT stack on the broader same-family lane", () => {
     const result = calculateImpactOnly([], {
       impactPredictorInput: {

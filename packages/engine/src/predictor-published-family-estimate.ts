@@ -3,8 +3,27 @@ import type {
   ImpactPredictorInput
 } from "@dynecho/shared";
 
-import { buildPredictorFamilyEstimateCase, normalizePredictorToken } from "./predictor-family-estimate-shared";
+import {
+  buildPredictorFamilyEstimateCase,
+  normalizePredictorToken,
+  type PredictorFamilyEstimateCase
+} from "./predictor-family-estimate-shared";
 import { clamp } from "./math";
+
+type PublishedFamilyRule = {
+  derive: (input: ImpactPredictorInput) => FloorSystemEstimateResult | null;
+  id: string;
+  implementationKind: "computed_metrics" | "fixed_output" | "scored_candidates";
+  priority: number;
+};
+
+type TableSafeFixedOutputPublishedFamilyRule = {
+  estimateCase: PredictorFamilyEstimateCase;
+  id: string;
+  matches: (input: ImpactPredictorInput) => boolean;
+};
+
+type OpenBoxPublishedFamilyEstimateCaseKey = "basic" | "dry";
 
 function thicknessNear(value: number | undefined, target: number, tolerance = 3): boolean {
   return typeof value === "number" && Math.abs(value - target) <= tolerance;
@@ -24,6 +43,243 @@ function hasUpperPackageContent(input: ImpactPredictorInput): boolean {
       input.floatingScreed?.materialClass ||
       typeof input.floatingScreed?.thicknessMm === "number"
   );
+}
+
+function deriveTableSafeFixedOutputPublishedFamilyEstimate(
+  input: ImpactPredictorInput,
+  rule: TableSafeFixedOutputPublishedFamilyRule
+): FloorSystemEstimateResult | null {
+  if (!rule.matches(input)) {
+    return null;
+  }
+
+  return buildPredictorFamilyEstimateCase(rule.estimateCase);
+}
+
+const PLITEQ_HOLLOW_CORE_PUBLISHED_RULE: TableSafeFixedOutputPublishedFamilyRule = {
+  id: "pliteq_hollow_core_combined_vinyl",
+  matches: (input) =>
+    input.structuralSupportType === "hollow_core" &&
+    input.impactSystemType === "combined_upper_lower_system" &&
+    normalizePredictorToken(input.resilientLayer?.productId) === "geniemat_rst05" &&
+    normalizePredictorToken(input.floorCovering?.materialClass) === "vinyl_flooring" &&
+    input.lowerTreatment?.type === "suspended_ceiling_elastic_hanger" &&
+    input.lowerTreatment.boardLayerCount === 1 &&
+    thicknessNear(input.lowerTreatment.boardThicknessMm, 16, 1),
+  estimateCase: {
+    airborneRatings: {
+      Rw: 62
+    },
+    candidateIds: ["pliteq_hcp200_vinyl_lab_2026"],
+    candidateScores: [0.6],
+    impactRatings: {
+      LnW: 48
+    },
+    kind: "family_archetype",
+    noteLabel: "Pliteq hollow-core archetype estimate",
+    structuralFamily: "hollow-core / precast concrete"
+  }
+};
+
+const DATAHOLZ_TIMBER_DRY_PUBLISHED_RULE: TableSafeFixedOutputPublishedFamilyRule = {
+  id: "dataholz_timber_dry_combined",
+  matches: (input) =>
+    input.structuralSupportType === "timber_joists" &&
+    input.impactSystemType === "combined_upper_lower_system" &&
+    normalizePredictorToken(input.floorCovering?.materialClass) === "dry_floating_gypsum_fiberboard" &&
+    input.lowerTreatment?.type === "suspended_ceiling_elastic_hanger" &&
+    input.lowerTreatment.boardLayerCount === 1 &&
+    thicknessNear(input.baseSlab?.thicknessMm, 200, 5) &&
+    thicknessNear(input.floorCovering?.thicknessMm, 65, 5) &&
+    thicknessNear(input.lowerTreatment.boardThicknessMm, 15, 2) &&
+    thicknessNear(input.lowerTreatment.cavityDepthMm, 60, 5) &&
+    thicknessNear(input.lowerTreatment.cavityFillThicknessMm, 200, 10),
+  estimateCase: {
+    airborneRatings: {
+      Rw: 66,
+      RwCtr: -15,
+      RwCtrSemantic: "ctr_term"
+    },
+    candidateIds: ["dataholz_gdrtxa06a_timber_frame_dry_lab_2026"],
+    candidateScores: [0.8],
+    impactRatings: {
+      CI: 1,
+      LnW: 52,
+      LnWPlusCI: 53
+    },
+    kind: "family_archetype",
+    noteLabel: "Dataholz dry timber integrated-row estimate",
+    structuralFamily: "timber frame / joist"
+  }
+};
+
+const CLT_WET_PUBLISHED_RULE: TableSafeFixedOutputPublishedFamilyRule = {
+  id: "clt_wet_heavy_floating",
+  matches: (input) =>
+    input.structuralSupportType === "mass_timber_clt" &&
+    input.impactSystemType === "heavy_floating_floor" &&
+    normalizePredictorToken(input.upperFill?.materialClass) === "non_bonded_chippings" &&
+    normalizePredictorToken(input.floatingScreed?.materialClass) === "generic_screed",
+  estimateCase: {
+    airborneRatings: {
+      Rw: 76.1
+    },
+    candidateIds: [
+      "dataholz_gdmnxn06_fill_clt_lab_2026",
+      "dataholz_gdmnxn05_wet_clt_lab_2026"
+    ],
+    candidateScores: [1.6, 1.6],
+    impactRatings: {
+      CI: -1,
+      LnW: 41.9,
+      LnWPlusCI: 40.9
+    },
+    kind: "family_archetype",
+    noteLabel: "Dataholz wet CLT family estimate",
+    structuralFamily: "mass-timber CLT"
+  }
+};
+
+const UBIQ_OPEN_WEB_SUSPENDED_VINYL_RULE: TableSafeFixedOutputPublishedFamilyRule = {
+  id: "ubiq_open_web_suspended_vinyl",
+  matches: (input) =>
+    input.structuralSupportType === "steel_joists" &&
+    normalizePredictorToken(input.supportForm) === "open_web_or_rolled" &&
+    input.impactSystemType === "suspended_ceiling_only" &&
+    input.lowerTreatment?.type === "suspended_ceiling_elastic_hanger" &&
+    normalizePredictorToken(input.floorCovering?.materialClass) === "vinyl_flooring" &&
+    thicknessNear(input.baseSlab?.thicknessMm, 250, 60) &&
+    thicknessNear(input.lowerTreatment?.cavityDepthMm, 120, 35) &&
+    thicknessNear(input.lowerTreatment?.cavityFillThicknessMm, 100, 45) &&
+    thicknessNear(input.lowerTreatment?.boardLayerCount, 2, 0) &&
+    thicknessNear(input.lowerTreatment?.boardThicknessMm, 16, 2) &&
+    thicknessNear(input.floorCovering?.thicknessMm, 3, 2),
+  estimateCase: {
+    airborneRatings: {
+      Rw: 63.1,
+      RwCtr: 57.7,
+      RwCtrSemantic: "rw_plus_ctr"
+    },
+    candidateIds: [
+      "ubiq_fl33_open_web_steel_200_lab_2026",
+      "ubiq_fl33_open_web_steel_300_lab_2026",
+      "ubiq_fl28_open_web_steel_200_exact_lab_2026",
+      "ubiq_fl28_open_web_steel_300_exact_lab_2026",
+      "ubiq_fl28_open_web_steel_400_exact_lab_2026"
+    ],
+    candidateScores: [2.1, 2.1, 2.9, 2.9, 3.4],
+    impactRatings: {
+      CI: -1.7,
+      LnW: 51,
+      LnWPlusCI: 49.3
+    },
+    kind: "family_general",
+    noteLabel: "UBIQ open-web steel suspended-vinyl family estimate",
+    sourceSystemIds: [
+      "ubiq_fl28_open_web_steel_200_exact_lab_2026",
+      "ubiq_fl28_open_web_steel_300_exact_lab_2026",
+      "ubiq_fl28_open_web_steel_400_exact_lab_2026"
+    ],
+    structuralFamily: "lightweight steel"
+  }
+};
+
+const STEEL_OPEN_WEB_CARPET_PUBLISHED_RULE: TableSafeFixedOutputPublishedFamilyRule = {
+  id: "steel_open_web_carpet_combined",
+  matches: (input) =>
+    input.structuralSupportType === "steel_joists" &&
+    normalizePredictorToken(input.supportForm) === "open_web_or_rolled" &&
+    input.impactSystemType === "combined_upper_lower_system" &&
+    normalizePredictorToken(input.floorCovering?.materialClass) === "carpet_with_foam_underlay",
+  estimateCase: {
+    airborneRatings: {
+      Rw: 63.7,
+      RwCtr: 58.4,
+      RwCtrSemantic: "rw_plus_ctr"
+    },
+    candidateIds: [
+      "ubiq_fl28_open_web_steel_300_exact_lab_2026",
+      "ubiq_fl28_open_web_steel_200_exact_lab_2026",
+      "ubiq_fl28_open_web_steel_400_exact_lab_2026"
+    ],
+    candidateScores: [1.9, 2.6, 2.6],
+    impactRatings: {
+      CI: -1.7,
+      LnW: 51,
+      LnWPlusCI: 49.3
+    },
+    kind: "family_general",
+    noteLabel: "UBIQ open-web steel family estimate",
+    structuralFamily: "lightweight steel"
+  }
+};
+
+const OPEN_BOX_PUBLISHED_ESTIMATE_CASES: Record<
+  OpenBoxPublishedFamilyEstimateCaseKey,
+  PredictorFamilyEstimateCase
+> = {
+  basic: {
+    airborneRatings: {
+      Rw: 49,
+      RwCtr: 37.465233062145899
+    },
+    candidateIds: ["tuas_r2a_open_box_timber_measured_2026"],
+    candidateScores: [0.4],
+    impactRatings: {
+      CI: 2,
+      CI50_2500: 2,
+      LnW: 72,
+      LnWPlusCI: 74
+    },
+    kind: "family_archetype",
+    noteLabel: "TUAS open-box archetype estimate",
+    structuralFamily: "open-box timber"
+  },
+  dry: {
+    airborneRatings: {
+      Rw: 75,
+      RwCtr: 66.84359068531064
+    },
+    candidateIds: ["tuas_r5b_open_box_timber_measured_2026"],
+    candidateScores: [0.3],
+    impactRatings: {
+      CI: 2,
+      CI50_2500: 5,
+      LnW: 39,
+      LnWPlusCI: 41
+    },
+    kind: "family_archetype",
+    noteLabel: "TUAS open-box dry-floor archetype estimate",
+    structuralFamily: "open-box timber"
+  }
+};
+
+function selectOpenBoxPublishedEstimateCase(
+  input: ImpactPredictorInput
+): OpenBoxPublishedFamilyEstimateCaseKey | null {
+  if (
+    input.structuralSupportType !== "open_box_timber" ||
+    input.impactSystemType !== "combined_upper_lower_system" ||
+    normalizePredictorToken(input.floorCovering?.materialClass) !== "laminate_flooring" ||
+    input.lowerTreatment?.type !== "suspended_ceiling_elastic_hanger" ||
+    input.lowerTreatment.boardLayerCount !== 2 ||
+    !thicknessNear(input.lowerTreatment.boardThicknessMm, 13, 1) ||
+    !thicknessNear(input.lowerTreatment.cavityFillThicknessMm, 100, 5)
+  ) {
+    return null;
+  }
+
+  if (
+    normalizePredictorToken(input.upperFill?.materialClass) === "generic_fill" &&
+    thicknessNear(input.upperFill?.thicknessMm, 50, 8) &&
+    normalizePredictorToken(input.floatingScreed?.materialClass) === "dry_floating_gypsum_fiberboard" &&
+    thicknessNear(input.floatingScreed?.thicknessMm, 60, 8) &&
+    thicknessNear(input.resilientLayer?.thicknessMm, 3, 1)
+  ) {
+    return "dry";
+  }
+
+  return "basic";
 }
 
 function hasOnlyGenericResilientUnderlay(input: ImpactPredictorInput): boolean {
@@ -347,61 +603,12 @@ function deriveConcreteCombinedVinylElasticCeilingEstimate(
 function deriveOpenBoxPublishedFamilyEstimate(
   input: ImpactPredictorInput
 ): FloorSystemEstimateResult | null {
-  if (
-    input.structuralSupportType !== "open_box_timber" ||
-    input.impactSystemType !== "combined_upper_lower_system" ||
-    normalizePredictorToken(input.floorCovering?.materialClass) !== "laminate_flooring" ||
-    input.lowerTreatment?.type !== "suspended_ceiling_elastic_hanger" ||
-    input.lowerTreatment.boardLayerCount !== 2 ||
-    !thicknessNear(input.lowerTreatment.boardThicknessMm, 13, 1) ||
-    !thicknessNear(input.lowerTreatment.cavityFillThicknessMm, 100, 5)
-  ) {
+  const estimateCaseKey = selectOpenBoxPublishedEstimateCase(input);
+  if (!estimateCaseKey) {
     return null;
   }
 
-  if (
-    normalizePredictorToken(input.upperFill?.materialClass) === "generic_fill" &&
-    thicknessNear(input.upperFill?.thicknessMm, 50, 8) &&
-    normalizePredictorToken(input.floatingScreed?.materialClass) === "dry_floating_gypsum_fiberboard" &&
-    thicknessNear(input.floatingScreed?.thicknessMm, 60, 8) &&
-    thicknessNear(input.resilientLayer?.thicknessMm, 3, 1)
-  ) {
-    return buildPredictorFamilyEstimateCase({
-      airborneRatings: {
-        Rw: 75,
-        RwCtr: 66.84359068531064
-      },
-      candidateIds: ["tuas_r5b_open_box_timber_measured_2026"],
-      candidateScores: [0.3],
-      impactRatings: {
-        CI: 2,
-        CI50_2500: 5,
-        LnW: 39,
-        LnWPlusCI: 41
-      },
-      kind: "family_archetype",
-      noteLabel: "TUAS open-box dry-floor archetype estimate",
-      structuralFamily: "open-box timber"
-    });
-  }
-
-  return buildPredictorFamilyEstimateCase({
-    airborneRatings: {
-      Rw: 49,
-      RwCtr: 37.465233062145899
-    },
-    candidateIds: ["tuas_r2a_open_box_timber_measured_2026"],
-    candidateScores: [0.4],
-    impactRatings: {
-      CI: 2,
-      CI50_2500: 2,
-      LnW: 72,
-      LnWPlusCI: 74
-    },
-    kind: "family_archetype",
-    noteLabel: "TUAS open-box archetype estimate",
-    structuralFamily: "open-box timber"
-  });
+  return buildPredictorFamilyEstimateCase(OPEN_BOX_PUBLISHED_ESTIMATE_CASES[estimateCaseKey]);
 }
 
 function deriveCltDryPublishedFamilyEstimate(
@@ -528,31 +735,7 @@ function deriveDataholzCltDryPublishedEstimate(
 function derivePliteqHollowCorePublishedFamilyEstimate(
   input: ImpactPredictorInput
 ): FloorSystemEstimateResult | null {
-  if (
-    input.structuralSupportType !== "hollow_core" ||
-    input.impactSystemType !== "combined_upper_lower_system" ||
-    normalizePredictorToken(input.resilientLayer?.productId) !== "geniemat_rst05" ||
-    normalizePredictorToken(input.floorCovering?.materialClass) !== "vinyl_flooring" ||
-    input.lowerTreatment?.type !== "suspended_ceiling_elastic_hanger" ||
-    input.lowerTreatment.boardLayerCount !== 1 ||
-    !thicknessNear(input.lowerTreatment.boardThicknessMm, 16, 1)
-  ) {
-    return null;
-  }
-
-  return buildPredictorFamilyEstimateCase({
-    airborneRatings: {
-      Rw: 62
-    },
-    candidateIds: ["pliteq_hcp200_vinyl_lab_2026"],
-    candidateScores: [0.6],
-    impactRatings: {
-      LnW: 48
-    },
-    kind: "family_archetype",
-    noteLabel: "Pliteq hollow-core archetype estimate",
-    structuralFamily: "hollow-core / precast concrete"
-  });
+  return deriveTableSafeFixedOutputPublishedFamilyEstimate(input, PLITEQ_HOLLOW_CORE_PUBLISHED_RULE);
 }
 
 function hasFurredTimberCeiling(input: ImpactPredictorInput): boolean {
@@ -658,70 +841,13 @@ function deriveKnaufTimberPublishedFamilyEstimate(
 function deriveDataholzTimberDryPublishedEstimate(
   input: ImpactPredictorInput
 ): FloorSystemEstimateResult | null {
-  if (
-    input.structuralSupportType !== "timber_joists" ||
-    input.impactSystemType !== "combined_upper_lower_system" ||
-    normalizePredictorToken(input.floorCovering?.materialClass) !== "dry_floating_gypsum_fiberboard" ||
-    input.lowerTreatment?.type !== "suspended_ceiling_elastic_hanger" ||
-    input.lowerTreatment.boardLayerCount !== 1 ||
-    !thicknessNear(input.baseSlab?.thicknessMm, 200, 5) ||
-    !thicknessNear(input.floorCovering?.thicknessMm, 65, 5) ||
-    !thicknessNear(input.lowerTreatment.boardThicknessMm, 15, 2) ||
-    !thicknessNear(input.lowerTreatment.cavityDepthMm, 60, 5) ||
-    !thicknessNear(input.lowerTreatment.cavityFillThicknessMm, 200, 10)
-  ) {
-    return null;
-  }
-
-  return buildPredictorFamilyEstimateCase({
-    airborneRatings: {
-      Rw: 66,
-      RwCtr: -15,
-      RwCtrSemantic: "ctr_term"
-    },
-    candidateIds: ["dataholz_gdrtxa06a_timber_frame_dry_lab_2026"],
-    candidateScores: [0.8],
-    impactRatings: {
-      CI: 1,
-      LnW: 52,
-      LnWPlusCI: 53
-    },
-    kind: "family_archetype",
-    noteLabel: "Dataholz dry timber integrated-row estimate",
-    structuralFamily: "timber frame / joist"
-  });
+  return deriveTableSafeFixedOutputPublishedFamilyEstimate(input, DATAHOLZ_TIMBER_DRY_PUBLISHED_RULE);
 }
 
 function deriveCltWetPublishedFamilyEstimate(
   input: ImpactPredictorInput
 ): FloorSystemEstimateResult | null {
-  if (
-    input.structuralSupportType !== "mass_timber_clt" ||
-    input.impactSystemType !== "heavy_floating_floor" ||
-    normalizePredictorToken(input.upperFill?.materialClass) !== "non_bonded_chippings" ||
-    normalizePredictorToken(input.floatingScreed?.materialClass) !== "generic_screed"
-  ) {
-    return null;
-  }
-
-  return buildPredictorFamilyEstimateCase({
-    airborneRatings: {
-      Rw: 76.1
-    },
-    candidateIds: [
-      "dataholz_gdmnxn06_fill_clt_lab_2026",
-      "dataholz_gdmnxn05_wet_clt_lab_2026"
-    ],
-    candidateScores: [1.6, 1.6],
-    impactRatings: {
-      CI: -1,
-      LnW: 41.9,
-      LnWPlusCI: 40.9
-    },
-    kind: "family_archetype",
-    noteLabel: "Dataholz wet CLT family estimate",
-    structuralFamily: "mass-timber CLT"
-  });
+  return deriveTableSafeFixedOutputPublishedFamilyEstimate(input, CLT_WET_PUBLISHED_RULE);
 }
 
 function derivePliteqSteelJoistSuspendedVinylEstimate(
@@ -793,114 +919,20 @@ function derivePliteqSteelJoistSuspendedVinylEstimate(
 function deriveUbiqOpenWebSuspendedVinylEstimate(
   input: ImpactPredictorInput
 ): FloorSystemEstimateResult | null {
-  if (
-    input.structuralSupportType !== "steel_joists" ||
-    normalizePredictorToken(input.supportForm) !== "open_web_or_rolled" ||
-    input.impactSystemType !== "suspended_ceiling_only" ||
-    input.lowerTreatment?.type !== "suspended_ceiling_elastic_hanger" ||
-    normalizePredictorToken(input.floorCovering?.materialClass) !== "vinyl_flooring"
-  ) {
-    return null;
-  }
-
-  if (
-    !thicknessNear(input.baseSlab?.thicknessMm, 250, 60) ||
-    !thicknessNear(input.lowerTreatment?.cavityDepthMm, 120, 35) ||
-    !thicknessNear(input.lowerTreatment?.cavityFillThicknessMm, 100, 45) ||
-    !thicknessNear(input.lowerTreatment?.boardLayerCount, 2, 0) ||
-    !thicknessNear(input.lowerTreatment?.boardThicknessMm, 16, 2) ||
-    !thicknessNear(input.floorCovering?.thicknessMm, 3, 2)
-  ) {
-    return null;
-  }
-
-  return buildPredictorFamilyEstimateCase({
-    airborneRatings: {
-      Rw: 63.1,
-      RwCtr: 57.7,
-      RwCtrSemantic: "rw_plus_ctr"
-    },
-    candidateIds: [
-      "ubiq_fl33_open_web_steel_200_lab_2026",
-      "ubiq_fl33_open_web_steel_300_lab_2026",
-      "ubiq_fl28_open_web_steel_200_exact_lab_2026",
-      "ubiq_fl28_open_web_steel_300_exact_lab_2026",
-      "ubiq_fl28_open_web_steel_400_exact_lab_2026"
-    ],
-    candidateScores: [2.1, 2.1, 2.9, 2.9, 3.4],
-    impactRatings: {
-      CI: -1.7,
-      LnW: 51,
-      LnWPlusCI: 49.3
-    },
-    kind: "family_general",
-    noteLabel: "UBIQ open-web steel suspended-vinyl family estimate",
-    sourceSystemIds: [
-      "ubiq_fl28_open_web_steel_200_exact_lab_2026",
-      "ubiq_fl28_open_web_steel_300_exact_lab_2026",
-      "ubiq_fl28_open_web_steel_400_exact_lab_2026"
-    ],
-    structuralFamily: "lightweight steel"
-  });
+  return deriveTableSafeFixedOutputPublishedFamilyEstimate(input, UBIQ_OPEN_WEB_SUSPENDED_VINYL_RULE);
 }
 
 function deriveSteelPublishedFamilyEstimate(
   input: ImpactPredictorInput
 ): FloorSystemEstimateResult | null {
-  if (
-    input.structuralSupportType !== "steel_joists" ||
-    normalizePredictorToken(input.supportForm) !== "open_web_or_rolled" ||
-    input.impactSystemType !== "combined_upper_lower_system" ||
-    normalizePredictorToken(input.floorCovering?.materialClass) !== "carpet_with_foam_underlay"
-  ) {
-    return null;
-  }
-
-  return buildPredictorFamilyEstimateCase({
-    airborneRatings: {
-      Rw: 63.7,
-      RwCtr: 58.4,
-      RwCtrSemantic: "rw_plus_ctr"
-    },
-    candidateIds: [
-      "ubiq_fl28_open_web_steel_300_exact_lab_2026",
-      "ubiq_fl28_open_web_steel_200_exact_lab_2026",
-      "ubiq_fl28_open_web_steel_400_exact_lab_2026"
-    ],
-    candidateScores: [1.9, 2.6, 2.6],
-    impactRatings: {
-      CI: -1.7,
-      LnW: 51,
-      LnWPlusCI: 49.3
-    },
-    kind: "family_general",
-    noteLabel: "UBIQ open-web steel family estimate",
-    structuralFamily: "lightweight steel"
-  });
+  return deriveTableSafeFixedOutputPublishedFamilyEstimate(input, STEEL_OPEN_WEB_CARPET_PUBLISHED_RULE);
 }
 
 export function derivePredictorPublishedFamilyEstimate(
   input: ImpactPredictorInput
 ): FloorSystemEstimateResult | null {
-  const publishedFamilyRules: readonly ((input: ImpactPredictorInput) => FloorSystemEstimateResult | null)[] = [
-    deriveKnaufConcreteCombinedPublishedFamilyEstimate,
-    deriveKnaufConcreteCombinedTilePublishedFamilyEstimate,
-    deriveKnaufConcreteSuspendedTilePublishedFamilyEstimate,
-    deriveConcreteCombinedVinylElasticCeilingEstimate,
-    derivePliteqSteelJoistSuspendedVinylEstimate,
-    deriveUbiqOpenWebSuspendedVinylEstimate,
-    deriveOpenBoxPublishedFamilyEstimate,
-    deriveCltDryPublishedFamilyEstimate,
-    deriveDataholzCltDryPublishedEstimate,
-    derivePliteqHollowCorePublishedFamilyEstimate,
-    deriveDataholzTimberDryPublishedEstimate,
-    deriveKnaufTimberPublishedFamilyEstimate,
-    deriveCltWetPublishedFamilyEstimate,
-    deriveSteelPublishedFamilyEstimate
-  ];
-
-  for (const derive of publishedFamilyRules) {
-    const estimate = derive(input);
+  for (const rule of PREDICTOR_PUBLISHED_FAMILY_RULES) {
+    const estimate = rule.derive(input);
     if (estimate) {
       return estimate;
     }
@@ -908,3 +940,96 @@ export function derivePredictorPublishedFamilyEstimate(
 
   return null;
 }
+
+// Fixed-output rules are the safest candidates for future table-driven extraction.
+// Computed and scored rules stay code-backed until their formulas are modeled explicitly.
+const PREDICTOR_PUBLISHED_FAMILY_RULES_RAW = [
+  {
+    id: "knauf_concrete_combined",
+    implementationKind: "scored_candidates",
+    priority: 10,
+    derive: deriveKnaufConcreteCombinedPublishedFamilyEstimate
+  },
+  {
+    id: "knauf_concrete_combined_tile",
+    implementationKind: "scored_candidates",
+    priority: 20,
+    derive: deriveKnaufConcreteCombinedTilePublishedFamilyEstimate
+  },
+  {
+    id: "knauf_concrete_suspended_tile",
+    implementationKind: "scored_candidates",
+    priority: 30,
+    derive: deriveKnaufConcreteSuspendedTilePublishedFamilyEstimate
+  },
+  {
+    id: "concrete_combined_vinyl_elastic_ceiling",
+    implementationKind: "computed_metrics",
+    priority: 40,
+    derive: deriveConcreteCombinedVinylElasticCeilingEstimate
+  },
+  {
+    id: "pliteq_steel_joist_suspended_vinyl",
+    implementationKind: "scored_candidates",
+    priority: 50,
+    derive: derivePliteqSteelJoistSuspendedVinylEstimate
+  },
+  {
+    id: "ubiq_open_web_suspended_vinyl",
+    implementationKind: "fixed_output",
+    priority: 60,
+    derive: deriveUbiqOpenWebSuspendedVinylEstimate
+  },
+  {
+    id: "open_box",
+    implementationKind: "fixed_output",
+    priority: 70,
+    derive: deriveOpenBoxPublishedFamilyEstimate
+  },
+  {
+    id: "clt_dry",
+    implementationKind: "fixed_output",
+    priority: 80,
+    derive: deriveCltDryPublishedFamilyEstimate
+  },
+  {
+    id: "dataholz_clt_dry",
+    implementationKind: "fixed_output",
+    priority: 90,
+    derive: deriveDataholzCltDryPublishedEstimate
+  },
+  {
+    id: "pliteq_hollow_core",
+    implementationKind: "fixed_output",
+    priority: 100,
+    derive: derivePliteqHollowCorePublishedFamilyEstimate
+  },
+  {
+    id: "dataholz_timber_dry",
+    implementationKind: "fixed_output",
+    priority: 110,
+    derive: deriveDataholzTimberDryPublishedEstimate
+  },
+  {
+    id: "knauf_timber",
+    implementationKind: "fixed_output",
+    priority: 120,
+    derive: deriveKnaufTimberPublishedFamilyEstimate
+  },
+  {
+    id: "clt_wet",
+    implementationKind: "fixed_output",
+    priority: 130,
+    derive: deriveCltWetPublishedFamilyEstimate
+  },
+  {
+    id: "steel_open_web_carpet",
+    implementationKind: "fixed_output",
+    priority: 140,
+    derive: deriveSteelPublishedFamilyEstimate
+  }
+] satisfies readonly PublishedFamilyRule[];
+
+export const PREDICTOR_PUBLISHED_FAMILY_RULES: readonly PublishedFamilyRule[] = [
+  ...PREDICTOR_PUBLISHED_FAMILY_RULES_RAW
+].sort((left, right) => left.priority - right.priority);

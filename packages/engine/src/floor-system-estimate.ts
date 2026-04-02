@@ -11,6 +11,7 @@ import type {
 import { getFloorSystemCompanionSemantic } from "@dynecho/shared";
 
 import { hasInvalidExplicitFloorBaseStructure } from "./floor-base-structure-eligibility";
+import { collectSingleEntryRoleConflicts, type SingleEntryRoleConflict } from "./floor-role-topology";
 import { getImpactConfidenceForBasis } from "./impact-confidence";
 import { buildUniformImpactMetricBasis } from "./impact-metric-basis";
 import { isResolvedHeavyConcreteCarrierEligible } from "./heavy-concrete-carrier-eligibility";
@@ -29,24 +30,9 @@ type StructuralFamily =
   | "unknown";
 
 type FloorProfile = "bare" | "combined" | "heavy_floating" | "lower_only" | "upper_only";
-type AmbiguousSingleEntryRole = Exclude<FloorRole, "ceiling_board">;
-type AmbiguousSingleEntryRoleConflict = {
-  count: number;
-  materialLabels: string[];
-  role: AmbiguousSingleEntryRole;
-};
 
 const UPPER_ROLES: FloorRole[] = ["floating_screed", "floor_covering", "resilient_layer", "upper_fill"];
 const LOWER_ROLES: FloorRole[] = ["ceiling_board", "ceiling_cavity", "ceiling_fill"];
-const SINGLE_ENTRY_ESTIMATE_ROLES: readonly AmbiguousSingleEntryRole[] = [
-  "base_structure",
-  "ceiling_cavity",
-  "ceiling_fill",
-  "floating_screed",
-  "floor_covering",
-  "resilient_layer",
-  "upper_fill"
-];
 
 function structuralFamilyFromMaterialIds(materialIds: readonly string[]): StructuralFamily {
   if (
@@ -145,45 +131,12 @@ function getLayerProfile(layers: readonly ResolvedLayer[]): FloorProfile {
 
 function collectAmbiguousSingleEntryRoleConflicts(
   layers: readonly ResolvedLayer[]
-): AmbiguousSingleEntryRoleConflict[] {
-  const conflicts: AmbiguousSingleEntryRoleConflict[] = [];
-
-  for (const role of SINGLE_ENTRY_ESTIMATE_ROLES) {
-    const roleLayers = layers.filter((layer) => layer.floorRole === role);
-    if (roleLayers.length <= 1) {
-      continue;
-    }
-
-    const distinctMaterialIds = new Set(roleLayers.map((layer) => layer.material.id));
-    let scheduleSegments = 0;
-    let insideRoleSegment = false;
-
-    for (const layer of layers) {
-      const isRoleLayer = layer.floorRole === role;
-
-      if (isRoleLayer && !insideRoleSegment) {
-        scheduleSegments += 1;
-      }
-
-      insideRoleSegment = isRoleLayer;
-    }
-
-    if (distinctMaterialIds.size <= 1 && scheduleSegments <= 1) {
-      continue;
-    }
-
-    conflicts.push({
-      count: roleLayers.length,
-      materialLabels: Array.from(new Set(roleLayers.map((layer) => layer.material.name))),
-      role
-    });
-  }
-
-  return conflicts;
+) {
+  return collectSingleEntryRoleConflicts(layers);
 }
 
 function formatAmbiguousSingleEntryRoleConflict(
-  conflict: AmbiguousSingleEntryRoleConflict
+  conflict: SingleEntryRoleConflict
 ): string {
   const materialsLabel = conflict.materialLabels.length > 0 ? ` (${conflict.materialLabels.join(", ")})` : "";
 
