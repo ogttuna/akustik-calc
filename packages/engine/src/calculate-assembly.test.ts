@@ -3696,6 +3696,36 @@ describe("calculateAssembly", () => {
     expect(result.warnings.some((warning: string) => /curated exact floor-system match active/i.test(warning))).toBe(true);
   });
 
+  it("carries the exact Dataholz bonded-fill timber frame row into standardized field-side outputs", () => {
+    const result = calculateAssembly(
+      [
+        { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 12.5 },
+        { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+        { floorRole: "ceiling_cavity", materialId: "resilient_channel", thicknessMm: 27 },
+        { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: 60 },
+        { floorRole: "floating_screed", materialId: "screed", thicknessMm: 60 },
+        { floorRole: "resilient_layer", materialId: "mw_t_impact_layer", thicknessMm: 30 },
+        { floorRole: "base_structure", materialId: "timber_frame_floor", thicknessMm: 240 }
+      ],
+      {
+        impactFieldContext: {
+          fieldKDb: 2,
+          receivingRoomVolumeM3: 50
+        },
+        targetOutputs: ["L'n,w", "L'nT,w", "L'nT,50"]
+      }
+    );
+
+    expect(result.floorSystemMatch?.system.id).toBe("dataholz_gdrnxa11a_timber_frame_lab_2026");
+    expect(result.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_field_volume_normalization");
+    expect(result.impact?.CI50_2500).toBe(14);
+    expect(result.impact?.LPrimeNW).toBe(44);
+    expect(result.impact?.LPrimeNTw).toBe(42);
+    expect(result.impact?.LPrimeNT50).toBe(56);
+    expect(result.impact?.metricBasis?.CI50_2500).toBe("official_floor_system_exact_match");
+    expect(result.impact?.metricBasis?.LPrimeNT50).toBe("estimated_standardized_field_lpriment50_from_lprimentw_plus_ci50_2500");
+  });
+
   it("matches the measured TUAS CLT family and carries CI,50-2500", () => {
     const result = calculateAssembly([
       { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },

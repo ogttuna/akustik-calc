@@ -35,6 +35,16 @@ const DATAHOLZ_WET_NO_LINING_EXACT_ROWS: readonly Omit<LayerDraft, "id">[] = [
   { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: "150" }
 ];
 
+const DATAHOLZ_TIMBER_FRAME_BONDED_FILL_EXACT_ROWS: readonly Omit<LayerDraft, "id">[] = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "12.5" },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: "100" },
+  { floorRole: "ceiling_cavity", materialId: "resilient_channel", thicknessMm: "27" },
+  { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: "60" },
+  { floorRole: "floating_screed", materialId: "screed", thicknessMm: "60" },
+  { floorRole: "resilient_layer", materialId: "mw_t_impact_layer", thicknessMm: "30" },
+  { floorRole: "base_structure", materialId: "timber_frame_floor", thicknessMm: "240" }
+];
+
 const CLT_UPPER_ONLY_ROWS: readonly Omit<LayerDraft, "id">[] = [
   { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: "4" },
   { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: "10" },
@@ -386,6 +396,25 @@ describe("floor family regressions", () => {
     expect(scenario.result?.impact?.LPrimeNW).toBe(41);
     expect(scenario.result?.impact?.LPrimeNTw).toBe(39);
     expect(scenario.result?.impact?.LPrimeNT50).toBe(44);
+  });
+
+  it("carries the exact Dataholz bonded-fill timber frame row into standardized field outputs on the web scenario route", () => {
+    const scenario = evaluateFloorScenario({
+      id: "dataholz-timber-frame-bonded-fill-field",
+      impactFieldContext: {
+        fieldKDb: 2,
+        receivingRoomVolumeM3: 50
+      },
+      rows: DATAHOLZ_TIMBER_FRAME_BONDED_FILL_EXACT_ROWS,
+      targetOutputs: FIELD_OUTPUTS
+    });
+
+    expect(scenario.result?.floorSystemMatch?.system.id).toBe("dataholz_gdrnxa11a_timber_frame_lab_2026");
+    expect(scenario.result?.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_field_volume_normalization");
+    expect(scenario.result?.impact?.CI50_2500).toBe(14);
+    expect(scenario.result?.impact?.LPrimeNW).toBe(44);
+    expect(scenario.result?.impact?.LPrimeNTw).toBe(42);
+    expect(scenario.result?.impact?.LPrimeNT50).toBe(56);
   });
 
   it("withholds the open-box dry-floor archetype lane when upper fill is split across disjoint rows", () => {

@@ -1150,6 +1150,7 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     impactRatings: {
       CI: 2,
+      CI50_2500: 14,
       LnW: 42,
       LnWPlusCI: 44
     },

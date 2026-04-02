@@ -232,6 +232,31 @@ describe("calculateImpactOnly", () => {
     expect(result.impact?.metricBasis?.LPrimeNT50).toBe("estimated_local_guide_tr_simple_method_lnwci_plus_k_plus_hd");
   });
 
+  it("carries the exact Dataholz bonded-fill timber frame row into the standardized field-side L'nT,50 lane", () => {
+    const result = calculateImpactOnly([], {
+      impactFieldContext: {
+        fieldKDb: 2,
+        receivingRoomVolumeM3: 50
+      },
+      officialFloorSystemId: "dataholz_gdrnxa11a_timber_frame_lab_2026",
+      targetOutputs: ["Ln,w", "CI", "CI,50-2500", "Ln,w+CI", "L'n,w", "L'nT,w", "L'nT,50"]
+    });
+
+    expect(result.sourceMode).toBe("official_floor_system");
+    expect(result.floorSystemMatch?.system.id).toBe("dataholz_gdrnxa11a_timber_frame_lab_2026");
+    expect(result.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_field_volume_normalization");
+    expect(result.impact?.LnW).toBe(42);
+    expect(result.impact?.CI).toBe(2);
+    expect(result.impact?.CI50_2500).toBe(14);
+    expect(result.impact?.LnWPlusCI).toBe(44);
+    expect(result.impact?.LPrimeNW).toBe(44);
+    expect(result.impact?.LPrimeNTw).toBe(42);
+    expect(result.impact?.LPrimeNT50).toBe(56);
+    expect(result.impact?.guideEstimateProfile).toBeUndefined();
+    expect(result.impact?.metricBasis?.CI50_2500).toBe("official_floor_system_exact_match");
+    expect(result.impact?.metricBasis?.LPrimeNT50).toBe("estimated_standardized_field_lpriment50_from_lprimentw_plus_ci50_2500");
+  });
+
   it("rejects non-positive receiving-room volume on the impact field context", () => {
     expect(() =>
       calculateImpactOnly([{ materialId: "air_gap", thicknessMm: 90 }], {
