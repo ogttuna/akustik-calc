@@ -104,7 +104,7 @@ export function buildOutputCard(input: {
     case "Rw":
       if (studyMode === "floor" && typeof result?.floorSystemRatings?.Rw === "number") {
         return {
-          detail: "Airborne companion carried on the active floor lane.",
+          detail: "Companion airborne rating carried on the active floor lane. This can differ from the live airborne estimate shown elsewhere.",
           label: "Rw",
           output,
           status: "live",
