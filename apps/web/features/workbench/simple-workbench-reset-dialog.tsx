@@ -28,8 +28,8 @@ export function SimpleWorkbenchResetDialog({ onCancel, onConfirm, open, rowCount
       <h3 className="text-sm font-semibold text-[color:var(--ink)]">Reset workbench?</h3>
       <p className="mt-2 text-[0.82rem] leading-6 text-[color:var(--ink-soft)]">
         {rowCount > 0
-          ? `This will clear all ${rowCount} layers, custom materials, and field inputs. This cannot be undone.`
-          : "This will clear all custom materials and field inputs. This cannot be undone."}
+          ? `This will restore the current example stack, clear field inputs, and keep your custom materials library. This cannot be undone.`
+          : "This will clear field inputs and restore the current example stack. Your custom materials library stays available."}
       </p>
       <div className="mt-4 flex justify-end gap-2">
         <button

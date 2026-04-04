@@ -31,6 +31,7 @@ import {
   getActiveValidationFamily,
   getActiveValidationMode
 } from "./validation-regime";
+import { parseWorkbenchNumber } from "./parse-number";
 
 type PerformanceCriteriaPanelProps = {
   activeCriteriaPack: CriteriaPack;
@@ -45,12 +46,8 @@ type PerformanceCriteriaPanelProps = {
 const DUTCH_IMPACT_OUTPUTS = new Set<RequestedOutputId>(["Ln,w", "L'n,w", "L'nT,w", "L'nT,50", "LnT,A"]);
 
 function parseNumberInput(value: string): number | null {
-  if (value.trim().length === 0) {
-    return null;
-  }
-
-  const parsed = Number(value);
-  return Number.isFinite(parsed) ? parsed : null;
+  const parsed = parseWorkbenchNumber(value);
+  return typeof parsed === "number" ? parsed : null;
 }
 
 function getTonePanelClass(tone: "accent" | "neutral" | "success" | "warning"): string {

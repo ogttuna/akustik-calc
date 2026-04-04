@@ -1,5 +1,6 @@
 import type { AirborneContextMode, RequestedOutputId } from "@dynecho/shared";
 
+import { parsePositiveWorkbenchNumber } from "./parse-number";
 import type { StudyMode } from "./preset-definitions";
 import { REQUESTED_OUTPUT_LABELS } from "./workbench-data";
 
@@ -16,9 +17,7 @@ export type GuidedOutputUnlock = {
 };
 
 function parsePositiveNumber(value: string): number | undefined {
-  const parsed = Number(value);
-
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : undefined;
+  return parsePositiveWorkbenchNumber(value);
 }
 
 function uniqueOutputs(outputs: readonly RequestedOutputId[]): RequestedOutputId[] {

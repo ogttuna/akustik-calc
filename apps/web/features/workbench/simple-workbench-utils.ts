@@ -3,6 +3,7 @@ import { formatDecimal } from "@/lib/format";
 import { hasDynamicStiffnessOverrideInput, getEffectiveDynamicStiffness, hasEffectiveDynamicStiffnessOverride, parseDynamicStiffnessOverride } from "./dynamic-stiffness";
 import { hasDensityOverrideInput, parseDensityOverride, getEffectiveDensity, getCatalogDensity, hasEffectiveDensityOverride } from "./material-density";
 import { normalizeRows } from "./normalize-rows";
+import { parsePositiveWorkbenchNumber } from "./parse-number";
 import { prependRecommendedMaterialGroup } from "./material-picker-recommendations";
 import { CUSTOM_MATERIAL_CATEGORY_OPTIONS, isCustomWorkbenchMaterial } from "./workbench-materials";
 import type { WorkbenchMaterialOptionGroup } from "./workbench-material-picker";
@@ -27,9 +28,7 @@ export function formatSignedDb(value: number | null | undefined): string {
 }
 
 export function parsePositiveNumber(value: string): number | undefined {
-  const parsed = Number(value);
-
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : undefined;
+  return parsePositiveWorkbenchNumber(value);
 }
 
 export function isThicknessReady(thicknessMm: string): boolean {
@@ -227,6 +226,41 @@ export function getRowActivityCounts(rows: readonly LayerDraft[], materials?: re
     parkedRowCount: Math.max(rows.length - liveRowCount, 0),
     solverLayerCount
   };
+}
+
+export type SimpleWorkbenchSolverDisplayLayer = {
+  floorRole?: FloorRole;
+  id: string;
+  material: MaterialDefinition;
+  sourceRowIds: readonly string[];
+  thicknessLabel: string;
+  thicknessMm: number;
+};
+
+export function buildSolverDisplayLayers(
+  rows: readonly LayerDraft[],
+  materials: readonly MaterialDefinition[]
+): SimpleWorkbenchSolverDisplayLayer[] {
+  const normalized = normalizeRows(rows, materials);
+  const solverMaterials =
+    normalized.runtimeMaterials.length > 0 ? [...materials, ...normalized.runtimeMaterials] : materials;
+  const fallbackMaterial = solverMaterials[0];
+
+  return normalized.solverLayers.flatMap((layer, index) => {
+    const material = solverMaterials.find((entry) => entry.id === layer.materialId) ?? fallbackMaterial;
+    if (!material) {
+      return [];
+    }
+
+    return [{
+      floorRole: layer.floorRole,
+      id: `solver-layer-${index + 1}`,
+      material,
+      sourceRowIds: [...layer.sourceRowIds],
+      thicknessLabel: `${formatDecimal(layer.thicknessMm)} mm`,
+      thicknessMm: layer.thicknessMm
+    }];
+  });
 }
 
 export function countAssignedFloorRoles(rows: readonly LayerDraft[]): number {

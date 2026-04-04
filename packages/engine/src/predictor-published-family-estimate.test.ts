@@ -15,16 +15,18 @@ describe("derivePredictorPublishedFamilyEstimate", () => {
       "pliteq_steel_joist_suspended_vinyl",
       "ubiq_open_web_suspended_vinyl",
       "open_box",
+      "clt_bare",
       "clt_dry",
       "dataholz_clt_dry",
       "pliteq_hollow_core",
       "dataholz_timber_dry",
       "knauf_timber",
       "clt_wet",
+      "dataholz_clt_wet_suspended",
       "steel_open_web_carpet"
     ]);
     expect(PREDICTOR_PUBLISHED_FAMILY_RULES.map((rule) => rule.priority)).toEqual([
-      10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140
+      10, 20, 30, 40, 50, 60, 70, 75, 80, 90, 100, 110, 120, 130, 135, 140
     ]);
     expect(PREDICTOR_PUBLISHED_FAMILY_RULES.map((rule) => rule.implementationKind)).toEqual([
       "scored_candidates",
@@ -33,6 +35,8 @@ describe("derivePredictorPublishedFamilyEstimate", () => {
       "computed_metrics",
       "scored_candidates",
       "fixed_output",
+      "fixed_output",
+      "computed_metrics",
       "fixed_output",
       "fixed_output",
       "fixed_output",
@@ -216,6 +220,58 @@ describe("derivePredictorPublishedFamilyEstimate", () => {
     ]);
   });
 
+  it("keeps bare CLT predictor inputs on a conservative interpolation lane instead of outperforming the laminate anchors", () => {
+    const result = derivePredictorPublishedFamilyEstimate({
+      structuralSupportType: "mass_timber_clt",
+      impactSystemType: "bare_floor",
+      baseSlab: {
+        thicknessMm: 140
+      }
+    });
+
+    expect(result?.kind).toBe("family_general");
+    expect(result?.impact.basis).toBe("predictor_mass_timber_clt_bare_interpolation_estimate");
+    expect(result?.impact.LnW).toBe(73);
+    expect(result?.impact.CI).toBe(0);
+    expect(result?.impact.CI50_2500).toBe(0);
+    expect(result?.impact.LnWPlusCI).toBe(73);
+    expect(result?.airborneRatings.Rw).toBe(35);
+    expect(result?.airborneRatings.RwCtr).toBe(31.7);
+    expect(result?.impact.estimateCandidateIds).toEqual([
+      "tuas_x2_clt140_measured_2026",
+      "tuas_c2_clt260_measured_2026"
+    ]);
+  });
+
+  it("keeps thin-finish CLT bare-floor predictor inputs on the TUAS interpolation anchors without the raw-slab penalty", () => {
+    const result = derivePredictorPublishedFamilyEstimate({
+      structuralSupportType: "mass_timber_clt",
+      impactSystemType: "bare_floor",
+      baseSlab: {
+        thicknessMm: 180
+      },
+      resilientLayer: {
+        thicknessMm: 3
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "laminate_flooring",
+        thicknessMm: 8
+      }
+    });
+
+    expect(result?.kind).toBe("family_general");
+    expect(result?.impact.basis).toBe("predictor_mass_timber_clt_bare_interpolation_estimate");
+    expect(result?.impact.LnW).toBe(68.3);
+    expect(result?.impact.LnWPlusCI).toBe(68.3);
+    expect(result?.airborneRatings.Rw).toBe(39.3);
+    expect(result?.airborneRatings.RwCtr).toBe(36);
+    expect(result?.impact.estimateCandidateIds).toEqual([
+      "tuas_x2_clt140_measured_2026",
+      "tuas_c2_clt260_measured_2026"
+    ]);
+  });
+
   it("keeps near-match steel joist vinyl suspended-ceiling stacks on the Pliteq family lane", () => {
     const result = derivePredictorPublishedFamilyEstimate({
       structuralSupportType: "steel_joists",
@@ -356,12 +412,12 @@ describe("derivePredictorPublishedFamilyEstimate", () => {
 
     expect(result?.kind).toBe("family_archetype");
     expect(result?.impact.basis).toBe("predictor_floor_system_family_archetype_estimate");
-    expect(result?.impact.LnW).toBe(72);
-    expect(result?.impact.CI).toBe(2);
-    expect(result?.impact.LnWPlusCI).toBe(74);
-    expect(result?.airborneRatings.Rw).toBe(49);
-    expect(result?.airborneRatings.RwCtr).toBe(37.465233062145899);
-    expect(result?.impact.estimateCandidateIds).toEqual(["tuas_r2a_open_box_timber_measured_2026"]);
+    expect(result?.impact.LnW).toBe(55);
+    expect(result?.impact.CI).toBe(0);
+    expect(result?.impact.LnWPlusCI).toBe(55);
+    expect(result?.airborneRatings.Rw).toBe(62);
+    expect(result?.airborneRatings.RwCtr).toBe(54.408826940816517);
+    expect(result?.impact.estimateCandidateIds).toEqual(["tuas_r2b_open_box_timber_measured_2026"]);
   });
 
   it("keeps open-box predictor inputs off the published-family lane when the common gate is broken", () => {
@@ -388,6 +444,46 @@ describe("derivePredictorPublishedFamilyEstimate", () => {
     });
 
     expect(result).toBeNull();
+  });
+
+  it("keeps thin-underlay wet CLT suspended stacks on the new Dataholz suspended-family lane", () => {
+    const result = derivePredictorPublishedFamilyEstimate({
+      structuralSupportType: "mass_timber_clt",
+      impactSystemType: "dry_floating_floor",
+      baseSlab: {
+        thicknessMm: 140
+      },
+      resilientLayer: {
+        thicknessMm: 8
+      },
+      floatingScreed: {
+        materialClass: "generic_screed",
+        thicknessMm: 50
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "vinyl_flooring",
+        thicknessMm: 4
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_elastic_hanger",
+        cavityDepthMm: 65,
+        cavityFillThicknessMm: 100,
+        boardLayerCount: 2,
+        boardThicknessMm: 13,
+        boardMaterialClass: "gypsum_board"
+      }
+    });
+
+    expect(result?.kind).toBe("family_general");
+    expect(result?.impact.basis).toBe("predictor_floor_system_family_general_estimate");
+    expect(result?.impact.LnW).toBe(49.5);
+    expect(result?.airborneRatings.Rw).toBe(61.5);
+    expect(result?.airborneRatings.RwCtr).toBe(-7);
+    expect(result?.impact.estimateCandidateIds).toEqual([
+      "dataholz_gdmnxa02a_00_clt_lab_2026",
+      "dataholz_gdmnxa02a_02_clt_lab_2026"
+    ]);
   });
 
   it("keeps direct-to-joists timber tile ceilings on the Knauf family-general lane even when support form is explicit", () => {

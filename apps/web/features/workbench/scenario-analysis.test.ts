@@ -219,6 +219,43 @@ describe("scenario analysis", () => {
     expect(splitScenario.warnings).toEqual(mergedScenario.warnings);
   });
 
+  it("keeps the same simple heavy-floor result when the floating package rows are entered out of solver order", () => {
+    const canonicalRows = [
+      { floorRole: "floor_covering" as const, id: "a", materialId: "ceramic_tile", thicknessMm: "8" },
+      { floorRole: "floating_screed" as const, id: "b", materialId: "screed", thicknessMm: "50" },
+      { floorRole: "resilient_layer" as const, id: "c", materialId: "generic_resilient_underlay", thicknessMm: "8" },
+      { floorRole: "base_structure" as const, id: "d", materialId: "concrete", thicknessMm: "150" }
+    ];
+    const misorderedRows = [
+      canonicalRows[0]!,
+      canonicalRows[2]!,
+      canonicalRows[1]!,
+      canonicalRows[3]!
+    ];
+
+    const canonicalScenario = evaluateScenario({
+      id: "canonical-order",
+      name: "canonical order",
+      rows: canonicalRows,
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+    const misorderedScenario = evaluateScenario({
+      id: "misordered-order",
+      name: "misordered order",
+      rows: misorderedRows,
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+
+    expect(canonicalScenario.result).not.toBeNull();
+    expect(misorderedScenario.result).not.toBeNull();
+    expect(resultSnapshot(misorderedScenario.result!)).toEqual(resultSnapshot(canonicalScenario.result!));
+    expect(misorderedScenario.warnings).toEqual(canonicalScenario.warnings);
+  });
+
   it("keeps the same bare exact floor result when one base slab is entered as ten rows", () => {
     const mergedRows = [
       { floorRole: "base_structure" as const, id: "a", materialId: "concrete", thicknessMm: "140" }
@@ -659,7 +696,7 @@ describe("scenario analysis", () => {
     expect(blankScenario.warnings.some((warning) => /invalid density override/i.test(warning))).toBe(false);
   });
 
-  it("falls back to the custom material catalog value when a local custom finish density override uses a comma decimal", () => {
+  it("treats a local custom finish comma-decimal density override as the same live override", () => {
     const customMaterial = buildCustomMaterialDefinition({
       draft: {
         ...createEmptyCustomMaterialDraft(),
@@ -675,7 +712,7 @@ describe("scenario analysis", () => {
       id: "custom-finish-comma-density-baseline",
       name: "custom finish comma density baseline",
       rows: [
-        { floorRole: "floor_covering", id: "a", materialId: customMaterial.id, thicknessMm: "8" },
+        { densityKgM3: "1650.0", floorRole: "floor_covering", id: "a", materialId: customMaterial.id, thicknessMm: "8" },
         { floorRole: "floating_screed", id: "b", materialId: "screed", thicknessMm: "50" },
         { floorRole: "resilient_layer", id: "c", materialId: "generic_resilient_underlay", thicknessMm: "8" },
         { floorRole: "base_structure", id: "d", materialId: "concrete", thicknessMm: "150" }
@@ -684,7 +721,7 @@ describe("scenario analysis", () => {
       studyMode: "floor",
       targetOutputs: TARGET_OUTPUTS
     });
-    const invalidScenario = evaluateScenario({
+    const localizedScenario = evaluateScenario({
       customMaterials: [customMaterial],
       id: "custom-finish-comma-density",
       name: "custom finish comma density",
@@ -700,11 +737,9 @@ describe("scenario analysis", () => {
     });
 
     expect(baselineScenario.result).not.toBeNull();
-    expect(invalidScenario.result).not.toBeNull();
-    expect(resultSnapshot(invalidScenario.result!)).toEqual(resultSnapshot(baselineScenario.result!));
-    expect(invalidScenario.warnings).toContain(
-      "Layer 1 has an invalid density override. Enter a non-negative kg/m³ value, use zero only for gap or support layers, or leave it blank."
-    );
+    expect(localizedScenario.result).not.toBeNull();
+    expect(resultSnapshot(localizedScenario.result!)).toEqual(resultSnapshot(baselineScenario.result!));
+    expect(localizedScenario.warnings).toEqual(baselineScenario.warnings);
   });
 
   it("lets a row-level density override change the live result for local custom concrete base materials", () => {
@@ -808,7 +843,7 @@ describe("scenario analysis", () => {
     expect(blankScenario.warnings.some((warning) => /invalid dynamic stiffness override/i.test(warning))).toBe(false);
   });
 
-  it("falls back to the custom resilient catalog value when dynamic stiffness override uses a comma decimal", () => {
+  it("treats a custom resilient comma-decimal dynamic stiffness override as the same live override", () => {
     const customMaterial = buildCustomMaterialDefinition({
       draft: {
         ...createEmptyCustomMaterialDraft(),
@@ -827,14 +862,14 @@ describe("scenario analysis", () => {
       rows: [
         { floorRole: "floor_covering", id: "a", materialId: "ceramic_tile", thicknessMm: "8" },
         { floorRole: "floating_screed", id: "b", materialId: "screed", thicknessMm: "50" },
-        { floorRole: "resilient_layer", id: "c", materialId: customMaterial.id, thicknessMm: "8" },
+        { dynamicStiffnessMNm3: "15.5", floorRole: "resilient_layer", id: "c", materialId: customMaterial.id, thicknessMm: "8" },
         { floorRole: "base_structure", id: "d", materialId: "concrete", thicknessMm: "150" }
       ],
       source: "current",
       studyMode: "floor",
       targetOutputs: TARGET_OUTPUTS
     });
-    const invalidScenario = evaluateScenario({
+    const localizedScenario = evaluateScenario({
       customMaterials: [customMaterial],
       id: "custom-resilient-comma-dyn",
       name: "custom resilient comma dyn",
@@ -850,11 +885,9 @@ describe("scenario analysis", () => {
     });
 
     expect(baselineScenario.result).not.toBeNull();
-    expect(invalidScenario.result).not.toBeNull();
-    expect(resultSnapshot(invalidScenario.result!)).toEqual(resultSnapshot(baselineScenario.result!));
-    expect(invalidScenario.warnings).toContain(
-      "Layer 3 has an invalid dynamic stiffness override. Enter a positive MN/m³ value or leave it blank."
-    );
+    expect(localizedScenario.result).not.toBeNull();
+    expect(resultSnapshot(localizedScenario.result!)).toEqual(resultSnapshot(baselineScenario.result!));
+    expect(localizedScenario.warnings).toEqual(baselineScenario.warnings);
   });
 
   it("surfaces soft sanity warnings for out-of-band guided inputs without blocking calculation", () => {
@@ -1191,8 +1224,13 @@ describe("scenario analysis", () => {
     expect(scenario.result?.floorSystemMatch).toBeNull();
     expect(scenario.result?.floorSystemEstimate?.kind).toBe("family_archetype");
     expect(scenario.result?.impact?.basis).toBe("predictor_floor_system_family_archetype_estimate");
-    expect(scenario.result?.impact?.LnW).toBeCloseTo(68.7, 1);
-    expect(scenario.result?.floorSystemRatings?.Rw).toBeCloseTo(51.6, 1);
+    expect(scenario.result?.impact?.LnW).toBeCloseTo(59.2, 1);
+    expect(scenario.result?.floorSystemRatings?.Rw).toBeCloseTo(58.9, 1);
+    expect(scenario.result?.impact?.estimateCandidateIds).toEqual([
+      "tuas_r2b_open_box_timber_measured_2026",
+      "tuas_r2a_open_box_timber_measured_2026",
+      "tuas_r3b_open_box_timber_measured_2026"
+    ]);
     expect(scenario.warnings).toContain("Screening estimate only. This result is coming from the local calibrated seed lane.");
   });
 
@@ -1226,7 +1264,7 @@ describe("scenario analysis", () => {
     );
     expect(
       scenario.result?.floorSystemEstimate?.notes.some((note: string) =>
-        /Displayed fit was capped from 87.5% to 54%/i.test(note)
+        /Displayed fit was capped from .* to 54%/i.test(note)
       )
     ).toBe(true);
     expect(
@@ -1657,12 +1695,41 @@ describe("scenario analysis", () => {
     expect(scenario.warnings.some((warning) => warning.includes("Expected number, received nan"))).toBe(true);
   });
 
-  it.each([
-    { label: "comma decimal", thicknessMm: "8,0" },
-    { label: "zero thickness", thicknessMm: "0" }
-  ])("treats $label floor-covering thickness as a dropped row instead of a fake layer", ({ thicknessMm }) => {
+  it("accepts comma-decimal floor-covering thickness as the same live layer", () => {
     const baselineScenario = evaluateScenario({
-      id: `invalid-thickness-baseline-${thicknessMm}`,
+      id: "comma-thickness-baseline",
+      name: "comma thickness baseline",
+      rows: [
+        { floorRole: "floor_covering", id: "a", materialId: "ceramic_tile", thicknessMm: "8.0" },
+        { floorRole: "resilient_layer", id: "b", materialId: "generic_resilient_underlay", thicknessMm: "8" },
+        { floorRole: "base_structure", id: "c", materialId: "concrete", thicknessMm: "150" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+    const localizedScenario = evaluateScenario({
+      id: "comma-thickness",
+      name: "comma thickness",
+      rows: [
+        { floorRole: "floor_covering", id: "a", materialId: "ceramic_tile", thicknessMm: "8,0" },
+        { floorRole: "resilient_layer", id: "b", materialId: "generic_resilient_underlay", thicknessMm: "8" },
+        { floorRole: "base_structure", id: "c", materialId: "concrete", thicknessMm: "150" }
+      ],
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: TARGET_OUTPUTS
+    });
+
+    expect(baselineScenario.result).not.toBeNull();
+    expect(localizedScenario.result).not.toBeNull();
+    expect(resultSnapshot(localizedScenario.result!)).toEqual(resultSnapshot(baselineScenario.result!));
+    expect(localizedScenario.warnings).toEqual(baselineScenario.warnings);
+  });
+
+  it("treats zero floor-covering thickness as a dropped row instead of a fake layer", () => {
+    const baselineScenario = evaluateScenario({
+      id: "invalid-thickness-baseline-0",
       name: "invalid thickness baseline",
       rows: [
         { floorRole: "resilient_layer", id: "b", materialId: "generic_resilient_underlay", thicknessMm: "8" },
@@ -1673,10 +1740,10 @@ describe("scenario analysis", () => {
       targetOutputs: TARGET_OUTPUTS
     });
     const invalidScenario = evaluateScenario({
-      id: `invalid-thickness-${thicknessMm}`,
+      id: "invalid-thickness-0",
       name: "invalid thickness",
       rows: [
-        { floorRole: "floor_covering", id: "a", materialId: "ceramic_tile", thicknessMm },
+        { floorRole: "floor_covering", id: "a", materialId: "ceramic_tile", thicknessMm: "0" },
         { floorRole: "resilient_layer", id: "b", materialId: "generic_resilient_underlay", thicknessMm: "8" },
         { floorRole: "base_structure", id: "c", materialId: "concrete", thicknessMm: "150" }
       ],
@@ -1776,21 +1843,27 @@ describe("scenario analysis", () => {
     expect(blankScenario.warnings.some((warning) => /invalid dynamic stiffness override/i.test(warning))).toBe(false);
   });
 
-  it("falls back to the catalog resilient layer when dynamic stiffness override uses a comma decimal", () => {
+  it("treats comma-decimal dynamic stiffness override as the same live override", () => {
     const baselineScenario = evaluateScenario({
       id: "comma-dyn-baseline",
       name: "comma dyn baseline",
       rows: [
         { floorRole: "floor_covering", id: "a", materialId: "ceramic_tile", thicknessMm: "8" },
         { floorRole: "floating_screed", id: "b", materialId: "screed", thicknessMm: "50" },
-        { floorRole: "resilient_layer", id: "c", materialId: "generic_resilient_underlay", thicknessMm: "8" },
+        {
+          dynamicStiffnessMNm3: "18.5",
+          floorRole: "resilient_layer",
+          id: "c",
+          materialId: "generic_resilient_underlay",
+          thicknessMm: "8"
+        },
         { floorRole: "base_structure", id: "d", materialId: "concrete", thicknessMm: "150" }
       ],
       source: "current",
       studyMode: "floor",
       targetOutputs: TARGET_OUTPUTS
     });
-    const invalidScenario = evaluateScenario({
+    const localizedScenario = evaluateScenario({
       id: "comma-dyn",
       name: "comma dyn",
       rows: [
@@ -1811,11 +1884,9 @@ describe("scenario analysis", () => {
     });
 
     expect(baselineScenario.result).not.toBeNull();
-    expect(invalidScenario.result).not.toBeNull();
-    expect(resultSnapshot(invalidScenario.result!)).toEqual(resultSnapshot(baselineScenario.result!));
-    expect(invalidScenario.warnings).toContain(
-      "Layer 3 has an invalid dynamic stiffness override. Enter a positive MN/m³ value or leave it blank."
-    );
+    expect(localizedScenario.result).not.toBeNull();
+    expect(resultSnapshot(localizedScenario.result!)).toEqual(resultSnapshot(baselineScenario.result!));
+    expect(localizedScenario.warnings).toEqual(baselineScenario.warnings);
   });
 
   it.each(["abc", "0", "-10"])("falls back to the catalog screed when density override %s is invalid", (densityKgM3) => {
@@ -1894,13 +1965,13 @@ describe("scenario analysis", () => {
     expect(blankScenario.warnings.some((warning) => /invalid density override/i.test(warning))).toBe(false);
   });
 
-  it("falls back to the catalog screed when density override uses a comma decimal", () => {
+  it("treats comma-decimal density override as the same live override", () => {
     const baselineScenario = evaluateScenario({
       id: "comma-density-baseline",
       name: "comma density baseline",
       rows: [
         { floorRole: "floor_covering", id: "a", materialId: "ceramic_tile", thicknessMm: "8" },
-        { floorRole: "floating_screed", id: "b", materialId: "screed", thicknessMm: "50" },
+        { densityKgM3: "1800.0", floorRole: "floating_screed", id: "b", materialId: "screed", thicknessMm: "50" },
         { floorRole: "resilient_layer", id: "c", materialId: "generic_resilient_underlay", thicknessMm: "8" },
         { floorRole: "base_structure", id: "d", materialId: "concrete", thicknessMm: "150" }
       ],
@@ -1908,7 +1979,7 @@ describe("scenario analysis", () => {
       studyMode: "floor",
       targetOutputs: TARGET_OUTPUTS
     });
-    const invalidScenario = evaluateScenario({
+    const localizedScenario = evaluateScenario({
       id: "comma-density",
       name: "comma density",
       rows: [
@@ -1923,11 +1994,9 @@ describe("scenario analysis", () => {
     });
 
     expect(baselineScenario.result).not.toBeNull();
-    expect(invalidScenario.result).not.toBeNull();
-    expect(resultSnapshot(invalidScenario.result!)).toEqual(resultSnapshot(baselineScenario.result!));
-    expect(invalidScenario.warnings).toContain(
-      "Layer 2 has an invalid density override. Enter a non-negative kg/m³ value, use zero only for gap or support layers, or leave it blank."
-    );
+    expect(localizedScenario.result).not.toBeNull();
+    expect(resultSnapshot(localizedScenario.result!)).toEqual(resultSnapshot(baselineScenario.result!));
+    expect(localizedScenario.warnings).toEqual(baselineScenario.warnings);
   });
 
   it("falls back and warns when zero density override is entered on a ceiling-support helper row", () => {

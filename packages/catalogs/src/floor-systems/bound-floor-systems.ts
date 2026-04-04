@@ -166,5 +166,46 @@ export const BOUND_FLOOR_SYSTEMS: readonly BoundFloorSystem[] = withFloorSystemS
       Rw: 63,
       RwCtr: 58
     }
+  },
+  {
+    id: "ubiq_fl33_open_web_steel_400_lab_2026",
+    label: "UBIQ FL-33 | 400 mm open-web / rolled steel | INEX FLOOR 19 | 2 x 16 mm resilient ceiling",
+    sourceLabel: "UBIQ official system table PDF",
+    sourceType: "official_manufacturer_system_table",
+    trustTier: "official_manufacturer",
+    match: {
+      absentRoles: ["upper_fill", "ceiling_fill"],
+      baseStructure: {
+        materialIds: ["open_web_steel_floor"],
+        thicknessMm: 400
+      },
+      floatingScreed: {
+        materialIds: ["inex_floor_panel"],
+        thicknessMm: 19
+      },
+      floorCovering: {
+        materialIds: ["engineered_timber_with_acoustic_underlay"]
+      },
+      ceilingCavity: {
+        materialIds: ["ubiq_resilient_ceiling"]
+      },
+      ceilingBoard: {
+        layerCount: 2,
+        materialIds: ["firestop_board"],
+        thicknessMm: 16
+      }
+    },
+    systemSummary: {
+      carrier: "400 mm open-web / rolled steel floor at 450 mm centres",
+      floorBuildUp: "19 mm INEX FLOOR upper deck with engineered timber floor and acoustic underlay",
+      ceiling: "Resilient ceiling family with 2 x 16 mm fire-rated plasterboard"
+    },
+    impactBounds: {
+      LnWUpperBound: 51
+    },
+    airborneRatings: {
+      Rw: 63,
+      RwCtr: 58
+    }
   }
 ]);

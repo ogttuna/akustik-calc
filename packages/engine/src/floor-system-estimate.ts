@@ -366,7 +366,51 @@ function getFamilyEstimatePool(
     return recommendations.slice();
   }
 
-  return recommendations.slice();
+  return [];
+}
+
+function buildRoleSignature(criteria: ExactFloorSystem["match"]["baseStructure"] | undefined): string {
+  if (!criteria) {
+    return "none";
+  }
+
+  const materialIds = criteria.materialIds?.join("/") ?? "*";
+  const thickness = typeof criteria.thicknessMm === "number" ? String(criteria.thicknessMm) : "*";
+  const layerCount = typeof criteria.layerCount === "number" ? String(criteria.layerCount) : "*";
+
+  return `${materialIds}:${thickness}:${layerCount}`;
+}
+
+function dedupeFamilyCandidatesForCurrentProfile(
+  family: StructuralFamily,
+  currentProfile: FloorProfile,
+  recommendations: readonly FloorSystemRecommendation[]
+): FloorSystemRecommendation[] {
+  if (family !== "lightweight_steel" || currentProfile !== "lower_only") {
+    return recommendations.slice();
+  }
+
+  const seen = new Set<string>();
+  const deduped: FloorSystemRecommendation[] = [];
+
+  for (const recommendation of recommendations) {
+    const match = recommendation.system.match;
+    const signature = [
+      buildRoleSignature(match.baseStructure),
+      buildRoleSignature(match.ceilingCavity),
+      buildRoleSignature(match.ceilingFill),
+      buildRoleSignature(match.ceilingBoard)
+    ].join("|");
+
+    if (seen.has(signature)) {
+      continue;
+    }
+
+    seen.add(signature);
+    deduped.push(recommendation);
+  }
+
+  return deduped;
 }
 
 function getStableCompanionSemantic(
@@ -468,7 +512,11 @@ export function deriveFloorSystemEstimate(
   }
   const currentProfile = getLayerProfile(layers);
   const ambiguousSingleEntryRoleConflicts = collectAmbiguousSingleEntryRoleConflicts(layers);
-  const familyPool = getFamilyEstimatePool(structuralFamily, recommendations);
+  const familyPool = dedupeFamilyCandidatesForCurrentProfile(
+    structuralFamily,
+    currentProfile,
+    getFamilyEstimatePool(structuralFamily, recommendations)
+  );
   const profileAligned = familyPool.filter((entry) => compatibleProfiles(currentProfile, getSystemProfile(entry.system)));
 
   if (structuralFamily === "lightweight_steel") {
@@ -483,7 +531,8 @@ export function deriveFloorSystemEstimate(
       ? profileAligned.filter((entry) => entry.fitPercent >= 55).slice(0, 3)
       : [];
   const generalCandidates = familyPool.filter((entry) => entry.fitPercent >= 30).slice(0, 3);
-  const lowConfidenceCandidates = recommendations.filter((entry) => entry.fitPercent >= 20).slice(0, 3);
+  const lowConfidencePool = structuralFamily === "unknown" ? recommendations : familyPool;
+  const lowConfidenceCandidates = lowConfidencePool.filter((entry) => entry.fitPercent >= 20).slice(0, 3);
 
   const activeKindAndSources: {
     kind: FloorSystemEstimateKind;

@@ -1,7 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 
-const TEST_USERNAME = process.env.DYNECHO_AUTH_USERNAME ?? "consultant";
-const TEST_PASSWORD = process.env.DYNECHO_AUTH_PASSWORD ?? "change-me";
+const TEST_USERNAME = process.env.DYNECHO_AUTH_USERNAME ?? "admin";
+const TEST_PASSWORD = process.env.DYNECHO_AUTH_PASSWORD ?? "admin";
 
 async function signIn(page: Page) {
   const response = await page.request.post("/api/auth/login", {

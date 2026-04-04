@@ -9,6 +9,7 @@ import { formatDecimal } from "@/lib/format";
 
 import { FieldGuide } from "./field-guide";
 import { buildImpactReferenceFieldGuide } from "./impact-field-guides";
+import { parseWorkbenchNumber } from "./parse-number";
 import {
   formatConfidenceLevel,
   formatConfidenceProvenance,
@@ -24,12 +25,8 @@ type ImpactReferencePanelProps = {
 };
 
 function parseNumberInput(value: string): number | null {
-  if (value.trim().length === 0) {
-    return null;
-  }
-
-  const parsed = Number(value);
-  return Number.isFinite(parsed) ? parsed : null;
+  const parsed = parseWorkbenchNumber(value);
+  return typeof parsed === "number" ? parsed : null;
 }
 
 export function ImpactReferencePanel({

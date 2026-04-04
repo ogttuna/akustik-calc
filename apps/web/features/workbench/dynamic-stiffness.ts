@@ -1,5 +1,7 @@
 import type { MaterialDefinition } from "@dynecho/shared";
 
+import { parsePositiveWorkbenchNumber } from "./parse-number";
+
 function trimTrailingZeros(value: string): string {
   return value.replace(/\.0+$/u, "").replace(/(\.\d*?)0+$/u, "$1");
 }
@@ -13,13 +15,7 @@ export function getCatalogDynamicStiffness(material: Pick<MaterialDefinition, "i
 }
 
 export function parseDynamicStiffnessOverride(value: string | null | undefined): number | undefined {
-  if (!value || value.trim().length === 0) {
-    return undefined;
-  }
-
-  const parsed = Number(value);
-
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : undefined;
+  return parsePositiveWorkbenchNumber(value);
 }
 
 export function hasDynamicStiffnessOverrideInput(value: string | null | undefined): boolean {

@@ -1,8 +1,8 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
 
 type GuidedContextKey = "building_prediction" | "element_lab" | "field_between_rooms";
-const TEST_USERNAME = process.env.DYNECHO_AUTH_USERNAME ?? "consultant";
-const TEST_PASSWORD = process.env.DYNECHO_AUTH_PASSWORD ?? "change-me";
+const TEST_USERNAME = process.env.DYNECHO_AUTH_USERNAME ?? "admin";
+const TEST_PASSWORD = process.env.DYNECHO_AUTH_PASSWORD ?? "admin";
 
 function escapeRegex(value: string) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -128,6 +128,60 @@ async function readPrimaryGuidedMetric(page: Page, label: "Primary floor read" |
   }).first();
 
   return (await card.getByText(/^-?\d+(\.\d+)? dB$/).first().textContent())?.trim();
+}
+
+type GuidedFloorSnapshot = {
+  deltaLw: string | null;
+  lnw: string | null;
+  primaryFloorRead: string | null;
+  rw: string | null;
+  warningCount: number | null;
+};
+
+async function readGuidedFloorSnapshot(page: Page): Promise<GuidedFloorSnapshot> {
+  await openGuidedWorkspacePanel(page, "Results");
+
+  const mainText = await page.locator("main").innerText();
+  const primaryFloorRead = await readPrimaryGuidedMetric(page, "Primary floor read");
+  const rwMatch = mainText.match(/Rw estimate[\s\S]*?Current read\s+([0-9]+(?:\.[0-9]+)?) dB/i);
+  const lnwMatch = mainText.match(/Ln,w[\s\S]*?Current read\s+([0-9]+(?:\.[0-9]+)?) dB/i);
+  const deltaLwMatch = mainText.match(/DeltaLw ([0-9]+(?:\.[0-9]+)?) dB/i);
+  const warningMatch = mainText.match(/(\d+) warnings/i);
+
+  return {
+    deltaLw: deltaLwMatch ? `${deltaLwMatch[1]} dB` : null,
+    lnw: lnwMatch ? `${lnwMatch[1]} dB` : null,
+    primaryFloorRead,
+    rw: rwMatch ? `${rwMatch[1]} dB` : null,
+    warningCount: warningMatch ? Number(warningMatch[1]) : null
+  };
+}
+
+function expectGuidedFloorSnapshotSane(snapshot: GuidedFloorSnapshot) {
+  const rw = Number.parseFloat(snapshot.rw ?? "");
+  const lnw = Number.parseFloat(snapshot.lnw ?? "");
+  const deltaLw = Number.parseFloat(snapshot.deltaLw ?? "");
+
+  expect(snapshot.primaryFloorRead).toBeTruthy();
+  expect(snapshot.rw).toBeTruthy();
+  expect(snapshot.lnw).toBeTruthy();
+  expect(snapshot.deltaLw).toBeTruthy();
+  expect(snapshot.warningCount).not.toBeNull();
+  expect(rw).toBeGreaterThan(20);
+  expect(rw).toBeLessThan(90);
+  expect(lnw).toBeGreaterThan(20);
+  expect(lnw).toBeLessThan(90);
+  expect(deltaLw).toBeGreaterThan(0);
+  expect(deltaLw).toBeLessThan(60);
+}
+
+async function resetGuidedWorkbench(page: Page, sampleLabel: string) {
+  const resetButton = page.getByRole("button", { name: "Reset" }).first();
+  await expect(resetButton).toBeVisible();
+  await resetButton.click();
+  await page.getByRole("button", { exact: true, name: "Reset everything" }).click();
+  await selectGuidedSurface(page, "floor");
+  await loadGuidedSample(page, sampleLabel);
 }
 
 async function ensureGuidedToolsOpen(page: Page, actionName: string) {
@@ -1196,6 +1250,61 @@ test("guided workbench keeps the same heavy-floor result when the middle layer r
   expect(editedPathValue).toBe(directPathValue);
 });
 
+test("guided workbench treats dot and comma decimal edits as the same live floor snapshot", async ({ page }) => {
+  await openFloorGuidedFlow(page);
+  await loadGuidedSample(page, "Impact Floor");
+
+  const baselineSnapshot = await readGuidedFloorSnapshot(page);
+  expectGuidedFloorSnapshotSane(baselineSnapshot);
+
+  await openGuidedWorkspacePanel(page, "Assembly");
+  const finishRow = await ensureGuidedRowExpanded(page, 1);
+  await finishRow.getByLabel("Thickness").fill("8.0");
+  await finishRow.getByLabel("Thickness").blur();
+  const dotThicknessSnapshot = await readGuidedFloorSnapshot(page);
+
+  await openGuidedWorkspacePanel(page, "Assembly");
+  const finishRowLocalized = await ensureGuidedRowExpanded(page, 1);
+  await finishRowLocalized.getByLabel("Thickness").fill("8,0");
+  await finishRowLocalized.getByLabel("Thickness").blur();
+  const commaThicknessSnapshot = await readGuidedFloorSnapshot(page);
+
+  expect(dotThicknessSnapshot).toEqual(baselineSnapshot);
+  expect(commaThicknessSnapshot).toEqual(dotThicknessSnapshot);
+
+  await resetGuidedWorkbench(page, "Impact Floor");
+  await openGuidedWorkspacePanel(page, "Assembly");
+  const screedRow = await ensureGuidedRowExpanded(page, 2);
+  await screedRow.getByLabel("Layer 2 density").fill("1800.0");
+  await screedRow.getByLabel("Layer 2 density").blur();
+  const dotDensitySnapshot = await readGuidedFloorSnapshot(page);
+  expectGuidedFloorSnapshotSane(dotDensitySnapshot);
+
+  await openGuidedWorkspacePanel(page, "Assembly");
+  const screedRowLocalized = await ensureGuidedRowExpanded(page, 2);
+  await screedRowLocalized.getByLabel("Layer 2 density").fill("1800,0");
+  await screedRowLocalized.getByLabel("Layer 2 density").blur();
+  const commaDensitySnapshot = await readGuidedFloorSnapshot(page);
+
+  expect(commaDensitySnapshot).toEqual(dotDensitySnapshot);
+
+  await resetGuidedWorkbench(page, "Impact Floor");
+  await openGuidedWorkspacePanel(page, "Assembly");
+  const resilientRow = await ensureGuidedRowExpanded(page, 3);
+  await resilientRow.getByLabel("Layer 3 dynamic stiffness").fill("18.5");
+  await resilientRow.getByLabel("Layer 3 dynamic stiffness").blur();
+  const dotDynamicSnapshot = await readGuidedFloorSnapshot(page);
+  expectGuidedFloorSnapshotSane(dotDynamicSnapshot);
+
+  await openGuidedWorkspacePanel(page, "Assembly");
+  const resilientRowLocalized = await ensureGuidedRowExpanded(page, 3);
+  await resilientRowLocalized.getByLabel("Layer 3 dynamic stiffness").fill("18,5");
+  await resilientRowLocalized.getByLabel("Layer 3 dynamic stiffness").blur();
+  const commaDynamicSnapshot = await readGuidedFloorSnapshot(page);
+
+  expect(commaDynamicSnapshot).toEqual(dotDynamicSnapshot);
+});
+
 test("guided workbench distinguishes editor rows from solver layers when identical live rows collapse", async ({ page }) => {
   await openFloorGuidedFlow(page);
   await loadGuidedSample(page, "Impact Floor");
@@ -1229,6 +1338,63 @@ test("guided workbench stays usable with a 10-layer stack", async ({ page }) => 
   await expect(page.getByText("5 solver layers", { exact: true }).first()).toBeVisible();
   await expect(page.getByText("10 live rows collapse to 5 solver layers before the read is solved.").first()).toBeVisible();
   await expect(page.getByRole("heading", { name: "Results" })).toBeVisible();
+});
+
+test("guided workbench keeps a split-and-reordered impact floor on the same live snapshot once the final stack matches", async ({
+  page
+}) => {
+  await openFloorGuidedFlow(page);
+  await loadGuidedSample(page, "Impact Floor");
+
+  const baselineSnapshot = await readGuidedFloorSnapshot(page);
+  expectGuidedFloorSnapshotSane(baselineSnapshot);
+
+  await openGuidedWorkspacePanel(page, "Assembly");
+  const resilientRow = visibleTestId(page, "editor-row-3");
+  await resilientRow.getByLabel(/Move layer 3 up/i).click();
+  const movedSnapshot = await readGuidedFloorSnapshot(page);
+  expectGuidedFloorSnapshotSane(movedSnapshot);
+
+  await openGuidedWorkspacePanel(page, "Assembly");
+  const resilientRowAfterMove = page
+    .locator('[data-testid^="editor-row-"]')
+    .filter({ has: page.getByText("Generic Resilient Underlay", { exact: true }) })
+    .first();
+  await resilientRowAfterMove.getByLabel(/Move layer \d+ down/i).click();
+  const roundTripSnapshot = await readGuidedFloorSnapshot(page);
+
+  expect(roundTripSnapshot).toEqual(baselineSnapshot);
+
+  await openGuidedWorkspacePanel(page, "Assembly");
+  for (let index = 0; index < 9; index += 1) {
+    const firstScreedRow = page
+      .locator('[data-testid^="editor-row-"]')
+      .filter({ has: page.getByText("Mineral Screed", { exact: true }) })
+      .first();
+    await firstScreedRow.getByLabel(/Duplicate layer/i).click();
+  }
+
+  const screedRows = page
+    .locator('[data-testid^="editor-row-"]')
+    .filter({ has: page.getByText("Mineral Screed", { exact: true }) });
+  await expect(screedRows).toHaveCount(10);
+
+  for (let index = 0; index < 10; index += 1) {
+    const row = screedRows.nth(index);
+    if ((await row.getByLabel("Thickness").count()) === 0) {
+      await row.getByRole("button", { exact: true, name: "Edit row" }).click();
+    }
+    await row.getByLabel("Thickness").fill("5");
+    await row.getByLabel("Thickness").blur();
+  }
+
+  await expect(page.getByText("13 rows", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("13 live / 0 parked", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("4 solver layers", { exact: true }).first()).toBeVisible();
+
+  const splitSnapshot = await readGuidedFloorSnapshot(page);
+  expectGuidedFloorSnapshotSane(splitSnapshot);
+  expect(splitSnapshot).toEqual(baselineSnapshot);
 });
 
 test("guided floor layout keeps a single desktop workspace visible and within roughly one-and-a-half screens", async ({

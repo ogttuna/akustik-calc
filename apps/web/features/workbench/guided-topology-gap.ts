@@ -6,6 +6,7 @@ import {
   IMPACT_ONLY_LOW_CONFIDENCE_TOPOLOGY_GAP_VALUE,
   isImpactOnlyLowConfidenceFloorLane
 } from "./impact-only-low-confidence-floor-lane";
+import { parsePositiveWorkbenchNumber } from "./parse-number";
 import {
   isSteelBoundSupportFormLane,
   STEEL_BOUND_SUPPORT_FORM_GAP_DETAIL,
@@ -18,7 +19,7 @@ export type GuidedTopologyGap = {
 };
 
 function hasLiveRole(rows: readonly LayerDraft[], role: FloorRole): boolean {
-  return rows.some((row) => row.floorRole === role && Number.isFinite(Number(row.thicknessMm)) && Number(row.thicknessMm) > 0);
+  return rows.some((row) => row.floorRole === role && typeof parsePositiveWorkbenchNumber(row.thicknessMm) === "number");
 }
 
 function joinTopologySteps(steps: readonly string[]): string {

@@ -1,6 +1,8 @@
 import { MATERIAL_CATALOG_SEED, materialCatalogById } from "@dynecho/catalogs";
 import type { FloorRole, MaterialCategory, MaterialDefinition } from "@dynecho/shared";
 
+import { parseWorkbenchNumber } from "./parse-number";
+
 export const CUSTOM_WORKBENCH_MATERIAL_TAG = "custom-workbench-material";
 
 export const CUSTOM_MATERIAL_CATEGORY_OPTIONS: readonly { label: string; value: MaterialCategory }[] = [
@@ -41,8 +43,8 @@ function formatThicknessValue(value: number): string {
 }
 
 function parseThicknessValue(value: string): number | null {
-  const parsed = Number(value);
-  return Number.isFinite(parsed) ? parsed : null;
+  const parsed = parseWorkbenchNumber(value);
+  return typeof parsed === "number" ? parsed : null;
 }
 
 function thicknessValuesMatch(left: string, right: string): boolean {
@@ -170,8 +172,8 @@ export function validateCustomMaterialDraft(
   if (draft.densityKgM3.trim().length === 0) {
     errors.densityKgM3 = "Density is required.";
   } else {
-    const densityKgM3 = Number(draft.densityKgM3);
-    if (!Number.isFinite(densityKgM3) || densityKgM3 < 0) {
+    const densityKgM3 = parseWorkbenchNumber(draft.densityKgM3);
+    if (typeof densityKgM3 !== "number" || !Number.isFinite(densityKgM3) || densityKgM3 < 0) {
       errors.densityKgM3 = "Density must be zero or greater in kg/m³.";
     } else if (densityKgM3 === 0 && draft.category !== "gap" && draft.category !== "support") {
       errors.densityKgM3 = "Use a density greater than zero unless this is a true gap or support layer.";
@@ -179,8 +181,8 @@ export function validateCustomMaterialDraft(
   }
 
   if (draft.dynamicStiffnessMNm3.trim().length > 0) {
-    const dynamicStiffnessMNm3 = Number(draft.dynamicStiffnessMNm3);
-    if (!Number.isFinite(dynamicStiffnessMNm3) || dynamicStiffnessMNm3 <= 0) {
+    const dynamicStiffnessMNm3 = parseWorkbenchNumber(draft.dynamicStiffnessMNm3);
+    if (typeof dynamicStiffnessMNm3 !== "number" || !Number.isFinite(dynamicStiffnessMNm3) || dynamicStiffnessMNm3 <= 0) {
       errors.dynamicStiffnessMNm3 = "Dynamic stiffness must be a positive MN/m³ value.";
     }
   }
@@ -207,9 +209,18 @@ export function buildCustomMaterialDefinition(input: {
   existingMaterials: readonly MaterialDefinition[];
 }): MaterialDefinition {
   const name = input.draft.name.trim();
-  const densityKgM3 = Number(input.draft.densityKgM3);
+  const densityKgM3 = parseWorkbenchNumber(input.draft.densityKgM3);
   const dynamicStiffnessMNm3 =
-    input.draft.dynamicStiffnessMNm3.trim().length > 0 ? Number(input.draft.dynamicStiffnessMNm3) : undefined;
+    input.draft.dynamicStiffnessMNm3.trim().length > 0 ? parseWorkbenchNumber(input.draft.dynamicStiffnessMNm3) : undefined;
+
+  if (!(typeof densityKgM3 === "number" && Number.isFinite(densityKgM3))) {
+    throw new Error("Invalid custom material density.");
+  }
+
+  if (input.draft.dynamicStiffnessMNm3.trim().length > 0 && !(typeof dynamicStiffnessMNm3 === "number" && Number.isFinite(dynamicStiffnessMNm3))) {
+    throw new Error("Invalid custom material dynamic stiffness.");
+  }
+
   const tags = Array.from(
     new Set([
       CUSTOM_WORKBENCH_MATERIAL_TAG,

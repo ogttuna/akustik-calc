@@ -2,6 +2,7 @@ import { MATERIAL_CATALOG_SEED } from "@dynecho/catalogs";
 import type { AirborneContext, FloorRole, ImpactFieldContext, LayerInput, MaterialDefinition, RequestedOutputId } from "@dynecho/shared";
 
 import type { StudyMode } from "./preset-definitions";
+import { parseWorkbenchNumber } from "./parse-number";
 import { getWorkbenchMaterialById } from "./workbench-materials";
 import type { LayerDraft } from "./workbench-store";
 
@@ -125,16 +126,7 @@ function formatBandValue(value: number): string {
 }
 
 function parseFiniteNumber(value: number | string | null | undefined): number | undefined {
-  if (typeof value === "number") {
-    return Number.isFinite(value) ? value : undefined;
-  }
-
-  if (typeof value !== "string" || value.trim().length === 0) {
-    return undefined;
-  }
-
-  const parsed = Number(value);
-  return Number.isFinite(parsed) ? parsed : undefined;
+  return parseWorkbenchNumber(value);
 }
 
 function formatFloorRoleLabel(floorRole: FloorRole): string {

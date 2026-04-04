@@ -20,6 +20,16 @@ function buildConcreteRow(input: {
     sourceLabel: "Euracoustics FA2023 concrete ceiling study",
     sourceType: "open_measured_dataset",
     trustTier: "peer_reviewed_open_access",
+    estimateMatch: !hasCeiling
+      ? {
+          structuralSupportType: "reinforced_concrete",
+          impactSystemType: "bare_floor",
+          baseSlab: {
+            materialClass: "heavy_concrete",
+            thicknessMm: 140
+          }
+        }
+      : undefined,
     match: {
       absentRoles: hasCeiling ? ["floating_screed", "resilient_layer", "upper_fill", "floor_covering"] : [
         "ceiling_board",

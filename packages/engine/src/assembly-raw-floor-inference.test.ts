@@ -102,6 +102,42 @@ const CASES: readonly RawAssemblyInferenceCase[] = [
     ]
   },
   {
+    id: "preset-only Dataholz integrated dry timber row",
+    raw: [
+      { materialId: "gypsum_board", thicknessMm: 15 },
+      { materialId: "rockwool", thicknessMm: 200 },
+      { materialId: "acoustic_hanger_ceiling", thicknessMm: 60 },
+      { materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 65 },
+      { materialId: "timber_frame_floor", thicknessMm: 200 }
+    ],
+    tagged: [
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 15 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 200 },
+      { floorRole: "ceiling_cavity", materialId: "acoustic_hanger_ceiling", thicknessMm: 60 },
+      { floorRole: "floor_covering", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 65 },
+      { floorRole: "base_structure", materialId: "timber_frame_floor", thicknessMm: 200 }
+    ]
+  },
+  {
+    id: "preset-only Dataholz integrated dry CLT row",
+    raw: [
+      { materialId: "gypsum_board", thicknessMm: 12.5 },
+      { materialId: "rockwool", thicknessMm: 50 },
+      { materialId: "acoustic_hanger_ceiling", thicknessMm: 70 },
+      { materialId: "non_bonded_chippings", thicknessMm: 60 },
+      { materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 65 },
+      { materialId: "clt_panel", thicknessMm: 160 }
+    ],
+    tagged: [
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 12.5 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 50 },
+      { floorRole: "ceiling_cavity", materialId: "acoustic_hanger_ceiling", thicknessMm: 70 },
+      { floorRole: "upper_fill", materialId: "non_bonded_chippings", thicknessMm: 60 },
+      { floorRole: "floor_covering", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 65 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 160 }
+    ]
+  },
+  {
     id: "promoted heavy concrete floating floor family estimate",
     raw: [
       { materialId: "concrete", thicknessMm: 150 },

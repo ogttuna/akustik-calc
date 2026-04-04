@@ -28,6 +28,7 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import {
   DEFAULT_PRESET_ID,
   getPresetById,
+  WORKBENCH_PRESETS,
   type PresetId,
   type StudyMode
 } from "./preset-definitions";
@@ -453,9 +454,32 @@ function replaceSingleBaseStructureRow(args: {
 const INITIAL_PRESET = getPresetById(DEFAULT_PRESET_ID);
 const INITIAL_CRITERIA_PACK = getCriteriaPackById(DEFAULT_CRITERIA_PACK_ID);
 
-function makeDefaultState() {
+function resolveDefaultPreset(input?: {
+  presetId?: PresetId;
+  studyMode?: StudyMode;
+}) {
+  if (input?.presetId) {
+    const preset = getPresetById(input.presetId);
+    if (!input.studyMode || preset.studyMode === input.studyMode) {
+      return preset;
+    }
+  }
+
+  if (input?.studyMode) {
+    return WORKBENCH_PRESETS.find((preset) => preset.studyMode === input.studyMode) ?? INITIAL_PRESET;
+  }
+
+  return INITIAL_PRESET;
+}
+
+function makeDefaultState(input?: {
+  presetId?: PresetId;
+  studyMode?: StudyMode;
+}) {
+  const preset = resolveDefaultPreset(input);
+
   return {
-    activePresetId: INITIAL_PRESET.id,
+    activePresetId: preset.id,
     calculatorId: "dynamic" as const,
     airborneAirtightness: "good" as const,
     airborneConnectionType: "auto" as const,
@@ -510,10 +534,10 @@ function makeDefaultState() {
     proposalValidityNote: DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_VALIDITY_NOTE,
     reportProfile: "consultant" as const,
     requestedOutputs: [...INITIAL_CRITERIA_PACK.requestedOutputs],
-    rows: buildPresetRows(INITIAL_PRESET.id),
+    rows: buildPresetRows(preset.id),
     savedScenarios: [] as ScenarioSnapshot[],
     studyContext: "concept" as const,
-    studyMode: INITIAL_PRESET.studyMode,
+    studyMode: preset.studyMode,
     targetLnwDb: INITIAL_CRITERIA_PACK.targetLnwDb,
     targetRwDb: INITIAL_CRITERIA_PACK.targetRwDb
   };
@@ -721,7 +745,10 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
         })),
       reset: () =>
         set((state) => ({
-          ...makeDefaultState(),
+          ...makeDefaultState({
+            presetId: state.activePresetId,
+            studyMode: state.studyMode
+          }),
           customMaterials: state.customMaterials
         })),
       saveCurrentScenario: () =>

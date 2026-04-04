@@ -292,7 +292,7 @@ export const WORKBENCH_PRESETS: readonly PresetDefinition[] = [
     id: "tuas_open_box_exact",
     label: "Measured Open Box",
     note: "open-box timber + EPS + resilient stud ceiling",
-    summary: "A measured open-box timber preset mapped to TUAS R2a so lower-treatment driven timber slabs are available beside CLT and concrete measured rows.",
+    summary: "A measured open-box timber preset mapped to TUAS R2b so lower-treatment driven timber slabs are available beside CLT and concrete measured rows.",
     studyMode: "floor",
     rows: [
       { materialId: "gypsum_board", thicknessMm: "13", floorRole: "ceiling_board" },

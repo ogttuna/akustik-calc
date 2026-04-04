@@ -9,6 +9,12 @@ import {
   LayerInputSchema,
   type AssemblyCalculation,
   type AirborneContext,
+  type FloorSystemAirborneRatings,
+  type FloorSystemBoundEstimateResult,
+  type FloorSystemBoundMatchResult,
+  type FloorSystemEstimateResult,
+  type FloorSystemMatchResult,
+  type ExactFloorSystem,
   type ExactImpactSource,
   type ImpactFieldContext,
   type ImpactPredictorInput,
@@ -40,7 +46,8 @@ import {
 import {
   buildResolvedImpactArtifacts,
   finalizeResolvedImpactLane,
-  resolveLayerBasedImpactLane
+  resolveLayerBasedImpactLane,
+  shouldHideLowConfidenceProxyAirborne
 } from "./impact-lane";
 import { computeLayerSurfaceMassKgM2 } from "./layer-surface-mass";
 import { getDefaultMaterialCatalog, resolveMaterial } from "./material-catalog";
@@ -65,6 +72,7 @@ import {
   SECURITY_FILLED_SINGLE_BOARD_FIELD_TARGET_RW_PRIME,
   type SecurityFilledSingleBoardFamily
 } from "./security-filled-single-board-corridor";
+import { inferStructuralSupportTypeFromMaterial } from "./structural-material-classification";
 import {
   detectSymmetricEnhancedFilledSingleBoardFamily,
   getSymmetricEnhancedFilledSingleBoardProfile,
@@ -97,10 +105,62 @@ function resolveLayers(
   });
 }
 
+function inferResolvedFloorStructuralSupportType(layers: readonly ResolvedLayer[]): string | null {
+  const baseLayer = layers.findLast((layer) => layer.floorRole === "base_structure");
+  return baseLayer ? inferStructuralSupportTypeFromMaterial(baseLayer.material) ?? null : null;
+}
+
+function inferExactFloorSystemStructuralSupportType(
+  system: ExactFloorSystem | null | undefined,
+  catalog: readonly MaterialDefinition[]
+): string | null {
+  const baseMaterialId = system?.match.baseStructure?.materialIds?.[0];
+  if (!baseMaterialId) {
+    return null;
+  }
+
+  return inferStructuralSupportTypeFromMaterial(resolveMaterial(baseMaterialId, catalog)) ?? null;
+}
+
+function buildClosestFloorSystemRecommendationWarning(input: {
+  catalog: readonly MaterialDefinition[];
+  recommendations: readonly { system: ExactFloorSystem }[];
+  resolvedLayers: readonly ResolvedLayer[];
+}): string | null {
+  const closestSystem = input.recommendations[0]?.system;
+  if (!closestSystem) {
+    return null;
+  }
+
+  const currentSupportType = inferResolvedFloorStructuralSupportType(input.resolvedLayers);
+  const candidateSupportType = inferExactFloorSystemStructuralSupportType(closestSystem, input.catalog);
+
+  if (!currentSupportType || !candidateSupportType || currentSupportType !== candidateSupportType) {
+    return "No curated exact floor-system landed. Nearby scored rows existed, but DynEcho withheld the closest candidate label because it drifted outside the defended same-family route.";
+  }
+
+  return `No curated exact floor-system landed. Closest family candidate is ${closestSystem.label}.`;
+}
+
 function pickReferenceFloorRatingLayers(layers: readonly ResolvedLayer[]): readonly ResolvedLayer[] {
   const baseStructureLayers = layers.filter((layer) => layer.floorRole === "base_structure");
 
   return baseStructureLayers.length > 0 ? baseStructureLayers : layers;
+}
+
+function pickFloorCarrier(input: {
+  boundFloorSystemEstimate?: FloorSystemBoundEstimateResult | null;
+  boundFloorSystemMatch?: FloorSystemBoundMatchResult | null;
+  floorSystemEstimate?: FloorSystemEstimateResult | null;
+  floorSystemMatch?: FloorSystemMatchResult | null;
+}): FloorSystemAirborneRatings | null {
+  return (
+    input.floorSystemMatch?.system.airborneRatings ??
+    input.floorSystemEstimate?.airborneRatings ??
+    input.boundFloorSystemMatch?.system.airborneRatings ??
+    input.boundFloorSystemEstimate?.airborneRatings ??
+    null
+  );
 }
 
 function isBoardLikeSurfaceLayer(layer: ResolvedLayer): boolean {
@@ -890,7 +950,42 @@ export function calculateAssembly(
     preferredSupplementaryImpact: directNarrowImpact,
     resolvedLayers: impactResolvedLayers
   });
+  const floorCarrier = pickFloorCarrier({
+    boundFloorSystemEstimate,
+    boundFloorSystemMatch,
+    floorSystemEstimate,
+    floorSystemMatch
+  });
+  const hideLowConfidenceProxyAirborne = shouldHideLowConfidenceProxyAirborne(floorSystemEstimate);
+  const floorSystemRatings = hideLowConfidenceProxyAirborne
+    ? null
+    : buildFloorSystemRatings({
+        boundFloorSystemEstimate,
+        boundFloorSystemMatch,
+        floorSystemEstimate,
+        floorSystemMatch,
+        impact,
+        lowerBoundImpact,
+        screeningBasis: explicitPredictorInput ? undefined : "screening_mass_law_curve_seed_v3",
+        screeningLayers: explicitPredictorInput
+          ? explicitDeltaImpact
+            ? pickReferenceFloorRatingLayers(impactResolvedLayers)
+            : impactResolvedLayers
+          : undefined,
+        screeningRwDb: explicitPredictorInput ? null : ratings.iso717.Rw,
+        screeningRwPlusCtrDb: explicitPredictorInput ? null : round1(ratings.iso717.Rw + ratings.iso717.Ctr)
+      });
+  const hasFloorSupportCarrierSignal = Boolean(
+    floorSystemMatch ||
+      floorSystemEstimate ||
+      boundFloorSystemMatch ||
+      boundFloorSystemEstimate ||
+      impactCatalogMatch ||
+      explicitDeltaImpact ||
+      (!exactImpactSource && (impact || lowerBoundImpact))
+  );
   const targetOutputSupport = analyzeTargetOutputSupport({
+    floorCarrier: hasFloorSupportCarrierSignal ? floorSystemRatings ?? floorCarrier : null,
     impact,
     lowerBoundImpact,
     metrics: {
@@ -910,7 +1005,6 @@ export function calculateAssembly(
   });
   const {
     dynamicImpactTrace,
-    hideLowConfidenceProxyAirborne,
     impactPredictorStatus,
     impactSupport
   } = buildResolvedImpactArtifacts({
@@ -928,24 +1022,6 @@ export function calculateAssembly(
     resolvedLayers: impactResolvedLayers,
     targetOutputSupport
   });
-  const floorSystemRatings = hideLowConfidenceProxyAirborne
-    ? null
-    : buildFloorSystemRatings({
-        boundFloorSystemEstimate,
-        boundFloorSystemMatch,
-        floorSystemEstimate,
-        floorSystemMatch,
-        impact,
-        lowerBoundImpact,
-        screeningBasis: explicitPredictorInput ? undefined : "screening_mass_law_curve_seed_v3",
-        screeningLayers: explicitPredictorInput
-          ? explicitDeltaImpact
-            ? pickReferenceFloorRatingLayers(impactResolvedLayers)
-            : impactResolvedLayers
-          : undefined,
-        screeningRwDb: explicitPredictorInput ? null : ratings.iso717.Rw,
-        screeningRwPlusCtrDb: explicitPredictorInput ? null : round1(ratings.iso717.Rw + ratings.iso717.Ctr)
-      });
   const warnings = buildEstimateWarnings(resolvedLayers, selectedCalculatorLabel);
   warnings.push(...(dynamicAirborneResult?.warnings ?? []));
   warnings.push(...airborneOverlayResult.warnings);
@@ -1000,9 +1076,15 @@ export function calculateAssembly(
       `Published bound-only family estimate active: ${boundFloorSystemEstimate.structuralFamily} ${boundFloorSystemEstimate.kind.replaceAll("_", " ")}. DynEcho is carrying official upper-bound impact support without fabricating an exact Ln,w value.`
     );
   } else if (floorSystemRecommendations.length > 0) {
-    warnings.push(
-      `No curated exact floor-system landed. Closest family candidate is ${floorSystemRecommendations[0]?.system.label}.`
-    );
+    const recommendationWarning = buildClosestFloorSystemRecommendationWarning({
+      catalog,
+      recommendations: floorSystemRecommendations,
+      resolvedLayers: impactResolvedLayers
+    });
+
+    if (recommendationWarning) {
+      warnings.push(recommendationWarning);
+    }
   }
 
   if (impactCatalogMatch) {

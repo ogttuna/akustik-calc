@@ -218,6 +218,52 @@ describe("workbench store", () => {
     vi.unstubAllGlobals();
   });
 
+  it("resets back onto the active preset lane instead of jumping across study modes", async () => {
+    const { useWorkbenchStore } = await import("./workbench-store");
+
+    useWorkbenchStore.getState().loadPreset("heavy_concrete_impact_floor");
+
+    const floorScreedRow = useWorkbenchStore
+      .getState()
+      .rows.find((row) => row.materialId === "screed" && row.floorRole === "floating_screed");
+
+    expect(floorScreedRow).toBeTruthy();
+
+    useWorkbenchStore.getState().updateThickness(floorScreedRow!.id, "125");
+    useWorkbenchStore.getState().reset();
+
+    let state = useWorkbenchStore.getState();
+
+    expect(state.studyMode).toBe("floor");
+    expect(state.activePresetId).toBe("heavy_concrete_impact_floor");
+    expect(state.rows.map((row) => `${row.materialId}:${row.thicknessMm}`)).toEqual([
+      "ceramic_tile:8",
+      "screed:50",
+      "generic_resilient_underlay:8",
+      "concrete:150"
+    ]);
+
+    useWorkbenchStore.getState().loadPreset("concrete_wall");
+
+    const wallWoolRow = useWorkbenchStore.getState().rows.find((row) => row.materialId === "rockwool");
+
+    expect(wallWoolRow).toBeTruthy();
+
+    useWorkbenchStore.getState().updateThickness(wallWoolRow!.id, "90");
+    useWorkbenchStore.getState().reset();
+
+    state = useWorkbenchStore.getState();
+
+    expect(state.studyMode).toBe("wall");
+    expect(state.activePresetId).toBe("concrete_wall");
+    expect(state.rows.map((row) => `${row.materialId}:${row.thicknessMm}`)).toEqual([
+      "gypsum_board:12.5",
+      "rockwool:50",
+      "air_gap:50",
+      "concrete:100"
+    ]);
+  });
+
   it("keeps representative wall and floor presets stable when the same final thickness is reached through different edit paths", async () => {
     const { evaluateScenario } = await import("./scenario-analysis");
     const { useWorkbenchStore } = await import("./workbench-store");

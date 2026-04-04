@@ -13,7 +13,12 @@ import {
   hasEffectiveDensityOverride,
   parseDensityOverride
 } from "./material-density";
+import { parsePositiveWorkbenchNumber } from "./parse-number";
 import type { LayerDraft } from "./workbench-store";
+
+type SolverLayer = LayerInput & {
+  sourceRowIds: string[];
+};
 
 const SOLVER_CONTINUUM_MATERIAL_IDS = new Set<string>([
   "ceramic_tile",
@@ -48,6 +53,15 @@ const SOLVER_CONTINUUM_MATERIAL_IDS = new Set<string>([
   "getzner_afm_35",
   "concrete"
 ]);
+const SIMPLE_TOPSIDE_FLOOR_ROLE_ORDER = new Map<
+  NonNullable<LayerInput["floorRole"]>,
+  number
+>([
+  ["floor_covering", 0],
+  ["floating_screed", 1],
+  ["resilient_layer", 2],
+  ["base_structure", 3]
+]);
 
 function getContinuumMaterialId(materialId: string): string {
   return materialId.split("__")[0] ?? materialId;
@@ -64,18 +78,91 @@ function canCollapseAtSolverBoundary(previousLayer: LayerInput | undefined, next
   );
 }
 
+function coalesceSolverBoundaryLayers(layers: readonly SolverLayer[]): SolverLayer[] {
+  const collapsed: SolverLayer[] = [];
+
+  for (const layer of layers) {
+    const previousLayer = collapsed.at(-1);
+
+    if (previousLayer && canCollapseAtSolverBoundary(previousLayer, layer)) {
+      previousLayer.thicknessMm += layer.thicknessMm;
+      previousLayer.sourceRowIds.push(...layer.sourceRowIds);
+      continue;
+    }
+
+    collapsed.push({
+      ...layer,
+      sourceRowIds: [...layer.sourceRowIds]
+    });
+  }
+
+  return collapsed;
+}
+
+function canonicalizeSimpleTopsideFloorPackage(layers: readonly SolverLayer[]): SolverLayer[] {
+  if (layers.length <= 1) {
+    return layers.map((layer) => ({
+      ...layer,
+      sourceRowIds: [...layer.sourceRowIds]
+    }));
+  }
+
+  const roleCounts = new Map<NonNullable<LayerInput["floorRole"]>, number>();
+
+  for (const layer of layers) {
+    const floorRole = layer.floorRole;
+    if (!floorRole) {
+      return layers.map((entry) => ({
+        ...entry,
+        sourceRowIds: [...entry.sourceRowIds]
+      }));
+    }
+
+    const priority = SIMPLE_TOPSIDE_FLOOR_ROLE_ORDER.get(floorRole);
+    if (typeof priority !== "number") {
+      return layers.map((entry) => ({
+        ...entry,
+        sourceRowIds: [...entry.sourceRowIds]
+      }));
+    }
+
+    roleCounts.set(floorRole, (roleCounts.get(floorRole) ?? 0) + 1);
+  }
+
+  if ((roleCounts.get("resilient_layer") ?? 0) < 1) {
+    return layers.map((entry) => ({
+      ...entry,
+      sourceRowIds: [...entry.sourceRowIds]
+    }));
+  }
+
+  if ((roleCounts.get("base_structure") ?? 0) !== 1) {
+    return layers.map((entry) => ({
+      ...entry,
+      sourceRowIds: [...entry.sourceRowIds]
+    }));
+  }
+
+  return [...layers].sort((left, right) => {
+    const leftPriority = SIMPLE_TOPSIDE_FLOOR_ROLE_ORDER.get(left.floorRole!);
+    const rightPriority = SIMPLE_TOPSIDE_FLOOR_ROLE_ORDER.get(right.floorRole!);
+
+    return (leftPriority ?? Number.MAX_SAFE_INTEGER) - (rightPriority ?? Number.MAX_SAFE_INTEGER);
+  });
+}
+
 export function normalizeRows(
   rows: readonly LayerDraft[],
   catalog: readonly MaterialDefinition[] = MATERIAL_CATALOG_SEED
 ) {
   const warnings: string[] = [];
-  const layers: LayerInput[] = [];
+  const parsedLayers: SolverLayer[] = [];
   const runtimeMaterials = new Map<string, MaterialDefinition>();
   const materialById = new Map(catalog.map((material) => [material.id, material]));
 
   rows.forEach((row, index) => {
-    const parsedThickness = Number(row.thicknessMm);
-    if (!Number.isFinite(parsedThickness) || parsedThickness <= 0) {
+    const parsedThickness = parsePositiveWorkbenchNumber(row.thicknessMm);
+    if (typeof parsedThickness !== "number" || !Number.isFinite(parsedThickness) || parsedThickness <= 0) {
       warnings.push(`Layer ${index + 1} is missing a valid thickness.`);
       return;
     }
@@ -126,20 +213,23 @@ export function normalizeRows(
       }
     }
 
-    const nextLayer: LayerInput = {
+    const nextLayer: SolverLayer = {
       floorRole: row.floorRole,
       materialId: resolvedMaterialId,
+      sourceRowIds: [row.id],
       thicknessMm: parsedThickness
     };
-    const previousLayer = layers.at(-1);
 
-    if (previousLayer && canCollapseAtSolverBoundary(previousLayer, nextLayer)) {
-      previousLayer.thicknessMm += nextLayer.thicknessMm;
-      return;
-    }
-
-    layers.push(nextLayer);
+    parsedLayers.push(nextLayer);
   });
 
-  return { layers, runtimeMaterials: Array.from(runtimeMaterials.values()), warnings };
+  const solverLayers = coalesceSolverBoundaryLayers(canonicalizeSimpleTopsideFloorPackage(parsedLayers));
+  const layers = solverLayers.map(({ sourceRowIds: _sourceRowIds, ...layer }) => layer);
+
+  return {
+    layers,
+    runtimeMaterials: Array.from(runtimeMaterials.values()),
+    solverLayers,
+    warnings
+  };
 }

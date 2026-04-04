@@ -1,5 +1,7 @@
 import type { MaterialDefinition } from "@dynecho/shared";
 
+import { parseWorkbenchNumber } from "./parse-number";
+
 function trimTrailingZeros(value: string): string {
   return value.replace(/\.0+$/u, "").replace(/(\.\d*?)0+$/u, "$1");
 }
@@ -18,13 +20,9 @@ export function parseDensityOverride(input: {
   material: Pick<MaterialDefinition, "category"> | null | undefined;
   value: string | null | undefined;
 }): number | undefined {
-  if (!input.value || input.value.trim().length === 0) {
-    return undefined;
-  }
+  const parsed = parseWorkbenchNumber(input.value);
 
-  const parsed = Number(input.value);
-
-  if (!Number.isFinite(parsed) || parsed < 0) {
+  if (typeof parsed !== "number" || !Number.isFinite(parsed) || parsed < 0) {
     return undefined;
   }
 

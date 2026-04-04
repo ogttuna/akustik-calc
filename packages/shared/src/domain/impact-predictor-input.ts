@@ -39,7 +39,9 @@ export const ImpactPredictorLowerTreatmentTypeSchema = z.enum([
 
 export const ImpactPredictorLowerTreatmentSupportClassSchema = z.enum([
   "direct_to_joists",
-  "furred_channels"
+  "furred_channels",
+  "tuas_open_box_family_a",
+  "tuas_open_box_family_b"
 ]);
 
 const ImpactPredictorSectionSchema = z

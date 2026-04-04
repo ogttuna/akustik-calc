@@ -25,12 +25,32 @@ type TableSafeFixedOutputPublishedFamilyRule = {
 
 type OpenBoxPublishedFamilyEstimateCaseKey = "basic" | "dry";
 
+const TUAS_CLT_BARE_X2_RW = 38;
+const TUAS_CLT_BARE_X2_RW_CTR = 34.7;
+const TUAS_CLT_BARE_X2_LNW = 70;
+const TUAS_CLT_BARE_C2_RW = 42;
+const TUAS_CLT_BARE_C2_RW_CTR = 38.748168054106159;
+const TUAS_CLT_BARE_C2_LNW = 65;
+const TUAS_CLT_BARE_REFERENCE_MIN_THICKNESS_MM = 140;
+const TUAS_CLT_BARE_REFERENCE_MAX_THICKNESS_MM = 260;
+const TUAS_CLT_BARE_RAW_SLAB_RW_PENALTY_DB = 3;
+const TUAS_CLT_BARE_RAW_SLAB_LNW_PENALTY_DB = 3;
+
 function thicknessNear(value: number | undefined, target: number, tolerance = 3): boolean {
   return typeof value === "number" && Math.abs(value - target) <= tolerance;
 }
 
 function calculateCandidateScore(value: number, target: number, scale: number): number {
   return Math.abs(value - target) / scale;
+}
+
+function interpolateLinear(value: number, startValue: number, endValue: number, startTarget: number, endTarget: number): number {
+  if (endTarget === startTarget) {
+    return startValue;
+  }
+
+  const factor = clamp((value - startTarget) / (endTarget - startTarget), 0, 1);
+  return startValue + ((endValue - startValue) * factor);
 }
 
 function hasUpperPackageContent(input: ImpactPredictorInput): boolean {
@@ -43,6 +63,19 @@ function hasUpperPackageContent(input: ImpactPredictorInput): boolean {
       input.floatingScreed?.materialClass ||
       typeof input.floatingScreed?.thicknessMm === "number"
   );
+}
+
+function hasBareCltRawSlabOnly(input: ImpactPredictorInput): boolean {
+  return !input.floorCovering?.materialClass &&
+    typeof input.floorCovering?.thicknessMm !== "number" &&
+    !input.resilientLayer?.productId &&
+    typeof input.resilientLayer?.dynamicStiffnessMNm3 !== "number" &&
+    typeof input.resilientLayer?.thicknessMm !== "number" &&
+    !input.upperFill?.materialClass &&
+    typeof input.upperFill?.thicknessMm !== "number" &&
+    !input.floatingScreed?.materialClass &&
+    typeof input.floatingScreed?.thicknessMm !== "number" &&
+    !input.lowerTreatment?.type;
 }
 
 function deriveTableSafeFixedOutputPublishedFamilyEstimate(
@@ -140,6 +173,86 @@ const CLT_WET_PUBLISHED_RULE: TableSafeFixedOutputPublishedFamilyRule = {
   }
 };
 
+function deriveDataholzCltWetSuspendedPublishedEstimate(
+  input: ImpactPredictorInput
+): FloorSystemEstimateResult | null {
+  if (input.structuralSupportType !== "mass_timber_clt") {
+    return null;
+  }
+
+  if (
+    input.impactSystemType !== "dry_floating_floor" &&
+    input.impactSystemType !== "combined_upper_lower_system"
+  ) {
+    return null;
+  }
+
+  if (input.lowerTreatment?.type !== "suspended_ceiling_elastic_hanger") {
+    return null;
+  }
+
+  if (
+    input.lowerTreatment.boardLayerCount !== 2 ||
+    !thicknessNear(input.lowerTreatment.boardThicknessMm, 13, 3) ||
+    !thicknessNear(input.lowerTreatment.cavityDepthMm, 45, 30) ||
+    !thicknessNear(input.lowerTreatment.cavityFillThicknessMm, 80, 30)
+  ) {
+    return null;
+  }
+
+  if (
+    !thicknessNear(input.baseSlab?.thicknessMm, 140, 12) ||
+    normalizePredictorToken(input.floatingScreed?.materialClass) !== "generic_screed" ||
+    !thicknessNear(input.floatingScreed?.thicknessMm, 45, 20) ||
+    (
+      normalizePredictorToken(input.floorCovering?.materialClass) !== "ceramic_tile" &&
+      normalizePredictorToken(input.floorCovering?.materialClass) !== "vinyl_flooring"
+    )
+  ) {
+    return null;
+  }
+
+  if (
+    input.upperFill?.materialClass ||
+    typeof input.upperFill?.thicknessMm === "number" ||
+    input.resilientLayer?.productId ||
+    typeof input.resilientLayer?.dynamicStiffnessMNm3 === "number" ||
+    !thicknessNear(input.resilientLayer?.thicknessMm, 8, 4)
+  ) {
+    return null;
+  }
+
+  const candidateScores = [
+    2.6 +
+      calculateCandidateScore(input.lowerTreatment.cavityDepthMm ?? 45, 70, 45) +
+      calculateCandidateScore(input.lowerTreatment.cavityFillThicknessMm ?? 80, 60, 40) +
+      calculateCandidateScore(input.floatingScreed?.thicknessMm ?? 45, 60, 25),
+    3.0 +
+      calculateCandidateScore(input.lowerTreatment.cavityDepthMm ?? 45, 70, 45) +
+      calculateCandidateScore(input.lowerTreatment.cavityFillThicknessMm ?? 80, 60, 40) +
+      calculateCandidateScore(input.floatingScreed?.thicknessMm ?? 45, 60, 25)
+  ] as const;
+
+  return buildPredictorFamilyEstimateCase({
+    airborneRatings: {
+      Rw: 61.5,
+      RwCtr: -7,
+      RwCtrSemantic: "ctr_term"
+    },
+    candidateIds: [
+      "dataholz_gdmnxa02a_00_clt_lab_2026",
+      "dataholz_gdmnxa02a_02_clt_lab_2026"
+    ],
+    candidateScores,
+    impactRatings: {
+      LnW: 49.5
+    },
+    kind: "family_general",
+    noteLabel: "Dataholz wet CLT suspended-family estimate",
+    structuralFamily: "mass-timber CLT"
+  });
+}
+
 const UBIQ_OPEN_WEB_SUSPENDED_VINYL_RULE: TableSafeFixedOutputPublishedFamilyRule = {
   id: "ubiq_open_web_suspended_vinyl",
   matches: (input) =>
@@ -220,16 +333,16 @@ const OPEN_BOX_PUBLISHED_ESTIMATE_CASES: Record<
 > = {
   basic: {
     airborneRatings: {
-      Rw: 49,
-      RwCtr: 37.465233062145899
+      Rw: 62,
+      RwCtr: 54.408826940816517
     },
-    candidateIds: ["tuas_r2a_open_box_timber_measured_2026"],
+    candidateIds: ["tuas_r2b_open_box_timber_measured_2026"],
     candidateScores: [0.4],
     impactRatings: {
-      CI: 2,
-      CI50_2500: 2,
-      LnW: 72,
-      LnWPlusCI: 74
+      CI: 0,
+      CI50_2500: 1,
+      LnW: 55,
+      LnWPlusCI: 55
     },
     kind: "family_archetype",
     noteLabel: "TUAS open-box archetype estimate",
@@ -611,6 +724,97 @@ function deriveOpenBoxPublishedFamilyEstimate(
   return buildPredictorFamilyEstimateCase(OPEN_BOX_PUBLISHED_ESTIMATE_CASES[estimateCaseKey]);
 }
 
+function deriveCltBarePublishedFamilyEstimate(
+  input: ImpactPredictorInput
+): FloorSystemEstimateResult | null {
+  if (
+    input.structuralSupportType !== "mass_timber_clt" ||
+    input.impactSystemType !== "bare_floor" ||
+    input.lowerTreatment?.type ||
+    input.upperFill?.materialClass ||
+    typeof input.upperFill?.thicknessMm === "number" ||
+    input.floatingScreed?.materialClass ||
+    typeof input.floatingScreed?.thicknessMm === "number"
+  ) {
+    return null;
+  }
+
+  const floorCoveringMaterialClass = normalizePredictorToken(input.floorCovering?.materialClass);
+  const resilientLayerThicknessMm = input.resilientLayer?.thicknessMm;
+
+  if (
+    floorCoveringMaterialClass &&
+    floorCoveringMaterialClass !== "laminate_flooring"
+  ) {
+    return null;
+  }
+
+  if (
+    input.resilientLayer?.productId ||
+    typeof input.resilientLayer?.dynamicStiffnessMNm3 === "number" ||
+    (
+      typeof resilientLayerThicknessMm === "number" &&
+      !thicknessNear(resilientLayerThicknessMm, 3, 2)
+    )
+  ) {
+    return null;
+  }
+
+  const baseThicknessMm = input.baseSlab?.thicknessMm;
+  if (!(typeof baseThicknessMm === "number" && baseThicknessMm >= 120 && baseThicknessMm <= 300)) {
+    return null;
+  }
+
+  const rawSlabOnly = hasBareCltRawSlabOnly(input);
+  const rawRw = interpolateLinear(
+    baseThicknessMm,
+    TUAS_CLT_BARE_X2_RW,
+    TUAS_CLT_BARE_C2_RW,
+    TUAS_CLT_BARE_REFERENCE_MIN_THICKNESS_MM,
+    TUAS_CLT_BARE_REFERENCE_MAX_THICKNESS_MM
+  );
+  const rawRwCtr = interpolateLinear(
+    baseThicknessMm,
+    TUAS_CLT_BARE_X2_RW_CTR,
+    TUAS_CLT_BARE_C2_RW_CTR,
+    TUAS_CLT_BARE_REFERENCE_MIN_THICKNESS_MM,
+    TUAS_CLT_BARE_REFERENCE_MAX_THICKNESS_MM
+  );
+  const rawLnW = interpolateLinear(
+    baseThicknessMm,
+    TUAS_CLT_BARE_X2_LNW,
+    TUAS_CLT_BARE_C2_LNW,
+    TUAS_CLT_BARE_REFERENCE_MIN_THICKNESS_MM,
+    TUAS_CLT_BARE_REFERENCE_MAX_THICKNESS_MM
+  );
+  const rwPenaltyDb = rawSlabOnly ? TUAS_CLT_BARE_RAW_SLAB_RW_PENALTY_DB : 0;
+  const lnWPenaltyDb = rawSlabOnly ? TUAS_CLT_BARE_RAW_SLAB_LNW_PENALTY_DB : 0;
+
+  return buildPredictorFamilyEstimateCase({
+    airborneRatings: {
+      Rw: Number((rawRw - rwPenaltyDb).toFixed(1)),
+      RwCtr: Number((rawRwCtr - rwPenaltyDb).toFixed(1))
+    },
+    basisOverride: "predictor_mass_timber_clt_bare_interpolation_estimate",
+    candidateIds: ["tuas_x2_clt140_measured_2026", "tuas_c2_clt260_measured_2026"],
+    candidateScores: [
+      Number((0.5 + calculateCandidateScore(baseThicknessMm, 140, 120) + (rawSlabOnly ? 0.6 : 0)).toFixed(2)),
+      Number((0.5 + calculateCandidateScore(baseThicknessMm, 260, 120) + (rawSlabOnly ? 0.6 : 0)).toFixed(2))
+    ],
+    impactRatings: {
+      CI: 0,
+      CI50_2500: 0,
+      LnW: Number((rawLnW + lnWPenaltyDb).toFixed(1)),
+      LnWPlusCI: Number((rawLnW + lnWPenaltyDb).toFixed(1))
+    },
+    kind: "family_general",
+    noteLabel: rawSlabOnly
+      ? "Measured CLT bare interpolation with conservative raw-slab penalty"
+      : "Measured CLT bare-floor interpolation estimate",
+    structuralFamily: "mass-timber CLT"
+  });
+}
+
 function deriveCltDryPublishedFamilyEstimate(
   input: ImpactPredictorInput
 ): FloorSystemEstimateResult | null {
@@ -987,6 +1191,12 @@ const PREDICTOR_PUBLISHED_FAMILY_RULES_RAW = [
     derive: deriveOpenBoxPublishedFamilyEstimate
   },
   {
+    id: "clt_bare",
+    implementationKind: "computed_metrics",
+    priority: 75,
+    derive: deriveCltBarePublishedFamilyEstimate
+  },
+  {
     id: "clt_dry",
     implementationKind: "fixed_output",
     priority: 80,
@@ -1021,6 +1231,12 @@ const PREDICTOR_PUBLISHED_FAMILY_RULES_RAW = [
     implementationKind: "fixed_output",
     priority: 130,
     derive: deriveCltWetPublishedFamilyEstimate
+  },
+  {
+    id: "dataholz_clt_wet_suspended",
+    implementationKind: "fixed_output",
+    priority: 135,
+    derive: deriveDataholzCltWetSuspendedPublishedEstimate
   },
   {
     id: "steel_open_web_carpet",

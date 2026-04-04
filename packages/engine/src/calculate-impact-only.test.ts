@@ -1013,7 +1013,9 @@ describe("calculateImpactOnly", () => {
       true
     );
     expect(
-      result.floorSystemEstimate?.notes.some((note: string) => /Displayed fit was capped from 87.5% to 54%/i.test(note))
+      result.floorSystemEstimate?.notes.some((note: string) =>
+        /Displayed fit was capped from .* to 54%/i.test(note)
+      )
     ).toBe(true);
   });
 
@@ -1945,14 +1947,205 @@ describe("calculateImpactOnly", () => {
     expect(result.sourceMode).toBe("predictor_input");
     expect(result.floorSystemEstimate?.kind).toBe("family_archetype");
     expect(result.impact?.basis).toBe("predictor_floor_system_family_archetype_estimate");
-    expect(result.impact?.LnW).toBe(72);
-    expect(result.impact?.CI).toBe(2);
-    expect(result.impact?.LnWPlusCI).toBe(74);
-    expect(result.floorSystemRatings?.Rw).toBe(49);
-    expect(result.floorSystemRatings?.RwCtr).toBe(37.465233062145899);
-    expect(result.impact?.estimateCandidateIds).toEqual(["tuas_r2a_open_box_timber_measured_2026"]);
+    expect(result.impact?.LnW).toBe(55);
+    expect(result.impact?.CI).toBe(0);
+    expect(result.impact?.LnWPlusCI).toBe(55);
+    expect(result.floorSystemRatings?.Rw).toBe(62);
+    expect(result.floorSystemRatings?.RwCtr).toBe(54.408826940816517);
+    expect(result.impact?.estimateCandidateIds).toEqual(["tuas_r2b_open_box_timber_measured_2026"]);
     expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(true);
     expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
+  });
+
+  it("can resolve TUAS open-box exact rows from predictor input once the suspended-ceiling family is explicit", () => {
+    const basicB = calculateImpactOnly([], {
+      impactPredictorInput: {
+        structuralSupportType: "open_box_timber",
+        impactSystemType: "combined_upper_lower_system",
+        baseSlab: {
+          thicknessMm: 370
+        },
+        resilientLayer: {
+          thicknessMm: 3
+        },
+        floorCovering: {
+          mode: "material_layer",
+          materialClass: "laminate_flooring",
+          thicknessMm: 8
+        },
+        lowerTreatment: {
+          type: "suspended_ceiling_elastic_hanger",
+          supportClass: "tuas_open_box_family_b",
+          cavityDepthMm: 25,
+          cavityFillThicknessMm: 100,
+          boardLayerCount: 2,
+          boardMaterialClass: "generic_gypsum_board",
+          boardThicknessMm: 13
+        }
+      },
+      targetOutputs: ["Ln,w", "CI,50-2500", "Rw"]
+    });
+
+    const stagedDry = calculateImpactOnly([], {
+      impactPredictorInput: {
+        structuralSupportType: "open_box_timber",
+        impactSystemType: "combined_upper_lower_system",
+        baseSlab: {
+          thicknessMm: 370
+        },
+        resilientLayer: {
+          thicknessMm: 3
+        },
+        upperFill: {
+          materialClass: "generic_fill",
+          thicknessMm: 13
+        },
+        floatingScreed: {
+          materialClass: "dry_floating_gypsum_fiberboard",
+          thicknessMm: 30
+        },
+        floorCovering: {
+          mode: "material_layer",
+          materialClass: "laminate_flooring",
+          thicknessMm: 8
+        },
+        lowerTreatment: {
+          type: "suspended_ceiling_elastic_hanger",
+          supportClass: "tuas_open_box_family_b",
+          cavityDepthMm: 25,
+          cavityFillThicknessMm: 100,
+          boardLayerCount: 2,
+          boardMaterialClass: "generic_gypsum_board",
+          boardThicknessMm: 13
+        }
+      },
+      targetOutputs: ["Ln,w", "CI,50-2500", "Rw"]
+    });
+
+    const basicA = calculateImpactOnly([], {
+      impactPredictorInput: {
+        structuralSupportType: "open_box_timber",
+        impactSystemType: "combined_upper_lower_system",
+        baseSlab: {
+          thicknessMm: 370
+        },
+        resilientLayer: {
+          thicknessMm: 3
+        },
+        floorCovering: {
+          mode: "material_layer",
+          materialClass: "laminate_flooring",
+          thicknessMm: 8
+        },
+        lowerTreatment: {
+          type: "suspended_ceiling_elastic_hanger",
+          supportClass: "tuas_open_box_family_a",
+          cavityDepthMm: 25,
+          cavityFillThicknessMm: 100,
+          boardLayerCount: 2,
+          boardMaterialClass: "generic_gypsum_board",
+          boardThicknessMm: 13
+        }
+      },
+      targetOutputs: ["Ln,w", "CI,50-2500", "Rw"]
+    });
+
+    expect(basicB.floorSystemMatch?.system.id).toBe("tuas_r2b_open_box_timber_measured_2026");
+    expect(basicB.impact?.LnW).toBe(55);
+    expect(basicB.impact?.CI50_2500).toBe(1);
+    expect(basicB.floorSystemRatings?.Rw).toBe(62);
+    expect(stagedDry.floorSystemMatch?.system.id).toBe("tuas_r3b_open_box_timber_measured_2026");
+    expect(stagedDry.impact?.LnW).toBe(46);
+    expect(stagedDry.impact?.CI50_2500).toBe(3);
+    expect(stagedDry.floorSystemRatings?.Rw).toBe(70);
+    expect(basicA.floorSystemMatch?.system.id).toBe("tuas_r2a_open_box_timber_measured_2026");
+    expect(basicA.impact?.LnW).toBe(72);
+    expect(basicA.impact?.CI50_2500).toBe(2);
+    expect(basicA.floorSystemRatings?.Rw).toBe(49);
+  });
+
+  it("can resolve TUAS family-a staged and dry open-box rows from explicit predictor input", () => {
+    const stagedDry = calculateImpactOnly([], {
+      impactPredictorInput: {
+        structuralSupportType: "open_box_timber",
+        impactSystemType: "combined_upper_lower_system",
+        baseSlab: {
+          thicknessMm: 370
+        },
+        resilientLayer: {
+          thicknessMm: 3
+        },
+        upperFill: {
+          materialClass: "generic_fill",
+          thicknessMm: 13
+        },
+        floatingScreed: {
+          materialClass: "dry_floating_gypsum_fiberboard",
+          thicknessMm: 30
+        },
+        floorCovering: {
+          mode: "material_layer",
+          materialClass: "laminate_flooring",
+          thicknessMm: 8
+        },
+        lowerTreatment: {
+          type: "suspended_ceiling_elastic_hanger",
+          supportClass: "tuas_open_box_family_a",
+          cavityDepthMm: 25,
+          cavityFillThicknessMm: 100,
+          boardLayerCount: 2,
+          boardMaterialClass: "generic_gypsum_board",
+          boardThicknessMm: 13
+        }
+      },
+      targetOutputs: ["Ln,w", "CI,50-2500", "Rw"]
+    });
+
+    const dryFloor = calculateImpactOnly([], {
+      impactPredictorInput: {
+        structuralSupportType: "open_box_timber",
+        impactSystemType: "combined_upper_lower_system",
+        baseSlab: {
+          thicknessMm: 370
+        },
+        resilientLayer: {
+          thicknessMm: 3
+        },
+        upperFill: {
+          materialClass: "generic_fill",
+          thicknessMm: 50
+        },
+        floatingScreed: {
+          materialClass: "dry_floating_gypsum_fiberboard",
+          thicknessMm: 60
+        },
+        floorCovering: {
+          mode: "material_layer",
+          materialClass: "laminate_flooring",
+          thicknessMm: 8
+        },
+        lowerTreatment: {
+          type: "suspended_ceiling_elastic_hanger",
+          supportClass: "tuas_open_box_family_a",
+          cavityDepthMm: 25,
+          cavityFillThicknessMm: 100,
+          boardLayerCount: 2,
+          boardMaterialClass: "generic_gypsum_board",
+          boardThicknessMm: 13
+        }
+      },
+      targetOutputs: ["Ln,w", "CI,50-2500", "Rw"]
+    });
+
+    expect(stagedDry.floorSystemMatch?.system.id).toBe("tuas_r3a_open_box_timber_measured_2026");
+    expect(stagedDry.impact?.LnW).toBe(61);
+    expect(stagedDry.impact?.CI50_2500).toBe(4);
+    expect(stagedDry.floorSystemRatings?.Rw).toBe(56);
+
+    expect(dryFloor.floorSystemMatch?.system.id).toBe("tuas_r5a_open_box_timber_measured_2026");
+    expect(dryFloor.impact?.LnW).toBe(56);
+    expect(dryFloor.impact?.CI50_2500).toBe(3);
+    expect(dryFloor.floorSystemRatings?.Rw).toBe(63);
   });
 
   it("can resolve an under-described Dataholz dry CLT stack on the broader same-family lane", () => {

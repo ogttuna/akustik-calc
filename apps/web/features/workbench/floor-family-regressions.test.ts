@@ -83,6 +83,30 @@ const OPEN_BOX_DRY_EXACT_ROWS: readonly Omit<LayerDraft, "id">[] = [
   { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: "370" }
 ];
 
+const OPEN_BOX_B_STAGED_DRY_EXACT_ROWS: readonly Omit<LayerDraft, "id">[] = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: "100" },
+  { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: "25" },
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: "8" },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: "3" },
+  { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: "13" },
+  { floorRole: "floating_screed", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: "30" },
+  { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: "370" }
+];
+
+const OPEN_BOX_A_STAGED_DRY_EXACT_ROWS: readonly Omit<LayerDraft, "id">[] = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: "100" },
+  { floorRole: "ceiling_cavity", materialId: "tuas_open_box_ceiling_family_a", thicknessMm: "25" },
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: "8" },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: "3" },
+  { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: "13" },
+  { floorRole: "floating_screed", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: "30" },
+  { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: "370" }
+];
+
 const OPEN_BOX_BASIC_EXACT_ROWS: readonly Omit<LayerDraft, "id">[] = [
   { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
   { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
@@ -90,6 +114,40 @@ const OPEN_BOX_BASIC_EXACT_ROWS: readonly Omit<LayerDraft, "id">[] = [
   { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: "25" },
   { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: "8" },
   { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: "3" },
+  { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: "370" }
+];
+
+const OPEN_BOX_A_BASIC_EXACT_ROWS: readonly Omit<LayerDraft, "id">[] = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: "100" },
+  { floorRole: "ceiling_cavity", materialId: "tuas_open_box_ceiling_family_a", thicknessMm: "25" },
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: "8" },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: "3" },
+  { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: "370" }
+];
+
+const OPEN_BOX_A_DRY_EXACT_ROWS: readonly Omit<LayerDraft, "id">[] = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: "100" },
+  { floorRole: "ceiling_cavity", materialId: "tuas_open_box_ceiling_family_a", thicknessMm: "25" },
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: "8" },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: "3" },
+  { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: "50" },
+  { floorRole: "floating_screed", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: "60" },
+  { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: "370" }
+];
+
+const OPEN_BOX_B_WET_SCREED_EXACT_ROWS: readonly Omit<LayerDraft, "id">[] = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: "100" },
+  { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: "25" },
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: "8" },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: "3" },
+  { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: "40" },
+  { floorRole: "floating_screed", materialId: "screed", thicknessMm: "40" },
   { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: "370" }
 ];
 
@@ -147,6 +205,53 @@ const UBIQ_STEEL_300_EXACT_ROWS: readonly Omit<LayerDraft, "id">[] = [
   { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: "300" }
 ];
 
+const UBIQ_FL24_STEEL_300_EXACT_ROWS: readonly Omit<LayerDraft, "id">[] = [
+  { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: "13" },
+  { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: "13" },
+  { floorRole: "floor_covering", materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: "20" },
+  { floorRole: "floating_screed", materialId: "inex_floor_panel", thicknessMm: "19" },
+  { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: "300" }
+];
+
+const UBIQ_FL24_STEEL_300_16MM_EXACT_ROWS: readonly Omit<LayerDraft, "id">[] = [
+  { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: "13" },
+  { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: "13" },
+  { floorRole: "floor_covering", materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: "20" },
+  { floorRole: "floating_screed", materialId: "inex_floor_panel", thicknessMm: "16" },
+  { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: "300" }
+];
+
+const UBIQ_FL26_STEEL_300_EXACT_ROWS: readonly Omit<LayerDraft, "id">[] = [
+  { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: "16" },
+  { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: "16" },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: "145" },
+  { floorRole: "ceiling_cavity", materialId: "ubiq_resilient_ceiling", thicknessMm: "65" },
+  { floorRole: "floor_covering", materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: "20" },
+  { floorRole: "floating_screed", materialId: "inex_floor_panel", thicknessMm: "19" },
+  { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: "300" }
+];
+
+const UBIQ_FL26_STEEL_300_16MM_EXACT_ROWS: readonly Omit<LayerDraft, "id">[] = [
+  { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: "16" },
+  { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: "16" },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: "145" },
+  { floorRole: "ceiling_cavity", materialId: "ubiq_resilient_ceiling", thicknessMm: "65" },
+  { floorRole: "floor_covering", materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: "20" },
+  { floorRole: "floating_screed", materialId: "inex_floor_panel", thicknessMm: "16" },
+  { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: "300" }
+];
+
+const UBIQ_STEEL_300_16MM_EXACT_ROWS: readonly Omit<LayerDraft, "id">[] = [
+  { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: "16" },
+  { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: "16" },
+  { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: "16" },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: "145" },
+  { floorRole: "ceiling_cavity", materialId: "ubiq_resilient_ceiling", thicknessMm: "65" },
+  { floorRole: "floor_covering", materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: "20" },
+  { floorRole: "floating_screed", materialId: "inex_floor_panel", thicknessMm: "16" },
+  { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: "300" }
+];
+
 const UBIQ_STEEL_300_BOUND_ROWS: readonly Omit<LayerDraft, "id">[] = [
   { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: "16" },
   { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: "16" },
@@ -154,6 +259,15 @@ const UBIQ_STEEL_300_BOUND_ROWS: readonly Omit<LayerDraft, "id">[] = [
   { floorRole: "floor_covering", materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: "20" },
   { floorRole: "floating_screed", materialId: "inex_floor_panel", thicknessMm: "19" },
   { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: "300" }
+];
+
+const UBIQ_STEEL_400_BOUND_ROWS: readonly Omit<LayerDraft, "id">[] = [
+  { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: "16" },
+  { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: "16" },
+  { floorRole: "ceiling_cavity", materialId: "ubiq_resilient_ceiling", thicknessMm: "65" },
+  { floorRole: "floor_covering", materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: "20" },
+  { floorRole: "floating_screed", materialId: "inex_floor_panel", thicknessMm: "19" },
+  { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: "400" }
 ];
 
 const STEEL_JOIST_250_BOUND_ROWS: readonly Omit<LayerDraft, "id">[] = [
@@ -403,12 +517,9 @@ describe("floor family regressions", () => {
 
     expect(scenario.result?.floorSystemMatch).toBeNull();
     expect(scenario.result?.impact?.basis).toBe("predictor_mass_timber_clt_dry_interaction_estimate");
-    expect(scenario.result?.impact?.LnW).toBe(67.5);
-    expect(scenario.result?.floorSystemRatings?.Rw).toBe(40);
-    expect(scenario.result?.impact?.estimateCandidateIds).toEqual([
-      "tuas_x2_clt140_measured_2026",
-      "tuas_c2_clt260_measured_2026"
-    ]);
+    expect(scenario.result?.impact?.LnW).toBe(70);
+    expect(scenario.result?.floorSystemRatings?.Rw).toBe(38);
+    expect(scenario.result?.impact?.estimateCandidateIds).toEqual(["tuas_x2_clt140_measured_2026"]);
   });
 
   it("keeps the measured TUAS open-box dry-floor row exact on the web scenario route", () => {
@@ -424,10 +535,49 @@ describe("floor family regressions", () => {
     expect(scenario.result?.floorSystemRatings?.Rw).toBe(75);
   });
 
-  it("keeps the measured TUAS open-box timber row exact on the web scenario route", () => {
+  it("keeps the measured TUAS open-box staged dry row exact on the web scenario route", () => {
+    const scenario = evaluateFloorScenario({
+      id: "open-box-b-staged-dry-exact",
+      rows: OPEN_BOX_B_STAGED_DRY_EXACT_ROWS,
+      targetOutputs: LAB_OUTPUTS
+    });
+
+    expect(scenario.result?.floorSystemMatch?.system.id).toBe("tuas_r3b_open_box_timber_measured_2026");
+    expect(scenario.result?.impact?.LnW).toBe(46);
+    expect(scenario.result?.impact?.CI50_2500).toBe(3);
+    expect(scenario.result?.floorSystemRatings?.Rw).toBe(70);
+  });
+
+  it("keeps the measured TUAS open-box family-a staged dry row exact on the web scenario route", () => {
+    const scenario = evaluateFloorScenario({
+      id: "open-box-a-staged-dry-exact",
+      rows: OPEN_BOX_A_STAGED_DRY_EXACT_ROWS,
+      targetOutputs: LAB_OUTPUTS
+    });
+
+    expect(scenario.result?.floorSystemMatch?.system.id).toBe("tuas_r3a_open_box_timber_measured_2026");
+    expect(scenario.result?.impact?.LnW).toBe(61);
+    expect(scenario.result?.impact?.CI50_2500).toBe(4);
+    expect(scenario.result?.floorSystemRatings?.Rw).toBe(56);
+  });
+
+  it("keeps the measured TUAS open-box family-b basic row exact on the web scenario route", () => {
     const scenario = evaluateFloorScenario({
       id: "open-box-basic-exact",
       rows: OPEN_BOX_BASIC_EXACT_ROWS,
+      targetOutputs: LAB_OUTPUTS
+    });
+
+    expect(scenario.result?.floorSystemMatch?.system.id).toBe("tuas_r2b_open_box_timber_measured_2026");
+    expect(scenario.result?.impact?.LnW).toBe(55);
+    expect(scenario.result?.impact?.CI50_2500).toBe(1);
+    expect(scenario.result?.floorSystemRatings?.Rw).toBe(62);
+  });
+
+  it("keeps the measured TUAS open-box family-a basic row exact on the web scenario route", () => {
+    const scenario = evaluateFloorScenario({
+      id: "open-box-a-basic-exact",
+      rows: OPEN_BOX_A_BASIC_EXACT_ROWS,
       targetOutputs: LAB_OUTPUTS
     });
 
@@ -435,6 +585,32 @@ describe("floor family regressions", () => {
     expect(scenario.result?.impact?.LnW).toBe(72);
     expect(scenario.result?.impact?.CI50_2500).toBe(2);
     expect(scenario.result?.floorSystemRatings?.Rw).toBe(49);
+  });
+
+  it("keeps the measured TUAS open-box family-a dry row exact on the web scenario route", () => {
+    const scenario = evaluateFloorScenario({
+      id: "open-box-a-dry-exact",
+      rows: OPEN_BOX_A_DRY_EXACT_ROWS,
+      targetOutputs: LAB_OUTPUTS
+    });
+
+    expect(scenario.result?.floorSystemMatch?.system.id).toBe("tuas_r5a_open_box_timber_measured_2026");
+    expect(scenario.result?.impact?.LnW).toBe(56);
+    expect(scenario.result?.impact?.CI50_2500).toBe(3);
+    expect(scenario.result?.floorSystemRatings?.Rw).toBe(63);
+  });
+
+  it("keeps the measured TUAS open-box wet screed row exact on the web scenario route", () => {
+    const scenario = evaluateFloorScenario({
+      id: "open-box-b-wet-screed-exact",
+      rows: OPEN_BOX_B_WET_SCREED_EXACT_ROWS,
+      targetOutputs: LAB_OUTPUTS
+    });
+
+    expect(scenario.result?.floorSystemMatch?.system.id).toBe("tuas_r11b_open_box_timber_measured_2026");
+    expect(scenario.result?.impact?.LnW).toBe(45);
+    expect(scenario.result?.impact?.CI50_2500).toBe(3);
+    expect(scenario.result?.floorSystemRatings?.Rw).toBe(74);
   });
 
   it("keeps the measured TUAS open-box timber row exact when two gypsum boards are merged into one row", () => {
@@ -642,6 +818,71 @@ describe("floor family regressions", () => {
     expect(scenario.result?.impact?.LnW).toBe(51);
     expect(scenario.result?.impact?.LnWPlusCI).toBe(49);
     expect(scenario.result?.floorSystemRatings?.Rw).toBe(64);
+  });
+
+  it("keeps the curated UBIQ FL-24 open-web steel 300 row exact on the web scenario route", () => {
+    const scenario = evaluateFloorScenario({
+      id: "ubiq-fl24-steel-300-exact",
+      rows: UBIQ_FL24_STEEL_300_EXACT_ROWS,
+      targetOutputs: LAB_OUTPUTS
+    });
+
+    expect(scenario.result?.floorSystemMatch?.system.id).toBe("ubiq_fl24_open_web_steel_300_exact_lab_2026");
+    expect(scenario.result?.impact?.LnW).toBe(54);
+    expect(scenario.result?.impact?.LnWPlusCI).toBe(52);
+    expect(scenario.result?.floorSystemRatings?.Rw).toBe(61);
+  });
+
+  it("keeps the curated UBIQ FL-24 open-web steel 300 16 mm row exact on the web scenario route", () => {
+    const scenario = evaluateFloorScenario({
+      id: "ubiq-fl24-steel-300-16mm-exact",
+      rows: UBIQ_FL24_STEEL_300_16MM_EXACT_ROWS,
+      targetOutputs: LAB_OUTPUTS
+    });
+
+    expect(scenario.result?.floorSystemMatch?.system.id).toBe("ubiq_fl24_open_web_steel_300_16mm_exact_lab_2026");
+    expect(scenario.result?.impact?.LnW).toBe(54);
+    expect(scenario.result?.impact?.LnWPlusCI).toBe(52);
+    expect(scenario.result?.floorSystemRatings?.Rw).toBe(60);
+  });
+
+  it("keeps the curated UBIQ FL-26 open-web steel 300 row exact on the web scenario route", () => {
+    const scenario = evaluateFloorScenario({
+      id: "ubiq-fl26-steel-300-exact",
+      rows: UBIQ_FL26_STEEL_300_EXACT_ROWS,
+      targetOutputs: LAB_OUTPUTS
+    });
+
+    expect(scenario.result?.floorSystemMatch?.system.id).toBe("ubiq_fl26_open_web_steel_300_exact_lab_2026");
+    expect(scenario.result?.impact?.LnW).toBe(53);
+    expect(scenario.result?.impact?.LnWPlusCI).toBe(51);
+    expect(scenario.result?.floorSystemRatings?.Rw).toBe(62);
+  });
+
+  it("keeps the curated UBIQ FL-26 open-web steel 300 16 mm row exact on the web scenario route", () => {
+    const scenario = evaluateFloorScenario({
+      id: "ubiq-fl26-steel-300-16mm-exact",
+      rows: UBIQ_FL26_STEEL_300_16MM_EXACT_ROWS,
+      targetOutputs: LAB_OUTPUTS
+    });
+
+    expect(scenario.result?.floorSystemMatch?.system.id).toBe("ubiq_fl26_open_web_steel_300_16mm_exact_lab_2026");
+    expect(scenario.result?.impact?.LnW).toBe(53);
+    expect(scenario.result?.impact?.LnWPlusCI).toBe(51);
+    expect(scenario.result?.floorSystemRatings?.Rw).toBe(61);
+  });
+
+  it("keeps the curated UBIQ open-web steel 300 16 mm row exact on the web scenario route", () => {
+    const scenario = evaluateFloorScenario({
+      id: "ubiq-steel-300-16mm-exact",
+      rows: UBIQ_STEEL_300_16MM_EXACT_ROWS,
+      targetOutputs: LAB_OUTPUTS
+    });
+
+    expect(scenario.result?.floorSystemMatch?.system.id).toBe("ubiq_fl28_open_web_steel_300_16mm_exact_lab_2026");
+    expect(scenario.result?.impact?.LnW).toBe(51);
+    expect(scenario.result?.impact?.LnWPlusCI).toBe(49);
+    expect(scenario.result?.floorSystemRatings?.Rw).toBe(63);
   });
 
   it("carries the curated UBIQ open-web steel 300 row into local-guide field outputs on the web scenario route", () => {
@@ -880,6 +1121,21 @@ describe("floor family regressions", () => {
     expect(scenario.result?.impact).toBeNull();
     expect(scenario.result?.floorSystemMatch).toBeNull();
     expect(scenario.result?.boundFloorSystemMatch?.system.id).toBe("ubiq_fl33_open_web_steel_300_lab_2026");
+    expect(scenario.result?.lowerBoundImpact?.basis).toBe("official_floor_system_bound_support");
+    expect(scenario.result?.lowerBoundImpact?.LnWUpperBound).toBe(51);
+    expect(scenario.result?.boundFloorSystemMatch?.system.airborneRatings.Rw).toBe(63);
+  });
+
+  it("keeps the curated UBIQ open-web steel 400 bound-only sibling on the bound-support lane", () => {
+    const scenario = evaluateFloorScenario({
+      id: "ubiq-steel-400-bound",
+      rows: UBIQ_STEEL_400_BOUND_ROWS,
+      targetOutputs: LAB_OUTPUTS
+    });
+
+    expect(scenario.result?.impact).toBeNull();
+    expect(scenario.result?.floorSystemMatch).toBeNull();
+    expect(scenario.result?.boundFloorSystemMatch?.system.id).toBe("ubiq_fl33_open_web_steel_400_lab_2026");
     expect(scenario.result?.lowerBoundImpact?.basis).toBe("official_floor_system_bound_support");
     expect(scenario.result?.lowerBoundImpact?.LnWUpperBound).toBe(51);
     expect(scenario.result?.boundFloorSystemMatch?.system.airborneRatings.Rw).toBe(63);

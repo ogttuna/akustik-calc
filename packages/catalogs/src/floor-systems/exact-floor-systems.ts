@@ -1734,6 +1734,114 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     }
   },
   {
+    id: "dataholz_gdmnxa02a_00_clt_lab_2026",
+    label: "Dataholz GDMNXA02A-00 | CLT floor | wet screed + suspended lining",
+    sourceLabel: "Dataholz open component library",
+    sourceType: "official_open_component_library",
+    sourceUrl: "https://www.dataholz.eu/en/index/download/en/gdmnxa02a-0.pdf",
+    trustTier: "official_manufacturer",
+    manualMatch: false,
+    match: {
+      absentRoles: ["floor_covering"],
+      baseStructure: {
+        materialIds: ["clt_panel"],
+        thicknessMm: 140
+      },
+      resilientLayer: {
+        materialIds: ["mw_t_impact_layer_s35"],
+        thicknessMm: 30
+      },
+      floatingScreed: {
+        materialIds: ["screed"],
+        thicknessMm: 60
+      },
+      upperFill: {
+        materialIds: ["non_bonded_chippings"],
+        thicknessMm: 60
+      },
+      ceilingCavity: {
+        materialIds: ["acoustic_hanger_ceiling"],
+        thicknessMm: 70
+      },
+      ceilingFill: {
+        materialIds: ["rockwool"],
+        thicknessMm: 60
+      },
+      ceilingBoard: {
+        layerCount: 1,
+        materialIds: ["gypsum_board"],
+        thicknessMm: 12.5
+      }
+    },
+    systemSummary: {
+      carrier: "140 mm cross laminated timber, minimum 5-ply",
+      floorBuildUp: "60 mm cement screed + 30 mm MW-T impact layer [s'=35 MN/m3] + 60 mm non-bonded chippings",
+      ceiling: "70 mm acoustic hanger ceiling with 60 mm mineral wool and 1 x 12.5 mm gypsum board"
+    },
+    impactRatings: {
+      LnW: 53
+    },
+    airborneRatings: {
+      Rw: 61,
+      RwCtr: -8,
+      RwCtrSemantic: "ctr_term"
+    }
+  },
+  {
+    id: "dataholz_gdmnxa02a_02_clt_lab_2026",
+    label: "Dataholz GDMNXA02A-02 | CLT floor | wet screed + suspended lining",
+    sourceLabel: "Dataholz open component library",
+    sourceType: "official_open_component_library",
+    sourceUrl: "https://www.dataholz.eu/en/index/download/en/gdmnxa02a-2.pdf",
+    trustTier: "official_manufacturer",
+    manualMatch: false,
+    match: {
+      absentRoles: ["floor_covering"],
+      baseStructure: {
+        materialIds: ["clt_panel"],
+        thicknessMm: 140
+      },
+      resilientLayer: {
+        materialIds: ["mw_t_impact_layer"],
+        thicknessMm: 30
+      },
+      floatingScreed: {
+        materialIds: ["screed"],
+        thicknessMm: 60
+      },
+      upperFill: {
+        materialIds: ["non_bonded_chippings"],
+        thicknessMm: 60
+      },
+      ceilingCavity: {
+        materialIds: ["acoustic_hanger_ceiling"],
+        thicknessMm: 70
+      },
+      ceilingFill: {
+        materialIds: ["rockwool"],
+        thicknessMm: 60
+      },
+      ceilingBoard: {
+        layerCount: 1,
+        materialIds: ["gypsum_board"],
+        thicknessMm: 12.5
+      }
+    },
+    systemSummary: {
+      carrier: "140 mm cross laminated timber, minimum 5-ply",
+      floorBuildUp: "60 mm cement screed + 30 mm MW-T impact layer [s'=10 MN/m3] + 60 mm non-bonded chippings",
+      ceiling: "70 mm acoustic hanger ceiling with 60 mm mineral wool and 1 x 12.5 mm gypsum board"
+    },
+    impactRatings: {
+      LnW: 46
+    },
+    airborneRatings: {
+      Rw: 62,
+      RwCtr: -6,
+      RwCtrSemantic: "ctr_term"
+    }
+  },
+  {
     id: "dataholz_gdmtxa01a_clt_lab_2026",
     label: "Dataholz GDMTXA01a | CLT floor | dry screed + suspended lining",
     sourceLabel: "Dataholz open component library",
@@ -2004,10 +2112,110 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
   },
   {
     id: "tuas_r2a_open_box_timber_measured_2026",
-    label: "TUAS R2a | open-box timber slab | laminate + EPS underlay | resilient stud ceiling",
+    label: "TUAS R2a | open-box timber slab | laminate + EPS underlay | ceiling family A",
     sourceLabel: "TUAS open measured dataset",
     sourceType: "open_measured_dataset",
     trustTier: "peer_reviewed_open_access",
+    estimateMatch: {
+      structuralSupportType: "open_box_timber",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        thicknessMm: 370
+      },
+      resilientLayer: {
+        productId: "eps_underlay",
+        thicknessMm: 3
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "laminate_flooring",
+        thicknessMm: 8
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_elastic_hanger",
+        supportClass: "tuas_open_box_family_a",
+        boardLayerCount: 2,
+        boardMaterialClass: "generic_gypsum_board",
+        boardThicknessMm: 13,
+        cavityDepthMm: 25,
+        cavityFillThicknessMm: 100
+      }
+    },
+      match: {
+        absentRoles: ["floating_screed", "upper_fill"],
+        baseStructure: {
+          materialIds: ["open_box_timber_slab"],
+          thicknessMm: 370
+      },
+      resilientLayer: {
+        materialIds: ["eps_underlay"],
+        thicknessMm: 3
+      },
+      floorCovering: {
+        materialIds: ["laminate_flooring"],
+        thicknessMm: 8
+      },
+      ceilingCavity: {
+        materialIds: ["tuas_open_box_ceiling_family_a"],
+        thicknessMm: 25
+      },
+      ceilingFill: {
+        materialIds: ["rockwool"],
+        thicknessMm: 100
+      },
+      ceilingBoard: {
+        layerCount: 2,
+        materialIds: ["gypsum_board"],
+        thicknessMm: 13
+      }
+    },
+    systemSummary: {
+      carrier: "Open box timber slab 370 mm",
+      floorBuildUp: "8 mm laminate on 3 mm EPS underlay over open-box timber slab",
+      ceiling: "25 mm TUAS family A suspended ceiling with 2 x 13 mm gypsum board and 100 mm glass wool"
+    },
+    impactRatings: {
+      CI: 2,
+      CI50_2500: 2,
+      LnW: 72,
+      LnWPlusCI: 74
+    },
+    airborneRatings: {
+      Rw: 49,
+      RwCtr: 37.465233062145899
+    }
+  },
+  {
+    id: "tuas_r2b_open_box_timber_measured_2026",
+    label: "TUAS R2b | open-box timber slab | laminate + EPS underlay | resilient stud ceiling",
+    sourceLabel: "TUAS open measured dataset",
+    sourceType: "open_measured_dataset",
+    trustTier: "peer_reviewed_open_access",
+    estimateMatch: {
+      structuralSupportType: "open_box_timber",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        thicknessMm: 370
+      },
+      resilientLayer: {
+        productId: "eps_underlay",
+        thicknessMm: 3
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "laminate_flooring",
+        thicknessMm: 8
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_elastic_hanger",
+        supportClass: "tuas_open_box_family_b",
+        boardLayerCount: 2,
+        boardMaterialClass: "generic_gypsum_board",
+        boardThicknessMm: 13,
+        cavityDepthMm: 25,
+        cavityFillThicknessMm: 100
+      }
+    },
     match: {
       absentRoles: ["floating_screed", "upper_fill"],
       baseStructure: {
@@ -2042,14 +2250,287 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
       ceiling: "25 mm resilient stud ceiling with 2 x 13 mm gypsum board and 100 mm glass wool"
     },
     impactRatings: {
-      CI: 2,
-      CI50_2500: 2,
-      LnW: 72,
-      LnWPlusCI: 74
+      CI: 0,
+      CI50_2500: 1,
+      LnW: 55,
+      LnWPlusCI: 55
     },
     airborneRatings: {
-      Rw: 49,
-      RwCtr: 37.465233062145899
+      Rw: 62,
+      RwCtr: 54.408826940816517
+    }
+  },
+  {
+    id: "tuas_r3a_open_box_timber_measured_2026",
+    label: "TUAS R3a | open-box timber slab | 13 mm glass wool dry floor | ceiling family A",
+    sourceLabel: "TUAS open measured dataset",
+    sourceType: "open_measured_dataset",
+    trustTier: "peer_reviewed_open_access",
+    estimateMatch: {
+      structuralSupportType: "open_box_timber",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        thicknessMm: 370
+      },
+      resilientLayer: {
+        productId: "eps_underlay",
+        thicknessMm: 3
+      },
+      upperFill: {
+        materialClass: "generic_fill",
+        thicknessMm: 13
+      },
+      floatingScreed: {
+        materialClass: "dry_floating_gypsum_fiberboard",
+        thicknessMm: 30
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "laminate_flooring",
+        thicknessMm: 8
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_elastic_hanger",
+        supportClass: "tuas_open_box_family_a",
+        boardLayerCount: 2,
+        boardMaterialClass: "generic_gypsum_board",
+        boardThicknessMm: 13,
+        cavityDepthMm: 25,
+        cavityFillThicknessMm: 100
+      }
+    },
+    match: {
+      absentRoles: [],
+      baseStructure: {
+        materialIds: ["open_box_timber_slab"],
+        thicknessMm: 370
+      },
+      resilientLayer: {
+        materialIds: ["eps_underlay"],
+        thicknessMm: 3
+      },
+      floatingScreed: {
+        materialIds: ["dry_floating_gypsum_fiberboard"],
+        thicknessMm: 30
+      },
+      upperFill: {
+        materialIds: ["generic_fill"],
+        thicknessMm: 13
+      },
+      floorCovering: {
+        materialIds: ["laminate_flooring"],
+        thicknessMm: 8
+      },
+      ceilingCavity: {
+        materialIds: ["tuas_open_box_ceiling_family_a"],
+        thicknessMm: 25
+      },
+      ceilingFill: {
+        materialIds: ["rockwool"],
+        thicknessMm: 100
+      },
+      ceilingBoard: {
+        layerCount: 2,
+        materialIds: ["gypsum_board"],
+        thicknessMm: 13
+      }
+    },
+    systemSummary: {
+      carrier: "Open box timber slab 370 mm",
+      floorBuildUp: "13 mm glass wool + 30 mm dry gypsum floor pack + 3 mm EPS underlay + 8 mm laminate",
+      ceiling: "25 mm TUAS family A resilient stud ceiling with 2 x 13 mm gypsum board and 100 mm glass wool"
+    },
+    impactRatings: {
+      CI: 2,
+      CI50_2500: 4,
+      LnW: 61,
+      LnWPlusCI: 63
+    },
+    airborneRatings: {
+      Rw: 56,
+      RwCtr: 45.20879603202112
+    }
+  },
+  {
+    id: "tuas_r3b_open_box_timber_measured_2026",
+    label: "TUAS R3b | open-box timber slab | 13 mm glass wool dry floor | resilient stud ceiling",
+    sourceLabel: "TUAS open measured dataset",
+    sourceType: "open_measured_dataset",
+    trustTier: "peer_reviewed_open_access",
+    estimateMatch: {
+      structuralSupportType: "open_box_timber",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        thicknessMm: 370
+      },
+      resilientLayer: {
+        productId: "eps_underlay",
+        thicknessMm: 3
+      },
+      upperFill: {
+        materialClass: "generic_fill",
+        thicknessMm: 13
+      },
+      floatingScreed: {
+        materialClass: "dry_floating_gypsum_fiberboard",
+        thicknessMm: 30
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "laminate_flooring",
+        thicknessMm: 8
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_elastic_hanger",
+        supportClass: "tuas_open_box_family_b",
+        boardLayerCount: 2,
+        boardMaterialClass: "generic_gypsum_board",
+        boardThicknessMm: 13,
+        cavityDepthMm: 25,
+        cavityFillThicknessMm: 100
+      }
+    },
+    match: {
+      absentRoles: [],
+      baseStructure: {
+        materialIds: ["open_box_timber_slab"],
+        thicknessMm: 370
+      },
+      resilientLayer: {
+        materialIds: ["eps_underlay"],
+        thicknessMm: 3
+      },
+      floatingScreed: {
+        materialIds: ["dry_floating_gypsum_fiberboard"],
+        thicknessMm: 30
+      },
+      upperFill: {
+        materialIds: ["generic_fill"],
+        thicknessMm: 13
+      },
+      floorCovering: {
+        materialIds: ["laminate_flooring"],
+        thicknessMm: 8
+      },
+      ceilingCavity: {
+        materialIds: ["resilient_stud_ceiling"],
+        thicknessMm: 25
+      },
+      ceilingFill: {
+        materialIds: ["rockwool"],
+        thicknessMm: 100
+      },
+      ceilingBoard: {
+        layerCount: 2,
+        materialIds: ["gypsum_board"],
+        thicknessMm: 13
+      }
+    },
+    systemSummary: {
+      carrier: "Open box timber slab 370 mm",
+      floorBuildUp: "13 mm glass wool + 30 mm dry gypsum floor pack + 3 mm EPS underlay + 8 mm laminate",
+      ceiling: "25 mm resilient stud ceiling with 2 x 13 mm gypsum board and 100 mm glass wool"
+    },
+    impactRatings: {
+      CI: 1,
+      CI50_2500: 3,
+      LnW: 46,
+      LnWPlusCI: 47
+    },
+    airborneRatings: {
+      Rw: 70,
+      RwCtr: 61.784975360023004
+    }
+  },
+  {
+    id: "tuas_r5a_open_box_timber_measured_2026",
+    label: "TUAS R5a | open-box timber slab | 50 mm glass wool dry floor | ceiling family A",
+    sourceLabel: "TUAS open measured dataset",
+    sourceType: "open_measured_dataset",
+    trustTier: "peer_reviewed_open_access",
+    estimateMatch: {
+      structuralSupportType: "open_box_timber",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        thicknessMm: 370
+      },
+      resilientLayer: {
+        productId: "eps_underlay",
+        thicknessMm: 3
+      },
+      upperFill: {
+        materialClass: "generic_fill",
+        thicknessMm: 50
+      },
+      floatingScreed: {
+        materialClass: "dry_floating_gypsum_fiberboard",
+        thicknessMm: 60
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "laminate_flooring",
+        thicknessMm: 8
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_elastic_hanger",
+        supportClass: "tuas_open_box_family_a",
+        boardLayerCount: 2,
+        boardMaterialClass: "generic_gypsum_board",
+        boardThicknessMm: 13,
+        cavityDepthMm: 25,
+        cavityFillThicknessMm: 100
+      }
+    },
+    match: {
+      absentRoles: [],
+      baseStructure: {
+        materialIds: ["open_box_timber_slab"],
+        thicknessMm: 370
+      },
+      resilientLayer: {
+        materialIds: ["eps_underlay"],
+        thicknessMm: 3
+      },
+      floatingScreed: {
+        materialIds: ["dry_floating_gypsum_fiberboard"],
+        thicknessMm: 60
+      },
+      upperFill: {
+        materialIds: ["generic_fill"],
+        thicknessMm: 50
+      },
+      floorCovering: {
+        materialIds: ["laminate_flooring"],
+        thicknessMm: 8
+      },
+      ceilingCavity: {
+        materialIds: ["tuas_open_box_ceiling_family_a"],
+        thicknessMm: 25
+      },
+      ceilingFill: {
+        materialIds: ["rockwool"],
+        thicknessMm: 100
+      },
+      ceilingBoard: {
+        layerCount: 2,
+        materialIds: ["gypsum_board"],
+        thicknessMm: 13
+      }
+    },
+    systemSummary: {
+      carrier: "Open box timber slab 370 mm",
+      floorBuildUp: "50 mm glass wool + 60 mm dry gypsum floor pack + 3 mm EPS underlay + 8 mm laminate",
+      ceiling: "25 mm TUAS family A resilient stud ceiling with 2 x 13 mm gypsum board and 100 mm glass wool"
+    },
+    impactRatings: {
+      CI: 2,
+      CI50_2500: 3,
+      LnW: 56,
+      LnWPlusCI: 58
+    },
+    airborneRatings: {
+      Rw: 63,
+      RwCtr: 51.880550309785406
     }
   },
   {
@@ -2058,6 +2539,39 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     sourceLabel: "TUAS open measured dataset",
     sourceType: "open_measured_dataset",
     trustTier: "peer_reviewed_open_access",
+    estimateMatch: {
+      structuralSupportType: "open_box_timber",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        thicknessMm: 370
+      },
+      resilientLayer: {
+        productId: "eps_underlay",
+        thicknessMm: 3
+      },
+      upperFill: {
+        materialClass: "generic_fill",
+        thicknessMm: 50
+      },
+      floatingScreed: {
+        materialClass: "dry_floating_gypsum_fiberboard",
+        thicknessMm: 60
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "laminate_flooring",
+        thicknessMm: 8
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_elastic_hanger",
+        supportClass: "tuas_open_box_family_b",
+        boardLayerCount: 2,
+        boardMaterialClass: "generic_gypsum_board",
+        boardThicknessMm: 13,
+        cavityDepthMm: 25,
+        cavityFillThicknessMm: 100
+      }
+    },
     match: {
       absentRoles: [],
       baseStructure: {
@@ -2140,6 +2654,97 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     airborneRatings: {
       Rw: 75,
       RwCtr: 66.843590685310645
+    }
+  },
+  {
+    id: "tuas_r11b_open_box_timber_measured_2026",
+    label: "TUAS R11b | open-box timber slab | 40 mm glass wool + 40 mm screed | resilient stud ceiling",
+    sourceLabel: "TUAS open measured dataset",
+    sourceType: "open_measured_dataset",
+    trustTier: "peer_reviewed_open_access",
+    estimateMatch: {
+      structuralSupportType: "open_box_timber",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        thicknessMm: 370
+      },
+      resilientLayer: {
+        productId: "eps_underlay",
+        thicknessMm: 3
+      },
+      upperFill: {
+        materialClass: "generic_fill",
+        thicknessMm: 40
+      },
+      floatingScreed: {
+        materialClass: "generic_screed",
+        thicknessMm: 40
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "laminate_flooring",
+        thicknessMm: 8
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_elastic_hanger",
+        supportClass: "tuas_open_box_family_b",
+        boardLayerCount: 2,
+        boardMaterialClass: "generic_gypsum_board",
+        boardThicknessMm: 13,
+        cavityDepthMm: 25,
+        cavityFillThicknessMm: 100
+      }
+    },
+    match: {
+      absentRoles: [],
+      baseStructure: {
+        materialIds: ["open_box_timber_slab"],
+        thicknessMm: 370
+      },
+      resilientLayer: {
+        materialIds: ["eps_underlay"],
+        thicknessMm: 3
+      },
+      floatingScreed: {
+        materialIds: ["screed"],
+        thicknessMm: 40
+      },
+      upperFill: {
+        materialIds: ["generic_fill"],
+        thicknessMm: 40
+      },
+      floorCovering: {
+        materialIds: ["laminate_flooring"],
+        thicknessMm: 8
+      },
+      ceilingCavity: {
+        materialIds: ["resilient_stud_ceiling"],
+        thicknessMm: 25
+      },
+      ceilingFill: {
+        materialIds: ["rockwool"],
+        thicknessMm: 100
+      },
+      ceilingBoard: {
+        layerCount: 2,
+        materialIds: ["gypsum_board"],
+        thicknessMm: 13
+      }
+    },
+    systemSummary: {
+      carrier: "Open box timber slab 370 mm",
+      floorBuildUp: "40 mm glass wool + 40 mm screed + 3 mm EPS underlay + 8 mm laminate",
+      ceiling: "25 mm resilient stud ceiling with 2 x 13 mm gypsum board and 100 mm glass wool"
+    },
+    impactRatings: {
+      CI: 1,
+      CI50_2500: 3,
+      LnW: 45,
+      LnWPlusCI: 46
+    },
+    airborneRatings: {
+      Rw: 74,
+      RwCtr: 65.654511374611502
     }
   },
   {
@@ -2377,6 +2982,826 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     }
   },
   {
+    id: "ubiq_fl24_open_web_steel_200_16mm_exact_lab_2026",
+    label: "UBIQ FL-24 | 200 mm open-web steel | INEX FLOOR 16 | 2 x 13 mm plasterboard",
+    sourceLabel: "UBIQ official system table PDF",
+    sourceType: "official_manufacturer_system_table",
+    trustTier: "official_manufacturer",
+    estimateMatch: {
+      structuralSupportType: "steel_joists",
+      supportForm: "open_web_or_rolled",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        thicknessMm: 200
+      },
+      floatingScreed: {
+        thicknessMm: 16
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "engineered_timber_with_acoustic_underlay"
+      }
+    },
+    match: {
+      absentRoles: ["upper_fill", "ceiling_cavity", "ceiling_fill"],
+      baseStructure: {
+        materialIds: ["open_web_steel_floor"],
+        thicknessMm: 200
+      },
+      floatingScreed: {
+        materialIds: ["inex_floor_panel"],
+        thicknessMm: 16
+      },
+      floorCovering: {
+        materialIds: ["engineered_timber_with_acoustic_underlay"]
+      },
+      ceilingBoard: {
+        layerCount: 2,
+        materialIds: ["firestop_board"],
+        thicknessMm: 13
+      }
+    },
+    systemSummary: {
+      carrier: "200 mm open-web steel joist at 450 mm centres",
+      floorBuildUp: "16 mm INEX FLOOR with engineered timber finish and acoustic underlay",
+      ceiling: "Direct ceiling lining with 2 x 13 mm fire-rated plasterboard"
+    },
+    impactRatings: {
+      CI: -1,
+      LnW: 55,
+      LnWPlusCI: 54
+    },
+    airborneRatings: {
+      Rw: 59,
+      RwCtr: 52
+    }
+  },
+  {
+    id: "ubiq_fl24_open_web_steel_200_exact_lab_2026",
+    label: "UBIQ FL-24 | 200 mm open-web steel | INEX FLOOR 19 | 2 x 13 mm plasterboard",
+    sourceLabel: "UBIQ official system table PDF",
+    sourceType: "official_manufacturer_system_table",
+    trustTier: "official_manufacturer",
+    estimateMatch: {
+      structuralSupportType: "steel_joists",
+      supportForm: "open_web_or_rolled",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        thicknessMm: 200
+      },
+      floatingScreed: {
+        thicknessMm: 19
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "engineered_timber_with_acoustic_underlay"
+      }
+    },
+    match: {
+      absentRoles: ["upper_fill", "ceiling_cavity", "ceiling_fill"],
+      baseStructure: {
+        materialIds: ["open_web_steel_floor"],
+        thicknessMm: 200
+      },
+      floatingScreed: {
+        materialIds: ["inex_floor_panel"],
+        thicknessMm: 19
+      },
+      floorCovering: {
+        materialIds: ["engineered_timber_with_acoustic_underlay"]
+      },
+      ceilingBoard: {
+        layerCount: 2,
+        materialIds: ["firestop_board"],
+        thicknessMm: 13
+      }
+    },
+    systemSummary: {
+      carrier: "200 mm open-web steel joist at 450 mm centres",
+      floorBuildUp: "19 mm INEX FLOOR with engineered timber finish and acoustic underlay",
+      ceiling: "Direct ceiling lining with 2 x 13 mm fire-rated plasterboard"
+    },
+    impactRatings: {
+      CI: -1,
+      LnW: 55,
+      LnWPlusCI: 54
+    },
+    airborneRatings: {
+      Rw: 60,
+      RwCtr: 53
+    }
+  },
+  {
+    id: "ubiq_fl24_open_web_steel_300_16mm_exact_lab_2026",
+    label: "UBIQ FL-24 | 300 mm open-web steel | INEX FLOOR 16 | 2 x 13 mm plasterboard",
+    sourceLabel: "UBIQ official system table PDF",
+    sourceType: "official_manufacturer_system_table",
+    trustTier: "official_manufacturer",
+    estimateMatch: {
+      structuralSupportType: "steel_joists",
+      supportForm: "open_web_or_rolled",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        thicknessMm: 300
+      },
+      floatingScreed: {
+        thicknessMm: 16
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "engineered_timber_with_acoustic_underlay"
+      }
+    },
+    match: {
+      absentRoles: ["upper_fill", "ceiling_cavity", "ceiling_fill"],
+      baseStructure: {
+        materialIds: ["open_web_steel_floor"],
+        thicknessMm: 300
+      },
+      floatingScreed: {
+        materialIds: ["inex_floor_panel"],
+        thicknessMm: 16
+      },
+      floorCovering: {
+        materialIds: ["engineered_timber_with_acoustic_underlay"]
+      },
+      ceilingBoard: {
+        layerCount: 2,
+        materialIds: ["firestop_board"],
+        thicknessMm: 13
+      }
+    },
+    systemSummary: {
+      carrier: "300 mm open-web steel joist at 450 mm centres",
+      floorBuildUp: "16 mm INEX FLOOR with engineered timber finish and acoustic underlay",
+      ceiling: "Direct ceiling lining with 2 x 13 mm fire-rated plasterboard"
+    },
+    impactRatings: {
+      CI: -2,
+      LnW: 54,
+      LnWPlusCI: 52
+    },
+    airborneRatings: {
+      Rw: 60,
+      RwCtr: 54
+    }
+  },
+  {
+    id: "ubiq_fl24_open_web_steel_300_exact_lab_2026",
+    label: "UBIQ FL-24 | 300 mm open-web steel | INEX FLOOR 19 | 2 x 13 mm plasterboard",
+    sourceLabel: "UBIQ official system table PDF",
+    sourceType: "official_manufacturer_system_table",
+    trustTier: "official_manufacturer",
+    estimateMatch: {
+      structuralSupportType: "steel_joists",
+      supportForm: "open_web_or_rolled",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        thicknessMm: 300
+      },
+      floatingScreed: {
+        thicknessMm: 19
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "engineered_timber_with_acoustic_underlay"
+      }
+    },
+    match: {
+      absentRoles: ["upper_fill", "ceiling_cavity", "ceiling_fill"],
+      baseStructure: {
+        materialIds: ["open_web_steel_floor"],
+        thicknessMm: 300
+      },
+      floatingScreed: {
+        materialIds: ["inex_floor_panel"],
+        thicknessMm: 19
+      },
+      floorCovering: {
+        materialIds: ["engineered_timber_with_acoustic_underlay"]
+      },
+      ceilingBoard: {
+        layerCount: 2,
+        materialIds: ["firestop_board"],
+        thicknessMm: 13
+      }
+    },
+    systemSummary: {
+      carrier: "300 mm open-web steel joist at 450 mm centres",
+      floorBuildUp: "19 mm INEX FLOOR with engineered timber finish and acoustic underlay",
+      ceiling: "Direct ceiling lining with 2 x 13 mm fire-rated plasterboard"
+    },
+    impactRatings: {
+      CI: -2,
+      LnW: 54,
+      LnWPlusCI: 52
+    },
+    airborneRatings: {
+      Rw: 61,
+      RwCtr: 55
+    }
+  },
+  {
+    id: "ubiq_fl24_open_web_steel_400_16mm_exact_lab_2026",
+    label: "UBIQ FL-24 | 400 mm open-web steel | INEX FLOOR 16 | 2 x 13 mm plasterboard",
+    sourceLabel: "UBIQ official system table PDF",
+    sourceType: "official_manufacturer_system_table",
+    trustTier: "official_manufacturer",
+    estimateMatch: {
+      structuralSupportType: "steel_joists",
+      supportForm: "open_web_or_rolled",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        thicknessMm: 400
+      },
+      floatingScreed: {
+        thicknessMm: 16
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "engineered_timber_with_acoustic_underlay"
+      }
+    },
+    match: {
+      absentRoles: ["upper_fill", "ceiling_cavity", "ceiling_fill"],
+      baseStructure: {
+        materialIds: ["open_web_steel_floor"],
+        thicknessMm: 400
+      },
+      floatingScreed: {
+        materialIds: ["inex_floor_panel"],
+        thicknessMm: 16
+      },
+      floorCovering: {
+        materialIds: ["engineered_timber_with_acoustic_underlay"]
+      },
+      ceilingBoard: {
+        layerCount: 2,
+        materialIds: ["firestop_board"],
+        thicknessMm: 13
+      }
+    },
+    systemSummary: {
+      carrier: "400 mm open-web steel joist at 450 mm centres",
+      floorBuildUp: "16 mm INEX FLOOR with engineered timber finish and acoustic underlay",
+      ceiling: "Direct ceiling lining with 2 x 13 mm fire-rated plasterboard"
+    },
+    impactRatings: {
+      CI: -2,
+      LnW: 53,
+      LnWPlusCI: 51
+    },
+    airborneRatings: {
+      Rw: 60,
+      RwCtr: 54
+    }
+  },
+  {
+    id: "ubiq_fl24_open_web_steel_400_exact_lab_2026",
+    label: "UBIQ FL-24 | 400 mm open-web steel | INEX FLOOR 19 | 2 x 13 mm plasterboard",
+    sourceLabel: "UBIQ official system table PDF",
+    sourceType: "official_manufacturer_system_table",
+    trustTier: "official_manufacturer",
+    estimateMatch: {
+      structuralSupportType: "steel_joists",
+      supportForm: "open_web_or_rolled",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        thicknessMm: 400
+      },
+      floatingScreed: {
+        thicknessMm: 19
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "engineered_timber_with_acoustic_underlay"
+      }
+    },
+    match: {
+      absentRoles: ["upper_fill", "ceiling_cavity", "ceiling_fill"],
+      baseStructure: {
+        materialIds: ["open_web_steel_floor"],
+        thicknessMm: 400
+      },
+      floatingScreed: {
+        materialIds: ["inex_floor_panel"],
+        thicknessMm: 19
+      },
+      floorCovering: {
+        materialIds: ["engineered_timber_with_acoustic_underlay"]
+      },
+      ceilingBoard: {
+        layerCount: 2,
+        materialIds: ["firestop_board"],
+        thicknessMm: 13
+      }
+    },
+    systemSummary: {
+      carrier: "400 mm open-web steel joist at 450 mm centres",
+      floorBuildUp: "19 mm INEX FLOOR with engineered timber finish and acoustic underlay",
+      ceiling: "Direct ceiling lining with 2 x 13 mm fire-rated plasterboard"
+    },
+    impactRatings: {
+      CI: -2,
+      LnW: 53,
+      LnWPlusCI: 51
+    },
+    airborneRatings: {
+      Rw: 61,
+      RwCtr: 55
+    }
+  },
+  {
+    id: "ubiq_fl26_open_web_steel_200_16mm_exact_lab_2026",
+    label: "UBIQ FL-26 | 200 mm open-web steel | INEX FLOOR 16 | 2 x 16 mm resilient ceiling",
+    sourceLabel: "UBIQ official system table PDF",
+    sourceType: "official_manufacturer_system_table",
+    trustTier: "official_manufacturer",
+    estimateMatch: {
+      structuralSupportType: "steel_joists",
+      supportForm: "open_web_or_rolled",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        thicknessMm: 200
+      },
+      floatingScreed: {
+        thicknessMm: 16
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "engineered_timber_with_acoustic_underlay"
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_elastic_hanger",
+        cavityDepthMm: 65,
+        cavityFillThicknessMm: 145,
+        boardLayerCount: 2,
+        boardThicknessMm: 16
+      }
+    },
+    match: {
+      absentRoles: ["upper_fill"],
+      baseStructure: {
+        materialIds: ["open_web_steel_floor"],
+        thicknessMm: 200
+      },
+      floatingScreed: {
+        materialIds: ["inex_floor_panel"],
+        thicknessMm: 16
+      },
+      floorCovering: {
+        materialIds: ["engineered_timber_with_acoustic_underlay"]
+      },
+      ceilingCavity: {
+        materialIds: ["ubiq_resilient_ceiling"],
+        thicknessMm: 65
+      },
+      ceilingFill: {
+        materialIds: ["rockwool"],
+        thicknessMm: 145
+      },
+      ceilingBoard: {
+        layerCount: 2,
+        materialIds: ["firestop_board"],
+        thicknessMm: 16
+      }
+    },
+    systemSummary: {
+      carrier: "200 mm open-web steel joist at 450 mm centres",
+      floorBuildUp: "16 mm INEX FLOOR with engineered timber finish and acoustic underlay",
+      ceiling: "65 mm resilient ceiling zone with 145 mm insulation and 2 x 16 mm fire-rated plasterboard"
+    },
+    impactRatings: {
+      CI: -1,
+      LnW: 54,
+      LnWPlusCI: 53
+    },
+    airborneRatings: {
+      Rw: 60,
+      RwCtr: 53
+    }
+  },
+  {
+    id: "ubiq_fl26_open_web_steel_200_exact_lab_2026",
+    label: "UBIQ FL-26 | 200 mm open-web steel | INEX FLOOR 19 | 2 x 16 mm resilient ceiling",
+    sourceLabel: "UBIQ official system table PDF",
+    sourceType: "official_manufacturer_system_table",
+    trustTier: "official_manufacturer",
+    estimateMatch: {
+      structuralSupportType: "steel_joists",
+      supportForm: "open_web_or_rolled",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        thicknessMm: 200
+      },
+      floatingScreed: {
+        thicknessMm: 19
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "engineered_timber_with_acoustic_underlay"
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_elastic_hanger",
+        cavityDepthMm: 65,
+        cavityFillThicknessMm: 145,
+        boardLayerCount: 2,
+        boardThicknessMm: 16
+      }
+    },
+    match: {
+      absentRoles: ["upper_fill"],
+      baseStructure: {
+        materialIds: ["open_web_steel_floor"],
+        thicknessMm: 200
+      },
+      floatingScreed: {
+        materialIds: ["inex_floor_panel"],
+        thicknessMm: 19
+      },
+      floorCovering: {
+        materialIds: ["engineered_timber_with_acoustic_underlay"]
+      },
+      ceilingCavity: {
+        materialIds: ["ubiq_resilient_ceiling"],
+        thicknessMm: 65
+      },
+      ceilingFill: {
+        materialIds: ["rockwool"],
+        thicknessMm: 145
+      },
+      ceilingBoard: {
+        layerCount: 2,
+        materialIds: ["firestop_board"],
+        thicknessMm: 16
+      }
+    },
+    systemSummary: {
+      carrier: "200 mm open-web steel joist at 450 mm centres",
+      floorBuildUp: "19 mm INEX FLOOR with engineered timber finish and acoustic underlay",
+      ceiling: "65 mm resilient ceiling zone with 145 mm insulation and 2 x 16 mm fire-rated plasterboard"
+    },
+    impactRatings: {
+      CI: -1,
+      LnW: 54,
+      LnWPlusCI: 53
+    },
+    airborneRatings: {
+      Rw: 61,
+      RwCtr: 55
+    }
+  },
+  {
+    id: "ubiq_fl26_open_web_steel_300_16mm_exact_lab_2026",
+    label: "UBIQ FL-26 | 300 mm open-web steel | INEX FLOOR 16 | 2 x 16 mm resilient ceiling",
+    sourceLabel: "UBIQ official system table PDF",
+    sourceType: "official_manufacturer_system_table",
+    trustTier: "official_manufacturer",
+    estimateMatch: {
+      structuralSupportType: "steel_joists",
+      supportForm: "open_web_or_rolled",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        thicknessMm: 300
+      },
+      floatingScreed: {
+        thicknessMm: 16
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "engineered_timber_with_acoustic_underlay"
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_elastic_hanger",
+        cavityDepthMm: 65,
+        cavityFillThicknessMm: 145,
+        boardLayerCount: 2,
+        boardThicknessMm: 16
+      }
+    },
+    match: {
+      absentRoles: ["upper_fill"],
+      baseStructure: {
+        materialIds: ["open_web_steel_floor"],
+        thicknessMm: 300
+      },
+      floatingScreed: {
+        materialIds: ["inex_floor_panel"],
+        thicknessMm: 16
+      },
+      floorCovering: {
+        materialIds: ["engineered_timber_with_acoustic_underlay"]
+      },
+      ceilingCavity: {
+        materialIds: ["ubiq_resilient_ceiling"],
+        thicknessMm: 65
+      },
+      ceilingFill: {
+        materialIds: ["rockwool"],
+        thicknessMm: 145
+      },
+      ceilingBoard: {
+        layerCount: 2,
+        materialIds: ["firestop_board"],
+        thicknessMm: 16
+      }
+    },
+    systemSummary: {
+      carrier: "300 mm open-web steel joist at 450 mm centres",
+      floorBuildUp: "16 mm INEX FLOOR with engineered timber finish and acoustic underlay",
+      ceiling: "65 mm resilient ceiling zone with 145 mm insulation and 2 x 16 mm fire-rated plasterboard"
+    },
+    impactRatings: {
+      CI: -2,
+      LnW: 53,
+      LnWPlusCI: 51
+    },
+    airborneRatings: {
+      Rw: 61,
+      RwCtr: 55
+    }
+  },
+  {
+    id: "ubiq_fl26_open_web_steel_300_exact_lab_2026",
+    label: "UBIQ FL-26 | 300 mm open-web steel | INEX FLOOR 19 | 2 x 16 mm resilient ceiling",
+    sourceLabel: "UBIQ official system table PDF",
+    sourceType: "official_manufacturer_system_table",
+    trustTier: "official_manufacturer",
+    estimateMatch: {
+      structuralSupportType: "steel_joists",
+      supportForm: "open_web_or_rolled",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        thicknessMm: 300
+      },
+      floatingScreed: {
+        thicknessMm: 19
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "engineered_timber_with_acoustic_underlay"
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_elastic_hanger",
+        cavityDepthMm: 65,
+        cavityFillThicknessMm: 145,
+        boardLayerCount: 2,
+        boardThicknessMm: 16
+      }
+    },
+    match: {
+      absentRoles: ["upper_fill"],
+      baseStructure: {
+        materialIds: ["open_web_steel_floor"],
+        thicknessMm: 300
+      },
+      floatingScreed: {
+        materialIds: ["inex_floor_panel"],
+        thicknessMm: 19
+      },
+      floorCovering: {
+        materialIds: ["engineered_timber_with_acoustic_underlay"]
+      },
+      ceilingCavity: {
+        materialIds: ["ubiq_resilient_ceiling"],
+        thicknessMm: 65
+      },
+      ceilingFill: {
+        materialIds: ["rockwool"],
+        thicknessMm: 145
+      },
+      ceilingBoard: {
+        layerCount: 2,
+        materialIds: ["firestop_board"],
+        thicknessMm: 16
+      }
+    },
+    systemSummary: {
+      carrier: "300 mm open-web steel joist at 450 mm centres",
+      floorBuildUp: "19 mm INEX FLOOR with engineered timber finish and acoustic underlay",
+      ceiling: "65 mm resilient ceiling zone with 145 mm insulation and 2 x 16 mm fire-rated plasterboard"
+    },
+    impactRatings: {
+      CI: -2,
+      LnW: 53,
+      LnWPlusCI: 51
+    },
+    airborneRatings: {
+      Rw: 62,
+      RwCtr: 57
+    }
+  },
+  {
+    id: "ubiq_fl26_open_web_steel_400_16mm_exact_lab_2026",
+    label: "UBIQ FL-26 | 400 mm open-web steel | INEX FLOOR 16 | 2 x 16 mm resilient ceiling",
+    sourceLabel: "UBIQ official system table PDF",
+    sourceType: "official_manufacturer_system_table",
+    trustTier: "official_manufacturer",
+    estimateMatch: {
+      structuralSupportType: "steel_joists",
+      supportForm: "open_web_or_rolled",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        thicknessMm: 400
+      },
+      floatingScreed: {
+        thicknessMm: 16
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "engineered_timber_with_acoustic_underlay"
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_elastic_hanger",
+        cavityDepthMm: 65,
+        cavityFillThicknessMm: 145,
+        boardLayerCount: 2,
+        boardThicknessMm: 16
+      }
+    },
+    match: {
+      absentRoles: ["upper_fill"],
+      baseStructure: {
+        materialIds: ["open_web_steel_floor"],
+        thicknessMm: 400
+      },
+      floatingScreed: {
+        materialIds: ["inex_floor_panel"],
+        thicknessMm: 16
+      },
+      floorCovering: {
+        materialIds: ["engineered_timber_with_acoustic_underlay"]
+      },
+      ceilingCavity: {
+        materialIds: ["ubiq_resilient_ceiling"],
+        thicknessMm: 65
+      },
+      ceilingFill: {
+        materialIds: ["rockwool"],
+        thicknessMm: 145
+      },
+      ceilingBoard: {
+        layerCount: 2,
+        materialIds: ["firestop_board"],
+        thicknessMm: 16
+      }
+    },
+    systemSummary: {
+      carrier: "400 mm open-web steel joist at 450 mm centres",
+      floorBuildUp: "16 mm INEX FLOOR with engineered timber finish and acoustic underlay",
+      ceiling: "65 mm resilient ceiling zone with 145 mm insulation and 2 x 16 mm fire-rated plasterboard"
+    },
+    impactRatings: {
+      CI: -2,
+      LnW: 53,
+      LnWPlusCI: 51
+    },
+    airborneRatings: {
+      Rw: 61,
+      RwCtr: 55
+    }
+  },
+  {
+    id: "ubiq_fl26_open_web_steel_400_exact_lab_2026",
+    label: "UBIQ FL-26 | 400 mm open-web steel | INEX FLOOR 19 | 2 x 16 mm resilient ceiling",
+    sourceLabel: "UBIQ official system table PDF",
+    sourceType: "official_manufacturer_system_table",
+    trustTier: "official_manufacturer",
+    estimateMatch: {
+      structuralSupportType: "steel_joists",
+      supportForm: "open_web_or_rolled",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        thicknessMm: 400
+      },
+      floatingScreed: {
+        thicknessMm: 19
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "engineered_timber_with_acoustic_underlay"
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_elastic_hanger",
+        cavityDepthMm: 65,
+        cavityFillThicknessMm: 145,
+        boardLayerCount: 2,
+        boardThicknessMm: 16
+      }
+    },
+    match: {
+      absentRoles: ["upper_fill"],
+      baseStructure: {
+        materialIds: ["open_web_steel_floor"],
+        thicknessMm: 400
+      },
+      floatingScreed: {
+        materialIds: ["inex_floor_panel"],
+        thicknessMm: 19
+      },
+      floorCovering: {
+        materialIds: ["engineered_timber_with_acoustic_underlay"]
+      },
+      ceilingCavity: {
+        materialIds: ["ubiq_resilient_ceiling"],
+        thicknessMm: 65
+      },
+      ceilingFill: {
+        materialIds: ["rockwool"],
+        thicknessMm: 145
+      },
+      ceilingBoard: {
+        layerCount: 2,
+        materialIds: ["firestop_board"],
+        thicknessMm: 16
+      }
+    },
+    systemSummary: {
+      carrier: "400 mm open-web steel joist at 450 mm centres",
+      floorBuildUp: "19 mm INEX FLOOR with engineered timber finish and acoustic underlay",
+      ceiling: "65 mm resilient ceiling zone with 145 mm insulation and 2 x 16 mm fire-rated plasterboard"
+    },
+    impactRatings: {
+      CI: -2,
+      LnW: 53,
+      LnWPlusCI: 51
+    },
+    airborneRatings: {
+      Rw: 62,
+      RwCtr: 57
+    }
+  },
+  {
+    id: "ubiq_fl28_open_web_steel_200_16mm_exact_lab_2026",
+    label: "UBIQ FL-28 | 200 mm open-web steel | INEX FLOOR 16 | 3 x 16 mm resilient ceiling",
+    sourceLabel: "UBIQ official system table PDF",
+    sourceType: "official_manufacturer_system_table",
+    trustTier: "official_manufacturer",
+    estimateMatch: {
+      structuralSupportType: "steel_joists",
+      supportForm: "open_web_or_rolled",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        thicknessMm: 200
+      },
+      floatingScreed: {
+        thicknessMm: 16
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "engineered_timber_with_acoustic_underlay"
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_elastic_hanger",
+        cavityDepthMm: 65,
+        cavityFillThicknessMm: 145,
+        boardLayerCount: 3,
+        boardThicknessMm: 16
+      }
+    },
+    match: {
+      absentRoles: ["upper_fill"],
+      baseStructure: {
+        materialIds: ["open_web_steel_floor"],
+        thicknessMm: 200
+      },
+      floatingScreed: {
+        materialIds: ["inex_floor_panel"],
+        thicknessMm: 16
+      },
+      floorCovering: {
+        materialIds: ["engineered_timber_with_acoustic_underlay"]
+      },
+      ceilingCavity: {
+        materialIds: ["ubiq_resilient_ceiling"],
+        thicknessMm: 65
+      },
+      ceilingFill: {
+        materialIds: ["rockwool"],
+        thicknessMm: 145
+      },
+      ceilingBoard: {
+        layerCount: 3,
+        materialIds: ["firestop_board"],
+        thicknessMm: 16
+      }
+    },
+    systemSummary: {
+      carrier: "200 mm open-web steel joist at 450 mm centres",
+      floorBuildUp: "16 mm INEX FLOOR with engineered timber finish and acoustic underlay",
+      ceiling: "65 mm resilient ceiling zone with 145 mm insulation and 3 x 16 mm fire-rated plasterboard"
+    },
+    impactRatings: {
+      CI: -1,
+      LnW: 52,
+      LnWPlusCI: 51
+    },
+    airborneRatings: {
+      Rw: 62,
+      RwCtr: 55
+    }
+  },
+  {
     id: "ubiq_fl28_open_web_steel_200_exact_lab_2026",
     label: "UBIQ FL-28 | 200 mm open-web steel | INEX FLOOR 19 | 3 x 16 mm resilient ceiling",
     sourceLabel: "UBIQ official system table PDF",
@@ -2440,6 +3865,76 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
       CI: -1,
       LnW: 52,
       LnWPlusCI: 51
+    },
+    airborneRatings: {
+      Rw: 63,
+      RwCtr: 57
+    }
+  },
+  {
+    id: "ubiq_fl28_open_web_steel_300_16mm_exact_lab_2026",
+    label: "UBIQ FL-28 | 300 mm open-web steel | INEX FLOOR 16 | 3 x 16 mm resilient ceiling",
+    sourceLabel: "UBIQ official system table PDF",
+    sourceType: "official_manufacturer_system_table",
+    trustTier: "official_manufacturer",
+    estimateMatch: {
+      structuralSupportType: "steel_joists",
+      supportForm: "open_web_or_rolled",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        thicknessMm: 300
+      },
+      floatingScreed: {
+        thicknessMm: 16
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "engineered_timber_with_acoustic_underlay"
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_elastic_hanger",
+        cavityDepthMm: 65,
+        cavityFillThicknessMm: 145,
+        boardLayerCount: 3,
+        boardThicknessMm: 16
+      }
+    },
+    match: {
+      absentRoles: ["upper_fill"],
+      baseStructure: {
+        materialIds: ["open_web_steel_floor"],
+        thicknessMm: 300
+      },
+      floatingScreed: {
+        materialIds: ["inex_floor_panel"],
+        thicknessMm: 16
+      },
+      floorCovering: {
+        materialIds: ["engineered_timber_with_acoustic_underlay"]
+      },
+      ceilingCavity: {
+        materialIds: ["ubiq_resilient_ceiling"],
+        thicknessMm: 65
+      },
+      ceilingFill: {
+        materialIds: ["rockwool"],
+        thicknessMm: 145
+      },
+      ceilingBoard: {
+        layerCount: 3,
+        materialIds: ["firestop_board"],
+        thicknessMm: 16
+      }
+    },
+    systemSummary: {
+      carrier: "300 mm open-web steel joist at 450 mm centres",
+      floorBuildUp: "16 mm INEX FLOOR with engineered timber finish and acoustic underlay",
+      ceiling: "65 mm resilient ceiling zone with 145 mm insulation and 3 x 16 mm fire-rated plasterboard"
+    },
+    impactRatings: {
+      CI: -2,
+      LnW: 51,
+      LnWPlusCI: 49
     },
     airborneRatings: {
       Rw: 63,
@@ -2514,6 +4009,76 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     airborneRatings: {
       Rw: 64,
       RwCtr: 59
+    }
+  },
+  {
+    id: "ubiq_fl28_open_web_steel_400_16mm_exact_lab_2026",
+    label: "UBIQ FL-28 | 400 mm open-web steel | INEX FLOOR 16 | 3 x 16 mm resilient ceiling",
+    sourceLabel: "UBIQ official system table PDF",
+    sourceType: "official_manufacturer_system_table",
+    trustTier: "official_manufacturer",
+    estimateMatch: {
+      structuralSupportType: "steel_joists",
+      supportForm: "open_web_or_rolled",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        thicknessMm: 400
+      },
+      floatingScreed: {
+        thicknessMm: 16
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "engineered_timber_with_acoustic_underlay"
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_elastic_hanger",
+        cavityDepthMm: 65,
+        cavityFillThicknessMm: 145,
+        boardLayerCount: 3,
+        boardThicknessMm: 16
+      }
+    },
+    match: {
+      absentRoles: ["upper_fill"],
+      baseStructure: {
+        materialIds: ["open_web_steel_floor"],
+        thicknessMm: 400
+      },
+      floatingScreed: {
+        materialIds: ["inex_floor_panel"],
+        thicknessMm: 16
+      },
+      floorCovering: {
+        materialIds: ["engineered_timber_with_acoustic_underlay"]
+      },
+      ceilingCavity: {
+        materialIds: ["ubiq_resilient_ceiling"],
+        thicknessMm: 65
+      },
+      ceilingFill: {
+        materialIds: ["rockwool"],
+        thicknessMm: 145
+      },
+      ceilingBoard: {
+        layerCount: 3,
+        materialIds: ["firestop_board"],
+        thicknessMm: 16
+      }
+    },
+    systemSummary: {
+      carrier: "400 mm open-web steel joist at 450 mm centres",
+      floorBuildUp: "16 mm INEX FLOOR with engineered timber finish and acoustic underlay",
+      ceiling: "65 mm resilient ceiling zone with 145 mm insulation and 3 x 16 mm fire-rated plasterboard"
+    },
+    impactRatings: {
+      CI: -2,
+      LnW: 50,
+      LnWPlusCI: 48
+    },
+    airborneRatings: {
+      Rw: 63,
+      RwCtr: 57
     }
   },
   {

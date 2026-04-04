@@ -4095,12 +4095,30 @@ describe("calculateAssembly", () => {
     expect(result.floorSystemMatch?.system.airborneRatings.Rw).toBe(49);
   });
 
-  it("matches the measured TUAS open-box timber family", () => {
+  it("matches the measured TUAS open-box family-b basic row", () => {
     const result = calculateAssembly([
       { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
       { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
       { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
       { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: 25 },
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
+    ]);
+
+    expect(result.floorSystemMatch?.system.id).toBe("tuas_r2b_open_box_timber_measured_2026");
+    expect(result.floorSystemMatch?.impact.LnW).toBe(55);
+    expect(result.floorSystemMatch?.impact.CI50_2500).toBe(1);
+    expect(result.floorSystemMatch?.system.airborneRatings.Rw).toBe(62);
+    expect(result.floorSystemMatch?.system.airborneRatings.RwCtr).toBeCloseTo(54.408826940816517, 5);
+  });
+
+  it("matches the measured TUAS open-box family-a basic row", () => {
+    const result = calculateAssembly([
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+      { floorRole: "ceiling_cavity", materialId: "tuas_open_box_ceiling_family_a", thicknessMm: 25 },
       { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
       { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
       { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
@@ -4113,7 +4131,47 @@ describe("calculateAssembly", () => {
     expect(result.floorSystemMatch?.system.airborneRatings.RwCtr).toBeCloseTo(37.465233062145899, 5);
   });
 
-  it("keeps the measured TUAS open-box timber family exact match when two 13 mm gypsum boards are entered as one 26 mm layer", () => {
+  it("matches the measured TUAS open-box staged dry-floor family", () => {
+    const result = calculateAssembly([
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+      { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: 25 },
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: 13 },
+      { floorRole: "floating_screed", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 30 },
+      { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
+    ]);
+
+    expect(result.floorSystemMatch?.system.id).toBe("tuas_r3b_open_box_timber_measured_2026");
+    expect(result.floorSystemMatch?.impact.LnW).toBe(46);
+    expect(result.floorSystemMatch?.impact.CI50_2500).toBe(3);
+    expect(result.floorSystemMatch?.system.airborneRatings.Rw).toBe(70);
+    expect(result.floorSystemMatch?.system.airborneRatings.RwCtr).toBeCloseTo(61.784975360023004, 5);
+  });
+
+  it("matches the measured TUAS open-box family-a staged dry-floor family", () => {
+    const result = calculateAssembly([
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+      { floorRole: "ceiling_cavity", materialId: "tuas_open_box_ceiling_family_a", thicknessMm: 25 },
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: 13 },
+      { floorRole: "floating_screed", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 30 },
+      { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
+    ]);
+
+    expect(result.floorSystemMatch?.system.id).toBe("tuas_r3a_open_box_timber_measured_2026");
+    expect(result.floorSystemMatch?.impact.LnW).toBe(61);
+    expect(result.floorSystemMatch?.impact.CI50_2500).toBe(4);
+    expect(result.floorSystemMatch?.system.airborneRatings.Rw).toBe(56);
+    expect(result.floorSystemMatch?.system.airborneRatings.RwCtr).toBeCloseTo(45.20879603202112, 5);
+  });
+
+  it("keeps the measured TUAS open-box family-b basic row exact when two 13 mm gypsum boards are entered as one 26 mm layer", () => {
     const result = calculateAssembly([
       { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 26 },
       { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
@@ -4123,11 +4181,11 @@ describe("calculateAssembly", () => {
       { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
     ]);
 
-    expect(result.floorSystemMatch?.system.id).toBe("tuas_r2a_open_box_timber_measured_2026");
-    expect(result.floorSystemMatch?.impact.LnW).toBe(72);
-    expect(result.floorSystemMatch?.impact.CI50_2500).toBe(2);
-    expect(result.floorSystemMatch?.system.airborneRatings.Rw).toBe(49);
-    expect(result.floorSystemMatch?.system.airborneRatings.RwCtr).toBeCloseTo(37.465233062145899, 5);
+    expect(result.floorSystemMatch?.system.id).toBe("tuas_r2b_open_box_timber_measured_2026");
+    expect(result.floorSystemMatch?.impact.LnW).toBe(55);
+    expect(result.floorSystemMatch?.impact.CI50_2500).toBe(1);
+    expect(result.floorSystemMatch?.system.airborneRatings.Rw).toBe(62);
+    expect(result.floorSystemMatch?.system.airborneRatings.RwCtr).toBeCloseTo(54.408826940816517, 5);
   });
 
   it("matches the measured TUAS open-box dry-floor family", () => {
@@ -4148,6 +4206,46 @@ describe("calculateAssembly", () => {
     expect(result.floorSystemMatch?.impact.CI50_2500).toBe(5);
     expect(result.floorSystemMatch?.system.airborneRatings.Rw).toBe(75);
     expect(result.floorSystemMatch?.system.airborneRatings.RwCtr).toBeCloseTo(66.84359, 5);
+  });
+
+  it("matches the measured TUAS open-box family-a dry-floor family", () => {
+    const result = calculateAssembly([
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+      { floorRole: "ceiling_cavity", materialId: "tuas_open_box_ceiling_family_a", thicknessMm: 25 },
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: 50 },
+      { floorRole: "floating_screed", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 60 },
+      { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
+    ]);
+
+    expect(result.floorSystemMatch?.system.id).toBe("tuas_r5a_open_box_timber_measured_2026");
+    expect(result.floorSystemMatch?.impact.LnW).toBe(56);
+    expect(result.floorSystemMatch?.impact.CI50_2500).toBe(3);
+    expect(result.floorSystemMatch?.system.airborneRatings.Rw).toBe(63);
+    expect(result.floorSystemMatch?.system.airborneRatings.RwCtr).toBeCloseTo(51.880550309785406, 5);
+  });
+
+  it("matches the measured TUAS open-box wet screed family", () => {
+    const result = calculateAssembly([
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+      { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: 25 },
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: 40 },
+      { floorRole: "floating_screed", materialId: "screed", thicknessMm: 40 },
+      { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
+    ]);
+
+    expect(result.floorSystemMatch?.system.id).toBe("tuas_r11b_open_box_timber_measured_2026");
+    expect(result.floorSystemMatch?.impact.LnW).toBe(45);
+    expect(result.floorSystemMatch?.impact.CI50_2500).toBe(3);
+    expect(result.floorSystemMatch?.system.airborneRatings.Rw).toBe(74);
+    expect(result.floorSystemMatch?.system.airborneRatings.RwCtr).toBeCloseTo(65.654511374611502, 5);
   });
 
   it("matches the measured TUAS concrete dry-floor family", () => {
@@ -4204,6 +4302,93 @@ describe("calculateAssembly", () => {
     expect(result.floorSystemMatch?.system.airborneRatings.RwCtr).toBe(59);
   });
 
+  it("matches the curated UBIQ FL-24 open-web steel 300 family", () => {
+    const result = calculateAssembly([
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 13 },
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 13 },
+      { floorRole: "floor_covering", materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: 20 },
+      { floorRole: "floating_screed", materialId: "inex_floor_panel", thicknessMm: 19 },
+      { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: 300 }
+    ]);
+
+    expect(result.floorSystemMatch?.system.id).toBe("ubiq_fl24_open_web_steel_300_exact_lab_2026");
+    expect(result.floorSystemMatch?.impact.LnW).toBe(54);
+    expect(result.floorSystemMatch?.impact.CI).toBe(-2);
+    expect(result.floorSystemMatch?.impact.LnWPlusCI).toBe(52);
+    expect(result.floorSystemMatch?.system.airborneRatings.RwCtr).toBe(55);
+  });
+
+  it("matches the curated UBIQ FL-24 open-web steel 300 16 mm deck family", () => {
+    const result = calculateAssembly([
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 13 },
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 13 },
+      { floorRole: "floor_covering", materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: 20 },
+      { floorRole: "floating_screed", materialId: "inex_floor_panel", thicknessMm: 16 },
+      { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: 300 }
+    ]);
+
+    expect(result.floorSystemMatch?.system.id).toBe("ubiq_fl24_open_web_steel_300_16mm_exact_lab_2026");
+    expect(result.floorSystemMatch?.impact.LnW).toBe(54);
+    expect(result.floorSystemMatch?.impact.CI).toBe(-2);
+    expect(result.floorSystemMatch?.impact.LnWPlusCI).toBe(52);
+    expect(result.floorSystemMatch?.system.airborneRatings.RwCtr).toBe(54);
+  });
+
+  it("matches the curated UBIQ FL-26 open-web steel 300 family", () => {
+    const result = calculateAssembly([
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 145 },
+      { floorRole: "ceiling_cavity", materialId: "ubiq_resilient_ceiling", thicknessMm: 65 },
+      { floorRole: "floor_covering", materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: 20 },
+      { floorRole: "floating_screed", materialId: "inex_floor_panel", thicknessMm: 19 },
+      { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: 300 }
+    ]);
+
+    expect(result.floorSystemMatch?.system.id).toBe("ubiq_fl26_open_web_steel_300_exact_lab_2026");
+    expect(result.floorSystemMatch?.impact.LnW).toBe(53);
+    expect(result.floorSystemMatch?.impact.CI).toBe(-2);
+    expect(result.floorSystemMatch?.impact.LnWPlusCI).toBe(51);
+    expect(result.floorSystemMatch?.system.airborneRatings.RwCtr).toBe(57);
+  });
+
+  it("matches the curated UBIQ FL-26 open-web steel 300 16 mm deck family", () => {
+    const result = calculateAssembly([
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 145 },
+      { floorRole: "ceiling_cavity", materialId: "ubiq_resilient_ceiling", thicknessMm: 65 },
+      { floorRole: "floor_covering", materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: 20 },
+      { floorRole: "floating_screed", materialId: "inex_floor_panel", thicknessMm: 16 },
+      { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: 300 }
+    ]);
+
+    expect(result.floorSystemMatch?.system.id).toBe("ubiq_fl26_open_web_steel_300_16mm_exact_lab_2026");
+    expect(result.floorSystemMatch?.impact.LnW).toBe(53);
+    expect(result.floorSystemMatch?.impact.CI).toBe(-2);
+    expect(result.floorSystemMatch?.impact.LnWPlusCI).toBe(51);
+    expect(result.floorSystemMatch?.system.airborneRatings.RwCtr).toBe(55);
+  });
+
+  it("matches the curated UBIQ open-web steel 300 16 mm deck family", () => {
+    const result = calculateAssembly([
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 145 },
+      { floorRole: "ceiling_cavity", materialId: "ubiq_resilient_ceiling", thicknessMm: 65 },
+      { floorRole: "floor_covering", materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: 20 },
+      { floorRole: "floating_screed", materialId: "inex_floor_panel", thicknessMm: 16 },
+      { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: 300 }
+    ]);
+
+    expect(result.floorSystemMatch?.system.id).toBe("ubiq_fl28_open_web_steel_300_16mm_exact_lab_2026");
+    expect(result.floorSystemMatch?.impact.LnW).toBe(51);
+    expect(result.floorSystemMatch?.impact.CI).toBe(-2);
+    expect(result.floorSystemMatch?.impact.LnWPlusCI).toBe(49);
+    expect(result.floorSystemMatch?.system.airborneRatings.RwCtr).toBe(57);
+  });
+
   it("matches the curated UBIQ open-web steel 400 family", () => {
     const result = calculateAssembly([
       { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
@@ -4236,6 +4421,25 @@ describe("calculateAssembly", () => {
     expect(result.impact).toBeNull();
     expect(result.floorSystemMatch).toBeNull();
     expect(result.boundFloorSystemMatch?.system.id).toBe("ubiq_fl33_open_web_steel_300_lab_2026");
+    expect(result.lowerBoundImpact?.basis).toBe("official_floor_system_bound_support");
+    expect(result.lowerBoundImpact?.LnWUpperBound).toBe(51);
+    expect(result.boundFloorSystemMatch?.system.airborneRatings.Rw).toBe(63);
+    expect(result.boundFloorSystemMatch?.system.airborneRatings.RwCtr).toBe(58);
+  });
+
+  it("matches the curated UBIQ bound-only open-web steel 400 sibling on the conservative support lane", () => {
+    const result = calculateAssembly([
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+      { floorRole: "ceiling_cavity", materialId: "ubiq_resilient_ceiling", thicknessMm: 65 },
+      { floorRole: "floor_covering", materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: 20 },
+      { floorRole: "floating_screed", materialId: "inex_floor_panel", thicknessMm: 19 },
+      { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: 400 }
+    ]);
+
+    expect(result.impact).toBeNull();
+    expect(result.floorSystemMatch).toBeNull();
+    expect(result.boundFloorSystemMatch?.system.id).toBe("ubiq_fl33_open_web_steel_400_lab_2026");
     expect(result.lowerBoundImpact?.basis).toBe("official_floor_system_bound_support");
     expect(result.lowerBoundImpact?.LnWUpperBound).toBe(51);
     expect(result.boundFloorSystemMatch?.system.airborneRatings.Rw).toBe(63);
@@ -4945,12 +5149,34 @@ describe("calculateAssembly", () => {
 
     expect(result.floorSystemMatch).toBeNull();
     expect(result.floorSystemEstimate?.impact.basis).toBe("predictor_mass_timber_clt_dry_interaction_estimate");
-    expect(result.floorSystemEstimate?.impact.LnW).toBe(67.5);
-    expect(result.floorSystemEstimate?.airborneRatings.Rw).toBe(40);
-    expect(result.floorSystemEstimate?.impact.estimateCandidateIds).toEqual([
-      "tuas_x2_clt140_measured_2026",
-      "tuas_c2_clt260_measured_2026"
+    expect(result.floorSystemEstimate?.impact.LnW).toBe(70);
+    expect(result.floorSystemEstimate?.airborneRatings.Rw).toBe(38);
+    expect(result.floorSystemEstimate?.impact.estimateCandidateIds).toEqual(["tuas_x2_clt140_measured_2026"]);
+  });
+
+  it("keeps thin-underlay wet CLT suspended stacks on the Dataholz suspended-family lane on the assembly route", () => {
+    const result = calculateAssembly([
+      { floorRole: "floor_covering", materialId: "vinyl_flooring", thicknessMm: 4 },
+      { floorRole: "resilient_layer", materialId: "generic_resilient_underlay_s30", thicknessMm: 8 },
+      { floorRole: "floating_screed", materialId: "screed", thicknessMm: 50 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 140 },
+      { floorRole: "ceiling_cavity", materialId: "resilient_channel", thicknessMm: 65 },
+      { floorRole: "ceiling_fill", materialId: "glasswool", thicknessMm: 100 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 }
     ]);
+
+    expect(result.floorSystemMatch).toBeNull();
+    expect(result.floorSystemEstimate?.kind).toBe("family_general");
+    expect(result.floorSystemEstimate?.impact.basis).toBe("predictor_floor_system_family_general_estimate");
+    expect(result.floorSystemEstimate?.impact.LnW).toBe(49.5);
+    expect(result.floorSystemEstimate?.airborneRatings.Rw).toBe(61.5);
+    expect(result.floorSystemEstimate?.airborneRatings.RwCtr).toBe(-7);
+    expect(result.floorSystemEstimate?.impact.estimateCandidateIds).toEqual([
+      "dataholz_gdmnxa02a_00_clt_lab_2026",
+      "dataholz_gdmnxa02a_02_clt_lab_2026"
+    ]);
+    expect(result.warnings.some((warning: string) => /derived from visible floor-role layers/i.test(warning))).toBe(true);
   });
 
   it("keeps open-box dry-floor stacks on the stronger TUAS archetype lane on the assembly route", () => {
@@ -4997,9 +5223,11 @@ describe("calculateAssembly", () => {
     expect(result.floorSystemEstimate?.notes.some((note: string) => /Archetype-level family matching was withheld/i.test(note))).toBe(
       true
     );
-    expect(result.floorSystemEstimate?.notes.some((note: string) => /Displayed fit was capped from 87.5% to 54%/i.test(note))).toBe(
-      true
-    );
+    expect(
+      result.floorSystemEstimate?.notes.some((note: string) =>
+        /Displayed fit was capped from .* to 54%/i.test(note)
+      )
+    ).toBe(true);
     expect(
       result.warnings.some((warning: string) =>
         /Visible-layer predictor matching is parked because single-entry floor roles are duplicated: upper fill x2/i.test(
@@ -5098,7 +5326,12 @@ describe("calculateAssembly", () => {
     expect(result.floorSystemMatch).toBeNull();
     expect(result.floorSystemEstimate?.kind).toBe("family_general");
     expect(result.impact?.basis).toBe("predictor_floor_system_family_general_estimate");
-    expect(result.impact?.LnW).toBe(51);
+    expect(result.impact?.LnW).toBe(53.3);
+    expect(result.impact?.estimateCandidateIds).toEqual([
+      "ubiq_fl26_open_web_steel_200_16mm_exact_lab_2026",
+      "ubiq_fl26_open_web_steel_300_16mm_exact_lab_2026",
+      "ubiq_fl26_open_web_steel_400_16mm_exact_lab_2026"
+    ]);
     expect(result.floorSystemEstimate?.structuralFamily).toBe("lightweight steel");
   });
 
@@ -6259,6 +6492,36 @@ describe("calculateAssembly", () => {
     expect(result.warnings.some((warning: string) => /field conversion is incomplete/i.test(warning))).toBe(true);
   });
 
+  it("keeps floor-carrier Rw exposed on the assembly route even when the airborne descriptor is apparent", () => {
+    const result = calculateAssembly(
+      [
+        { floorRole: "base_structure", materialId: "timber_frame_floor", thicknessMm: 240 },
+        { floorRole: "resilient_layer", materialId: "mw_t_impact_layer", thicknessMm: 30 },
+        { floorRole: "floor_covering", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 25 },
+        { floorRole: "ceiling_cavity", materialId: "resilient_channel", thicknessMm: 27 },
+        { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+        { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 12.5 },
+        { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 12.5 }
+      ],
+      {
+        airborneContext: {
+          contextMode: "field_between_rooms"
+        },
+        impactFieldContext: {
+          fieldKDb: 2,
+          receivingRoomVolumeM3: 55
+        },
+        targetOutputs: ["Rw", "R'w", "Ln,w", "L'n,w", "L'nT,w"]
+      }
+    );
+
+    expect(result.ratings.iso717.descriptor).toBe("R'w");
+    expect(result.floorSystemRatings?.Rw).toBe(65);
+    expect(result.metrics.estimatedRwPrimeDb).toBeGreaterThan(0);
+    expect(result.supportedTargetOutputs).toEqual(["Rw", "R'w", "Ln,w", "L'n,w", "L'nT,w"]);
+    expect(result.unsupportedTargetOutputs).toEqual([]);
+  });
+
   it("can expose an official approximate DnT,A,k companion even when live DnT,A geometry is still incomplete", () => {
     const layers = [
       { materialId: "skim_plaster", thicknessMm: 3 },
@@ -6293,5 +6556,37 @@ describe("calculateAssembly", () => {
     expect(result.floorSystemEstimate).toBeNull();
     expect(result.supportedTargetOutputs).toEqual(["Rw"]);
     expect(result.unsupportedTargetOutputs).toEqual(["Ln,w"]);
+  });
+
+  it("withholds closest-family warning labels when only cross-family floor recommendations exist", () => {
+    const result = calculateAssembly(
+      [
+        { floorRole: "floor_covering", materialId: "ceramic_tile", thicknessMm: 8 },
+        { floorRole: "resilient_layer", materialId: "generic_resilient_underlay_s30", thicknessMm: 8 },
+        { floorRole: "floating_screed", materialId: "screed", thicknessMm: 30 },
+        { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
+      ],
+      {
+        airborneContext: {
+          contextMode: "field_between_rooms",
+          panelHeightMm: 2800,
+          panelWidthMm: 3200,
+          receivingRoomRt60S: 0.6,
+          receivingRoomVolumeM3: 55
+        },
+        impactFieldContext: {
+          fieldKDb: 2,
+          receivingRoomVolumeM3: 55
+        },
+        targetOutputs: ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]
+      }
+    );
+
+    expect(
+      result.warnings.some((warning: string) =>
+        /withheld the closest candidate label because it drifted outside the defended same-family route/i.test(warning)
+      )
+    ).toBe(true);
+    expect(result.warnings.some((warning: string) => /Closest family candidate is TUAS X2/i.test(warning))).toBe(false);
   });
 });

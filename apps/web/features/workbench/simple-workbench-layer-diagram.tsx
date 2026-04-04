@@ -16,11 +16,10 @@ import { DetailTag } from "./simple-workbench-primitives";
 import { SectionIllustration } from "./simple-workbench-section-illustration";
 import type { StudyMode } from "./preset-definitions";
 import {
+  buildSolverDisplayLayers,
   buildMaterialFacts,
   compactValues,
   getRowActivityCounts,
-  isThicknessReady,
-  parsePositiveNumber,
   sumThickness
 } from "./simple-workbench-utils";
 import { FLOOR_ROLE_LABELS } from "./workbench-data";
@@ -30,29 +29,27 @@ export function LayerLegendRow(props: {
   active: boolean;
   index: number;
   material: MaterialDefinition;
-  ready: boolean;
-  row: LayerDraft;
+  sourceRowIds: readonly string[];
   studyMode: StudyMode;
+  thicknessLabel: string;
+  floorRole?: LayerDraft["floorRole"];
 }) {
-  const { active, index, material, ready, row, studyMode } = props;
+  const { active, floorRole, index, material, sourceRowIds, studyMode, thicknessLabel } = props;
   const facts = buildMaterialFacts({
-    densityOverride: row.densityKgM3,
-    dynamicStiffnessOverride: row.dynamicStiffnessMNm3,
     material,
-    thicknessMm: row.thicknessMm
+    thicknessMm: thicknessLabel.replace(/ mm$/u, "")
   });
+  const liveRowLabel =
+    sourceRowIds.length > 1 ? `${sourceRowIds.length} live rows` : "Solver layer";
 
   return (
     <article
       className={`rounded border px-3 py-2 ${
         active
           ? "border-[color:var(--ink)] bg-[color:color-mix(in_oklch,var(--ink)_4%,var(--paper))]"
-          : ready
-            ? "border-[color:var(--line)] bg-[color:var(--paper)]"
-            : "border-[color:var(--warning)] bg-[color:color-mix(in_oklch,var(--warning)_8%,var(--paper))]"
+          : "border-[color:var(--line)] bg-[color:var(--paper)]"
       }`}
       data-active={active ? "true" : "false"}
-      data-ready={ready ? "true" : "false"}
       data-testid={`legend-row-${index + 1}`}
     >
       <div className="flex items-center gap-2.5">
@@ -64,11 +61,11 @@ export function LayerLegendRow(props: {
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-1.5">
             <div className="truncate text-[0.82rem] font-semibold text-[color:var(--ink)]">{material.name}</div>
-            <DetailTag>{row.thicknessMm || "?"} mm</DetailTag>
-            {studyMode === "floor" && row.floorRole ? <DetailTag>{FLOOR_ROLE_LABELS[row.floorRole]}</DetailTag> : null}
+            <DetailTag>{thicknessLabel}</DetailTag>
+            {studyMode === "floor" && floorRole ? <DetailTag>{FLOOR_ROLE_LABELS[floorRole]}</DetailTag> : null}
           </div>
           <div className="mt-0.5 text-[0.68rem] leading-5 text-[color:var(--ink-soft)]">
-            {compactValues([getMaterialCategoryLabel(material), facts[0], ready ? "Live row" : "Parked"]).join(" · ")}
+            {compactValues([getMaterialCategoryLabel(material), facts[0], liveRowLabel]).join(" · ")}
           </div>
         </div>
       </div>
@@ -78,13 +75,16 @@ export function LayerLegendRow(props: {
 
 export function FloorStackFigure(props: {
   activeRowId: string | null;
-  rows: readonly {
+  layers: readonly {
     material: MaterialDefinition;
-    row: LayerDraft;
+    sourceRowIds: readonly string[];
+    thicknessLabel: string;
+    thicknessMm: number;
+    id: string;
   }[];
 }) {
-  const { activeRowId, rows } = props;
-  const totalThickness = rows.reduce((sum, entry) => sum + (parsePositiveNumber(entry.row.thicknessMm) ?? 0), 0);
+  const { activeRowId, layers } = props;
+  const totalThickness = layers.reduce((sum, entry) => sum + entry.thicknessMm, 0);
 
   return (
     <div className="section-figure rounded-xl border border-[color:var(--line)] bg-[color:var(--panel-strong)] px-3 py-3">
@@ -94,7 +94,7 @@ export function FloorStackFigure(props: {
           <div className="mt-1 text-[0.58rem] tracking-[0.12em] opacity-80">Section preview</div>
         </div>
         <div className="text-right text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">
-          <div>{rows.length} layers</div>
+          <div>{layers.length} layers</div>
           <div className="mt-1 text-[0.58rem] tracking-[0.12em] opacity-80">{formatIllustrationClampLabel("floor")}</div>
         </div>
       </div>
@@ -102,14 +102,14 @@ export function FloorStackFigure(props: {
       <div className="mt-3">
         <SectionIllustration
           axis="floor"
-          layers={rows.map(({ material, row }, index) => ({
-            active: row.id === activeRowId,
+          layers={layers.map(({ id, material, sourceRowIds, thicknessLabel, thicknessMm }, index) => ({
+            active: activeRowId ? sourceRowIds.includes(activeRowId) : false,
             indexLabel: String(index + 1),
-            key: row.id,
+            key: id,
             material,
-            ready: isThicknessReady(row.thicknessMm),
-            thicknessLabel: isThicknessReady(row.thicknessMm) ? `${row.thicknessMm} mm` : "Parked",
-            thicknessMm: parsePositiveNumber(row.thicknessMm) ?? null
+            ready: true,
+            thicknessLabel,
+            thicknessMm
           }))}
           orientation="floor"
         />
@@ -131,13 +131,16 @@ export function FloorStackFigure(props: {
 
 export function WallStackFigure(props: {
   activeRowId: string | null;
-  rows: readonly {
+  layers: readonly {
     material: MaterialDefinition;
-    row: LayerDraft;
+    sourceRowIds: readonly string[];
+    thicknessLabel: string;
+    thicknessMm: number;
+    id: string;
   }[];
 }) {
-  const { activeRowId, rows } = props;
-  const totalThickness = rows.reduce((sum, entry) => sum + (parsePositiveNumber(entry.row.thicknessMm) ?? 0), 0);
+  const { activeRowId, layers } = props;
+  const totalThickness = layers.reduce((sum, entry) => sum + entry.thicknessMm, 0);
 
   return (
     <div className="section-figure rounded-xl border border-[color:var(--line)] bg-[color:var(--panel-strong)] px-3 py-3">
@@ -147,7 +150,7 @@ export function WallStackFigure(props: {
           <div className="mt-1 text-[0.58rem] tracking-[0.12em] opacity-80">Section preview</div>
         </div>
         <div className="text-right text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">
-          <div>{rows.length} layers</div>
+          <div>{layers.length} layers</div>
           <div className="mt-1 text-[0.58rem] tracking-[0.12em] opacity-80">{formatIllustrationClampLabel("wall")}</div>
         </div>
       </div>
@@ -155,14 +158,14 @@ export function WallStackFigure(props: {
       <div className="mt-3">
         <SectionIllustration
           axis="wall"
-          layers={rows.map(({ material, row }, index) => ({
-            active: row.id === activeRowId,
+          layers={layers.map(({ id, material, sourceRowIds, thicknessLabel, thicknessMm }, index) => ({
+            active: activeRowId ? sourceRowIds.includes(activeRowId) : false,
             indexLabel: String(index + 1),
-            key: row.id,
+            key: id,
             material,
-            ready: isThicknessReady(row.thicknessMm),
-            thicknessLabel: isThicknessReady(row.thicknessMm) ? `${row.thicknessMm} mm` : "?",
-            thicknessMm: parsePositiveNumber(row.thicknessMm) ?? null
+            ready: true,
+            thicknessLabel,
+            thicknessMm
           }))}
           orientation="wall"
         />
@@ -192,10 +195,7 @@ export function LayerStackDiagram(props: {
   const { activeRowId, materials, result, rows, studyMode } = props;
   const totalThickness = sumThickness(rows);
   const { collapsedLiveRowCount, solverLayerCount } = getRowActivityCounts(rows, materials);
-  const resolved = rows.map((row) => ({
-    material: materials.find((entry) => entry.id === row.materialId) ?? materials[0]!,
-    row
-  }));
+  const resolved = buildSolverDisplayLayers(rows, materials);
 
   return (
     <section className={`min-w-0 overflow-hidden rounded border ${workbenchSectionCardClass("assembly")}`}>
@@ -210,13 +210,13 @@ export function LayerStackDiagram(props: {
         </div>
       </div>
 
-      {rows.length ? (
+      {resolved.length ? (
         <div className="grid gap-3 p-3">
           <div>
             {studyMode === "floor" ? (
-              <FloorStackFigure activeRowId={activeRowId} rows={resolved} />
+              <FloorStackFigure activeRowId={activeRowId} layers={resolved} />
             ) : (
-              <WallStackFigure activeRowId={activeRowId} rows={resolved} />
+              <WallStackFigure activeRowId={activeRowId} layers={resolved} />
             )}
           </div>
           <div className="grid gap-2">
@@ -229,15 +229,16 @@ export function LayerStackDiagram(props: {
               </div>
             </div>
             <div className="grid gap-2 xl:grid-cols-2">
-              {resolved.map(({ material, row }, index) => (
+              {resolved.map(({ floorRole, id, material, sourceRowIds, thicknessLabel }, index) => (
                 <LayerLegendRow
-                  active={row.id === activeRowId}
+                  active={activeRowId ? sourceRowIds.includes(activeRowId) : false}
+                  floorRole={floorRole}
                   index={index}
-                  key={row.id}
+                  key={id}
                   material={material}
-                  ready={isThicknessReady(row.thicknessMm)}
-                  row={row}
+                  sourceRowIds={sourceRowIds}
                   studyMode={studyMode}
+                  thicknessLabel={thicknessLabel}
                 />
               ))}
             </div>
@@ -251,7 +252,7 @@ export function LayerStackDiagram(props: {
       ) : (
         <div className="px-4 py-4">
           <div className="rounded border border-dashed border-[color:var(--line)] bg-[color:var(--paper)] px-4 py-5 text-[0.82rem] leading-6 text-[color:var(--ink-soft)]">
-            Add layers in physical order to generate the section preview and live stack metrics.
+            Add valid layers to generate the section preview and live stack metrics.
           </div>
         </div>
       )}

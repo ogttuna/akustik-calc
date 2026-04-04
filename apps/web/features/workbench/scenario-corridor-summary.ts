@@ -11,6 +11,7 @@ import {
 } from "./validation-regime";
 import type { ValidationPosture } from "./validation-regime";
 import { getDutchResidentialDnTAkComplianceSummary } from "./dutch-airborne-compliance";
+import { parseWorkbenchNumber } from "./parse-number";
 
 export type ScenarioCorridorSummary = {
   activeFamilyLabel?: string;
@@ -112,12 +113,8 @@ function formatSignedDb(value: number): string {
 }
 
 function parseTarget(value: string | null | undefined): number | null {
-  if (!value || value.trim().length === 0) {
-    return null;
-  }
-
-  const parsed = Number(value);
-  return Number.isFinite(parsed) ? parsed : null;
+  const parsed = parseWorkbenchNumber(value);
+  return typeof parsed === "number" ? parsed : null;
 }
 
 function getImpactComparableMetric(

@@ -43,6 +43,7 @@ import {
   STUDY_CONTEXT_LABELS,
   STUDY_MODE_LABELS
 } from "./workbench-data";
+import { parseWorkbenchNumber } from "./parse-number";
 import { summarizeTargetOutputs } from "./target-output-status";
 import { getScenarioDecisionSummary } from "./scenario-corridor-summary";
 import {
@@ -87,12 +88,8 @@ function slugify(value: string): string {
 }
 
 function parseTarget(value: string): number | null {
-  if (value.trim().length === 0) {
-    return null;
-  }
-
-  const parsed = Number(value);
-  return Number.isFinite(parsed) ? parsed : null;
+  const parsed = parseWorkbenchNumber(value);
+  return typeof parsed === "number" ? parsed : null;
 }
 
 function formatMetric(value: number): string {

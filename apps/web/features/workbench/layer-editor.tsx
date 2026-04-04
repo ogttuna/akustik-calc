@@ -9,6 +9,7 @@ import { FieldUsageBoard } from "./field-usage-board";
 import { FieldGuide } from "./field-guide";
 import { prependRecommendedMaterialGroup } from "./material-picker-recommendations";
 import { getCatalogDensity } from "./material-density";
+import { parsePositiveWorkbenchNumber } from "./parse-number";
 import type { StudyMode } from "./preset-definitions";
 import { FLOOR_ROLE_LABELS } from "./workbench-data";
 import { WorkbenchMaterialPicker, type WorkbenchMaterialOptionGroup } from "./workbench-material-picker";
@@ -90,8 +91,8 @@ export function LayerEditor({
 }: LayerEditorProps) {
   const rowLabel = rows.length === 1 ? "layer" : "layers";
   const validThicknessCount = rows.filter((row) => {
-    const thickness = Number(row.thicknessMm);
-    return Number.isFinite(thickness) && thickness > 0;
+    const thickness = parsePositiveWorkbenchNumber(row.thicknessMm);
+    return typeof thickness === "number";
   }).length;
   const assignedFloorRoleCount = rows.filter((row) => typeof row.floorRole === "string").length;
   const usageItems = [

@@ -40,6 +40,7 @@ import { ImpactTracePanel } from "./impact-trace-panel";
 import { LayerEditor } from "./layer-editor";
 import { MaterialLibraryPanel } from "./material-library-panel";
 import { normalizeRows } from "./normalize-rows";
+import { parseWorkbenchNumber } from "./parse-number";
 import { ParityScorecardPanel } from "./parity-scorecard-panel";
 import { PerformanceCriteriaPanel } from "./performance-criteria-panel";
 import { PanelPlaceholder } from "./panel-placeholder";
@@ -116,12 +117,7 @@ const WorkbenchCommandPalette = dynamic(
 );
 
 function parseFiniteNumber(value: string | null | undefined): number | undefined {
-  if (!value || value.trim().length === 0) {
-    return undefined;
-  }
-
-  const parsed = Number(value);
-  return Number.isFinite(parsed) ? parsed : undefined;
+  return parseWorkbenchNumber(value);
 }
 
 export function WorkbenchShell() {
@@ -231,8 +227,8 @@ export function WorkbenchShell() {
   const fieldRiskSummary = summarizeFieldRisk(fieldRiskIds);
   const normalized = normalizeRows(rows, materials);
   const validThicknessRowCount = rows.filter((row) => {
-    const thickness = Number(row.thicknessMm);
-    return Number.isFinite(thickness) && thickness > 0;
+    const thickness = parseFiniteNumber(row.thicknessMm);
+    return typeof thickness === "number" && thickness > 0;
   }).length;
   const assignedFloorRoleCount = rows.filter((row) => typeof row.floorRole === "string").length;
   const explicitBaseStructureCount = rows.filter((row) => row.floorRole === "base_structure").length;

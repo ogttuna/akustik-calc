@@ -63,6 +63,24 @@ describe("normalizeRows", () => {
     ]);
   });
 
+  it("rebuilds simple topside floor packages into deterministic solver order before coalescing", () => {
+    const normalized = normalizeRows([
+      { floorRole: "floor_covering", id: "a", materialId: "ceramic_tile", thicknessMm: "8" },
+      { floorRole: "resilient_layer", id: "b", materialId: "generic_resilient_underlay", thicknessMm: "8" },
+      { floorRole: "floating_screed", id: "c1", materialId: "screed", thicknessMm: "25" },
+      { floorRole: "floating_screed", id: "c2", materialId: "screed", thicknessMm: "25" },
+      { floorRole: "base_structure", id: "d", materialId: "concrete", thicknessMm: "150" }
+    ]);
+
+    expect(normalized.warnings).toEqual([]);
+    expect(normalized.layers).toEqual([
+      { floorRole: "floor_covering", materialId: "ceramic_tile", thicknessMm: 8 },
+      { floorRole: "floating_screed", materialId: "screed", thicknessMm: 50 },
+      { floorRole: "resilient_layer", materialId: "generic_resilient_underlay", thicknessMm: 8 },
+      { floorRole: "base_structure", materialId: "concrete", thicknessMm: 150 }
+    ]);
+  });
+
   it("collapses adjacent rows that share the same effective dynamic stiffness override", () => {
     const normalized = normalizeRows([
       { floorRole: "resilient_layer", id: "a", materialId: "generic_resilient_underlay", thicknessMm: "4", dynamicStiffnessMNm3: "35" },
@@ -136,12 +154,24 @@ describe("normalizeRows", () => {
     expect(normalized.layers).toEqual([{ floorRole: "floating_screed", materialId: "screed", thicknessMm: 50 }]);
   });
 
-  it.each([
-    { label: "comma decimal", thicknessMm: "8,0" },
-    { label: "zero thickness", thicknessMm: "0" }
-  ])("drops $label rows instead of inventing a malformed solver layer", ({ thicknessMm }) => {
+  it("accepts comma-decimal thickness instead of dropping an otherwise valid live row", () => {
     const normalized = normalizeRows([
-      { floorRole: "floor_covering", id: "a", materialId: "ceramic_tile", thicknessMm },
+      { floorRole: "floor_covering", id: "a", materialId: "ceramic_tile", thicknessMm: "8,0" },
+      { floorRole: "resilient_layer", id: "b", materialId: "generic_resilient_underlay", thicknessMm: "8" },
+      { floorRole: "base_structure", id: "c", materialId: "concrete", thicknessMm: "150" }
+    ]);
+
+    expect(normalized.warnings).toEqual([]);
+    expect(normalized.layers).toEqual([
+      { floorRole: "floor_covering", materialId: "ceramic_tile", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "generic_resilient_underlay", thicknessMm: 8 },
+      { floorRole: "base_structure", materialId: "concrete", thicknessMm: 150 }
+    ]);
+  });
+
+  it("drops zero-thickness rows instead of inventing a malformed solver layer", () => {
+    const normalized = normalizeRows([
+      { floorRole: "floor_covering", id: "a", materialId: "ceramic_tile", thicknessMm: "0" },
       { floorRole: "resilient_layer", id: "b", materialId: "generic_resilient_underlay", thicknessMm: "8" },
       { floorRole: "base_structure", id: "c", materialId: "concrete", thicknessMm: "150" }
     ]);

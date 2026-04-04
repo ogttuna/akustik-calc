@@ -66,6 +66,7 @@ const CEILING_CAVITY_MATERIAL_IDS = new Set([
   "genieclip_rst",
   "resilient_channel",
   "resilient_stud_ceiling",
+  "tuas_open_box_ceiling_family_a",
   "ubiq_resilient_ceiling"
 ]);
 const RESILIENT_LAYER_MATERIAL_IDS = new Set([
@@ -116,6 +117,7 @@ const BASE_STRUCTURE_HINT_MATERIAL_IDS = new Set([
 const SAFE_BARE_BASE_ROLE_INFERENCE_MATERIAL_IDS = new Set([
   "clt_panel",
   "composite_steel_deck",
+  "concrete",
   "hollow_core_plank",
   "steel_deck_composite"
 ]);
@@ -194,6 +196,11 @@ type PredictorMatchScore = {
   score: number;
 };
 
+const REQUIRED_PREDICTOR_SUPPORT_CLASSES = new Set([
+  "tuas_open_box_family_a",
+  "tuas_open_box_family_b"
+]);
+
 function scoreExactString(
   expected: string | undefined,
   actual: string | undefined,
@@ -209,6 +216,19 @@ function scoreExactString(
 
   const compatible = normalizer(expected) === normalizer(actual);
   return { compatible, score: compatible ? 1 : 0 };
+}
+
+function scorePredictorSupportClass(
+  expected: string | undefined,
+  actual: string | undefined
+): PredictorMatchScore {
+  const normalizedExpected = normalizePredictorToken(expected);
+
+  if (REQUIRED_PREDICTOR_SUPPORT_CLASSES.has(normalizedExpected) && !actual) {
+    return { compatible: false, score: 0 };
+  }
+
+  return scoreExactString(expected, actual, normalizePredictorToken);
 }
 
 function scoreExactNumber(
@@ -266,6 +286,28 @@ function scorePredictorSection(
     productId?: string;
     thicknessMm?: number;
   };
+
+  const hasExpectedSection =
+    typeof expectedSection.thicknessMm === "number" ||
+    typeof expectedSection.densityKgM3 === "number" ||
+    typeof expectedSection.dynamicStiffnessMNm3 === "number" ||
+    Boolean(expectedSection.materialClass) ||
+    Boolean(expectedSection.productId);
+  const hasActualSection =
+    typeof actualSection.thicknessMm === "number" ||
+    typeof actualSection.densityKgM3 === "number" ||
+    typeof actualSection.dynamicStiffnessMNm3 === "number" ||
+    Boolean(actualSection.materialClass) ||
+    Boolean(actualSection.productId);
+
+  if (hasExpectedSection && !hasActualSection) {
+    return { compatible: false, score: 0 };
+  }
+
+  if (!hasExpectedSection && !hasActualSection) {
+    return { compatible: true, score: 1 };
+  }
+
   let score: PredictorMatchScore = { compatible: true, score: 0 };
   score = accumulateScore(
     score,
@@ -347,7 +389,7 @@ function scorePredictorLowerTreatment(
   score = accumulateScore(score, scoreExactString(expected?.type, actual?.type));
   score = accumulateScore(
     score,
-    scoreExactString(expected?.supportClass, actual?.supportClass, normalizePredictorToken)
+    scorePredictorSupportClass(expected?.supportClass, actual?.supportClass)
   );
   score = accumulateScore(
     score,
@@ -450,9 +492,9 @@ function inferMissingFloorRole(
   }
 ): LayerInput["floorRole"] | undefined {
   if (material.id === "dry_floating_gypsum_fiberboard") {
-    return layer.thicknessMm >= 40 || context.hasSeparateTopFloorFinish
-      ? "floating_screed"
-      : "floor_covering";
+    // Published integrated dry-floor rows use thick gypsum-fiber elements as the top dry-floor
+    // layer unless a separate finish proves the board is acting as an intermediate screed.
+    return context.hasSeparateTopFloorFinish ? "floating_screed" : "floor_covering";
   }
 
   if (CEILING_CAVITY_MATERIAL_IDS.has(material.id)) {
@@ -822,6 +864,9 @@ function resolveCeilingSupportMaterialId(input: ImpactPredictorInput): string | 
   }
 
   if (input.structuralSupportType === "open_box_timber") {
+    if (supportClass === "tuas_open_box_family_a") {
+      return "tuas_open_box_ceiling_family_a";
+    }
     return "resilient_stud_ceiling";
   }
 
@@ -1092,6 +1137,7 @@ function resolveLowerTreatmentType(
     case "genieclip_rst":
     case "resilient_channel":
     case "resilient_stud_ceiling":
+    case "tuas_open_box_ceiling_family_a":
     case "ubiq_resilient_ceiling":
       return "suspended_ceiling_elastic_hanger";
     case "acoustic_hanger_ceiling":
@@ -1105,9 +1151,13 @@ function resolveLowerTreatmentType(
 
 function resolveLowerTreatmentSupportClass(
   cavityLayer: ResolvedLayerStackEntry | undefined
-): "direct_to_joists" | "furred_channels" | undefined {
+): "direct_to_joists" | "furred_channels" | "tuas_open_box_family_a" | undefined {
   if (!cavityLayer) {
     return "direct_to_joists";
+  }
+
+  if (cavityLayer.material.id === "tuas_open_box_ceiling_family_a") {
+    return "tuas_open_box_family_a";
   }
 
   if (cavityLayer.material.id === "furring_channel") {

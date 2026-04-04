@@ -10,6 +10,15 @@ type TopologyProfile = {
 
 const LAB_OUTPUTS: readonly RequestedOutputId[] = ["Rw", "Ln,w", "Ln,w+CI", "DeltaLw"];
 const FIELD_OUTPUTS: readonly RequestedOutputId[] = ["Ln,w", "L'n,w", "L'nT,w", "L'nT,50"];
+const FIELD_CORE_OUTPUTS: readonly RequestedOutputId[] = ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"];
+
+const AIRBORNE_FIELD_CONTEXT = {
+  contextMode: "field_between_rooms" as const,
+  panelHeightMm: 2800,
+  panelWidthMm: 3200,
+  receivingRoomRt60S: 0.6,
+  receivingRoomVolumeM3: 55
+};
 
 const IMPACT_FIELD_CONTEXT = {
   fieldKDb: 2,
@@ -105,10 +114,23 @@ const CASES = BASES.flatMap((base) =>
   )
 );
 
+const FIELD_CONTINUATION_FAIL_CLOSED_CASE_IDS = new Set([
+  "hollow_core_200__timber_acoustic__resilient_channel",
+  "open_box_370__tile_wet__none",
+  "open_box_370__vinyl_wet__none",
+  "open_box_370__timber_acoustic__none"
+]);
+
+const ROOM_TO_ROOM_SCREENING_ONLY_CASE_IDS = new Set(FIELD_CONTINUATION_FAIL_CLOSED_CASE_IDS);
+
 function getOutputValue(result: ReturnType<typeof calculateAssembly>, output: RequestedOutputId): number | null | undefined {
   switch (output) {
     case "Rw":
-      return result.metrics.estimatedRwDb;
+      return result.floorSystemRatings?.Rw ?? result.metrics.estimatedRwDb;
+    case "R'w":
+      return result.metrics.estimatedRwPrimeDb;
+    case "DnT,w":
+      return result.metrics.estimatedDnTwDb;
     case "Ln,w":
       return result.impact?.LnW;
     case "Ln,w+CI":
@@ -129,6 +151,8 @@ function getOutputValue(result: ReturnType<typeof calculateAssembly>, output: Re
 function isInsideCorridor(output: RequestedOutputId, value: number): boolean {
   switch (output) {
     case "Rw":
+    case "R'w":
+    case "DnT,w":
       return value >= 25 && value <= 90;
     case "DeltaLw":
       return value >= 0 && value <= 50;
@@ -219,7 +243,18 @@ describe("floor topology sanity sweep", () => {
         continue;
       }
 
-      if (!result.supportedTargetOutputs.length) {
+      if (FIELD_CONTINUATION_FAIL_CLOSED_CASE_IDS.has(testCase.id)) {
+        if (result.supportedTargetOutputs.length !== 0) {
+          failures.push(
+            `${testCase.id}: expected field continuation to stay fail-closed on impact outputs, got supported=${JSON.stringify(result.supportedTargetOutputs)}`
+          );
+        }
+        if (result.unsupportedTargetOutputs.join("|") !== FIELD_OUTPUTS.join("|")) {
+          failures.push(
+            `${testCase.id}: expected all field continuation outputs to stay unsupported, got ${JSON.stringify(result.unsupportedTargetOutputs)}`
+          );
+        }
+      } else if (!result.supportedTargetOutputs.length) {
         failures.push(`${testCase.id}: expected at least one supported field output`);
       }
 
@@ -249,6 +284,53 @@ describe("floor topology sanity sweep", () => {
       ) {
         failures.push(`${testCase.id}: expected L'nT,w to stay at or below L'n,w, got L'n,w=${lPrimeNW}, L'nT,w=${lPrimeNTw}`);
       }
+    }
+
+    expect(failures).toEqual([]);
+  });
+
+  it("keeps the representative room-to-room floor core bundle fully supported when full field context is present", () => {
+    const failures: string[] = [];
+
+    for (const testCase of CASES) {
+      const result = calculateAssembly(testCase.layers, {
+        airborneContext: AIRBORNE_FIELD_CONTEXT,
+        impactFieldContext: IMPACT_FIELD_CONTEXT,
+        targetOutputs: FIELD_CORE_OUTPUTS
+      });
+
+      if (!result.ok) {
+        failures.push(`${testCase.id}: room-to-room core run should stay ok`);
+        continue;
+      }
+
+      if (ROOM_TO_ROOM_SCREENING_ONLY_CASE_IDS.has(testCase.id)) {
+        if (result.supportedTargetOutputs.join("|") !== "R'w|DnT,w") {
+          failures.push(
+            `${testCase.id}: expected screening-only room-to-room support on R'w + DnT,w, got supported=${JSON.stringify(result.supportedTargetOutputs)} unsupported=${JSON.stringify(result.unsupportedTargetOutputs)}`
+          );
+        }
+        if (result.unsupportedTargetOutputs.join("|") !== 'Rw|Ln,w|L\'n,w|L\'nT,w') {
+          failures.push(
+            `${testCase.id}: expected room-to-room unsupported core outputs to stay on Rw/Ln,w/L'n,w/L'nT,w, got ${JSON.stringify(result.unsupportedTargetOutputs)}`
+          );
+        }
+      } else {
+        if (result.supportedTargetOutputs.join("|") !== FIELD_CORE_OUTPUTS.join("|")) {
+          failures.push(
+            `${testCase.id}: expected full core support ${JSON.stringify(FIELD_CORE_OUTPUTS)}, got supported=${JSON.stringify(result.supportedTargetOutputs)} unsupported=${JSON.stringify(result.unsupportedTargetOutputs)}`
+          );
+        }
+
+        if (result.unsupportedTargetOutputs.length !== 0) {
+          failures.push(
+            `${testCase.id}: expected no unsupported core outputs with full field context, got ${JSON.stringify(result.unsupportedTargetOutputs)}`
+          );
+        }
+      }
+
+      assertPartition(result, FIELD_CORE_OUTPUTS, `${testCase.id} room-to-room core`, failures);
+      assertFiniteSupportedOutputs(result, FIELD_CORE_OUTPUTS, `${testCase.id} room-to-room core`, failures);
     }
 
     expect(failures).toEqual([]);

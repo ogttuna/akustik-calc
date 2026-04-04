@@ -93,6 +93,15 @@ export const FLOOR_SYSTEM_MATERIALS: readonly MaterialDefinition[] = [
     tags: ["ceiling-support", "floor-system"]
   },
   {
+    id: "tuas_open_box_ceiling_family_a",
+    name: "TUAS Open-box Ceiling Family A",
+    category: "support",
+    densityKgM3: 0,
+    notes:
+      "Explicit TUAS suspended-ceiling family A support used to distinguish the R2a / R3a / R5a open-box exact corridor from the current family B lane.",
+    tags: ["ceiling-support", "stud", "measured", "tuas-family-a", "floor-system"]
+  },
+  {
     id: "ubiq_resilient_ceiling",
     name: "UBIQ Resilient Ceiling",
     category: "support",
