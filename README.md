@@ -14,12 +14,14 @@ Project status:
 - A first web shell exists in `apps/web`.
 - A seed `engine`, `catalogs`, `shared`, and `ui` package set exists.
 - Docker build and compose structure exist.
-- No code should be copied from `Acoustic2` until the import policy in [`docs/SOURCE_REPO_POLICY.md`](./docs/SOURCE_REPO_POLICY.md) is followed.
+- No code should be copied from `Acoustic2` until the import policy in [`docs/foundation/SOURCE_REPO_POLICY.md`](./docs/foundation/SOURCE_REPO_POLICY.md) is followed.
 
 Primary documents:
 
-- [`docs/PROJECT_PLAN.md`](./docs/PROJECT_PLAN.md)
-- [`docs/SOURCE_REPO_POLICY.md`](./docs/SOURCE_REPO_POLICY.md)
+- [`docs/calculator/CURRENT_STATE.md`](./docs/calculator/CURRENT_STATE.md)
+- [`docs/README.md`](./docs/README.md)
+- [`docs/foundation/PROJECT_PLAN.md`](./docs/foundation/PROJECT_PLAN.md)
+- [`docs/foundation/SOURCE_REPO_POLICY.md`](./docs/foundation/SOURCE_REPO_POLICY.md)
 
 Working principles:
 
@@ -31,7 +33,7 @@ Working principles:
 Run locally:
 
 - `pnpm install`
-- set `DYNECHO_AUTH_USERNAME`, `DYNECHO_AUTH_PASSWORD`, and `DYNECHO_AUTH_SECRET` first
+- optional: set `DYNECHO_AUTH_USERNAME`, `DYNECHO_AUTH_PASSWORD`, and `DYNECHO_AUTH_SECRET`
 - `pnpm dev`
 - `pnpm check`
 - `pnpm build`
@@ -55,12 +57,15 @@ Useful endpoints:
 
 - `GET /api/health`
 - `POST /api/estimate`
+- `POST /api/impact-only`
+- `POST /api/proposal-pdf`
 
 Authentication:
 
 - the landing page remains public
-- `/workbench`, `/workbench/proposal`, `POST /api/estimate`, `POST /api/impact-only`, and `POST /api/proposal-pdf` now require sign-in
-- copy [`apps/web/.env.example`](./apps/web/.env.example) into your local env setup and replace the placeholder credentials before starting the web app
+- when auth is configured, `/workbench`, `/workbench/proposal`, `POST /api/estimate`, `POST /api/impact-only`, and `POST /api/proposal-pdf` require sign-in
+- if auth env vars are not configured locally, the app falls back to preview mode instead of forcing login
+- copy [`apps/web/.env.example`](./apps/web/.env.example) into your local env setup if you want authenticated local runs instead of preview mode
 
 Read-only upstream tooling:
 

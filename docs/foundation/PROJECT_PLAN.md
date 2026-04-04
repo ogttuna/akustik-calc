@@ -1,9 +1,11 @@
 # DynEcho Project Plan
 
-Latest implementation snapshot:
+Document role:
 
-- `docs/STATUS_2026-03-21.md`
-- previous snapshot: `docs/STATUS_2026-03-20.md`
+- this document defines long-lived product direction and architecture constraints
+- this document is not the current execution backlog
+- for active calculator/workbench work, start with `docs/calculator/CURRENT_STATE.md`
+- use `docs/README.md` as the top-level docs map
 
 ## 1. Product Direction
 
@@ -34,7 +36,7 @@ Rules:
 - Do not use symlinks to point this repo into `Acoustic2`.
 - Do not create a fragile shared-code setup between the two repos while upstream is still changing.
 
-Upstream changes are adopted only by deliberate import/porting work. See `docs/SOURCE_REPO_POLICY.md`.
+Upstream changes are adopted only by deliberate import/porting work. See `docs/foundation/SOURCE_REPO_POLICY.md`.
 
 ### 2.2 Engine Rule
 
@@ -57,6 +59,11 @@ The engine must run in:
 - future desktop app
 
 ## 3. Recommended Stack
+
+Document intent for this section:
+
+- these are target stack choices and architectural preferences
+- this section is not a literal snapshot of every dependency currently installed in the repo
 
 ## 3.1 Monorepo
 
@@ -230,7 +237,16 @@ Observed implications:
 - `app.js` is strongly tied to `window`, `document`, and `localStorage`
 - the source test suite is heavy and should not be assumed ready for direct drop-in migration
 
-## 7. Phase Plan
+## 7. Historical Delivery Sequence
+
+This section captures the original repo/bootstrap sequencing.
+
+It is still useful for architectural intent, but it should not be read as the current implementation queue.
+
+For active calculator hardening, use:
+
+- `docs/calculator/CURRENT_STATE.md`
+- `docs/calculator/DYNAMIC_CALCULATOR_PLAN.md`
 
 ## Phase 0: Planning and Monorepo Scaffold
 
