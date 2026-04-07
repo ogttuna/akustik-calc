@@ -121,9 +121,9 @@ describe("dynamic route family boundary diagnostics", () => {
     expect(boundary.dynamicAirborneTrace?.familyBoundaryHoldRunnerUpMetricDb).toBe(39);
     expect(boundary.dynamicAirborneTrace?.familyBoundaryHoldBoundaryCeilingDb).toBe(43);
     expect(boundary.dynamicAirborneTrace?.familyBoundaryHoldCurrentMetricDb).toBe(50);
-    expect(boundary.dynamicAirborneTrace?.familyBoundaryHoldTargetMetricDb).toBe(48);
-    expect(boundary.metrics.estimatedRwPrimeDb).toBe(45);
-    expect(boundary.metrics.estimatedDnTwDb).toBe(46);
+    expect(boundary.dynamicAirborneTrace?.familyBoundaryHoldTargetMetricDb).toBe(47);
+    expect(boundary.metrics.estimatedRwPrimeDb).toBe(44);
+    expect(boundary.metrics.estimatedDnTwDb).toBe(45);
     expect(boundary.dynamicAirborneTrace?.strategy).toBe(
       "lined_massive_blend+reinforcement_monotonic_floor+family_boundary_hold"
     );
@@ -135,6 +135,9 @@ describe("dynamic route family boundary diagnostics", () => {
     ).toBe(true);
     expect(
       boundary.warnings.some((warning: string) => /hard family detector stayed on Lined Massive Wall/i.test(warning))
+    ).toBe(true);
+    expect(
+      boundary.dynamicAirborneTrace?.notes.some((note: string) => /conflict trim bonus 1\.0 dB/i.test(note))
     ).toBe(true);
 
     expect(upper.dynamicAirborneTrace?.detectedFamily).toBe("lined_massive_wall");
@@ -160,6 +163,7 @@ describe("dynamic route family boundary diagnostics", () => {
     expect(result.dynamicAirborneTrace?.detectedFamily).toBe("lined_massive_wall");
     expect(result.dynamicAirborneTrace?.familyDecisionClass).toBe("ambiguous");
     expect(result.dynamicAirborneTrace?.runnerUpFamily).toBe("double_leaf");
+    expect(result.dynamicAirborneTrace?.familyDecisionSelectedBelowRunnerUp).toBeUndefined();
     expect(result.dynamicAirborneTrace?.familyBoundaryHoldApplied).toBe(true);
     expect(result.dynamicAirborneTrace?.familyBoundaryHoldAllowedLeadDb).toBe(4);
     expect(result.dynamicAirborneTrace?.familyBoundaryHoldRunnerUpMetricDb).toBe(42);
@@ -171,6 +175,9 @@ describe("dynamic route family boundary diagnostics", () => {
     expect(result.dynamicAirborneTrace?.strategy).toBe(
       "lined_massive_blend+reinforcement_monotonic_floor+family_boundary_hold"
     );
+    expect(
+      result.dynamicAirborneTrace?.notes.some((note) => /conflict trim bonus/i.test(note))
+    ).toBe(false);
   });
 
   it("keeps the workbench AAC lining board matrix in the same conservative held corridor", () => {
@@ -178,16 +185,18 @@ describe("dynamic route family boundary diagnostics", () => {
       {
         board: "gypsum_board",
         decision: "ambiguous",
-        dnTw: 46,
-        rwPrime: 45,
+        dnTw: 45,
+        rwPrime: 44,
+        selectedBelowRunnerUp: true,
         thicknessMm: "100",
         warningPattern: /boundary between Lined Massive Wall and Double Leaf/i
       },
       {
         board: "diamond_board",
         decision: "ambiguous",
-        dnTw: 46,
-        rwPrime: 46,
+        dnTw: 45,
+        rwPrime: 45,
+        selectedBelowRunnerUp: true,
         thicknessMm: "100",
         warningPattern: /boundary between Lined Massive Wall and Double Leaf/i
       },
@@ -196,6 +205,25 @@ describe("dynamic route family boundary diagnostics", () => {
         decision: "narrow",
         dnTw: 46,
         rwPrime: 45,
+        selectedBelowRunnerUp: false,
+        thicknessMm: "120",
+        warningPattern: /family-boundary hold was applied/i
+      },
+      {
+        board: "firestop_board",
+        decision: "ambiguous",
+        dnTw: 45,
+        rwPrime: 45,
+        selectedBelowRunnerUp: true,
+        thicknessMm: "100",
+        warningPattern: /boundary between Lined Massive Wall and Double Leaf/i
+      },
+      {
+        board: "firestop_board",
+        decision: "narrow",
+        dnTw: 46,
+        rwPrime: 45,
+        selectedBelowRunnerUp: false,
         thicknessMm: "120",
         warningPattern: /family-boundary hold was applied/i
       }
@@ -225,6 +253,10 @@ describe("dynamic route family boundary diagnostics", () => {
       expect(result.dynamicAirborneTrace?.runnerUpFamily, `${testCase.board} ${testCase.thicknessMm} runner-up`).toBe(
         "double_leaf"
       );
+      expect(
+        result.dynamicAirborneTrace?.familyDecisionSelectedBelowRunnerUp,
+        `${testCase.board} ${testCase.thicknessMm} conflict flag`
+      ).toBe(testCase.selectedBelowRunnerUp || undefined);
       expect(result.metrics.estimatedRwPrimeDb, `${testCase.board} ${testCase.thicknessMm} R'w`).toBe(
         testCase.rwPrime
       );
@@ -238,25 +270,39 @@ describe("dynamic route family boundary diagnostics", () => {
         result.warnings.some((warning) => testCase.warningPattern.test(warning)),
         `${testCase.board} ${testCase.thicknessMm} warning`
       ).toBe(true);
+      expect(
+        result.dynamicAirborneTrace?.notes.some((note) => /conflict trim bonus 1\.0 dB/i.test(note)),
+        `${testCase.board} ${testCase.thicknessMm} conflict trim note`
+      ).toBe(testCase.selectedBelowRunnerUp);
     }
   });
 
   it("keeps trimmed-prefix workbench hybrids inside the held corridor across deeper 5-layer variants", () => {
     const cases = [
       {
-        dnTw: 48,
+        dnTw: 47,
         outer: { materialId: "rockwool", thicknessMm: "25" },
+        rwPrime: 46
+      },
+      {
+        dnTw: 47,
+        outer: { materialId: "rockwool", thicknessMm: "50" },
+        rwPrime: 46
+      },
+      {
+        dnTw: 47,
+        outer: { materialId: "glasswool", thicknessMm: "25" },
+        rwPrime: 46
+      },
+      {
+        dnTw: 48,
+        outer: { materialId: "air_gap", thicknessMm: "25" },
         rwPrime: 47
       },
       {
         dnTw: 48,
-        outer: { materialId: "glasswool", thicknessMm: "25" },
+        outer: { materialId: "air_gap", thicknessMm: "50" },
         rwPrime: 47
-      },
-      {
-        dnTw: 49,
-        outer: { materialId: "air_gap", thicknessMm: "25" },
-        rwPrime: 48
       }
     ] as const;
 
@@ -289,6 +335,10 @@ describe("dynamic route family boundary diagnostics", () => {
       expect(result.dynamicAirborneTrace?.runnerUpFamily, `${testCase.outer.materialId} runner-up`).toBe(
         "double_leaf"
       );
+      expect(
+        result.dynamicAirborneTrace?.familyDecisionSelectedBelowRunnerUp,
+        `${testCase.outer.materialId} conflict flag`
+      ).toBe(true);
       expect(result.metrics.estimatedRwPrimeDb, `${testCase.outer.materialId} R'w`).toBe(testCase.rwPrime);
       expect(result.metrics.estimatedDnTwDb, `${testCase.outer.materialId} DnT,w`).toBe(testCase.dnTw);
       expect(result.dynamicAirborneTrace?.strategy, `${testCase.outer.materialId} strategy`).toBe(
@@ -302,6 +352,10 @@ describe("dynamic route family boundary diagnostics", () => {
         result.warnings.some((warning) => /excluded from the dynamic airborne span/i.test(warning)),
         `${testCase.outer.materialId} trim warning`
       ).toBe(true);
+      expect(
+        result.dynamicAirborneTrace?.notes.some((note) => /conflict trim bonus 1\.0 dB/i.test(note)),
+        `${testCase.outer.materialId} conflict trim note`
+      ).toBe(true);
     }
 
     expect(Math.max(...rwPrimeValues) - Math.min(...rwPrimeValues)).toBeLessThanOrEqual(1);
@@ -312,10 +366,10 @@ describe("dynamic route family boundary diagnostics", () => {
     const cases = [
       {
         decision: "ambiguous",
-        dnTw: 47,
+        dnTw: 46,
         id: "dual-trim-aac-single",
         leading: 1,
-        rwPrime: 46,
+        rwPrime: 45,
         stack: [
           { materialId: "rockwool", thicknessMm: "25" },
           { materialId: "ytong_aac_d700", thicknessMm: "100" },
@@ -327,10 +381,10 @@ describe("dynamic route family boundary diagnostics", () => {
       },
       {
         decision: "ambiguous",
-        dnTw: 49,
+        dnTw: 48,
         id: "dual-trim-aac-double",
         leading: 2,
-        rwPrime: 47,
+        rwPrime: 46,
         stack: [
           { materialId: "air_gap", thicknessMm: "25" },
           { materialId: "rockwool", thicknessMm: "25" },
@@ -369,6 +423,9 @@ describe("dynamic route family boundary diagnostics", () => {
       expect(result.dynamicAirborneTrace?.detectedFamily, testCase.id).toBe("lined_massive_wall");
       expect(result.dynamicAirborneTrace?.familyDecisionClass, testCase.id).toBe(testCase.decision);
       expect(result.dynamicAirborneTrace?.runnerUpFamily, testCase.id).toBe("double_leaf");
+      expect(result.dynamicAirborneTrace?.familyDecisionSelectedBelowRunnerUp, testCase.id).toBe(
+        testCase.decision === "ambiguous" ? true : undefined
+      );
       expect(result.dynamicAirborneTrace?.familyBoundaryHoldApplied, testCase.id).toBe(true);
       expect(result.dynamicAirborneTrace?.trimmedOuterLayersApplied, testCase.id).toBe(true);
       expect(result.dynamicAirborneTrace?.trimmedOuterLeadingCount, testCase.id).toBe(testCase.leading);
@@ -385,6 +442,10 @@ describe("dynamic route family boundary diagnostics", () => {
         result.warnings.some((warning) => /excluded from the dynamic airborne span/i.test(warning)),
         `${testCase.id} trim warning`
       ).toBe(true);
+      expect(
+        result.dynamicAirborneTrace?.notes.some((note) => /conflict trim bonus 1\.0 dB/i.test(note)),
+        `${testCase.id} conflict trim note`
+      ).toBe(testCase.decision === "ambiguous");
     }
   });
 

@@ -5389,7 +5389,8 @@ function applyAmbiguousFamilyBoundaryHold(
   }
 
   const allowedLeadDb = boundary.decisionClass === "ambiguous" ? 4 : 5;
-  const maxTrimDb = boundary.decisionClass === "ambiguous" ? 2 : 1.5;
+  const baseMaxTrimDb = boundary.decisionClass === "ambiguous" ? 2 : 1.5;
+  const maxTrimDb = baseMaxTrimDb + (boundary.selectedBelowRunnerUp ? 1 : 0);
   const boundaryCeiling = runnerUpMetric + allowedLeadDb;
 
   if (!(currentMetric > boundaryCeiling + 1e-6)) {
@@ -5426,7 +5427,7 @@ function applyAmbiguousFamilyBoundaryHold(
   }
 
   notes.push(
-    `An ambiguity hold trimmed ${FAMILY_LABELS[selectedFamily]} against the nearby ${FAMILY_LABELS[boundary.runnerUpFamily]} corridor because the current two-leaf family boundary was ${boundary.decisionClass} (runner-up ${runnerUpMetric.toFixed(1)} dB, ceiling ${boundaryCeiling.toFixed(1)} dB, target ${targetMetric.toFixed(1)} dB, current ${currentMetric.toFixed(1)} dB).`
+    `An ambiguity hold trimmed ${FAMILY_LABELS[selectedFamily]} against the nearby ${FAMILY_LABELS[boundary.runnerUpFamily]} corridor because the current two-leaf family boundary was ${boundary.decisionClass} (runner-up ${runnerUpMetric.toFixed(1)} dB, ceiling ${boundaryCeiling.toFixed(1)} dB, target ${targetMetric.toFixed(1)} dB, current ${currentMetric.toFixed(1)} dB${boundary.selectedBelowRunnerUp ? `, conflict trim bonus ${(maxTrimDb - baseMaxTrimDb).toFixed(1)} dB` : ""}).`
   );
 
   return {

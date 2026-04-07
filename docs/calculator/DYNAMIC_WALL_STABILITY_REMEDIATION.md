@@ -573,10 +573,12 @@ Current bounded-hold constants:
 
 - ambiguous boundary:
   - allowed lead over runner-up: `4 dB`
-  - maximum trim from the currently chosen metric: `2 dB`
+  - base maximum trim from the currently chosen metric: `2 dB`
+  - additional conflict-only trim: `+1 dB` when `familyDecisionSelectedBelowRunnerUp` is true
 - narrow boundary:
   - allowed lead over runner-up: `5 dB`
-  - maximum trim from the currently chosen metric: `1.5 dB`
+  - base maximum trim from the currently chosen metric: `1.5 dB`
+  - current observed conflict bonus usage in defended scans: `0` narrow rows
 
 Why the scope is intentionally narrow:
 
@@ -595,16 +597,34 @@ New regression evidence now required:
 
 Local findings from the current Phase B.2 pass:
 
-- the classic `ytong_aac_d700 100 + air_gap 50 + gypsum_board 12.5` boundary now lands at about `R'w 45 / DnT,w 46` with:
+- the classic `ytong_aac_d700 100 + air_gap 50 + gypsum_board 12.5` boundary now lands at about `R'w 44 / DnT,w 45` with:
   - `familyDecisionClass: ambiguous`
   - runner-up `double_leaf`
   - score surface currently still slightly favors the runner-up:
     - selected `lined_massive_wall`: about `0.492`
     - runner-up `double_leaf`: about `0.501`
   - that row now also carries `familyDecisionSelectedBelowRunnerUp`
+  - that same row now consumes the new extra `1 dB` conflict trim budget:
+    - target metric: `47 dB`
+    - note suffix: `conflict trim bonus 1.0 dB`
   - strategy suffix `family_boundary_hold`
 - the heavier reordered hybrid `gypsum_board 12.5 | ytong_aac_d700 100 | rockwool 25 | air_gap 50 | diamond_board 12.5` now lands at about `Rw 49 / R'w 47 / DnT,w 48`
   - this keeps the reorder explicit but trims the old post-Phase-A lined-massive overshoot by about `2 dB`
+- the trimmed-prefix and dual-trim `ytong_aac_d700 100` conflict rows also move down by the same extra `1 dB`
+  - representative current building-side anchors:
+    - `rockwool 25 | ytong_aac_d700 100 | rockwool 25 | air_gap 50 | diamond_board 12.5`:
+      - `R'w 46 / DnT,w 47`
+    - `air_gap 25 | ytong_aac_d700 100 | rockwool 25 | air_gap 50 | diamond_board 12.5`:
+      - `R'w 47 / DnT,w 48`
+    - `rockwool 25 | ytong_aac_d700 100 | air_gap 50 | diamond_board 12.5 | glasswool 25`:
+      - `R'w 45 / DnT,w 46`
+    - `air_gap 25 | rockwool 25 | ytong_aac_d700 100 | air_gap 50 | diamond_board 12.5 | glasswool 25`:
+      - `R'w 46 / DnT,w 48`
+- the denser AAC sibling `ytong_g5_800 100` is intentionally unchanged by this extra trim
+  - representative current anchor:
+    - `ytong_g5_800 100 + air_gap 50 + diamond_board 12.5`:
+      - `R'w 45 / DnT,w 47`
+  - that row still does not carry `familyDecisionSelectedBelowRunnerUp`
 - a generated trimmed-prefix hybrid scan found `25` hold-active rows in the tested palette
   - those rows cluster around `AAC 100-120 mm` heavy cores with lining boards
   - the held `R'w` spread inside that scan stayed within a narrow `1 dB` band across the chosen outer compliant prefixes
@@ -706,9 +726,11 @@ Local findings from the current Phase B.2 pass:
       - runner-up family `double_leaf`
       - `familyBoundaryHoldApplied: true`
     - no `ytong_aac_d700 120`, `ytong_g5_800 100`, or non-AAC heavy-core row currently shows this selector conflict
+    - those `24` rows are also the only current rows allowed to emit the extra `conflict trim bonus 1.0 dB` note suffix
   - current representative route result:
     - `12` rows show `familyDecisionSelectedBelowRunnerUp`
     - all `12` are again limited to `ytong_aac_d700 100 mm` rows inside the held corridor
+    - those same `12` route rows are the only current route-level rows allowed to show the extra conflict trim note
   - current representative framed result:
     - `0` rows show `familyDecisionSelectedBelowRunnerUp`
 

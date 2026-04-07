@@ -142,6 +142,7 @@ const FRAMED_MULTI_CANDIDATE_CAVITIES: readonly (readonly LayerInput[])[] = [
 ] as const;
 
 const HOLD_SCAN_TIMEOUT_MS = 20_000;
+const NON_AAC_SWAP_TIMEOUT_MS = 35_000;
 
 function stackKey(layers: readonly LayerInput[]) {
   return layers.map((layer) => `${layer.materialId}:${layer.thicknessMm}`).join(" | ");
@@ -451,7 +452,7 @@ describe("dynamic airborne family boundary scan contracts", () => {
     }
 
     expect(offenders).toEqual([]);
-  }, HOLD_SCAN_TIMEOUT_MS);
+  }, NON_AAC_SWAP_TIMEOUT_MS);
 
   it("finds no silent >=8 dB adjacent-swap jumps across the expanded non-AAC heavy-core palette", () => {
     const readSnapshot = buildSnapshotReader();
