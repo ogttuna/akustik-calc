@@ -5,6 +5,8 @@ Historical note:
 - this is a dated investigation log
 - use it together with `docs/calculator/CURRENT_STATE.md` and `docs/calculator/DYNAMIC_CALCULATOR_PLAN.md`
 - treat it as evidence for the current hardening backlog, not as the living contract by itself
+- Phase A remediation for the reproduced wall-side instability class has since landed; the living status and shipped guard set now live under:
+  - `docs/calculator/DYNAMIC_WALL_STABILITY_REMEDIATION.md`
 
 ## 1. Why This Note Exists
 

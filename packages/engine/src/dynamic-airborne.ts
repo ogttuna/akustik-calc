@@ -442,6 +442,26 @@ type DoubleStudSignature = {
   splitGapSignature: boolean;
 };
 
+type FramingEvidenceSummary = {
+  boardLayerCount: number;
+  boardMassFraction: number;
+  boardDominantFramedMorphology: boolean;
+  explicitHint: boolean;
+  explicitHintOnly: boolean;
+  maxLeafMassKgM2: number;
+  minLeafMassKgM2: number;
+  studEligible: boolean;
+  supportEvidence: boolean;
+};
+
+type HeavyUnframedCavityRiskSummary = {
+  allowedLiftDb: number;
+  applies: boolean;
+  boardMassFraction: number;
+  maxLeafMassKgM2: number;
+  minLeafMassKgM2: number;
+};
+
 function normalizeFramingHint(airborneContext?: AirborneContext | null): DynamicFramingHint {
   return {
     connectionType: airborneContext?.connectionType ?? "auto",
@@ -538,6 +558,49 @@ function summarizeFramedBoardSystem(layers: readonly ResolvedLayer[]): FramedBoa
     primaryGapLayerCount,
     rightLeafBoardCount,
     securityBoardCount
+  };
+}
+
+function summarizeFramingEvidence(
+  layers: readonly ResolvedLayer[],
+  topology: ReturnType<typeof summarizeAirborneTopology>,
+  framingHint: DynamicFramingHint
+): FramingEvidenceSummary {
+  const explicitHint = hasExplicitFramingHint(framingHint);
+  const supportEvidence = topology.hasStudLikeSupport;
+  const boardSystem = summarizeFramedBoardSystem(layers);
+  const solidLayers = layers.filter((layer) => classifyLayerRole(layer).isSolidLeaf);
+  const totalSolidMassKgM2 = solidLayers.reduce((sum, layer) => sum + layer.surfaceMassKgM2, 0);
+  const boardMassKgM2 = solidLayers.reduce(
+    (sum, layer) => sum + (isBoardLikeLayer(layer) ? layer.surfaceMassKgM2 : 0),
+    0
+  );
+  const boardMassFraction = totalSolidMassKgM2 > 0 ? ksRound1(boardMassKgM2 / totalSolidMassKgM2) : 0;
+  const masonryProfile = summarizeSingleLeafMasonryProfile(layers);
+  const leafMassesKgM2 = topology.visibleLeafMassesKgM2.filter((value) => value > 0);
+  const maxLeafMassKgM2 = leafMassesKgM2.length ? Math.max(...leafMassesKgM2) : 0;
+  const minLeafMassKgM2 = leafMassesKgM2.length ? Math.min(...leafMassesKgM2) : 0;
+  const boardDominantFramedMorphology =
+    topology.visibleLeafCount === 2 &&
+    topology.cavityCount === 1 &&
+    boardSystem.leftLeafBoardCount >= 1 &&
+    boardSystem.rightLeafBoardCount >= 1 &&
+    boardSystem.boardLayerCount >= 2 &&
+    boardMassFraction >= 0.55 &&
+    masonryProfile.masonryMassRatio < 0.35 &&
+    maxLeafMassKgM2 <= 80 &&
+    topology.surfaceMassKgM2 <= 110;
+
+  return {
+    boardLayerCount: boardSystem.boardLayerCount,
+    boardMassFraction,
+    boardDominantFramedMorphology,
+    explicitHint,
+    explicitHintOnly: explicitHint && !supportEvidence,
+    maxLeafMassKgM2: ksRound1(maxLeafMassKgM2),
+    minLeafMassKgM2: ksRound1(minLeafMassKgM2),
+    studEligible: supportEvidence || (explicitHint && boardDominantFramedMorphology),
+    supportEvidence
   };
 }
 
@@ -823,6 +886,7 @@ function summarizeDoubleStudSignature(
 ): DoubleStudSignature {
   const cavity = describePrimaryCavity(layers);
   const boardSystem = summarizeFramedBoardSystem(layers);
+  const framingEvidence = summarizeFramingEvidence(layers, topology, framingHint);
   const fillFraction = cavity.coreThicknessMm > 0
     ? clamp(cavity.porousThicknessMm / cavity.coreThicknessMm, 0, 1)
     : 0;
@@ -832,7 +896,7 @@ function summarizeDoubleStudSignature(
   const likelyStud =
     topology.visibleLeafCount === 2 &&
     topology.cavityCount === 1 &&
-    (topology.hasStudLikeSupport || hasExplicitFramingHint(framingHint));
+    framingEvidence.studEligible;
   const singleBoardIndependentTwinFrame =
     boardSystem.averageBoardsPerLeaf >= 0.9 &&
     boardSystem.averageBoardsPerLeaf < 1.6 &&
@@ -854,6 +918,54 @@ function summarizeDoubleStudSignature(
     independentTrack,
     likelyDoubleStud,
     splitGapSignature
+  };
+}
+
+function summarizeHeavyUnframedCavityRisk(
+  layers: readonly ResolvedLayer[],
+  topology: ReturnType<typeof summarizeAirborneTopology>,
+  framingHint: DynamicFramingHint
+): HeavyUnframedCavityRiskSummary {
+  const framingEvidence = summarizeFramingEvidence(layers, topology, framingHint);
+  const masonryProfile = summarizeSingleLeafMasonryProfile(layers);
+  const leafMassesKgM2 = topology.visibleLeafMassesKgM2.filter((value) => value > 0);
+  const maxLeafMassKgM2 = leafMassesKgM2.length ? Math.max(...leafMassesKgM2) : 0;
+  const minLeafMassKgM2 = leafMassesKgM2.length ? Math.min(...leafMassesKgM2) : 0;
+  const heavyLeafSignal =
+    maxLeafMassKgM2 >= 70 ||
+    (
+      Number.isFinite(minLeafMassKgM2) &&
+      minLeafMassKgM2 >= 35 &&
+      topology.surfaceMassKgM2 >= 110
+    );
+  const compositeSignal =
+    topology.originalSolidLayerCount >= 3 ||
+    masonryProfile.masonryMassRatio >= 0.45;
+  const applies =
+    topology.visibleLeafCount >= 2 &&
+    topology.cavityCount >= 1 &&
+    !framingEvidence.studEligible &&
+    framingEvidence.boardMassFraction < 0.45 &&
+    heavyLeafSignal &&
+    compositeSignal;
+
+  let allowedLiftDb = 2.5;
+  if (topology.hasPorousFill) {
+    allowedLiftDb += (topology.visibleLeafMassRatio ?? 99) <= 1.8 ? 1.5 : 1.0;
+  }
+  if (topology.cavityCount >= 2) {
+    allowedLiftDb += 0.5;
+  }
+  if ((topology.visibleLeafMassRatio ?? 99) <= 1.6 && minLeafMassKgM2 >= 60) {
+    allowedLiftDb += 1.0;
+  }
+
+  return {
+    allowedLiftDb: ksRound1(clamp(allowedLiftDb, 2.5, 5.5)),
+    applies,
+    boardMassFraction: framingEvidence.boardMassFraction,
+    maxLeafMassKgM2: ksRound1(maxLeafMassKgM2),
+    minLeafMassKgM2: ksRound1(minLeafMassKgM2)
   };
 }
 
@@ -1778,11 +1890,12 @@ function estimateStudWallTargetRw(
   const notes: string[] = [];
   const cavity = describePrimaryCavity(layers);
   const boardSystem = summarizeFramedBoardSystem(layers);
+  const framingEvidence = summarizeFramingEvidence(layers, topology, framingHint);
 
   if (
     topology.visibleLeafCount !== 2 ||
     topology.cavityCount !== 1 ||
-    (!topology.hasStudLikeSupport && !hasExplicitFramingHint(framingHint))
+    !framingEvidence.studEligible
   ) {
     return {
       notes,
@@ -3603,6 +3716,102 @@ function applyNarrowHeavyDoubleLeafGapCap(
   };
 }
 
+function applyHeavyUnframedCavityScreeningCap(
+  curve: TransmissionLossCurve,
+  layers: readonly ResolvedLayer[],
+  topology: ReturnType<typeof summarizeAirborneTopology>,
+  family: DynamicAirborneFamily,
+  framingHint: DynamicFramingHint,
+  options: DynamicAirborneOptions
+): {
+  applied: boolean;
+  curve: TransmissionLossCurve;
+  notes: string[];
+  ratings: AssemblyRatings;
+  strategySuffix: string | null;
+  targetMetric: number | null;
+} {
+  const notes: string[] = [];
+
+  if (family !== "double_leaf" && family !== "multileaf_multicavity") {
+    return {
+      applied: false,
+      curve,
+      notes,
+      ratings: buildRatingsFromCurve(curve.frequenciesHz, curve.transmissionLossDb, options.airborneContext),
+      strategySuffix: null,
+      targetMetric: null
+    };
+  }
+
+  const risk = summarizeHeavyUnframedCavityRisk(layers, topology, framingHint);
+  if (!risk.applies) {
+    return {
+      applied: false,
+      curve,
+      notes,
+      ratings: buildRatingsFromCurve(curve.frequenciesHz, curve.transmissionLossDb, options.airborneContext),
+      strategySuffix: null,
+      targetMetric: null
+    };
+  }
+
+  const currentMetric = computeContextMetric(curve, options.airborneContext);
+  const screeningCurve = buildCalibratedMassLawCurve(topology.surfaceMassKgM2, options.screeningEstimatedRwDb);
+  const screeningMetric = computeContextMetric(screeningCurve, options.airborneContext);
+
+  if (
+    !(typeof currentMetric === "number" && Number.isFinite(currentMetric)) ||
+    !(typeof screeningMetric === "number" && Number.isFinite(screeningMetric))
+  ) {
+    return {
+      applied: false,
+      curve,
+      notes,
+      ratings: buildRatingsFromCurve(curve.frequenciesHz, curve.transmissionLossDb, options.airborneContext),
+      strategySuffix: null,
+      targetMetric: null
+    };
+  }
+
+  const targetMetric = ksRound1(screeningMetric + risk.allowedLiftDb);
+  if (!(currentMetric > targetMetric + 1e-6)) {
+    return {
+      applied: false,
+      curve,
+      notes,
+      ratings: buildRatingsFromCurve(curve.frequenciesHz, curve.transmissionLossDb, options.airborneContext),
+      strategySuffix: null,
+      targetMetric
+    };
+  }
+
+  const anchored = anchorCurveToMetric(curve, targetMetric, options.airborneContext);
+  if (!anchored.applied) {
+    return {
+      applied: false,
+      curve,
+      notes,
+      ratings: anchored.ratings,
+      strategySuffix: null,
+      targetMetric
+    };
+  }
+
+  notes.push(
+    `A heavy unframed ${family === "multileaf_multicavity" ? "multi-cavity" : "cavity"} wall was capped against the screening corridor because the selected family lane was outrunning a conservative mass-based anchor by more than the allowed gain band (screening ${screeningMetric.toFixed(1)} dB, target ${targetMetric.toFixed(1)} dB, max leaf ${risk.maxLeafMassKgM2.toFixed(1)} kg/m2, board fraction ${risk.boardMassFraction.toFixed(2)}).`
+  );
+
+  return {
+    applied: true,
+    curve: anchored.curve,
+    notes,
+    ratings: anchored.ratings,
+    strategySuffix: "heavy_unframed_cavity_cap",
+    targetMetric
+  };
+}
+
 function applyLinedMassiveMasonryMonotonicFloor(
   curve: TransmissionLossCurve,
   layers: readonly ResolvedLayer[],
@@ -4881,8 +5090,8 @@ function detectDynamicFamily(
   const lightestLeafMassKgM2 = Math.min(...topology.visibleLeafMassesKgM2.filter((value) => value > 0));
   const asymmetry = topology.visibleLeafMassRatio ?? 1;
   const masonryProfile = summarizeSingleLeafMasonryProfile(layers);
+  const framingEvidence = summarizeFramingEvidence(layers, topology, framingHint);
   const notes: string[] = [];
-  const explicitFramingHint = hasExplicitFramingHint(framingHint);
 
   if (topology.visibleLeafCount <= 1) {
     const hasMassiveMineralSignal =
@@ -4937,20 +5146,21 @@ function detectDynamicFamily(
     return { family: "double_stud_system", notes };
   }
 
-  if (topology.hasStudLikeSupport || explicitFramingHint) {
+  if (framingEvidence.studEligible) {
     notes.push(
-      topology.hasStudLikeSupport
+      framingEvidence.supportEvidence
         ? "Support or channel-like layers exist inside the separator, so the selector treats the wall as a stud-wall surrogate."
-        : "Explicit connection/stud metadata reclassified the visible two-leaf cavity as a framed stud-wall lane."
+        : "Explicit framed metadata matched a board-dominant two-leaf cavity, so the selector allows the wall onto the stud-wall surrogate lane."
     );
     return { family: "stud_wall_system", notes };
   }
 
   if (
-    dominantLeafMassKgM2 >= 110 &&
+    dominantLeafMassKgM2 >= 70 &&
     Number.isFinite(lightestLeafMassKgM2) &&
     lightestLeafMassKgM2 <= 20 &&
-    asymmetry >= 4
+    asymmetry >= 4 &&
+    !framingEvidence.studEligible
   ) {
     notes.push("A dominant heavy leaf plus a very light lining leaf indicates a lined massive-wall topology.");
     return { family: "lined_massive_wall", notes };
@@ -4966,6 +5176,7 @@ function chooseBlend(
   framingHint: DynamicFramingHint
 ): { blend: DelegateBlend; notes: string[] } {
   const topology = summarizeAirborneTopology(layers);
+  const framingEvidence = summarizeFramingEvidence(layers, topology, framingHint);
   const text = layers.map(materialText).join(" ");
   const cavity = describePrimaryCavity(layers);
   const notes: string[] = [];
@@ -5097,8 +5308,8 @@ function chooseBlend(
 
   if (family === "stud_wall_system") {
     notes.push(
-      hasExplicitFramingHint(framingHint)
-        ? "Explicit framed-wall metadata is active, so the stud-wall lane now calibrates a framed partition corridor instead of falling back to a plain cavity-wall guess."
+      framingEvidence.explicitHintOnly
+        ? "Explicit framed-wall metadata matched a board-dominant framed morphology, so the stud-wall lane now calibrates a framed partition corridor instead of falling back to a plain cavity-wall guess."
         : "Stud-like support layers are still handled through a surrogate blend because an explicit stud-compliance model has not landed locally yet."
     );
     return {
@@ -5174,7 +5385,12 @@ function buildConfidenceScore(
   family: DynamicAirborneFamily,
   topology: ReturnType<typeof summarizeAirborneTopology>,
   solverSpreadRwDb: number,
-  adjustmentDb: number
+  adjustmentDb: number,
+  options?: {
+    heavyUnframedCavity?: boolean;
+    hintOnlyFramingSuppressed?: boolean;
+    trimmedOuterLayers?: boolean;
+  }
 ): number {
   let score =
     family === "rigid_massive_wall"
@@ -5223,6 +5439,18 @@ function buildConfidenceScore(
     score -= 0.08;
   }
 
+  if (options?.heavyUnframedCavity) {
+    score -= 0.1;
+  }
+
+  if (options?.hintOnlyFramingSuppressed) {
+    score -= 0.06;
+  }
+
+  if (options?.trimmedOuterLayers) {
+    score -= 0.04;
+  }
+
   return ksRound1(clamp(score, 0.35, 0.92));
 }
 
@@ -5234,6 +5462,8 @@ export function calculateDynamicAirborneResult(
   const analysisLayers = trimmedOuterSpan.layers;
   const topology = summarizeAirborneTopology(analysisLayers);
   const framingHint = normalizeFramingHint(options.airborneContext);
+  const framingEvidence = summarizeFramingEvidence(analysisLayers, topology, framingHint);
+  const heavyUnframedCavityRisk = summarizeHeavyUnframedCavityRisk(analysisLayers, topology, framingHint);
   const family = detectDynamicFamily(analysisLayers, framingHint);
   const blendSelection = chooseBlend(family.family, analysisLayers, framingHint);
   const effectiveScreeningEstimatedRwDb = trimmedOuterSpan.trimmed
@@ -5406,6 +5636,23 @@ export function calculateDynamicAirborneResult(
   if (narrowHeavyGapCap.applied) {
     dynamicCurve = narrowHeavyGapCap.curve;
     ratings = narrowHeavyGapCap.ratings;
+  }
+
+  const heavyUnframedCavityCap = applyHeavyUnframedCavityScreeningCap(
+    dynamicCurve,
+    analysisLayers,
+    topology,
+    family.family,
+    framingHint,
+    {
+      ...options,
+      screeningEstimatedRwDb: effectiveScreeningEstimatedRwDb
+    }
+  );
+
+  if (heavyUnframedCavityCap.applied) {
+    dynamicCurve = heavyUnframedCavityCap.curve;
+    ratings = heavyUnframedCavityCap.ratings;
   }
 
   const securityBoardDoubleStudFieldTrim =
@@ -5587,7 +5834,12 @@ export function calculateDynamicAirborneResult(
     family.family,
     topology,
     solverSpreadRwDb,
-    blendSelection.blend.adjustmentsDb
+    blendSelection.blend.adjustmentsDb,
+    {
+      heavyUnframedCavity: heavyUnframedCavityRisk.applies,
+      hintOnlyFramingSuppressed: framingEvidence.explicitHintOnly && !framingEvidence.studEligible,
+      trimmedOuterLayers: trimmedOuterSpan.trimmed
+    }
   );
   const confidenceClass = classifyConfidence(confidenceScore);
   const warnings: string[] = [];
@@ -5599,6 +5851,7 @@ export function calculateDynamicAirborneResult(
     linedMassiveMonotonicFloor.strategySuffix,
     singleLeafMasonryFloor.strategySuffix,
     narrowHeavyGapCap.strategySuffix,
+    heavyUnframedCavityCap.strategySuffix,
     securityBoardDoubleStudFieldTrim.strategySuffix,
     highFillSingleBoardStudFieldLift.strategySuffix,
     mixedBoardEmptyCavityFieldMidbandLift.strategySuffix,
@@ -5615,8 +5868,8 @@ export function calculateDynamicAirborneResult(
     warnings.push(
       family.family === "double_stud_system"
         ? "Deep split-cavity framed-wall metadata is active on the dynamic airborne lane. The result is currently being held inside a calibrated double-stud corridor rather than the generic stud-wall surrogate."
-        : hasExplicitFramingHint(framingHint)
-          ? "Explicit framed-wall metadata is active on the dynamic airborne lane. The result is now being held inside a stud-wall calibration corridor instead of a plain cavity-wall surrogate."
+        : framingEvidence.explicitHintOnly
+          ? "Explicit framed-wall metadata is active on the dynamic airborne lane, but only because the visible morphology still looks like a board-dominant framed cavity."
           : "Stud-like support layers are being evaluated through a surrogate dynamic branch until explicit stud-compliance inputs and models are added locally."
     );
   }
@@ -5666,6 +5919,18 @@ export function calculateDynamicAirborneResult(
   if (narrowHeavyGapCap.applied) {
     warnings.push(
       "A very narrow air gap between heavy composite leaves was capped against the contact-equivalent wall because the decoupled double-leaf branch was overpredicting this low-clearance cavity."
+    );
+  }
+
+  if (framingEvidence.explicitHintOnly && !framingEvidence.studEligible) {
+    warnings.push(
+      "Explicit framed-wall metadata was not allowed to force the stud-wall lane because the visible leaves do not look like a board-dominant framed partition."
+    );
+  }
+
+  if (heavyUnframedCavityCap.applied) {
+    warnings.push(
+      "A heavy unframed cavity cap was applied because the selected cavity-wall family was outrunning a conservative mass-based corridor on a heavy composite topology."
     );
   }
 
@@ -5790,6 +6055,7 @@ export function calculateDynamicAirborneResult(
       ...linedMassiveMonotonicFloor.notes,
       ...singleLeafMasonryFloor.notes,
       ...narrowHeavyGapCap.notes,
+      ...heavyUnframedCavityCap.notes,
       ...securityBoardDoubleStudFieldTrim.notes,
       ...highFillSingleBoardStudFieldLift.notes,
       ...mixedBoardEmptyCavityFieldMidbandLift.notes,

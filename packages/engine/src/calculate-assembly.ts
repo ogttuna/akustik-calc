@@ -981,8 +981,7 @@ export function calculateAssembly(
       boundFloorSystemMatch ||
       boundFloorSystemEstimate ||
       impactCatalogMatch ||
-      explicitDeltaImpact ||
-      (!exactImpactSource && (impact || lowerBoundImpact))
+      explicitDeltaImpact
   );
   const targetOutputSupport = analyzeTargetOutputSupport({
     floorCarrier: hasFloorSupportCarrierSignal ? floorSystemRatings ?? floorCarrier : null,

@@ -22,6 +22,15 @@ Document role:
   - UBIQ open-web steel ceiling-fill contiguous splits on the field route
 - the first direct dynamic duplicate / reorder reproduction matrix is now in place for the current wall-side instability cases documented under:
   - [../archive/analysis/DYNAMIC_ROUTE_STABILITY_ANALYSIS_2026-04-07.md](../archive/analysis/DYNAMIC_ROUTE_STABILITY_ANALYSIS_2026-04-07.md)
+- the living wall-side remediation note is now the canonical design for fixing those instability cases without breaking framed and masonry benchmark corridors:
+  - [DYNAMIC_WALL_STABILITY_REMEDIATION.md](./DYNAMIC_WALL_STABILITY_REMEDIATION.md)
+- Phase A of that wall-side remediation note is now shipped:
+  - hint-only framed metadata no longer forces heavy mineral/composite stacks onto the stud-wall lane
+  - heavy unframed cavity walls can now be capped against a conservative screening corridor instead of over-scoring
+  - asymmetrical heavy-plus-light cavity walls can now fall onto `lined_massive_wall` earlier instead of staying on the old optimistic double-leaf route
+  - the first deep hybrid duplicate / adjacent-swap stress matrix now defends both engine and workbench routes
+- field-side support posture was tightened during validation:
+  - hybrid wall-like stacks no longer surface `Rw` on assembly field bundles just because a generic impact signal existed downstream
 - the living source-gap ledger now records which floor families are source-backed enough to tighten and which must stay fail-closed
 - the living source-gap ledger now also names the current implementation-backed widening-first and tightening-first family branches
 - the living source-gap ledger now includes a local source-corpus snapshot:
@@ -84,6 +93,10 @@ Important nuance:
 - the next hardening step should decide which combinations are genuinely path-invariant and which must stay physically order-sensitive
 - reproduced dynamic-route duplicate and reorder instability cases are documented separately under:
   - [../archive/analysis/DYNAMIC_ROUTE_STABILITY_ANALYSIS_2026-04-07.md](../archive/analysis/DYNAMIC_ROUTE_STABILITY_ANALYSIS_2026-04-07.md)
+- the intended fix order and protected-corridor rules for that wall-side work now live under:
+  - [DYNAMIC_WALL_STABILITY_REMEDIATION.md](./DYNAMIC_WALL_STABILITY_REMEDIATION.md)
+- wall-side Phase A reduced the currently reproduced jump class materially, but family selection is still hard-branch based rather than ambiguity-aware and scored
+- `multileaf_multicavity` remains a conservative surrogate rather than a dedicated multi-cavity solver
 - the remaining TUAS shortlist is no longer a pure import question:
   - `R7a` likely wants a separate heavy/wet `a` branch
   - `R6b` likely wants a separate reinforced lower-treatment `b` branch
@@ -93,8 +106,11 @@ Important nuance:
 Work in this order:
 
 1. Run a broader complex-stack torture pass before widening normalization rules any further.
-2. Do a mini branch-design audit for `R7a` and `R6b` before importing either row.
-3. Only after that decide whether the next widening move is TUAS branch extension or UBIQ source-trace cleanup.
+2. Move the wall-side remediation plan from shipped Phase A to Phase B:
+   - ambiguity-aware family scoring
+   - runner-up aware conservative holding instead of hard family handoff
+3. Do a mini branch-design audit for `R7a` and `R6b` before importing either row.
+4. Only after that decide whether the next widening move is TUAS branch extension or UBIQ source-trace cleanup.
 
 Use the source gap ledger to decide which families should be researched or widened first instead of opening new lanes ad hoc:
 
