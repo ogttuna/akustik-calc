@@ -303,7 +303,7 @@ Floor should now stay on controlled widening and tightening only.
 
 ### Risk Level
 
-- severity after the active blocker: medium
+- severity of the remaining floor debt: medium
 - why it matters:
   - most defended floor corridors are green
   - remaining debt is coverage, source-led widening, and complex-stack stability, not a universal solver collapse
@@ -458,4 +458,4 @@ Do this in order:
 4. re-check whether any wall corridor widening is still justified after those scans
 5. only then resume source-led floor widening
 
-This order is the safest one because the active blocker is already gone; the next risk is accidental widening without enough frozen evidence.
+This order is the safest one because the previous blocker is already closed; the next risk is accidental widening without enough frozen evidence.

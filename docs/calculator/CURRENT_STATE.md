@@ -43,7 +43,7 @@ Interpretation:
   - [../archive/analysis/DYNAMIC_ROUTE_STABILITY_ANALYSIS_2026-04-07.md](../archive/analysis/DYNAMIC_ROUTE_STABILITY_ANALYSIS_2026-04-07.md)
 - the living wall-side remediation note is now the canonical design for fixing those instability cases without breaking framed and masonry benchmark corridors:
   - [DYNAMIC_WALL_STABILITY_REMEDIATION.md](./DYNAMIC_WALL_STABILITY_REMEDIATION.md)
-- the cross-floor/wall remaining-work plan is now the canonical place for active blockers and the non-regressive next fix order:
+- the cross-floor/wall remaining-work plan is now the canonical place for current open work, completion status, and the non-regressive next fix order:
   - [DYNAMIC_CALCULATOR_REMAINING_WORK_PLAN.md](./DYNAMIC_CALCULATOR_REMAINING_WORK_PLAN.md)
 - the reinforced-concrete floor-carrier `Rw` support regression is now closed:
   - assembly-field concrete screening rows with real floor roles now keep `Rw` exposed again

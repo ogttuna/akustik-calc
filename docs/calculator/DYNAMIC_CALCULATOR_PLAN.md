@@ -1286,7 +1286,7 @@ Additional gates by phase:
 
 Immediate next implementation pass:
 
-1. finish the queued complex-stack torture pass on mixed floor and wall assemblies
+1. widen the current mixed floor/wall torture pass beyond the representative slice
 2. keep Phase 4 active, but only tighten families that still show defended drift under that torture pack
 3. widen support only after the torture pass identifies a real honest gap rather than a merely hypothetical one
 

@@ -545,7 +545,7 @@ Important limit:
 
 - this is evidence of materially improved posture, not proof that every possible wall stack is solved
 - the scan only covers the chosen local material palette and adjacent swaps, not arbitrary user imports or every deep manual hybrid
-- because of that, Phase B.2 is still needed before the selector can be called fully ambiguity-aware in the numeric lane itself
+- because of that, further Phase B.2 widening is still needed before the selector can be called fully ambiguity-aware in the numeric lane itself
 
 ### 15.6 Phase B.2 bounded hold shipped on 2026-04-07
 
