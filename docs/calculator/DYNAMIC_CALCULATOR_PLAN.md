@@ -47,7 +47,9 @@ Current execution status:
 
 Current queued follow-up:
 
-- run a dedicated complex-stack torture pass on mixed floor and wall assemblies before widening any more reorder canonicalization
+- keep widening the new mixed floor/wall torture pass before any more reorder canonicalization:
+  - a first broader mixed pack now exists on both engine and workbench routes
+  - the next step is to widen that representative slice into generated mixed preset and edit-chain matrices
 - extend the current representative raw-floor screening audit before widening the new `Rw` reopening rule beyond explicit floor-role assemblies
 - the broader workbench support-bucket vs output-card parity audit is now in place for representative floor presets and raw floor/raw hybrid scenarios
 - use the source gap ledger and widening-candidate contract to decide which family branches are widening-first versus tightening-first

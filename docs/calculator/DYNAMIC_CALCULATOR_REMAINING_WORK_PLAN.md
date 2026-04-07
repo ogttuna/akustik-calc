@@ -26,6 +26,7 @@ Every change must keep these guardrails green:
 - wall deep-hybrid cluster
 - floor standard engine corridor
 - floor standard route corridor
+- mixed floor/wall torture pack
 
 If a proposed fix cannot preserve those corridors, it is not ready.
 
@@ -67,6 +68,23 @@ Interpretation:
 - floor is not in a broad stability failure state
 - the previously active reinforced-concrete support-posture regression is now closed
 - the current floor debt is no longer a live blocker; it is coverage and future widening discipline
+
+### Shared Mixed-Mode Torture Coverage
+
+Current verified result:
+
+- engine mixed floor/wall contiguous-split parity pack: green
+  - `1` file
+  - `1` test
+- route mixed study-mode torture pack: green
+  - `1` file
+  - `2` tests
+
+Interpretation:
+
+- the repo now has a first broader mixed floor/wall torture slice rather than only isolated floor and wall seeded tests
+- cross-mode operator detours are now defended at the workbench route layer on representative deep stacks
+- remaining debt is no longer “no mixed torture exists”; it is that the mixed torture surface is still representative, not exhaustive
 
 ## 3. Recently Closed: Concrete Floor Carrier `Rw` Support Regression
 
@@ -301,6 +319,27 @@ Every new torture pack should touch both:
 
 - engine route
 - workbench route
+
+Current shipped mixed-torture surface:
+
+- engine:
+  - [mixed-floor-wall-complex-stack.test.ts](../../packages/engine/src/mixed-floor-wall-complex-stack.test.ts)
+- route:
+  - [mixed-study-mode-torture.test.ts](../../apps/web/features/workbench/mixed-study-mode-torture.test.ts)
+
+What this already covers:
+
+- alternating floor/wall study-mode switches
+- representative deep floor exact/bound rows
+- representative deep wall hybrid rows
+- neutral split-detour parity
+- broader support-bucket/card sanity after cross-mode edit chains
+
+What it does not yet cover:
+
+- generated wider mixed preset matrices
+- longer seeded cross-mode edit chains
+- mixed floor/wall duplicate-swap grids beyond the current representative anchors
 
 And should check both:
 

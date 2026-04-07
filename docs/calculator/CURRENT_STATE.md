@@ -40,6 +40,10 @@ Document role:
   - raw open-box rows stay fail-closed on field-side `Rw`
   - raw hollow-core screening rows keep their defended reopened carrier posture
   - raw wall-like heavy hybrids stay closed even when a finite screening carrier `Rw` exists
+- the first broader mixed floor/wall torture pack is now in place:
+  - engine-side deep floor and wall packages now have a shared contiguous-split parity contract
+  - workbench route now has an alternating study-mode torture test that switches between deep floor and wall edit chains
+  - that route pack defends both neutral split-detour parity and broader support-honest sanity after cross-mode edit sequences
 - Phase A of that wall-side remediation note is now shipped:
   - hint-only framed metadata no longer forces heavy mineral/composite stacks onto the stud-wall lane
   - heavy unframed cavity walls can now be capped against a conservative screening corridor instead of over-scoring
@@ -126,6 +130,9 @@ Important nuance:
 
 - complex mixed floor and wall stacks still need a wider manual and automated torture pass
 - the next hardening step should decide which combinations are genuinely path-invariant and which must stay physically order-sensitive
+- the new mixed-study-mode torture pack is only the first broader slice:
+  - it proves cross-mode store detours do not silently leak result posture on representative deep floor and wall packages
+  - it is not yet a generated full mixed matrix across wider preset families, longer edit chains, or larger duplicate/swap grids
 - the concrete floor-carrier `Rw` blocker from the 2026-04-07 revalidation is now fixed, but the narrowing rule is intentionally strict:
   - visible floor roles reopen the carrier
   - raw wall-like heavy hybrids stay closed
