@@ -215,9 +215,13 @@ Status:
   - two-leaf single-cavity boundary cases can emit runner-up-aware ambiguity diagnostics
   - trace now carries the current boundary posture when the family read is narrow or ambiguous
   - confidence can step down on those narrow boundary cases without moving the numeric lane itself yet
-- Phase B.2 is still open:
-  - conservative corridor holding is not shipped yet
-  - family selection still ends in a hard branch even when the trace is calling out a narrow winner
+- Phase B.2 is now partially shipped:
+  - a bounded conservative hold now exists for the `double_leaf <-> lined_massive_wall` boundary
+  - the hold only applies on `2 visible leaves / 1 cavity` topologies
+  - the hold trims by a small amount instead of replacing the chosen lane wholesale
+- Phase B.2 remains partially open:
+  - the hold does not yet cover every narrow family pairing
+  - family selection still ends in a hard branch first and only then gets trimmed back on the currently defended corridor
 
 Expected gain:
 
@@ -262,8 +266,10 @@ Primary test files that must be kept green:
 - [../../packages/engine/src/output-combination-sweep.test.ts](../../packages/engine/src/output-combination-sweep.test.ts)
 - [../../packages/engine/src/dynamic-guided-combination-sweep.test.ts](../../packages/engine/src/dynamic-guided-combination-sweep.test.ts)
 - [../../packages/engine/src/dynamic-airborne-family-boundary.test.ts](../../packages/engine/src/dynamic-airborne-family-boundary.test.ts)
+- [../../packages/engine/src/dynamic-airborne-order-sensitivity.test.ts](../../packages/engine/src/dynamic-airborne-order-sensitivity.test.ts)
 - [../../apps/web/features/workbench/dynamic-route-instability.test.ts](../../apps/web/features/workbench/dynamic-route-instability.test.ts)
 - [../../apps/web/features/workbench/dynamic-route-family-boundary.test.ts](../../apps/web/features/workbench/dynamic-route-family-boundary.test.ts)
+- [../../apps/web/features/workbench/dynamic-route-order-sensitivity.test.ts](../../apps/web/features/workbench/dynamic-route-order-sensitivity.test.ts)
 - [../../packages/engine/src/dynamic-airborne-instability-repro.test.ts](../../packages/engine/src/dynamic-airborne-instability-repro.test.ts)
 
 ## 11. Required Test Strategy
@@ -310,6 +316,7 @@ Required case classes:
 - deep stacks with multiple porous segments
 - deep stacks with mixed heavy and light leaves
 - stacks where outer compliant rows are present only on one side
+- stacks where a deeper 5-layer hybrid trims back to the same 2-leaf / 1-cavity morphology
 - stacks where support metadata is present but support layers are absent
 - stacks where support layers are present but metadata is `auto`
 
@@ -345,7 +352,8 @@ Keep the test hierarchy clear.
 Engine-level selector and solver guards:
 
 - `packages/engine/src/dynamic-airborne-instability-repro.test.ts`
-- add a new selector-focused contract file if the helper surface grows
+- `packages/engine/src/dynamic-airborne-family-boundary.test.ts`
+- `packages/engine/src/dynamic-airborne-order-sensitivity.test.ts`
 
 Engine-level benchmark protection:
 
@@ -357,6 +365,7 @@ Engine-level benchmark protection:
 Workbench edit-path protection:
 
 - `apps/web/features/workbench/dynamic-route-instability.test.ts`
+- `apps/web/features/workbench/dynamic-route-family-boundary.test.ts`
 - `apps/web/features/workbench/dynamic-route-order-sensitivity.test.ts`
 
 If a new helper is added to `airborne-topology.ts`, add topology-only tests close to the helper instead of burying everything inside end-to-end assertions.
@@ -517,6 +526,72 @@ Important limit:
 - this is evidence of materially improved posture, not proof that every possible wall stack is solved
 - the scan only covers the chosen local material palette and adjacent swaps, not arbitrary user imports or every deep manual hybrid
 - because of that, Phase B.2 is still needed before the selector can be called fully ambiguity-aware in the numeric lane itself
+
+### 15.6 Phase B.2 bounded hold shipped on 2026-04-07
+
+The next hardening step is now partially in the repo.
+
+Shipped behavior:
+
+- the two-leaf `double_leaf <-> lined_massive_wall` boundary can now receive a bounded conservative hold after family selection
+- the hold only activates when all of these are true:
+  - topology stays at exactly `2 visible leaves / 1 cavity`
+  - runner-up family exists
+  - decision class is `narrow` or `ambiguous`
+  - selected/runner-up pair is exactly `double_leaf` and `lined_massive_wall`
+- the hold does not replace the family lane
+- instead it:
+  - re-evaluates the runner-up lane
+  - computes a small allowed lead over that runner-up
+  - trims the chosen lane by a bounded amount if it is still materially outrunning the nearby corridor
+
+Current bounded-hold constants:
+
+- ambiguous boundary:
+  - allowed lead over runner-up: `4 dB`
+  - maximum trim from the currently chosen metric: `2 dB`
+- narrow boundary:
+  - allowed lead over runner-up: `5 dB`
+  - maximum trim from the currently chosen metric: `1.5 dB`
+
+Why the scope is intentionally narrow:
+
+- a broader hold would risk flattening real multi-leaf / triple-leaf penalties
+- the current shipped corridor is the one already backed by the new runner-up diagnostics and by the direct bug pack
+- wider family-pair holding should wait for `MorphologyV2` or at least a more explicit candidate-scoring surface
+
+New regression evidence now required:
+
+- exact `AAC + cavity + lining board` boundary rows
+- deeper 5-layer hybrids that trim back to the same held morphology
+- workbench parity for both of the above
+- no false hold activation on:
+  - clear `double_stud_system`
+  - explicit triple-leaf multi-cavity stacks
+
+Local findings from the current Phase B.2 pass:
+
+- the classic `ytong_aac_d700 100 + air_gap 50 + gypsum_board 12.5` boundary now lands at about `R'w 45 / DnT,w 46` with:
+  - `familyDecisionClass: ambiguous`
+  - runner-up `double_leaf`
+  - strategy suffix `family_boundary_hold`
+- the heavier reordered hybrid `gypsum_board 12.5 | ytong_aac_d700 100 | rockwool 25 | air_gap 50 | diamond_board 12.5` now lands at about `Rw 49 / R'w 47 / DnT,w 48`
+  - this keeps the reorder explicit but trims the old post-Phase-A lined-massive overshoot by about `2 dB`
+- a generated trimmed-prefix hybrid scan found `25` hold-active rows in the tested palette
+  - those rows cluster around `AAC 100-120 mm` heavy cores with lining boards
+  - the held `R'w` spread inside that scan stayed within a narrow `1 dB` band across the chosen outer compliant prefixes
+
+Residual risks after the shipped hold:
+
+- the hold is still corridor-specific, not a general family-scoring rewrite
+- deeper manual hybrids can still expose new narrow pairings outside `double_leaf <-> lined_massive_wall`
+- the selector still makes a hard family pick before the conservative trim applies
+
+What still needs more evidence:
+
+- wider generated scans over additional heavy cores such as Porotherm and sand-lime blocks
+- permutations where both sides carry outer compliant trims
+- narrow boundary cases that involve more than one plausible runner-up family
 
 ## 16. Validation Record
 

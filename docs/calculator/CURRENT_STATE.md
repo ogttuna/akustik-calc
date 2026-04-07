@@ -35,6 +35,11 @@ Document role:
 - Phase B.1 boundary diagnostics are now also shipped on the wall side:
   - narrow two-leaf family boundaries can now surface runner-up-aware warnings and notes
   - those boundary cases can step down in confidence without changing the numeric lane yet
+- Phase B.2 partial wall-side corridor holding is now also shipped:
+  - the `double_leaf <-> lined_massive_wall` boundary can now apply a bounded conservative hold after the family pick
+  - this currently stays deliberately narrow: only `2 visible leaves / 1 cavity` topology on that defended pairing
+  - deeper 5-layer hybrids that trim back to that morphology are now covered by direct engine and workbench matrix tests
+  - exact boundary, trimmed-prefix, instability, and order-sensitivity contracts now exist on both engine and workbench routes for that corridor
 - field-side support posture was tightened during validation:
   - hybrid wall-like stacks no longer surface `Rw` on assembly field bundles just because a generic impact signal existed downstream
 - the living source-gap ledger now records which floor families are source-backed enough to tighten and which must stay fail-closed
@@ -101,9 +106,10 @@ Important nuance:
   - [../archive/analysis/DYNAMIC_ROUTE_STABILITY_ANALYSIS_2026-04-07.md](../archive/analysis/DYNAMIC_ROUTE_STABILITY_ANALYSIS_2026-04-07.md)
 - the intended fix order and protected-corridor rules for that wall-side work now live under:
   - [DYNAMIC_WALL_STABILITY_REMEDIATION.md](./DYNAMIC_WALL_STABILITY_REMEDIATION.md)
-- wall-side Phase A reduced the currently reproduced jump class materially, and Phase B.1 now exposes narrow runner-up boundaries, but family selection still ends in a hard branch rather than a conservative held corridor
+- wall-side Phase A reduced the currently reproduced jump class materially, and Phase B.1 plus the first shipped Phase B.2 hold now cover the defended `double_leaf <-> lined_massive_wall` boundary, but family selection still ends in a hard branch outside that narrow held corridor
 - the largest remaining reorder deltas now cluster mainly around true multi-leaf / triple-leaf topologies, which should stay order-sensitive rather than being flattened blindly
 - `multileaf_multicavity` remains a conservative surrogate rather than a dedicated multi-cavity solver
+- deeper heavy hybrids with alternative cores still need broader generated scans before the current held-corridor posture can be widened
 - the remaining TUAS shortlist is no longer a pure import question:
   - `R7a` likely wants a separate heavy/wet `a` branch
   - `R6b` likely wants a separate reinforced lower-treatment `b` branch
@@ -113,11 +119,11 @@ Important nuance:
 Work in this order:
 
 1. Run a broader complex-stack torture pass before widening normalization rules any further.
-2. Move the wall-side remediation plan from shipped Phase A and Phase B.1 to Phase B.2:
-   - keep the new ambiguity-aware family scoring and runner-up trace
-   - add runner-up aware conservative holding only where the residual class is not a true multi-leaf / triple-leaf order-sensitive topology
+2. Widen the new wall-side Phase B.2 evidence base before extending the hold beyond the current defended corridor:
+   - keep the current runner-up-aware hold limited to `double_leaf <-> lined_massive_wall`
+   - scan more heavy-core families and dual-trim hybrids before adding any new held pair
 3. Do a mini branch-design audit for `R7a` and `R6b` before importing either row.
-4. Only after that decide whether the next widening move is TUAS branch extension or UBIQ source-trace cleanup.
+4. Only after that decide whether the next widening move is TUAS branch extension, UBIQ source-trace cleanup, or the next wall-side held family pairing.
 
 Use the source gap ledger to decide which families should be researched or widened first instead of opening new lanes ad hoc:
 

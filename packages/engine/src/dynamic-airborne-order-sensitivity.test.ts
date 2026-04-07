@@ -242,11 +242,11 @@ describe("dynamic airborne order-sensitive multileaf contracts", () => {
       strategy: swapped.strategy
     }).toEqual({
       confidence: "low",
-      dnTw: 50,
+      dnTw: 48,
       family: "lined_massive_wall",
-      rw: 51,
-      rwPrime: 49,
-      strategy: "lined_massive_blend+reinforcement_monotonic_floor"
+      rw: 49,
+      rwPrime: 47,
+      strategy: "lined_massive_blend+reinforcement_monotonic_floor+family_boundary_hold"
     });
     expect({
       confidence: duplicated.confidence,
@@ -263,10 +263,14 @@ describe("dynamic airborne order-sensitive multileaf contracts", () => {
       rwPrime: 45,
       strategy: "multileaf_screening_blend"
     });
-    expect(swapped.rw - base.rw).toBeGreaterThanOrEqual(12);
+    expect(swapped.rw - base.rw).toBeGreaterThanOrEqual(10);
+    expect(swapped.rwPrime - base.rwPrime).toBeGreaterThanOrEqual(10);
+    expect(swapped.dnTw - base.dnTw).toBeGreaterThanOrEqual(9);
     expectFragment(base.warnings, "intentionally order-sensitive", "heavy multileaf warning");
     expectFragment(base.notes, "intentionally order-sensitive", "heavy multileaf note");
     expectFragment(swapped.warnings, "boundary between Lined Massive Wall and Double Leaf", "heavy swapped boundary warning");
+    expectFragment(swapped.warnings, "family-boundary hold was applied", "heavy swapped hold warning");
+    expectFragment(swapped.notes, "ambiguity hold trimmed", "heavy swapped hold note");
     expectFragment(duplicated.warnings, "intentionally order-sensitive", "heavy duplicated warning");
   });
 });

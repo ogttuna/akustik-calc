@@ -67,11 +67,13 @@ type DynamicAirborneResult = {
 
 type DynamicAirborneOptions = {
   disableFramedReinforcementMonotonicFloor?: boolean;
+  disableFamilyBoundaryHold?: boolean;
   airborneContext?: AirborneContext | null;
   disableMasonryDavyCap?: boolean;
   disableLinedMassiveMasonryFloor?: boolean;
   disableNarrowHeavyDoubleLeafGapGuard?: boolean;
   disableSingleLeafMasonryFloor?: boolean;
+  forcedFamily?: DynamicAirborneFamily | null;
   framedReinforcementMonotonicGuardDepth?: number;
   frequenciesHz?: readonly number[];
   linedMassiveMasonryFloorGuardDepth?: number;
@@ -5232,6 +5234,158 @@ function applyMicroGapFillEquivalenceGuard(
   };
 }
 
+function applyAmbiguousFamilyBoundaryHold(
+  curve: TransmissionLossCurve,
+  layers: readonly ResolvedLayer[],
+  topology: ReturnType<typeof summarizeAirborneTopology>,
+  selectedFamily: DynamicAirborneFamily,
+  boundary: FamilyDecisionBoundarySummary,
+  options: DynamicAirborneOptions
+): {
+  applied: boolean;
+  curve: TransmissionLossCurve;
+  notes: string[];
+  ratings: AssemblyRatings;
+  runnerUpMetric: number | null;
+  strategySuffix: string | null;
+  targetMetric: number | null;
+} {
+  const notes: string[] = [];
+
+  if (
+    options.disableFamilyBoundaryHold ||
+    !boundary.runnerUpFamily ||
+    topology.visibleLeafCount !== 2 ||
+    topology.cavityCount !== 1
+  ) {
+    return {
+      applied: false,
+      curve,
+      notes,
+      ratings: buildRatingsFromCurve(curve.frequenciesHz, curve.transmissionLossDb, options.airborneContext),
+      runnerUpMetric: null,
+      strategySuffix: null,
+      targetMetric: null
+    };
+  }
+
+  const familyPair = [selectedFamily, boundary.runnerUpFamily].sort().join("|");
+  // Keep the hold tightly scoped until MorphologyV2 exists; broader suppression would risk flattening true multi-leaf behavior.
+  if (familyPair !== ["double_leaf", "lined_massive_wall"].sort().join("|")) {
+    return {
+      applied: false,
+      curve,
+      notes,
+      ratings: buildRatingsFromCurve(curve.frequenciesHz, curve.transmissionLossDb, options.airborneContext),
+      runnerUpMetric: null,
+      strategySuffix: null,
+      targetMetric: null
+    };
+  }
+
+  if (boundary.decisionClass !== "narrow" && boundary.decisionClass !== "ambiguous") {
+    return {
+      applied: false,
+      curve,
+      notes,
+      ratings: buildRatingsFromCurve(curve.frequenciesHz, curve.transmissionLossDb, options.airborneContext),
+      runnerUpMetric: null,
+      strategySuffix: null,
+      targetMetric: null
+    };
+  }
+
+  const currentMetric = computeContextMetric(curve, options.airborneContext);
+  if (!(typeof currentMetric === "number" && Number.isFinite(currentMetric))) {
+    return {
+      applied: false,
+      curve,
+      notes,
+      ratings: buildRatingsFromCurve(curve.frequenciesHz, curve.transmissionLossDb, options.airborneContext),
+      runnerUpMetric: null,
+      strategySuffix: null,
+      targetMetric: null
+    };
+  }
+
+  const runnerUpResult = calculateDynamicAirborneResult(layers, {
+    ...options,
+    disableFamilyBoundaryHold: true,
+    forcedFamily: boundary.runnerUpFamily,
+    screeningEstimatedRwDb: options.screeningEstimatedRwDb
+  });
+  const runnerUpMetric = computeContextMetric(runnerUpResult.curve, options.airborneContext);
+
+  if (!(typeof runnerUpMetric === "number" && Number.isFinite(runnerUpMetric))) {
+    return {
+      applied: false,
+      curve,
+      notes,
+      ratings: buildRatingsFromCurve(curve.frequenciesHz, curve.transmissionLossDb, options.airborneContext),
+      runnerUpMetric: null,
+      strategySuffix: null,
+      targetMetric: null
+    };
+  }
+
+  if (!(currentMetric > runnerUpMetric + 1e-6)) {
+    return {
+      applied: false,
+      curve,
+      notes,
+      ratings: buildRatingsFromCurve(curve.frequenciesHz, curve.transmissionLossDb, options.airborneContext),
+      runnerUpMetric,
+      strategySuffix: null,
+      targetMetric: null
+    };
+  }
+
+  const allowedLeadDb = boundary.decisionClass === "ambiguous" ? 4 : 5;
+  const maxTrimDb = boundary.decisionClass === "ambiguous" ? 2 : 1.5;
+  const boundaryCeiling = runnerUpMetric + allowedLeadDb;
+
+  if (!(currentMetric > boundaryCeiling + 1e-6)) {
+    return {
+      applied: false,
+      curve,
+      notes,
+      ratings: buildRatingsFromCurve(curve.frequenciesHz, curve.transmissionLossDb, options.airborneContext),
+      runnerUpMetric,
+      strategySuffix: null,
+      targetMetric: boundaryCeiling
+    };
+  }
+
+  const targetMetric = ksRound1(Math.max(boundaryCeiling, currentMetric - maxTrimDb));
+
+  const anchored = anchorCurveToMetric(curve, targetMetric, options.airborneContext);
+  if (!anchored.applied) {
+    return {
+      applied: false,
+      curve,
+      notes,
+      ratings: anchored.ratings,
+      runnerUpMetric,
+      strategySuffix: null,
+      targetMetric
+    };
+  }
+
+  notes.push(
+    `An ambiguity hold trimmed ${FAMILY_LABELS[selectedFamily]} against the nearby ${FAMILY_LABELS[boundary.runnerUpFamily]} corridor because the current two-leaf family boundary was ${boundary.decisionClass} (runner-up ${runnerUpMetric.toFixed(1)} dB, ceiling ${boundaryCeiling.toFixed(1)} dB, target ${targetMetric.toFixed(1)} dB, current ${currentMetric.toFixed(1)} dB).`
+  );
+
+  return {
+    applied: true,
+    curve: anchored.curve,
+    notes,
+    ratings: anchored.ratings,
+    runnerUpMetric,
+    strategySuffix: "family_boundary_hold",
+    targetMetric
+  };
+}
+
 function detectDynamicFamily(
   layers: readonly ResolvedLayer[],
   framingHint: DynamicFramingHint
@@ -5632,7 +5786,10 @@ export function calculateDynamicAirborneResult(
   const framingEvidence = summarizeFramingEvidence(analysisLayers, topology, framingHint);
   const heavyUnframedCavityRisk = summarizeHeavyUnframedCavityRisk(analysisLayers, topology, framingHint);
   const multileafOrderSensitivity = summarizeMultileafOrderSensitivity(analysisLayers, topology);
-  const family = detectDynamicFamily(analysisLayers, framingHint);
+  const family =
+    options.forcedFamily
+      ? { family: options.forcedFamily, notes: [] as string[] }
+      : detectDynamicFamily(analysisLayers, framingHint);
   const familyDecisionBoundary = summarizeFamilyDecisionBoundary(
     analysisLayers,
     topology,
@@ -5999,6 +6156,23 @@ export function calculateDynamicAirborneResult(
     ratings = microGapFillEquivalenceGuard.ratings;
   }
 
+  const familyBoundaryHold = applyAmbiguousFamilyBoundaryHold(
+    dynamicCurve,
+    analysisLayers,
+    topology,
+    family.family,
+    familyDecisionBoundary,
+    {
+      ...options,
+      screeningEstimatedRwDb: effectiveScreeningEstimatedRwDb
+    }
+  );
+
+  if (familyBoundaryHold.applied) {
+    dynamicCurve = familyBoundaryHold.curve;
+    ratings = familyBoundaryHold.ratings;
+  }
+
   const rwValues = delegates
     .map((delegate) => delegate.rw)
     .filter((value) => Number.isFinite(value) && value > 0);
@@ -6035,7 +6209,8 @@ export function calculateDynamicAirborneResult(
     mixedPlainModerateSingleBoardLabTemplate.strategySuffix,
     premiumSingleBoardFieldCorrection.strategySuffix,
     framedReinforcementMonotonicFloor.strategySuffix,
-    microGapFillEquivalenceGuard.strategySuffix
+    microGapFillEquivalenceGuard.strategySuffix,
+    familyBoundaryHold.strategySuffix
   ]
     .filter((token): token is string => typeof token === "string" && token.length > 0)
     .join("+");
@@ -6211,6 +6386,12 @@ export function calculateDynamicAirborneResult(
     );
   }
 
+  if (familyBoundaryHold.applied) {
+    warnings.push(
+      `A conservative family-boundary hold was applied because the current ${FAMILY_LABELS[family.family]} result was still outrunning the nearby ${FAMILY_LABELS[familyDecisionBoundary.runnerUpFamily ?? family.family]} corridor on a ${familyDecisionBoundary.decisionClass} two-leaf boundary.`
+    );
+  }
+
   if (trimmedOuterSpan.trimmed) {
     warnings.push(
       "Outer porous/gap/support layers outside the outermost solid leaves were excluded from the dynamic airborne span."
@@ -6282,7 +6463,8 @@ export function calculateDynamicAirborneResult(
       ...mixedPlainModerateSingleBoardLabTemplate.notes,
       ...premiumSingleBoardFieldCorrection.notes,
       ...framedReinforcementMonotonicFloor.notes,
-      ...microGapFillEquivalenceGuard.notes
+      ...microGapFillEquivalenceGuard.notes,
+      ...familyBoundaryHold.notes
     ],
     originalSolidLayerCount: topology.originalSolidLayerCount,
     porousLayerCount: topology.porousLayerCount,

@@ -148,11 +148,11 @@ const WORKBENCH_ADJACENT_SWAP_CASES = [
     },
     changed: {
       confidence: "low",
-      dnTw: 49,
+      dnTw: 47,
       family: "lined_massive_wall",
-      rw: 49,
-      rwPrime: 48,
-      strategy: "lined_massive_blend+reinforcement_monotonic_floor"
+      rw: 47,
+      rwPrime: 46,
+      strategy: "lined_massive_blend+reinforcement_monotonic_floor+family_boundary_hold"
     },
     maxDnTwDelta: 13,
     maxRwDelta: 13,
@@ -172,11 +172,11 @@ const WORKBENCH_ADJACENT_SWAP_CASES = [
     },
     changed: {
       confidence: "low",
-      dnTw: 48,
+      dnTw: 46,
       family: "lined_massive_wall",
-      rw: 49,
-      rwPrime: 46,
-      strategy: "lined_massive_blend+reinforcement_monotonic_floor"
+      rw: 47,
+      rwPrime: 44,
+      strategy: "lined_massive_blend+reinforcement_monotonic_floor+family_boundary_hold"
     },
     maxDnTwDelta: 12,
     maxRwDelta: 13,
@@ -188,11 +188,11 @@ const WORKBENCH_ADJACENT_SWAP_CASES = [
   {
     base: {
       confidence: "low",
-      dnTw: 49,
+      dnTw: 48,
       family: "lined_massive_wall",
-      rw: 50,
-      rwPrime: 48,
-      strategy: "lined_massive_blend+reinforcement_monotonic_floor"
+      rw: 49,
+      rwPrime: 47,
+      strategy: "lined_massive_blend+reinforcement_monotonic_floor+family_boundary_hold"
     },
     changed: {
       confidence: "medium",
@@ -212,11 +212,11 @@ const WORKBENCH_ADJACENT_SWAP_CASES = [
   {
     base: {
       confidence: "low",
-      dnTw: 49,
+      dnTw: 48,
       family: "lined_massive_wall",
-      rw: 50,
-      rwPrime: 48,
-      strategy: "lined_massive_blend+reinforcement_monotonic_floor"
+      rw: 49,
+      rwPrime: 47,
+      strategy: "lined_massive_blend+reinforcement_monotonic_floor+family_boundary_hold"
     },
     changed: {
       confidence: "low",
@@ -367,6 +367,7 @@ function snapshot(lab: ReturnType<typeof calculateDynamicWall>, field: ReturnTyp
     confidence: field.dynamicAirborneTrace?.confidenceClass ?? lab.dynamicAirborneTrace?.confidenceClass ?? null,
     dnTw: field.metrics.estimatedDnTwDb,
     family: field.dynamicAirborneTrace?.detectedFamily ?? lab.dynamicAirborneTrace?.detectedFamily ?? null,
+    notes: field.dynamicAirborneTrace?.notes ?? [],
     rw: lab.metrics.estimatedRwDb,
     rwPrime: field.metrics.estimatedRwPrimeDb,
     strategy: field.dynamicAirborneTrace?.strategy ?? lab.dynamicAirborneTrace?.strategy ?? null,
@@ -629,6 +630,17 @@ describe("dynamic airborne stability contracts", () => {
         testCase.maxRwPrimeDelta
       );
       expect(Math.abs(changed.dnTw - base.dnTw), `${testCase.name} field DnT,w delta`).toBeLessThanOrEqual(testCase.maxDnTwDelta);
+      if (base.family === "lined_massive_wall") {
+        expectWarningFragment(base.warnings, "family-boundary hold was applied", `${testCase.name} base`);
+        expect(base.notes.some((note) => /ambiguity hold trimmed/i.test(note)), `${testCase.name} base hold note`).toBe(true);
+      }
+      if (changed.family === "lined_massive_wall") {
+        expectWarningFragment(changed.warnings, "family-boundary hold was applied", `${testCase.name} changed`);
+        expect(
+          changed.notes.some((note) => /ambiguity hold trimmed/i.test(note)),
+          `${testCase.name} changed hold note`
+        ).toBe(true);
+      }
     }
   });
 

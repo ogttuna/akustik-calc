@@ -109,11 +109,11 @@ const ADJACENT_SWAP_CASES = [
     },
     changed: {
       confidence: "low",
-      dnTw: 49,
+      dnTw: 47,
       family: "lined_massive_wall",
-      rw: 49,
-      rwPrime: 48,
-      strategy: "lined_massive_blend+reinforcement_monotonic_floor"
+      rw: 47,
+      rwPrime: 46,
+      strategy: "lined_massive_blend+reinforcement_monotonic_floor+family_boundary_hold"
     },
     maxDnTwDelta: 13,
     maxRwDelta: 13,
@@ -133,11 +133,11 @@ const ADJACENT_SWAP_CASES = [
     },
     changed: {
       confidence: "low",
-      dnTw: 48,
+      dnTw: 46,
       family: "lined_massive_wall",
-      rw: 49,
-      rwPrime: 46,
-      strategy: "lined_massive_blend+reinforcement_monotonic_floor"
+      rw: 47,
+      rwPrime: 44,
+      strategy: "lined_massive_blend+reinforcement_monotonic_floor+family_boundary_hold"
     },
     maxDnTwDelta: 12,
     maxRwDelta: 13,
@@ -149,11 +149,11 @@ const ADJACENT_SWAP_CASES = [
   {
     base: {
       confidence: "low",
-      dnTw: 49,
+      dnTw: 48,
       family: "lined_massive_wall",
-      rw: 50,
-      rwPrime: 48,
-      strategy: "lined_massive_blend+reinforcement_monotonic_floor"
+      rw: 49,
+      rwPrime: 47,
+      strategy: "lined_massive_blend+reinforcement_monotonic_floor+family_boundary_hold"
     },
     changed: {
       confidence: "medium",
@@ -173,11 +173,11 @@ const ADJACENT_SWAP_CASES = [
   {
     base: {
       confidence: "low",
-      dnTw: 49,
+      dnTw: 48,
       family: "lined_massive_wall",
-      rw: 50,
-      rwPrime: 48,
-      strategy: "lined_massive_blend+reinforcement_monotonic_floor"
+      rw: 49,
+      rwPrime: 47,
+      strategy: "lined_massive_blend+reinforcement_monotonic_floor+family_boundary_hold"
     },
     changed: {
       confidence: "low",
@@ -371,6 +371,7 @@ function snapshot(resultPair: ReturnType<typeof evaluateDynamicWall>) {
       resultPair.field.result!.dynamicAirborneTrace?.detectedFamily ??
       resultPair.lab.result!.dynamicAirborneTrace?.detectedFamily ??
       null,
+    notes: resultPair.field.result!.dynamicAirborneTrace?.notes ?? [],
     rw: resultPair.lab.result!.metrics.estimatedRwDb,
     rwPrime: resultPair.field.result!.metrics.estimatedRwPrimeDb,
     strategy:
@@ -473,16 +474,18 @@ describe("dynamic route stability contracts", () => {
       confidence: base.confidence,
       dnTw: base.dnTw,
       family: base.family,
+      notes: base.notes,
       rw: base.rw,
       rwPrime: base.rwPrime,
       strategy: base.strategy
     }).toEqual({
       confidence: "low",
-      dnTw: 49,
+      dnTw: 48,
       family: "lined_massive_wall",
-      rw: 50,
-      rwPrime: 48,
-      strategy: "lined_massive_blend+reinforcement_monotonic_floor"
+      notes: expect.arrayContaining([expect.stringMatching(/ambiguity hold trimmed/i)]),
+      rw: 49,
+      rwPrime: 47,
+      strategy: "lined_massive_blend+reinforcement_monotonic_floor+family_boundary_hold"
     });
     expect({
       confidence: moved.confidence,
@@ -502,6 +505,7 @@ describe("dynamic route stability contracts", () => {
     expect(base.rw - moved.rw).toBeLessThanOrEqual(13);
     expect(base.rwPrime - moved.rwPrime).toBeLessThanOrEqual(13);
     expect(base.dnTw - moved.dnTw).toBeLessThanOrEqual(12);
+    expectWarningFragment(base.warnings, "family-boundary hold was applied", "move base");
   });
 
   it("keeps duplicate-handling stable across equivalent compliant-layer variants entered one row at a time", async () => {
@@ -565,28 +569,46 @@ describe("dynamic route stability contracts", () => {
           confidence: base.confidence,
           dnTw: base.dnTw,
           family: base.family,
+          notes: base.notes,
           rw: base.rw,
           rwPrime: base.rwPrime,
           strategy: base.strategy
         },
         `${testCase.name} base`
-      ).toEqual(testCase.base);
+      ).toEqual({
+        ...testCase.base,
+        notes: base.family === "lined_massive_wall"
+          ? expect.arrayContaining([expect.stringMatching(/ambiguity hold trimmed/i)])
+          : base.notes
+      });
       expect(
         {
           confidence: changed.confidence,
           dnTw: changed.dnTw,
           family: changed.family,
+          notes: changed.notes,
           rw: changed.rw,
           rwPrime: changed.rwPrime,
           strategy: changed.strategy
         },
         `${testCase.name} changed`
-      ).toEqual(testCase.changed);
+      ).toEqual({
+        ...testCase.changed,
+        notes: changed.family === "lined_massive_wall"
+          ? expect.arrayContaining([expect.stringMatching(/ambiguity hold trimmed/i)])
+          : changed.notes
+      });
       expect(Math.abs(changed.rw - base.rw), `${testCase.name} lab delta`).toBeLessThanOrEqual(testCase.maxRwDelta);
       expect(Math.abs(changed.rwPrime - base.rwPrime), `${testCase.name} field R'w delta`).toBeLessThanOrEqual(
         testCase.maxRwPrimeDelta
       );
       expect(Math.abs(changed.dnTw - base.dnTw), `${testCase.name} field DnT,w delta`).toBeLessThanOrEqual(testCase.maxDnTwDelta);
+      if (base.family === "lined_massive_wall") {
+        expectWarningFragment(base.warnings, "family-boundary hold was applied", `${testCase.name} base`);
+      }
+      if (changed.family === "lined_massive_wall") {
+        expectWarningFragment(changed.warnings, "family-boundary hold was applied", `${testCase.name} changed`);
+      }
     }
   });
 
