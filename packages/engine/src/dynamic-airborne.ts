@@ -475,8 +475,11 @@ type MultileafOrderSensitivitySummary = {
 type FamilyDecisionBoundarySummary = {
   decisionClass: DynamicAirborneFamilyDecisionClass;
   margin: number | null;
+  multiplePlausibleFamilies: boolean;
   runnerUpFamily: DynamicAirborneFamily | null;
   runnerUpScore: number | null;
+  secondaryRunnerUpFamily: DynamicAirborneFamily | null;
+  secondaryRunnerUpScore: number | null;
   selectedScore: number | null;
 };
 
@@ -1035,8 +1038,11 @@ function summarizeFamilyDecisionBoundary(
     return {
       decisionClass: "clear",
       margin: null,
+      multiplePlausibleFamilies: false,
       runnerUpFamily: null,
       runnerUpScore: null,
+      secondaryRunnerUpFamily: null,
+      secondaryRunnerUpScore: null,
       selectedScore: null
     };
   }
@@ -1104,9 +1110,13 @@ function summarizeFamilyDecisionBoundary(
     .sort((left, right) => right.score - left.score);
 
   const selected = scoredFamilies.find((entry) => entry.family === selectedFamily) ?? null;
-  const runnerUp = scoredFamilies.find((entry) => entry.family !== selectedFamily) ?? null;
+  const alternateFamilies = scoredFamilies.filter((entry) => entry.family !== selectedFamily);
+  const runnerUp = alternateFamilies[0] ?? null;
+  const secondaryRunnerUp = alternateFamilies[1] ?? null;
   const margin =
     selected && runnerUp ? ksRound1(Math.max(selected.score - runnerUp.score, 0)) : null;
+  const selectedToSecondaryMargin =
+    selected && secondaryRunnerUp ? ksRound1(Math.max(selected.score - secondaryRunnerUp.score, 0)) : null;
 
   let decisionClass: DynamicAirborneFamilyDecisionClass = "clear";
   if (selected && runnerUp && runnerUp.score >= 0.3) {
@@ -1117,11 +1127,24 @@ function summarizeFamilyDecisionBoundary(
     }
   }
 
+  const multiplePlausibleFamilies = Boolean(
+    selected &&
+      runnerUp &&
+      secondaryRunnerUp &&
+      runnerUp.score >= 0.3 &&
+      secondaryRunnerUp.score >= 0.28 &&
+      selectedToSecondaryMargin !== null &&
+      selectedToSecondaryMargin <= 0.22
+  );
+
   return {
     decisionClass,
     margin,
+    multiplePlausibleFamilies,
     runnerUpFamily: runnerUp?.family ?? null,
     runnerUpScore: runnerUp?.score ?? null,
+    secondaryRunnerUpFamily: secondaryRunnerUp?.family ?? null,
+    secondaryRunnerUpScore: secondaryRunnerUp?.score ?? null,
     selectedScore: selected?.score ?? null
   };
 }
@@ -5729,6 +5752,7 @@ function buildConfidenceScore(
     familyDecisionClass?: DynamicAirborneFamilyDecisionClass;
     heavyUnframedCavity?: boolean;
     hintOnlyFramingSuppressed?: boolean;
+    multiplePlausibleFamilies?: boolean;
     orderSensitiveMultileaf?: boolean;
     trimmedOuterLayers?: boolean;
   }
@@ -5794,6 +5818,10 @@ function buildConfidenceScore(
 
   if (options?.orderSensitiveMultileaf) {
     score -= 0.08;
+  }
+
+  if (options?.multiplePlausibleFamilies) {
+    score -= 0.04;
   }
 
   if (options?.familyDecisionClass === "narrow") {
@@ -6217,6 +6245,7 @@ export function calculateDynamicAirborneResult(
       familyDecisionClass: familyDecisionBoundary.decisionClass,
       heavyUnframedCavity: heavyUnframedCavityRisk.applies,
       hintOnlyFramingSuppressed: framingEvidence.explicitHintOnly && !framingEvidence.studEligible,
+      multiplePlausibleFamilies: familyDecisionBoundary.multiplePlausibleFamilies,
       orderSensitiveMultileaf: multileafOrderSensitivity.hasOrderSensitiveMultileaf,
       trimmedOuterLayers: trimmedOuterSpan.trimmed
     }
@@ -6336,6 +6365,16 @@ export function calculateDynamicAirborneResult(
     );
   }
 
+  if (
+    familyDecisionBoundary.multiplePlausibleFamilies &&
+    familyDecisionBoundary.runnerUpFamily &&
+    familyDecisionBoundary.secondaryRunnerUpFamily
+  ) {
+    warnings.push(
+      `More than one nearby family remains plausible on this two-leaf boundary: after ${FAMILY_LABELS[familyDecisionBoundary.runnerUpFamily]}, the ${FAMILY_LABELS[familyDecisionBoundary.secondaryRunnerUpFamily]} corridor is also still close enough that small support or lining changes can reshuffle the lane selection.`
+    );
+  }
+
   if (securityBoardDoubleStudFieldTrim.applied) {
     warnings.push(
       "A mixed security-board double-stud field trim was applied because the current split-cavity framed-wall surrogate was still slightly optimistic on the field side."
@@ -6450,6 +6489,8 @@ export function calculateDynamicAirborneResult(
       familyDecisionBoundary.decisionClass === "clear"
         ? undefined
         : familyDecisionBoundary.margin ?? undefined,
+    familyDecisionMultiplePlausibleFamilies:
+      familyDecisionBoundary.multiplePlausibleFamilies || undefined,
     familyBoundaryHoldCurrentMetricDb: familyBoundaryHold.currentMetricDb ?? undefined,
     familyBoundaryHoldRunnerUpMetricDb: familyBoundaryHold.runnerUpMetric ?? undefined,
     familyBoundaryHoldTargetMetricDb: familyBoundaryHold.targetMetric ?? undefined,
@@ -6467,6 +6508,11 @@ export function calculateDynamicAirborneResult(
             familyDecisionBoundary.decisionClass === "ambiguous"
               ? `The current family boundary is ambiguous: ${FAMILY_LABELS[family.family]} is only ${familyDecisionBoundary.margin?.toFixed(1) ?? "0.0"} score points ahead of ${FAMILY_LABELS[familyDecisionBoundary.runnerUpFamily]}.`
               : `The current family boundary is narrow: ${FAMILY_LABELS[family.family]} stays ahead of ${FAMILY_LABELS[familyDecisionBoundary.runnerUpFamily]} by ${familyDecisionBoundary.margin?.toFixed(1) ?? "0.0"} score points.`
+          ]
+        : []),
+      ...(familyDecisionBoundary.multiplePlausibleFamilies && familyDecisionBoundary.secondaryRunnerUpFamily
+        ? [
+            `A second nearby family also remains plausible on this boundary: ${FAMILY_LABELS[familyDecisionBoundary.secondaryRunnerUpFamily]} trails ${FAMILY_LABELS[family.family]} by ${ksRound1(Math.max((familyDecisionBoundary.selectedScore ?? 0) - (familyDecisionBoundary.secondaryRunnerUpScore ?? 0), 0)).toFixed(1)} score points.`
           ]
         : []),
       ...(multileafOrderSensitivity.boardInsertedTripleLeaf
@@ -6512,7 +6558,24 @@ export function calculateDynamicAirborneResult(
       familyDecisionBoundary.decisionClass === "clear" || !familyDecisionBoundary.runnerUpFamily
         ? undefined
         : FAMILY_LABELS[familyDecisionBoundary.runnerUpFamily],
+    runnerUpFamilyScore:
+      familyDecisionBoundary.decisionClass === "clear"
+        ? undefined
+        : familyDecisionBoundary.runnerUpScore ?? undefined,
+    secondaryRunnerUpFamily:
+      !familyDecisionBoundary.multiplePlausibleFamilies
+        ? undefined
+        : familyDecisionBoundary.secondaryRunnerUpFamily ?? undefined,
+    secondaryRunnerUpFamilyLabel:
+      !familyDecisionBoundary.multiplePlausibleFamilies || !familyDecisionBoundary.secondaryRunnerUpFamily
+        ? undefined
+        : FAMILY_LABELS[familyDecisionBoundary.secondaryRunnerUpFamily],
+    secondaryRunnerUpFamilyScore:
+      !familyDecisionBoundary.multiplePlausibleFamilies
+        ? undefined
+        : familyDecisionBoundary.secondaryRunnerUpScore ?? undefined,
     selectedLabel: getDelegateLabel(blendSelection.blend.selectedMethod),
+    selectedFamilyScore: familyDecisionBoundary.selectedScore ?? undefined,
     selectedMethod: blendSelection.blend.selectedMethod,
     solverSpreadRwDb,
     strategy,

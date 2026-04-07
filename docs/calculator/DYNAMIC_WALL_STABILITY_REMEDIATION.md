@@ -557,6 +557,12 @@ Shipped behavior:
   - `familyBoundaryHoldBoundaryCeilingDb`
   - `familyBoundaryHoldCurrentMetricDb`
   - `familyBoundaryHoldTargetMetricDb`
+- the family-boundary trace now also exposes the selector score surface itself:
+  - `selectedFamilyScore`
+  - `runnerUpFamilyScore`
+  - `familyDecisionMultiplePlausibleFamilies`
+  - `secondaryRunnerUpFamily`
+  - `secondaryRunnerUpFamilyScore`
 - outer-span trimming is now also structured in trace instead of living only inside free-form notes:
   - `trimmedOuterLayersApplied`
   - `trimmedOuterLeadingCount`
@@ -591,6 +597,9 @@ Local findings from the current Phase B.2 pass:
 - the classic `ytong_aac_d700 100 + air_gap 50 + gypsum_board 12.5` boundary now lands at about `R'w 45 / DnT,w 46` with:
   - `familyDecisionClass: ambiguous`
   - runner-up `double_leaf`
+  - score surface currently still slightly favors the runner-up:
+    - selected `lined_massive_wall`: about `0.492`
+    - runner-up `double_leaf`: about `0.501`
   - strategy suffix `family_boundary_hold`
 - the heavier reordered hybrid `gypsum_board 12.5 | ytong_aac_d700 100 | rockwool 25 | air_gap 50 | diamond_board 12.5` now lands at about `Rw 49 / R'w 47 / DnT,w 48`
   - this keeps the reorder explicit but trims the old post-Phase-A lined-massive overshoot by about `2 dB`
@@ -672,6 +681,20 @@ Local findings from the current Phase B.2 pass:
     - exact `R'w` / `DnT,w`
     - exact leading/trailing trim counts
     - absence of boundary/hold diagnostics on those non-AAC rows
+- multi-candidate selector diagnostics are now also under executable contract
+  - representative framed palette:
+    - contexts: `2`
+      - `steel_independent`
+      - `resilient_channel`
+    - left-leaf board packs: `4`
+    - cavity packs: `5`
+    - right-leaf board packs: `4`
+    - total rows per layer: `160`
+  - current result in that palette:
+    - all `160` rows stayed on `stud_wall_system`
+    - `0` rows exposed `familyDecisionMultiplePlausibleFamilies`
+    - `0` rows exposed a `secondaryRunnerUpFamily`
+  - route-side parity now defends the same `160` rows with the same current result
 
 Residual risks after the shipped hold:
 
@@ -683,7 +706,7 @@ What still needs more evidence:
 
 - deeper generated route-side palettes where non-AAC heavy cores also carry trailing outer trims, not just the current representative prefixes
 - permutations where both sides carry outer compliant trims inside broader manual hybrids, not just the current anchored samples
-- narrow boundary cases that involve more than one plausible runner-up family
+- narrow boundary cases that involve more than one plausible runner-up family outside the currently defended representative framed and heavy-core palettes
 - whether any future non-AAC heavy core that ever surfaces boundary diagnostics should enter the held corridor, or whether those families should stay outside until MorphologyV2
 
 ## 16. Validation Record

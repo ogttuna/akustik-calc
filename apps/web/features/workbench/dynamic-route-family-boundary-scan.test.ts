@@ -54,6 +54,67 @@ const REPRESENTATIVE_BOARDS = [
   { materialId: "security_board", thicknessMm: "12.5" }
 ] as const;
 
+const FRAMED_MULTI_CANDIDATE_CONTEXTS = [
+  {
+    id: "steel_independent",
+    outputs: ["Rw"] as const,
+    airborneContext: {
+      contextMode: "element_lab",
+      connectionType: "line_connection",
+      studType: "light_steel_stud",
+      studSpacingMm: 600,
+      airtightness: "good",
+      sharedTrack: "independent"
+    } satisfies AirborneContext
+  },
+  {
+    id: "resilient_channel",
+    outputs: ["R'w"] as const,
+    airborneContext: {
+      contextMode: "field_between_rooms",
+      connectionType: "resilient_channel",
+      studType: "resilient_stud",
+      studSpacingMm: 600,
+      airtightness: "good",
+      panelHeightMm: 2700,
+      panelWidthMm: 3000,
+      receivingRoomRt60S: 0.5,
+      receivingRoomVolumeM3: 30,
+      sharedTrack: "independent"
+    } satisfies AirborneContext
+  }
+] as const;
+
+const FRAMED_MULTI_CANDIDATE_BOARDS = [
+  [{ materialId: "gypsum", thicknessMm: "12.5" }],
+  [
+    { materialId: "gypsum", thicknessMm: "12.5" },
+    { materialId: "gypsum", thicknessMm: "12.5" }
+  ],
+  [
+    { materialId: "gypsum_board", thicknessMm: "12.5" },
+    { materialId: "diamond_board", thicknessMm: "12.5" }
+  ],
+  [
+    { materialId: "diamond_board", thicknessMm: "12.5" },
+    { materialId: "diamond_board", thicknessMm: "12.5" }
+  ]
+] as const;
+
+const FRAMED_MULTI_CANDIDATE_CAVITIES = [
+  [{ materialId: "air_gap", thicknessMm: "50" }],
+  [{ materialId: "rockwool", thicknessMm: "50" }],
+  [{ materialId: "glasswool", thicknessMm: "70" }],
+  [
+    { materialId: "air_gap", thicknessMm: "25" },
+    { materialId: "rockwool", thicknessMm: "25" }
+  ],
+  [
+    { materialId: "rockwool", thicknessMm: "25" },
+    { materialId: "air_gap", thicknessMm: "25" }
+  ]
+] as const;
+
 function buildRows(
   stack: readonly { materialId: string; thicknessMm: string }[],
   prefix: string
@@ -314,5 +375,55 @@ describe("dynamic route family boundary scan contracts", () => {
     }
 
     expect(offenders).toEqual([]);
+  }, ROUTE_SCAN_TIMEOUT_MS);
+
+  it("finds no multi-candidate boundary surface across the representative framed workbench palette yet", () => {
+    const multiCandidateHits: Array<{
+      context: string;
+      stack: string;
+    }> = [];
+    const familyCounts = new Map<string, number>();
+
+    for (const context of FRAMED_MULTI_CANDIDATE_CONTEXTS) {
+      for (const leftLeaf of FRAMED_MULTI_CANDIDATE_BOARDS) {
+        for (const cavity of FRAMED_MULTI_CANDIDATE_CAVITIES) {
+          for (const rightLeaf of FRAMED_MULTI_CANDIDATE_BOARDS) {
+            const stack = [...leftLeaf, ...cavity, ...rightLeaf] as const;
+            const rows = buildRows(stack, `${context.id}-${stackKey(stack)}`);
+            const result = evaluateScenario({
+              airborneContext: context.airborneContext,
+              calculator: "dynamic",
+              id: context.id,
+              name: context.id,
+              rows,
+              source: "current",
+              studyMode: "wall",
+              targetOutputs: [...context.outputs]
+            });
+
+            expect(result.result?.ok, `${context.id} ${stackKey(stack)} should stay ok`).toBe(true);
+
+            const trace = result.result?.dynamicAirborneTrace;
+            familyCounts.set(
+              `${context.id}:${trace?.detectedFamily ?? "none"}`,
+              (familyCounts.get(`${context.id}:${trace?.detectedFamily ?? "none"}`) ?? 0) + 1
+            );
+
+            if (trace?.familyDecisionMultiplePlausibleFamilies) {
+              multiCandidateHits.push({
+                context: context.id,
+                stack: stackKey(stack)
+              });
+            }
+          }
+        }
+      }
+    }
+
+    expect(multiCandidateHits).toEqual([]);
+    expect(Object.fromEntries([...familyCounts.entries()].sort(([left], [right]) => left.localeCompare(right)))).toEqual({
+      "resilient_channel:stud_wall_system": 80,
+      "steel_independent:stud_wall_system": 80
+    });
   }, ROUTE_SCAN_TIMEOUT_MS);
 });

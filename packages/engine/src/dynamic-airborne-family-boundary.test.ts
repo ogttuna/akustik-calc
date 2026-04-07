@@ -84,7 +84,15 @@ describe("dynamic airborne family boundary diagnostics", () => {
     expect(boundary.dynamicAirborneTrace?.confidenceClass).toBe("low");
     expect(boundary.dynamicAirborneTrace?.familyDecisionClass).toBe("ambiguous");
     expect(boundary.dynamicAirborneTrace?.familyDecisionMargin ?? Infinity).toBeLessThanOrEqual(0.1);
+    expect(boundary.dynamicAirborneTrace?.familyDecisionMultiplePlausibleFamilies).toBeUndefined();
     expect(boundary.dynamicAirborneTrace?.runnerUpFamily).toBe("double_leaf");
+    expect(boundary.dynamicAirborneTrace?.runnerUpFamilyScore ?? 0).toBeGreaterThan(0.49);
+    expect(boundary.dynamicAirborneTrace?.selectedFamilyScore ?? 0).toBeGreaterThan(0.49);
+    expect(boundary.dynamicAirborneTrace?.runnerUpFamilyScore ?? 0).toBeGreaterThan(
+      boundary.dynamicAirborneTrace?.selectedFamilyScore ?? Infinity
+    );
+    expect(boundary.dynamicAirborneTrace?.secondaryRunnerUpFamily).toBeUndefined();
+    expect(boundary.dynamicAirborneTrace?.secondaryRunnerUpFamilyScore).toBeUndefined();
     expect(boundary.dynamicAirborneTrace?.familyBoundaryHoldApplied).toBe(true);
     expect(boundary.dynamicAirborneTrace?.familyBoundaryHoldAllowedLeadDb).toBe(4);
     expect(boundary.dynamicAirborneTrace?.familyBoundaryHoldRunnerUpMetricDb).toBe(39);
