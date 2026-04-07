@@ -65,6 +65,12 @@ Current verified result:
 - standard engine floor corridor plus support/raw-screening cross-check pack: green
   - `23` files
   - `311` tests
+- raw safe-bare contiguous-split parity packs: green
+  - engine: [raw-floor-safe-bare-split-parity.test.ts](../../packages/engine/src/raw-floor-safe-bare-split-parity.test.ts)
+  - route: [raw-floor-safe-bare-split-parity.test.ts](../../apps/web/features/workbench/raw-floor-safe-bare-split-parity.test.ts)
+- raw treated/inferred contiguous-split parity packs: green
+  - engine: [raw-floor-inferred-split-parity.test.ts](../../packages/engine/src/raw-floor-inferred-split-parity.test.ts)
+  - route: [raw-floor-inferred-split-parity.test.ts](../../apps/web/features/workbench/raw-floor-inferred-split-parity.test.ts)
 - broad defended revalidation: green
   - included inside the `2026-04-07` broad packs
   - no new floor-side solver regression was reproduced there
@@ -73,6 +79,11 @@ Interpretation:
 
 - floor is not in a broad stability failure state
 - the previously active reinforced-concrete support-posture regression is now closed
+- the newly reproduced raw safe-bare contiguous-split inference gap is also now closed:
+  - raw same-material splits on hollow-core, bare CLT, and composite deck carriers now stay on the same predictor/family lane as their single-layer and tagged equivalents
+  - open-box timber and wall-like heavy hybrids stayed fail-closed through the same fix
+- the first treated/inferred raw-floor contiguous-split cohort is also now frozen:
+  - exact Dataholz dry CLT, exact TUAS open-box dry floor, integrated dry CLT, and promoted heavy-concrete family-estimate packages now stay identical across defended raw split and tagged split variants
 - the current floor debt is no longer a live blocker; it is coverage and future widening discipline
 - secondary route-surface revalidation on `2026-04-07` also showed that the latest red workbench tests were stale surface contracts, not a fresh calculator regression:
   - bound floor status now keeps companion `Rw` live on the defended carry-over lane
@@ -86,15 +97,21 @@ Current verified result:
 - engine mixed floor/wall contiguous-split parity pack: green
   - `1` file
   - `1` test
+- engine mixed floor/wall generated matrix pack: green
+  - `1` file
+  - `1` test
 - route mixed study-mode torture pack: green
   - `1` file
   - `2` tests
+- route mixed study-mode generated matrix pack: green
+  - `1` file
+  - `1` test
 
 Interpretation:
 
-- the repo now has a first broader mixed floor/wall torture slice rather than only isolated floor and wall seeded tests
+- the repo now has both a representative mixed torture slice and a first generated split-detour matrix rather than only isolated floor and wall seeded tests
 - cross-mode operator detours are now defended at the workbench route layer on representative deep stacks
-- remaining debt is no longer “no mixed torture exists”; it is that the mixed torture surface is still representative, not exhaustive
+- remaining debt is no longer “no mixed torture exists”; it is that the mixed torture surface still stops at the first generated matrix instead of longer edit chains and larger duplicate/swap grids
 
 ### Cross-Surface Interpretation
 
@@ -117,9 +134,12 @@ Completed and defended now:
 - reinforced-concrete field-side floor-carrier `Rw` support fix
 - representative floor output-card parity audit
 - representative wall output-card parity audit
+- safe-bare raw carrier contiguous-split parity fix
+- treated/inferred raw-floor contiguous-split parity first cohort
 - wall Phase A hardening
 - wall Phase B.1 boundary diagnostics
 - mixed floor/wall representative torture slice
+- mixed floor/wall first generated split-detour matrix
 
 Partially complete:
 
@@ -133,8 +153,8 @@ Partially complete:
 Still open:
 
 - wall MorphologyV2 / score-first selector architecture
-- wider-than-representative mixed floor/wall generated torture matrices
-- wider raw-floor inference audit beyond the current representative reopening guard
+- wider-than-first-slice mixed floor/wall generated torture matrices
+- wider raw-floor inference audit beyond the current representative reopening guard, safe-bare split cohort, and first treated/inferred split cohort
 - source-led widening decisions for remaining open-box / open-web / deferred family branches
 - later floor phases `5-8`
 
@@ -199,6 +219,57 @@ The fix now does two things:
 - remaining caution:
   - the first representative raw-screening carrier audits are now defended, but they are not a license to widen every raw screening row
   - if broader raw rows need `Rw` reopening later, that must go through wider raw-floor inference evidence, not another generic support shortcut
+
+## 3.1 Recently Closed: Raw Safe-Bare Contiguous Split Inference Gap
+
+### What Was Wrong
+
+For raw floor inputs with no explicit floor-role tags, contiguous same-material structural splits such as:
+
+- `hollow_core_plank 200` -> `100 + 100`
+- `clt_panel 140` -> `70 + 70`
+- `composite_steel_deck 150` -> `75 + 75`
+
+could silently fall off the predictor/family lane even though the normalized topology reduced back to a single safe bare carrier.
+
+Key diagnostic result:
+
+- raw split rows drifted away from their raw single-layer siblings
+- tagged split rows did not drift
+- that proved the bug was in raw inference gating, not in the defended tagged family corridors
+
+### Fix That Shipped
+
+The fix stays narrow and only touches coalesced single safe-bare carriers:
+
+1. [impact-predictor-input.ts](../../packages/engine/src/impact-predictor-input.ts)
+   - raw floor-role inference now accepts a normalized single safe-bare `base_structure` layer even when the visible raw input arrives as contiguous same-material splits
+2. [impact-predictor-input.ts](../../packages/engine/src/impact-predictor-input.ts)
+   - predictor-input derivation now accepts that same normalized safe-bare carrier shape, so raw split rows land on the same predictor/family lane as their single-layer and tagged equivalents
+
+What this does not widen:
+
+- open-box timber raw carriers
+- wall-like heavy hybrids
+- raw heavy rows that are not reducible to one safe-bare structural carrier
+
+### Contracts That Now Defend It
+
+- engine contiguous-split parity:
+  - [raw-floor-safe-bare-split-parity.test.ts](../../packages/engine/src/raw-floor-safe-bare-split-parity.test.ts)
+- engine raw-vs-tagged parity:
+  - [assembly-raw-floor-inference.test.ts](../../packages/engine/src/assembly-raw-floor-inference.test.ts)
+- engine raw-screening support split:
+  - [raw-floor-screening-carrier-support.test.ts](../../packages/engine/src/raw-floor-screening-carrier-support.test.ts)
+- route contiguous-split parity and card surface:
+  - [raw-floor-safe-bare-split-parity.test.ts](../../apps/web/features/workbench/raw-floor-safe-bare-split-parity.test.ts)
+- route raw-screening support split:
+  - [raw-floor-screening-route-support.test.ts](../../apps/web/features/workbench/raw-floor-screening-route-support.test.ts)
+- route output-card parity:
+  - [floor-output-card-support-parity.test.ts](../../apps/web/features/workbench/floor-output-card-support-parity.test.ts)
+- wider treated/inferred split parity:
+  - [raw-floor-inferred-split-parity.test.ts](../../packages/engine/src/raw-floor-inferred-split-parity.test.ts)
+  - [raw-floor-inferred-split-parity.test.ts](../../apps/web/features/workbench/raw-floor-inferred-split-parity.test.ts)
 
 ## 4. Route-Surface Audit Rules
 
@@ -293,8 +364,8 @@ Floor should now stay on controlled widening and tightening only.
 
 ### Remaining Floor Risks
 
-- mixed floor/wall complex stacks still need a broader torture pass
-- raw-vs-tagged parity is defended only on the currently harvested corridors
+- mixed floor/wall complex stacks still need broader generated edit-chain and duplicate/swap torture beyond the first generated matrix
+- raw-vs-tagged parity, safe-bare contiguous-split parity, and the first treated/inferred split cohort are defended only on the currently harvested floor cohorts
 - intentionally fail-closed structural carriers still need source-led widening decisions
 - route coverage now defends representative support-bucket/card parity and representative raw-screening posture, but not yet every wider raw-screening widening decision
 - the TUAS open-box real-world coverage fixture is now aligned with the defended `a/b` branch split:
@@ -312,12 +383,12 @@ Floor should now stay on controlled widening and tightening only.
 
 ### Safe Floor Fix Order
 
-1. run a broader complex-stack torture pass before any new widening
+1. extend the raw-floor screening-carrier audit beyond the current representative rows, safe-bare split cohort, and first treated/inferred split cohort before reopening any more `Rw` support:
+   - weaker structural carriers
+   - wider inferred floor packages with clear upper/lower treatment evidence
+   - raw wall-like heavy hybrids and other rows that must stay closed
 
-2. extend the raw-floor screening-carrier audit beyond the current representative rows before reopening any more `Rw` support:
-   - single-layer raw heavy floors
-   - raw inferred floor packages with clear upper/lower treatment evidence
-   - raw wall-like heavy hybrids that must stay closed
+2. run a broader complex-stack torture pass before any new widening
 
 3. continue source-led widening only in this order:
    - open-box timber corridor decisions
@@ -404,8 +475,10 @@ Current shipped mixed-torture surface:
 
 - engine:
   - [mixed-floor-wall-complex-stack.test.ts](../../packages/engine/src/mixed-floor-wall-complex-stack.test.ts)
+  - [mixed-floor-wall-generated-matrix.test.ts](../../packages/engine/src/mixed-floor-wall-generated-matrix.test.ts)
 - route:
   - [mixed-study-mode-torture.test.ts](../../apps/web/features/workbench/mixed-study-mode-torture.test.ts)
+  - [mixed-study-mode-generated-matrix.test.ts](../../apps/web/features/workbench/mixed-study-mode-generated-matrix.test.ts)
 
 What this already covers:
 
@@ -417,9 +490,9 @@ What this already covers:
 
 What it does not yet cover:
 
-- generated wider mixed preset matrices
 - longer seeded cross-mode edit chains
-- mixed floor/wall duplicate-swap grids beyond the current representative anchors
+- mixed floor/wall duplicate-swap grids beyond the current first generated split-detour matrix
+- any wider preset-family expansion that still proves necessary after those chains and swap grids
 
 And should check both:
 
@@ -443,7 +516,8 @@ The next phase is only complete when all of these are true:
 1. standard wall corridor still stays green
 2. standard floor corridor still stays green
 3. wall and floor output-card parity packs still stay green
-4. mixed-stack torture coverage is widened beyond the current representative anchors
+4. mixed-stack torture coverage is widened beyond the current first generated split-detour matrix
+   The representative anchors and first generated split-detour matrix already exist; the remaining step is to widen that matrix into longer chains and larger swap grids.
 5. no new widening has been merged without source-backed or benchmark-backed evidence
 6. every newly opened lane is labeled honestly on route and export surfaces
 7. any new red route-surface contract is first classified as solver, support-bucket, or stale-surface drift before logic changes are proposed
@@ -452,8 +526,8 @@ The next phase is only complete when all of these are true:
 
 Do this in order:
 
-1. widen the mixed floor/wall torture surface beyond the current representative anchors
-2. extend the raw-floor inference audit before reopening any broader screening-carrier posture
+1. extend the raw-floor inference audit before reopening any broader screening-carrier posture
+2. widen the mixed floor/wall torture surface beyond the current first generated split-detour matrix
 3. widen wall-side evidence only, not wall-side logic
 4. re-check whether any wall corridor widening is still justified after those scans
 5. only then resume source-led floor widening

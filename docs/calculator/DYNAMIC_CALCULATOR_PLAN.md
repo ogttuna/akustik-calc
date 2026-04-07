@@ -57,10 +57,13 @@ Completion-reading note:
 
 Current queued follow-up:
 
+- extend the current representative raw-floor screening audit before widening the new `Rw` reopening rule beyond explicit floor-role assemblies:
+  - the first raw safe-bare contiguous-split cohort is now defended on both engine and workbench routes
+  - the first treated/inferred contiguous-split cohort is now also defended on both engine and workbench routes
+  - the next step is to widen that audit into weaker carriers and wider inferred packages that should still stay closed
 - keep widening the new mixed floor/wall torture pass before any more reorder canonicalization:
-  - a first broader mixed pack now exists on both engine and workbench routes
-  - the next step is to widen that representative slice into generated mixed preset and edit-chain matrices
-- extend the current representative raw-floor screening audit before widening the new `Rw` reopening rule beyond explicit floor-role assemblies
+  - a representative mixed pack and a first generated split-detour matrix now exist on both engine and workbench routes
+  - the next step there is to widen that first generated matrix into longer edit-chain and duplicate/swap grids
 - the broader workbench support-bucket vs output-card parity audit is now in place for representative floor presets and raw floor/raw hybrid scenarios
 - use the source gap ledger and widening-candidate contract to decide which family branches are widening-first versus tightening-first
 - mine dormant exact-only source rows before inventing any broader generic family formula
@@ -1286,14 +1289,15 @@ Additional gates by phase:
 
 Immediate next implementation pass:
 
-1. widen the current mixed floor/wall torture pass beyond the representative slice
-2. keep Phase 4 active, but only tighten families that still show defended drift under that torture pack
+1. extend the raw-floor inference audit beyond the current representative rows, safe-bare contiguous-split cohort, and first treated/inferred split cohort
+2. widen the current mixed floor/wall torture pass beyond the first generated split-detour matrix
 3. widen support only after the torture pass identifies a real honest gap rather than a merely hypothetical one
 
 Why this is the correct next cut:
 
 - Phases 0 through 3 are already complete enough to act as the guardrail set
 - Phase 4 is already active, so the highest-value work is no longer baseline freezing or contract definition
+- the latest raw-floor passes closed a real safe-bare contiguous-split inference gap and froze a first treated/inferred split cohort, so the next safest move is to keep widening that audit before reopening any more carrier posture
 - the recent workbench normalization fixes created a new contract question:
   - which final packages should be path-invariant
   - which physically order-sensitive packages must stay order-sensitive

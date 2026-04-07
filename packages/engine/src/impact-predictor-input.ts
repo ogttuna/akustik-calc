@@ -650,22 +650,36 @@ function hasPotentialFloorRoleInferenceEvidence(rawLayers: readonly LayerInput[]
   return hasBaseCandidate && (hasExplicitFloorRole || hasAuxiliaryHint || (rawLayers.length === 1 && hasSafeBareBaseCandidate));
 }
 
+function hasNormalizedSafeBareBaseCandidate(
+  normalizedLayers: readonly ResolvedLayerStackEntry[]
+): boolean {
+  return Boolean(
+    normalizedLayers.length === 1 &&
+      normalizedLayers[0]?.floorRole === "base_structure" &&
+      SAFE_BARE_BASE_ROLE_INFERENCE_MATERIAL_IDS.has(
+        normalizePredictorToken(normalizedLayers[0]?.materialId)
+      )
+  );
+}
+
 export function maybeInferFloorRoleLayerStack(
   rawLayers: readonly LayerInput[],
   catalog: readonly MaterialDefinition[] = getDefaultMaterialCatalog()
 ): LayerInput[] | null {
-  if (!hasPotentialFloorRoleInferenceEvidence(rawLayers)) {
+  const normalizedLayers = normalizeImpactPredictorLayerStack(rawLayers, catalog);
+  const hasSafeBareBaseCandidate = hasNormalizedSafeBareBaseCandidate(normalizedLayers);
+
+  if (!hasPotentialFloorRoleInferenceEvidence(rawLayers) && !hasSafeBareBaseCandidate) {
     return null;
   }
 
-  const normalizedLayers = normalizeImpactPredictorLayerStack(rawLayers, catalog);
   const hasBaseStructure = normalizedLayers.some((layer) => layer.floorRole === "base_structure");
   const hasExplicitFloorRole = rawLayers.some((layer) => Boolean(layer.floorRole));
   const hasAuxiliaryFloorEvidence = normalizedLayers.some(
     (layer) => layer.floorRole && FLOOR_ROLE_INFERENCE_EVIDENCE_ROLES.has(layer.floorRole)
   );
 
-  if (!hasBaseStructure || (!hasExplicitFloorRole && !hasAuxiliaryFloorEvidence)) {
+  if (!hasBaseStructure || (!hasExplicitFloorRole && !hasAuxiliaryFloorEvidence && !hasSafeBareBaseCandidate)) {
     return null;
   }
 
@@ -1403,11 +1417,10 @@ function canDerivePredictorInputFromLayerStack(
   rawLayers: readonly BuildImpactPredictorLayerInput[],
   catalog: readonly MaterialDefinition[] = getDefaultMaterialCatalog()
 ): boolean {
-  if (!hasPotentialFloorRoleInferenceEvidence(rawLayers)) {
+  const normalizedLayers = normalizeImpactPredictorLayerStack(rawLayers, catalog);
+  if (!hasPotentialFloorRoleInferenceEvidence(rawLayers) && !hasNormalizedSafeBareBaseCandidate(normalizedLayers)) {
     return false;
   }
-
-  const normalizedLayers = normalizeImpactPredictorLayerStack(rawLayers, catalog);
 
   if (
     hasAmbiguousSingleEntryRoleTopology(normalizedLayers) ||

@@ -59,6 +59,13 @@ Interpretation:
   - raw open-box rows stay fail-closed on field-side `Rw`
   - raw hollow-core screening rows keep their defended reopened carrier posture
   - raw wall-like heavy hybrids stay closed even when a finite screening carrier `Rw` exists
+- safe-bare raw carrier contiguous-split parity is now defended explicitly on both engine and route layers:
+  - raw same-material contiguous splits on `hollow_core_plank`, bare `clt_panel`, `composite_steel_deck`, and `steel_deck_composite` no longer fall off the predictor/family lane
+  - the fix is deliberately narrow to coalesced single safe-bare carriers; open-box timber and wall-like heavy hybrids stay fail-closed
+  - raw vs tagged single-layer heavy concrete remains intentionally different on the field route because explicit visible floor-role evidence is still required before that carrier can reopen `Rw`
+- the first treated/inferred raw-floor contiguous-split cohort is now also defended on both engine and route layers:
+  - exact Dataholz dry CLT, exact TUAS open-box dry floor, integrated dry CLT, and promoted heavy-concrete family-estimate packages now stay identical across defended raw split and tagged split variants
+  - this widens the raw-floor audit beyond bare carriers without opening new weaker carriers or broader screening shortcuts
 - secondary route-surface revalidation on `2026-04-07` found two stale contracts but no new solver regression:
   - bound floor carry-over status was still expecting companion `Rw` to stay unavailable even though the defended floor carrier now keeps it supported
   - the wall full-preset matrix was still expecting apparent-route `Rw` to stay live even though the engine deliberately keeps wall-side `Rw` explicit once the descriptor becomes `R'w`
@@ -67,6 +74,9 @@ Interpretation:
   - engine-side deep floor and wall packages now have a shared contiguous-split parity contract
   - workbench route now has an alternating study-mode torture test that switches between deep floor and wall edit chains
   - that route pack defends both neutral split-detour parity and broader support-honest sanity after cross-mode edit sequences
+- the first generated mixed floor/wall matrix is now also in place:
+  - engine-side generated split variants now defend six broader floor and wall packages against neutral contiguous-split drift
+  - workbench route now mirrors that generated matrix across floor/wall study-mode detours, support-surface parity, and restore-to-baseline snapshots
 - Phase A of that wall-side remediation note is now shipped:
   - hint-only framed metadata no longer forces heavy mineral/composite stacks onto the stud-wall lane
   - heavy unframed cavity walls can now be capped against a conservative screening corridor instead of over-scoring
@@ -162,14 +172,15 @@ These behaviors are now explicitly defended and should not be treated as regress
 
 - complex mixed floor and wall stacks still need a wider manual and automated torture pass
 - the next hardening step should decide which combinations are genuinely path-invariant and which must stay physically order-sensitive
-- the new mixed-study-mode torture pack is only the first broader slice:
-  - it proves cross-mode store detours do not silently leak result posture on representative deep floor and wall packages
-  - it is not yet a generated full mixed matrix across wider preset families, longer edit chains, or larger duplicate/swap grids
+- the mixed floor/wall torture surface is no longer representative-only:
+  - the original mixed-study-mode torture pack proves cross-mode store detours do not silently leak result posture on representative deep floor and wall packages
+  - the first generated split-detour matrix is now also green on both engine and route layers
+  - it is still not a full mixed matrix across wider preset families, longer edit chains, or larger duplicate/swap grids
 - the concrete floor-carrier `Rw` blocker from the 2026-04-07 revalidation is now fixed, but the narrowing rule is intentionally strict:
   - visible floor roles reopen the carrier
   - raw wall-like heavy hybrids stay closed
   - untagged screening-only floor-like rows do not get widened automatically just because a finite screening `Rw` exists
-  - the first representative raw-screening audits are now green, but broader reopening still requires wider inference evidence rather than another generic support shortcut
+  - the first representative raw-screening audits, the safe-bare contiguous-split cohort, and the first treated/inferred split cohort are now green, but broader reopening still requires wider inference evidence rather than another generic support shortcut
 - reproduced dynamic-route duplicate and reorder instability cases are documented separately under:
   - [../archive/analysis/DYNAMIC_ROUTE_STABILITY_ANALYSIS_2026-04-07.md](../archive/analysis/DYNAMIC_ROUTE_STABILITY_ANALYSIS_2026-04-07.md)
 - the intended fix order and protected-corridor rules for that wall-side work now live under:
@@ -193,14 +204,13 @@ These behaviors are now explicitly defended and should not be treated as regress
 
 Work in this order:
 
-1. Expand the current mixed floor/wall torture surface from representative anchors to generated wider matrices:
-   - wider preset families
+1. Extend the raw-floor inference audit beyond the current representative screening rows, safe-bare contiguous-split cohort, and first treated/inferred split cohort before considering any broader screening-carrier reopening:
+   - weaker structural carriers and wider inferred family rows
+   - raw heavy wall-like hybrids and weaker structural carriers that must stay closed
+2. Expand the current mixed floor/wall torture surface beyond the first generated split-detour matrix:
    - longer cross-mode edit chains
    - mixed duplicate/swap grids
-2. Extend the raw-floor inference audit beyond the current representative screening rows before considering any broader screening-carrier reopening:
-   - single-layer raw heavy floors
-   - raw floor stacks inferred from visible finish/resilient/base packages
-   - raw heavy wall-like hybrids that must stay closed
+   - only then decide whether wider preset families are still needed
 3. Widen the wall-side Phase B.2 evidence base before extending the hold beyond the current defended corridor:
    - keep the current runner-up-aware hold limited to `double_leaf <-> lined_massive_wall`
    - focus next on wider-than-representative route palettes and any boundary that produces more than one plausible runner-up family outside the currently defended framed/heavy-core representative palettes
