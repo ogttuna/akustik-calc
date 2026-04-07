@@ -42,6 +42,9 @@ Current verified result:
 - standard route wall corridor: green
   - `6` files
   - `24` tests
+- broad defended revalidation: green
+  - included inside the `2026-04-07` broad packs
+  - no new wall-side solver regression was reproduced there
 - wall deep-hybrid cluster:
   - current documented validation posture remains the isolated `--maxWorkers=1` cluster in [DYNAMIC_WALL_STABILITY_REMEDIATION.md](./DYNAMIC_WALL_STABILITY_REMEDIATION.md)
   - the underlying wall contract set is still the defended posture for duplicate, reorder, boundary, and deep-hybrid swap cases
@@ -62,6 +65,9 @@ Current verified result:
 - standard engine floor corridor plus support/raw-screening cross-check pack: green
   - `23` files
   - `311` tests
+- broad defended revalidation: green
+  - included inside the `2026-04-07` broad packs
+  - no new floor-side solver regression was reproduced there
 
 Interpretation:
 
@@ -89,6 +95,17 @@ Interpretation:
 - the repo now has a first broader mixed floor/wall torture slice rather than only isolated floor and wall seeded tests
 - cross-mode operator detours are now defended at the workbench route layer on representative deep stacks
 - remaining debt is no longer “no mixed torture exists”; it is that the mixed torture surface is still representative, not exhaustive
+
+### Cross-Surface Interpretation
+
+Current overall reading:
+
+- there is no active known blocker in the defended dynamic-calculator corridors right now
+- current debt is mostly “how far is the evidence frozen” rather than “which reproduced bug is still open today”
+- before the latest revalidation, two red route tests looked like regressions but were not:
+  - bound floor carry-over `Rw` was now correctly live
+  - wall apparent-route `Rw` was now correctly explicit/unsupported
+- this means the next phase should prioritize evidence expansion and route-surface audit discipline, not a blind solver rewrite
 
 ## 3. Recently Closed: Concrete Floor Carrier `Rw` Support Regression
 
@@ -146,7 +163,29 @@ The fix now does two things:
   - the first representative raw-screening carrier audits are now defended, but they are not a license to widen every raw screening row
   - if broader raw rows need `Rw` reopening later, that must go through wider raw-floor inference evidence, not another generic support shortcut
 
-## 4. Remaining Wall Plan
+## 4. Route-Surface Audit Rules
+
+These rules are now important enough to keep separate from the generic non-regressive rules because they were the source of the latest false alarm.
+
+- do not treat a finite metric or companion value as automatically surface-live
+- `supportedTargetOutputs` / `unsupportedTargetOutputs` remain the source of truth for route cards and target-output status
+- if a route-surface contract is red, confirm whether engine support buckets agree before treating it as a solver regression
+- keep explicit wall/floor output-card parity audits green before widening any new route surface
+
+What is intentionally defended today:
+
+- floor carry-over `Rw` may stay live on defended floor-carrier lanes
+- wall-side `Rw` may stay explicit once the airborne descriptor is `R'w`
+- route cards must fail-close unsupported outputs even when some raw payload field is finite
+
+Current parity guards:
+
+- [floor-output-card-support-parity.test.ts](../../apps/web/features/workbench/floor-output-card-support-parity.test.ts)
+- [wall-output-card-support-parity.test.ts](../../apps/web/features/workbench/wall-output-card-support-parity.test.ts)
+- [target-output-status.test.ts](../../apps/web/features/workbench/target-output-status.test.ts)
+- [simple-workbench-output-model.test.ts](../../apps/web/features/workbench/simple-workbench-output-model.test.ts)
+
+## 5. Remaining Wall Plan
 
 Wall is no longer blocked by the old reproduced jump class, but it still has architectural debt.
 
@@ -189,7 +228,7 @@ Wall is no longer blocked by the old reproduced jump class, but it still has arc
 
 ### Likely Code Touch Surface
 
-Only after the concrete floor blocker is closed:
+Primary likely code touch surface:
 
 - [dynamic-airborne.ts](../../packages/engine/src/dynamic-airborne.ts)
   - selector scoring, ambiguity handling, or bounded hold logic
@@ -211,9 +250,9 @@ Do not touch these first in the next pass:
 - no widening of `stud_wall_system` on metadata alone
 - no expansion of the hold beyond `double_leaf <-> lined_massive_wall` without new generated scans
 
-## 5. Remaining Floor Plan
+## 6. Remaining Floor Plan
 
-After the concrete `Rw` support regression is fixed, floor work should return to controlled widening and tightening.
+Floor should now stay on controlled widening and tightening only.
 
 ### Remaining Floor Risks
 
@@ -253,7 +292,7 @@ After the concrete `Rw` support regression is fixed, floor work should return to
 
 ### Likely Code Touch Surface
 
-After the concrete support regression:
+Primary likely code touch surface:
 
 - [impact-predictor-input.ts](../../packages/engine/src/impact-predictor-input.ts)
   - if raw-floor inference needs to become more selective or more permissive
@@ -288,9 +327,9 @@ Avoid these until evidence forces them:
   - `FL-25`
   - `FL-27`
 
-## 6. Shared Torture-Pass Plan
+## 7. Shared Torture-Pass Plan
 
-This is the next major cross-cutting work item after the concrete support regression.
+This is now the next major cross-cutting work item.
 
 ### Goal
 
@@ -360,25 +399,26 @@ Each new torture-pass change should add more than one test shape:
 
 That keeps the suite from becoming overly optimistic around a single hand-picked stack.
 
-## 7. Definition Of Done For The Next Phase
+## 8. Definition Of Done For The Next Phase
 
 The next phase is only complete when all of these are true:
 
-1. the concrete floor `Rw` support regression is fixed on engine and pinned on route
-2. standard wall corridor still stays green
-3. standard floor corridor still stays green
-4. mixed-stack torture coverage exists for both wall and floor
+1. standard wall corridor still stays green
+2. standard floor corridor still stays green
+3. wall and floor output-card parity packs still stay green
+4. mixed-stack torture coverage is widened beyond the current representative anchors
 5. no new widening has been merged without source-backed or benchmark-backed evidence
 6. every newly opened lane is labeled honestly on route and export surfaces
+7. any new red route-surface contract is first classified as solver, support-bucket, or stale-surface drift before logic changes are proposed
 
-## 8. Recommended Execution Order
+## 9. Recommended Execution Order
 
 Do this in order:
 
-1. fix concrete floor field-side `Rw` support gating
-2. add route parity coverage for that exact posture
-3. run mixed floor/wall torture pass
-4. re-check whether any wall corridor widening is still justified
+1. widen the mixed floor/wall torture surface beyond the current representative anchors
+2. extend the raw-floor inference audit before reopening any broader screening-carrier posture
+3. widen wall-side evidence only, not wall-side logic
+4. re-check whether any wall corridor widening is still justified after those scans
 5. only then resume source-led floor widening
 
-This order is the safest one because it removes an active regression first, then expands evidence, and only after that changes behavior.
+This order is the safest one because the active blocker is already gone; the next risk is accidental widening without enough frozen evidence.

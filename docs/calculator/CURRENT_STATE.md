@@ -11,6 +11,25 @@ Document role:
 - workbench-side layer normalization and operator flow
 - result stability under edit/reorder/localized numeric input
 
+## Revalidated Snapshot
+
+Last full revalidation: `2026-04-07`
+
+Verified broad corridors:
+
+- engine defended corridor: green
+  - `22` files
+  - `365` tests
+- workbench defended corridor: green
+  - `24` files
+  - `294` tests
+
+Interpretation:
+
+- there is no active known solver blocker in the currently defended wall/floor corridors
+- the latest red route tests were stale surface contracts, not a fresh calculator regression
+- the remaining risk is widening discipline and coverage depth, not a currently reproduced broad failure
+
 ## Current Stable Gains
 
 - localized numeric input is normalized consistently across thickness, density, and dynamic stiffness parsing
@@ -124,6 +143,15 @@ Important nuance:
 - support still depends on topology, source class, and the active route
 - the workbench keeps unsupported outputs explicit instead of fabricating them
 
+## Not A Bug
+
+These behaviors are now explicitly defended and should not be treated as regressions unless the underlying engine contract changes first.
+
+- bound floor carry-over can keep `Rw` live while `Ln,w`, `L'n,w`, and `L'nT,w` stay bound-only
+- wall-side `Rw` can stay explicitly unsupported once the airborne descriptor is apparent `R'w`
+- floor-side `Rw` can stay live on a defended floor-carrier lane even when the visible airborne descriptor is apparent
+- unsupported outputs should stay explicit on route surfaces even when a finite numeric companion exists somewhere else in the result payload
+
 ## What Is Intentionally Narrow
 
 - reorder canonicalization is currently limited to the simple top-side heavy-floor package
@@ -165,12 +193,15 @@ Important nuance:
 
 Work in this order:
 
-1. Run a broader complex-stack torture pass before widening normalization rules any further.
+1. Expand the current mixed floor/wall torture surface from representative anchors to generated wider matrices:
+   - wider preset families
+   - longer cross-mode edit chains
+   - mixed duplicate/swap grids
 2. Extend the raw-floor inference audit beyond the current representative screening rows before considering any broader screening-carrier reopening:
    - single-layer raw heavy floors
    - raw floor stacks inferred from visible finish/resilient/base packages
    - raw heavy wall-like hybrids that must stay closed
-3. Widen the new wall-side Phase B.2 evidence base before extending the hold beyond the current defended corridor:
+3. Widen the wall-side Phase B.2 evidence base before extending the hold beyond the current defended corridor:
    - keep the current runner-up-aware hold limited to `double_leaf <-> lined_massive_wall`
    - focus next on wider-than-representative route palettes and any boundary that produces more than one plausible runner-up family outside the currently defended framed/heavy-core representative palettes
    - only widen if the next candidate pairing survives the same exact trace, scan, and workbench-parity contracts
