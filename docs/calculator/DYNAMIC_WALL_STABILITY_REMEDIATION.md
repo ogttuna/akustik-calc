@@ -666,6 +666,35 @@ Local findings from the current Phase B.2 pass:
     - `ytong_g5_800 100 mm`: `16`
   - current route-level swap result in that representative palette:
     - `0` silent `>=8 dB` adjacent-swap jumps without explicit boundary/hold/order-sensitive labelling
+- a dedicated deeper hybrid trailing-trim scan now also exists on both engine and workbench routes
+  - representative deep-hybrid palette:
+    - prefixes: `4`
+    - suffixes: `4`
+    - cavity packs: `3`
+    - heavy core rows: `6`
+    - lining boards: `4`
+    - total rows per layer: `1152`
+  - current engine and route result on that same representative palette:
+    - boundary-active rows: `480`
+    - active core rows:
+      - `ytong_aac_d700 100 mm`: `192`
+      - `ytong_aac_d700 120 mm`: `96`
+      - `ytong_g5_800 100 mm`: `192`
+    - current conflict rows:
+      - `ytong_aac_d700 100 mm`: `144`
+    - no Porotherm, sand-lime, or concrete row enters the defended boundary corridor there either
+    - no row exposes `familyDecisionMultiplePlausibleFamilies`
+  - hold-active trim grid inside that representative deep-hybrid palette now spans the full defended outer-trim range:
+    - `0/0`: `30`
+    - `0/1`: `60`
+    - `0/2`: `30`
+    - `1/0`: `60`
+    - `1/1`: `120`
+    - `1/2`: `60`
+    - `2/0`: `30`
+    - `2/1`: `60`
+    - `2/2`: `30`
+  - this closes the earlier gap where both-side outer trims and deeper cavity packs were only covered by hand-picked anchors instead of a generated representative matrix
 - non-AAC heavy-core exclusion is now also covered by executable engine and route contracts instead of remaining a future-note gap
   - expanded engine non-AAC palette:
     - prefixes: `8`
@@ -743,21 +772,21 @@ Residual risks after the shipped hold:
 
 What still needs more evidence:
 
-- deeper generated route-side palettes where non-AAC heavy cores also carry trailing outer trims, not just the current representative prefixes
-- permutations where both sides carry outer compliant trims inside broader manual hybrids, not just the current anchored samples
+- broader adjacent-swap coverage across the newer deep-hybrid trailing-trim palette, not just the older prefix-only and non-AAC representative swaps
+- wider-than-representative deep-hybrid route palettes beyond the current `4 x 4 x 3` prefix/suffix/cavity grid
 - narrow boundary cases that involve more than one plausible runner-up family outside the currently defended representative framed and heavy-core palettes
 - deeper hybrid palettes that might extend `familyDecisionSelectedBelowRunnerUp` beyond the current `ytong_aac_d700 100` corridor
 - whether any future non-AAC heavy core that ever surfaces boundary diagnostics should enter the held corridor, or whether those families should stay outside until MorphologyV2
 
 ## 16. Validation Record
 
-Validation run after the shipped Phase A work, the multileaf order-sensitive follow-up, the shipped Phase B.2 hold, the expanded engine boundary scans, the representative workbench route scan, and the new non-AAC exclusion contracts:
+Validation run after the shipped Phase A work, the multileaf order-sensitive follow-up, the shipped Phase B.2 hold, the expanded engine boundary scans, the representative workbench route scan, the new non-AAC exclusion contracts, and the dedicated deep-hybrid trailing-trim scans:
 
-- `pnpm -C apps/web exec vitest run --config vitest.config.ts features/workbench/dynamic-route-family-boundary.test.ts features/workbench/dynamic-route-family-boundary-scan.test.ts features/workbench/dynamic-route-order-sensitivity.test.ts features/workbench/dynamic-route-instability.test.ts`
-- `pnpm exec vitest run packages/engine/src/dynamic-airborne-family-boundary.test.ts packages/engine/src/dynamic-airborne-family-boundary-scan.test.ts packages/engine/src/dynamic-airborne-instability-repro.test.ts packages/engine/src/dynamic-airborne-order-sensitivity.test.ts packages/engine/src/airborne-framed-wall-benchmark.test.ts packages/engine/src/airborne-masonry-benchmark.test.ts`
+- `pnpm -C apps/web exec vitest run --config vitest.config.ts features/workbench/dynamic-route-family-boundary.test.ts features/workbench/dynamic-route-family-boundary-scan.test.ts features/workbench/dynamic-route-deep-hybrid-scan.test.ts features/workbench/dynamic-route-order-sensitivity.test.ts features/workbench/dynamic-route-instability.test.ts`
+- `pnpm exec vitest run packages/engine/src/dynamic-airborne-family-boundary.test.ts packages/engine/src/dynamic-airborne-family-boundary-scan.test.ts packages/engine/src/dynamic-airborne-deep-hybrid-scan.test.ts packages/engine/src/dynamic-airborne-instability-repro.test.ts packages/engine/src/dynamic-airborne-order-sensitivity.test.ts packages/engine/src/airborne-framed-wall-benchmark.test.ts packages/engine/src/airborne-masonry-benchmark.test.ts`
 - `pnpm exec vitest run packages/engine/src/output-combination-sweep.test.ts packages/engine/src/dynamic-guided-combination-sweep.test.ts`
 - `pnpm -C apps/web exec vitest run --config vitest.config.ts features/workbench/complex-stack-audit.test.ts features/workbench/wall-seeded-edit-stability.test.ts`
 
 Result:
 
-- all suites above passed after the shipped Phase A, the multileaf order-sensitive follow-up, the support-carrier narrowing, the new family-boundary diagnostics, the expanded Phase B.2 boundary scan contracts, and the new non-AAC exclusion anchors
+- all suites above passed after the shipped Phase A, the multileaf order-sensitive follow-up, the support-carrier narrowing, the new family-boundary diagnostics, the expanded Phase B.2 boundary scan contracts, the new non-AAC exclusion anchors, and the representative deep-hybrid trailing-trim scans

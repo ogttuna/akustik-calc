@@ -53,6 +53,19 @@ const NON_AAC_SCAN_CORES = [
   { materialId: "concrete", thicknessesMm: [80, 120] }
 ] as const;
 
+const NON_AAC_SWAP_CORE_COHORTS = [
+  [
+    { materialId: "porotherm_pls_100", thicknessesMm: [100] },
+    { materialId: "porotherm_pls_140", thicknessesMm: [140] },
+    { materialId: "porotherm_pls_190", thicknessesMm: [190] },
+    { materialId: "silka_cs_block", thicknessesMm: [100, 150] }
+  ],
+  [
+    { materialId: "pumice_block", thicknessesMm: [100, 150] },
+    { materialId: "concrete", thicknessesMm: [80, 120] }
+  ]
+] as const;
+
 const HOLD_SCAN_BOARDS = [
   { materialId: "gypsum_board", thicknessMm: 12.5 },
   { materialId: "diamond_board", thicknessMm: 12.5 },
@@ -221,6 +234,55 @@ function swapAdjacent(stack: readonly LayerInput[], leftIndex: number) {
   return swapped;
 }
 
+function collectSilentSwapOffendersForCores(
+  readSnapshot: ReturnType<typeof buildSnapshotReader>,
+  cores: readonly { materialId: string; thicknessesMm: readonly number[] }[]
+) {
+  const offenders: Array<{
+    baseStack: string;
+    changedStack: string;
+    delta: number;
+    swapIndex: number;
+  }> = [];
+
+  for (const prefix of HOLD_SCAN_PREFIXES) {
+    for (const core of cores) {
+      for (const coreThicknessMm of core.thicknessesMm) {
+        for (const board of HOLD_SCAN_BOARDS) {
+          const stack = buildBoundaryStack({
+            board,
+            coreMaterialId: core.materialId,
+            coreThicknessMm,
+            prefix
+          });
+          const base = readSnapshot(stack);
+
+          for (let swapIndex = 0; swapIndex < stack.length - 1; swapIndex += 1) {
+            const changedStack = swapAdjacent(stack, swapIndex);
+            const changed = readSnapshot(changedStack);
+            const maxDelta = Math.max(
+              Math.abs((changed.rw ?? 0) - (base.rw ?? 0)),
+              Math.abs((changed.rwPrime ?? 0) - (base.rwPrime ?? 0)),
+              Math.abs((changed.dnTw ?? 0) - (base.dnTw ?? 0))
+            );
+
+            if (maxDelta >= 8 && !base.flagged && !changed.flagged) {
+              offenders.push({
+                baseStack: stackKey(stack),
+                changedStack: stackKey(changedStack),
+                delta: maxDelta,
+                swapIndex
+              });
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return offenders;
+}
+
 describe("dynamic airborne family boundary scan contracts", () => {
   it("keeps the expanded heavy-core and dual-trim hold scan inside one defended corridor", () => {
     const hits: Array<{
@@ -343,7 +405,7 @@ describe("dynamic airborne family boundary scan contracts", () => {
       expect(Math.max(...spread.dnTw) - Math.min(...spread.dnTw), `${signature} DnT,w spread`).toBeLessThanOrEqual(3);
       expect(Math.max(...spread.rw) - Math.min(...spread.rw), `${signature} Rw spread`).toBeLessThanOrEqual(2);
     }
-  }, HOLD_SCAN_TIMEOUT_MS);
+  }, NON_AAC_SWAP_TIMEOUT_MS);
 
   it("keeps the expanded non-AAC heavy-core palette out of family-boundary diagnostics", () => {
     const boundaryHits: Array<{
@@ -427,9 +489,9 @@ describe("dynamic airborne family boundary scan contracts", () => {
             coreThicknessMm: core.thicknessMm,
             prefix
           });
+          const base = readSnapshot(stack);
 
           for (let swapIndex = 0; swapIndex < stack.length - 1; swapIndex += 1) {
-            const base = readSnapshot(stack);
             const changedStack = swapAdjacent(stack, swapIndex);
             const changed = readSnapshot(changedStack);
             const maxDelta = Math.max(
@@ -454,52 +516,19 @@ describe("dynamic airborne family boundary scan contracts", () => {
     expect(offenders).toEqual([]);
   }, NON_AAC_SWAP_TIMEOUT_MS);
 
-  it("finds no silent >=8 dB adjacent-swap jumps across the expanded non-AAC heavy-core palette", () => {
+  it("finds no silent >=8 dB adjacent-swap jumps across the first expanded non-AAC heavy-core cohort", () => {
     const readSnapshot = buildSnapshotReader();
-    const offenders: Array<{
-      baseStack: string;
-      changedStack: string;
-      delta: number;
-      swapIndex: number;
-    }> = [];
-
-    for (const prefix of HOLD_SCAN_PREFIXES) {
-      for (const core of NON_AAC_SCAN_CORES) {
-        for (const coreThicknessMm of core.thicknessesMm) {
-          for (const board of HOLD_SCAN_BOARDS) {
-            const stack = buildBoundaryStack({
-              board,
-              coreMaterialId: core.materialId,
-              coreThicknessMm,
-              prefix
-            });
-
-            for (let swapIndex = 0; swapIndex < stack.length - 1; swapIndex += 1) {
-              const base = readSnapshot(stack);
-              const changedStack = swapAdjacent(stack, swapIndex);
-              const changed = readSnapshot(changedStack);
-              const maxDelta = Math.max(
-                Math.abs((changed.rw ?? 0) - (base.rw ?? 0)),
-                Math.abs((changed.rwPrime ?? 0) - (base.rwPrime ?? 0)),
-                Math.abs((changed.dnTw ?? 0) - (base.dnTw ?? 0))
-              );
-
-              if (maxDelta >= 8 && !base.flagged && !changed.flagged) {
-                offenders.push({
-                  baseStack: stackKey(stack),
-                  changedStack: stackKey(changedStack),
-                  delta: maxDelta,
-                  swapIndex
-                });
-              }
-            }
-          }
-        }
-      }
-    }
+    const offenders = collectSilentSwapOffendersForCores(readSnapshot, NON_AAC_SWAP_CORE_COHORTS[0]);
 
     expect(offenders).toEqual([]);
-  }, HOLD_SCAN_TIMEOUT_MS);
+  }, NON_AAC_SWAP_TIMEOUT_MS);
+
+  it("finds no silent >=8 dB adjacent-swap jumps across the second expanded non-AAC heavy-core cohort", () => {
+    const readSnapshot = buildSnapshotReader();
+    const offenders = collectSilentSwapOffendersForCores(readSnapshot, NON_AAC_SWAP_CORE_COHORTS[1]);
+
+    expect(offenders).toEqual([]);
+  }, NON_AAC_SWAP_TIMEOUT_MS);
 
   it("finds no multi-candidate boundary surface across the representative framed palette yet", () => {
     const flaggedHits: Array<{

@@ -114,10 +114,11 @@ Important nuance:
 - the largest remaining reorder deltas now cluster mainly around true multi-leaf / triple-leaf topologies, which should stay order-sensitive rather than being flattened blindly
 - `multileaf_multicavity` remains a conservative surrogate rather than a dedicated multi-cavity solver
 - expanded engine and representative route scans over non-AAC heavy cores did not surface a second hold-worthy family pair; Porotherm, sand-lime, pumice, and concrete rows currently stay clear of boundary/hold diagnostics in the defended palettes
+- dedicated engine and route deep-hybrid trailing-trim scans now extend that evidence into a broader representative `4 x 4 x 3` prefix/suffix/cavity grid; the defended corridor still stays limited to the same three AAC core rows, with the full `0/0` through `2/2` trim grid now covered explicitly
 - the new selector score-surface trace now also shows that the defended AAC boundary is genuinely conflicted at score level, while the current representative framed palettes still do not produce a second plausible runner-up family
 - the new selector-conflict flag is currently confined to one defended sub-corridor: `ytong_aac_d700 100` inside the `lined_massive_wall <-> double_leaf` hold
 - that same sub-corridor is now the only current place where the hold is allowed to consume an extra `1 dB` conflict-trim budget; denser AAC siblings and non-AAC heavy cores stay on the pre-existing trim limits
-- the remaining widening risk is no longer “basic alternative core rows”; it is deeper hybrid permutations, trailing trims, and any future boundary that shows more than one plausible runner-up family
+- the remaining widening risk is no longer “basic alternative core rows”; it is deeper-hybrid adjacent-swap coverage beyond the current representative matrix and any future boundary that shows more than one plausible runner-up family
 - the remaining TUAS shortlist is no longer a pure import question:
   - `R7a` likely wants a separate heavy/wet `a` branch
   - `R6b` likely wants a separate reinforced lower-treatment `b` branch
@@ -129,7 +130,7 @@ Work in this order:
 1. Run a broader complex-stack torture pass before widening normalization rules any further.
 2. Widen the new wall-side Phase B.2 evidence base before extending the hold beyond the current defended corridor:
    - keep the current runner-up-aware hold limited to `double_leaf <-> lined_massive_wall`
-   - focus next on deeper hybrid permutations, trailing-trim variants, and any boundary that produces more than one plausible runner-up family outside the currently defended framed/heavy-core representative palettes
+   - focus next on deeper-hybrid adjacent-swap coverage, wider-than-representative route palettes, and any boundary that produces more than one plausible runner-up family outside the currently defended framed/heavy-core representative palettes
    - only widen if the next candidate pairing survives the same exact trace, scan, and workbench-parity contracts
 3. Do a mini branch-design audit for `R7a` and `R6b` before importing either row.
 4. Only after that decide whether the next widening move is TUAS branch extension, UBIQ source-trace cleanup, or the next wall-side held family pairing.
