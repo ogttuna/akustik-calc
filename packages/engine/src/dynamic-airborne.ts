@@ -5242,8 +5242,11 @@ function applyAmbiguousFamilyBoundaryHold(
   boundary: FamilyDecisionBoundarySummary,
   options: DynamicAirborneOptions
 ): {
+  allowedLeadDb: number | null;
   applied: boolean;
+  boundaryCeilingDb: number | null;
   curve: TransmissionLossCurve;
+  currentMetricDb: number | null;
   notes: string[];
   ratings: AssemblyRatings;
   runnerUpMetric: number | null;
@@ -5259,8 +5262,11 @@ function applyAmbiguousFamilyBoundaryHold(
     topology.cavityCount !== 1
   ) {
     return {
+      allowedLeadDb: null,
       applied: false,
+      boundaryCeilingDb: null,
       curve,
+      currentMetricDb: null,
       notes,
       ratings: buildRatingsFromCurve(curve.frequenciesHz, curve.transmissionLossDb, options.airborneContext),
       runnerUpMetric: null,
@@ -5273,8 +5279,11 @@ function applyAmbiguousFamilyBoundaryHold(
   // Keep the hold tightly scoped until MorphologyV2 exists; broader suppression would risk flattening true multi-leaf behavior.
   if (familyPair !== ["double_leaf", "lined_massive_wall"].sort().join("|")) {
     return {
+      allowedLeadDb: null,
       applied: false,
+      boundaryCeilingDb: null,
       curve,
+      currentMetricDb: null,
       notes,
       ratings: buildRatingsFromCurve(curve.frequenciesHz, curve.transmissionLossDb, options.airborneContext),
       runnerUpMetric: null,
@@ -5285,8 +5294,11 @@ function applyAmbiguousFamilyBoundaryHold(
 
   if (boundary.decisionClass !== "narrow" && boundary.decisionClass !== "ambiguous") {
     return {
+      allowedLeadDb: null,
       applied: false,
+      boundaryCeilingDb: null,
       curve,
+      currentMetricDb: null,
       notes,
       ratings: buildRatingsFromCurve(curve.frequenciesHz, curve.transmissionLossDb, options.airborneContext),
       runnerUpMetric: null,
@@ -5298,8 +5310,11 @@ function applyAmbiguousFamilyBoundaryHold(
   const currentMetric = computeContextMetric(curve, options.airborneContext);
   if (!(typeof currentMetric === "number" && Number.isFinite(currentMetric))) {
     return {
+      allowedLeadDb: null,
       applied: false,
+      boundaryCeilingDb: null,
       curve,
+      currentMetricDb: currentMetric,
       notes,
       ratings: buildRatingsFromCurve(curve.frequenciesHz, curve.transmissionLossDb, options.airborneContext),
       runnerUpMetric: null,
@@ -5318,8 +5333,11 @@ function applyAmbiguousFamilyBoundaryHold(
 
   if (!(typeof runnerUpMetric === "number" && Number.isFinite(runnerUpMetric))) {
     return {
+      allowedLeadDb: null,
       applied: false,
+      boundaryCeilingDb: null,
       curve,
+      currentMetricDb: currentMetric,
       notes,
       ratings: buildRatingsFromCurve(curve.frequenciesHz, curve.transmissionLossDb, options.airborneContext),
       runnerUpMetric: null,
@@ -5330,8 +5348,11 @@ function applyAmbiguousFamilyBoundaryHold(
 
   if (!(currentMetric > runnerUpMetric + 1e-6)) {
     return {
+      allowedLeadDb: null,
       applied: false,
+      boundaryCeilingDb: null,
       curve,
+      currentMetricDb: currentMetric,
       notes,
       ratings: buildRatingsFromCurve(curve.frequenciesHz, curve.transmissionLossDb, options.airborneContext),
       runnerUpMetric,
@@ -5346,8 +5367,11 @@ function applyAmbiguousFamilyBoundaryHold(
 
   if (!(currentMetric > boundaryCeiling + 1e-6)) {
     return {
+      allowedLeadDb,
       applied: false,
+      boundaryCeilingDb: boundaryCeiling,
       curve,
+      currentMetricDb: currentMetric,
       notes,
       ratings: buildRatingsFromCurve(curve.frequenciesHz, curve.transmissionLossDb, options.airborneContext),
       runnerUpMetric,
@@ -5361,8 +5385,11 @@ function applyAmbiguousFamilyBoundaryHold(
   const anchored = anchorCurveToMetric(curve, targetMetric, options.airborneContext);
   if (!anchored.applied) {
     return {
+      allowedLeadDb,
       applied: false,
+      boundaryCeilingDb: boundaryCeiling,
       curve,
+      currentMetricDb: currentMetric,
       notes,
       ratings: anchored.ratings,
       runnerUpMetric,
@@ -5376,8 +5403,11 @@ function applyAmbiguousFamilyBoundaryHold(
   );
 
   return {
+    allowedLeadDb,
     applied: true,
+    boundaryCeilingDb: boundaryCeiling,
     curve: anchored.curve,
+    currentMetricDb: currentMetric,
     notes,
     ratings: anchored.ratings,
     runnerUpMetric,
@@ -6411,12 +6441,18 @@ export function calculateDynamicAirborneResult(
     confidenceScore,
     detectedFamily: family.family,
     detectedFamilyLabel: FAMILY_LABELS[family.family],
+    familyBoundaryHoldAllowedLeadDb: familyBoundaryHold.allowedLeadDb ?? undefined,
+    familyBoundaryHoldApplied: familyBoundaryHold.applied || undefined,
+    familyBoundaryHoldBoundaryCeilingDb: familyBoundaryHold.boundaryCeilingDb ?? undefined,
     familyDecisionClass:
       familyDecisionBoundary.decisionClass === "clear" ? undefined : familyDecisionBoundary.decisionClass,
     familyDecisionMargin:
       familyDecisionBoundary.decisionClass === "clear"
         ? undefined
         : familyDecisionBoundary.margin ?? undefined,
+    familyBoundaryHoldCurrentMetricDb: familyBoundaryHold.currentMetricDb ?? undefined,
+    familyBoundaryHoldRunnerUpMetricDb: familyBoundaryHold.runnerUpMetric ?? undefined,
+    familyBoundaryHoldTargetMetricDb: familyBoundaryHold.targetMetric ?? undefined,
     hasPorousFill: topology.hasPorousFill,
     hasStudLikeSupport: topology.hasStudLikeSupport,
     notes: [

@@ -266,6 +266,7 @@ Primary test files that must be kept green:
 - [../../packages/engine/src/output-combination-sweep.test.ts](../../packages/engine/src/output-combination-sweep.test.ts)
 - [../../packages/engine/src/dynamic-guided-combination-sweep.test.ts](../../packages/engine/src/dynamic-guided-combination-sweep.test.ts)
 - [../../packages/engine/src/dynamic-airborne-family-boundary.test.ts](../../packages/engine/src/dynamic-airborne-family-boundary.test.ts)
+- [../../packages/engine/src/dynamic-airborne-family-boundary-scan.test.ts](../../packages/engine/src/dynamic-airborne-family-boundary-scan.test.ts)
 - [../../packages/engine/src/dynamic-airborne-order-sensitivity.test.ts](../../packages/engine/src/dynamic-airborne-order-sensitivity.test.ts)
 - [../../apps/web/features/workbench/dynamic-route-instability.test.ts](../../apps/web/features/workbench/dynamic-route-instability.test.ts)
 - [../../apps/web/features/workbench/dynamic-route-family-boundary.test.ts](../../apps/web/features/workbench/dynamic-route-family-boundary.test.ts)
@@ -342,6 +343,7 @@ Also assert:
 - detected family
 - strategy
 - confidence class
+- family-boundary hold metrics when a conservative hold is expected
 - warning presence when ambiguity is expected
 - cavity count where the topology is central to the bug
 
@@ -353,6 +355,7 @@ Engine-level selector and solver guards:
 
 - `packages/engine/src/dynamic-airborne-instability-repro.test.ts`
 - `packages/engine/src/dynamic-airborne-family-boundary.test.ts`
+- `packages/engine/src/dynamic-airborne-family-boundary-scan.test.ts`
 - `packages/engine/src/dynamic-airborne-order-sensitivity.test.ts`
 
 Engine-level benchmark protection:
@@ -544,6 +547,13 @@ Shipped behavior:
   - re-evaluates the runner-up lane
   - computes a small allowed lead over that runner-up
   - trims the chosen lane by a bounded amount if it is still materially outrunning the nearby corridor
+- the hold now also exposes exact trace metrics so the trim is auditable in tests and debug output:
+  - `familyBoundaryHoldApplied`
+  - `familyBoundaryHoldRunnerUpMetricDb`
+  - `familyBoundaryHoldAllowedLeadDb`
+  - `familyBoundaryHoldBoundaryCeilingDb`
+  - `familyBoundaryHoldCurrentMetricDb`
+  - `familyBoundaryHoldTargetMetricDb`
 
 Current bounded-hold constants:
 
@@ -580,6 +590,23 @@ Local findings from the current Phase B.2 pass:
 - a generated trimmed-prefix hybrid scan found `25` hold-active rows in the tested palette
   - those rows cluster around `AAC 100-120 mm` heavy cores with lining boards
   - the held `R'w` spread inside that scan stayed within a narrow `1 dB` band across the chosen outer compliant prefixes
+- a wider expanded heavy-core / dual-trim scan is now also part of the executable engine contract
+  - palette size:
+    - prefixes: `8`
+    - heavy core rows: `14`
+    - lining boards: `4`
+  - observed hold-active rows in that wider palette: `80`
+  - all `80` rows still stayed on exactly one pairing:
+    - selected family `lined_massive_wall`
+    - runner-up family `double_leaf`
+  - hold-active core rows in that wider palette:
+    - `ytong_aac_d700 100 mm`: `32`
+    - `ytong_aac_d700 120 mm`: `16`
+    - `ytong_g5_800 100 mm`: `32`
+  - no Porotherm, silicate, pumice, or concrete rows entered the current held corridor in that palette
+- an expanded adjacent-swap scan over the hold-active palette now also runs as an executable contract
+  - current result in that palette:
+    - `0` silent `>=8 dB` adjacent-swap jumps without explicit boundary/hold/order-sensitive labelling
 
 Residual risks after the shipped hold:
 
@@ -592,16 +619,17 @@ What still needs more evidence:
 - wider generated scans over additional heavy cores such as Porotherm and sand-lime blocks
 - permutations where both sides carry outer compliant trims
 - narrow boundary cases that involve more than one plausible runner-up family
+- whether any future non-AAC heavy core should enter the held corridor, or whether those families should stay outside until MorphologyV2
 
 ## 16. Validation Record
 
-Validation run after the shipped Phase A work, the multileaf order-sensitive follow-up, and the shipped Phase B.1 boundary diagnostics:
+Validation run after the shipped Phase A work, the multileaf order-sensitive follow-up, the shipped Phase B.2 hold, and the expanded boundary scans:
 
 - `pnpm -C apps/web exec vitest run --config vitest.config.ts features/workbench/dynamic-route-family-boundary.test.ts features/workbench/dynamic-route-order-sensitivity.test.ts features/workbench/dynamic-route-instability.test.ts`
-- `pnpm exec vitest run packages/engine/src/dynamic-airborne-family-boundary.test.ts packages/engine/src/dynamic-airborne-instability-repro.test.ts packages/engine/src/dynamic-airborne-order-sensitivity.test.ts packages/engine/src/airborne-framed-wall-benchmark.test.ts packages/engine/src/airborne-masonry-benchmark.test.ts`
+- `pnpm exec vitest run packages/engine/src/dynamic-airborne-family-boundary.test.ts packages/engine/src/dynamic-airborne-family-boundary-scan.test.ts packages/engine/src/dynamic-airborne-instability-repro.test.ts packages/engine/src/dynamic-airborne-order-sensitivity.test.ts packages/engine/src/airborne-framed-wall-benchmark.test.ts packages/engine/src/airborne-masonry-benchmark.test.ts`
 - `pnpm exec vitest run packages/engine/src/output-combination-sweep.test.ts packages/engine/src/dynamic-guided-combination-sweep.test.ts`
 - `pnpm -C apps/web exec vitest run --config vitest.config.ts features/workbench/complex-stack-audit.test.ts features/workbench/wall-seeded-edit-stability.test.ts`
 
 Result:
 
-- all suites above passed after the shipped Phase A, the multileaf order-sensitive follow-up, the support-carrier narrowing, and the new family-boundary diagnostics
+- all suites above passed after the shipped Phase A, the multileaf order-sensitive follow-up, the support-carrier narrowing, the new family-boundary diagnostics, and the expanded Phase B.2 boundary scan contracts

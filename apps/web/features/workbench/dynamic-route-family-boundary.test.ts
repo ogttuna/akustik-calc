@@ -107,6 +107,12 @@ describe("dynamic route family boundary diagnostics", () => {
     expect(boundary.dynamicAirborneTrace?.confidenceClass).toBe("low");
     expect(boundary.dynamicAirborneTrace?.familyDecisionClass).toBe("ambiguous");
     expect(boundary.dynamicAirborneTrace?.runnerUpFamily).toBe("double_leaf");
+    expect(boundary.dynamicAirborneTrace?.familyBoundaryHoldApplied).toBe(true);
+    expect(boundary.dynamicAirborneTrace?.familyBoundaryHoldAllowedLeadDb).toBe(4);
+    expect(boundary.dynamicAirborneTrace?.familyBoundaryHoldRunnerUpMetricDb).toBe(39);
+    expect(boundary.dynamicAirborneTrace?.familyBoundaryHoldBoundaryCeilingDb).toBe(43);
+    expect(boundary.dynamicAirborneTrace?.familyBoundaryHoldCurrentMetricDb).toBe(50);
+    expect(boundary.dynamicAirborneTrace?.familyBoundaryHoldTargetMetricDb).toBe(48);
     expect(boundary.metrics.estimatedRwPrimeDb).toBe(45);
     expect(boundary.metrics.estimatedDnTwDb).toBe(46);
     expect(boundary.dynamicAirborneTrace?.strategy).toBe(
@@ -121,9 +127,38 @@ describe("dynamic route family boundary diagnostics", () => {
 
     expect(upper.dynamicAirborneTrace?.detectedFamily).toBe("lined_massive_wall");
     expect(upper.dynamicAirborneTrace?.familyDecisionClass).toBeUndefined();
+    expect(upper.dynamicAirborneTrace?.familyBoundaryHoldApplied).toBeUndefined();
     expect(upper.metrics.estimatedRwPrimeDb).toBe(47);
     expect(upper.metrics.estimatedDnTwDb).toBe(47);
     expect(upper.dynamicAirborneTrace?.strategy).toBe("lined_massive_blend");
+  });
+
+  it("surfaces the same hold metrics through workbench flow on the denser AAC sibling core", () => {
+    const result = evaluateDynamicWall({
+      airborneContext: BUILDING_CONTEXT,
+      id: "g5-boundary",
+      outputs: FIELD_OUTPUTS,
+      stack: [
+        { materialId: "ytong_g5_800", thicknessMm: "100" },
+        { materialId: "air_gap", thicknessMm: "50" },
+        { materialId: "diamond_board", thicknessMm: "12.5" }
+      ]
+    });
+
+    expect(result.dynamicAirborneTrace?.detectedFamily).toBe("lined_massive_wall");
+    expect(result.dynamicAirborneTrace?.familyDecisionClass).toBe("ambiguous");
+    expect(result.dynamicAirborneTrace?.runnerUpFamily).toBe("double_leaf");
+    expect(result.dynamicAirborneTrace?.familyBoundaryHoldApplied).toBe(true);
+    expect(result.dynamicAirborneTrace?.familyBoundaryHoldAllowedLeadDb).toBe(4);
+    expect(result.dynamicAirborneTrace?.familyBoundaryHoldRunnerUpMetricDb).toBe(42);
+    expect(result.dynamicAirborneTrace?.familyBoundaryHoldBoundaryCeilingDb).toBe(46);
+    expect(result.dynamicAirborneTrace?.familyBoundaryHoldCurrentMetricDb).toBe(51);
+    expect(result.dynamicAirborneTrace?.familyBoundaryHoldTargetMetricDb).toBe(49);
+    expect(result.metrics.estimatedRwPrimeDb).toBe(45);
+    expect(result.metrics.estimatedDnTwDb).toBe(47);
+    expect(result.dynamicAirborneTrace?.strategy).toBe(
+      "lined_massive_blend+reinforcement_monotonic_floor+family_boundary_hold"
+    );
   });
 
   it("keeps the workbench AAC lining board matrix in the same conservative held corridor", () => {

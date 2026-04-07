@@ -40,6 +40,8 @@ Document role:
   - this currently stays deliberately narrow: only `2 visible leaves / 1 cavity` topology on that defended pairing
   - deeper 5-layer hybrids that trim back to that morphology are now covered by direct engine and workbench matrix tests
   - exact boundary, trimmed-prefix, instability, and order-sensitivity contracts now exist on both engine and workbench routes for that corridor
+  - hold trace now exposes runner-up, ceiling, current, and target metrics so the trim can be audited numerically
+  - the wider current scan evidence still shows only `ytong_aac_d700 100/120` and `ytong_g5_800 100` inside that held corridor
 - field-side support posture was tightened during validation:
   - hybrid wall-like stacks no longer surface `Rw` on assembly field bundles just because a generic impact signal existed downstream
 - the living source-gap ledger now records which floor families are source-backed enough to tighten and which must stay fail-closed
@@ -110,6 +112,7 @@ Important nuance:
 - the largest remaining reorder deltas now cluster mainly around true multi-leaf / triple-leaf topologies, which should stay order-sensitive rather than being flattened blindly
 - `multileaf_multicavity` remains a conservative surrogate rather than a dedicated multi-cavity solver
 - deeper heavy hybrids with alternative cores still need broader generated scans before the current held-corridor posture can be widened
+- the new expanded heavy-core boundary scan did not surface a second hold-worthy family pair yet; if another pair appears, it still needs explicit evidence before any widening
 - the remaining TUAS shortlist is no longer a pure import question:
   - `R7a` likely wants a separate heavy/wet `a` branch
   - `R6b` likely wants a separate reinforced lower-treatment `b` branch
@@ -122,6 +125,7 @@ Work in this order:
 2. Widen the new wall-side Phase B.2 evidence base before extending the hold beyond the current defended corridor:
    - keep the current runner-up-aware hold limited to `double_leaf <-> lined_massive_wall`
    - scan more heavy-core families and dual-trim hybrids before adding any new held pair
+   - only widen if the next candidate pairing survives the same exact trace, scan, and workbench-parity contracts
 3. Do a mini branch-design audit for `R7a` and `R6b` before importing either row.
 4. Only after that decide whether the next widening move is TUAS branch extension, UBIQ source-trace cleanup, or the next wall-side held family pairing.
 
