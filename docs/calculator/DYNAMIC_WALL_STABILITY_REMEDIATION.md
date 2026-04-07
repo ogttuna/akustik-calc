@@ -270,6 +270,7 @@ Primary test files that must be kept green:
 - [../../packages/engine/src/dynamic-airborne-order-sensitivity.test.ts](../../packages/engine/src/dynamic-airborne-order-sensitivity.test.ts)
 - [../../apps/web/features/workbench/dynamic-route-instability.test.ts](../../apps/web/features/workbench/dynamic-route-instability.test.ts)
 - [../../apps/web/features/workbench/dynamic-route-family-boundary.test.ts](../../apps/web/features/workbench/dynamic-route-family-boundary.test.ts)
+- [../../apps/web/features/workbench/dynamic-route-family-boundary-scan.test.ts](../../apps/web/features/workbench/dynamic-route-family-boundary-scan.test.ts)
 - [../../apps/web/features/workbench/dynamic-route-order-sensitivity.test.ts](../../apps/web/features/workbench/dynamic-route-order-sensitivity.test.ts)
 - [../../packages/engine/src/dynamic-airborne-instability-repro.test.ts](../../packages/engine/src/dynamic-airborne-instability-repro.test.ts)
 
@@ -370,6 +371,7 @@ Workbench edit-path protection:
 
 - `apps/web/features/workbench/dynamic-route-instability.test.ts`
 - `apps/web/features/workbench/dynamic-route-family-boundary.test.ts`
+- `apps/web/features/workbench/dynamic-route-family-boundary-scan.test.ts`
 - `apps/web/features/workbench/dynamic-route-order-sensitivity.test.ts`
 
 If a new helper is added to `airborne-topology.ts`, add topology-only tests close to the helper instead of burying everything inside end-to-end assertions.
@@ -621,6 +623,18 @@ Local findings from the current Phase B.2 pass:
     - exact `R'w` / `DnT,w`
     - exact leading/trailing trim counts
     - trim note and trim warning presence
+- a representative workbench-route scan now also exists so the same pairing is defended above the raw engine layer
+  - representative route palette:
+    - prefixes: `4`
+    - heavy core rows: `3`
+    - lining boards: `4`
+  - hold-active rows in that route palette: `40`
+  - current route-level hold-active core rows:
+    - `ytong_aac_d700 100 mm`: `16`
+    - `ytong_aac_d700 120 mm`: `8`
+    - `ytong_g5_800 100 mm`: `16`
+  - current route-level swap result in that representative palette:
+    - `0` silent `>=8 dB` adjacent-swap jumps without explicit boundary/hold/order-sensitive labelling
 
 Residual risks after the shipped hold:
 
@@ -637,9 +651,9 @@ What still needs more evidence:
 
 ## 16. Validation Record
 
-Validation run after the shipped Phase A work, the multileaf order-sensitive follow-up, the shipped Phase B.2 hold, and the expanded boundary scans:
+Validation run after the shipped Phase A work, the multileaf order-sensitive follow-up, the shipped Phase B.2 hold, the expanded engine boundary scans, and the representative workbench route scan:
 
-- `pnpm -C apps/web exec vitest run --config vitest.config.ts features/workbench/dynamic-route-family-boundary.test.ts features/workbench/dynamic-route-order-sensitivity.test.ts features/workbench/dynamic-route-instability.test.ts`
+- `pnpm -C apps/web exec vitest run --config vitest.config.ts features/workbench/dynamic-route-family-boundary.test.ts features/workbench/dynamic-route-family-boundary-scan.test.ts features/workbench/dynamic-route-order-sensitivity.test.ts features/workbench/dynamic-route-instability.test.ts`
 - `pnpm exec vitest run packages/engine/src/dynamic-airborne-family-boundary.test.ts packages/engine/src/dynamic-airborne-family-boundary-scan.test.ts packages/engine/src/dynamic-airborne-instability-repro.test.ts packages/engine/src/dynamic-airborne-order-sensitivity.test.ts packages/engine/src/airborne-framed-wall-benchmark.test.ts packages/engine/src/airborne-masonry-benchmark.test.ts`
 - `pnpm exec vitest run packages/engine/src/output-combination-sweep.test.ts packages/engine/src/dynamic-guided-combination-sweep.test.ts`
 - `pnpm -C apps/web exec vitest run --config vitest.config.ts features/workbench/complex-stack-audit.test.ts features/workbench/wall-seeded-edit-stability.test.ts`

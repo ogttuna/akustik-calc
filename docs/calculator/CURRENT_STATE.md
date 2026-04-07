@@ -43,6 +43,7 @@ Document role:
   - hold trace now exposes runner-up, ceiling, current, and target metrics so the trim can be audited numerically
   - trim trace now also exposes leading/trailing outer compliant removals so hold + trim interactions are no longer hidden inside free-form notes
   - the wider current scan evidence still shows only `ytong_aac_d700 100/120` and `ytong_g5_800 100` inside that held corridor
+  - a representative workbench route scan now also defends the same pairing at scenario-analysis level, not just engine level
 - field-side support posture was tightened during validation:
   - hybrid wall-like stacks no longer surface `Rw` on assembly field bundles just because a generic impact signal existed downstream
 - the living source-gap ledger now records which floor families are source-backed enough to tighten and which must stay fail-closed
