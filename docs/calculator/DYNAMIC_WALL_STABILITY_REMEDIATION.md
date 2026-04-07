@@ -695,6 +695,24 @@ Local findings from the current Phase B.2 pass:
     - `2/1`: `60`
     - `2/2`: `30`
   - this closes the earlier gap where both-side outer trims and deeper cavity packs were only covered by hand-picked anchors instead of a generated representative matrix
+  - adjacent-swap result on that same representative deep-hybrid palette:
+    - engine: `0` silent `>=8 dB` adjacent-swap jumps across nine executable cohorts
+    - route: `0` silent `>=8 dB` adjacent-swap jumps across nine executable cohorts
+    - defended cohorts:
+      - `ytong_aac_d700 100`, boards `gypsum/diamond`
+      - `ytong_aac_d700 100`, boards `firestop/security`
+      - `ytong_aac_d700 120`, boards `gypsum/diamond`
+      - `ytong_aac_d700 120`, boards `firestop/security`
+      - `ytong_g5_800 100`, boards `gypsum/diamond`
+      - `ytong_g5_800 100`, boards `firestop/security`
+      - `porotherm_pls_140 140`
+      - `silka_cs_block 150`
+      - `concrete 120`
+    - reason for the split:
+      - the original single generated swap pass stayed logically clean but exceeded Vitest timeout budgets because the representative deep-hybrid palette plus all adjacent swaps took roughly three minutes end-to-end
+      - a simple core-only split was still too slow for the `ytong_aac_d700 100`, `ytong_aac_d700 120`, and `ytong_g5_800 100` rows, so those hotspots are further split by board pair
+      - the shipped contract keeps the same search space but slices it into smaller executable cohorts so failures stay attributable and the suite does not rely on timeout inflation
+      - combined multi-worker Vitest invocations can still surface `[vitest-worker]: Timeout calling "onTaskUpdate"` on this generated deep-hybrid cluster even when the underlying assertions all pass; the stable validation posture is to keep the deep-hybrid cluster in its own `--maxWorkers=1` command
 - non-AAC heavy-core exclusion is now also covered by executable engine and route contracts instead of remaining a future-note gap
   - expanded engine non-AAC palette:
     - prefixes: `8`
@@ -772,7 +790,6 @@ Residual risks after the shipped hold:
 
 What still needs more evidence:
 
-- broader adjacent-swap coverage across the newer deep-hybrid trailing-trim palette, not just the older prefix-only and non-AAC representative swaps
 - wider-than-representative deep-hybrid route palettes beyond the current `4 x 4 x 3` prefix/suffix/cavity grid
 - narrow boundary cases that involve more than one plausible runner-up family outside the currently defended representative framed and heavy-core palettes
 - deeper hybrid palettes that might extend `familyDecisionSelectedBelowRunnerUp` beyond the current `ytong_aac_d700 100` corridor
@@ -780,10 +797,16 @@ What still needs more evidence:
 
 ## 16. Validation Record
 
-Validation run after the shipped Phase A work, the multileaf order-sensitive follow-up, the shipped Phase B.2 hold, the expanded engine boundary scans, the representative workbench route scan, the new non-AAC exclusion contracts, and the dedicated deep-hybrid trailing-trim scans:
+Validation run after the shipped Phase A work, the multileaf order-sensitive follow-up, the shipped Phase B.2 hold, the expanded engine boundary scans, the representative workbench route scan, the new non-AAC exclusion contracts, and the dedicated deep-hybrid trailing-trim scans plus their adjacent-swap contracts:
 
-- `pnpm -C apps/web exec vitest run --config vitest.config.ts features/workbench/dynamic-route-family-boundary.test.ts features/workbench/dynamic-route-family-boundary-scan.test.ts features/workbench/dynamic-route-deep-hybrid-scan.test.ts features/workbench/dynamic-route-order-sensitivity.test.ts features/workbench/dynamic-route-instability.test.ts`
-- `pnpm exec vitest run packages/engine/src/dynamic-airborne-family-boundary.test.ts packages/engine/src/dynamic-airborne-family-boundary-scan.test.ts packages/engine/src/dynamic-airborne-deep-hybrid-scan.test.ts packages/engine/src/dynamic-airborne-instability-repro.test.ts packages/engine/src/dynamic-airborne-order-sensitivity.test.ts packages/engine/src/airborne-framed-wall-benchmark.test.ts packages/engine/src/airborne-masonry-benchmark.test.ts`
+- standard engine corridor:
+  - `pnpm exec vitest run packages/engine/src/dynamic-airborne-family-boundary.test.ts packages/engine/src/dynamic-airborne-family-boundary-scan.test.ts packages/engine/src/dynamic-airborne-instability-repro.test.ts packages/engine/src/dynamic-airborne-order-sensitivity.test.ts packages/engine/src/airborne-framed-wall-benchmark.test.ts packages/engine/src/airborne-masonry-benchmark.test.ts packages/engine/src/output-combination-sweep.test.ts packages/engine/src/dynamic-guided-combination-sweep.test.ts`
+- standard route corridor:
+  - `pnpm -C apps/web exec vitest run --config vitest.config.ts features/workbench/dynamic-route-family-boundary.test.ts features/workbench/dynamic-route-family-boundary-scan.test.ts features/workbench/dynamic-route-order-sensitivity.test.ts features/workbench/dynamic-route-instability.test.ts features/workbench/complex-stack-audit.test.ts features/workbench/wall-seeded-edit-stability.test.ts`
+- deep-hybrid engine cluster:
+  - `pnpm exec vitest run --maxWorkers=1 packages/engine/src/dynamic-airborne-deep-hybrid-scan.test.ts packages/engine/src/dynamic-airborne-deep-hybrid-swap-aac-d700-100.test.ts packages/engine/src/dynamic-airborne-deep-hybrid-swap-aac-d700-120.test.ts packages/engine/src/dynamic-airborne-deep-hybrid-swap-aac-g5.test.ts packages/engine/src/dynamic-airborne-deep-hybrid-swap-heavy-core.test.ts`
+- deep-hybrid route cluster:
+  - `pnpm -C apps/web exec vitest run --maxWorkers=1 --config vitest.config.ts features/workbench/dynamic-route-deep-hybrid-scan.test.ts features/workbench/dynamic-route-deep-hybrid-swap-aac-d700-100.test.ts features/workbench/dynamic-route-deep-hybrid-swap-aac-d700-120.test.ts features/workbench/dynamic-route-deep-hybrid-swap-aac-g5.test.ts features/workbench/dynamic-route-deep-hybrid-swap-heavy-core.test.ts`
 - `pnpm exec vitest run packages/engine/src/output-combination-sweep.test.ts packages/engine/src/dynamic-guided-combination-sweep.test.ts`
 - `pnpm -C apps/web exec vitest run --config vitest.config.ts features/workbench/complex-stack-audit.test.ts features/workbench/wall-seeded-edit-stability.test.ts`
 
