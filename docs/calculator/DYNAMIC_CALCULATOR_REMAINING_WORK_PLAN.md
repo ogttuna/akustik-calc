@@ -414,6 +414,25 @@ Floor should now stay on controlled widening and tightening only.
 
 4. keep unsupported raw lanes fail-closed unless the source corpus clearly supports them
 
+### Missing Test Surfaces To Add Next
+
+These are the most likely next useful tests. They are not currently defended enough to claim closure.
+
+- wider-than-first raw concrete ceiling-helper permutations:
+  - helper contiguous-split variants
+  - board-only plus fill/cavity permutations across more thickness pairs
+  - route/card parity on those same variants
+- wider inferred floor-family rows:
+  - additional CLT, composite, and hollow-core inferred packages beyond the current first cohort
+  - ceiling-side inferred packages that should still stay closed
+- negative guards around raw heavy hybrids:
+  - concrete-plus-board hybrids that infer ceiling-board shapes but should still remain fail-closed
+  - weaker carrier plus helper-package rows that must not inherit the concrete reopening rule
+- broader mixed floor/wall generated grids:
+  - longer edit chains
+  - duplicate/swap permutations
+  - cross-mode store resets after partial edits
+
 ### Likely Code Touch Surface
 
 Primary likely code touch surface:

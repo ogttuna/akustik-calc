@@ -28,6 +28,15 @@ Reading rule:
 - `partial` means a narrow defended slice exists, not that the whole problem class is closed
 - `open` means do not infer completion from nearby green representative corridors
 
+## Resume Shortcut
+
+If the question is “where do I restart tomorrow without re-reading everything?”, use this order:
+
+1. [CURRENT_STATE.md](./CURRENT_STATE.md): latest verified snapshot and immediate next tasks
+2. [DYNAMIC_CALCULATOR_REMAINING_WORK_PLAN.md](./DYNAMIC_CALCULATOR_REMAINING_WORK_PLAN.md): open work, risk level, safe fix order, and missing-test surfaces
+3. [DYNAMIC_WALL_STABILITY_REMEDIATION.md](./DYNAMIC_WALL_STABILITY_REMEDIATION.md): only if the next task touches wall family selection or held boundary widening
+4. [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md): only if the next task needs source-backed widening decisions
+
 ## File Roles
 
 - [CURRENT_STATE.md](./CURRENT_STATE.md): what is stable now, what is intentionally narrow, and what remains risky
