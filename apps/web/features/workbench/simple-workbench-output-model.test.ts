@@ -117,6 +117,30 @@ describe("simple workbench output model", () => {
     );
   });
 
+  it("does not surface wall-side Rw once the apparent field route marks it unsupported", () => {
+    const card = buildOutputCard({
+      output: "Rw",
+      result: buildFixture({
+        metrics: {
+          ...buildFixture().metrics,
+          estimatedRwDb: 49.7,
+          estimatedRwPrimeDb: 50
+        },
+        supportedTargetOutputs: ["R'w", "Dn,w", "Dn,A"],
+        unsupportedTargetOutputs: ["Rw"]
+      }),
+      studyMode: "wall"
+    });
+
+    expect(card).toEqual(
+      expect.objectContaining({
+        label: "Rw",
+        status: "unsupported",
+        value: "Not ready"
+      })
+    );
+  });
+
   it("keeps bound-only Ln,w cards explicit as conservative upper bounds instead of live reads", () => {
     const card = buildOutputCard({
       output: "Ln,w",

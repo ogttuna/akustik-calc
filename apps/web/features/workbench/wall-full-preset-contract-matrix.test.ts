@@ -52,7 +52,7 @@ function evaluateWallPreset(presetId: PresetId, airborneContext: AirborneContext
 }
 
 describe("wall full preset contract matrix", () => {
-  it("keeps every wall preset aligned across lab, field, and building contexts", () => {
+  it("keeps every wall preset aligned across lab, apparent-field, and building contexts", () => {
     const failures: string[] = [];
 
     for (const preset of WORKBENCH_PRESETS.filter((preset) => preset.studyMode === "wall")) {
@@ -62,8 +62,11 @@ describe("wall full preset contract matrix", () => {
 
       const labLiveOutputs: RequestedOutputId[] = ["Rw", "STC", "C", "Ctr"];
       const labParkedOutputs: RequestedOutputId[] = ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A"];
-      const fieldLiveOutputs: RequestedOutputId[] = ["Rw", "R'w", "Dn,w", "Dn,A", "STC", "C", "Ctr"];
+      const fieldLiveOutputs: RequestedOutputId[] = ["R'w", "Dn,w", "Dn,A", "STC", "C", "Ctr"];
       const fieldParkedOutputs: RequestedOutputId[] = ["DnT,w", "DnT,A"];
+      const fieldUnavailableOutputs: RequestedOutputId[] = ["Rw"];
+      const buildingLiveOutputs: RequestedOutputId[] = ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "STC", "C", "Ctr"];
+      const buildingUnavailableOutputs: RequestedOutputId[] = ["Rw"];
 
       for (const output of labLiveOutputs) {
         if (labCards.get(output)?.status !== "live") {
@@ -89,7 +92,14 @@ describe("wall full preset contract matrix", () => {
         }
       }
 
-      for (const output of WALL_OUTPUTS) {
+      for (const output of fieldUnavailableOutputs) {
+        const card = fieldCards.get(output)!;
+        if (card.status !== "unsupported") {
+          failures.push(`${preset.id}: expected ${output} to stay explicit on the apparent field route`);
+        }
+      }
+
+      for (const output of buildingLiveOutputs) {
         if (buildingCards.get(output)?.status !== "live") {
           failures.push(`${preset.id}: expected ${output} to stay live on the building route`);
         }
@@ -97,6 +107,17 @@ describe("wall full preset contract matrix", () => {
         const card = buildingCards.get(output)!;
         if (/not ready/i.test(card.value)) {
           failures.push(`${preset.id}: ${output} should not show Not ready on the building route`);
+        }
+      }
+
+      for (const output of buildingUnavailableOutputs) {
+        const card = buildingCards.get(output)!;
+        if (card.status !== "unsupported") {
+          failures.push(`${preset.id}: expected ${output} to stay explicit on the building route`);
+        }
+
+        if (!/not ready/i.test(card.value)) {
+          failures.push(`${preset.id}: ${output} should stay explicit instead of showing a fabricated building value`);
         }
       }
     }

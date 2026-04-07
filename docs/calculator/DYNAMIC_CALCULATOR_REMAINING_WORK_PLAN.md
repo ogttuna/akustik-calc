@@ -68,6 +68,10 @@ Interpretation:
 - floor is not in a broad stability failure state
 - the previously active reinforced-concrete support-posture regression is now closed
 - the current floor debt is no longer a live blocker; it is coverage and future widening discipline
+- secondary route-surface revalidation on `2026-04-07` also showed that the latest red workbench tests were stale surface contracts, not a fresh calculator regression:
+  - bound floor status now keeps companion `Rw` live on the defended carry-over lane
+  - wall apparent-route `Rw` now stays explicitly unsupported in the route contracts, matching engine support buckets
+  - a new wall output-card parity pack now sits beside the floor parity pack so future support-surface drift is caught earlier
 
 ### Shared Mixed-Mode Torture Coverage
 

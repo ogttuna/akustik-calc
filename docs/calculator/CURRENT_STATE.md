@@ -40,6 +40,10 @@ Document role:
   - raw open-box rows stay fail-closed on field-side `Rw`
   - raw hollow-core screening rows keep their defended reopened carrier posture
   - raw wall-like heavy hybrids stay closed even when a finite screening carrier `Rw` exists
+- secondary route-surface revalidation on `2026-04-07` found two stale contracts but no new solver regression:
+  - bound floor carry-over status was still expecting companion `Rw` to stay unavailable even though the defended floor carrier now keeps it supported
+  - the wall full-preset matrix was still expecting apparent-route `Rw` to stay live even though the engine deliberately keeps wall-side `Rw` explicit once the descriptor becomes `R'w`
+  - a dedicated wall output-card parity audit now defends this surface directly so card/status drift is caught before it is mistaken for a calculator regression
 - the first broader mixed floor/wall torture pack is now in place:
   - engine-side deep floor and wall packages now have a shared contiguous-split parity contract
   - workbench route now has an alternating study-mode torture test that switches between deep floor and wall edit chains

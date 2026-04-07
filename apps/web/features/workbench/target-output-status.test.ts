@@ -71,7 +71,7 @@ describe("getTargetOutputStatus", () => {
     expect(rwStatus.note).not.toContain("carrier stays unspecified");
   });
 
-  it("keeps bound-only field carry-over explicit on L'n,w and L'nT,w once K and room volume are present", () => {
+  it("keeps bound-only field carry-over explicit on L'n,w and L'nT,w once K and room volume are present while companion Rw stays live", () => {
     const preset = getPresetById("ubiq_open_web_300_bound");
     const scenario = evaluateScenario({
       airborneContext: {
@@ -119,7 +119,8 @@ describe("getTargetOutputStatus", () => {
     expect(lPrimeNwStatus.note).toContain("conservative bound");
     expect(lPrimeNTwStatus.kind).toBe("engine_bound");
     expect(lPrimeNTwStatus.note).toContain("conservative bound");
-    expect(rwStatus.kind).toBe("unavailable");
+    expect(rwStatus.kind).toBe("engine_live");
+    expect(rwStatus.note).toContain("curated floor-family companions");
   });
 
   it("keeps timber bare-floor low-confidence airborne outputs explicit on the same published-family fallback lane", () => {
@@ -194,6 +195,40 @@ describe("getTargetOutputStatus", () => {
     expect(dntwStatus.label).toBe("Need partition geometry");
     expect(rwPrimeCorridor.laneLabel).toBe("Field airborne lane");
     expect(rwPrimeCorridor.modeLabel).toBe("Room-to-room field");
+  });
+
+  it("keeps wall-side Rw unavailable once the airborne route is explicitly apparent", () => {
+    const scenario = evaluateScenario({
+      airborneContext: {
+        contextMode: "building_prediction",
+        panelHeightMm: 3000,
+        panelWidthMm: 4200,
+        receivingRoomRt60S: 0.7,
+        receivingRoomVolumeM3: 55
+      },
+      id: "wall-building-route",
+      name: "Wall building route",
+      rows: FIELD_WALL_ROWS,
+      source: "current",
+      studyMode: "wall",
+      targetOutputs: ["Rw", "R'w", "Dn,w", "DnT,w"]
+    });
+
+    const rwStatus = getTargetOutputStatus({
+      guideResult: null,
+      output: "Rw",
+      result: scenario.result
+    });
+    const rwPrimeStatus = getTargetOutputStatus({
+      guideResult: null,
+      output: "R'w",
+      result: scenario.result
+    });
+
+    expect(rwStatus.kind).toBe("unavailable");
+    expect(rwStatus.label).toBe("Unavailable on current path");
+    expect(rwPrimeStatus.kind).toBe("engine_live");
+    expect(rwPrimeStatus.label).toBe("Apparent field");
   });
 
   it("separates room-volume blockers from geometry blockers on standardized airborne outputs", () => {
