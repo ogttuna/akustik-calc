@@ -380,6 +380,69 @@ describe("dynamic airborne family boundary diagnostics", () => {
     }
   });
 
+  it("keeps trimmed non-AAC lined-massive rows clear of family-boundary diagnostics", () => {
+    const cases = [
+      {
+        dnTw: 49,
+        leading: 1,
+        label: "porotherm-single-trim",
+        rwPrime: 47,
+        stack: [
+          { materialId: "rockwool", thicknessMm: 25 },
+          { materialId: "porotherm_pls_140", thicknessMm: 140 },
+          { materialId: "air_gap", thicknessMm: 50 },
+          { materialId: "diamond_board", thicknessMm: 12.5 },
+          { materialId: "glasswool", thicknessMm: 25 }
+        ] as const,
+        trailing: 1
+      },
+      {
+        dnTw: 58,
+        leading: 2,
+        label: "silka-dual-trim",
+        rwPrime: 56,
+        stack: [
+          { materialId: "air_gap", thicknessMm: 25 },
+          { materialId: "rockwool", thicknessMm: 25 },
+          { materialId: "silka_cs_block", thicknessMm: 150 },
+          { materialId: "air_gap", thicknessMm: 50 },
+          { materialId: "security_board", thicknessMm: 12.5 },
+          { materialId: "glasswool", thicknessMm: 25 }
+        ] as const,
+        trailing: 1
+      }
+    ] as const;
+
+    for (const testCase of cases) {
+      const result = calculateDynamicWall(testCase.stack, BUILDING_CONTEXT, ["R'w", "DnT,w"]);
+
+      expect(result.dynamicAirborneTrace?.detectedFamily, testCase.label).toBe("lined_massive_wall");
+      expect(result.dynamicAirborneTrace?.familyDecisionClass, testCase.label).toBeUndefined();
+      expect(result.dynamicAirborneTrace?.runnerUpFamily, testCase.label).toBeUndefined();
+      expect(result.dynamicAirborneTrace?.familyBoundaryHoldApplied, testCase.label).toBeUndefined();
+      expect(result.dynamicAirborneTrace?.trimmedOuterLayersApplied, testCase.label).toBe(true);
+      expect(result.dynamicAirborneTrace?.trimmedOuterLeadingCount, testCase.label).toBe(testCase.leading);
+      expect(result.dynamicAirborneTrace?.trimmedOuterTrailingCount, testCase.label).toBe(testCase.trailing);
+      expect(result.metrics.estimatedRwPrimeDb, testCase.label).toBe(testCase.rwPrime);
+      expect(result.metrics.estimatedDnTwDb, testCase.label).toBe(testCase.dnTw);
+      expect(result.dynamicAirborneTrace?.strategy, testCase.label).toBe("lined_massive_blend");
+      expect(
+        result.dynamicAirborneTrace?.notes.some((note) =>
+          new RegExp(`dynamic span \\(${testCase.leading} leading, ${testCase.trailing} trailing\\)`, "i").test(note)
+        ),
+        `${testCase.label} trim note`
+      ).toBe(true);
+      expect(
+        result.warnings.some((warning) => /excluded from the dynamic airborne span/i.test(warning)),
+        `${testCase.label} trim warning`
+      ).toBe(true);
+      expect(
+        result.warnings.some((warning) => /boundary between|family-boundary hold|still somewhat close/i.test(warning)),
+        `${testCase.label} boundary warning`
+      ).toBe(false);
+    }
+  });
+
   it("keeps strong double-stud corridors clear instead of labelling them as boundary cases", () => {
     const result = calculateDynamicWall(
       [

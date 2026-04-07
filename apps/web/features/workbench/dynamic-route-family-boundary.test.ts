@@ -376,6 +376,74 @@ describe("dynamic route family boundary diagnostics", () => {
     }
   });
 
+  it("keeps trimmed non-AAC workbench rows clear of family-boundary diagnostics", () => {
+    const cases = [
+      {
+        dnTw: 48,
+        id: "porotherm-single-trim",
+        leading: 1,
+        rwPrime: 47,
+        stack: [
+          { materialId: "rockwool", thicknessMm: "25" },
+          { materialId: "porotherm_pls_140", thicknessMm: "140" },
+          { materialId: "air_gap", thicknessMm: "50" },
+          { materialId: "diamond_board", thicknessMm: "12.5" },
+          { materialId: "glasswool", thicknessMm: "25" }
+        ] as const,
+        trailing: 1
+      },
+      {
+        dnTw: 57,
+        id: "silka-dual-trim",
+        leading: 2,
+        rwPrime: 56,
+        stack: [
+          { materialId: "air_gap", thicknessMm: "25" },
+          { materialId: "rockwool", thicknessMm: "25" },
+          { materialId: "silka_cs_block", thicknessMm: "150" },
+          { materialId: "air_gap", thicknessMm: "50" },
+          { materialId: "security_board", thicknessMm: "12.5" },
+          { materialId: "glasswool", thicknessMm: "25" }
+        ] as const,
+        trailing: 1
+      }
+    ] as const;
+
+    for (const testCase of cases) {
+      const result = evaluateDynamicWall({
+        airborneContext: FIELD_CONTEXT,
+        id: testCase.id,
+        outputs: FIELD_OUTPUTS,
+        stack: testCase.stack
+      });
+
+      expect(result.dynamicAirborneTrace?.detectedFamily, testCase.id).toBe("lined_massive_wall");
+      expect(result.dynamicAirborneTrace?.familyDecisionClass, testCase.id).toBeUndefined();
+      expect(result.dynamicAirborneTrace?.runnerUpFamily, testCase.id).toBeUndefined();
+      expect(result.dynamicAirborneTrace?.familyBoundaryHoldApplied, testCase.id).toBeUndefined();
+      expect(result.dynamicAirborneTrace?.trimmedOuterLayersApplied, testCase.id).toBe(true);
+      expect(result.dynamicAirborneTrace?.trimmedOuterLeadingCount, testCase.id).toBe(testCase.leading);
+      expect(result.dynamicAirborneTrace?.trimmedOuterTrailingCount, testCase.id).toBe(testCase.trailing);
+      expect(result.metrics.estimatedRwPrimeDb, testCase.id).toBe(testCase.rwPrime);
+      expect(result.metrics.estimatedDnTwDb, testCase.id).toBe(testCase.dnTw);
+      expect(result.dynamicAirborneTrace?.strategy, testCase.id).toBe("lined_massive_blend");
+      expect(
+        result.dynamicAirborneTrace?.notes.some((note) =>
+          new RegExp(`dynamic span \\(${testCase.leading} leading, ${testCase.trailing} trailing\\)`, "i").test(note)
+        ),
+        `${testCase.id} trim note`
+      ).toBe(true);
+      expect(
+        result.warnings.some((warning) => /excluded from the dynamic airborne span/i.test(warning)),
+        `${testCase.id} trim warning`
+      ).toBe(true);
+      expect(
+        result.warnings.some((warning) => /boundary between|family-boundary hold|still somewhat close/i.test(warning)),
+        `${testCase.id} boundary warning`
+      ).toBe(false);
+    }
+  });
+
   it("keeps clear double-stud workbench cases free from boundary warnings", () => {
     const result = evaluateDynamicWall({
       airborneContext: LAB_DOUBLE_STUD_CONTEXT,

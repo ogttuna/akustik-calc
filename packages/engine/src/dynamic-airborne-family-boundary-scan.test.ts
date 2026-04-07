@@ -44,6 +44,15 @@ const HOLD_SCAN_CORES = [
   { materialId: "concrete", thicknessesMm: [80, 120] }
 ] as const;
 
+const NON_AAC_SCAN_CORES = [
+  { materialId: "porotherm_pls_100", thicknessesMm: [100] },
+  { materialId: "porotherm_pls_140", thicknessesMm: [140] },
+  { materialId: "porotherm_pls_190", thicknessesMm: [190] },
+  { materialId: "silka_cs_block", thicknessesMm: [100, 150] },
+  { materialId: "pumice_block", thicknessesMm: [100, 150] },
+  { materialId: "concrete", thicknessesMm: [80, 120] }
+] as const;
+
 const HOLD_SCAN_BOARDS = [
   { materialId: "gypsum_board", thicknessMm: 12.5 },
   { materialId: "diamond_board", thicknessMm: 12.5 },
@@ -261,6 +270,69 @@ describe("dynamic airborne family boundary scan contracts", () => {
     }
   }, HOLD_SCAN_TIMEOUT_MS);
 
+  it("keeps the expanded non-AAC heavy-core palette out of family-boundary diagnostics", () => {
+    const boundaryHits: Array<{
+      stack: string;
+      trace: NonNullable<ReturnType<typeof calculateAssembly>["dynamicAirborneTrace"]>;
+      warnings: readonly string[];
+    }> = [];
+    const familyCounts = new Map<string, number>();
+    const trimCounts = new Map<string, number>();
+
+    for (const prefix of HOLD_SCAN_PREFIXES) {
+      for (const core of NON_AAC_SCAN_CORES) {
+        for (const coreThicknessMm of core.thicknessesMm) {
+          for (const board of HOLD_SCAN_BOARDS) {
+            const stack = buildBoundaryStack({
+              board,
+              coreMaterialId: core.materialId,
+              coreThicknessMm,
+              prefix
+            });
+            const result = calculateAssembly(stack, {
+              airborneContext: BUILDING_CONTEXT,
+              calculator: "dynamic",
+              targetOutputs: ["R'w", "DnT,w"]
+            });
+            const trace = result.dynamicAirborneTrace;
+            const trimKey = `${trace?.trimmedOuterLeadingCount ?? 0}/${trace?.trimmedOuterTrailingCount ?? 0}`;
+
+            familyCounts.set(trace?.detectedFamily ?? "none", (familyCounts.get(trace?.detectedFamily ?? "none") ?? 0) + 1);
+            trimCounts.set(trimKey, (trimCounts.get(trimKey) ?? 0) + 1);
+
+            const boundaryWarnings = result.warnings.filter((warning) =>
+              /boundary between|family-boundary hold|still somewhat close/i.test(warning)
+            );
+
+            if (
+              trace &&
+              (trace.familyDecisionClass ||
+                trace.runnerUpFamily ||
+                trace.familyBoundaryHoldApplied ||
+                boundaryWarnings.length > 0)
+            ) {
+              boundaryHits.push({
+                stack: stackKey(stack),
+                trace,
+                warnings: boundaryWarnings
+              });
+            }
+          }
+        }
+      }
+    }
+
+    expect(boundaryHits).toEqual([]);
+    expect(Object.fromEntries([...familyCounts.entries()].sort(([left], [right]) => left.localeCompare(right)))).toEqual({
+      lined_massive_wall: 288
+    });
+    expect(Object.fromEntries([...trimCounts.entries()].sort(([left], [right]) => left.localeCompare(right)))).toEqual({
+      "0/0": 36,
+      "1/0": 180,
+      "2/0": 72
+    });
+  }, HOLD_SCAN_TIMEOUT_MS);
+
   it("finds no silent >=8 dB adjacent-swap jumps across the expanded held-boundary palette", () => {
     const readSnapshot = buildSnapshotReader();
     const offenders: Array<{
@@ -297,6 +369,53 @@ describe("dynamic airborne family boundary scan contracts", () => {
                 delta: maxDelta,
                 swapIndex
               });
+            }
+          }
+        }
+      }
+    }
+
+    expect(offenders).toEqual([]);
+  }, HOLD_SCAN_TIMEOUT_MS);
+
+  it("finds no silent >=8 dB adjacent-swap jumps across the expanded non-AAC heavy-core palette", () => {
+    const readSnapshot = buildSnapshotReader();
+    const offenders: Array<{
+      baseStack: string;
+      changedStack: string;
+      delta: number;
+      swapIndex: number;
+    }> = [];
+
+    for (const prefix of HOLD_SCAN_PREFIXES) {
+      for (const core of NON_AAC_SCAN_CORES) {
+        for (const coreThicknessMm of core.thicknessesMm) {
+          for (const board of HOLD_SCAN_BOARDS) {
+            const stack = buildBoundaryStack({
+              board,
+              coreMaterialId: core.materialId,
+              coreThicknessMm,
+              prefix
+            });
+
+            for (let swapIndex = 0; swapIndex < stack.length - 1; swapIndex += 1) {
+              const base = readSnapshot(stack);
+              const changedStack = swapAdjacent(stack, swapIndex);
+              const changed = readSnapshot(changedStack);
+              const maxDelta = Math.max(
+                Math.abs((changed.rw ?? 0) - (base.rw ?? 0)),
+                Math.abs((changed.rwPrime ?? 0) - (base.rwPrime ?? 0)),
+                Math.abs((changed.dnTw ?? 0) - (base.dnTw ?? 0))
+              );
+
+              if (maxDelta >= 8 && !base.flagged && !changed.flagged) {
+                offenders.push({
+                  baseStack: stackKey(stack),
+                  changedStack: stackKey(changedStack),
+                  delta: maxDelta,
+                  swapIndex
+                });
+              }
             }
           }
         }

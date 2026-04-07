@@ -635,6 +635,43 @@ Local findings from the current Phase B.2 pass:
     - `ytong_g5_800 100 mm`: `16`
   - current route-level swap result in that representative palette:
     - `0` silent `>=8 dB` adjacent-swap jumps without explicit boundary/hold/order-sensitive labelling
+- non-AAC heavy-core exclusion is now also covered by executable engine and route contracts instead of remaining a future-note gap
+  - expanded engine non-AAC palette:
+    - prefixes: `8`
+    - non-AAC core rows: `9`
+    - lining boards: `4`
+    - total rows: `288`
+  - current engine non-AAC result:
+    - all `288` rows stayed on `lined_massive_wall`
+    - `0` rows exposed `familyDecisionClass`, `runnerUpFamily`, or `familyBoundaryHoldApplied`
+    - trim-count distribution in that palette:
+      - `0/0`: `36`
+      - `1/0`: `180`
+      - `2/0`: `72`
+    - adjacent-swap result:
+      - `0` silent `>=8 dB` adjacent-swap jumps
+  - representative route-side non-AAC palette:
+    - prefixes: `4`
+    - non-AAC core rows: `9`
+    - lining boards: `4`
+    - total rows: `144`
+  - current route-side non-AAC result:
+    - all `144` rows stayed on `lined_massive_wall`
+    - `0` rows exposed `familyDecisionClass`, `runnerUpFamily`, or `familyBoundaryHoldApplied`
+    - trim-count distribution in that palette:
+      - `0/0`: `36`
+      - `1/0`: `72`
+      - `2/0`: `36`
+    - adjacent-swap result:
+      - `0` silent `>=8 dB` adjacent-swap jumps
+- exact non-AAC trim anchors now also exist on both engine and workbench routes
+  - anchored samples:
+    - `rockwool 25 | porotherm_pls_140 140 | air_gap 50 | diamond_board 12.5 | glasswool 25`
+    - `air_gap 25 | rockwool 25 | silka_cs_block 150 | air_gap 50 | security_board 12.5 | glasswool 25`
+  - those anchors currently verify:
+    - exact `R'w` / `DnT,w`
+    - exact leading/trailing trim counts
+    - absence of boundary/hold diagnostics on those non-AAC rows
 
 Residual risks after the shipped hold:
 
@@ -644,14 +681,14 @@ Residual risks after the shipped hold:
 
 What still needs more evidence:
 
-- wider generated scans over additional heavy cores such as Porotherm and sand-lime blocks
-- permutations where both sides carry outer compliant trims
+- deeper generated route-side palettes where non-AAC heavy cores also carry trailing outer trims, not just the current representative prefixes
+- permutations where both sides carry outer compliant trims inside broader manual hybrids, not just the current anchored samples
 - narrow boundary cases that involve more than one plausible runner-up family
-- whether any future non-AAC heavy core should enter the held corridor, or whether those families should stay outside until MorphologyV2
+- whether any future non-AAC heavy core that ever surfaces boundary diagnostics should enter the held corridor, or whether those families should stay outside until MorphologyV2
 
 ## 16. Validation Record
 
-Validation run after the shipped Phase A work, the multileaf order-sensitive follow-up, the shipped Phase B.2 hold, the expanded engine boundary scans, and the representative workbench route scan:
+Validation run after the shipped Phase A work, the multileaf order-sensitive follow-up, the shipped Phase B.2 hold, the expanded engine boundary scans, the representative workbench route scan, and the new non-AAC exclusion contracts:
 
 - `pnpm -C apps/web exec vitest run --config vitest.config.ts features/workbench/dynamic-route-family-boundary.test.ts features/workbench/dynamic-route-family-boundary-scan.test.ts features/workbench/dynamic-route-order-sensitivity.test.ts features/workbench/dynamic-route-instability.test.ts`
 - `pnpm exec vitest run packages/engine/src/dynamic-airborne-family-boundary.test.ts packages/engine/src/dynamic-airborne-family-boundary-scan.test.ts packages/engine/src/dynamic-airborne-instability-repro.test.ts packages/engine/src/dynamic-airborne-order-sensitivity.test.ts packages/engine/src/airborne-framed-wall-benchmark.test.ts packages/engine/src/airborne-masonry-benchmark.test.ts`
@@ -660,4 +697,4 @@ Validation run after the shipped Phase A work, the multileaf order-sensitive fol
 
 Result:
 
-- all suites above passed after the shipped Phase A, the multileaf order-sensitive follow-up, the support-carrier narrowing, the new family-boundary diagnostics, and the expanded Phase B.2 boundary scan contracts
+- all suites above passed after the shipped Phase A, the multileaf order-sensitive follow-up, the support-carrier narrowing, the new family-boundary diagnostics, the expanded Phase B.2 boundary scan contracts, and the new non-AAC exclusion anchors

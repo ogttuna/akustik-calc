@@ -113,8 +113,8 @@ Important nuance:
 - wall-side Phase A reduced the currently reproduced jump class materially, and Phase B.1 plus the first shipped Phase B.2 hold now cover the defended `double_leaf <-> lined_massive_wall` boundary, but family selection still ends in a hard branch outside that narrow held corridor
 - the largest remaining reorder deltas now cluster mainly around true multi-leaf / triple-leaf topologies, which should stay order-sensitive rather than being flattened blindly
 - `multileaf_multicavity` remains a conservative surrogate rather than a dedicated multi-cavity solver
-- deeper heavy hybrids with alternative cores still need broader generated scans before the current held-corridor posture can be widened
-- the new expanded heavy-core boundary scan did not surface a second hold-worthy family pair yet; if another pair appears, it still needs explicit evidence before any widening
+- expanded engine and representative route scans over non-AAC heavy cores did not surface a second hold-worthy family pair; Porotherm, sand-lime, pumice, and concrete rows currently stay clear of boundary/hold diagnostics in the defended palettes
+- the remaining widening risk is no longer “basic alternative core rows”; it is deeper hybrid permutations, trailing trims, and any future boundary that shows more than one plausible runner-up family
 - the remaining TUAS shortlist is no longer a pure import question:
   - `R7a` likely wants a separate heavy/wet `a` branch
   - `R6b` likely wants a separate reinforced lower-treatment `b` branch
@@ -126,7 +126,7 @@ Work in this order:
 1. Run a broader complex-stack torture pass before widening normalization rules any further.
 2. Widen the new wall-side Phase B.2 evidence base before extending the hold beyond the current defended corridor:
    - keep the current runner-up-aware hold limited to `double_leaf <-> lined_massive_wall`
-   - scan more heavy-core families and dual-trim hybrids before adding any new held pair
+   - focus next on deeper hybrid permutations, trailing-trim variants, and any boundary that produces more than one plausible runner-up family
    - only widen if the next candidate pairing survives the same exact trace, scan, and workbench-parity contracts
 3. Do a mini branch-design audit for `R7a` and `R6b` before importing either row.
 4. Only after that decide whether the next widening move is TUAS branch extension, UBIQ source-trace cleanup, or the next wall-side held family pairing.

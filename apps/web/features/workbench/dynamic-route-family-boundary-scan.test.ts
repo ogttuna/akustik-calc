@@ -35,6 +35,18 @@ const REPRESENTATIVE_CORES = [
   { materialId: "ytong_g5_800", thicknessMm: "100" }
 ] as const;
 
+const NON_AAC_REPRESENTATIVE_CORES = [
+  { materialId: "porotherm_pls_100", thicknessMm: "100" },
+  { materialId: "porotherm_pls_140", thicknessMm: "140" },
+  { materialId: "porotherm_pls_190", thicknessMm: "190" },
+  { materialId: "silka_cs_block", thicknessMm: "100" },
+  { materialId: "silka_cs_block", thicknessMm: "150" },
+  { materialId: "pumice_block", thicknessMm: "100" },
+  { materialId: "pumice_block", thicknessMm: "150" },
+  { materialId: "concrete", thicknessMm: "80" },
+  { materialId: "concrete", thicknessMm: "120" }
+] as const;
+
 const REPRESENTATIVE_BOARDS = [
   { materialId: "gypsum_board", thicknessMm: "12.5" },
   { materialId: "diamond_board", thicknessMm: "12.5" },
@@ -174,6 +186,55 @@ describe("dynamic route family boundary scan contracts", () => {
     });
   }, ROUTE_SCAN_TIMEOUT_MS);
 
+  it("keeps representative non-AAC workbench rows outside boundary-hold diagnostics while preserving trim visibility", () => {
+    const boundaryHits: Array<{
+      stack: string;
+      warnings: readonly string[];
+    }> = [];
+    const familyCounts = new Map<string, number>();
+    const trimCounts = new Map<string, number>();
+
+    for (const prefix of REPRESENTATIVE_PREFIXES) {
+      for (const core of NON_AAC_REPRESENTATIVE_CORES) {
+        for (const board of REPRESENTATIVE_BOARDS) {
+          const stack = buildRepresentativeStack({ board, core, prefix });
+          const result = evaluateDynamicWallPair(stack, `non-aac-${stackKey(stack)}`);
+          const trace = result.trace;
+          const trimKey = `${trace?.trimmedOuterLeadingCount ?? 0}/${trace?.trimmedOuterTrailingCount ?? 0}`;
+          const boundaryWarnings = result.warnings.filter((warning) =>
+            /boundary between|family-boundary hold|still somewhat close/i.test(warning)
+          );
+
+          familyCounts.set(result.family ?? "none", (familyCounts.get(result.family ?? "none") ?? 0) + 1);
+          trimCounts.set(trimKey, (trimCounts.get(trimKey) ?? 0) + 1);
+
+          if (
+            trace &&
+            (trace.familyDecisionClass ||
+              trace.runnerUpFamily ||
+              trace.familyBoundaryHoldApplied ||
+              boundaryWarnings.length > 0)
+          ) {
+            boundaryHits.push({
+              stack: stackKey(stack),
+              warnings: boundaryWarnings
+            });
+          }
+        }
+      }
+    }
+
+    expect(boundaryHits).toEqual([]);
+    expect(Object.fromEntries([...familyCounts.entries()].sort(([left], [right]) => left.localeCompare(right)))).toEqual({
+      lined_massive_wall: 144
+    });
+    expect(Object.fromEntries([...trimCounts.entries()].sort(([left], [right]) => left.localeCompare(right)))).toEqual({
+      "0/0": 36,
+      "1/0": 72,
+      "2/0": 36
+    });
+  }, ROUTE_SCAN_TIMEOUT_MS);
+
   it("finds no silent >=8 dB adjacent-swap jumps across the representative workbench hold palette", () => {
     const offenders: Array<{
       baseStack: string;
@@ -191,6 +252,48 @@ describe("dynamic route family boundary scan contracts", () => {
           for (let swapIndex = 0; swapIndex < stack.length - 1; swapIndex += 1) {
             const changedStack = swapAdjacent(stack, swapIndex);
             const changed = evaluateDynamicWallPair(changedStack, `swap-${swapIndex}-${stackKey(changedStack)}`);
+            const delta = Math.max(
+              Math.abs((changed.rw ?? 0) - (base.rw ?? 0)),
+              Math.abs((changed.rwPrime ?? 0) - (base.rwPrime ?? 0)),
+              Math.abs((changed.dnTw ?? 0) - (base.dnTw ?? 0))
+            );
+
+            if (delta >= 8 && !base.flagged && !changed.flagged) {
+              offenders.push({
+                baseStack: stackKey(stack),
+                changedStack: stackKey(changedStack),
+                delta,
+                swapIndex
+              });
+            }
+          }
+        }
+      }
+    }
+
+    expect(offenders).toEqual([]);
+  }, ROUTE_SCAN_TIMEOUT_MS);
+
+  it("finds no silent >=8 dB adjacent-swap jumps across the representative non-AAC workbench palette", () => {
+    const offenders: Array<{
+      baseStack: string;
+      changedStack: string;
+      delta: number;
+      swapIndex: number;
+    }> = [];
+
+    for (const prefix of REPRESENTATIVE_PREFIXES) {
+      for (const core of NON_AAC_REPRESENTATIVE_CORES) {
+        for (const board of REPRESENTATIVE_BOARDS) {
+          const stack = buildRepresentativeStack({ board, core, prefix });
+          const base = evaluateDynamicWallPair(stack, `non-aac-swap-base-${stackKey(stack)}`);
+
+          for (let swapIndex = 0; swapIndex < stack.length - 1; swapIndex += 1) {
+            const changedStack = swapAdjacent(stack, swapIndex);
+            const changed = evaluateDynamicWallPair(
+              changedStack,
+              `non-aac-swap-${swapIndex}-${stackKey(changedStack)}`
+            );
             const delta = Math.max(
               Math.abs((changed.rw ?? 0) - (base.rw ?? 0)),
               Math.abs((changed.rwPrime ?? 0) - (base.rwPrime ?? 0)),
