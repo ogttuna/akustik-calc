@@ -41,6 +41,7 @@ Document role:
   - deeper 5-layer hybrids that trim back to that morphology are now covered by direct engine and workbench matrix tests
   - exact boundary, trimmed-prefix, instability, and order-sensitivity contracts now exist on both engine and workbench routes for that corridor
   - hold trace now exposes runner-up, ceiling, current, and target metrics so the trim can be audited numerically
+  - trim trace now also exposes leading/trailing outer compliant removals so hold + trim interactions are no longer hidden inside free-form notes
   - the wider current scan evidence still shows only `ytong_aac_d700 100/120` and `ytong_g5_800 100` inside that held corridor
 - field-side support posture was tightened during validation:
   - hybrid wall-like stacks no longer surface `Rw` on assembly field bundles just because a generic impact signal existed downstream

@@ -344,6 +344,7 @@ Also assert:
 - strategy
 - confidence class
 - family-boundary hold metrics when a conservative hold is expected
+- trimmed leading/trailing outer-layer counts when trim is part of the route interpretation
 - warning presence when ambiguity is expected
 - cavity count where the topology is central to the bug
 
@@ -554,6 +555,10 @@ Shipped behavior:
   - `familyBoundaryHoldBoundaryCeilingDb`
   - `familyBoundaryHoldCurrentMetricDb`
   - `familyBoundaryHoldTargetMetricDb`
+- outer-span trimming is now also structured in trace instead of living only inside free-form notes:
+  - `trimmedOuterLayersApplied`
+  - `trimmedOuterLeadingCount`
+  - `trimmedOuterTrailingCount`
 
 Current bounded-hold constants:
 
@@ -607,6 +612,15 @@ Local findings from the current Phase B.2 pass:
 - an expanded adjacent-swap scan over the hold-active palette now also runs as an executable contract
   - current result in that palette:
     - `0` silent `>=8 dB` adjacent-swap jumps without explicit boundary/hold/order-sensitive labelling
+- representative dual-sided trim rows now also have exact engine and workbench boundary contracts
+  - current anchored samples:
+    - single-side light trim on both ends around `ytong_aac_d700 100`
+    - heavier dual-leading trim around `ytong_aac_d700 100`
+    - denser AAC sibling `ytong_g5_800 100` with trim on both ends
+  - those contracts now verify:
+    - exact `R'w` / `DnT,w`
+    - exact leading/trailing trim counts
+    - trim note and trim warning presence
 
 Residual risks after the shipped hold:
 

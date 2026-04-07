@@ -6519,6 +6519,9 @@ export function calculateDynamicAirborneResult(
     supportLayerCount: topology.supportLayerCount,
     surfaceMassKgM2: topology.surfaceMassKgM2,
     totalGapThicknessMm: topology.totalGapThicknessMm,
+    trimmedOuterLeadingCount: trimmedOuterSpan.trimmed ? trimmedOuterSpan.trimmedLeadingCount : undefined,
+    trimmedOuterLayersApplied: trimmedOuterSpan.trimmed || undefined,
+    trimmedOuterTrailingCount: trimmedOuterSpan.trimmed ? trimmedOuterSpan.trimmedTrailingCount : undefined,
     visibleLeafCount: topology.visibleLeafCount,
     visibleLeafMassRatio: topology.visibleLeafMassRatio
   };

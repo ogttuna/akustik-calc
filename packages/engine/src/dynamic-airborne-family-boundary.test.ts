@@ -308,6 +308,78 @@ describe("dynamic airborne family boundary diagnostics", () => {
     expect(Math.max(...dnTwValues) - Math.min(...dnTwValues)).toBeLessThanOrEqual(1);
   });
 
+  it("keeps dual-sided trim boundary samples inside the held corridor and exposes exact trim counts", () => {
+    const cases = [
+      {
+        decision: "ambiguous",
+        dnTw: 47,
+        leading: 1,
+        rwPrime: 46,
+        stack: [
+          { materialId: "rockwool", thicknessMm: 25 },
+          { materialId: "ytong_aac_d700", thicknessMm: 100 },
+          { materialId: "air_gap", thicknessMm: 50 },
+          { materialId: "diamond_board", thicknessMm: 12.5 },
+          { materialId: "glasswool", thicknessMm: 25 }
+        ] as const,
+        trailing: 1
+      },
+      {
+        decision: "ambiguous",
+        dnTw: 49,
+        leading: 2,
+        rwPrime: 47,
+        stack: [
+          { materialId: "air_gap", thicknessMm: 25 },
+          { materialId: "rockwool", thicknessMm: 25 },
+          { materialId: "ytong_aac_d700", thicknessMm: 100 },
+          { materialId: "air_gap", thicknessMm: 50 },
+          { materialId: "diamond_board", thicknessMm: 12.5 },
+          { materialId: "glasswool", thicknessMm: 25 }
+        ] as const,
+        trailing: 1
+      },
+      {
+        decision: "narrow",
+        dnTw: 49,
+        leading: 1,
+        rwPrime: 48,
+        stack: [
+          { materialId: "rockwool", thicknessMm: 25 },
+          { materialId: "ytong_g5_800", thicknessMm: 100 },
+          { materialId: "air_gap", thicknessMm: 50 },
+          { materialId: "security_board", thicknessMm: 12.5 },
+          { materialId: "air_gap", thicknessMm: 25 }
+        ] as const,
+        trailing: 1
+      }
+    ] as const;
+
+    for (const testCase of cases) {
+      const result = calculateDynamicWall(testCase.stack, BUILDING_CONTEXT, ["R'w", "DnT,w"]);
+
+      expect(result.dynamicAirborneTrace?.detectedFamily, stackLabel(testCase.stack)).toBe("lined_massive_wall");
+      expect(result.dynamicAirborneTrace?.familyDecisionClass, stackLabel(testCase.stack)).toBe(testCase.decision);
+      expect(result.dynamicAirborneTrace?.runnerUpFamily, stackLabel(testCase.stack)).toBe("double_leaf");
+      expect(result.dynamicAirborneTrace?.familyBoundaryHoldApplied, stackLabel(testCase.stack)).toBe(true);
+      expect(result.dynamicAirborneTrace?.trimmedOuterLayersApplied, stackLabel(testCase.stack)).toBe(true);
+      expect(result.dynamicAirborneTrace?.trimmedOuterLeadingCount, stackLabel(testCase.stack)).toBe(testCase.leading);
+      expect(result.dynamicAirborneTrace?.trimmedOuterTrailingCount, stackLabel(testCase.stack)).toBe(testCase.trailing);
+      expect(result.metrics.estimatedRwPrimeDb, stackLabel(testCase.stack)).toBe(testCase.rwPrime);
+      expect(result.metrics.estimatedDnTwDb, stackLabel(testCase.stack)).toBe(testCase.dnTw);
+      expect(
+        result.dynamicAirborneTrace?.notes.some((note) =>
+          new RegExp(`dynamic span \\(${testCase.leading} leading, ${testCase.trailing} trailing\\)`, "i").test(note)
+        ),
+        `${stackLabel(testCase.stack)} trim note`
+      ).toBe(true);
+      expect(
+        result.warnings.some((warning) => /excluded from the dynamic airborne span/i.test(warning)),
+        `${stackLabel(testCase.stack)} trim warning`
+      ).toBe(true);
+    }
+  });
+
   it("keeps strong double-stud corridors clear instead of labelling them as boundary cases", () => {
     const result = calculateDynamicWall(
       [
@@ -356,3 +428,7 @@ describe("dynamic airborne family boundary diagnostics", () => {
     ).toBe(false);
   });
 });
+
+function stackLabel(layers: readonly LayerInput[]) {
+  return layers.map((layer) => `${layer.materialId}:${layer.thicknessMm}`).join(" | ");
+}

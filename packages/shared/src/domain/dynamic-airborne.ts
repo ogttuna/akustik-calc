@@ -66,6 +66,9 @@ const DynamicAirborneTraceShape = {
   supportLayerCount: z.number().int().nonnegative(),
   surfaceMassKgM2: z.number().nonnegative(),
   totalGapThicknessMm: z.number().nonnegative(),
+  trimmedOuterLeadingCount: z.number().int().nonnegative().optional(),
+  trimmedOuterLayersApplied: z.boolean().optional(),
+  trimmedOuterTrailingCount: z.number().int().nonnegative().optional(),
   visibleLeafCount: z.number().int().nonnegative(),
   visibleLeafMassRatio: z.number().positive().optional()
 } satisfies z.ZodRawShape;
