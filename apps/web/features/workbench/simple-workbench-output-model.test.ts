@@ -39,6 +39,8 @@ describe("simple workbench output model", () => {
     const card = buildOutputCard({
       output: "Rw",
       result: buildFixture({
+        supportedTargetOutputs: ["Rw"],
+        unsupportedTargetOutputs: [],
         floorSystemRatings: {
           Rw: 75,
           RwCtr: 68,
@@ -64,6 +66,8 @@ describe("simple workbench output model", () => {
     const card = buildOutputCard({
       output: "Rw",
       result: buildFixture({
+        supportedTargetOutputs: ["Rw"],
+        unsupportedTargetOutputs: [],
         floorSystemRatings: {
           Rw: 75,
           RwCtr: 68,
@@ -80,6 +84,35 @@ describe("simple workbench output model", () => {
         label: "Rw",
         status: "live",
         value: "56 dB"
+      })
+    );
+  });
+
+  it("does not surface unsupported floor-lane companion Rw when the support bucket keeps it hidden", () => {
+    const card = buildOutputCard({
+      output: "Rw",
+      result: buildFixture({
+        floorSystemRatings: {
+          Rw: 40,
+          RwCtr: 34,
+          RwCtrSemantic: "rw_plus_ctr",
+          basis: "screening_mass_law_curve_seed_v3"
+        },
+        metrics: {
+          ...buildFixture().metrics,
+          estimatedRwDb: 39.8
+        },
+        supportedTargetOutputs: ["R'w", "DnT,w"],
+        unsupportedTargetOutputs: ["Rw", "Ln,w"]
+      }),
+      studyMode: "floor"
+    });
+
+    expect(card).toEqual(
+      expect.objectContaining({
+        label: "Rw",
+        status: "unsupported",
+        value: "Not ready"
       })
     );
   });

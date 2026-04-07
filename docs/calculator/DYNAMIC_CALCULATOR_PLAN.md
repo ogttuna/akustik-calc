@@ -25,6 +25,10 @@ Important scope note:
 
 Current execution status:
 
+- the 2026-04-07 reinforced-concrete assembly-field `Rw` support blocker is now closed:
+  - concrete screening rows with visible floor roles now keep `Rw` exposed again on the assembly route
+  - workbench `Rw` cards now also respect engine support buckets instead of surfacing unsupported floor companions
+  - the reopening stays intentionally narrow so wall-like heavy hybrids remain closed
 - Phase 0 is complete and defended by the route/support regression matrix
 - Phase 1 is complete and defended by explicit support-contract tests
 - Phase 2 is complete for the currently known raw-vs-tagged floor drift set
@@ -43,6 +47,8 @@ Current execution status:
 Current queued follow-up:
 
 - run a dedicated complex-stack torture pass on mixed floor and wall assemblies before widening any more reorder canonicalization
+- run a raw-floor screening audit before widening the new `Rw` reopening rule beyond explicit floor-role assemblies
+- run a broader workbench support-bucket vs output-card parity audit so `Rw` is not the only defended output-surface consistency check
 - use the source gap ledger and widening-candidate contract to decide which family branches are widening-first versus tightening-first
 - mine dormant exact-only source rows before inventing any broader generic family formula
 - when sourcing new TUAS rows, import the first open-box corridor tier before broader TUAS CLT expansion

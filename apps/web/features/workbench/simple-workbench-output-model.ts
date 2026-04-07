@@ -24,6 +24,13 @@ export type OutputCardModel = BaseOutputCardModel & {
   postureTone: "accent" | "neutral" | "success" | "warning";
 };
 
+function isExplicitlyUnsupportedOutput(
+  result: AssemblyCalculation | null | undefined,
+  output: RequestedOutputId
+): boolean {
+  return Boolean(result?.unsupportedTargetOutputs.includes(output));
+}
+
 export function buildUnavailableOutputDetail(input: {
   output: RequestedOutputId;
   result: AssemblyCalculation | null;
@@ -102,6 +109,10 @@ export function buildOutputCard(input: {
 
   switch (output) {
     case "Rw":
+      if (studyMode === "floor" && isExplicitlyUnsupportedOutput(result, output)) {
+        break;
+      }
+
       if (studyMode === "floor" && typeof result?.floorSystemRatings?.Rw === "number") {
         return {
           detail: "Companion airborne rating carried on the active floor lane. This can differ from the live airborne estimate shown elsewhere.",

@@ -24,6 +24,13 @@ Document role:
   - [../archive/analysis/DYNAMIC_ROUTE_STABILITY_ANALYSIS_2026-04-07.md](../archive/analysis/DYNAMIC_ROUTE_STABILITY_ANALYSIS_2026-04-07.md)
 - the living wall-side remediation note is now the canonical design for fixing those instability cases without breaking framed and masonry benchmark corridors:
   - [DYNAMIC_WALL_STABILITY_REMEDIATION.md](./DYNAMIC_WALL_STABILITY_REMEDIATION.md)
+- the cross-floor/wall remaining-work plan is now the canonical place for active blockers and the non-regressive next fix order:
+  - [DYNAMIC_CALCULATOR_REMAINING_WORK_PLAN.md](./DYNAMIC_CALCULATOR_REMAINING_WORK_PLAN.md)
+- the reinforced-concrete floor-carrier `Rw` support regression is now closed:
+  - assembly-field concrete screening rows with real floor roles now keep `Rw` exposed again
+  - the reopening is deliberately narrow: it requires visible floor-role evidence plus an active impact-backed floor carrier
+  - workbench `Rw` cards now also respect engine support buckets instead of surfacing unsupported floor-carrier companions
+  - direct engine, route parity, and output-card consistency contracts now defend that fix
 - Phase A of that wall-side remediation note is now shipped:
   - hint-only framed metadata no longer forces heavy mineral/composite stacks onto the stud-wall lane
   - heavy unframed cavity walls can now be capped against a conservative screening corridor instead of over-scoring
@@ -106,6 +113,11 @@ Important nuance:
 
 - complex mixed floor and wall stacks still need a wider manual and automated torture pass
 - the next hardening step should decide which combinations are genuinely path-invariant and which must stay physically order-sensitive
+- the concrete floor-carrier `Rw` blocker from the 2026-04-07 revalidation is now fixed, but the narrowing rule is intentionally strict:
+  - visible floor roles reopen the carrier
+  - raw wall-like heavy hybrids stay closed
+  - untagged screening-only floor-like rows do not get widened automatically just because a finite screening `Rw` exists
+  - if raw screening floors need broader `Rw` reopening later, that must come through a separate defended raw-floor inference audit rather than another generic support shortcut
 - reproduced dynamic-route duplicate and reorder instability cases are documented separately under:
   - [../archive/analysis/DYNAMIC_ROUTE_STABILITY_ANALYSIS_2026-04-07.md](../archive/analysis/DYNAMIC_ROUTE_STABILITY_ANALYSIS_2026-04-07.md)
 - the intended fix order and protected-corridor rules for that wall-side work now live under:
@@ -130,12 +142,19 @@ Important nuance:
 Work in this order:
 
 1. Run a broader complex-stack torture pass before widening normalization rules any further.
-2. Widen the new wall-side Phase B.2 evidence base before extending the hold beyond the current defended corridor:
+2. Extend floor support-parity auditing beyond `Rw` so engine support buckets and rendered cards cannot drift again silently:
+   - keep the new concrete `Rw` parity pack green
+   - audit whether any other floor outputs can still bypass `supportedTargetOutputs` at the workbench-card layer
+3. Widen the new wall-side Phase B.2 evidence base before extending the hold beyond the current defended corridor:
    - keep the current runner-up-aware hold limited to `double_leaf <-> lined_massive_wall`
    - focus next on wider-than-representative route palettes and any boundary that produces more than one plausible runner-up family outside the currently defended framed/heavy-core representative palettes
    - only widen if the next candidate pairing survives the same exact trace, scan, and workbench-parity contracts
-3. Do a mini branch-design audit for `R7a` and `R6b` before importing either row.
-4. Only after that decide whether the next widening move is TUAS branch extension, UBIQ source-trace cleanup, or the next wall-side held family pairing.
+4. Do a raw-floor inference audit before considering any broader screening-carrier reopening:
+   - single-layer raw heavy floors
+   - raw floor stacks inferred from visible finish/resilient/base packages
+   - raw heavy wall-like hybrids that must stay closed
+5. Do a mini branch-design audit for `R7a` and `R6b` before importing either row.
+6. Only after that decide whether the next widening move is TUAS branch extension, UBIQ source-trace cleanup, or the next wall-side held family pairing.
 
 Use the source gap ledger to decide which families should be researched or widened first instead of opening new lanes ad hoc:
 

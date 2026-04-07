@@ -80,6 +80,29 @@ function buildCardMap(input: {
   );
 }
 
+function evaluateFloorRows(input: {
+  airborneContext?: AirborneContext | null;
+  id: string;
+  impactFieldContext?: ImpactFieldContext | null;
+  rows: Array<{
+    floorRole: string;
+    id: string;
+    materialId: string;
+    thicknessMm: number | string;
+  }>;
+}) {
+  return evaluateScenario({
+    airborneContext: input.airborneContext ?? null,
+    id: input.id,
+    impactFieldContext: input.impactFieldContext ?? null,
+    name: input.id,
+    rows: input.rows,
+    source: "current",
+    studyMode: "floor",
+    targetOutputs: FLOOR_MATRIX_OUTPUTS
+  }).result;
+}
+
 describe("floor output availability matrix", () => {
   it("keeps heavy concrete impact floor unlocks linear across lab, field, and full building routes", () => {
     const labCards = buildCardMap({
@@ -392,6 +415,51 @@ describe("floor output availability matrix", () => {
       expect.objectContaining({
         status: "live",
         value: "64.3 dB"
+      })
+    );
+  });
+
+  it("keeps room-to-room floor Rw cards aligned with the support bucket across concrete screening and fail-closed lightweight carriers", () => {
+    const concreteResult = evaluateFloorRows({
+      airborneContext: FIELD_BETWEEN_ROOMS_CONTEXT,
+      id: "concrete-room-to-room",
+      impactFieldContext: BUILDING_PREDICTION_IMPACT_FIELD,
+      rows: [{ floorRole: "base_structure", id: "a", materialId: "concrete", thicknessMm: 150 }]
+    });
+    const openBoxResult = evaluateFloorRows({
+      airborneContext: FIELD_BETWEEN_ROOMS_CONTEXT,
+      id: "open-box-room-to-room",
+      impactFieldContext: BUILDING_PREDICTION_IMPACT_FIELD,
+      rows: [{ floorRole: "base_structure", id: "a", materialId: "open_box_timber_slab", thicknessMm: 370 }]
+    });
+
+    expect(concreteResult.supportedTargetOutputs).toContain("Rw");
+    expect(concreteResult.unsupportedTargetOutputs).not.toContain("Rw");
+    expect(
+      buildOutputCard({
+        output: "Rw",
+        result: concreteResult,
+        studyMode: "floor"
+      })
+    ).toEqual(
+      expect.objectContaining({
+        status: "live",
+        value: "55 dB"
+      })
+    );
+
+    expect(openBoxResult.supportedTargetOutputs).not.toContain("Rw");
+    expect(openBoxResult.unsupportedTargetOutputs).toContain("Rw");
+    expect(
+      buildOutputCard({
+        output: "Rw",
+        result: openBoxResult,
+        studyMode: "floor"
+      })
+    ).toEqual(
+      expect.objectContaining({
+        status: "unsupported",
+        value: "Not ready"
       })
     );
   });

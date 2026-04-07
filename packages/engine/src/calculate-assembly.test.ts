@@ -6522,6 +6522,68 @@ describe("calculateAssembly", () => {
     expect(result.unsupportedTargetOutputs).toEqual([]);
   });
 
+  it("restores screening-backed concrete floor Rw on room-to-room routes without reopening fail-closed lightweight carriers", () => {
+    const roomToRoomOptions = {
+      airborneContext: {
+        contextMode: "field_between_rooms" as const,
+        panelHeightMm: 2800,
+        panelWidthMm: 3200,
+        receivingRoomRt60S: 0.6,
+        receivingRoomVolumeM3: 55
+      },
+      impactFieldContext: {
+        fieldKDb: 2,
+        receivingRoomVolumeM3: 55
+      },
+      targetOutputs: ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"] as const
+    };
+    const concreteBare = calculateAssembly(
+      [{ floorRole: "base_structure", materialId: "concrete", thicknessMm: 150 }],
+      roomToRoomOptions
+    );
+    const concreteCeilingOnly = calculateAssembly(
+      [
+        { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 16 },
+        { floorRole: "ceiling_cavity", materialId: "genieclip_rst", thicknessMm: 90 },
+        { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 90 },
+        { floorRole: "base_structure", materialId: "concrete", thicknessMm: 150 }
+      ],
+      roomToRoomOptions
+    );
+    const openBoxBare = calculateAssembly(
+      [{ floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }],
+      roomToRoomOptions
+    );
+    const wallLikeConcreteHybrid = calculateAssembly(
+      [
+        { materialId: "gypsum_board", thicknessMm: 12.5 },
+        { materialId: "concrete", thicknessMm: 120 },
+        { materialId: "gypsum_board", thicknessMm: 12.5 }
+      ],
+      roomToRoomOptions
+    );
+
+    expect(concreteBare.impact?.basis).toBe("mixed_predicted_plus_estimated_standardized_field_volume_normalization");
+    expect(concreteBare.floorSystemRatings?.basis).toBe("screening_mass_law_curve_seed_v3");
+    expect(concreteBare.supportedTargetOutputs).toEqual(["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]);
+    expect(concreteBare.unsupportedTargetOutputs).toEqual([]);
+
+    expect(concreteCeilingOnly.impact?.basis).toBe("mixed_predicted_plus_estimated_standardized_field_volume_normalization");
+    expect(concreteCeilingOnly.floorSystemRatings?.basis).toBe("screening_mass_law_curve_seed_v3");
+    expect(concreteCeilingOnly.supportedTargetOutputs).toEqual(["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]);
+    expect(concreteCeilingOnly.unsupportedTargetOutputs).toEqual([]);
+
+    expect(openBoxBare.impact).toBeNull();
+    expect(openBoxBare.floorSystemRatings?.basis).toBe("screening_mass_law_curve_seed_v3");
+    expect(openBoxBare.supportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
+    expect(openBoxBare.unsupportedTargetOutputs).toEqual(["Rw", "Ln,w", "L'n,w", "L'nT,w"]);
+
+    expect(wallLikeConcreteHybrid.impact).not.toBeNull();
+    expect(wallLikeConcreteHybrid.floorSystemRatings?.basis).toBe("screening_mass_law_curve_seed_v3");
+    expect(wallLikeConcreteHybrid.supportedTargetOutputs).toEqual(["R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]);
+    expect(wallLikeConcreteHybrid.unsupportedTargetOutputs).toEqual(["Rw"]);
+  });
+
   it("can expose an official approximate DnT,A,k companion even when live DnT,A geometry is still incomplete", () => {
     const layers = [
       { materialId: "skim_plaster", thicknessMm: 3 },

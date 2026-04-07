@@ -795,6 +795,7 @@ export function calculateAssembly(
     predictorAdaptation?.sourceLayers.length && !predictorAdaptation.officialFloorSystemId
       ? null
       : maybeInferFloorRoleLayerStack(layers, catalog);
+  const hasVisibleFloorCarrier = layers.some((layer) => Boolean(layer.floorRole));
   let impactResolvedLayers =
     predictorAdaptation?.sourceLayers.length && !predictorAdaptation.officialFloorSystemId
       ? resolveLayers(predictorAdaptation.sourceLayers, catalog)
@@ -975,13 +976,17 @@ export function calculateAssembly(
         screeningRwDb: explicitPredictorInput ? null : ratings.iso717.Rw,
         screeningRwPlusCtrDb: explicitPredictorInput ? null : round1(ratings.iso717.Rw + ratings.iso717.Ctr)
       });
+  const hasImpactBackedScreeningFloorCarrierSignal = Boolean(
+    impact && floorSystemRatings && hasVisibleFloorCarrier
+  );
   const hasFloorSupportCarrierSignal = Boolean(
     floorSystemMatch ||
       floorSystemEstimate ||
       boundFloorSystemMatch ||
       boundFloorSystemEstimate ||
       impactCatalogMatch ||
-      explicitDeltaImpact
+      explicitDeltaImpact ||
+      hasImpactBackedScreeningFloorCarrierSignal
   );
   const targetOutputSupport = analyzeTargetOutputSupport({
     floorCarrier: hasFloorSupportCarrierSignal ? floorSystemRatings ?? floorCarrier : null,
