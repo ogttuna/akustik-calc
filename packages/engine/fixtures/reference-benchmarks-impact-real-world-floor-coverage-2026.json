@@ -68,7 +68,7 @@
       }
     },
     {
-      "id": "open_box_timber_measured_family",
+      "id": "open_box_timber_measured_family_b",
       "family": "open_box_timber",
       "kind": "exact_match",
       "source": "TUAS open measured dataset + dynamicCalc/REAL_WORLD_FLOOR_COVERAGE.md",
@@ -77,6 +77,32 @@
         { "floorRole": "ceiling_board", "materialId": "gypsum_board", "thicknessMm": 13 },
         { "floorRole": "ceiling_fill", "materialId": "rockwool", "thicknessMm": 100 },
         { "floorRole": "ceiling_cavity", "materialId": "resilient_stud_ceiling", "thicknessMm": 25 },
+        { "floorRole": "floor_covering", "materialId": "laminate_flooring", "thicknessMm": 8 },
+        { "floorRole": "resilient_layer", "materialId": "eps_underlay", "thicknessMm": 3 },
+        { "floorRole": "base_structure", "materialId": "open_box_timber_slab", "thicknessMm": 370 }
+      ],
+      "expected": {
+        "floorRwDb": 62,
+        "floorSystemId": "tuas_r2b_open_box_timber_measured_2026",
+        "impactBasis": "open_measured_floor_system_exact_match",
+        "impactMetric": "LnW",
+        "impactValueDb": 55
+      },
+      "tolerances": {
+        "floorRwDb": 0,
+        "impactValueDb": 0
+      }
+    },
+    {
+      "id": "open_box_timber_measured_family_a",
+      "family": "open_box_timber",
+      "kind": "exact_match",
+      "source": "TUAS open measured dataset + dynamicCalc/REAL_WORLD_FLOOR_COVERAGE.md",
+      "layers": [
+        { "floorRole": "ceiling_board", "materialId": "gypsum_board", "thicknessMm": 13 },
+        { "floorRole": "ceiling_board", "materialId": "gypsum_board", "thicknessMm": 13 },
+        { "floorRole": "ceiling_fill", "materialId": "rockwool", "thicknessMm": 100 },
+        { "floorRole": "ceiling_cavity", "materialId": "tuas_open_box_ceiling_family_a", "thicknessMm": 25 },
         { "floorRole": "floor_covering", "materialId": "laminate_flooring", "thicknessMm": 8 },
         { "floorRole": "resilient_layer", "materialId": "eps_underlay", "thicknessMm": 3 },
         { "floorRole": "base_structure", "materialId": "open_box_timber_slab", "thicknessMm": 370 }

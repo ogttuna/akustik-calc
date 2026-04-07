@@ -55,12 +55,12 @@ Interpretation:
 
 Current verified result:
 
-- standard route floor corridor: green
-  - `9` files
-  - `224` tests
-- standard engine floor corridor plus support cross-check pack: green
-  - `18` files
-  - `321` tests
+- standard route floor corridor plus support/card parity pack: green
+  - `11` files
+  - `227` tests
+- standard engine floor corridor plus support/raw-screening cross-check pack: green
+  - `23` files
+  - `311` tests
 
 Interpretation:
 
@@ -103,6 +103,14 @@ The fix now does two things:
   - [floor-output-availability-matrix.test.ts](../../apps/web/features/workbench/floor-output-availability-matrix.test.ts)
 - direct card-model parity:
   - [simple-workbench-output-model.test.ts](../../apps/web/features/workbench/simple-workbench-output-model.test.ts)
+- broader representative card/support audit:
+  - [floor-output-card-support-parity.test.ts](../../apps/web/features/workbench/floor-output-card-support-parity.test.ts)
+- representative raw-screening carrier audit:
+  - [raw-floor-screening-carrier-support.test.ts](../../packages/engine/src/raw-floor-screening-carrier-support.test.ts)
+- representative raw-screening route audit:
+  - [raw-floor-screening-route-support.test.ts](../../apps/web/features/workbench/raw-floor-screening-route-support.test.ts)
+- real-world open-box branch-split benchmark:
+  - [impact-real-world-floor-coverage.test.ts](../../packages/engine/src/impact-real-world-floor-coverage.test.ts)
 - broad negative guard that stayed green during the fix:
   - [output-combination-sweep.test.ts](../../packages/engine/src/output-combination-sweep.test.ts)
 
@@ -113,8 +121,8 @@ The fix now does two things:
   - the shipped fix is intentionally narrow
   - it protects real floor-role assemblies without widening raw heavy screening rows automatically
 - remaining caution:
-  - raw untagged screening-only floors are still a deliberate separate audit problem
-  - if those rows need `Rw` reopening later, that must go through raw-floor inference evidence, not another generic support shortcut
+  - the first representative raw-screening carrier audits are now defended, but they are not a license to widen every raw screening row
+  - if broader raw rows need `Rw` reopening later, that must go through wider raw-floor inference evidence, not another generic support shortcut
 
 ## 4. Remaining Wall Plan
 
@@ -190,7 +198,10 @@ After the concrete `Rw` support regression is fixed, floor work should return to
 - mixed floor/wall complex stacks still need a broader torture pass
 - raw-vs-tagged parity is defended only on the currently harvested corridors
 - intentionally fail-closed structural carriers still need source-led widening decisions
-- route coverage does not yet pin every engine-side support nuance on representative screening rows
+- route coverage now defends representative support-bucket/card parity and representative raw-screening posture, but not yet every wider raw-screening widening decision
+- the TUAS open-box real-world coverage fixture is now aligned with the defended `a/b` branch split:
+  - generic `resilient_stud_ceiling` basic rows bind to `R2b`
+  - explicit `tuas_open_box_ceiling_family_a` rows bind to `R2a`
 
 ### Risk Level
 
@@ -203,25 +214,20 @@ After the concrete `Rw` support regression is fixed, floor work should return to
 
 ### Safe Floor Fix Order
 
-1. fix the active concrete support regression
-2. run a broader complex-stack torture pass before any new widening
+1. run a broader complex-stack torture pass before any new widening
 
-3. audit raw-floor screening-carrier posture explicitly before reopening any more `Rw` support:
+2. extend the raw-floor screening-carrier audit beyond the current representative rows before reopening any more `Rw` support:
    - single-layer raw heavy floors
    - raw inferred floor packages with clear upper/lower treatment evidence
    - raw wall-like heavy hybrids that must stay closed
 
-4. add a broader support-bucket vs output-card parity pass:
-   - `Rw` is now defended
-   - check whether any other floor outputs can still bypass support buckets on the workbench surface
-
-5. continue source-led widening only in this order:
+3. continue source-led widening only in this order:
    - open-box timber corridor decisions
    - open-web steel corridor decisions
    - CLT family tightening
    - only then any broader generic family opening
 
-5. keep unsupported raw lanes fail-closed unless the source corpus clearly supports them
+4. keep unsupported raw lanes fail-closed unless the source corpus clearly supports them
 
 ### Likely Code Touch Surface
 

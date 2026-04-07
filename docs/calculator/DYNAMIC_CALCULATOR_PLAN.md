@@ -29,6 +29,7 @@ Current execution status:
   - concrete screening rows with visible floor roles now keep `Rw` exposed again on the assembly route
   - workbench `Rw` cards now also respect engine support buckets instead of surfacing unsupported floor companions
   - the reopening stays intentionally narrow so wall-like heavy hybrids remain closed
+  - representative raw-screening carrier audits are now in place on both engine and route layers, so that narrow reopening is defended explicitly rather than implied
 - Phase 0 is complete and defended by the route/support regression matrix
 - Phase 1 is complete and defended by explicit support-contract tests
 - Phase 2 is complete for the currently known raw-vs-tagged floor drift set
@@ -47,8 +48,8 @@ Current execution status:
 Current queued follow-up:
 
 - run a dedicated complex-stack torture pass on mixed floor and wall assemblies before widening any more reorder canonicalization
-- run a raw-floor screening audit before widening the new `Rw` reopening rule beyond explicit floor-role assemblies
-- run a broader workbench support-bucket vs output-card parity audit so `Rw` is not the only defended output-surface consistency check
+- extend the current representative raw-floor screening audit before widening the new `Rw` reopening rule beyond explicit floor-role assemblies
+- the broader workbench support-bucket vs output-card parity audit is now in place for representative floor presets and raw floor/raw hybrid scenarios
 - use the source gap ledger and widening-candidate contract to decide which family branches are widening-first versus tightening-first
 - mine dormant exact-only source rows before inventing any broader generic family formula
 - when sourcing new TUAS rows, import the first open-box corridor tier before broader TUAS CLT expansion
@@ -57,6 +58,9 @@ Current queued follow-up:
   - predictor-side exact inference carries the explicit `a/b` suspended-ceiling support-class split
   - the visible-layer/workbench material route now exposes `family_a` through `tuas_open_box_ceiling_family_a`
   - `R2b` is now source-cleared and imported as the basic `b`-family anchor because `TUAS2023FloorConstructionDrawingsR1.pdf` shows it uses the existing visible-layer shorthand directly
+  - the real-world lab coverage benchmark now also reflects that defended split explicitly:
+    - generic `resilient_stud_ceiling` basic rows land on `R2b`
+    - explicit `tuas_open_box_ceiling_family_a` basic rows land on `R2a`
   - the next TUAS open-box decision is to verify whether `R7a` and `R6b` are true corridor extensions or separate branch structures before importing anything beyond the defended corridor
 - on the UBIQ open-web side, the first same-family FL-28 corridor fill is now complete:
   - visible FL-28 `16 mm INEX>FLOOR` exact siblings are imported

@@ -31,6 +31,15 @@ Document role:
   - the reopening is deliberately narrow: it requires visible floor-role evidence plus an active impact-backed floor carrier
   - workbench `Rw` cards now also respect engine support buckets instead of surfacing unsupported floor-carrier companions
   - direct engine, route parity, and output-card consistency contracts now defend that fix
+- representative floor output-card parity is now defended more broadly:
+  - the workbench card model now fail-closes any explicitly unsupported requested output before reading live/bound values
+  - representative preset matrices and raw floor/raw hybrid scenarios now assert that supported outputs never render as `unsupported/needs_input`, and unsupported outputs never render as `live/bound`
+  - floor route parity is therefore no longer guarded only on `Rw`; it now has a broader representative support-bucket/card audit
+- representative raw-floor screening posture is now defended explicitly on both engine and route layers:
+  - raw concrete single-layer and upper-treatment rows keep the intended split between closed and reopened field-side `Rw`
+  - raw open-box rows stay fail-closed on field-side `Rw`
+  - raw hollow-core screening rows keep their defended reopened carrier posture
+  - raw wall-like heavy hybrids stay closed even when a finite screening carrier `Rw` exists
 - Phase A of that wall-side remediation note is now shipped:
   - hint-only framed metadata no longer forces heavy mineral/composite stacks onto the stud-wall lane
   - heavy unframed cavity walls can now be capped against a conservative screening corridor instead of over-scoring
@@ -75,6 +84,10 @@ Document role:
   - `R2b` is now drawing-cleared and imported as the basic `b`-family anchor
   - remaining open-box shortlist for geometry audit: `R7a`, `R6b`
   - lower-priority numeric outliers stay deferred until drawings justify them: `R6a`, `R10a`, `R7b`, `R8b`, `R9b`, `R2c`
+- the real-world open-box coverage benchmark now matches the defended visible-layer truth surface:
+  - generic `resilient_stud_ceiling` basic rows anchor `R2b`
+  - explicit `tuas_open_box_ceiling_family_a` basic rows anchor `R2a`
+  - the coverage fixture no longer aliases a generic `b` shorthand row to the `a` branch
 - the first UBIQ same-family sibling import pass is now complete:
   - exact coverage now includes visible `FL-28` open-web `16 mm INEX>FLOOR` siblings at `200`, `300`, `400`
   - bound coverage now includes the visible `FL-28 (FRL/D)` open-web `400` row
@@ -117,7 +130,7 @@ Important nuance:
   - visible floor roles reopen the carrier
   - raw wall-like heavy hybrids stay closed
   - untagged screening-only floor-like rows do not get widened automatically just because a finite screening `Rw` exists
-  - if raw screening floors need broader `Rw` reopening later, that must come through a separate defended raw-floor inference audit rather than another generic support shortcut
+  - the first representative raw-screening audits are now green, but broader reopening still requires wider inference evidence rather than another generic support shortcut
 - reproduced dynamic-route duplicate and reorder instability cases are documented separately under:
   - [../archive/analysis/DYNAMIC_ROUTE_STABILITY_ANALYSIS_2026-04-07.md](../archive/analysis/DYNAMIC_ROUTE_STABILITY_ANALYSIS_2026-04-07.md)
 - the intended fix order and protected-corridor rules for that wall-side work now live under:
@@ -142,19 +155,16 @@ Important nuance:
 Work in this order:
 
 1. Run a broader complex-stack torture pass before widening normalization rules any further.
-2. Extend floor support-parity auditing beyond `Rw` so engine support buckets and rendered cards cannot drift again silently:
-   - keep the new concrete `Rw` parity pack green
-   - audit whether any other floor outputs can still bypass `supportedTargetOutputs` at the workbench-card layer
+2. Extend the raw-floor inference audit beyond the current representative screening rows before considering any broader screening-carrier reopening:
+   - single-layer raw heavy floors
+   - raw floor stacks inferred from visible finish/resilient/base packages
+   - raw heavy wall-like hybrids that must stay closed
 3. Widen the new wall-side Phase B.2 evidence base before extending the hold beyond the current defended corridor:
    - keep the current runner-up-aware hold limited to `double_leaf <-> lined_massive_wall`
    - focus next on wider-than-representative route palettes and any boundary that produces more than one plausible runner-up family outside the currently defended framed/heavy-core representative palettes
    - only widen if the next candidate pairing survives the same exact trace, scan, and workbench-parity contracts
-4. Do a raw-floor inference audit before considering any broader screening-carrier reopening:
-   - single-layer raw heavy floors
-   - raw floor stacks inferred from visible finish/resilient/base packages
-   - raw heavy wall-like hybrids that must stay closed
-5. Do a mini branch-design audit for `R7a` and `R6b` before importing either row.
-6. Only after that decide whether the next widening move is TUAS branch extension, UBIQ source-trace cleanup, or the next wall-side held family pairing.
+4. Do a mini branch-design audit for `R7a` and `R6b` before importing either row.
+5. Only after that decide whether the next widening move is TUAS branch extension, UBIQ source-trace cleanup, or the next wall-side held family pairing.
 
 Use the source gap ledger to decide which families should be researched or widened first instead of opening new lanes ad hoc:
 

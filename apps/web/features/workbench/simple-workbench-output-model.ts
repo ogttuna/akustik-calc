@@ -28,7 +28,7 @@ function isExplicitlyUnsupportedOutput(
   result: AssemblyCalculation | null | undefined,
   output: RequestedOutputId
 ): boolean {
-  return Boolean(result?.unsupportedTargetOutputs.includes(output));
+  return Boolean(result?.unsupportedTargetOutputs?.includes(output));
 }
 
 export function buildUnavailableOutputDetail(input: {
@@ -107,12 +107,18 @@ export function buildOutputCard(input: {
   const fieldRatings = result?.ratings.field;
   const isImpactOnlyLowConfidenceLane = isImpactOnlyLowConfidenceFloorLane(result);
 
+  if (isExplicitlyUnsupportedOutput(result, output)) {
+    return {
+      detail: buildUnavailableOutputDetail({ output, result: result ?? null, studyMode }),
+      label: REQUESTED_OUTPUT_LABELS[output],
+      output,
+      status: isRouteBlockedOutput({ output, result: result ?? null, studyMode }) ? "needs_input" : "unsupported",
+      value: "Not ready"
+    };
+  }
+
   switch (output) {
     case "Rw":
-      if (studyMode === "floor" && isExplicitlyUnsupportedOutput(result, output)) {
-        break;
-      }
-
       if (studyMode === "floor" && typeof result?.floorSystemRatings?.Rw === "number") {
         return {
           detail: "Companion airborne rating carried on the active floor lane. This can differ from the live airborne estimate shown elsewhere.",
