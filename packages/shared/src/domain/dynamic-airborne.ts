@@ -16,6 +16,9 @@ export type DynamicAirborneFamily = z.infer<typeof DynamicAirborneFamilySchema>;
 export const DynamicAirborneConfidenceClassSchema = z.enum(["low", "medium", "high"]);
 export type DynamicAirborneConfidenceClass = z.infer<typeof DynamicAirborneConfidenceClassSchema>;
 
+export const DynamicAirborneFamilyDecisionClassSchema = z.enum(["clear", "narrow", "ambiguous"]);
+export type DynamicAirborneFamilyDecisionClass = z.infer<typeof DynamicAirborneFamilyDecisionClassSchema>;
+
 export const DynamicAirborneDelegateMethodSchema = z.enum([
   "screening_mass_law_curve_seed_v3",
   "ks_rw_calibrated",
@@ -41,11 +44,15 @@ const DynamicAirborneTraceShape = {
   confidenceScore: z.number().min(0).max(1),
   detectedFamily: DynamicAirborneFamilySchema,
   detectedFamilyLabel: z.string().min(1),
+  familyDecisionClass: DynamicAirborneFamilyDecisionClassSchema.optional(),
+  familyDecisionMargin: z.number().nonnegative().optional(),
   hasPorousFill: z.boolean(),
   hasStudLikeSupport: z.boolean(),
   notes: z.array(z.string()),
   originalSolidLayerCount: z.number().int().nonnegative(),
   porousLayerCount: z.number().int().nonnegative(),
+  runnerUpFamily: DynamicAirborneFamilySchema.optional(),
+  runnerUpFamilyLabel: z.string().min(1).optional(),
   selectedLabel: z.string().min(1),
   selectedMethod: DynamicAirborneDelegateMethodSchema,
   solverSpreadRwDb: z.number().nonnegative(),

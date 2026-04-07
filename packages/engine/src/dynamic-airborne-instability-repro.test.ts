@@ -76,7 +76,7 @@ const WORKBENCH_MOVE_STACK: readonly LayerInput[] = [
 const EXPLICIT_DUPLICATE_VARIANTS = [
   {
     base: {
-      confidence: "medium",
+      confidence: "low",
       dnTw: 55,
       family: "double_leaf",
       rw: 63,
@@ -416,7 +416,7 @@ describe("dynamic airborne stability contracts", () => {
       rwPrime: base.rwPrime,
       strategy: base.strategy
     }).toEqual({
-      confidence: "medium",
+      confidence: "low",
       dnTw: 55,
       family: "double_leaf",
       rw: 63,
@@ -449,6 +449,11 @@ describe("dynamic airborne stability contracts", () => {
     expectWarningFragment(
       base.warnings,
       "heavy unframed cavity cap was applied",
+      "explicit duplicate base"
+    );
+    expectWarningFragment(
+      base.warnings,
+      "boundary between Double Leaf and Lined Massive Wall",
       "explicit duplicate base"
     );
   });
@@ -495,7 +500,7 @@ describe("dynamic airborne stability contracts", () => {
       rwPrime: moved.rwPrime,
       strategy: moved.strategy
     }).toEqual({
-      confidence: "medium",
+      confidence: "low",
       dnTw: 55,
       family: "double_leaf",
       rw: 62,
@@ -508,6 +513,11 @@ describe("dynamic airborne stability contracts", () => {
     expectWarningFragment(
       moved.warnings,
       "Explicit framed-wall metadata was not allowed to force the stud-wall lane",
+      "explicit move changed"
+    );
+    expectWarningFragment(
+      moved.warnings,
+      "boundary between Double Leaf and Lined Massive Wall",
       "explicit move changed"
     );
   });

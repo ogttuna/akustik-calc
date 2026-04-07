@@ -2,6 +2,7 @@ import type {
   AirborneContext,
   AssemblyRatings,
   DynamicAirborneConfidenceClass,
+  DynamicAirborneFamilyDecisionClass,
   DynamicAirborneDelegateMethod,
   DynamicAirborneFamily,
   DynamicAirborneTrace,
@@ -460,6 +461,21 @@ type HeavyUnframedCavityRiskSummary = {
   boardMassFraction: number;
   maxLeafMassKgM2: number;
   minLeafMassKgM2: number;
+};
+
+type MultileafOrderSensitivitySummary = {
+  boardInsertedTripleLeaf: boolean;
+  hasOrderSensitiveMultileaf: boolean;
+  innerLeafCount: number;
+  lightInnerLeaf: boolean;
+};
+
+type FamilyDecisionBoundarySummary = {
+  decisionClass: DynamicAirborneFamilyDecisionClass;
+  margin: number | null;
+  runnerUpFamily: DynamicAirborneFamily | null;
+  runnerUpScore: number | null;
+  selectedScore: number | null;
 };
 
 function normalizeFramingHint(airborneContext?: AirborneContext | null): DynamicFramingHint {
@@ -966,6 +982,145 @@ function summarizeHeavyUnframedCavityRisk(
     boardMassFraction: framingEvidence.boardMassFraction,
     maxLeafMassKgM2: ksRound1(maxLeafMassKgM2),
     minLeafMassKgM2: ksRound1(minLeafMassKgM2)
+  };
+}
+
+function summarizeMultileafOrderSensitivity(
+  layers: readonly ResolvedLayer[],
+  topology: ReturnType<typeof summarizeAirborneTopology>
+): MultileafOrderSensitivitySummary {
+  const layout = detectLeafCoreLayout(layers);
+  const innerLeafIndexes = layout.solidLeafIndexes.slice(1, -1);
+  const innerLeaves = innerLeafIndexes
+    .map((index) => layout.collapsedLayers[index])
+    .filter((layer): layer is ResolvedLayer => Boolean(layer));
+  const lightInnerLeaf = innerLeaves.some((layer) => layer.surfaceMassKgM2 <= 25);
+  const boardInsertedTripleLeaf =
+    topology.visibleLeafCount === 3 &&
+    topology.cavityCount === 2 &&
+    innerLeaves.some((layer) => isBoardLikeLayer(layer) || layer.surfaceMassKgM2 <= 25);
+
+  return {
+    boardInsertedTripleLeaf,
+    hasOrderSensitiveMultileaf: topology.visibleLeafCount >= 3 && topology.cavityCount >= 2,
+    innerLeafCount: innerLeaves.length,
+    lightInnerLeaf
+  };
+}
+
+function normalizeBoundarySignal(value: number, start: number, end: number): number {
+  if (!(Number.isFinite(value) && Number.isFinite(start) && Number.isFinite(end)) || end <= start) {
+    return 0;
+  }
+
+  return clamp((value - start) / (end - start), 0, 1);
+}
+
+function summarizeFamilyDecisionBoundary(
+  layers: readonly ResolvedLayer[],
+  topology: ReturnType<typeof summarizeAirborneTopology>,
+  framingHint: DynamicFramingHint,
+  selectedFamily: DynamicAirborneFamily
+): FamilyDecisionBoundarySummary {
+  if (
+    topology.visibleLeafCount !== 2 ||
+    topology.cavityCount !== 1 ||
+    (selectedFamily !== "double_leaf" &&
+      selectedFamily !== "lined_massive_wall" &&
+      selectedFamily !== "stud_wall_system" &&
+      selectedFamily !== "double_stud_system")
+  ) {
+    return {
+      decisionClass: "clear",
+      margin: null,
+      runnerUpFamily: null,
+      runnerUpScore: null,
+      selectedScore: null
+    };
+  }
+
+  const framingEvidence = summarizeFramingEvidence(layers, topology, framingHint);
+  const doubleStudSignature = summarizeDoubleStudSignature(layers, topology, framingHint);
+  const masonryProfile = summarizeSingleLeafMasonryProfile(layers);
+  const dominantLeafMassKgM2 = Math.max(...topology.visibleLeafMassesKgM2, 0);
+  const lightestLeafMassKgM2 = Math.min(...topology.visibleLeafMassesKgM2.filter((value) => value > 0));
+  const asymmetry = topology.visibleLeafMassRatio ?? 1;
+  const heavyDominantSignal = normalizeBoundarySignal(dominantLeafMassKgM2, 70, 100);
+  const lightLiningSignal = 1 - normalizeBoundarySignal(lightestLeafMassKgM2, 12, 25);
+  const asymmetrySignal = normalizeBoundarySignal(asymmetry, 4, 8);
+  const balancedMassSignal = 1 - normalizeBoundarySignal(dominantLeafMassKgM2, 70, 120);
+  const balancedLeafSignal = normalizeBoundarySignal(lightestLeafMassKgM2, 10, 25);
+  const symmetrySignal = 1 - normalizeBoundarySignal(asymmetry, 2.5, 8);
+  const boardDominanceSignal = normalizeBoundarySignal(framingEvidence.boardMassFraction, 0.45, 0.75);
+  const masonrySignal = normalizeBoundarySignal(masonryProfile.masonryMassRatio, 0.3, 0.7);
+
+  const doubleLeafScore = clamp(
+    0.22 +
+      (topology.hasPorousFill ? 0.1 : 0.06) +
+      0.18 * symmetrySignal +
+      0.2 * balancedMassSignal +
+      0.12 * balancedLeafSignal +
+      (framingEvidence.studEligible ? -0.15 : 0.05) +
+      (dominantLeafMassKgM2 >= 70 && lightestLeafMassKgM2 <= 20 ? -0.08 : 0),
+    0,
+    0.98
+  );
+  const linedMassiveScore = clamp(
+    (dominantLeafMassKgM2 >= 70 ? 0.15 : 0) +
+      0.38 * heavyDominantSignal +
+      0.17 * lightLiningSignal +
+      0.08 * asymmetrySignal +
+      0.12 * masonrySignal +
+      (framingEvidence.studEligible ? -0.15 : 0),
+    0,
+    0.98
+  );
+  const studScore = clamp(
+    (framingEvidence.supportEvidence ? 0.6 : framingEvidence.studEligible ? 0.45 : 0) +
+      0.18 * boardDominanceSignal +
+      (framingEvidence.boardDominantFramedMorphology ? 0.12 : 0) +
+      (doubleStudSignature.likelyDoubleStud ? -0.18 : 0) +
+      (dominantLeafMassKgM2 >= 70 ? -0.12 : 0),
+    0,
+    0.98
+  );
+  const doubleStudScore = clamp(
+    (doubleStudSignature.likelyDoubleStud ? 0.82 : 0) +
+      (doubleStudSignature.independentTrack ? 0.08 : 0) +
+      (doubleStudSignature.splitGapSignature ? 0.05 : 0),
+    0,
+    0.98
+  );
+
+  const scoredFamilies: Array<{ family: DynamicAirborneFamily; score: number }> = [
+    { family: "double_leaf", score: doubleLeafScore },
+    { family: "lined_massive_wall", score: linedMassiveScore },
+    { family: "stud_wall_system", score: studScore },
+    { family: "double_stud_system", score: doubleStudScore }
+  ]
+    .filter((entry) => entry.score >= 0.15 || entry.family === selectedFamily)
+    .sort((left, right) => right.score - left.score);
+
+  const selected = scoredFamilies.find((entry) => entry.family === selectedFamily) ?? null;
+  const runnerUp = scoredFamilies.find((entry) => entry.family !== selectedFamily) ?? null;
+  const margin =
+    selected && runnerUp ? ksRound1(Math.max(selected.score - runnerUp.score, 0)) : null;
+
+  let decisionClass: DynamicAirborneFamilyDecisionClass = "clear";
+  if (selected && runnerUp && runnerUp.score >= 0.3) {
+    if (selected.score < runnerUp.score || (margin !== null && margin <= 0.1)) {
+      decisionClass = "ambiguous";
+    } else if (margin !== null && margin <= 0.2) {
+      decisionClass = "narrow";
+    }
+  }
+
+  return {
+    decisionClass,
+    margin,
+    runnerUpFamily: runnerUp?.family ?? null,
+    runnerUpScore: runnerUp?.score ?? null,
+    selectedScore: selected?.score ?? null
   };
 }
 
@@ -5387,8 +5542,10 @@ function buildConfidenceScore(
   solverSpreadRwDb: number,
   adjustmentDb: number,
   options?: {
+    familyDecisionClass?: DynamicAirborneFamilyDecisionClass;
     heavyUnframedCavity?: boolean;
     hintOnlyFramingSuppressed?: boolean;
+    orderSensitiveMultileaf?: boolean;
     trimmedOuterLayers?: boolean;
   }
 ): number {
@@ -5451,6 +5608,16 @@ function buildConfidenceScore(
     score -= 0.04;
   }
 
+  if (options?.orderSensitiveMultileaf) {
+    score -= 0.08;
+  }
+
+  if (options?.familyDecisionClass === "narrow") {
+    score -= 0.03;
+  } else if (options?.familyDecisionClass === "ambiguous") {
+    score -= 0.05;
+  }
+
   return ksRound1(clamp(score, 0.35, 0.92));
 }
 
@@ -5464,7 +5631,14 @@ export function calculateDynamicAirborneResult(
   const framingHint = normalizeFramingHint(options.airborneContext);
   const framingEvidence = summarizeFramingEvidence(analysisLayers, topology, framingHint);
   const heavyUnframedCavityRisk = summarizeHeavyUnframedCavityRisk(analysisLayers, topology, framingHint);
+  const multileafOrderSensitivity = summarizeMultileafOrderSensitivity(analysisLayers, topology);
   const family = detectDynamicFamily(analysisLayers, framingHint);
+  const familyDecisionBoundary = summarizeFamilyDecisionBoundary(
+    analysisLayers,
+    topology,
+    framingHint,
+    family.family
+  );
   const blendSelection = chooseBlend(family.family, analysisLayers, framingHint);
   const effectiveScreeningEstimatedRwDb = trimmedOuterSpan.trimmed
     ? estimateRwDb(analysisLayers)
@@ -5836,8 +6010,10 @@ export function calculateDynamicAirborneResult(
     solverSpreadRwDb,
     blendSelection.blend.adjustmentsDb,
     {
+      familyDecisionClass: familyDecisionBoundary.decisionClass,
       heavyUnframedCavity: heavyUnframedCavityRisk.applies,
       hintOnlyFramingSuppressed: framingEvidence.explicitHintOnly && !framingEvidence.studEligible,
+      orderSensitiveMultileaf: multileafOrderSensitivity.hasOrderSensitiveMultileaf,
       trimmedOuterLayers: trimmedOuterSpan.trimmed
     }
   );
@@ -5931,6 +6107,27 @@ export function calculateDynamicAirborneResult(
   if (heavyUnframedCavityCap.applied) {
     warnings.push(
       "A heavy unframed cavity cap was applied because the selected cavity-wall family was outrunning a conservative mass-based corridor on a heavy composite topology."
+    );
+  }
+
+  if (multileafOrderSensitivity.boardInsertedTripleLeaf) {
+    warnings.push(
+      "A lightweight internal leaf sits between two compliant cavities, creating a triple-leaf partition. Small reorder changes can legitimately move the result materially, so this assembly should stay order-sensitive."
+    );
+  } else if (multileafOrderSensitivity.hasOrderSensitiveMultileaf) {
+    warnings.push(
+      "More than two visible leaves and more than one cavity were detected. This multi-leaf partition is intentionally order-sensitive, so small layer moves can legitimately change the result."
+    );
+  }
+
+  if (
+    familyDecisionBoundary.decisionClass !== "clear" &&
+    familyDecisionBoundary.runnerUpFamily
+  ) {
+    warnings.push(
+      familyDecisionBoundary.decisionClass === "ambiguous"
+        ? `The current family read sits near the boundary between ${FAMILY_LABELS[family.family]} and ${FAMILY_LABELS[familyDecisionBoundary.runnerUpFamily]}. Small thickness or support changes can switch the lane even when the assembly still looks broadly similar.`
+        : `The current family read is still somewhat close to ${FAMILY_LABELS[familyDecisionBoundary.runnerUpFamily]}, so nearby thickness or support changes can still move the lane selection.`
     );
   }
 
@@ -6033,6 +6230,12 @@ export function calculateDynamicAirborneResult(
     confidenceScore,
     detectedFamily: family.family,
     detectedFamilyLabel: FAMILY_LABELS[family.family],
+    familyDecisionClass:
+      familyDecisionBoundary.decisionClass === "clear" ? undefined : familyDecisionBoundary.decisionClass,
+    familyDecisionMargin:
+      familyDecisionBoundary.decisionClass === "clear"
+        ? undefined
+        : familyDecisionBoundary.margin ?? undefined,
     hasPorousFill: topology.hasPorousFill,
     hasStudLikeSupport: topology.hasStudLikeSupport,
     notes: [
@@ -6042,6 +6245,22 @@ export function calculateDynamicAirborneResult(
           ]
         : []),
       ...family.notes,
+      ...(familyDecisionBoundary.decisionClass !== "clear" && familyDecisionBoundary.runnerUpFamily
+        ? [
+            familyDecisionBoundary.decisionClass === "ambiguous"
+              ? `The current family boundary is ambiguous: ${FAMILY_LABELS[family.family]} is only ${familyDecisionBoundary.margin?.toFixed(1) ?? "0.0"} score points ahead of ${FAMILY_LABELS[familyDecisionBoundary.runnerUpFamily]}.`
+              : `The current family boundary is narrow: ${FAMILY_LABELS[family.family]} stays ahead of ${FAMILY_LABELS[familyDecisionBoundary.runnerUpFamily]} by ${familyDecisionBoundary.margin?.toFixed(1) ?? "0.0"} score points.`
+          ]
+        : []),
+      ...(multileafOrderSensitivity.boardInsertedTripleLeaf
+        ? [
+            `A lightweight internal leaf is sitting between two compliant cavities (${multileafOrderSensitivity.innerLeafCount} inner leaf${multileafOrderSensitivity.innerLeafCount === 1 ? "" : "ves"}), so the topology is a triple-leaf partition rather than a stable two-leaf cavity wall.`
+          ]
+        : multileafOrderSensitivity.hasOrderSensitiveMultileaf
+          ? [
+              `The detected multi-leaf topology has ${topology.visibleLeafCount} visible leaves and ${topology.cavityCount} cavities, so the assembly remains intentionally order-sensitive.`
+            ]
+          : []),
       ...blendSelection.notes,
       ...framedWallCalibration.notes,
       ...aacMassiveCalibration.notes,
@@ -6067,6 +6286,14 @@ export function calculateDynamicAirborneResult(
     ],
     originalSolidLayerCount: topology.originalSolidLayerCount,
     porousLayerCount: topology.porousLayerCount,
+    runnerUpFamily:
+      familyDecisionBoundary.decisionClass === "clear"
+        ? undefined
+        : familyDecisionBoundary.runnerUpFamily ?? undefined,
+    runnerUpFamilyLabel:
+      familyDecisionBoundary.decisionClass === "clear" || !familyDecisionBoundary.runnerUpFamily
+        ? undefined
+        : FAMILY_LABELS[familyDecisionBoundary.runnerUpFamily],
     selectedLabel: getDelegateLabel(blendSelection.blend.selectedMethod),
     selectedMethod: blendSelection.blend.selectedMethod,
     solverSpreadRwDb,

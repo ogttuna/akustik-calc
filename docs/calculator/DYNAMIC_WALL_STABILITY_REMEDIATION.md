@@ -209,6 +209,16 @@ Work items:
 - keep winner and runner-up
 - if the margin is small, hold the result inside a conservative corridor instead of fully switching lanes
 
+Status:
+
+- Phase B.1 is now shipped:
+  - two-leaf single-cavity boundary cases can emit runner-up-aware ambiguity diagnostics
+  - trace now carries the current boundary posture when the family read is narrow or ambiguous
+  - confidence can step down on those narrow boundary cases without moving the numeric lane itself yet
+- Phase B.2 is still open:
+  - conservative corridor holding is not shipped yet
+  - family selection still ends in a hard branch even when the trace is calling out a narrow winner
+
 Expected gain:
 
 - reorder and duplicate edits become less brittle
@@ -251,7 +261,9 @@ Primary test files that must be kept green:
 - [../../packages/engine/src/airborne-masonry-benchmark.test.ts](../../packages/engine/src/airborne-masonry-benchmark.test.ts)
 - [../../packages/engine/src/output-combination-sweep.test.ts](../../packages/engine/src/output-combination-sweep.test.ts)
 - [../../packages/engine/src/dynamic-guided-combination-sweep.test.ts](../../packages/engine/src/dynamic-guided-combination-sweep.test.ts)
+- [../../packages/engine/src/dynamic-airborne-family-boundary.test.ts](../../packages/engine/src/dynamic-airborne-family-boundary.test.ts)
 - [../../apps/web/features/workbench/dynamic-route-instability.test.ts](../../apps/web/features/workbench/dynamic-route-instability.test.ts)
+- [../../apps/web/features/workbench/dynamic-route-family-boundary.test.ts](../../apps/web/features/workbench/dynamic-route-family-boundary.test.ts)
 - [../../packages/engine/src/dynamic-airborne-instability-repro.test.ts](../../packages/engine/src/dynamic-airborne-instability-repro.test.ts)
 
 ## 11. Required Test Strategy
@@ -345,6 +357,7 @@ Engine-level benchmark protection:
 Workbench edit-path protection:
 
 - `apps/web/features/workbench/dynamic-route-instability.test.ts`
+- `apps/web/features/workbench/dynamic-route-order-sensitivity.test.ts`
 
 If a new helper is added to `airborne-topology.ts`, add topology-only tests close to the helper instead of burying everything inside end-to-end assertions.
 
@@ -436,15 +449,84 @@ Still open after Phase A:
 - `multileaf_multicavity` is still a conservative surrogate, not a premium multi-cavity solver
 - topology parsing still collapses contiguous solids too aggressively for a true long-term MorphologyV2 design
 
+### 15.4 Residual scan after Phase A
+
+A residual stress scan was run after Phase A across generated 5-layer archetypes and deeper hand-built hybrid stacks.
+
+Main finding:
+
+- the largest remaining reorder deltas are no longer clustering around the old hint-only stud promotion bug
+- they now cluster mainly around true multi-leaf / triple-leaf patterns such as:
+  - `board | porous fill | board | air gap | board`
+  - `board | porous fill | heavy core | air gap | board`
+
+Why that matters:
+
+- these patterns are not good candidates for blind smoothing
+- they are physically different from a two-leaf cavity wall
+- a reorder that collapses an inner leaf can legitimately move the result a lot
+
+That residual class is now handled explicitly:
+
+- dynamic warnings now call out lightweight triple-leaf partitions directly
+- broader multi-leaf partitions now get an explicit order-sensitive warning
+- confidence is pushed down further on those topologies
+
+This means the system is now separating two classes clearly:
+
+- false optimistic family promotion that should be fixed
+- genuinely order-sensitive multi-leaf behavior that should stay explicit
+
+External support for this distinction:
+
+- the cited partition paper on internal gypsum board layers in double-frame walls reports the classic triple-leaf penalty rather than a harmless reorder artifact:
+  - `https://www.sciencedirect.com/science/article/abs/pii/S0003682X05001799`
+  - inference from the abstract and current implementation: once an internal leaf creates a triple-leaf construction, the result should stay order-sensitive instead of being flattened into a stable two-leaf surrogate
+
+### 15.5 Residual false-handoff scan after Phase B.1 boundary diagnostics
+
+A broader generated swap scan was run after the new two-leaf family-boundary diagnostic landed.
+
+Local scan shape:
+
+- 6 solid materials on the left leaf
+- 4 compliant middle options
+- 6 solid materials in the inner solid slot
+- 4 compliant middle options
+- 6 solid materials on the right leaf
+- adjacent swaps on positions `2<->3` and `3<->4`
+
+Filter:
+
+- keep only cases with at least one `Rw` / `R'w` / `DnT,w` delta of `8 dB` or more
+- then drop any case that already carries an explicit order-sensitive or triple-leaf warning
+
+Observed result on that scan:
+
+- `0` remaining cases
+
+Meaning:
+
+- within this generated palette, the old large false-handoff class is no longer showing up silently
+- the remaining big deltas are either:
+  - already inside the explicit multi-leaf / triple-leaf order-sensitive posture, or
+  - below the current `8 dB` alert threshold
+
+Important limit:
+
+- this is evidence of materially improved posture, not proof that every possible wall stack is solved
+- the scan only covers the chosen local material palette and adjacent swaps, not arbitrary user imports or every deep manual hybrid
+- because of that, Phase B.2 is still needed before the selector can be called fully ambiguity-aware in the numeric lane itself
+
 ## 16. Validation Record
 
-Validation run after the Phase A implementation:
+Validation run after the shipped Phase A work, the multileaf order-sensitive follow-up, and the shipped Phase B.1 boundary diagnostics:
 
-- `pnpm -C apps/web exec vitest run --config vitest.config.ts features/workbench/dynamic-route-instability.test.ts`
-- `pnpm exec vitest run packages/engine/src/dynamic-airborne-instability-repro.test.ts packages/engine/src/airborne-framed-wall-benchmark.test.ts packages/engine/src/airborne-masonry-benchmark.test.ts`
+- `pnpm -C apps/web exec vitest run --config vitest.config.ts features/workbench/dynamic-route-family-boundary.test.ts features/workbench/dynamic-route-order-sensitivity.test.ts features/workbench/dynamic-route-instability.test.ts`
+- `pnpm exec vitest run packages/engine/src/dynamic-airborne-family-boundary.test.ts packages/engine/src/dynamic-airborne-instability-repro.test.ts packages/engine/src/dynamic-airborne-order-sensitivity.test.ts packages/engine/src/airborne-framed-wall-benchmark.test.ts packages/engine/src/airborne-masonry-benchmark.test.ts`
 - `pnpm exec vitest run packages/engine/src/output-combination-sweep.test.ts packages/engine/src/dynamic-guided-combination-sweep.test.ts`
 - `pnpm -C apps/web exec vitest run --config vitest.config.ts features/workbench/complex-stack-audit.test.ts features/workbench/wall-seeded-edit-stability.test.ts`
 
 Result:
 
-- all suites above passed after the shipped Phase A and the follow-up support-carrier narrowing
+- all suites above passed after the shipped Phase A, the multileaf order-sensitive follow-up, the support-carrier narrowing, and the new family-boundary diagnostics
