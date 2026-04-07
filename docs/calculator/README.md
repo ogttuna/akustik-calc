@@ -1,21 +1,23 @@
 # Calculator Docs
 
-Use this folder for active acoustic-calculator and workbench implementation notes.
+Use this folder for the current acoustic-calculator and workbench behavior.
 
-The source gap ledger now includes the current implementation-backed widening-first and tightening-first family branches, the imported TUAS open-box `a/b` corridor (`R2a`, `R2b`, `R3a`, `R3b`, `R5a`, `R5b`, `R11b`), the predictor-visible TUAS `a/b` ceiling split, the drawing-cleared `R2b` basic `b`-anchor, the remaining TUAS geometry shortlist (`R7a`, `R6b`), the completed first UBIQ same-family import pass, the landed `FL-24 -> FL-26 -> FL-28` open-web corridor, and the current remaining UBIQ split (`FL-23/25/27` deferred, source-trace cleanup still pending).
+This is the primary living doc set for dynamic calculator work. Read these files before using anything under `docs/archive`.
 
-Read order:
+## Read Order
 
-1. `CURRENT_STATE.md`
-2. `SOURCE_GAP_LEDGER.md`
-3. `DYNAMIC_CALCULATOR_PLAN.md`
+1. [CURRENT_STATE.md](./CURRENT_STATE.md): short snapshot of the current calculator/workbench posture
+2. [DYNAMIC_CALCULATOR_PLAN.md](./DYNAMIC_CALCULATOR_PLAN.md): active implementation order and hardening backlog
+3. [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md): source-backed widening, tightening, and deferred-family boundaries
+4. [../archive/analysis/README.md](../archive/analysis/README.md): dated investigations and reproduction notes
 
-Current documents:
+## File Roles
 
-- [CURRENT_STATE.md](./CURRENT_STATE.md)
-- [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md)
-- [DYNAMIC_CALCULATOR_PLAN.md](./DYNAMIC_CALCULATOR_PLAN.md)
+- [CURRENT_STATE.md](./CURRENT_STATE.md): what is stable now, what is intentionally narrow, and what remains risky
+- [DYNAMIC_CALCULATOR_PLAN.md](./DYNAMIC_CALCULATOR_PLAN.md): how to extend or harden the calculator without breaking current guardrails
+- [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md): which family lanes are source-backed enough to widen, which should stay fail-closed, and which are deferred
 
-Historical numerical deep dives live under:
+## Historical Analysis
 
-- [../archive/analysis/NUMERICAL_SYSTEM_ANALYSIS_2026-03-31.md](../archive/analysis/NUMERICAL_SYSTEM_ANALYSIS_2026-03-31.md)
+- [../archive/analysis/NUMERICAL_SYSTEM_ANALYSIS_2026-03-31.md](../archive/analysis/NUMERICAL_SYSTEM_ANALYSIS_2026-03-31.md): broad numerical-system deep dive
+- [../archive/analysis/DYNAMIC_ROUTE_STABILITY_ANALYSIS_2026-04-07.md](../archive/analysis/DYNAMIC_ROUTE_STABILITY_ANALYSIS_2026-04-07.md): reproduced dynamic-route duplicate and reorder instability cases

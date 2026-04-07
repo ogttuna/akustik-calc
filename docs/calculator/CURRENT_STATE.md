@@ -1,8 +1,9 @@
 # Dynamic Calculator Current State
 
-This is the short current-state note for the active dynamic calculator/workbench hardening track.
+Document role:
 
-Use this document before diving into the longer execution plan.
+- primary short snapshot for the current dynamic calculator and workbench posture
+- read this before the execution plan or any archived analysis note
 
 ## Scope
 
@@ -19,6 +20,8 @@ Use this document before diving into the longer execution plan.
 - the first deterministic complex-stack audit pack is now in place for:
   - wall mineral-wool contiguous splits
   - UBIQ open-web steel ceiling-fill contiguous splits on the field route
+- the first direct dynamic duplicate / reorder reproduction matrix is now in place for the current wall-side instability cases documented under:
+  - [../archive/analysis/DYNAMIC_ROUTE_STABILITY_ANALYSIS_2026-04-07.md](../archive/analysis/DYNAMIC_ROUTE_STABILITY_ANALYSIS_2026-04-07.md)
 - the living source-gap ledger now records which floor families are source-backed enough to tighten and which must stay fail-closed
 - the living source-gap ledger now also names the current implementation-backed widening-first and tightening-first family branches
 - the living source-gap ledger now includes a local source-corpus snapshot:
@@ -79,6 +82,8 @@ Important nuance:
 
 - complex mixed floor and wall stacks still need a wider manual and automated torture pass
 - the next hardening step should decide which combinations are genuinely path-invariant and which must stay physically order-sensitive
+- reproduced dynamic-route duplicate and reorder instability cases are documented separately under:
+  - [../archive/analysis/DYNAMIC_ROUTE_STABILITY_ANALYSIS_2026-04-07.md](../archive/analysis/DYNAMIC_ROUTE_STABILITY_ANALYSIS_2026-04-07.md)
 - the remaining TUAS shortlist is no longer a pure import question:
   - `R7a` likely wants a separate heavy/wet `a` branch
   - `R6b` likely wants a separate reinforced lower-treatment `b` branch

@@ -1,10 +1,10 @@
 # Foundation Docs
 
-Use this folder for repo-level rules and long-lived product direction.
+Use this folder for long-lived project direction and repo-level rules.
 
-Do not treat these files as the current task backlog. Active calculator work lives under `docs/calculator`.
+Do not treat these files as the current calculator backlog. Active calculator work lives under `docs/calculator`.
 
-Current documents:
+## File Roles
 
-- [PROJECT_PLAN.md](./PROJECT_PLAN.md)
-- [SOURCE_REPO_POLICY.md](./SOURCE_REPO_POLICY.md)
+- [PROJECT_PLAN.md](./PROJECT_PLAN.md): product direction, scope boundaries, and durable repo constraints
+- [SOURCE_REPO_POLICY.md](./SOURCE_REPO_POLICY.md): upstream import, parity, and source-of-truth rules

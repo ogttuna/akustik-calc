@@ -1,5 +1,10 @@
 # Dynamic Calculator Plan
 
+Document role:
+
+- active execution plan for dynamic-calculator hardening and coverage expansion
+- use this after `CURRENT_STATE.md` when deciding implementation order
+
 This note defines the recommended implementation order for expanding DynEcho's dynamic calculator so it becomes both broader in coverage and tighter in numerical behavior.
 
 Read together with:

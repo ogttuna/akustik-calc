@@ -1,45 +1,36 @@
-# DynEcho Docs Index
+# Docs
 
-This directory separates living reference documents from dated snapshots.
+This directory separates living reference docs from dated historical notes.
 
-Important:
+## Start Here
 
-- if the goal is to understand the current calculator/workbench state, start with the calculator docs
-- if the goal is to understand long-lived architecture and repo rules, use the foundation docs
-- archived notes are historical context only and should not be treated as the current execution backlog
+Read by intent:
 
-Use this order:
+1. Current calculator or workbench behavior: [calculator/README.md](./calculator/README.md)
+2. Repo-level direction and rules: [foundation/README.md](./foundation/README.md)
+3. Upstream import workflow and inventory: [imports/README.md](./imports/README.md)
+4. Historical investigations, status notes, and handoffs: [archive/README.md](./archive/README.md)
 
-1. Start with [calculator/CURRENT_STATE.md](./calculator/CURRENT_STATE.md) for the active calculator/workbench posture.
-2. Read [calculator/SOURCE_GAP_LEDGER.md](./calculator/SOURCE_GAP_LEDGER.md) before widening any new floor-family lane.
-3. Read [foundation/PROJECT_PLAN.md](./foundation/PROJECT_PLAN.md) for long-lived product direction and repo-level constraints.
-4. Read [foundation/SOURCE_REPO_POLICY.md](./foundation/SOURCE_REPO_POLICY.md) before any upstream import or parity work.
-5. Use [calculator/DYNAMIC_CALCULATOR_PLAN.md](./calculator/DYNAMIC_CALCULATOR_PLAN.md) for the active dynamic-calculator hardening roadmap.
-6. Use [imports/README.md](./imports/README.md) for upstream import inventory and refresh notes.
+## Hierarchy
 
-Directory intent:
+```text
+docs/
+  calculator/   current calculator and workbench behavior
+  foundation/   long-lived project direction and repo rules
+  imports/      upstream import notes and helper commands
+  archive/      dated status, handoff, and analysis notes
+```
 
-- `docs/foundation`
-  - long-lived project direction and repo rules
-- `docs/calculator`
-  - living implementation and numerical-behavior notes for the calculator/workbench surface
-- `docs/archive`
-  - dated status snapshots and handoff notes kept for history, not as the current source of truth
-- `docs/imports`
-  - upstream import notes and generated inventory artifacts
+If a file under `docs/archive` disagrees with a living document under `docs/calculator` or `docs/foundation`, the living document wins.
 
-Current canonical set:
+## Current Canonical Documents
 
-- [foundation/PROJECT_PLAN.md](./foundation/PROJECT_PLAN.md)
-- [foundation/SOURCE_REPO_POLICY.md](./foundation/SOURCE_REPO_POLICY.md)
-- [calculator/CURRENT_STATE.md](./calculator/CURRENT_STATE.md)
-- [calculator/SOURCE_GAP_LEDGER.md](./calculator/SOURCE_GAP_LEDGER.md)
-- [calculator/DYNAMIC_CALCULATOR_PLAN.md](./calculator/DYNAMIC_CALCULATOR_PLAN.md)
+- [calculator/CURRENT_STATE.md](./calculator/CURRENT_STATE.md): short living snapshot of the current calculator/workbench posture
+- [calculator/DYNAMIC_CALCULATOR_PLAN.md](./calculator/DYNAMIC_CALCULATOR_PLAN.md): active execution order for dynamic-calculator hardening
+- [calculator/SOURCE_GAP_LEDGER.md](./calculator/SOURCE_GAP_LEDGER.md): source-backed widening, tightening, and deferred-family ledger
+- [foundation/PROJECT_PLAN.md](./foundation/PROJECT_PLAN.md): long-lived product direction and repo constraints
+- [foundation/SOURCE_REPO_POLICY.md](./foundation/SOURCE_REPO_POLICY.md): upstream import and parity policy
 
-Archived snapshots:
+## Historical Notes
 
-- [archive/status/STATUS_2026-04-04.md](./archive/status/STATUS_2026-04-04.md)
-- [archive/handoffs/HANDOFF_2026-04-04.md](./archive/handoffs/HANDOFF_2026-04-04.md)
-- [archive/status/STATUS_2026-03-21.md](./archive/status/STATUS_2026-03-21.md)
-- [archive/handoffs/HANDOFF_2026-03-21.md](./archive/handoffs/HANDOFF_2026-03-21.md)
-- [archive/analysis/NUMERICAL_SYSTEM_ANALYSIS_2026-03-31.md](./archive/analysis/NUMERICAL_SYSTEM_ANALYSIS_2026-03-31.md)
+Use [archive/README.md](./archive/README.md) for the dated status timeline, handoffs, and analysis index.
