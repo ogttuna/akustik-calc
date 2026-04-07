@@ -45,6 +45,16 @@ Current execution status:
   - the active CLT guard pack now covers raw bare slabs, thin laminate-plus-underlay interpolation, and stronger dry / wet treatment packages
   - cross-family fallback warnings on the assembly route were hardened so fail-closed floor cases no longer advertise misleading closest-family labels
 
+Completion-reading note:
+
+- this status block is floor-roadmap progress, not a universal “all calculator work is complete” statement
+- for cross-floor/wall open work, use [DYNAMIC_CALCULATOR_REMAINING_WORK_PLAN.md](./DYNAMIC_CALCULATOR_REMAINING_WORK_PLAN.md)
+- for wall-specific phase closure, use [DYNAMIC_WALL_STABILITY_REMEDIATION.md](./DYNAMIC_WALL_STABILITY_REMEDIATION.md)
+- today’s accurate shorthand is:
+  - floor phases `0-3`: complete and defended
+  - floor phase `4`: active / partial
+  - floor phases `5-8`: open
+
 Current queued follow-up:
 
 - keep widening the new mixed floor/wall torture pass before any more reorder canonicalization:

@@ -107,6 +107,43 @@ Current overall reading:
   - wall apparent-route `Rw` was now correctly explicit/unsupported
 - this means the next phase should prioritize evidence expansion and route-surface audit discipline, not a blind solver rewrite
 
+## 2.1 Completion Checklist
+
+Use this section to answer “is that old doc item actually done yet?” without having to infer it from several documents.
+
+Completed and defended now:
+
+- floor baseline phases `0-3`
+- reinforced-concrete field-side floor-carrier `Rw` support fix
+- representative floor output-card parity audit
+- representative wall output-card parity audit
+- wall Phase A hardening
+- wall Phase B.1 boundary diagnostics
+- mixed floor/wall representative torture slice
+
+Partially complete:
+
+- floor Phase `4`
+  - active and defended on the currently targeted family-tightening corridor
+  - not a statement that all family-by-family tightening work is complete
+- wall Phase B.2
+  - shipped only on the currently defended `double_leaf <-> lined_massive_wall` corridor
+  - not a general ambiguity-aware selector yet
+
+Still open:
+
+- wall MorphologyV2 / score-first selector architecture
+- wider-than-representative mixed floor/wall generated torture matrices
+- wider raw-floor inference audit beyond the current representative reopening guard
+- source-led widening decisions for remaining open-box / open-web / deferred family branches
+- later floor phases `5-8`
+
+Important reading rule:
+
+- “completed” means the defended corridor exists and is guarded by executable tests
+- “partially complete” means a narrow defended slice exists, but the general problem class is not closed
+- “still open” means the work should not be inferred as solved just because nearby representative corridors are green
+
 ## 3. Recently Closed: Concrete Floor Carrier `Rw` Support Regression
 
 ### What Was Wrong

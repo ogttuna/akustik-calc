@@ -449,20 +449,34 @@ That support-carrier signal is now narrowed so it only opens when a real floor c
 - catalog-backed impact lane
 - explicit delta-backed carrier
 
-### 15.3 Current closure status
+### 15.3 Current closure checklist
 
-Closed by the current Phase A pass:
+Completed and defended now:
 
 - the explicit-metadata heavy-stack false `stud_wall_system` handoff reproduced in the original analysis note
 - the old workbench duplicate jump is materially reduced and now held inside a conservative capped lane
 - the light-lining reorder case now routes through `lined_massive_wall` instead of the previous optimistic double-leaf lane
 - the broad output-support sweep no longer regresses on the hybrid wall case that surfaced during validation
+- Phase B.1 boundary diagnostics are shipped
+- the first bounded Phase B.2 hold is shipped on the defended `double_leaf <-> lined_massive_wall` corridor
 
-Still open after Phase A:
+Partially complete:
+
+- ambiguity-aware wall selection
+  - runner-up-aware diagnostics exist
+  - one bounded hold corridor exists
+  - the selector is not yet generally score-first
+
+Still open:
 
 - family selection is still hard-branch based rather than scored
 - `multileaf_multicavity` is still a conservative surrogate, not a premium multi-cavity solver
 - topology parsing still collapses contiguous solids too aggressively for a true long-term MorphologyV2 design
+
+Reading rule:
+
+- do not read the shipped Phase B.2 slice as “wall ambiguity handling is solved”
+- it means only that one defended pairing is now held conservatively instead of being left as a silent hard-handoff jump
 
 ### 15.4 Residual scan after Phase A
 
