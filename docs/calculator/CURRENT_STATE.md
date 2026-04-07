@@ -23,11 +23,15 @@ Verified broad corridors:
 - workbench defended corridor: green
   - `24` files
   - `294` tests
+- latest change-adjacent revalidation after the raw-floor split/posture widening work: green
+  - engine targeted/broad pack: `15` files, `227` tests
+  - workbench targeted/broad pack: `14` files, `47` tests
 
 Interpretation:
 
 - there is no active known solver blocker in the currently defended wall/floor corridors
 - the latest red route tests were stale surface contracts, not a fresh calculator regression
+- the latest raw-floor and mixed-surface widening work did not introduce a fresh wall-side or floor-side regression in the defended corridors
 - the remaining risk is widening discipline and coverage depth, not a currently reproduced broad failure
 
 ## Current Stable Gains
@@ -47,7 +51,7 @@ Interpretation:
   - [DYNAMIC_CALCULATOR_REMAINING_WORK_PLAN.md](./DYNAMIC_CALCULATOR_REMAINING_WORK_PLAN.md)
 - the reinforced-concrete floor-carrier `Rw` support regression is now closed:
   - assembly-field concrete screening rows with real floor roles now keep `Rw` exposed again
-  - the reopening is deliberately narrow: it requires visible floor-role evidence plus an active impact-backed floor carrier
+  - the reopening is deliberately narrow: it now allows either visible floor-role evidence or the first defended raw concrete ceiling-helper inference cohort, plus an active impact-backed floor carrier
   - workbench `Rw` cards now also respect engine support buckets instead of surfacing unsupported floor-carrier companions
   - direct engine, route parity, and output-card consistency contracts now defend that fix
 - representative floor output-card parity is now defended more broadly:
@@ -56,13 +60,17 @@ Interpretation:
   - floor route parity is therefore no longer guarded only on `Rw`; it now has a broader representative support-bucket/card audit
 - representative raw-floor screening posture is now defended explicitly on both engine and route layers:
   - raw concrete single-layer and upper-treatment rows keep the intended split between closed and reopened field-side `Rw`
+  - raw concrete ceiling-side helper rows with a coherent inferred package now also reopen field-side `Rw`:
+    - at least one inferred `ceiling_board`
+    - plus at least one inferred `ceiling_cavity` or `ceiling_fill`
+    - plus a concrete base carrier
   - raw open-box rows stay fail-closed on field-side `Rw`
   - raw hollow-core screening rows keep their defended reopened carrier posture
   - raw wall-like heavy hybrids stay closed even when a finite screening carrier `Rw` exists
 - safe-bare raw carrier contiguous-split parity is now defended explicitly on both engine and route layers:
   - raw same-material contiguous splits on `hollow_core_plank`, bare `clt_panel`, `composite_steel_deck`, and `steel_deck_composite` no longer fall off the predictor/family lane
   - the fix is deliberately narrow to coalesced single safe-bare carriers; open-box timber and wall-like heavy hybrids stay fail-closed
-  - raw vs tagged single-layer heavy concrete remains intentionally different on the field route because explicit visible floor-role evidence is still required before that carrier can reopen `Rw`
+  - raw vs tagged single-layer heavy concrete remains intentionally different on the field route because a bare safe-bare carrier still does not reopen `Rw` without the defended helper-package evidence
 - the first treated/inferred raw-floor contiguous-split cohort is now also defended on both engine and route layers:
   - exact Dataholz dry CLT, exact TUAS open-box dry floor, integrated dry CLT, and promoted heavy-concrete family-estimate packages now stay identical across defended raw split and tagged split variants
   - this widens the raw-floor audit beyond bare carriers without opening new weaker carriers or broader screening shortcuts
@@ -184,7 +192,7 @@ These behaviors are now explicitly defended and should not be treated as regress
   - visible floor roles reopen the carrier
   - raw wall-like heavy hybrids stay closed
   - untagged screening-only floor-like rows do not get widened automatically just because a finite screening `Rw` exists
-  - the first representative raw-screening audits, the safe-bare contiguous-split cohort, the first treated/inferred split cohort, and the first weaker-carrier posture cohort are now green, but broader reopening still requires wider inference evidence rather than another generic support shortcut
+  - the first representative raw-screening audits, the safe-bare contiguous-split cohort, the first treated/inferred split cohort, the first weaker-carrier posture cohort, and the first raw concrete ceiling-side inferred support cohort are now green, but broader reopening still requires wider inference evidence rather than another generic support shortcut
 - reproduced dynamic-route duplicate and reorder instability cases are documented separately under:
   - [../archive/analysis/DYNAMIC_ROUTE_STABILITY_ANALYSIS_2026-04-07.md](../archive/analysis/DYNAMIC_ROUTE_STABILITY_ANALYSIS_2026-04-07.md)
 - the intended fix order and protected-corridor rules for that wall-side work now live under:
@@ -208,9 +216,9 @@ These behaviors are now explicitly defended and should not be treated as regress
 
 Work in this order:
 
-1. Extend the raw-floor inference audit beyond the current representative screening rows, safe-bare contiguous-split cohort, first treated/inferred split cohort, and first weaker-carrier posture cohort before considering any broader screening-carrier reopening:
+1. Extend the raw-floor inference audit beyond the current representative screening rows, safe-bare contiguous-split cohort, first treated/inferred split cohort, first weaker-carrier posture cohort, and first raw concrete ceiling-side inferred support cohort before considering any broader screening-carrier reopening:
    - wider inferred family rows
-   - ceiling-side inferred packages
+   - wider-than-first ceiling-side inferred packages
    - raw heavy wall-like hybrids and any remaining weaker carriers that must stay closed
 2. Expand the current mixed floor/wall torture surface beyond the first generated split-detour matrix:
    - longer cross-mode edit chains

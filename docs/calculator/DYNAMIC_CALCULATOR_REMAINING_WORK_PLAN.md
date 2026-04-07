@@ -90,6 +90,10 @@ Interpretation:
 - the first weaker-carrier posture cohort is also now frozen:
   - open-box timber, open-web steel, lightweight steel, and steel-joist bare carriers stay fail-closed even when tagged
   - timber-frame, timber-joist, and engineered-timber structural carriers stay explicitly role-gated instead of widening raw support
+- the first raw concrete ceiling-side inferred support cohort is also now frozen:
+  - raw concrete rows with a coherent inferred ceiling helper package now reopen field-side `Rw` without needing explicit row roles
+  - the defended shape is still narrow: at least one inferred `ceiling_board`, at least one inferred `ceiling_cavity` or `ceiling_fill`, and a concrete base carrier
+  - raw wall-like heavy hybrids and weaker carriers stay outside that reopening rule
 - the current floor debt is no longer a live blocker; it is coverage and future widening discipline
 - secondary route-surface revalidation on `2026-04-07` also showed that the latest red workbench tests were stale surface contracts, not a fresh calculator regression:
   - bound floor status now keeps companion `Rw` live on the defended carry-over lane
@@ -129,6 +133,10 @@ Current overall reading:
   - bound floor carry-over `Rw` was now correctly live
   - wall apparent-route `Rw` was now correctly explicit/unsupported
 - this means the next phase should prioritize evidence expansion and route-surface audit discipline, not a blind solver rewrite
+- the latest post-widening revalidation stayed green on the change-adjacent packs as well:
+  - engine pack: `15` files, `227` tests
+  - route pack: `14` files, `47` tests
+  - interpretation: the new raw-floor split/posture guards did not open a fresh regression in the currently defended wall, floor, or mixed surfaces
 
 ## 2.1 Completion Checklist
 
@@ -143,6 +151,7 @@ Completed and defended now:
 - safe-bare raw carrier contiguous-split parity fix
 - treated/inferred raw-floor contiguous-split parity first cohort
 - weaker-carrier raw-floor posture first cohort
+- raw concrete ceiling-side inferred support first cohort
 - wall Phase A hardening
 - wall Phase B.1 boundary diagnostics
 - mixed floor/wall representative torture slice
@@ -161,7 +170,7 @@ Still open:
 
 - wall MorphologyV2 / score-first selector architecture
 - wider-than-first-slice mixed floor/wall generated torture matrices
-- wider raw-floor inference audit beyond the current representative reopening guard, safe-bare split cohort, first treated/inferred split cohort, and first weaker-carrier posture cohort
+- wider raw-floor inference audit beyond the current representative reopening guard, safe-bare split cohort, first treated/inferred split cohort, first weaker-carrier posture cohort, and first raw concrete ceiling-side inferred support cohort
 - source-led widening decisions for remaining open-box / open-web / deferred family branches
 - later floor phases `5-8`
 
@@ -372,7 +381,7 @@ Floor should now stay on controlled widening and tightening only.
 ### Remaining Floor Risks
 
 - mixed floor/wall complex stacks still need broader generated edit-chain and duplicate/swap torture beyond the first generated matrix
-- raw-vs-tagged parity, safe-bare contiguous-split parity, the first treated/inferred split cohort, and the first weaker-carrier posture cohort are defended only on the currently harvested floor cohorts
+- raw-vs-tagged parity, safe-bare contiguous-split parity, the first treated/inferred split cohort, the first weaker-carrier posture cohort, and the first raw concrete ceiling-side inferred support cohort are defended only on the currently harvested floor cohorts
 - intentionally fail-closed structural carriers still need source-led widening decisions
 - route coverage now defends representative support-bucket/card parity and representative raw-screening posture, but not yet every wider raw-screening widening decision
 - the TUAS open-box real-world coverage fixture is now aligned with the defended `a/b` branch split:
@@ -390,9 +399,9 @@ Floor should now stay on controlled widening and tightening only.
 
 ### Safe Floor Fix Order
 
-1. extend the raw-floor screening-carrier audit beyond the current representative rows, safe-bare split cohort, first treated/inferred split cohort, and first weaker-carrier posture cohort before reopening any more `Rw` support:
+1. extend the raw-floor screening-carrier audit beyond the current representative rows, safe-bare split cohort, first treated/inferred split cohort, first weaker-carrier posture cohort, and first raw concrete ceiling-side inferred support cohort before reopening any more `Rw` support:
    - wider inferred floor packages with clear upper/lower treatment evidence
-   - ceiling-side inferred packages
+   - wider-than-first ceiling-side inferred packages
    - raw wall-like heavy hybrids and any remaining weaker carriers that must stay closed
 
 2. run a broader complex-stack torture pass before any new widening

@@ -61,6 +61,49 @@ const CASES: readonly RawRouteCase[] = [
     }
   },
   {
+    id: "raw_concrete_ceiling_board_cavity",
+    rows: [
+      { id: "a", materialId: "gypsum_board", thicknessMm: 13 },
+      { id: "b", materialId: "furring_channel", thicknessMm: 28 },
+      { id: "c", materialId: "concrete", thicknessMm: 150 }
+    ],
+    expected: {
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]
+    }
+  },
+  {
+    id: "raw_concrete_ceiling_board_fill",
+    rows: [
+      { id: "a", materialId: "gypsum_board", thicknessMm: 13 },
+      { id: "b", materialId: "rockwool", thicknessMm: 90 },
+      { id: "c", materialId: "concrete", thicknessMm: 150 }
+    ],
+    expected: {
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]
+    }
+  },
+  {
+    id: "raw_concrete_full_ceiling_helper",
+    rows: [
+      { id: "a", materialId: "gypsum_board", thicknessMm: 13 },
+      { id: "b", materialId: "rockwool", thicknessMm: 90 },
+      { id: "c", materialId: "furring_channel", thicknessMm: 28 },
+      { id: "d", materialId: "concrete", thicknessMm: 150 }
+    ],
+    expected: {
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]
+    }
+  },
+  {
     id: "raw_open_box_single",
     rows: [{ id: "a", materialId: "open_box_timber_slab", thicknessMm: 370 }],
     expected: {

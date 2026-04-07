@@ -173,6 +173,15 @@ describe("floor output-card support parity", () => {
         ]
       },
       {
+        id: "raw-concrete-with-ceiling-helper-room",
+        rows: [
+          { id: "a", materialId: "gypsum_board", thicknessMm: 13 },
+          { id: "b", materialId: "rockwool", thicknessMm: 90 },
+          { id: "c", materialId: "furring_channel", thicknessMm: 28 },
+          { id: "d", materialId: "concrete", thicknessMm: 150 }
+        ]
+      },
+      {
         id: "raw-heavy-walllike-hybrid-room",
         rows: [
           { id: "a", materialId: "gypsum_board", thicknessMm: 12.5 },

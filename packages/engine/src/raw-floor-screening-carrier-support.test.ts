@@ -75,6 +75,67 @@ const CASES: readonly RawScreeningCase[] = [
     }
   },
   {
+    id: "raw concrete with ceiling board and cavity helper",
+    layers: [
+      { materialId: "gypsum_board", thicknessMm: 13 },
+      { materialId: "furring_channel", thicknessMm: 28 },
+      { materialId: "concrete", thicknessMm: 150 }
+    ],
+    expectedLab: {
+      basis: "predictor_heavy_bare_floor_iso12354_annexc_estimate",
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["Rw", "Ln,w"]
+    },
+    expectedField: {
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]
+    }
+  },
+  {
+    id: "raw concrete with ceiling board and fill helper",
+    layers: [
+      { materialId: "gypsum_board", thicknessMm: 13 },
+      { materialId: "rockwool", thicknessMm: 90 },
+      { materialId: "concrete", thicknessMm: 150 }
+    ],
+    expectedLab: {
+      basis: "predictor_heavy_bare_floor_iso12354_annexc_estimate",
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["Rw", "Ln,w"]
+    },
+    expectedField: {
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]
+    }
+  },
+  {
+    id: "raw concrete with full ceiling helper package",
+    layers: [
+      { materialId: "gypsum_board", thicknessMm: 13 },
+      { materialId: "rockwool", thicknessMm: 90 },
+      { materialId: "furring_channel", thicknessMm: 28 },
+      { materialId: "concrete", thicknessMm: 150 }
+    ],
+    expectedLab: {
+      basis: "predictor_heavy_bare_floor_iso12354_annexc_estimate",
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["Rw", "Ln,w"]
+    },
+    expectedField: {
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]
+    }
+  },
+  {
     id: "raw open-box single layer",
     layers: [{ materialId: "open_box_timber_slab", thicknessMm: 370 }],
     expectedLab: {

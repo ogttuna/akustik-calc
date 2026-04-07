@@ -6550,6 +6550,15 @@ describe("calculateAssembly", () => {
       ],
       roomToRoomOptions
     );
+    const rawConcreteCeilingHelper = calculateAssembly(
+      [
+        { materialId: "gypsum_board", thicknessMm: 16 },
+        { materialId: "genieclip_rst", thicknessMm: 90 },
+        { materialId: "rockwool", thicknessMm: 90 },
+        { materialId: "concrete", thicknessMm: 150 }
+      ],
+      roomToRoomOptions
+    );
     const openBoxBare = calculateAssembly(
       [{ floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }],
       roomToRoomOptions
@@ -6572,6 +6581,11 @@ describe("calculateAssembly", () => {
     expect(concreteCeilingOnly.floorSystemRatings?.basis).toBe("screening_mass_law_curve_seed_v3");
     expect(concreteCeilingOnly.supportedTargetOutputs).toEqual(["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]);
     expect(concreteCeilingOnly.unsupportedTargetOutputs).toEqual([]);
+
+    expect(rawConcreteCeilingHelper.impact?.basis).toBe("mixed_predicted_plus_estimated_standardized_field_volume_normalization");
+    expect(rawConcreteCeilingHelper.floorSystemRatings?.basis).toBe("screening_mass_law_curve_seed_v3");
+    expect(rawConcreteCeilingHelper.supportedTargetOutputs).toEqual(["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]);
+    expect(rawConcreteCeilingHelper.unsupportedTargetOutputs).toEqual([]);
 
     expect(openBoxBare.impact).toBeNull();
     expect(openBoxBare.floorSystemRatings?.basis).toBe("screening_mass_law_curve_seed_v3");

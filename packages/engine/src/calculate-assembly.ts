@@ -773,6 +773,29 @@ function applyDynamicAirborneGuards(
   return nextOverlayResult;
 }
 
+function hasInferredConcreteCeilingHelperSupportSignal(input: {
+  inferredImpactLayers: readonly LayerInput[] | null;
+  visibleLayers: readonly LayerInput[];
+}): boolean {
+  if (input.visibleLayers.some((layer) => Boolean(layer.floorRole))) {
+    return false;
+  }
+
+  if (!input.inferredImpactLayers) {
+    return false;
+  }
+
+  const hasConcreteBaseStructure = input.inferredImpactLayers.some(
+    (layer) => layer.floorRole === "base_structure" && layer.materialId === "concrete"
+  );
+  const hasCeilingBoard = input.inferredImpactLayers.some((layer) => layer.floorRole === "ceiling_board");
+  const hasCeilingHelper = input.inferredImpactLayers.some(
+    (layer) => layer.floorRole === "ceiling_cavity" || layer.floorRole === "ceiling_fill"
+  );
+
+  return hasConcreteBaseStructure && hasCeilingBoard && hasCeilingHelper;
+}
+
 export function calculateAssembly(
   inputLayers: readonly LayerInput[],
   options: CalculateAssemblyOptions = {}
@@ -976,8 +999,14 @@ export function calculateAssembly(
         screeningRwDb: explicitPredictorInput ? null : ratings.iso717.Rw,
         screeningRwPlusCtrDb: explicitPredictorInput ? null : round1(ratings.iso717.Rw + ratings.iso717.Ctr)
       });
+  const hasInferredConcreteCeilingHelperCarrierSignal = hasInferredConcreteCeilingHelperSupportSignal({
+    inferredImpactLayers,
+    visibleLayers: layers
+  });
   const hasImpactBackedScreeningFloorCarrierSignal = Boolean(
-    impact && floorSystemRatings && hasVisibleFloorCarrier
+    impact &&
+      floorSystemRatings &&
+      (hasVisibleFloorCarrier || hasInferredConcreteCeilingHelperCarrierSignal)
   );
   const hasFloorSupportCarrierSignal = Boolean(
     floorSystemMatch ||
