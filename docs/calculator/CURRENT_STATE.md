@@ -115,6 +115,7 @@ Important nuance:
 - `multileaf_multicavity` remains a conservative surrogate rather than a dedicated multi-cavity solver
 - expanded engine and representative route scans over non-AAC heavy cores did not surface a second hold-worthy family pair; Porotherm, sand-lime, pumice, and concrete rows currently stay clear of boundary/hold diagnostics in the defended palettes
 - the new selector score-surface trace now also shows that the defended AAC boundary is genuinely conflicted at score level, while the current representative framed palettes still do not produce a second plausible runner-up family
+- the new selector-conflict flag is currently confined to one defended sub-corridor: `ytong_aac_d700 100` inside the `lined_massive_wall <-> double_leaf` hold
 - the remaining widening risk is no longer “basic alternative core rows”; it is deeper hybrid permutations, trailing trims, and any future boundary that shows more than one plausible runner-up family
 - the remaining TUAS shortlist is no longer a pure import question:
   - `R7a` likely wants a separate heavy/wet `a` branch

@@ -198,6 +198,7 @@ function swapAdjacent<T>(arr: readonly T[], index: number) {
 describe("dynamic route family boundary scan contracts", () => {
   it("keeps the representative workbench hold corridor on the same defended pairing", () => {
     const hits: Array<{
+      conflict: boolean;
       core: string;
       stack: string;
       trace: NonNullable<ReturnType<typeof evaluateDynamicWallPair>["trace"]>;
@@ -211,6 +212,9 @@ describe("dynamic route family boundary scan contracts", () => {
 
           if (result.trace?.strategy.includes("family_boundary_hold")) {
             hits.push({
+              conflict: Boolean(
+                (result.trace.runnerUpFamilyScore ?? -Infinity) > (result.trace.selectedFamilyScore ?? Infinity) + 1e-9
+              ),
               core: `${core.materialId}:${core.thicknessMm}`,
               stack: stackKey(stack),
               trace: result.trace
@@ -221,12 +225,18 @@ describe("dynamic route family boundary scan contracts", () => {
     }
 
     const holdCountsByCore = new Map<string, number>();
+    const conflictCountsByCore = new Map<string, number>();
 
     for (const hit of hits) {
       holdCountsByCore.set(hit.core, (holdCountsByCore.get(hit.core) ?? 0) + 1);
+      if (hit.conflict) {
+        conflictCountsByCore.set(hit.core, (conflictCountsByCore.get(hit.core) ?? 0) + 1);
+      }
 
       expect(hit.trace.detectedFamily, hit.stack).toBe("lined_massive_wall");
       expect(hit.trace.runnerUpFamily, hit.stack).toBe("double_leaf");
+      expect(hit.trace.familyDecisionMultiplePlausibleFamilies, hit.stack).toBeUndefined();
+      expect(hit.trace.familyDecisionSelectedBelowRunnerUp, hit.stack).toBe(hit.conflict || undefined);
       expect(hit.trace.familyBoundaryHoldApplied, hit.stack).toBe(true);
       expect(hit.trace.strategy.includes("family_boundary_hold"), hit.stack).toBe(true);
       expect(hit.trace.familyDecisionClass === "ambiguous" || hit.trace.familyDecisionClass === "narrow", hit.stack).toBe(
@@ -244,6 +254,9 @@ describe("dynamic route family boundary scan contracts", () => {
       "ytong_aac_d700:100": 16,
       "ytong_aac_d700:120": 8,
       "ytong_g5_800:100": 16
+    });
+    expect(Object.fromEntries([...conflictCountsByCore.entries()].sort(([left], [right]) => left.localeCompare(right)))).toEqual({
+      "ytong_aac_d700:100": 12
     });
   }, ROUTE_SCAN_TIMEOUT_MS);
 
@@ -272,6 +285,7 @@ describe("dynamic route family boundary scan contracts", () => {
           if (
             trace &&
             (trace.familyDecisionClass ||
+              trace.familyDecisionSelectedBelowRunnerUp ||
               trace.runnerUpFamily ||
               trace.familyBoundaryHoldApplied ||
               boundaryWarnings.length > 0)
@@ -378,8 +392,9 @@ describe("dynamic route family boundary scan contracts", () => {
   }, ROUTE_SCAN_TIMEOUT_MS);
 
   it("finds no multi-candidate boundary surface across the representative framed workbench palette yet", () => {
-    const multiCandidateHits: Array<{
+    const flaggedHits: Array<{
       context: string;
+      reason: string;
       stack: string;
     }> = [];
     const familyCounts = new Map<string, number>();
@@ -410,8 +425,17 @@ describe("dynamic route family boundary scan contracts", () => {
             );
 
             if (trace?.familyDecisionMultiplePlausibleFamilies) {
-              multiCandidateHits.push({
+              flaggedHits.push({
                 context: context.id,
+                reason: "multiple_plausible",
+                stack: stackKey(stack)
+              });
+            }
+
+            if (trace?.familyDecisionSelectedBelowRunnerUp) {
+              flaggedHits.push({
+                context: context.id,
+                reason: "selection_conflict",
                 stack: stackKey(stack)
               });
             }
@@ -420,7 +444,7 @@ describe("dynamic route family boundary scan contracts", () => {
       }
     }
 
-    expect(multiCandidateHits).toEqual([]);
+    expect(flaggedHits).toEqual([]);
     expect(Object.fromEntries([...familyCounts.entries()].sort(([left], [right]) => left.localeCompare(right)))).toEqual({
       "resilient_channel:stud_wall_system": 80,
       "steel_independent:stud_wall_system": 80

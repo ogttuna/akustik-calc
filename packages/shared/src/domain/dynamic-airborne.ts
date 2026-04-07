@@ -53,6 +53,7 @@ const DynamicAirborneTraceShape = {
   familyBoundaryHoldRunnerUpMetricDb: z.number().optional(),
   familyBoundaryHoldTargetMetricDb: z.number().optional(),
   familyDecisionMultiplePlausibleFamilies: z.boolean().optional(),
+  familyDecisionSelectedBelowRunnerUp: z.boolean().optional(),
   hasPorousFill: z.boolean(),
   hasStudLikeSupport: z.boolean(),
   notes: z.array(z.string()),

@@ -85,6 +85,7 @@ describe("dynamic airborne family boundary diagnostics", () => {
     expect(boundary.dynamicAirborneTrace?.familyDecisionClass).toBe("ambiguous");
     expect(boundary.dynamicAirborneTrace?.familyDecisionMargin ?? Infinity).toBeLessThanOrEqual(0.1);
     expect(boundary.dynamicAirborneTrace?.familyDecisionMultiplePlausibleFamilies).toBeUndefined();
+    expect(boundary.dynamicAirborneTrace?.familyDecisionSelectedBelowRunnerUp).toBe(true);
     expect(boundary.dynamicAirborneTrace?.runnerUpFamily).toBe("double_leaf");
     expect(boundary.dynamicAirborneTrace?.runnerUpFamilyScore ?? 0).toBeGreaterThan(0.49);
     expect(boundary.dynamicAirborneTrace?.selectedFamilyScore ?? 0).toBeGreaterThan(0.49);
@@ -111,10 +112,16 @@ describe("dynamic airborne family boundary diagnostics", () => {
       boundary.dynamicAirborneTrace?.notes.some((note: string) => /ambiguity hold trimmed/i.test(note))
     ).toBe(true);
     expect(
+      boundary.dynamicAirborneTrace?.notes.some((note: string) => /currently scoring slightly above/i.test(note))
+    ).toBe(true);
+    expect(
       boundary.warnings.some((warning: string) => /boundary between Lined Massive Wall and Double Leaf/i.test(warning))
     ).toBe(true);
     expect(
       boundary.warnings.some((warning: string) => /family-boundary hold was applied/i.test(warning))
+    ).toBe(true);
+    expect(
+      boundary.warnings.some((warning: string) => /hard family detector stayed on Lined Massive Wall/i.test(warning))
     ).toBe(true);
 
     expect(upper.dynamicAirborneTrace?.detectedFamily).toBe("lined_massive_wall");

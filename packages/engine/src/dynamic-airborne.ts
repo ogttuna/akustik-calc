@@ -476,6 +476,7 @@ type FamilyDecisionBoundarySummary = {
   decisionClass: DynamicAirborneFamilyDecisionClass;
   margin: number | null;
   multiplePlausibleFamilies: boolean;
+  selectedBelowRunnerUp: boolean;
   runnerUpFamily: DynamicAirborneFamily | null;
   runnerUpScore: number | null;
   secondaryRunnerUpFamily: DynamicAirborneFamily | null;
@@ -1039,6 +1040,7 @@ function summarizeFamilyDecisionBoundary(
       decisionClass: "clear",
       margin: null,
       multiplePlausibleFamilies: false,
+      selectedBelowRunnerUp: false,
       runnerUpFamily: null,
       runnerUpScore: null,
       secondaryRunnerUpFamily: null,
@@ -1117,6 +1119,7 @@ function summarizeFamilyDecisionBoundary(
     selected && runnerUp ? ksRound1(Math.max(selected.score - runnerUp.score, 0)) : null;
   const selectedToSecondaryMargin =
     selected && secondaryRunnerUp ? ksRound1(Math.max(selected.score - secondaryRunnerUp.score, 0)) : null;
+  const selectedBelowRunnerUp = Boolean(selected && runnerUp && runnerUp.score > selected.score + 1e-9);
 
   let decisionClass: DynamicAirborneFamilyDecisionClass = "clear";
   if (selected && runnerUp && runnerUp.score >= 0.3) {
@@ -1141,6 +1144,7 @@ function summarizeFamilyDecisionBoundary(
     decisionClass,
     margin,
     multiplePlausibleFamilies,
+    selectedBelowRunnerUp,
     runnerUpFamily: runnerUp?.family ?? null,
     runnerUpScore: runnerUp?.score ?? null,
     secondaryRunnerUpFamily: secondaryRunnerUp?.family ?? null,
@@ -5754,6 +5758,7 @@ function buildConfidenceScore(
     hintOnlyFramingSuppressed?: boolean;
     multiplePlausibleFamilies?: boolean;
     orderSensitiveMultileaf?: boolean;
+    selectionConflict?: boolean;
     trimmedOuterLayers?: boolean;
   }
 ): number {
@@ -5822,6 +5827,10 @@ function buildConfidenceScore(
 
   if (options?.multiplePlausibleFamilies) {
     score -= 0.04;
+  }
+
+  if (options?.selectionConflict) {
+    score -= 0.03;
   }
 
   if (options?.familyDecisionClass === "narrow") {
@@ -6247,6 +6256,7 @@ export function calculateDynamicAirborneResult(
       hintOnlyFramingSuppressed: framingEvidence.explicitHintOnly && !framingEvidence.studEligible,
       multiplePlausibleFamilies: familyDecisionBoundary.multiplePlausibleFamilies,
       orderSensitiveMultileaf: multileafOrderSensitivity.hasOrderSensitiveMultileaf,
+      selectionConflict: familyDecisionBoundary.selectedBelowRunnerUp,
       trimmedOuterLayers: trimmedOuterSpan.trimmed
     }
   );
@@ -6375,6 +6385,15 @@ export function calculateDynamicAirborneResult(
     );
   }
 
+  if (
+    familyDecisionBoundary.selectedBelowRunnerUp &&
+    familyDecisionBoundary.runnerUpFamily
+  ) {
+    warnings.push(
+      `The hard family detector stayed on ${FAMILY_LABELS[family.family]}, but the nearby boundary scoring currently leans slightly toward ${FAMILY_LABELS[familyDecisionBoundary.runnerUpFamily]}. Treat this as a mixed-boundary estimate rather than a settled lane.`
+    );
+  }
+
   if (securityBoardDoubleStudFieldTrim.applied) {
     warnings.push(
       "A mixed security-board double-stud field trim was applied because the current split-cavity framed-wall surrogate was still slightly optimistic on the field side."
@@ -6491,6 +6510,8 @@ export function calculateDynamicAirborneResult(
         : familyDecisionBoundary.margin ?? undefined,
     familyDecisionMultiplePlausibleFamilies:
       familyDecisionBoundary.multiplePlausibleFamilies || undefined,
+    familyDecisionSelectedBelowRunnerUp:
+      familyDecisionBoundary.selectedBelowRunnerUp || undefined,
     familyBoundaryHoldCurrentMetricDb: familyBoundaryHold.currentMetricDb ?? undefined,
     familyBoundaryHoldRunnerUpMetricDb: familyBoundaryHold.runnerUpMetric ?? undefined,
     familyBoundaryHoldTargetMetricDb: familyBoundaryHold.targetMetric ?? undefined,
@@ -6513,6 +6534,11 @@ export function calculateDynamicAirborneResult(
       ...(familyDecisionBoundary.multiplePlausibleFamilies && familyDecisionBoundary.secondaryRunnerUpFamily
         ? [
             `A second nearby family also remains plausible on this boundary: ${FAMILY_LABELS[familyDecisionBoundary.secondaryRunnerUpFamily]} trails ${FAMILY_LABELS[family.family]} by ${ksRound1(Math.max((familyDecisionBoundary.selectedScore ?? 0) - (familyDecisionBoundary.secondaryRunnerUpScore ?? 0), 0)).toFixed(1)} score points.`
+          ]
+        : []),
+      ...(familyDecisionBoundary.selectedBelowRunnerUp && familyDecisionBoundary.runnerUpFamily
+        ? [
+            `${FAMILY_LABELS[familyDecisionBoundary.runnerUpFamily]} is currently scoring slightly above ${FAMILY_LABELS[family.family]} on the boundary surface, so the chosen family should be read as a protected corridor hold rather than a clean selector win.`
           ]
         : []),
       ...(multileafOrderSensitivity.boardInsertedTripleLeaf

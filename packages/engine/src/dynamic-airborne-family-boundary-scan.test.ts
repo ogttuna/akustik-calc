@@ -223,6 +223,7 @@ function swapAdjacent(stack: readonly LayerInput[], leftIndex: number) {
 describe("dynamic airborne family boundary scan contracts", () => {
   it("keeps the expanded heavy-core and dual-trim hold scan inside one defended corridor", () => {
     const hits: Array<{
+      conflict: boolean;
       dnTw: number | null | undefined;
       key: string;
       rw: number | null | undefined;
@@ -250,6 +251,9 @@ describe("dynamic airborne family boundary scan contracts", () => {
 
             if (trace?.strategy.includes("family_boundary_hold")) {
               hits.push({
+                conflict: Boolean(
+                  (trace.runnerUpFamilyScore ?? -Infinity) > (trace.selectedFamilyScore ?? Infinity) + 1e-9
+                ),
                 dnTw: result.metrics.estimatedDnTwDb,
                 key: `${core.materialId}:${coreThicknessMm}|${board.materialId}:${board.thicknessMm}`,
                 rw: calculateAssembly(stack, {
@@ -268,6 +272,7 @@ describe("dynamic airborne family boundary scan contracts", () => {
     }
 
     const holdCountsByCore = new Map<string, number>();
+    const conflictCountsByCore = new Map<string, number>();
     const spreadsBySignature = new Map<
       string,
       {
@@ -280,6 +285,9 @@ describe("dynamic airborne family boundary scan contracts", () => {
     for (const hit of hits) {
       const coreKey = hit.key.split("|")[0]!;
       holdCountsByCore.set(coreKey, (holdCountsByCore.get(coreKey) ?? 0) + 1);
+      if (hit.conflict) {
+        conflictCountsByCore.set(coreKey, (conflictCountsByCore.get(coreKey) ?? 0) + 1);
+      }
 
       const spreadEntry = spreadsBySignature.get(hit.key) ?? { dnTw: [], rw: [], rwPrime: [] };
       spreadEntry.dnTw.push(hit.dnTw ?? -Infinity);
@@ -292,6 +300,8 @@ describe("dynamic airborne family boundary scan contracts", () => {
       expect(hit.trace.familyDecisionClass === "ambiguous" || hit.trace.familyDecisionClass === "narrow", hit.stack).toBe(
         true
       );
+      expect(hit.trace.familyDecisionMultiplePlausibleFamilies, hit.stack).toBeUndefined();
+      expect(hit.trace.familyDecisionSelectedBelowRunnerUp, hit.stack).toBe(hit.conflict || undefined);
       expect(hit.trace.familyBoundaryHoldApplied, hit.stack).toBe(true);
       expect(hit.trace.strategy.includes("family_boundary_hold"), hit.stack).toBe(true);
       expect(hit.trace.familyBoundaryHoldRunnerUpMetricDb, hit.stack).toBeTypeOf("number");
@@ -322,6 +332,9 @@ describe("dynamic airborne family boundary scan contracts", () => {
       "ytong_aac_d700:100": 32,
       "ytong_aac_d700:120": 16,
       "ytong_g5_800:100": 32
+    });
+    expect(Object.fromEntries([...conflictCountsByCore.entries()].sort(([left], [right]) => left.localeCompare(right)))).toEqual({
+      "ytong_aac_d700:100": 24
     });
 
     for (const [signature, spread] of spreadsBySignature.entries()) {
@@ -368,6 +381,7 @@ describe("dynamic airborne family boundary scan contracts", () => {
             if (
               trace &&
               (trace.familyDecisionClass ||
+                trace.familyDecisionSelectedBelowRunnerUp ||
                 trace.runnerUpFamily ||
                 trace.familyBoundaryHoldApplied ||
                 boundaryWarnings.length > 0)
@@ -487,9 +501,10 @@ describe("dynamic airborne family boundary scan contracts", () => {
   }, HOLD_SCAN_TIMEOUT_MS);
 
   it("finds no multi-candidate boundary surface across the representative framed palette yet", () => {
-    const multiCandidateHits: Array<{
+    const flaggedHits: Array<{
       context: string;
       stack: string;
+      reason: string;
       trace: NonNullable<ReturnType<typeof calculateAssembly>["dynamicAirborneTrace"]>;
     }> = [];
     const familyCounts = new Map<string, number>();
@@ -512,8 +527,18 @@ describe("dynamic airborne family boundary scan contracts", () => {
             );
 
             if (trace?.familyDecisionMultiplePlausibleFamilies) {
-              multiCandidateHits.push({
+              flaggedHits.push({
                 context: context.id,
+                reason: "multiple_plausible",
+                stack: stackKey(stack),
+                trace
+              });
+            }
+
+            if (trace?.familyDecisionSelectedBelowRunnerUp) {
+              flaggedHits.push({
+                context: context.id,
+                reason: "selection_conflict",
                 stack: stackKey(stack),
                 trace
               });
@@ -523,7 +548,7 @@ describe("dynamic airborne family boundary scan contracts", () => {
       }
     }
 
-    expect(multiCandidateHits).toEqual([]);
+    expect(flaggedHits).toEqual([]);
     expect(Object.fromEntries([...familyCounts.entries()].sort(([left], [right]) => left.localeCompare(right)))).toEqual({
       "resilient_channel:stud_wall_system": 80,
       "steel_independent:stud_wall_system": 80

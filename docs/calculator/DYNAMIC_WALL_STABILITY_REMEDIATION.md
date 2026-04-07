@@ -561,6 +561,7 @@ Shipped behavior:
   - `selectedFamilyScore`
   - `runnerUpFamilyScore`
   - `familyDecisionMultiplePlausibleFamilies`
+  - `familyDecisionSelectedBelowRunnerUp`
   - `secondaryRunnerUpFamily`
   - `secondaryRunnerUpFamilyScore`
 - outer-span trimming is now also structured in trace instead of living only inside free-form notes:
@@ -600,6 +601,7 @@ Local findings from the current Phase B.2 pass:
   - score surface currently still slightly favors the runner-up:
     - selected `lined_massive_wall`: about `0.492`
     - runner-up `double_leaf`: about `0.501`
+  - that row now also carries `familyDecisionSelectedBelowRunnerUp`
   - strategy suffix `family_boundary_hold`
 - the heavier reordered hybrid `gypsum_board 12.5 | ytong_aac_d700 100 | rockwool 25 | air_gap 50 | diamond_board 12.5` now lands at about `Rw 49 / R'w 47 / DnT,w 48`
   - this keeps the reorder explicit but trims the old post-Phase-A lined-massive overshoot by about `2 dB`
@@ -695,18 +697,34 @@ Local findings from the current Phase B.2 pass:
     - `0` rows exposed `familyDecisionMultiplePlausibleFamilies`
     - `0` rows exposed a `secondaryRunnerUpFamily`
   - route-side parity now defends the same `160` rows with the same current result
+- selector-conflict diagnostics are now also under executable contract
+  - current expanded heavy-core result:
+    - `24` rows show `familyDecisionSelectedBelowRunnerUp`
+    - all `24` currently stay inside one defended corridor:
+      - `ytong_aac_d700 100 mm`
+      - selected family `lined_massive_wall`
+      - runner-up family `double_leaf`
+      - `familyBoundaryHoldApplied: true`
+    - no `ytong_aac_d700 120`, `ytong_g5_800 100`, or non-AAC heavy-core row currently shows this selector conflict
+  - current representative route result:
+    - `12` rows show `familyDecisionSelectedBelowRunnerUp`
+    - all `12` are again limited to `ytong_aac_d700 100 mm` rows inside the held corridor
+  - current representative framed result:
+    - `0` rows show `familyDecisionSelectedBelowRunnerUp`
 
 Residual risks after the shipped hold:
 
 - the hold is still corridor-specific, not a general family-scoring rewrite
 - deeper manual hybrids can still expose new narrow pairings outside `double_leaf <-> lined_massive_wall`
 - the selector still makes a hard family pick before the conservative trim applies
+- the new selection-conflict flag makes that hard-pick debt explicit, but it does not remove the debt yet
 
 What still needs more evidence:
 
 - deeper generated route-side palettes where non-AAC heavy cores also carry trailing outer trims, not just the current representative prefixes
 - permutations where both sides carry outer compliant trims inside broader manual hybrids, not just the current anchored samples
 - narrow boundary cases that involve more than one plausible runner-up family outside the currently defended representative framed and heavy-core palettes
+- deeper hybrid palettes that might extend `familyDecisionSelectedBelowRunnerUp` beyond the current `ytong_aac_d700 100` corridor
 - whether any future non-AAC heavy core that ever surfaces boundary diagnostics should enter the held corridor, or whether those families should stay outside until MorphologyV2
 
 ## 16. Validation Record

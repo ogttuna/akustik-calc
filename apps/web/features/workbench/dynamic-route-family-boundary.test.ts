@@ -107,6 +107,7 @@ describe("dynamic route family boundary diagnostics", () => {
     expect(boundary.dynamicAirborneTrace?.confidenceClass).toBe("low");
     expect(boundary.dynamicAirborneTrace?.familyDecisionClass).toBe("ambiguous");
     expect(boundary.dynamicAirborneTrace?.familyDecisionMultiplePlausibleFamilies).toBeUndefined();
+    expect(boundary.dynamicAirborneTrace?.familyDecisionSelectedBelowRunnerUp).toBe(true);
     expect(boundary.dynamicAirborneTrace?.runnerUpFamily).toBe("double_leaf");
     expect(boundary.dynamicAirborneTrace?.runnerUpFamilyScore ?? 0).toBeGreaterThan(0.49);
     expect(boundary.dynamicAirborneTrace?.selectedFamilyScore ?? 0).toBeGreaterThan(0.49);
@@ -131,6 +132,9 @@ describe("dynamic route family boundary diagnostics", () => {
     ).toBe(true);
     expect(
       boundary.warnings.some((warning: string) => /family-boundary hold was applied/i.test(warning))
+    ).toBe(true);
+    expect(
+      boundary.warnings.some((warning: string) => /hard family detector stayed on Lined Massive Wall/i.test(warning))
     ).toBe(true);
 
     expect(upper.dynamicAirborneTrace?.detectedFamily).toBe("lined_massive_wall");
