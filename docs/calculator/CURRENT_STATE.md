@@ -66,6 +66,10 @@ Interpretation:
 - the first treated/inferred raw-floor contiguous-split cohort is now also defended on both engine and route layers:
   - exact Dataholz dry CLT, exact TUAS open-box dry floor, integrated dry CLT, and promoted heavy-concrete family-estimate packages now stay identical across defended raw split and tagged split variants
   - this widens the raw-floor audit beyond bare carriers without opening new weaker carriers or broader screening shortcuts
+- a first weaker-carrier raw-floor posture cohort is now also defended on both engine and route layers:
+  - bare `open_box_timber_slab`, `open_web_steel_floor`, `lightweight_steel_floor`, and `steel_joist_floor` stay fail-closed even when explicitly tagged as `base_structure`
+  - `timber_frame_floor`, `timber_joist_floor`, and `engineered_timber_structural` stay role-gated: raw rows remain fail-closed while explicit `base_structure` rows reopen the predictor/family lane
+  - raw and tagged contiguous splits now stay stable on both sides of that gate
 - secondary route-surface revalidation on `2026-04-07` found two stale contracts but no new solver regression:
   - bound floor carry-over status was still expecting companion `Rw` to stay unavailable even though the defended floor carrier now keeps it supported
   - the wall full-preset matrix was still expecting apparent-route `Rw` to stay live even though the engine deliberately keeps wall-side `Rw` explicit once the descriptor becomes `R'w`
@@ -180,7 +184,7 @@ These behaviors are now explicitly defended and should not be treated as regress
   - visible floor roles reopen the carrier
   - raw wall-like heavy hybrids stay closed
   - untagged screening-only floor-like rows do not get widened automatically just because a finite screening `Rw` exists
-  - the first representative raw-screening audits, the safe-bare contiguous-split cohort, and the first treated/inferred split cohort are now green, but broader reopening still requires wider inference evidence rather than another generic support shortcut
+  - the first representative raw-screening audits, the safe-bare contiguous-split cohort, the first treated/inferred split cohort, and the first weaker-carrier posture cohort are now green, but broader reopening still requires wider inference evidence rather than another generic support shortcut
 - reproduced dynamic-route duplicate and reorder instability cases are documented separately under:
   - [../archive/analysis/DYNAMIC_ROUTE_STABILITY_ANALYSIS_2026-04-07.md](../archive/analysis/DYNAMIC_ROUTE_STABILITY_ANALYSIS_2026-04-07.md)
 - the intended fix order and protected-corridor rules for that wall-side work now live under:
@@ -204,9 +208,10 @@ These behaviors are now explicitly defended and should not be treated as regress
 
 Work in this order:
 
-1. Extend the raw-floor inference audit beyond the current representative screening rows, safe-bare contiguous-split cohort, and first treated/inferred split cohort before considering any broader screening-carrier reopening:
-   - weaker structural carriers and wider inferred family rows
-   - raw heavy wall-like hybrids and weaker structural carriers that must stay closed
+1. Extend the raw-floor inference audit beyond the current representative screening rows, safe-bare contiguous-split cohort, first treated/inferred split cohort, and first weaker-carrier posture cohort before considering any broader screening-carrier reopening:
+   - wider inferred family rows
+   - ceiling-side inferred packages
+   - raw heavy wall-like hybrids and any remaining weaker carriers that must stay closed
 2. Expand the current mixed floor/wall torture surface beyond the first generated split-detour matrix:
    - longer cross-mode edit chains
    - mixed duplicate/swap grids

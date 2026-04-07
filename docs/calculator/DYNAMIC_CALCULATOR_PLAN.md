@@ -60,7 +60,8 @@ Current queued follow-up:
 - extend the current representative raw-floor screening audit before widening the new `Rw` reopening rule beyond explicit floor-role assemblies:
   - the first raw safe-bare contiguous-split cohort is now defended on both engine and workbench routes
   - the first treated/inferred contiguous-split cohort is now also defended on both engine and workbench routes
-  - the next step is to widen that audit into weaker carriers and wider inferred packages that should still stay closed
+  - the first weaker-carrier posture cohort is now also defended on both engine and workbench routes
+  - the next step is to widen that audit into wider inferred packages and ceiling-side packages that should still stay closed unless the source corpus really supports them
 - keep widening the new mixed floor/wall torture pass before any more reorder canonicalization:
   - a representative mixed pack and a first generated split-detour matrix now exist on both engine and workbench routes
   - the next step there is to widen that first generated matrix into longer edit-chain and duplicate/swap grids
@@ -1289,7 +1290,7 @@ Additional gates by phase:
 
 Immediate next implementation pass:
 
-1. extend the raw-floor inference audit beyond the current representative rows, safe-bare contiguous-split cohort, and first treated/inferred split cohort
+1. extend the raw-floor inference audit beyond the current representative rows, safe-bare contiguous-split cohort, first treated/inferred split cohort, and first weaker-carrier posture cohort
 2. widen the current mixed floor/wall torture pass beyond the first generated split-detour matrix
 3. widen support only after the torture pass identifies a real honest gap rather than a merely hypothetical one
 
@@ -1297,7 +1298,7 @@ Why this is the correct next cut:
 
 - Phases 0 through 3 are already complete enough to act as the guardrail set
 - Phase 4 is already active, so the highest-value work is no longer baseline freezing or contract definition
-- the latest raw-floor passes closed a real safe-bare contiguous-split inference gap and froze a first treated/inferred split cohort, so the next safest move is to keep widening that audit before reopening any more carrier posture
+- the latest raw-floor passes closed a real safe-bare contiguous-split inference gap and froze the first treated/inferred plus weaker-carrier cohorts, so the next safest move is to keep widening that audit before reopening any more carrier posture
 - the recent workbench normalization fixes created a new contract question:
   - which final packages should be path-invariant
   - which physically order-sensitive packages must stay order-sensitive
