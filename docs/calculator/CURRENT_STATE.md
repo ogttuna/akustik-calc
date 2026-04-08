@@ -4,6 +4,8 @@ Document role:
 
 - primary short snapshot for the current dynamic calculator and workbench posture
 - read this before the execution plan or any archived analysis note
+- for the latest UI handoff restart point, also read:
+  - [CHECKPOINT_2026-04-08_UI_HANDOFF.md](./CHECKPOINT_2026-04-08_UI_HANDOFF.md)
 
 ## Scope
 
@@ -23,9 +25,78 @@ Verified broad corridors:
 - workbench defended corridor: green
   - `24` files
   - `294` tests
+- latest repository build revalidation on `2026-04-08`: green
+  - command: `pnpm build`
+  - engine DTS blocker and web typecheck blocker are both closed
 - latest change-adjacent revalidation after the raw-floor split/posture widening work: green
   - engine targeted/broad pack: `15` files, `227` tests
   - workbench targeted/broad pack: `14` files, `47` tests
+- latest change-adjacent revalidation after the ceiling-board schedule normalization fix: green
+  - engine targeted/broad pack: `8` files, `79` tests
+  - workbench targeted/broad pack: `7` files, `26` tests
+- latest change-adjacent revalidation after the neutral non-packable composite lower-board conservative-continuation fix: green
+  - engine targeted/broad pack: `9` files, `76` tests
+  - workbench targeted/broad pack: `7` files, `26` tests
+- latest audit-surface revalidation after the packaged lower-board edit-path parity expansion: green
+  - engine targeted pack: `4` files, `21` tests
+  - workbench targeted pack: `4` files, `18` tests
+- latest change-adjacent revalidation after the disjoint lower-board topology hardening: green
+  - engine targeted/broad pack: `9` files, `243` tests
+  - workbench targeted/broad pack: `6` files, `91` tests
+- latest change-adjacent revalidation after the lower-helper topology hardening: green
+  - engine targeted/broad pack: `8` files, `67` tests
+  - workbench targeted/broad pack: `7` files, `94` tests
+- latest audit-surface revalidation after the helper edit-path parity expansion: green
+  - engine adjacent pack: `4` files, `46` tests
+  - workbench targeted pack: `4` files, `6` tests
+- latest mixed-surface revalidation after the generated edit-history matrix expansion: green
+  - engine adjacent pack: `2` files, `2` tests
+  - workbench targeted pack: `3` files, `4` tests
+- latest mixed-surface revalidation after the wider generated duplicate/swap grid expansion: green
+  - engine adjacent pack: `2` files, `2` tests
+  - workbench targeted pack: `4` files, `5` tests
+- latest mixed-surface revalidation after the longer cross-mode chain expansion: green
+  - engine adjacent pack: `2` files, `2` tests
+  - workbench targeted pack: `4` files, `6` tests
+- latest change-adjacent revalidation after the exact floor-system companion split normalization and mixed concrete-exact breadth expansion: green
+  - engine targeted/broad pack: `6` files, `16` tests
+  - workbench targeted pack: `4` files, `6` tests
+- latest mixed-surface revalidation after the exact steel breadth expansion: green
+  - engine targeted pack: `3` files, `4` tests
+  - workbench targeted pack: `4` files, `6` tests
+- latest mixed-surface revalidation after the mounted timber exact breadth expansion: green
+  - engine targeted pack: `3` files, `4` tests
+  - workbench targeted pack: `4` files, `6` tests
+- latest mixed-surface revalidation after the Dry RC exact breadth expansion: green
+  - engine targeted pack: `3` files, `4` tests
+  - workbench targeted pack: `4` files, `6` tests
+- latest mixed-surface revalidation after the concrete dry exact breadth expansion: green
+  - engine targeted pack: `3` files, `4` tests
+  - workbench targeted pack: `4` files, `6` tests
+- latest mixed-surface revalidation after the direct timber exact breadth expansion: green
+  - engine targeted pack: `3` files, `4` tests
+  - workbench targeted pack: `4` files, `6` tests
+- latest mixed-surface revalidation after the deeper exact steel breadth expansion: green
+  - engine targeted pack: `3` files, `4` tests
+  - workbench targeted pack: `4` files, `6` tests
+- latest mixed-surface revalidation after the measured open-box exact breadth expansion: green
+  - engine targeted pack: `3` files, `4` tests
+  - workbench targeted pack: `4` files, `6` tests
+- latest mixed-surface revalidation after the lighter mounted timber exact breadth expansion: green
+  - engine targeted pack: `3` files, `4` tests
+  - workbench targeted pack: `4` files, `6` tests
+- latest mixed-surface revalidation after the measured CLT exact breadth expansion: green
+  - engine targeted pack: `3` files, `4` tests
+  - workbench targeted pack: `4` files, `6` tests
+- latest mixed-surface revalidation after the direct-lined dry timber exact breadth expansion: green
+  - engine targeted pack: `3` files, `4` tests
+  - workbench targeted pack: `4` files, `6` tests
+- latest mixed-surface revalidation after the timber-frame exact breadth expansion: green
+  - engine targeted pack: `3` files, `4` tests
+  - workbench targeted pack: `4` files, `6` tests
+- latest mixed-surface revalidation after the heavier measured CLT exact breadth expansion: green
+  - engine targeted pack: `3` files, `4` tests
+  - workbench targeted pack: `4` files, `6` tests
 
 Interpretation:
 
@@ -65,6 +136,7 @@ Interpretation:
     - plus at least one inferred `ceiling_cavity` or `ceiling_fill`
     - plus a concrete base carrier
   - raw open-box rows stay fail-closed on field-side `Rw`
+  - that defended open-box closure now also explicitly includes raw lower-only ceiling-helper packages and raw upper-only dry packages
   - raw hollow-core screening rows keep their defended reopened carrier posture
   - raw wall-like heavy hybrids stay closed even when a finite screening carrier `Rw` exists
 - safe-bare raw carrier contiguous-split parity is now defended explicitly on both engine and route layers:
@@ -76,8 +148,44 @@ Interpretation:
   - this widens the raw-floor audit beyond bare carriers without opening new weaker carriers or broader screening shortcuts
 - a first weaker-carrier raw-floor posture cohort is now also defended on both engine and route layers:
   - bare `open_box_timber_slab`, `open_web_steel_floor`, `lightweight_steel_floor`, and `steel_joist_floor` stay fail-closed even when explicitly tagged as `base_structure`
+  - that bare open-web closure is now also explicitly separated from the defended lower-only packaged lane:
+    - raw and tagged open-web `2 x 16 mm` ceiling packages stay on the same UBIQ `FL-26` family-general branch
+    - this remains a packaged lower-only ceiling lane, not a reopened bare open-web carrier lane
   - `timber_frame_floor`, `timber_joist_floor`, and `engineered_timber_structural` stay role-gated: raw rows remain fail-closed while explicit `base_structure` rows reopen the predictor/family lane
+  - that role-gated timber posture now also explicitly covers raw lower-only and raw upper-only non-combined packages
+  - open-box timber widening now stays inside defended combined upper-plus-lower semantics; non-combined upper-only and lower-only packages stay closed even when visible floor roles are explicit
+  - composite ceiling-only packaged rows are now also explicitly frozen as a conservative PMC continuation:
+    - raw and tagged variants stay on the same `low_confidence` lane
+    - they do not silently promote into a broader family-general ceiling-only reopen
+  - CLT lower-only remains fail-closed and now serves as the adjacent negative guard against over-broad ceiling-side widening
   - raw and tagged contiguous splits now stay stable on both sides of that gate
+- a first family/profile boundary matrix is now also defended on both engine and route layers:
+  - adjacent `upper_only`, `lower_only`, `bare`, and `combined` lanes are now frozen side by side across reinforced concrete, CLT, open-box timber, open-web steel, and composite families
+  - this makes future widening work prove that it changed only the intended profile instead of silently reclassifying neighbors
+- packable ceiling-board schedule parity is now also defended on both engine and route layers:
+  - schedule-equivalent contiguous lower-board splits now normalize back onto the defended lane instead of parking the predictor and silently promoting or falling off
+  - composite lower-only packaged rows now stay on the same conservative PMC `low_confidence` continuation across raw single, raw split, tagged single, and tagged split variants
+  - open-web lower-only packaged rows stay on the same UBIQ `FL-26` family-general branch across the same split surface
+  - CLT and open-box lower-only guards remain fail-closed on the adjacent split surface, so the fix is not a generic ceiling-side widening shortcut
+  - non-packable mixed-thickness lower-board schedules still park the predictor; this fix did not reopen generic predictor derivation
+  - neutral same-total non-packable composite lower-only schedules now also stay on the same conservative PMC continuation instead of degrading into the bare-composite family lane
+  - neutral same-total non-packable open-web lower-only schedules stay on the same `FL-26` branch, while adjacent CLT and open-box lower-only guards remain fail-closed
+- the first packaged lower-board edit-path parity matrix is now also defended on both engine and route layers:
+  - contiguous mixed lower-board order now stays invariant across composite/open-web packaged lanes and adjacent CLT/open-box guard lanes
+  - workbench direct-entry and duplicate/swap/remove-rebuild detours now converge back onto the same final route snapshot on that same lower-only surface
+- disjoint lower-board topology hardening is now also defended on both engine and route layers:
+  - auto predictor derivation now stays fail-closed when identical ceiling-board layers are split across separated segments
+  - open-web lower-only packaged rows keep the defended `FL-26` family-general branch only on contiguous lower-board schedules; disjoint/intervening lower-board topology now steps down to `low_confidence`
+  - composite lower-only disjoint topology still stays on the same conservative PMC continuation, but now carries explicit topology notes instead of masquerading as the canonical packaged shape
+  - contiguous schedule-equivalent splits and defended contiguous non-packable mixed schedules remain unchanged, so this hardening did not collapse the existing packaged lower-only corridor
+- lower-helper topology hardening is now also defended on both engine and route layers:
+  - auto predictor derivation already stayed fail-closed on duplicated or split `ceiling_fill` / `ceiling_cavity`; now the family tier also stays conservative on that same surface
+  - open-web lower-only packaged rows now step down off the defended `FL-26` family-general tier when `ceiling_fill` or `ceiling_cavity` is split across a disjoint helper topology
+  - composite lower-only helper detours now stay on the same conservative PMC `low_confidence` continuation instead of silently lifting into `family_general`
+  - CLT and open-box helper detours remain fail-closed, and contiguous helper split parity remains unchanged, so this did not collapse the defended packaged corridor
+- lower-helper edit-path parity is now also defended on the route layer:
+  - direct final-row entry and duplicate/swap/remove/rebuild helper detours now converge onto the same final route snapshot for the defended open-web/composite lower-only helper surface
+  - adjacent CLT and open-box helper-detour guards also keep the same fail-closed route snapshot across those same store-history detours
 - secondary route-surface revalidation on `2026-04-07` found two stale contracts but no new solver regression:
   - bound floor carry-over status was still expecting companion `Rw` to stay unavailable even though the defended floor carrier now keeps it supported
   - the wall full-preset matrix was still expecting apparent-route `Rw` to stay live even though the engine deliberately keeps wall-side `Rw` explicit once the descriptor becomes `R'w`
@@ -87,8 +195,22 @@ Interpretation:
   - workbench route now has an alternating study-mode torture test that switches between deep floor and wall edit chains
   - that route pack defends both neutral split-detour parity and broader support-honest sanity after cross-mode edit sequences
 - the first generated mixed floor/wall matrix is now also in place:
-  - engine-side generated split variants now defend six broader floor and wall packages against neutral contiguous-split drift
+  - engine-side generated split variants now defend twenty-one broader floor and wall packages against neutral contiguous-split drift
   - workbench route now mirrors that generated matrix across floor/wall study-mode detours, support-surface parity, and restore-to-baseline snapshots
+  - the generated route/engine family breadth is now aligned on Knauf concrete exact, TUAS concrete dry exact, Knauf direct timber exact, Knauf timber mount exact, Knauf acoustic timber exact, Dataholz timber-frame exact, Dataholz Dry exact, Dataholz Dry RC exact, dry CLT exact, TUAS CLT exact, TUAS CLT 260 exact, TUAS open-box exact, open-box dry exact, open-web 200 exact, open-web 400 exact, and hollow-core vinyl exact floors, so the mixed generated surface no longer skips the defended published-exact concrete branch, the defended upper-treatment concrete exact branch, the defended direct-fixed timber exact branch, the defended lighter and heavier mounted timber exact branches, the defended wet-screed timber-frame, direct-lined dry, and suspended dry-timber exact branches, the defended dry and measured CLT exact branches, the defended measured and dry open-box exact branches, the defended exact steel branches, or the first defended precast hollow-core family on one side
+- the first generated mixed floor/wall edit-history matrix is now also in place:
+  - workbench route now defends the same generated floor and wall case set against duplicate/swap/remove/rebuild store histories, not only direct split detours
+  - those generated histories are also checked across opposite-mode resets before restoring the original study mode
+- the first wider generated mixed floor/wall duplicate/swap grid is now also in place:
+  - workbench route now defends the same generated floor and wall case set across more than one distinct duplicate/swap/rebuild history shape instead of a single representative edit-history path
+  - this still does not claim closure on wider preset families; it only widens the defended grid on the current generated case set
+- the first longer generated mixed floor/wall cross-mode chain is now also in place:
+  - workbench route now defends restore-to-baseline after partial generated edits, opposite-mode noise chains, and repeated study-mode switches on the current generated case set
+  - this still does not claim closure on wider preset families or seeded long-chain families; it only freezes the first deterministic long-chain slice
+- exact floor-system companion split parity is now also defended on the floor side:
+  - contiguous same-material splits on defended exact floor rows now keep screening-anchored airborne companion metrics stable instead of drifting by `0.1 dB` across exact-match-preserving concrete splits
+  - the shipped fix only normalizes the airborne companion path on explicit or inferred floor-like stacks; impact matching, published floor-system selection, and wall routes remain untouched
+  - adjacent hollow-core exact, TUAS open-box exact, TUAS CLT exact, TUAS CLT 260 exact, open-box dry exact, Knauf direct timber exact, Knauf timber mount exact, Knauf acoustic timber exact, Dataholz timber-frame exact, Dataholz Dry exact, Dataholz Dry RC exact, TUAS concrete dry exact, open-web 200 exact, open-web 400 exact, split parity, raw parity, and mixed generated route surfaces all stayed green after that hardening
 - Phase A of that wall-side remediation note is now shipped:
   - hint-only framed metadata no longer forces heavy mineral/composite stacks onto the stud-wall lane
   - heavy unframed cavity walls can now be capped against a conservative screening corridor instead of over-scoring
@@ -186,8 +308,8 @@ These behaviors are now explicitly defended and should not be treated as regress
 - the next hardening step should decide which combinations are genuinely path-invariant and which must stay physically order-sensitive
 - the mixed floor/wall torture surface is no longer representative-only:
   - the original mixed-study-mode torture pack proves cross-mode store detours do not silently leak result posture on representative deep floor and wall packages
-  - the first generated split-detour matrix is now also green on both engine and route layers
-  - it is still not a full mixed matrix across wider preset families, longer edit chains, or larger duplicate/swap grids
+  - the first generated split-detour matrix, first generated edit-history matrix, first wider duplicate/swap grid, and first deterministic long-chain slice are now also green on the defended mixed surface
+  - it is still not a full mixed matrix across wider preset families beyond the current heavy-concrete plus concrete exacts, Knauf timber exacts, Dataholz timber exacts, open-box exacts, CLT exacts, open-web exacts, and hollow-core cohort or broader seeded long-chain families
 - the concrete floor-carrier `Rw` blocker from the 2026-04-07 revalidation is now fixed, but the narrowing rule is intentionally strict:
   - visible floor roles reopen the carrier
   - raw wall-like heavy hybrids stay closed
@@ -220,10 +342,10 @@ Work in this order:
    - wider inferred family rows
    - wider-than-first ceiling-side inferred packages
    - raw heavy wall-like hybrids and any remaining weaker carriers that must stay closed
-2. Expand the current mixed floor/wall torture surface beyond the first generated split-detour matrix:
-   - longer cross-mode edit chains
-   - mixed duplicate/swap grids
-   - only then decide whether wider preset families are still needed
+2. Expand the current mixed floor/wall torture surface beyond the first deterministic long-chain slice:
+   - wider preset-family case sets beyond the current heavy-concrete plus concrete exacts, Knauf timber exacts, Dataholz timber exacts, open-box exacts, CLT exacts, open-web exacts, and hollow-core cohort
+   - broader seeded long-chain families once the current generated grid is no longer the limiting surface
+   - only then decide whether broader mixed-family widening is still needed
 3. Widen the wall-side Phase B.2 evidence base before extending the hold beyond the current defended corridor:
    - keep the current runner-up-aware hold limited to `double_leaf <-> lined_massive_wall`
    - focus next on wider-than-representative route palettes and any boundary that produces more than one plausible runner-up family outside the currently defended framed/heavy-core representative palettes

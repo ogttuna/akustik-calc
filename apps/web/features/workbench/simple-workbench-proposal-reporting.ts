@@ -615,9 +615,12 @@ function buildWallSvg(section: SimpleWorkbenchProposalConstructionSection): stri
 
 export function buildSimpleWorkbenchProposalConstructionRender(
   layers: readonly SimpleWorkbenchProposalConstructionLayer[],
-  studyModeLabel: string
+  studyModeLabel: string,
+  options?: {
+    totalThicknessLabelOverride?: string | null;
+  }
 ): ProposalConstructionRender {
-  const section = buildSimpleWorkbenchProposalConstructionSection(layers, studyModeLabel);
+  const section = buildSimpleWorkbenchProposalConstructionSection(layers, studyModeLabel, options);
   const svgMarkup = section.isWall ? buildWallSvg(section) : buildFloorSvg(section);
   const legendRowsHtml = section.bands
     .map(

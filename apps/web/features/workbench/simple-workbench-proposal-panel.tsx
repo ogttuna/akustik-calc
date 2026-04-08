@@ -2,7 +2,7 @@
 
 import type { AssemblyCalculation, ReportProfile } from "@dynecho/shared";
 import { SurfacePanel } from "@dynecho/ui";
-import { Building2, Copy, Download, FileText, LibraryBig, Printer, Save, ScrollText, Star, Trash2, Upload } from "lucide-react";
+import { Building2, Copy, Download, FilePenLine, FileText, LibraryBig, Printer, Save, ScrollText, Star, Trash2, Upload } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
@@ -689,6 +689,17 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
         description: "Allow pop-ups so DynEcho can open the print-ready proposal view."
       });
       return;
+    }
+  }
+
+  function openProposalAdjustmentView() {
+    storeSimpleWorkbenchProposalPreview(proposalDocument);
+    const adjustmentWindow = window.open("/workbench/proposal/configure", "_blank");
+
+    if (!adjustmentWindow) {
+      toast.error("Adjustment window blocked", {
+        description: "Allow pop-ups so DynEcho can open the PDF adjustment desk."
+      });
     }
   }
 
@@ -1879,6 +1890,15 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
             >
               <Download className="h-4 w-4" />
               {isDownloadingPdf ? "Generating PDF..." : "Download branded PDF"}
+            </button>
+            <button
+              className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={!exportReady}
+              onClick={openProposalAdjustmentView}
+              type="button"
+            >
+              <FilePenLine className="h-4 w-4" />
+              PDF ayarla
             </button>
             <button
               className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"

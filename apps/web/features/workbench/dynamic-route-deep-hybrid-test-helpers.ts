@@ -232,7 +232,7 @@ export function buildSnapshotReader() {
 
     const snapshot = {
       dnTw: field.result?.metrics.estimatedDnTwDb,
-      flagged: (field.result?.warnings ?? []).some((warning) =>
+      flagged: (field.result?.warnings ?? []).some((warning: string) =>
         /boundary|hold|order-sensitive|triple-leaf|excluded from the dynamic airborne span/i.test(warning)
       ),
       rw: lab.result?.metrics.estimatedRwDb

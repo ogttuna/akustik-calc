@@ -130,6 +130,142 @@ const CLT_DRY_ROWS: readonly LayerInput[] = [
   { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 140 }
 ];
 
+const OPEN_BOX_DRY_ROWS: readonly LayerInput[] = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+  { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: 25 },
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+  { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: 50 },
+  { floorRole: "floating_screed", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 60 },
+  { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
+];
+
+const HOLLOW_CORE_VINYL_ROWS: readonly LayerInput[] = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 16 },
+  { floorRole: "ceiling_cavity", materialId: "genieclip_rst", thicknessMm: 16 },
+  { floorRole: "floor_covering", materialId: "vinyl_flooring", thicknessMm: 5 },
+  { floorRole: "resilient_layer", materialId: "geniemat_rst05", thicknessMm: 5 },
+  { floorRole: "base_structure", materialId: "hollow_core_plank", thicknessMm: 200 }
+];
+
+const KNAUF_CONCRETE_ROWS: readonly LayerInput[] = [
+  { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 13 },
+  { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 13 },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 50 },
+  { floorRole: "ceiling_cavity", materialId: "furring_channel", thicknessMm: 100 },
+  { floorRole: "floor_covering", materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: 20 },
+  { floorRole: "base_structure", materialId: "concrete", thicknessMm: 150 }
+];
+
+const OPEN_WEB_200_EXACT_ROWS: readonly LayerInput[] = [
+  { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+  { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+  { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 145 },
+  { floorRole: "ceiling_cavity", materialId: "ubiq_resilient_ceiling", thicknessMm: 65 },
+  { floorRole: "floor_covering", materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: 20 },
+  { floorRole: "floating_screed", materialId: "inex_floor_panel", thicknessMm: 19 },
+  { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: 200 }
+];
+
+const KNAUF_ACOUSTIC_TIMBER_ROWS: readonly LayerInput[] = [
+  { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+  { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+  { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 145 },
+  { floorRole: "ceiling_cavity", materialId: "furring_channel", thicknessMm: 28 },
+  { floorRole: "floor_covering", materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: 20 },
+  { floorRole: "base_structure", materialId: "timber_joist_floor", thicknessMm: 240 }
+];
+
+const DATAHOLZ_TIMBER_FRAME_ROWS: readonly LayerInput[] = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 12.5 },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 120 },
+  { floorRole: "ceiling_cavity", materialId: "resilient_channel", thicknessMm: 27 },
+  { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: 40 },
+  { floorRole: "floating_screed", materialId: "screed", thicknessMm: 50 },
+  { floorRole: "resilient_layer", materialId: "mw_t_impact_layer", thicknessMm: 30 },
+  { floorRole: "base_structure", materialId: "timber_frame_floor", thicknessMm: 220 }
+];
+
+const DATAHOLZ_DRY_FLOOR_ROWS: readonly LayerInput[] = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 12.5 },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 12.5 },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+  { floorRole: "floor_covering", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 25 },
+  { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: 40 },
+  { floorRole: "resilient_layer", materialId: "mw_t_impact_layer", thicknessMm: 30 },
+  { floorRole: "base_structure", materialId: "timber_frame_floor", thicknessMm: 220 }
+];
+
+const DATAHOLZ_DRY_RC_ROWS: readonly LayerInput[] = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 12.5 },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 12.5 },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+  { floorRole: "ceiling_cavity", materialId: "resilient_channel", thicknessMm: 27 },
+  { floorRole: "floor_covering", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 25 },
+  { floorRole: "resilient_layer", materialId: "mw_t_impact_layer", thicknessMm: 30 },
+  { floorRole: "base_structure", materialId: "timber_frame_floor", thicknessMm: 240 }
+];
+
+const TUAS_CONCRETE_DRY_ROWS: readonly LayerInput[] = [
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+  { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: 50 },
+  { floorRole: "floating_screed", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 60 },
+  { floorRole: "base_structure", materialId: "concrete", thicknessMm: 160 }
+];
+
+const KNAUF_DIRECT_TIMBER_ROWS: readonly LayerInput[] = [
+  { floorRole: "ceiling_board", materialId: "impactstop_board", thicknessMm: 13 },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 90 },
+  { floorRole: "floor_covering", materialId: "engineered_timber_flooring", thicknessMm: 15 },
+  { floorRole: "base_structure", materialId: "timber_joist_floor", thicknessMm: 240 }
+];
+
+const OPEN_WEB_400_EXACT_ROWS: readonly LayerInput[] = [
+  { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+  { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+  { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 145 },
+  { floorRole: "ceiling_cavity", materialId: "ubiq_resilient_ceiling", thicknessMm: 65 },
+  { floorRole: "floor_covering", materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: 20 },
+  { floorRole: "floating_screed", materialId: "inex_floor_panel", thicknessMm: 19 },
+  { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: 400 }
+];
+
+const TUAS_OPEN_BOX_EXACT_ROWS: readonly LayerInput[] = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+  { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: 25 },
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+  { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
+];
+
+const KNAUF_TIMBER_MOUNT_ROWS: readonly LayerInput[] = [
+  { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 13 },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 145 },
+  { floorRole: "ceiling_cavity", materialId: "furring_channel", thicknessMm: 28 },
+  { floorRole: "floor_covering", materialId: "engineered_timber_flooring", thicknessMm: 15 },
+  { floorRole: "base_structure", materialId: "timber_joist_floor", thicknessMm: 240 }
+];
+
+const TUAS_CLT_EXACT_ROWS: readonly LayerInput[] = [
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+  { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 140 }
+];
+
+const TUAS_CLT_260_EXACT_ROWS: readonly LayerInput[] = [
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+  { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 260 }
+];
+
 const STEEL_BOUND_ROWS: readonly LayerInput[] = [
   { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
   { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
@@ -189,6 +325,22 @@ export const ENGINE_MIXED_GENERATED_CASES: readonly EngineMixedGeneratedCase[] =
       impactFieldContext: FLOOR_IMPACT_FIELD_CONTEXT,
       targetOutputs: FLOOR_FIELD_OUTPUTS
     },
+    id: "floor-open-box-dry",
+    label: "Open-box dry exact floor",
+    labOptions: { targetOutputs: FLOOR_LAB_OUTPUTS },
+    rows: OPEN_BOX_DRY_ROWS,
+    splitPlans: [
+      { parts: [20, 30], rowIndex: 6 },
+      { parts: [25, 35], rowIndex: 7 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    fieldOptions: {
+      airborneContext: FLOOR_AIRBORNE_CONTEXT,
+      impactFieldContext: FLOOR_IMPACT_FIELD_CONTEXT,
+      targetOutputs: FLOOR_FIELD_OUTPUTS
+    },
     id: "floor-clt-dry",
     label: "CLT dry exact floor",
     labOptions: { targetOutputs: FLOOR_LAB_OUTPUTS },
@@ -196,6 +348,230 @@ export const ENGINE_MIXED_GENERATED_CASES: readonly EngineMixedGeneratedCase[] =
     splitPlans: [
       { parts: [20, 40], rowIndex: 1 },
       { parts: [60, 80], rowIndex: 3 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    fieldOptions: {
+      airborneContext: FLOOR_AIRBORNE_CONTEXT,
+      impactFieldContext: FLOOR_IMPACT_FIELD_CONTEXT,
+      targetOutputs: FLOOR_FIELD_OUTPUTS
+    },
+    id: "floor-hollow-core-vinyl",
+    label: "Hollow-core vinyl exact floor",
+    labOptions: { targetOutputs: FLOOR_LAB_OUTPUTS },
+    rows: HOLLOW_CORE_VINYL_ROWS,
+    splitPlans: [
+      { parts: [8, 8], rowIndex: 0 },
+      { parts: [100, 100], rowIndex: 4 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    fieldOptions: {
+      airborneContext: FLOOR_AIRBORNE_CONTEXT,
+      impactFieldContext: FLOOR_IMPACT_FIELD_CONTEXT,
+      targetOutputs: FLOOR_FIELD_OUTPUTS
+    },
+    id: "floor-knauf-concrete",
+    label: "Knauf concrete exact floor",
+    labOptions: { targetOutputs: FLOOR_LAB_OUTPUTS },
+    rows: KNAUF_CONCRETE_ROWS,
+    splitPlans: [
+      { parts: [6.5, 6.5], rowIndex: 0 },
+      { parts: [75, 75], rowIndex: 5 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    fieldOptions: {
+      airborneContext: FLOOR_AIRBORNE_CONTEXT,
+      impactFieldContext: FLOOR_IMPACT_FIELD_CONTEXT,
+      targetOutputs: FLOOR_FIELD_OUTPUTS
+    },
+    id: "floor-open-web-200-exact",
+    label: "Open-web 200 exact floor",
+    labOptions: { targetOutputs: FLOOR_LAB_OUTPUTS },
+    rows: OPEN_WEB_200_EXACT_ROWS,
+    splitPlans: [
+      { parts: [8, 8], rowIndex: 0 },
+      { parts: [100, 100], rowIndex: 7 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    fieldOptions: {
+      airborneContext: FLOOR_AIRBORNE_CONTEXT,
+      impactFieldContext: FLOOR_IMPACT_FIELD_CONTEXT,
+      targetOutputs: FLOOR_FIELD_OUTPUTS
+    },
+    id: "floor-knauf-acoustic-timber",
+    label: "Knauf acoustic timber exact floor",
+    labOptions: { targetOutputs: FLOOR_LAB_OUTPUTS },
+    rows: KNAUF_ACOUSTIC_TIMBER_ROWS,
+    splitPlans: [
+      { parts: [8, 8], rowIndex: 0 },
+      { parts: [120, 120], rowIndex: 6 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    fieldOptions: {
+      airborneContext: FLOOR_AIRBORNE_CONTEXT,
+      impactFieldContext: FLOOR_IMPACT_FIELD_CONTEXT,
+      targetOutputs: FLOOR_FIELD_OUTPUTS
+    },
+    id: "floor-tuas-concrete-dry",
+    label: "TUAS concrete dry exact floor",
+    labOptions: { targetOutputs: FLOOR_LAB_OUTPUTS },
+    rows: TUAS_CONCRETE_DRY_ROWS,
+    splitPlans: [
+      { parts: [20, 30], rowIndex: 2 },
+      { parts: [80, 80], rowIndex: 4 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    fieldOptions: {
+      airborneContext: FLOOR_AIRBORNE_CONTEXT,
+      impactFieldContext: FLOOR_IMPACT_FIELD_CONTEXT,
+      targetOutputs: FLOOR_FIELD_OUTPUTS
+    },
+    id: "floor-knauf-direct-timber",
+    label: "Knauf direct timber exact floor",
+    labOptions: { targetOutputs: FLOOR_LAB_OUTPUTS },
+    rows: KNAUF_DIRECT_TIMBER_ROWS,
+    splitPlans: [
+      { parts: [6.5, 6.5], rowIndex: 0 },
+      { parts: [7.5, 7.5], rowIndex: 2 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    fieldOptions: {
+      airborneContext: FLOOR_AIRBORNE_CONTEXT,
+      impactFieldContext: FLOOR_IMPACT_FIELD_CONTEXT,
+      targetOutputs: FLOOR_FIELD_OUTPUTS
+    },
+    id: "floor-open-web-400-exact",
+    label: "Open-web 400 exact floor",
+    labOptions: { targetOutputs: FLOOR_LAB_OUTPUTS },
+    rows: OPEN_WEB_400_EXACT_ROWS,
+    splitPlans: [
+      { parts: [8, 8], rowIndex: 0 },
+      { parts: [200, 200], rowIndex: 7 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    fieldOptions: {
+      airborneContext: FLOOR_AIRBORNE_CONTEXT,
+      impactFieldContext: FLOOR_IMPACT_FIELD_CONTEXT,
+      targetOutputs: FLOOR_FIELD_OUTPUTS
+    },
+    id: "floor-open-box-exact",
+    label: "TUAS open-box exact floor",
+    labOptions: { targetOutputs: FLOOR_LAB_OUTPUTS },
+    rows: TUAS_OPEN_BOX_EXACT_ROWS,
+    splitPlans: [
+      { parts: [4, 4], rowIndex: 4 },
+      { parts: [1.5, 1.5], rowIndex: 5 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    fieldOptions: {
+      airborneContext: FLOOR_AIRBORNE_CONTEXT,
+      impactFieldContext: FLOOR_IMPACT_FIELD_CONTEXT,
+      targetOutputs: FLOOR_FIELD_OUTPUTS
+    },
+    id: "floor-knauf-timber-mount",
+    label: "Knauf timber mount exact floor",
+    labOptions: { targetOutputs: FLOOR_LAB_OUTPUTS },
+    rows: KNAUF_TIMBER_MOUNT_ROWS,
+    splitPlans: [
+      { parts: [70, 75], rowIndex: 1 },
+      { parts: [7.5, 7.5], rowIndex: 3 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    fieldOptions: {
+      airborneContext: FLOOR_AIRBORNE_CONTEXT,
+      impactFieldContext: FLOOR_IMPACT_FIELD_CONTEXT,
+      targetOutputs: FLOOR_FIELD_OUTPUTS
+    },
+    id: "floor-tuas-clt-exact",
+    label: "TUAS CLT exact floor",
+    labOptions: { targetOutputs: FLOOR_LAB_OUTPUTS },
+    rows: TUAS_CLT_EXACT_ROWS,
+    splitPlans: [
+      { parts: [4, 4], rowIndex: 0 },
+      { parts: [1.5, 1.5], rowIndex: 1 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    fieldOptions: {
+      airborneContext: FLOOR_AIRBORNE_CONTEXT,
+      impactFieldContext: FLOOR_IMPACT_FIELD_CONTEXT,
+      targetOutputs: FLOOR_FIELD_OUTPUTS
+    },
+    id: "floor-tuas-clt-260-exact",
+    label: "TUAS CLT 260 exact floor",
+    labOptions: { targetOutputs: FLOOR_LAB_OUTPUTS },
+    rows: TUAS_CLT_260_EXACT_ROWS,
+    splitPlans: [
+      { parts: [4, 4], rowIndex: 0 },
+      { parts: [1.5, 1.5], rowIndex: 1 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    fieldOptions: {
+      airborneContext: FLOOR_AIRBORNE_CONTEXT,
+      impactFieldContext: FLOOR_IMPACT_FIELD_CONTEXT,
+      targetOutputs: FLOOR_FIELD_OUTPUTS
+    },
+    id: "floor-dataholz-timber-frame",
+    label: "Dataholz timber-frame exact floor",
+    labOptions: { targetOutputs: FLOOR_LAB_OUTPUTS },
+    rows: DATAHOLZ_TIMBER_FRAME_ROWS,
+    splitPlans: [
+      { parts: [6.25, 6.25], rowIndex: 0 },
+      { parts: [110, 110], rowIndex: 6 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    fieldOptions: {
+      airborneContext: FLOOR_AIRBORNE_CONTEXT,
+      impactFieldContext: FLOOR_IMPACT_FIELD_CONTEXT,
+      targetOutputs: FLOOR_FIELD_OUTPUTS
+    },
+    id: "floor-dataholz-dry",
+    label: "Dataholz dry exact floor",
+    labOptions: { targetOutputs: FLOOR_LAB_OUTPUTS },
+    rows: DATAHOLZ_DRY_FLOOR_ROWS,
+    splitPlans: [
+      { parts: [6.25, 6.25], rowIndex: 0 },
+      { parts: [20, 20], rowIndex: 4 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    fieldOptions: {
+      airborneContext: FLOOR_AIRBORNE_CONTEXT,
+      impactFieldContext: FLOOR_IMPACT_FIELD_CONTEXT,
+      targetOutputs: FLOOR_FIELD_OUTPUTS
+    },
+    id: "floor-dataholz-dry-rc",
+    label: "Dataholz Dry RC exact floor",
+    labOptions: { targetOutputs: FLOOR_LAB_OUTPUTS },
+    rows: DATAHOLZ_DRY_RC_ROWS,
+    splitPlans: [
+      { parts: [6.25, 6.25], rowIndex: 0 },
+      { parts: [120, 120], rowIndex: 6 }
     ],
     studyMode: "floor"
   },

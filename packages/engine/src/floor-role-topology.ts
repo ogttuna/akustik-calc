@@ -14,6 +14,11 @@ export type CeilingBoardScheduleConflict = {
   role: "ceiling_board";
 };
 
+export type CeilingBoardTopologyConflict = CeilingBoardScheduleConflict & {
+  mixedSchedule: boolean;
+  scheduleSegments: number;
+};
+
 type FloorRoleTopologyLayer = {
   floorRole?: FloorRole;
   material: {
@@ -22,6 +27,8 @@ type FloorRoleTopologyLayer = {
   };
   thicknessMm?: number;
 };
+
+const CEILING_BOARD_SCHEDULE_PACK_TOLERANCE_MM = 0.25;
 
 export const SINGLE_ENTRY_FLOOR_ROLES: readonly SingleEntryFloorRole[] = [
   "base_structure",
@@ -83,6 +90,22 @@ export function hasAmbiguousSingleEntryRoleTopology(
 export function collectCeilingBoardScheduleConflict(
   layers: readonly FloorRoleTopologyLayer[]
 ): CeilingBoardScheduleConflict | null {
+  const conflict = collectCeilingBoardTopologyConflict(layers);
+
+  if (!conflict?.mixedSchedule) {
+    return null;
+  }
+
+  return {
+    count: conflict.count,
+    materialLabels: conflict.materialLabels,
+    role: conflict.role
+  };
+}
+
+export function collectCeilingBoardTopologyConflict(
+  layers: readonly FloorRoleTopologyLayer[]
+): CeilingBoardTopologyConflict | null {
   const ceilingBoards = layers.filter((layer) => layer.floorRole === "ceiling_board");
   const firstCeilingBoard = ceilingBoards[0];
 
@@ -90,18 +113,59 @@ export function collectCeilingBoardScheduleConflict(
     return null;
   }
 
-  const hasConflictingSchedule = ceilingBoards.some(
+  const mixedSchedule = ceilingBoards.some(
     (layer) =>
       layer.material.id !== firstCeilingBoard.material.id || layer.thicknessMm !== firstCeilingBoard.thicknessMm
   );
 
-  if (!hasConflictingSchedule) {
+  let scheduleSegments = 0;
+  let insideCeilingBoardSegment = false;
+
+  for (const layer of layers) {
+    const isCeilingBoard = layer.floorRole === "ceiling_board";
+
+    if (isCeilingBoard && !insideCeilingBoardSegment) {
+      scheduleSegments += 1;
+    }
+
+    insideCeilingBoardSegment = isCeilingBoard;
+  }
+
+  const scheduleEquivalentContiguousPackage =
+    scheduleSegments <= 1 &&
+    ceilingBoards.every((layer) => layer.material.id === firstCeilingBoard.material.id) &&
+    isScheduleEquivalentCeilingBoardPackage(ceilingBoards);
+
+  if (scheduleEquivalentContiguousPackage) {
+    return null;
+  }
+
+  if (!mixedSchedule && scheduleSegments <= 1) {
     return null;
   }
 
   return {
     count: ceilingBoards.length,
     materialLabels: Array.from(new Set(ceilingBoards.map((layer) => layer.material.name))),
-    role: "ceiling_board"
+    mixedSchedule,
+    role: "ceiling_board",
+    scheduleSegments
   };
+}
+
+function isScheduleEquivalentCeilingBoardPackage(
+  ceilingBoards: readonly FloorRoleTopologyLayer[]
+): boolean {
+  const maxThicknessMm = Math.max(...ceilingBoards.map((layer) => layer.thicknessMm ?? 0));
+  if (!(maxThicknessMm > 0)) {
+    return false;
+  }
+
+  const totalThicknessMm = ceilingBoards.reduce((sum, layer) => sum + (layer.thicknessMm ?? 0), 0);
+  const packedBoardCount = Math.round(totalThicknessMm / maxThicknessMm);
+
+  return (
+    packedBoardCount > 0 &&
+    Math.abs(totalThicknessMm - packedBoardCount * maxThicknessMm) <= CEILING_BOARD_SCHEDULE_PACK_TOLERANCE_MM
+  );
 }

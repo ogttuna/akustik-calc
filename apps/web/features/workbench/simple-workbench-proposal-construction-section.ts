@@ -116,13 +116,17 @@ function inferConstructionMaterialFamily(input: {
 
 export function buildSimpleWorkbenchProposalConstructionSection(
   layers: readonly SimpleWorkbenchProposalConstructionLayer[],
-  studyModeLabel: string
+  studyModeLabel: string,
+  options?: {
+    totalThicknessLabelOverride?: string | null;
+  }
 ): SimpleWorkbenchProposalConstructionSection {
   const normalizedStudyMode = studyModeLabel.trim().toLowerCase();
   const isWall = normalizedStudyMode.includes("wall");
   const anchorFromLabel = isWall ? "Side A" : "Walking side";
   const anchorToLabel = isWall ? "Side B" : "Ceiling side";
   const totalThicknessMm = layers.reduce((sum, layer) => sum + (parseThicknessMm(layer.thicknessLabel) ?? 0), 0);
+  const totalThicknessOverrideLabel = options?.totalThicknessLabelOverride?.trim();
   const bands: SimpleWorkbenchProposalConstructionBand[] = layers.map((layer, index) => ({
     category: layer.categoryLabel.toLowerCase(),
     flexGrow: Math.max(parseThicknessMm(layer.thicknessLabel) ?? 5, 12),
@@ -146,6 +150,11 @@ export function buildSimpleWorkbenchProposalConstructionSection(
     bands,
     headline: layers.length > 0 ? `${layers.length} visible row${layers.length === 1 ? "" : "s"} in solver order.` : "No visible rows are packaged yet.",
     isWall,
-    totalThicknessLabel: totalThicknessMm > 0 ? `${formatMillimetres(totalThicknessMm)} mm total` : "Thickness not entered",
+    totalThicknessLabel:
+      totalThicknessOverrideLabel && totalThicknessOverrideLabel.length > 0
+        ? totalThicknessOverrideLabel
+        : totalThicknessMm > 0
+          ? `${formatMillimetres(totalThicknessMm)} mm total`
+          : "Thickness not entered",
   };
 }

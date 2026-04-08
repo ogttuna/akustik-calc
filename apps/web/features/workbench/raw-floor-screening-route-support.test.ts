@@ -129,6 +129,37 @@ const CASES: readonly RawRouteCase[] = [
     }
   },
   {
+    id: "raw_open_box_ceiling_helper",
+    rows: [
+      { id: "a", materialId: "gypsum_board", thicknessMm: 13 },
+      { id: "b", materialId: "rockwool", thicknessMm: 90 },
+      { id: "c", materialId: "furring_channel", thicknessMm: 28 },
+      { id: "d", materialId: "open_box_timber_slab", thicknessMm: 370 }
+    ],
+    expected: {
+      basis: null,
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["R'w", "DnT,w"]
+    }
+  },
+  {
+    id: "raw_open_box_upper_only_dry",
+    rows: [
+      { id: "a", materialId: "laminate_flooring", thicknessMm: 8 },
+      { id: "b", materialId: "eps_underlay", thicknessMm: 3 },
+      { id: "c", materialId: "generic_fill", thicknessMm: 50 },
+      { id: "d", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 60 },
+      { id: "e", materialId: "open_box_timber_slab", thicknessMm: 370 }
+    ],
+    expected: {
+      basis: null,
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["R'w", "DnT,w"]
+    }
+  },
+  {
     id: "raw_hollow_core_single",
     rows: [{ id: "a", materialId: "hollow_core_plank", thicknessMm: 200 }],
     expected: {

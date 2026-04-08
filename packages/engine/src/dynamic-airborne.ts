@@ -1102,12 +1102,14 @@ function summarizeFamilyDecisionBoundary(
     0.98
   );
 
-  const scoredFamilies: Array<{ family: DynamicAirborneFamily; score: number }> = [
+  const scoredFamilyCandidates: Array<{ family: DynamicAirborneFamily; score: number }> = [
     { family: "double_leaf", score: doubleLeafScore },
     { family: "lined_massive_wall", score: linedMassiveScore },
     { family: "stud_wall_system", score: studScore },
     { family: "double_stud_system", score: doubleStudScore }
-  ]
+  ];
+
+  const scoredFamilies = scoredFamilyCandidates
     .filter((entry) => entry.score >= 0.15 || entry.family === selectedFamily)
     .sort((left, right) => right.score - left.score);
 

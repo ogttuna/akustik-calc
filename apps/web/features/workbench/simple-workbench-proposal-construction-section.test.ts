@@ -96,4 +96,23 @@ describe("simple workbench proposal construction section", () => {
       thicknessLabel: "75 mm"
     });
   });
+
+  it("honors a manually overridden total thickness label", () => {
+    const section = buildSimpleWorkbenchProposalConstructionSection(
+      [
+        {
+          categoryLabel: "Finish",
+          index: 1,
+          label: "Engineered timber",
+          thicknessLabel: "14 mm"
+        }
+      ],
+      "Floor",
+      {
+        totalThicknessLabelOverride: "162 mm total (manual)"
+      }
+    );
+
+    expect(section.totalThicknessLabel).toBe("162 mm total (manual)");
+  });
 });

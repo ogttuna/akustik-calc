@@ -1,6 +1,6 @@
 # Dynamic Calculator Source Gap Ledger
 
-Last reviewed: 2026-04-04
+Last reviewed: 2026-04-08
 
 Purpose:
 
@@ -47,6 +47,7 @@ Important scope note:
   - no live impact basis is exposed
 - why it stays closed:
   - the current TUAS open-box rows are defended combined systems, not a defended raw bare open-box impact lane
+  - the fail-closed posture now also explicitly covers raw and tagged lower-only ceiling-helper packages plus upper-only dry packages
   - widening this lane without stronger same-family evidence would create fake confidence
 - next research question:
   - can the TUAS measured corpus defend a narrow near-bare or single-side-treatment open-box lane
@@ -54,6 +55,26 @@ Important scope note:
 - current test anchors:
   - `packages/engine/src/bare-floor-raw-support.test.ts`
   - `packages/engine/src/floor-gap-ledger-contract.test.ts`
+  - `packages/engine/src/raw-floor-screening-carrier-support.test.ts`
+  - `packages/engine/src/raw-floor-weaker-carrier-posture.test.ts`
+
+### Role-Gated Timber Carriers
+
+- current posture:
+  - raw bare, lower-only, and upper-only `timber_frame_floor`, `timber_joist_floor`, and `engineered_timber_structural` rows stay fail-closed on impact
+  - explicit `base_structure` rows can still reopen the predictor/family lane
+  - raw combined rows can still use the defended exact/family corridors when the visible package carries upper-plus-lower evidence
+- why it stays gated:
+  - current timber evidence is strong enough for explicit-role and defended combined-package corridors
+  - it is not strong enough to let helper-only or top-side-only raw rows auto-promote into the same-family lane
+- next work:
+  - widen timber only through explicit-role or defended combined-package evidence
+  - do not let helper-only raw timber rows become an accidental generic widening shortcut
+- current test anchors:
+  - `packages/engine/src/raw-floor-weaker-carrier-posture.test.ts`
+  - `apps/web/features/workbench/raw-floor-weaker-carrier-route-posture.test.ts`
+  - `packages/engine/src/impact-predictor-input.test.ts`
+  - `packages/engine/src/impact-raw-layer-inference.test.ts`
 
 ### TUAS Open-Box Dry Exact Package
 
@@ -89,6 +110,45 @@ Important scope note:
   - `packages/engine/src/bare-floor-raw-support.test.ts`
   - `packages/engine/src/bare-floor-tagged-family-contract.test.ts`
   - `packages/engine/src/floor-gap-ledger-contract.test.ts`
+  - `packages/engine/src/floor-profile-boundary-matrix.test.ts`
+  - `apps/web/features/workbench/floor-profile-boundary-route-matrix.test.ts`
+
+### Open-Web Lower-Only Packaged Ceiling Lane
+
+- current posture:
+  - raw and tagged lower-only `2 x 16 mm` open-web ceiling packages are live
+  - lab: `family_general`
+  - field: `mixed_predicted_plus_estimated_local_guide`
+  - candidate ids:
+    - `ubiq_fl26_open_web_steel_300_16mm_exact_lab_2026`
+    - `ubiq_fl26_open_web_steel_200_16mm_exact_lab_2026`
+    - `ubiq_fl26_open_web_steel_400_16mm_exact_lab_2026`
+- why this does not contradict the bare closure:
+  - this is a packaged lower-only ceiling lane, not a bare open-web carrier lane
+  - the current family estimate stays inside explicit open-web support-form rows instead of borrowing from ambiguous generic steel families
+  - schedule-equivalent contiguous lower-board splits now stay on that same branch instead of parking predictor derivation
+  - neutral same-total non-packable mixed lower-board schedules also stay on that same `FL-26` branch even though the predictor blocker remains visible
+  - disjoint/intervening lower-board topology no longer stays on that defended `FL-26` family-general tier; it now steps down to `low_confidence` and surfaces explicit blocker copy
+  - disjoint/intervening lower-helper topology in `ceiling_fill` or `ceiling_cavity` also no longer stays on that defended `FL-26` family-general tier; it now steps down to `low_confidence` on the same conservative surface where predictor derivation was already fail-closed
+  - direct final-row entry and duplicate/swap/remove-rebuild store detours now also converge back onto that same branch
+- current test anchors:
+  - `packages/engine/src/floor-role-topology.test.ts`
+  - `packages/engine/src/impact-predictor-input.test.ts`
+  - `packages/engine/src/raw-floor-packaged-lane-audit.test.ts`
+  - `apps/web/features/workbench/raw-floor-packaged-lane-route-audit.test.ts`
+  - `packages/engine/src/floor-packaged-lane-disjoint-detour.test.ts`
+  - `packages/engine/src/floor-packaged-lane-helper-disjoint-detour.test.ts`
+  - `apps/web/features/workbench/floor-packaged-lane-disjoint-route-detour.test.ts`
+  - `apps/web/features/workbench/floor-packaged-lane-helper-disjoint-route-detour.test.ts`
+  - `packages/engine/src/floor-split-layer-parity.test.ts`
+  - `packages/engine/src/floor-packaged-lane-order-parity.test.ts`
+  - `apps/web/features/workbench/raw-floor-inferred-split-parity.test.ts`
+  - `apps/web/features/workbench/floor-packaged-lane-edit-path-parity.test.ts`
+  - `apps/web/features/workbench/floor-packaged-lane-helper-edit-path-parity.test.ts`
+  - `packages/engine/src/floor-core-coverage-matrix.test.ts`
+  - `apps/web/features/workbench/floor-family-regressions.test.ts`
+  - `packages/engine/src/floor-profile-boundary-matrix.test.ts`
+  - `apps/web/features/workbench/floor-profile-boundary-route-matrix.test.ts`
 
 ### UBIQ Open-Web Combined FL-28 Package
 
@@ -110,6 +170,48 @@ Important scope note:
   - `apps/web/features/workbench/floor-stack-invariance.test.ts`
   - `apps/web/features/workbench/complex-stack-audit.test.ts`
   - `packages/engine/src/floor-gap-ledger-contract.test.ts`
+  - `packages/engine/src/floor-profile-boundary-matrix.test.ts`
+  - `apps/web/features/workbench/floor-profile-boundary-route-matrix.test.ts`
+
+### Composite Ceiling-Only Conservative Lane
+
+- current posture:
+  - raw and tagged composite ceiling-only packaged rows are live
+  - lab: `low_confidence`
+  - field: `mixed_predicted_plus_estimated_standardized_field_volume_normalization`
+  - candidate ids:
+    - `pmc_m1_bare_composite_lab_2026`
+    - `pmc_m1_dry_floating_plus_c2x_lab_2026`
+    - `pmc_m1_dry_floating_plus_c1x_lab_2026`
+    - `pmc_m1_dry_floating_floor_lab_2026`
+- why it stays conservative:
+  - the PMC source family does support a ceiling-side continuation
+  - but the visible lower-only package still does not justify silently promoting that continuation into a broader family-general reopen
+  - schedule-equivalent contiguous lower-board splits now stay on the same conservative continuation instead of drifting into the bare-composite family lane
+  - neutral same-total mixed-thickness lower-board schedules now also stay on that same conservative continuation even though the predictor blocker remains active
+  - disjoint/intervening lower-board topology still stays on that same conservative continuation, but it now carries explicit topology notes and blocker copy instead of reading like the canonical packaged shape
+  - disjoint/intervening lower-helper topology in `ceiling_fill` or `ceiling_cavity` also now stays on that same conservative continuation instead of drifting up into `family_general`
+  - direct final-row entry and duplicate/swap/remove-rebuild store detours now also converge back onto that same conservative continuation
+- neighboring negative guard:
+  - CLT lower-only stays fail-closed on both engine and route surfaces
+  - open-box lower-only also stays fail-closed on the adjacent split surface
+- current test anchors:
+  - `packages/engine/src/floor-role-topology.test.ts`
+  - `packages/engine/src/raw-floor-packaged-lane-audit.test.ts`
+  - `apps/web/features/workbench/raw-floor-packaged-lane-route-audit.test.ts`
+  - `packages/engine/src/floor-packaged-lane-disjoint-detour.test.ts`
+  - `packages/engine/src/floor-packaged-lane-helper-disjoint-detour.test.ts`
+  - `apps/web/features/workbench/floor-packaged-lane-disjoint-route-detour.test.ts`
+  - `apps/web/features/workbench/floor-packaged-lane-helper-disjoint-route-detour.test.ts`
+  - `packages/engine/src/floor-split-layer-parity.test.ts`
+  - `packages/engine/src/floor-packaged-lane-order-parity.test.ts`
+  - `apps/web/features/workbench/raw-floor-inferred-split-parity.test.ts`
+  - `apps/web/features/workbench/floor-packaged-lane-edit-path-parity.test.ts`
+  - `apps/web/features/workbench/floor-packaged-lane-helper-edit-path-parity.test.ts`
+  - `packages/engine/src/impact-predictor-input.test.ts`
+  - `packages/engine/src/predictor-floor-system-estimate.test.ts`
+  - `packages/engine/src/composite-panel-published-interaction-estimate.test.ts`
+  - `apps/web/features/workbench/floor-family-regressions.test.ts`
 
 ### Wall Stability Guardrail
 

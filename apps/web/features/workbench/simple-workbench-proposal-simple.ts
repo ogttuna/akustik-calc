@@ -198,7 +198,9 @@ function inferStandardReferences(document: SimpleWorkbenchProposalDocument): Sim
 }
 
 function renderConstructionFigure(document: SimpleWorkbenchProposalDocument): string {
-  const construction = buildSimpleWorkbenchProposalConstructionRender(document.layers, document.studyModeLabel);
+  const construction = buildSimpleWorkbenchProposalConstructionRender(document.layers, document.studyModeLabel, {
+    totalThicknessLabelOverride: document.constructionTotalThicknessOverrideLabel
+  });
   return construction.section.bands.length > 0 ? construction.svgMarkup : "";
 }
 
@@ -533,7 +535,9 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
   const standardCodes = standardReferences.map((r) => r.code).join(" · ");
 
   const curvesHtml = renderSimpleCurveFigures(document);
-  const construction = buildSimpleWorkbenchProposalConstructionRender(document.layers, document.studyModeLabel);
+  const construction = buildSimpleWorkbenchProposalConstructionRender(document.layers, document.studyModeLabel, {
+    totalThicknessLabelOverride: document.constructionTotalThicknessOverrideLabel
+  });
   const methodSnapshotItems = [
     {
       detail: document.dynamicBranchDetail,

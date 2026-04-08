@@ -1,12 +1,14 @@
 # Dynamic Calculator Remaining Work Plan
 
-Last reviewed: 2026-04-07
+Last reviewed: 2026-04-08
 
 Document role:
 
 - single place for the remaining dynamic-calculator work across both wall and floor
 - use this after [CURRENT_STATE.md](./CURRENT_STATE.md) when deciding what should be fixed next
 - optimize for non-regressive work only: every item here must improve the calculator without weakening defended corridors
+- for the latest UI handoff restart point, also read:
+  - [CHECKPOINT_2026-04-08_UI_HANDOFF.md](./CHECKPOINT_2026-04-08_UI_HANDOFF.md)
 
 ## 1. Non-Regressive Rules
 
@@ -89,7 +91,42 @@ Interpretation:
   - exact Dataholz dry CLT, exact TUAS open-box dry floor, integrated dry CLT, and promoted heavy-concrete family-estimate packages now stay identical across defended raw split and tagged split variants
 - the first weaker-carrier posture cohort is also now frozen:
   - open-box timber, open-web steel, lightweight steel, and steel-joist bare carriers stay fail-closed even when tagged
+  - that bare open-web closure is now also separated from the defended lower-only packaged lane:
+    - raw and tagged open-web `2 x 16 mm` ceiling packages stay on the same UBIQ `FL-26` family-general branch
+    - this remains a packaged ceiling lane, not a reopened bare carrier lane
   - timber-frame, timber-joist, and engineered-timber structural carriers stay explicitly role-gated instead of widening raw support
+  - raw timber lower-only and upper-only non-combined packages now also stay fail-closed until explicit base-structure evidence is present
+  - open-box upper-only and lower-only non-combined packages now also stay fail-closed even when visible floor roles are explicit; defended open-box widening still starts from combined upper-plus-lower packages
+  - composite ceiling-only packaged rows are now also explicitly frozen as a conservative PMC low-confidence continuation rather than a family-general reopen
+  - CLT lower-only remains fail-closed and now acts as the adjacent negative guard for ceiling-side packaged widening
+- packable ceiling-board schedule parity is also now frozen:
+  - schedule-equivalent contiguous lower-board splits now reduce back to the defended predictor lane instead of parking the predictor and silently promoting or falling off
+  - composite lower-only packaged rows now stay identical across raw single, raw split, tagged single, and tagged split variants
+  - open-web lower-only packaged rows stay on the same defended `FL-26` branch across the same split surface
+  - CLT and open-box lower-only guards remain the adjacent negative controls, so this does not widen generic ceiling-side packages
+  - neutral same-total non-packable composite lower-only schedules now also stay on the same conservative continuation even though the predictor blocker remains active
+  - neutral same-total non-packable open-web lower-only schedules stay on the same defended `FL-26` branch, while CLT and open-box lower-only still act as fail-closed adjacent controls
+- packaged lower-board edit-path parity is also now frozen:
+  - contiguous mixed lower-board order stays invariant across composite/open-web packaged lanes and the adjacent CLT/open-box guards
+  - direct final-row entry and duplicate/swap/remove-rebuild workbench detours now land on the same final route snapshot on that lower-only surface
+  - this widens the audit surface without widening any new family lane
+- disjoint lower-board topology hardening is also now frozen:
+  - auto predictor derivation now stays fail-closed when identical ceiling-board layers are separated by intervening lower-side roles
+  - open-web lower-only packaged rows now keep the defended `FL-26` family-general tier only on contiguous lower-board schedules; disjoint/intervening topology steps down to `low_confidence`
+  - composite lower-only disjoint topology still stays on the same conservative PMC continuation, but now carries explicit topology notes instead of reading like the canonical packaged shape
+  - contiguous schedule-equivalent splits and defended contiguous non-packable mixed schedules remain unchanged, so this did not collapse the existing packaged lower-only corridor
+- lower-helper topology hardening is also now frozen:
+  - open-web lower-only packaged rows now keep the defended `FL-26` family-general tier only while `ceiling_fill` and `ceiling_cavity` stay coherent contiguous helpers
+  - disjoint helper topology in `ceiling_fill` or `ceiling_cavity` now steps that open-web surface down to `low_confidence`
+  - composite lower-only helper detours now stay on the same conservative PMC `low_confidence` continuation instead of drifting up into `family_general`
+  - CLT and open-box helper detours remain fail-closed, and the defended contiguous helper split corridor remains unchanged
+- lower-helper edit-path parity is also now frozen:
+  - direct final-row entry and duplicate/swap/remove/rebuild helper detours now land on the same final route snapshot across the defended open-web/composite helper surface
+  - adjacent CLT and open-box helper-detour guards keep the same fail-closed snapshot across those same store-history detours
+  - this expands route-surface evidence without widening any new family lane
+- a first family/profile boundary matrix is also now frozen:
+  - adjacent `upper_only`, `lower_only`, `bare`, and `combined` lanes are now checked side by side across reinforced concrete, CLT, open-box timber, open-web steel, and composite families
+  - future widening work should extend this boundary matrix before broadening support
 - the first raw concrete ceiling-side inferred support cohort is also now frozen:
   - raw concrete rows with a coherent inferred ceiling helper package now reopen field-side `Rw` without needing explicit row roles
   - the defended shape is still narrow: at least one inferred `ceiling_board`, at least one inferred `ceiling_cavity` or `ceiling_fill`, and a concrete base carrier
@@ -116,12 +153,19 @@ Current verified result:
 - route mixed study-mode generated matrix pack: green
   - `1` file
   - `1` test
+- route mixed study-mode generated edit-history matrix pack: green
+  - `1` file
+  - `1` test
+- route mixed study-mode generated history-grid pack: green
+  - `1` file
+  - `2` tests
 
 Interpretation:
 
-- the repo now has both a representative mixed torture slice and a first generated split-detour matrix rather than only isolated floor and wall seeded tests
+- the repo now has a representative mixed torture slice, a first generated split-detour matrix, a first generated edit-history matrix, a first wider duplicate/swap grid, and a first deterministic longer cross-mode chain rather than only isolated floor and wall seeded tests
 - cross-mode operator detours are now defended at the workbench route layer on representative deep stacks
-- remaining debt is no longer “no mixed torture exists”; it is that the mixed torture surface still stops at the first generated matrix instead of longer edit chains and larger duplicate/swap grids
+- the generated route/engine case sets are now aligned on Knauf concrete exact, TUAS concrete dry exact, Knauf direct timber exact, Knauf timber mount exact, Knauf acoustic timber exact, Dataholz timber-frame exact, Dataholz Dry exact, Dataholz Dry RC exact, dry CLT exact, TUAS CLT exact, TUAS CLT 260 exact, TUAS open-box exact, open-box dry exact, open-web 200 exact, open-web 400 exact, and hollow-core vinyl exact floors, so mixed generated breadth no longer skips the defended published-exact concrete branch, the defended upper-treatment concrete exact branch, the defended direct-fixed timber exact branch, the defended lighter and heavier mounted timber exact branches, the defended wet-screed timber-frame, direct-lined dry, and suspended dry-timber exact branches, the defended dry and measured CLT exact branches, the defended measured and dry open-box exact branches, the defended exact steel branches, or the first defended precast hollow-core family on one side
+- remaining debt is no longer “no mixed torture exists”; it is that the mixed torture surface still stops at the first deterministic longer chain and wider generated grid instead of wider preset-family case sets beyond the current heavy-concrete plus concrete exacts, Knauf timber exacts, Dataholz timber exacts, open-box exacts, CLT exacts, open-web exacts, and hollow-core cohort and broader seeded long-chain families
 
 ### Cross-Surface Interpretation
 
@@ -137,6 +181,94 @@ Current overall reading:
   - engine pack: `15` files, `227` tests
   - route pack: `14` files, `47` tests
   - interpretation: the new raw-floor split/posture guards did not open a fresh regression in the currently defended wall, floor, or mixed surfaces
+- the latest lower-board schedule normalization revalidation also stayed green on the change-adjacent packs:
+  - engine pack: `8` files, `79` tests
+  - route pack: `7` files, `26` tests
+  - interpretation: restoring packable ceiling-board split parity did not open a fresh regression in raw-floor inference, weaker-carrier guards, or the defended route surfaces
+- the latest neutral non-packable composite lower-board conservative-continuation revalidation also stayed green on the change-adjacent packs:
+  - engine pack: `9` files, `76` tests
+  - route pack: `7` files, `26` tests
+  - interpretation: keeping composite lower-only mixed board schedules on the conservative PMC continuation did not open a fresh regression in open-web packaged lanes, adjacent CLT/open-box guards, or the defended route surfaces
+- the latest packaged lower-board edit-path parity revalidation also stayed green on the change-adjacent packs:
+  - engine pack: `4` files, `21` tests
+  - route pack: `4` files, `18` tests
+  - interpretation: freezing duplicate/swap/remove-rebuild convergence on the lower-only packaged surface did not expose a fresh regression in the adjacent packaged-lane, split-parity, or profile-boundary corridors
+- the latest disjoint lower-board topology hardening revalidation also stayed green on the change-adjacent packs:
+  - engine pack: `9` files, `243` tests
+  - route pack: `6` files, `91` tests
+  - interpretation: separating disjoint/intervening lower-board topology from the defended contiguous packaged lanes did not open a fresh regression in the packaged-lane, split-parity, or route warning surfaces
+- the latest lower-helper topology hardening revalidation also stayed green on the change-adjacent packs:
+  - engine pack: `8` files, `67` tests
+  - route pack: `7` files, `94` tests
+  - interpretation: separating disjoint helper topology from the defended packaged lower-only tiers did not open a fresh regression in predictor blockers, contiguous split parity, or the route support surfaces
+- the latest helper edit-path parity expansion also stayed green on the change-adjacent packs:
+  - engine adjacent pack: `4` files, `46` tests
+  - route pack: `4` files, `6` tests
+  - interpretation: freezing helper-detour direct-vs-store-history parity did not expose a fresh regression in the helper disjoint corridor, predictor blockers, or the adjacent lower-board edit-path surface
+- the latest mixed generated edit-history expansion also stayed green on the change-adjacent packs:
+  - engine adjacent pack: `2` files, `2` tests
+  - route pack: `3` files, `4` tests
+  - interpretation: freezing direct-vs-history parity on the generated mixed floor/wall case set did not expose a fresh regression in the representative mixed torture slice, the original generated matrix, or the adjacent engine mixed surface
+- the latest mixed generated duplicate/swap grid expansion also stayed green on the change-adjacent packs:
+  - engine adjacent pack: `2` files, `2` tests
+  - route pack: `4` files, `5` tests
+  - interpretation: widening the generated mixed route grid beyond one representative history path did not expose a fresh regression in the first mixed torture slice, the generated edit-history matrix, or the adjacent engine mixed surface
+- the latest mixed longer cross-mode chain expansion also stayed green on the change-adjacent packs:
+  - engine adjacent pack: `2` files, `2` tests
+  - route pack: `4` files, `6` tests
+  - interpretation: adding partial-edit abort plus opposite-mode restore chains on the generated mixed case set did not expose a fresh regression in the wider duplicate/swap grid, the representative mixed torture slice, or the adjacent engine mixed surface
+- the latest exact floor-system companion split normalization and mixed concrete-exact breadth expansion also stayed green on the change-adjacent packs:
+  - engine pack: `6` files, `16` tests
+  - route pack: `4` files, `6` tests
+  - interpretation: merge-safe airborne companion normalization closed a `0.1 dB` concrete exact split drift without reopening raw exact parity, split parity, or the defended mixed generated route surface
+- the latest exact steel breadth expansion also stayed green on the change-adjacent packs:
+  - engine pack: `3` files, `4` tests
+  - route pack: `4` files, `6` tests
+  - interpretation: widening the mixed generated case set onto the first defended exact steel branch did not expose regression in exact companion parity, route history grid, or the adjacent engine mixed surface
+- the latest mounted timber exact breadth expansion also stayed green on the change-adjacent packs:
+  - engine pack: `3` files, `4` tests
+  - route pack: `4` files, `6` tests
+  - interpretation: widening the mixed generated case set onto the defended mounted timber exact branch did not expose regression in exact companion parity, route history grid, or the adjacent engine mixed surface
+- the latest Dry RC exact breadth expansion also stayed green on the change-adjacent packs:
+  - engine pack: `3` files, `4` tests
+  - route pack: `4` files, `6` tests
+  - interpretation: widening the mixed generated case set onto the defended suspended dry-timber exact branch did not expose regression in exact companion parity, route history grid, or the adjacent engine mixed surface
+- the latest concrete dry exact breadth expansion also stayed green on the change-adjacent packs:
+  - engine pack: `3` files, `4` tests
+  - route pack: `4` files, `6` tests
+  - interpretation: widening the mixed generated case set onto the defended upper-treatment concrete exact branch did not expose regression in exact companion parity, route history grid, or the adjacent engine mixed surface
+- the latest direct timber exact breadth expansion also stayed green on the change-adjacent packs:
+  - engine pack: `3` files, `4` tests
+  - route pack: `4` files, `6` tests
+  - interpretation: widening the mixed generated case set onto the defended direct-fixed timber exact branch did not expose regression in exact companion parity, route history grid, or the adjacent engine mixed surface
+- the latest deeper exact steel breadth expansion also stayed green on the change-adjacent packs:
+  - engine pack: `3` files, `4` tests
+  - route pack: `4` files, `6` tests
+  - interpretation: widening the mixed generated case set onto the deeper defended exact steel branch did not expose regression in exact companion parity, route history grid, or the adjacent engine mixed surface
+- the latest measured open-box exact breadth expansion also stayed green on the change-adjacent packs:
+  - engine pack: `3` files, `4` tests
+  - route pack: `4` files, `6` tests
+  - interpretation: widening the mixed generated case set onto the defended measured open-box exact branch did not expose regression in exact companion parity, route history grid, or the adjacent engine mixed surface
+- the latest lighter mounted timber exact breadth expansion also stayed green on the change-adjacent packs:
+  - engine pack: `3` files, `4` tests
+  - route pack: `4` files, `6` tests
+  - interpretation: widening the mixed generated case set onto the defended lighter mounted timber exact branch did not expose regression in exact companion parity, route history grid, or the adjacent engine mixed surface
+- the latest measured CLT exact breadth expansion also stayed green on the change-adjacent packs:
+  - engine pack: `3` files, `4` tests
+  - route pack: `4` files, `6` tests
+  - interpretation: widening the mixed generated case set onto the defended measured CLT exact branch did not expose regression in exact companion parity, route history grid, or the adjacent engine mixed surface
+- the latest direct-lined dry timber exact breadth expansion also stayed green on the change-adjacent packs:
+  - engine pack: `3` files, `4` tests
+  - route pack: `4` files, `6` tests
+  - interpretation: widening the mixed generated case set onto the defended direct-lined dry timber exact branch did not expose regression in exact companion parity, route history grid, or the adjacent engine mixed surface
+- the latest timber-frame exact breadth expansion also stayed green on the change-adjacent packs:
+  - engine pack: `3` files, `4` tests
+  - route pack: `4` files, `6` tests
+  - interpretation: widening the mixed generated case set onto the defended wet-screed timber-frame exact branch did not expose regression in exact companion parity, route history grid, or the adjacent engine mixed surface
+- the latest heavier measured CLT exact breadth expansion also stayed green on the change-adjacent packs:
+  - engine pack: `3` files, `4` tests
+  - route pack: `4` files, `6` tests
+  - interpretation: widening the mixed generated case set onto the defended heavier measured CLT exact branch did not expose regression in exact companion parity, route history grid, or the adjacent engine mixed surface
 
 ## 2.1 Completion Checklist
 
@@ -156,6 +288,10 @@ Completed and defended now:
 - wall Phase B.1 boundary diagnostics
 - mixed floor/wall representative torture slice
 - mixed floor/wall first generated split-detour matrix
+- mixed floor/wall first generated edit-history matrix
+- mixed floor/wall first wider duplicate/swap grid
+- mixed floor/wall first deterministic longer cross-mode chain
+- exact floor-system companion split parity on the defended floor exact rows
 
 Partially complete:
 
@@ -286,6 +422,336 @@ What this does not widen:
 - wider treated/inferred split parity:
   - [raw-floor-inferred-split-parity.test.ts](../../packages/engine/src/raw-floor-inferred-split-parity.test.ts)
   - [raw-floor-inferred-split-parity.test.ts](../../apps/web/features/workbench/raw-floor-inferred-split-parity.test.ts)
+
+## 3.2 Recently Closed: Packable Ceiling-Board Schedule Split Drift
+
+### What Was Wrong
+
+For defended lower-only packaged lanes, schedule-equivalent contiguous ceiling-board splits such as:
+
+- `2 x 15 mm firestop_board` -> `7.5 + 7.5 + 15`
+- `2 x 16 mm firestop_board` -> `8 + 8 + 16`
+
+could park predictor derivation even though the visible stack still reduced to the same defended lower-board package.
+
+Key reproduced drift:
+
+- composite lower-only packaged rows dropped from the defended PMC `low_confidence` continuation into a worse `family_general` bare-composite fallback
+- the same drift hit both raw split and tagged split route surfaces
+- adjacent open-web lower-only, CLT lower-only, and open-box lower-only corridors showed that the issue was specifically schedule-equivalent ceiling-board normalization, not a broader family-boundary regression
+
+### Fix That Shipped
+
+The fix stays narrow and only normalizes packable contiguous ceiling-board schedules:
+
+1. [impact-predictor-input.ts](../../packages/engine/src/impact-predictor-input.ts)
+   - same-material contiguous ceiling-board blocks now normalize back to repeated copies of the thickest visible board only when the total board thickness packs exactly into that defended schedule
+2. [impact-predictor-input.ts](../../packages/engine/src/impact-predictor-input.ts)
+   - non-packable mixed-thickness board schedules still remain visible predictor blockers instead of being reinterpreted optimistically
+
+At this stage:
+
+- broad non-packable mixed-thickness schedules still remained outside the split-equivalence corridor
+- the later narrow composite continuation hold in `3.3` closes one conservative subset without reopening generic predictor derivation
+
+What this does not widen:
+
+- CLT lower-only guards
+- open-box lower-only guards
+- non-packable mixed-thickness board schedules
+- disjoint lower-board schedules with intervening roles
+
+### Contracts That Now Defend It
+
+- predictor normalization and blocker guards:
+  - [impact-predictor-input.test.ts](../../packages/engine/src/impact-predictor-input.test.ts)
+- engine split parity on defended and adjacent lower-only lanes:
+  - [floor-split-layer-parity.test.ts](../../packages/engine/src/floor-split-layer-parity.test.ts)
+- engine packaged-lane/profile audits:
+  - [raw-floor-packaged-lane-audit.test.ts](../../packages/engine/src/raw-floor-packaged-lane-audit.test.ts)
+  - [floor-profile-boundary-matrix.test.ts](../../packages/engine/src/floor-profile-boundary-matrix.test.ts)
+- route raw/tagged split parity:
+  - [raw-floor-inferred-split-parity.test.ts](../../apps/web/features/workbench/raw-floor-inferred-split-parity.test.ts)
+- route packaged-lane/profile audits:
+  - [raw-floor-packaged-lane-route-audit.test.ts](../../apps/web/features/workbench/raw-floor-packaged-lane-route-audit.test.ts)
+  - [floor-profile-boundary-route-matrix.test.ts](../../apps/web/features/workbench/floor-profile-boundary-route-matrix.test.ts)
+
+## 3.3 Recently Closed: Neutral Non-Packable Composite Lower-Board Drift
+
+### What Was Wrong
+
+For composite lower-only packaged rows, neutral same-total mixed board schedules such as:
+
+- `2 x 15 mm firestop_board` -> `14 + 8 + 8`
+
+still kept the lower-board schedule conflict visible, but could fall off the conservative PMC continuation into a worse bare-composite `family_general` fallback.
+
+Key reproduced drift:
+
+- the predictor blocker stayed active, so this was not a false-positive “predictor reopened” case
+- composite lower-only raw split and tagged split rows both drifted away from their canonical raw single and tagged single siblings
+- adjacent open-web non-packable lower-only rows stayed on the same `FL-26` branch, while adjacent CLT and open-box lower-only rows stayed fail-closed
+- that proved the remaining bug was a narrow composite continuation/fallback mistake, not a generic ceiling-side widening rule
+
+### Fix That Shipped
+
+The fix stays narrow and only touches the composite lower-only mixed-board conflict path:
+
+1. [floor-system-estimate.ts](../../packages/engine/src/floor-system-estimate.ts)
+   - when a composite `lower_only` stack still exposes a lower-board schedule conflict, the estimator now derives a predictor-specific estimate directly from the visible layers
+2. [floor-system-estimate.ts](../../packages/engine/src/floor-system-estimate.ts)
+   - that path is reused only when it resolves to the conservative PMC `low_confidence` continuation, so the mixed schedule no longer degrades into the bare-composite `family_general` fallback
+
+What this does not widen:
+
+- generic non-packable lower-board schedules
+- open-web lower-only packaged lanes
+- CLT lower-only guards
+- open-box lower-only guards
+- generic predictor blockers outside this composite lower-only conservative continuation
+
+### Contracts That Now Defend It
+
+- engine neutral non-packable split parity:
+  - [floor-split-layer-parity.test.ts](../../packages/engine/src/floor-split-layer-parity.test.ts)
+- route raw/tagged neutral non-packable split parity:
+  - [raw-floor-inferred-split-parity.test.ts](../../apps/web/features/workbench/raw-floor-inferred-split-parity.test.ts)
+- adjacent packaged-lane audits:
+  - [raw-floor-packaged-lane-audit.test.ts](../../packages/engine/src/raw-floor-packaged-lane-audit.test.ts)
+  - [raw-floor-packaged-lane-route-audit.test.ts](../../apps/web/features/workbench/raw-floor-packaged-lane-route-audit.test.ts)
+- adjacent family/profile boundary audits:
+  - [floor-profile-boundary-matrix.test.ts](../../packages/engine/src/floor-profile-boundary-matrix.test.ts)
+  - [floor-profile-boundary-route-matrix.test.ts](../../apps/web/features/workbench/floor-profile-boundary-route-matrix.test.ts)
+- predictor/composite regression guards:
+  - [impact-predictor-input.test.ts](../../packages/engine/src/impact-predictor-input.test.ts)
+  - [predictor-floor-system-estimate.test.ts](../../packages/engine/src/predictor-floor-system-estimate.test.ts)
+  - [composite-panel-published-interaction-estimate.test.ts](../../packages/engine/src/composite-panel-published-interaction-estimate.test.ts)
+
+## 3.4 Newly Frozen Audit Surface: Packaged Lower-Board Edit-Path Parity
+
+### What This Audit Proves
+
+For the currently defended lower-only packaged surface:
+
+- composite non-packable conservative continuation
+- open-web non-packable `FL-26` branch
+- adjacent CLT lower-only guard
+- adjacent open-box lower-only guard
+
+the same final visible stack now has direct executable coverage across both of these representations:
+
+- direct final-row entry
+- duplicate, split, adjacent-swap, remove, and rebuild detours through the workbench store
+
+### Why This Matters
+
+- this separates solver behavior from store-history noise on one of the remaining brittle-looking floor surfaces
+- it also proves that contiguous mixed lower-board order is not silently changing the defended branch on the engine side
+- future widening work on lower-only helper packages now has to preserve both final-row parity and edit-history parity
+
+### Contracts That Now Defend It
+
+- engine contiguous mixed-board order parity:
+  - [floor-packaged-lane-order-parity.test.ts](../../packages/engine/src/floor-packaged-lane-order-parity.test.ts)
+- route direct-vs-edit-path parity:
+  - [floor-packaged-lane-edit-path-parity.test.ts](../../apps/web/features/workbench/floor-packaged-lane-edit-path-parity.test.ts)
+- adjacent packaged-lane contracts:
+  - [raw-floor-packaged-lane-audit.test.ts](../../packages/engine/src/raw-floor-packaged-lane-audit.test.ts)
+  - [raw-floor-packaged-lane-route-audit.test.ts](../../apps/web/features/workbench/raw-floor-packaged-lane-route-audit.test.ts)
+- adjacent split/profile contracts:
+  - [floor-split-layer-parity.test.ts](../../packages/engine/src/floor-split-layer-parity.test.ts)
+  - [raw-floor-inferred-split-parity.test.ts](../../apps/web/features/workbench/raw-floor-inferred-split-parity.test.ts)
+  - [floor-profile-boundary-matrix.test.ts](../../packages/engine/src/floor-profile-boundary-matrix.test.ts)
+  - [floor-profile-boundary-route-matrix.test.ts](../../apps/web/features/workbench/floor-profile-boundary-route-matrix.test.ts)
+
+## 3.5 Recently Closed: Disjoint Lower-Board Topology Drift
+
+### What Was Wrong
+
+For lower-only packaged surfaces, disjoint/intervening lower-board topology such as:
+
+- open-web: `16 mm board -> cavity -> 16 mm board`
+- composite: `15 mm board -> fill -> 15 mm board -> cavity`
+
+was still collapsing back onto the same visible lower-board package that the contiguous defended rows use.
+
+Key reproduced drift:
+
+- identical disjoint ceiling-board segments still auto-derived predictor input instead of staying fail-closed
+- disjoint open-web lower-only rows kept the defended `FL-26` `family_general` tier even though the lower-board topology was no longer contiguous
+- disjoint composite lower-only rows stayed on the conservative continuation, but they did so without explicit topology notes
+- adjacent CLT and open-box disjoint lower-only rows stayed fail-closed numerically, but they were missing the same explicit blocker copy
+
+### Fix That Shipped
+
+The fix stays narrow and only hardens disjoint/intervening lower-board topology:
+
+1. [floor-role-topology.ts](../../packages/engine/src/floor-role-topology.ts)
+   - ceiling-board topology now distinguishes three cases:
+     - schedule-equivalent contiguous splits: safe
+     - contiguous mixed schedules: still visible schedule conflicts
+     - disjoint/intervening ceiling-board segments: explicit topology conflicts
+2. [impact-predictor-input.ts](../../packages/engine/src/impact-predictor-input.ts)
+   - auto predictor derivation now stays fail-closed on that disjoint topology and surfaces the blocker warning copy
+3. [floor-system-estimate.ts](../../packages/engine/src/floor-system-estimate.ts)
+   - lightweight-steel lower-only family holding now steps down only when the lower-board topology is disjoint
+   - composite lower-only disjoint rows keep the same conservative PMC continuation, but now carry explicit topology notes
+
+What this does not widen or collapse:
+
+- schedule-equivalent contiguous lower-board splits
+- defended contiguous non-packable open-web lower-only schedules
+- defended contiguous non-packable composite lower-only schedules
+- CLT lower-only guards
+- open-box lower-only guards
+
+### Contracts That Now Defend It
+
+- topology and predictor blockers:
+  - [floor-role-topology.test.ts](../../packages/engine/src/floor-role-topology.test.ts)
+  - [impact-predictor-input.test.ts](../../packages/engine/src/impact-predictor-input.test.ts)
+- engine disjoint packaged-lane detours:
+  - [floor-packaged-lane-disjoint-detour.test.ts](../../packages/engine/src/floor-packaged-lane-disjoint-detour.test.ts)
+- route disjoint packaged-lane detours:
+  - [floor-packaged-lane-disjoint-route-detour.test.ts](../../apps/web/features/workbench/floor-packaged-lane-disjoint-route-detour.test.ts)
+- adjacent contiguous parity guards:
+  - [floor-split-layer-parity.test.ts](../../packages/engine/src/floor-split-layer-parity.test.ts)
+  - [raw-floor-inferred-split-parity.test.ts](../../apps/web/features/workbench/raw-floor-inferred-split-parity.test.ts)
+
+## 3.6 Recently Closed: Lower-Helper Topology Drift
+
+### What Was Wrong
+
+For lower-only packaged surfaces, duplicated or split helper roles such as:
+
+- open-web: `board -> fill -> cavity -> fill`
+- open-web: `board -> cavity -> fill -> cavity`
+- composite: `board -> fill -> cavity -> fill`
+- composite: `board -> cavity -> fill -> cavity`
+
+were already keeping auto predictor derivation fail-closed, but the family tier was still too optimistic.
+
+Key reproduced drift:
+
+- open-web lower-only helper detours still stayed on the defended `FL-26` `family_general` tier with only a capped fit
+- composite lower-only helper detours drifted from the canonical conservative `low_confidence` continuation up into `family_general`
+- adjacent CLT and open-box helper detours stayed fail-closed numerically, so the issue was not missing guards but family-tier posture on the defended open-web/composite surface
+
+### Fix That Shipped
+
+The fix stays narrow and only touches `lower_only` helper-role conflicts:
+
+1. [floor-system-estimate.ts](../../packages/engine/src/floor-system-estimate.ts)
+   - lower-only helper conflicts (`ceiling_fill`, `ceiling_cavity`) now hold back `family_general` on the same surface where predictor derivation is already fail-closed
+2. [floor-system-estimate.ts](../../packages/engine/src/floor-system-estimate.ts)
+   - open-web lower-only helper detours now step down to `low_confidence` instead of staying on the defended `FL-26` tier
+3. [floor-system-estimate.ts](../../packages/engine/src/floor-system-estimate.ts)
+   - composite lower-only helper detours now stay on the conservative PMC continuation and carry explicit helper-topology notes
+
+What this does not widen or collapse:
+
+- contiguous helper split parity
+- lower-board topology hardening from `3.5`
+- defended contiguous non-packable open-web lower-only schedules
+- defended contiguous non-packable composite lower-only schedules
+- CLT lower-only guards
+- open-box lower-only guards
+
+### Contracts That Now Defend It
+
+- engine helper disjoint packaged-lane detours:
+  - [floor-packaged-lane-helper-disjoint-detour.test.ts](../../packages/engine/src/floor-packaged-lane-helper-disjoint-detour.test.ts)
+- route helper disjoint packaged-lane detours:
+  - [floor-packaged-lane-helper-disjoint-route-detour.test.ts](../../apps/web/features/workbench/floor-packaged-lane-helper-disjoint-route-detour.test.ts)
+- adjacent contiguous parity/profile guards:
+  - [floor-split-layer-parity.test.ts](../../packages/engine/src/floor-split-layer-parity.test.ts)
+  - [raw-floor-inferred-split-parity.test.ts](../../apps/web/features/workbench/raw-floor-inferred-split-parity.test.ts)
+  - [floor-profile-boundary-matrix.test.ts](../../packages/engine/src/floor-profile-boundary-matrix.test.ts)
+  - [floor-profile-boundary-route-matrix.test.ts](../../apps/web/features/workbench/floor-profile-boundary-route-matrix.test.ts)
+
+## 3.7 Newly Frozen Audit Surface: Lower-Helper Edit-Path Parity
+
+### What This Audit Proves
+
+For the currently defended lower-only helper-detour surface:
+
+- open-web helper disjoint `low_confidence` hold
+- composite helper conservative continuation
+- adjacent CLT helper fail-closed guard
+- adjacent open-box helper fail-closed guard
+
+the same final visible stack now has direct executable coverage across both of these representations:
+
+- direct final-row entry
+- duplicate, split, adjacent-swap, remove, and rebuild helper detours through the workbench store
+
+### Why This Matters
+
+- this closes the remaining obvious store-history blind spot beside the helper-topology hardening from `3.6`
+- it proves that helper-detour route posture is not changing just because the same final helper topology was assembled through a noisier store path
+- future widening work on lower-only helper packages now has to preserve direct-vs-edit-path parity, not only direct disjoint final-row parity
+
+### Contracts That Now Defend It
+
+- route helper direct-vs-edit-path parity:
+  - [floor-packaged-lane-helper-edit-path-parity.test.ts](../../apps/web/features/workbench/floor-packaged-lane-helper-edit-path-parity.test.ts)
+- adjacent helper disjoint route contracts:
+  - [floor-packaged-lane-helper-disjoint-route-detour.test.ts](../../apps/web/features/workbench/floor-packaged-lane-helper-disjoint-route-detour.test.ts)
+- adjacent lower-board edit-path parity:
+  - [floor-packaged-lane-edit-path-parity.test.ts](../../apps/web/features/workbench/floor-packaged-lane-edit-path-parity.test.ts)
+- predictor and profile guards that must stay unchanged:
+  - [floor-role-topology.test.ts](../../packages/engine/src/floor-role-topology.test.ts)
+  - [impact-predictor-input.test.ts](../../packages/engine/src/impact-predictor-input.test.ts)
+  - [floor-profile-boundary-route-matrix.test.ts](../../apps/web/features/workbench/floor-profile-boundary-route-matrix.test.ts)
+
+## 3.8 Recently Closed: Exact Floor-System Companion Split Drift
+
+### What Was Wrong
+
+When a defended exact floor-system row kept the same published match after a contiguous same-material split, the main exact outputs stayed stable but screening-anchored airborne companions could still drift by `0.1 dB`.
+
+Reproduced example:
+
+- `Knauf CC60.1A` stayed on the same exact floor-system match with the same `Rw` and `Ln,w`
+- but `C`, `Ctr`, and the downstream field companion surface could shift slightly between canonical and split-equivalent rows
+- the same mixed generated route case therefore failed even though impact matching and support posture stayed identical
+
+Why this mattered:
+
+- this was a real solver-output drift, not a stale route contract
+- the drift appeared exactly on a family we wanted to add to the defended mixed generated breadth
+- accepting the preset without fixing the drift would have widened coverage while lowering split-determinism on exact floor rows
+
+### Fix That Shipped
+
+The fix stays narrow and only touches the airborne companion path for floor-like stacks:
+
+1. [calculate-assembly.ts](../../packages/engine/src/calculate-assembly.ts)
+   - a merge-safe airborne-equivalent layer set now coalesces contiguous same-material, same-role floor segments before screening-anchored airborne companion calculations
+2. [calculate-assembly.ts](../../packages/engine/src/calculate-assembly.ts)
+   - the gate is limited to explicit or inferred floor-like stacks, so wall routes do not silently inherit the new normalization
+3. [calculate-assembly.ts](../../packages/engine/src/calculate-assembly.ts)
+   - coalesced surface mass is recomputed from the merged thickness instead of summing rounded split masses, which closes the residual `0.1 dB` drift on split `6.5 + 6.5` board rows
+
+What this does not widen:
+
+- exact impact matching
+- published floor-system selection
+- wall airborne routes
+- generic lower-only packaged-lane logic
+
+### Contracts That Now Defend It
+
+- engine exact companion split parity:
+  - [floor-exact-companion-split-parity.test.ts](../../packages/engine/src/floor-exact-companion-split-parity.test.ts)
+- adjacent engine parity packs that stayed green:
+  - [floor-split-layer-parity.test.ts](../../packages/engine/src/floor-split-layer-parity.test.ts)
+  - [floor-input-noise-parity.test.ts](../../packages/engine/src/floor-input-noise-parity.test.ts)
+  - [floor-library-raw-parity.test.ts](../../packages/engine/src/floor-library-raw-parity.test.ts)
+- mixed generated route packs that stayed green after adding the concrete, exact steel, mounted timber exacts, measured CLT exacts, timber-frame exact, direct-lined dry timber exact, Dry RC exact, concrete dry exact, direct timber exact, deeper exact steel, and measured open-box exact cases:
+  - [mixed-study-mode-generated-matrix.test.ts](../../apps/web/features/workbench/mixed-study-mode-generated-matrix.test.ts)
+  - [mixed-study-mode-generated-edit-history-matrix.test.ts](../../apps/web/features/workbench/mixed-study-mode-generated-edit-history-matrix.test.ts)
+  - [mixed-study-mode-generated-history-grid.test.ts](../../apps/web/features/workbench/mixed-study-mode-generated-history-grid.test.ts)
 
 ## 4. Route-Surface Audit Rules
 
@@ -429,9 +895,9 @@ These are the most likely next useful tests. They are not currently defended eno
   - concrete-plus-board hybrids that infer ceiling-board shapes but should still remain fail-closed
   - weaker carrier plus helper-package rows that must not inherit the concrete reopening rule
 - broader mixed floor/wall generated grids:
-  - longer edit chains
-  - duplicate/swap permutations
-  - cross-mode store resets after partial edits
+  - broader seeded long-chain families beyond the current first deterministic chain
+  - duplicate/swap permutations beyond the current first widened grid
+  - wider preset-family case sets beyond the current heavy-concrete plus concrete exacts, Knauf timber exacts, Dataholz timber exacts, open-box exacts, CLT exacts, open-web exacts, and hollow-core cohort after the current partial-edit reset surface
 
 ### Likely Code Touch Surface
 
@@ -443,6 +909,8 @@ Primary likely code touch surface:
   - if same-family widening or tightening is required
 - [predictor-floor-system-estimate.ts](../../packages/engine/src/predictor-floor-system-estimate.ts)
   - if predictor-side family deviation tightening is needed
+- [calculate-assembly.ts](../../packages/engine/src/calculate-assembly.ts)
+  - if a future drift lands specifically in screening-anchored airborne companions on otherwise stable floor-system matches
 - [floor-system-ratings.ts](../../packages/engine/src/floor-system-ratings.ts)
   - only when rating derivation itself changes
 - [floor-role-topology.ts](../../packages/engine/src/floor-role-topology.ts)
@@ -514,6 +982,8 @@ Current shipped mixed-torture surface:
 - route:
   - [mixed-study-mode-torture.test.ts](../../apps/web/features/workbench/mixed-study-mode-torture.test.ts)
   - [mixed-study-mode-generated-matrix.test.ts](../../apps/web/features/workbench/mixed-study-mode-generated-matrix.test.ts)
+  - [mixed-study-mode-generated-edit-history-matrix.test.ts](../../apps/web/features/workbench/mixed-study-mode-generated-edit-history-matrix.test.ts)
+  - [mixed-study-mode-generated-history-grid.test.ts](../../apps/web/features/workbench/mixed-study-mode-generated-history-grid.test.ts)
 
 What this already covers:
 
@@ -521,12 +991,15 @@ What this already covers:
 - representative deep floor exact/bound rows
 - representative deep wall hybrid rows
 - neutral split-detour parity
+- first generated direct-vs-edit-history parity
+- first wider generated duplicate/swap grid
+- first deterministic longer cross-mode chain with partial-edit abort and restore
 - broader support-bucket/card sanity after cross-mode edit chains
 
 What it does not yet cover:
 
-- longer seeded cross-mode edit chains
-- mixed floor/wall duplicate-swap grids beyond the current first generated split-detour matrix
+- broader seeded cross-mode edit-chain families
+- mixed floor/wall duplicate-swap grids beyond the current first widened generated grid
 - any wider preset-family expansion that still proves necessary after those chains and swap grids
 
 And should check both:
@@ -551,8 +1024,8 @@ The next phase is only complete when all of these are true:
 1. standard wall corridor still stays green
 2. standard floor corridor still stays green
 3. wall and floor output-card parity packs still stay green
-4. mixed-stack torture coverage is widened beyond the current first generated split-detour matrix
-   The representative anchors and first generated split-detour matrix already exist; the remaining step is to widen that matrix into longer chains and larger swap grids.
+4. mixed-stack torture coverage is widened beyond the current first deterministic longer chain and first widened generated duplicate/swap grid
+   The representative anchors, first generated split-detour matrix, first generated edit-history matrix, first widened duplicate/swap grid, and first deterministic longer chain already exist; the remaining step is to widen that surface into broader seeded chain families and wider family grids.
 5. no new widening has been merged without source-backed or benchmark-backed evidence
 6. every newly opened lane is labeled honestly on route and export surfaces
 7. any new red route-surface contract is first classified as solver, support-bucket, or stale-surface drift before logic changes are proposed
@@ -562,7 +1035,7 @@ The next phase is only complete when all of these are true:
 Do this in order:
 
 1. extend the raw-floor inference audit before reopening any broader screening-carrier posture
-2. widen the mixed floor/wall torture surface beyond the current first generated split-detour matrix
+2. widen the mixed floor/wall torture surface beyond the current first deterministic longer chain and first widened generated duplicate/swap grid
 3. widen wall-side evidence only, not wall-side logic
 4. re-check whether any wall corridor widening is still justified after those scans
 5. only then resume source-led floor widening

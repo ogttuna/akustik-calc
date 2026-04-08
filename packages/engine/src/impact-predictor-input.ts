@@ -8,10 +8,10 @@ import { ImpactPredictorInputSchema, LayerInputSchema, type ImpactPredictorInput
 
 import { hasInvalidExplicitFloorBaseStructure } from "./floor-base-structure-eligibility";
 import {
-  collectCeilingBoardScheduleConflict,
+  collectCeilingBoardTopologyConflict,
   collectSingleEntryRoleConflicts,
   hasAmbiguousSingleEntryRoleTopology,
-  type CeilingBoardScheduleConflict,
+  type CeilingBoardTopologyConflict,
   type SingleEntryRoleConflict
 } from "./floor-role-topology";
 import { getDefaultMaterialCatalog, resolveMaterial } from "./material-catalog";
@@ -40,7 +40,7 @@ type BuildImpactPredictorAssemblyMeta = {
   contextMode?: string;
 };
 
-type PredictorRoleConflict = SingleEntryRoleConflict | CeilingBoardScheduleConflict;
+type PredictorRoleConflict = SingleEntryRoleConflict | CeilingBoardTopologyConflict;
 
 type ResolvedLayerStackEntry = LayerInput & {
   material: MaterialDefinition;
@@ -154,6 +154,52 @@ const MERGE_SAFE_IMPACT_LAYER_ROLES = new Set<NonNullable<LayerInput["floorRole"
   "resilient_layer",
   "upper_fill"
 ]);
+const CEILING_BOARD_SCHEDULE_PACK_TOLERANCE_MM = 0.1;
+
+function hasUpperFloorRoleEvidence(
+  layers: readonly Pick<LayerInput, "floorRole">[]
+): boolean {
+  return layers.some(
+    (layer) =>
+      layer.floorRole === "floating_screed" ||
+      layer.floorRole === "floor_covering" ||
+      layer.floorRole === "resilient_layer" ||
+      layer.floorRole === "upper_fill"
+  );
+}
+
+function hasLowerFloorRoleEvidence(
+  layers: readonly Pick<LayerInput, "floorRole">[]
+): boolean {
+  return layers.some(
+    (layer) =>
+      layer.floorRole === "ceiling_board" ||
+      layer.floorRole === "ceiling_cavity" ||
+      layer.floorRole === "ceiling_fill"
+  );
+}
+
+function isRawNonCombinedRoleGatedCarrierTopology(
+  rawLayers: readonly LayerInput[],
+  normalizedLayers: readonly ResolvedLayerStackEntry[]
+): boolean {
+  if (rawLayers.some((layer) => Boolean(layer.floorRole))) {
+    return false;
+  }
+
+  const baseStructureLayer = normalizedLayers.find((layer) => layer.floorRole === "base_structure");
+  if (!baseStructureLayer) {
+    return false;
+  }
+
+  const structuralSupportType = inferStructuralSupportTypeFromMaterial(baseStructureLayer.material);
+  if (structuralSupportType !== "timber_joists" && structuralSupportType !== "open_box_timber") {
+    return false;
+  }
+
+  return !(hasUpperFloorRoleEvidence(normalizedLayers) && hasLowerFloorRoleEvidence(normalizedLayers));
+}
+
 function sanitizeIdFragment(input: string): string {
   return input.trim().toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "");
 }
@@ -572,7 +618,7 @@ function normalizeImpactPredictorLayerStack(
     };
   });
 
-  return coalesceMergeSafeImpactLayers(normalizedEntries);
+  return normalizeScheduleEquivalentCeilingBoards(coalesceMergeSafeImpactLayers(normalizedEntries));
 }
 
 function canMergeImpactLayerPair(
@@ -611,6 +657,68 @@ function coalesceMergeSafeImpactLayers(
   }
 
   return collapsed;
+}
+
+function normalizeScheduleEquivalentCeilingBoards(
+  layers: readonly ResolvedLayerStackEntry[]
+): ResolvedLayerStackEntry[] {
+  const ceilingBoardIndexes = layers
+    .map((layer, index) => (layer.floorRole === "ceiling_board" ? index : -1))
+    .filter((index) => index >= 0);
+
+  if (ceilingBoardIndexes.length <= 1) {
+    return [...layers];
+  }
+
+  const firstIndex = ceilingBoardIndexes[0] as number;
+  const lastIndex = ceilingBoardIndexes.at(-1) as number;
+  if (lastIndex - firstIndex + 1 !== ceilingBoardIndexes.length) {
+    return [...layers];
+  }
+
+  const ceilingBoards = ceilingBoardIndexes.map((index) => layers[index] as ResolvedLayerStackEntry);
+  const firstBoard = ceilingBoards[0];
+  if (!firstBoard) {
+    return [...layers];
+  }
+
+  if (ceilingBoards.some((layer) => layer.material.id !== firstBoard.material.id)) {
+    return [...layers];
+  }
+
+  const maxThicknessMm = Math.max(...ceilingBoards.map((layer) => layer.thicknessMm));
+  if (!(maxThicknessMm > 0)) {
+    return [...layers];
+  }
+
+  const totalThicknessMm = ceilingBoards.reduce((sum, layer) => sum + layer.thicknessMm, 0);
+  const packedBoardCount = Math.round(totalThicknessMm / maxThicknessMm);
+
+  if (
+    packedBoardCount <= 0 ||
+    Math.abs(totalThicknessMm - packedBoardCount * maxThicknessMm) > CEILING_BOARD_SCHEDULE_PACK_TOLERANCE_MM
+  ) {
+    return [...layers];
+  }
+
+  const alreadyCanonical =
+    ceilingBoards.length === packedBoardCount &&
+    ceilingBoards.every(
+      (layer) => Math.abs(layer.thicknessMm - maxThicknessMm) <= CEILING_BOARD_SCHEDULE_PACK_TOLERANCE_MM
+    );
+  if (alreadyCanonical) {
+    return [...layers];
+  }
+
+  return [
+    ...layers.slice(0, firstIndex),
+    ...Array.from({ length: packedBoardCount }, () => ({
+      ...firstBoard,
+      thicknessMm: maxThicknessMm,
+      material: { ...firstBoard.material }
+    })),
+    ...layers.slice(lastIndex + 1)
+  ];
 }
 
 function hasPotentialFloorRoleInferenceEvidence(rawLayers: readonly LayerInput[]): boolean {
@@ -668,6 +776,10 @@ export function maybeInferFloorRoleLayerStack(
 ): LayerInput[] | null {
   const normalizedLayers = normalizeImpactPredictorLayerStack(rawLayers, catalog);
   const hasSafeBareBaseCandidate = hasNormalizedSafeBareBaseCandidate(normalizedLayers);
+
+  if (isRawNonCombinedRoleGatedCarrierTopology(rawLayers, normalizedLayers)) {
+    return null;
+  }
 
   if (!hasPotentialFloorRoleInferenceEvidence(rawLayers) && !hasSafeBareBaseCandidate) {
     return null;
@@ -1027,7 +1139,7 @@ function collectPredictorRoleConflicts(
   layers: readonly ResolvedLayerStackEntry[]
 ): PredictorRoleConflict[] {
   const conflicts = collectSingleEntryRoleConflicts(layers);
-  const ceilingBoardConflict = collectCeilingBoardScheduleConflict(layers);
+  const ceilingBoardConflict = collectCeilingBoardTopologyConflict(layers);
 
   return ceilingBoardConflict ? [...conflicts, ceilingBoardConflict] : conflicts;
 }
@@ -1418,13 +1530,17 @@ function canDerivePredictorInputFromLayerStack(
   catalog: readonly MaterialDefinition[] = getDefaultMaterialCatalog()
 ): boolean {
   const normalizedLayers = normalizeImpactPredictorLayerStack(rawLayers, catalog);
+  if (isRawNonCombinedRoleGatedCarrierTopology(rawLayers, normalizedLayers)) {
+    return false;
+  }
+
   if (!hasPotentialFloorRoleInferenceEvidence(rawLayers) && !hasNormalizedSafeBareBaseCandidate(normalizedLayers)) {
     return false;
   }
 
   if (
     hasAmbiguousSingleEntryRoleTopology(normalizedLayers) ||
-    collectCeilingBoardScheduleConflict(normalizedLayers)
+    collectCeilingBoardTopologyConflict(normalizedLayers)
   ) {
     return false;
   }

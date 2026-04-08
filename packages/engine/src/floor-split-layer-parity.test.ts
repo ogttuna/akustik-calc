@@ -186,6 +186,143 @@ const CASES: readonly SplitParityCase[] = [
       { materialId: "inex_floor_panel", thicknessMm: 9.5 },
       { materialId: "open_web_steel_floor", thicknessMm: 300 }
     ]
+  },
+  {
+    id: "composite lower-only split ceiling-board schedule",
+    canonical: [
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 15 },
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 15 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 50 },
+      { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: 150 },
+      { floorRole: "base_structure", materialId: "composite_steel_deck", thicknessMm: 150 }
+    ],
+    split: [
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 7.5 },
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 7.5 },
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 15 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 25 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 25 },
+      { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: 150 },
+      { floorRole: "base_structure", materialId: "composite_steel_deck", thicknessMm: 150 }
+    ]
+  },
+  {
+    id: "open-web lower-only split ceiling-board schedule",
+    canonical: [
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+      { floorRole: "ceiling_cavity", materialId: "ubiq_resilient_ceiling", thicknessMm: 65 },
+      { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: 300 }
+    ],
+    split: [
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 8 },
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 8 },
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+      { floorRole: "ceiling_cavity", materialId: "ubiq_resilient_ceiling", thicknessMm: 65 },
+      { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: 300 }
+    ]
+  },
+  {
+    id: "clt lower-only guard split ceiling-board schedule",
+    canonical: [
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+      { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: 25 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 260 }
+    ],
+    split: [
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 6.5 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 6.5 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 50 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 50 },
+      { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: 25 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 260 }
+    ]
+  },
+  {
+    id: "open-box lower-only guard split ceiling-board schedule",
+    canonical: [
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 90 },
+      { floorRole: "ceiling_cavity", materialId: "furring_channel", thicknessMm: 28 },
+      { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
+    ],
+    split: [
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 6.5 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 6.5 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 45 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 45 },
+      { floorRole: "ceiling_cavity", materialId: "furring_channel", thicknessMm: 28 },
+      { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
+    ]
+  },
+  {
+    id: "open-web lower-only non-packable ceiling-board schedule",
+    canonical: [
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+      { floorRole: "ceiling_cavity", materialId: "ubiq_resilient_ceiling", thicknessMm: 65 },
+      { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: 300 }
+    ],
+    split: [
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 14 },
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 9 },
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 9 },
+      { floorRole: "ceiling_cavity", materialId: "ubiq_resilient_ceiling", thicknessMm: 65 },
+      { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: 300 }
+    ]
+  },
+  {
+    id: "composite lower-only non-packable ceiling-board schedule",
+    canonical: [
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 15 },
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 15 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 50 },
+      { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: 150 },
+      { floorRole: "base_structure", materialId: "composite_steel_deck", thicknessMm: 150 }
+    ],
+    split: [
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 14 },
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 8 },
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 8 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 50 },
+      { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: 150 },
+      { floorRole: "base_structure", materialId: "composite_steel_deck", thicknessMm: 150 }
+    ]
+  },
+  {
+    id: "clt lower-only non-packable ceiling-board schedule",
+    canonical: [
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+      { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: 25 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 260 }
+    ],
+    split: [
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 5 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 5 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 3 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+      { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: 25 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 260 }
+    ]
+  },
+  {
+    id: "open-box lower-only non-packable ceiling-board schedule",
+    canonical: [
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 90 },
+      { floorRole: "ceiling_cavity", materialId: "furring_channel", thicknessMm: 28 },
+      { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
+    ],
+    split: [
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 5 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 5 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 3 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 90 },
+      { floorRole: "ceiling_cavity", materialId: "furring_channel", thicknessMm: 28 },
+      { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
+    ]
   }
 ];
 

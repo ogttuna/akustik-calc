@@ -156,6 +156,50 @@ const CASES: readonly CarrierCase[] = [
         ]
       }
     ]
+  },
+  {
+    id: "open-box-timber-non-combined-packages",
+    expectedStatuses: FAIL_CLOSED_STATUSES,
+    variants: [
+      {
+        id: "raw-lower-only",
+        rows: [
+          { id: "a", materialId: "gypsum_board", thicknessMm: 13 },
+          { id: "b", materialId: "rockwool", thicknessMm: 90 },
+          { id: "c", materialId: "furring_channel", thicknessMm: 28 },
+          { id: "d", materialId: "open_box_timber_slab", thicknessMm: 370 }
+        ]
+      },
+      {
+        id: "tagged-lower-only",
+        rows: [
+          { floorRole: "ceiling_board", id: "a", materialId: "gypsum_board", thicknessMm: 13 },
+          { floorRole: "ceiling_fill", id: "b", materialId: "rockwool", thicknessMm: 90 },
+          { floorRole: "ceiling_cavity", id: "c", materialId: "furring_channel", thicknessMm: 28 },
+          { floorRole: "base_structure", id: "d", materialId: "open_box_timber_slab", thicknessMm: 370 }
+        ]
+      },
+      {
+        id: "raw-upper-only",
+        rows: [
+          { id: "a", materialId: "laminate_flooring", thicknessMm: 8 },
+          { id: "b", materialId: "eps_underlay", thicknessMm: 3 },
+          { id: "c", materialId: "generic_fill", thicknessMm: 50 },
+          { id: "d", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 60 },
+          { id: "e", materialId: "open_box_timber_slab", thicknessMm: 370 }
+        ]
+      },
+      {
+        id: "tagged-upper-only",
+        rows: [
+          { floorRole: "floor_covering", id: "a", materialId: "laminate_flooring", thicknessMm: 8 },
+          { floorRole: "resilient_layer", id: "b", materialId: "eps_underlay", thicknessMm: 3 },
+          { floorRole: "upper_fill", id: "c", materialId: "generic_fill", thicknessMm: 50 },
+          { floorRole: "floating_screed", id: "d", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 60 },
+          { floorRole: "base_structure", id: "e", materialId: "open_box_timber_slab", thicknessMm: 370 }
+        ]
+      }
+    ]
   }
 ];
 
@@ -167,10 +211,30 @@ const TIMBER_CASES = [
       { id: "a", materialId: "timber_frame_floor", thicknessMm: 100 },
       { id: "b", materialId: "timber_frame_floor", thicknessMm: 100 }
     ],
+    rawLowerOnly: [
+      { id: "a", materialId: "gypsum_board", thicknessMm: 13 },
+      { id: "b", materialId: "rockwool", thicknessMm: 90 },
+      { id: "c", materialId: "furring_channel", thicknessMm: 28 },
+      { id: "d", materialId: "timber_frame_floor", thicknessMm: 200 }
+    ],
+    rawUpperOnly: [
+      { id: "a", materialId: "laminate_flooring", thicknessMm: 8 },
+      { id: "b", materialId: "timber_frame_floor", thicknessMm: 200 }
+    ],
     taggedSingle: [{ floorRole: "base_structure", id: "a", materialId: "timber_frame_floor", thicknessMm: 200 }],
     taggedSplit: [
       { floorRole: "base_structure", id: "a", materialId: "timber_frame_floor", thicknessMm: 100 },
       { floorRole: "base_structure", id: "b", materialId: "timber_frame_floor", thicknessMm: 100 }
+    ],
+    taggedLowerOnly: [
+      { floorRole: "ceiling_board", id: "a", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", id: "b", materialId: "rockwool", thicknessMm: 90 },
+      { floorRole: "ceiling_cavity", id: "c", materialId: "furring_channel", thicknessMm: 28 },
+      { floorRole: "base_structure", id: "d", materialId: "timber_frame_floor", thicknessMm: 200 }
+    ],
+    taggedUpperOnly: [
+      { floorRole: "floor_covering", id: "a", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "base_structure", id: "b", materialId: "timber_frame_floor", thicknessMm: 200 }
     ]
   },
   {
@@ -180,10 +244,30 @@ const TIMBER_CASES = [
       { id: "a", materialId: "timber_joist_floor", thicknessMm: 120 },
       { id: "b", materialId: "timber_joist_floor", thicknessMm: 120 }
     ],
+    rawLowerOnly: [
+      { id: "a", materialId: "gypsum_board", thicknessMm: 13 },
+      { id: "b", materialId: "rockwool", thicknessMm: 90 },
+      { id: "c", materialId: "furring_channel", thicknessMm: 28 },
+      { id: "d", materialId: "timber_joist_floor", thicknessMm: 240 }
+    ],
+    rawUpperOnly: [
+      { id: "a", materialId: "laminate_flooring", thicknessMm: 8 },
+      { id: "b", materialId: "timber_joist_floor", thicknessMm: 240 }
+    ],
     taggedSingle: [{ floorRole: "base_structure", id: "a", materialId: "timber_joist_floor", thicknessMm: 240 }],
     taggedSplit: [
       { floorRole: "base_structure", id: "a", materialId: "timber_joist_floor", thicknessMm: 120 },
       { floorRole: "base_structure", id: "b", materialId: "timber_joist_floor", thicknessMm: 120 }
+    ],
+    taggedLowerOnly: [
+      { floorRole: "ceiling_board", id: "a", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", id: "b", materialId: "rockwool", thicknessMm: 90 },
+      { floorRole: "ceiling_cavity", id: "c", materialId: "furring_channel", thicknessMm: 28 },
+      { floorRole: "base_structure", id: "d", materialId: "timber_joist_floor", thicknessMm: 240 }
+    ],
+    taggedUpperOnly: [
+      { floorRole: "floor_covering", id: "a", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "base_structure", id: "b", materialId: "timber_joist_floor", thicknessMm: 240 }
     ]
   },
   {
@@ -193,12 +277,32 @@ const TIMBER_CASES = [
       { id: "a", materialId: "engineered_timber_structural", thicknessMm: 120 },
       { id: "b", materialId: "engineered_timber_structural", thicknessMm: 120 }
     ],
+    rawLowerOnly: [
+      { id: "a", materialId: "gypsum_board", thicknessMm: 13 },
+      { id: "b", materialId: "rockwool", thicknessMm: 90 },
+      { id: "c", materialId: "furring_channel", thicknessMm: 28 },
+      { id: "d", materialId: "engineered_timber_structural", thicknessMm: 240 }
+    ],
+    rawUpperOnly: [
+      { id: "a", materialId: "laminate_flooring", thicknessMm: 8 },
+      { id: "b", materialId: "engineered_timber_structural", thicknessMm: 240 }
+    ],
     taggedSingle: [
       { floorRole: "base_structure", id: "a", materialId: "engineered_timber_structural", thicknessMm: 240 }
     ],
     taggedSplit: [
       { floorRole: "base_structure", id: "a", materialId: "engineered_timber_structural", thicknessMm: 120 },
       { floorRole: "base_structure", id: "b", materialId: "engineered_timber_structural", thicknessMm: 120 }
+    ],
+    taggedLowerOnly: [
+      { floorRole: "ceiling_board", id: "a", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", id: "b", materialId: "rockwool", thicknessMm: 90 },
+      { floorRole: "ceiling_cavity", id: "c", materialId: "furring_channel", thicknessMm: 28 },
+      { floorRole: "base_structure", id: "d", materialId: "engineered_timber_structural", thicknessMm: 240 }
+    ],
+    taggedUpperOnly: [
+      { floorRole: "floor_covering", id: "a", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "base_structure", id: "b", materialId: "engineered_timber_structural", thicknessMm: 240 }
     ]
   }
 ] as const;
@@ -259,8 +363,12 @@ describe("raw floor weaker carrier route posture", () => {
     for (const testCase of TIMBER_CASES) {
       const rawSingle = snapshot(`${testCase.id}-raw-single`, testCase.rawSingle);
       const rawSplit = snapshot(`${testCase.id}-raw-split`, testCase.rawSplit);
+      const rawLowerOnly = snapshot(`${testCase.id}-raw-lower-only`, testCase.rawLowerOnly);
+      const rawUpperOnly = snapshot(`${testCase.id}-raw-upper-only`, testCase.rawUpperOnly);
       const taggedSingle = snapshot(`${testCase.id}-tagged-single`, testCase.taggedSingle);
       const taggedSplit = snapshot(`${testCase.id}-tagged-split`, testCase.taggedSplit);
+      const taggedLowerOnly = snapshot(`${testCase.id}-tagged-lower-only`, testCase.taggedLowerOnly);
+      const taggedUpperOnly = snapshot(`${testCase.id}-tagged-upper-only`, testCase.taggedUpperOnly);
 
       if (JSON.stringify(rawSplit) !== JSON.stringify(rawSingle)) {
         failures.push(`${testCase.id}: raw split drifted from raw single fail-closed posture`);
@@ -275,12 +383,38 @@ describe("raw floor weaker carrier route posture", () => {
         failures.push(`${testCase.id}: raw posture no longer stays fail-closed on companion and impact outputs`);
       }
 
+      if (
+        rawLowerOnly.outputCards.Rw !== "unsupported" ||
+        rawLowerOnly.outputCards["Ln,w"] !== "unsupported" ||
+        rawLowerOnly.outputCards["L'n,w"] !== "needs_input" ||
+        rawLowerOnly.outputCards["L'nT,w"] !== "needs_input"
+      ) {
+        failures.push(`${testCase.id}: raw lower-only posture no longer stays fail-closed on companion and impact outputs`);
+      }
+
+      if (
+        rawUpperOnly.outputCards.Rw !== "unsupported" ||
+        rawUpperOnly.outputCards["Ln,w"] !== "unsupported" ||
+        rawUpperOnly.outputCards["L'n,w"] !== "needs_input" ||
+        rawUpperOnly.outputCards["L'nT,w"] !== "needs_input"
+      ) {
+        failures.push(`${testCase.id}: raw upper-only posture no longer stays fail-closed on companion and impact outputs`);
+      }
+
       if (taggedSingle.outputCards.Rw !== "live" || taggedSingle.outputCards["Ln,w"] !== "live") {
         failures.push(`${testCase.id}: tagged single no longer opens floor companion and impact outputs`);
       }
 
       if (JSON.stringify(taggedSplit) !== JSON.stringify(taggedSingle)) {
         failures.push(`${testCase.id}: tagged split drifted from tagged single live posture`);
+      }
+
+      if (taggedLowerOnly.outputCards.Rw !== "live" || taggedLowerOnly.outputCards["Ln,w"] !== "live") {
+        failures.push(`${testCase.id}: tagged lower-only no longer opens floor companion and impact outputs`);
+      }
+
+      if (taggedUpperOnly.outputCards.Rw !== "live" || taggedUpperOnly.outputCards["Ln,w"] !== "live") {
+        failures.push(`${testCase.id}: tagged upper-only no longer opens floor companion and impact outputs`);
       }
     }
 

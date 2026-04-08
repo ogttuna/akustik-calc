@@ -1,7 +1,7 @@
 "use client";
 
 import { SurfacePanel } from "@dynecho/ui";
-import { ArrowLeft, Copy, Download, Printer, RefreshCcw } from "lucide-react";
+import { ArrowLeft, Copy, Download, FilePenLine, Printer, RefreshCcw, RotateCcw } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -17,12 +17,11 @@ import { SimpleWorkbenchProposalConstructionFigure } from "@/features/workbench/
 import { buildSimpleWorkbenchProposalDossier } from "@/features/workbench/simple-workbench-proposal-dossier";
 import { getSimpleWorkbenchProposalBranding } from "@/features/workbench/simple-workbench-proposal-branding";
 import { downloadSimpleWorkbenchProposalPdf } from "@/features/workbench/simple-workbench-proposal-pdf";
-import { readSimpleWorkbenchProposalPreview } from "@/features/workbench/simple-workbench-proposal-preview-storage";
-
-type LoadedProposalPreview = {
-  document: SimpleWorkbenchProposalDocument;
-  savedAtIso: string;
-} | null;
+import {
+  readSimpleWorkbenchProposalPreview,
+  resetSimpleWorkbenchProposalPreviewCustomizations,
+  type LoadedSimpleWorkbenchProposalPreview
+} from "@/features/workbench/simple-workbench-proposal-preview-storage";
 
 function formatSavedAtLabel(savedAtIso: string): string {
   return new Intl.DateTimeFormat("en-GB", {
@@ -79,7 +78,7 @@ function ProposalLayerScheduleTable(props: { layers: SimpleWorkbenchProposalDocu
 export function ProposalPreviewClientPage() {
   const searchParams = useSearchParams();
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
-  const [loadedPreview, setLoadedPreview] = useState<LoadedProposalPreview>(null);
+  const [loadedPreview, setLoadedPreview] = useState<LoadedSimpleWorkbenchProposalPreview | null>(null);
   const [frameReady, setFrameReady] = useState(false);
   const [isDownloadingPdf, setIsDownloadingPdf] = useState(false);
 
@@ -114,7 +113,12 @@ export function ProposalPreviewClientPage() {
     [proposalDocument]
   );
   const constructionSection = useMemo(
-    () => (proposalDocument ? buildSimpleWorkbenchProposalConstructionSection(proposalDocument.layers, proposalDocument.studyModeLabel) : null),
+    () =>
+      proposalDocument
+        ? buildSimpleWorkbenchProposalConstructionSection(proposalDocument.layers, proposalDocument.studyModeLabel, {
+            totalThicknessLabelOverride: proposalDocument.constructionTotalThicknessOverrideLabel
+          })
+        : null,
     [proposalDocument]
   );
   const methodTraceNoteCount = useMemo(
@@ -207,6 +211,15 @@ export function ProposalPreviewClientPage() {
     setLoadedPreview(readSimpleWorkbenchProposalPreview());
   }
 
+  function handleResetPdfEdits() {
+    resetSimpleWorkbenchProposalPreviewCustomizations();
+    setFrameReady(false);
+    setLoadedPreview(readSimpleWorkbenchProposalPreview());
+    toast.success("PDF edits cleared", {
+      description: "The packaged proposal snapshot is active again."
+    });
+  }
+
   useEffect(() => {
     if (!proposalDocument || !shouldAutoPrint || !frameReady) {
       return;
@@ -249,6 +262,17 @@ export function ProposalPreviewClientPage() {
               Copy summary
             </button>
             <button
+              className="focus-ring surface-subtle-hover inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={!proposalDocument}
+              onClick={() => {
+                window.location.assign("/workbench/proposal/configure");
+              }}
+              type="button"
+            >
+              <FilePenLine className="h-4 w-4" />
+              PDF ayarla
+            </button>
+            <button
               className="focus-ring surface-subtle-hover inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)]"
               onClick={handleReload}
               type="button"
@@ -256,6 +280,16 @@ export function ProposalPreviewClientPage() {
               <RefreshCcw className="h-4 w-4" />
               Reload snapshot
             </button>
+            {loadedPreview?.hasCustomizations ? (
+              <button
+                className="focus-ring surface-subtle-hover inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)]"
+                onClick={handleResetPdfEdits}
+                type="button"
+              >
+                <RotateCcw className="h-4 w-4" />
+                Reset PDF edits
+              </button>
+            ) : null}
             <button
               className="focus-ring surface-subtle-hover inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] disabled:cursor-not-allowed disabled:opacity-50"
               disabled={!proposalDocument || isDownloadingPdf}
@@ -349,7 +383,11 @@ export function ProposalPreviewClientPage() {
                   <PreviewFactCard
                     detail={`${proposalDocument.consultantCompany} · ${proposalDocument.preparedBy}`}
                     label="Snapshot"
-                    value={formatSavedAtLabel(loadedPreview!.savedAtIso)}
+                    value={
+                      loadedPreview?.hasCustomizations && loadedPreview.customizedAtIso
+                        ? `${formatSavedAtLabel(loadedPreview.customizedAtIso)} · manual`
+                        : formatSavedAtLabel(loadedPreview!.savedAtIso)
+                    }
                   />
                 </div>
               </div>
@@ -371,7 +409,13 @@ export function ProposalPreviewClientPage() {
                   value={constructionSection?.totalThicknessLabel ?? "Thickness pending"}
                 />
                 <PreviewFactCard
-                  detail={frameReady ? "Preview frame ready for print." : "Preview frame is still loading."}
+                  detail={
+                    loadedPreview?.hasCustomizations
+                      ? "Manual PDF edits are active on this preview."
+                      : frameReady
+                        ? "Preview frame ready for print."
+                        : "Preview frame is still loading."
+                  }
                   label="Subject"
                   value={proposalDocument.proposalSubject}
                 />
@@ -486,6 +530,7 @@ export function ProposalPreviewClientPage() {
               <SimpleWorkbenchProposalConstructionFigure
                 layers={proposalDocument.layers}
                 studyModeLabel={proposalDocument.studyModeLabel}
+                totalThicknessOverrideLabel={proposalDocument.constructionTotalThicknessOverrideLabel}
               />
             </div>
           </SurfacePanel>

@@ -389,6 +389,171 @@ export const ROUTE_MIXED_GENERATED_CASES: readonly RouteMixedGeneratedCase[] = [
     studyMode: "floor"
   },
   {
+    id: "route-clt-dry",
+    label: "CLT dry exact floor",
+    requestedOutputs: DEFAULT_FLOOR_REQUESTED_OUTPUTS,
+    rows: getPresetById("dataholz_clt_dry_exact").rows,
+    splitPlans: [
+      { parts: ["20", "40"], rowIndex: 1 },
+      { parts: ["60", "80"], rowIndex: 3 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    id: "route-hollow-core-vinyl",
+    label: "Hollow-core vinyl exact floor",
+    requestedOutputs: DEFAULT_FLOOR_REQUESTED_OUTPUTS,
+    rows: getPresetById("hollow_core_vinyl_exact").rows,
+    splitPlans: [
+      { parts: ["8", "8"], rowIndex: 0 },
+      { parts: ["100", "100"], rowIndex: 4 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    id: "route-knauf-concrete",
+    label: "Knauf concrete exact floor",
+    requestedOutputs: DEFAULT_FLOOR_REQUESTED_OUTPUTS,
+    rows: getPresetById("knauf_concrete_exact").rows,
+    splitPlans: [
+      { parts: ["6.5", "6.5"], rowIndex: 0 },
+      { parts: ["75", "75"], rowIndex: 5 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    id: "route-open-web-200-exact",
+    label: "Open-web 200 exact floor",
+    requestedOutputs: DEFAULT_FLOOR_REQUESTED_OUTPUTS,
+    rows: getPresetById("ubiq_open_web_200_exact").rows,
+    splitPlans: [
+      { parts: ["8", "8"], rowIndex: 0 },
+      { parts: ["100", "100"], rowIndex: 7 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    id: "route-knauf-acoustic-timber",
+    label: "Knauf acoustic timber exact floor",
+    requestedOutputs: DEFAULT_FLOOR_REQUESTED_OUTPUTS,
+    rows: getPresetById("knauf_acoustic_mount_exact").rows,
+    splitPlans: [
+      { parts: ["8", "8"], rowIndex: 0 },
+      { parts: ["120", "120"], rowIndex: 6 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    id: "route-dataholz-timber-frame",
+    label: "Dataholz timber-frame exact floor",
+    requestedOutputs: DEFAULT_FLOOR_REQUESTED_OUTPUTS,
+    rows: getPresetById("dataholz_timber_frame_exact").rows,
+    splitPlans: [
+      { parts: ["6.25", "6.25"], rowIndex: 0 },
+      { parts: ["110", "110"], rowIndex: 6 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    id: "route-dataholz-dry",
+    label: "Dataholz dry exact floor",
+    requestedOutputs: DEFAULT_FLOOR_REQUESTED_OUTPUTS,
+    rows: getPresetById("dataholz_dry_floor_exact").rows,
+    splitPlans: [
+      { parts: ["6.25", "6.25"], rowIndex: 0 },
+      { parts: ["20", "20"], rowIndex: 4 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    id: "route-dataholz-dry-rc",
+    label: "Dataholz Dry RC exact floor",
+    requestedOutputs: DEFAULT_FLOOR_REQUESTED_OUTPUTS,
+    rows: getPresetById("dataholz_dry_rc_exact").rows,
+    splitPlans: [
+      { parts: ["6.25", "6.25"], rowIndex: 0 },
+      { parts: ["120", "120"], rowIndex: 6 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    id: "route-tuas-concrete-dry",
+    label: "TUAS concrete dry exact floor",
+    requestedOutputs: DEFAULT_FLOOR_REQUESTED_OUTPUTS,
+    rows: getPresetById("tuas_concrete_dry_exact").rows,
+    splitPlans: [
+      { parts: ["20", "30"], rowIndex: 2 },
+      { parts: ["80", "80"], rowIndex: 4 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    id: "route-knauf-direct-timber",
+    label: "Knauf direct timber exact floor",
+    requestedOutputs: DEFAULT_FLOOR_REQUESTED_OUTPUTS,
+    rows: getPresetById("knauf_direct_timber_exact").rows,
+    splitPlans: [
+      { parts: ["6.5", "6.5"], rowIndex: 0 },
+      { parts: ["7.5", "7.5"], rowIndex: 2 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    id: "route-open-web-400-exact",
+    label: "Open-web 400 exact floor",
+    requestedOutputs: DEFAULT_FLOOR_REQUESTED_OUTPUTS,
+    rows: getPresetById("ubiq_open_web_400_exact").rows,
+    splitPlans: [
+      { parts: ["8", "8"], rowIndex: 0 },
+      { parts: ["200", "200"], rowIndex: 7 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    id: "route-open-box-exact",
+    label: "TUAS open-box exact floor",
+    requestedOutputs: DEFAULT_FLOOR_REQUESTED_OUTPUTS,
+    rows: getPresetById("tuas_open_box_exact").rows,
+    splitPlans: [
+      { parts: ["4", "4"], rowIndex: 4 },
+      { parts: ["1.5", "1.5"], rowIndex: 5 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    id: "route-knauf-timber-mount",
+    label: "Knauf timber mount exact floor",
+    requestedOutputs: DEFAULT_FLOOR_REQUESTED_OUTPUTS,
+    rows: getPresetById("knauf_timber_mount_exact").rows,
+    splitPlans: [
+      { parts: ["70", "75"], rowIndex: 1 },
+      { parts: ["7.5", "7.5"], rowIndex: 3 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    id: "route-tuas-clt-exact",
+    label: "TUAS CLT exact floor",
+    requestedOutputs: DEFAULT_FLOOR_REQUESTED_OUTPUTS,
+    rows: getPresetById("tuas_clt_exact").rows,
+    splitPlans: [
+      { parts: ["4", "4"], rowIndex: 0 },
+      { parts: ["1.5", "1.5"], rowIndex: 1 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    id: "route-tuas-clt-260-exact",
+    label: "TUAS CLT 260 exact floor",
+    requestedOutputs: DEFAULT_FLOOR_REQUESTED_OUTPUTS,
+    rows: getPresetById("tuas_clt_260_exact").rows,
+    splitPlans: [
+      { parts: ["4", "4"], rowIndex: 0 },
+      { parts: ["1.5", "1.5"], rowIndex: 1 }
+    ],
+    studyMode: "floor"
+  },
+  {
     id: "route-open-web-bound",
     label: "Open-web bound floor",
     requestedOutputs: DEFAULT_FLOOR_REQUESTED_OUTPUTS,

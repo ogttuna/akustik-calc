@@ -18,13 +18,17 @@ import {
 type SimpleWorkbenchProposalConstructionFigureProps = {
   layers: readonly SimpleWorkbenchProposalConstructionLayer[];
   studyModeLabel: string;
+  totalThicknessOverrideLabel?: string;
 };
 
 export function SimpleWorkbenchProposalConstructionFigure({
   layers,
-  studyModeLabel
+  studyModeLabel,
+  totalThicknessOverrideLabel
 }: SimpleWorkbenchProposalConstructionFigureProps) {
-  const section = buildSimpleWorkbenchProposalConstructionSection(layers, studyModeLabel);
+  const section = buildSimpleWorkbenchProposalConstructionSection(layers, studyModeLabel, {
+    totalThicknessLabelOverride: totalThicknessOverrideLabel
+  });
 
   if (section.bands.length === 0) {
     return (

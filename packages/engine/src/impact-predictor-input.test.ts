@@ -728,12 +728,14 @@ describe("buildImpactPredictorInputFromLayerStack", () => {
     ]);
   });
 
-  it("avoids floor-role backfill for ambiguous bare heavy slabs without floor evidence", () => {
+  it("backfills the defended safe-bare heavy slab carrier role when the visible stack is a single raw concrete base", () => {
     expect(
       maybeInferFloorRoleLayerStack([
         { materialId: "concrete", thicknessMm: 140 }
       ])
-    ).toBeNull();
+    ).toEqual([
+      { floorRole: "base_structure", materialId: "concrete", thicknessMm: 140 }
+    ]);
   });
 
   it("derives bare-floor predictor inputs for safe single-layer raw base stacks", () => {
@@ -883,6 +885,51 @@ describe("buildImpactPredictorInputFromLayerStack", () => {
     }
   });
 
+  it("keeps raw role-gated timber and open-box non-combined stacks fail-closed for auto role inference and predictor derivation", () => {
+    const cases = [
+      {
+        id: "open-box lower-only helper package",
+        layers: [
+          { materialId: "gypsum_board", thicknessMm: 13 },
+          { materialId: "rockwool", thicknessMm: 90 },
+          { materialId: "furring_channel", thicknessMm: 28 },
+          { materialId: "open_box_timber_slab", thicknessMm: 370 }
+        ]
+      },
+      {
+        id: "open-box upper-only dry package",
+        layers: [
+          { materialId: "laminate_flooring", thicknessMm: 8 },
+          { materialId: "eps_underlay", thicknessMm: 3 },
+          { materialId: "generic_fill", thicknessMm: 50 },
+          { materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 60 },
+          { materialId: "open_box_timber_slab", thicknessMm: 370 }
+        ]
+      },
+      {
+        id: "timber lower-only helper package",
+        layers: [
+          { materialId: "gypsum_board", thicknessMm: 13 },
+          { materialId: "rockwool", thicknessMm: 90 },
+          { materialId: "furring_channel", thicknessMm: 28 },
+          { materialId: "timber_joist_floor", thicknessMm: 240 }
+        ]
+      },
+      {
+        id: "timber upper-only finish package",
+        layers: [
+          { materialId: "laminate_flooring", thicknessMm: 8 },
+          { materialId: "timber_joist_floor", thicknessMm: 240 }
+        ]
+      }
+    ] as const;
+
+    for (const testCase of cases) {
+      expect(maybeInferFloorRoleLayerStack(testCase.layers), testCase.id).toBeNull();
+      expect(maybeBuildImpactPredictorInputFromLayerStack(testCase.layers), testCase.id).toBeNull();
+    }
+  });
+
   it("keeps disjoint same-material single-entry roles fail-closed and surfaces the blocker warning", () => {
     const layers = [
       { floorRole: "base_structure" as const, materialId: "concrete", thicknessMm: 150 },
@@ -934,5 +981,58 @@ describe("buildImpactPredictorInputFromLayerStack", () => {
       structuralSupportType: "reinforced_concrete",
       upperFill: {}
     });
+  });
+
+  it("normalizes schedule-equivalent contiguous ceiling-board splits before deriving predictor input", () => {
+    const canonical = [
+      { floorRole: "ceiling_board" as const, materialId: "firestop_board", thicknessMm: 15 },
+      { floorRole: "ceiling_board" as const, materialId: "firestop_board", thicknessMm: 15 },
+      { floorRole: "ceiling_fill" as const, materialId: "rockwool", thicknessMm: 50 },
+      { floorRole: "ceiling_cavity" as const, materialId: "resilient_stud_ceiling", thicknessMm: 150 },
+      { floorRole: "base_structure" as const, materialId: "composite_steel_deck", thicknessMm: 150 }
+    ];
+    const split = [
+      { floorRole: "ceiling_board" as const, materialId: "firestop_board", thicknessMm: 7.5 },
+      { floorRole: "ceiling_board" as const, materialId: "firestop_board", thicknessMm: 7.5 },
+      { floorRole: "ceiling_board" as const, materialId: "firestop_board", thicknessMm: 15 },
+      { floorRole: "ceiling_fill" as const, materialId: "rockwool", thicknessMm: 25 },
+      { floorRole: "ceiling_fill" as const, materialId: "rockwool", thicknessMm: 25 },
+      { floorRole: "ceiling_cavity" as const, materialId: "resilient_stud_ceiling", thicknessMm: 150 },
+      { floorRole: "base_structure" as const, materialId: "composite_steel_deck", thicknessMm: 150 }
+    ];
+
+    expect(getVisibleLayerPredictorBlockerWarning(canonical)).toBeNull();
+    expect(getVisibleLayerPredictorBlockerWarning(split)).toBeNull();
+    expect(maybeBuildImpactPredictorInputFromLayerStack(split)).toEqual(
+      maybeBuildImpactPredictorInputFromLayerStack(canonical)
+    );
+  });
+
+  it("keeps non-packable mixed-thickness ceiling-board schedules fail-closed", () => {
+    const layers = [
+      { floorRole: "ceiling_board" as const, materialId: "firestop_board", thicknessMm: 10 },
+      { floorRole: "ceiling_board" as const, materialId: "firestop_board", thicknessMm: 20 },
+      { floorRole: "ceiling_cavity" as const, materialId: "resilient_stud_ceiling", thicknessMm: 150 },
+      { floorRole: "base_structure" as const, materialId: "composite_steel_deck", thicknessMm: 150 }
+    ];
+
+    expect(maybeBuildImpactPredictorInputFromLayerStack(layers)).toBeNull();
+    expect(getVisibleLayerPredictorBlockerWarning(layers)).toMatch(
+      /single-entry floor roles are duplicated: ceiling board x2 \(Firestop Board\)/i
+    );
+  });
+
+  it("keeps disjoint identical ceiling-board topologies fail-closed", () => {
+    const layers = [
+      { floorRole: "ceiling_board" as const, materialId: "firestop_board", thicknessMm: 16 },
+      { floorRole: "ceiling_cavity" as const, materialId: "ubiq_resilient_ceiling", thicknessMm: 65 },
+      { floorRole: "ceiling_board" as const, materialId: "firestop_board", thicknessMm: 16 },
+      { floorRole: "base_structure" as const, materialId: "open_web_steel_floor", thicknessMm: 300 }
+    ];
+
+    expect(maybeBuildImpactPredictorInputFromLayerStack(layers)).toBeNull();
+    expect(getVisibleLayerPredictorBlockerWarning(layers)).toMatch(
+      /single-entry floor roles are duplicated: ceiling board x2 \(Firestop Board\)/i
+    );
   });
 });

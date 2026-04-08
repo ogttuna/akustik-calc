@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   collectCeilingBoardScheduleConflict,
+  collectCeilingBoardTopologyConflict,
   collectSingleEntryRoleConflicts,
   hasAmbiguousSingleEntryRoleTopology
 } from "./floor-role-topology";
@@ -98,5 +99,33 @@ describe("floor-role topology", () => {
       materialLabels: ["Gypsum Board", "Firestop Board"],
       role: "ceiling_board"
     });
+  });
+
+  it("flags disjoint identical ceiling-board segments as a topology conflict without calling them mixed", () => {
+    const disjointBoards = [
+      layer("ceiling_board", "firestop_board", "Firestop Board", 16),
+      layer("ceiling_cavity", "ubiq_resilient_ceiling", "UBIQ Resilient Ceiling", 65),
+      layer("ceiling_board", "firestop_board", "Firestop Board", 16)
+    ];
+
+    expect(collectCeilingBoardScheduleConflict(disjointBoards)).toBeNull();
+    expect(collectCeilingBoardTopologyConflict(disjointBoards)).toEqual({
+      count: 2,
+      materialLabels: ["Firestop Board"],
+      mixedSchedule: false,
+      role: "ceiling_board",
+      scheduleSegments: 2
+    });
+  });
+
+  it("treats contiguous schedule-equivalent ceiling-board splits as safe", () => {
+    const splitBoards = [
+      layer("ceiling_board", "firestop_board", "Firestop Board", 8),
+      layer("ceiling_board", "firestop_board", "Firestop Board", 8),
+      layer("ceiling_board", "firestop_board", "Firestop Board", 16)
+    ];
+
+    expect(collectCeilingBoardScheduleConflict(splitBoards)).toBeNull();
+    expect(collectCeilingBoardTopologyConflict(splitBoards)).toBeNull();
   });
 });

@@ -96,6 +96,7 @@ export type SimpleWorkbenchProposalDocument = {
   consultantLogoDataUrl: string;
   consultantPhone: string;
   consultantWordmarkLine: string;
+  constructionTotalThicknessOverrideLabel?: string;
   corridorDossierCards: readonly SimpleWorkbenchProposalCorridorDossierCard[];
   corridorDossierHeadline: string;
   contextLabel: string;
@@ -320,6 +321,10 @@ export function parseSimpleWorkbenchProposalDocument(value: unknown): SimpleWork
     consultantLogoDataUrl,
     consultantPhone,
     consultantWordmarkLine,
+    constructionTotalThicknessOverrideLabel:
+      typeof value.constructionTotalThicknessOverrideLabel === "string"
+        ? value.constructionTotalThicknessOverrideLabel
+        : undefined,
     corridorDossierCards:
       corridorDossierCards.length > 0
         ? (corridorDossierCards as SimpleWorkbenchProposalCorridorDossierCard[])
@@ -1350,7 +1355,9 @@ function renderLayerRows(layers: readonly SimpleWorkbenchProposalLayer[]): strin
 }
 
 function renderConstructionFigure(document: SimpleWorkbenchProposalDocument): string {
-  const construction = buildSimpleWorkbenchProposalConstructionRender(document.layers, document.studyModeLabel);
+  const construction = buildSimpleWorkbenchProposalConstructionRender(document.layers, document.studyModeLabel, {
+    totalThicknessLabelOverride: document.constructionTotalThicknessOverrideLabel
+  });
 
   if (construction.section.bands.length === 0) {
     return `<div class="method-box"><h3>Construction section unavailable</h3><p>Add layers to produce the construction cross-section.</p></div>`;
@@ -1398,7 +1405,9 @@ export function buildSimpleWorkbenchProposalText(document: SimpleWorkbenchPropos
     reportProfileLabel: document.reportProfileLabel
   });
   const dossier = buildSimpleWorkbenchProposalDossier(document);
-  const constructionSection = buildSimpleWorkbenchProposalConstructionSection(document.layers, document.studyModeLabel);
+  const constructionSection = buildSimpleWorkbenchProposalConstructionSection(document.layers, document.studyModeLabel, {
+    totalThicknessLabelOverride: document.constructionTotalThicknessOverrideLabel
+  });
   const warningLines =
     document.warnings.length > 0
       ? document.warnings.map((warning) => `- ${warning}`)
@@ -1536,7 +1545,9 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
     reportProfileLabel: document.reportProfileLabel
   });
   const dossier = buildSimpleWorkbenchProposalDossier(document);
-  const constructionSection = buildSimpleWorkbenchProposalConstructionSection(document.layers, document.studyModeLabel);
+  const constructionSection = buildSimpleWorkbenchProposalConstructionSection(document.layers, document.studyModeLabel, {
+    totalThicknessLabelOverride: document.constructionTotalThicknessOverrideLabel
+  });
   const warningItems =
     document.warnings.length > 0
       ? renderListItems(document.warnings)

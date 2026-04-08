@@ -11,12 +11,19 @@ import type {
 import { getFloorSystemCompanionSemantic } from "@dynecho/shared";
 
 import { hasInvalidExplicitFloorBaseStructure } from "./floor-base-structure-eligibility";
-import { collectSingleEntryRoleConflicts, type SingleEntryRoleConflict } from "./floor-role-topology";
+import {
+  collectCeilingBoardTopologyConflict,
+  collectSingleEntryRoleConflicts,
+  type CeilingBoardTopologyConflict,
+  type SingleEntryRoleConflict
+} from "./floor-role-topology";
 import { getImpactConfidenceForBasis } from "./impact-confidence";
+import { buildImpactPredictorInputFromLayerStack } from "./impact-predictor-input";
 import { buildUniformImpactMetricBasis } from "./impact-metric-basis";
 import { isResolvedHeavyConcreteCarrierEligible } from "./heavy-concrete-carrier-eligibility";
 import { deriveLightweightSteelFl28Estimate } from "./lightweight-steel-fl28-estimate";
 import { round1 } from "./math";
+import { derivePredictorSpecificFloorSystemEstimate } from "./predictor-floor-system-estimate";
 import { inferStructuralSupportTypeFromMaterial } from "./structural-material-classification";
 
 type StructuralFamily =
@@ -141,6 +148,31 @@ function formatAmbiguousSingleEntryRoleConflict(
   const materialsLabel = conflict.materialLabels.length > 0 ? ` (${conflict.materialLabels.join(", ")})` : "";
 
   return `${conflict.role.replaceAll("_", " ")} x${conflict.count}${materialsLabel}`;
+}
+
+function formatAmbiguousSingleEntryRoleConflicts(
+  conflicts: readonly SingleEntryRoleConflict[]
+): string {
+  return conflicts.map(formatAmbiguousSingleEntryRoleConflict).join(", ");
+}
+
+function formatCeilingBoardScheduleConflict(conflict: {
+  count: number;
+  materialLabels: readonly string[];
+}): string {
+  const materialsLabel = conflict.materialLabels.length > 0 ? ` (${conflict.materialLabels.join(", ")})` : "";
+
+  return `ceiling board x${conflict.count}${materialsLabel}`;
+}
+
+function formatCeilingBoardTopologyConflict(
+  conflict: CeilingBoardTopologyConflict
+): string {
+  const baseLabel = formatCeilingBoardScheduleConflict(conflict);
+
+  return conflict.mixedSchedule
+    ? baseLabel
+    : `${baseLabel} split across ${conflict.scheduleSegments} separated segments`;
 }
 
 function capFitPercentForEstimateTier(
@@ -302,6 +334,17 @@ function compatibleProfiles(left: FloorProfile, right: FloorProfile): boolean {
   }
 
   return false;
+}
+
+function isEligibleFamilyProfile(
+  family: StructuralFamily,
+  profile: FloorProfile
+): boolean {
+  if (family === "open_box_timber" && profile !== "combined") {
+    return false;
+  }
+
+  return true;
 }
 
 function weightFromRecommendation(recommendation: FloorSystemRecommendation): number {
@@ -511,7 +554,48 @@ export function deriveFloorSystemEstimate(
     return null;
   }
   const currentProfile = getLayerProfile(layers);
+  if (!isEligibleFamilyProfile(structuralFamily, currentProfile)) {
+    return null;
+  }
+
+  const lowerOnlyCeilingBoardTopologyConflict =
+    currentProfile === "lower_only" ? collectCeilingBoardTopologyConflict(layers) : null;
+
+  if (structuralFamily === "composite_panel" && lowerOnlyCeilingBoardTopologyConflict) {
+    const conservativePredictorEstimate = derivePredictorSpecificFloorSystemEstimate(
+      buildImpactPredictorInputFromLayerStack(
+        layers.map((layer) => ({
+          floorRole: layer.floorRole,
+          materialId: layer.material.id,
+          thicknessMm: layer.thicknessMm
+        }))
+      )
+    );
+
+    if (conservativePredictorEstimate?.kind === "low_confidence") {
+      return {
+        ...conservativePredictorEstimate,
+        notes: [
+          ...conservativePredictorEstimate.notes,
+          `${
+            lowerOnlyCeilingBoardTopologyConflict.mixedSchedule
+              ? "Mixed lower-board schedule"
+              : "Disjoint lower-board topology"
+          } stayed on the conservative composite continuation: ${formatCeilingBoardTopologyConflict(
+            lowerOnlyCeilingBoardTopologyConflict
+          )}.`
+        ]
+      };
+    }
+  }
+
   const ambiguousSingleEntryRoleConflicts = collectAmbiguousSingleEntryRoleConflicts(layers);
+  const lowerOnlyHelperRoleConflicts =
+    currentProfile === "lower_only"
+      ? ambiguousSingleEntryRoleConflicts.filter(
+          (conflict) => conflict.role === "ceiling_fill" || conflict.role === "ceiling_cavity"
+        )
+      : [];
   const familyPool = dedupeFamilyCandidatesForCurrentProfile(
     structuralFamily,
     currentProfile,
@@ -526,11 +610,26 @@ export function deriveFloorSystemEstimate(
     }
   }
 
+  const lightweightSteelLowerOnlyCeilingBoardTierHold =
+    structuralFamily === "lightweight_steel" &&
+    currentProfile === "lower_only" &&
+    Boolean(lowerOnlyCeilingBoardTopologyConflict && lowerOnlyCeilingBoardTopologyConflict.scheduleSegments > 1);
+  const lightweightSteelLowerOnlyHelperTierHold =
+    structuralFamily === "lightweight_steel" && currentProfile === "lower_only" && lowerOnlyHelperRoleConflicts.length > 0;
+  const compositeLowerOnlyHelperTierHold =
+    structuralFamily === "composite_panel" && currentProfile === "lower_only" && lowerOnlyHelperRoleConflicts.length > 0;
+  const lowerOnlyFamilyGeneralTierHold =
+    lightweightSteelLowerOnlyCeilingBoardTierHold ||
+    lightweightSteelLowerOnlyHelperTierHold ||
+    compositeLowerOnlyHelperTierHold;
+
   const archetypeCandidates =
-    ambiguousSingleEntryRoleConflicts.length === 0
+    ambiguousSingleEntryRoleConflicts.length === 0 && !lowerOnlyFamilyGeneralTierHold
       ? profileAligned.filter((entry) => entry.fitPercent >= 55).slice(0, 3)
       : [];
-  const generalCandidates = familyPool.filter((entry) => entry.fitPercent >= 30).slice(0, 3);
+  const generalCandidates = lowerOnlyFamilyGeneralTierHold
+    ? []
+    : familyPool.filter((entry) => entry.fitPercent >= 30).slice(0, 3);
   const lowConfidencePool = structuralFamily === "unknown" ? recommendations : familyPool;
   const lowConfidenceCandidates = lowConfidencePool.filter((entry) => entry.fitPercent >= 20).slice(0, 3);
 
@@ -553,7 +652,7 @@ export function deriveFloorSystemEstimate(
     activeKindAndSources.sources.reduce((sum, entry) => sum + entry.fitPercent, 0) / activeKindAndSources.sources.length
   );
   const fitPercent =
-    ambiguousSingleEntryRoleConflicts.length > 0
+    ambiguousSingleEntryRoleConflicts.length > 0 || lowerOnlyFamilyGeneralTierHold
       ? round1(capFitPercentForEstimateTier(rawFitPercent, activeKindAndSources.kind))
       : rawFitPercent;
   const airborneRw = weightedAverage(activeKindAndSources.sources, (entry) => entry.system.airborneRatings.Rw);
@@ -587,6 +686,27 @@ export function deriveFloorSystemEstimate(
             `Archetype-level family matching was withheld because single-entry roles are duplicated or split in the visible stack: ${ambiguousSingleEntryRoleConflicts
               .map(formatAmbiguousSingleEntryRoleConflict)
               .join(", ")}.`
+          ]
+        : []),
+      ...(lightweightSteelLowerOnlyCeilingBoardTierHold && lowerOnlyCeilingBoardTopologyConflict
+        ? [
+            `Family-general lightweight-steel matching was withheld because the lower-only ceiling-board topology is split in the visible stack: ${formatCeilingBoardTopologyConflict(
+              lowerOnlyCeilingBoardTopologyConflict
+            )}.`
+          ]
+        : []),
+      ...(lightweightSteelLowerOnlyHelperTierHold
+        ? [
+            `Family-general lightweight-steel matching was withheld because the lower-only helper topology is split in the visible stack: ${formatAmbiguousSingleEntryRoleConflicts(
+              lowerOnlyHelperRoleConflicts
+            )}.`
+          ]
+        : []),
+      ...(compositeLowerOnlyHelperTierHold
+        ? [
+            `Lower-only helper topology stayed on the conservative composite continuation: ${formatAmbiguousSingleEntryRoleConflicts(
+              lowerOnlyHelperRoleConflicts
+            )}.`
           ]
         : []),
       ...(fitPercent < rawFitPercent

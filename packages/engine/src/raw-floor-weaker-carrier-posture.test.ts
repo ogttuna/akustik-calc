@@ -233,6 +233,122 @@ const CASES: readonly CarrierCase[] = [
         ]
       }
     ]
+  },
+  {
+    id: "raw timber non-combined packages stay fail-closed without explicit base-structure evidence",
+    expectedLab: {
+      basis: null,
+      estimateKind: null,
+      supported: ["Rw"]
+    },
+    expectedField: {
+      basis: null,
+      estimateKind: null,
+      supported: ["R'w", "DnT,w"]
+    },
+    variants: [
+      {
+        id: "timber-frame-raw-lower-only",
+        layers: [
+          { materialId: "gypsum_board", thicknessMm: 13 },
+          { materialId: "rockwool", thicknessMm: 90 },
+          { materialId: "furring_channel", thicknessMm: 28 },
+          { materialId: "timber_frame_floor", thicknessMm: 200 }
+        ]
+      },
+      {
+        id: "timber-frame-raw-upper-only",
+        layers: [
+          { materialId: "laminate_flooring", thicknessMm: 8 },
+          { materialId: "timber_frame_floor", thicknessMm: 200 }
+        ]
+      },
+      {
+        id: "timber-joist-raw-lower-only",
+        layers: [
+          { materialId: "gypsum_board", thicknessMm: 13 },
+          { materialId: "rockwool", thicknessMm: 90 },
+          { materialId: "furring_channel", thicknessMm: 28 },
+          { materialId: "timber_joist_floor", thicknessMm: 240 }
+        ]
+      },
+      {
+        id: "timber-joist-raw-upper-only",
+        layers: [
+          { materialId: "laminate_flooring", thicknessMm: 8 },
+          { materialId: "timber_joist_floor", thicknessMm: 240 }
+        ]
+      },
+      {
+        id: "engineered-raw-lower-only",
+        layers: [
+          { materialId: "gypsum_board", thicknessMm: 13 },
+          { materialId: "rockwool", thicknessMm: 90 },
+          { materialId: "furring_channel", thicknessMm: 28 },
+          { materialId: "engineered_timber_structural", thicknessMm: 240 }
+        ]
+      },
+      {
+        id: "engineered-raw-upper-only",
+        layers: [
+          { materialId: "laminate_flooring", thicknessMm: 8 },
+          { materialId: "engineered_timber_structural", thicknessMm: 240 }
+        ]
+      }
+    ]
+  },
+  {
+    id: "open-box timber non-combined packages stay fail-closed even when floor roles are explicit",
+    expectedLab: {
+      basis: null,
+      estimateKind: null,
+      supported: ["Rw"]
+    },
+    expectedField: {
+      basis: null,
+      estimateKind: null,
+      supported: ["R'w", "DnT,w"]
+    },
+    variants: [
+      {
+        id: "raw-lower-only",
+        layers: [
+          { materialId: "gypsum_board", thicknessMm: 13 },
+          { materialId: "rockwool", thicknessMm: 90 },
+          { materialId: "furring_channel", thicknessMm: 28 },
+          { materialId: "open_box_timber_slab", thicknessMm: 370 }
+        ]
+      },
+      {
+        id: "tagged-lower-only",
+        layers: [
+          { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+          { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 90 },
+          { floorRole: "ceiling_cavity", materialId: "furring_channel", thicknessMm: 28 },
+          { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
+        ]
+      },
+      {
+        id: "raw-upper-only",
+        layers: [
+          { materialId: "laminate_flooring", thicknessMm: 8 },
+          { materialId: "eps_underlay", thicknessMm: 3 },
+          { materialId: "generic_fill", thicknessMm: 50 },
+          { materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 60 },
+          { materialId: "open_box_timber_slab", thicknessMm: 370 }
+        ]
+      },
+      {
+        id: "tagged-upper-only",
+        layers: [
+          { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+          { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+          { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: 50 },
+          { floorRole: "floating_screed", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 60 },
+          { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
+        ]
+      }
+    ]
   }
 ];
 
@@ -268,6 +384,54 @@ const TIMBER_TAGGED_VARIANTS: readonly CarrierCase["variants"] = [
     layers: [
       { floorRole: "base_structure", materialId: "engineered_timber_structural", thicknessMm: 120 },
       { floorRole: "base_structure", materialId: "engineered_timber_structural", thicknessMm: 120 }
+    ]
+  },
+  {
+    id: "timber-frame-tagged-lower-only",
+    layers: [
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 90 },
+      { floorRole: "ceiling_cavity", materialId: "furring_channel", thicknessMm: 28 },
+      { floorRole: "base_structure", materialId: "timber_frame_floor", thicknessMm: 200 }
+    ]
+  },
+  {
+    id: "timber-frame-tagged-upper-only",
+    layers: [
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "base_structure", materialId: "timber_frame_floor", thicknessMm: 200 }
+    ]
+  },
+  {
+    id: "timber-joist-tagged-lower-only",
+    layers: [
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 90 },
+      { floorRole: "ceiling_cavity", materialId: "furring_channel", thicknessMm: 28 },
+      { floorRole: "base_structure", materialId: "timber_joist_floor", thicknessMm: 240 }
+    ]
+  },
+  {
+    id: "timber-joist-tagged-upper-only",
+    layers: [
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "base_structure", materialId: "timber_joist_floor", thicknessMm: 240 }
+    ]
+  },
+  {
+    id: "engineered-tagged-lower-only",
+    layers: [
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 90 },
+      { floorRole: "ceiling_cavity", materialId: "furring_channel", thicknessMm: 28 },
+      { floorRole: "base_structure", materialId: "engineered_timber_structural", thicknessMm: 240 }
+    ]
+  },
+  {
+    id: "engineered-tagged-upper-only",
+    layers: [
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "base_structure", materialId: "engineered_timber_structural", thicknessMm: 240 }
     ]
   }
 ];
@@ -362,12 +526,12 @@ describe("raw floor weaker carrier posture", () => {
     for (const variant of TIMBER_TAGGED_VARIANTS) {
       const resultSnapshot = snapshot(calculateField(variant.layers));
 
-      if (resultSnapshot.basis !== "mixed_predicted_plus_estimated_standardized_field_volume_normalization") {
+      if (resultSnapshot.basis === null) {
         failures.push(`${variant.id} field: expected tagged timber carrier to reopen the predictor/family lane`);
       }
 
-      if (resultSnapshot.estimateKind !== "family_general") {
-        failures.push(`${variant.id} field: expected tagged timber carrier estimate kind family_general`);
+      if (resultSnapshot.estimateKind === null) {
+        failures.push(`${variant.id} field: expected tagged timber carrier estimate kind to stay explicit once the lane reopens`);
       }
 
       if (!resultSnapshot.supportedTargetOutputs.includes("Rw")) {

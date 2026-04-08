@@ -173,6 +173,49 @@ const CASES: readonly RawScreeningCase[] = [
     }
   },
   {
+    id: "raw open-box with ceiling helper package",
+    layers: [
+      { materialId: "gypsum_board", thicknessMm: 13 },
+      { materialId: "rockwool", thicknessMm: 90 },
+      { materialId: "furring_channel", thicknessMm: 28 },
+      { materialId: "open_box_timber_slab", thicknessMm: 370 }
+    ],
+    expectedLab: {
+      basis: null,
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["Rw"]
+    },
+    expectedField: {
+      basis: null,
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["R'w", "DnT,w"]
+    }
+  },
+  {
+    id: "raw open-box with upper-only dry package",
+    layers: [
+      { materialId: "laminate_flooring", thicknessMm: 8 },
+      { materialId: "eps_underlay", thicknessMm: 3 },
+      { materialId: "generic_fill", thicknessMm: 50 },
+      { materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 60 },
+      { materialId: "open_box_timber_slab", thicknessMm: 370 }
+    ],
+    expectedLab: {
+      basis: null,
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["Rw"]
+    },
+    expectedField: {
+      basis: null,
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["R'w", "DnT,w"]
+    }
+  },
+  {
     id: "raw hollow-core single layer",
     layers: [{ materialId: "hollow_core_plank", thicknessMm: 200 }],
     expectedLab: {

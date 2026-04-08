@@ -105,6 +105,32 @@ function resolveLayers(
   });
 }
 
+function coalesceMergeSafeAirborneLayers(layers: readonly ResolvedLayer[]): ResolvedLayer[] {
+  const coalesced: ResolvedLayer[] = [];
+
+  for (const layer of layers) {
+    const previous = coalesced.at(-1);
+
+    if (
+      previous &&
+      previous.material.id === layer.material.id &&
+      previous.floorRole === layer.floorRole
+    ) {
+      const thicknessMm = previous.thicknessMm + layer.thicknessMm;
+      coalesced[coalesced.length - 1] = {
+        ...previous,
+        surfaceMassKgM2: computeLayerSurfaceMassKgM2({ thicknessMm }, previous.material),
+        thicknessMm
+      };
+      continue;
+    }
+
+    coalesced.push(layer);
+  }
+
+  return coalesced;
+}
+
 function inferResolvedFloorStructuralSupportType(layers: readonly ResolvedLayer[]): string | null {
   const baseLayer = layers.findLast((layer) => layer.floorRole === "base_structure");
   return baseLayer ? inferStructuralSupportTypeFromMaterial(baseLayer.material) ?? null : null;
@@ -825,41 +851,44 @@ export function calculateAssembly(
       : inferredImpactLayers
         ? resolveLayers(inferredImpactLayers, catalog)
         : resolvedLayers;
-  const totalThicknessMm = round1(resolvedLayers.reduce((sum, layer) => sum + layer.thicknessMm, 0));
-  const surfaceMassKgM2 = round1(resolvedLayers.reduce((sum, layer) => sum + layer.surfaceMassKgM2, 0));
-  const screeningEstimatedRwDb = estimateRwDb(resolvedLayers);
+  const airborneResolvedLayers = (layers.some((layer) => Boolean(layer.floorRole)) || Boolean(inferredImpactLayers))
+    ? coalesceMergeSafeAirborneLayers(resolvedLayers)
+    : resolvedLayers;
+  const totalThicknessMm = round1(airborneResolvedLayers.reduce((sum, layer) => sum + layer.thicknessMm, 0));
+  const surfaceMassKgM2 = round1(airborneResolvedLayers.reduce((sum, layer) => sum + layer.surfaceMassKgM2, 0));
+  const screeningEstimatedRwDb = estimateRwDb(airborneResolvedLayers);
   const screeningCurve = buildCalibratedMassLawCurve(surfaceMassKgM2, screeningEstimatedRwDb);
   const dynamicAirborneResult = options.calculator === "dynamic"
-    ? calculateDynamicAirborneResult(resolvedLayers, {
+    ? calculateDynamicAirborneResult(airborneResolvedLayers, {
         airborneContext,
         frequenciesHz: screeningCurve.frequenciesHz,
         screeningEstimatedRwDb
       })
     : null;
   const importedCalculatorResult = options.calculator && options.calculator !== "dynamic"
-    ? calculateAirborneCalculatorResult(options.calculator, resolvedLayers)
+    ? calculateAirborneCalculatorResult(options.calculator, airborneResolvedLayers)
     : null;
   const selectedCalculatorCurve = dynamicAirborneResult?.curve ?? importedCalculatorResult?.curve ?? screeningCurve;
   const selectedCalculatorLabel = dynamicAirborneResult?.label ?? importedCalculatorResult?.label;
   const availableCalculators: readonly AirborneCalculator[] = AIRBORNE_CALCULATORS;
-  let airborneOverlayResult = applyAirborneContextOverlay(selectedCalculatorCurve, resolvedLayers, airborneContext);
+  let airborneOverlayResult = applyAirborneContextOverlay(selectedCalculatorCurve, airborneResolvedLayers, airborneContext);
   if (options.calculator === "dynamic") {
     airborneOverlayResult = applyDynamicAirborneGuards(
       selectedCalculatorCurve,
       airborneOverlayResult,
-      resolvedLayers,
+      airborneResolvedLayers,
       airborneContext
     );
   }
   const verifiedAirborneAnchorResult = applyVerifiedAirborneCatalogAnchor(
     airborneOverlayResult.curve,
     airborneOverlayResult.ratings,
-    resolvedLayers,
+    airborneResolvedLayers,
     airborneContext
   );
   const approximateAirborneFieldCompanionResult = applyApproximateAirborneFieldCompanion(
     verifiedAirborneAnchorResult.ratings,
-    resolvedLayers,
+    airborneResolvedLayers,
     airborneContext
   );
   const curve = verifiedAirborneAnchorResult.curve;

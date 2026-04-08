@@ -198,6 +198,256 @@ const CASES: readonly InferredSplitCase[] = [
       { floorRole: "floating_screed", id: "f", materialId: "screed", thicknessMm: 15 },
       { floorRole: "floor_covering", id: "g", materialId: "ceramic_tile", thicknessMm: 8 }
     ]
+  },
+  {
+    id: "composite-lower-only-packaged-lane",
+    rawSingle: [
+      { id: "a", materialId: "firestop_board", thicknessMm: 15 },
+      { id: "b", materialId: "firestop_board", thicknessMm: 15 },
+      { id: "c", materialId: "rockwool", thicknessMm: 50 },
+      { id: "d", materialId: "resilient_stud_ceiling", thicknessMm: 150 },
+      { id: "e", materialId: "composite_steel_deck", thicknessMm: 150 }
+    ],
+    rawSplit: [
+      { id: "a", materialId: "firestop_board", thicknessMm: 7.5 },
+      { id: "b", materialId: "firestop_board", thicknessMm: 7.5 },
+      { id: "c", materialId: "firestop_board", thicknessMm: 15 },
+      { id: "d", materialId: "rockwool", thicknessMm: 25 },
+      { id: "e", materialId: "rockwool", thicknessMm: 25 },
+      { id: "f", materialId: "resilient_stud_ceiling", thicknessMm: 150 },
+      { id: "g", materialId: "composite_steel_deck", thicknessMm: 150 }
+    ],
+    taggedSingle: [
+      { floorRole: "ceiling_board", id: "a", materialId: "firestop_board", thicknessMm: 15 },
+      { floorRole: "ceiling_board", id: "b", materialId: "firestop_board", thicknessMm: 15 },
+      { floorRole: "ceiling_fill", id: "c", materialId: "rockwool", thicknessMm: 50 },
+      { floorRole: "ceiling_cavity", id: "d", materialId: "resilient_stud_ceiling", thicknessMm: 150 },
+      { floorRole: "base_structure", id: "e", materialId: "composite_steel_deck", thicknessMm: 150 }
+    ],
+    taggedSplit: [
+      { floorRole: "ceiling_board", id: "a", materialId: "firestop_board", thicknessMm: 7.5 },
+      { floorRole: "ceiling_board", id: "b", materialId: "firestop_board", thicknessMm: 7.5 },
+      { floorRole: "ceiling_board", id: "c", materialId: "firestop_board", thicknessMm: 15 },
+      { floorRole: "ceiling_fill", id: "d", materialId: "rockwool", thicknessMm: 25 },
+      { floorRole: "ceiling_fill", id: "e", materialId: "rockwool", thicknessMm: 25 },
+      { floorRole: "ceiling_cavity", id: "f", materialId: "resilient_stud_ceiling", thicknessMm: 150 },
+      { floorRole: "base_structure", id: "g", materialId: "composite_steel_deck", thicknessMm: 150 }
+    ]
+  },
+  {
+    id: "open-web-lower-only-packaged-lane",
+    rawSingle: [
+      { id: "a", materialId: "firestop_board", thicknessMm: 16 },
+      { id: "b", materialId: "firestop_board", thicknessMm: 16 },
+      { id: "c", materialId: "ubiq_resilient_ceiling", thicknessMm: 65 },
+      { id: "d", materialId: "open_web_steel_floor", thicknessMm: 300 }
+    ],
+    rawSplit: [
+      { id: "a", materialId: "firestop_board", thicknessMm: 8 },
+      { id: "b", materialId: "firestop_board", thicknessMm: 8 },
+      { id: "c", materialId: "firestop_board", thicknessMm: 16 },
+      { id: "d", materialId: "ubiq_resilient_ceiling", thicknessMm: 65 },
+      { id: "e", materialId: "open_web_steel_floor", thicknessMm: 300 }
+    ],
+    taggedSingle: [
+      { floorRole: "ceiling_board", id: "a", materialId: "firestop_board", thicknessMm: 16 },
+      { floorRole: "ceiling_board", id: "b", materialId: "firestop_board", thicknessMm: 16 },
+      { floorRole: "ceiling_cavity", id: "c", materialId: "ubiq_resilient_ceiling", thicknessMm: 65 },
+      { floorRole: "base_structure", id: "d", materialId: "open_web_steel_floor", thicknessMm: 300 }
+    ],
+    taggedSplit: [
+      { floorRole: "ceiling_board", id: "a", materialId: "firestop_board", thicknessMm: 8 },
+      { floorRole: "ceiling_board", id: "b", materialId: "firestop_board", thicknessMm: 8 },
+      { floorRole: "ceiling_board", id: "c", materialId: "firestop_board", thicknessMm: 16 },
+      { floorRole: "ceiling_cavity", id: "d", materialId: "ubiq_resilient_ceiling", thicknessMm: 65 },
+      { floorRole: "base_structure", id: "e", materialId: "open_web_steel_floor", thicknessMm: 300 }
+    ]
+  },
+  {
+    id: "clt-lower-only-guard",
+    rawSingle: [
+      { id: "a", materialId: "gypsum_board", thicknessMm: 13 },
+      { id: "b", materialId: "rockwool", thicknessMm: 100 },
+      { id: "c", materialId: "resilient_stud_ceiling", thicknessMm: 25 },
+      { id: "d", materialId: "clt_panel", thicknessMm: 260 }
+    ],
+    rawSplit: [
+      { id: "a", materialId: "gypsum_board", thicknessMm: 6.5 },
+      { id: "b", materialId: "gypsum_board", thicknessMm: 6.5 },
+      { id: "c", materialId: "rockwool", thicknessMm: 50 },
+      { id: "d", materialId: "rockwool", thicknessMm: 50 },
+      { id: "e", materialId: "resilient_stud_ceiling", thicknessMm: 25 },
+      { id: "f", materialId: "clt_panel", thicknessMm: 260 }
+    ],
+    taggedSingle: [
+      { floorRole: "ceiling_board", id: "a", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", id: "b", materialId: "rockwool", thicknessMm: 100 },
+      { floorRole: "ceiling_cavity", id: "c", materialId: "resilient_stud_ceiling", thicknessMm: 25 },
+      { floorRole: "base_structure", id: "d", materialId: "clt_panel", thicknessMm: 260 }
+    ],
+    taggedSplit: [
+      { floorRole: "ceiling_board", id: "a", materialId: "gypsum_board", thicknessMm: 6.5 },
+      { floorRole: "ceiling_board", id: "b", materialId: "gypsum_board", thicknessMm: 6.5 },
+      { floorRole: "ceiling_fill", id: "c", materialId: "rockwool", thicknessMm: 50 },
+      { floorRole: "ceiling_fill", id: "d", materialId: "rockwool", thicknessMm: 50 },
+      { floorRole: "ceiling_cavity", id: "e", materialId: "resilient_stud_ceiling", thicknessMm: 25 },
+      { floorRole: "base_structure", id: "f", materialId: "clt_panel", thicknessMm: 260 }
+    ]
+  },
+  {
+    id: "open-box-lower-only-guard",
+    rawSingle: [
+      { id: "a", materialId: "gypsum_board", thicknessMm: 13 },
+      { id: "b", materialId: "rockwool", thicknessMm: 90 },
+      { id: "c", materialId: "furring_channel", thicknessMm: 28 },
+      { id: "d", materialId: "open_box_timber_slab", thicknessMm: 370 }
+    ],
+    rawSplit: [
+      { id: "a", materialId: "gypsum_board", thicknessMm: 6.5 },
+      { id: "b", materialId: "gypsum_board", thicknessMm: 6.5 },
+      { id: "c", materialId: "rockwool", thicknessMm: 45 },
+      { id: "d", materialId: "rockwool", thicknessMm: 45 },
+      { id: "e", materialId: "furring_channel", thicknessMm: 28 },
+      { id: "f", materialId: "open_box_timber_slab", thicknessMm: 370 }
+    ],
+    taggedSingle: [
+      { floorRole: "ceiling_board", id: "a", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", id: "b", materialId: "rockwool", thicknessMm: 90 },
+      { floorRole: "ceiling_cavity", id: "c", materialId: "furring_channel", thicknessMm: 28 },
+      { floorRole: "base_structure", id: "d", materialId: "open_box_timber_slab", thicknessMm: 370 }
+    ],
+    taggedSplit: [
+      { floorRole: "ceiling_board", id: "a", materialId: "gypsum_board", thicknessMm: 6.5 },
+      { floorRole: "ceiling_board", id: "b", materialId: "gypsum_board", thicknessMm: 6.5 },
+      { floorRole: "ceiling_fill", id: "c", materialId: "rockwool", thicknessMm: 45 },
+      { floorRole: "ceiling_fill", id: "d", materialId: "rockwool", thicknessMm: 45 },
+      { floorRole: "ceiling_cavity", id: "e", materialId: "furring_channel", thicknessMm: 28 },
+      { floorRole: "base_structure", id: "f", materialId: "open_box_timber_slab", thicknessMm: 370 }
+    ]
+  },
+  {
+    id: "open-web-lower-only-non-packable-board-schedule",
+    rawSingle: [
+      { id: "a", materialId: "firestop_board", thicknessMm: 16 },
+      { id: "b", materialId: "firestop_board", thicknessMm: 16 },
+      { id: "c", materialId: "ubiq_resilient_ceiling", thicknessMm: 65 },
+      { id: "d", materialId: "open_web_steel_floor", thicknessMm: 300 }
+    ],
+    rawSplit: [
+      { id: "a", materialId: "firestop_board", thicknessMm: 14 },
+      { id: "b", materialId: "firestop_board", thicknessMm: 9 },
+      { id: "c", materialId: "firestop_board", thicknessMm: 9 },
+      { id: "e", materialId: "ubiq_resilient_ceiling", thicknessMm: 65 },
+      { id: "f", materialId: "open_web_steel_floor", thicknessMm: 300 }
+    ],
+    taggedSingle: [
+      { floorRole: "ceiling_board", id: "a", materialId: "firestop_board", thicknessMm: 16 },
+      { floorRole: "ceiling_board", id: "b", materialId: "firestop_board", thicknessMm: 16 },
+      { floorRole: "ceiling_cavity", id: "c", materialId: "ubiq_resilient_ceiling", thicknessMm: 65 },
+      { floorRole: "base_structure", id: "d", materialId: "open_web_steel_floor", thicknessMm: 300 }
+    ],
+    taggedSplit: [
+      { floorRole: "ceiling_board", id: "a", materialId: "firestop_board", thicknessMm: 14 },
+      { floorRole: "ceiling_board", id: "b", materialId: "firestop_board", thicknessMm: 9 },
+      { floorRole: "ceiling_board", id: "c", materialId: "firestop_board", thicknessMm: 9 },
+      { floorRole: "ceiling_cavity", id: "e", materialId: "ubiq_resilient_ceiling", thicknessMm: 65 },
+      { floorRole: "base_structure", id: "f", materialId: "open_web_steel_floor", thicknessMm: 300 }
+    ]
+  },
+  {
+    id: "composite-lower-only-non-packable-board-schedule",
+    rawSingle: [
+      { id: "a", materialId: "firestop_board", thicknessMm: 15 },
+      { id: "b", materialId: "firestop_board", thicknessMm: 15 },
+      { id: "c", materialId: "rockwool", thicknessMm: 50 },
+      { id: "d", materialId: "resilient_stud_ceiling", thicknessMm: 150 },
+      { id: "e", materialId: "composite_steel_deck", thicknessMm: 150 }
+    ],
+    rawSplit: [
+      { id: "a", materialId: "firestop_board", thicknessMm: 14 },
+      { id: "b", materialId: "firestop_board", thicknessMm: 8 },
+      { id: "c", materialId: "firestop_board", thicknessMm: 8 },
+      { id: "e", materialId: "rockwool", thicknessMm: 50 },
+      { id: "f", materialId: "resilient_stud_ceiling", thicknessMm: 150 },
+      { id: "g", materialId: "composite_steel_deck", thicknessMm: 150 }
+    ],
+    taggedSingle: [
+      { floorRole: "ceiling_board", id: "a", materialId: "firestop_board", thicknessMm: 15 },
+      { floorRole: "ceiling_board", id: "b", materialId: "firestop_board", thicknessMm: 15 },
+      { floorRole: "ceiling_fill", id: "c", materialId: "rockwool", thicknessMm: 50 },
+      { floorRole: "ceiling_cavity", id: "d", materialId: "resilient_stud_ceiling", thicknessMm: 150 },
+      { floorRole: "base_structure", id: "e", materialId: "composite_steel_deck", thicknessMm: 150 }
+    ],
+    taggedSplit: [
+      { floorRole: "ceiling_board", id: "a", materialId: "firestop_board", thicknessMm: 14 },
+      { floorRole: "ceiling_board", id: "b", materialId: "firestop_board", thicknessMm: 8 },
+      { floorRole: "ceiling_board", id: "c", materialId: "firestop_board", thicknessMm: 8 },
+      { floorRole: "ceiling_fill", id: "e", materialId: "rockwool", thicknessMm: 50 },
+      { floorRole: "ceiling_cavity", id: "f", materialId: "resilient_stud_ceiling", thicknessMm: 150 },
+      { floorRole: "base_structure", id: "g", materialId: "composite_steel_deck", thicknessMm: 150 }
+    ]
+  },
+  {
+    id: "clt-lower-only-non-packable-board-schedule",
+    rawSingle: [
+      { id: "a", materialId: "gypsum_board", thicknessMm: 13 },
+      { id: "b", materialId: "rockwool", thicknessMm: 100 },
+      { id: "c", materialId: "resilient_stud_ceiling", thicknessMm: 25 },
+      { id: "d", materialId: "clt_panel", thicknessMm: 260 }
+    ],
+    rawSplit: [
+      { id: "a", materialId: "gypsum_board", thicknessMm: 5 },
+      { id: "b", materialId: "gypsum_board", thicknessMm: 5 },
+      { id: "c", materialId: "gypsum_board", thicknessMm: 3 },
+      { id: "d", materialId: "rockwool", thicknessMm: 100 },
+      { id: "e", materialId: "resilient_stud_ceiling", thicknessMm: 25 },
+      { id: "f", materialId: "clt_panel", thicknessMm: 260 }
+    ],
+    taggedSingle: [
+      { floorRole: "ceiling_board", id: "a", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", id: "b", materialId: "rockwool", thicknessMm: 100 },
+      { floorRole: "ceiling_cavity", id: "c", materialId: "resilient_stud_ceiling", thicknessMm: 25 },
+      { floorRole: "base_structure", id: "d", materialId: "clt_panel", thicknessMm: 260 }
+    ],
+    taggedSplit: [
+      { floorRole: "ceiling_board", id: "a", materialId: "gypsum_board", thicknessMm: 5 },
+      { floorRole: "ceiling_board", id: "b", materialId: "gypsum_board", thicknessMm: 5 },
+      { floorRole: "ceiling_board", id: "c", materialId: "gypsum_board", thicknessMm: 3 },
+      { floorRole: "ceiling_fill", id: "d", materialId: "rockwool", thicknessMm: 100 },
+      { floorRole: "ceiling_cavity", id: "e", materialId: "resilient_stud_ceiling", thicknessMm: 25 },
+      { floorRole: "base_structure", id: "f", materialId: "clt_panel", thicknessMm: 260 }
+    ]
+  },
+  {
+    id: "open-box-lower-only-non-packable-board-schedule",
+    rawSingle: [
+      { id: "a", materialId: "gypsum_board", thicknessMm: 13 },
+      { id: "b", materialId: "rockwool", thicknessMm: 90 },
+      { id: "c", materialId: "furring_channel", thicknessMm: 28 },
+      { id: "d", materialId: "open_box_timber_slab", thicknessMm: 370 }
+    ],
+    rawSplit: [
+      { id: "a", materialId: "gypsum_board", thicknessMm: 5 },
+      { id: "b", materialId: "gypsum_board", thicknessMm: 5 },
+      { id: "c", materialId: "gypsum_board", thicknessMm: 3 },
+      { id: "d", materialId: "rockwool", thicknessMm: 90 },
+      { id: "e", materialId: "furring_channel", thicknessMm: 28 },
+      { id: "f", materialId: "open_box_timber_slab", thicknessMm: 370 }
+    ],
+    taggedSingle: [
+      { floorRole: "ceiling_board", id: "a", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", id: "b", materialId: "rockwool", thicknessMm: 90 },
+      { floorRole: "ceiling_cavity", id: "c", materialId: "furring_channel", thicknessMm: 28 },
+      { floorRole: "base_structure", id: "d", materialId: "open_box_timber_slab", thicknessMm: 370 }
+    ],
+    taggedSplit: [
+      { floorRole: "ceiling_board", id: "a", materialId: "gypsum_board", thicknessMm: 5 },
+      { floorRole: "ceiling_board", id: "b", materialId: "gypsum_board", thicknessMm: 5 },
+      { floorRole: "ceiling_board", id: "c", materialId: "gypsum_board", thicknessMm: 3 },
+      { floorRole: "ceiling_fill", id: "d", materialId: "rockwool", thicknessMm: 90 },
+      { floorRole: "ceiling_cavity", id: "e", materialId: "furring_channel", thicknessMm: 28 },
+      { floorRole: "base_structure", id: "f", materialId: "open_box_timber_slab", thicknessMm: 370 }
+    ]
   }
 ];
 
