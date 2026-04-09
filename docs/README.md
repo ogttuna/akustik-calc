@@ -27,6 +27,7 @@ If a file under `docs/archive` disagrees with a living document under `docs/calc
 
 - [calculator/CURRENT_STATE.md](./calculator/CURRENT_STATE.md): short living snapshot of the current calculator/workbench posture
 - [calculator/DYNAMIC_CALCULATOR_REMAINING_WORK_PLAN.md](./calculator/DYNAMIC_CALCULATOR_REMAINING_WORK_PLAN.md): explicit cross-floor/wall completion checklist and next-step order
+- [calculator/DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md](./calculator/DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md): execution model for coverage growth, accuracy tightening, and test-first slice planning
 - [calculator/DYNAMIC_CALCULATOR_PLAN.md](./calculator/DYNAMIC_CALCULATOR_PLAN.md): active execution order for dynamic-calculator hardening
 - [calculator/SOURCE_GAP_LEDGER.md](./calculator/SOURCE_GAP_LEDGER.md): source-backed widening, tightening, and deferred-family ledger
 - [foundation/PROJECT_PLAN.md](./foundation/PROJECT_PLAN.md): long-lived product direction and repo constraints
@@ -36,6 +37,7 @@ Status reading rule:
 
 - use `CURRENT_STATE.md` for “what is stable right now”
 - use `DYNAMIC_CALCULATOR_REMAINING_WORK_PLAN.md` for “what is done / partial / still open”
+- use `DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md` for “how the next widening or tightening slice should be selected and tested”
 - use `DYNAMIC_CALCULATOR_PLAN.md` only as the long-form roadmap, not as the sole current-status snapshot
 
 ## Historical Notes
