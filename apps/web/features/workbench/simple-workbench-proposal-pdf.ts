@@ -5,7 +5,8 @@ import {
   type SimpleWorkbenchProposalDocument
 } from "./simple-workbench-proposal";
 
-type SimpleWorkbenchProposalPdfStyle = "branded" | "simple";
+export type SimpleWorkbenchProposalExportStyle = "branded" | "simple";
+export type SimpleWorkbenchProposalExportFormat = "pdf" | "docx";
 
 function parseErrorMessage(value: unknown): string | null {
   if (typeof value !== "object" || value === null) {
@@ -16,14 +17,61 @@ function parseErrorMessage(value: unknown): string | null {
   return typeof message === "string" ? message : null;
 }
 
-export async function downloadSimpleWorkbenchProposalPdf(
+function getExportRoute(options: {
+  format: SimpleWorkbenchProposalExportFormat;
+  style: SimpleWorkbenchProposalExportStyle;
+}): string {
+  const baseRoute = options.format === "docx" ? "/api/proposal-docx" : "/api/proposal-pdf";
+  return options.style === "simple" ? `${baseRoute}?style=simple` : baseRoute;
+}
+
+export function getSimpleWorkbenchProposalExportLabel(options: {
+  format: SimpleWorkbenchProposalExportFormat;
+  style: SimpleWorkbenchProposalExportStyle;
+}): string {
+  if (options.format === "docx") {
+    return options.style === "simple" ? "Simple DOCX" : "Branded DOCX";
+  }
+
+  return options.style === "simple" ? "Simple PDF" : "Branded PDF";
+}
+
+function getDefaultExportErrorMessage(options: {
+  format: SimpleWorkbenchProposalExportFormat;
+  style: SimpleWorkbenchProposalExportStyle;
+}): string {
+  if (options.format === "docx") {
+    return options.style === "simple"
+      ? "DynEcho could not generate the simple DOCX on the server."
+      : "DynEcho could not generate the branded DOCX on the server.";
+  }
+
+  return options.style === "simple"
+    ? "DynEcho could not generate the simple PDF on the server."
+    : "DynEcho could not generate the branded PDF on the server.";
+}
+
+function getDownloadFilename(options: {
+  format: SimpleWorkbenchProposalExportFormat;
+  projectName: string;
+  style: SimpleWorkbenchProposalExportStyle;
+}): string {
+  return `${buildSimpleWorkbenchProposalFilename(options.projectName)}${options.style === "simple" ? "-simple" : ""}.${options.format}`;
+}
+
+export async function downloadSimpleWorkbenchProposalExport(
   proposalDocument: SimpleWorkbenchProposalDocument,
   options?: {
-    style?: SimpleWorkbenchProposalPdfStyle;
+    format?: SimpleWorkbenchProposalExportFormat;
+    style?: SimpleWorkbenchProposalExportStyle;
   }
 ): Promise<void> {
   const style = options?.style === "simple" ? "simple" : "branded";
-  const route = style === "simple" ? "/api/proposal-pdf?style=simple" : "/api/proposal-pdf";
+  const format = options?.format === "docx" ? "docx" : "pdf";
+  const route = getExportRoute({
+    format,
+    style
+  });
   const response = await fetch(route, {
     body: JSON.stringify(proposalDocument),
     headers: {
@@ -33,10 +81,10 @@ export async function downloadSimpleWorkbenchProposalPdf(
   });
 
   if (!response.ok) {
-    let message =
-      style === "simple"
-        ? "DynEcho could not generate the simple PDF on the server."
-        : "DynEcho could not generate the branded PDF on the server.";
+    let message = getDefaultExportErrorMessage({
+      format,
+      style
+    });
 
     try {
       const payload = (await response.json()) as unknown;
@@ -52,7 +100,35 @@ export async function downloadSimpleWorkbenchProposalPdf(
   const objectUrl = window.URL.createObjectURL(blob);
   const anchor = window.document.createElement("a");
   anchor.href = objectUrl;
-  anchor.download = `${buildSimpleWorkbenchProposalFilename(proposalDocument.projectName)}${style === "simple" ? "-simple" : ""}.pdf`;
+  anchor.download = getDownloadFilename({
+    format,
+    projectName: proposalDocument.projectName,
+    style
+  });
   anchor.click();
   window.setTimeout(() => window.URL.revokeObjectURL(objectUrl), 0);
+}
+
+export async function downloadSimpleWorkbenchProposalPdf(
+  proposalDocument: SimpleWorkbenchProposalDocument,
+  options?: {
+    style?: SimpleWorkbenchProposalExportStyle;
+  }
+): Promise<void> {
+  await downloadSimpleWorkbenchProposalExport(proposalDocument, {
+    format: "pdf",
+    style: options?.style
+  });
+}
+
+export async function downloadSimpleWorkbenchProposalDocx(
+  proposalDocument: SimpleWorkbenchProposalDocument,
+  options?: {
+    style?: SimpleWorkbenchProposalExportStyle;
+  }
+): Promise<void> {
+  await downloadSimpleWorkbenchProposalExport(proposalDocument, {
+    format: "docx",
+    style: options?.style
+  });
 }

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "tsx ../../tools/dev/run-next-build.ts",
-    "dev": "next dev -p 3010",
+    "dev": "tsx ../../tools/dev/run-next-dev.ts",
     "lint": "eslint . --ext .ts,.tsx --ignore-pattern next-env.d.ts --ignore-pattern .next --ignore-pattern '.next-*'",
     "start": "tsx ../../tools/dev/run-next-standalone.ts",
     "test": "vitest run",
@@ -17,6 +17,7 @@
     "@dynecho/shared": "workspace:*",
     "@dynecho/ui": "workspace:*",
     "@radix-ui/react-dialog": "^1.1.15",
+    "@turbodocx/html-to-docx": "^1.20.1",
     "cmdk": "^1.1.1",
     "lucide-react": "^0.577.0",
     "next": "^15.0.0",

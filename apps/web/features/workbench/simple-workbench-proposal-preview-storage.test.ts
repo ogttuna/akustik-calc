@@ -159,6 +159,26 @@ describe("simple workbench proposal preview storage", () => {
     expect(loaded?.savedAtIso).toMatch(/^20/);
   });
 
+  it("preserves metric visibility flags through stored preview snapshots", () => {
+    storeSimpleWorkbenchProposalPreview({
+      ...DOCUMENT,
+      metrics: [
+        {
+          detail: "Primary weighted airborne value based on the active defended route.",
+          label: "Rw",
+          value: "61 dB",
+          visible: false
+        }
+      ],
+      primaryMetricVisible: false
+    });
+
+    const loaded = readSimpleWorkbenchProposalPreview();
+
+    expect(loaded?.document.primaryMetricVisible).toBe(false);
+    expect(loaded?.document.metrics[0]?.visible).toBe(false);
+  });
+
   it("hydrates legacy preview snapshots that predate consultant identity fields", () => {
     const legacyDocument = { ...DOCUMENT } as Record<string, unknown>;
     delete legacyDocument.approverTitle;

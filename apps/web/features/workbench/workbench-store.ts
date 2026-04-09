@@ -187,6 +187,7 @@ type WorkbenchStore = {
   appendRows: (rows: readonly AppendLayerDraftInput[]) => void;
   addCustomMaterial: (material: MaterialDefinition) => void;
   applyCriteriaPack: (criteriaPackId: CriteriaPackId) => void;
+  clearRows: () => void;
   deleteSavedScenario: (scenarioId: string) => void;
   loadPreset: (presetId: PresetId) => void;
   loadSavedScenario: (scenarioId: string) => void;
@@ -617,6 +618,10 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
           targetRwDb: criteriaPack.targetRwDb
         });
       },
+      clearRows: () =>
+        set({
+          rows: []
+        }),
       deleteSavedScenario: (scenarioId) =>
         set((state) => ({
           savedScenarios: state.savedScenarios.filter((scenario) => scenario.id !== scenarioId)

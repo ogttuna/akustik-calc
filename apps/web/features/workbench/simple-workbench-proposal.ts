@@ -34,6 +34,7 @@ export type SimpleWorkbenchProposalMetric = {
   detail: string;
   label: string;
   value: string;
+  visible?: boolean;
 };
 
 export type SimpleWorkbenchProposalLayer = {
@@ -120,6 +121,7 @@ export type SimpleWorkbenchProposalDocument = {
   preparedBy: string;
   primaryMetricLabel: string;
   primaryMetricValue: string;
+  primaryMetricVisible?: boolean;
   projectName: string;
   proposalAttention: string;
   issueCodePrefix: string;
@@ -249,6 +251,23 @@ function normalizeCoverageItem(value: unknown): SimpleWorkbenchProposalCoverageI
   };
 }
 
+function normalizeProposalMetric(value: unknown): SimpleWorkbenchProposalMetric | null {
+  if (!isObjectRecord(value)) {
+    return null;
+  }
+
+  if (typeof value.detail !== "string" || typeof value.label !== "string" || typeof value.value !== "string") {
+    return null;
+  }
+
+  return {
+    detail: value.detail,
+    label: value.label,
+    value: value.value,
+    visible: value.visible === false ? false : true
+  };
+}
+
 export function parseSimpleWorkbenchProposalDocument(value: unknown): SimpleWorkbenchProposalDocument | null {
   if (!isObjectRecord(value)) {
     return null;
@@ -257,6 +276,9 @@ export function parseSimpleWorkbenchProposalDocument(value: unknown): SimpleWork
   const approverTitle = typeof value.approverTitle === "string" ? value.approverTitle : "Acoustic Consultant";
   const coverageItems = Array.isArray(value.coverageItems)
     ? value.coverageItems.map((item) => normalizeCoverageItem(item)).filter((item): item is SimpleWorkbenchProposalCoverageItem => item !== null)
+    : [];
+  const metrics = Array.isArray(value.metrics)
+    ? value.metrics.map((item) => normalizeProposalMetric(item)).filter((item): item is SimpleWorkbenchProposalMetric => item !== null)
     : [];
   const issueRegisterItems = Array.isArray(value.issueRegisterItems) ? value.issueRegisterItems : [];
   const methodDossierCards = Array.isArray(value.methodDossierCards) ? value.methodDossierCards : [];
@@ -334,6 +356,7 @@ export function parseSimpleWorkbenchProposalDocument(value: unknown): SimpleWork
         ? value.corridorDossierHeadline
         : "No validation corridor snapshot was packaged with this legacy proposal preview.",
     coverageItems,
+    metrics,
     issueBaseReference:
       typeof value.issueBaseReference === "string"
         ? value.issueBaseReference
@@ -392,6 +415,7 @@ export function parseSimpleWorkbenchProposalDocument(value: unknown): SimpleWork
       typeof value.proposalValidityNote === "string"
         ? value.proposalValidityNote
         : DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_VALIDITY_NOTE,
+    primaryMetricVisible: value.primaryMetricVisible === false ? false : true,
     reportProfile:
       typeof value.reportProfile === "string" &&
       (value.reportProfile === "consultant" || value.reportProfile === "developer" || value.reportProfile === "lab_ready")
@@ -401,6 +425,14 @@ export function parseSimpleWorkbenchProposalDocument(value: unknown): SimpleWork
           ),
     responseCurves: responseCurves.length > 0 ? responseCurves : undefined
   };
+}
+
+export function isPrimaryProposalMetricVisible(document: SimpleWorkbenchProposalDocument): boolean {
+  return document.primaryMetricVisible !== false;
+}
+
+export function getVisibleProposalMetrics(document: SimpleWorkbenchProposalDocument): readonly SimpleWorkbenchProposalMetric[] {
+  return document.metrics.filter((metric) => metric.visible !== false);
 }
 
 function escapeHtml(value: string): string {
@@ -555,7 +587,11 @@ function normalizeMetricSlug(label: string): string {
 }
 
 function proposalHasMetric(document: SimpleWorkbenchProposalDocument, matchers: readonly RegExp[]): boolean {
-  return [...document.metrics, ...document.coverageItems].some((item) =>
+  return [
+    ...(isPrimaryProposalMetricVisible(document) ? [{ label: document.primaryMetricLabel }] : []),
+    ...getVisibleProposalMetrics(document),
+    ...document.coverageItems
+  ].some((item) =>
     matchers.some((matcher) => matcher.test(normalizeMetricSlug(item.label)))
   );
 }
@@ -683,7 +719,7 @@ function buildProposalMetricChartRows(document: SimpleWorkbenchProposalDocument)
   const primaryMetricSlug = normalizeMetricSlug(document.primaryMetricLabel);
   const rows: ProposalMetricChartRow[] = [];
   const seenLabels = new Set<string>();
-  const orderedMetrics = [...document.metrics].sort((left, right) => {
+  const orderedMetrics = [...getVisibleProposalMetrics(document)].sort((left, right) => {
     const leftPrimary = normalizeMetricSlug(left.label) === primaryMetricSlug ? 1 : 0;
     const rightPrimary = normalizeMetricSlug(right.label) === primaryMetricSlug ? 1 : 0;
     return rightPrimary - leftPrimary;
@@ -1397,6 +1433,7 @@ export function buildSimpleWorkbenchProposalFilename(projectName: string): strin
 }
 
 export function buildSimpleWorkbenchProposalText(document: SimpleWorkbenchProposalDocument): string {
+  const visibleMetrics = getVisibleProposalMetrics(document);
   const branding = getSimpleWorkbenchProposalBranding({
     consultantCompany: document.consultantCompany,
     consultantWordmarkLine: document.consultantWordmarkLine,
@@ -1436,7 +1473,9 @@ export function buildSimpleWorkbenchProposalText(document: SimpleWorkbenchPropos
     `Issue code prefix: ${buildIssueCodePrefixLabel(document)}`,
     `Study: ${document.studyModeLabel} | ${document.contextLabel} | ${document.studyContextLabel} | ${document.reportProfileLabel}`,
     `Template: ${branding.templateLabel} | ${branding.coverTitle} | ${branding.wordmarkPrimary}`,
-    `Primary read: ${document.primaryMetricLabel} ${document.primaryMetricValue}`,
+    isPrimaryProposalMetricVisible(document)
+      ? `Primary read: ${document.primaryMetricLabel} ${document.primaryMetricValue}`
+      : "Primary read: Hidden on this PDF issue",
     "",
     "Executive summary",
     document.executiveSummary,
@@ -1512,7 +1551,7 @@ export function buildSimpleWorkbenchProposalText(document: SimpleWorkbenchPropos
     ),
     "",
     "Live outputs",
-    ...document.metrics.map((metric) => `- ${metric.label}: ${metric.value} (${metric.detail})`),
+    ...visibleMetrics.map((metric) => `- ${metric.label}: ${metric.value} (${metric.detail})`),
     "",
     "Applied method and deliverable basis",
     `- Dynamic route: ${document.dynamicBranchLabel} | ${document.dynamicBranchDetail}`,
@@ -1537,6 +1576,8 @@ export function buildSimpleWorkbenchProposalText(document: SimpleWorkbenchPropos
 }
 
 export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchProposalDocument): string {
+  const visibleMetrics = getVisibleProposalMetrics(document);
+  const primaryMetricVisible = isPrimaryProposalMetricVisible(document);
   const branding = getSimpleWorkbenchProposalBranding({
     consultantCompany: document.consultantCompany,
     consultantWordmarkLine: document.consultantWordmarkLine,
@@ -2622,11 +2663,17 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
               </div>
             </div>
             <div class="cover-stack">
+              ${
+                primaryMetricVisible
+                  ? `
               <div class="metric primary-metric">
                 <strong>Primary read</strong>
                 <span>${escapeHtml(document.primaryMetricLabel)} ${escapeHtml(document.primaryMetricValue)}</span>
                 <small>${escapeHtml(document.assemblyHeadline)}</small>
               </div>
+              `
+                  : ""
+              }
               <div class="card">
                 <strong>Issue</strong>
                 <span>${escapeHtml(document.proposalReference)}</span>
@@ -2741,11 +2788,17 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
         <section class="section">
           <div class="eyebrow" style="margin: 18px 0 8px;">Issue Snapshot</div>
           <div class="summary-grid" style="margin-top: 0;">
+            ${
+              primaryMetricVisible
+                ? `
             <div class="metric">
               <strong>Primary read</strong>
               <span>${escapeHtml(document.primaryMetricLabel)} ${escapeHtml(document.primaryMetricValue)}</span>
               <small>${escapeHtml(document.assemblyHeadline)}</small>
             </div>
+            `
+                : ""
+            }
             <div class="metric">
               <strong>Route</strong>
               <span>${escapeHtml(document.dynamicBranchLabel)}</span>
@@ -2770,10 +2823,14 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
             <div class="result-brief">
               <div class="method-box">
                 <h3>DAC technical reading</h3>
-                <p>${escapeHtml(document.primaryMetricLabel)} ${escapeHtml(document.primaryMetricValue)} is the current headline answer. Single-number ratings on this issue are expressed in the active ISO rating language, while route choice and validation posture remain explicit below.</p>
+                <p>${
+                  primaryMetricVisible
+                    ? `${escapeHtml(document.primaryMetricLabel)} ${escapeHtml(document.primaryMetricValue)} is the current headline answer.`
+                    : "The primary single-number answer is intentionally hidden on this issue."
+                } Single-number ratings on this issue are expressed in the active ISO rating language, while route choice and validation posture remain explicit below.</p>
               </div>
               <div class="result-chip-grid">
-                ${renderProposalMetricHighlights(document.metrics)}
+                ${renderProposalMetricHighlights(visibleMetrics)}
               </div>
               <div class="method-box">
                 <div class="eyebrow" style="margin-bottom: 8px;">Result interpretation</div>
@@ -2866,7 +2923,7 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
               </tr>
             </thead>
             <tbody>
-              ${renderMetricRows(document.metrics)}
+              ${renderMetricRows(visibleMetrics)}
             </tbody>
           </table>
         </section>

@@ -1,6 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { downloadSimpleWorkbenchProposalPdf } from "./simple-workbench-proposal-pdf";
+import {
+  downloadSimpleWorkbenchProposalDocx,
+  downloadSimpleWorkbenchProposalPdf
+} from "./simple-workbench-proposal-pdf";
 import type { SimpleWorkbenchProposalDocument } from "./simple-workbench-proposal";
 
 const DOCUMENT: SimpleWorkbenchProposalDocument = {
@@ -143,6 +146,32 @@ describe("simple workbench proposal pdf helper", () => {
     });
 
     expect(fetch).toHaveBeenCalledWith("/api/proposal-pdf?style=simple", {
+      body: JSON.stringify(DOCUMENT),
+      headers: {
+        "content-type": "application/json"
+      },
+      method: "POST"
+    });
+  });
+
+  it("posts the proposal snapshot to the branded docx route when requested", async () => {
+    await downloadSimpleWorkbenchProposalDocx(DOCUMENT);
+
+    expect(fetch).toHaveBeenCalledWith("/api/proposal-docx", {
+      body: JSON.stringify(DOCUMENT),
+      headers: {
+        "content-type": "application/json"
+      },
+      method: "POST"
+    });
+  });
+
+  it("posts the proposal snapshot to the simple docx route when requested", async () => {
+    await downloadSimpleWorkbenchProposalDocx(DOCUMENT, {
+      style: "simple"
+    });
+
+    expect(fetch).toHaveBeenCalledWith("/api/proposal-docx?style=simple", {
       body: JSON.stringify(DOCUMENT),
       headers: {
         "content-type": "application/json"

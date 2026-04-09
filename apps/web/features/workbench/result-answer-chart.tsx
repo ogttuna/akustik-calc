@@ -1,10 +1,12 @@
 "use client";
 
+import React from "react";
 import type { AssemblyCalculation } from "@dynecho/shared";
 
 import { buildResultAnswerChartLanes, type ResultAnswerChartLane } from "./result-answer-chart-model";
 
 type ResultAnswerChartProps = {
+  layout?: "auto" | "stacked";
   result: AssemblyCalculation | null;
   targetLnwDb?: string | null;
   targetRwDb?: string | null;
@@ -58,7 +60,7 @@ function getLaneStatus(lane: ResultAnswerChartLane): string | null {
   return lane.value <= lane.target ? "On or below brief" : "Above brief";
 }
 
-export function ResultAnswerChart({ result, targetLnwDb, targetRwDb }: ResultAnswerChartProps) {
+export function ResultAnswerChart({ layout = "auto", result, targetLnwDb, targetRwDb }: ResultAnswerChartProps) {
   const lanes = buildResultAnswerChartLanes({ result, targetLnwDb, targetRwDb });
 
   if (lanes.length === 0) {
@@ -66,7 +68,7 @@ export function ResultAnswerChart({ result, targetLnwDb, targetRwDb }: ResultAns
   }
 
   return (
-    <div className="grid gap-4 md:grid-cols-2">
+    <div className={layout === "stacked" ? "grid gap-4" : "grid gap-4 2xl:grid-cols-2"}>
       {lanes.map((lane) => {
         const palette = getLanePalette(lane.direction);
         const valueLeft = clampPercent(lane.value, lane.min, lane.max);

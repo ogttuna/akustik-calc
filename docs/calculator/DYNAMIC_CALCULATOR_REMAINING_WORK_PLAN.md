@@ -7,6 +7,8 @@ Document role:
 - single place for the remaining dynamic-calculator work across both wall and floor
 - use this after [CURRENT_STATE.md](./CURRENT_STATE.md) when deciding what should be fixed next
 - optimize for non-regressive work only: every item here must improve the calculator without weakening defended corridors
+- for the detailed execution model that separates coverage widening, accuracy tightening, and required test packs, also read:
+  - [DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md](./DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md)
 - for the latest UI handoff restart point, also read:
   - [CHECKPOINT_2026-04-08_UI_HANDOFF.md](./CHECKPOINT_2026-04-08_UI_HANDOFF.md)
 
@@ -149,7 +151,7 @@ Current verified result:
   - `1` test
 - route mixed study-mode torture pack: green
   - `1` file
-  - `2` tests
+  - `3` tests
 - route mixed study-mode generated matrix pack: green
   - `1` file
   - `1` test
@@ -158,14 +160,20 @@ Current verified result:
   - `1` test
 - route mixed study-mode generated history-grid pack: green
   - `1` file
-  - `2` tests
+  - `3` tests
 
 Interpretation:
 
-- the repo now has a representative mixed torture slice, a first generated split-detour matrix, a first generated edit-history matrix, a first wider duplicate/swap grid, and a first deterministic longer cross-mode chain rather than only isolated floor and wall seeded tests
+- the repo now has a representative mixed torture slice, a first generated split-detour matrix, a first generated edit-history matrix, a first wider duplicate/swap grid, and a first deterministic generated longer cross-mode plus save/load roundtrip chain rather than only isolated floor and wall seeded tests
 - cross-mode operator detours are now defended at the workbench route layer on representative deep stacks
-- the generated route/engine case sets are now aligned on Knauf concrete exact, TUAS concrete dry exact, Knauf direct timber exact, Knauf timber mount exact, Knauf acoustic timber exact, Dataholz timber-frame exact, Dataholz Dry exact, Dataholz Dry RC exact, dry CLT exact, TUAS CLT exact, TUAS CLT 260 exact, TUAS open-box exact, open-box dry exact, open-web 200 exact, open-web 400 exact, and hollow-core vinyl exact floors, so mixed generated breadth no longer skips the defended published-exact concrete branch, the defended upper-treatment concrete exact branch, the defended direct-fixed timber exact branch, the defended lighter and heavier mounted timber exact branches, the defended wet-screed timber-frame, direct-lined dry, and suspended dry-timber exact branches, the defended dry and measured CLT exact branches, the defended measured and dry open-box exact branches, the defended exact steel branches, or the first defended precast hollow-core family on one side
-- remaining debt is no longer “no mixed torture exists”; it is that the mixed torture surface still stops at the first deterministic longer chain and wider generated grid instead of wider preset-family case sets beyond the current heavy-concrete plus concrete exacts, Knauf timber exacts, Dataholz timber exacts, open-box exacts, CLT exacts, open-web exacts, and hollow-core cohort and broader seeded long-chain families
+- the representative deep-stack mixed torture slice now also defends save/load serialization roundtrips after alternating floor and wall detours, not only live in-memory edit sequences
+- that representative roundtrip slice is now frozen as a compact explicit seeded-family matrix across heavy-concrete, open-web-bound, official product-data exact (`REGUPOL Curve 8 exact`), curated exact family/system match (`dataholz_timber_frame_exact`), exact family/system match with low-frequency closures (`hollow_core_vinyl_exact`), official product-backed lower-bound (`REGUPOL wet bound`), product-property DeltaLw (`Getzner AFM 33 Delta`), warning-heavy missing-support-form steel bound (`UBIQ steel 300 unspecified bound`), and warning-light converged-crossover steel bound (`UBIQ steel 200 unspecified bound`) detours
+- that compact matrix now proves each representative seeded family survives save/load after a wall detour plus two neighboring seeded-family detour chains, not only after one alternating floor/wall switch
+- that same matrix now also survives at the current `savedScenarios` retention boundary, so the representative anchor no longer depends on a sparse saved-snapshot list
+- the generated route/engine case sets are now aligned on Knauf concrete exact, TUAS concrete dry exact, Knauf direct timber exact, Knauf timber mount exact, Knauf acoustic timber exact, Dataholz timber-frame exact, Dataholz Dry exact, Dataholz Dry RC exact, dry CLT exact, TUAS CLT exact, TUAS CLT 260 exact, TUAS open-box exact, open-box dry exact, REGUPOL Curve 8 exact, REGUPOL wet bound, Getzner AFM 33 Delta, open-web 200 exact, open-web 400 exact, UBIQ steel 250 bound, UBIQ steel 200 unspecified bound, UBIQ steel 300 unspecified bound, and hollow-core vinyl exact floors, so mixed generated breadth no longer skips the defended published-exact concrete branch, the defended upper-treatment concrete exact branch, the defended direct-fixed timber exact branch, the defended lighter and heavier mounted timber exact branches, the defended wet-screed timber-frame, direct-lined dry, and suspended dry-timber exact branches, the defended dry and measured CLT exact branches, the defended measured and dry open-box exact branches, the defended official product-backed resilient-underlay exact and lower-bound branches, the defended product-property DeltaLw branch, the defended exact steel branches, the first defended interpolation steel lower-bound branch, the defended converged crossover steel lower-bound branch, the defended missing-support-form steel lower-bound branch, or the first defended precast hollow-core family on one side
+- remaining debt is no longer “no mixed torture exists” or “the representative seeded-family matrix is missing”; it is that the mixed torture surface still stops at the first deterministic generated longer chain plus save/load roundtrip slice, the compact representative seeded-family matrix with its first two-seeded operator-history chain, and the wider generated grid instead of:
+  - broader seeded long-chain families beyond that compact matrix
+  - wider preset-family case sets beyond the current heavy-concrete plus concrete exacts, Knauf timber exacts, Dataholz timber exacts, open-box exacts, CLT exacts, open-web exacts, and hollow-core cohort
 
 ### Cross-Surface Interpretation
 
@@ -217,6 +225,41 @@ Current overall reading:
   - engine adjacent pack: `2` files, `2` tests
   - route pack: `4` files, `6` tests
   - interpretation: adding partial-edit abort plus opposite-mode restore chains on the generated mixed case set did not expose a fresh regression in the wider duplicate/swap grid, the representative mixed torture slice, or the adjacent engine mixed surface
+- the latest mixed save-load roundtrip long-chain expansion also stayed green on the change-adjacent packs:
+  - route pack: `4` files, `7` tests
+  - interpretation: adding save/load serialization roundtrips after the generated cross-mode long chain did not expose fresh regression in the generated history grid, support-surface honesty, or the defended mixed route surface
+- the latest representative mixed save-load torture expansion also stayed green on the change-adjacent packs:
+  - route pack: `4` files, `8` tests
+  - interpretation: adding save/load serialization roundtrips after alternating representative deep floor and wall detours did not expose fresh regression in the seeded mixed torture slice, route warnings, or support-surface honesty
+  - latest seeded-family widening inside that slice: `REGUPOL wet bound`, `Getzner AFM 33 Delta`, `UBIQ steel 300 unspecified bound`, plus `UBIQ steel 200 unspecified bound`
+- the latest representative seeded-family roundtrip matrix tightening also stayed green on the change-adjacent packs:
+  - engine adjacent pack: `2` files, `2` tests
+  - route pack: `4` files, `8` tests
+  - interpretation: converting the representative roundtrip slice into a compact explicit seeded-family matrix did not expose fresh regression in mixed save/load posture, warning surfaces, or adjacent generated engine coverage
+- the latest representative seeded-family product-data exact expansion also stayed green on the change-adjacent packs:
+  - engine mixed checkpoint pack: `3` files, `4` tests
+  - route pack: `4` files, `8` tests
+  - interpretation: adding the official product-data exact class (`REGUPOL Curve 8 exact`) to the compact representative seeded-family matrix did not expose fresh regression in mixed save/load posture, warning surfaces, or adjacent exact-split parity coverage
+- the latest representative seeded-family longer-chain tightening also stayed green on the change-adjacent packs:
+  - engine mixed checkpoint pack: `3` files, `4` tests
+  - route pack: `4` files, `8` tests
+  - interpretation: extending the compact representative seeded-family matrix from one neighboring seeded detour to a first two-seeded operator-history chain did not expose fresh regression in mixed save/load posture, warning surfaces, or adjacent exact-split parity coverage
+- the latest representative seeded-family retention-boundary tightening also stayed green on the change-adjacent packs:
+  - engine mixed checkpoint pack: `3` files, `4` tests
+  - route pack: `4` files, `8` tests
+  - interpretation: pushing the compact representative seeded-family matrix to the current eight-entry saved-scenario retention boundary did not expose fresh regression in snapshot reload, warning surfaces, requested outputs, or adjacent exact-split parity coverage
+- the latest representative seeded-family exact-family expansion also stayed green on the change-adjacent packs:
+  - engine mixed checkpoint pack: `3` files, `4` tests
+  - route pack: `4` files, `8` tests
+  - interpretation: adding the first curated exact family/system match class (`dataholz_timber_frame_exact`) to the compact representative seeded-family matrix did not expose fresh regression in mixed save/load posture, local-guide supplements, support buckets, or adjacent exact-split parity coverage
+- the latest representative seeded-family hollow-core exact expansion also stayed green on the change-adjacent packs:
+  - engine mixed checkpoint pack: `3` files, `4` tests
+  - route pack: `4` files, `8` tests
+  - interpretation: adding the first exact family/system match class with explicit low-frequency closures (`hollow_core_vinyl_exact`) to the compact representative seeded-family matrix did not expose fresh regression in mixed save/load posture, support buckets, unsupported-output honesty, or adjacent exact-split parity coverage
+- the latest representative seeded-family age-position tightening also stayed green on the change-adjacent packs:
+  - engine mixed checkpoint pack: `3` files, `4` tests
+  - route pack: `4` files, `8` tests
+  - interpretation: reloading oldest, mid-window, and newest retained snapshots inside the current eight-entry saved-scenario window did not expose fresh regression in snapshot age sensitivity, warning surfaces, support buckets, or adjacent exact-split parity coverage
 - the latest exact floor-system companion split normalization and mixed concrete-exact breadth expansion also stayed green on the change-adjacent packs:
   - engine pack: `6` files, `16` tests
   - route pack: `4` files, `6` tests
@@ -269,6 +312,30 @@ Current overall reading:
   - engine pack: `3` files, `4` tests
   - route pack: `4` files, `6` tests
   - interpretation: widening the mixed generated case set onto the defended heavier measured CLT exact branch did not expose regression in exact companion parity, route history grid, or the adjacent engine mixed surface
+- the latest official product-data exact breadth expansion also stayed green on the change-adjacent packs:
+  - engine pack: `3` files, `4` tests
+  - route pack: `4` files, `6` tests
+  - interpretation: widening the mixed generated case set onto the defended REGUPOL Curve 8 product-data exact branch did not expose regression in exact companion parity, `DeltaLw` support posture, route history grid, or the adjacent engine mixed surface
+- the latest official product-backed lower-bound breadth expansion also stayed green on the change-adjacent packs:
+  - engine pack: `3` files, `4` tests
+  - route pack: `4` files, `6` tests
+  - interpretation: widening the mixed generated case set onto the defended REGUPOL wet-support lower-bound branch did not expose regression in support honesty, `DeltaLw` live posture, route history grid, or the adjacent engine mixed surface
+- the latest steel interpolation lower-bound breadth expansion also stayed green on the change-adjacent packs:
+  - engine pack: `3` files, `4` tests
+  - route pack: `4` files, `6` tests
+  - interpretation: widening the mixed generated case set onto the defended UBIQ steel 250 lower-bound branch did not expose regression in support honesty, split-detour parity, route history grid, or the adjacent engine mixed surface
+- the latest product-property DeltaLw breadth expansion also stayed green on the change-adjacent packs:
+  - engine pack: `3` files, `4` tests
+  - route pack: `4` files, `6` tests
+  - interpretation: widening the mixed generated case set onto the defended Getzner AFM 33 Delta branch did not expose regression in `DeltaLw` support posture, `Ln,w+CI` closure honesty, route history grid, or the adjacent engine mixed surface
+- the latest converged crossover bound breadth expansion also stayed green on the change-adjacent packs:
+  - engine pack: `3` files, `4` tests
+  - route pack: `4` files, `6` tests
+  - interpretation: widening the mixed generated case set onto the defended UBIQ steel 200 unspecified branch did not expose regression in support-honest crossover handling, `Ln,w+CI`/`DeltaLw` closure honesty, route history grid, or the adjacent engine mixed surface
+- the latest missing support-form bound breadth expansion also stayed green on the change-adjacent packs:
+  - engine pack: `3` files, `4` tests
+  - route pack: `4` files, `6` tests
+  - interpretation: widening the mixed generated case set onto the defended UBIQ steel 300 unspecified branch did not expose regression in missing-support-form steel handling, `Ln,w+CI`/`DeltaLw` closure honesty, route history grid, or the adjacent engine mixed surface
 
 ## 2.1 Completion Checklist
 
@@ -287,10 +354,12 @@ Completed and defended now:
 - wall Phase A hardening
 - wall Phase B.1 boundary diagnostics
 - mixed floor/wall representative torture slice
+- mixed floor/wall representative save-load roundtrip torture slice
 - mixed floor/wall first generated split-detour matrix
 - mixed floor/wall first generated edit-history matrix
 - mixed floor/wall first wider duplicate/swap grid
 - mixed floor/wall first deterministic longer cross-mode chain
+- mixed floor/wall first save-load roundtrip long-chain slice
 - exact floor-system companion split parity on the defended floor exact rows
 
 Partially complete:
@@ -895,7 +964,7 @@ These are the most likely next useful tests. They are not currently defended eno
   - concrete-plus-board hybrids that infer ceiling-board shapes but should still remain fail-closed
   - weaker carrier plus helper-package rows that must not inherit the concrete reopening rule
 - broader mixed floor/wall generated grids:
-  - broader seeded long-chain families beyond the current first deterministic chain
+  - broader seeded long-chain families beyond the current first deterministic save/load-aware chain and compact representative seeded-family matrix
   - duplicate/swap permutations beyond the current first widened grid
   - wider preset-family case sets beyond the current heavy-concrete plus concrete exacts, Knauf timber exacts, Dataholz timber exacts, open-box exacts, CLT exacts, open-web exacts, and hollow-core cohort after the current partial-edit reset surface
 
@@ -993,7 +1062,7 @@ What this already covers:
 - neutral split-detour parity
 - first generated direct-vs-edit-history parity
 - first wider generated duplicate/swap grid
-- first deterministic longer cross-mode chain with partial-edit abort and restore
+- first deterministic longer cross-mode chain with partial-edit abort, restore, and save/load roundtrip
 - broader support-bucket/card sanity after cross-mode edit chains
 
 What it does not yet cover:
@@ -1025,7 +1094,7 @@ The next phase is only complete when all of these are true:
 2. standard floor corridor still stays green
 3. wall and floor output-card parity packs still stay green
 4. mixed-stack torture coverage is widened beyond the current first deterministic longer chain and first widened generated duplicate/swap grid
-   The representative anchors, first generated split-detour matrix, first generated edit-history matrix, first widened duplicate/swap grid, and first deterministic longer chain already exist; the remaining step is to widen that surface into broader seeded chain families and wider family grids.
+   The representative anchors, compact representative seeded-family matrix, first generated split-detour matrix, first generated edit-history matrix, first widened duplicate/swap grid, and first deterministic longer chain already exist; the remaining step is to widen that surface into broader seeded chain families and wider family grids.
 5. no new widening has been merged without source-backed or benchmark-backed evidence
 6. every newly opened lane is labeled honestly on route and export surfaces
 7. any new red route-surface contract is first classified as solver, support-bucket, or stale-surface drift before logic changes are proposed

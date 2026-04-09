@@ -1,5 +1,9 @@
 import type { SimpleWorkbenchProposalDocument } from "./simple-workbench-proposal";
-import { buildSimpleWorkbenchProposalFilename } from "./simple-workbench-proposal";
+import {
+  buildSimpleWorkbenchProposalFilename,
+  getVisibleProposalMetrics,
+  isPrimaryProposalMetricVisible
+} from "./simple-workbench-proposal";
 import { getSimpleWorkbenchProposalBranding } from "./simple-workbench-proposal-branding";
 import {
   buildSimpleWorkbenchProposalConstructionRender,
@@ -65,7 +69,11 @@ function escapeHtml(value: string): string {
 }
 
 function slugMetricLabels(document: SimpleWorkbenchProposalDocument): string[] {
-  return [...document.metrics, ...document.coverageItems]
+  return [
+    ...(isPrimaryProposalMetricVisible(document) ? [{ label: document.primaryMetricLabel }] : []),
+    ...getVisibleProposalMetrics(document),
+    ...document.coverageItems
+  ]
     .map((item) => item.label.trim().toLowerCase())
     .filter((label) => label.length > 0);
 }
@@ -480,6 +488,7 @@ function renderSimpleCurveFigures(document: SimpleWorkbenchProposalDocument): st
 }
 
 export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbenchProposalDocument): string {
+  const primaryMetricVisible = isPrimaryProposalMetricVisible(document);
   const branding = getSimpleWorkbenchProposalBranding({
     consultantCompany: document.consultantCompany,
     consultantWordmarkLine: document.consultantWordmarkLine,
@@ -495,7 +504,7 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
     variant: "symbol"
   });
   const standardReferences = inferStandardReferences(document);
-  const visibleMetrics = document.metrics.slice(0, MAX_SIMPLE_METRICS);
+  const visibleMetrics = getVisibleProposalMetrics(document).slice(0, MAX_SIMPLE_METRICS);
   const visibleLayers = document.layers.slice(0, MAX_SIMPLE_LAYER_ROWS);
   const visibleCitations = document.citations.slice(0, MAX_SIMPLE_CITATIONS);
   const visibleAssumptions = document.assumptionItems.slice(0, MAX_SIMPLE_ASSUMPTIONS);
@@ -552,7 +561,7 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
     {
       detail: `${document.studyModeLabel} · ${document.contextLabel} · ${document.reportProfileLabel}`,
       label: "Study scope",
-      value: document.primaryMetricLabel
+      value: primaryMetricVisible ? document.primaryMetricLabel : "Headline metric hidden"
     }
   ];
   const methodSnapshotHtml = methodSnapshotItems
@@ -1214,11 +1223,17 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
         </header>
 
         <section class="result-strip">
+          ${
+            primaryMetricVisible
+              ? `
           <article class="result-card result-card-primary">
             <strong>Primary answer</strong>
             <span>${escapeHtml(document.primaryMetricLabel)} ${escapeHtml(document.primaryMetricValue)}</span>
             <small>${escapeHtml(document.executiveSummary)}</small>
           </article>
+          `
+              : ""
+          }
           <article class="result-card">
             <strong>Dynamic route</strong>
             <span>${escapeHtml(document.dynamicBranchLabel)}</span>

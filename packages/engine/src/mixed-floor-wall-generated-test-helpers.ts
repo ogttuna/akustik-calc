@@ -266,6 +266,26 @@ const TUAS_CLT_260_EXACT_ROWS: readonly LayerInput[] = [
   { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 260 }
 ];
 
+const REGUPOL_CURVE_8_EXACT_ROWS: readonly LayerInput[] = [
+  { floorRole: "floor_covering", materialId: "ceramic_tile", thicknessMm: 8 },
+  { floorRole: "floating_screed", materialId: "screed", thicknessMm: 30 },
+  { floorRole: "resilient_layer", materialId: "regupol_sonus_curve_8", thicknessMm: 8 },
+  { floorRole: "base_structure", materialId: "concrete", thicknessMm: 150 }
+];
+
+const REGUPOL_CURVE_8_WET_BOUND_ROWS: readonly LayerInput[] = [
+  { floorRole: "floating_screed", materialId: "screed", thicknessMm: 70 },
+  { floorRole: "resilient_layer", materialId: "regupol_sonus_curve_8", thicknessMm: 8 },
+  { floorRole: "base_structure", materialId: "concrete", thicknessMm: 140 }
+];
+
+const GETZNER_AFM_33_DELTA_ROWS: readonly LayerInput[] = [
+  { floorRole: "floor_covering", materialId: "ceramic_tile", thicknessMm: 8 },
+  { floorRole: "floating_screed", materialId: "screed", thicknessMm: 50 },
+  { floorRole: "resilient_layer", materialId: "getzner_afm_33", thicknessMm: 8 },
+  { floorRole: "base_structure", materialId: "concrete", thicknessMm: 150 }
+];
+
 const STEEL_BOUND_ROWS: readonly LayerInput[] = [
   { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
   { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
@@ -273,6 +293,33 @@ const STEEL_BOUND_ROWS: readonly LayerInput[] = [
   { floorRole: "floor_covering", materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: 20 },
   { floorRole: "floating_screed", materialId: "inex_floor_panel", thicknessMm: 19 },
   { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: 300 }
+];
+
+const UBIQ_STEEL_250_BOUND_ROWS: readonly LayerInput[] = [
+  { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+  { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+  { floorRole: "ceiling_cavity", materialId: "ubiq_resilient_ceiling", thicknessMm: 65 },
+  { floorRole: "floor_covering", materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: 20 },
+  { floorRole: "floating_screed", materialId: "inex_floor_panel", thicknessMm: 19 },
+  { floorRole: "base_structure", materialId: "steel_joist_floor", thicknessMm: 250 }
+];
+
+const UBIQ_STEEL_200_UNSPECIFIED_BOUND_ROWS: readonly LayerInput[] = [
+  { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+  { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+  { floorRole: "ceiling_cavity", materialId: "ubiq_resilient_ceiling", thicknessMm: 65 },
+  { floorRole: "floor_covering", materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: 20 },
+  { floorRole: "floating_screed", materialId: "inex_floor_panel", thicknessMm: 19 },
+  { floorRole: "base_structure", materialId: "lightweight_steel_floor", thicknessMm: 200 }
+];
+
+const UBIQ_STEEL_300_UNSPECIFIED_BOUND_ROWS: readonly LayerInput[] = [
+  { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+  { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+  { floorRole: "ceiling_cavity", materialId: "ubiq_resilient_ceiling", thicknessMm: 65 },
+  { floorRole: "floor_covering", materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: 20 },
+  { floorRole: "floating_screed", materialId: "inex_floor_panel", thicknessMm: 19 },
+  { floorRole: "base_structure", materialId: "lightweight_steel_floor", thicknessMm: 300 }
 ];
 
 const STEEL_FALLBACK_ROWS: readonly LayerInput[] = [
@@ -316,6 +363,102 @@ export const ENGINE_MIXED_GENERATED_CASES: readonly EngineMixedGeneratedCase[] =
     splitPlans: [
       { parts: [20, 30], rowIndex: 1 },
       { parts: [60, 90], rowIndex: 3 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    fieldOptions: {
+      airborneContext: FLOOR_AIRBORNE_CONTEXT,
+      impactFieldContext: FLOOR_IMPACT_FIELD_CONTEXT,
+      targetOutputs: FLOOR_FIELD_OUTPUTS
+    },
+    id: "floor-ubiq-steel-300-unspecified-bound",
+    label: "UBIQ steel 300 unspecified bound floor",
+    labOptions: { targetOutputs: FLOOR_LAB_OUTPUTS },
+    rows: UBIQ_STEEL_300_UNSPECIFIED_BOUND_ROWS,
+    splitPlans: [
+      { parts: [8, 8], rowIndex: 0 },
+      { parts: [10, 10], rowIndex: 3 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    fieldOptions: {
+      airborneContext: FLOOR_AIRBORNE_CONTEXT,
+      impactFieldContext: FLOOR_IMPACT_FIELD_CONTEXT,
+      targetOutputs: FLOOR_FIELD_OUTPUTS
+    },
+    id: "floor-ubiq-steel-200-unspecified-bound",
+    label: "UBIQ steel 200 unspecified bound floor",
+    labOptions: { targetOutputs: FLOOR_LAB_OUTPUTS },
+    rows: UBIQ_STEEL_200_UNSPECIFIED_BOUND_ROWS,
+    splitPlans: [
+      { parts: [8, 8], rowIndex: 0 },
+      { parts: [10, 10], rowIndex: 3 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    fieldOptions: {
+      airborneContext: FLOOR_AIRBORNE_CONTEXT,
+      impactFieldContext: FLOOR_IMPACT_FIELD_CONTEXT,
+      targetOutputs: FLOOR_FIELD_OUTPUTS
+    },
+    id: "floor-getzner-afm-33-delta",
+    label: "Getzner AFM 33 Delta floor",
+    labOptions: { targetOutputs: FLOOR_LAB_OUTPUTS },
+    rows: GETZNER_AFM_33_DELTA_ROWS,
+    splitPlans: [
+      { parts: [25, 25], rowIndex: 1 },
+      { parts: [75, 75], rowIndex: 3 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    fieldOptions: {
+      airborneContext: FLOOR_AIRBORNE_CONTEXT,
+      impactFieldContext: FLOOR_IMPACT_FIELD_CONTEXT,
+      targetOutputs: FLOOR_FIELD_OUTPUTS
+    },
+    id: "floor-ubiq-steel-250-bound",
+    label: "UBIQ steel 250 bound floor",
+    labOptions: { targetOutputs: FLOOR_LAB_OUTPUTS },
+    rows: UBIQ_STEEL_250_BOUND_ROWS,
+    splitPlans: [
+      { parts: [8, 8], rowIndex: 0 },
+      { parts: [125, 125], rowIndex: 5 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    fieldOptions: {
+      airborneContext: FLOOR_AIRBORNE_CONTEXT,
+      impactFieldContext: FLOOR_IMPACT_FIELD_CONTEXT,
+      targetOutputs: FLOOR_FIELD_OUTPUTS
+    },
+    id: "floor-regupol-curve-8-wet-bound",
+    label: "REGUPOL wet bound floor",
+    labOptions: { targetOutputs: FLOOR_LAB_OUTPUTS },
+    rows: REGUPOL_CURVE_8_WET_BOUND_ROWS,
+    splitPlans: [
+      { parts: [35, 35], rowIndex: 0 },
+      { parts: [70, 70], rowIndex: 2 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    fieldOptions: {
+      airborneContext: FLOOR_AIRBORNE_CONTEXT,
+      impactFieldContext: FLOOR_IMPACT_FIELD_CONTEXT,
+      targetOutputs: FLOOR_FIELD_OUTPUTS
+    },
+    id: "floor-regupol-curve-8-exact",
+    label: "REGUPOL Curve 8 exact floor",
+    labOptions: { targetOutputs: FLOOR_LAB_OUTPUTS },
+    rows: REGUPOL_CURVE_8_EXACT_ROWS,
+    splitPlans: [
+      { parts: [15, 15], rowIndex: 1 },
+      { parts: [75, 75], rowIndex: 3 }
     ],
     studyMode: "floor"
   },

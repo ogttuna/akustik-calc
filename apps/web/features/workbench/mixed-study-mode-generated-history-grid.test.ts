@@ -24,9 +24,12 @@ type StoreHandle = {
     addRow: () => void;
     appendRows: (rows: readonly AppendableRow[]) => void;
     duplicateRow: (id: string) => void;
+    loadSavedScenario: (scenarioId: string) => void;
     moveRow: (id: string, direction: "up" | "down") => void;
     removeRow: (id: string) => void;
     rows: LayerDraft[];
+    saveCurrentScenario: () => void;
+    savedScenarios: Array<{ id: string }>;
     startStudyMode: (studyMode: "floor" | "wall") => void;
     updateFloorRole: (id: string, floorRole?: LayerDraft["floorRole"]) => void;
     updateMaterial: (id: string, materialId: string) => void;
@@ -512,6 +515,110 @@ describe("mixed study-mode generated history grid", () => {
         if (JSON.stringify(scenarioSnapshot(restoredScenario.field, testCase.studyMode)) !== JSON.stringify(directFieldSnapshot)) {
           failures.push(`${testCase.label} ${variant.id} restored field snapshot should match direct final snapshot`);
         }
+      }
+    }
+
+    expect(failures).toEqual([]);
+  }, 30_000);
+
+  it("preserves generated floor and wall final snapshots through save-load roundtrips after long cross-mode chains", async () => {
+    const { useWorkbenchStore } = await import("./workbench-store");
+    const failures: string[] = [];
+
+    for (const testCase of ROUTE_MIXED_GENERATED_CASES) {
+      const directFinalRows = buildDirectFinalRows(testCase);
+
+      useWorkbenchStore.getState().reset();
+      useWorkbenchStore.getState().startStudyMode(testCase.studyMode);
+      useWorkbenchStore.getState().appendRows(directFinalRows);
+
+      const directScenario = evaluateCurrentScenario(
+        useWorkbenchStore as unknown as StoreHandle,
+        `${testCase.id}-save-load-direct`,
+        testCase.studyMode
+      );
+      const directLabSnapshot = scenarioSnapshot(directScenario.lab, testCase.studyMode);
+      const directFieldSnapshot = scenarioSnapshot(directScenario.field, testCase.studyMode);
+
+      for (const variant of HISTORY_VARIANTS) {
+        useWorkbenchStore.getState().reset();
+        useWorkbenchStore.getState().startStudyMode(testCase.studyMode);
+        useWorkbenchStore.getState().appendRows(
+          buildGeneratedRows(testCase).map(({ floorRole, materialId, thicknessMm }) => ({
+            floorRole,
+            materialId,
+            thicknessMm
+          }))
+        );
+        applyPartialSplitToStore(useWorkbenchStore as unknown as StoreHandle, testCase, variant);
+
+        const oppositeMode = testCase.studyMode === "floor" ? "wall" : "floor";
+        useWorkbenchStore.getState().startStudyMode(oppositeMode);
+        useWorkbenchStore.getState().appendRows(oppositeMode === "floor" ? FLOOR_DETOUR_ROWS : WALL_DETOUR_ROWS);
+        applyOppositeModeNoiseChain(
+          useWorkbenchStore as unknown as StoreHandle,
+          oppositeMode,
+          failures,
+          `${testCase.label} ${variant.id} save-load`
+        );
+
+        useWorkbenchStore.getState().startStudyMode(testCase.studyMode);
+        useWorkbenchStore.getState().appendRows(
+          buildGeneratedRows(testCase).map(({ floorRole, materialId, thicknessMm }) => ({
+            floorRole,
+            materialId,
+            thicknessMm
+          }))
+        );
+        applyHistoryVariantToStore(useWorkbenchStore as unknown as StoreHandle, testCase, variant);
+
+        useWorkbenchStore.getState().saveCurrentScenario();
+        const savedScenarioId = useWorkbenchStore.getState().savedScenarios[0]?.id;
+
+        if (!savedScenarioId) {
+          failures.push(`${testCase.label} ${variant.id} should create a saved scenario id`);
+          continue;
+        }
+
+        useWorkbenchStore.getState().startStudyMode(oppositeMode);
+        useWorkbenchStore.getState().appendRows(oppositeMode === "floor" ? FLOOR_DETOUR_ROWS : WALL_DETOUR_ROWS);
+        useWorkbenchStore.getState().loadSavedScenario(savedScenarioId);
+
+        if (
+          JSON.stringify(normalizeRows(useWorkbenchStore.getState().rows)) !==
+          JSON.stringify(normalizeAppendableRows(directFinalRows))
+        ) {
+          failures.push(`${testCase.label} ${variant.id} save-load rows should match direct split rows after reload`);
+        }
+
+        const restoredScenario = evaluateCurrentScenario(
+          useWorkbenchStore as unknown as StoreHandle,
+          `${testCase.id}-${variant.id}-save-load-restored`,
+          testCase.studyMode
+        );
+
+        if (JSON.stringify(scenarioSnapshot(restoredScenario.lab, testCase.studyMode)) !== JSON.stringify(directLabSnapshot)) {
+          failures.push(`${testCase.label} ${variant.id} save-load lab snapshot should match direct final snapshot`);
+        }
+
+        if (JSON.stringify(scenarioSnapshot(restoredScenario.field, testCase.studyMode)) !== JSON.stringify(directFieldSnapshot)) {
+          failures.push(`${testCase.label} ${variant.id} save-load field snapshot should match direct final snapshot`);
+        }
+
+        assertScenarioSupportSurface({
+          failures,
+          label: `${testCase.label} ${variant.id} save-load lab`,
+          outputs: testCase.studyMode === "floor" ? FLOOR_OUTPUTS : WALL_LAB_OUTPUTS,
+          scenario: restoredScenario.lab,
+          studyMode: testCase.studyMode
+        });
+        assertScenarioSupportSurface({
+          failures,
+          label: `${testCase.label} ${variant.id} save-load field`,
+          outputs: testCase.studyMode === "floor" ? FLOOR_OUTPUTS : WALL_FIELD_OUTPUTS,
+          scenario: restoredScenario.field,
+          studyMode: testCase.studyMode
+        });
       }
     }
 

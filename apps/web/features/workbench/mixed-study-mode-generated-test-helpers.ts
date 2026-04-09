@@ -554,6 +554,72 @@ export const ROUTE_MIXED_GENERATED_CASES: readonly RouteMixedGeneratedCase[] = [
     studyMode: "floor"
   },
   {
+    id: "route-regupol-curve-8-exact",
+    label: "REGUPOL Curve 8 exact floor",
+    requestedOutputs: DEFAULT_FLOOR_REQUESTED_OUTPUTS,
+    rows: getPresetById("regupol_curve_8_exact").rows,
+    splitPlans: [
+      { parts: ["15", "15"], rowIndex: 1 },
+      { parts: ["75", "75"], rowIndex: 3 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    id: "route-regupol-curve-8-wet-bound",
+    label: "REGUPOL wet bound floor",
+    requestedOutputs: DEFAULT_FLOOR_REQUESTED_OUTPUTS,
+    rows: getPresetById("regupol_curve_8_wet_bound").rows,
+    splitPlans: [
+      { parts: ["35", "35"], rowIndex: 0 },
+      { parts: ["70", "70"], rowIndex: 2 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    id: "route-ubiq-steel-250-bound",
+    label: "UBIQ steel 250 bound floor",
+    requestedOutputs: DEFAULT_FLOOR_REQUESTED_OUTPUTS,
+    rows: getPresetById("ubiq_steel_250_bound").rows,
+    splitPlans: [
+      { parts: ["8", "8"], rowIndex: 0 },
+      { parts: ["125", "125"], rowIndex: 5 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    id: "route-getzner-afm-33-delta",
+    label: "Getzner AFM 33 Delta floor",
+    requestedOutputs: DEFAULT_FLOOR_REQUESTED_OUTPUTS,
+    rows: getPresetById("getzner_afm_33_delta").rows,
+    splitPlans: [
+      { parts: ["25", "25"], rowIndex: 1 },
+      { parts: ["75", "75"], rowIndex: 3 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    id: "route-ubiq-steel-200-unspecified-bound",
+    label: "UBIQ steel 200 unspecified bound floor",
+    requestedOutputs: DEFAULT_FLOOR_REQUESTED_OUTPUTS,
+    rows: getPresetById("ubiq_steel_200_unspecified_bound").rows,
+    splitPlans: [
+      { parts: ["8", "8"], rowIndex: 0 },
+      { parts: ["10", "10"], rowIndex: 3 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    id: "route-ubiq-steel-300-unspecified-bound",
+    label: "UBIQ steel 300 unspecified bound floor",
+    requestedOutputs: DEFAULT_FLOOR_REQUESTED_OUTPUTS,
+    rows: getPresetById("ubiq_steel_300_unspecified_bound").rows,
+    splitPlans: [
+      { parts: ["8", "8"], rowIndex: 0 },
+      { parts: ["10", "10"], rowIndex: 3 }
+    ],
+    studyMode: "floor"
+  },
+  {
     id: "route-open-web-bound",
     label: "Open-web bound floor",
     requestedOutputs: DEFAULT_FLOOR_REQUESTED_OUTPUTS,

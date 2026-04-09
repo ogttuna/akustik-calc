@@ -52,7 +52,13 @@ import {
   type SimpleWorkbenchProposalPolicyPreset
 } from "./simple-workbench-proposal-policy-presets";
 import { getSimpleWorkbenchProposalBranding } from "./simple-workbench-proposal-branding";
-import { downloadSimpleWorkbenchProposalPdf } from "./simple-workbench-proposal-pdf";
+import {
+  downloadSimpleWorkbenchProposalDocx,
+  downloadSimpleWorkbenchProposalPdf,
+  getSimpleWorkbenchProposalExportLabel,
+  type SimpleWorkbenchProposalExportFormat,
+  type SimpleWorkbenchProposalExportStyle
+} from "./simple-workbench-proposal-pdf";
 import { storeSimpleWorkbenchProposalPreview } from "./simple-workbench-proposal-preview-storage";
 import { buildWorkbenchResponseCurveFigures } from "./response-curve-model";
 import { REPORT_PROFILE_LABELS } from "./workbench-data";
@@ -655,25 +661,36 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
     }
   }
 
-  async function handleDownloadPdf(style: "branded" | "simple" = "branded") {
+  async function handleDownloadExport(
+    style: SimpleWorkbenchProposalExportStyle = "branded",
+    format: SimpleWorkbenchProposalExportFormat = "pdf"
+  ) {
     setIsDownloadingPdf(true);
 
     try {
-      await downloadSimpleWorkbenchProposalPdf(proposalDocument, {
-        style
-      });
-      toast.success(style === "simple" ? "Simple PDF downloaded" : "Branded PDF downloaded", {
+      if (format === "docx") {
+        await downloadSimpleWorkbenchProposalDocx(proposalDocument, {
+          style
+        });
+      } else {
+        await downloadSimpleWorkbenchProposalPdf(proposalDocument, {
+          style
+        });
+      }
+      toast.success(`${getSimpleWorkbenchProposalExportLabel({ format, style })} downloaded`, {
         description:
-          style === "simple"
-            ? "DynEcho prepared the lightweight calculation-summary PDF on the server."
-            : "DynEcho prepared the formal proposal PDF on the server."
+          format === "docx"
+            ? "DynEcho prepared the Word document on the server from the current proposal snapshot."
+            : style === "simple"
+              ? "DynEcho prepared the lightweight calculation-summary PDF on the server."
+              : "DynEcho prepared the formal proposal PDF on the server."
       });
     } catch (error) {
-      toast.error(style === "simple" ? "Simple PDF failed" : "PDF generation failed", {
+      toast.error(`${getSimpleWorkbenchProposalExportLabel({ format, style })} failed`, {
         description:
           error instanceof Error
             ? error.message
-            : `DynEcho could not generate the ${style === "simple" ? "simple" : "branded"} PDF on the server. Use the print view as a fallback.`
+            : `DynEcho could not generate the ${getSimpleWorkbenchProposalExportLabel({ format, style })} on the server. Use the print view as a fallback.`
       });
     } finally {
       setIsDownloadingPdf(false);
@@ -697,8 +714,8 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
     const adjustmentWindow = window.open("/workbench/proposal/configure", "_blank");
 
     if (!adjustmentWindow) {
-      toast.error("Adjustment window blocked", {
-        description: "Allow pop-ups so DynEcho can open the PDF adjustment desk."
+      toast.error("PDF editor blocked", {
+        description: "Allow pop-ups so DynEcho can open the PDF editor."
       });
     }
   }
@@ -1885,11 +1902,20 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
             <button
               className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"
               disabled={!exportReady || isDownloadingPdf}
-              onClick={() => void handleDownloadPdf()}
+              onClick={() => void handleDownloadExport()}
               type="button"
             >
               <Download className="h-4 w-4" />
-              {isDownloadingPdf ? "Generating PDF..." : "Download branded PDF"}
+              {isDownloadingPdf ? "Preparing file..." : "Download branded PDF"}
+            </button>
+            <button
+              className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={!exportReady || isDownloadingPdf}
+              onClick={() => void handleDownloadExport("branded", "docx")}
+              type="button"
+            >
+              <Download className="h-4 w-4" />
+              {isDownloadingPdf ? "Preparing file..." : "Download branded DOCX"}
             </button>
             <button
               className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"
@@ -1898,16 +1924,25 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
               type="button"
             >
               <FilePenLine className="h-4 w-4" />
-              PDF ayarla
+              Edit PDFs
             </button>
             <button
               className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"
               disabled={!exportReady || isDownloadingPdf}
-              onClick={() => void handleDownloadPdf("simple")}
+              onClick={() => void handleDownloadExport("simple")}
               type="button"
             >
               <Download className="h-4 w-4" />
-              {isDownloadingPdf ? "Generating PDF..." : "Simple PDF"}
+              {isDownloadingPdf ? "Preparing file..." : "Simple PDF"}
+            </button>
+            <button
+              className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={!exportReady || isDownloadingPdf}
+              onClick={() => void handleDownloadExport("simple", "docx")}
+              type="button"
+            >
+              <Download className="h-4 w-4" />
+              {isDownloadingPdf ? "Preparing file..." : "Simple DOCX"}
             </button>
             <button
               className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"

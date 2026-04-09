@@ -33,11 +33,18 @@ import { buildSimpleWorkbenchEvidencePacket } from "./simple-workbench-evidence"
 import { buildSimpleWorkbenchMethodDossier } from "./simple-workbench-method-dossier";
 import { buildSimpleWorkbenchProposalBrief } from "./simple-workbench-proposal-brief";
 import type { SimpleWorkbenchProposalDocument } from "./simple-workbench-proposal";
-import { downloadSimpleWorkbenchProposalPdf } from "./simple-workbench-proposal-pdf";
+import {
+  downloadSimpleWorkbenchProposalDocx,
+  downloadSimpleWorkbenchProposalPdf,
+  getSimpleWorkbenchProposalExportLabel,
+  type SimpleWorkbenchProposalExportFormat,
+  type SimpleWorkbenchProposalExportStyle
+} from "./simple-workbench-proposal-pdf";
 import {
   DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_ISSUE_PURPOSE,
   DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_VALIDITY_NOTE
 } from "./simple-workbench-proposal-policy-presets";
+import { storeSimpleWorkbenchProposalPreview } from "./simple-workbench-proposal-preview-storage";
 import { readSimpleWorkbenchIssueSequence } from "./simple-workbench-issue-sequence";
 import { buildWorkbenchResponseCurveFigures } from "./response-curve-model";
 import { isSteelBoundSupportFormLane } from "./steel-bound-support-form-lane";
@@ -146,11 +153,13 @@ export function SimpleWorkbenchShell() {
   const impactGuideReceivingRoomVolumeM3 = useWorkbenchStore((state) => state.impactGuideReceivingRoomVolumeM3);
 
   const appendRows = useWorkbenchStore((state) => state.appendRows);
+  const clearRows = useWorkbenchStore((state) => state.clearRows);
   const duplicateRow = useWorkbenchStore((state) => state.duplicateRow);
   const loadPreset = useWorkbenchStore((state) => state.loadPreset);
   const moveRow = useWorkbenchStore((state) => state.moveRow);
   const removeRow = useWorkbenchStore((state) => state.removeRow);
   const reset = useWorkbenchStore((state) => state.reset);
+  const startStudyMode = useWorkbenchStore((state) => state.startStudyMode);
   const setAirborneAirtightness = useWorkbenchStore((state) => state.setAirborneAirtightness);
   const setAirborneConnectionType = useWorkbenchStore((state) => state.setAirborneConnectionType);
   const setAirborneContextMode = useWorkbenchStore((state) => state.setAirborneContextMode);
@@ -509,48 +518,68 @@ export function SimpleWorkbenchShell() {
     });
     setActiveWorkspacePanel("stack");
   };
-  const handleQuickPdf = async (style: "branded" | "simple") => {
+  const buildQuickProposalDocument = (): SimpleWorkbenchProposalDocument => {
+    const issueSeq = readSimpleWorkbenchIssueSequence(proposalBrief.suggestedIssue.reference);
+
+    return {
+      approverTitle: approverTitle.trim() || "Acoustic Consultant", assemblyHeadline: heroHeadline,
+      assumptionItems: proposalBrief.assumptionItems, briefNote,
+      clientName: clientName.trim() || "Unnamed client", consultantAddress: consultantAddress.trim() || "Office address not entered",
+      citations: proposalEvidence.citations, consultantCompany: consultantCompany.trim() || "DynEcho Acoustic Consulting",
+      consultantEmail: consultantEmail.trim() || "Contact email not entered", consultantLogoDataUrl: consultantLogoDataUrl.trim(),
+      consultantPhone: consultantPhone.trim() || "Contact phone not entered", consultantWordmarkLine: consultantWordmarkLine.trim(),
+      corridorDossierCards: corridorDossier.cards, corridorDossierHeadline: corridorDossier.headline,
+      contextLabel: getEnvironmentLabel(airborneContextMode), coverageItems: proposalCoverageItems,
+      decisionTrailHeadline: proposalEvidence.decisionTrailHeadline, decisionTrailItems: proposalEvidence.decisionTrailItems,
+      dynamicBranchDetail: dynamicCalcBranch.detail, dynamicBranchLabel: dynamicCalcBranch.value,
+      executiveSummary: proposalBrief.executiveSummary, issuedOnLabel: proposalIssuedOnLabel, issuedOnIso: proposalIssuedOnIso,
+      issueBaseReference: issueSeq.baseReference, issueCodePrefix: proposalIssueCodePrefix.trim(),
+      issueNextReference: issueSeq.nextReference, issueRegisterItems: [], layers: proposalLayers,
+      methodDossierCards: methodDossier.cards, methodDossierHeadline: methodDossier.headline,
+      methodTraceGroups: methodDossier.traceGroups,
+      metrics: proposalMetrics.length > 0 ? proposalMetrics : [{ detail: "No live outputs yet.", label: "Status", value: "Waiting" }],
+      preparedBy: preparedBy.trim() || "DynEcho Operator",
+      primaryMetricLabel: proposalMetrics[0]?.label ?? "Primary read", primaryMetricValue: proposalMetrics[0]?.value ?? "Waiting",
+      projectName: projectName.trim() || "Untitled acoustic proposal",
+      proposalAttention: proposalAttention.trim() || "Attention line not entered",
+      proposalIssuePurpose: proposalIssuePurpose.trim() || DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_ISSUE_PURPOSE,
+      proposalRecipient: proposalRecipient.trim() || clientName.trim() || "Client delivery team",
+      proposalReference: proposalReference.trim() || proposalBrief.suggestedIssue.reference,
+      proposalRevision: proposalRevision.trim() || proposalBrief.suggestedIssue.revision,
+      proposalSubject: proposalSubject.trim() || `${projectName.trim() || "Untitled project"} ${getStudyModeLabel(studyMode).toLowerCase()} acoustic proposal`,
+      proposalValidityNote: proposalValidityNote.trim() || DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_VALIDITY_NOTE,
+      recommendationItems: proposalBrief.recommendationItems, reportProfile,
+      reportProfileLabel: REPORT_PROFILE_LABELS[reportProfile], responseCurves: responseCurveFigures,
+      studyModeLabel: getStudyModeLabel(studyMode), studyContextLabel: STUDY_CONTEXT_LABELS[studyContext],
+      validationDetail: validationSummary.detail, validationLabel: validationSummary.value, warnings: scenario.warnings
+    };
+  };
+  const handleQuickExport = async (
+    style: SimpleWorkbenchProposalExportStyle,
+    format: SimpleWorkbenchProposalExportFormat
+  ) => {
     setIsExportingPdf(true);
     try {
-      const issueSeq = readSimpleWorkbenchIssueSequence(proposalBrief.suggestedIssue.reference);
-      const doc: SimpleWorkbenchProposalDocument = {
-        approverTitle: approverTitle.trim() || "Acoustic Consultant", assemblyHeadline: heroHeadline,
-        assumptionItems: proposalBrief.assumptionItems, briefNote,
-        clientName: clientName.trim() || "Unnamed client", consultantAddress: consultantAddress.trim() || "Office address not entered",
-        citations: proposalEvidence.citations, consultantCompany: consultantCompany.trim() || "DynEcho Acoustic Consulting",
-        consultantEmail: consultantEmail.trim() || "Contact email not entered", consultantLogoDataUrl: consultantLogoDataUrl.trim(),
-        consultantPhone: consultantPhone.trim() || "Contact phone not entered", consultantWordmarkLine: consultantWordmarkLine.trim(),
-        corridorDossierCards: corridorDossier.cards, corridorDossierHeadline: corridorDossier.headline,
-        contextLabel: getEnvironmentLabel(airborneContextMode), coverageItems: proposalCoverageItems,
-        decisionTrailHeadline: proposalEvidence.decisionTrailHeadline, decisionTrailItems: proposalEvidence.decisionTrailItems,
-        dynamicBranchDetail: dynamicCalcBranch.detail, dynamicBranchLabel: dynamicCalcBranch.value,
-        executiveSummary: proposalBrief.executiveSummary, issuedOnLabel: proposalIssuedOnLabel, issuedOnIso: proposalIssuedOnIso,
-        issueBaseReference: issueSeq.baseReference, issueCodePrefix: proposalIssueCodePrefix.trim(),
-        issueNextReference: issueSeq.nextReference, issueRegisterItems: [], layers: proposalLayers,
-        methodDossierCards: methodDossier.cards, methodDossierHeadline: methodDossier.headline,
-        methodTraceGroups: methodDossier.traceGroups,
-        metrics: proposalMetrics.length > 0 ? proposalMetrics : [{ detail: "No live outputs yet.", label: "Status", value: "Waiting" }],
-        preparedBy: preparedBy.trim() || "DynEcho Operator",
-        primaryMetricLabel: proposalMetrics[0]?.label ?? "Primary read", primaryMetricValue: proposalMetrics[0]?.value ?? "Waiting",
-        projectName: projectName.trim() || "Untitled acoustic proposal",
-        proposalAttention: proposalAttention.trim() || "Attention line not entered",
-        proposalIssuePurpose: proposalIssuePurpose.trim() || DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_ISSUE_PURPOSE,
-        proposalRecipient: proposalRecipient.trim() || clientName.trim() || "Client delivery team",
-        proposalReference: proposalReference.trim() || proposalBrief.suggestedIssue.reference,
-        proposalRevision: proposalRevision.trim() || proposalBrief.suggestedIssue.revision,
-        proposalSubject: proposalSubject.trim() || `${projectName.trim() || "Untitled project"} ${getStudyModeLabel(studyMode).toLowerCase()} acoustic proposal`,
-        proposalValidityNote: proposalValidityNote.trim() || DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_VALIDITY_NOTE,
-        recommendationItems: proposalBrief.recommendationItems, reportProfile,
-        reportProfileLabel: REPORT_PROFILE_LABELS[reportProfile], responseCurves: responseCurveFigures,
-        studyModeLabel: getStudyModeLabel(studyMode), studyContextLabel: STUDY_CONTEXT_LABELS[studyContext],
-        validationDetail: validationSummary.detail, validationLabel: validationSummary.value, warnings: scenario.warnings
-      };
-      await downloadSimpleWorkbenchProposalPdf(doc, { style });
-      toast.success("PDF downloaded");
+      const doc = buildQuickProposalDocument();
+      if (format === "docx") {
+        await downloadSimpleWorkbenchProposalDocx(doc, { style });
+      } else {
+        await downloadSimpleWorkbenchProposalPdf(doc, { style });
+      }
+      toast.success(`${getSimpleWorkbenchProposalExportLabel({ format, style })} downloaded`);
     } catch {
-      toast.error("PDF generation failed");
+      toast.error(`${getSimpleWorkbenchProposalExportLabel({ format, style })} failed`);
     } finally {
       setIsExportingPdf(false);
+    }
+  };
+  const handleOpenPdfSetup = () => {
+    const doc = buildQuickProposalDocument();
+    storeSimpleWorkbenchProposalPreview(doc);
+    const adjustmentWindow = window.open("/workbench/proposal/configure?style=simple", "_blank");
+
+    if (!adjustmentWindow) {
+      toast.error("Simple PDF editor blocked");
     }
   };
   const moveRowWithFeedback = (rowId: string, direction: "up" | "down") => {
@@ -565,9 +594,8 @@ export function SimpleWorkbenchShell() {
   };
 
   const handleStudyModeChange = (nextStudyMode: "floor" | "wall") => {
-    const nextPresetId = MODE_PRESETS[nextStudyMode][0]!;
     setAirborneContextMode("element_lab");
-    loadPreset(nextPresetId);
+    startStudyMode(nextStudyMode);
   };
 
   // ── Render ───────────────────────────────────────────────────────────────
@@ -575,20 +603,23 @@ export function SimpleWorkbenchShell() {
     <div className="grid min-w-0 gap-0" style={SIMPLE_WORKBENCH_THEME}>
       <SimpleWorkbenchToolbar
         airborneContextMode={airborneContextMode}
-        automaticOutputsLength={automaticOutputs.length}
         exportReady={exportReady}
         isExportingPdf={isExportingPdf}
         modePresets={modePresets}
         onContextModeChange={setAirborneContextMode}
-        onExportBrandedPdf={() => void handleQuickPdf("branded")}
-        onExportSimplePdf={() => void handleQuickPdf("simple")}
+        onExportBrandedDocx={() => void handleQuickExport("branded", "docx")}
+        onExportBrandedPdf={() => void handleQuickExport("branded", "pdf")}
+        onExportSimpleDocx={() => void handleQuickExport("simple", "docx")}
+        onExportSimplePdf={() => void handleQuickExport("simple", "pdf")}
+        onOpenPdfSetup={handleOpenPdfSetup}
         onPresetChange={loadPreset}
+        onStartEmpty={clearRows}
         onReset={() => setResetDialogOpen(true)}
         onStudyModeChange={handleStudyModeChange}
         onToggleTheme={toggleTheme}
         readyOutputCount={readyOutputCount}
         rowCount={rows.length}
-        selectedPresetId={selectedPreset.id}
+        selectedPreset={selectedPreset}
         studyMode={studyMode}
         theme={theme}
       />

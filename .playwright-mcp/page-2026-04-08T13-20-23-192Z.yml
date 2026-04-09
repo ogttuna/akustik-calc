@@ -1,0 +1,21 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]: Protected workspace
+      - generic [ref=e6]: Signed in as admin
+    - generic [ref=e7]:
+      - link "Overview" [ref=e8] [cursor=pointer]:
+        - /url: /
+      - button "Sign out" [ref=e10] [cursor=pointer]
+  - main [ref=e11]:
+    - generic [ref=e12]:
+      - generic [ref=e13]: No Proposal Snapshot
+      - heading "Package a proposal before opening the PDF editor" [level=1] [ref=e14]
+      - paragraph [ref=e15]: This page only edits the packaged proposal snapshot that feeds the preview and PDF renderer. Return to the workbench proposal tab and package an issue first.
+      - link "Back to workbench" [ref=e17] [cursor=pointer]:
+        - /url: /workbench
+        - img [ref=e18]
+        - text: Back to workbench
+  - button "Open Next.js Dev Tools" [ref=e25] [cursor=pointer]:
+    - img [ref=e26]
+  - alert [ref=e29]

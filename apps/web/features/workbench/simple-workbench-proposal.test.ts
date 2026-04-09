@@ -522,4 +522,27 @@ describe("simple workbench proposal helpers", () => {
     expect(html).toContain("Published family estimate is active through reinforced concrete.");
     expect(html).toContain("This short-form report summarises the current DynEcho Acoustic Calculator reading.");
   });
+
+  it("omits hidden metrics and the hidden primary headline metric from branded and simple html", () => {
+    const hiddenMetricDocument = {
+      ...BASE_DOCUMENT,
+      metrics: [
+        { detail: "Visible airborne metric", label: "Rw", value: "61 dB", visible: true },
+        { detail: "Hidden impact metric", label: "Ln,w", value: "47 dB", visible: false }
+      ],
+      primaryMetricLabel: "Ln,w",
+      primaryMetricValue: "47 dB",
+      primaryMetricVisible: false
+    };
+
+    const brandedHtml = buildSimpleWorkbenchProposalHtml(hiddenMetricDocument);
+    const simpleHtml = buildSimpleWorkbenchProposalSimpleHtml(hiddenMetricDocument);
+
+    expect(brandedHtml).not.toContain("Ln,w 47 dB");
+    expect(brandedHtml).not.toContain("Hidden impact metric");
+    expect(brandedHtml).toContain("Visible airborne metric");
+    expect(simpleHtml).not.toContain("Primary answer");
+    expect(simpleHtml).not.toContain("Hidden impact metric");
+    expect(simpleHtml).toContain("Visible airborne metric");
+  });
 });

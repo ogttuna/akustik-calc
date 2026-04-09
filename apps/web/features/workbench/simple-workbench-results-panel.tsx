@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import type { AssemblyCalculation, MaterialDefinition, RequestedOutputId } from "@dynecho/shared";
 
 import { OutputCard, OutputCoverageSummary, OutputUnlockRail, PendingOutputRow } from "./simple-workbench-output-cards";
@@ -159,7 +160,7 @@ export function SimpleWorkbenchResultsPanel(props: {
                       </div>
                     </div>
 
-                    <div className="mt-5 grid gap-4 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] xl:items-start">
+                    <div className="mt-5 grid gap-4 3xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] 3xl:items-start">
                       <div className="grid gap-4">
                         <article className="rounded-[1.15rem] border border-[color:color-mix(in_oklch,var(--ink)_8%,var(--line))] bg-[linear-gradient(180deg,color-mix(in_oklch,var(--paper)_92%,white)_0%,color-mix(in_oklch,var(--panel)_74%,white)_100%)] px-4 py-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.44)]">
                           <div className="flex flex-wrap items-start justify-between gap-3">
@@ -225,7 +226,7 @@ export function SimpleWorkbenchResultsPanel(props: {
                       </div>
 
                       <div className="grid gap-4">
-                        <ResultAnswerChart result={result} targetLnwDb={targetLnwDb} targetRwDb={targetRwDb} />
+                        <ResultAnswerChart layout="stacked" result={result} targetLnwDb={targetLnwDb} targetRwDb={targetRwDb} />
                       </div>
                     </div>
 
@@ -243,7 +244,7 @@ export function SimpleWorkbenchResultsPanel(props: {
                           </div>
                         </div>
 
-                        <div className="mt-4 grid gap-4 2xl:grid-cols-2">
+                        <div className={`mt-4 grid gap-4 ${responseCurves.length > 1 ? "2xl:grid-cols-2" : ""}`}>
                           {responseCurves.map((figure) => (
                             <ResponseCurveFigureCard figure={figure} key={figure.id} />
                           ))}

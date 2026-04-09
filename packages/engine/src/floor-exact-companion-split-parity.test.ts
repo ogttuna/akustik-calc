@@ -9,7 +9,7 @@ type ExactCompanionSplitParityCase = {
   split: readonly LayerInput[];
 };
 
-const LAB_OUTPUTS: readonly RequestedOutputId[] = ["Rw", "Ln,w", "Ln,w+CI"];
+const LAB_OUTPUTS: readonly RequestedOutputId[] = ["Rw", "Ln,w", "Ln,w+CI", "DeltaLw"];
 const FIELD_OUTPUTS: readonly RequestedOutputId[] = [
   "Rw",
   "R'w",
@@ -18,6 +18,7 @@ const FIELD_OUTPUTS: readonly RequestedOutputId[] = [
   "Dn,w",
   "Dn,A",
   "Ln,w",
+  "DeltaLw",
   "Ln,w+CI",
   "L'n,w",
   "L'nT,w",
@@ -354,6 +355,82 @@ const CASES: readonly ExactCompanionSplitParityCase[] = [
       { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 1.5 },
       { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 260 }
     ]
+  },
+  {
+    id: "regupol curve 8 product-exact split screed and slab control",
+    canonical: [
+      { floorRole: "floor_covering", materialId: "ceramic_tile", thicknessMm: 8 },
+      { floorRole: "floating_screed", materialId: "screed", thicknessMm: 30 },
+      { floorRole: "resilient_layer", materialId: "regupol_sonus_curve_8", thicknessMm: 8 },
+      { floorRole: "base_structure", materialId: "concrete", thicknessMm: 150 }
+    ],
+    split: [
+      { floorRole: "floor_covering", materialId: "ceramic_tile", thicknessMm: 8 },
+      { floorRole: "floating_screed", materialId: "screed", thicknessMm: 15 },
+      { floorRole: "floating_screed", materialId: "screed", thicknessMm: 15 },
+      { floorRole: "resilient_layer", materialId: "regupol_sonus_curve_8", thicknessMm: 8 },
+      { floorRole: "base_structure", materialId: "concrete", thicknessMm: 75 },
+      { floorRole: "base_structure", materialId: "concrete", thicknessMm: 75 }
+    ]
+  },
+  {
+    id: "getzner afm 33 product-delta split screed and slab control",
+    canonical: [
+      { floorRole: "floor_covering", materialId: "ceramic_tile", thicknessMm: 8 },
+      { floorRole: "floating_screed", materialId: "screed", thicknessMm: 50 },
+      { floorRole: "resilient_layer", materialId: "getzner_afm_33", thicknessMm: 8 },
+      { floorRole: "base_structure", materialId: "concrete", thicknessMm: 150 }
+    ],
+    split: [
+      { floorRole: "floor_covering", materialId: "ceramic_tile", thicknessMm: 8 },
+      { floorRole: "floating_screed", materialId: "screed", thicknessMm: 25 },
+      { floorRole: "floating_screed", materialId: "screed", thicknessMm: 25 },
+      { floorRole: "resilient_layer", materialId: "getzner_afm_33", thicknessMm: 8 },
+      { floorRole: "base_structure", materialId: "concrete", thicknessMm: 75 },
+      { floorRole: "base_structure", materialId: "concrete", thicknessMm: 75 }
+    ]
+  },
+  {
+    id: "ubiq steel 200 unspecified bound split board and floor-covering control",
+    canonical: [
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+      { floorRole: "ceiling_cavity", materialId: "ubiq_resilient_ceiling", thicknessMm: 65 },
+      { floorRole: "floor_covering", materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: 20 },
+      { floorRole: "floating_screed", materialId: "inex_floor_panel", thicknessMm: 19 },
+      { floorRole: "base_structure", materialId: "lightweight_steel_floor", thicknessMm: 200 }
+    ],
+    split: [
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 8 },
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 8 },
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+      { floorRole: "ceiling_cavity", materialId: "ubiq_resilient_ceiling", thicknessMm: 65 },
+      { floorRole: "floor_covering", materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: 10 },
+      { floorRole: "floor_covering", materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: 10 },
+      { floorRole: "floating_screed", materialId: "inex_floor_panel", thicknessMm: 19 },
+      { floorRole: "base_structure", materialId: "lightweight_steel_floor", thicknessMm: 200 }
+    ]
+  },
+  {
+    id: "ubiq steel 300 unspecified bound split board and floor-covering control",
+    canonical: [
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+      { floorRole: "ceiling_cavity", materialId: "ubiq_resilient_ceiling", thicknessMm: 65 },
+      { floorRole: "floor_covering", materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: 20 },
+      { floorRole: "floating_screed", materialId: "inex_floor_panel", thicknessMm: 19 },
+      { floorRole: "base_structure", materialId: "lightweight_steel_floor", thicknessMm: 300 }
+    ],
+    split: [
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 8 },
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 8 },
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },
+      { floorRole: "ceiling_cavity", materialId: "ubiq_resilient_ceiling", thicknessMm: 65 },
+      { floorRole: "floor_covering", materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: 10 },
+      { floorRole: "floor_covering", materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: 10 },
+      { floorRole: "floating_screed", materialId: "inex_floor_panel", thicknessMm: 19 },
+      { floorRole: "base_structure", materialId: "lightweight_steel_floor", thicknessMm: 300 }
+    ]
   }
 ];
 
@@ -365,6 +442,7 @@ function resultSnapshot(result: ReturnType<typeof calculateAssembly>) {
     dnTA: result.metrics.estimatedDnTADb ?? null,
     dnTw: result.metrics.estimatedDnTwDb ?? null,
     dnW: result.metrics.estimatedDnWDb ?? null,
+    deltaLw: result.impact?.DeltaLw ?? result.lowerBoundImpact?.DeltaLwLowerBound ?? null,
     floorSystemMatchId: result.floorSystemMatch?.system.id ?? null,
     impactBasis: result.impact?.basis ?? null,
     lPrimeNTw: result.impact?.LPrimeNTw ?? null,

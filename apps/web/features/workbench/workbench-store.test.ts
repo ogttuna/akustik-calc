@@ -264,6 +264,21 @@ describe("workbench store", () => {
     ]);
   });
 
+  it("can clear the current rows without changing the selected mode or preset reference", async () => {
+    const { useWorkbenchStore } = await import("./workbench-store");
+
+    useWorkbenchStore.getState().loadPreset("heavy_concrete_impact_floor");
+    useWorkbenchStore.getState().setAirborneContextMode("building_prediction");
+    useWorkbenchStore.getState().clearRows();
+
+    const state = useWorkbenchStore.getState();
+
+    expect(state.rows).toEqual([]);
+    expect(state.studyMode).toBe("floor");
+    expect(state.activePresetId).toBe("heavy_concrete_impact_floor");
+    expect(state.airborneContextMode).toBe("building_prediction");
+  });
+
   it("keeps representative wall and floor presets stable when the same final thickness is reached through different edit paths", async () => {
     const { evaluateScenario } = await import("./scenario-analysis");
     const { useWorkbenchStore } = await import("./workbench-store");
