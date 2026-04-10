@@ -273,6 +273,24 @@ const CASES: readonly SplitParityCase[] = [
     ]
   },
   {
+    id: "open-web noncanonical continuation split board and fill schedule",
+    canonical: [
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 90 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: 300 }
+    ],
+    split: [
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 6.5 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 6.5 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 45 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 45 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 6.5 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 6.5 },
+      { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: 300 }
+    ]
+  },
+  {
     id: "composite lower-only non-packable ceiling-board schedule",
     canonical: [
       { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 15 },

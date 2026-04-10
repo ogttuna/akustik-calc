@@ -94,6 +94,7 @@ const FLOATING_SCREED_MATERIAL_IDS = new Set(["inex_floor_panel", "screed"]);
 const UPPER_FILL_MATERIAL_IDS = new Set([
   "bonded_chippings",
   "elastic_bonded_fill",
+  "eps_floor_insulation_board",
   "generic_fill",
   "non_bonded_chippings"
 ]);
@@ -962,6 +963,8 @@ function resolveUpperFillMaterialId(input: ImpactPredictorInput): string | null 
       return "non_bonded_chippings";
     case "elastic_bonded_fill":
       return "elastic_bonded_fill";
+    case "eps_floor_insulation_board":
+      return "eps_floor_insulation_board";
     case "generic_fill":
       return "generic_fill";
     default:
@@ -1217,6 +1220,8 @@ function resolveUpperFillMaterialClass(
   switch (layer.material.id) {
     case "elastic_bonded_fill":
       return "elastic_bonded_fill";
+    case "eps_floor_insulation_board":
+      return "eps_floor_insulation_board";
     case "generic_fill":
       return "generic_fill";
     case "bonded_chippings":

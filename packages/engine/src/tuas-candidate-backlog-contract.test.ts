@@ -44,6 +44,8 @@ const IMPORTED_TUAS_OPEN_BOX_IDS = [
   "tuas_r3b_open_box_timber_measured_2026",
   "tuas_r5a_open_box_timber_measured_2026",
   "tuas_r5b_open_box_timber_measured_2026",
+  "tuas_r6b_open_box_timber_measured_2026",
+  "tuas_r7a_open_box_timber_measured_2026",
   "tuas_r11b_open_box_timber_measured_2026"
 ] as const;
 
@@ -64,6 +66,18 @@ const IMPORTED_TUAS_OPEN_BOX_FAMILY_A_TIER = [
   { id: "R3a", lnW: 61, rw: 56 },
   { id: "R5a", lnW: 56, rw: 63 }
 ] as const;
+
+const IMPORTED_TUAS_OPEN_BOX_REINFORCED_B_TIER = [
+  { id: "R6b", lnW: 44, rw: 71 }
+] as const;
+
+const IMPORTED_TUAS_OPEN_BOX_HEAVY_A_TIER = [
+  { id: "R7a", lnW: 60, rw: 60 }
+] as const;
+
+const AUDITED_TUAS_OPEN_BOX_MIXED_SCHEDULE_DEFERRED_SET = ["R6a", "R10a"] as const;
+
+const AUDITED_TUAS_OPEN_BOX_HYBRID_LOWER_TREATMENT_DEFERRED_SET = ["R7b", "R8b", "R9b", "R2c"] as const;
 
 const DEFERRED_TUAS_CLT_IMPORT_TIER = [
   "X3",
@@ -135,6 +149,59 @@ describe("TUAS candidate backlog contract", () => {
 
     expect(lnWs).toEqual([61, 56]);
     expect(rws).toEqual([56, 63]);
+  });
+
+  it("keeps the TUAS open-box reinforced b-branch explicit once drawing-backed lower-treatment semantics are imported", () => {
+    const importedOpenBoxShortIds = new Set(
+      IMPORTED_TUAS_OPEN_BOX_IDS.map((id) =>
+        id.replace(/^tuas_/, "").replace(/_open_box_timber_measured_2026$/, "")
+      )
+    );
+
+    for (const candidate of IMPORTED_TUAS_OPEN_BOX_REINFORCED_B_TIER) {
+      expect(TUAS_OPEN_BOX_SOURCE_UNIVERSE).toContain(candidate.id);
+      expect(importedOpenBoxShortIds.has(candidate.id.toLowerCase())).toBe(true);
+    }
+
+    expect(IMPORTED_TUAS_OPEN_BOX_REINFORCED_B_TIER.map((candidate) => candidate.id)).toEqual(["R6b"]);
+    expect(IMPORTED_TUAS_OPEN_BOX_REINFORCED_B_TIER.map((candidate) => candidate.lnW)).toEqual([44]);
+    expect(IMPORTED_TUAS_OPEN_BOX_REINFORCED_B_TIER.map((candidate) => candidate.rw)).toEqual([71]);
+  });
+
+  it("keeps the TUAS open-box heavy a-branch explicit once the upper EPS board surface is introduced honestly", () => {
+    const importedOpenBoxShortIds = new Set(
+      IMPORTED_TUAS_OPEN_BOX_IDS.map((id) =>
+        id.replace(/^tuas_/, "").replace(/_open_box_timber_measured_2026$/, "")
+      )
+    );
+
+    for (const candidate of IMPORTED_TUAS_OPEN_BOX_HEAVY_A_TIER) {
+      expect(TUAS_OPEN_BOX_SOURCE_UNIVERSE).toContain(candidate.id);
+      expect(importedOpenBoxShortIds.has(candidate.id.toLowerCase())).toBe(true);
+    }
+
+    expect(IMPORTED_TUAS_OPEN_BOX_HEAVY_A_TIER.map((candidate) => candidate.id)).toEqual(["R7a"]);
+    expect(IMPORTED_TUAS_OPEN_BOX_HEAVY_A_TIER.map((candidate) => candidate.lnW)).toEqual([60]);
+    expect(IMPORTED_TUAS_OPEN_BOX_HEAVY_A_TIER.map((candidate) => candidate.rw)).toEqual([60]);
+  });
+
+  it("keeps the post-audit TUAS deferred groups explicit once the construction drawings are frozen", () => {
+    const importedOpenBoxShortIds = new Set(
+      IMPORTED_TUAS_OPEN_BOX_IDS.map((id) =>
+        id.replace(/^tuas_/, "").replace(/_open_box_timber_measured_2026$/, "")
+      )
+    );
+
+    expect(AUDITED_TUAS_OPEN_BOX_MIXED_SCHEDULE_DEFERRED_SET).toEqual(["R6a", "R10a"]);
+    expect(AUDITED_TUAS_OPEN_BOX_HYBRID_LOWER_TREATMENT_DEFERRED_SET).toEqual(["R7b", "R8b", "R9b", "R2c"]);
+
+    for (const candidate of [
+      ...AUDITED_TUAS_OPEN_BOX_MIXED_SCHEDULE_DEFERRED_SET,
+      ...AUDITED_TUAS_OPEN_BOX_HYBRID_LOWER_TREATMENT_DEFERRED_SET
+    ]) {
+      expect(TUAS_OPEN_BOX_SOURCE_UNIVERSE).toContain(candidate);
+      expect(importedOpenBoxShortIds.has(candidate.toLowerCase())).toBe(false);
+    }
   });
 
   it("keeps deferred TUAS CLT candidates explicit while Dataholz CLT dormant slack stays higher priority", () => {

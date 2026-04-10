@@ -182,11 +182,113 @@ describe("floor output-card support parity", () => {
         ]
       },
       {
+        id: "raw-concrete-with-split-helper-room",
+        rows: [
+          { id: "a", materialId: "gypsum_board", thicknessMm: 13 },
+          { id: "b", materialId: "gypsum_board", thicknessMm: 13 },
+          { id: "c", materialId: "rockwool", thicknessMm: 45 },
+          { id: "d", materialId: "rockwool", thicknessMm: 45 },
+          { id: "e", materialId: "furring_channel", thicknessMm: 14 },
+          { id: "f", materialId: "furring_channel", thicknessMm: 14 },
+          { id: "g", materialId: "concrete", thicknessMm: 150 }
+        ]
+      },
+      {
+        id: "raw-concrete-with-mixed-order-helper-room",
+        rows: [
+          { id: "a", materialId: "furring_channel", thicknessMm: 28 },
+          { id: "b", materialId: "gypsum_board", thicknessMm: 13 },
+          { id: "c", materialId: "rockwool", thicknessMm: 90 },
+          { id: "d", materialId: "concrete", thicknessMm: 150 }
+        ]
+      },
+      {
+        id: "raw-concrete-with-disjoint-board-fill-board-helper-room",
+        rows: [
+          { id: "a", materialId: "gypsum_board", thicknessMm: 13 },
+          { id: "b", materialId: "rockwool", thicknessMm: 45 },
+          { id: "c", materialId: "gypsum_board", thicknessMm: 13 },
+          { id: "d", materialId: "furring_channel", thicknessMm: 28 },
+          { id: "e", materialId: "concrete", thicknessMm: 150 }
+        ]
+      },
+      {
+        id: "raw-concrete-with-helper-and-top-finish-room",
+        rows: [
+          { id: "a", materialId: "gypsum_board", thicknessMm: 13 },
+          { id: "b", materialId: "rockwool", thicknessMm: 90 },
+          { id: "c", materialId: "furring_channel", thicknessMm: 28 },
+          { id: "d", materialId: "concrete", thicknessMm: 150 },
+          { id: "e", materialId: "ceramic_tile", thicknessMm: 8 }
+        ]
+      },
+      {
         id: "raw-heavy-walllike-hybrid-room",
         rows: [
           { id: "a", materialId: "gypsum_board", thicknessMm: 12.5 },
           { id: "b", materialId: "concrete", thicknessMm: 120 },
           { id: "c", materialId: "gypsum_board", thicknessMm: 12.5 }
+        ]
+      },
+      {
+        id: "raw-heavy-walllike-hybrid-with-helper-fill-room",
+        rows: [
+          { id: "a", materialId: "gypsum_board", thicknessMm: 12.5 },
+          { id: "b", materialId: "rockwool", thicknessMm: 90 },
+          { id: "c", materialId: "concrete", thicknessMm: 120 },
+          { id: "d", materialId: "gypsum_board", thicknessMm: 12.5 }
+        ]
+      },
+      {
+        id: "raw-lightweight-steel-helper-fill-board-mixed-room",
+        rows: [
+          { id: "a", materialId: "gypsum_board", thicknessMm: 13 },
+          { id: "b", materialId: "rockwool", thicknessMm: 90 },
+          { id: "c", materialId: "gypsum_board", thicknessMm: 13 },
+          { id: "d", materialId: "lightweight_steel_floor", thicknessMm: 250 }
+        ]
+      },
+      {
+        id: "raw-heavy-walllike-hybrid-split-fill-both-sides-room",
+        rows: [
+          { id: "a", materialId: "gypsum_board", thicknessMm: 12.5 },
+          { id: "b", materialId: "rockwool", thicknessMm: 45 },
+          { id: "c", materialId: "concrete", thicknessMm: 120 },
+          { id: "d", materialId: "rockwool", thicknessMm: 45 },
+          { id: "e", materialId: "gypsum_board", thicknessMm: 12.5 }
+        ]
+      },
+      {
+        id: "raw-heavy-walllike-hybrid-board-fill-board-mixed-room",
+        rows: [
+          { id: "a", materialId: "gypsum_board", thicknessMm: 12.5 },
+          { id: "b", materialId: "rockwool", thicknessMm: 45 },
+          { id: "c", materialId: "gypsum_board", thicknessMm: 12.5 },
+          { id: "d", materialId: "concrete", thicknessMm: 120 },
+          { id: "e", materialId: "gypsum_board", thicknessMm: 12.5 }
+        ]
+      },
+      {
+        id: "raw-steel-joist-helper-fill-board-mixed-room",
+        rows: [
+          { id: "a", materialId: "gypsum_board", thicknessMm: 13 },
+          { id: "b", materialId: "rockwool", thicknessMm: 90 },
+          { id: "c", materialId: "gypsum_board", thicknessMm: 13 },
+          { id: "d", materialId: "steel_joist_floor", thicknessMm: 250 }
+        ]
+      },
+      {
+        id: "tuas-r7a-room",
+        rows: [
+          { floorRole: "ceiling_board", id: "a", materialId: "gypsum_board", thicknessMm: 13 },
+          { floorRole: "ceiling_board", id: "b", materialId: "gypsum_board", thicknessMm: 13 },
+          { floorRole: "ceiling_fill", id: "c", materialId: "rockwool", thicknessMm: 100 },
+          { floorRole: "ceiling_cavity", id: "d", materialId: "tuas_open_box_ceiling_family_a", thicknessMm: 25 },
+          { floorRole: "floor_covering", id: "e", materialId: "laminate_flooring", thicknessMm: 8 },
+          { floorRole: "resilient_layer", id: "f", materialId: "eps_underlay", thicknessMm: 3 },
+          { floorRole: "upper_fill", id: "g", materialId: "eps_floor_insulation_board", thicknessMm: 50 },
+          { floorRole: "floating_screed", id: "h", materialId: "screed", thicknessMm: 40 },
+          { floorRole: "base_structure", id: "i", materialId: "open_box_timber_slab", thicknessMm: 370 }
         ]
       }
     ];

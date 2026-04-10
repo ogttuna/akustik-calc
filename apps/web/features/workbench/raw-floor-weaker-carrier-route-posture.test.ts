@@ -158,6 +158,30 @@ const CASES: readonly CarrierCase[] = [
     ]
   },
   {
+    id: "steel-joist-helper-heavy-package",
+    expectedStatuses: FAIL_CLOSED_STATUSES,
+    variants: [
+      {
+        id: "raw-helper-fill-board-mixed",
+        rows: [
+          { id: "a", materialId: "gypsum_board", thicknessMm: 13 },
+          { id: "b", materialId: "rockwool", thicknessMm: 90 },
+          { id: "c", materialId: "gypsum_board", thicknessMm: 13 },
+          { id: "d", materialId: "steel_joist_floor", thicknessMm: 250 }
+        ]
+      },
+      {
+        id: "tagged-helper-fill-board-mixed",
+        rows: [
+          { floorRole: "ceiling_board", id: "a", materialId: "gypsum_board", thicknessMm: 13 },
+          { floorRole: "ceiling_fill", id: "b", materialId: "rockwool", thicknessMm: 90 },
+          { floorRole: "ceiling_board", id: "c", materialId: "gypsum_board", thicknessMm: 13 },
+          { floorRole: "base_structure", id: "d", materialId: "steel_joist_floor", thicknessMm: 250 }
+        ]
+      }
+    ]
+  },
+  {
     id: "open-box-timber-non-combined-packages",
     expectedStatuses: FAIL_CLOSED_STATUSES,
     variants: [

@@ -1,5 +1,38 @@
 # UI Handoff Checkpoint — 2026-04-08
 
+Update: 2026-04-10
+
+This checkpoint is now a historical snapshot.
+
+Current restart point for the dynamic-calculator work:
+
+- latest closed slice:
+  - TUAS deferred shortlist drawing audit
+- latest route-control result:
+  - no honest new TUAS open-box import opened from the finished drawing/detail audit
+  - `R6a` / `R10a` remain mixed-schedule exact-surface backlog
+  - `R7b` / `R8b` / `R9b` / `R2c` remain hybrid lower-treatment support-surface backlog
+- currently selected next slice:
+  - `wall_selector_shadow_trace_audit_v1`
+- read in this order before touching code:
+  1. [CURRENT_STATE.md](./CURRENT_STATE.md)
+  2. [DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md](./DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md)
+  3. [DYNAMIC_CALCULATOR_REMAINING_WORK_PLAN.md](./DYNAMIC_CALCULATOR_REMAINING_WORK_PLAN.md)
+  4. [DYNAMIC_WALL_STABILITY_REMEDIATION.md](./DYNAMIC_WALL_STABILITY_REMEDIATION.md)
+- rerun this selected wall baseline pack before any edit:
+  - engine:
+    - `pnpm exec vitest run packages/engine/src/dynamic-airborne-family-boundary.test.ts packages/engine/src/dynamic-airborne-family-boundary-scan.test.ts packages/engine/src/dynamic-airborne-order-sensitivity.test.ts packages/engine/src/dynamic-airborne-instability-repro.test.ts`
+  - workbench:
+    - `cd apps/web && pnpm exec vitest run --config vitest.config.ts features/workbench/dynamic-route-family-boundary.test.ts features/workbench/dynamic-route-family-boundary-scan.test.ts features/workbench/dynamic-route-order-sensitivity.test.ts features/workbench/dynamic-route-instability.test.ts features/workbench/dynamic-calc-branch.test.ts`
+- current pause baseline is already green:
+  - engine: `4` files, `23` tests
+  - workbench: `5` files, `28` tests
+- start inspection here:
+  - [dynamic-airborne-family-boundary.test.ts](../../packages/engine/src/dynamic-airborne-family-boundary.test.ts)
+  - [dynamic-airborne-family-boundary-scan.test.ts](../../packages/engine/src/dynamic-airborne-family-boundary-scan.test.ts)
+  - [dynamic-route-family-boundary.test.ts](../../apps/web/features/workbench/dynamic-route-family-boundary.test.ts)
+  - [dynamic-route-family-boundary-scan.test.ts](../../apps/web/features/workbench/dynamic-route-family-boundary-scan.test.ts)
+
 Document role:
 
 - fast restart note before switching focus to UI work

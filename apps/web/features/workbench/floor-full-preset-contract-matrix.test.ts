@@ -66,9 +66,13 @@ const BOUND_ONLY_PRESET_IDS = new Set<PresetId>([
 
 const DELTA_LIVE_PRESET_IDS = new Set<PresetId>([
   "heavy_concrete_impact_floor",
+  "regupol_multi_45_tile_exact",
+  "regupol_multi_45_porcelain_exact",
   "regupol_curve_8_exact",
   "regupol_curve_8_wet_bound",
-  "getzner_afm_33_delta"
+  "getzner_afm_21_delta",
+  "getzner_afm_33_delta",
+  "getzner_afm_35_delta"
 ]);
 
 function evaluateFloorPreset(presetId: PresetId) {

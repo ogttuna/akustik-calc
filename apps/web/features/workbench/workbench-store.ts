@@ -343,6 +343,7 @@ export function inferFloorRole(
   }
 
   if (
+    materialId === "eps_floor_insulation_board" ||
     materialId === "generic_fill" ||
     materialId === "bonded_chippings" ||
     materialId === "non_bonded_chippings" ||

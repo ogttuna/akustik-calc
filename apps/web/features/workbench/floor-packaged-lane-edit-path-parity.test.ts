@@ -211,6 +211,47 @@ const CASES: readonly EditPathParityCase[] = [
     }
   },
   {
+    id: "open-web noncanonical continuation edit path",
+    canonical: [
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: "90" },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+      { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: "300" }
+    ],
+    directFinal: [
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "8" },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "5" },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: "90" },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "8" },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "5" },
+      { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: "300" }
+    ],
+    applyEdits(store) {
+      const state = store.getState();
+      const firstBoard = state.rows[0]!;
+      const lowerBoard = state.rows[2]!;
+
+      state.duplicateRow(firstBoard.id);
+      const firstBoardDuplicate = store.getState().rows[1]!;
+      state.updateThickness(firstBoard.id, "8");
+      state.updateThickness(firstBoardDuplicate.id, "5");
+
+      state.duplicateRow(lowerBoard.id);
+      const lowerBoardDuplicate = store.getState().rows[4]!;
+      state.updateThickness(lowerBoard.id, "8");
+      state.updateThickness(lowerBoardDuplicate.id, "5");
+
+      state.removeRow(lowerBoardDuplicate.id);
+      state.addRow();
+
+      const rebuilt = store.getState().rows.at(-1)!;
+      state.updateMaterial(rebuilt.id, "gypsum_board");
+      state.updateFloorRole(rebuilt.id, "ceiling_board");
+      state.updateThickness(rebuilt.id, "5");
+      moveCurrentRowToIndex(store, rebuilt.id, 4);
+    }
+  },
+  {
     id: "clt lower-only fail-closed edit path",
     canonical: [
       { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },

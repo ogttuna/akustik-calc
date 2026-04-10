@@ -85,6 +85,15 @@ export const FLOOR_SYSTEM_MATERIALS: readonly MaterialDefinition[] = [
     tags: ["fill", "floor-system"]
   },
   {
+    id: "eps_floor_insulation_board",
+    name: "EPS Floor Insulation Board",
+    category: "insulation",
+    densityKgM3: 15,
+    notes:
+      "Rigid EPS floor insulation board used under screed in the narrow TUAS open-box R7a exact branch. This is not a thin resilient underlay and should not be aliased through the generic loose/bonded fill placeholder.",
+    tags: ["upper-fill", "eps", "rigid-board", "floor-system"]
+  },
+  {
     id: "resilient_channel",
     name: "Resilient Channel",
     category: "support",

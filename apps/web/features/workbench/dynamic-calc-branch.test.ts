@@ -21,6 +21,17 @@ function evaluatePreset(presetId: PresetId) {
   });
 }
 
+function evaluateFloorRows(id: string, rows: Array<{ floorRole: string; materialId: string; thicknessMm: string }>) {
+  return evaluateScenario({
+    id,
+    name: id,
+    rows: rows.map((row, index) => ({ ...row, id: `${id}-${index + 1}` })),
+    source: "current",
+    studyMode: "floor",
+    targetOutputs: ["Rw", "Ln,w", "Ln,w+CI", "DeltaLw"]
+  });
+}
+
 describe("getDynamicCalcBranchSummary", () => {
   it("surfaces the published family topology for the guided heavy floor sample", () => {
     const scenario = evaluatePreset("heavy_concrete_impact_floor");
@@ -93,6 +104,28 @@ describe("getDynamicCalcBranchSummary", () => {
     expect(summary.detail).toContain("same low-confidence lane");
     expect(summary.detail).toContain("ceiling package");
     expect(summary.detail).toContain("narrower Knauf corridor");
+  });
+
+  it("keeps the preset-only Dataholz integrated dry CLT row on the published dry-family summary instead of surfacing exact floor family wording", () => {
+    const scenario = evaluateFloorRows("gdmtxa04a-boundary", [
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "12.5" },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: "50" },
+      { floorRole: "ceiling_cavity", materialId: "acoustic_hanger_ceiling", thicknessMm: "70" },
+      { floorRole: "upper_fill", materialId: "non_bonded_chippings", thicknessMm: "60" },
+      { floorRole: "floor_covering", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: "65" },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: "160" }
+    ]);
+
+    const summary = getDynamicCalcBranchSummary({
+      result: scenario.result,
+      studyMode: "floor"
+    });
+
+    expect(scenario.result?.floorSystemMatch).toBeNull();
+    expect(summary.value).toBe("Dry floating floor");
+    expect(summary.tone).toBe("neutral");
+    expect(summary.detail).toContain("Published family estimate is active through Published family blend · mass-timber CLT.");
+    expect(summary.detail).toContain("predictor mass timber clt dataholz dry estimate");
   });
 
   it("keeps wall screening explicit when no dynamic airborne family has locked yet", () => {

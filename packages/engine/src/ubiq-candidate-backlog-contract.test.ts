@@ -28,6 +28,11 @@ const IMPORTED_UBIQ_OPEN_WEB_BOUND_IDS = [
   "ubiq_fl33_open_web_steel_400_lab_2026"
 ] as const;
 
+const IMPORTED_UBIQ_STEEL_BOUND_IDS = [
+  "ubiq_fl32_steel_200_lab_2026",
+  "ubiq_fl32_steel_300_lab_2026"
+] as const;
+
 const IMPORTED_VISIBLE_FL28_EXACT_16MM_TIER = [
   { joistMm: 200, inexFloorMm: 16, lnW: 52, lnWPlusCi: 51, rw: 62, rwCtr: 55 },
   { joistMm: 300, inexFloorMm: 16, lnW: 51, lnWPlusCi: 49, rw: 63, rwCtr: 57 },
@@ -43,6 +48,13 @@ const IMPORTED_VISIBLE_FL28_FRLD_BOUND_400 = {
   rw: 63,
   rwCtr: 58
 } as const;
+
+const UBIQ_VISIBLE_FRLD_FAMILY_MAPPING = {
+  openWeb: "FL-28 (FRL/D)",
+  steelJoist: "FL-17 (FRL/D)"
+} as const;
+
+const UBIQ_OFFICIAL_SYSTEM_TABLE_URL = "https://www.ubiq.au/wp-content/uploads/2023/02/INEX-FLOOR-FLOOR-FIRE-ACOUSTIC.pdf";
 
 const IMPORTED_VISIBLE_FL24_EXACT_TIER = [
   {
@@ -108,6 +120,31 @@ describe("UBIQ candidate backlog contract", () => {
       200, 200, 200, 200, 200, 200, 300, 300, 300, 300, 300, 300, 400, 400, 400, 400, 400, 400
     ]);
     expect(sortedValues(importedBoundDepths)).toEqual([200, 300, 400]);
+  });
+
+  it("keeps the current UBIQ FRL/D bound ids frozen as internal ids while provenance stays on the shared official brochure", () => {
+    const importedSteelBoundRows = BOUND_FLOOR_SYSTEMS.filter((system) => system.id.startsWith("ubiq_fl32_steel_"));
+    const importedOpenWebBoundRows = BOUND_FLOOR_SYSTEMS.filter((system) => system.id.startsWith("ubiq_fl33_open_web_steel_"));
+
+    expect(sortedValues(importedSteelBoundRows.map((system) => system.id))).toEqual(sortedValues(IMPORTED_UBIQ_STEEL_BOUND_IDS));
+    expect(sortedValues(importedOpenWebBoundRows.map((system) => system.id))).toEqual(sortedValues(IMPORTED_UBIQ_OPEN_WEB_BOUND_IDS));
+    expect(sortedValues(importedSteelBoundRows.map((system) => system.label))).toEqual([
+      "UBIQ FL-32 | 200 mm steel joist / purlin | INEX FLOOR 19 | 2 x 16 mm resilient ceiling",
+      "UBIQ FL-32 | 300 mm steel joist / purlin | INEX FLOOR 19 | 2 x 16 mm resilient ceiling"
+    ]);
+    expect(sortedValues(importedOpenWebBoundRows.map((system) => system.label))).toEqual([
+      "UBIQ FL-33 | 200 mm open-web / rolled steel | INEX FLOOR 19 | 2 x 16 mm resilient ceiling",
+      "UBIQ FL-33 | 300 mm open-web / rolled steel | INEX FLOOR 19 | 2 x 16 mm resilient ceiling",
+      "UBIQ FL-33 | 400 mm open-web / rolled steel | INEX FLOOR 19 | 2 x 16 mm resilient ceiling"
+    ]);
+    expect(new Set(importedSteelBoundRows.map((system) => system.sourceUrl ?? ""))).toEqual(
+      new Set([UBIQ_OFFICIAL_SYSTEM_TABLE_URL])
+    );
+    expect(new Set(importedOpenWebBoundRows.map((system) => system.sourceUrl ?? ""))).toEqual(
+      new Set([UBIQ_OFFICIAL_SYSTEM_TABLE_URL])
+    );
+    expect(UBIQ_VISIBLE_FRLD_FAMILY_MAPPING.steelJoist).toBe("FL-17 (FRL/D)");
+    expect(UBIQ_VISIBLE_FRLD_FAMILY_MAPPING.openWeb).toBe("FL-28 (FRL/D)");
   });
 
   it("keeps the visible FL-24 2 x 13 mm exact corridor explicitly imported as the first adjacent-family widening pass", () => {

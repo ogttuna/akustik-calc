@@ -952,6 +952,50 @@ describe("mixed study-mode torture", () => {
       };
     };
 
+    const buildNoScreedProductExactFloorDetour = () => {
+      useWorkbenchStore.getState().startStudyMode("floor");
+      useWorkbenchStore.getState().appendRows(getPresetById("regupol_multi_45_porcelain_exact").rows);
+
+      const floorCovering = useWorkbenchStore.getState().rows.find(
+        (row) => row.floorRole === "floor_covering" && row.materialId === "porcelain_tile" && row.thicknessMm === "10"
+      );
+      const concreteBase = useWorkbenchStore.getState().rows.find(
+        (row) => row.floorRole === "base_structure" && row.materialId === "concrete" && row.thicknessMm === "150"
+      );
+      expect(floorCovering).toBeTruthy();
+      expect(concreteBase).toBeTruthy();
+
+      useWorkbenchStore.getState().duplicateRow(floorCovering!.id);
+      useWorkbenchStore.getState().duplicateRow(concreteBase!.id);
+
+      const currentRows = useWorkbenchStore.getState().rows;
+      const duplicatedCovering = currentRows[currentRows.findIndex((row) => row.id === floorCovering!.id) + 1];
+      const duplicatedConcrete = currentRows[currentRows.findIndex((row) => row.id === concreteBase!.id) + 1];
+      expect(duplicatedCovering).toBeTruthy();
+      expect(duplicatedConcrete).toBeTruthy();
+
+      useWorkbenchStore.getState().updateThickness(floorCovering!.id, "5");
+      useWorkbenchStore.getState().updateThickness(duplicatedCovering!.id, "5");
+      useWorkbenchStore.getState().updateThickness(concreteBase!.id, "75");
+      useWorkbenchStore.getState().updateThickness(duplicatedConcrete!.id, "75");
+
+      const scenarios = evaluateCurrentFloor("save-load-no-screed-product-exact-floor-detour");
+      assertFloorScenario("save-load-no-screed-product-exact-floor-detour lab", scenarios.lab, FLOOR_OUTPUTS);
+      assertFloorScenario("save-load-no-screed-product-exact-floor-detour field", scenarios.field, FLOOR_OUTPUTS);
+
+      return {
+        field: scenarioEnvelope(scenarios.field, "floor"),
+        lab: scenarioEnvelope(scenarios.lab, "floor"),
+        requestedOutputs: [...useWorkbenchStore.getState().requestedOutputs],
+        rows: normalizeRowsForRoundtrip(useWorkbenchStore.getState().rows),
+        savedScenarioId: (() => {
+          useWorkbenchStore.getState().saveCurrentScenario();
+          return useWorkbenchStore.getState().savedScenarios[0]?.id ?? null;
+        })(),
+        studyMode: useWorkbenchStore.getState().studyMode
+      };
+    };
+
     const buildExactFamilyFloorDetour = () => {
       useWorkbenchStore.getState().startStudyMode("floor");
       useWorkbenchStore.getState().appendRows(getPresetById("dataholz_timber_frame_exact").rows);
@@ -1181,6 +1225,52 @@ describe("mixed study-mode torture", () => {
       };
     };
 
+    const buildSteel250BoundDetour = () => {
+      useWorkbenchStore.getState().startStudyMode("floor");
+      useWorkbenchStore.getState().appendRows(getPresetById("ubiq_steel_250_bound").rows);
+
+      const ceilingBoard = useWorkbenchStore.getState().rows.find(
+        (row) => row.floorRole === "ceiling_board" && row.materialId === "firestop_board" && row.thicknessMm === "16"
+      );
+      const baseStructure = useWorkbenchStore.getState().rows.find(
+        (row) => row.floorRole === "base_structure" && row.materialId === "steel_joist_floor" && row.thicknessMm === "250"
+      );
+      expect(ceilingBoard).toBeTruthy();
+      expect(baseStructure).toBeTruthy();
+
+      useWorkbenchStore.getState().duplicateRow(ceilingBoard!.id);
+      useWorkbenchStore.getState().duplicateRow(baseStructure!.id);
+
+      let currentRows = useWorkbenchStore.getState().rows;
+      const duplicatedBoard = currentRows[currentRows.findIndex((row) => row.id === ceilingBoard!.id) + 1];
+      const duplicatedBase = currentRows[currentRows.findIndex((row) => row.id === baseStructure!.id) + 1];
+      expect(duplicatedBoard).toBeTruthy();
+      expect(duplicatedBase).toBeTruthy();
+
+      useWorkbenchStore.getState().updateThickness(ceilingBoard!.id, "8");
+      useWorkbenchStore.getState().updateThickness(duplicatedBoard!.id, "8");
+      useWorkbenchStore.getState().updateThickness(baseStructure!.id, "125");
+      useWorkbenchStore.getState().updateThickness(duplicatedBase!.id, "125");
+      moveCurrentRowToIndex(useWorkbenchStore, duplicatedBoard!.id, 0);
+      moveCurrentRowToIndex(useWorkbenchStore, duplicatedBase!.id, useWorkbenchStore.getState().rows.length - 1);
+
+      const scenarios = evaluateCurrentFloor("save-load-steel-250-detour");
+      assertFloorScenario("save-load-steel-250-detour lab", scenarios.lab, FLOOR_OUTPUTS);
+      assertFloorScenario("save-load-steel-250-detour field", scenarios.field, FLOOR_OUTPUTS);
+
+      return {
+        field: scenarioEnvelope(scenarios.field, "floor"),
+        lab: scenarioEnvelope(scenarios.lab, "floor"),
+        requestedOutputs: [...useWorkbenchStore.getState().requestedOutputs],
+        rows: normalizeRowsForRoundtrip(useWorkbenchStore.getState().rows),
+        savedScenarioId: (() => {
+          useWorkbenchStore.getState().saveCurrentScenario();
+          return useWorkbenchStore.getState().savedScenarios[0]?.id ?? null;
+        })(),
+        studyMode: useWorkbenchStore.getState().studyMode
+      };
+    };
+
     const assertReloadMatches = (args: {
       directField: ReturnType<typeof scenarioEnvelope>;
       directLab: ReturnType<typeof scenarioEnvelope>;
@@ -1265,6 +1355,10 @@ describe("mixed study-mode torture", () => {
         label: "product exact floor detour"
       },
       {
+        build: buildNoScreedProductExactFloorDetour,
+        label: "official no-screed exact floor detour"
+      },
+      {
         build: buildExactFamilyFloorDetour,
         label: "exact family floor detour"
       },
@@ -1283,6 +1377,10 @@ describe("mixed study-mode torture", () => {
       {
         build: buildSteel200UnspecifiedDetour,
         label: "steel 200 unspecified detour"
+      },
+      {
+        build: buildSteel250BoundDetour,
+        label: "steel 250 interpolation detour"
       }
     ] as const;
 

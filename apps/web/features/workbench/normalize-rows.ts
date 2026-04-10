@@ -28,6 +28,7 @@ const SOLVER_CONTINUUM_MATERIAL_IDS = new Set<string>([
   "engineered_timber_flooring",
   "engineered_timber_with_acoustic_underlay",
   "screed",
+  "eps_floor_insulation_board",
   "generic_fill",
   "elastic_bonded_fill",
   "bonded_chippings",

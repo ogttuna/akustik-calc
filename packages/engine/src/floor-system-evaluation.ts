@@ -101,7 +101,10 @@ function thicknessMatches(actual: number, expected: number): boolean {
 
 function hasMergeSafePackedRoleEquivalent(
   layers: readonly ResolvedLayer[],
-  criteria: FloorSystemRoleCriteria
+  criteria: FloorSystemRoleCriteria,
+  options: {
+    requireMaterialMatch?: boolean;
+  } = {}
 ): boolean {
   if (!(criteria.layerCount && typeof criteria.thicknessMm === "number") || layers.length === 0) {
     return false;
@@ -112,7 +115,7 @@ function hasMergeSafePackedRoleEquivalent(
     return false;
   }
 
-  if (criteria.materialIds && !criteria.materialIds.includes(firstMaterialId)) {
+  if (options.requireMaterialMatch !== false && criteria.materialIds && !criteria.materialIds.includes(firstMaterialId)) {
     return false;
   }
 
@@ -138,11 +141,13 @@ function evaluateRoleCriteria(
   const roleLabel = ROLE_LABELS[role];
   const totalSignals = scoreRoleCriteria(criteria);
   const missingSignals: string[] = [];
-  const packedEquivalent = hasMergeSafePackedRoleEquivalent(layers, criteria);
+  const packedScheduleEquivalent = hasMergeSafePackedRoleEquivalent(layers, criteria, {
+    requireMaterialMatch: false
+  });
   let matchedSignals = 0;
 
   if (criteria.layerCount) {
-    if (layers.length === criteria.layerCount || packedEquivalent) {
+    if (layers.length === criteria.layerCount || packedScheduleEquivalent) {
       matchedSignals += 1;
     } else {
       missingSignals.push(`Set ${roleLabel} layers to ${criteria.layerCount}.`);
@@ -164,7 +169,10 @@ function evaluateRoleCriteria(
   if (typeof criteria.thicknessMm === "number") {
     if (layers.length === 0) {
       missingSignals.push(`Add ${roleLabel} around ${criteria.thicknessMm} mm.`);
-    } else if (packedEquivalent || layers.every((layer) => thicknessMatches(layer.thicknessMm, criteria.thicknessMm as number))) {
+    } else if (
+      packedScheduleEquivalent ||
+      layers.every((layer) => thicknessMatches(layer.thicknessMm, criteria.thicknessMm as number))
+    ) {
       matchedSignals += 1;
     } else {
       missingSignals.push(`Tune ${roleLabel} to about ${criteria.thicknessMm} mm.`);

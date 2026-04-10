@@ -414,9 +414,101 @@ describe("buildImpactPredictorInputFromLayerStack", () => {
       }
     });
 
+    const reinforcedCeiling = adaptImpactPredictorInput({
+      structuralSupportType: "open_box_timber",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        thicknessMm: 370
+      },
+      resilientLayer: {
+        thicknessMm: 3
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "laminate_flooring",
+        thicknessMm: 8
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_elastic_hanger",
+        supportClass: "tuas_open_box_family_b",
+        cavityDepthMm: 25,
+        cavityFillThicknessMm: 100,
+        boardLayerCount: 4,
+        boardMaterialClass: "generic_gypsum_board",
+        boardThicknessMm: 15
+      }
+    });
+
     expect(basic.officialFloorSystemId).toBe("tuas_r2b_open_box_timber_measured_2026");
     expect(stagedDry.officialFloorSystemId).toBe("tuas_r3b_open_box_timber_measured_2026");
     expect(wetScreed.officialFloorSystemId).toBe("tuas_r11b_open_box_timber_measured_2026");
+    expect(reinforcedCeiling.officialFloorSystemId).toBe("tuas_r6b_open_box_timber_measured_2026");
+  });
+
+  it("infers the new rigid EPS board as upper fill instead of ceiling fill on untagged R7a-like stacks", () => {
+    const input = buildImpactPredictorInputFromLayerStack([
+      { materialId: "gypsum_board", thicknessMm: 13 },
+      { materialId: "gypsum_board", thicknessMm: 13 },
+      { materialId: "rockwool", thicknessMm: 100 },
+      { materialId: "tuas_open_box_ceiling_family_a", thicknessMm: 25 },
+      { materialId: "laminate_flooring", thicknessMm: 8 },
+      { materialId: "eps_underlay", thicknessMm: 3 },
+      { materialId: "eps_floor_insulation_board", thicknessMm: 50 },
+      { materialId: "screed", thicknessMm: 40 },
+      { materialId: "open_box_timber_slab", thicknessMm: 370 }
+    ]);
+
+    expect(input.structuralSupportType).toBe("open_box_timber");
+    expect(input.impactSystemType).toBe("combined_upper_lower_system");
+    expect(input.upperFill).toEqual({
+      densityKgM3: 15,
+      materialClass: "eps_floor_insulation_board",
+      thicknessMm: 50
+    });
+    expect(input.floatingScreed).toEqual({
+      densityKgM3: 2000,
+      materialClass: "generic_screed",
+      thicknessMm: 40
+    });
+    expect(input.lowerTreatment?.supportClass).toBe("tuas_open_box_family_a");
+  });
+
+  it("maps the TUAS open-box R7a branch onto a predictor exact id once the upper EPS board surface exists", () => {
+    const adaptation = adaptImpactPredictorInput({
+      structuralSupportType: "open_box_timber",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        thicknessMm: 370
+      },
+      resilientLayer: {
+        productId: "eps_underlay",
+        thicknessMm: 3
+      },
+      upperFill: {
+        materialClass: "eps_floor_insulation_board",
+        thicknessMm: 50
+      },
+      floatingScreed: {
+        materialClass: "generic_screed",
+        thicknessMm: 40
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "laminate_flooring",
+        thicknessMm: 8
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_elastic_hanger",
+        supportClass: "tuas_open_box_family_a",
+        cavityDepthMm: 25,
+        cavityFillThicknessMm: 100,
+        boardLayerCount: 2,
+        boardMaterialClass: "generic_gypsum_board",
+        boardThicknessMm: 13
+      }
+    });
+
+    expect(adaptation.officialFloorSystemId).toBe("tuas_r7a_open_box_timber_measured_2026");
   });
 
   it("maps the explicit TUAS family-a ceiling material back onto the predictor support-class split", () => {

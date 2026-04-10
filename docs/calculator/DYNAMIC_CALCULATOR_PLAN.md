@@ -71,21 +71,29 @@ Current queued follow-up:
 - mine dormant exact-only source rows before inventing any broader generic family formula
 - when sourcing new TUAS rows, import the first open-box corridor tier before broader TUAS CLT expansion
 - the first defended TUAS open-box `a/b` corridor is now complete:
-  - `R2a`, `R2b`, `R3a`, `R3b`, `R5a`, `R5b`, and `R11b` are imported as exact rows
+  - `R2a`, `R2b`, `R3a`, `R3b`, `R5a`, `R5b`, `R6b`, `R7a`, and `R11b` are imported as exact rows
   - predictor-side exact inference carries the explicit `a/b` suspended-ceiling support-class split
   - the visible-layer/workbench material route now exposes `family_a` through `tuas_open_box_ceiling_family_a`
   - `R2b` is now source-cleared and imported as the basic `b`-family anchor because `TUAS2023FloorConstructionDrawingsR1.pdf` shows it uses the existing visible-layer shorthand directly
+  - `R6b` is now source-cleared and imported as a narrow exact-only reinforced `b` branch because the published drawing package shows the stronger lower treatment directly on the current visible-layer surface
+  - `R7a` is now source-cleared and imported as a narrow exact-only heavy/wet `a` branch with a dedicated upper-EPS-board surface
   - the real-world lab coverage benchmark now also reflects that defended split explicitly:
     - generic `resilient_stud_ceiling` basic rows land on `R2b`
     - explicit `tuas_open_box_ceiling_family_a` basic rows land on `R2a`
-  - the next TUAS open-box decision is to verify whether `R7a` and `R6b` are true corridor extensions or separate branch structures before importing anything beyond the defended corridor
+  - selector-side backdoor collapse is now also guarded:
+    - non-dry upper packages no longer fall into the `basic` open-box case just because they are not `dry`
+  - one nearby stale expectation was corrected instead of widened:
+    - under-described direct-fixed CLT dry stacks stay screening-only until explicit combined-family evidence exists
 - on the UBIQ open-web side, the first same-family FL-28 corridor fill is now complete:
   - visible FL-28 `16 mm INEX>FLOOR` exact siblings are imported
   - the visible FL-28 `(FRL/D)` `400 mm` bound sibling is imported
   - the adjacent-family widening passes are now complete for `FL-24` and `FL-26`
   - `FL-23`, `FL-25`, and `FL-27` stay deferred until there is a deliberate reason to widen into their much weaker corridor
-  - the next UBIQ decision is whether to stop at the defended `FL-24 -> FL-26 -> FL-28` corridor or deliberately widen into that weaker band
-- keep the current `ubiq_fl32_*` and `ubiq_fl33_*` ids stable until the source-trace drift against the current May 2023 brochure is cleaned up explicitly
+  - the current boundary-freeze decision is to stop at the defended `FL-24 -> FL-26 -> FL-28` corridor for now
+  - any future weaker-band move must be a deliberate posture slice, not a follow-on to provenance cleanup
+- keep the current `ubiq_fl32_*` and `ubiq_fl33_*` ids stable as internal ids:
+  - the current May 2023 brochure still exposes visible FRL/D families as `FL-17 (FRL/D)` for steel joist / purlin and `FL-28 (FRL/D)` for open-web / rolled steel
+  - the provenance/boundary-freeze slice closes this as docs plus contract truth, not as an ad hoc runtime rename
 - treat that audit as a contract decision point:
   - widen deterministic normalization only where the final physical package should be path-invariant
   - keep true order-sensitive combinations explicitly order-sensitive
@@ -863,10 +871,16 @@ Primary-source audit completed after the CLT widening:
   - dataset DOI page: `https://data.mendeley.com/datasets/y83p8mpryd/2`
   - source article: `https://pmc.ncbi.nlm.nih.gov/articles/PMC10365936/`
   - the `TUAS2023FloorConstructionDrawingsR1.pdf` open-box block (`R2a` through `R2c`, pages `1-15`) was re-read directly
+  - the deferred shortlist was then re-read directly against the construction drawings plus `TUAS2023FloorDetails.pdf`
   - result:
     - all currently harvested open-box rows remain laminate / EPS / dry-floor variants
     - all inspected open-box rows still include some lower-treatment build-up
     - `R2c` looked promising at first glance, but it still contains a resilient-stud + `2 x 13 mm` gypsum lower build-up, so it does not justify any `__none` topology widening
+    - `R6a` and `R10a` do not open safe new imports on current surfaces because they require mixed board / staged dry-pack exact semantics
+    - `R7b`, `R8b`, `R9b`, and `R2c` do not open safe new imports on current surfaces because they require a new hybrid lower-treatment support surface beyond the existing `family_a` vs `family_b` split
+    - `TUAS2023FloorDetails.pdf` page `5/7` visually confirms the existing family split remains correct:
+      - `R2a-R10a` uses `25 mm` wooden laths
+      - `R2b-R11b` uses `25 mm` resilient steel studs
     - no TUAS open-box row was found that defends:
       - `open_box_370__tile_wet__none`
       - `open_box_370__vinyl_wet__none`

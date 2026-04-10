@@ -187,6 +187,39 @@ const CASES: readonly CarrierCase[] = [
     ]
   },
   {
+    id: "steel joist helper-heavy packages stay fail-closed even when tagged",
+    expectedLab: {
+      basis: null,
+      estimateKind: null,
+      supported: ["Rw"]
+    },
+    expectedField: {
+      basis: null,
+      estimateKind: null,
+      supported: ["R'w", "DnT,w"]
+    },
+    variants: [
+      {
+        id: "raw-helper-fill-board-mixed",
+        layers: [
+          { materialId: "gypsum_board", thicknessMm: 13 },
+          { materialId: "rockwool", thicknessMm: 90 },
+          { materialId: "gypsum_board", thicknessMm: 13 },
+          { materialId: "steel_joist_floor", thicknessMm: 250 }
+        ]
+      },
+      {
+        id: "tagged-helper-fill-board-mixed",
+        layers: [
+          { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+          { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 90 },
+          { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+          { floorRole: "base_structure", materialId: "steel_joist_floor", thicknessMm: 250 }
+        ]
+      }
+    ]
+  },
+  {
     id: "timber-frame style carriers require explicit base-structure evidence",
     expectedLab: {
       basis: null,

@@ -111,6 +111,44 @@ describe("derivePredictorPublishedFamilyEstimate", () => {
     expect(result?.impact.estimateCandidateIds).toEqual(["knauf_cc60_1a_concrete150_carpet_lab_2026"]);
   });
 
+  it("withholds the open-box basic archetype when a non-dry upper package is present", () => {
+    const result = derivePredictorPublishedFamilyEstimate({
+      structuralSupportType: "open_box_timber",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        thicknessMm: 370
+      },
+      resilientLayer: {
+        productId: "eps_underlay",
+        thicknessMm: 3
+      },
+      upperFill: {
+        materialClass: "eps_floor_insulation_board",
+        thicknessMm: 50
+      },
+      floatingScreed: {
+        materialClass: "generic_screed",
+        thicknessMm: 40
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "laminate_flooring",
+        thicknessMm: 8
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_elastic_hanger",
+        supportClass: "tuas_open_box_family_a",
+        cavityDepthMm: 25,
+        cavityFillThicknessMm: 100,
+        boardLayerCount: 2,
+        boardMaterialClass: "generic_gypsum_board",
+        boardThicknessMm: 13
+      }
+    });
+
+    expect(result).toBeNull();
+  });
+
   it("keeps near-match Knauf concrete tile-ceiling stacks on the tile archetype lane", () => {
     const result = derivePredictorPublishedFamilyEstimate({
       structuralSupportType: "reinforced_concrete",

@@ -136,6 +136,117 @@ const CASES: readonly RawScreeningCase[] = [
     }
   },
   {
+    id: "raw concrete with mixed-order ceiling helper package",
+    layers: [
+      { materialId: "furring_channel", thicknessMm: 28 },
+      { materialId: "gypsum_board", thicknessMm: 13 },
+      { materialId: "rockwool", thicknessMm: 90 },
+      { materialId: "concrete", thicknessMm: 150 }
+    ],
+    expectedLab: {
+      basis: "predictor_heavy_bare_floor_iso12354_annexc_estimate",
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["Rw", "Ln,w"]
+    },
+    expectedField: {
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]
+    }
+  },
+  {
+    id: "raw concrete with split cavity helper package",
+    layers: [
+      { materialId: "gypsum_board", thicknessMm: 13 },
+      { materialId: "gypsum_board", thicknessMm: 13 },
+      { materialId: "furring_channel", thicknessMm: 14 },
+      { materialId: "furring_channel", thicknessMm: 14 },
+      { materialId: "concrete", thicknessMm: 150 }
+    ],
+    expectedLab: {
+      basis: "predictor_heavy_bare_floor_iso12354_annexc_estimate",
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["Rw", "Ln,w"]
+    },
+    expectedField: {
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]
+    }
+  },
+  {
+    id: "raw concrete with disjoint board-fill-board helper package",
+    layers: [
+      { materialId: "gypsum_board", thicknessMm: 13 },
+      { materialId: "rockwool", thicknessMm: 45 },
+      { materialId: "gypsum_board", thicknessMm: 13 },
+      { materialId: "furring_channel", thicknessMm: 28 },
+      { materialId: "concrete", thicknessMm: 150 }
+    ],
+    expectedLab: {
+      basis: "predictor_heavy_bare_floor_iso12354_annexc_estimate",
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["Rw", "Ln,w"]
+    },
+    expectedField: {
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]
+    }
+  },
+  {
+    id: "raw concrete with ceiling helper package and top finish",
+    layers: [
+      { materialId: "gypsum_board", thicknessMm: 13 },
+      { materialId: "rockwool", thicknessMm: 90 },
+      { materialId: "furring_channel", thicknessMm: 28 },
+      { materialId: "concrete", thicknessMm: 150 },
+      { materialId: "ceramic_tile", thicknessMm: 8 }
+    ],
+    expectedLab: {
+      basis: "predictor_heavy_bare_floor_iso12354_annexc_estimate",
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["Rw", "Ln,w"]
+    },
+    expectedField: {
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]
+    }
+  },
+  {
+    id: "raw concrete with split full ceiling helper package",
+    layers: [
+      { materialId: "gypsum_board", thicknessMm: 13 },
+      { materialId: "gypsum_board", thicknessMm: 13 },
+      { materialId: "rockwool", thicknessMm: 45 },
+      { materialId: "rockwool", thicknessMm: 45 },
+      { materialId: "furring_channel", thicknessMm: 14 },
+      { materialId: "furring_channel", thicknessMm: 14 },
+      { materialId: "concrete", thicknessMm: 150 }
+    ],
+    expectedLab: {
+      basis: "predictor_heavy_bare_floor_iso12354_annexc_estimate",
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["Rw", "Ln,w"]
+    },
+    expectedField: {
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]
+    }
+  },
+  {
     id: "raw open-box single layer",
     layers: [{ materialId: "open_box_timber_slab", thicknessMm: 370 }],
     expectedLab: {
@@ -216,6 +327,30 @@ const CASES: readonly RawScreeningCase[] = [
     }
   },
   {
+    id: "raw open-box with split ceiling helper package",
+    layers: [
+      { materialId: "gypsum_board", thicknessMm: 13 },
+      { materialId: "gypsum_board", thicknessMm: 13 },
+      { materialId: "rockwool", thicknessMm: 45 },
+      { materialId: "rockwool", thicknessMm: 45 },
+      { materialId: "furring_channel", thicknessMm: 14 },
+      { materialId: "furring_channel", thicknessMm: 14 },
+      { materialId: "open_box_timber_slab", thicknessMm: 370 }
+    ],
+    expectedLab: {
+      basis: null,
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["Rw"]
+    },
+    expectedField: {
+      basis: null,
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["R'w", "DnT,w"]
+    }
+  },
+  {
     id: "raw hollow-core single layer",
     layers: [{ materialId: "hollow_core_plank", thicknessMm: 200 }],
     expectedLab: {
@@ -269,6 +404,113 @@ const CASES: readonly RawScreeningCase[] = [
       estimateKind: null,
       floorSystemMatchId: null,
       supported: ["R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]
+    }
+  },
+  {
+    id: "raw wall-like heavy hybrid with helper fill",
+    layers: [
+      { materialId: "gypsum_board", thicknessMm: 12.5 },
+      { materialId: "rockwool", thicknessMm: 90 },
+      { materialId: "concrete", thicknessMm: 120 },
+      { materialId: "gypsum_board", thicknessMm: 12.5 }
+    ],
+    expectedLab: {
+      basis: "predictor_heavy_bare_floor_iso12354_annexc_estimate",
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["Rw", "Ln,w"]
+    },
+    expectedField: {
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]
+    }
+  },
+  {
+    id: "raw wall-like heavy hybrid with split fill on both sides",
+    layers: [
+      { materialId: "gypsum_board", thicknessMm: 12.5 },
+      { materialId: "rockwool", thicknessMm: 45 },
+      { materialId: "concrete", thicknessMm: 120 },
+      { materialId: "rockwool", thicknessMm: 45 },
+      { materialId: "gypsum_board", thicknessMm: 12.5 }
+    ],
+    expectedLab: {
+      basis: "predictor_heavy_bare_floor_iso12354_annexc_estimate",
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["Rw", "Ln,w"]
+    },
+    expectedField: {
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]
+    }
+  },
+  {
+    id: "raw wall-like heavy hybrid with board-fill-board mixed helper",
+    layers: [
+      { materialId: "gypsum_board", thicknessMm: 12.5 },
+      { materialId: "rockwool", thicknessMm: 45 },
+      { materialId: "gypsum_board", thicknessMm: 12.5 },
+      { materialId: "concrete", thicknessMm: 120 },
+      { materialId: "gypsum_board", thicknessMm: 12.5 }
+    ],
+    expectedLab: {
+      basis: "predictor_heavy_bare_floor_iso12354_annexc_estimate",
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["Rw", "Ln,w"]
+    },
+    expectedField: {
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]
+    }
+  },
+  {
+    id: "raw lightweight steel with helper fill and split board mix",
+    layers: [
+      { materialId: "gypsum_board", thicknessMm: 13 },
+      { materialId: "rockwool", thicknessMm: 90 },
+      { materialId: "gypsum_board", thicknessMm: 13 },
+      { materialId: "lightweight_steel_floor", thicknessMm: 250 }
+    ],
+    expectedLab: {
+      basis: null,
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["Rw"]
+    },
+    expectedField: {
+      basis: null,
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["R'w", "DnT,w"]
+    }
+  },
+  {
+    id: "raw steel joist with helper fill and split board mix",
+    layers: [
+      { materialId: "gypsum_board", thicknessMm: 13 },
+      { materialId: "rockwool", thicknessMm: 90 },
+      { materialId: "gypsum_board", thicknessMm: 13 },
+      { materialId: "steel_joist_floor", thicknessMm: 250 }
+    ],
+    expectedLab: {
+      basis: null,
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["Rw"]
+    },
+    expectedField: {
+      basis: null,
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["R'w", "DnT,w"]
     }
   }
 ];

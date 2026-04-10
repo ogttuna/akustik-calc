@@ -39,6 +39,16 @@ type AxisBand = {
   start: number;
 };
 
+export type ProposalConstructionAnnotationLayout = {
+  compact: boolean;
+  labelLineLimit: number;
+  maxLabelLines: 1 | 2;
+  minGap: number;
+  rowMax: number;
+  rowMin: number;
+  showMeta: boolean;
+};
+
 function escapeMarkup(value: string): string {
   return value
     .replaceAll("&", "&amp;")
@@ -109,6 +119,24 @@ function multilineText(value: string, limit: number): string[] {
   );
 }
 
+function truncateSingleLineText(value: string, limit: number): string {
+  const normalized = value.trim().replace(/\s+/gu, " ");
+
+  if (normalized.length === 0) {
+    return "Unlabelled layer";
+  }
+
+  if (normalized.length <= limit) {
+    return normalized;
+  }
+
+  const safeLimit = Math.max(4, limit - 1);
+  const truncated = normalized.slice(0, safeLimit);
+  const cutAt = truncated.lastIndexOf(" ");
+
+  return `${(cutAt >= Math.max(3, Math.floor(safeLimit * 0.55)) ? truncated.slice(0, cutAt) : truncated).trimEnd()}…`;
+}
+
 function distributeAxisPositions(
   targets: readonly number[],
   minGap: number,
@@ -155,6 +183,46 @@ function buildElbowLeader(start: Point, end: Point, elbowX: number): string {
 
 function buildVerticalLeader(start: Point, end: Point, elbowY: number): string {
   return `M${start.x.toFixed(2)} ${start.y.toFixed(2)} V${elbowY.toFixed(2)} H${end.x.toFixed(2)} V${end.y.toFixed(2)}`;
+}
+
+export function resolveConstructionAnnotationLayout(input: {
+  bandCount: number;
+  height: number;
+  orientation: "floor" | "wall";
+}): ProposalConstructionAnnotationLayout {
+  const standardBounds =
+    input.orientation === "floor"
+      ? { defaultGap: 48, rowMax: input.height - 88, rowMin: 98 }
+      : { defaultGap: 42, rowMax: input.height - 64, rowMin: 72 };
+  const compactBounds =
+    input.orientation === "floor"
+      ? { rowMax: input.height - 54, rowMin: 74 }
+      : { rowMax: input.height - 40, rowMin: 58 };
+  const availableSpan = Math.max(0, compactBounds.rowMax - compactBounds.rowMin);
+  const naturalGap = input.bandCount > 1 ? availableSpan / (input.bandCount - 1) : availableSpan;
+  const useCompactLayout = input.bandCount > 5 || naturalGap < 34;
+
+  if (!useCompactLayout) {
+    return {
+      compact: false,
+      labelLineLimit: 18,
+      maxLabelLines: 2,
+      minGap: standardBounds.defaultGap,
+      rowMax: standardBounds.rowMax,
+      rowMin: standardBounds.rowMin,
+      showMeta: true
+    };
+  }
+
+  return {
+    compact: true,
+    labelLineLimit: naturalGap < 20 ? 24 : naturalGap < 26 ? 26 : 28,
+    maxLabelLines: 1,
+    minGap: Math.max(20, Math.min(28, naturalGap || standardBounds.defaultGap)),
+    rowMax: compactBounds.rowMax,
+    rowMin: compactBounds.rowMin,
+    showMeta: false
+  };
 }
 
 function getMaterialAppearance(
@@ -367,26 +435,43 @@ function buildAnnotationRows(
   rowYs: readonly number[],
   rowX: number,
   rowWidth: number,
-  lineLimit: number
+  layout: ProposalConstructionAnnotationLayout
 ): string {
   return bands
     .map(({ appearance, band }, index) => {
       const rowY = rowYs[index]!;
-      const labelLines = multilineText(band.label, lineLimit);
-      const metaLines = multilineText(band.metaLabel, lineLimit + 4);
+      const labelLines =
+        layout.maxLabelLines === 1
+          ? [truncateSingleLineText(band.label, layout.labelLineLimit)]
+          : multilineText(band.label, layout.labelLineLimit).slice(0, layout.maxLabelLines);
+      const metaLines = layout.showMeta ? multilineText(band.metaLabel, layout.labelLineLimit + 4).slice(0, 1) : [];
+      const separatorOffset = layout.compact ? 10 : 20;
+      const badgeSize = layout.compact ? 14 : 22;
+      const badgeY = rowY - (layout.compact ? 10 : 16);
+      const labelPrimaryY = rowY - 1;
+      const labelSecondaryY = rowY + 11;
+      const metaY = rowY + 23;
+      const titleFontSize = layout.compact ? "8.8" : "10.8";
+      const secondaryFontSize = layout.compact ? "0" : "9.2";
+      const metaFontSize = layout.compact ? "0" : "8.8";
+      const thicknessFontSize = layout.compact ? "8.8" : "10.2";
 
       return `
-        <line x1="${rowX}" y1="${rowY + 20}" x2="${rowX + rowWidth}" y2="${rowY + 20}" stroke="#d5dde4" stroke-width="1"></line>
-        <rect x="${rowX}" y="${rowY - 16}" width="22" height="22" rx="6" fill="#223241"></rect>
-        <text x="${rowX + 11}" y="${rowY - 1}" text-anchor="middle" font-family="Arial, Helvetica Neue, sans-serif" font-size="10" font-weight="700" fill="#ffffff">${escapeMarkup(band.indexLabel)}</text>
-        <text x="${rowX + 34}" y="${rowY - 1}" font-family="Arial, Helvetica Neue, sans-serif" font-size="10.8" font-weight="700" fill="#20303f">${escapeMarkup(labelLines[0] ?? band.label)}</text>
+        <line x1="${rowX}" y1="${rowY + separatorOffset}" x2="${rowX + rowWidth}" y2="${rowY + separatorOffset}" stroke="#d5dde4" stroke-width="1"></line>
+        <rect x="${rowX}" y="${badgeY}" width="${badgeSize}" height="${badgeSize}" rx="${layout.compact ? 5 : 6}" fill="#223241"></rect>
+        <text x="${rowX + badgeSize / 2}" y="${labelPrimaryY}" text-anchor="middle" font-family="Arial, Helvetica Neue, sans-serif" font-size="${layout.compact ? "8.2" : "10"}" font-weight="700" fill="#ffffff">${escapeMarkup(band.indexLabel)}</text>
+        <text x="${rowX + (layout.compact ? 28 : 34)}" y="${labelPrimaryY}" font-family="Arial, Helvetica Neue, sans-serif" font-size="${titleFontSize}" font-weight="700" fill="#20303f">${escapeMarkup(labelLines[0] ?? band.label)}</text>
         ${
-          labelLines[1]
-            ? `<text x="${rowX + 34}" y="${rowY + 11}" font-family="Arial, Helvetica Neue, sans-serif" font-size="9.2" fill="#5f6f7d">${escapeMarkup(labelLines[1])}</text>`
+          labelLines[1] && !layout.compact
+            ? `<text x="${rowX + 34}" y="${labelSecondaryY}" font-family="Arial, Helvetica Neue, sans-serif" font-size="${secondaryFontSize}" fill="#5f6f7d">${escapeMarkup(labelLines[1])}</text>`
             : ""
         }
-        <text x="${rowX + 34}" y="${rowY + 23}" font-family="Arial, Helvetica Neue, sans-serif" font-size="8.8" fill="#71818e">${escapeMarkup(metaLines[0] ?? band.metaLabel)}</text>
-        <text x="${rowX + rowWidth}" y="${rowY - 1}" text-anchor="end" font-family="Arial, Helvetica Neue, sans-serif" font-size="10.2" font-weight="700" fill="${appearance.accent}">${escapeMarkup(band.thicknessLabel)}</text>
+        ${
+          layout.showMeta
+            ? `<text x="${rowX + 34}" y="${metaY}" font-family="Arial, Helvetica Neue, sans-serif" font-size="${metaFontSize}" fill="#71818e">${escapeMarkup(metaLines[0] ?? band.metaLabel)}</text>`
+            : ""
+        }
+        <text x="${rowX + rowWidth}" y="${labelPrimaryY}" text-anchor="end" font-family="Arial, Helvetica Neue, sans-serif" font-size="${thicknessFontSize}" font-weight="700" fill="${appearance.accent}">${escapeMarkup(band.thicknessLabel)}</text>
       `;
     })
     .join("");
@@ -411,11 +496,16 @@ function buildFloorSvg(section: SimpleWorkbenchProposalConstructionSection): str
   const totalHeight = allocations.reduce((sum, allocation) => sum + allocation.sizePx, 0);
   const rowX = 550;
   const rowWidth = 240;
+  const annotationLayout = resolveConstructionAnnotationLayout({
+    bandCount: section.bands.length,
+    height,
+    orientation: "floor"
+  });
   const rowTargets = allocations.map((_, index) => {
     const offset = allocations.slice(0, index).reduce((sum, entry) => sum + entry.sizePx, 0);
     return sectionY + offset + allocations[index]!.sizePx / 2;
   });
-  const rowYs = distributeAxisPositions(rowTargets, 48, 98, height - 88);
+  const rowYs = distributeAxisPositions(rowTargets, annotationLayout.minGap, annotationLayout.rowMin, annotationLayout.rowMax);
 
   let defs = createArrowHead("construction-arrow-floor", "#223241");
   defs += createSectionSheenDefs("construction-floor");
@@ -500,7 +590,7 @@ function buildFloorSvg(section: SimpleWorkbenchProposalConstructionSection): str
       <line x1="${totalDimX - 8}" y1="${sectionY}" x2="${totalDimX + 8}" y2="${sectionY}" stroke="#223241" stroke-width="1"></line>
       <line x1="${totalDimX - 8}" y1="${sectionY + totalHeight}" x2="${totalDimX + 8}" y2="${sectionY + totalHeight}" stroke="#223241" stroke-width="1"></line>
       <text x="${(totalDimX - 6).toFixed(2)}" y="${totalCenterY.toFixed(2)}" text-anchor="middle" transform="rotate(-90 ${totalDimX - 6} ${totalCenterY.toFixed(2)})" font-family="Arial, Helvetica Neue, sans-serif" font-size="11.2" font-weight="700" fill="#223241">${escapeMarkup(section.totalThicknessLabel)}</text>
-      ${buildAnnotationRows(axisBands, rowYs, rowX, rowWidth, 18)}
+      ${buildAnnotationRows(axisBands, rowYs, rowX, rowWidth, annotationLayout)}
     </svg>
   `;
 }
@@ -524,8 +614,13 @@ function buildWallSvg(section: SimpleWorkbenchProposalConstructionSection): stri
   const totalWidth = allocations.reduce((sum, allocation) => sum + allocation.sizePx, 0);
   const rowX = 564;
   const rowWidth = 228;
+  const annotationLayout = resolveConstructionAnnotationLayout({
+    bandCount: section.bands.length,
+    height,
+    orientation: "wall"
+  });
   const rowTargets = allocations.map((_, index) => 78 + index * 42);
-  const rowYs = distributeAxisPositions(rowTargets, 42, 72, height - 64);
+  const rowYs = distributeAxisPositions(rowTargets, annotationLayout.minGap, annotationLayout.rowMin, annotationLayout.rowMax);
 
   let defs = createArrowHead("construction-arrow-wall", "#223241");
   defs += createSectionSheenDefs("construction-wall");
@@ -608,7 +703,7 @@ function buildWallSvg(section: SimpleWorkbenchProposalConstructionSection): stri
       <line x1="${sectionX}" y1="${totalDimY - 8}" x2="${sectionX}" y2="${totalDimY + 8}" stroke="#223241" stroke-width="1"></line>
       <line x1="${sectionX + totalWidth}" y1="${totalDimY - 8}" x2="${sectionX + totalWidth}" y2="${totalDimY + 8}" stroke="#223241" stroke-width="1"></line>
       <text x="${(sectionX + totalWidth / 2).toFixed(2)}" y="${(totalDimY - 10).toFixed(2)}" text-anchor="middle" font-family="Arial, Helvetica Neue, sans-serif" font-size="11.2" font-weight="700" fill="#223241">${escapeMarkup(section.totalThicknessLabel)}</text>
-      ${buildAnnotationRows(axisBands, rowYs, rowX, rowWidth, 18)}
+      ${buildAnnotationRows(axisBands, rowYs, rowX, rowWidth, annotationLayout)}
     </svg>
   `;
 }

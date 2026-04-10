@@ -28,9 +28,13 @@ export type PresetId =
   | "ubiq_steel_250_bound"
   | "ubiq_steel_200_unspecified_bound"
   | "ubiq_steel_300_unspecified_bound"
+  | "regupol_multi_45_tile_exact"
+  | "regupol_multi_45_porcelain_exact"
   | "regupol_curve_8_exact"
   | "regupol_curve_8_wet_bound"
+  | "getzner_afm_21_delta"
   | "getzner_afm_33_delta"
+  | "getzner_afm_35_delta"
   | "tuas_clt_260_exact"
   | "tuas_clt_exact";
 
@@ -432,6 +436,33 @@ export const WORKBENCH_PRESETS: readonly PresetDefinition[] = [
     ]
   },
   {
+    id: "regupol_multi_45_tile_exact",
+    label: "REGUPOL Multi 4.5 Tile",
+    note: "tile + screed + multi 4.5 + 150 slab",
+    summary:
+      "An official technical-data exact-system preset for the REGUPOL sonus multi 4.5 ceramic tile assembly so the second exact product row is visible beside Curve 8 without widening any generic lane.",
+    studyMode: "floor",
+    rows: [
+      { materialId: "ceramic_tile", thicknessMm: "8", floorRole: "floor_covering" },
+      { materialId: "screed", thicknessMm: "30", floorRole: "floating_screed" },
+      { materialId: "regupol_sonus_multi_4_5", thicknessMm: "4.5", floorRole: "resilient_layer" },
+      { materialId: "concrete", thicknessMm: "150", floorRole: "base_structure" }
+    ]
+  },
+  {
+    id: "regupol_multi_45_porcelain_exact",
+    label: "REGUPOL Multi 4.5 Porcelain",
+    note: "10 mm porcelain + multi 4.5 + 150 slab",
+    summary:
+      "An official technical-data exact-system preset for the REGUPOL sonus multi 4.5 porcelain assembly so a no-screed official product row stays visible on the workbench surface.",
+    studyMode: "floor",
+    rows: [
+      { materialId: "porcelain_tile", thicknessMm: "10", floorRole: "floor_covering" },
+      { materialId: "regupol_sonus_multi_4_5", thicknessMm: "4.5", floorRole: "resilient_layer" },
+      { materialId: "concrete", thicknessMm: "150", floorRole: "base_structure" }
+    ]
+  },
+  {
     id: "regupol_curve_8_exact",
     label: "REGUPOL Curve 8",
     note: "tile + screed + curve 8 + 150 slab",
@@ -457,6 +488,20 @@ export const WORKBENCH_PRESETS: readonly PresetDefinition[] = [
     ]
   },
   {
+    id: "getzner_afm_21_delta",
+    label: "Getzner AFM 21",
+    note: "official DeltaLw lane on the lighter AFM edge",
+    summary:
+      "A product-property preset that carries the official AFM 21 DeltaLw row so the lighter end of the AFM range is visible without implying an exact solved assembly.",
+    studyMode: "floor",
+    rows: [
+      { materialId: "ceramic_tile", thicknessMm: "8", floorRole: "floor_covering" },
+      { materialId: "screed", thicknessMm: "50", floorRole: "floating_screed" },
+      { materialId: "getzner_afm_21", thicknessMm: "8", floorRole: "resilient_layer" },
+      { materialId: "concrete", thicknessMm: "150", floorRole: "base_structure" }
+    ]
+  },
+  {
     id: "getzner_afm_33_delta",
     label: "Getzner AFM 33",
     note: "official DeltaLw lane on heavy slab reference",
@@ -466,6 +511,20 @@ export const WORKBENCH_PRESETS: readonly PresetDefinition[] = [
       { materialId: "ceramic_tile", thicknessMm: "8", floorRole: "floor_covering" },
       { materialId: "screed", thicknessMm: "50", floorRole: "floating_screed" },
       { materialId: "getzner_afm_33", thicknessMm: "8", floorRole: "resilient_layer" },
+      { materialId: "concrete", thicknessMm: "150", floorRole: "base_structure" }
+    ]
+  },
+  {
+    id: "getzner_afm_35_delta",
+    label: "Getzner AFM 35",
+    note: "official DeltaLw lane on the stronger AFM edge",
+    summary:
+      "A product-property preset that carries the official AFM 35 DeltaLw row so the stronger end of the AFM range is visible on the same heavy-floor reference surface.",
+    studyMode: "floor",
+    rows: [
+      { materialId: "ceramic_tile", thicknessMm: "8", floorRole: "floor_covering" },
+      { materialId: "screed", thicknessMm: "50", floorRole: "floating_screed" },
+      { materialId: "getzner_afm_35", thicknessMm: "8", floorRole: "resilient_layer" },
       { materialId: "concrete", thicknessMm: "150", floorRole: "base_structure" }
     ]
   },

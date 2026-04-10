@@ -355,6 +355,39 @@ const CASES: readonly InferredSplitCase[] = [
     ]
   },
   {
+    id: "open-web-noncanonical-continuation-board-and-fill-split",
+    rawSingle: [
+      { id: "a", materialId: "gypsum_board", thicknessMm: 13 },
+      { id: "b", materialId: "rockwool", thicknessMm: 90 },
+      { id: "c", materialId: "gypsum_board", thicknessMm: 13 },
+      { id: "d", materialId: "open_web_steel_floor", thicknessMm: 300 }
+    ],
+    rawSplit: [
+      { id: "a", materialId: "gypsum_board", thicknessMm: 6.5 },
+      { id: "b", materialId: "gypsum_board", thicknessMm: 6.5 },
+      { id: "c", materialId: "rockwool", thicknessMm: 45 },
+      { id: "d", materialId: "rockwool", thicknessMm: 45 },
+      { id: "e", materialId: "gypsum_board", thicknessMm: 6.5 },
+      { id: "f", materialId: "gypsum_board", thicknessMm: 6.5 },
+      { id: "g", materialId: "open_web_steel_floor", thicknessMm: 300 }
+    ],
+    taggedSingle: [
+      { floorRole: "ceiling_board", id: "a", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", id: "b", materialId: "rockwool", thicknessMm: 90 },
+      { floorRole: "ceiling_board", id: "c", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "base_structure", id: "d", materialId: "open_web_steel_floor", thicknessMm: 300 }
+    ],
+    taggedSplit: [
+      { floorRole: "ceiling_board", id: "a", materialId: "gypsum_board", thicknessMm: 6.5 },
+      { floorRole: "ceiling_board", id: "b", materialId: "gypsum_board", thicknessMm: 6.5 },
+      { floorRole: "ceiling_fill", id: "c", materialId: "rockwool", thicknessMm: 45 },
+      { floorRole: "ceiling_fill", id: "d", materialId: "rockwool", thicknessMm: 45 },
+      { floorRole: "ceiling_board", id: "e", materialId: "gypsum_board", thicknessMm: 6.5 },
+      { floorRole: "ceiling_board", id: "f", materialId: "gypsum_board", thicknessMm: 6.5 },
+      { floorRole: "base_structure", id: "g", materialId: "open_web_steel_floor", thicknessMm: 300 }
+    ]
+  },
+  {
     id: "composite-lower-only-non-packable-board-schedule",
     rawSingle: [
       { id: "a", materialId: "firestop_board", thicknessMm: 15 },

@@ -104,6 +104,134 @@ const CASES: readonly RawRouteCase[] = [
     }
   },
   {
+    id: "raw_concrete_mixed_order_helper",
+    rows: [
+      { id: "a", materialId: "furring_channel", thicknessMm: 28 },
+      { id: "b", materialId: "gypsum_board", thicknessMm: 13 },
+      { id: "c", materialId: "rockwool", thicknessMm: 90 },
+      { id: "d", materialId: "concrete", thicknessMm: 150 }
+    ],
+    expected: {
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]
+    }
+  },
+  {
+    id: "raw_concrete_split_ceiling_cavity",
+    rows: [
+      { id: "a", materialId: "gypsum_board", thicknessMm: 13 },
+      { id: "b", materialId: "gypsum_board", thicknessMm: 13 },
+      { id: "c", materialId: "furring_channel", thicknessMm: 14 },
+      { id: "d", materialId: "furring_channel", thicknessMm: 14 },
+      { id: "e", materialId: "concrete", thicknessMm: 150 }
+    ],
+    expected: {
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]
+    }
+  },
+  {
+    id: "raw_concrete_disjoint_board_fill_board_helper",
+    rows: [
+      { id: "a", materialId: "gypsum_board", thicknessMm: 13 },
+      { id: "b", materialId: "rockwool", thicknessMm: 45 },
+      { id: "c", materialId: "gypsum_board", thicknessMm: 13 },
+      { id: "d", materialId: "furring_channel", thicknessMm: 28 },
+      { id: "e", materialId: "concrete", thicknessMm: 150 }
+    ],
+    expected: {
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]
+    }
+  },
+  {
+    id: "raw_concrete_helper_with_top_finish",
+    rows: [
+      { id: "a", materialId: "gypsum_board", thicknessMm: 13 },
+      { id: "b", materialId: "rockwool", thicknessMm: 90 },
+      { id: "c", materialId: "furring_channel", thicknessMm: 28 },
+      { id: "d", materialId: "concrete", thicknessMm: 150 },
+      { id: "e", materialId: "ceramic_tile", thicknessMm: 8 }
+    ],
+    expected: {
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]
+    }
+  },
+  {
+    id: "raw_heavy_walllike_split_fill_both_sides",
+    rows: [
+      { id: "a", materialId: "gypsum_board", thicknessMm: 12.5 },
+      { id: "b", materialId: "rockwool", thicknessMm: 45 },
+      { id: "c", materialId: "concrete", thicknessMm: 120 },
+      { id: "d", materialId: "rockwool", thicknessMm: 45 },
+      { id: "e", materialId: "gypsum_board", thicknessMm: 12.5 }
+    ],
+    expected: {
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]
+    }
+  },
+  {
+    id: "raw_heavy_walllike_board_fill_board_mixed",
+    rows: [
+      { id: "a", materialId: "gypsum_board", thicknessMm: 12.5 },
+      { id: "b", materialId: "rockwool", thicknessMm: 45 },
+      { id: "c", materialId: "gypsum_board", thicknessMm: 12.5 },
+      { id: "d", materialId: "concrete", thicknessMm: 120 },
+      { id: "e", materialId: "gypsum_board", thicknessMm: 12.5 }
+    ],
+    expected: {
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]
+    }
+  },
+  {
+    id: "raw_steel_joist_helper_fill_board_mixed",
+    rows: [
+      { id: "a", materialId: "gypsum_board", thicknessMm: 13 },
+      { id: "b", materialId: "rockwool", thicknessMm: 90 },
+      { id: "c", materialId: "gypsum_board", thicknessMm: 13 },
+      { id: "d", materialId: "steel_joist_floor", thicknessMm: 250 }
+    ],
+    expected: {
+      basis: null,
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["R'w", "DnT,w"]
+    }
+  },
+  {
+    id: "raw_concrete_split_full_ceiling_helper",
+    rows: [
+      { id: "a", materialId: "gypsum_board", thicknessMm: 13 },
+      { id: "b", materialId: "gypsum_board", thicknessMm: 13 },
+      { id: "c", materialId: "rockwool", thicknessMm: 45 },
+      { id: "d", materialId: "rockwool", thicknessMm: 45 },
+      { id: "e", materialId: "furring_channel", thicknessMm: 14 },
+      { id: "f", materialId: "furring_channel", thicknessMm: 14 },
+      { id: "g", materialId: "concrete", thicknessMm: 150 }
+    ],
+    expected: {
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]
+    }
+  },
+  {
     id: "raw_open_box_single",
     rows: [{ id: "a", materialId: "open_box_timber_slab", thicknessMm: 370 }],
     expected: {
@@ -160,6 +288,24 @@ const CASES: readonly RawRouteCase[] = [
     }
   },
   {
+    id: "raw_open_box_split_ceiling_helper",
+    rows: [
+      { id: "a", materialId: "gypsum_board", thicknessMm: 13 },
+      { id: "b", materialId: "gypsum_board", thicknessMm: 13 },
+      { id: "c", materialId: "rockwool", thicknessMm: 45 },
+      { id: "d", materialId: "rockwool", thicknessMm: 45 },
+      { id: "e", materialId: "furring_channel", thicknessMm: 14 },
+      { id: "f", materialId: "furring_channel", thicknessMm: 14 },
+      { id: "g", materialId: "open_box_timber_slab", thicknessMm: 370 }
+    ],
+    expected: {
+      basis: null,
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["R'w", "DnT,w"]
+    }
+  },
+  {
     id: "raw_hollow_core_single",
     rows: [{ id: "a", materialId: "hollow_core_plank", thicknessMm: 200 }],
     expected: {
@@ -195,6 +341,36 @@ const CASES: readonly RawRouteCase[] = [
       estimateKind: null,
       floorSystemMatchId: null,
       supported: ["R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]
+    }
+  },
+  {
+    id: "walllike_hybrid_concrete_board_fill",
+    rows: [
+      { id: "a", materialId: "gypsum_board", thicknessMm: 12.5 },
+      { id: "b", materialId: "rockwool", thicknessMm: 90 },
+      { id: "c", materialId: "concrete", thicknessMm: 120 },
+      { id: "d", materialId: "gypsum_board", thicknessMm: 12.5 }
+    ],
+    expected: {
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]
+    }
+  },
+  {
+    id: "raw_lightweight_steel_helper_fill_board_mixed",
+    rows: [
+      { id: "a", materialId: "gypsum_board", thicknessMm: 13 },
+      { id: "b", materialId: "rockwool", thicknessMm: 90 },
+      { id: "c", materialId: "gypsum_board", thicknessMm: 13 },
+      { id: "d", materialId: "lightweight_steel_floor", thicknessMm: 250 }
+    ],
+    expected: {
+      basis: null,
+      estimateKind: null,
+      floorSystemMatchId: null,
+      supported: ["R'w", "DnT,w"]
     }
   }
 ];

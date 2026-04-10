@@ -296,6 +296,31 @@ const CASES: readonly BoundaryCase[] = [
     }
   },
   {
+    id: "open-web noncanonical lower-only continuation",
+    layers: [
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 90 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: 300 }
+    ],
+    expectedLab: {
+      basis: "predictor_floor_system_low_confidence_estimate",
+      candidateIds: ["ubiq_fl24_open_web_steel_300_16mm_exact_lab_2026"],
+      estimateKind: "low_confidence",
+      floorSystemMatchId: null,
+      supportedTargetOutputs: ["Rw", "Ln,w", "Ln,w+CI"],
+      unsupportedTargetOutputs: []
+    },
+    expectedField: {
+      basis: "mixed_predicted_plus_estimated_local_guide",
+      candidateIds: ["ubiq_fl24_open_web_steel_300_16mm_exact_lab_2026"],
+      estimateKind: "low_confidence",
+      floorSystemMatchId: null,
+      supportedTargetOutputs: ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"],
+      unsupportedTargetOutputs: []
+    }
+  },
+  {
     id: "open-web combined exact lane",
     layers: [
       { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 16 },

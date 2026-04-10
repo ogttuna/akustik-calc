@@ -120,6 +120,8 @@ export type ResolvedImpactArtifacts = {
   impactSupport: ImpactSupport | null;
 };
 
+const FLOOR_SYSTEM_VISIBLE_RECOMMENDATION_LIMIT = 8;
+
 export function shouldHideLowConfidenceProxyAirborne(
   floorSystemEstimate: FloorSystemEstimateResult | null | undefined
 ): boolean {
@@ -169,7 +171,7 @@ export function resolveLayerBasedImpactLane(
     !impactCatalogMatch;
   const floorSystemRecommendations = floorSystemMatch
     ? []
-    : recommendFloorSystems(input.resolvedLayers, 8);
+    : recommendFloorSystems(input.resolvedLayers, FLOOR_SYSTEM_VISIBLE_RECOMMENDATION_LIMIT);
   const predictorSpecificFloorSystemEstimate =
     input.predictorInput &&
     !input.officialFloorSystemId &&

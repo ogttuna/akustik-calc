@@ -1,6 +1,6 @@
 # Dynamic Calculator Source Gap Ledger
 
-Last reviewed: 2026-04-08
+Last reviewed: 2026-04-10
 
 Purpose:
 
@@ -130,6 +130,11 @@ Important scope note:
   - neutral same-total non-packable mixed lower-board schedules also stay on that same `FL-26` branch even though the predictor blocker remains visible
   - disjoint/intervening lower-board topology no longer stays on that defended `FL-26` family-general tier; it now steps down to `low_confidence` and surfaces explicit blocker copy
   - disjoint/intervening lower-helper topology in `ceiling_fill` or `ceiling_cavity` also no longer stays on that defended `FL-26` family-general tier; it now steps down to `low_confidence` on the same conservative surface where predictor derivation was already fail-closed
+  - a helper-heavy noncanonical `gypsum_board + rockwool + gypsum_board + open_web_steel_floor` package is now explicitly frozen on a conservative same-family `low_confidence` continuation:
+    - candidate id: `ubiq_fl24_open_web_steel_300_16mm_exact_lab_2026`
+    - blocker reason: split lower-only ceiling-board topology
+    - posture reason: visible `FL-24` direct `2 x 13 mm` plasterboard support exists, but the live stack still lacks the explicit `INEX FLOOR` top package and introduces extra fill
+  - that adjacent boundary is therefore not the same thing as the defended contiguous `FL-26` package and should stay a dedicated continuation class, not an implicit widening
   - direct final-row entry and duplicate/swap/remove-rebuild store detours now also converge back onto that same branch
 - current test anchors:
   - `packages/engine/src/floor-role-topology.test.ts`
@@ -140,6 +145,8 @@ Important scope note:
   - `packages/engine/src/floor-packaged-lane-helper-disjoint-detour.test.ts`
   - `apps/web/features/workbench/floor-packaged-lane-disjoint-route-detour.test.ts`
   - `apps/web/features/workbench/floor-packaged-lane-helper-disjoint-route-detour.test.ts`
+  - `packages/engine/src/floor-profile-boundary-matrix.test.ts`
+  - `apps/web/features/workbench/floor-profile-boundary-route-matrix.test.ts`
   - `packages/engine/src/floor-split-layer-parity.test.ts`
   - `packages/engine/src/floor-packaged-lane-order-parity.test.ts`
   - `apps/web/features/workbench/raw-floor-inferred-split-parity.test.ts`
@@ -253,7 +260,8 @@ Important scope note:
   - widening can stay inside the same upper-plus-lower package semantics instead of inventing a raw bare lane
 - safe next move:
   - mine the TUAS measured corpus for near-match rows that preserve the same laminate-plus-ceiling family logic
-  - treat `R7a` and `R6b` as branch-design questions, not blind exact imports
+  - keep `R6b` closed as the exact-only reinforced `b` branch now that the drawing-backed lower-treatment difference is imported
+  - keep `R7a` closed as the exact-only heavy/wet `a` branch now that the upper-EPS-board surface and selector guard are landed
   - prefer tolerance and same-package widening before any new topology widening
 - do not do next:
   - do not reinterpret these rows as a bare open-box impact lane
@@ -357,13 +365,14 @@ This section is implementation-backed from the current local catalog import, not
 
 ### TUAS Exact Corpus
 
-- open-box exact rows in the catalog: `7`
+- open-box exact rows in the catalog: `8`
   - `tuas_r2a_open_box_timber_measured_2026`
   - `tuas_r2b_open_box_timber_measured_2026`
   - `tuas_r3a_open_box_timber_measured_2026`
   - `tuas_r3b_open_box_timber_measured_2026`
   - `tuas_r5a_open_box_timber_measured_2026`
   - `tuas_r5b_open_box_timber_measured_2026`
+  - `tuas_r6b_open_box_timber_measured_2026`
   - `tuas_r11b_open_box_timber_measured_2026`
 - CLT exact rows in the catalog: `4`
   - `tuas_x2_clt140_measured_2026`
@@ -397,6 +406,7 @@ This section is implementation-backed from the current local catalog import, not
     - `R3b`
     - `R5a`
     - `R5b`
+    - `R6b`
     - `R11b`
   - CLT:
     - `X2`
@@ -416,6 +426,17 @@ This section is implementation-backed from the current local catalog import, not
     - reason:
       - same `b` family with a wet screed top package
       - brackets the stronger end of the current `b` corridor without inventing a new ceiling-support abstraction
+- completed drawing-backed open-box reinforced `b` branch:
+  - `R6b`
+    - reason:
+      - `TUAS2023FloorConstructionDrawingsR1.pdf` page `10/40` shows the same basic upper package already used by `R2b`
+        - 8 mm laminate
+        - 3 mm EPS underlay
+      - the real branch difference is the lower treatment, which the current role surface can already express honestly:
+        - 25 mm resilient stud ceiling
+        - 100 mm glass wool
+        - `4 x 15 mm` gypsum board
+      - this is therefore safe as a narrow exact import without widening the broader `family_b` shorthand or predictor family-archetype lane
 - completed explicit open-box `a`-family tier:
   - `R3a`
     - reason:
@@ -430,9 +451,10 @@ This section is implementation-backed from the current local catalog import, not
   - the visible-layer / workbench surface now exposes `family_a` via `tuas_open_box_ceiling_family_a`
   - the generic `resilient_stud_ceiling` material stays as the shorthand for the imported `b` corridor
 - deferred open-box tier:
-  - `R6a`, `R7a`, `R10a`, `R6b`, `R7b`, `R8b`, `R9b`, `R2c`
+  - `R6a`, `R10a`, `R7b`, `R8b`, `R9b`, `R2c`
   - reason:
-    - still useful, but lower value than the now-completed `a/b` corridor and the remaining CLT tightening work
+    - still useful, but the finished drawing audit now shows they do not fit the current honest visible-layer surfaces
+    - they are therefore no longer just low-priority numeric outliers; they are explicit new-surface backlog
 - post-corridor numeric screening from `TUAS2023FloorSoundInsulationDataR1.xlsx`:
   - geometry-cleared and now imported:
     - `R2b`
@@ -447,38 +469,77 @@ This section is implementation-backed from the current local catalog import, not
       - implementation outcome:
         - `R2b` is now the basic `b`-family anchor
         - the generic `resilient_stud_ceiling` surface now lands on the `b` corridor rather than aliasing family `a`
-  - current geometry-audit shortlist:
+  - branch-audit resolved and now imported:
+    - `R6b`
+      - `Ln,w 44`, `Rw 71`
+      - spreadsheet companions:
+        - `Ln,w+CI 44`
+        - `Ln,w+CI,50-2500 47`
+        - `Rw+Ctr 65.67605110604265`
+      - drawing result:
+        - `TUAS2023FloorConstructionDrawingsR1.pdf` page `10/40` keeps the same `b`-family top package as `R2b`
+        - the lower branch is explicitly stronger:
+          - `4 x 15 mm` gypsum board instead of `2 x 13 mm`
+      - implementation outcome:
+        - `R6b` now lands as an exact reinforced lower-treatment `b` branch
+        - current predictor exact-id inference can reach it directly from:
+          - `tuas_open_box_family_b`
+          - `boardLayerCount 4`
+          - `boardThicknessMm 15`
+        - the broader published-family archetype lane remains unchanged and still stays anchored to `R2b` / `R5b`
+  - branch-surface resolved and now imported:
     - `R7a`
       - `Ln,w 60`, `Rw 60`
-      - reason:
-        - `TUAS2023FloorConstructionDrawingsR1.pdf` shows a materially heavier top package:
+      - drawing result:
+        - `TUAS2023FloorConstructionDrawingsR1.pdf` page `5/40` shows a materially heavier top package:
           - 50 mm EPS
           - 40 mm screed
           - 3 mm EPS underlay
           - 8 mm laminate
-        - this looks more like a separate wet/heavy `a` branch than a trivial extension of the imported `R3a -> R5a` dry corridor
-    - `R6b`
-      - `Ln,w 44`, `Rw 71`
-      - reason:
-        - `TUAS2023FloorConstructionDrawingsR1.pdf` shows a materially reinforced lower treatment:
-          - four 15 mm gypsum boards total instead of the current two-board shorthand
-        - this sits numerically close to the imported stronger `b` corridor, but likely needs a separate lower-treatment branch rather than a blind exact import
-  - numeric deferred set until drawings prove otherwise:
-    - `R6a` (`Ln,w 64`, `Rw 56`)
-    - `R10a` (`Ln,w 63`, `Rw 56`)
-    - `R7b` (`Ln,w 47`, `Rw 72`)
-    - `R8b` (`Ln,w 50`, `Rw 72`)
-    - `R9b` (`Ln,w 46`, `Rw 68`)
-    - `R2c` (`Ln,w 60`, `Rw 54`)
-  - why this stays research-first:
-    - the spreadsheet gives trustworthy single-number values, but not enough by itself to encode the visible-layer recipe safely
-    - the next safe move is to audit `TUAS2023FloorConstructionDrawingsR1.pdf` against this shortlist before importing any of these rows
+        - the lower side still follows the existing `a`-family support morphology from `R5a` (`TUAS2023FloorConstructionDrawingsR1.pdf` page `3/40`)
+      - implementation outcome:
+        - `R7a` now lands as an exact-only heavy/wet `a` branch
+        - the catalog now has a dedicated rigid upper-insulation-board surface through `eps_floor_insulation_board`
+        - engine and workbench inference both keep that layer on `upper_fill`
+        - the open-box published-family selector now guards against non-dry upper packages collapsing onto the `R2b` basic archetype
+  - drawing-audit-resolved deferred set:
+    - mixed-schedule `a`-family outliers:
+      - `R6a` (`Ln,w 64`, `Rw 56`)
+        - `TUAS2023FloorConstructionDrawingsR1.pdf` page `4/40`
+        - same lower `family_a` morphology as the imported `a` corridor, but the lower board schedule is mixed (`2 x 13 mm` plus `4 x 15 mm`)
+        - current exact and predictor surfaces only expose one board thickness per lower-treatment branch, so no honest exact import opens yet
+      - `R10a` (`Ln,w 63`, `Rw 56`)
+        - `TUAS2023FloorConstructionDrawingsR1.pdf` page `6/40`
+        - same lower `family_a` morphology, but the top package is a staged multi-layer dry build-up with interleaved thin-board / mortar layers before the `3 mm` EPS underlay and `8 mm` laminate
+        - current exact surfaces do not represent that staged package honestly
+    - hybrid lower-treatment outliers:
+      - `R7b` (`Ln,w 47`, `Rw 72`)
+        - `TUAS2023FloorConstructionDrawingsR1.pdf` page `11/40`
+      - `R8b` (`Ln,w 50`, `Rw 72`)
+        - `TUAS2023FloorConstructionDrawingsR1.pdf` page `12/40`
+      - `R9b` (`Ln,w 46`, `Rw 68`)
+        - `TUAS2023FloorConstructionDrawingsR1.pdf` page `13/40`
+      - `R2c` (`Ln,w 60`, `Rw 54`)
+        - `TUAS2023FloorConstructionDrawingsR1.pdf` page `15/40`
+      - audit result:
+        - all four introduce a hybrid lower morphology with both `45 mm` timber stud and `25 mm` resilient stud below the open-box slab
+        - that is outside the currently defended `tuas_open_box_family_a` vs `tuas_open_box_family_b` surface split
+        - `R8b` also removes the laminate / EPS-underlay finish and inserts geotextile under the screed
+        - `R2c` also removes the mineral wool and still does not justify any `__none` topology widening
+  - why no new TUAS import opened after the finished drawing audit:
+    - the spreadsheet values remain trustworthy, but the finished drawing/detail audit shows the remaining rows need new surfaces rather than just a catalog copy pass
+    - `TUAS2023FloorDetails.pdf` page `5/7` visually confirms the existing family split remains correct:
+      - `R2a-R10a` uses `25 mm` wooden laths
+      - `R2b-R11b` uses `25 mm` resilient steel studs
+    - `R7a` is already closed because the dedicated upper-EPS-board surface and selector guard exist
+    - the nearby open-web noncanonical continuation parity debt is also already closed
+    - the next safe move is therefore no longer another immediate TUAS row import; it is a re-rank toward the next evidence-backed slice
 - deferred TUAS CLT tier:
   - `X3`, `X4`
   - `C3`, `C4`, `C5`, `C7`
   - `C2c`, `C3c`, `C4c`, `C7c`, `C11c`
   - reason:
-    - these remain worthwhile future imports, but current CLT tightening should first consume the already imported dormant Dataholz CLT slack
+    - these remain worthwhile future imports, but current CLT tightening should first resolve the remaining imported Dataholz CLT manual-match boundary question instead of reopening broader CLT evidence and exact behavior together
 - current contract anchors:
   - `packages/engine/src/floor-source-corpus-contract.test.ts`
   - `packages/engine/src/tuas-candidate-backlog-contract.test.ts`
@@ -487,20 +548,31 @@ This section is implementation-backed from the current local catalog import, not
 ### Dataholz CLT Exact Corpus
 
 - Dataholz CLT exact rows in the catalog: `9`
-- predictor-active CLT family rows today: `6`
+- predictor-active CLT family rows today: `8`
+  - `dataholz_gdmnxn02_wet_clt_lab_2026`
+  - `dataholz_gdmnxn02_05_wet_clt_lab_2026`
   - `dataholz_gdmtxn01_dry_clt_lab_2026`
   - `dataholz_gdmtxa01a_clt_lab_2026`
   - `dataholz_gdmnxn06_fill_clt_lab_2026`
   - `dataholz_gdmnxn05_wet_clt_lab_2026`
   - `dataholz_gdmnxa02a_00_clt_lab_2026`
   - `dataholz_gdmnxa02a_02_clt_lab_2026`
-- exact-only CLT tightening slack today: `3`
-  - `dataholz_gdmnxn02_wet_clt_lab_2026`
-  - `dataholz_gdmnxn02_05_wet_clt_lab_2026`
+- exact-only CLT tightening slack today: `1`
   - `dataholz_gdmtxa04a_clt_lab_2026`
 - current meaning:
-  - CLT has real imported slack for exact-preserving tightening without inventing a broader generic lane
-  - these three dormant exact rows are the cleanest local next candidates for tightening work before any broader CLT widening
+  - the wet no-lining Dataholz exact slack is now consumed on the predictor-exact path:
+    - `dataholz_gdmnxn02_wet_clt_lab_2026`
+    - `dataholz_gdmnxn02_05_wet_clt_lab_2026`
+  - the only remaining imported CLT exact-only row is not another straightforward wet/fill fingerprint:
+    - `dataholz_gdmtxa04a_clt_lab_2026` still carries `manualMatch: false`
+    - it currently routes through the dry CLT estimate neighborhood rather than an exact predictor/manual lane
+  - the `2026-04-09` boundary review narrowed the reason further:
+    - the official `GDMTXA04A` source still describes the top dry-floor layer only as `65.0 mm, m' approx. 37 kg/m²`
+    - the nearby `GDMTXA01a` source names an explicit `20 mm` dry screed element (`Rigidur`)
+    - local `dry_floating_gypsum_fiberboard 65 mm` therefore remains a convenience mapping for preset-only exact-id resolution, not yet an honest visible exact surface
+  - the next CLT decision is now effectively made:
+    - keep `gdmtxa04a` estimate-routed on visible and predictor surfaces
+    - do not treat it as generic CLT widening slack until a more honest material surface exists
 
 ### UBIQ Open-Web Steel Corpus
 
@@ -635,10 +707,26 @@ This section is implementation-backed from the current local catalog import, not
 - source-trace note:
   - the current `sourceUrl` for local `ubiq_fl32_*` and `ubiq_fl33_*` rows resolves to the May 2023 brochure
   - in that brochure the visible FRL/D steel-joist family code is `FL-17 (FRL/D)` and the visible open-web FRL/D family code is `FL-28 (FRL/D)`
-  - until provenance is cleaned up explicitly, keep the current internal ids stable and document the drift instead of renaming published-family lanes ad hoc
+  - the `2026-04-09` provenance/boundary-freeze slice is now closed:
+    - keep the current internal ids and labels stable as internal runtime references
+    - keep the visible-family drift documented explicitly in docs and contract tests
+    - do not rename published-family lanes ad hoc just because the source brochure uses different visible FRL/D family codes
 - current contract anchors:
   - `packages/engine/src/floor-source-corpus-contract.test.ts`
   - `packages/engine/src/ubiq-candidate-backlog-contract.test.ts`
+- `2026-04-09` primary-source recheck:
+  - rechecked against the May 2023 official UBIQ brochure:
+    - `FL-24` and `FL-26` still sit in the defended corridor immediately below `FL-28`
+    - `FL-23`, `FL-25`, and `FL-27` still sit in the materially weaker band
+  - current reason to keep deferring `FL-23/25/27` remains intact:
+    - timber + underlay values stay around `71 / 70 / 70` or `70 / 69 / 69`
+    - carpet + underlay values stay around `64 / 63` or `63 / 62`
+  - decision impact:
+    - do not use UBIQ weaker-band widening as the first post-guard corridor slice
+    - provenance/source-trace cleanup is now closed as a docs plus contract freeze rather than a runtime rename
+    - if UBIQ work resumes again, the next honest UBIQ move is either:
+      - a deliberate weaker-band defer/widen decision with explicit posture tests
+      - or a later source-backed package-variant widening inside the current defended corridor
 
 ### Dataholz Timber-Frame Corpus
 
@@ -653,6 +741,13 @@ This section is implementation-backed from the current local catalog import, not
 1. TUAS measured corpus
    - first mining target for open-box timber and CLT
    - strongest current open-access source for measured lightweight timber floor families with drawings and resilient-layer metadata
+   - `2026-04-09` public API recheck confirms the currently published dataset includes the drawing and detail files actually used in the current audit:
+     - `TUAS2023FloorConstructionDrawingsR1.pdf`
+     - `TUAS2023FloorDetails.pdf`
+   - immediate implication:
+     - `R6b` is now resolved and can stay as an exact-only reinforced `b` branch
+     - `R7a` is also now resolved as an exact-only heavy/wet `a` branch with a dedicated upper-EPS-board surface
+     - the next TUAS decision is no longer this branch design; it is which wider source-led corridor is worth mining next
 2. UBIQ official system tables
    - first widening target for open-web steel combined families
    - treat bare open-web support as a separate research question

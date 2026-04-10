@@ -8,6 +8,8 @@ const TUAS_OPEN_BOX_IDS = [
   "tuas_r3b_open_box_timber_measured_2026",
   "tuas_r5a_open_box_timber_measured_2026",
   "tuas_r5b_open_box_timber_measured_2026",
+  "tuas_r6b_open_box_timber_measured_2026",
+  "tuas_r7a_open_box_timber_measured_2026",
   "tuas_r11b_open_box_timber_measured_2026"
 ] as const;
 
@@ -31,6 +33,8 @@ const DATAHOLZ_CLT_IDS = [
 ] as const;
 
 const ACTIVE_DATAHOLZ_CLT_PREDICTOR_IDS = [
+  "dataholz_gdmnxn02_wet_clt_lab_2026",
+  "dataholz_gdmnxn02_05_wet_clt_lab_2026",
   "dataholz_gdmtxn01_dry_clt_lab_2026",
   "dataholz_gdmtxa01a_clt_lab_2026",
   "dataholz_gdmnxn06_fill_clt_lab_2026",
@@ -39,9 +43,7 @@ const ACTIVE_DATAHOLZ_CLT_PREDICTOR_IDS = [
   "dataholz_gdmnxa02a_02_clt_lab_2026"
 ] as const;
 
-const DORMANT_DATAHOLZ_CLT_IDS = [
-  "dataholz_gdmnxn02_wet_clt_lab_2026",
-  "dataholz_gdmnxn02_05_wet_clt_lab_2026",
+const REMAINING_DATAHOLZ_CLT_EXACT_ONLY_IDS = [
   "dataholz_gdmtxa04a_clt_lab_2026"
 ] as const;
 
@@ -85,7 +87,14 @@ const UBIQ_OPEN_WEB_BOUND_IDS = [
   "ubiq_fl33_open_web_steel_400_lab_2026"
 ] as const;
 
-function sortedIds(input: readonly string[]) {
+const UBIQ_STEEL_BOUND_IDS = [
+  "ubiq_fl32_steel_200_lab_2026",
+  "ubiq_fl32_steel_300_lab_2026"
+] as const;
+
+const UBIQ_OFFICIAL_SYSTEM_TABLE_URL = "https://www.ubiq.au/wp-content/uploads/2023/02/INEX-FLOOR-FLOOR-FIRE-ACOUSTIC.pdf";
+
+function sortedIds<T extends string | number>(input: readonly T[]) {
   return [...input].sort();
 }
 
@@ -104,6 +113,7 @@ describe("floor source corpus contract", () => {
         id.startsWith("ubiq_fl26_open_web_steel_") ||
         id.startsWith("ubiq_fl28_open_web_steel_")
     );
+    const ubiqSteelBoundIds = boundIds.filter((id) => id.startsWith("ubiq_fl32_steel_"));
     const ubiqOpenWebBoundIds = boundIds.filter((id) => id.startsWith("ubiq_fl33_open_web_steel_"));
 
     expect(sortedIds(tuasOpenBoxIds)).toEqual(sortedIds(TUAS_OPEN_BOX_IDS));
@@ -111,10 +121,26 @@ describe("floor source corpus contract", () => {
     expect(sortedIds(dataholzCltIds)).toEqual(sortedIds(DATAHOLZ_CLT_IDS));
     expect(sortedIds(dataholzTimberFrameIds)).toEqual(sortedIds(DATAHOLZ_TIMBER_FRAME_IDS));
     expect(sortedIds(ubiqOpenWebExactIds)).toEqual(sortedIds(UBIQ_OPEN_WEB_EXACT_IDS));
+    expect(sortedIds(ubiqSteelBoundIds)).toEqual(sortedIds(UBIQ_STEEL_BOUND_IDS));
     expect(sortedIds(ubiqOpenWebBoundIds)).toEqual(sortedIds(UBIQ_OPEN_WEB_BOUND_IDS));
   });
 
-  it("keeps the current Dataholz CLT dormant exact-only slack explicit", () => {
+  it("keeps the current UBIQ bound source cluster frozen around the shared official brochure URL", () => {
+    const ubiqBoundRows = BOUND_FLOOR_SYSTEMS.filter(
+      (system) => system.id.startsWith("ubiq_fl32_steel_") || system.id.startsWith("ubiq_fl33_open_web_steel_")
+    );
+    const steelJoistRows = ubiqBoundRows.filter((system) => system.id.startsWith("ubiq_fl32_steel_"));
+    const openWebRows = ubiqBoundRows.filter((system) => system.id.startsWith("ubiq_fl33_open_web_steel_"));
+
+    expect(new Set(ubiqBoundRows.map((system) => system.sourceLabel))).toEqual(new Set(["UBIQ official system table PDF"]));
+    expect(new Set(ubiqBoundRows.map((system) => system.sourceUrl ?? ""))).toEqual(new Set([UBIQ_OFFICIAL_SYSTEM_TABLE_URL]));
+    expect(sortedIds(steelJoistRows.map((system) => system.match.baseStructure?.thicknessMm ?? 0))).toEqual([200, 300]);
+    expect(sortedIds(openWebRows.map((system) => system.match.baseStructure?.thicknessMm ?? 0))).toEqual([200, 300, 400]);
+    expect(steelJoistRows.every((system) => system.match.baseStructure?.materialIds.includes("steel_joist_floor"))).toBe(true);
+    expect(openWebRows.every((system) => system.match.baseStructure?.materialIds.includes("open_web_steel_floor"))).toBe(true);
+  });
+
+  it("keeps the current Dataholz CLT remaining exact-only slack explicit", () => {
     const exactIds = EXACT_FLOOR_SYSTEMS
       .map((system) => system.id)
       .filter((id) => id.startsWith("dataholz_") && id.includes("_clt_"));
@@ -123,6 +149,15 @@ describe("floor source corpus contract", () => {
       (id) => !ACTIVE_DATAHOLZ_CLT_PREDICTOR_IDS.includes(id as (typeof ACTIVE_DATAHOLZ_CLT_PREDICTOR_IDS)[number])
     );
 
-    expect(sortedIds(dormantIds)).toEqual(sortedIds(DORMANT_DATAHOLZ_CLT_IDS));
+    expect(sortedIds(dormantIds)).toEqual(sortedIds(REMAINING_DATAHOLZ_CLT_EXACT_ONLY_IDS));
+  });
+
+  it("keeps the remaining Dataholz CLT exact-only slack on manual-match-disabled rows", () => {
+    const remainingRows = EXACT_FLOOR_SYSTEMS.filter((system) =>
+      REMAINING_DATAHOLZ_CLT_EXACT_ONLY_IDS.includes(system.id as (typeof REMAINING_DATAHOLZ_CLT_EXACT_ONLY_IDS)[number])
+    );
+
+    expect(sortedIds(remainingRows.map((system) => system.id))).toEqual(sortedIds(REMAINING_DATAHOLZ_CLT_EXACT_ONLY_IDS));
+    expect(remainingRows.every((system) => system.manualMatch === false && !system.estimateMatch)).toBe(true);
   });
 });

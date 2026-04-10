@@ -1,6 +1,6 @@
 # Dynamic Calculator Remaining Work Plan
 
-Last reviewed: 2026-04-08
+Last reviewed: 2026-04-10
 
 Document role:
 
@@ -78,6 +78,12 @@ Current verified result:
 - raw weaker-carrier posture packs: green
   - engine: [raw-floor-weaker-carrier-posture.test.ts](../../packages/engine/src/raw-floor-weaker-carrier-posture.test.ts)
   - route: [raw-floor-weaker-carrier-route-posture.test.ts](../../apps/web/features/workbench/raw-floor-weaker-carrier-route-posture.test.ts)
+- official-product representative breadth closure pack: green
+  - engine: `4` files, `253` tests
+  - workbench: `6` files, `11` tests
+- UBIQ provenance/boundary-freeze closure pack: green
+  - engine: `5` files, `276` tests
+  - workbench: `3` files, `67` tests
 - broad defended revalidation: green
   - included inside the `2026-04-07` broad packs
   - no new floor-side solver regression was reproduced there
@@ -133,6 +139,10 @@ Interpretation:
   - raw concrete rows with a coherent inferred ceiling helper package now reopen field-side `Rw` without needing explicit row roles
   - the defended shape is still narrow: at least one inferred `ceiling_board`, at least one inferred `ceiling_cavity` or `ceiling_fill`, and a concrete base carrier
   - raw wall-like heavy hybrids and weaker carriers stay outside that reopening rule
+- official-product representative breadth is also now broader without changing the solver/catalog lanes:
+  - workbench now exposes the missing `REGUPOL sonus multi 4.5` tile and porcelain exact rows
+  - workbench now exposes a wider `Getzner AFM` delta range through `AFM 21`, `AFM 33`, and `AFM 35`
+  - mixed generated engine and route surfaces now also include a second official exact topology plus a stronger product-delta lane
 - the current floor debt is no longer a live blocker; it is coverage and future widening discipline
 - secondary route-surface revalidation on `2026-04-07` also showed that the latest red workbench tests were stale surface contracts, not a fresh calculator regression:
   - bound floor status now keeps companion `Rw` live on the defended carry-over lane
@@ -167,11 +177,11 @@ Interpretation:
 - the repo now has a representative mixed torture slice, a first generated split-detour matrix, a first generated edit-history matrix, a first wider duplicate/swap grid, and a first deterministic generated longer cross-mode plus save/load roundtrip chain rather than only isolated floor and wall seeded tests
 - cross-mode operator detours are now defended at the workbench route layer on representative deep stacks
 - the representative deep-stack mixed torture slice now also defends save/load serialization roundtrips after alternating floor and wall detours, not only live in-memory edit sequences
-- that representative roundtrip slice is now frozen as a compact explicit seeded-family matrix across heavy-concrete, open-web-bound, official product-data exact (`REGUPOL Curve 8 exact`), curated exact family/system match (`dataholz_timber_frame_exact`), exact family/system match with low-frequency closures (`hollow_core_vinyl_exact`), official product-backed lower-bound (`REGUPOL wet bound`), product-property DeltaLw (`Getzner AFM 33 Delta`), warning-heavy missing-support-form steel bound (`UBIQ steel 300 unspecified bound`), and warning-light converged-crossover steel bound (`UBIQ steel 200 unspecified bound`) detours
-- that compact matrix now proves each representative seeded family survives save/load after a wall detour plus two neighboring seeded-family detour chains, not only after one alternating floor/wall switch
+- that representative roundtrip slice is now frozen as a compact explicit seeded-family matrix across heavy-concrete, open-web-bound, official product-data exact (`REGUPOL Curve 8 exact`), official no-screed exact product topology (`REGUPOL Multi 4.5 porcelain exact`), curated exact family/system match (`dataholz_timber_frame_exact`), exact family/system match with low-frequency closures (`hollow_core_vinyl_exact`), official product-backed lower-bound (`REGUPOL wet bound`), product-property DeltaLw (`Getzner AFM 33 Delta`), interpolation steel lower-bound (`UBIQ steel 250 bound`), warning-heavy missing-support-form steel bound (`UBIQ steel 300 unspecified bound`), and warning-light converged-crossover steel bound (`UBIQ steel 200 unspecified bound`) detours
+- that compact matrix now proves each representative seeded family survives save/load after a wall detour plus three neighboring seeded-family detour chains, not only after one alternating floor/wall switch
 - that same matrix now also survives at the current `savedScenarios` retention boundary, so the representative anchor no longer depends on a sparse saved-snapshot list
 - the generated route/engine case sets are now aligned on Knauf concrete exact, TUAS concrete dry exact, Knauf direct timber exact, Knauf timber mount exact, Knauf acoustic timber exact, Dataholz timber-frame exact, Dataholz Dry exact, Dataholz Dry RC exact, dry CLT exact, TUAS CLT exact, TUAS CLT 260 exact, TUAS open-box exact, open-box dry exact, REGUPOL Curve 8 exact, REGUPOL wet bound, Getzner AFM 33 Delta, open-web 200 exact, open-web 400 exact, UBIQ steel 250 bound, UBIQ steel 200 unspecified bound, UBIQ steel 300 unspecified bound, and hollow-core vinyl exact floors, so mixed generated breadth no longer skips the defended published-exact concrete branch, the defended upper-treatment concrete exact branch, the defended direct-fixed timber exact branch, the defended lighter and heavier mounted timber exact branches, the defended wet-screed timber-frame, direct-lined dry, and suspended dry-timber exact branches, the defended dry and measured CLT exact branches, the defended measured and dry open-box exact branches, the defended official product-backed resilient-underlay exact and lower-bound branches, the defended product-property DeltaLw branch, the defended exact steel branches, the first defended interpolation steel lower-bound branch, the defended converged crossover steel lower-bound branch, the defended missing-support-form steel lower-bound branch, or the first defended precast hollow-core family on one side
-- remaining debt is no longer “no mixed torture exists” or “the representative seeded-family matrix is missing”; it is that the mixed torture surface still stops at the first deterministic generated longer chain plus save/load roundtrip slice, the compact representative seeded-family matrix with its first two-seeded operator-history chain, and the wider generated grid instead of:
+- remaining debt is no longer “no mixed torture exists” or “the representative seeded-family matrix is missing”; it is that the mixed torture surface still stops at the first deterministic generated longer chain plus save/load roundtrip slice, the compact representative seeded-family matrix with its first three-neighbor operator-history chain, and the wider generated grid instead of:
   - broader seeded long-chain families beyond that compact matrix
   - wider preset-family case sets beyond the current heavy-concrete plus concrete exacts, Knauf timber exacts, Dataholz timber exacts, open-box exacts, CLT exacts, open-web exacts, and hollow-core cohort
 
@@ -231,7 +241,15 @@ Current overall reading:
 - the latest representative mixed save-load torture expansion also stayed green on the change-adjacent packs:
   - route pack: `4` files, `8` tests
   - interpretation: adding save/load serialization roundtrips after alternating representative deep floor and wall detours did not expose fresh regression in the seeded mixed torture slice, route warnings, or support-surface honesty
-  - latest seeded-family widening inside that slice: `REGUPOL wet bound`, `Getzner AFM 33 Delta`, `UBIQ steel 300 unspecified bound`, plus `UBIQ steel 200 unspecified bound`
+  - latest seeded-family widening inside that slice: `REGUPOL wet bound`, `Getzner AFM 33 Delta`, `UBIQ steel 250 bound`, `UBIQ steel 300 unspecified bound`, plus `UBIQ steel 200 unspecified bound`
+- the latest representative seeded-family interpolation steel expansion also stayed green on the change-adjacent packs:
+  - engine mixed checkpoint pack: `4` files, `252` tests
+  - route pack: `6` files, `11` tests
+  - interpretation: adding `UBIQ steel 250 bound` to the compact representative seeded-family matrix closed the remaining mixed save/load gap on the first interpolation steel lower-bound branch without exposing fresh regression in save/load posture, route support honesty, or adjacent mixed generated coverage
+- the latest representative seeded-family official no-screed exact expansion also stayed green on the change-adjacent packs:
+  - engine mixed checkpoint pack: `4` files, `253` tests
+  - route pack: `7` files, `13` tests
+  - interpretation: adding `REGUPOL Multi 4.5 porcelain exact` to the compact representative seeded-family matrix closed the remaining mixed save/load gap on the first official no-screed exact product topology without exposing fresh regression in save/load posture, route support honesty, or adjacent mixed generated coverage
 - the latest representative seeded-family roundtrip matrix tightening also stayed green on the change-adjacent packs:
   - engine adjacent pack: `2` files, `2` tests
   - route pack: `4` files, `8` tests
@@ -934,52 +952,255 @@ Floor should now stay on controlled widening and tightening only.
 
 ### Safe Floor Fix Order
 
-1. extend the raw-floor screening-carrier audit beyond the current representative rows, safe-bare split cohort, first treated/inferred split cohort, first weaker-carrier posture cohort, and first raw concrete ceiling-side inferred support cohort before reopening any more `Rw` support:
+1. allow narrow exact corridor branch-design decisions to proceed when they are fully source-backed and do not reopen raw screening carriers:
+   - most recent proven example: `R7a` upper-EPS branch-design decision
+   - this does not relax the stricter raw-screening reopening rules below
+
+2. extend the raw-floor screening-carrier audit beyond the current representative rows, safe-bare split cohort, first treated/inferred split cohort, first weaker-carrier posture cohort, and first raw concrete ceiling-side inferred support cohort before reopening any more `Rw` support:
    - wider inferred floor packages with clear upper/lower treatment evidence
-   - wider-than-first ceiling-side inferred packages
-   - raw wall-like heavy hybrids and any remaining weaker carriers that must stay closed
+   - ceiling-side inferred packages beyond the first widened contiguous-split helper cohort now in place
+   - raw wall-like heavy hybrids and any remaining weaker carriers that must stay closed beyond the first helper-fill negative guard now in place
 
-2. run a broader complex-stack torture pass before any new widening
+3. run a broader complex-stack torture pass before any new screening or family widening
 
-3. continue source-led widening only in this order:
+4. continue source-led widening only in this order:
    - open-box timber corridor decisions
    - open-web steel corridor decisions
    - CLT family tightening
    - only then any broader generic family opening
 
-4. keep unsupported raw lanes fail-closed unless the source corpus clearly supports them
+5. keep unsupported raw lanes fail-closed unless the source corpus clearly supports them
 
 ### Missing Test Surfaces To Add Next
 
 These are the most likely next useful tests. They are not currently defended enough to claim closure.
 
+- closed provenance/boundary slice:
+  - UBIQ provenance/boundary-freeze decision
+  - landed reason:
+    - the first widened raw-negative pass and the representative official-product breadth gap were already closed green
+    - UBIQ weaker-band widening remained deliberately deferred
+    - the honest move was therefore to freeze provenance and the no-weaker-band boundary more explicitly before any future UBIQ widening discussion
+  - landed scope:
+    - full current `ubiq_fl32_*` plus `ubiq_fl33_*` bound cluster is now frozen in contract tests
+    - shared official brochure URL is now part of that contract
+    - visible FRL/D drift is now documented explicitly without triggering a runtime rename
+  - current status:
+    - closed
+
+- closed slice after the raw-negative, official-product, UBIQ provenance, mixed representative-chain, and official no-screed exact follow-up passes:
+  - Dataholz CLT exact slack tightening
+  - landed reason:
+    - the imported Dataholz CLT corpus still had a narrow exact-preserving tightening opportunity
+    - local probing showed that only `dataholz_gdmnxn02_05_wet_clt_lab_2026` was still missing a defended predictor-exact fingerprint
+    - `dataholz_gdmnxn02_wet_clt_lab_2026` was already predictor-exact active, while `dataholz_gdmtxa04a_clt_lab_2026` remained a different class of problem because `manualMatch: false` keeps it outside predictor exact resolution
+  - landed scope:
+    - `gdmnxn02_05` now resolves on the exact lane from explicit predictor input
+    - adjacent wet CLT family estimates stayed intact
+    - `gdmtxa04a` now has an explicit adjacent negative guard that freezes it on the dry CLT estimate neighborhood
+  - current status:
+    - closed
+
+- selected next slice after that Dataholz CLT tightening pass:
+  - Dataholz GDMTXA04A manual-match boundary decision
+  - current reason:
+    - the wet no-lining Dataholz slack is now closed on the predictor-exact path
+    - the only remaining imported CLT exact-only row is `dataholz_gdmtxa04a_clt_lab_2026`
+    - this is not another straightforward fingerprint addition:
+      - it stays `manualMatch: false`
+      - visible and predictor surfaces currently route it through the dry CLT estimate branch
+    - the next honest move is therefore a narrow boundary decision about whether that row should remain estimate-only or gain a new defended exact surface
+  - current status:
+    - closed
+  - landed decision:
+    - keep `gdmtxa04a` estimate-only on visible and predictor surfaces for now
+    - reason:
+      - the official source still describes the `65 mm` top dry-floor layer only as an areal-mass entry, not as a named generic board/product surface
+      - that is enough for curated direct-id exact resolution, but not enough for an honest manual visible exact reopen
+    - freeze this posture with:
+      - engine exact-vs-estimate boundary tests
+      - workbench branch-summary honesty tests
+
+- selected next slice after the GDMTXA04A boundary closure:
+  - raw floor negative audit expansion v3
+  - current reason:
+    - the remaining CLT exact-only row is now deliberately frozen instead of widened
+    - the safest next gain is back on defended fail-closed posture:
+      - broader helper permutations
+      - wider heavy-hybrid negatives
+      - additional weaker-carrier helper packages
+    - this follows the explicit fallback rule already recorded in the coverage plan
+  - current status:
+    - closed
+  - landed scope:
+    - helper-heavy `steel_joist_floor` raw and tagged rows are now frozen on the same fail-closed weaker-carrier surface as helper-heavy lightweight steel
+    - wider wall-like heavy hybrids now also stay frozen on the same screening-only heavy-concrete posture across:
+      - split fill on both sides of the concrete core
+      - `board + fill + board + concrete + board` mixed helper topology
+    - engine, route, and output-card parity now all defend those added variants
+  - landed note:
+    - local probing exposed one adjacent open-web boundary question:
+      - `gypsum_board + rockwool + gypsum_board + open_web_steel_floor` currently lands on `low_confidence` / local-guide continuation
+      - that is not automatically a v3 bug because the source ledger already allows conservative open-web continuation inside explicit support-form evidence
+      - it should be handled as a dedicated boundary-decision slice instead of broadening the weaker-carrier fail-closed rule
+
+- selected next slice after raw floor negative audit expansion v3:
+  - open-web helper continuation boundary decision
+  - current reason:
+    - the second raw-negative pass closed the steel-joist and wider heavy-hybrid fail-closed stress surface without a solver change
+    - the remaining adjacent question is no longer generic raw-negative breadth:
+      - it is whether helper-heavy noncanonical open-web lower packages should stay on conservative continuation or step down further
+    - that decision must stay separate from both:
+      - the defended contiguous `FL-26` packaged lane
+      - the fail-closed weaker-carrier guard
+  - current status:
+    - closed
+  - landed decision:
+    - keep helper-heavy noncanonical `gypsum_board + rockwool + gypsum_board + open_web_steel_floor` on a same-family `low_confidence` continuation
+    - do not treat it as a fail-closed weaker-carrier bug
+    - do not promote it to the defended contiguous `FL-26` family-general package
+  - landed reason:
+    - the imported exact corpus already contains visible `FL-24` open-web rows with direct `2 x 13 mm` plasterboard lower lining
+    - the live stack still has split lower-board topology plus extra fill and no explicit `INEX FLOOR` top package
+    - current notes/warnings therefore correctly hold it below the narrower same-family corridor
+  - landed scope:
+    - engine note/warning contract now freezes the blocker copy
+    - engine and route boundary matrices now freeze the same `low_confidence` candidate id and live-output posture
+  - current validation:
+    - targeted engine: `2` files, `18` tests, green
+    - targeted workbench: `1` file, `14` tests, green
+    - adjacent engine: `5` files, `28` tests, green
+    - adjacent workbench: `5` files, `23` tests, green
+
+- selected next slice after open-web helper continuation boundary decision:
+  - open-web noncanonical continuation parity follow-up
+  - current reason:
+    - the boundary decision is now frozen on direct engine and route snapshots
+    - the next honest gain is to widen parity around that newly classified continuation:
+      - raw vs tagged
+      - duplicate/swap/remove/rebuild edit paths
+      - direct final-row entry parity
+    - existing open-web edit-path suites mostly defend the canonical firestop/cavity package corridor, not this newly frozen gypsum/rockwool/gypsum low-confidence continuation
+  - current status:
+    - closed
+  - landed scope:
+    - engine split-layer parity now includes the noncanonical `gypsum + rockwool + gypsum + open-web` continuation
+    - engine board-cluster order parity now includes the same continuation
+    - workbench raw/tagged split parity now includes the same continuation
+    - workbench duplicate/remove/rebuild edit-path parity now includes the same continuation
+    - the underlying evaluator now preserves merge-safe packed board-schedule equivalence for layer-count/thickness signals without treating that as a material-match reopen
+  - landed reason:
+    - the boundary decision itself was already correct
+    - the real adjacent defect was that schedule-equivalent split board entry drifted back to screening-only because packed schedule equivalence was still coupled to material matching
+    - the landed fix restores parity without promoting the continuation beyond the already-frozen conservative `FL-24`-anchored low-confidence lane
+  - current validation:
+    - targeted engine: `2` files, `4` tests, green
+    - targeted workbench: `2` files, `2` tests, green
+    - selected baseline engine: `4` files, `22` tests, green
+    - selected baseline workbench: `4` files, `19` tests, green
+    - adjacent engine: `3` files, `267` tests, green
+    - adjacent workbench: `3` files, `80` tests, green
+
+- selected next slice after open-web noncanonical continuation parity follow-up:
+  - TUAS deferred shortlist drawing audit
+  - current reason:
+    - the nearby open-web parity debt is now closed without widening solver posture
+    - the safest next coverage move is back on the evidence-first floor corridor path
+    - the source gap ledger already names the next safe move explicitly:
+    - audit `TUAS2023FloorConstructionDrawingsR1.pdf` and `TUAS2023FloorDetails.pdf` against the still-deferred numeric shortlist before importing new rows
+    - this keeps the product on the defended exact/bound/product widening path instead of reopening generic raw or steel-family discussions
+  - current status:
+    - closed
+  - landed result:
+    - `TUAS2023FloorDetails.pdf` page `5/7` visually confirms the existing `family_a` vs `family_b` split remains correct
+    - `R6a` and `R10a` stay deferred because they require mixed board / staged dry-pack surfaces the current exact route cannot encode honestly
+    - `R7b`, `R8b`, `R9b`, and `R2c` stay deferred because they require hybrid lower-treatment surfaces outside the defended `family_a` / `family_b` split
+    - `R2c` still does not justify any `__none` topology widening
+    - the slice therefore closed as docs plus contract tightening, not as a new TUAS import
+  - current validation:
+    - selected baseline engine: `4` files, `187` tests, green
+    - selected baseline workbench: `2` files, `68` tests, green
+
+- selected next slice after TUAS deferred shortlist drawing audit:
+  - wall selector shadow-trace audit
+  - current reason:
+    - the finished TUAS audit produced no honest new open-box import candidate on the current visible-layer surface
+    - mixed/history coverage is already materially stronger than earlier in the plan
+    - wall remains only partially complete outside the narrow `double_leaf <-> lined_massive_wall` hold corridor
+    - the best next accuracy move is therefore selector-trace evidence, not forced floor widening from weak source fit
+  - current status:
+    - selected
+    - not started
+  - pause baseline:
+    - engine: `4` files, `23` tests, green
+    - workbench: `5` files, `28` tests, green
+  - restart protocol:
+    - read the live state in [DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md](./DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md) first
+    - rerun the selected wall baseline pack before any edit
+    - inspect the defended hold corridor tests first:
+      - [dynamic-airborne-family-boundary.test.ts](../../packages/engine/src/dynamic-airborne-family-boundary.test.ts)
+      - [dynamic-airborne-family-boundary-scan.test.ts](../../packages/engine/src/dynamic-airborne-family-boundary-scan.test.ts)
+      - [dynamic-airborne-order-sensitivity.test.ts](../../packages/engine/src/dynamic-airborne-order-sensitivity.test.ts)
+      - [dynamic-route-family-boundary.test.ts](../../apps/web/features/workbench/dynamic-route-family-boundary.test.ts)
+      - [dynamic-route-family-boundary-scan.test.ts](../../apps/web/features/workbench/dynamic-route-family-boundary-scan.test.ts)
+      - [dynamic-calc-branch.test.ts](../../apps/web/features/workbench/dynamic-calc-branch.test.ts)
+
 - wider-than-first raw concrete ceiling-helper permutations:
-  - helper contiguous-split variants
-  - board-only plus fill/cavity permutations across more thickness pairs
-  - route/card parity on those same variants
+  - the first wider helper-side cohort is now defended:
+    - split cavity helper packages
+    - split fill-plus-cavity helper packages
+    - mixed-order helper package with terminal-base concrete
+    - disjoint `board + fill + board + cavity + concrete` helper package
+    - route/card parity on those same variants
+    - top-side finish negative showing that helper-side reopening closes again once concrete is no longer terminal
+  - still open:
+    - board-only plus fill/cavity permutations across more thickness pairs
+    - non-contiguous or mixed-order helper variants beyond the first widened split cohort
 - wider inferred floor-family rows:
   - additional CLT, composite, and hollow-core inferred packages beyond the current first cohort
   - ceiling-side inferred packages that should still stay closed
 - negative guards around raw heavy hybrids:
-  - concrete-plus-board hybrids that infer ceiling-board shapes but should still remain fail-closed
-  - weaker carrier plus helper-package rows that must not inherit the concrete reopening rule
+  - the first helper-fill wall-like heavy hybrid guard is now defended
+  - helper-heavy lightweight-steel raw rows are now also defended as fail-closed on the adjacent stress surface
+  - the second widened negative pass is now also defended:
+    - broader concrete-plus-board hybrids that infer ceiling-board shapes but should still remain screening-only / field-`Rw` closed
+    - helper-heavy steel-joist rows that must not inherit the concrete reopening rule
+  - still open:
+    - open-web helper-heavy noncanonical rows whose direct boundary posture is now frozen but whose broader parity surface is not yet fully defended
 - broader mixed floor/wall generated grids:
   - broader seeded long-chain families beyond the current first deterministic save/load-aware chain and compact representative seeded-family matrix
   - duplicate/swap permutations beyond the current first widened grid
   - wider preset-family case sets beyond the current heavy-concrete plus concrete exacts, Knauf timber exacts, Dataholz timber exacts, open-box exacts, CLT exacts, open-web exacts, and hollow-core cohort after the current partial-edit reset surface
+- `R7a` upper-EPS branch-design slice is now closed:
+  - exact-only row is landed with a dedicated `eps_floor_insulation_board` surface
+  - near-miss `generic_fill + screed` negatives are defended
+  - selector negatives now keep non-dry upper packages off the `R2b` basic archetype
+  - inference negatives now keep the new insulation-board material on `upper_fill` rather than `ceiling_fill`
+  - residual caution:
+    - do not use the nearby direct-fixed CLT screening contract as evidence for a broader combined-family widening
 
 ### Likely Code Touch Surface
 
 Primary likely code touch surface:
 
-- [impact-predictor-input.ts](../../packages/engine/src/impact-predictor-input.ts)
-  - if raw-floor inference needs to become more selective or more permissive
 - [floor-system-estimate.ts](../../packages/engine/src/floor-system-estimate.ts)
   - if same-family widening or tightening is required
 - [predictor-floor-system-estimate.ts](../../packages/engine/src/predictor-floor-system-estimate.ts)
   - if predictor-side family deviation tightening is needed
 - [calculate-assembly.ts](../../packages/engine/src/calculate-assembly.ts)
   - if a future drift lands specifically in screening-anchored airborne companions on otherwise stable floor-system matches
+- [floor-system-materials.ts](../../packages/catalogs/src/materials/floor-system-materials.ts)
+  - if the landed `eps_floor_insulation_board` surface needs extension or a sibling rigid-insulation surface is introduced
+- [impact-predictor-input.ts](../../packages/engine/src/impact-predictor-input.ts)
+  - if the landed upper-EPS material or a sibling rigid-insulation surface needs explicit `upper_fill` inference and predictor-class roundtripping
+- [floor-system-match.ts](../../packages/engine/src/floor-system-match.ts)
+  - if the remaining `gdmtxa04a` boundary decision revisits manual visible exact eligibility instead of keeping that row estimate-only
+- [predictor-published-family-estimate.ts](../../packages/engine/src/predictor-published-family-estimate.ts)
+  - if the open-box published-family selector must be narrowed so non-dry upper packages stop collapsing onto the basic archetype
+- [workbench-store.ts](../../apps/web/features/workbench/workbench-store.ts)
+  - if workbench role inference must keep rigid floor-insulation boards on `upper_fill` rather than `ceiling_fill`
+- [normalize-rows.ts](../../apps/web/features/workbench/normalize-rows.ts)
+  - if split/merged rigid upper-insulation layers need solver-boundary collapse parity beyond the landed `R7a` surface
 - [floor-system-ratings.ts](../../packages/engine/src/floor-system-ratings.ts)
   - only when rating derivation itself changes
 - [floor-role-topology.ts](../../packages/engine/src/floor-role-topology.ts)
@@ -1000,8 +1221,14 @@ Avoid these until evidence forces them:
   - still fail-closed on impact field outputs
   - should only open from official or measured same-family evidence
 - remaining TUAS corridor questions:
-  - `R7a`
-  - `R6b`
+  - note:
+    - `R6b` is now landed as an exact reinforced lower-treatment `b` branch
+    - `R7a` is now landed as an exact-only heavy/wet `a` branch with an honest upper-EPS-board surface
+    - the remaining work is no longer this branch design; it is choosing the next evidence-led corridor after the TUAS open-box shortlist
+- remaining Dataholz CLT manual-match boundary question:
+  - `dataholz_gdmtxa04a_clt_lab_2026` remains the only imported exact-only CLT row
+  - it stays estimate-routed today because `manualMatch: false` keeps it outside predictor exact resolution
+  - any future reopen must prove an honest visible surface and an honest predictor surface together; it is not another straight wet/fill exact fingerprint
 - deferred weaker UBIQ corridor rows:
   - `FL-23`
   - `FL-25`
@@ -1104,9 +1331,9 @@ The next phase is only complete when all of these are true:
 Do this in order:
 
 1. extend the raw-floor inference audit before reopening any broader screening-carrier posture
-2. widen the mixed floor/wall torture surface beyond the current first deterministic longer chain and first widened generated duplicate/swap grid
+2. widen mixed floor/wall torture coverage only when the selected floor or wall slice exposes a new representative gap
 3. widen wall-side evidence only, not wall-side logic
-4. re-check whether any wall corridor widening is still justified after those scans
-5. only then resume source-led floor widening
+4. only then resume broader source-led floor widening
+5. keep `gdmtxa04a` estimate-only until a future source-backed material surface exists
 
-This order is the safest one because the previous blocker is already closed; the next risk is accidental widening without enough frozen evidence.
+This order is the safest one because the previous broad blockers are already closed; the next risk is accidental widening that weakens the frozen raw/support posture or silently promotes under-described preset-only rows into visible exact corridors.

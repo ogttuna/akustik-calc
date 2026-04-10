@@ -392,6 +392,15 @@ function selectOpenBoxPublishedEstimateCase(
     return "dry";
   }
 
+  if (
+    input.upperFill?.materialClass ||
+    typeof input.upperFill?.thicknessMm === "number" ||
+    input.floatingScreed?.materialClass ||
+    typeof input.floatingScreed?.thicknessMm === "number"
+  ) {
+    return null;
+  }
+
   return "basic";
 }
 

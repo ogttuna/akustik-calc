@@ -273,6 +273,12 @@ const REGUPOL_CURVE_8_EXACT_ROWS: readonly LayerInput[] = [
   { floorRole: "base_structure", materialId: "concrete", thicknessMm: 150 }
 ];
 
+const REGUPOL_MULTI_45_PORCELAIN_ROWS: readonly LayerInput[] = [
+  { floorRole: "floor_covering", materialId: "porcelain_tile", thicknessMm: 10 },
+  { floorRole: "resilient_layer", materialId: "regupol_sonus_multi_4_5", thicknessMm: 4.5 },
+  { floorRole: "base_structure", materialId: "concrete", thicknessMm: 150 }
+];
+
 const REGUPOL_CURVE_8_WET_BOUND_ROWS: readonly LayerInput[] = [
   { floorRole: "floating_screed", materialId: "screed", thicknessMm: 70 },
   { floorRole: "resilient_layer", materialId: "regupol_sonus_curve_8", thicknessMm: 8 },
@@ -283,6 +289,13 @@ const GETZNER_AFM_33_DELTA_ROWS: readonly LayerInput[] = [
   { floorRole: "floor_covering", materialId: "ceramic_tile", thicknessMm: 8 },
   { floorRole: "floating_screed", materialId: "screed", thicknessMm: 50 },
   { floorRole: "resilient_layer", materialId: "getzner_afm_33", thicknessMm: 8 },
+  { floorRole: "base_structure", materialId: "concrete", thicknessMm: 150 }
+];
+
+const GETZNER_AFM_35_DELTA_ROWS: readonly LayerInput[] = [
+  { floorRole: "floor_covering", materialId: "ceramic_tile", thicknessMm: 8 },
+  { floorRole: "floating_screed", materialId: "screed", thicknessMm: 50 },
+  { floorRole: "resilient_layer", materialId: "getzner_afm_35", thicknessMm: 8 },
   { floorRole: "base_structure", materialId: "concrete", thicknessMm: 150 }
 ];
 
@@ -372,6 +385,22 @@ export const ENGINE_MIXED_GENERATED_CASES: readonly EngineMixedGeneratedCase[] =
       impactFieldContext: FLOOR_IMPACT_FIELD_CONTEXT,
       targetOutputs: FLOOR_FIELD_OUTPUTS
     },
+    id: "floor-regupol-multi-45-porcelain-exact",
+    label: "REGUPOL Multi 4.5 porcelain exact floor",
+    labOptions: { targetOutputs: FLOOR_LAB_OUTPUTS },
+    rows: REGUPOL_MULTI_45_PORCELAIN_ROWS,
+    splitPlans: [
+      { parts: [5, 5], rowIndex: 0 },
+      { parts: [75, 75], rowIndex: 2 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    fieldOptions: {
+      airborneContext: FLOOR_AIRBORNE_CONTEXT,
+      impactFieldContext: FLOOR_IMPACT_FIELD_CONTEXT,
+      targetOutputs: FLOOR_FIELD_OUTPUTS
+    },
     id: "floor-ubiq-steel-300-unspecified-bound",
     label: "UBIQ steel 300 unspecified bound floor",
     labOptions: { targetOutputs: FLOOR_LAB_OUTPUTS },
@@ -379,6 +408,22 @@ export const ENGINE_MIXED_GENERATED_CASES: readonly EngineMixedGeneratedCase[] =
     splitPlans: [
       { parts: [8, 8], rowIndex: 0 },
       { parts: [10, 10], rowIndex: 3 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    fieldOptions: {
+      airborneContext: FLOOR_AIRBORNE_CONTEXT,
+      impactFieldContext: FLOOR_IMPACT_FIELD_CONTEXT,
+      targetOutputs: FLOOR_FIELD_OUTPUTS
+    },
+    id: "floor-getzner-afm-35-delta",
+    label: "Getzner AFM 35 Delta floor",
+    labOptions: { targetOutputs: FLOOR_LAB_OUTPUTS },
+    rows: GETZNER_AFM_35_DELTA_ROWS,
+    splitPlans: [
+      { parts: [25, 25], rowIndex: 1 },
+      { parts: [75, 75], rowIndex: 3 }
     ],
     studyMode: "floor"
   },

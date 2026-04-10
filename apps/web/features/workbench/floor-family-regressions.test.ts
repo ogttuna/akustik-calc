@@ -151,8 +151,81 @@ const OPEN_BOX_B_WET_SCREED_EXACT_ROWS: readonly Omit<LayerDraft, "id">[] = [
   { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: "370" }
 ];
 
+const OPEN_BOX_B_REINFORCED_CEILING_EXACT_ROWS: readonly Omit<LayerDraft, "id">[] = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "15" },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "15" },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "15" },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "15" },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: "100" },
+  { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: "25" },
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: "8" },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: "3" },
+  { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: "370" }
+];
+
+const OPEN_BOX_A_EPS_SCREED_EXACT_ROWS: readonly Omit<LayerDraft, "id">[] = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: "100" },
+  { floorRole: "ceiling_cavity", materialId: "tuas_open_box_ceiling_family_a", thicknessMm: "25" },
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: "8" },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: "3" },
+  { floorRole: "upper_fill", materialId: "eps_floor_insulation_board", thicknessMm: "50" },
+  { floorRole: "floating_screed", materialId: "screed", thicknessMm: "40" },
+  { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: "370" }
+];
+
+const OPEN_BOX_A_EPS_SCREED_SPLIT_UPPER_ROWS: readonly Omit<LayerDraft, "id">[] = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: "100" },
+  { floorRole: "ceiling_cavity", materialId: "tuas_open_box_ceiling_family_a", thicknessMm: "25" },
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: "8" },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: "3" },
+  { floorRole: "upper_fill", materialId: "eps_floor_insulation_board", thicknessMm: "25" },
+  { floorRole: "upper_fill", materialId: "eps_floor_insulation_board", thicknessMm: "25" },
+  { floorRole: "floating_screed", materialId: "screed", thicknessMm: "40" },
+  { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: "370" }
+];
+
+const OPEN_BOX_A_MIXED_CEILING_SCHEDULE_ROWS: readonly Omit<LayerDraft, "id">[] = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "15" },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "15" },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "15" },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "15" },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: "100" },
+  { floorRole: "ceiling_cavity", materialId: "tuas_open_box_ceiling_family_a", thicknessMm: "25" },
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: "8" },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: "3" },
+  { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: "370" }
+];
+
+const OPEN_BOX_HYBRID_LOWER_WET_ROWS: readonly Omit<LayerDraft, "id">[] = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: "100" },
+  { floorRole: "ceiling_cavity", materialId: "tuas_open_box_ceiling_family_a", thicknessMm: "45" },
+  { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: "25" },
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: "8" },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: "3" },
+  { floorRole: "upper_fill", materialId: "eps_floor_insulation_board", thicknessMm: "35" },
+  { floorRole: "floating_screed", materialId: "screed", thicknessMm: "40" },
+  { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: "370" }
+];
+
 const OPEN_BOX_BASIC_MERGED_BOARD_ROWS: readonly Omit<LayerDraft, "id">[] = [
   { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "26" },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: "100" },
+  { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: "25" },
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: "8" },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: "3" },
+  { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: "370" }
+];
+
+const OPEN_BOX_B_REINFORCED_CEILING_MERGED_BOARD_ROWS: readonly Omit<LayerDraft, "id">[] = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "60" },
   { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: "100" },
   { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: "25" },
   { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: "8" },
@@ -508,7 +581,7 @@ describe("floor family regressions", () => {
     ]);
   });
 
-  it("keeps CLT upper-plus-lower stacks on the dry interaction fallback lane", () => {
+  it("keeps under-described CLT upper-plus-lower direct-fixed stacks on the fail-closed screening lane", () => {
     const scenario = evaluateFloorScenario({
       id: "clt-upper-lower-fallback",
       rows: CLT_UPPER_AND_LOWER_ROWS,
@@ -516,10 +589,18 @@ describe("floor family regressions", () => {
     });
 
     expect(scenario.result?.floorSystemMatch).toBeNull();
-    expect(scenario.result?.impact?.basis).toBe("predictor_mass_timber_clt_dry_interaction_estimate");
-    expect(scenario.result?.impact?.LnW).toBe(70);
-    expect(scenario.result?.floorSystemRatings?.Rw).toBe(38);
-    expect(scenario.result?.impact?.estimateCandidateIds).toEqual(["tuas_x2_clt140_measured_2026"]);
+    expect(scenario.result?.floorSystemEstimate).toBeNull();
+    expect(scenario.result?.impact).toBeNull();
+    expect(scenario.result?.floorSystemRatings?.basis).toBe("screening_mass_law_curve_seed_v3");
+    expect(scenario.result?.floorSystemRatings?.Rw).toBe(49);
+    expect(scenario.result?.supportedTargetOutputs).toEqual(["Rw"]);
+    expect(scenario.result?.unsupportedTargetOutputs).toEqual(["Ln,w", "Ln,w+CI", "DeltaLw"]);
+    expect(scenario.result?.floorSystemRecommendations).toHaveLength(8);
+    expect(
+      scenario.result?.warnings.some((warning: string) =>
+        /withheld the closest candidate label because it drifted outside the defended same-family route/i.test(warning)
+      )
+    ).toBe(true);
   });
 
   it("keeps the measured TUAS open-box dry-floor row exact on the web scenario route", () => {
@@ -613,6 +694,51 @@ describe("floor family regressions", () => {
     expect(scenario.result?.floorSystemRatings?.Rw).toBe(74);
   });
 
+  it("keeps the measured TUAS open-box reinforced ceiling row exact on the web scenario route", () => {
+    const scenario = evaluateFloorScenario({
+      id: "open-box-b-reinforced-ceiling-exact",
+      rows: OPEN_BOX_B_REINFORCED_CEILING_EXACT_ROWS,
+      targetOutputs: LAB_OUTPUTS
+    });
+
+    expect(scenario.result?.floorSystemMatch?.system.id).toBe("tuas_r6b_open_box_timber_measured_2026");
+    expect(scenario.result?.impact?.LnW).toBe(44);
+    expect(scenario.result?.impact?.CI50_2500).toBe(3);
+    expect(scenario.result?.floorSystemRatings?.Rw).toBe(71);
+  });
+
+  it("keeps the measured TUAS open-box EPS board plus screed branch exact on the web scenario route", () => {
+    const scenario = evaluateFloorScenario({
+      id: "open-box-a-eps-screed-exact",
+      rows: OPEN_BOX_A_EPS_SCREED_EXACT_ROWS,
+      targetOutputs: LAB_OUTPUTS
+    });
+
+    expect(scenario.result?.floorSystemMatch?.system.id).toBe("tuas_r7a_open_box_timber_measured_2026");
+    expect(scenario.result?.impact?.LnW).toBe(60);
+    expect(scenario.result?.floorSystemRatings?.Rw).toBe(60);
+  });
+
+  it("keeps the TUAS mixed-board family-a outlier off the exact web route", () => {
+    const scenario = evaluateFloorScenario({
+      id: "open-box-a-mixed-ceiling-schedule",
+      rows: OPEN_BOX_A_MIXED_CEILING_SCHEDULE_ROWS,
+      targetOutputs: LAB_OUTPUTS
+    });
+
+    expect(scenario.result?.floorSystemMatch).toBeNull();
+  });
+
+  it("keeps the TUAS hybrid lower-treatment wet outlier off the exact web route", () => {
+    const scenario = evaluateFloorScenario({
+      id: "open-box-hybrid-lower-wet",
+      rows: OPEN_BOX_HYBRID_LOWER_WET_ROWS,
+      targetOutputs: LAB_OUTPUTS
+    });
+
+    expect(scenario.result?.floorSystemMatch).toBeNull();
+  });
+
   it("keeps the measured TUAS open-box timber row exact when two gypsum boards are merged into one row", () => {
     const baselineScenario = evaluateFloorScenario({
       id: "open-box-basic-baseline",
@@ -628,6 +754,40 @@ describe("floor family regressions", () => {
     expect(baselineScenario.result).not.toBeNull();
     expect(mergedScenario.result).not.toBeNull();
     expect(resultSnapshot(mergedScenario.result!)).toEqual(resultSnapshot(baselineScenario.result!));
+  });
+
+  it("keeps the measured TUAS open-box reinforced ceiling row exact when four 15 mm gypsum boards are merged into one row", () => {
+    const baselineScenario = evaluateFloorScenario({
+      id: "open-box-reinforced-ceiling-baseline",
+      rows: OPEN_BOX_B_REINFORCED_CEILING_EXACT_ROWS,
+      targetOutputs: LAB_OUTPUTS
+    });
+    const mergedScenario = evaluateFloorScenario({
+      id: "open-box-reinforced-ceiling-merged-board",
+      rows: OPEN_BOX_B_REINFORCED_CEILING_MERGED_BOARD_ROWS,
+      targetOutputs: LAB_OUTPUTS
+    });
+
+    expect(baselineScenario.result).not.toBeNull();
+    expect(mergedScenario.result).not.toBeNull();
+    expect(resultSnapshot(mergedScenario.result!)).toEqual(resultSnapshot(baselineScenario.result!));
+  });
+
+  it("keeps the TUAS open-box EPS board branch stable when the upper EPS board is entered as contiguous split rows", () => {
+    const baselineScenario = evaluateFloorScenario({
+      id: "open-box-a-eps-screed-baseline",
+      rows: OPEN_BOX_A_EPS_SCREED_EXACT_ROWS,
+      targetOutputs: LAB_OUTPUTS
+    });
+    const splitScenario = evaluateFloorScenario({
+      id: "open-box-a-eps-screed-split-upper",
+      rows: OPEN_BOX_A_EPS_SCREED_SPLIT_UPPER_ROWS,
+      targetOutputs: LAB_OUTPUTS
+    });
+
+    expect(baselineScenario.result).not.toBeNull();
+    expect(splitScenario.result).not.toBeNull();
+    expect(resultSnapshot(splitScenario.result!)).toEqual(resultSnapshot(baselineScenario.result!));
   });
 
   it("carries the measured TUAS open-box dry-floor row into standardized field outputs on the web scenario route", () => {

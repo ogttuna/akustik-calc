@@ -811,15 +811,31 @@ function hasInferredConcreteCeilingHelperSupportSignal(input: {
     return false;
   }
 
-  const hasConcreteBaseStructure = input.inferredImpactLayers.some(
+  const concreteBaseStructureIndex = input.inferredImpactLayers.findIndex(
     (layer) => layer.floorRole === "base_structure" && layer.materialId === "concrete"
   );
-  const hasCeilingBoard = input.inferredImpactLayers.some((layer) => layer.floorRole === "ceiling_board");
-  const hasCeilingHelper = input.inferredImpactLayers.some(
+  if (concreteBaseStructureIndex === -1 || concreteBaseStructureIndex !== input.inferredImpactLayers.length - 1) {
+    return false;
+  }
+
+  const ceilingSideLayers = input.inferredImpactLayers.slice(0, concreteBaseStructureIndex);
+  if (
+    !ceilingSideLayers.every(
+      (layer) =>
+        layer.floorRole === "ceiling_board" ||
+        layer.floorRole === "ceiling_cavity" ||
+        layer.floorRole === "ceiling_fill"
+    )
+  ) {
+    return false;
+  }
+
+  const hasCeilingBoard = ceilingSideLayers.some((layer) => layer.floorRole === "ceiling_board");
+  const hasCeilingHelper = ceilingSideLayers.some(
     (layer) => layer.floorRole === "ceiling_cavity" || layer.floorRole === "ceiling_fill"
   );
 
-  return hasConcreteBaseStructure && hasCeilingBoard && hasCeilingHelper;
+  return hasCeilingBoard && hasCeilingHelper;
 }
 
 export function calculateAssembly(

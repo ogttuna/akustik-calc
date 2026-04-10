@@ -63,6 +63,25 @@ const CASES: readonly OrderParityCase[] = [
     ]
   },
   {
+    id: "open-web noncanonical continuation board-cluster order",
+    canonical: [
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 8 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 5 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 90 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 8 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 5 },
+      { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: 300 }
+    ],
+    reordered: [
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 5 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 8 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 90 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 5 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 8 },
+      { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: 300 }
+    ]
+  },
+  {
     id: "clt lower-only non-packable guard order",
     canonical: [
       { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 5 },

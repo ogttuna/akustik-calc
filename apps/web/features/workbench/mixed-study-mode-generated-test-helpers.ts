@@ -554,6 +554,17 @@ export const ROUTE_MIXED_GENERATED_CASES: readonly RouteMixedGeneratedCase[] = [
     studyMode: "floor"
   },
   {
+    id: "route-regupol-multi-45-porcelain-exact",
+    label: "REGUPOL Multi 4.5 porcelain exact floor",
+    requestedOutputs: DEFAULT_FLOOR_REQUESTED_OUTPUTS,
+    rows: getPresetById("regupol_multi_45_porcelain_exact").rows,
+    splitPlans: [
+      { parts: ["5", "5"], rowIndex: 0 },
+      { parts: ["75", "75"], rowIndex: 2 }
+    ],
+    studyMode: "floor"
+  },
+  {
     id: "route-regupol-curve-8-exact",
     label: "REGUPOL Curve 8 exact floor",
     requestedOutputs: DEFAULT_FLOOR_REQUESTED_OUTPUTS,
@@ -583,6 +594,17 @@ export const ROUTE_MIXED_GENERATED_CASES: readonly RouteMixedGeneratedCase[] = [
     splitPlans: [
       { parts: ["8", "8"], rowIndex: 0 },
       { parts: ["125", "125"], rowIndex: 5 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    id: "route-getzner-afm-35-delta",
+    label: "Getzner AFM 35 Delta floor",
+    requestedOutputs: DEFAULT_FLOOR_REQUESTED_OUTPUTS,
+    rows: getPresetById("getzner_afm_35_delta").rows,
+    splitPlans: [
+      { parts: ["25", "25"], rowIndex: 1 },
+      { parts: ["75", "75"], rowIndex: 3 }
     ],
     studyMode: "floor"
   },

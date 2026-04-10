@@ -239,6 +239,22 @@ const CASES: readonly BoundaryCase[] = [
     }
   },
   {
+    id: "openweb-noncanonical-lower",
+    rows: [
+      { floorRole: "ceiling_board", id: "a", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", id: "b", materialId: "rockwool", thicknessMm: 90 },
+      { floorRole: "ceiling_board", id: "c", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "base_structure", id: "d", materialId: "open_web_steel_floor", thicknessMm: 300 }
+    ],
+    expected: {
+      basis: "mixed_predicted_plus_estimated_local_guide",
+      candidateIds: ["ubiq_fl24_open_web_steel_300_16mm_exact_lab_2026"],
+      estimateKind: "low_confidence",
+      floorSystemMatchId: null,
+      statuses: LIVE_STATUSES
+    }
+  },
+  {
     id: "openweb-combined",
     rows: [
       { floorRole: "ceiling_board", id: "a", materialId: "firestop_board", thicknessMm: 16 },

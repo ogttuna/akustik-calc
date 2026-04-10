@@ -1488,6 +1488,26 @@ describe("workbench store", () => {
     expect(updatedRow?.densityKgM3 ?? "").toBe("");
   });
 
+  it("infers the rigid EPS board as upper fill when a draft row is switched onto the new R7a material surface", async () => {
+    const { useWorkbenchStore } = await import("./workbench-store");
+
+    useWorkbenchStore.getState().reset();
+    useWorkbenchStore.getState().loadPreset("heavy_concrete_impact_floor");
+
+    const row = useWorkbenchStore
+      .getState()
+      .rows.find((entry) => entry.floorRole === "floating_screed" && entry.materialId === "screed");
+
+    expect(row).toBeTruthy();
+
+    useWorkbenchStore.getState().updateMaterial(row!.id, "eps_floor_insulation_board");
+
+    const updatedRow = useWorkbenchStore.getState().rows.find((entry) => entry.id === row!.id);
+
+    expect(updatedRow?.materialId).toBe("eps_floor_insulation_board");
+    expect(updatedRow?.floorRole).toBe("upper_fill");
+  });
+
   it("reloads saved custom materials so they stay usable in the layer stack", async () => {
     const { evaluateScenario } = await import("./scenario-analysis");
     const { createEmptyCustomMaterialDraft, buildCustomMaterialDefinition } = await import("./workbench-materials");
