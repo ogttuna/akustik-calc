@@ -1,4 +1,4 @@
-import type { AssemblyCalculation } from "@dynecho/shared";
+import type { AssemblyCalculation, DynamicAirborneTrace } from "@dynecho/shared";
 
 import { IMPACT_ONLY_LOW_CONFIDENCE_FLOOR_FAMILY_NOTE, isImpactOnlyLowConfidenceFloorLane } from "./impact-only-low-confidence-floor-lane";
 import type { StudyMode } from "./preset-definitions";
@@ -12,6 +12,36 @@ export type DynamicCalcBranchSummary = {
 
 function formatStrategyLabel(strategy: string | undefined): string {
   return strategy ? strategy.replaceAll("_", " ") : "seed screening path";
+}
+
+function buildWallBoundaryDetail(trace: DynamicAirborneTrace): string | null {
+  const runnerUpLabel = trace.runnerUpFamilyLabel;
+
+  if (trace.familyDecisionClass === "ambiguous") {
+    if (trace.familyDecisionSelectedBelowRunnerUp) {
+      return runnerUpLabel
+        ? `${trace.detectedFamilyLabel} is on an ambiguous boundary with ${runnerUpLabel}, and the nearby ${runnerUpLabel} corridor is still slightly ahead, so read this as a protected corridor hold rather than a settled lane.`
+        : `${trace.detectedFamilyLabel} is on an ambiguous family boundary, and a nearby corridor is still slightly ahead, so read this as a protected corridor hold rather than a settled lane.`;
+    }
+
+    return runnerUpLabel
+      ? `${trace.detectedFamilyLabel} is on an ambiguous boundary with ${runnerUpLabel}, and a conservative family-boundary hold is active.`
+      : `${trace.detectedFamilyLabel} is on an ambiguous family boundary, and a conservative family-boundary hold is active.`;
+  }
+
+  if (trace.familyDecisionClass === "narrow") {
+    return runnerUpLabel
+      ? `${trace.detectedFamilyLabel} stays on a narrow boundary with ${runnerUpLabel}, and a conservative family-boundary hold is active.`
+      : `${trace.detectedFamilyLabel} stays on a narrow family boundary, and a conservative family-boundary hold is active.`;
+  }
+
+  if (trace.familyBoundaryHoldApplied) {
+    return runnerUpLabel
+      ? `A conservative family-boundary hold is active because ${runnerUpLabel} still remains nearby on the current corridor.`
+      : "A conservative family-boundary hold is active on the current corridor.";
+  }
+
+  return null;
 }
 
 export function getDynamicCalcBranchSummary(input: {
@@ -90,12 +120,18 @@ export function getDynamicCalcBranchSummary(input: {
 
   const airborneTrace = result.dynamicAirborneTrace ?? null;
   if (airborneTrace) {
+    const wallBoundaryDetail = buildWallBoundaryDetail(airborneTrace);
+    const wallNeedsWarning =
+      Boolean(wallBoundaryDetail) ||
+      airborneTrace.confidenceClass === "low" ||
+      airborneTrace.familyDecisionSelectedBelowRunnerUp === true;
+
     return {
-      detail: `${airborneTrace.selectedLabel} anchor is active with ${formatStrategyLabel(airborneTrace.strategy)}.`,
+      detail: `${airborneTrace.selectedLabel} anchor is active with ${formatStrategyLabel(airborneTrace.strategy)}.${wallBoundaryDetail ? ` ${wallBoundaryDetail}` : ""}`,
       tone:
-        airborneTrace.confidenceClass === "high"
+        !wallNeedsWarning && airborneTrace.confidenceClass === "high"
           ? "ready"
-          : airborneTrace.confidenceClass === "low"
+          : wallNeedsWarning
             ? "warning"
             : "neutral",
       value: airborneTrace.detectedFamilyLabel

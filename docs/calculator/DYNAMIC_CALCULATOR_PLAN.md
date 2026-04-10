@@ -876,7 +876,7 @@ Primary-source audit completed after the CLT widening:
     - all currently harvested open-box rows remain laminate / EPS / dry-floor variants
     - all inspected open-box rows still include some lower-treatment build-up
     - `R2c` looked promising at first glance, but it still contains a resilient-stud + `2 x 13 mm` gypsum lower build-up, so it does not justify any `__none` topology widening
-    - `R6a` and `R10a` do not open safe new imports on current surfaces because they require mixed board / staged dry-pack exact semantics
+    - `R6a` and `R10a` did not open safe new imports on the audit-time surfaces because they required mixed board / staged dry-pack exact semantics
     - `R7b`, `R8b`, `R9b`, and `R2c` do not open safe new imports on current surfaces because they require a new hybrid lower-treatment support surface beyond the existing `family_a` vs `family_b` split
     - `TUAS2023FloorDetails.pdf` page `5/7` visually confirms the existing family split remains correct:
       - `R2a-R10a` uses `25 mm` wooden laths
@@ -885,6 +885,17 @@ Primary-source audit completed after the CLT widening:
       - `open_box_370__tile_wet__none`
       - `open_box_370__vinyl_wet__none`
       - `open_box_370__timber_acoustic__none`
+  - update on `2026-04-10`:
+    - both `R6a` and `R10a` are now landed as exact rows on the current implementation surface
+    - `R7b`, `R8b`, `R9b`, and `R2c` are now also landed as exact rows on the hybrid lower-treatment open-box surface
+    - the hybrid open-box branch is therefore closed without reopening a generic `__none` topology lane
+    - the next selected slice is now `tuas_c7_wet_geotextile_clt_surface_design_v1`
+    - the current source-backed blocker is no longer material-surface absence:
+      - TUAS drawing page `24/40` shows `260 mm` CLT + `35 mm` EPS + `1 mm` geotextile + `40 mm` screed + `3 mm` EPS underlay + `8 mm` laminate
+      - current implementation still parks that stack on the broader `family_general` lane until a narrow exact row is landed
+    - current restart truth lives in:
+      - [CURRENT_STATE.md](./CURRENT_STATE.md)
+      - [DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md](./DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md)
 - Pliteq hollow-core audit:
   - official source used: `https://genieboard.pliteq.com/wp-content/uploads/sites/8/Mar2022-ESR-3816.pdf`
   - existing official hollow-core evidence still only defends:

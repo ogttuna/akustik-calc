@@ -445,6 +445,35 @@ describe("buildImpactPredictorInputFromLayerStack", () => {
     expect(reinforcedCeiling.officialFloorSystemId).toBe("tuas_r6b_open_box_timber_measured_2026");
   });
 
+  it("can infer the TUAS mixed-board family-a exact id from an explicit lower-board schedule", () => {
+    const mixedBoardA = adaptImpactPredictorInput({
+      structuralSupportType: "open_box_timber",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        thicknessMm: 370
+      },
+      resilientLayer: {
+        thicknessMm: 3
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "laminate_flooring",
+        thicknessMm: 8
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_elastic_hanger",
+        supportClass: "tuas_open_box_family_a",
+        cavityDepthMm: 25,
+        cavityFillThicknessMm: 100,
+        boardMaterialClass: "generic_gypsum_board",
+        boardThicknessScheduleMm: [13, 13, 15, 15, 15, 15]
+      }
+    });
+
+    expect(mixedBoardA.officialFloorSystemId).toBe("tuas_r6a_open_box_timber_measured_2026");
+    expect(mixedBoardA.sourceLayers).toEqual([]);
+  });
+
   it("infers the new rigid EPS board as upper fill instead of ceiling fill on untagged R7a-like stacks", () => {
     const input = buildImpactPredictorInputFromLayerStack([
       { materialId: "gypsum_board", thicknessMm: 13 },
@@ -528,6 +557,46 @@ describe("buildImpactPredictorInputFromLayerStack", () => {
     expect(input.impactSystemType).toBe("combined_upper_lower_system");
     expect(input.lowerTreatment?.type).toBe("suspended_ceiling_elastic_hanger");
     expect(input.lowerTreatment?.supportClass).toBe("tuas_open_box_family_a");
+  });
+
+  it("derives the TUAS mixed-board lower schedule from visible layers without surfacing a blocker warning", () => {
+    const layers = [
+      { materialId: "gypsum_board", thicknessMm: 26, floorRole: "ceiling_board" as const },
+      { materialId: "gypsum_board", thicknessMm: 60, floorRole: "ceiling_board" as const },
+      { materialId: "rockwool", thicknessMm: 100, floorRole: "ceiling_fill" as const },
+      { materialId: "tuas_open_box_ceiling_family_a", thicknessMm: 25, floorRole: "ceiling_cavity" as const },
+      { materialId: "laminate_flooring", thicknessMm: 8, floorRole: "floor_covering" as const },
+      { materialId: "eps_underlay", thicknessMm: 3, floorRole: "resilient_layer" as const },
+      { materialId: "open_box_timber_slab", thicknessMm: 370, floorRole: "base_structure" as const }
+    ];
+
+    const input = maybeBuildImpactPredictorInputFromLayerStack(layers);
+
+    expect(getVisibleLayerPredictorBlockerWarning(layers)).toBeNull();
+    expect(input?.lowerTreatment?.boardLayerCount).toBeUndefined();
+    expect(input?.lowerTreatment?.boardThicknessMm).toBeUndefined();
+    expect(input?.lowerTreatment?.boardThicknessScheduleMm).toEqual([26, 60]);
+  });
+
+  it("keeps the TUAS staged mixed upper package fail-closed on the predictor surface even after the exact visible-layer row lands", () => {
+    const layers = [
+      { materialId: "gypsum_board", thicknessMm: 13, floorRole: "ceiling_board" as const },
+      { materialId: "gypsum_board", thicknessMm: 13, floorRole: "ceiling_board" as const },
+      { materialId: "rockwool", thicknessMm: 100, floorRole: "ceiling_fill" as const },
+      { materialId: "tuas_open_box_ceiling_family_a", thicknessMm: 25, floorRole: "ceiling_cavity" as const },
+      { materialId: "laminate_flooring", thicknessMm: 8, floorRole: "floor_covering" as const },
+      { materialId: "eps_underlay", thicknessMm: 3, floorRole: "resilient_layer" as const },
+      { materialId: "glasswool_board", thicknessMm: 13, floorRole: "upper_fill" as const },
+      { materialId: "gypsum_board", thicknessMm: 15, floorRole: "floating_screed" as const },
+      { materialId: "screed", thicknessMm: 3, floorRole: "floating_screed" as const },
+      { materialId: "gypsum_board", thicknessMm: 15, floorRole: "floating_screed" as const },
+      { materialId: "open_box_timber_slab", thicknessMm: 370, floorRole: "base_structure" as const }
+    ];
+
+    expect(maybeBuildImpactPredictorInputFromLayerStack(layers)).toBeNull();
+    expect(getVisibleLayerPredictorBlockerWarning(layers)).toMatch(
+      /single-entry floor roles are duplicated: floating screed x3 \(Gypsum Board, Mineral Screed\)/i
+    );
   });
 
   it("infers steel support form, product id, engineered-timber-underlay covering, and elastic ceiling semantics", () => {

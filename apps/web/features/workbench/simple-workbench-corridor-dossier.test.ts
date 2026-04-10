@@ -67,6 +67,38 @@ describe("simple workbench corridor dossier", () => {
     expect(dossier.cards.find((card) => card.label === "Active family")).toBeUndefined();
   });
 
+  it("keeps wall corridor dossiers explicit when the current selector sits on a protected boundary hold", () => {
+    const scenario = evaluateScenario({
+      airborneContext: {
+        contextMode: "field_between_rooms",
+        airtightness: "good",
+        panelHeightMm: 2700,
+        panelWidthMm: 3000,
+        receivingRoomRt60S: 0.5,
+        receivingRoomVolumeM3: 30,
+        sharedTrack: "independent"
+      },
+      calculator: "dynamic",
+      id: "corridor-aac-boundary",
+      name: "corridor-aac-boundary",
+      rows: [
+        { id: "corridor-aac-boundary-1", materialId: "ytong_aac_d700", thicknessMm: "100" },
+        { id: "corridor-aac-boundary-2", materialId: "air_gap", thicknessMm: "50" },
+        { id: "corridor-aac-boundary-3", materialId: "gypsum_board", thicknessMm: "12.5" }
+      ],
+      source: "current",
+      studyMode: "wall",
+      targetOutputs: ["R'w", "DnT,w"]
+    });
+    const dossier = buildSimpleWorkbenchCorridorDossier(scenario.result, "wall");
+
+    expect(dossier.cards.find((card) => card.label === "Route posture")?.detail).toContain(
+      "ambiguous boundary with Double Leaf"
+    );
+    expect(dossier.cards.find((card) => card.label === "Route posture")?.detail).toContain("protected corridor hold");
+    expect(dossier.cards.find((card) => card.label === "Solver spread")?.value).toBe("26 dB");
+  });
+
   it("stays explicit when no live result is attached yet", () => {
     const dossier = buildSimpleWorkbenchCorridorDossier(null, "floor");
 

@@ -11,6 +11,7 @@ import { buildWorkbenchWarningNotes } from "./workbench-warning-notes";
 import { getFieldAirborneLiveDetail } from "./field-airborne-output";
 import { getImpactLaneKind, getImpactLanePillLabel } from "./impact-lane-view";
 import { ResultAnswerChart } from "./result-answer-chart";
+import { getAirborneBoundaryPosture } from "./validation-regime";
 
 type ResultSummaryProps = {
   result: AssemblyCalculation | null;
@@ -28,6 +29,7 @@ export function ResultSummary({ result, targetLnwDb, targetRwDb, warnings }: Res
   const lowerBoundImpact = result?.lowerBoundImpact ?? null;
   const impactLaneKind = getImpactLaneKind({ impact: result?.impact, lowerBoundImpact });
   const dynamicTrace = result?.dynamicAirborneTrace ?? null;
+  const boundaryPosture = getAirborneBoundaryPosture(dynamicTrace);
   const dynamicImpactTrace = result?.dynamicImpactTrace ?? null;
   const fieldAirborneProvenance = getFieldAirborneProvenanceSummary(result);
   const activeCalculatorLabel = result?.calculatorLabel ?? "Screening Seed";
@@ -110,7 +112,7 @@ export function ResultSummary({ result, targetLnwDb, targetRwDb, warnings }: Res
               value={activeCalculatorLabel}
               detail={
                 dynamicTrace
-                  ? `${dynamicTrace.selectedLabel} anchor · ${dynamicTrace.strategy.replaceAll("_", " ")}`
+                  ? `${dynamicTrace.selectedLabel} anchor · ${dynamicTrace.strategy.replaceAll("_", " ")}${boundaryPosture ? ` · ${boundaryPosture.label}` : ""}`
                   : result.metrics.method
               }
             />
@@ -118,7 +120,7 @@ export function ResultSummary({ result, targetLnwDb, targetRwDb, warnings }: Res
               <MetricCard
                 label="Dynamic confidence"
                 value={`${Math.round(dynamicTrace.confidenceScore * 100)}%`}
-                detail={`${dynamicTrace.confidenceClass} confidence · ${dynamicTrace.solverSpreadRwDb} dB solver spread`}
+                detail={`${dynamicTrace.confidenceClass} confidence · ${dynamicTrace.solverSpreadRwDb} dB solver spread${boundaryPosture ? ` · ${boundaryPosture.label}` : ""}`}
               />
             ) : null}
             {fieldAirborneProvenance ? (

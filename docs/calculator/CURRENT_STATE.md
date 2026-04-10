@@ -337,8 +337,8 @@ Interpretation:
 - the living source-gap ledger now records which floor families are source-backed enough to tighten and which must stay fail-closed
 - the living source-gap ledger now also names the current implementation-backed widening-first and tightening-first family branches
 - the living source-gap ledger now includes a local source-corpus snapshot:
-  - TUAS open-box exact rows: `8`
-  - TUAS CLT exact rows: `4`
+  - TUAS open-box exact rows: `15`
+  - TUAS CLT exact rows: `9`
   - Dataholz CLT exact rows: `9`, with `1` currently still exact-only tightening slack
   - UBIQ open-web rows: `18` exact plus `3` bound
 - Dataholz CLT exact-preserving tightening is now narrower and more explicit:
@@ -353,7 +353,7 @@ Interpretation:
   - safe `b`-family widening is imported: `R2b`, `R3b`, `R11b`
   - explicit `a`-family open-box widening is now also imported: `R3a`, `R5a`
   - drawing-backed reinforced `b`-family widening is now also imported: `R6b`
-  - deferred TUAS CLT import remains behind Dataholz CLT tightening
+  - the TUAS CLT staged-upper and heavy dry-top tiers are now landed through `C5`; the remaining CLT backlog is the wet-top `C7` row plus the combined `c`-family rows
 - predictor-side and visible-layer TUAS ceiling-family groundwork is now in place:
   - explicit predictor input distinguishes `tuas_open_box_family_a` vs `tuas_open_box_family_b`
   - visible-layer/workbench stacks can now surface `family_a` honestly through `tuas_open_box_ceiling_family_a`
@@ -369,13 +369,183 @@ Interpretation:
     - `R2b` as the basic `b`-family anchor
     - `R6b` as the reinforced lower-treatment `b` branch
     - `R7a` as the exact-only heavy/wet `a` branch
-  - the deferred drawing-audit shortlist is now also closed without opening a new import:
+  - the original deferred drawing-audit shortlist is now partially resolved on exact surfaces:
     - `TUAS2023FloorDetails.pdf` page `5/7` visually confirms the existing family split remains correct:
       - `R2a-R10a` uses `25 mm` wooden laths
       - `R2b-R11b` uses `25 mm` resilient steel studs
-    - `R6a` (`4/40`) and `R10a` (`6/40`) stay deferred because they introduce mixed board / staged dry-pack schedules that the current exact role surface cannot encode honestly
-    - `R7b` (`11/40`), `R8b` (`12/40`), `R9b` (`13/40`), and `R2c` (`15/40`) stay deferred because they introduce hybrid lower-treatment morphologies outside the current `family_a` vs `family_b` support surfaces
-    - `R2c` specifically still does not justify any `__none` topology widening
+    - `R6a` (`4/40`) no longer stays parked:
+      - dedicated mixed lower-board schedule semantics now exist on exact visible-layer and predictor surfaces for the existing `family_a` support morphology
+      - exact row `tuas_r6a_open_box_timber_measured_2026` is landed at `Ln,w 64`, `Rw 56`
+      - grouped packed shorthand such as `26 mm + 60 mm` gypsum packages also resolves to that same exact row, but monolithic same-total shorthand still does not
+      - lab support remains `Rw` plus `Ln,w`; `Ln,w+CI` stays unsupported
+      - field continuation remains `Ln,w`, `L'n,w`, and `L'nT,w`; `L'nT,50` stays unsupported
+    - `R10a` (`6/40`) no longer stays parked:
+      - page `6/40` is now frozen and landed on the exact visible-layer route as:
+        - lower corridor unchanged: `2 x 13 mm` gypsum board + `100 mm` mineral wool + `25 mm` `family_a` cavity
+        - staged upper package: `13 mm` glass wool board + `15 mm` gypsum board + `3 mm` mortar + `15 mm` gypsum board + `3 mm` EPS underlay + `8 mm` laminate
+        - source spreadsheet exact lab tuple:
+          - `Ln,w 63`
+          - `Ln,w+CI 64`
+          - `Ln,w+CI,50-2500 66`
+          - `Rw 56`
+      - implementation outcome:
+        - exact row `tuas_r10a_open_box_timber_measured_2026` is now landed
+        - a dedicated exact `floating_screed` material/thickness schedule now exists for the source-backed split visible stack
+        - lab support is now `Rw`, `Ln,w`, and `Ln,w+CI`
+        - field continuation is now `Ln,w`, `L'n,w`, `L'nT,w`, and `L'nT,50`
+      - narrow honesty guard remains explicit:
+        - the physical split visible stack now lands exact without surfacing the old duplicate `floating_screed x3` warning
+        - the over-abstracted shorthand still does not land exact:
+          - `upper_fill 13 mm` + `dry_floating_gypsum_fiberboard 33 mm`
+          - it still only reaches `family_archetype` at `90%` fit
+        - predictor derivation still stays fail-closed on the staged mixed floating-screed package, so this slice widened the visible exact surface only
+    - `R2c` (`15/40`) no longer stays parked:
+      - page `15/40` is now frozen and landed on the exact visible-layer route as:
+        - lower hybrid corridor unchanged: `45 mm` `family_a` cavity + `25 mm` resilient stud + `2 x 13 mm` gypsum board
+        - no mineral wool
+        - top package: `3 mm` EPS underlay + `8 mm` laminate
+        - source spreadsheet exact lab tuple:
+          - `Ln,w 60`
+          - `Ln,w+CI 60`
+          - `Ln,w+CI,50-2500 60`
+          - `Rw 54`
+      - implementation outcome:
+        - exact row `tuas_r2c_open_box_timber_measured_2026` is now landed
+        - lab support is now `Rw`, `Ln,w`, and `Ln,w+CI`
+        - field continuation is now `Ln,w`, `L'n,w`, `L'nT,w`, and `L'nT,50`
+      - narrow honesty guard remains explicit:
+        - the exact route reuses the defended hybrid lower-treatment visible surface instead of inventing a generic `__none` / no-mineral-wool widening lane
+        - the older separator-free proxy still stays non-exact on the broader `family_general` lane
+    - the finished implementation comparison now narrows the remaining open TUAS set further:
+    - TUAS open-box exact rows now number `15`
+    - TUAS CLT exact rows now number `9`
+    - the same-family staged upper-package debt on the defended `family_a` corridor is now closed
+    - the first same-surface staged-upper CLT debt is also now closed:
+      - exact row `tuas_x3_clt140_measured_2026` is landed
+      - source-backed lab tuple is now live on the exact route:
+        - `Ln,w 61`
+        - `Ln,w+CI 63`
+        - `Ln,w+CI,50-2500 64`
+        - `Rw 49`
+      - field continuation is now live on the standardized continuation route:
+        - `L'n,w 63`
+        - `L'nT,w 61`
+        - `L'nT,50 64`
+      - the visible exact route no longer surfaces the duplicate `floating_screed x3` blocker for the defended stack
+      - predictor derivation still stays fail-closed on that staged mixed floating-screed package, so no broader predictor shortcut was invented
+    - new adjacent-family drift found during close-out is now frozen explicitly:
+      - the nearby bare-CLT visible fallback now admits `tuas_x4_clt140_measured_2026` as the third adjacent candidate
+      - that shifts the defended fallback tuple from `Ln,w 67.2` / `Rw 40.4` to `Ln,w 66.9` / `Rw 40.6`
+      - this is accepted because the route remains an estimate lane and the change came from a new nearer source-backed exact sibling rather than a heuristic widening
+    - the current separator-free hybrid open-box lower-treatment proxy still falls to `family_general` at `54%` fit with a duplicate `ceiling_cavity` blocker
+    - the thicker staged-upper CLT follow-on is now also closed:
+      - exact row `tuas_c3_clt260_measured_2026` is landed
+      - source-backed exact lab tuple is now live on the exact route:
+        - `Ln,w 55`
+        - `Ln,w+CI 58`
+        - `Ln,w+CI,50-2500 59`
+        - `Rw 54`
+      - field continuation is now live on the standardized continuation route:
+        - `L'n,w 57`
+        - `L'nT,w 55`
+        - `L'nT,50 59`
+      - the visible exact route again avoids the duplicate `floating_screed x3` blocker because the landed schedule remains the same defended `15 mm gypsum + 3 mm mortar + 15 mm gypsum` stack
+      - predictor derivation still stays fail-closed on that staged mixed floating-screed package, so the slice widened only the defended visible exact surface
+    - the first heavy dry-top CLT follow-on is now also closed:
+      - exact row `tuas_x4_clt140_measured_2026` is landed
+      - source-backed exact lab tuple is now live on the exact route:
+        - `Ln,w 52`
+        - `Ln,w+CI 52`
+        - `Ln,w+CI,50-2500 60`
+        - `Rw 55`
+      - field continuation is now live on the standardized continuation route:
+        - `L'n,w 54`
+        - `L'nT,w 52`
+        - `L'nT,50 60`
+      - packed visible shorthand such as `30 mm` gypsum board still resolves to the same exact row because it preserves the defended `2 x 15 mm` same-material schedule
+      - over-abstracted shorthand still does not land exact:
+        - `upper_fill 50 mm generic_fill` + `dry_floating_gypsum_fiberboard 30 mm`
+        - it only reaches `family_general` at `94%` fit against `tuas_x5_clt140_measured_2026`
+      - predictor derivation still stays fail-closed on this visible heavy dry-top package, so the slice widened only the defended exact surface
+    - the thicker same-surface heavy dry-top follow-on is now also closed:
+      - exact row `tuas_c4_clt260_measured_2026` is landed
+      - source-backed exact lab tuple is now live on the exact route:
+        - `Ln,w 47`
+        - `Ln,w+CI 49`
+        - `Ln,w+CI,50-2500 53`
+        - `Rw 61`
+      - field continuation is now live on the standardized continuation route:
+        - `L'n,w 49`
+        - `L'nT,w 47`
+        - `L'nT,50 53`
+      - packed visible shorthand such as `30 mm` gypsum board still resolves to the same exact row because it preserves the defended `2 x 15 mm` same-material schedule
+      - over-abstracted shorthand still does not land exact:
+        - `upper_fill 50 mm generic_fill` + `dry_floating_gypsum_fiberboard 30 mm`
+        - it only reaches `family_general` at `94%` fit against `tuas_x5_clt140_measured_2026`
+      - predictor derivation still stays fail-closed on this visible heavy dry-top package, so the slice widened only the defended exact surface
+    - the heavier same-surface heavy dry-top follow-on is now also closed:
+      - exact row `tuas_c5_clt260_measured_2026` is landed
+      - source-backed exact lab tuple is now live on the exact route:
+        - `Ln,w 45`
+        - `Ln,w+CI 46`
+        - `Ln,w+CI,50-2500 51`
+        - `Rw 61`
+      - field continuation is now live on the standardized continuation route:
+        - `L'n,w 47`
+        - `L'nT,w 45`
+        - `L'nT,50 51`
+      - packed visible shorthand such as `60 mm` gypsum board still resolves to the same exact row because it preserves the defended `4 x 15 mm` same-material schedule
+      - over-abstracted shorthand still does not land exact:
+        - `upper_fill 50 mm generic_fill` + `dry_floating_gypsum_fiberboard 60 mm`
+        - it only reaches `family_general` at `94%` fit against `tuas_x5_clt140_measured_2026`
+      - predictor derivation still stays fail-closed on this visible heavy dry-top package, so the slice widened only the defended exact surface
+    - a new route-honesty leak found during the `C5` close-out is now frozen explicitly:
+      - under-described combined CLT direct-fixed stacks briefly tried to reuse `tuas_c5` through a profile-mismatched `family_general` lane
+      - a narrow `massTimberCombinedDirectFixedTierHold` now keeps those stacks screening-only / impact-unsupported unless a real profile-aligned candidate exists
+    - the heavy dry-top visible tier is now closed before the broader open-box hybrid branch reopens
+    - the hybrid lower-treatment branch is no longer only a decision artifact:
+      - exact row `tuas_r7b_open_box_timber_measured_2026` is now landed on the visible exact route
+      - source-backed lab tuple is now live on the exact route:
+        - `Ln,w 47`
+        - `Ln,w+CI 47`
+        - `Ln,w+CI,50-2500 48`
+        - `Rw 72`
+      - field continuation is now live on the standardized continuation route:
+        - `L'n,w 49`
+        - `L'nT,w 46.6`
+        - `L'nT,50 47.6`
+      - the exact route now carries the true hybrid lower-treatment `45 mm family_a + 25 mm resilient stud` underside plus the explicit `1 mm geotextile + 40 mm screed` floating-screed schedule without duplicate-role blocker warnings
+      - the workbench sanity band now treats `1 mm geotextile` as an expected separator layer instead of flagging it as an out-of-band false positive
+      - exact row `tuas_r8b_open_box_timber_measured_2026` is now landed with lab `Ln,w 50`, `Ln,w+CI 49`, `Ln,w+CI,50-2500 50`, `Rw 72`
+      - field continuation is now `L'n,w 52`, `L'nT,w 49.6`, `L'nT,50 49.6`
+      - exact row `tuas_r9b_open_box_timber_measured_2026` is now landed with lab `Ln,w 46`, `Ln,w+CI 46`, `Ln,w+CI,50-2500 48`, `Rw 68`
+      - field continuation is now `L'n,w 48`, `L'nT,w 45.6`, `L'nT,50 47.6`
+      - the source correction is now explicit:
+        - TUAS drawing page `13/40` shows `40 mm screed + 3 mm EPS underlay + 8 mm laminate`
+        - there is no extra upper `plastic-layer` or `geotextile` item on the `R9b` top package
+      - the old separator-free proxy is still broader `family_general`, but its nearest candidates are now re-ranked by the landed exact sibling:
+        - candidate set is now `tuas_r9b`, `tuas_r7b`, `tuas_r7a`
+        - frozen estimate is now `Ln,w 48.5` / `Rw 67.3`
+      - exact row `tuas_r2c_open_box_timber_measured_2026` is now also landed with lab `Ln,w 60`, `Ln,w+CI 60`, `Ln,w+CI,50-2500 60`, `Rw 54`
+      - field continuation is now `L'n,w 62`, `L'nT,w 59.6`, `L'nT,50 59.6`
+      - the no-fill open-box debt is therefore closed without reopening a generic `__none` topology widening lane
+    - the next CLT-local debt is now narrower and more explicit:
+      - `C7` no longer lacks a geotextile-capable visible material surface
+      - TUAS drawing page `24/40` shows:
+        - `260 mm` CLT
+        - `35 mm` EPS
+        - `1 mm` geotextile
+        - `40 mm` screed
+        - `3 mm` EPS underlay
+        - `8 mm` laminate
+      - the source spreadsheet exact lab tuple is now frozen for the next slice:
+        - `Ln,w 60`
+        - `Ln,w+CI 62`
+        - `Ln,w+CI,50-2500 63`
+        - `Rw 57`
+      - current implementation still parks that stack on `family_general` `54%` fit with candidate set `tuas_c4`, `tuas_c2`, `tuas_x4` and frozen estimate `Ln,w 59` / `Rw 48.3`
+    - `C2c`, `C3c`, `C4c`, `C7c`, and `C11c` remain later combined CLT backlog because their raw visible routes are still screening-only / impact-unsupported today
+    - `C7c` also still remains later because the combined lower-ceiling interaction lane is still absent
 - the real-world open-box coverage benchmark now matches the defended visible-layer truth surface:
   - generic `resilient_stud_ceiling` basic rows anchor `R2b`
   - explicit `tuas_open_box_ceiling_family_a` basic rows anchor `R2a`
@@ -386,7 +556,10 @@ Interpretation:
   - the adjacent-family widening passes are now complete for `FL-24` and `FL-26`
   - the generic lightweight-steel `lower_only` fallback now lands on the nearer `FL-26` `2 x 16 mm` corridor when the visible ceiling package matches that profile
   - `FL-23`, `FL-25`, and `FL-27` are explicitly deferred because their timber and carpet lanes sit materially below the current supported corridor
-  - the remaining later clean-up is the source-trace drift around the `ubiq_fl32_*` and `ubiq_fl33_*` internal ids
+  - the remaining later clean-up is now explicit provenance conflict, not a hidden widening backlog:
+    - the May 2023 Fire/Acoustic brochure still shows the open-web FRL/D package as `FL-28 (FRL/D)`
+    - the May 2023 Floor Solutions brochure shows the same `2 x 16 mm` open-web FRL/D package as `FL-26 (FRL/D)`
+    - current `ubiq_fl33_*` ids therefore remain frozen as internal runtime ids, and this conflict does not by itself justify a new corridor import or runtime rename
 
 ## Implemented Output Posture
 
@@ -507,39 +680,188 @@ Work in this order:
    - do not reopen `FL-23/25/27` just because provenance is now clearer
    - do not turn the provenance freeze into an ad hoc runtime rename
    - do not treat the corrected direct-fixed CLT screening contract as a widening target
-2. Expand the current mixed floor/wall torture surface only where the next representative seeded gap is still clearly higher value than a fresh widening slice:
-  - keep the new compact representative seeded-family roundtrip matrix green across:
-    - heavy-concrete and open-web-bound seeded detours
-    - official product-data exact seeded detours
-    - official no-screed exact seeded detours
-    - the interpolation steel lower-bound seeded detour now also in place
-    - product-backed lower-bound seeded detours
-    - product-property `DeltaLw` seeded detours
-    - warning-heavy and warning-light steel bound seeded detours
-  - wider preset-family case sets beyond the current heavy-concrete plus concrete exacts, Knauf timber exacts, Dataholz timber exacts, open-box exacts, CLT exacts, open-web exacts, and hollow-core cohort
-   - broader seeded long-chain families now that the compact representative matrix already survives the first three-neighbor operator-history chain, the current saved-scenario retention boundary, the first age-position reload audit, and the first curated exact-family match class
-   - mixed/history is no longer the first blocker now that the no-screed official exact topology is also inside the representative matrix
-   - only widen broader mixed-family grids if the next tightening slice exposes a real route-history blind spot
-3. Tighten the next exact-preserving family before opening a broader widening slice:
-   - the open-web helper continuation boundary is now closed as a conservative same-family `low_confidence` decision
-   - its parity follow-up is now also closed:
-     - the same continuation now survives representative raw/tagged, split/order, and edit-path detours
-     - the landed fix was a packed-schedule evaluator correction, not a stronger lane reopen
-   - the next clean local target is back on evidence-first widening:
-     - audit the deferred TUAS shortlist against drawings/details before importing new rows
-   - keep raw weaker-carrier closures, defended contiguous `FL-26` packaged rows, and the noncanonical `FL-24`-anchored continuation explicitly separated
-4. Widen the wall-side Phase B.2 evidence base before extending the hold beyond the current defended corridor:
-   - keep the current runner-up-aware hold limited to `double_leaf <-> lined_massive_wall`
-   - focus next on wider-than-representative route palettes and any boundary that produces more than one plausible runner-up family outside the currently defended framed/heavy-core representative palettes
-   - only widen if the next candidate pairing survives the same exact trace, scan, and workbench-parity contracts
-5. Only after that decide whether the next widening move is:
-   - a TUAS-backed floor evidence widening move
-   - another official-product representative closure if a real gap remains
-   - or the next wall-side held family pairing
+2. Freeze the now-closed wall-side trace-first slice before any new widening:
+   - `wall_selector_shadow_trace_audit_v1` is now closed
+   - primary route wording parity is landed:
+     - `dynamic-calc-branch.ts` surfaces ambiguous/narrow boundary state and protected corridor hold on the defended wall corridor
+   - secondary non-advanced posture parity is also landed:
+     - shared validation posture, corridor dossier, consultant decision trail, evidence packet, and result summary no longer flatten the defended wall boundary into family-plus-confidence wording
+   - the latest route-control pass stays narrow:
+     - engine wall pack: `4` files, `23` tests, green
+     - workbench wall honesty pack: `9` files, `49` tests, green
+     - no second held family pair survives on the representative non-AAC heavy-core palette
+     - no framed multi-candidate boundary surface survives yet
+   - decision:
+     - keep the current runner-up-aware hold limited to `double_leaf <-> lined_massive_wall`
+     - do not invent a second held family until a new trace/scan/parity pack proves it
+3. Freeze the now-closed UBIQ corridor decision before any new widening:
+   - `ubiq_open_web_corridor_decision_v1` is now closed
+   - current close-out result:
+     - the current official UBIQ corridor still has no clean new package-variant import beyond the already imported `FL-24 -> FL-26 -> FL-28` rows
+     - the weaker `FL-23/25/27` band stays explicitly deferred
+     - a second official UBIQ brochure exposes the same open-web FRL/D package as `FL-26 (FRL/D)` instead of `FL-28 (FRL/D)`
+     - that is now tracked as provenance conflict, not as a new widening prompt or a runtime rename prompt
+   - current support nuance now locked in tests:
+     - bound open-web support keeps `Rw` and conservative `Ln,w` live on lab outputs
+     - field continuation keeps `Ln,w`, `L'n,w`, and `L'nT,w` conservative-upper-bound live
+     - `L'nT,50` still stays unsupported on that current bound lane
+4. Freeze the now-closed TUAS staged upper-package slice before reopening broader floor work:
+   - closed widening slice: `tuas_r10a_staged_upper_package_surface_design_v1`
+   - landed result:
+     - exact row `tuas_r10a_open_box_timber_measured_2026`
+     - narrow exact visible-layer `floating_screed` schedule for the source-backed `15 mm gypsum + 3 mm mortar + 15 mm gypsum` stack
+     - lab support now carries `Rw`, `Ln,w`, and `Ln,w+CI`
+     - field continuation now carries `Ln,w`, `L'n,w`, `L'nT,w`, and `L'nT,50`
+     - the shorthand `upper_fill 13 mm` + `dry_floating_gypsum_fiberboard 33 mm` remains non-exact
+     - predictor derivation remains intentionally fail-closed on that staged mixed floating-screed package
+  - closed decision slice: `tuas_clt_backlog_decision_v1`
+  - close-out result:
+    - `X3` was the selected first staged-upper TUAS CLT import candidate
+    - `C3` is now landed as the adjacent thicker same-surface follow-on
+    - `X4` and `C4` are now both landed as the first upper-only heavy dry-top follow-ons
+    - `C5` remains the next broader heavy dry-top backlog item
+    - `C2c`, `C3c`, `C4c`, `C7c`, and `C11c` remain later combined lower-ceiling backlog
+    - at that point, `C7` and `C7c` still remained geotextile-dependent backlog
+  - closed widening slice: `tuas_x3_staged_upper_clt_surface_design_v1`
+  - landed result:
+    - exact row `tuas_x3_clt140_measured_2026`
+    - exact visible-layer `floating_screed` material/thickness schedule now carries the source-backed `15 mm gypsum + 3 mm mortar + 15 mm gypsum` stack on `140 mm` CLT
+    - lab posture is explicit:
+      - basis `open_measured_floor_system_exact_match`
+      - supported outputs `Rw`, `Ln,w`, `Ln,w+CI`
+      - unsupported output `DeltaLw`
+    - field posture is explicit:
+      - basis `mixed_exact_plus_estimated_standardized_field_volume_normalization`
+      - supported outputs `Rw`, `Ln,w`, `L'n,w`, `L'nT,w`, `L'nT,50`
+      - unsupported outputs `none`
+    - predictor derivation remains fail-closed on the staged mixed floating-screed package, so the slice widened only the defended visible exact surface
+    - adjacent bare-CLT estimate drift is frozen and accepted because the new exact sibling is now part of the visible neighboring-family set
+  - closed slice: `tuas_c3_staged_upper_clt_surface_design_v1`
+  - landed result:
+    - exact row `tuas_c3_clt260_measured_2026`
+    - exact visible-layer `floating_screed` material/thickness schedule now also carries the source-backed `15 mm gypsum + 3 mm mortar + 15 mm gypsum` stack on `260 mm` CLT
+    - lab posture is explicit:
+      - basis `open_measured_floor_system_exact_match`
+      - supported outputs `Rw`, `Ln,w`, `Ln,w+CI`
+      - unsupported output `DeltaLw`
+    - field posture is explicit:
+      - basis `mixed_exact_plus_estimated_standardized_field_volume_normalization`
+      - supported outputs `Rw`, `Ln,w`, `L'n,w`, `L'nT,w`, `L'nT,50`
+      - unsupported outputs `none`
+    - predictor derivation remains fail-closed on the staged mixed floating-screed package, so the slice widened only the defended visible exact surface
+    - adjacent heavy-dry estimate drift is frozen and accepted because the new exact sibling is now part of the visible neighboring-family set
+  - closed slice: `tuas_x4_heavy_dry_top_clt_surface_design_v1`
+  - landed result:
+    - exact row `tuas_x4_clt140_measured_2026`
+    - exact visible-layer `floating_screed` material/thickness schedule now carries the source-backed `50 mm glass wool + 2 x 15 mm gypsum board + 3 mm EPS + 8 mm laminate` stack on `140 mm` CLT
+    - lab posture is explicit:
+      - basis `open_measured_floor_system_exact_match`
+      - supported outputs `Rw`, `Ln,w`, `Ln,w+CI`
+      - unsupported output `DeltaLw`
+    - field posture is explicit:
+      - basis `mixed_exact_plus_estimated_standardized_field_volume_normalization`
+      - supported outputs `Rw`, `Ln,w`, `L'n,w`, `L'nT,w`, `L'nT,50`
+      - unsupported outputs `none`
+    - packed same-material shorthand such as `30 mm` gypsum board still resolves to that same exact row
+    - predictor derivation remains fail-closed on the generic dry shorthand:
+      - `generic_fill 50 mm` + `dry_floating_gypsum_fiberboard 30 mm`
+      - still only reaches `family_general` at `94%` fit against `tuas_x5_clt140_measured_2026`
+    - adjacent heavier-sibling estimate drift is frozen and accepted because the new exact sibling is now part of the visible neighboring-family set
+  - closed slice: `tuas_c4_heavy_dry_top_clt_surface_design_v1`
+  - landed result:
+    - exact row `tuas_c4_clt260_measured_2026`
+    - exact visible-layer `floating_screed` material/thickness schedule now also carries the source-backed `50 mm glass wool + 2 x 15 mm gypsum board + 3 mm EPS + 8 mm laminate` stack on `260 mm` CLT
+    - lab posture is explicit:
+      - basis `open_measured_floor_system_exact_match`
+      - supported outputs `Rw`, `Ln,w`, `Ln,w+CI`
+      - unsupported output `DeltaLw`
+    - field posture is explicit:
+      - basis `mixed_exact_plus_estimated_standardized_field_volume_normalization`
+      - supported outputs `Rw`, `Ln,w`, `L'n,w`, `L'nT,w`, `L'nT,50`
+      - unsupported outputs `none`
+    - packed same-material shorthand such as `30 mm` gypsum board still resolves to that same exact row
+    - predictor derivation remains fail-closed on the generic dry shorthand:
+      - `generic_fill 50 mm` + `dry_floating_gypsum_fiberboard 30 mm`
+      - still only reaches `family_general` at `94%` fit against `tuas_x5_clt140_measured_2026`
+    - adjacent heavier-sibling estimate drift is frozen and accepted because the new exact sibling is now part of the visible neighboring-family set
+  - closed slice: `tuas_c5_heavy_dry_top_clt_surface_design_v1`
+  - landed result:
+    - exact row `tuas_c5_clt260_measured_2026`
+    - exact visible-layer `floating_screed` material/thickness schedule now also carries the source-backed `50 mm glass wool + 4 x 15 mm gypsum board + 3 mm EPS + 8 mm laminate` stack on `260 mm` CLT
+    - lab posture is explicit:
+      - basis `open_measured_floor_system_exact_match`
+      - supported outputs `Rw`, `Ln,w`, `Ln,w+CI`
+      - unsupported output `DeltaLw`
+    - field posture is explicit:
+      - basis `mixed_exact_plus_estimated_standardized_field_volume_normalization`
+      - supported outputs `Rw`, `Ln,w`, `L'n,w`, `L'nT,w`, `L'nT,50`
+      - unsupported outputs `none`
+    - packed same-material shorthand such as `60 mm` gypsum board still resolves to that same exact row
+    - predictor derivation remains fail-closed on the generic dry shorthand:
+      - `generic_fill 50 mm` + `dry_floating_gypsum_fiberboard 60 mm`
+      - still only reaches `family_general` at `94%` fit against `tuas_x5_clt140_measured_2026`
+    - combined direct-fixed CLT under-described stacks now stay fail-closed again because a narrow `massTimberCombinedDirectFixedTierHold` blocks profile-mismatched `family_general` reuse when no profile-aligned candidate exists
+  - closed slice: `tuas_r8b_hybrid_lower_finishless_follow_on_v1`
+  - landed result:
+    - exact row `tuas_r8b_open_box_timber_measured_2026`
+    - exact visible-layer `floating_screed` material/thickness schedule now also carries the source-backed finishless sibling `35 mm EPS board + 1 mm geotextile + 40 mm screed` stack
+    - the hybrid underside exact route now also carries the defended `45 mm family_a cavity + 25 mm resilient stud` lower-treatment schedule
+    - lab posture is explicit:
+      - basis `open_measured_floor_system_exact_match`
+      - supported outputs `Rw`, `Ln,w`, `Ln,w+CI`
+      - unsupported outputs `none`
+    - field posture is explicit:
+      - basis `mixed_exact_plus_estimated_standardized_field_volume_normalization`
+      - supported outputs `Ln,w`, `L'n,w`, `L'nT,w`, `L'nT,50`
+      - unsupported outputs `none`
+    - proxy and sibling posture are now frozen more honestly:
+      - the old proxy without the separator layer still stays broader `family_general` at `54%` fit, but it is now re-ranked through `tuas_r9b`, `tuas_r7b`, `tuas_r7a` with `Ln,w 48.5` / `Rw 67.3`
+      - the true finishless sibling `R8b` now lands exactly at `Ln,w 50` / `Rw 72`
+      - the true wet-top sibling `R9b` now also lands exactly at `Ln,w 46` / `Rw 68`
+      - the true no-fill sibling `R2c` now also lands exactly at `Ln,w 60` / `Rw 54`
+  - active slice: `tuas_c7_wet_geotextile_clt_surface_design_v1`
+  - current status: `selected`
+  - the current implementation-backed reason is now explicit:
+    - the hybrid lower-treatment open-box branch is now fully closed through `R2c`
+    - the next honest source-backed gap is the wet geotextile CLT sibling `C7`
+    - `C7` now reuses an already defended visible material surface:
+      - `35 mm` EPS upper fill
+      - `1 mm` geotextile + `40 mm` screed floating-screed schedule
+      - `3 mm` EPS underlay + `8 mm` laminate
+    - current implementation still keeps that stack off the exact lane, so the next job is a narrow exact-row landing rather than another support-surface invention
+    - combined `c`-family CLT debt stays later
+5. After the now-closed TUAS hybrid lower-treatment decision, continue floor growth in this order:
+   - TUAS `C7` wet geotextile CLT follow-on
+   - combined `c`-family CLT backlog only after the current `C7` slice is frozen
+   - raw widening only after those corridor and boundary packs are green
+6. Expand broader mixed/history grids only when a targeted slice exposes a real route-history blind spot or makes a new corridor representative:
+   - keep the compact representative seeded-family roundtrip matrix green across:
+     - heavy-concrete and open-web-bound seeded detours
+     - official product-data exact seeded detours
+     - official no-screed exact seeded detours
+     - interpolation steel lower-bound seeded detours
+     - product-backed lower-bound seeded detours
+     - product-property `DeltaLw` seeded detours
+     - warning-heavy and warning-light steel bound seeded detours
+   - only widen broader mixed-family grids if the next wall or floor slice actually needs that extra history net
 
 Use the source gap ledger to decide which families should be researched or widened first instead of opening new lanes ad hoc:
 
 - [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md)
+
+Current wall-side guardrails after the selector-slice close-out:
+
+- the wall selector slice is now closed at honesty hardening rather than promoted into a second widening pass
+- the current defended held rows remain:
+  - `ytong_aac_d700 100`
+  - `ytong_aac_d700 120`
+  - `ytong_g5_800 100`
+- no second held family pair is currently defended on the representative non-AAC heavy-core palette
+- no multi-candidate framed palette is currently defended
+- the primary workbench route summary now mirrors those guardrails instead of hiding the current boundary/hold state behind anchor-only wording
+- the shared wall validation/evidence wording surfaces now also mirror those guardrails instead of collapsing the same case into family-plus-confidence wording
+- no remaining non-advanced user-facing wall surface is currently known to hide runner-up or hold posture outside the advanced diagnostics
+- treat any candidate beyond those sets as unproven until it survives the same exact trace, scan, and workbench-parity contracts
 
 The torture pass should include:
 
@@ -550,9 +872,10 @@ The torture pass should include:
 
 The next widening audit should answer:
 
-- after the selected raw-floor negative audit closes, which source-led corridor now has the cleanest widening evidence?
-- does the next corridor candidate preserve route honesty without reopening raw weak-carrier or helper-side shortcuts?
-- are any stale family expectations being mistaken for real widening opportunities?
+- can `C7` land as a narrow exact wet-top CLT row on the already defended geotextile/screed visible surface?
+- can the next slice keep `C2c/C3c/C4c/C7c/C11c` screening-only while `C7` is explored?
+- does the current `C7` proxy stay explicitly non-exact until the exact row is landed?
+- do under-described combined direct-fixed CLT stacks stay fail-closed while the remaining combined `c` backlog is still deferred?
 
 ## Canonical Documents
 

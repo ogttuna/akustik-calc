@@ -55,6 +55,7 @@ const MATERIAL_THICKNESS_BANDS: Record<string, GuidedSanityBand> = {
   generic_fill: { max: 150, min: 30, unit: "mm" },
   generic_resilient_underlay: { max: 30, min: 3, unit: "mm" },
   generic_resilient_underlay_s30: { max: 30, min: 3, unit: "mm" },
+  geotextile: { max: 5, min: 0.5, unit: "mm" },
   genieclip_rst: { max: 180, min: 15, unit: "mm" },
   geniemat_rst02: { max: 20, min: 2, unit: "mm" },
   geniemat_rst05: { max: 20, min: 2, unit: "mm" },

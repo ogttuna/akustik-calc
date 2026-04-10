@@ -91,6 +91,15 @@ const BASE_SEED_MATERIALS: readonly MaterialDefinition[] = [
     tags: ["lining", "board", "cement-board", "dense-board", "wet-area-board"]
   },
   {
+    id: "geotextile",
+    name: "Geotextile Separator Layer",
+    category: "finish",
+    densityKgM3: 150,
+    notes:
+      "Curated nominal separator-membrane entry for the TUAS hybrid lower-treatment open-box rows. Density is a conservative placeholder for exact-match schedule surfacing, not a generalized wet-build predictor calibration.",
+    tags: ["separator", "membrane", "geotextile", "nonwoven"]
+  },
+  {
     id: "cement_plaster",
     name: "Cement Plaster",
     category: "finish",

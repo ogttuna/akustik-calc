@@ -16,6 +16,26 @@ describe("input sanity", () => {
     ).toBe("Typical band 25 to 90 mm for Mineral Screed in the floating screed role.");
   });
 
+  it("keeps the TUAS geotextile separator thickness inside its explicit floating-screed band", () => {
+    expect(
+      getLayerThicknessGuidanceHint({
+        floorRole: "floating_screed",
+        materialId: "geotextile"
+      })
+    ).toBe("Typical band 0.5 to 5 mm for Geotextile Separator Layer in the floating screed role.");
+
+    expect(
+      getLayerThicknessSanityWarning(
+        {
+          floorRole: "floating_screed",
+          materialId: "geotextile",
+          thicknessMm: "1"
+        },
+        7
+      )
+    ).toBeNull();
+  });
+
   it("falls back to floor-role guidance when the material is unknown", () => {
     expect(
       getLayerThicknessGuidanceHint({

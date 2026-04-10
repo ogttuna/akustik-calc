@@ -2035,6 +2035,130 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     }
   },
   {
+    id: "tuas_x3_clt140_measured_2026",
+    label: "TUAS X3 | CLT 140 mm | staged mixed upper package + laminate",
+    sourceLabel: "TUAS open measured dataset",
+    sourceType: "open_measured_dataset",
+    trustTier: "peer_reviewed_open_access",
+    match: {
+      absentRoles: ["ceiling_board", "ceiling_cavity", "ceiling_fill"],
+      baseStructure: {
+        materialIds: ["clt_panel"],
+        thicknessMm: 140
+      },
+      resilientLayer: {
+        materialIds: ["eps_underlay"],
+        thicknessMm: 3
+      },
+      upperFill: {
+        materialIds: ["glasswool_board"],
+        thicknessMm: 13
+      },
+      floatingScreed: {
+        layerCount: 3,
+        materialScheduleIds: ["gypsum_board", "screed", "gypsum_board"],
+        thicknessScheduleMm: [15, 3, 15]
+      },
+      floorCovering: {
+        materialIds: ["laminate_flooring"],
+        thicknessMm: 8
+      }
+    },
+    systemSummary: {
+      carrier: "Cross-laminated timber slab 140 mm (edge-glued)",
+      floorBuildUp: "13 mm glass wool board + 15 mm gypsum board + 3 mm mortar + 15 mm gypsum board + 3 mm EPS underlay + 8 mm laminate",
+      ceiling: "No additional lower treatment"
+    },
+    impactRatings: {
+      CI: 2,
+      CI50_2500: 3,
+      LnW: 61,
+      LnWPlusCI: 63
+    },
+    airborneRatings: {
+      Rw: 49,
+      RwCtr: 41.446442652662284
+    }
+  },
+  {
+    id: "tuas_x4_clt140_measured_2026",
+    label: "TUAS X4 | CLT 140 mm | 50 mm glass wool + 2 x 15 mm gypsum + laminate",
+    sourceLabel: "TUAS open measured dataset",
+    sourceType: "open_measured_dataset",
+    trustTier: "peer_reviewed_open_access",
+    match: {
+      absentRoles: ["ceiling_board", "ceiling_cavity", "ceiling_fill"],
+      baseStructure: {
+        materialIds: ["clt_panel"],
+        thicknessMm: 140
+      },
+      resilientLayer: {
+        materialIds: ["eps_underlay"],
+        thicknessMm: 3
+      },
+      upperFill: {
+        materialIds: ["glasswool_board"],
+        thicknessMm: 50
+      },
+      floatingScreed: {
+        layerCount: 2,
+        materialIds: ["gypsum_board"],
+        thicknessMm: 15
+      },
+      floorCovering: {
+        materialIds: ["laminate_flooring"],
+        thicknessMm: 8
+      }
+    },
+    systemSummary: {
+      carrier: "Cross-laminated timber slab 140 mm (edge-glued)",
+      floorBuildUp: "50 mm glass wool + 2 x 15 mm gypsum board + 3 mm EPS underlay + 8 mm laminate",
+      ceiling: "No additional lower treatment"
+    },
+    impactRatings: {
+      CI: 0,
+      CI50_2500: 8,
+      LnW: 52,
+      LnWPlusCI: 52
+    },
+    impactBands: {
+      frequenciesHz: [20, 25, 31.5, 40, 50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500, 3150, 4000, 5000],
+      labOrField: "lab",
+      levelsDb: [
+        72.23222595899838,
+        61.752720605622194,
+        68.96649342614279,
+        60.523316548144415,
+        65.4,
+        71.7,
+        67.8,
+        63,
+        60.3,
+        59.6,
+        58.8,
+        54.8,
+        53.8,
+        51,
+        44.9,
+        39.4,
+        31.6,
+        28.5,
+        25.7,
+        18.8,
+        14.5,
+        12.4,
+        10.8,
+        8.4,
+        8.4
+      ],
+      standardMethod: "open_measured_dataset"
+    },
+    airborneRatings: {
+      Rw: 55,
+      RwCtr: 48.421656285045998
+    }
+  },
+  {
     id: "tuas_x5_clt140_measured_2026",
     label: "TUAS X5 | CLT 140 mm | 50 mm glass wool dry floor + laminate",
     sourceLabel: "TUAS open measured dataset",
@@ -2678,6 +2802,75 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     }
   },
   {
+    id: "tuas_r6a_open_box_timber_measured_2026",
+    label: "TUAS R6a | open-box timber slab | laminate + EPS underlay | mixed-board ceiling family A",
+    sourceLabel: "TUAS open measured dataset",
+    sourceType: "open_measured_dataset",
+    trustTier: "peer_reviewed_open_access",
+    estimateMatch: {
+      structuralSupportType: "open_box_timber",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        thicknessMm: 370
+      },
+      resilientLayer: {
+        productId: "eps_underlay",
+        thicknessMm: 3
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "laminate_flooring",
+        thicknessMm: 8
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_elastic_hanger",
+        supportClass: "tuas_open_box_family_a",
+        boardMaterialClass: "generic_gypsum_board",
+        boardThicknessScheduleMm: [13, 13, 15, 15, 15, 15],
+        cavityDepthMm: 25,
+        cavityFillThicknessMm: 100
+      }
+    },
+    match: {
+      absentRoles: ["floating_screed", "upper_fill"],
+      baseStructure: {
+        materialIds: ["open_box_timber_slab"],
+        thicknessMm: 370
+      },
+      resilientLayer: {
+        materialIds: ["eps_underlay"],
+        thicknessMm: 3
+      },
+      floorCovering: {
+        materialIds: ["laminate_flooring"],
+        thicknessMm: 8
+      },
+      ceilingCavity: {
+        materialIds: ["tuas_open_box_ceiling_family_a"],
+        thicknessMm: 25
+      },
+      ceilingFill: {
+        materialIds: ["rockwool"],
+        thicknessMm: 100
+      },
+      ceilingBoard: {
+        materialIds: ["gypsum_board"],
+        thicknessScheduleMm: [13, 13, 15, 15, 15, 15]
+      }
+    },
+    systemSummary: {
+      carrier: "Open box timber slab 370 mm",
+      floorBuildUp: "8 mm laminate on 3 mm EPS underlay over open-box timber slab",
+      ceiling: "25 mm TUAS family A suspended ceiling with 2 x 13 mm + 4 x 15 mm gypsum board and 100 mm glass wool"
+    },
+    impactRatings: {
+      LnW: 64
+    },
+    airborneRatings: {
+      Rw: 56
+    }
+  },
+  {
     id: "tuas_r6b_open_box_timber_measured_2026",
     label: "TUAS R6b | open-box timber slab | laminate + EPS underlay | reinforced resilient stud ceiling",
     sourceLabel: "TUAS open measured dataset",
@@ -2840,6 +3033,279 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     }
   },
   {
+    id: "tuas_r7b_open_box_timber_measured_2026",
+    label: "TUAS R7b | open-box timber slab | EPS board + geotextile + screed + EPS underlay + laminate | hybrid lower treatment",
+    sourceLabel: "TUAS open measured dataset",
+    sourceType: "open_measured_dataset",
+    trustTier: "peer_reviewed_open_access",
+    match: {
+      absentRoles: [],
+      baseStructure: {
+        materialIds: ["open_box_timber_slab"],
+        thicknessMm: 370
+      },
+      resilientLayer: {
+        materialIds: ["eps_underlay"],
+        thicknessMm: 3
+      },
+      upperFill: {
+        materialIds: ["eps_floor_insulation_board"],
+        thicknessMm: 35
+      },
+      floatingScreed: {
+        layerCount: 2,
+        materialScheduleIds: ["geotextile", "screed"],
+        thicknessScheduleMm: [1, 40]
+      },
+      floorCovering: {
+        materialIds: ["laminate_flooring"],
+        thicknessMm: 8
+      },
+      ceilingCavity: {
+        layerCount: 2,
+        materialScheduleIds: ["tuas_open_box_ceiling_family_a", "resilient_stud_ceiling"],
+        thicknessScheduleMm: [45, 25]
+      },
+      ceilingFill: {
+        materialIds: ["rockwool"],
+        thicknessMm: 100
+      },
+      ceilingBoard: {
+        layerCount: 2,
+        materialIds: ["gypsum_board"],
+        thicknessMm: 13
+      }
+    },
+    systemSummary: {
+      carrier: "Open box timber slab 370 mm",
+      floorBuildUp: "35 mm EPS floor insulation board + 1 mm geotextile + 40 mm screed + 3 mm EPS underlay + 8 mm laminate",
+      ceiling: "45 mm TUAS family A cavity + 25 mm resilient stud ceiling with 2 x 13 mm gypsum board and 100 mm rockwool"
+    },
+    impactRatings: {
+      CI: 0,
+      CI50_2500: 1,
+      LnW: 47,
+      LnWPlusCI: 47
+    },
+    airborneRatings: {
+      Rw: 72,
+      RwCtr: 65.863871535312214
+    }
+  },
+  {
+    id: "tuas_r8b_open_box_timber_measured_2026",
+    label: "TUAS R8b | open-box timber slab | EPS board + geotextile + screed | hybrid lower treatment",
+    sourceLabel: "TUAS open measured dataset",
+    sourceType: "open_measured_dataset",
+    trustTier: "peer_reviewed_open_access",
+    match: {
+      absentRoles: ["resilient_layer", "floor_covering"],
+      baseStructure: {
+        materialIds: ["open_box_timber_slab"],
+        thicknessMm: 370
+      },
+      upperFill: {
+        materialIds: ["eps_floor_insulation_board"],
+        thicknessMm: 35
+      },
+      floatingScreed: {
+        layerCount: 2,
+        materialScheduleIds: ["geotextile", "screed"],
+        thicknessScheduleMm: [1, 40]
+      },
+      ceilingCavity: {
+        layerCount: 2,
+        materialScheduleIds: ["tuas_open_box_ceiling_family_a", "resilient_stud_ceiling"],
+        thicknessScheduleMm: [45, 25]
+      },
+      ceilingFill: {
+        materialIds: ["rockwool"],
+        thicknessMm: 100
+      },
+      ceilingBoard: {
+        layerCount: 2,
+        materialIds: ["gypsum_board"],
+        thicknessMm: 13
+      }
+    },
+    systemSummary: {
+      carrier: "Open box timber slab 370 mm",
+      floorBuildUp: "35 mm EPS floor insulation board + 1 mm geotextile + 40 mm screed",
+      ceiling: "45 mm TUAS family A cavity + 25 mm resilient stud ceiling with 2 x 13 mm gypsum board and 100 mm rockwool"
+    },
+    impactRatings: {
+      CI: -1,
+      CI50_2500: 0,
+      LnW: 50,
+      LnWPlusCI: 49
+    },
+    airborneRatings: {
+      Rw: 72,
+      RwCtr: 65.536479574136578
+    }
+  },
+  {
+    id: "tuas_r9b_open_box_timber_measured_2026",
+    label: "TUAS R9b | open-box timber slab | screed + EPS underlay + laminate | hybrid lower treatment",
+    sourceLabel: "TUAS open measured dataset",
+    sourceType: "open_measured_dataset",
+    trustTier: "peer_reviewed_open_access",
+    match: {
+      absentRoles: ["upper_fill"],
+      baseStructure: {
+        materialIds: ["open_box_timber_slab"],
+        thicknessMm: 370
+      },
+      resilientLayer: {
+        materialIds: ["eps_underlay"],
+        thicknessMm: 3
+      },
+      floatingScreed: {
+        materialIds: ["screed"],
+        thicknessMm: 40
+      },
+      floorCovering: {
+        materialIds: ["laminate_flooring"],
+        thicknessMm: 8
+      },
+      ceilingCavity: {
+        layerCount: 2,
+        materialScheduleIds: ["tuas_open_box_ceiling_family_a", "resilient_stud_ceiling"],
+        thicknessScheduleMm: [45, 25]
+      },
+      ceilingFill: {
+        materialIds: ["rockwool"],
+        thicknessMm: 100
+      },
+      ceilingBoard: {
+        layerCount: 2,
+        materialIds: ["gypsum_board"],
+        thicknessMm: 13
+      }
+    },
+    systemSummary: {
+      carrier: "Open box timber slab 370 mm",
+      floorBuildUp: "40 mm screed + 3 mm EPS underlay + 8 mm laminate",
+      ceiling: "45 mm TUAS family A cavity + 25 mm resilient stud ceiling with 2 x 13 mm gypsum board and 100 mm rockwool"
+    },
+    impactRatings: {
+      CI: 0,
+      CI50_2500: 2,
+      LnW: 46,
+      LnWPlusCI: 46
+    },
+    airborneRatings: {
+      Rw: 68,
+      RwCtr: 63.536300162353015
+    }
+  },
+  {
+    id: "tuas_r2c_open_box_timber_measured_2026",
+    label: "TUAS R2c | open-box timber slab | EPS underlay + laminate | hybrid lower treatment no fill",
+    sourceLabel: "TUAS open measured dataset",
+    sourceType: "open_measured_dataset",
+    trustTier: "peer_reviewed_open_access",
+    match: {
+      absentRoles: ["ceiling_fill", "upper_fill", "floating_screed"],
+      baseStructure: {
+        materialIds: ["open_box_timber_slab"],
+        thicknessMm: 370
+      },
+      resilientLayer: {
+        materialIds: ["eps_underlay"],
+        thicknessMm: 3
+      },
+      floorCovering: {
+        materialIds: ["laminate_flooring"],
+        thicknessMm: 8
+      },
+      ceilingCavity: {
+        layerCount: 2,
+        materialScheduleIds: ["tuas_open_box_ceiling_family_a", "resilient_stud_ceiling"],
+        thicknessScheduleMm: [45, 25]
+      },
+      ceilingBoard: {
+        layerCount: 2,
+        materialIds: ["gypsum_board"],
+        thicknessMm: 13
+      }
+    },
+    systemSummary: {
+      carrier: "Open box timber slab 370 mm",
+      floorBuildUp: "3 mm EPS underlay + 8 mm laminate",
+      ceiling: "45 mm TUAS family A cavity + 25 mm resilient stud ceiling with 2 x 13 mm gypsum board"
+    },
+    impactRatings: {
+      CI: 0,
+      CI50_2500: 0,
+      LnW: 60,
+      LnWPlusCI: 60
+    },
+    airborneRatings: {
+      Rw: 54,
+      RwCtr: 50.153254568605014
+    }
+  },
+  {
+    id: "tuas_r10a_open_box_timber_measured_2026",
+    label: "TUAS R10a | open-box timber slab | staged mixed upper package + laminate | ceiling family A",
+    sourceLabel: "TUAS open measured dataset",
+    sourceType: "open_measured_dataset",
+    trustTier: "peer_reviewed_open_access",
+    match: {
+      absentRoles: [],
+      baseStructure: {
+        materialIds: ["open_box_timber_slab"],
+        thicknessMm: 370
+      },
+      resilientLayer: {
+        materialIds: ["eps_underlay"],
+        thicknessMm: 3
+      },
+      upperFill: {
+        materialIds: ["glasswool_board"],
+        thicknessMm: 13
+      },
+      floatingScreed: {
+        layerCount: 3,
+        materialScheduleIds: ["gypsum_board", "screed", "gypsum_board"],
+        thicknessScheduleMm: [15, 3, 15]
+      },
+      floorCovering: {
+        materialIds: ["laminate_flooring"],
+        thicknessMm: 8
+      },
+      ceilingCavity: {
+        materialIds: ["tuas_open_box_ceiling_family_a"],
+        thicknessMm: 25
+      },
+      ceilingFill: {
+        materialIds: ["rockwool"],
+        thicknessMm: 100
+      },
+      ceilingBoard: {
+        layerCount: 2,
+        materialIds: ["gypsum_board"],
+        thicknessMm: 13
+      }
+    },
+    systemSummary: {
+      carrier: "Open box timber slab 370 mm",
+      floorBuildUp: "13 mm glass wool board + 15 mm gypsum board + 3 mm mortar + 15 mm gypsum board + 3 mm EPS underlay + 8 mm laminate",
+      ceiling: "25 mm TUAS family A suspended ceiling with 2 x 13 mm gypsum board and 100 mm glass wool"
+    },
+    impactRatings: {
+      CI: 1,
+      CI50_2500: 3,
+      LnW: 63,
+      LnWPlusCI: 64
+    },
+    airborneRatings: {
+      Rw: 56,
+      RwCtr: 44.903379895449063
+    }
+  },
+  {
     id: "tuas_r11b_open_box_timber_measured_2026",
     label: "TUAS R11b | open-box timber slab | 40 mm glass wool + 40 mm screed | resilient stud ceiling",
     sourceLabel: "TUAS open measured dataset",
@@ -2965,6 +3431,208 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     airborneRatings: {
       Rw: 42,
       RwCtr: 38.748168054106159
+    }
+  },
+  {
+    id: "tuas_c3_clt260_measured_2026",
+    label: "TUAS C3 | CLT 260 mm | staged mixed upper package + laminate",
+    sourceLabel: "TUAS open measured dataset",
+    sourceType: "open_measured_dataset",
+    trustTier: "peer_reviewed_open_access",
+    match: {
+      absentRoles: ["ceiling_board", "ceiling_cavity", "ceiling_fill"],
+      baseStructure: {
+        materialIds: ["clt_panel"],
+        thicknessMm: 260
+      },
+      resilientLayer: {
+        materialIds: ["eps_underlay"],
+        thicknessMm: 3
+      },
+      upperFill: {
+        materialIds: ["glasswool_board"],
+        thicknessMm: 13
+      },
+      floatingScreed: {
+        layerCount: 3,
+        materialScheduleIds: ["gypsum_board", "screed", "gypsum_board"],
+        thicknessScheduleMm: [15, 3, 15]
+      },
+      floorCovering: {
+        materialIds: ["laminate_flooring"],
+        thicknessMm: 8
+      }
+    },
+    systemSummary: {
+      carrier: "Cross-laminated timber slab 260 mm (edge-glued)",
+      floorBuildUp: "13 mm glass wool board + 15 mm gypsum board + 3 mm mortar + 15 mm gypsum board + 3 mm EPS underlay + 8 mm laminate",
+      ceiling: "No additional lower treatment"
+    },
+    impactRatings: {
+      CI: 3,
+      CI50_2500: 4,
+      LnW: 55,
+      LnWPlusCI: 58
+    },
+    airborneRatings: {
+      Rw: 54,
+      RwCtr: 45.299729806216845
+    }
+  },
+  {
+    id: "tuas_c4_clt260_measured_2026",
+    label: "TUAS C4 | CLT 260 mm | 50 mm glass wool + 2 x 15 mm gypsum + laminate",
+    sourceLabel: "TUAS open measured dataset",
+    sourceType: "open_measured_dataset",
+    trustTier: "peer_reviewed_open_access",
+    match: {
+      absentRoles: ["ceiling_board", "ceiling_cavity", "ceiling_fill"],
+      baseStructure: {
+        materialIds: ["clt_panel"],
+        thicknessMm: 260
+      },
+      resilientLayer: {
+        materialIds: ["eps_underlay"],
+        thicknessMm: 3
+      },
+      upperFill: {
+        materialIds: ["glasswool_board"],
+        thicknessMm: 50
+      },
+      floatingScreed: {
+        layerCount: 2,
+        materialIds: ["gypsum_board"],
+        thicknessMm: 15
+      },
+      floorCovering: {
+        materialIds: ["laminate_flooring"],
+        thicknessMm: 8
+      }
+    },
+    systemSummary: {
+      carrier: "Cross-laminated timber slab 260 mm (edge-glued)",
+      floorBuildUp: "50 mm glass wool + 2 x 15 mm gypsum board + 3 mm EPS underlay + 8 mm laminate",
+      ceiling: "No additional lower treatment"
+    },
+    impactRatings: {
+      CI: 2,
+      CI50_2500: 6,
+      LnW: 47,
+      LnWPlusCI: 49
+    },
+    impactBands: {
+      frequenciesHz: [20, 25, 31.5, 40, 50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500, 3150, 4000, 5000],
+      labOrField: "lab",
+      levelsDb: [
+        84.106051867185244,
+        79.791927201228901,
+        83.661484273276415,
+        80.191256452276448,
+        74.15023116861768,
+        70.499426179716664,
+        72.330159979877934,
+        66.608770554530224,
+        58.244188167437805,
+        55.222278733476955,
+        60.050479407700664,
+        45.282250522662373,
+        43.708121436473192,
+        40.28408637327059,
+        36.497969497320412,
+        34.854755284248384,
+        34.367119305961438,
+        33.833258520871915,
+        32.002081214845909,
+        30.566358592259292,
+        30.466920124026736,
+        26.77081061740552,
+        22.722509851584476,
+        19.987334560985108,
+        16.926032888813722
+      ],
+      standardMethod: "open_measured_dataset"
+    },
+    airborneRatings: {
+      Rw: 61,
+      RwCtr: 54.131432673998987
+    }
+  },
+  {
+    id: "tuas_c5_clt260_measured_2026",
+    label: "TUAS C5 | CLT 260 mm | 50 mm glass wool + 4 x 15 mm gypsum + laminate",
+    sourceLabel: "TUAS open measured dataset",
+    sourceType: "open_measured_dataset",
+    trustTier: "peer_reviewed_open_access",
+    match: {
+      absentRoles: ["ceiling_board", "ceiling_cavity", "ceiling_fill"],
+      baseStructure: {
+        materialIds: ["clt_panel"],
+        thicknessMm: 260
+      },
+      resilientLayer: {
+        materialIds: ["eps_underlay"],
+        thicknessMm: 3
+      },
+      upperFill: {
+        materialIds: ["glasswool_board"],
+        thicknessMm: 50
+      },
+      floatingScreed: {
+        layerCount: 4,
+        materialIds: ["gypsum_board"],
+        thicknessMm: 15
+      },
+      floorCovering: {
+        materialIds: ["laminate_flooring"],
+        thicknessMm: 8
+      }
+    },
+    systemSummary: {
+      carrier: "Cross-laminated timber slab 260 mm (edge-glued)",
+      floorBuildUp: "50 mm glass wool + 4 x 15 mm gypsum board + 3 mm EPS underlay + 8 mm laminate",
+      ceiling: "No additional lower treatment"
+    },
+    impactRatings: {
+      CI: 1,
+      CI50_2500: 6,
+      LnW: 45,
+      LnWPlusCI: 46
+    },
+    impactBands: {
+      frequenciesHz: [20, 25, 31.5, 40, 50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500, 3150, 4000, 5000],
+      labOrField: "lab",
+      levelsDb: [
+        66.688039943344762,
+        57.43434409567768,
+        63.700827484011157,
+        58.318929546911939,
+        58.4,
+        60.2,
+        57.7,
+        56.6,
+        54.7,
+        50.9,
+        53.6,
+        49.1,
+        48.1,
+        45.6,
+        40.299999999999997,
+        32.700000000000003,
+        28,
+        24.9,
+        20.7,
+        17.399999999999999,
+        13.1,
+        11.2,
+        9.6,
+        6.4,
+        6.6
+      ],
+      standardMethod: "open_measured_dataset"
+    },
+    airborneRatings: {
+      Rw: 61,
+      RwCtr: 55.317986888908273
     }
   },
   {

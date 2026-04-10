@@ -554,6 +554,24 @@ export function deriveFloorSystemEstimate(
     return null;
   }
   const currentProfile = getLayerProfile(layers);
+  let predictorInputFromLayers:
+    | ReturnType<typeof buildImpactPredictorInputFromLayerStack>
+    | undefined;
+  const getPredictorInputFromLayers = () => {
+    if (predictorInputFromLayers !== undefined) {
+      return predictorInputFromLayers;
+    }
+
+    predictorInputFromLayers = buildImpactPredictorInputFromLayerStack(
+      layers.map((layer) => ({
+        floorRole: layer.floorRole,
+        materialId: layer.material.id,
+        thicknessMm: layer.thicknessMm
+      }))
+    );
+
+    return predictorInputFromLayers;
+  };
   if (!isEligibleFamilyProfile(structuralFamily, currentProfile)) {
     return null;
   }
@@ -563,13 +581,7 @@ export function deriveFloorSystemEstimate(
 
   if (structuralFamily === "composite_panel" && lowerOnlyCeilingBoardTopologyConflict) {
     const conservativePredictorEstimate = derivePredictorSpecificFloorSystemEstimate(
-      buildImpactPredictorInputFromLayerStack(
-        layers.map((layer) => ({
-          floorRole: layer.floorRole,
-          materialId: layer.material.id,
-          thicknessMm: layer.thicknessMm
-        }))
-      )
+      getPredictorInputFromLayers()
     );
 
     if (conservativePredictorEstimate?.kind === "low_confidence") {
@@ -602,6 +614,11 @@ export function deriveFloorSystemEstimate(
     getFamilyEstimatePool(structuralFamily, recommendations)
   );
   const profileAligned = familyPool.filter((entry) => compatibleProfiles(currentProfile, getSystemProfile(entry.system)));
+  const massTimberCombinedDirectFixedTierHold =
+    structuralFamily === "mass_timber_clt" &&
+    currentProfile === "combined" &&
+    getPredictorInputFromLayers()?.lowerTreatment?.type === "direct_fixed_ceiling" &&
+    profileAligned.length === 0;
 
   if (structuralFamily === "lightweight_steel") {
     const fl28Estimate = deriveLightweightSteelFl28Estimate(layers, recommendations);
@@ -622,6 +639,10 @@ export function deriveFloorSystemEstimate(
     lightweightSteelLowerOnlyCeilingBoardTierHold ||
     lightweightSteelLowerOnlyHelperTierHold ||
     compositeLowerOnlyHelperTierHold;
+
+  if (massTimberCombinedDirectFixedTierHold) {
+    return null;
+  }
 
   const archetypeCandidates =
     ambiguousSingleEntryRoleConflicts.length === 0 && !lowerOnlyFamilyGeneralTierHold

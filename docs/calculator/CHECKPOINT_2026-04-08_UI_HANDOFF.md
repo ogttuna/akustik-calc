@@ -7,31 +7,50 @@ This checkpoint is now a historical snapshot.
 Current restart point for the dynamic-calculator work:
 
 - latest closed slice:
-  - TUAS deferred shortlist drawing audit
+  - `tuas_r2c_hybrid_lower_no_fill_surface_design_v1`
 - latest route-control result:
-  - no honest new TUAS open-box import opened from the finished drawing/detail audit
-  - `R6a` / `R10a` remain mixed-schedule exact-surface backlog
-  - `R7b` / `R8b` / `R9b` / `R2c` remain hybrid lower-treatment support-surface backlog
+  - `R6a`, `R10a`, `R7b`, `R8b`, and `R9b` are now all landed as exact TUAS open-box rows
+  - `R2c` is now also landed as an exact TUAS open-box row:
+    - lab `Ln,w 60`, `Ln,w+CI 60`, `Rw 54`
+    - field `L'n,w 62`, `L'nT,w 59.6`, `L'nT,50 59.6`
+  - the hybrid lower-treatment open-box branch is now closed without reopening a generic `__none` topology lane
+  - predictor derivation still stays fail-closed on the staged mixed floating-screed `R10a` package even though the visible exact row is now landed
+  - `X3`, `C3`, `X4`, `C4`, and `C5` are now all landed as exact TUAS CLT rows with live field continuation on the defended visible surfaces
+  - nearby bare-CLT visible fallback is now frozen with `tuas_x4` as the third adjacent exact sibling at `Ln,w 66.9` / `Rw 40.6`
+  - over-abstracted `X4`, `C4`, and `C5` shorthand still stay off the exact lane at `family_general` `94%` fit against `tuas_x5`
+  - packed `60 mm` gypsum shorthand now stays exact on `tuas_c5_clt260_measured_2026`
+  - under-described combined direct-fixed CLT stacks now stay fail-closed again because `massTimberCombinedDirectFixedTierHold` blocks profile-mismatched `family_general` reuse when no profile-aligned candidate exists
+  - `R7b` exact now carries `Ln,w 47`, `Ln,w+CI 47`, `Rw 72`; field continuation now carries `L'n,w 49`, `L'nT,w 46.6`, `L'nT,50 47.6`
+  - the old separator-free proxy still stays broader `family_general` at `54%` fit, but now re-ranks to `tuas_r9b`, `tuas_r7b`, `tuas_r7a` with `Ln,w 48.5` / `Rw 67.3`
+  - `R8b` exact now carries `Ln,w 50`, `Ln,w+CI 49`, `Rw 72`; field continuation now carries `L'n,w 52`, `L'nT,w 49.6`, `L'nT,50 49.6`
+  - `R9b` exact now carries `Ln,w 46`, `Ln,w+CI 46`, `Rw 68`; field continuation now carries `L'n,w 48`, `L'nT,w 45.6`, `L'nT,50 47.6`
+  - the source correction is now explicit: TUAS drawing page `13/40` shows `40 mm screed + 3 mm EPS underlay + 8 mm laminate`, not a separate upper `plastic-layer`
+  - the next honest widening candidate is now `C7`, not another open-box row:
+    - TUAS drawing page `24/40` shows `260 mm` CLT + `35 mm` EPS + `1 mm` geotextile + `40 mm` screed + `3 mm` EPS underlay + `8 mm` laminate
+    - current implementation still parks that stack at `family_general` `54%` fit with candidate set `tuas_c4`, `tuas_c2`, `tuas_x4` and frozen estimate `Ln,w 59` / `Rw 48.3`
+    - source spreadsheet exact lab tuple is `Ln,w 60`, `Ln,w+CI 62`, `Rw 57`
+  - combined `c`-family CLT rows still remain screening-only after that
 - currently selected next slice:
-  - `wall_selector_shadow_trace_audit_v1`
+  - `tuas_c7_wet_geotextile_clt_surface_design_v1`
 - read in this order before touching code:
   1. [CURRENT_STATE.md](./CURRENT_STATE.md)
   2. [DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md](./DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md)
   3. [DYNAMIC_CALCULATOR_REMAINING_WORK_PLAN.md](./DYNAMIC_CALCULATOR_REMAINING_WORK_PLAN.md)
-  4. [DYNAMIC_WALL_STABILITY_REMEDIATION.md](./DYNAMIC_WALL_STABILITY_REMEDIATION.md)
-- rerun this selected wall baseline pack before any edit:
+  4. [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md)
+- rerun this selected floor baseline pack before any edit:
   - engine:
-    - `pnpm exec vitest run packages/engine/src/dynamic-airborne-family-boundary.test.ts packages/engine/src/dynamic-airborne-family-boundary-scan.test.ts packages/engine/src/dynamic-airborne-order-sensitivity.test.ts packages/engine/src/dynamic-airborne-instability-repro.test.ts`
+    - `pnpm exec vitest run packages/engine/src/calculate-impact-only.test.ts packages/engine/src/calculate-assembly.test.ts packages/engine/src/impact-predictor-input.test.ts packages/engine/src/tuas-support-surface-decision-contract.test.ts packages/engine/src/tuas-clt-backlog-decision-contract.test.ts packages/engine/src/tuas-post-corridor-screening-contract.test.ts packages/engine/src/tuas-candidate-backlog-contract.test.ts packages/engine/src/floor-gap-ledger-contract.test.ts packages/engine/src/floor-source-corpus-contract.test.ts`
   - workbench:
-    - `cd apps/web && pnpm exec vitest run --config vitest.config.ts features/workbench/dynamic-route-family-boundary.test.ts features/workbench/dynamic-route-family-boundary-scan.test.ts features/workbench/dynamic-route-order-sensitivity.test.ts features/workbench/dynamic-route-instability.test.ts features/workbench/dynamic-calc-branch.test.ts`
+    - `cd apps/web && pnpm exec vitest run --config vitest.config.ts features/workbench/floor-family-regressions.test.ts features/workbench/complex-stack-audit.test.ts`
 - current pause baseline is already green:
-  - engine: `4` files, `23` tests
-  - workbench: `5` files, `28` tests
+  - engine: `9` files, `366` tests
+  - workbench: `2` files, `82` tests
 - start inspection here:
-  - [dynamic-airborne-family-boundary.test.ts](../../packages/engine/src/dynamic-airborne-family-boundary.test.ts)
-  - [dynamic-airborne-family-boundary-scan.test.ts](../../packages/engine/src/dynamic-airborne-family-boundary-scan.test.ts)
-  - [dynamic-route-family-boundary.test.ts](../../apps/web/features/workbench/dynamic-route-family-boundary.test.ts)
-  - [dynamic-route-family-boundary-scan.test.ts](../../apps/web/features/workbench/dynamic-route-family-boundary-scan.test.ts)
+  - [tuas-support-surface-decision-contract.test.ts](../../packages/engine/src/tuas-support-surface-decision-contract.test.ts)
+  - [tuas-clt-backlog-decision-contract.test.ts](../../packages/engine/src/tuas-clt-backlog-decision-contract.test.ts)
+  - [tuas-candidate-backlog-contract.test.ts](../../packages/engine/src/tuas-candidate-backlog-contract.test.ts)
+  - [floor-family-regressions.test.ts](../../apps/web/features/workbench/floor-family-regressions.test.ts)
+  - [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md)
 
 Document role:
 
@@ -62,7 +81,7 @@ Document role:
   - workbench targeted pack: `4` files, `8` tests
   - engine adjacent pack: `2` files, `2` tests
 - current mixed generated floor/wall sample set defends `27` broader packages
-- latest root repository build is green on `2026-04-08`:
+- latest root repository build is green on `2026-04-10`:
   - command: `pnpm build`
   - engine DTS blocker closed
   - web typecheck/build blocker closed

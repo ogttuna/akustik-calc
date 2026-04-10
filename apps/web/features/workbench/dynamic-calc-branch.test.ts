@@ -1,3 +1,4 @@
+import type { AirborneContext, FloorRole, RequestedOutputId } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
 import { getDynamicCalcBranchSummary } from "./dynamic-calc-branch";
@@ -21,7 +22,7 @@ function evaluatePreset(presetId: PresetId) {
   });
 }
 
-function evaluateFloorRows(id: string, rows: Array<{ floorRole: string; materialId: string; thicknessMm: string }>) {
+function evaluateFloorRows(id: string, rows: Array<{ floorRole: FloorRole; materialId: string; thicknessMm: string }>) {
   return evaluateScenario({
     id,
     name: id,
@@ -29,6 +30,31 @@ function evaluateFloorRows(id: string, rows: Array<{ floorRole: string; material
     source: "current",
     studyMode: "floor",
     targetOutputs: ["Rw", "Ln,w", "Ln,w+CI", "DeltaLw"]
+  });
+}
+
+const FIELD_CONTEXT = {
+  contextMode: "field_between_rooms",
+  airtightness: "good",
+  panelHeightMm: 2700,
+  panelWidthMm: 3000,
+  receivingRoomRt60S: 0.5,
+  receivingRoomVolumeM3: 30,
+  sharedTrack: "independent"
+} as const satisfies AirborneContext;
+
+const WALL_OUTPUTS = ["R'w", "DnT,w"] as const satisfies readonly RequestedOutputId[];
+
+function evaluateWallRows(id: string, rows: Array<{ materialId: string; thicknessMm: string }>) {
+  return evaluateScenario({
+    airborneContext: FIELD_CONTEXT,
+    calculator: "dynamic",
+    id,
+    name: id,
+    rows: rows.map((row, index) => ({ ...row, id: `${id}-${index + 1}` })),
+    source: "current",
+    studyMode: "wall",
+    targetOutputs: WALL_OUTPUTS
   });
 }
 
@@ -139,5 +165,68 @@ describe("getDynamicCalcBranchSummary", () => {
     expect(summary.value).toBe("Screening seed");
     expect(summary.tone).toBe("warning");
     expect(summary.detail).toContain("seed cavity-screening path");
+  });
+
+  it("surfaces ambiguous wall family boundaries as protected corridor holds in the primary route summary", () => {
+    const scenario = evaluateWallRows("aac-boundary-summary", [
+      { materialId: "ytong_aac_d700", thicknessMm: "100" },
+      { materialId: "air_gap", thicknessMm: "50" },
+      { materialId: "gypsum_board", thicknessMm: "12.5" }
+    ]);
+
+    const summary = getDynamicCalcBranchSummary({
+      result: scenario.result,
+      studyMode: "wall"
+    });
+
+    expect(scenario.result?.dynamicAirborneTrace?.familyDecisionClass).toBe("ambiguous");
+    expect(scenario.result?.dynamicAirborneTrace?.familyDecisionSelectedBelowRunnerUp).toBe(true);
+    expect(summary.value).toBe("Lined Massive Wall");
+    expect(summary.tone).toBe("warning");
+    expect(summary.detail).toContain("Mass Law anchor is active with lined massive blend+reinforcement monotonic floor+family boundary hold.");
+    expect(summary.detail).toContain("ambiguous boundary with Double Leaf");
+    expect(summary.detail).toContain("protected corridor hold");
+  });
+
+  it("surfaces narrow wall family boundaries as held but not settled corridors in the primary route summary", () => {
+    const scenario = evaluateWallRows("aac-narrow-summary", [
+      { materialId: "ytong_aac_d700", thicknessMm: "120" },
+      { materialId: "air_gap", thicknessMm: "50" },
+      { materialId: "diamond_board", thicknessMm: "12.5" }
+    ]);
+
+    const summary = getDynamicCalcBranchSummary({
+      result: scenario.result,
+      studyMode: "wall"
+    });
+
+    expect(scenario.result?.dynamicAirborneTrace?.familyDecisionClass).toBe("narrow");
+    expect(scenario.result?.dynamicAirborneTrace?.familyDecisionSelectedBelowRunnerUp).toBeUndefined();
+    expect(summary.value).toBe("Lined Massive Wall");
+    expect(summary.tone).toBe("warning");
+    expect(summary.detail).toContain("Mass Law anchor is active with lined massive blend+reinforcement monotonic floor+family boundary hold.");
+    expect(summary.detail).toContain("narrow boundary with Double Leaf");
+    expect(summary.detail).toContain("conservative family-boundary hold is active");
+    expect(summary.detail).not.toContain("protected corridor hold");
+  });
+
+  it("keeps settled wall family summaries compact when no boundary signal is active", () => {
+    const scenario = evaluateWallRows("aac-clear-summary", [
+      { materialId: "ytong_aac_d700", thicknessMm: "160" },
+      { materialId: "air_gap", thicknessMm: "50" },
+      { materialId: "gypsum_board", thicknessMm: "12.5" }
+    ]);
+
+    const summary = getDynamicCalcBranchSummary({
+      result: scenario.result,
+      studyMode: "wall"
+    });
+
+    expect(scenario.result?.dynamicAirborneTrace?.familyDecisionClass).toBeUndefined();
+    expect(summary.value).toBe("Lined Massive Wall");
+    expect(summary.tone).toBe("neutral");
+    expect(summary.detail).toBe("Mass Law anchor is active with lined massive blend.");
+    expect(summary.detail).not.toContain("boundary");
+    expect(summary.detail).not.toContain("hold");
   });
 });

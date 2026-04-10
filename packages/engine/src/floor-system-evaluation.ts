@@ -7,6 +7,8 @@ import type {
   ResolvedLayer
 } from "@dynecho/shared";
 
+import { matchesPackedThicknessSchedule } from "./ceiling-board-thickness-schedule";
+
 export const THICKNESS_TOLERANCE_MM = 2;
 
 export const ROLE_LABELS: Record<FloorRole, string> = {
@@ -126,11 +128,41 @@ function hasMergeSafePackedRoleEquivalent(
 }
 
 function scoreRoleCriteria(criteria: FloorSystemRoleCriteria): number {
-  return (criteria.layerCount ? 1 : 0) + (criteria.materialIds ? 1 : 0) + (typeof criteria.thicknessMm === "number" ? 1 : 0);
+  return (
+    (criteria.layerCount ? 1 : 0) +
+    (criteria.materialIds ? 1 : 0) +
+    (criteria.materialScheduleIds ? 1 : 0) +
+    (criteria.thicknessScheduleMm ? 1 : 0) +
+    (typeof criteria.thicknessMm === "number" ? 1 : 0)
+  );
 }
 
 function describeMaterialSet(criteria: FloorSystemRoleCriteria): string {
   return criteria.materialIds?.join(" / ") ?? "curated material";
+}
+
+function describeMaterialSchedule(criteria: FloorSystemRoleCriteria): string {
+  return criteria.materialScheduleIds?.join(" -> ") ?? "curated material schedule";
+}
+
+function matchesRoleMaterialSchedule(
+  layers: readonly ResolvedLayer[],
+  expectedMaterialIds: readonly string[]
+): boolean {
+  const actualMaterialIds = layers.map((layer) => layer.material.id);
+
+  if (actualMaterialIds.length !== expectedMaterialIds.length || actualMaterialIds.length === 0) {
+    return false;
+  }
+
+  const matchesForward = actualMaterialIds.every((materialId, index) => materialId === expectedMaterialIds[index]);
+  if (matchesForward) {
+    return true;
+  }
+
+  return actualMaterialIds.every(
+    (materialId, index) => materialId === expectedMaterialIds[expectedMaterialIds.length - 1 - index]
+  );
 }
 
 function evaluateRoleCriteria(
@@ -144,6 +176,15 @@ function evaluateRoleCriteria(
   const packedScheduleEquivalent = hasMergeSafePackedRoleEquivalent(layers, criteria, {
     requireMaterialMatch: false
   });
+  const actualThicknessScheduleMm = layers.map((layer) => layer.thicknessMm);
+  const thicknessScheduleEquivalent =
+    criteria.thicknessScheduleMm &&
+    actualThicknessScheduleMm.every((thicknessMm) => typeof thicknessMm === "number" && thicknessMm > 0)
+      ? matchesPackedThicknessSchedule(actualThicknessScheduleMm as number[], criteria.thicknessScheduleMm)
+      : false;
+  const materialScheduleEquivalent = criteria.materialScheduleIds
+    ? matchesRoleMaterialSchedule(layers, criteria.materialScheduleIds)
+    : false;
   let matchedSignals = 0;
 
   if (criteria.layerCount) {
@@ -166,6 +207,16 @@ function evaluateRoleCriteria(
     missingSignals.push(`Add ${roleLabel}.`);
   }
 
+  if (criteria.materialScheduleIds) {
+    if (layers.length === 0) {
+      missingSignals.push(`Add ${roleLabel} using ${describeMaterialSchedule(criteria)}.`);
+    } else if (materialScheduleEquivalent) {
+      matchedSignals += 1;
+    } else {
+      missingSignals.push(`Use ${roleLabel} material schedule ${describeMaterialSchedule(criteria)}.`);
+    }
+  }
+
   if (typeof criteria.thicknessMm === "number") {
     if (layers.length === 0) {
       missingSignals.push(`Add ${roleLabel} around ${criteria.thicknessMm} mm.`);
@@ -176,6 +227,16 @@ function evaluateRoleCriteria(
       matchedSignals += 1;
     } else {
       missingSignals.push(`Tune ${roleLabel} to about ${criteria.thicknessMm} mm.`);
+    }
+  }
+
+  if (criteria.thicknessScheduleMm) {
+    if (layers.length === 0) {
+      missingSignals.push(`Add ${roleLabel} using the supported thickness schedule.`);
+    } else if (thicknessScheduleEquivalent) {
+      matchedSignals += 1;
+    } else {
+      missingSignals.push(`Tune ${roleLabel} to the supported mixed thickness schedule.`);
     }
   }
 

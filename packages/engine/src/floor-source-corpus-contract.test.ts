@@ -8,15 +8,26 @@ const TUAS_OPEN_BOX_IDS = [
   "tuas_r3b_open_box_timber_measured_2026",
   "tuas_r5a_open_box_timber_measured_2026",
   "tuas_r5b_open_box_timber_measured_2026",
+  "tuas_r6a_open_box_timber_measured_2026",
   "tuas_r6b_open_box_timber_measured_2026",
   "tuas_r7a_open_box_timber_measured_2026",
+  "tuas_r7b_open_box_timber_measured_2026",
+  "tuas_r8b_open_box_timber_measured_2026",
+  "tuas_r9b_open_box_timber_measured_2026",
+  "tuas_r2c_open_box_timber_measured_2026",
+  "tuas_r10a_open_box_timber_measured_2026",
   "tuas_r11b_open_box_timber_measured_2026"
 ] as const;
 
 const TUAS_CLT_IDS = [
   "tuas_x2_clt140_measured_2026",
+  "tuas_x3_clt140_measured_2026",
+  "tuas_x4_clt140_measured_2026",
   "tuas_x5_clt140_measured_2026",
   "tuas_c2_clt260_measured_2026",
+  "tuas_c3_clt260_measured_2026",
+  "tuas_c4_clt260_measured_2026",
+  "tuas_c5_clt260_measured_2026",
   "tuas_c5c_clt260_measured_2026"
 ] as const;
 

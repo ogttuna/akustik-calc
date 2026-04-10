@@ -75,6 +75,7 @@ const ImpactPredictorLowerTreatmentSchema = z
   .object({
     boardLayerCount: z.number().int().positive().optional(),
     boardMaterialClass: z.string().min(1).optional(),
+    boardThicknessScheduleMm: z.array(z.number().positive()).min(1).optional(),
     boardThicknessMm: z.number().positive().optional(),
     cavityDepthMm: z.number().positive().optional(),
     cavityFillThicknessMm: z.number().nonnegative().optional(),

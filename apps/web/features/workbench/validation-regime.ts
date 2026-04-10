@@ -7,7 +7,7 @@ import {
   IMPACT_VALIDATION_FAMILY_MATRIX,
   IMPACT_VALIDATION_MODE_MATRIX
 } from "@dynecho/engine";
-import type { AssemblyCalculation } from "@dynecho/shared";
+import type { AssemblyCalculation, DynamicAirborneTrace } from "@dynecho/shared";
 
 import { getImpactLaneKind, getImpactLanePillLabel } from "./impact-lane-view";
 
@@ -33,6 +33,55 @@ export type ValidationHardeningTask = {
   id: string;
   label: string;
 };
+
+export type AirborneBoundaryPosture = {
+  detail: string;
+  label: string;
+};
+
+export function getAirborneBoundaryPosture(
+  trace: DynamicAirborneTrace | null | undefined
+): AirborneBoundaryPosture | null {
+  if (!trace) {
+    return null;
+  }
+
+  const runnerUpLabel = trace.runnerUpFamilyLabel ?? "another nearby family";
+  const multiplePlausibleDetail =
+    trace.familyDecisionMultiplePlausibleFamilies && trace.secondaryRunnerUpFamilyLabel
+      ? ` A second nearby family also remains plausible: ${trace.secondaryRunnerUpFamilyLabel}.`
+      : "";
+
+  if (trace.familyDecisionClass === "ambiguous") {
+    if (trace.familyDecisionSelectedBelowRunnerUp) {
+      return {
+        detail: `The current wall read sits on an ambiguous boundary with ${runnerUpLabel}, and the nearby ${runnerUpLabel} corridor is still slightly ahead, so the selector is staying on ${trace.detectedFamilyLabel} as a protected corridor hold rather than a clean win.${multiplePlausibleDetail}`,
+        label: `Ambiguous boundary with ${runnerUpLabel} · protected corridor hold`
+      };
+    }
+
+    return {
+      detail: `The current wall read sits on an ambiguous boundary with ${runnerUpLabel}, and a conservative family-boundary hold is active.${multiplePlausibleDetail}`,
+      label: `Ambiguous boundary with ${runnerUpLabel} · family hold`
+    };
+  }
+
+  if (trace.familyDecisionClass === "narrow") {
+    return {
+      detail: `The current wall read stays on a narrow boundary with ${runnerUpLabel}, and a conservative family-boundary hold is active.${multiplePlausibleDetail}`,
+      label: `Narrow boundary with ${runnerUpLabel} · family hold`
+    };
+  }
+
+  if (trace.familyBoundaryHoldApplied) {
+    return {
+      detail: `A conservative family-boundary hold remains active because ${runnerUpLabel} still sits nearby on the current corridor.${multiplePlausibleDetail}`,
+      label: `Family-boundary hold near ${runnerUpLabel}`
+    };
+  }
+
+  return null;
+}
 
 export function describeImpactValidationPosture(result: AssemblyCalculation | null): ValidationPosture {
   if (!result) {
@@ -128,8 +177,13 @@ export function describeAirborneValidationPosture(result: AssemblyCalculation | 
 
   const trace = result.dynamicAirborneTrace;
   if (trace) {
+    const boundaryPosture = getAirborneBoundaryPosture(trace);
+
     return {
-      detail: `${trace.detectedFamilyLabel} is the current airborne family read with ${trace.confidenceClass} confidence. Solver spread is currently ${trace.solverSpreadRwDb} dB across the candidate family set.`,
+      detail:
+        `${trace.detectedFamilyLabel} is the current airborne family read with ${trace.confidenceClass} confidence. ` +
+        `Solver spread is currently ${trace.solverSpreadRwDb} dB across the candidate family set.` +
+        (boundaryPosture ? ` ${boundaryPosture.detail}` : ""),
       label: `${trace.selectedLabel} anchor`,
       posture: "estimate"
     };

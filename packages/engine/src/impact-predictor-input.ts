@@ -14,6 +14,10 @@ import {
   type CeilingBoardTopologyConflict,
   type SingleEntryRoleConflict
 } from "./floor-role-topology";
+import {
+  layersMatchPackedThicknessSchedule,
+  matchesPackedThicknessSchedule
+} from "./ceiling-board-thickness-schedule";
 import { getDefaultMaterialCatalog, resolveMaterial } from "./material-catalog";
 import { ksRound1 } from "./math";
 import {
@@ -444,6 +448,13 @@ function scorePredictorLowerTreatment(
   );
   score = accumulateScore(
     score,
+    scoreBoardThicknessSchedule(
+      expected?.boardThicknessScheduleMm,
+      actual?.boardThicknessScheduleMm
+    )
+  );
+  score = accumulateScore(
+    score,
     scoreExactString(expected?.boardMaterialClass, actual?.boardMaterialClass, normalizePredictorMaterialClass)
   );
   score = accumulateScore(
@@ -464,6 +475,26 @@ function scorePredictorLowerTreatment(
   );
 
   return score;
+}
+
+function scoreBoardThicknessSchedule(
+  expected: readonly number[] | undefined,
+  actual: readonly number[] | undefined
+): PredictorMatchScore {
+  if (!expected?.length && !actual?.length) {
+    return { compatible: true, score: 0 };
+  }
+
+  if (!expected?.length || !actual?.length) {
+    return { compatible: false, score: 0 };
+  }
+
+  const compatible = matchesPackedThicknessSchedule(actual, expected);
+
+  return {
+    compatible,
+    score: compatible ? 1 : 0
+  };
 }
 
 function scoreFloorSystemEstimateMatch(
@@ -1143,8 +1174,22 @@ function collectPredictorRoleConflicts(
 ): PredictorRoleConflict[] {
   const conflicts = collectSingleEntryRoleConflicts(layers);
   const ceilingBoardConflict = collectCeilingBoardTopologyConflict(layers);
+  const ceilingBoards = layersForRole(layers, "ceiling_board");
+  const ceilingCavity = firstLayerForRole(layers, "ceiling_cavity");
+  const boardMaterialClass = resolveLowerTreatmentBoardMaterialClass(ceilingBoards[0]);
 
-  return ceilingBoardConflict ? [...conflicts, ceilingBoardConflict] : conflicts;
+  if (
+    ceilingBoardConflict &&
+    !lowerTreatmentMatchesSupportedExactSchedule({
+      boardMaterialClass,
+      ceilingBoards,
+      ceilingCavity
+    })
+  ) {
+    return [...conflicts, ceilingBoardConflict];
+  }
+
+  return conflicts;
 }
 
 function formatPredictorRoleLabel(role: NonNullable<LayerInput["floorRole"]>): string {
@@ -1318,6 +1363,64 @@ function resolveLowerTreatmentBoardMaterialClass(
   }
 }
 
+function resolveLowerTreatmentBoardThicknessSchedule(
+  ceilingBoards: readonly ResolvedLayerStackEntry[]
+): number[] | undefined {
+  if (ceilingBoards.length <= 1) {
+    return undefined;
+  }
+
+  const firstBoard = ceilingBoards[0];
+  if (!firstBoard || !ceilingBoards.every((layer) => layer.material.id === firstBoard.material.id)) {
+    return undefined;
+  }
+
+  const thicknessesMm = ceilingBoards.map((layer) => layer.thicknessMm);
+  const firstThicknessMm = thicknessesMm[0];
+
+  if (
+    typeof firstThicknessMm === "number" &&
+    thicknessesMm.every((thicknessMm) => thicknessMm === firstThicknessMm)
+  ) {
+    return undefined;
+  }
+
+  return thicknessesMm;
+}
+
+function lowerTreatmentMatchesSupportedExactSchedule(input: {
+  boardMaterialClass: string | undefined;
+  ceilingBoards: readonly ResolvedLayerStackEntry[];
+  ceilingCavity: ResolvedLayerStackEntry | undefined;
+}): boolean {
+  if (input.ceilingBoards.length <= 1) {
+    return false;
+  }
+
+  const type = resolveLowerTreatmentType(input.ceilingCavity);
+  const supportClass = resolveLowerTreatmentSupportClass(input.ceilingCavity);
+
+  return EXACT_FLOOR_SYSTEMS.some((system) => {
+    const lowerTreatment = system.estimateMatch?.lowerTreatment;
+    const boardThicknessScheduleMm = lowerTreatment?.boardThicknessScheduleMm;
+
+    if (!lowerTreatment || !boardThicknessScheduleMm?.length) {
+      return false;
+    }
+
+    return (
+      lowerTreatment.type === type &&
+      lowerTreatment.supportClass === supportClass &&
+      normalizePredictorToken(lowerTreatment.boardMaterialClass) === normalizePredictorToken(input.boardMaterialClass) &&
+      layersMatchPackedThicknessSchedule(
+        input.ceilingBoards,
+        boardThicknessScheduleMm,
+        input.ceilingBoards[0]?.material.id
+      )
+    );
+  });
+}
+
 function impactCoverClassActsAsUpperTreatment(materialClass: string | undefined): boolean {
   switch ((materialClass || "").trim().toLowerCase()) {
     case "engineered_timber_with_acoustic_underlay":
@@ -1465,6 +1568,8 @@ export function buildImpactPredictorInputFromLayerStack(
   const ceilingFill = firstLayerForRole(resolvedLayers, "ceiling_fill");
   const ceilingBoards = layersForRole(resolvedLayers, "ceiling_board");
   const firstCeilingBoard = ceilingBoards[0];
+  const boardThicknessScheduleMm = resolveLowerTreatmentBoardThicknessSchedule(ceilingBoards);
+  const boardMaterialClass = resolveLowerTreatmentBoardMaterialClass(firstCeilingBoard);
 
   const structuralSupport = resolveStructuralSupportFromBaseLayer(baseStructure);
 
@@ -1490,9 +1595,10 @@ export function buildImpactPredictorInputFromLayerStack(
       : undefined,
     lowerTreatment: ceilingBoards.length
       ? {
-          boardLayerCount: ceilingBoards.length,
-          boardMaterialClass: resolveLowerTreatmentBoardMaterialClass(firstCeilingBoard),
-          boardThicknessMm: firstCeilingBoard?.thicknessMm,
+          boardLayerCount: boardThicknessScheduleMm ? undefined : ceilingBoards.length,
+          boardMaterialClass,
+          boardThicknessScheduleMm,
+          boardThicknessMm: boardThicknessScheduleMm ? undefined : firstCeilingBoard?.thicknessMm,
           cavityDepthMm: ceilingCavity?.thicknessMm,
           cavityFillThicknessMm: ceilingFill?.thicknessMm,
           supportClass: resolveLowerTreatmentSupportClass(ceilingCavity),
@@ -1543,10 +1649,7 @@ function canDerivePredictorInputFromLayerStack(
     return false;
   }
 
-  if (
-    hasAmbiguousSingleEntryRoleTopology(normalizedLayers) ||
-    collectCeilingBoardTopologyConflict(normalizedLayers)
-  ) {
+  if (hasAmbiguousSingleEntryRoleTopology(normalizedLayers) || collectPredictorRoleConflicts(normalizedLayers).length > 0) {
     return false;
   }
 
@@ -1654,9 +1757,14 @@ function buildSourceLayersFromPredictorInput(
   catalogAdditions: MaterialDefinition[]
 ): LayerInput[] {
   const sourceLayers: LayerInput[] = [];
-  const boardLayerCount = input.lowerTreatment?.boardLayerCount ?? 0;
+  const boardThicknessScheduleMm = input.lowerTreatment?.boardThicknessScheduleMm ?? [];
+  const boardLayerCount = boardThicknessScheduleMm.length > 0 ? 0 : input.lowerTreatment?.boardLayerCount ?? 0;
   const boardThicknessMm = input.lowerTreatment?.boardThicknessMm;
   const boardMaterialId = resolveCeilingBoardMaterialId(input);
+
+  for (const scheduledBoardThicknessMm of boardThicknessScheduleMm) {
+    pushLayer(sourceLayers, boardMaterialId, scheduledBoardThicknessMm, "ceiling_board");
+  }
 
   for (let index = 0; index < boardLayerCount; index += 1) {
     pushLayer(sourceLayers, boardMaterialId, boardThicknessMm, "ceiling_board");

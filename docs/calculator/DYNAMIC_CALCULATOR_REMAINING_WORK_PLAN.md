@@ -1129,11 +1129,39 @@ These are the most likely next useful tests. They are not currently defended eno
     - wall remains only partially complete outside the narrow `double_leaf <-> lined_massive_wall` hold corridor
     - the best next accuracy move is therefore selector-trace evidence, not forced floor widening from weak source fit
   - current status:
-    - selected
-    - not started
+    - closed
+    - stopped at selector-honesty hardening rather than promoted into a second held-family widening
   - pause baseline:
     - engine: `4` files, `23` tests, green
     - workbench: `5` files, `28` tests, green
+  - current landed result inside the active slice:
+    - `dynamic-calc-branch.ts` no longer hides the defended wall selector boundary behind anchor-only wording
+    - the primary route summary now surfaces:
+      - ambiguous boundary with runner-up family
+      - protected corridor hold when the selected family sits below the runner-up score
+      - narrow boundary with conservative hold wording
+      - clear settled corridor cases stay compact
+    - `dynamic-calc-branch.test.ts` now covers those wall cases directly
+    - the next hidden posture turned out to be downstream wording reuse, not a new selector rule:
+      - shared airborne validation wording had still collapsed the defended wall boundary into family + confidence + solver spread only
+      - corridor dossier, consultant decision trail, output posture, and other downstream wall surfaces inherited that flattened wording
+      - the dynamic airborne evidence citation also stayed too compact
+    - the active slice now also lands shared secondary parity on those surfaces:
+      - validation posture wording carries ambiguous / narrow boundary and protected corridor hold state
+      - corridor dossier and consultant decision trail now keep that same posture visible
+      - evidence packet and result summary no longer revert to family-plus-confidence shorthand on the defended boundary
+  - current validation after that parity patch:
+    - selected workbench wall pack after the first parity patch: `5` files, `31` tests, green
+    - extended wall honesty pack after the secondary parity patch: `9` files, `49` tests, green
+    - selected engine wall isolation pack after the final close-out pass: `4` files, `23` tests, green
+    - `pnpm build`: green
+    - existing build caveat unchanged:
+      - `sharp` / `@img` module-resolution warnings still appear during the web build but do not currently fail the build
+  - explicit close-out result:
+    - the selected engine/workbench packs still show no second held family pair on the representative non-AAC heavy-core palette
+    - no framed multi-candidate boundary surface survives yet
+    - no remaining non-advanced user-facing wall surface is currently known to hide runner-up or hold posture
+    - keep the defended hold limited to `double_leaf <-> lined_massive_wall` and return to floor work
   - restart protocol:
     - read the live state in [DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md](./DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md) first
     - rerun the selected wall baseline pack before any edit
@@ -1144,6 +1172,271 @@ These are the most likely next useful tests. They are not currently defended eno
       - [dynamic-route-family-boundary.test.ts](../../apps/web/features/workbench/dynamic-route-family-boundary.test.ts)
       - [dynamic-route-family-boundary-scan.test.ts](../../apps/web/features/workbench/dynamic-route-family-boundary-scan.test.ts)
       - [dynamic-calc-branch.test.ts](../../apps/web/features/workbench/dynamic-calc-branch.test.ts)
+    - then treat the closed wall truth surface as frozen unless a new trace/scan/parity pack proves a second held family
+
+- selected next slice after wall selector shadow-trace audit:
+  - UBIQ open-web corridor decision
+  - current reason:
+    - the wall selector slice is now closed and no longer blocks floor work
+    - remaining TUAS open-box rows need new visible/support surfaces rather than another safe same-package import
+    - UBIQ still has one bounded next decision inside explicit support-form reasoning:
+      - either a source-backed package variant exists inside the defended `FL-24 -> FL-26 -> FL-28` corridor
+      - or the honest answer is to keep `FL-23/25/27` deferred as the materially weaker band
+  - current status:
+    - closed
+  - pause baseline:
+    - engine: `3` files, `9` tests, green
+    - workbench: `2` files, `63` tests, green
+  - current scope:
+    - kept explicit open-web support-form reasoning frozen
+    - did not auto-import `FL-23/25/27`
+    - rechecked corridor-internal package-variant widening vs explicit weaker-band defer
+    - current close-out result:
+      - no honest new corridor import survived
+      - a second official brochure exposes the same open-web FRL/D `2 x 16 mm` package as `FL-26 (FRL/D)` instead of `FL-28 (FRL/D)`
+      - that is now frozen as provenance conflict only, not as a widening or runtime rename prompt
+  - restart protocol:
+    - read the live state in [DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md](./DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md) first
+    - rerun:
+      - [floor-gap-ledger-contract.test.ts](../../packages/engine/src/floor-gap-ledger-contract.test.ts)
+      - [ubiq-candidate-backlog-contract.test.ts](../../packages/engine/src/ubiq-candidate-backlog-contract.test.ts)
+      - [floor-widening-candidate-contract.test.ts](../../packages/engine/src/floor-widening-candidate-contract.test.ts)
+      - [floor-family-regressions.test.ts](../../apps/web/features/workbench/floor-family-regressions.test.ts)
+      - [complex-stack-audit.test.ts](../../apps/web/features/workbench/complex-stack-audit.test.ts)
+    - recheck [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md) before any widening decision
+
+- selected next slice after UBIQ open-web corridor decision:
+  - TUAS open-box support-surface decision
+  - current reason:
+    - UBIQ is now closed without widening
+    - remaining TUAS open-box debt is the first real unresolved coverage blocker again
+    - the finished TUAS drawing audit already reduced that debt to two concrete blocker classes:
+      - mixed board / staged dry-pack outliers: `R6a`, `R10a`
+      - hybrid lower-treatment outliers: `R7b`, `R8b`, `R9b`, `R2c`
+  - current status:
+    - closed
+  - close-out result:
+    - the current implementation comparison does not support treating `R6a` and `R10a` as one shared next surface
+    - `R6a` is the first promotable candidate because its proxy still sits on the near-corridor `family_archetype` lane
+    - `R10a` remained separate staged upper-package debt at that decision point
+    - the hybrid branch remains secondary because its proxy already drops to broader `family_general`
+  - close-out baseline:
+    - engine: `5` files, `18` tests, green
+    - workbench: `2` files, `63` tests, green
+
+- selected next slice after the TUAS support-surface decision:
+  - TUAS `R6a` mixed-board surface design
+  - current status:
+    - closed
+  - close-out result:
+    - exact row `tuas_r6a_open_box_timber_measured_2026` is landed
+    - exact visible and predictor surfaces now carry the mixed lower-board schedule `2 x 13 mm + 4 x 15 mm`
+    - grouped packed shorthand `26 mm + 60 mm` is now defended on the same exact row
+    - lab support remains `Rw` plus `Ln,w`, while `Ln,w+CI` stays unsupported
+    - field continuation remains `Ln,w`, `L'n,w`, and `L'nT,w`, while `L'nT,50` stays unsupported
+    - the remaining TUAS open-box debt is now `R10a` plus the hybrid lower-treatment branch
+  - close-out baseline:
+    - engine: `8` files, `318` tests, green
+    - workbench: `2` files, `66` tests, green
+    - build: green
+  - restart protocol:
+    - read the live state in [DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md](./DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md) first
+    - rerun:
+      - [calculate-assembly.test.ts](../../packages/engine/src/calculate-assembly.test.ts)
+      - [calculate-impact-only.test.ts](../../packages/engine/src/calculate-impact-only.test.ts)
+      - [impact-predictor-input.test.ts](../../packages/engine/src/impact-predictor-input.test.ts)
+      - [tuas-support-surface-decision-contract.test.ts](../../packages/engine/src/tuas-support-surface-decision-contract.test.ts)
+      - [tuas-candidate-backlog-contract.test.ts](../../packages/engine/src/tuas-candidate-backlog-contract.test.ts)
+      - [tuas-post-corridor-screening-contract.test.ts](../../packages/engine/src/tuas-post-corridor-screening-contract.test.ts)
+      - [floor-gap-ledger-contract.test.ts](../../packages/engine/src/floor-gap-ledger-contract.test.ts)
+      - [floor-source-corpus-contract.test.ts](../../packages/engine/src/floor-source-corpus-contract.test.ts)
+      - [floor-family-regressions.test.ts](../../apps/web/features/workbench/floor-family-regressions.test.ts)
+      - [complex-stack-audit.test.ts](../../apps/web/features/workbench/complex-stack-audit.test.ts)
+    - recheck [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md) and the TUAS drawing notes before any widening decision
+
+- selected next slice after the TUAS `R6a` mixed-board surface design:
+  - TUAS `R10a` staged upper-package surface design
+  - current status:
+    - closed
+  - close-out baseline:
+    - engine: `8` files, `324` tests, green
+    - workbench: `2` files, `66` tests, green
+    - `pnpm build`: green
+  - close-out result:
+    - exact row `tuas_r10a_open_box_timber_measured_2026` is landed
+    - exact visible-layer `floating_screed` material/thickness schedule now carries the source-backed split staged upper package
+    - lab support now carries `Rw`, `Ln,w`, and `Ln,w+CI`
+    - field continuation now carries `Ln,w`, `L'n,w`, `L'nT,w`, and `L'nT,50`
+    - over-abstracted `upper_fill 13 mm` + `dry_floating_gypsum_fiberboard 33 mm` shorthand still remains non-exact on `family_archetype`
+    - predictor derivation remains fail-closed on the staged mixed floating-screed package
+    - the remaining TUAS open-box debt now narrows to the hybrid lower-treatment branch only
+  - restart protocol:
+    - read the live state in [DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md](./DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md) first
+    - rerun:
+      - [calculate-assembly.test.ts](../../packages/engine/src/calculate-assembly.test.ts)
+      - [calculate-impact-only.test.ts](../../packages/engine/src/calculate-impact-only.test.ts)
+      - [impact-predictor-input.test.ts](../../packages/engine/src/impact-predictor-input.test.ts)
+      - [tuas-support-surface-decision-contract.test.ts](../../packages/engine/src/tuas-support-surface-decision-contract.test.ts)
+      - [tuas-candidate-backlog-contract.test.ts](../../packages/engine/src/tuas-candidate-backlog-contract.test.ts)
+      - [tuas-post-corridor-screening-contract.test.ts](../../packages/engine/src/tuas-post-corridor-screening-contract.test.ts)
+      - [floor-gap-ledger-contract.test.ts](../../packages/engine/src/floor-gap-ledger-contract.test.ts)
+      - [floor-source-corpus-contract.test.ts](../../packages/engine/src/floor-source-corpus-contract.test.ts)
+      - [floor-family-regressions.test.ts](../../apps/web/features/workbench/floor-family-regressions.test.ts)
+      - [complex-stack-audit.test.ts](../../apps/web/features/workbench/complex-stack-audit.test.ts)
+    - recheck [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md) and the TUAS drawing notes before any widening decision
+
+- selected next slice after the TUAS `R10a` staged upper-package surface design:
+  - TUAS CLT backlog decision
+  - current status:
+    - closed
+  - pause baseline:
+    - engine: `8` files, `324` tests, green
+    - workbench: `2` files, `66` tests, green
+    - `pnpm build`: green
+  - current scope:
+    - re-rank the deferred TUAS CLT universe against the now-closed TUAS open-box exact corpus
+    - freeze the next promotable TUAS CLT candidate and required CLT-family calibration axis
+    - keep the hybrid open-box lower-treatment branch secondary unless the CLT decision fails
+  - current frozen truth:
+    - TUAS open-box exact corpus now numbers `11`
+    - the same-family staged upper-package open-box debt is now closed
+    - the remaining hybrid open-box proxy still falls to `family_general` at `54%` fit with duplicate `ceiling_cavity`
+    - the deferred TUAS CLT set is therefore the narrower next floor decision surface
+  - decision result:
+    - `X3` is the selected next TUAS CLT import candidate
+    - `C3` is the adjacent thicker follow-on once the `X3` surface is landed
+    - `X4`, `C4`, and `C5` remain broader heavy dry-top backlog
+    - `C2c`, `C3c`, `C4c`, `C7c`, and `C11c` remain combined lower-ceiling backlog
+    - at that point, `C7` and `C7c` still remained geotextile-dependent backlog
+
+- selected next slice after the TUAS CLT backlog decision:
+  - TUAS `X3` staged upper CLT surface design
+  - current status:
+    - closed
+  - pause baseline:
+    - engine: `9` files, `332` tests, green
+    - workbench: `2` files, `68` tests, green
+    - `pnpm build`: green
+  - current scope:
+    - land `X3` as an exact staged-upper CLT row using the already-landed `R10a` material/thickness schedule semantics
+    - freeze the adjacent bare-CLT estimate drift caused by the new exact sibling
+    - keep combined `c`-family rows and geotextile-dependent rows deferred in the same slice
+  - current frozen truth:
+    - exact row `tuas_x3_clt140_measured_2026` is now landed
+    - source-backed exact lab tuple is now `Ln,w 61`, `Ln,w+CI 63`, `Ln,w+CI,50-2500 64`, `Rw 49`
+    - field continuation is now `L'n,w 63`, `L'nT,w 61`, `L'nT,50 64`
+    - predictor derivation still stays fail-closed on the staged mixed floating-screed package
+    - the nearby bare-CLT visible fallback now admits `tuas_x3` as a third adjacent exact sibling and is frozen at `Ln,w 67.2` / `Rw 40.4`
+    - the heavier dry-top `X4` proxy still sits on a broader `family_archetype` lane
+    - the simpler combined `C2c` proxy still stays screening-only with impact outputs unsupported
+
+- selected next slice after the landed TUAS `X3` staged upper CLT surface design:
+  - TUAS `C3` staged upper CLT surface design
+  - current status:
+    - closed
+  - pause baseline:
+    - engine: `9` files, `335` tests, green
+    - workbench: `2` files, `70` tests, green
+    - `pnpm build`: green
+  - current scope:
+    - land `C3` as the thicker staged-upper CLT sibling using the same schedule semantics now proven on `X3`
+    - avoid widening combined `c`-family or geotextile-dependent rows in the same slice
+    - keep the hybrid open-box support-surface branch secondary unless `C3` fails
+  - current frozen truth:
+    - `X3` is no longer deferred; it is part of the exact TUAS CLT corpus
+    - exact row `tuas_c3_clt260_measured_2026` is now landed
+    - source-backed exact lab tuple is now `Ln,w 55`, `Ln,w+CI 58`, `Ln,w+CI,50-2500 59`, `Rw 54`
+    - field continuation is now `L'n,w 57`, `L'nT,w 55`, `L'nT,50 59`
+    - predictor derivation still stays fail-closed on the staged mixed floating-screed package
+    - `X4` is now closed as the first upper-only heavy dry-top exact row
+    - `C4` is now the nearest thicker same-surface follow-on
+    - `C5` remains broader heavy dry-top backlog
+    - `C2c`, `C3c`, `C4c`, `C7c`, and `C11c` remain screening-only combined backlog
+    - at that point, `C7` and `C7c` still remained geotextile-dependent backlog
+    - the nearby `C4` heavy dry-top proxy now reranks onto `tuas_x4`, `tuas_c3`, and `tuas_c2` with frozen `family_archetype` fit `82%` and frozen estimate tuple `Ln,w 55.9` / `Rw 51.3`
+
+- selected next slice after the landed TUAS `X4` heavy dry-top CLT surface design:
+  - TUAS `C4` heavy dry-top CLT surface design
+  - current status:
+    - closed
+  - pause baseline:
+    - engine: `9` files, `347` tests, green
+    - workbench: `2` files, `76` tests, green
+    - `pnpm build`: green
+  - current scope:
+    - land `C4` as the thicker heavy dry-top same-surface CLT row without widening a generic dry shortcut
+    - avoid widening `C5`, combined `c`-family rows, or geotextile-dependent rows in the same slice
+    - keep the hybrid open-box support-surface branch secondary unless `C4` fails
+  - current frozen truth:
+    - the staged-upper CLT corridor is now closed on both defended carriers:
+      - `tuas_x3_clt140_measured_2026`
+      - `tuas_c3_clt260_measured_2026`
+    - the first heavy dry-top exact row is now also closed:
+      - `tuas_x4_clt140_measured_2026`
+      - shorthand `generic_fill 50 mm + dry_floating_gypsum_fiberboard 30 mm` still stays off the exact lane at `family_general` `94%` fit against `tuas_x5`
+    - the exact thicker same-surface follow-on is now also closed:
+      - `tuas_c4_clt260_measured_2026`
+      - lab tuple `Ln,w 47`, `Ln,w+CI 49`, `Ln,w+CI,50-2500 53`, `Rw 61`
+      - field continuation `L'n,w 49`, `L'nT,w 47`, `L'nT,50 53`
+      - shorthand `generic_fill 50 mm + dry_floating_gypsum_fiberboard 30 mm` still stays off the exact lane at `family_general` `94%` fit against `tuas_x5`
+    - the immediate unresolved heavier heavy dry-top proxy is now `C5`
+    - that proxy currently stays on `family_archetype` at `78.7%` fit
+    - current frozen candidate set is `tuas_c4`, `tuas_x4`, `tuas_c3`
+    - current frozen estimate tuple is `Ln,w 50` / `Rw 57.9`
+    - `C2c`, `C3c`, `C4c`, `C7c`, and `C11c` remain screening-only combined backlog
+    - at that point, `C7` and `C7c` still remained geotextile-dependent backlog
+
+- selected next slice after the landed TUAS `R2c` hybrid lower no-fill follow-on:
+  - TUAS `C7` wet geotextile CLT follow-on
+  - current status:
+    - selected
+  - pause baseline:
+    - engine: `9` files, `366` tests, green
+    - workbench: `2` files, `82` tests, green
+    - `pnpm build`: green
+  - current scope:
+    - determine whether the already-supported geotextile/screed visible surface can honestly carry the `C7` wet CLT sibling as a narrow exact row
+    - keep combined `c`-family CLT rows and raw widening secondary unless the `C7` follow-on closes green
+  - current frozen truth:
+    - the staged-upper CLT corridor is now closed on both defended carriers:
+      - `tuas_x3_clt140_measured_2026`
+      - `tuas_c3_clt260_measured_2026`
+    - the heavy dry-top corridor is now closed through the heavier same-surface follow-on:
+      - `tuas_x4_clt140_measured_2026`
+      - `tuas_c4_clt260_measured_2026`
+      - `tuas_c5_clt260_measured_2026`
+    - `C5` is now landed exactly with:
+      - lab `Ln,w 45`, `Ln,w+CI 46`, `Ln,w+CI,50-2500 51`, `Rw 61`
+      - field `L'n,w 47`, `L'nT,w 45`, `L'nT,50 51`
+    - packed `60 mm` gypsum shorthand still stays exact on `tuas_c5_clt260_measured_2026`
+    - generic dry shorthand `generic_fill 50 mm + dry_floating_gypsum_fiberboard 60 mm` still stays off the exact lane at `family_general` `94%` fit against `tuas_x5`
+    - under-described combined direct-fixed CLT stacks stay fail-closed because `massTimberCombinedDirectFixedTierHold` blocks profile-mismatched `family_general` reuse when no profile-aligned candidate exists
+    - the hybrid decision is now implemented:
+      - exact row `tuas_r7b_open_box_timber_measured_2026` is landed with lab `Ln,w 47`, `Ln,w+CI 47`, `Ln,w+CI,50-2500 48`, `Rw 72`
+      - field continuation is now `L'n,w 49`, `L'nT,w 46.6`, `L'nT,50 47.6`
+      - exact row `tuas_r8b_open_box_timber_measured_2026` is now landed with lab `Ln,w 50`, `Ln,w+CI 49`, `Ln,w+CI,50-2500 50`, `Rw 72`
+      - field continuation is now `L'n,w 52`, `L'nT,w 49.6`, `L'nT,50 49.6`
+      - exact row `tuas_r9b_open_box_timber_measured_2026` is now also landed with lab `Ln,w 46`, `Ln,w+CI 46`, `Ln,w+CI,50-2500 48`, `Rw 68`
+      - field continuation is now `L'n,w 48`, `L'nT,w 45.6`, `L'nT,50 47.6`
+      - TUAS drawing page `13/40` is now frozen as the decisive source correction:
+        - `R9b` carries `40 mm screed + 3 mm EPS underlay + 8 mm laminate`
+        - no extra upper `plastic-layer` or `geotextile` item is present on that top package
+      - the old separator-free proxy still stays `family_general` `54%` fit, but it is now re-ranked to `tuas_r9b`, `tuas_r7b`, `tuas_r7a` at `Ln,w 48.5` / `Rw 67.3`
+      - exact row `tuas_r2c_open_box_timber_measured_2026` is now also landed with lab `Ln,w 60`, `Ln,w+CI 60`, `Ln,w+CI,50-2500 60`, `Rw 54`
+      - field continuation is now `L'n,w 62`, `L'nT,w 59.6`, `L'nT,50 59.6`
+      - the no-fill hybrid lower-treatment branch is now closed without reopening a generic `__none` topology lane
+    - the next CLT-local debt is now explicit:
+      - TUAS drawing page `24/40` freezes `C7` as:
+        - `260 mm` CLT
+        - `35 mm` EPS
+        - `1 mm` geotextile
+        - `40 mm` screed
+        - `3 mm` EPS underlay
+        - `8 mm` laminate
+      - source spreadsheet exact lab tuple is now frozen as `Ln,w 60`, `Ln,w+CI 62`, `Ln,w+CI,50-2500 63`, `Rw 57`
+      - current `C7` proxy still falls to `family_general` at `54%` fit with candidate set `tuas_c4`, `tuas_c2`, `tuas_x4` and frozen estimate `Ln,w 59` / `Rw 48.3`
+    - `C2c`, `C3c`, `C4c`, `C7c`, and `C11c` remain screening-only combined backlog
+    - `C7c` remains later combined backlog
 
 - wider-than-first raw concrete ceiling-helper permutations:
   - the first wider helper-side cohort is now defended:

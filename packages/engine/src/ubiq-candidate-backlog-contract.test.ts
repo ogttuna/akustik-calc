@@ -55,6 +55,12 @@ const UBIQ_VISIBLE_FRLD_FAMILY_MAPPING = {
 } as const;
 
 const UBIQ_OFFICIAL_SYSTEM_TABLE_URL = "https://www.ubiq.au/wp-content/uploads/2023/02/INEX-FLOOR-FLOOR-FIRE-ACOUSTIC.pdf";
+const UBIQ_OFFICIAL_FLOOR_SOLUTIONS_URL = "https://www.ubiq.au/wp-content/uploads/2023/02/INEX-FLOOR-FLOOR-SOLUTIONS-16PP-2023-1.pdf";
+
+const UBIQ_SECONDARY_VISIBLE_FRLD_FAMILY_MAPPING = {
+  openWeb: "FL-26 (FRL/D)",
+  steelJoist: "FL-17 (FRL/D)"
+} as const;
 
 const IMPORTED_VISIBLE_FL24_EXACT_TIER = [
   {
@@ -145,6 +151,20 @@ describe("UBIQ candidate backlog contract", () => {
     );
     expect(UBIQ_VISIBLE_FRLD_FAMILY_MAPPING.steelJoist).toBe("FL-17 (FRL/D)");
     expect(UBIQ_VISIBLE_FRLD_FAMILY_MAPPING.openWeb).toBe("FL-28 (FRL/D)");
+  });
+
+  it("keeps the secondary official floor-solutions FRL/D drift explicit without turning it into a new bound import or runtime rename", () => {
+    const importedOpenWebBoundRows = BOUND_FLOOR_SYSTEMS.filter((system) => system.id.startsWith("ubiq_fl33_open_web_steel_"));
+
+    expect(sortedValues(importedOpenWebBoundRows.map((system) => system.id))).toEqual(sortedValues(IMPORTED_UBIQ_OPEN_WEB_BOUND_IDS));
+    expect(sortedValues(importedOpenWebBoundRows.map((system) => system.match.baseStructure?.thicknessMm ?? null))).toEqual([200, 300, 400]);
+    expect(UBIQ_OFFICIAL_FLOOR_SOLUTIONS_URL).toBe(
+      "https://www.ubiq.au/wp-content/uploads/2023/02/INEX-FLOOR-FLOOR-SOLUTIONS-16PP-2023-1.pdf"
+    );
+    expect(UBIQ_VISIBLE_FRLD_FAMILY_MAPPING.openWeb).toBe("FL-28 (FRL/D)");
+    expect(UBIQ_SECONDARY_VISIBLE_FRLD_FAMILY_MAPPING.openWeb).toBe("FL-26 (FRL/D)");
+    expect(UBIQ_VISIBLE_FRLD_FAMILY_MAPPING.steelJoist).toBe("FL-17 (FRL/D)");
+    expect(UBIQ_SECONDARY_VISIBLE_FRLD_FAMILY_MAPPING.steelJoist).toBe("FL-17 (FRL/D)");
   });
 
   it("keeps the visible FL-24 2 x 13 mm exact corridor explicitly imported as the first adjacent-family widening pass", () => {

@@ -1,12 +1,38 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  describeAirborneValidationPosture,
   formatValidationFamilyBenchmarkMix,
+  getAirborneBoundaryPosture,
   getValidationCoverageSnapshotRows,
   getValidationHardeningTasks,
   getValidationFamilyModeRows,
   IMPACT_VALIDATION_FAMILY_MATRIX
 } from "./validation-regime";
+import { evaluateScenario } from "./scenario-analysis";
+
+const FIELD_CONTEXT = {
+  contextMode: "field_between_rooms",
+  airtightness: "good",
+  panelHeightMm: 2700,
+  panelWidthMm: 3000,
+  receivingRoomRt60S: 0.5,
+  receivingRoomVolumeM3: 30,
+  sharedTrack: "independent"
+} as const;
+
+function evaluateWall(id: string, rows: Array<{ materialId: string; thicknessMm: string }>) {
+  return evaluateScenario({
+    airborneContext: FIELD_CONTEXT,
+    calculator: "dynamic",
+    id,
+    name: id,
+    rows: rows.map((row, index) => ({ ...row, id: `${id}-${index + 1}` })),
+    source: "current",
+    studyMode: "wall",
+    targetOutputs: ["R'w", "DnT,w"]
+  });
+}
 
 describe("validation regime helpers", () => {
   it("formats the active family benchmark mix with posture totals", () => {
@@ -80,5 +106,36 @@ describe("validation regime helpers", () => {
     expect(tasks.find((task) => task.id === "replace-bound-corridors")?.familyLabels).toContain(
       "lightweight steel / open-web joists"
     );
+  });
+
+  it("surfaces protected corridor holds on the defended ambiguous wall boundary", () => {
+    const scenario = evaluateWall("validation-aac-boundary", [
+      { materialId: "ytong_aac_d700", thicknessMm: "100" },
+      { materialId: "air_gap", thicknessMm: "50" },
+      { materialId: "gypsum_board", thicknessMm: "12.5" }
+    ]);
+    const trace = scenario.result?.dynamicAirborneTrace;
+
+    const boundaryPosture = getAirborneBoundaryPosture(trace);
+    const validationPosture = describeAirborneValidationPosture(scenario.result);
+
+    expect(boundaryPosture?.label).toBe("Ambiguous boundary with Double Leaf · protected corridor hold");
+    expect(boundaryPosture?.detail).toContain("ambiguous boundary with Double Leaf");
+    expect(boundaryPosture?.detail).toContain("protected corridor hold");
+    expect(validationPosture.detail).toContain("ambiguous boundary with Double Leaf");
+    expect(validationPosture.detail).toContain("protected corridor hold");
+  });
+
+  it("keeps settled wall selectors free of boundary posture when the corridor is clear", () => {
+    const scenario = evaluateWall("validation-aac-clear", [
+      { materialId: "ytong_aac_d700", thicknessMm: "160" },
+      { materialId: "air_gap", thicknessMm: "50" },
+      { materialId: "gypsum_board", thicknessMm: "12.5" }
+    ]);
+    const trace = scenario.result?.dynamicAirborneTrace;
+
+    expect(getAirborneBoundaryPosture(trace)).toBeNull();
+    expect(describeAirborneValidationPosture(scenario.result).detail).not.toContain("boundary");
+    expect(describeAirborneValidationPosture(scenario.result).detail).not.toContain("hold");
   });
 });

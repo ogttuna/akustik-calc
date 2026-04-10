@@ -1224,12 +1224,13 @@ describe("scenario analysis", () => {
     expect(scenario.result?.floorSystemMatch).toBeNull();
     expect(scenario.result?.floorSystemEstimate?.kind).toBe("family_archetype");
     expect(scenario.result?.impact?.basis).toBe("predictor_floor_system_family_archetype_estimate");
-    expect(scenario.result?.impact?.LnW).toBeCloseTo(59.2, 1);
-    expect(scenario.result?.floorSystemRatings?.Rw).toBeCloseTo(58.9, 1);
+    expect(scenario.result?.floorSystemEstimate?.fitPercent).toBe(89);
+    expect(scenario.result?.impact?.LnW).toBeCloseTo(56.4, 1);
+    expect(scenario.result?.floorSystemRatings?.Rw).toBeCloseTo(61.1, 1);
     expect(scenario.result?.impact?.estimateCandidateIds).toEqual([
       "tuas_r2b_open_box_timber_measured_2026",
       "tuas_r2a_open_box_timber_measured_2026",
-      "tuas_r3b_open_box_timber_measured_2026"
+      "tuas_r6b_open_box_timber_measured_2026"
     ]);
     expect(scenario.warnings).toContain("Screening estimate only. This result is coming from the local calibrated seed lane.");
   });
@@ -2054,8 +2055,13 @@ describe("scenario analysis", () => {
     expect(scenario.result?.floorSystemMatch).toBeNull();
     expect(scenario.result?.floorSystemEstimate?.kind).toBe("family_general");
     expect(scenario.result?.impact?.basis).toBe("predictor_floor_system_family_general_estimate");
-    expect(scenario.result?.impact?.LnW).toBeCloseTo(60.3, 1);
-    expect(scenario.result?.floorSystemRatings?.Rw).toBeCloseTo(52.7, 1);
+    expect(scenario.result?.floorSystemEstimate?.fitPercent).toBe(54);
+    expect(scenario.result?.impact?.LnW).toBeCloseTo(55.3, 1);
+    expect(scenario.result?.floorSystemRatings?.Rw).toBeCloseTo(51.6, 1);
+    expect(scenario.result?.impact?.estimateCandidateIds).toEqual([
+      "tuas_h2_concrete160_measured_2026",
+      "tuas_h5_concrete160_measured_2026"
+    ]);
     expect(
       scenario.warnings.some((warning) =>
         /Visible-layer predictor matching is parked because single-entry floor roles are duplicated: base structure x2 \(Concrete, Timber Joist Floor\)/i.test(

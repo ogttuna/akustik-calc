@@ -3741,6 +3741,84 @@ describe("calculateAssembly", () => {
     expect(result.floorSystemMatch?.impact.confidence.provenance).toBe("exact_floor_system_family");
   });
 
+  it("matches the measured TUAS X3 staged-upper CLT row on the exact route", () => {
+    const result = calculateAssembly([
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "upper_fill", materialId: "glasswool_board", thicknessMm: 13 },
+      { floorRole: "floating_screed", materialId: "gypsum_board", thicknessMm: 15 },
+      { floorRole: "floating_screed", materialId: "screed", thicknessMm: 3 },
+      { floorRole: "floating_screed", materialId: "gypsum_board", thicknessMm: 15 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 140 }
+    ]);
+
+    expect(result.floorSystemMatch?.system.id).toBe("tuas_x3_clt140_measured_2026");
+    expect(result.floorSystemMatch?.impact.LnW).toBe(61);
+    expect(result.floorSystemMatch?.impact.CI).toBe(2);
+    expect(result.floorSystemMatch?.impact.CI50_2500).toBe(3);
+    expect(result.floorSystemMatch?.impact.LnWPlusCI).toBe(63);
+    expect(result.floorSystemMatch?.system.airborneRatings.Rw).toBe(49);
+    expect(result.floorSystemMatch?.system.airborneRatings.RwCtr).toBeCloseTo(41.446442652662284, 5);
+    expect(
+      result.warnings.some((warning: string) => /single-entry floor roles are duplicated: floating screed x3/i.test(warning))
+    ).toBe(false);
+  });
+
+  it("matches the measured TUAS X4 heavy dry-top CLT row on the exact route", () => {
+    const result = calculateAssembly([
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "upper_fill", materialId: "glasswool_board", thicknessMm: 50 },
+      { floorRole: "floating_screed", materialId: "gypsum_board", thicknessMm: 15 },
+      { floorRole: "floating_screed", materialId: "gypsum_board", thicknessMm: 15 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 140 }
+    ]);
+
+    expect(result.floorSystemMatch?.system.id).toBe("tuas_x4_clt140_measured_2026");
+    expect(result.floorSystemMatch?.impact.LnW).toBe(52);
+    expect(result.floorSystemMatch?.impact.CI).toBe(0);
+    expect(result.floorSystemMatch?.impact.CI50_2500).toBe(8);
+    expect(result.floorSystemMatch?.impact.LnWPlusCI).toBe(52);
+    expect(result.floorSystemMatch?.system.airborneRatings.Rw).toBe(55);
+    expect(result.floorSystemMatch?.system.airborneRatings.RwCtr).toBeCloseTo(48.421656285045998, 5);
+    expect(
+      result.warnings.some((warning: string) => /single-entry floor roles are duplicated: floating screed x2/i.test(warning))
+    ).toBe(false);
+  });
+
+  it("keeps the measured TUAS X4 heavy dry-top row exact when the two gypsum boards are merged into one packed row", () => {
+    const result = calculateAssembly([
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "upper_fill", materialId: "glasswool_board", thicknessMm: 50 },
+      { floorRole: "floating_screed", materialId: "gypsum_board", thicknessMm: 30 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 140 }
+    ]);
+
+    expect(result.floorSystemMatch?.system.id).toBe("tuas_x4_clt140_measured_2026");
+    expect(result.floorSystemMatch?.impact.LnW).toBe(52);
+    expect(result.floorSystemMatch?.system.airborneRatings.Rw).toBe(55);
+  });
+
+  it("keeps the over-abstracted TUAS X4 heavy dry-top shorthand off the exact route", () => {
+    const result = calculateAssembly([
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: 50 },
+      { floorRole: "floating_screed", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 30 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 140 }
+    ]);
+
+    expect(result.floorSystemMatch).toBeNull();
+    expect(result.floorSystemEstimate?.kind).toBe("family_general");
+    expect(result.floorSystemEstimate?.fitPercent).toBe(94);
+    expect(result.impact?.basis).toBe("predictor_mass_timber_clt_dry_interaction_estimate");
+    expect(result.impact?.estimateCandidateIds).toEqual(["tuas_x5_clt140_measured_2026"]);
+    expect(result.impact?.LnW).toBe(50);
+    expect(result.impact?.LnWPlusCI).toBe(51);
+    expect(result.floorSystemRatings?.Rw).toBe(55);
+  });
+
   it("matches the curated Knauf direct-fixed timber family", () => {
     const result = calculateAssembly([
       { floorRole: "ceiling_board", materialId: "impactstop_board", thicknessMm: 13 },
@@ -4081,6 +4159,141 @@ describe("calculateAssembly", () => {
     expect(result.floorSystemMatch?.system.airborneRatings.RwCtr).toBeCloseTo(38.748168054106159, 5);
   });
 
+  it("matches the measured TUAS C3 staged-upper CLT row on the exact route", () => {
+    const result = calculateAssembly([
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "upper_fill", materialId: "glasswool_board", thicknessMm: 13 },
+      { floorRole: "floating_screed", materialId: "gypsum_board", thicknessMm: 15 },
+      { floorRole: "floating_screed", materialId: "screed", thicknessMm: 3 },
+      { floorRole: "floating_screed", materialId: "gypsum_board", thicknessMm: 15 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 260 }
+    ]);
+
+    expect(result.floorSystemMatch?.system.id).toBe("tuas_c3_clt260_measured_2026");
+    expect(result.floorSystemMatch?.impact.LnW).toBe(55);
+    expect(result.floorSystemMatch?.impact.CI).toBe(3);
+    expect(result.floorSystemMatch?.impact.CI50_2500).toBe(4);
+    expect(result.floorSystemMatch?.impact.LnWPlusCI).toBe(58);
+    expect(result.floorSystemMatch?.system.airborneRatings.Rw).toBe(54);
+    expect(result.floorSystemMatch?.system.airborneRatings.RwCtr).toBeCloseTo(45.299729806216845, 5);
+    expect(
+      result.warnings.some((warning: string) => /single-entry floor roles are duplicated: floating screed x3/i.test(warning))
+    ).toBe(false);
+  });
+
+  it("matches the measured TUAS C4 heavy dry-top CLT row on the exact route", () => {
+    const result = calculateAssembly([
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "upper_fill", materialId: "glasswool_board", thicknessMm: 50 },
+      { floorRole: "floating_screed", materialId: "gypsum_board", thicknessMm: 15 },
+      { floorRole: "floating_screed", materialId: "gypsum_board", thicknessMm: 15 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 260 }
+    ]);
+
+    expect(result.floorSystemMatch?.system.id).toBe("tuas_c4_clt260_measured_2026");
+    expect(result.floorSystemMatch?.impact.LnW).toBe(47);
+    expect(result.floorSystemMatch?.impact.CI).toBe(2);
+    expect(result.floorSystemMatch?.impact.CI50_2500).toBe(6);
+    expect(result.floorSystemMatch?.impact.LnWPlusCI).toBe(49);
+    expect(result.floorSystemMatch?.system.airborneRatings.Rw).toBe(61);
+    expect(result.floorSystemMatch?.system.airborneRatings.RwCtr).toBeCloseTo(54.131432673998987, 5);
+    expect(
+      result.warnings.some((warning: string) => /single-entry floor roles are duplicated: floating screed x2/i.test(warning))
+    ).toBe(false);
+  });
+
+  it("keeps the measured TUAS C4 heavy dry-top row exact when the two gypsum boards are merged into one packed row", () => {
+    const result = calculateAssembly([
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "upper_fill", materialId: "glasswool_board", thicknessMm: 50 },
+      { floorRole: "floating_screed", materialId: "gypsum_board", thicknessMm: 30 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 260 }
+    ]);
+
+    expect(result.floorSystemMatch?.system.id).toBe("tuas_c4_clt260_measured_2026");
+    expect(result.floorSystemMatch?.impact.LnW).toBe(47);
+    expect(result.floorSystemMatch?.system.airborneRatings.Rw).toBe(61);
+  });
+
+  it("keeps the over-abstracted TUAS C4 heavy dry-top shorthand off the exact route", () => {
+    const result = calculateAssembly([
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: 50 },
+      { floorRole: "floating_screed", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 30 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 260 }
+    ]);
+
+    expect(result.floorSystemMatch).toBeNull();
+    expect(result.floorSystemEstimate?.kind).toBe("family_general");
+    expect(result.floorSystemEstimate?.fitPercent).toBe(94);
+    expect(result.impact?.basis).toBe("predictor_mass_timber_clt_dry_interaction_estimate");
+    expect(result.impact?.estimateCandidateIds).toEqual(["tuas_x5_clt140_measured_2026"]);
+    expect(result.impact?.LnW).toBe(50);
+    expect(result.impact?.LnWPlusCI).toBe(51);
+    expect(result.floorSystemRatings?.Rw).toBe(55);
+  });
+
+  it("matches the measured TUAS C5 heavy dry-top CLT row on the exact route", () => {
+    const result = calculateAssembly([
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "upper_fill", materialId: "glasswool_board", thicknessMm: 50 },
+      { floorRole: "floating_screed", materialId: "gypsum_board", thicknessMm: 15 },
+      { floorRole: "floating_screed", materialId: "gypsum_board", thicknessMm: 15 },
+      { floorRole: "floating_screed", materialId: "gypsum_board", thicknessMm: 15 },
+      { floorRole: "floating_screed", materialId: "gypsum_board", thicknessMm: 15 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 260 }
+    ]);
+
+    expect(result.floorSystemMatch?.system.id).toBe("tuas_c5_clt260_measured_2026");
+    expect(result.floorSystemMatch?.impact.LnW).toBe(45);
+    expect(result.floorSystemMatch?.impact.CI).toBe(1);
+    expect(result.floorSystemMatch?.impact.CI50_2500).toBe(6);
+    expect(result.floorSystemMatch?.impact.LnWPlusCI).toBe(46);
+    expect(result.floorSystemMatch?.system.airborneRatings.Rw).toBe(61);
+    expect(result.floorSystemMatch?.system.airborneRatings.RwCtr).toBeCloseTo(55.317986888908273, 5);
+    expect(
+      result.warnings.some((warning: string) => /single-entry floor roles are duplicated: floating screed x4/i.test(warning))
+    ).toBe(false);
+  });
+
+  it("keeps the measured TUAS C5 heavy dry-top row exact when the four gypsum boards are merged into one packed row", () => {
+    const result = calculateAssembly([
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "upper_fill", materialId: "glasswool_board", thicknessMm: 50 },
+      { floorRole: "floating_screed", materialId: "gypsum_board", thicknessMm: 60 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 260 }
+    ]);
+
+    expect(result.floorSystemMatch?.system.id).toBe("tuas_c5_clt260_measured_2026");
+    expect(result.floorSystemMatch?.impact.LnW).toBe(45);
+    expect(result.floorSystemMatch?.system.airborneRatings.Rw).toBe(61);
+  });
+
+  it("keeps the over-abstracted TUAS C5 heavy dry-top shorthand off the exact route", () => {
+    const result = calculateAssembly([
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: 50 },
+      { floorRole: "floating_screed", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 60 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 260 }
+    ]);
+
+    expect(result.floorSystemMatch).toBeNull();
+    expect(result.floorSystemEstimate?.kind).toBe("family_general");
+    expect(result.floorSystemEstimate?.fitPercent).toBe(94);
+    expect(result.impact?.basis).toBe("predictor_mass_timber_clt_dry_interaction_estimate");
+    expect(result.impact?.estimateCandidateIds).toEqual(["tuas_x5_clt140_measured_2026"]);
+    expect(result.impact?.LnW).toBe(50);
+    expect(result.impact?.LnWPlusCI).toBe(51);
+    expect(result.floorSystemRatings?.Rw).toBe(55);
+  });
+
   it("matches the measured TUAS concrete 160 family", () => {
     const result = calculateAssembly([
       { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
@@ -4287,7 +4500,7 @@ describe("calculateAssembly", () => {
     expect(result.floorSystemMatch?.system.airborneRatings.Rw).toBe(60);
   });
 
-  it("keeps the TUAS mixed-board family-a outlier off the exact route", () => {
+  it("matches the measured TUAS mixed-board family-a row on the exact route", () => {
     const result = calculateAssembly([
       { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
       { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
@@ -4302,7 +4515,12 @@ describe("calculateAssembly", () => {
       { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
     ]);
 
-    expect(result.floorSystemMatch).toBeNull();
+    expect(result.floorSystemMatch?.system.id).toBe("tuas_r6a_open_box_timber_measured_2026");
+    expect(result.floorSystemMatch?.impact.LnW).toBe(64);
+    expect(result.floorSystemMatch?.system.airborneRatings.Rw).toBe(56);
+    expect(
+      result.warnings.some((warning: string) => /single-entry floor roles are duplicated: ceiling board x6/i.test(warning))
+    ).toBe(false);
   });
 
   it("keeps the TUAS hybrid lower-treatment wet outlier off the exact route", () => {
@@ -4337,6 +4555,174 @@ describe("calculateAssembly", () => {
     expect(result.floorSystemMatch?.impact.CI50_2500).toBe(3);
     expect(result.floorSystemMatch?.system.airborneRatings.Rw).toBe(71);
     expect(result.floorSystemMatch?.system.airborneRatings.RwCtr).toBeCloseTo(65.67605110604265, 5);
+  });
+
+  it("keeps the measured TUAS mixed-board family-a row exact when the ceiling schedule is entered as 26 mm plus 60 mm gypsum packages", () => {
+    const result = calculateAssembly([
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 26 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 60 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+      { floorRole: "ceiling_cavity", materialId: "tuas_open_box_ceiling_family_a", thicknessMm: 25 },
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
+    ]);
+
+    expect(result.floorSystemMatch?.system.id).toBe("tuas_r6a_open_box_timber_measured_2026");
+    expect(result.floorSystemMatch?.impact.LnW).toBe(64);
+    expect(result.floorSystemMatch?.system.airborneRatings.Rw).toBe(56);
+  });
+
+  it("matches the measured TUAS staged upper-package family-a row on the exact route", () => {
+    const result = calculateAssembly([
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+      { floorRole: "ceiling_cavity", materialId: "tuas_open_box_ceiling_family_a", thicknessMm: 25 },
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "upper_fill", materialId: "glasswool_board", thicknessMm: 13 },
+      { floorRole: "floating_screed", materialId: "gypsum_board", thicknessMm: 15 },
+      { floorRole: "floating_screed", materialId: "screed", thicknessMm: 3 },
+      { floorRole: "floating_screed", materialId: "gypsum_board", thicknessMm: 15 },
+      { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
+    ]);
+
+    expect(result.floorSystemMatch?.system.id).toBe("tuas_r10a_open_box_timber_measured_2026");
+    expect(result.floorSystemMatch?.impact.LnW).toBe(63);
+    expect(result.floorSystemMatch?.impact.CI).toBe(1);
+    expect(result.floorSystemMatch?.impact.CI50_2500).toBe(3);
+    expect(result.floorSystemMatch?.impact.LnWPlusCI).toBe(64);
+    expect(result.floorSystemMatch?.system.airborneRatings.Rw).toBe(56);
+    expect(result.floorSystemMatch?.system.airborneRatings.RwCtr).toBeCloseTo(44.903379895449063, 5);
+    expect(
+      result.warnings.some((warning: string) => /single-entry floor roles are duplicated: floating screed x3/i.test(warning))
+    ).toBe(false);
+  });
+
+  it("matches the measured TUAS hybrid lower-treatment row on the exact route once the geotextile schedule lands", () => {
+    const result = calculateAssembly([
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+      { floorRole: "ceiling_cavity", materialId: "tuas_open_box_ceiling_family_a", thicknessMm: 45 },
+      { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: 25 },
+      { floorRole: "upper_fill", materialId: "eps_floor_insulation_board", thicknessMm: 35 },
+      { floorRole: "floating_screed", materialId: "geotextile", thicknessMm: 1 },
+      { floorRole: "floating_screed", materialId: "screed", thicknessMm: 40 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
+    ]);
+
+    expect(result.floorSystemMatch?.system.id).toBe("tuas_r7b_open_box_timber_measured_2026");
+    expect(result.floorSystemMatch?.impact.LnW).toBe(47);
+    expect(result.floorSystemMatch?.impact.CI).toBe(0);
+    expect(result.floorSystemMatch?.impact.CI50_2500).toBe(1);
+    expect(result.floorSystemMatch?.impact.LnWPlusCI).toBe(47);
+    expect(result.floorSystemMatch?.system.airborneRatings.Rw).toBe(72);
+    expect(result.floorSystemMatch?.system.airborneRatings.RwCtr).toBeCloseTo(65.863871535312214, 5);
+    expect(result.warnings.some((warning: string) => /single-entry floor roles are duplicated: ceiling cavity x2/i.test(warning))).toBe(
+      false
+    );
+    expect(result.warnings.some((warning: string) => /single-entry floor roles are duplicated: floating screed x2/i.test(warning))).toBe(
+      false
+    );
+  });
+
+  it("matches the measured TUAS finishless hybrid lower-treatment sibling on the exact route once the no-finish surface lands", () => {
+    const result = calculateAssembly([
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+      { floorRole: "ceiling_cavity", materialId: "tuas_open_box_ceiling_family_a", thicknessMm: 45 },
+      { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: 25 },
+      { floorRole: "upper_fill", materialId: "eps_floor_insulation_board", thicknessMm: 35 },
+      { floorRole: "floating_screed", materialId: "geotextile", thicknessMm: 1 },
+      { floorRole: "floating_screed", materialId: "screed", thicknessMm: 40 },
+      { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
+    ]);
+
+    expect(result.floorSystemMatch?.system.id).toBe("tuas_r8b_open_box_timber_measured_2026");
+    expect(result.floorSystemMatch?.impact.LnW).toBe(50);
+    expect(result.floorSystemMatch?.impact.CI).toBe(-1);
+    expect(result.floorSystemMatch?.impact.CI50_2500).toBe(0);
+    expect(result.floorSystemMatch?.impact.LnWPlusCI).toBe(49);
+    expect(result.floorSystemMatch?.system.airborneRatings.Rw).toBe(72);
+    expect(result.floorSystemMatch?.system.airborneRatings.RwCtr).toBeCloseTo(65.536479574136578, 5);
+    expect(result.warnings.some((warning: string) => /single-entry floor roles are duplicated: ceiling cavity x2/i.test(warning))).toBe(
+      false
+    );
+    expect(result.warnings.some((warning: string) => /single-entry floor roles are duplicated: floating screed x2/i.test(warning))).toBe(
+      false
+    );
+  });
+
+  it("matches the measured TUAS wet-top hybrid lower-treatment sibling on the exact route once the source stack is frozen correctly", () => {
+    const result = calculateAssembly([
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+      { floorRole: "ceiling_cavity", materialId: "tuas_open_box_ceiling_family_a", thicknessMm: 45 },
+      { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: 25 },
+      { floorRole: "floating_screed", materialId: "screed", thicknessMm: 40 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
+    ]);
+
+    expect(result.floorSystemMatch?.system.id).toBe("tuas_r9b_open_box_timber_measured_2026");
+    expect(result.floorSystemMatch?.impact.LnW).toBe(46);
+    expect(result.floorSystemMatch?.impact.CI).toBe(0);
+    expect(result.floorSystemMatch?.impact.CI50_2500).toBe(2);
+    expect(result.floorSystemMatch?.impact.LnWPlusCI).toBe(46);
+    expect(result.floorSystemMatch?.system.airborneRatings.Rw).toBe(68);
+    expect(result.floorSystemMatch?.system.airborneRatings.RwCtr).toBeCloseTo(63.536300162353015, 5);
+    expect(result.warnings.some((warning: string) => /single-entry floor roles are duplicated: ceiling cavity x2/i.test(warning))).toBe(
+      false
+    );
+  });
+
+  it("matches the measured TUAS no-fill hybrid lower-treatment sibling on the exact route once the source stack is frozen correctly", () => {
+    const result = calculateAssembly([
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_cavity", materialId: "tuas_open_box_ceiling_family_a", thicknessMm: 45 },
+      { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: 25 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
+    ]);
+
+    expect(result.floorSystemMatch?.system.id).toBe("tuas_r2c_open_box_timber_measured_2026");
+    expect(result.floorSystemMatch?.impact.LnW).toBe(60);
+    expect(result.floorSystemMatch?.impact.CI).toBe(0);
+    expect(result.floorSystemMatch?.impact.CI50_2500).toBe(0);
+    expect(result.floorSystemMatch?.impact.LnWPlusCI).toBe(60);
+    expect(result.floorSystemMatch?.system.airborneRatings.Rw).toBe(54);
+    expect(result.floorSystemMatch?.system.airborneRatings.RwCtr).toBeCloseTo(50.153254568605014, 5);
+    expect(result.warnings.some((warning: string) => /single-entry floor roles are duplicated: ceiling cavity x2/i.test(warning))).toBe(
+      false
+    );
+  });
+
+  it("keeps the over-abstracted TUAS staged upper-package shorthand off the exact route", () => {
+    const result = calculateAssembly([
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+      { floorRole: "ceiling_cavity", materialId: "tuas_open_box_ceiling_family_a", thicknessMm: 25 },
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: 13 },
+      { floorRole: "floating_screed", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 33 },
+      { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
+    ]);
+
+    expect(result.floorSystemMatch).toBeNull();
+    expect(result.floorSystemEstimate?.kind).toBe("family_archetype");
+    expect(result.floorSystemEstimate?.fitPercent).toBe(90);
+    expect(result.impact?.basis).toBe("predictor_floor_system_family_archetype_estimate");
   });
 
   it("matches the measured TUAS concrete dry-floor family", () => {
@@ -5239,11 +5625,12 @@ describe("calculateAssembly", () => {
 
     expect(result.floorSystemMatch).toBeNull();
     expect(result.floorSystemEstimate?.impact.basis).toBe("predictor_mass_timber_clt_bare_interpolation_estimate");
-    expect(result.floorSystemEstimate?.impact.LnW).toBe(67.5);
-    expect(result.floorSystemEstimate?.airborneRatings.Rw).toBe(40);
+    expect(result.floorSystemEstimate?.impact.LnW).toBe(66.9);
+    expect(result.floorSystemEstimate?.airborneRatings.Rw).toBe(40.6);
     expect(result.floorSystemEstimate?.impact.estimateCandidateIds).toEqual([
       "tuas_x2_clt140_measured_2026",
-      "tuas_c2_clt260_measured_2026"
+      "tuas_c2_clt260_measured_2026",
+      "tuas_x4_clt140_measured_2026"
     ]);
   });
 

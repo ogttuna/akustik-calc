@@ -12,6 +12,7 @@ import {
   getFieldAirborneProvenanceSummary,
   getFieldAirborneReportLines
 } from "./field-airborne-provenance";
+import { getAirborneBoundaryPosture } from "./validation-regime";
 
 export type SimpleWorkbenchProposalDecisionItem = {
   detail: string;
@@ -178,10 +179,13 @@ export function buildSimpleWorkbenchEvidencePacket(input: {
   }
 
   if (result?.dynamicAirborneTrace) {
+    const boundaryPosture = getAirborneBoundaryPosture(result.dynamicAirborneTrace);
+
     citations.push({
       detail:
         `${result.dynamicAirborneTrace.detectedFamilyLabel} · ${result.dynamicAirborneTrace.selectedLabel} · ` +
-        `${Math.round(result.dynamicAirborneTrace.confidenceScore * 100)}% confidence.`,
+        `${Math.round(result.dynamicAirborneTrace.confidenceScore * 100)}% confidence.` +
+        (boundaryPosture ? ` ${boundaryPosture.label}.` : ""),
       label: "Dynamic airborne anchor",
       tone:
         result.dynamicAirborneTrace.confidenceClass === "high"

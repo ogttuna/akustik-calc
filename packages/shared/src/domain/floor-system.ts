@@ -27,6 +27,8 @@ export const FloorSystemTrustTierSchema = z.enum([
 export const FloorSystemRoleCriteriaSchema = z.object({
   layerCount: z.number().int().positive().optional(),
   materialIds: z.array(z.string().min(1)).min(1).optional(),
+  materialScheduleIds: z.array(z.string().min(1)).min(1).optional(),
+  thicknessScheduleMm: z.array(z.number().positive()).min(1).optional(),
   thicknessMm: z.number().positive().optional()
 });
 
@@ -111,6 +113,7 @@ const FloorSystemEstimateLowerTreatmentSchema = z
   .object({
     boardLayerCount: z.number().int().positive().optional(),
     boardMaterialClass: z.string().min(1).optional(),
+    boardThicknessScheduleMm: z.array(z.number().positive()).min(1).optional(),
     boardThicknessMm: z.number().positive().optional(),
     cavityDepthMm: z.number().positive().optional(),
     cavityFillThicknessMm: z.number().nonnegative().optional(),
