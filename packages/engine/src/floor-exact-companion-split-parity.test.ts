@@ -357,6 +357,112 @@ const CASES: readonly ExactCompanionSplitParityCase[] = [
     ]
   },
   {
+    id: "tuas c7 wet geotextile exact split screed and eps-board control",
+    canonical: [
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "floating_screed", materialId: "geotextile", thicknessMm: 1 },
+      { floorRole: "floating_screed", materialId: "screed", thicknessMm: 40 },
+      { floorRole: "upper_fill", materialId: "eps_floor_insulation_board", thicknessMm: 35 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 260 }
+    ],
+    split: [
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "floating_screed", materialId: "geotextile", thicknessMm: 1 },
+      { floorRole: "floating_screed", materialId: "screed", thicknessMm: 15 },
+      { floorRole: "floating_screed", materialId: "screed", thicknessMm: 25 },
+      { floorRole: "upper_fill", materialId: "eps_floor_insulation_board", thicknessMm: 10 },
+      { floorRole: "upper_fill", materialId: "eps_floor_insulation_board", thicknessMm: 25 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 260 }
+    ]
+  },
+  {
+    id: "tuas c2c combined exact split ceiling-board and carrier control",
+    canonical: [
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+      { floorRole: "ceiling_cavity", materialId: "acoustic_hanger_ceiling", thicknessMm: 70 },
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 260 }
+    ],
+    split: [
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 6.5 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 6.5 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+      { floorRole: "ceiling_cavity", materialId: "acoustic_hanger_ceiling", thicknessMm: 70 },
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 1.5 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 1.5 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 130 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 130 }
+    ]
+  },
+  {
+    id: "tuas c3c combined exact split dry-board and ceiling-board control",
+    canonical: [
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+      { floorRole: "ceiling_cavity", materialId: "acoustic_hanger_ceiling", thicknessMm: 70 },
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "floating_screed", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "floating_screed", materialId: "gypsum_board", thicknessMm: 15 },
+      { floorRole: "floating_screed", materialId: "gypsum_board", thicknessMm: 15 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 260 }
+    ],
+    split: [
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 6.5 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 6.5 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+      { floorRole: "ceiling_cavity", materialId: "acoustic_hanger_ceiling", thicknessMm: 70 },
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "floating_screed", materialId: "gypsum_board", thicknessMm: 6.5 },
+      { floorRole: "floating_screed", materialId: "gypsum_board", thicknessMm: 6.5 },
+      { floorRole: "floating_screed", materialId: "gypsum_board", thicknessMm: 15 },
+      { floorRole: "floating_screed", materialId: "gypsum_board", thicknessMm: 15 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 130 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 130 }
+    ]
+  },
+  {
+    id: "tuas c4c combined exact split upper-fill dry-board ceiling-board and carrier control",
+    canonical: [
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+      { floorRole: "ceiling_cavity", materialId: "acoustic_hanger_ceiling", thicknessMm: 70 },
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "upper_fill", materialId: "glasswool_board", thicknessMm: 50 },
+      { floorRole: "floating_screed", materialId: "gypsum_board", thicknessMm: 15 },
+      { floorRole: "floating_screed", materialId: "gypsum_board", thicknessMm: 15 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 260 }
+    ],
+    split: [
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 6.5 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 6.5 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+      { floorRole: "ceiling_cavity", materialId: "acoustic_hanger_ceiling", thicknessMm: 70 },
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "upper_fill", materialId: "glasswool_board", thicknessMm: 25 },
+      { floorRole: "upper_fill", materialId: "glasswool_board", thicknessMm: 25 },
+      { floorRole: "floating_screed", materialId: "gypsum_board", thicknessMm: 7.5 },
+      { floorRole: "floating_screed", materialId: "gypsum_board", thicknessMm: 7.5 },
+      { floorRole: "floating_screed", materialId: "gypsum_board", thicknessMm: 15 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 130 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 130 }
+    ]
+  },
+  {
     id: "regupol curve 8 product-exact split screed and slab control",
     canonical: [
       { floorRole: "floor_covering", materialId: "ceramic_tile", thicknessMm: 8 },

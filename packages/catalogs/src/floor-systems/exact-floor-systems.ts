@@ -2024,14 +2024,14 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
       ceiling: "No additional lower treatment"
     },
     impactRatings: {
-      CI: 0,
-      CI50_2500: 0,
-      LnW: 70,
-      LnWPlusCI: 70
+      CI: 2,
+      CI50_2500: 3,
+      LnW: 61,
+      LnWPlusCI: 63
     },
     airborneRatings: {
       Rw: 38,
-      RwCtr: 34.7
+      RwCtr: 37.242344245020725
     }
   },
   {
@@ -2070,14 +2070,14 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
       ceiling: "No additional lower treatment"
     },
     impactRatings: {
-      CI: 2,
-      CI50_2500: 3,
-      LnW: 61,
-      LnWPlusCI: 63
+      CI: 0,
+      CI50_2500: 8,
+      LnW: 52,
+      LnWPlusCI: 52
     },
     airborneRatings: {
       Rw: 49,
-      RwCtr: 41.446442652662284
+      RwCtr: 47.10786221887914
     }
   },
   {
@@ -2116,46 +2116,46 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
       ceiling: "No additional lower treatment"
     },
     impactRatings: {
-      CI: 0,
+      CI: 1,
       CI50_2500: 8,
-      LnW: 52,
-      LnWPlusCI: 52
+      LnW: 50,
+      LnWPlusCI: 51
     },
     impactBands: {
       frequenciesHz: [20, 25, 31.5, 40, 50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500, 3150, 4000, 5000],
       labOrField: "lab",
       levelsDb: [
-        72.23222595899838,
-        61.752720605622194,
-        68.96649342614279,
-        60.523316548144415,
-        65.4,
-        71.7,
-        67.8,
-        63,
-        60.3,
-        59.6,
-        58.8,
-        54.8,
-        53.8,
-        51,
-        44.9,
-        39.4,
-        31.6,
-        28.5,
-        25.7,
-        18.8,
-        14.5,
-        12.4,
-        10.8,
-        8.4,
-        8.4
+        87.69644673704535,
+        82.84819233180403,
+        90.71866889848235,
+        82.47845286781076,
+        76.63748152094948,
+        76.26178924656664,
+        77.64756429893393,
+        69.8564915632972,
+        60.5012183061683,
+        58.86310105006574,
+        55.85185481018566,
+        50.15801734703297,
+        50.20449869090232,
+        49.10675816215532,
+        44.20595311576401,
+        39.05682094740483,
+        34.87846311798496,
+        35.62084932358843,
+        33.773586429570045,
+        30.02115260914249,
+        28.640026427879484,
+        26.205091010560913,
+        22.58947484386416,
+        19.92416343796227,
+        18.292055381745755
       ],
       standardMethod: "open_measured_dataset"
     },
     airborneRatings: {
       Rw: 55,
-      RwCtr: 48.421656285045998
+      RwCtr: 53.20807486278851
     }
   },
   {
@@ -2213,46 +2213,46 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
       ceiling: "No additional lower treatment"
     },
     impactRatings: {
-      CI: 1,
-      CI50_2500: 8,
-      LnW: 50,
-      LnWPlusCI: 51
+      CI: 0,
+      CI50_2500: 0,
+      LnW: 65,
+      LnWPlusCI: 65
     },
     impactBands: {
       frequenciesHz: [20, 25, 31.5, 40, 50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500, 3150, 4000, 5000],
       labOrField: "lab",
       levelsDb: [
-        71.41484801938284,
-        57.856031636249334,
-        68.02291387557823,
-        58.68229511109616,
-        63.2,
-        70.5,
-        64.9,
-        62.4,
-        56.9,
-        56.5,
-        57,
-        54.1,
-        53.2,
-        50.7,
-        43.9,
-        38.1,
-        31.2,
-        27.3,
-        24.6,
-        17.1,
-        12.1,
-        11.2,
-        10.8,
-        8.2,
-        8.5
+        86.3654207370248,
+        80.7359361579656,
+        89.89318361298649,
+        79.991390078572,
+        78.67883251385726,
+        75.54247597251768,
+        71.60009168434031,
+        62.622709160435775,
+        57.48111120810134,
+        53.092220520200655,
+        53.59145627585459,
+        47.06875958445886,
+        46.48537400727974,
+        44.30906923002322,
+        40.38096479451434,
+        38.09918868250873,
+        35.39883881222491,
+        36.84567298423087,
+        34.048585701031904,
+        29.73897558043597,
+        26.38787052460315,
+        22.797854295948653,
+        18.080329604535873,
+        13.180821426854653,
+        13.593308832773957
       ],
       standardMethod: "open_measured_dataset"
     },
     airborneRatings: {
       Rw: 55,
-      RwCtr: 48.36814613192648
+      RwCtr: 53.24148704194138
     }
   },
   {
@@ -2321,13 +2321,13 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     impactRatings: {
       CI: 2,
-      CI50_2500: 2,
-      LnW: 72,
-      LnWPlusCI: 74
+      CI50_2500: 4,
+      LnW: 61,
+      LnWPlusCI: 63
     },
     airborneRatings: {
       Rw: 49,
-      RwCtr: 37.465233062145899
+      RwCtr: 44.52764215440286
     }
   },
   {
@@ -2395,14 +2395,14 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
       ceiling: "25 mm resilient stud ceiling with 2 x 13 mm gypsum board and 100 mm glass wool"
     },
     impactRatings: {
-      CI: 0,
-      CI50_2500: 1,
-      LnW: 55,
-      LnWPlusCI: 55
+      CI: 1,
+      CI50_2500: 3,
+      LnW: 46,
+      LnWPlusCI: 47
     },
     airborneRatings: {
       Rw: 62,
-      RwCtr: 54.408826940816517
+      RwCtr: 59.973347663855776
     }
   },
   {
@@ -2487,13 +2487,13 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     impactRatings: {
       CI: 2,
-      CI50_2500: 4,
-      LnW: 61,
-      LnWPlusCI: 63
+      CI50_2500: 3,
+      LnW: 56,
+      LnWPlusCI: 58
     },
     airborneRatings: {
       Rw: 56,
-      RwCtr: 45.20879603202112
+      RwCtr: 51.30566236283586
     }
   },
   {
@@ -2577,14 +2577,14 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
       ceiling: "25 mm resilient stud ceiling with 2 x 13 mm gypsum board and 100 mm glass wool"
     },
     impactRatings: {
-      CI: 1,
-      CI50_2500: 3,
-      LnW: 46,
-      LnWPlusCI: 47
+      CI: 2,
+      CI50_2500: 5,
+      LnW: 39,
+      LnWPlusCI: 41
     },
     airborneRatings: {
       Rw: 70,
-      RwCtr: 61.784975360023004
+      RwCtr: 67.58499572159022
     }
   },
   {
@@ -2668,14 +2668,14 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
       ceiling: "25 mm TUAS family A resilient stud ceiling with 2 x 13 mm gypsum board and 100 mm glass wool"
     },
     impactRatings: {
-      CI: 2,
-      CI50_2500: 3,
-      LnW: 56,
-      LnWPlusCI: 58
+      CI: 1,
+      CI50_2500: 2,
+      LnW: 64,
+      LnWPlusCI: 65
     },
     airborneRatings: {
       Rw: 63,
-      RwCtr: 51.880550309785406
+      RwCtr: 57.78202920484737
     }
   },
   {
@@ -2759,46 +2759,46 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
       ceiling: "25 mm resilient stud ceiling with 2 x 13 mm gypsum board and 100 mm glass wool"
     },
     impactRatings: {
-      CI: 2,
-      CI50_2500: 5,
-      LnW: 39,
-      LnWPlusCI: 41
+      CI: 0,
+      CI50_2500: 3,
+      LnW: 44,
+      LnWPlusCI: 44
     },
     impactBands: {
       frequenciesHz: [20, 25, 31.5, 40, 50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500, 3150, 4000, 5000],
       labOrField: "lab",
       levelsDb: [
-        74.13033278908374,
-        62.76465433938682,
-        64.63381527212033,
-        60.93242446663671,
-        51,
-        53.4,
-        51.6,
-        49.6,
-        51.3,
-        50.2,
-        43.3,
-        40.7,
-        38.2,
-        33.2,
-        25,
-        19.1,
-        17.8,
-        12,
-        10.7,
-        8.8,
-        6.5,
-        4.2,
-        4.9,
-        4.7,
-        5.1
+        88.98469913260708,
+        83.08692204644406,
+        87.19333228366578,
+        79.55663296751297,
+        67.67563819548371,
+        62.965791899593924,
+        55.296984714295945,
+        48.99744604599472,
+        52.387035539600646,
+        47.30707265699782,
+        38.88512949368683,
+        37.82978425722561,
+        35.24997132256958,
+        34.092279526947756,
+        30.069690294186124,
+        28.704244477277463,
+        27.66708268040662,
+        22.843591928507557,
+        18.213951139421262,
+        18.587499085657775,
+        16.608315041494276,
+        18.33852083392007,
+        16.344670629632056,
+        12.70254820886805,
+        10.41167300505007
       ],
       standardMethod: "open_measured_dataset"
     },
     airborneRatings: {
       Rw: 75,
-      RwCtr: 66.843590685310645
+      RwCtr: 71.87531170772152
     }
   },
   {
@@ -2864,10 +2864,14 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
       ceiling: "25 mm TUAS family A suspended ceiling with 2 x 13 mm + 4 x 15 mm gypsum board and 100 mm glass wool"
     },
     impactRatings: {
-      LnW: 64
+      CI: 1,
+      CI50_2500: 3,
+      LnW: 60,
+      LnWPlusCI: 61
     },
     airborneRatings: {
-      Rw: 56
+      Rw: 56,
+      RwCtr: 53.59725745128915
     }
   },
   {
@@ -2936,13 +2940,13 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     impactRatings: {
       CI: 0,
-      CI50_2500: 3,
-      LnW: 44,
-      LnWPlusCI: 44
+      CI50_2500: 1,
+      LnW: 47,
+      LnWPlusCI: 47
     },
     airborneRatings: {
       Rw: 71,
-      RwCtr: 65.67605110604265
+      RwCtr: 69.5361374042257
     }
   },
   {
@@ -3026,10 +3030,14 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
       ceiling: "25 mm TUAS family A suspended ceiling with 2 x 13 mm gypsum board and 100 mm glass wool"
     },
     impactRatings: {
-      LnW: 60
+      CI: 1,
+      CI50_2500: 3,
+      LnW: 63,
+      LnWPlusCI: 64
     },
     airborneRatings: {
-      Rw: 60
+      Rw: 60,
+      RwCtr: 57
     }
   },
   {
@@ -3089,7 +3097,7 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     airborneRatings: {
       Rw: 72,
-      RwCtr: 65.863871535312214
+      RwCtr: 70.726430817278
     }
   },
   {
@@ -3141,7 +3149,7 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     airborneRatings: {
       Rw: 72,
-      RwCtr: 65.536479574136578
+      RwCtr: 70.60101885694094
     }
   },
   {
@@ -3189,14 +3197,14 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
       ceiling: "45 mm TUAS family A cavity + 25 mm resilient stud ceiling with 2 x 13 mm gypsum board and 100 mm rockwool"
     },
     impactRatings: {
-      CI: 0,
-      CI50_2500: 2,
-      LnW: 46,
+      CI: 1,
+      CI50_2500: 3,
+      LnW: 45,
       LnWPlusCI: 46
     },
     airborneRatings: {
       Rw: 68,
-      RwCtr: 63.536300162353015
+      RwCtr: 67.01756572323127
     }
   },
   {
@@ -3238,12 +3246,12 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     impactRatings: {
       CI: 0,
       CI50_2500: 0,
-      LnW: 60,
-      LnWPlusCI: 60
+      LnW: 70,
+      LnWPlusCI: 70
     },
     airborneRatings: {
       Rw: 54,
-      RwCtr: 50.153254568605014
+      RwCtr: 53.34048310542768
     }
   },
   {
@@ -3295,14 +3303,14 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
       ceiling: "25 mm TUAS family A suspended ceiling with 2 x 13 mm gypsum board and 100 mm glass wool"
     },
     impactRatings: {
-      CI: 1,
-      CI50_2500: 3,
-      LnW: 63,
-      LnWPlusCI: 64
+      CI: 0,
+      CI50_2500: 1,
+      LnW: 55,
+      LnWPlusCI: 55
     },
     airborneRatings: {
       Rw: 56,
-      RwCtr: 44.903379895449063
+      RwCtr: 50.89680103538985
     }
   },
   {
@@ -3386,14 +3394,14 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
       ceiling: "25 mm resilient stud ceiling with 2 x 13 mm gypsum board and 100 mm glass wool"
     },
     impactRatings: {
-      CI: 1,
-      CI50_2500: 3,
-      LnW: 45,
-      LnWPlusCI: 46
+      CI: 0,
+      CI50_2500: 0,
+      LnW: 60,
+      LnWPlusCI: 60
     },
     airborneRatings: {
       Rw: 74,
-      RwCtr: 65.654511374611502
+      RwCtr: 71.15477026441121
     }
   },
   {
@@ -3423,14 +3431,14 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
       ceiling: "No additional lower treatment"
     },
     impactRatings: {
-      CI: 0,
-      CI50_2500: 0,
-      LnW: 65,
-      LnWPlusCI: 65
+      CI: 3,
+      CI50_2500: 4,
+      LnW: 55,
+      LnWPlusCI: 58
     },
     airborneRatings: {
       Rw: 42,
-      RwCtr: 38.748168054106159
+      RwCtr: 41.478540491108376
     }
   },
   {
@@ -3469,14 +3477,14 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
       ceiling: "No additional lower treatment"
     },
     impactRatings: {
-      CI: 3,
-      CI50_2500: 4,
-      LnW: 55,
-      LnWPlusCI: 58
+      CI: 2,
+      CI50_2500: 6,
+      LnW: 47,
+      LnWPlusCI: 49
     },
     airborneRatings: {
       Rw: 54,
-      RwCtr: 45.299729806216845
+      RwCtr: 51.413639069637696
     }
   },
   {
@@ -3515,10 +3523,10 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
       ceiling: "No additional lower treatment"
     },
     impactRatings: {
-      CI: 2,
+      CI: 1,
       CI50_2500: 6,
-      LnW: 47,
-      LnWPlusCI: 49
+      LnW: 45,
+      LnWPlusCI: 46
     },
     impactBands: {
       frequenciesHz: [20, 25, 31.5, 40, 50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500, 3150, 4000, 5000],
@@ -3554,7 +3562,7 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     airborneRatings: {
       Rw: 61,
-      RwCtr: 54.131432673998987
+      RwCtr: 58.831296422168144
     }
   },
   {
@@ -3593,46 +3601,339 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
       ceiling: "No additional lower treatment"
     },
     impactRatings: {
-      CI: 1,
-      CI50_2500: 6,
-      LnW: 45,
-      LnWPlusCI: 46
+      CI: 2,
+      CI50_2500: 3,
+      LnW: 60,
+      LnWPlusCI: 62
     },
     impactBands: {
       frequenciesHz: [20, 25, 31.5, 40, 50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500, 3150, 4000, 5000],
       labOrField: "lab",
       levelsDb: [
-        66.688039943344762,
-        57.43434409567768,
-        63.700827484011157,
-        58.318929546911939,
-        58.4,
-        60.2,
-        57.7,
-        56.6,
-        54.7,
-        50.9,
-        53.6,
-        49.1,
-        48.1,
-        45.6,
-        40.299999999999997,
-        32.700000000000003,
-        28,
-        24.9,
-        20.7,
-        17.399999999999999,
-        13.1,
-        11.2,
-        9.6,
-        6.4,
-        6.6
+        83.38969771059153,
+        77.03198620919188,
+        84.63010531603929,
+        76.46764002899377,
+        76.12697425541992,
+        69.15062898410406,
+        65.72887428818605,
+        59.4991621694355,
+        53.984749378461906,
+        50.79415958631088,
+        54.52397940538498,
+        43.514298695659825,
+        41.953099972488886,
+        40.652148548621064,
+        37.66498063413417,
+        31.37359546466279,
+        27.932312638381312,
+        26.12310843617644,
+        22.95517302920244,
+        18.537467312415902,
+        16.406007749204576,
+        18.71257799068667,
+        19.279909604217487,
+        17.111945574309424,
+        13.27252773876381
       ],
       standardMethod: "open_measured_dataset"
     },
     airborneRatings: {
       Rw: 61,
-      RwCtr: 55.317986888908273
+      RwCtr: 59.492301808652826
+    }
+  },
+  {
+    id: "tuas_c7_clt260_measured_2026",
+    label: "TUAS C7 | CLT 260 mm | EPS board + geotextile + screed + EPS underlay + laminate",
+    sourceLabel: "TUAS open measured dataset",
+    sourceType: "open_measured_dataset",
+    trustTier: "peer_reviewed_open_access",
+    match: {
+      absentRoles: ["ceiling_board", "ceiling_cavity", "ceiling_fill"],
+      baseStructure: {
+        materialIds: ["clt_panel"],
+        thicknessMm: 260
+      },
+      upperFill: {
+        materialIds: ["eps_floor_insulation_board"],
+        thicknessMm: 35
+      },
+      floatingScreed: {
+        layerCount: 2,
+        materialScheduleIds: ["geotextile", "screed"],
+        thicknessScheduleMm: [1, 40]
+      },
+      resilientLayer: {
+        materialIds: ["eps_underlay"],
+        thicknessMm: 3
+      },
+      floorCovering: {
+        materialIds: ["laminate_flooring"],
+        thicknessMm: 8
+      }
+    },
+    systemSummary: {
+      carrier: "Cross-laminated timber slab 260 mm (edge-glued)",
+      floorBuildUp: "35 mm EPS floor insulation board + 1 mm geotextile + 40 mm screed + 3 mm EPS underlay + 8 mm laminate",
+      ceiling: "No additional lower treatment"
+    },
+    impactRatings: {
+      CI: 1,
+      CI50_2500: 3,
+      LnW: 39,
+      LnWPlusCI: 40
+    },
+    airborneRatings: {
+      Rw: 57,
+      RwCtr: 52.458421802887344
+    }
+  },
+  {
+    id: "tuas_c7c_clt260_measured_2026",
+    label: "TUAS C7c | CLT 260 mm | EPS board + geotextile + screed + EPS underlay + laminate + suspended ceiling",
+    sourceLabel: "TUAS open measured dataset",
+    sourceType: "open_measured_dataset",
+    trustTier: "peer_reviewed_open_access",
+    match: {
+      absentRoles: [],
+      baseStructure: {
+        materialIds: ["clt_panel"],
+        thicknessMm: 260
+      },
+      upperFill: {
+        materialIds: ["eps_floor_insulation_board"],
+        thicknessMm: 35
+      },
+      floatingScreed: {
+        layerCount: 2,
+        materialScheduleIds: ["geotextile", "screed"],
+        thicknessScheduleMm: [1, 40]
+      },
+      resilientLayer: {
+        materialIds: ["eps_underlay"],
+        thicknessMm: 3
+      },
+      floorCovering: {
+        materialIds: ["laminate_flooring"],
+        thicknessMm: 8
+      },
+      ceilingCavity: {
+        materialIds: ["acoustic_hanger_ceiling"],
+        thicknessMm: 70
+      },
+      ceilingFill: {
+        materialIds: ["rockwool"],
+        thicknessMm: 100
+      },
+      ceilingBoard: {
+        layerCount: 2,
+        materialIds: ["gypsum_board"],
+        thicknessMm: 13
+      }
+    },
+    systemSummary: {
+      carrier: "Cross-laminated timber slab 260 mm (edge-glued)",
+      floorBuildUp: "35 mm EPS floor insulation board + 1 mm geotextile + 40 mm screed + 3 mm EPS underlay + 8 mm laminate",
+      ceiling: "70 mm acoustic hanger ceiling with 100 mm mineral wool and 2 x 13 mm gypsum board"
+    },
+    impactRatings: {
+      CI: 5,
+      CI50_2500: 14,
+      LnW: 30,
+      LnWPlusCI: 35
+    },
+    airborneRatings: {
+      Rw: 75,
+      RwCtr: 70.92499901751341
+    }
+  },
+  {
+    id: "tuas_c2c_clt260_measured_2026",
+    label: "TUAS C2c | CLT 260 mm | EPS underlay + laminate + suspended ceiling",
+    sourceLabel: "TUAS open measured dataset",
+    sourceType: "open_measured_dataset",
+    trustTier: "peer_reviewed_open_access",
+    estimateMatch: {
+      structuralSupportType: "mass_timber_clt",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        thicknessMm: 260
+      },
+      resilientLayer: {
+        thicknessMm: 3,
+        dynamicStiffnessMNm3: 64
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "laminate_flooring",
+        thicknessMm: 8
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_rigid_hanger",
+        cavityDepthMm: 70,
+        cavityFillThicknessMm: 100,
+        boardLayerCount: 2,
+        boardMaterialClass: "generic_gypsum_board",
+        boardThicknessMm: 13
+      }
+    },
+    match: {
+      absentRoles: ["floating_screed", "upper_fill"],
+      baseStructure: {
+        materialIds: ["clt_panel"],
+        thicknessMm: 260
+      },
+      resilientLayer: {
+        materialIds: ["eps_underlay"],
+        thicknessMm: 3
+      },
+      floorCovering: {
+        materialIds: ["laminate_flooring"],
+        thicknessMm: 8
+      },
+      ceilingCavity: {
+        materialIds: ["acoustic_hanger_ceiling"],
+        thicknessMm: 70
+      },
+      ceilingFill: {
+        materialIds: ["rockwool"],
+        thicknessMm: 100
+      },
+      ceilingBoard: {
+        layerCount: 2,
+        materialIds: ["gypsum_board"],
+        thicknessMm: 13
+      }
+    },
+    systemSummary: {
+      carrier: "Cross-laminated timber slab 260 mm (edge-glued)",
+      floorBuildUp: "3 mm EPS underlay + 8 mm laminate",
+      ceiling: "70 mm acoustic hanger ceiling with 100 mm mineral wool and 2 x 13 mm gypsum board"
+    },
+    impactRatings: {
+      CI: 4,
+      CI50_2500: 9,
+      LnW: 35,
+      LnWPlusCI: 39
+    },
+    airborneRatings: {
+      Rw: 70,
+      RwCtr: 67.41490151958673
+    }
+  },
+  {
+    id: "tuas_c3c_clt260_measured_2026",
+    label: "TUAS C3c | CLT 260 mm | 13 mm gypsum + 2 x 15 mm gypsum + suspended ceiling",
+    sourceLabel: "TUAS open measured dataset",
+    sourceType: "open_measured_dataset",
+    trustTier: "peer_reviewed_open_access",
+    match: {
+      absentRoles: ["upper_fill"],
+      baseStructure: {
+        materialIds: ["clt_panel"],
+        thicknessMm: 260
+      },
+      resilientLayer: {
+        materialIds: ["eps_underlay"],
+        thicknessMm: 3
+      },
+      floatingScreed: {
+        layerCount: 3,
+        materialScheduleIds: ["gypsum_board", "gypsum_board", "gypsum_board"],
+        thicknessScheduleMm: [13, 15, 15]
+      },
+      floorCovering: {
+        materialIds: ["laminate_flooring"],
+        thicknessMm: 8
+      },
+      ceilingCavity: {
+        materialIds: ["acoustic_hanger_ceiling"],
+        thicknessMm: 70
+      },
+      ceilingFill: {
+        materialIds: ["rockwool"],
+        thicknessMm: 100
+      },
+      ceilingBoard: {
+        layerCount: 2,
+        materialIds: ["gypsum_board"],
+        thicknessMm: 13
+      }
+    },
+    systemSummary: {
+      carrier: "Cross-laminated timber slab 260 mm (edge-glued)",
+      floorBuildUp: "13 mm gypsum board + 2 x 15 mm gypsum board + 3 mm EPS underlay + 8 mm laminate",
+      ceiling: "70 mm acoustic hanger ceiling with 100 mm mineral wool and 2 x 13 mm gypsum board"
+    },
+    impactRatings: {
+      CI: 2,
+      CI50_2500: 16,
+      LnW: 27,
+      LnWPlusCI: 29
+    },
+    airborneRatings: {
+      Rw: 73,
+      RwCtr: 67.7537144078056
+    }
+  },
+  {
+    id: "tuas_c4c_clt260_measured_2026",
+    label: "TUAS C4c | CLT 260 mm | 50 mm glass wool + 2 x 15 mm gypsum + suspended ceiling",
+    sourceLabel: "TUAS open measured dataset",
+    sourceType: "open_measured_dataset",
+    trustTier: "peer_reviewed_open_access",
+    match: {
+      absentRoles: [],
+      baseStructure: {
+        materialIds: ["clt_panel"],
+        thicknessMm: 260
+      },
+      resilientLayer: {
+        materialIds: ["eps_underlay"],
+        thicknessMm: 3
+      },
+      upperFill: {
+        materialIds: ["glasswool_board"],
+        thicknessMm: 50
+      },
+      floatingScreed: {
+        layerCount: 2,
+        materialIds: ["gypsum_board"],
+        thicknessMm: 15
+      },
+      floorCovering: {
+        materialIds: ["laminate_flooring"],
+        thicknessMm: 8
+      },
+      ceilingCavity: {
+        materialIds: ["acoustic_hanger_ceiling"],
+        thicknessMm: 70
+      },
+      ceilingFill: {
+        materialIds: ["rockwool"],
+        thicknessMm: 100
+      },
+      ceilingBoard: {
+        layerCount: 2,
+        materialIds: ["gypsum_board"],
+        thicknessMm: 13
+      }
+    },
+    systemSummary: {
+      carrier: "Cross-laminated timber slab 260 mm (edge-glued)",
+      floorBuildUp: "50 mm glass wool + 2 x 15 mm gypsum board + 3 mm EPS underlay + 8 mm laminate",
+      ceiling: "70 mm acoustic hanger ceiling with 100 mm mineral wool and 2 x 13 mm gypsum board"
+    },
+    impactRatings: {
+      CI: 2,
+      CI50_2500: 16,
+      LnW: 24,
+      LnWPlusCI: 26
+    },
+    airborneRatings: {
+      Rw: 74,
+      RwCtr: 69.69668895954507
     }
   },
   {
@@ -3708,46 +4009,46 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
       ceiling: "Hanging-wire suspended ceiling with 100 mm glass wool and 2 x 13 mm gypsum boards"
     },
     impactRatings: {
-      CI: 2,
-      CI50_2500: 16,
-      LnW: 24,
-      LnWPlusCI: 26
+      CI: 4,
+      CI50_2500: 6,
+      LnW: 38,
+      LnWPlusCI: 42
     },
     impactBands: {
       frequenciesHz: [20, 25, 31.5, 40, 50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500, 3150, 4000, 5000],
       labOrField: "lab",
       levelsDb: [
-        72.80200426135157,
-        63.810226886375794,
-        66.61669832535526,
-        48.745669959655686,
-        49.3,
-        53.4,
-        45.6,
-        37.5,
-        35.8,
-        30.7,
-        29.4,
-        22.1,
-        21.2,
-        16.5,
-        14,
-        7.3,
-        4.6,
-        3.9,
-        -1.3,
-        -1.7,
-        -1,
-        0.4,
-        2.1,
-        3.9,
-        5.2
+        86.44305944662032,
+        82.43431154607758,
+        85.48962188183688,
+        71.93364560656336,
+        68.32003476803226,
+        64.4974627944173,
+        54.49292795225674,
+        40.97131071349352,
+        37.50656725131751,
+        31.26789426941332,
+        32.71582932848809,
+        26.500812262095714,
+        24.95806525802386,
+        25.325366244452574,
+        20.62767147501809,
+        20.96741997342113,
+        20.6890275728863,
+        15.112696846982956,
+        17.517521963229665,
+        13.883643478551626,
+        13.10920526157864,
+        10.96443857379316,
+        9.785596370646438,
+        6.306880086023325,
+        5.266319858870024
       ],
       standardMethod: "open_measured_dataset"
     },
     airborneRatings: {
       Rw: 75,
-      RwCtr: 64.4365251312953
+      RwCtr: 70.46337519002095
     }
   },
   {
@@ -3777,14 +4078,14 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
       ceiling: "No additional lower treatment"
     },
     impactRatings: {
-      CI: 1,
-      CI50_2500: 1,
-      LnW: 59,
-      LnWPlusCI: 60
+      CI: 2,
+      CI50_2500: 5,
+      LnW: 47,
+      LnWPlusCI: 49
     },
     airborneRatings: {
       Rw: 49,
-      RwCtr: 44.156597327380645
+      RwCtr: 47.53683856051791
     }
   },
   {
@@ -3823,13 +4124,13 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     impactRatings: {
       CI: 1,
-      CI50_2500: 10,
-      LnW: 35,
-      LnWPlusCI: 36
+      CI50_2500: 9,
+      LnW: 46,
+      LnWPlusCI: 47
     },
     airborneRatings: {
       Rw: 66,
-      RwCtr: 61.064359544996876
+      RwCtr: 64.50483471830356
     }
   },
   {

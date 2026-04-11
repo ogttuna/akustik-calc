@@ -184,6 +184,26 @@ function hasLowerFloorRoleEvidence(
   );
 }
 
+function hasMassTimberCombinedMultiEntryFloatingScreedVisibleStack(
+  rawLayers: readonly Pick<LayerInput, "floorRole">[],
+  normalizedLayers: readonly ResolvedLayerStackEntry[]
+): boolean {
+  if (rawLayers.filter((layer) => layer.floorRole === "floating_screed").length <= 1) {
+    return false;
+  }
+
+  if (!hasLowerFloorRoleEvidence(normalizedLayers)) {
+    return false;
+  }
+
+  const baseStructureLayer = normalizedLayers.find((layer) => layer.floorRole === "base_structure");
+  if (!baseStructureLayer) {
+    return false;
+  }
+
+  return inferStructuralSupportTypeFromMaterial(baseStructureLayer.material) === "mass_timber_clt";
+}
+
 function isRawNonCombinedRoleGatedCarrierTopology(
   rawLayers: readonly LayerInput[],
   normalizedLayers: readonly ResolvedLayerStackEntry[]
@@ -814,6 +834,10 @@ export function maybeInferFloorRoleLayerStack(
   }
 
   if (!hasPotentialFloorRoleInferenceEvidence(rawLayers) && !hasSafeBareBaseCandidate) {
+    return null;
+  }
+
+  if (hasMassTimberCombinedMultiEntryFloatingScreedVisibleStack(rawLayers, normalizedLayers)) {
     return null;
   }
 
@@ -1480,7 +1504,7 @@ function resolveImpactSystemType(input: ImpactPredictorInput): ImpactPredictorIn
     input.structuralSupportType === "mass_timber_clt" &&
     (typeof input.upperFill?.thicknessMm === "number" || typeof input.floatingScreed?.thicknessMm === "number")
   ) {
-    return "dry_floating_floor";
+    return hasLowerTreatment ? "combined_upper_lower_system" : "dry_floating_floor";
   }
 
   if (
@@ -1646,6 +1670,10 @@ function canDerivePredictorInputFromLayerStack(
   }
 
   if (!hasPotentialFloorRoleInferenceEvidence(rawLayers) && !hasNormalizedSafeBareBaseCandidate(normalizedLayers)) {
+    return false;
+  }
+
+  if (hasMassTimberCombinedMultiEntryFloatingScreedVisibleStack(rawLayers, normalizedLayers)) {
     return false;
   }
 

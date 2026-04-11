@@ -67,6 +67,29 @@ const CASES: readonly NoiseParityCase[] = [
     ]
   },
   {
+    id: "tuas clt wet geotextile exact family",
+    layers: [
+      { materialId: "laminate_flooring", thicknessMm: 8 },
+      { materialId: "eps_underlay", thicknessMm: 3 },
+      { materialId: "geotextile", thicknessMm: 1 },
+      { materialId: "screed", thicknessMm: 40 },
+      { materialId: "eps_floor_insulation_board", thicknessMm: 35 },
+      { materialId: "clt_panel", thicknessMm: 260 }
+    ]
+  },
+  {
+    id: "tuas c2c combined exact family",
+    layers: [
+      { materialId: "gypsum_board", thicknessMm: 13 },
+      { materialId: "gypsum_board", thicknessMm: 13 },
+      { materialId: "rockwool", thicknessMm: 100 },
+      { materialId: "acoustic_hanger_ceiling", thicknessMm: 70 },
+      { materialId: "laminate_flooring", thicknessMm: 8 },
+      { materialId: "eps_underlay", thicknessMm: 3 },
+      { materialId: "clt_panel", thicknessMm: 260 }
+    ]
+  },
+  {
     id: "open-web steel exact combined family",
     layers: [
       { materialId: "open_web_steel_joist", thicknessMm: 300 },

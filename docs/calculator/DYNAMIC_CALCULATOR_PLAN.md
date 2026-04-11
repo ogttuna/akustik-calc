@@ -25,6 +25,11 @@ Important scope note:
 
 Current execution status:
 
+- `tuas_floor_source_truth_rebaseline_v1` is now closed:
+  - TUAS exact floor rows and TUAS-backed predictor lanes were compared back to `TUAS2023FloorSoundInsulationDataR1.xlsx` / `SoundInsulation`
+  - numeric truth now follows rows `34` (`Ln,w`), `35` (`Ln,w+CI`), `36` (`Ln,w+CI,50-2500`), `41` (`Rw`), and `42` (`Rw+C`)
+  - engine, workbench, and build gates are green after the rebaseline
+  - semantic debt remains: row `42` is `Rw+C`, but the current domain companion still uses the `RwCtr` slot/name
 - the 2026-04-07 reinforced-concrete assembly-field `Rw` support blocker is now closed:
   - concrete screening rows with visible floor roles now keep `Rw` exposed again on the assembly route
   - workbench `Rw` cards now also respect engine support buckets instead of surfacing unsupported floor companions
@@ -52,7 +57,7 @@ Completion-reading note:
 - for wall-specific phase closure, use [DYNAMIC_WALL_STABILITY_REMEDIATION.md](./DYNAMIC_WALL_STABILITY_REMEDIATION.md)
 - today’s accurate shorthand is:
   - floor phases `0-3`: complete and defended
-  - floor phase `4`: active / partial
+  - floor phase `4`: active / partial, with TUAS numeric source truth now rebaselined
   - floor phases `5-8`: open
 
 Current queued follow-up:
@@ -69,7 +74,7 @@ Current queued follow-up:
 - the broader workbench support-bucket vs output-card parity audit is now in place for representative floor presets and raw floor/raw hybrid scenarios
 - use the source gap ledger and widening-candidate contract to decide which family branches are widening-first versus tightening-first
 - mine dormant exact-only source rows before inventing any broader generic family formula
-- when sourcing new TUAS rows, import the first open-box corridor tier before broader TUAS CLT expansion
+- when sourcing new TUAS rows, first compare the target row against the rebaselined TUAS spreadsheet truth before importing or changing predictor expectations
 - the first defended TUAS open-box `a/b` corridor is now complete:
   - `R2a`, `R2b`, `R3a`, `R3b`, `R5a`, `R5b`, `R6b`, `R7a`, and `R11b` are imported as exact rows
   - predictor-side exact inference carries the explicit `a/b` suspended-ceiling support-class split
@@ -889,10 +894,15 @@ Primary-source audit completed after the CLT widening:
     - both `R6a` and `R10a` are now landed as exact rows on the current implementation surface
     - `R7b`, `R8b`, `R9b`, and `R2c` are now also landed as exact rows on the hybrid lower-treatment open-box surface
     - the hybrid open-box branch is therefore closed without reopening a generic `__none` topology lane
-    - the next selected slice is now `tuas_c7_wet_geotextile_clt_surface_design_v1`
+    - `tuas_c7_wet_geotextile_clt_surface_design_v1` is now also closed as an exact row landing
+    - `tuas_post_c7_clt_boundary_tightening_v1`, `tuas_clt_remaining_combined_source_schedule_research_v1`, and `tuas_c7c_combined_wet_clt_surface_design_v1` are now also closed
+    - `tuas_remaining_combined_clt_exact_import_decision_matrix_v1` is now also closed with `C3c` as the first remaining combined exact import
+    - `tuas_c4c_combined_heavy_dry_exact_candidate_v1` is now also closed as exact `tuas_c4c_clt260_measured_2026`
+    - the next selected slice is now `tuas_c11c_wet_stack_anomaly_audit_v1`
     - the current source-backed blocker is no longer material-surface absence:
-      - TUAS drawing page `24/40` shows `260 mm` CLT + `35 mm` EPS + `1 mm` geotextile + `40 mm` screed + `3 mm` EPS underlay + `8 mm` laminate
-      - current implementation still parks that stack on the broader `family_general` lane until a narrow exact row is landed
+      - TUAS drawing page `24/40` exact stack is now landed as `tuas_c7_clt260_measured_2026`
+      - `C2c`, `C3c`, `C4c`, and `C7c` are exact anchors, and `C5c` is predictor-backed
+      - the remaining risk is accidentally widening `C11c` into combined shorthand inference, predictor aliases, or under-described direct-fixed stacks before its wet-stack anomaly is explained
     - current restart truth lives in:
       - [CURRENT_STATE.md](./CURRENT_STATE.md)
       - [DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md](./DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md)
@@ -1316,34 +1326,55 @@ Additional gates by phase:
 
 Immediate next implementation pass:
 
-1. extend the raw-floor inference audit beyond the current representative rows, safe-bare contiguous-split cohort, first treated/inferred split cohort, first weaker-carrier posture cohort, and first raw concrete ceiling-side inferred support cohort
-2. widen the current mixed floor/wall torture pass beyond the first generated split-detour matrix
-3. widen support only after the torture pass identifies a real honest gap rather than a merely hypothetical one
+1. keep the selected TUAS floor baseline packs and `pnpm build` green
+2. keep the landed `C3c`, `C4c`, and `C7c` exact corridors plus the re-closed combined-CLT inference/predictor guard green
+3. run `tuas_c11c_wet_stack_anomaly_audit_v1` as the next CLT-local pass
+4. keep `C11c` deferred until that audit explains its weak source tuple
 
 Why this is the correct next cut:
 
-- Phases 0 through 3 are already complete enough to act as the guardrail set
-- Phase 4 is already active, so the highest-value work is no longer baseline freezing or contract definition
-- the latest raw-floor passes closed a real safe-bare contiguous-split inference gap, froze the first treated/inferred plus weaker-carrier cohorts, and added the first raw concrete ceiling-side inferred support cohort, so the next safest move is to keep widening that audit before reopening any more carrier posture
-- the recent workbench normalization fixes created a new contract question:
-  - which final packages should be path-invariant
-  - which physically order-sensitive packages must stay order-sensitive
-- without answering that contract question first, wider normalization or broader family openings risk making the calculator look more stable while actually becoming less physical
+- the hybrid open-box branch is already closed through `R2c`
+- the staged-upper, heavy dry-top, and wet geotextile TUAS CLT branch is now closed through `C7`
+- the source-evidence pass is now also closed:
+  - TUAS drawing pages `25/40` through `30/40` freeze the real visible schedules for `C2c/C3c/C4c/C5c/C7c/C11c`
+  - `C2c` is now landed exactly
+  - `C3c` is now landed exactly after correcting the stale page `26/40` proxy from `13 mm glass wool` to `13 mm gypsum board + 2 x 15 mm gypsum board`
+  - `C4c` is now landed exactly
+  - `C11c` is no longer blocked by missing drawings; it is blocked by a wet-stack anomaly and route-discipline decision
+- the visible combined CLT semantics pass is now also closed:
+  - visible `C5c` stacks now land on the predictor-backed combined lane instead of staying screening-only
+  - the enabling predictor-type fix is now narrow and the `C5c` published lane is geometry-gated
+  - `C7c` is now landed exactly as the wet combined sibling
+- the remaining combined backlog boundary pass is still closed and the `C7c` slice re-closed the next drift:
+  - Dataholz dry combined predictor input no longer blends `tuas_c2c`
+  - CLT `lower_only` no longer reopens through `C2c`
+  - combined CLT visible stacks with lower treatment plus multi-entry `floating_screed` no longer auto-normalize into inferred or predictor-derived shorthand lanes
+- the first remaining combined exact decision is closed with `C3c`, and the C4c exact-candidate pass is also closed
+- the next risk is therefore `C11c` wet-stack anomaly analysis, not source discovery
+- the next honest cut is a narrow `C11c` audit; it stays screening-only unless its wet stack and weak `Ln,w 59` tuple are explained before import
 
 Recommended widening target after the torture pass:
 
-- do not widen reinforced concrete or CLT core support blindly
-- first re-check the intentionally fail-closed structural carriers and other real remaining gaps:
+- do not widen reinforced concrete, CLT combined interaction, or raw support blindly
+- first keep `C3c`, `C4c`, and `C7c` frozen as exact combined anchors, and keep `C11c` deferred unless it earns its own explicit exact corridor
+- before resuming `C11c` or raw widening, keep `tuas_floor_source_truth_rebaseline_v1` as the baseline:
+  - `C2c` is now `Ln,w 35`, `Ln,w+CI 39`, `Ln,w+CI,50-2500 44`
+  - `C3c` is now `Ln,w 27`, `Ln,w+CI 29`, `Ln,w+CI,50-2500 43`
+  - `C4c` is now `Ln,w 24`, `Ln,w+CI 26`, `Ln,w+CI,50-2500 40`
+  - `C5c` predictor-backed truth is now `Ln,w 38`, `Ln,w+CI 42`, `Ln,w+CI,50-2500 44`
+  - `C7c` is now `Ln,w 30`, `Ln,w+CI 35`, `Ln,w+CI,50-2500 44`
+- then re-check the intentionally fail-closed structural carriers and other real remaining gaps:
   - bare open-box timber
   - bare open-web steel
   - any future corridor-limited openings that still lack defended `CI`, `DeltaLw`, or `L'nT,50` semantics
 
 Research order behind that widening target:
 
-- mine the TUAS measured corpus first for open-box timber and CLT:
+- use the now-recovered TUAS measured corpus first for the remaining CLT-local debt:
   - the published TUAS dataset contains 30 wooden and 8 concrete floors
   - it reports ISO 10140 / ISO 717 results, detailed construction drawings, and resilient-layer details for all 38 floors
-  - use that corpus to decide whether the remaining open-box and bare-CLT gaps can open as narrow same-family lanes instead of broad generic ones
+  - the real visible schedules for `C2c/C3c/C4c/C5c/C7c/C11c` are now recovered locally from pages `25/40` through `30/40`
+  - use that source truth to keep `C3c/C4c/C7c` frozen and to decide whether `C11c` can ever be imported without reopening shorthand-derived aliases
 - mine UBIQ official rows next for open-web steel:
   - the current UBIQ source is strongest for combined upper-plus-lower system tables, not for bare open-web carriers
   - prefer widening supported open-web combined families from those official rows before attempting any bare open-web lane
@@ -1360,7 +1391,7 @@ Recommended tightening target after the torture pass:
   - monotonicity or treatment-strength relations are physically obvious
   - the active route is already live often enough that drift matters to real operators
 
-That is now the highest-leverage path because the defended representative concrete / CLT / timber / composite core corridor is already green under full field context, so the next meaningful gain comes from carefully opening the remaining honest gaps and tightening active families rather than redoing completed baseline phases.
+That is now the highest-leverage path because the defended representative concrete / CLT / timber / composite core corridor is already green under full field context, and the next meaningful gain comes from deciding the remaining combined CLT exact imports one row at a time after the landed `C7c` anchor and the re-closed inference/predictor boundary. For the live current-state truth, use `CURRENT_STATE.md`, `DYNAMIC_CALCULATOR_REMAINING_WORK_PLAN.md`, and `DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md`.
 
 ## 9. Definition of Success
 

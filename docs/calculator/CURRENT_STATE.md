@@ -25,9 +25,68 @@ Verified broad corridors:
 - workbench defended corridor: green
   - `24` files
   - `294` tests
-- latest repository build revalidation on `2026-04-08`: green
+- latest change-adjacent revalidation after the TUAS `C7` wet geotextile exact landing: green
+  - engine targeted pack: `6` files, `313` tests
+  - workbench targeted pack: `1` file, `81` tests
+- latest change-adjacent revalidation after the TUAS post-`C7` CLT boundary tightening closure: green
+  - engine targeted pack: `8` files, `333` tests
+  - workbench targeted pack: `2` files, `91` tests
+- latest change-adjacent revalidation after the TUAS `C5c` visible combined CLT semantics closure: green
+  - engine targeted pack: `5` files, `340` tests
+  - workbench targeted pack: `2` files, `91` tests
+- latest change-adjacent revalidation after the TUAS remaining combined backlog boundary-matrix closure: green
+  - engine targeted pack: `3` files, `58` tests
+  - workbench targeted pack: `2` files, `95` tests
+- latest change-adjacent revalidation after the TUAS remaining combined source-schedule research, `C2c` exact landing, and CLT adjacency re-close: green
+  - engine targeted pack: `12` files, `381` tests
+  - workbench targeted pack: `2` files, `96` tests
+- latest app-local workbench boundary matrix revalidation after the same CLT adjacency re-close: green
+  - workbench targeted pack: `1` file, `14` tests
+  - operational note: run this pack from `apps/web` with the local Vitest config so `@` aliases resolve correctly
+- latest repository build revalidation on `2026-04-10`: green
   - command: `pnpm build`
   - engine DTS blocker and web typecheck blocker are both closed
+  - the same non-blocking `Node >=22` engine mismatch and `sharp/@img` `proposal-docx` warnings still remain
+- latest change-adjacent revalidation after the TUAS floor source-truth rebaseline: green
+  - selected/closed slice: `tuas_floor_source_truth_rebaseline_v1`
+  - engine targeted pack: `6` files, `331` tests
+  - workbench targeted pack: `2` files, `98` tests
+  - repository build: green
+  - key finding:
+    - imported TUAS floor rows and TUAS-backed predictor lanes had source drift from the `SoundInsulation` spreadsheet single-number rows
+    - catalog and predictor values are now rebaselined to rows `34` (`Ln,w`), `35` (`Ln,w+CI`), `36` (`Ln,w+CI,50-2500`), `41` (`Rw`), and `42` (`Rw+C`)
+    - row `42` is still stored in the current `RwCtr` companion slot; numeric truth is fixed, but the label/semantic migration remains an explicit follow-up gap
+- latest change-adjacent revalidation after the `C7c` exact landing plus combined-CLT predictor/inference re-close: green
+  - engine targeted pack: `4` files, `345` tests
+  - workbench targeted pack: `2` files, `98` tests
+  - key route-control anchor:
+    - combined CLT visible stacks with lower treatment plus multi-entry `floating_screed` now stay fail-closed on auto inference and predictor derivation
+    - `C3c/C4c/C11c` therefore remain screening-only after `C7c` instead of reopening through packed shorthand aliases
+- latest change-adjacent revalidation after the `C3c` exact decision-matrix import: green
+  - selected/closed slice: `tuas_remaining_combined_clt_exact_import_decision_matrix_v1`
+  - engine targeted pack: `6` files, `325` tests
+  - workbench targeted pack: `2` files, `100` tests
+  - repository build: green
+  - known non-blocking warnings remain: local Node is `20.20.1` while package engines want `>=22`, and the existing `sharp/@img` optional-package warnings still flow through `proposal-docx`
+  - key route-control anchor:
+    - `C3c` is now exact as `tuas_c3c_clt260_measured_2026`
+    - source correction: TUAS drawing page `26/40` shows `13 mm gypsum board + 2 x 15 mm gypsum board`, not a `13 mm` glass-wool upper-fill layer
+    - `C3c` source truth is `Ln,w 27`, `Ln,w+CI 29`, `Ln,w+CI,50-2500 43`, `Rw 73`; spreadsheet row `42` still remains stored in the current `RwCtr` companion slot as numeric `Rw+C`
+    - exact split parity now admits only merge-safe contiguous same-role/same-material packed thickness equivalents; mixed-material schedules still stay explicit
+    - at that checkpoint, `C4c` and `C11c` remained deferred; `C4c` was the next narrow exact candidate, while `C11c` needed a separate wet-stack anomaly check before any import
+- latest change-adjacent revalidation after the `C4c` exact candidate landing and combined-CLT guard re-close: green
+  - selected/closed slice: `tuas_c4c_combined_heavy_dry_exact_candidate_v1`
+  - engine C4c/backlog/source/split/predictor pack: `6` files, `83` tests
+  - engine assembly/impact-only route guard pack: `2` files, `287` tests
+  - engine gap/noise/support pack: `3` files, `12` tests
+  - workbench targeted pack: `2` files, `102` tests
+  - repository build: green
+  - known non-blocking warnings remain: local Node is `20.20.1` while package engines want `>=22`, and the existing `sharp/@img` optional-package warnings still flow through `proposal-docx`
+  - key route-control anchor:
+    - `C4c` is now exact as `tuas_c4c_clt260_measured_2026`
+    - `C4c` source truth is `Ln,w 24`, `Ln,w+CI 26`, `Ln,w+CI,50-2500 40`, `Rw 74`; spreadsheet row `42` still remains stored in the current `RwCtr` companion slot as numeric `Rw+C`
+    - under-described combined CLT stacks with lower board/fill but no explicit `ceiling_cavity` stay fail-closed even though profile-aligned `C4c` now exists
+    - `C11c` is now the only remaining source-backed combined CLT backlog row and needs a separate wet-stack anomaly audit before any import
 - latest change-adjacent revalidation after the raw-floor split/posture widening work: green
   - engine targeted/broad pack: `15` files, `227` tests
   - workbench targeted/broad pack: `14` files, `47` tests
@@ -338,7 +397,7 @@ Interpretation:
 - the living source-gap ledger now also names the current implementation-backed widening-first and tightening-first family branches
 - the living source-gap ledger now includes a local source-corpus snapshot:
   - TUAS open-box exact rows: `15`
-  - TUAS CLT exact rows: `9`
+  - TUAS CLT exact rows: `12`
   - Dataholz CLT exact rows: `9`, with `1` currently still exact-only tightening slack
   - UBIQ open-web rows: `18` exact plus `3` bound
 - Dataholz CLT exact-preserving tightening is now narrower and more explicit:
@@ -353,7 +412,7 @@ Interpretation:
   - safe `b`-family widening is imported: `R2b`, `R3b`, `R11b`
   - explicit `a`-family open-box widening is now also imported: `R3a`, `R5a`
   - drawing-backed reinforced `b`-family widening is now also imported: `R6b`
-  - the TUAS CLT staged-upper and heavy dry-top tiers are now landed through `C5`; the remaining CLT backlog is the wet-top `C7` row plus the combined `c`-family rows
+  - the TUAS CLT staged-upper, heavy dry-top, and wet geotextile tiers are now landed through `C7`; the remaining CLT backlog is the combined `c`-family rows plus the adjacent CLT boundary-tightening work
 - predictor-side and visible-layer TUAS ceiling-family groundwork is now in place:
   - explicit predictor input distinguishes `tuas_open_box_family_a` vs `tuas_open_box_family_b`
   - visible-layer/workbench stacks can now surface `family_a` honestly through `tuas_open_box_ceiling_family_a`
@@ -405,9 +464,9 @@ Interpretation:
         - no mineral wool
         - top package: `3 mm` EPS underlay + `8 mm` laminate
         - source spreadsheet exact lab tuple:
-          - `Ln,w 60`
-          - `Ln,w+CI 60`
-          - `Ln,w+CI,50-2500 60`
+          - `Ln,w 70`
+          - `Ln,w+CI 70`
+          - `Ln,w+CI,50-2500 70`
           - `Rw 54`
       - implementation outcome:
         - exact row `tuas_r2c_open_box_timber_measured_2026` is now landed
@@ -418,50 +477,50 @@ Interpretation:
         - the older separator-free proxy still stays non-exact on the broader `family_general` lane
     - the finished implementation comparison now narrows the remaining open TUAS set further:
     - TUAS open-box exact rows now number `15`
-    - TUAS CLT exact rows now number `9`
+    - TUAS CLT exact rows now number `12`
     - the same-family staged upper-package debt on the defended `family_a` corridor is now closed
     - the first same-surface staged-upper CLT debt is also now closed:
       - exact row `tuas_x3_clt140_measured_2026` is landed
       - source-backed lab tuple is now live on the exact route:
-        - `Ln,w 61`
-        - `Ln,w+CI 63`
-        - `Ln,w+CI,50-2500 64`
+        - `Ln,w 52`
+        - `Ln,w+CI 52`
+        - `Ln,w+CI,50-2500 60`
         - `Rw 49`
       - field continuation is now live on the standardized continuation route:
-        - `L'n,w 63`
-        - `L'nT,w 61`
-        - `L'nT,50 64`
+        - `L'n,w 54`
+        - `L'nT,w 52`
+        - `L'nT,50 60`
       - the visible exact route no longer surfaces the duplicate `floating_screed x3` blocker for the defended stack
       - predictor derivation still stays fail-closed on that staged mixed floating-screed package, so no broader predictor shortcut was invented
     - new adjacent-family drift found during close-out is now frozen explicitly:
       - the nearby bare-CLT visible fallback now admits `tuas_x4_clt140_measured_2026` as the third adjacent candidate
-      - that shifts the defended fallback tuple from `Ln,w 67.2` / `Rw 40.4` to `Ln,w 66.9` / `Rw 40.6`
+      - the source-truth rebaseline later shifted the defended fallback tuple again to `Ln,w 57.7` / `Rw 40.6`
       - this is accepted because the route remains an estimate lane and the change came from a new nearer source-backed exact sibling rather than a heuristic widening
     - the current separator-free hybrid open-box lower-treatment proxy still falls to `family_general` at `54%` fit with a duplicate `ceiling_cavity` blocker
     - the thicker staged-upper CLT follow-on is now also closed:
       - exact row `tuas_c3_clt260_measured_2026` is landed
       - source-backed exact lab tuple is now live on the exact route:
-        - `Ln,w 55`
-        - `Ln,w+CI 58`
-        - `Ln,w+CI,50-2500 59`
+        - `Ln,w 47`
+        - `Ln,w+CI 49`
+        - `Ln,w+CI,50-2500 53`
         - `Rw 54`
       - field continuation is now live on the standardized continuation route:
-        - `L'n,w 57`
-        - `L'nT,w 55`
-        - `L'nT,50 59`
+        - `L'n,w 49`
+        - `L'nT,w 47`
+        - `L'nT,50 53`
       - the visible exact route again avoids the duplicate `floating_screed x3` blocker because the landed schedule remains the same defended `15 mm gypsum + 3 mm mortar + 15 mm gypsum` stack
       - predictor derivation still stays fail-closed on that staged mixed floating-screed package, so the slice widened only the defended visible exact surface
     - the first heavy dry-top CLT follow-on is now also closed:
       - exact row `tuas_x4_clt140_measured_2026` is landed
       - source-backed exact lab tuple is now live on the exact route:
-        - `Ln,w 52`
-        - `Ln,w+CI 52`
-        - `Ln,w+CI,50-2500 60`
+        - `Ln,w 50`
+        - `Ln,w+CI 51`
+        - `Ln,w+CI,50-2500 58`
         - `Rw 55`
       - field continuation is now live on the standardized continuation route:
-        - `L'n,w 54`
-        - `L'nT,w 52`
-        - `L'nT,50 60`
+        - `L'n,w 52`
+        - `L'nT,w 50`
+        - `L'nT,50 58`
       - packed visible shorthand such as `30 mm` gypsum board still resolves to the same exact row because it preserves the defended `2 x 15 mm` same-material schedule
       - over-abstracted shorthand still does not land exact:
         - `upper_fill 50 mm generic_fill` + `dry_floating_gypsum_fiberboard 30 mm`
@@ -518,34 +577,29 @@ Interpretation:
       - the workbench sanity band now treats `1 mm geotextile` as an expected separator layer instead of flagging it as an out-of-band false positive
       - exact row `tuas_r8b_open_box_timber_measured_2026` is now landed with lab `Ln,w 50`, `Ln,w+CI 49`, `Ln,w+CI,50-2500 50`, `Rw 72`
       - field continuation is now `L'n,w 52`, `L'nT,w 49.6`, `L'nT,50 49.6`
-      - exact row `tuas_r9b_open_box_timber_measured_2026` is now landed with lab `Ln,w 46`, `Ln,w+CI 46`, `Ln,w+CI,50-2500 48`, `Rw 68`
-      - field continuation is now `L'n,w 48`, `L'nT,w 45.6`, `L'nT,50 47.6`
+      - exact row `tuas_r9b_open_box_timber_measured_2026` is now landed with lab `Ln,w 45`, `Ln,w+CI 46`, `Ln,w+CI,50-2500 48`, `Rw 68`
+      - field continuation is now `L'n,w 47`, `L'nT,w 44.6`, `L'nT,50 47.6`
       - the source correction is now explicit:
         - TUAS drawing page `13/40` shows `40 mm screed + 3 mm EPS underlay + 8 mm laminate`
         - there is no extra upper `plastic-layer` or `geotextile` item on the `R9b` top package
       - the old separator-free proxy is still broader `family_general`, but its nearest candidates are now re-ranked by the landed exact sibling:
         - candidate set is now `tuas_r9b`, `tuas_r7b`, `tuas_r7a`
-        - frozen estimate is now `Ln,w 48.5` / `Rw 67.3`
-      - exact row `tuas_r2c_open_box_timber_measured_2026` is now also landed with lab `Ln,w 60`, `Ln,w+CI 60`, `Ln,w+CI,50-2500 60`, `Rw 54`
-      - field continuation is now `L'n,w 62`, `L'nT,w 59.6`, `L'nT,50 59.6`
+        - frozen estimate is now `Ln,w 48.3`, `Ln,w+CI 49.2`, and `Rw 67.3`
+      - exact row `tuas_r2c_open_box_timber_measured_2026` is now also landed with lab `Ln,w 70`, `Ln,w+CI 70`, `Ln,w+CI,50-2500 70`, `Rw 54`
+      - field continuation is now `L'n,w 72`, `L'nT,w 69.6`, `L'nT,50 69.6`
       - the no-fill open-box debt is therefore closed without reopening a generic `__none` topology widening lane
-    - the next CLT-local debt is now narrower and more explicit:
-      - `C7` no longer lacks a geotextile-capable visible material surface
-      - TUAS drawing page `24/40` shows:
+    - the `C7` wet geotextile CLT follow-on is now closed:
+      - TUAS drawing page `24/40` is now frozen as the landed exact stack:
         - `260 mm` CLT
         - `35 mm` EPS
         - `1 mm` geotextile
         - `40 mm` screed
         - `3 mm` EPS underlay
         - `8 mm` laminate
-      - the source spreadsheet exact lab tuple is now frozen for the next slice:
-        - `Ln,w 60`
-        - `Ln,w+CI 62`
-        - `Ln,w+CI,50-2500 63`
-        - `Rw 57`
-      - current implementation still parks that stack on `family_general` `54%` fit with candidate set `tuas_c4`, `tuas_c2`, `tuas_x4` and frozen estimate `Ln,w 59` / `Rw 48.3`
-    - `C2c`, `C3c`, `C4c`, `C7c`, and `C11c` remain later combined CLT backlog because their raw visible routes are still screening-only / impact-unsupported today
-    - `C7c` also still remains later because the combined lower-ceiling interaction lane is still absent
+      - exact row `tuas_c7_clt260_measured_2026` is now landed with lab `Ln,w 39`, `Ln,w+CI 40`, `Ln,w+CI,50-2500 42`, `Rw 57`
+      - field continuation is now `L'n,w 41`, `L'nT,w 39`, `L'nT,50 42`
+      - the old `family_general` `54%` proxy is now retired on the true source-backed stack instead of serving as the live corridor
+    - `C2c`, `C3c`, `C4c`, and `C7c` are now exact anchors, while `C11c` remains later combined CLT backlog because its visible route is still screening-only / impact-unsupported today
 - the real-world open-box coverage benchmark now matches the defended visible-layer truth surface:
   - generic `resilient_stud_ceiling` basic rows anchor `R2b`
   - explicit `tuas_open_box_ceiling_family_a` basic rows anchor `R2a`
@@ -719,9 +773,8 @@ Work in this order:
     - `X3` was the selected first staged-upper TUAS CLT import candidate
     - `C3` is now landed as the adjacent thicker same-surface follow-on
     - `X4` and `C4` are now both landed as the first upper-only heavy dry-top follow-ons
-    - `C5` remains the next broader heavy dry-top backlog item
-    - `C2c`, `C3c`, `C4c`, `C7c`, and `C11c` remain later combined lower-ceiling backlog
-    - at that point, `C7` and `C7c` still remained geotextile-dependent backlog
+    - `C5` was still the next broader heavy dry-top backlog item at that historical checkpoint
+    - current rebaseline truth supersedes that checkpoint: `C2c`, `C3c`, `C4c`, and `C7c` are exact anchors, `C5c` is predictor-backed, and only `C11c` remains combined lower-ceiling exact-import backlog
   - closed widening slice: `tuas_x3_staged_upper_clt_surface_design_v1`
   - landed result:
     - exact row `tuas_x3_clt140_measured_2026`
@@ -815,25 +868,59 @@ Work in this order:
       - supported outputs `Ln,w`, `L'n,w`, `L'nT,w`, `L'nT,50`
       - unsupported outputs `none`
     - proxy and sibling posture are now frozen more honestly:
-      - the old proxy without the separator layer still stays broader `family_general` at `54%` fit, but it is now re-ranked through `tuas_r9b`, `tuas_r7b`, `tuas_r7a` with `Ln,w 48.5` / `Rw 67.3`
+      - the old proxy without the separator layer still stays broader `family_general` at `54%` fit, but it is now re-ranked through `tuas_r9b`, `tuas_r7b`, `tuas_r7a` with `Ln,w 48.3`, `Ln,w+CI 49.2`, and `Rw 67.3`
       - the true finishless sibling `R8b` now lands exactly at `Ln,w 50` / `Rw 72`
-      - the true wet-top sibling `R9b` now also lands exactly at `Ln,w 46` / `Rw 68`
-      - the true no-fill sibling `R2c` now also lands exactly at `Ln,w 60` / `Rw 54`
-  - active slice: `tuas_c7_wet_geotextile_clt_surface_design_v1`
+      - the true wet-top sibling `R9b` now also lands exactly at `Ln,w 45` / `Rw 68`
+      - the true no-fill sibling `R2c` now also lands exactly at `Ln,w 70` / `Rw 54`
+  - latest closed slice: `tuas_clt_remaining_combined_source_schedule_research_v1`
+  - current status: `closed`
+  - the current implementation-backed result is now explicit:
+    - the TUAS drawing corpus now freezes the remaining combined CLT visible schedules directly:
+      - `C2c` on page `25/40`
+      - `C3c` on page `26/40`
+      - `C4c` on page `27/40`
+      - `C5c` on page `28/40`
+      - `C7c` on page `29/40`
+      - `C11c` on page `30/40`
+    - `C2c` is now landed as a true exact row:
+      - exact row `tuas_c2c_clt260_measured_2026`
+      - lab posture: `Ln,w 35`, `Ln,w+CI 39`, `Ln,w+CI,50-2500 44`, `Rw 70`
+      - field posture: `L'n,w 37`, `L'nT,w 35`, `L'nT,50 44`
+    - the remaining combined backlog is now split more honestly:
+      - `C7c` is now landed exactly as `tuas_c7c_clt260_measured_2026`
+        - lab: `Ln,w 30`, `Ln,w+CI 35`, `Ln,w+CI,50-2500 44`, `Rw 75`
+        - field: `L'n,w 32`, `L'nT,w 30`, `L'nT,50 44`
+      - `C5c` remains a predictor-backed combined corridor, not a direct source-schedule exact row; the source-truth predictor lane is now `Ln,w 38`, `Ln,w+CI 42`, `Ln,w+CI,50-2500 44`, `Rw 75`
+      - `C3c` is now landed exactly as `tuas_c3c_clt260_measured_2026`
+        - lab: `Ln,w 27`, `Ln,w+CI 29`, `Ln,w+CI,50-2500 43`, `Rw 73`
+        - field: `L'n,w 29`, `L'nT,w 27`, `L'nT,50 43`
+        - source correction: page `26/40` is `13 mm gypsum board + 2 x 15 mm gypsum board`, not a `13 mm` glass-wool upper-fill layer
+      - `C4c` is now landed exactly as `tuas_c4c_clt260_measured_2026`
+        - lab: `Ln,w 24`, `Ln,w+CI 26`, `Ln,w+CI,50-2500 40`, `Rw 74`
+        - field: `L'n,w 26`, `L'nT,w 24`, `L'nT,50 40`
+      - `C11c` remains source-backed but intentionally screening-only pending a wet-stack anomaly audit
+      - the old `C11c` shorthand proxy is now known to be source-inaccurate and should not be treated as the real visible schedule
+    - the latest slice exposed and re-closed the next combined CLT drift before it could become silent widening:
+      - combined CLT visible stacks with lower treatment plus multi-entry `floating_screed` were being packed into shorthand inference/predictor routes
+      - `impact-predictor-input.ts` now keeps those stacks fail-closed for both `maybeInferFloorRoleLayerStack` and `maybeBuildImpactPredictorInputFromLayerStack`
+      - `floor-system-estimate.ts` keeps the adjacent combined CLT family-estimate lane fail-closed on the same surface
+    - the current fail-closed truth is therefore explicit:
+      - under-described direct-fixed CLT upper-plus-lower stacks now stay screening-only even after `C4c` creates a profile-aligned combined exact row
+      - source-backed `C11c` still stays screening-only with impact outputs unsupported
+  - latest closed slice: `tuas_remaining_combined_clt_exact_import_decision_matrix_v1`
+  - latest closed follow-up slice: `tuas_c4c_combined_heavy_dry_exact_candidate_v1`
+  - selected next slice: `tuas_c11c_wet_stack_anomaly_audit_v1`
   - current status: `selected`
   - the current implementation-backed reason is now explicit:
-    - the hybrid lower-treatment open-box branch is now fully closed through `R2c`
-    - the next honest source-backed gap is the wet geotextile CLT sibling `C7`
-    - `C7` now reuses an already defended visible material surface:
-      - `35 mm` EPS upper fill
-      - `1 mm` geotextile + `40 mm` screed floating-screed schedule
-      - `3 mm` EPS underlay + `8 mm` laminate
-    - current implementation still keeps that stack off the exact lane, so the next job is a narrow exact-row landing rather than another support-surface invention
-    - combined `c`-family CLT debt stays later
-5. After the now-closed TUAS hybrid lower-treatment decision, continue floor growth in this order:
-   - TUAS `C7` wet geotextile CLT follow-on
-   - combined `c`-family CLT backlog only after the current `C7` slice is frozen
-   - raw widening only after those corridor and boundary packs are green
+    - `C7c`, `C3c`, and `C4c` are no longer open gaps; they are exact anchors
+    - the remaining honest work is deciding whether `C11c` should ever be imported after its wet-stack anomaly is explained
+    - that decision depends on source/anomaly analysis and route discipline, not on missing drawings
+5. After the now-closed TUAS hybrid lower-treatment, `C7`, post-`C7` boundary, `C5c` visible combined, remaining-backlog boundary, and source-schedule-research decisions, continue floor growth in this order:
+   - keep the landed `C3c`, `C4c`, and `C7c` exact corridors plus the combined-CLT inference/predictor fail-closed guard frozen
+   - run the `C11c` wet-stack anomaly audit before any import decision
+   - keep `C11c` screening-only until that audit justifies a different posture
+   - only land the next row if it stays a pure exact corridor and does not weaken the new combined-CLT guards
+   - raw widening only after those combined corridor packs are green
 6. Expand broader mixed/history grids only when a targeted slice exposes a real route-history blind spot or makes a new corridor representative:
    - keep the compact representative seeded-family roundtrip matrix green across:
      - heavy-concrete and open-web-bound seeded detours
@@ -872,10 +959,8 @@ The torture pass should include:
 
 The next widening audit should answer:
 
-- can `C7` land as a narrow exact wet-top CLT row on the already defended geotextile/screed visible surface?
-- can the next slice keep `C2c/C3c/C4c/C7c/C11c` screening-only while `C7` is explored?
-- does the current `C7` proxy stay explicitly non-exact until the exact row is landed?
-- do under-described combined direct-fixed CLT stacks stay fail-closed while the remaining combined `c` backlog is still deferred?
+- after the now-landed `C3c`, `C4c`, and `C7c`, does `C11c` deserve its own separate wet combined exact corridor after a source-anomaly audit, or should it remain deferred while dry combined work stays frozen?
+- once the remaining combined CLT rows are re-ranked with the new source truth, is raw widening actually the next best use of effort?
 
 ## Canonical Documents
 

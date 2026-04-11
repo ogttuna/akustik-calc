@@ -114,15 +114,15 @@ const CASES: readonly GapLedgerCase[] = [
       basis: "open_measured_floor_system_exact_match",
       boundId: null,
       exactId: "tuas_r6a_open_box_timber_measured_2026",
-      supported: ["Rw", "Ln,w"],
-      unsupported: ["Ln,w+CI"]
+      supported: ["Rw", "Ln,w", "Ln,w+CI"],
+      unsupported: []
     },
     expectedField: {
       basis: "mixed_exact_plus_estimated_standardized_field_volume_normalization",
       boundId: null,
       exactId: "tuas_r6a_open_box_timber_measured_2026",
-      supported: ["Ln,w", "L'n,w", "L'nT,w"],
-      unsupported: ["L'nT,50"]
+      supported: ["Ln,w", "L'n,w", "L'nT,w", "L'nT,50"],
+      unsupported: []
     }
   },
   {
@@ -392,6 +392,31 @@ const CASES: readonly GapLedgerCase[] = [
       basis: "mixed_exact_plus_estimated_standardized_field_volume_normalization",
       boundId: null,
       exactId: "tuas_c5_clt260_measured_2026",
+      supported: ["Ln,w", "L'n,w", "L'nT,w", "L'nT,50"],
+      unsupported: []
+    }
+  },
+  {
+    id: "clt-c7-wet-geotextile-exact",
+    layers: [
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "floating_screed", materialId: "geotextile", thicknessMm: 1 },
+      { floorRole: "floating_screed", materialId: "screed", thicknessMm: 40 },
+      { floorRole: "upper_fill", materialId: "eps_floor_insulation_board", thicknessMm: 35 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 260 }
+    ],
+    expectedLab: {
+      basis: "open_measured_floor_system_exact_match",
+      boundId: null,
+      exactId: "tuas_c7_clt260_measured_2026",
+      supported: ["Rw", "Ln,w", "Ln,w+CI"],
+      unsupported: []
+    },
+    expectedField: {
+      basis: "mixed_exact_plus_estimated_standardized_field_volume_normalization",
+      boundId: null,
+      exactId: "tuas_c7_clt260_measured_2026",
       supported: ["Ln,w", "L'n,w", "L'nT,w", "L'nT,50"],
       unsupported: []
     }

@@ -20,6 +20,18 @@ Important scope note:
 - wall-side dynamic behavior still stays mostly under benchmark and stability guardrails
 - if wall-family widening becomes active work, add a separate wall ledger instead of overloading this one
 
+## Latest Source-Truth Rebaseline
+
+- latest closed slice: `tuas_floor_source_truth_rebaseline_v1`
+- source checked: `TUAS2023FloorSoundInsulationDataR1.xlsx`, sheet `SoundInsulation`
+- implementation correction:
+  - imported TUAS floor rows now match spreadsheet rows `34` (`Ln,w`), `35` (`Ln,w+CI`), `36` (`Ln,w+CI,50-2500`), `41` (`Rw`), and `42` (`Rw+C`)
+  - TUAS-backed published predictor lanes for CLT bare interpolation, open-box basic/dry archetypes, `X5`, and `C5c` were rebaselined to the same truth
+  - `packages/engine/src/tuas-candidate-backlog-contract.test.ts` now guards the imported TUAS single-number truth directly against the spreadsheet fixture values
+- remaining source-label gap:
+  - spreadsheet row `42` is `Rw+C`
+  - the current domain still stores that companion in the `RwCtr`/`rw_plus_ctr` slot, so the numbers are corrected but the label/semantic migration remains open
+
 ## Current Audited Posture
 
 ### Bare CLT Slab
@@ -486,7 +498,7 @@ This section is implementation-backed from the current local catalog import, not
 - post-corridor numeric screening from `TUAS2023FloorSoundInsulationDataR1.xlsx`:
   - geometry-cleared and now imported:
     - `R2b`
-      - `Ln,w 55`, `Rw 62`
+      - `Ln,w 46`, `Rw 62`
       - drawing result:
         - `TUAS2023FloorConstructionDrawingsR1.pdf` shows the same visible-layer shorthand already used by the imported `b` corridor:
           - 8 mm laminate
@@ -499,11 +511,11 @@ This section is implementation-backed from the current local catalog import, not
         - the generic `resilient_stud_ceiling` surface now lands on the `b` corridor rather than aliasing family `a`
   - branch-audit resolved and now imported:
     - `R6b`
-      - `Ln,w 44`, `Rw 71`
+      - `Ln,w 47`, `Rw 71`
       - spreadsheet companions:
         - `Ln,w+CI 44`
-        - `Ln,w+CI,50-2500 47`
-        - `Rw+Ctr 65.67605110604265`
+        - `Ln,w+CI,50-2500 48`
+        - `Rw+C 69.5361374042257`
       - drawing result:
         - `TUAS2023FloorConstructionDrawingsR1.pdf` page `10/40` keeps the same `b`-family top package as `R2b`
         - the lower branch is explicitly stronger:
@@ -517,7 +529,7 @@ This section is implementation-backed from the current local catalog import, not
         - the broader published-family archetype lane remains unchanged and still stays anchored to `R2b` / `R5b`
   - branch-surface resolved and now imported:
     - `R7a`
-      - `Ln,w 60`, `Rw 60`
+      - `Ln,w 63`, `Rw 60`
       - drawing result:
         - `TUAS2023FloorConstructionDrawingsR1.pdf` page `5/40` shows a materially heavier top package:
           - 50 mm EPS
@@ -532,7 +544,7 @@ This section is implementation-backed from the current local catalog import, not
         - the open-box published-family selector now guards against non-dry upper packages collapsing onto the `R2b` basic archetype
   - support-surface resolved and now imported:
     - `R6a`
-      - `Ln,w 64`, `Rw 56`
+      - `Ln,w 60`, `Rw 56`
       - drawing result:
         - `TUAS2023FloorConstructionDrawingsR1.pdf` page `4/40`
         - same lower `family_a` morphology as the imported `a` corridor, but the lower board schedule is mixed (`2 x 13 mm` plus `4 x 15 mm`)
@@ -543,11 +555,11 @@ This section is implementation-backed from the current local catalog import, not
         - lab support remains `Rw` plus `Ln,w`, while `Ln,w+CI` stays unsupported
         - field continuation remains `Ln,w`, `L'n,w`, and `L'nT,w`, while `L'nT,50` stays unsupported
     - `R10a`
-      - `Ln,w 63`, `Rw 56`
+      - `Ln,w 55`, `Rw 56`
       - spreadsheet companions:
-        - `Ln,w+CI 64`
-        - `Ln,w+CI,50-2500 66`
-        - `Rw+Ctr 44.903379895449063`
+        - `Ln,w+CI 55`
+        - `Ln,w+CI,50-2500 56`
+        - `Rw+C 50.89680103538985`
       - drawing result:
         - `TUAS2023FloorConstructionDrawingsR1.pdf` page `6/40`
         - same lower `family_a` morphology as the imported corridor
@@ -572,13 +584,13 @@ This section is implementation-backed from the current local catalog import, not
     - `R8b` (`Ln,w 50`, `Rw 72`)
       - `TUAS2023FloorConstructionDrawingsR1.pdf` page `12/40`
       - landed as exact row `tuas_r8b_open_box_timber_measured_2026`
-    - `R9b` (`Ln,w 46`, `Rw 68`)
+    - `R9b` (`Ln,w 45`, `Rw 68`)
       - `TUAS2023FloorConstructionDrawingsR1.pdf` page `13/40`
       - landed as exact row `tuas_r9b_open_box_timber_measured_2026`
       - source correction is now frozen:
         - `R9b` carries `40 mm` screed + `3 mm` EPS underlay + `8 mm` laminate
         - no extra upper `plastic-layer` or `geotextile` item is present on that top package
-    - `R2c` (`Ln,w 60`, `Rw 54`)
+    - `R2c` (`Ln,w 70`, `Rw 54`)
       - `TUAS2023FloorConstructionDrawingsR1.pdf` page `15/40`
       - landed as exact row `tuas_r2c_open_box_timber_measured_2026`
       - the no-fill variant closed without reopening a generic `__none` topology widening lane
@@ -616,17 +628,17 @@ This section is implementation-backed from the current local catalog import, not
       - `tuas_c5_heavy_dry_top_clt_surface_design_v1`
     - reason:
       - `X3` reused the landed `R10a` staged upper-package material/thickness schedule without introducing a new lower-treatment surface
-      - exact row `tuas_x3_clt140_measured_2026` is now landed with lab `Ln,w 61`, `Ln,w+CI 63`, `Ln,w+CI,50-2500 64`, `Rw 49`
-      - field continuation is now `L'n,w 63`, `L'nT,w 61`, `L'nT,50 64`
-      - exact row `tuas_c3_clt260_measured_2026` is now landed with lab `Ln,w 55`, `Ln,w+CI 58`, `Ln,w+CI,50-2500 59`, `Rw 54`
-      - field continuation is now `L'n,w 57`, `L'nT,w 55`, `L'nT,50 59`
-      - exact row `tuas_x4_clt140_measured_2026` is now landed with lab `Ln,w 52`, `Ln,w+CI 52`, `Ln,w+CI,50-2500 60`, `Rw 55`
+      - exact row `tuas_x3_clt140_measured_2026` is now landed with lab `Ln,w 52`, `Ln,w+CI 52`, `Ln,w+CI,50-2500 60`, `Rw 49`
       - field continuation is now `L'n,w 54`, `L'nT,w 52`, `L'nT,50 60`
-      - exact row `tuas_c4_clt260_measured_2026` is now landed with lab `Ln,w 47`, `Ln,w+CI 49`, `Ln,w+CI,50-2500 53`, `Rw 61`
+      - exact row `tuas_c3_clt260_measured_2026` is now landed with lab `Ln,w 47`, `Ln,w+CI 49`, `Ln,w+CI,50-2500 53`, `Rw 54`
       - field continuation is now `L'n,w 49`, `L'nT,w 47`, `L'nT,50 53`
-      - exact row `tuas_c5_clt260_measured_2026` is now landed with lab `Ln,w 45`, `Ln,w+CI 46`, `Ln,w+CI,50-2500 51`, `Rw 61`
+      - exact row `tuas_x4_clt140_measured_2026` is now landed with lab `Ln,w 50`, `Ln,w+CI 51`, `Ln,w+CI,50-2500 58`, `Rw 55`
+      - field continuation is now `L'n,w 52`, `L'nT,w 50`, `L'nT,50 58`
+      - exact row `tuas_c4_clt260_measured_2026` is now landed with lab `Ln,w 45`, `Ln,w+CI 46`, `Ln,w+CI,50-2500 51`, `Rw 61`
       - field continuation is now `L'n,w 47`, `L'nT,w 45`, `L'nT,50 51`
-      - adjacent bare-CLT visible fallback now also admits `tuas_x4` as a third exact sibling and is frozen at `Ln,w 66.9` / `Rw 40.6`
+      - exact row `tuas_c5_clt260_measured_2026` is now landed with lab `Ln,w 60`, `Ln,w+CI 62`, `Ln,w+CI,50-2500 63`, `Rw 61`
+      - field continuation is now `L'n,w 62`, `L'nT,w 60`, `L'nT,50 63`
+      - adjacent bare-CLT visible fallback now also admits `tuas_x4` as a third exact sibling and is frozen at `Ln,w 57.7` / `Rw 40.6`
       - over-abstracted `X4`, `C4`, and `C5` shorthand still stay off the exact lane at `family_general` `94%` fit against `tuas_x5`
       - packed `60 mm` gypsum shorthand still stays exact on `tuas_c5_clt260_measured_2026`
       - the `C5` close-out also caught and re-closed a route leak:
@@ -635,23 +647,51 @@ This section is implementation-backed from the current local catalog import, not
         - the hybrid decision is now implemented and closed:
         - exact row `tuas_r7b_open_box_timber_measured_2026` is landed with lab `Ln,w 47`, `Ln,w+CI 47`, `Ln,w+CI,50-2500 48`, `Rw 72`
         - field continuation is now `L'n,w 49`, `L'nT,w 46.6`, `L'nT,50 47.6`
-        - the old separator-free proxy still stays broader `family_general` at `54%` fit, but it is now re-ranked to `tuas_r9b`, `tuas_r7b`, `tuas_r7a` with `Ln,w 48.5` / `Rw 67.3`
+        - the old separator-free proxy still stays broader `family_general` at `54%` fit, but it is now re-ranked to `tuas_r9b`, `tuas_r7b`, `tuas_r7a` with `Ln,w 48.3`, `Ln,w+CI 49.2`, and `Rw 67.3`
         - exact row `tuas_r8b_open_box_timber_measured_2026` is now landed with lab `Ln,w 50`, `Ln,w+CI 49`, `Ln,w+CI,50-2500 50`, `Rw 72`
         - field continuation is now `L'n,w 52`, `L'nT,w 49.6`, `L'nT,50 49.6`
-        - exact row `tuas_r9b_open_box_timber_measured_2026` is now also landed with lab `Ln,w 46`, `Ln,w+CI 46`, `Ln,w+CI,50-2500 48`, `Rw 68`
-        - field continuation is now `L'n,w 48`, `L'nT,w 45.6`, `L'nT,50 47.6`
+        - exact row `tuas_r9b_open_box_timber_measured_2026` is now also landed with lab `Ln,w 45`, `Ln,w+CI 46`, `Ln,w+CI,50-2500 48`, `Rw 68`
+        - field continuation is now `L'n,w 47`, `L'nT,w 44.6`, `L'nT,50 47.6`
         - TUAS drawing page `13/40` is now frozen as the source correction:
           - `R9b` carries `40 mm screed + 3 mm EPS underlay + 8 mm laminate`
           - no extra upper `plastic-layer` or `geotextile` item is present on that top package
-        - exact row `tuas_r2c_open_box_timber_measured_2026` is now also landed with lab `Ln,w 60`, `Ln,w+CI 60`, `Ln,w+CI,50-2500 60`, `Rw 54`
-        - field continuation is now `L'n,w 62`, `L'nT,w 59.6`, `L'nT,50 59.6`
+        - exact row `tuas_r2c_open_box_timber_measured_2026` is now also landed with lab `Ln,w 70`, `Ln,w+CI 70`, `Ln,w+CI,50-2500 70`, `Rw 54`
+        - field continuation is now `L'n,w 72`, `L'nT,w 69.6`, `L'nT,50 69.6`
         - the no-fill hybrid lower-treatment branch is therefore closed without reopening a generic `__none` topology lane
-      - selected next slice: `tuas_c7_wet_geotextile_clt_surface_design_v1`
-      - `C7` no longer needs a new geotextile-capable visible material surface:
-        - TUAS drawing page `24/40` freezes `260 mm` CLT + `35 mm` EPS + `1 mm` geotextile + `40 mm` screed + `3 mm` EPS underlay + `8 mm` laminate
-        - current implementation still parks that stack at `family_general` `54%` fit with candidate set `tuas_c4`, `tuas_c2`, `tuas_x4` and frozen estimate `Ln,w 59` / `Rw 48.3` versus source `Ln,w 60` / `Rw 57`
-      - `C2c`, `C3c`, `C4c`, `C7c`, and `C11c` remain later combined CLT backlog because their current raw visible routes are still screening-only / impact-unsupported
-      - `C7c` also still remains later because the combined lower-ceiling interaction lane is absent
+      - latest closed slice: `tuas_clt_remaining_combined_source_schedule_research_v1`
+      - current closed-truth after the source-schedule research pass:
+        - TUAS drawing pages `25/40` through `30/40` now freeze the real visible schedules for `C2c/C3c/C4c/C5c/C7c/C11c`
+        - exact row `tuas_c2c_clt260_measured_2026` is now landed with lab `Ln,w 35`, `Ln,w+CI 39`, `Ln,w+CI,50-2500 44`, `Rw 70`
+        - exact row `tuas_c7_clt260_measured_2026` still stays narrow under engine split/noise parity and route-side contiguous split invariance
+        - visible `C5c` stacks stay on the predictor-backed combined lane with `Ln,w 38`, `Ln,w+CI 42`, `Ln,w+CI,50-2500 44`, and `Rw 75`
+        - `C5c` remains a defended visible-layer combined corridor, but still not a direct source-schedule exact row
+        - source-backed `C3c`, `C4c`, `C11c`, and `C7c` were all drawing-backed at that point, but only `C7c` was the narrowest next import candidate
+        - the Dataholz dry combined predictor lineage and CLT `lower_only` guard were both re-closed after `C2c` landed
+      - latest closed slice: `tuas_c7c_combined_wet_clt_surface_design_v1`
+        - exact row `tuas_c7c_clt260_measured_2026` is now landed with lab `Ln,w 30`, `Ln,w+CI 35`, `Ln,w+CI,50-2500 44`, `Rw 75`
+        - field continuation is now `L'n,w 32`, `L'nT,w 30`, `L'nT,50 44`
+        - `C3c/C4c/C11c` remain screening-only after `C7c` lands
+        - the root cause is now explicit:
+          - combined CLT visible stacks with lower treatment plus multi-entry `floating_screed` no longer auto-normalize into inferred or predictor-derived shorthand lanes
+          - `C3c/C4c` therefore stay fail-closed and now warn toward `C7c` as the closest same-family candidate
+      - latest closed slice: `tuas_remaining_combined_clt_exact_import_decision_matrix_v1`
+        - exact row `tuas_c3c_clt260_measured_2026` is now landed with lab `Ln,w 27`, `Ln,w+CI 29`, `Ln,w+CI,50-2500 43`, `Rw 73`
+        - field continuation is now `L'n,w 29`, `L'nT,w 27`, `L'nT,50 43`
+        - source correction: TUAS drawing page `26/40` shows `13 mm gypsum board + 2 x 15 mm gypsum board`, not the stale `13 mm glass wool` upper-fill proxy
+        - exact split parity now accepts only merge-safe contiguous same-role/same-material packed thickness equivalents, so mixed-material schedules still need explicit exact rows
+      - latest closed slice: `tuas_c4c_combined_heavy_dry_exact_candidate_v1`
+        - exact row `tuas_c4c_clt260_measured_2026` is now landed with lab `Ln,w 24`, `Ln,w+CI 26`, `Ln,w+CI,50-2500 40`, `Rw 74`
+        - field continuation is now `L'n,w 26`, `L'nT,w 24`, `L'nT,50 40`
+        - route-control result: under-described combined CLT lower board/fill stacks without explicit `ceiling_cavity` remain fail-closed even though profile-aligned `C4c` now exists
+      - selected next slice: `tuas_c11c_wet_stack_anomaly_audit_v1`
+        - reason: `C11c` is the only remaining source-backed combined CLT backlog row, and its wet stack has a weak `Ln,w 59` tuple that needs anomaly review before any import
+      - `C11c` remains later combined CLT backlog because its exact-import semantics are still deferred even though its visible schedule is now known
+      - the repo-local TUAS measured reference fixture now exposes:
+        - exact `C2c`
+        - exact `C3c`
+        - exact `C4c`
+        - exact `C7c`
+        - predictor-backed imported `C5c`
 - current contract anchors:
   - `packages/engine/src/floor-source-corpus-contract.test.ts`
   - `packages/engine/src/tuas-candidate-backlog-contract.test.ts`

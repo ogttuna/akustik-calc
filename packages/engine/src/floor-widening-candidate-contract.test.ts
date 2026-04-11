@@ -44,7 +44,7 @@ const CASES: readonly WideningCandidateCase[] = [
       basis: "predictor_floor_system_family_archetype_estimate",
       candidateIds: ["tuas_r2b_open_box_timber_measured_2026"],
       kind: "family_archetype",
-      lnW: 55,
+      lnW: 46,
       rw: 62
     }
   },
@@ -84,7 +84,7 @@ const CASES: readonly WideningCandidateCase[] = [
       basis: "predictor_floor_system_family_archetype_estimate",
       candidateIds: ["tuas_r5b_open_box_timber_measured_2026"],
       kind: "family_archetype",
-      lnW: 39,
+      lnW: 44,
       rw: 75
     }
   },
@@ -169,7 +169,7 @@ const CASES: readonly WideningCandidateCase[] = [
         "tuas_c2_clt260_measured_2026"
       ],
       kind: "family_general",
-      lnW: 73,
+      lnW: 64,
       rw: 35
     }
   },
@@ -195,7 +195,7 @@ const CASES: readonly WideningCandidateCase[] = [
       basis: "predictor_mass_timber_clt_dry_interaction_estimate",
       candidateIds: ["tuas_x5_clt140_measured_2026"],
       kind: "family_general",
-      lnW: 50,
+      lnW: 65,
       rw: 55
     }
   },
@@ -207,9 +207,16 @@ const CASES: readonly WideningCandidateCase[] = [
       baseSlab: {
         thicknessMm: 260
       },
+      resilientLayer: {
+        thicknessMm: 3
+      },
       upperFill: {
         materialClass: "generic_fill",
         thicknessMm: 50
+      },
+      floatingScreed: {
+        materialClass: "dry_floating_gypsum_fiberboard",
+        thicknessMm: 60
       },
       floorCovering: {
         mode: "material_layer",
@@ -227,7 +234,7 @@ const CASES: readonly WideningCandidateCase[] = [
       basis: "predictor_mass_timber_clt_dry_interaction_estimate",
       candidateIds: ["tuas_c5c_clt260_measured_2026"],
       kind: "family_general",
-      lnW: 24.5,
+      lnW: 38,
       rw: 75
     }
   },
@@ -402,5 +409,32 @@ describe("floor widening candidate contract", () => {
     }
 
     expect(failures).toEqual([]);
+  });
+
+  it("keeps under-described CLT dry combined shorthand off the TUAS C5c published lane", () => {
+    const result = derivePredictorPublishedFamilyEstimate({
+      structuralSupportType: "mass_timber_clt",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        thicknessMm: 260
+      },
+      upperFill: {
+        materialClass: "generic_fill",
+        thicknessMm: 50
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "laminate_flooring",
+        thicknessMm: 8
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_rigid_hanger",
+        cavityFillThicknessMm: 100,
+        boardLayerCount: 2,
+        boardThicknessMm: 13
+      }
+    });
+
+    expect(result).toBeNull();
   });
 });

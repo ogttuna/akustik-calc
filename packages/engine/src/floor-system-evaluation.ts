@@ -108,7 +108,7 @@ function hasMergeSafePackedRoleEquivalent(
     requireMaterialMatch?: boolean;
   } = {}
 ): boolean {
-  if (!(criteria.layerCount && typeof criteria.thicknessMm === "number") || layers.length === 0) {
+  if (typeof criteria.thicknessMm !== "number" || layers.length === 0) {
     return false;
   }
 
@@ -122,9 +122,36 @@ function hasMergeSafePackedRoleEquivalent(
   }
 
   const totalThicknessMm = layers.reduce((sum, layer) => sum + layer.thicknessMm, 0);
-  const expectedPackedThicknessMm = criteria.layerCount * criteria.thicknessMm;
+  const expectedPackedThicknessMm = (criteria.layerCount ?? 1) * criteria.thicknessMm;
 
   return thicknessMatches(totalThicknessMm, expectedPackedThicknessMm);
+}
+
+function hasMergeSafePackedThicknessScheduleEquivalent(
+  layers: readonly ResolvedLayer[],
+  criteria: FloorSystemRoleCriteria
+): boolean {
+  if (!criteria.thicknessScheduleMm || layers.length === 0) {
+    return false;
+  }
+
+  const firstMaterialId = layers[0]?.material.id;
+  if (!firstMaterialId || !layers.every((layer) => layer.material.id === firstMaterialId)) {
+    return false;
+  }
+
+  if (criteria.materialScheduleIds) {
+    if (!criteria.materialScheduleIds.every((materialId) => materialId === firstMaterialId)) {
+      return false;
+    }
+  } else if (criteria.materialIds && !criteria.materialIds.includes(firstMaterialId)) {
+    return false;
+  }
+
+  const actualTotalThicknessMm = layers.reduce((sum, layer) => sum + layer.thicknessMm, 0);
+  const expectedTotalThicknessMm = criteria.thicknessScheduleMm.reduce((sum, thicknessMm) => sum + thicknessMm, 0);
+
+  return thicknessMatches(actualTotalThicknessMm, expectedTotalThicknessMm);
 }
 
 function scoreRoleCriteria(criteria: FloorSystemRoleCriteria): number {
@@ -176,19 +203,21 @@ function evaluateRoleCriteria(
   const packedScheduleEquivalent = hasMergeSafePackedRoleEquivalent(layers, criteria, {
     requireMaterialMatch: false
   });
+  const packedThicknessScheduleEquivalent = hasMergeSafePackedThicknessScheduleEquivalent(layers, criteria);
   const actualThicknessScheduleMm = layers.map((layer) => layer.thicknessMm);
   const thicknessScheduleEquivalent =
-    criteria.thicknessScheduleMm &&
+    packedThicknessScheduleEquivalent ||
+    (criteria.thicknessScheduleMm &&
     actualThicknessScheduleMm.every((thicknessMm) => typeof thicknessMm === "number" && thicknessMm > 0)
       ? matchesPackedThicknessSchedule(actualThicknessScheduleMm as number[], criteria.thicknessScheduleMm)
-      : false;
+      : false);
   const materialScheduleEquivalent = criteria.materialScheduleIds
-    ? matchesRoleMaterialSchedule(layers, criteria.materialScheduleIds)
+    ? packedThicknessScheduleEquivalent || matchesRoleMaterialSchedule(layers, criteria.materialScheduleIds)
     : false;
   let matchedSignals = 0;
 
   if (criteria.layerCount) {
-    if (layers.length === criteria.layerCount || packedScheduleEquivalent) {
+    if (layers.length === criteria.layerCount || packedScheduleEquivalent || packedThicknessScheduleEquivalent) {
       matchedSignals += 1;
     } else {
       missingSignals.push(`Set ${roleLabel} layers to ${criteria.layerCount}.`);

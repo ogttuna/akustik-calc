@@ -37,6 +37,76 @@ const UBIQ_STEEL_300_EXACT_ROWS: readonly Omit<LayerDraft, "id">[] = [
   { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: "300" }
 ];
 
+const CLT_C7_WET_GEOTEXTILE_EXACT_ROWS: readonly Omit<LayerDraft, "id">[] = [
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: "8" },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: "3" },
+  { floorRole: "floating_screed", materialId: "geotextile", thicknessMm: "1" },
+  { floorRole: "floating_screed", materialId: "screed", thicknessMm: "40" },
+  { floorRole: "upper_fill", materialId: "eps_floor_insulation_board", thicknessMm: "35" },
+  { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: "260" }
+];
+
+const CLT_C5C_VISIBLE_COMBINED_ROWS: readonly Omit<LayerDraft, "id">[] = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: "100" },
+  { floorRole: "ceiling_cavity", materialId: "acoustic_hanger_ceiling", thicknessMm: "70" },
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: "8" },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: "3" },
+  { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: "50" },
+  { floorRole: "floating_screed", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: "60" },
+  { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: "260" }
+];
+
+const CLT_C2C_COMBINED_EXACT_ROWS: readonly Omit<LayerDraft, "id">[] = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: "100" },
+  { floorRole: "ceiling_cavity", materialId: "acoustic_hanger_ceiling", thicknessMm: "70" },
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: "8" },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: "3" },
+  { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: "260" }
+];
+
+const CLT_C3C_COMBINED_EXACT_ROWS: readonly Omit<LayerDraft, "id">[] = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: "100" },
+  { floorRole: "ceiling_cavity", materialId: "acoustic_hanger_ceiling", thicknessMm: "70" },
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: "8" },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: "3" },
+  { floorRole: "floating_screed", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "floating_screed", materialId: "gypsum_board", thicknessMm: "15" },
+  { floorRole: "floating_screed", materialId: "gypsum_board", thicknessMm: "15" },
+  { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: "260" }
+];
+
+const CLT_C4C_COMBINED_EXACT_ROWS: readonly Omit<LayerDraft, "id">[] = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: "100" },
+  { floorRole: "ceiling_cavity", materialId: "acoustic_hanger_ceiling", thicknessMm: "70" },
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: "8" },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: "3" },
+  { floorRole: "upper_fill", materialId: "glasswool_board", thicknessMm: "50" },
+  { floorRole: "floating_screed", materialId: "gypsum_board", thicknessMm: "15" },
+  { floorRole: "floating_screed", materialId: "gypsum_board", thicknessMm: "15" },
+  { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: "260" }
+];
+
+const CLT_C7C_COMBINED_WET_EXACT_ROWS: readonly Omit<LayerDraft, "id">[] = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: "100" },
+  { floorRole: "ceiling_cavity", materialId: "acoustic_hanger_ceiling", thicknessMm: "70" },
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: "8" },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: "3" },
+  { floorRole: "floating_screed", materialId: "geotextile", thicknessMm: "1" },
+  { floorRole: "floating_screed", materialId: "screed", thicknessMm: "40" },
+  { floorRole: "upper_fill", materialId: "eps_floor_insulation_board", thicknessMm: "35" },
+  { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: "260" }
+];
+
 function evaluateFloorScenario(input: {
   id: string;
   impactFieldContext?: Parameters<typeof evaluateScenario>[0]["impactFieldContext"];
@@ -189,6 +259,130 @@ describe("guided floor stack invariance", () => {
       rows: UBIQ_STEEL_300_EXACT_ROWS,
       splitPairs: contiguousSplitPairs(19),
       targetOutputs: LAB_OUTPUTS
+    });
+  });
+
+  it("keeps the TUAS C7 wet geotextile exact row stable across every contiguous split of the 35 mm EPS board", () => {
+    assertStableAcrossContiguousSplits({
+      baselineId: "clt-c7-upper-fill",
+      rowIndex: 4,
+      rows: CLT_C7_WET_GEOTEXTILE_EXACT_ROWS,
+      splitPairs: contiguousSplitPairs(35),
+      targetOutputs: LAB_OUTPUTS
+    });
+  });
+
+  it("keeps the TUAS C7 wet geotextile field route stable across every contiguous split of the 40 mm screed", () => {
+    assertStableAcrossContiguousSplits({
+      baselineId: "clt-c7-field-screed",
+      impactFieldContext: {
+        fieldKDb: 2,
+        receivingRoomVolumeM3: 55
+      },
+      rowIndex: 3,
+      rows: CLT_C7_WET_GEOTEXTILE_EXACT_ROWS,
+      splitPairs: contiguousSplitPairs(40),
+      targetOutputs: FIELD_OUTPUTS
+    });
+  });
+
+  it("keeps the TUAS C7c combined wet exact row stable across every contiguous split of the 35 mm EPS board", () => {
+    assertStableAcrossContiguousSplits({
+      baselineId: "clt-c7c-upper-fill",
+      rowIndex: 8,
+      rows: CLT_C7C_COMBINED_WET_EXACT_ROWS,
+      splitPairs: contiguousSplitPairs(35),
+      targetOutputs: LAB_OUTPUTS
+    });
+  });
+
+  it("keeps the TUAS C7c combined wet field route stable across every contiguous split of one 13 mm ceiling board", () => {
+    assertStableAcrossContiguousSplits({
+      baselineId: "clt-c7c-field-ceiling-board",
+      impactFieldContext: {
+        fieldKDb: 2,
+        receivingRoomVolumeM3: 55
+      },
+      rowIndex: 0,
+      rows: CLT_C7C_COMBINED_WET_EXACT_ROWS,
+      splitPairs: contiguousSplitPairs(13),
+      targetOutputs: FIELD_OUTPUTS
+    });
+  });
+
+  it("keeps the visible TUAS C5c combined field route stable across every contiguous split of the 50 mm upper fill", () => {
+    assertStableAcrossContiguousSplits({
+      baselineId: "clt-c5c-field-upper-fill",
+      impactFieldContext: {
+        fieldKDb: 2,
+        receivingRoomVolumeM3: 50
+      },
+      rowIndex: 6,
+      rows: CLT_C5C_VISIBLE_COMBINED_ROWS,
+      splitPairs: contiguousSplitPairs(50),
+      targetOutputs: FIELD_OUTPUTS
+    });
+  });
+
+  it("keeps the TUAS C2c combined exact field route stable across every contiguous split of one 13 mm ceiling board", () => {
+    assertStableAcrossContiguousSplits({
+      baselineId: "clt-c2c-field-ceiling-board",
+      impactFieldContext: {
+        fieldKDb: 2,
+        receivingRoomVolumeM3: 50
+      },
+      rowIndex: 0,
+      rows: CLT_C2C_COMBINED_EXACT_ROWS,
+      splitPairs: contiguousSplitPairs(13),
+      targetOutputs: FIELD_OUTPUTS
+    });
+  });
+
+  it("keeps the TUAS C3c combined exact row stable across every contiguous split of the source-corrected 13 mm gypsum dry board", () => {
+    assertStableAcrossContiguousSplits({
+      baselineId: "clt-c3c-floating-gypsum-13",
+      rowIndex: 6,
+      rows: CLT_C3C_COMBINED_EXACT_ROWS,
+      splitPairs: contiguousSplitPairs(13),
+      targetOutputs: LAB_OUTPUTS
+    });
+  });
+
+  it("keeps the TUAS C3c combined exact field route stable across every contiguous split of one 13 mm ceiling board", () => {
+    assertStableAcrossContiguousSplits({
+      baselineId: "clt-c3c-field-ceiling-board",
+      impactFieldContext: {
+        fieldKDb: 2,
+        receivingRoomVolumeM3: 50
+      },
+      rowIndex: 0,
+      rows: CLT_C3C_COMBINED_EXACT_ROWS,
+      splitPairs: contiguousSplitPairs(13),
+      targetOutputs: FIELD_OUTPUTS
+    });
+  });
+
+  it("keeps the TUAS C4c combined exact row stable across every contiguous split of the 50 mm glass-wool upper fill", () => {
+    assertStableAcrossContiguousSplits({
+      baselineId: "clt-c4c-upper-fill-50",
+      rowIndex: 6,
+      rows: CLT_C4C_COMBINED_EXACT_ROWS,
+      splitPairs: contiguousSplitPairs(50),
+      targetOutputs: LAB_OUTPUTS
+    });
+  });
+
+  it("keeps the TUAS C4c combined exact field route stable across every contiguous split of one 15 mm gypsum dry board", () => {
+    assertStableAcrossContiguousSplits({
+      baselineId: "clt-c4c-field-floating-gypsum-15",
+      impactFieldContext: {
+        fieldKDb: 2,
+        receivingRoomVolumeM3: 50
+      },
+      rowIndex: 7,
+      rows: CLT_C4C_COMBINED_EXACT_ROWS,
+      splitPairs: contiguousSplitPairs(15),
+      targetOutputs: FIELD_OUTPUTS
     });
   });
 });

@@ -136,6 +136,44 @@ function getLayerProfile(layers: readonly ResolvedLayer[]): FloorProfile {
   return getProfile(hasUpper, hasLower, hasFloatingScreed);
 }
 
+function hasUpperPackageRole(layers: readonly ResolvedLayer[]): boolean {
+  return layers.some(
+    (layer) => layer.floorRole === "upper_fill" || layer.floorRole === "floating_screed"
+  );
+}
+
+function hasVisibleLowerTreatmentWithoutCavity(layers: readonly ResolvedLayer[]): boolean {
+  const hasLowerBoardOrFill = layers.some(
+    (layer) => layer.floorRole === "ceiling_board" || layer.floorRole === "ceiling_fill"
+  );
+  const hasCeilingCavity = layers.some((layer) => layer.floorRole === "ceiling_cavity");
+
+  return hasLowerBoardOrFill && !hasCeilingCavity;
+}
+
+function hasMultipleRoleLayers(
+  layers: readonly ResolvedLayer[],
+  role: FloorRole
+): boolean {
+  return layers.filter((layer) => layer.floorRole === role).length > 1;
+}
+
+function hasRuntimeGeneratedPredictorUpperPackage(
+  layers: readonly ResolvedLayer[]
+): boolean {
+  return layers.some(
+    (layer) =>
+      (layer.floorRole === "floating_screed" || layer.floorRole === "upper_fill") &&
+      layer.material.id.startsWith("predictor_")
+  );
+}
+
+function hasAmbiguousUpperRoleConflict(
+  conflicts: readonly SingleEntryRoleConflict[]
+): boolean {
+  return conflicts.some((conflict) => UPPER_ROLES.includes(conflict.role));
+}
+
 function collectAmbiguousSingleEntryRoleConflicts(
   layers: readonly ResolvedLayer[]
 ) {
@@ -204,6 +242,10 @@ function getSystemProfile(system: ExactFloorSystem): FloorProfile {
   const hasFloatingScreed = Boolean(system.match.floatingScreed);
 
   return getProfile(hasUpper, hasLower, hasFloatingScreed);
+}
+
+function hasSystemUpperPackage(system: ExactFloorSystem): boolean {
+  return Boolean(system.match.upperFill || system.match.floatingScreed);
 }
 
 function formatStructuralFamily(family: StructuralFamily): string {
@@ -534,6 +576,26 @@ function buildImpactEstimate(
   };
 }
 
+function restrictSourcesForSpecificImpactBasis(
+  basis: ImpactCalculation["basis"],
+  sources: readonly FloorSystemRecommendation[]
+): readonly FloorSystemRecommendation[] {
+  const sourceIdFilter =
+    basis === "predictor_mass_timber_clt_dataholz_dry_estimate"
+      ? (id: string) => id.startsWith("dataholz_")
+      : basis === "predictor_mass_timber_clt_bare_interpolation_estimate" ||
+          basis === "predictor_mass_timber_clt_dry_interaction_estimate"
+        ? (id: string) => id.startsWith("tuas_")
+        : null;
+
+  if (!sourceIdFilter) {
+    return sources;
+  }
+
+  const filtered = sources.filter((entry) => sourceIdFilter(entry.system.id));
+  return filtered.length > 0 ? filtered : sources;
+}
+
 export function deriveFloorSystemEstimate(
   layers: readonly ResolvedLayer[],
   recommendations: readonly FloorSystemRecommendation[]
@@ -614,11 +676,32 @@ export function deriveFloorSystemEstimate(
     getFamilyEstimatePool(structuralFamily, recommendations)
   );
   const profileAligned = familyPool.filter((entry) => compatibleProfiles(currentProfile, getSystemProfile(entry.system)));
-  const massTimberCombinedDirectFixedTierHold =
+  const massTimberLowerOnlyTierHold = structuralFamily === "mass_timber_clt" && currentProfile === "lower_only";
+  const massTimberCombinedProfileTierHold =
     structuralFamily === "mass_timber_clt" &&
     currentProfile === "combined" &&
-    getPredictorInputFromLayers()?.lowerTreatment?.type === "direct_fixed_ceiling" &&
     profileAligned.length === 0;
+  const massTimberCombinedVisibleUpperPackageTierHold =
+    structuralFamily === "mass_timber_clt" &&
+    currentProfile === "combined" &&
+    hasUpperPackageRole(layers) &&
+    !profileAligned.some((entry) => hasSystemUpperPackage(entry.system));
+  const massTimberCombinedAmbiguousUpperTierHold =
+    structuralFamily === "mass_timber_clt" &&
+    currentProfile === "combined" &&
+    hasAmbiguousUpperRoleConflict(ambiguousSingleEntryRoleConflicts);
+  const massTimberCombinedMultiEntryFloatingScreedTierHold =
+    structuralFamily === "mass_timber_clt" &&
+    currentProfile === "combined" &&
+    hasMultipleRoleLayers(layers, "floating_screed");
+  const massTimberCombinedRuntimeGeneratedUpperPackageTierHold =
+    structuralFamily === "mass_timber_clt" &&
+    currentProfile === "combined" &&
+    hasRuntimeGeneratedPredictorUpperPackage(layers);
+  const massTimberCombinedIncompleteLowerTreatmentTierHold =
+    structuralFamily === "mass_timber_clt" &&
+    currentProfile === "combined" &&
+    hasVisibleLowerTreatmentWithoutCavity(layers);
 
   if (structuralFamily === "lightweight_steel") {
     const fl28Estimate = deriveLightweightSteelFl28Estimate(layers, recommendations);
@@ -640,7 +723,15 @@ export function deriveFloorSystemEstimate(
     lightweightSteelLowerOnlyHelperTierHold ||
     compositeLowerOnlyHelperTierHold;
 
-  if (massTimberCombinedDirectFixedTierHold) {
+  if (
+    massTimberLowerOnlyTierHold ||
+    massTimberCombinedProfileTierHold ||
+    massTimberCombinedVisibleUpperPackageTierHold ||
+    massTimberCombinedAmbiguousUpperTierHold ||
+    massTimberCombinedMultiEntryFloatingScreedTierHold ||
+    massTimberCombinedRuntimeGeneratedUpperPackageTierHold ||
+    massTimberCombinedIncompleteLowerTreatmentTierHold
+  ) {
     return null;
   }
 
@@ -669,18 +760,32 @@ export function deriveFloorSystemEstimate(
     return null;
   }
 
+  const allowSpecificBasis = ambiguousSingleEntryRoleConflicts.length === 0;
+  const estimateBasisInfo = resolveSpecificFamilyEstimateBasis({
+    allowSpecificBasis,
+    currentProfile,
+    family: structuralFamily,
+    heavyConcreteCarrierEligible,
+    kind: activeKindAndSources.kind,
+    sources: activeKindAndSources.sources
+  });
+  const estimateSources = restrictSourcesForSpecificImpactBasis(
+    estimateBasisInfo.basis,
+    activeKindAndSources.sources
+  );
+
   const rawFitPercent = round1(
-    activeKindAndSources.sources.reduce((sum, entry) => sum + entry.fitPercent, 0) / activeKindAndSources.sources.length
+    estimateSources.reduce((sum, entry) => sum + entry.fitPercent, 0) / estimateSources.length
   );
   const fitPercent =
     ambiguousSingleEntryRoleConflicts.length > 0 || lowerOnlyFamilyGeneralTierHold
       ? round1(capFitPercentForEstimateTier(rawFitPercent, activeKindAndSources.kind))
       : rawFitPercent;
-  const airborneRw = weightedAverage(activeKindAndSources.sources, (entry) => entry.system.airborneRatings.Rw);
-  const companionSemantic = getStableCompanionSemantic(activeKindAndSources.sources);
+  const airborneRw = weightedAverage(estimateSources, (entry) => entry.system.airborneRatings.Rw);
+  const companionSemantic = getStableCompanionSemantic(estimateSources);
   const airborneCompanion =
     companionSemantic
-      ? weightedAverage(activeKindAndSources.sources, (entry) => entry.system.airborneRatings.RwCtr)
+      ? weightedAverage(estimateSources, (entry) => entry.system.airborneRatings.RwCtr)
       : undefined;
   if (typeof airborneRw !== "number") {
     return null;
@@ -693,8 +798,8 @@ export function deriveFloorSystemEstimate(
       RwCtrSemantic: companionSemantic
     },
     fitPercent,
-    impact: buildImpactEstimate(activeKindAndSources.kind, structuralFamily, currentProfile, activeKindAndSources.sources, {
-      allowSpecificBasis: ambiguousSingleEntryRoleConflicts.length === 0,
+    impact: buildImpactEstimate(activeKindAndSources.kind, structuralFamily, currentProfile, estimateSources, {
+      allowSpecificBasis,
       heavyConcreteCarrierEligible
     }),
     kind: activeKindAndSources.kind,
@@ -740,11 +845,11 @@ export function deriveFloorSystemEstimate(
         : companionSemantic === "rw_plus_ctr"
           ? ["Published airborne companion remains a direct Rw + Ctr family figure."]
           : ["Published family rows did not expose a stable companion airborne figure across the supporting sources."]),
-      ...activeKindAndSources.sources.flatMap((entry) =>
+      ...estimateSources.flatMap((entry) =>
         entry.missingSignals.slice(0, 2).map((signal) => `${entry.system.label}: ${signal}`)
       )
     ],
-    sourceSystems: activeKindAndSources.sources.map((entry) => entry.system),
+    sourceSystems: estimateSources.map((entry) => entry.system),
     structuralFamily: formatStructuralFamily(structuralFamily)
   };
 }

@@ -28,6 +28,11 @@ const TUAS_CLT_IDS = [
   "tuas_c3_clt260_measured_2026",
   "tuas_c4_clt260_measured_2026",
   "tuas_c5_clt260_measured_2026",
+  "tuas_c7_clt260_measured_2026",
+  "tuas_c7c_clt260_measured_2026",
+  "tuas_c2c_clt260_measured_2026",
+  "tuas_c3c_clt260_measured_2026",
+  "tuas_c4c_clt260_measured_2026",
   "tuas_c5c_clt260_measured_2026"
 ] as const;
 

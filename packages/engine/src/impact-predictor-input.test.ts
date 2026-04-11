@@ -182,6 +182,61 @@ describe("buildImpactPredictorInputFromLayerStack", () => {
     expect(input.lowerTreatment?.type).toBe("suspended_ceiling_elastic_hanger");
   });
 
+  it("treats visible TUAS C5c-style CLT dry packages with a suspended ceiling as combined systems", () => {
+    const input = buildImpactPredictorInputFromLayerStack([
+      { materialId: "gypsum_board", thicknessMm: 13, floorRole: "ceiling_board" },
+      { materialId: "gypsum_board", thicknessMm: 13, floorRole: "ceiling_board" },
+      { materialId: "rockwool", thicknessMm: 100, floorRole: "ceiling_fill" },
+      { materialId: "acoustic_hanger_ceiling", thicknessMm: 70, floorRole: "ceiling_cavity" },
+      { materialId: "laminate_flooring", thicknessMm: 8, floorRole: "floor_covering" },
+      { materialId: "eps_underlay", thicknessMm: 3, floorRole: "resilient_layer" },
+      { materialId: "generic_fill", thicknessMm: 50, floorRole: "upper_fill" },
+      { materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 60, floorRole: "floating_screed" },
+      { materialId: "clt_panel", thicknessMm: 260, floorRole: "base_structure" }
+    ]);
+
+    expect(input.structuralSupportType).toBe("mass_timber_clt");
+    expect(input.impactSystemType).toBe("combined_upper_lower_system");
+    expect(input.floatingScreed).toEqual({
+      densityKgM3: 900,
+      materialClass: "dry_floating_gypsum_fiberboard",
+      thicknessMm: 60
+    });
+    expect(input.lowerTreatment?.type).toBe("suspended_ceiling_rigid_hanger");
+    expect(input.lowerTreatment?.boardLayerCount).toBe(2);
+    expect(input.lowerTreatment?.boardThicknessMm).toBe(13);
+  });
+
+  it("can infer the TUAS C2c combined CLT exact id from an explicit rigid-hanger predictor input", () => {
+    const adaptation = adaptImpactPredictorInput({
+      structuralSupportType: "mass_timber_clt",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        thicknessMm: 260
+      },
+      resilientLayer: {
+        thicknessMm: 3,
+        dynamicStiffnessMNm3: 64
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "laminate_flooring",
+        thicknessMm: 8
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_rigid_hanger",
+        cavityDepthMm: 70,
+        cavityFillThicknessMm: 100,
+        boardLayerCount: 2,
+        boardMaterialClass: "generic_gypsum_board",
+        boardThicknessMm: 13
+      }
+    });
+
+    expect(adaptation.officialFloorSystemId).toBe("tuas_c2c_clt260_measured_2026");
+    expect(adaptation.sourceLayers).toEqual([]);
+  });
+
   it("recognizes custom concrete base materials as reinforced-concrete support", () => {
     const customConcrete: MaterialDefinition = {
       category: "mass",
@@ -1081,6 +1136,46 @@ describe("buildImpactPredictorInputFromLayerStack", () => {
         layers: [
           { materialId: "laminate_flooring", thicknessMm: 8 },
           { materialId: "timber_joist_floor", thicknessMm: 240 }
+        ]
+      }
+    ] as const;
+
+    for (const testCase of cases) {
+      expect(maybeInferFloorRoleLayerStack(testCase.layers), testCase.id).toBeNull();
+      expect(maybeBuildImpactPredictorInputFromLayerStack(testCase.layers), testCase.id).toBeNull();
+    }
+  });
+
+  it("keeps combined CLT visible stacks with multi-entry floating screed fail-closed for auto inference and predictor derivation", () => {
+    const cases = [
+      {
+        id: "staged combined CLT surface",
+        layers: [
+          { floorRole: "ceiling_board" as const, materialId: "gypsum_board", thicknessMm: 13 },
+          { floorRole: "ceiling_board" as const, materialId: "gypsum_board", thicknessMm: 13 },
+          { floorRole: "ceiling_fill" as const, materialId: "rockwool", thicknessMm: 100 },
+          { floorRole: "ceiling_cavity" as const, materialId: "acoustic_hanger_ceiling", thicknessMm: 70 },
+          { floorRole: "floor_covering" as const, materialId: "laminate_flooring", thicknessMm: 8 },
+          { floorRole: "resilient_layer" as const, materialId: "eps_underlay", thicknessMm: 3 },
+          { floorRole: "upper_fill" as const, materialId: "glasswool_board", thicknessMm: 13 },
+          { floorRole: "floating_screed" as const, materialId: "gypsum_board", thicknessMm: 15 },
+          { floorRole: "floating_screed" as const, materialId: "gypsum_board", thicknessMm: 15 },
+          { floorRole: "base_structure" as const, materialId: "clt_panel", thicknessMm: 260 }
+        ]
+      },
+      {
+        id: "heavy dry combined CLT surface",
+        layers: [
+          { floorRole: "ceiling_board" as const, materialId: "gypsum_board", thicknessMm: 13 },
+          { floorRole: "ceiling_board" as const, materialId: "gypsum_board", thicknessMm: 13 },
+          { floorRole: "ceiling_fill" as const, materialId: "rockwool", thicknessMm: 100 },
+          { floorRole: "ceiling_cavity" as const, materialId: "acoustic_hanger_ceiling", thicknessMm: 70 },
+          { floorRole: "floor_covering" as const, materialId: "laminate_flooring", thicknessMm: 8 },
+          { floorRole: "resilient_layer" as const, materialId: "eps_underlay", thicknessMm: 3 },
+          { floorRole: "upper_fill" as const, materialId: "glasswool_board", thicknessMm: 50 },
+          { floorRole: "floating_screed" as const, materialId: "gypsum_board", thicknessMm: 15 },
+          { floorRole: "floating_screed" as const, materialId: "gypsum_board", thicknessMm: 15 },
+          { floorRole: "base_structure" as const, materialId: "clt_panel", thicknessMm: 260 }
         ]
       }
     ] as const;

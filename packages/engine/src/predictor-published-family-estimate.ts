@@ -26,11 +26,11 @@ type TableSafeFixedOutputPublishedFamilyRule = {
 type OpenBoxPublishedFamilyEstimateCaseKey = "basic" | "dry";
 
 const TUAS_CLT_BARE_X2_RW = 38;
-const TUAS_CLT_BARE_X2_RW_CTR = 34.7;
-const TUAS_CLT_BARE_X2_LNW = 70;
+const TUAS_CLT_BARE_X2_RW_CTR = 37.242344245020725;
+const TUAS_CLT_BARE_X2_LNW = 61;
 const TUAS_CLT_BARE_C2_RW = 42;
-const TUAS_CLT_BARE_C2_RW_CTR = 38.748168054106159;
-const TUAS_CLT_BARE_C2_LNW = 65;
+const TUAS_CLT_BARE_C2_RW_CTR = 41.478540491108376;
+const TUAS_CLT_BARE_C2_LNW = 55;
 const TUAS_CLT_BARE_REFERENCE_MIN_THICKNESS_MM = 140;
 const TUAS_CLT_BARE_REFERENCE_MAX_THICKNESS_MM = 260;
 const TUAS_CLT_BARE_RAW_SLAB_RW_PENALTY_DB = 3;
@@ -334,15 +334,15 @@ const OPEN_BOX_PUBLISHED_ESTIMATE_CASES: Record<
   basic: {
     airborneRatings: {
       Rw: 62,
-      RwCtr: 54.408826940816517
+      RwCtr: 59.973347663855776
     },
     candidateIds: ["tuas_r2b_open_box_timber_measured_2026"],
     candidateScores: [0.4],
     impactRatings: {
-      CI: 0,
-      CI50_2500: 1,
-      LnW: 55,
-      LnWPlusCI: 55
+      CI: 1,
+      CI50_2500: 3,
+      LnW: 46,
+      LnWPlusCI: 47
     },
     kind: "family_archetype",
     noteLabel: "TUAS open-box archetype estimate",
@@ -351,15 +351,15 @@ const OPEN_BOX_PUBLISHED_ESTIMATE_CASES: Record<
   dry: {
     airborneRatings: {
       Rw: 75,
-      RwCtr: 66.84359068531064
+      RwCtr: 71.87531170772152
     },
     candidateIds: ["tuas_r5b_open_box_timber_measured_2026"],
     candidateScores: [0.3],
     impactRatings: {
-      CI: 2,
-      CI50_2500: 5,
-      LnW: 39,
-      LnWPlusCI: 41
+      CI: 0,
+      CI50_2500: 3,
+      LnW: 44,
+      LnWPlusCI: 44
     },
     kind: "family_archetype",
     noteLabel: "TUAS open-box dry-floor archetype estimate",
@@ -843,16 +843,16 @@ function deriveCltDryPublishedFamilyEstimate(
     return buildPredictorFamilyEstimateCase({
       airborneRatings: {
         Rw: 55,
-        RwCtr: 48.36814613192648
+        RwCtr: 53.24148704194138
       },
       basisOverride: "predictor_mass_timber_clt_dry_interaction_estimate",
       candidateIds: ["tuas_x5_clt140_measured_2026"],
       candidateScores: [0.5],
       impactRatings: {
-        CI: 1,
-        CI50_2500: 8,
-        LnW: 50,
-        LnWPlusCI: 51
+        CI: 0,
+        CI50_2500: 0,
+        LnW: 65,
+        LnWPlusCI: 65
       },
       kind: "family_general",
       noteLabel: "TUAS CLT dry published interaction estimate",
@@ -862,25 +862,30 @@ function deriveCltDryPublishedFamilyEstimate(
 
   if (
     input.impactSystemType === "combined_upper_lower_system" &&
+    thicknessNear(input.baseSlab?.thicknessMm, 260, 8) &&
     input.lowerTreatment?.type === "suspended_ceiling_rigid_hanger" &&
     input.lowerTreatment.boardLayerCount === 2 &&
     thicknessNear(input.lowerTreatment.boardThicknessMm, 13, 1) &&
     thicknessNear(input.lowerTreatment.cavityFillThicknessMm, 100, 8) &&
-    thicknessNear(input.upperFill?.thicknessMm, 50, 8)
+    thicknessNear(input.resilientLayer?.thicknessMm, 3, 1) &&
+    thicknessNear(input.upperFill?.thicknessMm, 50, 8) &&
+    normalizePredictorToken(input.floatingScreed?.materialClass) === "dry_floating_gypsum_fiberboard" &&
+    thicknessNear(input.floatingScreed?.thicknessMm, 60, 8) &&
+    thicknessNear(input.floorCovering?.thicknessMm, 8, 2)
   ) {
     return buildPredictorFamilyEstimateCase({
       airborneRatings: {
         Rw: 75,
-        RwCtr: 64.4365251312953
+        RwCtr: 70.46337519002095
       },
       basisOverride: "predictor_mass_timber_clt_dry_interaction_estimate",
       candidateIds: ["tuas_c5c_clt260_measured_2026"],
       candidateScores: [0.6],
       impactRatings: {
-        CI: 2,
-        CI50_2500: 16,
-        LnW: 24.5,
-        LnWPlusCI: 26.5
+        CI: 4,
+        CI50_2500: 6,
+        LnW: 38,
+        LnWPlusCI: 42
       },
       kind: "family_general",
       noteLabel: "TUAS CLT dry combined published interaction estimate",

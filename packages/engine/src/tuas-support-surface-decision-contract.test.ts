@@ -131,10 +131,11 @@ describe("TUAS support-surface decision contract", () => {
 
     expect(lab.floorSystemMatch?.system.id).toBe("tuas_r6a_open_box_timber_measured_2026");
     expect(lab.impact?.basis).toBe("open_measured_floor_system_exact_match");
-    expect(lab.impact?.LnW).toBe(64);
+    expect(lab.impact?.LnW).toBe(60);
+    expect(lab.impact?.LnWPlusCI).toBe(61);
     expect(lab.floorSystemRatings?.Rw).toBe(56);
-    expect(lab.supportedTargetOutputs).toEqual(["Rw", "Ln,w"]);
-    expect(lab.unsupportedTargetOutputs).toEqual(["Ln,w+CI"]);
+    expect(lab.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "Ln,w+CI"]);
+    expect(lab.unsupportedTargetOutputs).toEqual([]);
     expect(
       lab.warnings.some((warning) =>
         /single-entry floor roles are duplicated: ceiling board x6 \(Gypsum Board\)/i.test(warning)
@@ -143,12 +144,12 @@ describe("TUAS support-surface decision contract", () => {
 
     expect(field.floorSystemMatch?.system.id).toBe("tuas_r6a_open_box_timber_measured_2026");
     expect(field.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_field_volume_normalization");
-    expect(field.impact?.LnW).toBe(64);
-    expect(field.impact?.LPrimeNW).toBe(66);
-    expect(field.impact?.LPrimeNTw).toBe(63.6);
-    expect(field.impact?.LPrimeNT50).toBeUndefined();
-    expect(field.supportedTargetOutputs).toEqual(["Ln,w", "L'n,w", "L'nT,w"]);
-    expect(field.unsupportedTargetOutputs).toEqual(["L'nT,50"]);
+    expect(field.impact?.LnW).toBe(60);
+    expect(field.impact?.LPrimeNW).toBe(62);
+    expect(field.impact?.LPrimeNTw).toBe(59.6);
+    expect(field.impact?.LPrimeNT50).toBe(62.6);
+    expect(field.supportedTargetOutputs).toEqual(["Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]);
+    expect(field.unsupportedTargetOutputs).toEqual([]);
   });
 
   it("keeps the R7b-shaped proxy without the separator layer on the broader family-general lane even after the exact anchor lands", () => {
@@ -169,8 +170,8 @@ describe("TUAS support-surface decision contract", () => {
       "tuas_r7b_open_box_timber_measured_2026",
       "tuas_r7a_open_box_timber_measured_2026"
     ]);
-    expect(lab.impact?.LnW).toBe(48.5);
-    expect(lab.impact?.LnWPlusCI).toBe(46.2);
+    expect(lab.impact?.LnW).toBe(48.3);
+    expect(lab.impact?.LnWPlusCI).toBe(49.2);
     expect(lab.floorSystemRatings?.Rw).toBe(67.3);
     expect(lab.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "Ln,w+CI"]);
     expect(
@@ -191,10 +192,10 @@ describe("TUAS support-surface decision contract", () => {
       "tuas_r7b_open_box_timber_measured_2026",
       "tuas_r7a_open_box_timber_measured_2026"
     ]);
-    expect(field.impact?.LnW).toBe(48.5);
-    expect(field.impact?.LPrimeNW).toBe(50.5);
-    expect(field.impact?.LPrimeNTw).toBe(48.1);
-    expect(field.impact?.LPrimeNT50).toBe(49.9);
+    expect(field.impact?.LnW).toBe(48.3);
+    expect(field.impact?.LPrimeNW).toBe(50.3);
+    expect(field.impact?.LPrimeNTw).toBe(47.9);
+    expect(field.impact?.LPrimeNT50).toBe(50.6);
     expect(field.supportedTargetOutputs).toEqual(["Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]);
   });
 
@@ -272,7 +273,9 @@ describe("TUAS support-surface decision contract", () => {
 
     expect(lab.floorSystemMatch?.system.id).toBe("tuas_r9b_open_box_timber_measured_2026");
     expect(lab.impact?.basis).toBe("open_measured_floor_system_exact_match");
-    expect(lab.impact?.LnW).toBe(46);
+    expect(lab.impact?.LnW).toBe(45);
+    expect(lab.impact?.CI).toBe(1);
+    expect(lab.impact?.CI50_2500).toBe(3);
     expect(lab.impact?.LnWPlusCI).toBe(46);
     expect(lab.floorSystemRatings?.Rw).toBe(68);
     expect(lab.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "Ln,w+CI"]);
@@ -281,9 +284,9 @@ describe("TUAS support-surface decision contract", () => {
 
     expect(field.floorSystemMatch?.system.id).toBe("tuas_r9b_open_box_timber_measured_2026");
     expect(field.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_field_volume_normalization");
-    expect(field.impact?.LnW).toBe(46);
-    expect(field.impact?.LPrimeNW).toBe(48);
-    expect(field.impact?.LPrimeNTw).toBe(45.6);
+    expect(field.impact?.LnW).toBe(45);
+    expect(field.impact?.LPrimeNW).toBe(47);
+    expect(field.impact?.LPrimeNTw).toBe(44.6);
     expect(field.impact?.LPrimeNT50).toBe(47.6);
     expect(field.supportedTargetOutputs).toEqual(["Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]);
     expect(field.unsupportedTargetOutputs).toEqual([]);
@@ -300,8 +303,8 @@ describe("TUAS support-surface decision contract", () => {
 
     expect(lab.floorSystemMatch?.system.id).toBe("tuas_r2c_open_box_timber_measured_2026");
     expect(lab.impact?.basis).toBe("open_measured_floor_system_exact_match");
-    expect(lab.impact?.LnW).toBe(60);
-    expect(lab.impact?.LnWPlusCI).toBe(60);
+    expect(lab.impact?.LnW).toBe(70);
+    expect(lab.impact?.LnWPlusCI).toBe(70);
     expect(lab.floorSystemRatings?.Rw).toBe(54);
     expect(lab.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "Ln,w+CI"]);
     expect(lab.unsupportedTargetOutputs).toEqual([]);
@@ -309,10 +312,10 @@ describe("TUAS support-surface decision contract", () => {
 
     expect(field.floorSystemMatch?.system.id).toBe("tuas_r2c_open_box_timber_measured_2026");
     expect(field.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_field_volume_normalization");
-    expect(field.impact?.LnW).toBe(60);
-    expect(field.impact?.LPrimeNW).toBe(62);
-    expect(field.impact?.LPrimeNTw).toBe(59.6);
-    expect(field.impact?.LPrimeNT50).toBe(59.6);
+    expect(field.impact?.LnW).toBe(70);
+    expect(field.impact?.LPrimeNW).toBe(72);
+    expect(field.impact?.LPrimeNTw).toBe(69.6);
+    expect(field.impact?.LPrimeNT50).toBe(69.6);
     expect(field.supportedTargetOutputs).toEqual(["Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]);
     expect(field.unsupportedTargetOutputs).toEqual([]);
   });
@@ -328,8 +331,8 @@ describe("TUAS support-surface decision contract", () => {
 
     expect(lab.floorSystemMatch?.system.id).toBe("tuas_r10a_open_box_timber_measured_2026");
     expect(lab.impact?.basis).toBe("open_measured_floor_system_exact_match");
-    expect(lab.impact?.LnW).toBe(63);
-    expect(lab.impact?.LnWPlusCI).toBe(64);
+    expect(lab.impact?.LnW).toBe(55);
+    expect(lab.impact?.LnWPlusCI).toBe(55);
     expect(lab.floorSystemRatings?.Rw).toBe(56);
     expect(lab.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "Ln,w+CI"]);
     expect(lab.unsupportedTargetOutputs).toEqual([]);
@@ -343,10 +346,10 @@ describe("TUAS support-surface decision contract", () => {
 
     expect(field.floorSystemMatch?.system.id).toBe("tuas_r10a_open_box_timber_measured_2026");
     expect(field.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_field_volume_normalization");
-    expect(field.impact?.LnW).toBe(63);
-    expect(field.impact?.LPrimeNW).toBe(65);
-    expect(field.impact?.LPrimeNTw).toBe(62.6);
-    expect(field.impact?.LPrimeNT50).toBe(65.6);
+    expect(field.impact?.LnW).toBe(55);
+    expect(field.impact?.LPrimeNW).toBe(57);
+    expect(field.impact?.LPrimeNTw).toBe(54.6);
+    expect(field.impact?.LPrimeNT50).toBe(55.6);
     expect(field.supportedTargetOutputs).toEqual(["Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]);
     expect(field.unsupportedTargetOutputs).toEqual([]);
   });
@@ -369,7 +372,7 @@ describe("TUAS support-surface decision contract", () => {
       "tuas_r3b_open_box_timber_measured_2026",
       "tuas_r5a_open_box_timber_measured_2026"
     ]);
-    expect(lab.impact?.LnW).toBe(56.3);
+    expect(lab.impact?.LnW).toBe(53.9);
     expect(lab.floorSystemRatings?.Rw).toBe(60.9);
     expect(lab.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "Ln,w+CI"]);
     expect(lab.warnings.some((warning) => /family archetype at 90% fit/i.test(warning))).toBe(true);
@@ -383,10 +386,10 @@ describe("TUAS support-surface decision contract", () => {
       "tuas_r3b_open_box_timber_measured_2026",
       "tuas_r5a_open_box_timber_measured_2026"
     ]);
-    expect(field.impact?.LnW).toBe(56.3);
-    expect(field.impact?.LPrimeNW).toBe(58.3);
-    expect(field.impact?.LPrimeNTw).toBe(55.9);
-    expect(field.impact?.LPrimeNT50).toBe(59.4);
+    expect(field.impact?.LnW).toBe(53.9);
+    expect(field.impact?.LPrimeNW).toBe(55.9);
+    expect(field.impact?.LPrimeNTw).toBe(53.5);
+    expect(field.impact?.LPrimeNT50).toBe(56.7);
     expect(field.supportedTargetOutputs).toEqual(["Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]);
   });
 

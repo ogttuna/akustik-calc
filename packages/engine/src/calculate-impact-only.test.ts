@@ -200,7 +200,7 @@ describe("calculateImpactOnly", () => {
 
     expect(result.sourceMode).toBe("official_floor_system");
     expect(result.floorSystemMatch?.system.id).toBe("tuas_x5_clt140_measured_2026");
-    expect(result.impact?.LnW).toBe(50);
+    expect(result.impact?.LnW).toBe(65);
     expect(result.impact?.metricBasis?.LnW).toBe("open_measured_floor_system_exact_match");
     expect(result.floorCarrier?.Rw).toBe(55);
     expect(result.visibleLayers).toHaveLength(0);
@@ -1063,10 +1063,10 @@ describe("calculateImpactOnly", () => {
 
     expect(result.sourceMode).toBe("official_floor_system");
     expect(result.floorSystemMatch?.system.id).toBe("tuas_r7a_open_box_timber_measured_2026");
-    expect(result.impact?.LnW).toBe(60);
+    expect(result.impact?.LnW).toBe(63);
     expect(result.floorCarrier?.Rw).toBe(60);
-    expect(result.supportedTargetOutputs).toEqual(["Ln,w", "Rw"]);
-    expect(result.unsupportedTargetOutputs).toEqual(["Ln,w+CI"]);
+    expect(result.supportedTargetOutputs).toEqual(["Ln,w", "Rw", "Ln,w+CI"]);
+    expect(result.unsupportedTargetOutputs).toEqual([]);
   });
 
   it("keeps an R7a-like visible stack off the open-box basic archetype on the impact-only route when the upper package is not the dry corridor", () => {
@@ -1226,9 +1226,9 @@ describe("calculateImpactOnly", () => {
     expect(result.impact?.fieldEstimateProfile).toBe("explicit_field_lprimenw_from_lnw_plus_k");
     expect(result.impact?.fieldEstimateDirectOffsetDb).toBeUndefined();
     expect(result.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_field_volume_normalization");
-    expect(result.impact?.LPrimeNW).toBe(41);
-    expect(result.impact?.LPrimeNTw).toBe(39);
-    expect(result.impact?.LPrimeNT50).toBe(44);
+    expect(result.impact?.LPrimeNW).toBe(46);
+    expect(result.impact?.LPrimeNTw).toBe(44);
+    expect(result.impact?.LPrimeNT50).toBe(47);
     expect(result.impact?.metricBasis?.LPrimeNW).toBe("estimated_field_lprimenw_from_lnw_plus_k");
     expect(result.impact?.metricBasis?.LPrimeNTw).toBe("estimated_standardized_field_lprimentw_from_lprimenw_plus_room_volume");
     expect(result.impact?.metricBasis?.LPrimeNT50).toBe("estimated_standardized_field_lpriment50_from_lprimentw_plus_ci50_2500");
@@ -1256,7 +1256,7 @@ describe("calculateImpactOnly", () => {
     });
 
     expect(result.impact?.basis).toBe("mixed_exact_plus_estimated_direct_flanking_energy_sum");
-    expect(result.impact?.LPrimeNW).toBe(44);
+    expect(result.impact?.LPrimeNW).toBe(42);
     expect(result.impact?.fieldEstimateFlankingFamilyModels).toEqual(["open_box_timber"]);
     expect(result.impactSupport?.formulaNotes.some((note: string) => /Family-aware flanking path models were applied for: open box timber/i.test(note))).toBe(true);
   });
@@ -1276,8 +1276,8 @@ describe("calculateImpactOnly", () => {
     expect(result.impact?.metricBasis?.LPrimeNW).toBe("estimated_field_lprimenw_from_lnw_plus_k");
     expect(result.impact?.metricBasis?.LPrimeNTw).toBe("estimated_standardized_field_lprimentw_from_lprimenw_plus_room_volume");
     expect(result.impact?.fieldEstimateLowerTreatmentReductionDb).toBe(6);
-    expect(result.impact?.LPrimeNW).toBe(35);
-    expect(result.impact?.LPrimeNTw).toBe(33);
+    expect(result.impact?.LPrimeNW).toBe(40);
+    expect(result.impact?.LPrimeNTw).toBe(38);
     expect(result.impactSupport?.formulaNotes.some((note: string) => /L'n,w = Ln,w \+ K/i.test(note))).toBe(true);
     expect(result.impactSupport?.formulaNotes.some((note: string) => /ΔLd = 6 dB was applied before the field-side K correction/i.test(note))).toBe(true);
     expect(result.impactSupport?.formulaNotes.some((note: string) => /applied before field standardization/i.test(note))).toBe(true);
@@ -1539,7 +1539,7 @@ describe("calculateImpactOnly", () => {
     expect(result.sourceLayers.at(-1)?.material.id).toBe("lightweight_concrete");
     expect(result.impact?.basis).toBe("predictor_floor_system_family_general_estimate");
     expect(result.floorSystemEstimate?.fitPercent).toBe(45);
-    expect(result.impact?.LnW).toBe(59);
+    expect(result.impact?.LnW).toBe(47);
     expect(result.floorSystemRatings?.Rw).toBe(49);
     expect(result.impact?.estimateCandidateIds).toEqual(["tuas_h2_concrete160_measured_2026"]);
     expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(true);
@@ -2051,11 +2051,11 @@ describe("calculateImpactOnly", () => {
     expect(result.sourceMode).toBe("predictor_input");
     expect(result.floorSystemEstimate?.kind).toBe("family_archetype");
     expect(result.impact?.basis).toBe("predictor_floor_system_family_archetype_estimate");
-    expect(result.impact?.LnW).toBe(39);
-    expect(result.impact?.CI).toBe(2);
-    expect(result.impact?.LnWPlusCI).toBe(41);
+    expect(result.impact?.LnW).toBe(44);
+    expect(result.impact?.CI).toBe(0);
+    expect(result.impact?.LnWPlusCI).toBe(44);
     expect(result.floorSystemRatings?.Rw).toBe(75);
-    expect(result.floorSystemRatings?.RwCtr).toBe(66.84359068531064);
+    expect(result.floorSystemRatings?.RwCtr).toBe(71.87531170772152);
     expect(result.impact?.estimateCandidateIds).toEqual(["tuas_r5b_open_box_timber_measured_2026"]);
     expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(true);
     expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
@@ -2090,11 +2090,11 @@ describe("calculateImpactOnly", () => {
     expect(result.sourceMode).toBe("predictor_input");
     expect(result.floorSystemEstimate?.kind).toBe("family_archetype");
     expect(result.impact?.basis).toBe("predictor_floor_system_family_archetype_estimate");
-    expect(result.impact?.LnW).toBe(55);
-    expect(result.impact?.CI).toBe(0);
-    expect(result.impact?.LnWPlusCI).toBe(55);
+    expect(result.impact?.LnW).toBe(46);
+    expect(result.impact?.CI).toBe(1);
+    expect(result.impact?.LnWPlusCI).toBe(47);
     expect(result.floorSystemRatings?.Rw).toBe(62);
-    expect(result.floorSystemRatings?.RwCtr).toBe(54.408826940816517);
+    expect(result.floorSystemRatings?.RwCtr).toBe(59.973347663855776);
     expect(result.impact?.estimateCandidateIds).toEqual(["tuas_r2b_open_box_timber_measured_2026"]);
     expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(true);
     expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
@@ -2249,23 +2249,23 @@ describe("calculateImpactOnly", () => {
     });
 
     expect(basicB.floorSystemMatch?.system.id).toBe("tuas_r2b_open_box_timber_measured_2026");
-    expect(basicB.impact?.LnW).toBe(55);
-    expect(basicB.impact?.CI50_2500).toBe(1);
+    expect(basicB.impact?.LnW).toBe(46);
+    expect(basicB.impact?.CI50_2500).toBe(3);
     expect(basicB.floorSystemRatings?.Rw).toBe(62);
     expect(stagedDry.floorSystemMatch?.system.id).toBe("tuas_r3b_open_box_timber_measured_2026");
-    expect(stagedDry.impact?.LnW).toBe(46);
-    expect(stagedDry.impact?.CI50_2500).toBe(3);
+    expect(stagedDry.impact?.LnW).toBe(39);
+    expect(stagedDry.impact?.CI50_2500).toBe(5);
     expect(stagedDry.floorSystemRatings?.Rw).toBe(70);
     expect(basicA.floorSystemMatch?.system.id).toBe("tuas_r2a_open_box_timber_measured_2026");
-    expect(basicA.impact?.LnW).toBe(72);
-    expect(basicA.impact?.CI50_2500).toBe(2);
+    expect(basicA.impact?.LnW).toBe(61);
+    expect(basicA.impact?.CI50_2500).toBe(4);
     expect(basicA.floorSystemRatings?.Rw).toBe(49);
     expect(mixedBoardA.floorSystemMatch?.system.id).toBe("tuas_r6a_open_box_timber_measured_2026");
-    expect(mixedBoardA.impact?.LnW).toBe(64);
+    expect(mixedBoardA.impact?.LnW).toBe(60);
     expect(mixedBoardA.floorSystemRatings?.Rw).toBe(56);
     expect(reinforcedB.floorSystemMatch?.system.id).toBe("tuas_r6b_open_box_timber_measured_2026");
-    expect(reinforcedB.impact?.LnW).toBe(44);
-    expect(reinforcedB.impact?.CI50_2500).toBe(3);
+    expect(reinforcedB.impact?.LnW).toBe(47);
+    expect(reinforcedB.impact?.CI50_2500).toBe(1);
     expect(reinforcedB.floorSystemRatings?.Rw).toBe(71);
   });
 
@@ -2343,13 +2343,13 @@ describe("calculateImpactOnly", () => {
     });
 
     expect(stagedDry.floorSystemMatch?.system.id).toBe("tuas_r3a_open_box_timber_measured_2026");
-    expect(stagedDry.impact?.LnW).toBe(61);
-    expect(stagedDry.impact?.CI50_2500).toBe(4);
+    expect(stagedDry.impact?.LnW).toBe(56);
+    expect(stagedDry.impact?.CI50_2500).toBe(3);
     expect(stagedDry.floorSystemRatings?.Rw).toBe(56);
 
     expect(dryFloor.floorSystemMatch?.system.id).toBe("tuas_r5a_open_box_timber_measured_2026");
-    expect(dryFloor.impact?.LnW).toBe(56);
-    expect(dryFloor.impact?.CI50_2500).toBe(3);
+    expect(dryFloor.impact?.LnW).toBe(64);
+    expect(dryFloor.impact?.CI50_2500).toBe(2);
     expect(dryFloor.floorSystemRatings?.Rw).toBe(63);
   });
 
@@ -2372,8 +2372,8 @@ describe("calculateImpactOnly", () => {
 
     expect(result.floorSystemMatch?.system.id).toBe("tuas_r10a_open_box_timber_measured_2026");
     expect(result.impact?.basis).toBe("open_measured_floor_system_exact_match");
-    expect(result.impact?.LnW).toBe(63);
-    expect(result.impact?.LnWPlusCI).toBe(64);
+    expect(result.impact?.LnW).toBe(55);
+    expect(result.impact?.LnWPlusCI).toBe(55);
     expect(result.floorSystemRatings?.Rw).toBe(56);
     expect(
       result.warnings.some((warning: string) =>
@@ -2529,7 +2529,7 @@ describe("calculateImpactOnly", () => {
 
     expect(lab.floorSystemMatch?.system.id).toBe("tuas_r9b_open_box_timber_measured_2026");
     expect(lab.impact?.basis).toBe("open_measured_floor_system_exact_match");
-    expect(lab.impact?.LnW).toBe(46);
+    expect(lab.impact?.LnW).toBe(45);
     expect(lab.impact?.LnWPlusCI).toBe(46);
     expect(lab.floorSystemRatings?.Rw).toBe(68);
     expect(lab.warnings.some((warning: string) => /single-entry floor roles are duplicated: ceiling cavity x2/i.test(warning))).toBe(
@@ -2538,9 +2538,9 @@ describe("calculateImpactOnly", () => {
 
     expect(field.floorSystemMatch?.system.id).toBe("tuas_r9b_open_box_timber_measured_2026");
     expect(field.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_field_volume_normalization");
-    expect(field.impact?.LnW).toBe(46);
-    expect(field.impact?.LPrimeNW).toBe(48);
-    expect(field.impact?.LPrimeNTw).toBe(45.6);
+    expect(field.impact?.LnW).toBe(45);
+    expect(field.impact?.LPrimeNW).toBe(47);
+    expect(field.impact?.LPrimeNTw).toBe(44.6);
     expect(field.impact?.LPrimeNT50).toBe(47.6);
   });
 
@@ -2575,8 +2575,8 @@ describe("calculateImpactOnly", () => {
 
     expect(lab.floorSystemMatch?.system.id).toBe("tuas_r2c_open_box_timber_measured_2026");
     expect(lab.impact?.basis).toBe("open_measured_floor_system_exact_match");
-    expect(lab.impact?.LnW).toBe(60);
-    expect(lab.impact?.LnWPlusCI).toBe(60);
+    expect(lab.impact?.LnW).toBe(70);
+    expect(lab.impact?.LnWPlusCI).toBe(70);
     expect(lab.floorSystemRatings?.Rw).toBe(54);
     expect(lab.warnings.some((warning: string) => /single-entry floor roles are duplicated: ceiling cavity x2/i.test(warning))).toBe(
       false
@@ -2584,10 +2584,10 @@ describe("calculateImpactOnly", () => {
 
     expect(field.floorSystemMatch?.system.id).toBe("tuas_r2c_open_box_timber_measured_2026");
     expect(field.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_field_volume_normalization");
-    expect(field.impact?.LnW).toBe(60);
-    expect(field.impact?.LPrimeNW).toBe(62);
-    expect(field.impact?.LPrimeNTw).toBe(59.6);
-    expect(field.impact?.LPrimeNT50).toBe(59.6);
+    expect(field.impact?.LnW).toBe(70);
+    expect(field.impact?.LPrimeNW).toBe(72);
+    expect(field.impact?.LPrimeNTw).toBe(69.6);
+    expect(field.impact?.LPrimeNT50).toBe(69.6);
   });
 
   it("keeps the TUAS X3 staged-upper CLT split exact on the visible layer route while the duplicate floating-screed shorthand stays off the predictor lane", () => {
@@ -2621,8 +2621,8 @@ describe("calculateImpactOnly", () => {
 
     expect(lab.floorSystemMatch?.system.id).toBe("tuas_x3_clt140_measured_2026");
     expect(lab.impact?.basis).toBe("open_measured_floor_system_exact_match");
-    expect(lab.impact?.LnW).toBe(61);
-    expect(lab.impact?.LnWPlusCI).toBe(63);
+    expect(lab.impact?.LnW).toBe(52);
+    expect(lab.impact?.LnWPlusCI).toBe(52);
     expect(lab.floorSystemRatings?.Rw).toBe(49);
     expect(
       lab.warnings.some((warning: string) =>
@@ -2632,10 +2632,10 @@ describe("calculateImpactOnly", () => {
 
     expect(field.floorSystemMatch?.system.id).toBe("tuas_x3_clt140_measured_2026");
     expect(field.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_field_volume_normalization");
-    expect(field.impact?.LnW).toBe(61);
-    expect(field.impact?.LPrimeNW).toBe(63);
-    expect(field.impact?.LPrimeNTw).toBe(61);
-    expect(field.impact?.LPrimeNT50).toBe(64);
+    expect(field.impact?.LnW).toBe(52);
+    expect(field.impact?.LPrimeNW).toBe(54);
+    expect(field.impact?.LPrimeNTw).toBe(52);
+    expect(field.impact?.LPrimeNT50).toBe(60);
     expect(field.supportedImpactOutputs).toEqual(["Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]);
     expect(field.unsupportedTargetOutputs).toEqual([]);
   });
@@ -2671,8 +2671,8 @@ describe("calculateImpactOnly", () => {
 
     expect(lab.floorSystemMatch?.system.id).toBe("tuas_c3_clt260_measured_2026");
     expect(lab.impact?.basis).toBe("open_measured_floor_system_exact_match");
-    expect(lab.impact?.LnW).toBe(55);
-    expect(lab.impact?.LnWPlusCI).toBe(58);
+    expect(lab.impact?.LnW).toBe(47);
+    expect(lab.impact?.LnWPlusCI).toBe(49);
     expect(lab.floorSystemRatings?.Rw).toBe(54);
     expect(
       lab.warnings.some((warning: string) =>
@@ -2682,10 +2682,10 @@ describe("calculateImpactOnly", () => {
 
     expect(field.floorSystemMatch?.system.id).toBe("tuas_c3_clt260_measured_2026");
     expect(field.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_field_volume_normalization");
-    expect(field.impact?.LnW).toBe(55);
-    expect(field.impact?.LPrimeNW).toBe(57);
-    expect(field.impact?.LPrimeNTw).toBe(55);
-    expect(field.impact?.LPrimeNT50).toBe(59);
+    expect(field.impact?.LnW).toBe(47);
+    expect(field.impact?.LPrimeNW).toBe(49);
+    expect(field.impact?.LPrimeNTw).toBe(47);
+    expect(field.impact?.LPrimeNT50).toBe(53);
     expect(field.supportedImpactOutputs).toEqual(["Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]);
     expect(field.unsupportedTargetOutputs).toEqual([]);
   });
@@ -2729,18 +2729,18 @@ describe("calculateImpactOnly", () => {
 
     expect(lab.floorSystemMatch?.system.id).toBe("tuas_x4_clt140_measured_2026");
     expect(lab.impact?.basis).toBe("open_measured_floor_system_exact_match");
-    expect(lab.impact?.LnW).toBe(52);
-    expect(lab.impact?.LnWPlusCI).toBe(52);
+    expect(lab.impact?.LnW).toBe(50);
+    expect(lab.impact?.LnWPlusCI).toBe(51);
     expect(lab.floorSystemRatings?.Rw).toBe(55);
     expect(lab.supportedImpactOutputs).toEqual(["Ln,w", "Ln,w+CI"]);
     expect(lab.unsupportedTargetOutputs).toEqual([]);
 
     expect(field.floorSystemMatch?.system.id).toBe("tuas_x4_clt140_measured_2026");
     expect(field.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_field_volume_normalization");
-    expect(field.impact?.LnW).toBe(52);
-    expect(field.impact?.LPrimeNW).toBe(54);
-    expect(field.impact?.LPrimeNTw).toBe(52);
-    expect(field.impact?.LPrimeNT50).toBe(60);
+    expect(field.impact?.LnW).toBe(50);
+    expect(field.impact?.LPrimeNW).toBe(52);
+    expect(field.impact?.LPrimeNTw).toBe(50);
+    expect(field.impact?.LPrimeNT50).toBe(58);
     expect(field.supportedImpactOutputs).toEqual(["Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]);
     expect(field.unsupportedTargetOutputs).toEqual([]);
 
@@ -2749,8 +2749,8 @@ describe("calculateImpactOnly", () => {
     expect(shorthand.floorSystemEstimate?.fitPercent).toBe(94);
     expect(shorthand.impact?.basis).toBe("predictor_mass_timber_clt_dry_interaction_estimate");
     expect(shorthand.impact?.estimateCandidateIds).toEqual(["tuas_x5_clt140_measured_2026"]);
-    expect(shorthand.impact?.LnW).toBe(50);
-    expect(shorthand.impact?.LnWPlusCI).toBe(51);
+    expect(shorthand.impact?.LnW).toBe(65);
+    expect(shorthand.impact?.LnWPlusCI).toBe(65);
     expect(shorthand.floorSystemRatings?.Rw).toBe(55);
   });
 
@@ -2793,23 +2793,23 @@ describe("calculateImpactOnly", () => {
 
     expect(lab.floorSystemMatch?.system.id).toBe("tuas_c4_clt260_measured_2026");
     expect(lab.impact?.basis).toBe("open_measured_floor_system_exact_match");
-    expect(lab.impact?.LnW).toBe(47);
-    expect(lab.impact?.LnWPlusCI).toBe(49);
+    expect(lab.impact?.LnW).toBe(45);
+    expect(lab.impact?.LnWPlusCI).toBe(46);
     expect(lab.floorSystemRatings?.Rw).toBe(61);
     expect(lab.supportedImpactOutputs).toEqual(["Ln,w", "Ln,w+CI"]);
     expect(lab.unsupportedTargetOutputs).toEqual([]);
 
     expect(field.floorSystemMatch?.system.id).toBe("tuas_c4_clt260_measured_2026");
     expect(field.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_field_volume_normalization");
-    expect(field.impact?.LnW).toBe(47);
-    expect(field.impact?.LPrimeNW).toBe(49);
-    expect(field.impact?.LPrimeNTw).toBe(47);
-    expect(field.impact?.LPrimeNT50).toBe(53);
+    expect(field.impact?.LnW).toBe(45);
+    expect(field.impact?.LPrimeNW).toBe(47);
+    expect(field.impact?.LPrimeNTw).toBe(45);
+    expect(field.impact?.LPrimeNT50).toBe(51);
     expect(field.supportedImpactOutputs).toEqual(["Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]);
     expect(field.unsupportedTargetOutputs).toEqual([]);
 
     expect(packed.floorSystemMatch?.system.id).toBe("tuas_c4_clt260_measured_2026");
-    expect(packed.impact?.LnW).toBe(47);
+    expect(packed.impact?.LnW).toBe(45);
     expect(packed.floorSystemRatings?.Rw).toBe(61);
   });
 
@@ -2866,23 +2866,23 @@ describe("calculateImpactOnly", () => {
 
     expect(lab.floorSystemMatch?.system.id).toBe("tuas_c5_clt260_measured_2026");
     expect(lab.impact?.basis).toBe("open_measured_floor_system_exact_match");
-    expect(lab.impact?.LnW).toBe(45);
-    expect(lab.impact?.LnWPlusCI).toBe(46);
+    expect(lab.impact?.LnW).toBe(60);
+    expect(lab.impact?.LnWPlusCI).toBe(62);
     expect(lab.floorSystemRatings?.Rw).toBe(61);
     expect(lab.supportedImpactOutputs).toEqual(["Ln,w", "Ln,w+CI"]);
     expect(lab.unsupportedTargetOutputs).toEqual([]);
 
     expect(field.floorSystemMatch?.system.id).toBe("tuas_c5_clt260_measured_2026");
     expect(field.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_field_volume_normalization");
-    expect(field.impact?.LnW).toBe(45);
-    expect(field.impact?.LPrimeNW).toBe(47);
-    expect(field.impact?.LPrimeNTw).toBe(45);
-    expect(field.impact?.LPrimeNT50).toBe(51);
+    expect(field.impact?.LnW).toBe(60);
+    expect(field.impact?.LPrimeNW).toBe(62);
+    expect(field.impact?.LPrimeNTw).toBe(60);
+    expect(field.impact?.LPrimeNT50).toBe(63);
     expect(field.supportedImpactOutputs).toEqual(["Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]);
     expect(field.unsupportedTargetOutputs).toEqual([]);
 
     expect(packed.floorSystemMatch?.system.id).toBe("tuas_c5_clt260_measured_2026");
-    expect(packed.impact?.LnW).toBe(45);
+    expect(packed.impact?.LnW).toBe(60);
     expect(packed.floorSystemRatings?.Rw).toBe(61);
 
     expect(shorthand.floorSystemMatch).toBeNull();
@@ -2890,9 +2890,121 @@ describe("calculateImpactOnly", () => {
     expect(shorthand.floorSystemEstimate?.fitPercent).toBe(94);
     expect(shorthand.impact?.basis).toBe("predictor_mass_timber_clt_dry_interaction_estimate");
     expect(shorthand.impact?.estimateCandidateIds).toEqual(["tuas_x5_clt140_measured_2026"]);
-    expect(shorthand.impact?.LnW).toBe(50);
-    expect(shorthand.impact?.LnWPlusCI).toBe(51);
+    expect(shorthand.impact?.LnW).toBe(65);
+    expect(shorthand.impact?.LnWPlusCI).toBe(65);
     expect(shorthand.floorSystemRatings?.Rw).toBe(55);
+  });
+
+  it("keeps the TUAS C7 wet geotextile CLT source stack exact on the visible layer route", () => {
+    const lab = calculateImpactOnly([
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "floating_screed", materialId: "geotextile", thicknessMm: 1 },
+      { floorRole: "floating_screed", materialId: "screed", thicknessMm: 40 },
+      { floorRole: "upper_fill", materialId: "eps_floor_insulation_board", thicknessMm: 35 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 260 }
+    ], {
+      targetOutputs: ["Rw", "Ln,w", "Ln,w+CI"]
+    });
+
+    const field = calculateImpactOnly([
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "floating_screed", materialId: "geotextile", thicknessMm: 1 },
+      { floorRole: "floating_screed", materialId: "screed", thicknessMm: 40 },
+      { floorRole: "upper_fill", materialId: "eps_floor_insulation_board", thicknessMm: 35 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 260 }
+    ], {
+      impactFieldContext: {
+        fieldKDb: 2,
+        receivingRoomVolumeM3: 50
+      },
+      targetOutputs: ["Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]
+    });
+
+    expect(lab.floorSystemMatch?.system.id).toBe("tuas_c7_clt260_measured_2026");
+    expect(lab.impact?.basis).toBe("open_measured_floor_system_exact_match");
+    expect(lab.impact?.LnW).toBe(39);
+    expect(lab.impact?.CI).toBe(1);
+    expect(lab.impact?.CI50_2500).toBe(3);
+    expect(lab.impact?.LnWPlusCI).toBe(40);
+    expect(lab.floorSystemRatings?.Rw).toBe(57);
+    expect(lab.supportedImpactOutputs).toEqual(["Ln,w", "Ln,w+CI"]);
+    expect(lab.unsupportedTargetOutputs).toEqual([]);
+    expect(
+      lab.warnings.some((warning: string) =>
+        /single-entry floor roles are duplicated: floating screed x2 \(Geotextile, Mineral Screed\)/i.test(warning)
+      )
+    ).toBe(false);
+
+    expect(field.floorSystemMatch?.system.id).toBe("tuas_c7_clt260_measured_2026");
+    expect(field.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_field_volume_normalization");
+    expect(field.impact?.LnW).toBe(39);
+    expect(field.impact?.LPrimeNW).toBe(41);
+    expect(field.impact?.LPrimeNTw).toBe(39);
+    expect(field.impact?.LPrimeNT50).toBe(42);
+    expect(field.supportedImpactOutputs).toEqual(["Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]);
+    expect(field.unsupportedTargetOutputs).toEqual([]);
+  });
+
+  it("keeps the TUAS C7c combined wet CLT source stack exact on the visible layer route", () => {
+    const lab = calculateImpactOnly([
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+      { floorRole: "ceiling_cavity", materialId: "acoustic_hanger_ceiling", thicknessMm: 70 },
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "floating_screed", materialId: "geotextile", thicknessMm: 1 },
+      { floorRole: "floating_screed", materialId: "screed", thicknessMm: 40 },
+      { floorRole: "upper_fill", materialId: "eps_floor_insulation_board", thicknessMm: 35 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 260 }
+    ], {
+      targetOutputs: ["Rw", "Ln,w", "Ln,w+CI"]
+    });
+
+    const field = calculateImpactOnly([
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+      { floorRole: "ceiling_cavity", materialId: "acoustic_hanger_ceiling", thicknessMm: 70 },
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "floating_screed", materialId: "geotextile", thicknessMm: 1 },
+      { floorRole: "floating_screed", materialId: "screed", thicknessMm: 40 },
+      { floorRole: "upper_fill", materialId: "eps_floor_insulation_board", thicknessMm: 35 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 260 }
+    ], {
+      impactFieldContext: {
+        fieldKDb: 2,
+        receivingRoomVolumeM3: 50
+      },
+      targetOutputs: ["Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]
+    });
+
+    expect(lab.floorSystemMatch?.system.id).toBe("tuas_c7c_clt260_measured_2026");
+    expect(lab.impact?.basis).toBe("open_measured_floor_system_exact_match");
+    expect(lab.impact?.LnW).toBe(30);
+    expect(lab.impact?.CI).toBe(5);
+    expect(lab.impact?.CI50_2500).toBe(14);
+    expect(lab.impact?.LnWPlusCI).toBe(35);
+    expect(lab.floorSystemRatings?.Rw).toBe(75);
+    expect(lab.supportedImpactOutputs).toEqual(["Ln,w", "Ln,w+CI"]);
+    expect(lab.unsupportedTargetOutputs).toEqual([]);
+    expect(
+      lab.warnings.some((warning: string) =>
+        /Visible-layer predictor matching is parked because single-entry floor roles are duplicated: floating screed x2/i.test(warning)
+      )
+    ).toBe(false);
+
+    expect(field.floorSystemMatch?.system.id).toBe("tuas_c7c_clt260_measured_2026");
+    expect(field.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_field_volume_normalization");
+    expect(field.impact?.LnW).toBe(30);
+    expect(field.impact?.LPrimeNW).toBe(32);
+    expect(field.impact?.LPrimeNTw).toBe(30);
+    expect(field.impact?.LPrimeNT50).toBe(44);
+    expect(field.supportedImpactOutputs).toEqual(["Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]);
+    expect(field.unsupportedTargetOutputs).toEqual([]);
   });
 
   it("can resolve an under-described Dataholz dry CLT stack on the broader same-family lane", () => {
