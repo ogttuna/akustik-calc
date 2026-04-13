@@ -26,6 +26,21 @@ Important scope note:
 
 Current execution status:
 
+- `ubiq_open_web_packaged_lane_trace_matrix_v1` is now closed:
+  - this was a no-widening trace/card checkpoint for the UBIQ open-web
+    `2 x 16 mm` packaged lower lane
+  - canonical raw, raw split, and tagged split visible inputs stay on the
+    current `family_general` source-backed estimate at `56.7%` fit
+  - reordered lower-package input remains live but is explicitly pinned as
+    `low_confidence` at `29%` fit with duplicate-role warning coverage
+  - engine and workbench matrices now measure numeric answers, support buckets,
+    card status/value, candidate ids, and warnings for this lane
+  - no solver, catalog, selector, source, support, or workbench runtime behavior
+    changed
+  - full engine validation is green at `102` files / `790` tests; full web
+    validation is green at `97` files / `605` tests
+  - `pnpm build` is green with the known `sharp/@img` optional-package warnings
+    and Next.js TypeScript plugin recommendation
 - the 2026-04-12 broad engine-suite cleanup is now closed:
   - stale TUAS/Open Box/CLT/UBIQ validation fixtures, field continuation fixtures,
     floor-topology expectations, and impact upstream-parity acceptance fixtures
@@ -183,7 +198,7 @@ Current execution status:
     - full engine suite: `100` files, `788` tests, green
     - full web suite: `95` files, `603` tests, green
     - `git diff --check`: green
-- latest raw-floor hostile-input guard:
+- previous raw-floor hostile-input guard:
   - `raw_floor_hostile_input_answer_matrix_v1` is implemented and target-green
   - no solver, catalog, source, selector, support, or workbench runtime behavior
     changed
@@ -1534,7 +1549,9 @@ Immediate next implementation pass:
    no-widening selector trace/card checkpoint
 6. keep `raw_floor_hostile_input_answer_matrix_v1` frozen as the latest
    no-widening raw-floor hostile-input guard
-7. re-rank before any new solver, selector, or support-widening behavior slice
+7. keep `ubiq_open_web_packaged_lane_trace_matrix_v1` frozen as the latest
+   no-widening UBIQ packaged lower-lane checkpoint
+8. re-rank before any new solver, selector, or support-widening behavior slice
 
 Why this is the correct next cut:
 

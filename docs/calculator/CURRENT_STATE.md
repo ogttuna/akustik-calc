@@ -23,6 +23,55 @@ Last cross-package build revalidation: `2026-04-13`
 
 Verified broad corridors:
 
+- latest UBIQ open-web packaged-lane checkpoint:
+  - slice id: `ubiq_open_web_packaged_lane_trace_matrix_v1`
+  - implemented on: `2026-04-13`
+  - type: no-widening UBIQ open-web lower-package trace/card slice
+  - status: implemented and target-green
+  - reason this was selected:
+    - raw-floor behavior widening still carries high fake-confidence risk
+    - UBIQ has explicit open-web packaged rows, but the visible route currently
+      lands through source-backed family estimates rather than exact matching
+    - split/tagged and reordered layer input needed answer-level and card-level
+      coverage before deciding whether any UBIQ behavior should widen
+  - implemented tests:
+    - `packages/engine/src/ubiq-open-web-packaged-lane-trace-matrix.test.ts`
+      pins lab and field numeric answers, support buckets, candidate ids,
+      estimate kind, fit percent, and warning fragments for:
+      - canonical raw `2 x 16 mm` lower package
+      - raw split lower package
+      - tagged split lower package
+      - reordered lower package
+    - `apps/web/features/workbench/ubiq-open-web-packaged-lane-card-matrix.test.ts`
+      mirrors those rows through workbench output-card status/value snapshots
+      and user-facing warning fragments
+  - behavior scope:
+    - no solver, catalog, selector, source, or workbench runtime behavior changed
+    - canonical, raw split, and tagged split inputs stay on
+      `family_general` at `56.7%` fit
+    - reordered input still returns live values, but is explicitly
+      `low_confidence` at `29%` fit with duplicate-role warning coverage
+    - this does not open a bare open-web raw carrier lane
+  - latest validation:
+    - focused engine UBIQ trace matrix:
+      `1` file, `1` test, green
+    - focused workbench UBIQ card matrix:
+      `1` file, `1` test, green
+    - engine packaged-lane/UBIQ adjacent pack:
+      `7` files, `24` tests, green
+    - workbench packaged-lane adjacent pack:
+      `7` files, `13` tests, green
+    - `pnpm --filter @dynecho/engine typecheck`: green
+    - `pnpm --filter @dynecho/web typecheck`: green with the known Next.js
+      TypeScript plugin recommendation
+    - `pnpm --filter @dynecho/engine test`: `102` files, `790` tests, green
+    - `pnpm --filter @dynecho/web test`: `97` files, `605` tests, green
+    - `pnpm build`: green with the known `sharp/@img` optional-package
+      warnings and Next.js TypeScript plugin recommendation
+    - `git diff --check`: green
+  - next planning implication:
+    - continue re-ranking before behavior work; this checkpoint is evidence
+      for the packaged lower lane, not a mandate to widen open-web support
 - latest raw-floor hostile-input checkpoint:
   - slice id: `raw_floor_hostile_input_answer_matrix_v1`
   - implemented on: `2026-04-13`

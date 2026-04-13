@@ -21,10 +21,39 @@ Read together with:
 ## Current Active Slice Ledger
 
 - latest completed slice:
-  `raw_floor_hostile_input_answer_matrix_v1`
-- status: implemented as a no-widening pre-widening raw-floor answer/card guard;
-  focused, adjacent, typecheck, and diff gates are green
+  `ubiq_open_web_packaged_lane_trace_matrix_v1`
+- status: implemented as a no-widening UBIQ open-web lower-package trace/card
+  guard; focused, adjacent, typecheck, full-suite, and diff gates are green
 - latest completed slice intent:
+  - pin a source-backed UBIQ open-web lower-package lane before any new
+    raw-floor widening
+  - prove exact, raw split, tagged split, and reordered user inputs with
+    numeric `Rw`, `R'w`, `DnT,w`, `Ln,w`, `L'n,w`, and `L'nT,w` snapshots
+  - keep the current distinction explicit: canonical and split lower packages
+    stay on `family_general` at `56.7%` fit, while reordered input stays live
+    but is labeled `low_confidence` at `29%` fit
+  - avoid opening a bare open-web raw carrier lane or changing solver/catalog
+    behavior
+- latest completed slice artifacts:
+  - `packages/engine/src/ubiq-open-web-packaged-lane-trace-matrix.test.ts`
+  - `apps/web/features/workbench/ubiq-open-web-packaged-lane-card-matrix.test.ts`
+- latest completed slice validation:
+  - focused engine UBIQ trace matrix: `1` file, `1` test, green
+  - focused workbench UBIQ card matrix: `1` file, `1` test, green
+  - engine packaged-lane/UBIQ adjacent pack: `7` files, `24` tests, green
+  - workbench packaged-lane adjacent pack: `7` files, `13` tests, green
+  - engine/web typechecks: green; web still prints the known Next.js
+    TypeScript plugin recommendation
+  - full engine suite: `102` files, `790` tests, green
+  - full web suite: `97` files, `605` tests, green
+  - `pnpm build`: green with the known `sharp/@img` optional-package warnings
+    and Next.js TypeScript plugin recommendation
+  - `git diff --check`: green
+- previous raw hostile-input slice:
+  `raw_floor_hostile_input_answer_matrix_v1` is implemented as a no-widening
+  pre-widening raw-floor answer/card guard; focused, adjacent, typecheck, and
+  full-suite gates are green
+- previous raw hostile-input intent:
   - broaden the raw-floor hostile-input stress surface before any behavior
     widening
   - pin numeric answers, support buckets, impact basis, and workbench card
@@ -32,19 +61,16 @@ Read together with:
   - keep helper-only timber, open-web steel raw carriers, CLT lower-only
     fragments, and non-terminal concrete helper arrangements from becoming
     accidental widening shortcuts
-- latest completed slice artifacts:
+- previous raw hostile-input artifacts:
   - `packages/engine/src/raw-floor-hostile-input-answer-matrix.test.ts`
   - `apps/web/features/workbench/raw-floor-hostile-input-route-card-matrix.test.ts`
-- latest completed slice validation:
+- previous raw hostile-input validation:
   - focused engine hostile-input matrix: `1` file, `1` test, green
   - focused workbench hostile-input card matrix: `1` file, `1` test, green
   - engine raw adjacent pack: `6` files, `12` tests, green
   - workbench raw adjacent pack: `6` files, `9` tests, green
-  - engine/web typechecks: green; web still prints the known Next.js
-    TypeScript plugin recommendation
   - full engine suite: `101` files, `789` tests, green
   - full web suite: `96` files, `604` tests, green
-  - `git diff --check`: green
 - previous wall-selector trace slice:
   `wall_selector_wider_trace_matrix_v1` is implemented as a no-widening
   wall-selector trace/card guard; focused, adjacent, typecheck, and full-suite
@@ -119,6 +145,8 @@ Read together with:
   - re-rank candidates again before selecting behavior work
   - keep `wall_selector_wider_trace_matrix_v1` frozen as evidence, not as a
     mandate to widen wall selector math
+  - keep `ubiq_open_web_packaged_lane_trace_matrix_v1` frozen as a packaged
+    lower-lane guard, not as permission to open bare open-web carrier support
   - keep `raw_floor_hostile_input_answer_matrix_v1` frozen as the latest
     hostile-input pre-widening guard
   - raw-floor behavior widening, CLT-local combined behavior work, C11c, and

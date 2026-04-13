@@ -393,7 +393,41 @@ The next no-widening raw-floor guard is also implemented:
   - full web suite: `96` files, `604` tests, green
   - engine/web typechecks and `git diff --check`: green
 
-Deferred until after that checkpoint:
+The next no-widening UBIQ open-web packaged-lane guard is also implemented:
+
+- slice id: `ubiq_open_web_packaged_lane_trace_matrix_v1`
+- engine artifact:
+  `packages/engine/src/ubiq-open-web-packaged-lane-trace-matrix.test.ts`
+- workbench artifact:
+  `apps/web/features/workbench/ubiq-open-web-packaged-lane-card-matrix.test.ts`
+- purpose:
+  - prove that an already-live UBIQ open-web packaged lower lane is measured by
+    numeric answers and output-card values, not only by "supported" flags
+  - keep the current family-estimate posture honest before any UBIQ behavior
+    widening is considered
+- pinned routes:
+  - canonical raw `2 x 16 mm` lower package:
+    `family_general`, `56.7%` fit, live `Rw`, `R'w`, `DnT,w`, `Ln,w`,
+    `L'n,w`, and `L'nT,w`
+  - raw split lower package:
+    same numeric answers and card values as canonical raw input
+  - tagged split lower package:
+    same numeric answers and card values as canonical raw input
+  - reordered lower package:
+    same live answer values, but explicitly `low_confidence` at `29%` fit with
+    duplicate-role warning coverage
+- validation:
+  - focused engine UBIQ trace matrix: `1` file, `1` test, green
+  - focused workbench UBIQ card matrix: `1` file, `1` test, green
+  - engine packaged-lane/UBIQ adjacent pack: `7` files, `24` tests, green
+  - workbench packaged-lane adjacent pack: `7` files, `13` tests, green
+  - full engine suite: `102` files, `790` tests, green
+  - full web suite: `97` files, `605` tests, green
+  - `pnpm build`: green with the known `sharp/@img` optional-package warnings
+    and Next.js TypeScript plugin recommendation
+  - engine/web typechecks and `git diff --check`: green
+
+Deferred until after these checkpoints:
 
 - `floor_raw_inference_source_led_widening_v1`
 - `clt_local_combined_interaction_evidence_v1`

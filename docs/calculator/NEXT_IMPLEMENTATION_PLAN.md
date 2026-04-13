@@ -62,14 +62,29 @@ These rules govern calculator work:
 Use this as the current baseline:
 
 - branch: `main`
-- latest local checkpoint commits:
+- latest committed baseline before this working slice:
+  - `646bdf8 test(calculator): pin raw floor hostile input answers`
+  - `e664c81 test(calculator): add wall selector trace matrices`
+  - `014be88 docs(calculator): detail wall trace implementation plan`
+  - `8f73493 docs(calculator): select next wall trace slice`
   - `08c918e docs(calculator): document answer origins and next gates`
-  - `631f16d test(web): stabilize full workbench validation gate`
-  - `b172d5b test(calculator): add output origin trace matrices`
-  - `9abdd5f test(calculator): pin source and raw floor answer guards`
-  - `5d5a2b1 test(web): reuse mixed wall history fixture`
-- the checkpoint commit stack was clean after `08c918e` before this docs-only
-  next-slice selection review
+- latest completed working slice:
+  - `ubiq_open_web_packaged_lane_trace_matrix_v1`
+  - no solver, catalog, selector, source, support, or workbench runtime behavior
+    changed
+  - engine trace matrix:
+    `packages/engine/src/ubiq-open-web-packaged-lane-trace-matrix.test.ts`
+  - workbench card matrix:
+    `apps/web/features/workbench/ubiq-open-web-packaged-lane-card-matrix.test.ts`
+  - pinned behavior:
+    canonical, raw split, and tagged split UBIQ open-web lower packages stay
+    `family_general` at `56.7%` fit; reordered input stays live but is pinned
+    as `low_confidence` at `29%` fit
+  - validation:
+    focused UBIQ engine/web tests green; engine adjacent pack `7` files /
+    `24` tests green; workbench adjacent pack `7` files / `13` tests green;
+    engine/web typechecks green; full engine `102` files / `790` tests green;
+    full web `97` files / `605` tests green
 - `git diff --check`: green
 - `pnpm --filter @dynecho/engine typecheck`: green
 - `pnpm --filter @dynecho/web typecheck`: green with the known Next.js
@@ -91,8 +106,13 @@ Use this as the current baseline:
   - result: `2` files passed, `107` tests passed
 - full engine suite:
   - command: `pnpm --filter @dynecho/engine test`
-  - result: `98` files passed, `786` tests passed
-- `pnpm build`: green
+  - result: `102` files passed, `790` tests passed
+- full web suite:
+  - command: `pnpm --filter @dynecho/web test`
+  - result: `97` files passed, `605` tests passed
+- latest cross-package build gate:
+  - `pnpm build`: green with the known `sharp/@img` optional-package warnings
+    and Next.js TypeScript plugin recommendation
 - known non-blocking build warnings:
   - `sharp/@img` optional-package warnings through `proposal-docx`
   - Next.js TypeScript plugin recommendation
@@ -461,15 +481,21 @@ Candidate ranking:
 Current decision after the checkpoint:
 
 - `wall_selector_wider_trace_matrix_v1` and
-  `raw_floor_hostile_input_answer_matrix_v1` are now implemented as no-widening
+  `raw_floor_hostile_input_answer_matrix_v1` are implemented as no-widening
   checkpoints
-- neither matrix exposed a classified behavior bug in the current representative
-  rows, so no selector, source, or raw-floor support behavior was changed
+- `ubiq_open_web_packaged_lane_trace_matrix_v1` is now also implemented as the
+  next no-widening floor checkpoint
+- these matrices did not expose a classified behavior bug in the current
+  representative rows, so no selector, source, or raw-floor support behavior
+  was changed
 - do not immediately widen wall, floor, or CLT behavior from this evidence alone
-- next work must name one source-backed route family and one output surface
-  before behavior work; the likely candidates remain source-led raw-floor
-  widening one carrier at a time, or CLT combined evidence only after stronger
-  source/frequency support
+- the next implementation step should stay narrow:
+  - either add another source-backed output-origin/card guard for a named
+    package family with visible user-hostile input risk
+  - or, if behavior widening is selected, name exactly one route family and one
+    output surface first and add answer/card guards before code changes
+- do not use the UBIQ packaged lower-lane trace as permission to open bare
+  open-web raw carrier support
 
 ## Wall Selector Implementation Comparison
 

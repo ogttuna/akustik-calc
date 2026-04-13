@@ -39,6 +39,38 @@ Current planning implication:
 - `dataholz_clt_source_truth_audit_v1` is now closed as a no-widening source
   audit before any new raw-floor widening
 - latest implemented floor-side guard:
+  - `ubiq_open_web_packaged_lane_trace_matrix_v1`
+  - this is a no-widening UBIQ open-web packaged lower-lane guard before any
+    new raw-floor or open-web carrier behavior widening
+  - reason: UBIQ has explicit open-web source rows and the visible route is
+    already live through a source-backed family estimate, but exact/split,
+    tagged/split, and reordered layer inputs needed answer-level and card-level
+    pinning before any route behavior could be considered safe
+  - result:
+    - no solver, catalog, selector, source, support, or workbench runtime
+      behavior changed
+    - canonical, raw split, and tagged split lower packages all stay on
+      candidate ids:
+      - `ubiq_fl26_open_web_steel_300_16mm_exact_lab_2026`
+      - `ubiq_fl26_open_web_steel_200_16mm_exact_lab_2026`
+      - `ubiq_fl26_open_web_steel_400_16mm_exact_lab_2026`
+    - canonical/split/tagged variants are pinned as `family_general` at
+      `56.7%` fit with live floor and field output cards
+    - reordered lower-package input remains live but is pinned as
+      `low_confidence` at `29%` fit with duplicate-role warning coverage
+    - this checkpoint does not open bare open-web raw carrier support
+  - test anchors:
+    - `packages/engine/src/ubiq-open-web-packaged-lane-trace-matrix.test.ts`
+    - `apps/web/features/workbench/ubiq-open-web-packaged-lane-card-matrix.test.ts`
+  - validation:
+    - engine packaged-lane/UBIQ adjacent pack: `7` files, `24` tests, green
+    - workbench packaged-lane adjacent pack: `7` files, `13` tests, green
+    - full engine suite: `102` files, `790` tests, green
+    - full web suite: `97` files, `605` tests, green
+    - `pnpm build`: green with the known `sharp/@img` optional-package
+      warnings and Next.js TypeScript plugin recommendation
+    - engine/web typechecks and `git diff --check`: green
+- previous implemented floor-side guard:
   - `raw_floor_hostile_input_answer_matrix_v1`
   - this is a no-widening hostile-input guard before new raw-floor behavior
     widening

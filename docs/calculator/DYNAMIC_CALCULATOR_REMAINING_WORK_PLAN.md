@@ -91,6 +91,34 @@ Interpretation:
 
 Current verified result:
 
+- UBIQ open-web packaged-lane trace/card matrix: green
+  - slice id: `ubiq_open_web_packaged_lane_trace_matrix_v1`
+  - no solver, catalog, source, selector, support, or workbench runtime behavior
+    changed
+  - engine:
+    `packages/engine/src/ubiq-open-web-packaged-lane-trace-matrix.test.ts`
+  - workbench:
+    `apps/web/features/workbench/ubiq-open-web-packaged-lane-card-matrix.test.ts`
+  - focused validation:
+    - engine UBIQ trace matrix: `1` file, `1` test, green
+    - workbench UBIQ card matrix: `1` file, `1` test, green
+  - adjacent validation:
+    - engine packaged-lane/UBIQ pack: `7` files, `24` tests, green
+    - workbench packaged-lane pack: `7` files, `13` tests, green
+  - full validation:
+    - engine suite: `102` files, `790` tests, green
+    - web suite: `97` files, `605` tests, green
+    - `pnpm build`: green with the known `sharp/@img` optional-package
+      warnings and Next.js TypeScript plugin recommendation
+    - engine/web typechecks and `git diff --check`: green
+  - pinned surface:
+    canonical raw, raw split, tagged split, and reordered UBIQ open-web
+    `2 x 16 mm` lower packages
+  - interpretation:
+    - canonical/split/tagged variants stay on the current
+      `family_general` source-backed estimate at `56.7%` fit
+    - reordered input remains live but drops to `low_confidence` at `29%` fit
+    - this checkpoint does not open bare open-web raw carrier support
 - raw-floor hostile-input answer/card matrix: green
   - slice id: `raw_floor_hostile_input_answer_matrix_v1`
   - no solver, catalog, source, selector, support, or workbench runtime behavior
@@ -2134,7 +2162,14 @@ Do this in order:
       unsupported
     - open-web helper-heavy and fragmented CLT lower-only raw stacks stay
       fail-closed on impact outputs
-11. re-rank candidates before selecting the next behavior slice:
+11. keep `ubiq_open_web_packaged_lane_trace_matrix_v1` frozen as the latest
+    UBIQ packaged lower-lane guard:
+    - canonical, raw split, and tagged split open-web lower packages stay on
+      `family_general` at `56.7%` fit
+    - reordered lower-package input stays live but is pinned as
+      `low_confidence` at `29%` fit
+    - this is not permission to open bare open-web raw carrier support
+12. re-rank candidates before selecting the next behavior slice:
     - explicit CLT-local combined-interaction work remains source/frequency
       evidence-led
     - true raw-floor inference widening remains one carrier/output surface at a
