@@ -53,7 +53,8 @@ These rules govern calculator work:
 Use this as the current baseline:
 
 - branch: `main`
-- latest checked commit: `f3c0ace docs(calculator): refresh execution checkpoint`
+- latest checked base before this checkpoint:
+  `dc8800e docs(calculator): select next source-led slice`
 - checkpoint commit stack:
   - `b278baa test(engine): stabilize validation and full-suite gates`
   - `bdc91e7 fix(engine): preserve explicit floor stack intent`
@@ -74,6 +75,21 @@ Use this as the current baseline:
 - known non-blocking build warnings:
   - `sharp/@img` optional-package warnings through `proposal-docx`
   - Next.js TypeScript plugin recommendation
+- current checkpoint slices:
+  - `dataholz_timber_frame_role_gated_raw_predictor_audit_v1`
+  - `workbench_test_typing_hygiene_v1`
+  - engine selected pack: `8` files, `310` tests, green
+  - workbench selected pack: `5` files, `114` tests, green
+  - `pnpm --filter @dynecho/engine typecheck`: green
+  - `pnpm --filter @dynecho/web typecheck`: green after the workbench test
+    typing hygiene pass
+  - `pnpm build`: green with the known `sharp/@img` and Next TypeScript-plugin
+    warnings
+  - workbench typing hygiene pack: `16` files, `64` tests, green
+  - typing hygiene scope: strict `FloorRole` row typing, string-normalized test
+    thickness inputs, explicit non-null scenario-result guards, warning/note
+    callback types, and output status maps narrowed to the actually requested
+    output set
 - first TUAS source-truth fixture refresh is green:
   - `predictor-published-family-estimate`
   - `impact-layer-stack-driven`
@@ -284,13 +300,36 @@ Acceptance:
 
 ### Step 2: Dataholz Timber-Frame Raw/Predictor Role-Gate Audit
 
-Status: selected as the next implementation slice
+Status: closed as source-truth audit / no broad raw widening
 
 Baseline validation after selecting this slice:
 
 - engine starting pack: `6` files, `300` tests, green
 - workbench starting pack: `3` files, `104` tests, green
 - no solver behavior changed during this plan-selection pass
+- new measurement guard added after review feedback:
+  - `dataholz-timber-frame-source-truth-audit.test.ts`
+  - pins all `10` imported Dataholz timber-frame rows to explicit numeric
+    source truth, official-id field continuations, visible tagged exact routes,
+    raw fail-closed exceptions, basis labels, and unsupported output buckets
+
+Slice result:
+
+- no generic raw widening was taken for `timber_frame_floor`,
+  `timber_joist_floor`, or `engineered_timber_structural`
+- all `10` imported Dataholz timber-frame rows now have executable numeric
+  source-truth guards for `Rw`, companion `Ctr`/`Rw+Ctr`, `Ln,w`, `CI`,
+  `CI,50-2500`, `Ln,w+CI`, field continuations, basis labels, and
+  support/unsupported buckets
+- role-tagged exact rows stay exact, while raw no-lining timber-frame input
+  remains screening-only for impact outputs
+- contiguous same-role split pieces preserve the exact Dataholz `GDRNXA11A`
+  answer; disjoint/intervening role splits are intentionally withheld from the
+  exact route and fall back to the family estimate with explicit warnings
+- workbench output cards now read floor-study `Ctr` from the active floor-system
+  companion before the live airborne screening estimate, so the Dataholz
+  `GDRNXA11A` exact card shows source `Ctr -17 dB` instead of the unrelated
+  screening `-6 dB`
 
 Purpose:
 
@@ -333,12 +372,80 @@ Work:
 
 Acceptance:
 
-- new support is explicitly labeled as exact, bound, product, family estimate, or
-  low confidence
-- unsupported surfaces stay unsupported instead of producing optimistic values
-- route snapshots do not drift under split/reorder/noise tests
-- if no source-backed widening is defensible, the slice closes as a documented
-  no-widening/fail-closed audit instead of forcing a behavior change
+- closed for this slice:
+  - new support is explicitly labeled as exact, bound, product, family estimate,
+    or low confidence
+  - unsupported surfaces stay unsupported instead of producing optimistic values
+  - route snapshots do not drift under contiguous split tests
+  - disjoint/intervening split topology does not preserve exact-match state
+  - no source-backed raw widening was defensible, so the slice closes as a
+    documented no-widening/fail-closed audit instead of forcing a behavior change
+
+### Step 2.5: TUAS Measured Lightweight Timber Source-Triage
+
+Status: selected as the next implementation slice
+
+Slice id:
+
+- `tuas_measured_lightweight_timber_source_triage_v1`
+
+Purpose:
+
+- use the already-landed TUAS measured open-box and CLT rows to choose the next
+  narrow, source-defensible calculator improvement
+- avoid widening raw open-box, raw CLT, or helper-only timber carriers unless the
+  measured corpus and visible schedule defend the exact route
+- turn the next TUAS decision into executable source-truth tests before changing
+  solver behavior
+
+Starting posture:
+
+- TUAS open-box exact rows are broad enough to support defended combined
+  upper-plus-lower packages
+- raw bare open-box, lower-only open-box, and upper-only open-box rows still stay
+  fail-closed on impact
+- `R6b` is already landed as a reinforced lower-treatment `b` branch
+- `R7a` is already landed as a heavy/wet `a` branch with an upper EPS-board
+  surface
+- `R7b`, `R8b`, `R9b`, `R10a`, and `R2c` are landed exact routes; any next move
+  must not reopen their shorthand/proxy variants accidentally
+- TUAS combined CLT rows through `C7c` are landed, while `C11c` remains
+  deliberately deferred / fail-closed
+
+Work:
+
+- build a TUAS measured-source audit table for the currently imported open-box
+  and CLT rows that are still candidates for route tightening
+- classify each candidate branch as:
+  - exact already defended
+  - exact but only under explicit role tags
+  - family estimate
+  - raw/helper-only fail-closed
+  - source anomaly / defer
+- add answer-measuring tests before implementation:
+  - numeric `Rw`, `Ln,w`, `Ln,w+CI`, `CI,50-2500`
+  - field continuations where `impactFieldContext` is available
+  - support/unsupported output buckets
+  - exact match id or family estimate candidate ids
+  - warning/basis labels for fail-closed or low-confidence routes
+- include hostile-input guards:
+  - contiguous split parity for exact rows
+  - disjoint/intervening role splits withholding exact routes
+  - missing `floorRole` labels
+  - upper-only, lower-only, and bare raw carrier attempts
+  - workbench card parity for any route whose supported output bucket changes
+- if no safe widening is found, close the slice as a no-widening source audit and
+  keep the fail-closed posture explicit
+
+Acceptance:
+
+- the next TUAS candidate decision is based on measured-source rows, not family
+  guesswork
+- any behavior change has numeric source-truth tests and workbench surface tests
+  in the same slice
+- raw/helper-only routes do not become optimistic by accident
+- exact rows remain stable under contiguous split input and unstable topology is
+  withheld with visible warnings
 
 ### Step 3: Mixed Floor/Wall Robustness Expansion
 
@@ -449,14 +556,24 @@ Acceptance:
 
 Run target packs with `exec vitest run`:
 
-Selected next-slice starting pack:
+Closed Dataholz checkpoint pack:
 
 ```sh
-pnpm --filter @dynecho/engine exec vitest run src/raw-floor-exact-exception-audit.test.ts src/raw-floor-weaker-carrier-posture.test.ts src/floor-exact-companion-split-parity.test.ts src/floor-source-corpus-contract.test.ts src/calculate-assembly.test.ts src/calculate-impact-only.test.ts
+pnpm --filter @dynecho/engine exec vitest run src/dataholz-timber-frame-source-truth-audit.test.ts src/target-output-support-contract.test.ts src/raw-floor-exact-exception-audit.test.ts src/raw-floor-weaker-carrier-posture.test.ts src/floor-exact-companion-split-parity.test.ts src/floor-source-corpus-contract.test.ts src/calculate-assembly.test.ts src/calculate-impact-only.test.ts
 ```
 
 ```sh
-pnpm --filter @dynecho/web exec vitest run features/workbench/floor-family-regressions.test.ts features/workbench/raw-floor-weaker-carrier-route-posture.test.ts features/workbench/floor-stack-invariance.test.ts
+pnpm --filter @dynecho/web exec vitest run features/workbench/simple-workbench-output-model.test.ts features/workbench/dataholz-timber-frame-source-truth-route.test.ts features/workbench/floor-family-regressions.test.ts features/workbench/raw-floor-weaker-carrier-route-posture.test.ts features/workbench/floor-stack-invariance.test.ts
+```
+
+Selected next-slice starting pack:
+
+```sh
+pnpm --filter @dynecho/engine exec vitest run src/tuas-candidate-backlog-contract.test.ts src/tuas-support-surface-decision-contract.test.ts src/tuas-post-corridor-screening-contract.test.ts src/floor-gap-ledger-contract.test.ts src/floor-profile-boundary-matrix.test.ts src/raw-floor-safe-bare-split-parity.test.ts src/calculate-assembly.test.ts src/calculate-impact-only.test.ts
+```
+
+```sh
+pnpm --filter @dynecho/web exec vitest run features/workbench/floor-family-regressions.test.ts features/workbench/floor-profile-boundary-route-matrix.test.ts features/workbench/raw-floor-inferred-split-parity.test.ts features/workbench/raw-floor-weaker-carrier-route-posture.test.ts features/workbench/floor-output-card-support-parity.test.ts
 ```
 
 General floor/source guard packs:

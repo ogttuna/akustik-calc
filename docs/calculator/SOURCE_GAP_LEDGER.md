@@ -905,14 +905,27 @@ This section is implementation-backed from the current local catalog import, not
 
 - Dataholz timber-frame exact rows in the catalog: `10`
 - current meaning:
-  - this is now the selected next one-family audit surface for
-    `source_led_raw_or_predictor_widening_v1`
+  - the `dataholz_timber_frame_role_gated_raw_predictor_audit_v1` slice is
+    closed as a source-truth audit and no-widening decision
   - the prior blocker was that open-box, open-web, and Dataholz CLT boundary
-    decisions still needed closure; those are now closed enough to stop blocking
-    a timber-frame role-gated audit
-  - the audit must keep curated exact rows, explicit `base_structure` routes,
-    predictor/family estimates, low-confidence continuations, and raw
-    fail-closed carriers separate
+    decisions still needed closure; those are now closed enough, and the
+    timber-frame audit confirmed that generic raw widening is still not
+    defensible
+  - curated exact rows, explicit `base_structure` routes, predictor/family
+    estimates, low-confidence continuations, and raw fail-closed carriers must
+    remain separate
+  - `packages/engine/src/dataholz-timber-frame-source-truth-audit.test.ts`
+    now pins all `10` imported rows to numeric source truth, official-id field
+    continuations, visible exact/raw route posture, split-topology behavior, and
+    supported/unsupported output buckets
+  - `apps/web/features/workbench/dataholz-timber-frame-source-truth-route.test.ts`
+    now verifies that exact Dataholz `GDRNXA11A` reaches the workbench output
+    cards with source `Rw 83`, `Ctr -17`, `Ln,w 42`, `CI +2`,
+    `CI,50-2500 +14`, `Ln,w+CI 44`, `L'n,w 44`, `L'nT,w 42`, and
+    `L'nT,50 56`
+  - workbench floor-study `Ctr` cards must read the active floor-system
+    companion before live airborne screening estimates; this prevents exact
+    Dataholz source `Ctr -17 dB` from being masked by screening `-6 dB`
   - do not use the timber-frame corpus to reopen generic raw
     `timber_frame_floor`, `timber_joist_floor`, or
     `engineered_timber_structural` lanes unless source-backed role evidence is
@@ -920,30 +933,40 @@ This section is implementation-backed from the current local catalog import, not
 
 ## Immediate Research Order
 
-1. Dataholz timber-frame component sheets and imported exact corpus
+1. TUAS measured corpus
    - current status:
-     - selected next audit surface
+     - selected next implementation slice:
+       `tuas_measured_lightweight_timber_source_triage_v1`
    - immediate purpose:
-     - decide whether any role-gated raw/predictor behavior can be tightened
-       safely, or whether the current fail-closed raw posture should be frozen
-       more explicitly
+     - choose the next narrow source-defensible floor improvement from the
+       measured open-box / CLT corpus, or close the next candidate as
+       no-widening if the measured rows do not defend it
    - first checks:
+     - imported open-box and CLT rows still match spreadsheet single-number
+       truth for `Rw`, `Ln,w`, `Ln,w+CI`, and `CI,50-2500`
+     - `R6b`, `R7a`, `R7b`, `R8b`, `R9b`, `R10a`, and `R2c` remain exact only
+       under their defended visible schedules
+     - raw bare, lower-only, and upper-only open-box carrier attempts remain
+       fail-closed unless measured source evidence justifies a narrower route
+     - `C11c` remains a source anomaly / fail-closed row and must not reopen
+       combined-CLT inference
+     - workbench cards stay aligned with engine support buckets for any route
+       whose output support changes
+2. Dataholz timber-frame component sheets and imported exact corpus
+   - current status:
+     - latest audit closed; keep as defended no-widening/fail-closed reference
+   - immediate purpose:
+     - preserve the explicit source-truth guards and only reopen this family
+       with stronger component-sheet evidence, not with generic raw inference
+   - closed checks:
      - raw-vs-tagged drift around `dataholz_gdsnxn01a_timber_frame_lab_2026`
-     - explicit `base_structure` exact behavior for the imported timber-frame
-       rows
+       remains intentional
+     - explicit `base_structure` exact behavior for imported timber-frame rows is
+       measured against source truth
      - helper-only raw timber carriers remain fail-closed unless role evidence
        is explicit
-     - split/reorder/many-layer noise does not promote weak carriers
-2. TUAS measured corpus
-   - next surface-design slice after the UBIQ corridor close-out
-   - still the strongest current open-access source for measured lightweight timber floor families with drawings and resilient-layer metadata
-   - `2026-04-09` public API recheck confirms the currently published dataset includes the drawing and detail files actually used in the current audit:
-     - `TUAS2023FloorConstructionDrawingsR1.pdf`
-     - `TUAS2023FloorDetails.pdf`
-   - immediate implication:
-      - `R6b` is now resolved and can stay as an exact-only reinforced `b` branch
-      - `R7a` is also now resolved as an exact-only heavy/wet `a` branch with a dedicated upper-EPS-board surface
-      - the next TUAS decision is no longer this branch design; it is which later new-surface corridor is worth mining after the UBIQ gate
+     - contiguous split noise preserves exact rows; disjoint/intervening role
+       splits do not promote weak carriers
 3. UBIQ official system tables
    - current status:
      - the corridor decision is closed for now

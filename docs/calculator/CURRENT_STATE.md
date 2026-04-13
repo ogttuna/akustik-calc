@@ -27,6 +27,47 @@ Verified broad corridors:
 - workbench defended corridor: green
   - `24` files
   - `294` tests
+- latest change-adjacent revalidation after the Dataholz timber-frame
+  role-gated source-truth audit: green
+  - selected/closed slice:
+    `dataholz_timber_frame_role_gated_raw_predictor_audit_v1`
+  - engine targeted pack:
+    - command: `pnpm --filter @dynecho/engine exec vitest run src/dataholz-timber-frame-source-truth-audit.test.ts src/target-output-support-contract.test.ts src/raw-floor-exact-exception-audit.test.ts src/raw-floor-weaker-carrier-posture.test.ts src/floor-exact-companion-split-parity.test.ts src/floor-source-corpus-contract.test.ts src/calculate-assembly.test.ts src/calculate-impact-only.test.ts --reporter=basic`
+    - result: `8` files passed, `310` tests passed
+  - workbench targeted pack:
+    - command: `pnpm --filter @dynecho/web exec vitest run features/workbench/simple-workbench-output-model.test.ts features/workbench/dataholz-timber-frame-source-truth-route.test.ts features/workbench/floor-family-regressions.test.ts features/workbench/raw-floor-weaker-carrier-route-posture.test.ts features/workbench/floor-stack-invariance.test.ts --reporter=basic`
+    - result: `5` files passed, `114` tests passed
+  - engine typecheck:
+    - command: `pnpm --filter @dynecho/engine typecheck`
+    - result: green
+  - web standalone typecheck:
+    - command: `pnpm --filter @dynecho/web typecheck`
+    - result: green after the workbench test typing hygiene pass
+  - workbench typing hygiene pack:
+    - command: `pnpm --filter @dynecho/web exec vitest run features/workbench/dynamic-route-family-boundary-scan.test.ts features/workbench/dynamic-route-family-boundary.test.ts features/workbench/dynamic-route-order-sensitivity.test.ts features/workbench/floor-output-availability-matrix.test.ts features/workbench/floor-output-card-support-parity.test.ts features/workbench/wall-output-card-support-parity.test.ts features/workbench/floor-packaged-lane-disjoint-route-detour.test.ts features/workbench/floor-packaged-lane-helper-disjoint-route-detour.test.ts features/workbench/floor-profile-boundary-route-matrix.test.ts features/workbench/raw-floor-inferred-split-parity.test.ts features/workbench/raw-floor-packaged-lane-route-audit.test.ts features/workbench/raw-floor-safe-bare-split-parity.test.ts features/workbench/raw-floor-screening-route-support.test.ts features/workbench/raw-floor-weaker-carrier-route-posture.test.ts features/workbench/simple-workbench-output-model.test.ts features/workbench/dataholz-timber-frame-source-truth-route.test.ts --reporter=basic`
+    - result: `16` files passed, `64` tests passed
+  - repository build:
+    - command: `pnpm build`
+    - result: green
+    - known non-blocking warnings remain: `sharp/@img` optional packages
+      through `proposal-docx`, and the Next.js TypeScript plugin recommendation
+  - scope:
+    - no generic raw widening was taken for `timber_frame_floor`,
+      `timber_joist_floor`, or `engineered_timber_structural`
+    - all `10` imported Dataholz timber-frame rows now have executable
+      source-truth guards for `Rw`, companion `Ctr`/`Rw+Ctr`, `Ln,w`, `CI`,
+      `CI,50-2500`, `Ln,w+CI`, field continuations, basis labels, and
+      support/unsupported buckets
+    - role-tagged exact rows stay exact, raw no-lining timber-frame input stays
+      impact fail-closed, and disjoint/intervening split topology does not
+      preserve exact-match state
+    - workbench floor-study `Ctr` output cards now prefer the active floor-system
+      companion before live airborne screening `Ctr`, so exact Dataholz
+      `GDRNXA11A` displays source `Ctr -17 dB` instead of screening `-6 dB`
+    - strict web test typing debt is closed for the touched workbench route and
+      output-card test files by using literal `FloorRole` rows, string-normalized
+      draft thicknesses, explicit evaluated-result guards, typed warning/note
+      callbacks, and output-status maps scoped to requested outputs
 - latest change-adjacent revalidation after the TUAS `C7` wet geotextile exact landing: green
   - engine targeted pack: `6` files, `313` tests
   - workbench targeted pack: `1` file, `81` tests
