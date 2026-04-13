@@ -71,6 +71,28 @@ export const WALL_DETOUR_ROWS: readonly Omit<LayerDraft, "id">[] = [
 
 export const FLOOR_DETOUR_ROWS: readonly Omit<LayerDraft, "id">[] = getPresetById("tuas_open_box_dry_exact").rows;
 
+const DATAHOLZ_GDMTXA04A_BOUNDARY_ROWS: readonly Omit<LayerDraft, "id">[] = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "12.5" },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: "50" },
+  { floorRole: "ceiling_cavity", materialId: "acoustic_hanger_ceiling", thicknessMm: "70" },
+  { floorRole: "upper_fill", materialId: "non_bonded_chippings", thicknessMm: "60" },
+  { floorRole: "floor_covering", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: "65" },
+  { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: "160" }
+];
+
+const TUAS_C11C_COMBINED_WET_FAIL_CLOSED_ROWS: readonly Omit<LayerDraft, "id">[] = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: "100" },
+  { floorRole: "ceiling_cavity", materialId: "acoustic_hanger_ceiling", thicknessMm: "70" },
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: "8" },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: "3" },
+  { floorRole: "upper_fill", materialId: "glasswool_board", thicknessMm: "30" },
+  { floorRole: "floating_screed", materialId: "geotextile", thicknessMm: "1" },
+  { floorRole: "floating_screed", materialId: "screed", thicknessMm: "40" },
+  { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: "260" }
+];
+
 function buildRows(rows: readonly Omit<LayerDraft, "id">[], id: string): LayerDraft[] {
   return rows.map((row, index) => ({
     ...row,
@@ -396,6 +418,29 @@ export const ROUTE_MIXED_GENERATED_CASES: readonly RouteMixedGeneratedCase[] = [
     splitPlans: [
       { parts: ["20", "40"], rowIndex: 1 },
       { parts: ["60", "80"], rowIndex: 3 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    id: "route-dataholz-gdmtxa04a-boundary",
+    label: "Dataholz GDMTXA04A manual-match boundary floor",
+    requestedOutputs: DEFAULT_FLOOR_REQUESTED_OUTPUTS,
+    rows: DATAHOLZ_GDMTXA04A_BOUNDARY_ROWS,
+    splitPlans: [
+      { parts: ["25", "35"], rowIndex: 3 },
+      { parts: ["32.5", "32.5"], rowIndex: 4 },
+      { parts: ["80", "80"], rowIndex: 5 }
+    ],
+    studyMode: "floor"
+  },
+  {
+    id: "route-tuas-c11c-fail-closed",
+    label: "TUAS C11c fail-closed combined wet floor",
+    requestedOutputs: DEFAULT_FLOOR_REQUESTED_OUTPUTS,
+    rows: TUAS_C11C_COMBINED_WET_FAIL_CLOSED_ROWS,
+    splitPlans: [
+      { parts: ["12", "18"], rowIndex: 6 },
+      { parts: ["130", "130"], rowIndex: 9 }
     ],
     studyMode: "floor"
   },

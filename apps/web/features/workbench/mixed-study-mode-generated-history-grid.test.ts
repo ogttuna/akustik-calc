@@ -52,6 +52,18 @@ const HISTORY_VARIANTS: readonly HistoryVariant[] = [
     reverseParts: true
   },
   {
+    id: "ascending-direct-trailing-rebuild",
+    planOrder: "asc",
+    rebuildPiece: "trailing",
+    reverseParts: false
+  },
+  {
+    id: "descending-reversed-leading-rebuild",
+    planOrder: "desc",
+    rebuildPiece: "leading",
+    reverseParts: true
+  },
+  {
     id: "descending-direct-trailing-rebuild",
     planOrder: "desc",
     rebuildPiece: "trailing",

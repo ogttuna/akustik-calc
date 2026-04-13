@@ -817,6 +817,57 @@ describe("mixed study-mode torture", () => {
       };
     };
 
+    const buildConcreteWallDetour = () => {
+      useWorkbenchStore.getState().startStudyMode("wall");
+      useWorkbenchStore.getState().appendRows(getPresetById("concrete_wall").rows);
+
+      const gypsumBoard = useWorkbenchStore.getState().rows.find(
+        (row) => row.materialId === "gypsum_board" && row.thicknessMm === "12.5"
+      );
+      const rockwool = useWorkbenchStore.getState().rows.find(
+        (row) => row.materialId === "rockwool" && row.thicknessMm === "50"
+      );
+      const concrete = useWorkbenchStore.getState().rows.find(
+        (row) => row.materialId === "concrete" && row.thicknessMm === "100"
+      );
+      expect(gypsumBoard).toBeTruthy();
+      expect(rockwool).toBeTruthy();
+      expect(concrete).toBeTruthy();
+
+      useWorkbenchStore.getState().duplicateRow(rockwool!.id);
+      useWorkbenchStore.getState().duplicateRow(concrete!.id);
+
+      const currentRows = useWorkbenchStore.getState().rows;
+      const duplicatedRockwool = currentRows[currentRows.findIndex((row) => row.id === rockwool!.id) + 1];
+      const duplicatedConcrete = currentRows[currentRows.findIndex((row) => row.id === concrete!.id) + 1];
+      expect(duplicatedRockwool).toBeTruthy();
+      expect(duplicatedConcrete).toBeTruthy();
+
+      useWorkbenchStore.getState().updateThickness(rockwool!.id, "20");
+      useWorkbenchStore.getState().updateThickness(duplicatedRockwool!.id, "30");
+      useWorkbenchStore.getState().updateThickness(concrete!.id, "60");
+      useWorkbenchStore.getState().updateThickness(duplicatedConcrete!.id, "40");
+      useWorkbenchStore.getState().updateMaterial(gypsumBoard!.id, "diamond_board");
+      moveCurrentRowToIndex(useWorkbenchStore, duplicatedRockwool!.id, 0);
+      moveCurrentRowToIndex(useWorkbenchStore, duplicatedConcrete!.id, useWorkbenchStore.getState().rows.length - 1);
+
+      const scenarios = evaluateCurrentWall("save-load-concrete-wall-detour");
+      assertWallScenario("save-load-concrete-wall-detour lab", scenarios.lab, WALL_LAB_OUTPUTS);
+      assertWallScenario("save-load-concrete-wall-detour field", scenarios.field, WALL_FIELD_OUTPUTS);
+
+      return {
+        field: scenarioEnvelope(scenarios.field, "wall"),
+        lab: scenarioEnvelope(scenarios.lab, "wall"),
+        requestedOutputs: [...useWorkbenchStore.getState().requestedOutputs],
+        rows: normalizeRowsForRoundtrip(useWorkbenchStore.getState().rows),
+        savedScenarioId: (() => {
+          useWorkbenchStore.getState().saveCurrentScenario();
+          return useWorkbenchStore.getState().savedScenarios[0]?.id ?? null;
+        })(),
+        studyMode: useWorkbenchStore.getState().studyMode
+      };
+    };
+
     const buildBoundFloorDetour = () => {
       useWorkbenchStore.getState().startStudyMode("floor");
       useWorkbenchStore.getState().appendRows(getPresetById("ubiq_open_web_300_bound").rows);
@@ -1385,18 +1436,19 @@ describe("mixed study-mode torture", () => {
     ] as const;
 
     const wallDirect = buildWallDetour();
+    const concreteWallBoundary = buildConcreteWallDetour();
     const productExactBoundary = buildProductExactFloorDetour();
     buildWallDetour();
     const exactFamilyBoundary = buildExactFamilyFloorDetour();
-    buildWallDetour();
+    buildConcreteWallDetour();
     buildDeltaFloorDetour();
-    buildWallDetour();
     const steel300Boundary = buildSteel300UnspecifiedDetour();
 
     const retainedIds = new Set(useWorkbenchStore.getState().savedScenarios.map((scenario) => scenario.id));
     expect(useWorkbenchStore.getState().savedScenarios).toHaveLength(8);
     for (const savedScenarioId of [
       wallDirect.savedScenarioId,
+      concreteWallBoundary.savedScenarioId,
       productExactBoundary.savedScenarioId,
       exactFamilyBoundary.savedScenarioId,
       steel300Boundary.savedScenarioId
@@ -1413,6 +1465,15 @@ describe("mixed study-mode torture", () => {
       expectedStudyMode: wallDirect.studyMode,
       label: "oldest wall detour at saved-scenario retention boundary",
       savedScenarioId: wallDirect.savedScenarioId
+    });
+    assertReloadMatches({
+      directField: concreteWallBoundary.field,
+      directLab: concreteWallBoundary.lab,
+      expectedRequestedOutputs: concreteWallBoundary.requestedOutputs,
+      expectedRows: concreteWallBoundary.rows,
+      expectedStudyMode: concreteWallBoundary.studyMode,
+      label: "second wall-family detour at saved-scenario retention boundary",
+      savedScenarioId: concreteWallBoundary.savedScenarioId
     });
     assertReloadMatches({
       directField: exactFamilyBoundary.field,
@@ -1444,11 +1505,11 @@ describe("mixed study-mode torture", () => {
       const direct = currentCase.build();
       buildWallDetour();
       partnerCase.build();
-      buildWallDetour();
+      buildConcreteWallDetour();
       secondaryPartnerCase.build();
       buildWallDetour();
       tertiaryPartnerCase.build();
-      buildWallDetour();
+      buildConcreteWallDetour();
 
       assertReloadMatches({
         directField: direct.field,
