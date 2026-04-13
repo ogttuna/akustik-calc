@@ -1,6 +1,6 @@
 # Dynamic Calculator Coverage And Accuracy Plan
 
-Last reviewed: 2026-04-11
+Last reviewed: 2026-04-13
 
 Document role:
 
@@ -19,7 +19,7 @@ Read together with:
 
 ## Current Active Slice Ledger
 
-- latest closed slice: `tuas_c4c_combined_heavy_dry_exact_candidate_v1`
+- latest closed slice: `tuas_c11c_wet_stack_anomaly_audit_v1`
 - status: closed and green
 - source/implementation comparison:
   - the C4c candidate pass compared implementation against the rebaselined TUAS spreadsheet rows `34`, `35`, `36`, `41`, and `42` plus drawing page `27/40`
@@ -27,27 +27,32 @@ Read together with:
   - `C4c` is now landed exactly as `tuas_c4c_clt260_measured_2026`
   - `C4c` page `27/40` source stack is `50 mm glass wool + 2 x 15 mm gypsum board + 3 mm EPS + 8 mm laminate` over `CLT 260`, plus the same `70 mm` acoustic hanger ceiling with `100 mm` mineral wool and `2 x 13 mm` gypsum board
   - `C4c` landed with `Ln,w 24`, `Ln,w+CI 26`, `Ln,w+CI,50-2500 40`, `Rw 74`, and numeric `Rw+C 69.69668895954507`
-  - `C11c` remains deferred behind a wet-stack anomaly check: page `30/40` shows `30 mm glass wool + geotextile + 40 mm screed` plus the same lower suspended ceiling, but the source truth is much weaker at `Ln,w 59`, `Ln,w+CI 60`, `Ln,w+CI,50-2500 60`, `Rw 74`
+  - `C11c` anomaly audit is now closed as deferred/fail-closed: page `30/40` shows `30 mm glass wool + geotextile + 40 mm screed` plus the same lower suspended ceiling, but the source truth is much weaker at `Ln,w 59`, `Ln,w+CI 60`, `Ln,w+CI,50-2500 60`, `Rw 74`
+  - the C11c source tuple is `35 dB` weaker than same-airborne `C4c`, `29 dB` weaker than nearby wet combined `C7c`, and `21 dB` weaker than predictor-backed dry combined `C5c` on `Ln,w`
+  - current C11c route behavior therefore remains screening-only with `Rw 49`, no exact match, no predictor estimate, and impact outputs unsupported
   - row `42` is still `Rw+C`, but the current domain still stores it in the `RwCtr` companion slot; this remains an explicit semantic follow-up, not a hidden numeric drift
   - exact split parity now accepts only merge-safe contiguous same-role/same-material packed thickness equivalents; mixed-material schedules still require explicit material/thickness schedules
   - route-control finding from this slice:
     - adding `C4c` correctly created a profile-aligned combined CLT exact row, but it also exposed that under-described combined CLT stacks with lower board/fill and no `ceiling_cavity` could drift into family estimates
     - `floor-system-estimate.ts` now keeps those stacks fail-closed unless the lower suspended-cavity topology is explicit
 - validation:
-  - `pnpm --filter @dynecho/engine test -- src/tuas-candidate-backlog-contract.test.ts src/floor-source-corpus-contract.test.ts src/tuas-clt-backlog-decision-contract.test.ts src/floor-exact-companion-split-parity.test.ts src/floor-widening-candidate-contract.test.ts src/impact-predictor-input.test.ts --reporter=basic`
+  - `pnpm --filter @dynecho/engine exec vitest run src/tuas-c11c-wet-stack-anomaly-audit.test.ts --reporter=basic`
+  - result: `1` file, `2` tests, green
+  - `pnpm --filter @dynecho/engine exec vitest run src/tuas-candidate-backlog-contract.test.ts src/floor-source-corpus-contract.test.ts src/tuas-clt-backlog-decision-contract.test.ts src/floor-exact-companion-split-parity.test.ts src/floor-widening-candidate-contract.test.ts src/impact-predictor-input.test.ts`
   - result: `6` files, `83` tests, green
-  - `pnpm --filter @dynecho/engine test -- src/calculate-assembly.test.ts src/calculate-impact-only.test.ts --reporter=basic`
+  - `pnpm --filter @dynecho/engine exec vitest run src/calculate-assembly.test.ts src/calculate-impact-only.test.ts`
   - result: `2` files, `287` tests, green
-  - `pnpm --filter @dynecho/engine test -- src/floor-input-noise-parity.test.ts src/floor-gap-ledger-contract.test.ts src/tuas-support-surface-decision-contract.test.ts --reporter=basic`
+  - `pnpm --filter @dynecho/engine exec vitest run src/floor-input-noise-parity.test.ts src/floor-gap-ledger-contract.test.ts src/tuas-support-surface-decision-contract.test.ts`
   - result: `3` files, `12` tests, green
-  - `pnpm --filter @dynecho/web test -- features/workbench/floor-family-regressions.test.ts features/workbench/floor-stack-invariance.test.ts --reporter=basic`
+  - `pnpm --filter @dynecho/web exec vitest run features/workbench/floor-family-regressions.test.ts features/workbench/floor-stack-invariance.test.ts`
   - result: `2` files, `102` tests, green
   - `pnpm build`
   - result: green with the known Node `>=22` warning and existing `sharp/@img` optional-package warnings
 - next intended move:
   - keep `C3c` and `C4c` frozen as staged/heavy-dry combined exact anchors
-  - run a separate `tuas_c11c_wet_stack_anomaly_audit_v1` before any C11c import decision
+  - keep `C11c` deferred unless a future source correction or frequency-level explanation resolves the anomaly
   - do not let `C11c` reopen shorthand inference, predictor aliases, or under-described direct-fixed stacks
+  - resume raw/predictor widening only one source-backed family at a time
 
 ## 1. Why This Document Exists
 
@@ -410,14 +415,14 @@ This repo is no longer at a cold-start point, so the live next-step order is now
 3. Workstream A remaining combined-CLT matrix
    - `tuas_remaining_combined_clt_exact_import_decision_matrix_v1` is closed with `C3c` as the first landed exact import
    - `tuas_c4c_combined_heavy_dry_exact_candidate_v1` is also closed with exact `tuas_c4c_clt260_measured_2026`
-   - next selected slice is `tuas_c11c_wet_stack_anomaly_audit_v1`
-   - audit `C11c` before any import; keep it screening-only unless the weak wet-stack tuple is explained
+   - `tuas_c11c_wet_stack_anomaly_audit_v1` is closed as deferred/fail-closed
+   - keep `C11c` screening-only unless the weak wet-stack tuple is explained by source correction or frequency-level evidence
    - `C2c`, `C3c`, `C4c`, and `C7c` are already exact anchors, and `C5c` is already predictor-backed
 4. Workstream A/B boundary hold
    - do not let `C2c`, `C5c`, or `C7c` silently reopen shorthand aliasing or broader combined-CLT predictor lanes
    - keep under-described combined direct-fixed CLT stacks fail-closed unless the exact source row is imported deliberately
 5. Workstream C
-   - only after the `C11c` anomaly decision is green, resume raw/predictor widening on corridors that are now stronger from A/B
+   - resume raw/predictor widening on corridors that are now stronger from A/B, but keep it source-led and one family at a time
 6. Workstream D / E2
    - broader wall widening and broader mixed/history grids remain evidence-triggered follow-up work, not the default next move
 
@@ -430,7 +435,7 @@ Reasoning:
 
 - the implementation already landed the hybrid open-box branch through `R2c`, the CLT dry-top branch through `C5`, and the wet geotextile CLT branch through `C7`
 - `packages/engine/src/tuas-clt-backlog-decision-contract.test.ts` now keeps the remaining combined CLT backlog fail-closed unless a row earns a pure exact import
-- the next floor move is therefore no longer `C7`, `C3c`, or `C4c`; it is the rebaselined `C11c` wet-stack anomaly audit
+- the next floor move is therefore no longer `C7`, `C3c`, `C4c`, or `C11c`; C11c is audited and deliberately deferred
 - the combined `c`-family CLT backlog is a different class of debt:
   - `C2c`, `C3c`, `C4c`, and `C7c` are now exact anchors
   - `C5c` is now predictor-backed
@@ -449,7 +454,7 @@ These are the safest next gains.
   - exact row `tuas_c7_clt260_measured_2026` is now landed on the already-defended `35 mm EPS + 1 mm geotextile + 40 mm screed + 3 mm EPS underlay + 8 mm laminate` visible surface
   - rebaselined landed posture is `Ln,w 39`, `Ln,w+CI 40`, `Ln,w+CI,50-2500 42`, `Rw 57`
 - freeze the adjacent CLT-local neighbors now that `C7` is landed
-  - keep `C11c` screening-only / impact-unsupported until the wet-stack anomaly audit justifies another posture
+  - keep `C11c` screening-only / impact-unsupported after the wet-stack anomaly audit unless source correction or frequency-level evidence justifies another posture
   - keep `C2c`, `C3c`, `C4c`, and `C7c` exact-only, and keep `C5c` predictor-backed
   - keep under-described combined direct-fixed CLT stacks fail-closed
 - treat the wall-selector and UBIQ provenance slices as closed
@@ -831,7 +836,7 @@ The safest next execution sequence is:
 What this means in practice:
 
 - the next slice is no longer wall-first, UBIQ-first, open-box-first, C7-first, or mixed-history-first
-- the first remaining combined exact-import decision matrix is closed with `C3c`, and the `C4c` exact-candidate pass is also closed; the next slice is `tuas_c11c_wet_stack_anomaly_audit_v1`
+- the first remaining combined exact-import decision matrix is closed with `C3c`, the `C4c` exact-candidate pass is also closed, and the `C11c` anomaly audit is closed as deferred / fail-closed
 - the real risk is no longer "can we find one more same-family open-box or upper-only CLT row":
   - it is accidentally using combined CLT source rows to smuggle in broader shorthand inference, predictor aliases, or raw widening
 - each floor widening slice should still carry its own first mixed/history follow-up if it creates a new representative corridor
@@ -841,7 +846,7 @@ What this means in practice:
 
 If only one slice should start now, the best candidate is:
 
-- `tuas_c11c_wet_stack_anomaly_audit_v1`
+- `source_led_raw_or_predictor_widening_v1`, after selecting one concrete source family
 
 Reason:
 
@@ -850,7 +855,7 @@ Reason:
   - the remaining drift is provenance-only, not new coverage
 - the hybrid open-box branch is now fully closed through `R2c`
 - the staged-upper, heavy dry-top, wet geotextile, and combined-anchor TUAS CLT baseline is now closed through `C2c`, `C3c`, `C4c`, `C5c`, and `C7c`
-- the next CLT-local risk is anomaly discipline around `C11c`, not source discovery
+- the C11c anomaly discipline is now closed as deferred / fail-closed, not a source discovery blocker
 - the immediate risk is therefore narrow and easy to reason about:
   - keep the landed `C2c`, `C3c`, `C4c`, predictor-backed `C5c`, and landed `C7c` anchors from reopening combined shorthand inference, predictor aliases, or broad raw inference
 
@@ -866,16 +871,16 @@ Important notes for the next operator:
 
 This document now establishes the rule for the next stage:
 
-- immediate next execution step is `tuas_c11c_wet_stack_anomaly_audit_v1`
-- the repo-specific order now treats the rebaselined `C2c`, `C3c`, `C4c`, predictor-backed `C5c`, and landed `C7c` anchor set as frozen and keeps raw widening behind the remaining combined-CLT anomaly/import decision
+- immediate next execution step is a concrete `source_led_raw_or_predictor_widening_v1` family selection
+- the repo-specific order now treats the rebaselined `C2c`, `C3c`, `C4c`, predictor-backed `C5c`, landed `C7c`, and deferred C11c guard as frozen; raw widening may proceed only behind those guards
 - `wall_selector_shadow_trace_audit_v1` remains a closed selector-honesty hardening slice, not an open widening prompt
 - `ubiq_open_web_corridor_decision_v1` also remains closed:
   - the current official-source conflict does not justify new coverage or a runtime rename
 - the TUAS hybrid open-box branch is now closed through `R2c`
-- the TUAS staged-upper, heavy dry-top, and wet geotextile CLT branch is now closed through `C7`
-- the next floor move is therefore the `C4c` exact-candidate pass, not another open-box widening pass
+- the TUAS staged-upper, heavy dry-top, wet geotextile, and combined-CLT anchor branches are closed through `C4c` / `C7c`
+- the next floor move is therefore source-led raw/predictor widening, not another open-box bulk pass or the already-closed `C4c` / `C11c` passes
 - remaining combined `c`-family CLT rows stay deferred unless they can land as pure exact rows without weakening the combined-CLT inference/predictor guards
-- raw inference widening still stays behind the separate screening-reopen guardrail and the currently selected CLT-local boundary work
+- raw inference widening still stays behind the separate screening-reopen guardrail and the frozen combined-CLT boundary work
 - mixed/history breadth remains `E2`, not the immediate next slice, unless landed `C7` or its follow-on exposes a real history blind spot
 - every slice is selected with its test pack up front
 
@@ -1170,17 +1175,18 @@ Active slice:
     - `L'n,w 52`
     - `L'nT,w 49.6`
     - `L'nT,50 49.6`
-- latest closed slice id: `tuas_c4c_combined_heavy_dry_exact_candidate_v1`
+- latest closed slice id: `tuas_c11c_wet_stack_anomaly_audit_v1`
 - latest closed slice status: `closed`
-- next slice id: `tuas_c11c_wet_stack_anomaly_audit_v1`
-- next slice status: `selected`
+- next slice id: `source-led_raw_or_predictor_widening_v1`
+- next slice status: `eligible, not selected to a concrete family yet`
 - active test pack:
   - engine:
-    - `pnpm --filter @dynecho/engine test -- src/tuas-candidate-backlog-contract.test.ts src/floor-source-corpus-contract.test.ts src/tuas-clt-backlog-decision-contract.test.ts src/floor-exact-companion-split-parity.test.ts src/floor-widening-candidate-contract.test.ts src/impact-predictor-input.test.ts --reporter=basic`
-    - `pnpm --filter @dynecho/engine test -- src/calculate-assembly.test.ts src/calculate-impact-only.test.ts --reporter=basic`
-    - `pnpm --filter @dynecho/engine test -- src/floor-input-noise-parity.test.ts src/floor-gap-ledger-contract.test.ts src/tuas-support-surface-decision-contract.test.ts --reporter=basic`
+    - `pnpm --filter @dynecho/engine exec vitest run src/tuas-c11c-wet-stack-anomaly-audit.test.ts`
+    - `pnpm --filter @dynecho/engine exec vitest run src/tuas-candidate-backlog-contract.test.ts src/floor-source-corpus-contract.test.ts src/tuas-clt-backlog-decision-contract.test.ts src/floor-exact-companion-split-parity.test.ts src/floor-widening-candidate-contract.test.ts src/impact-predictor-input.test.ts`
+    - `pnpm --filter @dynecho/engine exec vitest run src/calculate-assembly.test.ts src/calculate-impact-only.test.ts`
+    - `pnpm --filter @dynecho/engine exec vitest run src/floor-input-noise-parity.test.ts src/floor-gap-ledger-contract.test.ts src/tuas-support-surface-decision-contract.test.ts`
   - workbench:
-    - `pnpm --filter @dynecho/web test -- features/workbench/floor-family-regressions.test.ts features/workbench/floor-stack-invariance.test.ts --reporter=basic`
+    - `pnpm --filter @dynecho/web exec vitest run features/workbench/floor-family-regressions.test.ts features/workbench/floor-stack-invariance.test.ts`
   - current active baseline is green:
   - engine C4c/backlog/source/split/predictor pack: `6` files, `83` tests
   - engine assembly/impact-only route guard pack: `2` files, `287` tests
@@ -1313,7 +1319,7 @@ Active slice:
 - previous selected next slice id after the C3c decision-matrix import: `tuas_c4c_combined_heavy_dry_exact_candidate_v1`
 - previous selected next slice reason:
   - `C4c` is the remaining row closest to defended dry/staged exact surfaces and has local source truth from drawing page `27/40`
-  - `C11c` stays deferred because its wet `30 mm glass wool + geotextile + 40 mm screed` stack has a weaker `Ln,w 59` tuple that needs a separate anomaly check before import
+  - `C11c` stays deferred because its wet `30 mm glass wool + geotextile + 40 mm screed` stack has a weaker `Ln,w 59` tuple that the later anomaly audit kept fail-closed
   - the next import must preserve the re-closed inference/predictor boundary instead of reopening shorthand aliases
 - latest closed slice id: `tuas_c4c_combined_heavy_dry_exact_candidate_v1`
 - latest closed slice status: `closed`
@@ -1324,13 +1330,13 @@ Active slice:
   - the new C4c row did not weaken C2c/C3c/C5c/C7c/C7c exact or predictor anchors
   - the under-described CLT upper-plus-lower direct-fixed guard is now stronger:
     - lower board/fill without explicit `ceiling_cavity` remains screening-only even though profile-aligned C4c now exists
-- selected next slice id: `tuas_c11c_wet_stack_anomaly_audit_v1`
-- selected next slice reason:
+- latest closed follow-up slice id: `tuas_c11c_wet_stack_anomaly_audit_v1`
+- closed decision:
   - `C11c` is the only remaining source-backed combined CLT backlog row
   - its wet `30 mm glass wool + geotextile + 40 mm screed` stack has a weak tuple (`Ln,w 59`, `Ln,w+CI 60`, `Ln,w+CI,50-2500 60`) despite `Rw 74`
-  - audit source/frequency behavior before deciding whether it deserves an exact import or should remain deferred
-- follow-on queue after the now-closed `C4c` pass:
-  1. `tuas_c11c_wet_stack_anomaly_audit_v1`
+  - current implementation keeps it deferred / fail-closed; revisit only with source correction or frequency-level evidence
+- follow-on queue after the now-closed `C4c` and `C11c` passes:
+  1. source-led raw/predictor widening, one family at a time
   2. raw widening only on corridors strengthened by the previous steps
     - [dynamic-airborne-family-boundary-scan.test.ts](../../packages/engine/src/dynamic-airborne-family-boundary-scan.test.ts)
     - [dynamic-route-family-boundary.test.ts](../../apps/web/features/workbench/dynamic-route-family-boundary.test.ts)
@@ -1538,6 +1544,60 @@ Historical route-control trail kept for provenance:
     - selected baseline workbench: `4` files, `19` tests, green
     - adjacent engine: `3` files, `267` tests, green
     - adjacent workbench: `3` files, `80` tests, green
+- the first post-full-suite shared torture expansion is now also closed:
+  - slice id: `mixed_boundary_floor_torture_expansion_v1`
+  - the generated mixed engine and workbench grids now include:
+    - TUAS `C11c` combined wet fail-closed stack
+    - Dataholz `GDMTXA04A` manual-match boundary stack
+  - this was a regression-net expansion, not a solver widening:
+    - no C11c exact import or impact reopen
+    - no Dataholz manual visible exact reopen
+    - no catalog row change
+  - validation:
+    - engine generated matrix: `1` file, `1` test, green
+    - workbench generated matrix/edit-history/history-grid pack: `3` files, `5`
+      tests, green
+    - engine typecheck: green
+    - stable full engine suite: `93` files, `757` tests, green
+    - repository build: green
+- the complementary generated mixed history-grid expansion is now also closed:
+  - slice id: `mixed_history_grid_variant_expansion_v1`
+  - this was a route-history regression-net expansion, not a solver widening:
+    - widened the generated mixed workbench history grid from two to four
+      complementary duplicate/swap/rebuild variants
+    - added ascending direct trailing rebuild and descending reversed leading
+      rebuild paths
+    - kept the same generated floor/wall final rows and route snapshots stable
+      through direct parity, cross-mode partial restore chains, and save/load
+      roundtrips
+    - no solver, catalog, selector, or store behavior changed
+  - targeted validation:
+    - workbench generated history grid: `1` file, `3` tests, green
+    - workbench generated matrix/edit-history/history-grid pack: `3` files, `5`
+      tests, green
+    - engine generated matrix: `1` file, `1` test, green
+    - engine typecheck: green
+    - stable full engine suite: `93` files, `757` tests, green
+    - repository build: green
+- the second-wall-family seeded cross-mode expansion is now also closed:
+  - slice id: `mixed_seeded_cross_mode_wall_family_expansion_v1`
+  - this was a route-history regression-net expansion, not a solver widening:
+    - added a concrete-wall detour beside the existing deep-hybrid wall detour in
+      the representative mixed torture save/load chain
+    - the new detour splits/reorders rockwool and concrete layers, changes the
+      lining board, saves the scenario, and checks reload parity at the
+      saved-scenario retention boundary
+    - the seeded cross-mode matrix now alternates floor-family detours with two
+      distinct wall-family edit histories
+    - no solver, catalog, selector, or store behavior changed
+  - targeted validation:
+    - workbench mixed torture file: `1` file, `3` tests, green
+    - workbench mixed/generated plus seeded edit-stability pack: `6` files, `10`
+      tests, green
+    - engine mixed pack: `2` files, `2` tests, green
+    - engine typecheck: green
+    - stable full engine suite: `93` files, `757` tests, green
+    - repository build: green
 
 Latest green baseline gate:
 

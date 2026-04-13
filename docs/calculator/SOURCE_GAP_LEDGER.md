@@ -397,7 +397,7 @@ This section is implementation-backed from the current local catalog import, not
   - `tuas_r2c_open_box_timber_measured_2026`
   - `tuas_r10a_open_box_timber_measured_2026`
   - `tuas_r11b_open_box_timber_measured_2026`
-- CLT exact rows in the catalog: `9`
+- CLT exact rows in the catalog: `14`
   - `tuas_x2_clt140_measured_2026`
   - `tuas_x3_clt140_measured_2026`
   - `tuas_x4_clt140_measured_2026`
@@ -406,11 +406,16 @@ This section is implementation-backed from the current local catalog import, not
   - `tuas_c3_clt260_measured_2026`
   - `tuas_c4_clt260_measured_2026`
   - `tuas_c5_clt260_measured_2026`
+  - `tuas_c7_clt260_measured_2026`
+  - `tuas_c2c_clt260_measured_2026`
+  - `tuas_c3c_clt260_measured_2026`
+  - `tuas_c4c_clt260_measured_2026`
   - `tuas_c5c_clt260_measured_2026`
+  - `tuas_c7c_clt260_measured_2026`
 - current meaning:
   - the TUAS open-box and CLT branches are already using the full currently imported TUAS floor slice
   - widening here means mining additional source rows from the broader TUAS corpus, not unlocking dormant imported rows that already exist locally
-  - the TUAS article reports `15` open-box floors and `15` CLT floors tested in total, so the local import is still a deliberately narrow subset rather than the full published corpus
+  - the TUAS article reports `15` open-box floors and `15` CLT floors tested in total, so the local open-box import is complete and one CLT row, `C11c`, remains deliberately deferred
 
 ### TUAS Candidate Import Backlog
 
@@ -683,9 +688,15 @@ This section is implementation-backed from the current local catalog import, not
         - exact row `tuas_c4c_clt260_measured_2026` is now landed with lab `Ln,w 24`, `Ln,w+CI 26`, `Ln,w+CI,50-2500 40`, `Rw 74`
         - field continuation is now `L'n,w 26`, `L'nT,w 24`, `L'nT,50 40`
         - route-control result: under-described combined CLT lower board/fill stacks without explicit `ceiling_cavity` remain fail-closed even though profile-aligned `C4c` now exists
-      - selected next slice: `tuas_c11c_wet_stack_anomaly_audit_v1`
-        - reason: `C11c` is the only remaining source-backed combined CLT backlog row, and its wet stack has a weak `Ln,w 59` tuple that needs anomaly review before any import
-      - `C11c` remains later combined CLT backlog because its exact-import semantics are still deferred even though its visible schedule is now known
+      - latest closed slice: `tuas_c11c_wet_stack_anomaly_audit_v1`
+        - decision: keep `C11c` deferred / fail-closed; do not import it as an exact floor row yet
+        - reason: the visible schedule is known (`CLT 260`, `30 mm` glass wool, geotextile, `40 mm` screed, same suspended lower ceiling), but the source tuple `Ln,w 59`, `Ln,w+CI 60`, `Ln,w+CI,50-2500 60`, `Rw 74` is still anomalously weak beside the frozen combined CLT anchors
+        - anomaly scale now locked by test:
+          - `35 dB` weaker than same-airborne `C4c` on `Ln,w`
+          - `29 dB` weaker than nearby wet combined `C7c` on `Ln,w`
+          - `21 dB` weaker than predictor-backed dry combined `C5c` on `Ln,w`
+        - current route behavior: visible C11c stays screening-only with `Rw 49`, no exact match, no predictor estimate, and all impact outputs unsupported
+      - `C11c` remains later combined CLT backlog because its exact-import semantics are now deliberately deferred, not because its visible schedule is unknown
       - the repo-local TUAS measured reference fixture now exposes:
         - exact `C2c`
         - exact `C3c`
@@ -698,6 +709,7 @@ This section is implementation-backed from the current local catalog import, not
   - `packages/engine/src/tuas-post-corridor-screening-contract.test.ts`
   - `packages/engine/src/tuas-support-surface-decision-contract.test.ts`
   - `packages/engine/src/tuas-clt-backlog-decision-contract.test.ts`
+  - `packages/engine/src/tuas-c11c-wet-stack-anomaly-audit.test.ts`
 
 ### Dataholz CLT Exact Corpus
 

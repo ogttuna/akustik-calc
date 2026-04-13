@@ -25,6 +25,21 @@ Important scope note:
 
 Current execution status:
 
+- the 2026-04-12 broad engine-suite cleanup is now closed:
+  - stale TUAS/Open Box/CLT/UBIQ validation fixtures, field continuation fixtures,
+    floor-topology expectations, and impact upstream-parity acceptance fixtures
+    were aligned to current defended source truth
+  - under-described combined dry-plus-wet CLT now has an explicit
+    `unsupported_gap` validation posture
+  - wall-side AAC lined-massive stability is aligned to the existing `100 mm`
+    family-boundary hold contract; no solver widening was made in that wall
+    slice
+  - stable full engine validation is green with
+    `pnpm --filter @dynecho/engine exec vitest run --maxWorkers=1 --reporter=basic`
+    (`93` files, `757` tests)
+  - the engine package `test` script pins `--maxWorkers=1` because broad
+    multi-worker Vitest runs can still report worker RPC timeouts after all
+    assertions pass in CPU-heavy dynamic-airborne generated scans
 - `tuas_floor_source_truth_rebaseline_v1` is now closed:
   - TUAS exact floor rows and TUAS-backed predictor lanes were compared back to `TUAS2023FloorSoundInsulationDataR1.xlsx` / `SoundInsulation`
   - numeric truth now follows rows `34` (`Ln,w`), `35` (`Ln,w+CI`), `36` (`Ln,w+CI,50-2500`), `41` (`Rw`), and `42` (`Rw+C`)
@@ -686,18 +701,31 @@ Validated on 2026-04-03:
 - `pnpm engine:benchmark-airborne`
   - dynamic stayed rank `#1` with `MAE 0.00`, `RMSE 0.00`, `MaxAE 0.00`, `Win 7 / 7`
 
-Current explicit no-safe-inference exact rows:
+Current implementation correction from the 2026-04-12 suite triage:
 
-- `euracoustics_f0_bare_concrete_lab_2026`
-- `pmc_m1_bare_composite_lab_2026`
+- current explicit no-safe-inference exact row:
+  - `dataholz_gdsnxn01a_timber_frame_lab_2026`
+- raw `140 mm concrete` now infers a safe `base_structure` and still lands
+  `euracoustics_f0_bare_concrete_lab_2026`
+- the impact-only surface reports that concrete route as `visible_stack`, not the
+  older `predictor_input` source mode
+- the detailed broad-suite classification is recorded in
+  `FULL_ENGINE_SUITE_TRIAGE_2026-04-12.md`
 
-Resolved in this pass:
+Current evidence-rich manual exact raw/base-only drift set:
 
-- raw `140 mm concrete` now lands `euracoustics_f0_bare_concrete_lab_2026` on both assembly and impact-only surfaces
-- the change was kept deliberately narrow:
-  - visible-layer role backfill remains `null`
-  - exact landing now comes through safe predictor derivation plus predictor exact-id resolution
-  - broader ambiguous bare-carrier role backfill was not widened
+- `tuas_x3_clt140_measured_2026`
+- `tuas_x4_clt140_measured_2026`
+- `tuas_r7b_open_box_timber_measured_2026`
+- `tuas_r8b_open_box_timber_measured_2026`
+- `tuas_r10a_open_box_timber_measured_2026`
+- `tuas_c3_clt260_measured_2026`
+- `tuas_c4_clt260_measured_2026`
+- `tuas_c5_clt260_measured_2026`
+- `tuas_c7_clt260_measured_2026`
+- `tuas_c7c_clt260_measured_2026`
+- `tuas_c3c_clt260_measured_2026`
+- `tuas_c4c_clt260_measured_2026`
 
 Resolved in the second Phase 2 inference pass:
 
@@ -718,7 +746,8 @@ Resolved in the second Phase 2 inference pass:
 
 Current raw-vs-tagged core drift set:
 
-- none
+- `dataholz_gdsnxn01a_timber_frame_lab_2026`
+- the 12 TUAS ids listed above
 
 Current implementation reading:
 
@@ -898,11 +927,11 @@ Primary-source audit completed after the CLT widening:
     - `tuas_post_c7_clt_boundary_tightening_v1`, `tuas_clt_remaining_combined_source_schedule_research_v1`, and `tuas_c7c_combined_wet_clt_surface_design_v1` are now also closed
     - `tuas_remaining_combined_clt_exact_import_decision_matrix_v1` is now also closed with `C3c` as the first remaining combined exact import
     - `tuas_c4c_combined_heavy_dry_exact_candidate_v1` is now also closed as exact `tuas_c4c_clt260_measured_2026`
-    - the next selected slice is now `tuas_c11c_wet_stack_anomaly_audit_v1`
+    - `tuas_c11c_wet_stack_anomaly_audit_v1` is now also closed as deferred / fail-closed
     - the current source-backed blocker is no longer material-surface absence:
       - TUAS drawing page `24/40` exact stack is now landed as `tuas_c7_clt260_measured_2026`
       - `C2c`, `C3c`, `C4c`, and `C7c` are exact anchors, and `C5c` is predictor-backed
-      - the remaining risk is accidentally widening `C11c` into combined shorthand inference, predictor aliases, or under-described direct-fixed stacks before its wet-stack anomaly is explained
+      - the remaining risk is accidentally widening `C11c` into combined shorthand inference, predictor aliases, or under-described direct-fixed stacks while its weak wet-stack tuple remains unexplained
     - current restart truth lives in:
       - [CURRENT_STATE.md](./CURRENT_STATE.md)
       - [DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md](./DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md)
@@ -1053,6 +1082,11 @@ CLT bare-lane tightening completed on 2026-04-03:
       - raw bare `160 mm` CLT improves monotonically over raw bare `140 mm`
       - dry and wet CLT treatment packages stay clearly better than the raw bare slab
       - laminate-plus-underlay CLT interpolation stays between the defended TUAS `x2 / c2` anchors
+- 2026-04-12 revalidation note:
+  - the test snapshot was re-aligned to the documented raw-slab penalty without changing solver logic
+  - current `140 mm` raw CLT output is `Rw 35`, `Ln,w 64`, and `Ln,w+CI 64`
+  - standardized field output for the same slab is `R'w 33`, `L'n,w 66`, `L'nT,w 63.6`, and `L'nT,w+CI,50-2500 63.6`
+  - dry/wet treatment guards remain relation-based; their minimum improvement margins now reflect the current source-backed Dataholz dry/wet outputs instead of the older over-strong expectation
 - CLT combinations explicitly exercised in this pass:
   - raw bare CLT:
     - `140 mm`
@@ -1295,9 +1329,9 @@ Every phase should close with explicit verification.
 
 Minimum gates:
 
-- `pnpm --filter @dynecho/engine test -- src/airborne-benchmark.test.ts src/impact-validation-benchmark.test.ts src/dynamic-guided-combination-sweep.test.ts src/output-perturbation-sweep.test.ts`
+- `pnpm --filter @dynecho/engine exec vitest run src/airborne-benchmark.test.ts src/impact-validation-benchmark.test.ts src/dynamic-guided-combination-sweep.test.ts src/output-perturbation-sweep.test.ts`
 - `pnpm engine:benchmark-airborne`
-- `pnpm --filter @dynecho/web test -- dynamic-calc-branch.test.ts scenario-analysis.test.ts common-floor-combinations.test.ts guided-combination-sweep.test.ts floor-family-regressions.test.ts`
+- `pnpm --filter @dynecho/web exec vitest run dynamic-calc-branch.test.ts scenario-analysis.test.ts common-floor-combinations.test.ts guided-combination-sweep.test.ts floor-family-regressions.test.ts`
 
 Phase 0 targeted gates:
 
@@ -1328,8 +1362,8 @@ Immediate next implementation pass:
 
 1. keep the selected TUAS floor baseline packs and `pnpm build` green
 2. keep the landed `C3c`, `C4c`, and `C7c` exact corridors plus the re-closed combined-CLT inference/predictor guard green
-3. run `tuas_c11c_wet_stack_anomaly_audit_v1` as the next CLT-local pass
-4. keep `C11c` deferred until that audit explains its weak source tuple
+3. keep `tuas_c11c_wet_stack_anomaly_audit_v1` closed as deferred / fail-closed
+4. select the next raw or predictor widening target one source-backed family at a time
 
 Why this is the correct next cut:
 
@@ -1349,15 +1383,15 @@ Why this is the correct next cut:
   - Dataholz dry combined predictor input no longer blends `tuas_c2c`
   - CLT `lower_only` no longer reopens through `C2c`
   - combined CLT visible stacks with lower treatment plus multi-entry `floating_screed` no longer auto-normalize into inferred or predictor-derived shorthand lanes
-- the first remaining combined exact decision is closed with `C3c`, and the C4c exact-candidate pass is also closed
-- the next risk is therefore `C11c` wet-stack anomaly analysis, not source discovery
-- the next honest cut is a narrow `C11c` audit; it stays screening-only unless its wet stack and weak `Ln,w 59` tuple are explained before import
+- the first remaining combined exact decision is closed with `C3c`, the C4c exact-candidate pass is closed, and the C11c wet-stack anomaly audit is closed as deferred / fail-closed
+- the next risk is therefore broadening raw or predictor inference accidentally, not C11c source discovery
+- the next honest cut is a source-led raw/predictor slice that keeps C11c screening-only unless its wet stack and weak `Ln,w 59` tuple are explained before import
 
 Recommended widening target after the torture pass:
 
 - do not widen reinforced concrete, CLT combined interaction, or raw support blindly
 - first keep `C3c`, `C4c`, and `C7c` frozen as exact combined anchors, and keep `C11c` deferred unless it earns its own explicit exact corridor
-- before resuming `C11c` or raw widening, keep `tuas_floor_source_truth_rebaseline_v1` as the baseline:
+- before revisiting `C11c` or raw widening, keep `tuas_floor_source_truth_rebaseline_v1` as the baseline:
   - `C2c` is now `Ln,w 35`, `Ln,w+CI 39`, `Ln,w+CI,50-2500 44`
   - `C3c` is now `Ln,w 27`, `Ln,w+CI 29`, `Ln,w+CI,50-2500 43`
   - `C4c` is now `Ln,w 24`, `Ln,w+CI 26`, `Ln,w+CI,50-2500 40`

@@ -15,7 +15,9 @@ Document role:
 
 ## Revalidated Snapshot
 
-Last full revalidation: `2026-04-07`
+Last full engine revalidation: `2026-04-13`
+
+Last cross-package build revalidation: `2026-04-13`
 
 Verified broad corridors:
 
@@ -86,7 +88,143 @@ Verified broad corridors:
     - `C4c` is now exact as `tuas_c4c_clt260_measured_2026`
     - `C4c` source truth is `Ln,w 24`, `Ln,w+CI 26`, `Ln,w+CI,50-2500 40`, `Rw 74`; spreadsheet row `42` still remains stored in the current `RwCtr` companion slot as numeric `Rw+C`
     - under-described combined CLT stacks with lower board/fill but no explicit `ceiling_cavity` stay fail-closed even though profile-aligned `C4c` now exists
-    - `C11c` is now the only remaining source-backed combined CLT backlog row and needs a separate wet-stack anomaly audit before any import
+    - at that checkpoint, `C11c` was the only remaining source-backed combined CLT backlog row and still needed a separate wet-stack anomaly audit before any import
+- latest change-adjacent revalidation after the `C11c` wet-stack anomaly audit: green
+  - selected/closed slice: `tuas_c11c_wet_stack_anomaly_audit_v1`
+  - engine C11c audit pack: `1` file, `2` tests
+  - key route-control anchor:
+    - `C11c` remains deliberately deferred / fail-closed; no exact catalog row is imported
+    - visible source schedule is known: `CLT 260`, `30 mm` glass wool, geotextile, `40 mm` screed, and the same suspended lower ceiling
+    - source truth is `Ln,w 59`, `Ln,w+CI 60`, `Ln,w+CI,50-2500 60`, `Rw 74`
+    - anomaly scale is now executable: `C11c` is `35 dB` weaker than same-airborne `C4c`, `29 dB` weaker than nearby wet combined `C7c`, and `21 dB` weaker than predictor-backed dry combined `C5c` on `Ln,w`
+    - current route behavior remains honest: screening-only `Rw 49`, no exact match, no predictor estimate, and impact outputs unsupported
+- latest source-truth fixture revalidation after the first TUAS broad-suite refresh: green
+  - engine fixture pack: `5` files, `88` tests
+  - refreshed stale TUAS/Open Box/CLT expectations in predictor, layer-driven, common-floor, validation-regime, and dynamic-route snapshots
+  - full engine-suite status after this refresh: `83` files passed, `10` failed; `743` tests passed, `13` failed; `3` worker-timeout errors
+- latest raw bare CLT posture revalidation after the documented `clt_bare` penalty alignment: green
+  - engine bare-CLT posture pack: `2` files, `7` tests
+  - no solver logic changed in this slice; stale raw bare CLT snapshots were aligned to the already-documented `-3 dB` airborne / `+3 dB` impact raw-slab penalty
+  - current `140 mm` raw CLT snapshot is `Rw 35`, `Ln,w 64`, `Ln,w+CI 64`, with standardized field outputs `R'w 33`, `L'n,w 66`, `L'nT,w 63.6`, and `L'nT,w+CI,50-2500 63.6`
+  - full engine-suite status after this refresh: `86` files passed, `7` failed; `746` tests passed, `10` failed; `4` worker-timeout errors
+- latest broad-suite cleanup after stale impact fixture, field/topology, upstream-parity, wall-stability, and runner-stability refresh: green
+  - impact/field/topology/parity/wall target pack: `7` files, `21` tests
+  - validation-regime pack: `2` files, `5` tests
+  - deep-hybrid runner pack: `5` files, `10` tests
+  - web validation-regime pack: `2` files, `13` tests
+  - stable full engine suite:
+    - command: `pnpm --filter @dynecho/engine exec vitest run --maxWorkers=1 --reporter=basic`
+    - result: `93` files passed, `757` tests passed
+  - repository build: green
+    - known non-blocking warnings remain: `sharp/@img` optional packages through `proposal-docx`, and the Next.js TypeScript plugin recommendation
+  - engine package typecheck: green in the follow-up test-typing cleanup slice below
+  - operational note:
+    - direct multi-worker `vitest run` currently has all assertions green but can still exit non-zero from Vitest worker RPC `onTaskUpdate` timeout after the CPU-heavy dynamic-airborne scan cluster
+    - `packages/engine` package `test` now uses `--maxWorkers=1` so the default package-level full suite follows the stable path
+  - key route-control anchors:
+    - stale TUAS/Open Box/CLT/UBIQ validation tuples are aligned to current source truth
+    - under-described combined dry-plus-wet CLT is tracked as explicit `unsupported_gap`
+    - workbench validation-regime reporting now labels that unsupported posture instead of assuming every benchmark mode is exact/estimate/bound/field/low-confidence
+    - accepted local upstream impact divergences are listed per metric and remain fail-strict for any unlisted mismatch
+    - AAC lined-massive wall stability is aligned to the existing `100 mm` family-boundary hold contract without solver widening
+    - deep-hybrid stress tests now yield periodically to the Vitest worker RPC loop and split the largest non-AAC swap cohort by board pair while preserving the same search space
+- latest engine test-typing cleanup after the broad-suite triage: green
+  - command: `pnpm --filter @dynecho/engine typecheck`
+  - result: green
+  - targeted touched-test pack:
+    - command: `pnpm --filter @dynecho/engine exec vitest run --maxWorkers=1 src/dynamic-airborne-family-boundary-scan.test.ts src/dynamic-airborne-family-boundary.test.ts src/dynamic-airborne-instability-repro.test.ts src/dynamic-airborne-order-sensitivity.test.ts src/floor-packaged-lane-disjoint-detour.test.ts src/floor-packaged-lane-helper-disjoint-detour.test.ts src/floor-source-corpus-contract.test.ts src/raw-floor-weaker-carrier-posture.test.ts src/tuas-c11c-wet-stack-anomaly-audit.test.ts src/tuas-candidate-backlog-contract.test.ts src/tuas-clt-backlog-decision-contract.test.ts src/tuas-post-corridor-screening-contract.test.ts src/tuas-support-surface-decision-contract.test.ts src/ubiq-candidate-backlog-contract.test.ts --reporter=basic`
+    - result: `14` files passed, `97` tests passed
+  - stable full engine suite:
+    - command: `pnpm --filter @dynecho/engine exec vitest run --maxWorkers=1 --reporter=basic`
+    - result: `93` files passed, `757` tests passed
+  - repository build:
+    - command: `pnpm build`
+    - result: green
+    - known non-blocking warnings remain: `sharp/@img` optional packages through `proposal-docx`, and the Next.js TypeScript plugin recommendation
+  - scope:
+    - no acoustic solver behavior changed in this cleanup slice
+    - closed test-only strict typing debt for warning/note callbacks, empty TUAS backlog arrays, nullable UBIQ fixture arrays, and C11c audit option/rating typing
+- latest mixed floor/wall torture expansion after the green full-suite gate: green
+  - selected/closed slice: `mixed_boundary_floor_torture_expansion_v1`
+  - engine targeted pack:
+    - command: `pnpm --filter @dynecho/engine exec vitest run src/mixed-floor-wall-generated-matrix.test.ts --reporter=basic`
+    - result: `1` file passed, `1` test passed
+  - workbench targeted pack:
+    - command: `pnpm --filter @dynecho/web exec vitest run features/workbench/mixed-study-mode-generated-matrix.test.ts features/workbench/mixed-study-mode-generated-edit-history-matrix.test.ts features/workbench/mixed-study-mode-generated-history-grid.test.ts --reporter=basic`
+    - result: `3` files passed, `5` tests passed
+  - engine typecheck:
+    - command: `pnpm --filter @dynecho/engine typecheck`
+    - result: green
+  - stable full engine suite:
+    - command: `pnpm --filter @dynecho/engine exec vitest run --maxWorkers=1 --reporter=basic`
+    - result: `93` files passed, `757` tests passed
+  - repository build:
+    - command: `pnpm build`
+    - result: green
+    - known non-blocking warnings remain: `sharp/@img` optional packages through `proposal-docx`, and the Next.js TypeScript plugin recommendation
+  - scope:
+    - no acoustic solver or catalog behavior changed
+    - generated mixed engine/workbench grids now include the TUAS `C11c` combined wet fail-closed stack
+    - generated mixed engine/workbench grids now include the Dataholz `GDMTXA04A` manual-match boundary stack
+    - split, duplicate/swap/remove/rebuild, cross-mode partial edit, and save/load chains now guard both risk surfaces
+  - route-control anchor:
+    - `C11c` remains screening-only / impact-unsupported under split and history detours
+    - `GDMTXA04A` remains dry-family estimate-routed instead of reopening the manual exact lane under split and history detours
+- latest generated mixed history-grid variant expansion: green
+  - selected/closed slice: `mixed_history_grid_variant_expansion_v1`
+  - scope:
+    - no acoustic solver, catalog, selector, or workbench behavior changed
+    - the generated mixed workbench history grid now covers four complementary
+      duplicate/swap/rebuild variants instead of two
+    - the added variants cover ascending direct trailing rebuild and descending
+      reversed leading rebuild paths
+    - the same generated floor/wall case set remains stable through direct final
+      parity, longer cross-mode partial-edit restore chains, and save/load
+      roundtrips
+  - targeted validation:
+    - command: `pnpm --filter @dynecho/web exec vitest run features/workbench/mixed-study-mode-generated-history-grid.test.ts --reporter=basic`
+    - result: `1` file passed, `3` tests passed
+    - command: `pnpm --filter @dynecho/web exec vitest run features/workbench/mixed-study-mode-generated-matrix.test.ts features/workbench/mixed-study-mode-generated-edit-history-matrix.test.ts features/workbench/mixed-study-mode-generated-history-grid.test.ts --reporter=basic`
+    - result: `3` files passed, `5` tests passed
+    - command: `pnpm --filter @dynecho/engine exec vitest run src/mixed-floor-wall-generated-matrix.test.ts --reporter=basic`
+    - result: `1` file passed, `1` test passed
+    - command: `pnpm --filter @dynecho/engine typecheck`
+    - result: green
+  - stable full engine suite:
+    - command: `pnpm --filter @dynecho/engine exec vitest run --maxWorkers=1 --reporter=basic`
+    - result: `93` files passed, `757` tests passed
+  - repository build:
+    - command: `pnpm build`
+    - result: green
+    - known non-blocking warnings remain: `sharp/@img` optional packages through `proposal-docx`, and the Next.js TypeScript plugin recommendation
+- latest seeded mixed cross-mode edit-chain expansion: green
+  - selected/closed slice: `mixed_seeded_cross_mode_wall_family_expansion_v1`
+  - scope:
+    - no acoustic solver, catalog, selector, or workbench store behavior changed
+    - the representative mixed torture save/load chain now alternates the seeded
+      floor detour matrix with two distinct wall-family detours instead of one
+    - the new concrete-wall detour splits and reorders rockwool/concrete layers,
+      changes the lining board, saves the scenario, and verifies reload parity at
+      the saved-scenario retention boundary
+    - the existing deep hybrid wall detour remains in the same chain, so the
+      wider seeded cross-mode chain now checks both framed/deep-hybrid and
+      concrete-wall edit families
+  - targeted validation:
+    - command: `pnpm --filter @dynecho/web exec vitest run features/workbench/mixed-study-mode-torture.test.ts --reporter=basic`
+    - result: `1` file passed, `3` tests passed
+    - command: `pnpm --filter @dynecho/web exec vitest run features/workbench/mixed-study-mode-torture.test.ts features/workbench/mixed-study-mode-generated-matrix.test.ts features/workbench/mixed-study-mode-generated-edit-history-matrix.test.ts features/workbench/mixed-study-mode-generated-history-grid.test.ts features/workbench/floor-seeded-edit-stability.test.ts features/workbench/wall-seeded-edit-stability.test.ts --reporter=basic`
+    - result: `6` files passed, `10` tests passed
+    - command: `pnpm --filter @dynecho/engine exec vitest run src/mixed-floor-wall-generated-matrix.test.ts src/mixed-floor-wall-complex-stack.test.ts --reporter=basic`
+    - result: `2` files passed, `2` tests passed
+    - command: `pnpm --filter @dynecho/engine typecheck`
+    - result: green
+  - stable full engine suite:
+    - command: `pnpm --filter @dynecho/engine exec vitest run --maxWorkers=1 --reporter=basic`
+    - result: `93` files passed, `757` tests passed
+  - repository build:
+    - command: `pnpm build`
+    - result: green
+    - known non-blocking warnings remain: `sharp/@img` optional packages through `proposal-docx`, and the Next.js TypeScript plugin recommendation
 - latest change-adjacent revalidation after the raw-floor split/posture widening work: green
   - engine targeted/broad pack: `15` files, `227` tests
   - workbench targeted/broad pack: `14` files, `47` tests
@@ -898,7 +1036,7 @@ Work in this order:
       - `C4c` is now landed exactly as `tuas_c4c_clt260_measured_2026`
         - lab: `Ln,w 24`, `Ln,w+CI 26`, `Ln,w+CI,50-2500 40`, `Rw 74`
         - field: `L'n,w 26`, `L'nT,w 24`, `L'nT,50 40`
-      - `C11c` remains source-backed but intentionally screening-only pending a wet-stack anomaly audit
+      - `C11c` remains source-backed but intentionally screening-only after the wet-stack anomaly audit
       - the old `C11c` shorthand proxy is now known to be source-inaccurate and should not be treated as the real visible schedule
     - the latest slice exposed and re-closed the next combined CLT drift before it could become silent widening:
       - combined CLT visible stacks with lower treatment plus multi-entry `floating_screed` were being packed into shorthand inference/predictor routes
@@ -909,18 +1047,17 @@ Work in this order:
       - source-backed `C11c` still stays screening-only with impact outputs unsupported
   - latest closed slice: `tuas_remaining_combined_clt_exact_import_decision_matrix_v1`
   - latest closed follow-up slice: `tuas_c4c_combined_heavy_dry_exact_candidate_v1`
-  - selected next slice: `tuas_c11c_wet_stack_anomaly_audit_v1`
-  - current status: `selected`
+  - latest closed slice: `tuas_c11c_wet_stack_anomaly_audit_v1`
+  - current status: `closed as deferred / fail-closed`
   - the current implementation-backed reason is now explicit:
     - `C7c`, `C3c`, and `C4c` are no longer open gaps; they are exact anchors
-    - the remaining honest work is deciding whether `C11c` should ever be imported after its wet-stack anomaly is explained
-    - that decision depends on source/anomaly analysis and route discipline, not on missing drawings
+    - `C11c` should not be imported until a source correction or frequency-level explanation resolves the weak wet-stack tuple
+    - the decision depends on source/anomaly evidence and route discipline, not on missing drawings
 5. After the now-closed TUAS hybrid lower-treatment, `C7`, post-`C7` boundary, `C5c` visible combined, remaining-backlog boundary, and source-schedule-research decisions, continue floor growth in this order:
    - keep the landed `C3c`, `C4c`, and `C7c` exact corridors plus the combined-CLT inference/predictor fail-closed guard frozen
-   - run the `C11c` wet-stack anomaly audit before any import decision
-   - keep `C11c` screening-only until that audit justifies a different posture
+   - keep `C11c` screening-only after the anomaly audit unless source correction or frequency-level evidence justifies a different posture
    - only land the next row if it stays a pure exact corridor and does not weaken the new combined-CLT guards
-   - raw widening only after those combined corridor packs are green
+   - raw widening is now eligible, but only one source-backed family at a time
 6. Expand broader mixed/history grids only when a targeted slice exposes a real route-history blind spot or makes a new corridor representative:
    - keep the compact representative seeded-family roundtrip matrix green across:
      - heavy-concrete and open-web-bound seeded detours
@@ -959,8 +1096,8 @@ The torture pass should include:
 
 The next widening audit should answer:
 
-- after the now-landed `C3c`, `C4c`, and `C7c`, does `C11c` deserve its own separate wet combined exact corridor after a source-anomaly audit, or should it remain deferred while dry combined work stays frozen?
-- once the remaining combined CLT rows are re-ranked with the new source truth, is raw widening actually the next best use of effort?
+- which raw or predictor source family can be widened without changing the documented raw-vs-tagged drift posture accidentally?
+- does any future C11c source correction or frequency-level evidence resolve the weak wet-stack tuple enough to revisit the exact-import decision?
 
 ## Canonical Documents
 

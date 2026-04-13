@@ -710,7 +710,7 @@ Local findings from the current Phase B.2 pass:
     - `2/2`: `30`
   - this closes the earlier gap where both-side outer trims and deeper cavity packs were only covered by hand-picked anchors instead of a generated representative matrix
   - adjacent-swap result on that same representative deep-hybrid palette:
-    - engine: `0` silent `>=8 dB` adjacent-swap jumps across nine executable cohorts
+    - engine: `0` silent `>=8 dB` adjacent-swap jumps across ten executable cohorts
     - route: `0` silent `>=8 dB` adjacent-swap jumps across nine executable cohorts
     - defended cohorts:
       - `ytong_aac_d700 100`, boards `gypsum/diamond`
@@ -719,14 +719,15 @@ Local findings from the current Phase B.2 pass:
       - `ytong_aac_d700 120`, boards `firestop/security`
       - `ytong_g5_800 100`, boards `gypsum/diamond`
       - `ytong_g5_800 100`, boards `firestop/security`
-      - `porotherm_pls_140 140`
+      - `porotherm_pls_140 140`, boards `gypsum/diamond`
+      - `porotherm_pls_140 140`, boards `firestop/security`
       - `silka_cs_block 150`
       - `concrete 120`
     - reason for the split:
       - the original single generated swap pass stayed logically clean but exceeded Vitest timeout budgets because the representative deep-hybrid palette plus all adjacent swaps took roughly three minutes end-to-end
       - a simple core-only split was still too slow for the `ytong_aac_d700 100`, `ytong_aac_d700 120`, and `ytong_g5_800 100` rows, so those hotspots are further split by board pair
       - the shipped contract keeps the same search space but slices it into smaller executable cohorts so failures stay attributable and the suite does not rely on timeout inflation
-      - combined multi-worker Vitest invocations can still surface `[vitest-worker]: Timeout calling "onTaskUpdate"` on this generated deep-hybrid cluster even when the underlying assertions all pass; the stable validation posture is to keep the deep-hybrid cluster in its own `--maxWorkers=1` command
+      - combined multi-worker Vitest invocations can still surface `[vitest-worker]: Timeout calling "onTaskUpdate"` on this generated deep-hybrid cluster even when the underlying assertions all pass; the stable validation posture is to keep the deep-hybrid cluster or the whole engine suite in a `--maxWorkers=1` command
 - non-AAC heavy-core exclusion is now also covered by executable engine and route contracts instead of remaining a future-note gap
   - expanded engine non-AAC palette:
     - prefixes: `8`

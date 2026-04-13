@@ -1,6 +1,6 @@
 # Dynamic Calculator Remaining Work Plan
 
-Last reviewed: 2026-04-10
+Last reviewed: 2026-04-13
 
 Document role:
 
@@ -977,9 +977,9 @@ Floor should now stay on controlled widening and tightening only.
    - `C11c` remains screening-only / impact-unsupported today
    - under-described combined direct-fixed CLT stacks remain fail-closed
 
-4. run `tuas_c11c_wet_stack_anomaly_audit_v1` before any raw-floor screening / inference widening:
+4. keep `tuas_c11c_wet_stack_anomaly_audit_v1` closed as deferred / fail-closed before any raw-floor screening / inference widening:
    - any combined-row reopen must preserve the combined-CLT inference/predictor fail-closed guards
-   - if `C11c` cannot be explained and landed as a pure exact import, keep it deferred and continue with boundary-first tightening
+   - C11c is now kept deferred because the known source schedule still has an unexplained weak wet-stack tuple
 
 5. only after that, resume raw-floor screening and inference widening:
    - wider inferred floor packages with clear upper/lower treatment evidence
@@ -1684,19 +1684,111 @@ What this already covers:
 - neutral split-detour parity
 - first generated direct-vs-edit-history parity
 - first wider generated duplicate/swap grid
+- complementary generated duplicate/swap/rebuild history-grid variants across
+  ascending/direct/trailing and descending/reversed/leading paths
 - first deterministic longer cross-mode chain with partial-edit abort, restore, and save/load roundtrip
+- second wall-family seeded cross-mode chain coverage through concrete-wall
+  split/reorder/edit detours at the saved-scenario retention boundary
 - broader support-bucket/card sanity after cross-mode edit chains
+- TUAS `C11c` combined wet fail-closed stack through generated engine and route
+  mixed grids
+- Dataholz `GDMTXA04A` manual-match boundary stack through generated engine and
+  route mixed grids
+- split, duplicate/swap/remove/rebuild, cross-mode partial-edit, and save/load
+  parity on those two high-risk floor boundary surfaces
 
 What it does not yet cover:
 
-- broader seeded cross-mode edit-chain families
-- mixed floor/wall duplicate-swap grids beyond the current first widened generated grid
+- broader seeded cross-mode edit-chain families beyond the current second
+  wall-family expansion
+- wider mixed floor/wall duplicate-swap grids beyond the current complementary
+  generated history-grid variants
 - any wider preset-family expansion that still proves necessary after those chains and swap grids
 
 And should check both:
 
 - numeric delta behavior
 - support posture / warnings / confidence posture
+
+Closed slice:
+
+- slice id: `mixed_boundary_floor_torture_expansion_v1`
+- workstream: `7` shared torture-pass expansion
+- status: `closed`
+- landed scope:
+  - added the known TUAS `C11c` source schedule to the generated mixed matrix as
+    a fail-closed floor boundary case
+  - added the Dataholz `GDMTXA04A` manual-match boundary stack to the generated
+    mixed matrix as a preset-only / estimate-routed boundary case
+  - propagated both surfaces through engine generated split parity and workbench
+    generated split, edit-history, long-chain, and save/load parity
+- explicit non-landed scope:
+  - no exact row import
+  - no catalog row change
+  - no generic CLT widening
+  - no C11c impact reopen
+  - no manual visible exact reopen for `GDMTXA04A`
+- validation:
+  - engine generated matrix: `1` file, `1` test, green
+  - workbench generated matrix/edit-history/history-grid pack: `3` files, `5`
+    tests, green
+  - engine typecheck: green
+  - stable full engine suite: `93` files, `757` tests, green
+  - repository build: green
+
+Closed slice:
+
+- slice id: `mixed_history_grid_variant_expansion_v1`
+- workstream: `7` shared torture-pass expansion
+- status: `closed`
+- landed scope:
+  - widened the generated mixed workbench history grid from two to four
+    complementary duplicate/swap/rebuild variants
+  - added ascending direct trailing rebuild and descending reversed leading
+    rebuild paths beside the existing ascending reversed leading and descending
+    direct trailing paths
+  - kept the same generated floor/wall case set under direct final-row parity,
+    longer cross-mode partial-edit restore chains, and save/load roundtrips
+- explicit non-landed scope:
+  - no acoustic solver behavior change
+  - no catalog row change
+  - no selector change
+  - no workbench store behavior change
+- targeted validation:
+  - workbench generated history grid: `1` file, `3` tests, green
+  - workbench generated matrix/edit-history/history-grid pack: `3` files, `5`
+    tests, green
+  - engine generated matrix: `1` file, `1` test, green
+  - engine typecheck: green
+  - stable full engine suite: `93` files, `757` tests, green
+  - repository build: green
+
+Closed slice:
+
+- slice id: `mixed_seeded_cross_mode_wall_family_expansion_v1`
+- workstream: `7` shared torture-pass expansion
+- status: `closed`
+- landed scope:
+  - added a second wall-family detour to the representative mixed torture
+    save/load chain
+  - the new concrete-wall detour splits rockwool and concrete layers, reorders
+    the split layers, changes the lining board, saves the scenario, and checks
+    reload parity at the saved-scenario retention boundary
+  - kept the existing deep-hybrid wall detour in the same chain while alternating
+    it with the concrete-wall detour between seeded floor-family detours
+- explicit non-landed scope:
+  - no acoustic solver behavior change
+  - no catalog row change
+  - no selector change
+  - no workbench store behavior change
+- targeted validation:
+  - workbench mixed torture file: `1` file, `3` tests, green
+  - workbench mixed/generated plus seeded edit-stability pack: `6` files, `10`
+    tests, green
+  - engine mixed pack: `2` files, `2` tests, green
+  - engine typecheck: green
+  - stable full engine suite: `93` files, `757` tests, green
+  - repository build: green
 
 ### Test Pattern Requirements
 
@@ -1715,8 +1807,8 @@ The next phase is only complete when all of these are true:
 1. standard wall corridor still stays green
 2. standard floor corridor still stays green
 3. wall and floor output-card parity packs still stay green
-4. mixed-stack torture coverage is widened beyond the current first deterministic longer chain and first widened generated duplicate/swap grid
-   The representative anchors, compact representative seeded-family matrix, first generated split-detour matrix, first generated edit-history matrix, first widened duplicate/swap grid, and first deterministic longer chain already exist; the remaining step is to widen that surface into broader seeded chain families and wider family grids.
+4. mixed-stack torture coverage is widened beyond the current first deterministic longer chain and first complementary generated duplicate/swap grid
+   The representative anchors, compact representative seeded-family matrix, first generated split-detour matrix, first generated edit-history matrix, first complementary duplicate/swap grid, and first deterministic longer chain already exist; the remaining step is to widen that surface into broader seeded chain families and wider family grids.
 5. no new widening has been merged without source-backed or benchmark-backed evidence
 6. every newly opened lane is labeled honestly on route and export surfaces
 7. any new red route-surface contract is first classified as solver, support-bucket, or stale-surface drift before logic changes are proposed
@@ -1729,8 +1821,8 @@ Do this in order:
 2. use `tuas_floor_source_truth_rebaseline_v1` as the active numeric source of truth before any new exact import
 3. keep `C4c` frozen as exact `tuas_c4c_clt260_measured_2026`; `C2c`, `C3c`, `C4c`, and `C7c` are already exact anchors, and `C5c` is already predictor-backed
 4. keep under-described combined direct-fixed CLT stacks deferred against the exact anchors unless the source row is imported deliberately
-5. run `tuas_c11c_wet_stack_anomaly_audit_v1` before any C11c exact import
-6. widen mixed floor/wall torture coverage only if the remaining combined-CLT exact-import work creates a new representative route-history blind spot
+5. keep `C11c` deferred after `tuas_c11c_wet_stack_anomaly_audit_v1` unless source correction or frequency-level evidence explains the weak tuple
+6. widen mixed floor/wall torture coverage only if the next source-led widening work creates a new representative route-history blind spot
 7. only then re-rank between:
    - explicit CLT-local combined-interaction work
    - more CLT-local tightening / boundary hardening
