@@ -384,6 +384,14 @@ const HELD_WALL_ROWS: readonly LayerInput[] = [
   { materialId: "gypsum_board", thicknessMm: 12.5 }
 ];
 
+const HEAVY_COMPOSITE_WALL_ROWS: readonly LayerInput[] = [
+  { materialId: "concrete", thicknessMm: 80 },
+  { materialId: "pumice_block", thicknessMm: 100 },
+  { materialId: "air_gap", thicknessMm: 50 },
+  { materialId: "gypsum_board", thicknessMm: 12.5 },
+  { materialId: "concrete", thicknessMm: 80 }
+];
+
 export const ENGINE_MIXED_GENERATED_CASES: readonly EngineMixedGeneratedCase[] = [
   {
     fieldOptions: {
@@ -879,6 +887,22 @@ export const ENGINE_MIXED_GENERATED_CASES: readonly EngineMixedGeneratedCase[] =
     splitPlans: [
       { parts: [15, 35], rowIndex: 1 },
       { parts: [6, 6.5], rowIndex: 6 }
+    ],
+    studyMode: "wall"
+  },
+  {
+    fieldOptions: {
+      airborneContext: WALL_FIELD_CONTEXT,
+      calculator: "dynamic",
+      targetOutputs: WALL_FIELD_OUTPUTS
+    },
+    id: "wall-heavy-composite-hint-suppression",
+    label: "Heavy composite hint-suppression wall",
+    labOptions: { calculator: "dynamic", targetOutputs: WALL_LAB_OUTPUTS },
+    rows: HEAVY_COMPOSITE_WALL_ROWS,
+    splitPlans: [
+      { parts: [40, 40], rowIndex: 0 },
+      { parts: [50, 50], rowIndex: 1 }
     ],
     studyMode: "wall"
   }

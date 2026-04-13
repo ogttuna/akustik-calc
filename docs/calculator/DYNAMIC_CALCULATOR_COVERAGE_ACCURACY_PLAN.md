@@ -21,6 +21,45 @@ Read together with:
 
 - latest closed slice: `open_box_finish_tolerance_guard_v1`
 - status: closed and green
+- active next slice: `mixed_floor_wall_seeded_route_history_expansion_v1`
+- active next status: minimum first target implemented and green in the current
+  working tree
+- active next intent:
+  - widen route-history and mixed floor/wall torture evidence before opening
+    another solver-widening slice
+  - start test-first: the first edit should add or extend executable coverage,
+    not change acoustic selection math
+  - preserve the current defended floor/wall corridors and classify any new red
+    before changing solver behavior
+- active next acceptance:
+  - one broader seeded family chain beyond the current deterministic longer
+    chain surface
+  - one wider generated duplicate/swap or edit-history matrix beyond the first
+    complementary generated grid
+  - route/card/support-bucket parity assertions for newly covered histories
+  - green targeted engine and workbench packs, then the accepted full engine and
+    build gates if the slice touches shared route behavior
+- active next first target:
+  - promoted the existing heavy-composite wall instability shape into the mixed
+    route-history coverage net as a third wall-family detour
+  - the shape is concrete / pumice block / air gap / gypsum board / concrete
+  - the generated variants split material totals without changing the
+    intended final visible stack
+  - the workbench seeded chain saves and reloads this wall detour at the
+    retained-scenario boundary beside the existing deep-hybrid and concrete-wall
+    detours
+  - validation:
+    - engine mixed pack: `2` files, `2` tests, green
+    - web mixed pack: `6` files, `10` tests, green
+    - engine and web typechecks: green
+    - full engine suite: `96` files, `780` tests, green
+    - repository build: green with known `sharp/@img` and Next TypeScript-plugin
+      warnings
+- optional target after that first target is green:
+  - add the latest open-box finish-tolerance boundary to the generated mixed
+    floor set so exact-outside `12 mm` laminate plus `3 mm` EPS stays
+    impact-unsupported under route-history variants
+  - keep it as a separate follow-up if it exposes a real solver/support red
 - source/implementation comparison:
   - the open-box finish tolerance guard closed the latest source-led tightening
     slice:
@@ -2109,27 +2148,29 @@ Open watchpoints:
 
 Next recommended move:
 
-- execute the selected `tuas_deferred_shortlist_drawing_audit_v1` slice
-- keep the next comparison order explicit:
-  - first classify the deferred TUAS shortlist against drawings/details into:
-    - honest visible-layer import candidates
-    - exact-only candidates needing a new surface
-    - or rows that stay deferred
-  - then re-rank whether the next code slice should be:
-    - a TUAS-backed floor evidence widening move
-    - a wall selector evidence move
-    - or a later raw-floor negative pass
-- if that TUAS audit stalls or collapses into weak visible evidence, re-rank between:
-  - a floor evidence widening move
-  - a wall selector evidence move
-  - or a mixed representative follow-up
-- the finished TUAS audit resolved the shortlist into two explicit blocker groups:
-  - mixed-schedule outliers:
-    - `R6a`
-    - `R10a`
-  - hybrid lower-treatment outliers:
-    - `R7b`
-    - `R8b`
-    - `R9b`
-    - `R2c`
-- do not treat the corrected CLT direct-fixed screening contract as a reason to open a broader family lane
+- execute the selected `mixed_floor_wall_seeded_route_history_expansion_v1`
+  slice
+- keep the slice test-first:
+  - add broader mixed floor/wall route-history evidence before any acoustic
+    solver change
+  - include a seeded family chain plus a generated duplicate/swap or edit-history
+    matrix
+  - assert support buckets and route/card parity, not only final finite numeric
+    answers
+- classify any new failure before changing implementation:
+  - solver drift
+  - support-bucket or output-card drift
+  - stale fixture expectation
+  - intentionally unsupported/fail-closed behavior
+- after this slice is green, re-rank the next implementation move between:
+  - `floor_raw_inference_source_led_widening_v1`
+  - `wall_selector_wider_trace_matrix_v1`
+  - `clt_local_combined_interaction_evidence_v1`
+- the old `tuas_deferred_shortlist_drawing_audit_v1` recommendation is closed:
+  - the shortlist was reduced into explicit mixed-schedule and hybrid
+    lower-treatment groups
+  - the subsequent TUAS support-surface, `R6a`, `R10a`, hybrid open-box, CLT
+    source-truth, and source-backed fallback guard slices have now closed the
+    currently defended branch set
+  - do not treat the corrected CLT direct-fixed screening contract as a reason
+    to open a broader family lane

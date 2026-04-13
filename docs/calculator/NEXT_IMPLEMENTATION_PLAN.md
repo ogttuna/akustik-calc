@@ -53,79 +53,134 @@ These rules govern calculator work:
 Use this as the current baseline:
 
 - branch: `main`
-- latest checked base before this checkpoint:
-  `dc8800e docs(calculator): select next source-led slice`
-- checkpoint commit stack:
-  - `b278baa test(engine): stabilize validation and full-suite gates`
-  - `bdc91e7 fix(engine): preserve explicit floor stack intent`
-  - `9c0ed2e test(engine): lock TUAS C11c fail-closed posture`
-  - `bf585b7 test(workbench): expand mixed route torture coverage`
-  - `f3c0ace docs(calculator): refresh execution checkpoint`
-- working tree after the stabilization checkpoint is clean
+- latest local checkpoint commits:
+  - `3796c17 fix(calculator): preserve floor companion semantics`
+  - `d17a7a0 fix(engine): tighten source-backed floor fallback guards`
+  - `bbaf553 docs(calculator): checkpoint source-led floor guard plan`
+- the checkpoint commit stack was cut from a clean working tree before this
+  planning update
 - `git diff --check`: green
 - `pnpm --filter @dynecho/engine typecheck`: green
-- targeted workbench pack:
-  - `7` files, `19` tests, green
-- targeted engine pack:
-  - `5` files, `9` tests, green
+- `pnpm --filter @dynecho/web typecheck`: green with the known Next.js
+  TypeScript plugin recommendation
+- latest change-adjacent engine direct predictor guard:
+  - command: `pnpm --filter @dynecho/engine exec vitest run src/predictor-published-family-estimate.test.ts --reporter=basic`
+  - result: `1` file passed, `19` tests passed
+- latest change-adjacent engine source/route guard:
+  - command: `pnpm --filter @dynecho/engine exec vitest run src/tuas-support-surface-decision-contract.test.ts --reporter=basic`
+  - result: `1` file passed, `11` tests passed
+- latest change-adjacent workbench route guard:
+  - command: `pnpm --filter @dynecho/web exec vitest run features/workbench/floor-family-regressions.test.ts --reporter=basic`
+  - result: `1` file passed, `92` tests passed
+- latest engine route/broad guard pack:
+  - command: `pnpm --filter @dynecho/engine exec vitest run src/predictor-published-family-estimate.test.ts src/tuas-support-surface-decision-contract.test.ts src/floor-widening-candidate-contract.test.ts src/floor-source-corpus-contract.test.ts src/calculate-impact-only.test.ts src/calculate-assembly.test.ts --reporter=basic`
+  - result: `6` files passed, `323` tests passed
+- latest workbench broad route guard pack:
+  - command: `pnpm --filter @dynecho/web exec vitest run features/workbench/floor-family-regressions.test.ts features/workbench/floor-stack-invariance.test.ts --reporter=basic`
+  - result: `2` files passed, `107` tests passed
 - full engine suite:
   - command: `pnpm --filter @dynecho/engine test`
-  - result: `93` files passed, `757` tests passed
+  - result: `96` files passed, `780` tests passed
 - `pnpm build`: green
 - known non-blocking build warnings:
   - `sharp/@img` optional-package warnings through `proposal-docx`
   - Next.js TypeScript plugin recommendation
-- current checkpoint slices:
-  - `dataholz_timber_frame_role_gated_raw_predictor_audit_v1`
-  - `workbench_test_typing_hygiene_v1`
-  - engine selected pack: `8` files, `310` tests, green
-  - workbench selected pack: `5` files, `114` tests, green
-  - `pnpm --filter @dynecho/engine typecheck`: green
-  - `pnpm --filter @dynecho/web typecheck`: green after the workbench test
-    typing hygiene pass
-  - `pnpm build`: green with the known `sharp/@img` and Next TypeScript-plugin
-    warnings
-  - workbench typing hygiene pack: `16` files, `64` tests, green
-  - typing hygiene scope: strict `FloorRole` row typing, string-normalized test
-    thickness inputs, explicit non-null scenario-result guards, warning/note
-    callback types, and output status maps narrowed to the actually requested
-    output set
-- first TUAS source-truth fixture refresh is green:
-  - `predictor-published-family-estimate`
-  - `impact-layer-stack-driven`
-  - `impact-common-floor-combinations`
-  - `impact-validation-regime`
-  - `dynamic-floor-regression-matrix`
-- raw bare CLT posture refresh is green:
-  - `bare-floor-raw-support`
-  - `clt-floor-monotonicity`
-  - current `140 mm` raw CLT snapshot is `Rw 35`, `Ln,w 64`,
-    `Ln,w+CI 64`, with standardized field outputs `R'w 33`, `L'n,w 66`,
-    `L'nT,w 63.6`, and `L'nT,w+CI,50-2500 63.6`
-- stale impact fixture, field/topology, upstream-parity, validation-regime, and
-  wall-stability cleanup is green:
-  - target pack: `7` files, `21` tests
-  - validation-regime pack: `2` files, `5` tests
-  - deep-hybrid runner pack: `5` files, `10` tests
-  - web validation-regime pack: `2` files, `13` tests
-- stable full engine-suite triage after that cleanup is green:
-  - accepted command: `pnpm --filter @dynecho/engine test`
-  - accepted result: `93` files passed, `757` tests passed
-- `pnpm build`: green after the `unsupported_gap` posture was added to the
-  workbench validation-regime reporting helpers
-- engine test-typing cleanup is green:
-  - `pnpm --filter @dynecho/engine typecheck`
-  - touched-test pack: `14` files passed, `97` tests passed
-  - stable full engine suite: `93` files passed, `757` tests passed
-  - `pnpm build`: green
-  - closed classes: implicit `warning` / `note` callback parameter types, stale
-    empty-array `never` narrowing in TUAS contract tests, nullable UBIQ candidate
-    arrays, and C11c audit option/rating typing
-  - no acoustic solver behavior changed in this cleanup slice
+- latest closed implementation slices:
+  - `floor_airborne_companion_c_ctr_semantic_audit_v1`
+  - `clt_laminate_underlay_interpolation_guard_v1`
+  - `clt_dry_finish_package_guard_v1`
+  - `clt_combined_finish_fallback_guard_v1`
+  - `open_box_disjoint_upper_fallback_guard_v1`
+  - `open_box_finish_package_guard_v1`
+  - `open_box_finish_tolerance_guard_v1`
 - direct broad multi-worker `vitest run` currently has all assertions green but
   can still exit non-zero from Vitest worker RPC timeout after CPU-heavy
   dynamic-airborne generated scans; use the package `test` script for the
   accepted full engine gate
+
+Current active next slice:
+
+- slice id: `mixed_floor_wall_seeded_route_history_expansion_v1`
+- type: test-first route/history hardening; no solver behavior changed in the
+  first implemented target
+- current working-tree status: minimum first target implemented and green
+- reason:
+  - the latest floor source-led guard and companion-semantics slices are green
+  - no active known solver blocker remains in defended floor/wall corridors
+  - the next-phase definition of done still requires broader mixed-stack
+    torture coverage beyond the first deterministic longer chain and first
+    complementary duplicate/swap grid
+  - running this before the next source-led widening reduces the chance that a
+    later floor or wall expansion silently breaks save/load, duplicate, split,
+    or reorder behavior
+- acceptance:
+  - add at least one broader seeded family chain
+  - add at least one wider generated duplicate/swap or edit-history matrix
+  - include support-bucket/card parity assertions, not only finite-number checks
+  - classify any new red as solver drift, support-surface drift, stale fixture,
+    or intentionally unsupported before changing solver logic
+- follow-on rerank after this slice is green:
+  - `floor_raw_inference_source_led_widening_v1`
+  - `wall_selector_wider_trace_matrix_v1`
+  - `clt_local_combined_interaction_evidence_v1`
+
+Ready implementation pass for `mixed_floor_wall_seeded_route_history_expansion_v1`:
+
+- pre-edit baseline commands:
+  - `pnpm --filter @dynecho/engine exec vitest run src/mixed-floor-wall-generated-matrix.test.ts src/mixed-floor-wall-complex-stack.test.ts --reporter=basic`
+  - `pnpm --filter @dynecho/web exec vitest run features/workbench/mixed-study-mode-torture.test.ts features/workbench/mixed-study-mode-generated-matrix.test.ts features/workbench/mixed-study-mode-generated-edit-history-matrix.test.ts features/workbench/mixed-study-mode-generated-history-grid.test.ts features/workbench/floor-seeded-edit-stability.test.ts features/workbench/wall-seeded-edit-stability.test.ts --reporter=basic`
+- implemented edit set:
+  - [mixed-floor-wall-generated-test-helpers.ts](../../packages/engine/src/mixed-floor-wall-generated-test-helpers.ts)
+    - added a `wall-heavy-composite-hint-suppression` generated wall case based on
+      the existing concrete / pumice / air-gap / gypsum / concrete heavy
+      composite wall shape from the wall instability contracts
+    - uses split plans that preserve visible material totals, such as concrete
+      `80 -> 40 + 40` and pumice `100 -> 50 + 50`
+  - [mixed-study-mode-generated-test-helpers.ts](../../apps/web/features/workbench/mixed-study-mode-generated-test-helpers.ts)
+    - mirrored the same route generated wall case so engine and workbench matrices
+      cover the same new wall-family surface
+  - [mixed-study-mode-torture.test.ts](../../apps/web/features/workbench/mixed-study-mode-torture.test.ts)
+    - added a third wall-family seeded detour using the same heavy-composite wall
+      shape
+    - includes duplicate/split, move, save, reload, and support-card assertions
+      at the saved-scenario retention boundary
+    - alternates this third wall detour with the existing deep-hybrid and concrete
+      wall detours in the representative seeded floor chain
+  - optional, only if the first three edits stay green and fast:
+    - add one generated floor boundary case for the latest open-box
+      finish-tolerance guard, such as an exact-outside `12 mm` laminate plus
+      `3 mm` EPS open-box walking finish that must remain impact-unsupported
+      through split and edit-history variants
+- stop/go rules:
+  - if the new wall case is green without solver changes, keep the slice as a
+    pure test/docs hardening commit
+  - if a new red appears only on card/support parity, fix support-surface mapping
+    before touching solver logic
+  - if a numeric drift appears, first compare direct rows, split rows, route
+    snapshots, warnings, and support buckets; only then decide whether it is a
+    real solver bug
+  - if the optional open-box floor boundary creates a real behavior red, split it
+    into its own follow-up slice instead of expanding this mixed-history slice
+- close-out gates:
+  - pre-edit engine mixed baseline: `2` files, `2` tests, green
+  - pre-edit web mixed baseline: `6` files, `10` tests, green
+  - post-edit engine mixed pack: `2` files, `2` tests, green
+  - post-edit focused web mixed pack: `4` files, `8` tests, green
+  - post-edit full web mixed pack: `6` files, `10` tests, green
+  - `pnpm --filter @dynecho/engine typecheck`: green
+  - `pnpm --filter @dynecho/web typecheck`: green with the known Next.js
+    TypeScript plugin recommendation
+  - `pnpm --filter @dynecho/engine test`: `96` files, `780` tests, green
+  - `pnpm build`: green with the known `sharp/@img` optional-package warnings
+    through `proposal-docx` and the Next.js TypeScript plugin recommendation
+
+Next immediate decision:
+
+- either close/commit the green heavy-composite route-history target as the first
+  slice result
+- or run the optional
+  `open_box_finish_tolerance_mixed_history_boundary_v1` test-only follow-up
+  before moving to source-led solver widening
 
 The currently defended floor/wall corridors match the living state docs:
 

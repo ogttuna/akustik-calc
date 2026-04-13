@@ -69,6 +69,14 @@ export const WALL_DETOUR_ROWS: readonly Omit<LayerDraft, "id">[] = [
   { materialId: "gypsum_board", thicknessMm: "12.5" }
 ] as const;
 
+export const HEAVY_COMPOSITE_WALL_ROWS: readonly Omit<LayerDraft, "id">[] = [
+  { materialId: "concrete", thicknessMm: "80" },
+  { materialId: "pumice_block", thicknessMm: "100" },
+  { materialId: "air_gap", thicknessMm: "50" },
+  { materialId: "gypsum_board", thicknessMm: "12.5" },
+  { materialId: "concrete", thicknessMm: "80" }
+] as const;
+
 export const FLOOR_DETOUR_ROWS: readonly Omit<LayerDraft, "id">[] = getPresetById("tuas_open_box_dry_exact").rows;
 
 const DATAHOLZ_GDMTXA04A_BOUNDARY_ROWS: readonly Omit<LayerDraft, "id">[] = [
@@ -727,6 +735,17 @@ export const ROUTE_MIXED_GENERATED_CASES: readonly RouteMixedGeneratedCase[] = [
     splitPlans: [
       { parts: ["15", "35"], rowIndex: 1 },
       { parts: ["6", "6.5"], rowIndex: 6 }
+    ],
+    studyMode: "wall"
+  },
+  {
+    id: "route-wall-heavy-composite-hint-suppression",
+    label: "Heavy composite hint-suppression wall",
+    requestedOutputs: DEFAULT_WALL_REQUESTED_OUTPUTS,
+    rows: HEAVY_COMPOSITE_WALL_ROWS,
+    splitPlans: [
+      { parts: ["40", "40"], rowIndex: 0 },
+      { parts: ["50", "50"], rowIndex: 1 }
     ],
     studyMode: "wall"
   }

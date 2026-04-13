@@ -1916,6 +1916,64 @@ Each new torture-pass change should add more than one test shape:
 
 That keeps the suite from becoming overly optimistic around a single hand-picked stack.
 
+### Current Selected Next Slice
+
+- slice id: `mixed_floor_wall_seeded_route_history_expansion_v1`
+- status: minimum first target implemented and green in the current working tree
+- why this is next:
+  - the latest floor source-led guard pack and companion-semantics pack are
+    green
+  - defended floor/wall corridors have no active known solver blocker
+  - the next-phase definition of done still requires mixed-stack torture
+    coverage beyond the first deterministic longer chain and first
+    complementary generated duplicate/swap grid
+  - a test-first route-history pass is lower risk than opening another solver
+    widening lane immediately
+- minimum useful scope:
+  - add one broader seeded family chain
+  - add one wider generated duplicate/swap or edit-history matrix
+  - include route/card/support-bucket parity checks for the newly covered mixed
+    histories
+- selected first concrete target:
+  - added the heavy-composite wall shape from the existing wall instability
+    contracts as a third wall-family route-history surface:
+    - concrete
+    - pumice block
+    - air gap
+    - gypsum board
+    - concrete
+  - mirrored it in both generated helpers:
+    - [mixed-floor-wall-generated-test-helpers.ts](../../packages/engine/src/mixed-floor-wall-generated-test-helpers.ts)
+    - [mixed-study-mode-generated-test-helpers.ts](../../apps/web/features/workbench/mixed-study-mode-generated-test-helpers.ts)
+  - added the seeded save/load chain coverage in
+    [mixed-study-mode-torture.test.ts](../../apps/web/features/workbench/mixed-study-mode-torture.test.ts)
+  - validation:
+    - pre-edit engine mixed pack: `2` files, `2` tests, green
+    - pre-edit web mixed pack: `6` files, `10` tests, green
+    - post-edit engine mixed pack: `2` files, `2` tests, green
+    - post-edit focused web mixed pack: `4` files, `8` tests, green
+    - post-edit full web mixed pack: `6` files, `10` tests, green
+    - engine typecheck: green
+    - web typecheck: green with the known Next.js TypeScript plugin
+      recommendation
+    - full engine suite: `96` files, `780` tests, green
+    - repository build: green with the known `sharp/@img` optional-package
+      warnings through `proposal-docx` and the Next.js TypeScript plugin
+      recommendation
+- implementation rule:
+  - do not change solver behavior until a new test exposes a classified failure
+  - classify every red as solver drift, support-surface drift, stale fixture, or
+    intentionally unsupported/fail-closed behavior
+- optional second target:
+  - only after the heavy-composite wall route is green, add one open-box
+    finish-tolerance boundary case for a `12 mm` laminate plus `3 mm` EPS open-box
+    walking finish that must remain impact-unsupported
+  - split this into a follow-up slice if it exposes a real behavior issue
+- follow-on options after this is green:
+  - `floor_raw_inference_source_led_widening_v1`
+  - `wall_selector_wider_trace_matrix_v1`
+  - `clt_local_combined_interaction_evidence_v1`
+
 ## 8. Definition Of Done For The Next Phase
 
 The next phase is only complete when all of these are true:
@@ -1938,7 +1996,8 @@ Do this in order:
 3. keep `C4c` frozen as exact `tuas_c4c_clt260_measured_2026`; `C2c`, `C3c`, `C4c`, and `C7c` are already exact anchors, and `C5c` is already predictor-backed
 4. keep under-described combined direct-fixed CLT stacks deferred against the exact anchors unless the source row is imported deliberately
 5. keep `C11c` deferred after `tuas_c11c_wet_stack_anomaly_audit_v1` unless source correction or frequency-level evidence explains the weak tuple
-6. widen mixed floor/wall torture coverage only if the next source-led widening work creates a new representative route-history blind spot
+6. run `mixed_floor_wall_seeded_route_history_expansion_v1` as the next
+   test-first route/history guard before another solver-widening slice
 7. only then re-rank between:
    - explicit CLT-local combined-interaction work
    - more CLT-local tightening / boundary hardening

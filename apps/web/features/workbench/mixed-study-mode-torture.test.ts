@@ -61,6 +61,14 @@ const WALL_CHAIN_APPEND_ROWS: readonly Omit<LayerDraft, "id">[] = [
   { materialId: "air_gap", thicknessMm: "25" }
 ];
 
+const HEAVY_COMPOSITE_WALL_ROWS: readonly Omit<LayerDraft, "id">[] = [
+  { materialId: "concrete", thicknessMm: "80" },
+  { materialId: "pumice_block", thicknessMm: "100" },
+  { materialId: "air_gap", thicknessMm: "50" },
+  { materialId: "gypsum_board", thicknessMm: "12.5" },
+  { materialId: "concrete", thicknessMm: "80" }
+];
+
 function createMemoryStorage(): Storage {
   const values = new Map<string, string>();
 
@@ -868,6 +876,60 @@ describe("mixed study-mode torture", () => {
       };
     };
 
+    const buildHeavyCompositeWallDetour = () => {
+      useWorkbenchStore.getState().startStudyMode("wall");
+      useWorkbenchStore.getState().appendRows(HEAVY_COMPOSITE_WALL_ROWS);
+
+      const leadingConcrete = useWorkbenchStore.getState().rows.find(
+        (row) => row.materialId === "concrete" && row.thicknessMm === "80"
+      );
+      const pumice = useWorkbenchStore.getState().rows.find(
+        (row) => row.materialId === "pumice_block" && row.thicknessMm === "100"
+      );
+      const gypsumBoard = useWorkbenchStore.getState().rows.find(
+        (row) => row.materialId === "gypsum_board" && row.thicknessMm === "12.5"
+      );
+      expect(leadingConcrete).toBeTruthy();
+      expect(pumice).toBeTruthy();
+      expect(gypsumBoard).toBeTruthy();
+
+      useWorkbenchStore.getState().duplicateRow(leadingConcrete!.id);
+      useWorkbenchStore.getState().duplicateRow(pumice!.id);
+
+      let currentRows = useWorkbenchStore.getState().rows;
+      const duplicatedConcrete = currentRows[currentRows.findIndex((row) => row.id === leadingConcrete!.id) + 1];
+      const duplicatedPumice = currentRows[currentRows.findIndex((row) => row.id === pumice!.id) + 1];
+      expect(duplicatedConcrete).toBeTruthy();
+      expect(duplicatedPumice).toBeTruthy();
+
+      useWorkbenchStore.getState().updateThickness(leadingConcrete!.id, "40");
+      useWorkbenchStore.getState().updateThickness(duplicatedConcrete!.id, "40");
+      useWorkbenchStore.getState().updateThickness(pumice!.id, "50");
+      useWorkbenchStore.getState().updateThickness(duplicatedPumice!.id, "50");
+      useWorkbenchStore.getState().updateMaterial(gypsumBoard!.id, "firestop_board");
+
+      currentRows = useWorkbenchStore.getState().rows;
+      const duplicatedPumiceIndex = currentRows.findIndex((row) => row.id === duplicatedPumice!.id);
+      moveCurrentRowToIndex(useWorkbenchStore, duplicatedPumice!.id, Math.max(0, duplicatedPumiceIndex - 1));
+      moveCurrentRowToIndex(useWorkbenchStore, duplicatedPumice!.id, duplicatedPumiceIndex);
+
+      const scenarios = evaluateCurrentWall("save-load-heavy-composite-wall-detour");
+      assertWallScenario("save-load-heavy-composite-wall-detour lab", scenarios.lab, WALL_LAB_OUTPUTS);
+      assertWallScenario("save-load-heavy-composite-wall-detour field", scenarios.field, WALL_FIELD_OUTPUTS);
+
+      return {
+        field: scenarioEnvelope(scenarios.field, "wall"),
+        lab: scenarioEnvelope(scenarios.lab, "wall"),
+        requestedOutputs: [...useWorkbenchStore.getState().requestedOutputs],
+        rows: normalizeRowsForRoundtrip(useWorkbenchStore.getState().rows),
+        savedScenarioId: (() => {
+          useWorkbenchStore.getState().saveCurrentScenario();
+          return useWorkbenchStore.getState().savedScenarios[0]?.id ?? null;
+        })(),
+        studyMode: useWorkbenchStore.getState().studyMode
+      };
+    };
+
     const buildBoundFloorDetour = () => {
       useWorkbenchStore.getState().startStudyMode("floor");
       useWorkbenchStore.getState().appendRows(getPresetById("ubiq_open_web_300_bound").rows);
@@ -1437,8 +1499,8 @@ describe("mixed study-mode torture", () => {
 
     const wallDirect = buildWallDetour();
     const concreteWallBoundary = buildConcreteWallDetour();
+    const heavyCompositeWallBoundary = buildHeavyCompositeWallDetour();
     const productExactBoundary = buildProductExactFloorDetour();
-    buildWallDetour();
     const exactFamilyBoundary = buildExactFamilyFloorDetour();
     buildConcreteWallDetour();
     buildDeltaFloorDetour();
@@ -1449,6 +1511,7 @@ describe("mixed study-mode torture", () => {
     for (const savedScenarioId of [
       wallDirect.savedScenarioId,
       concreteWallBoundary.savedScenarioId,
+      heavyCompositeWallBoundary.savedScenarioId,
       productExactBoundary.savedScenarioId,
       exactFamilyBoundary.savedScenarioId,
       steel300Boundary.savedScenarioId
@@ -1474,6 +1537,15 @@ describe("mixed study-mode torture", () => {
       expectedStudyMode: concreteWallBoundary.studyMode,
       label: "second wall-family detour at saved-scenario retention boundary",
       savedScenarioId: concreteWallBoundary.savedScenarioId
+    });
+    assertReloadMatches({
+      directField: heavyCompositeWallBoundary.field,
+      directLab: heavyCompositeWallBoundary.lab,
+      expectedRequestedOutputs: heavyCompositeWallBoundary.requestedOutputs,
+      expectedRows: heavyCompositeWallBoundary.rows,
+      expectedStudyMode: heavyCompositeWallBoundary.studyMode,
+      label: "third wall-family detour at saved-scenario retention boundary",
+      savedScenarioId: heavyCompositeWallBoundary.savedScenarioId
     });
     assertReloadMatches({
       directField: exactFamilyBoundary.field,
@@ -1507,7 +1579,7 @@ describe("mixed study-mode torture", () => {
       partnerCase.build();
       buildConcreteWallDetour();
       secondaryPartnerCase.build();
-      buildWallDetour();
+      buildHeavyCompositeWallDetour();
       tertiaryPartnerCase.build();
       buildConcreteWallDetour();
 

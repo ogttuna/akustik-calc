@@ -105,6 +105,27 @@ Current execution status:
     interpolation band
   - engine, workbench, typecheck, full engine, and repository build gates are
     green after the guard
+- current selected next slice:
+  - `mixed_floor_wall_seeded_route_history_expansion_v1`
+  - this is a test-first route/history hardening pass, not an immediate solver
+    widening pass
+  - it added a broader seeded mixed family chain and a wider generated
+    duplicate/swap/edit-history matrix surface before changing acoustic behavior
+  - first target: added the concrete / pumice block / air gap / gypsum board /
+    concrete heavy-composite wall shape as a third wall-family mixed-history
+    detour in the engine helper, workbench generated helper, and workbench
+    save/load torture chain
+  - first target validation: engine mixed pack, web mixed pack, and engine/web
+    typechecks are green; full engine suite and repository build are also green
+  - optional follow-up inside the same slice only if green and fast: add the
+    open-box `12 mm` laminate plus `3 mm` EPS finish-tolerance boundary to the
+    generated mixed floor set
+  - any new red must be classified as solver drift, support-surface drift, stale
+    fixture, or intentionally unsupported/fail-closed behavior before code
+    changes are made
+  - after this slice is green, re-rank between source-led raw-floor inference
+    widening, wider wall selector trace evidence, and CLT-local combined
+    interaction evidence
 - the 2026-04-07 reinforced-concrete assembly-field `Rw` support blocker is now closed:
   - concrete screening rows with visible floor roles now keep `Rw` exposed again on the assembly route
   - workbench `Rw` cards now also respect engine support buckets instead of surfacing unsupported floor companions

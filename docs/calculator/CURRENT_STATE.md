@@ -1222,6 +1222,62 @@ These behaviors are now explicitly defended and should not be treated as regress
 
 Work in this order:
 
+0. Execute the next selected test-first slice before new solver widening:
+   - slice id: `mixed_floor_wall_seeded_route_history_expansion_v1`
+   - current working-tree status:
+     - minimum first target is implemented and green
+     - no solver, catalog, selector, or store behavior changed
+   - intent: widen mixed floor/wall route-history torture coverage without
+     intentionally changing solver behavior at slice start
+   - why this is next:
+     - the latest source-led floor guard set is green
+     - the last committed checkpoint was clean after the companion-semantics,
+       source-backed fallback guard, and docs commits
+     - the next-phase definition of done still requires broader mixed-stack
+       torture beyond the current representative chain/grid surface
+     - this reduces risk before reopening floor raw-inference widening, CLT-local
+       combined-interaction work, or wider wall selector evidence work
+   - minimum coverage to add:
+     - one broader seeded floor/wall family chain
+     - one wider duplicate/swap or edit-history generated matrix
+     - route/card/support-bucket parity assertions for any newly covered history
+       path
+   - first concrete target:
+     - added the concrete / pumice block / air gap / gypsum board / concrete
+       heavy-composite wall shape as the third wall-family mixed-history detour
+     - mirrored it in engine and workbench generated helpers before changing any
+       solver behavior
+     - added saved-scenario retention-boundary reload coverage in the
+       workbench torture chain
+   - first target validation:
+     - engine mixed baseline before edit: `2` files, `2` tests, green
+     - web mixed baseline before edit: `6` files, `10` tests, green
+     - engine mixed pack after edit: `2` files, `2` tests, green
+     - focused web mixed pack after edit: `4` files, `8` tests, green
+     - full web mixed pack after edit: `6` files, `10` tests, green
+     - engine typecheck: green
+     - web typecheck: green with the known Next.js TypeScript plugin
+       recommendation
+     - full engine suite: `96` files, `780` tests, green
+     - repository build: green with the known `sharp/@img` optional-package
+       warnings through `proposal-docx` and the Next.js TypeScript plugin
+       recommendation
+   - optional second target:
+     - add an open-box exact-outside `12 mm` laminate plus `3 mm` EPS
+       finish-tolerance boundary only if the wall detour slice stays green and
+       fast
+     - split that optional case into its own slice if it exposes a real
+       solver/support issue
+   - classify any new red before editing solver logic:
+     - solver drift
+     - support-surface drift
+     - stale fixture expectation
+     - intentionally unsupported / fail-closed behavior
+   - rerank after green:
+     - `floor_raw_inference_source_led_widening_v1`
+     - `wall_selector_wider_trace_matrix_v1`
+     - `clt_local_combined_interaction_evidence_v1`
+
 1. Keep the closed raw-floor negative audit, the closed official-product representative breadth slice, the closed UBIQ provenance/boundary-freeze slice, and the closed interpolation-steel mixed seeded-family slice frozen:
    - do not reopen `FL-23/25/27` just because provenance is now clearer
    - do not turn the provenance freeze into an ad hoc runtime rename

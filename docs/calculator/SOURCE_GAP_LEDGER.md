@@ -20,6 +20,19 @@ Important scope note:
 - wall-side dynamic behavior still stays mostly under benchmark and stability guardrails
 - if wall-family widening becomes active work, add a separate wall ledger instead of overloading this one
 
+Current planning implication:
+
+- do not start the next turn by widening a source gap directly unless the current
+  route-history guard is deliberately closed first
+- `mixed_floor_wall_seeded_route_history_expansion_v1` has its first
+  heavy-composite wall route-history target green in the working tree
+- after closing that test-first route-history guard, use this ledger to re-rank
+  the floor-side source options:
+  - source-led raw-floor inference widening on already-defended corridors
+  - CLT-local combined-interaction evidence
+  - continued fail-closed posture for `C11c`, weak UBIQ bands, and exact-only
+    Dataholz rows until stronger source evidence exists
+
 ## Latest Source-Truth Rebaseline
 
 - latest closed slice: `tuas_floor_source_truth_rebaseline_v1`
