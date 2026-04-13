@@ -23,6 +23,54 @@ Last cross-package build revalidation: `2026-04-13`
 
 Verified broad corridors:
 
+- latest raw-floor hostile-input checkpoint:
+  - slice id: `raw_floor_hostile_input_answer_matrix_v1`
+  - implemented on: `2026-04-13`
+  - type: no-widening pre-widening raw-floor answer/card slice
+  - status: implemented and target-green
+  - reason this was selected:
+    - the wall-selector trace checkpoint exposed no classified behavior bug
+    - raw-floor behavior widening still has the largest fake-confidence blast
+      radius, so the next safe move is a stronger hostile-input guard before
+      any new support lane opens
+    - existing raw helpers already had support-bucket and some answer snapshots,
+      but long split, reordered, and weak-carrier raw stacks needed a compact
+      answer/card matrix
+  - implemented tests:
+    - `packages/engine/src/raw-floor-hostile-input-answer-matrix.test.ts`
+      pins numeric answers, support buckets, impact basis, no-match posture,
+      warning fragments, and layer counts for:
+      - long split terminal-concrete helper
+      - same-material concrete helper with non-terminal concrete
+      - long open-web helper negative
+      - fragmented CLT lower-only negative
+    - `apps/web/features/workbench/raw-floor-hostile-input-route-card-matrix.test.ts`
+      mirrors those rows through workbench output-card status/value snapshots
+  - behavior scope:
+    - no solver, catalog, selector, source, or workbench runtime behavior changed
+    - open-web helper-heavy and fragmented CLT lower-only raw stacks still fail
+      closed on impact outputs
+    - concrete moved away from the terminal position still withholds field `Rw`
+      even when impact field continuations remain live
+  - latest validation:
+    - focused engine hostile-input matrix:
+      `1` file, `1` test, green
+    - focused workbench hostile-input card matrix:
+      `1` file, `1` test, green
+    - engine raw adjacent pack:
+      `6` files, `12` tests, green
+    - workbench raw adjacent pack:
+      `6` files, `9` tests, green
+    - `pnpm --filter @dynecho/engine typecheck`: green
+    - `pnpm --filter @dynecho/web typecheck`: green with the known Next.js
+      TypeScript plugin recommendation
+    - `pnpm --filter @dynecho/engine test`: `101` files, `789` tests, green
+    - `pnpm --filter @dynecho/web test`: `96` files, `604` tests, green
+    - `git diff --check`: green
+  - next planning implication:
+    - raw-floor widening remains behavior-deferred until a single
+      source-backed carrier/output surface is named; this checkpoint is a guard,
+      not a widening
 - latest wall-selector trace checkpoint:
   - slice id: `wall_selector_wider_trace_matrix_v1`
   - implemented on: `2026-04-13`

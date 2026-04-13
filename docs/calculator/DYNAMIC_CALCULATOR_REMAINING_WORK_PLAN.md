@@ -91,6 +91,28 @@ Interpretation:
 
 Current verified result:
 
+- raw-floor hostile-input answer/card matrix: green
+  - slice id: `raw_floor_hostile_input_answer_matrix_v1`
+  - no solver, catalog, source, selector, support, or workbench runtime behavior
+    changed
+  - engine:
+    `packages/engine/src/raw-floor-hostile-input-answer-matrix.test.ts`
+  - workbench:
+    `apps/web/features/workbench/raw-floor-hostile-input-route-card-matrix.test.ts`
+  - focused validation:
+    - engine hostile-input matrix: `1` file, `1` test, green
+    - workbench hostile-input card matrix: `1` file, `1` test, green
+  - adjacent validation:
+    - engine raw adjacent pack: `6` files, `12` tests, green
+    - workbench raw adjacent pack: `6` files, `9` tests, green
+  - full validation:
+    - engine suite: `101` files, `789` tests, green
+    - web suite: `96` files, `604` tests, green
+    - engine/web typechecks and `git diff --check`: green
+  - pinned surface:
+    long split terminal-concrete helper, same-material non-terminal concrete
+    helper, long open-web helper-heavy negative, and fragmented CLT lower-only
+    negative
 - output-origin trace matrix: full current gates green
   - engine:
     `packages/engine/src/output-origin-trace-matrix.test.ts`
@@ -2104,13 +2126,21 @@ Do this in order:
      checkpoint alone
    - `dynamic-airborne.ts` is already large, so any future selector behavior or
      refactor work must be split from trace-only checkpoints
-10. re-rank candidates before selecting the next implementation slice:
+10. keep `raw_floor_hostile_input_answer_matrix_v1` frozen as the latest
+    raw-floor hostile-input guard:
+    - long split terminal-concrete helper answers are pinned as live where
+      supported
+    - concrete that is no longer terminal keeps requested field `Rw`
+      unsupported
+    - open-web helper-heavy and fragmented CLT lower-only raw stacks stay
+      fail-closed on impact outputs
+11. re-rank candidates before selecting the next behavior slice:
     - explicit CLT-local combined-interaction work remains source/frequency
       evidence-led
     - true raw-floor inference widening remains one carrier/output surface at a
       time
     - wall selector behavior work needs a fresh classified red or a separate
       evidence-backed behavior plan
-11. keep `gdmtxa04a` estimate-only until a future source-backed material surface exists
+12. keep `gdmtxa04a` estimate-only until a future source-backed material surface exists
 
-This order is the safest one because the previous broad blockers are already closed; the immediate risk is silently broadening behavior before the next route can be explained by value, origin, basis/source, support bucket, and workbench card status. Raw-floor widening is now better measured, but still has the largest fake-confidence blast radius. CLT combined behavior is better anchored, but `C11c` remains deliberately deferred and `GDMTXA04A` remains estimate-only. The wall trace slice has reduced selector uncertainty without weakening those frozen floor corridors, so the next move is re-ranking rather than automatic widening.
+This order is the safest one because the previous broad blockers are already closed; the immediate risk is silently broadening behavior before the next route can be explained by value, origin, basis/source, support bucket, and workbench card status. Raw-floor widening is now better measured, including hostile long-split and reordered negatives, but still has the largest fake-confidence blast radius. CLT combined behavior is better anchored, but `C11c` remains deliberately deferred and `GDMTXA04A` remains estimate-only. The wall trace and raw hostile-input slices reduced selector and raw-route uncertainty without weakening frozen corridors, so the next move is re-ranking rather than automatic widening.

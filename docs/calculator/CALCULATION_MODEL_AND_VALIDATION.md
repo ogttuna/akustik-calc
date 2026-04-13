@@ -365,6 +365,34 @@ Latest wall-selector validation:
 - full web suite: `95` files, `603` tests, green
 - `git diff --check`: green
 
+The next no-widening raw-floor guard is also implemented:
+
+- slice id: `raw_floor_hostile_input_answer_matrix_v1`
+- engine artifact:
+  `packages/engine/src/raw-floor-hostile-input-answer-matrix.test.ts`
+- workbench artifact:
+  `apps/web/features/workbench/raw-floor-hostile-input-route-card-matrix.test.ts`
+- purpose:
+  - prove that hostile raw floor inputs are measured by answers, not only by
+    finite/non-finite checks
+  - keep raw-floor widening blocked until a source-backed carrier/output surface
+    is named
+- pinned routes:
+  - long split terminal-concrete helper: all requested floor/field outputs live
+    with numeric answer snapshots
+  - same-material concrete helper with non-terminal concrete: field `Rw`
+    unsupported while impact field continuations remain live
+  - long open-web helper-heavy raw stack: impact outputs unsupported/needs-input
+  - fragmented CLT lower-only raw stack: impact outputs unsupported/needs-input
+- validation:
+  - focused engine hostile-input matrix: `1` file, `1` test, green
+  - focused workbench hostile-input card matrix: `1` file, `1` test, green
+  - engine raw adjacent pack: `6` files, `12` tests, green
+  - workbench raw adjacent pack: `6` files, `9` tests, green
+  - full engine suite: `101` files, `789` tests, green
+  - full web suite: `96` files, `604` tests, green
+  - engine/web typechecks and `git diff --check`: green
+
 Deferred until after that checkpoint:
 
 - `floor_raw_inference_source_led_widening_v1`

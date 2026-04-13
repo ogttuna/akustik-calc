@@ -21,20 +21,45 @@ Read together with:
 ## Current Active Slice Ledger
 
 - latest completed slice:
-  `wall_selector_wider_trace_matrix_v1`
-- status: implemented as a no-widening wall-selector trace/card guard; focused,
-  adjacent, and typecheck gates are green
+  `raw_floor_hostile_input_answer_matrix_v1`
+- status: implemented as a no-widening pre-widening raw-floor answer/card guard;
+  focused, adjacent, typecheck, and diff gates are green
 - latest completed slice intent:
+  - broaden the raw-floor hostile-input stress surface before any behavior
+    widening
+  - pin numeric answers, support buckets, impact basis, and workbench card
+    status/value for long split, reordered, and weak-carrier raw stacks
+  - keep helper-only timber, open-web steel raw carriers, CLT lower-only
+    fragments, and non-terminal concrete helper arrangements from becoming
+    accidental widening shortcuts
+- latest completed slice artifacts:
+  - `packages/engine/src/raw-floor-hostile-input-answer-matrix.test.ts`
+  - `apps/web/features/workbench/raw-floor-hostile-input-route-card-matrix.test.ts`
+- latest completed slice validation:
+  - focused engine hostile-input matrix: `1` file, `1` test, green
+  - focused workbench hostile-input card matrix: `1` file, `1` test, green
+  - engine raw adjacent pack: `6` files, `12` tests, green
+  - workbench raw adjacent pack: `6` files, `9` tests, green
+  - engine/web typechecks: green; web still prints the known Next.js
+    TypeScript plugin recommendation
+  - full engine suite: `101` files, `789` tests, green
+  - full web suite: `96` files, `604` tests, green
+  - `git diff --check`: green
+- previous wall-selector trace slice:
+  `wall_selector_wider_trace_matrix_v1` is implemented as a no-widening
+  wall-selector trace/card guard; focused, adjacent, typecheck, and full-suite
+  gates are green
+- previous wall-selector slice intent:
   - pin the current wall selector answer/support/card posture before any wider
     selector behavior change
   - keep the current defended `double_leaf <-> lined_massive_wall` hold visible
     on engine traces and user-facing workbench explanations
   - prove clear settled wall families, held AAC/G5 boundaries, non-AAC
     heavy-core controls, and strong framed controls without touching solver math
-- latest completed slice artifacts:
+- previous wall-selector artifacts:
   - `packages/engine/src/dynamic-airborne-wall-selector-trace-matrix.test.ts`
   - `apps/web/features/workbench/wall-selector-output-origin-card-matrix.test.ts`
-- latest completed slice validation:
+- previous wall-selector validation:
   - focused engine trace matrix: `1` file, `1` test, green
   - focused workbench card matrix: `1` file, `1` test, green
   - engine selector/boundary pack: `3` files, `15` tests, green
@@ -94,6 +119,8 @@ Read together with:
   - re-rank candidates again before selecting behavior work
   - keep `wall_selector_wider_trace_matrix_v1` frozen as evidence, not as a
     mandate to widen wall selector math
+  - keep `raw_floor_hostile_input_answer_matrix_v1` frozen as the latest
+    hostile-input pre-widening guard
   - raw-floor behavior widening, CLT-local combined behavior work, C11c, and
     `GDMTXA04A` exact reopening remain deferred until they have stronger
     source/frequency evidence and their own output-origin trace rows

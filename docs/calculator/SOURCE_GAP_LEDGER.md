@@ -39,6 +39,34 @@ Current planning implication:
 - `dataholz_clt_source_truth_audit_v1` is now closed as a no-widening source
   audit before any new raw-floor widening
 - latest implemented floor-side guard:
+  - `raw_floor_hostile_input_answer_matrix_v1`
+  - this is a no-widening hostile-input guard before new raw-floor behavior
+    widening
+  - reason: after the wall selector trace checkpoint exposed no behavior bug,
+    raw-floor remains the largest fake-confidence risk; before naming a new
+    support lane, long split, reordered, and weak-carrier raw stacks needed
+    answer-level pinning
+  - result:
+    - no solver, catalog, selector, source, or workbench runtime behavior
+      changed
+    - engine matrix pins numeric `Rw`, `R'w`, `DnT,w`, `Ln,w`, `L'n,w`, and
+      `L'nT,w` answers where live, plus fail-closed unsupported buckets where
+      not live
+    - workbench matrix pins matching output-card status/value snapshots
+    - open-web helper-heavy raw stacks and fragmented CLT lower-only raw stacks
+      stay impact-unsupported / needs-input
+    - concrete moved away from the terminal position keeps requested field `Rw`
+      unsupported
+  - test anchors:
+    - `packages/engine/src/raw-floor-hostile-input-answer-matrix.test.ts`
+    - `apps/web/features/workbench/raw-floor-hostile-input-route-card-matrix.test.ts`
+  - validation:
+    - engine raw adjacent pack: `6` files, `12` tests, green
+    - workbench raw adjacent pack: `6` files, `9` tests, green
+    - full engine suite: `101` files, `789` tests, green
+    - full web suite: `96` files, `604` tests, green
+    - engine/web typechecks and `git diff --check`: green
+- previous implemented floor-side guard:
   - `raw_concrete_helper_permutation_answer_guard_v1`
   - umbrella: `floor_raw_inference_source_led_widening_v1`
   - this is not a new exact/source import; it is the answer-measuring guard for

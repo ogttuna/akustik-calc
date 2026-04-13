@@ -327,6 +327,54 @@ Current wall-selector trace checkpoint:
   - `pnpm --filter @dynecho/web test`: `95` files, `603` tests, green
   - `git diff --check`: green
 
+Current raw-floor hostile-input checkpoint:
+
+- slice id: `raw_floor_hostile_input_answer_matrix_v1`
+- type: no-widening pre-widening raw-floor answer/card matrix
+- status: implemented and target-green
+- behavior scope:
+  - no solver, catalog, source, selector, support, or workbench runtime behavior
+    changed
+  - this is a guard before any raw-floor behavior widening, not a support-lane
+    opening
+- why it follows the wall trace checkpoint:
+  - the wall trace matrix exposed no classified behavior bug, so widening wall
+    selector math would be premature
+  - CLT combined behavior still has `C11c` and `GDMTXA04A` source/frequency
+    blockers
+  - raw-floor widening remains high-risk, so the next useful move is stronger
+    hostile-input answer evidence
+- implemented edit set:
+  - [raw-floor-hostile-input-answer-matrix.test.ts](../../packages/engine/src/raw-floor-hostile-input-answer-matrix.test.ts)
+    pins engine numeric answers, support buckets, impact basis, no-match
+    posture, warnings, and layer counts
+  - [raw-floor-hostile-input-route-card-matrix.test.ts](../../apps/web/features/workbench/raw-floor-hostile-input-route-card-matrix.test.ts)
+    mirrors those rows through workbench output-card status/value snapshots
+- covered rows:
+  - `11`-layer split terminal-concrete helper: all requested floor/field outputs
+    stay live with pinned numeric answers
+  - same materials with concrete no longer terminal: impact field outputs remain
+    live, but requested field `Rw` stays unsupported
+  - `13`-layer open-web helper-heavy raw stack: field airborne outputs stay live
+    while `Rw` and impact outputs stay unsupported/needs-input
+  - fragmented CLT lower-only raw stack: field airborne outputs stay live while
+    `Rw` and impact outputs stay unsupported/needs-input
+- validation completed in this checkpoint:
+  - focused engine hostile-input matrix:
+    `1` file, `1` test, green
+  - focused workbench hostile-input card matrix:
+    `1` file, `1` test, green
+  - engine raw adjacent pack:
+    `6` files, `12` tests, green
+  - workbench raw adjacent pack:
+    `6` files, `9` tests, green
+  - `pnpm --filter @dynecho/engine typecheck`: green
+  - `pnpm --filter @dynecho/web typecheck`: green with the known Next.js
+    TypeScript plugin recommendation
+  - `pnpm --filter @dynecho/engine test`: `101` files, `789` tests, green
+  - `pnpm --filter @dynecho/web test`: `96` files, `604` tests, green
+  - `git diff --check`: green
+
 ## Next Slice Selection Review
 
 Review date: 2026-04-13
@@ -412,16 +460,16 @@ Candidate ranking:
 
 Current decision after the checkpoint:
 
-- `wall_selector_wider_trace_matrix_v1` is now implemented as a trace-only
-  checkpoint
-- the matrix exposed no classified behavior bug in the current representative
-  rows, so no selector behavior was changed
-- do not immediately widen wall, floor, or CLT behavior from this evidence
-  alone
-- next work must re-rank candidates again against source evidence and current
-  risk; the likely candidates remain narrow wall-selector behavior only if a
-  new trace red appears, source-led raw-floor widening one carrier at a time, or
-  CLT combined evidence only after stronger source/frequency support
+- `wall_selector_wider_trace_matrix_v1` and
+  `raw_floor_hostile_input_answer_matrix_v1` are now implemented as no-widening
+  checkpoints
+- neither matrix exposed a classified behavior bug in the current representative
+  rows, so no selector, source, or raw-floor support behavior was changed
+- do not immediately widen wall, floor, or CLT behavior from this evidence alone
+- next work must name one source-backed route family and one output surface
+  before behavior work; the likely candidates remain source-led raw-floor
+  widening one carrier at a time, or CLT combined evidence only after stronger
+  source/frequency support
 
 ## Wall Selector Implementation Comparison
 

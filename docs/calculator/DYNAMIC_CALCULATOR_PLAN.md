@@ -183,6 +183,19 @@ Current execution status:
     - full engine suite: `100` files, `788` tests, green
     - full web suite: `95` files, `603` tests, green
     - `git diff --check`: green
+- latest raw-floor hostile-input guard:
+  - `raw_floor_hostile_input_answer_matrix_v1` is implemented and target-green
+  - no solver, catalog, source, selector, support, or workbench runtime behavior
+    changed
+  - engine tests now pin numeric answer/support snapshots for:
+    - long split terminal-concrete helper
+    - same-material helper stack where concrete is not terminal
+    - long open-web helper-heavy negative
+    - fragmented CLT lower-only negative
+  - workbench tests now pin matching output-card status/value snapshots
+  - adjacent raw-floor engine and web packs plus engine/web typechecks are green
+  - full engine suite is green: `101` files, `789` tests
+  - full web suite is green: `96` files, `604` tests
 - the 2026-04-07 reinforced-concrete assembly-field `Rw` support blocker is now closed:
   - concrete screening rows with visible floor roles now keep `Rw` exposed again on the assembly route
   - workbench `Rw` cards now also respect engine support buckets instead of surfacing unsupported floor companions
@@ -1519,7 +1532,9 @@ Immediate next implementation pass:
    no-widening answer guard under `floor_raw_inference_source_led_widening_v1`
 5. keep `wall_selector_wider_trace_matrix_v1` frozen as the latest
    no-widening selector trace/card checkpoint
-6. re-rank before any new solver or selector behavior slice
+6. keep `raw_floor_hostile_input_answer_matrix_v1` frozen as the latest
+   no-widening raw-floor hostile-input guard
+7. re-rank before any new solver, selector, or support-widening behavior slice
 
 Why this is the correct next cut:
 
