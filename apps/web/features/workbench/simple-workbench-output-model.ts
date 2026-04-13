@@ -1,4 +1,9 @@
-import type { AssemblyCalculation, RequestedOutputId } from "@dynecho/shared";
+import {
+  getFloorSystemCompanionSemantic,
+  getFloorSystemDerivedRwPlusCtr,
+  type AssemblyCalculation,
+  type RequestedOutputId
+} from "@dynecho/shared";
 
 import { formatDecimal } from "@/lib/format";
 
@@ -98,6 +103,22 @@ export function isRouteBlockedOutput(input: {
   return false;
 }
 
+function getFloorSystemCtrTerm(result: AssemblyCalculation | null | undefined): number | null {
+  const ratings = result?.floorSystemRatings;
+
+  if (!ratings) {
+    return null;
+  }
+
+  const derivedRwPlusCtr = getFloorSystemDerivedRwPlusCtr(ratings);
+
+  if (typeof derivedRwPlusCtr !== "number" || !Number.isFinite(derivedRwPlusCtr)) {
+    return null;
+  }
+
+  return getFloorSystemCompanionSemantic(ratings) === "ctr_term" ? ratings.RwCtr ?? null : derivedRwPlusCtr - ratings.Rw;
+}
+
 export function buildOutputCard(input: {
   output: RequestedOutputId;
   result: AssemblyCalculation | null;
@@ -173,6 +194,21 @@ export function buildOutputCard(input: {
       }
       break;
     case "Ctr":
+      if (studyMode === "floor") {
+        const floorCtr = getFloorSystemCtrTerm(result);
+
+        if (typeof floorCtr === "number") {
+          return {
+            detail:
+              "Companion traffic-noise adaptation carried on the active floor lane. This can differ from the live airborne estimate shown elsewhere.",
+            label: "Ctr",
+            output,
+            status: "live",
+            value: formatSignedDb(floorCtr)
+          };
+        }
+      }
+
       if (typeof result?.metrics.estimatedCtrDb === "number") {
         return {
           detail: isImpactOnlyLowConfidenceLane ? IMPACT_ONLY_LOW_CONFIDENCE_CTR_DETAIL : "Traffic-noise adaptation term on the airborne lane.",

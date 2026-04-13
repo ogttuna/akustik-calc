@@ -97,6 +97,53 @@ describe("target output support contract", () => {
     expect(result.unsupportedImpactOutputs).toEqual(["Ln,w", "DeltaLw"]);
   });
 
+  it("uses floor-carrier Ctr before screening Ctr and withholds fabricated companions", () => {
+    const exactCarrier = analyzeTargetOutputSupport({
+      floorCarrier: carrier({
+        Rw: 83,
+        RwCtr: -17,
+        RwCtrSemantic: "ctr_term"
+      }),
+      impact: null,
+      lowerBoundImpact: null,
+      metrics: {
+        estimatedCtrDb: -6
+      },
+      targetOutputs: ["Ctr"]
+    });
+
+    expect(exactCarrier.supportedTargetOutputs).toEqual(["Ctr"]);
+    expect(exactCarrier.unsupportedTargetOutputs).toEqual([]);
+
+    const missingFloorCompanion = analyzeTargetOutputSupport({
+      floorCarrier: carrier({
+        Rw: 70,
+        RwCtr: undefined
+      }),
+      impact: null,
+      lowerBoundImpact: null,
+      metrics: {
+        estimatedCtrDb: -6
+      },
+      targetOutputs: ["Ctr"]
+    });
+
+    expect(missingFloorCompanion.supportedTargetOutputs).toEqual([]);
+    expect(missingFloorCompanion.unsupportedTargetOutputs).toEqual(["Ctr"]);
+
+    const airborneOnly = analyzeTargetOutputSupport({
+      impact: null,
+      lowerBoundImpact: null,
+      metrics: {
+        estimatedCtrDb: -6
+      },
+      targetOutputs: ["Ctr"]
+    });
+
+    expect(airborneOnly.supportedTargetOutputs).toEqual(["Ctr"]);
+    expect(airborneOnly.unsupportedTargetOutputs).toEqual([]);
+  });
+
   it("does not expose lab Rw when the active airborne descriptor is already R'w", () => {
     const result = analyzeTargetOutputSupport({
       impact: null,

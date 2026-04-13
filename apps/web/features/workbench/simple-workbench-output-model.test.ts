@@ -62,6 +62,66 @@ describe("simple workbench output model", () => {
     );
   });
 
+  it("prefers floor-lane companion Ctr over the live airborne estimate on floor studies", () => {
+    const card = buildOutputCard({
+      output: "Ctr",
+      result: buildFixture({
+        supportedTargetOutputs: ["Ctr"],
+        unsupportedTargetOutputs: [],
+        floorSystemRatings: {
+          Rw: 83,
+          RwCtr: -17,
+          RwCtrSemantic: "ctr_term",
+          basis: "official_floor_system_exact_match"
+        },
+        metrics: {
+          ...buildFixture().metrics,
+          estimatedCtrDb: -6
+        }
+      }),
+      studyMode: "floor"
+    });
+
+    expect(card).toEqual(
+      expect.objectContaining({
+        detail:
+          "Companion traffic-noise adaptation carried on the active floor lane. This can differ from the live airborne estimate shown elsewhere.",
+        label: "Ctr",
+        status: "live",
+        value: "-17 dB"
+      })
+    );
+  });
+
+  it("derives floor-lane Ctr from published Rw plus Ctr companions", () => {
+    const card = buildOutputCard({
+      output: "Ctr",
+      result: buildFixture({
+        supportedTargetOutputs: ["Ctr"],
+        unsupportedTargetOutputs: [],
+        floorSystemRatings: {
+          Rw: 75,
+          RwCtr: 68,
+          RwCtrSemantic: "rw_plus_ctr",
+          basis: "official_floor_system_exact_match"
+        },
+        metrics: {
+          ...buildFixture().metrics,
+          estimatedCtrDb: -4
+        }
+      }),
+      studyMode: "floor"
+    });
+
+    expect(card).toEqual(
+      expect.objectContaining({
+        label: "Ctr",
+        status: "live",
+        value: "-7 dB"
+      })
+    );
+  });
+
   it("keeps wall-study Rw on the live airborne calculator", () => {
     const card = buildOutputCard({
       output: "Rw",

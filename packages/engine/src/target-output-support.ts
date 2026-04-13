@@ -86,21 +86,21 @@ function getCarrierRwPrime(input: TargetOutputSupportInput): number | null {
 }
 
 function getCarrierCtr(input: TargetOutputSupportInput): number | null {
+  if (input.floorCarrier) {
+    const derivedRwPlusCtr = getFloorSystemDerivedRwPlusCtr(input.floorCarrier);
+
+    if (!isFiniteNumber(derivedRwPlusCtr)) {
+      return null;
+    }
+
+    return Number(derivedRwPlusCtr) - input.floorCarrier.Rw;
+  }
+
   if (isFiniteNumber(input.metrics?.estimatedCtrDb)) {
     return input.metrics?.estimatedCtrDb ?? null;
   }
 
-  if (!input.floorCarrier) {
-    return null;
-  }
-
-  const derivedRwPlusCtr = getFloorSystemDerivedRwPlusCtr(input.floorCarrier);
-
-  if (!isFiniteNumber(derivedRwPlusCtr)) {
-    return null;
-  }
-
-  return Number(derivedRwPlusCtr) - input.floorCarrier.Rw;
+  return null;
 }
 
 function isTargetOutputAvailable(
