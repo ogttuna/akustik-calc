@@ -107,4 +107,77 @@ describe("CLT floor monotonicity", () => {
     expect(upper180.lab.impact?.LnW ?? Infinity).toBeLessThanOrEqual(x2Exact140.lab.impact?.LnW ?? -Infinity);
     expect(upper180.lab.impact?.LnW ?? Infinity).toBeGreaterThanOrEqual(c2Exact260.lab.impact?.LnW ?? -Infinity);
   });
+
+  it("withholds CLT laminate interpolation when the source-backed finish package is incomplete or out of band", () => {
+    const noUnderlay = calculateCltCase([
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 180 }
+    ]);
+    const thickLaminate = calculateCltCase([
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 30 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 180 }
+    ]);
+
+    for (const result of [noUnderlay, thickLaminate]) {
+      expect(result.lab.impact?.basis).toBeUndefined();
+      expect(result.lab.supportedTargetOutputs).toEqual(["Rw"]);
+      expect(result.lab.unsupportedTargetOutputs).toEqual(["Ln,w", "Ln,w+CI"]);
+      expect(result.field.impact?.basis).toBeUndefined();
+      expect(result.field.supportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
+      expect(result.field.unsupportedTargetOutputs).toEqual(["Rw", "Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]);
+    }
+  });
+
+  it("withholds CLT dry interaction when the laminate or underlay finish is out of band", () => {
+    const thickLaminate = calculateCltCase([
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 30 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: 50 },
+      { floorRole: "floating_screed", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 60 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 140 }
+    ]);
+    const thickUnderlay = calculateCltCase([
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 12 },
+      { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: 50 },
+      { floorRole: "floating_screed", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 60 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 140 }
+    ]);
+    const combinedThickLaminate = calculateCltCase([
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 30 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+      { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: 50 },
+      { floorRole: "floating_screed", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 60 },
+      { floorRole: "ceiling_cavity", materialId: "acoustic_hanger_ceiling", thicknessMm: 70 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 260 }
+    ]);
+    const combinedThickUnderlay = calculateCltCase([
+      { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+      { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 12 },
+      { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: 50 },
+      { floorRole: "floating_screed", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 60 },
+      { floorRole: "ceiling_cavity", materialId: "acoustic_hanger_ceiling", thicknessMm: 70 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+      { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 260 }
+    ]);
+
+    for (const result of [thickLaminate, thickUnderlay, combinedThickLaminate, combinedThickUnderlay]) {
+      expect(result.lab.floorSystemMatch).toBeNull();
+      expect(result.lab.floorSystemEstimate).toBeNull();
+      expect(result.lab.impact).toBeNull();
+      expect(result.lab.supportedTargetOutputs).toEqual(["Rw"]);
+      expect(result.lab.unsupportedTargetOutputs).toEqual(["Ln,w", "Ln,w+CI"]);
+      expect(result.field.floorSystemMatch).toBeNull();
+      expect(result.field.floorSystemEstimate).toBeNull();
+      expect(result.field.impact).toBeNull();
+      expect(result.field.supportedTargetOutputs).toEqual(["R'w", "DnT,w"]);
+      expect(result.field.unsupportedTargetOutputs).toEqual(["Rw", "Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]);
+    }
+  });
 });

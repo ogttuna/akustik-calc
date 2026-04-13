@@ -136,9 +136,71 @@ function getLayerProfile(layers: readonly ResolvedLayer[]): FloorProfile {
   return getProfile(hasUpper, hasLower, hasFloatingScreed);
 }
 
+function thicknessNear(value: number | undefined, target: number, tolerance = 3): boolean {
+  return typeof value === "number" && Math.abs(value - target) <= tolerance;
+}
+
 function hasUpperPackageRole(layers: readonly ResolvedLayer[]): boolean {
   return layers.some(
     (layer) => layer.floorRole === "upper_fill" || layer.floorRole === "floating_screed"
+  );
+}
+
+function hasSingleSourceBackedLaminateUnderlayPackage(layers: readonly ResolvedLayer[]): boolean {
+  const floorCoverings = layers.filter((layer) => layer.floorRole === "floor_covering");
+  const resilientLayers = layers.filter((layer) => layer.floorRole === "resilient_layer");
+
+  return (
+    floorCoverings.length === 1 &&
+    floorCoverings[0]?.material.id === "laminate_flooring" &&
+    thicknessNear(floorCoverings[0]?.thicknessMm, 8, 4) &&
+    resilientLayers.length === 1 &&
+    resilientLayers[0]?.material.id === "eps_underlay" &&
+    thicknessNear(resilientLayers[0]?.thicknessMm, 3, 2)
+  );
+}
+
+function hasSourceBackedLaminateUnderlayPair(layers: readonly ResolvedLayer[]): boolean {
+  return (
+    layers.some(
+      (layer) =>
+        layer.floorRole === "floor_covering" &&
+        layer.material.id === "laminate_flooring" &&
+        thicknessNear(layer.thicknessMm, 8, 4)
+    ) &&
+    layers.some(
+      (layer) =>
+        layer.floorRole === "resilient_layer" &&
+        layer.material.id === "eps_underlay" &&
+        thicknessNear(layer.thicknessMm, 3, 2)
+    )
+  );
+}
+
+// Open-box exact rows use the same +/-2 mm visible-role tolerance as the exact
+// matcher; a broader CLT interpolation band would over-promote R2/R5/R9 fallbacks.
+function hasSourceBackedOpenBoxLaminateUnderlayPair(layers: readonly ResolvedLayer[]): boolean {
+  return (
+    layers.some(
+      (layer) =>
+        layer.floorRole === "floor_covering" &&
+        layer.material.id === "laminate_flooring" &&
+        thicknessNear(layer.thicknessMm, 8, 2)
+    ) &&
+    layers.some(
+      (layer) =>
+        layer.floorRole === "resilient_layer" &&
+        layer.material.id === "eps_underlay" &&
+        thicknessNear(layer.thicknessMm, 3, 2)
+    )
+  );
+}
+
+function hasLaminateUnderlayFinishInput(layers: readonly ResolvedLayer[]): boolean {
+  return layers.some(
+    (layer) =>
+      (layer.floorRole === "floor_covering" && layer.material.id === "laminate_flooring") ||
+      (layer.floorRole === "resilient_layer" && layer.material.id === "eps_underlay")
   );
 }
 
@@ -172,6 +234,21 @@ function hasAmbiguousUpperRoleConflict(
   conflicts: readonly SingleEntryRoleConflict[]
 ): boolean {
   return conflicts.some((conflict) => UPPER_ROLES.includes(conflict.role));
+}
+
+function hasOpenBoxHybridFloatingScreedConflict(
+  layers: readonly ResolvedLayer[],
+  conflicts: readonly SingleEntryRoleConflict[]
+): boolean {
+  if (!conflicts.some((conflict) => conflict.role === "floating_screed")) {
+    return false;
+  }
+
+  const floatingScreedMaterialIds = new Set(
+    layers.filter((layer) => layer.floorRole === "floating_screed").map((layer) => layer.material.id)
+  );
+
+  return floatingScreedMaterialIds.has("geotextile") && floatingScreedMaterialIds.has("screed");
 }
 
 function collectAmbiguousSingleEntryRoleConflicts(
@@ -702,6 +779,39 @@ export function deriveFloorSystemEstimate(
     structuralFamily === "mass_timber_clt" &&
     currentProfile === "combined" &&
     hasVisibleLowerTreatmentWithoutCavity(layers);
+  // The TUAS CLT upper-only interpolation is only source-backed for laminate
+  // over thin EPS; keep partial finish packages on screening instead.
+  const massTimberIncompleteBareInterpolationFinishTierHold =
+    structuralFamily === "mass_timber_clt" &&
+    currentProfile === "upper_only" &&
+    !hasUpperPackageRole(layers) &&
+    !hasSingleSourceBackedLaminateUnderlayPackage(layers);
+  // TUAS CLT measured/published interaction rows also carry the thin
+  // laminate/EPS finish; malformed walking finishes must not re-enter through
+  // same-family fallback after the direct predictor rejects them.
+  // Use pair detection here because wet/dry upper packages may also contain
+  // source-backed EPS board layers that are not the thin walking underlay.
+  const massTimberMalformedLaminateUnderlayFinishTierHold =
+    structuralFamily === "mass_timber_clt" &&
+    (currentProfile === "upper_only" || currentProfile === "heavy_floating" || currentProfile === "combined") &&
+    hasUpperPackageRole(layers) &&
+    hasLaminateUnderlayFinishInput(layers) &&
+    !hasSourceBackedLaminateUnderlayPair(layers);
+  // TUAS open-box hybrid upper packages are source-backed only while the staged
+  // upper schedule stays exact; if exact matching falls off because upper roles
+  // are split or mixed out of order, do not reopen impact through family blending.
+  const openBoxCombinedAmbiguousUpperTierHold =
+    structuralFamily === "open_box_timber" &&
+    currentProfile === "combined" &&
+    hasOpenBoxHybridFloatingScreedConflict(layers, ambiguousSingleEntryRoleConflicts);
+  // TUAS open-box source rows that expose a walking finish share the same thin
+  // laminate/EPS pair. If that pair is incomplete or visibly outside the source
+  // band, exact fallout must not reopen through basic/dry/hybrid family blends.
+  const openBoxMalformedLaminateUnderlayFinishTierHold =
+    structuralFamily === "open_box_timber" &&
+    currentProfile === "combined" &&
+    hasLaminateUnderlayFinishInput(layers) &&
+    !hasSourceBackedOpenBoxLaminateUnderlayPair(layers);
 
   if (structuralFamily === "lightweight_steel") {
     const fl28Estimate = deriveLightweightSteelFl28Estimate(layers, recommendations);
@@ -730,7 +840,11 @@ export function deriveFloorSystemEstimate(
     massTimberCombinedAmbiguousUpperTierHold ||
     massTimberCombinedMultiEntryFloatingScreedTierHold ||
     massTimberCombinedRuntimeGeneratedUpperPackageTierHold ||
-    massTimberCombinedIncompleteLowerTreatmentTierHold
+    massTimberCombinedIncompleteLowerTreatmentTierHold ||
+    massTimberIncompleteBareInterpolationFinishTierHold ||
+    massTimberMalformedLaminateUnderlayFinishTierHold ||
+    openBoxCombinedAmbiguousUpperTierHold ||
+    openBoxMalformedLaminateUnderlayFinishTierHold
   ) {
     return null;
   }
@@ -842,7 +956,9 @@ export function deriveFloorSystemEstimate(
         : []),
       ...(companionSemantic === "ctr_term"
         ? ["Published airborne companion remains a Ctr adaptation term from Rw(C;Ctr) family rows."]
-        : companionSemantic === "rw_plus_ctr"
+        : companionSemantic === "rw_plus_c"
+          ? ["Published airborne companion remains a direct Rw + C family figure."]
+          : companionSemantic === "rw_plus_ctr"
           ? ["Published airborne companion remains a direct Rw + Ctr family figure."]
           : ["Published family rows did not expose a stable companion airborne figure across the supporting sources."]),
       ...estimateSources.flatMap((entry) =>

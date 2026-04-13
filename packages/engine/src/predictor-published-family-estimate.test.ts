@@ -310,6 +310,110 @@ describe("derivePredictorPublishedFamilyEstimate", () => {
     ]);
   });
 
+  it("keeps incomplete or out-of-band CLT laminate finishes off the TUAS bare interpolation lane", () => {
+    const noUnderlay = derivePredictorPublishedFamilyEstimate({
+      structuralSupportType: "mass_timber_clt",
+      impactSystemType: "bare_floor",
+      baseSlab: {
+        thicknessMm: 180
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "laminate_flooring",
+        thicknessMm: 8
+      }
+    });
+    const thickLaminate = derivePredictorPublishedFamilyEstimate({
+      structuralSupportType: "mass_timber_clt",
+      impactSystemType: "bare_floor",
+      baseSlab: {
+        thicknessMm: 180
+      },
+      resilientLayer: {
+        thicknessMm: 3
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "laminate_flooring",
+        thicknessMm: 30
+      }
+    });
+
+    expect(noUnderlay).toBeNull();
+    expect(thickLaminate).toBeNull();
+  });
+
+  it("keeps malformed CLT dry finishes off the TUAS X5 dry interaction lane", () => {
+    const thickLaminate = derivePredictorPublishedFamilyEstimate({
+      structuralSupportType: "mass_timber_clt",
+      impactSystemType: "dry_floating_floor",
+      baseSlab: {
+        thicknessMm: 140
+      },
+      upperFill: {
+        materialClass: "generic_fill",
+        thicknessMm: 50
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "laminate_flooring",
+        thicknessMm: 30
+      }
+    });
+    const thickUnderlay = derivePredictorPublishedFamilyEstimate({
+      structuralSupportType: "mass_timber_clt",
+      impactSystemType: "dry_floating_floor",
+      baseSlab: {
+        thicknessMm: 140
+      },
+      resilientLayer: {
+        thicknessMm: 12
+      },
+      upperFill: {
+        materialClass: "generic_fill",
+        thicknessMm: 50
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "laminate_flooring",
+        thicknessMm: 8
+      }
+    });
+    const combinedThickLaminate = derivePredictorPublishedFamilyEstimate({
+      structuralSupportType: "mass_timber_clt",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        thicknessMm: 260
+      },
+      resilientLayer: {
+        thicknessMm: 3
+      },
+      upperFill: {
+        materialClass: "generic_fill",
+        thicknessMm: 50
+      },
+      floatingScreed: {
+        materialClass: "dry_floating_gypsum_fiberboard",
+        thicknessMm: 60
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "laminate_flooring",
+        thicknessMm: 30
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_rigid_hanger",
+        cavityFillThicknessMm: 100,
+        boardLayerCount: 2,
+        boardThicknessMm: 13
+      }
+    });
+
+    expect(thickLaminate).toBeNull();
+    expect(thickUnderlay).toBeNull();
+    expect(combinedThickLaminate).toBeNull();
+  });
+
   it("keeps near-match steel joist vinyl suspended-ceiling stacks on the Pliteq family lane", () => {
     const result = derivePredictorPublishedFamilyEstimate({
       structuralSupportType: "steel_joists",
@@ -456,6 +560,84 @@ describe("derivePredictorPublishedFamilyEstimate", () => {
     expect(result?.airborneRatings.Rw).toBe(62);
     expect(result?.airborneRatings.RwCtr).toBe(59.973347663855776);
     expect(result?.impact.estimateCandidateIds).toEqual(["tuas_r2b_open_box_timber_measured_2026"]);
+  });
+
+  it("aligns open-box laminate finish tolerance with the exact source band", () => {
+    const accepted = derivePredictorPublishedFamilyEstimate({
+      structuralSupportType: "open_box_timber",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        thicknessMm: 370
+      },
+      resilientLayer: {
+        thicknessMm: 3
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "laminate_flooring",
+        thicknessMm: 10
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_elastic_hanger",
+        cavityFillThicknessMm: 100,
+        boardLayerCount: 2,
+        boardThicknessMm: 13
+      }
+    });
+    const outsideBasic = derivePredictorPublishedFamilyEstimate({
+      structuralSupportType: "open_box_timber",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        thicknessMm: 370
+      },
+      resilientLayer: {
+        thicknessMm: 3
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "laminate_flooring",
+        thicknessMm: 12
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_elastic_hanger",
+        cavityFillThicknessMm: 100,
+        boardLayerCount: 2,
+        boardThicknessMm: 13
+      }
+    });
+    const outsideDry = derivePredictorPublishedFamilyEstimate({
+      structuralSupportType: "open_box_timber",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        thicknessMm: 370
+      },
+      resilientLayer: {
+        thicknessMm: 3
+      },
+      upperFill: {
+        materialClass: "generic_fill",
+        thicknessMm: 50
+      },
+      floatingScreed: {
+        materialClass: "dry_floating_gypsum_fiberboard",
+        thicknessMm: 60
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "laminate_flooring",
+        thicknessMm: 12
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_elastic_hanger",
+        cavityFillThicknessMm: 100,
+        boardLayerCount: 2,
+        boardThicknessMm: 13
+      }
+    });
+
+    expect(accepted?.impact.estimateCandidateIds).toEqual(["tuas_r2b_open_box_timber_measured_2026"]);
+    expect(outsideBasic).toBeNull();
+    expect(outsideDry).toBeNull();
   });
 
   it("keeps open-box predictor inputs off the published-family lane when the common gate is broken", () => {

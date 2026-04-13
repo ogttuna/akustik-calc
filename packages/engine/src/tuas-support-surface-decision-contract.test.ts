@@ -52,6 +52,20 @@ const R7B_HYBRID_LOWER_SOURCE_LAYERS: readonly LayerInput[] = [
   { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
 ];
 
+const R7B_HYBRID_LOWER_DISJOINT_UPPER_LAYERS: readonly LayerInput[] = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+  { floorRole: "ceiling_cavity", materialId: "tuas_open_box_ceiling_family_a", thicknessMm: 45 },
+  { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: 25 },
+  { floorRole: "floating_screed", materialId: "geotextile", thicknessMm: 1 },
+  { floorRole: "upper_fill", materialId: "eps_floor_insulation_board", thicknessMm: 35 },
+  { floorRole: "floating_screed", materialId: "screed", thicknessMm: 40 },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+  { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
+];
+
 const R8B_HYBRID_LOWER_SOURCE_LAYERS: readonly LayerInput[] = [
   { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
   { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
@@ -83,6 +97,74 @@ const R2C_HYBRID_LOWER_PROXY_LAYERS: readonly LayerInput[] = [
   { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: 25 },
   { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
   { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+  { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
+];
+
+const R2B_BASIC_THICK_LAMINATE_LAYERS: readonly LayerInput[] = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+  { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: 25 },
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 30 },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+  { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
+];
+
+const R2B_BASIC_OUTSIDE_EXACT_LAMINATE_LAYERS: readonly LayerInput[] = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+  { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: 25 },
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 12 },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+  { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
+];
+
+const R5B_DRY_THICK_UNDERLAY_LAYERS: readonly LayerInput[] = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+  { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: 25 },
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 12 },
+  { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: 50 },
+  { floorRole: "floating_screed", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 60 },
+  { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
+];
+
+const R5B_DRY_OUTSIDE_EXACT_LAMINATE_LAYERS: readonly LayerInput[] = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+  { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: 25 },
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 12 },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+  { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: 50 },
+  { floorRole: "floating_screed", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: 60 },
+  { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
+];
+
+const R9B_HYBRID_THICK_LAMINATE_LAYERS: readonly LayerInput[] = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+  { floorRole: "ceiling_cavity", materialId: "tuas_open_box_ceiling_family_a", thicknessMm: 45 },
+  { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: 25 },
+  { floorRole: "floating_screed", materialId: "screed", thicknessMm: 40 },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 30 },
+  { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
+];
+
+const R9B_HYBRID_OUTSIDE_EXACT_LAMINATE_LAYERS: readonly LayerInput[] = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+  { floorRole: "ceiling_cavity", materialId: "tuas_open_box_ceiling_family_a", thicknessMm: 45 },
+  { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: 25 },
+  { floorRole: "floating_screed", materialId: "screed", thicknessMm: 40 },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 12 },
   { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: 370 }
 ];
 
@@ -226,6 +308,63 @@ describe("TUAS support-surface decision contract", () => {
     expect(field.impact?.LPrimeNT50).toBe(47.6);
     expect(field.supportedTargetOutputs).toEqual(["Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]);
     expect(field.unsupportedTargetOutputs).toEqual([]);
+  });
+
+  it("keeps disjoint open-box hybrid upper packages from borrowing the broader family-general lane", () => {
+    const lab = calculateAssembly(R7B_HYBRID_LOWER_DISJOINT_UPPER_LAYERS, {
+      targetOutputs: LAB_OUTPUTS
+    });
+    const field = calculateAssembly(R7B_HYBRID_LOWER_DISJOINT_UPPER_LAYERS, {
+      impactFieldContext: FIELD_CONTEXT,
+      targetOutputs: FIELD_OUTPUTS
+    });
+
+    expect(lab.floorSystemMatch).toBeNull();
+    expect(lab.floorSystemEstimate).toBeNull();
+    expect(lab.impact).toBeNull();
+    expect(lab.supportedTargetOutputs).toEqual(["Rw"]);
+    expect(lab.unsupportedTargetOutputs).toEqual(["Ln,w", "Ln,w+CI"]);
+    expect(lab.warnings.some((warning: string) => /floating screed x2 \(Geotextile Separator Layer, Mineral Screed\)/i.test(warning))).toBe(true);
+
+    expect(field.floorSystemMatch).toBeNull();
+    expect(field.floorSystemEstimate).toBeNull();
+    expect(field.impact).toBeNull();
+    expect(field.supportedTargetOutputs).toEqual([]);
+    expect(field.unsupportedTargetOutputs).toEqual(["Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]);
+    expect(field.warnings.some((warning: string) => /floating screed x2 \(Geotextile Separator Layer, Mineral Screed\)/i.test(warning))).toBe(true);
+  });
+
+  it("keeps malformed open-box laminate/EPS walking finishes from borrowing TUAS same-family impact lanes", () => {
+    const cases = [
+      R2B_BASIC_THICK_LAMINATE_LAYERS,
+      R2B_BASIC_OUTSIDE_EXACT_LAMINATE_LAYERS,
+      R5B_DRY_THICK_UNDERLAY_LAYERS,
+      R5B_DRY_OUTSIDE_EXACT_LAMINATE_LAYERS,
+      R9B_HYBRID_THICK_LAMINATE_LAYERS,
+      R9B_HYBRID_OUTSIDE_EXACT_LAMINATE_LAYERS
+    ];
+
+    for (const layers of cases) {
+      const lab = calculateAssembly(layers, {
+        targetOutputs: LAB_OUTPUTS
+      });
+      const field = calculateAssembly(layers, {
+        impactFieldContext: FIELD_CONTEXT,
+        targetOutputs: FIELD_OUTPUTS
+      });
+
+      expect(lab.floorSystemMatch).toBeNull();
+      expect(lab.floorSystemEstimate).toBeNull();
+      expect(lab.impact).toBeNull();
+      expect(lab.supportedTargetOutputs).toEqual(["Rw"]);
+      expect(lab.unsupportedTargetOutputs).toEqual(["Ln,w", "Ln,w+CI"]);
+
+      expect(field.floorSystemMatch).toBeNull();
+      expect(field.floorSystemEstimate).toBeNull();
+      expect(field.impact).toBeNull();
+      expect(field.supportedTargetOutputs).toEqual([]);
+      expect(field.unsupportedTargetOutputs).toEqual(["Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]);
+    }
   });
 
   it("lands the true R8b finishless sibling on the exact route once the no-finish follow-on surface exists", () => {

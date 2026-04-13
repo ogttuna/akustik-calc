@@ -1225,7 +1225,7 @@ describe("scenario analysis", () => {
     expect(scenario.result?.floorSystemEstimate?.kind).toBe("family_archetype");
     expect(scenario.result?.impact?.basis).toBe("predictor_floor_system_family_archetype_estimate");
     expect(scenario.result?.floorSystemEstimate?.fitPercent).toBe(89);
-    expect(scenario.result?.impact?.LnW).toBeCloseTo(56.4, 1);
+    expect(scenario.result?.impact?.LnW).toBeCloseTo(49.8, 1);
     expect(scenario.result?.floorSystemRatings?.Rw).toBeCloseTo(61.1, 1);
     expect(scenario.result?.impact?.estimateCandidateIds).toEqual([
       "tuas_r2b_open_box_timber_measured_2026",
@@ -1489,18 +1489,17 @@ describe("scenario analysis", () => {
     );
   });
 
-  it("keeps timber bare-floor low-confidence lane live with exposed airborne companions on the same fallback family", () => {
+  it("keeps timber bare-floor low-confidence lane live while withholding ambiguous airborne companions", () => {
     const scenario = evaluatePresetScenario("timber_bare_impact_only_fallback");
 
     expect(scenario.result).not.toBeNull();
     expect(scenario.result?.dynamicImpactTrace?.estimateTier).toBe("low_confidence");
     expect(scenario.result?.floorSystemRatings).toEqual({
       Rw: 51.6,
-      RwCtr: 31.1,
       basis: "predictor_floor_system_low_confidence_estimate"
     });
-    expect(scenario.result?.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "Ln,w+CI", "STC", "C", "Ctr"]);
-    expect(scenario.result?.unsupportedTargetOutputs).toEqual([]);
+    expect(scenario.result?.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "Ln,w+CI", "STC"]);
+    expect(scenario.result?.unsupportedTargetOutputs).toEqual(["C", "Ctr"]);
     expect(scenario.warnings).toContain(IMPACT_ONLY_LOW_CONFIDENCE_FLOOR_FAMILY_NOTE);
     expect(scenario.warnings).toContain(
       "Screening estimate only. This result is coming from the local calibrated seed lane."
@@ -2056,7 +2055,7 @@ describe("scenario analysis", () => {
     expect(scenario.result?.floorSystemEstimate?.kind).toBe("family_general");
     expect(scenario.result?.impact?.basis).toBe("predictor_floor_system_family_general_estimate");
     expect(scenario.result?.floorSystemEstimate?.fitPercent).toBe(54);
-    expect(scenario.result?.impact?.LnW).toBeCloseTo(55.3, 1);
+    expect(scenario.result?.impact?.LnW).toBeCloseTo(46.8, 1);
     expect(scenario.result?.floorSystemRatings?.Rw).toBeCloseTo(51.6, 1);
     expect(scenario.result?.impact?.estimateCandidateIds).toEqual([
       "tuas_h2_concrete160_measured_2026",
@@ -2161,7 +2160,7 @@ describe("scenario analysis", () => {
     expect(scenario.result).not.toBeNull();
     expect(scenario.result?.impact?.basis).toBe("mixed_exact_plus_estimated_direct_flanking_energy_sum");
     expect(scenario.result?.impact?.fieldEstimateProfile).toBe("direct_flanking_energy_sum");
-    expect(scenario.result?.impact?.LPrimeNW).toBe(44);
+    expect(scenario.result?.impact?.LPrimeNW).toBe(42);
     expect(scenario.result?.impact?.LPrimeNTw).toBeUndefined();
     expect(
       scenario.result?.impactSupport?.formulaNotes.some((note: string) =>
@@ -2197,9 +2196,9 @@ describe("scenario analysis", () => {
     expect(scenario.result).not.toBeNull();
     expect(scenario.result?.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_direct_flanking_energy_sum");
     expect(scenario.result?.impact?.fieldEstimateProfile).toBe("direct_flanking_energy_sum");
-    expect(scenario.result?.impact?.LPrimeNW).toBe(41);
-    expect(scenario.result?.impact?.LPrimeNTw).toBe(39);
-    expect(scenario.result?.impact?.LPrimeNT50).toBe(44);
+    expect(scenario.result?.impact?.LPrimeNW).toBe(39);
+    expect(scenario.result?.impact?.LPrimeNTw).toBe(37);
+    expect(scenario.result?.impact?.LPrimeNT50).toBe(54);
     expect(
       scenario.result?.impactSupport?.formulaNotes.some((note: string) => /Current direct-path offset is 2 dB/i.test(note))
     ).toBe(true);
@@ -2232,10 +2231,10 @@ describe("scenario analysis", () => {
     expect(scenario.result).not.toBeNull();
     expect(scenario.result?.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_field_volume_normalization");
     expect(scenario.result?.impact?.fieldEstimateProfile).toBe("explicit_field_lprimenw_from_lnw_plus_k");
-    expect(scenario.result?.impact?.LnW).toBe(39);
-    expect(scenario.result?.impact?.LPrimeNW).toBe(39);
-    expect(scenario.result?.impact?.LPrimeNTw).toBe(37);
-    expect(scenario.result?.impact?.LPrimeNT50).toBe(42);
+    expect(scenario.result?.impact?.LnW).toBe(44);
+    expect(scenario.result?.impact?.LPrimeNW).toBe(44);
+    expect(scenario.result?.impact?.LPrimeNTw).toBe(42);
+    expect(scenario.result?.impact?.LPrimeNT50).toBe(45);
   });
 
   it("lets negative K lower the carried field impact metrics without leaving the standardized field lane", () => {
@@ -2265,10 +2264,10 @@ describe("scenario analysis", () => {
     expect(scenario.result).not.toBeNull();
     expect(scenario.result?.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_field_volume_normalization");
     expect(scenario.result?.impact?.fieldEstimateProfile).toBe("explicit_field_lprimenw_from_lnw_plus_k");
-    expect(scenario.result?.impact?.LnW).toBe(39);
-    expect(scenario.result?.impact?.LPrimeNW).toBe(36);
-    expect(scenario.result?.impact?.LPrimeNTw).toBe(34);
-    expect(scenario.result?.impact?.LPrimeNT50).toBe(39);
+    expect(scenario.result?.impact?.LnW).toBe(44);
+    expect(scenario.result?.impact?.LPrimeNW).toBe(41);
+    expect(scenario.result?.impact?.LPrimeNTw).toBe(39);
+    expect(scenario.result?.impact?.LPrimeNT50).toBe(42);
   });
 
   it("keeps direct-path-only continuation stable when the direct offset is zero", () => {
@@ -2298,9 +2297,9 @@ describe("scenario analysis", () => {
     expect(scenario.result).not.toBeNull();
     expect(scenario.result?.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_direct_flanking_energy_sum");
     expect(scenario.result?.impact?.fieldEstimateProfile).toBe("direct_flanking_energy_sum");
-    expect(scenario.result?.impact?.LPrimeNW).toBe(39);
-    expect(scenario.result?.impact?.LPrimeNTw).toBe(37);
-    expect(scenario.result?.impact?.LPrimeNT50).toBe(42);
+    expect(scenario.result?.impact?.LPrimeNW).toBe(37);
+    expect(scenario.result?.impact?.LPrimeNTw).toBe(35);
+    expect(scenario.result?.impact?.LPrimeNT50).toBe(52);
     expect(
       scenario.result?.impactSupport?.formulaNotes.some((note: string) => /Current direct-path offset is 0 dB/i.test(note))
     ).toBe(true);
@@ -2333,9 +2332,9 @@ describe("scenario analysis", () => {
     expect(scenario.result).not.toBeNull();
     expect(scenario.result?.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_direct_flanking_energy_sum");
     expect(scenario.result?.impact?.fieldEstimateProfile).toBe("direct_flanking_energy_sum");
-    expect(scenario.result?.impact?.LPrimeNW).toBe(37);
-    expect(scenario.result?.impact?.LPrimeNTw).toBe(35);
-    expect(scenario.result?.impact?.LPrimeNT50).toBe(40);
+    expect(scenario.result?.impact?.LPrimeNW).toBe(35);
+    expect(scenario.result?.impact?.LPrimeNTw).toBe(33);
+    expect(scenario.result?.impact?.LPrimeNT50).toBe(50);
     expect(
       scenario.result?.impactSupport?.formulaNotes.some((note: string) => /Current direct-path offset is -2 dB/i.test(note))
     ).toBe(true);
@@ -2370,7 +2369,7 @@ describe("scenario analysis", () => {
     expect(scenario.result?.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_field_volume_normalization");
     expect(scenario.result?.impact?.fieldEstimateProfile).toBe("explicit_field_lprimenw_from_lnw_plus_k");
     expect(scenario.result?.impact?.fieldEstimateLowerTreatmentReductionDb).toBe(6);
-    expect(scenario.result?.impact?.LPrimeNW).toBe(35);
-    expect(scenario.result?.impact?.LPrimeNTw).toBe(33);
+    expect(scenario.result?.impact?.LPrimeNW).toBe(40);
+    expect(scenario.result?.impact?.LPrimeNTw).toBe(38);
   });
 });

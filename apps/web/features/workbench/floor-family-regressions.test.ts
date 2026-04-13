@@ -239,6 +239,20 @@ const OPEN_BOX_R7B_HYBRID_LOWER_SOURCE_ROWS: readonly Omit<LayerDraft, "id">[] =
   { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: "370" }
 ];
 
+const OPEN_BOX_R7B_HYBRID_LOWER_DISJOINT_UPPER_ROWS: readonly Omit<LayerDraft, "id">[] = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: "100" },
+  { floorRole: "ceiling_cavity", materialId: "tuas_open_box_ceiling_family_a", thicknessMm: "45" },
+  { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: "25" },
+  { floorRole: "floating_screed", materialId: "geotextile", thicknessMm: "1" },
+  { floorRole: "upper_fill", materialId: "eps_floor_insulation_board", thicknessMm: "35" },
+  { floorRole: "floating_screed", materialId: "screed", thicknessMm: "40" },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: "3" },
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: "8" },
+  { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: "370" }
+];
+
 const OPEN_BOX_R8B_HYBRID_LOWER_SOURCE_ROWS: readonly Omit<LayerDraft, "id">[] = [
   { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
   { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
@@ -260,6 +274,74 @@ const OPEN_BOX_R9B_HYBRID_LOWER_SOURCE_ROWS: readonly Omit<LayerDraft, "id">[] =
   { floorRole: "floating_screed", materialId: "screed", thicknessMm: "40" },
   { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: "3" },
   { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: "8" },
+  { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: "370" }
+];
+
+const OPEN_BOX_BASIC_THICK_LAMINATE_ROWS: readonly Omit<LayerDraft, "id">[] = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: "100" },
+  { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: "25" },
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: "30" },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: "3" },
+  { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: "370" }
+];
+
+const OPEN_BOX_BASIC_OUTSIDE_EXACT_LAMINATE_ROWS: readonly Omit<LayerDraft, "id">[] = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: "100" },
+  { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: "25" },
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: "12" },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: "3" },
+  { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: "370" }
+];
+
+const OPEN_BOX_DRY_THICK_UNDERLAY_ROWS: readonly Omit<LayerDraft, "id">[] = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: "100" },
+  { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: "25" },
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: "8" },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: "12" },
+  { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: "50" },
+  { floorRole: "floating_screed", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: "60" },
+  { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: "370" }
+];
+
+const OPEN_BOX_DRY_OUTSIDE_EXACT_LAMINATE_ROWS: readonly Omit<LayerDraft, "id">[] = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: "100" },
+  { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: "25" },
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: "12" },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: "3" },
+  { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: "50" },
+  { floorRole: "floating_screed", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: "60" },
+  { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: "370" }
+];
+
+const OPEN_BOX_HYBRID_THICK_LAMINATE_ROWS: readonly Omit<LayerDraft, "id">[] = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: "100" },
+  { floorRole: "ceiling_cavity", materialId: "tuas_open_box_ceiling_family_a", thicknessMm: "45" },
+  { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: "25" },
+  { floorRole: "floating_screed", materialId: "screed", thicknessMm: "40" },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: "3" },
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: "30" },
+  { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: "370" }
+];
+
+const OPEN_BOX_HYBRID_OUTSIDE_EXACT_LAMINATE_ROWS: readonly Omit<LayerDraft, "id">[] = [
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: "100" },
+  { floorRole: "ceiling_cavity", materialId: "tuas_open_box_ceiling_family_a", thicknessMm: "45" },
+  { floorRole: "ceiling_cavity", materialId: "resilient_stud_ceiling", thicknessMm: "25" },
+  { floorRole: "floating_screed", materialId: "screed", thicknessMm: "40" },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: "3" },
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: "12" },
   { floorRole: "base_structure", materialId: "open_box_timber_slab", thicknessMm: "370" }
 ];
 
@@ -749,6 +831,67 @@ describe("floor family regressions", () => {
     expect(scenario.result?.impact?.estimateCandidateIds).toEqual(["dataholz_gdmtxn01_dry_clt_lab_2026"]);
   });
 
+  it("keeps malformed CLT laminate-only entries off the TUAS X2/C2 impact interpolation lane", () => {
+    const scenario = evaluateFloorScenario({
+      id: "clt-laminate-without-underlay",
+      rows: [
+        { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: "8" },
+        { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: "180" }
+      ],
+      targetOutputs: LAB_OUTPUTS
+    });
+
+    expect(scenario.result?.floorSystemMatch).toBeNull();
+    expect(scenario.result?.floorSystemEstimate).toBeNull();
+    expect(scenario.result?.impact).toBeNull();
+    expect(scenario.result?.supportedTargetOutputs).toEqual(["Rw"]);
+    expect(scenario.result?.unsupportedTargetOutputs).toEqual(["Ln,w", "Ln,w+CI", "DeltaLw"]);
+  });
+
+  it("keeps malformed CLT dry finishes off the TUAS X5 dry interaction web route", () => {
+    const scenario = evaluateFloorScenario({
+      id: "clt-dry-thick-laminate",
+      rows: [
+        { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: "30" },
+        { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: "3" },
+        { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: "50" },
+        { floorRole: "floating_screed", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: "60" },
+        { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: "140" }
+      ],
+      targetOutputs: LAB_OUTPUTS
+    });
+
+    expect(scenario.result?.floorSystemMatch).toBeNull();
+    expect(scenario.result?.floorSystemEstimate).toBeNull();
+    expect(scenario.result?.impact).toBeNull();
+    expect(scenario.result?.supportedTargetOutputs).toEqual(["Rw"]);
+    expect(scenario.result?.unsupportedTargetOutputs).toEqual(["Ln,w", "Ln,w+CI", "DeltaLw"]);
+  });
+
+  it("keeps malformed combined CLT dry finishes off the generic CLT fallback web route", () => {
+    const scenario = evaluateFloorScenario({
+      id: "clt-combined-dry-thick-laminate",
+      rows: [
+        { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: "30" },
+        { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: "3" },
+        { floorRole: "upper_fill", materialId: "generic_fill", thicknessMm: "50" },
+        { floorRole: "floating_screed", materialId: "dry_floating_gypsum_fiberboard", thicknessMm: "60" },
+        { floorRole: "ceiling_cavity", materialId: "acoustic_hanger_ceiling", thicknessMm: "70" },
+        { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: "100" },
+        { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+        { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "13" },
+        { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: "260" }
+      ],
+      targetOutputs: LAB_OUTPUTS
+    });
+
+    expect(scenario.result?.floorSystemMatch).toBeNull();
+    expect(scenario.result?.floorSystemEstimate).toBeNull();
+    expect(scenario.result?.impact).toBeNull();
+    expect(scenario.result?.supportedTargetOutputs).toEqual(["Rw"]);
+    expect(scenario.result?.unsupportedTargetOutputs).toEqual(["Ln,w", "Ln,w+CI", "DeltaLw"]);
+  });
+
   it("keeps the curated Dataholz wet CLT fill row exact on the web scenario route", () => {
     const scenario = evaluateFloorScenario({
       id: "dataholz-wet-clt-fill-exact",
@@ -1042,6 +1185,50 @@ describe("floor family regressions", () => {
     expect(scenario.result?.impact?.LnWPlusCI).toBe(47);
     expect(scenario.result?.floorSystemRatings?.Rw).toBe(72);
     expect(scenario.warnings.some((warning) => /Geotextile Separator Layer in the floating screed role/i.test(warning))).toBe(false);
+  });
+
+  it("keeps disjoint TUAS hybrid upper packages off the open-box generic fallback web route", () => {
+    const scenario = evaluateFloorScenario({
+      id: "open-box-r7b-disjoint-upper-package",
+      rows: OPEN_BOX_R7B_HYBRID_LOWER_DISJOINT_UPPER_ROWS,
+      targetOutputs: LAB_OUTPUTS
+    });
+
+    expect(scenario.result?.floorSystemMatch).toBeNull();
+    expect(scenario.result?.floorSystemEstimate).toBeNull();
+    expect(scenario.result?.impact).toBeNull();
+    expect(scenario.result?.supportedTargetOutputs).toEqual(["Rw"]);
+    expect(scenario.result?.unsupportedTargetOutputs).toEqual(["Ln,w", "Ln,w+CI", "DeltaLw"]);
+    expect(
+      scenario.warnings.some((warning) =>
+        /floating screed x2 \(Geotextile Separator Layer, Mineral Screed\)/i.test(warning)
+      )
+    ).toBe(true);
+  });
+
+  it("keeps malformed open-box laminate/EPS walking finishes off TUAS same-family impact fallbacks", () => {
+    const cases = [
+      ["open-box-basic-thick-laminate", OPEN_BOX_BASIC_THICK_LAMINATE_ROWS],
+      ["open-box-basic-outside-exact-laminate", OPEN_BOX_BASIC_OUTSIDE_EXACT_LAMINATE_ROWS],
+      ["open-box-dry-thick-underlay", OPEN_BOX_DRY_THICK_UNDERLAY_ROWS],
+      ["open-box-dry-outside-exact-laminate", OPEN_BOX_DRY_OUTSIDE_EXACT_LAMINATE_ROWS],
+      ["open-box-hybrid-thick-laminate", OPEN_BOX_HYBRID_THICK_LAMINATE_ROWS],
+      ["open-box-hybrid-outside-exact-laminate", OPEN_BOX_HYBRID_OUTSIDE_EXACT_LAMINATE_ROWS]
+    ] as const;
+
+    for (const [id, rows] of cases) {
+      const scenario = evaluateFloorScenario({
+        id,
+        rows,
+        targetOutputs: LAB_OUTPUTS
+      });
+
+      expect(scenario.result?.floorSystemMatch).toBeNull();
+      expect(scenario.result?.floorSystemEstimate).toBeNull();
+      expect(scenario.result?.impact).toBeNull();
+      expect(scenario.result?.supportedTargetOutputs).toEqual(["Rw"]);
+      expect(scenario.result?.unsupportedTargetOutputs).toEqual(["Ln,w", "Ln,w+CI", "DeltaLw"]);
+    }
   });
 
   it("keeps the TUAS hybrid lower-treatment proxy without the separator off the exact web route", () => {

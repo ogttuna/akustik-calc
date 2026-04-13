@@ -78,6 +78,33 @@ function hasBareCltRawSlabOnly(input: ImpactPredictorInput): boolean {
     !input.lowerTreatment?.type;
 }
 
+function hasOutOfBandCltLaminateUnderlayFinish(input: ImpactPredictorInput): boolean {
+  return (
+    (
+      normalizePredictorToken(input.floorCovering?.materialClass) === "laminate_flooring" &&
+      typeof input.floorCovering?.thicknessMm === "number" &&
+      !thicknessNear(input.floorCovering.thicknessMm, 8, 4)
+    ) ||
+    (
+      typeof input.resilientLayer?.thicknessMm === "number" &&
+      !thicknessNear(input.resilientLayer.thicknessMm, 3, 2)
+    )
+  );
+}
+
+function hasSourceBackedOpenBoxLaminateUnderlayFinish(input: ImpactPredictorInput): boolean {
+  const resilientProductId = normalizePredictorToken(input.resilientLayer?.productId);
+
+  // Keep open-box published rows aligned with exact-match tolerance. The wider
+  // CLT interpolation band is not safe for R2/R5/R9 same-family impact fallback.
+  return (
+    normalizePredictorToken(input.floorCovering?.materialClass) === "laminate_flooring" &&
+    thicknessNear(input.floorCovering?.thicknessMm, 8, 2) &&
+    (!resilientProductId || resilientProductId === "eps_underlay") &&
+    thicknessNear(input.resilientLayer?.thicknessMm, 3, 2)
+  );
+}
+
 function deriveTableSafeFixedOutputPublishedFamilyEstimate(
   input: ImpactPredictorInput,
   rule: TableSafeFixedOutputPublishedFamilyRule
@@ -379,6 +406,13 @@ function selectOpenBoxPublishedEstimateCase(
     !thicknessNear(input.lowerTreatment.boardThicknessMm, 13, 1) ||
     !thicknessNear(input.lowerTreatment.cavityFillThicknessMm, 100, 5)
   ) {
+    return null;
+  }
+
+  // TUAS open-box published rows that carry walking finishes all use the thin
+  // laminate/EPS pair. Incomplete or out-of-band finish input should not borrow
+  // the basic, dry, or hybrid measured family lane after exact matching falls off.
+  if (!hasSourceBackedOpenBoxLaminateUnderlayFinish(input)) {
     return null;
   }
 
@@ -750,6 +784,12 @@ function deriveCltBarePublishedFamilyEstimate(
 
   const floorCoveringMaterialClass = normalizePredictorToken(input.floorCovering?.materialClass);
   const resilientLayerThicknessMm = input.resilientLayer?.thicknessMm;
+  const hasFinishPackageInput =
+    Boolean(floorCoveringMaterialClass) ||
+    typeof input.floorCovering?.thicknessMm === "number" ||
+    input.resilientLayer?.productId ||
+    typeof input.resilientLayer?.dynamicStiffnessMNm3 === "number" ||
+    typeof resilientLayerThicknessMm === "number";
 
   if (
     floorCoveringMaterialClass &&
@@ -758,11 +798,15 @@ function deriveCltBarePublishedFamilyEstimate(
     return null;
   }
 
+  // TUAS X2/C2 anchors are laminate on a thin EPS underlay. A partial finish
+  // package would otherwise inherit the full measured improvement silently.
   if (
-    input.resilientLayer?.productId ||
-    typeof input.resilientLayer?.dynamicStiffnessMNm3 === "number" ||
+    hasFinishPackageInput &&
     (
-      typeof resilientLayerThicknessMm === "number" &&
+      floorCoveringMaterialClass !== "laminate_flooring" ||
+      !thicknessNear(input.floorCovering?.thicknessMm, 8, 4) ||
+      input.resilientLayer?.productId ||
+      typeof input.resilientLayer?.dynamicStiffnessMNm3 === "number" ||
       !thicknessNear(resilientLayerThicknessMm, 3, 2)
     )
   ) {
@@ -832,6 +876,12 @@ function deriveCltDryPublishedFamilyEstimate(
     normalizePredictorToken(input.floorCovering?.materialClass) !== "laminate_flooring" ||
     normalizePredictorToken(input.upperFill?.materialClass) !== "generic_fill"
   ) {
+    return null;
+  }
+
+  // TUAS X5/C5c dry rows still carry the thin laminate/EPS walking finish.
+  // Explicitly out-of-band finish values should not borrow that measured lane.
+  if (hasOutOfBandCltLaminateUnderlayFinish(input)) {
     return null;
   }
 
