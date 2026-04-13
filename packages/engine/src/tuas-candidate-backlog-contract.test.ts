@@ -1,6 +1,12 @@
 import { EXACT_FLOOR_SYSTEMS } from "@dynecho/catalogs";
 import { describe, expect, it } from "vitest";
 
+type TuasBacklogCandidate = {
+  readonly id: string;
+  readonly lnW: number;
+  readonly rw: number;
+};
+
 const TUAS_OPEN_BOX_SOURCE_UNIVERSE = [
   "R2a",
   "R3a",
@@ -128,7 +134,7 @@ const IMPORTED_TUAS_OPEN_BOX_STAGED_UPPER_PACKAGE_TIER = [
   { id: "R10a", lnW: 55, rw: 56 }
 ] as const;
 
-const AUDITED_TUAS_OPEN_BOX_STAGED_UPPER_PACKAGE_DEFERRED_SET = [] as const;
+const AUDITED_TUAS_OPEN_BOX_STAGED_UPPER_PACKAGE_DEFERRED_SET: readonly string[] = [];
 
 const IMPORTED_TUAS_OPEN_BOX_HYBRID_LOWER_TREATMENT_TIER = [
   { id: "R7b", lnW: 47, rw: 72 },
@@ -137,11 +143,11 @@ const IMPORTED_TUAS_OPEN_BOX_HYBRID_LOWER_TREATMENT_TIER = [
   { id: "R2c", lnW: 70, rw: 54 }
 ] as const;
 
-const AUDITED_TUAS_OPEN_BOX_HYBRID_LOWER_TREATMENT_DEFERRED_SET = [] as const;
+const AUDITED_TUAS_OPEN_BOX_HYBRID_LOWER_TREATMENT_DEFERRED_SET: readonly string[] = [];
 
-const NEXT_TUAS_OPEN_BOX_SUPPORT_SURFACE_ANCHOR_TIER = [] as const;
-const NEXT_TUAS_OPEN_BOX_SUPPORT_SURFACE_SIBLING_TIER = [] as const;
-const DEFERRED_TUAS_OPEN_BOX_SUPPORT_SURFACE_VARIANT_TIER = [] as const;
+const NEXT_TUAS_OPEN_BOX_SUPPORT_SURFACE_ANCHOR_TIER: readonly string[] = [];
+const NEXT_TUAS_OPEN_BOX_SUPPORT_SURFACE_SIBLING_TIER: readonly string[] = [];
+const DEFERRED_TUAS_OPEN_BOX_SUPPORT_SURFACE_VARIANT_TIER: readonly string[] = [];
 
 const LANDED_TUAS_CLT_STAGED_UPPER_TIER = [
   { id: "X3", lnW: 52, rw: 49 },
@@ -178,11 +184,11 @@ const LANDED_TUAS_CLT_COMBINED_HEAVY_DRY_TIER = [
   { id: "C4c", lnW: 24, rw: 74 }
 ] as const;
 
-const NEXT_TUAS_CLT_HEAVY_DRY_TOP_TIER = [] as const;
+const NEXT_TUAS_CLT_HEAVY_DRY_TOP_TIER: readonly TuasBacklogCandidate[] = [];
 
-const DEFERRED_TUAS_CLT_HEAVY_DRY_TOP_TIER = [] as const;
+const DEFERRED_TUAS_CLT_HEAVY_DRY_TOP_TIER: readonly TuasBacklogCandidate[] = [];
 
-const DEFERRED_TUAS_CLT_WET_TOP_TIER = [] as const;
+const DEFERRED_TUAS_CLT_WET_TOP_TIER: readonly TuasBacklogCandidate[] = [];
 
 const DEFERRED_TUAS_CLT_COMBINED_SCREENING_TIER = [
   { id: "C11c", lnW: 59, rw: 74 }

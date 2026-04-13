@@ -223,7 +223,7 @@ describe("TUAS CLT backlog decision contract", () => {
     expect(lab.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "Ln,w+CI"]);
     expect(lab.unsupportedTargetOutputs).toEqual([]);
     expect(
-      lab.warnings.some((warning) =>
+      lab.warnings.some((warning: string) =>
         /single-entry floor roles are duplicated: floating screed x3 \(Gypsum Board, Mineral Screed\)/i.test(warning)
       )
     ).toBe(false);
@@ -257,7 +257,7 @@ describe("TUAS CLT backlog decision contract", () => {
     expect(lab.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "Ln,w+CI"]);
     expect(lab.unsupportedTargetOutputs).toEqual([]);
     expect(
-      lab.warnings.some((warning) =>
+      lab.warnings.some((warning: string) =>
         /single-entry floor roles are duplicated: floating screed x3 \(Gypsum Board, Mineral Screed\)/i.test(warning)
       )
     ).toBe(false);
@@ -291,7 +291,7 @@ describe("TUAS CLT backlog decision contract", () => {
     expect(lab.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "Ln,w+CI"]);
     expect(lab.unsupportedTargetOutputs).toEqual([]);
     expect(
-      lab.warnings.some((warning) =>
+      lab.warnings.some((warning: string) =>
         /single-entry floor roles are duplicated: floating screed x2 \(Gypsum Board\)/i.test(warning)
       )
     ).toBe(false);
@@ -343,7 +343,7 @@ describe("TUAS CLT backlog decision contract", () => {
     expect(lab.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "Ln,w+CI"]);
     expect(lab.unsupportedTargetOutputs).toEqual([]);
     expect(
-      lab.warnings.some((warning) =>
+      lab.warnings.some((warning: string) =>
         /single-entry floor roles are duplicated: floating screed x2 \(Gypsum Board\)/i.test(warning)
       )
     ).toBe(false);
@@ -398,7 +398,7 @@ describe("TUAS CLT backlog decision contract", () => {
     expect(lab.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "Ln,w+CI"]);
     expect(lab.unsupportedTargetOutputs).toEqual([]);
     expect(
-      lab.warnings.some((warning) =>
+      lab.warnings.some((warning: string) =>
         /single-entry floor roles are duplicated: floating screed x4 \(Gypsum Board\)/i.test(warning)
       )
     ).toBe(false);
@@ -465,7 +465,7 @@ describe("TUAS CLT backlog decision contract", () => {
     expect(lab.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "Ln,w+CI"]);
     expect(lab.unsupportedTargetOutputs).toEqual([]);
     expect(
-      lab.warnings.some((warning) =>
+      lab.warnings.some((warning: string) =>
         /single-entry floor roles are duplicated: floating screed x2 \(Geotextile, Mineral Screed\)/i.test(warning)
       )
     ).toBe(false);
@@ -501,7 +501,7 @@ describe("TUAS CLT backlog decision contract", () => {
     expect(lab.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "Ln,w+CI"]);
     expect(lab.unsupportedTargetOutputs).toEqual([]);
     expect(
-      lab.warnings.some((warning) =>
+      lab.warnings.some((warning: string) =>
         /Visible-layer predictor matching is parked because single-entry floor roles are duplicated: floating screed x2/i.test(warning)
       )
     ).toBe(false);
@@ -540,7 +540,7 @@ describe("TUAS CLT backlog decision contract", () => {
     expect(lab.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "Ln,w+CI"]);
     expect(lab.unsupportedTargetOutputs).toEqual([]);
     expect(
-      lab.warnings.some((warning) => /Published family estimate active: mass-timber CLT family general at 92\.8% fit/i.test(warning))
+      lab.warnings.some((warning: string) => /Published family estimate active: mass-timber CLT family general at 92\.8% fit/i.test(warning))
     ).toBe(true);
 
     expect(field.floorSystemMatch).toBeNull();
@@ -633,7 +633,7 @@ describe("TUAS CLT backlog decision contract", () => {
     expect(lab.supportedTargetOutputs).toEqual(["Rw"]);
     expect(lab.unsupportedTargetOutputs).toEqual(["Ln,w", "Ln,w+CI"]);
     expect(
-      lab.warnings.some((warning) =>
+      lab.warnings.some((warning: string) =>
         /Visible-layer predictor matching is parked because single-entry floor roles are duplicated: floating screed x2/i.test(warning)
       )
     ).toBe(true);

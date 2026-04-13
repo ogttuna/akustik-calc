@@ -1,6 +1,12 @@
 import { EXACT_FLOOR_SYSTEMS } from "@dynecho/catalogs";
 import { describe, expect, it } from "vitest";
 
+type TuasOpenBoxCandidate = {
+  readonly id: string;
+  readonly lnW: number;
+  readonly rw: number;
+};
+
 const GEOMETRY_CLEARED_TUAS_OPEN_BOX_IMPORTS = [
   { id: "R2b", lnW: 55, rw: 62 }
 ] as const;
@@ -25,11 +31,11 @@ const HYBRID_LOWER_TREATMENT_RESOLVED_TUAS_OPEN_BOX_IMPORTS = [
   { id: "R2c", lnW: 60, rw: 54 }
 ] as const;
 
-const POST_CORRIDOR_TUAS_OPEN_BOX_GEOMETRY_AUDIT_TIER = [] as const;
+const POST_CORRIDOR_TUAS_OPEN_BOX_GEOMETRY_AUDIT_TIER: readonly TuasOpenBoxCandidate[] = [];
 
-const POST_CORRIDOR_TUAS_OPEN_BOX_STAGED_UPPER_PACKAGE_DEFERRED_SET = [] as const;
+const POST_CORRIDOR_TUAS_OPEN_BOX_STAGED_UPPER_PACKAGE_DEFERRED_SET: readonly TuasOpenBoxCandidate[] = [];
 
-const POST_CORRIDOR_TUAS_OPEN_BOX_HYBRID_LOWER_TREATMENT_DEFERRED_SET = [] as const;
+const POST_CORRIDOR_TUAS_OPEN_BOX_HYBRID_LOWER_TREATMENT_DEFERRED_SET: readonly TuasOpenBoxCandidate[] = [];
 
 describe("TUAS post-corridor screening contract", () => {
   it("keeps the geometry-cleared TUAS basic b-anchor explicit once drawing audit confirms it", () => {

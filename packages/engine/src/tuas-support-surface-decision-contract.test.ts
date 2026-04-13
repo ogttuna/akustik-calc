@@ -137,7 +137,7 @@ describe("TUAS support-surface decision contract", () => {
     expect(lab.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "Ln,w+CI"]);
     expect(lab.unsupportedTargetOutputs).toEqual([]);
     expect(
-      lab.warnings.some((warning) =>
+      lab.warnings.some((warning: string) =>
         /single-entry floor roles are duplicated: ceiling board x6 \(Gypsum Board\)/i.test(warning)
       )
     ).toBe(false);
@@ -175,13 +175,13 @@ describe("TUAS support-surface decision contract", () => {
     expect(lab.floorSystemRatings?.Rw).toBe(67.3);
     expect(lab.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "Ln,w+CI"]);
     expect(
-      lab.warnings.some((warning) =>
+      lab.warnings.some((warning: string) =>
         /single-entry floor roles are duplicated: ceiling cavity x2 \(TUAS Open-box Ceiling Family A, Resilient Stud Ceiling\)/i.test(
           warning
         )
       )
     ).toBe(true);
-    expect(lab.warnings.some((warning) => /family general at 54% fit/i.test(warning))).toBe(true);
+    expect(lab.warnings.some((warning: string) => /family general at 54% fit/i.test(warning))).toBe(true);
 
     expect(field.floorSystemMatch).toBeNull();
     expect(field.floorSystemEstimate?.kind).toBe("family_general");
@@ -215,8 +215,8 @@ describe("TUAS support-surface decision contract", () => {
     expect(lab.floorSystemRatings?.Rw).toBe(72);
     expect(lab.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "Ln,w+CI"]);
     expect(lab.unsupportedTargetOutputs).toEqual([]);
-    expect(lab.warnings.some((warning) => /single-entry floor roles are duplicated: ceiling cavity x2/i.test(warning))).toBe(false);
-    expect(lab.warnings.some((warning) => /single-entry floor roles are duplicated: floating screed x2/i.test(warning))).toBe(false);
+    expect(lab.warnings.some((warning: string) => /single-entry floor roles are duplicated: ceiling cavity x2/i.test(warning))).toBe(false);
+    expect(lab.warnings.some((warning: string) => /single-entry floor roles are duplicated: floating screed x2/i.test(warning))).toBe(false);
 
     expect(field.floorSystemMatch?.system.id).toBe("tuas_r7b_open_box_timber_measured_2026");
     expect(field.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_field_volume_normalization");
@@ -245,7 +245,7 @@ describe("TUAS support-surface decision contract", () => {
     expect(lab.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "Ln,w+CI"]);
     expect(lab.unsupportedTargetOutputs).toEqual([]);
     expect(
-      lab.warnings.some((warning) =>
+      lab.warnings.some((warning: string) =>
         /single-entry floor roles are duplicated: ceiling cavity x2 \(TUAS Open-box Ceiling Family A, Resilient Stud Ceiling\); floating screed x2 \(Geotextile Separator Layer, Mineral Screed\)/i.test(
           warning
         )
@@ -280,7 +280,7 @@ describe("TUAS support-surface decision contract", () => {
     expect(lab.floorSystemRatings?.Rw).toBe(68);
     expect(lab.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "Ln,w+CI"]);
     expect(lab.unsupportedTargetOutputs).toEqual([]);
-    expect(lab.warnings.some((warning) => /single-entry floor roles are duplicated: ceiling cavity x2/i.test(warning))).toBe(false);
+    expect(lab.warnings.some((warning: string) => /single-entry floor roles are duplicated: ceiling cavity x2/i.test(warning))).toBe(false);
 
     expect(field.floorSystemMatch?.system.id).toBe("tuas_r9b_open_box_timber_measured_2026");
     expect(field.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_field_volume_normalization");
@@ -308,7 +308,7 @@ describe("TUAS support-surface decision contract", () => {
     expect(lab.floorSystemRatings?.Rw).toBe(54);
     expect(lab.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "Ln,w+CI"]);
     expect(lab.unsupportedTargetOutputs).toEqual([]);
-    expect(lab.warnings.some((warning) => /single-entry floor roles are duplicated: ceiling cavity x2/i.test(warning))).toBe(false);
+    expect(lab.warnings.some((warning: string) => /single-entry floor roles are duplicated: ceiling cavity x2/i.test(warning))).toBe(false);
 
     expect(field.floorSystemMatch?.system.id).toBe("tuas_r2c_open_box_timber_measured_2026");
     expect(field.impact?.basis).toBe("mixed_exact_plus_estimated_standardized_field_volume_normalization");
@@ -337,7 +337,7 @@ describe("TUAS support-surface decision contract", () => {
     expect(lab.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "Ln,w+CI"]);
     expect(lab.unsupportedTargetOutputs).toEqual([]);
     expect(
-      lab.warnings.some((warning) =>
+      lab.warnings.some((warning: string) =>
         /single-entry floor roles are duplicated: floating screed x3 \(Gypsum Board, Mineral Screed\)/i.test(
           warning
         )
@@ -375,7 +375,7 @@ describe("TUAS support-surface decision contract", () => {
     expect(lab.impact?.LnW).toBe(53.9);
     expect(lab.floorSystemRatings?.Rw).toBe(60.9);
     expect(lab.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "Ln,w+CI"]);
-    expect(lab.warnings.some((warning) => /family archetype at 90% fit/i.test(warning))).toBe(true);
+    expect(lab.warnings.some((warning: string) => /family archetype at 90% fit/i.test(warning))).toBe(true);
 
     expect(field.floorSystemMatch).toBeNull();
     expect(field.floorSystemEstimate?.kind).toBe("family_archetype");
