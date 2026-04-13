@@ -39,6 +39,22 @@ Verified broad corridors:
       change
     - keep solver selection, source catalogs, CLT support, and raw-floor support
       unchanged unless the trace exposes a classified bug
+  - implementation comparison:
+    - current trace fields already expose family decision class, runner-up
+      scores, optional secondary runner-up, family-boundary hold metrics, and
+      trimmed outer-span counts
+    - the next gap is not another broad scan; it is a compact wall selector
+      output-origin/card matrix tying those trace fields to `Rw`, `R'w`,
+      `DnT,w`, support buckets, and workbench cards
+    - `packages/engine/src/dynamic-airborne.ts` is about `6630` lines, so this
+      slice should avoid growing it unless a classified behavior bug is found
+  - latest focused baseline:
+    - engine boundary pack:
+      `pnpm --filter @dynecho/engine exec vitest run src/dynamic-airborne-family-boundary.test.ts src/dynamic-airborne-family-boundary-scan.test.ts --reporter=basic`
+      passed: `2` files, `14` tests
+    - workbench boundary pack:
+      `pnpm --filter @dynecho/web exec vitest run features/workbench/dynamic-route-family-boundary.test.ts features/workbench/dynamic-route-family-boundary-scan.test.ts features/workbench/validation-regime.test.ts features/workbench/consultant-decision-trail.test.ts --reporter=basic`
+      passed: `4` files, `25` tests
 - latest trace/measurement slice:
   - slice id: `output_origin_trace_matrix_v1`
   - status: implemented as no-widening engine/workbench evidence; no solver,

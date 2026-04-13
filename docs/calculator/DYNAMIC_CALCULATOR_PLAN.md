@@ -170,6 +170,10 @@ Current execution status:
     - add engine and workbench trace/card assertions first
     - do not change solver selection, source catalogs, floor support, or wall
       selector math unless the trace pack exposes a classified behavior bug
+  - scope refined after implementation comparison:
+    - use the existing boundary scan packs as the baseline
+    - add dedicated trace/card matrix tests for the wall selector output path
+    - do not expand `dynamic-airborne.ts` during the trace-only pass
 - the 2026-04-07 reinforced-concrete assembly-field `Rw` support blocker is now closed:
   - concrete screening rows with visible floor roles now keep `Rw` exposed again on the assembly route
   - workbench `Rw` cards now also respect engine support buckets instead of surfacing unsupported floor companions
@@ -203,11 +207,13 @@ Completion-reading note:
 Current queued follow-up:
 
 - start `wall_selector_wider_trace_matrix_v1`:
-  - add trace rows for clear settled wall families
-  - pin the current `double_leaf <-> lined_massive_wall` hold
-  - add non-AAC heavy-core controls that must not enter the AAC-like boundary
-  - add at least one unsupported or held route with matching workbench card
-    posture
+  - add engine trace rows for clear `double_leaf`, held AAC boundary, clear
+    `lined_massive_wall`, denser held G5 sibling, non-AAC heavy-core control,
+    and strong framed control
+  - add matching workbench card/route rows for `Rw`, `R'w`, and `DnT,w`
+  - pin the current `double_leaf <-> lined_massive_wall` hold fields and keep
+    non-AAC heavy-core controls out of AAC-like boundary diagnostics
+  - keep user-facing boundary wording present only on held routes
   - checkpoint the evidence before any selector behavior change
 - keep raw-floor inference widening deferred for now:
   - the first raw safe-bare contiguous-split cohort is defended on both engine

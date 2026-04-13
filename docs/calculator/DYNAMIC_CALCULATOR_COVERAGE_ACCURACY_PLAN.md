@@ -80,6 +80,17 @@ Read together with:
   - defer raw-floor behavior widening, CLT-local combined behavior work, C11c,
     and `GDMTXA04A` exact reopening until they have stronger source/frequency
     evidence and their own output-origin trace rows
+- active slice implementation contract:
+  - add a compact engine trace matrix before any code behavior change:
+    `packages/engine/src/dynamic-airborne-wall-selector-trace-matrix.test.ts`
+  - add a compact workbench card/route matrix before any code behavior change:
+    `apps/web/features/workbench/wall-selector-output-origin-card-matrix.test.ts`
+  - matrix rows must include clear `double_leaf`, held AAC boundary, clear
+    `lined_massive_wall`, denser held G5 sibling, one non-AAC heavy-core
+    control, and one strong framed control
+  - assertions must include numeric output values where live, support buckets,
+    family/runner-up/hold trace fields, workbench card status/value, and
+    user-facing boundary wording only on the held route
 - previous route-history first target, now closed:
   - promoted the existing heavy-composite wall instability shape into the mixed
     route-history coverage net as a third wall-family detour

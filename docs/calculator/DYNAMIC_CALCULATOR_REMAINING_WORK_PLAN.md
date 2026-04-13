@@ -2068,6 +2068,12 @@ Do this in order:
      could drift
    - do not change wall selector math unless this trace pack exposes a
      classified behavior bug that deserves its own behavior slice
+   - implementation comparison result:
+     - the broad engine and workbench boundary scans are already green
+     - the missing piece is a compact output-origin/card matrix for the selected
+       wall selector route, not another undocumented scan expansion
+     - `dynamic-airborne.ts` is already large, so behavior or refactor work must
+       be split from this trace-only slice
 10. keep explicit CLT-local combined-interaction work, more CLT-local
     tightening, and true raw-floor inference widening deferred until the new wall
     trace evidence is checkpointed and the candidates are re-ranked again

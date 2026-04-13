@@ -341,6 +341,11 @@ applied to settled wall families, the currently held
 `double_leaf <-> lined_massive_wall` boundary, non-AAC heavy-core controls, and
 at least one unsupported or held route.
 
+The expected first artifacts are:
+
+- `packages/engine/src/dynamic-airborne-wall-selector-trace-matrix.test.ts`
+- `apps/web/features/workbench/wall-selector-output-origin-card-matrix.test.ts`
+
 Deferred until after that checkpoint:
 
 - `floor_raw_inference_source_led_widening_v1`

@@ -373,6 +373,126 @@ Current decision:
 - if the trace exposes no red, checkpoint the evidence and re-rank again rather
   than forcing a behavior change
 
+## Wall Selector Implementation Comparison
+
+Review date: 2026-04-13, second pass
+
+Implementation facts verified locally:
+
+- wall family ambiguity is already represented in `DynamicAirborneTrace` through:
+  - `familyDecisionClass`
+  - `familyDecisionMargin`
+  - `familyDecisionSelectedBelowRunnerUp`
+  - `runnerUpFamily` / `runnerUpFamilyScore`
+  - optional `secondaryRunnerUpFamily` / `secondaryRunnerUpFamilyScore`
+  - `familyBoundaryHold*` metric fields
+  - `trimmedOuter*` fields
+- boundary scoring currently only runs on `2 visible leaves / 1 cavity` and only
+  for selected families in the `double_leaf`, `lined_massive_wall`,
+  `stud_wall_system`, and `double_stud_system` set
+- the numeric hold is deliberately narrower than the scoring surface:
+  - it can only apply to the `double_leaf <-> lined_massive_wall` pair
+  - it requires `narrow` or `ambiguous`
+  - it compares the active metric against a forced runner-up calculation
+  - it allows `4 dB` lead for `ambiguous` and `5 dB` for `narrow`
+  - it trims at most `2 dB` for `ambiguous`, `1.5 dB` for `narrow`, plus
+    `1 dB` when the hard-selected family is scoring below the runner-up
+- current route wording already projects the held boundary through:
+  - `dynamic-calc-branch.ts`
+  - validation posture
+  - consultant decision trail
+- architecture watch:
+  - `packages/engine/src/dynamic-airborne.ts` is currently about `6630` lines
+  - do not add new ad hoc explanation logic to that file in this slice
+  - if a behavior bug later requires code, first prefer a small extracted
+    boundary/trace helper or a tightly scoped patch around the existing boundary
+    functions; do not start MorphologyV2 inside this trace slice
+
+Existing green coverage before the next slice:
+
+- engine boundary pack:
+  - command:
+    `pnpm --filter @dynecho/engine exec vitest run src/dynamic-airborne-family-boundary.test.ts src/dynamic-airborne-family-boundary-scan.test.ts --reporter=basic`
+  - result: `2` files, `14` tests, green
+  - existing scope:
+    - AAC `80/100/160 mm` lower/boundary/upper corridor values
+    - denser `ytong_g5_800` held sibling
+    - board matrix for gypsum, diamond, firestop, and security boards
+    - trimmed-prefix and dual-sided trim variants
+    - non-AAC heavy-core exclusion
+    - no silent `>=8 dB` adjacent-swap jumps in the expanded held and non-AAC
+      palettes
+    - no multi-candidate framed boundary surface in the current representative
+      framed palette
+- workbench boundary pack:
+  - command:
+    `pnpm --filter @dynecho/web exec vitest run features/workbench/dynamic-route-family-boundary.test.ts features/workbench/dynamic-route-family-boundary-scan.test.ts features/workbench/validation-regime.test.ts features/workbench/consultant-decision-trail.test.ts --reporter=basic`
+  - result: `4` files, `25` tests, green
+  - existing scope:
+    - same boundary/trim/non-AAC/framed surfaces through `evaluateScenario`
+    - representative workbench hold count:
+      `40` held routes across AAC/G5 cores
+    - representative non-AAC count:
+      `144` clear `lined_massive_wall` routes with no boundary diagnostics
+    - route wording for ambiguous boundary and protected corridor hold
+
+Gap after comparing plan to implementation:
+
+- current scan tests prove broad stability, but they are not a compact
+  output-origin/card matrix for the selected wall selector slice
+- the existing cross-domain `output_origin_trace_matrix_v1` has a generic
+  dynamic wall field case and a missing-volume wall case, but it does not pin the
+  boundary-specific trace fields or workbench cards for the held selector
+  corridor
+- no true positive for `familyDecisionMultiplePlausibleFamilies` currently
+  survives the representative framed palette; do not design behavior around a
+  hypothetical multi-runner-up route until a real trace row exposes it
+
+Next implementation details:
+
+1. Add a compact engine trace matrix.
+   - preferred file:
+     `packages/engine/src/dynamic-airborne-wall-selector-trace-matrix.test.ts`
+   - required rows:
+     - clear `double_leaf` field row:
+       `ytong_aac_d700 80 / air_gap 50 / gypsum_board 12.5`
+     - held AAC boundary row:
+       `ytong_aac_d700 100 / air_gap 50 / gypsum_board 12.5`
+     - clear `lined_massive_wall` field row:
+       `ytong_aac_d700 160 / air_gap 50 / gypsum_board 12.5`
+     - denser held sibling:
+       `ytong_g5_800 100 / air_gap 50 / diamond_board 12.5`
+     - non-AAC heavy-core control:
+       one `porotherm`, `silka`, or `pumice` lined-massive route with trim
+       visibility but no boundary diagnostics
+     - strong framed control:
+       one `double_stud_system` or `stud_wall_system` route with no boundary
+       diagnostics
+   - assert:
+     - `Rw`, `R'w`, and/or `DnT,w` numeric values where live
+     - `supportedTargetOutputs` and `unsupportedTargetOutputs`
+     - selected family, strategy, confidence class, runner-up fields, hold
+       metrics, trim counts, notes, and warnings
+2. Add a compact workbench card/route matrix.
+   - preferred file:
+     `apps/web/features/workbench/wall-selector-output-origin-card-matrix.test.ts`
+   - mirror the representative engine rows through `evaluateScenario`
+   - assert:
+     - output-card status/value for `Rw`, `R'w`, and `DnT,w`
+     - branch summary value/tone/detail from `getDynamicCalcBranchSummary`
+     - validation posture / consultant wording for the held route only where it
+       is user-facing
+     - no boundary/hold wording on clear double-leaf, clear lined-massive, and
+       non-AAC control rows
+3. Re-run the existing broad selector packs.
+   - the new compact matrix is not a replacement for the scan tests
+   - keep the expanded engine scan and representative web scan green
+4. Only if the new trace matrix fails:
+   - classify the failure as stale fixture, card projection drift, support-bucket
+     drift, trace-field drift, or solver behavior drift
+   - fix card/projection drift in web-only code where possible
+   - open a separate behavior slice before changing `dynamic-airborne.ts`
+
 Non-goals for this slice:
 
 - no `GDMTXA04A` exact reopen
