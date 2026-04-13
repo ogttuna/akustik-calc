@@ -19,9 +19,104 @@ Read together with:
 
 ## Current Active Slice Ledger
 
-- latest closed slice: `tuas_c11c_wet_stack_anomaly_audit_v1`
+- latest closed slice: `open_box_finish_tolerance_guard_v1`
 - status: closed and green
 - source/implementation comparison:
+  - the open-box finish tolerance guard closed the latest source-led tightening
+    slice:
+    - the previous guard correctly blocked missing/incomplete/out-of-band
+      laminate/EPS walking finishes, but source inspection found that the
+      open-box predictor/fallback band still used a wider CLT interpolation
+      laminate tolerance
+    - TUAS open-box exact matching uses the visible-role tolerance around
+      `8 mm` laminate plus `3 mm` EPS, so `10 mm` laminate remains a tolerated
+      near source-band predictor input while `12 mm` laminate no longer borrows
+      the `R2b/R5b/R9b` impact lanes after exact matching falls off
+    - this is open-box-specific; it does not tighten the separate CLT
+      interpolation band
+  - previous open-box laminate/EPS walking-finish fallback posture remains:
+    - the open-box laminate/EPS walking-finish fallback guard closed the earlier
+    source-led tightening slice:
+    - TUAS open-box rows that expose a walking finish are source-backed for the
+      same thin finish band:
+      - `8 mm` laminate
+      - `3 mm` EPS underlay
+    - malformed visible inputs that still look like `R2b`, `R5b`, or `R9b`
+      neighbors but carry missing, incomplete, or out-of-band laminate/EPS
+      walking finishes now withhold impact support instead of borrowing the
+      predictor-specific or generic same-family open-box impact lanes
+    - valid exact open-box source rows remain live
+    - direct predictor inputs that carry a source-band `3 mm` underlay without a
+      product id remain accepted; explicit non-EPS or out-of-band underlay input
+      is blocked
+  - previous open-box disjoint upper-package posture remains:
+    - the TUAS hybrid open-box wet upper package is source-backed only while
+      its staged `geotextile + screed` floating-screed schedule remains exact
+    - if exact matching falls off because that staged upper schedule is
+      disjoint or mixed out of order, the visible route now withholds
+      `family_general` impact support instead of borrowing `R8b/R9b/R2c`
+      neighbors
+    - true source rows such as `R7b/R8b/R9b/R2c` remain exact when their
+      source-backed upper/lower schedule is entered faithfully
+    - the existing generic dry open-box disjoint `upper_fill` route remains on
+      the documented `family_general` lane, so this is a narrow wet hybrid
+      guard rather than a broad open-box fallback shutdown
+  - previous combined CLT fallback posture remains:
+    - the combined CLT malformed-finish fallback guard closed the remaining
+      visible-route gap after the dry finish-package guard:
+    - direct predictor already rejected out-of-band laminate/EPS walking
+      finishes
+    - visible-layer combined CLT stacks could still re-enter through the
+      generic same-family CLT archetype if they also carried lower treatment
+    - the fallback hold now covers `combined` CLT profiles as well as the
+      existing `upper_only` and `heavy_floating` dry profiles
+    - malformed combined CLT walking finishes now stay impact-unsupported
+      instead of borrowing `Ln,w` / `Ln,w+CI` values from
+      `C2c/C3c/C4c/C5c` neighbors
+    - valid source-backed laminate/EPS pairs remain live, including C7-style
+      wet packages that also contain extra upper-package layers
+  - previous dry finish-package posture remains:
+    - the dry CLT finish-package guard compared TUAS `X5/C5c` dry interaction
+      behavior against the visible source finish band:
+      - `8 mm` laminate
+      - `3 mm` EPS underlay
+    - explicitly out-of-band laminate or EPS thicknesses now fail closed on
+      both direct predictor and visible-layer routes instead of borrowing the
+      measured dry interaction lane
+    - the route fallback guard also prevents malformed dry CLT rows from
+      re-entering through the generic same-family CLT archetype
+    - source-backed C7-style wet upper packages remain live on their existing
+      missing-role family-estimate posture because the dry-finish guard now
+      looks for a valid laminate/EPS pair rather than requiring the whole upper
+      package to contain only one resilient layer
+  - previous CLT interpolation posture remains:
+    - the CLT interpolation pass compared the implementation against the TUAS
+      `X2/C2` source anchors, whose visible package is `8 mm` laminate on
+      `3 mm` EPS underlay over CLT
+    - raw bare CLT remains source-backed as a conservative bare-slab
+      interpolation with the existing raw-slab penalty
+    - CLT with the defended laminate-plus-EPS package remains supported on the
+      same interpolation lane
+    - CLT with laminate only, or laminate far outside the source thickness band,
+      now stays screening-only / impact-unsupported instead of borrowing the
+      full measured `X2/C2` impact improvement
+    - direct predictor, visible layer route, and workbench scenario surfaces now
+      share this package-completeness guard
+  - previous companion-semantics posture remains:
+    - the companion-semantics pass compared implementation against TUAS
+      spreadsheet row `42` (`Rw+C`) and the already-fixed Dataholz timber-frame
+      rows that publish `Ctr` as a term
+    - TUAS source `Rw+C` values stay in the legacy numeric `RwCtr` field for
+      compatibility but now carry explicit `RwCtrSemantic: "rw_plus_c"`
+    - all `31` imported TUAS exact rows with an airborne companion support `C`
+      and withhold `Ctr`; Dataholz `ctr_term` rows still support `Ctr` and
+      withhold `C`
+    - target-output support, predictor-family propagated companions, output
+      combination sweeps, and workbench floor cards now share the same C-vs-Ctr
+      contract
+    - low-confidence mixed-source predictor companions now withhold the
+      companion instead of relabeling a mixed `C`/`Ctr`/`Rw+Ctr` candidate set
+  - previous active source-row posture remains:
   - the C4c candidate pass compared implementation against the rebaselined TUAS spreadsheet rows `34`, `35`, `36`, `41`, and `42` plus drawing page `27/40`
   - `C3c` remains frozen exactly as `tuas_c3c_clt260_measured_2026`
   - `C4c` is now landed exactly as `tuas_c4c_clt260_measured_2026`
@@ -30,24 +125,81 @@ Read together with:
   - `C11c` anomaly audit is now closed as deferred/fail-closed: page `30/40` shows `30 mm glass wool + geotextile + 40 mm screed` plus the same lower suspended ceiling, but the source truth is much weaker at `Ln,w 59`, `Ln,w+CI 60`, `Ln,w+CI,50-2500 60`, `Rw 74`
   - the C11c source tuple is `35 dB` weaker than same-airborne `C4c`, `29 dB` weaker than nearby wet combined `C7c`, and `21 dB` weaker than predictor-backed dry combined `C5c` on `Ln,w`
   - current C11c route behavior therefore remains screening-only with `Rw 49`, no exact match, no predictor estimate, and impact outputs unsupported
-  - row `42` is still `Rw+C`, but the current domain still stores it in the `RwCtr` companion slot; this remains an explicit semantic follow-up, not a hidden numeric drift
+  - row `42` is `Rw+C`; the companion-semantics audit now keeps it in the
+    legacy numeric `RwCtr` field with explicit `RwCtrSemantic: "rw_plus_c"` so
+    TUAS supports `C` and withholds `Ctr`
   - exact split parity now accepts only merge-safe contiguous same-role/same-material packed thickness equivalents; mixed-material schedules still require explicit material/thickness schedules
   - route-control finding from this slice:
     - adding `C4c` correctly created a profile-aligned combined CLT exact row, but it also exposed that under-described combined CLT stacks with lower board/fill and no `ceiling_cavity` could drift into family estimates
     - `floor-system-estimate.ts` now keeps those stacks fail-closed unless the lower suspended-cavity topology is explicit
 - validation:
-  - `pnpm --filter @dynecho/engine exec vitest run src/tuas-c11c-wet-stack-anomaly-audit.test.ts --reporter=basic`
+  - `pnpm --filter @dynecho/engine exec vitest run src/tuas-support-surface-decision-contract.test.ts --reporter=basic`
+  - result: `1` file, `11` tests, green
+  - `pnpm --filter @dynecho/engine exec vitest run src/predictor-published-family-estimate.test.ts --reporter=basic`
+  - result: `1` file, `19` tests, green
+  - `pnpm --filter @dynecho/web exec vitest run features/workbench/floor-family-regressions.test.ts --reporter=basic`
+  - result: `1` file, `92` tests, green
+  - `pnpm --filter @dynecho/web exec vitest run features/workbench/floor-family-regressions.test.ts features/workbench/floor-stack-invariance.test.ts --reporter=basic`
+  - result: `2` files, `107` tests, green
+  - `pnpm --filter @dynecho/engine exec vitest run src/predictor-published-family-estimate.test.ts src/tuas-support-surface-decision-contract.test.ts src/floor-widening-candidate-contract.test.ts src/floor-source-corpus-contract.test.ts src/calculate-impact-only.test.ts src/calculate-assembly.test.ts --reporter=basic`
+  - result: `6` files, `323` tests, green
+  - `pnpm --filter @dynecho/engine typecheck`: green
+  - `pnpm --filter @dynecho/web typecheck`: green with the known Next.js
+    TypeScript plugin recommendation
+  - `pnpm --filter @dynecho/engine test`: `96` files, `780` tests, green
+  - `pnpm build`: green with the known `sharp/@img` optional-package warnings
+    through `proposal-docx` and the Next.js TypeScript plugin recommendation
+  - previous combined CLT fallback validation:
+  - `pnpm --filter @dynecho/engine exec vitest run src/predictor-published-family-estimate.test.ts src/clt-floor-monotonicity.test.ts --reporter=basic`
+  - result: `2` files, `24` tests, green
+  - `pnpm --filter @dynecho/web exec vitest run features/workbench/floor-family-regressions.test.ts --reporter=basic`
+  - result: `1` file, `90` tests, green
+  - `pnpm --filter @dynecho/engine exec vitest run src/predictor-published-family-estimate.test.ts src/clt-floor-monotonicity.test.ts src/tuas-measured-source-truth-audit.test.ts --reporter=basic`
+  - result: `3` files, `31` tests, green
+  - `pnpm --filter @dynecho/engine exec vitest run src/raw-floor-inferred-split-parity.test.ts src/floor-exact-companion-split-parity.test.ts src/impact-predictor-input.test.ts src/floor-source-corpus-contract.test.ts src/floor-widening-candidate-contract.test.ts src/clt-floor-monotonicity.test.ts src/predictor-published-family-estimate.test.ts src/tuas-measured-source-truth-audit.test.ts --reporter=basic`
+  - result: `8` files, `83` tests, green
+  - `pnpm --filter @dynecho/engine exec vitest run src/predictor-published-family-estimate.test.ts src/clt-floor-monotonicity.test.ts src/tuas-measured-source-truth-audit.test.ts src/floor-widening-candidate-contract.test.ts src/floor-gap-ledger-contract.test.ts src/calculate-impact-only.test.ts src/calculate-assembly.test.ts --reporter=basic`
+  - result: `7` files, `321` tests, green
+  - `pnpm --filter @dynecho/web exec vitest run features/workbench/floor-family-regressions.test.ts features/workbench/floor-stack-invariance.test.ts features/workbench/raw-floor-inferred-split-parity.test.ts --reporter=basic`
+  - result: `3` files, `106` tests, green
+  - `pnpm --filter @dynecho/engine typecheck`: green
+  - `pnpm --filter @dynecho/web typecheck`: green with the known Next.js
+    TypeScript plugin recommendation
+  - `pnpm --filter @dynecho/engine test`: `96` files, `777` tests, green
+  - `pnpm build`: green with the known `sharp/@img` optional-package warnings
+    through `proposal-docx` and the Next.js TypeScript plugin recommendation
+  - previous CLT interpolation validation:
+  - `pnpm --filter @dynecho/engine exec vitest run src/predictor-published-family-estimate.test.ts src/clt-floor-monotonicity.test.ts --reporter=basic`
+  - result: `2` files, `22` tests, green
+  - `pnpm --filter @dynecho/engine exec vitest run src/raw-floor-inferred-split-parity.test.ts src/floor-exact-companion-split-parity.test.ts src/impact-predictor-input.test.ts src/floor-source-corpus-contract.test.ts src/floor-widening-candidate-contract.test.ts src/clt-floor-monotonicity.test.ts src/predictor-published-family-estimate.test.ts --reporter=basic`
+  - result: `7` files, `74` tests, green
+  - `pnpm --filter @dynecho/engine exec vitest run src/predictor-published-family-estimate.test.ts src/clt-floor-monotonicity.test.ts src/floor-widening-candidate-contract.test.ts src/floor-gap-ledger-contract.test.ts src/calculate-impact-only.test.ts src/calculate-assembly.test.ts --reporter=basic`
+  - result: `6` files, `312` tests, green
+  - `pnpm --filter @dynecho/web exec vitest run features/workbench/floor-family-regressions.test.ts features/workbench/floor-stack-invariance.test.ts features/workbench/raw-floor-inferred-split-parity.test.ts --reporter=basic`
+  - result: `3` files, `104` tests, green
+  - `pnpm --filter @dynecho/engine typecheck`: green
+  - `pnpm --filter @dynecho/web typecheck`: green with the known Next.js
+    TypeScript plugin recommendation
+  - `pnpm --filter @dynecho/engine test`: `96` files, `775` tests, green
+  - `pnpm build`: green with the known `sharp/@img` optional-package warnings
+    through `proposal-docx` and the Next.js TypeScript plugin recommendation
+  - previous companion-semantics validation:
+  - `pnpm --filter @dynecho/engine exec vitest run src/predictor-family-estimate-shared.test.ts src/target-output-support-contract.test.ts src/tuas-measured-source-truth-audit.test.ts src/output-combination-sweep.test.ts src/dataholz-timber-frame-source-truth-audit.test.ts src/calculate-impact-only.test.ts src/calculate-assembly.test.ts src/dynamic-floor-regression-matrix.test.ts src/predictor-branch-stability-sweep.test.ts --reporter=basic`
+  - result: `9` files, `326` tests, green
+  - `pnpm --filter @dynecho/web exec vitest run features/workbench/scenario-analysis.test.ts features/workbench/simple-workbench-output-model.test.ts features/workbench/dataholz-timber-frame-source-truth-route.test.ts features/workbench/floor-output-card-support-parity.test.ts --reporter=basic`
+  - result: `4` files, `84` tests, green
+  - `pnpm --filter @dynecho/engine exec vitest run src/impact-upstream-parity-acceptance.test.ts --reporter=basic`
   - result: `1` file, `2` tests, green
-  - `pnpm --filter @dynecho/engine exec vitest run src/tuas-candidate-backlog-contract.test.ts src/floor-source-corpus-contract.test.ts src/tuas-clt-backlog-decision-contract.test.ts src/floor-exact-companion-split-parity.test.ts src/floor-widening-candidate-contract.test.ts src/impact-predictor-input.test.ts`
-  - result: `6` files, `83` tests, green
-  - `pnpm --filter @dynecho/engine exec vitest run src/calculate-assembly.test.ts src/calculate-impact-only.test.ts`
-  - result: `2` files, `287` tests, green
-  - `pnpm --filter @dynecho/engine exec vitest run src/floor-input-noise-parity.test.ts src/floor-gap-ledger-contract.test.ts src/tuas-support-surface-decision-contract.test.ts`
-  - result: `3` files, `12` tests, green
-  - `pnpm --filter @dynecho/web exec vitest run features/workbench/floor-family-regressions.test.ts features/workbench/floor-stack-invariance.test.ts`
-  - result: `2` files, `102` tests, green
-  - `pnpm build`
-  - result: green with the known Node `>=22` warning and existing `sharp/@img` optional-package warnings
+  - `pnpm --filter @dynecho/shared typecheck`: green
+  - `pnpm --filter @dynecho/catalogs typecheck`: green
+  - `pnpm --filter @dynecho/engine typecheck`: green
+  - `pnpm --filter @dynecho/web typecheck`: green with the known Next.js
+    TypeScript plugin recommendation
+  - `pnpm --filter @dynecho/engine test`: green in this companion-semantics
+    slice; the current full-suite count is recorded in the latest slice
+    validation above
+  - `pnpm build`: green with the known `sharp/@img` optional-package warnings
+    through `proposal-docx` and the Next.js TypeScript plugin recommendation
 - next intended move:
   - keep `C3c` and `C4c` frozen as staged/heavy-dry combined exact anchors
   - keep `C11c` deferred unless a future source correction or frequency-level explanation resolves the anomaly
@@ -411,7 +563,9 @@ This repo is no longer at a cold-start point, so the live next-step order is now
 2. Workstream A source-truth rebaseline
    - `tuas_floor_source_truth_rebaseline_v1` is now the active numeric baseline
    - TUAS floor rows must read `Ln,w` from row `34`, `Ln,w+CI` from row `35`, `Ln,w+CI,50-2500` from row `36`, `Rw` from row `41`, and the current companion numeric from row `42` (`Rw+C` in source)
-   - the current domain still stores row `42` in `RwCtr`/`rw_plus_ctr`-style slots; this is a semantic-label debt, not a numeric blocker
+   - `floor_airborne_companion_c_ctr_semantic_audit_v1` closed the semantic-label
+     debt: row `42` now carries `RwCtrSemantic: "rw_plus_c"` and cannot be
+     exposed as `Ctr`
 3. Workstream A remaining combined-CLT matrix
    - `tuas_remaining_combined_clt_exact_import_decision_matrix_v1` is closed with `C3c` as the first landed exact import
    - `tuas_c4c_combined_heavy_dry_exact_candidate_v1` is also closed with exact `tuas_c4c_clt260_measured_2026`
@@ -1175,11 +1329,14 @@ Active slice:
     - `L'n,w 52`
     - `L'nT,w 49.6`
     - `L'nT,50 49.6`
-- latest closed slice id: `tuas_c11c_wet_stack_anomaly_audit_v1`
-- latest closed slice status: `closed`
-- next slice id: `source-led_raw_or_predictor_widening_v1`
-- next slice status: `eligible, not selected to a concrete family yet`
-- active test pack:
+- historical closed slice id: `tuas_c11c_wet_stack_anomaly_audit_v1`
+- historical slice status: `closed`
+- historical follow-on slice id: `clt_laminate_underlay_interpolation_guard_v1`
+- historical follow-on slice status: `closed and green`; the current latest
+  closed CLT tightening slice is `clt_dry_finish_package_guard_v1`
+- follow-on source-led raw/predictor widening remains deferred until the next
+  concrete source family is selected
+- audit test pack:
   - engine:
     - `pnpm --filter @dynecho/engine exec vitest run src/tuas-c11c-wet-stack-anomaly-audit.test.ts`
     - `pnpm --filter @dynecho/engine exec vitest run src/tuas-candidate-backlog-contract.test.ts src/floor-source-corpus-contract.test.ts src/tuas-clt-backlog-decision-contract.test.ts src/floor-exact-companion-split-parity.test.ts src/floor-widening-candidate-contract.test.ts src/impact-predictor-input.test.ts`
@@ -1187,7 +1344,7 @@ Active slice:
     - `pnpm --filter @dynecho/engine exec vitest run src/floor-input-noise-parity.test.ts src/floor-gap-ledger-contract.test.ts src/tuas-support-surface-decision-contract.test.ts`
   - workbench:
     - `pnpm --filter @dynecho/web exec vitest run features/workbench/floor-family-regressions.test.ts features/workbench/floor-stack-invariance.test.ts`
-  - current active baseline is green:
+  - audit baseline was green:
   - engine C4c/backlog/source/split/predictor pack: `6` files, `83` tests
   - engine assembly/impact-only route guard pack: `2` files, `287` tests
   - engine gap/noise/support pack: `3` files, `12` tests
@@ -1280,16 +1437,16 @@ Active slice:
   - rerun the selected TUAS floor test pack before any edit
   - if wall context is needed again, inspect the closed selector-honesty corridor in:
     - [dynamic-airborne-family-boundary.test.ts](../../packages/engine/src/dynamic-airborne-family-boundary.test.ts)
-- current repo-backed follow-on after the landed `C7` slice:
+- historical repo-backed follow-on after the landed `C7` slice:
   - `tuas_post_c7_clt_boundary_tightening_v1` is now also closed
   - current frozen truth:
     - engine exact-companion split parity and engine raw-order/noise parity now keep the landed `C7` corridor narrow
     - route-side contiguous split invariance now also keeps the landed `C7` corridor narrow on the workbench path
     - combined wet `C7c` visible proxies are fail-closed again at `Rw 49`; impact outputs stay unsupported
     - visible `C5c` combined CLT stacks now land on the explicit predictor-backed lane with `Ln,w 38`, `Ln,w+CI 42`, `Ln,w+CI,50-2500 44`, and `Rw 75`
-- latest closed slice id: `tuas_clt_remaining_combined_source_schedule_research_v1`
-- latest closed slice status: `closed`
-- latest closed slice result:
+- historical closed slice id: `tuas_clt_remaining_combined_source_schedule_research_v1`
+- historical slice status: `closed`
+- historical slice result:
   - TUAS drawing pages `25/40` through `30/40` now freeze the real visible schedules for `C2c/C3c/C4c/C5c/C7c/C11c`
   - `C2c` is now landed exactly as `tuas_c2c_clt260_measured_2026`
     - rebaselined lab tuple: `Ln,w 35`, `Ln,w+CI 39`, `Ln,w+CI,50-2500 44`, `Rw 70`
@@ -1297,9 +1454,9 @@ Active slice:
   - the slice re-closed two adjacency drifts:
     - Dataholz dry combined predictor input no longer blends `tuas_c2c`
     - CLT `lower_only` no longer reopens through `C2c`
-- latest closed slice id: `tuas_c7c_combined_wet_clt_surface_design_v1`
-- latest closed slice status: `closed`
-- latest closed slice result:
+- historical closed slice id: `tuas_c7c_combined_wet_clt_surface_design_v1`
+- historical slice status: `closed`
+- historical slice result:
   - `C7c` is now landed exactly as `tuas_c7c_clt260_measured_2026`
     - rebaselined lab tuple: `Ln,w 30`, `Ln,w+CI 35`, `Ln,w+CI,50-2500 44`, `Rw 75`
   - `C3c` is now exact after the decision-matrix pass; `C4c/C11c` remain screening-only after that landing
@@ -1307,9 +1464,9 @@ Active slice:
     - combined CLT visible stacks with lower treatment plus multi-entry `floating_screed` no longer auto-normalize into inferred or predictor-derived shorthand lanes
     - that guard now sits in both auto role inference and predictor derivation
   - `C3c/C4c` closest-family warnings now honestly point at `C7c`
-- latest closed slice id: `tuas_remaining_combined_clt_exact_import_decision_matrix_v1`
-- latest closed slice status: `closed`
-- latest closed slice result:
+- historical closed slice id: `tuas_remaining_combined_clt_exact_import_decision_matrix_v1`
+- historical slice status: `closed`
+- historical slice result:
   - `C3c` is now landed exactly as `tuas_c3c_clt260_measured_2026`
     - rebaselined lab tuple: `Ln,w 27`, `Ln,w+CI 29`, `Ln,w+CI,50-2500 43`, `Rw 73`
     - field continuation: `L'n,w 29`, `L'nT,w 27`, `L'nT,50 43`
@@ -1321,9 +1478,9 @@ Active slice:
   - `C4c` is the remaining row closest to defended dry/staged exact surfaces and has local source truth from drawing page `27/40`
   - `C11c` stays deferred because its wet `30 mm glass wool + geotextile + 40 mm screed` stack has a weaker `Ln,w 59` tuple that the later anomaly audit kept fail-closed
   - the next import must preserve the re-closed inference/predictor boundary instead of reopening shorthand aliases
-- latest closed slice id: `tuas_c4c_combined_heavy_dry_exact_candidate_v1`
-- latest closed slice status: `closed`
-- latest closed slice result:
+- historical closed slice id: `tuas_c4c_combined_heavy_dry_exact_candidate_v1`
+- historical slice status: `closed`
+- historical slice result:
   - `C4c` is now landed exactly as `tuas_c4c_clt260_measured_2026`
     - rebaselined lab tuple: `Ln,w 24`, `Ln,w+CI 26`, `Ln,w+CI,50-2500 40`, `Rw 74`
     - field continuation: `L'n,w 26`, `L'nT,w 24`, `L'nT,50 40`

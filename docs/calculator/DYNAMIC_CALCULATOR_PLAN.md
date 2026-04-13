@@ -44,7 +44,67 @@ Current execution status:
   - TUAS exact floor rows and TUAS-backed predictor lanes were compared back to `TUAS2023FloorSoundInsulationDataR1.xlsx` / `SoundInsulation`
   - numeric truth now follows rows `34` (`Ln,w`), `35` (`Ln,w+CI`), `36` (`Ln,w+CI,50-2500`), `41` (`Rw`), and `42` (`Rw+C`)
   - engine, workbench, and build gates are green after the rebaseline
-  - semantic debt remains: row `42` is `Rw+C`, but the current domain companion still uses the `RwCtr` slot/name
+- `floor_airborne_companion_c_ctr_semantic_audit_v1` is now closed:
+  - row `42` remains stored in the legacy numeric `RwCtr` field for
+    compatibility, but it now carries `RwCtrSemantic: "rw_plus_c"`
+  - TUAS exact/official-id rows support `C` / `Rw+C` and withhold `Ctr`
+  - Dataholz `ctr_term` rows still support source `Ctr` and withhold `C`
+  - engine support buckets, predictor-family propagated companions, output
+    sweeps, and workbench floor cards all share this C-vs-Ctr contract
+- `clt_laminate_underlay_interpolation_guard_v1` is now closed:
+  - TUAS `X2/C2` interpolation remains available for raw bare CLT and the
+    defended `laminate + EPS underlay` CLT package
+  - laminate-only CLT and out-of-band laminate thicknesses no longer inherit
+    measured laminate-plus-EPS impact support
+  - direct predictor, visible layer route, and workbench scenario tests now
+    measure the same fail-closed package-completeness boundary
+- `clt_dry_finish_package_guard_v1` is now closed:
+  - TUAS `X5/C5c` dry CLT interaction remains available for the source-backed
+    `8 mm` laminate plus `3 mm` EPS finish band
+  - out-of-band laminate or EPS thicknesses no longer borrow dry CLT impact
+    support through either the predictor-specific lane or generic same-family
+    CLT fallback
+  - C7 wet upper-package missing-role behavior remains on the documented
+    family-estimate posture
+- `clt_combined_finish_fallback_guard_v1` is now closed:
+  - combined CLT stacks with lower suspended treatment and malformed
+    laminate/EPS walking finishes now fail closed before the generic
+    same-family CLT archetype can reopen
+  - this is a tightening-only follow-up to the dry finish-package guard:
+    valid source-backed laminate/EPS pairs remain live, while out-of-band
+    combined finishes stay impact-unsupported
+  - engine, workbench, typecheck, full engine, and repository build gates are
+    green after the guard
+- `open_box_disjoint_upper_fallback_guard_v1` is now closed:
+  - TUAS open-box hybrid wet upper packages with a source-backed
+    `geotextile + screed` floating-screed schedule now fail closed when that
+    staged upper schedule is disjoint or mixed out of order and exact matching
+    falls off
+  - true `R7b/R8b/R9b/R2c` source rows remain exact, while the existing generic
+    dry open-box disjoint `upper_fill` route remains on the documented
+    `family_general` lane
+  - engine, workbench, typecheck, full engine, and repository build gates are
+    green after the guard
+- `open_box_finish_package_guard_v1` is now closed:
+  - TUAS open-box walking-finish support is now constrained to the source-backed
+    `8 mm` laminate plus `3 mm` EPS underlay band
+  - malformed basic/dry/hybrid open-box walking finishes now fail closed before
+    predictor-specific or generic same-family impact fallback can borrow
+    `R2b/R5b/R9b` values
+  - valid exact open-box rows remain live, and direct predictor rows with
+    source-band `3 mm` underlay but no product id remain accepted
+  - engine, workbench, typecheck, full engine, and repository build gates are
+    green after the guard
+- `open_box_finish_tolerance_guard_v1` is now closed:
+  - open-box walking-finish fallback now uses the exact visible-role tolerance
+    around the source `8 mm` laminate plus `3 mm` EPS pair
+  - `10 mm` laminate remains accepted as a near source-band direct predictor
+    input, while `12 mm` laminate no longer borrows `R2b/R5b/R9b` impact values
+    after exact matching rejects it
+  - this was kept open-box-specific and does not change the separate CLT
+    interpolation band
+  - engine, workbench, typecheck, full engine, and repository build gates are
+    green after the guard
 - the 2026-04-07 reinforced-concrete assembly-field `Rw` support blocker is now closed:
   - concrete screening rows with visible floor roles now keep `Rw` exposed again on the assembly route
   - workbench `Rw` cards now also respect engine support buckets instead of surfacing unsupported floor companions

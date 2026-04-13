@@ -21,12 +21,323 @@ Last cross-package build revalidation: `2026-04-13`
 
 Verified broad corridors:
 
+- latest change-adjacent revalidation after the open-box finish tolerance guard:
+  green
+  - selected/closed slice:
+    `open_box_finish_tolerance_guard_v1`
+  - engine direct predictor guard pack:
+    - command: `pnpm --filter @dynecho/engine exec vitest run src/predictor-published-family-estimate.test.ts --reporter=basic`
+    - result: `1` file passed, `19` tests passed
+  - engine source/route guard pack:
+    - command: `pnpm --filter @dynecho/engine exec vitest run src/tuas-support-surface-decision-contract.test.ts --reporter=basic`
+    - result: `1` file passed, `11` tests passed
+  - workbench route guard pack:
+    - command: `pnpm --filter @dynecho/web exec vitest run features/workbench/floor-family-regressions.test.ts --reporter=basic`
+    - result: `1` file passed, `92` tests passed
+  - engine route/broad guard pack:
+    - command: `pnpm --filter @dynecho/engine exec vitest run src/predictor-published-family-estimate.test.ts src/tuas-support-surface-decision-contract.test.ts src/floor-widening-candidate-contract.test.ts src/floor-source-corpus-contract.test.ts src/calculate-impact-only.test.ts src/calculate-assembly.test.ts --reporter=basic`
+    - result: `6` files passed, `323` tests passed
+  - workbench broad route guard pack:
+    - command: `pnpm --filter @dynecho/web exec vitest run features/workbench/floor-family-regressions.test.ts features/workbench/floor-stack-invariance.test.ts --reporter=basic`
+    - result: `2` files passed, `107` tests passed
+  - typechecks:
+    - `pnpm --filter @dynecho/engine typecheck`: green
+    - `pnpm --filter @dynecho/web typecheck`: green with the known Next.js
+      TypeScript plugin recommendation
+  - stable full engine suite:
+    - command: `pnpm --filter @dynecho/engine test`
+    - result: `96` files passed, `780` tests passed
+  - repository build:
+    - command: `pnpm build`
+    - result: green
+    - known non-blocking warnings remain: `sharp/@img` optional packages
+      through `proposal-docx`, and the Next.js TypeScript plugin recommendation
+  - scope:
+    - TUAS open-box walking-finish fallback is now aligned to the exact visible
+      role tolerance around the source `8 mm` laminate plus `3 mm` EPS pair
+    - `10 mm` laminate remains accepted as a near source-band predictor input,
+      while `12 mm` laminate is outside the exact open-box band and now stays
+      impact-unsupported instead of borrowing `R2b/R5b/R9b` values
+    - the narrower open-box guard does not change the separate CLT interpolation
+      band
+- previous change-adjacent revalidation after the open-box laminate/EPS walking
+  finish fallback guard: green
+  - selected/closed slice:
+    `open_box_finish_package_guard_v1`
+  - engine source/route guard pack:
+    - command: `pnpm --filter @dynecho/engine exec vitest run src/tuas-support-surface-decision-contract.test.ts --reporter=basic`
+    - result: `1` file passed, `11` tests passed
+  - workbench route guard pack:
+    - command: `pnpm --filter @dynecho/web exec vitest run features/workbench/floor-family-regressions.test.ts --reporter=basic`
+    - result: `1` file passed, `92` tests passed
+  - engine route/broad guard pack:
+    - command: `pnpm --filter @dynecho/engine exec vitest run src/predictor-published-family-estimate.test.ts src/tuas-support-surface-decision-contract.test.ts src/floor-widening-candidate-contract.test.ts src/floor-source-corpus-contract.test.ts src/calculate-impact-only.test.ts src/calculate-assembly.test.ts --reporter=basic`
+    - result: `6` files passed, `322` tests passed
+  - workbench broad route guard pack:
+    - command: `pnpm --filter @dynecho/web exec vitest run features/workbench/floor-family-regressions.test.ts features/workbench/floor-stack-invariance.test.ts --reporter=basic`
+    - result: `2` files passed, `107` tests passed
+  - typechecks:
+    - `pnpm --filter @dynecho/engine typecheck`: green
+    - `pnpm --filter @dynecho/web typecheck`: green with the known Next.js
+      TypeScript plugin recommendation
+  - stable full engine suite:
+    - command: `pnpm --filter @dynecho/engine test`
+    - result: `96` files passed, `779` tests passed
+  - repository build:
+    - command: `pnpm build`
+    - result: green
+    - known non-blocking warnings remain: `sharp/@img` optional packages
+      through `proposal-docx`, and the Next.js TypeScript plugin recommendation
+  - scope:
+    - TUAS open-box rows that expose a walking finish are source-backed only for
+      the thin `8 mm` laminate plus `3 mm` EPS pair
+    - if exact matching falls off because that laminate/EPS walking finish is
+      missing, incomplete, or out of band, both the predictor-specific lane and
+      visible same-family fallback now withhold impact support
+    - representative `R2b`, `R5b`, and `R9b` malformed inputs stay `Rw`-only in
+      lab support and withhold field impact outputs instead of borrowing
+      same-family `Ln,w` values
+    - valid exact open-box source rows remain live; predictor inputs with
+      source-band `3 mm` underlay and no product id remain accepted, while
+      explicit non-EPS or out-of-band underlay input is blocked
+- previous change-adjacent revalidation after the open-box disjoint upper-package
+  fallback guard: green
+  - selected/closed slice:
+    `open_box_disjoint_upper_fallback_guard_v1`
+  - engine source/route guard pack:
+    - command: `pnpm --filter @dynecho/engine exec vitest run src/tuas-support-surface-decision-contract.test.ts --reporter=basic`
+    - result: `1` file passed, `10` tests passed
+  - workbench route guard pack:
+    - command: `pnpm --filter @dynecho/web exec vitest run features/workbench/floor-family-regressions.test.ts --reporter=basic`
+    - result: `1` file passed, `91` tests passed
+  - engine source-adjacent guard pack:
+    - command: `pnpm --filter @dynecho/engine exec vitest run src/tuas-support-surface-decision-contract.test.ts src/floor-widening-candidate-contract.test.ts src/floor-source-corpus-contract.test.ts src/floor-packaged-lane-disjoint-detour.test.ts src/floor-packaged-lane-helper-disjoint-detour.test.ts --reporter=basic`
+    - result: `5` files passed, `23` tests passed
+  - workbench broad route guard pack:
+    - command: `pnpm --filter @dynecho/web exec vitest run features/workbench/floor-family-regressions.test.ts features/workbench/floor-stack-invariance.test.ts --reporter=basic`
+    - result: `2` files passed, `106` tests passed
+  - engine route/broad guard pack:
+    - command: `pnpm --filter @dynecho/engine exec vitest run src/predictor-published-family-estimate.test.ts src/clt-floor-monotonicity.test.ts src/tuas-measured-source-truth-audit.test.ts src/floor-widening-candidate-contract.test.ts src/floor-gap-ledger-contract.test.ts src/calculate-impact-only.test.ts src/calculate-assembly.test.ts --reporter=basic`
+    - result: `7` files passed, `321` tests passed
+  - typechecks:
+    - `pnpm --filter @dynecho/engine typecheck`: green
+    - `pnpm --filter @dynecho/web typecheck`: green with the known Next.js
+      TypeScript plugin recommendation
+  - stable full engine suite:
+    - command: `pnpm --filter @dynecho/engine test`
+    - result: `96` files passed, `778` tests passed
+  - repository build:
+    - command: `pnpm build`
+    - result: green
+    - known non-blocking warnings remain: `sharp/@img` optional packages
+      through `proposal-docx`, and the Next.js TypeScript plugin recommendation
+  - scope:
+    - TUAS open-box hybrid wet upper packages with the source-backed
+      `geotextile + screed` floating-screed schedule no longer re-enter through
+      generic same-family blending when exact matching falls off because the
+      staged upper schedule is disjoint or mixed out of order
+    - true source rows such as `R7b/R8b/R9b/R2c` remain exact when their staged
+      upper/lower schedules are entered as source-backed rows
+    - the existing generic dry open-box disjoint `upper_fill` posture remains
+      on the documented `family_general` lane; this guard is not a broad
+      open-box fallback shutdown
+- latest change-adjacent revalidation after the CLT combined malformed-finish
+  fallback guard: green
+  - selected/closed slice:
+    `clt_combined_finish_fallback_guard_v1`
+  - engine direct/route guard pack:
+    - command: `pnpm --filter @dynecho/engine exec vitest run src/predictor-published-family-estimate.test.ts src/clt-floor-monotonicity.test.ts --reporter=basic`
+    - result: `2` files passed, `24` tests passed
+  - workbench route guard pack:
+    - command: `pnpm --filter @dynecho/web exec vitest run features/workbench/floor-family-regressions.test.ts --reporter=basic`
+    - result: `1` file passed, `90` tests passed
+  - engine source-adjacent guard pack:
+    - command: `pnpm --filter @dynecho/engine exec vitest run src/raw-floor-inferred-split-parity.test.ts src/floor-exact-companion-split-parity.test.ts src/impact-predictor-input.test.ts src/floor-source-corpus-contract.test.ts src/floor-widening-candidate-contract.test.ts src/clt-floor-monotonicity.test.ts src/predictor-published-family-estimate.test.ts src/tuas-measured-source-truth-audit.test.ts --reporter=basic`
+    - result: `8` files passed, `83` tests passed
+  - engine route/broad guard pack:
+    - command: `pnpm --filter @dynecho/engine exec vitest run src/predictor-published-family-estimate.test.ts src/clt-floor-monotonicity.test.ts src/tuas-measured-source-truth-audit.test.ts src/floor-widening-candidate-contract.test.ts src/floor-gap-ledger-contract.test.ts src/calculate-impact-only.test.ts src/calculate-assembly.test.ts --reporter=basic`
+    - result: `7` files passed, `321` tests passed
+  - workbench broad route guard pack:
+    - command: `pnpm --filter @dynecho/web exec vitest run features/workbench/floor-family-regressions.test.ts features/workbench/floor-stack-invariance.test.ts features/workbench/raw-floor-inferred-split-parity.test.ts --reporter=basic`
+    - result: `3` files passed, `106` tests passed
+  - typechecks:
+    - `pnpm --filter @dynecho/engine typecheck`: green
+    - `pnpm --filter @dynecho/web typecheck`: green with the known Next.js
+      TypeScript plugin recommendation
+  - stable full engine suite:
+    - command: `pnpm --filter @dynecho/engine test`
+    - result: `96` files passed, `777` tests passed
+  - repository build:
+    - command: `pnpm build`
+    - result: green
+    - known non-blocking warnings remain: `sharp/@img` optional packages
+      through `proposal-docx`, and the Next.js TypeScript plugin recommendation
+  - scope:
+    - combined CLT stacks with explicit lower treatment and malformed
+      laminate/EPS walking finishes no longer re-enter through the generic
+      same-family CLT archetype after the direct predictor rejects them
+    - valid source-backed laminate/EPS pairs remain live for the defended TUAS
+      CLT rows, including the existing C7-style wet package posture
+    - malformed combined CLT finishes stay impact-unsupported instead of
+      borrowing `Ln,w` / `Ln,w+CI` values from `C2c/C3c/C4c/C5c` neighbors
+- latest change-adjacent revalidation after the CLT dry finish-package guard:
+  green
+  - selected/closed slice:
+    `clt_dry_finish_package_guard_v1`
+  - engine direct/source guard pack:
+    - command: `pnpm --filter @dynecho/engine exec vitest run src/predictor-published-family-estimate.test.ts src/clt-floor-monotonicity.test.ts src/tuas-measured-source-truth-audit.test.ts --reporter=basic`
+    - result: `3` files passed, `31` tests passed
+  - engine source-adjacent guard pack:
+    - command: `pnpm --filter @dynecho/engine exec vitest run src/raw-floor-inferred-split-parity.test.ts src/floor-exact-companion-split-parity.test.ts src/impact-predictor-input.test.ts src/floor-source-corpus-contract.test.ts src/floor-widening-candidate-contract.test.ts src/clt-floor-monotonicity.test.ts src/predictor-published-family-estimate.test.ts src/tuas-measured-source-truth-audit.test.ts --reporter=basic`
+    - result: `8` files passed, `83` tests passed
+  - engine route/broad guard pack:
+    - command: `pnpm --filter @dynecho/engine exec vitest run src/predictor-published-family-estimate.test.ts src/clt-floor-monotonicity.test.ts src/tuas-measured-source-truth-audit.test.ts src/floor-widening-candidate-contract.test.ts src/floor-gap-ledger-contract.test.ts src/calculate-impact-only.test.ts src/calculate-assembly.test.ts --reporter=basic`
+    - result: `7` files passed, `321` tests passed
+  - workbench route guard pack:
+    - command: `pnpm --filter @dynecho/web exec vitest run features/workbench/floor-family-regressions.test.ts features/workbench/floor-stack-invariance.test.ts features/workbench/raw-floor-inferred-split-parity.test.ts --reporter=basic`
+    - result: `3` files passed, `105` tests passed
+  - typechecks:
+    - `pnpm --filter @dynecho/engine typecheck`: green
+    - `pnpm --filter @dynecho/web typecheck`: green with the known Next.js
+      TypeScript plugin recommendation
+  - stable full engine suite:
+    - command: `pnpm --filter @dynecho/engine test`
+    - result: `96` files passed, `777` tests passed
+  - repository build:
+    - command: `pnpm build`
+    - result: green
+    - known non-blocking warnings remain: `sharp/@img` optional packages
+      through `proposal-docx`, and the Next.js TypeScript plugin recommendation
+  - scope:
+    - TUAS `X5/C5c` dry CLT interaction lanes still accept the source-backed
+      `8 mm` laminate plus `3 mm` EPS finish band
+    - explicitly out-of-band laminate or EPS thicknesses no longer borrow the
+      measured dry interaction lane or the fallback same-family CLT archetype
+    - source-backed C7-style wet upper packages remain on their existing
+      family-estimate posture when entered as missing-role raw rows
+- latest change-adjacent revalidation after the CLT laminate-underlay
+  interpolation guard: green
+  - selected/closed slice:
+    `clt_laminate_underlay_interpolation_guard_v1`
+  - engine direct/route guard packs:
+    - command: `pnpm --filter @dynecho/engine exec vitest run src/predictor-published-family-estimate.test.ts src/clt-floor-monotonicity.test.ts --reporter=basic`
+    - result: `2` files passed, `22` tests passed
+    - command: `pnpm --filter @dynecho/engine exec vitest run src/raw-floor-inferred-split-parity.test.ts src/floor-exact-companion-split-parity.test.ts src/impact-predictor-input.test.ts src/floor-source-corpus-contract.test.ts src/floor-widening-candidate-contract.test.ts src/clt-floor-monotonicity.test.ts src/predictor-published-family-estimate.test.ts --reporter=basic`
+    - result: `7` files passed, `74` tests passed
+    - command: `pnpm --filter @dynecho/engine exec vitest run src/predictor-published-family-estimate.test.ts src/clt-floor-monotonicity.test.ts src/floor-widening-candidate-contract.test.ts src/floor-gap-ledger-contract.test.ts src/calculate-impact-only.test.ts src/calculate-assembly.test.ts --reporter=basic`
+    - result: `6` files passed, `312` tests passed
+  - workbench route guard pack:
+    - command: `pnpm --filter @dynecho/web exec vitest run features/workbench/floor-family-regressions.test.ts features/workbench/floor-stack-invariance.test.ts features/workbench/raw-floor-inferred-split-parity.test.ts --reporter=basic`
+    - result: `3` files passed, `104` tests passed
+  - typechecks:
+    - `pnpm --filter @dynecho/engine typecheck`: green
+    - `pnpm --filter @dynecho/web typecheck`: green with the known Next.js
+      TypeScript plugin recommendation
+  - stable full engine suite:
+    - command: `pnpm --filter @dynecho/engine test`
+    - result: `96` files passed, `775` tests passed
+  - repository build:
+    - command: `pnpm build`
+    - result: green
+    - known non-blocking warnings remain: `sharp/@img` optional packages
+      through `proposal-docx`, and the Next.js TypeScript plugin recommendation
+  - scope:
+    - raw bare CLT remains on the conservative TUAS X2/C2 interpolation lane
+    - source-backed `laminate + EPS underlay` CLT entries remain live and stable
+    - laminate-only CLT and physically out-of-band laminate entries no longer
+      inherit the full TUAS X2/C2 impact improvement
+    - workbench now keeps those malformed CLT finish packages at `Rw`-only /
+      impact-unsupported instead of showing source-like `Ln,w` cards
+- latest change-adjacent revalidation after the floor airborne companion
+  semantics audit: green
+  - selected/closed slice:
+    `floor_airborne_companion_c_ctr_semantic_audit_v1`
+  - engine semantic guard packs:
+    - command: `pnpm --filter @dynecho/engine exec vitest run src/predictor-family-estimate-shared.test.ts src/target-output-support-contract.test.ts src/tuas-measured-source-truth-audit.test.ts src/output-combination-sweep.test.ts src/dataholz-timber-frame-source-truth-audit.test.ts src/calculate-impact-only.test.ts src/calculate-assembly.test.ts src/dynamic-floor-regression-matrix.test.ts src/predictor-branch-stability-sweep.test.ts --reporter=basic`
+    - result: `9` files passed, `326` tests passed
+  - workbench semantic guard pack:
+    - command: `pnpm --filter @dynecho/web exec vitest run features/workbench/scenario-analysis.test.ts features/workbench/simple-workbench-output-model.test.ts features/workbench/dataholz-timber-frame-source-truth-route.test.ts features/workbench/floor-output-card-support-parity.test.ts --reporter=basic`
+    - result: `4` files passed, `84` tests passed
+  - typechecks:
+    - `pnpm --filter @dynecho/shared typecheck`: green
+    - `pnpm --filter @dynecho/catalogs typecheck`: green
+    - `pnpm --filter @dynecho/engine typecheck`: green
+    - `pnpm --filter @dynecho/web typecheck`: green with the known Next.js
+      TypeScript plugin recommendation
+  - stable full engine suite:
+    - command: `pnpm --filter @dynecho/engine test`
+    - result: green in this companion-semantics slice; the current full-suite
+      count is recorded in the latest CLT guard section above
+  - repository build:
+    - command: `pnpm build`
+    - result: green
+    - known non-blocking warnings remain: `sharp/@img` optional packages
+      through `proposal-docx`, and the Next.js TypeScript plugin recommendation
+  - scope:
+    - floor airborne companion semantics now distinguish `rw_plus_c`,
+      `rw_plus_ctr`, and `ctr_term`
+    - all `31` currently imported TUAS exact floor-system rows with a
+      spreadsheet airborne companion now carry `RwCtrSemantic: "rw_plus_c"`
+    - TUAS source row `42` is exposed as source-backed `C` / `Rw+C`, not as
+      `Ctr`
+    - Dataholz timber-frame rows keep `Ctr` term behavior through
+      `RwCtrSemantic: "ctr_term"` and still prefer source `Ctr` over screening
+      `Ctr`
+    - target-output support, exact/official-id floor routes, predictor-family
+      propagated companions, output-combination sweeps, and floor workbench
+      cards now share the same C-vs-Ctr contract
+    - low-confidence mixed-source predictor companions now fail closed when the
+      source candidate set mixes Dataholz `ctr_term` with Knauf `Rw+Ctr`
+      semantics
 - engine defended corridor: green
   - `22` files
   - `365` tests
 - workbench defended corridor: green
   - `24` files
   - `294` tests
+- latest change-adjacent revalidation after the TUAS measured lightweight timber
+  source-truth audit: green
+  - selected/closed slice:
+    `tuas_measured_lightweight_timber_source_triage_v1`
+  - engine targeted pack:
+    - command: `pnpm --filter @dynecho/engine exec vitest run src/tuas-measured-source-truth-audit.test.ts src/tuas-candidate-backlog-contract.test.ts src/tuas-support-surface-decision-contract.test.ts src/tuas-clt-backlog-decision-contract.test.ts src/tuas-c11c-wet-stack-anomaly-audit.test.ts src/raw-floor-exact-exception-audit.test.ts src/raw-floor-weaker-carrier-posture.test.ts src/calculate-impact-only.test.ts src/calculate-assembly.test.ts --reporter=basic`
+    - result: `9` files passed, `345` tests passed
+  - stable full engine suite:
+    - command: `pnpm --filter @dynecho/engine test`
+    - result: `95` files passed, `770` tests passed
+  - engine typecheck:
+    - command: `pnpm --filter @dynecho/engine typecheck`
+    - result: green
+  - web standalone typecheck:
+    - command: `pnpm --filter @dynecho/web typecheck`
+    - result: green with the known Next.js TypeScript plugin recommendation
+  - repository build:
+    - command: `pnpm build`
+    - result: green
+    - known non-blocking warnings remain: `sharp/@img` optional packages
+      through `proposal-docx`, and the Next.js TypeScript plugin recommendation
+  - new audit contract:
+    - `packages/engine/src/tuas-measured-source-truth-audit.test.ts`
+    - result: `7` tests passed
+  - scope:
+    - no solver, catalog, or workbench behavior changed in this slice
+    - all `29` currently imported TUAS measured open-box / CLT rows are pinned
+      to explicit spreadsheet single-number truth for `Rw`, `Rw+C`, `Ln,w`,
+      `CI`, `CI,50-2500`, `Ln,w+CI`, and official-id field continuations
+    - role-tagged visible stacks stay exact except the deliberately
+      predictor-backed `X5` and `C5c` rows, which remain non-exact
+      family-general routes with their source row as the only candidate
+    - current missing-role drift is numeric and intentional: under-described raw
+      CLT / hybrid open-box / combined-CLT stacks either stay impact
+      unsupported or remain on family estimate routes instead of widening into
+      exact rows
+    - raw bare, upper-only, and lower-only open-box carrier attempts remain
+      impact fail-closed
+    - contiguous merge-safe split pieces preserve exact TUAS source answers,
+      while disjoint/intervening single-entry role splits withhold exact routes
+      and emit visible topology warnings
+    - workbench card tests were not expanded because this audit did not change
+      any route support bucket or output-card surface
 - latest change-adjacent revalidation after the Dataholz timber-frame
   role-gated source-truth audit: green
   - selected/closed slice:
@@ -98,7 +409,9 @@ Verified broad corridors:
   - key finding:
     - imported TUAS floor rows and TUAS-backed predictor lanes had source drift from the `SoundInsulation` spreadsheet single-number rows
     - catalog and predictor values are now rebaselined to rows `34` (`Ln,w`), `35` (`Ln,w+CI`), `36` (`Ln,w+CI,50-2500`), `41` (`Rw`), and `42` (`Rw+C`)
-    - row `42` is still stored in the current `RwCtr` companion slot; numeric truth is fixed, but the label/semantic migration remains an explicit follow-up gap
+    - later companion-semantics work closed the row `42` label debt: TUAS
+      `Rw+C` rows now use `RwCtrSemantic: "rw_plus_c"` and expose `C`, not
+      `Ctr`
 - latest change-adjacent revalidation after the `C7c` exact landing plus combined-CLT predictor/inference re-close: green
   - engine targeted pack: `4` files, `345` tests
   - workbench targeted pack: `2` files, `98` tests
@@ -114,7 +427,7 @@ Verified broad corridors:
   - key route-control anchor:
     - `C3c` is now exact as `tuas_c3c_clt260_measured_2026`
     - source correction: TUAS drawing page `26/40` shows `13 mm gypsum board + 2 x 15 mm gypsum board`, not a `13 mm` glass-wool upper-fill layer
-    - `C3c` source truth is `Ln,w 27`, `Ln,w+CI 29`, `Ln,w+CI,50-2500 43`, `Rw 73`; spreadsheet row `42` still remains stored in the current `RwCtr` companion slot as numeric `Rw+C`
+    - `C3c` source truth is `Ln,w 27`, `Ln,w+CI 29`, `Ln,w+CI,50-2500 43`, `Rw 73`; later companion-semantics work marks spreadsheet row `42` as `Rw+C` through `RwCtrSemantic: "rw_plus_c"`
     - exact split parity now admits only merge-safe contiguous same-role/same-material packed thickness equivalents; mixed-material schedules still stay explicit
     - at that checkpoint, `C4c` and `C11c` remained deferred; `C4c` was the next narrow exact candidate, while `C11c` needed a separate wet-stack anomaly check before any import
 - latest change-adjacent revalidation after the `C4c` exact candidate landing and combined-CLT guard re-close: green
@@ -127,7 +440,7 @@ Verified broad corridors:
   - known non-blocking warnings remain: local Node is `20.20.1` while package engines want `>=22`, and the existing `sharp/@img` optional-package warnings still flow through `proposal-docx`
   - key route-control anchor:
     - `C4c` is now exact as `tuas_c4c_clt260_measured_2026`
-    - `C4c` source truth is `Ln,w 24`, `Ln,w+CI 26`, `Ln,w+CI,50-2500 40`, `Rw 74`; spreadsheet row `42` still remains stored in the current `RwCtr` companion slot as numeric `Rw+C`
+    - `C4c` source truth is `Ln,w 24`, `Ln,w+CI 26`, `Ln,w+CI,50-2500 40`, `Rw 74`; later companion-semantics work marks spreadsheet row `42` as `Rw+C` through `RwCtrSemantic: "rw_plus_c"`
     - under-described combined CLT stacks with lower board/fill but no explicit `ceiling_cavity` stay fail-closed even though profile-aligned `C4c` now exists
     - at that checkpoint, `C11c` was the only remaining source-backed combined CLT backlog row and still needed a separate wet-stack anomaly audit before any import
 - latest change-adjacent revalidation after the `C11c` wet-stack anomaly audit: green
@@ -1051,7 +1364,7 @@ Work in this order:
       - the true finishless sibling `R8b` now lands exactly at `Ln,w 50` / `Rw 72`
       - the true wet-top sibling `R9b` now also lands exactly at `Ln,w 45` / `Rw 68`
       - the true no-fill sibling `R2c` now also lands exactly at `Ln,w 70` / `Rw 54`
-  - latest closed slice: `tuas_clt_remaining_combined_source_schedule_research_v1`
+  - historical closed slice: `tuas_clt_remaining_combined_source_schedule_research_v1`
   - current status: `closed`
   - the current implementation-backed result is now explicit:
     - the TUAS drawing corpus now freezes the remaining combined CLT visible schedules directly:
@@ -1086,9 +1399,9 @@ Work in this order:
     - the current fail-closed truth is therefore explicit:
       - under-described direct-fixed CLT upper-plus-lower stacks now stay screening-only even after `C4c` creates a profile-aligned combined exact row
       - source-backed `C11c` still stays screening-only with impact outputs unsupported
-  - latest closed slice: `tuas_remaining_combined_clt_exact_import_decision_matrix_v1`
+  - historical closed slice: `tuas_remaining_combined_clt_exact_import_decision_matrix_v1`
   - latest closed follow-up slice: `tuas_c4c_combined_heavy_dry_exact_candidate_v1`
-  - latest closed slice: `tuas_c11c_wet_stack_anomaly_audit_v1`
+  - historical closed slice: `tuas_c11c_wet_stack_anomaly_audit_v1`
   - current status: `closed as deferred / fail-closed`
   - the current implementation-backed reason is now explicit:
     - `C7c`, `C3c`, and `C4c` are no longer open gaps; they are exact anchors

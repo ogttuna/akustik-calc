@@ -383,7 +383,7 @@ Acceptance:
 
 ### Step 2.5: TUAS Measured Lightweight Timber Source-Triage
 
-Status: selected as the next implementation slice
+Status: closed as no-widening source-truth audit
 
 Slice id:
 
@@ -437,15 +437,482 @@ Work:
 - if no safe widening is found, close the slice as a no-widening source audit and
   keep the fail-closed posture explicit
 
+Slice result:
+
+- no solver, catalog, or workbench behavior changed in this slice
+- new executable contract:
+  - `packages/engine/src/tuas-measured-source-truth-audit.test.ts`
+  - result: `7` tests green
+- target validation:
+  - command: `pnpm --filter @dynecho/engine exec vitest run src/tuas-measured-source-truth-audit.test.ts src/tuas-candidate-backlog-contract.test.ts src/tuas-support-surface-decision-contract.test.ts src/tuas-clt-backlog-decision-contract.test.ts src/tuas-c11c-wet-stack-anomaly-audit.test.ts src/raw-floor-exact-exception-audit.test.ts src/raw-floor-weaker-carrier-posture.test.ts src/calculate-impact-only.test.ts src/calculate-assembly.test.ts --reporter=basic`
+  - result: `9` files passed, `345` tests passed
+- full engine validation:
+  - command: `pnpm --filter @dynecho/engine test`
+  - result: `95` files passed, `770` tests passed
+- standalone typechecks:
+  - `pnpm --filter @dynecho/engine typecheck`: green
+  - `pnpm --filter @dynecho/web typecheck`: green with the known Next.js
+    TypeScript plugin recommendation
+- repository build:
+  - command: `pnpm build`
+  - result: green, with the known non-blocking `sharp/@img` optional-package
+    warnings and Next.js TypeScript plugin recommendation
+- all `29` currently imported TUAS measured open-box / CLT rows are pinned to
+  explicit spreadsheet single-number truth:
+  - `Rw`
+  - `Rw+C` in the current legacy floor companion slot
+  - `Ln,w`
+  - `CI`
+  - `CI,50-2500`
+  - `Ln,w+CI`
+  - official-id field continuations for `L'n,w`, `L'nT,w`, and `L'nT,50`
+- visible tagged routes stay exact except `X5` and `C5c`, which remain
+  deliberate predictor-backed non-exact rows
+- missing-role raw drift is now numeric and intentional:
+  - some raw CLT / combined-CLT stacks remain impact-unsupported
+  - selected hybrid open-box and combined-CLT raw stacks remain family-estimate
+    routes with explicit candidate ids and fit percentages
+  - raw bare, upper-only, and lower-only open-box carrier attempts remain impact
+    fail-closed
+- contiguous merge-safe splits preserve exact TUAS source answers; disjoint
+  single-entry role splits do not preserve exact state
+- no workbench route/card test was needed because output support buckets did not
+  change
+
 Acceptance:
 
-- the next TUAS candidate decision is based on measured-source rows, not family
-  guesswork
-- any behavior change has numeric source-truth tests and workbench surface tests
-  in the same slice
-- raw/helper-only routes do not become optimistic by accident
-- exact rows remain stable under contiguous split input and unstable topology is
-  withheld with visible warnings
+- closed for this slice:
+  - the TUAS candidate decision is based on measured-source rows, not family
+    guesswork
+  - no behavior change was taken because the measured corpus did not defend a
+    safer raw/helper widening
+  - raw/helper-only routes do not become optimistic by accident
+  - exact rows remain stable under contiguous split input and unstable topology
+    is withheld with visible warnings
+
+### Step 2.6: Floor Airborne Companion Semantics
+
+Status: closed and green
+
+Slice id:
+
+- `floor_airborne_companion_c_ctr_semantic_audit_v1`
+
+Purpose:
+
+- remove the remaining ambiguity around floor airborne companion outputs
+- preserve the Dataholz timber-frame `Ctr` term fix while handling TUAS row `42`
+  honestly as `Rw+C`, not as a generic `Ctr` term
+- prevent output cards, target-output support, and engine routes from silently
+  mixing `C`, `Ctr`, `Rw+C`, and `Rw+Ctr`
+
+Starting posture:
+
+- Dataholz timber-frame rows now carry explicit `RwCtrSemantic: "ctr_term"` and
+  workbench floor cards correctly show source `Ctr` before screening `Ctr`
+- TUAS spreadsheet row `42` is source truth for `Rw+C`; those values now remain
+  in the legacy numeric `RwCtr` field for compatibility but carry explicit
+  `RwCtrSemantic: "rw_plus_c"`
+- `RequestedOutputId` already has both `C` and `Ctr`, but floor-system carrier
+  support now distinguishes those outputs instead of deriving one from the
+  other
+
+Work:
+
+- closed engine target-output support audit for floor-system carrier companions:
+  - official floor-system id route
+  - visible exact route
+  - predictor/family route
+  - screening-only route
+- closed web output-card mapping for the same companion semantics
+- domain now has a distinct `rw_plus_c` semantic while preserving the legacy
+  numeric field name for saved-data/catalog compatibility
+- added numeric tests that keep:
+  - Dataholz `Ctr` term rows as `Ctr`
+  - TUAS `Rw+C` rows as `C` / `Rw+C`, not mislabeled `Ctr`
+  - screening estimates separate from source companions
+- output-combination sweeps now request `C` alongside `Ctr` and assert the
+  supported/unsupported partition plus finite source values
+
+Acceptance:
+
+- closed for this slice:
+  - `rw_plus_c`, `rw_plus_ctr`, and `ctr_term` are distinct shared-domain
+    semantics
+  - all `31` currently imported TUAS exact floor-system rows with an airborne
+    companion carry `RwCtrSemantic: "rw_plus_c"`
+  - TUAS exact/official-id routes support `C` and withhold `Ctr`
+  - Dataholz `ctr_term` routes still support `Ctr` and withhold `C`
+  - floor workbench cards surface source `C` for TUAS-style companions and do
+    not show those same values as `Ctr`
+  - predictor/family airborne companions inherit a unanimous source semantic and
+    withhold the companion when the source set mixes `C`, `Ctr`, and `Rw+Ctr`
+    semantics
+
+Validation:
+
+- `pnpm --filter @dynecho/engine exec vitest run src/predictor-family-estimate-shared.test.ts src/target-output-support-contract.test.ts src/tuas-measured-source-truth-audit.test.ts src/output-combination-sweep.test.ts src/dataholz-timber-frame-source-truth-audit.test.ts src/calculate-impact-only.test.ts src/calculate-assembly.test.ts src/dynamic-floor-regression-matrix.test.ts src/predictor-branch-stability-sweep.test.ts --reporter=basic`
+  - result: `9` files, `326` tests, green
+- `pnpm --filter @dynecho/web exec vitest run features/workbench/scenario-analysis.test.ts features/workbench/simple-workbench-output-model.test.ts features/workbench/dataholz-timber-frame-source-truth-route.test.ts features/workbench/floor-output-card-support-parity.test.ts --reporter=basic`
+  - result: `4` files, `84` tests, green
+- `pnpm --filter @dynecho/engine exec vitest run src/impact-upstream-parity-acceptance.test.ts --reporter=basic`
+  - result: `1` file, `2` tests, green
+- `pnpm --filter @dynecho/shared typecheck`: green
+- `pnpm --filter @dynecho/catalogs typecheck`: green
+- `pnpm --filter @dynecho/engine typecheck`: green
+- `pnpm --filter @dynecho/web typecheck`: green with the known Next.js
+  TypeScript plugin recommendation
+- `pnpm --filter @dynecho/engine test`: green in this companion-semantics
+  slice; the current full-suite count is recorded in Step 2.7 below
+- `pnpm build`: green with the known `sharp/@img` optional-package warnings
+  through `proposal-docx` and the Next.js TypeScript plugin recommendation
+
+### Step 2.9: CLT Combined Malformed-Finish Fallback Guard
+
+Status: closed and green
+
+Slice id:
+
+- `clt_combined_finish_fallback_guard_v1`
+
+Purpose:
+
+- close the remaining CLT visible-route gap where malformed laminate/EPS
+  walking finishes could pass the direct predictor guard but still land on the
+  generic same-family combined CLT archetype
+- preserve source-backed combined CLT rows that still carry the valid
+  `8 mm` laminate plus `3 mm` EPS pair
+- keep explicit lower-treatment combined CLT packages fail-closed when their
+  walking finish is outside the measured source band
+
+Work:
+
+- broadened the visible-layer malformed laminate/EPS finish hold to include
+  `combined` CLT profiles in addition to `upper_only` and `heavy_floating`
+- kept the looser pair detector for valid CLT packages so C7-style wet stacks
+  and other source-backed rows with extra EPS board layers do not get mistaken
+  for malformed walking underlay
+- added engine and workbench route tests that measure thick-laminate and
+  thick-underlay combined CLT packages as impact-unsupported rather than
+  estimated from `C2c/C3c/C4c/C5c` neighbors
+
+Acceptance:
+
+- malformed combined CLT walking finishes have no exact match, no fallback
+  estimate, and no impact result
+- lab support remains `Rw`-only for those malformed combined packages
+- field support remains apparent-airborne only (`R'w`, `DnT,w`) and withholds
+  impact outputs
+- valid source-backed laminate/EPS combined CLT routes remain live
+
+Validation:
+
+- `pnpm --filter @dynecho/engine exec vitest run src/predictor-published-family-estimate.test.ts src/clt-floor-monotonicity.test.ts --reporter=basic`
+  - result: `2` files, `24` tests, green
+- `pnpm --filter @dynecho/web exec vitest run features/workbench/floor-family-regressions.test.ts --reporter=basic`
+  - result: `1` file, `90` tests, green
+- `pnpm --filter @dynecho/engine exec vitest run src/raw-floor-inferred-split-parity.test.ts src/floor-exact-companion-split-parity.test.ts src/impact-predictor-input.test.ts src/floor-source-corpus-contract.test.ts src/floor-widening-candidate-contract.test.ts src/clt-floor-monotonicity.test.ts src/predictor-published-family-estimate.test.ts src/tuas-measured-source-truth-audit.test.ts --reporter=basic`
+  - result: `8` files, `83` tests, green
+- `pnpm --filter @dynecho/engine exec vitest run src/predictor-published-family-estimate.test.ts src/clt-floor-monotonicity.test.ts src/tuas-measured-source-truth-audit.test.ts src/floor-widening-candidate-contract.test.ts src/floor-gap-ledger-contract.test.ts src/calculate-impact-only.test.ts src/calculate-assembly.test.ts --reporter=basic`
+  - result: `7` files, `321` tests, green
+- `pnpm --filter @dynecho/web exec vitest run features/workbench/floor-family-regressions.test.ts features/workbench/floor-stack-invariance.test.ts features/workbench/raw-floor-inferred-split-parity.test.ts --reporter=basic`
+  - result: `3` files, `106` tests, green
+- `pnpm --filter @dynecho/engine typecheck`: green
+- `pnpm --filter @dynecho/web typecheck`: green with the known Next.js
+  TypeScript plugin recommendation
+- `pnpm --filter @dynecho/engine test`: `96` files, `777` tests, green
+- `pnpm build`: green with the known `sharp/@img` optional-package warnings
+  through `proposal-docx` and the Next.js TypeScript plugin recommendation
+
+### Step 2.10: Open-Box Disjoint Upper-Package Fallback Guard
+
+Status: closed and green
+
+Slice id:
+
+- `open_box_disjoint_upper_fallback_guard_v1`
+
+Purpose:
+
+- close the open-box visible-route gap where a TUAS hybrid wet upper package
+  could lose exact matching because its staged upper schedule was disjoint or
+  mixed out of order, then still borrow impact support from the broader
+  same-family `R8b/R9b/R2c` corridor
+- preserve exact source rows whose staged upper/lower schedule is entered
+  faithfully
+- preserve the existing generic dry open-box disjoint `upper_fill` posture so
+  this tightening does not become a broad open-box fallback shutdown
+
+Work:
+
+- added an estimator hold for open-box combined stacks whose floating-screed
+  conflict carries the source-backed `geotextile + screed` wet hybrid package
+- kept the guard narrower than the existing generic dry upper-fill disjoint
+  warning lane
+- added engine support-surface tests that measure lab and field output buckets:
+  no exact match, no estimate, no impact, `Rw`-only lab support, and no field
+  impact support for the malformed hybrid schedule
+- added the same workbench route guard and preserved the adjacent dry
+  `family_general` regression expectation
+
+Acceptance:
+
+- true `R7b/R8b/R9b/R2c` source rows remain exact
+- disjoint or mixed `geotextile + screed` wet hybrid upper schedules do not
+  reopen through generic open-box blending after exact matching rejects them
+- the user-facing warning still identifies the duplicated/split
+  `floating screed x2 (Geotextile Separator Layer, Mineral Screed)` role
+- generic dry open-box disjoint `upper_fill` rows remain on the documented
+  `family_general` lane with the existing warning
+
+Validation:
+
+- `pnpm --filter @dynecho/engine exec vitest run src/tuas-support-surface-decision-contract.test.ts --reporter=basic`
+  - result: `1` file, `10` tests, green
+- `pnpm --filter @dynecho/web exec vitest run features/workbench/floor-family-regressions.test.ts --reporter=basic`
+  - result: `1` file, `91` tests, green
+- `pnpm --filter @dynecho/engine exec vitest run src/tuas-support-surface-decision-contract.test.ts src/floor-widening-candidate-contract.test.ts src/floor-source-corpus-contract.test.ts src/floor-packaged-lane-disjoint-detour.test.ts src/floor-packaged-lane-helper-disjoint-detour.test.ts --reporter=basic`
+  - result: `5` files, `23` tests, green
+- `pnpm --filter @dynecho/web exec vitest run features/workbench/floor-family-regressions.test.ts features/workbench/floor-stack-invariance.test.ts --reporter=basic`
+  - result: `2` files, `106` tests, green
+- `pnpm --filter @dynecho/engine exec vitest run src/predictor-published-family-estimate.test.ts src/clt-floor-monotonicity.test.ts src/tuas-measured-source-truth-audit.test.ts src/floor-widening-candidate-contract.test.ts src/floor-gap-ledger-contract.test.ts src/calculate-impact-only.test.ts src/calculate-assembly.test.ts --reporter=basic`
+  - result: `7` files, `321` tests, green
+- `pnpm --filter @dynecho/engine typecheck`: green
+- `pnpm --filter @dynecho/web typecheck`: green with the known Next.js
+  TypeScript plugin recommendation
+- `pnpm --filter @dynecho/engine test`: `96` files, `778` tests, green
+- `pnpm build`: green with the known `sharp/@img` optional-package warnings
+  through `proposal-docx` and the Next.js TypeScript plugin recommendation
+
+### Step 2.11: Open-Box Laminate/EPS Walking-Finish Fallback Guard
+
+Status: closed and green
+
+Slice id:
+
+- `open_box_finish_package_guard_v1`
+
+Purpose:
+
+- close the open-box visible-route gap where malformed walking finishes could
+  lose exact matching but still borrow predictor-specific or generic
+  same-family `Ln,w` support from TUAS `R2b`, `R5b`, or `R9b` neighbors
+- keep TUAS open-box walking-finish support source-led to the thin
+  `8 mm` laminate plus `3 mm` EPS band currently present in the measured rows
+- preserve valid exact open-box source rows and preserve direct predictor inputs
+  that omit a product id but still carry the source-band `3 mm` underlay
+
+Work:
+
+- added an open-box combined-profile hold in `floor-system-estimate.ts` when the
+  visible stack contains a laminate/EPS walking finish but no source-backed
+  laminate-underlay pair
+- added the matching published-predictor guard so direct open-box family lanes
+  reject explicit non-EPS or out-of-band laminate/underlay input before returning
+  `R2b`, `R5b`, or `R9b` estimates
+- added engine and workbench route tests for malformed basic, dry, and hybrid
+  open-box walking-finish inputs
+
+Acceptance:
+
+- malformed `R2b`-style thick laminate, `R5b`-style thick underlay, and
+  `R9b`-style thick laminate inputs have no exact match, no estimate, and no
+  impact result
+- lab support remains `Rw`-only for those malformed open-box packages
+- field support withholds impact outputs instead of surfacing borrowed
+  `Ln,w`/apparent impact values
+- exact source-backed open-box packages remain live
+
+Validation:
+
+- `pnpm --filter @dynecho/engine exec vitest run src/tuas-support-surface-decision-contract.test.ts --reporter=basic`
+  - result: `1` file, `11` tests, green
+- `pnpm --filter @dynecho/web exec vitest run features/workbench/floor-family-regressions.test.ts --reporter=basic`
+  - result: `1` file, `92` tests, green
+- `pnpm --filter @dynecho/engine exec vitest run src/predictor-published-family-estimate.test.ts src/tuas-support-surface-decision-contract.test.ts src/floor-widening-candidate-contract.test.ts src/floor-source-corpus-contract.test.ts src/calculate-impact-only.test.ts src/calculate-assembly.test.ts --reporter=basic`
+  - result: `6` files, `322` tests, green
+- `pnpm --filter @dynecho/web exec vitest run features/workbench/floor-family-regressions.test.ts features/workbench/floor-stack-invariance.test.ts --reporter=basic`
+  - result: `2` files, `107` tests, green
+- `pnpm --filter @dynecho/engine typecheck`: green
+- `pnpm --filter @dynecho/web typecheck`: green with the known Next.js
+  TypeScript plugin recommendation
+- `pnpm --filter @dynecho/engine test`: `96` files, `779` tests, green
+- `pnpm build`: green with the known `sharp/@img` optional-package warnings
+  through `proposal-docx` and the Next.js TypeScript plugin recommendation
+
+### Step 2.12: Open-Box Finish Tolerance Guard
+
+Status: closed and green
+
+Slice id:
+
+- `open_box_finish_tolerance_guard_v1`
+
+Purpose:
+
+- align the open-box laminate/EPS walking-finish fallback band with the exact
+  visible-role tolerance used by curated TUAS open-box source rows
+- prevent near-looking but exact-outside laminate inputs, such as `12 mm`, from
+  borrowing `R2b/R5b/R9b` impact values after exact matching rejects them
+- preserve tolerated near source-band input, such as `10 mm` laminate, and keep
+  the wider CLT interpolation band separate
+
+Work:
+
+- added direct predictor tests that accept `10 mm` laminate but reject `12 mm`
+  laminate on open-box published-family routes
+- extended the engine support-surface and workbench malformed-finish route tests
+  to cover basic, dry, and hybrid open-box stacks at the exact-tolerance boundary
+- introduced an open-box-specific laminate/EPS pair guard in
+  `floor-system-estimate.ts` so the visible fallback path uses the exact
+  tolerance instead of the broader CLT interpolation tolerance
+
+Acceptance:
+
+- `12 mm` laminate open-box basic, dry, and hybrid inputs have no exact match, no
+  estimate, and no impact result
+- lab support remains `Rw`-only for those exact-outside packages
+- field support withholds impact outputs
+- `10 mm` laminate direct predictor input remains on the source-band open-box
+  lane
+
+Validation:
+
+- `pnpm --filter @dynecho/engine exec vitest run src/predictor-published-family-estimate.test.ts --reporter=basic`
+  - result: `1` file, `19` tests, green
+- `pnpm --filter @dynecho/engine exec vitest run src/tuas-support-surface-decision-contract.test.ts --reporter=basic`
+  - result: `1` file, `11` tests, green
+- `pnpm --filter @dynecho/web exec vitest run features/workbench/floor-family-regressions.test.ts --reporter=basic`
+  - result: `1` file, `92` tests, green
+- `pnpm --filter @dynecho/engine exec vitest run src/predictor-published-family-estimate.test.ts src/tuas-support-surface-decision-contract.test.ts src/floor-widening-candidate-contract.test.ts src/floor-source-corpus-contract.test.ts src/calculate-impact-only.test.ts src/calculate-assembly.test.ts --reporter=basic`
+  - result: `6` files, `323` tests, green
+- `pnpm --filter @dynecho/web exec vitest run features/workbench/floor-family-regressions.test.ts features/workbench/floor-stack-invariance.test.ts --reporter=basic`
+  - result: `2` files, `107` tests, green
+- `pnpm --filter @dynecho/engine typecheck`: green
+- `pnpm --filter @dynecho/web typecheck`: green with the known Next.js
+  TypeScript plugin recommendation
+- `pnpm --filter @dynecho/engine test`: `96` files, `780` tests, green
+- `pnpm build`: green with the known `sharp/@img` optional-package warnings
+  through `proposal-docx` and the Next.js TypeScript plugin recommendation
+
+### Step 2.8: CLT Dry Finish-Package Guard
+
+Status: closed and green
+
+Slice id:
+
+- `clt_dry_finish_package_guard_v1`
+
+Purpose:
+
+- tighten the TUAS `X5/C5c` dry CLT interaction lane without removing the
+  existing source-backed dry shorthand corridor
+- keep malformed walking finishes from borrowing measured dry CLT impact values
+- preserve the C7 wet upper-package raw drift posture found by the TUAS measured
+  source-truth audit
+
+Work:
+
+- direct predictor dry CLT rule now rejects explicitly out-of-band laminate or
+  EPS thicknesses before returning the `X5/C5c` dry interaction estimate
+- visible-layer fallback now applies the same malformed-finish hold before the
+  generic same-family CLT archetype can reopen
+- bare CLT interpolation still uses its stricter complete-package guard
+- C7-style wet packages use a looser source-backed laminate/EPS pair check so
+  extra upper EPS board layers do not get mistaken for malformed walking
+  underlay
+
+Acceptance:
+
+- `8 mm` laminate plus `3 mm` EPS dry CLT shorthand remains supported
+- `30 mm` laminate dry CLT and `12 mm` EPS dry CLT stay `Rw`-only /
+  impact-unsupported
+- C7 missing-role source-truth drift remains on its documented family-estimate
+  posture
+
+Validation:
+
+- `pnpm --filter @dynecho/engine exec vitest run src/predictor-published-family-estimate.test.ts src/clt-floor-monotonicity.test.ts src/tuas-measured-source-truth-audit.test.ts --reporter=basic`
+  - result: `3` files, `31` tests, green
+- `pnpm --filter @dynecho/engine exec vitest run src/raw-floor-inferred-split-parity.test.ts src/floor-exact-companion-split-parity.test.ts src/impact-predictor-input.test.ts src/floor-source-corpus-contract.test.ts src/floor-widening-candidate-contract.test.ts src/clt-floor-monotonicity.test.ts src/predictor-published-family-estimate.test.ts src/tuas-measured-source-truth-audit.test.ts --reporter=basic`
+  - result: `8` files, `83` tests, green
+- `pnpm --filter @dynecho/engine exec vitest run src/predictor-published-family-estimate.test.ts src/clt-floor-monotonicity.test.ts src/tuas-measured-source-truth-audit.test.ts src/floor-widening-candidate-contract.test.ts src/floor-gap-ledger-contract.test.ts src/calculate-impact-only.test.ts src/calculate-assembly.test.ts --reporter=basic`
+  - result: `7` files, `321` tests, green
+- `pnpm --filter @dynecho/web exec vitest run features/workbench/floor-family-regressions.test.ts features/workbench/floor-stack-invariance.test.ts features/workbench/raw-floor-inferred-split-parity.test.ts --reporter=basic`
+  - result: `3` files, `105` tests, green
+- `pnpm --filter @dynecho/engine typecheck`: green
+- `pnpm --filter @dynecho/web typecheck`: green with the known Next.js
+  TypeScript plugin recommendation
+- `pnpm --filter @dynecho/engine test`: `96` files, `777` tests, green
+- `pnpm build`: green with the known `sharp/@img` optional-package warnings
+  through `proposal-docx` and the Next.js TypeScript plugin recommendation
+
+### Step 2.7: CLT Laminate-Underlay Interpolation Guard
+
+Status: closed and green
+
+Slice id:
+
+- `clt_laminate_underlay_interpolation_guard_v1`
+
+Purpose:
+
+- tighten the CLT X2/C2 interpolation lane without widening any new family
+- preserve the current raw bare CLT interpolation and the defended
+  laminate-plus-EPS route
+- stop incomplete or physically out-of-band finish packages from borrowing the
+  full measured `laminate + EPS underlay` impact improvement
+
+Starting posture:
+
+- TUAS `X2` and `C2` source anchors are explicitly `8 mm` laminate on `3 mm`
+  EPS underlay over CLT
+- direct predictor inputs already had a CLT bare interpolation rule, but it did
+  not fully distinguish:
+  - true raw bare CLT
+  - source-backed laminate-plus-EPS CLT
+  - laminate-only CLT
+  - out-of-band laminate thickness
+- the visible layer route could still derive a family estimate from `X2/C2`
+  when the user supplied laminate without the matching EPS underlay
+
+Work:
+
+- direct predictor rule now requires a complete source-backed finish package
+  before removing the raw-slab penalty:
+  - laminate floor covering around the source thickness band
+  - thin EPS underlay around the source thickness band
+- `floor-system-estimate.ts` applies the same guard on visible layer routes
+- raw bare CLT remains live on the existing conservative interpolation
+- malformed CLT finish packages now stay screening-only / impact-unsupported
+  instead of showing `Ln,w` and `Ln,w+CI`
+- workbench scenario coverage now verifies the same user-facing output bucket
+
+Acceptance:
+
+- closed for this slice:
+  - raw bare CLT stays supported
+  - defended laminate-plus-EPS CLT stays supported
+  - laminate-only CLT with no EPS underlay withholds impact outputs
+  - `30 mm` laminate over thin EPS withholds impact outputs
+  - workbench cards keep malformed CLT finish packages at `Rw`-only support
+
+Validation:
+
+- `pnpm --filter @dynecho/engine exec vitest run src/predictor-published-family-estimate.test.ts src/clt-floor-monotonicity.test.ts --reporter=basic`
+  - result: `2` files, `22` tests, green
+- `pnpm --filter @dynecho/engine exec vitest run src/raw-floor-inferred-split-parity.test.ts src/floor-exact-companion-split-parity.test.ts src/impact-predictor-input.test.ts src/floor-source-corpus-contract.test.ts src/floor-widening-candidate-contract.test.ts src/clt-floor-monotonicity.test.ts src/predictor-published-family-estimate.test.ts --reporter=basic`
+  - result: `7` files, `74` tests, green
+- `pnpm --filter @dynecho/engine exec vitest run src/predictor-published-family-estimate.test.ts src/clt-floor-monotonicity.test.ts src/floor-widening-candidate-contract.test.ts src/floor-gap-ledger-contract.test.ts src/calculate-impact-only.test.ts src/calculate-assembly.test.ts --reporter=basic`
+  - result: `6` files, `312` tests, green
+- `pnpm --filter @dynecho/web exec vitest run features/workbench/floor-family-regressions.test.ts features/workbench/floor-stack-invariance.test.ts features/workbench/raw-floor-inferred-split-parity.test.ts --reporter=basic`
+  - result: `3` files, `104` tests, green
+- `pnpm --filter @dynecho/engine typecheck`: green
+- `pnpm --filter @dynecho/web typecheck`: green with the known Next.js
+  TypeScript plugin recommendation
+- `pnpm --filter @dynecho/engine test`: `96` files, `775` tests, green
+- `pnpm build`: green with the known `sharp/@img` optional-package warnings
+  through `proposal-docx` and the Next.js TypeScript plugin recommendation
 
 ### Step 3: Mixed Floor/Wall Robustness Expansion
 

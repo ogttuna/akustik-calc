@@ -28,9 +28,13 @@ Important scope note:
   - imported TUAS floor rows now match spreadsheet rows `34` (`Ln,w`), `35` (`Ln,w+CI`), `36` (`Ln,w+CI,50-2500`), `41` (`Rw`), and `42` (`Rw+C`)
   - TUAS-backed published predictor lanes for CLT bare interpolation, open-box basic/dry archetypes, `X5`, and `C5c` were rebaselined to the same truth
   - `packages/engine/src/tuas-candidate-backlog-contract.test.ts` now guards the imported TUAS single-number truth directly against the spreadsheet fixture values
-- remaining source-label gap:
+- closed source-label gap:
   - spreadsheet row `42` is `Rw+C`
-  - the current domain still stores that companion in the `RwCtr`/`rw_plus_ctr` slot, so the numbers are corrected but the label/semantic migration remains open
+  - the current domain still stores that companion in the legacy numeric
+    `RwCtr` field for compatibility, but `RwCtrSemantic: "rw_plus_c"` now
+    prevents the value from being exposed as `Ctr`
+  - target-output support and workbench cards now support TUAS `C` while keeping
+    TUAS `Ctr` unsupported
 
 ## Current Audited Posture
 
@@ -43,13 +47,32 @@ Important scope note:
 - why it is open:
   - the current CLT lane is already narrowed to same-family anchors and guarded by CLT-specific monotonicity tests
   - this is no longer a blind generic lightweight-floor fallback
+- latest tightening guard:
+  - `clt_laminate_underlay_interpolation_guard_v1` is closed
+  - `clt_dry_finish_package_guard_v1` is closed
+  - `clt_combined_finish_fallback_guard_v1` is closed
+  - raw bare CLT remains live on the conservative TUAS X2/C2 interpolation with
+    the raw-slab penalty
+  - source-backed `laminate + EPS underlay` CLT remains live
+  - laminate-only CLT and out-of-band laminate thicknesses no longer inherit
+    source-backed impact support from the TUAS `X2/C2` laminate-plus-EPS rows
+  - dry CLT `X5/C5c` interaction no longer accepts explicit out-of-band
+    laminate or EPS thicknesses through predictor-specific or generic fallback
+    routes
+  - combined CLT stacks with lower treatment and malformed laminate/EPS walking
+    finishes no longer reopen through the generic same-family CLT archetype
+    after the direct predictor rejects them
+  - C7-style wet packages remain live when the valid laminate/EPS pair is
+    present alongside additional upper-package layers
 - next work:
   - keep tightening monotonicity and treatment-strength relations
   - do not widen CLT by inventing a broader generic lane first
 - current test anchors:
   - `packages/engine/src/clt-floor-monotonicity.test.ts`
+  - `packages/engine/src/predictor-published-family-estimate.test.ts`
   - `packages/engine/src/bare-floor-raw-support.test.ts`
   - `packages/engine/src/floor-gap-ledger-contract.test.ts`
+  - `apps/web/features/workbench/floor-family-regressions.test.ts`
 
 ### Bare Open-Box Timber Slab
 
@@ -57,6 +80,31 @@ Important scope note:
   - lab: `Rw` only
   - impact field: fail-closed
   - no live impact basis is exposed
+- latest tightening guard:
+  - `open_box_finish_tolerance_guard_v1` is closed
+  - `open_box_finish_package_guard_v1` is closed
+  - `open_box_disjoint_upper_fallback_guard_v1` is closed
+  - TUAS open-box rows that expose a walking finish are source-backed only for
+    the thin `8 mm` laminate plus `3 mm` EPS underlay pair
+  - the open-box fallback band now follows the exact visible-role tolerance for
+    that pair: `10 mm` laminate remains a tolerated near source-band predictor
+    input, while `12 mm` laminate no longer borrows `R2b/R5b/R9b` impact values
+    after exact matching falls off
+  - malformed basic, dry, or hybrid visible inputs that carry missing,
+    incomplete, or out-of-band laminate/EPS walking finishes now withhold impact
+    support instead of borrowing predictor-specific or generic same-family
+    `R2b/R5b/R9b` values
+  - valid exact open-box source rows remain live, and direct predictor input with
+    source-band `3 mm` underlay but no product id remains accepted
+  - TUAS hybrid open-box wet upper packages with the source-backed
+    `geotextile + screed` floating-screed schedule stay exact when the full
+    source schedule is entered faithfully
+  - if that staged upper package is disjoint or mixed out of order and exact
+    matching falls off, the visible route now withholds `family_general`
+    impact support instead of borrowing neighboring `R8b/R9b/R2c` rows
+  - generic dry open-box disjoint `upper_fill` rows remain on the existing
+    family-general warning lane; this guard is not a broad open-box fallback
+    shutdown
 - why it stays closed:
   - the current TUAS open-box rows are defended combined systems, not a defended raw bare open-box impact lane
   - the fail-closed posture now also explicitly covers raw and tagged lower-only ceiling-helper packages plus upper-only dry packages
@@ -69,6 +117,8 @@ Important scope note:
   - `packages/engine/src/floor-gap-ledger-contract.test.ts`
   - `packages/engine/src/raw-floor-screening-carrier-support.test.ts`
   - `packages/engine/src/raw-floor-weaker-carrier-posture.test.ts`
+  - `packages/engine/src/tuas-support-surface-decision-contract.test.ts`
+  - `apps/web/features/workbench/floor-family-regressions.test.ts`
 
 ### Role-Gated Timber Carriers
 
@@ -98,6 +148,15 @@ Important scope note:
 - why it matters:
   - it is the strongest current open-box anchor for future same-family widening
   - it proves that open-box timber can stay exact and stable when the package is fully described
+- latest tightening guard:
+  - the dry open-box walking-finish fallback is source-bounded to the measured
+    `8 mm` laminate plus `3 mm` EPS pair
+  - the laminate tolerance is now aligned with exact open-box matching; `12 mm`
+    laminate no longer borrows the `R5b` dry tuple after exact matching rejects it
+  - malformed dry rows with out-of-band EPS underlay no longer borrow the
+    `R5b` impact tuple through direct predictor or visible same-family fallback
+  - exact `tuas_r5b_open_box_timber_measured_2026` remains live when the full
+    source package is entered
 - next work:
   - prefer widening around this defended package before attempting any raw bare open-box lane
 - current test anchors:
@@ -252,7 +311,10 @@ Important scope note:
     - candidate id: `tuas_r2b_open_box_timber_measured_2026`
     - current gate:
       - `combined_upper_lower_system`
-      - laminate floor covering
+      - source-band `8 mm` laminate floor covering plus `3 mm` EPS walking
+        underlay when the route exposes that finish package
+      - open-box fallback uses the exact visible-role tolerance here; `12 mm`
+        laminate is unsupported rather than a tolerated source-band finish
       - suspended ceiling with `2 x 13 mm` board and `~100 mm` cavity fill
       - generic `resilient_stud_ceiling` visible-layer shorthand
   - `open_box basic family_a exact`
@@ -265,7 +327,8 @@ Important scope note:
       - all `basic` gate conditions
       - `generic_fill ~50 mm`
       - `dry_floating_gypsum_fiberboard ~60 mm`
-      - resilient layer `~3 mm`
+      - resilient walking underlay remains `~3 mm`; out-of-band underlay is now
+        treated as unsupported instead of falling back to `R5b`
 - why this is widening-first:
   - the family already has a defended `b` corridor anchor and stronger same-family branches
   - the explicit `family_a` surface is now available, so family splits no longer need to alias through one generic ceiling token
@@ -663,7 +726,7 @@ This section is implementation-backed from the current local catalog import, not
         - exact row `tuas_r2c_open_box_timber_measured_2026` is now also landed with lab `Ln,w 70`, `Ln,w+CI 70`, `Ln,w+CI,50-2500 70`, `Rw 54`
         - field continuation is now `L'n,w 72`, `L'nT,w 69.6`, `L'nT,50 69.6`
         - the no-fill hybrid lower-treatment branch is therefore closed without reopening a generic `__none` topology lane
-      - latest closed slice: `tuas_clt_remaining_combined_source_schedule_research_v1`
+      - historical closed slice: `tuas_clt_remaining_combined_source_schedule_research_v1`
       - current closed-truth after the source-schedule research pass:
         - TUAS drawing pages `25/40` through `30/40` now freeze the real visible schedules for `C2c/C3c/C4c/C5c/C7c/C11c`
         - exact row `tuas_c2c_clt260_measured_2026` is now landed with lab `Ln,w 35`, `Ln,w+CI 39`, `Ln,w+CI,50-2500 44`, `Rw 70`
@@ -672,23 +735,23 @@ This section is implementation-backed from the current local catalog import, not
         - `C5c` remains a defended visible-layer combined corridor, but still not a direct source-schedule exact row
         - source-backed `C3c`, `C4c`, `C11c`, and `C7c` were all drawing-backed at that point, but only `C7c` was the narrowest next import candidate
         - the Dataholz dry combined predictor lineage and CLT `lower_only` guard were both re-closed after `C2c` landed
-      - latest closed slice: `tuas_c7c_combined_wet_clt_surface_design_v1`
+      - historical closed slice: `tuas_c7c_combined_wet_clt_surface_design_v1`
         - exact row `tuas_c7c_clt260_measured_2026` is now landed with lab `Ln,w 30`, `Ln,w+CI 35`, `Ln,w+CI,50-2500 44`, `Rw 75`
         - field continuation is now `L'n,w 32`, `L'nT,w 30`, `L'nT,50 44`
         - `C3c/C4c/C11c` remain screening-only after `C7c` lands
         - the root cause is now explicit:
           - combined CLT visible stacks with lower treatment plus multi-entry `floating_screed` no longer auto-normalize into inferred or predictor-derived shorthand lanes
           - `C3c/C4c` therefore stay fail-closed and now warn toward `C7c` as the closest same-family candidate
-      - latest closed slice: `tuas_remaining_combined_clt_exact_import_decision_matrix_v1`
+      - historical closed slice: `tuas_remaining_combined_clt_exact_import_decision_matrix_v1`
         - exact row `tuas_c3c_clt260_measured_2026` is now landed with lab `Ln,w 27`, `Ln,w+CI 29`, `Ln,w+CI,50-2500 43`, `Rw 73`
         - field continuation is now `L'n,w 29`, `L'nT,w 27`, `L'nT,50 43`
         - source correction: TUAS drawing page `26/40` shows `13 mm gypsum board + 2 x 15 mm gypsum board`, not the stale `13 mm glass wool` upper-fill proxy
         - exact split parity now accepts only merge-safe contiguous same-role/same-material packed thickness equivalents, so mixed-material schedules still need explicit exact rows
-      - latest closed slice: `tuas_c4c_combined_heavy_dry_exact_candidate_v1`
+      - historical closed slice: `tuas_c4c_combined_heavy_dry_exact_candidate_v1`
         - exact row `tuas_c4c_clt260_measured_2026` is now landed with lab `Ln,w 24`, `Ln,w+CI 26`, `Ln,w+CI,50-2500 40`, `Rw 74`
         - field continuation is now `L'n,w 26`, `L'nT,w 24`, `L'nT,50 40`
         - route-control result: under-described combined CLT lower board/fill stacks without explicit `ceiling_cavity` remain fail-closed even though profile-aligned `C4c` now exists
-      - latest closed slice: `tuas_c11c_wet_stack_anomaly_audit_v1`
+      - historical closed slice: `tuas_c11c_wet_stack_anomaly_audit_v1`
         - decision: keep `C11c` deferred / fail-closed; do not import it as an exact floor row yet
         - reason: the visible schedule is known (`CLT 260`, `30 mm` glass wool, geotextile, `40 mm` screed, same suspended lower ceiling), but the source tuple `Ln,w 59`, `Ln,w+CI 60`, `Ln,w+CI,50-2500 60`, `Rw 74` is still anomalously weak beside the frozen combined CLT anchors
         - anomaly scale now locked by test:
@@ -933,26 +996,43 @@ This section is implementation-backed from the current local catalog import, not
 
 ## Immediate Research Order
 
-1. TUAS measured corpus
+1. Floor airborne companion semantics
    - current status:
-     - selected next implementation slice:
+     - latest closed implementation slice:
+       `floor_airborne_companion_c_ctr_semantic_audit_v1`
+   - closed purpose:
+     - preserved the now-fixed Dataholz `Ctr` source-card path while resolving
+       the TUAS row `42` `Rw+C` companion semantics honestly
+     - prevented `C`, `Ctr`, `Rw+C`, and `Rw+Ctr` from being mixed by engine
+       target-output support or workbench output cards
+   - closed checks:
+     - Dataholz rows with explicit `RwCtrSemantic: "ctr_term"` still expose
+       source `Ctr` and are not masked by screening companions
+     - all `31` imported TUAS exact rows with an airborne companion carry
+       `RwCtrSemantic: "rw_plus_c"` and do not get mislabeled as `Ctr`
+     - requested `C` support is source-backed and tested; requested `Ctr` stays
+       unsupported for those TUAS rows
+     - engine support changes have matching workbench output-card tests
+2. TUAS measured corpus
+   - current status:
+     - latest audit closed as a no-widening source-truth decision:
        `tuas_measured_lightweight_timber_source_triage_v1`
-   - immediate purpose:
-     - choose the next narrow source-defensible floor improvement from the
-       measured open-box / CLT corpus, or close the next candidate as
-       no-widening if the measured rows do not defend it
-   - first checks:
-     - imported open-box and CLT rows still match spreadsheet single-number
-       truth for `Rw`, `Ln,w`, `Ln,w+CI`, and `CI,50-2500`
+   - closed checks:
+     - `packages/engine/src/tuas-measured-source-truth-audit.test.ts` pins all
+       `29` imported TUAS measured open-box / CLT rows to numeric source truth
+       for `Rw`, `Rw+C`, `Ln,w`, `CI`, `CI,50-2500`, `Ln,w+CI`, and official-id
+       field continuations
      - `R6b`, `R7a`, `R7b`, `R8b`, `R9b`, `R10a`, and `R2c` remain exact only
        under their defended visible schedules
      - raw bare, lower-only, and upper-only open-box carrier attempts remain
-       fail-closed unless measured source evidence justifies a narrower route
+       impact fail-closed
+     - missing-role raw CLT / hybrid open-box / combined-CLT drift is numeric and
+       intentional, not a hidden widening lane
      - `C11c` remains a source anomaly / fail-closed row and must not reopen
        combined-CLT inference
-     - workbench cards stay aligned with engine support buckets for any route
-       whose output support changes
-2. Dataholz timber-frame component sheets and imported exact corpus
+     - workbench cards did not need expansion in this slice because output
+       support buckets did not change
+3. Dataholz timber-frame component sheets and imported exact corpus
    - current status:
      - latest audit closed; keep as defended no-widening/fail-closed reference
    - immediate purpose:
@@ -967,16 +1047,16 @@ This section is implementation-backed from the current local catalog import, not
        is explicit
      - contiguous split noise preserves exact rows; disjoint/intervening role
        splits do not promote weak carriers
-3. UBIQ official system tables
+4. UBIQ official system tables
    - current status:
      - the corridor decision is closed for now
      - the current official-source conflict is frozen as provenance drift, not as new coverage
    - treat bare open-web support as a separate research question
-4. Dataholz CLT component sheets
+5. Dataholz CLT component sheets
    - first tightening target for CLT calibration after the selected timber-frame
      audit
    - use them to tighten deviation, not to justify a generic universal lightweight-floor lane
-5. Broader modeling literature
+6. Broader modeling literature
    - useful for later model research
    - not enough by itself to open new production lanes without family-specific source anchors
 

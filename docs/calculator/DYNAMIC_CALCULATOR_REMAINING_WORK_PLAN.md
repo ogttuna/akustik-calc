@@ -90,7 +90,123 @@ Current verified result:
   - build: green
   - key correction:
     - imported TUAS exact rows and TUAS-backed predictor lanes now use the `SoundInsulation` spreadsheet rows `34`, `35`, `36`, `41`, and `42` as the numeric baseline
-    - row `42` is `Rw+C`; the current model still labels the companion slot as `RwCtr`, so semantic relabeling remains open while numeric truth is now guarded
+- floor airborne companion semantics pack: green
+  - engine semantic guards: `9` files, `326` tests
+  - workbench semantic guards: `4` files, `84` tests
+  - upstream parity acceptance: `1` file, `2` tests
+  - typechecks: shared, catalogs, engine, and web green
+  - full engine suite: green in this companion-semantics slice; the current
+    full-suite count is recorded in the CLT laminate-underlay guard pack below
+  - build: green with the known `sharp/@img` optional-package warnings and
+    Next.js TypeScript plugin recommendation
+  - key correction:
+    - row `42` is `Rw+C`; the numeric field remains `RwCtr` for compatibility,
+      but TUAS rows now carry `RwCtrSemantic: "rw_plus_c"` so `C` is supported
+      and `Ctr` stays unsupported
+    - Dataholz `ctr_term` rows still expose source `Ctr` and withhold `C`
+    - mixed-source predictor companion sets now fail closed instead of exposing
+      an ambiguous legacy `RwCtr` value
+- CLT laminate-underlay interpolation guard: green
+  - engine direct guard: `2` files, `22` tests
+  - engine adjacent guard: `7` files, `74` tests
+  - engine route/broad guard: `6` files, `312` tests
+  - workbench route guard: `3` files, `104` tests
+  - typechecks: engine and web green
+  - full engine suite: `96` files, `775` tests, green
+  - build: green with the known `sharp/@img` optional-package warnings and
+    Next.js TypeScript plugin recommendation
+  - key correction:
+    - TUAS `X2/C2` interpolation remains live for raw bare CLT and defended
+      `laminate + EPS underlay` CLT
+    - laminate-only CLT and out-of-band laminate thicknesses now stay
+      impact-unsupported instead of inheriting the full measured
+      laminate-plus-EPS improvement
+- CLT dry finish-package guard: green
+  - engine direct/source guard: `3` files, `31` tests
+  - engine source-adjacent guard: `8` files, `83` tests
+  - engine route/broad guard: `7` files, `321` tests
+  - workbench route guard: `3` files, `105` tests
+  - typechecks: engine and web green
+  - full engine suite: `96` files, `777` tests, green
+  - build: green with the known `sharp/@img` optional-package warnings and
+    Next.js TypeScript plugin recommendation
+  - key correction:
+    - TUAS `X5/C5c` dry CLT interaction remains live for the source-backed
+      `8 mm` laminate plus `3 mm` EPS finish band
+    - out-of-band laminate or EPS thicknesses now stay impact-unsupported
+      instead of re-entering through the dry interaction lane or generic CLT
+      family archetype fallback
+    - C7-style wet source packages remain on their documented family-estimate
+      posture when entered as missing-role raw rows
+- CLT combined malformed-finish fallback guard: green
+  - engine direct/route guard: `2` files, `24` tests
+  - workbench direct route guard: `1` file, `90` tests
+  - engine source-adjacent guard: `8` files, `83` tests
+  - engine route/broad guard: `7` files, `321` tests
+  - workbench broad route guard: `3` files, `106` tests
+  - typechecks: engine and web green
+  - full engine suite: `96` files, `777` tests, green
+  - build: green with the known `sharp/@img` optional-package warnings and
+    Next.js TypeScript plugin recommendation
+  - key correction:
+    - combined CLT stacks with explicit lower treatment and malformed
+      laminate/EPS walking finishes now fail closed before the generic
+      same-family CLT archetype can reopen
+    - valid source-backed laminate/EPS pairs remain live, including wet CLT
+      packages with additional source-backed upper layers
+    - malformed combined CLT finishes remain `Rw`-only in lab support and
+      impact-unsupported instead of borrowing `C2c/C3c/C4c/C5c` neighbors
+- open-box disjoint upper-package fallback guard: green
+  - engine source/route guard: `1` file, `10` tests
+  - workbench direct route guard: `1` file, `91` tests
+  - engine source-adjacent guard: `5` files, `23` tests
+  - workbench broad route guard: `2` files, `106` tests
+  - engine route/broad guard: `7` files, `321` tests
+  - typechecks: engine and web green
+  - full engine suite: `96` files, `778` tests, green
+  - build: green with the known `sharp/@img` optional-package warnings and
+    Next.js TypeScript plugin recommendation
+  - key correction:
+    - TUAS open-box hybrid wet upper packages with a source-backed
+      `geotextile + screed` floating-screed schedule now fail closed when
+      exact matching falls off due to a disjoint or mixed upper schedule
+    - exact `R7b/R8b/R9b/R2c` source rows remain live
+    - generic dry open-box disjoint `upper_fill` rows remain on the documented
+      `family_general` lane, so this did not broadly shut open-box fallback
+- open-box laminate/EPS walking-finish fallback guard: green
+  - engine source/route guard: `1` file, `11` tests
+  - workbench direct route guard: `1` file, `92` tests
+  - engine route/broad guard: `6` files, `322` tests
+  - workbench broad route guard: `2` files, `107` tests
+  - typechecks: engine and web green
+  - full engine suite: `96` files, `779` tests, green
+  - build: green with the known `sharp/@img` optional-package warnings and
+    Next.js TypeScript plugin recommendation
+  - key correction:
+    - TUAS open-box walking-finish support is now limited to the source-backed
+      `8 mm` laminate plus `3 mm` EPS underlay band
+    - malformed `R2b` basic, `R5b` dry, and `R9b` hybrid style inputs no longer
+      borrow predictor-specific or generic same-family impact values after exact
+      matching falls off
+    - valid exact open-box rows remain live; direct predictor rows with a
+      source-band `3 mm` underlay and no product id remain accepted
+- open-box finish tolerance guard: green
+  - engine direct predictor guard: `1` file, `19` tests
+  - engine source/route guard: `1` file, `11` tests
+  - workbench direct route guard: `1` file, `92` tests
+  - engine route/broad guard: `6` files, `323` tests
+  - workbench broad route guard: `2` files, `107` tests
+  - typechecks: engine and web green
+  - full engine suite: `96` files, `780` tests, green
+  - build: green with the known `sharp/@img` optional-package warnings and
+    Next.js TypeScript plugin recommendation
+  - key correction:
+    - open-box walking-finish fallback is now aligned to exact visible-role
+      tolerance for the source `8 mm` laminate plus `3 mm` EPS pair
+    - `10 mm` laminate remains accepted as a near source-band predictor input,
+      but `12 mm` laminate stays impact-unsupported instead of borrowing
+      `R2b/R5b/R9b` values after exact matching falls off
+    - this does not tighten the separate CLT interpolation band
 - broad defended revalidation: green
   - included inside the `2026-04-07` broad packs
   - no new floor-side solver regression was reproduced there
