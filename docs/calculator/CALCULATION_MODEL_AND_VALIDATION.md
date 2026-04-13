@@ -456,6 +456,38 @@ The deferred open-box finish-tolerance mixed-history boundary is now closed:
     warnings
   - engine/web typechecks and `git diff --check`: green
 
+The TUAS `R5b` open-box dry-package fragmentation guard is now closed:
+
+- slice id: `open_box_dry_package_fragmentation_trace_matrix_v1`
+- engine artifact:
+  `packages/engine/src/open-box-dry-package-fragmentation-trace-matrix.test.ts`
+- workbench artifact:
+  `apps/web/features/workbench/open-box-dry-package-fragmentation-card-matrix.test.ts`
+- purpose:
+  - prove that source-equivalent high fragmentation of a strong open-box dry
+    exact row keeps the same answers and card statuses
+  - prove that disjoint upper-fill input does not silently become exact `R5b`
+    even when it still lands on the documented family-general fallback
+- pinned routes:
+  - fragmented source-equivalent `R5b` package:
+    exact `tuas_r5b_open_box_timber_measured_2026`, lab `Rw 75`, `Ln,w 44`,
+    `Ln,w+CI 44`, and field `L'n,w 46`, `L'nT,w 43.6`, `L'nT,50 46.6`
+  - disjoint upper-fill dry package:
+    no exact match, `family_general` at `54%` fit, lab `Rw 63.8`,
+    `Ln,w 56.3`, `Ln,w+CI 57.7`, and field `L'n,w 58.3`, `L'nT,w 55.9`,
+    `L'nT,50 58.8`
+- validation:
+  - focused engine trace matrix: `1` file, `1` test, green
+  - focused workbench card matrix: `1` file, `1` test, green
+  - engine adjacent open-box/split pack: `6` files, `50` tests, green
+  - workbench adjacent open-box/card/history pack: `5` files, `111` tests,
+    green
+  - full engine suite: `103` files, `791` tests, green
+  - full web suite: `99` files, `607` tests, green
+  - `pnpm build`: green with known `sharp/@img` and Next.js TypeScript plugin
+    warnings
+  - engine/web typechecks and `git diff --check`: green
+
 Deferred until after these checkpoints:
 
 - `floor_raw_inference_source_led_widening_v1`

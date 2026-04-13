@@ -21,10 +21,40 @@ Read together with:
 ## Current Active Slice Ledger
 
 - latest completed slice:
-  `open_box_finish_tolerance_mixed_history_boundary_v1`
-- status: implemented as a no-widening workbench store-history/output-card
-  boundary guard; focused, adjacent, typecheck, and full-web gates are green
+  `open_box_dry_package_fragmentation_trace_matrix_v1`
+- status: implemented as a no-widening TUAS `R5b` open-box dry package
+  trace/card guard; focused, adjacent, typecheck, full-suite, build, and diff
+  gates are green
 - latest completed slice intent:
+  - pin the strongest current open-box dry anchor before any same-package
+    widening discussion
+  - prove that high-fragmentation source-equivalent input remains exact on
+    `R5b` across lab and field output surfaces
+  - prove that disjoint upper-fill dry input remains on the documented
+    `family_general 54%` warning lane instead of silently collapsing onto exact
+    `R5b`
+  - keep the guard outside the already large workbench floor regression file
+- latest completed slice artifacts:
+  - `packages/engine/src/open-box-dry-package-fragmentation-trace-matrix.test.ts`
+  - `apps/web/features/workbench/open-box-dry-package-fragmentation-card-matrix.test.ts`
+- latest completed slice validation:
+  - focused engine trace matrix: `1` file, `1` test, green
+  - focused workbench card matrix: `1` file, `1` test, green
+  - engine adjacent open-box/split pack: `6` files, `50` tests, green
+  - workbench adjacent open-box/card/history pack: `5` files, `111` tests,
+    green
+  - engine/web typechecks: green; web still prints the known Next.js
+    TypeScript plugin recommendation
+  - full engine suite: `103` files, `791` tests, green
+  - full web suite: `99` files, `607` tests, green
+  - `pnpm build`: green with the known `sharp/@img` optional-package warnings
+    and Next.js TypeScript plugin recommendation
+  - `git diff --check`: green
+- previous open-box history completed slice:
+  `open_box_finish_tolerance_mixed_history_boundary_v1` is implemented as a
+  no-widening workbench store-history/output-card boundary guard; focused,
+  adjacent, typecheck, full-suite, build, and diff gates are green
+- previous open-box history intent:
   - close the previously deferred optional open-box finish-tolerance history
     boundary after `open_box_finish_tolerance_guard_v1`
   - prove that duplicate, split, reorder-bounce, save/load, and mixed floor/wall
@@ -33,9 +63,9 @@ Read together with:
     `12 mm` laminate outside the source band fail-closed on impact outputs
   - avoid changing solver/catalog/selector/support behavior before the next
     route family and output surface are named
-- latest completed slice artifacts:
+- previous open-box history artifacts:
   - `apps/web/features/workbench/open-box-finish-tolerance-mixed-history-boundary.test.ts`
-- latest completed slice validation:
+- previous open-box history validation:
   - focused workbench open-box mixed-history boundary:
     `1` file, `1` test, green
   - workbench adjacent mixed/history/floor pack:
@@ -178,6 +208,9 @@ Read together with:
     lower-lane guard, not as permission to open bare open-web carrier support
   - keep `open_box_finish_tolerance_mixed_history_boundary_v1` frozen as a
     history/card boundary guard, not as a new open-box tolerance widening
+  - keep `open_box_dry_package_fragmentation_trace_matrix_v1` frozen as a
+    source-equivalent fragmentation/disjoint-fallback guard, not as permission
+    to open raw bare open-box support
   - keep `raw_floor_hostile_input_answer_matrix_v1` frozen as the latest
     hostile-input pre-widening guard
   - raw-floor behavior widening, CLT-local combined behavior work, C11c, and

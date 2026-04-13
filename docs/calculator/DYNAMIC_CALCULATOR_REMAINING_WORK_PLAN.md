@@ -91,6 +91,36 @@ Interpretation:
 
 Current verified result:
 
+- open-box dry-package fragmentation trace/card matrix: green
+  - slice id: `open_box_dry_package_fragmentation_trace_matrix_v1`
+  - no solver, catalog, source, selector, support, or workbench runtime behavior
+    changed
+  - engine:
+    `packages/engine/src/open-box-dry-package-fragmentation-trace-matrix.test.ts`
+  - workbench:
+    `apps/web/features/workbench/open-box-dry-package-fragmentation-card-matrix.test.ts`
+  - focused validation:
+    - engine trace matrix: `1` file, `1` test, green
+    - workbench card matrix: `1` file, `1` test, green
+  - adjacent validation:
+    - engine open-box/split pack: `6` files, `50` tests, green
+    - workbench open-box/card/history pack: `5` files, `111` tests, green
+  - broad validation:
+    - engine suite: `103` files, `791` tests, green
+    - web suite: `99` files, `607` tests, green
+    - repository build: green with known `sharp/@img` and Next.js TypeScript
+      plugin warnings
+    - engine/web typechecks and `git diff --check`: green
+  - pinned surface:
+    - source-equivalent high-fragmentation TUAS `R5b` dry package remains
+      exact/live on lab and field output cards
+    - disjoint upper-fill dry package stays on `family_general 54%` with
+      duplicate upper-fill warning coverage instead of silently collapsing onto
+      exact `R5b`
+  - interpretation:
+    - this is a guard on existing source-equivalent fragmentation and disjoint
+      fallback behavior
+    - it is not permission to widen raw bare open-box impact support
 - open-box finish-tolerance mixed-history boundary: green
   - slice id: `open_box_finish_tolerance_mixed_history_boundary_v1`
   - no solver, catalog, source, selector, support, or workbench runtime behavior
@@ -2101,12 +2131,13 @@ That keeps the suite from becoming overly optimistic around a single hand-picked
   - do not change solver behavior until a new test exposes a classified failure
   - classify every red as solver drift, support-surface drift, stale fixture, or
     intentionally unsupported/fail-closed behavior
-- optional second target:
-  - only after the heavy-composite wall route is green, add one open-box
-    finish-tolerance boundary case for a `12 mm` laminate plus `3 mm` EPS open-box
-    walking finish that must remain impact-unsupported
-  - split this into a follow-up slice if it exposes a real behavior issue
-  - current decision: deferred
+- implemented optional second target:
+  - after the heavy-composite wall route stayed green, the open-box
+    finish-tolerance boundary was added as
+    `open_box_finish_tolerance_mixed_history_boundary_v1`
+  - `12 mm` laminate plus `3 mm` EPS open-box walking finish remains
+    impact-unsupported through split/save-load/floor-wall history
+  - current decision: closed
 - current source-led follow-up:
   - `dataholz_clt_source_truth_audit_v1` is now closed as a no-widening guard
   - all imported Dataholz CLT rows have answer-measuring engine tests for

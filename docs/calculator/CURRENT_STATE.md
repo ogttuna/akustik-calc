@@ -25,6 +25,57 @@ Last cross-package build revalidation: `2026-04-13`
 
 Verified broad corridors:
 
+- latest open-box dry-package fragmentation checkpoint:
+  - slice id: `open_box_dry_package_fragmentation_trace_matrix_v1`
+  - implemented on: `2026-04-13`
+  - type: no-widening TUAS `R5b` open-box dry exact trace/card guard
+  - status: implemented and target-green
+  - reason this was selected:
+    - raw-floor behavior widening still needs source-led evidence one carrier
+      and one output surface at a time
+    - TUAS `R5b` is the strongest current open-box dry anchor for future
+      same-package widening, but high fragmentation and disjoint upper-package
+      input needed answer/card snapshots before any widening
+    - `apps/web/features/workbench/floor-family-regressions.test.ts` is already
+      large, so this guard was kept in separate focused files instead of
+      growing that workbench regression file
+  - implemented tests:
+    - `packages/engine/src/open-box-dry-package-fragmentation-trace-matrix.test.ts`
+      pins lab and field values, exact/estimate route ids, basis, support
+      buckets, candidate ids, and warnings
+    - `apps/web/features/workbench/open-box-dry-package-fragmentation-card-matrix.test.ts`
+      mirrors the same cases through workbench output-card status/value
+      snapshots
+  - pinned behavior:
+    - a `17`-row fragmented but source-equivalent `R5b` dry package remains
+      exact on `tuas_r5b_open_box_timber_measured_2026`
+    - exact lab answers stay `Rw 75`, `Ln,w 44`, `Ln,w+CI 44`, with
+      `DeltaLw` unsupported
+    - exact field answers stay `Rw 75`, `Ln,w 44`, `L'n,w 46`,
+      `L'nT,w 43.6`, and `L'nT,50 46.6`
+    - a disjoint upper-fill dry package does not silently collapse onto exact
+      `R5b`; it stays on `family_general` at `54%` fit with explicit duplicate
+      upper-fill warning coverage
+  - latest validation:
+    - focused engine fragmentation trace matrix:
+      `1` file, `1` test, green
+    - focused workbench fragmentation card matrix:
+      `1` file, `1` test, green
+    - engine adjacent open-box/split pack:
+      `6` files, `50` tests, green
+    - workbench adjacent open-box/card/history pack:
+      `5` files, `111` tests, green
+    - `pnpm --filter @dynecho/engine typecheck`: green
+    - `pnpm --filter @dynecho/web typecheck`: green with the known Next.js
+      TypeScript plugin recommendation
+    - `pnpm --filter @dynecho/engine test`: `103` files, `791` tests, green
+    - `pnpm --filter @dynecho/web test`: `99` files, `607` tests, green
+    - `pnpm build`: green with the known `sharp/@img` optional-package
+      warnings and Next.js TypeScript plugin recommendation
+  - next planning implication:
+    - future open-box widening should stay same-package/source-led first; this
+      guard is evidence for `R5b` fragmentation and disjoint fallback behavior,
+      not permission to open raw bare open-box impact support
 - latest open-box finish-tolerance mixed-history checkpoint:
   - slice id: `open_box_finish_tolerance_mixed_history_boundary_v1`
   - implemented on: `2026-04-13`
@@ -1564,6 +1615,13 @@ Work in this order:
 
 Current checkpoint before the remaining ordered list:
 
+- `open_box_dry_package_fragmentation_trace_matrix_v1` is now closed as a
+  no-widening TUAS `R5b` trace/card guard:
+  - source-equivalent high fragmentation remains exact/live through engine and
+    workbench card surfaces
+  - disjoint upper-fill dry-package input remains on the documented
+    `family_general 54%` warning lane instead of silently collapsing onto exact
+    `R5b`
 - `mixed_floor_wall_seeded_route_history_expansion_v1` is closed and committed
   for the first heavy-composite wall target; no solver, catalog, selector, or
   store behavior changed

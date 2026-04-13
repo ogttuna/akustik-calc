@@ -26,6 +26,24 @@ Important scope note:
 
 Current execution status:
 
+- `open_box_dry_package_fragmentation_trace_matrix_v1` is now closed:
+  - this was a no-widening engine/workbench trace-card checkpoint for the TUAS
+    `R5b` open-box dry package
+  - a `17`-row source-equivalent fragmented dry package remains exact on
+    `tuas_r5b_open_box_timber_measured_2026`
+  - exact lab answers remain `Rw 75`, `Ln,w 44`, and `Ln,w+CI 44`; exact field
+    answers remain `Rw 75`, `Ln,w 44`, `L'n,w 46`, `L'nT,w 43.6`, and
+    `L'nT,50 46.6`
+  - disjoint upper-fill dry input remains off exact `R5b` and stays on
+    `family_general` at `54%` fit with explicit duplicate upper-fill warning
+    coverage
+  - no solver, catalog, selector, source, support, or workbench runtime behavior
+    changed
+  - focused engine/workbench validation is green; adjacent engine validation is
+    green at `6` files / `50` tests; adjacent workbench validation is green at
+    `5` files / `111` tests; full engine is green at `103` files / `791`
+    tests; full web is green at `99` files / `607` tests; repository build is
+    green with known warnings
 - `open_box_finish_tolerance_mixed_history_boundary_v1` is now closed:
   - this was a no-widening workbench store-history/output-card checkpoint for
     the open-box walking-finish tolerance boundary

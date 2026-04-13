@@ -39,6 +39,37 @@ Current planning implication:
 - `dataholz_clt_source_truth_audit_v1` is now closed as a no-widening source
   audit before any new raw-floor widening
 - latest implemented floor-side guard:
+  - `open_box_dry_package_fragmentation_trace_matrix_v1`
+  - this is a no-widening TUAS `R5b` open-box dry package trace/card guard
+    before any same-package widening or raw open-box reopening
+  - reason: `R5b` is the strongest current dry open-box anchor, and high
+    fragmentation plus disjoint upper-fill user input needed answer/card
+    pinning before using it as future widening evidence
+  - result:
+    - no solver, catalog, selector, source, support, or workbench runtime
+      behavior changed
+    - source-equivalent `17`-row fragmented `R5b` remains exact on
+      `tuas_r5b_open_box_timber_measured_2026`
+    - lab values stay `Rw 75`, `Ln,w 44`, `Ln,w+CI 44`, with `DeltaLw`
+      unsupported
+    - field values stay `Rw 75`, `Ln,w 44`, `L'n,w 46`, `L'nT,w 43.6`, and
+      `L'nT,50 46.6`
+    - disjoint upper-fill dry input stays off exact `R5b` and remains
+      `family_general` at `54%` fit with duplicate upper-fill warning coverage
+  - test anchors:
+    - `packages/engine/src/open-box-dry-package-fragmentation-trace-matrix.test.ts`
+    - `apps/web/features/workbench/open-box-dry-package-fragmentation-card-matrix.test.ts`
+  - validation:
+    - focused engine/web tests: `1` file / `1` test each, green
+    - engine open-box/split adjacent pack: `6` files, `50` tests, green
+    - workbench open-box/card/history adjacent pack: `5` files, `111` tests,
+      green
+    - full engine suite: `103` files, `791` tests, green
+    - full web suite: `99` files, `607` tests, green
+    - `pnpm build`: green with known `sharp/@img` and Next.js TypeScript
+      plugin warnings
+    - engine/web typechecks and `git diff --check`: green
+- previous implemented floor-side guard:
   - `open_box_finish_tolerance_mixed_history_boundary_v1`
   - this is a no-widening workbench history/card guard for the already narrowed
     TUAS open-box walking-finish tolerance boundary
@@ -301,6 +332,11 @@ Current planning implication:
   - it is the strongest current open-box anchor for future same-family widening
   - it proves that open-box timber can stay exact and stable when the package is fully described
 - latest tightening guard:
+  - `open_box_dry_package_fragmentation_trace_matrix_v1` is closed
+  - source-equivalent high fragmentation of the `R5b` dry package remains exact
+    on lab and field outputs
+  - disjoint upper-fill input remains on the documented `family_general 54%`
+    warning lane, not exact `R5b`
   - the dry open-box walking-finish fallback is source-bounded to the measured
     `8 mm` laminate plus `3 mm` EPS pair
   - the laminate tolerance is now aligned with exact open-box matching; `12 mm`

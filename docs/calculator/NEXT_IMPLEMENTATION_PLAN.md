@@ -63,6 +63,7 @@ Use this as the current baseline:
 
 - branch: `main`
 - latest committed baseline before this working slice:
+  - `b2cc5b7 test(web): pin open box finish tolerance history boundary`
   - `81f15c6 test(calculator): pin ubiq open web packaged lane traces`
   - `646bdf8 test(calculator): pin raw floor hostile input answers`
   - `e664c81 test(calculator): add wall selector trace matrices`
@@ -70,6 +71,26 @@ Use this as the current baseline:
   - `8f73493 docs(calculator): select next wall trace slice`
   - `08c918e docs(calculator): document answer origins and next gates`
 - latest completed working slice:
+  - `open_box_dry_package_fragmentation_trace_matrix_v1`
+  - no solver, catalog, selector, source, support, or workbench runtime behavior
+    changed
+  - engine trace matrix:
+    `packages/engine/src/open-box-dry-package-fragmentation-trace-matrix.test.ts`
+  - workbench card matrix:
+    `apps/web/features/workbench/open-box-dry-package-fragmentation-card-matrix.test.ts`
+  - pinned behavior:
+    high-fragmentation source-equivalent TUAS `R5b` open-box dry input stays
+    exact with lab `Rw 75`, `Ln,w 44`, `Ln,w+CI 44`, and field `L'n,w 46`,
+    `L'nT,w 43.6`, `L'nT,50 46.6`; disjoint upper-fill dry input stays off
+    exact `R5b` and remains `family_general` at `54%` fit with duplicate
+    upper-fill warning coverage
+  - validation:
+    focused engine/web tests green; engine adjacent pack `6` files / `50`
+    tests green; workbench adjacent pack `5` files / `111` tests green;
+    engine/web typechecks green; full engine `103` files / `791` tests green;
+    full web `99` files / `607` tests green; `pnpm build` green with known
+    warnings
+- previous completed working slice:
   - `open_box_finish_tolerance_mixed_history_boundary_v1`
   - no solver, catalog, selector, source, support, or workbench runtime behavior
     changed
@@ -146,6 +167,7 @@ Use this as the current baseline:
   - `open_box_finish_package_guard_v1`
   - `open_box_finish_tolerance_guard_v1`
   - `open_box_finish_tolerance_mixed_history_boundary_v1`
+  - `open_box_dry_package_fragmentation_trace_matrix_v1`
 - direct broad multi-worker `vitest run` currently has all assertions green but
   can still exit non-zero from Vitest worker RPC timeout after CPU-heavy
   dynamic-airborne generated scans; use the package `test` script for the
@@ -509,6 +531,8 @@ Current decision after the checkpoint:
   next no-widening floor checkpoint
 - `open_box_finish_tolerance_mixed_history_boundary_v1` is now implemented as
   the follow-up no-widening workbench history/card boundary checkpoint
+- `open_box_dry_package_fragmentation_trace_matrix_v1` is now implemented as a
+  no-widening TUAS `R5b` dry-package fragmentation trace/card checkpoint
 - these matrices did not expose a classified behavior bug in the current
   representative rows, so no selector, source, or raw-floor support behavior
   was changed
@@ -524,6 +548,9 @@ Current decision after the checkpoint:
   open-web raw carrier support
 - do not use the open-box mixed-history guard as permission to expand the
   laminate/EPS tolerance band beyond the source-backed boundary
+- do not use the `R5b` fragmentation guard as permission to open raw bare
+  open-box impact support; it only freezes source-equivalent fragmentation and
+  disjoint upper-fill fallback behavior
 
 ## Wall Selector Implementation Comparison
 
