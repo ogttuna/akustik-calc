@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { getPresetById } from "./preset-definitions";
 import { evaluateScenario } from "./scenario-analysis";
 import { buildOutputCard } from "./simple-workbench-output-model";
+import { HEAVY_COMPOSITE_WALL_ROWS } from "./mixed-study-mode-generated-test-helpers";
 import type { LayerDraft } from "./workbench-store";
 
 const FLOOR_OUTPUTS: readonly RequestedOutputId[] = [
@@ -59,14 +60,6 @@ const WALL_DEEP_ROWS: readonly Omit<LayerDraft, "id">[] = [
 const WALL_CHAIN_APPEND_ROWS: readonly Omit<LayerDraft, "id">[] = [
   { materialId: "rockwool", thicknessMm: "30" },
   { materialId: "air_gap", thicknessMm: "25" }
-];
-
-const HEAVY_COMPOSITE_WALL_ROWS: readonly Omit<LayerDraft, "id">[] = [
-  { materialId: "concrete", thicknessMm: "80" },
-  { materialId: "pumice_block", thicknessMm: "100" },
-  { materialId: "air_gap", thicknessMm: "50" },
-  { materialId: "gypsum_board", thicknessMm: "12.5" },
-  { materialId: "concrete", thicknessMm: "80" }
 ];
 
 function createMemoryStorage(): Storage {
