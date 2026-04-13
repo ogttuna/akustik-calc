@@ -49,8 +49,8 @@ describe("validation regime helpers", () => {
 
     const rows = getValidationFamilyModeRows(family!);
 
-    expect(formatValidationFamilyBenchmarkMix(family!)).toBe("7 exact · 5 estimate · 1 low confidence · 3 bound");
-    expect(rows.find((row) => row.id === "official_floor_system_bound")?.caseCount).toBe(2);
+    expect(formatValidationFamilyBenchmarkMix(family!)).toBe("8 exact · 5 estimate · 1 low confidence · 2 bound");
+    expect(rows.find((row) => row.id === "official_floor_system_bound")?.caseCount).toBe(1);
     expect(rows.find((row) => row.id === "family_specific_bound_estimate")?.caseCount).toBe(1);
     expect(rows.find((row) => row.id === "family_general_estimate")?.caseCount).toBe(3);
     expect(rows.find((row) => row.id === "low_confidence_estimate")?.caseCount).toBe(1);
@@ -71,9 +71,12 @@ describe("validation regime helpers", () => {
     const family = IMPACT_VALIDATION_FAMILY_MATRIX.find((entry) => entry.id === "mass_timber_clt");
 
     expect(family).toBeTruthy();
-    expect(formatValidationFamilyBenchmarkMix(family!)).toBe("3 exact · 6 estimate · 1 low confidence · 5 field");
-    expect(getValidationFamilyModeRows(family!).find((row) => row.id === "family_specific_estimate")?.caseCount).toBe(5);
+    expect(formatValidationFamilyBenchmarkMix(family!)).toBe(
+      "3 exact · 5 estimate · 1 low confidence · 5 field · 1 unsupported"
+    );
+    expect(getValidationFamilyModeRows(family!).find((row) => row.id === "family_specific_estimate")?.caseCount).toBe(4);
     expect(getValidationFamilyModeRows(family!).find((row) => row.id === "low_confidence_estimate")?.caseCount).toBe(1);
+    expect(getValidationFamilyModeRows(family!).find((row) => row.id === "unsupported_gap")?.caseCount).toBe(1);
   });
 
   it("keeps the open-box timber mix aligned with both TUAS archetype ladders", () => {
@@ -102,6 +105,7 @@ describe("validation regime helpers", () => {
     const tasks = getValidationHardeningTasks();
 
     expect(tasks.find((task) => task.id === "retire-low-confidence")?.familyLabels).toContain("timber frame / joist families");
+    expect(tasks.find((task) => task.id === "close-unsupported-gaps")?.familyLabels).toContain("mass timber CLT");
     expect(tasks.find((task) => task.id === "expand-field-continuation")).toBeUndefined();
     expect(tasks.find((task) => task.id === "replace-bound-corridors")?.familyLabels).toContain(
       "lightweight steel / open-web joists"

@@ -37,7 +37,16 @@ function formatCount(count: number, singular: string, plural = `${singular}s`): 
 }
 
 function mapCoverageTone(
-  value: "bound" | "estimate" | "exact" | "field" | "inactive" | "live" | "low_confidence" | "staged"
+  value:
+    | "bound"
+    | "estimate"
+    | "exact"
+    | "field"
+    | "inactive"
+    | "live"
+    | "low_confidence"
+    | "staged"
+    | "unsupported"
 ): SimpleWorkbenchCorridorDossierCard["tone"] {
   switch (value) {
     case "exact":
@@ -49,6 +58,7 @@ function mapCoverageTone(
       return "accent";
     case "bound":
     case "low_confidence":
+    case "unsupported":
       return "warning";
     case "inactive":
     case "staged":

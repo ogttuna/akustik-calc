@@ -163,7 +163,7 @@ describe("dynamic airborne family boundary diagnostics", () => {
       "lined_massive_blend+reinforcement_monotonic_floor+family_boundary_hold"
     );
     expect(
-      result.dynamicAirborneTrace?.notes.some((note) => /conflict trim bonus/i.test(note))
+      result.dynamicAirborneTrace?.notes.some((note: string) => /conflict trim bonus/i.test(note))
     ).toBe(false);
   });
 
@@ -253,15 +253,15 @@ describe("dynamic airborne family boundary diagnostics", () => {
         "lined_massive_blend+reinforcement_monotonic_floor+family_boundary_hold"
       );
       expect(
-        result.warnings.some((warning) => testCase.warningPattern.test(warning)),
+        result.warnings.some((warning: string) => testCase.warningPattern.test(warning)),
         `${testCase.board} ${testCase.thicknessMm} warning`
       ).toBe(true);
       expect(
-        result.dynamicAirborneTrace?.notes.some((note) => /ambiguity hold trimmed/i.test(note)),
+        result.dynamicAirborneTrace?.notes.some((note: string) => /ambiguity hold trimmed/i.test(note)),
         `${testCase.board} ${testCase.thicknessMm} hold note`
       ).toBe(true);
       expect(
-        result.dynamicAirborneTrace?.notes.some((note) => /conflict trim bonus 1\.0 dB/i.test(note)),
+        result.dynamicAirborneTrace?.notes.some((note: string) => /conflict trim bonus 1\.0 dB/i.test(note)),
         `${testCase.board} ${testCase.thicknessMm} conflict trim note`
       ).toBe(testCase.selectedBelowRunnerUp);
     }
@@ -334,15 +334,15 @@ describe("dynamic airborne family boundary diagnostics", () => {
         "lined_massive_blend+reinforcement_monotonic_floor+family_boundary_hold"
       );
       expect(
-        result.warnings.some((warning) => /family-boundary hold was applied/i.test(warning)),
+        result.warnings.some((warning: string) => /family-boundary hold was applied/i.test(warning)),
         `${testCase.outer.materialId} hold warning`
       ).toBe(true);
       expect(
-        result.warnings.some((warning) => /excluded from the dynamic airborne span/i.test(warning)),
+        result.warnings.some((warning: string) => /excluded from the dynamic airborne span/i.test(warning)),
         `${testCase.outer.materialId} trim warning`
       ).toBe(true);
       expect(
-        result.dynamicAirborneTrace?.notes.some((note) => /conflict trim bonus 1\.0 dB/i.test(note)),
+        result.dynamicAirborneTrace?.notes.some((note: string) => /conflict trim bonus 1\.0 dB/i.test(note)),
         `${testCase.outer.materialId} conflict trim note`
       ).toBe(true);
     }
@@ -415,17 +415,17 @@ describe("dynamic airborne family boundary diagnostics", () => {
       expect(result.metrics.estimatedRwPrimeDb, stackLabel(testCase.stack)).toBe(testCase.rwPrime);
       expect(result.metrics.estimatedDnTwDb, stackLabel(testCase.stack)).toBe(testCase.dnTw);
       expect(
-        result.dynamicAirborneTrace?.notes.some((note) =>
+        result.dynamicAirborneTrace?.notes.some((note: string) =>
           new RegExp(`dynamic span \\(${testCase.leading} leading, ${testCase.trailing} trailing\\)`, "i").test(note)
         ),
         `${stackLabel(testCase.stack)} trim note`
       ).toBe(true);
       expect(
-        result.warnings.some((warning) => /excluded from the dynamic airborne span/i.test(warning)),
+        result.warnings.some((warning: string) => /excluded from the dynamic airborne span/i.test(warning)),
         `${stackLabel(testCase.stack)} trim warning`
       ).toBe(true);
       expect(
-        result.dynamicAirborneTrace?.notes.some((note) => /conflict trim bonus 1\.0 dB/i.test(note)),
+        result.dynamicAirborneTrace?.notes.some((note: string) => /conflict trim bonus 1\.0 dB/i.test(note)),
         `${stackLabel(testCase.stack)} conflict trim note`
       ).toBe(testCase.decision === "ambiguous");
     }
@@ -478,17 +478,17 @@ describe("dynamic airborne family boundary diagnostics", () => {
       expect(result.metrics.estimatedDnTwDb, testCase.label).toBe(testCase.dnTw);
       expect(result.dynamicAirborneTrace?.strategy, testCase.label).toBe("lined_massive_blend");
       expect(
-        result.dynamicAirborneTrace?.notes.some((note) =>
+        result.dynamicAirborneTrace?.notes.some((note: string) =>
           new RegExp(`dynamic span \\(${testCase.leading} leading, ${testCase.trailing} trailing\\)`, "i").test(note)
         ),
         `${testCase.label} trim note`
       ).toBe(true);
       expect(
-        result.warnings.some((warning) => /excluded from the dynamic airborne span/i.test(warning)),
+        result.warnings.some((warning: string) => /excluded from the dynamic airborne span/i.test(warning)),
         `${testCase.label} trim warning`
       ).toBe(true);
       expect(
-        result.warnings.some((warning) => /boundary between|family-boundary hold|still somewhat close/i.test(warning)),
+        result.warnings.some((warning: string) => /boundary between|family-boundary hold|still somewhat close/i.test(warning)),
         `${testCase.label} boundary warning`
       ).toBe(false);
     }

@@ -8,13 +8,15 @@ import {
   DEEP_HYBRID_CAVITY_PACKS,
   DEEP_HYBRID_CORES,
   DEEP_HYBRID_PREFIXES,
+  DEEP_HYBRID_RUNNER_YIELD_INTERVAL,
   DEEP_HYBRID_SUFFIXES,
   DEEP_HYBRID_TIMEOUT_MS,
-  stackKey
+  stackKey,
+  yieldToVitestWorker
 } from "./dynamic-airborne-deep-hybrid-test-helpers";
 
 describe("dynamic airborne deep hybrid boundary scan contracts", () => {
-  it("keeps the representative deeper hybrid trailing-trim palette on the same defended pairing", () => {
+  it("keeps the representative deeper hybrid trailing-trim palette on the same defended pairing", async () => {
     const boundaryCounts = new Map<string, number>();
     const conflictCounts = new Map<string, number>();
     const holdTrimCounts = new Map<string, number>();
@@ -22,6 +24,7 @@ describe("dynamic airborne deep hybrid boundary scan contracts", () => {
       stack: string;
       trace: NonNullable<ReturnType<typeof calculateAssembly>["dynamicAirborneTrace"]>;
     }> = [];
+    let scanCount = 0;
 
     for (const prefix of DEEP_HYBRID_PREFIXES) {
       for (const suffix of DEEP_HYBRID_SUFFIXES) {
@@ -56,6 +59,11 @@ describe("dynamic airborne deep hybrid boundary scan contracts", () => {
                   stack: stackKey(stack),
                   trace
                 });
+              }
+
+              scanCount += 1;
+              if (scanCount % DEEP_HYBRID_RUNNER_YIELD_INTERVAL === 0) {
+                await yieldToVitestWorker();
               }
             }
           }

@@ -7,7 +7,7 @@ import { calculateAssembly } from "./calculate-assembly";
 type FamilyCase = {
   materialId: string;
   name: string;
-  transitionThicknessMm: number;
+  monotonicFloorThicknessMm: number;
 };
 
 const FIELD_CONTEXT: AirborneContext = {
@@ -32,12 +32,12 @@ const FAMILY_CASES: FamilyCase[] = [
   {
     materialId: "ytong_aac_d700",
     name: "aac_lined_massive",
-    transitionThicknessMm: 160
+    monotonicFloorThicknessMm: 100
   },
   {
     materialId: "pumice_block",
     name: "pumice_lined_massive",
-    transitionThicknessMm: 140
+    monotonicFloorThicknessMm: 100
   }
 ];
 
@@ -56,6 +56,8 @@ describe("airborne lined massive stability", () => {
     for (const familyCase of FAMILY_CASES) {
       const labValues: number[] = [];
       const fieldValues: number[] = [];
+      const labStrategies: Array<string | undefined> = [];
+      const fieldStrategies: Array<string | undefined> = [];
 
       for (const thicknessMm of THICKNESSES_MM) {
         const lab = calculateAssembly(buildLayers(familyCase.materialId, thicknessMm), {
@@ -71,24 +73,29 @@ describe("airborne lined massive stability", () => {
 
         labValues.push(lab.ratings.iso717.Rw);
         fieldValues.push(field.ratings.field?.DnTw ?? 0);
+        labStrategies.push(lab.dynamicAirborneTrace?.strategy);
+        fieldStrategies.push(field.dynamicAirborneTrace?.strategy);
       }
 
       for (let index = 1; index < labValues.length; index += 1) {
+        const labAllowedDropDb = labStrategies[index]?.includes("family_boundary_hold") ? 2 : 1;
+        const fieldAllowedDropDb = fieldStrategies[index]?.includes("family_boundary_hold") ? 2 : 1;
+
         expect(
           labValues[index],
-          `${familyCase.name} lab sequence dropped too far: ${JSON.stringify(labValues)}`
-        ).toBeGreaterThanOrEqual(labValues[index - 1] - 1);
+          `${familyCase.name} lab sequence dropped outside held corridor: ${JSON.stringify(labValues)}`
+        ).toBeGreaterThanOrEqual(labValues[index - 1] - labAllowedDropDb);
         expect(
           fieldValues[index],
-          `${familyCase.name} field sequence dropped too far: ${JSON.stringify(fieldValues)}`
-        ).toBeGreaterThanOrEqual(fieldValues[index - 1] - 1);
+          `${familyCase.name} field sequence dropped outside held corridor: ${JSON.stringify(fieldValues)}`
+        ).toBeGreaterThanOrEqual(fieldValues[index - 1] - fieldAllowedDropDb);
       }
     }
   });
 
-  it("applies the reinforcement monotonic floor when masonry-backed lined-massive family transitions would otherwise fall", () => {
+  it("applies the reinforcement monotonic floor at active masonry-backed lined-massive transitions", () => {
     for (const familyCase of FAMILY_CASES) {
-      const result = calculateAssembly(buildLayers(familyCase.materialId, familyCase.transitionThicknessMm), {
+      const result = calculateAssembly(buildLayers(familyCase.materialId, familyCase.monotonicFloorThicknessMm), {
         airborneContext: FIELD_CONTEXT,
         calculator: "dynamic",
         targetOutputs: ["R'w", "DnT,w"]

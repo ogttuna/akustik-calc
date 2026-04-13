@@ -23,6 +23,10 @@ type LowerBoundMetricKey =
 
 type ImpactParityCase = {
   compare: {
+    acceptedLocalDivergences?: readonly {
+      metrics: readonly string[];
+      reason: string;
+    }[];
     compareCatalogId?: boolean;
     compareFloorMetrics?: boolean;
     compareFloorSystemId?: boolean;
@@ -206,6 +210,13 @@ export const IMPACT_PARITY_CASES: readonly ImpactParityCase[] = [
       targetOutputs: ["L'n,w"]
     },
     compare: {
+      acceptedLocalDivergences: [
+        {
+          metrics: ["impact.LPrimeNW", "floor.RwCtr"],
+          reason:
+            "Acoustic2 still carries the older TUAS R5b open-box tuple; local follows the source-truth refresh with Ln,w 44, CI50 3, and Rw+Ctr 71.87531170772152."
+        }
+      ],
       compareFloorMetrics: true,
       compareImpactBasis: true,
       impactMetrics: ["LPrimeNW"]
@@ -240,6 +251,13 @@ export const IMPACT_PARITY_CASES: readonly ImpactParityCase[] = [
       targetOutputs: ["L'n,w", "L'nT,w"]
     },
     compare: {
+      acceptedLocalDivergences: [
+        {
+          metrics: ["impact.LPrimeNW", "impact.LPrimeNTw", "impact.LPrimeNT50", "floor.RwCtr"],
+          reason:
+            "Acoustic2 still carries the older TUAS R5b open-box tuple; local follows the source-truth refresh with Ln,w 44, CI50 3, and Rw+Ctr 71.87531170772152."
+        }
+      ],
       compareFloorMetrics: true,
       compareImpactBasis: true,
       impactMetrics: ["LPrimeNW", "LPrimeNTw", "LPrimeNT50"]
@@ -621,6 +639,13 @@ export const IMPACT_PARITY_CASES: readonly ImpactParityCase[] = [
       targetOutputs: ["L'n,w", "L'nT,w", "L'nT,50"]
     },
     compare: {
+      acceptedLocalDivergences: [
+        {
+          metrics: ["impact.LPrimeNW", "impact.LPrimeNTw", "impact.LPrimeNT50"],
+          reason:
+            "Acoustic2 still carries the older TUAS X2 CLT tuple; local follows the source-truth refresh with Ln,w 61, CI 2, and CI50 3."
+        }
+      ],
       compareImpactBasis: true,
       impactMetrics: ["LPrimeNW", "LPrimeNTw", "LPrimeNT50"]
     }

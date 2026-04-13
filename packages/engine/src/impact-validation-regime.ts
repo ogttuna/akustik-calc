@@ -22,10 +22,17 @@ export type ImpactValidationModeId =
   | "family_archetype_estimate"
   | "family_general_estimate"
   | "low_confidence_estimate"
+  | "unsupported_gap"
   | "field_explicit_k_estimate"
   | "field_standardized_volume_estimate";
 
-export type ImpactValidationModePosture = "exact" | "estimate" | "bound" | "field" | "low_confidence";
+export type ImpactValidationModePosture =
+  | "exact"
+  | "estimate"
+  | "bound"
+  | "field"
+  | "low_confidence"
+  | "unsupported";
 
 export type ImpactValidationModeRegime = {
   caseCount: number;
@@ -58,14 +65,14 @@ export type ImpactValidationFamilyRegime = {
 
 export const IMPACT_VALIDATION_MODE_MATRIX: readonly ImpactValidationModeRegime[] = [
   {
-    caseCount: 34,
+    caseCount: 35,
     id: "official_floor_system",
     label: "Official floor-system exact",
     note: "Curated exact or manual-exact published floor rows with direct Ln,w and companion airborne data.",
     posture: "exact"
   },
   {
-    caseCount: 2,
+    caseCount: 1,
     id: "official_floor_system_bound",
     label: "Official floor-system bound",
     note: "Published support rows that keep airborne companions exact but expose impact only as a conservative upper bound.",
@@ -93,7 +100,7 @@ export const IMPACT_VALIDATION_MODE_MATRIX: readonly ImpactValidationModeRegime[
     posture: "bound"
   },
   {
-    caseCount: 9,
+    caseCount: 8,
     id: "family_specific_estimate",
     label: "Family-specific estimate",
     note: "Narrow family branches such as CLT, composite, steel, or published heavy-concrete treatment estimates before broad averaging.",
@@ -126,6 +133,13 @@ export const IMPACT_VALIDATION_MODE_MATRIX: readonly ImpactValidationModeRegime[
     label: "Low-confidence family fallback",
     note: "Last-resort published-family blend that keeps the result non-empty without pretending it is a narrow same-family fit; this now covers the timber nil-ceiling, concrete combined, steel suspended, and composite ceiling-only fallback corridors.",
     posture: "low_confidence"
+  },
+  {
+    caseCount: 1,
+    id: "unsupported_gap",
+    label: "Unsupported source gap",
+    note: "Source-backed combinations where the currently available descriptors are intentionally insufficient, so the engine must fail closed instead of fabricating a live Ln,w lane.",
+    posture: "unsupported"
   },
   {
     caseCount: 2,
@@ -165,7 +179,8 @@ function buildPostureCaseCounts(
     estimate: 0,
     exact: 0,
     field: 0,
-    low_confidence: 0
+    low_confidence: 0,
+    unsupported: 0
   };
 
   for (const distribution of modeDistribution) {
@@ -243,7 +258,7 @@ export const IMPACT_VALIDATION_FAMILY_MATRIX: readonly ImpactValidationFamilyReg
   createImpactValidationFamilyRegime({
     fieldCaseCount: 2,
     fieldCoverage: "live",
-    floorCaseCount: 2,
+    floorCaseCount: 3,
     floorCoverage: "exact",
     id: "open_box_timber",
     label: "open box timber",
@@ -264,13 +279,14 @@ export const IMPACT_VALIDATION_FAMILY_MATRIX: readonly ImpactValidationFamilyReg
     maxToleranceDb: 0,
     modeDistribution: [
       { caseCount: 3, id: "official_floor_system" },
-      { caseCount: 5, id: "family_specific_estimate" },
+      { caseCount: 4, id: "family_specific_estimate" },
       { caseCount: 1, id: "family_archetype_estimate" },
       { caseCount: 1, id: "low_confidence_estimate" },
+      { caseCount: 1, id: "unsupported_gap" },
       { caseCount: 1, id: "field_explicit_k_estimate" },
       { caseCount: 4, id: "field_standardized_volume_estimate" }
     ],
-    note: "CLT now has representative exact dry and fill floor rows in addition to the narrow CLT estimate corridors, and the field corpus covers both open-measured standardized-volume continuation and official-row local-guide carry-over."
+    note: "CLT now has representative exact dry and fill floor rows in addition to the narrow CLT estimate corridors. The under-described combined dry-plus-wet CLT stack is explicitly tracked as an unsupported source gap until descriptors are rich enough for a defensible lane, and the field corpus covers both open-measured standardized-volume continuation and official-row local-guide carry-over."
   }),
   createImpactValidationFamilyRegime({
     fieldCaseCount: 1,
@@ -281,8 +297,8 @@ export const IMPACT_VALIDATION_FAMILY_MATRIX: readonly ImpactValidationFamilyReg
     label: "lightweight steel / open-web joists",
     maxToleranceDb: 0,
     modeDistribution: [
-      { caseCount: 7, id: "official_floor_system" },
-      { caseCount: 2, id: "official_floor_system_bound" },
+      { caseCount: 8, id: "official_floor_system" },
+      { caseCount: 1, id: "official_floor_system_bound" },
       { caseCount: 1, id: "family_specific_estimate" },
       { caseCount: 1, id: "family_specific_bound_estimate" },
       { caseCount: 1, id: "family_archetype_estimate" },

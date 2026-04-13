@@ -30,7 +30,8 @@ type ValidationBenchmarkCase = {
     | "family_specific_estimate"
     | "family_archetype_estimate"
     | "family_general_estimate"
-    | "low_confidence_estimate";
+    | "low_confidence_estimate"
+    | "unsupported_gap";
   source: string;
   targetOutputs?: RequestedOutputId[];
   tolerances?: Record<string, number>;
@@ -96,7 +97,8 @@ describe("impact validation benchmark corpus", () => {
         "family_specific_estimate",
         "family_archetype_estimate",
         "family_general_estimate",
-        "low_confidence_estimate"
+        "low_confidence_estimate",
+        "unsupported_gap"
       ]).toContain(entry.mode);
       expect(entry.impactPredictorInput && typeof entry.impactPredictorInput === "object").toBe(true);
       expect(entry.expected && typeof entry.expected === "object").toBe(true);
@@ -124,6 +126,18 @@ describe("impact validation benchmark corpus", () => {
       const impact = result.impact;
       const lowerBound = result.lowerBoundImpact;
       const floorRatings = result.floorSystemRatings;
+
+      if (entry.mode === "unsupported_gap") {
+        if (impact || lowerBound || result.floorSystemMatch || result.boundFloorSystemMatch || result.impactCatalogMatch) {
+          errors.push(`${entry.id}: expected the benchmark gap to stay impact-unsupported and match-free`);
+        }
+
+        if (result.supportedImpactOutputs.length > 0) {
+          errors.push(`${entry.id}: expected no supported impact outputs, got ${result.supportedImpactOutputs.join(", ")}`);
+        }
+
+        continue;
+      }
 
       if (!impact && !lowerBound && !result.floorSystemMatch && !result.boundFloorSystemMatch && !result.impactCatalogMatch) {
         errors.push(`${entry.id}: calculateImpactOnly returned no usable benchmark lane`);

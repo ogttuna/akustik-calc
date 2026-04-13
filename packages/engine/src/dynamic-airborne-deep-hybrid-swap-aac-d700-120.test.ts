@@ -13,8 +13,8 @@ describe("dynamic airborne deep hybrid AAC-D700-120 swap contracts", () => {
   for (const cohort of DEEP_HYBRID_AAC_D700_120_SWAP_SCAN_COHORTS) {
     it(
       `finds no silent >=8 dB adjacent-swap jumps for AAC-D700-120 deep-hybrid cohort ${cohort.label}`,
-      () => {
-        const offenders = collectSilentSwapOffenders(readSnapshot, cohort);
+      async () => {
+        const offenders = await collectSilentSwapOffenders(readSnapshot, cohort);
         expect(offenders).toEqual([]);
       },
       DEEP_HYBRID_SWAP_TIMEOUT_MS

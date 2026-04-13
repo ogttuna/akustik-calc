@@ -149,7 +149,8 @@ describe("impact validation regime matrix", () => {
           estimate: 0,
           exact: 0,
           field: 0,
-          low_confidence: 0
+          low_confidence: 0,
+          unsupported: 0
         }
       );
 

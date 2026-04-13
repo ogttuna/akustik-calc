@@ -86,7 +86,7 @@
         "floorSystemId": "tuas_r2b_open_box_timber_measured_2026",
         "impactBasis": "open_measured_floor_system_exact_match",
         "impactMetric": "LnW",
-        "impactValueDb": 55
+        "impactValueDb": 46
       },
       "tolerances": {
         "floorRwDb": 0,
@@ -112,7 +112,7 @@
         "floorSystemId": "tuas_r2a_open_box_timber_measured_2026",
         "impactBasis": "open_measured_floor_system_exact_match",
         "impactMetric": "LnW",
-        "impactValueDb": 72
+        "impactValueDb": 61
       },
       "tolerances": {
         "floorRwDb": 0,
@@ -140,7 +140,7 @@
         "floorSystemId": "tuas_r5b_open_box_timber_measured_2026",
         "impactBasis": "predictor_floor_system_family_archetype_estimate",
         "impactMetric": "LnW",
-        "impactValueDb": 39
+        "impactValueDb": 44
       },
       "tolerances": {
         "floorRwDb": 0,
@@ -158,10 +158,10 @@
         { "floorRole": "base_structure", "materialId": "clt_panel", "thicknessMm": 180 }
       ],
       "expected": {
-        "floorRwDb": 40,
+        "floorRwDb": 40.6,
         "impactBasis": "predictor_mass_timber_clt_bare_interpolation_estimate",
         "impactMetric": "LnW",
-        "impactValueDb": 67.5
+        "impactValueDb": 57.7
       },
       "tolerances": {
         "floorRwDb": 0,

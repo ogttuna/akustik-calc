@@ -102,6 +102,16 @@ function sortedValues<T extends string | number>(input: readonly T[]) {
   return [...input].sort();
 }
 
+function requireNumericValues(input: readonly (number | null | undefined)[], label: string) {
+  const missingIndex = input.findIndex((value) => typeof value !== "number");
+
+  if (missingIndex !== -1) {
+    throw new Error(`${label} is missing a numeric fixture value at index ${missingIndex}`);
+  }
+
+  return input as readonly number[];
+}
+
 describe("UBIQ candidate backlog contract", () => {
   it("keeps the current imported UBIQ open-web exact and bound subsets explicit", () => {
     const importedExactRows = EXACT_FLOOR_SYSTEMS.filter(
@@ -115,9 +125,18 @@ describe("UBIQ candidate backlog contract", () => {
     expect(sortedValues(importedExactRows.map((system) => system.id))).toEqual(sortedValues(IMPORTED_UBIQ_OPEN_WEB_EXACT_IDS));
     expect(sortedValues(importedBoundRows.map((system) => system.id))).toEqual(sortedValues(IMPORTED_UBIQ_OPEN_WEB_BOUND_IDS));
 
-    const importedExactDecks = importedExactRows.map((system) => system.match.floatingScreed?.thicknessMm ?? null);
-    const importedExactDepths = importedExactRows.map((system) => system.match.baseStructure?.thicknessMm ?? null);
-    const importedBoundDepths = importedBoundRows.map((system) => system.match.baseStructure?.thicknessMm ?? null);
+    const importedExactDecks = requireNumericValues(
+      importedExactRows.map((system) => system.match.floatingScreed?.thicknessMm),
+      "UBIQ exact deck thicknesses"
+    );
+    const importedExactDepths = requireNumericValues(
+      importedExactRows.map((system) => system.match.baseStructure?.thicknessMm),
+      "UBIQ exact joist depths"
+    );
+    const importedBoundDepths = requireNumericValues(
+      importedBoundRows.map((system) => system.match.baseStructure?.thicknessMm),
+      "UBIQ bound joist depths"
+    );
 
     expect(sortedValues(importedExactDecks)).toEqual([
       16, 16, 16, 16, 16, 16, 16, 16, 16, 19, 19, 19, 19, 19, 19, 19, 19, 19
@@ -157,7 +176,14 @@ describe("UBIQ candidate backlog contract", () => {
     const importedOpenWebBoundRows = BOUND_FLOOR_SYSTEMS.filter((system) => system.id.startsWith("ubiq_fl33_open_web_steel_"));
 
     expect(sortedValues(importedOpenWebBoundRows.map((system) => system.id))).toEqual(sortedValues(IMPORTED_UBIQ_OPEN_WEB_BOUND_IDS));
-    expect(sortedValues(importedOpenWebBoundRows.map((system) => system.match.baseStructure?.thicknessMm ?? null))).toEqual([200, 300, 400]);
+    expect(
+      sortedValues(
+        requireNumericValues(
+          importedOpenWebBoundRows.map((system) => system.match.baseStructure?.thicknessMm),
+          "UBIQ open-web bound depths"
+        )
+      )
+    ).toEqual([200, 300, 400]);
     expect(UBIQ_OFFICIAL_FLOOR_SOLUTIONS_URL).toBe(
       "https://www.ubiq.au/wp-content/uploads/2023/02/INEX-FLOOR-FLOOR-SOLUTIONS-16PP-2023-1.pdf"
     );
@@ -214,8 +240,11 @@ describe("UBIQ candidate backlog contract", () => {
   });
 
   it("keeps the visible FL-28 FRL/D 400 mm bound sibling explicitly imported beside the existing 200 and 300 rows", () => {
-    const importedBoundDepths = BOUND_FLOOR_SYSTEMS.filter((system) => system.id.startsWith("ubiq_fl33_open_web_steel_")).map(
-      (system) => system.match.baseStructure?.thicknessMm ?? null
+    const importedBoundDepths = requireNumericValues(
+      BOUND_FLOOR_SYSTEMS.filter((system) => system.id.startsWith("ubiq_fl33_open_web_steel_")).map(
+        (system) => system.match.baseStructure?.thicknessMm
+      ),
+      "UBIQ FL-28 FRL/D bound depths"
     );
 
     expect(sortedValues(importedBoundDepths)).toEqual([200, 300, 400]);

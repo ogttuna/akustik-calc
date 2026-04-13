@@ -67,9 +67,9 @@
       },
       "expected": {
         "basis": "mixed_exact_plus_estimated_standardized_field_volume_normalization",
-        "lprimeNwDb": 74,
-        "lprimeNTwDb": 72,
-        "lprimeNT50Db": 74
+        "lprimeNwDb": 63,
+        "lprimeNTwDb": 61,
+        "lprimeNT50Db": 65
       },
       "tolerances": {
         "lprimeNwDb": 0,
@@ -93,9 +93,9 @@
       },
       "expected": {
         "basis": "mixed_exact_plus_estimated_standardized_field_volume_normalization",
-        "lprimeNwDb": 41,
-        "lprimeNTwDb": 39,
-        "lprimeNT50Db": 44
+        "lprimeNwDb": 46,
+        "lprimeNTwDb": 44,
+        "lprimeNT50Db": 47
       },
       "tolerances": {
         "lprimeNwDb": 0,
@@ -119,9 +119,9 @@
       },
       "expected": {
         "basis": "mixed_exact_plus_estimated_standardized_field_volume_normalization",
-        "lprimeNwDb": 26,
-        "lprimeNTwDb": 24,
-        "lprimeNT50Db": 40
+        "lprimeNwDb": 40,
+        "lprimeNTwDb": 38,
+        "lprimeNT50Db": 44
       },
       "tolerances": {
         "lprimeNwDb": 0,

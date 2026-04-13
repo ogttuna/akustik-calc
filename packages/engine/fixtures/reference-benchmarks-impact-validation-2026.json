@@ -1016,10 +1016,10 @@
         }
       },
       "expected": {
-        "lnwMinDb": 72.0,
-        "lnwMaxDb": 72.0,
-        "rwMinDb": 49.0,
-        "rwMaxDb": 49.0
+        "lnwMinDb": 46.0,
+        "lnwMaxDb": 46.0,
+        "rwMinDb": 62.0,
+        "rwMaxDb": 62.0
       }
     },
     {
@@ -1057,8 +1057,8 @@
         }
       },
       "expected": {
-        "lnwMinDb": 39.0,
-        "lnwMaxDb": 39.0,
+        "lnwMinDb": 44.0,
+        "lnwMaxDb": 44.0,
         "rwMinDb": 75.0,
         "rwMaxDb": 75.0
       }
@@ -1166,8 +1166,8 @@
         }
       },
       "expected": {
-        "lnwMinDb": 67.5,
-        "lnwMaxDb": 68.5,
+        "lnwMinDb": 59.0,
+        "lnwMaxDb": 59.0,
         "rwMinDb": 39.0,
         "rwMaxDb": 40.0
       }
@@ -1233,15 +1233,15 @@
         }
       },
       "expected": {
-        "lnwMinDb": 49.5,
-        "lnwMaxDb": 50.5,
+        "lnwMinDb": 65.0,
+        "lnwMaxDb": 65.0,
         "rwMinDb": 54.5,
         "rwMaxDb": 55.5
       }
     },
     {
       "id": "tuas_clt_dry_combined_interaction_estimate",
-      "mode": "family_specific_estimate",
+      "mode": "unsupported_gap",
       "source": "https://doi.org/10.17632/y83p8mpryd.2",
       "expectedBasis": "predictor_mass_timber_clt_dry_interaction_estimate",
       "impactPredictorInput": {
@@ -1599,8 +1599,8 @@
       "expected": {
         "lnwMinDb": 50.9,
         "lnwMaxDb": 51.1,
-        "rwMinDb": 63.6,
-        "rwMaxDb": 63.8
+        "rwMinDb": 62.6,
+        "rwMaxDb": 62.8
       }
     },
     {
@@ -1803,9 +1803,9 @@
       }
     },
     {
-      "id": "ubiq_fl33_steel_manual_bound",
-      "mode": "official_floor_system_bound",
-      "source": "https://www.ubiq.au/wp-content/uploads/2025/05/UBIQ_INEX_FLOOR_2_WAY-FRL_250524.pdf",
+      "id": "ubiq_fl26_steel_manual_exact",
+      "mode": "official_floor_system",
+      "source": "https://www.ubiq.au/wp-content/uploads/2023/02/INEX-FLOOR-FLOOR-FIRE-ACOUSTIC.pdf",
       "impactPredictorInput": {
         "structuralSupportType": "steel_joists",
         "supportForm": "open_web_or_rolled",
@@ -1827,8 +1827,10 @@
         }
       },
       "expected": {
-        "rwDb": 63.0,
-        "lnwUpperBoundDb": 51.0
+        "lnwDb": 53.0,
+        "ciDb": -2.0,
+        "lnwPlusCiDb": 51.0,
+        "rwDb": 62.0
       }
     },
     {
@@ -2064,9 +2066,9 @@
         "officialFloorSystemId": "tuas_r5b_open_box_timber_measured_2026"
       },
       "expected": {
-        "lprimeNwDb": 41.0,
-        "lprimeNTwDb": 39.0,
-        "lprimeNT50Db": 44.0
+        "lprimeNwDb": 46.0,
+        "lprimeNTwDb": 44.0,
+        "lprimeNT50Db": 47.0
       },
       "expectedBasis": "mixed_exact_plus_estimated_standardized_field_volume_normalization",
       "tolerances": {
@@ -2090,9 +2092,9 @@
         "officialFloorSystemId": "tuas_r2a_open_box_timber_measured_2026"
       },
       "expected": {
-        "lprimeNwDb": 74.0,
-        "lprimeNTwDb": 72.0,
-        "lprimeNT50Db": 74.0
+        "lprimeNwDb": 63.0,
+        "lprimeNTwDb": 61.0,
+        "lprimeNT50Db": 65.0
       },
       "expectedBasis": "mixed_exact_plus_estimated_standardized_field_volume_normalization",
       "tolerances": {
@@ -2116,9 +2118,9 @@
         "officialFloorSystemId": "tuas_x2_clt140_measured_2026"
       },
       "expected": {
-        "lprimeNwDb": 72.0,
-        "lprimeNTwDb": 70.0,
-        "lprimeNT50Db": 70.0
+        "lprimeNwDb": 63.0,
+        "lprimeNTwDb": 61.0,
+        "lprimeNT50Db": 64.0
       },
       "expectedBasis": "mixed_exact_plus_estimated_standardized_field_volume_normalization",
       "tolerances": {
@@ -2142,9 +2144,9 @@
         "officialFloorSystemId": "tuas_x5_clt140_measured_2026"
       },
       "expected": {
-        "lprimeNwDb": 52.0,
-        "lprimeNTwDb": 50.0,
-        "lprimeNT50Db": 58.0
+        "lprimeNwDb": 67.0,
+        "lprimeNTwDb": 65.0,
+        "lprimeNT50Db": 65.0
       },
       "expectedBasis": "mixed_exact_plus_estimated_standardized_field_volume_normalization",
       "tolerances": {
@@ -2168,9 +2170,9 @@
         "officialFloorSystemId": "tuas_c2_clt260_measured_2026"
       },
       "expected": {
-        "lprimeNwDb": 67.0,
-        "lprimeNTwDb": 65.0,
-        "lprimeNT50Db": 65.0
+        "lprimeNwDb": 57.0,
+        "lprimeNTwDb": 55.0,
+        "lprimeNT50Db": 59.0
       },
       "expectedBasis": "mixed_exact_plus_estimated_standardized_field_volume_normalization",
       "tolerances": {
@@ -2194,9 +2196,9 @@
         "officialFloorSystemId": "tuas_c5c_clt260_measured_2026"
       },
       "expected": {
-        "lprimeNwDb": 26.0,
-        "lprimeNTwDb": 24.0,
-        "lprimeNT50Db": 40.0
+        "lprimeNwDb": 40.0,
+        "lprimeNTwDb": 38.0,
+        "lprimeNT50Db": 44.0
       },
       "expectedBasis": "mixed_exact_plus_estimated_standardized_field_volume_normalization",
       "tolerances": {
@@ -2220,9 +2222,9 @@
         "officialFloorSystemId": "tuas_h2_concrete160_measured_2026"
       },
       "expected": {
-        "lprimeNwDb": 61.0,
-        "lprimeNTwDb": 59.0,
-        "lprimeNT50Db": 60.0
+        "lprimeNwDb": 49.0,
+        "lprimeNTwDb": 47.0,
+        "lprimeNT50Db": 52.0
       },
       "expectedBasis": "mixed_exact_plus_estimated_standardized_field_volume_normalization",
       "tolerances": {
@@ -2246,9 +2248,9 @@
         "officialFloorSystemId": "tuas_h5_concrete160_measured_2026"
       },
       "expected": {
-        "lprimeNwDb": 37.0,
-        "lprimeNTwDb": 35.0,
-        "lprimeNT50Db": 45.0
+        "lprimeNwDb": 48.0,
+        "lprimeNTwDb": 46.0,
+        "lprimeNT50Db": 55.0
       },
       "expectedBasis": "mixed_exact_plus_estimated_standardized_field_volume_normalization",
       "tolerances": {

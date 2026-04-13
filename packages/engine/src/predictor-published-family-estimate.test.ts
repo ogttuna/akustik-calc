@@ -269,12 +269,12 @@ describe("derivePredictorPublishedFamilyEstimate", () => {
 
     expect(result?.kind).toBe("family_general");
     expect(result?.impact.basis).toBe("predictor_mass_timber_clt_bare_interpolation_estimate");
-    expect(result?.impact.LnW).toBe(73);
+    expect(result?.impact.LnW).toBe(64);
     expect(result?.impact.CI).toBe(0);
     expect(result?.impact.CI50_2500).toBe(0);
-    expect(result?.impact.LnWPlusCI).toBe(73);
+    expect(result?.impact.LnWPlusCI).toBe(64);
     expect(result?.airborneRatings.Rw).toBe(35);
-    expect(result?.airborneRatings.RwCtr).toBe(31.7);
+    expect(result?.airborneRatings.RwCtr).toBe(34.2);
     expect(result?.impact.estimateCandidateIds).toEqual([
       "tuas_x2_clt140_measured_2026",
       "tuas_c2_clt260_measured_2026"
@@ -300,10 +300,10 @@ describe("derivePredictorPublishedFamilyEstimate", () => {
 
     expect(result?.kind).toBe("family_general");
     expect(result?.impact.basis).toBe("predictor_mass_timber_clt_bare_interpolation_estimate");
-    expect(result?.impact.LnW).toBe(68.3);
-    expect(result?.impact.LnWPlusCI).toBe(68.3);
+    expect(result?.impact.LnW).toBe(59);
+    expect(result?.impact.LnWPlusCI).toBe(59);
     expect(result?.airborneRatings.Rw).toBe(39.3);
-    expect(result?.airborneRatings.RwCtr).toBe(36);
+    expect(result?.airborneRatings.RwCtr).toBe(38.7);
     expect(result?.impact.estimateCandidateIds).toEqual([
       "tuas_x2_clt140_measured_2026",
       "tuas_c2_clt260_measured_2026"
@@ -417,11 +417,11 @@ describe("derivePredictorPublishedFamilyEstimate", () => {
 
     expect(result?.kind).toBe("family_archetype");
     expect(result?.impact.basis).toBe("predictor_floor_system_family_archetype_estimate");
-    expect(result?.impact.LnW).toBe(39);
-    expect(result?.impact.CI).toBe(2);
-    expect(result?.impact.LnWPlusCI).toBe(41);
+    expect(result?.impact.LnW).toBe(44);
+    expect(result?.impact.CI).toBe(0);
+    expect(result?.impact.LnWPlusCI).toBe(44);
     expect(result?.airborneRatings.Rw).toBe(75);
-    expect(result?.airborneRatings.RwCtr).toBe(66.84359068531064);
+    expect(result?.airborneRatings.RwCtr).toBe(71.87531170772152);
     expect(result?.impact.estimateCandidateIds).toEqual(["tuas_r5b_open_box_timber_measured_2026"]);
   });
 
@@ -450,11 +450,11 @@ describe("derivePredictorPublishedFamilyEstimate", () => {
 
     expect(result?.kind).toBe("family_archetype");
     expect(result?.impact.basis).toBe("predictor_floor_system_family_archetype_estimate");
-    expect(result?.impact.LnW).toBe(55);
-    expect(result?.impact.CI).toBe(0);
-    expect(result?.impact.LnWPlusCI).toBe(55);
+    expect(result?.impact.LnW).toBe(46);
+    expect(result?.impact.CI).toBe(1);
+    expect(result?.impact.LnWPlusCI).toBe(47);
     expect(result?.airborneRatings.Rw).toBe(62);
-    expect(result?.airborneRatings.RwCtr).toBe(54.408826940816517);
+    expect(result?.airborneRatings.RwCtr).toBe(59.973347663855776);
     expect(result?.impact.estimateCandidateIds).toEqual(["tuas_r2b_open_box_timber_measured_2026"]);
   });
 

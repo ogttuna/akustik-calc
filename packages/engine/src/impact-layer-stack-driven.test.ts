@@ -125,9 +125,9 @@ describe("layer-driven impact parity", () => {
     );
 
     expect(result.ok).toBe(true);
-    expect(result.impact?.LnW).toBe(70);
-    expect(result.impact?.CI).toBe(0);
-    expect(result.impact?.LnWPlusCI).toBe(70);
+    expect(result.impact?.LnW).toBe(61);
+    expect(result.impact?.CI).toBe(2);
+    expect(result.impact?.LnWPlusCI).toBe(63);
     expect(result.floorSystemRatings?.Rw).toBe(38);
     expect(result.impactPredictorStatus?.matchedFloorSystemId).toBe("tuas_x2_clt140_measured_2026");
   });

@@ -393,7 +393,7 @@ function swapAdjacent(stack: readonly LayerInput[], leftIndex: number) {
 
 function expectWarningFragment(warnings: readonly string[], fragment: string, label: string) {
   expect(
-    warnings.some((warning) => warning.includes(fragment)),
+    warnings.some((warning: string) => warning.includes(fragment)),
     `${label} should include warning fragment: ${fragment}`
   ).toBe(true);
 }
@@ -632,12 +632,12 @@ describe("dynamic airborne stability contracts", () => {
       expect(Math.abs(changed.dnTw - base.dnTw), `${testCase.name} field DnT,w delta`).toBeLessThanOrEqual(testCase.maxDnTwDelta);
       if (base.family === "lined_massive_wall") {
         expectWarningFragment(base.warnings, "family-boundary hold was applied", `${testCase.name} base`);
-        expect(base.notes.some((note) => /ambiguity hold trimmed/i.test(note)), `${testCase.name} base hold note`).toBe(true);
+        expect(base.notes.some((note: string) => /ambiguity hold trimmed/i.test(note)), `${testCase.name} base hold note`).toBe(true);
       }
       if (changed.family === "lined_massive_wall") {
         expectWarningFragment(changed.warnings, "family-boundary hold was applied", `${testCase.name} changed`);
         expect(
-          changed.notes.some((note) => /ambiguity hold trimmed/i.test(note)),
+          changed.notes.some((note: string) => /ambiguity hold trimmed/i.test(note)),
           `${testCase.name} changed hold note`
         ).toBe(true);
       }

@@ -9,7 +9,7 @@
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts --clean",
     "lint": "eslint src --ext .ts",
-    "test": "vitest run",
+    "test": "vitest run --maxWorkers=1",
     "typecheck": "tsc --project tsconfig.json"
   },
   "dependencies": {
@@ -17,4 +17,3 @@
     "@dynecho/shared": "workspace:*"
   }
 }
-

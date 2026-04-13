@@ -44,8 +44,14 @@ type Mismatch = {
   metric: string;
 };
 
+type AcceptedMismatch = Mismatch & {
+  reason: string;
+};
+
 type ParityResult = {
+  acceptedMismatches: AcceptedMismatch[];
   fixture: ImpactOnlyParityCase;
+  id: string;
   local: ImpactOnlySummary;
   mismatches: Mismatch[];
   ok: boolean;
@@ -290,6 +296,31 @@ function getLowerBoundMetricValue(
   }
 }
 
+function splitAcceptedMismatches(fixture: ImpactOnlyParityCase, mismatches: readonly Mismatch[]) {
+  const acceptedReasonsByMetric = new Map<string, string>();
+
+  for (const divergence of fixture.compare.acceptedLocalDivergences ?? []) {
+    for (const metric of divergence.metrics) {
+      acceptedReasonsByMetric.set(metric, divergence.reason);
+    }
+  }
+
+  const acceptedMismatches: AcceptedMismatch[] = [];
+  const remainingMismatches: Mismatch[] = [];
+
+  for (const mismatch of mismatches) {
+    const reason = acceptedReasonsByMetric.get(mismatch.metric);
+
+    if (reason) {
+      acceptedMismatches.push({ ...mismatch, reason });
+    } else {
+      remainingMismatches.push(mismatch);
+    }
+  }
+
+  return { acceptedMismatches, remainingMismatches };
+}
+
 function compareCase(fixture: ImpactOnlyParityCase, options: { upstreamPath?: string } = {}): ParityResult {
   const targetOutputs = (fixture.upstreamOptions.targetOutputs ?? []) as RequestedOutputId[];
   const localImpactPredictorInput = fixture.derivePredictorInputFromVisibleLayers
@@ -374,11 +405,15 @@ function compareCase(fixture: ImpactOnlyParityCase, options: { upstreamPath?: st
     );
   }
 
+  const { acceptedMismatches, remainingMismatches } = splitAcceptedMismatches(fixture, mismatches);
+
   return {
+    acceptedMismatches,
     fixture,
+    id: fixture.id,
     local,
-    mismatches,
-    ok: mismatches.length === 0,
+    mismatches: remainingMismatches,
+    ok: remainingMismatches.length === 0,
     upstream
   };
 }
@@ -470,7 +505,12 @@ function printResult(result: ParityResult) {
   }
 
   if (result.ok) {
-    console.log("  status: ok");
+    console.log(result.acceptedMismatches.length ? "  status: ok with accepted local divergence" : "  status: ok");
+    for (const mismatch of result.acceptedMismatches) {
+      console.log(
+        `    accepted ${mismatch.metric}: dynecho=${mismatch.actual} | upstream=${mismatch.expected} | ${mismatch.reason}`
+      );
+    }
     return;
   }
 

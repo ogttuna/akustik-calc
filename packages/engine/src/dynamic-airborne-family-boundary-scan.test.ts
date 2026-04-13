@@ -208,7 +208,7 @@ function buildSnapshotReader() {
       targetOutputs: ["R'w", "DnT,w"]
     });
 
-    const warnings = field.warnings.filter((warning) =>
+    const warnings = field.warnings.filter((warning: string) =>
       /boundary|hold|order-sensitive|triple-leaf|excluded from the dynamic airborne span/i.test(warning)
     );
 
@@ -437,7 +437,7 @@ describe("dynamic airborne family boundary scan contracts", () => {
             familyCounts.set(trace?.detectedFamily ?? "none", (familyCounts.get(trace?.detectedFamily ?? "none") ?? 0) + 1);
             trimCounts.set(trimKey, (trimCounts.get(trimKey) ?? 0) + 1);
 
-            const boundaryWarnings = result.warnings.filter((warning) =>
+            const boundaryWarnings = result.warnings.filter((warning: string) =>
               /boundary between|family-boundary hold|still somewhat close/i.test(warning)
             );
 

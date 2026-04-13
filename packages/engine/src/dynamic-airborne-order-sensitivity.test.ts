@@ -207,7 +207,7 @@ describe("dynamic airborne order-sensitive multileaf contracts", () => {
       expect(swapped.dnTw - base.dnTw, `${variant.name} field DnT,w delta`).toBeGreaterThanOrEqual(12);
       expectFragment(base.warnings, "triple-leaf partition", `${variant.name} base warning`);
       expect(
-        swapped.warnings.some((warning) => warning.includes("triple-leaf partition")),
+        swapped.warnings.some((warning: string) => warning.includes("triple-leaf partition")),
         `${variant.name} swapped should not stay on the triple-leaf warning`
       ).toBe(false);
     }

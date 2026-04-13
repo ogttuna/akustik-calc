@@ -7,6 +7,7 @@ import {
   IMPACT_VALIDATION_FAMILY_MATRIX,
   IMPACT_VALIDATION_MODE_MATRIX
 } from "@dynecho/engine";
+import type { ImpactValidationModePosture } from "@dynecho/engine";
 import type { AssemblyCalculation, DynamicAirborneTrace } from "@dynecho/shared";
 
 import { getImpactLaneKind, getImpactLanePillLabel } from "./impact-lane-view";
@@ -314,9 +315,7 @@ export function formatFieldCoverageLabel(value: "bound" | "live" | "staged"): st
   }
 }
 
-export function formatValidationModePostureLabel(
-  value: "bound" | "estimate" | "exact" | "field" | "low_confidence"
-): string {
+export function formatValidationModePostureLabel(value: ImpactValidationModePosture): string {
   switch (value) {
     case "exact":
       return "Exact benchmark mode";
@@ -328,6 +327,8 @@ export function formatValidationModePostureLabel(
       return "Field benchmark mode";
     case "low_confidence":
       return "Low-confidence benchmark mode";
+    case "unsupported":
+      return "Unsupported source gap";
   }
 }
 
@@ -339,7 +340,8 @@ export function formatValidationFamilyBenchmarkMix(
     entry.postureCaseCounts.estimate > 0 ? `${entry.postureCaseCounts.estimate} estimate` : null,
     entry.postureCaseCounts.low_confidence > 0 ? `${entry.postureCaseCounts.low_confidence} low confidence` : null,
     entry.postureCaseCounts.bound > 0 ? `${entry.postureCaseCounts.bound} bound` : null,
-    entry.postureCaseCounts.field > 0 ? `${entry.postureCaseCounts.field} field` : null
+    entry.postureCaseCounts.field > 0 ? `${entry.postureCaseCounts.field} field` : null,
+    entry.postureCaseCounts.unsupported > 0 ? `${entry.postureCaseCounts.unsupported} unsupported` : null
   ].filter((part): part is string => Boolean(part));
 
   return parts.length > 0 ? parts.join(" · ") : "No tracked benchmark mix";
@@ -350,7 +352,10 @@ export function getValidationCoverageSnapshotRows(): ValidationCoverageSnapshotR
     let focusLabel = "Broadly covered";
     let focusDetail = "Exact, estimate, and field evidence are already separated without a live low-confidence escape hatch.";
 
-    if (entry.postureCaseCounts.low_confidence > 0) {
+    if (entry.postureCaseCounts.unsupported > 0) {
+      focusLabel = "Unsupported source gap";
+      focusDetail = `${entry.postureCaseCounts.unsupported} benchmark case is deliberately fail-closed until the source descriptors are rich enough for a defensible lane.`;
+    } else if (entry.postureCaseCounts.low_confidence > 0) {
       focusLabel = "Remaining low-confidence lane";
       focusDetail = `${entry.postureCaseCounts.low_confidence} benchmark case still needs the final fallback lane, so this family remains the sharpest place to tighten topology support next.`;
     } else if (entry.fieldCoverage === "staged") {
@@ -389,8 +394,21 @@ export function getValidationHardeningTasks(): ValidationHardeningTask[] {
   const boundFamilies = IMPACT_VALIDATION_FAMILY_MATRIX.filter(
     (entry) => entry.floorCoverage === "bound" || entry.fieldCoverage === "bound"
   ).map((entry) => entry.label);
+  const unsupportedFamilies = IMPACT_VALIDATION_FAMILY_MATRIX.filter(
+    (entry) => entry.postureCaseCounts.unsupported > 0
+  ).map((entry) => entry.label);
 
   const tasks: ValidationHardeningTask[] = [];
+
+  if (unsupportedFamilies.length > 0) {
+    tasks.push({
+      detail:
+        "Add source descriptors or exact rows before reopening these fail-closed gaps. Do not convert them into low-confidence estimates just to fill output cards.",
+      familyLabels: unsupportedFamilies,
+      id: "close-unsupported-gaps",
+      label: "Close unsupported source gaps"
+    });
+  }
 
   if (lowConfidenceFamilies.length > 0) {
     tasks.push({
@@ -441,13 +459,13 @@ export function getValidationFamilyModeRows(
   caseCount: number;
   id: string;
   label: string;
-  posture: "bound" | "estimate" | "exact" | "field" | "low_confidence";
+  posture: ImpactValidationModePosture;
 }> {
   return entry.modeDistribution.reduce<Array<{
     caseCount: number;
     id: string;
     label: string;
-    posture: "bound" | "estimate" | "exact" | "field" | "low_confidence";
+    posture: ImpactValidationModePosture;
   }>>((rows, distribution) => {
       const regime = getImpactValidationModeRegimeById(distribution.id);
 

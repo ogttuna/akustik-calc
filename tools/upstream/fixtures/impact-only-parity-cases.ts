@@ -24,6 +24,10 @@ type ImpactOnlyLowerBoundMetricKey =
 
 export type ImpactOnlyParityCase = {
   compare: {
+    acceptedLocalDivergences?: readonly {
+      metrics: readonly string[];
+      reason: string;
+    }[];
     compareFloorMetrics?: boolean;
     compareFloorSystemId?: boolean;
     compareImpactBasis?: boolean;
@@ -615,6 +619,13 @@ export const IMPACT_ONLY_PARITY_CASES: readonly ImpactOnlyParityCase[] = [
       targetOutputs: ["Ln,w", "CI", "Ln,w+CI"]
     },
     compare: {
+      acceptedLocalDivergences: [
+        {
+          metrics: ["impact.LnW", "impact.CI", "impact.LnWPlusCI", "floor.RwCtr"],
+          reason:
+            "Acoustic2 still carries the older TUAS X2 CLT tuple; local follows the source-truth refresh with Ln,w 61, CI 2, Ln,w+CI 63, and Rw+Ctr 37.242344245020725."
+        }
+      ],
       compareFloorMetrics: true,
       compareFloorSystemId: true,
       impactMetrics: ["LnW", "CI", "LnWPlusCI"]

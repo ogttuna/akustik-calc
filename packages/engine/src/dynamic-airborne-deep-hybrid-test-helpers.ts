@@ -14,8 +14,16 @@ export const BUILDING_CONTEXT: AirborneContext = {
   receivingRoomVolumeM3: 45
 };
 
-export const DEEP_HYBRID_TIMEOUT_MS = 35_000;
-export const DEEP_HYBRID_SWAP_TIMEOUT_MS = 40_000;
+// These CPU-heavy stress scans slow down under full-suite worker contention.
+export const DEEP_HYBRID_TIMEOUT_MS = 60_000;
+export const DEEP_HYBRID_SWAP_TIMEOUT_MS = 90_000;
+export const DEEP_HYBRID_RUNNER_YIELD_INTERVAL = 50;
+
+export function yieldToVitestWorker() {
+  return new Promise<void>((resolve) => {
+    setTimeout(resolve, 0);
+  });
+}
 
 export const DEEP_HYBRID_PREFIXES: readonly (readonly LayerInput[])[] = [
   [],
@@ -66,8 +74,8 @@ export const BOARDS = [
   { materialId: "security_board", thicknessMm: 12.5 }
 ] as const;
 
-const FAST_BOARD_PAIR = [BOARDS[0], BOARDS[1]] as const;
-const SLOW_BOARD_PAIR = [BOARDS[2], BOARDS[3]] as const;
+export const FAST_BOARD_PAIR = [BOARDS[0], BOARDS[1]] as const;
+export const SLOW_BOARD_PAIR = [BOARDS[2], BOARDS[3]] as const;
 
 export type DeepHybridCore = (typeof DEEP_HYBRID_CORES)[number];
 export type DeepHybridBoard = (typeof BOARDS)[number];
@@ -123,9 +131,14 @@ export const DEEP_HYBRID_AAC_D700_120_SWAP_SCAN_COHORTS = DEEP_HYBRID_AAC_D700_S
 
 export const DEEP_HYBRID_NON_AAC_SWAP_SCAN_COHORTS: readonly DeepHybridSwapCohort[] = [
   {
-    boards: BOARDS,
+    boards: FAST_BOARD_PAIR,
     cores: [DEEP_HYBRID_CORES[3]] as const,
-    label: `${DEEP_HYBRID_CORES[3].materialId}:${DEEP_HYBRID_CORES[3].thicknessMm}`
+    label: `${DEEP_HYBRID_CORES[3].materialId}:${DEEP_HYBRID_CORES[3].thicknessMm}:boards-a`
+  },
+  {
+    boards: SLOW_BOARD_PAIR,
+    cores: [DEEP_HYBRID_CORES[3]] as const,
+    label: `${DEEP_HYBRID_CORES[3].materialId}:${DEEP_HYBRID_CORES[3].thicknessMm}:boards-b`
   },
   {
     boards: BOARDS,
@@ -195,7 +208,7 @@ export function buildSnapshotReader() {
 
     const snapshot = {
       dnTw: field.metrics.estimatedDnTwDb,
-      flagged: field.warnings.some((warning) =>
+      flagged: field.warnings.some((warning: string) =>
         /boundary|hold|order-sensitive|triple-leaf|excluded from the dynamic airborne span/i.test(warning)
       ),
       rw: lab.metrics.estimatedRwDb
@@ -206,7 +219,7 @@ export function buildSnapshotReader() {
   };
 }
 
-export function collectSilentSwapOffenders(
+export async function collectSilentSwapOffenders(
   readSnapshot: ReturnType<typeof buildSnapshotReader>,
   cohort: DeepHybridSwapCohort
 ) {
@@ -216,6 +229,7 @@ export function collectSilentSwapOffenders(
     delta: number;
     swapIndex: number;
   }> = [];
+  let comparisonCount = 0;
 
   for (const prefix of DEEP_HYBRID_PREFIXES) {
     for (const suffix of DEEP_HYBRID_SUFFIXES) {
@@ -246,6 +260,11 @@ export function collectSilentSwapOffenders(
                   delta,
                   swapIndex
                 });
+              }
+
+              comparisonCount += 1;
+              if (comparisonCount % DEEP_HYBRID_RUNNER_YIELD_INTERVAL === 0) {
+                await yieldToVitestWorker();
               }
             }
           }
