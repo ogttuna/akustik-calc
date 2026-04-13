@@ -117,7 +117,7 @@ Current execution status:
   - `mixed_floor_wall_seeded_route_history_expansion_v1` is already closed and
     committed for the first heavy-composite wall target; the optional open-box
     mixed-history boundary is deferred
-  - selected next after this checkpoint:
+  - historical follow-up selected after that checkpoint:
     `raw_concrete_helper_permutation_answer_guard_v1`, under source-led
     raw-floor inference widening
 - latest no-widening answer guard:
@@ -156,6 +156,20 @@ Current execution status:
   - the web full-suite runner now mirrors the engine package by using
     `--maxWorkers=1`; web deep-hybrid route scans also yield periodically so
     long CPU scans do not trip Vitest worker-RPC timeout after assertions pass
+- selected next implementation slice:
+  - `wall_selector_wider_trace_matrix_v1`
+  - type: no-widening wall-selector trace/research slice
+  - reason:
+    - wall Phase B.2 remains partial beyond the defended
+      `double_leaf <-> lined_massive_wall` hold
+    - raw-floor behavior widening is now better answer-measured, but still has
+      the largest fake-confidence blast radius
+    - CLT combined behavior has exact/predictor anchors, but `C11c` and
+      `GDMTXA04A` stay deliberately deferred/estimate-only
+  - implementation rule:
+    - add engine and workbench trace/card assertions first
+    - do not change solver selection, source catalogs, floor support, or wall
+      selector math unless the trace pack exposes a classified behavior bug
 - the 2026-04-07 reinforced-concrete assembly-field `Rw` support blocker is now closed:
   - concrete screening rows with visible floor roles now keep `Rw` exposed again on the assembly route
   - workbench `Rw` cards now also respect engine support buckets instead of surfacing unsupported floor companions
@@ -188,12 +202,24 @@ Completion-reading note:
 
 Current queued follow-up:
 
-- extend the current representative raw-floor screening audit before widening the new `Rw` reopening rule beyond explicit floor-role assemblies:
-  - the first raw safe-bare contiguous-split cohort is now defended on both engine and workbench routes
-  - the first treated/inferred contiguous-split cohort is now also defended on both engine and workbench routes
-  - the first weaker-carrier posture cohort is now also defended on both engine and workbench routes
-  - the first raw concrete ceiling-side inferred support cohort is now also defended on both engine and workbench routes
-  - the next step is to widen that audit into wider inferred packages and wider-than-first ceiling-side packages that should still stay closed unless the source corpus really supports them
+- start `wall_selector_wider_trace_matrix_v1`:
+  - add trace rows for clear settled wall families
+  - pin the current `double_leaf <-> lined_massive_wall` hold
+  - add non-AAC heavy-core controls that must not enter the AAC-like boundary
+  - add at least one unsupported or held route with matching workbench card
+    posture
+  - checkpoint the evidence before any selector behavior change
+- keep raw-floor inference widening deferred for now:
+  - the first raw safe-bare contiguous-split cohort is defended on both engine
+    and workbench routes
+  - the first treated/inferred contiguous-split cohort is also defended on both
+    engine and workbench routes
+  - the first weaker-carrier posture cohort is also defended on both engine and
+    workbench routes
+  - the first raw concrete ceiling-side inferred support cohort is also
+    defended on both engine and workbench routes
+  - the next raw-floor move must name one source-backed carrier and first add
+    no-widening origin/card evidence
 - keep widening the new mixed floor/wall torture pass before any more reorder canonicalization:
   - a representative mixed pack and a first generated split-detour matrix now exist on both engine and workbench routes
   - the next step there is to widen that first generated matrix into longer edit-chain and duplicate/swap grids
@@ -1476,7 +1502,10 @@ Immediate next implementation pass:
 3. keep `tuas_c11c_wet_stack_anomaly_audit_v1` closed as deferred / fail-closed
 4. keep `raw_concrete_helper_permutation_answer_guard_v1` frozen as the latest
    no-widening answer guard under `floor_raw_inference_source_led_widening_v1`
-5. checkpoint the current guard set before the next solver or selector slice
+5. implement `wall_selector_wider_trace_matrix_v1` as the next no-widening
+   selector trace slice
+6. checkpoint that wall trace evidence before any new solver or selector
+   behavior slice
 
 Why this is the correct next cut:
 
@@ -1497,18 +1526,17 @@ Why this is the correct next cut:
   - CLT `lower_only` no longer reopens through `C2c`
   - combined CLT visible stacks with lower treatment plus multi-entry `floating_screed` no longer auto-normalize into inferred or predictor-derived shorthand lanes
 - the first remaining combined exact decision is closed with `C3c`, the C4c exact-candidate pass is closed, and the C11c wet-stack anomaly audit is closed as deferred / fail-closed
-- the next risk is therefore broadening raw or predictor inference accidentally, not C11c source discovery
-- local implementation review shows the safest next cut is the already-open raw
-  terminal-concrete plus ceiling-helper corridor:
-  - visible rows must be raw/unlabeled
-  - inferred impact layers must place `concrete` as the terminal
-    `base_structure`
-  - all preceding inferred roles must be ceiling-side board/cavity/fill roles
-  - at least one board plus one helper must exist
-- the next honest cut is a source-led raw/predictor guard that pins numeric
-  answers and route/card support for that corridor while keeping C11c
-  screening-only unless its wet stack and weak `Ln,w 59` tuple are explained
-  before import
+- the raw terminal-concrete plus ceiling-helper corridor has now received that
+  no-widening answer guard
+- the next risk is silently broadening behavior before the next route can be
+  explained by value, origin, basis/source, support bucket, and workbench card
+  status
+- wall Phase B.2 is still partial: only the defended
+  `double_leaf <-> lined_massive_wall` hold is shipped
+- the next honest cut is therefore a wall selector trace matrix that expands
+  evidence around settled families, the defended hold, non-AAC heavy-core
+  controls, and unsupported or held user-facing routes without changing selector
+  math
 
 Completed widening-prep target after the torture pass:
 

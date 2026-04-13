@@ -63,13 +63,13 @@ Use this as the current baseline:
 
 - branch: `main`
 - latest local checkpoint commits:
+  - `08c918e docs(calculator): document answer origins and next gates`
+  - `631f16d test(web): stabilize full workbench validation gate`
+  - `b172d5b test(calculator): add output origin trace matrices`
+  - `9abdd5f test(calculator): pin source and raw floor answer guards`
   - `5d5a2b1 test(web): reuse mixed wall history fixture`
-  - `b471d81 test(calculator): expand mixed route-history wall coverage`
-  - `bbaf553 docs(calculator): checkpoint source-led floor guard plan`
-  - `d17a7a0 fix(engine): tighten source-backed floor fallback guards`
-  - `3796c17 fix(calculator): preserve floor companion semantics`
-- the checkpoint commit stack was clean before the current
-  `dataholz_clt_source_truth_audit_v1` working-tree slice
+- the checkpoint commit stack was clean after `08c918e` before this docs-only
+  next-slice selection review
 - `git diff --check`: green
 - `pnpm --filter @dynecho/engine typecheck`: green
 - `pnpm --filter @dynecho/web typecheck`: green with the known Next.js
@@ -109,7 +109,7 @@ Use this as the current baseline:
   dynamic-airborne generated scans; use the package `test` script for the
   accepted full engine gate
 
-Latest closed working-tree slice:
+Latest closed source-truth slice:
 
 - slice id: `dataholz_clt_source_truth_audit_v1`
 - type: source-led raw/predictor guard; no widening and no solver behavior
@@ -145,7 +145,7 @@ Latest closed working-tree slice:
     TypeScript plugin recommendation
   - `pnpm --filter @dynecho/engine test`: `97` files, `785` tests, green
 
-Current completed working-tree slice:
+Current completed answer-guard slice:
 
 - slice id: `raw_concrete_helper_permutation_answer_guard_v1`
 - umbrella: `floor_raw_inference_source_led_widening_v1`
@@ -219,7 +219,7 @@ Current completed working-tree slice:
     TypeScript plugin recommendation
   - `pnpm --filter @dynecho/engine test`: `98` files, `786` tests, green
 
-Next immediate decision after this guard:
+Closed follow-up after this guard:
 
 - finish the documentation/analysis correction that makes answer origins
   explicit before new solver widening:
@@ -238,8 +238,6 @@ Next immediate decision after this guard:
     - `packages/engine/src/impact-lane.ts`
     - `packages/engine/src/impact-field-context.ts`
     - `apps/web/features/workbench/simple-workbench-output-model.ts`
-- close/checkpoint the Dataholz CLT, raw-concrete-helper, and calculation-model
-  docs slices together
 - latest trace/measurement implementation slice:
   - slice id: `output_origin_trace_matrix_v1`
   - type: test-first origin/card matrix; no solver behavior change and no
@@ -282,11 +280,98 @@ Next immediate decision after this guard:
   - `@dynecho/web` now runs its package test script with `--maxWorkers=1`, and
     web deep-hybrid route scans yield periodically to avoid Vitest worker-RPC
     timeouts during long CPU scan files
-- after this trace slice is included in the checkpoint, re-rank between:
-  - `wall_selector_wider_trace_matrix_v1`
-  - `clt_local_combined_interaction_evidence_v1`
-  - true `floor_raw_inference_source_led_widening_v1` behavior widening on a
-    now stronger answer-measured corridor
+
+## Next Slice Selection Review
+
+Review date: 2026-04-13
+
+This review is intentionally conservative. The next slice must make the next
+behavior decision safer; it should not widen solver support just because the
+previous guard set is green.
+
+Selection criteria:
+
+- source evidence:
+  - exact source rows, measured rows, official bounds, or already-defended
+    predictor-family evidence must exist before behavior widening
+- current risk:
+  - prefer the slice that reduces silent route drift, fake confidence, or
+    unsupported-output leakage first
+- test readiness:
+  - the slice must be expressible as value/origin/basis/support/card evidence
+    before any runtime behavior change
+- blast radius:
+  - no broad selector or family-lane changes without a trace-only pass first
+- architecture:
+  - avoid growing `calculate-assembly.ts` with ad hoc explanation code; prefer
+    focused trace tests or small helper modules if origin reporting later needs
+    structure
+
+Candidate ranking:
+
+1. `wall_selector_wider_trace_matrix_v1`
+   - selected next
+   - type: no-widening trace/research slice
+   - why:
+     - wall Phase B.2 is only partially shipped; the current hold is limited to
+       the defended `double_leaf <-> lined_massive_wall` corridor
+     - existing deep-hybrid engine and workbench scans show the current
+       representative corridors are stable, but the docs still identify
+       wider-than-representative deep-hybrid matrices and future multi-runner-up
+       boundaries as the remaining wall-side risk
+     - a trace-only slice can expand evidence without changing solver behavior
+       or weakening source-backed floor corridors
+   - required outputs:
+     - engine trace rows for clear settled families, current held boundary,
+       non-AAC heavy-core non-boundary controls, and at least one intentionally
+       unsupported or held route
+     - matching workbench route/card/branch rows where user-facing status can
+       drift
+     - no numeric lane changes unless the trace exposes a classified bug and a
+       separate behavior slice is opened
+   - validation gate:
+     - focused engine wall selector trace pack
+     - focused workbench wall selector trace/card pack
+     - `pnpm --filter @dynecho/engine typecheck`
+     - `pnpm --filter @dynecho/web typecheck`
+     - `pnpm --filter @dynecho/engine test`
+     - `pnpm --filter @dynecho/web test`
+     - `git diff --check`
+
+2. `floor_raw_inference_source_led_widening_v1`
+   - not selected for immediate behavior widening
+   - why:
+     - the raw terminal-concrete plus ceiling-helper corridor is now
+       answer-measured, but broad raw-floor widening still needs source-family
+       evidence one carrier at a time
+     - helper-only timber, open-web steel raw carriers, weak UBIQ bands, and
+       wall-like heavy hybrids remain explicit fail-closed or conservative
+       corridors
+   - next eligible shape:
+     - only after a narrow source-backed candidate is named and first added to
+       the output-origin trace matrix as a no-widening baseline
+
+3. `clt_local_combined_interaction_evidence_v1`
+   - not selected for behavior work yet
+   - why:
+     - `C2c`, `C3c`, `C4c`, and `C7c` are already exact anchors, `C5c` is
+       predictor-backed, and `C11c` remains deliberately deferred because its
+       weak wet-stack tuple is unexplained
+     - `GDMTXA04A` is frozen as estimate-routed and must not become a visible
+       exact shortcut
+   - next eligible shape:
+     - source/frequency audit only, unless new evidence explains the deferred
+       combined-CLT behavior well enough to justify a separate exact or
+       predictor slice
+
+Current decision:
+
+- start `wall_selector_wider_trace_matrix_v1` next
+- keep it trace-only until the tests reveal a classified behavior problem
+- do not change solver selection, calibration, source catalogs, or floor-family
+  support during that slice
+- if the trace exposes no red, checkpoint the evidence and re-rank again rather
+  than forcing a behavior change
 
 Non-goals for this slice:
 
@@ -295,7 +380,7 @@ Non-goals for this slice:
 - no UBIQ weak-band reopen
 - no helper-only timber or open-web steel widening
 - no generic raw-floor base widening
-- no broad wall selector work
+- no broad wall selector behavior work
 
 The currently defended floor/wall corridors match the living state docs:
 

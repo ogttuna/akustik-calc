@@ -23,6 +23,22 @@ Last cross-package build revalidation: `2026-04-13`
 
 Verified broad corridors:
 
+- selected next implementation slice:
+  - slice id: `wall_selector_wider_trace_matrix_v1`
+  - selected on: `2026-04-13`
+  - type: no-widening wall-selector trace/research slice
+  - reason:
+    - floor source/answer/origin guards are now much stronger, but broad
+      raw-floor widening still has the highest fake-confidence blast radius
+    - CLT combined behavior has exact/predictor anchors, but `C11c` remains a
+      deliberate deferred anomaly and `GDMTXA04A` remains estimate-only
+    - wall Phase B.2 is still partial: only the defended
+      `double_leaf <-> lined_massive_wall` hold is shipped
+  - required posture:
+    - add engine and workbench trace/card rows before any selector behavior
+      change
+    - keep solver selection, source catalogs, CLT support, and raw-floor support
+      unchanged unless the trace exposes a classified bug
 - latest trace/measurement slice:
   - slice id: `output_origin_trace_matrix_v1`
   - status: implemented as no-widening engine/workbench evidence; no solver,
@@ -1400,17 +1416,13 @@ Current checkpoint before the remaining ordered list:
   - do not use `GDMTXA04A`, weak UBIQ bands, C11c, helper-only timber rows, or
     open-web steel as shortcut reasons for broad raw inference widening
 - next implementation decision:
-  - close/checkpoint the current no-widening guard set:
-    `dataholz_clt_source_truth_audit_v1`,
-    `raw_concrete_helper_permutation_answer_guard_v1`,
-    `calculation_model_and_validation_docs_v1`, and
-    `output_origin_trace_matrix_v1`
-  - before new solver widening, extend the trace matrix for the selected route
-    so representative outputs are defended by value, origin, basis/source,
-    support bucket, and workbench card status
-  - re-rank between wall-selector wider trace matrices, CLT-local combined
-    evidence, and true raw-floor behavior widening on the now answer-measured
-    concrete-helper corridor
+  - start `wall_selector_wider_trace_matrix_v1`
+  - keep it trace-only and no-widening while it measures the remaining
+    wall-selector risk around settled families, the defended
+    `double_leaf <-> lined_massive_wall` hold, non-AAC heavy-core controls, and
+    unsupported or held user-facing routes
+  - do not change solver selection, source catalogs, CLT support, or raw-floor
+    support unless the trace pack exposes a classified behavior bug
 
 1. Keep the closed raw-floor negative audit, the closed official-product representative breadth slice, the closed UBIQ provenance/boundary-freeze slice, and the closed interpolation-steel mixed seeded-family slice frozen:
    - do not reopen `FL-23/25/27` just because provenance is now clearer

@@ -20,7 +20,7 @@ Read together with:
 
 ## Current Active Slice Ledger
 
-- latest completed working-tree slice:
+- latest completed slice:
   `output_origin_trace_matrix_v1`
 - status: implemented as a no-widening trace/measurement guard; focused,
   adjacent, typecheck, and full engine gates are green
@@ -67,17 +67,19 @@ Read together with:
   - no UBIQ weak-band reopen
   - no helper-only timber, open-web steel, or generic raw-floor widening
 - active next decision:
-  - close/checkpoint the current no-widening guard set:
-    `dataholz_clt_source_truth_audit_v1`,
-    `raw_concrete_helper_permutation_answer_guard_v1`,
-    `calculation_model_and_validation_docs_v1`, and
-    `output_origin_trace_matrix_v1`
-  - before any new solver widening, extend the trace matrix for the candidate
-    route so representative outputs stay defended by value, origin,
-    basis/source, support bucket, and workbench card status
-  - re-rank between wall-selector wider trace matrices, CLT-local combined
-    evidence, and true raw-floor behavior widening on the now answer-measured
-    concrete-helper corridor
+  - select `wall_selector_wider_trace_matrix_v1` as the next implementation
+    slice
+  - keep it no-widening and trace-only until tests expose a classified behavior
+    problem
+  - expand wall-selector evidence before changing solver selection:
+    - clear settled wall families
+    - the currently defended `double_leaf <-> lined_massive_wall` hold
+    - non-AAC heavy-core controls that must not enter the AAC-like boundary
+    - at least one unsupported or held wall route with matching workbench card
+      posture
+  - defer raw-floor behavior widening, CLT-local combined behavior work, C11c,
+    and `GDMTXA04A` exact reopening until they have stronger source/frequency
+    evidence and their own output-origin trace rows
 - previous route-history first target, now closed:
   - promoted the existing heavy-composite wall instability shape into the mixed
     route-history coverage net as a third wall-family detour
@@ -2217,7 +2219,7 @@ Next recommended move:
   frozen
 - keep `raw_concrete_helper_permutation_answer_guard_v1` frozen as the latest
   no-widening answer guard before any wider family or selector work
-- result:
+- result of the frozen floor guard:
   - local implementation review showed the raw concrete helper signal is already
     narrow: raw visible input only, inferred terminal `concrete`
     `base_structure`, ceiling-side-only board/cavity/fill roles, and at least
@@ -2228,11 +2230,15 @@ Next recommended move:
     card status and values
   - no solver behavior was widened, no new family was reopened, and
     `GDMTXA04A` remains estimate-only
-- after checkpointing this guard set, re-rank the next source-led move between:
-  - wall selector wider trace matrices
-  - CLT-local combined evidence
-  - true raw-floor behavior widening on the now answer-measured concrete-helper
-    corridor
+- selected next move after the guard-set checkpoint:
+  - `wall_selector_wider_trace_matrix_v1`
+  - start as no-widening trace/research, not selector behavior change
+  - prove settled wall families, the current
+    `double_leaf <-> lined_massive_wall` hold, non-AAC heavy-core controls, and
+    at least one unsupported or held route on engine plus workbench card
+    surfaces
+  - defer CLT-local combined evidence and true raw-floor behavior widening until
+    this wall trace evidence is checkpointed and candidates are re-ranked again
 - classify any new failure before changing implementation:
   - solver drift
   - support-bucket or output-card drift

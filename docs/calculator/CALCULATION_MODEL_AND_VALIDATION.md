@@ -330,12 +330,21 @@ The first trace/measurement slice is implemented:
   - full web suite: `94` files, `602` tests, green
   - engine/web typechecks and `git diff --check`: green
 
-After this trace slice and the current no-widening guard set are checkpointed,
-re-rank real implementation work between:
+After this trace slice and the current no-widening guard set were checkpointed,
+the selected next slice became:
+
+- `wall_selector_wider_trace_matrix_v1`
+
+It must start as a trace-only wall-selector slice, not as behavior widening.
+The required proof shape is the same value/origin/support/card structure above,
+applied to settled wall families, the currently held
+`double_leaf <-> lined_massive_wall` boundary, non-AAC heavy-core controls, and
+at least one unsupported or held route.
+
+Deferred until after that checkpoint:
 
 - `floor_raw_inference_source_led_widening_v1`
-- `wall_selector_wider_trace_matrix_v1`
 - `clt_local_combined_interaction_evidence_v1`
 
-Do not widen any of them until the selected route can be explained with the same
-value/origin/support/card structure above.
+Do not widen either deferred route until it has its own source-led or
+frequency-led evidence and trace rows.

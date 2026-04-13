@@ -2059,11 +2059,18 @@ Do this in order:
      only finite outputs or supported-output lists
    - adjacent negatives for top-side finish after concrete, wall-like heavy
      hybrids, and weaker carriers remain in the validation pack
-9. after checkpointing the current no-widening guard set, re-rank between:
-   - explicit CLT-local combined-interaction work
-   - wall selector wider trace matrices
-   - more CLT-local tightening / boundary hardening
-   - true raw-floor inference widening on a stronger answer-measured corridor
-10. keep `gdmtxa04a` estimate-only until a future source-backed material surface exists
+9. start `wall_selector_wider_trace_matrix_v1` next as a no-widening
+   trace/research slice:
+   - add engine trace rows for clear settled wall families, the currently held
+     `double_leaf <-> lined_massive_wall` boundary, non-AAC heavy-core controls,
+     and at least one unsupported or held route
+   - add matching workbench route/card assertions wherever user-facing status
+     could drift
+   - do not change wall selector math unless this trace pack exposes a
+     classified behavior bug that deserves its own behavior slice
+10. keep explicit CLT-local combined-interaction work, more CLT-local
+    tightening, and true raw-floor inference widening deferred until the new wall
+    trace evidence is checkpointed and the candidates are re-ranked again
+11. keep `gdmtxa04a` estimate-only until a future source-backed material surface exists
 
-This order is the safest one because the previous broad blockers are already closed; the next risk is accidental widening that weakens the frozen raw/support posture or silently promotes the remaining `C11c` combined wet-stack row or preset-only CLT rows into visible exact corridors now that `C2c`, `C3c`, `C4c`, `C7c`, and the predictor-backed `C5c` baseline are frozen. The selected concrete-helper guard adds the missing answer-measurement layer without broadening those routes.
+This order is the safest one because the previous broad blockers are already closed; the immediate risk is not missing a known source row, it is silently broadening behavior before the next route can be explained by value, origin, basis/source, support bucket, and workbench card status. Raw-floor widening is now better measured, but still has the largest fake-confidence blast radius. CLT combined behavior is better anchored, but `C11c` remains deliberately deferred and `GDMTXA04A` remains estimate-only. The wall trace slice reduces the remaining selector uncertainty without weakening those frozen floor corridors.

@@ -1081,6 +1081,15 @@ This section is implementation-backed from the current local catalog import, not
 
 ## Immediate Research Order
 
+Scope note:
+
+- this ledger ranks source-family research, not the active implementation slice
+- the active implementation slice selected on `2026-04-13` is
+  `wall_selector_wider_trace_matrix_v1`
+- raw-floor, CLT-local, UBIQ, and Dataholz source-family widening remains
+  deferred unless a future candidate first gets value/origin/support/card trace
+  evidence
+
 1. Floor airborne companion semantics
    - current status:
      - latest closed implementation slice:
