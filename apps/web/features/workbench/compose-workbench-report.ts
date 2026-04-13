@@ -102,7 +102,7 @@ function formatSignedMetric(value: number): string {
 
 function buildFloorSystemCompanionLines(
   prefix: "Exact" | "Estimated",
-  ratings: { Rw: number; RwCtr?: number; RwCtrSemantic?: "ctr_term" | "rw_plus_ctr" }
+  ratings: { Rw: number; RwCtr?: number; RwCtrSemantic?: "ctr_term" | "rw_plus_c" | "rw_plus_ctr" }
 ): string[] {
   const label = getFloorSystemCompanionLabel(ratings);
 

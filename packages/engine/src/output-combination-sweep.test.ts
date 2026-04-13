@@ -1,8 +1,10 @@
 import { BOUND_FLOOR_SYSTEMS, EXACT_FLOOR_SYSTEMS } from "@dynecho/catalogs";
 import {
-  getFloorSystemDerivedRwPlusCtr,
+  getFloorSystemC,
+  getFloorSystemCtr,
   type FloorRole,
   type FloorSystemMatchCriteria,
+  type FloorSystemAirborneRatings,
   type FloorSystemRoleCriteria,
   type RequestedOutputId
 } from "@dynecho/shared";
@@ -14,6 +16,7 @@ import { calculateImpactOnly } from "./calculate-impact-only";
 const AIRBORNE_REQUEST: readonly RequestedOutputId[] = ["Rw", "R'w", "DnT,w", "DnT,A", "Dn,w", "Dn,A"];
 const IMPACT_BUNDLE_REQUEST: readonly RequestedOutputId[] = [
   "Rw",
+  "C",
   "Ctr",
   "Ln,w",
   "CI",
@@ -98,17 +101,18 @@ function getRequestedOutputValue(
   result: ReturnType<typeof calculateAssembly> | ReturnType<typeof calculateImpactOnly>,
   output: RequestedOutputId
 ): number | null | undefined {
+  const floorCarrier: FloorSystemAirborneRatings | null | undefined =
+    "floorSystemRatings" in result ? result.floorSystemRatings : result.floorCarrier;
+
   switch (output) {
     case "Rw":
-      return "metrics" in result ? result.metrics.estimatedRwDb : result.floorCarrier?.Rw;
+      return floorCarrier?.Rw ?? ("metrics" in result ? result.metrics.estimatedRwDb : undefined);
     case "R'w":
       return "metrics" in result ? result.metrics.estimatedRwPrimeDb : undefined;
+    case "C":
+      return floorCarrier ? getFloorSystemC(floorCarrier) : "metrics" in result ? result.metrics.estimatedCDb : undefined;
     case "Ctr": {
-      if ("metrics" in result) {
-        return result.metrics.estimatedCtrDb;
-      }
-      const derivedRwPlusCtr = result.floorCarrier ? getFloorSystemDerivedRwPlusCtr(result.floorCarrier) : undefined;
-      return typeof derivedRwPlusCtr === "number" ? derivedRwPlusCtr - result.floorCarrier.Rw : undefined;
+      return floorCarrier ? getFloorSystemCtr(floorCarrier) : "metrics" in result ? result.metrics.estimatedCtrDb : undefined;
     }
     case "DnT,w":
       return "metrics" in result ? result.metrics.estimatedDnTwDb : undefined;
@@ -396,15 +400,18 @@ describe("output combination sweep", () => {
         officialFloorSystemId: system.id,
         targetOutputs: IMPACT_BUNDLE_REQUEST
       });
-      const derivedRwPlusCtr = getFloorSystemDerivedRwPlusCtr(system.airborneRatings);
+      const c = getFloorSystemC(system.airborneRatings);
+      const ctr = getFloorSystemCtr(system.airborneRatings);
       const hasCI = typeof system.impactRatings.CI === "number";
       const hasCI50 = typeof system.impactRatings.CI50_2500 === "number";
       const expectedSupported = IMPACT_BUNDLE_REQUEST.filter((output) => {
         switch (output) {
           case "Rw":
             return true;
+          case "C":
+            return typeof c === "number";
           case "Ctr":
-            return typeof derivedRwPlusCtr === "number";
+            return typeof ctr === "number";
           case "Ln,w":
           case "L'n,w":
           case "L'nT,w":
@@ -476,9 +483,14 @@ describe("output combination sweep", () => {
         targetOutputs: IMPACT_BUNDLE_REQUEST
       });
       const impactOnlySupported: RequestedOutputId[] = ["Rw"];
-      const derivedRwPlusCtr = getFloorSystemDerivedRwPlusCtr(system.airborneRatings);
+      const c = getFloorSystemC(system.airborneRatings);
+      const ctr = getFloorSystemCtr(system.airborneRatings);
 
-      if (typeof derivedRwPlusCtr === "number") {
+      if (typeof c === "number") {
+        impactOnlySupported.push("C");
+      }
+
+      if (typeof ctr === "number") {
         impactOnlySupported.push("Ctr");
       }
 
@@ -503,7 +515,17 @@ describe("output combination sweep", () => {
         },
         targetOutputs: IMPACT_BUNDLE_REQUEST
       });
-      const assemblySupported: RequestedOutputId[] = ["Rw", "Ctr", "Ln,w", "L'n,w", "L'nT,w"];
+      const assemblySupported: RequestedOutputId[] = ["Rw"];
+
+      if (typeof c === "number") {
+        assemblySupported.push("C");
+      }
+
+      if (typeof ctr === "number") {
+        assemblySupported.push("Ctr");
+      }
+
+      assemblySupported.push("Ln,w", "L'n,w", "L'nT,w");
 
       expectCleanPartition(assembly, assemblySupported, `${system.id} assembly bound`, failures);
 

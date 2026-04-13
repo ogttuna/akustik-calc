@@ -2031,7 +2031,8 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     airborneRatings: {
       Rw: 38,
-      RwCtr: 37.242344245020725
+      RwCtr: 37.242344245020725,
+      RwCtrSemantic: "rw_plus_c"
     }
   },
   {
@@ -2077,7 +2078,8 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     airborneRatings: {
       Rw: 49,
-      RwCtr: 47.10786221887914
+      RwCtr: 47.10786221887914,
+      RwCtrSemantic: "rw_plus_c"
     }
   },
   {
@@ -2155,7 +2157,8 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     airborneRatings: {
       Rw: 55,
-      RwCtr: 53.20807486278851
+      RwCtr: 53.20807486278851,
+      RwCtrSemantic: "rw_plus_c"
     }
   },
   {
@@ -2252,7 +2255,8 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     airborneRatings: {
       Rw: 55,
-      RwCtr: 53.24148704194138
+      RwCtr: 53.24148704194138,
+      RwCtrSemantic: "rw_plus_c"
     }
   },
   {
@@ -2327,7 +2331,8 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     airborneRatings: {
       Rw: 49,
-      RwCtr: 44.52764215440286
+      RwCtr: 44.52764215440286,
+      RwCtrSemantic: "rw_plus_c"
     }
   },
   {
@@ -2402,7 +2407,8 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     airborneRatings: {
       Rw: 62,
-      RwCtr: 59.973347663855776
+      RwCtr: 59.973347663855776,
+      RwCtrSemantic: "rw_plus_c"
     }
   },
   {
@@ -2493,7 +2499,8 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     airborneRatings: {
       Rw: 56,
-      RwCtr: 51.30566236283586
+      RwCtr: 51.30566236283586,
+      RwCtrSemantic: "rw_plus_c"
     }
   },
   {
@@ -2584,7 +2591,8 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     airborneRatings: {
       Rw: 70,
-      RwCtr: 67.58499572159022
+      RwCtr: 67.58499572159022,
+      RwCtrSemantic: "rw_plus_c"
     }
   },
   {
@@ -2675,7 +2683,8 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     airborneRatings: {
       Rw: 63,
-      RwCtr: 57.78202920484737
+      RwCtr: 57.78202920484737,
+      RwCtrSemantic: "rw_plus_c"
     }
   },
   {
@@ -2798,7 +2807,8 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     airborneRatings: {
       Rw: 75,
-      RwCtr: 71.87531170772152
+      RwCtr: 71.87531170772152,
+      RwCtrSemantic: "rw_plus_c"
     }
   },
   {
@@ -2871,7 +2881,8 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     airborneRatings: {
       Rw: 56,
-      RwCtr: 53.59725745128915
+      RwCtr: 53.59725745128915,
+      RwCtrSemantic: "rw_plus_c"
     }
   },
   {
@@ -2946,7 +2957,8 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     airborneRatings: {
       Rw: 71,
-      RwCtr: 69.5361374042257
+      RwCtr: 69.5361374042257,
+      RwCtrSemantic: "rw_plus_c"
     }
   },
   {
@@ -3037,7 +3049,8 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     airborneRatings: {
       Rw: 60,
-      RwCtr: 57
+      RwCtr: 57,
+      RwCtrSemantic: "rw_plus_c"
     }
   },
   {
@@ -3097,7 +3110,8 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     airborneRatings: {
       Rw: 72,
-      RwCtr: 70.726430817278
+      RwCtr: 70.726430817278,
+      RwCtrSemantic: "rw_plus_c"
     }
   },
   {
@@ -3149,7 +3163,8 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     airborneRatings: {
       Rw: 72,
-      RwCtr: 70.60101885694094
+      RwCtr: 70.60101885694094,
+      RwCtrSemantic: "rw_plus_c"
     }
   },
   {
@@ -3204,7 +3219,8 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     airborneRatings: {
       Rw: 68,
-      RwCtr: 67.01756572323127
+      RwCtr: 67.01756572323127,
+      RwCtrSemantic: "rw_plus_c"
     }
   },
   {
@@ -3251,7 +3267,8 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     airborneRatings: {
       Rw: 54,
-      RwCtr: 53.34048310542768
+      RwCtr: 53.34048310542768,
+      RwCtrSemantic: "rw_plus_c"
     }
   },
   {
@@ -3310,7 +3327,8 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     airborneRatings: {
       Rw: 56,
-      RwCtr: 50.89680103538985
+      RwCtr: 50.89680103538985,
+      RwCtrSemantic: "rw_plus_c"
     }
   },
   {
@@ -3401,7 +3419,8 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     airborneRatings: {
       Rw: 74,
-      RwCtr: 71.15477026441121
+      RwCtr: 71.15477026441121,
+      RwCtrSemantic: "rw_plus_c"
     }
   },
   {
@@ -3438,7 +3457,8 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     airborneRatings: {
       Rw: 42,
-      RwCtr: 41.478540491108376
+      RwCtr: 41.478540491108376,
+      RwCtrSemantic: "rw_plus_c"
     }
   },
   {
@@ -3484,7 +3504,8 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     airborneRatings: {
       Rw: 54,
-      RwCtr: 51.413639069637696
+      RwCtr: 51.413639069637696,
+      RwCtrSemantic: "rw_plus_c"
     }
   },
   {
@@ -3562,7 +3583,8 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     airborneRatings: {
       Rw: 61,
-      RwCtr: 58.831296422168144
+      RwCtr: 58.831296422168144,
+      RwCtrSemantic: "rw_plus_c"
     }
   },
   {
@@ -3640,7 +3662,8 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     airborneRatings: {
       Rw: 61,
-      RwCtr: 59.492301808652826
+      RwCtr: 59.492301808652826,
+      RwCtrSemantic: "rw_plus_c"
     }
   },
   {
@@ -3686,7 +3709,8 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     airborneRatings: {
       Rw: 57,
-      RwCtr: 52.458421802887344
+      RwCtr: 52.458421802887344,
+      RwCtrSemantic: "rw_plus_c"
     }
   },
   {
@@ -3745,7 +3769,8 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     airborneRatings: {
       Rw: 75,
-      RwCtr: 70.92499901751341
+      RwCtr: 70.92499901751341,
+      RwCtrSemantic: "rw_plus_c"
     }
   },
   {
@@ -3819,7 +3844,8 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     airborneRatings: {
       Rw: 70,
-      RwCtr: 67.41490151958673
+      RwCtr: 67.41490151958673,
+      RwCtrSemantic: "rw_plus_c"
     }
   },
   {
@@ -3874,7 +3900,8 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     airborneRatings: {
       Rw: 73,
-      RwCtr: 67.7537144078056
+      RwCtr: 67.7537144078056,
+      RwCtrSemantic: "rw_plus_c"
     }
   },
   {
@@ -3933,7 +3960,8 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     airborneRatings: {
       Rw: 74,
-      RwCtr: 69.69668895954507
+      RwCtr: 69.69668895954507,
+      RwCtrSemantic: "rw_plus_c"
     }
   },
   {
@@ -4048,7 +4076,8 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     airborneRatings: {
       Rw: 75,
-      RwCtr: 70.46337519002095
+      RwCtr: 70.46337519002095,
+      RwCtrSemantic: "rw_plus_c"
     }
   },
   {
@@ -4085,7 +4114,8 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     airborneRatings: {
       Rw: 49,
-      RwCtr: 47.53683856051791
+      RwCtr: 47.53683856051791,
+      RwCtrSemantic: "rw_plus_c"
     }
   },
   {
@@ -4130,7 +4160,8 @@ export const EXACT_FLOOR_SYSTEMS: readonly ExactFloorSystem[] = withFloorSystemS
     },
     airborneRatings: {
       Rw: 66,
-      RwCtr: 64.50483471830356
+      RwCtr: 64.50483471830356,
+      RwCtrSemantic: "rw_plus_c"
     }
   },
   {

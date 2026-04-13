@@ -144,6 +144,57 @@ describe("target output support contract", () => {
     expect(airborneOnly.unsupportedTargetOutputs).toEqual([]);
   });
 
+  it("keeps floor-carrier C and Ctr semantics separate before screening fallbacks", () => {
+    const rwPlusC = analyzeTargetOutputSupport({
+      floorCarrier: carrier({
+        Rw: 49,
+        RwCtr: 44.52764215440286,
+        RwCtrSemantic: "rw_plus_c"
+      }),
+      impact: null,
+      lowerBoundImpact: null,
+      metrics: {
+        estimatedCDb: -1,
+        estimatedCtrDb: -6
+      },
+      targetOutputs: ["C", "Ctr"]
+    });
+
+    expect(rwPlusC.supportedTargetOutputs).toEqual(["C"]);
+    expect(rwPlusC.unsupportedTargetOutputs).toEqual(["Ctr"]);
+
+    const ctrTerm = analyzeTargetOutputSupport({
+      floorCarrier: carrier({
+        Rw: 83,
+        RwCtr: -17,
+        RwCtrSemantic: "ctr_term"
+      }),
+      impact: null,
+      lowerBoundImpact: null,
+      metrics: {
+        estimatedCDb: -1,
+        estimatedCtrDb: -6
+      },
+      targetOutputs: ["C", "Ctr"]
+    });
+
+    expect(ctrTerm.supportedTargetOutputs).toEqual(["Ctr"]);
+    expect(ctrTerm.unsupportedTargetOutputs).toEqual(["C"]);
+
+    const airborneOnly = analyzeTargetOutputSupport({
+      impact: null,
+      lowerBoundImpact: null,
+      metrics: {
+        estimatedCDb: -1,
+        estimatedCtrDb: -6
+      },
+      targetOutputs: ["C", "Ctr"]
+    });
+
+    expect(airborneOnly.supportedTargetOutputs).toEqual(["C", "Ctr"]);
+    expect(airborneOnly.unsupportedTargetOutputs).toEqual([]);
+  });
+
   it("does not expose lab Rw when the active airborne descriptor is already R'w", () => {
     const result = analyzeTargetOutputSupport({
       impact: null,

@@ -1,6 +1,6 @@
 import {
-  getFloorSystemCompanionSemantic,
-  getFloorSystemDerivedRwPlusCtr,
+  getFloorSystemC,
+  getFloorSystemCtr,
   type AssemblyCalculation,
   type RequestedOutputId
 } from "@dynecho/shared";
@@ -110,13 +110,17 @@ function getFloorSystemCtrTerm(result: AssemblyCalculation | null | undefined): 
     return null;
   }
 
-  const derivedRwPlusCtr = getFloorSystemDerivedRwPlusCtr(ratings);
+  return getFloorSystemCtr(ratings) ?? null;
+}
 
-  if (typeof derivedRwPlusCtr !== "number" || !Number.isFinite(derivedRwPlusCtr)) {
+function getFloorSystemCAdaptationTerm(result: AssemblyCalculation | null | undefined): number | null {
+  const ratings = result?.floorSystemRatings;
+
+  if (!ratings) {
     return null;
   }
 
-  return getFloorSystemCompanionSemantic(ratings) === "ctr_term" ? ratings.RwCtr ?? null : derivedRwPlusCtr - ratings.Rw;
+  return getFloorSystemC(ratings) ?? null;
 }
 
 export function buildOutputCard(input: {
@@ -183,6 +187,21 @@ export function buildOutputCard(input: {
       }
       break;
     case "C":
+      if (studyMode === "floor") {
+        const floorC = getFloorSystemCAdaptationTerm(result);
+
+        if (typeof floorC === "number") {
+          return {
+            detail:
+              "Companion mid-frequency adaptation carried on the active floor lane. This can differ from the live airborne estimate shown elsewhere.",
+            label: "C",
+            output,
+            status: "live",
+            value: formatSignedDb(floorC)
+          };
+        }
+      }
+
       if (typeof result?.metrics.estimatedCDb === "number") {
         return {
           detail: "Mid-frequency adaptation term on the airborne lane.",

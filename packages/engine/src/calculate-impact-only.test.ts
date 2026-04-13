@@ -3274,7 +3274,7 @@ describe("calculateImpactOnly", () => {
     expect(result.impact?.CI).toBe(2);
     expect(result.impact?.LnWPlusCI).toBe(63.3);
     expect(result.floorSystemRatings?.Rw).toBe(51.6);
-    expect(result.floorSystemRatings?.RwCtr).toBe(31.1);
+    expect(result.floorSystemRatings?.RwCtr).toBeUndefined();
     expect(result.impact?.estimateCandidateIds).toEqual([
       "dataholz_gdsnxn01a_timber_frame_lab_2026",
       "knauf_ct3b_timber_nil_lab_2026",
@@ -3284,8 +3284,8 @@ describe("calculateImpactOnly", () => {
     ]);
     expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(true);
     expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(true);
-    expect(result.supportedTargetOutputs).toEqual(["Rw", "Ctr", "Ln,w", "CI", "Ln,w+CI"]);
-    expect(result.unsupportedTargetOutputs).toEqual([]);
+    expect(result.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "CI", "Ln,w+CI"]);
+    expect(result.unsupportedTargetOutputs).toEqual(["Ctr"]);
     expect(result.supportedImpactOutputs).toEqual(["Ln,w", "CI", "Ln,w+CI"]);
     expect(result.unsupportedImpactOutputs).toEqual([]);
   });

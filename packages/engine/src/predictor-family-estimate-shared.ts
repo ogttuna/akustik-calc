@@ -2,10 +2,12 @@ import { BOUND_FLOOR_SYSTEMS, EXACT_FLOOR_SYSTEMS } from "@dynecho/catalogs";
 import type {
   ExactFloorSystem,
   FloorSystemAirborneRatings,
+  FloorSystemAirborneCompanionSemantic,
   FloorSystemEstimateKind,
   FloorSystemEstimateResult,
   ImpactCalculation
 } from "@dynecho/shared";
+import { getFloorSystemCompanionSemantic } from "@dynecho/shared";
 
 import { getImpactConfidenceForBasis } from "./impact-confidence";
 import { buildUniformImpactMetricBasis } from "./impact-metric-basis";
@@ -90,6 +92,32 @@ function estimateFitPercent(candidates: readonly WeightedCandidate[]): number {
   return round1(Math.max(28, 100 - averageScore * 12));
 }
 
+function resolveAirborneRatingsCompanionSemantic(
+  ratings: FloorSystemAirborneRatings,
+  sourceSystems: readonly ExactFloorSystem[]
+): FloorSystemAirborneRatings {
+  if (ratings.RwCtrSemantic || typeof ratings.RwCtr !== "number") {
+    return ratings;
+  }
+
+  const sourceSemantics = new Set<FloorSystemAirborneCompanionSemantic>(
+    sourceSystems
+      .filter((system) => typeof system.airborneRatings.RwCtr === "number")
+      .map((system) => getFloorSystemCompanionSemantic(system.airborneRatings))
+  );
+
+  if (sourceSemantics.size !== 1) {
+    // Mixed source semantics cannot safely be rendered as C, Ctr, or Rw+Ctr.
+    // Withhold the companion instead of letting the legacy default relabel it.
+    return { Rw: ratings.Rw };
+  }
+
+  return {
+    ...ratings,
+    RwCtrSemantic: [...sourceSemantics][0]
+  };
+}
+
 export function buildPredictorFamilyEstimateCase(input: PredictorFamilyEstimateCase): FloorSystemEstimateResult | null {
   if (input.candidateIds.length === 0 || input.candidateIds.length !== input.candidateScores.length) {
     return null;
@@ -125,7 +153,7 @@ export function buildPredictorFamilyEstimateCase(input: PredictorFamilyEstimateC
   };
 
   return {
-    airborneRatings: input.airborneRatings,
+    airborneRatings: resolveAirborneRatingsCompanionSemantic(input.airborneRatings, sourceSystems),
     fitPercent: estimateFitPercent(weightedCandidates),
     impact,
     kind: input.kind,

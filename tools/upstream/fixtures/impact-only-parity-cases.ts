@@ -1303,6 +1303,13 @@ export const IMPACT_ONLY_PARITY_CASES: readonly ImpactOnlyParityCase[] = [
       targetOutputs: ["Ln,w", "CI", "Ln,w+CI"]
     },
     compare: {
+      acceptedLocalDivergences: [
+        {
+          metrics: ["floor.RwCtr"],
+          reason:
+            "Local now withholds the low-confidence timber bare-floor companion because its candidate set mixes Dataholz ctr_term with Knauf Rw+Ctr rows; Acoustic2 still exposes the ambiguous legacy RwCtr value."
+        }
+      ],
       compareImpactBasis: true,
       compareImpactEstimateCandidateIds: true,
       compareFloorMetrics: true,

@@ -6821,7 +6821,7 @@ describe("calculateAssembly", () => {
     expect(result.unsupportedTargetOutputs).toEqual([]);
   });
 
-  it("keeps timber bare-floor laminate layer stacks on the upstream low-confidence lane with airborne companions exposed", () => {
+  it("keeps timber bare-floor laminate layer stacks on the upstream low-confidence lane with ambiguous airborne companions withheld", () => {
     const result = calculateAssembly(
       [
         { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 9 },
@@ -6838,9 +6838,9 @@ describe("calculateAssembly", () => {
     expect(result.impact?.CI).toBe(2);
     expect(result.impact?.LnWPlusCI).toBe(63.3);
     expect(result.floorSystemRatings?.Rw).toBe(51.6);
-    expect(result.floorSystemRatings?.RwCtr).toBe(31.1);
-    expect(result.supportedTargetOutputs).toEqual(["Rw", "Ctr", "Ln,w", "CI", "Ln,w+CI"]);
-    expect(result.unsupportedTargetOutputs).toEqual([]);
+    expect(result.floorSystemRatings?.RwCtr).toBeUndefined();
+    expect(result.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "CI", "Ln,w+CI"]);
+    expect(result.unsupportedTargetOutputs).toEqual(["Ctr"]);
   });
 
   it("keeps combined reinforced-concrete predictor input on the upstream low-confidence lane", () => {

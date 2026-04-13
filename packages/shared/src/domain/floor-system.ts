@@ -67,6 +67,7 @@ export const FloorSystemImpactBoundsSchema = z
 
 export const FloorSystemAirborneCompanionSemanticSchema = z.enum([
   "rw_plus_ctr",
+  "rw_plus_c",
   "ctr_term"
 ]);
 

@@ -87,7 +87,7 @@ function toMatchResult(evaluation: ReturnType<typeof evaluateMatchedFloorSystem<
     typeof evaluation.system.airborneRatings.RwCtr === "number"
       ? companionLabel === "Ctr"
         ? `Rw ${round1(evaluation.system.airborneRatings.Rw)} dB, Ctr ${round1(evaluation.system.airborneRatings.RwCtr)} dB, derived Rw + Ctr ${round1(derivedRwPlusCtr ?? evaluation.system.airborneRatings.RwCtr)} dB, Ln,w ${round1(evaluation.system.impactRatings.LnW)} dB.`
-        : `Rw ${round1(evaluation.system.airborneRatings.Rw)} dB, Rw + Ctr ${round1(evaluation.system.airborneRatings.RwCtr)} dB, Ln,w ${round1(evaluation.system.impactRatings.LnW)} dB.`
+        : `Rw ${round1(evaluation.system.airborneRatings.Rw)} dB, ${companionLabel} ${round1(evaluation.system.airborneRatings.RwCtr)} dB, Ln,w ${round1(evaluation.system.impactRatings.LnW)} dB.`
       : `Rw ${round1(evaluation.system.airborneRatings.Rw)} dB, no published ${companionLabel} companion, Ln,w ${round1(evaluation.system.impactRatings.LnW)} dB.`;
 
   return {
@@ -116,7 +116,7 @@ export function resolveExactFloorSystemById(id: string): FloorSystemMatchResult 
     typeof system.airborneRatings.RwCtr === "number"
       ? companionLabel === "Ctr"
         ? `Rw ${round1(system.airborneRatings.Rw)} dB, Ctr ${round1(system.airborneRatings.RwCtr)} dB, derived Rw + Ctr ${round1(derivedRwPlusCtr ?? system.airborneRatings.RwCtr)} dB, Ln,w ${round1(system.impactRatings.LnW)} dB.`
-        : `Rw ${round1(system.airborneRatings.Rw)} dB, Rw + Ctr ${round1(system.airborneRatings.RwCtr)} dB, Ln,w ${round1(system.impactRatings.LnW)} dB.`
+        : `Rw ${round1(system.airborneRatings.Rw)} dB, ${companionLabel} ${round1(system.airborneRatings.RwCtr)} dB, Ln,w ${round1(system.impactRatings.LnW)} dB.`
       : `Rw ${round1(system.airborneRatings.Rw)} dB, no published ${companionLabel} companion, Ln,w ${round1(system.impactRatings.LnW)} dB.`;
 
   return {

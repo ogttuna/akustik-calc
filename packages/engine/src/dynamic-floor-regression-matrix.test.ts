@@ -427,7 +427,7 @@ const CASES: readonly MatrixCase[] = [
       evidenceTier: "estimate",
       floorRatingsBasis: "predictor_floor_system_low_confidence_estimate",
       floorRw: 51.6,
-      floorRwCtr: 31.1,
+      floorRwCtr: null,
       floorSystemEstimateBasis: "predictor_floor_system_low_confidence_estimate",
       floorSystemEstimateKind: "low_confidence",
       floorSystemMatchId: null,
@@ -448,10 +448,10 @@ const CASES: readonly MatrixCase[] = [
       selectionKind: "family_estimate",
       sourceMode: null,
       supportedImpactOutputs: ["Ln,w", "CI", "Ln,w+CI"],
-      supportedTargetOutputs: ["Rw", "Ctr", "Ln,w", "CI", "Ln,w+CI"],
+      supportedTargetOutputs: ["Rw", "Ln,w", "CI", "Ln,w+CI"],
       systemType: "bare_floor",
       unsupportedImpactOutputs: [],
-      unsupportedTargetOutputs: []
+      unsupportedTargetOutputs: ["Ctr"]
     }
   },
   {
@@ -780,7 +780,7 @@ const CASES: readonly MatrixCase[] = [
       evidenceTier: "estimate",
       floorRatingsBasis: "predictor_floor_system_low_confidence_estimate",
       floorRw: 51.6,
-      floorRwCtr: 31.1,
+      floorRwCtr: null,
       floorSystemEstimateBasis: "predictor_floor_system_low_confidence_estimate",
       floorSystemEstimateKind: "low_confidence",
       floorSystemMatchId: null,
@@ -801,10 +801,10 @@ const CASES: readonly MatrixCase[] = [
       selectionKind: "family_estimate",
       sourceMode: "predictor_input",
       supportedImpactOutputs: ["Ln,w", "CI", "Ln,w+CI"],
-      supportedTargetOutputs: ["Rw", "Ctr", "Ln,w", "CI", "Ln,w+CI"],
+      supportedTargetOutputs: ["Rw", "Ln,w", "CI", "Ln,w+CI"],
       systemType: "bare_floor",
       unsupportedImpactOutputs: [],
-      unsupportedTargetOutputs: []
+      unsupportedTargetOutputs: ["Ctr"]
     }
   }
 ];

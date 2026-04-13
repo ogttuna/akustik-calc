@@ -1,9 +1,9 @@
 "use client";
 
-import type { FloorSystemAirborneRatings } from "@dynecho/shared";
 import {
   getFloorSystemCompanionLabel,
-  getFloorSystemDerivedRwPlusCtr
+  getFloorSystemDerivedRwPlusCtr,
+  type FloorSystemAirborneRatings
 } from "@dynecho/shared";
 
 import { formatDecimal } from "@/lib/format";
@@ -33,7 +33,7 @@ export function getFloorSystemCompanionPresentation(
       detail:
         label === "Ctr"
           ? `This ${contextLabel} does not expose a published Ctr companion.`
-          : `This ${contextLabel} does not publish a companion Rw + Ctr figure.`,
+          : `This ${contextLabel} does not publish a companion ${label} figure.`,
       label,
       pillText: `${label} N/A`,
       valueText: "N/A"
@@ -60,9 +60,11 @@ export function getFloorSystemCompanionPresentation(
     detail:
       context === "estimate"
         ? "Weighted companion airborne estimate from the same family rows."
-        : "Published companion traffic-noise figure from the family.",
+        : label === "Rw + C"
+          ? "Published companion mid-frequency figure from the family."
+          : "Published companion traffic-noise figure from the family.",
     label,
-    pillText: `${formatDecimal(ratings.RwCtr)} dB Rw + Ctr`,
+    pillText: `${formatDecimal(ratings.RwCtr)} dB ${label}`,
     valueText: `${formatDecimal(ratings.RwCtr)} dB`
   };
 }

@@ -273,7 +273,7 @@ const BRANCH_SWEEP_CASES: readonly BranchSweepCase[] = [
       "knauf_ct2d_timber_nil_lab_2026"
     ],
     targetOutputs: ["Rw", "Ctr", "Ln,w", "CI", "Ln,w+CI"],
-    expectedSupportedTargetOutputs: ["Rw", "Ctr", "Ln,w", "CI", "Ln,w+CI"],
+    expectedSupportedTargetOutputs: ["Rw", "Ln,w", "CI", "Ln,w+CI"],
     variants: [
       {
         id: "baseline",

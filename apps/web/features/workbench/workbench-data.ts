@@ -143,9 +143,9 @@ export const CAPABILITY_ROWS = [
     status: "live" as const
   },
   {
-    detail: "A curated Knauf, Dataholz, TUAS, and UBIQ floor-family slice can now exact-match role-tagged floor build-ups across timber, concrete, CLT, open-box, and open-web steel examples, then surface published Ln,w, CI, and companion Rw values. When a family omits Rw + Ctr, DynEcho carries that honestly as unavailable rather than fabricating it. When the stack is close but not exact, DynEcho now shows the nearest curated families and missing signals.",
+    detail: "A curated Knauf, Dataholz, TUAS, and UBIQ floor-family slice can now exact-match role-tagged floor build-ups across timber, concrete, CLT, open-box, and open-web steel examples, then surface published Ln,w, CI, and companion Rw values. When a family omits C or Ctr, DynEcho carries that honestly as unavailable rather than fabricating it. When the stack is close but not exact, DynEcho now shows the nearest curated families and missing signals.",
     family: "Exact floor systems",
-    label: "Curated Ln,w, CI, Ln,w+CI, Rw, Rw + Ctr",
+    label: "Curated Ln,w, CI, Ln,w+CI, Rw, Rw + C, Rw + Ctr",
     status: "live" as const
   },
   {

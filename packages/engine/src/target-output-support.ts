@@ -1,5 +1,6 @@
 import {
-  getFloorSystemDerivedRwPlusCtr,
+  getFloorSystemC,
+  getFloorSystemCtr,
   type FloorSystemAirborneRatings,
   type ImpactBoundCalculation,
   type ImpactCalculation,
@@ -87,17 +88,35 @@ function getCarrierRwPrime(input: TargetOutputSupportInput): number | null {
 
 function getCarrierCtr(input: TargetOutputSupportInput): number | null {
   if (input.floorCarrier) {
-    const derivedRwPlusCtr = getFloorSystemDerivedRwPlusCtr(input.floorCarrier);
+    const ctr = getFloorSystemCtr(input.floorCarrier);
 
-    if (!isFiniteNumber(derivedRwPlusCtr)) {
+    if (!isFiniteNumber(ctr)) {
       return null;
     }
 
-    return Number(derivedRwPlusCtr) - input.floorCarrier.Rw;
+    return ctr ?? null;
   }
 
   if (isFiniteNumber(input.metrics?.estimatedCtrDb)) {
     return input.metrics?.estimatedCtrDb ?? null;
+  }
+
+  return null;
+}
+
+function getCarrierC(input: TargetOutputSupportInput): number | null {
+  if (input.floorCarrier) {
+    const c = getFloorSystemC(input.floorCarrier);
+
+    if (!isFiniteNumber(c)) {
+      return null;
+    }
+
+    return c ?? null;
+  }
+
+  if (isFiniteNumber(input.metrics?.estimatedCDb)) {
+    return input.metrics?.estimatedCDb ?? null;
   }
 
   return null;
@@ -117,7 +136,7 @@ function isTargetOutputAvailable(
     case "STC":
       return isFiniteNumber(input.metrics?.estimatedStc);
     case "C":
-      return isFiniteNumber(input.metrics?.estimatedCDb);
+      return isFiniteNumber(getCarrierC(input));
     case "Ctr":
       return isFiniteNumber(getCarrierCtr(input));
     case "DnT,w":

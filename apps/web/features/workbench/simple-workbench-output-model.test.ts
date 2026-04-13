@@ -122,6 +122,66 @@ describe("simple workbench output model", () => {
     );
   });
 
+  it("derives floor-lane C from published Rw plus C companions", () => {
+    const card = buildOutputCard({
+      output: "C",
+      result: buildFixture({
+        supportedTargetOutputs: ["C"],
+        unsupportedTargetOutputs: [],
+        floorSystemRatings: {
+          Rw: 49,
+          RwCtr: 44.52764215440286,
+          RwCtrSemantic: "rw_plus_c",
+          basis: "official_floor_system_exact_match"
+        },
+        metrics: {
+          ...buildFixture().metrics,
+          estimatedCDb: -1
+        }
+      }),
+      studyMode: "floor"
+    });
+
+    expect(card).toEqual(
+      expect.objectContaining({
+        detail:
+          "Companion mid-frequency adaptation carried on the active floor lane. This can differ from the live airborne estimate shown elsewhere.",
+        label: "C",
+        status: "live",
+        value: "-4.5 dB"
+      })
+    );
+  });
+
+  it("does not surface Rw plus C companions as Ctr", () => {
+    const card = buildOutputCard({
+      output: "Ctr",
+      result: buildFixture({
+        supportedTargetOutputs: ["C"],
+        unsupportedTargetOutputs: ["Ctr"],
+        floorSystemRatings: {
+          Rw: 49,
+          RwCtr: 44.52764215440286,
+          RwCtrSemantic: "rw_plus_c",
+          basis: "official_floor_system_exact_match"
+        },
+        metrics: {
+          ...buildFixture().metrics,
+          estimatedCtrDb: -6
+        }
+      }),
+      studyMode: "floor"
+    });
+
+    expect(card).toEqual(
+      expect.objectContaining({
+        label: "Ctr",
+        status: "unsupported",
+        value: "Not ready"
+      })
+    );
+  });
+
   it("keeps wall-study Rw on the live airborne calculator", () => {
     const card = buildOutputCard({
       output: "Rw",
