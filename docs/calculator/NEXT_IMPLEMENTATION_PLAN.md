@@ -53,11 +53,23 @@ These rules govern calculator work:
 Use this as the current baseline:
 
 - branch: `main`
-- latest checked commit: `c41b4c1 Land TUAS C4c exact floor anchor`
-- working tree at the start of this review was clean after the GitHub refresh;
-  the checkout now carries the uncommitted review changes listed in this plan
-- current uncommitted changes from this review: docs, test helpers, focused
-  engine robustness guards, and tests that classify current raw drift posture
+- latest checked commit: `f3c0ace docs(calculator): refresh execution checkpoint`
+- checkpoint commit stack:
+  - `b278baa test(engine): stabilize validation and full-suite gates`
+  - `bdc91e7 fix(engine): preserve explicit floor stack intent`
+  - `9c0ed2e test(engine): lock TUAS C11c fail-closed posture`
+  - `bf585b7 test(workbench): expand mixed route torture coverage`
+  - `f3c0ace docs(calculator): refresh execution checkpoint`
+- working tree after the stabilization checkpoint is clean
+- `git diff --check`: green
+- `pnpm --filter @dynecho/engine typecheck`: green
+- targeted workbench pack:
+  - `7` files, `19` tests, green
+- targeted engine pack:
+  - `5` files, `9` tests, green
+- full engine suite:
+  - command: `pnpm --filter @dynecho/engine test`
+  - result: `93` files passed, `757` tests passed
 - `pnpm build`: green
 - known non-blocking build warnings:
   - `sharp/@img` optional-package warnings through `proposal-docx`
@@ -81,8 +93,8 @@ Use this as the current baseline:
   - deep-hybrid runner pack: `5` files, `10` tests
   - web validation-regime pack: `2` files, `13` tests
 - stable full engine-suite triage after that cleanup is green:
-  - command: `pnpm --filter @dynecho/engine exec vitest run --maxWorkers=1 --reporter=basic`
-  - result: `93` files passed, `757` tests passed
+  - accepted command: `pnpm --filter @dynecho/engine test`
+  - accepted result: `93` files passed, `757` tests passed
 - `pnpm build`: green after the `unsupported_gap` posture was added to the
   workbench validation-regime reporting helpers
 - engine test-typing cleanup is green:
@@ -96,8 +108,8 @@ Use this as the current baseline:
   - no acoustic solver behavior changed in this cleanup slice
 - direct broad multi-worker `vitest run` currently has all assertions green but
   can still exit non-zero from Vitest worker RPC timeout after CPU-heavy
-  dynamic-airborne generated scans; use the package `test` script or the explicit
-  `--maxWorkers=1` command for full validation
+  dynamic-airborne generated scans; use the package `test` script for the
+  accepted full engine gate
 
 The currently defended floor/wall corridors match the living state docs:
 
@@ -129,10 +141,11 @@ The following rules supersede stale historical wording in older plan sections:
   not `pnpm --filter <pkg> test -- <files>`, because the latter broadened the
   run in this checkout
 - full engine-suite validation should use
-  `pnpm --filter @dynecho/engine exec vitest run --maxWorkers=1` or
   `pnpm --filter @dynecho/engine test`; the engine package test script pins
   `--maxWorkers=1` to avoid Vitest worker RPC timeouts in CPU-heavy generated
-  scan files
+  scan files. A direct `--reporter=basic` full-suite run can report all
+  assertions green and still exit non-zero from a Vitest worker RPC timeout, so
+  it is not the accepted green gate for this checkpoint
 - full engine-suite triage is recorded in
   `FULL_ENGINE_SUITE_TRIAGE_2026-04-12.md`; do not treat every broad-suite red as
   a solver regression without checking that classification first
@@ -269,17 +282,40 @@ Acceptance:
   - C7c exact
 - workbench output cards show support/unsupported status honestly
 
-### Step 2: Raw And Predictor Inference Widening
+### Step 2: Dataholz Timber-Frame Raw/Predictor Role-Gate Audit
 
-Status: unblocked after C11c, still source-led and one family at a time
+Status: selected as the next implementation slice
+
+Baseline validation after selecting this slice:
+
+- engine starting pack: `6` files, `300` tests, green
+- workbench starting pack: `3` files, `104` tests, green
+- no solver behavior changed during this plan-selection pass
 
 Purpose:
 
-- widen useful coverage only after the source-backed combined-CLT decision is safe
+- execute the `source_led_raw_or_predictor_widening_v1` plan on one concrete
+  family instead of opening a broad raw or predictor pass
+- use Dataholz timber-frame because TUAS combined-CLT, UBIQ open-web, Dataholz
+  GDMTXA04A, and mixed/history stabilization are now closed enough to stop
+  blocking the next source-led family selection
+- decide whether any Dataholz timber-frame raw or predictor surface can be
+  tightened safely, or whether the current role-gated fail-closed posture should
+  be frozen more explicitly
 
 Work:
 
-- select one family at a time from the source gap ledger
+- slice id: `dataholz_timber_frame_role_gated_raw_predictor_audit_v1`
+- audit the `10` imported Dataholz timber-frame exact rows against current
+  visible-stack, predictor-input, and raw-vs-tagged behavior
+- keep direct curated exact rows and explicit `base_structure` routes separate
+  from raw helper-only rows
+- classify each representative branch as:
+  - direct exact
+  - explicit-role exact
+  - predictor/family estimate
+  - low-confidence continuation
+  - unsupported / fail-closed
 - prefer exact/bound/product rows before raw family inference
 - add representative hostile-input tests:
   - many layers
@@ -289,6 +325,11 @@ Work:
   - upper/lower package reorder attempts
   - missing role labels
   - preset-only rows modeled manually
+- add the smallest workbench route-parity guard if the slice changes support
+  buckets or makes a new timber-frame corridor representative
+- do not widen generic `timber_frame_floor`, `timber_joist_floor`, or
+  `engineered_timber_structural` raw carriers unless the source-backed role
+  evidence is explicit enough to preserve the existing weaker-carrier guard
 
 Acceptance:
 
@@ -296,6 +337,8 @@ Acceptance:
   low confidence
 - unsupported surfaces stay unsupported instead of producing optimistic values
 - route snapshots do not drift under split/reorder/noise tests
+- if no source-backed widening is defensible, the slice closes as a documented
+  no-widening/fail-closed audit instead of forcing a behavior change
 
 ### Step 3: Mixed Floor/Wall Robustness Expansion
 
@@ -379,7 +422,8 @@ Acceptance:
 
 ### Step 5: Full Suite Triage And CI Gate
 
-Status: open
+Status: closed for the current checkpoint; ongoing as the broad gate for future
+slices
 
 Purpose:
 
@@ -405,6 +449,18 @@ Acceptance:
 
 Run target packs with `exec vitest run`:
 
+Selected next-slice starting pack:
+
+```sh
+pnpm --filter @dynecho/engine exec vitest run src/raw-floor-exact-exception-audit.test.ts src/raw-floor-weaker-carrier-posture.test.ts src/floor-exact-companion-split-parity.test.ts src/floor-source-corpus-contract.test.ts src/calculate-assembly.test.ts src/calculate-impact-only.test.ts
+```
+
+```sh
+pnpm --filter @dynecho/web exec vitest run features/workbench/floor-family-regressions.test.ts features/workbench/raw-floor-weaker-carrier-route-posture.test.ts features/workbench/floor-stack-invariance.test.ts
+```
+
+General floor/source guard packs:
+
 ```sh
 pnpm --filter @dynecho/engine exec vitest run src/floor-library-sweep.test.ts src/floor-library-raw-parity.test.ts src/raw-floor-exact-exception-audit.test.ts
 ```
@@ -427,6 +483,12 @@ pnpm --filter @dynecho/engine exec vitest run src/dynamic-airborne-family-bounda
 
 ```sh
 pnpm --filter @dynecho/web exec vitest run features/workbench/floor-family-regressions.test.ts features/workbench/floor-stack-invariance.test.ts
+```
+
+Broad checkpoint gates:
+
+```sh
+pnpm --filter @dynecho/engine test
 ```
 
 ```sh

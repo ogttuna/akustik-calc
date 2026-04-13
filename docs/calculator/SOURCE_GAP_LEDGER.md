@@ -1,6 +1,6 @@
 # Dynamic Calculator Source Gap Ledger
 
-Last reviewed: 2026-04-10
+Last reviewed: 2026-04-13
 
 Purpose:
 
@@ -905,13 +905,36 @@ This section is implementation-backed from the current local catalog import, not
 
 - Dataholz timber-frame exact rows in the catalog: `10`
 - current meaning:
-  - this is a meaningful future tightening and widening surface
-  - but it is not the immediate next dynamic-floor family to push while open-box and open-web widening decisions are still source-ledger work
-  - keep it as a later track rather than mixing it into the current open-box/open-web research sprint
+  - this is now the selected next one-family audit surface for
+    `source_led_raw_or_predictor_widening_v1`
+  - the prior blocker was that open-box, open-web, and Dataholz CLT boundary
+    decisions still needed closure; those are now closed enough to stop blocking
+    a timber-frame role-gated audit
+  - the audit must keep curated exact rows, explicit `base_structure` routes,
+    predictor/family estimates, low-confidence continuations, and raw
+    fail-closed carriers separate
+  - do not use the timber-frame corpus to reopen generic raw
+    `timber_frame_floor`, `timber_joist_floor`, or
+    `engineered_timber_structural` lanes unless source-backed role evidence is
+    strong enough to preserve the weaker-carrier guard
 
 ## Immediate Research Order
 
-1. TUAS measured corpus
+1. Dataholz timber-frame component sheets and imported exact corpus
+   - current status:
+     - selected next audit surface
+   - immediate purpose:
+     - decide whether any role-gated raw/predictor behavior can be tightened
+       safely, or whether the current fail-closed raw posture should be frozen
+       more explicitly
+   - first checks:
+     - raw-vs-tagged drift around `dataholz_gdsnxn01a_timber_frame_lab_2026`
+     - explicit `base_structure` exact behavior for the imported timber-frame
+       rows
+     - helper-only raw timber carriers remain fail-closed unless role evidence
+       is explicit
+     - split/reorder/many-layer noise does not promote weak carriers
+2. TUAS measured corpus
    - next surface-design slice after the UBIQ corridor close-out
    - still the strongest current open-access source for measured lightweight timber floor families with drawings and resilient-layer metadata
    - `2026-04-09` public API recheck confirms the currently published dataset includes the drawing and detail files actually used in the current audit:
@@ -921,15 +944,16 @@ This section is implementation-backed from the current local catalog import, not
       - `R6b` is now resolved and can stay as an exact-only reinforced `b` branch
       - `R7a` is also now resolved as an exact-only heavy/wet `a` branch with a dedicated upper-EPS-board surface
       - the next TUAS decision is no longer this branch design; it is which later new-surface corridor is worth mining after the UBIQ gate
-2. UBIQ official system tables
+3. UBIQ official system tables
    - current status:
      - the corridor decision is closed for now
      - the current official-source conflict is frozen as provenance drift, not as new coverage
    - treat bare open-web support as a separate research question
-3. Dataholz component sheets
-   - first tightening target for CLT and timber family calibration
+4. Dataholz CLT component sheets
+   - first tightening target for CLT calibration after the selected timber-frame
+     audit
    - use them to tighten deviation, not to justify a generic universal lightweight-floor lane
-4. Broader modeling literature
+5. Broader modeling literature
    - useful for later model research
    - not enough by itself to open new production lanes without family-specific source anchors
 

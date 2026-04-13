@@ -8,6 +8,33 @@ Document role:
 
 This is a checkpoint document, not a new solver plan.
 
+## Post-Acceptance Update
+
+Accepted on: `2026-04-13`
+
+The dirty-worktree packages classified below were committed into five reviewable
+commits:
+
+- `b278baa test(engine): stabilize validation and full-suite gates`
+- `bdc91e7 fix(engine): preserve explicit floor stack intent`
+- `9c0ed2e test(engine): lock TUAS C11c fail-closed posture`
+- `bf585b7 test(workbench): expand mixed route torture coverage`
+- `f3c0ace docs(calculator): refresh execution checkpoint`
+
+Post-commit state:
+
+- worktree: clean
+- `git diff --check`: green
+- `pnpm --filter @dynecho/engine typecheck`: green
+- targeted workbench pack: `7` files, `19` tests, green
+- targeted engine pack: `5` files, `9` tests, green
+- accepted full engine gate: `pnpm --filter @dynecho/engine test`
+  - `93` files, `757` tests, green
+- `pnpm build`: green
+
+Use `NEXT_IMPLEMENTATION_PLAN.md` for the current next slice. This checkpoint
+remains useful as the package map for the accepted commit stack.
+
 ## Current State
 
 Checkpoint date: `2026-04-13`
@@ -22,7 +49,9 @@ Worktree shape at checkpoint creation:
   - `packages/engine/src/floor-system-test-layer-builders.ts`
   - `packages/engine/src/tuas-c11c-wet-stack-anomaly-audit.test.ts`
 
-The worktree is intentionally dirty. Do not revert unrelated files while continuing.
+This worktree shape was the pre-acceptance stabilization state. The accepted
+post-commit state is clean; do not use this historical dirty-worktree note as a
+reason to expect uncommitted changes after `f3c0ace`.
 
 ## Last Verified Gate
 
@@ -246,16 +275,14 @@ Review notes:
 
 ## Safe Next Move
 
-Before new implementation work:
+The accepted next implementation slice is now maintained in
+`NEXT_IMPLEMENTATION_PLAN.md`.
 
-1. review the package map above against `git diff --name-status`
-2. keep packages separable during commit/PR preparation
-3. run the targeted pack for any package that is edited during review
-4. keep the full engine gate on `pnpm --filter @dynecho/engine exec vitest run --maxWorkers=1 --reporter=basic`
+Current restart rule:
 
-After this checkpoint is accepted, the next implementation slice should be:
-
-- select one concrete `source_led_raw_or_predictor_widening_v1` family
+- execute one concrete `source_led_raw_or_predictor_widening_v1` family
+- start with the selected Dataholz timber-frame role-gated raw/predictor audit
 - write the contract tests first
 - land only source-backed behavior
 - keep unsupported or under-described combinations fail-closed
+- keep the accepted full engine gate on `pnpm --filter @dynecho/engine test`
