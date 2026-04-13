@@ -59,18 +59,30 @@ describe("wall full preset contract matrix", () => {
       const labCards = evaluateWallPreset(preset.id, null);
       const fieldCards = evaluateWallPreset(preset.id, FIELD_CONTEXT);
       const buildingCards = evaluateWallPreset(preset.id, BUILDING_CONTEXT);
+      const isScreeningConcreteWall = preset.id === "concrete_wall";
 
-      const labLiveOutputs: RequestedOutputId[] = ["Rw", "STC", "C", "Ctr"];
+      const labLiveOutputs: RequestedOutputId[] = isScreeningConcreteWall ? ["Rw", "STC", "Ctr"] : ["Rw", "STC", "C", "Ctr"];
       const labParkedOutputs: RequestedOutputId[] = ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A"];
-      const fieldLiveOutputs: RequestedOutputId[] = ["R'w", "Dn,w", "Dn,A", "STC", "C", "Ctr"];
+      const labUnavailableOutputs: RequestedOutputId[] = isScreeningConcreteWall ? ["C"] : [];
+      const fieldLiveOutputs: RequestedOutputId[] = isScreeningConcreteWall
+        ? ["Rw", "R'w", "Dn,w", "Dn,A", "STC", "Ctr"]
+        : ["R'w", "Dn,w", "Dn,A", "STC", "C", "Ctr"];
       const fieldParkedOutputs: RequestedOutputId[] = ["DnT,w", "DnT,A"];
-      const fieldUnavailableOutputs: RequestedOutputId[] = ["Rw"];
-      const buildingLiveOutputs: RequestedOutputId[] = ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "STC", "C", "Ctr"];
-      const buildingUnavailableOutputs: RequestedOutputId[] = ["Rw"];
+      const fieldUnavailableOutputs: RequestedOutputId[] = isScreeningConcreteWall ? ["C"] : ["Rw"];
+      const buildingLiveOutputs: RequestedOutputId[] = isScreeningConcreteWall
+        ? ["Rw", "R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "STC", "Ctr"]
+        : ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "STC", "C", "Ctr"];
+      const buildingUnavailableOutputs: RequestedOutputId[] = isScreeningConcreteWall ? ["C"] : ["Rw"];
 
       for (const output of labLiveOutputs) {
         if (labCards.get(output)?.status !== "live") {
           failures.push(`${preset.id}: expected ${output} to stay live in lab mode`);
+        }
+      }
+
+      for (const output of labUnavailableOutputs) {
+        if (labCards.get(output)?.status !== "unsupported") {
+          failures.push(`${preset.id}: expected ${output} to stay unsupported in lab mode`);
         }
       }
 

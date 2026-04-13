@@ -339,7 +339,7 @@ const COMMON_FLOOR_CASES: readonly CommonFloorCase[] = [
     expectedLab: {
       basis: "open_measured_floor_system_exact_match",
       floorSystemMatchId: "tuas_r5b_open_box_timber_measured_2026",
-      lnw: { min: 39, max: 39 },
+      lnw: { min: 44, max: 44 },
       rw: { min: 75, max: 75 },
       supportedTargetOutputs: ["Ln,w", "Ln,w+CI", "Rw"]
     }

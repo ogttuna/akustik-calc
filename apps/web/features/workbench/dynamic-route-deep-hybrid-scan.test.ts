@@ -8,12 +8,14 @@ import {
   DEEP_HYBRID_PREFIXES,
   DEEP_HYBRID_SUFFIXES,
   evaluateDynamicWallField,
+  ROUTE_DEEP_HYBRID_RUNNER_YIELD_INTERVAL,
   ROUTE_DEEP_HYBRID_TIMEOUT_MS,
-  stackKey
+  stackKey,
+  yieldToVitestWorker
 } from "./dynamic-route-deep-hybrid-test-helpers";
 
 describe("dynamic route deep hybrid boundary scan contracts", () => {
-  it("keeps the representative deeper hybrid trailing-trim route palette on the same defended pairing", () => {
+  it("keeps the representative deeper hybrid trailing-trim route palette on the same defended pairing", async () => {
     const boundaryCounts = new Map<string, number>();
     const conflictCounts = new Map<string, number>();
     const holdTrimCounts = new Map<string, number>();
@@ -52,6 +54,10 @@ describe("dynamic route deep hybrid boundary scan contracts", () => {
                   stack: stackKey(stack),
                   trace
                 });
+              }
+
+              if (scanIndex % ROUTE_DEEP_HYBRID_RUNNER_YIELD_INTERVAL === 0) {
+                await yieldToVitestWorker();
               }
             }
           }

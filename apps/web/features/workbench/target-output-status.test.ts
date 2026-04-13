@@ -123,7 +123,7 @@ describe("getTargetOutputStatus", () => {
     expect(rwStatus.note).toContain("curated floor-family companions");
   });
 
-  it("keeps timber bare-floor low-confidence airborne outputs explicit on the same published-family fallback lane", () => {
+  it("keeps timber bare-floor low-confidence outputs explicit while withholding unsupported Ctr", () => {
     const scenario = evaluatePreset("timber_bare_impact_only_fallback");
 
     const rwStatus = getTargetOutputStatus({
@@ -144,8 +144,8 @@ describe("getTargetOutputStatus", () => {
 
     expect(rwStatus.kind).toBe("engine_live");
     expect(rwStatus.note).toContain("same low-confidence published-family fallback");
-    expect(ctrStatus.kind).toBe("engine_live");
-    expect(ctrStatus.note).toContain("same low-confidence published-family fallback");
+    expect(ctrStatus.kind).toBe("unavailable");
+    expect(ctrStatus.note).toContain("keeping this requested output explicit instead of inventing a number");
     expect(ciStatus.kind).toBe("engine_live");
     expect(ciStatus.label).toBe("Family estimate");
     expect(ciStatus.note).toContain("supported guide lane");

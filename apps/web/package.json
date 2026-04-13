@@ -8,7 +8,7 @@
     "dev": "tsx ../../tools/dev/run-next-dev.ts",
     "lint": "eslint . --ext .ts,.tsx --ignore-pattern next-env.d.ts --ignore-pattern .next --ignore-pattern '.next-*'",
     "start": "tsx ../../tools/dev/run-next-standalone.ts",
-    "test": "vitest run",
+    "test": "vitest run --maxWorkers=1",
     "typecheck": "tsx ../../tools/dev/run-next-typecheck.ts"
   },
   "dependencies": {

@@ -13,8 +13,8 @@ describe("dynamic route deep hybrid AAC-G5 swap contracts", () => {
   for (const cohort of DEEP_HYBRID_AAC_G5_SWAP_SCAN_COHORTS) {
     it(
       `finds no silent >=8 dB adjacent-swap jumps for AAC-G5 deep-hybrid route cohort ${cohort.label}`,
-      () => {
-        const offenders = collectSilentSwapOffenders(readSnapshot, cohort);
+      async () => {
+        const offenders = await collectSilentSwapOffenders(readSnapshot, cohort);
         expect(offenders).toEqual([]);
       },
       ROUTE_DEEP_HYBRID_SWAP_TIMEOUT_MS

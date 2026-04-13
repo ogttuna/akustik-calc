@@ -132,7 +132,7 @@ describe("getDynamicCalcBranchSummary", () => {
     expect(summary.detail).toContain("narrower Knauf corridor");
   });
 
-  it("keeps the preset-only Dataholz integrated dry CLT row on the published dry-family summary instead of surfacing exact floor family wording", () => {
+  it("keeps the preset-only Dataholz integrated dry CLT row on the published combined-family summary instead of surfacing exact floor family wording", () => {
     const scenario = evaluateFloorRows("gdmtxa04a-boundary", [
       { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: "12.5" },
       { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: "50" },
@@ -148,7 +148,7 @@ describe("getDynamicCalcBranchSummary", () => {
     });
 
     expect(scenario.result?.floorSystemMatch).toBeNull();
-    expect(summary.value).toBe("Dry floating floor");
+    expect(summary.value).toBe("Combined upper and lower system");
     expect(summary.tone).toBe("neutral");
     expect(summary.detail).toContain("Published family estimate is active through Published family blend · mass-timber CLT.");
     expect(summary.detail).toContain("predictor mass timber clt dataholz dry estimate");

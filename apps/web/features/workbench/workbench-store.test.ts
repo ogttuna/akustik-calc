@@ -1039,8 +1039,12 @@ describe("workbench store", () => {
     expect(replacedScenario.result).not.toBeNull();
     expect(replacedScenario.result?.floorSystemEstimate?.kind).toBe("family_archetype");
     expect(replacedScenario.result?.impact?.basis).toBe("predictor_floor_system_family_archetype_estimate");
-    expect(replacedScenario.result?.impact?.LnW).toBeCloseTo(68, 1);
+    expect(replacedScenario.result?.impact?.LnW).toBeCloseTo(58.5, 1);
     expect(replacedScenario.result?.floorSystemRatings?.Rw).toBeCloseTo(39.6, 1);
+    expect(replacedScenario.result?.impact?.estimateCandidateIds).toEqual([
+      "tuas_x2_clt140_measured_2026",
+      "tuas_c2_clt260_measured_2026"
+    ]);
     expect(
       replacedScenario.warnings.some((warning) =>
         /Visible-layer predictor matching is parked because single-entry floor roles are duplicated: base structure x2/i.test(

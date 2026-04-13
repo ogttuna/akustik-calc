@@ -1222,16 +1222,15 @@ describe("scenario analysis", () => {
     expect(scenario.result).not.toBeNull();
     expect(scenario.warnings).not.toContain(expect.stringContaining("Unknown material"));
     expect(scenario.result?.floorSystemMatch).toBeNull();
-    expect(scenario.result?.floorSystemEstimate?.kind).toBe("family_archetype");
-    expect(scenario.result?.impact?.basis).toBe("predictor_floor_system_family_archetype_estimate");
-    expect(scenario.result?.floorSystemEstimate?.fitPercent).toBe(89);
-    expect(scenario.result?.impact?.LnW).toBeCloseTo(49.8, 1);
-    expect(scenario.result?.floorSystemRatings?.Rw).toBeCloseTo(61.1, 1);
-    expect(scenario.result?.impact?.estimateCandidateIds).toEqual([
-      "tuas_r2b_open_box_timber_measured_2026",
-      "tuas_r2a_open_box_timber_measured_2026",
-      "tuas_r6b_open_box_timber_measured_2026"
-    ]);
+    expect(scenario.result?.floorSystemEstimate).toBeNull();
+    expect(scenario.result?.impact).toBeNull();
+    expect(scenario.result?.floorSystemRatings?.basis).toBe("screening_mass_law_curve_seed_v3");
+    expect(scenario.result?.floorSystemRatings?.Rw).toBeCloseTo(43, 1);
+    expect(scenario.result?.supportedTargetOutputs).toEqual(["Rw"]);
+    expect(scenario.result?.unsupportedTargetOutputs).toEqual(["Ln,w", "Ln,w+CI", "DeltaLw", "L'n,w", "L'nT,w"]);
+    expect(scenario.warnings).toContain(
+      "Impact sound outputs are not available for the current input/path: Ln,w, Ln,w+CI, DeltaLw, L'n,w, L'nT,w. DynEcho kept those outputs explicit instead of fabricating unsupported ratings."
+    );
     expect(scenario.warnings).toContain("Screening estimate only. This result is coming from the local calibrated seed lane.");
   });
 

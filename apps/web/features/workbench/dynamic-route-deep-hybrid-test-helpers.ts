@@ -14,6 +14,13 @@ export const BUILDING_CONTEXT: AirborneContext = {
 export const FIELD_TRACE_OUTPUTS: readonly RequestedOutputId[] = ["DnT,w"];
 export const ROUTE_DEEP_HYBRID_TIMEOUT_MS = 40_000;
 export const ROUTE_DEEP_HYBRID_SWAP_TIMEOUT_MS = 45_000;
+export const ROUTE_DEEP_HYBRID_RUNNER_YIELD_INTERVAL = 50;
+
+export function yieldToVitestWorker() {
+  return new Promise<void>((resolve) => {
+    setTimeout(resolve, 0);
+  });
+}
 
 export const DEEP_HYBRID_PREFIXES = [
   [],
@@ -243,7 +250,7 @@ export function buildSnapshotReader() {
   };
 }
 
-export function collectSilentSwapOffenders(
+export async function collectSilentSwapOffenders(
   readSnapshot: ReturnType<typeof buildSnapshotReader>,
   cohort: DeepHybridSwapCohort
 ) {
@@ -253,6 +260,7 @@ export function collectSilentSwapOffenders(
     delta: number;
     swapIndex: number;
   }> = [];
+  let comparisonCount = 0;
 
   for (const prefix of DEEP_HYBRID_PREFIXES) {
     for (const suffix of DEEP_HYBRID_SUFFIXES) {
@@ -283,6 +291,11 @@ export function collectSilentSwapOffenders(
                   delta,
                   swapIndex
                 });
+              }
+
+              comparisonCount += 1;
+              if (comparisonCount % ROUTE_DEEP_HYBRID_RUNNER_YIELD_INTERVAL === 0) {
+                await yieldToVitestWorker();
               }
             }
           }
