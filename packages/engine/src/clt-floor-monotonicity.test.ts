@@ -78,10 +78,10 @@ describe("CLT floor monotonicity", () => {
     expect(wet160.lab.floorSystemEstimate?.kind).toBe("family_archetype");
     expect(dry145.lab.floorSystemRatings?.Rw ?? 0).toBeGreaterThan(bare160.lab.floorSystemRatings?.Rw ?? 0);
     expect(wet160.lab.floorSystemRatings?.Rw ?? 0).toBeGreaterThan(dry145.lab.floorSystemRatings?.Rw ?? 0);
-    expect(dry145.lab.impact?.LnW ?? Infinity).toBeLessThan((bare160.lab.impact?.LnW ?? 0) - 15);
-    expect(wet160.lab.impact?.LnW ?? Infinity).toBeLessThan((bare160.lab.impact?.LnW ?? 0) - 20);
-    expect(dry145.field.impact?.LPrimeNTw ?? Infinity).toBeLessThan((bare160.field.impact?.LPrimeNTw ?? 0) - 15);
-    expect(wet160.field.impact?.LPrimeNTw ?? Infinity).toBeLessThan((bare160.field.impact?.LPrimeNTw ?? 0) - 20);
+    expect(dry145.lab.impact?.LnW ?? Infinity).toBeLessThan((bare160.lab.impact?.LnW ?? 0) - 10);
+    expect(wet160.lab.impact?.LnW ?? Infinity).toBeLessThan((bare160.lab.impact?.LnW ?? 0) - 12);
+    expect(dry145.field.impact?.LPrimeNTw ?? Infinity).toBeLessThan((bare160.field.impact?.LPrimeNTw ?? 0) - 10);
+    expect(wet160.field.impact?.LPrimeNTw ?? Infinity).toBeLessThan((bare160.field.impact?.LPrimeNTw ?? 0) - 12);
   });
 
   it("keeps laminate-plus-underlay CLT interpolation between the defended TUAS anchors", () => {

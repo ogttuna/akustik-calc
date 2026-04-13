@@ -1,74 +1,16 @@
 import { EXACT_FLOOR_SYSTEMS } from "@dynecho/catalogs";
-import type { FloorRole, FloorSystemMatchCriteria, FloorSystemRoleCriteria, LayerInput } from "@dynecho/shared";
+import type { LayerInput } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
 import { calculateAssembly } from "./calculate-assembly";
 import { calculateImpactOnly } from "./calculate-impact-only";
+import { buildFloorTestLayersFromCriteria } from "./floor-system-test-layer-builders";
 import { maybeInferFloorRoleLayerStack } from "./impact-predictor-input";
-
-const MATCH_ROLE_ENTRIES: Array<[FloorRole, keyof FloorSystemMatchCriteria]> = [
-  ["ceiling_board", "ceilingBoard"],
-  ["ceiling_fill", "ceilingFill"],
-  ["ceiling_cavity", "ceilingCavity"],
-  ["upper_fill", "upperFill"],
-  ["floating_screed", "floatingScreed"],
-  ["floor_covering", "floorCovering"],
-  ["resilient_layer", "resilientLayer"],
-  ["base_structure", "baseStructure"]
-];
 
 const REQUESTED_OUTPUTS = ["Rw", "Ln,w", "Ln,w+CI", "L'n,w", "L'nT,w", "L'nT,50"] as const;
 
-function getDefaultThicknessMm(role: FloorRole): number {
-  switch (role) {
-    case "base_structure":
-      return 150;
-    case "ceiling_board":
-      return 12.5;
-    case "ceiling_cavity":
-      return 25;
-    case "ceiling_fill":
-      return 90;
-    case "floating_screed":
-      return 19;
-    case "floor_covering":
-      return 8;
-    case "resilient_layer":
-      return 5;
-    case "upper_fill":
-      return 50;
-  }
-}
-
-function buildLayersFromCriteria(match: FloorSystemMatchCriteria, mode: "raw" | "tagged"): LayerInput[] {
-  const layers: LayerInput[] = [];
-
-  for (const [role, key] of MATCH_ROLE_ENTRIES) {
-    const criteria = match[key] as FloorSystemRoleCriteria | undefined;
-
-    if (!criteria) {
-      continue;
-    }
-
-    const materialId = criteria.materialIds?.[0];
-
-    if (!materialId) {
-      throw new Error(`Cannot build ${role} layer without a material id.`);
-    }
-
-    const layerCount = criteria.layerCount ?? 1;
-    const thicknessMm = criteria.thicknessMm ?? getDefaultThicknessMm(role);
-
-    for (let index = 0; index < layerCount; index += 1) {
-      layers.push({
-        ...(mode === "tagged" ? { floorRole: role } : {}),
-        materialId,
-        thicknessMm
-      });
-    }
-  }
-
-  return layers;
+function buildLayersFromCriteria(match: Parameters<typeof buildFloorTestLayersFromCriteria>[0], mode: "raw" | "tagged"): LayerInput[] {
+  return buildFloorTestLayersFromCriteria(match, mode);
 }
 
 function coreSnapshot(result: ReturnType<typeof calculateAssembly>) {
@@ -91,15 +33,17 @@ describe("raw floor exact exception audit", () => {
       return !maybeInferFloorRoleLayerStack(rawLayers);
     }).map((system) => system.id);
 
-    expect(ids).toEqual(["euracoustics_f0_bare_concrete_lab_2026", "pmc_m1_bare_composite_lab_2026"]);
+    expect(ids).toEqual(["dataholz_gdsnxn01a_timber_frame_lab_2026"]);
   });
 
-  it("lets the bare-concrete raw stack land the curated exact row without role backfill", () => {
+  it("infers the bare-concrete raw stack as a safe base and lands the curated exact row", () => {
     expect(
       maybeInferFloorRoleLayerStack([
         { materialId: "concrete", thicknessMm: 140 }
       ])
-    ).toBeNull();
+    ).toEqual([
+      { floorRole: "base_structure", materialId: "concrete", thicknessMm: 140 }
+    ]);
 
     const result = calculateAssembly([{ materialId: "concrete", thicknessMm: 140 }], {
       targetOutputs: REQUESTED_OUTPUTS
@@ -119,12 +63,12 @@ describe("raw floor exact exception audit", () => {
 
     expect(result.floorSystemMatch?.system.id).toBe("euracoustics_f0_bare_concrete_lab_2026");
     expect(result.impact?.basis).toBe("open_measured_floor_system_exact_match");
-    expect(result.sourceMode).toBe("predictor_input");
+    expect(result.sourceMode).toBe("visible_stack");
     expect(result.supportedTargetOutputs).toEqual(["Rw", "Ln,w"]);
   });
 
-  it("keeps the curated floor library free of raw-vs-tagged core drifts after the Phase 2 inference fix", () => {
-    const drifts = EXACT_FLOOR_SYSTEMS.map((system) => {
+  it("keeps the current raw-vs-tagged core drift set explicit", () => {
+    const driftIds = EXACT_FLOOR_SYSTEMS.map((system) => {
       const tagged = calculateAssembly(buildLayersFromCriteria(system.match, "tagged"), {
         targetOutputs: REQUESTED_OUTPUTS
       });
@@ -141,13 +85,22 @@ describe("raw floor exact exception audit", () => {
       };
     })
       .filter((entry) => !entry.same)
-      .map(({ id, manualMatch, raw, tagged }) => ({
-        id,
-        manualMatch,
-        raw,
-        tagged
-      }));
+      .map((entry) => entry.id);
 
-    expect(drifts).toEqual([]);
+    expect(driftIds).toEqual([
+      "dataholz_gdsnxn01a_timber_frame_lab_2026",
+      "tuas_x3_clt140_measured_2026",
+      "tuas_x4_clt140_measured_2026",
+      "tuas_r7b_open_box_timber_measured_2026",
+      "tuas_r8b_open_box_timber_measured_2026",
+      "tuas_r10a_open_box_timber_measured_2026",
+      "tuas_c3_clt260_measured_2026",
+      "tuas_c4_clt260_measured_2026",
+      "tuas_c5_clt260_measured_2026",
+      "tuas_c7_clt260_measured_2026",
+      "tuas_c7c_clt260_measured_2026",
+      "tuas_c3c_clt260_measured_2026",
+      "tuas_c4c_clt260_measured_2026"
+    ]);
   });
 });

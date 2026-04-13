@@ -33,7 +33,8 @@ import {
   getVisibleLayerPredictorBlockerWarning,
   maybeInferFloorRoleLayerStack,
   maybeBuildImpactPredictorInputFromLayerStack,
-  mergePredictorCatalog
+  mergePredictorCatalog,
+  normalizeExplicitFloorRoleLayerStack
 } from "./impact-predictor-input";
 import {
   filterImpactCatalogMatchForExplicitPredictorInput,
@@ -118,10 +119,19 @@ export function calculateImpactOnly(
       : visibleLayers;
   const exactImpactSource = options.exactImpactSource ? ExactImpactSourceSchema.parse(options.exactImpactSource) : null;
   const impactFieldContext = options.impactFieldContext ? ImpactFieldContextSchema.parse(options.impactFieldContext) : null;
+  const hasFullyTaggedSourceStack =
+    sourceLayersInput.length > 0 && sourceLayersInput.every((layer) => Boolean(layer.floorRole));
+  const normalizedExplicitSourceLayersInput = hasFullyTaggedSourceStack
+    ? normalizeExplicitFloorRoleLayerStack(sourceLayersInput, catalog)
+    : null;
   const inferredSourceLayersInput =
     predictorAdaptation?.sourceLayers.length && !predictorAdaptation.officialFloorSystemId
       ? null
-      : maybeInferFloorRoleLayerStack(sourceLayersInput, catalog);
+      // Explicit floor roles are operator intent. Only coalesce contiguous same-role pieces for split parity;
+      // do not re-infer a fully tagged stack into a broader predictor lane.
+      : hasFullyTaggedSourceStack
+        ? normalizedExplicitSourceLayersInput
+        : maybeInferFloorRoleLayerStack(sourceLayersInput, catalog);
   if (inferredSourceLayersInput) {
     sourceLayersInput = inferredSourceLayersInput;
   }

@@ -103,15 +103,15 @@ describe("bare raw floor support", () => {
         label: "bare CLT",
         layers: [{ materialId: "clt_panel", thicknessMm: 140 }],
         expected: {
-          fieldLPrimeNT50: 72.6,
-          fieldLPrimeNTw: 72.6,
-          fieldLPrimeNW: 75,
+          fieldLPrimeNT50: 63.6,
+          fieldLPrimeNTw: 63.6,
+          fieldLPrimeNW: 66,
           fieldRwPrime: 33,
           fieldSupportedTargetOutputs: ["Rw", "R'w", "Ln,w", "Ln,w+CI", "L'n,w", "L'nT,w", "L'nT,50"],
           fieldUnsupportedTargetOutputs: ["DnT,w", "DnT,A", "Dn,w", "Dn,A"],
           labBasis: "predictor_mass_timber_clt_bare_interpolation_estimate",
-          labLnW: 73,
-          labLnWPlusCI: 73,
+          labLnW: 64,
+          labLnWPlusCI: 64,
           labRw: 35
         }
       },

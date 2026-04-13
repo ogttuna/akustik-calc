@@ -385,7 +385,7 @@ const CASES: readonly CarrierCase[] = [
   }
 ];
 
-const TIMBER_TAGGED_VARIANTS: readonly CarrierCase["variants"] = [
+const TIMBER_TAGGED_VARIANTS: CarrierCase["variants"] = [
   {
     id: "timber-frame-tagged-single",
     layers: [{ floorRole: "base_structure", materialId: "timber_frame_floor", thicknessMm: 200 }]

@@ -9,30 +9,19 @@ import type {
 import { describe, expect, it } from "vitest";
 
 import { calculateAssembly } from "./calculate-assembly";
+import {
+  buildFloorTestLayersFromCriteria,
+  FLOOR_TEST_MATCH_ROLE_ENTRIES,
+  FLOOR_TEST_MERGE_SAFE_PACKED_ROLES,
+  getFloorTestMaterialSchedule,
+  getFloorTestThicknessSchedule
+} from "./floor-system-test-layer-builders";
 import { deriveImpactGuideMetrics } from "./impact-guide";
 import {
   getVisibleLayerPredictorBlockerWarning,
   maybeBuildImpactPredictorInputFromLayerStack
 } from "./impact-predictor-input";
 
-const MATCH_ROLE_ENTRIES: Array<[FloorRole, keyof FloorSystemMatchCriteria]> = [
-  ["ceiling_board", "ceilingBoard"],
-  ["ceiling_fill", "ceilingFill"],
-  ["ceiling_cavity", "ceilingCavity"],
-  ["upper_fill", "upperFill"],
-  ["floating_screed", "floatingScreed"],
-  ["floor_covering", "floorCovering"],
-  ["resilient_layer", "resilientLayer"],
-  ["base_structure", "baseStructure"]
-];
-const MERGE_SAFE_PACKED_ROLES = new Set<FloorRole>([
-  "base_structure",
-  "ceiling_fill",
-  "floating_screed",
-  "floor_covering",
-  "resilient_layer",
-  "upper_fill"
-]);
 const SINGLE_ENTRY_SCHEDULE_ROLES = new Set<FloorRole>([
   "base_structure",
   "ceiling_cavity",
@@ -69,90 +58,41 @@ const IMPACT_FIELD_CONTEXT = {
   receivingRoomVolumeM3: 55
 };
 
-function getDefaultThicknessMm(role: FloorRole): number {
-  switch (role) {
-    case "base_structure":
-      return 150;
-    case "ceiling_board":
-      return 12.5;
-    case "ceiling_cavity":
-      return 25;
-    case "ceiling_fill":
-      return 90;
-    case "floating_screed":
-      return 19;
-    case "floor_covering":
-      return 8;
-    case "resilient_layer":
-      return 5;
-    case "upper_fill":
-      return 50;
-  }
-}
-
 function buildLayersFromCriteria(match: FloorSystemMatchCriteria): LayerInput[] {
-  const layers: LayerInput[] = [];
-
-  for (const [role, key] of MATCH_ROLE_ENTRIES) {
-    const criteria = match[key] as FloorSystemRoleCriteria | undefined;
-
-    if (!criteria) {
-      continue;
-    }
-
-    const materialId = criteria.materialIds?.[0];
-    if (!materialId) {
-      throw new Error(`Cannot build ${role} layer without at least one material id.`);
-    }
-
-    const layerCount = criteria.layerCount ?? 1;
-    const thicknessMm = criteria.thicknessMm ?? getDefaultThicknessMm(role);
-
-    for (let index = 0; index < layerCount; index += 1) {
-      layers.push({
-        floorRole: role,
-        materialId,
-        thicknessMm
-      });
-    }
-  }
-
-  return layers;
+  return buildFloorTestLayersFromCriteria(match);
 }
 
 function buildPackedLayersFromCriteria(match: FloorSystemMatchCriteria): LayerInput[] {
   const layers: LayerInput[] = [];
 
-  for (const [role, key] of MATCH_ROLE_ENTRIES) {
+  for (const [role, key] of FLOOR_TEST_MATCH_ROLE_ENTRIES) {
     const criteria = match[key] as FloorSystemRoleCriteria | undefined;
 
     if (!criteria) {
       continue;
     }
 
-    const materialId = criteria.materialIds?.[0];
-    if (!materialId) {
-      throw new Error(`Cannot build ${role} layer without at least one material id.`);
-    }
-
-    const layerCount = criteria.layerCount ?? 1;
-    const thicknessMm = criteria.thicknessMm ?? getDefaultThicknessMm(role);
-    const canPackRole = layerCount > 1 && criteria.materialIds?.length === 1 && MERGE_SAFE_PACKED_ROLES.has(role);
+    const materialSchedule = getFloorTestMaterialSchedule(role, criteria);
+    const thicknessSchedule = getFloorTestThicknessSchedule(role, criteria, materialSchedule.length);
+    const canPackRole =
+      materialSchedule.length > 1 &&
+      new Set(materialSchedule).size === 1 &&
+      FLOOR_TEST_MERGE_SAFE_PACKED_ROLES.has(role);
 
     if (canPackRole) {
       layers.push({
         floorRole: role,
-        materialId,
-        thicknessMm: thicknessMm * layerCount
+        materialId: materialSchedule[0]!,
+        thicknessMm: thicknessSchedule.reduce((sum, thicknessMm) => sum + thicknessMm, 0)
       });
       continue;
     }
 
-    for (let index = 0; index < layerCount; index += 1) {
+    for (let index = 0; index < materialSchedule.length; index += 1) {
       layers.push({
         floorRole: role,
-        materialId,
-        thicknessMm
+        materialId: materialSchedule[index]!,
+        thicknessMm: thicknessSchedule[index]!
       });
     }
   }
@@ -166,24 +106,22 @@ function buildHighSplitLayersFromCriteria(
 ): LayerInput[] {
   const layers: LayerInput[] = [];
 
-  for (const [role, key] of MATCH_ROLE_ENTRIES) {
+  for (const [role, key] of FLOOR_TEST_MATCH_ROLE_ENTRIES) {
     const criteria = match[key] as FloorSystemRoleCriteria | undefined;
 
     if (!criteria) {
       continue;
     }
 
-    const materialId = criteria.materialIds?.[0];
-    if (!materialId) {
-      throw new Error(`Cannot build ${role} layer without at least one material id.`);
-    }
-
-    const layerCount = criteria.layerCount ?? 1;
-    const thicknessMm = criteria.thicknessMm ?? getDefaultThicknessMm(role);
-    const canSplitRole = criteria.materialIds?.length === 1 && MERGE_SAFE_PACKED_ROLES.has(role);
+    const materialSchedule = getFloorTestMaterialSchedule(role, criteria);
+    const thicknessSchedule = getFloorTestThicknessSchedule(role, criteria, materialSchedule.length);
+    const canSplitRole =
+      new Set(materialSchedule).size === 1 &&
+      FLOOR_TEST_MERGE_SAFE_PACKED_ROLES.has(role);
 
     if (canSplitRole) {
-      for (let layerIndex = 0; layerIndex < layerCount; layerIndex += 1) {
+      for (let layerIndex = 0; layerIndex < materialSchedule.length; layerIndex += 1) {
+        const thicknessMm = thicknessSchedule[layerIndex]!;
         const splitThicknessMm = Math.round((thicknessMm / splitLayerCount) * 1000) / 1000;
         let usedThicknessMm = 0;
 
@@ -194,7 +132,7 @@ function buildHighSplitLayersFromCriteria(
 
           layers.push({
             floorRole: role,
-            materialId,
+            materialId: materialSchedule[layerIndex]!,
             thicknessMm: nextThicknessMm
           });
         }
@@ -203,11 +141,11 @@ function buildHighSplitLayersFromCriteria(
       continue;
     }
 
-    for (let index = 0; index < layerCount; index += 1) {
+    for (let index = 0; index < materialSchedule.length; index += 1) {
       layers.push({
         floorRole: role,
-        materialId,
-        thicknessMm
+        materialId: materialSchedule[index]!,
+        thicknessMm: thicknessSchedule[index]!
       });
     }
   }
@@ -339,7 +277,7 @@ describe("curated floor-library sweep", () => {
     const failures: string[] = [];
 
     for (const system of EXACT_FLOOR_SYSTEMS.filter((entry) => entry.manualMatch !== false)) {
-      for (const [role, key] of MATCH_ROLE_ENTRIES) {
+      for (const [role, key] of FLOOR_TEST_MATCH_ROLE_ENTRIES) {
         const criteria = system.match[key] as FloorSystemRoleCriteria | undefined;
         if (!criteria || !SINGLE_ENTRY_SCHEDULE_ROLES.has(role)) {
           continue;
@@ -364,7 +302,7 @@ describe("curated floor-library sweep", () => {
     const failures: string[] = [];
 
     for (const system of [...EXACT_FLOOR_SYSTEMS.filter((entry) => entry.manualMatch !== false), ...BOUND_FLOOR_SYSTEMS]) {
-      for (const [role, key] of MATCH_ROLE_ENTRIES) {
+      for (const [role, key] of FLOOR_TEST_MATCH_ROLE_ENTRIES) {
         const criteria = system.match[key] as FloorSystemRoleCriteria | undefined;
         if (!criteria || !SINGLE_ENTRY_SCHEDULE_ROLES.has(role)) {
           continue;
@@ -555,7 +493,7 @@ describe("curated floor-library sweep", () => {
     const failures: string[] = [];
 
     for (const system of BOUND_FLOOR_SYSTEMS) {
-      for (const [role, key] of MATCH_ROLE_ENTRIES) {
+      for (const [role, key] of FLOOR_TEST_MATCH_ROLE_ENTRIES) {
         const criteria = system.match[key] as FloorSystemRoleCriteria | undefined;
         if (!criteria || !SINGLE_ENTRY_SCHEDULE_ROLES.has(role)) {
           continue;

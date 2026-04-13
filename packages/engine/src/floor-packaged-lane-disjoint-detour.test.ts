@@ -6,7 +6,7 @@ import { calculateAssembly } from "./calculate-assembly";
 const LAB_OUTPUTS: readonly RequestedOutputId[] = ["Rw", "Ln,w", "Ln,w+CI"];
 
 function hasCeilingBoardBlocker(warnings: readonly string[]) {
-  return warnings.some((warning) => /single-entry floor roles are duplicated: ceiling board x2/i.test(warning));
+  return warnings.some((warning: string) => /single-entry floor roles are duplicated: ceiling board x2/i.test(warning));
 }
 
 describe("floor packaged-lane disjoint detours", () => {
@@ -61,7 +61,7 @@ describe("floor packaged-lane disjoint detours", () => {
     expect(disjointResult.floorSystemEstimate?.kind).toBe("low_confidence");
     expect(hasCeilingBoardBlocker(disjointResult.warnings)).toBe(true);
     expect(
-      disjointResult.floorSystemEstimate?.notes.some((note) =>
+      disjointResult.floorSystemEstimate?.notes.some((note: string) =>
         /Disjoint lower-board topology stayed on the conservative composite continuation/i.test(note)
       )
     ).toBe(true);
@@ -119,7 +119,7 @@ describe("floor packaged-lane disjoint detours", () => {
     expect(result.impact?.estimateCandidateIds).toEqual(["ubiq_fl24_open_web_steel_300_16mm_exact_lab_2026"]);
     expect(hasCeilingBoardBlocker(result.warnings)).toBe(true);
     expect(
-      result.floorSystemEstimate?.notes.some((note) =>
+      result.floorSystemEstimate?.notes.some((note: string) =>
         /Family-general lightweight-steel matching was withheld because the lower-only ceiling-board topology is split/i.test(note)
       )
     ).toBe(true);

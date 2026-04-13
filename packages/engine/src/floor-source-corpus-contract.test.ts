@@ -152,8 +152,8 @@ describe("floor source corpus contract", () => {
     expect(new Set(ubiqBoundRows.map((system) => system.sourceUrl ?? ""))).toEqual(new Set([UBIQ_OFFICIAL_SYSTEM_TABLE_URL]));
     expect(sortedIds(steelJoistRows.map((system) => system.match.baseStructure?.thicknessMm ?? 0))).toEqual([200, 300]);
     expect(sortedIds(openWebRows.map((system) => system.match.baseStructure?.thicknessMm ?? 0))).toEqual([200, 300, 400]);
-    expect(steelJoistRows.every((system) => system.match.baseStructure?.materialIds.includes("steel_joist_floor"))).toBe(true);
-    expect(openWebRows.every((system) => system.match.baseStructure?.materialIds.includes("open_web_steel_floor"))).toBe(true);
+    expect(steelJoistRows.every((system) => system.match.baseStructure?.materialIds?.includes("steel_joist_floor") === true)).toBe(true);
+    expect(openWebRows.every((system) => system.match.baseStructure?.materialIds?.includes("open_web_steel_floor") === true)).toBe(true);
   });
 
   it("keeps the current Dataholz CLT remaining exact-only slack explicit", () => {

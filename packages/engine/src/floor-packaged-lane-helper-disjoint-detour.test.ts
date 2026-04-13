@@ -7,7 +7,7 @@ const LAB_OUTPUTS: readonly RequestedOutputId[] = ["Rw", "Ln,w", "Ln,w+CI"];
 
 function hasPredictorBlocker(warnings: readonly string[], role: "ceiling_fill" | "ceiling_cavity") {
   const label = role.replaceAll("_", " ");
-  return warnings.some((warning) => new RegExp(`single-entry floor roles are duplicated: ${label} x2`, "i").test(warning));
+  return warnings.some((warning: string) => new RegExp(`single-entry floor roles are duplicated: ${label} x2`, "i").test(warning));
 }
 
 describe("floor packaged-lane helper disjoint detours", () => {
@@ -45,7 +45,7 @@ describe("floor packaged-lane helper disjoint detours", () => {
     expect(fillDisjointResult.impact?.basis).toBe("predictor_floor_system_low_confidence_estimate");
     expect(hasPredictorBlocker(fillDisjointResult.warnings, "ceiling_fill")).toBe(true);
     expect(
-      fillDisjointResult.floorSystemEstimate?.notes.some((note) =>
+      fillDisjointResult.floorSystemEstimate?.notes.some((note: string) =>
         /Family-general lightweight-steel matching was withheld because the lower-only helper topology is split/i.test(note)
       )
     ).toBe(true);
@@ -54,7 +54,7 @@ describe("floor packaged-lane helper disjoint detours", () => {
     expect(cavityDisjointResult.impact?.basis).toBe("predictor_floor_system_low_confidence_estimate");
     expect(hasPredictorBlocker(cavityDisjointResult.warnings, "ceiling_cavity")).toBe(true);
     expect(
-      cavityDisjointResult.floorSystemEstimate?.notes.some((note) =>
+      cavityDisjointResult.floorSystemEstimate?.notes.some((note: string) =>
         /Family-general lightweight-steel matching was withheld because the lower-only helper topology is split/i.test(note)
       )
     ).toBe(true);
@@ -93,7 +93,7 @@ describe("floor packaged-lane helper disjoint detours", () => {
     expect(fillDisjointResult.impact?.basis).toBe("predictor_floor_system_low_confidence_estimate");
     expect(hasPredictorBlocker(fillDisjointResult.warnings, "ceiling_fill")).toBe(true);
     expect(
-      fillDisjointResult.floorSystemEstimate?.notes.some((note) =>
+      fillDisjointResult.floorSystemEstimate?.notes.some((note: string) =>
         /Lower-only helper topology stayed on the conservative composite continuation/i.test(note)
       )
     ).toBe(true);
@@ -102,7 +102,7 @@ describe("floor packaged-lane helper disjoint detours", () => {
     expect(cavityDisjointResult.impact?.basis).toBe("predictor_floor_system_low_confidence_estimate");
     expect(hasPredictorBlocker(cavityDisjointResult.warnings, "ceiling_cavity")).toBe(true);
     expect(
-      cavityDisjointResult.floorSystemEstimate?.notes.some((note) =>
+      cavityDisjointResult.floorSystemEstimate?.notes.some((note: string) =>
         /Lower-only helper topology stayed on the conservative composite continuation/i.test(note)
       )
     ).toBe(true);

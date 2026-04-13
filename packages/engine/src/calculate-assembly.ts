@@ -41,7 +41,8 @@ import {
   getVisibleLayerPredictorBlockerWarning,
   maybeInferFloorRoleLayerStack,
   maybeBuildImpactPredictorInputFromLayerStack,
-  mergePredictorCatalog
+  mergePredictorCatalog,
+  normalizeExplicitFloorRoleLayerStack
 } from "./impact-predictor-input";
 import {
   buildResolvedImpactArtifacts,
@@ -856,10 +857,18 @@ export function calculateAssembly(
   const impactFieldContext = options.impactFieldContext ? ImpactFieldContextSchema.parse(options.impactFieldContext) : null;
   const airborneContext = options.airborneContext ? AirborneContextSchema.parse(options.airborneContext) : null;
   const resolvedLayers = resolveLayers(layers, catalog);
+  const hasFullyTaggedFloorStack = layers.length > 0 && layers.every((layer) => Boolean(layer.floorRole));
+  const normalizedExplicitImpactLayers = hasFullyTaggedFloorStack
+    ? normalizeExplicitFloorRoleLayerStack(layers, catalog)
+    : null;
   const inferredImpactLayers =
     predictorAdaptation?.sourceLayers.length && !predictorAdaptation.officialFloorSystemId
       ? null
-      : maybeInferFloorRoleLayerStack(layers, catalog);
+      // Explicit floor roles are operator intent. Only coalesce contiguous same-role pieces for split parity;
+      // do not re-infer a fully tagged stack into a broader predictor lane.
+      : hasFullyTaggedFloorStack
+        ? normalizedExplicitImpactLayers
+        : maybeInferFloorRoleLayerStack(layers, catalog);
   const hasVisibleFloorCarrier = layers.some((layer) => Boolean(layer.floorRole));
   let impactResolvedLayers =
     predictorAdaptation?.sourceLayers.length && !predictorAdaptation.officialFloorSystemId

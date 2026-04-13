@@ -19,7 +19,6 @@ import {
   matchesPackedThicknessSchedule
 } from "./ceiling-board-thickness-schedule";
 import { getDefaultMaterialCatalog, resolveMaterial } from "./material-catalog";
-import { ksRound1 } from "./math";
 import {
   inferBaseSlabMaterialClassFromMaterial,
   inferStructuralSupportTypeFromMaterial,
@@ -705,7 +704,7 @@ function coalesceMergeSafeImpactLayers(
     }
 
     const mergedPrevious = previous as ResolvedLayerStackEntry;
-    mergedPrevious.thicknessMm = ksRound1(mergedPrevious.thicknessMm + layer.thicknessMm);
+    mergedPrevious.thicknessMm = Math.round((mergedPrevious.thicknessMm + layer.thicknessMm) * 1000) / 1000;
   }
 
   return collapsed;
@@ -852,6 +851,21 @@ export function maybeInferFloorRoleLayerStack(
   }
 
   return normalizedLayers.map((layer) => ({
+    floorRole: layer.floorRole,
+    materialId: layer.materialId,
+    thicknessMm: layer.thicknessMm
+  }));
+}
+
+export function normalizeExplicitFloorRoleLayerStack(
+  rawLayers: readonly LayerInput[],
+  catalog: readonly MaterialDefinition[] = getDefaultMaterialCatalog()
+): LayerInput[] | null {
+  if (rawLayers.length === 0 || rawLayers.some((layer) => !layer.floorRole)) {
+    return null;
+  }
+
+  return normalizeImpactPredictorLayerStack(rawLayers, catalog).map((layer) => ({
     floorRole: layer.floorRole,
     materialId: layer.materialId,
     thicknessMm: layer.thicknessMm

@@ -214,6 +214,11 @@ function evaluateRoleCriteria(
   const materialScheduleEquivalent = criteria.materialScheduleIds
     ? packedThicknessScheduleEquivalent || matchesRoleMaterialSchedule(layers, criteria.materialScheduleIds)
     : false;
+  const directThicknessEquivalent =
+    typeof criteria.thicknessMm === "number" &&
+    (criteria.layerCount
+      ? layers.every((layer) => thicknessMatches(layer.thicknessMm, criteria.thicknessMm as number))
+      : layers.length === 1 && thicknessMatches(layers[0]!.thicknessMm, criteria.thicknessMm));
   let matchedSignals = 0;
 
   if (criteria.layerCount) {
@@ -249,10 +254,7 @@ function evaluateRoleCriteria(
   if (typeof criteria.thicknessMm === "number") {
     if (layers.length === 0) {
       missingSignals.push(`Add ${roleLabel} around ${criteria.thicknessMm} mm.`);
-    } else if (
-      packedScheduleEquivalent ||
-      layers.every((layer) => thicknessMatches(layer.thicknessMm, criteria.thicknessMm as number))
-    ) {
+    } else if (packedScheduleEquivalent || directThicknessEquivalent) {
       matchedSignals += 1;
     } else {
       missingSignals.push(`Tune ${roleLabel} to about ${criteria.thicknessMm} mm.`);
