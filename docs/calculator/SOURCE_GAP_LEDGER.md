@@ -10,6 +10,7 @@ Purpose:
 
 Read together with:
 
+- [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
 - [CURRENT_STATE.md](./CURRENT_STATE.md)
 - [DYNAMIC_CALCULATOR_PLAN.md](./DYNAMIC_CALCULATOR_PLAN.md)
 - [../foundation/SOURCE_REPO_POLICY.md](../foundation/SOURCE_REPO_POLICY.md)
@@ -22,16 +23,37 @@ Important scope note:
 
 Current planning implication:
 
-- do not start the next turn by widening a source gap directly unless the current
-  route-history guard is deliberately closed first
-- `mixed_floor_wall_seeded_route_history_expansion_v1` has its first
-  heavy-composite wall route-history target green in the working tree
-- after closing that test-first route-history guard, use this ledger to re-rank
-  the floor-side source options:
-  - source-led raw-floor inference widening on already-defended corridors
-  - CLT-local combined-interaction evidence
-  - continued fail-closed posture for `C11c`, weak UBIQ bands, and exact-only
-    Dataholz rows until stronger source evidence exists
+- the answer-origin docs gap is now explicit and has a first executable trace
+  matrix:
+  - formulas are active, but exact source rows, predictor lanes, bound lanes,
+    and unsupported support gates can own different requested outputs
+  - `output_origin_trace_matrix_v1` now pins representative outputs with
+    value/origin/support evidence and matching workbench card status
+  - adjacent validation and the full engine suite are green after that matrix:
+    engine `3` files / `7` tests, workbench `3` files / `4` tests, full engine
+    `99` files / `787` tests, full web `94` files / `602` tests
+  - before any new source-led widening, extend that matrix for the candidate
+    route instead of relying only on prose confidence
+- `mixed_floor_wall_seeded_route_history_expansion_v1` is closed and committed
+  for the first heavy-composite wall target
+- `dataholz_clt_source_truth_audit_v1` is now closed as a no-widening source
+  audit before any new raw-floor widening
+- latest implemented floor-side guard:
+  - `raw_concrete_helper_permutation_answer_guard_v1`
+  - umbrella: `floor_raw_inference_source_led_widening_v1`
+  - this is not a new exact/source import; it is the answer-measuring guard for
+    the already-open raw terminal-concrete plus ceiling-helper corridor
+  - reason: current implementation has a narrow helper signal, and current
+    tests already defend support buckets; the remaining gap is explicit numeric
+    answer snapshots and workbench route/card parity across wider helper
+    permutations
+  - result:
+    - no solver, catalog, selector, or workbench runtime behavior changed
+    - engine answer snapshots and workbench route/card snapshots are now in
+      place and target-green
+- keep the continued fail-closed posture for `C11c`, weak UBIQ bands,
+  helper-only timber carriers, open-web steel raw carriers, and exact-only
+  Dataholz rows until stronger source evidence exists
 
 ## Latest Source-Truth Rebaseline
 
@@ -50,6 +72,36 @@ Current planning implication:
     TUAS `Ctr` unsupported
 
 ## Current Audited Posture
+
+### Raw Terminal Concrete With Ceiling Helpers
+
+- current posture:
+  - raw visible inputs with no explicit `floorRole` can reopen field `Rw` only
+    when inferred impact roles find terminal `concrete` as `base_structure`
+    and the lower side is composed only of `ceiling_board`, `ceiling_cavity`,
+    and/or `ceiling_fill`
+  - the signal requires at least one ceiling board and at least one helper
+    (`ceiling_cavity` or `ceiling_fill`)
+  - top-side finish after the concrete, non-terminal concrete, wall-like heavy
+    hybrids, open-box timber, open-web steel, lightweight steel, steel joist,
+    timber frame, timber joist, and engineered timber remain closed against
+    this raw helper shortcut
+- current guard coverage:
+  - support-bucket behavior is already covered in
+    `packages/engine/src/raw-floor-screening-carrier-support.test.ts`
+  - route-side support behavior is already covered in
+    `apps/web/features/workbench/raw-floor-screening-route-support.test.ts`
+  - weaker-carrier and safe-bare split parity guards cover nearby negatives
+- latest closed gap:
+  - `raw_concrete_helper_permutation_answer_guard_v1`
+  - added explicit numeric answer snapshots for wider helper permutations so
+    formula or route movement is visible as answer movement, not just as
+    support-bucket movement
+  - treat the snapshots as local implementation baselines; they are not a new
+    external source import
+  - test anchors:
+    - `packages/engine/src/raw-concrete-helper-answer-guard.test.ts`
+    - `apps/web/features/workbench/raw-concrete-helper-route-card-guard.test.ts`
 
 ### Bare CLT Slab
 
@@ -815,6 +867,26 @@ This section is implementation-backed from the current local catalog import, not
   - the next CLT decision is now effectively made:
     - keep `gdmtxa04a` estimate-routed on visible and predictor surfaces
     - do not treat it as generic CLT widening slack until a more honest material surface exists
+- latest source-truth audit:
+  - slice id: `dataholz_clt_source_truth_audit_v1`
+  - status: closed as no-widening source-truth guard
+  - implementation result:
+    - no solver, catalog, selector, or workbench runtime behavior changed
+    - all `9` imported Dataholz CLT rows are now pinned to explicit catalog
+      `Rw`, `Ctr`, `Ln,w`, `CI`, `CI,50-2500`, and `Ln,w+CI` source truth
+    - official-id field continuations now measure `L'n,w`, `L'nT,w`, and
+      `L'nT,50` support/unsupported buckets for every Dataholz CLT row
+    - visible raw/tagged routes now explicitly prove:
+      - manual-match-enabled CLT rows still resolve exact
+      - `GDMNXA02A-00` and `GDMNXA02A-02` remain screening-only on visible rows
+      - `GDMTXA04A` remains routed to the dry CLT estimate candidate
+        `dataholz_gdmtxa01a_clt_lab_2026`, not to a visible exact row
+    - disjoint/intervening dry CLT role splits are now measured as broader
+      family-general fallback with an explicit duplicate-role warning instead
+      of silently preserving the exact row
+  - current test anchors:
+    - `packages/engine/src/dataholz-clt-source-truth-audit.test.ts`
+    - `apps/web/features/workbench/dataholz-clt-source-truth-route.test.ts`
 
 ### UBIQ Open-Web Steel Corpus
 

@@ -9,6 +9,7 @@ This note defines the recommended implementation order for expanding DynEcho's d
 
 Read together with:
 
+- `docs/calculator/CALCULATION_MODEL_AND_VALIDATION.md`
 - `docs/calculator/CURRENT_STATE.md`
 - `docs/calculator/SOURCE_GAP_LEDGER.md`
 - `docs/archive/analysis/NUMERICAL_SYSTEM_ANALYSIS_2026-03-31.md`
@@ -105,27 +106,56 @@ Current execution status:
     interpolation band
   - engine, workbench, typecheck, full engine, and repository build gates are
     green after the guard
-- current selected next slice:
-  - `mixed_floor_wall_seeded_route_history_expansion_v1`
-  - this is a test-first route/history hardening pass, not an immediate solver
-    widening pass
-  - it added a broader seeded mixed family chain and a wider generated
-    duplicate/swap/edit-history matrix surface before changing acoustic behavior
-  - first target: added the concrete / pumice block / air gap / gypsum board /
-    concrete heavy-composite wall shape as a third wall-family mixed-history
-    detour in the engine helper, workbench generated helper, and workbench
-    save/load torture chain
-  - first target validation: engine mixed pack, web mixed pack, and engine/web
-    typechecks are green; full engine suite and repository build are also green
-  - optional follow-up inside the same slice only if green and fast: add the
-    open-box `12 mm` laminate plus `3 mm` EPS finish-tolerance boundary to the
-    generated mixed floor set
-  - any new red must be classified as solver drift, support-surface drift, stale
-    fixture, or intentionally unsupported/fail-closed behavior before code
-    changes are made
-  - after this slice is green, re-rank between source-led raw-floor inference
-    widening, wider wall selector trace evidence, and CLT-local combined
-    interaction evidence
+- latest source-led floor checkpoint:
+  - `dataholz_clt_source_truth_audit_v1`
+  - this is a no-widening source-truth guard, not a solver behavior change
+  - all imported Dataholz CLT rows now have answer-measuring engine coverage for
+    catalog truth, official-id field continuation, visible raw/tagged posture,
+    contiguous split stability, and disjoint-role fallback behavior
+  - workbench output-card coverage now covers exact dry CLT and the
+    `GDMTXA04A` estimate-routed boundary
+  - `mixed_floor_wall_seeded_route_history_expansion_v1` is already closed and
+    committed for the first heavy-composite wall target; the optional open-box
+    mixed-history boundary is deferred
+  - selected next after this checkpoint:
+    `raw_concrete_helper_permutation_answer_guard_v1`, under source-led
+    raw-floor inference widening
+- latest no-widening answer guard:
+  - `raw_concrete_helper_permutation_answer_guard_v1` is implemented and
+    target-green
+  - no solver, catalog, selector, or workbench runtime behavior changed
+  - engine tests now pin numeric answers for wider raw terminal-concrete helper
+    permutations plus top-finish, wall-like hybrid, and steel-joist negatives
+  - workbench tests now pin route/card status and values for the same
+    representative shapes
+  - engine raw/source pack, workbench raw/source pack, and engine/web
+    typechecks are green
+  - full engine suite is green: `98` files, `786` tests
+- latest docs/analysis correction:
+  - `calculation_model_and_validation_docs_v1` is implemented as a docs-only
+    local implementation audit
+  - the living docs now make explicit that formulas are active, but exact
+    source rows, predictor estimates, bound-only lanes, field continuations,
+    and unsupported support gates can own different requested outputs
+- latest trace/measurement guard:
+  - `output_origin_trace_matrix_v1` is implemented and fully validated through
+    the current target, typecheck, engine, and web gates
+  - no solver, catalog, selector, or workbench runtime behavior changed
+  - representative exact-source, source-family estimate, formula/predictor,
+    bound-only, dynamic field, missing-geometry, and unsupported routes are now
+    executable as value/origin/support/card evidence rather than prose
+    confidence
+  - future widening should extend this matrix for the candidate route before
+    changing support or solver behavior
+  - adjacent validation is green:
+    - engine trace/source/raw pack: `3` files, `7` tests
+    - workbench trace/source/raw pack: `3` files, `4` tests
+    - full engine suite: `99` files, `787` tests
+    - full web suite: `94` files, `602` tests
+    - engine/web typechecks and `git diff --check`: green
+  - the web full-suite runner now mirrors the engine package by using
+    `--maxWorkers=1`; web deep-hybrid route scans also yield periodically so
+    long CPU scans do not trip Vitest worker-RPC timeout after assertions pass
 - the 2026-04-07 reinforced-concrete assembly-field `Rw` support blocker is now closed:
   - concrete screening rows with visible floor roles now keep `Rw` exposed again on the assembly route
   - workbench `Rw` cards now also respect engine support buckets instead of surfacing unsupported floor companions
@@ -1444,7 +1474,9 @@ Immediate next implementation pass:
 1. keep the selected TUAS floor baseline packs and `pnpm build` green
 2. keep the landed `C3c`, `C4c`, and `C7c` exact corridors plus the re-closed combined-CLT inference/predictor guard green
 3. keep `tuas_c11c_wet_stack_anomaly_audit_v1` closed as deferred / fail-closed
-4. select the next raw or predictor widening target one source-backed family at a time
+4. keep `raw_concrete_helper_permutation_answer_guard_v1` frozen as the latest
+   no-widening answer guard under `floor_raw_inference_source_led_widening_v1`
+5. checkpoint the current guard set before the next solver or selector slice
 
 Why this is the correct next cut:
 
@@ -1466,9 +1498,38 @@ Why this is the correct next cut:
   - combined CLT visible stacks with lower treatment plus multi-entry `floating_screed` no longer auto-normalize into inferred or predictor-derived shorthand lanes
 - the first remaining combined exact decision is closed with `C3c`, the C4c exact-candidate pass is closed, and the C11c wet-stack anomaly audit is closed as deferred / fail-closed
 - the next risk is therefore broadening raw or predictor inference accidentally, not C11c source discovery
-- the next honest cut is a source-led raw/predictor slice that keeps C11c screening-only unless its wet stack and weak `Ln,w 59` tuple are explained before import
+- local implementation review shows the safest next cut is the already-open raw
+  terminal-concrete plus ceiling-helper corridor:
+  - visible rows must be raw/unlabeled
+  - inferred impact layers must place `concrete` as the terminal
+    `base_structure`
+  - all preceding inferred roles must be ceiling-side board/cavity/fill roles
+  - at least one board plus one helper must exist
+- the next honest cut is a source-led raw/predictor guard that pins numeric
+  answers and route/card support for that corridor while keeping C11c
+  screening-only unless its wet stack and weak `Ln,w 59` tuple are explained
+  before import
 
-Recommended widening target after the torture pass:
+Completed widening-prep target after the torture pass:
+
+- `raw_concrete_helper_permutation_answer_guard_v1`
+- scope:
+  - no solver behavior change
+  - added explicit answer snapshots for wider concrete ceiling-helper
+    permutations
+  - preserve top-finish, wall-like heavy hybrid, weaker-carrier, UBIQ weak-band,
+    `GDMTXA04A`, and C11c fail-closed/estimate-only boundaries
+- first answer baselines from the local implementation probe:
+  - split full helper over `160 mm` concrete:
+    `Rw 57`, `R'w 57`, `Ln,w 72.7`, `L'n,w 74.7`, `L'nT,w 72.3`
+  - split board/fill helper over `180 mm` concrete:
+    `Rw 58`, `R'w 58`, `Ln,w 71.0`, `L'n,w 73.0`, `L'nT,w 70.6`
+  - split board/cavity helper over `140 mm` concrete:
+    `Rw 55`, `R'w 55`, `Ln,w 74.6`, `L'n,w 76.6`, `L'nT,w 74.2`
+  - helper plus top-side finish after terminal concrete remains field-`Rw`
+    unsupported
+
+Deferred widening targets after this guard:
 
 - do not widen reinforced concrete, CLT combined interaction, or raw support blindly
 - first keep `C3c`, `C4c`, and `C7c` frozen as exact combined anchors, and keep `C11c` deferred unless it earns its own explicit exact corridor

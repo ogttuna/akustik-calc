@@ -11,6 +11,7 @@ Document role:
 
 Read together with:
 
+- [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
 - [CURRENT_STATE.md](./CURRENT_STATE.md)
 - [DYNAMIC_CALCULATOR_REMAINING_WORK_PLAN.md](./DYNAMIC_CALCULATOR_REMAINING_WORK_PLAN.md)
 - [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md)
@@ -19,27 +20,65 @@ Read together with:
 
 ## Current Active Slice Ledger
 
-- latest closed slice: `open_box_finish_tolerance_guard_v1`
-- status: closed and green
-- active next slice: `mixed_floor_wall_seeded_route_history_expansion_v1`
-- active next status: minimum first target implemented and green in the current
-  working tree
-- active next intent:
-  - widen route-history and mixed floor/wall torture evidence before opening
-    another solver-widening slice
-  - start test-first: the first edit should add or extend executable coverage,
-    not change acoustic selection math
+- latest completed working-tree slice:
+  `output_origin_trace_matrix_v1`
+- status: implemented as a no-widening trace/measurement guard; focused,
+  adjacent, typecheck, and full engine gates are green
+- previous no-widening answer guard:
+  `raw_concrete_helper_permutation_answer_guard_v1` is closed as an
+  answer/support guard; target engine/workbench packs are green
+- previous source-led slice: `dataholz_clt_source_truth_audit_v1` is closed as
+  a no-widening source-truth guard; target engine/workbench packs are green
+- previous route-history slice: `mixed_floor_wall_seeded_route_history_expansion_v1`
+  is closed and committed for the first heavy-composite wall target
+- completed slice intent:
+  - keep the newly pinned Dataholz CLT source truth frozen
+  - measure the already-open raw terminal-concrete plus ceiling-helper corridor
+    with explicit numeric answer snapshots, not only support-bucket checks
+  - keep implementation test-first and avoid changing acoustic selection math
   - preserve the current defended floor/wall corridors and classify any new red
     before changing solver behavior
-- active next acceptance:
-  - one broader seeded family chain beyond the current deterministic longer
-    chain surface
-  - one wider generated duplicate/swap or edit-history matrix beyond the first
-    complementary generated grid
-  - route/card/support-bucket parity assertions for newly covered histories
-  - green targeted engine and workbench packs, then the accepted full engine and
-    build gates if the slice touches shared route behavior
-- active next first target:
+- completed slice acceptance:
+  - one route corridor at a time: raw visible inputs inferred as terminal
+    concrete with ceiling-side board/helper layers
+  - route/card/support-bucket parity assertions plus numeric `Rw`, `R'w`,
+    `Ln,w`, `L'n,w`, and `L'nT,w` snapshots
+  - green targeted engine and workbench packs, plus engine/web typechecks
+- completed slice validation:
+  - latest output-origin trace engine/source/raw pack:
+    `3` files, `7` tests, green
+  - latest output-origin trace workbench/source/raw pack:
+    `3` files, `4` tests, green
+  - latest full engine suite:
+    `99` files, `787` tests, green
+  - latest full web suite:
+    `94` files, `602` tests, green
+  - latest engine/web typechecks: green
+  - latest `git diff --check`: green
+  - engine raw/source pack: `5` files, `14` tests, green
+  - workbench raw/source pack: `5` files, `7` tests, green
+  - engine typecheck: green
+  - web typecheck: green with the known Next.js TypeScript plugin
+    recommendation
+  - full engine suite: `98` files, `786` tests, green
+- completed slice non-goals:
+  - no `GDMTXA04A` exact reopen
+  - no C11c import
+  - no UBIQ weak-band reopen
+  - no helper-only timber, open-web steel, or generic raw-floor widening
+- active next decision:
+  - close/checkpoint the current no-widening guard set:
+    `dataholz_clt_source_truth_audit_v1`,
+    `raw_concrete_helper_permutation_answer_guard_v1`,
+    `calculation_model_and_validation_docs_v1`, and
+    `output_origin_trace_matrix_v1`
+  - before any new solver widening, extend the trace matrix for the candidate
+    route so representative outputs stay defended by value, origin,
+    basis/source, support bucket, and workbench card status
+  - re-rank between wall-selector wider trace matrices, CLT-local combined
+    evidence, and true raw-floor behavior widening on the now answer-measured
+    concrete-helper corridor
+- previous route-history first target, now closed:
   - promoted the existing heavy-composite wall instability shape into the mixed
     route-history coverage net as a third wall-family detour
   - the shape is concrete / pumice block / air gap / gypsum board / concrete
@@ -55,7 +94,7 @@ Read together with:
     - full engine suite: `96` files, `780` tests, green
     - repository build: green with known `sharp/@img` and Next TypeScript-plugin
       warnings
-- optional target after that first target is green:
+- deferred optional route-history target:
   - add the latest open-box finish-tolerance boundary to the generated mixed
     floor set so exact-outside `12 mm` laminate plus `3 mm` EPS stays
     impact-unsupported under route-history variants
@@ -1987,6 +2026,30 @@ Active slice gate:
 
 Closed slice:
 
+- slice id: `dataholz_clt_source_truth_audit_v1`
+- workstream: `B` family-specific source-truth guard before widening
+- status: `closed`
+- landed scope:
+  - added an engine Dataholz CLT source-truth audit covering all `9` imported
+    rows
+  - pinned catalog numeric truth, official-id field continuations, visible
+    raw/tagged route posture, contiguous split stability, and disjoint-role
+    fallback behavior
+  - added workbench output-card coverage for exact dry CLT and the
+    `GDMTXA04A` estimate-routed boundary
+- explicit non-landed scope:
+  - no solver behavior change
+  - no catalog row import
+  - no `GDMTXA04A` manual visible exact reopen
+  - no generic raw CLT or timber widening
+- validation:
+  - pre-edit engine raw/corpus baseline: `4` files, `11` tests, green
+  - post-edit engine source/raw pack: `5` files, `16` tests, green
+  - post-edit workbench route/raw pack: `4` files, `7` tests, green
+  - engine typecheck: green
+  - web typecheck: green with the known Next.js TypeScript plugin recommendation
+  - full engine suite: `97` files, `785` tests, green
+
 - slice id: `dataholz_gdmtxa04a_manual_match_boundary_decision_v1`
 - workstream: `B` family-specific tightening boundary decision
 - status: `closed`
@@ -2142,30 +2205,39 @@ Open watchpoints:
 - `dataholz_gdmtxa04a_clt_lab_2026` remains the only imported exact-only Dataholz CLT row:
   - keep it estimate-routed unless a future slice proves an honest visible plus predictor exact surface together
   - current source evidence is not yet enough for that reopen
+  - the `dataholz_clt_source_truth_audit_v1` guard now pins this boundary on
+    both engine and workbench route/card surfaces
 - UBIQ visible-code drift is now frozen as documentation truth:
   - do not reopen it as a runtime rename prompt unless a future slice deliberately changes user-facing provenance semantics
   - do not use it as a backdoor reason to widen into the weaker band
 
 Next recommended move:
 
-- execute the selected `mixed_floor_wall_seeded_route_history_expansion_v1`
-  slice
-- keep the slice test-first:
-  - add broader mixed floor/wall route-history evidence before any acoustic
-    solver change
-  - include a seeded family chain plus a generated duplicate/swap or edit-history
-    matrix
-  - assert support buckets and route/card parity, not only final finite numeric
-    answers
+- keep the closed `dataholz_clt_source_truth_audit_v1` validation checkpoint
+  frozen
+- keep `raw_concrete_helper_permutation_answer_guard_v1` frozen as the latest
+  no-widening answer guard before any wider family or selector work
+- result:
+  - local implementation review showed the raw concrete helper signal is already
+    narrow: raw visible input only, inferred terminal `concrete`
+    `base_structure`, ceiling-side-only board/cavity/fill roles, and at least
+    one board plus one helper
+  - the new engine guard now pins numeric answer snapshots for wider helper
+    permutations and adjacent top-finish / wall-like / steel-joist negatives
+  - the new workbench guard mirrors the same representative shapes on output
+    card status and values
+  - no solver behavior was widened, no new family was reopened, and
+    `GDMTXA04A` remains estimate-only
+- after checkpointing this guard set, re-rank the next source-led move between:
+  - wall selector wider trace matrices
+  - CLT-local combined evidence
+  - true raw-floor behavior widening on the now answer-measured concrete-helper
+    corridor
 - classify any new failure before changing implementation:
   - solver drift
   - support-bucket or output-card drift
   - stale fixture expectation
   - intentionally unsupported/fail-closed behavior
-- after this slice is green, re-rank the next implementation move between:
-  - `floor_raw_inference_source_led_widening_v1`
-  - `wall_selector_wider_trace_matrix_v1`
-  - `clt_local_combined_interaction_evidence_v1`
 - the old `tuas_deferred_shortlist_drawing_audit_v1` recommendation is closed:
   - the shortlist was reduced into explicit mixed-schedule and hybrid
     lower-treatment groups

@@ -7,29 +7,31 @@ This is the primary living doc set for dynamic calculator work. Read these files
 ## Read Order
 
 1. [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md): concise current execution plan and validated next steps
-2. [CURRENT_STATE.md](./CURRENT_STATE.md): short snapshot of the current calculator/workbench posture
-3. [STABILIZATION_CHECKPOINT_2026-04-13.md](./STABILIZATION_CHECKPOINT_2026-04-13.md): current dirty-worktree package map and safe checkpoint before new widening
-4. [FULL_ENGINE_SUITE_TRIAGE_2026-04-12.md](./FULL_ENGINE_SUITE_TRIAGE_2026-04-12.md): current broad-suite failure classification and focused cleanup status
-5. [CHECKPOINT_2026-04-08_UI_HANDOFF.md](./CHECKPOINT_2026-04-08_UI_HANDOFF.md): fast restart note for the latest UI handoff point
-6. [DYNAMIC_CALCULATOR_REMAINING_WORK_PLAN.md](./DYNAMIC_CALCULATOR_REMAINING_WORK_PLAN.md): cross-floor/wall remaining work, recently closed regressions, completion status, and non-regressive fix order
-7. [DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md](./DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md): current execution model for coverage growth, accuracy tightening, and test-first slice planning
-8. [DYNAMIC_WALL_STABILITY_REMEDIATION.md](./DYNAMIC_WALL_STABILITY_REMEDIATION.md): wall-side dynamic stability diagnosis, safe fix order, and test contracts
-9. [DYNAMIC_CALCULATOR_PLAN.md](./DYNAMIC_CALCULATOR_PLAN.md): active implementation order and hardening backlog
-10. [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md): source-backed widening, tightening, and deferred-family boundaries
-11. [../archive/analysis/README.md](../archive/analysis/README.md): dated investigations and reproduction notes
+2. [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md): answer-origin map for formulas, source rows, predictors, field continuations, support gating, and test meaning
+3. [CURRENT_STATE.md](./CURRENT_STATE.md): short snapshot of the current calculator/workbench posture
+4. [STABILIZATION_CHECKPOINT_2026-04-13.md](./STABILIZATION_CHECKPOINT_2026-04-13.md): current dirty-worktree package map and safe checkpoint before new widening
+5. [FULL_ENGINE_SUITE_TRIAGE_2026-04-12.md](./FULL_ENGINE_SUITE_TRIAGE_2026-04-12.md): current broad-suite failure classification and focused cleanup status
+6. [CHECKPOINT_2026-04-08_UI_HANDOFF.md](./CHECKPOINT_2026-04-08_UI_HANDOFF.md): fast restart note for the latest UI handoff point
+7. [DYNAMIC_CALCULATOR_REMAINING_WORK_PLAN.md](./DYNAMIC_CALCULATOR_REMAINING_WORK_PLAN.md): cross-floor/wall remaining work, recently closed regressions, completion status, and non-regressive fix order
+8. [DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md](./DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md): current execution model for coverage growth, accuracy tightening, and test-first slice planning
+9. [DYNAMIC_WALL_STABILITY_REMEDIATION.md](./DYNAMIC_WALL_STABILITY_REMEDIATION.md): wall-side dynamic stability diagnosis, safe fix order, and test contracts
+10. [DYNAMIC_CALCULATOR_PLAN.md](./DYNAMIC_CALCULATOR_PLAN.md): active implementation order and hardening backlog
+11. [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md): source-backed widening, tightening, and deferred-family boundaries
+12. [../archive/analysis/README.md](../archive/analysis/README.md): dated investigations and reproduction notes
 
 ## Status Shortcut
 
 If the question is “what is actually finished vs still open?”, use this order:
 
 1. [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md): current execution plan, next slice, and validation commands
-2. [CURRENT_STATE.md](./CURRENT_STATE.md): broad verified snapshot
-3. [STABILIZATION_CHECKPOINT_2026-04-13.md](./STABILIZATION_CHECKPOINT_2026-04-13.md): current dirty-worktree package map and validation gate
-4. [FULL_ENGINE_SUITE_TRIAGE_2026-04-12.md](./FULL_ENGINE_SUITE_TRIAGE_2026-04-12.md): which broad-suite reds are stale, fixed, real, or intentionally fail-closed
-5. [DYNAMIC_CALCULATOR_REMAINING_WORK_PLAN.md](./DYNAMIC_CALCULATOR_REMAINING_WORK_PLAN.md): explicit completion checklist across floor + wall
-6. [DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md](./DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md): next-slice execution order, test-first rules, and workstream priorities
-7. [DYNAMIC_WALL_STABILITY_REMEDIATION.md](./DYNAMIC_WALL_STABILITY_REMEDIATION.md): wall-only phase closure and partial-open items
-8. [DYNAMIC_CALCULATOR_PLAN.md](./DYNAMIC_CALCULATOR_PLAN.md): floor-dominant roadmap phases
+2. [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md): how to decide whether a shown answer is source-backed, formula-backed, predictor-backed, bound-only, or unsupported
+3. [CURRENT_STATE.md](./CURRENT_STATE.md): broad verified snapshot
+4. [STABILIZATION_CHECKPOINT_2026-04-13.md](./STABILIZATION_CHECKPOINT_2026-04-13.md): current dirty-worktree package map and validation gate
+5. [FULL_ENGINE_SUITE_TRIAGE_2026-04-12.md](./FULL_ENGINE_SUITE_TRIAGE_2026-04-12.md): which broad-suite reds are stale, fixed, real, or intentionally fail-closed
+6. [DYNAMIC_CALCULATOR_REMAINING_WORK_PLAN.md](./DYNAMIC_CALCULATOR_REMAINING_WORK_PLAN.md): explicit completion checklist across floor + wall
+7. [DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md](./DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md): next-slice execution order, test-first rules, and workstream priorities
+8. [DYNAMIC_WALL_STABILITY_REMEDIATION.md](./DYNAMIC_WALL_STABILITY_REMEDIATION.md): wall-only phase closure and partial-open items
+9. [DYNAMIC_CALCULATOR_PLAN.md](./DYNAMIC_CALCULATOR_PLAN.md): floor-dominant roadmap phases
 
 Reading rule:
 
@@ -42,17 +44,19 @@ Reading rule:
 If the question is “where do I restart tomorrow without re-reading everything?”, use this order:
 
 1. [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md): exact restart point and current next slice
-2. [CHECKPOINT_2026-04-08_UI_HANDOFF.md](./CHECKPOINT_2026-04-08_UI_HANDOFF.md): latest UI handoff context
-3. [STABILIZATION_CHECKPOINT_2026-04-13.md](./STABILIZATION_CHECKPOINT_2026-04-13.md): current dirty-worktree package map before new widening work
-4. [CURRENT_STATE.md](./CURRENT_STATE.md): latest verified snapshot and immediate next tasks
-5. [DYNAMIC_CALCULATOR_REMAINING_WORK_PLAN.md](./DYNAMIC_CALCULATOR_REMAINING_WORK_PLAN.md): open work, risk level, safe fix order, and missing-test surfaces
-6. [DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md](./DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md): only if the next task is choosing or staging the next coverage/accuracy slice
-7. [DYNAMIC_WALL_STABILITY_REMEDIATION.md](./DYNAMIC_WALL_STABILITY_REMEDIATION.md): only if the next task touches wall family selection or held boundary widening
-8. [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md): only if the next task needs source-backed widening decisions
+2. [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md): only if the next task touches output origin, formula/source confidence, or card support meaning
+3. [CHECKPOINT_2026-04-08_UI_HANDOFF.md](./CHECKPOINT_2026-04-08_UI_HANDOFF.md): latest UI handoff context
+4. [STABILIZATION_CHECKPOINT_2026-04-13.md](./STABILIZATION_CHECKPOINT_2026-04-13.md): current dirty-worktree package map before new widening work
+5. [CURRENT_STATE.md](./CURRENT_STATE.md): latest verified snapshot and immediate next tasks
+6. [DYNAMIC_CALCULATOR_REMAINING_WORK_PLAN.md](./DYNAMIC_CALCULATOR_REMAINING_WORK_PLAN.md): open work, risk level, safe fix order, and missing-test surfaces
+7. [DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md](./DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md): only if the next task is choosing or staging the next coverage/accuracy slice
+8. [DYNAMIC_WALL_STABILITY_REMEDIATION.md](./DYNAMIC_WALL_STABILITY_REMEDIATION.md): only if the next task touches wall family selection or held boundary widening
+9. [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md): only if the next task needs source-backed widening decisions
 
 ## File Roles
 
 - [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md): concise current execution plan, next slice, validation commands, and definition of done
+- [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md): central map of answer origins, formulas, source rows, predictor lanes, support gating, and test confidence rules
 - [CURRENT_STATE.md](./CURRENT_STATE.md): what is stable now, what is intentionally narrow, and what remains risky
 - [STABILIZATION_CHECKPOINT_2026-04-13.md](./STABILIZATION_CHECKPOINT_2026-04-13.md): current dirty-worktree package map, validation gate, and safe restart notes before new widening
 - [FULL_ENGINE_SUITE_TRIAGE_2026-04-12.md](./FULL_ENGINE_SUITE_TRIAGE_2026-04-12.md): broad engine-suite failure classes, cleanup fixes, and non-blocking vs real-risk split

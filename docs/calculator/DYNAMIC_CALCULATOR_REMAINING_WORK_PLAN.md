@@ -9,6 +9,8 @@ Document role:
 - optimize for non-regressive work only: every item here must improve the calculator without weakening defended corridors
 - for the detailed execution model that separates coverage widening, accuracy tightening, and required test packs, also read:
   - [DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md](./DYNAMIC_CALCULATOR_COVERAGE_ACCURACY_PLAN.md)
+- for output-origin, formula/source confidence, and card-support meaning, also read:
+  - [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
 - for the latest UI handoff restart point, also read:
   - [CHECKPOINT_2026-04-08_UI_HANDOFF.md](./CHECKPOINT_2026-04-08_UI_HANDOFF.md)
 
@@ -63,6 +65,25 @@ Interpretation:
 
 Current verified result:
 
+- output-origin trace matrix: full current gates green
+  - engine:
+    `packages/engine/src/output-origin-trace-matrix.test.ts`
+  - workbench:
+    `apps/web/features/workbench/output-origin-trace-card-matrix.test.ts`
+  - adjacent validation:
+    - engine trace/source/raw pack: `3` files, `7` tests, green
+    - workbench trace/source/raw pack: `3` files, `4` tests, green
+    - full engine suite: `99` files, `787` tests, green
+    - full web suite: `94` files, `602` tests, green
+    - engine/web typechecks and `git diff --check`: green
+  - covered answer origins:
+    exact Dataholz CLT source, Dataholz source-family estimate, raw
+    terminal-concrete formula/predictor, UBIQ bound-only source, dynamic wall
+    field formula, field-airborne missing geometry, and unsupported impact
+    fail-closed posture
+  - planning implication:
+    every new widening candidate should add its own value/origin/support/card
+    row before solver behavior changes
 - standard route floor corridor plus support/card parity pack: green
   - `11` files
   - `227` tests
@@ -1916,11 +1937,11 @@ Each new torture-pass change should add more than one test shape:
 
 That keeps the suite from becoming overly optimistic around a single hand-picked stack.
 
-### Current Selected Next Slice
+### Recently Closed Route-History Slice And Current Source-Led Guard
 
 - slice id: `mixed_floor_wall_seeded_route_history_expansion_v1`
-- status: minimum first target implemented and green in the current working tree
-- why this is next:
+- status: closed and committed for the first heavy-composite wall target
+- why it ran before source widening:
   - the latest floor source-led guard pack and companion-semantics pack are
     green
   - defended floor/wall corridors have no active known solver blocker
@@ -1969,8 +1990,39 @@ That keeps the suite from becoming overly optimistic around a single hand-picked
     finish-tolerance boundary case for a `12 mm` laminate plus `3 mm` EPS open-box
     walking finish that must remain impact-unsupported
   - split this into a follow-up slice if it exposes a real behavior issue
-- follow-on options after this is green:
-  - `floor_raw_inference_source_led_widening_v1`
+  - current decision: deferred
+- current source-led follow-up:
+  - `dataholz_clt_source_truth_audit_v1` is now closed as a no-widening guard
+  - all imported Dataholz CLT rows have answer-measuring engine tests for
+    catalog source truth, official-id field continuations, visible route posture,
+    contiguous split stability, and disjoint-role fallback behavior
+  - exact dry CLT and `GDMTXA04A` visible route/card surfaces now have workbench
+    tests
+  - `GDMTXA04A` remains estimate-routed through
+    `dataholz_gdmtxa01a_clt_lab_2026`; no solver/catalog behavior changed
+  - validation:
+    - engine source/raw pack: `5` files, `16` tests, green
+    - workbench route/raw pack: `4` files, `7` tests, green
+    - engine and web typechecks: green
+    - full engine suite: `97` files, `785` tests, green
+- implemented follow-on after this checkpoint:
+  - `raw_concrete_helper_permutation_answer_guard_v1`
+  - umbrella: `floor_raw_inference_source_led_widening_v1`
+  - reason: the raw terminal-concrete plus ceiling-helper corridor was already
+    open and guarded for support buckets, but it needed explicit answer
+    snapshots across wider helper permutations before any broader raw-floor
+    widening could be justified
+  - result:
+    - no solver, catalog, selector, or workbench runtime behavior changed
+    - engine guard now pins answer snapshots for wider terminal-concrete helper
+      permutations plus top-finish, wall-like hybrid, and steel-joist negatives
+    - workbench guard now pins route/card status and values for the same
+      representative shapes
+    - engine raw/source pack: `5` files, `14` tests, green
+    - workbench raw/source pack: `5` files, `7` tests, green
+    - engine and web typechecks: green
+    - full engine suite: `98` files, `786` tests, green
+- deferred follow-on options after that guard is closed:
   - `wall_selector_wider_trace_matrix_v1`
   - `clt_local_combined_interaction_evidence_v1`
 
@@ -1996,12 +2048,22 @@ Do this in order:
 3. keep `C4c` frozen as exact `tuas_c4c_clt260_measured_2026`; `C2c`, `C3c`, `C4c`, and `C7c` are already exact anchors, and `C5c` is already predictor-backed
 4. keep under-described combined direct-fixed CLT stacks deferred against the exact anchors unless the source row is imported deliberately
 5. keep `C11c` deferred after `tuas_c11c_wet_stack_anomaly_audit_v1` unless source correction or frequency-level evidence explains the weak tuple
-6. run `mixed_floor_wall_seeded_route_history_expansion_v1` as the next
-   test-first route/history guard before another solver-widening slice
-7. only then re-rank between:
+6. keep the closed `mixed_floor_wall_seeded_route_history_expansion_v1` first
+   heavy-composite target frozen; the optional open-box mixed-history boundary is
+   deferred
+7. keep `dataholz_clt_source_truth_audit_v1` frozen as the latest source-led
+   no-widening guard before any broad raw-floor widening
+8. keep `raw_concrete_helper_permutation_answer_guard_v1` frozen as the latest
+   no-widening answer guard:
+   - numeric answers for terminal concrete helper permutations are pinned, not
+     only finite outputs or supported-output lists
+   - adjacent negatives for top-side finish after concrete, wall-like heavy
+     hybrids, and weaker carriers remain in the validation pack
+9. after checkpointing the current no-widening guard set, re-rank between:
    - explicit CLT-local combined-interaction work
+   - wall selector wider trace matrices
    - more CLT-local tightening / boundary hardening
-   - raw-floor inference widening on the now-stronger corridor
-8. keep `gdmtxa04a` estimate-only until a future source-backed material surface exists
+   - true raw-floor inference widening on a stronger answer-measured corridor
+10. keep `gdmtxa04a` estimate-only until a future source-backed material surface exists
 
-This order is the safest one because the previous broad blockers are already closed; the next risk is accidental widening that weakens the frozen raw/support posture or silently promotes the remaining `C11c` combined wet-stack row or preset-only CLT rows into visible exact corridors now that `C2c`, `C3c`, `C4c`, `C7c`, and the predictor-backed `C5c` baseline are frozen.
+This order is the safest one because the previous broad blockers are already closed; the next risk is accidental widening that weakens the frozen raw/support posture or silently promotes the remaining `C11c` combined wet-stack row or preset-only CLT rows into visible exact corridors now that `C2c`, `C3c`, `C4c`, `C7c`, and the predictor-backed `C5c` baseline are frozen. The selected concrete-helper guard adds the missing answer-measurement layer without broadening those routes.

@@ -6,6 +6,8 @@ Document role:
 - read this before the execution plan or any archived analysis note
 - for the latest UI handoff restart point, also read:
   - [CHECKPOINT_2026-04-08_UI_HANDOFF.md](./CHECKPOINT_2026-04-08_UI_HANDOFF.md)
+- for answer-origin, formula/source confidence, and test-meaning questions, also read:
+  - [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
 
 ## Scope
 
@@ -21,6 +23,131 @@ Last cross-package build revalidation: `2026-04-13`
 
 Verified broad corridors:
 
+- latest trace/measurement slice:
+  - slice id: `output_origin_trace_matrix_v1`
+  - status: implemented as no-widening engine/workbench evidence; no solver,
+    catalog, selector, or workbench runtime behavior changed
+  - result:
+    - representative outputs are now pinned as
+      `output -> value -> origin -> basis/source -> support/card status`
+    - covered origin classes:
+      - exact Dataholz dry CLT source row
+      - Dataholz `GDMTXA04A` source-family estimate route
+      - raw terminal-concrete plus ceiling-helper formula/predictor route
+      - UBIQ bound-only source row
+      - dynamic wall airborne field route
+      - field-airborne missing-geometry `needs_input` posture
+      - unsupported impact fail-closed posture
+  - validation:
+    - engine trace matrix:
+      `pnpm --filter @dynecho/engine exec vitest run src/output-origin-trace-matrix.test.ts --reporter=basic`
+      passed
+    - workbench trace-card matrix:
+      `pnpm --filter @dynecho/web exec vitest run features/workbench/output-origin-trace-card-matrix.test.ts --reporter=basic`
+      passed
+    - engine trace/source/raw pack:
+      `pnpm --filter @dynecho/engine exec vitest run src/output-origin-trace-matrix.test.ts src/raw-concrete-helper-answer-guard.test.ts src/dataholz-clt-source-truth-audit.test.ts --reporter=basic`
+      passed: `3` files, `7` tests
+    - workbench trace/source/raw pack:
+      `pnpm --filter @dynecho/web exec vitest run features/workbench/output-origin-trace-card-matrix.test.ts features/workbench/raw-concrete-helper-route-card-guard.test.ts features/workbench/dataholz-clt-source-truth-route.test.ts --reporter=basic`
+      passed: `3` files, `4` tests
+    - `pnpm --filter @dynecho/engine typecheck`: green
+    - `pnpm --filter @dynecho/web typecheck`: green with the known Next.js
+      TypeScript plugin recommendation
+    - `pnpm --filter @dynecho/engine test`: `99` files, `787` tests, green
+    - `pnpm --filter @dynecho/web test`: `94` files, `602` tests, green
+    - `git diff --check`: green
+  - test anchors:
+    - `packages/engine/src/output-origin-trace-matrix.test.ts`
+    - `apps/web/features/workbench/output-origin-trace-card-matrix.test.ts`
+- latest broad web-suite cleanup:
+  - status: test/runner stabilization; no calculator runtime behavior changed
+  - result:
+    - stale workbench expectations were aligned to the current defended source
+      truth and support posture:
+      - TUAS `R5b` open-box dry exact `Ln,w` is `44`, matching the engine
+        source-truth rebaseline
+      - Dataholz `GDMTXA04A` visible route is a combined upper/lower
+        source-family estimate, not an exact dry-only route
+      - custom laminate mimic over open-box timber now fails closed on impact
+        and stays on screening `Rw`
+      - timber bare-floor low-confidence lane withholds unsupported `Ctr`
+      - concrete wall screening preset keeps `Rw` live while `C` is unsupported
+      - replace-base CLT store flow stays on the defended TUAS `X2/C2`
+        source-family estimate
+    - `apps/web` package test script now uses `vitest run --maxWorkers=1`, the
+      same stable full-suite posture already used by `packages/engine`
+    - web deep-hybrid route scan helpers yield periodically to the Vitest worker
+      loop without reducing the scan surface
+  - validation:
+    - focused stale-expectation pack: `6` files, `189` tests, green
+    - isolated web deep-hybrid pack: `5` files, `10` tests, green
+    - full web suite: `94` files, `602` tests, green
+- latest docs/analysis correction:
+  - slice id: `calculation_model_and_validation_docs_v1`
+  - status: docs-only local implementation audit; no solver, catalog, selector,
+    or workbench runtime behavior changed
+  - result:
+    - [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
+      now explains where `Rw`, `R'w`, `DnT,w`, `Ln,w`, `L'n,w`, `L'nT,w`,
+      companions, bounds, and unsupported cards come from
+    - the doc separates source truth, formula truth, predictor truth, bound
+      truth, and unsupported truth
+    - future widening must extend the trace/measurement matrix before changing
+      support or solver behavior
+  - reviewed local implementation paths:
+    - `calculateAssembly` orchestration
+    - airborne screening and mass-law/curve rating
+    - floor companion selection
+    - impact-lane selection and field continuation
+    - target-output support gating
+    - workbench output-card value/status selection
+- latest change-adjacent revalidation after the raw concrete helper answer
+  guard: green
+  - selected/closed slice:
+    `raw_concrete_helper_permutation_answer_guard_v1`
+  - engine raw/source guard pack:
+    - command: `pnpm --filter @dynecho/engine exec vitest run src/raw-concrete-helper-answer-guard.test.ts src/raw-floor-screening-carrier-support.test.ts src/raw-floor-weaker-carrier-posture.test.ts src/raw-floor-safe-bare-split-parity.test.ts src/dataholz-clt-source-truth-audit.test.ts --reporter=basic`
+    - result: `5` files passed, `14` tests passed
+  - workbench route/raw guard pack:
+    - command: `pnpm --filter @dynecho/web exec vitest run features/workbench/raw-concrete-helper-route-card-guard.test.ts features/workbench/raw-floor-screening-route-support.test.ts features/workbench/raw-floor-weaker-carrier-route-posture.test.ts features/workbench/raw-floor-inferred-split-parity.test.ts features/workbench/dataholz-clt-source-truth-route.test.ts --reporter=basic`
+    - result: `5` files passed, `7` tests passed
+  - typechecks:
+    - `pnpm --filter @dynecho/engine typecheck`: green
+    - `pnpm --filter @dynecho/web typecheck`: green with the known Next.js
+      TypeScript plugin recommendation
+  - stable full engine suite:
+    - command: `pnpm --filter @dynecho/engine test`
+    - result: `98` files passed, `786` tests passed
+  - scope:
+    - raw terminal-concrete plus ceiling-helper answer snapshots are pinned on
+      the engine surface
+    - matching workbench output-card status/value snapshots are pinned
+    - top-finish, wall-like heavy hybrid, and steel-joist helper negatives stay
+      fail-closed where intended
+    - no solver, catalog, selector, or workbench runtime behavior changed
+- latest change-adjacent revalidation after the Dataholz CLT source-truth audit:
+  green
+  - selected/closed slice:
+    `dataholz_clt_source_truth_audit_v1`
+  - engine source/raw guard pack:
+    - command: `pnpm --filter @dynecho/engine exec vitest run src/dataholz-clt-source-truth-audit.test.ts src/floor-source-corpus-contract.test.ts src/raw-floor-inferred-split-parity.test.ts src/raw-floor-packaged-lane-audit.test.ts src/raw-floor-screening-carrier-support.test.ts --reporter=basic`
+    - result: `5` files passed, `16` tests passed
+  - workbench route/raw guard pack:
+    - command: `pnpm --filter @dynecho/web exec vitest run features/workbench/dataholz-clt-source-truth-route.test.ts features/workbench/raw-floor-inferred-split-parity.test.ts features/workbench/raw-floor-packaged-lane-route-audit.test.ts features/workbench/raw-floor-screening-route-support.test.ts --reporter=basic`
+    - result: `4` files passed, `7` tests passed
+  - typechecks:
+    - `pnpm --filter @dynecho/engine typecheck`: green
+    - `pnpm --filter @dynecho/web typecheck`: green with the known Next.js
+      TypeScript plugin recommendation
+  - stable full engine suite:
+    - command: `pnpm --filter @dynecho/engine test`
+    - result: `97` files passed, `785` tests passed
+  - scope:
+    - all imported Dataholz CLT rows are pinned to explicit source answers
+    - `GDMTXA04A` remains estimate-routed on visible routes instead of reopening
+      manual exact matching
+    - no solver, catalog, selector, or workbench runtime behavior changed
 - latest change-adjacent revalidation after the open-box finish tolerance guard:
   green
   - selected/closed slice:
@@ -900,6 +1027,20 @@ Interpretation:
   - the official source still under-describes the `65 mm` top dry-floor layer as an areal-mass entry rather than a named generic board product
   - the current `dry_floating_gypsum_fiberboard 65 mm` mapping therefore remains good enough for preset-only exact-id resolution but not yet good enough for manual visible exact reopening
   - engine and workbench route contracts now defend that row as an estimate-routed dry CLT boundary instead of leaving it as an undocumented near-miss
+- latest Dataholz CLT source-truth guard:
+  - slice id: `dataholz_clt_source_truth_audit_v1`
+  - status: closed as no-widening audit
+  - no solver, catalog, selector, or workbench runtime behavior changed
+  - every imported Dataholz CLT row is now pinned to explicit catalog source
+    truth and official-id field continuation answers
+  - visible raw/tagged CLT routes now also assert the actual answer posture:
+    - manual-match-enabled rows remain exact
+    - `GDMNXA02A-00` and `GDMNXA02A-02` remain screening-only on visible rows
+    - `GDMTXA04A` stays on the dry CLT estimate route through
+      `dataholz_gdmtxa01a_clt_lab_2026`
+  - workbench output-card coverage now checks exact dry CLT cards and the
+    `GDMTXA04A` estimate-routed card surface, including `Rw`, `Ctr`, `Ln,w`,
+    and `Ln,w+CI`
 - the living source-gap ledger now includes a TUAS candidate-import backlog:
   - safe `b`-family widening is imported: `R2b`, `R3b`, `R11b`
   - explicit `a`-family open-box widening is now also imported: `R3a`, `R5a`
@@ -1222,61 +1363,54 @@ These behaviors are now explicitly defended and should not be treated as regress
 
 Work in this order:
 
-0. Execute the next selected test-first slice before new solver widening:
-   - slice id: `mixed_floor_wall_seeded_route_history_expansion_v1`
-   - current working-tree status:
-     - minimum first target is implemented and green
-     - no solver, catalog, selector, or store behavior changed
-   - intent: widen mixed floor/wall route-history torture coverage without
-     intentionally changing solver behavior at slice start
-   - why this is next:
-     - the latest source-led floor guard set is green
-     - the last committed checkpoint was clean after the companion-semantics,
-       source-backed fallback guard, and docs commits
-     - the next-phase definition of done still requires broader mixed-stack
-       torture beyond the current representative chain/grid surface
-     - this reduces risk before reopening floor raw-inference widening, CLT-local
-       combined-interaction work, or wider wall selector evidence work
-   - minimum coverage to add:
-     - one broader seeded floor/wall family chain
-     - one wider duplicate/swap or edit-history generated matrix
-     - route/card/support-bucket parity assertions for any newly covered history
-       path
-   - first concrete target:
-     - added the concrete / pumice block / air gap / gypsum board / concrete
-       heavy-composite wall shape as the third wall-family mixed-history detour
-     - mirrored it in engine and workbench generated helpers before changing any
-       solver behavior
-     - added saved-scenario retention-boundary reload coverage in the
-       workbench torture chain
-   - first target validation:
-     - engine mixed baseline before edit: `2` files, `2` tests, green
-     - web mixed baseline before edit: `6` files, `10` tests, green
-     - engine mixed pack after edit: `2` files, `2` tests, green
-     - focused web mixed pack after edit: `4` files, `8` tests, green
-     - full web mixed pack after edit: `6` files, `10` tests, green
-     - engine typecheck: green
-     - web typecheck: green with the known Next.js TypeScript plugin
-       recommendation
-     - full engine suite: `96` files, `780` tests, green
-     - repository build: green with the known `sharp/@img` optional-package
-       warnings through `proposal-docx` and the Next.js TypeScript plugin
-       recommendation
-   - optional second target:
-     - add an open-box exact-outside `12 mm` laminate plus `3 mm` EPS
-       finish-tolerance boundary only if the wall detour slice stays green and
-       fast
-     - split that optional case into its own slice if it exposes a real
-       solver/support issue
-   - classify any new red before editing solver logic:
-     - solver drift
-     - support-surface drift
-     - stale fixture expectation
-     - intentionally unsupported / fail-closed behavior
-   - rerank after green:
-     - `floor_raw_inference_source_led_widening_v1`
-     - `wall_selector_wider_trace_matrix_v1`
-     - `clt_local_combined_interaction_evidence_v1`
+Current checkpoint before the remaining ordered list:
+
+- `mixed_floor_wall_seeded_route_history_expansion_v1` is closed and committed
+  for the first heavy-composite wall target; no solver, catalog, selector, or
+  store behavior changed
+- optional `open_box_finish_tolerance_mixed_history_boundary_v1` is deliberately
+  deferred so it does not inflate the current source-led floor guard
+- `dataholz_clt_source_truth_audit_v1` is closed as a no-widening source-truth
+  audit:
+  - no solver, catalog, selector, or workbench runtime behavior changed
+  - engine tests now pin numeric source truth, official-id field continuation,
+    visible raw/tagged posture, contiguous-split stability, and disjoint-role
+    fallback behavior for all imported Dataholz CLT rows
+  - workbench tests now pin output-card behavior for exact dry CLT and the
+    `GDMTXA04A` estimate-routed boundary
+- `raw_concrete_helper_permutation_answer_guard_v1` is implemented as the latest
+  no-widening answer/support guard:
+  - `raw_concrete_helper_permutation_answer_guard_v1`
+  - umbrella: `floor_raw_inference_source_led_widening_v1`
+  - no solver, catalog, selector, or workbench runtime behavior changed
+  - local code review confirms the helper signal is deliberately narrow:
+    visible rows must be raw/unlabeled, inferred concrete must be terminal
+    `base_structure`, the layers before it must be ceiling-side
+    board/cavity/fill roles only, and at least one board plus one helper must
+    be present
+  - new engine tests pin numeric answers for three wider terminal-concrete
+    helper permutations and adjacent top-finish / wall-like / steel-joist
+    negatives
+  - new workbench tests pin route/card status and values for the same
+    representative corridor
+  - validation:
+    - engine raw/source pack: `5` files, `14` tests, green
+    - workbench raw/source pack: `5` files, `7` tests, green
+    - engine and web typechecks: green
+  - do not use `GDMTXA04A`, weak UBIQ bands, C11c, helper-only timber rows, or
+    open-web steel as shortcut reasons for broad raw inference widening
+- next implementation decision:
+  - close/checkpoint the current no-widening guard set:
+    `dataholz_clt_source_truth_audit_v1`,
+    `raw_concrete_helper_permutation_answer_guard_v1`,
+    `calculation_model_and_validation_docs_v1`, and
+    `output_origin_trace_matrix_v1`
+  - before new solver widening, extend the trace matrix for the selected route
+    so representative outputs are defended by value, origin, basis/source,
+    support bucket, and workbench card status
+  - re-rank between wall-selector wider trace matrices, CLT-local combined
+    evidence, and true raw-floor behavior widening on the now answer-measured
+    concrete-helper corridor
 
 1. Keep the closed raw-floor negative audit, the closed official-product representative breadth slice, the closed UBIQ provenance/boundary-freeze slice, and the closed interpolation-steel mixed seeded-family slice frozen:
    - do not reopen `FL-23/25/27` just because provenance is now clearer
