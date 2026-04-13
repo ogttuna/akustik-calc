@@ -2,7 +2,7 @@
 
 Document role:
 
-- classify the current large dirty worktree into reviewable implementation slices
+- preserve the accepted large dirty-worktree stabilization map as historical context
 - record which changes are behavior-affecting, test-only, fixture-only, or docs-only
 - give the next agent a safe restart point before any new source-led widening work
 
@@ -77,7 +77,7 @@ Latest broad validation before this checkpoint:
 
 ## Package Map
 
-These are the reviewable packages inside the current dirty worktree.
+These were the reviewable packages inside the pre-acceptance dirty worktree.
 
 ### 1. Full Engine Suite Triage And Unsupported-Gap Discipline
 
@@ -263,7 +263,7 @@ Review notes:
 
 - `NEXT_IMPLEMENTATION_PLAN.md` is the concise restart plan
 - `CURRENT_STATE.md` is the current truth snapshot
-- this checkpoint is only for dirty-worktree stabilization and package classification
+- this checkpoint is only historical dirty-worktree stabilization and package classification
 
 ## Current Risk Register
 

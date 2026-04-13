@@ -8,6 +8,9 @@ unambiguous.
 
 Read together with:
 
+- [CHECKPOINT_2026-04-13_END_OF_DAY_HANDOFF.md](./CHECKPOINT_2026-04-13_END_OF_DAY_HANDOFF.md)
+  for the latest clean resume state, accepted commits, validation snapshot, and
+  next-agent cautions
 - [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
   when the question is whether a shown answer is source-backed, formula-backed,
   predictor-backed, bound-only, or unsupported
@@ -62,7 +65,8 @@ These rules govern calculator work:
 Use this as the current baseline:
 
 - branch: `main`
-- latest committed baseline before this working slice:
+- latest implementation baseline before the docs-only end-of-day handoff:
+  - `8f321de test(calculator): pin open box dry package fragmentation`
   - `b2cc5b7 test(web): pin open box finish tolerance history boundary`
   - `81f15c6 test(calculator): pin ubiq open web packaged lane traces`
   - `646bdf8 test(calculator): pin raw floor hostile input answers`

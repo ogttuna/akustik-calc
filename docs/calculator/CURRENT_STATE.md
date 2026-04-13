@@ -4,6 +4,8 @@ Document role:
 
 - primary short snapshot for the current dynamic calculator and workbench posture
 - read this before the execution plan or any archived analysis note
+- for the clean end-of-day resume checkpoint, also read:
+  - [CHECKPOINT_2026-04-13_END_OF_DAY_HANDOFF.md](./CHECKPOINT_2026-04-13_END_OF_DAY_HANDOFF.md)
 - for the latest UI handoff restart point, also read:
   - [CHECKPOINT_2026-04-08_UI_HANDOFF.md](./CHECKPOINT_2026-04-08_UI_HANDOFF.md)
 - for answer-origin, formula/source confidence, and test-meaning questions, also read:
