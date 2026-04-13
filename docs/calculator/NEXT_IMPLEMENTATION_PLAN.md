@@ -63,12 +63,33 @@ Use this as the current baseline:
 
 - branch: `main`
 - latest committed baseline before this working slice:
+  - `81f15c6 test(calculator): pin ubiq open web packaged lane traces`
   - `646bdf8 test(calculator): pin raw floor hostile input answers`
   - `e664c81 test(calculator): add wall selector trace matrices`
   - `014be88 docs(calculator): detail wall trace implementation plan`
   - `8f73493 docs(calculator): select next wall trace slice`
   - `08c918e docs(calculator): document answer origins and next gates`
 - latest completed working slice:
+  - `open_box_finish_tolerance_mixed_history_boundary_v1`
+  - no solver, catalog, selector, source, support, or workbench runtime behavior
+    changed
+  - workbench mixed-history boundary guard:
+    `apps/web/features/workbench/open-box-finish-tolerance-mixed-history-boundary.test.ts`
+  - pinned behavior:
+    the source-band `10 mm` laminate finish split (`4 + 6 mm`) survives
+    duplicate/edit/reorder-bounce/save-load/floor-wall-mode history as exact
+    `tuas_r2b_open_box_timber_measured_2026` with live `Rw 62`, `Ln,w 46`,
+    `L'n,w 48`, and `L'nT,w 45.6`; the outside-band `12 mm` laminate split
+    (`6 + 6 mm`) stays fail-closed on impact cards while `Rw` remains
+    screening live at `44 dB`
+  - validation:
+    focused workbench open-box boundary `1` file / `1` test green; workbench
+    adjacent mixed/history/floor pack `5` files / `112` tests green; engine
+    adjacent source/route pack `4` files / `36` tests green; engine/web
+    typechecks green; full engine `102` files / `790` tests green; full web
+    `98` files / `606` tests green; `pnpm build` green with known warnings;
+    `git diff --check` green
+- previous completed working slice:
   - `ubiq_open_web_packaged_lane_trace_matrix_v1`
   - no solver, catalog, selector, source, support, or workbench runtime behavior
     changed
@@ -124,6 +145,7 @@ Use this as the current baseline:
   - `open_box_disjoint_upper_fallback_guard_v1`
   - `open_box_finish_package_guard_v1`
   - `open_box_finish_tolerance_guard_v1`
+  - `open_box_finish_tolerance_mixed_history_boundary_v1`
 - direct broad multi-worker `vitest run` currently has all assertions green but
   can still exit non-zero from Vitest worker RPC timeout after CPU-heavy
   dynamic-airborne generated scans; use the package `test` script for the
@@ -138,8 +160,8 @@ Latest closed source-truth slice:
 - reason:
   - `mixed_floor_wall_seeded_route_history_expansion_v1` is already closed and
     committed for the first heavy-composite wall target
-  - optional `open_box_finish_tolerance_mixed_history_boundary_v1` is deferred
-    to keep this pass small
+  - optional `open_box_finish_tolerance_mixed_history_boundary_v1` is now
+    closed as a no-widening workbench history/card boundary guard
   - source-led floor widening is eligible, but the remaining Dataholz CLT
     exact-only slack had to be measured first so `GDMTXA04A` cannot become a
     broad raw-inference shortcut
@@ -485,17 +507,23 @@ Current decision after the checkpoint:
   checkpoints
 - `ubiq_open_web_packaged_lane_trace_matrix_v1` is now also implemented as the
   next no-widening floor checkpoint
+- `open_box_finish_tolerance_mixed_history_boundary_v1` is now implemented as
+  the follow-up no-widening workbench history/card boundary checkpoint
 - these matrices did not expose a classified behavior bug in the current
   representative rows, so no selector, source, or raw-floor support behavior
   was changed
 - do not immediately widen wall, floor, or CLT behavior from this evidence alone
 - the next implementation step should stay narrow:
-  - either add another source-backed output-origin/card guard for a named
-    package family with visible user-hostile input risk
-  - or, if behavior widening is selected, name exactly one route family and one
+  - re-rank again now that the deferred open-box history boundary is closed
+  - if the next move is still no-widening, add another source-backed
+    output-origin/card guard for one named package family with visible
+    user-hostile input risk
+  - if behavior widening is selected, name exactly one route family and one
     output surface first and add answer/card guards before code changes
 - do not use the UBIQ packaged lower-lane trace as permission to open bare
   open-web raw carrier support
+- do not use the open-box mixed-history guard as permission to expand the
+  laminate/EPS tolerance band beyond the source-backed boundary
 
 ## Wall Selector Implementation Comparison
 

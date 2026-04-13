@@ -21,10 +21,39 @@ Read together with:
 ## Current Active Slice Ledger
 
 - latest completed slice:
-  `ubiq_open_web_packaged_lane_trace_matrix_v1`
-- status: implemented as a no-widening UBIQ open-web lower-package trace/card
-  guard; focused, adjacent, typecheck, full-suite, and diff gates are green
+  `open_box_finish_tolerance_mixed_history_boundary_v1`
+- status: implemented as a no-widening workbench store-history/output-card
+  boundary guard; focused, adjacent, typecheck, and full-web gates are green
 - latest completed slice intent:
+  - close the previously deferred optional open-box finish-tolerance history
+    boundary after `open_box_finish_tolerance_guard_v1`
+  - prove that duplicate, split, reorder-bounce, save/load, and mixed floor/wall
+    mode history do not move the final open-box layer stack or output cards
+  - keep `10 mm` laminate in the source-band exact/live posture while keeping
+    `12 mm` laminate outside the source band fail-closed on impact outputs
+  - avoid changing solver/catalog/selector/support behavior before the next
+    route family and output surface are named
+- latest completed slice artifacts:
+  - `apps/web/features/workbench/open-box-finish-tolerance-mixed-history-boundary.test.ts`
+- latest completed slice validation:
+  - focused workbench open-box mixed-history boundary:
+    `1` file, `1` test, green
+  - workbench adjacent mixed/history/floor pack:
+    `5` files, `112` tests, green
+  - engine adjacent source/route pack:
+    `4` files, `36` tests, green
+  - engine/web typechecks: green; web still prints the known Next.js
+    TypeScript plugin recommendation
+  - full engine suite: `102` files, `790` tests, green
+  - full web suite: `98` files, `606` tests, green
+  - `pnpm build`: green with the known `sharp/@img` optional-package warnings
+    and Next.js TypeScript plugin recommendation
+  - `git diff --check`: green
+- previous UBIQ completed slice:
+  `ubiq_open_web_packaged_lane_trace_matrix_v1` is implemented as a
+  no-widening UBIQ open-web lower-package trace/card guard; focused, adjacent,
+  typecheck, full-suite, build, and diff gates are green
+- previous UBIQ intent:
   - pin a source-backed UBIQ open-web lower-package lane before any new
     raw-floor widening
   - prove exact, raw split, tagged split, and reordered user inputs with
@@ -34,10 +63,10 @@ Read together with:
     but is labeled `low_confidence` at `29%` fit
   - avoid opening a bare open-web raw carrier lane or changing solver/catalog
     behavior
-- latest completed slice artifacts:
+- previous UBIQ artifacts:
   - `packages/engine/src/ubiq-open-web-packaged-lane-trace-matrix.test.ts`
   - `apps/web/features/workbench/ubiq-open-web-packaged-lane-card-matrix.test.ts`
-- latest completed slice validation:
+- previous UBIQ validation:
   - focused engine UBIQ trace matrix: `1` file, `1` test, green
   - focused workbench UBIQ card matrix: `1` file, `1` test, green
   - engine packaged-lane/UBIQ adjacent pack: `7` files, `24` tests, green
@@ -147,6 +176,8 @@ Read together with:
     mandate to widen wall selector math
   - keep `ubiq_open_web_packaged_lane_trace_matrix_v1` frozen as a packaged
     lower-lane guard, not as permission to open bare open-web carrier support
+  - keep `open_box_finish_tolerance_mixed_history_boundary_v1` frozen as a
+    history/card boundary guard, not as a new open-box tolerance widening
   - keep `raw_floor_hostile_input_answer_matrix_v1` frozen as the latest
     hostile-input pre-widening guard
   - raw-floor behavior widening, CLT-local combined behavior work, C11c, and
@@ -173,11 +204,13 @@ Read together with:
     - full engine suite: `96` files, `780` tests, green
     - repository build: green with known `sharp/@img` and Next TypeScript-plugin
       warnings
-- deferred optional route-history target:
-  - add the latest open-box finish-tolerance boundary to the generated mixed
-    floor set so exact-outside `12 mm` laminate plus `3 mm` EPS stays
-    impact-unsupported under route-history variants
-  - keep it as a separate follow-up if it exposes a real solver/support red
+- closed optional route-history target:
+  - the latest open-box finish-tolerance boundary is now covered in a compact
+    mixed-history workbench guard
+  - exact/source-band `10 mm` laminate plus `3 mm` EPS stays exact/live after
+    split/save-load/mode-switch history
+  - outside-band `12 mm` laminate plus `3 mm` EPS stays impact-unsupported /
+    needs-input after the same history path
 - source/implementation comparison:
   - the open-box finish tolerance guard closed the latest source-led tightening
     slice:

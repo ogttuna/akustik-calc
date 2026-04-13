@@ -39,6 +39,33 @@ Current planning implication:
 - `dataholz_clt_source_truth_audit_v1` is now closed as a no-widening source
   audit before any new raw-floor widening
 - latest implemented floor-side guard:
+  - `open_box_finish_tolerance_mixed_history_boundary_v1`
+  - this is a no-widening workbench history/card guard for the already narrowed
+    TUAS open-box walking-finish tolerance boundary
+  - reason: the source-band vs outside-band open-box laminate/EPS boundary was
+    already narrowed, but user-hostile duplicate/split/reorder-bounce/save-load
+    and floor/wall mode history still needed answer/card pinning
+  - result:
+    - no solver, catalog, selector, source, support, or workbench runtime
+      behavior changed
+    - source-band `10 mm` laminate split as `4 + 6 mm` remains exact on
+      `tuas_r2b_open_box_timber_measured_2026` with live `Rw 62`, `Ln,w 46`,
+      `L'n,w 48`, and `L'nT,w 45.6`
+    - outside-band `12 mm` laminate split as `6 + 6 mm` remains impact
+      unsupported / needs-input, while `Rw` remains screening live at `44 dB`
+  - test anchor:
+    - `apps/web/features/workbench/open-box-finish-tolerance-mixed-history-boundary.test.ts`
+  - validation:
+    - focused workbench boundary: `1` file, `1` test, green
+    - workbench mixed/history/floor adjacent pack: `5` files, `112` tests,
+      green
+    - engine source/route adjacent pack: `4` files, `36` tests, green
+    - full engine suite: `102` files, `790` tests, green
+    - full web suite: `98` files, `606` tests, green
+    - `pnpm build`: green with known `sharp/@img` and Next.js TypeScript
+      plugin warnings
+    - engine/web typechecks and `git diff --check`: green
+- previous implemented floor-side guard:
   - `ubiq_open_web_packaged_lane_trace_matrix_v1`
   - this is a no-widening UBIQ open-web packaged lower-lane guard before any
     new raw-floor or open-web carrier behavior widening

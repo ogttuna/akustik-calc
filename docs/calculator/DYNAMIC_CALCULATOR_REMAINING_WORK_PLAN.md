@@ -91,6 +91,32 @@ Interpretation:
 
 Current verified result:
 
+- open-box finish-tolerance mixed-history boundary: green
+  - slice id: `open_box_finish_tolerance_mixed_history_boundary_v1`
+  - no solver, catalog, source, selector, support, or workbench runtime behavior
+    changed
+  - workbench:
+    `apps/web/features/workbench/open-box-finish-tolerance-mixed-history-boundary.test.ts`
+  - focused validation:
+    - workbench open-box mixed-history boundary: `1` file, `1` test, green
+  - adjacent validation:
+    - workbench mixed/history/floor pack: `5` files, `112` tests, green
+    - engine source/route pack: `4` files, `36` tests, green
+  - broad validation:
+    - engine suite: `102` files, `790` tests, green
+    - web suite: `98` files, `606` tests, green
+    - repository build: green with known `sharp/@img` and Next.js TypeScript
+      plugin warnings
+    - engine/web typechecks and `git diff --check`: green
+  - pinned surface:
+    - source-band `10 mm` laminate split as `4 + 6 mm` remains exact/live
+      through duplicate/edit/reorder-bounce/save-load/floor-wall history
+    - outside-band `12 mm` laminate split as `6 + 6 mm` remains
+      impact-unsupported / needs-input through the same history path
+  - interpretation:
+    - this closes the previously deferred optional open-box history boundary
+    - it is a guard on existing behavior, not permission to widen open-box
+      tolerance or raw-floor support
 - UBIQ open-web packaged-lane trace/card matrix: green
   - slice id: `ubiq_open_web_packaged_lane_trace_matrix_v1`
   - no solver, catalog, source, selector, support, or workbench runtime behavior
@@ -1204,6 +1230,20 @@ Floor should now stay on controlled widening and tightening only.
 ### Missing Test Surfaces To Add Next
 
 These are the most likely next useful tests. They are not currently defended enough to claim closure.
+
+- closed optional route-history slice:
+  - open-box finish-tolerance mixed-history boundary
+  - landed reason:
+    - `open_box_finish_tolerance_guard_v1` had already narrowed the source-band
+      vs outside-band laminate/EPS support boundary
+    - the remaining risk was store-history drift under duplicate/split,
+      row-order bounce, save/load, and floor/wall mode switching
+  - landed scope:
+    - `10 mm` source-band laminate split remains exact/live on TUAS `R2b`
+    - `12 mm` outside-band laminate split remains fail-closed on impact outputs
+    - workbench output-card values and unsupported/needs-input status are pinned
+  - current status:
+    - closed
 
 - closed provenance/boundary slice:
   - UBIQ provenance/boundary-freeze decision

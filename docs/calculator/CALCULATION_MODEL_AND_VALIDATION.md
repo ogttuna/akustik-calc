@@ -427,6 +427,35 @@ The next no-widening UBIQ open-web packaged-lane guard is also implemented:
     and Next.js TypeScript plugin recommendation
   - engine/web typechecks and `git diff --check`: green
 
+The deferred open-box finish-tolerance mixed-history boundary is now closed:
+
+- slice id: `open_box_finish_tolerance_mixed_history_boundary_v1`
+- workbench artifact:
+  `apps/web/features/workbench/open-box-finish-tolerance-mixed-history-boundary.test.ts`
+- purpose:
+  - prove that the source-band vs outside-band open-box walking-finish boundary
+    survives realistic workbench history, not only direct evaluation
+  - keep the current open-box tolerance posture measured before any new
+    behavior widening
+- pinned routes:
+  - `10 mm` laminate split as `4 + 6 mm` plus `3 mm` EPS:
+    exact `tuas_r2b_open_box_timber_measured_2026`, live `Rw 62`, `Ln,w 46`,
+    `L'n,w 48`, and `L'nT,w 45.6`
+  - `12 mm` laminate split as `6 + 6 mm` plus `3 mm` EPS:
+    no exact impact support, `Rw 44` screening live, `Ln,w` unsupported, and
+    field impact cards needs-input
+  - both routes pass through duplicate/edit, row-order bounce, save/load, and
+    floor/wall mode switching before evaluation
+- validation:
+  - focused workbench boundary guard: `1` file, `1` test, green
+  - workbench adjacent mixed/history/floor pack: `5` files, `112` tests, green
+  - engine adjacent source/route pack: `4` files, `36` tests, green
+  - full engine suite: `102` files, `790` tests, green
+  - full web suite: `98` files, `606` tests, green
+  - `pnpm build`: green with known `sharp/@img` and Next.js TypeScript plugin
+    warnings
+  - engine/web typechecks and `git diff --check`: green
+
 Deferred until after these checkpoints:
 
 - `floor_raw_inference_source_led_widening_v1`

@@ -19,10 +19,57 @@ Document role:
 
 Last full engine revalidation: `2026-04-13`
 
+Last full web revalidation: `2026-04-13`
+
 Last cross-package build revalidation: `2026-04-13`
 
 Verified broad corridors:
 
+- latest open-box finish-tolerance mixed-history checkpoint:
+  - slice id: `open_box_finish_tolerance_mixed_history_boundary_v1`
+  - implemented on: `2026-04-13`
+  - type: no-widening workbench store-history/output-card boundary guard
+  - status: implemented and target-green
+  - reason this was selected:
+    - it was the last explicitly deferred optional route-history guard after
+      `open_box_finish_tolerance_guard_v1`
+    - it checks a user-hostile edit path that can otherwise hide route drift:
+      duplicate a walking finish, split the laminate total, bounce row order,
+      save/load the floor, detour through wall mode, then reload the floor
+    - the slice measures the existing answer/card boundary before any new
+      open-box or raw-floor behavior widening
+  - implemented test:
+    - `apps/web/features/workbench/open-box-finish-tolerance-mixed-history-boundary.test.ts`
+      pins the final normalized rows plus output-card values for:
+      - source-band `10 mm` laminate split as `4 + 6 mm`
+      - outside-band `12 mm` laminate split as `6 + 6 mm`
+  - behavior scope:
+    - no solver, catalog, selector, source, support, or workbench runtime
+      behavior changed
+    - the `10 mm` split remains exact on
+      `tuas_r2b_open_box_timber_measured_2026` with live `Rw 62`, `Ln,w 46`,
+      `L'n,w 48`, and `L'nT,w 45.6`
+    - the `12 mm` split remains outside the source band: `Rw` stays screening
+      live at `44 dB`, while `Ln,w`, `L'n,w`, and `L'nT,w` stay unsupported /
+      needs-input
+  - latest validation:
+    - focused workbench open-box mixed-history boundary:
+      `1` file, `1` test, green
+    - workbench adjacent mixed/history/floor pack:
+      `5` files, `112` tests, green
+    - engine adjacent source/route pack:
+      `4` files, `36` tests, green
+    - `pnpm --filter @dynecho/engine typecheck`: green
+    - `pnpm --filter @dynecho/web typecheck`: green with the known Next.js
+      TypeScript plugin recommendation
+    - `pnpm --filter @dynecho/engine test`: `102` files, `790` tests, green
+    - `pnpm --filter @dynecho/web test`: `98` files, `606` tests, green
+    - `pnpm build`: green with the known `sharp/@img` optional-package
+      warnings and Next.js TypeScript plugin recommendation
+    - `git diff --check`: green
+  - next planning implication:
+    - the deferred open-box history boundary is now closed; behavior widening
+      still requires naming one route family and one output surface first
 - latest UBIQ open-web packaged-lane checkpoint:
   - slice id: `ubiq_open_web_packaged_lane_trace_matrix_v1`
   - implemented on: `2026-04-13`
@@ -1520,8 +1567,12 @@ Current checkpoint before the remaining ordered list:
 - `mixed_floor_wall_seeded_route_history_expansion_v1` is closed and committed
   for the first heavy-composite wall target; no solver, catalog, selector, or
   store behavior changed
-- optional `open_box_finish_tolerance_mixed_history_boundary_v1` is deliberately
-  deferred so it does not inflate the current source-led floor guard
+- `open_box_finish_tolerance_mixed_history_boundary_v1` is now closed as a
+  no-widening store-history/output-card guard:
+  - source-band `10 mm` laminate split remains exact/live through duplicate,
+    reorder bounce, save/load, and floor/wall mode switching
+  - outside-band `12 mm` laminate split remains impact-unsupported /
+    needs-input through the same history path
 - `dataholz_clt_source_truth_audit_v1` is closed as a no-widening source-truth
   audit:
   - no solver, catalog, selector, or workbench runtime behavior changed

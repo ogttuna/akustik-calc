@@ -26,6 +26,24 @@ Important scope note:
 
 Current execution status:
 
+- `open_box_finish_tolerance_mixed_history_boundary_v1` is now closed:
+  - this was a no-widening workbench store-history/output-card checkpoint for
+    the open-box walking-finish tolerance boundary
+  - source-band `10 mm` laminate split as `4 + 6 mm` remains exact on
+    `tuas_r2b_open_box_timber_measured_2026` after duplicate/edit,
+    reorder-bounce, save/load, and floor/wall mode switching
+  - the exact/live source-band answer remains pinned at `Rw 62`, `Ln,w 46`,
+    `L'n,w 48`, and `L'nT,w 45.6`
+  - outside-band `12 mm` laminate split as `6 + 6 mm` remains outside exact
+    support: `Rw` is screening live at `44 dB`, while `Ln,w`, `L'n,w`, and
+    `L'nT,w` stay unsupported / needs-input
+  - no solver, catalog, selector, source, support, or workbench runtime behavior
+    changed
+  - focused workbench validation is green at `1` file / `1` test; adjacent
+    web validation is green at `5` files / `112` tests; adjacent engine
+    validation is green at `4` files / `36` tests; full web validation is
+    green at `98` files / `606` tests; full engine validation is green at
+    `102` files / `790` tests; repository build is green with known warnings
 - `ubiq_open_web_packaged_lane_trace_matrix_v1` is now closed:
   - this was a no-widening trace/card checkpoint for the UBIQ open-web
     `2 x 16 mm` packaged lower lane
@@ -131,7 +149,8 @@ Current execution status:
     `GDMTXA04A` estimate-routed boundary
   - `mixed_floor_wall_seeded_route_history_expansion_v1` is already closed and
     committed for the first heavy-composite wall target; the optional open-box
-    mixed-history boundary is deferred
+    mixed-history boundary is now closed as
+    `open_box_finish_tolerance_mixed_history_boundary_v1`
   - historical follow-up selected after that checkpoint:
     `raw_concrete_helper_permutation_answer_guard_v1`, under source-led
     raw-floor inference widening
