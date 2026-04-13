@@ -156,24 +156,33 @@ Current execution status:
   - the web full-suite runner now mirrors the engine package by using
     `--maxWorkers=1`; web deep-hybrid route scans also yield periodically so
     long CPU scans do not trip Vitest worker-RPC timeout after assertions pass
-- selected next implementation slice:
+- latest wall-selector trace checkpoint:
   - `wall_selector_wider_trace_matrix_v1`
-  - type: no-widening wall-selector trace/research slice
-  - reason:
+  - type: no-widening wall-selector trace/card slice
+  - status: implemented and target-green
+  - reason it was selected:
     - wall Phase B.2 remains partial beyond the defended
       `double_leaf <-> lined_massive_wall` hold
     - raw-floor behavior widening is now better answer-measured, but still has
       the largest fake-confidence blast radius
     - CLT combined behavior has exact/predictor anchors, but `C11c` and
       `GDMTXA04A` stay deliberately deferred/estimate-only
-  - implementation rule:
-    - add engine and workbench trace/card assertions first
-    - do not change solver selection, source catalogs, floor support, or wall
-      selector math unless the trace pack exposes a classified behavior bug
-  - scope refined after implementation comparison:
-    - use the existing boundary scan packs as the baseline
-    - add dedicated trace/card matrix tests for the wall selector output path
-    - do not expand `dynamic-airborne.ts` during the trace-only pass
+  - implementation result:
+    - added dedicated engine and workbench trace/card matrix tests for the wall
+      selector output path
+    - used the existing boundary scan packs as the adjacent baseline
+    - did not change solver selection, source catalogs, floor support, wall
+      selector math, or workbench runtime behavior
+    - did not expand `dynamic-airborne.ts` during the trace-only pass
+  - validation:
+    - focused engine trace matrix: `1` file, `1` test, green
+    - focused workbench card matrix: `1` file, `1` test, green
+    - engine selector/boundary pack: `3` files, `15` tests, green
+    - workbench selector/boundary/validation pack: `5` files, `26` tests, green
+    - engine/web typechecks: green
+    - full engine suite: `100` files, `788` tests, green
+    - full web suite: `95` files, `603` tests, green
+    - `git diff --check`: green
 - the 2026-04-07 reinforced-concrete assembly-field `Rw` support blocker is now closed:
   - concrete screening rows with visible floor roles now keep `Rw` exposed again on the assembly route
   - workbench `Rw` cards now also respect engine support buckets instead of surfacing unsupported floor companions
@@ -206,15 +215,15 @@ Completion-reading note:
 
 Current queued follow-up:
 
-- start `wall_selector_wider_trace_matrix_v1`:
-  - add engine trace rows for clear `double_leaf`, held AAC boundary, clear
+- re-rank the next implementation slice after the wall-selector trace
+  checkpoint:
+  - the trace matrix now pins clear `double_leaf`, held AAC boundary, clear
     `lined_massive_wall`, denser held G5 sibling, non-AAC heavy-core control,
-    and strong framed control
-  - add matching workbench card/route rows for `Rw`, `R'w`, and `DnT,w`
-  - pin the current `double_leaf <-> lined_massive_wall` hold fields and keep
-    non-AAC heavy-core controls out of AAC-like boundary diagnostics
-  - keep user-facing boundary wording present only on held routes
-  - checkpoint the evidence before any selector behavior change
+    and strong framed control rows
+  - no behavior bug was exposed in those rows, so there is no automatic selector
+    widening to do next
+  - any future wall selector behavior work needs a fresh classified red or a
+    separately named evidence-backed behavior slice
 - keep raw-floor inference widening deferred for now:
   - the first raw safe-bare contiguous-split cohort is defended on both engine
     and workbench routes
@@ -1508,10 +1517,9 @@ Immediate next implementation pass:
 3. keep `tuas_c11c_wet_stack_anomaly_audit_v1` closed as deferred / fail-closed
 4. keep `raw_concrete_helper_permutation_answer_guard_v1` frozen as the latest
    no-widening answer guard under `floor_raw_inference_source_led_widening_v1`
-5. implement `wall_selector_wider_trace_matrix_v1` as the next no-widening
-   selector trace slice
-6. checkpoint that wall trace evidence before any new solver or selector
-   behavior slice
+5. keep `wall_selector_wider_trace_matrix_v1` frozen as the latest
+   no-widening selector trace/card checkpoint
+6. re-rank before any new solver or selector behavior slice
 
 Why this is the correct next cut:
 

@@ -331,20 +331,39 @@ The first trace/measurement slice is implemented:
   - engine/web typechecks and `git diff --check`: green
 
 After this trace slice and the current no-widening guard set were checkpointed,
-the selected next slice became:
+the next wall-selector trace slice was implemented:
 
 - `wall_selector_wider_trace_matrix_v1`
 
-It must start as a trace-only wall-selector slice, not as behavior widening.
-The required proof shape is the same value/origin/support/card structure above,
-applied to settled wall families, the currently held
-`double_leaf <-> lined_massive_wall` boundary, non-AAC heavy-core controls, and
-at least one unsupported or held route.
+It stayed trace-only and did not widen behavior. The proof shape is the same
+value/origin/support/card structure above, applied to settled wall families, the
+currently held `double_leaf <-> lined_massive_wall` boundary, non-AAC heavy-core
+controls, and a strong framed control route.
 
-The expected first artifacts are:
+Implemented artifacts:
 
 - `packages/engine/src/dynamic-airborne-wall-selector-trace-matrix.test.ts`
 - `apps/web/features/workbench/wall-selector-output-origin-card-matrix.test.ts`
+
+The matrix pins:
+
+- live `Rw`, `R'w`, and `DnT,w` values where supported
+- unsupported `Rw` on field-only wall routes and field `needs_input` on
+  lab-only double-stud routes
+- family decision class, runner-up, hold metrics, trim counts, and warnings
+- matching workbench card status/value, branch summary, validation posture, and
+  consultant wording
+
+Latest wall-selector validation:
+
+- focused engine trace matrix: `1` file, `1` test, green
+- focused workbench card matrix: `1` file, `1` test, green
+- engine selector/boundary pack: `3` files, `15` tests, green
+- workbench selector/boundary/validation pack: `5` files, `26` tests, green
+- engine/web typechecks: green
+- full engine suite: `100` files, `788` tests, green
+- full web suite: `95` files, `603` tests, green
+- `git diff --check`: green
 
 Deferred until after that checkpoint:
 

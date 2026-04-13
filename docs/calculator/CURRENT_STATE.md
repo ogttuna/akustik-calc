@@ -23,38 +23,61 @@ Last cross-package build revalidation: `2026-04-13`
 
 Verified broad corridors:
 
-- selected next implementation slice:
+- latest wall-selector trace checkpoint:
   - slice id: `wall_selector_wider_trace_matrix_v1`
-  - selected on: `2026-04-13`
-  - type: no-widening wall-selector trace/research slice
-  - reason:
+  - implemented on: `2026-04-13`
+  - type: no-widening wall-selector trace/card slice
+  - status: implemented and target-green
+  - reason this was selected:
     - floor source/answer/origin guards are now much stronger, but broad
       raw-floor widening still has the highest fake-confidence blast radius
     - CLT combined behavior has exact/predictor anchors, but `C11c` remains a
       deliberate deferred anomaly and `GDMTXA04A` remains estimate-only
     - wall Phase B.2 is still partial: only the defended
       `double_leaf <-> lined_massive_wall` hold is shipped
-  - required posture:
-    - add engine and workbench trace/card rows before any selector behavior
+  - completed posture:
+    - added engine and workbench trace/card rows before any selector behavior
       change
     - keep solver selection, source catalogs, CLT support, and raw-floor support
       unchanged unless the trace exposes a classified bug
-  - implementation comparison:
+    - the trace exposed no classified behavior bug in the representative rows,
+      so no runtime behavior changed
+  - implementation comparison result:
     - current trace fields already expose family decision class, runner-up
       scores, optional secondary runner-up, family-boundary hold metrics, and
       trimmed outer-span counts
-    - the next gap is not another broad scan; it is a compact wall selector
-      output-origin/card matrix tying those trace fields to `Rw`, `R'w`,
-      `DnT,w`, support buckets, and workbench cards
+    - the closed gap is now a compact wall selector output-origin/card matrix
+      tying those trace fields to `Rw`, `R'w`, `DnT,w`, support buckets, and
+      workbench cards
     - `packages/engine/src/dynamic-airborne.ts` is about `6630` lines, so this
-      slice should avoid growing it unless a classified behavior bug is found
-  - latest focused baseline:
-    - engine boundary pack:
-      `pnpm --filter @dynecho/engine exec vitest run src/dynamic-airborne-family-boundary.test.ts src/dynamic-airborne-family-boundary-scan.test.ts --reporter=basic`
-      passed: `2` files, `14` tests
-    - workbench boundary pack:
-      `pnpm --filter @dynecho/web exec vitest run features/workbench/dynamic-route-family-boundary.test.ts features/workbench/dynamic-route-family-boundary-scan.test.ts features/workbench/validation-regime.test.ts features/workbench/consultant-decision-trail.test.ts --reporter=basic`
-      passed: `4` files, `25` tests
+      slice avoided growing it
+  - implemented tests:
+    - `packages/engine/src/dynamic-airborne-wall-selector-trace-matrix.test.ts`
+      pins clear double-leaf, held AAC boundary, clear lined-massive, held G5
+      sibling, non-AAC heavy-core trim control, and lab double-stud control rows
+    - `apps/web/features/workbench/wall-selector-output-origin-card-matrix.test.ts`
+      mirrors those rows through output cards, branch summary, validation
+      posture, and consultant decision wording
+  - latest validation:
+    - focused engine trace matrix:
+      `1` file, `1` test, green
+    - focused workbench card matrix:
+      `1` file, `1` test, green
+    - engine selector/boundary pack:
+      `pnpm --filter @dynecho/engine exec vitest run src/dynamic-airborne-wall-selector-trace-matrix.test.ts src/dynamic-airborne-family-boundary.test.ts src/dynamic-airborne-family-boundary-scan.test.ts --reporter=basic`
+      passed: `3` files, `15` tests
+    - workbench selector/boundary/validation pack:
+      `pnpm --filter @dynecho/web exec vitest run features/workbench/wall-selector-output-origin-card-matrix.test.ts features/workbench/dynamic-route-family-boundary.test.ts features/workbench/dynamic-route-family-boundary-scan.test.ts features/workbench/validation-regime.test.ts features/workbench/consultant-decision-trail.test.ts --reporter=basic`
+      passed: `5` files, `26` tests
+    - `pnpm --filter @dynecho/engine typecheck`: green
+    - `pnpm --filter @dynecho/web typecheck`: green with the known Next.js
+      TypeScript plugin recommendation
+    - `pnpm --filter @dynecho/engine test`: `100` files, `788` tests, green
+    - `pnpm --filter @dynecho/web test`: `95` files, `603` tests, green
+    - `git diff --check`: green
+  - next planning implication:
+    - re-rank before any behavior slice; do not turn the trace checkpoint into
+      automatic wall selector widening
 - latest trace/measurement slice:
   - slice id: `output_origin_trace_matrix_v1`
   - status: implemented as no-widening engine/workbench evidence; no solver,
@@ -1431,14 +1454,15 @@ Current checkpoint before the remaining ordered list:
     - engine and web typechecks: green
   - do not use `GDMTXA04A`, weak UBIQ bands, C11c, helper-only timber rows, or
     open-web steel as shortcut reasons for broad raw inference widening
-- next implementation decision:
-  - start `wall_selector_wider_trace_matrix_v1`
-  - keep it trace-only and no-widening while it measures the remaining
-    wall-selector risk around settled families, the defended
+- implemented follow-on checkpoint:
+  - `wall_selector_wider_trace_matrix_v1` is now implemented as a trace-only
+    and no-widening wall-selector matrix
+  - it measures settled families, the defended
     `double_leaf <-> lined_massive_wall` hold, non-AAC heavy-core controls, and
-    unsupported or held user-facing routes
-  - do not change solver selection, source catalogs, CLT support, or raw-floor
-    support unless the trace pack exposes a classified behavior bug
+    a strong framed control on engine and workbench surfaces
+  - no solver selection, source catalogs, CLT support, raw-floor support, wall
+    selector math, or workbench runtime behavior changed
+  - next implementation work should be re-ranked before any behavior widening
 
 1. Keep the closed raw-floor negative audit, the closed official-product representative breadth slice, the closed UBIQ provenance/boundary-freeze slice, and the closed interpolation-steel mixed seeded-family slice frozen:
    - do not reopen `FL-23/25/27` just because provenance is now clearer

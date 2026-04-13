@@ -281,6 +281,52 @@ Closed follow-up after this guard:
     web deep-hybrid route scans yield periodically to avoid Vitest worker-RPC
     timeouts during long CPU scan files
 
+Current wall-selector trace checkpoint:
+
+- slice id: `wall_selector_wider_trace_matrix_v1`
+- type: no-widening wall-selector trace/card matrix
+- status: implemented and target-green
+- behavior scope:
+  - no solver selection, source catalog, floor support, wall selector math, or
+    workbench runtime behavior changed
+  - the slice only pins the current answer/support/card posture so any future
+    selector change has a compact regression surface
+- implemented edit set:
+  - [dynamic-airborne-wall-selector-trace-matrix.test.ts](../../packages/engine/src/dynamic-airborne-wall-selector-trace-matrix.test.ts)
+    pins engine values, support buckets, selected family, confidence, strategy,
+    runner-up, boundary-hold metrics, trim visibility, notes, and warnings
+  - [wall-selector-output-origin-card-matrix.test.ts](../../apps/web/features/workbench/wall-selector-output-origin-card-matrix.test.ts)
+    mirrors the same rows through workbench cards, branch summary, validation
+    posture, and consultant decision wording
+- covered rows:
+  - clear field `double_leaf`:
+    `ytong_aac_d700 80 / air_gap 50 / gypsum_board 12.5`
+  - held AAC boundary:
+    `ytong_aac_d700 100 / air_gap 50 / gypsum_board 12.5`
+  - clear field `lined_massive_wall`:
+    `ytong_aac_d700 160 / air_gap 50 / gypsum_board 12.5`
+  - denser held G5 sibling:
+    `ytong_g5_800 100 / air_gap 50 / diamond_board 12.5`
+  - non-AAC heavy-core trim control:
+    `rockwool / porotherm / air_gap / diamond_board / glasswool`
+  - strong lab double-stud control:
+    double gypsum leaves around split cavities and mineral wool
+- validation completed in this checkpoint:
+  - focused engine trace matrix:
+    `1` file, `1` test, green
+  - focused workbench card matrix:
+    `1` file, `1` test, green
+  - engine selector/boundary pack:
+    `3` files, `15` tests, green
+  - workbench selector/boundary/validation pack:
+    `5` files, `26` tests, green
+  - `pnpm --filter @dynecho/engine typecheck`: green
+  - `pnpm --filter @dynecho/web typecheck`: green with the known Next.js
+    TypeScript plugin recommendation
+  - `pnpm --filter @dynecho/engine test`: `100` files, `788` tests, green
+  - `pnpm --filter @dynecho/web test`: `95` files, `603` tests, green
+  - `git diff --check`: green
+
 ## Next Slice Selection Review
 
 Review date: 2026-04-13
@@ -310,7 +356,7 @@ Selection criteria:
 Candidate ranking:
 
 1. `wall_selector_wider_trace_matrix_v1`
-   - selected next
+   - selected and now implemented as the latest no-widening checkpoint
    - type: no-widening trace/research slice
    - why:
      - wall Phase B.2 is only partially shipped; the current hold is limited to
@@ -364,14 +410,18 @@ Candidate ranking:
        combined-CLT behavior well enough to justify a separate exact or
        predictor slice
 
-Current decision:
+Current decision after the checkpoint:
 
-- start `wall_selector_wider_trace_matrix_v1` next
-- keep it trace-only until the tests reveal a classified behavior problem
-- do not change solver selection, calibration, source catalogs, or floor-family
-  support during that slice
-- if the trace exposes no red, checkpoint the evidence and re-rank again rather
-  than forcing a behavior change
+- `wall_selector_wider_trace_matrix_v1` is now implemented as a trace-only
+  checkpoint
+- the matrix exposed no classified behavior bug in the current representative
+  rows, so no selector behavior was changed
+- do not immediately widen wall, floor, or CLT behavior from this evidence
+  alone
+- next work must re-rank candidates again against source evidence and current
+  risk; the likely candidates remain narrow wall-selector behavior only if a
+  new trace red appears, source-led raw-floor widening one carrier at a time, or
+  CLT combined evidence only after stronger source/frequency support
 
 ## Wall Selector Implementation Comparison
 
@@ -448,12 +498,12 @@ Gap after comparing plan to implementation:
   survives the representative framed palette; do not design behavior around a
   hypothetical multi-runner-up route until a real trace row exposes it
 
-Next implementation details:
+Implemented checkpoint details:
 
-1. Add a compact engine trace matrix.
-   - preferred file:
+1. Added a compact engine trace matrix.
+   - file:
      `packages/engine/src/dynamic-airborne-wall-selector-trace-matrix.test.ts`
-   - required rows:
+   - covered rows:
      - clear `double_leaf` field row:
        `ytong_aac_d700 80 / air_gap 50 / gypsum_board 12.5`
      - held AAC boundary row:
@@ -468,26 +518,27 @@ Next implementation details:
      - strong framed control:
        one `double_stud_system` or `stud_wall_system` route with no boundary
        diagnostics
-   - assert:
+   - assertions:
      - `Rw`, `R'w`, and/or `DnT,w` numeric values where live
      - `supportedTargetOutputs` and `unsupportedTargetOutputs`
      - selected family, strategy, confidence class, runner-up fields, hold
        metrics, trim counts, notes, and warnings
-2. Add a compact workbench card/route matrix.
-   - preferred file:
+2. Added a compact workbench card/route matrix.
+   - file:
      `apps/web/features/workbench/wall-selector-output-origin-card-matrix.test.ts`
-   - mirror the representative engine rows through `evaluateScenario`
-   - assert:
+   - mirrors the representative engine rows through `evaluateScenario`
+   - assertions:
      - output-card status/value for `Rw`, `R'w`, and `DnT,w`
      - branch summary value/tone/detail from `getDynamicCalcBranchSummary`
      - validation posture / consultant wording for the held route only where it
        is user-facing
      - no boundary/hold wording on clear double-leaf, clear lined-massive, and
        non-AAC control rows
-3. Re-run the existing broad selector packs.
+3. Re-ran the existing broad selector packs.
    - the new compact matrix is not a replacement for the scan tests
-   - keep the expanded engine scan and representative web scan green
-4. Only if the new trace matrix fails:
+   - the expanded engine scan and representative web scan remain green in the
+     adjacent validation packs listed above
+4. For a future selector behavior slice:
    - classify the failure as stale fixture, card projection drift, support-bucket
      drift, trace-field drift, or solver behavior drift
    - fix card/projection drift in web-only code where possible

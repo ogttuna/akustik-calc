@@ -21,9 +21,33 @@ Read together with:
 ## Current Active Slice Ledger
 
 - latest completed slice:
-  `output_origin_trace_matrix_v1`
-- status: implemented as a no-widening trace/measurement guard; focused,
-  adjacent, typecheck, and full engine gates are green
+  `wall_selector_wider_trace_matrix_v1`
+- status: implemented as a no-widening wall-selector trace/card guard; focused,
+  adjacent, and typecheck gates are green
+- latest completed slice intent:
+  - pin the current wall selector answer/support/card posture before any wider
+    selector behavior change
+  - keep the current defended `double_leaf <-> lined_massive_wall` hold visible
+    on engine traces and user-facing workbench explanations
+  - prove clear settled wall families, held AAC/G5 boundaries, non-AAC
+    heavy-core controls, and strong framed controls without touching solver math
+- latest completed slice artifacts:
+  - `packages/engine/src/dynamic-airborne-wall-selector-trace-matrix.test.ts`
+  - `apps/web/features/workbench/wall-selector-output-origin-card-matrix.test.ts`
+- latest completed slice validation:
+  - focused engine trace matrix: `1` file, `1` test, green
+  - focused workbench card matrix: `1` file, `1` test, green
+  - engine selector/boundary pack: `3` files, `15` tests, green
+  - workbench selector/boundary/validation pack: `5` files, `26` tests, green
+  - engine/web typechecks: green; web still prints the known Next.js
+    TypeScript plugin recommendation
+  - full engine suite: `100` files, `788` tests, green
+  - full web suite: `95` files, `603` tests, green
+  - `git diff --check`: green
+- previous trace/measurement slice:
+  `output_origin_trace_matrix_v1` is implemented as a no-widening
+  cross-domain origin/card guard; focused, adjacent, typecheck, and full engine
+  gates are green
 - previous no-widening answer guard:
   `raw_concrete_helper_permutation_answer_guard_v1` is closed as an
   answer/support guard; target engine/workbench packs are green
@@ -31,20 +55,20 @@ Read together with:
   a no-widening source-truth guard; target engine/workbench packs are green
 - previous route-history slice: `mixed_floor_wall_seeded_route_history_expansion_v1`
   is closed and committed for the first heavy-composite wall target
-- completed slice intent:
+- previous floor answer-guard intent:
   - keep the newly pinned Dataholz CLT source truth frozen
   - measure the already-open raw terminal-concrete plus ceiling-helper corridor
     with explicit numeric answer snapshots, not only support-bucket checks
   - keep implementation test-first and avoid changing acoustic selection math
   - preserve the current defended floor/wall corridors and classify any new red
     before changing solver behavior
-- completed slice acceptance:
+- previous floor answer-guard acceptance:
   - one route corridor at a time: raw visible inputs inferred as terminal
     concrete with ceiling-side board/helper layers
   - route/card/support-bucket parity assertions plus numeric `Rw`, `R'w`,
     `Ln,w`, `L'n,w`, and `L'nT,w` snapshots
   - green targeted engine and workbench packs, plus engine/web typechecks
-- completed slice validation:
+- previous trace/floor guard validation:
   - latest output-origin trace engine/source/raw pack:
     `3` files, `7` tests, green
   - latest output-origin trace workbench/source/raw pack:
@@ -67,30 +91,17 @@ Read together with:
   - no UBIQ weak-band reopen
   - no helper-only timber, open-web steel, or generic raw-floor widening
 - active next decision:
-  - select `wall_selector_wider_trace_matrix_v1` as the next implementation
-    slice
-  - keep it no-widening and trace-only until tests expose a classified behavior
-    problem
-  - expand wall-selector evidence before changing solver selection:
-    - clear settled wall families
-    - the currently defended `double_leaf <-> lined_massive_wall` hold
-    - non-AAC heavy-core controls that must not enter the AAC-like boundary
-    - at least one unsupported or held wall route with matching workbench card
-      posture
-  - defer raw-floor behavior widening, CLT-local combined behavior work, C11c,
-    and `GDMTXA04A` exact reopening until they have stronger source/frequency
-    evidence and their own output-origin trace rows
-- active slice implementation contract:
-  - add a compact engine trace matrix before any code behavior change:
-    `packages/engine/src/dynamic-airborne-wall-selector-trace-matrix.test.ts`
-  - add a compact workbench card/route matrix before any code behavior change:
-    `apps/web/features/workbench/wall-selector-output-origin-card-matrix.test.ts`
-  - matrix rows must include clear `double_leaf`, held AAC boundary, clear
-    `lined_massive_wall`, denser held G5 sibling, one non-AAC heavy-core
-    control, and one strong framed control
-  - assertions must include numeric output values where live, support buckets,
-    family/runner-up/hold trace fields, workbench card status/value, and
-    user-facing boundary wording only on the held route
+  - re-rank candidates again before selecting behavior work
+  - keep `wall_selector_wider_trace_matrix_v1` frozen as evidence, not as a
+    mandate to widen wall selector math
+  - raw-floor behavior widening, CLT-local combined behavior work, C11c, and
+    `GDMTXA04A` exact reopening remain deferred until they have stronger
+    source/frequency evidence and their own output-origin trace rows
+- next slice selection contract:
+  - name one route family and one output surface before implementation
+  - add value/origin/support/card assertions first when behavior will widen
+  - classify any red as stale fixture, projection drift, support-bucket drift,
+    trace-field drift, or solver behavior drift before changing code
 - previous route-history first target, now closed:
   - promoted the existing heavy-composite wall instability shape into the mixed
     route-history coverage net as a third wall-family detour
@@ -2241,15 +2252,15 @@ Next recommended move:
     card status and values
   - no solver behavior was widened, no new family was reopened, and
     `GDMTXA04A` remains estimate-only
-- selected next move after the guard-set checkpoint:
+- implemented move after the guard-set checkpoint:
   - `wall_selector_wider_trace_matrix_v1`
-  - start as no-widening trace/research, not selector behavior change
-  - prove settled wall families, the current
+  - stayed no-widening trace/research, not selector behavior change
+  - proved settled wall families, the current
     `double_leaf <-> lined_massive_wall` hold, non-AAC heavy-core controls, and
-    at least one unsupported or held route on engine plus workbench card
-    surfaces
-  - defer CLT-local combined evidence and true raw-floor behavior widening until
-    this wall trace evidence is checkpointed and candidates are re-ranked again
+    a strong framed route on engine plus workbench card surfaces
+  - no behavior bug was exposed, so CLT-local combined evidence and true
+    raw-floor behavior widening remain deferred until candidates are re-ranked
+    again
 - classify any new failure before changing implementation:
   - solver drift
   - support-bucket or output-card drift

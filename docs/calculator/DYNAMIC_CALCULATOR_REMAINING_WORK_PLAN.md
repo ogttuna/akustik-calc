@@ -42,6 +42,27 @@ If a proposed fix cannot preserve those corridors, it is not ready.
 
 Current verified result:
 
+- wall selector trace/card checkpoint: green
+  - slice id: `wall_selector_wider_trace_matrix_v1`
+  - no solver, catalog, selector, floor support, or workbench runtime behavior
+    changed
+  - engine:
+    `packages/engine/src/dynamic-airborne-wall-selector-trace-matrix.test.ts`
+  - workbench:
+    `apps/web/features/workbench/wall-selector-output-origin-card-matrix.test.ts`
+  - focused validation:
+    - engine trace matrix: `1` file, `1` test, green
+    - workbench card matrix: `1` file, `1` test, green
+  - adjacent validation:
+    - engine selector/boundary pack: `3` files, `15` tests, green
+    - workbench selector/boundary/validation pack: `5` files, `26` tests, green
+  - full validation:
+    - engine suite: `100` files, `788` tests, green
+    - web suite: `95` files, `603` tests, green
+    - engine/web typechecks and `git diff --check`: green
+  - pinned surface:
+    clear double-leaf, held AAC boundary, clear lined-massive, held G5 sibling,
+    non-AAC heavy-core trim control, and lab double-stud control
 - standard engine wall corridor: green
   - `8` files
   - `34` tests
@@ -59,7 +80,12 @@ Interpretation:
 
 - the reproduced wall jump class is materially reduced inside the defended corridor
 - the remaining wall debt is no longer “basic instability everywhere”
-- the remaining wall debt is corridor widening and selector architecture outside the currently defended `double_leaf <-> lined_massive_wall` hold
+- the latest compact wall selector trace matrix did not expose a classified
+  behavior bug, so the remaining wall debt is still corridor widening and
+  selector architecture outside the currently defended
+  `double_leaf <-> lined_massive_wall` hold
+- that debt should not be touched without a newly named behavior slice and a
+  failing or source-backed trace row
 
 ### Floor
 
@@ -2022,9 +2048,19 @@ That keeps the suite from becoming overly optimistic around a single hand-picked
     - workbench raw/source pack: `5` files, `7` tests, green
     - engine and web typechecks: green
     - full engine suite: `98` files, `786` tests, green
-- deferred follow-on options after that guard is closed:
+- implemented follow-on after that guard:
   - `wall_selector_wider_trace_matrix_v1`
+  - no solver, catalog, selector, floor-support, or workbench runtime behavior
+    changed
+  - engine/workbench matrix tests now pin settled wall families, the defended
+    `double_leaf <-> lined_massive_wall` hold, non-AAC heavy-core controls, and
+    a strong framed control
+  - selector/boundary adjacent packs and engine/web typechecks are green
+- deferred follow-on options after that checkpoint:
+  - re-ranked source-led raw-floor widening, one carrier/output surface at a
+    time
   - `clt_local_combined_interaction_evidence_v1`
+  - wall selector behavior only if a future trace exposes a classified red
 
 ## 8. Definition Of Done For The Next Phase
 
@@ -2059,24 +2095,22 @@ Do this in order:
      only finite outputs or supported-output lists
    - adjacent negatives for top-side finish after concrete, wall-like heavy
      hybrids, and weaker carriers remain in the validation pack
-9. start `wall_selector_wider_trace_matrix_v1` next as a no-widening
-   trace/research slice:
-   - add engine trace rows for clear settled wall families, the currently held
+9. keep `wall_selector_wider_trace_matrix_v1` frozen as the latest
+   no-widening wall-selector evidence checkpoint:
+   - settled wall families, the currently held
      `double_leaf <-> lined_massive_wall` boundary, non-AAC heavy-core controls,
-     and at least one unsupported or held route
-   - add matching workbench route/card assertions wherever user-facing status
-     could drift
-   - do not change wall selector math unless this trace pack exposes a
-     classified behavior bug that deserves its own behavior slice
-   - implementation comparison result:
-     - the broad engine and workbench boundary scans are already green
-     - the missing piece is a compact output-origin/card matrix for the selected
-       wall selector route, not another undocumented scan expansion
-     - `dynamic-airborne.ts` is already large, so behavior or refactor work must
-       be split from this trace-only slice
-10. keep explicit CLT-local combined-interaction work, more CLT-local
-    tightening, and true raw-floor inference widening deferred until the new wall
-    trace evidence is checkpointed and the candidates are re-ranked again
+     and a strong framed control are now pinned on engine and workbench surfaces
+   - no behavior bug was exposed, so do not change wall selector math from this
+     checkpoint alone
+   - `dynamic-airborne.ts` is already large, so any future selector behavior or
+     refactor work must be split from trace-only checkpoints
+10. re-rank candidates before selecting the next implementation slice:
+    - explicit CLT-local combined-interaction work remains source/frequency
+      evidence-led
+    - true raw-floor inference widening remains one carrier/output surface at a
+      time
+    - wall selector behavior work needs a fresh classified red or a separate
+      evidence-backed behavior plan
 11. keep `gdmtxa04a` estimate-only until a future source-backed material surface exists
 
-This order is the safest one because the previous broad blockers are already closed; the immediate risk is not missing a known source row, it is silently broadening behavior before the next route can be explained by value, origin, basis/source, support bucket, and workbench card status. Raw-floor widening is now better measured, but still has the largest fake-confidence blast radius. CLT combined behavior is better anchored, but `C11c` remains deliberately deferred and `GDMTXA04A` remains estimate-only. The wall trace slice reduces the remaining selector uncertainty without weakening those frozen floor corridors.
+This order is the safest one because the previous broad blockers are already closed; the immediate risk is silently broadening behavior before the next route can be explained by value, origin, basis/source, support bucket, and workbench card status. Raw-floor widening is now better measured, but still has the largest fake-confidence blast radius. CLT combined behavior is better anchored, but `C11c` remains deliberately deferred and `GDMTXA04A` remains estimate-only. The wall trace slice has reduced selector uncertainty without weakening those frozen floor corridors, so the next move is re-ranking rather than automatic widening.
