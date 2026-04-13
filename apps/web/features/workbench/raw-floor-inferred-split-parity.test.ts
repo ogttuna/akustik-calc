@@ -1,11 +1,11 @@
-import type { RequestedOutputId } from "@dynecho/shared";
+import type { FloorRole, RequestedOutputId } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
 import { buildOutputCard } from "./simple-workbench-output-model";
 import { evaluateScenario } from "./scenario-analysis";
 
 type ScenarioRow = {
-  floorRole?: string;
+  floorRole?: FloorRole;
   id: string;
   materialId: string;
   thicknessMm: number | string;
@@ -490,11 +490,19 @@ function snapshot(id: string, rows: readonly ScenarioRow[]) {
     id,
     impactFieldContext: IMPACT_FIELD_CONTEXT,
     name: id,
-    rows: [...rows],
+    rows: rows.map((row) => ({
+      ...row,
+      thicknessMm: String(row.thicknessMm)
+    })),
     source: "current",
     studyMode: "floor",
     targetOutputs: FIELD_OUTPUTS
   }).result;
+
+  expect(result, `${id} should evaluate`).not.toBeNull();
+  if (!result) {
+    throw new Error(`${id} did not evaluate.`);
+  }
 
   return {
     basis: result.impact?.basis ?? null,

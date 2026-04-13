@@ -1,17 +1,19 @@
-import type { RequestedOutputId } from "@dynecho/shared";
+import type { FloorRole, RequestedOutputId } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
 import { evaluateScenario } from "./scenario-analysis";
 import { buildOutputCard } from "./simple-workbench-output-model";
 
 type ScenarioRow = {
-  floorRole?: string;
+  floorRole?: FloorRole;
   id: string;
   materialId: string;
   thicknessMm: number | string;
 };
 
-const FIELD_OUTPUTS: readonly RequestedOutputId[] = ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"];
+const FIELD_OUTPUTS = ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"] as const satisfies readonly RequestedOutputId[];
+type FieldOutput = (typeof FIELD_OUTPUTS)[number];
+type CardStatus = "live" | "needs_input" | "unsupported";
 
 const AIRBORNE_FIELD_CONTEXT = {
   contextMode: "field_between_rooms" as const,
@@ -26,7 +28,7 @@ const IMPACT_FIELD_CONTEXT = {
   receivingRoomVolumeM3: 55
 };
 
-const FAIL_CLOSED_STATUSES: Record<RequestedOutputId, "live" | "needs_input" | "unsupported"> = {
+const FAIL_CLOSED_STATUSES: Record<FieldOutput, CardStatus> = {
   Rw: "unsupported",
   "R'w": "live",
   "DnT,w": "live",
@@ -41,7 +43,10 @@ function evaluateRows(id: string, rows: readonly ScenarioRow[]) {
     id,
     impactFieldContext: IMPACT_FIELD_CONTEXT,
     name: id,
-    rows: [...rows],
+    rows: rows.map((row) => ({
+      ...row,
+      thicknessMm: String(row.thicknessMm)
+    })),
     source: "current",
     studyMode: "floor",
     targetOutputs: FIELD_OUTPUTS
@@ -59,7 +64,7 @@ function evaluateRows(id: string, rows: readonly ScenarioRow[]) {
               studyMode: "floor"
             }).status
           ])
-        ) as Record<RequestedOutputId, "live" | "needs_input" | "unsupported">)
+        ) as Record<FieldOutput, CardStatus>)
       : null
   };
 }
@@ -98,7 +103,7 @@ describe("floor packaged-lane helper disjoint route detours", () => {
     expect(fillDisjoint.result?.floorSystemEstimate?.kind).toBe("low_confidence");
     expect(hasPredictorBlocker(fillDisjoint.warnings, "ceiling_fill")).toBe(true);
     expect(
-      fillDisjoint.result?.floorSystemEstimate?.notes.some((note) =>
+      fillDisjoint.result?.floorSystemEstimate?.notes.some((note: string) =>
         /Family-general lightweight-steel matching was withheld because the lower-only helper topology is split/i.test(note)
       )
     ).toBe(true);
@@ -114,7 +119,7 @@ describe("floor packaged-lane helper disjoint route detours", () => {
     expect(cavityDisjoint.result?.floorSystemEstimate?.kind).toBe("low_confidence");
     expect(hasPredictorBlocker(cavityDisjoint.warnings, "ceiling_cavity")).toBe(true);
     expect(
-      cavityDisjoint.result?.floorSystemEstimate?.notes.some((note) =>
+      cavityDisjoint.result?.floorSystemEstimate?.notes.some((note: string) =>
         /Family-general lightweight-steel matching was withheld because the lower-only helper topology is split/i.test(note)
       )
     ).toBe(true);
@@ -148,7 +153,7 @@ describe("floor packaged-lane helper disjoint route detours", () => {
     expect(fillDisjoint.result?.floorSystemEstimate?.kind).toBe("low_confidence");
     expect(hasPredictorBlocker(fillDisjoint.warnings, "ceiling_fill")).toBe(true);
     expect(
-      fillDisjoint.result?.floorSystemEstimate?.notes.some((note) =>
+      fillDisjoint.result?.floorSystemEstimate?.notes.some((note: string) =>
         /Lower-only helper topology stayed on the conservative composite continuation/i.test(note)
       )
     ).toBe(true);
@@ -156,7 +161,7 @@ describe("floor packaged-lane helper disjoint route detours", () => {
     expect(cavityDisjoint.result?.floorSystemEstimate?.kind).toBe("low_confidence");
     expect(hasPredictorBlocker(cavityDisjoint.warnings, "ceiling_cavity")).toBe(true);
     expect(
-      cavityDisjoint.result?.floorSystemEstimate?.notes.some((note) =>
+      cavityDisjoint.result?.floorSystemEstimate?.notes.some((note: string) =>
         /Lower-only helper topology stayed on the conservative composite continuation/i.test(note)
       )
     ).toBe(true);

@@ -1,4 +1,4 @@
-import type { AirborneContext, ImpactFieldContext, RequestedOutputId } from "@dynecho/shared";
+import type { AirborneContext, FloorRole, ImpactFieldContext, RequestedOutputId } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
 import { type PresetDefinition, WORKBENCH_PRESETS } from "./preset-definitions";
@@ -46,33 +46,49 @@ const IMPACT_FIELD_CONTEXT: ImpactFieldContext = {
   receivingRoomVolumeM3: 60
 };
 
+type ScenarioRow = {
+  floorRole?: FloorRole;
+  id: string;
+  materialId: string;
+  thicknessMm: number | string;
+};
+
 function evaluateFloorRows(input: {
   airborneContext: AirborneContext | null;
   id: string;
   impactFieldContext: ImpactFieldContext | null;
-  rows: Array<{
-    floorRole?: string;
-    id: string;
-    materialId: string;
-    thicknessMm: number | string;
-  }>;
+  rows: readonly ScenarioRow[];
 }) {
   return evaluateScenario({
     airborneContext: input.airborneContext,
     id: input.id,
     impactFieldContext: input.impactFieldContext,
     name: input.id,
-    rows: input.rows,
+    rows: input.rows.map((row) => ({
+      ...row,
+      thicknessMm: String(row.thicknessMm)
+    })),
     source: "current",
     studyMode: "floor",
     targetOutputs: FLOOR_CARD_AUDIT_OUTPUTS
   }).result;
 }
 
+type FloorScenarioResult = NonNullable<ReturnType<typeof evaluateFloorRows>>;
+
+function expectFloorScenarioResult(result: ReturnType<typeof evaluateFloorRows>, label: string): FloorScenarioResult {
+  expect(result, `${label} should evaluate`).not.toBeNull();
+  if (!result) {
+    throw new Error(`${label} did not evaluate.`);
+  }
+
+  return result;
+}
+
 function auditResultParity(input: {
   failures: string[];
   label: string;
-  result: ReturnType<typeof evaluateFloorRows>;
+  result: FloorScenarioResult;
 }) {
   const supported = new Set(input.result.supportedTargetOutputs);
   const unsupported = new Set(input.result.unsupportedTargetOutputs);
@@ -131,15 +147,18 @@ describe("floor output-card support parity", () => {
       (candidate): candidate is PresetDefinition => candidate.studyMode === "floor"
     )) {
       for (const context of contexts) {
-        const result = evaluateFloorRows({
-          airborneContext: context.airborneContext,
-          id: `${preset.id}-${context.label}`,
-          impactFieldContext: context.impactFieldContext,
-          rows: preset.rows.map((row, index) => ({
-            ...row,
-            id: `${preset.id}-${context.label}-${index + 1}`
-          }))
-        });
+        const result = expectFloorScenarioResult(
+          evaluateFloorRows({
+            airborneContext: context.airborneContext,
+            id: `${preset.id}-${context.label}`,
+            impactFieldContext: context.impactFieldContext,
+            rows: preset.rows.map((row, index) => ({
+              ...row,
+              id: `${preset.id}-${context.label}-${index + 1}`
+            }))
+          }),
+          `${preset.id} ${context.label}`
+        );
 
         auditResultParity({
           failures,
@@ -154,7 +173,7 @@ describe("floor output-card support parity", () => {
 
   it("keeps representative raw floor, inferred floor, and wall-like hybrid scenarios aligned with engine support buckets", () => {
     const failures: string[] = [];
-    const cases = [
+    const cases: readonly { id: string; rows: readonly ScenarioRow[] }[] = [
       {
         id: "tagged-concrete-room",
         rows: [{ floorRole: "base_structure", id: "a", materialId: "concrete", thicknessMm: 150 }]
@@ -294,12 +313,15 @@ describe("floor output-card support parity", () => {
     ];
 
     for (const testCase of cases) {
-      const result = evaluateFloorRows({
-        airborneContext: FIELD_BETWEEN_ROOMS_CONTEXT,
-        id: testCase.id,
-        impactFieldContext: IMPACT_FIELD_CONTEXT,
-        rows: testCase.rows
-      });
+      const result = expectFloorScenarioResult(
+        evaluateFloorRows({
+          airborneContext: FIELD_BETWEEN_ROOMS_CONTEXT,
+          id: testCase.id,
+          impactFieldContext: IMPACT_FIELD_CONTEXT,
+          rows: testCase.rows
+        }),
+        testCase.id
+      );
 
       auditResultParity({
         failures,

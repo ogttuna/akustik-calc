@@ -1,4 +1,4 @@
-import type { RequestedOutputId } from "@dynecho/shared";
+import type { FloorRole, RequestedOutputId } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
 import { evaluateScenario } from "./scenario-analysis";
@@ -12,7 +12,7 @@ type RawRouteCase = {
   };
   id: string;
   rows: Array<{
-    floorRole?: string;
+    floorRole?: FloorRole;
     id: string;
     materialId: string;
     thicknessMm: number | string;
@@ -385,11 +385,19 @@ describe("raw floor screening route support", () => {
         id: testCase.id,
         impactFieldContext: IMPACT_FIELD_CONTEXT,
         name: testCase.id,
-        rows: testCase.rows,
+        rows: testCase.rows.map((row) => ({
+          ...row,
+          thicknessMm: String(row.thicknessMm)
+        })),
         source: "current",
         studyMode: "floor",
         targetOutputs: FIELD_OUTPUTS
       }).result;
+
+      expect(result, `${testCase.id} should evaluate`).not.toBeNull();
+      if (!result) {
+        throw new Error(`${testCase.id} did not evaluate.`);
+      }
 
       if ((result.impact?.basis ?? null) !== testCase.expected.basis) {
         failures.push(

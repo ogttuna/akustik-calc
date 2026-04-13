@@ -36,28 +36,42 @@ const BUILDING_PREDICTION_CONTEXT: AirborneContext = {
 function evaluateWallRows(input: {
   airborneContext: AirborneContext | null;
   id: string;
-  rows: Array<{
+  rows: readonly {
     id: string;
     materialId: string;
     thicknessMm: number | string;
-  }>;
+  }[];
 }) {
   return evaluateScenario({
     airborneContext: input.airborneContext,
     id: input.id,
     impactFieldContext: null,
     name: input.id,
-    rows: input.rows,
+    rows: input.rows.map((row) => ({
+      ...row,
+      thicknessMm: String(row.thicknessMm)
+    })),
     source: "current",
     studyMode: "wall",
     targetOutputs: WALL_CARD_AUDIT_OUTPUTS
   }).result;
 }
 
+type WallScenarioResult = NonNullable<ReturnType<typeof evaluateWallRows>>;
+
+function expectWallScenarioResult(result: ReturnType<typeof evaluateWallRows>, label: string): WallScenarioResult {
+  expect(result, `${label} should evaluate`).not.toBeNull();
+  if (!result) {
+    throw new Error(`${label} did not evaluate.`);
+  }
+
+  return result;
+}
+
 function auditResultParity(input: {
   failures: string[];
   label: string;
-  result: ReturnType<typeof evaluateWallRows>;
+  result: WallScenarioResult;
 }) {
   const supported = new Set(input.result.supportedTargetOutputs);
   const unsupported = new Set(input.result.unsupportedTargetOutputs);
@@ -112,14 +126,17 @@ describe("wall output-card support parity", () => {
       (candidate): candidate is PresetDefinition => candidate.studyMode === "wall"
     )) {
       for (const context of contexts) {
-        const result = evaluateWallRows({
-          airborneContext: context.airborneContext,
-          id: `${preset.id}-${context.label}`,
-          rows: preset.rows.map((row, index) => ({
-            ...row,
-            id: `${preset.id}-${context.label}-${index + 1}`
-          }))
-        });
+        const result = expectWallScenarioResult(
+          evaluateWallRows({
+            airborneContext: context.airborneContext,
+            id: `${preset.id}-${context.label}`,
+            rows: preset.rows.map((row, index) => ({
+              ...row,
+              id: `${preset.id}-${context.label}-${index + 1}`
+            }))
+          }),
+          `${preset.id} ${context.label}`
+        );
 
         auditResultParity({
           failures,

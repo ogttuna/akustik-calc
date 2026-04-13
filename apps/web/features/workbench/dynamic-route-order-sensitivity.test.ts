@@ -153,7 +153,7 @@ describe("dynamic route order-sensitive multileaf contracts", () => {
     expect(swapped.dnTw - base.dnTw).toBeGreaterThanOrEqual(12);
     expectFragment(base.warnings, "triple-leaf partition", "classic triple base warning");
     expect(
-      swapped.warnings.some((warning) => warning.includes("triple-leaf partition")),
+      swapped.warnings.some((warning: string) => warning.includes("triple-leaf partition")),
       "collapsed swap should no longer report the triple-leaf warning"
     ).toBe(false);
   });

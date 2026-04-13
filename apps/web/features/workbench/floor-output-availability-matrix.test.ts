@@ -1,4 +1,4 @@
-import type { AirborneContext, ImpactFieldContext, RequestedOutputId } from "@dynecho/shared";
+import type { AirborneContext, FloorRole, ImpactFieldContext, RequestedOutputId } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
 import { getPresetById, type PresetId } from "./preset-definitions";
@@ -85,7 +85,7 @@ function evaluateFloorRows(input: {
   id: string;
   impactFieldContext?: ImpactFieldContext | null;
   rows: Array<{
-    floorRole: string;
+    floorRole?: FloorRole;
     id: string;
     materialId: string;
     thicknessMm: number | string;
@@ -96,7 +96,10 @@ function evaluateFloorRows(input: {
     id: input.id,
     impactFieldContext: input.impactFieldContext ?? null,
     name: input.id,
-    rows: input.rows,
+    rows: input.rows.map((row) => ({
+      ...row,
+      thicknessMm: String(row.thicknessMm)
+    })),
     source: "current",
     studyMode: "floor",
     targetOutputs: FLOOR_MATRIX_OUTPUTS
@@ -432,6 +435,12 @@ describe("floor output availability matrix", () => {
       impactFieldContext: BUILDING_PREDICTION_IMPACT_FIELD,
       rows: [{ floorRole: "base_structure", id: "a", materialId: "open_box_timber_slab", thicknessMm: 370 }]
     });
+
+    expect(concreteResult).not.toBeNull();
+    expect(openBoxResult).not.toBeNull();
+    if (!concreteResult || !openBoxResult) {
+      throw new Error("Expected representative floor output scenarios to evaluate.");
+    }
 
     expect(concreteResult.supportedTargetOutputs).toContain("Rw");
     expect(concreteResult.unsupportedTargetOutputs).not.toContain("Rw");

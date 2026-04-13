@@ -154,7 +154,7 @@ function evaluateDynamicWallPair(
   expect(lab.result?.ok, `${id} lab should stay ok`).toBe(true);
   expect(field.result?.ok, `${id} field should stay ok`).toBe(true);
 
-  const warnings = field.result!.warnings.filter((warning) =>
+  const warnings = field.result!.warnings.filter((warning: string) =>
     /boundary|hold|order-sensitive|triple-leaf|excluded from the dynamic airborne span/i.test(warning)
   );
 
@@ -174,7 +174,7 @@ function evaluateDynamicWallPair(
 
 function buildRepresentativeStack(input: {
   board: (typeof REPRESENTATIVE_BOARDS)[number];
-  core: (typeof REPRESENTATIVE_CORES)[number];
+  core: (typeof REPRESENTATIVE_CORES)[number] | (typeof NON_AAC_REPRESENTATIVE_CORES)[number];
   prefix: readonly { materialId: string; thicknessMm: string }[];
 }) {
   return [
@@ -275,7 +275,7 @@ describe("dynamic route family boundary scan contracts", () => {
           const result = evaluateDynamicWallPair(stack, `non-aac-${stackKey(stack)}`);
           const trace = result.trace;
           const trimKey = `${trace?.trimmedOuterLeadingCount ?? 0}/${trace?.trimmedOuterTrailingCount ?? 0}`;
-          const boundaryWarnings = result.warnings.filter((warning) =>
+          const boundaryWarnings = result.warnings.filter((warning: string) =>
             /boundary between|family-boundary hold|still somewhat close/i.test(warning)
           );
 

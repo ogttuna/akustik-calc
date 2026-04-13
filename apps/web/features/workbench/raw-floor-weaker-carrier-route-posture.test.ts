@@ -1,18 +1,20 @@
-import type { RequestedOutputId } from "@dynecho/shared";
+import type { FloorRole, RequestedOutputId } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
 import { buildOutputCard } from "./simple-workbench-output-model";
 import { evaluateScenario } from "./scenario-analysis";
 
 type ScenarioRow = {
-  floorRole?: string;
+  floorRole?: FloorRole;
   id: string;
   materialId: string;
   thicknessMm: number | string;
 };
 
+type CardStatus = "live" | "needs_input" | "unsupported";
+
 type CarrierCase = {
-  expectedStatuses: Record<RequestedOutputId, "live" | "needs_input" | "unsupported">;
+  expectedStatuses: Record<FieldOutput, CardStatus>;
   id: string;
   variants: readonly {
     id: string;
@@ -20,7 +22,8 @@ type CarrierCase = {
   }[];
 };
 
-const FIELD_OUTPUTS: readonly RequestedOutputId[] = ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"];
+const FIELD_OUTPUTS = ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"] as const satisfies readonly RequestedOutputId[];
+type FieldOutput = (typeof FIELD_OUTPUTS)[number];
 
 const AIRBORNE_FIELD_CONTEXT = {
   contextMode: "field_between_rooms" as const,
@@ -35,7 +38,7 @@ const IMPACT_FIELD_CONTEXT = {
   receivingRoomVolumeM3: 55
 };
 
-const FAIL_CLOSED_STATUSES: Record<RequestedOutputId, "live" | "needs_input" | "unsupported"> = {
+const FAIL_CLOSED_STATUSES: Record<FieldOutput, CardStatus> = {
   Rw: "unsupported",
   "R'w": "live",
   "DnT,w": "live",
@@ -337,11 +340,19 @@ function snapshot(id: string, rows: readonly ScenarioRow[]) {
     id,
     impactFieldContext: IMPACT_FIELD_CONTEXT,
     name: id,
-    rows: [...rows],
+    rows: rows.map((row) => ({
+      ...row,
+      thicknessMm: String(row.thicknessMm)
+    })),
     source: "current",
     studyMode: "floor",
     targetOutputs: FIELD_OUTPUTS
   }).result;
+
+  expect(result, `${id} should evaluate`).not.toBeNull();
+  if (!result) {
+    throw new Error(`${id} did not evaluate.`);
+  }
 
   return {
     basis: result.impact?.basis ?? null,
