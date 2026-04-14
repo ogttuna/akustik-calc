@@ -80,6 +80,22 @@ describe("target output support contract", () => {
     expect(impactOnlyStyle.unsupportedTargetOutputs).toEqual(["Ln,w", "DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"]);
   });
 
+  it("supports a combined Ln,w+CI bound without fabricating split Ln,w or CI support", () => {
+    const result = analyzeTargetOutputSupport({
+      impact: null,
+      lowerBoundImpact: lowerBound({
+        LnWPlusCIUpperBound: 45,
+        LnWUpperBound: undefined
+      }),
+      targetOutputs: ["Ln,w", "CI", "Ln,w+CI", "L'n,w", "L'nT,w"]
+    });
+
+    expect(result.supportedTargetOutputs).toEqual(["Ln,w+CI"]);
+    expect(result.unsupportedTargetOutputs).toEqual(["Ln,w", "CI", "L'n,w", "L'nT,w"]);
+    expect(result.supportedImpactOutputs).toEqual(["Ln,w+CI"]);
+    expect(result.unsupportedImpactOutputs).toEqual(["Ln,w", "CI", "L'n,w", "L'nT,w"]);
+  });
+
   it("keeps impact-only style carrier support separate from conservative bound impact support", () => {
     const result = analyzeTargetOutputSupport({
       countBoundSupportAsSupported: false,

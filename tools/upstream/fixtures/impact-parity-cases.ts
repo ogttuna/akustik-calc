@@ -328,7 +328,7 @@ export const IMPACT_PARITY_CASES: readonly ImpactParityCase[] = [
   },
   {
     id: "assembly_general_ubiq_open_web_carpet",
-    label: "Assembly route keeps open-web steel carpet topology on the published family blend",
+    label: "Assembly route promotes open-web steel carpet topology to the official combined bound",
     layers: [
       { materialId: "gypsum_board", thicknessMm: 12.5 },
       { materialId: "air_gap", thicknessMm: 90 },
@@ -387,6 +387,23 @@ export const IMPACT_PARITY_CASES: readonly ImpactParityCase[] = [
       targetOutputs: ["Ln,w", "CI", "Ln,w+CI"]
     },
     compare: {
+      acceptedLocalDivergences: [
+        {
+          metrics: [
+            "impact.LnW",
+            "impact.CI",
+            "impact.LnWPlusCI",
+            "impact.basis",
+            "impact.metricBasis.LnW",
+            "impact.metricBasis.CI",
+            "impact.metricBasis.LnWPlusCI",
+            "impact.estimateCandidateIds",
+            "floor.Rw",
+            "floor.RwCtr"
+          ],
+          reason: "DynEcho now promotes the official UBIQ carpet Ln,w+CI <=45 bound instead of the older upstream family-general estimate."
+        }
+      ],
       compareFloorMetrics: true,
       compareImpactBasis: true,
       compareImpactEstimateCandidateIds: true,

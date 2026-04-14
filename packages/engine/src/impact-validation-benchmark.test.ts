@@ -181,8 +181,25 @@ describe("impact validation benchmark corpus", () => {
           errors.push(`${entry.id}: expected floor Rw ${entry.expected.rwDb}, got ${rw}`);
         }
 
-        if (upper !== Number(entry.expected.lnwUpperBoundDb)) {
+        if (entry.expected.rwCtrDb !== undefined && numberOrNull(floorRatings?.RwCtr) !== Number(entry.expected.rwCtrDb)) {
+          errors.push(`${entry.id}: expected floor Rw+Ctr ${entry.expected.rwCtrDb}, got ${numberOrNull(floorRatings?.RwCtr)}`);
+        }
+
+        if (entry.expected.lnwUpperBoundDb !== undefined && upper !== Number(entry.expected.lnwUpperBoundDb)) {
           errors.push(`${entry.id}: expected Ln,w upper bound ${entry.expected.lnwUpperBoundDb}, got ${upper}`);
+        }
+
+        if (
+          entry.expected.lnwPlusCiUpperBoundDb !== undefined &&
+          numberOrNull(lowerBound?.LnWPlusCIUpperBound) !== Number(entry.expected.lnwPlusCiUpperBoundDb)
+        ) {
+          errors.push(
+            `${entry.id}: expected Ln,w+CI upper bound ${entry.expected.lnwPlusCiUpperBoundDb}, got ${numberOrNull(lowerBound?.LnWPlusCIUpperBound)}`
+          );
+        }
+
+        if (entry.expectedBasis && (lowerBound?.basis ?? "").trim().toLowerCase() !== entry.expectedBasis.trim().toLowerCase()) {
+          errors.push(`${entry.id}: expected lower-bound basis ${entry.expectedBasis}`);
         }
       } else if (entry.mode === "official_catalog_exact") {
         const lnw = numberOrNull(impact?.LnW);

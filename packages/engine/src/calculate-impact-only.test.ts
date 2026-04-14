@@ -3043,7 +3043,7 @@ describe("calculateImpactOnly", () => {
     expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
   });
 
-  it("can resolve the broader UBIQ steel family lane from carpeted open-web predictor input", () => {
+  it("routes carpeted open-web predictor input to the official combined UBIQ Ln,w+CI bound", () => {
     const result = calculateImpactOnly([], {
       impactPredictorInput: {
         structuralSupportType: "steel_joists",
@@ -3072,19 +3072,19 @@ describe("calculateImpactOnly", () => {
     });
 
     expect(result.sourceMode).toBe("predictor_input");
-    expect(result.floorSystemEstimate?.kind).toBe("family_general");
-    expect(result.impact?.basis).toBe("predictor_floor_system_family_general_estimate");
-    expect(result.impact?.LnW).toBe(51);
-    expect(result.impact?.CI).toBe(-1.7);
-    expect(result.impact?.LnWPlusCI).toBe(49.3);
-    expect(result.floorSystemRatings?.Rw).toBe(63.7);
-    expect(result.floorSystemRatings?.RwCtr).toBe(58.4);
-    expect(result.impact?.estimateCandidateIds).toEqual([
-      "ubiq_fl28_open_web_steel_300_exact_lab_2026",
-      "ubiq_fl28_open_web_steel_200_exact_lab_2026",
-      "ubiq_fl28_open_web_steel_400_exact_lab_2026"
-    ]);
-    expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(true);
+    expect(result.floorSystemEstimate).toBeNull();
+    expect(result.impact).toBeNull();
+    expect(result.boundFloorSystemMatch?.system.id).toBe(
+      "ubiq_fl28_open_web_steel_300_19mm_carpet_lnw_plus_ci_bound_lab_2026"
+    );
+    expect(result.lowerBoundImpact?.basis).toBe("official_floor_system_bound_support");
+    expect(result.lowerBoundImpact?.LnWPlusCIUpperBound).toBe(45);
+    expect(result.lowerBoundImpact?.LnWUpperBound).toBeUndefined();
+    expect(result.floorSystemRatings?.Rw).toBe(64);
+    expect(result.floorSystemRatings?.RwCtr).toBe(59);
+    expect(result.supportedImpactOutputs).toEqual([]);
+    expect(result.unsupportedImpactOutputs).toEqual(["Ln,w", "CI", "Ln,w+CI"]);
+    expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(false);
     expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
   });
 

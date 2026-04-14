@@ -1,6 +1,6 @@
 # Dynamic Calculator Remaining Work Plan
 
-Last reviewed: 2026-04-13
+Last reviewed: 2026-04-14
 
 Document role:
 
@@ -91,6 +91,119 @@ Interpretation:
 
 Current verified result:
 
+- UBIQ weak-band exact import and topology correction: green
+  - slice id: `ubiq_weak_band_exact_import_source_mapping_v1`
+  - source: official UBIQ fire/acoustic floor table PDF, page `7`
+  - engine:
+    `packages/engine/src/ubiq-open-web-weak-band-exact-source-mapping.test.ts`
+  - workbench:
+    `apps/web/features/workbench/ubiq-open-web-weaker-band-card-posture.test.ts`
+  - focused validation:
+    - engine UBIQ exact/source/posture/re-rank/backlog pack:
+      `5` files, `210` tests, green
+    - floor library sweep/source/raw parity/companion pack:
+      `4` files, `29` tests, green
+    - workbench weak-band and packaged-lane card pack:
+      `2` files, `3` tests, green
+  - pinned surface:
+    - `FL-23`, `FL-25`, and `FL-27` direct weak-band source stacks are exact
+      only when the direct lower-board package is visible
+    - the `54` weak-band rows are excluded from nearby-family estimates with
+      `familyEstimateEligible: false`
+    - upper-only weak-band packages remain impact-fail-closed
+    - `FL-24` now requires resilient lower-treatment criteria instead of
+      colliding with direct `FL-23`
+  - interpretation:
+    - this closes the previous weak-band defer/import decision
+    - it is not permission to open raw bare open-web impact support
+    - the next UBIQ source work was completion of supported-band finish lanes
+      and catalog extraction, not broad lightweight-steel widening
+- UBIQ supported-band finish completion: green
+  - slice id: `ubiq_open_web_supported_band_finish_completion_v1`
+  - source: official UBIQ fire/acoustic floor table PDF, page `7`
+  - catalog:
+    `packages/catalogs/src/floor-systems/ubiq-open-web-supported-band-rows.ts`
+  - engine:
+    `packages/engine/src/ubiq-open-web-supported-band-finish-completion.test.ts`
+  - workbench:
+    `apps/web/features/workbench/floor-family-regressions.test.ts`
+  - focused validation:
+    - engine supported-band/backlog/corpus pack:
+      `3` files, `16` tests, green
+    - workbench floor-family route pack:
+      `1` file, `96` tests, green
+    - catalog, engine, and web typecheck: green
+    - catalog, engine, and web lint: green
+    - full engine suite: `107` files, `806` tests, green
+    - full web suite: `101` files, `615` tests, green
+    - `pnpm build`: green with known `sharp/@img` optional-package warnings and
+      the existing Next.js TypeScript plugin recommendation
+    - `git diff --check`: green
+  - pinned surface:
+    - UBIQ open-web exact rows now total `90` across `FL-23/24/25/26/27/28`
+    - supported resilient-band rows now total `36`: `18` bare INEX and `18`
+      timber + acoustic underlay
+    - bare rows are exact-only and cannot anchor nearby-family estimates
+    - `FL-24` remains exact-only; `FL-26/28` timber rows remain the current
+      defended family-estimate anchors
+    - official carpet `Ln,w+CI <=45` values were intentionally left out of
+      exact import because they are combined-metric bounds, not exact `Ln,w`
+  - interpretation:
+    - this closes the supported-band exact finish completion
+    - follow-up UBIQ carpet work must stay schema/output support for
+      `Ln,w+CI` upper bounds, not a shortcut exact import
+    - raw bare open-web impact support remains deferred
+- UBIQ supported-band carpet bound surface: green
+  - slice id: `impact_lnw_plus_ci_bound_surface_v1`
+  - source: official UBIQ fire/acoustic floor table PDF, page `7`
+  - catalog:
+    `packages/catalogs/src/floor-systems/ubiq-open-web-supported-band-carpet-bound-rows.ts`
+  - engine:
+    `packages/engine/src/impact-lnw-plus-ci-bound-surface.test.ts`
+  - workbench:
+    `apps/web/features/workbench/floor-family-regressions.test.ts`
+  - focused validation:
+    - targeted engine regression pack: `5` files, `296` tests, green
+    - full web suite during the slice: `101` files, `615` tests, green
+  - pinned surface:
+    - bound floor-system catalog now totals `23` rows
+    - `18` UBIQ carpet rows expose official `Ln,w+CI <=45`
+    - requested `Ln,w+CI` is supported as a bound; requested `Ln,w`, `CI`, and
+      field continuations stay closed from this source
+  - selected next floor slice:
+    `bound_metric_report_surface_completion_v1`
+  - interpretation:
+    - the combined-metric source gap is closed for runtime/card support
+    - the remaining risk is user-facing report/criteria/reference wording that
+      still assumes every impact bound is `LnWUpperBound`
+- Bound metric report/reference completion: green
+  - slice id: `bound_metric_report_surface_completion_v1`
+  - workbench:
+    - `apps/web/features/workbench/compose-workbench-report.ts`
+    - `apps/web/features/workbench/dutch-impact-reference.ts`
+    - `apps/web/features/workbench/impact-field-guides.ts`
+    - `apps/web/features/workbench/impact-product-catalog-panel.tsx`
+  - tests:
+    - `apps/web/features/workbench/compose-workbench-report-bound-metrics.test.ts`
+    - `apps/web/features/workbench/impact-field-guides-bound-metrics.test.ts`
+  - focused validation:
+    - targeted web report/reference/guide pack: `4` files, `103` tests, green
+    - final broad validation: catalog/engine/web typecheck and lint green,
+      full engine `108` files / `811` tests green, full web `103` files /
+      `618` tests green, `pnpm build` green with known `sharp/@img`
+      optional-package warnings and the existing Next.js TypeScript plugin
+      recommendation, and `git diff --check` green
+  - pinned surface:
+    - report markdown shows `Ln,w+CI upper bound` where that is the owned bound
+    - target `Ln,w` math does not use combined `Ln,w+CI` bounds
+    - Dutch impact references keep combined bounds as staged proxies, not
+      compliance verdicts
+    - field-guide copy says combined bounds are not valid guide-base `Ln,w`
+  - follow-up floor slice:
+    `ubiq_lnw_plus_ci_bound_history_guard_v1` is now closed
+  - interpretation:
+    - the report/reference wording gap is closed, and the route-history /
+      hostile-input stability gap is now also closed by the follow-up guard
 - open-box dry-package fragmentation trace/card matrix: green
   - slice id: `open_box_dry_package_fragmentation_trace_matrix_v1`
   - no solver, catalog, source, selector, support, or workbench runtime behavior
@@ -172,7 +285,7 @@ Current verified result:
     `2 x 16 mm` lower packages
   - interpretation:
     - canonical/split/tagged variants stay on the current
-      `family_general` source-backed estimate at `56.7%` fit
+      `family_general` source-backed estimate at `59.3%` fit
     - reordered input remains live but drops to `low_confidence` at `29%` fit
     - this checkpoint does not open bare open-web raw carrier support
 - raw-floor hostile-input answer/card matrix: green
@@ -1356,11 +1469,17 @@ These are the most likely next useful tests. They are not currently defended eno
   - current status:
     - closed
   - landed decision:
-    - keep helper-heavy noncanonical `gypsum_board + rockwool + gypsum_board + open_web_steel_floor` on a same-family `low_confidence` continuation
-    - do not treat it as a fail-closed weaker-carrier bug
-    - do not promote it to the defended contiguous `FL-26` family-general package
+    - historical 2026-04-09 posture: keep helper-heavy noncanonical
+      `gypsum_board + rockwool + gypsum_board + open_web_steel_floor` on a
+      same-family `low_confidence` continuation
+    - superseded on 2026-04-14: after the `FL-24` resilient topology
+      correction and exact-only flag, this package is impact-fail-closed
+    - still do not promote it to the defended contiguous `FL-26`
+      family-general package
   - landed reason:
-    - the imported exact corpus already contains visible `FL-24` open-web rows with direct `2 x 13 mm` plasterboard lower lining
+    - superseded source reading: `FL-24` requires resilient ceiling,
+      `rockwool`, and `2 x 13 mm` boards rather than direct
+      `2 x 13 mm` plasterboard lower lining
     - the live stack still has split lower-board topology plus extra fill and no explicit `INEX FLOOR` top package
     - current notes/warnings therefore correctly hold it below the narrower same-family corridor
   - landed scope:
@@ -1392,7 +1511,9 @@ These are the most likely next useful tests. They are not currently defended eno
   - landed reason:
     - the boundary decision itself was already correct
     - the real adjacent defect was that schedule-equivalent split board entry drifted back to screening-only because packed schedule equivalence was still coupled to material matching
-    - the landed fix restores parity without promoting the continuation beyond the already-frozen conservative `FL-24`-anchored low-confidence lane
+    - superseded on 2026-04-14: the parity lane is now fail-closed with the
+      same impact-support posture in canonical and split forms instead of being
+      an `FL-24`-anchored low-confidence lane
   - current validation:
     - targeted engine: `2` files, `4` tests, green
     - targeted workbench: `2` files, `2` tests, green
@@ -1481,7 +1602,9 @@ These are the most likely next useful tests. They are not currently defended eno
     - remaining TUAS open-box rows need new visible/support surfaces rather than another safe same-package import
     - UBIQ still has one bounded next decision inside explicit support-form reasoning:
       - either a source-backed package variant exists inside the defended `FL-24 -> FL-26 -> FL-28` corridor
-      - or the honest answer is to keep `FL-23/25/27` deferred as the materially weaker band
+      - or, at that historical checkpoint, the honest answer was to keep
+        `FL-23/25/27` deferred as the materially weaker band; superseded on
+        `2026-04-14` by exact-only correction import
   - current status:
     - closed
   - pause baseline:
@@ -1843,12 +1966,17 @@ These are the most likely next useful tests. They are not currently defended eno
   - the second widened negative pass is now also defended:
     - broader concrete-plus-board hybrids that infer ceiling-board shapes but should still remain screening-only / field-`Rw` closed
     - helper-heavy steel-joist rows that must not inherit the concrete reopening rule
-  - still open:
-    - open-web helper-heavy noncanonical rows whose direct boundary posture is now frozen but whose broader parity surface is not yet fully defended
+  - closed follow-up:
+    - open-web helper-heavy noncanonical rows now have both the direct boundary
+      posture and the first broader parity surface defended
 - broader mixed floor/wall generated grids:
-  - broader seeded long-chain families beyond the current first deterministic save/load-aware chain and compact representative seeded-family matrix
-  - duplicate/swap permutations beyond the current first widened grid
-  - wider preset-family case sets beyond the current heavy-concrete plus concrete exacts, Knauf timber exacts, Dataholz timber exacts, open-box exacts, CLT exacts, open-web exacts, and hollow-core cohort after the current partial-edit reset surface
+  - second-pass implementation review on 2026-04-14 confirmed the broad generated
+    family grids already exist on both web and engine routes
+  - the follow-up no-widening output-card snapshot guard is now also closed by
+    `apps/web/features/workbench/mixed-study-mode-output-card-snapshot-grid.test.ts`
+  - the grid now pins full user-facing output-card status/value snapshots across
+    direct split detours, replayed mixed histories, partial-edit restore, and
+    save/load roundtrips
 - `R7a` upper-EPS branch-design slice is now closed:
   - exact-only row is landed with a dedicated `eps_floor_insulation_board` surface
   - near-miss `generic_fill + screed` negatives are defended
@@ -2190,8 +2318,16 @@ The next phase is only complete when all of these are true:
 1. standard wall corridor still stays green
 2. standard floor corridor still stays green
 3. wall and floor output-card parity packs still stay green
-4. mixed-stack torture coverage is widened beyond the current first deterministic longer chain and first complementary generated duplicate/swap grid
-   The representative anchors, compact representative seeded-family matrix, first generated split-detour matrix, first generated edit-history matrix, first complementary duplicate/swap grid, and first deterministic longer chain already exist; the remaining step is to widen that surface into broader seeded chain families and wider family grids.
+4. mixed-stack torture coverage stays green across the broad generated family
+   grid already verified on 2026-04-14:
+   - `32` web route cases
+   - `32` engine route cases
+   - duplicate/swap/remove/rebuild paths
+   - partial-edit plus cross-mode restore paths
+   - save/load roundtrips
+   The explicit output-card status/value snapshot parity guard across that
+   existing grid is now implemented and target-green; do not create another
+   broad family grid unless a future classified red shows a missing route shape.
 5. no new widening has been merged without source-backed or benchmark-backed evidence
 6. every newly opened lane is labeled honestly on route and export surfaces
 7. any new red route-surface contract is first classified as solver, support-bucket, or stale-surface drift before logic changes are proposed
@@ -2206,8 +2342,8 @@ Do this in order:
 4. keep under-described combined direct-fixed CLT stacks deferred against the exact anchors unless the source row is imported deliberately
 5. keep `C11c` deferred after `tuas_c11c_wet_stack_anomaly_audit_v1` unless source correction or frequency-level evidence explains the weak tuple
 6. keep the closed `mixed_floor_wall_seeded_route_history_expansion_v1` first
-   heavy-composite target frozen; the optional open-box mixed-history boundary is
-   deferred
+   heavy-composite target frozen; keep the now-closed open-box mixed-history
+   boundary frozen as its own no-widening store-history/card guard
 7. keep `dataholz_clt_source_truth_audit_v1` frozen as the latest source-led
    no-widening guard before any broad raw-floor widening
 8. keep `raw_concrete_helper_permutation_answer_guard_v1` frozen as the latest
@@ -2236,7 +2372,7 @@ Do this in order:
 11. keep `ubiq_open_web_packaged_lane_trace_matrix_v1` frozen as the latest
     UBIQ packaged lower-lane guard:
     - canonical, raw split, and tagged split open-web lower packages stay on
-      `family_general` at `56.7%` fit
+      `family_general` at `59.3%` fit
     - reordered lower-package input stays live but is pinned as
       `low_confidence` at `29%` fit
     - this is not permission to open bare open-web raw carrier support
@@ -2247,6 +2383,169 @@ Do this in order:
       time
     - wall selector behavior work needs a fresh classified red or a separate
       evidence-backed behavior plan
-12. keep `gdmtxa04a` estimate-only until a future source-backed material surface exists
+13. keep `gdmtxa04a` estimate-only until a future source-backed material surface exists
+14. keep the now-closed `source_gap_candidate_research_re_rank_v1` frozen:
+    - Dataholz `GDMTXA04A`, TUAS `C11c`, and raw bare open-box/open-web impact
+      candidates remain deferred
+    - the selected UBIQ weak-band guard is now closed:
+      `ubiq_open_web_weaker_band_posture_guard_v1`
+    - runtime widening is still blocked until the follow-up
+      `ubiq_weak_band_exact_import_source_mapping_v1` lands or is explicitly
+      superseded
 
-This order is the safest one because the previous broad blockers are already closed; the immediate risk is silently broadening behavior before the next route can be explained by value, origin, basis/source, support bucket, and workbench card status. Raw-floor widening is now better measured, including hostile long-split and reordered negatives, but still has the largest fake-confidence blast radius. CLT combined behavior is better anchored, but `C11c` remains deliberately deferred and `GDMTXA04A` remains estimate-only. The wall trace and raw hostile-input slices reduced selector and raw-route uncertainty without weakening frozen corridors, so the next move is re-ranking rather than automatic widening.
+2026-04-14 re-rank and implementation result:
+
+- second-pass implementation review verified that the broader generated mixed
+  route-history grid already exists:
+  - `32` generated web route cases
+  - `32` generated engine route cases
+  - targeted web mixed pack: `3` files / `5` tests green on 2026-04-14
+  - targeted engine mixed pack: `2` files / `2` tests green on 2026-04-14
+- therefore the selected no-widening implementation slice was
+  `mixed_floor_wall_output_card_snapshot_grid_v1`
+- it is now implemented and target-green:
+  - focused card grid: `1` file / `2` tests green
+  - adjacent web mixed pack including the new guard: `4` files / `7` tests green
+  - adjacent engine mixed pack: `2` files / `2` tests green
+  - web and engine typechecks green
+  - focused new-file ESLint green
+- it pins user-facing output-card status/value snapshots across direct and
+  replayed mixed histories before any behavior widening
+- it remains no-widening; no solver/catalog/selector/support/runtime behavior
+  changed
+- the next selected planning slice was
+  `source_gap_candidate_research_re_rank_v1`
+- it supersedes older historical wording that says the open-box mixed-history
+  boundary is still deferred or that the broad generated mixed grid still needs
+  to be created
+- follow-up source re-rank result:
+  - `source_gap_candidate_research_re_rank_v1` is now implemented with
+    `packages/engine/src/source-gap-candidate-re-rank-contract.test.ts`
+  - focused source re-rank contract: `1` file / `3` tests green
+  - selected next slice at that checkpoint:
+    `ubiq_open_web_weaker_band_posture_guard_v1`
+  - Dataholz `GDMTXA04A`, TUAS `C11c`, and raw bare open-box/open-web impact
+    remain deferred; UBIQ `FL-23/25/27` gets no-runtime posture tests before any
+    exact/bound import decision
+- UBIQ weak-band posture guard result:
+  - `ubiq_open_web_weaker_band_posture_guard_v1` is now implemented with:
+    - `packages/engine/src/ubiq-open-web-weaker-band-posture-guard.test.ts`
+    - `apps/web/features/workbench/ubiq-open-web-weaker-band-card-posture.test.ts`
+  - focused engine posture guard: `1` file / `3` tests green
+  - focused workbench card posture guard: `1` file / `1` test green
+  - narrow runtime behavior changed so open-web upper-only weak-band packages no
+    longer borrow `FL-24/26/28` lower-treatment impact estimates
+  - follow-up exact import result:
+    `ubiq_weak_band_exact_import_source_mapping_v1` imported `54` exact-only
+    `FL-23/25/27` rows, corrected `FL-24` to the resilient lower-treatment
+    topology, and made `FL-24` exact-only so raw/split lower-only helper stacks
+    do not borrow it as a low-confidence continuation
+  - supported-band exact completion result:
+    `ubiq_open_web_supported_band_finish_completion_v1` imported `36`
+    supported resilient-band exact rows across bare INEX and timber + acoustic
+    underlay, then `impact_lnw_plus_ci_bound_surface_v1` imported the `18`
+    supported carpet rows as honest `Ln,w+CI <=45` bound support
+  - follow-up report/reference result:
+    `bound_metric_report_surface_completion_v1` closed the remaining combined
+    bound wording/math gap on report, Dutch reference, guide, and product-bound
+    surfaces
+  - follow-up history/hostile-input result:
+    `ubiq_lnw_plus_ci_bound_history_guard_v1` closed the first UBIQ
+    combined-bound route-history gap:
+    - source-equivalent split/reordered stacks stay on the official
+      `Ln,w+CI <=45` bound
+    - malformed near-misses stay off official bound provenance
+    - workbench duplicate/split/reorder/save-load and floor/wall detours keep
+      official bound cards stable
+    - final broad validation is green: catalog/engine/web typecheck and lint,
+      full engine `109` files / `813` tests, full web `104` files / `620`
+      tests, `pnpm build`, and `git diff --check`
+  - follow-up near-miss posture result:
+    `ubiq_lnw_plus_ci_near_miss_estimate_posture_decision_v1` closed the
+    remaining UBIQ combined-bound false-confidence gap:
+    - malformed open-web + carpet/foam combined-bound stacks now fail closed
+      for impact outputs after official `Ln,w+CI <=45` bound matching falls off
+    - derived predictor fallback no longer borrows nearby bare/timber
+      `FL-24/26/28` rows for those malformed stacks
+    - targeted engine near-miss/bound pack is green at `3` files / `7` tests
+    - targeted workbench near-miss/history/report pack is green at `3` files /
+      `5` tests
+    - final broad validation after the follow-up source-gap matrix is green:
+      catalog/engine/web typecheck and lint, full engine `111` files / `821`
+      tests, full web `106` files / `627` tests, `pnpm build`, and
+      `git diff --check`
+  - follow-up remaining-source-gap posture result:
+    `remaining_source_gap_posture_matrix_v1` closed the next no-widening
+    matrix:
+    - `C11c` stays deferred / impact-fail-closed
+    - `GDMTXA04A` stays estimate-only instead of exact-reopened
+    - raw bare open-web/open-box impact and helper-only timber/open-web
+      negatives remain deferred
+    - targeted engine matrix is green at `1` file / `6` tests
+    - targeted workbench card matrix is green at `1` file / `6` tests
+  - follow-up source-evidence re-rank result:
+    `raw_bare_open_web_open_box_source_evidence_re_rank_v1` is implemented as
+    a no-runtime source contract
+    - TUAS open-box evidence is packaged measured systems, not raw bare carrier
+      impact evidence
+    - UBIQ open-web evidence is INEX / finish / resilient-ceiling system-table
+      evidence, not raw bare carrier impact evidence
+    - raw bare open-web/open-box impact remains fail-closed
+    - validation is green: targeted engine source-evidence contract `1` file /
+      `3` tests; full engine `112` files / `824` tests; engine typecheck/lint;
+      `git diff --check`
+	  - follow-up packaged open-box design guard:
+	    `tuas_open_box_same_package_fragmentation_design_v1` is implemented as a
+	    no-runtime generated route/card guard
+    - all `15` imported TUAS open-box exact rows preserve exact id, source
+      values, field continuations, support buckets, and workbench card
+      statuses/values under source-equivalent contiguous fragmentation
+	    - final validation is green: targeted engine/workbench guards `1` file /
+	      `2` tests each; full engine `113` files / `826` tests; full web `107`
+	      files / `629` tests; engine/web typecheck and lint; `pnpm build`;
+	      `git diff --check`
+
+	  - follow-up UBIQ packaged open-web finish-family guard:
+	    `ubiq_open_web_packaged_finish_family_design_v1` is implemented as a
+	    no-runtime generated exact/bound route-card guard
+	    - all `90` UBIQ open-web exact rows and all `21` UBIQ open-web bound rows
+	      preserve exact/bound source ids, metric basis, support buckets, and
+	      workbench card statuses/values under source-equivalent contiguous
+	      fragmentation
+	    - weak-band carpet rows stay exact-only; supported-band carpet rows stay
+	      `Ln,w+CI <=45` bound-only
+	    - final validation is green: targeted engine `1` file / `3` tests;
+	      targeted workbench `1` file / `2` tests; full engine `114` files /
+	      `829` tests; full web `108` files / `631` tests; engine/web typecheck
+	      and lint; `pnpm build`; `git diff --check`
+
+	  - follow-up UBIQ packaged open-web near-miss/drop-off matrix:
+	    `ubiq_open_web_packaged_finish_near_miss_matrix_v1` is implemented as a
+	    no-runtime generated route/card guard
+	    - representative weak-band exact-only, supported-band exact, and
+	      supported-band `Ln,w+CI <=45` bound packages now pin source-critical
+	      deck/board/fill drift and valid finish switches
+	    - source-critical mismatches do not retain official exact/bound provenance
+	    - final validation is green: targeted engine `1` file / `1` test;
+	      targeted workbench `1` file / `1` test; full engine `115` files /
+	      `830` tests; full web `109` files / `632` tests; engine/web typecheck
+	      and lint; `pnpm build`
+
+	  - follow-up UBIQ packaged open-web history-replay matrix:
+	    `ubiq_open_web_packaged_finish_history_replay_matrix_v1`
+	    is implemented as a no-runtime workbench store/history guard
+	    - weak carpet exact, supported carpet bound, extra-board near-miss,
+	      carpet-to-timber valid switch, and timber wrong-deck fallback routes
+	      survive duplicate/split/reorder/save-load and floor/wall detours
+	    - official exact/bound provenance is retained only for source-equivalent
+	      and valid-switch histories; source-critical near-misses remain off
+	      official exact/bound provenance
+	    - validation is green: targeted workbench `1` file / `1` test; adjacent
+	      UBIQ web pack `3` files / `4` tests; full engine `115` files / `830`
+	      tests; full web `110` files / `633` tests; engine/web typecheck and
+	      lint; `pnpm build`; `git diff --check`
+
+	  - selected next planning slice:
+	    `post_ubiq_source_gap_re_rank_v1`
+
+This order is the safest one because the previous broad blockers are already closed; the immediate risk is silently broadening behavior before the next route can be explained by value, origin, basis/source, support bucket, and workbench/report status. Raw-floor widening is now better measured, including hostile long-split and reordered negatives, but still has the largest fake-confidence blast radius. CLT combined behavior is better anchored, but `C11c` remains deliberately deferred and `GDMTXA04A` remains estimate-only. The wall trace, raw hostile-input slices, generated mixed route-history grid, output-card snapshot guard, source candidate re-rank, UBIQ weak-band posture guard, UBIQ weak-band exact import, UBIQ supported-band exact completion, `Ln,w+CI` bound-surface import, report/reference completion, UBIQ combined-bound history guard, UBIQ near-miss fail-closed guard, remaining-source-gap posture matrix, raw bare open-web/open-box source re-rank, packaged open-box same-package guard, UBIQ packaged open-web finish-family guard, UBIQ packaged open-web near-miss/drop-off matrix, and UBIQ packaged open-web history-replay matrix reduced selector, raw-route, projection, source-selection, weak-band, supported-band, combined-bound, user-facing wording, history-replay, near-miss, deferred-gap, packaged-open-box, packaged-open-web, and raw-carrier false-confidence uncertainty without weakening frozen corridors, so the next move is a post-UBIQ source-gap re-rank rather than automatic broad raw-floor widening.

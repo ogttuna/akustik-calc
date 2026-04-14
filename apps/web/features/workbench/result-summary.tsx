@@ -247,6 +247,13 @@ export function ResultSummary({ result, targetLnwDb, targetRwDb, warnings }: Res
                 }
               />
             ) : null}
+            {typeof lowerBoundImpact?.LnWPlusCIUpperBound === "number" ? (
+              <MetricCard
+                label="Ln,w+CI upper bound"
+                value={`<= ${formatDecimal(lowerBoundImpact.LnWPlusCIUpperBound)} dB`}
+                detail="Conservative combined bound from the active impact support lane"
+              />
+            ) : null}
             {dynamicImpactTrace ? (
               <MetricCard
                 label="Impact lane"

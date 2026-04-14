@@ -305,6 +305,10 @@ export function CalculationTraceDropdown(props: { result: AssemblyCalculation | 
     traceRows.push({ label: "Ln,w upper bound", value: `≤ ${formatDecimal(lowerBound.LnWUpperBound)} dB` });
   }
 
+  if (studyMode === "floor" && lowerBound && typeof lowerBound.LnWPlusCIUpperBound === "number") {
+    traceRows.push({ label: "Ln,w+CI upper bound", value: `≤ ${formatDecimal(lowerBound.LnWPlusCIUpperBound)} dB` });
+  }
+
   // Formula notes (first few from dynamic trace)
   const formulaNotes: string[] = [
     ...(dynamicTrace?.notes ?? []).slice(0, 3),

@@ -484,6 +484,18 @@ describe("curated floor-library sweep", () => {
           `${system.id}: expected Ln,w upper bound ${system.impactBounds.LnWUpperBound}, got ${result.lowerBoundImpact?.LnWUpperBound ?? "none"}`
         );
       }
+
+      if (result.lowerBoundImpact?.LnWPlusCIUpperBound !== system.impactBounds.LnWPlusCIUpperBound) {
+        failures.push(
+          `${system.id}: expected Ln,w+CI upper bound ${system.impactBounds.LnWPlusCIUpperBound ?? "none"}, got ${result.lowerBoundImpact?.LnWPlusCIUpperBound ?? "none"}`
+        );
+      }
+
+      if (result.lowerBoundImpact?.DeltaLwLowerBound !== system.impactBounds.DeltaLwLowerBound) {
+        failures.push(
+          `${system.id}: expected DeltaLw lower bound ${system.impactBounds.DeltaLwLowerBound ?? "none"}, got ${result.lowerBoundImpact?.DeltaLwLowerBound ?? "none"}`
+        );
+      }
     }
 
     expect(failures).toEqual([]);
@@ -582,10 +594,10 @@ describe("curated floor-library sweep", () => {
     expect(failures).toEqual([]);
   });
 
-  it("every bound-only floor row can continue into conservative field-side upper bounds when K and V are provided", () => {
+  it("every bound-only floor row with a lab Ln,w bound can continue into conservative field-side upper bounds when K and V are provided", () => {
     const failures: string[] = [];
 
-    for (const system of BOUND_FLOOR_SYSTEMS) {
+    for (const system of BOUND_FLOOR_SYSTEMS.filter((entry) => typeof entry.impactBounds.LnWUpperBound === "number")) {
       const result = calculateAssembly(buildLayersFromCriteria(system.match));
       const lowerBoundImpact = result.boundFloorSystemMatch?.lowerBoundImpact ?? result.lowerBoundImpact;
 
@@ -610,10 +622,10 @@ describe("curated floor-library sweep", () => {
     expect(failures).toEqual([]);
   });
 
-  it("every bound-only floor row can continue into conservative direct field-side upper bounds on the main lane", () => {
+  it("every bound-only floor row with a lab Ln,w bound can continue into conservative direct field-side upper bounds on the main lane", () => {
     const failures: string[] = [];
 
-    for (const system of BOUND_FLOOR_SYSTEMS) {
+    for (const system of BOUND_FLOOR_SYSTEMS.filter((entry) => typeof entry.impactBounds.LnWUpperBound === "number")) {
       const result = calculateAssembly(buildLayersFromCriteria(system.match), {
         impactFieldContext: {
           fieldKDb: 2,
@@ -632,6 +644,34 @@ describe("curated floor-library sweep", () => {
         typeof lowerBoundImpact.LPrimeNTwUpperBound !== "number"
       ) {
         failures.push(`${system.id}: expected direct L'n,w / L'nT,w upper bounds on the main lane`);
+      }
+    }
+
+    expect(failures).toEqual([]);
+  });
+
+  it("combined Ln,w+CI-only bound rows do not derive split field-side impact bounds", () => {
+    const failures: string[] = [];
+
+    for (const system of BOUND_FLOOR_SYSTEMS.filter((entry) => typeof entry.impactBounds.LnWPlusCIUpperBound === "number")) {
+      const result = calculateAssembly(buildLayersFromCriteria(system.match), {
+        impactFieldContext: {
+          fieldKDb: 2,
+          receivingRoomVolumeM3: 50
+        }
+      });
+      const lowerBoundImpact = result.lowerBoundImpact;
+
+      if (lowerBoundImpact?.LnWPlusCIUpperBound !== system.impactBounds.LnWPlusCIUpperBound) {
+        failures.push(`${system.id}: expected Ln,w+CI bound to survive field context without conversion`);
+      }
+
+      if (
+        typeof lowerBoundImpact?.LnWUpperBound === "number" ||
+        typeof lowerBoundImpact?.LPrimeNWUpperBound === "number" ||
+        typeof lowerBoundImpact?.LPrimeNTwUpperBound === "number"
+      ) {
+        failures.push(`${system.id}: expected no split Ln,w or field-side upper bounds from a combined Ln,w+CI-only source`);
       }
     }
 

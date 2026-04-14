@@ -258,11 +258,11 @@ const CASES: readonly BoundaryCase[] = [
       { floorRole: "base_structure", id: "d", materialId: "open_web_steel_floor", thicknessMm: 300 }
     ],
     expected: {
-      basis: "mixed_predicted_plus_estimated_local_guide",
-      candidateIds: ["ubiq_fl24_open_web_steel_300_16mm_exact_lab_2026"],
-      estimateKind: "low_confidence",
+      basis: null,
+      candidateIds: null,
+      estimateKind: null,
       floorSystemMatchId: null,
-      statuses: LIVE_STATUSES
+      statuses: FAIL_CLOSED_STATUSES
     }
   },
   {

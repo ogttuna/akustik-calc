@@ -103,7 +103,7 @@ describe("floor packaged-lane disjoint detours", () => {
     }
   });
 
-  it("keeps noncanonical open-web lower board-split topology on the conservative FL-24 continuation with blocker copy", () => {
+  it("keeps noncanonical open-web lower board-split topology fail-closed with blocker copy", () => {
     const result = calculateAssembly(
       [
         { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
@@ -114,14 +114,8 @@ describe("floor packaged-lane disjoint detours", () => {
       { targetOutputs: LAB_OUTPUTS }
     );
 
-    expect(result.floorSystemEstimate?.kind).toBe("low_confidence");
-    expect(result.impact?.basis).toBe("predictor_floor_system_low_confidence_estimate");
-    expect(result.impact?.estimateCandidateIds).toEqual(["ubiq_fl24_open_web_steel_300_16mm_exact_lab_2026"]);
+    expect(result.floorSystemEstimate).toBeNull();
+    expect(result.impact).toBeNull();
     expect(hasCeilingBoardBlocker(result.warnings)).toBe(true);
-    expect(
-      result.floorSystemEstimate?.notes.some((note: string) =>
-        /Family-general lightweight-steel matching was withheld because the lower-only ceiling-board topology is split/i.test(note)
-      )
-    ).toBe(true);
   });
 });

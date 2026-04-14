@@ -130,7 +130,7 @@ function getRequestedOutputValue(
     case "CI,50-2500":
       return result.impact?.CI50_2500;
     case "Ln,w+CI":
-      return result.impact?.LnWPlusCI;
+      return result.impact?.LnWPlusCI ?? result.lowerBoundImpact?.LnWPlusCIUpperBound;
     case "DeltaLw":
       return result.impact?.DeltaLw ?? result.lowerBoundImpact?.DeltaLwLowerBound;
     case "L'n,w":

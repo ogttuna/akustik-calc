@@ -190,8 +190,8 @@ function applyPartialSplitToStore(store: StoreHandle, testCase: RouteMixedGenera
 
   store.getState().duplicateRow(target.id);
 
-  let currentRows = store.getState().rows;
-  let targetIndex = currentRows.findIndex((row) => row.id === target.id);
+  const currentRows = store.getState().rows;
+  const targetIndex = currentRows.findIndex((row) => row.id === target.id);
 
   expect(targetIndex).toBeGreaterThanOrEqual(0);
 
@@ -286,7 +286,7 @@ function applyOppositeModeNoiseChain(
   store.getState().duplicateRow(target!.id);
 
   let currentRows = store.getState().rows;
-  let targetIndex = currentRows.findIndex((row) => row.id === target!.id);
+  const targetIndex = currentRows.findIndex((row) => row.id === target!.id);
 
   expect(targetIndex).toBeGreaterThanOrEqual(0);
 

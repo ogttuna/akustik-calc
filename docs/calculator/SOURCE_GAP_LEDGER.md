@@ -1,6 +1,6 @@
 # Dynamic Calculator Source Gap Ledger
 
-Last reviewed: 2026-04-13
+Last reviewed: 2026-04-14
 
 Purpose:
 
@@ -23,6 +23,107 @@ Important scope note:
 
 Current planning implication:
 
+- 2026-04-14 second-pass plan selection and implementation:
+  - the no-widening route/card projection guard
+    `mixed_floor_wall_output_card_snapshot_grid_v1`
+    is now implemented and target-green
+  - it did not import rows, change source truth, or alter formulas
+  - source/internet research was completed under
+    `source_gap_candidate_research_re_rank_v1`
+  - that re-rank selected exactly one posture guard:
+    `ubiq_open_web_weaker_band_posture_guard_v1`
+  - the selected UBIQ guard is now implemented; it found and fixed a narrow
+    false-confidence route where open-web upper-only weak-band input borrowed
+    `FL-24/26/28` lower-treatment impact ratings
+  - `ubiq_weak_band_exact_import_source_mapping_v1` is now implemented:
+    - `FL-23`, `FL-25`, and `FL-27` have `54` exact-only correction rows
+    - those rows are source-backed exact matches, not family-estimate anchors
+    - direct `2 x 13 mm` open-web stacks now map to `FL-23`, while `FL-24`
+      requires the resilient lower-treatment topology
+    - `FL-24` is exact-only until the supported-band finish completion slice
+      re-audits whether it can safely participate in family estimates
+  - `ubiq_open_web_supported_band_finish_completion_v1` is now implemented:
+    - exact UBIQ open-web coverage for `FL-23/24/25/26/27/28` is `90` rows
+    - `FL-24/26/28` supported resilient-band coverage is `36` exact rows:
+      `18` bare INEX rows plus `18` timber + acoustic underlay rows
+    - bare supported-band rows are exact-only and cannot anchor nearby-family
+      estimates
+    - supported-band carpet values were deferred from exact import because the
+      official table gives `Ln,w+CI <= 45`, not exact `Ln,w`
+  - `impact_lnw_plus_ci_bound_surface_v1` is now implemented:
+    - the bound model has a first-class `LnWPlusCIUpperBound` metric
+    - UBIQ `FL-24/26/28` supported-band carpet + foam-underlay rows are now
+      imported as `18` official `Ln,w+CI <=45` bound rows
+    - those rows support `Ln,w+CI` only; they do not imply exact `Ln,w`, exact
+      `CI`, or field continuations
+  - `bound_metric_report_surface_completion_v1` is now implemented:
+    - report/reference/guide surfaces display the combined bound as
+      `Ln,w+CI`, not as `Ln,w`
+    - target `Ln,w` gap math, Dutch impact references, and guide-base status
+      remain honest about the combined-bound limitation
+    - broad validation after the follow-up history guard is green:
+      catalog/engine/web typecheck and lint, full engine `109` files / `813`
+      tests, full web `104` files / `620` tests, `pnpm build`, and
+      `git diff --check`
+  - `ubiq_lnw_plus_ci_bound_history_guard_v1` is now implemented:
+    - canonical, `49`-layer split, and role-reordered UBIQ carpet stacks keep
+      the same official `Ln,w+CI <=45` bound
+    - disjoint carpet, extra boards, missing fill, and wrong-depth near-misses
+      stay off official bound provenance
+    - workbench duplicate/split/reorder/save-load and floor/wall detours keep
+      the official bound card stable
+  - `ubiq_lnw_plus_ci_near_miss_estimate_posture_decision_v1` is now
+    implemented:
+    - malformed UBIQ open-web + carpet/foam combined-bound near-misses now fail
+      closed for impact outputs once official `Ln,w+CI <=45` bound matching
+      falls off
+    - the engine prevents those stacks from re-entering through broader
+      lightweight-steel family estimates or derived predictor fallback
+    - assembly keeps only screening/live `Rw`; exact and field impact outputs
+      stay unsupported
+    - final broad validation after the follow-up source-gap matrix is green:
+      catalog/engine/web typecheck and lint, full engine `111` files / `821`
+      tests, full web `106` files / `627` tests, `pnpm build`, and
+      `git diff --check`
+  - follow-up source-gap matrix result:
+    `remaining_source_gap_posture_matrix_v1`
+    - pin the remaining deferred source gaps before any broad runtime widening
+    - cover `C11c`, `GDMTXA04A`, raw bare open-box/open-web impact, and
+      helper-only timber/open-web negatives on value, origin, basis/source,
+      support bucket, and workbench card surfaces
+  - source-evidence re-rank result:
+    `raw_bare_open_web_open_box_source_evidence_re_rank_v1`
+    - raw bare open-web/open-box impact remains fail-closed because current
+      source evidence supports packaged systems, not bare carrier impact tests
+  - packaged open-box guard result:
+    `tuas_open_box_same_package_fragmentation_design_v1`
+    - all `15` TUAS open-box exact rows now preserve exact route/card answers
+      under source-equivalent contiguous fragmentation
+  - packaged open-web guard result:
+    `ubiq_open_web_packaged_finish_family_design_v1`
+    - all `90` UBIQ open-web exact rows and all `21` UBIQ open-web bound rows
+      now preserve exact/bound route/card answers under source-equivalent
+      contiguous fragmentation
+    - weak-band carpet rows remain exact-only; supported-band carpet rows remain
+      `Ln,w+CI <=45` bound-only
+  - packaged open-web near-miss/drop-off result:
+    `ubiq_open_web_packaged_finish_near_miss_matrix_v1`
+    - representative weak-band exact-only, supported-band exact, and
+      supported-band bound rows now pin source-critical deck/board/fill drift and
+      valid finish switches on route/card surfaces
+    - source-critical mismatches do not retain official exact/bound provenance
+  - packaged open-web history-replay result:
+    `ubiq_open_web_packaged_finish_history_replay_matrix_v1`
+    - replayed exact/bound/near-miss/valid-switch states through realistic
+      workbench duplicate/split/reorder/save-load and floor/wall mode detours
+    - source-equivalent histories keep official route/card values; near-misses
+      remain off official exact/bound provenance
+  - next selected planning slice:
+    `post_ubiq_source_gap_re_rank_v1`
+    - re-rank candidates before any behavior widening
+  - Dataholz `GDMTXA04A`, TUAS `C11c`, and raw bare open-box/open-web impact
+    support remain deferred until stronger source/material/frequency evidence
+    exists
 - the answer-origin docs gap is now explicit and has a first executable trace
   matrix:
   - formulas are active, but exact source rows, predictor lanes, bound lanes,
@@ -113,7 +214,7 @@ Current planning implication:
       - `ubiq_fl26_open_web_steel_200_16mm_exact_lab_2026`
       - `ubiq_fl26_open_web_steel_400_16mm_exact_lab_2026`
     - canonical/split/tagged variants are pinned as `family_general` at
-      `56.7%` fit with live floor and field output cards
+      `59.3%` fit with live floor and field output cards
     - reordered lower-package input remains live but is pinned as
       `low_confidence` at `29%` fit with duplicate-role warning coverage
     - this checkpoint does not open bare open-web raw carrier support
@@ -389,11 +490,14 @@ Current planning implication:
   - neutral same-total non-packable mixed lower-board schedules also stay on that same `FL-26` branch even though the predictor blocker remains visible
   - disjoint/intervening lower-board topology no longer stays on that defended `FL-26` family-general tier; it now steps down to `low_confidence` and surfaces explicit blocker copy
   - disjoint/intervening lower-helper topology in `ceiling_fill` or `ceiling_cavity` also no longer stays on that defended `FL-26` family-general tier; it now steps down to `low_confidence` on the same conservative surface where predictor derivation was already fail-closed
-  - a helper-heavy noncanonical `gypsum_board + rockwool + gypsum_board + open_web_steel_floor` package is now explicitly frozen on a conservative same-family `low_confidence` continuation:
-    - candidate id: `ubiq_fl24_open_web_steel_300_16mm_exact_lab_2026`
-    - blocker reason: split lower-only ceiling-board topology
-    - posture reason: visible `FL-24` direct `2 x 13 mm` plasterboard support exists, but the live stack still lacks the explicit `INEX FLOOR` top package and introduces extra fill
-  - that adjacent boundary is therefore not the same thing as the defended contiguous `FL-26` package and should stay a dedicated continuation class, not an implicit widening
+  - superseded on 2026-04-14: the helper-heavy noncanonical
+    `gypsum_board + rockwool + gypsum_board + open_web_steel_floor` package no
+    longer borrows `FL-24`; after the resilient topology correction and
+    `familyEstimateEligible: false`, it is fail-closed for impact instead of a
+    low-confidence continuation
+  - that adjacent boundary is therefore not the same thing as the defended
+    contiguous `FL-26` package and should stay outside impact estimates unless a
+    matching source row is imported
   - direct final-row entry and duplicate/swap/remove-rebuild store detours now also converge back onto that same branch
 - current test anchors:
   - `packages/engine/src/floor-role-topology.test.ts`
@@ -566,9 +670,12 @@ Current planning implication:
   - the first same-family UBIQ sibling import pass is now complete:
     - FL-28 exact `16 mm INEX>FLOOR` open-web rows at `200`, `300`, and `400` are now imported
     - the visible `FL-28 (FRL/D)` open-web `400` row for the conservative `2 x 16 mm` ceiling family is now imported
-  - the UBIQ corridor decision is now closed without widening:
-    - the defended `FL-24 -> FL-26 -> FL-28` corridor still has no clean new package-variant import beyond the already imported rows
-    - only treat `FL-23/25/27` as a deliberate defer/widen decision with explicit posture tests, not as the default follow-on import
+  - the UBIQ corridor decision is superseded by the 2026-04-14 exact import:
+    - `FL-24` now stays exact-only after the resilient topology correction
+    - `FL-23/25/27` are imported as exact-only correction rows, not deferred
+      widening anchors
+    - `FL-26/28` remain the current supported-band family-estimate surface until
+      the finish completion slice re-audits the official table
     - a second official UBIQ brochure exposes the same open-web FRL/D `2 x 16 mm` package as `FL-26 (FRL/D)` instead of `FL-28 (FRL/D)`
     - that conflict is now frozen as provenance-only drift, not as a widening or runtime rename prompt
   - prefer official-table neighborhoods before any generic lightweight-steel broadening
@@ -874,7 +981,9 @@ This section is implementation-backed from the current local catalog import, not
   - `C2c`, `C3c`, `C4c`, `C7c`, `C11c`
   - reason:
     - these remain worthwhile future imports after the staged-upper and heavy dry-top CLT tiers are now landed through `C5`
-    - the selected next step is now CLT-local again because the hybrid open-box branch is closed and `C7` is the narrowest remaining exact-row debt
+    - at the 2026-04-10 re-rank, the selected next step was CLT-local again
+      because the hybrid open-box branch was closed and `C7` was the narrowest
+      remaining exact-row debt
   - re-rank result on `2026-04-10`:
     - closed slices:
       - `tuas_x3_staged_upper_clt_surface_design_v1`
@@ -1013,164 +1122,185 @@ This section is implementation-backed from the current local catalog import, not
 
 ### UBIQ Open-Web Steel Corpus
 
-- exact open-web rows in the catalog: `18`
-  - `ubiq_fl24_open_web_steel_200_16mm_exact_lab_2026`
-  - `ubiq_fl24_open_web_steel_200_exact_lab_2026`
-  - `ubiq_fl24_open_web_steel_300_16mm_exact_lab_2026`
-  - `ubiq_fl24_open_web_steel_300_exact_lab_2026`
-  - `ubiq_fl24_open_web_steel_400_16mm_exact_lab_2026`
-  - `ubiq_fl24_open_web_steel_400_exact_lab_2026`
-  - `ubiq_fl26_open_web_steel_200_16mm_exact_lab_2026`
-  - `ubiq_fl26_open_web_steel_200_exact_lab_2026`
-  - `ubiq_fl26_open_web_steel_300_16mm_exact_lab_2026`
-  - `ubiq_fl26_open_web_steel_300_exact_lab_2026`
-  - `ubiq_fl26_open_web_steel_400_16mm_exact_lab_2026`
-  - `ubiq_fl26_open_web_steel_400_exact_lab_2026`
-  - `ubiq_fl28_open_web_steel_200_16mm_exact_lab_2026`
-  - `ubiq_fl28_open_web_steel_200_exact_lab_2026`
-  - `ubiq_fl28_open_web_steel_300_16mm_exact_lab_2026`
-  - `ubiq_fl28_open_web_steel_300_exact_lab_2026`
-  - `ubiq_fl28_open_web_steel_400_16mm_exact_lab_2026`
-  - `ubiq_fl28_open_web_steel_400_exact_lab_2026`
+- source used for the active open-web table:
+  <https://www.ubiq.au/wp-content/uploads/2023/02/INEX-FLOOR-FLOOR-FIRE-ACOUSTIC.pdf>
+- exact open-web rows in the catalog for `FL-23/24/25/26/27/28`: `90`
+  - weak direct-band rows: `54`
+    - `FL-23`: `2 x 13 mm` direct lower lining
+    - `FL-25`: `2 x 16 mm` direct lower lining
+    - `FL-27`: `3 x 16 mm` direct lower lining
+    - coverage: `3` joist depths x `2` INEX deck thicknesses x `3` finishes
+    - all are `familyEstimateEligible: false`
+  - supported resilient-band rows: `36`
+    - `FL-24`: `2 x 13 mm` resilient lower-treatment topology
+    - `FL-26`: `2 x 16 mm` resilient lower-treatment topology
+    - `FL-28`: `3 x 16 mm` resilient lower-treatment topology
+    - current exact imports cover the bare INEX lane and timber + underlay lane
+      for `200 / 300 / 400 mm` joists and `16 / 19 mm` INEX decks
+    - `FL-24` rows are exact-only (`familyEstimateEligible: false`) after the
+      topology correction
+    - bare rows are also exact-only; keep `FL-26/28` timber rows as the current
+      family-estimate anchors
+  - supported-band carpet bound rows: `18`
+    - `FL-24`, `FL-26`, and `FL-28` resilient lower-treatment topology
+    - coverage: `3` joist depths x `2` INEX deck thicknesses x `3` supported
+      families
+    - official metric: `Ln,w+CI <=45` through `LnWPlusCIUpperBound`
+    - not exact `Ln,w`; do not derive `CI`, `L'n,w`, `L'nT,w`, or `L'nT,50`
+- bound open-web rows in the catalog: `23`
+  - `18` UBIQ supported-band carpet `Ln,w+CI` bound rows
+  - `5` legacy conservative `Ln,w` upper-bound rows
 - bound FL-33 open-web rows in the catalog: `3`
   - `ubiq_fl33_open_web_steel_200_lab_2026`
   - `ubiq_fl33_open_web_steel_300_lab_2026`
   - `ubiq_fl33_open_web_steel_400_lab_2026`
-  - current meaning:
-  - the active predictor branches already cite the full currently imported UBIQ open-web neighborhood
-  - the first same-family UBIQ sibling import pass is complete, so exact-match and bound-match coverage include the missing FL-28 `16 mm` siblings and the `400 mm` conservative bound sibling
-  - the adjacent-family widening passes are complete for `FL-24` and `FL-26`, so direct exact coverage now reaches both source-backed neighbors below the FL-28 corridor without dropping into the much weaker `FL-23/25/27` band
-  - the lightweight-steel `lower_only` family-general fallback can now legitimately prefer the imported `FL-26` `2 x 16 mm` corridor when the visible ceiling package matches that lower profile more closely than `FL-28`
-  - widening here should next mine adjacent packaged-system variants from the official UBIQ tables before any raw open-web impact lane is considered
-  - the current source trace also has a visible-code drift:
-    - the exact `3 x 16 mm` open-web family is visibly labeled `UBIQ FL-28` in the May 2023 brochure
-    - the bound `2 x 16 mm` open-web FRL/D family is visibly labeled `UBIQ FL-28 (FRL/D)` there
-    - local `ubiq_fl33_*` ids should therefore be treated as stable internal ids pending cleanup, not as the authoritative visible row code from the current source URL
+  - these remain stable internal ids for the FRL/D conservative open-web bound
+    lane; visible brochure family-code drift is documented and should not be
+    fixed by ad hoc runtime renames
+- current posture:
+  - exact direct lower-board weak-band stacks now land on `FL-23/25/27`
+  - upper-only weak-band visible packages still fail closed for impact and do
+    not borrow `FL-24/26/28` lower-treatment ratings
+  - weak-band rows can match exact user stacks but cannot seed nearby-family
+    recommendations or interpolation
+  - direct `2 x 13 mm` stacks no longer collide with `FL-24`; `FL-24` now
+    requires `ubiq_resilient_ceiling`, `rockwool`, and `2 x 13 mm` boards
+  - raw or split lower-only helper stacks that do not exactly expose the
+    resilient `FL-24` source topology now fail closed instead of borrowing
+    `FL-24` as a low-confidence continuation
+  - supported-band carpet stacks now receive official `Ln,w+CI <=45` bound
+    provenance where the exact source topology is visible
+  - supported-band carpet stacks still keep exact `Ln,w`, exact `CI`, and field
+    continuations closed unless another source/formula lane owns them
 
 ### UBIQ Candidate Import Backlog
 
-- visible source rows from the May 2023 official acoustic table on page `7`:
-  - `UBIQ FL-28`
-  - open-web trusses
-  - `3 x 16 mm` resilient ceiling package
-  - joist depths `200`, `300`, `400`
-  - both `16 mm` and `19 mm INEX>FLOOR` variants are published
-- visible source rows from the May 2023 official FRL/D table on page `14`:
-  - `UBIQ FL-28 (FRL/D)`
-  - open-web trusses
-  - `2 x 16 mm` resilient ceiling package
-  - joist depths `200`, `300`, `400`
-  - `19 mm INEX>FLOOR`
-- current imported exact subset:
-  - `UBIQ FL-24`
-  - `UBIQ FL-26`
-  - open-web trusses
-  - resilient `2 x 16 mm` fire-rated plasterboard ceiling package with `145 mm` insulation and `65 mm` cavity
-  - joist depths `200`, `300`, `400`
-  - both `16 mm` and `19 mm INEX>FLOOR` variants are now imported
-  - `UBIQ FL-28`
-  - open-web trusses
-  - direct `2 x 13 mm` plasterboard ceiling package for `FL-24`
-  - joist depths `200`, `300`, `400`
-  - resilient `3 x 16 mm` fire-rated plasterboard ceiling package with `145 mm` insulation and `65 mm` cavity for `FL-28`
-  - imported depths: `200`, `300`, `400` across all three imported families
-- current imported bound subset:
-  - the `200`, `300`, and `400` local `ubiq_fl33_*` open-web bound rows are imported
-  - the visible May 2023 source family behind that bound package is `UBIQ FL-28 (FRL/D)`
-- completed first UBIQ import tier:
-  - same-family exact siblings from visible `UBIQ FL-28`:
-    - `200 mm` joist, `16 mm INEX>FLOOR`
-      - `Rw / Rw+Ctr = 62 / 55`
-      - `Ln,w / Ln,w+Ci` with timber + underlay: `52 / 51`
-    - `300 mm` joist, `16 mm INEX>FLOOR`
-      - `Rw / Rw+Ctr = 63 / 57`
-      - `Ln,w / Ln,w+Ci` with timber + underlay: `51 / 49`
-    - `400 mm` joist, `16 mm INEX>FLOOR`
-      - `Rw / Rw+Ctr = 63 / 57`
-      - `Ln,w / Ln,w+Ci` with timber + underlay: `50 / 48`
-  - same-family bound sibling from visible `UBIQ FL-28 (FRL/D)`:
-    - `400 mm` joist, `19 mm INEX>FLOOR`
-      - `Rw / Rw+Ctr = 63 / 58`
-      - timber + underlay: `Ln,w <= 51`
-      - carpet + underlay: `Ln,w+Ci <= 45`
-  - current value:
-    - exact-match and bound-match coverage now include the missing siblings inside the exact same published open-web package families the product already uses
-    - this tightened corridor coverage without inventing a new topology or broadening across support-form ambiguity
-- completed adjacent-family import tier:
-  - visible `UBIQ FL-24`:
-    - `200 mm` joist:
-      - `16 mm INEX>FLOOR` -> `Rw / Rw+Ctr = 59 / 52`, timber + underlay `Ln,w / Ln,w+Ci = 55 / 54`
-      - `19 mm INEX>FLOOR` -> `Rw / Rw+Ctr = 60 / 53`, timber + underlay `Ln,w / Ln,w+Ci = 55 / 54`
-    - `300 mm` joist:
-      - `16 mm INEX>FLOOR` -> `Rw / Rw+Ctr = 60 / 54`, timber + underlay `Ln,w / Ln,w+Ci = 54 / 52`
-      - `19 mm INEX>FLOOR` -> `Rw / Rw+Ctr = 61 / 55`, timber + underlay `Ln,w / Ln,w+Ci = 54 / 52`
-    - `400 mm` joist:
-      - `16 mm INEX>FLOOR` -> `Rw / Rw+Ctr = 60 / 54`, timber + underlay `Ln,w / Ln,w+Ci = 53 / 51`
-      - `19 mm INEX>FLOOR` -> `Rw / Rw+Ctr = 61 / 55`, timber + underlay `Ln,w / Ln,w+Ci = 53 / 51`
-  - current value:
-    - this extends direct exact coverage one step below FL-28 while still staying inside the `45 or less` carpet corridor
-  - visible `UBIQ FL-26`:
-    - `200 mm` joist:
-      - `16 mm INEX>FLOOR` -> `Rw / Rw+Ctr = 60 / 53`, timber + underlay `Ln,w / Ln,w+Ci = 54 / 53`
-      - `19 mm INEX>FLOOR` -> `Rw / Rw+Ctr = 61 / 55`, timber + underlay `Ln,w / Ln,w+Ci = 54 / 53`
-    - `300 mm` joist:
-      - `16 mm INEX>FLOOR` -> `Rw / Rw+Ctr = 61 / 55`, timber + underlay `Ln,w / Ln,w+Ci = 53 / 51`
-      - `19 mm INEX>FLOOR` -> `Rw / Rw+Ctr = 62 / 57`, timber + underlay `Ln,w / Ln,w+Ci = 53 / 51`
-    - `400 mm` joist:
-      - `16 mm INEX>FLOOR` -> `Rw / Rw+Ctr = 61 / 55`, timber + underlay `Ln,w / Ln,w+Ci = 53 / 51`
-      - `19 mm INEX>FLOOR` -> `Rw / Rw+Ctr = 62 / 57`, timber + underlay `Ln,w / Ln,w+Ci = 53 / 51`
-  - current value:
-    - exact coverage now spans the defended `FL-24 -> FL-26 -> FL-28` open-web corridor while still staying inside the `45 or less` carpet band
-    - the next widening question is therefore whether to stop at this corridor or deliberately enter the materially weaker `FL-23/25/27` band
-- active remaining UBIQ open-web backlog:
-  - imported adjacent-family exact corridor:
-    - `FL-24`
-    - `FL-26`
-    - current reason:
-      - both families stay at `45 or less` on carpet + underlay across the visible `200 / 300 / 400 mm` corridor
-      - their timber + underlay values stay inside the defended `55 -> 53` band immediately below FL-28
-      - this makes them credible one-step and two-step widenings without broadening into the much weaker band
-  - explicitly deferred weaker families from the same acoustic table:
-    - `FL-23`
-    - `FL-25`
-    - `FL-27`
-    - current reason:
-      - their timber + underlay values stay around `71 / 70 / 70` or `70 / 69 / 69`
-      - their carpet + underlay values stay around `64 / 63` or `63 / 62`
-      - that is materially below the current supported FL-28 corridor, so importing them next would broaden the lightweight-steel family too aggressively
-  - implementation note:
-    - the next step is no longer another automatic adjacent-family import
-    - the `2026-04-10` UBIQ corridor decision is now closed:
-      - the product stays stopped at the defended `FL-24 -> FL-26 -> FL-28` corridor for now
-      - no corridor-internal package variant was strong enough to justify a new import
-      - only after a future explicit posture slice should `FL-23/25/27` be reconsidered
-- source-trace note:
-  - the current `sourceUrl` for local `ubiq_fl32_*` and `ubiq_fl33_*` rows resolves to the May 2023 brochure
-  - in that brochure the visible FRL/D steel-joist family code is `FL-17 (FRL/D)` and the visible open-web FRL/D family code is `FL-28 (FRL/D)`
-  - a second current official brochure now also matters:
-    - `INEX-FLOOR-FLOOR-SOLUTIONS-16PP-2023-1.pdf`
-    - there the visible open-web FRL/D family code is `FL-26 (FRL/D)` for the same `2 x 16 mm` package
-  - the `2026-04-09` provenance/boundary-freeze slice is now closed:
-    - keep the current internal ids and labels stable as internal runtime references
-    - keep the visible-family drift documented explicitly in docs and contract tests
-    - do not rename published-family lanes ad hoc just because the source brochure uses different visible FRL/D family codes
+- closed on 2026-04-14:
+  - `ubiq_open_web_weaker_band_posture_guard_v1`
+  - `ubiq_weak_band_exact_import_source_mapping_v1`
+  - `ubiq_open_web_supported_band_finish_completion_v1`
+  - `impact_lnw_plus_ci_bound_surface_v1`
+  - `bound_metric_report_surface_completion_v1`
+  - `ubiq_lnw_plus_ci_bound_history_guard_v1`
+  - `ubiq_lnw_plus_ci_near_miss_estimate_posture_decision_v1`
 - current contract anchors:
-  - `packages/engine/src/floor-source-corpus-contract.test.ts`
+  - `packages/engine/src/ubiq-open-web-weak-band-exact-source-mapping.test.ts`
+  - `packages/engine/src/ubiq-open-web-weaker-band-posture-guard.test.ts`
+  - `packages/engine/src/ubiq-open-web-supported-band-finish-completion.test.ts`
+  - `packages/engine/src/impact-lnw-plus-ci-bound-surface.test.ts`
+  - `apps/web/features/workbench/ubiq-open-web-weaker-band-card-posture.test.ts`
+  - `apps/web/features/workbench/compose-workbench-report-bound-metrics.test.ts`
+  - `apps/web/features/workbench/impact-field-guides-bound-metrics.test.ts`
+  - `packages/engine/src/ubiq-lnw-plus-ci-bound-history-guard.test.ts`
+  - `apps/web/features/workbench/ubiq-lnw-plus-ci-bound-history-guard.test.ts`
+  - `packages/engine/src/ubiq-lnw-plus-ci-near-miss-estimate-posture.test.ts`
+  - `apps/web/features/workbench/ubiq-lnw-plus-ci-near-miss-estimate-posture.test.ts`
+  - `packages/engine/src/remaining-source-gap-posture-matrix.test.ts`
+  - `apps/web/features/workbench/remaining-source-gap-posture-card-matrix.test.ts`
   - `packages/engine/src/ubiq-candidate-backlog-contract.test.ts`
-- `2026-04-09` primary-source recheck:
-  - rechecked against the May 2023 official UBIQ brochure:
-    - `FL-24` and `FL-26` still sit in the defended corridor immediately below `FL-28`
-    - `FL-23`, `FL-25`, and `FL-27` still sit in the materially weaker band
-  - current reason to keep deferring `FL-23/25/27` remains intact:
-    - timber + underlay values stay around `71 / 70 / 70` or `70 / 69 / 69`
-    - carpet + underlay values stay around `64 / 63` or `63 / 62`
-  - decision impact:
-    - do not use UBIQ weaker-band widening as the first post-wall corridor slice
-    - provenance/source-trace cleanup is now closed as a docs plus contract freeze rather than a runtime rename
-    - the current cross-brochure FRL/D conflict also does not justify a new corridor import
-    - if UBIQ work resumes again, the next honest UBIQ move is either:
-      - a deliberate weaker-band defer/widen decision with explicit posture tests
-      - or a later source-backed package-variant widening inside the current defended corridor
+  - `packages/engine/src/floor-source-corpus-contract.test.ts`
+  - `packages/engine/src/raw-bare-open-web-open-box-source-evidence-rerank-contract.test.ts`
+- latest closed no-widening slice:
+  `raw_bare_open_web_open_box_source_evidence_re_rank_v1`
+  - result: raw bare open-web/open-box impact remains fail-closed because the
+    current source corpus supports packaged systems, not bare carrier impact
+    tests
+  - source contract pins the TUAS and UBIQ evidence boundaries before any
+    future behavior widening
+  - validation: targeted engine source-evidence contract `1` file / `3` tests
+    green; full engine suite `112` files / `824` tests green; engine
+    typecheck/lint and `git diff --check` green
+- follow-up completed slice:
+  `tuas_open_box_same_package_fragmentation_design_v1`
+  - implemented as a no-runtime generated route/card guard over all `15`
+    imported TUAS open-box exact rows
+  - source-equivalent contiguous fragmentation preserves exact id, source
+    values, field continuations, support buckets, and workbench card
+    statuses/values
+  - final validation is green: targeted engine/workbench guards `1` file / `2`
+    tests each; full engine `113` files / `826` tests; full web `107` files /
+    `629` tests; engine/web typecheck and lint; `pnpm build`;
+    `git diff --check`
+- follow-up completed slice:
+  `ubiq_open_web_packaged_finish_family_design_v1`
+  - implemented as a no-runtime generated route/card guard over all `90` imported
+    UBIQ open-web exact rows and all `21` imported UBIQ open-web bound rows
+  - source-equivalent contiguous fragmentation preserves exact/bound id, source
+    metric basis, support buckets, and workbench card statuses/values
+  - weak-band carpet exact rows stay exact-only; supported-band carpet rows stay
+    `Ln,w+CI <=45` bound-only
+  - final validation is green: targeted engine `1` file / `3` tests; targeted
+    workbench `1` file / `2` tests; full engine `114` files / `829` tests; full
+    web `108` files / `631` tests; engine/web typecheck and lint; `pnpm build`;
+    `git diff --check`
+- follow-up completed slice:
+  `ubiq_open_web_packaged_finish_near_miss_matrix_v1`
+  - implemented as a no-runtime generated route/card guard over representative
+    weak-band exact-only, supported-band exact, and supported-band
+    `Ln,w+CI <=45` bound packages
+  - source-critical deck/board/fill drift does not retain official exact/bound
+    provenance
+  - valid finish switches route to the other official UBIQ exact or bound row
+  - final validation is green: targeted engine `1` file / `1` test; targeted
+    workbench `1` file / `1` test; full engine `115` files / `830` tests; full
+    web `109` files / `632` tests; engine/web typecheck and lint; `pnpm build`
+- follow-up completed slice:
+  `ubiq_open_web_packaged_finish_history_replay_matrix_v1`
+  - stayed inside the UBIQ packaged open-web INEX deck / finish / lower-system
+    surface and pinned edit-history replay before any runtime widening
+  - exact, bound, near-miss, and valid finish-switch card states survive
+    duplicate/split/reorder/save-load and floor/wall mode detours
+  - validation is green: targeted web guard `1` file / `1` test; adjacent UBIQ
+    web pack `3` files / `4` tests; full engine `115` files / `830` tests; full
+    web `110` files / `633` tests; engine/web typecheck and lint; `pnpm build`;
+    `git diff --check`
+- selected next planning slice:
+  `post_ubiq_source_gap_re_rank_v1`
+- still deferred:
+  - raw bare open-web impact support
+  - raw bare open-box impact support
+  - UBIQ FRL/D visible-code renames unless a dedicated provenance-only cleanup
+    is selected
+- `2026-04-14` source re-rank:
+  - source links rechecked:
+    - Dataholz `GDMTXA04A` component page:
+      <https://www.dataholz.eu/en/components/intermediate-floor/detail/kz/gdmtxa04a.htm>
+    - UBIQ fire/acoustic floor table PDF:
+      <https://www.ubiq.au/wp-content/uploads/2023/02/INEX-FLOOR-FLOOR-FIRE-ACOUSTIC.pdf>
+    - TUAS measured floor dataset:
+      <https://data.mendeley.com/datasets/y83p8mpryd/2>
+    - TUAS dataset article / PubMed record:
+      <https://pubmed.ncbi.nlm.nih.gov/37492232/>
+  - Dataholz `GDMTXA04A` remains deferred from visible exact reopening:
+    - the official page confirms the `65 mm` top layer is still described by
+      mass only, not by an explicit material surface
+    - local `dry_floating_gypsum_fiberboard 65 mm` must stay a convenience
+      fixture for exact-id resolution, not a generic visible exact lane
+  - TUAS `C11c` remains deferred:
+    - the TUAS/Mendeley dataset is credible measured data, but the row remains
+      anomalously weak beside landed combined CLT anchors and needs
+      frequency/source explanation before exact import
+  - raw bare open-box/open-web impact remains deferred:
+    - TUAS describes tested floors with at least a covering and often floating
+      floor/ceiling treatments
+    - UBIQ evidence is package-table evidence, not a bare open-web carrier lane
+    - the follow-up `raw_bare_open_web_open_box_source_evidence_re_rank_v1`
+      contract now pins this as a closed no-runtime decision:
+      - TUAS open-box rows are measured packaged systems
+      - UBIQ open-web rows are INEX deck / finish / resilient-ceiling systems
+      - the next safe implementation direction is
+        `tuas_open_box_same_package_fragmentation_design_v1`, not raw bare
+        impact widening
+  - selected guard:
+    `ubiq_open_web_weaker_band_posture_guard_v1`
+    - reason: `FL-23`, `FL-25`, and `FL-27` have explicit official source
+      values, but they are materially weaker than the defended
+      `FL-24 -> FL-26 -> FL-28` corridor
+    - implementation result: engine and workbench posture guards are now in
+      place, and open-web upper-only weak-band packages fail closed for impact
+      instead of borrowing `FL-24/26/28` lower-treatment estimates
+    - follow-up result: `ubiq_weak_band_exact_import_source_mapping_v1` imported
+      the exact-only weak-band rows and corrected `FL-24` topology
 
 ### Dataholz Timber-Frame Corpus
 
@@ -1206,9 +1336,22 @@ This section is implementation-backed from the current local catalog import, not
 
 Scope note:
 
-- this ledger ranks source-family research, not the active implementation slice
-- the active implementation slice selected on `2026-04-13` is
-  `wall_selector_wider_trace_matrix_v1`
+- this ledger now ranks the selected UBIQ weak-band exact-import source mapping
+  and UBIQ combined-bound history/near-miss guards as closed before any
+  unrelated source-family widening
+- the no-widening `mixed_floor_wall_output_card_snapshot_grid_v1` guard is
+  implemented; the source re-rank is implemented; the UBIQ weak-band posture
+  guard is implemented; the UBIQ weak-band exact import is implemented; the
+  UBIQ supported-band finish completion is implemented; the `Ln,w+CI` bound
+  surface is implemented; the report-surface completion is implemented; the
+  UBIQ combined-bound history guard is implemented; the UBIQ combined-bound
+  near-miss posture guard is implemented; the remaining source-gap posture
+  matrix is implemented; the raw bare open-web/open-box source-evidence re-rank
+  is implemented; the TUAS open-box same-package fragmentation guard is
+  implemented; the UBIQ packaged open-web finish-family guard is implemented;
+  the UBIQ packaged open-web near-miss/drop-off matrix is implemented; the UBIQ
+  packaged open-web history-replay matrix is implemented; the next selected
+  planning slice is `post_ubiq_source_gap_re_rank_v1`
 - raw-floor, CLT-local, UBIQ, and Dataholz source-family widening remains
   deferred unless a future candidate first gets value/origin/support/card trace
   evidence

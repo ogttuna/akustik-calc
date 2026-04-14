@@ -116,7 +116,7 @@ function getOutputValue(
     case "DeltaLw":
       return result.impact?.DeltaLw ?? result.lowerBoundImpact?.DeltaLwLowerBound;
     case "Ln,w+CI":
-      return result.impact?.LnWPlusCI;
+      return result.impact?.LnWPlusCI ?? result.lowerBoundImpact?.LnWPlusCIUpperBound;
     case "L'n,w":
       return result.impact?.LPrimeNW ?? result.lowerBoundImpact?.LPrimeNWUpperBound;
     case "L'nT,w":

@@ -20,6 +20,7 @@ import {
 import { getImpactConfidenceForBasis } from "./impact-confidence";
 import { buildImpactPredictorInputFromLayerStack } from "./impact-predictor-input";
 import { buildUniformImpactMetricBasis } from "./impact-metric-basis";
+import { hasBoundOnlyUbiqOpenWebCarpetCombinedProfile } from "./bound-only-floor-near-miss";
 import { isResolvedHeavyConcreteCarrierEligible } from "./heavy-concrete-carrier-eligibility";
 import { deriveLightweightSteelFl28Estimate } from "./lightweight-steel-fl28-estimate";
 import { round1 } from "./math";
@@ -812,6 +813,20 @@ export function deriveFloorSystemEstimate(
     currentProfile === "combined" &&
     hasLaminateUnderlayFinishInput(layers) &&
     !hasSourceBackedOpenBoxLaminateUnderlayPair(layers);
+  const lightweightSteelOpenWebUpperOnlyTierHold =
+    structuralFamily === "lightweight_steel" &&
+    baseStructureLayer?.material.id === "open_web_steel_floor" &&
+    (currentProfile === "upper_only" || currentProfile === "heavy_floating");
+  // UBIQ publishes carpet + foam-underlay open-web rows as a combined
+  // Ln,w+CI upper bound only. If exact bound matching falls off, do not borrow
+  // nearby bare/timber exact rows to fabricate exact Ln,w, CI, or field values.
+  const lightweightSteelOpenWebCarpetBoundOnlyTierHold =
+    structuralFamily === "lightweight_steel" &&
+    hasBoundOnlyUbiqOpenWebCarpetCombinedProfile(layers);
+
+  if (lightweightSteelOpenWebCarpetBoundOnlyTierHold) {
+    return null;
+  }
 
   if (structuralFamily === "lightweight_steel") {
     const fl28Estimate = deriveLightweightSteelFl28Estimate(layers, recommendations);
@@ -844,7 +859,11 @@ export function deriveFloorSystemEstimate(
     massTimberIncompleteBareInterpolationFinishTierHold ||
     massTimberMalformedLaminateUnderlayFinishTierHold ||
     openBoxCombinedAmbiguousUpperTierHold ||
-    openBoxMalformedLaminateUnderlayFinishTierHold
+    openBoxMalformedLaminateUnderlayFinishTierHold ||
+    // UBIQ FL-23/25/27 upper-only open-web source rows are materially weaker
+    // than the imported FL-24/26/28 lower-treatment corridor. Until those rows
+    // are imported explicitly, do not borrow lower-treatment ratings here.
+    lightweightSteelOpenWebUpperOnlyTierHold
   ) {
     return null;
   }

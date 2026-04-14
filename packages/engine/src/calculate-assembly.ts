@@ -34,6 +34,7 @@ import { classifyLayerRole, materialText } from "./airborne-topology";
 import { calculateDynamicAirborneResult } from "./dynamic-airborne";
 import { clamp, round1 } from "./math";
 import { buildEstimateWarnings, estimateRwDb } from "./estimate-rw";
+import { hasBoundOnlyUbiqOpenWebCarpetCombinedProfile } from "./bound-only-floor-near-miss";
 import { buildFloorSystemRatings } from "./floor-system-ratings";
 import { buildExactImpactFromSource } from "./impact-exact";
 import {
@@ -876,6 +877,10 @@ export function calculateAssembly(
       : inferredImpactLayers
         ? resolveLayers(inferredImpactLayers, catalog)
         : resolvedLayers;
+  const blocksBoundOnlyUbiqOpenWebCarpetDerivedEstimate =
+    !explicitPredictorInput &&
+    !exactImpactSource &&
+    hasBoundOnlyUbiqOpenWebCarpetCombinedProfile(impactResolvedLayers);
   const airborneResolvedLayers = (layers.some((layer) => Boolean(layer.floorRole)) || Boolean(inferredImpactLayers))
     ? coalesceMergeSafeAirborneLayers(resolvedLayers)
     : resolvedLayers;
@@ -981,20 +986,23 @@ export function calculateAssembly(
         resolvedLayers: derivedImpactResolvedLayers
       });
       const shouldUseDerived =
-        Boolean(
-          derivedImpactLane.floorSystemMatch ||
-            derivedImpactLane.boundFloorSystemMatch ||
-            derivedImpactLane.impactCatalogMatch ||
-            derivedImpactLane.predictorSpecificFloorSystemEstimate
-        ) ||
-        (!directNarrowImpact &&
-          !directImpactLane.floorSystemEstimate &&
-          !directImpactLane.boundFloorSystemEstimate &&
+        !blocksBoundOnlyUbiqOpenWebCarpetDerivedEstimate &&
+        (
           Boolean(
-            derivedImpactLane.narrowImpact ||
-              derivedImpactLane.floorSystemEstimate ||
-              derivedImpactLane.boundFloorSystemEstimate
-          ));
+            derivedImpactLane.floorSystemMatch ||
+              derivedImpactLane.boundFloorSystemMatch ||
+              derivedImpactLane.impactCatalogMatch ||
+              derivedImpactLane.predictorSpecificFloorSystemEstimate
+          ) ||
+          (!directNarrowImpact &&
+            !directImpactLane.floorSystemEstimate &&
+            !directImpactLane.boundFloorSystemEstimate &&
+            Boolean(
+              derivedImpactLane.narrowImpact ||
+                derivedImpactLane.floorSystemEstimate ||
+                derivedImpactLane.boundFloorSystemEstimate
+            ))
+        );
 
       if (shouldUseDerived) {
         predictorInput = derivedPredictorInput;

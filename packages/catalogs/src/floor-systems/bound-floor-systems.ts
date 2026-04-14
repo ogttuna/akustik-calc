@@ -1,8 +1,10 @@
 import type { BoundFloorSystem } from "@dynecho/shared";
 
 import { withFloorSystemSourceUrls } from "./source-url";
+import { UBIQ_OPEN_WEB_SUPPORTED_BAND_CARPET_BOUND_ROWS } from "./ubiq-open-web-supported-band-carpet-bound-rows";
 
 export const BOUND_FLOOR_SYSTEMS: readonly BoundFloorSystem[] = withFloorSystemSourceUrls([
+  ...UBIQ_OPEN_WEB_SUPPORTED_BAND_CARPET_BOUND_ROWS,
   {
     id: "ubiq_fl32_steel_200_lab_2026",
     label: "UBIQ FL-32 | 200 mm steel joist / purlin | INEX FLOOR 19 | 2 x 16 mm resilient ceiling",

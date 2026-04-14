@@ -49,10 +49,10 @@ describe("validation regime helpers", () => {
 
     const rows = getValidationFamilyModeRows(family!);
 
-    expect(formatValidationFamilyBenchmarkMix(family!)).toBe("8 exact · 5 estimate · 1 low confidence · 2 bound");
-    expect(rows.find((row) => row.id === "official_floor_system_bound")?.caseCount).toBe(1);
+    expect(formatValidationFamilyBenchmarkMix(family!)).toBe("8 exact · 4 estimate · 1 low confidence · 3 bound");
+    expect(rows.find((row) => row.id === "official_floor_system_bound")?.caseCount).toBe(2);
     expect(rows.find((row) => row.id === "family_specific_bound_estimate")?.caseCount).toBe(1);
-    expect(rows.find((row) => row.id === "family_general_estimate")?.caseCount).toBe(3);
+    expect(rows.find((row) => row.id === "family_general_estimate")?.caseCount).toBe(2);
     expect(rows.find((row) => row.id === "low_confidence_estimate")?.caseCount).toBe(1);
     expect(rows.find((row) => row.id === "official_floor_system")?.label).toMatch(/official floor-system exact/i);
   });

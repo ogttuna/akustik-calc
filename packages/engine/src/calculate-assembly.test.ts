@@ -4829,10 +4829,44 @@ describe("calculateAssembly", () => {
     expect(result.floorSystemMatch?.system.airborneRatings.RwCtr).toBe(59);
   });
 
-  it("matches the curated UBIQ FL-24 open-web steel 300 family", () => {
+  it("matches the official UBIQ FL-23 direct open-web steel 300 family", () => {
     const result = calculateAssembly([
       { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 13 },
       { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 13 },
+      { floorRole: "floor_covering", materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: 20 },
+      { floorRole: "floating_screed", materialId: "inex_floor_panel", thicknessMm: 19 },
+      { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: 300 }
+    ]);
+
+    expect(result.floorSystemMatch?.system.id).toBe("ubiq_fl23_open_web_steel_300_19mm_timber_underlay_exact_lab_2026");
+    expect(result.floorSystemMatch?.impact.LnW).toBe(71);
+    expect(result.floorSystemMatch?.impact.CI).toBe(-1);
+    expect(result.floorSystemMatch?.impact.LnWPlusCI).toBe(70);
+    expect(result.floorSystemMatch?.system.airborneRatings.RwCtr).toBe(44);
+  });
+
+  it("matches the official UBIQ FL-23 direct open-web steel 300 16 mm deck family", () => {
+    const result = calculateAssembly([
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 13 },
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 13 },
+      { floorRole: "floor_covering", materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: 20 },
+      { floorRole: "floating_screed", materialId: "inex_floor_panel", thicknessMm: 16 },
+      { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: 300 }
+    ]);
+
+    expect(result.floorSystemMatch?.system.id).toBe("ubiq_fl23_open_web_steel_300_16mm_timber_underlay_exact_lab_2026");
+    expect(result.floorSystemMatch?.impact.LnW).toBe(71);
+    expect(result.floorSystemMatch?.impact.CI).toBe(-1);
+    expect(result.floorSystemMatch?.impact.LnWPlusCI).toBe(70);
+    expect(result.floorSystemMatch?.system.airborneRatings.RwCtr).toBe(43);
+  });
+
+  it("matches the curated UBIQ FL-24 resilient open-web steel 300 family", () => {
+    const result = calculateAssembly([
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 13 },
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 145 },
+      { floorRole: "ceiling_cavity", materialId: "ubiq_resilient_ceiling", thicknessMm: 65 },
       { floorRole: "floor_covering", materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: 20 },
       { floorRole: "floating_screed", materialId: "inex_floor_panel", thicknessMm: 19 },
       { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: 300 }
@@ -4845,10 +4879,12 @@ describe("calculateAssembly", () => {
     expect(result.floorSystemMatch?.system.airborneRatings.RwCtr).toBe(55);
   });
 
-  it("matches the curated UBIQ FL-24 open-web steel 300 16 mm deck family", () => {
+  it("matches the curated UBIQ FL-24 resilient open-web steel 300 16 mm deck family", () => {
     const result = calculateAssembly([
       { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 13 },
       { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 145 },
+      { floorRole: "ceiling_cavity", materialId: "ubiq_resilient_ceiling", thicknessMm: 65 },
       { floorRole: "floor_covering", materialId: "engineered_timber_with_acoustic_underlay", thicknessMm: 20 },
       { floorRole: "floating_screed", materialId: "inex_floor_panel", thicknessMm: 16 },
       { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: 300 }
@@ -5992,7 +6028,7 @@ describe("calculateAssembly", () => {
     expect(result.impact?.estimateCandidateIds).toEqual(["dataholz_gdrtxa06a_timber_frame_dry_lab_2026"]);
   });
 
-  it("matches upstream steel broader family numbers on the assembly route", () => {
+  it("routes UBIQ open-web steel carpet predictor input to the official combined Ln,w+CI bound", () => {
     const result = calculateAssembly(
       [
         { materialId: "gypsum_board", thicknessMm: 12.5 },
@@ -6028,17 +6064,18 @@ describe("calculateAssembly", () => {
       }
     );
 
-    expect(result.impact?.basis).toBe("predictor_floor_system_family_general_estimate");
-    expect(result.impact?.LnW).toBe(51);
-    expect(result.impact?.CI).toBe(-1.7);
-    expect(result.impact?.LnWPlusCI).toBe(49.3);
-    expect(result.floorSystemRatings?.Rw).toBe(63.7);
-    expect(result.floorSystemRatings?.RwCtr).toBe(58.4);
-    expect(result.impact?.estimateCandidateIds).toEqual([
-      "ubiq_fl28_open_web_steel_300_exact_lab_2026",
-      "ubiq_fl28_open_web_steel_200_exact_lab_2026",
-      "ubiq_fl28_open_web_steel_400_exact_lab_2026"
-    ]);
+    expect(result.impact).toBeNull();
+    expect(result.floorSystemEstimate).toBeNull();
+    expect(result.boundFloorSystemMatch?.system.id).toBe(
+      "ubiq_fl28_open_web_steel_300_19mm_carpet_lnw_plus_ci_bound_lab_2026"
+    );
+    expect(result.lowerBoundImpact?.basis).toBe("official_floor_system_bound_support");
+    expect(result.lowerBoundImpact?.LnWPlusCIUpperBound).toBe(45);
+    expect(result.lowerBoundImpact?.LnWUpperBound).toBeUndefined();
+    expect(result.floorSystemRatings?.Rw).toBe(64);
+    expect(result.floorSystemRatings?.RwCtr).toBe(59);
+    expect(result.supportedTargetOutputs).toEqual(["Ln,w+CI"]);
+    expect(result.unsupportedTargetOutputs).toEqual(["Ln,w", "CI"]);
   });
 
   it("keeps near-match concrete timber-underlay visible-layer stacks on the Knauf concrete archetype lane", () => {

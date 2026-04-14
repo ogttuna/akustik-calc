@@ -56,6 +56,10 @@ function formatImpactSnippet(scenario: EvaluatedScenario): string {
     return ` · Ln,w <= ${formatDecimal(scenario.result.lowerBoundImpact.LnWUpperBound)} dB`;
   }
 
+  if (typeof scenario.result?.lowerBoundImpact?.LnWPlusCIUpperBound === "number") {
+    return ` · Ln,w+CI <= ${formatDecimal(scenario.result.lowerBoundImpact.LnWPlusCIUpperBound)} dB`;
+  }
+
   return "";
 }
 

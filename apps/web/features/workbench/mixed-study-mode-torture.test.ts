@@ -87,11 +87,6 @@ function createMemoryStorage(): Storage {
   };
 }
 
-function formatThicknessMm(value: number) {
-  const rounded = Math.round(value * 10) / 10;
-  return Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(1).replace(/\.0$/u, "");
-}
-
 function moveCurrentRowToIndex(useWorkbenchStore: {
   getState: () => {
     moveRow: (id: string, direction: "up" | "down") => void;
@@ -127,7 +122,7 @@ function getFloorValue(
     case "DeltaLw":
       return result.impact?.DeltaLw ?? result.lowerBoundImpact?.DeltaLwLowerBound;
     case "Ln,w+CI":
-      return result.impact?.LnWPlusCI;
+      return result.impact?.LnWPlusCI ?? result.lowerBoundImpact?.LnWPlusCIUpperBound;
     case "L'n,w":
       return result.impact?.LPrimeNW ?? result.lowerBoundImpact?.LPrimeNWUpperBound;
     case "L'nT,w":
@@ -984,7 +979,7 @@ describe("mixed study-mode torture", () => {
       useWorkbenchStore.getState().duplicateRow(floatingScreed!.id);
       useWorkbenchStore.getState().duplicateRow(concreteBase!.id);
 
-      let currentRows = useWorkbenchStore.getState().rows;
+      const currentRows = useWorkbenchStore.getState().rows;
       const duplicatedScreed = currentRows[currentRows.findIndex((row) => row.id === floatingScreed!.id) + 1];
       const duplicatedConcrete = currentRows[currentRows.findIndex((row) => row.id === concreteBase!.id) + 1];
       expect(duplicatedScreed).toBeTruthy();
@@ -1030,7 +1025,7 @@ describe("mixed study-mode torture", () => {
       useWorkbenchStore.getState().duplicateRow(floatingScreed!.id);
       useWorkbenchStore.getState().duplicateRow(concreteBase!.id);
 
-      let currentRows = useWorkbenchStore.getState().rows;
+      const currentRows = useWorkbenchStore.getState().rows;
       const duplicatedScreed = currentRows[currentRows.findIndex((row) => row.id === floatingScreed!.id) + 1];
       const duplicatedConcrete = currentRows[currentRows.findIndex((row) => row.id === concreteBase!.id) + 1];
       expect(duplicatedScreed).toBeTruthy();
@@ -1118,7 +1113,7 @@ describe("mixed study-mode torture", () => {
       useWorkbenchStore.getState().duplicateRow(ceilingBoard!.id);
       useWorkbenchStore.getState().duplicateRow(baseStructure!.id);
 
-      let currentRows = useWorkbenchStore.getState().rows;
+      const currentRows = useWorkbenchStore.getState().rows;
       const duplicatedBoard = currentRows[currentRows.findIndex((row) => row.id === ceilingBoard!.id) + 1];
       const duplicatedBase = currentRows[currentRows.findIndex((row) => row.id === baseStructure!.id) + 1];
       expect(duplicatedBoard).toBeTruthy();
@@ -1162,7 +1157,7 @@ describe("mixed study-mode torture", () => {
       useWorkbenchStore.getState().duplicateRow(ceilingBoard!.id);
       useWorkbenchStore.getState().duplicateRow(baseStructure!.id);
 
-      let currentRows = useWorkbenchStore.getState().rows;
+      const currentRows = useWorkbenchStore.getState().rows;
       const duplicatedBoard = currentRows[currentRows.findIndex((row) => row.id === ceilingBoard!.id) + 1];
       const duplicatedBase = currentRows[currentRows.findIndex((row) => row.id === baseStructure!.id) + 1];
       expect(duplicatedBoard).toBeTruthy();
@@ -1206,7 +1201,7 @@ describe("mixed study-mode torture", () => {
       useWorkbenchStore.getState().duplicateRow(floatingScreed!.id);
       useWorkbenchStore.getState().duplicateRow(concreteBase!.id);
 
-      let currentRows = useWorkbenchStore.getState().rows;
+      const currentRows = useWorkbenchStore.getState().rows;
       const duplicatedScreed = currentRows[currentRows.findIndex((row) => row.id === floatingScreed!.id) + 1];
       const duplicatedConcrete = currentRows[currentRows.findIndex((row) => row.id === concreteBase!.id) + 1];
       expect(duplicatedScreed).toBeTruthy();
@@ -1254,7 +1249,7 @@ describe("mixed study-mode torture", () => {
       useWorkbenchStore.getState().duplicateRow(ceilingBoard!.id);
       useWorkbenchStore.getState().duplicateRow(floorCovering!.id);
 
-      let currentRows = useWorkbenchStore.getState().rows;
+      const currentRows = useWorkbenchStore.getState().rows;
       const duplicatedBoard = currentRows[currentRows.findIndex((row) => row.id === ceilingBoard!.id) + 1];
       const duplicatedCovering = currentRows[currentRows.findIndex((row) => row.id === floorCovering!.id) + 1];
       expect(duplicatedBoard).toBeTruthy();
@@ -1302,7 +1297,7 @@ describe("mixed study-mode torture", () => {
       useWorkbenchStore.getState().duplicateRow(ceilingBoard!.id);
       useWorkbenchStore.getState().duplicateRow(floorCovering!.id);
 
-      let currentRows = useWorkbenchStore.getState().rows;
+      const currentRows = useWorkbenchStore.getState().rows;
       const duplicatedBoard = currentRows[currentRows.findIndex((row) => row.id === ceilingBoard!.id) + 1];
       const duplicatedCovering = currentRows[currentRows.findIndex((row) => row.id === floorCovering!.id) + 1];
       expect(duplicatedBoard).toBeTruthy();
@@ -1347,7 +1342,7 @@ describe("mixed study-mode torture", () => {
       useWorkbenchStore.getState().duplicateRow(ceilingBoard!.id);
       useWorkbenchStore.getState().duplicateRow(baseStructure!.id);
 
-      let currentRows = useWorkbenchStore.getState().rows;
+      const currentRows = useWorkbenchStore.getState().rows;
       const duplicatedBoard = currentRows[currentRows.findIndex((row) => row.id === ceilingBoard!.id) + 1];
       const duplicatedBase = currentRows[currentRows.findIndex((row) => row.id === baseStructure!.id) + 1];
       expect(duplicatedBoard).toBeTruthy();

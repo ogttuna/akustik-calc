@@ -85,6 +85,8 @@ export function getScenarioCorridorSummary(
           ? `L'n,w ${formatDecimal(result.impact.LPrimeNW)} dB`
           : typeof result?.lowerBoundImpact?.LnWUpperBound === "number"
             ? `Ln,w <= ${formatDecimal(result.lowerBoundImpact.LnWUpperBound)} dB`
+            : typeof result?.lowerBoundImpact?.LnWPlusCIUpperBound === "number"
+              ? `Ln,w+CI <= ${formatDecimal(result.lowerBoundImpact.LnWPlusCIUpperBound)} dB`
             : "Impact headline unavailable";
 
   return {
@@ -141,6 +143,10 @@ function getImpactComparableMetric(
 
   if (typeof result?.lowerBoundImpact?.LnWUpperBound === "number") {
     return { label: "Ln,w upper bound", value: result.lowerBoundImpact.LnWUpperBound };
+  }
+
+  if (typeof result?.lowerBoundImpact?.LnWPlusCIUpperBound === "number") {
+    return { label: "Ln,w+CI upper bound", value: result.lowerBoundImpact.LnWPlusCIUpperBound };
   }
 
   return null;

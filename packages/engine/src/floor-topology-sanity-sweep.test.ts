@@ -137,7 +137,7 @@ function getOutputValue(result: ReturnType<typeof calculateAssembly>, output: Re
     case "Ln,w":
       return result.impact?.LnW;
     case "Ln,w+CI":
-      return result.impact?.LnWPlusCI;
+      return result.impact?.LnWPlusCI ?? result.lowerBoundImpact?.LnWPlusCIUpperBound;
     case "DeltaLw":
       return result.impact?.DeltaLw ?? result.lowerBoundImpact?.DeltaLwLowerBound;
     case "L'n,w":

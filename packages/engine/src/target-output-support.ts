@@ -164,7 +164,10 @@ function isTargetOutputAvailable(
     case "CI,50-2500":
       return hasAvailableImpactOutput(input.impact, output);
     case "Ln,w+CI":
-      return hasAvailableImpactOutput(input.impact, output);
+      return (
+        hasAvailableImpactOutput(input.impact, output) ||
+        (countBoundSupportAsSupported && isFiniteNumber(input.lowerBoundImpact?.LnWPlusCIUpperBound))
+      );
     case "DeltaLw":
       return (
         hasAvailableImpactOutput(input.impact, output) ||

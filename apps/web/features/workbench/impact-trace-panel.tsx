@@ -266,6 +266,15 @@ export function ImpactTracePanel({ result }: ImpactTracePanelProps) {
               detail="Lab-side conservative ceiling preserved on the trace"
             />
             <MetricCard
+              label="Ln,w+CI upper bound"
+              value={
+                typeof lowerBoundImpact.LnWPlusCIUpperBound === "number"
+                  ? `<= ${formatDecimal(lowerBoundImpact.LnWPlusCIUpperBound)} dB`
+                  : "N/A"
+              }
+              detail="Combined low-frequency bound when the source does not publish split Ln,w and CI"
+            />
+            <MetricCard
               label="DeltaLw lower bound"
               value={
                 typeof lowerBoundImpact.DeltaLwLowerBound === "number"

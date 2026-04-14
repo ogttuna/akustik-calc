@@ -23,6 +23,7 @@ import {
 } from "@dynecho/shared";
 
 import { resolveBoundFloorSystemById } from "./bound-floor-system-match";
+import { hasBoundOnlyUbiqOpenWebCarpetCombinedProfile } from "./bound-only-floor-near-miss";
 import { buildFloorSystemRatings } from "./floor-system-ratings";
 import {
   resolveExactFloorSystemById
@@ -137,6 +138,9 @@ export function calculateImpactOnly(
   }
   let resolvedVisibleLayers = resolveLayers(visibleLayers, catalog);
   let resolvedSourceLayers = resolveLayers(sourceLayersInput, catalog);
+  const blocksBoundOnlyUbiqOpenWebCarpetDerivedEstimate =
+    hasBoundOnlyUbiqOpenWebCarpetCombinedProfile(resolvedVisibleLayers) ||
+    hasBoundOnlyUbiqOpenWebCarpetCombinedProfile(resolvedSourceLayers);
 
   let sourceMode: ImpactOnlySourceMode =
     options.sourceLayers && sourceLayersInput.length > 0 ? "source_layers" : "visible_stack";
@@ -230,20 +234,23 @@ export function calculateImpactOnly(
           resolvedLayers: derivedResolvedSourceLayers
         });
         const shouldUseDerived =
-          Boolean(
-            derivedImpactLane.floorSystemMatch ||
-              derivedImpactLane.boundFloorSystemMatch ||
-              derivedImpactLane.impactCatalogMatch ||
-              derivedImpactLane.predictorSpecificFloorSystemEstimate
-          ) ||
-          (!narrowImpact &&
-            !directImpactLane.floorSystemEstimate &&
-            !directImpactLane.boundFloorSystemEstimate &&
+          !blocksBoundOnlyUbiqOpenWebCarpetDerivedEstimate &&
+          (
             Boolean(
-              derivedImpactLane.narrowImpact ||
-                derivedImpactLane.floorSystemEstimate ||
-                derivedImpactLane.boundFloorSystemEstimate
-            ));
+              derivedImpactLane.floorSystemMatch ||
+                derivedImpactLane.boundFloorSystemMatch ||
+                derivedImpactLane.impactCatalogMatch ||
+                derivedImpactLane.predictorSpecificFloorSystemEstimate
+            ) ||
+            (!narrowImpact &&
+              !directImpactLane.floorSystemEstimate &&
+              !directImpactLane.boundFloorSystemEstimate &&
+              Boolean(
+                derivedImpactLane.narrowImpact ||
+                  derivedImpactLane.floorSystemEstimate ||
+                  derivedImpactLane.boundFloorSystemEstimate
+              ))
+          );
 
         if (shouldUseDerived) {
           predictorInput = derivedPredictorInput;
@@ -265,7 +272,7 @@ export function calculateImpactOnly(
       }
     }
 
-    if (!floorSystemEstimate && !boundFloorSystemEstimate) {
+    if (!blocksBoundOnlyUbiqOpenWebCarpetDerivedEstimate && !floorSystemEstimate && !boundFloorSystemEstimate) {
       const fallbackImpactLane = resolveLayerBasedImpactLane({
         catalog,
         exactImpact,

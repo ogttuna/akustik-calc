@@ -158,6 +158,27 @@ function buildImpactLane(
     };
   }
 
+  if (typeof lowerBoundImpact?.LnWPlusCIUpperBound === "number") {
+    const parsedTarget = parseTarget(targetLnwDb);
+
+    return {
+      companions:
+        typeof lowerBoundImpact.DeltaLwLowerBound === "number"
+          ? [{ label: "DeltaLw lower bound", valueLabel: `>= ${formatDecimal(lowerBoundImpact.DeltaLwLowerBound)} dB` }]
+          : [],
+      detail: "Only a conservative combined Ln,w+CI bound is currently available on the impact lane.",
+      direction: "lower_better",
+      id: "impact-bound",
+      label: "Ln,w+CI upper bound",
+      max: 90,
+      min: 20,
+      target: parsedTarget,
+      targetLabel: parsedTarget !== null ? `Brief maximum ${formatDecimal(parsedTarget)} dB` : null,
+      value: lowerBoundImpact.LnWPlusCIUpperBound,
+      valueLabel: `<= ${formatDecimal(lowerBoundImpact.LnWPlusCIUpperBound)} dB`
+    };
+  }
+
   return null;
 }
 

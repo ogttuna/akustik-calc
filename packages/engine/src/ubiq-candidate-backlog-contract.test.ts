@@ -1,26 +1,50 @@
 import { BOUND_FLOOR_SYSTEMS, EXACT_FLOOR_SYSTEMS } from "@dynecho/catalogs";
 import { describe, expect, it } from "vitest";
 
-const IMPORTED_UBIQ_OPEN_WEB_EXACT_IDS = [
-  "ubiq_fl24_open_web_steel_200_16mm_exact_lab_2026",
-  "ubiq_fl24_open_web_steel_200_exact_lab_2026",
-  "ubiq_fl24_open_web_steel_300_16mm_exact_lab_2026",
-  "ubiq_fl24_open_web_steel_300_exact_lab_2026",
-  "ubiq_fl24_open_web_steel_400_16mm_exact_lab_2026",
-  "ubiq_fl24_open_web_steel_400_exact_lab_2026",
-  "ubiq_fl26_open_web_steel_200_16mm_exact_lab_2026",
-  "ubiq_fl26_open_web_steel_200_exact_lab_2026",
-  "ubiq_fl26_open_web_steel_300_16mm_exact_lab_2026",
-  "ubiq_fl26_open_web_steel_300_exact_lab_2026",
-  "ubiq_fl26_open_web_steel_400_16mm_exact_lab_2026",
-  "ubiq_fl26_open_web_steel_400_exact_lab_2026",
-  "ubiq_fl28_open_web_steel_200_16mm_exact_lab_2026",
-  "ubiq_fl28_open_web_steel_200_exact_lab_2026",
-  "ubiq_fl28_open_web_steel_300_16mm_exact_lab_2026",
-  "ubiq_fl28_open_web_steel_300_exact_lab_2026",
-  "ubiq_fl28_open_web_steel_400_16mm_exact_lab_2026",
-  "ubiq_fl28_open_web_steel_400_exact_lab_2026"
-] as const;
+const IMPORTED_UBIQ_SUPPORTED_FAMILIES = ["fl24", "fl26", "fl28"] as const;
+const IMPORTED_UBIQ_SUPPORTED_JOIST_DEPTHS = [200, 300, 400] as const;
+const IMPORTED_UBIQ_SUPPORTED_DECKS = [16, 19] as const;
+
+function importedSupportedTimberId(
+  family: (typeof IMPORTED_UBIQ_SUPPORTED_FAMILIES)[number],
+  joistMm: (typeof IMPORTED_UBIQ_SUPPORTED_JOIST_DEPTHS)[number],
+  inexFloorMm: (typeof IMPORTED_UBIQ_SUPPORTED_DECKS)[number]
+): string {
+  const deckSuffix = inexFloorMm === 16 ? "_16mm" : "";
+
+  return `ubiq_${family}_open_web_steel_${joistMm}${deckSuffix}_exact_lab_2026`;
+}
+
+function importedSupportedBareId(
+  family: (typeof IMPORTED_UBIQ_SUPPORTED_FAMILIES)[number],
+  joistMm: (typeof IMPORTED_UBIQ_SUPPORTED_JOIST_DEPTHS)[number],
+  inexFloorMm: (typeof IMPORTED_UBIQ_SUPPORTED_DECKS)[number]
+): string {
+  return `ubiq_${family}_open_web_steel_${joistMm}_${inexFloorMm}mm_bare_exact_lab_2026`;
+}
+
+function importedSupportedCarpetBoundId(
+  family: (typeof IMPORTED_UBIQ_SUPPORTED_FAMILIES)[number],
+  joistMm: (typeof IMPORTED_UBIQ_SUPPORTED_JOIST_DEPTHS)[number],
+  inexFloorMm: (typeof IMPORTED_UBIQ_SUPPORTED_DECKS)[number]
+): string {
+  return `ubiq_${family}_open_web_steel_${joistMm}_${inexFloorMm}mm_carpet_lnw_plus_ci_bound_lab_2026`;
+}
+
+const IMPORTED_UBIQ_OPEN_WEB_EXACT_IDS = IMPORTED_UBIQ_SUPPORTED_FAMILIES.flatMap((family) =>
+  IMPORTED_UBIQ_SUPPORTED_JOIST_DEPTHS.flatMap((joistMm) =>
+    IMPORTED_UBIQ_SUPPORTED_DECKS.flatMap((inexFloorMm) => [
+      importedSupportedBareId(family, joistMm, inexFloorMm),
+      importedSupportedTimberId(family, joistMm, inexFloorMm)
+    ])
+  )
+);
+
+const IMPORTED_UBIQ_SUPPORTED_CARPET_BOUND_IDS = IMPORTED_UBIQ_SUPPORTED_FAMILIES.flatMap((family) =>
+  IMPORTED_UBIQ_SUPPORTED_JOIST_DEPTHS.flatMap((joistMm) =>
+    IMPORTED_UBIQ_SUPPORTED_DECKS.map((inexFloorMm) => importedSupportedCarpetBoundId(family, joistMm, inexFloorMm))
+  )
+);
 
 const IMPORTED_UBIQ_OPEN_WEB_BOUND_IDS = [
   "ubiq_fl33_open_web_steel_200_lab_2026",
@@ -80,7 +104,7 @@ const IMPORTED_VISIBLE_FL26_EXACT_TIER = [
   }
 ] as const;
 
-const DEFERRED_UBIQ_OPEN_WEB_PACKAGES = [
+const UBIQ_OPEN_WEB_WEAK_BAND_SOURCE_VALUES = [
   {
     carpetLnWPlusCi: [64, 64, 63],
     family: "FL-23",
@@ -121,9 +145,25 @@ describe("UBIQ candidate backlog contract", () => {
         system.id.startsWith("ubiq_fl28_open_web_steel_")
     );
     const importedBoundRows = BOUND_FLOOR_SYSTEMS.filter((system) => system.id.startsWith("ubiq_fl33_open_web_steel_"));
+    const importedSupportedBoundRows = BOUND_FLOOR_SYSTEMS.filter(
+      (system) =>
+        system.id.startsWith("ubiq_fl24_open_web_steel_") ||
+        system.id.startsWith("ubiq_fl26_open_web_steel_") ||
+        system.id.startsWith("ubiq_fl28_open_web_steel_")
+    );
 
     expect(sortedValues(importedExactRows.map((system) => system.id))).toEqual(sortedValues(IMPORTED_UBIQ_OPEN_WEB_EXACT_IDS));
     expect(sortedValues(importedBoundRows.map((system) => system.id))).toEqual(sortedValues(IMPORTED_UBIQ_OPEN_WEB_BOUND_IDS));
+    expect(sortedValues(importedSupportedBoundRows.map((system) => system.id))).toEqual(
+      sortedValues(IMPORTED_UBIQ_SUPPORTED_CARPET_BOUND_IDS)
+    );
+    expect(importedExactRows).toHaveLength(36);
+    expect(importedExactRows.filter((system) => system.id.includes("_bare_"))).toHaveLength(18);
+    expect(importedExactRows.filter((system) => system.id.includes("carpet"))).toHaveLength(0);
+    expect(importedSupportedBoundRows).toHaveLength(18);
+    expect(new Set(importedSupportedBoundRows.map((system) => system.impactBounds.LnWPlusCIUpperBound))).toEqual(new Set([45]));
+    expect(new Set(importedSupportedBoundRows.map((system) => system.impactBounds.LnWUpperBound))).toEqual(new Set([undefined]));
+    expect(new Set(importedExactRows.map((system) => system.airborneRatings.RwCtrSemantic))).toEqual(new Set(["rw_plus_ctr"]));
 
     const importedExactDecks = requireNumericValues(
       importedExactRows.map((system) => system.match.floatingScreed?.thicknessMm),
@@ -138,12 +178,8 @@ describe("UBIQ candidate backlog contract", () => {
       "UBIQ bound joist depths"
     );
 
-    expect(sortedValues(importedExactDecks)).toEqual([
-      16, 16, 16, 16, 16, 16, 16, 16, 16, 19, 19, 19, 19, 19, 19, 19, 19, 19
-    ]);
-    expect(sortedValues(importedExactDepths)).toEqual([
-      200, 200, 200, 200, 200, 200, 300, 300, 300, 300, 300, 300, 400, 400, 400, 400, 400, 400
-    ]);
+    expect(sortedValues(importedExactDecks)).toEqual([...Array(18).fill(16), ...Array(18).fill(19)]);
+    expect(sortedValues(importedExactDepths)).toEqual([...Array(12).fill(200), ...Array(12).fill(300), ...Array(12).fill(400)]);
     expect(sortedValues(importedBoundDepths)).toEqual([200, 300, 400]);
   });
 
@@ -193,7 +229,7 @@ describe("UBIQ candidate backlog contract", () => {
     expect(UBIQ_SECONDARY_VISIBLE_FRLD_FAMILY_MAPPING.steelJoist).toBe("FL-17 (FRL/D)");
   });
 
-  it("keeps the visible FL-24 2 x 13 mm exact corridor explicitly imported as the first adjacent-family widening pass", () => {
+  it("keeps the visible FL-24 2 x 13 mm resilient corridor explicitly imported as exact-only source rows", () => {
     const importedExactPairs = new Set(
       EXACT_FLOOR_SYSTEMS.filter((system) => system.id.startsWith("ubiq_fl24_open_web_steel_")).map((system) => {
         const joistMm = system.match.baseStructure?.thicknessMm ?? 0;
@@ -210,6 +246,14 @@ describe("UBIQ candidate backlog contract", () => {
       expect(candidate.timberLnW16Mm).toEqual([55, 54, 53]);
       expect(candidate.timberLnW19Mm).toEqual([55, 54, 53]);
     }
+
+    expect(
+      new Set(
+        EXACT_FLOOR_SYSTEMS.filter((system) => system.id.startsWith("ubiq_fl24_open_web_steel_")).map(
+          (system) => system.familyEstimateEligible
+        )
+      )
+    ).toEqual(new Set([false]));
 
     expect(importedExactPairs).toEqual(
       new Set(["200-16", "200-19", "300-16", "300-19", "400-16", "400-19"])
@@ -280,10 +324,35 @@ describe("UBIQ candidate backlog contract", () => {
     );
   });
 
-  it("keeps FL-23, FL-25, and FL-27 explicitly deferred while they remain materially weaker than the imported FL-24/26/28 corridor", () => {
-    expect(DEFERRED_UBIQ_OPEN_WEB_PACKAGES.map((candidate) => candidate.family)).toEqual(["FL-23", "FL-25", "FL-27"]);
+  it("keeps the supported resilient carpet lane modeled only as explicit Ln,w+CI bound support", () => {
+    const supportedExactRows = EXACT_FLOOR_SYSTEMS.filter((system) =>
+      /^ubiq_fl(?:24|26|28)_open_web_steel_/u.test(system.id)
+    );
+    const supportedBoundRows = BOUND_FLOOR_SYSTEMS.filter((system) =>
+      /^ubiq_fl(?:24|26|28)_open_web_steel_/u.test(system.id)
+    );
 
-    for (const candidate of DEFERRED_UBIQ_OPEN_WEB_PACKAGES) {
+    expect(IMPORTED_VISIBLE_FL24_EXACT_TIER[0]?.carpetLnWPlusCiUpperBound).toBe(45);
+    expect(IMPORTED_VISIBLE_FL26_EXACT_TIER[0]?.carpetLnWPlusCiUpperBound).toBe(45);
+    expect(IMPORTED_VISIBLE_FL28_FRLD_BOUND_400.carpetLnWPlusCiUpperBound).toBe(45);
+    expect(supportedExactRows.some((system) => system.id.includes("carpet"))).toBe(false);
+    expect(sortedValues(supportedBoundRows.map((system) => system.id))).toEqual(
+      sortedValues(IMPORTED_UBIQ_SUPPORTED_CARPET_BOUND_IDS)
+    );
+    expect(new Set(supportedBoundRows.map((system) => system.impactBounds.LnWPlusCIUpperBound))).toEqual(new Set([45]));
+    expect(new Set(supportedBoundRows.map((system) => system.impactBounds.LnWUpperBound))).toEqual(new Set([undefined]));
+  });
+
+  it("keeps FL-23, FL-25, and FL-27 exact-only while they remain materially weaker than the FL-24/26/28 corridor", () => {
+    const importedWeakBandRows = EXACT_FLOOR_SYSTEMS.filter((system) =>
+      /^ubiq_fl(?:23|25|27)_open_web_steel_/u.test(system.id)
+    );
+
+    expect(UBIQ_OPEN_WEB_WEAK_BAND_SOURCE_VALUES.map((candidate) => candidate.family)).toEqual(["FL-23", "FL-25", "FL-27"]);
+    expect(importedWeakBandRows).toHaveLength(54);
+    expect(new Set(importedWeakBandRows.map((system) => system.familyEstimateEligible))).toEqual(new Set([false]));
+
+    for (const candidate of UBIQ_OPEN_WEB_WEAK_BAND_SOURCE_VALUES) {
       expect(candidate.timberLnW.every((value) => value >= 69)).toBe(true);
       expect(candidate.carpetLnWPlusCi.every((value) => value >= 62)).toBe(true);
     }

@@ -368,6 +368,17 @@ export function buildOutputCard(input: {
           value: `${formatDecimal(result.impact.LnWPlusCI)} dB`
         };
       }
+
+      if (typeof result?.lowerBoundImpact?.LnWPlusCIUpperBound === "number") {
+        return {
+          detail:
+            "Conservative upper bound from a source row that publishes combined Ln,w+CI without enough data to split exact Ln,w and CI.",
+          label: "Ln,w+CI",
+          output,
+          status: "bound",
+          value: `<= ${formatDecimal(result.lowerBoundImpact.LnWPlusCIUpperBound)} dB`
+        };
+      }
       break;
     case "DeltaLw":
       if (typeof result?.impact?.DeltaLw === "number") {

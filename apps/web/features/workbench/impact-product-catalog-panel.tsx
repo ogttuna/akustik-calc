@@ -93,13 +93,21 @@ export function ImpactProductCatalogPanel({ result }: ImpactProductCatalogPanelP
 
           <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
             <MetricCard
-              label={lowerBoundImpact && !liveImpact ? "Ln,w upper bound" : "Ln,w"}
+              label={
+                lowerBoundImpact && !liveImpact
+                  ? typeof lowerBoundImpact.LnWPlusCIUpperBound === "number"
+                    ? "Ln,w+CI upper bound"
+                    : "Ln,w upper bound"
+                  : "Ln,w"
+              }
               value={
                 typeof liveImpact?.LnW === "number"
                   ? `${formatDecimal(liveImpact.LnW)} dB`
                   : typeof lowerBoundImpact?.LnWUpperBound === "number"
                     ? `<= ${formatDecimal(lowerBoundImpact.LnWUpperBound)} dB`
-                    : "N/A"
+                    : typeof lowerBoundImpact?.LnWPlusCIUpperBound === "number"
+                      ? `<= ${formatDecimal(lowerBoundImpact.LnWPlusCIUpperBound)} dB`
+                      : "N/A"
               }
               detail={
                 match.catalog.matchMode === "exact_system"

@@ -304,20 +304,20 @@ const CASES: readonly BoundaryCase[] = [
       { floorRole: "base_structure", materialId: "open_web_steel_floor", thicknessMm: 300 }
     ],
     expectedLab: {
-      basis: "predictor_floor_system_low_confidence_estimate",
-      candidateIds: ["ubiq_fl24_open_web_steel_300_16mm_exact_lab_2026"],
-      estimateKind: "low_confidence",
+      basis: null,
+      candidateIds: null,
+      estimateKind: null,
       floorSystemMatchId: null,
-      supportedTargetOutputs: ["Rw", "Ln,w", "Ln,w+CI"],
-      unsupportedTargetOutputs: []
+      supportedTargetOutputs: ["Rw"],
+      unsupportedTargetOutputs: ["Ln,w", "Ln,w+CI"]
     },
     expectedField: {
-      basis: "mixed_predicted_plus_estimated_local_guide",
-      candidateIds: ["ubiq_fl24_open_web_steel_300_16mm_exact_lab_2026"],
-      estimateKind: "low_confidence",
+      basis: null,
+      candidateIds: null,
+      estimateKind: null,
       floorSystemMatchId: null,
-      supportedTargetOutputs: ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"],
-      unsupportedTargetOutputs: []
+      supportedTargetOutputs: ["R'w", "DnT,w"],
+      unsupportedTargetOutputs: ["Rw", "Ln,w", "L'n,w", "L'nT,w"]
     }
   },
   {

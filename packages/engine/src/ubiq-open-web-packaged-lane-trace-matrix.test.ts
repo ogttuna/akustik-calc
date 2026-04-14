@@ -56,7 +56,7 @@ const FAMILY_GENERAL_LAB: TraceSnapshot = {
   basis: "predictor_floor_system_family_general_estimate",
   candidateIds: UBIQ_FL26_CANDIDATE_IDS,
   dnTwDb: null,
-  fitPercent: 56.7,
+  fitPercent: 59.3,
   floorRw: 60.7,
   kind: "family_general",
   lPrimeNTw: null,
@@ -74,7 +74,7 @@ const FAMILY_GENERAL_FIELD: TraceSnapshot = {
   basis: "mixed_predicted_plus_estimated_local_guide",
   candidateIds: UBIQ_FL26_CANDIDATE_IDS,
   dnTwDb: 74,
-  fitPercent: 56.7,
+  fitPercent: 59.3,
   floorRw: 60.7,
   kind: "family_general",
   lPrimeNTw: 52.9,
@@ -101,7 +101,7 @@ const LOW_CONFIDENCE_FIELD: TraceSnapshot = {
   kind: "low_confidence"
 };
 
-const FAMILY_GENERAL_WARNING = /published family estimate active: lightweight steel family general at 56\.7% fit/i;
+const FAMILY_GENERAL_WARNING = /published family estimate active: lightweight steel family general at 59\.3% fit/i;
 const LOW_CONFIDENCE_WARNING = /published family estimate active: lightweight steel low confidence at 29% fit/i;
 const DUPLICATE_ROLE_WARNING = /single-entry floor roles are duplicated: ceiling board x2/i;
 

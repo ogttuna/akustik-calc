@@ -125,6 +125,12 @@ function getCurrentImpactProxyContext(
     };
   }
 
+  if (typeof result.lowerBoundImpact?.LnWPlusCIUpperBound === "number") {
+    return {
+      summary: `Current live lab metric is Ln,w+CI upper bound <= ${result.lowerBoundImpact.LnWPlusCIUpperBound.toFixed(1)} dB`
+    };
+  }
+
   return null;
 }
 

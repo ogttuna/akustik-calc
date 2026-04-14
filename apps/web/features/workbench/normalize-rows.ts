@@ -225,7 +225,11 @@ export function normalizeRows(
   });
 
   const solverLayers = coalesceSolverBoundaryLayers(canonicalizeSimpleTopsideFloorPackage(parsedLayers));
-  const layers = solverLayers.map(({ sourceRowIds: _sourceRowIds, ...layer }) => layer);
+  const layers = solverLayers.map(({ floorRole, materialId, thicknessMm }) => ({
+    floorRole,
+    materialId,
+    thicknessMm
+  }));
 
   return {
     layers,

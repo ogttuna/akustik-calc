@@ -255,6 +255,11 @@ export function ImpactResultPanel({ result }: ImpactResultPanelProps) {
                   detail="Conservative ceiling from the supporting evidence row"
                 />
                 <MetricCard
+                  label="Ln,w+CI upper bound"
+                  value={typeof lowerBoundImpact.LnWPlusCIUpperBound === "number" ? `<= ${formatDecimal(lowerBoundImpact.LnWPlusCIUpperBound)} dB` : "N/A"}
+                  detail="Combined bound when the source does not publish split Ln,w and CI"
+                />
+                <MetricCard
                   label="DeltaLw lower bound"
                   value={typeof lowerBoundImpact.DeltaLwLowerBound === "number" ? `>= ${formatDecimal(lowerBoundImpact.DeltaLwLowerBound)} dB` : "N/A"}
                   detail="Published only when the supporting row states a minimum improvement"
@@ -291,6 +296,11 @@ export function ImpactResultPanel({ result }: ImpactResultPanelProps) {
               label="Ln,w upper bound"
               value={typeof lowerBoundImpact.LnWUpperBound === "number" ? `<= ${formatDecimal(lowerBoundImpact.LnWUpperBound)} dB` : "N/A"}
               detail="Official lightweight-steel bound support"
+            />
+            <MetricCard
+              label="Ln,w+CI upper bound"
+              value={typeof lowerBoundImpact.LnWPlusCIUpperBound === "number" ? `<= ${formatDecimal(lowerBoundImpact.LnWPlusCIUpperBound)} dB` : "N/A"}
+              detail="Official combined bound support"
             />
             <MetricCard
               label="L'n,w upper bound"

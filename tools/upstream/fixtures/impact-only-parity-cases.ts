@@ -422,7 +422,7 @@ export const IMPACT_ONLY_PARITY_CASES: readonly ImpactOnlyParityCase[] = [
   },
   {
     id: "predictor_general_ubiq_open_web_carpet",
-    label: "Explicit UBIQ open-web carpet published family blend",
+    label: "Explicit UBIQ open-web carpet official combined bound",
     visibleLayers: [],
     localOptions: {
       impactPredictorInput: {
@@ -479,6 +479,25 @@ export const IMPACT_ONLY_PARITY_CASES: readonly ImpactOnlyParityCase[] = [
       targetOutputs: ["Ln,w", "CI", "Ln,w+CI"]
     },
     compare: {
+      acceptedLocalDivergences: [
+        {
+          metrics: [
+            "impact.LnW",
+            "impact.metricBasis.LnW",
+            "impact.CI",
+            "impact.metricBasis.CI",
+            "impact.LnWPlusCI",
+            "impact.metricBasis.LnWPlusCI",
+            "floor.Rw",
+            "floor.RwCtr",
+            "impact.basis",
+            "impact.estimateCandidateIds",
+            "supportedImpactOutputs",
+            "unsupportedImpactOutputs"
+          ],
+          reason: "DynEcho now promotes the official UBIQ carpet Ln,w+CI <=45 bound instead of the older upstream family-general estimate."
+        }
+      ],
       compareFloorMetrics: true,
       compareImpactBasis: true,
       compareImpactEstimateCandidateIds: true,
@@ -1040,7 +1059,7 @@ export const IMPACT_ONLY_PARITY_CASES: readonly ImpactOnlyParityCase[] = [
   },
   {
     id: "predictor_steel_open_web_general",
-    label: "Predictor-input open-web steel broader family estimate",
+    label: "Predictor-input open-web steel official combined carpet bound",
     visibleLayers: [],
     localOptions: {
       impactPredictorInput: {
@@ -1089,6 +1108,25 @@ export const IMPACT_ONLY_PARITY_CASES: readonly ImpactOnlyParityCase[] = [
       targetOutputs: ["Ln,w", "CI", "Ln,w+CI"]
     },
     compare: {
+      acceptedLocalDivergences: [
+        {
+          metrics: [
+            "impact.LnW",
+            "impact.metricBasis.LnW",
+            "impact.CI",
+            "impact.metricBasis.CI",
+            "impact.LnWPlusCI",
+            "impact.metricBasis.LnWPlusCI",
+            "floor.Rw",
+            "floor.RwCtr",
+            "impact.basis",
+            "impact.estimateCandidateIds",
+            "supportedImpactOutputs",
+            "unsupportedImpactOutputs"
+          ],
+          reason: "DynEcho now promotes the official UBIQ carpet Ln,w+CI <=45 bound instead of the older upstream family-general estimate."
+        }
+      ],
       compareImpactBasis: true,
       compareImpactEstimateCandidateIds: true,
       compareFloorMetrics: true,

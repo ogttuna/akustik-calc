@@ -127,7 +127,7 @@ async function readPrimaryGuidedMetric(page: Page, label: "Primary floor read" |
     has: page.getByText(label, { exact: true })
   }).first();
 
-  return (await card.getByText(/^-?\d+(\.\d+)? dB$/).first().textContent())?.trim();
+  return (await card.getByText(/^-?\d+(\.\d+)? dB$/).first().textContent())?.trim() ?? null;
 }
 
 type GuidedFloorSnapshot = {

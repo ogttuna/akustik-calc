@@ -120,6 +120,45 @@ function buildFloorSystemCompanionLines(
   return lines;
 }
 
+type ReportImpactBounds = {
+  DeltaLwLowerBound?: number;
+  LnWPlusCIUpperBound?: number;
+  LnWUpperBound?: number;
+  LPrimeNTwUpperBound?: number;
+  LPrimeNWUpperBound?: number;
+};
+
+function buildImpactBoundReportLines(prefix: string, lowerBound: ReportImpactBounds | null | undefined): string[] {
+  if (!lowerBound) {
+    return [];
+  }
+
+  const labelPrefix = prefix.length > 0 ? `${prefix} ` : "";
+  const lines: string[] = [];
+
+  if (typeof lowerBound.LnWUpperBound === "number") {
+    lines.push(`- ${labelPrefix}Ln,w upper bound: <= ${formatMetric(lowerBound.LnWUpperBound)} dB`);
+  }
+
+  if (typeof lowerBound.LnWPlusCIUpperBound === "number") {
+    lines.push(`- ${labelPrefix}Ln,w+CI upper bound: <= ${formatMetric(lowerBound.LnWPlusCIUpperBound)} dB`);
+  }
+
+  if (typeof lowerBound.DeltaLwLowerBound === "number") {
+    lines.push(`- ${labelPrefix}DeltaLw lower bound: >= ${formatMetric(lowerBound.DeltaLwLowerBound)} dB`);
+  }
+
+  if (typeof lowerBound.LPrimeNWUpperBound === "number") {
+    lines.push(`- ${labelPrefix}L'n,w upper bound: <= ${formatMetric(lowerBound.LPrimeNWUpperBound)} dB`);
+  }
+
+  if (typeof lowerBound.LPrimeNTwUpperBound === "number") {
+    lines.push(`- ${labelPrefix}L'nT,w upper bound: <= ${formatMetric(lowerBound.LPrimeNTwUpperBound)} dB`);
+  }
+
+  return lines;
+}
+
 function listOutputs(outputs: readonly RequestedOutputId[]): string {
   return outputs.map((output) => REQUESTED_OUTPUT_LABELS[output]).join(", ");
 }
@@ -396,8 +435,11 @@ export function composeWorkbenchReport({
             ]
           : ["- Impact Ln,w / DeltaLw: unavailable for the current stack topology"])
           .concat(
-            !currentScenario.result.impact && typeof currentLowerBoundImpact?.LnWUpperBound === "number"
-              ? [`- Impact Ln,w upper bound: <= ${formatMetric(currentLowerBoundImpact.LnWUpperBound)} dB`, `- Impact bound basis: ${currentLowerBoundImpact.basis}`]
+            !currentScenario.result.impact && currentLowerBoundImpact
+              ? [
+                  ...buildImpactBoundReportLines("Impact", currentLowerBoundImpact),
+                  `- Impact bound basis: ${currentLowerBoundImpact.basis}`
+                ]
               : []
           )
       ]
@@ -540,18 +582,7 @@ export function composeWorkbenchReport({
           ...(predictorLowerBound
             ? [
                 `- Lower-bound basis: ${predictorLowerBound.basis}`,
-                ...(typeof predictorLowerBound.LnWUpperBound === "number"
-                  ? [`- Ln,w upper bound: <= ${formatMetric(predictorLowerBound.LnWUpperBound)} dB`]
-                  : []),
-                ...(typeof predictorLowerBound.DeltaLwLowerBound === "number"
-                  ? [`- DeltaLw lower bound: >= ${formatMetric(predictorLowerBound.DeltaLwLowerBound)} dB`]
-                  : []),
-                ...(typeof predictorLowerBound.LPrimeNWUpperBound === "number"
-                  ? [`- L'n,w upper bound: <= ${formatMetric(predictorLowerBound.LPrimeNWUpperBound)} dB`]
-                  : []),
-                ...(typeof predictorLowerBound.LPrimeNTwUpperBound === "number"
-                  ? [`- L'nT,w upper bound: <= ${formatMetric(predictorLowerBound.LPrimeNTwUpperBound)} dB`]
-                  : []),
+                ...buildImpactBoundReportLines("", predictorLowerBound),
                 `- Lower-bound confidence: ${predictorLowerBound.confidence.level} (${predictorLowerBound.confidence.score.toFixed(2)}) via ${predictorLowerBound.confidence.provenance}`,
                 ...predictorLowerBound.notes.map((line: string) => `- Lower-bound note: ${line}`)
               ]
@@ -642,6 +673,9 @@ export function composeWorkbenchReport({
           ...(typeof currentImpactCatalogLowerBound?.LnWUpperBound === "number"
             ? [`- Product-lane Ln,w upper bound: <= ${formatMetric(currentImpactCatalogLowerBound.LnWUpperBound)} dB`]
             : []),
+          ...(typeof currentImpactCatalogLowerBound?.LnWPlusCIUpperBound === "number"
+            ? [`- Product-lane Ln,w+CI upper bound: <= ${formatMetric(currentImpactCatalogLowerBound.LnWPlusCIUpperBound)} dB`]
+            : []),
           ...(typeof currentImpactCatalogLowerBound?.DeltaLwLowerBound === "number"
             ? [`- Product-lane DeltaLw lower bound: >= ${formatMetric(currentImpactCatalogLowerBound.DeltaLwLowerBound)} dB`]
             : []),
@@ -677,6 +711,9 @@ export function composeWorkbenchReport({
             ...(typeof currentBoundFloorSystem.lowerBoundImpact.LnWUpperBound === "number"
               ? [`- Exact Ln,w upper bound: <= ${formatMetric(currentBoundFloorSystem.lowerBoundImpact.LnWUpperBound)} dB`]
               : []),
+            ...(typeof currentBoundFloorSystem.lowerBoundImpact.LnWPlusCIUpperBound === "number"
+              ? [`- Exact Ln,w+CI upper bound: <= ${formatMetric(currentBoundFloorSystem.lowerBoundImpact.LnWPlusCIUpperBound)} dB`]
+              : []),
             `- Exact Rw: ${formatMetric(currentBoundFloorSystem.system.airborneRatings.Rw)} dB`,
             ...buildFloorSystemCompanionLines("Exact", currentBoundFloorSystem.system.airborneRatings),
             `- Basis: ${currentBoundFloorSystem.lowerBoundImpact.basis}`
@@ -706,6 +743,9 @@ export function composeWorkbenchReport({
               `- Estimate kind: ${currentBoundFloorEstimate.kind}`,
               ...(typeof currentBoundFloorEstimate.lowerBoundImpact.LnWUpperBound === "number"
                 ? [`- Estimated Ln,w upper bound: <= ${formatMetric(currentBoundFloorEstimate.lowerBoundImpact.LnWUpperBound)} dB`]
+                : []),
+              ...(typeof currentBoundFloorEstimate.lowerBoundImpact.LnWPlusCIUpperBound === "number"
+                ? [`- Estimated Ln,w+CI upper bound: <= ${formatMetric(currentBoundFloorEstimate.lowerBoundImpact.LnWPlusCIUpperBound)} dB`]
                 : []),
               `- Estimated Rw: ${formatMetric(currentBoundFloorEstimate.airborneRatings.Rw)} dB`,
               ...buildFloorSystemCompanionLines("Estimated", currentBoundFloorEstimate.airborneRatings),

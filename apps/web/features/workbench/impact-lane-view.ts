@@ -90,7 +90,7 @@ export function getImpactLaneNarrative(kind: ImpactLaneKind, hasExactFamilyCompa
           : kind === "official_catalog"
             ? "Official product rows now stay on their own evidence lane. Exact manufacturer-system rows, lower-bound support rows, and catalog DeltaLw entries are surfaced without pretending they are generic topology solvers."
             : kind === "bound_only"
-              ? "Some official rows publish conservative impact support only, such as Ln,w upper bounds or DeltaLw lower bounds. DynEcho now carries those bounds honestly instead of inventing a precise live metric."
+              ? "Some official rows publish conservative impact support only, such as Ln,w upper bounds, Ln,w+CI upper bounds, or DeltaLw lower bounds. DynEcho now carries those bounds honestly instead of inventing a precise live metric."
               : kind === "scoped_formula"
                 ? "This lane stays honest: the local formula and predictor branch still covers the narrow heavy-floor estimate path, while exact families, official rows, exact imports, and labeled published-family fallbacks can light up their own evidence lanes when the topology supports them. Broader family import and deeper field-side continuations still need more adoption work."
                 : "The current stack does not yet hit a supported impact lane.";

@@ -223,6 +223,11 @@ export function ExactFloorSystemPanel({ result }: ExactFloorSystemPanelProps) {
               detail="Published conservative impact support"
             />
             <MetricCard
+              label="Ln,w+CI upper bound"
+              value={typeof boundMatch.lowerBoundImpact.LnWPlusCIUpperBound === "number" ? `<= ${formatDecimal(boundMatch.lowerBoundImpact.LnWPlusCIUpperBound)} dB` : "N/A"}
+              detail="Published combined low-frequency support"
+            />
+            <MetricCard
               label="Rw"
               value={`${formatDecimal(boundMatch.system.airborneRatings.Rw)} dB`}
               detail="Published family airborne rating"
@@ -411,6 +416,11 @@ export function ExactFloorSystemPanel({ result }: ExactFloorSystemPanelProps) {
               detail="Interpolated conservative family support"
             />
             <MetricCard
+              label="Ln,w+CI upper bound"
+              value={typeof boundEstimate.lowerBoundImpact.LnWPlusCIUpperBound === "number" ? `<= ${formatDecimal(boundEstimate.lowerBoundImpact.LnWPlusCIUpperBound)} dB` : "N/A"}
+              detail="Interpolated combined conservative support when available"
+            />
+            <MetricCard
               label="Rw"
               value={`${formatDecimal(boundEstimate.airborneRatings.Rw)} dB`}
               detail="Interpolated published family airborne value"
@@ -505,7 +515,9 @@ export function ExactFloorSystemPanel({ result }: ExactFloorSystemPanelProps) {
             const impactPillText =
               "impactRatings" in system
                 ? `${formatDecimal(system.impactRatings.LnW)} dB Ln,w`
-                : `<= ${formatDecimal(system.impactBounds.LnWUpperBound ?? 0)} dB Ln,w`;
+                : typeof system.impactBounds.LnWUpperBound === "number"
+                  ? `<= ${formatDecimal(system.impactBounds.LnWUpperBound)} dB Ln,w`
+                  : `<= ${formatDecimal(system.impactBounds.LnWPlusCIUpperBound ?? 0)} dB Ln,w+CI`;
 
             return (
               <article className="rounded-md border hairline bg-[color:var(--paper)] px-4 py-4" key={system.id}>

@@ -76,26 +76,50 @@ const DATAHOLZ_TIMBER_FRAME_IDS = [
   "dataholz_gdrtxa06a_timber_frame_dry_lab_2026"
 ] as const;
 
-const UBIQ_OPEN_WEB_EXACT_IDS = [
-  "ubiq_fl24_open_web_steel_200_16mm_exact_lab_2026",
-  "ubiq_fl24_open_web_steel_200_exact_lab_2026",
-  "ubiq_fl24_open_web_steel_300_16mm_exact_lab_2026",
-  "ubiq_fl24_open_web_steel_300_exact_lab_2026",
-  "ubiq_fl24_open_web_steel_400_16mm_exact_lab_2026",
-  "ubiq_fl24_open_web_steel_400_exact_lab_2026",
-  "ubiq_fl26_open_web_steel_200_16mm_exact_lab_2026",
-  "ubiq_fl26_open_web_steel_200_exact_lab_2026",
-  "ubiq_fl26_open_web_steel_300_16mm_exact_lab_2026",
-  "ubiq_fl26_open_web_steel_300_exact_lab_2026",
-  "ubiq_fl26_open_web_steel_400_16mm_exact_lab_2026",
-  "ubiq_fl26_open_web_steel_400_exact_lab_2026",
-  "ubiq_fl28_open_web_steel_200_16mm_exact_lab_2026",
-  "ubiq_fl28_open_web_steel_200_exact_lab_2026",
-  "ubiq_fl28_open_web_steel_300_16mm_exact_lab_2026",
-  "ubiq_fl28_open_web_steel_300_exact_lab_2026",
-  "ubiq_fl28_open_web_steel_400_16mm_exact_lab_2026",
-  "ubiq_fl28_open_web_steel_400_exact_lab_2026"
-] as const;
+const UBIQ_OPEN_WEB_EXACT_FAMILIES = ["fl24", "fl26", "fl28"] as const;
+const UBIQ_OPEN_WEB_EXACT_JOIST_DEPTHS = [200, 300, 400] as const;
+const UBIQ_OPEN_WEB_EXACT_DECKS = [16, 19] as const;
+
+function ubiqOpenWebTimberId(
+  family: (typeof UBIQ_OPEN_WEB_EXACT_FAMILIES)[number],
+  joistMm: (typeof UBIQ_OPEN_WEB_EXACT_JOIST_DEPTHS)[number],
+  inexFloorMm: (typeof UBIQ_OPEN_WEB_EXACT_DECKS)[number]
+): string {
+  const deckSuffix = inexFloorMm === 16 ? "_16mm" : "";
+
+  return `ubiq_${family}_open_web_steel_${joistMm}${deckSuffix}_exact_lab_2026`;
+}
+
+function ubiqOpenWebBareId(
+  family: (typeof UBIQ_OPEN_WEB_EXACT_FAMILIES)[number],
+  joistMm: (typeof UBIQ_OPEN_WEB_EXACT_JOIST_DEPTHS)[number],
+  inexFloorMm: (typeof UBIQ_OPEN_WEB_EXACT_DECKS)[number]
+): string {
+  return `ubiq_${family}_open_web_steel_${joistMm}_${inexFloorMm}mm_bare_exact_lab_2026`;
+}
+
+function ubiqOpenWebCarpetBoundId(
+  family: (typeof UBIQ_OPEN_WEB_EXACT_FAMILIES)[number],
+  joistMm: (typeof UBIQ_OPEN_WEB_EXACT_JOIST_DEPTHS)[number],
+  inexFloorMm: (typeof UBIQ_OPEN_WEB_EXACT_DECKS)[number]
+): string {
+  return `ubiq_${family}_open_web_steel_${joistMm}_${inexFloorMm}mm_carpet_lnw_plus_ci_bound_lab_2026`;
+}
+
+const UBIQ_OPEN_WEB_EXACT_IDS = UBIQ_OPEN_WEB_EXACT_FAMILIES.flatMap((family) =>
+  UBIQ_OPEN_WEB_EXACT_JOIST_DEPTHS.flatMap((joistMm) =>
+    UBIQ_OPEN_WEB_EXACT_DECKS.flatMap((inexFloorMm) => [
+      ubiqOpenWebBareId(family, joistMm, inexFloorMm),
+      ubiqOpenWebTimberId(family, joistMm, inexFloorMm)
+    ])
+  )
+);
+
+const UBIQ_OPEN_WEB_SUPPORTED_CARPET_BOUND_IDS = UBIQ_OPEN_WEB_EXACT_FAMILIES.flatMap((family) =>
+  UBIQ_OPEN_WEB_EXACT_JOIST_DEPTHS.flatMap((joistMm) =>
+    UBIQ_OPEN_WEB_EXACT_DECKS.map((inexFloorMm) => ubiqOpenWebCarpetBoundId(family, joistMm, inexFloorMm))
+  )
+);
 
 const UBIQ_OPEN_WEB_BOUND_IDS = [
   "ubiq_fl33_open_web_steel_200_lab_2026",
@@ -129,6 +153,12 @@ describe("floor source corpus contract", () => {
         id.startsWith("ubiq_fl26_open_web_steel_") ||
         id.startsWith("ubiq_fl28_open_web_steel_")
     );
+    const ubiqOpenWebSupportedCarpetBoundIds = boundIds.filter(
+      id =>
+        id.startsWith("ubiq_fl24_open_web_steel_") ||
+        id.startsWith("ubiq_fl26_open_web_steel_") ||
+        id.startsWith("ubiq_fl28_open_web_steel_")
+    );
     const ubiqSteelBoundIds = boundIds.filter((id) => id.startsWith("ubiq_fl32_steel_"));
     const ubiqOpenWebBoundIds = boundIds.filter((id) => id.startsWith("ubiq_fl33_open_web_steel_"));
 
@@ -137,6 +167,7 @@ describe("floor source corpus contract", () => {
     expect(sortedIds(dataholzCltIds)).toEqual(sortedIds(DATAHOLZ_CLT_IDS));
     expect(sortedIds(dataholzTimberFrameIds)).toEqual(sortedIds(DATAHOLZ_TIMBER_FRAME_IDS));
     expect(sortedIds(ubiqOpenWebExactIds)).toEqual(sortedIds(UBIQ_OPEN_WEB_EXACT_IDS));
+    expect(sortedIds(ubiqOpenWebSupportedCarpetBoundIds)).toEqual(sortedIds(UBIQ_OPEN_WEB_SUPPORTED_CARPET_BOUND_IDS));
     expect(sortedIds(ubiqSteelBoundIds)).toEqual(sortedIds(UBIQ_STEEL_BOUND_IDS));
     expect(sortedIds(ubiqOpenWebBoundIds)).toEqual(sortedIds(UBIQ_OPEN_WEB_BOUND_IDS));
   });

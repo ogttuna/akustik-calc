@@ -280,8 +280,14 @@ The accepted next implementation slice is now maintained in
 
 Current restart rule:
 
-- execute one concrete `source_led_raw_or_predictor_widening_v1` family
-- start with the selected Dataholz timber-frame role-gated raw/predictor audit
+- this 2026-04-13 restart rule is superseded by
+  `NEXT_IMPLEMENTATION_PLAN.md`
+- the current next slice is
+  `ubiq_weak_band_exact_import_source_mapping_v1`, following the closed
+  `source_gap_candidate_research_re_rank_v1` and
+  `ubiq_open_web_weaker_band_posture_guard_v1`
+- do not restart the old Dataholz timber-frame raw/predictor audit as the next
+  active slice
 - write the contract tests first
 - land only source-backed behavior
 - keep unsupported or under-described combinations fail-closed

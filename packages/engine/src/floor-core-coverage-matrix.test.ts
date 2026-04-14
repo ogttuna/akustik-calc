@@ -328,9 +328,9 @@ const CASES: readonly CoreCoverageCase[] = [
 ];
 
 function expectFinite(value: number | null | undefined, label: string) {
-  expect(typeof value).toBe("number");
-  expect(Number.isFinite(value)).toBe(true);
-  expect(value as number).toBeGreaterThanOrEqual(0);
+  expect(typeof value, label).toBe("number");
+  expect(Number.isFinite(value), label).toBe(true);
+  expect(value as number, label).toBeGreaterThanOrEqual(0);
 }
 
 describe("floor core coverage matrix", () => {

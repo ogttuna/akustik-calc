@@ -54,10 +54,15 @@ export const FloorSystemImpactRatingsSchema = z.object({
 export const FloorSystemImpactBoundsSchema = z
   .object({
     DeltaLwLowerBound: z.number().nonnegative().optional(),
+    LnWPlusCIUpperBound: z.number().positive().optional(),
     LnWUpperBound: z.number().positive().optional()
   })
   .superRefine((value, ctx) => {
-    if (!Number.isFinite(value.LnWUpperBound) && !Number.isFinite(value.DeltaLwLowerBound)) {
+    if (
+      !Number.isFinite(value.LnWUpperBound) &&
+      !Number.isFinite(value.LnWPlusCIUpperBound) &&
+      !Number.isFinite(value.DeltaLwLowerBound)
+    ) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: "Floor-system bound support requires at least one bound metric."

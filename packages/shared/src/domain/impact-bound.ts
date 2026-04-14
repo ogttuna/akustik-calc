@@ -12,6 +12,7 @@ export const ImpactBoundCalculationSchema = z
     LPrimeNT50UpperBound: z.number().positive().optional(),
     LPrimeNTwUpperBound: z.number().positive().optional(),
     LPrimeNWUpperBound: z.number().positive().optional(),
+    LnWPlusCIUpperBound: z.number().positive().optional(),
     LnWUpperBound: z.number().positive().optional(),
     basis: ImpactEstimateBasisSchema,
     confidence: ImpactConfidenceSchema,
@@ -21,6 +22,7 @@ export const ImpactBoundCalculationSchema = z
   .superRefine((value, ctx) => {
     if (
       !Number.isFinite(value.LnWUpperBound) &&
+      !Number.isFinite(value.LnWPlusCIUpperBound) &&
       !Number.isFinite(value.LPrimeNWUpperBound) &&
       !Number.isFinite(value.LPrimeNT50UpperBound) &&
       !Number.isFinite(value.LPrimeNTwUpperBound) &&

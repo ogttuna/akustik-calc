@@ -129,7 +129,7 @@ function getRequestedOutputValue(
     case "CI,50-2500":
       return result.impact?.CI50_2500;
     case "Ln,w+CI":
-      return result.impact?.LnWPlusCI;
+      return result.impact?.LnWPlusCI ?? result.lowerBoundImpact?.LnWPlusCIUpperBound;
     case "L'n,w":
       return result.impact?.LPrimeNW ?? result.lowerBoundImpact?.LPrimeNWUpperBound;
     case "L'nT,w":
@@ -504,9 +504,19 @@ describe("output combination sweep", () => {
         expectFiniteNumber(getRequestedOutputValue(impactOnly, output), `${system.id} impact-only ${output}`, failures);
       });
 
-      expectFiniteNumber(impactOnly.lowerBoundImpact?.LnWUpperBound, `${system.id} impact-only Ln,w upper bound`, failures);
-      expectFiniteNumber(impactOnly.lowerBoundImpact?.LPrimeNWUpperBound, `${system.id} impact-only L'n,w upper bound`, failures);
-      expectFiniteNumber(impactOnly.lowerBoundImpact?.LPrimeNTwUpperBound, `${system.id} impact-only L'nT,w upper bound`, failures);
+      if (typeof system.impactBounds.LnWUpperBound === "number") {
+        expectFiniteNumber(impactOnly.lowerBoundImpact?.LnWUpperBound, `${system.id} impact-only Ln,w upper bound`, failures);
+        expectFiniteNumber(impactOnly.lowerBoundImpact?.LPrimeNWUpperBound, `${system.id} impact-only L'n,w upper bound`, failures);
+        expectFiniteNumber(impactOnly.lowerBoundImpact?.LPrimeNTwUpperBound, `${system.id} impact-only L'nT,w upper bound`, failures);
+      }
+
+      if (typeof system.impactBounds.LnWPlusCIUpperBound === "number") {
+        expectFiniteNumber(
+          impactOnly.lowerBoundImpact?.LnWPlusCIUpperBound,
+          `${system.id} impact-only Ln,w+CI upper bound`,
+          failures
+        );
+      }
 
       const assembly = calculateAssembly(buildLayersFromCriteria(system.match), {
         impactFieldContext: {
@@ -525,7 +535,17 @@ describe("output combination sweep", () => {
         assemblySupported.push("Ctr");
       }
 
-      assemblySupported.push("Ln,w", "L'n,w", "L'nT,w");
+      if (typeof system.impactBounds.LnWUpperBound === "number") {
+        assemblySupported.push("Ln,w", "L'n,w", "L'nT,w");
+      }
+
+      if (typeof system.impactBounds.LnWPlusCIUpperBound === "number") {
+        assemblySupported.push("Ln,w+CI");
+      }
+
+      if (typeof system.impactBounds.DeltaLwLowerBound === "number") {
+        assemblySupported.push("DeltaLw");
+      }
 
       expectCleanPartition(assembly, assemblySupported, `${system.id} assembly bound`, failures);
 

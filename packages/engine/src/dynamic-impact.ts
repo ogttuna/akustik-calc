@@ -295,6 +295,7 @@ function collectMetricLabels(
   if (typeof impact?.LPrimeNTw === "number") labels.push("L'nT,w");
   if (typeof impact?.LPrimeNT50 === "number") labels.push("L'nT,50");
   if (typeof lowerBoundImpact?.LnWUpperBound === "number") labels.push("Ln,w upper bound");
+  if (typeof lowerBoundImpact?.LnWPlusCIUpperBound === "number") labels.push("Ln,w+CI upper bound");
   if (typeof lowerBoundImpact?.DeltaLwLowerBound === "number") labels.push("DeltaLw lower bound");
   if (typeof lowerBoundImpact?.LPrimeNWUpperBound === "number") labels.push("L'n,w upper bound");
   if (typeof lowerBoundImpact?.LPrimeNTwUpperBound === "number") labels.push("L'nT,w upper bound");

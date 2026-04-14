@@ -76,7 +76,9 @@ function canManualExactMatch(system: ExactFloorSystem): boolean {
 }
 
 function canParticipateInRecommendations(system: ExactFloorSystem): boolean {
-  return canManualExactMatch(system);
+  // Some exact source rows are intentionally narrow correction rows. They should
+  // match only exact user stacks and must not become nearby-family anchors.
+  return canManualExactMatch(system) && system.familyEstimateEligible !== false;
 }
 
 function toMatchResult(evaluation: ReturnType<typeof evaluateMatchedFloorSystem<ExactFloorSystem>>): FloorSystemMatchResult {

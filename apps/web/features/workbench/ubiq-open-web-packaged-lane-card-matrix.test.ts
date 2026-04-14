@@ -76,7 +76,7 @@ const FAMILY_GENERAL_ROUTE: RouteSnapshot = {
   cards: LIVE_CARDS,
   candidateIds: UBIQ_FL26_CANDIDATE_IDS,
   dnTwDb: 74,
-  fitPercent: 56.7,
+  fitPercent: 59.3,
   floorRw: 60.7,
   kind: "family_general",
   lPrimeNTw: 52.9,
@@ -94,7 +94,7 @@ const LOW_CONFIDENCE_ROUTE: RouteSnapshot = {
   kind: "low_confidence"
 };
 
-const FAMILY_GENERAL_WARNING = /published family estimate active: lightweight steel family general at 56\.7% fit/i;
+const FAMILY_GENERAL_WARNING = /published family estimate active: lightweight steel family general at 59\.3% fit/i;
 const LOW_CONFIDENCE_WARNING = /low-confidence published-family fallback is active/i;
 const DUPLICATE_ROLE_WARNING = /single-entry floor roles are duplicated: ceiling board x2/i;
 const RAW_SPLIT_SANITY_WARNING = /layer 7 thickness 150 mm is outside the guided sanity band/i;

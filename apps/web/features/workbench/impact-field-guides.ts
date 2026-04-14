@@ -40,6 +40,7 @@ export function buildImpactGuideFieldGuides(input: {
 }): Record<"ci" | "ci50_2500" | "guideBase" | "hd" | "k" | "massRatio" | "smallRoom" | "volume", WorkbenchFieldStatus> {
   const hasBaseLnW = typeof input.baseImpact?.LnW === "number";
   const hasBaseLnWUpperBound = typeof input.baseLowerBoundImpact?.LnWUpperBound === "number";
+  const hasBaseLnWPlusCIUpperBound = typeof input.baseLowerBoundImpact?.LnWPlusCIUpperBound === "number";
   const carriedCi = typeof input.baseImpact?.CI === "number" ? input.baseImpact.CI : null;
   const carriedCi50_2500 = typeof input.baseImpact?.CI50_2500 === "number" ? input.baseImpact.CI50_2500 : null;
   const manualCi = hasValue(input.ciInput);
@@ -130,6 +131,12 @@ export function buildImpactGuideFieldGuides(input: {
             currentUse: `Guide derivation is currently anchored to the ${formatGuideSourceLabel(input.selectedSource)} with a conservative Ln,w upper bound.`,
             kind: "active",
             meaning: "When only bound support exists, guide outputs also stay on an upper-bound lane instead of fabricating an exact field result."
+          }
+      : hasBaseLnWPlusCIUpperBound
+        ? {
+            currentUse: "The selected source only has a combined Ln,w+CI upper bound, so guide derivation is not active.",
+            kind: "conditional",
+            meaning: "Guide outputs need an exact Ln,w source or an explicit Ln,w upper-bound lane; a combined Ln,w+CI bound is reportable but not a field-guide base."
           }
       : {
           currentUse: "The selected guide base has not produced Ln,w yet. Activate a live impact result or the heavy-reference shortcut first.",

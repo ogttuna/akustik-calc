@@ -22,16 +22,29 @@ import { round1 } from "./math";
 
 function buildOfficialBoundImpact(system: BoundFloorSystem): ImpactBoundCalculation {
   const lnWUpperBound = system.impactBounds.LnWUpperBound;
+  const lnWPlusCIUpperBound = system.impactBounds.LnWPlusCIUpperBound;
   const deltaLwLowerBound = system.impactBounds.DeltaLwLowerBound;
+  const metricNotes = [
+    ...(typeof lnWUpperBound === "number"
+      ? [`Impact remains conservative: Ln,w stays at or below ${round1(lnWUpperBound)} dB.`]
+      : []),
+    ...(typeof lnWPlusCIUpperBound === "number"
+      ? [`Impact remains conservative: Ln,w+CI stays at or below ${round1(lnWPlusCIUpperBound)} dB.`]
+      : []),
+    ...(typeof deltaLwLowerBound === "number"
+      ? [`Impact remains conservative: DeltaLw stays at or above ${round1(deltaLwLowerBound)} dB.`]
+      : [])
+  ];
 
   return {
     DeltaLwLowerBound: deltaLwLowerBound,
+    LnWPlusCIUpperBound: lnWPlusCIUpperBound,
     LnWUpperBound: lnWUpperBound,
     basis: "official_floor_system_bound_support",
     confidence: getImpactConfidenceForBasis("official_floor_system_bound_support"),
     notes: [
       `${system.label} matched the curated official bound-only floor-system lane.`,
-      `Impact remains conservative: Ln,w stays at or below ${round1(lnWUpperBound ?? 0)} dB.`,
+      ...metricNotes,
       `Carrier: ${system.systemSummary.carrier}.`
     ],
     scope: "exact_floor_system_family"

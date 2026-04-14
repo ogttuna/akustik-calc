@@ -1544,8 +1544,8 @@
       }
     },
     {
-      "id": "ubiq_steel_carpet_family_general_estimate",
-      "mode": "family_general_estimate",
+      "id": "ubiq_steel_carpet_lnw_plus_ci_bound",
+      "mode": "official_floor_system_bound",
       "source": "https://www.ubiq.au/wp-content/uploads/2023/02/INEX-FLOOR-FLOOR-FIRE-ACOUSTIC.pdf",
       "impactPredictorInput": {
         "structuralSupportType": "steel_joists",
@@ -1570,11 +1570,11 @@
           "boardThicknessMm": 16
         }
       },
+      "expectedBasis": "official_floor_system_bound_support",
       "expected": {
-        "lnwMinDb": 50.5,
-        "lnwMaxDb": 51.5,
-        "rwMinDb": 63.0,
-        "rwMaxDb": 64.0
+        "lnwPlusCiUpperBoundDb": 45.0,
+        "rwDb": 64.0,
+        "rwCtrDb": 59.0
       }
     },
     {

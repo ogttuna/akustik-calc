@@ -503,7 +503,7 @@ function getOutputValue(
     case "Ln,w":
       return result.impact?.LnW ?? result.lowerBoundImpact?.LnWUpperBound;
     case "Ln,w+CI":
-      return result.impact?.LnWPlusCI;
+      return result.impact?.LnWPlusCI ?? result.lowerBoundImpact?.LnWPlusCIUpperBound;
     case "L'n,w":
       return result.impact?.LPrimeNW ?? result.lowerBoundImpact?.LPrimeNWUpperBound;
     case "L'nT,w":

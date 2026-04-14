@@ -93,7 +93,7 @@ const CASES: readonly AuditCase[] = [
         "ubiq_fl26_open_web_steel_200_16mm_exact_lab_2026",
         "ubiq_fl26_open_web_steel_400_16mm_exact_lab_2026"
       ],
-      fitPercent: 56.7,
+      fitPercent: 59.3,
       kind: "family_general",
       lPrimeNTw: null,
       lPrimeNW: null,
@@ -110,7 +110,7 @@ const CASES: readonly AuditCase[] = [
         "ubiq_fl26_open_web_steel_200_16mm_exact_lab_2026",
         "ubiq_fl26_open_web_steel_400_16mm_exact_lab_2026"
       ],
-      fitPercent: 56.7,
+      fitPercent: 59.3,
       kind: "family_general",
       lPrimeNTw: 52.9,
       lPrimeNW: 55.3,
@@ -144,7 +144,7 @@ const CASES: readonly AuditCase[] = [
         "ubiq_fl26_open_web_steel_200_16mm_exact_lab_2026",
         "ubiq_fl26_open_web_steel_400_16mm_exact_lab_2026"
       ],
-      fitPercent: 71.7,
+      fitPercent: 73.7,
       kind: "family_general",
       lPrimeNTw: null,
       lPrimeNW: null,
@@ -161,7 +161,7 @@ const CASES: readonly AuditCase[] = [
         "ubiq_fl26_open_web_steel_200_16mm_exact_lab_2026",
         "ubiq_fl26_open_web_steel_400_16mm_exact_lab_2026"
       ],
-      fitPercent: 71.7,
+      fitPercent: 73.7,
       kind: "family_general",
       lPrimeNTw: 52.9,
       lPrimeNW: 55.3,

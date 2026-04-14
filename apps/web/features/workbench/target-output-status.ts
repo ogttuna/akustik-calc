@@ -121,6 +121,10 @@ function hasEngineBoundValue(output: RequestedOutputId, result: AssemblyCalculat
     return typeof bound.LnWUpperBound === "number";
   }
 
+  if (output === "Ln,w+CI") {
+    return typeof bound.LnWPlusCIUpperBound === "number";
+  }
+
   if (output === "L'n,w") {
     return typeof bound.LPrimeNWUpperBound === "number";
   }

@@ -72,10 +72,10 @@ export const IMPACT_VALIDATION_MODE_MATRIX: readonly ImpactValidationModeRegime[
     posture: "exact"
   },
   {
-    caseCount: 1,
+    caseCount: 2,
     id: "official_floor_system_bound",
     label: "Official floor-system bound",
-    note: "Published support rows that keep airborne companions exact but expose impact only as a conservative upper bound.",
+    note: "Published support rows that keep airborne companions exact but expose impact only as conservative Ln,w or Ln,w+CI bounds.",
     posture: "bound"
   },
   {
@@ -121,7 +121,7 @@ export const IMPACT_VALIDATION_MODE_MATRIX: readonly ImpactValidationModeRegime[
     posture: "estimate"
   },
   {
-    caseCount: 5,
+    caseCount: 4,
     id: "family_general_estimate",
     label: "Family general estimate",
     note: "Broader same-family estimate layer used only after stricter exact and archetype corridors fail, once low-confidence carve-outs have been stripped out.",
@@ -298,11 +298,11 @@ export const IMPACT_VALIDATION_FAMILY_MATRIX: readonly ImpactValidationFamilyReg
     maxToleranceDb: 0,
     modeDistribution: [
       { caseCount: 8, id: "official_floor_system" },
-      { caseCount: 1, id: "official_floor_system_bound" },
+      { caseCount: 2, id: "official_floor_system_bound" },
       { caseCount: 1, id: "family_specific_estimate" },
       { caseCount: 1, id: "family_specific_bound_estimate" },
       { caseCount: 1, id: "family_archetype_estimate" },
-      { caseCount: 3, id: "family_general_estimate" },
+      { caseCount: 2, id: "family_general_estimate" },
       { caseCount: 1, id: "low_confidence_estimate" }
     ],
     note: "Published UBIQ and Pliteq support remains conservative on both lab and field chains. Most steel predictor fallbacks stay on narrower same-family lanes, while the joist-or-purlin suspended vinyl fallback is now explicitly labeled low-confidence."
