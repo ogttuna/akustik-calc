@@ -22,34 +22,38 @@ Read together with:
 
 Latest closed implementation slice:
 
-- `heavy_concrete_formula_field_provenance_surface_v1`
+- `formula_provenance_method_evidence_dossier_v1`
 - status:
-  - implemented and target-green locally
-  - metadata/provenance runtime behavior changed
+  - implemented and focused target-green locally
+  - no numeric runtime behavior changed
+  - user-facing proposal/method/evidence provenance behavior changed
   - numeric acoustic outputs, source rows, formula constants, and supported
     family scope did not change
 - why it was the right next step:
-  - the previous slice proved heavy concrete formula values survive realistic
-    workbench history and card rendering
-  - the next discovered gap was provenance loss after field carry-over:
-    `impact.metricBasis` still knew `Ln,w` / `DeltaLw` came from the narrow
-    formula lane, but predictor status, support formula notes, trace labels,
-    and report output did not consistently surface that ownership
-  - fixing that was safer and more directly tied to calculator correctness than
-    opening any new raw-family, Dataholz, C11c, UBIQ, or wall-selector runtime
-    lane
+  - the previous slice made heavy concrete formula ownership visible in the
+    impact trace panel and Markdown report
+  - the remaining user-facing gap was narrower: proposal method dossiers still
+    selected only generic `dynamicImpactTrace.notes`, so the Annex-C formula
+    derivation could disappear from the solver rationale appendix even though
+    `impactSupport.formulaNotes` and `dynamicImpactTrace.selectedLabel` were
+    correct
+  - the evidence packet dynamic impact citation already had the correct formula
+    label and field-basis wording, but it did not have an executable guard on
+    the field-carried heavy floating formula route
+  - closing those surfaces was safer than opening any new raw-family, Dataholz,
+    C11c, UBIQ, or wall-selector runtime lane
 - guarded surfaces:
-  - `impactPredictorStatus.implementedFormulaEstimate`
-  - `impactSupport.formulaNotes`
-  - `dynamicImpactTrace.selectedLabel`
-  - workbench impact trace panel
-  - Markdown report formula-note section
+  - `simpleWorkbenchMethodDossier.traceGroups`
+  - `simpleWorkbenchEvidencePacket.citations`
+  - proposal solver-rationale appendix via `methodTraceGroups`
+  - carried heavy floating formula route with `Ln,w`, `DeltaLw`, `L'n,w`, and
+    `L'nT,w`
 - latest focused validation:
   - engine: `3` files / `7` tests green
-  - web: `4` files / `16` tests green
+  - web: `3` files / `6` tests green
 - latest full validation:
-  - full engine suite: `120` files / `844` tests green
-  - full web suite: `113` files / `638` tests green
+  - full engine suite: `121` files / `846` tests green
+  - full web suite: `113` files / `640` tests green
   - engine/web typecheck and lint green
   - `pnpm build` green with the known optional `sharp/@img` warnings from the
     DOCX dependency and the existing Next TypeScript plugin recommendation
@@ -57,7 +61,7 @@ Latest closed implementation slice:
 
 Selected next planning action:
 
-- `post_formula_provenance_report_next_slice_selection_v1`
+- `post_method_evidence_formula_provenance_next_slice_selection_v1`
 - choose exactly one next behavior or research slice before any new runtime
   widening
 - current non-selected candidates remain deferred: raw bare open-box/open-web
@@ -475,6 +479,55 @@ Selected next planning action:
   - continue to reject broad raw-family widening until a source-backed or
     formula-backed lane owns the target behavior
 
+Closed during this implementation pass:
+
+- slice id: `post_formula_provenance_report_next_slice_selection_v1`
+- selected implementation slice:
+  `formula_provenance_method_evidence_dossier_v1`
+- type: no-numeric-runtime user-facing provenance guard
+- why this was selected:
+  - trace/report formula provenance was already guarded, but proposal method
+    dossiers still used only generic `dynamicImpactTrace.notes`
+  - that meant a field-carried heavy floating formula could enter the proposal
+    solver rationale appendix as `Heavy floating-floor formula` while omitting
+    the Annex-C derivation notes that explain why the lane is scoped and
+    formula-owned
+  - the evidence packet dynamic impact citation also needed an explicit guard
+    that the formula label, estimated-evidence posture, and standardized
+    field-volume basis survive together
+- implemented behavior:
+  - formula-owned impact lanes reserve method-dossier note budget for
+    `impactSupport.formulaNotes`
+  - the heavy floating formula route keeps the scoped formula note, Annex-C
+    scope note, bare-slab relation, and floating-floor treatment relation in
+    the proposal method trace group
+  - the evidence packet now has an executable guard for
+    `Heavy floating-floor formula · Estimated evidence · Standardized
+    field-volume carry-over.`
+- artifacts:
+  - `apps/web/features/workbench/simple-workbench-method-dossier.test.ts`
+  - `apps/web/features/workbench/simple-workbench-evidence.test.ts`
+  - `packages/engine/src/post-formula-provenance-report-next-slice-selection-contract.test.ts`
+  - refreshed
+    `packages/engine/src/source-gap-candidate-re-rank-contract.test.ts`
+- non-goals:
+  - no new source rows were imported
+  - no formula constants, acoustic equations, numeric outputs, or supported
+    route families changed
+  - raw timber/open-box/open-web, Dataholz, C11c, broad heavy-concrete formula,
+    and wall-selector runtime widening remain deferred
+
+Selected next planning action:
+
+- slice id: `post_method_evidence_formula_provenance_next_slice_selection_v1`
+- type: planning / route-family selection
+- purpose:
+  - choose the next single behavior, research, or architecture slice now that
+    formula provenance is guarded across trace, report, method dossier, and
+    evidence packet surfaces
+  - do not open broad runtime widening unless the selected route family and
+    output surface are named first and source/formula ownership is executable
+
 ## 2026-04-14 Validated Restart Plan
 
 The existing plans are not finished. The implementation is at a clean,
@@ -791,8 +844,10 @@ Completed first task from this planning slice:
     `post_heavy_concrete_formula_history_next_slice_selection_v1`
   - the formula-provenance guard selected by that pass is closed:
     `heavy_concrete_formula_field_provenance_surface_v1`
+  - the proposal/method/evidence formula provenance guard is closed:
+    `formula_provenance_method_evidence_dossier_v1`
   - the current selected next planning action is:
-    `post_formula_provenance_report_next_slice_selection_v1`
+    `post_method_evidence_formula_provenance_next_slice_selection_v1`
   - all remaining risky behavior candidates stay non-widening until another
     source-backed matrix proves otherwise
 
@@ -1726,8 +1781,10 @@ Current decision after the checkpoint:
     closed
   - the selected heavy-concrete formula provenance guard
     `heavy_concrete_formula_field_provenance_surface_v1` is now closed
+  - the selected proposal/method/evidence formula provenance guard
+    `formula_provenance_method_evidence_dossier_v1` is now closed
   - the next step is the planning pass
-    `post_formula_provenance_report_next_slice_selection_v1`
+    `post_method_evidence_formula_provenance_next_slice_selection_v1`
   - if a future behavior widening is selected after this checkpoint,
     name exactly one route family and one output surface first and add
     answer/card guards before code changes
@@ -1761,9 +1818,10 @@ Current decision after the checkpoint:
     checkpoint validation/commit-preparation action is closed; the
     `post_checkpoint_next_slice_selection_v1` planning pass is closed; the CLT
     combined anchor history guard is closed; the formula-lane selection pass,
-    heavy-concrete formula history guard, and formula provenance guard are
-    closed; the active next planning action is
-    `post_formula_provenance_report_next_slice_selection_v1`
+    heavy-concrete formula history guard, formula provenance guard, and
+    proposal/method/evidence formula provenance guard are closed; the active
+    next planning action is
+    `post_method_evidence_formula_provenance_next_slice_selection_v1`
 
 ## Wall Selector Implementation Comparison
 

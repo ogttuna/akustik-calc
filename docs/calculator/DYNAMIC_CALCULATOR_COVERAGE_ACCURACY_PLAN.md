@@ -145,7 +145,7 @@ Read together with:
     - validate and commit the no-runtime source-gap guard/docs checkpoint before
       any runtime widening
   - selected next planning action:
-    `post_formula_provenance_report_next_slice_selection_v1`
+    `post_method_evidence_formula_provenance_next_slice_selection_v1`
     - `post_checkpoint_next_slice_selection_v1` is closed; it selected and
       closed `clt_combined_anchor_history_replay_matrix_v1`
     - `post_clt_combined_anchor_history_next_slice_selection_v1` is closed; it
@@ -153,6 +153,8 @@ Read together with:
     - `post_heavy_concrete_formula_history_next_slice_selection_v1` is closed;
       it selected and closed
       `heavy_concrete_formula_field_provenance_surface_v1`
+    - `post_formula_provenance_report_next_slice_selection_v1` is closed; it
+      selected and closed `formula_provenance_method_evidence_dossier_v1`
     - choose exactly one next slice before any runtime widening
 - previous completed slice:
   `bound_metric_report_surface_completion_v1`
@@ -1456,8 +1458,9 @@ is closed. The formula-lane selection action
 selected heavy-concrete formula history guard
 `heavy_concrete_formula_history_card_matrix_v1` is closed. The formula
 provenance guard `heavy_concrete_formula_field_provenance_surface_v1` is also
-closed. The current next action is
-`post_formula_provenance_report_next_slice_selection_v1`.
+closed. The proposal/method/evidence formula provenance guard
+`formula_provenance_method_evidence_dossier_v1` is closed. The current next
+action is `post_method_evidence_formula_provenance_next_slice_selection_v1`.
 
 Reason:
 

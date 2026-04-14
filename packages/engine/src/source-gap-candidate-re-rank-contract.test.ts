@@ -8,11 +8,12 @@ const POST_UBIQ_SOURCE_GAP_DECISION = {
   closedPlanningActions: [
     "post_checkpoint_next_slice_selection_v1",
     "post_clt_combined_anchor_history_next_slice_selection_v1",
-    "post_heavy_concrete_formula_history_next_slice_selection_v1"
+    "post_heavy_concrete_formula_history_next_slice_selection_v1",
+    "post_formula_provenance_report_next_slice_selection_v1"
   ],
-  latestClosedImplementationSlice: "heavy_concrete_formula_field_provenance_surface_v1",
+  latestClosedImplementationSlice: "formula_provenance_method_evidence_dossier_v1",
   planningContractRefreshSlice: "post_ubiq_source_gap_decision_matrix_v1",
-  selectedNextPlanningAction: "post_formula_provenance_report_next_slice_selection_v1",
+  selectedNextPlanningAction: "post_method_evidence_formula_provenance_next_slice_selection_v1",
   numericRuntimeBehaviorChange: false
 } as const;
 
@@ -95,11 +96,12 @@ describe("source gap candidate re-rank contract", () => {
       closedPlanningActions: [
         "post_checkpoint_next_slice_selection_v1",
         "post_clt_combined_anchor_history_next_slice_selection_v1",
-        "post_heavy_concrete_formula_history_next_slice_selection_v1"
+        "post_heavy_concrete_formula_history_next_slice_selection_v1",
+        "post_formula_provenance_report_next_slice_selection_v1"
       ],
-      latestClosedImplementationSlice: "heavy_concrete_formula_field_provenance_surface_v1",
+      latestClosedImplementationSlice: "formula_provenance_method_evidence_dossier_v1",
       planningContractRefreshSlice: "post_ubiq_source_gap_decision_matrix_v1",
-      selectedNextPlanningAction: "post_formula_provenance_report_next_slice_selection_v1",
+      selectedNextPlanningAction: "post_method_evidence_formula_provenance_next_slice_selection_v1",
       numericRuntimeBehaviorChange: false
     });
     expect(CLOSED_UBIQ_SOURCE_GAP_SLICES).toContain("ubiq_open_web_weaker_band_posture_guard_v1");

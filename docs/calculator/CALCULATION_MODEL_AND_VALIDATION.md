@@ -425,6 +425,33 @@ Latest formula provenance/report guard:
   - this is metadata/provenance behavior only; it does not widen formula scope,
     source matching, catalog import, wall behavior, or numeric acoustic results
 
+Latest proposal method/evidence formula guard:
+
+- `formula_provenance_method_evidence_dossier_v1`
+- purpose:
+  - carry the already-owned heavy concrete formula provenance into the proposal
+    method dossier and evidence packet surfaces
+  - prevent field-carried formula lanes from looking like generic estimated
+    impact lanes inside exported solver rationale material
+- implemented artifacts:
+  - `apps/web/features/workbench/simple-workbench-method-dossier.test.ts`
+  - `apps/web/features/workbench/simple-workbench-evidence.test.ts`
+  - `packages/engine/src/post-formula-provenance-report-next-slice-selection-contract.test.ts`
+- behavior now guarded:
+  - heavy floating formula with `K` and receiving-room volume still presents as
+    `Heavy floating-floor formula`
+  - the method trace group keeps the scoped formula note and Annex-C derivation
+    notes from `impactSupport.formulaNotes`
+  - the evidence packet dynamic impact citation keeps the selected formula
+    label, `Estimated evidence` tier, and standardized field-volume basis
+- validation:
+  - full engine suite: `121` files / `846` tests green
+  - full web suite: `113` files / `640` tests green
+  - engine/web typecheck and lint, `pnpm build`, and `git diff --check` green
+- non-goal:
+  - this is no-numeric-runtime UI/documentation behavior only; it does not
+    change acoustic equations, constants, source rows, or supported family scope
+
 Latest wall-selector validation:
 
 - focused engine trace matrix: `1` file, `1` test, green
@@ -809,8 +836,10 @@ The UBIQ open-web packaged finish near-miss/drop-off matrix is now implemented:
     `heavy_concrete_formula_history_card_matrix_v1`
   - heavy-concrete formula provenance guard closed as:
     `heavy_concrete_formula_field_provenance_surface_v1`
+  - proposal/method/evidence formula provenance guard closed as:
+    `formula_provenance_method_evidence_dossier_v1`
   - next selected planning route:
-    `post_formula_provenance_report_next_slice_selection_v1`
+    `post_method_evidence_formula_provenance_next_slice_selection_v1`
 
 The deferred open-box finish-tolerance mixed-history boundary is now closed:
 

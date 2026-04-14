@@ -1,10 +1,42 @@
 import { describe, expect, it } from "vitest";
 
+import type { ImpactFieldContext, RequestedOutputId } from "@dynecho/shared";
+
 import { getDynamicCalcBranchSummary } from "./dynamic-calc-branch";
 import { getPresetById } from "./preset-definitions";
 import { evaluateScenario } from "./scenario-analysis";
 import { buildSimpleWorkbenchMethodDossier } from "./simple-workbench-method-dossier";
 import { getGuidedValidationSummary } from "./guided-validation-summary";
+import type { LayerDraft } from "./workbench-store";
+
+const FORMULA_TARGET_OUTPUTS = ["Rw", "Ln,w", "DeltaLw", "L'n,w", "L'nT,w"] as const satisfies readonly RequestedOutputId[];
+
+const FORMULA_IMPACT_FIELD_CONTEXT: ImpactFieldContext = {
+  fieldKDb: 2,
+  receivingRoomVolumeM3: 55
+};
+
+const HEAVY_FLOATING_FORMULA_ROWS: readonly Omit<LayerDraft, "id">[] = [
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: "8" },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: "3" },
+  { floorRole: "base_structure", materialId: "concrete", thicknessMm: "180" }
+];
+
+function buildRows(rows: readonly Omit<LayerDraft, "id">[], id: string): LayerDraft[] {
+  return rows.map((row, index) => ({ ...row, id: `${id}-${index + 1}` }));
+}
+
+function buildHeavyFloatingFormulaScenario() {
+  return evaluateScenario({
+    id: "method-dossier-heavy-floating-formula",
+    impactFieldContext: FORMULA_IMPACT_FIELD_CONTEXT,
+    name: "Method dossier heavy floating formula",
+    rows: buildRows(HEAVY_FLOATING_FORMULA_ROWS, "method-dossier-heavy-floating-formula"),
+    source: "current",
+    studyMode: "floor",
+    targetOutputs: FORMULA_TARGET_OUTPUTS
+  });
+}
 
 describe("simple workbench method dossier", () => {
   it("packages live lane notes, stack reading, and output posture from the active dynamic result", () => {
@@ -107,5 +139,80 @@ describe("simple workbench method dossier", () => {
     expect(dossier.readyCoverageCount).toBe(2);
     expect(dossier.parkedCoverageCount).toBe(1);
     expect(dossier.unsupportedCoverageCount).toBe(1);
+  });
+
+  it("keeps heavy concrete formula derivation notes inside the proposal method dossier", () => {
+    const scenario = buildHeavyFloatingFormulaScenario();
+    const result = scenario.result;
+
+    expect(result, "formula scenario should evaluate").not.toBeNull();
+    if (!result) {
+      throw new Error("Expected formula scenario to evaluate.");
+    }
+
+    const branchSummary = getDynamicCalcBranchSummary({
+      result,
+      studyMode: "floor"
+    });
+    const validationSummary = getGuidedValidationSummary({
+      result,
+      studyMode: "floor"
+    });
+
+    const dossier = buildSimpleWorkbenchMethodDossier({
+      branchDetail: branchSummary.detail,
+      branchLabel: branchSummary.value,
+      contextLabel: "Building prediction",
+      coverageItems: [
+        {
+          detail: "Heavy floating formula result on the active impact lane.",
+          label: "Ln,w",
+          postureDetail: "The active route is a scoped heavy-concrete formula estimate.",
+          postureLabel: "Scoped live",
+          postureTone: "accent",
+          status: "live",
+          value: "65.8 dB"
+        },
+        {
+          detail: "Standardized field continuation from the same formula-owned lane.",
+          label: "L'nT,w",
+          postureDetail: "Field K and room volume are explicit.",
+          postureLabel: "Scoped live",
+          postureTone: "accent",
+          status: "live",
+          value: "65.4 dB"
+        }
+      ],
+      layers: HEAVY_FLOATING_FORMULA_ROWS.map((row, index) => ({
+        categoryLabel: "Test layer",
+        index: index + 1,
+        label: row.materialId,
+        roleLabel: row.floorRole,
+        thicknessLabel: `${row.thicknessMm} mm`
+      })),
+      result,
+      stackDetail: "3 live rows feed 3 solver layers directly on the active route.",
+      studyModeLabel: "Floor",
+      validationDetail: validationSummary.detail,
+      validationLabel: validationSummary.value,
+      warnings: scenario.warnings
+    });
+
+    const impactTraceGroup = dossier.traceGroups.find((group) => group.label === "Impact lane");
+
+    expect(impactTraceGroup).toEqual(
+      expect.objectContaining({
+        tone: "accent",
+        value: "Heavy floating-floor formula"
+      })
+    );
+    expect(impactTraceGroup?.detail).toContain("Estimated evidence using Standardized field-volume carry-over.");
+    expect(impactTraceGroup?.detail).toContain("Standardized room-volume carry-over.");
+    expect(impactTraceGroup?.notes).toHaveLength(4);
+    expect(impactTraceGroup?.notes).toContain("Scoped formula estimate is active on the current impact lane.");
+    expect(impactTraceGroup?.notes).toContain("Annex C style estimate remains a narrow heavy-floor screening path.");
+    expect(impactTraceGroup?.notes).toContain(
+      "Floating-floor branch applies 13 log10(m'load) - 14.2 log10(s') + 20.8 for the treatment term."
+    );
   });
 });

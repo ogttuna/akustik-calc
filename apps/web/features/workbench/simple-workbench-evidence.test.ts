@@ -1,8 +1,28 @@
 import { describe, expect, it } from "vitest";
 
+import type { ImpactFieldContext, RequestedOutputId } from "@dynecho/shared";
+
 import { getPresetById } from "./preset-definitions";
 import { evaluateScenario } from "./scenario-analysis";
 import { buildSimpleWorkbenchEvidencePacket } from "./simple-workbench-evidence";
+import type { LayerDraft } from "./workbench-store";
+
+const FORMULA_TARGET_OUTPUTS = ["Rw", "Ln,w", "DeltaLw", "L'n,w", "L'nT,w"] as const satisfies readonly RequestedOutputId[];
+
+const FORMULA_IMPACT_FIELD_CONTEXT: ImpactFieldContext = {
+  fieldKDb: 2,
+  receivingRoomVolumeM3: 55
+};
+
+const HEAVY_FLOATING_FORMULA_ROWS: readonly Omit<LayerDraft, "id">[] = [
+  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: "8" },
+  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: "3" },
+  { floorRole: "base_structure", materialId: "concrete", thicknessMm: "180" }
+];
+
+function buildRows(rows: readonly Omit<LayerDraft, "id">[], id: string): LayerDraft[] {
+  return rows.map((row, index) => ({ ...row, id: `${id}-${index + 1}` }));
+}
 
 describe("simple workbench evidence packet", () => {
   it("surfaces decision-trail and exact-family citation data for an exact floor preset", () => {
@@ -69,5 +89,31 @@ describe("simple workbench evidence packet", () => {
     expect(dynamicCitation).toBeTruthy();
     expect(dynamicCitation?.detail).toContain("Ambiguous boundary with Double Leaf");
     expect(dynamicCitation?.detail).toContain("protected corridor hold");
+  });
+
+  it("keeps heavy concrete formula provenance explicit in dynamic impact citations", () => {
+    const scenario = evaluateScenario({
+      id: "evidence-heavy-floating-formula",
+      impactFieldContext: FORMULA_IMPACT_FIELD_CONTEXT,
+      name: "Evidence heavy floating formula",
+      rows: buildRows(HEAVY_FLOATING_FORMULA_ROWS, "evidence-heavy-floating-formula"),
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: FORMULA_TARGET_OUTPUTS
+    });
+
+    const packet = buildSimpleWorkbenchEvidencePacket({
+      outputs: FORMULA_TARGET_OUTPUTS,
+      result: scenario.result,
+      warnings: scenario.warnings
+    });
+    const dynamicCitation = packet.citations.find((citation) => citation.label === "Dynamic impact anchor");
+
+    expect(dynamicCitation).toEqual(
+      expect.objectContaining({
+        detail: "Heavy floating-floor formula · Estimated evidence · Standardized field-volume carry-over.",
+        tone: "accent"
+      })
+    );
   });
 });

@@ -104,10 +104,26 @@ Planning / implementation update: `2026-04-14`
   - full validation is green: engine `120` files / `844` tests, web `113`
     files / `638` tests, engine/web typecheck and lint, `pnpm build`, and
     `git diff --check`
+- closed no-numeric-runtime proposal/method/evidence provenance guard:
+  `formula_provenance_method_evidence_dossier_v1`
+  - numeric results, formula constants, source rows, and supported route
+    families did not change
+  - field-carried heavy floating formula results now keep Annex-C formula
+    derivation notes inside the proposal method dossier instead of showing
+    only generic dynamic trace notes
+  - the evidence packet dynamic impact citation is guarded as
+    `Heavy floating-floor formula · Estimated evidence · Standardized
+    field-volume carry-over.`
+  - focused engine selection guard is green: `3` files / `7` tests
+  - focused web method/evidence/report guard is green: `3` files / `6` tests
+  - full validation is green: engine `121` files / `846` tests, web `113`
+    files / `640` tests, engine/web typecheck and lint, `pnpm build`, and
+    `git diff --check`
 - selected next planning action:
-  `post_formula_provenance_report_next_slice_selection_v1`
-  - choose the next single behavior or research slice after formula provenance
-    is explicit on trace/report surfaces
+  `post_method_evidence_formula_provenance_next_slice_selection_v1`
+  - choose the next single behavior, research, or architecture slice after
+    formula provenance is explicit on trace, report, method dossier, and
+    evidence packet surfaces
 - architecture checkpoint scan:
   - production changes in this pass are metadata/provenance-only:
     `packages/engine/src/impact-support.ts`,
@@ -360,8 +376,10 @@ Planning / implementation update: `2026-04-14`
     `heavy_concrete_formula_history_card_matrix_v1`
   - closed heavy-concrete formula provenance guard:
     `heavy_concrete_formula_field_provenance_surface_v1`
+  - closed proposal/method/evidence formula provenance guard:
+    `formula_provenance_method_evidence_dossier_v1`
   - next selected planning action:
-    `post_formula_provenance_report_next_slice_selection_v1`
+    `post_method_evidence_formula_provenance_next_slice_selection_v1`
 
 Verified broad corridors:
 
@@ -2032,9 +2050,10 @@ Current checkpoint before the remaining ordered list:
     also closed; the checkpoint action is closed; the active next no-runtime
     action is closed as `post_checkpoint_next_slice_selection_v1`; the CLT
     combined anchor history guard, formula-lane selection pass,
-    heavy-concrete formula history guard, and formula provenance guard are also
-    closed, and the next planning action is
-    `post_formula_provenance_report_next_slice_selection_v1`
+    heavy-concrete formula history guard, formula provenance guard, and
+    proposal/method/evidence provenance guard are also closed, and the next
+    planning action is
+    `post_method_evidence_formula_provenance_next_slice_selection_v1`
 
 1. Keep the closed raw-floor negative audit, the closed official-product representative breadth slice, the closed UBIQ provenance/boundary-freeze slice, and the closed interpolation-steel mixed seeded-family slice frozen:
    - do not use the new `FL-23/25/27` exact-only correction rows as generic
@@ -2256,9 +2275,9 @@ Current checkpoint before the remaining ordered list:
      material-surface recheck are closed; the checkpoint action is closed; the
      `post_checkpoint_next_slice_selection_v1` planning pass and CLT combined
      anchor history guard are closed; the formula-lane selection pass,
-     heavy-concrete formula history guard, and formula provenance guard are
-     closed; the next action is
-     `post_formula_provenance_report_next_slice_selection_v1`
+     heavy-concrete formula history guard, formula provenance guard, and
+     proposal/method/evidence provenance guard are closed; the next action is
+     `post_method_evidence_formula_provenance_next_slice_selection_v1`
      before any wider runtime change
 
 Use the source gap ledger to decide which families should be researched or widened first instead of opening new lanes ad hoc:

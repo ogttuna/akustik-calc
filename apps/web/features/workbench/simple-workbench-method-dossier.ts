@@ -125,11 +125,23 @@ function buildImpactTraceGroup(result: AssemblyCalculation | null): SimpleWorkbe
     return null;
   }
 
-  const noteSelection = selectSimpleWorkbenchTraceNotes(trace.notes, {
+  const formulaNotes = result?.impactSupport?.formulaNotes ?? [];
+  const isFormulaEstimate =
+    trace.selectionKind === "formula_estimate" || result?.impactPredictorStatus?.implementedFormulaEstimate === true;
+  const traceNoteSelection = selectSimpleWorkbenchTraceNotes(trace.notes, {
     fallbackNotes: [
       `${trace.fieldContinuationLabel} keeps ${trace.availableMetricLabels.join(", ") || "the current impact companions"} on the active lane.`
-    ]
+    ],
+    maxNotes: isFormulaEstimate && formulaNotes.length > 0 ? 1 : 4
   });
+  const visibleNotes =
+    isFormulaEstimate && formulaNotes.length > 0
+      ? [
+          ...traceNoteSelection.notes,
+          // Formula lanes need derivation notes in proposal dossiers; generic trace notes can otherwise consume all visible slots.
+          ...formulaNotes.slice(0, Math.max(0, 4 - traceNoteSelection.notes.length))
+        ]
+      : traceNoteSelection.notes;
   const supportDetail = [trace.detectedSupportFamilyLabel, trace.systemTypeLabel, trace.supportFormLabel].filter(Boolean).join(" · ");
 
   return {
@@ -138,7 +150,7 @@ function buildImpactTraceGroup(result: AssemblyCalculation | null): SimpleWorkbe
       `${supportDetail.length > 0 ? `${supportDetail}. ` : ""}` +
       `${trace.fieldContinuationLabel}${typeof trace.fitPercent === "number" ? ` at ${trace.fitPercent.toFixed(0)}% fit.` : "."}`,
     label: "Impact lane",
-    notes: noteSelection.notes,
+    notes: visibleNotes,
     tone: mapImpactTone(trace.evidenceTier),
     value: trace.selectedLabel
   };
