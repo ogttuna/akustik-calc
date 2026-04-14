@@ -193,7 +193,9 @@ Current execution status:
   - validate and commit the no-runtime source-gap guard/docs checkpoint before
     any solver/catalog/workbench runtime widening
 - selected next no-runtime planning action:
-  `post_checkpoint_next_slice_selection_v1`
+  `post_clt_combined_anchor_history_next_slice_selection_v1`
+  - `post_checkpoint_next_slice_selection_v1` is closed; it selected and
+    closed `clt_combined_anchor_history_replay_matrix_v1`
   - choose exactly one next behavior or research slice before runtime widening
 - `open_box_dry_package_fragmentation_trace_matrix_v1` is now closed:
   - this was a no-widening engine/workbench trace-card checkpoint for the TUAS

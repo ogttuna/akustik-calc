@@ -56,11 +56,34 @@ Planning / implementation update: `2026-04-14`
     files / `8` tests, full engine suite `117` files / `837` tests, full web
     suite `110` files / `633` tests, engine/web typecheck and lint, and
     `pnpm build` plus `git diff --check`
-- selected next planning action:
+- closed planning action:
   `post_checkpoint_next_slice_selection_v1`
-  - choose exactly one next behavior or research slice from the guarded state;
-    keep runtime widening closed until a route family and output surface are
-    named with source/value/origin/support evidence
+  - selected the no-runtime
+    `clt_combined_anchor_history_replay_matrix_v1` workbench field-card guard;
+    raw bare open-box/open-web impact, `GDMTXA04A` exact reopen, `C11c` exact
+    import, and wall-selector architecture widening stayed non-eligible
+- closed no-runtime history guard:
+  `clt_combined_anchor_history_replay_matrix_v1`
+  - `C4c` exact, `C5c` predictor-backed, and under-described combined-CLT
+    fail-closed routes now survive workbench split, row-order bounce,
+    save/load, and floor/wall mode detour on field impact cards
+  - focused web guard is green: `1` file / `1` test
+- selected next planning action:
+  `post_clt_combined_anchor_history_next_slice_selection_v1`
+  - choose the next single route family and output surface; this history guard
+    does not itself authorize broad runtime widening
+- architecture checkpoint scan:
+  - no production runtime file changed in this pass; the new artifacts are
+    executable tests and planning docs
+  - existing large-file hotspots remain manageable only because they are heavily
+    covered, but future work touching them should budget extraction before
+    widening behavior:
+    `packages/engine/src/dynamic-airborne.ts` (about `6.6k` lines),
+    `apps/web/features/workbench/simple-workbench-proposal.ts` (about `3.1k`
+    lines), `apps/web/features/workbench/simple-workbench-proposal-panel.tsx`
+    (about `2.0k` lines), and
+    `packages/engine/src/impact-predictor-input.ts` (about `2.0k` lines)
+  - the current CLT history checkpoint did not add to those hotspots
 - source review during that pass kept the conservative posture:
   - UBIQ open-web evidence remains packaged INEX / finish / resilient-ceiling
     table evidence, not bare open-web impact evidence
@@ -288,7 +311,11 @@ Planning / implementation update: `2026-04-14`
   - closed checkpoint action:
     `checkpoint_validation_and_commit_v1`
   - next selected no-runtime planning action:
+    `post_clt_combined_anchor_history_next_slice_selection_v1`
+  - closed follow-up planning action:
     `post_checkpoint_next_slice_selection_v1`
+  - closed CLT combined anchor history guard:
+    `clt_combined_anchor_history_replay_matrix_v1`
 
 Verified broad corridors:
 
@@ -1957,7 +1984,9 @@ Current checkpoint before the remaining ordered list:
     are closed; the post-UBIQ decision matrix refresh and C11c frequency/source
     recheck are closed; the Dataholz `GDMTXA04A` material-surface recheck is
     also closed; the checkpoint action is closed; the active next no-runtime
-    action is `post_checkpoint_next_slice_selection_v1`
+    action is closed as `post_checkpoint_next_slice_selection_v1`; the CLT
+    combined anchor history guard is also closed, and the next planning action
+    is `post_clt_combined_anchor_history_next_slice_selection_v1`
 
 1. Keep the closed raw-floor negative audit, the closed official-product representative breadth slice, the closed UBIQ provenance/boundary-freeze slice, and the closed interpolation-steel mixed seeded-family slice frozen:
    - do not use the new `FL-23/25/27` exact-only correction rows as generic
@@ -2177,8 +2206,10 @@ Current checkpoint before the remaining ordered list:
      history-replay matrix are closed; the post-UBIQ decision matrix refresh is
      closed; the C11c frequency/source recheck and Dataholz `GDMTXA04A`
      material-surface recheck are closed; the checkpoint action is closed; the
-     next no-runtime action is `post_checkpoint_next_slice_selection_v1` before
-     any wider runtime change
+     `post_checkpoint_next_slice_selection_v1` planning pass and CLT combined
+     anchor history guard are closed; the next no-runtime action is
+     `post_clt_combined_anchor_history_next_slice_selection_v1` before any
+     wider runtime change
 
 Use the source gap ledger to decide which families should be researched or widened first instead of opening new lanes ad hoc:
 

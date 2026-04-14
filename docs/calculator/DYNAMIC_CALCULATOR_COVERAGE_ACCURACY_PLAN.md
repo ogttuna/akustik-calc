@@ -145,7 +145,9 @@ Read together with:
     - validate and commit the no-runtime source-gap guard/docs checkpoint before
       any runtime widening
   - selected next no-runtime planning action:
-    `post_checkpoint_next_slice_selection_v1`
+    `post_clt_combined_anchor_history_next_slice_selection_v1`
+    - `post_checkpoint_next_slice_selection_v1` is closed; it selected and
+      closed `clt_combined_anchor_history_replay_matrix_v1`
     - choose exactly one next slice before any runtime widening
 - previous completed slice:
   `bound_metric_report_surface_completion_v1`
@@ -1441,8 +1443,11 @@ This checkpoint has since been superseded by the closed
 follow-ups are now also closed. The C11c frequency/source recheck is also
 closed as no-runtime. The Dataholz `GDMTXA04A` material-surface recheck is
 also closed as no-runtime. The checkpoint action
-`checkpoint_validation_and_commit_v1` is closed. The current next action is
-`post_checkpoint_next_slice_selection_v1`.
+`checkpoint_validation_and_commit_v1` is closed. The follow-up planning action
+`post_checkpoint_next_slice_selection_v1` is closed, and the selected CLT
+combined anchor history guard `clt_combined_anchor_history_replay_matrix_v1`
+is closed. The current next action is
+`post_clt_combined_anchor_history_next_slice_selection_v1`.
 
 Reason:
 

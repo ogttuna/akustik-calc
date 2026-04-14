@@ -4,9 +4,11 @@ import { describe, expect, it } from "vitest";
 const POST_UBIQ_SOURCE_GAP_DECISION = {
   closedResearchSlices: ["tuas_c11c_frequency_source_recheck_v1", "dataholz_gdmtxa04a_material_surface_recheck_v1"],
   closedCheckpointAction: "checkpoint_validation_and_commit_v1",
-  latestCheckpointCommit: "1be632d",
+  latestCheckpointCommit: "49ce4eb",
+  closedPlanningAction: "post_checkpoint_next_slice_selection_v1",
+  latestClosedImplementationSlice: "clt_combined_anchor_history_replay_matrix_v1",
   planningContractRefreshSlice: "post_ubiq_source_gap_decision_matrix_v1",
-  selectedNextPlanningAction: "post_checkpoint_next_slice_selection_v1",
+  selectedNextPlanningAction: "post_clt_combined_anchor_history_next_slice_selection_v1",
   runtimeBehaviorChange: false
 } as const;
 
@@ -78,16 +80,18 @@ function boundIdsMatching(pattern: RegExp) {
 }
 
 describe("source gap candidate re-rank contract", () => {
-  it("selects checkpoint validation after the closed C11c and Dataholz no-runtime rechecks", () => {
+  it("keeps source-gap widening closed after checkpoint validation and the CLT history guard", () => {
     const selectedCandidates = SOURCE_GAP_CANDIDATES.filter((candidate) => candidate.selectedNextGuard);
 
     expect(selectedCandidates).toEqual([]);
     expect(POST_UBIQ_SOURCE_GAP_DECISION).toEqual({
       closedResearchSlices: ["tuas_c11c_frequency_source_recheck_v1", "dataholz_gdmtxa04a_material_surface_recheck_v1"],
       closedCheckpointAction: "checkpoint_validation_and_commit_v1",
-      latestCheckpointCommit: "1be632d",
+      latestCheckpointCommit: "49ce4eb",
+      closedPlanningAction: "post_checkpoint_next_slice_selection_v1",
+      latestClosedImplementationSlice: "clt_combined_anchor_history_replay_matrix_v1",
       planningContractRefreshSlice: "post_ubiq_source_gap_decision_matrix_v1",
-      selectedNextPlanningAction: "post_checkpoint_next_slice_selection_v1",
+      selectedNextPlanningAction: "post_clt_combined_anchor_history_next_slice_selection_v1",
       runtimeBehaviorChange: false
     });
     expect(CLOSED_UBIQ_SOURCE_GAP_SLICES).toContain("ubiq_open_web_weaker_band_posture_guard_v1");

@@ -124,9 +124,13 @@ Current planning implication:
     - `dataholz_gdmtxa04a_material_surface_recheck_v1` is closed as no-runtime
     - closed checkpoint action:
       `checkpoint_validation_and_commit_v1`
+    - follow-up planning action:
+      `post_checkpoint_next_slice_selection_v1` is closed
+    - selected CLT guard:
+      `clt_combined_anchor_history_replay_matrix_v1` is closed
     - next selected planning action:
-      `post_checkpoint_next_slice_selection_v1`
-    - validate and commit the no-runtime source-gap checkpoint before any
+      `post_clt_combined_anchor_history_next_slice_selection_v1`
+    - validate one selected route family and output surface before any
       behavior widening or exact reopen
   - Dataholz `GDMTXA04A`, TUAS `C11c`, and raw bare open-box/open-web impact
     support remain deferred until stronger source/material/frequency evidence
@@ -1359,7 +1363,10 @@ Scope note:
     Dataholz `GDMTXA04A` material-surface recheck are also closed as
     no-runtime, the checkpoint action is closed as
     `checkpoint_validation_and_commit_v1`, and the selected next planning
-    action is now `post_checkpoint_next_slice_selection_v1`
+    action is now closed as `post_checkpoint_next_slice_selection_v1`; the
+    selected CLT combined anchor history guard is also closed, and the next
+    planning action is now
+    `post_clt_combined_anchor_history_next_slice_selection_v1`
 - the no-widening `mixed_floor_wall_output_card_snapshot_grid_v1` guard is
   implemented; the source re-rank is implemented; the UBIQ weak-band posture
   guard is implemented; the UBIQ weak-band exact import is implemented; the
@@ -1374,9 +1381,11 @@ Scope note:
   packaged open-web history-replay matrix is implemented; the current planning
   slice is `post_ubiq_source_gap_re_rank_v1`; the executable refresh, C11c
   frequency/source recheck, and Dataholz `GDMTXA04A` material-surface recheck
-  are closed, `checkpoint_validation_and_commit_v1` is closed, and
-  `post_checkpoint_next_slice_selection_v1` is the next selected no-runtime
-  planning action
+  are closed, `checkpoint_validation_and_commit_v1` is closed,
+  `post_checkpoint_next_slice_selection_v1` is closed, the CLT combined anchor
+  history guard is closed, and
+  `post_clt_combined_anchor_history_next_slice_selection_v1` is the next
+  selected no-runtime planning action
 - raw-floor, CLT-local, UBIQ, and Dataholz source-family widening remains
   deferred unless a future candidate first gets value/origin/support/card trace
   evidence

@@ -749,8 +749,12 @@ The UBIQ open-web packaged finish near-miss/drop-off matrix is now implemented:
     single-material visible surface
   - checkpoint validation/commit-preparation route closed as:
     `checkpoint_validation_and_commit_v1`
-  - next selected no-runtime planning route:
+  - follow-up planning route closed as:
     `post_checkpoint_next_slice_selection_v1`
+  - CLT combined anchor history guard closed as:
+    `clt_combined_anchor_history_replay_matrix_v1`
+  - next selected no-runtime planning route:
+    `post_clt_combined_anchor_history_next_slice_selection_v1`
 
 The deferred open-box finish-tolerance mixed-history boundary is now closed:
 

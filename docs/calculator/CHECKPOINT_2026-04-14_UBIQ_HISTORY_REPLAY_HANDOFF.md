@@ -286,13 +286,41 @@ Closed checkpoint action:
   - `pnpm build` green with known optional `sharp/@img` warnings
   - `git diff --check`
 
-Selected next planning action:
+Closed next planning action:
 
 - `post_checkpoint_next_slice_selection_v1`
 - no runtime behavior change
-- choose exactly one next behavior or research slice before any runtime
-  widening; keep `C11c`, `GDMTXA04A`, and raw bare open-box/open-web impact
-  closed unless stronger source/material/frequency evidence appears
+- selected and implemented:
+  `clt_combined_anchor_history_replay_matrix_v1`
+- selected route family / output surface:
+  `tuas_combined_clt_anchors` / `workbench_field_impact_cards`
+
+Closed next implementation action:
+
+- `clt_combined_anchor_history_replay_matrix_v1`
+- no runtime behavior change
+- result: `C4c` exact, `C5c` predictor-backed, and under-described
+  combined-CLT fail-closed routes now survive split, row-order bounce,
+  save/load, and floor/wall mode detour on workbench field impact cards
+
+Selected next planning action:
+
+- `post_clt_combined_anchor_history_next_slice_selection_v1`
+- no runtime behavior change
+- choose the next single route family and output surface; do not treat the CLT
+  history guard as permission for broad raw-floor, Dataholz, C11c, UBIQ, or wall
+  selector widening
+
+Architecture checkpoint note:
+
+- no production runtime file changed in this pass
+- current large-file hotspots are pre-existing:
+  `packages/engine/src/dynamic-airborne.ts`,
+  `apps/web/features/workbench/simple-workbench-proposal.ts`,
+  `apps/web/features/workbench/simple-workbench-proposal-panel.tsx`, and
+  `packages/engine/src/impact-predictor-input.ts`
+- future behavior work touching those files should extract a narrow helper or
+  module with regression tests before widening the calculator surface
 
 Purpose:
 
