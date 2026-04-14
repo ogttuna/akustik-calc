@@ -5,11 +5,15 @@ const POST_UBIQ_SOURCE_GAP_DECISION = {
   closedResearchSlices: ["tuas_c11c_frequency_source_recheck_v1", "dataholz_gdmtxa04a_material_surface_recheck_v1"],
   closedCheckpointAction: "checkpoint_validation_and_commit_v1",
   latestCheckpointCommit: "49ce4eb",
-  closedPlanningActions: ["post_checkpoint_next_slice_selection_v1", "post_clt_combined_anchor_history_next_slice_selection_v1"],
-  latestClosedImplementationSlice: "heavy_concrete_formula_history_card_matrix_v1",
+  closedPlanningActions: [
+    "post_checkpoint_next_slice_selection_v1",
+    "post_clt_combined_anchor_history_next_slice_selection_v1",
+    "post_heavy_concrete_formula_history_next_slice_selection_v1"
+  ],
+  latestClosedImplementationSlice: "heavy_concrete_formula_field_provenance_surface_v1",
   planningContractRefreshSlice: "post_ubiq_source_gap_decision_matrix_v1",
-  selectedNextPlanningAction: "post_heavy_concrete_formula_history_next_slice_selection_v1",
-  runtimeBehaviorChange: false
+  selectedNextPlanningAction: "post_formula_provenance_report_next_slice_selection_v1",
+  numericRuntimeBehaviorChange: false
 } as const;
 
 const CLOSED_UBIQ_SOURCE_GAP_SLICES = [
@@ -88,11 +92,15 @@ describe("source gap candidate re-rank contract", () => {
       closedResearchSlices: ["tuas_c11c_frequency_source_recheck_v1", "dataholz_gdmtxa04a_material_surface_recheck_v1"],
       closedCheckpointAction: "checkpoint_validation_and_commit_v1",
       latestCheckpointCommit: "49ce4eb",
-      closedPlanningActions: ["post_checkpoint_next_slice_selection_v1", "post_clt_combined_anchor_history_next_slice_selection_v1"],
-      latestClosedImplementationSlice: "heavy_concrete_formula_history_card_matrix_v1",
+      closedPlanningActions: [
+        "post_checkpoint_next_slice_selection_v1",
+        "post_clt_combined_anchor_history_next_slice_selection_v1",
+        "post_heavy_concrete_formula_history_next_slice_selection_v1"
+      ],
+      latestClosedImplementationSlice: "heavy_concrete_formula_field_provenance_surface_v1",
       planningContractRefreshSlice: "post_ubiq_source_gap_decision_matrix_v1",
-      selectedNextPlanningAction: "post_heavy_concrete_formula_history_next_slice_selection_v1",
-      runtimeBehaviorChange: false
+      selectedNextPlanningAction: "post_formula_provenance_report_next_slice_selection_v1",
+      numericRuntimeBehaviorChange: false
     });
     expect(CLOSED_UBIQ_SOURCE_GAP_SLICES).toContain("ubiq_open_web_weaker_band_posture_guard_v1");
     expect(CLOSED_UBIQ_SOURCE_GAP_SLICES).toContain("ubiq_weak_band_exact_import_source_mapping_v1");

@@ -42,10 +42,10 @@ type BuildDynamicImpactTraceInput = {
   resolvedLayers: readonly ResolvedLayer[];
 };
 
-const FORMULA_BASES = new Set<ImpactCalculation["basis"]>([
-  "predictor_heavy_bare_floor_iso12354_annexc_estimate",
-  "predictor_heavy_floating_floor_iso12354_annexc_estimate"
-]);
+const FORMULA_BARE_BASIS = "predictor_heavy_bare_floor_iso12354_annexc_estimate";
+const FORMULA_BARE_METRIC_BASIS = "predictor_bare_massive_floor_iso12354_annexc_estimate";
+const FORMULA_FLOATING_BASIS = "predictor_heavy_floating_floor_iso12354_annexc_estimate";
+const FORMULA_PUBLISHED_UPPER_TREATMENT_BASIS = "predictor_heavy_concrete_published_upper_treatment_estimate";
 
 function formatSelectionKindLabel(kind: DynamicImpactSelectionKind): string {
   switch (kind) {
@@ -66,6 +66,35 @@ function formatSelectionKindLabel(kind: DynamicImpactSelectionKind): string {
     case "bound_family_estimate":
       return "Bound family estimate";
   }
+}
+
+function getScopedFormulaSelectionLabel(
+  impact: ImpactCalculation | null,
+  impactBasis: ImpactCalculation["basis"] | undefined
+): string | null {
+  const basisLabels = new Set<string>();
+
+  if (impactBasis) {
+    basisLabels.add(impactBasis);
+  }
+
+  for (const value of Object.values(impact?.metricBasis ?? {})) {
+    basisLabels.add(value);
+  }
+
+  if (basisLabels.has(FORMULA_FLOATING_BASIS)) {
+    return "Heavy floating-floor formula";
+  }
+
+  if (basisLabels.has(FORMULA_BARE_BASIS) || basisLabels.has(FORMULA_BARE_METRIC_BASIS)) {
+    return "Heavy bare-floor formula";
+  }
+
+  if (basisLabels.has(FORMULA_PUBLISHED_UPPER_TREATMENT_BASIS)) {
+    return "Heavy concrete published upper-treatment estimate";
+  }
+
+  return null;
 }
 
 function formatEvidenceTierLabel(tier: DynamicImpactEvidenceTier): string {
@@ -441,6 +470,7 @@ export function buildDynamicImpactTrace(
     lowerBoundImpact: input.lowerBoundImpact
   });
   const impactBasis = input.impact?.basis ?? input.lowerBoundImpact?.basis;
+  const formulaSelectionLabel = getScopedFormulaSelectionLabel(input.impact, input.impact?.basis);
   const availableMetricLabels = collectMetricLabels(input.impact, input.lowerBoundImpact);
   const structuralSupportType =
     resolvedPredictorInput?.structuralSupportType ?? structuralSupportTypeFromFamily(supportFamily ?? undefined);
@@ -521,13 +551,10 @@ export function buildDynamicImpactTrace(
     selectedSourceLabels = input.boundFloorSystemEstimate.sourceSystems.map((system) => system.label);
     candidateRowCount = input.boundFloorSystemEstimate.sourceSystems.length;
     fitPercent = input.boundFloorSystemEstimate.fitPercent;
-  } else if (impactBasis && FORMULA_BASES.has(impactBasis)) {
+  } else if (formulaSelectionLabel) {
     selectionKind = "formula_estimate";
     evidenceTier = "estimate";
-    selectedLabel =
-      impactBasis === "predictor_heavy_bare_floor_iso12354_annexc_estimate"
-        ? "Heavy bare-floor formula"
-        : "Heavy floating-floor formula";
+    selectedLabel = formulaSelectionLabel;
     candidateRowCount = 1;
   }
 

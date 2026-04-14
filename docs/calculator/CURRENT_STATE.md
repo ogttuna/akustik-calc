@@ -68,11 +68,13 @@ Planning / implementation update: `2026-04-14`
     fail-closed routes now survive workbench split, row-order bounce,
     save/load, and floor/wall mode detour on field impact cards
   - focused web guard is green: `1` file / `1` test
-- selected next planning action:
+- closed planning action:
   `post_heavy_concrete_formula_history_next_slice_selection_v1`
-  - choose the next single route family and output surface; the heavy-concrete
-    formula guard does not itself authorize broad raw timber, open-box,
-    open-web, Dataholz, C11c, or wall-selector widening
+  - selected the narrow runtime-metadata slice
+    `heavy_concrete_formula_field_provenance_surface_v1`
+  - rejected broad raw timber, open-box, open-web, Dataholz, C11c,
+    heavy-concrete formula widening, and wall-selector widening as immediate
+    follow-ups
 - closed planning action:
   `post_clt_combined_anchor_history_next_slice_selection_v1`
   - selected and implemented
@@ -86,9 +88,33 @@ Planning / implementation update: `2026-04-14`
   - covered cards: `Rw`, `Ln,w`, `DeltaLw`, `L'n,w`, and `L'nT,w`
   - focused engine selection guard is green: `2` files / `4` tests
   - focused web formula history guard is green: `1` file / `3` tests
+- closed runtime-metadata formula provenance guard:
+  `heavy_concrete_formula_field_provenance_surface_v1`
+  - numeric results did not change
+  - field-carried heavy bare/floating concrete formula metrics are now still
+    identified from `impact.metricBasis` after `impact.basis` changes to the
+    mixed field-normalization lane
+  - `impactPredictorStatus.implementedFormulaEstimate`,
+    `impactSupport.formulaNotes`, `dynamicImpactTrace.selectedLabel`, the
+    impact trace panel, and the Markdown report now keep the formula origin
+    visible
+  - focused engine provenance guard is green: `3` files / `7` tests
+  - focused web provenance/history/branch guard is green: `4` files / `16`
+    tests
+  - full validation is green: engine `120` files / `844` tests, web `113`
+    files / `638` tests, engine/web typecheck and lint, `pnpm build`, and
+    `git diff --check`
+- selected next planning action:
+  `post_formula_provenance_report_next_slice_selection_v1`
+  - choose the next single behavior or research slice after formula provenance
+    is explicit on trace/report surfaces
 - architecture checkpoint scan:
-  - no production runtime file changed in this pass; the new artifacts are
-    executable tests and planning docs
+  - production changes in this pass are metadata/provenance-only:
+    `packages/engine/src/impact-support.ts`,
+    `packages/engine/src/impact-predictor-status.ts`, and
+    `packages/engine/src/dynamic-impact.ts`
+  - no formula scope, source row, source-family lane, or numeric acoustic
+    result was widened
   - existing large-file hotspots remain manageable only because they are heavily
     covered, but future work touching them should budget extraction before
     widening behavior:
@@ -332,8 +358,10 @@ Planning / implementation update: `2026-04-14`
     `post_clt_combined_anchor_history_next_slice_selection_v1`
   - closed heavy-concrete formula history guard:
     `heavy_concrete_formula_history_card_matrix_v1`
-  - next selected no-runtime planning action:
-    `post_heavy_concrete_formula_history_next_slice_selection_v1`
+  - closed heavy-concrete formula provenance guard:
+    `heavy_concrete_formula_field_provenance_surface_v1`
+  - next selected planning action:
+    `post_formula_provenance_report_next_slice_selection_v1`
 
 Verified broad corridors:
 
@@ -2003,9 +2031,10 @@ Current checkpoint before the remaining ordered list:
     recheck are closed; the Dataholz `GDMTXA04A` material-surface recheck is
     also closed; the checkpoint action is closed; the active next no-runtime
     action is closed as `post_checkpoint_next_slice_selection_v1`; the CLT
-    combined anchor history guard, formula-lane selection pass, and
-    heavy-concrete formula history guard are also closed, and the next planning
-    action is `post_heavy_concrete_formula_history_next_slice_selection_v1`
+    combined anchor history guard, formula-lane selection pass,
+    heavy-concrete formula history guard, and formula provenance guard are also
+    closed, and the next planning action is
+    `post_formula_provenance_report_next_slice_selection_v1`
 
 1. Keep the closed raw-floor negative audit, the closed official-product representative breadth slice, the closed UBIQ provenance/boundary-freeze slice, and the closed interpolation-steel mixed seeded-family slice frozen:
    - do not use the new `FL-23/25/27` exact-only correction rows as generic
@@ -2226,9 +2255,10 @@ Current checkpoint before the remaining ordered list:
      closed; the C11c frequency/source recheck and Dataholz `GDMTXA04A`
      material-surface recheck are closed; the checkpoint action is closed; the
      `post_checkpoint_next_slice_selection_v1` planning pass and CLT combined
-     anchor history guard are closed; the formula-lane selection pass and
-     heavy-concrete formula history guard are closed; the next no-runtime
-     action is `post_heavy_concrete_formula_history_next_slice_selection_v1`
+     anchor history guard are closed; the formula-lane selection pass,
+     heavy-concrete formula history guard, and formula provenance guard are
+     closed; the next action is
+     `post_formula_provenance_report_next_slice_selection_v1`
      before any wider runtime change
 
 Use the source gap ledger to decide which families should be researched or widened first instead of opening new lanes ad hoc:

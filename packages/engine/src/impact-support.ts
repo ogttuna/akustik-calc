@@ -20,10 +20,9 @@ type BuildImpactSupportInput = {
   lowerBoundImpact: ImpactBoundCalculation | null;
 };
 
-const ANNEX_C_STYLE_BASES = new Set<ImpactCalculation["basis"]>([
-  "predictor_heavy_bare_floor_iso12354_annexc_estimate",
-  "predictor_heavy_floating_floor_iso12354_annexc_estimate"
-]);
+const ANNEX_C_BARE_BASIS = "predictor_heavy_bare_floor_iso12354_annexc_estimate";
+const ANNEX_C_BARE_METRIC_BASIS = "predictor_bare_massive_floor_iso12354_annexc_estimate";
+const ANNEX_C_FLOATING_BASIS = "predictor_heavy_floating_floor_iso12354_annexc_estimate";
 
 function pushUnique(target: string[], line: string) {
   if (!target.includes(line)) {
@@ -41,6 +40,14 @@ function hasMetricBasis(impact: ImpactCalculation | null, label: string): boolea
   }
 
   return Object.values(impact.metricBasis).some((value) => value === label);
+}
+
+function hasBareAnnexCFormula(impact: ImpactCalculation | null): boolean {
+  return impact?.basis === ANNEX_C_BARE_BASIS || hasMetricBasis(impact, ANNEX_C_BARE_METRIC_BASIS);
+}
+
+function hasFloatingAnnexCFormula(impact: ImpactCalculation | null): boolean {
+  return impact?.basis === ANNEX_C_FLOATING_BASIS || hasMetricBasis(impact, ANNEX_C_FLOATING_BASIS);
 }
 
 export function buildImpactSupport(input: BuildImpactSupportInput): ImpactSupport | null {
@@ -88,16 +95,16 @@ export function buildImpactSupport(input: BuildImpactSupportInput): ImpactSuppor
     notes.push(`Published bound-only family estimate is active: ${input.boundFloorSystemEstimate.structuralFamily}.`);
   }
 
-  if (input.impact && ANNEX_C_STYLE_BASES.has(input.impact.basis)) {
+  const hasBareAnnexC = hasBareAnnexCFormula(input.impact);
+  const hasFloatingAnnexC = hasFloatingAnnexCFormula(input.impact);
+
+  if (input.impact && (hasBareAnnexC || hasFloatingAnnexC)) {
     notes.push("Annex C style estimate is active on the dedicated impact lane.");
     pushUnique(formulaNotes, "Annex C style estimate remains a narrow heavy-floor screening path.");
-    if (typeof input.impact.baseSurfaceMassKgM2 === "number") {
+    if (hasBareAnnexC || hasFloatingAnnexC) {
       pushUnique(formulaNotes, "Heavy bare-floor path follows 164 - 35 log10(m'base) for the base slab contribution.");
     }
-    if (
-      typeof input.impact.floatingLoadSurfaceMassKgM2 === "number" &&
-      typeof input.impact.resilientDynamicStiffnessMNm3 === "number"
-    ) {
+    if (hasFloatingAnnexC) {
       pushUnique(formulaNotes, "Floating-floor branch applies 13 log10(m'load) - 14.2 log10(s') + 20.8 for the treatment term.");
       pushUnique(formulaNotes, "Resonance cross-check follows f0 ~= 160 * sqrt(s'/m'load).");
     }

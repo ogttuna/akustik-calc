@@ -33,11 +33,20 @@ const FAMILY_ESTIMATE_BASES = new Set<ImpactCalculation["basis"]>([
   "predictor_lightweight_steel_fl28_interpolation_estimate"
 ]);
 
-const FORMULA_BASES = new Set<ImpactCalculation["basis"]>([
+const FORMULA_BASIS_LABELS = new Set<string>([
   "predictor_heavy_bare_floor_iso12354_annexc_estimate",
+  "predictor_bare_massive_floor_iso12354_annexc_estimate",
   "predictor_heavy_floating_floor_iso12354_annexc_estimate",
   "predictor_heavy_concrete_published_upper_treatment_estimate"
 ]);
+
+function hasFormulaMetricBasis(impact: ImpactCalculation | null): boolean {
+  if (!impact?.metricBasis) {
+    return false;
+  }
+
+  return Object.values(impact.metricBasis).some((value) => FORMULA_BASIS_LABELS.has(value));
+}
 
 export function buildImpactPredictorStatus(
   input: BuildImpactPredictorStatusInput
@@ -53,7 +62,9 @@ export function buildImpactPredictorStatus(
       input.boundFloorSystemEstimate ||
       (input.impact && FAMILY_ESTIMATE_BASES.has(input.impact.basis))
   );
-  const implementedFormulaEstimate = Boolean(input.impact && FORMULA_BASES.has(input.impact.basis));
+  const implementedFormulaEstimate = Boolean(
+    input.impact && (FORMULA_BASIS_LABELS.has(input.impact.basis) || hasFormulaMetricBasis(input.impact))
+  );
   const active = Boolean(
     input.predictorInputActive ||
       input.impact ||

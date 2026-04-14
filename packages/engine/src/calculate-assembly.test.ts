@@ -6202,6 +6202,47 @@ describe("calculateAssembly", () => {
     expect(result.impact?.metricBasis?.LnW).toBe("predictor_bare_massive_floor_iso12354_annexc_estimate");
     expect(result.impact?.metricBasis?.LPrimeNW).toBe("estimated_field_lprimenw_from_lnw_plus_k");
     expect(result.impact?.metricBasis?.LPrimeNTw).toBe("estimated_standardized_field_lprimentw_from_lprimenw_plus_room_volume");
+    expect(result.dynamicImpactTrace?.selectionKind).toBe("formula_estimate");
+    expect(result.dynamicImpactTrace?.selectedLabel).toBe("Heavy bare-floor formula");
+    expect(result.impactPredictorStatus?.implementedFormulaEstimate).toBe(true);
+    expect(result.impactPredictorStatus?.notes.some((note: string) => /Implemented formula estimate is active/i.test(note))).toBe(true);
+    expect(result.impactSupport?.notes.some((note: string) => /Annex C style estimate is active/i.test(note))).toBe(true);
+    expect(result.impactSupport?.formulaNotes.some((note: string) => /Annex C style estimate/i.test(note))).toBe(true);
+    expect(result.impactSupport?.formulaNotes.some((note: string) => /164 - 35 log10\(m'base\)/i.test(note))).toBe(true);
+    expect(result.impactSupport?.formulaNotes.some((note: string) => /L'n,w = Ln,w \+ K/i.test(note))).toBe(true);
+    expect(result.impactSupport?.formulaNotes.some((note: string) => /L'nT,w = L'n,w \+ 10 log10\(31\.3 \/ V\)/i.test(note))).toBe(true);
+  });
+
+  it("keeps heavy floating formula provenance visible after standardized field carry-over", () => {
+    const result = calculateAssembly(
+      [
+        { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
+        { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
+        { floorRole: "base_structure", materialId: "concrete", thicknessMm: 180 }
+      ],
+      {
+        impactFieldContext: {
+          fieldKDb: 2,
+          receivingRoomVolumeM3: 55
+        }
+      }
+    );
+
+    expect(result.impact?.basis).toBe("mixed_predicted_plus_estimated_standardized_field_volume_normalization");
+    expect(result.impact?.LnW).toBe(65.8);
+    expect(result.impact?.DeltaLw).toBe(6);
+    expect(result.impact?.LPrimeNW).toBe(67.8);
+    expect(result.impact?.LPrimeNTw).toBe(65.4);
+    expect(result.impact?.metricBasis?.LnW).toBe("predictor_heavy_floating_floor_iso12354_annexc_estimate");
+    expect(result.impact?.metricBasis?.DeltaLw).toBe("predictor_heavy_floating_floor_iso12354_annexc_estimate");
+    expect(result.dynamicImpactTrace?.selectionKind).toBe("formula_estimate");
+    expect(result.dynamicImpactTrace?.selectedLabel).toBe("Heavy floating-floor formula");
+    expect(result.impactPredictorStatus?.implementedFormulaEstimate).toBe(true);
+    expect(result.impactSupport?.formulaNotes.some((note: string) => /Annex C style estimate/i.test(note))).toBe(true);
+    expect(result.impactSupport?.formulaNotes.some((note: string) => /13 log10\(m'load\) - 14\.2 log10\(s'\) \+ 20\.8/i.test(note))).toBe(true);
+    expect(result.impactSupport?.formulaNotes.some((note: string) => /f0 .* sqrt\(s'\/m'load\)/i.test(note))).toBe(true);
+    expect(result.impactSupport?.formulaNotes.some((note: string) => /L'n,w = Ln,w \+ K/i.test(note))).toBe(true);
+    expect(result.impactSupport?.formulaNotes.some((note: string) => /L'nT,w = L'n,w \+ 10 log10\(31\.3 \/ V\)/i.test(note))).toBe(true);
   });
 
   it("carries predictor-backed timber dry-family estimates into live field continuation on the main impact lane", () => {

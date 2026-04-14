@@ -397,6 +397,34 @@ Latest formula-lane history/card guard:
   - this did not import source rows or broaden raw timber/open-box/open-web
     support; it only guards formula-lane ownership and card stability
 
+Latest formula provenance/report guard:
+
+- `heavy_concrete_formula_field_provenance_surface_v1`
+- purpose:
+  - preserve formula ownership after field-side `K` and standardized
+    room-volume carry-over changes `impact.basis` to a mixed field lane
+  - make the formula origin visible in the same user-facing surfaces that show
+    the result: predictor status, support formula notes, dynamic trace labels,
+    the impact trace panel, and the Markdown report
+- implemented artifacts:
+  - `packages/engine/src/post-heavy-concrete-formula-history-next-slice-selection-contract.test.ts`
+  - `apps/web/features/workbench/heavy-concrete-formula-provenance-report-surface.test.ts`
+  - strengthened field-carry-over formula assertions in
+    `packages/engine/src/calculate-assembly.test.ts`
+- behavior now guarded:
+  - field-carried bare concrete `Ln,w` still reports the narrow heavy bare-floor
+    formula basis from `impact.metricBasis`
+  - field-carried floating concrete `Ln,w` / `DeltaLw` still reports the
+    narrow heavy floating-floor formula basis from `impact.metricBasis`
+  - `impactPredictorStatus.implementedFormulaEstimate` remains true for those
+    mixed field lanes
+  - `impactSupport.formulaNotes` includes the Annex-C narrow-scope note,
+    formula relation, resonance cross-check where relevant, and field-side
+    `L'n,w` / `L'nT,w` derivations together
+- non-goal:
+  - this is metadata/provenance behavior only; it does not widen formula scope,
+    source matching, catalog import, wall behavior, or numeric acoustic results
+
 Latest wall-selector validation:
 
 - focused engine trace matrix: `1` file, `1` test, green
@@ -779,8 +807,10 @@ The UBIQ open-web packaged finish near-miss/drop-off matrix is now implemented:
     `post_clt_combined_anchor_history_next_slice_selection_v1`
   - heavy-concrete formula history guard closed as:
     `heavy_concrete_formula_history_card_matrix_v1`
-  - next selected no-runtime planning route:
-    `post_heavy_concrete_formula_history_next_slice_selection_v1`
+  - heavy-concrete formula provenance guard closed as:
+    `heavy_concrete_formula_field_provenance_surface_v1`
+  - next selected planning route:
+    `post_formula_provenance_report_next_slice_selection_v1`
 
 The deferred open-box finish-tolerance mixed-history boundary is now closed:
 

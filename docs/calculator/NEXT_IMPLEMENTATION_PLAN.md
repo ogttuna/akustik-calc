@@ -18,6 +18,52 @@ Read together with:
 - [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md) before widening any floor
   family lane
 
+## Current Restart Point - 2026-04-14
+
+Latest closed implementation slice:
+
+- `heavy_concrete_formula_field_provenance_surface_v1`
+- status:
+  - implemented and target-green locally
+  - metadata/provenance runtime behavior changed
+  - numeric acoustic outputs, source rows, formula constants, and supported
+    family scope did not change
+- why it was the right next step:
+  - the previous slice proved heavy concrete formula values survive realistic
+    workbench history and card rendering
+  - the next discovered gap was provenance loss after field carry-over:
+    `impact.metricBasis` still knew `Ln,w` / `DeltaLw` came from the narrow
+    formula lane, but predictor status, support formula notes, trace labels,
+    and report output did not consistently surface that ownership
+  - fixing that was safer and more directly tied to calculator correctness than
+    opening any new raw-family, Dataholz, C11c, UBIQ, or wall-selector runtime
+    lane
+- guarded surfaces:
+  - `impactPredictorStatus.implementedFormulaEstimate`
+  - `impactSupport.formulaNotes`
+  - `dynamicImpactTrace.selectedLabel`
+  - workbench impact trace panel
+  - Markdown report formula-note section
+- latest focused validation:
+  - engine: `3` files / `7` tests green
+  - web: `4` files / `16` tests green
+- latest full validation:
+  - full engine suite: `120` files / `844` tests green
+  - full web suite: `113` files / `638` tests green
+  - engine/web typecheck and lint green
+  - `pnpm build` green with the known optional `sharp/@img` warnings from the
+    DOCX dependency and the existing Next TypeScript plugin recommendation
+  - `git diff --check` green
+
+Selected next planning action:
+
+- `post_formula_provenance_report_next_slice_selection_v1`
+- choose exactly one next behavior or research slice before any new runtime
+  widening
+- current non-selected candidates remain deferred: raw bare open-box/open-web
+  impact widening, `GDMTXA04A` visible exact reopen, `C11c` exact import, broad
+  heavy-concrete formula widening, and wall-selector behavior widening
+
 ## 2026-04-14 Post-Checkpoint Planning Iteration
 
 Checkpoint commit:
@@ -383,15 +429,51 @@ Closed during this implementation pass:
   - focused engine selection guard: `2` files / `4` tests green
   - focused web formula history guard: `1` file / `3` tests green
 
-Selected next planning action:
+Closed during this implementation pass:
 
 - slice id: `post_heavy_concrete_formula_history_next_slice_selection_v1`
-- type: no-runtime planning / route-family selection
+- selected implementation slice:
+  `heavy_concrete_formula_field_provenance_surface_v1`
+- type: runtime-metadata provenance guard; no numeric acoustic result changed
+- why this was selected:
+  - after the history/card guard, the next risk was that field-carried formula
+    outputs could read like generic mixed estimates in trace/report surfaces
+  - the formula ownership was present in `impact.metricBasis`, but
+    `impactPredictorStatus.implementedFormulaEstimate` and
+    `impactSupport.formulaNotes` did not consistently preserve the Annex-C
+    provenance once `impact.basis` moved to the mixed field-normalization lane
+  - this is directly tied to the project rule that formula/source/predictor
+    ownership must be visible and tested, not inferred by a human reading raw
+    notes
+- implemented behavior:
+  - heavy bare/floating concrete formula metric bases are recognized from
+    `impact.metricBasis` after field carry-over
+  - `impactPredictorStatus.implementedFormulaEstimate` stays true for those
+    field-carried formula outputs
+  - `impactSupport.formulaNotes` now carries the Annex-C narrow-scope note,
+    bare/floating formula relation, resonance cross-check where relevant, and
+    the field-side `K` / room-volume formulas together
+  - `dynamicImpactTrace.selectedLabel` now names `Heavy bare-floor formula` or
+    `Heavy floating-floor formula` instead of generic `Impact lane`
+- artifacts:
+  - `packages/engine/src/post-heavy-concrete-formula-history-next-slice-selection-contract.test.ts`
+  - `apps/web/features/workbench/heavy-concrete-formula-provenance-report-surface.test.ts`
+  - strengthened expectations in `packages/engine/src/calculate-assembly.test.ts`
+- non-goals:
+  - no new source rows were imported
+  - no raw timber/open-box/open-web, Dataholz, C11c, heavy-concrete formula
+    scope, or wall-selector runtime widening was opened
+  - no acoustic formula constants or numeric output expectations changed
+
+Selected next planning action:
+
+- slice id: `post_formula_provenance_report_next_slice_selection_v1`
+- type: planning / route-family selection
 - purpose:
-  - choose the next single route family and output surface after the heavy
-    concrete formula-history guard
-  - do not treat formula-lane success as permission for broad raw timber,
-    open-box, open-web, Dataholz, C11c, or wall-selector widening
+  - choose the next single behavior or research slice now that formula
+    provenance is explicit on trace/report surfaces
+  - continue to reject broad raw-family widening until a source-backed or
+    formula-backed lane owns the target behavior
 
 ## 2026-04-14 Validated Restart Plan
 
@@ -701,12 +783,16 @@ Completed first task from this planning slice:
     `post_checkpoint_next_slice_selection_v1`
   - the CLT combined anchor history guard selected by that pass is closed:
     `clt_combined_anchor_history_replay_matrix_v1`
-  - the current selected next planning action is:
-    `post_heavy_concrete_formula_history_next_slice_selection_v1`
   - the formula-lane planning action is closed:
     `post_clt_combined_anchor_history_next_slice_selection_v1`
   - the heavy-concrete formula history guard selected by that pass is closed:
     `heavy_concrete_formula_history_card_matrix_v1`
+  - the formula-provenance planning action is closed:
+    `post_heavy_concrete_formula_history_next_slice_selection_v1`
+  - the formula-provenance guard selected by that pass is closed:
+    `heavy_concrete_formula_field_provenance_surface_v1`
+  - the current selected next planning action is:
+    `post_formula_provenance_report_next_slice_selection_v1`
   - all remaining risky behavior candidates stay non-widening until another
     source-backed matrix proves otherwise
 
@@ -1635,8 +1721,13 @@ Current decision after the checkpoint:
     `post_clt_combined_anchor_history_next_slice_selection_v1` is now closed
   - the selected heavy-concrete formula history guard
     `heavy_concrete_formula_history_card_matrix_v1` is now closed
-  - the next step is the no-runtime planning pass
-    `post_heavy_concrete_formula_history_next_slice_selection_v1`
+  - the formula-provenance planning pass
+    `post_heavy_concrete_formula_history_next_slice_selection_v1` is now
+    closed
+  - the selected heavy-concrete formula provenance guard
+    `heavy_concrete_formula_field_provenance_surface_v1` is now closed
+  - the next step is the planning pass
+    `post_formula_provenance_report_next_slice_selection_v1`
   - if a future behavior widening is selected after this checkpoint,
     name exactly one route family and one output surface first and add
     answer/card guards before code changes
@@ -1669,10 +1760,10 @@ Current decision after the checkpoint:
     Dataholz `GDMTXA04A` material-surface recheck is also closed; the
     checkpoint validation/commit-preparation action is closed; the
     `post_checkpoint_next_slice_selection_v1` planning pass is closed; the CLT
-    combined anchor history guard is closed; the formula-lane selection pass
-    and heavy-concrete formula history guard are closed; the active next
-    no-runtime action is
-    `post_heavy_concrete_formula_history_next_slice_selection_v1`
+    combined anchor history guard is closed; the formula-lane selection pass,
+    heavy-concrete formula history guard, and formula provenance guard are
+    closed; the active next planning action is
+    `post_formula_provenance_report_next_slice_selection_v1`
 
 ## Wall Selector Implementation Comparison
 
