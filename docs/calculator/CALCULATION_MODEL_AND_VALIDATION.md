@@ -738,8 +738,19 @@ The UBIQ open-web packaged finish near-miss/drop-off matrix is now implemented:
     web pack `3` files / `4` tests; engine/web typecheck/lint; full engine
     `115` files / `830` tests; full web `110` files / `633` tests;
     `pnpm build`; `git diff --check`
-- next selected planning route:
+- post-UBIQ source-gap planning route:
   `post_ubiq_source_gap_re_rank_v1`
+  - executable refresh closed as
+    `post_ubiq_source_gap_decision_matrix_v1`
+  - C11c source/frequency recheck closed as no-runtime; the weak tuple is not
+    explained by `CI` or `CI,50-2500`
+  - Dataholz `GDMTXA04A` material-surface recheck closed as no-runtime; the
+    source top layer is a composite dry screed element, not the current local
+    single-material visible surface
+  - checkpoint validation/commit-preparation route closed as:
+    `checkpoint_validation_and_commit_v1`
+  - next selected no-runtime planning route:
+    `post_checkpoint_next_slice_selection_v1`
 
 The deferred open-box finish-tolerance mixed-history boundary is now closed:
 

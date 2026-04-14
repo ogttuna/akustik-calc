@@ -6,7 +6,7 @@ This is the primary living doc set for dynamic calculator work. Read these files
 
 ## Read Order
 
-1. [CHECKPOINT_2026-04-14_UBIQ_HISTORY_REPLAY_HANDOFF.md](./CHECKPOINT_2026-04-14_UBIQ_HISTORY_REPLAY_HANDOFF.md): current commit-prep checkpoint after the UBIQ packaged open-web history replay guard
+1. [CHECKPOINT_2026-04-14_UBIQ_HISTORY_REPLAY_HANDOFF.md](./CHECKPOINT_2026-04-14_UBIQ_HISTORY_REPLAY_HANDOFF.md): committed checkpoint after the UBIQ packaged open-web history replay guard
 2. [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md): concise current execution plan and validated next steps
 3. [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md): answer-origin map for formulas, source rows, predictors, field continuations, support gating, and test meaning
 4. [CURRENT_STATE.md](./CURRENT_STATE.md): short snapshot of the current calculator/workbench posture
@@ -25,8 +25,8 @@ This is the primary living doc set for dynamic calculator work. Read these files
 
 If the question is “what is actually finished vs still open?”, use this order:
 
-1. [CHECKPOINT_2026-04-14_UBIQ_HISTORY_REPLAY_HANDOFF.md](./CHECKPOINT_2026-04-14_UBIQ_HISTORY_REPLAY_HANDOFF.md): current checkpoint, validation gate, dirty-worktree shape, and commit-prep notes
-2. [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md): current execution plan, next slice, and validation commands
+1. [CHECKPOINT_2026-04-14_UBIQ_HISTORY_REPLAY_HANDOFF.md](./CHECKPOINT_2026-04-14_UBIQ_HISTORY_REPLAY_HANDOFF.md): current committed checkpoint, validation gate, accepted package map, and restart notes
+2. [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md): current execution plan, next action, and validation commands
 3. [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md): how to decide whether a shown answer is source-backed, formula-backed, predictor-backed, bound-only, or unsupported
 4. [CURRENT_STATE.md](./CURRENT_STATE.md): broad verified snapshot
 5. [CHECKPOINT_2026-04-13_END_OF_DAY_HANDOFF.md](./CHECKPOINT_2026-04-13_END_OF_DAY_HANDOFF.md): latest clean handoff state and resume constraints
@@ -47,8 +47,8 @@ Reading rule:
 
 If the question is “where do I restart tomorrow without re-reading everything?”, use this order:
 
-1. [CHECKPOINT_2026-04-14_UBIQ_HISTORY_REPLAY_HANDOFF.md](./CHECKPOINT_2026-04-14_UBIQ_HISTORY_REPLAY_HANDOFF.md): current checkpoint, latest validation gate, and commit-prep notes
-2. [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md): exact restart point and current next slice
+1. [CHECKPOINT_2026-04-14_UBIQ_HISTORY_REPLAY_HANDOFF.md](./CHECKPOINT_2026-04-14_UBIQ_HISTORY_REPLAY_HANDOFF.md): current committed checkpoint, latest validation gate, and restart notes
+2. [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md): exact restart point and current next action
 3. [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md): only if the next task touches output origin, formula/source confidence, or card support meaning
 4. [CURRENT_STATE.md](./CURRENT_STATE.md): latest verified snapshot and immediate next tasks
 5. [CHECKPOINT_2026-04-13_END_OF_DAY_HANDOFF.md](./CHECKPOINT_2026-04-13_END_OF_DAY_HANDOFF.md): latest clean historical handoff context
@@ -61,10 +61,10 @@ If the question is “where do I restart tomorrow without re-reading everything?
 
 ## File Roles
 
-- [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md): concise current execution plan, next slice, validation commands, and definition of done
+- [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md): concise current execution plan, next action, validation commands, and definition of done
 - [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md): central map of answer origins, formulas, source rows, predictor lanes, support gating, and test confidence rules
 - [CURRENT_STATE.md](./CURRENT_STATE.md): what is stable now, what is intentionally narrow, and what remains risky
-- [CHECKPOINT_2026-04-14_UBIQ_HISTORY_REPLAY_HANDOFF.md](./CHECKPOINT_2026-04-14_UBIQ_HISTORY_REPLAY_HANDOFF.md): current checkpoint, green validation gate, dirty-worktree package map, and commit-prep notes
+- [CHECKPOINT_2026-04-14_UBIQ_HISTORY_REPLAY_HANDOFF.md](./CHECKPOINT_2026-04-14_UBIQ_HISTORY_REPLAY_HANDOFF.md): current checkpoint, green validation gate, accepted package map, and restart notes
 - [CHECKPOINT_2026-04-13_END_OF_DAY_HANDOFF.md](./CHECKPOINT_2026-04-13_END_OF_DAY_HANDOFF.md): clean handoff state, latest commits, validation snapshot, and next-agent constraints
 - [STABILIZATION_CHECKPOINT_2026-04-13.md](./STABILIZATION_CHECKPOINT_2026-04-13.md): historical dirty-worktree package map, validation gate, and restart notes from the accepted stabilization set
 - [FULL_ENGINE_SUITE_TRIAGE_2026-04-12.md](./FULL_ENGINE_SUITE_TRIAGE_2026-04-12.md): broad engine-suite failure classes, cleanup fixes, and non-blocking vs real-risk split

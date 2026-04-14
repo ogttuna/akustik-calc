@@ -2,17 +2,27 @@
 
 Document role:
 
-- define the current commit-prep checkpoint after the UBIQ packaged open-web
+- define the committed checkpoint after the UBIQ packaged open-web
   finish-family, near-miss, and workbench history-replay passes
 - preserve the latest green validation gate
 - give the next agent a safe restart point before any new source-led widening or
-  commit grouping
+  planning iteration
 
 This is a checkpoint document, not a new solver plan.
 
 ## Current State
 
 Checkpoint date: `2026-04-14`
+
+Accepted commit:
+
+- `1be632d test(calculator): lock UBIQ packaged floor source and history surfaces`
+
+Current restart posture:
+
+- working tree was clean after the accepted checkpoint commit
+- use [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md) for the
+  post-checkpoint planning iteration and selected next action
 
 Latest closed implementation slice:
 
@@ -102,15 +112,15 @@ Build note:
 - the file was restored to the pre-build `.next-typecheck` reference after the
   green build
 
-## Dirty Worktree Shape
+## Committed Checkpoint Shape
 
-The working tree is intentionally not clean yet. It contains the accumulated
-2026-04-14 source-led UBIQ/report/history/posture work plus this checkpoint.
+The checkpoint is committed in `1be632d`. Treat the following package groups as
+the accepted restart baseline, not as unreviewed dirty work.
 
-Do not revert unrelated dirty files. Treat them as part of the current
-commit-prep batch unless the user explicitly requests a different split.
+Do not reopen or revert these groups while selecting the next slice unless a
+new failing test or source finding specifically targets them.
 
-High-level package groups currently represented in the dirty worktree:
+High-level package groups represented in the checkpoint commit:
 
 - UBIQ weak-band exact import and topology correction
 - UBIQ supported-band finish completion
@@ -231,13 +241,58 @@ Current conclusion:
 No immediate refactor was opened at this checkpoint because the remaining large
 files are behavior-sensitive and already covered by green broad gates. The safe
 next cleanup path is to continue moving new source-family coverage into focused
-modules/tests rather than splitting old core files during commit preparation.
+modules/tests rather than splitting old core files during source-family work.
 
 ## Current Next Step
 
 Selected next planning slice:
 
 - `post_ubiq_source_gap_re_rank_v1`
+
+Completed immediate implementation action from that planning slice:
+
+- `post_ubiq_source_gap_decision_matrix_v1`
+- no runtime behavior change
+- purpose: update the executable source-gap selector so the already completed
+  UBIQ weak-band exact-import path is no longer presented as the active next
+  task
+
+Closed next research action:
+
+- `tuas_c11c_frequency_source_recheck_v1`
+- no runtime behavior change
+- result: keep `C11c` fail-closed because the weak measured tuple is not
+  explained by `CI` or `CI,50-2500`
+
+Closed next research action:
+
+- `dataholz_gdmtxa04a_material_surface_recheck_v1`
+- no runtime behavior change
+- result: keep `GDMTXA04A` direct-official-id exact only and visible
+  estimate-routed because the source top layer is a composite dry screed element
+  (`2x12.5 mm` gypsum fibre with `40 mm` mineral wool), not the current local
+  single `dry_floating_gypsum_fiberboard` surface
+
+Closed checkpoint action:
+
+- `checkpoint_validation_and_commit_v1`
+- no runtime behavior change
+- current close-out validation is green:
+  - engine source-gap/Dataholz/C11c pack: `6` files / `23` tests
+  - web remaining-source-gap + Dataholz card pack: `2` files / `8` tests
+  - full engine suite: `117` files / `837` tests
+  - full web suite: `110` files / `633` tests
+  - engine/web typecheck and lint
+  - `pnpm build` green with known optional `sharp/@img` warnings
+  - `git diff --check`
+
+Selected next planning action:
+
+- `post_checkpoint_next_slice_selection_v1`
+- no runtime behavior change
+- choose exactly one next behavior or research slice before any runtime
+  widening; keep `C11c`, `GDMTXA04A`, and raw bare open-box/open-web impact
+  closed unless stronger source/material/frequency evidence appears
 
 Purpose:
 
@@ -258,18 +313,15 @@ Hard constraints:
 - no wall-selector widening without a fresh classified red or source-backed
   behavior plan
 
-## Commit Prep Notes
+## Accepted Commit Notes
 
-Before committing:
+This checkpoint was accepted as one commit:
 
-1. Re-run `git diff --check`.
-2. Review `git status --short` and decide commit grouping.
-3. If committing as one large checkpoint, use this document as the review map.
-4. If splitting commits, keep docs with the behavior/test slice they describe.
-5. Do not stage generated `apps/web/next-env.d.ts` route-reference churn if it
-   only comes from `pnpm build`.
+```text
+1be632d test(calculator): lock UBIQ packaged floor source and history surfaces
+```
 
-Suggested top-level commit grouping if the user wants multiple commits:
+The package map that was reviewed for that commit:
 
 1. UBIQ source/catalog/runtime support changes
    - shared bound schema and target-output support
@@ -292,10 +344,3 @@ Suggested top-level commit grouping if the user wants multiple commits:
    - current-state and next-plan updates
    - source-gap ledger updates
    - this checkpoint
-
-If the user prefers one commit, use this checkpoint as the commit body outline
-and make the subject explicit, for example:
-
-```text
-test(calculator): lock UBIQ packaged floor source and history surfaces
-```

@@ -8,9 +8,9 @@ unambiguous.
 
 Read together with:
 
-- [CHECKPOINT_2026-04-13_END_OF_DAY_HANDOFF.md](./CHECKPOINT_2026-04-13_END_OF_DAY_HANDOFF.md)
-  for the latest clean resume state, accepted commits, validation snapshot, and
-  next-agent cautions
+- [CHECKPOINT_2026-04-14_UBIQ_HISTORY_REPLAY_HANDOFF.md](./CHECKPOINT_2026-04-14_UBIQ_HISTORY_REPLAY_HANDOFF.md)
+  for the latest committed checkpoint, accepted commit, validation snapshot,
+  and next-agent cautions
 - [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
   when the question is whether a shown answer is source-backed, formula-backed,
   predictor-backed, bound-only, or unsupported
@@ -18,17 +18,272 @@ Read together with:
 - [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md) before widening any floor
   family lane
 
+## 2026-04-14 Post-Checkpoint Planning Iteration
+
+Checkpoint commit:
+
+- `1be632d test(calculator): lock UBIQ packaged floor source and history surfaces`
+
+Working tree posture at this review:
+
+- clean at review start
+- no runtime source widening is selected from the checkpoint alone
+- the immediate risk is stale planning/executable-contract drift, not a known
+  solver regression
+
+Source review performed for this planning pass:
+
+- UBIQ official INEX floor table:
+  <https://www.ubiq.au/wp-content/uploads/2023/02/INEX-FLOOR-FLOOR-FIRE-ACOUSTIC.pdf>
+  - open-web rows remain explicit INEX deck / finish / resilient-ceiling system
+    table rows
+  - carpet rows publish `Ln,w+CI 45 or less`, so the current bound-only
+    treatment remains correct
+  - this is still not bare open-web carrier impact evidence
+- Dataholz `GDMTXA04A` sheet:
+  <https://www.dataholz.eu/en/index/download/en/gdmtxa04a-0.pdf>
+  - source still exposes `Ln,w (CI) 49(4)` and `CI50-2500 9 dB`
+- Dataholz `GDMTXA04A` component page:
+  <https://www.dataholz.eu/bauteile/geschossdecke/detail/kz/gdmtxa04a.htm>
+  - the English PDF/component surface keeps the top `65.0 mm` layer at
+    mass-level wording, while the German component page identifies it as a
+    composite dry screed element: `2x12.5 mm` gypsum fibre board with `40 mm`
+    mineral wool
+  - the local single `dry_floating_gypsum_fiberboard` convenience surface is
+    therefore not a faithful visible exact-match material model for that
+    composite top layer
+- TUAS/Mendeley measured floor dataset:
+  <https://data.mendeley.com/datasets/y83p8mpryd/2>
+  - current imported TUAS open-box rows remain measured packaged systems
+  - no new bare open-box/open-web carrier impact lane is justified by this
+    planning pass
+
+Implementation comparison after the checkpoint:
+
+- catalog posture remains:
+  - exact floor systems: `173`
+  - bound floor systems: `23`
+    - `5` legacy `Ln,w` upper-bound rows
+    - `18` UBIQ supported-band carpet `Ln,w+CI` upper-bound rows
+  - official impact product rows: `10`
+  - TUAS open-box exact rows: `15`
+  - TUAS CLT / TUAS concrete exact rows under `tuas_[cxh]`: `16`
+  - Dataholz CLT exact rows: `9`
+  - UBIQ open-web exact rows for `FL-23/24/25/26/27/28`: `90`
+  - UBIQ weak-band exact rows for `FL-23/25/27`: `54`
+  - UBIQ supported resilient-band exact rows for `FL-24/26/28`: `36`
+  - UBIQ supported-band carpet + foam-underlay official bound rows: `18`
+- the UBIQ weak-band source-gap item is closed as exact-only import plus
+  no-family-estimate posture, not a still-active next step
+- UBIQ packaged open-web exact/bound/near-miss/history replay surfaces are now
+  guarded across engine and workbench
+- `C11c`, `GDMTXA04A`, raw bare open-box/open-web impact, helper-only timber,
+  and helper-only open-web remain deliberately guarded or fail-closed
+- wall boundary holding remains limited to the defended
+  `double_leaf <-> lined_massive_wall` pair inside `2 visible leaves / 1 cavity`
+- unsupported outputs are still gated before workbench cards show values
+
+Current decision:
+
+1. Do not start broad raw-floor, CLT, wall-selector, Dataholz, or UBIQ runtime
+   widening from the checkpoint.
+2. The planning-contract drift is closed in this pass: the executable
+   source-gap contract no longer points to the completed UBIQ weak-band path.
+3. The TUAS `C11c` source/frequency recheck is closed as no-runtime:
+   the weak tuple is not explained by `CI` or `CI,50-2500`, so exact import
+   remains blocked.
+4. The Dataholz `GDMTXA04A` material-surface recheck is closed as no-runtime:
+   the source top layer is a composite dry screed surface that the current local
+   single-material convenience surface cannot represent honestly.
+5. The checkpoint validation and commit-preparation action is now closed; the
+   next action is a fresh no-runtime slice-selection pass, not an exact reopen
+   and not raw-floor/runtime widening.
+
+Closed during this planning pass:
+
+- slice id: `post_ubiq_source_gap_decision_matrix_v1`
+- type: no-runtime executable planning-contract refresh
+- status: implemented and target-green on 2026-04-14
+- objective:
+  - update the source-gap re-rank contract so it no longer selects the already
+    completed UBIQ weak-band exact-import path as the active next step
+  - keep all remaining source-gap candidates explicitly non-widening until a
+    stronger source or frequency-level explanation exists
+  - preserve the current checkpoint as the baseline before the next actual
+    behavior slice is selected
+- required artifacts:
+  - `packages/engine/src/source-gap-candidate-re-rank-contract.test.ts`
+  - this plan document
+  - `CURRENT_STATE.md`, `README.md`, and `SOURCE_GAP_LEDGER.md` wording that
+    identifies the checkpoint as committed rather than commit-prep work
+- acceptance:
+  - the planning-contract refresh is recorded as:
+    `post_ubiq_source_gap_decision_matrix_v1`
+  - after the follow-up C11c and Dataholz no-runtime rechecks, no source-gap
+    candidate is selected for runtime widening
+  - closed checkpoint action is:
+    `checkpoint_validation_and_commit_v1`
+  - selected next planning action is:
+    `post_checkpoint_next_slice_selection_v1`
+  - `runtimeBehaviorChange` is `false`
+  - UBIQ weak-band rows stay imported as exact-only with
+    `familyEstimateEligible: false`
+  - non-selected candidates remain deferred:
+    `C11c`, `GDMTXA04A`, raw bare open-box/open-web impact, helper-only timber,
+    and helper-only open-web
+  - targeted engine/web source-gap packs stay green
+  - no production runtime file changes are needed
+
+Closed during this implementation pass:
+
+- slice id: `tuas_c11c_frequency_source_recheck_v1`
+- type: no-runtime source/frequency audit before exact import
+- status: implemented and target-green on 2026-04-14
+- why this is first:
+  - it is one known deferred source row, so the blast radius is smaller than
+    raw bare open-box/open-web impact widening
+  - visible schedule evidence is already known, but the weak impact tuple is
+    not explained well enough to expose exact impact outputs
+  - resolving this either produces a narrowly justified exact-import plan or
+    locks the row as intentionally deferred with stronger evidence
+- non-goals:
+  - no import of `tuas_c11c_clt260_measured_2026` until the source/frequency
+    audit explains the anomaly
+  - no Dataholz `GDMTXA04A` exact reopen
+  - no raw bare open-box/open-web impact support
+  - no UBIQ raw open-web widening
+- required first checks:
+  - compare `C11c` source tuple against landed `C2c/C3c/C4c/C7c` combined CLT
+    anchors on value, basis, support bucket, and visible source schedule
+  - inspect any available TUAS frequency/source data before deciding whether the
+    weak tuple is an importable measured truth or a deferred anomaly
+  - keep workbench card posture at fail-closed unless the engine exact import is
+    source-explained
+- initial starting validation before adding the recheck guard:
+  - engine C11c/source-gap pack: `4` files / `16` tests green
+  - workbench remaining-source-gap card pack: `1` file / `6` tests green
+- result:
+  - source frame remains narrow: TUAS says floors were not tested bare, measured
+    frequency range is `20..5000 Hz`, and `20..40 Hz` is outside the ISO
+    supported range
+  - `C11c` has `Ln,w 59`, `Ln,w+CI 60`, and `Ln,w+CI,50-2500 60`, so `CI` and
+    `CI,50-2500` are both only `+1 dB`
+  - landed combined CLT anchors have much stronger weighted impact values and
+    larger low-frequency companion terms; therefore the C11c issue is the
+    weighted impact tuple itself, not a low-frequency companion explanation
+  - `C11c` remains fail-closed until a raw one-third-octave spectrum or source
+    correction/lab note explains the weak tuple
+- final validation:
+  - engine C11c/source-gap pack with the new recheck guard:
+    `4` files / `14` tests green
+  - workbench remaining-source-gap card pack: `1` file / `6` tests green
+  - engine typecheck and lint green
+  - `git diff --check` green
+
+Closed during this implementation pass:
+
+- slice id: `dataholz_gdmtxa04a_material_surface_recheck_v1`
+- type: no-runtime source/material-surface audit before exact reopen
+- status: implemented; target validation belongs to the checkpoint close-out
+- why this followed C11c:
+  - it is a single imported Dataholz CLT row with exact source numbers but
+    `manualMatch: false`
+  - current blocker is visible material-surface ambiguity, not missing acoustic
+    numbers
+  - blast radius is smaller than raw bare open-box/open-web impact widening
+- non-goals:
+  - no exact visible reopen unless the official source exposes an honest
+    material surface for the `65 mm` top layer
+  - no generic dry floating gypsum-fiberboard shortcut
+  - no change to `GDMTXA04A` estimate-only workbench posture unless the engine
+    route becomes source-explained
+- required first checks:
+  - compare the Dataholz PDF and component page wording for the `65 mm` top
+    layer against the local `dry_floating_gypsum_fiberboard` convenience fixture
+  - keep source `Ln,w`, `CI`, and `CI,50-2500` truth separate from visible-route
+    eligibility
+  - verify `dataholz_gdmtxa04a_clt_lab_2026` stays `manualMatch: false` and
+    estimate-routed unless source material evidence changes
+- result:
+  - English Dataholz source surfaces do not expose a generic visible material
+    model for the `65 mm` top layer
+  - German Dataholz source text identifies a composite dry screed element:
+    `2x12.5 mm` gypsum fibre board with a `40 mm` mineral-wool core
+  - the current local single material id, `dry_floating_gypsum_fiberboard`, is
+    kept as direct-official-id convenience only and is not promoted to manual
+    visible exact matching
+  - direct official-id resolution still returns the source truth:
+    `Rw 70`, `Ctr -19`, `Ln,w 49`, `CI 4`, `CI,50-2500 9`, `Ln,w+CI 53`
+  - visible `GDMTXA04A`-shaped layer entry stays on the defended dry-CLT
+    estimate route: candidate `dataholz_gdmtxa01a_clt_lab_2026`, `Rw 65`,
+    `Ln,w 47`, `CI 2`, `Ln,w+CI 49`
+- starting validation before adding the new recheck guard:
+  - engine Dataholz/source-gap pack: `3` files / `14` tests green
+  - workbench remaining-source-gap card pack: `1` file / `6` tests green
+- checkpoint validation completed in this implementation pass:
+  - updated engine source-gap/Dataholz/C11c pack including
+    `src/dataholz-gdmtxa04a-material-surface-recheck.test.ts`: `6` files /
+    `23` tests green
+  - workbench remaining-source-gap + Dataholz source-truth card pack: `2` files
+    / `8` tests green
+  - full engine suite: `117` files / `837` tests green
+  - full web suite: `110` files / `633` tests green
+  - engine typecheck and lint green
+  - web typecheck and lint green; the existing Next.js TypeScript plugin
+    recommendation remains informational
+  - `pnpm build` green with the known optional `sharp/@img` warnings and the
+    existing Next.js TypeScript plugin recommendation
+  - `git diff --check` green
+
+Closed checkpoint action:
+
+- slice id: `checkpoint_validation_and_commit_v1`
+- type: no-runtime validation / docs close-out
+- status: implemented and target-green on 2026-04-14
+- why this followed the source rechecks:
+  - the two remaining source-specific post-checkpoint questions, `C11c` and
+    `GDMTXA04A`, are now both closed without runtime widening
+  - source evidence still does not justify raw bare open-box/open-web impact
+    support, a `GDMTXA04A` exact visible reopen, or a `C11c` exact import
+  - the honest move was to prove the checkpoint, update docs, and then commit
+    the guard/docs state
+- non-goals:
+  - no solver/catalog/workbench runtime change
+  - no new exact/bound row import
+  - no broad predictor/family fallback widening
+- acceptance:
+  - targeted engine source-gap pack green
+  - targeted web remaining-source-gap card pack green
+  - full engine and full web suites green
+  - engine typecheck and lint green
+  - web typecheck and lint green
+  - `pnpm build` green
+  - `git diff --check` green
+  - docs identify no source-gap candidate as runtime-widening eligible
+
+Selected next planning action:
+
+- slice id: `post_checkpoint_next_slice_selection_v1`
+- type: no-runtime planning / source-gap rebaseline
+- purpose:
+  - choose exactly one next behavior or research slice from the current guarded
+    state
+  - keep `C11c`, `GDMTXA04A`, and raw bare open-box/open-web impact closed
+    unless stronger source/material/frequency evidence appears
+  - if a runtime widening is selected, name one route family and one output
+    surface before code changes
+
 ## 2026-04-14 Validated Restart Plan
 
 The existing plans are not finished. The implementation is at a clean,
 validated checkpoint, but the remaining phase still needs more evidence before
 any broad wall-selector, raw-floor, CLT, UBIQ, or open-box behavior widening.
 
-Current implementation comparison after the `ubiq_lnw_plus_ci_near_miss_estimate_posture_decision_v1`
-slice:
+Current implementation comparison after
+`ubiq_open_web_packaged_finish_history_replay_matrix_v1` and checkpoint commit
+`1be632d`:
 
-- working tree contains the 2026-04-14 implementation slice; do not assume a
-  clean committed checkpoint until `git status` is checked
+- working tree was clean at the start of the post-checkpoint planning review
 - catalog posture verified from `@dynecho/catalogs` after implementation:
   - exact floor systems: `173`
   - bound floor systems: `23`
@@ -86,7 +341,8 @@ slice:
   - raw terminal-concrete helper support is still narrow and does not open
     helper-only timber, open-web steel, or generic raw-floor support
 - current broad validation baseline after the UBIQ exact, combined-bound,
-  report-surface, and history-guard slices:
+  report-surface, history-guard, near-miss, source-gap, packaged-route, and
+  history-replay slices:
   - catalog, engine, and web typecheck green
   - catalog, engine, and web lint green
   - targeted engine regression pack after the `Ln,w+CI` bound conversion:
@@ -101,8 +357,8 @@ slice:
     `3` files / `7` tests green
   - targeted UBIQ combined-bound near-miss workbench pack:
     `3` files / `5` tests green
-  - full engine suite: `111` files / `821` tests green
-  - full web suite: `106` files / `627` tests green
+  - full engine suite: `115` files / `830` tests green
+  - full web suite: `110` files / `633` tests green
   - `pnpm build` green with known `sharp/@img` optional-package warnings and
     the existing Next.js TypeScript plugin recommendation
   - `git diff --check` green
@@ -286,10 +542,12 @@ Closed implementation slice:
     and the existing Next.js TypeScript plugin recommendation
   - `git diff --check` green
 
-Selected next planning slice:
+Selected post-checkpoint planning slice:
 
 - slice id: `post_ubiq_source_gap_re_rank_v1`
 - type: no-runtime source-led re-rank before any behavior widening
+- status: converted into an executable decision contract during this planning
+  pass
 - objective:
   - re-rank raw-floor, CLT-local, wall-selector, Dataholz, and remaining UBIQ
     candidates after the packaged UBIQ exact/bound/near-miss/history surfaces are
@@ -302,6 +560,27 @@ Selected next planning slice:
   - if runtime widening becomes eligible, it is scoped to one route family and
     one output surface first
   - docs and executable contracts clearly explain why the next slice is selected
+
+Completed first task from this planning slice:
+
+- slice id: `post_ubiq_source_gap_decision_matrix_v1`
+- status: implemented and target-green on 2026-04-14
+- why:
+  - the previous executable re-rank contract still named the UBIQ weak-band
+    posture/import path as the selected next work even though that path is now
+    closed
+  - leaving that stale selector in place would mislead the next agent into
+    redoing completed UBIQ work instead of ranking the remaining source gaps
+- expected result:
+  - no production runtime changes
+  - after the C11c and Dataholz follow-up rechecks, no current source-gap
+    candidate is runtime-widening eligible
+  - the checkpoint action is closed:
+    `checkpoint_validation_and_commit_v1`
+  - the current selected next planning action is:
+    `post_checkpoint_next_slice_selection_v1`
+  - all remaining risky behavior candidates stay non-widening until another
+    source-backed matrix proves otherwise
 
 Second-pass correction from implementation review:
 
@@ -1212,11 +1491,17 @@ Current decision after the checkpoint:
   - the UBIQ weak-band posture guard then exposed and fixed a narrow classified
     false-confidence route:
     `ubiq_open_web_weaker_band_posture_guard_v1`
-  - the next step is
-    `ubiq_weak_band_exact_import_source_mapping_v1`, which must extract the
-    full official `FL-23/25/27` table and decide exact import versus continued
-    fail-closed posture before any wider runtime change
-  - if a future behavior widening is selected after that source-mapping slice,
+  - `ubiq_weak_band_exact_import_source_mapping_v1` and its supported-band,
+    bound, report, near-miss, source-gap, packaged-route, and history-replay
+    follow-ups are now closed
+  - `tuas_c11c_frequency_source_recheck_v1` is now also closed as no-runtime
+  - `dataholz_gdmtxa04a_material_surface_recheck_v1` is now also closed as
+    no-runtime
+  - the checkpoint validation/commit-preparation step
+    `checkpoint_validation_and_commit_v1` is now closed
+  - the next step is the no-runtime planning pass
+    `post_checkpoint_next_slice_selection_v1`
+  - if a future behavior widening is selected after this checkpoint,
     name exactly one route family and one output surface first and add
     answer/card guards before code changes
 - do not use the UBIQ packaged lower-lane trace as permission to open bare
@@ -1243,8 +1528,11 @@ Current decision after the checkpoint:
     history, near-miss posture, source-gap matrix, raw bare open-web/open-box
     source-evidence re-rank, TUAS open-box same-package guard, UBIQ packaged
     open-web finish-family guard, UBIQ packaged open-web near-miss/drop-off
-    matrix, and UBIQ packaged open-web history-replay slices; the active next
-    planning slice is `post_ubiq_source_gap_re_rank_v1`
+    matrix, and UBIQ packaged open-web history-replay slices; the post-UBIQ
+    decision matrix refresh and C11c frequency/source recheck are closed; the
+    Dataholz `GDMTXA04A` material-surface recheck is also closed; the
+    checkpoint validation/commit-preparation action is closed; the active next
+    no-runtime action is `post_checkpoint_next_slice_selection_v1`
 
 ## Wall Selector Implementation Comparison
 
@@ -2290,6 +2578,26 @@ pnpm --filter @dynecho/engine exec vitest run src/source-gap-candidate-re-rank-c
 
 ```sh
 pnpm --filter @dynecho/web exec vitest run features/workbench/ubiq-open-web-packaged-finish-history-replay-matrix.test.ts features/workbench/ubiq-open-web-packaged-finish-near-miss-card-matrix.test.ts features/workbench/ubiq-lnw-plus-ci-bound-history-guard.test.ts features/workbench/remaining-source-gap-posture-card-matrix.test.ts features/workbench/compose-workbench-report-bound-metrics.test.ts features/workbench/impact-field-guides-bound-metrics.test.ts
+```
+
+Closed `C11c` source/frequency recheck pack:
+
+```sh
+pnpm --filter @dynecho/engine exec vitest run src/source-gap-candidate-re-rank-contract.test.ts src/tuas-c11c-frequency-source-recheck.test.ts src/tuas-c11c-wet-stack-anomaly-audit.test.ts src/remaining-source-gap-posture-matrix.test.ts
+```
+
+```sh
+pnpm --filter @dynecho/web exec vitest run features/workbench/remaining-source-gap-posture-card-matrix.test.ts
+```
+
+Next Dataholz `GDMTXA04A` material-surface recheck starting pack:
+
+```sh
+pnpm --filter @dynecho/engine exec vitest run src/source-gap-candidate-re-rank-contract.test.ts src/dataholz-clt-source-truth-audit.test.ts src/remaining-source-gap-posture-matrix.test.ts
+```
+
+```sh
+pnpm --filter @dynecho/web exec vitest run features/workbench/remaining-source-gap-posture-card-matrix.test.ts
 ```
 
 Full checkpoint gate:

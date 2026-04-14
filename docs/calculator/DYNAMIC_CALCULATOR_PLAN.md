@@ -171,6 +171,30 @@ Current execution status:
     Dataholz, or UBIQ runtime widening
   - do not use the finish-family or near-miss guards as permission to open raw
     bare open-web impact support or a broad weak-band family fallback
+- selected immediate no-runtime action from that planning slice:
+  `post_ubiq_source_gap_decision_matrix_v1`
+  - refresh the executable source-gap selector so completed UBIQ weak-band work
+    is no longer shown as the active next task
+  - keep all remaining runtime widening candidates non-eligible until a stronger
+    source/frequency matrix exists
+- closed no-runtime research action:
+  `tuas_c11c_frequency_source_recheck_v1`
+  - audit the remaining deferred combined-CLT row before any exact import or
+    predictor widening
+  - result: keep `C11c` fail-closed because the weak tuple is not explained by
+    `CI` or `CI,50-2500`
+- closed no-runtime research action:
+  `dataholz_gdmtxa04a_material_surface_recheck_v1`
+  - result: keep `GDMTXA04A` direct-official-id exact only and visible
+    estimate-routed because the source top layer is a composite dry screed
+    element, not the current local single visible material surface
+- closed checkpoint action:
+  `checkpoint_validation_and_commit_v1`
+  - validate and commit the no-runtime source-gap guard/docs checkpoint before
+    any solver/catalog/workbench runtime widening
+- selected next no-runtime planning action:
+  `post_checkpoint_next_slice_selection_v1`
+  - choose exactly one next behavior or research slice before runtime widening
 - `open_box_dry_package_fragmentation_trace_matrix_v1` is now closed:
   - this was a no-widening engine/workbench trace-card checkpoint for the TUAS
     `R5b` open-box dry package

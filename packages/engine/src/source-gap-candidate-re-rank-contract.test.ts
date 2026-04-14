@@ -1,28 +1,50 @@
 import { BOUND_FLOOR_SYSTEMS, EXACT_FLOOR_SYSTEMS } from "@dynecho/catalogs";
 import { describe, expect, it } from "vitest";
 
-const SELECTED_SOURCE_GAP_POSTURE_GUARD = "ubiq_open_web_weaker_band_posture_guard_v1";
-const POSTURE_GUARD_FOLLOW_UP_SLICE = "ubiq_weak_band_exact_import_source_mapping_v1";
+const POST_UBIQ_SOURCE_GAP_DECISION = {
+  closedResearchSlices: ["tuas_c11c_frequency_source_recheck_v1", "dataholz_gdmtxa04a_material_surface_recheck_v1"],
+  closedCheckpointAction: "checkpoint_validation_and_commit_v1",
+  latestCheckpointCommit: "1be632d",
+  planningContractRefreshSlice: "post_ubiq_source_gap_decision_matrix_v1",
+  selectedNextPlanningAction: "post_checkpoint_next_slice_selection_v1",
+  runtimeBehaviorChange: false
+} as const;
+
+const CLOSED_UBIQ_SOURCE_GAP_SLICES = [
+  "ubiq_open_web_weaker_band_posture_guard_v1",
+  "ubiq_weak_band_exact_import_source_mapping_v1",
+  "ubiq_open_web_supported_band_finish_completion_v1",
+  "impact_lnw_plus_ci_bound_surface_v1",
+  "ubiq_lnw_plus_ci_bound_history_guard_v1",
+  "ubiq_lnw_plus_ci_near_miss_estimate_posture_decision_v1",
+  "ubiq_open_web_packaged_finish_family_design_v1",
+  "ubiq_open_web_packaged_finish_near_miss_matrix_v1",
+  "ubiq_open_web_packaged_finish_history_replay_matrix_v1"
+] as const;
 
 const SOURCE_GAP_CANDIDATES = [
   {
     id: "dataholz_gdmtxa04a",
-    posture: "defer_until_honest_material_surface",
+    posture: "closed_deferred_until_composite_dry_screed_surface_can_be_modeled",
+    runtimeWideningEligible: false,
     selectedNextGuard: false
   },
   {
     id: "ubiq_fl23_25_27_weaker_band",
-    posture: "guard_landed_exact_import_follow_up_active",
-    selectedNextGuard: true
+    posture: "closed_exact_only_import_no_longer_selected_next",
+    runtimeWideningEligible: false,
+    selectedNextGuard: false
   },
   {
     id: "tuas_c11c",
-    posture: "defer_until_frequency_or_source_correction_explains_anomaly",
+    posture: "closed_deferred_until_raw_spectrum_or_source_correction_explains_weighted_tuple",
+    runtimeWideningEligible: false,
     selectedNextGuard: false
   },
   {
     id: "raw_bare_open_box_open_web_impact",
     posture: "defer_until_bare_carrier_impact_source_exists",
+    runtimeWideningEligible: false,
     selectedNextGuard: false
   }
 ] as const;
@@ -56,16 +78,25 @@ function boundIdsMatching(pattern: RegExp) {
 }
 
 describe("source gap candidate re-rank contract", () => {
-  it("selects exactly one UBIQ guard and exact-import follow-up after source re-rank", () => {
+  it("selects checkpoint validation after the closed C11c and Dataholz no-runtime rechecks", () => {
     const selectedCandidates = SOURCE_GAP_CANDIDATES.filter((candidate) => candidate.selectedNextGuard);
 
-    expect(selectedCandidates.map((candidate) => candidate.id)).toEqual(["ubiq_fl23_25_27_weaker_band"]);
-    expect(SELECTED_SOURCE_GAP_POSTURE_GUARD).toBe("ubiq_open_web_weaker_band_posture_guard_v1");
-    expect(POSTURE_GUARD_FOLLOW_UP_SLICE).toBe("ubiq_weak_band_exact_import_source_mapping_v1");
-    expect(selectedCandidates).toHaveLength(1);
+    expect(selectedCandidates).toEqual([]);
+    expect(POST_UBIQ_SOURCE_GAP_DECISION).toEqual({
+      closedResearchSlices: ["tuas_c11c_frequency_source_recheck_v1", "dataholz_gdmtxa04a_material_surface_recheck_v1"],
+      closedCheckpointAction: "checkpoint_validation_and_commit_v1",
+      latestCheckpointCommit: "1be632d",
+      planningContractRefreshSlice: "post_ubiq_source_gap_decision_matrix_v1",
+      selectedNextPlanningAction: "post_checkpoint_next_slice_selection_v1",
+      runtimeBehaviorChange: false
+    });
+    expect(CLOSED_UBIQ_SOURCE_GAP_SLICES).toContain("ubiq_open_web_weaker_band_posture_guard_v1");
+    expect(CLOSED_UBIQ_SOURCE_GAP_SLICES).toContain("ubiq_weak_band_exact_import_source_mapping_v1");
+    expect(CLOSED_UBIQ_SOURCE_GAP_SLICES).toContain("ubiq_open_web_packaged_finish_history_replay_matrix_v1");
+    expect(SOURCE_GAP_CANDIDATES.filter((candidate) => candidate.runtimeWideningEligible)).toEqual([]);
   });
 
-  it("keeps the selected UBIQ FL-23/25/27 weak band on exact-only import posture after the guard lands", () => {
+  it("keeps the landed UBIQ FL-23/25/27 weak band on exact-only import posture", () => {
     const weakBandRows = EXACT_FLOOR_SYSTEMS.filter((system) => /^ubiq_fl(?:23|25|27)_open_web_steel_/u.test(system.id));
 
     expect(weakBandRows).toHaveLength(54);
@@ -84,7 +115,7 @@ describe("source gap candidate re-rank contract", () => {
     }
   });
 
-  it("keeps non-selected source candidates deferred on their current catalog posture", () => {
+  it("keeps selected and deferred source candidates on non-widening catalog posture", () => {
     const gdmtxa04a = EXACT_FLOOR_SYSTEMS.find((system) => system.id === "dataholz_gdmtxa04a_clt_lab_2026");
     const exactIds = EXACT_FLOOR_SYSTEMS.map((system) => system.id);
 
@@ -94,13 +125,14 @@ describe("source gap candidate re-rank contract", () => {
     expect(exactIds).not.toContain("tuas_c11c_clt260_measured_2026");
 
     expect(SOURCE_GAP_CANDIDATES.find((candidate) => candidate.id === "dataholz_gdmtxa04a")?.posture).toBe(
-      "defer_until_honest_material_surface"
+      "closed_deferred_until_composite_dry_screed_surface_can_be_modeled"
     );
     expect(SOURCE_GAP_CANDIDATES.find((candidate) => candidate.id === "tuas_c11c")?.posture).toBe(
-      "defer_until_frequency_or_source_correction_explains_anomaly"
+      "closed_deferred_until_raw_spectrum_or_source_correction_explains_weighted_tuple"
     );
     expect(SOURCE_GAP_CANDIDATES.find((candidate) => candidate.id === "raw_bare_open_box_open_web_impact")?.posture).toBe(
       "defer_until_bare_carrier_impact_source_exists"
     );
+    expect(SOURCE_GAP_CANDIDATES.filter((candidate) => candidate.runtimeWideningEligible)).toEqual([]);
   });
 });

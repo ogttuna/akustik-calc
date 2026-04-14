@@ -124,6 +124,29 @@ Read together with:
     - re-rank candidates before any source-family widening; keep raw bare
       open-web/open-box impact, `C11c`, and `GDMTXA04A` deferred unless the next
       pass finds stronger source/frequency evidence
+  - selected immediate no-runtime action:
+    `post_ubiq_source_gap_decision_matrix_v1`
+    - refresh the executable source-gap decision contract after the UBIQ
+      exact/bound/history package is committed
+    - do not change solver/catalog/workbench runtime behavior in that slice
+  - closed no-runtime research action:
+    `tuas_c11c_frequency_source_recheck_v1`
+    - compare the deferred `C11c` measured tuple against landed combined-CLT
+      anchors before any exact import
+    - result: keep workbench cards fail-closed because the weak tuple is not
+      explained by `CI` or `CI,50-2500`
+  - closed no-runtime research action:
+    `dataholz_gdmtxa04a_material_surface_recheck_v1`
+    - result: keep direct official-id source truth only; visible exact reopen is
+      blocked because the source top layer is a composite dry screed element,
+      not the current local single visible material surface
+  - closed checkpoint action:
+    `checkpoint_validation_and_commit_v1`
+    - validate and commit the no-runtime source-gap guard/docs checkpoint before
+      any runtime widening
+  - selected next no-runtime planning action:
+    `post_checkpoint_next_slice_selection_v1`
+    - choose exactly one next slice before any runtime widening
 - previous completed slice:
   `bound_metric_report_surface_completion_v1`
   - implemented as no-widening report/reference/guide completion for
@@ -1414,8 +1437,12 @@ At this older checkpoint, the best candidate was:
 
 This checkpoint has since been superseded by the closed
 `source_gap_candidate_research_re_rank_v1` and the closed
-`ubiq_open_web_weaker_band_posture_guard_v1`; the current next slice is
-`ubiq_weak_band_exact_import_source_mapping_v1`.
+`ubiq_open_web_weaker_band_posture_guard_v1`; the UBIQ exact/bound/history
+follow-ups are now also closed. The C11c frequency/source recheck is also
+closed as no-runtime. The Dataholz `GDMTXA04A` material-surface recheck is
+also closed as no-runtime. The checkpoint action
+`checkpoint_validation_and_commit_v1` is closed. The current next action is
+`post_checkpoint_next_slice_selection_v1`.
 
 Reason:
 

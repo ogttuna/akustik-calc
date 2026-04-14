@@ -2547,5 +2547,30 @@ Do this in order:
 
 	  - selected next planning slice:
 	    `post_ubiq_source_gap_re_rank_v1`
+	  - selected immediate no-runtime action:
+	    `post_ubiq_source_gap_decision_matrix_v1`
+	    - refresh the executable source-gap selector after the UBIQ weak-band and
+	      packaged open-web work has been committed
+	    - keep runtime widening candidates closed until the refreshed matrix
+	      names one route family and output surface
+	  - closed no-runtime research action:
+	    `tuas_c11c_frequency_source_recheck_v1`
+	    - audit the one remaining deferred combined-CLT source row before any
+	      exact import
+	    - keep `C11c` impact fail-closed because the weak tuple is not explained
+	      by `CI` or `CI,50-2500`
+	  - closed no-runtime research action:
+	    `dataholz_gdmtxa04a_material_surface_recheck_v1`
+	    - keep `GDMTXA04A` direct-official-id exact only and visible
+	      estimate-routed because the source top layer is a composite dry screed
+	      element, not the current local single visible material surface
+	  - closed checkpoint action:
+	    `checkpoint_validation_and_commit_v1`
+	    - validate and commit the no-runtime source-gap guard/docs checkpoint
+	      before any solver/catalog/workbench runtime widening
+	  - selected next no-runtime planning action:
+	    `post_checkpoint_next_slice_selection_v1`
+	    - choose exactly one next behavior or research slice before runtime
+	      widening
 
-This order is the safest one because the previous broad blockers are already closed; the immediate risk is silently broadening behavior before the next route can be explained by value, origin, basis/source, support bucket, and workbench/report status. Raw-floor widening is now better measured, including hostile long-split and reordered negatives, but still has the largest fake-confidence blast radius. CLT combined behavior is better anchored, but `C11c` remains deliberately deferred and `GDMTXA04A` remains estimate-only. The wall trace, raw hostile-input slices, generated mixed route-history grid, output-card snapshot guard, source candidate re-rank, UBIQ weak-band posture guard, UBIQ weak-band exact import, UBIQ supported-band exact completion, `Ln,w+CI` bound-surface import, report/reference completion, UBIQ combined-bound history guard, UBIQ near-miss fail-closed guard, remaining-source-gap posture matrix, raw bare open-web/open-box source re-rank, packaged open-box same-package guard, UBIQ packaged open-web finish-family guard, UBIQ packaged open-web near-miss/drop-off matrix, and UBIQ packaged open-web history-replay matrix reduced selector, raw-route, projection, source-selection, weak-band, supported-band, combined-bound, user-facing wording, history-replay, near-miss, deferred-gap, packaged-open-box, packaged-open-web, and raw-carrier false-confidence uncertainty without weakening frozen corridors, so the next move is a post-UBIQ source-gap re-rank rather than automatic broad raw-floor widening.
+This order is the safest one because the previous broad blockers are already closed; the immediate risk is silently broadening behavior before the next route can be explained by value, origin, basis/source, support bucket, and workbench/report status. Raw-floor widening is now better measured, including hostile long-split and reordered negatives, but still has the largest fake-confidence blast radius. CLT combined behavior is better anchored, but `C11c` remains deliberately deferred and `GDMTXA04A` remains estimate-only. The wall trace, raw hostile-input slices, generated mixed route-history grid, output-card snapshot guard, source candidate re-rank, UBIQ weak-band posture guard, UBIQ weak-band exact import, UBIQ supported-band exact completion, `Ln,w+CI` bound-surface import, report/reference completion, UBIQ combined-bound history guard, UBIQ near-miss fail-closed guard, remaining-source-gap posture matrix, raw bare open-web/open-box source re-rank, packaged open-box same-package guard, UBIQ packaged open-web finish-family guard, UBIQ packaged open-web near-miss/drop-off matrix, UBIQ packaged open-web history-replay matrix, C11c frequency/source recheck, Dataholz GDMTXA04A material-surface recheck, and checkpoint validation reduced selector, raw-route, projection, source-selection, weak-band, supported-band, combined-bound, user-facing wording, history-replay, near-miss, deferred-gap, packaged-open-box, packaged-open-web, raw-carrier, frequency-source, visible-material, and checkpoint false-confidence uncertainty without weakening frozen corridors, so the next move is a new no-runtime slice-selection pass rather than automatic broad raw-floor widening.

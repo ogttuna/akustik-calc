@@ -118,9 +118,16 @@ Current planning implication:
       workbench duplicate/split/reorder/save-load and floor/wall mode detours
     - source-equivalent histories keep official route/card values; near-misses
       remain off official exact/bound provenance
-  - next selected planning slice:
-    `post_ubiq_source_gap_re_rank_v1`
-    - re-rank candidates before any behavior widening
+  - post-UBIQ source-gap decision:
+    - `post_ubiq_source_gap_decision_matrix_v1` is closed
+    - `tuas_c11c_frequency_source_recheck_v1` is closed as no-runtime
+    - `dataholz_gdmtxa04a_material_surface_recheck_v1` is closed as no-runtime
+    - closed checkpoint action:
+      `checkpoint_validation_and_commit_v1`
+    - next selected planning action:
+      `post_checkpoint_next_slice_selection_v1`
+    - validate and commit the no-runtime source-gap checkpoint before any
+      behavior widening or exact reopen
   - Dataholz `GDMTXA04A`, TUAS `C11c`, and raw bare open-box/open-web impact
     support remain deferred until stronger source/material/frequency evidence
     exists
@@ -1339,6 +1346,20 @@ Scope note:
 - this ledger now ranks the selected UBIQ weak-band exact-import source mapping
   and UBIQ combined-bound history/near-miss guards as closed before any
   unrelated source-family widening
+- post-checkpoint planning pass:
+  - accepted checkpoint commit:
+    `1be632d test(calculator): lock UBIQ packaged floor source and history surfaces`
+  - selected immediate action:
+    `post_ubiq_source_gap_decision_matrix_v1`
+  - type: no-runtime executable planning-contract refresh
+  - purpose: remove the stale active-next signal from the old UBIQ weak-band
+    source-gap contract and force all remaining runtime candidates to stay
+    non-widening until stronger evidence exists
+  - result: implemented and target-green; the C11c frequency/source recheck and
+    Dataholz `GDMTXA04A` material-surface recheck are also closed as
+    no-runtime, the checkpoint action is closed as
+    `checkpoint_validation_and_commit_v1`, and the selected next planning
+    action is now `post_checkpoint_next_slice_selection_v1`
 - the no-widening `mixed_floor_wall_output_card_snapshot_grid_v1` guard is
   implemented; the source re-rank is implemented; the UBIQ weak-band posture
   guard is implemented; the UBIQ weak-band exact import is implemented; the
@@ -1350,8 +1371,12 @@ Scope note:
   is implemented; the TUAS open-box same-package fragmentation guard is
   implemented; the UBIQ packaged open-web finish-family guard is implemented;
   the UBIQ packaged open-web near-miss/drop-off matrix is implemented; the UBIQ
-  packaged open-web history-replay matrix is implemented; the next selected
-  planning slice is `post_ubiq_source_gap_re_rank_v1`
+  packaged open-web history-replay matrix is implemented; the current planning
+  slice is `post_ubiq_source_gap_re_rank_v1`; the executable refresh, C11c
+  frequency/source recheck, and Dataholz `GDMTXA04A` material-surface recheck
+  are closed, `checkpoint_validation_and_commit_v1` is closed, and
+  `post_checkpoint_next_slice_selection_v1` is the next selected no-runtime
+  planning action
 - raw-floor, CLT-local, UBIQ, and Dataholz source-family widening remains
   deferred unless a future candidate first gets value/origin/support/card trace
   evidence
