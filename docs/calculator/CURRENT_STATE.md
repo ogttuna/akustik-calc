@@ -5,7 +5,10 @@ Document role:
 - primary short snapshot for the current dynamic calculator and workbench posture
 - read this before the execution plan or any archived analysis note
 - for the latest committed checkpoint, also read:
+  - [CHECKPOINT_2026-04-14_FORMULA_PROVENANCE_DOSSIER_HANDOFF.md](./CHECKPOINT_2026-04-14_FORMULA_PROVENANCE_DOSSIER_HANDOFF.md)
+    for the current end-of-day formula-provenance checkpoint
   - [CHECKPOINT_2026-04-14_UBIQ_HISTORY_REPLAY_HANDOFF.md](./CHECKPOINT_2026-04-14_UBIQ_HISTORY_REPLAY_HANDOFF.md)
+    for the prior UBIQ packaged open-web history checkpoint
 - for the latest UI handoff restart point, also read:
   - [CHECKPOINT_2026-04-08_UI_HANDOFF.md](./CHECKPOINT_2026-04-08_UI_HANDOFF.md)
 - for answer-origin, formula/source confidence, and test-meaning questions, also read:

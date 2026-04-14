@@ -8,9 +8,12 @@ unambiguous.
 
 Read together with:
 
+- [CHECKPOINT_2026-04-14_FORMULA_PROVENANCE_DOSSIER_HANDOFF.md](./CHECKPOINT_2026-04-14_FORMULA_PROVENANCE_DOSSIER_HANDOFF.md)
+  for the latest end-of-day checkpoint, validation gate, completed formula
+  provenance slice map, and explicit not-done list
 - [CHECKPOINT_2026-04-14_UBIQ_HISTORY_REPLAY_HANDOFF.md](./CHECKPOINT_2026-04-14_UBIQ_HISTORY_REPLAY_HANDOFF.md)
-  for the latest committed checkpoint, accepted commit, validation snapshot,
-  and next-agent cautions
+  for the earlier UBIQ packaged open-web checkpoint, accepted commit,
+  validation snapshot, and next-agent cautions
 - [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
   when the question is whether a shown answer is source-backed, formula-backed,
   predictor-backed, bound-only, or unsupported
