@@ -128,8 +128,12 @@ Current planning implication:
       `post_checkpoint_next_slice_selection_v1` is closed
     - selected CLT guard:
       `clt_combined_anchor_history_replay_matrix_v1` is closed
+    - follow-up formula-lane selection:
+      `post_clt_combined_anchor_history_next_slice_selection_v1` is closed
+    - selected formula guard:
+      `heavy_concrete_formula_history_card_matrix_v1` is closed
     - next selected planning action:
-      `post_clt_combined_anchor_history_next_slice_selection_v1`
+      `post_heavy_concrete_formula_history_next_slice_selection_v1`
     - validate one selected route family and output surface before any
       behavior widening or exact reopen
   - Dataholz `GDMTXA04A`, TUAS `C11c`, and raw bare open-box/open-web impact
@@ -1364,9 +1368,10 @@ Scope note:
     no-runtime, the checkpoint action is closed as
     `checkpoint_validation_and_commit_v1`, and the selected next planning
     action is now closed as `post_checkpoint_next_slice_selection_v1`; the
-    selected CLT combined anchor history guard is also closed, and the next
-    planning action is now
-    `post_clt_combined_anchor_history_next_slice_selection_v1`
+    selected CLT combined anchor history guard is also closed; the follow-up
+    formula-lane selection and heavy-concrete formula history guard are also
+    closed, and the next planning action is now
+    `post_heavy_concrete_formula_history_next_slice_selection_v1`
 - the no-widening `mixed_floor_wall_output_card_snapshot_grid_v1` guard is
   implemented; the source re-rank is implemented; the UBIQ weak-band posture
   guard is implemented; the UBIQ weak-band exact import is implemented; the
@@ -1383,8 +1388,8 @@ Scope note:
   frequency/source recheck, and Dataholz `GDMTXA04A` material-surface recheck
   are closed, `checkpoint_validation_and_commit_v1` is closed,
   `post_checkpoint_next_slice_selection_v1` is closed, the CLT combined anchor
-  history guard is closed, and
-  `post_clt_combined_anchor_history_next_slice_selection_v1` is the next
+  history guard is closed, the heavy-concrete formula history guard is closed,
+  and `post_heavy_concrete_formula_history_next_slice_selection_v1` is the next
   selected no-runtime planning action
 - raw-floor, CLT-local, UBIQ, and Dataholz source-family widening remains
   deferred unless a future candidate first gets value/origin/support/card trace

@@ -124,7 +124,12 @@ Closed during this planning pass:
   - closed checkpoint action is:
     `checkpoint_validation_and_commit_v1`
   - selected next planning action is:
+    `post_heavy_concrete_formula_history_next_slice_selection_v1`
+  - closed follow-up planning actions:
+    `post_checkpoint_next_slice_selection_v1` and
     `post_clt_combined_anchor_history_next_slice_selection_v1`
+  - latest closed guard:
+    `heavy_concrete_formula_history_card_matrix_v1`
   - `runtimeBehaviorChange` is `false`
   - UBIQ weak-band rows stay imported as exact-only with
     `familyEstimateEligible: false`
@@ -318,11 +323,22 @@ Selected next planning action:
 
 - slice id: `post_clt_combined_anchor_history_next_slice_selection_v1`
 - type: no-runtime planning / route-family selection
+- status: closed during the next implementation pass on 2026-04-14
 - purpose:
   - choose the next single route family and output surface after the CLT
     combined anchor history guard
   - do not infer permission for broad raw-floor, Dataholz, C11c, UBIQ, or wall
     selector widening from this no-runtime history guard
+- result:
+  - selected and implemented no-runtime guard:
+    `heavy_concrete_formula_history_card_matrix_v1`
+  - selected route family:
+    `heavy_concrete_formula_floor_lane`
+  - selected output surface:
+    `workbench_field_impact_cards`
+  - rejected immediate runtime candidates stay non-eligible:
+    raw bare open-box/open-web impact widening, `GDMTXA04A` visible exact
+    reopen, `C11c` exact import, and wall-selector behavior widening
 - architecture checkpoint note:
   - no production runtime file changed in the CLT history guard pass
   - current large-file hotspots are pre-existing and should be split only when a
@@ -334,6 +350,48 @@ Selected next planning action:
     `packages/engine/src/impact-predictor-input.ts` (about `2.0k` lines)
   - next work touching one of those files must include a narrow extraction plan
     and regression tests for the extracted behavior
+
+Closed during this implementation pass:
+
+- slice id: `heavy_concrete_formula_history_card_matrix_v1`
+- type: no-runtime formula-lane workbench history/card guard
+- status: implemented and target-green on 2026-04-14
+- why this was selected:
+  - the project goal is not to hand-enter every possible lab assembly; formula
+    lanes must be trusted and visibly separated from exact/source/predictor
+    rows
+  - heavy concrete floors are the clearest currently implemented formula-owned
+    floor family: bare massive `Ln,w` and floating-floor `DeltaLw` use the
+    narrow Annex-C-style formula path
+  - the existing common-floor tests cover broad value corridors, but the next
+    gap was compact workbench history/card proof for formula-owned outputs
+- covered route/card states:
+  - bare `180 mm` concrete remains formula-owned after source-equivalent
+    `90 + 90 mm` base split, save/load, and floor/wall mode detour:
+    `Rw 58`, `Ln,w 71.8`, `L'n,w 73.8`, `L'nT,w 71.4`; `DeltaLw`
+    remains unsupported
+  - `8 mm` laminate plus `3 mm` EPS underlay on `180 mm` concrete remains on
+    the heavy floating-floor formula lane after `3 + 5 mm` covering split:
+    `Rw 60`, `Ln,w 65.8`, `DeltaLw 6.0`, `L'n,w 67.8`, `L'nT,w 65.4`
+  - `15 mm` engineered timber plus generic resilient underlay on `180 mm`
+    concrete remains on the same formula lane after `5 + 10 mm` covering split:
+    `Rw 60`, `Ln,w 51.5`, `DeltaLw 20.3`, `L'n,w 53.5`, `L'nT,w 51.1`
+- artifacts:
+  - `packages/engine/src/post-clt-combined-anchor-history-next-slice-selection-contract.test.ts`
+  - `apps/web/features/workbench/heavy-concrete-formula-history-card-matrix.test.ts`
+- validation:
+  - focused engine selection guard: `2` files / `4` tests green
+  - focused web formula history guard: `1` file / `3` tests green
+
+Selected next planning action:
+
+- slice id: `post_heavy_concrete_formula_history_next_slice_selection_v1`
+- type: no-runtime planning / route-family selection
+- purpose:
+  - choose the next single route family and output surface after the heavy
+    concrete formula-history guard
+  - do not treat formula-lane success as permission for broad raw timber,
+    open-box, open-web, Dataholz, C11c, or wall-selector widening
 
 ## 2026-04-14 Validated Restart Plan
 
@@ -644,7 +702,11 @@ Completed first task from this planning slice:
   - the CLT combined anchor history guard selected by that pass is closed:
     `clt_combined_anchor_history_replay_matrix_v1`
   - the current selected next planning action is:
+    `post_heavy_concrete_formula_history_next_slice_selection_v1`
+  - the formula-lane planning action is closed:
     `post_clt_combined_anchor_history_next_slice_selection_v1`
+  - the heavy-concrete formula history guard selected by that pass is closed:
+    `heavy_concrete_formula_history_card_matrix_v1`
   - all remaining risky behavior candidates stay non-widening until another
     source-backed matrix proves otherwise
 
@@ -1569,8 +1631,12 @@ Current decision after the checkpoint:
     `post_checkpoint_next_slice_selection_v1` is now closed
   - the selected CLT combined anchor history guard
     `clt_combined_anchor_history_replay_matrix_v1` is now closed
+  - the follow-up formula-lane planning pass
+    `post_clt_combined_anchor_history_next_slice_selection_v1` is now closed
+  - the selected heavy-concrete formula history guard
+    `heavy_concrete_formula_history_card_matrix_v1` is now closed
   - the next step is the no-runtime planning pass
-    `post_clt_combined_anchor_history_next_slice_selection_v1`
+    `post_heavy_concrete_formula_history_next_slice_selection_v1`
   - if a future behavior widening is selected after this checkpoint,
     name exactly one route family and one output surface first and add
     answer/card guards before code changes
@@ -1603,8 +1669,10 @@ Current decision after the checkpoint:
     Dataholz `GDMTXA04A` material-surface recheck is also closed; the
     checkpoint validation/commit-preparation action is closed; the
     `post_checkpoint_next_slice_selection_v1` planning pass is closed; the CLT
-    combined anchor history guard is closed; the active next no-runtime action
-    is `post_clt_combined_anchor_history_next_slice_selection_v1`
+    combined anchor history guard is closed; the formula-lane selection pass
+    and heavy-concrete formula history guard are closed; the active next
+    no-runtime action is
+    `post_heavy_concrete_formula_history_next_slice_selection_v1`
 
 ## Wall Selector Implementation Comparison
 

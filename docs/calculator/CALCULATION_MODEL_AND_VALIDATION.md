@@ -375,6 +375,28 @@ The matrix pins:
 - matching workbench card status/value, branch summary, validation posture, and
   consultant wording
 
+Latest formula-lane history/card guard:
+
+- `heavy_concrete_formula_history_card_matrix_v1`
+- purpose:
+  - prove that the calculator is not only hand-entered exact rows; the narrow
+    heavy concrete formula lanes also survive realistic workbench history
+  - keep formula-owned outputs visibly separate from exact source rows,
+    source-family estimates, and unsupported outputs
+- implemented artifacts:
+  - `packages/engine/src/post-clt-combined-anchor-history-next-slice-selection-contract.test.ts`
+  - `apps/web/features/workbench/heavy-concrete-formula-history-card-matrix.test.ts`
+- covered formula bases:
+  - bare massive floor `Ln,w`:
+    `predictor_bare_massive_floor_iso12354_annexc_estimate`
+  - heavy floating-floor `Ln,w` / `DeltaLw`:
+    `predictor_heavy_floating_floor_iso12354_annexc_estimate`
+- covered workbench outputs:
+  - `Rw`, `Ln,w`, `DeltaLw`, `L'n,w`, `L'nT,w`
+- non-goal:
+  - this did not import source rows or broaden raw timber/open-box/open-web
+    support; it only guards formula-lane ownership and card stability
+
 Latest wall-selector validation:
 
 - focused engine trace matrix: `1` file, `1` test, green
@@ -753,8 +775,12 @@ The UBIQ open-web packaged finish near-miss/drop-off matrix is now implemented:
     `post_checkpoint_next_slice_selection_v1`
   - CLT combined anchor history guard closed as:
     `clt_combined_anchor_history_replay_matrix_v1`
-  - next selected no-runtime planning route:
+  - formula-lane selection route closed as:
     `post_clt_combined_anchor_history_next_slice_selection_v1`
+  - heavy-concrete formula history guard closed as:
+    `heavy_concrete_formula_history_card_matrix_v1`
+  - next selected no-runtime planning route:
+    `post_heavy_concrete_formula_history_next_slice_selection_v1`
 
 The deferred open-box finish-tolerance mixed-history boundary is now closed:
 

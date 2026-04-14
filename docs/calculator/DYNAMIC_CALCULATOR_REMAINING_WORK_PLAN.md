@@ -2569,9 +2569,12 @@ Do this in order:
 	    - validate and commit the no-runtime source-gap guard/docs checkpoint
 	      before any solver/catalog/workbench runtime widening
 	  - selected next no-runtime planning action:
-	    `post_clt_combined_anchor_history_next_slice_selection_v1`
+	    `post_heavy_concrete_formula_history_next_slice_selection_v1`
 	    - `post_checkpoint_next_slice_selection_v1` is closed; it selected and
 	      closed `clt_combined_anchor_history_replay_matrix_v1`
+	    - `post_clt_combined_anchor_history_next_slice_selection_v1` is closed;
+	      it selected and closed
+	      `heavy_concrete_formula_history_card_matrix_v1`
 	    - choose exactly one next behavior or research slice before runtime
 	      widening
 

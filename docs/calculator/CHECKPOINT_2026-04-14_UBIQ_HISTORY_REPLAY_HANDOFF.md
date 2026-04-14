@@ -305,11 +305,21 @@ Closed next implementation action:
 
 Selected next planning action:
 
-- `post_clt_combined_anchor_history_next_slice_selection_v1`
+- `post_heavy_concrete_formula_history_next_slice_selection_v1`
 - no runtime behavior change
-- choose the next single route family and output surface; do not treat the CLT
-  history guard as permission for broad raw-floor, Dataholz, C11c, UBIQ, or wall
-  selector widening
+- choose the next single route family and output surface; do not treat the
+  heavy-concrete formula-history guard as permission for broad raw timber,
+  open-box, open-web, Dataholz, C11c, UBIQ, or wall-selector widening
+
+Closed formula-lane selection and guard:
+
+- `post_clt_combined_anchor_history_next_slice_selection_v1` is closed
+- selected and implemented:
+  `heavy_concrete_formula_history_card_matrix_v1`
+- result: bare concrete and heavy floating-floor formula-owned routes now
+  survive source-equivalent mass splits, row-order bounce, save/load, and
+  floor/wall mode detour on workbench field impact cards
+- no production runtime behavior changed
 
 Architecture checkpoint note:
 
