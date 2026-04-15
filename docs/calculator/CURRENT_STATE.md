@@ -31,6 +31,10 @@ Last cross-package build revalidation: `2026-04-14`
 Planning / implementation update: `2026-04-14`
 
 - latest accepted checkpoint commit:
+  `9250c06 docs(calculator): record formula provenance checkpoint`
+- latest technical implementation checkpoint commit:
+  `137e0c8 test(workbench): carry formula provenance into method dossiers`
+- prior UBIQ checkpoint commit:
   `1be632d test(calculator): lock UBIQ packaged floor source and history surfaces`
 - post-checkpoint planning pass selected
   `post_ubiq_source_gap_decision_matrix_v1` as the immediate no-runtime

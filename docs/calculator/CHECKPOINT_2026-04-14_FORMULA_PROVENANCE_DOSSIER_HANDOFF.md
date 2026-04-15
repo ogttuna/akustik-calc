@@ -7,8 +7,67 @@ Document role:
 - map the completed work back to the living calculator docs
 - make unfinished or deliberately deferred work explicit before the next
   planning slice starts
+- give a new agentic worker a direct restart path without scanning every
+  historical plan note
 
 This is a checkpoint document, not a new solver plan.
+
+## Where This Document Lives
+
+Path:
+
+- `docs/calculator/CHECKPOINT_2026-04-14_FORMULA_PROVENANCE_DOSSIER_HANDOFF.md`
+
+Primary indexes that point here:
+
+- `docs/README.md`
+- `docs/calculator/README.md`
+- `docs/calculator/CURRENT_STATE.md`
+- `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
+
+If an incoming agent only knows the repo root, start at `docs/README.md`; it
+links this file as the current clean checkpoint. If already inside calculator
+docs, start at `docs/calculator/README.md`; this file is first in the read
+order, status shortcut, and resume shortcut.
+
+## Two-Minute Restart
+
+Use this sequence for a fast, safe restart:
+
+1. Read this file first.
+2. Open [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md) and confirm
+   the active next planning action is still
+   `post_method_evidence_formula_provenance_next_slice_selection_v1`.
+3. Open [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md) before considering any
+   new floor-family source widening.
+4. Open [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
+   if the next candidate touches formula ownership, source confidence, metric
+   basis, field carry-over, or unsupported-output posture.
+5. Run `git status --short` before making changes.
+
+Do not start by editing solver/catalog/runtime code. The next action is still a
+selection pass, not a selected implementation.
+
+## Current Answer In One Screen
+
+- latest checkpoint doc commit:
+  `9250c06 docs(calculator): record formula provenance checkpoint`
+- latest technical implementation commit:
+  `137e0c8 test(workbench): carry formula provenance into method dossiers`
+- latest closed implementation slice:
+  `formula_provenance_method_evidence_dossier_v1`
+- latest closed behavior:
+  heavy concrete formula provenance is now visible across workbench history
+  cards, trace/report surfaces, proposal method dossiers, and evidence packets
+- latest validation:
+  full engine `121` files / `846` tests, full web `113` files / `640` tests,
+  engine/web typecheck and lint, `pnpm build`, and `git diff --check` were
+  green on `2026-04-14`
+- next selected planning action:
+  `post_method_evidence_formula_provenance_next_slice_selection_v1`
+- current rule:
+  pick one route family and one output surface before any new behavior
+  widening
 
 ## Current State
 
@@ -17,6 +76,10 @@ Checkpoint date: `2026-04-14`
 Accepted technical checkpoint commit:
 
 - `137e0c8 test(workbench): carry formula provenance into method dossiers`
+
+Accepted documentation checkpoint commit:
+
+- `9250c06 docs(calculator): record formula provenance checkpoint`
 
 Latest implementation sequence since the prior UBIQ checkpoint:
 
@@ -27,12 +90,31 @@ Latest implementation sequence since the prior UBIQ checkpoint:
 
 Current restart posture:
 
-- working tree was clean after `137e0c8`
+- working tree was clean after `9250c06`
 - no numeric acoustic runtime behavior changed in the latest slice
 - no source rows, formula constants, supported family scope, or broad selector
   behavior were widened
 - the next selected planning action is:
   `post_method_evidence_formula_provenance_next_slice_selection_v1`
+
+## What Changed Since The Prior Checkpoint
+
+Prior current checkpoint:
+
+- `docs/calculator/CHECKPOINT_2026-04-14_UBIQ_HISTORY_REPLAY_HANDOFF.md`
+- accepted commit:
+  `1be632d test(calculator): lock UBIQ packaged floor source and history surfaces`
+
+New work after that checkpoint closed a chain of no-widening formula provenance
+risks:
+
+- CLT combined anchor history card guard
+- heavy concrete formula history card guard
+- heavy concrete formula field carry-over trace/report provenance guard
+- heavy concrete formula proposal method/evidence dossier guard
+
+The important distinction: these passes made already-owned answers harder to
+misread. They did not claim new acoustic truth for new layer families.
 
 ## Closed Slices
 
@@ -89,6 +171,12 @@ Current restart posture:
 
 ## Documentation Mapping
 
+- [README.md](../README.md)
+  - repo-level docs index; points new agents to this checkpoint before older
+    handoff notes
+- [README.md](./README.md)
+  - calculator docs index; this checkpoint is first in read order, status
+    shortcut, and resume shortcut
 - [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md)
   - current restart point, latest closed slice, validation counts, next planning
     action, and the rejected immediate runtime-widening candidates
@@ -170,6 +258,35 @@ at this checkpoint:
     `apps/web/features/workbench/simple-workbench-proposal-panel.tsx`, or
     `packages/engine/src/impact-predictor-input.ts` should budget extraction or
     a dedicated architecture slice before widening behavior
+
+## Files Most Likely To Matter Next
+
+Planning and source posture:
+
+- `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
+- `docs/calculator/SOURCE_GAP_LEDGER.md`
+- `packages/engine/src/source-gap-candidate-re-rank-contract.test.ts`
+- `packages/engine/src/post-formula-provenance-report-next-slice-selection-contract.test.ts`
+
+Formula provenance surfaces just closed:
+
+- `apps/web/features/workbench/simple-workbench-method-dossier.ts`
+- `apps/web/features/workbench/simple-workbench-method-dossier.test.ts`
+- `apps/web/features/workbench/simple-workbench-evidence.test.ts`
+- `apps/web/features/workbench/heavy-concrete-formula-provenance-report-surface.test.ts`
+
+Numeric formula ownership already guarded elsewhere:
+
+- `packages/engine/src/calculate-assembly.test.ts`
+- `packages/engine/src/impact-support.ts`
+- `packages/engine/src/impact-predictor-status.ts`
+- `packages/engine/src/dynamic-impact.ts`
+
+Source-family widening candidates still deferred:
+
+- `packages/engine/src/raw-bare-open-web-open-box-source-evidence-rerank-contract.test.ts`
+- `packages/engine/src/dataholz-gdmtxa04a-material-surface-recheck.test.ts`
+- `packages/engine/src/tuas-c11c-frequency-source-recheck.test.ts`
 
 ## Restart Rule
 

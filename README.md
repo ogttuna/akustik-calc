@@ -18,6 +18,7 @@ Project status:
 
 Primary documents:
 
+- [`docs/calculator/CHECKPOINT_2026-04-14_FORMULA_PROVENANCE_DOSSIER_HANDOFF.md`](./docs/calculator/CHECKPOINT_2026-04-14_FORMULA_PROVENANCE_DOSSIER_HANDOFF.md)
 - [`docs/calculator/CURRENT_STATE.md`](./docs/calculator/CURRENT_STATE.md)
 - [`docs/README.md`](./docs/README.md)
 - [`docs/foundation/PROJECT_PLAN.md`](./docs/foundation/PROJECT_PLAN.md)
