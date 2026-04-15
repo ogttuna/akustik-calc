@@ -143,8 +143,8 @@ Decision:
 ## 3.8 Billing and Monitoring
 
 - `Stripe Billing`
-- `Sentry`
 - `Vercel Analytics`
+- monitoring/error reporting if needed later
 
 Decision:
 

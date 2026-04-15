@@ -10,6 +10,8 @@ import {
   FLOOR_DETOUR_ROWS,
   FLOOR_OUTPUTS,
   ROUTE_MIXED_GENERATED_CASES,
+  SELECTED_ROUTE_MIXED_GENERATED_CASES,
+  SELECTED_ROUTE_MIXED_GENERATED_CASE_IDS,
   WALL_DETOUR_ROWS,
   WALL_FIELD_OUTPUTS,
   WALL_LAB_OUTPUTS,
@@ -29,9 +31,11 @@ type StoreHandle = {
     moveRow: (id: string, direction: "up" | "down") => void;
     removeRow: (id: string) => void;
     reset: () => void;
+    requestedOutputs: readonly RequestedOutputId[];
     rows: LayerDraft[];
     saveCurrentScenario: () => void;
     savedScenarios: Array<{ id: string }>;
+    setRequestedOutputs: (outputs: RequestedOutputId[]) => void;
     startStudyMode: (studyMode: "floor" | "wall") => void;
     updateFloorRole: (id: string, floorRole?: LayerDraft["floorRole"]) => void;
     updateMaterial: (id: string, materialId: string) => void;
@@ -72,16 +76,35 @@ const REQUIRED_CARD_GRID_CASE_IDS = [
   "route-open-web-400-exact",
   "route-open-web-bound",
   "route-wall-held-aac",
+  "route-wall-heavy-composite-hint-suppression",
 ] as const;
 
-// The wider history-grid test covers all four path variants; this projection
-// guard uses one representative noisy path so card regressions stay cheap.
-const CARD_HISTORY_VARIANT: HistoryVariant = {
-  id: "ascending-reversed-leading-rebuild",
-  planOrder: "asc",
-  rebuildPiece: "leading",
-  reverseParts: true,
-};
+const CARD_HISTORY_VARIANTS: readonly HistoryVariant[] = [
+  {
+    id: "ascending-reversed-leading-rebuild",
+    planOrder: "asc",
+    rebuildPiece: "leading",
+    reverseParts: true,
+  },
+  {
+    id: "descending-direct-trailing-rebuild",
+    planOrder: "desc",
+    rebuildPiece: "trailing",
+    reverseParts: false,
+  },
+];
+
+function expectSelectedCardGridCasesCovered(): void {
+  expect(SELECTED_ROUTE_MIXED_GENERATED_CASES.map((testCase) => testCase.id)).toEqual(
+    SELECTED_ROUTE_MIXED_GENERATED_CASE_IDS,
+  );
+}
+
+function requestedOutputsForStudyMode(studyMode: "floor" | "wall"): RequestedOutputId[] {
+  return studyMode === "floor"
+    ? ["Rw", "R'w", "DnT,w", "Ln,w", "L'nT,w"]
+    : ["Rw", "Ctr", "R'w", "Dn,w", "DnT,A"];
+}
 
 function normalizeRows(rows: readonly LayerDraft[]): AppendableRow[] {
   return rows.map(({ floorRole, materialId, thicknessMm }) => ({
@@ -184,10 +207,14 @@ function buildDirectFinalRows(testCase: RouteMixedGeneratedCase): AppendableRow[
   return current;
 }
 
-function applyPartialSplitToStore(store: StoreHandle, testCase: RouteMixedGeneratedCase): void {
+function applyPartialSplitToStore(
+  store: StoreHandle,
+  testCase: RouteMixedGeneratedCase,
+  variant: HistoryVariant,
+): void {
   const baselineRows = [...store.getState().rows];
   const targetPlan =
-    CARD_HISTORY_VARIANT.planOrder === "asc"
+    variant.planOrder === "asc"
       ? [...testCase.splitPlans].sort((left, right) => left.rowIndex - right.rowIndex)[0]
       : [...testCase.splitPlans].sort((left, right) => right.rowIndex - left.rowIndex)[0];
 
@@ -215,7 +242,7 @@ function applyPartialSplitToStore(store: StoreHandle, testCase: RouteMixedGenera
   const originalId = currentRows[targetIndex]!.id;
   const duplicateId = currentRows[targetIndex + 1]!.id;
 
-  if (CARD_HISTORY_VARIANT.reverseParts) {
+  if (variant.reverseParts) {
     store.getState().updateThickness(originalId, targetPlan.parts[1]!);
     store.getState().updateThickness(duplicateId, targetPlan.parts[0]!);
     moveCurrentRowToIndex(store, duplicateId, targetIndex);
@@ -224,12 +251,16 @@ function applyPartialSplitToStore(store: StoreHandle, testCase: RouteMixedGenera
     store.getState().updateThickness(duplicateId, targetPlan.parts[1]!);
   }
 
-  bounceRow(store, CARD_HISTORY_VARIANT.rebuildPiece === "leading" ? duplicateId : originalId);
+  bounceRow(store, variant.rebuildPiece === "leading" ? duplicateId : originalId);
 }
 
-function applyHistoryVariantToStore(store: StoreHandle, testCase: RouteMixedGeneratedCase): void {
+function applyHistoryVariantToStore(
+  store: StoreHandle,
+  testCase: RouteMixedGeneratedCase,
+  variant: HistoryVariant,
+): void {
   const orderedPlans =
-    CARD_HISTORY_VARIANT.planOrder === "asc"
+    variant.planOrder === "asc"
       ? [...testCase.splitPlans].sort((left, right) => left.rowIndex - right.rowIndex)
       : [...testCase.splitPlans].sort((left, right) => right.rowIndex - left.rowIndex);
   const baselineRows = [...store.getState().rows];
@@ -255,7 +286,7 @@ function applyHistoryVariantToStore(store: StoreHandle, testCase: RouteMixedGene
     const originalId = currentRows[targetIndex]!.id;
     const duplicateId = currentRows[targetIndex + 1]!.id;
 
-    if (CARD_HISTORY_VARIANT.reverseParts) {
+    if (variant.reverseParts) {
       store.getState().updateThickness(originalId, plan.parts[1]!);
       store.getState().updateThickness(duplicateId, plan.parts[0]!);
       moveCurrentRowToIndex(store, duplicateId, targetIndex);
@@ -273,23 +304,23 @@ function applyHistoryVariantToStore(store: StoreHandle, testCase: RouteMixedGene
         : currentRows[targetIndex + 1]!.id;
     const trailingId = leadingId === originalId ? duplicateId : originalId;
 
-    bounceRow(store, CARD_HISTORY_VARIANT.rebuildPiece === "leading" ? trailingId : leadingId);
+    bounceRow(store, variant.rebuildPiece === "leading" ? trailingId : leadingId);
 
-    const rebuildId = CARD_HISTORY_VARIANT.rebuildPiece === "leading" ? leadingId : trailingId;
+    const rebuildId = variant.rebuildPiece === "leading" ? leadingId : trailingId;
     const rebuildIndex = store.getState().rows.findIndex((row) => row.id === rebuildId);
 
     expect(rebuildIndex).toBeGreaterThanOrEqual(0);
 
     store.getState().removeRow(rebuildId);
     rebuildRowAtIndex(
-      store,
-      {
-        floorRole: target.floorRole,
-        materialId: target.materialId,
-        thicknessMm: CARD_HISTORY_VARIANT.rebuildPiece === "leading" ? plan.parts[0]! : plan.parts[1]!,
-      },
-      rebuildIndex,
-    );
+        store,
+        {
+          floorRole: target.floorRole,
+          materialId: target.materialId,
+          thicknessMm: variant.rebuildPiece === "leading" ? plan.parts[0]! : plan.parts[1]!,
+        },
+        rebuildIndex,
+      );
   }
 }
 
@@ -427,6 +458,17 @@ function scenarioOutputCardSnapshots(
   };
 }
 
+function scenarioRequestedOutputCardSnapshots(
+  scenario: ReturnType<typeof evaluateCurrentScenario>,
+  requestedOutputs: readonly RequestedOutputId[],
+  studyMode: "floor" | "wall",
+): ScenarioOutputCardSnapshots {
+  return {
+    field: outputCardSnapshot(scenario.field, requestedOutputs, studyMode),
+    lab: outputCardSnapshot(scenario.lab, requestedOutputs, studyMode),
+  };
+}
+
 function cardSnapshotsForAppendableRows(
   store: StoreHandle,
   id: string,
@@ -446,6 +488,18 @@ function cardSnapshotsForStore(
   studyMode: "floor" | "wall",
 ): ScenarioOutputCardSnapshots {
   return scenarioOutputCardSnapshots(evaluateCurrentScenario(store, id, studyMode), studyMode);
+}
+
+function requestedCardSnapshotsForStore(
+  store: StoreHandle,
+  id: string,
+  studyMode: "floor" | "wall",
+): ScenarioOutputCardSnapshots {
+  return scenarioRequestedOutputCardSnapshots(
+    evaluateCurrentScenario(store, id, studyMode),
+    store.getState().requestedOutputs,
+    studyMode,
+  );
 }
 
 function appendGeneratedRows(store: StoreHandle, testCase: RouteMixedGeneratedCase): void {
@@ -551,32 +605,38 @@ describe("mixed study-mode output-card snapshot grid", () => {
       store.getState().reset();
       store.getState().startStudyMode(testCase.studyMode);
       appendGeneratedRows(store, testCase);
-      applyHistoryVariantToStore(store, testCase);
-      assertRowsEqual(
-        failures,
-        `${testCase.id}:${CARD_HISTORY_VARIANT.id}:rows`,
-        store.getState().rows,
-        directFinalRows,
-      );
-      assertProjectionEqual(
-        failures,
-        `${testCase.id}:${CARD_HISTORY_VARIANT.id}:cards`,
-        cardSnapshotsForStore(store, `${testCase.id}:${CARD_HISTORY_VARIANT.id}`, testCase.studyMode),
-        expected,
-      );
+      for (const variant of CARD_HISTORY_VARIANTS) {
+        store.getState().reset();
+        store.getState().startStudyMode(testCase.studyMode);
+        appendGeneratedRows(store, testCase);
+        applyHistoryVariantToStore(store, testCase, variant);
+        assertRowsEqual(
+          failures,
+          `${testCase.id}:${variant.id}:rows`,
+          store.getState().rows,
+          directFinalRows,
+        );
+        assertProjectionEqual(
+          failures,
+          `${testCase.id}:${variant.id}:cards`,
+          cardSnapshotsForStore(store, `${testCase.id}:${variant.id}`, testCase.studyMode),
+          expected,
+        );
+      }
     }
 
     expect(failures, failures.join("\n\n")).toEqual([]);
   });
 
-  it("keeps output cards stable after partial-edit restore and save-load roundtrips", async () => {
+  it("keeps selected seeded boundary route output cards stable after partial-edit restore and save-load roundtrips", async () => {
     expectRequiredCasesCovered();
+    expectSelectedCardGridCasesCovered();
 
     const { useWorkbenchStore } = await import("./workbench-store");
     const store = useWorkbenchStore as StoreHandle;
     const failures: string[] = [];
 
-    for (const testCase of ROUTE_MIXED_GENERATED_CASES) {
+    for (const testCase of SELECTED_ROUTE_MIXED_GENERATED_CASES) {
       const directFinalRows = buildDirectFinalRows(testCase);
       const expected = cardSnapshotsForAppendableRows(
         store,
@@ -585,62 +645,133 @@ describe("mixed study-mode output-card snapshot grid", () => {
         testCase.studyMode,
       );
 
-      store.getState().reset();
-      store.getState().startStudyMode(testCase.studyMode);
-      appendGeneratedRows(store, testCase);
-      applyPartialSplitToStore(store, testCase);
-      runOppositeModeNoiseChain(store, testCase);
-      store.getState().startStudyMode(testCase.studyMode);
-      appendGeneratedRows(store, testCase);
-      applyHistoryVariantToStore(store, testCase);
-      assertRowsEqual(
-        failures,
-        `${testCase.id}:partial-restore:${CARD_HISTORY_VARIANT.id}:rows`,
-        store.getState().rows,
-        directFinalRows,
-      );
-      assertProjectionEqual(
-        failures,
-        `${testCase.id}:partial-restore:${CARD_HISTORY_VARIANT.id}:cards`,
-        cardSnapshotsForStore(
-          store,
-          `${testCase.id}:partial-restore:${CARD_HISTORY_VARIANT.id}`,
-          testCase.studyMode,
-        ),
-        expected,
-      );
+      for (const variant of CARD_HISTORY_VARIANTS) {
+        store.getState().reset();
+        store.getState().startStudyMode(testCase.studyMode);
+        appendGeneratedRows(store, testCase);
+        applyPartialSplitToStore(store, testCase, variant);
+        runOppositeModeNoiseChain(store, testCase);
+        store.getState().startStudyMode(testCase.studyMode);
+        appendGeneratedRows(store, testCase);
+        applyHistoryVariantToStore(store, testCase, variant);
+        assertRowsEqual(
+          failures,
+          `${testCase.id}:partial-restore:${variant.id}:rows`,
+          store.getState().rows,
+          directFinalRows,
+        );
+        assertProjectionEqual(
+          failures,
+          `${testCase.id}:partial-restore:${variant.id}:cards`,
+          cardSnapshotsForStore(
+            store,
+            `${testCase.id}:partial-restore:${variant.id}`,
+            testCase.studyMode,
+          ),
+          expected,
+        );
+
+        store.getState().reset();
+        store.getState().startStudyMode(testCase.studyMode);
+        appendGeneratedRows(store, testCase);
+        applyPartialSplitToStore(store, testCase, variant);
+        runOppositeModeNoiseChain(store, testCase);
+        store.getState().startStudyMode(testCase.studyMode);
+        appendGeneratedRows(store, testCase);
+        applyHistoryVariantToStore(store, testCase, variant);
+        store.getState().saveCurrentScenario();
+
+        const savedScenario = store.getState().savedScenarios[0];
+
+        if (!savedScenario) {
+          failures.push(`${testCase.id}:save-load:${variant.id} missing saved scenario`);
+          continue;
+        }
+
+        runOppositeModeNoiseChain(store, testCase);
+        store.getState().loadSavedScenario(savedScenario.id);
+        assertRowsEqual(
+          failures,
+          `${testCase.id}:save-load:${variant.id}:rows`,
+          store.getState().rows,
+          directFinalRows,
+        );
+        assertProjectionEqual(
+          failures,
+          `${testCase.id}:save-load:${variant.id}:cards`,
+          cardSnapshotsForStore(
+            store,
+            `${testCase.id}:save-load:${variant.id}`,
+            testCase.studyMode,
+          ),
+          expected,
+        );
+      }
+    }
+
+    expect(failures, failures.join("\n\n")).toEqual([]);
+  });
+
+  it("keeps selected seeded boundary route requested-output card posture stable after default resets and save-load restores", async () => {
+    expectRequiredCasesCovered();
+    expectSelectedCardGridCasesCovered();
+
+    const { useWorkbenchStore } = await import("./workbench-store");
+    const store = useWorkbenchStore as StoreHandle;
+    const failures: string[] = [];
+
+    for (const testCase of SELECTED_ROUTE_MIXED_GENERATED_CASES) {
+      const selectedRequestedOutputs = requestedOutputsForStudyMode(testCase.studyMode);
+      const expectedDefaultOutputs =
+        testCase.studyMode === "floor" ? ["Rw", "Ln,w", "Ln,w+CI", "DeltaLw"] : ["Rw", "STC", "C", "Ctr"];
+      const oppositeMode = testCase.studyMode === "floor" ? "wall" : "floor";
+      const expectedOppositeOutputs =
+        oppositeMode === "floor" ? ["Rw", "Ln,w", "Ln,w+CI", "DeltaLw"] : ["Rw", "STC", "C", "Ctr"];
 
       store.getState().reset();
       store.getState().startStudyMode(testCase.studyMode);
-      appendGeneratedRows(store, testCase);
-      applyPartialSplitToStore(store, testCase);
-      runOppositeModeNoiseChain(store, testCase);
-      store.getState().startStudyMode(testCase.studyMode);
-      appendGeneratedRows(store, testCase);
-      applyHistoryVariantToStore(store, testCase);
+      if (JSON.stringify(store.getState().requestedOutputs) !== JSON.stringify(expectedDefaultOutputs)) {
+        failures.push(`${testCase.id}: default requested-output bundle should match the study-mode default`);
+      }
+      appendDirectRows(store, testCase);
+      applySplitPlansToStore(store, testCase.splitPlans);
+      store.getState().setRequestedOutputs(selectedRequestedOutputs);
+      const expected = requestedCardSnapshotsForStore(
+        store,
+        `${testCase.id}:requested-output-direct`,
+        testCase.studyMode,
+      );
+
       store.getState().saveCurrentScenario();
-
       const savedScenario = store.getState().savedScenarios[0];
 
       if (!savedScenario) {
-        failures.push(`${testCase.id}:save-load missing saved scenario`);
+        failures.push(`${testCase.id}:requested-output-restore missing saved scenario`);
         continue;
       }
 
-      runOppositeModeNoiseChain(store, testCase);
+      store.getState().startStudyMode(oppositeMode);
+      if (JSON.stringify(store.getState().requestedOutputs) !== JSON.stringify(expectedOppositeOutputs)) {
+        failures.push(`${testCase.id}: opposite-mode reset should open the opposite default requested outputs`);
+      }
+      store.getState().appendRows(oppositeMode === "floor" ? FLOOR_DETOUR_ROWS : WALL_DETOUR_ROWS);
+
+      store.getState().startStudyMode(testCase.studyMode);
+      if (JSON.stringify(store.getState().requestedOutputs) !== JSON.stringify(expectedDefaultOutputs)) {
+        failures.push(`${testCase.id}: returning to ${testCase.studyMode} should reset the default requested outputs`);
+      }
+
       store.getState().loadSavedScenario(savedScenario.id);
-      assertRowsEqual(
-        failures,
-        `${testCase.id}:save-load:${CARD_HISTORY_VARIANT.id}:rows`,
-        store.getState().rows,
-        directFinalRows,
-      );
+      if (JSON.stringify(store.getState().requestedOutputs) !== JSON.stringify(selectedRequestedOutputs)) {
+        failures.push(`${testCase.id}: save-load should restore the selected requested-output bundle`);
+      }
+
       assertProjectionEqual(
         failures,
-        `${testCase.id}:save-load:${CARD_HISTORY_VARIANT.id}:cards`,
-        cardSnapshotsForStore(
+        `${testCase.id}:requested-output-restore:cards`,
+        requestedCardSnapshotsForStore(
           store,
-          `${testCase.id}:save-load:${CARD_HISTORY_VARIANT.id}`,
+          `${testCase.id}:requested-output-restore`,
           testCase.studyMode,
         ),
         expected,

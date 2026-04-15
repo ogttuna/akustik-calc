@@ -5,8 +5,10 @@ Document role:
 - primary short snapshot for the current dynamic calculator and workbench posture
 - read this before the execution plan or any archived analysis note
 - for the latest committed checkpoint, also read:
+  - [CHECKPOINT_2026-04-15_REQUESTED_OUTPUT_HISTORY_REPLAY_HANDOFF.md](./CHECKPOINT_2026-04-15_REQUESTED_OUTPUT_HISTORY_REPLAY_HANDOFF.md)
+    for the current end-of-day requested-output replay checkpoint
   - [CHECKPOINT_2026-04-14_FORMULA_PROVENANCE_DOSSIER_HANDOFF.md](./CHECKPOINT_2026-04-14_FORMULA_PROVENANCE_DOSSIER_HANDOFF.md)
-    for the current end-of-day formula-provenance checkpoint
+    for the prior formula-provenance checkpoint
   - [CHECKPOINT_2026-04-14_UBIQ_HISTORY_REPLAY_HANDOFF.md](./CHECKPOINT_2026-04-14_UBIQ_HISTORY_REPLAY_HANDOFF.md)
     for the prior UBIQ packaged open-web history checkpoint
 - for the latest UI handoff restart point, also read:
@@ -22,13 +24,22 @@ Document role:
 
 ## Revalidated Snapshot
 
-Last full engine revalidation: `2026-04-14`
+Last full engine revalidation: `2026-04-15`
 
-Last full web revalidation: `2026-04-14`
+Last full web revalidation: `2026-04-15`
 
-Last cross-package build revalidation: `2026-04-14`
+Last cross-package build revalidation: `2026-04-15`
 
-Planning / implementation update: `2026-04-14`
+Planning / implementation update: `2026-04-15`
+
+- latest live verification after the end-of-day checkpoint refresh:
+  - full engine suite: `126` files / `859` tests, green
+  - full web suite: `113` files / `645` tests, green
+  - `pnpm calculator:gate:current`: green
+  - `pnpm typecheck`: green
+  - `pnpm lint`: green
+  - `pnpm build`: green with the known optional `sharp/@img` DOCX warnings
+  - `git diff --check`: green
 
 - latest accepted checkpoint commit:
   `9250c06 docs(calculator): record formula provenance checkpoint`
@@ -126,18 +137,123 @@ Planning / implementation update: `2026-04-14`
   - full validation is green: engine `121` files / `846` tests, web `113`
     files / `640` tests, engine/web typecheck and lint, `pnpm build`, and
     `git diff --check`
-- selected next planning action:
+- closed planning action:
   `post_method_evidence_formula_provenance_next_slice_selection_v1`
-  - choose the next single behavior, research, or architecture slice after
-    formula provenance is explicit on trace, report, method dossier, and
-    evidence packet surfaces
+  - selected the no-runtime
+    `mixed_floor_wall_seeded_cross_mode_chain_expansion_v1` shared torture-pass
+    slice as the immediate next implementation step
+  - that next slice is still selected-only; the repo currently guards the choice
+    with a planning-contract test, but the slice itself is not closed yet
+  - broaden seeded cross-mode mixed floor/wall history evidence before any new
+    source, formula, or wall-selector widening
+  - explicit deferred candidates remain raw bare open-box/open-web impact,
+    Dataholz `GDMTXA04A` visible exact reopen, TUAS `C11c` exact import, broad
+    heavy-concrete formula widening, and wall-selector behavior widening
+- closed no-runtime shared torture-pass guard:
+  `mixed_floor_wall_seeded_cross_mode_chain_expansion_v1`
+  - the selected six-route mixed floor/wall boundary ledger is now explicit
+    across the engine companion parity surface, the workbench torture surface,
+    and the output-card projection surface
+  - `route-wall-heavy-composite-hint-suppression` is now explicit in targeted
+    workbench card coverage rather than only incidental helper-led matrix
+    coverage
+  - numeric runtime behavior did not change
+  - focused engine gate is green: `2` files / `4` tests
+  - focused web gate is green: `2` files / `7` tests
+  - full validation is green: engine `122` files / `849` tests, web `113`
+    files / `642` tests, `pnpm build`, and `git diff --check`
+- closed planning action:
+  `post_mixed_floor_wall_seeded_cross_mode_chain_next_slice_selection_v1`
+  - selected the no-runtime
+    `mixed_floor_wall_duplicate_swap_grid_expansion_v1` shared torture-pass
+    slice as the immediate next implementation step
+  - widen duplicate-swap and replay-grid pressure before any new source,
+    formula, or wall-selector widening
+  - explicit deferred candidates remain raw bare open-box/open-web impact,
+    Dataholz `GDMTXA04A` visible exact reopen, TUAS `C11c` exact import, broad
+    heavy-concrete formula widening, and wall-selector behavior widening
+- closed no-runtime shared torture-pass guard:
+  `mixed_floor_wall_duplicate_swap_grid_expansion_v1`
+  - the selected six-route mixed floor/wall boundary ledger now survives a
+    broader duplicate-swap replay grid across the engine companion surface, the
+    workbench generated history/edit-history replay surfaces, and the
+    output-card projection surface
+  - output-card projection parity is now guarded across more than one noisy
+    replay path, and the selected replay/save-load surfaces are explicit
+  - numeric runtime behavior did not change
+  - focused engine gate is green: `2` files / `4` tests
+  - focused web gate is green: `3` files / `7` tests
+  - full validation is green: engine `123` files / `852` tests, web `113`
+    files / `643` tests, `pnpm build`, and `git diff --check`
+- closed planning action:
+  `post_mixed_floor_wall_duplicate_swap_grid_next_slice_selection_v1`
+  - selected the no-runtime
+    `mixed_floor_wall_requested_output_reset_grid_expansion_v1` shared
+    posture-pass slice as the immediate next implementation step
+  - widen requested-output default/reset/save-load posture before any new
+    source, formula, or wall-selector widening
+  - explicit deferred candidates remain raw bare open-box/open-web impact,
+    Dataholz `GDMTXA04A` visible exact reopen, TUAS `C11c` exact import, broad
+    heavy-concrete formula widening, and wall-selector behavior widening
+- closed no-runtime shared posture-pass guard:
+  `mixed_floor_wall_requested_output_reset_grid_expansion_v1`
+  - the selected six-route mixed floor/wall boundary ledger now keeps
+    mode-default requested-output bundles, opposite-mode resets, save/load
+    restore posture, engine support buckets, and requested output-card
+    projection posture stable
+  - numeric runtime behavior did not change
+  - focused engine gate is green: `2` files / `5` tests
+  - focused web gate is green: `2` files / `5` tests
+  - full validation is green: engine `124` files / `855` tests, web `113`
+    files / `645` tests, `pnpm build`, and `git diff --check`
+- closed planning action:
+  `post_mixed_floor_wall_requested_output_reset_grid_next_slice_selection_v1`
+  - selected the no-runtime
+    `mixed_floor_wall_requested_output_history_replay_grid_expansion_v1`
+    shared torture-pass slice as the immediate next implementation step
+  - widen selected-route custom requested-output bundle replay posture before
+    any new source, formula, or wall-selector widening
+  - explicit deferred candidates remain raw bare open-box/open-web impact,
+    Dataholz `GDMTXA04A` visible exact reopen, TUAS `C11c` exact import, broad
+    heavy-concrete formula widening, and wall-selector behavior widening
+- closed no-runtime shared torture-pass guard:
+  `mixed_floor_wall_requested_output_history_replay_grid_expansion_v1`
+  - the selected six-route mixed floor/wall boundary ledger now keeps custom
+    requested-output bundles stable across hostile edit-history replay, long
+    cross-mode history chains, and save/load restore
+  - numeric runtime behavior did not change
+  - focused engine gate is green: `2` files / `5` tests
+  - focused web gate is green: `2` files / `5` tests
+  - full validation is green: engine `125` files / `857` tests, web `113`
+    files / `645` tests, `pnpm build`, and `git diff --check`
+- closed planning action:
+  `post_mixed_floor_wall_requested_output_history_replay_grid_next_slice_selection_v1`
+  - selected the no-runtime
+    `mixed_floor_wall_requested_output_card_history_replay_grid_expansion_v1`
+    shared torture-pass slice as the immediate next implementation step
+  - widen selected-route output-card projection posture for custom
+    requested-output bundles before any new source, formula, or wall-selector
+    widening
+  - explicit deferred candidates remain raw bare open-box/open-web impact,
+    Dataholz `GDMTXA04A` visible exact reopen, TUAS `C11c` exact import, broad
+    heavy-concrete formula widening, and wall-selector behavior widening
+- explicit not-done item at the current checkpoint:
+  - `mixed_floor_wall_requested_output_card_history_replay_grid_expansion_v1`
+    is still selected-only
+  - the hidden custom requested-output bundle already survives replay/history
+    abuse, but the visible output-card status/value/support posture for the
+    same replay chains is not widened yet
 - architecture checkpoint scan:
-  - production changes in this pass are metadata/provenance-only:
-    `packages/engine/src/impact-support.ts`,
-    `packages/engine/src/impact-predictor-status.ts`, and
-    `packages/engine/src/dynamic-impact.ts`
-  - no formula scope, source row, source-family lane, or numeric acoustic
-    result was widened
+  - production runtime changes in this pass: none
+  - current pass touched only test, doc, checkpoint, and focused-gate surfaces:
+    `packages/engine/src/mixed-floor-wall-generated-matrix.test.ts`,
+    `apps/web/features/workbench/mixed-study-mode-generated-matrix.test.ts`,
+    `apps/web/features/workbench/mixed-study-mode-output-card-snapshot-grid.test.ts`,
+    `packages/engine/src/post-mixed-floor-wall-requested-output-history-replay-grid-next-slice-selection-contract.test.ts`,
+    `tools/dev/run-calculator-current-gate.ts`, calculator docs, and the
+    `2026-04-15` checkpoint note
+  - no formula scope, source row, source-family lane, selector behavior, or
+    numeric acoustic result was widened
   - existing large-file hotspots remain manageable only because they are heavily
     covered, but future work touching them should budget extraction before
     widening behavior:

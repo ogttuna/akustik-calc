@@ -14,6 +14,7 @@ Project status:
 - A first web shell exists in `apps/web`.
 - A seed `engine`, `catalogs`, `shared`, and `ui` package set exists.
 - Docker build and compose structure exist.
+- The web app now has auth-gated workbench flows and proposal PDF/DOCX export.
 - No code should be copied from `Acoustic2` until the import policy in [`docs/foundation/SOURCE_REPO_POLICY.md`](./docs/foundation/SOURCE_REPO_POLICY.md) is followed.
 
 Primary documents:
@@ -36,6 +37,7 @@ Run locally:
 - `pnpm install`
 - optional: set `DYNECHO_AUTH_USERNAME`, `DYNECHO_AUTH_PASSWORD`, and `DYNECHO_AUTH_SECRET`
 - `pnpm dev`
+- `pnpm calculator:gate:current`
 - `pnpm check`
 - `pnpm build`
 - `pnpm e2e`
@@ -60,6 +62,7 @@ Useful endpoints:
 - `POST /api/estimate`
 - `POST /api/impact-only`
 - `POST /api/proposal-pdf`
+- `POST /api/proposal-docx`
 
 Authentication:
 
@@ -67,6 +70,14 @@ Authentication:
 - when auth is configured, `/workbench`, `/workbench/proposal`, `POST /api/estimate`, `POST /api/impact-only`, and `POST /api/proposal-pdf` require sign-in
 - if auth env vars are not configured locally, the app falls back to preview mode instead of forcing login
 - copy [`apps/web/.env.example`](./apps/web/.env.example) into your local env setup if you want authenticated local runs instead of preview mode
+
+Agent workflow:
+
+- read [`AGENTS.md`](./AGENTS.md) before changing calculator behavior
+- use [`docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`](./docs/calculator/NEXT_IMPLEMENTATION_PLAN.md)
+  as the current next-step authority
+- run `pnpm calculator:gate:current` for the focused current-slice confidence
+  gate
 
 Read-only upstream tooling:
 

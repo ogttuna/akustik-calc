@@ -1,4 +1,6 @@
 import { spawn } from "node:child_process";
+import path from "node:path";
+import { hasExplicitNextPlugin, wireNextPluginWarningFilter } from "./next-plugin-warning";
 
 const TYPECHECK_DIST_DIR = ".next-typecheck";
 
@@ -7,14 +9,16 @@ function getPnpmCommand(): string {
 }
 
 async function main() {
+  const suppressNextPluginWarning = hasExplicitNextPlugin(path.join(process.cwd(), "tsconfig.json"));
   const child = spawn(getPnpmCommand(), ["exec", "next", "typegen"], {
     cwd: process.cwd(),
     env: {
       ...process.env,
       NEXT_DIST_DIR: TYPECHECK_DIST_DIR
     },
-    stdio: "inherit"
+    stdio: ["inherit", "pipe", "pipe"]
   });
+  wireNextPluginWarningFilter(child, suppressNextPluginWarning);
 
   child.on("exit", (code, signal) => {
     if (signal) {

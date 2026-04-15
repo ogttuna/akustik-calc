@@ -16,6 +16,24 @@ Read together with:
 - `docs/foundation/PROJECT_PLAN.md`
 - `docs/README.md`
 
+Current authority note:
+
+- use [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md) for the
+  authoritative immediate next-step plan as of `2026-04-15`
+- this file remains the long-form floor-dominant backlog and includes older
+  closed slices below
+
+Current status summary:
+
+- latest completed slice:
+  `formula_provenance_method_evidence_dossier_v1`
+- current selected next slice:
+  `mixed_floor_wall_seeded_cross_mode_chain_expansion_v1`
+- current deferred runtime candidates:
+  raw bare open-box/open-web impact, Dataholz `GDMTXA04A` visible exact reopen,
+  TUAS `C11c` exact import, broad heavy-concrete formula widening, and
+  wall-selector behavior widening
+
 This note is intentionally execution-oriented. It is not a product snapshot and not a one-day handoff.
 
 Important scope note:

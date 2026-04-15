@@ -12,6 +12,24 @@ Document role:
 
 This is a checkpoint document, not a new solver plan.
 
+Historical status update:
+
+- as of `2026-04-15`, the follow-on planning action recorded in this checkpoint
+  is now closed in [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md)
+- the current committed restart point now lives in
+  [CHECKPOINT_2026-04-15_REQUESTED_OUTPUT_HISTORY_REPLAY_HANDOFF.md](./CHECKPOINT_2026-04-15_REQUESTED_OUTPUT_HISTORY_REPLAY_HANDOFF.md)
+- use `NEXT_IMPLEMENTATION_PLAN.md` as the current next-step authority; this
+  checkpoint remains the accepted `2026-04-14` close-out snapshot
+- live suites after that follow-on planning-contract refresh now sit at full
+  engine `124` files / `854` tests and full web `113` files / `643` tests
+- the selected follow-on slices
+  `mixed_floor_wall_seeded_cross_mode_chain_expansion_v1` and
+  `mixed_floor_wall_duplicate_swap_grid_expansion_v1` are now implemented and
+  target-green in the working tree
+- the current next-step selection after that closeout also lives in
+  [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md); the validation
+  section below remains the accepted historical checkpoint gate
+
 ## Where This Document Lives
 
 Path:
@@ -27,17 +45,17 @@ Primary indexes that point here:
 
 If an incoming agent only knows the repo root, start at `docs/README.md`; it
 links this file as the current clean checkpoint. If already inside calculator
-docs, start at `docs/calculator/README.md`; this file is first in the read
-order, status shortcut, and resume shortcut.
+docs, start at `docs/calculator/README.md`; this file remains the current
+checkpoint and the first item in the resume shortcut even though the active
+next-step plan now appears before it in the general read order.
 
 ## Two-Minute Restart
 
 Use this sequence for a fast, safe restart:
 
 1. Read this file first.
-2. Open [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md) and confirm
-   the active next planning action is still
-   `post_method_evidence_formula_provenance_next_slice_selection_v1`.
+2. Open [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md) and use it
+   as the current next-step authority.
 3. Open [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md) before considering any
    new floor-family source widening.
 4. Open [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
@@ -46,7 +64,7 @@ Use this sequence for a fast, safe restart:
 5. Run `git status --short` before making changes.
 
 Do not start by editing solver/catalog/runtime code. The next action is still a
-selection pass, not a selected implementation.
+no-runtime shared torture-pass slice, not a broad runtime widening.
 
 ## Current Answer In One Screen
 
@@ -63,9 +81,9 @@ selection pass, not a selected implementation.
   full engine `121` files / `846` tests, full web `113` files / `640` tests,
   engine/web typecheck and lint, `pnpm build`, and `git diff --check` were
   green on `2026-04-14`
-- next selected planning action:
+- follow-on planning action at that checkpoint:
   `post_method_evidence_formula_provenance_next_slice_selection_v1`
-- current rule:
+- checkpoint rule:
   pick one route family and one output surface before any new behavior
   widening
 
@@ -94,7 +112,7 @@ Current restart posture:
 - no numeric acoustic runtime behavior changed in the latest slice
 - no source rows, formula constants, supported family scope, or broad selector
   behavior were widened
-- the next selected planning action is:
+- at this checkpoint, the next selected planning action was:
   `post_method_evidence_formula_provenance_next_slice_selection_v1`
 
 ## What Changed Since The Prior Checkpoint

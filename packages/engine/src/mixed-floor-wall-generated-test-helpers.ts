@@ -87,6 +87,33 @@ export function buildGeneratedVariants(testCase: EngineMixedGeneratedCase) {
   return [...individual, ...combined];
 }
 
+export const SELECTED_ENGINE_MIXED_GENERATED_ROUTE_CASES = [
+  {
+    engineCaseId: "wall-held-aac",
+    routeId: "route-wall-held-aac"
+  },
+  {
+    engineCaseId: "wall-heavy-composite-hint-suppression",
+    routeId: "route-wall-heavy-composite-hint-suppression"
+  },
+  {
+    engineCaseId: "floor-dataholz-gdmtxa04a-boundary",
+    routeId: "route-dataholz-gdmtxa04a-boundary"
+  },
+  {
+    engineCaseId: "floor-tuas-c11c-fail-closed",
+    routeId: "route-tuas-c11c-fail-closed"
+  },
+  {
+    engineCaseId: "floor-open-box-exact",
+    routeId: "route-open-box-exact"
+  },
+  {
+    engineCaseId: "floor-open-web-bound",
+    routeId: "route-open-web-bound"
+  }
+] as const;
+
 export function resultSnapshot(result: ReturnType<typeof calculateAssembly>) {
   return {
     boundFloorSystemEstimateKind: result.boundFloorSystemEstimate?.kind ?? null,

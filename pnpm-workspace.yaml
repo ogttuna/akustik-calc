@@ -1,4 +1,8 @@
 packages:
   - apps/*
   - packages/*
-
+strictDepBuilds: true
+allowBuilds:
+  '@turbodocx/html-to-docx': true
+  esbuild: true
+  sharp: true

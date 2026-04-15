@@ -29,38 +29,50 @@ export async function POST(request: Request) {
     );
   }
 
-  const username = typeof payload.username === "string" ? payload.username : "";
-  const password = typeof payload.password === "string" ? payload.password : "";
-  const nextPath = normalizeNextPath(typeof payload.nextPath === "string" ? payload.nextPath : undefined);
-  const loginState = validateLoginCredentials(username, password);
+  try {
+    const username = typeof payload.username === "string" ? payload.username : "";
+    const password = typeof payload.password === "string" ? payload.password : "";
+    const nextPath = normalizeNextPath(typeof payload.nextPath === "string" ? payload.nextPath : undefined);
+    const loginState = validateLoginCredentials(username, password);
 
-  if (!loginState.configured) {
+    if (!loginState.configured) {
+      return NextResponse.json(
+        {
+          ok: true,
+          redirectTo: nextPath
+        }
+      );
+    }
+
+    if (!loginState.valid) {
+      return NextResponse.json(
+        {
+          error: "Invalid username or password.",
+          ok: false
+        },
+        {
+          status: 401
+        }
+      );
+    }
+
+    const response = NextResponse.json({
+      ok: true,
+      redirectTo: nextPath
+    });
+
+    applySessionCookie(response, loginState.config, loginState.config.username);
+
+    return response;
+  } catch {
     return NextResponse.json(
       {
-        ok: true,
-        redirectTo: nextPath
-      }
-    );
-  }
-
-  if (!loginState.valid) {
-    return NextResponse.json(
-      {
-        error: "Invalid username or password.",
+        error: "DynEcho could not complete the sign-in request.",
         ok: false
       },
       {
-        status: 401
+        status: 500
       }
     );
   }
-
-  const response = NextResponse.json({
-    ok: true,
-    redirectTo: nextPath
-  });
-
-  applySessionCookie(response, loginState.config, loginState.config.username);
-
-  return response;
 }

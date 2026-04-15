@@ -1,6 +1,6 @@
 # Dynamic Calculator Coverage And Accuracy Plan
 
-Last reviewed: 2026-04-14
+Last reviewed: 2026-04-15
 
 Document role:
 
@@ -18,7 +18,55 @@ Read together with:
 - [DYNAMIC_WALL_STABILITY_REMEDIATION.md](./DYNAMIC_WALL_STABILITY_REMEDIATION.md)
 - [DYNAMIC_CALCULATOR_PLAN.md](./DYNAMIC_CALCULATOR_PLAN.md)
 
-## Current Active Slice Ledger
+Current authority note:
+
+- [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md) is the
+  authoritative immediate next-step file as of `2026-04-15`
+- this document remains the long-form coverage/accuracy backlog and can contain
+  superseded historical slice ledgers below
+
+## Current Active Slice Ledger - 2026-04-15
+
+- latest completed slice:
+  `formula_provenance_method_evidence_dossier_v1`
+- status:
+  implemented and green; no numeric runtime behavior changed
+- latest completed slice intent:
+  - keep heavy concrete formula ownership visible on proposal method dossiers
+    and evidence packets after it was already preserved on trace/report
+    surfaces
+  - protect formula-derived rationale text without widening formula scope or
+    source rows
+- latest completed slice validation at the accepted checkpoint:
+  - targeted engine planning/provenance guard:
+    `3` files / `7` tests, green
+  - targeted web method/evidence/report guard:
+    `3` files / `6` tests, green
+  - full engine:
+    `121` files / `846` tests, green
+  - full web:
+    `113` files / `640` tests, green
+- closed planning action:
+  `post_method_evidence_formula_provenance_next_slice_selection_v1`
+- selected next slice:
+  `mixed_floor_wall_seeded_cross_mode_chain_expansion_v1`
+  - type: no-runtime shared torture-pass evidence expansion
+  - route family: `mixed_floor_wall_seeded_boundary_routes`
+  - output surface: `workbench_saved_scenario_replay_and_output_cards`
+  - why this next:
+    - mixed floor/wall first-pass generated matrices already exist
+    - remaining gap is broader seeded cross-mode edit-chain coverage beyond the
+      current second wall-family retention boundary
+    - this is the safest next blocker to remove before any wall-selector or
+      source-led widening
+- immediate deferred candidates remain:
+  - raw bare open-box/open-web impact widening
+  - Dataholz `GDMTXA04A` visible exact reopen
+  - TUAS `C11c` exact import
+  - broad heavy-concrete formula widening
+  - wall-selector behavior widening
+
+## Historical Ledger Continuation
 
 - latest completed slice:
   `ubiq_lnw_plus_ci_near_miss_estimate_posture_decision_v1`

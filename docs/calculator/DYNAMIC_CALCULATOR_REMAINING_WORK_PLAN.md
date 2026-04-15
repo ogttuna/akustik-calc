@@ -1,6 +1,6 @@
 # Dynamic Calculator Remaining Work Plan
 
-Last reviewed: 2026-04-14
+Last reviewed: 2026-04-15
 
 Document role:
 
@@ -13,6 +13,13 @@ Document role:
   - [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
 - for the latest UI handoff restart point, also read:
   - [CHECKPOINT_2026-04-08_UI_HANDOFF.md](./CHECKPOINT_2026-04-08_UI_HANDOFF.md)
+
+Current authority note:
+
+- [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md) is the
+  authoritative immediate next-step file as of `2026-04-15`
+- this document remains the long-form remaining-work ledger across floor and
+  wall and can include older closed-slice context below
 
 ## 1. Non-Regressive Rules
 

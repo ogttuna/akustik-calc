@@ -4,7 +4,16 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { getPresetById } from "./preset-definitions";
 import { evaluateScenario } from "./scenario-analysis";
 import { buildOutputCard } from "./simple-workbench-output-model";
-import { HEAVY_COMPOSITE_WALL_ROWS } from "./mixed-study-mode-generated-test-helpers";
+import {
+  assertScenarioSupportSurface,
+  evaluateFloorScenario,
+  evaluateWallScenario,
+  FLOOR_DETOUR_ROWS,
+  HEAVY_COMPOSITE_WALL_ROWS,
+  ROUTE_MIXED_GENERATED_CASES,
+  WALL_DETOUR_ROWS,
+  type RouteMixedGeneratedCase
+} from "./mixed-study-mode-generated-test-helpers";
 import type { LayerDraft } from "./workbench-store";
 
 const FLOOR_OUTPUTS: readonly RequestedOutputId[] = [
@@ -61,6 +70,48 @@ const WALL_CHAIN_APPEND_ROWS: readonly Omit<LayerDraft, "id">[] = [
   { materialId: "rockwool", thicknessMm: "30" },
   { materialId: "air_gap", thicknessMm: "25" }
 ];
+
+const SELECTED_TORTURE_ROUTE_CASES = [
+  {
+    routeId: "route-wall-held-aac",
+    routeCaseId: "route-wall-held-aac"
+  },
+  {
+    routeId: "route-wall-heavy-composite-hint-suppression",
+    routeCaseId: "route-wall-heavy-composite-hint-suppression"
+  },
+  {
+    routeId: "route-dataholz-gdmtxa04a-boundary",
+    routeCaseId: "route-dataholz-gdmtxa04a-boundary"
+  },
+  {
+    routeId: "route-tuas-c11c-fail-closed",
+    routeCaseId: "route-tuas-c11c-fail-closed"
+  },
+  {
+    routeId: "route-open-box-exact",
+    routeCaseId: "route-open-box-exact"
+  },
+  {
+    routeId: "route-open-web-bound",
+    routeCaseId: "route-open-web-bound"
+  }
+] as const;
+
+function resolveSelectedTortureCase(routeCaseId: string): RouteMixedGeneratedCase {
+  const testCase = ROUTE_MIXED_GENERATED_CASES.find((candidate) => candidate.id === routeCaseId);
+
+  if (!testCase) {
+    throw new Error(`Expected selected mixed study-mode torture case "${routeCaseId}" to exist.`);
+  }
+
+  return testCase;
+}
+
+const SELECTED_TORTURE_CASES = SELECTED_TORTURE_ROUTE_CASES.map(({ routeCaseId, routeId }) => ({
+  routeId,
+  testCase: resolveSelectedTortureCase(routeCaseId)
+}));
 
 function createMemoryStorage(): Storage {
   const values = new Map<string, string>();
@@ -241,6 +292,64 @@ function normalizeRowsForRoundtrip(rows: readonly LayerDraft[]) {
   }));
 }
 
+function buildRowsForGeneratedCase(rows: readonly Omit<LayerDraft, "id">[], idPrefix: string): LayerDraft[] {
+  return rows.map((row, index) => ({
+    ...row,
+    id: `${idPrefix}-${index + 1}`
+  }));
+}
+
+function buildDirectFinalRows(testCase: RouteMixedGeneratedCase): Omit<LayerDraft, "id">[] {
+  const current = [...testCase.rows];
+  const sorted = [...testCase.splitPlans].sort((left, right) => right.rowIndex - left.rowIndex);
+
+  for (const plan of sorted) {
+    const target = current[plan.rowIndex];
+
+    if (!target) {
+      throw new Error(`Cannot split missing direct-final row at index ${plan.rowIndex}.`);
+    }
+
+    current.splice(
+      plan.rowIndex,
+      1,
+      ...plan.parts.map((thicknessMm) => ({
+        ...target,
+        thicknessMm
+      }))
+    );
+  }
+
+  return current;
+}
+
+function evaluateSelectedGeneratedCase(
+  id: string,
+  testCase: RouteMixedGeneratedCase,
+  rows: readonly Omit<LayerDraft, "id">[]
+) {
+  const layerDraftRows = buildRowsForGeneratedCase(rows, id);
+  return testCase.studyMode === "floor" ? evaluateFloorScenario(id, layerDraftRows) : evaluateWallScenario(id, layerDraftRows);
+}
+
+function evaluateSelectedStoreCase(
+  id: string,
+  testCase: RouteMixedGeneratedCase,
+  rows: readonly LayerDraft[]
+) {
+  return evaluateSelectedGeneratedCase(
+    id,
+    testCase,
+    rows.map(({ densityKgM3, dynamicStiffnessMNm3, floorRole, materialId, thicknessMm }) => ({
+      densityKgM3,
+      dynamicStiffnessMNm3,
+      floorRole,
+      materialId,
+      thicknessMm
+    }))
+  );
+}
+
 describe("mixed study-mode torture", () => {
   beforeEach(() => {
     vi.resetModules();
@@ -249,6 +358,109 @@ describe("mixed study-mode torture", () => {
 
   afterEach(() => {
     vi.unstubAllGlobals();
+  });
+
+  it("pins the selected seeded boundary routes in the mixed study-mode torture surface", () => {
+    expect(
+      SELECTED_TORTURE_CASES.map(({ routeId, testCase }) => ({
+        routeCaseId: testCase.id,
+        routeId
+      }))
+    ).toEqual([
+      {
+        routeCaseId: "route-wall-held-aac",
+        routeId: "route-wall-held-aac"
+      },
+      {
+        routeCaseId: "route-wall-heavy-composite-hint-suppression",
+        routeId: "route-wall-heavy-composite-hint-suppression"
+      },
+      {
+        routeCaseId: "route-dataholz-gdmtxa04a-boundary",
+        routeId: "route-dataholz-gdmtxa04a-boundary"
+      },
+      {
+        routeCaseId: "route-tuas-c11c-fail-closed",
+        routeId: "route-tuas-c11c-fail-closed"
+      },
+      {
+        routeCaseId: "route-open-box-exact",
+        routeId: "route-open-box-exact"
+      },
+      {
+        routeCaseId: "route-open-web-bound",
+        routeId: "route-open-web-bound"
+      }
+    ]);
+  });
+
+  it("restores the selected seeded boundary routes after opposite-mode save-load detours", async () => {
+    const { useWorkbenchStore } = await import("./workbench-store");
+    const failures: string[] = [];
+
+    for (const { routeId, testCase } of SELECTED_TORTURE_CASES) {
+      const directFinalRows = buildDirectFinalRows(testCase);
+      const expected = evaluateSelectedGeneratedCase(`${routeId}:expected`, testCase, directFinalRows);
+
+      assertScenarioSupportSurface({
+        failures,
+        label: `${routeId} direct lab`,
+        outputs: testCase.studyMode === "floor" ? FLOOR_OUTPUTS : WALL_LAB_OUTPUTS,
+        scenario: expected.lab,
+        studyMode: testCase.studyMode
+      });
+      assertScenarioSupportSurface({
+        failures,
+        label: `${routeId} direct field`,
+        outputs: testCase.studyMode === "floor" ? FLOOR_OUTPUTS : WALL_FIELD_OUTPUTS,
+        scenario: expected.field,
+        studyMode: testCase.studyMode
+      });
+
+      useWorkbenchStore.getState().reset();
+      useWorkbenchStore.getState().startStudyMode(testCase.studyMode);
+      useWorkbenchStore.getState().appendRows(directFinalRows);
+      useWorkbenchStore.getState().saveCurrentScenario();
+
+      const savedScenarioId = useWorkbenchStore.getState().savedScenarios[0]?.id;
+
+      if (!savedScenarioId) {
+        failures.push(`${routeId}: expected a saved scenario before the opposite-mode detour`);
+        continue;
+      }
+
+      const oppositeMode = testCase.studyMode === "floor" ? "wall" : "floor";
+      useWorkbenchStore.getState().startStudyMode(oppositeMode);
+      useWorkbenchStore.getState().appendRows(oppositeMode === "floor" ? FLOOR_DETOUR_ROWS : WALL_DETOUR_ROWS);
+      useWorkbenchStore.getState().loadSavedScenario(savedScenarioId);
+
+      const restored = evaluateSelectedStoreCase(`${routeId}:restored`, testCase, useWorkbenchStore.getState().rows);
+
+      assertScenarioSupportSurface({
+        failures,
+        label: `${routeId} restored lab`,
+        outputs: testCase.studyMode === "floor" ? FLOOR_OUTPUTS : WALL_LAB_OUTPUTS,
+        scenario: restored.lab,
+        studyMode: testCase.studyMode
+      });
+      assertScenarioSupportSurface({
+        failures,
+        label: `${routeId} restored field`,
+        outputs: testCase.studyMode === "floor" ? FLOOR_OUTPUTS : WALL_FIELD_OUTPUTS,
+        scenario: restored.field,
+        studyMode: testCase.studyMode
+      });
+
+      if (JSON.stringify(scenarioSnapshot(restored.lab, testCase.studyMode)) !== JSON.stringify(scenarioSnapshot(expected.lab, testCase.studyMode))) {
+        failures.push(`${routeId}: restored lab snapshot should match the direct final snapshot`);
+      }
+
+      if (JSON.stringify(scenarioSnapshot(restored.field, testCase.studyMode)) !== JSON.stringify(scenarioSnapshot(expected.field, testCase.studyMode))) {
+        failures.push(`${routeId}: restored field snapshot should match the direct final snapshot`);
+      }
+    }
+
+    expect(failures).toEqual([]);
   });
 
   it("keeps neutral deep floor and wall split-detours exact across alternating study-mode switches", async () => {

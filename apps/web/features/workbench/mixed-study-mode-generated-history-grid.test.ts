@@ -1,14 +1,20 @@
+import type { RequestedOutputId } from "@dynecho/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
   assertScenarioSupportSurface,
   buildGeneratedRows,
+  customRequestedOutputsForStudyMode,
   createMemoryStorage,
+  DEFAULT_FLOOR_REQUESTED_OUTPUTS,
+  DEFAULT_WALL_REQUESTED_OUTPUTS,
   evaluateFloorScenario,
   evaluateWallScenario,
   FLOOR_DETOUR_ROWS,
   FLOOR_OUTPUTS,
   ROUTE_MIXED_GENERATED_CASES,
+  SELECTED_ROUTE_MIXED_GENERATED_CASES,
+  SELECTED_ROUTE_MIXED_GENERATED_CASE_IDS,
   scenarioSnapshot,
   WALL_DETOUR_ROWS,
   WALL_FIELD_OUTPUTS,
@@ -27,9 +33,11 @@ type StoreHandle = {
     loadSavedScenario: (scenarioId: string) => void;
     moveRow: (id: string, direction: "up" | "down") => void;
     removeRow: (id: string) => void;
+    requestedOutputs: readonly RequestedOutputId[];
     rows: LayerDraft[];
     saveCurrentScenario: () => void;
     savedScenarios: Array<{ id: string }>;
+    setRequestedOutputs: (outputs: RequestedOutputId[]) => void;
     startStudyMode: (studyMode: "floor" | "wall") => void;
     updateFloorRole: (id: string, floorRole?: LayerDraft["floorRole"]) => void;
     updateMaterial: (id: string, materialId: string) => void;
@@ -71,6 +79,63 @@ const HISTORY_VARIANTS: readonly HistoryVariant[] = [
   }
 ];
 
+const SELECTED_DUPLICATE_SWAP_HISTORY_VARIANTS: readonly HistoryVariant[] = [
+  {
+    id: "ascending-direct-leading-rebuild",
+    planOrder: "asc",
+    rebuildPiece: "leading",
+    reverseParts: false
+  },
+  {
+    id: "ascending-reversed-leading-rebuild",
+    planOrder: "asc",
+    rebuildPiece: "leading",
+    reverseParts: true
+  },
+  {
+    id: "ascending-direct-trailing-rebuild",
+    planOrder: "asc",
+    rebuildPiece: "trailing",
+    reverseParts: false
+  },
+  {
+    id: "ascending-reversed-trailing-rebuild",
+    planOrder: "asc",
+    rebuildPiece: "trailing",
+    reverseParts: true
+  },
+  {
+    id: "descending-direct-leading-rebuild",
+    planOrder: "desc",
+    rebuildPiece: "leading",
+    reverseParts: false
+  },
+  {
+    id: "descending-reversed-leading-rebuild",
+    planOrder: "desc",
+    rebuildPiece: "leading",
+    reverseParts: true
+  },
+  {
+    id: "descending-direct-trailing-rebuild",
+    planOrder: "desc",
+    rebuildPiece: "trailing",
+    reverseParts: false
+  },
+  {
+    id: "descending-reversed-trailing-rebuild",
+    planOrder: "desc",
+    rebuildPiece: "trailing",
+    reverseParts: true
+  }
+];
+
+function expectSelectedRouteCasesCovered() {
+  expect(SELECTED_ROUTE_MIXED_GENERATED_CASES.map((testCase) => testCase.id)).toEqual(
+    SELECTED_ROUTE_MIXED_GENERATED_CASE_IDS
+  );
+}
+
 function normalizeRows(rows: readonly LayerDraft[]) {
   return rows.map((row) => ({
     floorRole: row.floorRole,
@@ -85,6 +150,13 @@ function normalizeAppendableRows(rows: readonly AppendableRow[]) {
     materialId: row.materialId,
     thicknessMm: row.thicknessMm
   }));
+}
+
+function requestedOutputsMatch(
+  actual: readonly RequestedOutputId[],
+  expected: readonly RequestedOutputId[]
+) {
+  return JSON.stringify(actual) === JSON.stringify(expected);
 }
 
 function formatThicknessMm(value: number) {
@@ -533,15 +605,27 @@ describe("mixed study-mode generated history grid", () => {
     expect(failures).toEqual([]);
   }, 30_000);
 
-  it("preserves generated floor and wall final snapshots through save-load roundtrips after long cross-mode chains", async () => {
+  it("preserves the selected seeded boundary routes through expanded duplicate/swap save-load roundtrips after long cross-mode chains", async () => {
+    expectSelectedRouteCasesCovered();
+
     const { useWorkbenchStore } = await import("./workbench-store");
     const failures: string[] = [];
 
-    for (const testCase of ROUTE_MIXED_GENERATED_CASES) {
+    for (const testCase of SELECTED_ROUTE_MIXED_GENERATED_CASES) {
       const directFinalRows = buildDirectFinalRows(testCase);
+      const selectedRequestedOutputs = customRequestedOutputsForStudyMode(testCase.studyMode);
+      const expectedDefaultOutputs =
+        testCase.studyMode === "floor" ? DEFAULT_FLOOR_REQUESTED_OUTPUTS : DEFAULT_WALL_REQUESTED_OUTPUTS;
 
       useWorkbenchStore.getState().reset();
       useWorkbenchStore.getState().startStudyMode(testCase.studyMode);
+      if (!requestedOutputsMatch(useWorkbenchStore.getState().requestedOutputs, expectedDefaultOutputs)) {
+        failures.push(`${testCase.label} should open with the expected default requested outputs`);
+      }
+      useWorkbenchStore.getState().setRequestedOutputs(selectedRequestedOutputs);
+      if (!requestedOutputsMatch(useWorkbenchStore.getState().requestedOutputs, selectedRequestedOutputs)) {
+        failures.push(`${testCase.label} should accept the selected custom requested-output bundle`);
+      }
       useWorkbenchStore.getState().appendRows(directFinalRows);
 
       const directScenario = evaluateCurrentScenario(
@@ -552,7 +636,7 @@ describe("mixed study-mode generated history grid", () => {
       const directLabSnapshot = scenarioSnapshot(directScenario.lab, testCase.studyMode);
       const directFieldSnapshot = scenarioSnapshot(directScenario.field, testCase.studyMode);
 
-      for (const variant of HISTORY_VARIANTS) {
+      for (const variant of SELECTED_DUPLICATE_SWAP_HISTORY_VARIANTS) {
         useWorkbenchStore.getState().reset();
         useWorkbenchStore.getState().startStudyMode(testCase.studyMode);
         useWorkbenchStore.getState().appendRows(
@@ -562,6 +646,7 @@ describe("mixed study-mode generated history grid", () => {
             thicknessMm
           }))
         );
+        useWorkbenchStore.getState().setRequestedOutputs(selectedRequestedOutputs);
         applyPartialSplitToStore(useWorkbenchStore as unknown as StoreHandle, testCase, variant);
 
         const oppositeMode = testCase.studyMode === "floor" ? "wall" : "floor";
@@ -582,7 +667,14 @@ describe("mixed study-mode generated history grid", () => {
             thicknessMm
           }))
         );
+        useWorkbenchStore.getState().setRequestedOutputs(selectedRequestedOutputs);
         applyHistoryVariantToStore(useWorkbenchStore as unknown as StoreHandle, testCase, variant);
+
+        if (!requestedOutputsMatch(useWorkbenchStore.getState().requestedOutputs, selectedRequestedOutputs)) {
+          failures.push(
+            `${testCase.label} ${variant.id} should keep the selected custom requested-output bundle through the long replay chain`
+          );
+        }
 
         useWorkbenchStore.getState().saveCurrentScenario();
         const savedScenarioId = useWorkbenchStore.getState().savedScenarios[0]?.id;
@@ -595,6 +687,12 @@ describe("mixed study-mode generated history grid", () => {
         useWorkbenchStore.getState().startStudyMode(oppositeMode);
         useWorkbenchStore.getState().appendRows(oppositeMode === "floor" ? FLOOR_DETOUR_ROWS : WALL_DETOUR_ROWS);
         useWorkbenchStore.getState().loadSavedScenario(savedScenarioId);
+
+        if (!requestedOutputsMatch(useWorkbenchStore.getState().requestedOutputs, selectedRequestedOutputs)) {
+          failures.push(
+            `${testCase.label} ${variant.id} save-load should restore the selected custom requested-output bundle after the long replay chain`
+          );
+        }
 
         if (
           JSON.stringify(normalizeRows(useWorkbenchStore.getState().rows)) !==

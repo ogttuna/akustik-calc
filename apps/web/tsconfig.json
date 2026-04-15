@@ -7,7 +7,12 @@
         "./*"
       ]
     },
-    "allowJs": true
+    "allowJs": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "include": [
     "**/*.ts",

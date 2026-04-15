@@ -41,8 +41,26 @@ export const WALL_FIELD_CONTEXT: AirborneContext = {
   receivingRoomVolumeM3: 45
 };
 
-export const DEFAULT_FLOOR_REQUESTED_OUTPUTS = ["Rw", "Ln,w", "Ln,w+CI", "DeltaLw"];
-export const DEFAULT_WALL_REQUESTED_OUTPUTS = ["Rw", "STC", "C", "Ctr"];
+export const DEFAULT_FLOOR_REQUESTED_OUTPUTS: readonly RequestedOutputId[] = [
+  "Rw",
+  "Ln,w",
+  "Ln,w+CI",
+  "DeltaLw"
+];
+export const DEFAULT_WALL_REQUESTED_OUTPUTS: readonly RequestedOutputId[] = [
+  "Rw",
+  "STC",
+  "C",
+  "Ctr"
+];
+
+export function customRequestedOutputsForStudyMode(
+  studyMode: "floor" | "wall"
+): RequestedOutputId[] {
+  return studyMode === "floor"
+    ? ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"]
+    : ["Rw", "Ctr", "R'w", "Dn,w", "DnT,A"];
+}
 
 export type SplitPlan = {
   parts: readonly string[];
@@ -750,3 +768,22 @@ export const ROUTE_MIXED_GENERATED_CASES: readonly RouteMixedGeneratedCase[] = [
     studyMode: "wall"
   }
 ] as const;
+
+export const SELECTED_ROUTE_MIXED_GENERATED_CASE_IDS = [
+  "route-wall-held-aac",
+  "route-wall-heavy-composite-hint-suppression",
+  "route-dataholz-gdmtxa04a-boundary",
+  "route-tuas-c11c-fail-closed",
+  "route-open-box-exact",
+  "route-open-web-bound"
+] as const;
+
+export const SELECTED_ROUTE_MIXED_GENERATED_CASES = SELECTED_ROUTE_MIXED_GENERATED_CASE_IDS.map((id) => {
+  const testCase = ROUTE_MIXED_GENERATED_CASES.find((candidate) => candidate.id === id);
+
+  if (!testCase) {
+    throw new Error(`Expected selected mixed generated route case "${id}" to exist.`);
+  }
+
+  return testCase;
+});

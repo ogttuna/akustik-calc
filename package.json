@@ -8,6 +8,7 @@
   },
   "scripts": {
     "build": "turbo run build",
+    "calculator:gate:current": "tsx tools/dev/run-calculator-current-gate.ts",
     "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm build",
     "dev": "turbo run dev --parallel --filter=@dynecho/web",
     "docker:build": "docker build -t dynecho-web .",

@@ -1,6 +1,7 @@
 import { spawn } from "node:child_process";
 import { access, cp, mkdir, rm } from "node:fs/promises";
 import path from "node:path";
+import { hasExplicitNextPlugin, wireNextPluginWarningFilter } from "./next-plugin-warning";
 
 const DEFAULT_DIST_DIR = ".next";
 
@@ -54,6 +55,7 @@ async function main() {
   const appDir = process.cwd();
   const configuredDistDir = process.env.NEXT_DIST_DIR?.trim();
   const distDir = configuredDistDir && configuredDistDir.length > 0 ? configuredDistDir : DEFAULT_DIST_DIR;
+  const suppressNextPluginWarning = hasExplicitNextPlugin(path.join(appDir, "tsconfig.json"));
 
   await rm(path.resolve(appDir, distDir), {
     force: true,
@@ -66,8 +68,9 @@ async function main() {
       ...process.env,
       NEXT_DIST_DIR: distDir
     },
-    stdio: "inherit"
+    stdio: ["inherit", "pipe", "pipe"]
   });
+  wireNextPluginWarningFilter(child, suppressNextPluginWarning);
 
   const exitCode = await new Promise<number>((resolve, reject) => {
     child.on("error", reject);
