@@ -8,6 +8,13 @@ If the question is “what is still open and what executes next?”, start with
 [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md), then
 [CURRENT_STATE.md](./CURRENT_STATE.md), then the latest committed checkpoint.
 
+## New Agent Fast Start
+
+1. Read [CHECKPOINT_2026-04-16_RUNTIME_CANDIDATE_RERANK_HANDOFF.md](./CHECKPOINT_2026-04-16_RUNTIME_CANDIDATE_RERANK_HANDOFF.md).
+2. Read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md).
+3. Run `pnpm calculator:gate:current`.
+4. If green, start the selected next slice `heavy_concrete_formula_family_widening_v1`.
+
 ## Current Execution Snapshot
 
 - active next slice:

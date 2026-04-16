@@ -215,22 +215,36 @@ validation path before and after a refactor.
 
 ## Current Architectural Hotspots
 
-As of `2026-04-16`, the calculator is not blocked on a numeric bug. The active
-risk is harness maintainability in the requested-output output-card test lane.
+As of `2026-04-16`, the requested-output output-card harness chain is frozen at
+a clean green baseline. The active risk is no longer harness sprawl; it is the
+next real runtime widening on the reinforced-concrete impact corridor.
 
 Current hotspots:
 
-- visible assertion surface:
-  `apps/web/features/workbench/mixed-study-mode-output-card-snapshot-grid.test.ts`
-- requested-output runner hotspot:
-  `apps/web/features/workbench/mixed-study-mode-output-card-snapshot-requested-output-runners.ts`
-- shared variant branch helper:
-  `apps/web/features/workbench/mixed-study-mode-output-card-snapshot-requested-output-variant-drivers.ts`
+- selected runtime widening anchors:
+  - `packages/engine/src/impact-estimate.ts`
+  - `packages/engine/src/floor-system-estimate.ts`
+  - `packages/engine/src/dynamic-impact.ts`
+  - `packages/engine/src/impact-support.ts`
+- selected heavy-concrete engine evidence:
+  - `packages/engine/src/impact-heavy-floor-planned-scope-benchmark.test.ts`
+  - `packages/engine/src/reinforced-concrete-floor-monotonicity.test.ts`
+  - `packages/engine/src/floor-widening-candidate-contract.test.ts`
+  - `packages/engine/src/calculate-impact-only.test.ts`
+- selected heavy-concrete workbench evidence:
+  - `apps/web/features/workbench/heavy-concrete-formula-history-card-matrix.test.ts`
+  - `apps/web/features/workbench/heavy-concrete-formula-provenance-report-surface.test.ts`
+- held second-candidate evidence:
+  - `packages/engine/src/dataholz-clt-source-truth-audit.test.ts`
+  - `apps/web/features/workbench/dataholz-clt-source-truth-route.test.ts`
 - focused gate entrypoint:
   `tools/dev/run-calculator-current-gate.ts`
+- source-backed widening ledger:
+  `docs/calculator/SOURCE_GAP_LEDGER.md`
 
-The current selected next slice exists to reduce this harness complexity before
-opening new runtime widening.
+The current selected next slice exists to widen the already-owned
+reinforced-concrete formula family honestly, not to reopen another harness
+refactor chain or a blocked source anomaly.
 
 ## What This System Is Not Yet
 
@@ -252,4 +266,4 @@ To avoid docs drift, be explicit about current non-features:
 - Want answer-origin or support semantics:
   read [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
 - Want the last clean resume point:
-  read [CHECKPOINT_2026-04-16_REQUESTED_OUTPUT_HARNESS_REFACTOR_HANDOFF.md](./CHECKPOINT_2026-04-16_REQUESTED_OUTPUT_HARNESS_REFACTOR_HANDOFF.md)
+  read [CHECKPOINT_2026-04-16_RUNTIME_CANDIDATE_RERANK_HANDOFF.md](./CHECKPOINT_2026-04-16_RUNTIME_CANDIDATE_RERANK_HANDOFF.md)
