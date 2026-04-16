@@ -14,6 +14,7 @@ Document role:
 Read together with:
 
 - [CURRENT_STATE.md](./CURRENT_STATE.md)
+- [SYSTEM_MAP.md](./SYSTEM_MAP.md)
 - [CHECKPOINT_2026-04-16_REQUESTED_OUTPUT_HARNESS_REFACTOR_HANDOFF.md](./CHECKPOINT_2026-04-16_REQUESTED_OUTPUT_HARNESS_REFACTOR_HANDOFF.md)
 - [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
 - [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md)
@@ -134,6 +135,21 @@ Concrete comparison findings after the closeout:
 - `requested_output_surface_runner_loop_driver`
 - `requested_output_surface_label_descriptor`
 - `requested_output_surface_failure_closeout`
+
+### Current Implementation Anchors
+
+- planning contract:
+  `packages/engine/src/post-mixed-floor-wall-output-card-snapshot-requested-output-variant-branch-driver-extraction-next-slice-selection-contract.test.ts`
+- engine companion:
+  `packages/engine/src/mixed-floor-wall-generated-matrix.test.ts`
+- visible web target:
+  `apps/web/features/workbench/mixed-study-mode-output-card-snapshot-grid.test.ts`
+- requested-output harness hotspot:
+  `apps/web/features/workbench/mixed-study-mode-output-card-snapshot-requested-output-runners.ts`
+- shared branch setup helper:
+  `apps/web/features/workbench/mixed-study-mode-output-card-snapshot-requested-output-variant-drivers.ts`
+- focused gate entrypoint:
+  `tools/dev/run-calculator-current-gate.ts`
 
 ### Non-goals
 

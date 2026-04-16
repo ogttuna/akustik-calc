@@ -8,10 +8,26 @@ Read by intent:
 
 1. Next calculator implementation steps: [calculator/NEXT_IMPLEMENTATION_PLAN.md](./calculator/NEXT_IMPLEMENTATION_PLAN.md)
 2. Current calculator or workbench behavior: [calculator/CURRENT_STATE.md](./calculator/CURRENT_STATE.md)
-3. Current clean checkpoint / restart point: [calculator/CHECKPOINT_2026-04-16_REQUESTED_OUTPUT_HARNESS_REFACTOR_HANDOFF.md](./calculator/CHECKPOINT_2026-04-16_REQUESTED_OUTPUT_HARNESS_REFACTOR_HANDOFF.md)
-4. Repo-level direction and rules: [foundation/README.md](./foundation/README.md)
-5. Upstream import workflow and inventory: [imports/README.md](./imports/README.md)
-6. Historical investigations, status notes, and handoffs: [archive/README.md](./archive/README.md)
+3. Calculator system model and runtime boundaries: [calculator/SYSTEM_MAP.md](./calculator/SYSTEM_MAP.md)
+4. Current clean checkpoint / restart point: [calculator/CHECKPOINT_2026-04-16_REQUESTED_OUTPUT_HARNESS_REFACTOR_HANDOFF.md](./calculator/CHECKPOINT_2026-04-16_REQUESTED_OUTPUT_HARNESS_REFACTOR_HANDOFF.md)
+5. Repo-level direction and rules: [foundation/README.md](./foundation/README.md)
+6. Upstream import workflow and inventory: [imports/README.md](./imports/README.md)
+7. Historical investigations, status notes, and handoffs: [archive/README.md](./archive/README.md)
+
+## Fast Paths
+
+- If the question is "where do I resume implementation now?":
+  read [calculator/CHECKPOINT_2026-04-16_REQUESTED_OUTPUT_HARNESS_REFACTOR_HANDOFF.md](./calculator/CHECKPOINT_2026-04-16_REQUESTED_OUTPUT_HARNESS_REFACTOR_HANDOFF.md),
+  then [calculator/NEXT_IMPLEMENTATION_PLAN.md](./calculator/NEXT_IMPLEMENTATION_PLAN.md),
+  then run `pnpm calculator:gate:current`.
+- If the question is "what is stable right now?":
+  read [calculator/CURRENT_STATE.md](./calculator/CURRENT_STATE.md),
+  then [calculator/SYSTEM_MAP.md](./calculator/SYSTEM_MAP.md),
+  then [calculator/CALCULATION_MODEL_AND_VALIDATION.md](./calculator/CALCULATION_MODEL_AND_VALIDATION.md).
+- If the question is "what should be implemented next?":
+  read [calculator/NEXT_IMPLEMENTATION_PLAN.md](./calculator/NEXT_IMPLEMENTATION_PLAN.md),
+  then [calculator/SOURCE_GAP_LEDGER.md](./calculator/SOURCE_GAP_LEDGER.md),
+  then [calculator/DYNAMIC_CALCULATOR_REMAINING_WORK_PLAN.md](./calculator/DYNAMIC_CALCULATOR_REMAINING_WORK_PLAN.md).
 
 ## Hierarchy
 
@@ -29,6 +45,7 @@ If a file under `docs/archive` disagrees with a living document under `docs/calc
 
 - [calculator/NEXT_IMPLEMENTATION_PLAN.md](./calculator/NEXT_IMPLEMENTATION_PLAN.md): concise current execution plan and validated next steps
 - [calculator/CURRENT_STATE.md](./calculator/CURRENT_STATE.md): short living snapshot of the current calculator/workbench posture
+- [calculator/SYSTEM_MAP.md](./calculator/SYSTEM_MAP.md): end-to-end system model, runtime boundaries, persistence posture, and test surface map
 - [calculator/CHECKPOINT_2026-04-16_REQUESTED_OUTPUT_HARNESS_REFACTOR_HANDOFF.md](./calculator/CHECKPOINT_2026-04-16_REQUESTED_OUTPUT_HARNESS_REFACTOR_HANDOFF.md): current clean restart point, latest validation gate, requested-output harness hardening closeout, and explicit not-done list
 - [calculator/CHECKPOINT_2026-04-14_FORMULA_PROVENANCE_DOSSIER_HANDOFF.md](./calculator/CHECKPOINT_2026-04-14_FORMULA_PROVENANCE_DOSSIER_HANDOFF.md): historical formula-provenance checkpoint and close-out context
 - [calculator/CHECKPOINT_2026-04-14_UBIQ_HISTORY_REPLAY_HANDOFF.md](./calculator/CHECKPOINT_2026-04-14_UBIQ_HISTORY_REPLAY_HANDOFF.md): historical UBIQ packaged open-web checkpoint

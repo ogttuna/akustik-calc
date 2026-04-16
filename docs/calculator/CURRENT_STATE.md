@@ -15,6 +15,8 @@ Document role:
   - [CHECKPOINT_2026-04-08_UI_HANDOFF.md](./CHECKPOINT_2026-04-08_UI_HANDOFF.md)
 - for answer-origin, formula/source confidence, and test-meaning questions, also read:
   - [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
+- for end-to-end product flow, runtime boundaries, persistence posture, and file ownership, also read:
+  - [SYSTEM_MAP.md](./SYSTEM_MAP.md)
 
 ## Scope
 
@@ -58,6 +60,22 @@ Planning / implementation update: `2026-04-16`
     - engine contract + companion pack: `2` files / `5` tests
     - web replay substrate + output-card pack: `3` files / `18` tests
   - strengthened gate is green
+
+## Current Hotspot Map
+
+- visible output-card assertion surface:
+  `apps/web/features/workbench/mixed-study-mode-output-card-snapshot-grid.test.ts`
+  at about `315` lines
+- requested-output harness hotspot:
+  `apps/web/features/workbench/mixed-study-mode-output-card-snapshot-requested-output-runners.ts`
+  at about `979` lines
+- shared requested-output branch setup helper:
+  `apps/web/features/workbench/mixed-study-mode-output-card-snapshot-requested-output-variant-drivers.ts`
+  at about `212` lines
+- engine companion parity surface:
+  `packages/engine/src/mixed-floor-wall-generated-matrix.test.ts`
+- focused checkpoint gate:
+  `tools/dev/run-calculator-current-gate.ts`
 
 - latest accepted checkpoint document:
   `CHECKPOINT_2026-04-16_REQUESTED_OUTPUT_HARNESS_REFACTOR_HANDOFF.md`

@@ -13,7 +13,8 @@ This is a checkpoint document, not a new solver plan.
 
 Use [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md) as the current
 next-step authority. Use [CURRENT_STATE.md](./CURRENT_STATE.md) as the broader
-living snapshot.
+living snapshot. Use [SYSTEM_MAP.md](./SYSTEM_MAP.md) when the next agent needs
+a fast explanation of the live runtime and file boundaries.
 
 ## Two-Minute Restart
 
@@ -45,6 +46,21 @@ no-runtime output-card harness extraction slice.
   layer now exists, but the runner helper still duplicates broad / selected /
   representative outer loop orchestration, case-selection wiring, label
   scaffolding, and failure-closeout structure across `10` exported runners
+
+## File Map For This Checkpoint
+
+- visible assertion surface:
+  [mixed-study-mode-output-card-snapshot-grid.test.ts](../../apps/web/features/workbench/mixed-study-mode-output-card-snapshot-grid.test.ts)
+- requested-output harness hotspot:
+  [mixed-study-mode-output-card-snapshot-requested-output-runners.ts](../../apps/web/features/workbench/mixed-study-mode-output-card-snapshot-requested-output-runners.ts)
+- shared requested-output branch setup:
+  [mixed-study-mode-output-card-snapshot-requested-output-variant-drivers.ts](../../apps/web/features/workbench/mixed-study-mode-output-card-snapshot-requested-output-variant-drivers.ts)
+- extracted low-level snapshot helpers:
+  [mixed-study-mode-output-card-snapshot-test-helpers.ts](../../apps/web/features/workbench/mixed-study-mode-output-card-snapshot-test-helpers.ts)
+- engine companion:
+  [mixed-floor-wall-generated-matrix.test.ts](../../packages/engine/src/mixed-floor-wall-generated-matrix.test.ts)
+- current focused gate:
+  [run-calculator-current-gate.ts](../../tools/dev/run-calculator-current-gate.ts)
 
 ## What Closed Before This Checkpoint
 
@@ -100,6 +116,12 @@ Revalidated on `2026-04-16`:
   - green with the known optional `sharp/@img` warnings from the DOCX path
 - `git diff --check`
   - green
+
+## Minimal Resume Commands
+
+1. `pnpm calculator:gate:current`
+2. `pnpm --filter @dynecho/web exec vitest run features/workbench/mixed-study-mode-output-card-snapshot-grid.test.ts features/workbench/mixed-study-mode-generated-history-grid.test.ts features/workbench/mixed-study-mode-generated-edit-history-matrix.test.ts --maxWorkers=1`
+3. `pnpm --filter @dynecho/engine exec vitest run src/post-mixed-floor-wall-output-card-snapshot-requested-output-variant-branch-driver-extraction-next-slice-selection-contract.test.ts src/mixed-floor-wall-generated-matrix.test.ts --maxWorkers=1`
 
 ## Exact Resume Target
 
