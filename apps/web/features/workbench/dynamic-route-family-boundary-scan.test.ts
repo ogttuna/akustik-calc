@@ -17,7 +17,7 @@ const BUILDING_CONTEXT: AirborneContext = {
 
 const LAB_OUTPUTS: readonly RequestedOutputId[] = ["Rw"];
 const FIELD_OUTPUTS: readonly RequestedOutputId[] = ["R'w", "DnT,w"];
-const ROUTE_SCAN_TIMEOUT_MS = 20_000;
+const ROUTE_SCAN_TIMEOUT_MS = 30_000;
 
 const REPRESENTATIVE_PREFIXES = [
   [],

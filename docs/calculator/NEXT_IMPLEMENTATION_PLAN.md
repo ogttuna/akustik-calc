@@ -15,20 +15,20 @@ Read together with:
 
 - [CURRENT_STATE.md](./CURRENT_STATE.md)
 - [SYSTEM_MAP.md](./SYSTEM_MAP.md)
-- [CHECKPOINT_2026-04-16_REQUESTED_OUTPUT_HARNESS_REFACTOR_HANDOFF.md](./CHECKPOINT_2026-04-16_REQUESTED_OUTPUT_HARNESS_REFACTOR_HANDOFF.md)
+- [CHECKPOINT_2026-04-16_RUNTIME_CANDIDATE_RERANK_HANDOFF.md](./CHECKPOINT_2026-04-16_RUNTIME_CANDIDATE_RERANK_HANDOFF.md)
 - [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
 - [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md)
 
 ## Verified Against Implementation - 2026-04-16
 
 - latest closed implementation slice:
-  `mixed_floor_wall_output_card_snapshot_requested_output_variant_branch_driver_extraction_v1`
+  `mixed_floor_wall_runtime_candidate_re_rank_after_requested_output_harness_v1`
 - local verification in this closeout pass:
-  - focused engine gate: `2` files / `5` tests, green
-  - focused web gate: `3` files / `18` tests, green
+  - focused engine gate: `4/4` test files passed, `13/13` tests passed
+  - focused web gate: `3/3` test files passed, `6/6` tests passed
   - `pnpm calculator:gate:current`: green
-  - full engine suite: `140` files / `887` tests, green
-  - full web suite: `113` files / `655` tests, green
+  - full engine suite: `146/146` test files passed, `900/900` tests passed
+  - full web suite: `113/113` test files passed, `655/655` tests passed
   - `pnpm typecheck`: green
   - `pnpm lint`: green
   - `pnpm build`: green with the known optional `sharp/@img` DOCX warnings
@@ -36,158 +36,134 @@ Read together with:
 
 ## Closeout Summary
 
-The active selected slice from the previous pass is now implemented.
+The requested-output harness chain remains frozen. The no-runtime rerank that
+followed it is now also closed.
 
-Concrete comparison findings after the closeout:
+Concrete comparison result:
 
-- compact replay, edit-history, and partial-restore branch setup now live in a
-  dedicated helper module:
-  `mixed-study-mode-output-card-snapshot-requested-output-variant-drivers.ts`
-- `mixed-study-mode-output-card-snapshot-requested-output-runners.ts`
-  shrank from about `1147` lines to about `979` lines while the new
-  variant-driver helper stayed compact at about `212` lines and the main grid
-  file stayed at about `315` lines
-- no runtime or numeric calculator behavior changed
-- the next honest gap is now the repeated broad / selected / representative
-  outer runner-loop harness and label scaffolding still duplicated across the
-  requested-output snapshot surfaces
+- selected next widening direction:
+  `heavy_concrete_formula_family_widening_v1`
+- held but not selected candidate:
+  `dataholz_clt_calibration_tightening`
+- why heavy concrete won the rerank:
+  - the formula lane is already live on bare and floating reinforced-concrete
+    routes
+  - official catalog exact rows, product-delta rows, and lower-bound anchors
+    already defend the same corridor
+  - monotonicity, helper-negative, history, trace, report, and method-dossier
+    provenance guards are already green
+  - widening can stay inside a physically obvious reinforced-concrete corridor
+    instead of reopening a blocked source anomaly
+- why Dataholz CLT did not win the rerank:
+  - exact-only slack is now mostly consumed
+  - the remaining `GDMTXA04A` row is still a manual-match/material-surface
+    boundary, not generic calibration slack
+  - there is no fresh classified runtime red on the current defended CLT estimate
+    lane
+- no runtime or numeric calculator behavior changed in the rerank itself
 
 ## Current Position
 
 - latest committed checkpoint:
-  `CHECKPOINT_2026-04-16_REQUESTED_OUTPUT_HARNESS_REFACTOR_HANDOFF.md`
+  `CHECKPOINT_2026-04-16_RUNTIME_CANDIDATE_RERANK_HANDOFF.md`
 - latest closed implementation slice:
-  `mixed_floor_wall_output_card_snapshot_requested_output_variant_branch_driver_extraction_v1`
+  `mixed_floor_wall_runtime_candidate_re_rank_after_requested_output_harness_v1`
 - closed planning action in this pass:
-  `post_mixed_floor_wall_output_card_snapshot_requested_output_variant_branch_driver_extraction_next_slice_selection_v1`
+  `post_mixed_floor_wall_runtime_candidate_re_rank_after_requested_output_harness_next_slice_selection_v1`
 - selected next implementation slice:
-  `mixed_floor_wall_output_card_snapshot_requested_output_surface_runner_loop_extraction_v1`
+  `heavy_concrete_formula_family_widening_v1`
 - slice type:
-  no-runtime harness hardening
+  runtime formula-family widening on the defended reinforced-concrete corridor
 - implementation status:
-  selected and contract-guarded, but not implemented yet
+  selected and contract-guarded
 - explicit not-done item at this checkpoint:
-  output-card coverage is green, and shared variant drivers now exist, but the
-  requested-output runner helper still duplicates broad / selected /
-  representative outer loop orchestration, case-selection wiring, and label
-  scaffolding across `10` exported runners
-
-## Why This Slice Was Chosen
-
-- requested-output variant-branch driver extraction is now closed
-- the main snapshot-grid regression file remains under control at about
-  `315` lines, and the runner helper dropped to about `979` lines, so the next
-  maintainability hotspot is the repeated surface runner-loop shell rather than
-  branch choreography
-- `apps/web/features/workbench/mixed-study-mode-output-card-snapshot-requested-output-runners.ts`
-  still repeats the same direct-expectation prep, variant loop, save/load
-  orchestration, and assertion label envelope across broad / selected /
-  representative requested-output surfaces
-- extracting a shared surface runner-loop harness is safer than reopening
-  raw-source, Dataholz, `C11c`, heavy-concrete formula, or wall-selector
-  runtime scope
-- this keeps following the repo rule to split large test harnesses before they
-  become hidden blockers for future calculator widening
+  no heavy-concrete widening has landed yet; only the post-harness rerank is
+  closed
 
 ## Selected Next Slice
 
 - slice id:
-  `mixed_floor_wall_output_card_snapshot_requested_output_surface_runner_loop_extraction_v1`
+  `heavy_concrete_formula_family_widening_v1`
 - workstream:
-  `test_harness_hardening`
+  `runtime_formula_family_widening`
 - route family:
-  `mixed_floor_wall_route_matrix`
+  `heavy_concrete_formula_floor_lane`
 - output surface:
-  `workbench_output_card_snapshot_requested_output_surface_runner_loop_harness`
+  `heavy_concrete_formula_family_widening_matrix`
 - engine companion surface:
-  `mixed_generated_route_support_bucket_parity`
+  `reinforced_concrete_formula_scope_benchmark`
 - behavior class:
-  no-runtime refactor / evidence-harness hardening
+  runtime widening inside an already-owned reinforced-concrete formula corridor
 
 ### Scope
 
-- extract a shared broad / selected / representative requested-output surface
-  runner-loop harness out of
-  `mixed-study-mode-output-card-snapshot-requested-output-runners.ts`
-- centralize repeated case-selection wiring, direct expectation preparation,
-  variant iteration, save/load detour orchestration, and final failure collapse
-  envelopes so exported runners become thin wrappers around surface descriptors
-- centralize repeated label scaffolding for rows/cards/save-load snapshots so
-  per-surface differences live in small descriptors rather than open-coded
-  string templates across `10` exported runners
-- keep these surfaces green as regression guards:
-  - broad requested-output compact replay breadth
-  - broad requested-output compact replay restore breadth
-  - broad requested-output edit-history restore breadth
-  - broad requested-output partial-restore breadth
-  - selected requested-output partial-restore
-  - selected requested-output generated-history restore
-  - selected requested-output edit-history restore
-  - representative requested-output partial-restore
-  - representative requested-output generated-history restore
-  - representative requested-output edit-history restore
-  - representative broad default-output restore
-- keep runtime behavior and numeric results unchanged
+- widen the current heavy-concrete formula family lane only where the reinforced
+  concrete corridor is already source-anchored or formula-owned
+- preserve exact row, exact catalog, product-delta, and lower-bound precedence
+  over the formula lane
+- keep formula provenance explicit on engine, workbench, trace, and report
+  surfaces
+- do not use this slice to reopen CLT, raw open-box/open-web, `GDMTXA04A`,
+  `C11c`, or wall-selector behavior
 
-### Requested-Output Surface Runner Extraction Targets
+### Candidate Re-rank Result
 
-- `requested_output_surface_case_selector`
-- `requested_output_surface_runner_loop_driver`
-- `requested_output_surface_label_descriptor`
-- `requested_output_surface_failure_closeout`
+Selected now:
+
+- `heavy_concrete_formula_family_widening`
+  - posture: selected after the post-harness rerank
+  - reason: live formula lane plus catalog/lower-bound anchors and green
+    monotonicity / provenance guards make it the highest-ROI honest widening
+
+Held for later:
+
+- `dataholz_clt_calibration_tightening`
+  - posture: held second candidate after rerank
+  - reason: current CLT estimate lane is defended, the remaining exact-only row
+    is still a blocked material-surface boundary, and no fresh runtime red is
+    forcing immediate CLT calibration work
+
+Still blocked:
+
+- `raw_bare_open_box_open_web_impact_widening`
+  - blocked until bare-carrier impact source evidence exists
+- `dataholz_gdmtxa04a_visible_exact_reopen`
+  - blocked until the composite dry-screed surface is modeled honestly
+- `tuas_c11c_exact_import`
+  - blocked until the frequency/source anomaly is explained
+- `wall_selector_behavior_widening`
+  - blocked until a fresh classified wall-selector red exists
 
 ### Current Implementation Anchors
 
 - planning contract:
-  `packages/engine/src/post-mixed-floor-wall-output-card-snapshot-requested-output-variant-branch-driver-extraction-next-slice-selection-contract.test.ts`
-- engine companion:
-  `packages/engine/src/mixed-floor-wall-generated-matrix.test.ts`
-- visible web target:
-  `apps/web/features/workbench/mixed-study-mode-output-card-snapshot-grid.test.ts`
-- requested-output harness hotspot:
-  `apps/web/features/workbench/mixed-study-mode-output-card-snapshot-requested-output-runners.ts`
-- shared branch setup helper:
-  `apps/web/features/workbench/mixed-study-mode-output-card-snapshot-requested-output-variant-drivers.ts`
+  `packages/engine/src/post-mixed-floor-wall-runtime-candidate-re-rank-after-requested-output-harness-next-slice-selection-contract.test.ts`
+- heavy-concrete engine evidence:
+  - `packages/engine/src/impact-heavy-floor-planned-scope-benchmark.test.ts`
+  - `packages/engine/src/reinforced-concrete-floor-monotonicity.test.ts`
+  - `packages/engine/src/floor-widening-candidate-contract.test.ts`
+  - `packages/engine/src/calculate-impact-only.test.ts`
+- heavy-concrete web evidence:
+  - `apps/web/features/workbench/heavy-concrete-formula-history-card-matrix.test.ts`
+  - `apps/web/features/workbench/heavy-concrete-formula-provenance-report-surface.test.ts`
+- held CLT evidence:
+  - `packages/engine/src/dataholz-clt-source-truth-audit.test.ts`
+  - `packages/engine/src/floor-source-corpus-contract.test.ts`
+  - `apps/web/features/workbench/dataholz-clt-source-truth-route.test.ts`
+- likely runtime edit anchors for the selected widening:
+  - `packages/engine/src/impact-estimate.ts`
+  - `packages/engine/src/floor-system-estimate.ts`
+  - `packages/engine/src/dynamic-impact.ts`
+  - `packages/engine/src/impact-support.ts`
 - focused gate entrypoint:
   `tools/dev/run-calculator-current-gate.ts`
+- source-backed boundary ledger:
+  `docs/calculator/SOURCE_GAP_LEDGER.md`
 
-### Non-goals
+### Validation Commands For This Checkpoint
 
-- no raw bare open-box/open-web impact widening
-- no `GDMTXA04A` visible exact reopen
-- no `C11c` exact import
-- no broad heavy-concrete formula widening
-- no wall-selector behavior change
-- no requested-output bundle definition change
-- no numeric/runtime calculator change
-- no new route-family widening until the surface runner-loop harness is shared
-
-### Focused Test Pack
-
-- engine:
-  - `packages/engine/src/mixed-floor-wall-generated-matrix.test.ts`
-- web:
-  - `apps/web/features/workbench/mixed-study-mode-output-card-snapshot-grid.test.ts`
-  - `apps/web/features/workbench/mixed-study-mode-generated-history-grid.test.ts`
-  - `apps/web/features/workbench/mixed-study-mode-generated-edit-history-matrix.test.ts`
-- planning contract:
-  - `packages/engine/src/post-mixed-floor-wall-output-card-snapshot-requested-output-variant-branch-driver-extraction-next-slice-selection-contract.test.ts`
-
-### Acceptance
-
-- broad, selected, and representative requested-output card restore coverage
-  stays green after surface runner-loop extraction
-- the requested-output runner helper shrinks further and becomes more reviewable
-- outer requested-output runner-loop orchestration and label scaffolding are
-  shared instead of repeated across multiple exported runners
-- targeted test pack is green
-- close the slice with:
-  `post_mixed_floor_wall_output_card_snapshot_requested_output_surface_runner_loop_extraction_next_slice_selection_v1`
-
-### Focused Validation Order
-
-1. `pnpm --filter @dynecho/engine exec vitest run src/post-mixed-floor-wall-output-card-snapshot-requested-output-variant-branch-driver-extraction-next-slice-selection-contract.test.ts src/mixed-floor-wall-generated-matrix.test.ts --maxWorkers=1`
-2. `pnpm --filter @dynecho/web exec vitest run features/workbench/mixed-study-mode-output-card-snapshot-grid.test.ts features/workbench/mixed-study-mode-generated-history-grid.test.ts features/workbench/mixed-study-mode-generated-edit-history-matrix.test.ts --maxWorkers=1`
+1. `pnpm --filter @dynecho/engine exec vitest run src/post-mixed-floor-wall-runtime-candidate-re-rank-after-requested-output-harness-next-slice-selection-contract.test.ts src/impact-heavy-floor-planned-scope-benchmark.test.ts src/reinforced-concrete-floor-monotonicity.test.ts src/dataholz-clt-source-truth-audit.test.ts --maxWorkers=1`
+2. `pnpm --filter @dynecho/web exec vitest run features/workbench/heavy-concrete-formula-history-card-matrix.test.ts features/workbench/heavy-concrete-formula-provenance-report-surface.test.ts features/workbench/dataholz-clt-source-truth-route.test.ts --maxWorkers=1`
 3. `pnpm --filter @dynecho/engine test`
 4. `pnpm --filter @dynecho/web test`
 5. `pnpm typecheck`
@@ -197,27 +173,27 @@ Concrete comparison findings after the closeout:
 
 ### Slice Stop Conditions
 
-- stop and re-scope if surface runner-loop extraction hides scenario meaning or
-  makes requested-output test intent harder to read than the current explicit
-  wrappers
-- stop and classify separately if any extracted helper changes requested-output
-  card projection semantics instead of just reducing repetition
-- stop and split again if the runner helper remains too large for safe future
-  widening even after the outer surface loop harness is shared
+- stop if the widening leaks outside reinforced-concrete carriers into CLT,
+  open-box, open-web, or selector-specific behavior
+- stop if exact, catalog, product-delta, or lower-bound precedence is weakened
+  by the new formula-family lane
+- stop if the widening makes field/report/provenance surfaces less explicit
+  about formula ownership
+- stop if Dataholz `GDMTXA04A`, TUAS `C11c`, or any bare-carrier source anomaly
+  is implicitly reopened by the same change
 
-## Explicitly Deferred After This Selection
+## Explicitly Deferred Until This Widening Closes
 
+- Dataholz CLT calibration tightening
 - raw bare open-box/open-web impact widening
 - Dataholz `GDMTXA04A` visible exact reopen
 - TUAS `C11c` exact import
-- broad heavy-concrete formula family widening
 - wall-selector behavior widening
 
 ## Immediate Next Steps
 
 1. Keep this plan as the authoritative next-step file.
-2. Execute
-   `mixed_floor_wall_output_card_snapshot_requested_output_surface_runner_loop_extraction_v1`
-   as a no-runtime harness-hardening slice.
-3. Keep runtime widening blocked until the requested-output surface runner-loop
-   harness is shared and still green.
+2. Treat the requested-output harness chain as closed and frozen.
+3. Execute `heavy_concrete_formula_family_widening_v1`.
+4. Keep the held Dataholz CLT candidate explicit; do not silently substitute it
+   for the selected heavy-concrete widening.

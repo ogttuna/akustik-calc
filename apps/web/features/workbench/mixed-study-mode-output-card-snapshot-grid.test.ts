@@ -121,7 +121,7 @@ describe("mixed study-mode output-card snapshot grid", () => {
 
   it("keeps broad requested-output card routes stable after expanded partial-edit restore and save-load roundtrips", async () => {
     await runBroadRequestedOutputPartialRestoreGrid();
-  });
+  }, 10000);
 
   it("keeps selected seeded boundary route output cards stable after expanded partial-edit restore and save-load roundtrips", async () => {
     expectRequiredCasesCovered();

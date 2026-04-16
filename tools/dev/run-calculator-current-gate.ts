@@ -41,7 +41,7 @@ function runStep(step: Step): Promise<void> {
 async function main() {
   const steps: Step[] = [
     {
-      label: "engine current-slice contract + mixed support-bucket companion gate",
+      label: "engine runtime-candidate rerank + heavy concrete evidence gate",
       args: [
         "pnpm",
         "--filter",
@@ -49,13 +49,15 @@ async function main() {
         "exec",
         "vitest",
         "run",
-        "src/post-mixed-floor-wall-output-card-snapshot-requested-output-variant-branch-driver-extraction-next-slice-selection-contract.test.ts",
-        "src/mixed-floor-wall-generated-matrix.test.ts",
+        "src/post-mixed-floor-wall-runtime-candidate-re-rank-after-requested-output-harness-next-slice-selection-contract.test.ts",
+        "src/impact-heavy-floor-planned-scope-benchmark.test.ts",
+        "src/reinforced-concrete-floor-monotonicity.test.ts",
+        "src/dataholz-clt-source-truth-audit.test.ts",
         "--maxWorkers=1"
       ]
     },
     {
-      label: "web mixed requested-output snapshot harness regression gate",
+      label: "web heavy concrete + dataholz rerank evidence gate",
       args: [
         "pnpm",
         "--filter",
@@ -63,9 +65,9 @@ async function main() {
         "exec",
         "vitest",
         "run",
-        "features/workbench/mixed-study-mode-output-card-snapshot-grid.test.ts",
-        "features/workbench/mixed-study-mode-generated-edit-history-matrix.test.ts",
-        "features/workbench/mixed-study-mode-generated-history-grid.test.ts",
+        "features/workbench/heavy-concrete-formula-history-card-matrix.test.ts",
+        "features/workbench/heavy-concrete-formula-provenance-report-surface.test.ts",
+        "features/workbench/dataholz-clt-source-truth-route.test.ts",
         "--maxWorkers=1"
       ]
     },
