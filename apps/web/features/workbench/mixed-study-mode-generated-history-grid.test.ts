@@ -12,7 +12,9 @@ import {
   evaluateWallScenario,
   FLOOR_DETOUR_ROWS,
   FLOOR_OUTPUTS,
+  type GeneratedHistoryVariant as HistoryVariant,
   ROUTE_MIXED_GENERATED_CASES,
+  SELECTED_DUPLICATE_SWAP_HISTORY_VARIANTS,
   SELECTED_ROUTE_MIXED_GENERATED_CASES,
   SELECTED_ROUTE_MIXED_GENERATED_CASE_IDS,
   scenarioSnapshot,
@@ -45,13 +47,6 @@ type StoreHandle = {
   };
 };
 
-type HistoryVariant = {
-  id: string;
-  planOrder: "asc" | "desc";
-  rebuildPiece: "leading" | "trailing";
-  reverseParts: boolean;
-};
-
 const HISTORY_VARIANTS: readonly HistoryVariant[] = [
   {
     id: "ascending-reversed-leading-rebuild",
@@ -76,57 +71,6 @@ const HISTORY_VARIANTS: readonly HistoryVariant[] = [
     planOrder: "desc",
     rebuildPiece: "trailing",
     reverseParts: false
-  }
-];
-
-const SELECTED_DUPLICATE_SWAP_HISTORY_VARIANTS: readonly HistoryVariant[] = [
-  {
-    id: "ascending-direct-leading-rebuild",
-    planOrder: "asc",
-    rebuildPiece: "leading",
-    reverseParts: false
-  },
-  {
-    id: "ascending-reversed-leading-rebuild",
-    planOrder: "asc",
-    rebuildPiece: "leading",
-    reverseParts: true
-  },
-  {
-    id: "ascending-direct-trailing-rebuild",
-    planOrder: "asc",
-    rebuildPiece: "trailing",
-    reverseParts: false
-  },
-  {
-    id: "ascending-reversed-trailing-rebuild",
-    planOrder: "asc",
-    rebuildPiece: "trailing",
-    reverseParts: true
-  },
-  {
-    id: "descending-direct-leading-rebuild",
-    planOrder: "desc",
-    rebuildPiece: "leading",
-    reverseParts: false
-  },
-  {
-    id: "descending-reversed-leading-rebuild",
-    planOrder: "desc",
-    rebuildPiece: "leading",
-    reverseParts: true
-  },
-  {
-    id: "descending-direct-trailing-rebuild",
-    planOrder: "desc",
-    rebuildPiece: "trailing",
-    reverseParts: false
-  },
-  {
-    id: "descending-reversed-trailing-rebuild",
-    planOrder: "desc",
-    rebuildPiece: "trailing",
-    reverseParts: true
   }
 ];
 

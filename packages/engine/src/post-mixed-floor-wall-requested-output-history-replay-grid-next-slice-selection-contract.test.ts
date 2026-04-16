@@ -21,6 +21,11 @@ const SELECTED_SHARED_POSTURE_SCOPE = {
     "route-open-box-exact",
     "route-open-web-bound"
   ],
+  bundleSource: "customRequestedOutputsForStudyMode_shared_helper",
+  selectedRequestedOutputBundles: {
+    floor: ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"],
+    wall: ["Rw", "Ctr", "R'w", "Dn,w", "DnT,A"]
+  },
   postureStressors: [
     "selected_custom_requested_output_bundles",
     "output_card_status_projection_after_edit_history_replay",
@@ -28,9 +33,15 @@ const SELECTED_SHARED_POSTURE_SCOPE = {
     "save_load_requested_output_card_restore_after_long_chain",
     "selected_route_support_snapshot_projection_alignment"
   ],
+  requiredReplaySubstrates: [
+    "selected_edit_history_variants",
+    "selected_duplicate_swap_history_variants"
+  ],
   targetedEngineTest: "packages/engine/src/mixed-floor-wall-generated-matrix.test.ts",
   targetedWebTests: [
-    "apps/web/features/workbench/mixed-study-mode-output-card-snapshot-grid.test.ts"
+    "apps/web/features/workbench/mixed-study-mode-output-card-snapshot-grid.test.ts",
+    "apps/web/features/workbench/mixed-study-mode-generated-edit-history-matrix.test.ts",
+    "apps/web/features/workbench/mixed-study-mode-generated-history-grid.test.ts"
   ]
 } as const;
 
@@ -88,6 +99,11 @@ describe("post mixed floor/wall requested-output history replay grid next slice 
         "route-open-box-exact",
         "route-open-web-bound"
       ],
+      bundleSource: "customRequestedOutputsForStudyMode_shared_helper",
+      selectedRequestedOutputBundles: {
+        floor: ["Rw", "R'w", "DnT,w", "Ln,w", "L'n,w", "L'nT,w"],
+        wall: ["Rw", "Ctr", "R'w", "Dn,w", "DnT,A"]
+      },
       postureStressors: [
         "selected_custom_requested_output_bundles",
         "output_card_status_projection_after_edit_history_replay",
@@ -95,9 +111,15 @@ describe("post mixed floor/wall requested-output history replay grid next slice 
         "save_load_requested_output_card_restore_after_long_chain",
         "selected_route_support_snapshot_projection_alignment"
       ],
+      requiredReplaySubstrates: [
+        "selected_edit_history_variants",
+        "selected_duplicate_swap_history_variants"
+      ],
       targetedEngineTest: "packages/engine/src/mixed-floor-wall-generated-matrix.test.ts",
       targetedWebTests: [
-        "apps/web/features/workbench/mixed-study-mode-output-card-snapshot-grid.test.ts"
+        "apps/web/features/workbench/mixed-study-mode-output-card-snapshot-grid.test.ts",
+        "apps/web/features/workbench/mixed-study-mode-generated-edit-history-matrix.test.ts",
+        "apps/web/features/workbench/mixed-study-mode-generated-history-grid.test.ts"
       ]
     });
   });

@@ -7,12 +7,15 @@ import {
   customRequestedOutputsForStudyMode,
   createMemoryStorage,
   DEFAULT_FLOOR_REQUESTED_OUTPUTS,
+  DEFAULT_EDIT_HISTORY_VARIANT,
   DEFAULT_WALL_REQUESTED_OUTPUTS,
+  type EditHistoryVariant,
   evaluateFloorScenario,
   evaluateWallScenario,
   FLOOR_DETOUR_ROWS,
   FLOOR_OUTPUTS,
   ROUTE_MIXED_GENERATED_CASES,
+  SELECTED_EDIT_HISTORY_VARIANTS,
   SELECTED_ROUTE_MIXED_GENERATED_CASES,
   SELECTED_ROUTE_MIXED_GENERATED_CASE_IDS,
   scenarioSnapshot,
@@ -45,47 +48,6 @@ type StoreHandle = {
     updateThickness: (id: string, thicknessMm: string) => void;
   };
 };
-
-type EditHistoryVariant = {
-  id: string;
-  noiseDirection: "up" | "down";
-  planOrder: "asc" | "desc";
-  rebuildParity: "even" | "odd";
-  reverseParts: boolean;
-};
-
-const DEFAULT_EDIT_HISTORY_VARIANT: EditHistoryVariant = {
-  id: "descending-direct-even-rebuild-noise-down",
-  noiseDirection: "down",
-  planOrder: "desc",
-  rebuildParity: "even",
-  reverseParts: false
-};
-
-const SELECTED_EDIT_HISTORY_VARIANTS: readonly EditHistoryVariant[] = [
-  DEFAULT_EDIT_HISTORY_VARIANT,
-  {
-    id: "ascending-direct-even-rebuild-noise-up",
-    noiseDirection: "up",
-    planOrder: "asc",
-    rebuildParity: "even",
-    reverseParts: false
-  },
-  {
-    id: "ascending-direct-odd-rebuild-noise-down",
-    noiseDirection: "down",
-    planOrder: "asc",
-    rebuildParity: "odd",
-    reverseParts: false
-  },
-  {
-    id: "descending-direct-odd-rebuild-noise-up",
-    noiseDirection: "up",
-    planOrder: "desc",
-    rebuildParity: "odd",
-    reverseParts: false
-  }
-];
 
 function expectSelectedRouteCasesCovered() {
   expect(SELECTED_ROUTE_MIXED_GENERATED_CASES.map((testCase) => testCase.id)).toEqual(

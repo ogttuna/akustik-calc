@@ -62,6 +62,105 @@ export function customRequestedOutputsForStudyMode(
     : ["Rw", "Ctr", "R'w", "Dn,w", "DnT,A"];
 }
 
+export type GeneratedHistoryVariant = {
+  id: string;
+  planOrder: "asc" | "desc";
+  rebuildPiece: "leading" | "trailing";
+  reverseParts: boolean;
+};
+
+export const SELECTED_DUPLICATE_SWAP_HISTORY_VARIANTS: readonly GeneratedHistoryVariant[] = [
+  {
+    id: "ascending-direct-leading-rebuild",
+    planOrder: "asc",
+    rebuildPiece: "leading",
+    reverseParts: false
+  },
+  {
+    id: "ascending-reversed-leading-rebuild",
+    planOrder: "asc",
+    rebuildPiece: "leading",
+    reverseParts: true
+  },
+  {
+    id: "ascending-direct-trailing-rebuild",
+    planOrder: "asc",
+    rebuildPiece: "trailing",
+    reverseParts: false
+  },
+  {
+    id: "ascending-reversed-trailing-rebuild",
+    planOrder: "asc",
+    rebuildPiece: "trailing",
+    reverseParts: true
+  },
+  {
+    id: "descending-direct-leading-rebuild",
+    planOrder: "desc",
+    rebuildPiece: "leading",
+    reverseParts: false
+  },
+  {
+    id: "descending-reversed-leading-rebuild",
+    planOrder: "desc",
+    rebuildPiece: "leading",
+    reverseParts: true
+  },
+  {
+    id: "descending-direct-trailing-rebuild",
+    planOrder: "desc",
+    rebuildPiece: "trailing",
+    reverseParts: false
+  },
+  {
+    id: "descending-reversed-trailing-rebuild",
+    planOrder: "desc",
+    rebuildPiece: "trailing",
+    reverseParts: true
+  }
+];
+
+export type EditHistoryVariant = {
+  id: string;
+  noiseDirection: "up" | "down";
+  planOrder: "asc" | "desc";
+  rebuildParity: "even" | "odd";
+  reverseParts: boolean;
+};
+
+export const DEFAULT_EDIT_HISTORY_VARIANT: EditHistoryVariant = {
+  id: "descending-direct-even-rebuild-noise-down",
+  noiseDirection: "down",
+  planOrder: "desc",
+  rebuildParity: "even",
+  reverseParts: false
+};
+
+export const SELECTED_EDIT_HISTORY_VARIANTS: readonly EditHistoryVariant[] = [
+  DEFAULT_EDIT_HISTORY_VARIANT,
+  {
+    id: "ascending-direct-even-rebuild-noise-up",
+    noiseDirection: "up",
+    planOrder: "asc",
+    rebuildParity: "even",
+    reverseParts: false
+  },
+  {
+    id: "ascending-direct-odd-rebuild-noise-down",
+    noiseDirection: "down",
+    planOrder: "asc",
+    rebuildParity: "odd",
+    reverseParts: false
+  },
+  {
+    id: "descending-direct-odd-rebuild-noise-up",
+    noiseDirection: "up",
+    planOrder: "desc",
+    rebuildParity: "odd",
+    reverseParts: false
+  }
+];
+
 export type SplitPlan = {
   parts: readonly string[];
   rowIndex: number;

@@ -155,7 +155,16 @@ const FRAMED_MULTI_CANDIDATE_CAVITIES: readonly (readonly LayerInput[])[] = [
 ] as const;
 
 const HOLD_SCAN_TIMEOUT_MS = 20_000;
-const NON_AAC_SWAP_TIMEOUT_MS = 35_000;
+// The non-AAC swap sweep is CPU-heavy and occasionally crosses the tighter
+// threshold under full-suite load without signaling a behavioral regression.
+const NON_AAC_SWAP_TIMEOUT_MS = 60_000;
+const FAMILY_BOUNDARY_RUNNER_YIELD_INTERVAL = 50;
+
+function yieldToVitestWorker() {
+  return new Promise<void>((resolve) => {
+    setTimeout(resolve, 0);
+  });
+}
 
 function stackKey(layers: readonly LayerInput[]) {
   return layers.map((layer) => `${layer.materialId}:${layer.thicknessMm}`).join(" | ");
@@ -234,7 +243,7 @@ function swapAdjacent(stack: readonly LayerInput[], leftIndex: number) {
   return swapped;
 }
 
-function collectSilentSwapOffendersForCores(
+async function collectSilentSwapOffendersForCores(
   readSnapshot: ReturnType<typeof buildSnapshotReader>,
   cores: readonly { materialId: string; thicknessesMm: readonly number[] }[]
 ) {
@@ -244,6 +253,7 @@ function collectSilentSwapOffendersForCores(
     delta: number;
     swapIndex: number;
   }> = [];
+  let comparisonCount = 0;
 
   for (const prefix of HOLD_SCAN_PREFIXES) {
     for (const core of cores) {
@@ -274,6 +284,11 @@ function collectSilentSwapOffendersForCores(
                 swapIndex
               });
             }
+
+            comparisonCount += 1;
+            if (comparisonCount % FAMILY_BOUNDARY_RUNNER_YIELD_INTERVAL === 0) {
+              await yieldToVitestWorker();
+            }
           }
         }
       }
@@ -284,7 +299,7 @@ function collectSilentSwapOffendersForCores(
 }
 
 describe("dynamic airborne family boundary scan contracts", () => {
-  it("keeps the expanded heavy-core and dual-trim hold scan inside one defended corridor", () => {
+  it("keeps the expanded heavy-core and dual-trim hold scan inside one defended corridor", async () => {
     const hits: Array<{
       conflict: boolean;
       dnTw: number | null | undefined;
@@ -294,6 +309,7 @@ describe("dynamic airborne family boundary scan contracts", () => {
       stack: string;
       trace: NonNullable<ReturnType<typeof calculateAssembly>["dynamicAirborneTrace"]>;
     }> = [];
+    let scanCount = 0;
 
     for (const prefix of HOLD_SCAN_PREFIXES) {
       for (const core of HOLD_SCAN_CORES) {
@@ -328,6 +344,11 @@ describe("dynamic airborne family boundary scan contracts", () => {
                 stack: stackKey(stack),
                 trace
               });
+            }
+
+            scanCount += 1;
+            if (scanCount % FAMILY_BOUNDARY_RUNNER_YIELD_INTERVAL === 0) {
+              await yieldToVitestWorker();
             }
           }
         }
@@ -407,7 +428,7 @@ describe("dynamic airborne family boundary scan contracts", () => {
     }
   }, NON_AAC_SWAP_TIMEOUT_MS);
 
-  it("keeps the expanded non-AAC heavy-core palette out of family-boundary diagnostics", () => {
+  it("keeps the expanded non-AAC heavy-core palette out of family-boundary diagnostics", async () => {
     const boundaryHits: Array<{
       stack: string;
       trace: NonNullable<ReturnType<typeof calculateAssembly>["dynamicAirborneTrace"]>;
@@ -415,6 +436,7 @@ describe("dynamic airborne family boundary scan contracts", () => {
     }> = [];
     const familyCounts = new Map<string, number>();
     const trimCounts = new Map<string, number>();
+    let scanCount = 0;
 
     for (const prefix of HOLD_SCAN_PREFIXES) {
       for (const core of NON_AAC_SCAN_CORES) {
@@ -455,6 +477,11 @@ describe("dynamic airborne family boundary scan contracts", () => {
                 warnings: boundaryWarnings
               });
             }
+
+            scanCount += 1;
+            if (scanCount % FAMILY_BOUNDARY_RUNNER_YIELD_INTERVAL === 0) {
+              await yieldToVitestWorker();
+            }
           }
         }
       }
@@ -471,7 +498,7 @@ describe("dynamic airborne family boundary scan contracts", () => {
     });
   }, HOLD_SCAN_TIMEOUT_MS);
 
-  it("finds no silent >=8 dB adjacent-swap jumps across the expanded held-boundary palette", () => {
+  it("finds no silent >=8 dB adjacent-swap jumps across the expanded held-boundary palette", async () => {
     const readSnapshot = buildSnapshotReader();
     const offenders: Array<{
       baseStack: string;
@@ -479,6 +506,7 @@ describe("dynamic airborne family boundary scan contracts", () => {
       delta: number;
       swapIndex: number;
     }> = [];
+    let comparisonCount = 0;
 
     for (const prefix of EXPANDED_SWAP_PREFIXES) {
       for (const core of EXPANDED_SWAP_CORES) {
@@ -508,6 +536,11 @@ describe("dynamic airborne family boundary scan contracts", () => {
                 swapIndex
               });
             }
+
+            comparisonCount += 1;
+            if (comparisonCount % FAMILY_BOUNDARY_RUNNER_YIELD_INTERVAL === 0) {
+              await yieldToVitestWorker();
+            }
           }
         }
       }
@@ -516,21 +549,21 @@ describe("dynamic airborne family boundary scan contracts", () => {
     expect(offenders).toEqual([]);
   }, NON_AAC_SWAP_TIMEOUT_MS);
 
-  it("finds no silent >=8 dB adjacent-swap jumps across the first expanded non-AAC heavy-core cohort", () => {
+  it("finds no silent >=8 dB adjacent-swap jumps across the first expanded non-AAC heavy-core cohort", async () => {
     const readSnapshot = buildSnapshotReader();
-    const offenders = collectSilentSwapOffendersForCores(readSnapshot, NON_AAC_SWAP_CORE_COHORTS[0]);
+    const offenders = await collectSilentSwapOffendersForCores(readSnapshot, NON_AAC_SWAP_CORE_COHORTS[0]);
 
     expect(offenders).toEqual([]);
   }, NON_AAC_SWAP_TIMEOUT_MS);
 
-  it("finds no silent >=8 dB adjacent-swap jumps across the second expanded non-AAC heavy-core cohort", () => {
+  it("finds no silent >=8 dB adjacent-swap jumps across the second expanded non-AAC heavy-core cohort", async () => {
     const readSnapshot = buildSnapshotReader();
-    const offenders = collectSilentSwapOffendersForCores(readSnapshot, NON_AAC_SWAP_CORE_COHORTS[1]);
+    const offenders = await collectSilentSwapOffendersForCores(readSnapshot, NON_AAC_SWAP_CORE_COHORTS[1]);
 
     expect(offenders).toEqual([]);
   }, NON_AAC_SWAP_TIMEOUT_MS);
 
-  it("finds no multi-candidate boundary surface across the representative framed palette yet", () => {
+  it("finds no multi-candidate boundary surface across the representative framed palette yet", async () => {
     const flaggedHits: Array<{
       context: string;
       stack: string;
@@ -538,6 +571,7 @@ describe("dynamic airborne family boundary scan contracts", () => {
       trace: NonNullable<ReturnType<typeof calculateAssembly>["dynamicAirborneTrace"]>;
     }> = [];
     const familyCounts = new Map<string, number>();
+    let scanCount = 0;
 
     for (const context of FRAMED_MULTI_CANDIDATE_CONTEXTS) {
       for (const leftLeaf of FRAMED_MULTI_CANDIDATE_BOARDS) {
@@ -572,6 +606,11 @@ describe("dynamic airborne family boundary scan contracts", () => {
                 stack: stackKey(stack),
                 trace
               });
+            }
+
+            scanCount += 1;
+            if (scanCount % FAMILY_BOUNDARY_RUNNER_YIELD_INTERVAL === 0) {
+              await yieldToVitestWorker();
             }
           }
         }

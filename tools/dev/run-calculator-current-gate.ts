@@ -49,13 +49,13 @@ async function main() {
         "exec",
         "vitest",
         "run",
-        "src/post-mixed-floor-wall-requested-output-history-replay-grid-next-slice-selection-contract.test.ts",
+        "src/post-mixed-floor-wall-output-card-snapshot-requested-output-variant-branch-driver-extraction-next-slice-selection-contract.test.ts",
         "src/mixed-floor-wall-generated-matrix.test.ts",
         "--maxWorkers=1"
       ]
     },
     {
-      label: "web mixed requested-output output-card history replay gate",
+      label: "web mixed requested-output snapshot harness regression gate",
       args: [
         "pnpm",
         "--filter",
@@ -64,6 +64,8 @@ async function main() {
         "vitest",
         "run",
         "features/workbench/mixed-study-mode-output-card-snapshot-grid.test.ts",
+        "features/workbench/mixed-study-mode-generated-edit-history-matrix.test.ts",
+        "features/workbench/mixed-study-mode-generated-history-grid.test.ts",
         "--maxWorkers=1"
       ]
     },

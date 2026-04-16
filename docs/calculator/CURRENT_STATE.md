@@ -5,8 +5,8 @@ Document role:
 - primary short snapshot for the current dynamic calculator and workbench posture
 - read this before the execution plan or any archived analysis note
 - for the latest committed checkpoint, also read:
-  - [CHECKPOINT_2026-04-15_REQUESTED_OUTPUT_HISTORY_REPLAY_HANDOFF.md](./CHECKPOINT_2026-04-15_REQUESTED_OUTPUT_HISTORY_REPLAY_HANDOFF.md)
-    for the current end-of-day requested-output replay checkpoint
+  - [CHECKPOINT_2026-04-16_REQUESTED_OUTPUT_HARNESS_REFACTOR_HANDOFF.md](./CHECKPOINT_2026-04-16_REQUESTED_OUTPUT_HARNESS_REFACTOR_HANDOFF.md)
+    for the current end-of-day requested-output harness refactor checkpoint
   - [CHECKPOINT_2026-04-14_FORMULA_PROVENANCE_DOSSIER_HANDOFF.md](./CHECKPOINT_2026-04-14_FORMULA_PROVENANCE_DOSSIER_HANDOFF.md)
     for the prior formula-provenance checkpoint
   - [CHECKPOINT_2026-04-14_UBIQ_HISTORY_REPLAY_HANDOFF.md](./CHECKPOINT_2026-04-14_UBIQ_HISTORY_REPLAY_HANDOFF.md)
@@ -24,25 +24,43 @@ Document role:
 
 ## Revalidated Snapshot
 
-Last full engine revalidation: `2026-04-15`
+Last full engine revalidation: `2026-04-16`
 
-Last full web revalidation: `2026-04-15`
+Last full web revalidation: `2026-04-16`
 
-Last cross-package build revalidation: `2026-04-15`
+Last cross-package build revalidation: `2026-04-16`
 
-Planning / implementation update: `2026-04-15`
+Planning / implementation update: `2026-04-16`
 
-- latest live verification after the end-of-day checkpoint refresh:
-  - full engine suite: `126` files / `859` tests, green
-  - full web suite: `113` files / `645` tests, green
-  - `pnpm calculator:gate:current`: green
+- latest live verification after the requested-output variant-branch driver extraction closeout:
+  - full engine suite: `140` files / `887` tests, green
+  - full web suite: `113` files / `655` tests, green
+  - focused engine gate: `2` files / `5` tests, green
+  - focused web gate: `3` files / `18` tests, green
   - `pnpm typecheck`: green
   - `pnpm lint`: green
+  - `pnpm calculator:gate:current`: green
   - `pnpm build`: green with the known optional `sharp/@img` DOCX warnings
   - `git diff --check`: green
+- latest no-runtime plan refinement on `2026-04-16`:
+  - closed the requested-output variant-branch driver extraction slice
+  - reduced `mixed-study-mode-output-card-snapshot-requested-output-runners.ts`
+    from about `1147` lines to about `979` lines by moving compact replay,
+    edit-history, and partial-restore branch setup into
+    `mixed-study-mode-output-card-snapshot-requested-output-variant-drivers.ts`
+  - kept `mixed-study-mode-output-card-snapshot-grid.test.ts` stable at about
+    `315` lines and `13` explicit visible output-card assertions while the new
+    variant-driver helper stayed compact at about `212` lines
+  - selected requested-output surface runner-loop extraction as the next
+    no-runtime target because the runner helper still repeats broad / selected /
+    representative outer loop orchestration across `10` exported runners
+  - strengthened `calculator:gate:current` still runs:
+    - engine contract + companion pack: `2` files / `5` tests
+    - web replay substrate + output-card pack: `3` files / `18` tests
+  - strengthened gate is green
 
-- latest accepted checkpoint commit:
-  `9250c06 docs(calculator): record formula provenance checkpoint`
+- latest accepted checkpoint document:
+  `CHECKPOINT_2026-04-16_REQUESTED_OUTPUT_HARNESS_REFACTOR_HANDOFF.md`
 - latest technical implementation checkpoint commit:
   `137e0c8 test(workbench): carry formula provenance into method dossiers`
 - prior UBIQ checkpoint commit:
@@ -237,21 +255,398 @@ Planning / implementation update: `2026-04-15`
   - explicit deferred candidates remain raw bare open-box/open-web impact,
     Dataholz `GDMTXA04A` visible exact reopen, TUAS `C11c` exact import, broad
     heavy-concrete formula widening, and wall-selector behavior widening
+- closed no-runtime shared torture-pass guard:
+  `mixed_floor_wall_requested_output_card_history_replay_grid_expansion_v1`
+  - the selected six-route mixed floor/wall boundary ledger now keeps visible
+    custom requested-output output-card posture stable across shared-helper
+    bundle selection, hostile edit-history replay, long generated-history
+    replay, opposite-mode detours, and save/load restore
+  - numeric runtime behavior did not change
+  - focused engine gate is green: `2` files / `5` tests
+  - focused web gate is green: `3` files / `9` tests
+  - full validation is green: engine `126` files / `859` tests, web `113`
+    files / `646` tests, `pnpm calculator:gate:current`, `pnpm build`, and
+    `git diff --check`
+- closed planning action:
+  `post_mixed_floor_wall_requested_output_card_history_replay_grid_next_slice_selection_v1`
+  - selected the no-runtime
+    `mixed_floor_wall_output_card_history_grid_breadth_expansion_v1`
+    shared torture-pass slice as the immediate next implementation step
+  - widen the broader visible output-card replay matrix before any new source,
+    formula, or wall-selector widening
+  - explicit deferred candidates remain raw bare open-box/open-web impact,
+    Dataholz `GDMTXA04A` visible exact reopen, TUAS `C11c` exact import, broad
+    heavy-concrete formula widening, and wall-selector behavior widening
+- closed no-runtime shared torture-pass guard:
+  `mixed_floor_wall_output_card_history_grid_breadth_expansion_v1`
+  - the broader mixed floor/wall visible output-card route matrix now keeps
+    status/value/support/warning/floor-system projection posture aligned across
+    the compact four-variant replay grid
+  - the selected requested-output ledger remains green on its narrower restore
+    surfaces while the broad replay surface widens above it
+  - numeric runtime behavior did not change
+  - full engine revalidation initially exposed a Vitest worker RPC timeout in
+    `dynamic-airborne-family-boundary-scan.test.ts`; the suite is green again
+    after adding controlled yield checkpoints there
+  - focused engine gate is green: `2` files / `5` tests
+  - focused web gate is green: `3` files / `9` tests
+  - full validation is green: engine `127` files / `861` tests, web `113`
+    files / `646` tests, `pnpm calculator:gate:current`, `pnpm typecheck`,
+    `pnpm lint`, `pnpm build`, and `git diff --check`
+- closed planning action:
+  `post_mixed_floor_wall_output_card_history_grid_breadth_next_slice_selection_v1`
+  - selected the no-runtime
+    `mixed_floor_wall_output_card_history_restore_grid_expansion_v1`
+    shared torture-pass slice as the immediate next implementation step
+  - widen broader visible output-card restore/save-load posture before any new
+    source, formula, or wall-selector widening
+  - explicit deferred candidates remain raw bare open-box/open-web impact,
+    Dataholz `GDMTXA04A` visible exact reopen, TUAS `C11c` exact import, broad
+    heavy-concrete formula widening, and wall-selector behavior widening
+- closed no-runtime shared torture-pass guard:
+  `mixed_floor_wall_output_card_history_restore_grid_expansion_v1`
+  - the representative mixed floor/wall required output-card grid now keeps
+    visible status/value/support/warning/floor-system posture aligned after
+    opposite-mode detours and save/load roundtrips on top of the compact
+    four-variant replay matrix
+  - the selected requested-output ledger remains green on its narrower restore
+    surfaces while the representative broad default-output restore surface
+    widens above it
+  - numeric runtime behavior did not change
+  - focused engine gate is green: `2` files / `5` tests
+  - focused web gate is green: `3` files / `10` tests
+  - full validation is green: engine `129` files / `865` tests, web `113`
+    files / `647` tests, `pnpm calculator:gate:current`, `pnpm typecheck`,
+    `pnpm lint`, `pnpm build`, and `git diff --check`
+- closed planning action:
+  `post_mixed_floor_wall_output_card_history_restore_grid_next_slice_selection_v1`
+  - selected the no-runtime
+    `mixed_floor_wall_requested_output_card_required_grid_restore_expansion_v1`
+    shared torture-pass slice as the immediate next implementation step
+  - widen representative visible custom requested-output restore/save-load
+    posture before any new source, formula, or wall-selector widening
+  - explicit deferred candidates remain raw bare open-box/open-web impact,
+    Dataholz `GDMTXA04A` visible exact reopen, TUAS `C11c` exact import, broad
+    heavy-concrete formula widening, and wall-selector behavior widening
+- closed no-runtime shared torture-pass guard:
+  `mixed_floor_wall_requested_output_card_required_grid_restore_expansion_v1`
+  - the representative mixed floor/wall required output-card grid now keeps
+    visible custom requested-output status/value/support/warning/floor-system
+    posture aligned after compact generated-history replay, opposite-mode
+    detours, and save/load roundtrips
+  - the representative broad default-output restore surface remains green
+    above it, and the selected six-route custom requested-output ledgers remain
+    green below it
+  - numeric runtime behavior did not change
+  - focused engine gate is green: `2` files / `5` tests
+  - focused web gate is green: `3` files / `11` tests
+  - full validation is green: engine `130` files / `867` tests, web `113`
+    files / `648` tests, `pnpm calculator:gate:current`, `pnpm typecheck`,
+    `pnpm lint`, `pnpm build`, and `git diff --check`
+- closed planning action:
+  `post_mixed_floor_wall_requested_output_card_required_grid_restore_next_slice_selection_v1`
+  - selected the no-runtime
+    `mixed_floor_wall_requested_output_card_required_grid_edit_history_restore_expansion_v1`
+    shared torture-pass slice as the immediate next implementation step
+  - widen representative visible custom requested-output edit-history
+    restore/save-load posture before any new source, formula, or
+    wall-selector widening
+  - explicit deferred candidates remain raw bare open-box/open-web impact,
+    Dataholz `GDMTXA04A` visible exact reopen, TUAS `C11c` exact import, broad
+    heavy-concrete formula widening, and wall-selector behavior widening
+- closed no-runtime shared torture-pass guard:
+  `mixed_floor_wall_requested_output_card_required_grid_edit_history_restore_expansion_v1`
+  - the representative mixed floor/wall required output-card grid now keeps
+    visible custom requested-output status/value/support/warning/floor-system
+    posture aligned after edit-history replay, opposite-mode detours, and
+    save/load roundtrips
+  - the representative generated-history requested-output restore surface
+    remains green above it, and the selected six-route custom requested-output
+    generated/edit replay ledgers remain green below it
+  - numeric runtime behavior did not change
+  - focused engine gate is green: `2` files / `5` tests
+  - focused web gate is green: `3` files / `12` tests
+  - full validation is green: engine `131` files / `869` tests, web `113`
+    files / `648` tests, `pnpm calculator:gate:current`, `pnpm typecheck`,
+    `pnpm lint`, `pnpm build`, and `git diff --check`
+- closed planning action:
+  `post_mixed_floor_wall_requested_output_card_required_grid_edit_history_restore_next_slice_selection_v1`
+  - selected the no-runtime
+    `mixed_floor_wall_requested_output_card_partial_restore_grid_expansion_v1`
+    shared torture-pass slice as the immediate next implementation step
+  - widen selected visible custom requested-output partial-edit
+    restore/save-load posture before any new source, formula, or
+    wall-selector widening
+  - explicit deferred candidates remain raw bare open-box/open-web impact,
+    Dataholz `GDMTXA04A` visible exact reopen, TUAS `C11c` exact import, broad
+    heavy-concrete formula widening, and wall-selector behavior widening
+- closed no-runtime shared torture-pass guard:
+  `mixed_floor_wall_requested_output_card_partial_restore_grid_expansion_v1`
+  - the selected mixed floor/wall six-route boundary ledger now keeps visible
+    custom requested-output status/value/support/warning/floor-system posture
+    aligned after partial-edit replay, opposite-mode detours, and save/load
+    roundtrips
+  - the representative visible custom requested-output generated-history and
+    edit-history restore surfaces remain green above it
+  - numeric runtime behavior did not change
+  - focused engine gate is green: `2` files / `5` tests
+  - focused web gate is green: `3` files / `13` tests
+  - full validation is green: engine `132` files / `871` tests, web `113`
+    files / `650` tests, `pnpm calculator:gate:current`, `pnpm typecheck`,
+    `pnpm lint`, `pnpm build`, and `git diff --check`
+- closed planning action:
+  `post_mixed_floor_wall_requested_output_card_partial_restore_grid_next_slice_selection_v1`
+  - selected the no-runtime
+    `mixed_floor_wall_requested_output_card_required_grid_partial_restore_expansion_v1`
+    shared torture-pass slice as the immediate next implementation step
+  - widen representative visible custom requested-output partial-edit
+    restore/save-load posture before any new source, formula, or
+    wall-selector widening
+  - explicit deferred candidates remain raw bare open-box/open-web impact,
+    Dataholz `GDMTXA04A` visible exact reopen, TUAS `C11c` exact import, broad
+    heavy-concrete formula widening, and wall-selector behavior widening
+- closed no-runtime shared torture-pass guard:
+  `mixed_floor_wall_requested_output_card_required_grid_partial_restore_expansion_v1`
+  - the representative mixed floor/wall required-card grid now keeps visible
+    custom requested-output status/value/support/warning/floor-system posture
+    aligned after partial-edit replay, opposite-mode detours, and save/load
+    roundtrips
+  - the selected requested-output partial-restore surface remains green below
+    it, and the representative generated-history/edit-history requested-output
+    restore surfaces remain green beside it
+  - numeric runtime behavior did not change
+  - focused engine gate is green: `2` files / `5` tests
+  - focused web gate is green: `3` files / `14` tests
+  - full validation is green: engine `133` files / `873` tests, web `113`
+    files / `651` tests, `pnpm calculator:gate:current`, `pnpm typecheck`,
+    `pnpm lint`, `pnpm build`, and `git diff --check`
+- closed planning action:
+  `post_mixed_floor_wall_requested_output_card_required_grid_partial_restore_next_slice_selection_v1`
+  - selected the no-runtime
+    `mixed_floor_wall_requested_output_card_history_grid_breadth_expansion_v1`
+    shared torture-pass slice as the immediate next implementation step
+  - widen broad visible custom requested-output replay/save-load posture before
+    any new source, formula, or wall-selector widening
+  - explicit deferred candidates remain raw bare open-box/open-web impact,
+    Dataholz `GDMTXA04A` visible exact reopen, TUAS `C11c` exact import, broad
+    heavy-concrete formula widening, and wall-selector behavior widening
+- closed no-runtime shared torture-pass guard:
+  `mixed_floor_wall_requested_output_card_history_grid_breadth_expansion_v1`
+  - the broader mixed floor/wall route matrix now keeps visible custom
+    requested-output status/value/support/warning/floor-system posture aligned
+    across the compact replay grid
+  - the selected requested-output partial-restore surface remains green below
+    it, and the representative requested-output generated-history,
+    edit-history, partial-restore, and broad default-output restore surfaces
+    remain green beside it
+  - numeric runtime behavior did not change
+  - focused engine gate is green: `2` files / `5` tests
+  - focused web gate is green: `3` files / `15` tests
+  - full validation is green: engine `134` files / `875` tests, web `113`
+    files / `652` tests, `pnpm calculator:gate:current`, `pnpm typecheck`,
+    `pnpm lint`, `pnpm build`, and `git diff --check`
+- closed planning action:
+  `post_mixed_floor_wall_requested_output_card_history_grid_breadth_next_slice_selection_v1`
+  - selected the no-runtime
+    `mixed_floor_wall_requested_output_card_history_restore_grid_expansion_v1`
+    shared torture-pass slice as the immediate next implementation step
+  - widen broad visible custom requested-output opposite-mode detour and
+    save/load restore posture before any new source, formula, or
+    wall-selector widening
+  - explicit deferred candidates remain raw bare open-box/open-web impact,
+    Dataholz `GDMTXA04A` visible exact reopen, TUAS `C11c` exact import, broad
+    heavy-concrete formula widening, and wall-selector behavior widening
+- closed no-runtime shared torture-pass guard:
+  `mixed_floor_wall_requested_output_card_history_restore_grid_expansion_v1`
+  - the broader mixed floor/wall route matrix now keeps visible custom
+    requested-output status/value/support/warning/floor-system posture aligned
+    after compact replay, opposite-mode detours, and save/load roundtrips
+  - the broader requested-output compact replay surface remains green below it,
+    and the selected requested-output generated-history, edit-history,
+    partial-restore, representative requested-output generated-history,
+    edit-history, partial-restore, and representative broad default-output
+    restore surfaces remain green beside it
+  - numeric runtime behavior did not change
+  - focused engine gate is green: `2` files / `5` tests
+  - focused web gate is green: `3` files / `16` tests
+  - full validation is green: engine `135` files / `877` tests, web `113`
+    files / `653` tests, `pnpm calculator:gate:current`, full engine/web test
+    suites, `pnpm typecheck`, `pnpm lint`, `pnpm build`, and `git diff --check`
+- closed planning action:
+  `post_mixed_floor_wall_requested_output_card_history_restore_grid_next_slice_selection_v1`
+  - selected the no-runtime
+    `mixed_floor_wall_requested_output_card_edit_history_restore_grid_expansion_v1`
+    shared torture-pass slice as the immediate next implementation step
+  - widen broad visible custom requested-output edit-history replay,
+    opposite-mode detour, and save/load restore posture before any new source,
+    formula, or wall-selector widening
+  - explicit deferred candidates remain raw bare open-box/open-web impact,
+    Dataholz `GDMTXA04A` visible exact reopen, TUAS `C11c` exact import, broad
+    heavy-concrete formula widening, and wall-selector behavior widening
+- closed no-runtime shared torture-pass guard:
+  `mixed_floor_wall_requested_output_card_edit_history_restore_grid_expansion_v1`
+  - the broader mixed floor/wall route matrix now keeps visible custom
+    requested-output status/value/support/warning/floor-system posture aligned
+    after edit-history replay, opposite-mode detours, and save/load roundtrips
+  - the broader requested-output compact replay, compact replay-restore, and
+    partial-restore breadth surfaces remain green below it, and the selected
+    and representative requested-output restore surfaces remain green beside it
+  - numeric runtime behavior did not change
+  - focused engine gate is green: `2` files / `5` tests
+  - focused web gate is green: `3` files / `17` tests
+  - full validation is green: engine `136` files / `879` tests, web `113`
+    files / `654` tests, `pnpm calculator:gate:current`, full engine/web test
+    suites, `pnpm typecheck`, `pnpm lint`, `pnpm build`, and `git diff --check`
+- closed planning action:
+  `post_mixed_floor_wall_requested_output_card_edit_history_restore_grid_next_slice_selection_v1`
+  - selected the no-runtime
+    `mixed_floor_wall_requested_output_card_partial_restore_grid_breadth_expansion_v1`
+    shared torture-pass slice as the immediate next implementation step
+  - widen broad visible custom requested-output partial-edit replay,
+    opposite-mode detour, and save/load restore posture before any new source,
+    formula, or wall-selector widening
+  - explicit deferred candidates remain raw bare open-box/open-web impact,
+    Dataholz `GDMTXA04A` visible exact reopen, TUAS `C11c` exact import, broad
+    heavy-concrete formula widening, and wall-selector behavior widening
+- closed no-runtime shared torture-pass guard:
+  `mixed_floor_wall_requested_output_card_partial_restore_grid_breadth_expansion_v1`
+  - the broader mixed floor/wall route matrix now keeps visible custom
+    requested-output status/value/support/warning/floor-system posture aligned
+    after partial-split replay, opposite-mode detours, and save/load
+    roundtrips
+  - the broader requested-output compact replay, compact replay-restore, and
+    edit-history restore surfaces remain green below it, and the selected and
+    representative requested-output restore surfaces remain green beside it
+  - numeric runtime behavior did not change
+  - focused engine gate is green: `2` files / `5` tests
+  - focused web gate is green: `3` files / `18` tests
+  - full validation is green: engine `137` files / `881` tests, web `113`
+    files / `655` tests, `pnpm calculator:gate:current`, full engine/web test
+    suites, `pnpm typecheck`, `pnpm lint`, `pnpm build`, and `git diff --check`
+- closed planning action:
+  `post_mixed_floor_wall_requested_output_card_partial_restore_grid_breadth_next_slice_selection_v1`
+  - selected the no-runtime
+    `mixed_floor_wall_output_card_snapshot_grid_helper_extraction_v1` as the
+    immediate next implementation step
+  - requested-output breadth is now green; the next honest gap is harness
+    maintainability because the snapshot-grid regression file was about `2145`
+    lines and crossed the readability stop-condition
+  - runtime widening stays deferred until the harness is smaller and still
+    green
+- closed no-runtime harness-hardening guard:
+  `mixed_floor_wall_output_card_snapshot_grid_helper_extraction_v1`
+  - low-level snapshot helpers now live in
+    `mixed-study-mode-output-card-snapshot-test-helpers.ts` instead of the
+    main regression file
+  - `mixed-study-mode-output-card-snapshot-grid.test.ts` shrank from about
+    `2145` lines to about `1515` lines while keeping broad, selected, and
+    representative requested-output restore coverage green
+  - numeric runtime behavior did not change
+  - focused engine gate is green: `2` files / `5` tests
+  - focused web gate is green: `3` files / `18` tests
+  - full validation is green: engine `138` files / `883` tests, web `113`
+    files / `655` tests, focused packs, `pnpm typecheck`, and `pnpm lint`
+- closed planning action:
+  `post_mixed_floor_wall_output_card_snapshot_grid_helper_extraction_next_slice_selection_v1`
+  - selected the no-runtime
+    `mixed_floor_wall_output_card_snapshot_grid_requested_output_runner_extraction_v1`
+    as the immediate next implementation step
+  - coverage stayed green; the next honest gap was remaining requested-output
+    runner duplication inside the snapshot-grid regression file
+  - runtime widening stayed deferred until the requested-output runners were
+    extracted and still green
+- closed no-runtime harness-hardening guard:
+  `mixed_floor_wall_output_card_snapshot_grid_requested_output_runner_extraction_v1`
+  - broad, selected, and representative requested-output runner bodies now live
+    in `mixed-study-mode-output-card-snapshot-requested-output-runners.ts`
+    instead of the main snapshot-grid regression file
+  - `mixed-study-mode-output-card-snapshot-grid.test.ts` shrank from about
+    `1515` lines to about `315` lines while keeping the explicit `13`-test
+    output-card surface green
+  - numeric runtime behavior did not change
+  - focused engine gate is green: `2` files / `5` tests
+  - focused web gate is green: `3` files / `18` tests
+  - full validation is green: engine `138` files / `883` tests, web `113`
+    files / `655` tests, full engine/web suites, `pnpm typecheck`,
+    `pnpm lint`, `pnpm build`, and `git diff --check`
+- closed planning action:
+  `post_mixed_floor_wall_output_card_snapshot_requested_output_runner_extraction_next_slice_selection_v1`
+  - selected the no-runtime
+    `mixed_floor_wall_output_card_snapshot_requested_output_save_load_detour_driver_extraction_v1`
+    as the immediate next implementation step
+  - coverage stayed green; the next honest gap was repeated requested-output
+    save/load restore, opposite-mode detour, and default-selection choreography
+    inside the new runner helper file
+  - runtime widening stayed deferred until the shared restore driver landed and
+    remained green
+- closed no-runtime harness-hardening guard:
+  `mixed_floor_wall_output_card_snapshot_requested_output_save_load_detour_driver_extraction_v1`
+  - requested-output default-selection baseline, save/load + opposite-mode
+    detour restore, and representative case-selection setup are now shared
+    inside `mixed-study-mode-output-card-snapshot-requested-output-runners.ts`
+  - `mixed-study-mode-output-card-snapshot-requested-output-runners.ts`
+    shrank from about `1305` lines to about `1147` lines while the main grid
+    file stayed at about `315` lines and `13` visible output-card assertions
+  - numeric runtime behavior did not change
+  - focused engine gate is green: `2` files / `5` tests
+  - focused web gate is green: `3` files / `18` tests
+  - full validation is green: engine `139` files / `885` tests, web `113`
+    files / `655` tests, full engine/web suites, `pnpm typecheck`,
+    `pnpm lint`, `pnpm build`, and `git diff --check`
+- closed planning action:
+  `post_mixed_floor_wall_output_card_snapshot_requested_output_save_load_detour_driver_extraction_next_slice_selection_v1`
+  - selected the no-runtime
+    `mixed_floor_wall_output_card_snapshot_requested_output_variant_branch_driver_extraction_v1`
+    as the immediate next implementation step
+  - coverage is still green; the next honest gap was repeated compact replay,
+    edit-history replay, and partial-restore branch choreography inside the
+    requested-output runner helper file
+  - runtime widening stayed deferred until the shared variant branch drivers
+    landed and remained green
+- closed no-runtime harness-hardening guard:
+  `mixed_floor_wall_output_card_snapshot_requested_output_variant_branch_driver_extraction_v1`
+  - compact replay, edit-history, and partial-restore branch setup now live in
+    `mixed-study-mode-output-card-snapshot-requested-output-variant-drivers.ts`
+  - `mixed-study-mode-output-card-snapshot-requested-output-runners.ts`
+    shrank from about `1147` lines to about `979` lines while the new
+    variant-driver helper stayed compact at about `212` lines and the main grid
+    file stayed at about `315` lines
+  - numeric runtime behavior did not change
+  - focused engine gate is green: `2` files / `5` tests
+  - focused web gate is green: `3` files / `18` tests
+  - full validation is green: engine `140` files / `887` tests, web `113`
+    files / `655` tests, full engine/web suites, `pnpm typecheck`,
+    `pnpm lint`, `pnpm calculator:gate:current`, `pnpm build`, and
+    `git diff --check`
+- closed planning action:
+  `post_mixed_floor_wall_output_card_snapshot_requested_output_variant_branch_driver_extraction_next_slice_selection_v1`
+  - selected the no-runtime
+    `mixed_floor_wall_output_card_snapshot_requested_output_surface_runner_loop_extraction_v1`
+    as the immediate next implementation step
+  - coverage is still green; the next honest gap is repeated broad / selected /
+    representative outer runner-loop orchestration, case wiring, and label
+    scaffolding inside the requested-output runner helper file
+  - runtime widening stays deferred until the shared surface runner-loop
+    harness lands and remains green
 - explicit not-done item at the current checkpoint:
-  - `mixed_floor_wall_requested_output_card_history_replay_grid_expansion_v1`
+  - `mixed_floor_wall_output_card_snapshot_requested_output_surface_runner_loop_extraction_v1`
     is still selected-only
-  - the hidden custom requested-output bundle already survives replay/history
-    abuse, but the visible output-card status/value/support posture for the
-    same replay chains is not widened yet
+  - broad visible custom requested-output coverage remains explicit across
+    replay, restore, edit-history, and partial-restore breadth on the wider
+    mixed route matrix
+  - the next open no-runtime gap is the repeated surface runner-loop harness
+    inside `mixed-study-mode-output-card-snapshot-requested-output-runners.ts`
 - architecture checkpoint scan:
   - production runtime changes in this pass: none
-  - current pass touched only test, doc, checkpoint, and focused-gate surfaces:
-    `packages/engine/src/mixed-floor-wall-generated-matrix.test.ts`,
-    `apps/web/features/workbench/mixed-study-mode-generated-matrix.test.ts`,
+  - current pass touched only test, contract, doc, and focused-gate surfaces:
     `apps/web/features/workbench/mixed-study-mode-output-card-snapshot-grid.test.ts`,
-    `packages/engine/src/post-mixed-floor-wall-requested-output-history-replay-grid-next-slice-selection-contract.test.ts`,
-    `tools/dev/run-calculator-current-gate.ts`, calculator docs, and the
-    `2026-04-15` checkpoint note
+    `apps/web/features/workbench/mixed-study-mode-output-card-snapshot-test-helpers.ts`,
+    `apps/web/features/workbench/mixed-study-mode-output-card-snapshot-requested-output-runners.ts`,
+    `apps/web/features/workbench/mixed-study-mode-output-card-snapshot-requested-output-variant-drivers.ts`,
+    `packages/engine/src/post-mixed-floor-wall-output-card-snapshot-requested-output-variant-branch-driver-extraction-next-slice-selection-contract.test.ts`,
+    `tools/dev/run-calculator-current-gate.ts`,
+    [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md), and
+    [CURRENT_STATE.md](./CURRENT_STATE.md)
   - no formula scope, source row, source-family lane, selector behavior, or
     numeric acoustic result was widened
   - existing large-file hotspots remain manageable only because they are heavily
@@ -262,7 +657,9 @@ Planning / implementation update: `2026-04-15`
     lines), `apps/web/features/workbench/simple-workbench-proposal-panel.tsx`
     (about `2.0k` lines), and
     `packages/engine/src/impact-predictor-input.ts` (about `2.0k` lines)
-  - the current CLT history checkpoint did not add to those hotspots
+  - the main snapshot-grid file stays under control at about `315` lines, the
+    requested-output runner helper is now about `979` lines, and the next safer
+    step is surface runner-loop extraction rather than runtime widening
 - source review during that pass kept the conservative posture:
   - UBIQ open-web evidence remains packaged INEX / finish / resilient-ceiling
     table evidence, not bare open-web impact evidence

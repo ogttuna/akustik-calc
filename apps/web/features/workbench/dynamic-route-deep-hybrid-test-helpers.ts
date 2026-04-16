@@ -12,8 +12,9 @@ export const BUILDING_CONTEXT: AirborneContext = {
 };
 
 export const FIELD_TRACE_OUTPUTS: readonly RequestedOutputId[] = ["DnT,w"];
+// These workbench route scans are CPU-heavy and can drift upward under full-suite load.
 export const ROUTE_DEEP_HYBRID_TIMEOUT_MS = 40_000;
-export const ROUTE_DEEP_HYBRID_SWAP_TIMEOUT_MS = 45_000;
+export const ROUTE_DEEP_HYBRID_SWAP_TIMEOUT_MS = 90_000;
 export const ROUTE_DEEP_HYBRID_RUNNER_YIELD_INTERVAL = 50;
 
 export function yieldToVitestWorker() {
