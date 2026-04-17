@@ -15,7 +15,7 @@ Read together with:
 
 - [CURRENT_STATE.md](./CURRENT_STATE.md)
 - [SYSTEM_MAP.md](./SYSTEM_MAP.md)
-- [CHECKPOINT_2026-04-17_HEAVY_CONCRETE_FORMULA_FAMILY_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-17_HEAVY_CONCRETE_FORMULA_FAMILY_CLOSEOUT_HANDOFF.md)
+- [CHECKPOINT_2026-04-17_REINFORCED_CONCRETE_ACCURACY_TIGHTENING_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-17_REINFORCED_CONCRETE_ACCURACY_TIGHTENING_CLOSEOUT_HANDOFF.md)
 - [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
 - [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md)
 
@@ -60,34 +60,37 @@ Use this section first when deciding what to do next.
 ### Now
 
 - active slice:
-  `reinforced_concrete_accuracy_tightening_follow_up_v1`
+  `dataholz_clt_calibration_tightening`
 - current highest-ROI task:
-  close the reinforced-concrete tightening slice now that the solver-side
-  residual fit decision on the `vinyl + elastic ceiling` branch is explicit
-- solver-side decision now landed:
-  the corridor remains intentionally `low_confidence`, and the dormant
-  direct published-family overlap was removed so helper-level logic no longer
-  pretends a narrower defended lane exists
+  start the defended Dataholz CLT tightening pass now that the reinforced-
+  concrete low-confidence corridor is explicitly closed at both solver and
+  helper level
+- closeout decision now landed:
+  reinforced-concrete `vinyl + elastic ceiling` remains intentionally
+  `low_confidence`, and the dormant direct published-family overlap was
+  removed so no hidden narrower defended lane remains
 
 ### Next
 
-1. Revalidate the active slice with the solver-side overlap removal in place.
-2. Add the closeout note/contract updates that explain why the corridor stays
-   low-confidence even when nearby published rows remain part of the fallback.
-3. Prepare the next-slice selection handoff with
-   `dataholz_clt_calibration_tightening` still held second.
+1. Revalidate the active slice with the reinforced-concrete closeout contract
+   in place.
+2. Open `dataholz_clt_calibration_tightening` on the defended exact-vs-
+   estimate CLT corridor.
+3. Keep `GDMTXA04A` as an explicit blocked surface decision unless fresh
+   evidence supports a narrower reopen.
 
 ### Later
 
-1. `dataholz_clt_calibration_tightening`
-2. blocked source-backed widening re-rank
+1. blocked source-backed widening re-rank
+2. conditionally reopen reinforced-concrete or `GDMTXA04A` only if fresh proof
+   appears
 
 ### Explicit Non-Goals Right Now
 
 - do not reopen heavy-concrete parity widening
 - do not widen raw source families from nearby green tests
-- do not spend another micro-pass only on wording if the remaining open risk is
-  solver-side
+- do not spend another reinforced-concrete wording micro-pass now that the
+  solver-side closeout is explicit
 
 ## Verified Against Implementation - 2026-04-17
 
@@ -284,6 +287,15 @@ Use this section first when deciding what to do next.
   - full web suite: `117/117` test files passed, `674/674` tests passed
   - `pnpm build`: green with the known optional `sharp/@img` DOCX warnings
   - `git diff --check`: green
+- local verification in this reinforced-concrete closeout selection pass:
+  - focused engine gate: `5/5` test files passed, `23/23` tests passed
+  - focused web gate: `2/2` test files passed, `5/5` tests passed
+  - `pnpm calculator:gate:current`: green
+  - full engine suite: `153/153` test files passed, `945/945` tests passed
+  - full web suite: `117/117` test files passed, `674/674` tests passed
+  - `pnpm check`: green
+  - `pnpm build`: green with the known optional `sharp/@img` DOCX warnings
+  - `git diff --check`: green
 
 ## Closeout Summary
 
@@ -303,161 +315,89 @@ Heavy-concrete closeout result:
   - no seventh defended parity widening remains proven
   - blocked branches stayed blocked
 - selected next tightening direction:
-`reinforced_concrete_accuracy_tightening_follow_up_v1`
-- held but not selected candidate:
   `dataholz_clt_calibration_tightening`
-- why reinforced-concrete tightening wins now:
-  - widening is honestly exhausted unless a new proof-backed equivalence
-    appears
-  - the concrete corridor is already the most owned user-facing floor family
-  - the highest remaining ROI is accuracy tightening inside the same corridor,
-    not broader widening
-  - the closeout audit, benchmark, monotonicity, and provenance guards already
-    define a stable baseline for tightening
-- why Dataholz CLT did not move up yet:
-  - it remains defended and useful, but it is a lower-ROI tightening target
-    than reinforced concrete right now
-  - there is still no fresh classified runtime red forcing immediate CLT work
-  - the blocked exact-reopen/source-anomaly boundaries are unchanged
+- closed but still guarded candidate:
+  `reinforced_concrete_accuracy_tightening_follow_up_v1`
+- why Dataholz CLT moves up now:
+  - reinforced-concrete overlap and solver-side honesty risk are now explicitly
+    closed
+  - the defended CLT exact/estimate corridor is already benchmarked and
+    source-truth pinned
+  - the only remaining exact-only CLT slack is `GDMTXA04A`, which stays a
+    blocked material-surface decision rather than a reason to delay CLT
+    calibration work
+  - blocked source-family widening still has lower ROI than tightening the
+    defended CLT corridor next
+- why reinforced-concrete does not stay active:
+  - the corridor is now intentionally frozen on the low-confidence branch
+    without a hidden helper overlap
+  - remaining work there is no longer the best next runtime return
 - no runtime or numeric calculator behavior changed in the closeout selection
   itself
 
 ## Current Position
 
 - latest committed checkpoint:
-  `CHECKPOINT_2026-04-17_HEAVY_CONCRETE_FORMULA_FAMILY_CLOSEOUT_HANDOFF.md`
+  `CHECKPOINT_2026-04-17_REINFORCED_CONCRETE_ACCURACY_TIGHTENING_CLOSEOUT_HANDOFF.md`
 - latest closed implementation slice:
-  `heavy_concrete_formula_family_widening_v1`
-- closed planning action in this pass:
-  `post_heavy_concrete_formula_family_widening_next_slice_selection_v1`
-- selected next implementation slice:
   `reinforced_concrete_accuracy_tightening_follow_up_v1`
+- closed planning action in this pass:
+  `post_reinforced_concrete_accuracy_tightening_follow_up_next_slice_selection_v1`
+- selected next implementation slice:
+  `dataholz_clt_calibration_tightening`
 - slice type:
-  runtime accuracy tightening on the defended reinforced-concrete corridor
+  runtime accuracy tightening on the defended Dataholz CLT corridor
 - implementation status:
-  started; first engine-side proxy-airborne honesty tightening and second
-  workbench-side wording tightening are landed on the reinforced-concrete
-  low-confidence branch, and the candidate pool is narrowed away from carpet
-  and bare-slab rows while the branch remains low-confidence; predictor-only
-  fit now shares the same 29% displayed ceiling as the derived low-confidence
-  tier; trace, report, and validation-posture surfaces now carry the same 29%
-  mixed-row / proxy-companion honesty language as the warning and output-card
-  surfaces; the branch now also shares the defended combined-vinyl bounded
-  geometry slope, so Ln,w and Rw move continuously inside the current
-  low-confidence envelope instead of staying frozen at the baseline tuple; a
-  visible-stack continuity guard now also freezes neutral reorder/alias/safe-
-  split variants on the same low-confidence lane while keeping the expanded
-  four-board ceiling schedule as an intentional formula-owned boundary; the
-  impact lane headline/pill and the high-visibility impact summary, result,
-  delivery-assist, and curated floor-estimate panels now also label the branch
-  as a low-confidence fallback instead of a generic published family estimate,
-  the main confidence/provenance detail now reads as low-confidence fallback
-  provenance instead of generic published-family provenance, and the runtime
-  diagnostics/proposal evidence chain is now pinned on the same scenario so it
-  keeps screening-only low-confidence wording instead of drifting back to
-  generic published-family language; the dynamic impact trace itself now also
-  emits `Low-confidence fallback` as the live trace label and first note
-  instead of a generic published-family note, and candidate/source-row
-  surfaces now read as nearby published rows rather than a narrow family
-  match across the trace panel, curated floor-estimate card, and generated
-  report export; the same nearby-row wording now also carries through the main
-  impact result panel and the hidden-row evidence detail instead of reverting
-  to generic `Candidate lineage` / `estimate anchor` copy, and the raw
-  candidate-id surfaces now read as ranked nearby published row ids rather
-  than a privileged narrow-match candidate list; the same nearby-row score
-  offsets are now centralized in one helper with a geometry-sensitive third-row
-  penalty so the same-ceiling-first order and the family-vs-low-confidence
-  penalty gap cannot silently drift apart, and the same ranking rationale now
-  appears directly on trace/evidence/report surfaces instead of staying hidden
-  behind raw score lists alone; solver-side predictor notes for this branch
-  now also say nearby published rows / low-confidence fallback lineage instead
-  of leaking generic published-family wording into raw engine notes or
-  downstream trace summaries, and `impactSupport.notes` now also carries the
-  same mixed-row / elastic-first ranking rationale so report and support-basis
-  surfaces do not collapse back to a vague low-confidence label; the same
-  evidence packet now also carries ranked nearby-row anchor labels into
-  proposal and diagnostics surfaces instead of falling back to generic
-  `Nearby published row N` numbering, and the same evidence packet now puts
-  the dynamic impact anchor plus fallback rationale ahead of raw row anchors so
-  proposal/diagnostics surfaces do not lead with what feels like a narrow
-  best-match citation; proposal brief and dossier wording now also keep this
-  branch explicitly in screening territory by saying `screening output` and
-  `screening package` instead of generic `ready output` / `issue package`
-  language, and the consultant decision trail now also treats the same branch
-  as a screening posture with an explicit delivery-posture warning instead of
-  leaving the floor-side trail in generic posture/delivery-neutral wording;
-  the low-confidence proposal brief now also keeps both warning-present and
-  no-warning paths in screening territory by replacing optimistic `freeze the
-  stack` / `attach the citation appendix` copy with screening-snapshot and
-  nearby-row appendix language when this branch is active, and the consultant
-  decision trail `Output coverage` item now stays warning-toned on this branch
-  instead of leaking a green/success signal merely because several outputs are
-  populated inside the screening fallback; the same low-confidence proposal
-  brief executive summary and proposal dossier headline now also read as a
-  screening route with nearby-row citations attached instead of repeating a
-  generic low-confidence posture in more delivery-neutral language, and the
-  low-confidence diagnostics dossier now also keeps trace coverage,
-  evidence-courier, and no-warning warning-board surfaces in explicit
-  screening posture instead of leaking green/clear readiness cues; broad
-  repo-wide revalidation then found and fixed one stale lint leak, one stale
-  typecheck leak, and three stale engine expectation/parity contracts, so the
-  current honesty/ranking chain is no longer the primary risk surface
+  not started; the reinforced-concrete tightening corridor is now closed as an
+  explicit low-confidence helper/solver agreement, and the next honest move is
+  to tighten the defended Dataholz CLT exact-vs-estimate corridor without
+  reopening blocked source-anomaly surfaces
 - explicit not-done item at this checkpoint:
-  the tightening slice is open; low-confidence `vinyl + elastic ceiling`
-  remains low-confidence, and residual family-vs-formula fit plus edge-
-  continuity tightening are still open after the landed honesty substeps,
-  predictor-only fit-cap alignment, bounded numeric continuity tightening, and
-  broad repo-wide validation of the current screening/evidence wording chain
+  the CLT tightening slice is open; exact-vs-estimate calibration remains to
+  be tightened, while `GDMTXA04A` stays blocked as a material-surface decision
+  until fresh evidence appears
 
 ## Selected Next Slice
 
 - slice id:
-  `reinforced_concrete_accuracy_tightening_follow_up_v1`
+  `dataholz_clt_calibration_tightening`
 - workstream:
   `runtime_accuracy_tightening`
 - route family:
-  `reinforced_concrete_floor_lane`
+  `mass_timber_clt_floor_lane`
 - output surface:
-  `reinforced_concrete_accuracy_tightening_matrix`
+  `dataholz_clt_calibration_tightening_matrix`
 - engine companion surface:
-  `reinforced_concrete_formula_family_closeout_audit`
+  `dataholz_clt_source_truth_audit`
 - behavior class:
-  runtime tightening inside an already-owned reinforced-concrete floor corridor
+  runtime tightening inside an already-defended Dataholz CLT floor corridor
 
 ### Scope
 
-- tighten broad or low-confidence reinforced-concrete branches only inside the
-  already-owned corridor
-- preserve exact row, catalog, bound, family, formula, and low-confidence
-  ownership boundaries
-- keep companion-output honesty explicit on engine, workbench, trace, and
-  report surfaces
-- use this slice to improve fit and confidence posture, not to reopen widening
-  on blocked families or parity probes
+- tighten Dataholz CLT exact-vs-estimate behavior only inside the already-
+  defended corridor
+- preserve exact row, catalog, bound, family, and blocked exact-only ownership
+  boundaries
+- keep `GDMTXA04A` explicit as a blocked material-surface decision unless fresh
+  source evidence changes that posture
+- use this slice to improve CLT calibration posture, not to reopen blocked
+  source widening or reinforce-concrete wording churn
 
 ### Closeout Selection Result
 
 Selected now:
 
-- `reinforced_concrete_accuracy_tightening_follow_up_v1`
-  - posture: selected after the heavy-concrete widening closeout
-  - reason: widening is honestly exhausted; the biggest remaining value is
-    tightening the same owned corridor
-
-Held for later:
-
 - `dataholz_clt_calibration_tightening`
-  - posture: held second tightening candidate
-  - reason: current CLT estimate lane is still defended, but reinforced
-    concrete has the higher immediate ROI and no fresh CLT runtime red forces a
-    reorder
+  - posture: selected after the reinforced-concrete tightening closeout
+  - reason: the reinforced-concrete corridor is now explicitly frozen, so CLT
+    becomes the highest-ROI defended tightening family
 
 Conditionally reopen only if new proof appears:
 
-- `reinforced_concrete_parity_reopen`
+- `reinforced_concrete_accuracy_reopen`
   - posture: explicitly not selected
-  - reason: the final explicit carpet-plus-generic-underlay probe closed
-    without producing a new defended widening candidate
+  - reason: the `vinyl + elastic ceiling` branch now has an explicit
+    low-confidence closeout with no hidden family overlap left to reopen
 
 Still blocked:
 
@@ -474,36 +414,19 @@ Still blocked:
 
 - planning contract:
   `packages/engine/src/post-heavy-concrete-formula-family-widening-next-slice-selection-contract.test.ts`
-- reinforced-concrete engine evidence:
-  - `packages/engine/src/impact-heavy-floor-planned-scope-benchmark.test.ts`
-  - `packages/engine/src/reinforced-concrete-floor-monotonicity.test.ts`
+- closed reinforced-concrete evidence:
   - `packages/engine/src/reinforced-concrete-formula-family-closeout-audit.test.ts`
   - `packages/engine/src/reinforced-concrete-family-formula-fit-audit.test.ts`
-  - `packages/engine/src/reinforced-concrete-low-confidence-edge-continuity.test.ts`
-  - `packages/engine/src/reinforced-concrete-visible-low-confidence-edge-continuity.test.ts`
-  - `packages/engine/src/calculate-impact-only.test.ts`
-- reinforced-concrete web evidence:
-  - `apps/web/features/workbench/heavy-concrete-formula-history-card-matrix.test.ts`
-  - `apps/web/features/workbench/heavy-concrete-formula-provenance-report-surface.test.ts`
-  - `apps/web/features/workbench/reinforced-concrete-low-confidence-impact-panels.test.ts`
   - `apps/web/features/workbench/reinforced-concrete-low-confidence-proposal-honesty.test.ts`
-  - `apps/web/features/workbench/simple-workbench-evidence.test.ts`
-  - `apps/web/features/workbench/simple-workbench-output-model.test.ts`
-  - `apps/web/features/workbench/target-output-status.test.ts`
-  - `apps/web/features/workbench/dynamic-calc-branch.test.ts`
-  - `apps/web/features/workbench/guided-validation-summary.test.ts`
-  - `apps/web/features/workbench/workbench-warning-notes.test.ts`
-- held CLT evidence:
+- selected CLT evidence:
   - `packages/engine/src/dataholz-clt-source-truth-audit.test.ts`
   - `packages/engine/src/floor-source-corpus-contract.test.ts`
   - `apps/web/features/workbench/dataholz-clt-source-truth-route.test.ts`
 - likely runtime edit anchors for the selected tightening:
-  - `packages/engine/src/heavy-concrete-published-upper-treatment-estimate.ts`
   - `packages/engine/src/predictor-published-family-estimate.ts`
-  - `packages/engine/src/reinforced-concrete-combined-vinyl-elastic-ceiling-estimate.ts`
-  - `packages/engine/src/reinforced-concrete-low-confidence-airborne.ts`
-  - `packages/engine/src/impact-support.ts`
-  - `packages/engine/src/impact-predictor-status.ts`
+  - `packages/engine/src/predictor-floor-system-estimate.ts`
+  - `packages/engine/src/floor-system-estimate.ts`
+  - `packages/engine/src/calculate-assembly.ts`
 - focused gate entrypoint:
   `tools/dev/run-calculator-current-gate.ts`
 - source-backed boundary ledger:
@@ -619,145 +542,99 @@ are kept.
 
 ### Execution Plan For This Slice
 
-1. Freeze the current ownership matrix as the tightening entry contract.
+1. Freeze the reinforced-concrete closeout as the entry contract.
    - keep
      `packages/engine/src/reinforced-concrete-formula-family-closeout-audit.test.ts`
-     green as the central route/basis/support ledger
-   - keep
-     `packages/engine/src/impact-heavy-floor-planned-scope-benchmark.test.ts`
      and
-     `packages/engine/src/reinforced-concrete-floor-monotonicity.test.ts`
-     green so tightening does not buy apparent accuracy by weakening the
-     defended corridor
-2. Tighten only inside the already-owned reinforced-concrete corridor.
-   - start with the low-confidence `vinyl + elastic ceiling` branch, residual
-     family-vs-formula fit drift, and companion-output honesty
+     `packages/engine/src/reinforced-concrete-family-formula-fit-audit.test.ts`
+     green so the closed low-confidence corridor does not silently reopen
+2. Tighten only inside the already-defended Dataholz CLT corridor.
+   - start with exact-vs-estimate calibration and remaining exact-only slack
+     boundaries
    - keep
-     `packages/engine/src/heavy-concrete-published-upper-treatment-estimate.ts`,
      `packages/engine/src/predictor-published-family-estimate.ts`,
-     `packages/engine/src/impact-estimate.ts`, and
-     `packages/engine/src/target-output-support.ts` as the primary runtime edit
+     `packages/engine/src/predictor-floor-system-estimate.ts`,
+     `packages/engine/src/floor-system-estimate.ts`, and
+     `packages/engine/src/calculate-assembly.ts` as the primary runtime edit
      anchors
-   - do not use this slice to reopen CLT, raw open-box/open-web,
-     `GDMTXA04A`, `C11c`, selector behavior, or closed parity probes
-3. Keep provenance and support surfaces explicit while tightening.
-   - preserve formula-vs-family-vs-low-confidence wording on engine and
-     workbench surfaces
-   - if wording changes reach the workbench, keep
-     `apps/web/features/workbench/heavy-concrete-formula-history-card-matrix.test.ts`
-     and
-     `apps/web/features/workbench/heavy-concrete-formula-provenance-report-surface.test.ts`
+   - do not use this slice to reopen reinforced-concrete wording work, raw
+     open-box/open-web, `GDMTXA04A`, `C11c`, selector behavior, or parity
+     probes
+3. Keep exact-vs-estimate provenance explicit while tightening.
+   - preserve exact-vs-family wording on engine and workbench surfaces
+   - if CLT wording reaches the workbench, keep
+     `apps/web/features/workbench/dataholz-clt-source-truth-route.test.ts`
      green without broadening support semantics
-4. Close the tightening slice only when the tighter route remains bounded and
-   repeatable.
+4. Close the tightening slice only when the tighter CLT route remains bounded
+   and repeatable.
    - update the planning contract only after tightening edits land
    - keep the focused gate green throughout
    - rerun the broad repo gate before calling the slice closed
 
 ### Tightening Queue
 
-This queue is ordered. Do not skip to CLT or blocked families before the
-earlier concrete tightening steps are either landed or explicitly classified as
-still unready.
-
-1. Low-confidence posture audit
-   - re-evaluate the reinforced-concrete `vinyl + elastic ceiling` branch
-   - either tighten its confidence posture with evidence-backed guards or leave
-     it explicitly low-confidence
-2. Residual family-vs-formula fit audit
-   - compare the surviving published-family and formula-owned reinforced-
-     concrete branches
-   - tighten only where the family lane is already bounded and the fit drift is
-     measurable
-3. Companion-output and edge-continuity audit
-   - ensure companion airborne outputs, unsupported buckets, and hostile edge
-     continuity stay honest under the tighter posture
+1. Exact-vs-estimate calibration audit
+   - re-evaluate defended Dataholz CLT estimate rows against the exact rows
+     already pinned in the source-truth audit
+   - tighten only where the estimate lane stays inside the defended CLT family
+2. Remaining exact-only slack audit
+   - keep `GDMTXA04A` explicit as the only remaining exact-only CLT row
+   - do not reopen it unless a new honest material-surface rule appears
+3. Workbench route-carry-through audit
+   - ensure exact, estimate, and blocked-exact CLT surfaces stay explicit on
+     cards, summaries, and report exports
 
 ### Queue Status Right Now
 
-Use this as the live handoff state, not as a hypothetical queue.
-
-1. Heavy-concrete parity queue
+1. Reinforced-concrete closeout queue
    - current status: closed
-   - reopen only if a new explicit predictor vs visible-stack mismatch is
-     backed by current canonicalization or existing source-topology rules
-2. Concrete tightening queue
-   - current status: started
+   - reopen only if a new helper-vs-solver overlap or proof-backed equivalent
+     lane appears later
+2. CLT tightening queue
+   - current status: selected and not started
    - use
-     `packages/engine/src/reinforced-concrete-formula-family-closeout-audit.test.ts`
-     as the living ownership matrix for this pass
-   - landed honesty substeps:
-     - reinforced-concrete low-confidence proxy-airborne honesty on warnings,
-       predictor status, and support notes
-     - reinforced-concrete low-confidence wording on workbench warning notes,
-       output cards, target-status details, branch summary, and guided
-       validation summary
-     - reinforced-concrete low-confidence candidate pooling now stays on the
-       nearer combined concrete rows instead of mixing in carpet and bare-slab
-       rows
-     - reinforced-concrete low-confidence predictor-only fit now shares the
-       same displayed 29% ceiling as the derived tier, and trace/report
-       surfaces now carry the same mixed-row / proxy-companion honesty wording
-     - reinforced-concrete low-confidence validation-posture detail now uses
-       the same 29% mixed-row fallback wording instead of the generic final
-       fallback copy
-     - residual reinforced-concrete family-vs-formula fit posture now has a
-       living audit guard that keeps the low-confidence combined-vinyl lane on
-       the bounded combined-geometry slope while preserving a visible numeric
-       gap from the formula-owned heavy-floating corridor
-     - predictor-side reinforced-concrete low-confidence edge continuity now
-       has a living audit guard for small near-threshold slab and ceiling
-       changes plus neutral board-class presence, so the lane stays stable
-       without hidden branch flips or abrupt numeric jumps
-     - visible-stack reinforced-concrete low-confidence edge continuity now
-       has a living audit guard for neutral reorder, board-alias, and safe
-       same-material split variants, while the expanded four-board ceiling
-       schedule is pinned as an intentional formula-owned boundary instead of
-       a silent low-confidence carry-over
-     - scenario-driven diagnostics/proposal guards now pin the same branch on
-       low-confidence fallback wording across evidence citations, diagnostics
-       dossier, and proposal brief outputs instead of generic published-family
-       phrasing
-3. Held CLT queue
-   - current status: still held second
-   - reopen only after reinforced-concrete tightening stabilizes
+     `packages/engine/src/dataholz-clt-source-truth-audit.test.ts`
+     as the exact-row source-truth ledger for this pass
+   - use
+     `packages/engine/src/floor-source-corpus-contract.test.ts`
+     as the remaining exact-only slack contract
+3. Blocked source-anomaly queue
+   - current status: still blocked
+   - `GDMTXA04A`, raw bare open-box/open-web, `C11c`, and wall-selector
+     widening stay out of scope until fresh evidence appears
 
 ### Step Transition Rule
 
-Follow this rule mechanically to avoid drifting into unsupported tightening or
-accidental re-widening.
-
-1. Start with one defended reinforced-concrete honesty or fit problem.
+1. Start with one defended CLT exact-vs-estimate or blocked-slack problem.
 2. Tighten it only if all of the following are true:
-   - the branch already belongs to the owned reinforced-concrete corridor
-   - the tighter posture is justified by current benchmarks, bounded family
-     evidence, or explicit formula ownership
-   - the change does not reopen a blocked parity or source-anomaly boundary
+   - the branch already belongs to the defended Dataholz CLT corridor
+   - the tighter posture is justified by current exact rows, bounded family
+     evidence, or explicit blocked-surface rules
+   - the change does not reopen a blocked source-anomaly boundary
 3. If any one of those checks fails, leave the branch on its current posture.
-4. If a tightening pass ends without a defended improvement, keep the corridor
-   frozen and move to the next ranked family only after documenting that result.
+4. If a tightening pass ends without a defended improvement, keep the CLT
+   corridor frozen and move to the next ranked family only after documenting
+   that result.
 
 ### Execution Loop From Here
 
-Use this loop for each reinforced-concrete tightening step.
-
-1. Probe one owned reinforced-concrete honesty / fit target locally.
-2. Reject it immediately if it depends on reopening a blocked family or a
-   closed parity candidate.
-3. Add route-level, benchmark, and support-bucket tests that describe the
-   tighter intended posture.
+1. Probe one defended Dataholz CLT calibration target locally.
+2. Reject it immediately if it depends on reopening a blocked exact or source
+   family.
+3. Add route-level and workbench-route tests that describe the tighter
+   intended posture.
 4. Land the smallest tightening change that satisfies those tests.
-5. Run the targeted reinforced-concrete engine pack.
+5. Run the targeted CLT engine/web pack.
 6. Run `pnpm calculator:gate:current`.
 7. Update `NEXT_IMPLEMENTATION_PLAN.md` and `CURRENT_STATE.md` if the step
    lands.
-8. Stop the slice when the remaining tightening queue contains only branches
-   that still lack evidence for a tighter posture.
+8. Stop the slice when the remaining CLT queue contains only blocked-surface
+   decisions that still lack evidence for a tighter posture.
 
 ### Validation Commands For This Checkpoint
 
-1. `pnpm --filter @dynecho/engine exec vitest run src/post-heavy-concrete-formula-family-widening-next-slice-selection-contract.test.ts src/reinforced-concrete-formula-family-closeout-audit.test.ts src/impact-heavy-floor-planned-scope-benchmark.test.ts src/reinforced-concrete-floor-monotonicity.test.ts src/dataholz-clt-source-truth-audit.test.ts --maxWorkers=1`
-2. `pnpm --filter @dynecho/web exec vitest run features/workbench/heavy-concrete-formula-history-card-matrix.test.ts features/workbench/heavy-concrete-formula-provenance-report-surface.test.ts features/workbench/dataholz-clt-source-truth-route.test.ts --maxWorkers=1`
+1. `pnpm --filter @dynecho/engine exec vitest run src/post-reinforced-concrete-accuracy-tightening-follow-up-next-slice-selection-contract.test.ts src/reinforced-concrete-formula-family-closeout-audit.test.ts src/reinforced-concrete-family-formula-fit-audit.test.ts src/dataholz-clt-source-truth-audit.test.ts src/floor-source-corpus-contract.test.ts --maxWorkers=1`
+2. `pnpm --filter @dynecho/web exec vitest run features/workbench/reinforced-concrete-low-confidence-proposal-honesty.test.ts features/workbench/dataholz-clt-source-truth-route.test.ts --maxWorkers=1`
 3. `pnpm check`
 4. `pnpm build`
 5. `git diff --check`
@@ -787,10 +664,7 @@ This order is provisional and should be revalidated when the active slice
 closes, but it is the current safest program sequence.
 
 1. `reinforced_concrete_accuracy_tightening_follow_up_v1`
-   - tighten any still-broad or low-confidence reinforced-concrete branches that
-     remain after the widening closeout
-   - especially re-check the combined vinyl + elastic-ceiling concrete lane
-     before allowing it to graduate beyond low-confidence
+   - closed and guarded; do not reopen unless new proof appears
 2. `dataholz_clt_calibration_tightening`
    - keep CLT as a tightening-first family, not a broadening-first family
    - only improve same-family deviation, monotonicity, and exact-vs-estimate
@@ -806,47 +680,35 @@ Use this order when choosing the next implementation action. The point is not
 just “what is technically next”, but “what buys the most defended progress per
 unit of risk and engineering time”.
 
-1. `reinforced_concrete_accuracy_tightening_follow_up_v1`
+1. `dataholz_clt_calibration_tightening`
    - ROI: high
    - why:
-     - reinforced concrete is already an owned corridor, so accuracy work here
-       compounds across the existing user-facing answer surface
-     - the biggest remaining honesty risk is no longer missing reach inside the
-       current corridor, but broad family or low-confidence branches that may
-       still be too loose
-   - likely targets:
-     - `vinyl + elastic ceiling` evidence posture
-     - solver-side residual family-vs-formula fit decision on the
-       `vinyl + elastic ceiling` branch
-     - companion-output honesty and edge continuity
-2. `dataholz_clt_calibration_tightening`
-   - ROI: medium-high
-   - why:
-     - CLT is already defended enough to tighten
-     - but it has lower immediate ROI than reinforced-concrete tightening
-       because there is no fresh classified runtime red forcing it now
+     - reinforced-concrete is explicitly closed, so CLT is the next defended
+       corridor with real tightening headroom
+     - exact rows, estimate rows, and remaining exact-only slack are already
+       pinned in executable source-truth and route tests
    - keep the scope tightening-first:
      - no broad CLT widening
      - no blocked exact reopen hidden inside calibration work
-3. Source-backed widening re-rank for currently blocked families
+2. Source-backed widening re-rank for currently blocked families
    - ROI: conditional / later
    - why:
      - these items can be valuable, but they carry the highest evidence and
        model-risk burden
-     - they should only be reopened after concrete widening and tightening
-       leave a clean baseline
+     - they should only be reopened after CLT tightening leaves a clean
+       baseline
    - currently includes:
      - raw bare open-box/open-web impact widening
      - `GDMTXA04A`
      - `C11c`
      - wall-selector widening
-4. Reopen reinforced-concrete parity widening only if a new proof-backed
+3. Reopen reinforced-concrete or `GDMTXA04A` only if a new proof-backed
    equivalence appears
    - ROI: conditional / opportunistic
    - why:
-     - this queue is no longer presumed to contain a hidden win
-     - reopen it only if canonicalization, visible-stack derivation, or a
-       source-backed topology rule changes
+     - both boundaries are now intentionally closed rather than forgotten
+     - reopen them only if canonicalization, visible-stack derivation, or a
+       source-backed material/topology rule changes
 
 ## Decision Gates From Here
 
@@ -854,16 +716,15 @@ This is the mechanical sequence from the current checkpoint.
 
 1. Keep the final defended-equivalence probe closed as a negative guard.
 2. Keep the parity queue closed unless a new proof-backed equivalence appears.
-3. Open `reinforced_concrete_accuracy_tightening_follow_up_v1`.
-4. Only after reinforced-concrete tightening stabilizes, re-open CLT
-   tightening.
-5. Only after both tightening families are stable, re-rank blocked
-   source-backed widening families.
+3. Open `dataholz_clt_calibration_tightening`.
+4. Only after CLT tightening stabilizes, re-rank blocked source-backed
+   widening families.
+5. Reopen reinforced-concrete or `GDMTXA04A` only if fresh proof appears.
 
 ## Immediate Next Steps
 
 1. Keep this file as the authoritative immediate plan until the
-   reinforced-concrete accuracy tightening is actually closed.
+   Dataholz CLT tightening is actually closed.
 2. Treat the requested-output harness chain as closed and frozen.
 3. Keep the heavy-concrete widening closed:
    the landed parity fixes, negative guard, and closeout audit are now the
@@ -906,18 +767,15 @@ This is the mechanical sequence from the current checkpoint.
    the concrete formula-vs-family ownership matrix is now executable in
    `packages/engine/src/reinforced-concrete-formula-family-closeout-audit.test.ts`.
 12. Next execution step:
-   start `reinforced_concrete_accuracy_tightening_follow_up_v1` instead of
-   reopening speculative widening.
+   start `dataholz_clt_calibration_tightening` instead of reopening a closed
+   reinforced-concrete micro-pass.
 13. First tightening targets:
-   `vinyl + elastic ceiling` evidence posture, the solver-side residual
-   family-vs-formula fit decision on that branch, and companion-output /
-   edge-continuity honesty.
-   First landed substep:
-   reinforced-concrete low-confidence proxy-airborne honesty now stays explicit
-   on engine warnings plus predictor/support provenance surfaces without
-   promoting the branch out of `low_confidence`.
-   Broad revalidation result:
-   that honesty/ranking chain is now repo-wide green, so the next honest move
-   is solver-side tightening instead of another wording-only micro-pass.
-14. Keep the held Dataholz CLT candidate explicit; do not silently substitute it
-   for the selected reinforced-concrete tightening.
+   Dataholz CLT exact-vs-estimate calibration, explicit remaining exact-only
+   slack, and route/citation carry-through on the defended CLT corridor.
+   Entry posture:
+   reinforced-concrete is now solver-honest and repo-wide green, so the next
+   honest move is CLT tightening instead of more concrete wording or support
+   polishing.
+14. Keep the blocked source-anomaly candidates explicit; do not silently blur
+   `GDMTXA04A`, `C11c`, or raw bare-carrier widening into the selected CLT
+   tightening.

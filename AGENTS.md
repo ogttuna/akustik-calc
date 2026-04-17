@@ -5,7 +5,7 @@ Start here before changing calculator behavior.
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-04-17_HEAVY_CONCRETE_FORMULA_FAMILY_CLOSEOUT_HANDOFF.md`
+2. `docs/calculator/CHECKPOINT_2026-04-17_REINFORCED_CONCRETE_ACCURACY_TIGHTENING_CLOSEOUT_HANDOFF.md`
 3. `docs/calculator/CURRENT_STATE.md`
 4. `docs/calculator/CALCULATION_MODEL_AND_VALIDATION.md`
 
@@ -15,7 +15,7 @@ plan.
 ## Current Workflow
 
 - current selected slice:
-  `reinforced_concrete_accuracy_tightening_follow_up_v1`
+  `dataholz_clt_calibration_tightening`
 - do not reopen raw source families, `GDMTXA04A`, `C11c`, heavy-concrete parity
   widening or formula scope, or wall-selector behavior from nearby green tests
   alone

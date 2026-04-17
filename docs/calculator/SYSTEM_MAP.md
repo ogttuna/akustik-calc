@@ -216,36 +216,34 @@ validation path before and after a refactor.
 ## Current Architectural Hotspots
 
 As of `2026-04-17`, the requested-output output-card harness chain is frozen at
-a clean green baseline. The heavy-concrete widening is closed. The active risk
-is no longer harness sprawl or parity hunting; it is reinforced-concrete
-accuracy tightening on the same owned corridor.
+a clean green baseline. The reinforced-concrete accuracy tightening slice is
+closed. The active risk is no longer reinforced-concrete screening honesty; it
+is the next Dataholz CLT calibration tightening pass on the defended CLT
+corridor.
 
 Current hotspots:
 
 - selected runtime tightening anchors:
-  - `packages/engine/src/heavy-concrete-published-upper-treatment-estimate.ts`
   - `packages/engine/src/predictor-published-family-estimate.ts`
-  - `packages/engine/src/impact-estimate.ts`
-  - `packages/engine/src/target-output-support.ts`
-- selected reinforced-concrete engine evidence:
-  - `packages/engine/src/post-heavy-concrete-formula-family-widening-next-slice-selection-contract.test.ts`
-  - `packages/engine/src/reinforced-concrete-formula-family-closeout-audit.test.ts`
-  - `packages/engine/src/impact-heavy-floor-planned-scope-benchmark.test.ts`
-  - `packages/engine/src/reinforced-concrete-floor-monotonicity.test.ts`
-  - `packages/engine/src/calculate-impact-only.test.ts`
-- selected reinforced-concrete workbench evidence:
-  - `apps/web/features/workbench/heavy-concrete-formula-history-card-matrix.test.ts`
-  - `apps/web/features/workbench/heavy-concrete-formula-provenance-report-surface.test.ts`
-- held second-candidate evidence:
+  - `packages/engine/src/predictor-floor-system-estimate.ts`
+  - `packages/engine/src/floor-system-estimate.ts`
+  - `packages/engine/src/calculate-assembly.ts`
+- selected CLT engine evidence:
+  - `packages/engine/src/post-reinforced-concrete-accuracy-tightening-follow-up-next-slice-selection-contract.test.ts`
   - `packages/engine/src/dataholz-clt-source-truth-audit.test.ts`
+  - `packages/engine/src/floor-source-corpus-contract.test.ts`
+- selected CLT workbench evidence:
   - `apps/web/features/workbench/dataholz-clt-source-truth-route.test.ts`
+- closed reinforced-concrete guard evidence:
+  - `packages/engine/src/reinforced-concrete-family-formula-fit-audit.test.ts`
+  - `apps/web/features/workbench/reinforced-concrete-low-confidence-proposal-honesty.test.ts`
 - focused gate entrypoint:
   `tools/dev/run-calculator-current-gate.ts`
 - source-backed widening ledger:
   `docs/calculator/SOURCE_GAP_LEDGER.md`
 
-The current selected next slice exists to tighten the already-owned
-reinforced-concrete corridor honestly, not to reopen parity hunting, another
+The current selected next slice exists to tighten the defended Dataholz CLT
+corridor honestly, not to reopen reinforced-concrete wording churn, another
 harness refactor chain, or a blocked source anomaly.
 
 ## What This System Is Not Yet
@@ -268,4 +266,4 @@ To avoid docs drift, be explicit about current non-features:
 - Want answer-origin or support semantics:
   read [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
 - Want the last clean resume point:
-  read [CHECKPOINT_2026-04-17_HEAVY_CONCRETE_FORMULA_FAMILY_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-17_HEAVY_CONCRETE_FORMULA_FAMILY_CLOSEOUT_HANDOFF.md)
+  read [CHECKPOINT_2026-04-17_REINFORCED_CONCRETE_ACCURACY_TIGHTENING_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-17_REINFORCED_CONCRETE_ACCURACY_TIGHTENING_CLOSEOUT_HANDOFF.md)

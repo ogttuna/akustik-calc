@@ -41,7 +41,7 @@ function runStep(step: Step): Promise<void> {
 async function main() {
   const steps: Step[] = [
     {
-      label: "engine heavy-concrete closeout + reinforced-concrete accuracy gate",
+      label: "engine reinforced-concrete closeout + dataholz clt calibration gate",
       args: [
         "pnpm",
         "--filter",
@@ -49,20 +49,16 @@ async function main() {
         "exec",
         "vitest",
         "run",
-        "src/post-heavy-concrete-formula-family-widening-next-slice-selection-contract.test.ts",
+        "src/post-reinforced-concrete-accuracy-tightening-follow-up-next-slice-selection-contract.test.ts",
         "src/reinforced-concrete-formula-family-closeout-audit.test.ts",
         "src/reinforced-concrete-family-formula-fit-audit.test.ts",
-        "src/reinforced-concrete-combined-vinyl-elastic-ceiling-estimate.test.ts",
-        "src/reinforced-concrete-low-confidence-edge-continuity.test.ts",
-        "src/reinforced-concrete-visible-low-confidence-edge-continuity.test.ts",
-        "src/impact-heavy-floor-planned-scope-benchmark.test.ts",
-        "src/reinforced-concrete-floor-monotonicity.test.ts",
         "src/dataholz-clt-source-truth-audit.test.ts",
+        "src/floor-source-corpus-contract.test.ts",
         "--maxWorkers=1"
       ]
     },
     {
-      label: "web reinforced-concrete accuracy + dataholz evidence gate",
+      label: "web reinforced-concrete closeout + dataholz clt route gate",
       args: [
         "pnpm",
         "--filter",
@@ -70,12 +66,7 @@ async function main() {
         "exec",
         "vitest",
         "run",
-        "features/workbench/heavy-concrete-formula-history-card-matrix.test.ts",
-        "features/workbench/heavy-concrete-formula-provenance-report-surface.test.ts",
-        "features/workbench/impact-trace-panel.test.ts",
-        "features/workbench/reinforced-concrete-low-confidence-impact-panels.test.ts",
         "features/workbench/reinforced-concrete-low-confidence-proposal-honesty.test.ts",
-        "features/workbench/workbench-warning-notes.test.ts",
         "features/workbench/dataholz-clt-source-truth-route.test.ts",
         "--maxWorkers=1"
       ]

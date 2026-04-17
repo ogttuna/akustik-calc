@@ -1,5 +1,9 @@
 # Checkpoint 2026-04-17 Heavy Concrete Formula Family Closeout Handoff
 
+Superseded by
+[CHECKPOINT_2026-04-17_REINFORCED_CONCRETE_ACCURACY_TIGHTENING_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-17_REINFORCED_CONCRETE_ACCURACY_TIGHTENING_CLOSEOUT_HANDOFF.md)
+for the current restart point.
+
 Document role:
 
 - define the current checkpoint after the defended heavy-concrete widening
