@@ -1,5 +1,9 @@
 # Checkpoint 2026-04-17 Reinforced-Concrete Accuracy Tightening Closeout Handoff
 
+Superseded by
+[CHECKPOINT_2026-04-17_DATAHOLZ_CLT_CALIBRATION_TIGHTENING_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-17_DATAHOLZ_CLT_CALIBRATION_TIGHTENING_CLOSEOUT_HANDOFF.md)
+for the current restart point.
+
 Document role:
 
 - define the current checkpoint after the reinforced-concrete accuracy

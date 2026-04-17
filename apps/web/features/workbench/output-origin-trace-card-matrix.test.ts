@@ -132,7 +132,7 @@ const CASES: readonly RouteCase[] = [
       floorSystemEstimateKind: "family_general",
       floorSystemMatchId: null,
       floorSystemRatingsBasis: "predictor_mass_timber_clt_dataholz_dry_estimate",
-      impactBasis: "mixed_predicted_plus_estimated_local_guide",
+      impactBasis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
       lowerBoundBasis: null,
       supported: ["Rw", "Ln,w", "L'n,w", "L'nT,w", "Ln,w+CI", "L'nT,50"],
       unsupported: ["R'w", "DnT,w", "Ctr"],
@@ -144,7 +144,7 @@ const CASES: readonly RouteCase[] = [
         "L'n,w": { status: "live", value: "51 dB" },
         "L'nT,w": { status: "live", value: "49 dB" },
         "Ln,w+CI": { status: "live", value: "53 dB" },
-        "L'nT,50": { status: "live", value: "53 dB" },
+        "L'nT,50": { status: "live", value: "58 dB" },
         Ctr: { status: "unsupported", value: "Not ready" }
       }
     }

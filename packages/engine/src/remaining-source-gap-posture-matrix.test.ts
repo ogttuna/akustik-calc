@@ -5,6 +5,7 @@ import { calculateAssembly } from "./calculate-assembly";
 
 type SourceGapSnapshot = {
   candidateIds: readonly string[] | null;
+  ci50_2500: number | null;
   estimateBasis: string | null;
   estimateKind: string | null;
   fitPercent: number | null;
@@ -33,6 +34,7 @@ const FIELD_OUTPUTS: readonly RequestedOutputId[] = [
   "R'w",
   "DnT,w",
   "Ln,w",
+  "CI,50-2500",
   "Ln,w+CI",
   "L'n,w",
   "L'nT,w",
@@ -77,6 +79,7 @@ const DATAHOLZ_GDMTXA04A_VISIBLE_LAYERS: readonly LayerInput[] = [
 const FAIL_CLOSED_IMPACT_UNSUPPORTED: readonly RequestedOutputId[] = [
   "Rw",
   "Ln,w",
+  "CI,50-2500",
   "Ln,w+CI",
   "L'n,w",
   "L'nT,w",
@@ -89,6 +92,7 @@ const CASES: readonly SourceGapCase[] = [
     layers: C11C_COMBINED_WET_SOURCE_LAYERS,
     expected: {
       candidateIds: null,
+      ci50_2500: null,
       estimateBasis: null,
       estimateKind: null,
       fitPercent: null,
@@ -111,11 +115,12 @@ const CASES: readonly SourceGapCase[] = [
     layers: DATAHOLZ_GDMTXA04A_VISIBLE_LAYERS,
     expected: {
       candidateIds: ["dataholz_gdmtxa01a_clt_lab_2026"],
+      ci50_2500: 9,
       estimateBasis: "predictor_mass_timber_clt_dataholz_dry_estimate",
       estimateKind: "family_general",
       fitPercent: 50,
-      impactBasis: "mixed_predicted_plus_estimated_local_guide",
-      lPrimeNT50: 53,
+      impactBasis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
+      lPrimeNT50: 57.6,
       lPrimeNTw: 48.6,
       lPrimeNW: 51,
       lnW: 49,
@@ -133,6 +138,7 @@ const CASES: readonly SourceGapCase[] = [
     layers: [{ materialId: "open_web_steel_floor", thicknessMm: 300 }],
     expected: {
       candidateIds: null,
+      ci50_2500: null,
       estimateBasis: null,
       estimateKind: null,
       fitPercent: null,
@@ -155,6 +161,7 @@ const CASES: readonly SourceGapCase[] = [
     layers: [{ materialId: "open_box_timber_slab", thicknessMm: 220 }],
     expected: {
       candidateIds: null,
+      ci50_2500: null,
       estimateBasis: null,
       estimateKind: null,
       fitPercent: null,
@@ -182,6 +189,7 @@ const CASES: readonly SourceGapCase[] = [
     ],
     expected: {
       candidateIds: null,
+      ci50_2500: null,
       estimateBasis: null,
       estimateKind: null,
       fitPercent: null,
@@ -209,6 +217,7 @@ const CASES: readonly SourceGapCase[] = [
     ],
     expected: {
       candidateIds: null,
+      ci50_2500: null,
       estimateBasis: null,
       estimateKind: null,
       fitPercent: null,
@@ -237,6 +246,7 @@ function snapshot(layers: readonly LayerInput[]): SourceGapSnapshot {
 
   return {
     candidateIds: result.impact?.estimateCandidateIds ?? null,
+    ci50_2500: result.impact?.CI50_2500 ?? null,
     estimateBasis: result.floorSystemEstimate?.impact.basis ?? null,
     estimateKind: result.floorSystemEstimate?.kind ?? null,
     fitPercent: result.floorSystemEstimate?.fitPercent ?? null,

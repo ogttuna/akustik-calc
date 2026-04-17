@@ -1,6 +1,6 @@
 # Dynamic Calculator Source Gap Ledger
 
-Last reviewed: 2026-04-14
+Last reviewed: 2026-04-17
 
 Purpose:
 
@@ -23,6 +23,27 @@ Important scope note:
 
 Current planning implication:
 
+- 2026-04-17 blocked-source rerank posture:
+  - active no-runtime slice:
+    `blocked_source_backed_widening_rerank_v1`
+  - current explicit candidate order:
+    1. `dataholz_gdmtxa04a_visible_exact_reopen`
+    2. `tuas_c11c_exact_import`
+    3. `raw_bare_open_box_open_web_impact_widening`
+    4. `wall_selector_behavior_widening`
+  - current order reason:
+    - `GDMTXA04A` is the strongest blocked candidate because a direct official
+      exact row exists and the remaining gap is honest composite-surface
+      modeling rather than missing source truth
+    - `C11c` stays second because its remaining blocker is an unexplained
+      weighted-tuple anomaly, not a missing drawing or missing family
+    - raw bare open-box/open-web stays below both because current source
+      evidence is packaged-system evidence, not bare-carrier impact evidence
+    - wall-selector stays last because no fresh classified red currently
+      exists, so it is not a live runtime candidate
+  - hard rule while this rerank stays open:
+    keep every blocked family fail-closed until the rerank closes with exactly
+    one explicit next runtime target
 - 2026-04-14 second-pass plan selection and implementation:
   - the no-widening route/card projection guard
     `mixed_floor_wall_output_card_snapshot_grid_v1`

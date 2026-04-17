@@ -217,34 +217,30 @@ validation path before and after a refactor.
 
 As of `2026-04-17`, the requested-output output-card harness chain is frozen at
 a clean green baseline. The reinforced-concrete accuracy tightening slice is
-closed. The active risk is no longer reinforced-concrete screening honesty; it
-is the next Dataholz CLT calibration tightening pass on the defended CLT
-corridor.
+closed. The defended Dataholz CLT calibration pass is also now closed. The
+active risk is no longer a live solver corridor; it is selecting the next
+blocked source-backed family honestly before any new runtime widening.
 
 Current hotspots:
 
-- selected runtime tightening anchors:
-  - `packages/engine/src/predictor-published-family-estimate.ts`
-  - `packages/engine/src/predictor-floor-system-estimate.ts`
-  - `packages/engine/src/floor-system-estimate.ts`
-  - `packages/engine/src/calculate-assembly.ts`
-- selected CLT engine evidence:
-  - `packages/engine/src/post-reinforced-concrete-accuracy-tightening-follow-up-next-slice-selection-contract.test.ts`
+- selected rerank anchors:
+  - `packages/engine/src/post-dataholz-clt-calibration-tightening-next-slice-selection-contract.test.ts`
+  - `packages/engine/src/source-gap-candidate-re-rank-contract.test.ts`
+  - `packages/engine/src/raw-bare-open-web-open-box-source-evidence-rerank-contract.test.ts`
+  - `packages/engine/src/remaining-source-gap-posture-matrix.test.ts`
+- closed CLT evidence:
+  - `packages/engine/src/dataholz-clt-calibration-tightening-audit.test.ts`
+  - `packages/engine/src/dataholz-gdmtxa04a-material-surface-recheck.test.ts`
   - `packages/engine/src/dataholz-clt-source-truth-audit.test.ts`
-  - `packages/engine/src/floor-source-corpus-contract.test.ts`
-- selected CLT workbench evidence:
   - `apps/web/features/workbench/dataholz-clt-source-truth-route.test.ts`
-- closed reinforced-concrete guard evidence:
-  - `packages/engine/src/reinforced-concrete-family-formula-fit-audit.test.ts`
-  - `apps/web/features/workbench/reinforced-concrete-low-confidence-proposal-honesty.test.ts`
 - focused gate entrypoint:
   `tools/dev/run-calculator-current-gate.ts`
 - source-backed widening ledger:
   `docs/calculator/SOURCE_GAP_LEDGER.md`
 
-The current selected next slice exists to tighten the defended Dataholz CLT
-corridor honestly, not to reopen reinforced-concrete wording churn, another
-harness refactor chain, or a blocked source anomaly.
+The current selected next slice exists to re-rank the blocked source-backed
+families honestly, not to reopen `GDMTXA04A`, `C11c`, raw open-box/open-web,
+reinforced-concrete, or wall-selector behavior by inertia.
 
 ## What This System Is Not Yet
 
@@ -266,4 +262,4 @@ To avoid docs drift, be explicit about current non-features:
 - Want answer-origin or support semantics:
   read [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
 - Want the last clean resume point:
-  read [CHECKPOINT_2026-04-17_REINFORCED_CONCRETE_ACCURACY_TIGHTENING_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-17_REINFORCED_CONCRETE_ACCURACY_TIGHTENING_CLOSEOUT_HANDOFF.md)
+  read [CHECKPOINT_2026-04-17_DATAHOLZ_CLT_CALIBRATION_TIGHTENING_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-17_DATAHOLZ_CLT_CALIBRATION_TIGHTENING_CLOSEOUT_HANDOFF.md)

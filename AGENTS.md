@@ -5,7 +5,7 @@ Start here before changing calculator behavior.
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-04-17_REINFORCED_CONCRETE_ACCURACY_TIGHTENING_CLOSEOUT_HANDOFF.md`
+2. `docs/calculator/CHECKPOINT_2026-04-17_DATAHOLZ_CLT_CALIBRATION_TIGHTENING_CLOSEOUT_HANDOFF.md`
 3. `docs/calculator/CURRENT_STATE.md`
 4. `docs/calculator/CALCULATION_MODEL_AND_VALIDATION.md`
 
@@ -15,10 +15,10 @@ plan.
 ## Current Workflow
 
 - current selected slice:
-  `dataholz_clt_calibration_tightening`
-- do not reopen raw source families, `GDMTXA04A`, `C11c`, heavy-concrete parity
-  widening or formula scope, or wall-selector behavior from nearby green tests
-  alone
+  `blocked_source_backed_widening_rerank_v1`
+- do not reopen `GDMTXA04A`, `C11c`, raw open-box/open-web, heavy-concrete
+  parity or formula scope, reinforced-concrete reopening, or wall-selector
+  behavior from nearby green tests alone
 - if a slice closes, update the current plan, current state, and the relevant
   checkpoint/handoff note together
 - keep planning-contract tests in sync with the selected next slice

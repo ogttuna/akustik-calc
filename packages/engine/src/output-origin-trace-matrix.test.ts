@@ -195,7 +195,7 @@ const CASES: readonly OriginCase[] = [
       floorSystemEstimateKind: "family_general",
       floorSystemMatchId: null,
       floorSystemRatingsBasis: "predictor_mass_timber_clt_dataholz_dry_estimate",
-      impactBasis: "mixed_predicted_plus_estimated_local_guide",
+      impactBasis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
       lowerBoundBasis: null,
       method: "screening_mass_law_curve_seed_v3",
       origin: "source_family_estimate",

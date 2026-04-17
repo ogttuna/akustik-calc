@@ -117,10 +117,10 @@ describe("Dataholz GDMTXA04A material-surface recheck", () => {
     expect(result.impact?.basis).toBe("predictor_mass_timber_clt_dataholz_dry_estimate");
     expect(result.impact?.LnW).toBe(49);
     expect(result.impact?.CI).toBe(4);
-    expect(result.impact?.CI50_2500).toBeUndefined();
+    expect(result.impact?.CI50_2500).toBe(9);
     expect(result.impact?.LnWPlusCI).toBe(53);
-    expect(result.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "CI", "Ln,w+CI"]);
-    expect(result.unsupportedTargetOutputs).toEqual(["Ctr", "CI,50-2500"]);
+    expect(result.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "CI", "CI,50-2500", "Ln,w+CI"]);
+    expect(result.unsupportedTargetOutputs).toEqual(["Ctr"]);
   });
 
   it("defers exact visible reopen until the source composite surface can be modeled explicitly", () => {

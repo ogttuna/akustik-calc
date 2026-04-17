@@ -41,7 +41,7 @@ function runStep(step: Step): Promise<void> {
 async function main() {
   const steps: Step[] = [
     {
-      label: "engine reinforced-concrete closeout + dataholz clt calibration gate",
+      label: "engine Dataholz CLT closeout + blocked-source rerank gate",
       args: [
         "pnpm",
         "--filter",
@@ -49,17 +49,19 @@ async function main() {
         "exec",
         "vitest",
         "run",
-        "src/post-reinforced-concrete-accuracy-tightening-follow-up-next-slice-selection-contract.test.ts",
-        "src/reinforced-concrete-formula-family-closeout-audit.test.ts",
-        "src/reinforced-concrete-family-formula-fit-audit.test.ts",
+        "src/post-dataholz-clt-calibration-tightening-next-slice-selection-contract.test.ts",
         "src/dataholz-clt-calibration-tightening-audit.test.ts",
+        "src/dataholz-gdmtxa04a-material-surface-recheck.test.ts",
         "src/dataholz-clt-source-truth-audit.test.ts",
         "src/floor-source-corpus-contract.test.ts",
+        "src/source-gap-candidate-re-rank-contract.test.ts",
+        "src/raw-bare-open-web-open-box-source-evidence-rerank-contract.test.ts",
+        "src/remaining-source-gap-posture-matrix.test.ts",
         "--maxWorkers=1"
       ]
     },
     {
-      label: "web reinforced-concrete closeout + dataholz clt route gate",
+      label: "web Dataholz CLT closeout + blocked-source posture gate",
       args: [
         "pnpm",
         "--filter",
@@ -67,7 +69,6 @@ async function main() {
         "exec",
         "vitest",
         "run",
-        "features/workbench/reinforced-concrete-low-confidence-proposal-honesty.test.ts",
         "features/workbench/dataholz-clt-source-truth-route.test.ts",
         "features/workbench/remaining-source-gap-posture-card-matrix.test.ts",
         "features/workbench/output-origin-trace-card-matrix.test.ts",

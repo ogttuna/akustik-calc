@@ -10,10 +10,10 @@ If the question is “what is still open and what executes next?”, start with
 
 ## New Agent Fast Start
 
-1. Read [CHECKPOINT_2026-04-17_REINFORCED_CONCRETE_ACCURACY_TIGHTENING_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-17_REINFORCED_CONCRETE_ACCURACY_TIGHTENING_CLOSEOUT_HANDOFF.md).
+1. Read [CHECKPOINT_2026-04-17_DATAHOLZ_CLT_CALIBRATION_TIGHTENING_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-17_DATAHOLZ_CLT_CALIBRATION_TIGHTENING_CLOSEOUT_HANDOFF.md).
 2. Read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md).
 3. Run `pnpm calculator:gate:current`.
-4. If green, start the selected next slice `dataholz_clt_calibration_tightening`.
+4. If green, start the selected next slice `blocked_source_backed_widening_rerank_v1`.
 
 ## Current Execution Snapshot
 
@@ -21,15 +21,15 @@ If the question is “what is still open and what executes next?”, start with
   broader corridor coverage plus higher numerical and provenance accuracy at the
   same time
 - active next slice:
-  `dataholz_clt_calibration_tightening`
+  `blocked_source_backed_widening_rerank_v1`
 - current guardrail:
-  requested-output output-card harness work is hard-stopped; reinforced-
-  concrete accuracy tightening is closed and the next step is Dataholz CLT
-  calibration tightening
+  requested-output output-card harness work is hard-stopped; the defended CLT
+  calibration pass is closed and the next step is a no-runtime blocked-source
+  rerank
 - current candidate posture:
-  Dataholz CLT tightening is selected; reinforced-concrete reopening is closed
-  unless new proof appears; the heavy-concrete parity queue stays closed; and
-  the source-anomaly candidates remain blocked
+  blocked-source rerank is selected; direct `GDMTXA04A`, `C11c`, raw
+  open-box/open-web, reinforced-concrete reopening, and wall-selector widening
+  stay blocked until the rerank reorders them explicitly
 - last full green validation:
   `2026-04-17`
   - engine: `153/153` test files passed, `945/945` tests passed
@@ -58,7 +58,7 @@ If the question is “what is still open and what executes next?”, start with
 1. [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md): concise current execution plan and validated next steps
 2. [CURRENT_STATE.md](./CURRENT_STATE.md): short snapshot of the current calculator/workbench posture
 3. [SYSTEM_MAP.md](./SYSTEM_MAP.md): end-to-end product flow, runtime boundaries, persistence posture, and test surface map
-4. [CHECKPOINT_2026-04-17_REINFORCED_CONCRETE_ACCURACY_TIGHTENING_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-17_REINFORCED_CONCRETE_ACCURACY_TIGHTENING_CLOSEOUT_HANDOFF.md): latest checkpoint after the reinforced-concrete tightening closeout
+4. [CHECKPOINT_2026-04-17_DATAHOLZ_CLT_CALIBRATION_TIGHTENING_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-17_DATAHOLZ_CLT_CALIBRATION_TIGHTENING_CLOSEOUT_HANDOFF.md): latest checkpoint after the Dataholz CLT calibration closeout
 5. [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md): answer-origin map for formulas, source rows, predictors, field continuations, support gating, and test meaning
 6. [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md): source-backed widening, tightening, and deferred-family boundaries
 7. [DYNAMIC_CALCULATOR_REMAINING_WORK_PLAN.md](./DYNAMIC_CALCULATOR_REMAINING_WORK_PLAN.md): cross-floor/wall remaining work, completion status, and safe execution order

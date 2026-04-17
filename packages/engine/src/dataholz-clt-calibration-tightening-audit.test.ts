@@ -32,18 +32,25 @@ describe("Dataholz CLT calibration tightening audit", () => {
     expect(visible.floorSystemMatch).toBeNull();
     expect(visible.floorSystemEstimate?.kind).toBe("family_general");
     expect(visible.floorSystemEstimate?.impact.basis).toBe("predictor_mass_timber_clt_dataholz_dry_estimate");
+    expect(visible.impact?.basis).toBe("mixed_predicted_plus_estimated_standardized_field_volume_normalization");
     expect(visible.impact?.estimateCandidateIds).toEqual(["dataholz_gdmtxa01a_clt_lab_2026"]);
     expect(visible.floorSystemRatings?.Rw).toBe(65);
 
     expect(visible.impact?.LnW).toBe(49);
     expect(visible.impact?.CI).toBe(4);
+    expect(visible.impact?.CI50_2500).toBe(9);
     expect(visible.impact?.LnWPlusCI).toBe(53);
     expect(visible.impact?.LnW).toBeGreaterThanOrEqual(exact.impact?.LnW ?? 0);
     expect(visible.impact?.CI).toBeGreaterThanOrEqual(exact.impact?.CI ?? 0);
+    expect(visible.impact?.CI50_2500).toBeGreaterThanOrEqual(exact.impact?.CI50_2500 ?? 0);
     expect(visible.impact?.LnWPlusCI).toBeGreaterThanOrEqual(exact.impact?.LnWPlusCI ?? 0);
 
     expect(visible.impact?.LPrimeNW).toBe(51);
     expect(visible.impact?.LPrimeNTw).toBe(48.6);
+    expect(visible.impact?.LPrimeNT50).toBe(57.6);
+    expect(visible.impact?.metricBasis?.LPrimeNT50).toBe(
+      "estimated_standardized_field_lpriment50_from_lprimentw_plus_ci50_2500"
+    );
     expect(
       visible.impact?.notes.some((note: string) =>
         /capped against the direct official exact row/i.test(note)

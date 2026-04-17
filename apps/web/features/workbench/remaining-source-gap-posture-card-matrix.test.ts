@@ -33,6 +33,7 @@ const FIELD_OUTPUTS = [
   "R'w",
   "DnT,w",
   "Ln,w",
+  "CI,50-2500",
   "Ln,w+CI",
   "L'n,w",
   "L'nT,w",
@@ -54,10 +55,11 @@ const IMPACT_FIELD_CONTEXT = {
 
 const FAIL_CLOSED_CARDS: Pick<
   Record<TargetOutput, CardSnapshot>,
-  "Rw" | "Ln,w" | "Ln,w+CI" | "L'n,w" | "L'nT,w" | "L'nT,50"
+  "Rw" | "Ln,w" | "CI,50-2500" | "Ln,w+CI" | "L'n,w" | "L'nT,w" | "L'nT,50"
 > = {
   Rw: { status: "unsupported", value: "Not ready" },
   "Ln,w": { status: "unsupported", value: "Not ready" },
+  "CI,50-2500": { status: "unsupported", value: "Not ready" },
   "Ln,w+CI": { status: "unsupported", value: "Not ready" },
   "L'n,w": { status: "needs_input", value: "Not ready" },
   "L'nT,w": { status: "needs_input", value: "Not ready" },
@@ -67,6 +69,7 @@ const FAIL_CLOSED_CARDS: Pick<
 const FAIL_CLOSED_UNSUPPORTED: readonly RequestedOutputId[] = [
   "Rw",
   "Ln,w",
+  "CI,50-2500",
   "Ln,w+CI",
   "L'n,w",
   "L'nT,w",
@@ -118,14 +121,15 @@ const CASES: readonly SourceGapCase[] = [
         "R'w": { status: "live", value: "48 dB" },
         "DnT,w": { status: "live", value: "51 dB" },
         "Ln,w": { status: "live", value: "49 dB" },
+        "CI,50-2500": { status: "live", value: "+9 dB" },
         "Ln,w+CI": { status: "live", value: "53 dB" },
         "L'n,w": { status: "live", value: "51 dB" },
         "L'nT,w": { status: "live", value: "48.6 dB" },
-        "L'nT,50": { status: "live", value: "53 dB" }
+        "L'nT,50": { status: "live", value: "57.6 dB" }
       },
       estimateBasis: "predictor_mass_timber_clt_dataholz_dry_estimate",
       estimateKind: "family_general",
-      impactBasis: "mixed_predicted_plus_estimated_local_guide",
+      impactBasis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization",
       matchId: null,
       supported: FIELD_OUTPUTS,
       unsupported: []

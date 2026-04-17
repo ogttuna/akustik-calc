@@ -43,6 +43,7 @@ const UPPER_ROLES: FloorRole[] = ["floating_screed", "floor_covering", "resilien
 const LOWER_ROLES: FloorRole[] = ["ceiling_board", "ceiling_cavity", "ceiling_fill"];
 const DATAHOLZ_GDMTXA04A_CALIBRATION_IMPACT = {
   CI: 4,
+  CI50_2500: 9,
   LnW: 49,
   LnWPlusCI: 53
 } as const;
@@ -263,12 +264,14 @@ function isDataholzGdmtxa04aVisibleCalibrationBoundary(
 function calibrateMassTimberImpactEstimate(input: {
   basis: ImpactCalculation["basis"];
   ci: number | undefined;
+  ci50_2500: number | undefined;
   layers: readonly ResolvedLayer[] | undefined;
   lnW: number | undefined;
   lnWPlusCI: number | undefined;
   sources: readonly FloorSystemRecommendation[];
 }): {
   ci: number | undefined;
+  ci50_2500: number | undefined;
   lnW: number | undefined;
   lnWPlusCI: number | undefined;
   notes: string[];
@@ -276,6 +279,7 @@ function calibrateMassTimberImpactEstimate(input: {
   if (!input.layers || !isDataholzGdmtxa04aVisibleCalibrationBoundary(input.layers, input.basis, input.sources)) {
     return {
       ci: input.ci,
+      ci50_2500: input.ci50_2500,
       lnW: input.lnW,
       lnWPlusCI: input.lnWPlusCI,
       notes: []
@@ -287,13 +291,17 @@ function calibrateMassTimberImpactEstimate(input: {
   // impact while the composite dry-screed surface remains unmodeled.
   return {
     ci: Math.max(input.ci ?? DATAHOLZ_GDMTXA04A_CALIBRATION_IMPACT.CI, DATAHOLZ_GDMTXA04A_CALIBRATION_IMPACT.CI),
+    ci50_2500: Math.max(
+      input.ci50_2500 ?? DATAHOLZ_GDMTXA04A_CALIBRATION_IMPACT.CI50_2500,
+      DATAHOLZ_GDMTXA04A_CALIBRATION_IMPACT.CI50_2500
+    ),
     lnW: Math.max(input.lnW ?? DATAHOLZ_GDMTXA04A_CALIBRATION_IMPACT.LnW, DATAHOLZ_GDMTXA04A_CALIBRATION_IMPACT.LnW),
     lnWPlusCI: Math.max(
       input.lnWPlusCI ?? DATAHOLZ_GDMTXA04A_CALIBRATION_IMPACT.LnWPlusCI,
       DATAHOLZ_GDMTXA04A_CALIBRATION_IMPACT.LnWPlusCI
     ),
     notes: [
-      "The GDMTXA04A-like composite dry-screed boundary stayed on the estimate lane, and its impact outputs were capped against the direct official exact row to avoid optimistic drift."
+      "The GDMTXA04A-like composite dry-screed boundary stayed on the estimate lane, and its impact outputs plus the low-frequency CI,50-2500 companion were capped against the direct official exact row to avoid optimistic drift."
     ]
   };
 }
@@ -702,6 +710,7 @@ function buildImpactEstimate(
   const calibratedImpact = calibrateMassTimberImpactEstimate({
     basis: basisInfo.basis,
     ci,
+    ci50_2500,
     layers: options.layers,
     lnW,
     lnWPlusCI,
@@ -713,7 +722,7 @@ function buildImpactEstimate(
     availableOutputs.push("CI");
   }
 
-  if (typeof ci50_2500 === "number") {
+  if (typeof calibratedImpact.ci50_2500 === "number") {
     availableOutputs.push("CI,50-2500");
   }
 
@@ -723,7 +732,7 @@ function buildImpactEstimate(
 
   return {
     CI: calibratedImpact.ci,
-    CI50_2500: ci50_2500,
+    CI50_2500: calibratedImpact.ci50_2500,
     LnW: calibratedImpact.lnW ?? 0,
     LnWPlusCI: calibratedImpact.lnWPlusCI,
     availableOutputs,
@@ -734,7 +743,7 @@ function buildImpactEstimate(
     metricBasis: buildUniformImpactMetricBasis(
       {
         CI: calibratedImpact.ci,
-        CI50_2500: ci50_2500,
+        CI50_2500: calibratedImpact.ci50_2500,
         LnW: calibratedImpact.lnW ?? undefined,
         LnWPlusCI: calibratedImpact.lnWPlusCI
       },
