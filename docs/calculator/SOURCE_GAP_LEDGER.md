@@ -44,6 +44,12 @@ Current planning implication:
   - hard rule while this rerank stays open:
     keep every blocked family fail-closed until the rerank closes with exactly
     one explicit next runtime target
+  - current rerank progress:
+    - rank-1 `GDMTXA04A` feasibility is now explicitly closed as blocked
+    - reason: direct source truth exists, but honest visible exact reopening
+      still needs composite dry-screed surface modeling
+    - active next comparison target inside the rerank:
+      `tuas_c11c_exact_import`
 - 2026-04-14 second-pass plan selection and implementation:
   - the no-widening route/card projection guard
     `mixed_floor_wall_output_card_snapshot_grid_v1`

@@ -13,7 +13,7 @@ If the question is “what is still open and what executes next?”, start with
 1. Read [CHECKPOINT_2026-04-17_DATAHOLZ_CLT_CALIBRATION_TIGHTENING_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-17_DATAHOLZ_CLT_CALIBRATION_TIGHTENING_CLOSEOUT_HANDOFF.md).
 2. Read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md).
 3. Run `pnpm calculator:gate:current`.
-4. If green, start the selected next slice `blocked_source_backed_widening_rerank_v1`.
+4. If green, continue the selected slice `blocked_source_backed_widening_rerank_v1` from the landed `GDMTXA04A` rank-1 feasibility hold toward the `C11c` comparison.
 
 ## Current Execution Snapshot
 
@@ -30,12 +30,15 @@ If the question is “what is still open and what executes next?”, start with
   blocked-source rerank is selected; direct `GDMTXA04A`, `C11c`, raw
   open-box/open-web, reinforced-concrete reopening, and wall-selector widening
   stay blocked until the rerank reorders them explicitly
+- current rerank progress:
+  rank-1 `GDMTXA04A` feasibility is now explicitly held on composite-surface
+  modeling, so `C11c` is the active next comparison target
 - last full green validation:
   `2026-04-17`
-  - engine: `153/153` test files passed, `945/945` tests passed
+  - engine: `156/156` test files passed, `951/951` tests passed
   - web: `117/117` test files passed, `674/674` tests passed
-  - focused engine gate: `5/5` test files passed, `23/23` tests passed
-  - focused web gate: `2/2` test files passed, `5/5` tests passed
+  - focused engine gate: `9/9` test files passed, `31/31` tests passed
+  - focused web gate: `3/3` test files passed, `9/9` tests passed
   - `pnpm typecheck`, `pnpm lint`, `pnpm check`, `pnpm build`, and
     `pnpm calculator:gate:current` green
 
@@ -44,12 +47,11 @@ If the question is “what is still open and what executes next?”, start with
 - [predictor-published-family-estimate.ts](../../packages/engine/src/predictor-published-family-estimate.ts): published-family CLT and remaining floor-family estimate anchor
 - [predictor-floor-system-estimate.ts](../../packages/engine/src/predictor-floor-system-estimate.ts): predictor route-selection anchor for CLT estimate posture
 - [floor-system-estimate.ts](../../packages/engine/src/floor-system-estimate.ts): floor-family exact vs estimate selection anchor
-- [post-reinforced-concrete-accuracy-tightening-follow-up-next-slice-selection-contract.test.ts](../../packages/engine/src/post-reinforced-concrete-accuracy-tightening-follow-up-next-slice-selection-contract.test.ts): executable next-slice selection contract
+- [blocked-source-rank-1-gdmtxa04a-feasibility-contract.test.ts](../../packages/engine/src/blocked-source-rank-1-gdmtxa04a-feasibility-contract.test.ts): executable rank-1 rerank feasibility hold
+- [source-gap-candidate-re-rank-contract.test.ts](../../packages/engine/src/source-gap-candidate-re-rank-contract.test.ts): executable blocked-source rerank order contract
 - [dataholz-clt-source-truth-audit.test.ts](../../packages/engine/src/dataholz-clt-source-truth-audit.test.ts): primary Dataholz CLT source-truth audit anchor
 - [floor-source-corpus-contract.test.ts](../../packages/engine/src/floor-source-corpus-contract.test.ts): floor-source cluster and remaining exact-only slack contract
 - [dataholz-clt-source-truth-route.test.ts](../../apps/web/features/workbench/dataholz-clt-source-truth-route.test.ts): workbench exact-vs-estimate CLT route posture anchor
-- [reinforced-concrete-family-formula-fit-audit.test.ts](../../packages/engine/src/reinforced-concrete-family-formula-fit-audit.test.ts): closed reinforced-concrete closeout guard
-- [reinforced-concrete-low-confidence-proposal-honesty.test.ts](../../apps/web/features/workbench/reinforced-concrete-low-confidence-proposal-honesty.test.ts): closed reinforced-concrete screening carry-through guard
 - [run-calculator-current-gate.ts](../../tools/dev/run-calculator-current-gate.ts): single-command focused checkpoint gate
 - [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md): source-backed widening, tightening, and blocked-family boundaries for the current rerank outcome
 

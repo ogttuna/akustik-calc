@@ -24,6 +24,7 @@ Use [SYSTEM_MAP.md](./SYSTEM_MAP.md) for the live runtime/file map.
    `blocked_source_backed_widening_rerank_v1`.
 4. Open:
    - [post-dataholz-clt-calibration-tightening-next-slice-selection-contract.test.ts](../../packages/engine/src/post-dataholz-clt-calibration-tightening-next-slice-selection-contract.test.ts)
+   - [blocked-source-rank-1-gdmtxa04a-feasibility-contract.test.ts](../../packages/engine/src/blocked-source-rank-1-gdmtxa04a-feasibility-contract.test.ts)
    - [source-gap-candidate-re-rank-contract.test.ts](../../packages/engine/src/source-gap-candidate-re-rank-contract.test.ts)
    - [raw-bare-open-web-open-box-source-evidence-rerank-contract.test.ts](../../packages/engine/src/raw-bare-open-web-open-box-source-evidence-rerank-contract.test.ts)
    - [remaining-source-gap-posture-matrix.test.ts](../../packages/engine/src/remaining-source-gap-posture-matrix.test.ts)
@@ -91,12 +92,16 @@ step itself.
 ## What Is Planned But Not Done Now
 
 - `blocked_source_backed_widening_rerank_v1`
-  remains selected and not started
+  remains selected and now has rank-1 progress landed
   - current rerank order:
     1. visible `GDMTXA04A` exact reopen
     2. TUAS `C11c` exact import
     3. raw bare open-box/open-web impact widening
     4. wall-selector behavior widening
+  - current rerank progress:
+    - rank-1 `GDMTXA04A` keeps its order position but stays blocked after an
+      explicit feasibility audit
+    - the next active comparison target inside the rerank is now `C11c`
   - each candidate must stay explicit on value, origin, support, and current
     evidence posture before any direct runtime change is selected
 - reinforced-concrete reopening remains conditional-only
@@ -123,10 +128,25 @@ Revalidated on `2026-04-17`:
 - `git diff --check`
   - green
 
+Latest rerank progress revalidation on `2026-04-17`:
+
+- `pnpm calculator:gate:current`
+  - green
+  - focused engine gate: `9/9` test files passed, `31/31` tests passed
+  - focused web gate: `3/3` test files passed, `9/9` tests passed
+- `pnpm check`
+  - green
+  - full engine suite: `156/156` test files passed, `951/951` tests passed
+  - full web suite: `117/117` test files passed, `674/674` tests passed
+- `pnpm build`
+  - green with the known optional `sharp/@img` warnings from the DOCX path
+- `git diff --check`
+  - green
+
 ## Minimal Resume Commands
 
 1. `pnpm calculator:gate:current`
-2. `pnpm --filter @dynecho/engine exec vitest run src/post-dataholz-clt-calibration-tightening-next-slice-selection-contract.test.ts src/source-gap-candidate-re-rank-contract.test.ts src/raw-bare-open-web-open-box-source-evidence-rerank-contract.test.ts src/remaining-source-gap-posture-matrix.test.ts src/dataholz-gdmtxa04a-material-surface-recheck.test.ts src/floor-source-corpus-contract.test.ts --maxWorkers=1`
+2. `pnpm --filter @dynecho/engine exec vitest run src/blocked-source-rank-1-gdmtxa04a-feasibility-contract.test.ts src/post-dataholz-clt-calibration-tightening-next-slice-selection-contract.test.ts src/source-gap-candidate-re-rank-contract.test.ts src/raw-bare-open-web-open-box-source-evidence-rerank-contract.test.ts src/remaining-source-gap-posture-matrix.test.ts src/dataholz-gdmtxa04a-material-surface-recheck.test.ts src/floor-source-corpus-contract.test.ts --maxWorkers=1`
 3. `pnpm --filter @dynecho/web exec vitest run features/workbench/remaining-source-gap-posture-card-matrix.test.ts features/workbench/output-origin-trace-card-matrix.test.ts features/workbench/dataholz-clt-source-truth-route.test.ts --maxWorkers=1`
 4. Read [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md) before changing routing or support posture.
 
@@ -137,6 +157,7 @@ Keep the next scope on:
 - planning contract:
   [post-dataholz-clt-calibration-tightening-next-slice-selection-contract.test.ts](../../packages/engine/src/post-dataholz-clt-calibration-tightening-next-slice-selection-contract.test.ts)
 - selected engine rerank guards:
+  [blocked-source-rank-1-gdmtxa04a-feasibility-contract.test.ts](../../packages/engine/src/blocked-source-rank-1-gdmtxa04a-feasibility-contract.test.ts),
   [source-gap-candidate-re-rank-contract.test.ts](../../packages/engine/src/source-gap-candidate-re-rank-contract.test.ts),
   [raw-bare-open-web-open-box-source-evidence-rerank-contract.test.ts](../../packages/engine/src/raw-bare-open-web-open-box-source-evidence-rerank-contract.test.ts),
   and [remaining-source-gap-posture-matrix.test.ts](../../packages/engine/src/remaining-source-gap-posture-matrix.test.ts)

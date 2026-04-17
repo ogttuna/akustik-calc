@@ -41,9 +41,8 @@ Planning / implementation update: `2026-04-17`
   next honest step is no longer another solver pass; it is a no-runtime
   rerank of the still-blocked source-backed families
 - immediate next decision:
-  refresh the explicit ROI order for raw bare open-box/open-web,
-  `GDMTXA04A`, `C11c`, and wall-selector widening while keeping every one of
-  those candidates blocked during the rerank
+  keep rank-1 `GDMTXA04A` blocked on honest composite-surface modeling and run
+  the next explicit feasibility comparison on `C11c`
 - current explicit blocked candidate order:
   1. `dataholz_gdmtxa04a_visible_exact_reopen`
   2. `tuas_c11c_exact_import`
@@ -83,6 +82,22 @@ Planning / implementation update: `2026-04-17`
   - `pnpm calculator:gate:current`: green with focused engine `8/8` files and
     `29/29` tests plus focused web `3/3` files and `9/9` tests
   - `pnpm check`: green with full engine `155/155` files and `949/949` tests
+    plus full web `117/117` files and `674/674` tests
+  - `pnpm build`: green with the known optional `sharp/@img` DOCX warnings
+  - `git diff --check`: green
+- latest blocked-source rerank progress update on `2026-04-17`:
+  - landed
+    `packages/engine/src/blocked-source-rank-1-gdmtxa04a-feasibility-contract.test.ts`
+  - kept rank-1 `GDMTXA04A` blocked after an explicit feasibility audit
+    because visible exact reopening still requires honest composite dry-screed
+    surface modeling
+  - advanced the active rerank comparison target to `tuas_c11c_exact_import`
+    without changing runtime behavior or the blocked candidate order
+  - targeted rerank engine pack: `4/4` test files passed, `10/10` tests
+    passed
+  - `pnpm calculator:gate:current`: green with focused engine `9/9` files and
+    `31/31` tests plus focused web `3/3` files and `9/9` tests
+  - `pnpm check`: green with full engine `156/156` files and `951/951` tests
     plus full web `117/117` files and `674/674` tests
   - `pnpm build`: green with the known optional `sharp/@img` DOCX warnings
   - `git diff --check`: green

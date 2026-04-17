@@ -62,9 +62,8 @@ Use this section first when deciding what to do next.
 - active slice:
   `blocked_source_backed_widening_rerank_v1`
 - current highest-ROI task:
-  run an explicit no-runtime rerank over the still-blocked source-backed
-  widening families now that the defended Dataholz CLT calibration pass is
-  closed
+  continue the explicit no-runtime rerank by freezing the rank-1
+  `GDMTXA04A` feasibility result and auditing rank-2 `C11c` next
 - current explicit blocked candidate order:
   1. `dataholz_gdmtxa04a_visible_exact_reopen`
   2. `tuas_c11c_exact_import`
@@ -78,14 +77,18 @@ Use this section first when deciding what to do next.
   the same visible CLT boundary now carries the standardized `L'nT,50`
   companion path instead of the weaker local-guide fallback, so the remaining
   open work is slice selection rather than another CLT micro-tightening pass
+- active-slice rerank progress now landed:
+  rank-1 `GDMTXA04A` keeps the strongest direct source truth but remains
+  blocked after an explicit feasibility audit because honest visible exact
+  reopening still needs composite dry-screed surface modeling; the rerank now
+  advances to `C11c` without changing runtime behavior
 
 ### Next
 
-1. Freeze the blocked candidate order explicitly:
-   `GDMTXA04A` first, `C11c` second, raw bare open-box/open-web third,
-   wall-selector fourth.
-2. Keep all currently blocked families fail-closed while the rerank is active.
-3. Select exactly one next runtime candidate only after the rerank compares
+1. Keep rank-1 `GDMTXA04A` explicitly blocked on composite-surface modeling.
+2. Audit `C11c` as the new active comparison target inside the rerank.
+3. Keep all currently blocked families fail-closed while the rerank is active.
+4. Select exactly one next runtime candidate only after the rerank compares
    ROI, evidence posture, and fake-confidence risk explicitly.
 
 ### Later
@@ -132,6 +135,21 @@ Use this section first when deciding what to do next.
   - `pnpm calculator:gate:current`: green with focused engine `8/8` files and
     `29/29` tests plus focused web `3/3` files and `9/9` tests
   - `pnpm check`: green with full engine `155/155` files and `949/949` tests
+    plus full web `117/117` files and `674/674` tests
+  - `pnpm build`: green with the known optional `sharp/@img` DOCX warnings
+  - `git diff --check`: green
+- latest blocked-source rerank progress update on `2026-04-17`:
+  - landed
+    `packages/engine/src/blocked-source-rank-1-gdmtxa04a-feasibility-contract.test.ts`
+  - froze rank-1 `GDMTXA04A` as still blocked after an explicit feasibility
+    audit instead of letting the rerank drift toward a silent exact reopen
+  - advanced the rerank comparison target to `tuas_c11c_exact_import` without
+    changing runtime behavior or the blocked candidate order
+  - targeted rerank engine pack: `4/4` test files passed, `10/10` tests
+    passed
+  - `pnpm calculator:gate:current`: green with focused engine `9/9` files and
+    `31/31` tests plus focused web `3/3` files and `9/9` tests
+  - `pnpm check`: green with full engine `156/156` files and `951/951` tests
     plus full web `117/117` files and `674/674` tests
   - `pnpm build`: green with the known optional `sharp/@img` DOCX warnings
   - `git diff --check`: green
