@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  buildReinforcedConcreteCombinedVinylElasticCeilingCandidateSet,
+  buildReinforcedConcreteCombinedVinylElasticCeilingLowConfidenceCandidateSet,
   deriveReinforcedConcreteCombinedVinylElasticCeilingMetrics
 } from "./reinforced-concrete-combined-vinyl-elastic-ceiling-estimate";
 
 describe("reinforced concrete combined vinyl elastic ceiling ranking", () => {
-  it("keeps same-ceiling nearby rows ahead of the timber-underlay row for the family lane", () => {
+  it("keeps same-ceiling nearby rows ahead of the timber-underlay row for the low-confidence lane", () => {
     const metrics = deriveReinforcedConcreteCombinedVinylElasticCeilingMetrics({
       structuralSupportType: "reinforced_concrete",
       impactSystemType: "combined_upper_lower_system",
@@ -37,17 +37,21 @@ describe("reinforced concrete combined vinyl elastic ceiling ranking", () => {
 
     expect(metrics).not.toBeNull();
 
-    const familyCandidateSet = buildReinforcedConcreteCombinedVinylElasticCeilingCandidateSet(
+    const lowConfidenceCandidateSet = buildReinforcedConcreteCombinedVinylElasticCeilingLowConfidenceCandidateSet(
       metrics!.candidateScore,
-      "family_general"
+      {
+        boardThicknessMm: 16,
+        cavityDepthMm: 120,
+        cavityFillThicknessMm: 100
+      }
     );
 
-    expect(familyCandidateSet.candidateIds).toEqual([
+    expect(lowConfidenceCandidateSet.candidateIds).toEqual([
       "euracoustics_f2_elastic_ceiling_concrete_lab_2026",
       "euracoustics_f1_rigid_ceiling_concrete_lab_2026",
       "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026"
     ]);
-    expect(familyCandidateSet.candidateScores).toEqual([2.5, 2.9, 3.7]);
+    expect(lowConfidenceCandidateSet.candidateScores).toEqual([5, 5.5, 7.8]);
   });
 
   it("keeps the low-confidence nearby-row fallback on the same order with an explicit uncertainty penalty", () => {
@@ -80,9 +84,8 @@ describe("reinforced concrete combined vinyl elastic ceiling ranking", () => {
 
     expect(metrics).not.toBeNull();
 
-    const lowConfidenceCandidateSet = buildReinforcedConcreteCombinedVinylElasticCeilingCandidateSet(
+    const lowConfidenceCandidateSet = buildReinforcedConcreteCombinedVinylElasticCeilingLowConfidenceCandidateSet(
       metrics!.candidateScore,
-      "low_confidence",
       {
         boardThicknessMm: 16,
         cavityDepthMm: 120,
@@ -98,36 +101,34 @@ describe("reinforced concrete combined vinyl elastic ceiling ranking", () => {
     expect(lowConfidenceCandidateSet.candidateScores).toEqual([5, 5.5, 7.8]);
   });
 
-  it("keeps the same-ceiling row as the best-scored nearby row across both tiers", () => {
+  it("keeps the same-ceiling row as the best-scored nearby row across the fallback ordering", () => {
     const baseCandidateScore = 4.1;
-    const familyCandidateSet = buildReinforcedConcreteCombinedVinylElasticCeilingCandidateSet(
+    const lowConfidenceCandidateSet = buildReinforcedConcreteCombinedVinylElasticCeilingLowConfidenceCandidateSet(
       baseCandidateScore,
-      "family_general"
-    );
-    const lowConfidenceCandidateSet = buildReinforcedConcreteCombinedVinylElasticCeilingCandidateSet(
-      baseCandidateScore,
-      "low_confidence"
+      {
+        boardThicknessMm: 16,
+        cavityDepthMm: 120,
+        cavityFillThicknessMm: 100
+      }
     );
 
-    expect(familyCandidateSet.candidateScores[0]).toBeLessThan(familyCandidateSet.candidateScores[1]!);
-    expect(familyCandidateSet.candidateScores[1]).toBeLessThan(familyCandidateSet.candidateScores[2]!);
     expect(lowConfidenceCandidateSet.candidateScores[0]).toBeLessThan(lowConfidenceCandidateSet.candidateScores[1]!);
     expect(lowConfidenceCandidateSet.candidateScores[1]).toBeLessThan(lowConfidenceCandidateSet.candidateScores[2]!);
   });
 
   it("increases the timber-underlay fallback penalty as the ceiling geometry drifts farther away", () => {
     const baseCandidateScore = 2.5;
-    const shallower = buildReinforcedConcreteCombinedVinylElasticCeilingCandidateSet(baseCandidateScore, "low_confidence", {
+    const shallower = buildReinforcedConcreteCombinedVinylElasticCeilingLowConfidenceCandidateSet(baseCandidateScore, {
       boardThicknessMm: 15,
       cavityDepthMm: 100,
       cavityFillThicknessMm: 85
     });
-    const baseline = buildReinforcedConcreteCombinedVinylElasticCeilingCandidateSet(baseCandidateScore, "low_confidence", {
+    const baseline = buildReinforcedConcreteCombinedVinylElasticCeilingLowConfidenceCandidateSet(baseCandidateScore, {
       boardThicknessMm: 16,
       cavityDepthMm: 120,
       cavityFillThicknessMm: 100
     });
-    const deeper = buildReinforcedConcreteCombinedVinylElasticCeilingCandidateSet(baseCandidateScore, "low_confidence", {
+    const deeper = buildReinforcedConcreteCombinedVinylElasticCeilingLowConfidenceCandidateSet(baseCandidateScore, {
       boardThicknessMm: 18,
       cavityDepthMm: 140,
       cavityFillThicknessMm: 120

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { calculateImpactOnly } from "./calculate-impact-only";
+import { derivePredictorPublishedFamilyEstimate } from "./predictor-published-family-estimate";
 import { deriveReinforcedConcreteCombinedVinylElasticCeilingMetrics } from "./reinforced-concrete-combined-vinyl-elastic-ceiling-estimate";
 
 function buildReinforcedConcreteCombinedInput(overrides: Record<string, unknown> = {}) {
@@ -127,5 +128,29 @@ describe("reinforced concrete family vs formula fit audit", () => {
 
     expect((formula.impact?.LnW ?? 0) - (lowConfidence.impact?.LnW ?? 0)).toBeGreaterThanOrEqual(10);
     expect((lowConfidence.floorSystemRatings?.Rw ?? 0) - (formula.floorSystemRatings?.Rw ?? 0)).toBeGreaterThanOrEqual(4);
+  });
+
+  it("does not keep a hidden published-family overlap for the same combined vinyl corridor", () => {
+    const input = buildReinforcedConcreteCombinedInput({
+      lowerTreatment: {
+        type: "suspended_ceiling_elastic_hanger",
+        cavityDepthMm: 120,
+        cavityFillThicknessMm: 100,
+        boardLayerCount: 2,
+        boardThicknessMm: 16,
+        boardMaterialClass: "firestop_board"
+      }
+    });
+
+    const directPublishedFamily = derivePredictorPublishedFamilyEstimate(input as never);
+    const routed = calculateImpactOnly([], {
+      impactPredictorInput: input as never,
+      targetOutputs: ["Rw", "Ctr", "Ln,w"]
+    });
+
+    expect(directPublishedFamily).toBeNull();
+    expect(routed.floorSystemEstimate?.kind).toBe("low_confidence");
+    expect(routed.impact?.basis).toBe("predictor_floor_system_low_confidence_estimate");
+    expect(routed.dynamicImpactTrace?.selectionKindLabel).toBe("Low-confidence fallback");
   });
 });

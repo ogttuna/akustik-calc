@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { derivePredictorSpecificFloorSystemEstimate } from "./predictor-floor-system-estimate";
 
 describe("derivePredictorSpecificFloorSystemEstimate", () => {
-  it("keeps overlapping reinforced-concrete vinyl inputs on the low-confidence strategy before the published-family strategy", () => {
+  it("keeps reinforced-concrete vinyl inputs on the low-confidence strategy even when the ceiling board token is explicit", () => {
     const result = derivePredictorSpecificFloorSystemEstimate({
       structuralSupportType: "reinforced_concrete",
       impactSystemType: "combined_upper_lower_system",
@@ -27,7 +27,8 @@ describe("derivePredictorSpecificFloorSystemEstimate", () => {
         cavityDepthMm: 120,
         cavityFillThicknessMm: 100,
         boardLayerCount: 2,
-        boardThicknessMm: 16
+        boardThicknessMm: 16,
+        boardMaterialClass: "firestop_board"
       }
     });
 

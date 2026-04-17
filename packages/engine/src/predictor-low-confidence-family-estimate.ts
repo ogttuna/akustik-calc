@@ -6,7 +6,7 @@ import {
   normalizePredictorToken
 } from "./predictor-family-estimate-shared";
 import {
-  buildReinforcedConcreteCombinedVinylElasticCeilingCandidateSet,
+  buildReinforcedConcreteCombinedVinylElasticCeilingLowConfidenceCandidateSet,
   deriveReinforcedConcreteCombinedVinylElasticCeilingMetrics,
 } from "./reinforced-concrete-combined-vinyl-elastic-ceiling-estimate";
 
@@ -233,9 +233,8 @@ function deriveReinforcedConcreteCombinedVinylLowConfidenceEstimate(
     return null;
   }
 
-  const candidateSet = buildReinforcedConcreteCombinedVinylElasticCeilingCandidateSet(
+  const candidateSet = buildReinforcedConcreteCombinedVinylElasticCeilingLowConfidenceCandidateSet(
     metrics.candidateScore,
-    "low_confidence",
     {
       boardThicknessMm: lowerTreatment.boardThicknessMm,
       cavityDepthMm: lowerTreatment.cavityDepthMm,

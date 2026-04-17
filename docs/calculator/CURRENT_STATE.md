@@ -32,6 +32,22 @@ Last cross-package build revalidation: `2026-04-17`
 
 Planning / implementation update: `2026-04-17`
 
+## Operator Snapshot
+
+- active slice:
+  `reinforced_concrete_accuracy_tightening_follow_up_v1`
+- current broad-pass conclusion:
+  repo-wide validation is green, and the reinforced-concrete low-confidence
+  honesty/ranking chain is no longer the primary open risk
+- immediate next decision:
+  finish slice closeout after the reinforced-concrete `vinyl + elastic ceiling`
+  branch was explicitly frozen as `low_confidence` at the solver/helper level
+- do not do first:
+  - parity reopening
+  - CLT tightening
+  - blocked source-family widening
+  - wording-only micro-passes that do not change solver-side certainty
+
 - latest live verification after the runtime candidate rerank closeout:
   - full engine suite: `147/147` test files passed, `923/923` tests passed
   - full web suite: `113/113` test files passed, `655/655` tests passed
@@ -190,6 +206,19 @@ Planning / implementation update: `2026-04-17`
     passed, `4/4` tests passed
   - `pnpm calculator:gate:current`: green with `9/9` engine files and
     `33/33` engine tests plus `7/7` web files and `16/16` web tests
+  - `pnpm build`: green with the known optional `sharp/@img` DOCX warnings
+  - `git diff --check`: green
+- latest solver-side overlap-removal progress on `2026-04-17`:
+  - removed the dormant direct published-family helper overlap for the
+    reinforced-concrete combined `vinyl + elastic ceiling` corridor
+  - active solver routing and direct family-helper behavior now agree that the
+    corridor remains intentionally `low_confidence`
+  - targeted engine overlap pack: `4/4` test files passed, `35/35` tests
+    passed
+  - `pnpm calculator:gate:current`: green with `9/9` engine files and
+    `34/34` engine tests plus `7/7` web files and `16/16` web tests
+  - `pnpm check`: green with full engine `152/152` files and `942/942` tests
+    plus full web `117/117` files and `674/674` tests
   - `pnpm build`: green with the known optional `sharp/@img` DOCX warnings
   - `git diff --check`: green
 - latest nearby-row ranking-rationale surface validation on `2026-04-17`:

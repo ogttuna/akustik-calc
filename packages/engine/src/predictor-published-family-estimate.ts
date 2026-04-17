@@ -8,10 +8,6 @@ import {
   normalizePredictorToken,
   type PredictorFamilyEstimateCase
 } from "./predictor-family-estimate-shared";
-import {
-  buildReinforcedConcreteCombinedVinylElasticCeilingCandidateSet,
-  deriveReinforcedConcreteCombinedVinylElasticCeilingMetrics,
-} from "./reinforced-concrete-combined-vinyl-elastic-ceiling-estimate";
 import { clamp } from "./math";
 
 type PublishedFamilyRule = {
@@ -707,41 +703,6 @@ function deriveKnaufConcreteSuspendedTilePublishedFamilyEstimate(
   });
 }
 
-function deriveConcreteCombinedVinylElasticCeilingEstimate(
-  input: ImpactPredictorInput
-): FloorSystemEstimateResult | null {
-  const boardMaterialClass = normalizePredictorToken(input.lowerTreatment?.boardMaterialClass);
-  if (!isConcreteFirestopBoardClass(boardMaterialClass)) {
-    return null;
-  }
-
-  const metrics = deriveReinforcedConcreteCombinedVinylElasticCeilingMetrics(input);
-  if (!metrics) {
-    return null;
-  }
-
-  const candidateSet = buildReinforcedConcreteCombinedVinylElasticCeilingCandidateSet(
-    metrics.candidateScore,
-    "family_general"
-  );
-
-  return buildPredictorFamilyEstimateCase({
-    airborneRatings: {
-      Rw: metrics.rw,
-      RwCtr: 57,
-      RwCtrSemantic: "rw_plus_ctr"
-    },
-    candidateIds: candidateSet.candidateIds,
-    candidateScores: candidateSet.candidateScores,
-    impactRatings: {
-      LnW: metrics.lnW
-    },
-    kind: "family_general",
-    noteLabel: "Reinforced-concrete vinyl plus elastic-ceiling family estimate",
-    structuralFamily: "reinforced concrete"
-  });
-}
-
 function deriveOpenBoxPublishedFamilyEstimate(
   input: ImpactPredictorInput
 ): FloorSystemEstimateResult | null {
@@ -1217,81 +1178,75 @@ const PREDICTOR_PUBLISHED_FAMILY_RULES_RAW = [
     derive: deriveKnaufConcreteSuspendedTilePublishedFamilyEstimate
   },
   {
-    id: "concrete_combined_vinyl_elastic_ceiling",
-    implementationKind: "computed_metrics",
-    priority: 40,
-    derive: deriveConcreteCombinedVinylElasticCeilingEstimate
-  },
-  {
     id: "pliteq_steel_joist_suspended_vinyl",
     implementationKind: "scored_candidates",
-    priority: 50,
+    priority: 40,
     derive: derivePliteqSteelJoistSuspendedVinylEstimate
   },
   {
     id: "ubiq_open_web_suspended_vinyl",
     implementationKind: "fixed_output",
-    priority: 60,
+    priority: 50,
     derive: deriveUbiqOpenWebSuspendedVinylEstimate
   },
   {
     id: "open_box",
     implementationKind: "fixed_output",
-    priority: 70,
+    priority: 60,
     derive: deriveOpenBoxPublishedFamilyEstimate
   },
   {
     id: "clt_bare",
     implementationKind: "computed_metrics",
-    priority: 75,
+    priority: 70,
     derive: deriveCltBarePublishedFamilyEstimate
   },
   {
     id: "clt_dry",
     implementationKind: "fixed_output",
-    priority: 80,
+    priority: 75,
     derive: deriveCltDryPublishedFamilyEstimate
   },
   {
     id: "dataholz_clt_dry",
     implementationKind: "fixed_output",
-    priority: 90,
+    priority: 80,
     derive: deriveDataholzCltDryPublishedEstimate
   },
   {
     id: "pliteq_hollow_core",
     implementationKind: "fixed_output",
-    priority: 100,
+    priority: 90,
     derive: derivePliteqHollowCorePublishedFamilyEstimate
   },
   {
     id: "dataholz_timber_dry",
     implementationKind: "fixed_output",
-    priority: 110,
+    priority: 100,
     derive: deriveDataholzTimberDryPublishedEstimate
   },
   {
     id: "knauf_timber",
     implementationKind: "fixed_output",
-    priority: 120,
+    priority: 110,
     derive: deriveKnaufTimberPublishedFamilyEstimate
   },
   {
     id: "clt_wet",
     implementationKind: "fixed_output",
-    priority: 130,
+    priority: 120,
     derive: deriveCltWetPublishedFamilyEstimate
   },
   {
     id: "dataholz_clt_wet_suspended",
     implementationKind: "fixed_output",
-    priority: 135,
+    priority: 130,
     derive: deriveDataholzCltWetSuspendedPublishedEstimate
   },
   {
     id: "steel_open_web_carpet",
     implementationKind: "fixed_output",
-    priority: 140,
+    priority: 135,
     derive: deriveSteelPublishedFamilyEstimate
   }
 ] satisfies readonly PublishedFamilyRule[];

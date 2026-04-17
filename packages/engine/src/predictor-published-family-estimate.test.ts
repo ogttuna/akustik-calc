@@ -11,7 +11,6 @@ describe("derivePredictorPublishedFamilyEstimate", () => {
       "knauf_concrete_combined",
       "knauf_concrete_combined_tile",
       "knauf_concrete_suspended_tile",
-      "concrete_combined_vinyl_elastic_ceiling",
       "pliteq_steel_joist_suspended_vinyl",
       "ubiq_open_web_suspended_vinyl",
       "open_box",
@@ -26,13 +25,12 @@ describe("derivePredictorPublishedFamilyEstimate", () => {
       "steel_open_web_carpet"
     ]);
     expect(PREDICTOR_PUBLISHED_FAMILY_RULES.map((rule) => rule.priority)).toEqual([
-      10, 20, 30, 40, 50, 60, 70, 75, 80, 90, 100, 110, 120, 130, 135, 140
+      10, 20, 30, 40, 50, 60, 70, 75, 80, 90, 100, 110, 120, 130, 135
     ]);
     expect(PREDICTOR_PUBLISHED_FAMILY_RULES.map((rule) => rule.implementationKind)).toEqual([
       "scored_candidates",
       "scored_candidates",
       "scored_candidates",
-      "computed_metrics",
       "scored_candidates",
       "fixed_output",
       "fixed_output",
@@ -220,7 +218,7 @@ describe("derivePredictorPublishedFamilyEstimate", () => {
     ]);
   });
 
-  it("keeps near-match concrete vinyl plus elastic ceiling stacks on the narrower family-general lane", () => {
+  it("does not reopen a narrower published-family lane for concrete vinyl plus elastic ceiling stacks", () => {
     const result = derivePredictorPublishedFamilyEstimate({
       structuralSupportType: "reinforced_concrete",
       impactSystemType: "combined_upper_lower_system",
@@ -242,20 +240,12 @@ describe("derivePredictorPublishedFamilyEstimate", () => {
         cavityDepthMm: 120,
         cavityFillThicknessMm: 100,
         boardLayerCount: 2,
-        boardThicknessMm: 16
+        boardThicknessMm: 16,
+        boardMaterialClass: "firestop_board"
       }
     });
 
-    expect(result?.kind).toBe("family_general");
-    expect(result?.impact.basis).toBe("predictor_floor_system_family_general_estimate");
-    expect(result?.impact.LnW).toBe(50);
-    expect(result?.airborneRatings.Rw).toBe(65.9);
-    expect(result?.airborneRatings.RwCtr).toBe(57);
-    expect(result?.impact.estimateCandidateIds).toEqual([
-      "euracoustics_f2_elastic_ceiling_concrete_lab_2026",
-      "euracoustics_f1_rigid_ceiling_concrete_lab_2026",
-      "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026"
-    ]);
+    expect(result).toBeNull();
   });
 
   it("keeps bare CLT predictor inputs on a conservative interpolation lane instead of outperforming the laminate anchors", () => {

@@ -53,6 +53,42 @@ Project-level definition of progress:
 - stable exact/catalog/bound/formula precedence
 - stable workbench/report/card origin wording under hostile history
 
+## Immediate Execution Frame
+
+Use this section first when deciding what to do next.
+
+### Now
+
+- active slice:
+  `reinforced_concrete_accuracy_tightening_follow_up_v1`
+- current highest-ROI task:
+  close the reinforced-concrete tightening slice now that the solver-side
+  residual fit decision on the `vinyl + elastic ceiling` branch is explicit
+- solver-side decision now landed:
+  the corridor remains intentionally `low_confidence`, and the dormant
+  direct published-family overlap was removed so helper-level logic no longer
+  pretends a narrower defended lane exists
+
+### Next
+
+1. Revalidate the active slice with the solver-side overlap removal in place.
+2. Add the closeout note/contract updates that explain why the corridor stays
+   low-confidence even when nearby published rows remain part of the fallback.
+3. Prepare the next-slice selection handoff with
+   `dataholz_clt_calibration_tightening` still held second.
+
+### Later
+
+1. `dataholz_clt_calibration_tightening`
+2. blocked source-backed widening re-rank
+
+### Explicit Non-Goals Right Now
+
+- do not reopen heavy-concrete parity widening
+- do not widen raw source families from nearby green tests
+- do not spend another micro-pass only on wording if the remaining open risk is
+  solver-side
+
 ## Verified Against Implementation - 2026-04-17
 
 - latest closed implementation slice:
@@ -224,7 +260,7 @@ Project-level definition of progress:
   - `git diff --check`: green
 - local verification in this broad repo revalidation pass:
   - `pnpm check`: green
-  - full engine suite: `152/152` test files passed, `941/941` tests passed
+  - full engine suite: `152/152` test files passed, `942/942` tests passed
   - full web suite: `117/117` test files passed, `674/674` tests passed
   - `pnpm calculator:gate:current`: green with `9/9` engine files and
     `33/33` engine tests plus `7/7` web files and `16/16` web tests
@@ -238,6 +274,16 @@ Project-level definition of progress:
   - the next high-ROI move is no longer wording-only screening polish; it is a
     solver-side residual evidence/fit decision on the same reinforced-concrete
     branch
+- local verification in this solver-side overlap-removal pass:
+  - targeted engine overlap pack: `4/4` test files passed, `35/35` tests
+    passed
+  - `pnpm calculator:gate:current`: green with `9/9` engine files and
+    `34/34` engine tests plus `7/7` web files and `16/16` web tests
+  - `pnpm check`: green
+  - full engine suite: `152/152` test files passed, `942/942` tests passed
+  - full web suite: `117/117` test files passed, `674/674` tests passed
+  - `pnpm build`: green with the known optional `sharp/@img` DOCX warnings
+  - `git diff --check`: green
 
 ## Closeout Summary
 

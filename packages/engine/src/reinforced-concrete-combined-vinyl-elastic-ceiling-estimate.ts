@@ -9,10 +9,6 @@ export type ReinforcedConcreteCombinedVinylElasticCeilingMetrics = {
   rw: number;
 };
 
-export type ReinforcedConcreteCombinedVinylElasticCeilingCandidateTier =
-  | "family_general"
-  | "low_confidence";
-
 export type ReinforcedConcreteCombinedVinylElasticCeilingCandidateSet = {
   candidateIds: readonly string[];
   candidateScores: readonly number[];
@@ -30,13 +26,7 @@ export const REINFORCED_CONCRETE_COMBINED_VINYL_ELASTIC_CEILING_CANDIDATE_IDS = 
   "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026"
 ] as const;
 
-const REINFORCED_CONCRETE_COMBINED_VINYL_ELASTIC_CEILING_SCORE_OFFSETS = {
-  family_general: [0, 0.4, 1.2],
-  low_confidence: [2.5, 3.0, 4.7]
-} as const satisfies Record<
-  ReinforcedConcreteCombinedVinylElasticCeilingCandidateTier,
-  readonly [number, number, number]
->;
+const REINFORCED_CONCRETE_COMBINED_VINYL_ELASTIC_CEILING_LOW_CONFIDENCE_SCORE_OFFSETS = [2.5, 3.0, 4.7] as const;
 
 const KNAUF_TIMBER_UNDERLAY_REFERENCE: ReinforcedConcreteCombinedVinylElasticCeilingGeometry = {
   boardThicknessMm: 13,
@@ -78,21 +68,18 @@ function calculateTimberUnderlayTopologyPenalty(
   return Number((((cavityPenalty + fillPenalty + boardPenalty) / 3)).toFixed(1));
 }
 
-export function buildReinforcedConcreteCombinedVinylElasticCeilingCandidateSet(
+export function buildReinforcedConcreteCombinedVinylElasticCeilingLowConfidenceCandidateSet(
   baseCandidateScore: number,
-  tier: ReinforcedConcreteCombinedVinylElasticCeilingCandidateTier,
   geometry?: ReinforcedConcreteCombinedVinylElasticCeilingGeometry
 ): ReinforcedConcreteCombinedVinylElasticCeilingCandidateSet {
-  const scoreOffsets = REINFORCED_CONCRETE_COMBINED_VINYL_ELASTIC_CEILING_SCORE_OFFSETS[tier];
-  const lowConfidenceTopologyPenalty =
-    tier === "low_confidence" ? calculateTimberUnderlayTopologyPenalty(geometry) : 0;
+  const lowConfidenceTopologyPenalty = calculateTimberUnderlayTopologyPenalty(geometry);
 
   return {
     // Keep same-ceiling nearby rows ahead of the timber-underlay archetype so
-    // the low-confidence branch does not imply a narrower family match than it
+    // the screening fallback does not imply a narrower family match than it
     // really has.
     candidateIds: REINFORCED_CONCRETE_COMBINED_VINYL_ELASTIC_CEILING_CANDIDATE_IDS,
-    candidateScores: scoreOffsets.map((offset, index) =>
+    candidateScores: REINFORCED_CONCRETE_COMBINED_VINYL_ELASTIC_CEILING_LOW_CONFIDENCE_SCORE_OFFSETS.map((offset, index) =>
       baseCandidateScore + offset + (index === 2 ? lowConfidenceTopologyPenalty : 0)
     )
   };
