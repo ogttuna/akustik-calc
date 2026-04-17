@@ -1791,6 +1791,23 @@ function resolveResilientMaterialId(
     return "generic_resilient_underlay";
   }
 
+  const hasFloatingUpperPackage =
+    Boolean(input.upperFill?.materialClass) ||
+    typeof input.upperFill?.thicknessMm === "number" ||
+    Boolean(input.floatingScreed?.materialClass) ||
+    typeof input.floatingScreed?.thicknessMm === "number";
+
+  // Combined reinforced-concrete predictor input can still carry a wet/dry
+  // upper package. Keep the generic separator in the adapted source layers so
+  // the route does not collapse back onto the bare-slab formula.
+  if (
+    input.structuralSupportType === "reinforced_concrete" &&
+    input.impactSystemType === "combined_upper_lower_system" &&
+    hasFloatingUpperPackage
+  ) {
+    return "generic_resilient_underlay";
+  }
+
   return null;
 }
 

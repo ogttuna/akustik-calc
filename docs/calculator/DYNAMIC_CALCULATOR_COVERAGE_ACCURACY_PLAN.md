@@ -25,7 +25,25 @@ Current authority note:
 - this document remains the long-form coverage/accuracy backlog and can contain
   superseded historical slice ledgers below
 
-## Current Active Slice Ledger - 2026-04-15
+## Program North Star
+
+The calculator should become broader and more accurate at the same time.
+
+Use this long-form backlog with the following invariant:
+
+- widening without accuracy discipline is not progress
+- tightening that only protects a tiny corridor while blocking defended useful
+  coverage is also not progress
+- the target state is a calculator that can answer more real assemblies while
+  staying explicit about exact, bound, family-estimate, formula, field, and
+  unsupported ownership
+
+## Historical Active Slice Ledger - 2026-04-15
+
+This top ledger is intentionally historical. The live immediate next step moved
+forward after this checkpoint; use
+[NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md) for the current
+selected slice and execution order.
 
 - latest completed slice:
   `formula_provenance_method_evidence_dossier_v1`

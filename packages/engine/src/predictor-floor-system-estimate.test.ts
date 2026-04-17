@@ -85,6 +85,201 @@ describe("derivePredictorSpecificFloorSystemEstimate", () => {
     expect(result?.impact.basis).toBe("predictor_heavy_concrete_published_upper_treatment_estimate");
   });
 
+  it("keeps combined wet concrete plus elastic ceiling inputs on the heavy-concrete special strategy", () => {
+    const result = derivePredictorSpecificFloorSystemEstimate({
+      structuralSupportType: "reinforced_concrete",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        materialClass: "heavy_concrete",
+        thicknessMm: 150,
+        densityKgM3: 2400
+      },
+      resilientLayer: {
+        thicknessMm: 8
+      },
+      floatingScreed: {
+        materialClass: "generic_screed",
+        thicknessMm: 50,
+        densityKgM3: 2000
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "ceramic_tile",
+        thicknessMm: 8,
+        densityKgM3: 2000
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_elastic_hanger",
+        cavityDepthMm: 65,
+        cavityFillThicknessMm: 100,
+        boardLayerCount: 2,
+        boardThicknessMm: 13,
+        boardMaterialClass: "gypsum_board"
+      }
+    });
+
+    expect(result?.kind).toBe("family_general");
+    expect(result?.impact.basis).toBe("predictor_heavy_concrete_published_upper_treatment_estimate");
+    expect(result?.impact.LnW).toBe(43);
+    expect(result?.airborneRatings.Rw).toBe(77);
+    expect(result?.impact.estimateCandidateIds).toEqual(["euracoustics_f2_elastic_ceiling_concrete_lab_2026"]);
+  });
+
+  it("keeps combined wet concrete plus rigid gypsum ceiling inputs on the heavy-concrete special strategy", () => {
+    const result = derivePredictorSpecificFloorSystemEstimate({
+      structuralSupportType: "reinforced_concrete",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        materialClass: "heavy_concrete",
+        thicknessMm: 150,
+        densityKgM3: 2400
+      },
+      resilientLayer: {
+        thicknessMm: 8
+      },
+      floatingScreed: {
+        materialClass: "generic_screed",
+        thicknessMm: 50,
+        densityKgM3: 2000
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "ceramic_tile",
+        thicknessMm: 8,
+        densityKgM3: 2000
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_rigid_hanger",
+        cavityDepthMm: 130,
+        cavityFillThicknessMm: 100,
+        boardLayerCount: 2,
+        boardThicknessMm: 13,
+        boardMaterialClass: "gypsum_board"
+      }
+    });
+
+    expect(result?.kind).toBe("family_general");
+    expect(result?.impact.basis).toBe("predictor_heavy_concrete_published_upper_treatment_estimate");
+    expect(result?.impact.LnW).toBe(51.5);
+    expect(result?.airborneRatings.Rw).toBe(70);
+    expect(result?.airborneRatings.RwCtr).toBe(57);
+    expect(result?.impact.estimateCandidateIds).toEqual([
+      "euracoustics_f1_rigid_ceiling_concrete_lab_2026",
+      "euracoustics_f2_elastic_ceiling_concrete_lab_2026",
+      "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026"
+    ]);
+  });
+
+  it("keeps combined wet concrete plus derived generic gypsum ceiling inputs on the heavy-concrete special strategy", () => {
+    const result = derivePredictorSpecificFloorSystemEstimate({
+      structuralSupportType: "reinforced_concrete",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        materialClass: "heavy_concrete",
+        thicknessMm: 150,
+        densityKgM3: 2400
+      },
+      resilientLayer: {
+        thicknessMm: 8
+      },
+      floatingScreed: {
+        materialClass: "generic_screed",
+        thicknessMm: 50,
+        densityKgM3: 2000
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "ceramic_tile",
+        thicknessMm: 8,
+        densityKgM3: 2000
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_rigid_hanger",
+        cavityDepthMm: 130,
+        cavityFillThicknessMm: 100,
+        boardLayerCount: 2,
+        boardThicknessMm: 13,
+        boardMaterialClass: "generic_gypsum_board"
+      }
+    });
+
+    expect(result?.kind).toBe("family_general");
+    expect(result?.impact.basis).toBe("predictor_heavy_concrete_published_upper_treatment_estimate");
+    expect(result?.impact.LnW).toBe(51.5);
+    expect(result?.airborneRatings.Rw).toBe(70);
+    expect(result?.airborneRatings.RwCtr).toBe(57);
+  });
+
+  it("treats fire_board as firestop_board on reinforced-concrete concrete archetype inputs", () => {
+    const result = derivePredictorSpecificFloorSystemEstimate({
+      structuralSupportType: "reinforced_concrete",
+      impactSystemType: "suspended_ceiling_only",
+      baseSlab: {
+        materialClass: "heavy_concrete",
+        thicknessMm: 205,
+        densityKgM3: 2400
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "ceramic_tile",
+        thicknessMm: 8,
+        densityKgM3: 2000
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_rigid_hanger",
+        cavityDepthMm: 310,
+        cavityFillThicknessMm: 50,
+        boardLayerCount: 2,
+        boardThicknessMm: 13,
+        boardMaterialClass: "fire_board",
+        supportClass: "furred_channels"
+      }
+    });
+
+    expect(result?.kind).toBe("family_archetype");
+    expect(result?.impact.basis).toBe("predictor_floor_system_family_archetype_estimate");
+    expect(result?.impact.LnW).toBe(45);
+    expect(result?.airborneRatings.Rw).toBe(69);
+    expect(result?.airborneRatings.RwCtr).toBe(64);
+    expect(result?.impact.estimateCandidateIds).toEqual(["knauf_cc60_1b_concrete200_tile_acoustic_underlay_lab_2026"]);
+  });
+
+  it("keeps split timber flooring plus generic underlay concrete inputs on the concrete archetype strategy", () => {
+    const result = derivePredictorSpecificFloorSystemEstimate({
+      structuralSupportType: "reinforced_concrete",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        materialClass: "heavy_concrete",
+        thicknessMm: 165,
+        densityKgM3: 2400
+      },
+      resilientLayer: {
+        thicknessMm: 5
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "engineered_timber_flooring",
+        thicknessMm: 18,
+        densityKgM3: 900
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_elastic_hanger",
+        cavityDepthMm: 110,
+        cavityFillThicknessMm: 60,
+        boardLayerCount: 2,
+        boardThicknessMm: 13,
+        boardMaterialClass: "firestop_board"
+      }
+    });
+
+    expect(result?.kind).toBe("family_archetype");
+    expect(result?.impact.basis).toBe("predictor_floor_system_family_archetype_estimate");
+    expect(result?.impact.LnW).toBe(51);
+    expect(result?.airborneRatings.Rw).toBe(63);
+    expect(result?.airborneRatings.RwCtr).toBe(57);
+    expect(result?.impact.estimateCandidateIds).toEqual(["knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026"]);
+  });
+
   it("falls through to the published-family strategy when no earlier special strategy matches", () => {
     const result = derivePredictorSpecificFloorSystemEstimate({
       structuralSupportType: "timber_joists",

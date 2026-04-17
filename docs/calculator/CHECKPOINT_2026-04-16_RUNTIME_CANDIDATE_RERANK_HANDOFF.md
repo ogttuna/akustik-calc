@@ -45,8 +45,10 @@ widening. The next safe step is the selected heavy-concrete widening.
   the requested-output harness refactor chain is hard-stopped and the rerank is
   closed; no new harness-only or CLT-tightening slice should be opened first
 - explicit not-done item:
-  no heavy-concrete widening has landed yet; the next job is to implement it
-  inside the defended reinforced-concrete corridor
+  this handoff selected the heavy-concrete widening, and later work has already
+  landed six defended predictor-side substeps; the remaining job is to
+  finish the rest of the bounded reinforced-concrete corridor without reopening
+  blocked families
 
 ## What Closed In This Checkpoint
 
@@ -100,8 +102,13 @@ None of those changes altered runtime or numeric calculator behavior.
 ## What Is Planned But Not Done Now
 
 - `heavy_concrete_formula_family_widening_v1`
-  remains selected-only
-  - no heavy-concrete runtime widening has landed yet
+  remains active and partially landed
+  - predictor-input separator retention, elastic ceiling promotion, and rigid
+    gypsum ceiling promotion have landed on the defended reinforced-concrete
+    corridor
+  - visible-stack parity for the same gypsum-board wet concrete ceiling
+    corridors is now restored through the derived `generic_gypsum_board` alias,
+    while DeltaLw still comes from the visible-stack formula companion
   - exact row, exact catalog, product-delta, and lower-bound precedence must
     remain intact through that widening
 - `dataholz_clt_calibration_tightening`
@@ -119,7 +126,7 @@ Revalidated on `2026-04-16`:
 
 - `pnpm calculator:gate:current`
   - green
-  - focused engine gate: `4/4` test files passed, `13/13` tests passed
+  - focused engine gate: `4/4` test files passed, `14/14` tests passed
   - focused web gate: `3/3` test files passed, `6/6` tests passed
 - `pnpm --filter @dynecho/engine test`
   - green: `146/146` test files passed, `900/900` tests passed

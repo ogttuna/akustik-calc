@@ -17,6 +17,9 @@ If the question is “what is still open and what executes next?”, start with
 
 ## Current Execution Snapshot
 
+- primary product aim:
+  broader corridor coverage plus higher numerical and provenance accuracy at the
+  same time
 - active next slice:
   `heavy_concrete_formula_family_widening_v1`
 - current guardrail:

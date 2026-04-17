@@ -6101,6 +6101,31 @@ describe("calculateAssembly", () => {
     expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
   });
 
+  it("keeps split timber flooring plus generic underlay concrete visible-layer stacks on the Knauf concrete archetype lane", () => {
+    const result = calculateAssembly([
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 13 },
+      { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 13 },
+      { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 60 },
+      { floorRole: "ceiling_cavity", materialId: "furring_channel", thicknessMm: 110 },
+      { floorRole: "floor_covering", materialId: "engineered_timber_flooring", thicknessMm: 18 },
+      { floorRole: "resilient_layer", materialId: "generic_resilient_underlay", thicknessMm: 5 },
+      { floorRole: "base_structure", materialId: "concrete", thicknessMm: 165 }
+    ]);
+
+    expect(result.floorSystemMatch).toBeNull();
+    expect(result.floorSystemEstimate?.kind).toBe("family_archetype");
+    expect(result.impact?.basis).toBe("predictor_floor_system_family_archetype_estimate");
+    expect(result.impact?.LnW).toBe(51);
+    expect(result.floorSystemRatings?.Rw).toBe(63);
+    expect(result.floorSystemRatings?.RwCtr).toBe(57);
+    expect(result.impact?.estimateCandidateIds).toEqual([
+      "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026"
+    ]);
+    expect(result.impactPredictorStatus?.inputMode).toBe("derived_from_visible_layers");
+    expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(true);
+    expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
+  });
+
   it("keeps near-match concrete tile-ceiling visible-layer stacks on the Knauf tile archetype lane", () => {
     const result = calculateAssembly([
       { floorRole: "ceiling_board", materialId: "firestop_board", thicknessMm: 13 },
@@ -6734,6 +6759,178 @@ describe("calculateAssembly", () => {
     expect(result.floorSystemRatings?.Rw).toBe(58);
     expect(result.floorSystemRatings?.RwCtr).toBe(-6.7);
     expect(result.floorSystemEstimate?.impact.estimateCandidateIds).toEqual(["regupol_curve8_concrete_tile_lab_2026"]);
+  });
+
+  it("routes reinforced-concrete combined wet predictor input onto the defended published upper-treatment lane on the assembly route", () => {
+    const result = calculateAssembly(
+      [
+        { materialId: "gypsum_board", thicknessMm: 12.5 },
+        { materialId: "air_gap", thicknessMm: 90 },
+        { materialId: "rockwool", thicknessMm: 90 },
+        { materialId: "gypsum_board", thicknessMm: 12.5 }
+      ],
+      {
+        impactPredictorInput: {
+          structuralSupportType: "reinforced_concrete",
+          impactSystemType: "combined_upper_lower_system",
+          baseSlab: {
+            materialClass: "heavy_concrete",
+            thicknessMm: 150,
+            densityKgM3: 2400
+          },
+          resilientLayer: {
+            thicknessMm: 8
+          },
+          floatingScreed: {
+            materialClass: "generic_screed",
+            thicknessMm: 50,
+            densityKgM3: 2000
+          },
+          floorCovering: {
+            mode: "material_layer",
+            materialClass: "ceramic_tile",
+            thicknessMm: 8,
+            densityKgM3: 2000
+          },
+          lowerTreatment: {
+            type: "suspended_ceiling_elastic_hanger",
+            cavityDepthMm: 65,
+            cavityFillThicknessMm: 100,
+            boardLayerCount: 2,
+            boardThicknessMm: 13,
+            boardMaterialClass: "gypsum_board"
+          }
+        },
+        targetOutputs: ["Ln,w", "DeltaLw", "Rw"]
+      }
+    );
+
+    expect(result.impact?.basis).toBe("predictor_heavy_concrete_published_upper_treatment_estimate");
+    expect(result.floorSystemEstimate?.kind).toBe("family_general");
+    expect(result.impact?.LnW).toBe(43);
+    expect(result.impact?.DeltaLw).toBe(33.4);
+    expect(result.floorSystemRatings?.Rw).toBe(77);
+    expect(result.floorSystemRatings?.RwCtr).toBeUndefined();
+    expect(result.impact?.estimateCandidateIds).toEqual(["euracoustics_f2_elastic_ceiling_concrete_lab_2026"]);
+    expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(true);
+    expect(result.impactPredictorStatus?.implementedFormulaEstimate).toBe(true);
+    expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
+  });
+
+  it("routes reinforced-concrete combined wet predictor input with a rigid gypsum ceiling onto the defended published upper-treatment lane on the assembly route", () => {
+    const result = calculateAssembly(
+      [
+        { materialId: "gypsum_board", thicknessMm: 12.5 },
+        { materialId: "air_gap", thicknessMm: 90 },
+        { materialId: "rockwool", thicknessMm: 90 },
+        { materialId: "gypsum_board", thicknessMm: 12.5 }
+      ],
+      {
+        impactPredictorInput: {
+          structuralSupportType: "reinforced_concrete",
+          impactSystemType: "combined_upper_lower_system",
+          baseSlab: {
+            materialClass: "heavy_concrete",
+            thicknessMm: 150,
+            densityKgM3: 2400
+          },
+          resilientLayer: {
+            thicknessMm: 8
+          },
+          floatingScreed: {
+            materialClass: "generic_screed",
+            thicknessMm: 50,
+            densityKgM3: 2000
+          },
+          floorCovering: {
+            mode: "material_layer",
+            materialClass: "ceramic_tile",
+            thicknessMm: 8,
+            densityKgM3: 2000
+          },
+          lowerTreatment: {
+            type: "suspended_ceiling_rigid_hanger",
+            cavityDepthMm: 130,
+            cavityFillThicknessMm: 100,
+            boardLayerCount: 2,
+            boardThicknessMm: 13,
+            boardMaterialClass: "gypsum_board"
+          }
+        },
+        targetOutputs: ["Ln,w", "Rw", "Ctr", "DeltaLw"]
+      }
+    );
+
+    expect(result.impact?.basis).toBe("predictor_heavy_concrete_published_upper_treatment_estimate");
+    expect(result.floorSystemEstimate?.kind).toBe("family_general");
+    expect(result.impact?.LnW).toBe(51.5);
+    expect(result.impact?.DeltaLw).toBe(33.4);
+    expect(result.floorSystemRatings?.Rw).toBe(70);
+    expect(result.floorSystemRatings?.RwCtr).toBe(57);
+    expect(result.impact?.estimateCandidateIds).toEqual([
+      "euracoustics_f1_rigid_ceiling_concrete_lab_2026",
+      "euracoustics_f2_elastic_ceiling_concrete_lab_2026",
+      "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026"
+    ]);
+    expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(true);
+    expect(result.impactPredictorStatus?.implementedFormulaEstimate).toBe(true);
+    expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
+  });
+
+  it("derives the defended published upper-treatment lane from a visible combined wet stack with an elastic gypsum ceiling on the assembly route", () => {
+    const result = calculateAssembly(
+      [
+        { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+        { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+        { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+        { floorRole: "ceiling_cavity", materialId: "resilient_channel", thicknessMm: 65 },
+        { floorRole: "floor_covering", materialId: "ceramic_tile", thicknessMm: 8 },
+        { floorRole: "floating_screed", materialId: "screed", thicknessMm: 50 },
+        { floorRole: "resilient_layer", materialId: "generic_resilient_underlay_s30", thicknessMm: 8 },
+        { floorRole: "base_structure", materialId: "concrete", thicknessMm: 150 }
+      ],
+      {
+        targetOutputs: ["Ln,w", "DeltaLw", "Rw"]
+      }
+    );
+
+    expect(result.impact?.basis).toBe("predictor_heavy_concrete_published_upper_treatment_estimate");
+    expect(result.floorSystemEstimate?.kind).toBe("family_general");
+    expect(result.impact?.LnW).toBe(43);
+    expect(result.impact?.DeltaLw).toBe(26.7);
+    expect(result.floorSystemRatings?.Rw).toBe(77);
+    expect(result.floorSystemRatings?.RwCtr).toBeUndefined();
+    expect(result.impact?.estimateCandidateIds).toEqual(["euracoustics_f2_elastic_ceiling_concrete_lab_2026"]);
+  });
+
+  it("derives the defended published upper-treatment lane from a visible combined wet stack with a rigid gypsum ceiling on the assembly route", () => {
+    const result = calculateAssembly(
+      [
+        { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+        { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
+        { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
+        { floorRole: "ceiling_cavity", materialId: "furring_channel", thicknessMm: 130 },
+        { floorRole: "floor_covering", materialId: "ceramic_tile", thicknessMm: 8 },
+        { floorRole: "floating_screed", materialId: "screed", thicknessMm: 50 },
+        { floorRole: "resilient_layer", materialId: "generic_resilient_underlay_s30", thicknessMm: 8 },
+        { floorRole: "base_structure", materialId: "concrete", thicknessMm: 150 }
+      ],
+      {
+        targetOutputs: ["Ln,w", "Rw", "Ctr", "DeltaLw"]
+      }
+    );
+
+    expect(result.impact?.basis).toBe("predictor_heavy_concrete_published_upper_treatment_estimate");
+    expect(result.floorSystemEstimate?.kind).toBe("family_general");
+    expect(result.impact?.LnW).toBe(51.5);
+    expect(result.impact?.DeltaLw).toBe(26.7);
+    expect(result.floorSystemRatings?.Rw).toBe(70);
+    expect(result.floorSystemRatings?.RwCtr).toBe(57);
+    expect(result.impact?.estimateCandidateIds).toEqual([
+      "euracoustics_f1_rigid_ceiling_concrete_lab_2026",
+      "euracoustics_f2_elastic_ceiling_concrete_lab_2026",
+      "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026"
+    ]);
   });
 
   it("keeps lightweight-concrete floating floors off the heavy-concrete-specific impact lanes", () => {

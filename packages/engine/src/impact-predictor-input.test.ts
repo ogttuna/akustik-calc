@@ -782,6 +782,49 @@ describe("buildImpactPredictorInputFromLayerStack", () => {
     );
   });
 
+  it("keeps the generic resilient separator in reinforced-concrete combined wet predictor stacks", () => {
+    const adaptation = adaptImpactPredictorInput({
+      structuralSupportType: "reinforced_concrete",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        materialClass: "heavy_concrete",
+        thicknessMm: 150,
+        densityKgM3: 2400
+      },
+      resilientLayer: {
+        thicknessMm: 8
+      },
+      floatingScreed: {
+        materialClass: "generic_screed",
+        thicknessMm: 50,
+        densityKgM3: 2000
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "ceramic_tile",
+        thicknessMm: 8,
+        densityKgM3: 2000
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_elastic_hanger",
+        cavityDepthMm: 65,
+        cavityFillThicknessMm: 100,
+        boardLayerCount: 2,
+        boardThicknessMm: 13,
+        boardMaterialClass: "gypsum_board"
+      }
+    });
+
+    expect(adaptation.sourceLayers).toEqual(
+      expect.arrayContaining([
+        { floorRole: "floor_covering", materialId: "ceramic_tile", thicknessMm: 8 },
+        { floorRole: "floating_screed", materialId: "screed", thicknessMm: 50 },
+        { floorRole: "resilient_layer", materialId: "generic_resilient_underlay", thicknessMm: 8 },
+        { floorRole: "base_structure", materialId: "concrete", thicknessMm: 150 }
+      ])
+    );
+  });
+
   it("treats thick gypsum-fiber dry decks as floating screeds when a separate top finish is present", () => {
     const input = buildImpactPredictorInputFromLayerStack([
       { materialId: "gypsum_board", thicknessMm: 13 },

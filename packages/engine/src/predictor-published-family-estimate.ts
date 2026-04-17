@@ -450,6 +450,43 @@ function hasOnlyGenericResilientUnderlay(input: ImpactPredictorInput): boolean {
   );
 }
 
+function isConcreteFirestopBoardClass(value: string | undefined): boolean {
+  const normalized = normalizePredictorToken(value);
+
+  // Predictor input still receives `fire_board` from some legacy callers while
+  // the derived visible-stack adapter canonicalizes that same ceiling board as
+  // `firestop_board`. Keep both inside the same defended concrete archetype
+  // corridor instead of silently dropping to the bare-slab formula lane.
+  return normalized === "" || normalized === "firestop_board" || normalized === "fire_board";
+}
+
+function hasConcreteSplitTimberUnderlayAlias(input: ImpactPredictorInput): boolean {
+  const floorMaterial = normalizePredictorToken(input.floorCovering?.materialClass);
+
+  if (
+    floorMaterial !== "engineered_timber_flooring" &&
+    floorMaterial !== "engineered_timber_with_acoustic_underlay"
+  ) {
+    return false;
+  }
+
+  // Visible-stack derivation keeps a generic resilient underlay as an explicit
+  // predictor field even after it normalizes engineered timber flooring onto
+  // the combined acoustic-underlay finish class. Keep that split
+  // timber-plus-generic-underlay representation inside the same bounded Knauf
+  // concrete archetype corridor instead of letting it collapse to the
+  // bare-concrete formula path.
+  return hasOnlyGenericResilientUnderlay(input);
+}
+
+function resolveConcreteCombinedFloorMaterial(input: ImpactPredictorInput): string {
+  if (hasConcreteSplitTimberUnderlayAlias(input)) {
+    return "engineered_timber_with_acoustic_underlay";
+  }
+
+  return normalizePredictorToken(input.floorCovering?.materialClass);
+}
+
 function deriveKnaufConcreteCombinedPublishedFamilyEstimate(
   input: ImpactPredictorInput
 ): FloorSystemEstimateResult | null {
@@ -461,13 +498,13 @@ function deriveKnaufConcreteCombinedPublishedFamilyEstimate(
       input.lowerTreatment?.type === "suspended_ceiling_rigid_hanger"
     ) ||
     input.lowerTreatment.boardLayerCount !== 2 ||
-    hasUpperPackageContent(input)
+    (hasUpperPackageContent(input) && !hasConcreteSplitTimberUnderlayAlias(input))
   ) {
     return null;
   }
 
   const boardMaterialClass = normalizePredictorToken(input.lowerTreatment.boardMaterialClass);
-  if (boardMaterialClass && boardMaterialClass !== "firestop_board") {
+  if (!isConcreteFirestopBoardClass(boardMaterialClass)) {
     return null;
   }
 
@@ -492,7 +529,7 @@ function deriveKnaufConcreteCombinedPublishedFamilyEstimate(
     calculateCandidateScore(cavityFillThicknessMm ?? 50, 50, 20) +
     calculateCandidateScore(boardThicknessMm ?? 13, 13, 4);
 
-  const floorMaterial = normalizePredictorToken(input.floorCovering?.materialClass);
+  const floorMaterial = resolveConcreteCombinedFloorMaterial(input);
 
   if (floorMaterial === "engineered_timber_with_acoustic_underlay") {
     return buildPredictorFamilyEstimateCase({
@@ -557,7 +594,7 @@ function deriveKnaufConcreteCombinedTilePublishedFamilyEstimate(
     return null;
   }
 
-  if (boardMaterialClass && boardMaterialClass !== "firestop_board") {
+  if (!isConcreteFirestopBoardClass(boardMaterialClass)) {
     return null;
   }
 
@@ -624,7 +661,7 @@ function deriveKnaufConcreteSuspendedTilePublishedFamilyEstimate(
     return null;
   }
 
-  if (boardMaterialClass && boardMaterialClass !== "firestop_board") {
+  if (!isConcreteFirestopBoardClass(boardMaterialClass)) {
     return null;
   }
 
@@ -703,7 +740,7 @@ function deriveConcreteCombinedVinylElasticCeilingEstimate(
   }
 
   const boardMaterialClass = normalizePredictorToken(input.lowerTreatment.boardMaterialClass);
-  if (boardMaterialClass && boardMaterialClass !== "firestop_board") {
+  if (!isConcreteFirestopBoardClass(boardMaterialClass)) {
     return null;
   }
 

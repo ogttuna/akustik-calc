@@ -23,7 +23,11 @@ Current authority note:
 - this file remains the long-form floor-dominant backlog and includes older
   closed slices below
 
-Current status summary:
+Historical status summary:
+
+- this top summary is superseded for immediate execution order
+- use [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md) for the live
+  selected next slice and current stop conditions
 
 - latest completed slice:
   `formula_provenance_method_evidence_dossier_v1`
