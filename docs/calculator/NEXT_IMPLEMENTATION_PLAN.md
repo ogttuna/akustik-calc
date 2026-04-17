@@ -62,8 +62,9 @@ Use this section first when deciding what to do next.
 - active slice:
   `blocked_source_backed_widening_rerank_v1`
 - current highest-ROI task:
-  continue the explicit no-runtime rerank by freezing rank-2 `C11c` as blocked
-  and moving the active comparison to raw bare open-box/open-web
+  run the explicit rank-3 feasibility audit for raw bare open-box/open-web and
+  decide whether it is still a real runtime candidate or should be held
+  blocked like `GDMTXA04A` and `C11c`
 - current explicit blocked candidate order:
   1. `dataholz_gdmtxa04a_visible_exact_reopen`
   2. `tuas_c11c_exact_import`
@@ -96,6 +97,22 @@ Use this section first when deciding what to do next.
 4. Keep all currently blocked families fail-closed while the rerank is active.
 5. Select exactly one next runtime candidate only after the rerank compares
    ROI, evidence posture, and fake-confidence risk explicitly.
+
+### Rank-3 Decision Gate
+
+Treat the raw bare open-box/open-web step as a feasibility audit, not as an
+implementation-ready widening.
+
+- success condition:
+  direct bare-carrier impact evidence exists strongly enough that runtime
+  widening would not need to reinterpret packaged-system values as bare-carrier
+  values
+- fail-closed condition:
+  current evidence still only proves packaged-system behavior, so the candidate
+  stays blocked and the rerank advances to `wall_selector_behavior_widening`
+- non-goal:
+  do not reinterpret packaged TUAS or UBIQ rows as bare-carrier impact truth
+  just because nearby tests are green
 
 ### Later
 
@@ -175,6 +192,18 @@ Use this section first when deciding what to do next.
   - `pnpm check`: green with full engine `157/157` files and `953/953` tests
     plus full web `117/117` files and `674/674` tests
   - `pnpm build`: green with the known optional `sharp/@img` DOCX warnings
+  - `git diff --check`: green
+- latest broad audit and replanning pass on `2026-04-17`:
+  - reran `pnpm calculator:gate:current`, `pnpm check`, and `pnpm build`
+  - found no hidden runtime regressions beyond the already-landed rank-2
+    `C11c` feasibility hold
+  - revalidated that the active rerank order still matches implementation and
+    that the honest first move is the rank-3 raw bare open-box/open-web
+    feasibility audit rather than a direct widening
+  - full engine suite: `157/157` test files passed, `953/953` tests passed
+  - full web suite: `117/117` test files passed, `674/674` tests passed
+  - focused engine gate: `10/10` test files passed, `33/33` tests passed
+  - focused web gate: `3/3` test files passed, `9/9` tests passed
   - `git diff --check`: green
 - latest closed implementation slice:
   `heavy_concrete_formula_family_widening_v1`

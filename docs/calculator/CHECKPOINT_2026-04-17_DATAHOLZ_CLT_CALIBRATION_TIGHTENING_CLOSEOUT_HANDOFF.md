@@ -105,6 +105,8 @@ step itself.
     - rank-2 `C11c` also stays blocked after an explicit feasibility audit
     - the next active comparison target inside the rerank is now raw bare
       open-box/open-web
+    - treat that rank-3 target as a feasibility audit, not as an
+      implementation-ready widening
   - each candidate must stay explicit on value, origin, support, and current
     evidence posture before any direct runtime change is selected
 - reinforced-concrete reopening remains conditional-only

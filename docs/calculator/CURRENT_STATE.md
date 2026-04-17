@@ -42,8 +42,12 @@ Planning / implementation update: `2026-04-17`
   rerank of the still-blocked source-backed families
 - immediate next decision:
   keep rank-1 `GDMTXA04A` and rank-2 `C11c` blocked on their explicit
-  feasibility findings and run the next comparison on raw bare
+  feasibility findings and run the rank-3 feasibility audit on raw bare
   open-box/open-web
+- first implementation question now:
+  does raw bare open-box/open-web have true bare-carrier impact evidence, or
+  does it stay blocked because current TUAS and UBIQ rows are still packaged
+  system evidence only
 - current explicit blocked candidate order:
   1. `dataholz_gdmtxa04a_visible_exact_reopen`
   2. `tuas_c11c_exact_import`
@@ -118,6 +122,18 @@ Planning / implementation update: `2026-04-17`
   - `pnpm check`: green with full engine `157/157` files and `953/953` tests
     plus full web `117/117` files and `674/674` tests
   - `pnpm build`: green with the known optional `sharp/@img` DOCX warnings
+  - `git diff --check`: green
+- latest broad audit and replanning pass on `2026-04-17`:
+  - reran the focused gate, full repo gate, and build after the rank-2
+    `C11c` feasibility hold landed
+  - found no new runtime mismatch between implementation and the living rerank
+    docs
+  - confirmed that the active next move is the rank-3 raw bare
+    open-box/open-web feasibility audit, not a direct widening pass
+  - full engine suite: `157/157` test files passed, `953/953` tests passed
+  - full web suite: `117/117` test files passed, `674/674` tests passed
+  - focused engine gate: `10/10` test files passed, `33/33` tests passed
+  - focused web gate: `3/3` test files passed, `9/9` tests passed
   - `git diff --check`: green
 
 - latest live verification after the runtime candidate rerank closeout:

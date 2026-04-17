@@ -53,6 +53,9 @@ Current planning implication:
       anomalous and the route still stays impact-fail-closed
     - active next comparison target inside the rerank:
       `raw_bare_open_box_open_web_impact_widening`
+    - current interpretation of that target:
+      a feasibility audit that must prove real bare-carrier impact evidence
+      exists before any runtime widening can even be considered
 - 2026-04-14 second-pass plan selection and implementation:
   - the no-widening route/card projection guard
     `mixed_floor_wall_output_card_snapshot_grid_v1`

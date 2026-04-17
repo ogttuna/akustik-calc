@@ -13,7 +13,7 @@ If the question is “what is still open and what executes next?”, start with
 1. Read [CHECKPOINT_2026-04-17_DATAHOLZ_CLT_CALIBRATION_TIGHTENING_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-17_DATAHOLZ_CLT_CALIBRATION_TIGHTENING_CLOSEOUT_HANDOFF.md).
 2. Read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md).
 3. Run `pnpm calculator:gate:current`.
-4. If green, continue the selected slice `blocked_source_backed_widening_rerank_v1` from the landed `GDMTXA04A` and `C11c` feasibility holds toward the raw bare open-box/open-web comparison.
+4. If green, continue the selected slice `blocked_source_backed_widening_rerank_v1` by treating raw bare open-box/open-web as a rank-3 feasibility audit, not as a pre-approved widening.
 
 ## Current Execution Snapshot
 
@@ -32,7 +32,9 @@ If the question is “what is still open and what executes next?”, start with
   stay blocked until the rerank reorders them explicitly
 - current rerank progress:
   rank-1 `GDMTXA04A` and rank-2 `C11c` feasibility are now explicitly held,
-  so raw bare open-box/open-web is the active next comparison target
+  so raw bare open-box/open-web is the active next comparison target and the
+  current first question is whether any honest bare-carrier impact evidence
+  exists at all
 - last full green validation:
   `2026-04-17`
   - engine: `157/157` test files passed, `953/953` tests passed
