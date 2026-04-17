@@ -140,11 +140,11 @@ const CASES: readonly RouteCase[] = [
         Rw: { status: "live", value: "65 dB" },
         "R'w": { status: "needs_input", value: "Not ready" },
         "DnT,w": { status: "needs_input", value: "Not ready" },
-        "Ln,w": { status: "live", value: "47 dB" },
-        "L'n,w": { status: "live", value: "49 dB" },
-        "L'nT,w": { status: "live", value: "47 dB" },
-        "Ln,w+CI": { status: "live", value: "49 dB" },
-        "L'nT,50": { status: "live", value: "49 dB" },
+        "Ln,w": { status: "live", value: "49 dB" },
+        "L'n,w": { status: "live", value: "51 dB" },
+        "L'nT,w": { status: "live", value: "49 dB" },
+        "Ln,w+CI": { status: "live", value: "53 dB" },
+        "L'nT,50": { status: "live", value: "53 dB" },
         Ctr: { status: "unsupported", value: "Not ready" }
       }
     }

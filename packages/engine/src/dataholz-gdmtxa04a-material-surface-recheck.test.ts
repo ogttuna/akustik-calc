@@ -115,10 +115,10 @@ describe("Dataholz GDMTXA04A material-surface recheck", () => {
     expect(result.impact?.estimateCandidateIds).toEqual(["dataholz_gdmtxa01a_clt_lab_2026"]);
     expect(result.floorSystemRatings?.Rw).toBe(65);
     expect(result.impact?.basis).toBe("predictor_mass_timber_clt_dataholz_dry_estimate");
-    expect(result.impact?.LnW).toBe(47);
-    expect(result.impact?.CI).toBe(2);
+    expect(result.impact?.LnW).toBe(49);
+    expect(result.impact?.CI).toBe(4);
     expect(result.impact?.CI50_2500).toBeUndefined();
-    expect(result.impact?.LnWPlusCI).toBe(49);
+    expect(result.impact?.LnWPlusCI).toBe(53);
     expect(result.supportedTargetOutputs).toEqual(["Rw", "Ln,w", "CI", "Ln,w+CI"]);
     expect(result.unsupportedTargetOutputs).toEqual(["Ctr", "CI,50-2500"]);
   });

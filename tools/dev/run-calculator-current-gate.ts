@@ -52,6 +52,7 @@ async function main() {
         "src/post-reinforced-concrete-accuracy-tightening-follow-up-next-slice-selection-contract.test.ts",
         "src/reinforced-concrete-formula-family-closeout-audit.test.ts",
         "src/reinforced-concrete-family-formula-fit-audit.test.ts",
+        "src/dataholz-clt-calibration-tightening-audit.test.ts",
         "src/dataholz-clt-source-truth-audit.test.ts",
         "src/floor-source-corpus-contract.test.ts",
         "--maxWorkers=1"
@@ -68,6 +69,8 @@ async function main() {
         "run",
         "features/workbench/reinforced-concrete-low-confidence-proposal-honesty.test.ts",
         "features/workbench/dataholz-clt-source-truth-route.test.ts",
+        "features/workbench/remaining-source-gap-posture-card-matrix.test.ts",
+        "features/workbench/output-origin-trace-card-matrix.test.ts",
         "--maxWorkers=1"
       ]
     },

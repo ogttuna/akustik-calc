@@ -62,22 +62,27 @@ Use this section first when deciding what to do next.
 - active slice:
   `dataholz_clt_calibration_tightening`
 - current highest-ROI task:
-  start the defended Dataholz CLT tightening pass now that the reinforced-
-  concrete low-confidence corridor is explicitly closed at both solver and
-  helper level
+  continue the defended Dataholz CLT tightening pass by auditing the residual
+  `CI50_2500` / `L'nT,50` slack after the first visible `GDMTXA04A`-like
+  estimate calibration landed
 - closeout decision now landed:
   reinforced-concrete `vinyl + elastic ceiling` remains intentionally
   `low_confidence`, and the dormant direct published-family overlap was
   removed so no hidden narrower defended lane remains
+- active-slice progress now landed:
+  the visible `GDMTXA04A`-like composite dry-screed boundary stays on the
+  defended estimate lane, but its lab-side impact outputs are now capped
+  against the direct official exact row so the route no longer drifts
+  optimistically on `Ln,w`, `CI`, or `Ln,w+CI`
 
 ### Next
 
-1. Revalidate the active slice with the reinforced-concrete closeout contract
-   in place.
-2. Open `dataholz_clt_calibration_tightening` on the defended exact-vs-
-   estimate CLT corridor.
-3. Keep `GDMTXA04A` as an explicit blocked surface decision unless fresh
-   evidence supports a narrower reopen.
+1. Keep the visible `GDMTXA04A`-like CLT boundary on its estimate-only route
+   with the new lab-side impact cap in place.
+2. Decide whether the remaining `CI50_2500` / `L'nT,50` slack can be tightened
+   without reopening blocked exact ownership.
+3. Keep `GDMTXA04A` as an explicit blocked exact-reopen decision unless fresh
+   evidence supports a narrower surface rule.
 
 ### Later
 
@@ -94,6 +99,23 @@ Use this section first when deciding what to do next.
 
 ## Verified Against Implementation - 2026-04-17
 
+- latest active-slice CLT calibration progress on `2026-04-17`:
+  - landed `packages/engine/src/dataholz-clt-calibration-tightening-audit.test.ts`
+  - the visible `GDMTXA04A`-like composite dry-screed boundary stays
+    estimate-only with candidate `dataholz_gdmtxa01a_clt_lab_2026`
+  - lab-side impact outputs are now capped against the direct official exact
+    row on `Ln,w`, `CI`, and `Ln,w+CI`
+  - residual `CI50_2500` / `L'nT,50` slack remains the next CLT tightening
+    target; the direct `GDMTXA04A` exact reopen stays blocked
+- latest active-slice CLT calibration validation on `2026-04-17`:
+  - targeted CLT engine pack: `7/7` test files passed, `318/318` tests passed
+  - focused engine gate: `6/6` test files passed, `24/24` tests passed
+  - focused web gate: `4/4` test files passed, `12/12` tests passed
+  - `pnpm calculator:gate:current`: green
+  - `pnpm check`: green with full engine `154/154` files and `946/946` tests
+    plus full web `117/117` files and `674/674` tests
+  - `pnpm build`: green with the known optional `sharp/@img` DOCX warnings
+  - `git diff --check`: green
 - latest closed implementation slice:
   `heavy_concrete_formula_family_widening_v1`
 - latest focused active-slice verification on `2026-04-17`:
@@ -348,14 +370,14 @@ Heavy-concrete closeout result:
 - slice type:
   runtime accuracy tightening on the defended Dataholz CLT corridor
 - implementation status:
-  not started; the reinforced-concrete tightening corridor is now closed as an
-  explicit low-confidence helper/solver agreement, and the next honest move is
-  to tighten the defended Dataholz CLT exact-vs-estimate corridor without
-  reopening blocked source-anomaly surfaces
+  in progress; the reinforced-concrete tightening corridor is closed as an
+  explicit low-confidence helper/solver agreement, and the CLT slice has now
+  landed its first visible-boundary calibration step without reopening blocked
+  source-anomaly surfaces
 - explicit not-done item at this checkpoint:
-  the CLT tightening slice is open; exact-vs-estimate calibration remains to
-  be tightened, while `GDMTXA04A` stays blocked as a material-surface decision
-  until fresh evidence appears
+  the CLT tightening slice is open; residual `CI50_2500` / `L'nT,50` slack
+  still needs to be audited, while `GDMTXA04A` stays blocked as a
+  material-surface exact reopen until fresh evidence appears
 
 ## Selected Next Slice
 
@@ -413,15 +435,18 @@ Still blocked:
 ### Current Implementation Anchors
 
 - planning contract:
-  `packages/engine/src/post-heavy-concrete-formula-family-widening-next-slice-selection-contract.test.ts`
+  `packages/engine/src/post-reinforced-concrete-accuracy-tightening-follow-up-next-slice-selection-contract.test.ts`
 - closed reinforced-concrete evidence:
   - `packages/engine/src/reinforced-concrete-formula-family-closeout-audit.test.ts`
   - `packages/engine/src/reinforced-concrete-family-formula-fit-audit.test.ts`
   - `apps/web/features/workbench/reinforced-concrete-low-confidence-proposal-honesty.test.ts`
 - selected CLT evidence:
+  - `packages/engine/src/dataholz-clt-calibration-tightening-audit.test.ts`
   - `packages/engine/src/dataholz-clt-source-truth-audit.test.ts`
   - `packages/engine/src/floor-source-corpus-contract.test.ts`
   - `apps/web/features/workbench/dataholz-clt-source-truth-route.test.ts`
+  - `apps/web/features/workbench/remaining-source-gap-posture-card-matrix.test.ts`
+  - `apps/web/features/workbench/output-origin-trace-card-matrix.test.ts`
 - likely runtime edit anchors for the selected tightening:
   - `packages/engine/src/predictor-published-family-estimate.ts`
   - `packages/engine/src/predictor-floor-system-estimate.ts`
@@ -591,13 +616,19 @@ are kept.
    - reopen only if a new helper-vs-solver overlap or proof-backed equivalent
      lane appears later
 2. CLT tightening queue
-   - current status: selected and not started
+   - current status: selected and in progress
    - use
      `packages/engine/src/dataholz-clt-source-truth-audit.test.ts`
      as the exact-row source-truth ledger for this pass
    - use
      `packages/engine/src/floor-source-corpus-contract.test.ts`
      as the remaining exact-only slack contract
+   - first landed step:
+     visible `GDMTXA04A`-like dry-screed estimates now cap `Ln,w`, `CI`, and
+     `Ln,w+CI` against the direct official exact row without reopening exact
+     ownership
+   - next tightening target:
+     residual `CI50_2500` / `L'nT,50` slack on the same defended corridor
 3. Blocked source-anomaly queue
    - current status: still blocked
    - `GDMTXA04A`, raw bare open-box/open-web, `C11c`, and wall-selector
@@ -633,8 +664,8 @@ are kept.
 
 ### Validation Commands For This Checkpoint
 
-1. `pnpm --filter @dynecho/engine exec vitest run src/post-reinforced-concrete-accuracy-tightening-follow-up-next-slice-selection-contract.test.ts src/reinforced-concrete-formula-family-closeout-audit.test.ts src/reinforced-concrete-family-formula-fit-audit.test.ts src/dataholz-clt-source-truth-audit.test.ts src/floor-source-corpus-contract.test.ts --maxWorkers=1`
-2. `pnpm --filter @dynecho/web exec vitest run features/workbench/reinforced-concrete-low-confidence-proposal-honesty.test.ts features/workbench/dataholz-clt-source-truth-route.test.ts --maxWorkers=1`
+1. `pnpm --filter @dynecho/engine exec vitest run src/post-reinforced-concrete-accuracy-tightening-follow-up-next-slice-selection-contract.test.ts src/reinforced-concrete-formula-family-closeout-audit.test.ts src/reinforced-concrete-family-formula-fit-audit.test.ts src/dataholz-clt-calibration-tightening-audit.test.ts src/dataholz-clt-source-truth-audit.test.ts src/floor-source-corpus-contract.test.ts --maxWorkers=1`
+2. `pnpm --filter @dynecho/web exec vitest run features/workbench/reinforced-concrete-low-confidence-proposal-honesty.test.ts features/workbench/dataholz-clt-source-truth-route.test.ts features/workbench/remaining-source-gap-posture-card-matrix.test.ts features/workbench/output-origin-trace-card-matrix.test.ts --maxWorkers=1`
 3. `pnpm check`
 4. `pnpm build`
 5. `git diff --check`

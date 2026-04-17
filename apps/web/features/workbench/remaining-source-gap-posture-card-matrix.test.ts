@@ -117,11 +117,11 @@ const CASES: readonly SourceGapCase[] = [
         Rw: { status: "live", value: "65 dB" },
         "R'w": { status: "live", value: "48 dB" },
         "DnT,w": { status: "live", value: "51 dB" },
-        "Ln,w": { status: "live", value: "47 dB" },
-        "Ln,w+CI": { status: "live", value: "49 dB" },
-        "L'n,w": { status: "live", value: "49 dB" },
-        "L'nT,w": { status: "live", value: "46.6 dB" },
-        "L'nT,50": { status: "live", value: "49 dB" }
+        "Ln,w": { status: "live", value: "49 dB" },
+        "Ln,w+CI": { status: "live", value: "53 dB" },
+        "L'n,w": { status: "live", value: "51 dB" },
+        "L'nT,w": { status: "live", value: "48.6 dB" },
+        "L'nT,50": { status: "live", value: "53 dB" }
       },
       estimateBasis: "predictor_mass_timber_clt_dataholz_dry_estimate",
       estimateKind: "family_general",

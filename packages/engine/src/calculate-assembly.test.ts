@@ -5654,9 +5654,9 @@ describe("calculateAssembly", () => {
     expect(result.floorSystemMatch).toBeNull();
     expect(result.floorSystemEstimate?.kind).toBe("family_general");
     expect(result.floorSystemEstimate?.impact.basis).toBe("predictor_mass_timber_clt_dataholz_dry_estimate");
-    expect(result.floorSystemEstimate?.impact.LnW).toBe(47);
-    expect(result.floorSystemEstimate?.impact.CI).toBe(2);
-    expect(result.floorSystemEstimate?.impact.LnWPlusCI).toBe(49);
+    expect(result.floorSystemEstimate?.impact.LnW).toBe(49);
+    expect(result.floorSystemEstimate?.impact.CI).toBe(4);
+    expect(result.floorSystemEstimate?.impact.LnWPlusCI).toBe(53);
     expect(result.floorSystemEstimate?.airborneRatings.Rw).toBe(65);
     expect(result.floorSystemEstimate?.impact.estimateCandidateIds).toEqual(["dataholz_gdmtxa01a_clt_lab_2026"]);
   });

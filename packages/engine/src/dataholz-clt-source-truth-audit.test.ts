@@ -347,8 +347,8 @@ describe("Dataholz CLT source-truth audit", () => {
         estimateKind: "family_general",
         floorSystemMatchId: null,
         impactBasis: "predictor_mass_timber_clt_dataholz_dry_estimate",
-        lnW: 47,
-        lnWPlusCI: 49,
+        lnW: 49,
+        lnWPlusCI: 53,
         rw: 65,
         supportedTargetOutputs: ["Rw", "Ln,w", "Ln,w+CI"],
         unsupportedTargetOutputs: []

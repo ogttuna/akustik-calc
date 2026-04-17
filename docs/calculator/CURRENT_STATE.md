@@ -37,16 +37,36 @@ Planning / implementation update: `2026-04-17`
 - active slice:
   `dataholz_clt_calibration_tightening`
 - current broad-pass conclusion:
-  repo-wide validation is green, and the reinforced-concrete low-confidence
-  helper/solver overlap plus screening-posture chain are closed enough that
-  CLT is now the higher-ROI tightening family
+  the first solver-side CLT calibration step is now landed, and the
+  reinforced-concrete low-confidence helper/solver overlap plus screening-
+  posture chain are closed enough that CLT remains the higher-ROI tightening
+  family
 - immediate next decision:
-  start the defended Dataholz CLT calibration pass while keeping
-  reinforced-concrete frozen on its explicit low-confidence branch
+  audit the residual `CI50_2500` / `L'nT,50` slack on the defended
+  `GDMTXA04A`-like visible boundary while keeping reinforced-concrete frozen on
+  its explicit low-confidence branch
 - do not do first:
   - reinforced-concrete reopening
   - blocked source-family widening
   - wording-only micro-passes that do not change CLT solver-side certainty
+
+- latest active-slice CLT calibration progress on `2026-04-17`:
+  - landed `packages/engine/src/dataholz-clt-calibration-tightening-audit.test.ts`
+  - kept the visible `GDMTXA04A`-like composite dry-screed boundary on the
+    defended estimate route with candidate `dataholz_gdmtxa01a_clt_lab_2026`
+  - capped lab-side `Ln,w`, `CI`, and `Ln,w+CI` against the direct official
+    exact row so the route no longer drifts optimistically on those outputs
+  - kept direct `GDMTXA04A` exact reopen blocked
+  - left residual `CI50_2500` / `L'nT,50` slack as the next tightening target
+- latest active-slice CLT calibration validation on `2026-04-17`:
+  - targeted CLT engine pack: `7/7` test files passed, `318/318` tests passed
+  - focused engine gate: `6/6` test files passed, `24/24` tests passed
+  - focused web gate: `4/4` test files passed, `12/12` tests passed
+  - `pnpm calculator:gate:current`: green
+  - `pnpm check`: green with full engine `154/154` files and `946/946` tests
+    plus full web `117/117` files and `674/674` tests
+  - `pnpm build`: green with the known optional `sharp/@img` DOCX warnings
+  - `git diff --check`: green
 
 - latest live verification after the runtime candidate rerank closeout:
   - full engine suite: `147/147` test files passed, `923/923` tests passed
@@ -315,16 +335,15 @@ Planning / implementation update: `2026-04-17`
   - `git diff --check`: green
 - latest broad repo revalidation on `2026-04-17`:
   - `pnpm check`: green
-  - full engine suite: `152/152` test files passed, `941/941` tests passed
+  - full engine suite: `154/154` test files passed, `946/946` tests passed
   - full web suite: `117/117` test files passed, `674/674` tests passed
-  - `pnpm calculator:gate:current`: green with `9/9` engine files and
-    `33/33` engine tests plus `7/7` web files and `16/16` web tests
+  - `pnpm calculator:gate:current`: green with `6/6` engine files and
+    `24/24` engine tests plus `4/4` web files and `12/12` web tests
   - `pnpm build`: green with the known optional `sharp/@img` DOCX warnings
   - `git diff --check`: green
-  - repo-wide validation surfaced one stale lint leak, one stale typecheck
-    leak, and three stale engine expectation/parity contracts; all five drifts
-    were aligned without changing the intended reinforced-concrete corridor
-    posture
+  - repo-wide validation surfaced one stale CLT workbench posture contract; it
+    was aligned to the new visible-boundary calibration values without changing
+    the intended CLT ownership posture
 
 ## Current Answer In One Screen
 
@@ -339,10 +358,11 @@ Planning / implementation update: `2026-04-17`
   tightening is closed, and the next move is Dataholz CLT calibration
   tightening, not another reinforced-concrete honesty micro-pass
 - current explicit not-done item:
-  the CLT tightening pass is open; exact-vs-estimate calibration remains to be
-  tightened on the defended Dataholz CLT corridor, while `GDMTXA04A` stays a
-  blocked material-surface decision and the closed reinforced-concrete
-  low-confidence corridor remains a guard, not an active target
+  the CLT tightening pass is open; residual `CI50_2500` / `L'nT,50` slack
+  still needs to be tightened on the defended Dataholz CLT corridor, while
+  `GDMTXA04A` stays a blocked material-surface exact reopen and the closed
+  reinforced-concrete low-confidence corridor remains a guard, not an active
+  target
 
 ## Current Hotspot Map
 
@@ -353,10 +373,13 @@ Planning / implementation update: `2026-04-17`
   - `packages/engine/src/calculate-assembly.ts`
 - selected CLT engine evidence:
   - `packages/engine/src/post-reinforced-concrete-accuracy-tightening-follow-up-next-slice-selection-contract.test.ts`
+  - `packages/engine/src/dataholz-clt-calibration-tightening-audit.test.ts`
   - `packages/engine/src/dataholz-clt-source-truth-audit.test.ts`
   - `packages/engine/src/floor-source-corpus-contract.test.ts`
 - selected CLT workbench evidence:
   - `apps/web/features/workbench/dataholz-clt-source-truth-route.test.ts`
+  - `apps/web/features/workbench/remaining-source-gap-posture-card-matrix.test.ts`
+  - `apps/web/features/workbench/output-origin-trace-card-matrix.test.ts`
 - closed reinforced-concrete evidence:
   - `packages/engine/src/reinforced-concrete-family-formula-fit-audit.test.ts`
   - `packages/engine/src/reinforced-concrete-formula-family-closeout-audit.test.ts`
@@ -398,11 +421,11 @@ Still blocked:
    The final carpet-plus-generic-underlay probe is now a negative guard, and
    the parity queue should stay shut unless a new proof-backed equivalence
    appears later.
-3. Start `dataholz_clt_calibration_tightening`.
+3. Continue `dataholz_clt_calibration_tightening`.
    Entry posture:
-   exact Dataholz CLT rows and remaining exact-only slack are already pinned in
-   source-truth and route tests, so the next honest move is to tighten CLT
-   exact-vs-estimate calibration without reopening blocked exact surfaces.
+   the first visible `GDMTXA04A`-like estimate calibration is now landed, so
+   the next honest move is to tighten the remaining `CI50_2500` / `L'nT,50`
+   slack without reopening blocked exact surfaces.
 4. Treat the current blocked boundaries as hard stops, not “later in the same
    pass” items.
    Do not reopen reinforced-concrete wording work, raw open-box/open-web,

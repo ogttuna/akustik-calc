@@ -41,6 +41,11 @@ type FloorProfile = "bare" | "combined" | "heavy_floating" | "lower_only" | "upp
 
 const UPPER_ROLES: FloorRole[] = ["floating_screed", "floor_covering", "resilient_layer", "upper_fill"];
 const LOWER_ROLES: FloorRole[] = ["ceiling_board", "ceiling_cavity", "ceiling_fill"];
+const DATAHOLZ_GDMTXA04A_CALIBRATION_IMPACT = {
+  CI: 4,
+  LnW: 49,
+  LnWPlusCI: 53
+} as const;
 
 function structuralFamilyFromMaterialIds(materialIds: readonly string[]): StructuralFamily {
   if (
@@ -212,6 +217,85 @@ function hasVisibleLowerTreatmentWithoutCavity(layers: readonly ResolvedLayer[])
   const hasCeilingCavity = layers.some((layer) => layer.floorRole === "ceiling_cavity");
 
   return hasLowerBoardOrFill && !hasCeilingCavity;
+}
+
+function isDataholzGdmtxa04aVisibleCalibrationBoundary(
+  layers: readonly ResolvedLayer[],
+  basis: ImpactCalculation["basis"],
+  sources: readonly FloorSystemRecommendation[]
+): boolean {
+  if (
+    basis !== "predictor_mass_timber_clt_dataholz_dry_estimate" ||
+    sources.length !== 1 ||
+    sources[0]?.system.id !== "dataholz_gdmtxa01a_clt_lab_2026"
+  ) {
+    return false;
+  }
+
+  const baseStructure = layers.find((layer) => layer.floorRole === "base_structure");
+  const floorCovering = layers.find((layer) => layer.floorRole === "floor_covering");
+  const upperFill = layers.find((layer) => layer.floorRole === "upper_fill");
+  const ceilingBoards = layers.filter((layer) => layer.floorRole === "ceiling_board");
+  const ceilingCavity = layers.find((layer) => layer.floorRole === "ceiling_cavity");
+  const ceilingFill = layers.find((layer) => layer.floorRole === "ceiling_fill");
+  const resilientLayer = layers.find((layer) => layer.floorRole === "resilient_layer");
+  const floatingScreed = layers.find((layer) => layer.floorRole === "floating_screed");
+
+  return (
+    baseStructure?.material.id === "clt_panel" &&
+    thicknessNear(baseStructure.thicknessMm, 160, 12) &&
+    floorCovering?.material.id === "dry_floating_gypsum_fiberboard" &&
+    thicknessNear(floorCovering.thicknessMm, 65, 8) &&
+    (upperFill?.material.id === "non_bonded_chippings" || upperFill?.material.id === "bonded_chippings") &&
+    thicknessNear(upperFill.thicknessMm, 60, 8) &&
+    !resilientLayer &&
+    !floatingScreed &&
+    ceilingBoards.length === 1 &&
+    ceilingBoards[0]?.material.id === "gypsum_board" &&
+    thicknessNear(ceilingBoards[0]?.thicknessMm, 12.5, 3) &&
+    ceilingCavity?.material.id === "acoustic_hanger_ceiling" &&
+    thicknessNear(ceilingCavity.thicknessMm, 70, 30) &&
+    ceilingFill?.material.id === "rockwool" &&
+    thicknessNear(ceilingFill.thicknessMm, 50, 30)
+  );
+}
+
+function calibrateMassTimberImpactEstimate(input: {
+  basis: ImpactCalculation["basis"];
+  ci: number | undefined;
+  layers: readonly ResolvedLayer[] | undefined;
+  lnW: number | undefined;
+  lnWPlusCI: number | undefined;
+  sources: readonly FloorSystemRecommendation[];
+}): {
+  ci: number | undefined;
+  lnW: number | undefined;
+  lnWPlusCI: number | undefined;
+  notes: string[];
+} {
+  if (!input.layers || !isDataholzGdmtxa04aVisibleCalibrationBoundary(input.layers, input.basis, input.sources)) {
+    return {
+      ci: input.ci,
+      lnW: input.lnW,
+      lnWPlusCI: input.lnWPlusCI,
+      notes: []
+    };
+  }
+
+  // Keep the blocked GDMTXA04A visible boundary on the estimate lane, but do
+  // not let that nearby-row estimate outrun the direct official exact row on
+  // impact while the composite dry-screed surface remains unmodeled.
+  return {
+    ci: Math.max(input.ci ?? DATAHOLZ_GDMTXA04A_CALIBRATION_IMPACT.CI, DATAHOLZ_GDMTXA04A_CALIBRATION_IMPACT.CI),
+    lnW: Math.max(input.lnW ?? DATAHOLZ_GDMTXA04A_CALIBRATION_IMPACT.LnW, DATAHOLZ_GDMTXA04A_CALIBRATION_IMPACT.LnW),
+    lnWPlusCI: Math.max(
+      input.lnWPlusCI ?? DATAHOLZ_GDMTXA04A_CALIBRATION_IMPACT.LnWPlusCI,
+      DATAHOLZ_GDMTXA04A_CALIBRATION_IMPACT.LnWPlusCI
+    ),
+    notes: [
+      "The GDMTXA04A-like composite dry-screed boundary stayed on the estimate lane, and its impact outputs were capped against the direct official exact row to avoid optimistic drift."
+    ]
+  };
 }
 
 function hasMultipleRoleLayers(
@@ -597,7 +681,11 @@ function buildImpactEstimate(
   family: StructuralFamily,
   currentProfile: FloorProfile,
   sources: readonly FloorSystemRecommendation[],
-  options: { allowSpecificBasis?: boolean; heavyConcreteCarrierEligible?: boolean } = {}
+  options: {
+    allowSpecificBasis?: boolean;
+    heavyConcreteCarrierEligible?: boolean;
+    layers?: readonly ResolvedLayer[];
+  } = {}
 ): ImpactCalculation {
   const basisInfo = resolveSpecificFamilyEstimateBasis({
     allowSpecificBasis: options.allowSpecificBasis,
@@ -611,9 +699,17 @@ function buildImpactEstimate(
   const ci = weightedAverage(sources, (entry) => entry.system.impactRatings.CI);
   const ci50_2500 = weightedAverage(sources, (entry) => entry.system.impactRatings.CI50_2500);
   const lnWPlusCI = weightedAverage(sources, (entry) => entry.system.impactRatings.LnWPlusCI);
+  const calibratedImpact = calibrateMassTimberImpactEstimate({
+    basis: basisInfo.basis,
+    ci,
+    layers: options.layers,
+    lnW,
+    lnWPlusCI,
+    sources
+  });
   const availableOutputs: ImpactCalculation["availableOutputs"] = ["Ln,w"];
 
-  if (typeof ci === "number") {
+  if (typeof calibratedImpact.ci === "number") {
     availableOutputs.push("CI");
   }
 
@@ -621,15 +717,15 @@ function buildImpactEstimate(
     availableOutputs.push("CI,50-2500");
   }
 
-  if (typeof lnWPlusCI === "number") {
+  if (typeof calibratedImpact.lnWPlusCI === "number") {
     availableOutputs.push("Ln,w+CI");
   }
 
   return {
-    CI: ci,
+    CI: calibratedImpact.ci,
     CI50_2500: ci50_2500,
-    LnW: lnW ?? 0,
-    LnWPlusCI: lnWPlusCI,
+    LnW: calibratedImpact.lnW ?? 0,
+    LnWPlusCI: calibratedImpact.lnWPlusCI,
     availableOutputs,
     basis: basisInfo.basis,
     confidence: getImpactConfidenceForBasis(basisInfo.basis),
@@ -637,10 +733,10 @@ function buildImpactEstimate(
     labOrField: "lab",
     metricBasis: buildUniformImpactMetricBasis(
       {
-        CI: ci,
+        CI: calibratedImpact.ci,
         CI50_2500: ci50_2500,
-        LnW: lnW ?? undefined,
-        LnWPlusCI: lnWPlusCI
+        LnW: calibratedImpact.lnW ?? undefined,
+        LnWPlusCI: calibratedImpact.lnWPlusCI
       },
       basisInfo.basis
     ),
@@ -648,6 +744,7 @@ function buildImpactEstimate(
       `${basisInfo.label} derived from nearby ${formatStructuralFamily(family)} rows.`,
       `Current profile ${currentProfile.replaceAll("_", " ")} stayed inside the curated ${formatStructuralFamily(family)} branch.`,
       `Source rows: ${sources.map((entry) => `${entry.system.label} (${entry.fitPercent}% fit)`).join("; ")}.`,
+      ...calibratedImpact.notes,
       "This remains a labeled published-family estimate, not an exact floor-system match or a universal physical predictor."
     ],
     scope: "family_estimate"
@@ -933,7 +1030,8 @@ export function deriveFloorSystemEstimate(
     fitPercent,
     impact: buildImpactEstimate(activeKindAndSources.kind, structuralFamily, currentProfile, estimateSources, {
       allowSpecificBasis,
-      heavyConcreteCarrierEligible
+      heavyConcreteCarrierEligible,
+      layers
     }),
     kind: activeKindAndSources.kind,
     notes: [
