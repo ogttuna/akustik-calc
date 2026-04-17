@@ -1884,6 +1884,52 @@ describe("calculateImpactOnly", () => {
     expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
   });
 
+  it("keeps carpet plus extra generic underlay concrete predictor input on the formula-owned posture", () => {
+    const result = calculateImpactOnly([], {
+      impactPredictorInput: {
+        structuralSupportType: "reinforced_concrete",
+        impactSystemType: "combined_upper_lower_system",
+        baseSlab: {
+          materialClass: "heavy_concrete",
+          thicknessMm: 165,
+          densityKgM3: 2400
+        },
+        resilientLayer: {
+          thicknessMm: 5
+        },
+        floorCovering: {
+          mode: "material_layer",
+          materialClass: "carpet_with_foam_underlay",
+          thicknessMm: 11,
+          densityKgM3: 320
+        },
+        lowerTreatment: {
+          type: "suspended_ceiling_elastic_hanger",
+          cavityDepthMm: 110,
+          cavityFillThicknessMm: 60,
+          boardLayerCount: 2,
+          boardThicknessMm: 13,
+          boardMaterialClass: "firestop_board"
+        }
+      },
+      targetOutputs: ["Ln,w", "Rw", "Ctr", "DeltaLw"]
+    });
+
+    expect(result.sourceMode).toBe("predictor_input");
+    expect(result.floorSystemMatch).toBeNull();
+    expect(result.floorSystemEstimate).toBeNull();
+    expect(result.impact?.basis).toBe("predictor_heavy_bare_floor_iso12354_annexc_estimate");
+    expect(result.impact?.LnW).toBe(72);
+    expect(result.floorSystemRatings?.basis).toBe("predictor_heavy_concrete_floor_airborne_companion_estimate");
+    expect(result.floorSystemRatings?.Rw).toBe(59);
+    expect(result.floorSystemRatings?.RwCtr).toBe(53.2);
+    expect(result.impact?.estimateCandidateIds).toBeUndefined();
+    expect(result.supportedTargetOutputs).toEqual(["Ln,w"]);
+    expect(result.unsupportedTargetOutputs).toEqual(["Rw", "Ctr", "DeltaLw"]);
+    expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(false);
+    expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(false);
+  });
+
   it("can resolve a near-match Knauf concrete tile-ceiling stack on the concrete tile archetype lane", () => {
     const result = calculateImpactOnly([], {
       impactPredictorInput: {
@@ -3561,19 +3607,40 @@ describe("calculateImpactOnly", () => {
 
     expect(result.sourceMode).toBe("predictor_input");
     expect(result.floorSystemEstimate?.kind).toBe("low_confidence");
+    expect(result.floorSystemEstimate?.fitPercent).toBe(29);
+    expect(result.dynamicImpactTrace?.fitPercent).toBe(29);
     expect(result.impact?.basis).toBe("predictor_floor_system_low_confidence_estimate");
     expect(result.impact?.LnW).toBe(50);
     expect(result.floorSystemRatings?.Rw).toBe(65.9);
     expect(result.floorSystemRatings?.RwCtr).toBe(57);
     expect(result.impact?.estimateCandidateIds).toEqual([
-      "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026",
-      "knauf_cc60_1a_concrete150_carpet_lab_2026",
       "euracoustics_f2_elastic_ceiling_concrete_lab_2026",
-      "euracoustics_f0_bare_concrete_lab_2026",
-      "euracoustics_f1_rigid_ceiling_concrete_lab_2026"
+      "euracoustics_f1_rigid_ceiling_concrete_lab_2026",
+      "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026"
     ]);
     expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(true);
     expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(true);
+    expect(
+      result.impactPredictorStatus?.notes.some((note: string) => /implemented low-confidence fallback estimate is active/i.test(note))
+    ).toBe(true);
+    expect(
+      result.impactPredictorStatus?.notes.some((note: string) => /^Implemented family estimate is active\.$/i.test(note))
+    ).toBe(false);
+    expect(
+      result.impactPredictorStatus?.notes.some((note: string) => /proxy values from the same mixed-row reinforced-concrete fallback/i.test(note))
+    ).toBe(true);
+    expect(
+      result.impactSupport?.notes.some((note: string) => /Published floor-system low-confidence fallback is active: reinforced concrete/i.test(note))
+    ).toBe(true);
+    expect(
+      result.impactSupport?.notes.some((note: string) => /proxy airborne companions from mixed nearby concrete rows/i.test(note))
+    ).toBe(true);
+    expect(
+      result.impactSupport?.notes.some((note: string) => /Nearby-row ranking stays elastic-ceiling first, rigid-ceiling second/i.test(note))
+    ).toBe(true);
+    expect(
+      result.warnings.some((warning: string) => /low-confidence reinforced-concrete fallback is active with proxy airborne companions/i.test(warning))
+    ).toBe(true);
   });
 
   it("keeps composite suspended-ceiling predictor input on the upstream low-confidence lane", () => {

@@ -4,6 +4,10 @@ import {
   IMPACT_ONLY_LOW_CONFIDENCE_FLOOR_FAMILY_NOTE,
   isImpactOnlyLowConfidenceFloorLane
 } from "./impact-only-low-confidence-floor-lane";
+import {
+  isReinforcedConcreteLowConfidenceFloorLane,
+  REINFORCED_CONCRETE_LOW_CONFIDENCE_FLOOR_FAMILY_NOTE
+} from "./reinforced-concrete-low-confidence-floor-lane";
 
 const EXACT_FLOOR_SYSTEM_MATCH_PREFIX = "Curated exact floor-system match active:";
 
@@ -19,8 +23,12 @@ const EXACT_MATCH_SUPPRESSED_WARNING_PATTERNS = [
 ];
 const LOW_CONFIDENCE_FAMILY_ESTIMATE_PATTERN =
   /^Published family estimate active: .* low confidence at \d+(?:\.\d+)?% fit\.$/;
+const LOW_CONFIDENCE_FALLBACK_WARNING_PATTERN =
+  /^Published low-confidence fallback active: .* at \d+(?:\.\d+)?% fit\.$/;
 const IMPACT_ONLY_LOW_CONFIDENCE_FLOOR_WARNING_PATTERN =
   /^Low-confidence .* (?:proxy airborne companions hidden|unavailable proxy airborne outputs hidden)/;
+const LOW_CONFIDENCE_PROXY_AIRBORNE_WARNING_PATTERN =
+  /^Low-confidence .* active with proxy airborne companions\./;
 
 export const EXACT_FLOOR_FAMILY_CURVE_NOTE =
   "Primary floor-family Rw and Ln,w companions come from the curated exact match. STC, C, and Ctr stay on the local airborne curve when shown, so read them as curve-derived companions.";
@@ -34,6 +42,8 @@ export function buildWorkbenchWarningNotes(result: AssemblyCalculation | null, w
     result?.impact?.basis === "predictor_floor_system_low_confidence_estimate" ||
     result?.floorSystemEstimate?.kind === "low_confidence";
   const isImpactOnlyLowConfidenceEstimate = isImpactOnlyLowConfidenceFloorLane(result);
+  const isReinforcedConcreteLowConfidenceEstimate =
+    isReinforcedConcreteLowConfidenceFloorLane(result);
 
   if (!result?.floorSystemMatch) {
     if (!isLowConfidenceFloorEstimate) {
@@ -44,21 +54,32 @@ export function buildWorkbenchWarningNotes(result: AssemblyCalculation | null, w
     let impactOnlyFloorWarningFound = false;
     const filteredWarnings = dedupedWarnings.filter((warning) => {
       const matchesLowConfidenceLine = LOW_CONFIDENCE_FAMILY_ESTIMATE_PATTERN.test(warning);
+      const matchesLowConfidenceFallbackLine = LOW_CONFIDENCE_FALLBACK_WARNING_PATTERN.test(warning);
       const matchesImpactOnlyFloorLine = IMPACT_ONLY_LOW_CONFIDENCE_FLOOR_WARNING_PATTERN.test(warning);
-      if (matchesLowConfidenceLine) {
+      const matchesProxyAirborneLine = LOW_CONFIDENCE_PROXY_AIRBORNE_WARNING_PATTERN.test(warning);
+      if (matchesLowConfidenceLine || matchesLowConfidenceFallbackLine) {
         lowConfidenceWarningFound = true;
       }
       if (matchesImpactOnlyFloorLine) {
         impactOnlyFloorWarningFound = true;
       }
+      if (matchesProxyAirborneLine) {
+        lowConfidenceWarningFound = true;
+      }
 
-      return !matchesLowConfidenceLine && !matchesImpactOnlyFloorLine;
+      return !matchesLowConfidenceLine && !matchesLowConfidenceFallbackLine && !matchesImpactOnlyFloorLine && !matchesProxyAirborneLine;
     });
 
     return Array.from(
       new Set([
         ...(lowConfidenceWarningFound || impactOnlyFloorWarningFound
-          ? [isImpactOnlyLowConfidenceEstimate ? IMPACT_ONLY_LOW_CONFIDENCE_FLOOR_FAMILY_NOTE : LOW_CONFIDENCE_FLOOR_FAMILY_NOTE]
+          ? [
+              isImpactOnlyLowConfidenceEstimate
+                ? IMPACT_ONLY_LOW_CONFIDENCE_FLOOR_FAMILY_NOTE
+                : isReinforcedConcreteLowConfidenceEstimate
+                  ? REINFORCED_CONCRETE_LOW_CONFIDENCE_FLOOR_FAMILY_NOTE
+                  : LOW_CONFIDENCE_FLOOR_FAMILY_NOTE
+            ]
           : []),
         ...filteredWarnings
       ])

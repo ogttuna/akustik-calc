@@ -34,6 +34,31 @@ function buildFixture(overrides: Partial<AssemblyCalculation> = {}): AssemblyCal
   } as AssemblyCalculation;
 }
 
+function buildReinforcedConcreteLowConfidenceFixture(): AssemblyCalculation {
+  return buildFixture({
+    dynamicImpactTrace: {
+      detectedSupportFamily: "reinforced_concrete",
+      estimateTier: "low_confidence",
+      systemType: "combined_upper_lower_system"
+    } as AssemblyCalculation["dynamicImpactTrace"],
+    floorSystemEstimate: {
+      kind: "low_confidence"
+    } as AssemblyCalculation["floorSystemEstimate"],
+    floorSystemRatings: {
+      Rw: 65.9,
+      RwCtr: 57,
+      RwCtrSemantic: "rw_plus_ctr",
+      basis: "predictor_floor_system_low_confidence_estimate"
+    },
+    impact: {
+      basis: "predictor_floor_system_low_confidence_estimate",
+      LnW: 50
+    } as AssemblyCalculation["impact"],
+    supportedTargetOutputs: ["Rw", "Ctr", "Ln,w"],
+    unsupportedTargetOutputs: []
+  });
+}
+
 describe("simple workbench output model", () => {
   it("prefers floor-lane companion Rw over the live airborne estimate on floor studies", () => {
     const card = buildOutputCard({
@@ -303,5 +328,31 @@ describe("simple workbench output model", () => {
         value: "<= 51 dB"
       })
     );
+  });
+
+  it("keeps reinforced-concrete low-confidence floor companions explicit as mixed-row proxies", () => {
+    const result = buildReinforcedConcreteLowConfidenceFixture();
+    const rwCard = buildOutputCard({
+      output: "Rw",
+      result,
+      studyMode: "floor"
+    });
+    const ctrCard = buildOutputCard({
+      output: "Ctr",
+      result,
+      studyMode: "floor"
+    });
+    const lnwCard = buildOutputCard({
+      output: "Ln,w",
+      result,
+      studyMode: "floor"
+    });
+
+    expect(rwCard.detail).toContain("Proxy airborne companion");
+    expect(rwCard.detail).toContain("mixed nearby-row reinforced-concrete fallback");
+    expect(ctrCard.detail).toContain("Proxy traffic-noise companion");
+    expect(ctrCard.detail).toContain("mixed nearby-row reinforced-concrete fallback");
+    expect(lnwCard.detail).toContain("mixed nearby-row concrete lane");
+    expect(lnwCard.detail).toContain("narrow same-stack family fit");
   });
 });

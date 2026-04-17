@@ -7146,11 +7146,42 @@ describe("calculateAssembly", () => {
     );
 
     expect(result.impact?.basis).toBe("predictor_floor_system_low_confidence_estimate");
+    expect(result.floorSystemEstimate?.fitPercent).toBe(29);
+    expect(result.dynamicImpactTrace?.fitPercent).toBe(29);
     expect(result.impact?.LnW).toBe(50);
     expect(result.floorSystemRatings?.Rw).toBe(65.9);
     expect(result.floorSystemRatings?.RwCtr).toBe(57);
     expect(result.impactPredictorStatus?.implementedFamilyEstimate).toBe(true);
     expect(result.impactPredictorStatus?.implementedLowConfidenceEstimate).toBe(true);
+    expect(
+      result.impactPredictorStatus?.notes.some((note: string) => /implemented low-confidence fallback estimate is active/i.test(note))
+    ).toBe(true);
+    expect(
+      result.impactPredictorStatus?.notes.some((note: string) => /^Implemented family estimate is active\.$/i.test(note))
+    ).toBe(false);
+    expect(
+      result.impactPredictorStatus?.notes.some((note: string) => /proxy values from the same mixed-row reinforced-concrete fallback/i.test(note))
+    ).toBe(true);
+    expect(
+      result.impactSupport?.notes.some((note: string) => /Published floor-system low-confidence fallback is active: reinforced concrete/i.test(note))
+    ).toBe(true);
+    expect(
+      result.impactSupport?.notes.some((note: string) => /proxy airborne companions from mixed nearby concrete rows/i.test(note))
+    ).toBe(true);
+    expect(
+      result.impactSupport?.notes.some((note: string) => /Nearby-row ranking stays elastic-ceiling first, rigid-ceiling second/i.test(note))
+    ).toBe(true);
+    expect(
+      result.warnings.some((warning: string) => /low-confidence reinforced-concrete fallback is active with proxy airborne companions/i.test(warning))
+    ).toBe(true);
+    expect(
+      result.warnings.some((warning: string) => /Published low-confidence fallback active: reinforced concrete at 29% fit\./i.test(warning))
+    ).toBe(true);
+    expect(result.impact?.estimateCandidateIds).toEqual([
+      "euracoustics_f2_elastic_ceiling_concrete_lab_2026",
+      "euracoustics_f1_rigid_ceiling_concrete_lab_2026",
+      "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026"
+    ]);
   });
 
   it("applies structured airborne leakage and field-flanking overlays without altering the impact lane", () => {

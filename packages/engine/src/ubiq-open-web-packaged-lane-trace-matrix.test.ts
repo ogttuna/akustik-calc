@@ -102,7 +102,7 @@ const LOW_CONFIDENCE_FIELD: TraceSnapshot = {
 };
 
 const FAMILY_GENERAL_WARNING = /published family estimate active: lightweight steel family general at 59\.3% fit/i;
-const LOW_CONFIDENCE_WARNING = /published family estimate active: lightweight steel low confidence at 29% fit/i;
+const LOW_CONFIDENCE_WARNING = /published low-confidence fallback active: lightweight steel at 29% fit/i;
 const DUPLICATE_ROLE_WARNING = /single-entry floor roles are duplicated: ceiling board x2/i;
 
 const CASES: readonly TraceCase[] = [

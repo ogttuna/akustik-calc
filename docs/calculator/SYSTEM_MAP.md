@@ -1,6 +1,6 @@
 # System Map
 
-Last reviewed: 2026-04-16
+Last reviewed: 2026-04-17
 
 Document role:
 
@@ -215,23 +215,25 @@ validation path before and after a refactor.
 
 ## Current Architectural Hotspots
 
-As of `2026-04-16`, the requested-output output-card harness chain is frozen at
-a clean green baseline. The active risk is no longer harness sprawl; it is the
-next real runtime widening on the reinforced-concrete impact corridor.
+As of `2026-04-17`, the requested-output output-card harness chain is frozen at
+a clean green baseline. The heavy-concrete widening is closed. The active risk
+is no longer harness sprawl or parity hunting; it is reinforced-concrete
+accuracy tightening on the same owned corridor.
 
 Current hotspots:
 
-- selected runtime widening anchors:
+- selected runtime tightening anchors:
+  - `packages/engine/src/heavy-concrete-published-upper-treatment-estimate.ts`
+  - `packages/engine/src/predictor-published-family-estimate.ts`
   - `packages/engine/src/impact-estimate.ts`
-  - `packages/engine/src/floor-system-estimate.ts`
-  - `packages/engine/src/dynamic-impact.ts`
-  - `packages/engine/src/impact-support.ts`
-- selected heavy-concrete engine evidence:
+  - `packages/engine/src/target-output-support.ts`
+- selected reinforced-concrete engine evidence:
+  - `packages/engine/src/post-heavy-concrete-formula-family-widening-next-slice-selection-contract.test.ts`
+  - `packages/engine/src/reinforced-concrete-formula-family-closeout-audit.test.ts`
   - `packages/engine/src/impact-heavy-floor-planned-scope-benchmark.test.ts`
   - `packages/engine/src/reinforced-concrete-floor-monotonicity.test.ts`
-  - `packages/engine/src/floor-widening-candidate-contract.test.ts`
   - `packages/engine/src/calculate-impact-only.test.ts`
-- selected heavy-concrete workbench evidence:
+- selected reinforced-concrete workbench evidence:
   - `apps/web/features/workbench/heavy-concrete-formula-history-card-matrix.test.ts`
   - `apps/web/features/workbench/heavy-concrete-formula-provenance-report-surface.test.ts`
 - held second-candidate evidence:
@@ -242,9 +244,9 @@ Current hotspots:
 - source-backed widening ledger:
   `docs/calculator/SOURCE_GAP_LEDGER.md`
 
-The current selected next slice exists to widen the already-owned
-reinforced-concrete formula family honestly, not to reopen another harness
-refactor chain or a blocked source anomaly.
+The current selected next slice exists to tighten the already-owned
+reinforced-concrete corridor honestly, not to reopen parity hunting, another
+harness refactor chain, or a blocked source anomaly.
 
 ## What This System Is Not Yet
 
@@ -266,4 +268,4 @@ To avoid docs drift, be explicit about current non-features:
 - Want answer-origin or support semantics:
   read [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
 - Want the last clean resume point:
-  read [CHECKPOINT_2026-04-16_RUNTIME_CANDIDATE_RERANK_HANDOFF.md](./CHECKPOINT_2026-04-16_RUNTIME_CANDIDATE_RERANK_HANDOFF.md)
+  read [CHECKPOINT_2026-04-17_HEAVY_CONCRETE_FORMULA_FAMILY_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-17_HEAVY_CONCRETE_FORMULA_FAMILY_CLOSEOUT_HANDOFF.md)

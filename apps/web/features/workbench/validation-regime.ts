@@ -11,6 +11,10 @@ import type { ImpactValidationModePosture } from "@dynecho/engine";
 import type { AssemblyCalculation, DynamicAirborneTrace } from "@dynecho/shared";
 
 import { getImpactLaneKind, getImpactLanePillLabel } from "./impact-lane-view";
+import {
+  isReinforcedConcreteLowConfidenceFloorLane,
+  REINFORCED_CONCRETE_LOW_CONFIDENCE_TRACE_CANDIDATE_DETAIL
+} from "./reinforced-concrete-low-confidence-floor-lane";
 
 export type ValidationPosture = {
   detail: string;
@@ -96,6 +100,16 @@ export function describeImpactValidationPosture(result: AssemblyCalculation | nu
   const trace = result.dynamicImpactTrace;
   if (trace) {
     if (trace.estimateTier === "low_confidence") {
+      if (isReinforcedConcreteLowConfidenceFloorLane(result)) {
+        return {
+          detail:
+            "The active impact lane is the final reinforced-concrete mixed-row fallback. " +
+            REINFORCED_CONCRETE_LOW_CONFIDENCE_TRACE_CANDIDATE_DETAIL,
+          label: trace.estimateTierLabel ?? "Low-confidence family fallback",
+          posture: "low_confidence"
+        };
+      }
+
       return {
         detail:
           "The active impact lane is the final published-family fallback. It remains source-backed, but it should be read as a last-resort low-confidence output rather than a narrow same-family estimate.",
@@ -141,6 +155,16 @@ export function describeImpactValidationPosture(result: AssemblyCalculation | nu
 
   if (result.impact) {
     if (result.impact.basis === "predictor_floor_system_low_confidence_estimate") {
+      if (isReinforcedConcreteLowConfidenceFloorLane(result)) {
+        return {
+          detail:
+            "The live impact output is coming from the final reinforced-concrete mixed-row fallback. " +
+            REINFORCED_CONCRETE_LOW_CONFIDENCE_TRACE_CANDIDATE_DETAIL,
+          label: "Low-confidence family fallback",
+          posture: "low_confidence"
+        };
+      }
+
       return {
         detail:
           "The live impact output is coming from the final published-family fallback. It stays source-backed and non-empty, but it sits below the narrower same-family estimate corridors.",

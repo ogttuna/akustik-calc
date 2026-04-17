@@ -10,6 +10,7 @@ import { formatDecimal } from "@/lib/format";
 import {
   formatConfidenceLevel,
   formatConfidenceProvenance,
+  formatConfidenceProvenanceForImpact,
   formatConfidenceScore,
   getConfidenceTone
 } from "./impact-confidence-view";
@@ -24,6 +25,7 @@ import {
   getImpactLaneNarrative,
   getImpactLanePillLabel
 } from "./impact-lane-view";
+import { isReinforcedConcreteLowConfidenceFloorLane } from "./reinforced-concrete-low-confidence-floor-lane";
 
 type ImpactResultPanelProps = {
   result: AssemblyCalculation | null;
@@ -38,9 +40,13 @@ export function ImpactResultPanel({ result }: ImpactResultPanelProps) {
   const boundFloorSystemEstimate = result?.boundFloorSystemEstimate ?? null;
   const laneKind = getImpactLaneKind({ impact, lowerBoundImpact });
   const metricBasisRows = getActiveImpactMetricBasisRows(impact);
+  const reinforcedConcreteLowConfidence = isReinforcedConcreteLowConfidenceFloorLane(result);
   const primaryMetricLabel = impact?.labOrField === "field" ? "L'nT,w" : "Ln,w";
   const primaryMetricValue =
     impact?.labOrField === "field" ? impact?.LPrimeNTw ?? null : impact?.LnW ?? null;
+  const floorEstimatePillLabel =
+    floorSystemEstimate?.kind === "low_confidence" ? "Low-confidence floor fallback" : "Published family estimate";
+  const floorEstimatePillTone = floorSystemEstimate?.kind === "low_confidence" ? "warning" : "accent";
 
   return (
     <SurfacePanel className="px-5 py-5">
@@ -49,7 +55,7 @@ export function ImpactResultPanel({ result }: ImpactResultPanelProps) {
         <Pill tone={impact ? "success" : lowerBoundImpact ? "neutral" : "warning"}>{getImpactLanePillLabel(laneKind)}</Pill>
         {result?.impactCatalogMatch ? <Pill tone="neutral">Official product evidence</Pill> : null}
         {floorSystemMatch ? <Pill tone="success">Exact family companion</Pill> : null}
-        {floorSystemEstimate ? <Pill tone="accent">Published family estimate</Pill> : null}
+        {floorSystemEstimate ? <Pill tone={floorEstimatePillTone}>{floorEstimatePillLabel}</Pill> : null}
         {boundFloorSystemMatch ? <Pill tone="neutral">Official bound family</Pill> : null}
         {boundFloorSystemEstimate ? <Pill tone="neutral">Bound interpolation</Pill> : null}
         {impact && (typeof impact.LPrimeNW === "number" || typeof impact.LPrimeNTw === "number") ? (
@@ -190,7 +196,10 @@ export function ImpactResultPanel({ result }: ImpactResultPanelProps) {
             <MetricCard
               label="Confidence"
               value={`${formatConfidenceScore(impact.confidence.score)} · ${formatConfidenceLevel(impact.confidence.level)}`}
-              detail={`${formatConfidenceProvenance(impact.confidence.provenance)} provenance${impact.bandSet ? ` · ${impact.bandSet}` : ""}`}
+              detail={`${formatConfidenceProvenanceForImpact({
+                basis: impact.basis,
+                provenance: impact.confidence.provenance
+              })} provenance${impact.bandSet ? ` · ${impact.bandSet}` : ""}`}
             />
           </div>
 
@@ -228,7 +237,9 @@ export function ImpactResultPanel({ result }: ImpactResultPanelProps) {
 
           {impact.estimateCandidateIds?.length ? (
             <div className="mt-3 rounded-md border hairline bg-[color:var(--panel)] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
-              <span className="font-semibold text-[color:var(--ink)]">Candidate lineage:</span>{" "}
+              <span className="font-semibold text-[color:var(--ink)]">
+                {reinforcedConcreteLowConfidence ? "Ranked nearby published row ids:" : "Candidate lineage:"}
+              </span>{" "}
               {impact.estimateCandidateIds.join(", ")}
             </div>
           ) : null}

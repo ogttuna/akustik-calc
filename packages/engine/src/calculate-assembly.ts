@@ -54,6 +54,10 @@ import {
 import { computeLayerSurfaceMassKgM2 } from "./layer-surface-mass";
 import { getDefaultMaterialCatalog, resolveMaterial } from "./material-catalog";
 import {
+  hasReinforcedConcreteLowConfidenceProxyAirborne,
+  REINFORCED_CONCRETE_LOW_CONFIDENCE_PROXY_AIRBORNE_WARNING
+} from "./reinforced-concrete-low-confidence-airborne";
+import {
   detectMixedPlainFilledSingleBoardFamily,
   getMixedPlainFilledSingleBoardProfile,
   MIXED_PLAIN_FILLED_SINGLE_BOARD_FIELD_TARGET_RW_PRIME
@@ -1132,6 +1136,8 @@ export function calculateAssembly(
     warnings.push(
       "Low-confidence published-family fallback is active without finite airborne companions. DynEcho kept unavailable proxy airborne outputs hidden instead of fabricating supported Rw / Ctr values."
     );
+  } else if (hasReinforcedConcreteLowConfidenceProxyAirborne(floorSystemEstimate)) {
+    warnings.push(REINFORCED_CONCRETE_LOW_CONFIDENCE_PROXY_AIRBORNE_WARNING);
   }
 
   if (predictorInputMode === "derived_from_visible_layers") {
@@ -1164,7 +1170,9 @@ export function calculateAssembly(
     warnings.push(
       floorSystemEstimate.impact.basis === "predictor_lightweight_steel_fl28_interpolation_estimate"
         ? `Published family estimate active: lightweight steel FL-28 interpolation at ${floorSystemEstimate.fitPercent}% fit. DynEcho stayed inside the curated UBIQ open-web family instead of drifting into a broad steel blend.`
-        : `Published family estimate active: ${floorSystemEstimate.structuralFamily} ${floorSystemEstimate.kind.replaceAll("_", " ")} at ${floorSystemEstimate.fitPercent}% fit.`
+        : floorSystemEstimate.kind === "low_confidence"
+          ? `Published low-confidence fallback active: ${floorSystemEstimate.structuralFamily} at ${floorSystemEstimate.fitPercent}% fit.`
+          : `Published family estimate active: ${floorSystemEstimate.structuralFamily} ${floorSystemEstimate.kind.replaceAll("_", " ")} at ${floorSystemEstimate.fitPercent}% fit.`
     );
   } else if (boundFloorSystemEstimate) {
     warnings.push(

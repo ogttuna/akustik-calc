@@ -6,6 +6,10 @@ import {
 } from "./impact-only-low-confidence-floor-lane";
 import type { StudyMode } from "./preset-definitions";
 import {
+  isReinforcedConcreteLowConfidenceFloorLane,
+  REINFORCED_CONCRETE_LOW_CONFIDENCE_FLOOR_FAMILY_NOTE
+} from "./reinforced-concrete-low-confidence-floor-lane";
+import {
   isSteelBoundSupportFormLane,
   STEEL_BOUND_SUPPORT_FORM_ROUTE_NOTE
 } from "./steel-bound-support-form-lane";
@@ -69,6 +73,9 @@ function buildGuidedValidationDetail(input: {
     case "low_confidence":
       if (studyMode === "floor" && isImpactOnlyLowConfidenceFloorLane(result)) {
         return `${posture.label} is active. ${IMPACT_ONLY_LOW_CONFIDENCE_FLOOR_FAMILY_NOTE}`;
+      }
+      if (studyMode === "floor" && isReinforcedConcreteLowConfidenceFloorLane(result)) {
+        return `${posture.label} is active. ${REINFORCED_CONCRETE_LOW_CONFIDENCE_FLOOR_FAMILY_NOTE}`;
       }
       return `${posture.label} is active. This is the final published-family fallback, so treat it as a last-resort estimate rather than a narrow solver match.`;
     case "bound":

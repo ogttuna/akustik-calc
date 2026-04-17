@@ -23,6 +23,7 @@ export type PredictorFamilyEstimateCase = {
   basisOverride?: ImpactCalculation["basis"];
   candidateIds: readonly string[];
   candidateScores: readonly number[];
+  fitPercentOverride?: number;
   impactRatings: {
     CI?: number;
     CI50_2500?: number;
@@ -92,6 +93,58 @@ function estimateFitPercent(candidates: readonly WeightedCandidate[]): number {
   return round1(Math.max(28, 100 - averageScore * 12));
 }
 
+function capPredictorEstimateFitPercent(fitPercent: number, kind: FloorSystemEstimateKind): number {
+  if (kind === "low_confidence") {
+    // Keep predictor-only low-confidence routes on the same displayed fit ceiling
+    // as the broader floor-system estimate pipeline.
+    return Math.min(fitPercent, 29);
+  }
+
+  return fitPercent;
+}
+
+function buildPredictorImpactNotes(
+  input: PredictorFamilyEstimateCase,
+  candidateLabels: readonly string[]
+): string[] {
+  const candidateScores = input.candidateScores.map((score) => ksRound1(score)).join(", ");
+
+  if (input.kind === "low_confidence") {
+    return [
+      `${input.noteLabel} stayed inside nearby published rows instead of drifting into a fabricated topology result.`,
+      `Nearby published rows: ${candidateLabels.join("; ")}.`,
+      `Nearby-row scores: ${candidateScores}.`,
+      "This remains a low-confidence fallback built from nearby published rows, not a narrow published-family claim or an exact lab record."
+    ];
+  }
+
+  return [
+    `${input.noteLabel} stayed inside curated published family rows instead of drifting into a fabricated topology result.`,
+    `Candidate rows: ${candidateLabels.join("; ")}.`,
+    `Candidate scores: ${candidateScores}.`,
+    "This remains a labeled published-family estimate, not an exact lab record."
+  ];
+}
+
+function buildPredictorEstimateNotes(
+  input: PredictorFamilyEstimateCase,
+  candidateLabels: readonly string[]
+): string[] {
+  if (input.kind === "low_confidence") {
+    return [
+      `Active family: ${input.structuralFamily}.`,
+      `${input.noteLabel} is active on the predictor lane.`,
+      `Nearby published lineage: ${candidateLabels.join("; ")}.`
+    ];
+  }
+
+  return [
+    `Active family: ${input.structuralFamily}.`,
+    `${input.noteLabel} is active on the predictor lane.`,
+    `Curated lineage: ${candidateLabels.join("; ")}.`
+  ];
+}
+
 function resolveAirborneRatingsCompanionSemantic(
   ratings: FloorSystemAirborneRatings,
   sourceSystems: readonly ExactFloorSystem[]
@@ -143,25 +196,19 @@ export function buildPredictorFamilyEstimateCase(input: PredictorFamilyEstimateC
     estimateCandidateIds: [...input.candidateIds],
     labOrField: "lab",
     metricBasis: buildUniformImpactMetricBasis(input.impactRatings, basis),
-    notes: [
-      `${input.noteLabel} stayed inside curated published family rows instead of drifting into a fabricated topology result.`,
-      `Candidate rows: ${candidateLabels.join("; ")}.`,
-      `Candidate scores: ${input.candidateScores.map((score) => ksRound1(score)).join(", ")}.`,
-      "This remains a labeled published-family estimate, not an exact lab record."
-    ],
+    notes: buildPredictorImpactNotes(input, candidateLabels),
     scope: "family_estimate"
   };
 
   return {
     airborneRatings: resolveAirborneRatingsCompanionSemantic(input.airborneRatings, sourceSystems),
-    fitPercent: estimateFitPercent(weightedCandidates),
+    fitPercent:
+      typeof input.fitPercentOverride === "number"
+        ? input.fitPercentOverride
+        : capPredictorEstimateFitPercent(estimateFitPercent(weightedCandidates), input.kind),
     impact,
     kind: input.kind,
-    notes: [
-      `Active family: ${input.structuralFamily}.`,
-      `${input.noteLabel} is active on the predictor lane.`,
-      `Curated lineage: ${candidateLabels.join("; ")}.`
-    ],
+    notes: buildPredictorEstimateNotes(input, candidateLabels),
     sourceSystems,
     structuralFamily: input.structuralFamily
   };

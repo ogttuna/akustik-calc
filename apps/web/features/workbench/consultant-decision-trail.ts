@@ -52,6 +52,7 @@ function formatOutputCoverage(input: {
   guideResult: ImpactGuideDerivation | null;
   outputs: readonly RequestedOutputId[];
   result: AssemblyCalculation | null;
+  screeningFallbackActive?: boolean;
 }): ConsultantDecisionTrailItem {
   const summary = summarizeTargetOutputs(input);
   const activeCount = summary.engineLive.length + summary.engineBound.length + summary.guideReady.length;
@@ -69,12 +70,15 @@ function formatOutputCoverage(input: {
   return {
     detail:
       `${input.outputs.length} requested output${input.outputs.length === 1 ? "" : "s"} are armed. ` +
-      `${activeCount} currently resolve through live, bound, or guide-backed lanes.` +
+      `${activeCount} currently resolve through ${
+        input.screeningFallbackActive ? "live, bound, guide-backed, or screening-fallback lanes" : "live, bound, or guide-backed lanes"
+      }.` +
       (blockedLabels.length > 0
         ? ` Still explicit: ${blockedLabels.join(", ")}.`
-        : " No requested output is currently left as an unresolved placeholder."),
+        : " No requested output is currently left as an unresolved placeholder.") +
+      (input.screeningFallbackActive ? " Keep the current package in screening mode until a narrower lane is proven." : ""),
     label: "Output coverage",
-    tone: blockedLabels.length > 0 ? "warning" : activeCount > 0 ? "success" : "accent"
+    tone: input.screeningFallbackActive ? "warning" : blockedLabels.length > 0 ? "warning" : activeCount > 0 ? "success" : "accent"
   };
 }
 
@@ -91,12 +95,15 @@ export function getConsultantDecisionTrail(input: {
   const activeFamily = getActiveValidationFamily(result);
   const activeMode = getActiveValidationMode(result);
   const fieldAirborneProvenance = getFieldAirborneProvenanceSummary(result);
+  const screeningFallbackActive = Boolean(result && impactPosture.posture === "low_confidence");
 
   const items: ConsultantDecisionTrailItem[] = [
     {
       detail: !result
         ? impactPosture.detail
-        : `${activeMode?.label ?? impactPosture.label}${activeFamily ? ` on ${activeFamily.label}` : ""}. ${impactPosture.detail}`,
+        : `${activeMode?.label ?? impactPosture.label}${activeFamily ? ` on ${activeFamily.label}` : ""}. ${impactPosture.detail}${
+            screeningFallbackActive ? " Keep the current floor-side read in screening territory and do not treat it as delivery-ready." : ""
+          }`,
       label: "Impact corridor",
       tone: getPostureTone(impactPosture.posture)
     },
@@ -105,10 +112,21 @@ export function getConsultantDecisionTrail(input: {
       label: "Airborne corridor",
       tone: getPostureTone(airbornePosture.posture)
     },
+    ...(screeningFallbackActive
+      ? [
+          {
+            detail:
+              "Low-confidence fallback remains active on the current floor-side route. Keep nearby-row evidence, warnings, and corridor notes attached, and do not present the package as delivery-ready.",
+            label: "Delivery posture",
+            tone: "warning" as const
+          }
+        ]
+      : []),
     formatOutputCoverage({
       guideResult,
       outputs,
-      result
+      result,
+      screeningFallbackActive
     })
   ];
 
@@ -139,7 +157,9 @@ export function getConsultantDecisionTrail(input: {
   return {
     headline: !result
       ? "No live decision trail yet. Build a valid stack before treating the export as a consultant brief."
-      : `${impactPosture.label}${activeFamily ? ` on ${activeFamily.label}` : ""} is the current floor-side posture. ${
+      : `${impactPosture.label}${activeFamily ? ` on ${activeFamily.label}` : ""} is the current floor-side ${
+          screeningFallbackActive ? "screening posture" : "posture"
+        }. ${
           fieldAirborneProvenance
             ? `${fieldAirborneProvenance.label} is the active field-airborne reading.`
             : `${airbornePosture.label} is the current airborne reading.`

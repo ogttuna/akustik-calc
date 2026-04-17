@@ -148,7 +148,7 @@ function buildValidationRecommendation(input: {
 
   if (validationLabel === "Low-confidence fallback") {
     return {
-      detail: `${validationDetail} Use this only for option screening until a narrower published family or measured row is available.`,
+      detail: `${validationDetail} Use this only for option screening until a narrower published family or measured row is available, and do not present it as delivery-ready.`,
       label: "Keep screening language explicit",
       tone: "warning"
     };
@@ -189,6 +189,7 @@ export function buildSimpleWorkbenchProposalBrief(input: {
   validationTone: "neutral" | "ready" | "warning";
   warnings: readonly string[];
 }): SimpleWorkbenchProposalBrief {
+  const lowConfidenceFallback = input.validationLabel === "Low-confidence fallback";
   const suggestedIssue = buildSuggestedIssue({
     consultantCompany: input.consultantCompany,
     issueCodePrefix: input.issueCodePrefix,
@@ -199,12 +200,16 @@ export function buildSimpleWorkbenchProposalBrief(input: {
   const citedSourcesCount = input.citations.filter((citation) => typeof citation.href === "string" && citation.href.length > 0).length;
   const executiveSummary =
     `${input.projectName} currently reads ${input.primaryMetricLabel} ${input.primaryMetricValue}. ` +
-    `DynEcho is carrying the stack on the ${input.dynamicBranchLabel.toLowerCase()} route with a ${input.validationLabel.toLowerCase()} posture. ` +
+    (lowConfidenceFallback
+      ? `DynEcho is carrying the stack on a screening-only low-confidence fallback route. `
+      : `DynEcho is carrying the stack on the ${input.dynamicBranchLabel.toLowerCase()} route with a ${input.validationLabel.toLowerCase()} posture. `) +
     `${input.studyContextLabel} issue under the ${input.reportProfileLabel.toLowerCase()} profile in ${input.contextLabel.toLowerCase()} context. ` +
-    `${input.citations.length} citation${input.citations.length === 1 ? "" : "s"} are attached` +
+    `${input.citations.length} ${lowConfidenceFallback ? "nearby-row " : ""}citation${input.citations.length === 1 ? "" : "s"} are attached` +
     (input.warnings.length > 0
       ? ` and ${input.warnings.length} live warning${input.warnings.length === 1 ? "" : "s"} remain explicit.`
-      : " and no live warning is currently active.");
+      : lowConfidenceFallback
+        ? " and the screening package remains explicit even without an additional live warning."
+        : " and no live warning is currently active.");
 
   const assumptionItems: SimpleWorkbenchProposalBriefItem[] = [
     {
@@ -230,18 +235,24 @@ export function buildSimpleWorkbenchProposalBrief(input: {
     {
       detail:
         input.warnings.length > 0
-          ? `${input.warnings.length} live warning${input.warnings.length === 1 ? "" : "s"} remain visible. First signal: ${input.warnings[0]}`
-          : "No live warning flag is active on the current route.",
+          ? `${input.warnings.length} live warning${input.warnings.length === 1 ? "" : "s"} remain visible. First signal: ${input.warnings[0]}${
+              lowConfidenceFallback ? " Keep the current route in screening-only fallback mode while those warnings remain open." : ""
+            }`
+          : lowConfidenceFallback
+            ? "No additional live warning is active, but the current route still stays in screening-only fallback mode."
+            : "No live warning flag is active on the current route.",
       label: "Live warning state",
-      tone: input.warnings.length > 0 ? "warning" : "success"
+      tone: input.warnings.length > 0 ? "warning" : lowConfidenceFallback ? "warning" : "success"
     },
     {
       detail:
-        citedSourcesCount > 0
+        lowConfidenceFallback && citedSourcesCount > 0
+          ? `${input.citations.length} nearby-row source line${input.citations.length === 1 ? "" : "s"} are attached, including ${citedSourcesCount} direct link${citedSourcesCount === 1 ? "" : "s"} for screening audit follow-up.`
+          : citedSourcesCount > 0
           ? `${input.citations.length} source line${input.citations.length === 1 ? "" : "s"} are attached, including ${citedSourcesCount} direct link${citedSourcesCount === 1 ? "" : "s"} for audit follow-up.`
           : `${input.citations.length} source line${input.citations.length === 1 ? "" : "s"} are attached, but no direct source link is active yet.`,
       label: "Citation coverage",
-      tone: citedSourcesCount > 0 ? "success" : input.citations.length > 0 ? "accent" : "warning"
+      tone: citedSourcesCount > 0 ? (lowConfidenceFallback ? "accent" : "success") : input.citations.length > 0 ? "accent" : "warning"
     }
   ];
 
@@ -253,10 +264,19 @@ export function buildSimpleWorkbenchProposalBrief(input: {
     }),
     input.warnings.length > 0
       ? {
-          detail: input.warnings[0],
+          detail: `${input.warnings[0]}${
+            lowConfidenceFallback ? " Keep the package in screening mode until a narrower lane is proven." : ""
+          }`,
           label: "Resolve the first live blocker",
           tone: "warning"
         }
+      : lowConfidenceFallback
+        ? {
+            detail:
+              "No extra live blocker remains, but keep the present stack frozen only as a screening snapshot until a narrower lane is proven.",
+            label: "Keep the stack as a screening snapshot",
+            tone: "warning"
+          }
       : {
           detail: "No live blocker remains on the current route. Keep the present stack frozen if you are issuing it.",
           label: "Freeze the current stack",
@@ -273,7 +293,13 @@ export function buildSimpleWorkbenchProposalBrief(input: {
           label: "Carry one fallback option",
           tone: "accent"
         },
-    citedSourcesCount > 0
+    lowConfidenceFallback && citedSourcesCount > 0
+      ? {
+          detail: `${citedSourcesCount} linked nearby-row source line${citedSourcesCount === 1 ? "" : "s"} should travel with the screening package so the fallback evidence stays auditable.`,
+          label: "Carry the nearby-row appendix",
+          tone: "accent"
+        }
+      : citedSourcesCount > 0
       ? {
           detail: `${citedSourcesCount} linked source line${citedSourcesCount === 1 ? "" : "s"} are ready to travel with the offer sheet appendix.`,
           label: "Attach the citation appendix",

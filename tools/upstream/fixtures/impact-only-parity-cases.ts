@@ -1184,6 +1184,13 @@ export const IMPACT_ONLY_PARITY_CASES: readonly ImpactOnlyParityCase[] = [
       targetOutputs: ["Ln,w"]
     },
     compare: {
+      acceptedLocalDivergences: [
+        {
+          metrics: ["impact.estimateCandidateIds"],
+          reason:
+            "DynEcho now keeps the reinforced-concrete low-confidence fallback on the mixed nearby-row ranking that was tightened in the owned corridor, while upstream still carries the older broader candidate list."
+        }
+      ],
       compareImpactBasis: true,
       compareImpactEstimateCandidateIds: true,
       compareFloorMetrics: true,

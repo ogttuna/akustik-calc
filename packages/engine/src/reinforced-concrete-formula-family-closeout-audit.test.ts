@@ -15,7 +15,14 @@ type CloseoutSnapshot = {
   impactLnW: number | null;
   metricBasisDeltaLw: string | null;
   metricBasisLnW: string | null;
+  noteMentionsLowConfidenceFallback: boolean;
+  noteMentionsNearbyRowRankingSupport: boolean;
   noteMentionsPublishedFamily: boolean;
+  noteMentionsProxyAirborneHonesty: boolean;
+  rawEstimateNotesMentionNearbyPublishedLineage: boolean;
+  rawEstimateNotesMentionCuratedLineage: boolean;
+  rawImpactNotesMentionLowConfidenceFallbackRecord: boolean;
+  rawImpactNotesMentionPublishedFamilyRecord: boolean;
   rw: number | null;
   rwCtr: number | null;
   supportedTargetOutputs: readonly string[];
@@ -30,6 +37,8 @@ type CloseoutCase = {
 
 function snapshot(result: DynamicResult): CloseoutSnapshot {
   const notes = result.impactSupport?.notes ?? [];
+  const rawImpactNotes = result.impact?.notes ?? [];
+  const rawEstimateNotes = result.floorSystemEstimate?.notes ?? [];
 
   return {
     candidateIds: result.impact?.estimateCandidateIds ?? null,
@@ -41,8 +50,30 @@ function snapshot(result: DynamicResult): CloseoutSnapshot {
     impactLnW: result.impact?.LnW ?? null,
     metricBasisDeltaLw: result.impact?.metricBasis?.DeltaLw ?? null,
     metricBasisLnW: result.impact?.metricBasis?.LnW ?? null,
+    noteMentionsLowConfidenceFallback: notes.some(
+      (note: string) => /Published floor-system low-confidence fallback is active: reinforced concrete/i.test(note)
+    ),
+    noteMentionsNearbyRowRankingSupport: notes.some(
+      (note: string) => /Nearby-row ranking stays elastic-ceiling first, rigid-ceiling second/i.test(note)
+    ),
     noteMentionsPublishedFamily: notes.some(
       (note: string) => /Published floor-system family estimate is active: reinforced concrete/i.test(note)
+    ),
+    noteMentionsProxyAirborneHonesty: notes.some(
+      (note: string) => /proxy airborne companions from mixed nearby concrete rows/i.test(note)
+    ),
+    rawEstimateNotesMentionNearbyPublishedLineage: rawEstimateNotes.some(
+      (note: string) => /Nearby published lineage:/i.test(note)
+    ),
+    rawEstimateNotesMentionCuratedLineage: rawEstimateNotes.some((note: string) => /Curated lineage:/i.test(note)),
+    rawImpactNotesMentionLowConfidenceFallbackRecord: rawImpactNotes.some(
+      (note: string) =>
+        /This remains a low-confidence fallback built from nearby published rows, not a narrow published-family claim or an exact lab record\./i.test(
+          note
+        )
+    ),
+    rawImpactNotesMentionPublishedFamilyRecord: rawImpactNotes.some(
+      (note: string) => /This remains a labeled published-family estimate, not an exact lab record\./i.test(note)
     ),
     rw: result.floorSystemRatings?.Rw ?? null,
     rwCtr: result.floorSystemRatings?.RwCtr ?? null,
@@ -68,7 +99,14 @@ const CASES: readonly CloseoutCase[] = [
       impactLnW: 74.5,
       metricBasisDeltaLw: null,
       metricBasisLnW: "predictor_bare_massive_floor_iso12354_annexc_estimate",
+      noteMentionsLowConfidenceFallback: false,
+      noteMentionsNearbyRowRankingSupport: false,
       noteMentionsPublishedFamily: false,
+      noteMentionsProxyAirborneHonesty: false,
+      rawEstimateNotesMentionNearbyPublishedLineage: false,
+      rawEstimateNotesMentionCuratedLineage: false,
+      rawImpactNotesMentionLowConfidenceFallbackRecord: false,
+      rawImpactNotesMentionPublishedFamilyRecord: false,
       rw: 57,
       rwCtr: 50.8,
       supportedTargetOutputs: ["Rw", "Ln,w"],
@@ -98,7 +136,14 @@ const CASES: readonly CloseoutCase[] = [
       impactLnW: 65.8,
       metricBasisDeltaLw: "predictor_heavy_floating_floor_iso12354_annexc_estimate",
       metricBasisLnW: "predictor_heavy_floating_floor_iso12354_annexc_estimate",
+      noteMentionsLowConfidenceFallback: false,
+      noteMentionsNearbyRowRankingSupport: false,
       noteMentionsPublishedFamily: false,
+      noteMentionsProxyAirborneHonesty: false,
+      rawEstimateNotesMentionNearbyPublishedLineage: false,
+      rawEstimateNotesMentionCuratedLineage: false,
+      rawImpactNotesMentionLowConfidenceFallbackRecord: false,
+      rawImpactNotesMentionPublishedFamilyRecord: false,
       rw: 60,
       rwCtr: 53.6,
       supportedTargetOutputs: ["Rw", "Ln,w", "DeltaLw"],
@@ -129,7 +174,14 @@ const CASES: readonly CloseoutCase[] = [
       impactLnW: 50,
       metricBasisDeltaLw: "predictor_heavy_floating_floor_iso12354_annexc_estimate",
       metricBasisLnW: "predictor_heavy_concrete_published_upper_treatment_estimate",
+      noteMentionsLowConfidenceFallback: false,
+      noteMentionsNearbyRowRankingSupport: false,
       noteMentionsPublishedFamily: true,
+      noteMentionsProxyAirborneHonesty: false,
+      rawEstimateNotesMentionNearbyPublishedLineage: false,
+      rawEstimateNotesMentionCuratedLineage: false,
+      rawImpactNotesMentionLowConfidenceFallbackRecord: false,
+      rawImpactNotesMentionPublishedFamilyRecord: false,
       rw: 58,
       rwCtr: -6.7,
       supportedTargetOutputs: ["Rw", "Ln,w", "DeltaLw"],
@@ -164,11 +216,127 @@ const CASES: readonly CloseoutCase[] = [
       impactLnW: 43,
       metricBasisDeltaLw: "predictor_heavy_floating_floor_iso12354_annexc_estimate",
       metricBasisLnW: "predictor_heavy_concrete_published_upper_treatment_estimate",
+      noteMentionsLowConfidenceFallback: false,
+      noteMentionsNearbyRowRankingSupport: false,
       noteMentionsPublishedFamily: true,
+      noteMentionsProxyAirborneHonesty: false,
+      rawEstimateNotesMentionNearbyPublishedLineage: false,
+      rawEstimateNotesMentionCuratedLineage: false,
+      rawImpactNotesMentionLowConfidenceFallbackRecord: false,
+      rawImpactNotesMentionPublishedFamilyRecord: false,
       rw: 77,
       rwCtr: null,
       supportedTargetOutputs: ["Rw", "Ln,w", "DeltaLw"],
       unsupportedTargetOutputs: []
+    }
+  },
+  {
+    id: "carpet archetype stays family-owned with DeltaLw unsupported",
+    evaluate: () =>
+      calculateImpactOnly([], {
+        impactPredictorInput: {
+          structuralSupportType: "reinforced_concrete",
+          impactSystemType: "combined_upper_lower_system",
+          baseSlab: {
+            materialClass: "heavy_concrete",
+            thicknessMm: 165,
+            densityKgM3: 2400
+          },
+          floorCovering: {
+            mode: "material_layer",
+            materialClass: "carpet_with_foam_underlay",
+            thicknessMm: 11,
+            densityKgM3: 320
+          },
+          lowerTreatment: {
+            type: "suspended_ceiling_elastic_hanger",
+            cavityDepthMm: 110,
+            cavityFillThicknessMm: 60,
+            boardLayerCount: 2,
+            boardThicknessMm: 13,
+            boardMaterialClass: "firestop_board"
+          }
+        },
+        targetOutputs: ["Rw", "Ctr", "Ln,w", "DeltaLw"]
+      }),
+    expected: {
+      candidateIds: ["knauf_cc60_1a_concrete150_carpet_lab_2026"],
+      companionDeltaLwFromAnnexC: false,
+      floorRatingsBasis: "predictor_floor_system_family_archetype_estimate",
+      floorSystemEstimateKind: "family_archetype",
+      impactBasis: "predictor_floor_system_family_archetype_estimate",
+      impactDeltaLw: null,
+      impactLnW: 31,
+      metricBasisDeltaLw: null,
+      metricBasisLnW: "predictor_floor_system_family_archetype_estimate",
+      noteMentionsLowConfidenceFallback: false,
+      noteMentionsNearbyRowRankingSupport: false,
+      noteMentionsPublishedFamily: true,
+      noteMentionsProxyAirborneHonesty: false,
+      rawEstimateNotesMentionNearbyPublishedLineage: false,
+      rawEstimateNotesMentionCuratedLineage: true,
+      rawImpactNotesMentionLowConfidenceFallbackRecord: false,
+      rawImpactNotesMentionPublishedFamilyRecord: true,
+      rw: 63,
+      rwCtr: 57,
+      supportedTargetOutputs: ["Rw", "Ctr", "Ln,w"],
+      unsupportedTargetOutputs: ["DeltaLw"]
+    }
+  },
+  {
+    id: "carpet plus extra generic underlay remains formula-owned and unproven",
+    evaluate: () =>
+      calculateImpactOnly([], {
+        impactPredictorInput: {
+          structuralSupportType: "reinforced_concrete",
+          impactSystemType: "combined_upper_lower_system",
+          baseSlab: {
+            materialClass: "heavy_concrete",
+            thicknessMm: 165,
+            densityKgM3: 2400
+          },
+          resilientLayer: {
+            thicknessMm: 5
+          },
+          floorCovering: {
+            mode: "material_layer",
+            materialClass: "carpet_with_foam_underlay",
+            thicknessMm: 11,
+            densityKgM3: 320
+          },
+          lowerTreatment: {
+            type: "suspended_ceiling_elastic_hanger",
+            cavityDepthMm: 110,
+            cavityFillThicknessMm: 60,
+            boardLayerCount: 2,
+            boardThicknessMm: 13,
+            boardMaterialClass: "firestop_board"
+          }
+        },
+        targetOutputs: ["Rw", "Ctr", "Ln,w", "DeltaLw"]
+      }),
+    expected: {
+      candidateIds: null,
+      companionDeltaLwFromAnnexC: false,
+      floorRatingsBasis: "predictor_heavy_concrete_floor_airborne_companion_estimate",
+      floorSystemEstimateKind: null,
+      impactBasis: "predictor_heavy_bare_floor_iso12354_annexc_estimate",
+      impactDeltaLw: null,
+      impactLnW: 72,
+      metricBasisDeltaLw: null,
+      metricBasisLnW: "predictor_bare_massive_floor_iso12354_annexc_estimate",
+      noteMentionsLowConfidenceFallback: false,
+      noteMentionsNearbyRowRankingSupport: false,
+      noteMentionsPublishedFamily: false,
+      noteMentionsProxyAirborneHonesty: false,
+      rawEstimateNotesMentionNearbyPublishedLineage: false,
+      rawEstimateNotesMentionCuratedLineage: false,
+      rawImpactNotesMentionLowConfidenceFallbackRecord: false,
+      rawImpactNotesMentionPublishedFamilyRecord: false,
+      rw: 59,
+      rwCtr: 53.2,
+      supportedTargetOutputs: ["Ln,w"],
+      unsupportedTargetOutputs: ["Rw", "Ctr", "DeltaLw"]
     }
   },
   {
@@ -198,7 +366,14 @@ const CASES: readonly CloseoutCase[] = [
       impactLnW: 51,
       metricBasisDeltaLw: null,
       metricBasisLnW: "predictor_floor_system_family_archetype_estimate",
+      noteMentionsLowConfidenceFallback: false,
+      noteMentionsNearbyRowRankingSupport: false,
       noteMentionsPublishedFamily: true,
+      noteMentionsProxyAirborneHonesty: false,
+      rawEstimateNotesMentionNearbyPublishedLineage: false,
+      rawEstimateNotesMentionCuratedLineage: true,
+      rawImpactNotesMentionLowConfidenceFallbackRecord: false,
+      rawImpactNotesMentionPublishedFamilyRecord: true,
       rw: 63,
       rwCtr: 57,
       supportedTargetOutputs: ["Rw", "Ctr", "Ln,w"],
@@ -239,11 +414,9 @@ const CASES: readonly CloseoutCase[] = [
       }),
     expected: {
       candidateIds: [
-        "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026",
-        "knauf_cc60_1a_concrete150_carpet_lab_2026",
         "euracoustics_f2_elastic_ceiling_concrete_lab_2026",
-        "euracoustics_f0_bare_concrete_lab_2026",
-        "euracoustics_f1_rigid_ceiling_concrete_lab_2026"
+        "euracoustics_f1_rigid_ceiling_concrete_lab_2026",
+        "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026"
       ],
       companionDeltaLwFromAnnexC: false,
       floorRatingsBasis: "predictor_floor_system_low_confidence_estimate",
@@ -253,7 +426,14 @@ const CASES: readonly CloseoutCase[] = [
       impactLnW: 50,
       metricBasisDeltaLw: null,
       metricBasisLnW: "predictor_floor_system_low_confidence_estimate",
-      noteMentionsPublishedFamily: true,
+      noteMentionsLowConfidenceFallback: true,
+      noteMentionsNearbyRowRankingSupport: true,
+      noteMentionsPublishedFamily: false,
+      noteMentionsProxyAirborneHonesty: true,
+      rawEstimateNotesMentionNearbyPublishedLineage: true,
+      rawEstimateNotesMentionCuratedLineage: false,
+      rawImpactNotesMentionLowConfidenceFallbackRecord: true,
+      rawImpactNotesMentionPublishedFamilyRecord: false,
       rw: 65.9,
       rwCtr: 57,
       supportedTargetOutputs: ["Rw", "Ctr", "Ln,w"],

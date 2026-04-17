@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import type { AssemblyCalculation } from "@dynecho/shared";
 
 import { getPresetById, type PresetId } from "./preset-definitions";
 import { evaluateScenario } from "./scenario-analysis";
@@ -19,6 +20,57 @@ function evaluatePreset(presetId: PresetId) {
     studyMode: preset.studyMode,
     targetOutputs
   });
+}
+
+function buildReinforcedConcreteLowConfidenceResult(): AssemblyCalculation {
+  return {
+    curve: {
+      frequenciesHz: [125, 250, 500],
+      transmissionLossDb: [52, 60, 67]
+    },
+    dynamicImpactTrace: {
+      detectedSupportFamily: "reinforced_concrete",
+      estimateTier: "low_confidence",
+      estimateTierLabel: "Low-confidence fallback · reinforced concrete",
+      systemType: "combined_upper_lower_system",
+      systemTypeLabel: "Combined upper and lower system"
+    } as AssemblyCalculation["dynamicImpactTrace"],
+    floorSystemEstimate: {
+      kind: "low_confidence"
+    } as AssemblyCalculation["floorSystemEstimate"],
+    floorSystemRatings: {
+      Rw: 65.9,
+      RwCtr: 57,
+      RwCtrSemantic: "rw_plus_ctr",
+      basis: "predictor_floor_system_low_confidence_estimate"
+    },
+    impact: {
+      basis: "predictor_floor_system_low_confidence_estimate",
+      LnW: 50
+    } as AssemblyCalculation["impact"],
+    layers: [],
+    metrics: {
+      airGapCount: 1,
+      estimatedCDb: -2,
+      estimatedCtrDb: -8.9,
+      estimatedRwDb: 65.9,
+      estimatedStc: 65,
+      insulationCount: 1,
+      method: "screening_mass_law_curve_seed_v3",
+      surfaceMassKgM2: 410,
+      totalThicknessMm: 446
+    },
+    ok: true,
+    ratings: {
+      iso717: {
+        composite: "Rw 66 (-2;-9)",
+        descriptor: "Rw"
+      }
+    },
+    supportedTargetOutputs: ["Rw", "Ctr", "Ln,w"],
+    unsupportedTargetOutputs: [],
+    warnings: []
+  } as AssemblyCalculation;
 }
 
 describe("getGuidedValidationSummary", () => {
@@ -120,6 +172,18 @@ describe("getGuidedValidationSummary", () => {
     expect(summary.detail).toContain("same low-confidence lane");
     expect(summary.detail).toContain("ceiling package");
     expect(summary.detail).toContain("narrower Knauf corridor");
+  });
+
+  it("calls out reinforced-concrete combined low-confidence lanes as mixed-row proxy companion fallbacks", () => {
+    const summary = getGuidedValidationSummary({
+      result: buildReinforcedConcreteLowConfidenceResult(),
+      studyMode: "floor"
+    });
+
+    expect(summary.value).toBe("Low-confidence fallback");
+    expect(summary.tone).toBe("warning");
+    expect(summary.detail).toContain("mixed nearby-row concrete lane");
+    expect(summary.detail).toContain("proxy airborne companions");
   });
 
   it("waits for a supported lane when no result exists yet", () => {

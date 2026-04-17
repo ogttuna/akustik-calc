@@ -1,4 +1,8 @@
-import type { ImpactConfidence, ImpactConfidenceLevel, ImpactConfidenceProvenance } from "@dynecho/shared";
+import type {
+  ImpactConfidence,
+  ImpactConfidenceLevel,
+  ImpactConfidenceProvenance
+} from "@dynecho/shared";
 
 export function formatConfidenceLevel(level: ImpactConfidenceLevel): string {
   return `${level.charAt(0).toUpperCase()}${level.slice(1)} confidence`;
@@ -48,6 +52,17 @@ export function formatConfidenceProvenance(provenance: ImpactConfidenceProvenanc
   }
 
   return "Manual guide";
+}
+
+export function formatConfidenceProvenanceForImpact(input: {
+  basis?: string | null;
+  provenance: ImpactConfidenceProvenance;
+}): string {
+  if (input.basis === "predictor_floor_system_low_confidence_estimate") {
+    return "Low-confidence fallback";
+  }
+
+  return formatConfidenceProvenance(input.provenance);
 }
 
 export function describeConfidence(confidence: Pick<ImpactConfidence, "level" | "score" | "summary">): string {

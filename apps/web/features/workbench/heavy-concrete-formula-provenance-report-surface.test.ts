@@ -1,4 +1,4 @@
-import type { ImpactFieldContext, RequestedOutputId } from "@dynecho/shared";
+import type { AssemblyCalculation, ImpactFieldContext, RequestedOutputId } from "@dynecho/shared";
 import * as React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -28,6 +28,99 @@ const HEAVY_FLOATING_FORMULA_ROWS: readonly Omit<LayerDraft, "id">[] = [
 
 function buildRows(rows: readonly Omit<LayerDraft, "id">[], id: string): LayerDraft[] {
   return rows.map((row, index) => ({ ...row, id: `${id}-${index + 1}` }));
+}
+
+function buildReinforcedConcreteLowConfidenceResult(): AssemblyCalculation {
+  return {
+    dynamicImpactTrace: {
+      availableMetricLabels: ["Ln,w", "Rw", "Ctr"],
+      candidateRowCount: 3,
+      confidenceClass: "low",
+      confidenceScore: 0.54,
+      detectedSupportFamily: "reinforced_concrete",
+      estimateTier: "low_confidence",
+      estimateTierLabel: "Low-confidence fallback · reinforced concrete",
+      evidenceTier: "estimate",
+      evidenceTierLabel: "Estimated evidence",
+      fitPercent: 29,
+      impactBasisLabel: "Published family low-confidence estimate",
+      selectedLabel: "Low-confidence fallback · reinforced concrete",
+      selectionKindLabel: "Low-confidence fallback",
+      systemType: "combined_upper_lower_system",
+      systemTypeLabel: "Combined upper and lower system"
+    } as AssemblyCalculation["dynamicImpactTrace"],
+    floorSystemEstimate: {
+      fitPercent: 29,
+      impact: {
+        basis: "predictor_floor_system_low_confidence_estimate"
+      },
+      kind: "low_confidence",
+      structuralFamily: "reinforced concrete",
+      sourceSystems: [
+        {
+          id: "euracoustics_f2_elastic_ceiling_concrete_lab_2026",
+          label: "Euracoustics F2 elastic ceiling concrete",
+          sourceLabel: "Euracoustics laboratory row",
+          sourceType: "open_measured_dataset",
+          sourceUrl: "https://example.com/euracoustics-f2",
+          trustTier: "peer_reviewed_open_access"
+        },
+        {
+          id: "euracoustics_f1_rigid_ceiling_concrete_lab_2026",
+          label: "Euracoustics F1 rigid ceiling concrete",
+          sourceLabel: "Euracoustics laboratory row",
+          sourceType: "open_measured_dataset",
+          sourceUrl: "https://example.com/euracoustics-f1",
+          trustTier: "peer_reviewed_open_access"
+        },
+        {
+          id: "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026",
+          label: "Knauf CC60 1A concrete 150 timber acoustic underlay",
+          sourceLabel: "Knauf laboratory table",
+          sourceType: "official_manufacturer_system_table",
+          sourceUrl: "https://example.com/knauf",
+          trustTier: "official_manufacturer"
+        }
+      ]
+    } as AssemblyCalculation["floorSystemEstimate"],
+    floorSystemRatings: {
+      Rw: 65.9,
+      RwCtr: 57,
+      RwCtrSemantic: "rw_plus_ctr",
+      basis: "predictor_floor_system_low_confidence_estimate"
+    },
+    impact: {
+      basis: "predictor_floor_system_low_confidence_estimate",
+      estimateCandidateIds: [
+        "euracoustics_f2_elastic_ceiling_concrete_lab_2026",
+        "euracoustics_f1_rigid_ceiling_concrete_lab_2026",
+        "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026"
+      ],
+      LnW: 50
+    } as AssemblyCalculation["impact"],
+    layers: [],
+    metrics: {
+      airGapCount: 1,
+      estimatedCDb: -2,
+      estimatedCtrDb: -8.9,
+      estimatedRwDb: 65.9,
+      estimatedStc: 65,
+      insulationCount: 1,
+      method: "screening_mass_law_curve_seed_v3",
+      surfaceMassKgM2: 410,
+      totalThicknessMm: 446
+    },
+    ok: true,
+    ratings: {
+      iso717: {
+        composite: "Rw 66 (-2;-9)",
+        descriptor: "Rw"
+      }
+    },
+    supportedTargetOutputs: ["Rw", "Ctr", "Ln,w"],
+    unsupportedTargetOutputs: [],
+    warnings: []
+  } as AssemblyCalculation;
 }
 
 function buildHeavyFloatingFormulaScenario() {
@@ -118,5 +211,19 @@ describe("heavy concrete formula provenance report surface", () => {
     expect(report).toContain("- Formula note: Resonance cross-check follows f0 ~= 160 * sqrt(s'/m'load).");
     expect(report).toContain("- Formula note: L'n,w = Ln,w + K.");
     expect(report).toContain("- Formula note: L'nT,w = L'n,w + 10 log10(31.3 / V) on the standardized field-volume path.");
+  });
+
+  it("keeps reinforced-concrete low-confidence trace cards explicit as mixed-row fallbacks at the 29% ceiling", () => {
+    vi.stubGlobal("React", React);
+    const traceHtml = renderToStaticMarkup(
+      React.createElement(ImpactTracePanel, { result: buildReinforcedConcreteLowConfidenceResult() })
+    );
+
+    expect(traceHtml).toContain("29% fit inside the active low-confidence ceiling");
+    expect(traceHtml).toContain("mixed nearby-row concrete lane");
+    expect(traceHtml).toContain("Nearby row 1 · elastic-ceiling anchor");
+    expect(traceHtml).toContain("rigid-ceiling row second");
+    expect(traceHtml).toContain("Proxy airborne companions from the same mixed nearby-row reinforced-concrete fallback");
+    expect(traceHtml).toContain("Displayed fit is capped at 29% for this low-confidence tier");
   });
 });

@@ -252,9 +252,9 @@ describe("derivePredictorPublishedFamilyEstimate", () => {
     expect(result?.airborneRatings.Rw).toBe(65.9);
     expect(result?.airborneRatings.RwCtr).toBe(57);
     expect(result?.impact.estimateCandidateIds).toEqual([
-      "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026",
       "euracoustics_f2_elastic_ceiling_concrete_lab_2026",
-      "euracoustics_f1_rigid_ceiling_concrete_lab_2026"
+      "euracoustics_f1_rigid_ceiling_concrete_lab_2026",
+      "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026"
     ]);
   });
 

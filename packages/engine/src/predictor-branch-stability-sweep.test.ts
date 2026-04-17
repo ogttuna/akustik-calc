@@ -13,6 +13,7 @@ type BranchSweepVariant = {
 type BranchSweepCase = {
   expectedBasis: string;
   expectedCandidateIds: readonly string[];
+  expectedFitPercent?: number;
   expectedKind: "family_general" | "low_confidence";
   expectedSupportedTargetOutputs: readonly RequestedOutputId[];
   id: string;
@@ -36,12 +37,11 @@ const BRANCH_SWEEP_CASES: readonly BranchSweepCase[] = [
     id: "concrete_combined_vinyl_elastic_low_confidence",
     expectedKind: "low_confidence",
     expectedBasis: "predictor_floor_system_low_confidence_estimate",
+    expectedFitPercent: 29,
     expectedCandidateIds: [
-      "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026",
-      "knauf_cc60_1a_concrete150_carpet_lab_2026",
       "euracoustics_f2_elastic_ceiling_concrete_lab_2026",
-      "euracoustics_f0_bare_concrete_lab_2026",
-      "euracoustics_f1_rigid_ceiling_concrete_lab_2026"
+      "euracoustics_f1_rigid_ceiling_concrete_lab_2026",
+      "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026"
     ],
     targetOutputs: ["Rw", "Ctr", "Ln,w", "CI", "Ln,w+CI"],
     expectedSupportedTargetOutputs: ["Rw", "Ctr", "Ln,w"],
@@ -92,8 +92,8 @@ const BRANCH_SWEEP_CASES: readonly BranchSweepCase[] = [
             boardMaterialClass: "firestop_board"
           }
         },
-        lnwRange: [50.0, 50.0],
-        rwRange: [65.9, 65.9]
+        lnwRange: [50.4, 50.4],
+        rwRange: [65.3, 65.3]
       },
       {
         id: "deeper_ceiling_and_softer_resilient_package",
@@ -117,8 +117,8 @@ const BRANCH_SWEEP_CASES: readonly BranchSweepCase[] = [
             boardMaterialClass: "firestop_board"
           }
         },
-        lnwRange: [50.0, 50.0],
-        rwRange: [65.9, 65.9]
+        lnwRange: [50.6, 50.6],
+        rwRange: [64.7, 64.7]
       }
     ]
   },
@@ -345,6 +345,14 @@ describe("predictor branch stability sweep", () => {
         expect(result.floorSystemEstimate?.kind, `${label} should keep the same floor-system estimate kind`).toBe(
           testCase.expectedKind
         );
+        if (typeof testCase.expectedFitPercent === "number") {
+          expect(result.floorSystemEstimate?.fitPercent, `${label} should keep the same displayed fit ceiling`).toBe(
+            testCase.expectedFitPercent
+          );
+          expect(result.dynamicImpactTrace?.fitPercent, `${label} trace fit should stay aligned`).toBe(
+            testCase.expectedFitPercent
+          );
+        }
         expect(result.impact?.basis, `${label} should keep the same predictor basis`).toBe(testCase.expectedBasis);
         expect(result.impact?.estimateCandidateIds, `${label} should keep the same candidate family`).toEqual(
           testCase.expectedCandidateIds

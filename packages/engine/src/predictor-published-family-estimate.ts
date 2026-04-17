@@ -8,6 +8,10 @@ import {
   normalizePredictorToken,
   type PredictorFamilyEstimateCase
 } from "./predictor-family-estimate-shared";
+import {
+  buildReinforcedConcreteCombinedVinylElasticCeilingCandidateSet,
+  deriveReinforcedConcreteCombinedVinylElasticCeilingMetrics,
+} from "./reinforced-concrete-combined-vinyl-elastic-ceiling-estimate";
 import { clamp } from "./math";
 
 type PublishedFamilyRule = {
@@ -503,7 +507,7 @@ function deriveKnaufConcreteCombinedPublishedFamilyEstimate(
     return null;
   }
 
-  const boardMaterialClass = normalizePredictorToken(input.lowerTreatment.boardMaterialClass);
+  const boardMaterialClass = normalizePredictorToken(input.lowerTreatment?.boardMaterialClass);
   if (!isConcreteFirestopBoardClass(boardMaterialClass)) {
     return null;
   }
@@ -587,7 +591,7 @@ function deriveKnaufConcreteCombinedTilePublishedFamilyEstimate(
   }
 
   const floorMaterial = normalizePredictorToken(input.floorCovering?.materialClass);
-  const boardMaterialClass = normalizePredictorToken(input.lowerTreatment.boardMaterialClass);
+  const boardMaterialClass = normalizePredictorToken(input.lowerTreatment?.boardMaterialClass);
   const resilientThicknessMm = input.resilientLayer?.thicknessMm;
 
   if (floorMaterial !== "ceramic_tile") {
@@ -655,7 +659,7 @@ function deriveKnaufConcreteSuspendedTilePublishedFamilyEstimate(
   }
 
   const floorMaterial = normalizePredictorToken(input.floorCovering?.materialClass);
-  const boardMaterialClass = normalizePredictorToken(input.lowerTreatment.boardMaterialClass);
+  const boardMaterialClass = normalizePredictorToken(input.lowerTreatment?.boardMaterialClass);
 
   if (floorMaterial !== "ceramic_tile") {
     return null;
@@ -706,86 +710,31 @@ function deriveKnaufConcreteSuspendedTilePublishedFamilyEstimate(
 function deriveConcreteCombinedVinylElasticCeilingEstimate(
   input: ImpactPredictorInput
 ): FloorSystemEstimateResult | null {
-  if (
-    input.structuralSupportType !== "reinforced_concrete" ||
-    input.impactSystemType !== "combined_upper_lower_system" ||
-    input.lowerTreatment?.type !== "suspended_ceiling_elastic_hanger" ||
-    normalizePredictorToken(input.floorCovering?.materialClass) !== "vinyl_flooring"
-  ) {
-    return null;
-  }
-
-  const baseThicknessMm = input.baseSlab?.thicknessMm;
-  const resilientThicknessMm = input.resilientLayer?.thicknessMm;
-  const floorCoveringThicknessMm = input.floorCovering?.thicknessMm;
-  const cavityDepthMm = input.lowerTreatment.cavityDepthMm;
-  const cavityFillThicknessMm = input.lowerTreatment.cavityFillThicknessMm;
-  const boardThicknessMm = input.lowerTreatment.boardThicknessMm;
-  const boardLayerCount = input.lowerTreatment.boardLayerCount;
-
-  if (
-    !(typeof baseThicknessMm === "number" && baseThicknessMm >= 140 && baseThicknessMm <= 190) ||
-    !(typeof resilientThicknessMm === "number" && resilientThicknessMm > 0) ||
-    !(typeof floorCoveringThicknessMm === "number" && floorCoveringThicknessMm > 0) ||
-    !(typeof cavityDepthMm === "number" && cavityDepthMm > 0) ||
-    !(typeof cavityFillThicknessMm === "number" && cavityFillThicknessMm >= 0) ||
-    !(typeof boardThicknessMm === "number" && boardThicknessMm > 0) ||
-    boardLayerCount !== 2
-  ) {
-    return null;
-  }
-
-  if (input.floatingScreed?.materialClass || input.upperFill?.materialClass) {
-    return null;
-  }
-
-  const boardMaterialClass = normalizePredictorToken(input.lowerTreatment.boardMaterialClass);
+  const boardMaterialClass = normalizePredictorToken(input.lowerTreatment?.boardMaterialClass);
   if (!isConcreteFirestopBoardClass(boardMaterialClass)) {
     return null;
   }
 
-  if (
-    !thicknessNear(resilientThicknessMm, 8, 4) ||
-    !thicknessNear(floorCoveringThicknessMm, 3, 2) ||
-    !thicknessNear(cavityDepthMm, 120, 30) ||
-    !thicknessNear(cavityFillThicknessMm, 100, 35) ||
-    !thicknessNear(boardThicknessMm, 16, 3)
-  ) {
+  const metrics = deriveReinforcedConcreteCombinedVinylElasticCeilingMetrics(input);
+  if (!metrics) {
     return null;
   }
 
-  const baseThicknessDelta = clamp((baseThicknessMm - 150) / 30, -1, 1);
-  const upperPackageFactor = clamp(((resilientThicknessMm / 8) + (floorCoveringThicknessMm / 3)) / 2, 0.75, 1.3);
-  const ceilingFactor = clamp(
-    ((cavityDepthMm / 120) + (Math.min(cavityFillThicknessMm, cavityDepthMm) / 100) + (boardThicknessMm / 16)) / 3,
-    0.75,
-    1.25
+  const candidateSet = buildReinforcedConcreteCombinedVinylElasticCeilingCandidateSet(
+    metrics.candidateScore,
+    "family_general"
   );
-  const lnW = 50.6 - (0.6 * baseThicknessDelta) - (0.8 * (upperPackageFactor - 1)) - (0.8 * (ceilingFactor - 1));
-  const rw = 64.9 + baseThicknessDelta + (0.6 * (ceilingFactor - 1)) - (0.2 * (upperPackageFactor - 1));
-  const candidateScore =
-    1.5 +
-    calculateCandidateScore(baseThicknessMm, 150, 30) +
-    calculateCandidateScore(resilientThicknessMm, 8, 4) +
-    calculateCandidateScore(floorCoveringThicknessMm, 3, 2) +
-    calculateCandidateScore(cavityDepthMm, 120, 30) +
-    calculateCandidateScore(cavityFillThicknessMm, 100, 35) +
-    calculateCandidateScore(boardThicknessMm, 16, 3);
 
   return buildPredictorFamilyEstimateCase({
     airborneRatings: {
-      Rw: Number(rw.toFixed(1)),
+      Rw: metrics.rw,
       RwCtr: 57,
       RwCtrSemantic: "rw_plus_ctr"
     },
-    candidateIds: [
-      "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026",
-      "euracoustics_f2_elastic_ceiling_concrete_lab_2026",
-      "euracoustics_f1_rigid_ceiling_concrete_lab_2026"
-    ],
-    candidateScores: [candidateScore, candidateScore + 0.4, candidateScore + 1.2],
+    candidateIds: candidateSet.candidateIds,
+    candidateScores: candidateSet.candidateScores,
     impactRatings: {
-      LnW: Number(lnW.toFixed(1))
+      LnW: metrics.lnW
     },
     kind: "family_general",
     noteLabel: "Reinforced-concrete vinyl plus elastic-ceiling family estimate",
@@ -1169,7 +1118,7 @@ function derivePliteqSteelJoistSuspendedVinylEstimate(
     return null;
   }
 
-  const boardMaterialClass = normalizePredictorToken(input.lowerTreatment.boardMaterialClass);
+  const boardMaterialClass = normalizePredictorToken(input.lowerTreatment?.boardMaterialClass);
 
   if (boardMaterialClass && boardMaterialClass !== "firestop_board") {
     return null;

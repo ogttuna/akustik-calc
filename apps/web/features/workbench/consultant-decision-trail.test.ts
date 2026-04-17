@@ -10,6 +10,16 @@ const WALL_ROWS = [
   { id: "wall-4", materialId: "gypsum_board", thicknessMm: "12.5" }
 ] as const;
 
+const REINFORCED_CONCRETE_LOW_CONFIDENCE_ROWS = [
+  { id: "rc-low-1", materialId: "concrete", thicknessMm: "180", floorRole: "base_structure" },
+  { id: "rc-low-2", materialId: "generic_resilient_underlay", thicknessMm: "8", floorRole: "resilient_layer" },
+  { id: "rc-low-3", materialId: "vinyl_flooring", thicknessMm: "3", floorRole: "floor_covering" },
+  { id: "rc-low-4", materialId: "resilient_channel", thicknessMm: "120", floorRole: "ceiling_cavity" },
+  { id: "rc-low-5", materialId: "glasswool", thicknessMm: "100", floorRole: "ceiling_fill" },
+  { id: "rc-low-6", materialId: "firestop_board", thicknessMm: "16", floorRole: "ceiling_board" },
+  { id: "rc-low-7", materialId: "firestop_board", thicknessMm: "16", floorRole: "ceiling_board" }
+] as const;
+
 describe("consultant decision trail", () => {
   it("keeps corridor, provenance, and assumption posture in one trail", () => {
     const scenario = evaluateScenario({
@@ -116,5 +126,49 @@ describe("consultant decision trail", () => {
     expect(trail.items.find((item) => item.label === "Airborne corridor")?.detail).toContain("protected corridor hold");
     expect(lines).toContainEqual(expect.stringContaining("Airborne corridor:"));
     expect(lines).toContainEqual(expect.stringContaining("protected corridor hold"));
+  });
+
+  it("keeps low-confidence reinforced-concrete trails in screening territory", () => {
+    const scenario = evaluateScenario({
+      id: "consultant-trail-reinforced-concrete-low-confidence",
+      name: "Consultant trail reinforced concrete low confidence",
+      rows: REINFORCED_CONCRETE_LOW_CONFIDENCE_ROWS,
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: ["Rw", "Ctr", "Ln,w"]
+    });
+
+    const trail = getConsultantDecisionTrail({
+      guideResult: null,
+      outputs: ["Rw", "Ctr", "Ln,w"],
+      result: scenario.result,
+      warnings: scenario.warnings
+    });
+    const lines = getConsultantDecisionTrailReportLines({
+      guideResult: null,
+      outputs: ["Rw", "Ctr", "Ln,w"],
+      result: scenario.result,
+      warnings: scenario.warnings
+    });
+
+    expect(trail.headline).toContain("screening posture");
+    expect(trail.items).toContainEqual(
+      expect.objectContaining({
+        label: "Delivery posture",
+        tone: "warning"
+      })
+    );
+    expect(trail.items.find((item) => item.label === "Impact corridor")?.detail).toContain(
+      "do not treat it as delivery-ready"
+    );
+    expect(trail.items.find((item) => item.label === "Output coverage")?.detail).toContain(
+      "screening-fallback lanes"
+    );
+    expect(trail.items.find((item) => item.label === "Output coverage")?.detail).toContain(
+      "Keep the current package in screening mode"
+    );
+    expect(trail.items.find((item) => item.label === "Output coverage")?.tone).toBe("warning");
+    expect(lines).toContainEqual(expect.stringContaining("Decision trail headline: Low-confidence fallback on reinforced concrete is the current floor-side screening posture."));
+    expect(lines).toContainEqual(expect.stringContaining("Delivery posture: Low-confidence fallback remains active on the current floor-side route."));
   });
 });

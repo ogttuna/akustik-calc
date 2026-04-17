@@ -1,5 +1,10 @@
 # Checkpoint 2026-04-16 Runtime Candidate Re-rank Handoff
 
+Superseded note:
+
+- this checkpoint is historical
+- use [CHECKPOINT_2026-04-17_HEAVY_CONCRETE_FORMULA_FAMILY_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-17_HEAVY_CONCRETE_FORMULA_FAMILY_CLOSEOUT_HANDOFF.md) for the latest restart point after the heavy-concrete widening closeout
+
 Document role:
 
 - define the current checkpoint after the requested-output harness hard stop and

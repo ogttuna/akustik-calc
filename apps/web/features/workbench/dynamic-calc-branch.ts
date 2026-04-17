@@ -2,6 +2,10 @@ import type { AssemblyCalculation, DynamicAirborneTrace } from "@dynecho/shared"
 
 import { IMPACT_ONLY_LOW_CONFIDENCE_FLOOR_FAMILY_NOTE, isImpactOnlyLowConfidenceFloorLane } from "./impact-only-low-confidence-floor-lane";
 import type { StudyMode } from "./preset-definitions";
+import {
+  isReinforcedConcreteLowConfidenceFloorLane,
+  REINFORCED_CONCRETE_LOW_CONFIDENCE_FLOOR_FAMILY_NOTE
+} from "./reinforced-concrete-low-confidence-floor-lane";
 import { isSteelBoundSupportFormLane, STEEL_BOUND_SUPPORT_FORM_ROUTE_NOTE } from "./steel-bound-support-form-lane";
 
 export type DynamicCalcBranchSummary = {
@@ -76,6 +80,14 @@ export function getDynamicCalcBranchSummary(input: {
         if (isImpactOnlyLowConfidenceFloorLane(result)) {
           return {
             detail: `${trace.selectedLabel} is active. Final published-family fallback on the ${trace.systemTypeLabel?.toLowerCase() ?? "current"} topology. ${IMPACT_ONLY_LOW_CONFIDENCE_FLOOR_FAMILY_NOTE}`,
+            tone: "warning",
+            value: trace.systemTypeLabel ?? trace.selectionKindLabel
+          };
+        }
+
+        if (isReinforcedConcreteLowConfidenceFloorLane(result)) {
+          return {
+            detail: `${trace.selectedLabel} is active. Final published-family fallback on the ${trace.systemTypeLabel?.toLowerCase() ?? "current"} topology. ${REINFORCED_CONCRETE_LOW_CONFIDENCE_FLOOR_FAMILY_NOTE}`,
             tone: "warning",
             value: trace.systemTypeLabel ?? trace.selectionKindLabel
           };

@@ -11,6 +11,10 @@ import {
 } from "@dynecho/shared";
 
 import { type TargetOutputSupportResult } from "./target-output-support";
+import {
+  hasReinforcedConcreteLowConfidenceProxyAirborne,
+  REINFORCED_CONCRETE_LOW_CONFIDENCE_PROXY_AIRBORNE_STATUS_NOTE
+} from "./reinforced-concrete-low-confidence-airborne";
 
 type BuildImpactPredictorStatusInput = {
   boundFloorSystemEstimate?: FloorSystemBoundEstimateResult | null;
@@ -117,12 +121,16 @@ export function buildImpactPredictorStatus(
     }
   }
 
-  if (implementedFamilyEstimate) {
+  if (implementedFamilyEstimate && !implementedLowConfidenceEstimate) {
     notes.push("Implemented family estimate is active.");
   }
 
   if (implementedLowConfidenceEstimate) {
-    notes.push("Low-confidence fallback estimate is active.");
+    notes.push("Implemented low-confidence fallback estimate is active.");
+  }
+
+  if (hasReinforcedConcreteLowConfidenceProxyAirborne(input.floorSystemEstimate)) {
+    notes.push(REINFORCED_CONCRETE_LOW_CONFIDENCE_PROXY_AIRBORNE_STATUS_NOTE);
   }
 
   if (input.hasImpactContext) {

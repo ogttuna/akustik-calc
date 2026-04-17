@@ -12,6 +12,15 @@ import {
   getFieldAirborneProvenanceSummary,
   getFieldAirborneReportLines
 } from "./field-airborne-provenance";
+import {
+  formatReinforcedConcreteLowConfidenceAdditionalRowsDetail,
+  formatReinforcedConcreteLowConfidenceRankedRowLabel,
+  REINFORCED_CONCRETE_LOW_CONFIDENCE_ADDITIONAL_ROWS_LABEL,
+  REINFORCED_CONCRETE_LOW_CONFIDENCE_CANDIDATE_ROWS_DETAIL,
+  isReinforcedConcreteLowConfidenceFloorLane,
+  REINFORCED_CONCRETE_LOW_CONFIDENCE_EVIDENCE_DETAIL_PREFIX,
+  REINFORCED_CONCRETE_LOW_CONFIDENCE_TRACE_CANDIDATE_DETAIL
+} from "./reinforced-concrete-low-confidence-floor-lane";
 import { getAirborneBoundaryPosture } from "./validation-regime";
 
 export type SimpleWorkbenchProposalDecisionItem = {
@@ -77,6 +86,26 @@ function stripReportBulletPrefix(line: string): string {
   return line.replace(/^- /u, "").trim();
 }
 
+function buildDynamicImpactAnchorCitation(input: {
+  dynamicImpactTrace: NonNullable<AssemblyCalculation["dynamicImpactTrace"]>;
+  reinforcedConcreteLowConfidence: boolean;
+}): SimpleWorkbenchProposalCitation {
+  const { dynamicImpactTrace, reinforcedConcreteLowConfidence } = input;
+
+  return {
+    detail: reinforcedConcreteLowConfidence
+      ? `${dynamicImpactTrace.selectedLabel} · ${dynamicImpactTrace.evidenceTierLabel} · ${REINFORCED_CONCRETE_LOW_CONFIDENCE_TRACE_CANDIDATE_DETAIL}`
+      : `${dynamicImpactTrace.selectedLabel} · ${dynamicImpactTrace.evidenceTierLabel} · ${dynamicImpactTrace.impactBasisLabel}.`,
+    label: "Dynamic impact anchor",
+    tone:
+      dynamicImpactTrace.evidenceTier === "exact"
+        ? "success"
+        : dynamicImpactTrace.evidenceTier === "estimate"
+          ? "accent"
+          : "warning"
+  };
+}
+
 export function buildSimpleWorkbenchEvidencePacket(input: {
   briefNote?: string;
   outputs: readonly RequestedOutputId[];
@@ -94,6 +123,7 @@ export function buildSimpleWorkbenchEvidencePacket(input: {
   const citations: SimpleWorkbenchProposalCitation[] = [];
   const fieldAirborneProvenance = getFieldAirborneProvenanceSummary(result);
   const fieldAirborneLines = getFieldAirborneReportLines(result).map(stripReportBulletPrefix);
+  const reinforcedConcreteLowConfidence = isReinforcedConcreteLowConfidenceFloorLane(result);
 
   if (result?.floorSystemMatch) {
     citations.push({
@@ -117,22 +147,44 @@ export function buildSimpleWorkbenchEvidencePacket(input: {
     });
   }
 
+  if (reinforcedConcreteLowConfidence && result?.dynamicImpactTrace) {
+    citations.push(
+      buildDynamicImpactAnchorCitation({
+        dynamicImpactTrace: result.dynamicImpactTrace,
+        reinforcedConcreteLowConfidence
+      })
+    );
+    citations.push({
+      detail: REINFORCED_CONCRETE_LOW_CONFIDENCE_CANDIDATE_ROWS_DETAIL,
+      label: "Nearby-row fallback rationale",
+      tone: "warning"
+    });
+  }
+
   if (result?.floorSystemEstimate) {
     for (const [index, system] of result.floorSystemEstimate.sourceSystems.slice(0, 3).entries()) {
       citations.push({
         detail:
-          `${result.floorSystemEstimate.kind.replaceAll("_", " ")} estimate at ${Math.round(result.floorSystemEstimate.fitPercent)}% fit. ` +
+          `${reinforcedConcreteLowConfidence ? REINFORCED_CONCRETE_LOW_CONFIDENCE_EVIDENCE_DETAIL_PREFIX : `${result.floorSystemEstimate.kind.replaceAll("_", " ")} estimate at ${Math.round(result.floorSystemEstimate.fitPercent)}% fit.`} ` +
           `${system.sourceLabel} · ${formatFloorSourceType(system.sourceType)} · ${formatTrustTier(system.trustTier)} · system id ${system.id}.`,
         href: system.sourceUrl,
-        label: `Estimate anchor ${index + 1}: ${system.label}`,
+        label: reinforcedConcreteLowConfidence
+          ? `${formatReinforcedConcreteLowConfidenceRankedRowLabel(index)}: ${system.label}`
+          : `Estimate anchor ${index + 1}: ${system.label}`,
         tone: result.floorSystemEstimate.kind === "low_confidence" ? "warning" : "accent"
       });
     }
 
     if (result.floorSystemEstimate.sourceSystems.length > 3) {
+      const hiddenRowCount = result.floorSystemEstimate.sourceSystems.length - 3;
+
       citations.push({
-        detail: `${result.floorSystemEstimate.sourceSystems.length - 3} more estimate anchor rows remain in the current family corridor.`,
-        label: "Additional estimate anchors",
+        detail: reinforcedConcreteLowConfidence
+          ? formatReinforcedConcreteLowConfidenceAdditionalRowsDetail(hiddenRowCount)
+          : `${hiddenRowCount} more estimate anchor rows remain in the current family corridor.`,
+        label: reinforcedConcreteLowConfidence
+          ? REINFORCED_CONCRETE_LOW_CONFIDENCE_ADDITIONAL_ROWS_LABEL
+          : "Additional estimate anchors",
         tone: result.floorSystemEstimate.kind === "low_confidence" ? "warning" : "neutral"
       });
     }
@@ -197,18 +249,14 @@ export function buildSimpleWorkbenchEvidencePacket(input: {
   }
 
   if (result?.dynamicImpactTrace) {
-    citations.push({
-      detail:
-        `${result.dynamicImpactTrace.selectedLabel} · ${result.dynamicImpactTrace.evidenceTierLabel} · ` +
-        `${result.dynamicImpactTrace.impactBasisLabel}.`,
-      label: "Dynamic impact anchor",
-      tone:
-        result.dynamicImpactTrace.evidenceTier === "exact"
-          ? "success"
-          : result.dynamicImpactTrace.evidenceTier === "estimate"
-            ? "accent"
-            : "warning"
-    });
+    if (!reinforcedConcreteLowConfidence) {
+      citations.push(
+        buildDynamicImpactAnchorCitation({
+          dynamicImpactTrace: result.dynamicImpactTrace,
+          reinforcedConcreteLowConfidence
+        })
+      );
+    }
   }
 
   if (citations.length === 0) {

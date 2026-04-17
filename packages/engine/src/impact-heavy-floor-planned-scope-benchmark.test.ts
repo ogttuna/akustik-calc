@@ -241,6 +241,22 @@ type ReinforcedConcreteFamilyLaneCase = {
   targetOutputs: readonly RequestedOutputId[];
 };
 
+type ReinforcedConcreteBlockedParityCase = {
+  expected: {
+    basis: string;
+    implementedFamilyEstimate: boolean;
+    implementedFormulaEstimate: boolean;
+    implementedLowConfidenceEstimate: boolean;
+    kind: null;
+    lnwDb: number;
+    supportedTargetOutputs: readonly RequestedOutputId[];
+    unsupportedTargetOutputs: readonly RequestedOutputId[];
+  };
+  id: string;
+  impactPredictorInput: ImpactPredictorInput;
+  targetOutputs: readonly RequestedOutputId[];
+};
+
 const REINFORCED_CONCRETE_FAMILY_LANE_CASES: readonly ReinforcedConcreteFamilyLaneCase[] = [
   {
     id: "published_upper_treatment_predictor_family_general",
@@ -281,6 +297,46 @@ const REINFORCED_CONCRETE_FAMILY_LANE_CASES: readonly ReinforcedConcreteFamilyLa
       rwDb: 58,
       supportedTargetOutputs: ["Ln,w", "Rw", "Ctr"],
       unsupportedTargetOutputs: []
+    }
+  },
+  {
+    id: "knauf_concrete_carpet_archetype",
+    impactPredictorInput: {
+      structuralSupportType: "reinforced_concrete",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        materialClass: "heavy_concrete",
+        thicknessMm: 165,
+        densityKgM3: 2400
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "carpet_with_foam_underlay",
+        thicknessMm: 11,
+        densityKgM3: 320
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_elastic_hanger",
+        cavityDepthMm: 110,
+        cavityFillThicknessMm: 60,
+        boardLayerCount: 2,
+        boardThicknessMm: 13,
+        boardMaterialClass: "firestop_board"
+      }
+    },
+    targetOutputs: ["Ln,w", "Rw", "Ctr", "DeltaLw"],
+    expected: {
+      basis: "predictor_floor_system_family_archetype_estimate",
+      candidateIds: ["knauf_cc60_1a_concrete150_carpet_lab_2026"],
+      implementedFamilyEstimate: true,
+      implementedFormulaEstimate: false,
+      implementedLowConfidenceEstimate: false,
+      kind: "family_archetype",
+      lnwDb: 31,
+      rwCtrDb: 57,
+      rwDb: 63,
+      supportedTargetOutputs: ["Ln,w", "Rw", "Ctr"],
+      unsupportedTargetOutputs: ["DeltaLw"]
     }
   },
   {
@@ -608,11 +664,9 @@ const REINFORCED_CONCRETE_FAMILY_LANE_CASES: readonly ReinforcedConcreteFamilyLa
     expected: {
       basis: "predictor_floor_system_low_confidence_estimate",
       candidateIds: [
-        "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026",
-        "knauf_cc60_1a_concrete150_carpet_lab_2026",
         "euracoustics_f2_elastic_ceiling_concrete_lab_2026",
-        "euracoustics_f0_bare_concrete_lab_2026",
-        "euracoustics_f1_rigid_ceiling_concrete_lab_2026"
+        "euracoustics_f1_rigid_ceiling_concrete_lab_2026",
+        "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026"
       ],
       implementedFamilyEstimate: true,
       implementedFormulaEstimate: false,
@@ -725,6 +779,49 @@ const REINFORCED_CONCRETE_FAMILY_LANE_CASES: readonly ReinforcedConcreteFamilyLa
       rwDb: 70,
       supportedTargetOutputs: ["Ln,w", "Rw", "Ctr", "DeltaLw"],
       unsupportedTargetOutputs: []
+    }
+  }
+];
+
+const REINFORCED_CONCRETE_BLOCKED_PARITY_CASES: readonly ReinforcedConcreteBlockedParityCase[] = [
+  {
+    id: "concrete_carpet_plus_generic_underlay_stays_unproven",
+    impactPredictorInput: {
+      structuralSupportType: "reinforced_concrete",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        materialClass: "heavy_concrete",
+        thicknessMm: 165,
+        densityKgM3: 2400
+      },
+      resilientLayer: {
+        thicknessMm: 5
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "carpet_with_foam_underlay",
+        thicknessMm: 11,
+        densityKgM3: 320
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_elastic_hanger",
+        cavityDepthMm: 110,
+        cavityFillThicknessMm: 60,
+        boardLayerCount: 2,
+        boardThicknessMm: 13,
+        boardMaterialClass: "firestop_board"
+      }
+    },
+    targetOutputs: ["Ln,w", "Rw", "Ctr", "DeltaLw"],
+    expected: {
+      basis: "predictor_heavy_bare_floor_iso12354_annexc_estimate",
+      implementedFamilyEstimate: false,
+      implementedFormulaEstimate: true,
+      implementedLowConfidenceEstimate: false,
+      kind: null,
+      lnwDb: 72,
+      supportedTargetOutputs: ["Ln,w"],
+      unsupportedTargetOutputs: ["Rw", "Ctr", "DeltaLw"]
     }
   }
 ];
@@ -890,6 +987,70 @@ describe("impact heavy-floor planned-scope benchmark", () => {
         errors.push(
           `${entry.id}: expected candidate ids ${entry.expected.candidateIds.join(", ")}, got ${result.impact?.estimateCandidateIds?.join(", ") ?? "null"}`
         );
+      }
+
+      if ((result.impactPredictorStatus?.implementedFamilyEstimate ?? false) !== entry.expected.implementedFamilyEstimate) {
+        errors.push(
+          `${entry.id}: expected implementedFamilyEstimate ${String(entry.expected.implementedFamilyEstimate)}, got ${String(result.impactPredictorStatus?.implementedFamilyEstimate ?? false)}`
+        );
+      }
+
+      if ((result.impactPredictorStatus?.implementedFormulaEstimate ?? false) !== entry.expected.implementedFormulaEstimate) {
+        errors.push(
+          `${entry.id}: expected implementedFormulaEstimate ${String(entry.expected.implementedFormulaEstimate)}, got ${String(result.impactPredictorStatus?.implementedFormulaEstimate ?? false)}`
+        );
+      }
+
+      if (
+        (result.impactPredictorStatus?.implementedLowConfidenceEstimate ?? false) !==
+        entry.expected.implementedLowConfidenceEstimate
+      ) {
+        errors.push(
+          `${entry.id}: expected implementedLowConfidenceEstimate ${String(entry.expected.implementedLowConfidenceEstimate)}, got ${String(result.impactPredictorStatus?.implementedLowConfidenceEstimate ?? false)}`
+        );
+      }
+
+      if (result.supportedTargetOutputs.join("|") !== entry.expected.supportedTargetOutputs.join("|")) {
+        errors.push(
+          `${entry.id}: expected supported outputs ${entry.expected.supportedTargetOutputs.join(", ")}, got ${result.supportedTargetOutputs.join(", ")}`
+        );
+      }
+
+      if (result.unsupportedTargetOutputs.join("|") !== entry.expected.unsupportedTargetOutputs.join("|")) {
+        errors.push(
+          `${entry.id}: expected unsupported outputs ${entry.expected.unsupportedTargetOutputs.join(", ")}, got ${result.unsupportedTargetOutputs.join(", ")}`
+        );
+      }
+    }
+
+    expect(errors).toEqual([]);
+  });
+
+  it("keeps unproven reinforced-concrete parity candidates off defended family lanes", () => {
+    const errors: string[] = [];
+
+    for (const entry of REINFORCED_CONCRETE_BLOCKED_PARITY_CASES) {
+      const result = calculateImpactOnly([], {
+        impactPredictorInput: entry.impactPredictorInput,
+        targetOutputs: [...entry.targetOutputs]
+      });
+
+      if (result.sourceMode !== "predictor_input") {
+        errors.push(`${entry.id}: expected predictor_input source mode, got ${result.sourceMode}`);
+      }
+
+      if (result.impact?.basis !== entry.expected.basis) {
+        errors.push(`${entry.id}: expected impact basis ${entry.expected.basis}, got ${result.impact?.basis ?? "null"}`);
+      }
+
+      if ((result.floorSystemEstimate?.kind ?? null) !== entry.expected.kind) {
+        errors.push(
+          `${entry.id}: expected estimate kind ${String(entry.expected.kind)}, got ${result.floorSystemEstimate?.kind ?? "null"}`
+        );
+      }
+
+      if (numberOrNull(result.impact?.LnW) !== entry.expected.lnwDb) {
+        errors.push(`${entry.id}: expected Ln,w ${entry.expected.lnwDb}, got ${numberOrNull(result.impact?.LnW)}`);
       }
 
       if ((result.impactPredictorStatus?.implementedFamilyEstimate ?? false) !== entry.expected.implementedFamilyEstimate) {

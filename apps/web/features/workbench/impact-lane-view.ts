@@ -4,6 +4,7 @@ export type ImpactLaneKind =
   | "bound_only"
   | "exact_family"
   | "exact_source"
+  | "low_confidence_fallback"
   | "official_catalog"
   | "published_family"
   | "scoped_formula"
@@ -34,6 +35,10 @@ export function getImpactLaneKind(input: {
     return "official_catalog";
   }
 
+  if (impact.basis === "predictor_floor_system_low_confidence_estimate") {
+    return "low_confidence_fallback";
+  }
+
   if (impact.confidence.provenance === "published_family_estimate" && impact.scope === "family_estimate") {
     return "published_family";
   }
@@ -47,6 +52,8 @@ export function getImpactLanePillLabel(kind: ImpactLaneKind): string {
       return "Exact live";
     case "exact_family":
       return "Exact family live";
+    case "low_confidence_fallback":
+      return "Low-confidence live";
     case "published_family":
       return "Family estimate live";
     case "official_catalog":
@@ -66,6 +73,8 @@ export function getImpactLaneHeadline(kind: ImpactLaneKind): string {
       return "Exact impact outputs";
     case "exact_family":
       return "Exact family outputs";
+    case "low_confidence_fallback":
+      return "Low-confidence fallback";
     case "published_family":
       return "Published family estimate";
     case "official_catalog":
@@ -85,6 +94,8 @@ export function getImpactLaneNarrative(kind: ImpactLaneKind, hasExactFamilyCompa
       ? "Exact impact-band sources now stay on their own evidence lane. Airborne Rw/TL remains on the screening path while impact ratings come directly from the imported nominal grid."
       : kind === "exact_family"
         ? "Curated exact floor families now feed the main impact lane as well. Published Ln,w and companion terms from exact floor rows are no longer stranded in a side panel."
+        : kind === "low_confidence_fallback"
+          ? "This lane stays source-backed and non-empty, but it is the final low-confidence fallback built from nearby published rows rather than a narrow same-family estimate. Keep it explicit as a fallback and do not present it as a family-calibrated result."
         : kind === "published_family"
           ? "When no exact floor row lands, DynEcho can now keep the estimate inside the right physical family and label the result with the published branch it came from instead of returning an empty impact lane."
           : kind === "official_catalog"

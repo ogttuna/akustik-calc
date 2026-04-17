@@ -16,10 +16,12 @@ import { formatDecimal } from "@/lib/format";
 import {
   formatConfidenceLevel,
   formatConfidenceProvenance,
+  formatConfidenceProvenanceForImpact,
   formatConfidenceScore,
   getConfidenceTone
 } from "./impact-confidence-view";
 import { getFloorSystemCompanionPresentation } from "./floor-system-airborne-view";
+import { formatReinforcedConcreteLowConfidenceRankedRowLabel } from "./reinforced-concrete-low-confidence-floor-lane";
 
 type ExactFloorSystemPanelProps = {
   result: AssemblyCalculation | null;
@@ -47,6 +49,10 @@ export function ExactFloorSystemPanel({ result }: ExactFloorSystemPanelProps) {
   const boundMatchCompanion = boundMatch ? getFloorSystemCompanionPresentation(boundMatch.system.airborneRatings, "exact") : null;
   const boundEstimateCompanion = boundEstimate ? getFloorSystemCompanionPresentation(boundEstimate.airborneRatings, "estimate") : null;
   const recommendations: FloorSystemRecommendation[] = result?.floorSystemRecommendations ?? [];
+  const estimateActiveLabel =
+    estimate?.kind === "low_confidence" ? "Low-confidence fallback active" : "Family estimate active";
+  const estimateMetricDetail =
+    estimate?.kind === "low_confidence" ? "Low-confidence fallback estimate" : "Published-family estimate";
   const recommendationById = new Map<string, FloorSystemRecommendation>(
     recommendations.map((recommendation: FloorSystemRecommendation) => [recommendation.system.id, recommendation])
   );
@@ -68,7 +74,7 @@ export function ExactFloorSystemPanel({ result }: ExactFloorSystemPanelProps) {
             : boundMatch
               ? "Bound family active"
               : estimate || boundEstimate
-                ? "Family estimate active"
+                ? estimateActiveLabel
                 : "Awaiting family match"}
         </Pill>
         {match ? (
@@ -285,7 +291,7 @@ export function ExactFloorSystemPanel({ result }: ExactFloorSystemPanelProps) {
             <MetricCard
               label="Ln,w"
               value={`${formatDecimal(estimate.impact.LnW ?? 0)} dB`}
-              detail="Published-family estimate"
+              detail={estimateMetricDetail}
             />
             <MetricCard
               label="Rw"
@@ -319,7 +325,10 @@ export function ExactFloorSystemPanel({ result }: ExactFloorSystemPanelProps) {
             <MetricCard
               label="Confidence"
               value={`${formatConfidenceScore(estimate.impact.confidence.score)} · ${formatConfidenceLevel(estimate.impact.confidence.level)}`}
-              detail={`${formatConfidenceProvenance(estimate.impact.confidence.provenance)} provenance`}
+              detail={`${formatConfidenceProvenanceForImpact({
+                basis: estimate.impact.basis,
+                provenance: estimate.impact.confidence.provenance
+              })} provenance`}
             />
           </div>
 
@@ -332,15 +341,20 @@ export function ExactFloorSystemPanel({ result }: ExactFloorSystemPanelProps) {
           </div>
 
           <div className="mt-5 space-y-3">
-            <div className="eyebrow">Blended published rows</div>
-            {estimate.sourceSystems.map((system: ExactFloorSystem) => {
+            <div className="eyebrow">{estimate.kind === "low_confidence" ? "Nearby published rows" : "Blended published rows"}</div>
+            {estimate.sourceSystems.map((system: ExactFloorSystem, index: number) => {
               const companion = getFloorSystemCompanionPresentation(system.airborneRatings, "library");
 
               return (
               <article className="rounded-md border hairline bg-[color:var(--paper)] px-4 py-4" key={system.id}>
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
-                    <div className="font-semibold text-[color:var(--ink)]">{system.label}</div>
+                    {estimate.kind === "low_confidence" ? (
+                      <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+                        {formatReinforcedConcreteLowConfidenceRankedRowLabel(index)}
+                      </div>
+                    ) : null}
+                    <div className={`${estimate.kind === "low_confidence" ? "mt-2" : ""} font-semibold text-[color:var(--ink)]`}>{system.label}</div>
                     <div className="mt-1 text-sm leading-7 text-[color:var(--ink-soft)]">
                       {system.sourceLabel} · {system.trustTier.replaceAll("_", " ")}
                     </div>

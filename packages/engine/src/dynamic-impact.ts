@@ -123,6 +123,17 @@ function formatEstimateTier(kind: FloorSystemEstimateKind | undefined): string |
   }
 }
 
+function formatTraceSelectionKindLabel(input: {
+  estimateTier?: FloorSystemEstimateKind;
+  selectionKind: DynamicImpactSelectionKind;
+}): string {
+  if (input.selectionKind === "family_estimate" && input.estimateTier === "low_confidence") {
+    return "Low-confidence fallback";
+  }
+
+  return formatSelectionKindLabel(input.selectionKind);
+}
+
 function formatStructuralSupportType(value: ImpactPredictorInput["structuralSupportType"] | undefined): string | undefined {
   switch (value) {
     case "reinforced_concrete":
@@ -558,8 +569,13 @@ export function buildDynamicImpactTrace(
     candidateRowCount = 1;
   }
 
+  const selectionKindLabel = formatTraceSelectionKindLabel({
+    estimateTier,
+    selectionKind
+  });
+
   const notes: string[] = [
-    `${formatSelectionKindLabel(selectionKind)} is active on the current impact lane.`,
+    `${selectionKindLabel} is active on the current impact lane.`,
     `Current evidence tier is ${formatEvidenceTierLabel(evidenceTier).toLowerCase()}.`
   ];
 
@@ -613,7 +629,7 @@ export function buildDynamicImpactTrace(
     selectedSourceIds,
     selectedSourceLabels,
     selectionKind,
-    selectionKindLabel: formatSelectionKindLabel(selectionKind),
+    selectionKindLabel,
     standardizedFieldActive: fieldContinuation.standardizedFieldActive,
     structuralSupportLabel: formatStructuralSupportType(structuralSupportType),
     structuralSupportType,

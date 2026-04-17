@@ -50,6 +50,10 @@ import {
 } from "./impact-lane";
 import { computeLayerSurfaceMassKgM2 } from "./layer-surface-mass";
 import { getDefaultMaterialCatalog, resolveMaterial } from "./material-catalog";
+import {
+  hasReinforcedConcreteLowConfidenceProxyAirborne,
+  REINFORCED_CONCRETE_LOW_CONFIDENCE_PROXY_AIRBORNE_WARNING
+} from "./reinforced-concrete-low-confidence-airborne";
 import { analyzeTargetOutputSupport, buildTargetOutputWarnings } from "./target-output-support";
 
 export type CalculateImpactOnlyOptions = {
@@ -368,6 +372,8 @@ export function calculateImpactOnly(
     warnings.push(
       "Low-confidence published-family fallback is active without finite airborne companions. DynEcho kept unavailable proxy airborne outputs hidden instead of fabricating supported Rw / Ctr values."
     );
+  } else if (hasReinforcedConcreteLowConfidenceProxyAirborne(floorSystemEstimate)) {
+    warnings.push(REINFORCED_CONCRETE_LOW_CONFIDENCE_PROXY_AIRBORNE_WARNING);
   }
 
   if (predictorInputMode === "derived_from_visible_layers") {

@@ -34,6 +34,7 @@ import {
   formatImpactMetricBasisLabel,
   getActiveImpactMetricBasisRows
 } from "./impact-metric-basis-view";
+import { formatReinforcedConcreteLowConfidenceRankedRowText } from "./reinforced-concrete-low-confidence-floor-lane";
 import type { PresetDefinition, StudyMode } from "./preset-definitions";
 import type { EvaluatedScenario } from "./scenario-analysis";
 import {
@@ -425,7 +426,16 @@ export function composeWorkbenchReport({
               `- Impact provenance: ${currentScenario.result.impact.confidence.provenance}`,
               `- Impact basis: ${currentScenario.result.impact.basis}`,
               ...(currentScenario.result.impact.estimateCandidateIds?.length
-                ? [`- Impact estimate candidate ids: ${currentScenario.result.impact.estimateCandidateIds.join(", ")}`]
+                ? [
+                    currentScenario.result.impact.basis === "predictor_floor_system_low_confidence_estimate"
+                      ? `- Impact nearby published row ids: ${currentScenario.result.impact.estimateCandidateIds.join(", ")}`
+                      : `- Impact estimate candidate ids: ${currentScenario.result.impact.estimateCandidateIds.join(", ")}`
+                  ]
+                : []),
+              ...(currentScenario.result.impact.basis === "predictor_floor_system_low_confidence_estimate"
+                ? [
+                    "- Impact nearby-row ranking: elastic-ceiling row first, rigid-ceiling row second, timber-underlay row held as a farther fallback when cavity and board geometry drift."
+                  ]
                 : []),
               ...(currentScenario.result.impact.bandSet ? [`- Impact band set: ${currentScenario.result.impact.bandSet}`] : []),
               `- Impact trust note: ${currentScenario.result.impact.confidence.summary}`,
@@ -720,7 +730,11 @@ export function composeWorkbenchReport({
           ]
       : currentEstimatedFloorSystem
         ? [
-            `- Estimated family: ${currentEstimatedFloorSystem.structuralFamily}`,
+            `${
+              currentEstimatedFloorSystem.kind === "low_confidence"
+                ? "- Low-confidence fallback family"
+                : "- Estimated family"
+            }: ${currentEstimatedFloorSystem.structuralFamily}`,
             `- Estimate kind: ${currentEstimatedFloorSystem.kind}`,
             `- Estimated Ln,w: ${formatMetric(currentEstimatedFloorSystem.impact.LnW ?? 0)} dB`,
             `- Estimated Rw: ${formatMetric(currentEstimatedFloorSystem.airborneRatings.Rw)} dB`,
@@ -734,7 +748,17 @@ export function composeWorkbenchReport({
             ...(typeof currentEstimatedFloorSystem.impact.LnWPlusCI === "number"
               ? [`- Estimated Ln,w+CI: ${formatMetric(currentEstimatedFloorSystem.impact.LnWPlusCI)} dB`]
               : []),
-            `- Source rows: ${currentEstimatedFloorSystem.sourceSystems.map((entry: { label: string }) => entry.label).join("; ")}`,
+            `${
+              currentEstimatedFloorSystem.kind === "low_confidence" ? "- Nearby published rows" : "- Source rows"
+            }: ${
+              currentEstimatedFloorSystem.kind === "low_confidence"
+                ? currentEstimatedFloorSystem.sourceSystems
+                    .map((entry: { label: string }, index: number) =>
+                      formatReinforcedConcreteLowConfidenceRankedRowText(index, entry.label)
+                    )
+                    .join("; ")
+                : currentEstimatedFloorSystem.sourceSystems.map((entry: { label: string }) => entry.label).join("; ")
+            }`,
             `- Basis: ${currentEstimatedFloorSystem.impact.basis}`
           ]
         : currentBoundFloorEstimate

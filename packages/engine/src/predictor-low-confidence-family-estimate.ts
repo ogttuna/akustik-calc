@@ -5,6 +5,10 @@ import {
   type PredictorFamilyEstimateCase,
   normalizePredictorToken
 } from "./predictor-family-estimate-shared";
+import {
+  buildReinforcedConcreteCombinedVinylElasticCeilingCandidateSet,
+  deriveReinforcedConcreteCombinedVinylElasticCeilingMetrics,
+} from "./reinforced-concrete-combined-vinyl-elastic-ceiling-estimate";
 
 type TokenExpectation = string | readonly string[];
 
@@ -46,36 +50,6 @@ function matchesLowConfidenceRule(input: ImpactPredictorInput, rule: LowConfiden
 }
 
 const LOW_CONFIDENCE_RULES: readonly LowConfidenceRule[] = [
-  {
-    id: "reinforced_concrete_combined_vinyl",
-    match: {
-      floorCoveringMaterialClass: "vinyl_flooring",
-      impactSystemType: "combined_upper_lower_system",
-      lowerTreatmentType: "suspended_ceiling_elastic_hanger",
-      structuralSupportType: "reinforced_concrete"
-    },
-    estimate: {
-      airborneRatings: {
-        Rw: 65.9,
-        RwCtr: 57,
-        RwCtrSemantic: "rw_plus_ctr"
-      },
-      candidateIds: [
-        "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026",
-        "knauf_cc60_1a_concrete150_carpet_lab_2026",
-        "euracoustics_f2_elastic_ceiling_concrete_lab_2026",
-        "euracoustics_f0_bare_concrete_lab_2026",
-        "euracoustics_f1_rigid_ceiling_concrete_lab_2026"
-      ],
-      candidateScores: [5, 5, 5.5, 7, 7.2],
-      impactRatings: {
-        LnW: 50
-      },
-      kind: "low_confidence",
-      noteLabel: "Reinforced-concrete combined low-confidence fallback",
-      structuralFamily: "reinforced concrete"
-    }
-  },
   {
     id: "open_web_steel_suspended_vinyl",
     match: {
@@ -241,9 +215,60 @@ const LOW_CONFIDENCE_RULES: readonly LowConfidenceRule[] = [
   }
 ];
 
+function deriveReinforcedConcreteCombinedVinylLowConfidenceEstimate(
+  input: ImpactPredictorInput
+): FloorSystemEstimateResult | null {
+  const lowerTreatment = input.lowerTreatment;
+  if (
+    !lowerTreatment ||
+    typeof lowerTreatment.boardThicknessMm !== "number" ||
+    typeof lowerTreatment.cavityDepthMm !== "number" ||
+    typeof lowerTreatment.cavityFillThicknessMm !== "number"
+  ) {
+    return null;
+  }
+
+  const metrics = deriveReinforcedConcreteCombinedVinylElasticCeilingMetrics(input);
+  if (!metrics) {
+    return null;
+  }
+
+  const candidateSet = buildReinforcedConcreteCombinedVinylElasticCeilingCandidateSet(
+    metrics.candidateScore,
+    "low_confidence",
+    {
+      boardThicknessMm: lowerTreatment.boardThicknessMm,
+      cavityDepthMm: lowerTreatment.cavityDepthMm,
+      cavityFillThicknessMm: lowerTreatment.cavityFillThicknessMm
+    }
+  );
+
+  return buildPredictorFamilyEstimateCase({
+    airborneRatings: {
+      Rw: metrics.rw,
+      RwCtr: 57,
+      RwCtrSemantic: "rw_plus_ctr"
+    },
+    candidateIds: candidateSet.candidateIds,
+    candidateScores: candidateSet.candidateScores,
+    fitPercentOverride: 29,
+    impactRatings: {
+      LnW: metrics.lnW
+    },
+    kind: "low_confidence",
+    noteLabel: "Reinforced-concrete combined low-confidence fallback",
+    structuralFamily: "reinforced concrete"
+  });
+}
+
 export function derivePredictorLowConfidenceFamilyEstimate(
   input: ImpactPredictorInput
 ): FloorSystemEstimateResult | null {
+  const reinforcedConcreteEstimate = deriveReinforcedConcreteCombinedVinylLowConfidenceEstimate(input);
+  if (reinforcedConcreteEstimate) {
+    return reinforcedConcreteEstimate;
+  }
+
   for (const rule of LOW_CONFIDENCE_RULES) {
     if (matchesLowConfidenceRule(input, rule)) {
       return buildPredictorFamilyEstimateCase(rule.estimate);

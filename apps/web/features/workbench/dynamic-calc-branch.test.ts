@@ -1,4 +1,4 @@
-import type { AirborneContext, FloorRole, RequestedOutputId } from "@dynecho/shared";
+import type { AirborneContext, AssemblyCalculation, FloorRole, RequestedOutputId } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
 import { getDynamicCalcBranchSummary } from "./dynamic-calc-branch";
@@ -56,6 +56,58 @@ function evaluateWallRows(id: string, rows: Array<{ materialId: string; thicknes
     studyMode: "wall",
     targetOutputs: WALL_OUTPUTS
   });
+}
+
+function buildReinforcedConcreteLowConfidenceResult(): AssemblyCalculation {
+  return {
+    curve: {
+      frequenciesHz: [125, 250, 500],
+      transmissionLossDb: [52, 60, 67]
+    },
+    dynamicImpactTrace: {
+      detectedSupportFamily: "reinforced_concrete",
+      estimateTier: "low_confidence",
+      selectedLabel: "Low-confidence fallback · reinforced concrete",
+      selectionKindLabel: "Low-confidence fallback",
+      systemType: "combined_upper_lower_system",
+      systemTypeLabel: "Combined upper and lower system"
+    } as AssemblyCalculation["dynamicImpactTrace"],
+    floorSystemEstimate: {
+      kind: "low_confidence"
+    } as AssemblyCalculation["floorSystemEstimate"],
+    floorSystemRatings: {
+      Rw: 65.9,
+      RwCtr: 57,
+      RwCtrSemantic: "rw_plus_ctr",
+      basis: "predictor_floor_system_low_confidence_estimate"
+    },
+    impact: {
+      basis: "predictor_floor_system_low_confidence_estimate",
+      LnW: 50
+    } as AssemblyCalculation["impact"],
+    layers: [],
+    metrics: {
+      airGapCount: 1,
+      estimatedCDb: -2,
+      estimatedCtrDb: -8.9,
+      estimatedRwDb: 65.9,
+      estimatedStc: 65,
+      insulationCount: 1,
+      method: "screening_mass_law_curve_seed_v3",
+      surfaceMassKgM2: 410,
+      totalThicknessMm: 446
+    },
+    ok: true,
+    ratings: {
+      iso717: {
+        composite: "Rw 66 (-2;-9)",
+        descriptor: "Rw"
+      }
+    },
+    supportedTargetOutputs: ["Rw", "Ctr", "Ln,w"],
+    unsupportedTargetOutputs: [],
+    warnings: []
+  } as AssemblyCalculation;
 }
 
 describe("getDynamicCalcBranchSummary", () => {
@@ -130,6 +182,19 @@ describe("getDynamicCalcBranchSummary", () => {
     expect(summary.detail).toContain("same low-confidence lane");
     expect(summary.detail).toContain("ceiling package");
     expect(summary.detail).toContain("narrower Knauf corridor");
+  });
+
+  it("keeps reinforced-concrete combined low-confidence summaries explicit about mixed-row proxy airborne companions", () => {
+    const summary = getDynamicCalcBranchSummary({
+      result: buildReinforcedConcreteLowConfidenceResult(),
+      studyMode: "floor"
+    });
+
+    expect(summary.value).toBe("Combined upper and lower system");
+    expect(summary.tone).toBe("warning");
+    expect(summary.detail).toContain("Low-confidence fallback · reinforced concrete is active.");
+    expect(summary.detail).toContain("mixed nearby-row concrete lane");
+    expect(summary.detail).toContain("proxy airborne companions");
   });
 
   it("keeps the preset-only Dataholz integrated dry CLT row on the published combined-family summary instead of surfacing exact floor family wording", () => {

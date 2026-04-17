@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import { getPresetById, type PresetId } from "./preset-definitions";
 import { evaluateScenario } from "./scenario-analysis";
 import { getTargetOutputCorridor, getTargetOutputStatus } from "./target-output-status";
+import type { AssemblyCalculation } from "@dynecho/shared";
 
 function evaluatePreset(presetId: PresetId) {
   const preset = getPresetById(presetId);
@@ -19,6 +20,59 @@ function evaluatePreset(presetId: PresetId) {
     studyMode: preset.studyMode,
     targetOutputs
   });
+}
+
+function buildReinforcedConcreteLowConfidenceResult(): AssemblyCalculation {
+  return {
+    curve: {
+      frequenciesHz: [125, 250, 500],
+      transmissionLossDb: [52, 60, 67]
+    },
+    dynamicImpactTrace: {
+      detectedSupportFamily: "reinforced_concrete",
+      estimateTier: "low_confidence",
+      estimateTierLabel: "Low-confidence fallback · reinforced concrete",
+      selectedLabel: "Low-confidence fallback · reinforced concrete",
+      selectionKindLabel: "Low-confidence fallback",
+      systemType: "combined_upper_lower_system",
+      systemTypeLabel: "Combined upper and lower system"
+    } as AssemblyCalculation["dynamicImpactTrace"],
+    floorSystemEstimate: {
+      kind: "low_confidence"
+    } as AssemblyCalculation["floorSystemEstimate"],
+    floorSystemRatings: {
+      Rw: 65.9,
+      RwCtr: 57,
+      RwCtrSemantic: "rw_plus_ctr",
+      basis: "predictor_floor_system_low_confidence_estimate"
+    },
+    impact: {
+      basis: "predictor_floor_system_low_confidence_estimate",
+      LnW: 50
+    } as AssemblyCalculation["impact"],
+    layers: [],
+    metrics: {
+      airGapCount: 1,
+      estimatedCDb: -2,
+      estimatedCtrDb: -8.9,
+      estimatedRwDb: 65.9,
+      estimatedStc: 65,
+      insulationCount: 1,
+      method: "screening_mass_law_curve_seed_v3",
+      surfaceMassKgM2: 410,
+      totalThicknessMm: 446
+    },
+    ok: true,
+    ratings: {
+      iso717: {
+        composite: "Rw 66 (-2;-9)",
+        descriptor: "Rw"
+      }
+    },
+    supportedTargetOutputs: ["Rw", "Ctr", "Ln,w"],
+    unsupportedTargetOutputs: [],
+    warnings: []
+  } as AssemblyCalculation;
 }
 
 const FIELD_WALL_ROWS = [
@@ -149,6 +203,46 @@ describe("getTargetOutputStatus", () => {
     expect(ciStatus.kind).toBe("engine_live");
     expect(ciStatus.label).toBe("Family estimate");
     expect(ciStatus.note).toContain("supported guide lane");
+  });
+
+  it("keeps reinforced-concrete low-confidence combined outputs explicit as mixed-row proxies", () => {
+    const result = buildReinforcedConcreteLowConfidenceResult();
+
+    const rwStatus = getTargetOutputStatus({
+      guideResult: null,
+      output: "Rw",
+      result
+    });
+    const ctrStatus = getTargetOutputStatus({
+      guideResult: null,
+      output: "Ctr",
+      result
+    });
+    const lnwStatus = getTargetOutputStatus({
+      guideResult: null,
+      output: "Ln,w",
+      result
+    });
+    const rwCorridor = getTargetOutputCorridor({
+      guideResult: null,
+      output: "Rw",
+      result
+    });
+    const lnwCorridor = getTargetOutputCorridor({
+      guideResult: null,
+      output: "Ln,w",
+      result
+    });
+
+    expect(rwStatus.kind).toBe("engine_live");
+    expect(rwStatus.note).toContain("Proxy airborne companion");
+    expect(rwStatus.note).toContain("narrow same-stack family claim");
+    expect(ctrStatus.kind).toBe("engine_live");
+    expect(ctrStatus.note).toContain("Proxy traffic-noise companion");
+    expect(lnwStatus.kind).toBe("engine_live");
+    expect(lnwStatus.note).toContain("mixed nearby-row concrete lane");
+    expect(rwCorridor.detail).toContain("Proxy airborne companion");
+    expect(lnwCorridor.detail).toContain("mixed nearby-row concrete lane");
   });
 
   it("keeps apparent field airborne outputs explicit while geometry-gated outputs stay parked", () => {

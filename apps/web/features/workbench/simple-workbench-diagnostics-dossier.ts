@@ -56,6 +56,7 @@ export function buildSimpleWorkbenchDiagnosticsDossier(input: {
   ].filter(Boolean).length;
   const warningCount = input.warnings.length;
   const validationTone = getValidationTone(input.validationLabel);
+  const lowConfidenceFallback = input.validationLabel === "Low-confidence fallback";
 
   return {
     cards: [
@@ -68,15 +69,17 @@ export function buildSimpleWorkbenchDiagnosticsDossier(input: {
       {
         detail:
           traceCount > 0
-            ? `${formatCount(traceCount, "live trace")} are available for audit. Dynamic airborne, dynamic impact, and airborne overlay remain separate instead of being collapsed into one confidence claim.`
+            ? `${formatCount(traceCount, lowConfidenceFallback ? "screening trace" : "live trace")} are available for audit. Dynamic airborne, dynamic impact, and airborne overlay remain separate instead of being collapsed into one confidence claim${
+                lowConfidenceFallback ? " or being read as a delivery-ready package." : "."
+              }`
             : "No explicit trace block is active yet. Build a supported route first so diagnostics can expose the solver lineage.",
         label: "Trace coverage",
-        tone: traceCount > 0 ? "success" : "warning",
-        value: `${traceCount} live`
+        tone: traceCount > 0 ? (lowConfidenceFallback ? "accent" : "success") : "warning",
+        value: lowConfidenceFallback ? `${traceCount} screening` : `${traceCount} live`
       },
       {
         detail:
-          `${formatCount(input.decisionTrailItems.length, "decision line")} and ${formatCount(input.citations.length, "citation")} travel with the guided package. ` +
+          `${formatCount(input.decisionTrailItems.length, "decision line")} and ${formatCount(input.citations.length, "citation")} travel with the ${lowConfidenceFallback ? "screening package" : "guided package"}. ` +
           `${formatCount(linkedCitationCount, "linked source")} are directly openable from the diagnostics surface.`,
         label: "Evidence courier",
         tone: input.citations.length > 0 ? "accent" : "warning",
@@ -86,14 +89,16 @@ export function buildSimpleWorkbenchDiagnosticsDossier(input: {
         detail:
           warningCount > 0
             ? `${formatCount(warningCount, "live warning")} remain explicit. First signal: ${input.warnings[0]}`
-            : "No live warning is active on the current route.",
+            : lowConfidenceFallback
+              ? "No extra live warning is active, but the current route still remains in screening posture."
+              : "No live warning is active on the current route.",
         label: "Warning board",
-        tone: warningCount > 0 ? "warning" : "success",
-        value: warningCount > 0 ? `${warningCount} active` : "Clear"
+        tone: warningCount > 0 ? "warning" : lowConfidenceFallback ? "warning" : "success",
+        value: warningCount > 0 ? `${warningCount} active` : lowConfidenceFallback ? "Screening" : "Clear"
       }
     ],
     headline:
-      `${input.branchLabel} is active with ${input.validationLabel.toLowerCase()} posture. ` +
+      `${input.branchLabel} is active with ${lowConfidenceFallback ? "screening-route low-confidence posture" : `${input.validationLabel.toLowerCase()} posture`}. ` +
       `${formatCount(traceCount, "trace group")} and ${formatCount(input.citations.length, "citation line")} remain visible so the guided flow can explain why the current route was chosen.`,
     linkedCitationCount,
     traceCount,

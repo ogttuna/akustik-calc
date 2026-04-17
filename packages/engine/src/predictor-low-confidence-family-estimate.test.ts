@@ -32,16 +32,94 @@ describe("derivePredictorLowConfidenceFamilyEstimate", () => {
     });
 
     expect(result?.kind).toBe("low_confidence");
+    expect(result?.fitPercent).toBe(29);
     expect(result?.impact.basis).toBe("predictor_floor_system_low_confidence_estimate");
     expect(result?.impact.LnW).toBe(50);
     expect(result?.airborneRatings.Rw).toBe(65.9);
     expect(result?.impact.estimateCandidateIds).toEqual([
-      "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026",
-      "knauf_cc60_1a_concrete150_carpet_lab_2026",
       "euracoustics_f2_elastic_ceiling_concrete_lab_2026",
-      "euracoustics_f0_bare_concrete_lab_2026",
-      "euracoustics_f1_rigid_ceiling_concrete_lab_2026"
+      "euracoustics_f1_rigid_ceiling_concrete_lab_2026",
+      "knauf_cc60_1a_concrete150_timber_acoustic_underlay_lab_2026"
     ]);
+    expect(result?.impact.notes).toContain(
+      "This remains a low-confidence fallback built from nearby published rows, not a narrow published-family claim or an exact lab record."
+    );
+    expect(result?.impact.notes?.join(" ")).toContain("Nearby published rows:");
+    expect(result?.impact.notes?.join(" ")).toContain("elastic hanger ceiling");
+    expect(result?.impact.notes?.join(" ")).toContain("rigid hanger ceiling");
+    expect(result?.impact.notes?.join(" ")).toContain("Knauf CC60.1A");
+    expect(result?.impact.notes?.join(" ")).not.toContain("Candidate rows:");
+    expect(result?.notes?.join(" ")).toContain("Nearby published lineage:");
+    expect(result?.notes?.join(" ")).toContain("elastic hanger ceiling");
+    expect(result?.notes?.join(" ")).not.toContain("Curated lineage:");
+  });
+
+  it("keeps reinforced-concrete combined vinyl fallback continuous inside the bounded geometry band", () => {
+    const shallower = derivePredictorLowConfidenceFamilyEstimate({
+      structuralSupportType: "reinforced_concrete",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        materialClass: "heavy_concrete",
+        thicknessMm: 165,
+        densityKgM3: 2400
+      },
+      resilientLayer: {
+        thicknessMm: 6,
+        dynamicStiffnessMNm3: 28
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "vinyl_flooring",
+        thicknessMm: 4,
+        densityKgM3: 1400
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_elastic_hanger",
+        cavityDepthMm: 100,
+        cavityFillThicknessMm: 85,
+        boardLayerCount: 2,
+        boardThicknessMm: 15,
+        boardMaterialClass: "firestop_board"
+      }
+    });
+
+    const deeper = derivePredictorLowConfidenceFamilyEstimate({
+      structuralSupportType: "reinforced_concrete",
+      impactSystemType: "combined_upper_lower_system",
+      baseSlab: {
+        materialClass: "heavy_concrete",
+        thicknessMm: 140,
+        densityKgM3: 2400
+      },
+      resilientLayer: {
+        thicknessMm: 10,
+        dynamicStiffnessMNm3: 32
+      },
+      floorCovering: {
+        mode: "material_layer",
+        materialClass: "vinyl_flooring",
+        thicknessMm: 2.5,
+        densityKgM3: 1400
+      },
+      lowerTreatment: {
+        type: "suspended_ceiling_elastic_hanger",
+        cavityDepthMm: 140,
+        cavityFillThicknessMm: 120,
+        boardLayerCount: 2,
+        boardThicknessMm: 18,
+        boardMaterialClass: "firestop_board"
+      }
+    });
+
+    expect(shallower?.kind).toBe("low_confidence");
+    expect(shallower?.fitPercent).toBe(29);
+    expect(shallower?.impact.LnW).toBe(50.4);
+    expect(shallower?.airborneRatings.Rw).toBe(65.3);
+
+    expect(deeper?.kind).toBe("low_confidence");
+    expect(deeper?.fitPercent).toBe(29);
+    expect(deeper?.impact.LnW).toBe(50.6);
+    expect(deeper?.airborneRatings.Rw).toBe(64.7);
   });
 
   it("keeps open-web steel suspended vinyl inputs on the open-web low-confidence lane", () => {

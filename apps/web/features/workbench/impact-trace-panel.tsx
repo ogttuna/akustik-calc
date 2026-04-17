@@ -13,6 +13,16 @@ import {
   formatConfidenceProvenance,
   formatConfidenceScore
 } from "./impact-confidence-view";
+import {
+  REINFORCED_CONCRETE_LOW_CONFIDENCE_CANDIDATE_ROWS_DETAIL,
+  REINFORCED_CONCRETE_LOW_CONFIDENCE_COMPANION_BASIS_DETAIL,
+  formatReinforcedConcreteLowConfidenceRankedRowLabel,
+  isReinforcedConcreteLowConfidenceFloorLane,
+  REINFORCED_CONCRETE_LOW_CONFIDENCE_CTR_DETAIL,
+  REINFORCED_CONCRETE_LOW_CONFIDENCE_ESTIMATE_TIER_DETAIL,
+  REINFORCED_CONCRETE_LOW_CONFIDENCE_FIT_DETAIL,
+  REINFORCED_CONCRETE_LOW_CONFIDENCE_TRACE_CANDIDATE_DETAIL
+} from "./reinforced-concrete-low-confidence-floor-lane";
 import { selectSimpleWorkbenchTraceNotes } from "./simple-workbench-trace-notes";
 
 type ImpactTracePanelProps = {
@@ -56,6 +66,14 @@ function formatEstimateTier(value: string | undefined): string {
   }
 }
 
+function getCandidateLineageHeading(kind: AssemblyCalculation["floorSystemEstimate"] extends infer T
+  ? T extends { kind?: infer K }
+    ? K
+    : never
+  : never): string {
+  return kind === "low_confidence" ? "Nearby published rows" : "Candidate lineage";
+}
+
 function formatOutputList(outputs: readonly string[]): string {
   return outputs.length > 0 ? outputs.join(", ") : "None";
 }
@@ -92,6 +110,7 @@ export function ImpactTracePanel({ result }: ImpactTracePanelProps) {
   const sourceLineageLabels =
     familyEstimate?.sourceSystems.map((system: FamilyEstimateSourceSystem) => system.label) ?? [];
   const hiddenCandidateCount = Math.max(0, candidateRowCount - sourceLineageLabels.length);
+  const reinforcedConcreteLowConfidence = isReinforcedConcreteLowConfidenceFloorLane(result);
   const dynamicNoteSelection = selectSimpleWorkbenchTraceNotes(dynamicImpactTrace?.notes ?? []);
   const boundNoteSelection = selectSimpleWorkbenchTraceNotes(lowerBoundImpact?.notes ?? []);
   const statusNoteSelection = selectSimpleWorkbenchTraceNotes(status?.notes ?? [], {
@@ -117,7 +136,7 @@ export function ImpactTracePanel({ result }: ImpactTracePanelProps) {
           </Pill>
         ) : null}
         {status?.implementedFormulaEstimate ? <Pill tone="accent">Formula lane</Pill> : null}
-        {status?.implementedFamilyEstimate ? <Pill tone="accent">Family lane</Pill> : null}
+        {status?.implementedFamilyEstimate && !status?.implementedLowConfidenceEstimate ? <Pill tone="accent">Family lane</Pill> : null}
         {status?.implementedLowConfidenceEstimate ? <Pill tone="warning">Low confidence</Pill> : null}
         {lowerBoundImpact ? <Pill tone="neutral">Upper-bound support</Pill> : null}
         {dynamicImpactTrace ? <Pill tone={getEvidenceTone(dynamicImpactTrace.evidenceTier)}>{dynamicImpactTrace.evidenceTierLabel}</Pill> : null}
@@ -221,7 +240,9 @@ export function ImpactTracePanel({ result }: ImpactTracePanelProps) {
               label="Candidate rows"
               value={String(dynamicImpactTrace.candidateRowCount)}
               detail={
-                typeof dynamicImpactTrace.fitPercent === "number"
+                reinforcedConcreteLowConfidence
+                  ? REINFORCED_CONCRETE_LOW_CONFIDENCE_TRACE_CANDIDATE_DETAIL
+                  : typeof dynamicImpactTrace.fitPercent === "number"
                   ? `${formatDecimal(dynamicImpactTrace.fitPercent)}% fit inside the active family`
                   : "No family blend fit score on this lane"
               }
@@ -340,7 +361,9 @@ export function ImpactTracePanel({ result }: ImpactTracePanelProps) {
                   : "N/A"
               }
               detail={
-                companionLabel === "Ctr" && typeof derivedRwPlusCtr === "number"
+                reinforcedConcreteLowConfidence && companionLabel === "Ctr"
+                  ? REINFORCED_CONCRETE_LOW_CONFIDENCE_CTR_DETAIL
+                  : companionLabel === "Ctr" && typeof derivedRwPlusCtr === "number"
                   ? `Derived Rw + Ctr ${formatDecimal(derivedRwPlusCtr)} dB`
                   : "Published companion airborne figure"
               }
@@ -348,7 +371,11 @@ export function ImpactTracePanel({ result }: ImpactTracePanelProps) {
             <MetricCard
               label="Basis"
               value={formatBasisLabel(floorSystemRatings.basis)}
-              detail="Which lane supplied the companion airborne figure"
+              detail={
+                reinforcedConcreteLowConfidence
+                  ? REINFORCED_CONCRETE_LOW_CONFIDENCE_COMPANION_BASIS_DETAIL
+                  : "Which lane supplied the companion airborne figure"
+              }
             />
             <MetricCard
               label="Curve relation"
@@ -376,7 +403,11 @@ export function ImpactTracePanel({ result }: ImpactTracePanelProps) {
             <MetricCard
               label="Estimate tier"
               value={formatEstimateTier(familyEstimate.kind)}
-              detail="Whether this lane stayed on an archetype branch, broadened into a wider family blend, or fell to a low-confidence fallback"
+              detail={
+                reinforcedConcreteLowConfidence
+                  ? REINFORCED_CONCRETE_LOW_CONFIDENCE_ESTIMATE_TIER_DETAIL
+                  : "Whether this lane stayed on an archetype branch, broadened into a wider family blend, or fell to a low-confidence fallback"
+              }
             />
             <MetricCard
               label="Structural family"
@@ -386,12 +417,20 @@ export function ImpactTracePanel({ result }: ImpactTracePanelProps) {
             <MetricCard
               label="Fit"
               value={`${formatDecimal(familyEstimate.fitPercent)}%`}
-              detail="How closely the current topology stayed inside the active published family"
+              detail={
+                reinforcedConcreteLowConfidence
+                  ? REINFORCED_CONCRETE_LOW_CONFIDENCE_FIT_DETAIL
+                  : "How closely the current topology stayed inside the active published family"
+              }
             />
             <MetricCard
               label="Candidate rows"
               value={String(candidateRowCount)}
-              detail="Published rows ranked for this family estimate before the active blend was locked"
+              detail={
+                reinforcedConcreteLowConfidence
+                  ? REINFORCED_CONCRETE_LOW_CONFIDENCE_CANDIDATE_ROWS_DETAIL
+                  : "Published rows ranked for this family estimate before the active blend was locked"
+              }
             />
             <MetricCard
               label="Estimate basis"
@@ -403,17 +442,27 @@ export function ImpactTracePanel({ result }: ImpactTracePanelProps) {
           {sourceLineageLabels.length ? (
             <div className="mt-4 rounded-md border hairline bg-[color:var(--panel-strong)] px-4 py-4">
               <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
-                Candidate lineage
+                {getCandidateLineageHeading(familyEstimate.kind)}
               </div>
               <ul className="mt-3 grid gap-2 text-sm leading-7 text-[color:var(--ink-soft)]">
-                {sourceLineageLabels.map((label: string) => (
+                {sourceLineageLabels.map((label: string, index: number) => (
                   <li className="rounded border hairline bg-[color:var(--paper)] px-3 py-3" key={label}>
-                    {label}
+                    {reinforcedConcreteLowConfidence ? (
+                      <>
+                        <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+                          {formatReinforcedConcreteLowConfidenceRankedRowLabel(index)}
+                        </div>
+                        <div className="mt-1">{label}</div>
+                      </>
+                    ) : (
+                      label
+                    )}
                   </li>
                 ))}
                 {hiddenCandidateCount > 0 ? (
                   <li className="rounded border hairline bg-[color:var(--paper)] px-3 py-3">
-                    +{hiddenCandidateCount} more ranked candidate row{hiddenCandidateCount === 1 ? "" : "s"} in the solver trace
+                    +{hiddenCandidateCount} more ranked {familyEstimate.kind === "low_confidence" ? "nearby published row" : "candidate row"}
+                    {hiddenCandidateCount === 1 ? "" : "s"} in the solver trace
                   </li>
                 ) : null}
               </ul>

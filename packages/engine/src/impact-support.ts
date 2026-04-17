@@ -10,6 +10,12 @@ import {
   type ImpactSupport
 } from "@dynecho/shared";
 
+import {
+  hasReinforcedConcreteLowConfidenceProxyAirborne,
+  REINFORCED_CONCRETE_LOW_CONFIDENCE_NEARBY_ROW_RANKING_SUPPORT_NOTE,
+  REINFORCED_CONCRETE_LOW_CONFIDENCE_PROXY_AIRBORNE_SUPPORT_NOTE
+} from "./reinforced-concrete-low-confidence-airborne";
+
 type BuildImpactSupportInput = {
   boundFloorSystemEstimate?: FloorSystemBoundEstimateResult | null;
   boundFloorSystemMatch?: FloorSystemBoundMatchResult | null;
@@ -70,7 +76,16 @@ export function buildImpactSupport(input: BuildImpactSupportInput): ImpactSuppor
   if (input.floorSystemMatch) {
     notes.push(`Curated exact floor-system family is active: ${input.floorSystemMatch.system.label}.`);
   } else if (input.floorSystemEstimate) {
-    notes.push(`Published floor-system family estimate is active: ${input.floorSystemEstimate.structuralFamily}.`);
+    notes.push(
+      input.floorSystemEstimate.kind === "low_confidence"
+        ? `Published floor-system low-confidence fallback is active: ${input.floorSystemEstimate.structuralFamily} via mixed nearby published rows rather than a narrow same-stack family fit.`
+        : `Published floor-system family estimate is active: ${input.floorSystemEstimate.structuralFamily}.`
+    );
+  }
+
+  if (hasReinforcedConcreteLowConfidenceProxyAirborne(input.floorSystemEstimate)) {
+    notes.push(REINFORCED_CONCRETE_LOW_CONFIDENCE_PROXY_AIRBORNE_SUPPORT_NOTE);
+    notes.push(REINFORCED_CONCRETE_LOW_CONFIDENCE_NEARBY_ROW_RANKING_SUPPORT_NOTE);
   }
 
   if (input.impactCatalogMatch) {

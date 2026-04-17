@@ -3,7 +3,7 @@
 Superseded note:
 
 - this checkpoint is historical
-- use [CHECKPOINT_2026-04-16_RUNTIME_CANDIDATE_RERANK_HANDOFF.md](./CHECKPOINT_2026-04-16_RUNTIME_CANDIDATE_RERANK_HANDOFF.md) for the latest restart point after the post-harness rerank
+- use [CHECKPOINT_2026-04-17_HEAVY_CONCRETE_FORMULA_FAMILY_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-17_HEAVY_CONCRETE_FORMULA_FAMILY_CLOSEOUT_HANDOFF.md) for the latest restart point after the heavy-concrete widening closeout
 
 
 Document role:

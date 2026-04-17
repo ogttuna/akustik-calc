@@ -10,6 +10,12 @@ import { formatDecimal } from "@/lib/format";
 import { FIELD_AIRBORNE_OUTPUTS, getFieldAirborneBlockingRequirement, getFieldAirborneLiveDetail, getFieldAirbornePendingDetail } from "./field-airborne-output";
 import { IMPACT_ONLY_LOW_CONFIDENCE_CTR_DETAIL, IMPACT_ONLY_LOW_CONFIDENCE_LNW_DETAIL, IMPACT_ONLY_LOW_CONFIDENCE_RW_DETAIL, IMPACT_ONLY_LOW_CONFIDENCE_UNAVAILABLE_DETAIL, isImpactOnlyLowConfidenceFloorLane, isImpactOnlyLowConfidenceUnavailableOutput } from "./impact-only-low-confidence-floor-lane";
 import type { StudyMode } from "./preset-definitions";
+import {
+  REINFORCED_CONCRETE_LOW_CONFIDENCE_CTR_DETAIL,
+  REINFORCED_CONCRETE_LOW_CONFIDENCE_LNW_DETAIL,
+  REINFORCED_CONCRETE_LOW_CONFIDENCE_RW_DETAIL,
+  isReinforcedConcreteLowConfidenceFloorLane
+} from "./reinforced-concrete-low-confidence-floor-lane";
 import { FIELD_IMPACT_OUTPUTS } from "./simple-workbench-constants";
 import { buildSimpleWorkbenchOutputPosture } from "./simple-workbench-output-posture";
 import { formatSignedDb } from "./simple-workbench-utils";
@@ -131,6 +137,8 @@ export function buildOutputCard(input: {
   const { output, result, studyMode } = input;
   const fieldRatings = result?.ratings.field;
   const isImpactOnlyLowConfidenceLane = isImpactOnlyLowConfidenceFloorLane(result);
+  const isReinforcedConcreteLowConfidenceLane =
+    isReinforcedConcreteLowConfidenceFloorLane(result);
 
   if (isExplicitlyUnsupportedOutput(result, output)) {
     return {
@@ -146,7 +154,9 @@ export function buildOutputCard(input: {
     case "Rw":
       if (studyMode === "floor" && typeof result?.floorSystemRatings?.Rw === "number") {
         return {
-          detail: "Companion airborne rating carried on the active floor lane. This can differ from the live airborne estimate shown elsewhere.",
+          detail: isReinforcedConcreteLowConfidenceLane
+            ? REINFORCED_CONCRETE_LOW_CONFIDENCE_RW_DETAIL
+            : "Companion airborne rating carried on the active floor lane. This can differ from the live airborne estimate shown elsewhere.",
           label: "Rw",
           output,
           status: "live",
@@ -218,8 +228,9 @@ export function buildOutputCard(input: {
 
         if (typeof floorCtr === "number") {
           return {
-            detail:
-              "Companion traffic-noise adaptation carried on the active floor lane. This can differ from the live airborne estimate shown elsewhere.",
+            detail: isReinforcedConcreteLowConfidenceLane
+              ? REINFORCED_CONCRETE_LOW_CONFIDENCE_CTR_DETAIL
+              : "Companion traffic-noise adaptation carried on the active floor lane. This can differ from the live airborne estimate shown elsewhere.",
             label: "Ctr",
             output,
             status: "live",
@@ -296,7 +307,11 @@ export function buildOutputCard(input: {
     case "Ln,w":
       if (typeof result?.impact?.LnW === "number") {
         return {
-          detail: isImpactOnlyLowConfidenceLane ? IMPACT_ONLY_LOW_CONFIDENCE_LNW_DETAIL : "Lab-side weighted normalized impact sound level.",
+          detail: isReinforcedConcreteLowConfidenceLane
+            ? REINFORCED_CONCRETE_LOW_CONFIDENCE_LNW_DETAIL
+            : isImpactOnlyLowConfidenceLane
+              ? IMPACT_ONLY_LOW_CONFIDENCE_LNW_DETAIL
+              : "Lab-side weighted normalized impact sound level.",
           label: "Ln,w",
           output,
           status: "live",

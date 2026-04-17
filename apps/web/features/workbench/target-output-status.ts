@@ -34,6 +34,12 @@ import {
   isImpactOnlyLowConfidenceUnavailableOutput
 } from "./impact-only-low-confidence-floor-lane";
 import {
+  REINFORCED_CONCRETE_LOW_CONFIDENCE_CTR_DETAIL,
+  REINFORCED_CONCRETE_LOW_CONFIDENCE_LNW_DETAIL,
+  REINFORCED_CONCRETE_LOW_CONFIDENCE_RW_DETAIL,
+  isReinforcedConcreteLowConfidenceFloorLane
+} from "./reinforced-concrete-low-confidence-floor-lane";
+import {
   isSteelBoundSupportFormLane,
   STEEL_BOUND_SUPPORT_FORM_AIRBORNE_DETAIL,
   STEEL_BOUND_SUPPORT_FORM_LNW_DETAIL
@@ -294,6 +300,8 @@ export function getTargetOutputStatus(input: {
   const guideState = hasGuideValue(output, guideResult);
   const supportNote = REQUESTED_OUTPUT_SUPPORT_NOTES[output];
   const isImpactOnlyLowConfidenceLane = isImpactOnlyLowConfidenceFloorLane(result);
+  const isReinforcedConcreteLowConfidenceLane =
+    isReinforcedConcreteLowConfidenceFloorLane(result);
   const isSteelSupportFormBoundLane = isSteelBoundSupportFormLane(result);
   const fieldAirborneRequirement = isFieldAirborneOutput(output)
     ? getFieldAirborneBlockingRequirement(output, result)
@@ -313,17 +321,24 @@ export function getTargetOutputStatus(input: {
     const label = getEngineLiveLabel(output, result);
     const customEngineLiveNote = isFieldAirborneOutput(output)
       ? getFieldAirborneLiveDetail(output, result)
-      : isImpactOnlyLowConfidenceLane && output === "Ln,w"
-        ? IMPACT_ONLY_LOW_CONFIDENCE_LNW_DETAIL
-        : isImpactOnlyLowConfidenceLane && output === "Rw"
-          ? IMPACT_ONLY_LOW_CONFIDENCE_RW_DETAIL
-          : isImpactOnlyLowConfidenceLane && output === "Ctr"
-            ? IMPACT_ONLY_LOW_CONFIDENCE_CTR_DETAIL
-            : isSteelSupportFormBoundLane && output === "Ln,w"
-            ? STEEL_BOUND_SUPPORT_FORM_LNW_DETAIL
-            : isSteelSupportFormBoundLane && (output === "Rw" || output === "Ctr")
-              ? STEEL_BOUND_SUPPORT_FORM_AIRBORNE_DETAIL
-              : null;
+      : isReinforcedConcreteLowConfidenceLane && output === "Ln,w"
+        ? REINFORCED_CONCRETE_LOW_CONFIDENCE_LNW_DETAIL
+        : isReinforcedConcreteLowConfidenceLane && output === "Rw"
+          ? REINFORCED_CONCRETE_LOW_CONFIDENCE_RW_DETAIL
+          : isReinforcedConcreteLowConfidenceLane && output === "Ctr"
+            ? REINFORCED_CONCRETE_LOW_CONFIDENCE_CTR_DETAIL
+            : isImpactOnlyLowConfidenceLane && output === "Ln,w"
+              ? IMPACT_ONLY_LOW_CONFIDENCE_LNW_DETAIL
+              : isImpactOnlyLowConfidenceLane && output === "Rw"
+                ? IMPACT_ONLY_LOW_CONFIDENCE_RW_DETAIL
+                : isImpactOnlyLowConfidenceLane && output === "Ctr"
+                  ? IMPACT_ONLY_LOW_CONFIDENCE_CTR_DETAIL
+                  : isSteelSupportFormBoundLane && output === "Ln,w"
+                    ? STEEL_BOUND_SUPPORT_FORM_LNW_DETAIL
+                    : isSteelSupportFormBoundLane &&
+                        (output === "Rw" || output === "Ctr")
+                      ? STEEL_BOUND_SUPPORT_FORM_AIRBORNE_DETAIL
+                      : null;
 
     return {
       kind: hasEngineBoundValue(output, result) ? "engine_bound" : "engine_live",
@@ -407,6 +422,8 @@ export function getTargetOutputCorridor(input: {
   const status = getTargetOutputStatus(input);
   const activeFamily = getActiveValidationFamily(result);
   const activeMode = getActiveValidationMode(result);
+  const isReinforcedConcreteLowConfidenceLane =
+    isReinforcedConcreteLowConfidenceFloorLane(result);
 
   if (RESEARCH_OUTPUTS.has(output)) {
     return {
@@ -442,7 +459,11 @@ export function getTargetOutputCorridor(input: {
     const airbornePosture = describeAirborneValidationPosture(result);
 
     return {
-      detail: airbornePosture.detail,
+      detail:
+        isReinforcedConcreteLowConfidenceLane &&
+        (output === "Rw" || output === "Ctr")
+          ? status.note
+          : airbornePosture.detail,
       familyLabel: result?.dynamicAirborneTrace?.detectedFamilyLabel,
       laneLabel: "Airborne lane",
       modeLabel: airbornePosture.label,
@@ -476,6 +497,8 @@ export function getTargetOutputCorridor(input: {
       detail:
         status.kind === "guide_ready"
           ? `Guide/manual supplement is currently shaping ${output}.`
+          : isReinforcedConcreteLowConfidenceLane && output === "Ln,w"
+            ? status.note
           : impactPosture.detail,
       familyLabel: activeFamily?.label,
       laneLabel: status.kind === "guide_ready" ? "Guide/manual supplement" : "Impact floor corridor",

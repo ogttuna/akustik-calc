@@ -33,6 +33,9 @@ export function ResultSummary({ result, targetLnwDb, targetRwDb, warnings }: Res
   const dynamicImpactTrace = result?.dynamicImpactTrace ?? null;
   const fieldAirborneProvenance = getFieldAirborneProvenanceSummary(result);
   const activeCalculatorLabel = result?.calculatorLabel ?? "Screening Seed";
+  const floorEstimatePillLabel =
+    result?.floorSystemEstimate?.kind === "low_confidence" ? "Low-confidence floor fallback" : "Estimated floor family";
+  const floorEstimatePillTone = result?.floorSystemEstimate?.kind === "low_confidence" ? "warning" : "accent";
   const primaryAirborneValue =
     result?.airborneOverlay?.contextMode === "building_prediction" && typeof result?.metrics.estimatedDnTwDb === "number"
       ? result.metrics.estimatedDnTwDb
@@ -82,7 +85,7 @@ export function ResultSummary({ result, targetLnwDb, targetRwDb, warnings }: Res
         ) : null}
         {result?.impactCatalogMatch ? <Pill tone="accent">Official product lane</Pill> : null}
         {result?.floorSystemMatch ? <Pill tone="success">Exact floor family</Pill> : null}
-        {result?.floorSystemEstimate ? <Pill tone="accent">Estimated floor family</Pill> : null}
+        {result?.floorSystemEstimate ? <Pill tone={floorEstimatePillTone}>{floorEstimatePillLabel}</Pill> : null}
         {result?.boundFloorSystemMatch ? <Pill tone="neutral">Bound floor family</Pill> : null}
         {result?.boundFloorSystemEstimate ? <Pill tone="neutral">Bound family estimate</Pill> : null}
         {!result?.floorSystemMatch && result?.floorSystemRecommendations.length ? <Pill tone="neutral">Near floor family</Pill> : null}

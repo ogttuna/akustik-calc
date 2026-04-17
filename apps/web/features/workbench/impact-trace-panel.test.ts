@@ -1,6 +1,7 @@
 import type { AssemblyCalculation } from "@dynecho/shared";
+import * as React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { ImpactTracePanel } from "./impact-trace-panel";
 
@@ -57,10 +58,38 @@ function buildFixture(overrides: Partial<AssemblyCalculation> = {}): AssemblyCal
 }
 
 describe("impact trace panel", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
   it("renders lane-less fail-closed floor results without assuming a field continuation object", () => {
-    const html = renderToStaticMarkup(<ImpactTracePanel result={buildFixture()} />);
+    vi.stubGlobal("React", React);
+    const html = renderToStaticMarkup(React.createElement(ImpactTracePanel, { result: buildFixture() }));
 
     expect(html).toContain("Predictor status and evidence trace");
     expect(html).not.toContain("Field continuation");
+  });
+
+  it("keeps low-confidence predictor traces off the generic family-lane pill", () => {
+    vi.stubGlobal("React", React);
+    const html = renderToStaticMarkup(
+      React.createElement(ImpactTracePanel, {
+        result: buildFixture({
+          impactPredictorStatus: {
+            active: true,
+            futureSupportedTargetOutputs: [],
+            implementedFamilyEstimate: true,
+            implementedFormulaEstimate: false,
+            implementedLowConfidenceEstimate: true,
+            notes: [],
+            readyForPlannedSolver: false,
+            warnings: []
+          }
+        })
+      })
+    );
+
+    expect(html).toContain("Low confidence");
+    expect(html).not.toContain("Family lane");
   });
 });

@@ -60,6 +60,19 @@ export function DeliveryAssistPanel({
   const activeValidationFamily = getActiveValidationFamily(result);
   const activeValidationMode = getActiveValidationMode(result);
   const fieldAirborneProvenance = getFieldAirborneProvenanceSummary(result);
+  const impactLaneActivityLabel = result?.floorSystemMatch
+    ? "Curated exact floor family is active"
+    : result?.floorSystemEstimate?.kind === "low_confidence"
+      ? "Published low-confidence fallback is active"
+      : result?.floorSystemEstimate
+        ? "Published family estimate is active"
+        : effectiveLaneKind === "exact_source"
+          ? "Exact impact source is active"
+          : effectiveLaneKind === "official_catalog"
+            ? "Official product lane is active"
+            : effectiveLaneKind === "low_confidence_fallback"
+              ? "Low-confidence fallback is active"
+              : "Scoped impact path is active";
   const impactHeadline =
     effectiveImpact
       ? typeof effectiveImpact.LnTA === "number"
@@ -108,7 +121,7 @@ export function DeliveryAssistPanel({
       : "No research-only output is currently being requested.",
     outputSummary.engineLive.length + outputSummary.engineBound.length > 0
       ? effectiveImpact
-        ? `${result?.floorSystemMatch ? "Curated exact floor family is active" : result?.floorSystemEstimate ? "Published family estimate is active" : effectiveLaneKind === "exact_source" ? "Exact impact source is active" : effectiveLaneKind === "official_catalog" ? "Official product lane is active" : "Scoped impact path is active"}: ${impactHeadline ?? "headline unavailable"}${typeof effectiveImpact.DeltaLw === "number" ? `, DeltaLw ${effectiveImpact.DeltaLw.toFixed(1)} dB` : ""}. ${describeConfidence(effectiveImpact.confidence)}`
+        ? `${impactLaneActivityLabel}: ${impactHeadline ?? "headline unavailable"}${typeof effectiveImpact.DeltaLw === "number" ? `, DeltaLw ${effectiveImpact.DeltaLw.toFixed(1)} dB` : ""}. ${describeConfidence(effectiveImpact.confidence)}`
         : `Engine-supported outputs are active (${[...outputSummary.engineLive, ...outputSummary.engineBound].map((status) => status.output).join(", ")}), but the current stack still does not surface an impact headline.`
       : "No scoped impact output is currently being requested.",
     outputSummary.guideReady.length > 0

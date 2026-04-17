@@ -57,4 +57,51 @@ describe("simple workbench diagnostics dossier", () => {
     expect(dossier.linkedCitationCount).toBeGreaterThanOrEqual(0);
     expect(dossier.warningCount).toBe(scenario.warnings.length);
   });
+
+  it("keeps low-confidence diagnostics in screening posture even without a live warning", () => {
+    const dossier = buildSimpleWorkbenchDiagnosticsDossier({
+      branchLabel: "Low-confidence fallback",
+      citations: [
+        {
+          detail: "Nearby published row remains attached for screening audit.",
+          href: "https://example.com/nearby-row",
+          label: "Nearby row 1 · elastic-ceiling anchor",
+          tone: "warning"
+        }
+      ],
+      decisionTrailHeadline: "Low-confidence fallback on reinforced concrete is the current floor-side screening posture.",
+      decisionTrailItems: [
+        {
+          detail: "Low-confidence fallback remains active on the current floor-side route.",
+          label: "Delivery posture",
+          tone: "warning"
+        }
+      ],
+      result: {
+        dynamicAirborneTrace: {} as never,
+        dynamicImpactTrace: {} as never
+      } as never,
+      validationDetail: "Low-confidence fallback remains explicit on a mixed nearby-row concrete lane.",
+      validationLabel: "Low-confidence fallback",
+      warnings: []
+    });
+
+    expect(dossier.headline).toContain("screening-route low-confidence posture");
+    expect(dossier.cards).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          label: "Trace coverage",
+          tone: "accent",
+          value: "2 screening"
+        }),
+        expect.objectContaining({
+          label: "Warning board",
+          tone: "warning",
+          value: "Screening"
+        })
+      ])
+    );
+    expect(dossier.cards.find((card) => card.label === "Evidence courier")?.detail).toContain("screening package");
+    expect(dossier.cards.find((card) => card.label === "Warning board")?.detail).toContain("screening posture");
+  });
 });

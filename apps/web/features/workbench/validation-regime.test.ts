@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  describeImpactValidationPosture,
   describeAirborneValidationPosture,
   formatValidationFamilyBenchmarkMix,
   getAirborneBoundaryPosture,
@@ -10,6 +11,7 @@ import {
   IMPACT_VALIDATION_FAMILY_MATRIX
 } from "./validation-regime";
 import { evaluateScenario } from "./scenario-analysis";
+import type { AssemblyCalculation } from "@dynecho/shared";
 
 const FIELD_CONTEXT = {
   contextMode: "field_between_rooms",
@@ -32,6 +34,54 @@ function evaluateWall(id: string, rows: Array<{ materialId: string; thicknessMm:
     studyMode: "wall",
     targetOutputs: ["R'w", "DnT,w"]
   });
+}
+
+function buildReinforcedConcreteLowConfidenceResult(): AssemblyCalculation {
+  return {
+    dynamicImpactTrace: {
+      detectedSupportFamily: "reinforced_concrete",
+      estimateTier: "low_confidence",
+      estimateTierLabel: "Low-confidence fallback · reinforced concrete",
+      fitPercent: 29,
+      systemType: "combined_upper_lower_system"
+    } as AssemblyCalculation["dynamicImpactTrace"],
+    floorSystemEstimate: {
+      fitPercent: 29,
+      kind: "low_confidence"
+    } as AssemblyCalculation["floorSystemEstimate"],
+    floorSystemRatings: {
+      Rw: 65.9,
+      RwCtr: 57,
+      RwCtrSemantic: "rw_plus_ctr",
+      basis: "predictor_floor_system_low_confidence_estimate"
+    },
+    impact: {
+      basis: "predictor_floor_system_low_confidence_estimate",
+      LnW: 50
+    } as AssemblyCalculation["impact"],
+    layers: [],
+    metrics: {
+      airGapCount: 1,
+      estimatedCDb: -2,
+      estimatedCtrDb: -8.9,
+      estimatedRwDb: 65.9,
+      estimatedStc: 65,
+      insulationCount: 1,
+      method: "screening_mass_law_curve_seed_v3",
+      surfaceMassKgM2: 410,
+      totalThicknessMm: 446
+    },
+    ok: true,
+    ratings: {
+      iso717: {
+        composite: "Rw 66 (-2;-9)",
+        descriptor: "Rw"
+      }
+    },
+    supportedTargetOutputs: ["Rw", "Ctr", "Ln,w"],
+    unsupportedTargetOutputs: [],
+    warnings: []
+  } as AssemblyCalculation;
 }
 
 describe("validation regime helpers", () => {
@@ -141,5 +191,15 @@ describe("validation regime helpers", () => {
     expect(getAirborneBoundaryPosture(trace)).toBeNull();
     expect(describeAirborneValidationPosture(scenario.result).detail).not.toContain("boundary");
     expect(describeAirborneValidationPosture(scenario.result).detail).not.toContain("hold");
+  });
+
+  it("keeps reinforced-concrete low-confidence impact posture explicit as a 29% mixed-row fallback", () => {
+    const posture = describeImpactValidationPosture(buildReinforcedConcreteLowConfidenceResult());
+
+    expect(posture.posture).toBe("low_confidence");
+    expect(posture.label).toBe("Low-confidence fallback · reinforced concrete");
+    expect(posture.detail).toContain("reinforced-concrete mixed-row fallback");
+    expect(posture.detail).toContain("29% fit inside the active low-confidence ceiling");
+    expect(posture.detail).toContain("mixed nearby-row concrete lane");
   });
 });
