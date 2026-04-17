@@ -48,8 +48,11 @@ Current planning implication:
     - rank-1 `GDMTXA04A` feasibility is now explicitly closed as blocked
     - reason: direct source truth exists, but honest visible exact reopening
       still needs composite dry-screed surface modeling
+    - rank-2 `C11c` feasibility is now explicitly closed as blocked
+    - reason: the visible schedule is real, but the combined wet tuple remains
+      anomalous and the route still stays impact-fail-closed
     - active next comparison target inside the rerank:
-      `tuas_c11c_exact_import`
+      `raw_bare_open_box_open_web_impact_widening`
 - 2026-04-14 second-pass plan selection and implementation:
   - the no-widening route/card projection guard
     `mixed_floor_wall_output_card_snapshot_grid_v1`

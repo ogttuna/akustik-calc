@@ -41,8 +41,9 @@ Planning / implementation update: `2026-04-17`
   next honest step is no longer another solver pass; it is a no-runtime
   rerank of the still-blocked source-backed families
 - immediate next decision:
-  keep rank-1 `GDMTXA04A` blocked on honest composite-surface modeling and run
-  the next explicit feasibility comparison on `C11c`
+  keep rank-1 `GDMTXA04A` and rank-2 `C11c` blocked on their explicit
+  feasibility findings and run the next comparison on raw bare
+  open-box/open-web
 - current explicit blocked candidate order:
   1. `dataholz_gdmtxa04a_visible_exact_reopen`
   2. `tuas_c11c_exact_import`
@@ -98,6 +99,23 @@ Planning / implementation update: `2026-04-17`
   - `pnpm calculator:gate:current`: green with focused engine `9/9` files and
     `31/31` tests plus focused web `3/3` files and `9/9` tests
   - `pnpm check`: green with full engine `156/156` files and `951/951` tests
+    plus full web `117/117` files and `674/674` tests
+  - `pnpm build`: green with the known optional `sharp/@img` DOCX warnings
+  - `git diff --check`: green
+- latest blocked-source rank-2 progress update on `2026-04-17`:
+  - landed
+    `packages/engine/src/blocked-source-rank-2-c11c-feasibility-contract.test.ts`
+  - kept rank-2 `C11c` blocked after an explicit feasibility audit because the
+    combined wet tuple remains anomalous and the visible route still stays
+    impact-fail-closed
+  - advanced the active rerank comparison target to raw bare
+    open-box/open-web without changing runtime behavior or the blocked
+    candidate order
+  - targeted rerank engine pack: `5/5` test files passed, `15/15` tests
+    passed
+  - `pnpm calculator:gate:current`: green with focused engine `10/10` files
+    and `33/33` tests plus focused web `3/3` files and `9/9` tests
+  - `pnpm check`: green with full engine `157/157` files and `953/953` tests
     plus full web `117/117` files and `674/674` tests
   - `pnpm build`: green with the known optional `sharp/@img` DOCX warnings
   - `git diff --check`: green

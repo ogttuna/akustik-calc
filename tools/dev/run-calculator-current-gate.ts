@@ -50,6 +50,7 @@ async function main() {
         "vitest",
         "run",
         "src/blocked-source-rank-1-gdmtxa04a-feasibility-contract.test.ts",
+        "src/blocked-source-rank-2-c11c-feasibility-contract.test.ts",
         "src/post-dataholz-clt-calibration-tightening-next-slice-selection-contract.test.ts",
         "src/dataholz-clt-calibration-tightening-audit.test.ts",
         "src/dataholz-gdmtxa04a-material-surface-recheck.test.ts",

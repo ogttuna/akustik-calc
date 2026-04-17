@@ -62,8 +62,8 @@ Use this section first when deciding what to do next.
 - active slice:
   `blocked_source_backed_widening_rerank_v1`
 - current highest-ROI task:
-  continue the explicit no-runtime rerank by freezing the rank-1
-  `GDMTXA04A` feasibility result and auditing rank-2 `C11c` next
+  continue the explicit no-runtime rerank by freezing rank-2 `C11c` as blocked
+  and moving the active comparison to raw bare open-box/open-web
 - current explicit blocked candidate order:
   1. `dataholz_gdmtxa04a_visible_exact_reopen`
   2. `tuas_c11c_exact_import`
@@ -82,13 +82,19 @@ Use this section first when deciding what to do next.
   blocked after an explicit feasibility audit because honest visible exact
   reopening still needs composite dry-screed surface modeling; the rerank now
   advances to `C11c` without changing runtime behavior
+- active-slice rerank progress now also landed:
+  rank-2 `C11c` stays blocked after an explicit feasibility audit because its
+  combined wet tuple still carries an unresolved anomaly; the rerank now
+  advances to raw bare open-box/open-web without changing runtime behavior
 
 ### Next
 
 1. Keep rank-1 `GDMTXA04A` explicitly blocked on composite-surface modeling.
-2. Audit `C11c` as the new active comparison target inside the rerank.
-3. Keep all currently blocked families fail-closed while the rerank is active.
-4. Select exactly one next runtime candidate only after the rerank compares
+2. Keep rank-2 `C11c` explicitly blocked on its unresolved anomaly.
+3. Audit raw bare open-box/open-web as the new active comparison target inside
+   the rerank.
+4. Keep all currently blocked families fail-closed while the rerank is active.
+5. Select exactly one next runtime candidate only after the rerank compares
    ROI, evidence posture, and fake-confidence risk explicitly.
 
 ### Later
@@ -150,6 +156,23 @@ Use this section first when deciding what to do next.
   - `pnpm calculator:gate:current`: green with focused engine `9/9` files and
     `31/31` tests plus focused web `3/3` files and `9/9` tests
   - `pnpm check`: green with full engine `156/156` files and `951/951` tests
+    plus full web `117/117` files and `674/674` tests
+  - `pnpm build`: green with the known optional `sharp/@img` DOCX warnings
+  - `git diff --check`: green
+- latest blocked-source rank-2 progress update on `2026-04-17`:
+  - landed
+    `packages/engine/src/blocked-source-rank-2-c11c-feasibility-contract.test.ts`
+  - froze rank-2 `C11c` as still blocked after an explicit feasibility audit
+    because its combined wet tuple remains anomalous and cannot be imported
+    honestly
+  - advanced the rerank comparison target to
+    `raw_bare_open_box_open_web_impact_widening` without changing runtime
+    behavior or the blocked candidate order
+  - targeted rerank engine pack: `5/5` test files passed, `15/15` tests
+    passed
+  - `pnpm calculator:gate:current`: green with focused engine `10/10` files
+    and `33/33` tests plus focused web `3/3` files and `9/9` tests
+  - `pnpm check`: green with full engine `157/157` files and `953/953` tests
     plus full web `117/117` files and `674/674` tests
   - `pnpm build`: green with the known optional `sharp/@img` DOCX warnings
   - `git diff --check`: green
