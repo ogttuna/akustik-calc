@@ -51,11 +51,12 @@ Current planning implication:
     - rank-2 `C11c` feasibility is now explicitly closed as blocked
     - reason: the visible schedule is real, but the combined wet tuple remains
       anomalous and the route still stays impact-fail-closed
+    - rank-3 raw bare open-box/open-web feasibility is now explicitly closed
+      as blocked
+    - reason: current TUAS and UBIQ source rows still prove packaged systems,
+      not true bare-carrier impact behavior
     - active next comparison target inside the rerank:
-      `raw_bare_open_box_open_web_impact_widening`
-    - current interpretation of that target:
-      a feasibility audit that must prove real bare-carrier impact evidence
-      exists before any runtime widening can even be considered
+      `wall_selector_behavior_widening`
 - 2026-04-14 second-pass plan selection and implementation:
   - the no-widening route/card projection guard
     `mixed_floor_wall_output_card_snapshot_grid_v1`

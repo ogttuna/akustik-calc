@@ -26,6 +26,7 @@ Use [SYSTEM_MAP.md](./SYSTEM_MAP.md) for the live runtime/file map.
    - [post-dataholz-clt-calibration-tightening-next-slice-selection-contract.test.ts](../../packages/engine/src/post-dataholz-clt-calibration-tightening-next-slice-selection-contract.test.ts)
    - [blocked-source-rank-1-gdmtxa04a-feasibility-contract.test.ts](../../packages/engine/src/blocked-source-rank-1-gdmtxa04a-feasibility-contract.test.ts)
    - [blocked-source-rank-2-c11c-feasibility-contract.test.ts](../../packages/engine/src/blocked-source-rank-2-c11c-feasibility-contract.test.ts)
+   - [blocked-source-rank-3-raw-bare-open-box-open-web-feasibility-contract.test.ts](../../packages/engine/src/blocked-source-rank-3-raw-bare-open-box-open-web-feasibility-contract.test.ts)
    - [source-gap-candidate-re-rank-contract.test.ts](../../packages/engine/src/source-gap-candidate-re-rank-contract.test.ts)
    - [raw-bare-open-web-open-box-source-evidence-rerank-contract.test.ts](../../packages/engine/src/raw-bare-open-web-open-box-source-evidence-rerank-contract.test.ts)
    - [remaining-source-gap-posture-matrix.test.ts](../../packages/engine/src/remaining-source-gap-posture-matrix.test.ts)
@@ -103,10 +104,10 @@ step itself.
     - rank-1 `GDMTXA04A` keeps its order position but stays blocked after an
       explicit feasibility audit
     - rank-2 `C11c` also stays blocked after an explicit feasibility audit
-    - the next active comparison target inside the rerank is now raw bare
-      open-box/open-web
-    - treat that rank-3 target as a feasibility audit, not as an
-      implementation-ready widening
+    - rank-3 raw bare open-box/open-web also stays blocked after an explicit
+      feasibility audit because current source truth remains packaged-only
+    - the next active comparison target inside the rerank is now
+      wall-selector behavior widening
   - each candidate must stay explicit on value, origin, support, and current
     evidence posture before any direct runtime change is selected
 - reinforced-concrete reopening remains conditional-only
@@ -163,10 +164,22 @@ Latest rank-2 rerank progress revalidation on `2026-04-17`:
 - `git diff --check`
   - green
 
+Latest rank-3 rerank progress revalidation on `2026-04-18`:
+
+- `pnpm calculator:gate:current`
+  - green
+  - focused engine gate: `11/11` test files passed, `35/35` tests passed
+  - focused web gate: `3/3` test files passed, `9/9` tests passed
+- targeted rerank engine pack
+  - green
+  - `6/6` test files passed, `18/18` tests passed
+- `git diff --check`
+  - green
+
 ## Minimal Resume Commands
 
 1. `pnpm calculator:gate:current`
-2. `pnpm --filter @dynecho/engine exec vitest run src/blocked-source-rank-1-gdmtxa04a-feasibility-contract.test.ts src/blocked-source-rank-2-c11c-feasibility-contract.test.ts src/post-dataholz-clt-calibration-tightening-next-slice-selection-contract.test.ts src/source-gap-candidate-re-rank-contract.test.ts src/raw-bare-open-web-open-box-source-evidence-rerank-contract.test.ts src/remaining-source-gap-posture-matrix.test.ts src/dataholz-gdmtxa04a-material-surface-recheck.test.ts src/floor-source-corpus-contract.test.ts src/tuas-c11c-wet-stack-anomaly-audit.test.ts --maxWorkers=1`
+2. `pnpm --filter @dynecho/engine exec vitest run src/blocked-source-rank-1-gdmtxa04a-feasibility-contract.test.ts src/blocked-source-rank-2-c11c-feasibility-contract.test.ts src/blocked-source-rank-3-raw-bare-open-box-open-web-feasibility-contract.test.ts src/post-dataholz-clt-calibration-tightening-next-slice-selection-contract.test.ts src/source-gap-candidate-re-rank-contract.test.ts src/raw-bare-open-web-open-box-source-evidence-rerank-contract.test.ts src/remaining-source-gap-posture-matrix.test.ts src/dataholz-gdmtxa04a-material-surface-recheck.test.ts src/floor-source-corpus-contract.test.ts src/tuas-c11c-wet-stack-anomaly-audit.test.ts --maxWorkers=1`
 3. `pnpm --filter @dynecho/web exec vitest run features/workbench/remaining-source-gap-posture-card-matrix.test.ts features/workbench/output-origin-trace-card-matrix.test.ts features/workbench/dataholz-clt-source-truth-route.test.ts --maxWorkers=1`
 4. Read [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md) before changing routing or support posture.
 
@@ -179,6 +192,7 @@ Keep the next scope on:
 - selected engine rerank guards:
   [blocked-source-rank-1-gdmtxa04a-feasibility-contract.test.ts](../../packages/engine/src/blocked-source-rank-1-gdmtxa04a-feasibility-contract.test.ts),
   [blocked-source-rank-2-c11c-feasibility-contract.test.ts](../../packages/engine/src/blocked-source-rank-2-c11c-feasibility-contract.test.ts),
+  [blocked-source-rank-3-raw-bare-open-box-open-web-feasibility-contract.test.ts](../../packages/engine/src/blocked-source-rank-3-raw-bare-open-box-open-web-feasibility-contract.test.ts),
   [source-gap-candidate-re-rank-contract.test.ts](../../packages/engine/src/source-gap-candidate-re-rank-contract.test.ts),
   [raw-bare-open-web-open-box-source-evidence-rerank-contract.test.ts](../../packages/engine/src/raw-bare-open-web-open-box-source-evidence-rerank-contract.test.ts),
   and [remaining-source-gap-posture-matrix.test.ts](../../packages/engine/src/remaining-source-gap-posture-matrix.test.ts)

@@ -13,7 +13,7 @@ If the question is “what is still open and what executes next?”, start with
 1. Read [CHECKPOINT_2026-04-17_DATAHOLZ_CLT_CALIBRATION_TIGHTENING_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-17_DATAHOLZ_CLT_CALIBRATION_TIGHTENING_CLOSEOUT_HANDOFF.md).
 2. Read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md).
 3. Run `pnpm calculator:gate:current`.
-4. If green, continue the selected slice `blocked_source_backed_widening_rerank_v1` by treating raw bare open-box/open-web as a rank-3 feasibility audit, not as a pre-approved widening.
+4. If green, continue the selected slice `blocked_source_backed_widening_rerank_v1` from the landed raw bare rank-3 hold toward the wall-selector comparison.
 
 ## Current Execution Snapshot
 
@@ -31,10 +31,9 @@ If the question is “what is still open and what executes next?”, start with
   open-box/open-web, reinforced-concrete reopening, and wall-selector widening
   stay blocked until the rerank reorders them explicitly
 - current rerank progress:
-  rank-1 `GDMTXA04A` and rank-2 `C11c` feasibility are now explicitly held,
-  so raw bare open-box/open-web is the active next comparison target and the
-  current first question is whether any honest bare-carrier impact evidence
-  exists at all
+  rank-1 `GDMTXA04A`, rank-2 `C11c`, and rank-3 raw bare
+  open-box/open-web feasibility are now explicitly held, so wall-selector is
+  the active next comparison target
 - last full green validation:
   `2026-04-17`
   - engine: `157/157` test files passed, `953/953` tests passed
@@ -51,6 +50,7 @@ If the question is “what is still open and what executes next?”, start with
 - [floor-system-estimate.ts](../../packages/engine/src/floor-system-estimate.ts): floor-family exact vs estimate selection anchor
 - [blocked-source-rank-1-gdmtxa04a-feasibility-contract.test.ts](../../packages/engine/src/blocked-source-rank-1-gdmtxa04a-feasibility-contract.test.ts): executable rank-1 rerank feasibility hold
 - [blocked-source-rank-2-c11c-feasibility-contract.test.ts](../../packages/engine/src/blocked-source-rank-2-c11c-feasibility-contract.test.ts): executable rank-2 rerank feasibility hold
+- [blocked-source-rank-3-raw-bare-open-box-open-web-feasibility-contract.test.ts](../../packages/engine/src/blocked-source-rank-3-raw-bare-open-box-open-web-feasibility-contract.test.ts): executable rank-3 rerank feasibility hold
 - [source-gap-candidate-re-rank-contract.test.ts](../../packages/engine/src/source-gap-candidate-re-rank-contract.test.ts): executable blocked-source rerank order contract
 - [dataholz-clt-source-truth-audit.test.ts](../../packages/engine/src/dataholz-clt-source-truth-audit.test.ts): primary Dataholz CLT source-truth audit anchor
 - [floor-source-corpus-contract.test.ts](../../packages/engine/src/floor-source-corpus-contract.test.ts): floor-source cluster and remaining exact-only slack contract

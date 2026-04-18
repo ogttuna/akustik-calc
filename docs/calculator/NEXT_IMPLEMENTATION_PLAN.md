@@ -62,9 +62,8 @@ Use this section first when deciding what to do next.
 - active slice:
   `blocked_source_backed_widening_rerank_v1`
 - current highest-ROI task:
-  run the explicit rank-3 feasibility audit for raw bare open-box/open-web and
-  decide whether it is still a real runtime candidate or should be held
-  blocked like `GDMTXA04A` and `C11c`
+  freeze rank-3 raw bare open-box/open-web as blocked and move the active
+  comparison to `wall_selector_behavior_widening`
 - current explicit blocked candidate order:
   1. `dataholz_gdmtxa04a_visible_exact_reopen`
   2. `tuas_c11c_exact_import`
@@ -87,15 +86,23 @@ Use this section first when deciding what to do next.
   rank-2 `C11c` stays blocked after an explicit feasibility audit because its
   combined wet tuple still carries an unresolved anomaly; the rerank now
   advances to raw bare open-box/open-web without changing runtime behavior
+- active-slice rerank progress now also landed:
+  rank-3 raw bare open-box/open-web stays blocked after an explicit
+  feasibility audit because current TUAS and UBIQ evidence still proves
+  packaged-system behavior rather than true bare-carrier impact behavior; the
+  rerank now advances to wall-selector behavior without changing runtime
+  behavior
 
 ### Next
 
 1. Keep rank-1 `GDMTXA04A` explicitly blocked on composite-surface modeling.
 2. Keep rank-2 `C11c` explicitly blocked on its unresolved anomaly.
-3. Audit raw bare open-box/open-web as the new active comparison target inside
-   the rerank.
-4. Keep all currently blocked families fail-closed while the rerank is active.
-5. Select exactly one next runtime candidate only after the rerank compares
+3. Keep rank-3 raw bare open-box/open-web explicitly blocked on packaged-only
+   source evidence.
+4. Audit `wall_selector_behavior_widening` as the new active comparison target
+   inside the rerank.
+5. Keep all currently blocked families fail-closed while the rerank is active.
+6. Select exactly one next runtime candidate only after the rerank compares
    ROI, evidence posture, and fake-confidence risk explicitly.
 
 ### Rank-3 Decision Gate
@@ -204,6 +211,19 @@ implementation-ready widening.
   - full web suite: `117/117` test files passed, `674/674` tests passed
   - focused engine gate: `10/10` test files passed, `33/33` tests passed
   - focused web gate: `3/3` test files passed, `9/9` tests passed
+  - `git diff --check`: green
+- latest blocked-source rank-3 progress update on `2026-04-18`:
+  - landed
+    `packages/engine/src/blocked-source-rank-3-raw-bare-open-box-open-web-feasibility-contract.test.ts`
+  - froze rank-3 raw bare open-box/open-web as still blocked after an explicit
+    feasibility audit because current TUAS and UBIQ rows remain packaged-system
+    evidence, not true bare-carrier impact evidence
+  - advanced the rerank comparison target to `wall_selector_behavior_widening`
+    without changing runtime behavior or the blocked candidate order
+  - targeted rerank engine pack: `6/6` test files passed, `18/18` tests
+    passed
+  - `pnpm calculator:gate:current`: green with focused engine `11/11` files
+    and `35/35` tests plus focused web `3/3` files and `9/9` tests
   - `git diff --check`: green
 - latest closed implementation slice:
   `heavy_concrete_formula_family_widening_v1`

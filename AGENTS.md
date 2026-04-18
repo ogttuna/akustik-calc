@@ -17,8 +17,8 @@ plan.
 - current selected slice:
   `blocked_source_backed_widening_rerank_v1`
 - current first decision inside the slice:
-  audit `raw_bare_open_box_open_web_impact_widening` as rank-3 feasibility,
-  not as an already-approved runtime widening
+  keep `raw_bare_open_box_open_web_impact_widening` blocked after the landed
+  rank-3 feasibility audit and compare `wall_selector_behavior_widening` next
 - do not reopen `GDMTXA04A`, `C11c`, raw open-box/open-web, heavy-concrete
   parity or formula scope, reinforced-concrete reopening, or wall-selector
   behavior from nearby green tests alone

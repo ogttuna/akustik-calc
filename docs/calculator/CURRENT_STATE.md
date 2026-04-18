@@ -41,13 +41,12 @@ Planning / implementation update: `2026-04-17`
   next honest step is no longer another solver pass; it is a no-runtime
   rerank of the still-blocked source-backed families
 - immediate next decision:
-  keep rank-1 `GDMTXA04A` and rank-2 `C11c` blocked on their explicit
-  feasibility findings and run the rank-3 feasibility audit on raw bare
-  open-box/open-web
+  keep rank-1 `GDMTXA04A`, rank-2 `C11c`, and rank-3 raw bare
+  open-box/open-web blocked on their explicit feasibility findings and run the
+  next comparison on `wall_selector_behavior_widening`
 - first implementation question now:
-  does raw bare open-box/open-web have true bare-carrier impact evidence, or
-  does it stay blocked because current TUAS and UBIQ rows are still packaged
-  system evidence only
+  does wall-selector widening have a real live red worth reopening, or does it
+  also stay blocked once compared against the already-held floor candidates
 - current explicit blocked candidate order:
   1. `dataholz_gdmtxa04a_visible_exact_reopen`
   2. `tuas_c11c_exact_import`
@@ -134,6 +133,20 @@ Planning / implementation update: `2026-04-17`
   - full web suite: `117/117` test files passed, `674/674` tests passed
   - focused engine gate: `10/10` test files passed, `33/33` tests passed
   - focused web gate: `3/3` test files passed, `9/9` tests passed
+  - `git diff --check`: green
+- latest blocked-source rank-3 progress update on `2026-04-18`:
+  - landed
+    `packages/engine/src/blocked-source-rank-3-raw-bare-open-box-open-web-feasibility-contract.test.ts`
+  - kept rank-3 raw bare open-box/open-web blocked after an explicit
+    feasibility audit because current TUAS and UBIQ rows still prove packaged
+    systems rather than true bare-carrier impact behavior
+  - advanced the active rerank comparison target to
+    `wall_selector_behavior_widening` without changing runtime behavior or the
+    blocked candidate order
+  - targeted rerank engine pack: `6/6` test files passed, `18/18` tests
+    passed
+  - `pnpm calculator:gate:current`: green with focused engine `11/11` files
+    and `35/35` tests plus focused web `3/3` files and `9/9` tests
   - `git diff --check`: green
 
 - latest live verification after the runtime candidate rerank closeout:
