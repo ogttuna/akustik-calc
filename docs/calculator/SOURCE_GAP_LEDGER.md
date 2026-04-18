@@ -55,8 +55,13 @@ Current planning implication:
       as blocked
     - reason: current TUAS and UBIQ source rows still prove packaged systems,
       not true bare-carrier impact behavior
-    - active next comparison target inside the rerank:
-      `wall_selector_behavior_widening`
+    - rank-4 `wall_selector_behavior_widening` feasibility is now explicitly
+      closed as blocked
+    - reason: the current wall trace/card guard is already closed and no fresh
+      classified wall red exists
+    - active next action inside the rerank:
+      close the rerank and select the next slice explicitly instead of opening
+      any blocked runtime candidate by inertia
 - 2026-04-14 second-pass plan selection and implementation:
   - the no-widening route/card projection guard
     `mixed_floor_wall_output_card_snapshot_grid_v1`

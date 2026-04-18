@@ -52,6 +52,7 @@ async function main() {
         "src/blocked-source-rank-1-gdmtxa04a-feasibility-contract.test.ts",
         "src/blocked-source-rank-2-c11c-feasibility-contract.test.ts",
         "src/blocked-source-rank-3-raw-bare-open-box-open-web-feasibility-contract.test.ts",
+        "src/blocked-source-rank-4-wall-selector-feasibility-contract.test.ts",
         "src/post-dataholz-clt-calibration-tightening-next-slice-selection-contract.test.ts",
         "src/dataholz-clt-calibration-tightening-audit.test.ts",
         "src/dataholz-gdmtxa04a-material-surface-recheck.test.ts",

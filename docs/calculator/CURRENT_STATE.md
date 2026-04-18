@@ -41,12 +41,11 @@ Planning / implementation update: `2026-04-17`
   next honest step is no longer another solver pass; it is a no-runtime
   rerank of the still-blocked source-backed families
 - immediate next decision:
-  keep rank-1 `GDMTXA04A`, rank-2 `C11c`, and rank-3 raw bare
-  open-box/open-web blocked on their explicit feasibility findings and run the
-  next comparison on `wall_selector_behavior_widening`
+  keep all four blocked candidates fail-closed on their explicit feasibility
+  findings and move from comparison work to rerank closeout selection
 - first implementation question now:
-  does wall-selector widening have a real live red worth reopening, or does it
-  also stay blocked once compared against the already-held floor candidates
+  after all four blocked candidates are explicit holds, which single next
+  slice should replace the rerank without faking runtime urgency
 - current explicit blocked candidate order:
   1. `dataholz_gdmtxa04a_visible_exact_reopen`
   2. `tuas_c11c_exact_import`
@@ -147,6 +146,21 @@ Planning / implementation update: `2026-04-17`
     passed
   - `pnpm calculator:gate:current`: green with focused engine `11/11` files
     and `35/35` tests plus focused web `3/3` files and `9/9` tests
+  - `git diff --check`: green
+- latest blocked-source rank-4 progress update on `2026-04-18`:
+  - landed
+    `packages/engine/src/blocked-source-rank-4-wall-selector-feasibility-contract.test.ts`
+  - kept rank-4 `wall_selector_behavior_widening` blocked after an explicit
+    feasibility audit because the current wall trace/card guard is already
+    closed and no fresh classified wall red exists
+  - exhausted the comparison queue inside
+    `blocked_source_backed_widening_rerank_v1` without changing runtime
+    behavior, so the next honest move is rerank closeout selection instead of
+    another feasibility pass
+  - targeted rerank engine pack: `7/7` test files passed, `20/20` tests
+    passed
+  - `pnpm calculator:gate:current`: green with focused engine `12/12` files
+    and `37/37` tests plus focused web `3/3` files and `9/9` tests
   - `git diff --check`: green
 
 - latest live verification after the runtime candidate rerank closeout:

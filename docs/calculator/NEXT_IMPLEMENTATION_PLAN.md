@@ -62,8 +62,8 @@ Use this section first when deciding what to do next.
 - active slice:
   `blocked_source_backed_widening_rerank_v1`
 - current highest-ROI task:
-  freeze rank-3 raw bare open-box/open-web as blocked and move the active
-  comparison to `wall_selector_behavior_widening`
+  freeze rank-4 wall-selector behavior as blocked and move the active slice to
+  rerank closeout selection
 - current explicit blocked candidate order:
   1. `dataholz_gdmtxa04a_visible_exact_reopen`
   2. `tuas_c11c_exact_import`
@@ -92,6 +92,11 @@ Use this section first when deciding what to do next.
   packaged-system behavior rather than true bare-carrier impact behavior; the
   rerank now advances to wall-selector behavior without changing runtime
   behavior
+- active-slice rerank progress now also landed:
+  rank-4 wall-selector behavior stays blocked after an explicit feasibility
+  audit because the current trace/card guard is already closed and no fresh
+  classified wall red exists; the rerank now has no further comparison target
+  and is ready for closeout selection without changing runtime behavior
 
 ### Next
 
@@ -99,11 +104,12 @@ Use this section first when deciding what to do next.
 2. Keep rank-2 `C11c` explicitly blocked on its unresolved anomaly.
 3. Keep rank-3 raw bare open-box/open-web explicitly blocked on packaged-only
    source evidence.
-4. Audit `wall_selector_behavior_widening` as the new active comparison target
-   inside the rerank.
-5. Keep all currently blocked families fail-closed while the rerank is active.
-6. Select exactly one next runtime candidate only after the rerank compares
-   ROI, evidence posture, and fake-confidence risk explicitly.
+4. Keep rank-4 `wall_selector_behavior_widening` explicitly blocked on the
+   already-closed trace/card guard plus the absence of any fresh classified
+   wall red.
+5. Keep all currently blocked families fail-closed while the rerank closes.
+6. Close `blocked_source_backed_widening_rerank_v1` and select the next slice
+   explicitly instead of reopening any blocked runtime candidate by inertia.
 
 ### Rank-3 Decision Gate
 
@@ -120,6 +126,21 @@ implementation-ready widening.
 - non-goal:
   do not reinterpret packaged TUAS or UBIQ rows as bare-carrier impact truth
   just because nearby tests are green
+
+### Rank-4 Decision Gate
+
+Treat the wall-selector step as a feasibility audit, not as an implementation-ready widening.
+
+- success condition:
+  a fresh classified wall red exists that the current trace/card guard fails to
+  hold honestly, so reopening selector behavior would fix a live runtime bug
+- fail-closed condition:
+  the current trace/card guard is already closed and no fresh classified wall
+  red exists, so the candidate stays blocked and the rerank moves to closeout
+  selection instead of another comparison
+- non-goal:
+  do not reopen wall-selector behavior from old nearby green tests or general
+  discomfort with ambiguous family holds
 
 ### Later
 
@@ -224,6 +245,20 @@ implementation-ready widening.
     passed
   - `pnpm calculator:gate:current`: green with focused engine `11/11` files
     and `35/35` tests plus focused web `3/3` files and `9/9` tests
+  - `git diff --check`: green
+- latest blocked-source rank-4 progress update on `2026-04-18`:
+  - landed
+    `packages/engine/src/blocked-source-rank-4-wall-selector-feasibility-contract.test.ts`
+  - kept rank-4 wall-selector behavior blocked after an explicit feasibility
+    audit because the current wall trace/card guard is already closed and no
+    fresh classified wall red exists
+  - exhausted the comparison queue inside
+    `blocked_source_backed_widening_rerank_v1` without changing runtime
+    behavior, so the next honest move is rerank closeout selection
+  - targeted rerank engine pack: `7/7` test files passed, `20/20` tests
+    passed
+  - `pnpm calculator:gate:current`: green with focused engine `12/12` files
+    and `37/37` tests plus focused web `3/3` files and `9/9` tests
   - `git diff --check`: green
 - latest closed implementation slice:
   `heavy_concrete_formula_family_widening_v1`

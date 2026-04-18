@@ -27,6 +27,7 @@ Use [SYSTEM_MAP.md](./SYSTEM_MAP.md) for the live runtime/file map.
    - [blocked-source-rank-1-gdmtxa04a-feasibility-contract.test.ts](../../packages/engine/src/blocked-source-rank-1-gdmtxa04a-feasibility-contract.test.ts)
    - [blocked-source-rank-2-c11c-feasibility-contract.test.ts](../../packages/engine/src/blocked-source-rank-2-c11c-feasibility-contract.test.ts)
    - [blocked-source-rank-3-raw-bare-open-box-open-web-feasibility-contract.test.ts](../../packages/engine/src/blocked-source-rank-3-raw-bare-open-box-open-web-feasibility-contract.test.ts)
+   - [blocked-source-rank-4-wall-selector-feasibility-contract.test.ts](../../packages/engine/src/blocked-source-rank-4-wall-selector-feasibility-contract.test.ts)
    - [source-gap-candidate-re-rank-contract.test.ts](../../packages/engine/src/source-gap-candidate-re-rank-contract.test.ts)
    - [raw-bare-open-web-open-box-source-evidence-rerank-contract.test.ts](../../packages/engine/src/raw-bare-open-web-open-box-source-evidence-rerank-contract.test.ts)
    - [remaining-source-gap-posture-matrix.test.ts](../../packages/engine/src/remaining-source-gap-posture-matrix.test.ts)
@@ -38,7 +39,7 @@ Use [SYSTEM_MAP.md](./SYSTEM_MAP.md) for the live runtime/file map.
 
 Do not reopen `GDMTXA04A`, raw open-box/open-web, `C11c`,
 reinforced-concrete, heavy-concrete parity, or wall-selector widening first.
-The next safe step is the selected blocked-source rerank.
+The next safe step after the landed rank-4 hold is rerank closeout selection.
 
 ## Current Answer In One Screen
 
@@ -106,8 +107,11 @@ step itself.
     - rank-2 `C11c` also stays blocked after an explicit feasibility audit
     - rank-3 raw bare open-box/open-web also stays blocked after an explicit
       feasibility audit because current source truth remains packaged-only
-    - the next active comparison target inside the rerank is now
-      wall-selector behavior widening
+    - rank-4 wall-selector behavior also stays blocked after an explicit
+      feasibility audit because the current wall trace/card guard is already
+      closed and no fresh classified wall red exists
+    - the next active move inside the rerank is now closeout selection, not
+      another comparison
   - each candidate must stay explicit on value, origin, support, and current
     evidence posture before any direct runtime change is selected
 - reinforced-concrete reopening remains conditional-only
@@ -176,10 +180,22 @@ Latest rank-3 rerank progress revalidation on `2026-04-18`:
 - `git diff --check`
   - green
 
+Latest rank-4 rerank progress revalidation on `2026-04-18`:
+
+- `pnpm calculator:gate:current`
+  - green
+  - focused engine gate: `12/12` test files passed, `37/37` tests passed
+  - focused web gate: `3/3` test files passed, `9/9` tests passed
+- targeted rerank engine pack
+  - green
+  - `7/7` test files passed, `20/20` tests passed
+- `git diff --check`
+  - green
+
 ## Minimal Resume Commands
 
 1. `pnpm calculator:gate:current`
-2. `pnpm --filter @dynecho/engine exec vitest run src/blocked-source-rank-1-gdmtxa04a-feasibility-contract.test.ts src/blocked-source-rank-2-c11c-feasibility-contract.test.ts src/blocked-source-rank-3-raw-bare-open-box-open-web-feasibility-contract.test.ts src/post-dataholz-clt-calibration-tightening-next-slice-selection-contract.test.ts src/source-gap-candidate-re-rank-contract.test.ts src/raw-bare-open-web-open-box-source-evidence-rerank-contract.test.ts src/remaining-source-gap-posture-matrix.test.ts src/dataholz-gdmtxa04a-material-surface-recheck.test.ts src/floor-source-corpus-contract.test.ts src/tuas-c11c-wet-stack-anomaly-audit.test.ts --maxWorkers=1`
+2. `pnpm --filter @dynecho/engine exec vitest run src/blocked-source-rank-1-gdmtxa04a-feasibility-contract.test.ts src/blocked-source-rank-2-c11c-feasibility-contract.test.ts src/blocked-source-rank-3-raw-bare-open-box-open-web-feasibility-contract.test.ts src/blocked-source-rank-4-wall-selector-feasibility-contract.test.ts src/post-dataholz-clt-calibration-tightening-next-slice-selection-contract.test.ts src/source-gap-candidate-re-rank-contract.test.ts src/raw-bare-open-web-open-box-source-evidence-rerank-contract.test.ts src/remaining-source-gap-posture-matrix.test.ts src/dataholz-gdmtxa04a-material-surface-recheck.test.ts src/floor-source-corpus-contract.test.ts src/tuas-c11c-wet-stack-anomaly-audit.test.ts --maxWorkers=1`
 3. `pnpm --filter @dynecho/web exec vitest run features/workbench/remaining-source-gap-posture-card-matrix.test.ts features/workbench/output-origin-trace-card-matrix.test.ts features/workbench/dataholz-clt-source-truth-route.test.ts --maxWorkers=1`
 4. Read [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md) before changing routing or support posture.
 
@@ -193,6 +209,7 @@ Keep the next scope on:
   [blocked-source-rank-1-gdmtxa04a-feasibility-contract.test.ts](../../packages/engine/src/blocked-source-rank-1-gdmtxa04a-feasibility-contract.test.ts),
   [blocked-source-rank-2-c11c-feasibility-contract.test.ts](../../packages/engine/src/blocked-source-rank-2-c11c-feasibility-contract.test.ts),
   [blocked-source-rank-3-raw-bare-open-box-open-web-feasibility-contract.test.ts](../../packages/engine/src/blocked-source-rank-3-raw-bare-open-box-open-web-feasibility-contract.test.ts),
+  [blocked-source-rank-4-wall-selector-feasibility-contract.test.ts](../../packages/engine/src/blocked-source-rank-4-wall-selector-feasibility-contract.test.ts),
   [source-gap-candidate-re-rank-contract.test.ts](../../packages/engine/src/source-gap-candidate-re-rank-contract.test.ts),
   [raw-bare-open-web-open-box-source-evidence-rerank-contract.test.ts](../../packages/engine/src/raw-bare-open-web-open-box-source-evidence-rerank-contract.test.ts),
   and [remaining-source-gap-posture-matrix.test.ts](../../packages/engine/src/remaining-source-gap-posture-matrix.test.ts)

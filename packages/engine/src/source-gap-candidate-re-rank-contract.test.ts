@@ -6,7 +6,7 @@ const BLOCKED_SOURCE_BACKED_WIDENING_RERANK = {
   outcome: "refresh_priority_order_without_runtime_change",
   runtimeBehaviorChange: false,
   selectedNextRuntimeCandidate: null,
-  selectedNextRuntimeCandidateStatus: "hold_until_rerank_closeout_selects_exactly_one_runtime_slice",
+  selectedNextRuntimeCandidateStatus: "hold_until_rerank_closeout_selects_the_next_slice_explicitly",
   routeFamily: "deferred_floor_source_gap_candidates",
   outputSurface: "blocked_source_backed_widening_rerank_matrix"
 } as const;
@@ -69,7 +69,7 @@ describe("source gap candidate re-rank contract", () => {
       outcome: "refresh_priority_order_without_runtime_change",
       runtimeBehaviorChange: false,
       selectedNextRuntimeCandidate: null,
-      selectedNextRuntimeCandidateStatus: "hold_until_rerank_closeout_selects_exactly_one_runtime_slice",
+      selectedNextRuntimeCandidateStatus: "hold_until_rerank_closeout_selects_the_next_slice_explicitly",
       routeFamily: "deferred_floor_source_gap_candidates",
       outputSurface: "blocked_source_backed_widening_rerank_matrix"
     });
