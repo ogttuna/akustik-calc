@@ -1,6 +1,6 @@
 # Next Implementation Plan
 
-Last reviewed: 2026-04-18
+Last reviewed: 2026-04-19
 
 Document role:
 
@@ -62,8 +62,9 @@ Use this section first when deciding what to do next.
 - active slice:
   `mixed_floor_wall_seeded_cross_mode_chain_expansion_v2`
 - current highest-ROI task:
-  extend the seeded mixed floor/wall cross-mode evidence chain on the existing
-  defended boundary routes before any blocked runtime reopen is reconsidered
+  extend selected seeded duplicate-swap and save-load replay pressure on the
+  existing defended boundary routes until the web-side chain matches the new
+  engine-side reverse-mask coverage
 - selected next slice posture:
   all four blocked source-backed runtime candidates are now explicit holds, so
   the highest-ROI next move is a no-runtime shared torture-pass follow-up
@@ -72,12 +73,12 @@ Use this section first when deciding what to do next.
 - selected output surface:
   `workbench_saved_scenario_replay_and_output_cards`
 - selected scope:
-  - broader seeded cross-mode edit-chain families beyond the current second
-    wall-family expansion
-  - wider duplicate-swap pressure beyond the current complementary generated
-    history-grid variants
-  - saved-scenario replay and output-card projection parity after longer
-    cross-mode chains
+  - landed: broader selected seeded edit-history families beyond the current
+    second wall-family expansion
+  - active: wider selected duplicate-swap pressure beyond the current
+    complementary generated history-grid variants
+  - landed for selected edit-history replay: saved-scenario replay and
+    output-card projection parity after longer cross-mode chains
 - blocked runtime candidate posture stays explicit:
   1. `dataholz_gdmtxa04a_visible_exact_reopen`
   2. `tuas_c11c_exact_import`
@@ -88,11 +89,12 @@ Use this section first when deciding what to do next.
 
 1. Keep `GDMTXA04A`, `C11c`, raw bare open-box/open-web, and wall-selector
    behavior explicit blocked holds while this follow-up stays active.
-2. Extend the seeded mixed floor/wall engine torture coverage without creating
-   a broader generated family grid.
-3. Extend the matching web saved-scenario replay, generated history-grid,
-   generated edit-history, and output-card projection parity on the same
-   seeded boundary routes.
+2. Keep the widened selected edit-history replay set on the selected boundary
+   routes; do not leak that broader replay contract back into broad or
+   representative requested-output surfaces.
+3. Extend the matching web generated history-grid, partial-restore, and
+   requested-output replay surfaces on the same seeded boundary routes until
+   multi-split cases carry explicit reverse-mask save-load pressure.
 4. If the follow-up exposes a fresh classified runtime red, classify it before
    any widening proposal; do not reopen a blocked source-backed candidate by
    proximity alone.
@@ -116,6 +118,29 @@ Use this section first when deciding what to do next.
   micro-pass while the seeded mixed follow-up is active
 
 ## Verified Against Implementation - 2026-04-18
+
+- latest active-slice mixed floor/wall seeded-chain progress on `2026-04-19`:
+  - widened
+    `apps/web/features/workbench/mixed-study-mode-generated-test-helpers.ts`
+    selected edit-history variants from the prior direct-only quartet to an
+    eight-variant selected-only replay set with reversed split-order chains
+  - kept broad and representative requested-output edit-history descriptors on
+    their previous direct-only contract while the selected requested-output
+    lane adopted the broader selected replay set
+  - normalized the selected generated edit-history helper and the selected
+    requested-output output-card helper so reversed hostile replay still
+    collapses onto the canonical direct-final row order before snapshot and
+    save-load assertions
+  - widened
+    `packages/engine/src/mixed-floor-wall-generated-matrix.test.ts`
+    selected duplicate/swap reverse-mask pressure from the prior
+    direct-plus-single/all-reversal coverage to exhaustive reverse-mask
+    combinations on the defended seeded boundary routes
+  - `pnpm calculator:gate:current`: green with focused engine `10/10` files
+    and `28/28` tests plus focused web `4/4` files and `23/23` tests
+  - repo build inside the focused gate: green with the known optional
+    `sharp/@img` DOCX warnings
+  - `git diff --check`: green
 
 - latest blocked-source rerank closeout selection on `2026-04-18`:
   - landed

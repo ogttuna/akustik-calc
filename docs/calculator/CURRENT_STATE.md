@@ -30,7 +30,7 @@ Last full web revalidation: `2026-04-18`
 
 Last cross-package build revalidation: `2026-04-18`
 
-Planning / implementation update: `2026-04-18`
+Planning / implementation update: `2026-04-19`
 
 ## Operator Snapshot
 
@@ -41,12 +41,12 @@ Planning / implementation update: `2026-04-18`
   the next honest step is a no-runtime shared mixed floor/wall evidence pass
   rather than another runtime candidate comparison
 - immediate next decision:
-  extend the seeded mixed floor/wall cross-mode chain on the already-defended
-  boundary routes without reopening any blocked runtime candidate
+  extend selected duplicate-swap/save-load replay pressure on the already-
+  defended boundary routes without reopening any blocked runtime candidate
 - first implementation question now:
-  which broader seeded cross-mode edit-chain families beyond the current
-  second wall-family expansion still need explicit engine/web parity before any
-  blocked runtime reopen is reconsidered
+  which selected multi-split duplicate-swap and requested-output replay
+  families still need explicit web parity after the new engine-side exhaustive
+  reverse-mask pressure landed
 - current explicit blocked candidate order:
   1. `dataholz_gdmtxa04a_visible_exact_reopen`
   2. `tuas_c11c_exact_import`
@@ -56,6 +56,26 @@ Planning / implementation update: `2026-04-18`
   - direct blocked-family reopening
   - blocked source-family widening
   - another broad generated family grid without a fresh classified red
+
+- latest active-slice mixed floor/wall seeded-chain progress on `2026-04-19`:
+  - widened the selected seeded edit-history replay set from the prior
+    direct-only quartet to an eight-variant selected-only family that now
+    includes reversed split-order chains
+  - kept broad and representative requested-output edit-history surfaces on
+    their previous direct-only contract so the active slice stays selected-
+    route scoped
+  - aligned the selected generated edit-history helper and the selected
+    requested-output output-card helper so reversed hostile replay collapses
+    back onto the canonical direct-final row order before scenario and
+    save-load assertions
+  - widened selected engine duplicate/swap pressure from complementary
+    direct-plus-single/all reversal coverage to exhaustive reverse-mask
+    combinations on the defended seeded boundary routes
+  - `pnpm calculator:gate:current`: green with focused engine `10/10` files
+    and `28/28` tests plus focused web `4/4` files and `23/23` tests
+  - focused repo build: green with the known optional `sharp/@img` DOCX
+    warnings
+  - `git diff --check`: green
 
 - latest active-slice CLT calibration closeout on `2026-04-17`:
   - landed `packages/engine/src/dataholz-clt-calibration-tightening-audit.test.ts`

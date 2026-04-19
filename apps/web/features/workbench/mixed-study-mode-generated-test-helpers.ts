@@ -136,7 +136,7 @@ export const DEFAULT_EDIT_HISTORY_VARIANT: EditHistoryVariant = {
   reverseParts: false
 };
 
-export const SELECTED_EDIT_HISTORY_VARIANTS: readonly EditHistoryVariant[] = [
+export const BROAD_EDIT_HISTORY_VARIANTS: readonly EditHistoryVariant[] = [
   DEFAULT_EDIT_HISTORY_VARIANT,
   {
     id: "ascending-direct-even-rebuild-noise-up",
@@ -158,6 +158,38 @@ export const SELECTED_EDIT_HISTORY_VARIANTS: readonly EditHistoryVariant[] = [
     planOrder: "desc",
     rebuildParity: "odd",
     reverseParts: false
+  }
+];
+
+export const SELECTED_EDIT_HISTORY_VARIANTS: readonly EditHistoryVariant[] = [
+  ...BROAD_EDIT_HISTORY_VARIANTS,
+  {
+    id: "descending-reversed-even-rebuild-noise-down",
+    noiseDirection: "down",
+    planOrder: "desc",
+    rebuildParity: "even",
+    reverseParts: true
+  },
+  {
+    id: "ascending-reversed-even-rebuild-noise-up",
+    noiseDirection: "up",
+    planOrder: "asc",
+    rebuildParity: "even",
+    reverseParts: true
+  },
+  {
+    id: "ascending-reversed-odd-rebuild-noise-down",
+    noiseDirection: "down",
+    planOrder: "asc",
+    rebuildParity: "odd",
+    reverseParts: true
+  },
+  {
+    id: "descending-reversed-odd-rebuild-noise-up",
+    noiseDirection: "up",
+    planOrder: "desc",
+    rebuildParity: "odd",
+    reverseParts: true
   }
 ];
 

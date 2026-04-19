@@ -29,13 +29,11 @@ const SELECTED_DUPLICATE_SWAP_CASES = SELECTED_ENGINE_MIXED_GENERATED_ROUTE_CASE
 );
 
 function buildDuplicateSwapGridVariants(testCase: EngineMixedGeneratedCase) {
-  const reverseMasks = testCase.splitPlans.map((_, index) =>
-    testCase.splitPlans.map((__, maskIndex) => maskIndex === index)
+  // Exhaust every reverse-mask combination on the selected seeded routes so the
+  // shared torture pass widens end-state pressure without inventing new route families.
+  const reverseMasks = Array.from({ length: 2 ** testCase.splitPlans.length }, (_, mask) =>
+    testCase.splitPlans.map((__, index) => Boolean(mask & (1 << index)))
   );
-
-  if (testCase.splitPlans.length > 1) {
-    reverseMasks.push(testCase.splitPlans.map(() => true));
-  }
 
   return reverseMasks.map((reverseMask) => {
     const variantPlans: SplitPlan[] = testCase.splitPlans.map((plan, index) => ({

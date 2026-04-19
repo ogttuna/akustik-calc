@@ -92,6 +92,27 @@ function moveCurrentRowToIndex(store: StoreHandle, rowId: string, targetIndex: n
   }
 }
 
+function normalizeSplitPairOrder(
+  store: StoreHandle,
+  firstId: string,
+  secondId: string,
+  reverseParts: boolean
+) {
+  const currentRows = store.getState().rows;
+  const firstIndex = currentRows.findIndex((row) => row.id === firstId);
+  const secondIndex = currentRows.findIndex((row) => row.id === secondId);
+
+  expect(firstIndex).toBeGreaterThanOrEqual(0);
+  expect(secondIndex).toBeGreaterThanOrEqual(0);
+
+  const pairStart = Math.min(firstIndex, secondIndex);
+  const leadingId = reverseParts ? secondId : firstId;
+  const trailingId = leadingId === firstId ? secondId : firstId;
+
+  moveCurrentRowToIndex(store, leadingId, pairStart);
+  moveCurrentRowToIndex(store, trailingId, pairStart + 1);
+}
+
 function rebuildRowAtIndex(store: StoreHandle, row: AppendableRow, targetIndex: number) {
   store.getState().addRow();
 
@@ -202,6 +223,10 @@ function applyEditHistoryToStore(
       store.getState().updateThickness(firstId, firstPart);
       store.getState().updateThickness(secondId, secondPart);
     }
+
+    // Keep hostile replay history pressure without letting reversed split rows
+    // leak into the final canonical route order.
+    normalizeSplitPairOrder(store, firstId, secondId, variant.reverseParts);
   }
 }
 

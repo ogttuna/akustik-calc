@@ -1,11 +1,13 @@
 import type { RequestedOutputSurfaceDescriptor } from "./mixed-study-mode-output-card-snapshot-requested-output-surface-runner-loop";
 import {
+  BROAD_EDIT_HISTORY_BRANCH,
   COMPACT_REPLAY_BRANCH,
-  EDIT_HISTORY_BRANCH,
   PARTIAL_RESTORE_BRANCH,
+  SELECTED_EDIT_HISTORY_BRANCH,
+  type BroadEditHistoryVariant,
   type DuplicateSwapHistoryVariant,
-  type EditHistoryVariant,
   type HistoryVariant,
+  type SelectedEditHistoryVariant,
   createBroadRequestedOutputSurfaceDescriptor,
   createRepresentativeRequestedOutputSurfaceDescriptor,
   createSelectedRequestedOutputSurfaceDescriptor,
@@ -37,9 +39,9 @@ export function createBroadRequestedOutputRestoreAfterCompactReplayDescriptor():
   );
 }
 
-export function createBroadRequestedOutputEditHistoryRestoreDescriptor(): RequestedOutputSurfaceDescriptor<EditHistoryVariant> {
+export function createBroadRequestedOutputEditHistoryRestoreDescriptor(): RequestedOutputSurfaceDescriptor<BroadEditHistoryVariant> {
   return createBroadRequestedOutputSurfaceDescriptor(
-    EDIT_HISTORY_BRANCH,
+    BROAD_EDIT_HISTORY_BRANCH,
     createBroadRequestedOutputEditHistoryRestoreMessages(),
   );
 }
@@ -65,9 +67,9 @@ export function createSelectedRequestedOutputGeneratedHistoryRestoreDescriptor()
   );
 }
 
-export function createSelectedRequestedOutputEditHistoryRestoreDescriptor(): RequestedOutputSurfaceDescriptor<EditHistoryVariant> {
+export function createSelectedRequestedOutputEditHistoryRestoreDescriptor(): RequestedOutputSurfaceDescriptor<SelectedEditHistoryVariant> {
   return createSelectedRequestedOutputSurfaceDescriptor(
-    EDIT_HISTORY_BRANCH,
+    SELECTED_EDIT_HISTORY_BRANCH,
     createSelectedRequestedOutputEditHistoryRestoreMessages(),
   );
 }
@@ -79,9 +81,9 @@ export function createRepresentativeRequestedOutputRestoreDescriptor(): Requeste
   );
 }
 
-export function createRepresentativeRequestedOutputEditHistoryRestoreDescriptor(): RequestedOutputSurfaceDescriptor<EditHistoryVariant> {
+export function createRepresentativeRequestedOutputEditHistoryRestoreDescriptor(): RequestedOutputSurfaceDescriptor<BroadEditHistoryVariant> {
   return createRepresentativeRequestedOutputSurfaceDescriptor(
-    EDIT_HISTORY_BRANCH,
+    BROAD_EDIT_HISTORY_BRANCH,
     createRepresentativeRequestedOutputEditHistoryRestoreMessages(),
   );
 }

@@ -148,6 +148,27 @@ export function moveCurrentRowToIndex(store: StoreHandle, rowId: string, targetI
   }
 }
 
+function normalizeSplitPairOrder(
+  store: StoreHandle,
+  firstId: string,
+  secondId: string,
+  reverseParts: boolean,
+): void {
+  const currentRows = store.getState().rows;
+  const firstIndex = currentRows.findIndex((row) => row.id === firstId);
+  const secondIndex = currentRows.findIndex((row) => row.id === secondId);
+
+  expect(firstIndex).toBeGreaterThanOrEqual(0);
+  expect(secondIndex).toBeGreaterThanOrEqual(0);
+
+  const pairStart = Math.min(firstIndex, secondIndex);
+  const leadingId = reverseParts ? secondId : firstId;
+  const trailingId = leadingId === firstId ? secondId : firstId;
+
+  moveCurrentRowToIndex(store, leadingId, pairStart);
+  moveCurrentRowToIndex(store, trailingId, pairStart + 1);
+}
+
 export function rebuildRowAtIndex(store: StoreHandle, row: AppendableRow, targetIndex: number): void {
   store.getState().addRow();
 
@@ -383,30 +404,32 @@ export function applyEditHistoryVariantToStore(
     const shouldRebuild =
       variant.rebuildParity === "even" ? planIndex % 2 === 0 : planIndex % 2 === 1;
 
-    if (!shouldRebuild) {
-      continue;
+    if (shouldRebuild) {
+      currentRows = store.getState().rows;
+      const rebuildIndex = currentRows.findIndex((row) => row.id === firstId);
+
+      expect(rebuildIndex).toBeGreaterThanOrEqual(0);
+
+      store.getState().removeRow(firstId);
+      rebuildRowAtIndex(
+        store,
+        {
+          floorRole: target.floorRole,
+          materialId: target.materialId,
+          thicknessMm: firstPart,
+        },
+        rebuildIndex,
+      );
+
+      firstId = store.getState().rows[rebuildIndex]!.id;
+      secondId = store.getState().rows[rebuildIndex + 1]!.id;
+      store.getState().updateThickness(firstId, firstPart);
+      store.getState().updateThickness(secondId, secondPart);
     }
 
-    currentRows = store.getState().rows;
-    const rebuildIndex = currentRows.findIndex((row) => row.id === firstId);
-
-    expect(rebuildIndex).toBeGreaterThanOrEqual(0);
-
-    store.getState().removeRow(firstId);
-    rebuildRowAtIndex(
-      store,
-      {
-        floorRole: target.floorRole,
-        materialId: target.materialId,
-        thicknessMm: firstPart,
-      },
-      rebuildIndex,
-    );
-
-    firstId = store.getState().rows[rebuildIndex]!.id;
-    secondId = store.getState().rows[rebuildIndex + 1]!.id;
-    store.getState().updateThickness(firstId, firstPart);
-    store.getState().updateThickness(secondId, secondPart);
+    // Keep the replay path hostile while restoring the canonical direct-final
+    // pair order expected by the seeded route output-card surfaces.
+    normalizeSplitPairOrder(store, firstId, secondId, variant.reverseParts);
   }
 }
 
@@ -654,4 +677,3 @@ export function assertRowsEqual(
     )}\nactualRows=${JSON.stringify(normalizedActual, null, 2)}`,
   );
 }
-

@@ -1,4 +1,5 @@
 import {
+  BROAD_EDIT_HISTORY_VARIANTS,
   ROUTE_MIXED_GENERATED_CASES,
   SELECTED_DUPLICATE_SWAP_HISTORY_VARIANTS,
   SELECTED_EDIT_HISTORY_VARIANTS,
@@ -22,7 +23,8 @@ import {
 export type HistoryVariant = (typeof CARD_HISTORY_VARIANTS)[number];
 export type DuplicateSwapHistoryVariant =
   (typeof SELECTED_DUPLICATE_SWAP_HISTORY_VARIANTS)[number];
-export type EditHistoryVariant = (typeof SELECTED_EDIT_HISTORY_VARIANTS)[number];
+export type BroadEditHistoryVariant = (typeof BROAD_EDIT_HISTORY_VARIANTS)[number];
+export type SelectedEditHistoryVariant = (typeof SELECTED_EDIT_HISTORY_VARIANTS)[number];
 
 type VariantWithId = { id: string };
 type RequestedOutputSurfaceScope = Pick<
@@ -98,7 +100,12 @@ export const COMPACT_REPLAY_BRANCH: VariantBranchBinding<HistoryVariant> = {
   variants: CARD_HISTORY_VARIANTS,
 };
 
-export const EDIT_HISTORY_BRANCH: VariantBranchBinding<EditHistoryVariant> = {
+export const BROAD_EDIT_HISTORY_BRANCH: VariantBranchBinding<BroadEditHistoryVariant> = {
+  runVariantBranch: runEditHistoryVariantBranch,
+  variants: BROAD_EDIT_HISTORY_VARIANTS,
+};
+
+export const SELECTED_EDIT_HISTORY_BRANCH: VariantBranchBinding<SelectedEditHistoryVariant> = {
   runVariantBranch: runEditHistoryVariantBranch,
   variants: SELECTED_EDIT_HISTORY_VARIANTS,
 };
