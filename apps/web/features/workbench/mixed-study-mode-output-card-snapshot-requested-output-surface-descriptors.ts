@@ -1,8 +1,9 @@
 import type { RequestedOutputSurfaceDescriptor } from "./mixed-study-mode-output-card-snapshot-requested-output-surface-runner-loop";
 import {
   BROAD_EDIT_HISTORY_BRANCH,
+  COMPACT_PARTIAL_RESTORE_BRANCH,
   COMPACT_REPLAY_BRANCH,
-  PARTIAL_RESTORE_BRANCH,
+  SELECTED_PARTIAL_RESTORE_BRANCH,
   SELECTED_EDIT_HISTORY_BRANCH,
   type BroadEditHistoryVariant,
   type DuplicateSwapHistoryVariant,
@@ -46,23 +47,23 @@ export function createBroadRequestedOutputEditHistoryRestoreDescriptor(): Reques
   );
 }
 
-export function createBroadRequestedOutputPartialRestoreDescriptor(): RequestedOutputSurfaceDescriptor<DuplicateSwapHistoryVariant> {
+export function createBroadRequestedOutputPartialRestoreDescriptor(): RequestedOutputSurfaceDescriptor<HistoryVariant> {
   return createBroadRequestedOutputSurfaceDescriptor(
-    PARTIAL_RESTORE_BRANCH,
+    COMPACT_PARTIAL_RESTORE_BRANCH,
     createBroadRequestedOutputPartialRestoreMessages(),
   );
 }
 
 export function createSelectedRequestedOutputPartialRestoreDescriptor(): RequestedOutputSurfaceDescriptor<DuplicateSwapHistoryVariant> {
   return createSelectedRequestedOutputSurfaceDescriptor(
-    PARTIAL_RESTORE_BRANCH,
+    SELECTED_PARTIAL_RESTORE_BRANCH,
     createSelectedRequestedOutputPartialRestoreMessages(),
   );
 }
 
 export function createSelectedRequestedOutputGeneratedHistoryRestoreDescriptor(): RequestedOutputSurfaceDescriptor<DuplicateSwapHistoryVariant> {
   return createSelectedRequestedOutputSurfaceDescriptor(
-    PARTIAL_RESTORE_BRANCH,
+    SELECTED_PARTIAL_RESTORE_BRANCH,
     createSelectedRequestedOutputGeneratedHistoryRestoreMessages(),
   );
 }
@@ -88,9 +89,9 @@ export function createRepresentativeRequestedOutputEditHistoryRestoreDescriptor(
   );
 }
 
-export function createRepresentativeRequestedOutputPartialRestoreDescriptor(): RequestedOutputSurfaceDescriptor<DuplicateSwapHistoryVariant> {
+export function createRepresentativeRequestedOutputPartialRestoreDescriptor(): RequestedOutputSurfaceDescriptor<HistoryVariant> {
   return createRepresentativeRequestedOutputSurfaceDescriptor(
-    PARTIAL_RESTORE_BRANCH,
+    COMPACT_PARTIAL_RESTORE_BRANCH,
     createRepresentativeRequestedOutputPartialRestoreMessages(),
   );
 }

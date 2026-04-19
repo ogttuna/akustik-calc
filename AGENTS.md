@@ -17,8 +17,9 @@ plan.
 - current selected slice:
   `mixed_floor_wall_seeded_cross_mode_chain_expansion_v2`
 - current first decision inside the slice:
-  extend seeded mixed floor/wall cross-mode evidence on the already-defended
-  boundary routes before reopening any blocked runtime candidate
+  close the mixed floor/wall seeded slice with an explicit next-slice
+  selection contract now that the selected requested-output replay chain
+  matches the defended reverse-mask pressure
 - do not reopen `GDMTXA04A`, `C11c`, raw open-box/open-web, heavy-concrete
   parity or formula scope, reinforced-concrete reopening, or wall-selector
   behavior from nearby green tests alone

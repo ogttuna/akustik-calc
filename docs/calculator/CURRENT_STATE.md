@@ -41,13 +41,13 @@ Planning / implementation update: `2026-04-19`
   the next honest step is a no-runtime shared mixed floor/wall evidence pass
   rather than another runtime candidate comparison
 - immediate next decision:
-  extend the remaining selected requested-output/save-load replay pressure on
-  the already-defended boundary routes without reopening any blocked runtime
-  candidate
+  close `mixed_floor_wall_seeded_cross_mode_chain_expansion_v2` with an
+  explicit next-slice selection contract now that the selected
+  requested-output/save-load replay chain matches the engine-side
+  reverse-mask pressure
 - first implementation question now:
-  which selected requested-output replay families still need explicit
-  per-plan reverse-mask web parity after the new generated-history and
-  output-card helpers adopted that pressure
+  whether any fresh classified red appeared during the selected
+  requested-output branch split, or whether the slice is clean to close
 - current explicit blocked candidate order:
   1. `dataholz_gdmtxa04a_visible_exact_reopen`
   2. `tuas_c11c_exact_import`
@@ -59,6 +59,22 @@ Planning / implementation update: `2026-04-19`
   - another broad generated family grid without a fresh classified red
 
 - latest active-slice mixed floor/wall seeded-chain progress on `2026-04-19`:
+  - split the requested-output partial-restore descriptor branch so broad and
+    representative requested-output surfaces keep the compact replay variants
+    while the selected seeded requested-output surfaces carry the explicit
+    reverse-mask variants
+  - landed
+    `apps/web/features/workbench/mixed-study-mode-output-card-snapshot-requested-output-surface-descriptors.test.ts`
+    and added it to the focused current gate so the branch split stays pinned
+  - `pnpm calculator:gate:current`: green with focused engine `10/10` files
+    and `28/28` tests plus focused web `5/5` files and `25/25` tests
+  - focused repo build: green with the known optional `sharp/@img` DOCX
+    warnings
+  - `git diff --check`: green
+  - next narrow task inside the slice is closeout selection, not more replay
+    widening
+
+- earlier active-slice mixed floor/wall seeded-chain progress on `2026-04-19`:
   - widened the selected web duplicate/swap replay family from a single
     global reverse toggle to explicit per-plan reverse-mask variants on the
     defended seeded boundary routes

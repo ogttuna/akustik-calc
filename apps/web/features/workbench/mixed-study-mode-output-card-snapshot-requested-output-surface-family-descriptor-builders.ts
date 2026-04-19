@@ -100,6 +100,11 @@ export const COMPACT_REPLAY_BRANCH: VariantBranchBinding<HistoryVariant> = {
   variants: CARD_HISTORY_VARIANTS,
 };
 
+export const COMPACT_PARTIAL_RESTORE_BRANCH: VariantBranchBinding<HistoryVariant> = {
+  runVariantBranch: runPartialRestoreVariantBranch,
+  variants: CARD_HISTORY_VARIANTS,
+};
+
 export const BROAD_EDIT_HISTORY_BRANCH: VariantBranchBinding<BroadEditHistoryVariant> = {
   runVariantBranch: runEditHistoryVariantBranch,
   variants: BROAD_EDIT_HISTORY_VARIANTS,
@@ -110,7 +115,10 @@ export const SELECTED_EDIT_HISTORY_BRANCH: VariantBranchBinding<SelectedEditHist
   variants: SELECTED_EDIT_HISTORY_VARIANTS,
 };
 
-export const PARTIAL_RESTORE_BRANCH: VariantBranchBinding<DuplicateSwapHistoryVariant> = {
+// Selected requested-output restore lanes intentionally carry the broader
+// reverse-mask family; broad and representative lanes stay on the compact
+// branch so this slice does not silently widen their replay contract.
+export const SELECTED_PARTIAL_RESTORE_BRANCH: VariantBranchBinding<DuplicateSwapHistoryVariant> = {
   runVariantBranch: runPartialRestoreVariantBranch,
   variants: SELECTED_DUPLICATE_SWAP_HISTORY_VARIANTS,
 };

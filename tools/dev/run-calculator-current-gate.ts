@@ -75,6 +75,7 @@ async function main() {
         "features/workbench/mixed-study-mode-generated-history-grid.test.ts",
         "features/workbench/mixed-study-mode-generated-edit-history-matrix.test.ts",
         "features/workbench/mixed-study-mode-output-card-snapshot-grid.test.ts",
+        "features/workbench/mixed-study-mode-output-card-snapshot-requested-output-surface-descriptors.test.ts",
         "--maxWorkers=1"
       ]
     },
