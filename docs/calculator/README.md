@@ -10,10 +10,10 @@ If the question is “what is still open and what executes next?”, start with
 
 ## New Agent Fast Start
 
-1. Read [CHECKPOINT_2026-04-18_BLOCKED_SOURCE_RERANK_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-18_BLOCKED_SOURCE_RERANK_CLOSEOUT_HANDOFF.md).
+1. Read [CHECKPOINT_2026-04-19_MIXED_FLOOR_WALL_SEEDED_CHAIN_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-19_MIXED_FLOOR_WALL_SEEDED_CHAIN_CLOSEOUT_HANDOFF.md).
 2. Read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md).
 3. Run `pnpm calculator:gate:current`.
-4. If green, continue the selected slice `mixed_floor_wall_seeded_cross_mode_chain_expansion_v2` from the landed blocked-source rerank closeout.
+4. If green, continue the selected slice `blocked_source_backed_widening_rerank_refresh_v2` from the landed mixed floor/wall seeded-chain closeout.
 
 ## Current Execution Snapshot
 
@@ -21,29 +21,29 @@ If the question is “what is still open and what executes next?”, start with
   broader corridor coverage plus higher numerical and provenance accuracy at the
   same time
 - active next slice:
-  `mixed_floor_wall_seeded_cross_mode_chain_expansion_v2`
+  `blocked_source_backed_widening_rerank_refresh_v2`
 - current guardrail:
-  all four blocked source-backed runtime candidates are now explicit holds, so
-  the next step is a no-runtime shared mixed floor/wall evidence pass instead
-  of a reopen-by-inertia runtime widening
+  the mixed seeded floor/wall evidence pass is now closed, and all four
+  source-backed runtime candidates still remain explicit holds, so the next
+  step is a no-runtime blocked-source rerank refresh instead of a
+  reopen-by-inertia runtime widening
 - current candidate posture:
   direct `GDMTXA04A`, `C11c`, raw open-box/open-web, reinforced-concrete
   reopening, and wall-selector widening stay blocked; the selected next move
-  is seeded cross-mode follow-up evidence on the existing defended boundary
-  routes
+  is a blocked-source rerank refresh after the seeded cross-mode closeout
 - last full green validation:
-  `2026-04-18`
-  - engine: `160/160` test files passed, `960/960` tests passed
-  - web: `117/117` test files passed, `674/674` tests passed
-  - focused engine gate: `10/10` test files passed, `28/28` tests passed
-  - focused web gate: `4/4` test files passed, `23/23` tests passed
-  - deep-hybrid web swap scans needed extra timeout headroom under full-suite
-    load; no calculator/runtime behavior changed
-  - `pnpm typecheck`, `pnpm lint`, `pnpm check`, `pnpm build`, and
+  `2026-04-19`
+  - engine: `160/160` test files passed, `961/961` tests passed
+  - web: `118/118` test files passed, `676/676` tests passed
+  - focused engine gate: `11/11` test files passed, `31/31` tests passed
+  - focused web gate: `5/5` test files passed, `25/25` tests passed
+  - `pnpm lint`, `pnpm typecheck`, `pnpm check`, `pnpm build`, and
     `pnpm calculator:gate:current` green
+  - build keeps only the known optional `sharp/@img` DOCX warnings
 
 ## Current Hot Files
 
+- [post-mixed-floor-wall-seeded-cross-mode-chain-next-slice-selection-contract.test.ts](../../packages/engine/src/post-mixed-floor-wall-seeded-cross-mode-chain-next-slice-selection-contract.test.ts): executable mixed seeded-chain closeout and blocked-source refresh selection
 - [post-blocked-source-backed-widening-rerank-next-slice-selection-contract.test.ts](../../packages/engine/src/post-blocked-source-backed-widening-rerank-next-slice-selection-contract.test.ts): executable blocked-source rerank closeout selection
 - [source-gap-candidate-re-rank-contract.test.ts](../../packages/engine/src/source-gap-candidate-re-rank-contract.test.ts): executable blocked-source rerank order and closeout posture
 - [blocked-source-rank-1-gdmtxa04a-feasibility-contract.test.ts](../../packages/engine/src/blocked-source-rank-1-gdmtxa04a-feasibility-contract.test.ts): executable rank-1 blocked hold
@@ -56,6 +56,7 @@ If the question is “what is still open and what executes next?”, start with
 - [mixed-study-mode-generated-history-grid.test.ts](../../apps/web/features/workbench/mixed-study-mode-generated-history-grid.test.ts): generated mixed history-grid web anchor
 - [mixed-study-mode-generated-edit-history-matrix.test.ts](../../apps/web/features/workbench/mixed-study-mode-generated-edit-history-matrix.test.ts): generated mixed edit-history web anchor
 - [mixed-study-mode-output-card-snapshot-grid.test.ts](../../apps/web/features/workbench/mixed-study-mode-output-card-snapshot-grid.test.ts): saved-scenario and output-card projection anchor
+- [mixed-study-mode-output-card-snapshot-requested-output-surface-descriptors.test.ts](../../apps/web/features/workbench/mixed-study-mode-output-card-snapshot-requested-output-surface-descriptors.test.ts): selected requested-output replay branch split contract
 - [run-calculator-current-gate.ts](../../tools/dev/run-calculator-current-gate.ts): single-command focused checkpoint gate
 - [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md): blocked-source closeout and deferred runtime-candidate ledger
 
@@ -64,7 +65,7 @@ If the question is “what is still open and what executes next?”, start with
 1. [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md): concise current execution plan and validated next steps
 2. [CURRENT_STATE.md](./CURRENT_STATE.md): short snapshot of the current calculator/workbench posture
 3. [SYSTEM_MAP.md](./SYSTEM_MAP.md): end-to-end product flow, runtime boundaries, persistence posture, and test surface map
-4. [CHECKPOINT_2026-04-18_BLOCKED_SOURCE_RERANK_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-18_BLOCKED_SOURCE_RERANK_CLOSEOUT_HANDOFF.md): latest checkpoint after the blocked-source rerank closeout
+4. [CHECKPOINT_2026-04-19_MIXED_FLOOR_WALL_SEEDED_CHAIN_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-19_MIXED_FLOOR_WALL_SEEDED_CHAIN_CLOSEOUT_HANDOFF.md): latest checkpoint after the mixed seeded-chain closeout and blocked-source refresh selection
 5. [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md): answer-origin map for formulas, source rows, predictors, field continuations, support gating, and test meaning
 6. [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md): source-backed widening, tightening, and deferred-family boundaries
 7. [DYNAMIC_CALCULATOR_REMAINING_WORK_PLAN.md](./DYNAMIC_CALCULATOR_REMAINING_WORK_PLAN.md): cross-floor/wall remaining work, completion status, and safe execution order

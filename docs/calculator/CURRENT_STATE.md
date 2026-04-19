@@ -5,7 +5,7 @@ Document role:
 - primary short snapshot for the current dynamic calculator and workbench posture
 - read this before historical analysis or older checkpoint notes
 - for the current checkpoint, also read:
-  - [CHECKPOINT_2026-04-18_BLOCKED_SOURCE_RERANK_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-18_BLOCKED_SOURCE_RERANK_CLOSEOUT_HANDOFF.md)
+  - [CHECKPOINT_2026-04-19_MIXED_FLOOR_WALL_SEEDED_CHAIN_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-19_MIXED_FLOOR_WALL_SEEDED_CHAIN_CLOSEOUT_HANDOFF.md)
 - for the authoritative next step, read:
   - [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md)
 - for end-to-end product flow and file boundaries, read:
@@ -24,30 +24,28 @@ Document role:
 
 ## Revalidated Snapshot
 
-Last full engine revalidation: `2026-04-18`
+Last full engine revalidation: `2026-04-19`
 
-Last full web revalidation: `2026-04-18`
+Last full web revalidation: `2026-04-19`
 
-Last cross-package build revalidation: `2026-04-18`
+Last cross-package build revalidation: `2026-04-19`
 
 Planning / implementation update: `2026-04-19`
 
 ## Operator Snapshot
 
 - active slice:
-  `mixed_floor_wall_seeded_cross_mode_chain_expansion_v2`
+  `blocked_source_backed_widening_rerank_refresh_v2`
 - current broad-pass conclusion:
-  all four blocked source-backed runtime candidates are now explicit holds, so
-  the next honest step is a no-runtime shared mixed floor/wall evidence pass
-  rather than another runtime candidate comparison
+  the mixed seeded floor/wall evidence pass is now closed cleanly, and all
+  four blocked source-backed runtime candidates still remain explicit holds
 - immediate next decision:
-  close `mixed_floor_wall_seeded_cross_mode_chain_expansion_v2` with an
-  explicit next-slice selection contract now that the selected
-  requested-output/save-load replay chain matches the engine-side
-  reverse-mask pressure
+  rerank the explicit blocked source-backed runtime candidates again after the
+  mixed seeded-chain closeout instead of reopening any one candidate by
+  inertia
 - first implementation question now:
-  whether any fresh classified red appeared during the selected
-  requested-output branch split, or whether the slice is clean to close
+  whether any fresh classified runtime red actually emerged from the mixed
+  seeded closeout, or whether the blocked candidate order should remain intact
 - current explicit blocked candidate order:
   1. `dataholz_gdmtxa04a_visible_exact_reopen`
   2. `tuas_c11c_exact_import`
@@ -58,7 +56,34 @@ Planning / implementation update: `2026-04-19`
   - blocked source-family widening
   - another broad generated family grid without a fresh classified red
 
-- latest active-slice mixed floor/wall seeded-chain progress on `2026-04-19`:
+- latest slice closeout selection on `2026-04-19`:
+  - landed
+    `packages/engine/src/post-mixed-floor-wall-seeded-cross-mode-chain-next-slice-selection-contract.test.ts`
+  - closed `mixed_floor_wall_seeded_cross_mode_chain_expansion_v2`
+  - selected `blocked_source_backed_widening_rerank_refresh_v2` as the next
+    honest no-runtime slice because the mixed seeded closeout produced no
+    fresh classified runtime red
+  - kept `GDMTXA04A`, `C11c`, raw bare open-box/open-web, and wall-selector
+    widening blocked after the closeout
+  - added the new closeout selection contract to the focused current gate
+  - `pnpm calculator:gate:current`: green with focused engine `11/11` files
+    and `31/31` tests plus focused web `5/5` files and `25/25` tests
+  - focused repo build: green with the known optional `sharp/@img` DOCX
+    warnings
+  - `git diff --check`: green
+
+- latest broad validation pass on `2026-04-19`:
+  - reran `pnpm check` after the mixed seeded-chain closeout selection wiring
+    and doc refresh
+  - full engine suite: `160/160` test files passed, `961/961` tests passed
+  - full web suite: `118/118` test files passed, `676/676` tests passed
+  - reran `pnpm build`: green with the known optional `sharp/@img` DOCX
+    warnings
+  - the full green pass confirmed the new mixed seeded closeout contract and
+    selected requested-output descriptor contract without reopening any blocked
+    runtime candidate
+
+- earlier active-slice mixed floor/wall seeded-chain progress on `2026-04-19`:
   - split the requested-output partial-restore descriptor branch so broad and
     representative requested-output surfaces keep the compact replay variants
     while the selected seeded requested-output surfaces carry the explicit
@@ -71,7 +96,7 @@ Planning / implementation update: `2026-04-19`
   - focused repo build: green with the known optional `sharp/@img` DOCX
     warnings
   - `git diff --check`: green
-  - next narrow task inside the slice is closeout selection, not more replay
+  - next narrow task inside the slice was closeout selection, not more replay
     widening
 
 - earlier active-slice mixed floor/wall seeded-chain progress on `2026-04-19`:

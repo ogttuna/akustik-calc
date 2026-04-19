@@ -1,6 +1,6 @@
 # System Map
 
-Last reviewed: 2026-04-17
+Last reviewed: 2026-04-19
 
 Document role:
 
@@ -215,17 +215,20 @@ validation path before and after a refactor.
 
 ## Current Architectural Hotspots
 
-As of `2026-04-18`, the requested-output output-card harness chain is frozen at
+As of `2026-04-19`, the requested-output output-card harness chain is frozen at
 a clean green baseline. The reinforced-concrete accuracy tightening slice is
-closed. The defended Dataholz CLT calibration pass is also closed, and the
-blocked source-backed rerank is now closed as well. The active risk is no
-longer choosing a blocked runtime candidate; it is extending shared mixed
-floor/wall seeded-chain evidence honestly before any future reopen.
+closed. The defended Dataholz CLT calibration pass is also closed, the first
+blocked source-backed rerank is closed, and the seeded mixed floor/wall
+cross-mode chain follow-up is now closed as well. The active risk is no longer
+replay coverage drift on the defended mixed routes; it is choosing the next
+source-backed move honestly after that shared evidence pass closed without a
+fresh classified runtime red.
 
 Current hotspots:
 
 - selected closeout and follow-up anchors:
   - `packages/engine/src/post-blocked-source-backed-widening-rerank-next-slice-selection-contract.test.ts`
+  - `packages/engine/src/post-mixed-floor-wall-seeded-cross-mode-chain-next-slice-selection-contract.test.ts`
   - `packages/engine/src/source-gap-candidate-re-rank-contract.test.ts`
   - `packages/engine/src/blocked-source-rank-1-gdmtxa04a-feasibility-contract.test.ts`
   - `packages/engine/src/blocked-source-rank-2-c11c-feasibility-contract.test.ts`
@@ -243,10 +246,11 @@ Current hotspots:
 - source-backed widening ledger:
   `docs/calculator/SOURCE_GAP_LEDGER.md`
 
-The current selected next slice exists to extend seeded mixed floor/wall
-boundary-route evidence honestly while keeping `GDMTXA04A`, `C11c`, raw
-open-box/open-web, reinforced-concrete reopening, and wall-selector behavior
-blocked until a fresh classified red proves otherwise.
+The current selected next slice exists to refresh blocked source-backed
+candidate order honestly after the seeded mixed floor/wall boundary-route pack
+closed cleanly, while keeping `GDMTXA04A`, `C11c`, raw open-box/open-web,
+reinforced-concrete reopening, and wall-selector behavior blocked until a
+fresh classified red proves otherwise.
 
 ## What This System Is Not Yet
 

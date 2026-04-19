@@ -5,7 +5,7 @@ Start here before changing calculator behavior.
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-04-18_BLOCKED_SOURCE_RERANK_CLOSEOUT_HANDOFF.md`
+2. `docs/calculator/CHECKPOINT_2026-04-19_MIXED_FLOOR_WALL_SEEDED_CHAIN_CLOSEOUT_HANDOFF.md`
 3. `docs/calculator/CURRENT_STATE.md`
 4. `docs/calculator/CALCULATION_MODEL_AND_VALIDATION.md`
 
@@ -15,11 +15,10 @@ plan.
 ## Current Workflow
 
 - current selected slice:
-  `mixed_floor_wall_seeded_cross_mode_chain_expansion_v2`
+  `blocked_source_backed_widening_rerank_refresh_v2`
 - current first decision inside the slice:
-  close the mixed floor/wall seeded slice with an explicit next-slice
-  selection contract now that the selected requested-output replay chain
-  matches the defended reverse-mask pressure
+  re-rank the explicit blocked source-backed runtime candidates again after the
+  mixed seeded-chain closeout instead of reopening any one candidate by inertia
 - do not reopen `GDMTXA04A`, `C11c`, raw open-box/open-web, heavy-concrete
   parity or formula scope, reinforced-concrete reopening, or wall-selector
   behavior from nearby green tests alone

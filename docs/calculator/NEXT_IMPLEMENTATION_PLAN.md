@@ -15,7 +15,7 @@ Read together with:
 
 - [CURRENT_STATE.md](./CURRENT_STATE.md)
 - [SYSTEM_MAP.md](./SYSTEM_MAP.md)
-- [CHECKPOINT_2026-04-18_BLOCKED_SOURCE_RERANK_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-18_BLOCKED_SOURCE_RERANK_CLOSEOUT_HANDOFF.md)
+- [CHECKPOINT_2026-04-19_MIXED_FLOOR_WALL_SEEDED_CHAIN_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-19_MIXED_FLOOR_WALL_SEEDED_CHAIN_CLOSEOUT_HANDOFF.md)
 - [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
 - [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md)
 
@@ -60,29 +60,25 @@ Use this section first when deciding what to do next.
 ### Now
 
 - active slice:
-  `mixed_floor_wall_seeded_cross_mode_chain_expansion_v2`
+  `blocked_source_backed_widening_rerank_refresh_v2`
 - current highest-ROI task:
-  close `mixed_floor_wall_seeded_cross_mode_chain_expansion_v2` with an
-  explicit next-slice selection contract now that the selected
-  requested-output/save-load replay chain matches the engine-side
-  reverse-mask coverage
+  refresh the blocked source-backed runtime candidate order after the mixed
+  seeded-chain closeout and confirm whether any candidate genuinely became
+  re-openable
 - selected next slice posture:
-  all four blocked source-backed runtime candidates are now explicit holds, so
-  the highest-ROI next move is a no-runtime shared torture-pass follow-up
+  the mixed seeded floor/wall follow-up is now closed cleanly, but no fresh
+  classified runtime red emerged from it, so the highest-ROI next move is a
+  no-runtime blocked-source rerank refresh
 - selected route family:
-  `mixed_floor_wall_seeded_boundary_routes`
+  `deferred_floor_source_gap_candidates`
 - selected output surface:
-  `workbench_saved_scenario_replay_and_output_cards`
+  `blocked_source_backed_widening_rerank_matrix`
 - selected scope:
-  - landed: broader selected seeded edit-history families beyond the current
-    second wall-family expansion
-  - landed: wider selected duplicate-swap pressure beyond the current
-    complementary generated history-grid variants
-  - landed: matching selected requested-output replay pressure beyond the
-    compact requested-output runner loop
-  - active: closeout readiness and next-slice selection
-  - landed for selected edit-history replay: saved-scenario replay and
-    output-card projection parity after longer cross-mode chains
+  - landed: mixed seeded cross-mode edit-history, duplicate-swap, and
+    requested-output replay closeout on the defended boundary routes
+  - active: blocked-source candidate refresh after the mixed seeded closeout
+  - blocked runtime candidate posture stays explicit until a rerank refresh
+    proves otherwise
 - blocked runtime candidate posture stays explicit:
   1. `dataholz_gdmtxa04a_visible_exact_reopen`
   2. `tuas_c11c_exact_import`
@@ -91,25 +87,22 @@ Use this section first when deciding what to do next.
 
 ### Next
 
-1. Keep `GDMTXA04A`, `C11c`, raw bare open-box/open-web, and wall-selector
-   behavior explicit blocked holds while this follow-up stays active.
-2. Keep the widened selected edit-history replay set on the selected boundary
-   routes; do not leak that broader replay contract back into broad or
-   representative requested-output surfaces.
-3. Keep the selected requested-output replay surfaces on the same seeded
-   boundary routes on their new reverse-mask branch while broad and
-   representative requested-output surfaces stay on the compact branch.
-4. If the follow-up exposes a fresh classified runtime red, classify it before
-   any widening proposal; do not reopen a blocked source-backed candidate by
-   proximity alone.
-5. Close `mixed_floor_wall_seeded_cross_mode_chain_expansion_v2` with an
-   explicit next-slice selection contract instead of auto-falling back to a
-   blocked runtime candidate.
+1. Re-score the current blocked candidate order against the post-closeout
+   mixed seeded evidence instead of reopening a candidate by inertia.
+2. Keep `GDMTXA04A`, `C11c`, raw bare open-box/open-web, and wall-selector
+   behavior explicit blocked holds unless the rerank refresh finds a fresh
+   classified runtime red.
+3. Use the closed mixed seeded boundary-route pack as evidence input to the
+   rerank refresh; do not re-open the replay-expansion slice itself.
+4. If the refresh still finds no honest runtime candidate, fail closed and
+   select another no-runtime slice explicitly.
+5. If the refresh does find a live candidate, record that decision in a new
+   executable selection contract before any solver/runtime change.
 
 ### Later
 
-1. a fresh runtime-candidate selection pass only if this shared follow-up
-   exposes a classified red worth reopening
+1. a fresh runtime widening only if the rerank refresh produces one explicit
+   live candidate
 2. otherwise keep all current blocked source-backed candidates fail-closed
 
 ### Explicit Non-Goals Right Now
@@ -122,6 +115,31 @@ Use this section first when deciding what to do next.
   micro-pass while the seeded mixed follow-up is active
 
 ## Verified Against Implementation - 2026-04-19
+
+- latest slice closeout selection on `2026-04-19`:
+  - landed
+    `packages/engine/src/post-mixed-floor-wall-seeded-cross-mode-chain-next-slice-selection-contract.test.ts`
+  - closed `mixed_floor_wall_seeded_cross_mode_chain_expansion_v2`
+  - selected `blocked_source_backed_widening_rerank_refresh_v2` as the next
+    honest no-runtime slice because the mixed seeded closeout produced no
+    fresh classified runtime red
+  - kept `GDMTXA04A`, `C11c`, raw bare open-box/open-web, and wall-selector
+    widening explicit blocked holds after the closeout
+  - added the new closeout selection contract to the focused current gate
+  - `pnpm calculator:gate:current`: green with focused engine `11/11` files
+    and `31/31` tests plus focused web `5/5` files and `25/25` tests
+  - focused repo build: green with the known optional `sharp/@img` DOCX
+    warnings
+  - `git diff --check`: green
+
+- latest broad validation pass on `2026-04-19`:
+  - reran `pnpm check` after the mixed seeded-chain closeout selection and
+    living-doc refresh
+  - full engine suite: `160/160` test files passed, `961/961` tests passed
+  - full web suite: `118/118` test files passed, `676/676` tests passed
+  - reran `pnpm build`: green with the known optional `sharp/@img` DOCX
+    warnings
+  - no new runtime candidate was reopened by the broad pass
 
 - earlier active-slice mixed floor/wall seeded-chain landing on `2026-04-19`:
   - split the requested-output partial-restore branch so broad and

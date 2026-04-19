@@ -1,6 +1,6 @@
 # Dynamic Calculator Source Gap Ledger
 
-Last reviewed: 2026-04-18
+Last reviewed: 2026-04-19
 
 Purpose:
 
@@ -23,11 +23,11 @@ Important scope note:
 
 Current planning implication:
 
-- 2026-04-18 blocked-source rerank closeout posture:
+- 2026-04-19 mixed-seeded closeout and blocked-source refresh posture:
   - latest closed no-runtime slice:
-    `blocked_source_backed_widening_rerank_v1`
-  - selected next no-runtime slice:
     `mixed_floor_wall_seeded_cross_mode_chain_expansion_v2`
+  - selected next no-runtime slice:
+    `blocked_source_backed_widening_rerank_refresh_v2`
   - current explicit candidate order:
     1. `dataholz_gdmtxa04a_visible_exact_reopen`
     2. `tuas_c11c_exact_import`
@@ -43,7 +43,7 @@ Current planning implication:
       evidence is packaged-system evidence, not bare-carrier impact evidence
     - wall-selector stays last because no fresh classified red currently
       exists, so it is not a live runtime candidate
-  - rerank closeout result:
+  - inherited blocked-source posture:
     - rank-1 `GDMTXA04A` feasibility is now explicitly closed as blocked
     - reason: direct source truth exists, but honest visible exact reopening
       still needs composite dry-screed surface modeling
@@ -58,17 +58,15 @@ Current planning implication:
       closed as blocked
     - reason: the current wall trace/card guard is already closed and no fresh
       classified wall red exists
-    - selected next action after the rerank:
-      extend the shared seeded mixed floor/wall cross-mode evidence chain
-      instead of opening any blocked runtime candidate by inertia
+  - mixed seeded closeout result:
+    - selected next action after the seeded cross-mode closeout:
+      refresh the blocked source-backed candidate order again instead of
+      opening any blocked runtime candidate by inertia
   - selected next slice reason:
-    - all four ranked runtime candidates are explicit holds, so the next
-      honest move is no-runtime evidence expansion rather than a fake-urgency
-      reopen
-    - the remaining open shared risk is longer seeded cross-mode edit-chain
-      evidence on already-defended floor/wall boundary routes
-    - saved-scenario replay and output-card projection pressure still provides
-      a safer ROI path than any blocked source-backed runtime widening
+    - the shared seeded floor/wall pass closed without a fresh classified
+      runtime red
+    - all four blocked runtime candidates therefore remain explicit holds
+    - the next honest move is a no-runtime rerank refresh before any reopen
 - 2026-04-14 second-pass plan selection and implementation:
   - the no-widening route/card projection guard
     `mixed_floor_wall_output_card_snapshot_grid_v1`

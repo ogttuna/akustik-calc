@@ -41,7 +41,7 @@ function runStep(step: Step): Promise<void> {
 async function main() {
   const steps: Step[] = [
     {
-      label: "engine blocked-source closeout + mixed floor/wall seeded-chain gate",
+      label: "engine mixed seeded-chain closeout + blocked-source refresh gate",
       args: [
         "pnpm",
         "--filter",
@@ -50,6 +50,7 @@ async function main() {
         "vitest",
         "run",
         "src/post-blocked-source-backed-widening-rerank-next-slice-selection-contract.test.ts",
+        "src/post-mixed-floor-wall-seeded-cross-mode-chain-next-slice-selection-contract.test.ts",
         "src/source-gap-candidate-re-rank-contract.test.ts",
         "src/blocked-source-rank-1-gdmtxa04a-feasibility-contract.test.ts",
         "src/blocked-source-rank-2-c11c-feasibility-contract.test.ts",
