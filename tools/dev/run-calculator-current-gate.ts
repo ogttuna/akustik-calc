@@ -51,6 +51,7 @@ async function main() {
         "run",
         "src/post-blocked-source-backed-widening-rerank-next-slice-selection-contract.test.ts",
         "src/post-mixed-floor-wall-seeded-cross-mode-chain-next-slice-selection-contract.test.ts",
+        "src/blocked-source-backed-widening-rerank-refresh-contract.test.ts",
         "src/source-gap-candidate-re-rank-contract.test.ts",
         "src/blocked-source-rank-1-gdmtxa04a-feasibility-contract.test.ts",
         "src/blocked-source-rank-2-c11c-feasibility-contract.test.ts",

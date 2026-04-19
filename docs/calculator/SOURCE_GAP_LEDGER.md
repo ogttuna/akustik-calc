@@ -62,6 +62,13 @@ Current planning implication:
     - selected next action after the seeded cross-mode closeout:
       refresh the blocked source-backed candidate order again instead of
       opening any blocked runtime candidate by inertia
+  - blocked-source refresh landing result:
+    - the post-closeout rerank refresh kept the explicit blocked order
+      unchanged:
+      `GDMTXA04A`, `C11c`, raw bare open-box/open-web, wall-selector
+    - reason: the mixed seeded floor/wall closeout added no fresh classified
+      runtime red, no new direct source truth, and no wall trace red that
+      could honestly reopen any blocked runtime candidate
   - selected next slice reason:
     - the shared seeded floor/wall pass closed without a fresh classified
       runtime red

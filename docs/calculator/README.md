@@ -43,6 +43,7 @@ If the question is “what is still open and what executes next?”, start with
 
 ## Current Hot Files
 
+- [blocked-source-backed-widening-rerank-refresh-contract.test.ts](../../packages/engine/src/blocked-source-backed-widening-rerank-refresh-contract.test.ts): executable blocked-source refresh proving the post-seeded order stays fail-closed
 - [post-mixed-floor-wall-seeded-cross-mode-chain-next-slice-selection-contract.test.ts](../../packages/engine/src/post-mixed-floor-wall-seeded-cross-mode-chain-next-slice-selection-contract.test.ts): executable mixed seeded-chain closeout and blocked-source refresh selection
 - [post-blocked-source-backed-widening-rerank-next-slice-selection-contract.test.ts](../../packages/engine/src/post-blocked-source-backed-widening-rerank-next-slice-selection-contract.test.ts): executable blocked-source rerank closeout selection
 - [source-gap-candidate-re-rank-contract.test.ts](../../packages/engine/src/source-gap-candidate-re-rank-contract.test.ts): executable blocked-source rerank order and closeout posture

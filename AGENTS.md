@@ -17,8 +17,8 @@ plan.
 - current selected slice:
   `blocked_source_backed_widening_rerank_refresh_v2`
 - current first decision inside the slice:
-  re-rank the explicit blocked source-backed runtime candidates again after the
-  mixed seeded-chain closeout instead of reopening any one candidate by inertia
+  close the refresh after the landed rerank contract confirmed that the mixed
+  seeded-chain closeout did not change the explicit blocked candidate order
 - do not reopen `GDMTXA04A`, `C11c`, raw open-box/open-web, heavy-concrete
   parity or formula scope, reinforced-concrete reopening, or wall-selector
   behavior from nearby green tests alone

@@ -40,12 +40,11 @@ Planning / implementation update: `2026-04-19`
   the mixed seeded floor/wall evidence pass is now closed cleanly, and all
   four blocked source-backed runtime candidates still remain explicit holds
 - immediate next decision:
-  rerank the explicit blocked source-backed runtime candidates again after the
-  mixed seeded-chain closeout instead of reopening any one candidate by
-  inertia
+  close the blocked-source refresh after the landed rerank contract confirmed
+  that the mixed seeded closeout did not change the explicit blocked order
 - first implementation question now:
-  whether any fresh classified runtime red actually emerged from the mixed
-  seeded closeout, or whether the blocked candidate order should remain intact
+  which no-runtime slice should execute next now that the blocked-source
+  refresh contract found no fresh classified runtime red and no order change
 - current explicit blocked candidate order:
   1. `dataholz_gdmtxa04a_visible_exact_reopen`
   2. `tuas_c11c_exact_import`
@@ -82,6 +81,22 @@ Planning / implementation update: `2026-04-19`
   - the full green pass confirmed the new mixed seeded closeout contract and
     selected requested-output descriptor contract without reopening any blocked
     runtime candidate
+
+- latest blocked-source refresh landing on `2026-04-19`:
+  - landed
+    `packages/engine/src/blocked-source-backed-widening-rerank-refresh-contract.test.ts`
+  - kept the explicit blocked candidate order unchanged after the mixed
+    seeded closeout:
+    `GDMTXA04A`, `C11c`, raw bare open-box/open-web, wall-selector
+  - confirmed the mixed seeded closeout contributed no fresh classified
+    runtime red, no direct source import, and no wall trace red that would
+    honestly reopen any blocked runtime candidate
+  - added the refresh contract to the focused current gate
+  - `pnpm calculator:gate:current`: green with focused engine `12/12` files
+    and `34/34` tests plus focused web `5/5` files and `25/25` tests
+  - focused repo build: green with the known optional `sharp/@img` DOCX
+    warnings
+  - `git diff --check`: green
 
 - earlier active-slice mixed floor/wall seeded-chain progress on `2026-04-19`:
   - split the requested-output partial-restore descriptor branch so broad and

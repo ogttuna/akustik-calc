@@ -62,9 +62,8 @@ Use this section first when deciding what to do next.
 - active slice:
   `blocked_source_backed_widening_rerank_refresh_v2`
 - current highest-ROI task:
-  refresh the blocked source-backed runtime candidate order after the mixed
-  seeded-chain closeout and confirm whether any candidate genuinely became
-  re-openable
+  close the blocked-source refresh after proving the mixed seeded-chain
+  closeout did not change the explicit blocked runtime candidate order
 - selected next slice posture:
   the mixed seeded floor/wall follow-up is now closed cleanly, but no fresh
   classified runtime red emerged from it, so the highest-ROI next move is a
@@ -76,7 +75,10 @@ Use this section first when deciding what to do next.
 - selected scope:
   - landed: mixed seeded cross-mode edit-history, duplicate-swap, and
     requested-output replay closeout on the defended boundary routes
-  - active: blocked-source candidate refresh after the mixed seeded closeout
+  - landed: blocked-source rerank refresh contract that keeps the explicit
+    candidate order unchanged after the mixed seeded closeout
+  - active: blocked-source refresh closeout selection after the unchanged
+    rerank result
   - blocked runtime candidate posture stays explicit until a rerank refresh
     proves otherwise
 - blocked runtime candidate posture stays explicit:
@@ -87,17 +89,17 @@ Use this section first when deciding what to do next.
 
 ### Next
 
-1. Re-score the current blocked candidate order against the post-closeout
-   mixed seeded evidence instead of reopening a candidate by inertia.
+1. Close `blocked_source_backed_widening_rerank_refresh_v2` with an explicit
+   next-slice selection contract now that the refresh contract shows no order
+   change.
 2. Keep `GDMTXA04A`, `C11c`, raw bare open-box/open-web, and wall-selector
-   behavior explicit blocked holds unless the rerank refresh finds a fresh
-   classified runtime red.
-3. Use the closed mixed seeded boundary-route pack as evidence input to the
-   rerank refresh; do not re-open the replay-expansion slice itself.
-4. If the refresh still finds no honest runtime candidate, fail closed and
+   behavior explicit blocked holds unless a new classified runtime red appears.
+3. Use the closed mixed seeded boundary-route pack and the landed refresh
+   contract as the evidence input to the closeout decision.
+4. If no honest runtime candidate exists after the closeout, fail closed and
    select another no-runtime slice explicitly.
-5. If the refresh does find a live candidate, record that decision in a new
-   executable selection contract before any solver/runtime change.
+5. If any future refresh does find a live candidate, record that decision in a
+   new executable selection contract before any solver/runtime change.
 
 ### Later
 
@@ -140,6 +142,22 @@ Use this section first when deciding what to do next.
   - reran `pnpm build`: green with the known optional `sharp/@img` DOCX
     warnings
   - no new runtime candidate was reopened by the broad pass
+
+- latest blocked-source refresh landing on `2026-04-19`:
+  - landed
+    `packages/engine/src/blocked-source-backed-widening-rerank-refresh-contract.test.ts`
+  - re-scored the blocked candidate order against the closed mixed seeded
+    floor/wall evidence pack and kept the order unchanged:
+    `GDMTXA04A`, `C11c`, raw bare open-box/open-web, wall-selector
+  - confirmed the mixed seeded closeout added no fresh classified runtime red,
+    no new direct source truth, and no wall trace red that could honestly
+    reopen a blocked runtime candidate
+  - added the refresh contract to the focused current gate
+  - `pnpm calculator:gate:current`: green with focused engine `12/12` files
+    and `34/34` tests plus focused web `5/5` files and `25/25` tests
+  - focused repo build: green with the known optional `sharp/@img` DOCX
+    warnings
+  - `git diff --check`: green
 
 - earlier active-slice mixed floor/wall seeded-chain landing on `2026-04-19`:
   - split the requested-output partial-restore branch so broad and
