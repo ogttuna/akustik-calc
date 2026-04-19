@@ -61,6 +61,10 @@ export type ScenarioOutputCardSnapshots = {
   field: OutputCardProjectionSnapshot;
 };
 
+function planShouldReverse(variant: HistoryVariant, planIndex: number): boolean {
+  return variant.reversePlanIndexes?.includes(planIndex) ?? variant.reverseParts;
+}
+
 export const REQUIRED_CARD_GRID_CASE_IDS = [
   "route-tuas-c11c-fail-closed",
   "route-dataholz-gdmtxa04a-boundary",
@@ -240,15 +244,19 @@ export function applyPartialSplitToStore(
   variant: HistoryVariant,
 ): void {
   const baselineRows = [...store.getState().rows];
-  const targetPlan =
-    variant.planOrder === "asc"
-      ? [...testCase.splitPlans].sort((left, right) => left.rowIndex - right.rowIndex)[0]
-      : [...testCase.splitPlans].sort((left, right) => right.rowIndex - left.rowIndex)[0];
+  const targetPlanEntry = [...testCase.splitPlans]
+    .map((plan, index) => ({ plan, planIndex: index }))
+    .sort((left, right) =>
+      variant.planOrder === "asc"
+        ? left.plan.rowIndex - right.plan.rowIndex
+        : right.plan.rowIndex - left.plan.rowIndex,
+    )[0];
 
-  if (!targetPlan) {
+  if (!targetPlanEntry) {
     throw new Error(`Expected at least one split plan for ${testCase.id}.`);
   }
 
+  const { plan: targetPlan, planIndex } = targetPlanEntry;
   const target = baselineRows[targetPlan.rowIndex];
 
   if (!target) {
@@ -269,7 +277,7 @@ export function applyPartialSplitToStore(
   const originalId = currentRows[targetIndex]!.id;
   const duplicateId = currentRows[targetIndex + 1]!.id;
 
-  if (variant.reverseParts) {
+  if (planShouldReverse(variant, planIndex)) {
     store.getState().updateThickness(originalId, targetPlan.parts[1]!);
     store.getState().updateThickness(duplicateId, targetPlan.parts[0]!);
     moveCurrentRowToIndex(store, duplicateId, targetIndex);
@@ -287,12 +295,16 @@ export function applyHistoryVariantToStore(
   variant: HistoryVariant,
 ): void {
   const orderedPlans =
-    variant.planOrder === "asc"
-      ? [...testCase.splitPlans].sort((left, right) => left.rowIndex - right.rowIndex)
-      : [...testCase.splitPlans].sort((left, right) => right.rowIndex - left.rowIndex);
+    [...testCase.splitPlans]
+      .map((plan, index) => ({ plan, planIndex: index }))
+      .sort((left, right) =>
+        variant.planOrder === "asc"
+          ? left.plan.rowIndex - right.plan.rowIndex
+          : right.plan.rowIndex - left.plan.rowIndex,
+      );
   const baselineRows = [...store.getState().rows];
 
-  for (const plan of orderedPlans) {
+  for (const { plan, planIndex } of orderedPlans) {
     const target = baselineRows[plan.rowIndex];
 
     if (!target) {
@@ -313,7 +325,7 @@ export function applyHistoryVariantToStore(
     const originalId = currentRows[targetIndex]!.id;
     const duplicateId = currentRows[targetIndex + 1]!.id;
 
-    if (variant.reverseParts) {
+    if (planShouldReverse(variant, planIndex)) {
       store.getState().updateThickness(originalId, plan.parts[1]!);
       store.getState().updateThickness(duplicateId, plan.parts[0]!);
       moveCurrentRowToIndex(store, duplicateId, targetIndex);

@@ -47,6 +47,10 @@ type StoreHandle = {
   };
 };
 
+function planShouldReverse(variant: HistoryVariant, planIndex: number) {
+  return variant.reversePlanIndexes?.includes(planIndex) ?? variant.reverseParts;
+}
+
 const HISTORY_VARIANTS: readonly HistoryVariant[] = [
   {
     id: "ascending-reversed-leading-rebuild",
@@ -185,15 +189,19 @@ function buildDirectFinalRows(testCase: RouteMixedGeneratedCase): AppendableRow[
 
 function applyPartialSplitToStore(store: StoreHandle, testCase: RouteMixedGeneratedCase, variant: HistoryVariant) {
   const baselineRows = [...store.getState().rows];
-  const targetPlan =
+  const sortedPlans = [...testCase.splitPlans].map((plan, index) => ({ plan, planIndex: index })).sort((left, right) =>
+    variant.planOrder === "asc" ? left.plan.rowIndex - right.plan.rowIndex : right.plan.rowIndex - left.plan.rowIndex
+  );
+  const targetPlanEntry =
     variant.planOrder === "asc"
-      ? [...testCase.splitPlans].sort((left, right) => left.rowIndex - right.rowIndex)[0]
-      : [...testCase.splitPlans].sort((left, right) => right.rowIndex - left.rowIndex)[0];
+      ? sortedPlans[0]
+      : sortedPlans[0];
 
-  if (!targetPlan) {
+  if (!targetPlanEntry) {
     throw new Error(`Expected at least one split plan for ${testCase.id}.`);
   }
 
+  const { plan: targetPlan, planIndex } = targetPlanEntry;
   const target = baselineRows[targetPlan.rowIndex];
 
   if (!target) {
@@ -214,7 +222,7 @@ function applyPartialSplitToStore(store: StoreHandle, testCase: RouteMixedGenera
   const originalId = currentRows[targetIndex]!.id;
   const duplicateId = currentRows[targetIndex + 1]!.id;
 
-  if (variant.reverseParts) {
+  if (planShouldReverse(variant, planIndex)) {
     store.getState().updateThickness(originalId, targetPlan.parts[1]!);
     store.getState().updateThickness(duplicateId, targetPlan.parts[0]!);
     moveCurrentRowToIndex(store, duplicateId, targetIndex);
@@ -228,11 +236,13 @@ function applyPartialSplitToStore(store: StoreHandle, testCase: RouteMixedGenera
 
 function applyHistoryVariantToStore(store: StoreHandle, testCase: RouteMixedGeneratedCase, variant: HistoryVariant) {
   const baselineRows = [...store.getState().rows];
-  const sorted = [...testCase.splitPlans].sort((left, right) =>
-    variant.planOrder === "asc" ? left.rowIndex - right.rowIndex : right.rowIndex - left.rowIndex
+  const sorted = [...testCase.splitPlans].map((plan, index) => ({ plan, planIndex: index })).sort((left, right) =>
+    variant.planOrder === "asc"
+      ? left.plan.rowIndex - right.plan.rowIndex
+      : right.plan.rowIndex - left.plan.rowIndex
   );
 
-  for (const plan of sorted) {
+  for (const { plan, planIndex } of sorted) {
     const target = baselineRows[plan.rowIndex];
 
     if (!target) {
@@ -253,7 +263,7 @@ function applyHistoryVariantToStore(store: StoreHandle, testCase: RouteMixedGene
     const originalId = currentRows[targetIndex]!.id;
     const duplicateId = currentRows[targetIndex + 1]!.id;
 
-    if (variant.reverseParts) {
+    if (planShouldReverse(variant, planIndex)) {
       store.getState().updateThickness(originalId, plan.parts[1]!);
       store.getState().updateThickness(duplicateId, plan.parts[0]!);
       moveCurrentRowToIndex(store, duplicateId, targetIndex);

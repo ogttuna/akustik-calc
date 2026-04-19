@@ -41,12 +41,13 @@ Planning / implementation update: `2026-04-19`
   the next honest step is a no-runtime shared mixed floor/wall evidence pass
   rather than another runtime candidate comparison
 - immediate next decision:
-  extend selected duplicate-swap/save-load replay pressure on the already-
-  defended boundary routes without reopening any blocked runtime candidate
+  extend the remaining selected requested-output/save-load replay pressure on
+  the already-defended boundary routes without reopening any blocked runtime
+  candidate
 - first implementation question now:
-  which selected multi-split duplicate-swap and requested-output replay
-  families still need explicit web parity after the new engine-side exhaustive
-  reverse-mask pressure landed
+  which selected requested-output replay families still need explicit
+  per-plan reverse-mask web parity after the new generated-history and
+  output-card helpers adopted that pressure
 - current explicit blocked candidate order:
   1. `dataholz_gdmtxa04a_visible_exact_reopen`
   2. `tuas_c11c_exact_import`
@@ -58,6 +59,22 @@ Planning / implementation update: `2026-04-19`
   - another broad generated family grid without a fresh classified red
 
 - latest active-slice mixed floor/wall seeded-chain progress on `2026-04-19`:
+  - widened the selected web duplicate/swap replay family from a single
+    global reverse toggle to explicit per-plan reverse-mask variants on the
+    defended seeded boundary routes
+  - aligned the selected generated-history grid and selected output-card
+    partial-restore helper so save-load replay can reverse individual split
+    plans while broad and representative requested-output grids stay on their
+    compact contract
+  - `pnpm calculator:gate:current`: green with focused engine `10/10` files
+    and `28/28` tests plus focused web `4/4` files and `23/23` tests
+  - focused repo build: green with the known optional `sharp/@img` DOCX
+    warnings
+  - `git diff --check`: green
+  - next narrow task inside the slice is the remaining selected
+    requested-output replay runner loop, not a blocked runtime candidate
+
+- earlier active-slice mixed floor/wall seeded-chain landing on `2026-04-19`:
   - widened the selected seeded edit-history replay set from the prior
     direct-only quartet to an eight-variant selected-only family that now
     includes reversed split-order chains

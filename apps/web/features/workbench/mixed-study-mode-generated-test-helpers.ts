@@ -67,8 +67,12 @@ export type GeneratedHistoryVariant = {
   planOrder: "asc" | "desc";
   rebuildPiece: "leading" | "trailing";
   reverseParts: boolean;
+  reversePlanIndexes?: readonly number[];
 };
 
+// Selected boundary routes use per-plan reverse masks so web replay pressure can
+// mirror the engine-side exhaustive reverse-mask coverage without widening the
+// broad replay contract.
 export const SELECTED_DUPLICATE_SWAP_HISTORY_VARIANTS: readonly GeneratedHistoryVariant[] = [
   {
     id: "ascending-direct-leading-rebuild",
@@ -77,46 +81,53 @@ export const SELECTED_DUPLICATE_SWAP_HISTORY_VARIANTS: readonly GeneratedHistory
     reverseParts: false
   },
   {
-    id: "ascending-reversed-leading-rebuild",
+    id: "ascending-reverse-plan-1-leading-rebuild",
     planOrder: "asc",
     rebuildPiece: "leading",
-    reverseParts: true
+    reverseParts: false,
+    reversePlanIndexes: [0]
   },
   {
-    id: "ascending-direct-trailing-rebuild",
+    id: "ascending-reverse-plan-2-trailing-rebuild",
     planOrder: "asc",
     rebuildPiece: "trailing",
-    reverseParts: false
+    reverseParts: false,
+    reversePlanIndexes: [1]
   },
   {
-    id: "ascending-reversed-trailing-rebuild",
+    id: "ascending-reverse-plans-1-2-trailing-rebuild",
     planOrder: "asc",
     rebuildPiece: "trailing",
-    reverseParts: true
+    reverseParts: false,
+    reversePlanIndexes: [0, 1]
   },
   {
-    id: "descending-direct-leading-rebuild",
+    id: "descending-reverse-plan-3-leading-rebuild",
     planOrder: "desc",
     rebuildPiece: "leading",
-    reverseParts: false
+    reverseParts: false,
+    reversePlanIndexes: [2]
   },
   {
-    id: "descending-reversed-leading-rebuild",
+    id: "descending-reverse-plans-1-3-leading-rebuild",
     planOrder: "desc",
     rebuildPiece: "leading",
-    reverseParts: true
+    reverseParts: false,
+    reversePlanIndexes: [0, 2]
   },
   {
-    id: "descending-direct-trailing-rebuild",
+    id: "descending-reverse-plans-2-3-trailing-rebuild",
     planOrder: "desc",
     rebuildPiece: "trailing",
-    reverseParts: false
+    reverseParts: false,
+    reversePlanIndexes: [1, 2]
   },
   {
-    id: "descending-reversed-trailing-rebuild",
+    id: "descending-reverse-plans-1-2-3-trailing-rebuild",
     planOrder: "desc",
     rebuildPiece: "trailing",
-    reverseParts: true
+    reverseParts: false,
+    reversePlanIndexes: [0, 1, 2]
   }
 ];
 

@@ -62,9 +62,9 @@ Use this section first when deciding what to do next.
 - active slice:
   `mixed_floor_wall_seeded_cross_mode_chain_expansion_v2`
 - current highest-ROI task:
-  extend selected seeded duplicate-swap and save-load replay pressure on the
-  existing defended boundary routes until the web-side chain matches the new
-  engine-side reverse-mask coverage
+  extend selected seeded requested-output and save-load replay pressure on the
+  existing defended boundary routes until the remaining web-side chain matches
+  the new engine-side reverse-mask coverage
 - selected next slice posture:
   all four blocked source-backed runtime candidates are now explicit holds, so
   the highest-ROI next move is a no-runtime shared torture-pass follow-up
@@ -75,8 +75,10 @@ Use this section first when deciding what to do next.
 - selected scope:
   - landed: broader selected seeded edit-history families beyond the current
     second wall-family expansion
-  - active: wider selected duplicate-swap pressure beyond the current
+  - landed: wider selected duplicate-swap pressure beyond the current
     complementary generated history-grid variants
+  - active: matching selected requested-output replay pressure beyond the
+    current compact requested-output runner loop
   - landed for selected edit-history replay: saved-scenario replay and
     output-card projection parity after longer cross-mode chains
 - blocked runtime candidate posture stays explicit:
@@ -92,9 +94,9 @@ Use this section first when deciding what to do next.
 2. Keep the widened selected edit-history replay set on the selected boundary
    routes; do not leak that broader replay contract back into broad or
    representative requested-output surfaces.
-3. Extend the matching web generated history-grid, partial-restore, and
-   requested-output replay surfaces on the same seeded boundary routes until
-   multi-split cases carry explicit reverse-mask save-load pressure.
+3. Extend the remaining selected requested-output replay surfaces on the same
+   seeded boundary routes until multi-split cases carry explicit reverse-mask
+   save-load pressure end-to-end.
 4. If the follow-up exposes a fresh classified runtime red, classify it before
    any widening proposal; do not reopen a blocked source-backed candidate by
    proximity alone.
@@ -117,8 +119,26 @@ Use this section first when deciding what to do next.
 - do not reopen heavy-concrete parity widening or another CLT tightening
   micro-pass while the seeded mixed follow-up is active
 
-## Verified Against Implementation - 2026-04-18
+## Verified Against Implementation - 2026-04-19
 
+- earlier active-slice mixed floor/wall seeded-chain landing on `2026-04-19`:
+  - widened the selected web duplicate/swap replay family from a single
+    global reverse toggle to explicit per-plan reverse-mask variants on the
+    defended seeded boundary routes
+  - aligned
+    `apps/web/features/workbench/mixed-study-mode-generated-history-grid.test.ts`
+    and
+    `apps/web/features/workbench/mixed-study-mode-output-card-snapshot-test-helpers.ts`
+    so partial-restore and save-load replay can reverse individual split plans
+    without leaking that broader contract into the compact broad replay lanes
+  - kept broad and representative requested-output/output-card replay on the
+    compact direct-vs-global-reverse contract while the selected seeded lane
+    adopted per-plan reverse masks
+  - `pnpm calculator:gate:current`: green with focused engine `10/10` files
+    and `28/28` tests plus focused web `4/4` files and `23/23` tests
+  - focused repo build: green with the known optional `sharp/@img` DOCX
+    warnings
+  - `git diff --check`: green
 - latest active-slice mixed floor/wall seeded-chain progress on `2026-04-19`:
   - widened
     `apps/web/features/workbench/mixed-study-mode-generated-test-helpers.ts`
