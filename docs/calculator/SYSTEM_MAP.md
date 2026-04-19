@@ -215,32 +215,38 @@ validation path before and after a refactor.
 
 ## Current Architectural Hotspots
 
-As of `2026-04-17`, the requested-output output-card harness chain is frozen at
+As of `2026-04-18`, the requested-output output-card harness chain is frozen at
 a clean green baseline. The reinforced-concrete accuracy tightening slice is
-closed. The defended Dataholz CLT calibration pass is also now closed. The
-active risk is no longer a live solver corridor; it is selecting the next
-blocked source-backed family honestly before any new runtime widening.
+closed. The defended Dataholz CLT calibration pass is also closed, and the
+blocked source-backed rerank is now closed as well. The active risk is no
+longer choosing a blocked runtime candidate; it is extending shared mixed
+floor/wall seeded-chain evidence honestly before any future reopen.
 
 Current hotspots:
 
-- selected rerank anchors:
-  - `packages/engine/src/post-dataholz-clt-calibration-tightening-next-slice-selection-contract.test.ts`
+- selected closeout and follow-up anchors:
+  - `packages/engine/src/post-blocked-source-backed-widening-rerank-next-slice-selection-contract.test.ts`
   - `packages/engine/src/source-gap-candidate-re-rank-contract.test.ts`
-  - `packages/engine/src/raw-bare-open-web-open-box-source-evidence-rerank-contract.test.ts`
-  - `packages/engine/src/remaining-source-gap-posture-matrix.test.ts`
-- closed CLT evidence:
-  - `packages/engine/src/dataholz-clt-calibration-tightening-audit.test.ts`
-  - `packages/engine/src/dataholz-gdmtxa04a-material-surface-recheck.test.ts`
-  - `packages/engine/src/dataholz-clt-source-truth-audit.test.ts`
-  - `apps/web/features/workbench/dataholz-clt-source-truth-route.test.ts`
+  - `packages/engine/src/blocked-source-rank-1-gdmtxa04a-feasibility-contract.test.ts`
+  - `packages/engine/src/blocked-source-rank-2-c11c-feasibility-contract.test.ts`
+  - `packages/engine/src/blocked-source-rank-3-raw-bare-open-box-open-web-feasibility-contract.test.ts`
+  - `packages/engine/src/blocked-source-rank-4-wall-selector-feasibility-contract.test.ts`
+- selected mixed floor/wall evidence anchors:
+  - `packages/engine/src/mixed-floor-wall-complex-stack.test.ts`
+  - `packages/engine/src/mixed-floor-wall-generated-matrix.test.ts`
+  - `apps/web/features/workbench/mixed-study-mode-torture.test.ts`
+  - `apps/web/features/workbench/mixed-study-mode-generated-history-grid.test.ts`
+  - `apps/web/features/workbench/mixed-study-mode-generated-edit-history-matrix.test.ts`
+  - `apps/web/features/workbench/mixed-study-mode-output-card-snapshot-grid.test.ts`
 - focused gate entrypoint:
   `tools/dev/run-calculator-current-gate.ts`
 - source-backed widening ledger:
   `docs/calculator/SOURCE_GAP_LEDGER.md`
 
-The current selected next slice exists to re-rank the blocked source-backed
-families honestly, not to reopen `GDMTXA04A`, `C11c`, raw open-box/open-web,
-reinforced-concrete, or wall-selector behavior by inertia.
+The current selected next slice exists to extend seeded mixed floor/wall
+boundary-route evidence honestly while keeping `GDMTXA04A`, `C11c`, raw
+open-box/open-web, reinforced-concrete reopening, and wall-selector behavior
+blocked until a fresh classified red proves otherwise.
 
 ## What This System Is Not Yet
 
@@ -262,4 +268,4 @@ To avoid docs drift, be explicit about current non-features:
 - Want answer-origin or support semantics:
   read [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
 - Want the last clean resume point:
-  read [CHECKPOINT_2026-04-17_DATAHOLZ_CLT_CALIBRATION_TIGHTENING_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-17_DATAHOLZ_CLT_CALIBRATION_TIGHTENING_CLOSEOUT_HANDOFF.md)
+  read [CHECKPOINT_2026-04-18_BLOCKED_SOURCE_RERANK_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-18_BLOCKED_SOURCE_RERANK_CLOSEOUT_HANDOFF.md)

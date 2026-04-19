@@ -1,6 +1,6 @@
 # Next Implementation Plan
 
-Last reviewed: 2026-04-17
+Last reviewed: 2026-04-18
 
 Document role:
 
@@ -15,7 +15,7 @@ Read together with:
 
 - [CURRENT_STATE.md](./CURRENT_STATE.md)
 - [SYSTEM_MAP.md](./SYSTEM_MAP.md)
-- [CHECKPOINT_2026-04-17_DATAHOLZ_CLT_CALIBRATION_TIGHTENING_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-17_DATAHOLZ_CLT_CALIBRATION_TIGHTENING_CLOSEOUT_HANDOFF.md)
+- [CHECKPOINT_2026-04-18_BLOCKED_SOURCE_RERANK_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-18_BLOCKED_SOURCE_RERANK_CLOSEOUT_HANDOFF.md)
 - [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
 - [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md)
 
@@ -60,102 +60,95 @@ Use this section first when deciding what to do next.
 ### Now
 
 - active slice:
-  `blocked_source_backed_widening_rerank_v1`
+  `mixed_floor_wall_seeded_cross_mode_chain_expansion_v2`
 - current highest-ROI task:
-  freeze rank-4 wall-selector behavior as blocked and move the active slice to
-  rerank closeout selection
-- current explicit blocked candidate order:
+  extend the seeded mixed floor/wall cross-mode evidence chain on the existing
+  defended boundary routes before any blocked runtime reopen is reconsidered
+- selected next slice posture:
+  all four blocked source-backed runtime candidates are now explicit holds, so
+  the highest-ROI next move is a no-runtime shared torture-pass follow-up
+- selected route family:
+  `mixed_floor_wall_seeded_boundary_routes`
+- selected output surface:
+  `workbench_saved_scenario_replay_and_output_cards`
+- selected scope:
+  - broader seeded cross-mode edit-chain families beyond the current second
+    wall-family expansion
+  - wider duplicate-swap pressure beyond the current complementary generated
+    history-grid variants
+  - saved-scenario replay and output-card projection parity after longer
+    cross-mode chains
+- blocked runtime candidate posture stays explicit:
   1. `dataholz_gdmtxa04a_visible_exact_reopen`
   2. `tuas_c11c_exact_import`
   3. `raw_bare_open_box_open_web_impact_widening`
   4. `wall_selector_behavior_widening`
-- closeout decision now landed:
-  the visible `GDMTXA04A`-like composite dry-screed boundary stays
-  estimate-only, while its visible estimate route is now capped against the
-  direct official exact row on `Ln,w`, `CI`, `CI,50-2500`, and `Ln,w+CI`
-- active-slice progress now landed:
-  the same visible CLT boundary now carries the standardized `L'nT,50`
-  companion path instead of the weaker local-guide fallback, so the remaining
-  open work is slice selection rather than another CLT micro-tightening pass
-- active-slice rerank progress now landed:
-  rank-1 `GDMTXA04A` keeps the strongest direct source truth but remains
-  blocked after an explicit feasibility audit because honest visible exact
-  reopening still needs composite dry-screed surface modeling; the rerank now
-  advances to `C11c` without changing runtime behavior
-- active-slice rerank progress now also landed:
-  rank-2 `C11c` stays blocked after an explicit feasibility audit because its
-  combined wet tuple still carries an unresolved anomaly; the rerank now
-  advances to raw bare open-box/open-web without changing runtime behavior
-- active-slice rerank progress now also landed:
-  rank-3 raw bare open-box/open-web stays blocked after an explicit
-  feasibility audit because current TUAS and UBIQ evidence still proves
-  packaged-system behavior rather than true bare-carrier impact behavior; the
-  rerank now advances to wall-selector behavior without changing runtime
-  behavior
-- active-slice rerank progress now also landed:
-  rank-4 wall-selector behavior stays blocked after an explicit feasibility
-  audit because the current trace/card guard is already closed and no fresh
-  classified wall red exists; the rerank now has no further comparison target
-  and is ready for closeout selection without changing runtime behavior
 
 ### Next
 
-1. Keep rank-1 `GDMTXA04A` explicitly blocked on composite-surface modeling.
-2. Keep rank-2 `C11c` explicitly blocked on its unresolved anomaly.
-3. Keep rank-3 raw bare open-box/open-web explicitly blocked on packaged-only
-   source evidence.
-4. Keep rank-4 `wall_selector_behavior_widening` explicitly blocked on the
-   already-closed trace/card guard plus the absence of any fresh classified
-   wall red.
-5. Keep all currently blocked families fail-closed while the rerank closes.
-6. Close `blocked_source_backed_widening_rerank_v1` and select the next slice
-   explicitly instead of reopening any blocked runtime candidate by inertia.
-
-### Rank-3 Decision Gate
-
-Treat the raw bare open-box/open-web step as a feasibility audit, not as an
-implementation-ready widening.
-
-- success condition:
-  direct bare-carrier impact evidence exists strongly enough that runtime
-  widening would not need to reinterpret packaged-system values as bare-carrier
-  values
-- fail-closed condition:
-  current evidence still only proves packaged-system behavior, so the candidate
-  stays blocked and the rerank advances to `wall_selector_behavior_widening`
-- non-goal:
-  do not reinterpret packaged TUAS or UBIQ rows as bare-carrier impact truth
-  just because nearby tests are green
-
-### Rank-4 Decision Gate
-
-Treat the wall-selector step as a feasibility audit, not as an implementation-ready widening.
-
-- success condition:
-  a fresh classified wall red exists that the current trace/card guard fails to
-  hold honestly, so reopening selector behavior would fix a live runtime bug
-- fail-closed condition:
-  the current trace/card guard is already closed and no fresh classified wall
-  red exists, so the candidate stays blocked and the rerank moves to closeout
-  selection instead of another comparison
-- non-goal:
-  do not reopen wall-selector behavior from old nearby green tests or general
-  discomfort with ambiguous family holds
+1. Keep `GDMTXA04A`, `C11c`, raw bare open-box/open-web, and wall-selector
+   behavior explicit blocked holds while this follow-up stays active.
+2. Extend the seeded mixed floor/wall engine torture coverage without creating
+   a broader generated family grid.
+3. Extend the matching web saved-scenario replay, generated history-grid,
+   generated edit-history, and output-card projection parity on the same
+   seeded boundary routes.
+4. If the follow-up exposes a fresh classified runtime red, classify it before
+   any widening proposal; do not reopen a blocked source-backed candidate by
+   proximity alone.
+5. Close `mixed_floor_wall_seeded_cross_mode_chain_expansion_v2` with an
+   explicit next-slice selection contract instead of auto-falling back to a
+   blocked runtime candidate.
 
 ### Later
 
-1. the single next runtime candidate chosen by the rerank
-2. conditionally reopen reinforced-concrete or `GDMTXA04A` only if fresh proof
-   appears
+1. a fresh runtime-candidate selection pass only if this shared follow-up
+   exposes a classified red worth reopening
+2. otherwise keep all current blocked source-backed candidates fail-closed
 
 ### Explicit Non-Goals Right Now
 
-- do not reopen heavy-concrete parity widening
-- do not widen raw source families from nearby green tests
-- do not reopen another CLT tightening micro-pass now that the defended
-  `CI50_2500` / `L'nT,50` slack is closed
+- do not reopen `GDMTXA04A`, `C11c`, raw bare open-box/open-web, or
+  wall-selector behavior from nearby green tests alone
+- do not create another broad mixed generated family grid just because the
+  shared torture pass is active
+- do not reopen heavy-concrete parity widening or another CLT tightening
+  micro-pass while the seeded mixed follow-up is active
 
-## Verified Against Implementation - 2026-04-17
+## Verified Against Implementation - 2026-04-18
+
+- latest blocked-source rerank closeout selection on `2026-04-18`:
+  - landed
+    `packages/engine/src/post-blocked-source-backed-widening-rerank-next-slice-selection-contract.test.ts`
+  - closed `blocked_source_backed_widening_rerank_v1` after all four ranked
+    runtime candidates stayed explicitly blocked
+  - selected `mixed_floor_wall_seeded_cross_mode_chain_expansion_v2` as the
+    next honest no-runtime slice on the shared seeded floor/wall boundary
+    routes
+  - updated the focused gate to pair the rerank closeout contract with the
+    existing mixed floor/wall seeded-chain engine/web anchors
+  - targeted closeout engine pack: `10/10` test files passed, `28/28` tests
+    passed
+  - targeted closeout web pack: `4/4` test files passed, `23/23` tests passed
+  - `pnpm calculator:gate:current`: green
+  - `pnpm check`: green with full engine `160/160` files and `960/960` tests
+    plus full web `117/117` files and `674/674` tests
+  - `pnpm build`: green with the known optional `sharp/@img` DOCX warnings
+  - `git diff --check`: green
+- latest broad validation stability pass on `2026-04-18`:
+  - isolated the broad-gate failure to two throughput-only web deep-hybrid
+    swap timeouts, not a runtime regression
+  - widened
+    `apps/web/features/workbench/dynamic-route-deep-hybrid-test-helpers.ts`
+    swap timeout headroom from `90_000` to `150_000`
+  - kept calculator/runtime behavior unchanged
+  - confirmed the focused gate stayed green with engine `10/10` files and
+    `28/28` tests plus web `4/4` files and `23/23` tests
+  - reran `pnpm check`: green with full engine `160/160` files and `960/960`
+    tests plus full web `117/117` files and `674/674` tests
+  - reran `pnpm build`: green with the known optional `sharp/@img` DOCX
+    warnings
+  - `git diff --check`: green
 
 - latest active-slice CLT calibration closeout on `2026-04-17`:
   - landed `packages/engine/src/dataholz-clt-calibration-tightening-audit.test.ts`

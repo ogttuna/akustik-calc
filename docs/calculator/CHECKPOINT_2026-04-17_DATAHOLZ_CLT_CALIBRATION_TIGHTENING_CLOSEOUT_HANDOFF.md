@@ -1,5 +1,11 @@
 # Checkpoint 2026-04-17 Dataholz CLT Calibration Tightening Closeout Handoff
 
+Superseded note:
+
+- this checkpoint is historical
+- use [CHECKPOINT_2026-04-18_BLOCKED_SOURCE_RERANK_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-18_BLOCKED_SOURCE_RERANK_CLOSEOUT_HANDOFF.md)
+  for the latest restart point after the blocked-source rerank closeout
+
 Document role:
 
 - define the current checkpoint after the defended Dataholz CLT calibration

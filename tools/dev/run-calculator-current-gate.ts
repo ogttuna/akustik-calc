@@ -41,7 +41,7 @@ function runStep(step: Step): Promise<void> {
 async function main() {
   const steps: Step[] = [
     {
-      label: "engine Dataholz CLT closeout + blocked-source rerank gate",
+      label: "engine blocked-source closeout + mixed floor/wall seeded-chain gate",
       args: [
         "pnpm",
         "--filter",
@@ -49,23 +49,21 @@ async function main() {
         "exec",
         "vitest",
         "run",
+        "src/post-blocked-source-backed-widening-rerank-next-slice-selection-contract.test.ts",
+        "src/source-gap-candidate-re-rank-contract.test.ts",
         "src/blocked-source-rank-1-gdmtxa04a-feasibility-contract.test.ts",
         "src/blocked-source-rank-2-c11c-feasibility-contract.test.ts",
         "src/blocked-source-rank-3-raw-bare-open-box-open-web-feasibility-contract.test.ts",
         "src/blocked-source-rank-4-wall-selector-feasibility-contract.test.ts",
-        "src/post-dataholz-clt-calibration-tightening-next-slice-selection-contract.test.ts",
-        "src/dataholz-clt-calibration-tightening-audit.test.ts",
-        "src/dataholz-gdmtxa04a-material-surface-recheck.test.ts",
-        "src/dataholz-clt-source-truth-audit.test.ts",
-        "src/floor-source-corpus-contract.test.ts",
-        "src/source-gap-candidate-re-rank-contract.test.ts",
         "src/raw-bare-open-web-open-box-source-evidence-rerank-contract.test.ts",
         "src/remaining-source-gap-posture-matrix.test.ts",
+        "src/mixed-floor-wall-complex-stack.test.ts",
+        "src/mixed-floor-wall-generated-matrix.test.ts",
         "--maxWorkers=1"
       ]
     },
     {
-      label: "web Dataholz CLT closeout + blocked-source posture gate",
+      label: "web mixed floor/wall seeded-chain gate",
       args: [
         "pnpm",
         "--filter",
@@ -73,9 +71,10 @@ async function main() {
         "exec",
         "vitest",
         "run",
-        "features/workbench/dataholz-clt-source-truth-route.test.ts",
-        "features/workbench/remaining-source-gap-posture-card-matrix.test.ts",
-        "features/workbench/output-origin-trace-card-matrix.test.ts",
+        "features/workbench/mixed-study-mode-torture.test.ts",
+        "features/workbench/mixed-study-mode-generated-history-grid.test.ts",
+        "features/workbench/mixed-study-mode-generated-edit-history-matrix.test.ts",
+        "features/workbench/mixed-study-mode-output-card-snapshot-grid.test.ts",
         "--maxWorkers=1"
       ]
     },

@@ -5,7 +5,7 @@ Document role:
 - primary short snapshot for the current dynamic calculator and workbench posture
 - read this before historical analysis or older checkpoint notes
 - for the current checkpoint, also read:
-  - [CHECKPOINT_2026-04-17_DATAHOLZ_CLT_CALIBRATION_TIGHTENING_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-17_DATAHOLZ_CLT_CALIBRATION_TIGHTENING_CLOSEOUT_HANDOFF.md)
+  - [CHECKPOINT_2026-04-18_BLOCKED_SOURCE_RERANK_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-18_BLOCKED_SOURCE_RERANK_CLOSEOUT_HANDOFF.md)
 - for the authoritative next step, read:
   - [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md)
 - for end-to-end product flow and file boundaries, read:
@@ -24,28 +24,29 @@ Document role:
 
 ## Revalidated Snapshot
 
-Last full engine revalidation: `2026-04-17`
+Last full engine revalidation: `2026-04-18`
 
-Last full web revalidation: `2026-04-17`
+Last full web revalidation: `2026-04-18`
 
-Last cross-package build revalidation: `2026-04-17`
+Last cross-package build revalidation: `2026-04-18`
 
-Planning / implementation update: `2026-04-17`
+Planning / implementation update: `2026-04-18`
 
 ## Operator Snapshot
 
 - active slice:
-  `blocked_source_backed_widening_rerank_v1`
+  `mixed_floor_wall_seeded_cross_mode_chain_expansion_v2`
 - current broad-pass conclusion:
-  the defended CLT calibration corridor is now closed tightly enough that the
-  next honest step is no longer another solver pass; it is a no-runtime
-  rerank of the still-blocked source-backed families
+  all four blocked source-backed runtime candidates are now explicit holds, so
+  the next honest step is a no-runtime shared mixed floor/wall evidence pass
+  rather than another runtime candidate comparison
 - immediate next decision:
-  keep all four blocked candidates fail-closed on their explicit feasibility
-  findings and move from comparison work to rerank closeout selection
+  extend the seeded mixed floor/wall cross-mode chain on the already-defended
+  boundary routes without reopening any blocked runtime candidate
 - first implementation question now:
-  after all four blocked candidates are explicit holds, which single next
-  slice should replace the rerank without faking runtime urgency
+  which broader seeded cross-mode edit-chain families beyond the current
+  second wall-family expansion still need explicit engine/web parity before any
+  blocked runtime reopen is reconsidered
 - current explicit blocked candidate order:
   1. `dataholz_gdmtxa04a_visible_exact_reopen`
   2. `tuas_c11c_exact_import`
@@ -54,7 +55,7 @@ Planning / implementation update: `2026-04-17`
 - do not do first:
   - direct blocked-family reopening
   - blocked source-family widening
-  - wording-only micro-passes that do not change the next-slice decision
+  - another broad generated family grid without a fresh classified red
 
 - latest active-slice CLT calibration closeout on `2026-04-17`:
   - landed `packages/engine/src/dataholz-clt-calibration-tightening-audit.test.ts`
@@ -162,12 +163,45 @@ Planning / implementation update: `2026-04-17`
   - `pnpm calculator:gate:current`: green with focused engine `12/12` files
     and `37/37` tests plus focused web `3/3` files and `9/9` tests
   - `git diff --check`: green
+- latest blocked-source rerank closeout selection on `2026-04-18`:
+  - closed `blocked_source_backed_widening_rerank_v1`
+  - selected `mixed_floor_wall_seeded_cross_mode_chain_expansion_v2` as the
+    next honest no-runtime slice
+  - kept `GDMTXA04A`, `C11c`, raw bare open-box/open-web, and wall-selector
+    widening blocked after their explicit feasibility audits
+  - reused the defended seeded mixed floor/wall boundary-route family instead
+    of inventing a new runtime urgency after the rerank exhausted its
+    candidate queue
+  - targeted closeout engine pack: `10/10` test files passed, `28/28` tests
+    passed
+  - targeted closeout web pack: `4/4` test files passed, `23/23` tests passed
+  - `pnpm calculator:gate:current`: green
+  - `pnpm check`: green
+  - `pnpm build`: green with the known optional `sharp/@img` DOCX warnings
+  - `git diff --check`: green
+- latest broad validation stability pass on `2026-04-18`:
+  - narrowed the only broad-gate failure to two throughput-only web
+    deep-hybrid swap timeouts
+  - widened
+    `apps/web/features/workbench/dynamic-route-deep-hybrid-test-helpers.ts`
+    swap timeout headroom from `90_000` to `150_000`
+  - kept calculator/runtime behavior unchanged
+  - full engine suite: `160/160` test files passed, `960/960` tests passed
+  - full web suite: `117/117` test files passed, `674/674` tests passed
+  - focused engine gate: `10/10` test files passed, `28/28` tests passed
+  - focused web gate: `4/4` test files passed, `23/23` tests passed
+  - `pnpm typecheck`: green
+  - `pnpm lint`: green
+  - `pnpm check`: green
+  - `pnpm calculator:gate:current`: green
+  - `pnpm build`: green with the known optional `sharp/@img` DOCX warnings
+  - `git diff --check`: green
 
 - latest live verification after the runtime candidate rerank closeout:
-  - full engine suite: `147/147` test files passed, `923/923` tests passed
-  - full web suite: `113/113` test files passed, `655/655` tests passed
-  - focused engine gate: `4/4` test files passed, `14/14` tests passed
-  - focused web gate: `3/3` test files passed, `6/6` tests passed
+  - full engine suite: `160/160` test files passed, `960/960` tests passed
+  - full web suite: `117/117` test files passed, `674/674` tests passed
+  - focused engine gate: `10/10` test files passed, `28/28` tests passed
+  - focused web gate: `4/4` test files passed, `23/23` tests passed
   - `pnpm typecheck`: green
   - `pnpm lint`: green
   - `pnpm check`: green
