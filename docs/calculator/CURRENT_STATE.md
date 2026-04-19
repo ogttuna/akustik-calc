@@ -72,15 +72,15 @@ Planning / implementation update: `2026-04-19`
   - `git diff --check`: green
 
 - latest broad validation pass on `2026-04-19`:
-  - reran `pnpm check` after the mixed seeded-chain closeout selection wiring
-    and doc refresh
-  - full engine suite: `160/160` test files passed, `961/961` tests passed
+  - reran `pnpm check` after the blocked-source refresh landing and current
+    doc refresh
+  - full engine suite: `161/161` test files passed, `964/964` tests passed
   - full web suite: `118/118` test files passed, `676/676` tests passed
   - reran `pnpm build`: green with the known optional `sharp/@img` DOCX
     warnings
-  - the full green pass confirmed the new mixed seeded closeout contract and
-    selected requested-output descriptor contract without reopening any blocked
-    runtime candidate
+  - the full green pass confirmed the landed blocked-source refresh contract
+    without reopening any blocked runtime candidate or changing the explicit
+    blocked order
 
 - latest blocked-source refresh landing on `2026-04-19`:
   - landed

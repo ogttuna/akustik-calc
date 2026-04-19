@@ -30,12 +30,13 @@ If the question is “what is still open and what executes next?”, start with
 - current candidate posture:
   direct `GDMTXA04A`, `C11c`, raw open-box/open-web, reinforced-concrete
   reopening, and wall-selector widening stay blocked; the selected next move
-  is a blocked-source rerank refresh after the seeded cross-mode closeout
+  is the blocked-source rerank refresh closeout after the landed refresh
+  contract confirmed no order change
 - last full green validation:
   `2026-04-19`
-  - engine: `160/160` test files passed, `961/961` tests passed
+  - engine: `161/161` test files passed, `964/964` tests passed
   - web: `118/118` test files passed, `676/676` tests passed
-  - focused engine gate: `11/11` test files passed, `31/31` tests passed
+  - focused engine gate: `12/12` test files passed, `34/34` tests passed
   - focused web gate: `5/5` test files passed, `25/25` tests passed
   - `pnpm lint`, `pnpm typecheck`, `pnpm check`, `pnpm build`, and
     `pnpm calculator:gate:current` green
