@@ -39,6 +39,13 @@ If the question is “what is still open and what executes next?”, start with
   fail-closed; raw helper, CLT-local, and reinforced closeouts are all now
   explicit evidence inputs; the selected next move is Dataholz CLT
   calibration tightening
+- latest checkpoint review:
+  `2026-04-20`
+  - reread the living plan/state/handoff docs against the active Dataholz CLT
+    audit and route tests
+  - reran `pnpm calculator:gate:current` and `pnpm check`: still green
+  - found no doc/implementation drift, so the next move remains the first
+    defended tightening cut inside `dataholz_clt_calibration_tightening`
 - last full green validation:
   `2026-04-20`
   - engine: `182/182` test files passed, `1015/1015` tests passed

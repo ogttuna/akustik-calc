@@ -92,6 +92,18 @@ Planning / implementation update: `2026-04-20`
   - the full green pass confirmed the broad audit could select a defended live
     corridor without reopening any blocked runtime candidate by inertia
 
+- latest checkpoint review on `2026-04-20`:
+  - reread `NEXT_IMPLEMENTATION_PLAN.md`,
+    `CHECKPOINT_2026-04-19_MIXED_FLOOR_WALL_SEEDED_CHAIN_CLOSEOUT_HANDOFF.md`,
+    `CURRENT_STATE.md`, repo `AGENTS.md`, the focused gate, and the active
+    Dataholz CLT audit/route tests against the current implementation
+  - reran `pnpm calculator:gate:current`: green with focused engine `47/47`
+    files and `179/179` tests plus focused web `20/20` files and `38/38`
+    tests
+  - confirmed the active slice stays `dataholz_clt_calibration_tightening`
+    with no new justification to reopen any closed blocked-source family or to
+    drift back into reinforced-concrete follow-up work
+
 - latest broad audit and replanning closeout selection on `2026-04-20`:
   - landed
     `packages/engine/src/post-broad-audit-and-replanning-pass-v2-next-slice-selection-contract.test.ts`
