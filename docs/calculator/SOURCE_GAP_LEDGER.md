@@ -1,6 +1,6 @@
 # Dynamic Calculator Source Gap Ledger
 
-Last reviewed: 2026-04-19
+Last reviewed: 2026-04-20
 
 Purpose:
 
@@ -23,26 +23,31 @@ Important scope note:
 
 Current planning implication:
 
-- 2026-04-19 mixed-seeded closeout and blocked-source refresh posture:
-  - latest closed no-runtime slice:
-    `mixed_floor_wall_seeded_cross_mode_chain_expansion_v2`
-  - selected next no-runtime slice:
-    `blocked_source_backed_widening_rerank_refresh_v2`
-  - current explicit candidate order:
-    1. `dataholz_gdmtxa04a_visible_exact_reopen`
-    2. `tuas_c11c_exact_import`
-    3. `raw_bare_open_box_open_web_impact_widening`
-    4. `wall_selector_behavior_widening`
+- 2026-04-20 reinforced closeout posture:
+  - latest closed no-runtime slices:
+    - `blocked_source_backed_widening_rerank_refresh_v2`
+    - `dataholz_gdmtxa04a_composite_surface_model_design_v1`
+    - `tuas_c11c_exact_import_readiness_design_v1`
+    - `raw_bare_open_box_open_web_impact_widening`
+    - `wall_selector_behavior_widening`
+    - `broad_audit_and_replanning_pass_v2`
+    - `raw_terminal_concrete_helper_family_widening_v1`
+    - `clt_local_combined_interaction_evidence_v1`
+    - `reinforced_concrete_accuracy_reopen`
+  - selected next active slice:
+    `dataholz_clt_calibration_tightening`
+  - current remaining candidate order:
+    - no active blocked-source candidate remains in the current queue
   - current order reason:
-    - `GDMTXA04A` is the strongest blocked candidate because a direct official
-      exact row exists and the remaining gap is honest composite-surface
-      modeling rather than missing source truth
-    - `C11c` stays second because its remaining blocker is an unexplained
-      weighted-tuple anomaly, not a missing drawing or missing family
-    - raw bare open-box/open-web stays below both because current source
-      evidence is packaged-system evidence, not bare-carrier impact evidence
-    - wall-selector stays last because no fresh classified red currently
-      exists, so it is not a live runtime candidate
+    - `GDMTXA04A` is no longer the active blocked family because its dedicated
+      design slice closed fail-closed without yielding a reopen candidate
+    - `C11c` is no longer the active blocked family because its readiness
+      design also closed fail-closed without yielding an honest exact-import
+      candidate
+    - raw bare open-box/open-web is no longer the active blocked family
+      because its source-evidence and feasibility pack also closed fail-closed
+    - wall-selector is no longer active because the last remaining blocked
+      family also closed fail-closed
   - inherited blocked-source posture:
     - rank-1 `GDMTXA04A` feasibility is now explicitly closed as blocked
     - reason: direct source truth exists, but honest visible exact reopening
@@ -50,18 +55,23 @@ Current planning implication:
     - rank-2 `C11c` feasibility is now explicitly closed as blocked
     - reason: the visible schedule is real, but the combined wet tuple remains
       anomalous and the route still stays impact-fail-closed
+    - rank-2 `C11c` readiness design is now also explicitly closed fail-closed
+    - reason: the landed design did not yield an honest exact-import rule
+      beyond the existing anomaly posture
     - rank-3 raw bare open-box/open-web feasibility is now explicitly closed
       as blocked
     - reason: current TUAS and UBIQ source rows still prove packaged systems,
       not true bare-carrier impact behavior
+    - rank-3 raw bare family closeout is now also explicitly closed fail-closed
+    - reason: the landed blocker pack did not yield an honest runtime reopen
+      candidate
     - rank-4 `wall_selector_behavior_widening` feasibility is now explicitly
       closed as blocked
     - reason: the current wall trace/card guard is already closed and no fresh
       classified wall red exists
-  - mixed seeded closeout result:
-    - selected next action after the seeded cross-mode closeout:
-      refresh the blocked source-backed candidate order again instead of
-      opening any blocked runtime candidate by inertia
+    - rank-4 wall-selector closeout is now also explicitly closed fail-closed
+    - reason: the landed wall feasibility audit did not yield any honest wall
+      reopen candidate, so the next move became program-level replanning
   - blocked-source refresh landing result:
     - the post-closeout rerank refresh kept the explicit blocked order
       unchanged:
@@ -69,11 +79,65 @@ Current planning implication:
     - reason: the mixed seeded floor/wall closeout added no fresh classified
       runtime red, no new direct source truth, and no wall trace red that
       could honestly reopen any blocked runtime candidate
-  - selected next slice reason:
-    - the shared seeded floor/wall pass closed without a fresh classified
-      runtime red
-    - all four blocked runtime candidates therefore remain explicit holds
-    - the next honest move is a no-runtime rerank refresh before any reopen
+  - broad-audit selection reason:
+    - the shared seeded floor/wall pass, the blocked-source refresh, and the
+      Dataholz, `C11c`, raw bare, and wall-selector fail-closed closeouts all
+      landed without a fresh classified runtime red
+    - the broad audit reran the full repo validation baseline green before
+      selecting a new active slice
+    - the next honest move is the already-live raw terminal-concrete helper
+      corridor because it is formula-owned and better guarded than held
+      CLT-local evidence work or any blocked-source reopen candidate
+  - raw-helper closeout result:
+    - the helper-family, split-topology, partial-order, and provenance guards
+      are now explicit enough that the corridor closed as solved program
+      evidence
+    - the next honest move became the held CLT-local combined evidence slice,
+      not more raw-helper sprawl
+  - CLT-local closeout result:
+    - the exact local combined anchors `C2c`, `C3c`, `C4c`, and `C7c` are now
+      explicit
+    - the visible `C5c` local combined route is now explicit as a
+      predictor-backed proxy
+    - under-described local combined shapes now stay fail-closed on the same
+      screening-owned boundary
+    - the slice then closed cleanly and promoted
+      `reinforced_concrete_accuracy_reopen` as the only still-live
+      non-blocked conditional follow-up
+  - reinforced closeout result:
+    - the bounded low-confidence reinforced corridor is now explicit across
+      matrix, provenance, diagnostics-dossier, and consultant-trail surfaces
+    - the slice then closed cleanly because no fourth defended boundary
+      remained and promoted `dataholz_clt_calibration_tightening` as the next
+      honest tightening move
+  - current active-slice posture:
+    - landed runtime anchors:
+      - `packages/engine/src/dataholz-clt-source-truth-audit.test.ts`
+      - `packages/engine/src/dataholz-clt-calibration-tightening-audit.test.ts`
+      - `packages/engine/src/floor-source-corpus-contract.test.ts`
+      - `apps/web/features/workbench/dataholz-clt-source-truth-route.test.ts`
+    - current posture:
+      tighten the defended Dataholz CLT exact-vs-estimate corridor while
+      keeping visible `GDMTXA04A` rows estimate-only and keeping every
+      blocked-source family fail-closed
+  - closed Dataholz slice progress:
+    - landed:
+      `packages/engine/src/dataholz-gdmtxa04a-composite-surface-model.ts`
+    - landed:
+      `packages/engine/src/dataholz-gdmtxa04a-composite-surface-model-design.test.ts`
+    - closeout posture:
+      the slice pinned the proxy boundary and the remaining reopen evidence
+      explicitly, then closed fail-closed because it still did not justify a
+      live exact-visible candidate
+  - closed C11c slice progress:
+    - landed:
+      `packages/engine/src/tuas-c11c-exact-import-readiness.ts`
+    - landed:
+      `packages/engine/src/tuas-c11c-exact-import-readiness-design.test.ts`
+    - closeout posture:
+      the slice pinned the visible combined wet schedule, the weak weighted
+      tuple, and the missing import prerequisites explicitly, then closed
+      fail-closed because exact import still stayed unsupported
 - 2026-04-14 second-pass plan selection and implementation:
   - the no-widening route/card projection guard
     `mixed_floor_wall_output_card_snapshot_grid_v1`

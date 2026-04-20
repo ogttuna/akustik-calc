@@ -15,10 +15,11 @@ plan.
 ## Current Workflow
 
 - current selected slice:
-  `blocked_source_backed_widening_rerank_refresh_v2`
+  `dataholz_clt_calibration_tightening`
 - current first decision inside the slice:
-  close the refresh after the landed rerank contract confirmed that the mixed
-  seeded-chain closeout did not change the explicit blocked candidate order
+  tighten the defended Dataholz CLT exact-vs-estimate corridor after the
+  reinforced-concrete low-confidence follow-up closed honestly, without
+  drifting back into blocked-source or reinforced reopening work
 - do not reopen `GDMTXA04A`, `C11c`, raw open-box/open-web, heavy-concrete
   parity or formula scope, reinforced-concrete reopening, or wall-selector
   behavior from nearby green tests alone

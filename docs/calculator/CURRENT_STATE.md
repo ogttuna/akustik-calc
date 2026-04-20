@@ -24,36 +24,48 @@ Document role:
 
 ## Revalidated Snapshot
 
-Last full engine revalidation: `2026-04-19`
+Last full engine revalidation: `2026-04-20`
 
-Last full web revalidation: `2026-04-19`
+Last full web revalidation: `2026-04-20`
 
-Last cross-package build revalidation: `2026-04-19`
+Last cross-package build revalidation: `2026-04-20`
 
-Planning / implementation update: `2026-04-19`
+Last focused gate revalidation: `2026-04-20`
+
+Planning / implementation update: `2026-04-20`
 
 ## Operator Snapshot
 
 - active slice:
-  `blocked_source_backed_widening_rerank_refresh_v2`
+  `dataholz_clt_calibration_tightening`
 - current broad-pass conclusion:
-  the mixed seeded floor/wall evidence pass is now closed cleanly, and all
-  four blocked source-backed runtime candidates still remain explicit holds
+  the Dataholz design, the `C11c` readiness design, the raw bare family, and
+  the wall-selector family all closed fail-closed, the broad audit/replanning
+  pass reran the full validation baseline, the raw helper corridor then closed
+  cleanly, the CLT-local evidence slice also closed cleanly, the bounded
+  reinforced-concrete follow-up then closed honestly, and the next active
+  slice is now the defended Dataholz CLT calibration tightening corridor
 - immediate next decision:
-  close the blocked-source refresh after the landed rerank contract confirmed
-  that the mixed seeded closeout did not change the explicit blocked order
+  keep the reinforced, raw-helper, and CLT-local closeouts frozen, use the
+  landed Dataholz source-truth plus calibration audits as the new floor, then
+  decide whether Dataholz CLT yields one more defended tightening cut or this
+  slice also closes cleanly
 - first implementation question now:
-  which no-runtime slice should execute next now that the blocked-source
-  refresh contract found no fresh classified runtime red and no order change
-- current explicit blocked candidate order:
-  1. `dataholz_gdmtxa04a_visible_exact_reopen`
-  2. `tuas_c11c_exact_import`
-  3. `raw_bare_open_box_open_web_impact_widening`
-  4. `wall_selector_behavior_widening`
+  after the source-truth audit, calibration audit, and workbench source-truth
+  route, which remaining Dataholz exact-vs-estimate or capped-visible slack is
+  still defendable without reopening `GDMTXA04A` visible exact matching
+- selected route family:
+  `mass_timber_clt_floor_lane`
+- selected output surface:
+  `dataholz_clt_calibration_tightening_matrix`
+- current remaining blocked candidate order:
+  - none inside the current blocked-source queue
+  - `GDMTXA04A`, `C11c`, raw bare open-box/open-web, and wall-selector stay
+    closed fail-closed until new evidence appears
 - do not do first:
   - direct blocked-family reopening
-  - blocked source-family widening
-  - another broad generated family grid without a fresh classified red
+  - concrete or CLT runtime reopening by inertia
+  - another broad generated family grid without a fresh ROI decision
 
 - latest slice closeout selection on `2026-04-19`:
   - landed
@@ -71,16 +83,239 @@ Planning / implementation update: `2026-04-19`
     warnings
   - `git diff --check`: green
 
-- latest broad validation pass on `2026-04-19`:
-  - reran `pnpm check` after the blocked-source refresh landing and current
-    doc refresh
-  - full engine suite: `161/161` test files passed, `964/964` tests passed
-  - full web suite: `118/118` test files passed, `676/676` tests passed
+- latest broad validation pass on `2026-04-20`:
+  - reran `pnpm check` during the broad audit/replanning closeout
+  - full engine suite: `182/182` test files passed, `1015/1015` tests passed
+  - full web suite: `129/129` test files passed, `699/699` tests passed
   - reran `pnpm build`: green with the known optional `sharp/@img` DOCX
     warnings
-  - the full green pass confirmed the landed blocked-source refresh contract
-    without reopening any blocked runtime candidate or changing the explicit
-    blocked order
+  - the full green pass confirmed the broad audit could select a defended live
+    corridor without reopening any blocked runtime candidate by inertia
+
+- latest broad audit and replanning closeout selection on `2026-04-20`:
+  - landed
+    `packages/engine/src/post-broad-audit-and-replanning-pass-v2-next-slice-selection-contract.test.ts`
+  - closed `broad_audit_and_replanning_pass_v2`
+  - selected `raw_terminal_concrete_helper_family_widening_v1` as the next
+    honest active slice because the terminal-concrete helper lane is already
+    live, formula-owned, and better guarded than the held CLT-local evidence
+    work or any closed blocked-source family
+  - kept `GDMTXA04A`, `C11c`, raw bare open-box/open-web, and wall-selector
+    fail-closed after the audit closeout
+
+- latest raw terminal-concrete helper widening matrix landing on `2026-04-20`:
+  - landed
+    `packages/engine/src/raw-terminal-concrete-helper-widening-matrix.test.ts`
+  - landed
+    `apps/web/features/workbench/raw-terminal-concrete-helper-route-card-matrix.test.ts`
+  - pinned the first defended widening cut across furring, resilient stud,
+    rigid hanger, resilient-channel, and clip-plus-board cavity helper
+    variants on terminal concrete carriers
+  - kept board-only and helper-without-board concrete lower-treatment inputs
+    explicit fail-closed for field-side `Rw`
+  - updated the focused current gate with the new raw helper matrix pair
+
+- latest raw terminal-concrete helper provenance/origin guard landing on
+  `2026-04-20`:
+  - landed
+    `packages/engine/src/raw-terminal-concrete-helper-origin-matrix.test.ts`
+  - landed
+    `apps/web/features/workbench/raw-terminal-concrete-helper-output-origin-card-matrix.test.ts`
+  - pinned the same helper-family widening cut to a single defended
+    provenance surface across engine and workbench:
+    screening-owned floor ratings, mixed predicted-plus-estimated field impact,
+    no estimate family reopening, and no lower-bound fallback
+  - kept board-only and helper-without-board concrete negatives on the same
+    provenance surface while field-side `Rw` stays fail-closed
+  - updated the focused current gate with the new raw helper provenance pair
+
+- latest raw terminal-concrete helper split-topology widening landing on
+  `2026-04-20`:
+  - landed
+    `packages/engine/src/raw-terminal-concrete-helper-split-topology-matrix.test.ts`
+  - landed
+    `apps/web/features/workbench/raw-terminal-concrete-helper-split-topology-route-card-matrix.test.ts`
+  - landed
+    `packages/engine/src/raw-terminal-concrete-helper-split-topology-origin-matrix.test.ts`
+  - landed
+    `apps/web/features/workbench/raw-terminal-concrete-helper-split-topology-output-origin-card-matrix.test.ts`
+  - pinned one more defended widening cut on the same formula-owned concrete
+    lane across split full-helper, split board-fill, and split board-cavity
+    topologies
+  - kept top-finish and wall-like negatives on the same provenance surface and
+    kept the weaker steel-joist raw carrier outside the concrete impact lane
+  - updated the focused current gate with the new split-topology pair
+
+- latest raw terminal-concrete helper partial-order widening landing on
+  `2026-04-20`:
+  - landed
+    `packages/engine/src/raw-terminal-concrete-helper-partial-order-matrix.test.ts`
+  - landed
+    `apps/web/features/workbench/raw-terminal-concrete-helper-partial-order-route-card-matrix.test.ts`
+  - landed
+    `packages/engine/src/raw-terminal-concrete-helper-partial-order-origin-matrix.test.ts`
+  - landed
+    `apps/web/features/workbench/raw-terminal-concrete-helper-partial-order-output-origin-card-matrix.test.ts`
+  - pinned the remaining defended helper shapes from the raw screening support
+    baseline on the same formula-owned concrete lane:
+    board-and-cavity, board-and-fill, mixed-order, and disjoint
+    board-fill-board
+  - kept the same screening-owned rating provenance and mixed
+    predicted-plus-estimated impact continuation across engine and workbench
+  - updated the focused current gate with the new partial-order pair
+  - `pnpm calculator:gate:current`: green with focused engine `30/30` files
+    and `70/70` tests plus focused web `11/11` files and `12/12` tests
+
+- latest raw terminal-concrete helper closeout selection on `2026-04-20`:
+  - landed
+    `packages/engine/src/post-raw-terminal-concrete-helper-family-widening-next-slice-selection-contract.test.ts`
+  - closed `raw_terminal_concrete_helper_family_widening_v1`
+  - selected `clt_local_combined_interaction_evidence_v1` as the next honest
+    no-runtime slice because the raw helper support-baseline shapes are now
+    explicitly pinned and another raw-helper cut would be sprawl instead of a
+    clean ROI move
+  - kept reinforced-concrete reopening plus every closed blocked-source family
+    fail-closed after the closeout
+  - updated the focused current gate with the new raw-helper closeout
+    selection contract
+  - `pnpm calculator:gate:current`: green with focused engine `31/31` files
+    and `73/73` tests plus focused web `11/11` files and `12/12` tests
+
+- latest CLT-local combined evidence triad landing on `2026-04-20`:
+  - landed
+    `packages/engine/src/clt-local-combined-interaction-evidence-matrix.test.ts`
+  - pinned the first explicit no-runtime local CLT combined evidence triad on
+    the engine surface:
+    exact `C4c`, predictor-backed visible `C5c`, and one under-described
+    fail-closed local combined boundary
+  - kept exact provenance, predictor provenance, and screening-only
+    fail-closed posture explicit instead of reopening local combined runtime
+    widening by inertia
+  - updated the focused current gate to carry the new engine matrix and the
+    existing workbench CLT history replay guard
+  - `pnpm calculator:gate:current`: green with focused engine `35/35` files
+    and `134/134` tests plus focused web `13/13` files and `14/14` tests
+
+- latest CLT-local combined exact-anchor pack landing on `2026-04-20`:
+  - landed
+    `packages/engine/src/clt-local-combined-exact-anchor-pack.test.ts`
+  - landed
+    `apps/web/features/workbench/clt-local-combined-exact-anchor-route-card-matrix.test.ts`
+  - pinned the remaining exact local CLT combined anchors on the explicit
+    engine/workbench evidence surface:
+    `C2c`, `C3c`, and `C7c`
+  - kept those three anchors exact and kept the family split honest:
+    `C5c` stays predictor-backed and under-described direct-fixed local shapes
+    still stay fail-closed
+  - updated the focused current gate to carry the new engine/web exact-anchor
+    pair
+  - `pnpm calculator:gate:current`: green with focused engine `35/35` files
+    and `134/134` tests plus focused web `13/13` files and `14/14` tests
+
+- latest CLT-local combined closeout selection on `2026-04-20`:
+  - landed
+    `packages/engine/src/post-clt-local-combined-interaction-evidence-next-slice-selection-contract.test.ts`
+  - closed `clt_local_combined_interaction_evidence_v1`
+  - selected `reinforced_concrete_accuracy_reopen` as the next honest active
+    follow-up because the local CLT surface is now explicit and the only
+    remaining live non-blocked corridor is the bounded reinforced-concrete
+    conditional lane
+  - kept `GDMTXA04A`, `C11c`, raw bare open-box/open-web, and wall-selector
+    fail-closed after the closeout and kept raw helper closed as solved
+    evidence
+  - updated the focused current gate with the new CLT closeout selection
+    contract plus the reinforced-concrete guard pack
+  - `pnpm calculator:gate:current`: green with focused engine `42/42` files
+    and `159/159` tests plus focused web `15/15` files and `20/20` tests
+  - focused repo build: green with the known optional `sharp/@img` DOCX
+    warnings
+  - `git diff --check`: green
+
+- latest reinforced-concrete low-confidence follow-up matrix landing on
+  `2026-04-20`:
+  - landed
+    `packages/engine/src/reinforced-concrete-low-confidence-follow-up-matrix.test.ts`
+  - landed
+    `apps/web/features/workbench/reinforced-concrete-low-confidence-follow-up-route-card-matrix.test.ts`
+  - pinned one explicit reinforced-concrete follow-up surface across engine
+    and workbench:
+    explicit predictor-input low-confidence baseline, visible-derived
+    low-confidence route, expanded-board heavy bare-floor boundary, and
+    upper-only heavy-floating formula boundary
+  - kept the guarded low-confidence lane explicit:
+    nearby-row candidate ids, proxy-airborne posture, and unsupported
+    `DeltaLw` stay on the follow-up surface while the adjacent heavy bare and
+    heavy floating formula lanes stay outside it
+  - updated the focused current gate with the new reinforced engine/web matrix
+    pair
+  - `pnpm calculator:gate:current`: green with focused engine `43/43` files
+    and `164/164` tests plus focused web `16/16` files and `24/24` tests
+  - focused repo build: green with the known optional `sharp/@img` DOCX
+    warnings
+  - `git diff --check`: green
+
+- latest reinforced-concrete low-confidence provenance/origin landing on
+  `2026-04-20`:
+  - landed
+    `packages/engine/src/reinforced-concrete-low-confidence-follow-up-origin-matrix.test.ts`
+  - landed
+    `apps/web/features/workbench/reinforced-concrete-low-confidence-follow-up-provenance-matrix.test.ts`
+  - pinned the same reinforced follow-up corridor to one explicit provenance
+    split:
+    the low-confidence visible route keeps the nearby-row fallback packet,
+    while the expanded-board and upper-only boundaries stay on the heavy bare
+    / heavy floating formula evidence surfaces
+  - confirmed the workbench evidence packet is honest:
+    the visible low-confidence route now snapshots the real five-citation
+    nearby-row packet instead of a stale extra-summary citation
+  - updated the focused current gate with the new reinforced engine/web
+    provenance pair
+  - `pnpm calculator:gate:current`: green with focused engine `44/44` files
+    and `169/169` tests plus focused web `17/17` files and `28/28` tests
+  - focused repo build: green with the known optional `sharp/@img` DOCX
+    warnings
+  - `git diff --check`: green
+
+- latest reinforced-concrete diagnostics/trail surface landing on
+  `2026-04-20`:
+  - landed
+    `apps/web/features/workbench/reinforced-concrete-low-confidence-diagnostics-dossier-matrix.test.ts`
+  - landed
+    `apps/web/features/workbench/reinforced-concrete-low-confidence-consultant-trail-matrix.test.ts`
+  - pinned the same reinforced follow-up corridor on user-facing audit
+    surfaces:
+    the visible low-confidence route stays screening-only in the diagnostics
+    dossier and consultant decision trail, while expanded-board and upper-only
+    boundaries stay on scoped-formula wording
+  - confirmed the reporting split stays honest:
+    the low-confidence route carries the five-citation screening package and
+    warning-heavy delivery posture, while the adjacent formula lanes keep the
+    one-citation scoped package and distinct output-coverage tones
+  - updated the focused current gate with the new reinforced dossier/trail
+    pair
+  - `pnpm calculator:gate:current`: green with focused engine `44/44` files
+    and `169/169` tests plus focused web `19/19` files and `36/36` tests
+  - focused repo build: green with the known optional `sharp/@img` DOCX
+    warnings
+  - `git diff --check`: green
+
+- latest reinforced-concrete closeout selection on `2026-04-20`:
+  - landed
+    `packages/engine/src/post-reinforced-concrete-accuracy-reopen-next-slice-selection-contract.test.ts`
+  - closed `reinforced_concrete_accuracy_reopen`
+  - selected `dataholz_clt_calibration_tightening` as the next honest active
+    slice because the bounded reinforced low-confidence corridor is now
+    explicit and no fourth defended boundary remained inside it
+  - kept `GDMTXA04A`, `C11c`, raw bare open-box/open-web, and wall-selector
+    fail-closed after the closeout and kept raw helper plus CLT-local
+    evidence closed as solved program input
+  - updated the focused current gate with the new reinforced closeout
+    selection contract plus the Dataholz CLT source-truth/calibration pack
+  - `pnpm calculator:gate:current`: green with focused engine `47/47` files
+    and `179/179` tests plus focused web `20/20` files and `38/38` tests
+  - focused repo build: green with the known optional `sharp/@img` DOCX
+    warnings
+  - `git diff --check`: green
 
 - latest blocked-source refresh landing on `2026-04-19`:
   - landed
@@ -97,6 +332,118 @@ Planning / implementation update: `2026-04-19`
   - focused repo build: green with the known optional `sharp/@img` DOCX
     warnings
   - `git diff --check`: green
+
+- latest blocked-source refresh closeout selection on `2026-04-20`:
+  - landed
+    `packages/engine/src/post-blocked-source-backed-widening-rerank-refresh-next-slice-selection-contract.test.ts`
+  - closed `blocked_source_backed_widening_rerank_refresh_v2`
+  - selected `dataholz_gdmtxa04a_composite_surface_model_design_v1` as the
+    next honest no-runtime slice because `GDMTXA04A` stayed rank 1 after the
+    refresh and its remaining blocker is still local composite-surface design
+  - kept `GDMTXA04A`, `C11c`, raw bare open-box/open-web, and wall-selector
+    widening blocked after the closeout
+  - added the new closeout selection contract to the focused current gate
+  - `pnpm calculator:gate:current`: green with focused engine `13/13` files
+    and `37/37` tests plus focused web `5/5` files and `25/25` tests
+  - focused repo build: green with the known optional `sharp/@img` DOCX
+    warnings
+  - `git diff --check`: green
+
+- latest C11c readiness design closeout selection on `2026-04-20`:
+  - landed
+    `packages/engine/src/post-tuas-c11c-exact-import-readiness-design-next-slice-selection-contract.test.ts`
+  - closed `tuas_c11c_exact_import_readiness_design_v1`
+  - selected `raw_bare_open_box_open_web_impact_widening` as the next honest
+    no-runtime slice because the landed readiness design did not yield a
+    defended exact-import candidate for the weak weighted tuple
+  - kept `GDMTXA04A`, `C11c`, raw bare open-box/open-web, and wall-selector
+    widening blocked after the closeout
+  - added the new closeout selection contract to the focused current gate
+  - `pnpm calculator:gate:current`: green with focused engine `18/18` files
+    and `52/52` tests plus focused web `5/5` files and `25/25` tests
+  - focused repo build: green with the known optional `sharp/@img` DOCX
+    warnings
+  - `git diff --check`: green
+
+- latest raw bare family closeout selection on `2026-04-20`:
+  - landed
+    `packages/engine/src/post-raw-bare-open-box-open-web-impact-widening-next-slice-selection-contract.test.ts`
+  - closed `raw_bare_open_box_open_web_impact_widening`
+  - selected `wall_selector_behavior_widening` as the next honest no-runtime
+    slice because the landed raw blocker pack still did not yield true
+    bare-carrier impact evidence
+  - kept `GDMTXA04A`, `C11c`, raw bare open-box/open-web, and wall-selector
+    widening blocked after the closeout
+  - added the new closeout selection contract to the focused current gate
+  - `pnpm calculator:gate:current`: green with focused engine `19/19` files
+    and `55/55` tests plus focused web `5/5` files and `25/25` tests
+  - focused repo build: green with the known optional `sharp/@img` DOCX
+    warnings
+  - `git diff --check`: green
+
+- latest wall-selector closeout selection on `2026-04-20`:
+  - landed
+    `packages/engine/src/post-wall-selector-behavior-widening-next-slice-selection-contract.test.ts`
+  - closed `wall_selector_behavior_widening`
+  - selected `broad_audit_and_replanning_pass_v2` as the next honest no-runtime
+    slice because the last remaining blocked family also did not yield a fresh
+    classified wall red
+  - kept `GDMTXA04A`, `C11c`, raw bare open-box/open-web, and wall-selector
+    widening closed fail-closed after the closeout
+  - added the new closeout selection contract to the focused current gate
+  - `pnpm calculator:gate:current`: green with focused engine `20/20` files
+    and `58/58` tests plus focused web `5/5` files and `25/25` tests
+  - focused repo build: green with the known optional `sharp/@img` DOCX
+    warnings
+  - `git diff --check`: green
+
+- latest Dataholz composite-surface design landing on `2026-04-20`:
+  - landed
+    `packages/engine/src/dataholz-gdmtxa04a-composite-surface-model.ts`
+  - landed
+    `packages/engine/src/dataholz-gdmtxa04a-composite-surface-model-design.test.ts`
+  - extracted the shared `GDMTXA04A` visible proxy boundary and impact cap out
+    of `packages/engine/src/floor-system-estimate.ts`
+  - kept visible `GDMTXA04A` rows estimate-only and kept exact visible reopen
+    blocked because the design still does not yield an honest composite
+    surface equivalence
+  - added the new design contract to the focused current gate
+  - `pnpm calculator:gate:current`: green with focused engine `14/14` files
+    and `40/40` tests plus focused web `5/5` files and `25/25` tests
+  - focused repo build: green with the known optional `sharp/@img` DOCX
+    warnings
+  - `git diff --check`: green
+
+- latest C11c exact-import readiness design landing on `2026-04-20`:
+  - landed
+    `packages/engine/src/tuas-c11c-exact-import-readiness.ts`
+  - landed
+    `packages/engine/src/tuas-c11c-exact-import-readiness-design.test.ts`
+  - centralized the visible `C11c` schedule, weak weighted tuple, nearby exact
+    anchors, and exact-import prerequisites into one shared fact surface
+  - rewired the active `C11c` blocker evidence tests onto the shared fact
+    surface
+  - kept visible `C11c` rows screening-only with `Rw` support only and left
+    exact import blocked because the design still does not produce an honest
+    source-backed import rule
+  - added the new design contract to the focused current gate
+  - `pnpm calculator:gate:current`: green with focused engine `17/17` files
+    and `49/49` tests plus focused web `5/5` files and `25/25` tests
+  - focused repo build: green with the known optional `sharp/@img` DOCX
+    warnings
+  - `git diff --check`: green
+
+- latest focused gate revalidation on `2026-04-20`:
+  - reran `pnpm calculator:gate:current` after landing the first raw helper
+    widening matrix
+  - focused engine gate stayed green at `25/25` files and `65/65` tests
+  - focused web gate stayed green at `6/6` files and `7/7` tests
+  - focused repo build stayed green with the known optional `sharp/@img` DOCX
+    warnings
+  - `git diff --check`: green
+  - revalidation confirmed the active open work is now raw helper widening,
+    not another blocked-source closeout or a forced reopen
+    widening
 
 - earlier active-slice mixed floor/wall seeded-chain progress on `2026-04-19`:
   - split the requested-output partial-restore descriptor branch so broad and
@@ -585,37 +932,47 @@ Planning / implementation update: `2026-04-19`
 ## Current Answer In One Screen
 
 - latest closed implementation slice:
-  `dataholz_clt_calibration_tightening`
+  `broad_audit_and_replanning_pass_v2`
 - latest closed planning action:
-  `post_dataholz_clt_calibration_tightening_next_slice_selection_v1`
+  `post_broad_audit_and_replanning_pass_v2_next_slice_selection_v1`
 - current active next slice:
-  `blocked_source_backed_widening_rerank_v1`
+  `raw_terminal_concrete_helper_family_widening_v1`
 - current rule:
-  the requested-output harness chain stays frozen; the defended CLT
-  calibration pass is closed, and the next move is blocked-source rerank
-  selection, not another solver-side micro-pass
+  the requested-output harness chain and the full blocked-source family queue
+  stay frozen fail-closed; the first post-audit widening move is the guarded
+  raw terminal-concrete helper lane, not any blocked-family reopen
 - current explicit not-done item:
-  the blocked-source rerank pass is open; raw bare open-box/open-web,
-  `GDMTXA04A`, `C11c`, and wall-selector widening still need an explicit fresh
-  priority order before any one of them becomes the next active runtime slice
+  the selected raw helper widening slice is only partially widened so far;
+  `GDMTXA04A`, `C11c`, raw bare open-box/open-web, and wall-selector remain
+  closed fail-closed until later evidence reopens them honestly
 
 ## Current Hotspot Map
 
-- selected rerank anchors:
-  - `packages/engine/src/post-dataholz-clt-calibration-tightening-next-slice-selection-contract.test.ts`
-  - `packages/engine/src/source-gap-candidate-re-rank-contract.test.ts`
-  - `packages/engine/src/raw-bare-open-web-open-box-source-evidence-rerank-contract.test.ts`
-  - `packages/engine/src/remaining-source-gap-posture-matrix.test.ts`
-- closed CLT evidence:
-  - `packages/engine/src/dataholz-clt-calibration-tightening-audit.test.ts`
-  - `packages/engine/src/dataholz-gdmtxa04a-material-surface-recheck.test.ts`
-  - `packages/engine/src/dataholz-clt-source-truth-audit.test.ts`
-  - `packages/engine/src/floor-source-corpus-contract.test.ts`
-  - `apps/web/features/workbench/dataholz-clt-source-truth-route.test.ts`
-- closed reinforced-concrete guard evidence:
-  - `packages/engine/src/reinforced-concrete-family-formula-fit-audit.test.ts`
-  - `packages/engine/src/reinforced-concrete-formula-family-closeout-audit.test.ts`
-  - `apps/web/features/workbench/reinforced-concrete-low-confidence-proposal-honesty.test.ts`
+- selected raw helper widening anchors:
+  - `packages/engine/src/post-broad-audit-and-replanning-pass-v2-next-slice-selection-contract.test.ts`
+  - `packages/engine/src/raw-floor-screening-carrier-support.test.ts`
+  - `packages/engine/src/raw-concrete-helper-answer-guard.test.ts`
+  - `packages/engine/src/raw-terminal-concrete-helper-origin-matrix.test.ts`
+  - `packages/engine/src/raw-terminal-concrete-helper-split-topology-matrix.test.ts`
+  - `packages/engine/src/raw-terminal-concrete-helper-split-topology-origin-matrix.test.ts`
+  - `packages/engine/src/raw-floor-hostile-input-answer-matrix.test.ts`
+  - `packages/engine/src/raw-floor-safe-bare-split-parity.test.ts`
+  - `apps/web/features/workbench/raw-floor-screening-route-support.test.ts`
+  - `apps/web/features/workbench/raw-concrete-helper-route-card-guard.test.ts`
+  - `apps/web/features/workbench/raw-terminal-concrete-helper-output-origin-card-matrix.test.ts`
+  - `apps/web/features/workbench/raw-terminal-concrete-helper-split-topology-route-card-matrix.test.ts`
+  - `apps/web/features/workbench/raw-terminal-concrete-helper-split-topology-output-origin-card-matrix.test.ts`
+  - `apps/web/features/workbench/raw-floor-hostile-input-route-card-matrix.test.ts`
+  - `apps/web/features/workbench/raw-floor-safe-bare-split-parity.test.ts`
+- closed CLT-local evidence:
+  - `packages/engine/src/impact-predictor-input.test.ts`
+  - `packages/engine/src/tuas-clt-backlog-decision-contract.test.ts`
+  - `apps/web/features/workbench/clt-combined-anchor-history-replay-matrix.test.ts`
+- fail-closed blocked-source evidence:
+  - `packages/engine/src/post-dataholz-gdmtxa04a-composite-surface-model-design-next-slice-selection-contract.test.ts`
+  - `packages/engine/src/post-tuas-c11c-exact-import-readiness-design-next-slice-selection-contract.test.ts`
+  - `packages/engine/src/post-raw-bare-open-box-open-web-impact-widening-next-slice-selection-contract.test.ts`
+  - `packages/engine/src/post-wall-selector-behavior-widening-next-slice-selection-contract.test.ts`
 - focused checkpoint gate:
   `tools/dev/run-calculator-current-gate.ts`
 - source-backed rerank ledger:
@@ -628,16 +985,24 @@ The requested-output output-card harness refactor chain is now complete enough.
 Rule from this point:
 
 - do not create another requested-output harness-only micro-slice
-- only reopen that harness if the selected blocked-source rerank exposes a new
-  mixed-route red that cannot be localized otherwise
+- only reopen that harness if the active Dataholz design or a later
+  blocked-source selection exposes a new mixed-route red that cannot be
+  localized otherwise
 
 ## Immediate Candidate Posture
 
-- `blocked_source_backed_widening_rerank_v1`
-  - selected now
-
 - `dataholz_clt_calibration_tightening`
-  - closed and guarded, not selected
+  - selected now as the defended runtime tightening slice on the mass-timber
+    CLT floor lane
+
+- `reinforced_concrete_accuracy_reopen`
+  - closed as the latest explicit closeout input, not selected
+
+- `clt_local_combined_interaction_evidence_v1`
+  - closed as the latest explicit closeout input, not selected
+
+- `raw_terminal_concrete_helper_family_widening_v1`
+  - closed as solved program evidence, not selected
 
 Still blocked:
 
@@ -652,37 +1017,40 @@ Still blocked:
 
 ## Current Next Steps
 
-1. Keep the requested-output harness frozen at the current green baseline.
-2. Keep the heavy-concrete widening closed.
-   The final carpet-plus-generic-underlay probe is now a negative guard, and
-   the parity queue should stay shut unless a new proof-backed equivalence
-   appears later.
-3. Open `blocked_source_backed_widening_rerank_v1`.
-   Entry posture:
-   the defended CLT corridor is now closed, so the next honest move is a
-   no-runtime rerank of the still-blocked source-backed widening candidates.
-   Current order:
-   `GDMTXA04A`, `C11c`, raw bare open-box/open-web, wall-selector.
-4. Treat the current blocked boundaries as hard stops, not “later in the same
-   pass” items.
-   Do not reopen raw open-box/open-web, `GDMTXA04A`, `C11c`, reinforced-
-   concrete, or wall-selector work without the rerank selecting them first.
-5. Keep the closed reinforced-concrete low-confidence corridor as a guard, not
-   as a reopened target.
-6. Do not blur blocked source-anomaly candidates into the rerank or treat them
-   as implicitly reopened.
+1. Keep the broad validation baseline green while the Dataholz CLT tightening
+   slice is active.
+2. Start `dataholz_clt_calibration_tightening` from the defended source-truth
+   and calibration audits, not from a direct `GDMTXA04A` exact reopen claim.
+3. Keep `reinforced_concrete_accuracy_reopen`,
+   `clt_local_combined_interaction_evidence_v1`, and
+   `raw_terminal_concrete_helper_family_widening_v1` frozen as closed
+   evidence inputs unless a future trace exposes genuinely new defended proof.
+4. Keep `GDMTXA04A`, `C11c`, raw bare open-box/open-web, and wall-selector
+   explicitly fail-closed under the new active slice.
+5. Add or update CLT audit, provenance, and route-card guards before any
+   tightened Dataholz corridor is treated as broader or more exact.
 
 ## Priority Order From Here
 
 This is the ROI-ranked order, not just the chronological queue.
 
-1. `blocked_source_backed_widening_rerank_v1`.
-   The defended CLT corridor is now explicitly closed, so the best next return
-   is to re-rank the blocked source-backed candidates before opening another
-   runtime slice.
-   Current order:
-   `GDMTXA04A` first, `C11c` second, raw bare open-box/open-web third,
-   wall-selector fourth.
-2. The single runtime candidate selected by that rerank.
-3. Reopen reinforced-concrete or `GDMTXA04A` only if a new proof-backed
-   equivalence or material-surface rule appears.
+1. `dataholz_clt_calibration_tightening`.
+   selected now: it is the current defended runtime tightening corridor, and
+   the next honest move is to reduce remaining exact-vs-estimate slack inside
+   the already-pinned Dataholz CLT source-truth family.
+2. `reinforced_concrete_accuracy_reopen`.
+   now closed as explicit low-confidence closeout evidence: the corridor no
+   longer has a defended fourth boundary cut, so it should not be reopened by
+   inertia.
+3. `clt_local_combined_interaction_evidence_v1`.
+   now closed as explicit evidence: the exact anchors, predictor-backed proxy,
+   and under-described fail-closed boundary are all pinned on one shared local
+   surface.
+4. `raw_terminal_concrete_helper_family_widening_v1`.
+   now closed as program evidence: the terminal-concrete helper lane is
+   already live, formula-owned, and fully pinned across answer/support/
+   provenance/route-card surfaces for the current support baseline.
+5. blocked-source reopen candidates.
+   `GDMTXA04A`, `C11c`, raw bare open-box/open-web, and wall-selector stay
+   fail-closed until new evidence appears rather than because they were
+   forgotten.

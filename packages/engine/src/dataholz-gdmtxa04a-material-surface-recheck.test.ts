@@ -3,41 +3,13 @@ import { describe, expect, it } from "vitest";
 
 import { calculateAssembly } from "./calculate-assembly";
 import { calculateImpactOnly } from "./calculate-impact-only";
+import {
+  GDMTXA04A_SOURCE_FRAME,
+  GDMTXA04A_VISIBLE_SURFACE_MODEL_DECISION
+} from "./dataholz-gdmtxa04a-composite-surface-model";
 import { buildFloorTestLayersFromCriteria } from "./floor-system-test-layer-builders";
 
 const TARGET_OUTPUTS = ["Rw", "Ctr", "Ln,w", "CI", "CI,50-2500", "Ln,w+CI"] as const;
-
-const GDMTXA04A_SOURCE_FRAME = {
-  id: "gdmtxa04a-00",
-  englishComponentUrl: "https://www.dataholz.eu/en/components/intermediate-floor/detail/kz/gdmtxa04a.htm",
-  englishPdfUrl: "https://www.dataholz.eu/en/index/download/en/gdmtxa04a-0.pdf",
-  germanComponentUrl: "https://www.dataholz.eu/bauteile/geschossdecke/detail/kz/gdmtxa04a.htm",
-  sourceTopLayer: {
-    thicknessMm: 65,
-    englishWording: "m' approx. 37 kg/m2",
-    germanWording: "Trockenestrichelement (2x12.5 GF mit 40 MW), m' ca. 37 kg/m2",
-    compositeInterpretation: {
-      gypsumFiberSheetsMm: [12.5, 12.5],
-      mineralWoolCoreMm: 40
-    }
-  },
-  localCatalogSurface: {
-    materialId: "dry_floating_gypsum_fiberboard",
-    isConvenienceSurfaceForDirectOfficialIdOnly: true,
-    representsSourceCompositeSurface: false
-  }
-} as const;
-
-const GDMTXA04A_RECHECK_DECISION = {
-  exactVisibleReopenEligible: false,
-  reason: "source_surface_is_composite_dry_screed_with_mineral_wool_core_not_a_single_local_surface_material",
-  requiredEvidenceBeforeReopen: [
-    "catalog_material_or_role_for_65mm_dry_screed_element_with_2x12_5mm_gf_and_40mm_mw",
-    "source_backed_visible_match_rule_that_keeps_composite_surface_semantics"
-  ],
-  runtimeBehaviorChange: false,
-  selectedFollowUpIfEvidenceExists: "dataholz_gdmtxa04a_exact_visible_reopen_candidate_v1"
-} as const;
 
 function getGdmtxa04a() {
   const system = EXACT_FLOOR_SYSTEMS.find((candidate) => candidate.id === "dataholz_gdmtxa04a_clt_lab_2026");
@@ -67,6 +39,7 @@ describe("Dataholz GDMTXA04A material-surface recheck", () => {
       },
       localCatalogSurface: {
         materialId: "dry_floating_gypsum_fiberboard",
+        floorRole: "floor_covering",
         isConvenienceSurfaceForDirectOfficialIdOnly: true,
         representsSourceCompositeSurface: false
       }
@@ -124,9 +97,16 @@ describe("Dataholz GDMTXA04A material-surface recheck", () => {
   });
 
   it("defers exact visible reopen until the source composite surface can be modeled explicitly", () => {
-    expect(GDMTXA04A_RECHECK_DECISION).toEqual({
+    expect(GDMTXA04A_VISIBLE_SURFACE_MODEL_DECISION).toEqual({
       exactVisibleReopenEligible: false,
       reason: "source_surface_is_composite_dry_screed_with_mineral_wool_core_not_a_single_local_surface_material",
+      currentVisibleProxy: {
+        materialId: "dry_floating_gypsum_fiberboard",
+        floorRole: "floor_covering",
+        route: "predictor_mass_timber_clt_dataholz_dry_estimate",
+        sourceCandidateId: "dataholz_gdmtxa01a_clt_lab_2026",
+        representsSourceCompositeSurface: false
+      },
       requiredEvidenceBeforeReopen: [
         "catalog_material_or_role_for_65mm_dry_screed_element_with_2x12_5mm_gf_and_40mm_mw",
         "source_backed_visible_match_rule_that_keeps_composite_surface_semantics"

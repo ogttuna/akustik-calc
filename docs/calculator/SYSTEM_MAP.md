@@ -1,6 +1,6 @@
 # System Map
 
-Last reviewed: 2026-04-19
+Last reviewed: 2026-04-20
 
 Document role:
 
@@ -215,42 +215,111 @@ validation path before and after a refactor.
 
 ## Current Architectural Hotspots
 
-As of `2026-04-19`, the requested-output output-card harness chain is frozen at
-a clean green baseline. The reinforced-concrete accuracy tightening slice is
-closed. The defended Dataholz CLT calibration pass is also closed, the first
+As of `2026-04-20`, the requested-output output-card harness chain is frozen at
+a clean green baseline. The reinforced-concrete accuracy follow-up slice has
+now closed honestly after its matrix, provenance, and report surfaces landed.
+The defended Dataholz CLT calibration pass is now the active tightening slice,
+while the first
 blocked source-backed rerank is closed, and the seeded mixed floor/wall
-cross-mode chain follow-up is now closed as well. The active risk is no longer
-replay coverage drift on the defended mixed routes; it is choosing the next
-source-backed move honestly after that shared evidence pass closed without a
-fresh classified runtime red.
+cross-mode chain follow-up is now closed as well. The blocked-source refresh
+closeout is also closed. The Dataholz composite-surface design is now also
+closed fail-closed. The C11c readiness design is now landed and closed
+fail-closed. The raw bare open-box/open-web family is now also closed
+fail-closed. The wall-selector family is now also closed fail-closed. The
+raw helper lane has closed too, so the active risk is no longer raw-helper
+sprawl. The CLT-local combined evidence surface has now closed too: the exact
+anchors, the predictor-backed visible proxy, and the under-described
+fail-closed boundary are all explicit. The active risk is now letting the
+Dataholz CLT tightening slice blur from a defended exact-vs-estimate/capped-
+visible corridor into accidental `GDMTXA04A` exact reopening or blocked-family
+drift.
 
 Current hotspots:
 
 - selected closeout and follow-up anchors:
   - `packages/engine/src/post-blocked-source-backed-widening-rerank-next-slice-selection-contract.test.ts`
   - `packages/engine/src/post-mixed-floor-wall-seeded-cross-mode-chain-next-slice-selection-contract.test.ts`
+  - `packages/engine/src/post-blocked-source-backed-widening-rerank-refresh-next-slice-selection-contract.test.ts`
+  - `packages/engine/src/post-dataholz-gdmtxa04a-composite-surface-model-design-next-slice-selection-contract.test.ts`
   - `packages/engine/src/source-gap-candidate-re-rank-contract.test.ts`
   - `packages/engine/src/blocked-source-rank-1-gdmtxa04a-feasibility-contract.test.ts`
+  - `packages/engine/src/dataholz-gdmtxa04a-composite-surface-model.ts`
+  - `packages/engine/src/clt-local-combined-interaction-evidence-matrix.test.ts`
+  - `packages/engine/src/clt-local-combined-exact-anchor-pack.test.ts`
+  - `packages/engine/src/raw-terminal-concrete-helper-origin-matrix.test.ts`
+  - `packages/engine/src/raw-terminal-concrete-helper-split-topology-matrix.test.ts`
+  - `packages/engine/src/raw-terminal-concrete-helper-split-topology-origin-matrix.test.ts`
+  - `packages/engine/src/raw-terminal-concrete-helper-partial-order-matrix.test.ts`
+  - `packages/engine/src/raw-terminal-concrete-helper-partial-order-origin-matrix.test.ts`
+  - `packages/engine/src/post-raw-terminal-concrete-helper-family-widening-next-slice-selection-contract.test.ts`
+  - `packages/engine/src/post-clt-local-combined-interaction-evidence-next-slice-selection-contract.test.ts`
+  - `packages/engine/src/post-reinforced-concrete-accuracy-reopen-next-slice-selection-contract.test.ts`
+  - `packages/engine/src/tuas-clt-backlog-decision-contract.test.ts`
+  - `packages/engine/src/dataholz-clt-source-truth-audit.test.ts`
+  - `packages/engine/src/dataholz-clt-calibration-tightening-audit.test.ts`
+  - `packages/engine/src/reinforced-concrete-formula-family-closeout-audit.test.ts`
+  - `packages/engine/src/reinforced-concrete-low-confidence-follow-up-matrix.test.ts`
+  - `packages/engine/src/reinforced-concrete-low-confidence-follow-up-origin-matrix.test.ts`
+  - `packages/engine/src/reinforced-concrete-family-formula-fit-audit.test.ts`
+  - `packages/engine/src/reinforced-concrete-low-confidence-edge-continuity.test.ts`
+  - `packages/engine/src/reinforced-concrete-visible-low-confidence-edge-continuity.test.ts`
+  - `packages/engine/src/reinforced-concrete-combined-vinyl-elastic-ceiling-estimate.test.ts`
+  - `apps/web/features/workbench/raw-terminal-concrete-helper-output-origin-card-matrix.test.ts`
+  - `apps/web/features/workbench/raw-terminal-concrete-helper-split-topology-route-card-matrix.test.ts`
+  - `apps/web/features/workbench/raw-terminal-concrete-helper-split-topology-output-origin-card-matrix.test.ts`
+  - `apps/web/features/workbench/raw-terminal-concrete-helper-partial-order-route-card-matrix.test.ts`
+  - `apps/web/features/workbench/raw-terminal-concrete-helper-partial-order-output-origin-card-matrix.test.ts`
+  - `apps/web/features/workbench/clt-combined-anchor-history-replay-matrix.test.ts`
+  - `apps/web/features/workbench/clt-local-combined-exact-anchor-route-card-matrix.test.ts`
+  - `apps/web/features/workbench/reinforced-concrete-low-confidence-impact-panels.test.ts`
+  - `apps/web/features/workbench/reinforced-concrete-low-confidence-follow-up-route-card-matrix.test.ts`
+  - `apps/web/features/workbench/reinforced-concrete-low-confidence-follow-up-provenance-matrix.test.ts`
+  - `apps/web/features/workbench/reinforced-concrete-low-confidence-diagnostics-dossier-matrix.test.ts`
+  - `apps/web/features/workbench/reinforced-concrete-low-confidence-consultant-trail-matrix.test.ts`
+  - `apps/web/features/workbench/reinforced-concrete-low-confidence-proposal-honesty.test.ts`
+  - `apps/web/features/workbench/dataholz-clt-source-truth-route.test.ts`
+  - `packages/engine/src/dataholz-gdmtxa04a-composite-surface-model-design.test.ts`
+  - `packages/engine/src/dataholz-gdmtxa04a-material-surface-recheck.test.ts`
+  - `packages/engine/src/tuas-c11c-exact-import-readiness.ts`
+  - `packages/engine/src/tuas-c11c-exact-import-readiness-design.test.ts`
+  - `packages/engine/src/post-tuas-c11c-exact-import-readiness-design-next-slice-selection-contract.test.ts`
+  - `packages/engine/src/tuas-c11c-frequency-source-recheck.test.ts`
   - `packages/engine/src/blocked-source-rank-2-c11c-feasibility-contract.test.ts`
   - `packages/engine/src/blocked-source-rank-3-raw-bare-open-box-open-web-feasibility-contract.test.ts`
+  - `packages/engine/src/post-raw-bare-open-box-open-web-impact-widening-next-slice-selection-contract.test.ts`
   - `packages/engine/src/blocked-source-rank-4-wall-selector-feasibility-contract.test.ts`
-- selected mixed floor/wall evidence anchors:
-  - `packages/engine/src/mixed-floor-wall-complex-stack.test.ts`
-  - `packages/engine/src/mixed-floor-wall-generated-matrix.test.ts`
-  - `apps/web/features/workbench/mixed-study-mode-torture.test.ts`
-  - `apps/web/features/workbench/mixed-study-mode-generated-history-grid.test.ts`
-  - `apps/web/features/workbench/mixed-study-mode-generated-edit-history-matrix.test.ts`
-  - `apps/web/features/workbench/mixed-study-mode-output-card-snapshot-grid.test.ts`
+  - `packages/engine/src/post-wall-selector-behavior-widening-next-slice-selection-contract.test.ts`
+- selected broad-audit and raw-helper anchors:
+  - `packages/engine/src/post-broad-audit-and-replanning-pass-v2-next-slice-selection-contract.test.ts`
+  - `packages/engine/src/raw-floor-screening-carrier-support.test.ts`
+  - `packages/engine/src/raw-concrete-helper-answer-guard.test.ts`
+  - `packages/engine/src/raw-terminal-concrete-helper-widening-matrix.test.ts`
+  - `packages/engine/src/raw-floor-hostile-input-answer-matrix.test.ts`
+  - `packages/engine/src/raw-floor-safe-bare-split-parity.test.ts`
+  - `packages/engine/src/output-origin-trace-matrix.test.ts`
+  - `apps/web/features/workbench/raw-floor-screening-route-support.test.ts`
+  - `apps/web/features/workbench/raw-concrete-helper-route-card-guard.test.ts`
+  - `apps/web/features/workbench/raw-terminal-concrete-helper-route-card-matrix.test.ts`
+  - `apps/web/features/workbench/raw-floor-hostile-input-route-card-matrix.test.ts`
+  - `apps/web/features/workbench/raw-floor-safe-bare-split-parity.test.ts`
 - focused gate entrypoint:
   `tools/dev/run-calculator-current-gate.ts`
 - source-backed widening ledger:
   `docs/calculator/SOURCE_GAP_LEDGER.md`
 
-The current selected next slice exists to refresh blocked source-backed
-candidate order honestly after the seeded mixed floor/wall boundary-route pack
-closed cleanly, while keeping `GDMTXA04A`, `C11c`, raw open-box/open-web,
-reinforced-concrete reopening, and wall-selector behavior blocked until a
-fresh classified red proves otherwise.
+The current selected next slice no longer exists to close another blocked
+source-backed family. That wall-selector closeout is now landed and fail-closed
+as well, the broad audit already selected the raw helper lane, the raw helper
+slice closed, the CLT-local evidence slice then closed too, and the reinforced
+low-confidence follow-up has now closed as well.
+The active system risk is now keeping the Dataholz CLT tightening corridor
+bounded by its defended source-truth and calibration surfaces without
+pretending that visible `GDMTXA04A` rows have become direct exact matches, or
+that any blocked-source family has silently reopened.
+Dataholz CLT tightening is now the only still-live non-blocked defended
+runtime corridor. The closed reinforced, `GDMTXA04A`, `C11c`, raw bare, and
+wall-selector families all stay explicit closeout evidence rather than active
+runtime work while the Dataholz slice is active.
 
 ## What This System Is Not Yet
 
@@ -272,4 +341,4 @@ To avoid docs drift, be explicit about current non-features:
 - Want answer-origin or support semantics:
   read [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
 - Want the last clean resume point:
-  read [CHECKPOINT_2026-04-18_BLOCKED_SOURCE_RERANK_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-18_BLOCKED_SOURCE_RERANK_CLOSEOUT_HANDOFF.md)
+  read [CHECKPOINT_2026-04-19_MIXED_FLOOR_WALL_SEEDED_CHAIN_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-19_MIXED_FLOOR_WALL_SEEDED_CHAIN_CLOSEOUT_HANDOFF.md)

@@ -12,6 +12,10 @@ import { getFloorSystemCompanionSemantic } from "@dynecho/shared";
 
 import { hasInvalidExplicitFloorBaseStructure } from "./floor-base-structure-eligibility";
 import {
+  GDMTXA04A_VISIBLE_ESTIMATE_IMPACT_CAP,
+  isDataholzGdmtxa04aVisibleEstimateBoundary
+} from "./dataholz-gdmtxa04a-composite-surface-model";
+import {
   collectCeilingBoardTopologyConflict,
   collectSingleEntryRoleConflicts,
   type CeilingBoardTopologyConflict,
@@ -41,12 +45,6 @@ type FloorProfile = "bare" | "combined" | "heavy_floating" | "lower_only" | "upp
 
 const UPPER_ROLES: FloorRole[] = ["floating_screed", "floor_covering", "resilient_layer", "upper_fill"];
 const LOWER_ROLES: FloorRole[] = ["ceiling_board", "ceiling_cavity", "ceiling_fill"];
-const DATAHOLZ_GDMTXA04A_CALIBRATION_IMPACT = {
-  CI: 4,
-  CI50_2500: 9,
-  LnW: 49,
-  LnWPlusCI: 53
-} as const;
 
 function structuralFamilyFromMaterialIds(materialIds: readonly string[]): StructuralFamily {
   if (
@@ -220,47 +218,6 @@ function hasVisibleLowerTreatmentWithoutCavity(layers: readonly ResolvedLayer[])
   return hasLowerBoardOrFill && !hasCeilingCavity;
 }
 
-function isDataholzGdmtxa04aVisibleCalibrationBoundary(
-  layers: readonly ResolvedLayer[],
-  basis: ImpactCalculation["basis"],
-  sources: readonly FloorSystemRecommendation[]
-): boolean {
-  if (
-    basis !== "predictor_mass_timber_clt_dataholz_dry_estimate" ||
-    sources.length !== 1 ||
-    sources[0]?.system.id !== "dataholz_gdmtxa01a_clt_lab_2026"
-  ) {
-    return false;
-  }
-
-  const baseStructure = layers.find((layer) => layer.floorRole === "base_structure");
-  const floorCovering = layers.find((layer) => layer.floorRole === "floor_covering");
-  const upperFill = layers.find((layer) => layer.floorRole === "upper_fill");
-  const ceilingBoards = layers.filter((layer) => layer.floorRole === "ceiling_board");
-  const ceilingCavity = layers.find((layer) => layer.floorRole === "ceiling_cavity");
-  const ceilingFill = layers.find((layer) => layer.floorRole === "ceiling_fill");
-  const resilientLayer = layers.find((layer) => layer.floorRole === "resilient_layer");
-  const floatingScreed = layers.find((layer) => layer.floorRole === "floating_screed");
-
-  return (
-    baseStructure?.material.id === "clt_panel" &&
-    thicknessNear(baseStructure.thicknessMm, 160, 12) &&
-    floorCovering?.material.id === "dry_floating_gypsum_fiberboard" &&
-    thicknessNear(floorCovering.thicknessMm, 65, 8) &&
-    (upperFill?.material.id === "non_bonded_chippings" || upperFill?.material.id === "bonded_chippings") &&
-    thicknessNear(upperFill.thicknessMm, 60, 8) &&
-    !resilientLayer &&
-    !floatingScreed &&
-    ceilingBoards.length === 1 &&
-    ceilingBoards[0]?.material.id === "gypsum_board" &&
-    thicknessNear(ceilingBoards[0]?.thicknessMm, 12.5, 3) &&
-    ceilingCavity?.material.id === "acoustic_hanger_ceiling" &&
-    thicknessNear(ceilingCavity.thicknessMm, 70, 30) &&
-    ceilingFill?.material.id === "rockwool" &&
-    thicknessNear(ceilingFill.thicknessMm, 50, 30)
-  );
-}
-
 function calibrateMassTimberImpactEstimate(input: {
   basis: ImpactCalculation["basis"];
   ci: number | undefined;
@@ -276,7 +233,7 @@ function calibrateMassTimberImpactEstimate(input: {
   lnWPlusCI: number | undefined;
   notes: string[];
 } {
-  if (!input.layers || !isDataholzGdmtxa04aVisibleCalibrationBoundary(input.layers, input.basis, input.sources)) {
+  if (!input.layers || !isDataholzGdmtxa04aVisibleEstimateBoundary(input.layers, input.basis, input.sources)) {
     return {
       ci: input.ci,
       ci50_2500: input.ci50_2500,
@@ -290,15 +247,18 @@ function calibrateMassTimberImpactEstimate(input: {
   // not let that nearby-row estimate outrun the direct official exact row on
   // impact while the composite dry-screed surface remains unmodeled.
   return {
-    ci: Math.max(input.ci ?? DATAHOLZ_GDMTXA04A_CALIBRATION_IMPACT.CI, DATAHOLZ_GDMTXA04A_CALIBRATION_IMPACT.CI),
+    ci: Math.max(input.ci ?? GDMTXA04A_VISIBLE_ESTIMATE_IMPACT_CAP.CI, GDMTXA04A_VISIBLE_ESTIMATE_IMPACT_CAP.CI),
     ci50_2500: Math.max(
-      input.ci50_2500 ?? DATAHOLZ_GDMTXA04A_CALIBRATION_IMPACT.CI50_2500,
-      DATAHOLZ_GDMTXA04A_CALIBRATION_IMPACT.CI50_2500
+      input.ci50_2500 ?? GDMTXA04A_VISIBLE_ESTIMATE_IMPACT_CAP.CI50_2500,
+      GDMTXA04A_VISIBLE_ESTIMATE_IMPACT_CAP.CI50_2500
     ),
-    lnW: Math.max(input.lnW ?? DATAHOLZ_GDMTXA04A_CALIBRATION_IMPACT.LnW, DATAHOLZ_GDMTXA04A_CALIBRATION_IMPACT.LnW),
+    lnW: Math.max(
+      input.lnW ?? GDMTXA04A_VISIBLE_ESTIMATE_IMPACT_CAP.LnW,
+      GDMTXA04A_VISIBLE_ESTIMATE_IMPACT_CAP.LnW
+    ),
     lnWPlusCI: Math.max(
-      input.lnWPlusCI ?? DATAHOLZ_GDMTXA04A_CALIBRATION_IMPACT.LnWPlusCI,
-      DATAHOLZ_GDMTXA04A_CALIBRATION_IMPACT.LnWPlusCI
+      input.lnWPlusCI ?? GDMTXA04A_VISIBLE_ESTIMATE_IMPACT_CAP.LnWPlusCI,
+      GDMTXA04A_VISIBLE_ESTIMATE_IMPACT_CAP.LnWPlusCI
     ),
     notes: [
       "The GDMTXA04A-like composite dry-screed boundary stayed on the estimate lane, and its impact outputs plus the low-frequency CI,50-2500 companion were capped against the direct official exact row to avoid optimistic drift."

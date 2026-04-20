@@ -2,6 +2,7 @@ import type { LayerInput, RequestedOutputId } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
 import { calculateAssembly } from "./calculate-assembly";
+import { TUAS_C11C_COMBINED_WET_SOURCE_LAYERS } from "./tuas-c11c-exact-import-readiness";
 
 type SourceGapSnapshot = {
   candidateIds: readonly string[] | null;
@@ -54,19 +55,6 @@ const IMPACT_FIELD_CONTEXT = {
   receivingRoomVolumeM3: 55
 };
 
-const C11C_COMBINED_WET_SOURCE_LAYERS: readonly LayerInput[] = [
-  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
-  { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 13 },
-  { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 100 },
-  { floorRole: "ceiling_cavity", materialId: "acoustic_hanger_ceiling", thicknessMm: 70 },
-  { floorRole: "floor_covering", materialId: "laminate_flooring", thicknessMm: 8 },
-  { floorRole: "resilient_layer", materialId: "eps_underlay", thicknessMm: 3 },
-  { floorRole: "upper_fill", materialId: "glasswool_board", thicknessMm: 30 },
-  { floorRole: "floating_screed", materialId: "geotextile", thicknessMm: 1 },
-  { floorRole: "floating_screed", materialId: "screed", thicknessMm: 40 },
-  { floorRole: "base_structure", materialId: "clt_panel", thicknessMm: 260 }
-];
-
 const DATAHOLZ_GDMTXA04A_VISIBLE_LAYERS: readonly LayerInput[] = [
   { floorRole: "ceiling_board", materialId: "gypsum_board", thicknessMm: 12.5 },
   { floorRole: "ceiling_fill", materialId: "rockwool", thicknessMm: 50 },
@@ -89,7 +77,7 @@ const FAIL_CLOSED_IMPACT_UNSUPPORTED: readonly RequestedOutputId[] = [
 const CASES: readonly SourceGapCase[] = [
   {
     id: "tuas C11c wet stack remains deferred and impact-fail-closed",
-    layers: C11C_COMBINED_WET_SOURCE_LAYERS,
+    layers: TUAS_C11C_COMBINED_WET_SOURCE_LAYERS,
     expected: {
       candidateIds: null,
       ci50_2500: null,
