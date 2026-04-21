@@ -32,6 +32,7 @@ import {
   getDelegateLabel,
   interpolateLinear,
   interpolateRwSeries,
+  normalizeBoundarySignal,
   octaveBandWindowWeight,
   octaveGaussianDip,
   shiftCurve,
@@ -695,14 +696,6 @@ function summarizeMultileafOrderSensitivity(
     innerLeafCount: innerLeaves.length,
     lightInnerLeaf
   };
-}
-
-function normalizeBoundarySignal(value: number, start: number, end: number): number {
-  if (!(Number.isFinite(value) && Number.isFinite(start) && Number.isFinite(end)) || end <= start) {
-    return 0;
-  }
-
-  return clamp((value - start) / (end - start), 0, 1);
 }
 
 function summarizeFamilyDecisionBoundary(

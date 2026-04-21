@@ -166,6 +166,20 @@ export function octaveBandWindowWeight(
   return clamp(Math.min(left, right), 0, 1);
 }
 
+// Map a raw signal onto [0, 1] via a two-sided linear ramp between
+// `start` and `end`. Returns 0 for malformed inputs or reversed
+// ranges so callers do not need to defend against NaN / Infinity
+// propagation. The family-decision-boundary summarizer composes
+// several of these to blend heavy / light / asymmetric signals
+// into a single class assignment.
+export function normalizeBoundarySignal(value: number, start: number, end: number): number {
+  if (!(Number.isFinite(value) && Number.isFinite(start) && Number.isFinite(end)) || end <= start) {
+    return 0;
+  }
+
+  return clamp((value - start) / (end - start), 0, 1);
+}
+
 export function octaveGaussianDip(
   freqHz: number,
   centerHz: number,
