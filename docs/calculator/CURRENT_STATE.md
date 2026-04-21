@@ -34,26 +34,71 @@ Last focused gate revalidation: `2026-04-20`
 
 Planning / implementation update: `2026-04-20`
 
+## For The Next Agent — Resume Here
+
+1. This file: the current snapshot (what just closed, what is selected,
+   what is frozen). Read top-to-bottom.
+2. [MASTER_PLAN.md](./MASTER_PLAN.md) — why the current slice is the
+   current slice and the next ten strategic moves.
+3. [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md) §Now
+   and §Selected Next Slice — the tactical detail for the active slice.
+4. Run `pnpm calculator:gate:current` to confirm green baseline.
+5. Start the active slice.
+
+If the three docs disagree, stop and fix the drift before starting work.
+That is how the 2026-04-20 doc-drift problem (captured in
+[SYSTEM_AUDIT_2026-04-20.md](./SYSTEM_AUDIT_2026-04-20.md)) stays fixed.
+
 ## Operator Snapshot
 
 - active slice:
-  `dataholz_clt_calibration_tightening`
+  `wall_reorder_output_set_consistency_v1` (selected and not started)
+- latest closed implementation slice:
+  `wall_preset_expansion_v1` (closed `2026-04-20` on
+  `packages/engine/src/post-wall-preset-expansion-v1-next-slice-selection-contract.test.ts`)
+- prior closed implementation slice:
+  `dataholz_clt_calibration_tightening` (second pass, closed `2026-04-20` on
+  `packages/engine/src/post-dataholz-clt-calibration-tightening-second-pass-next-slice-selection-contract.test.ts`)
+- closeout cut landed in wall_preset_expansion_v1:
+  three new wall presets landed on the workbench with benchmark-backed
+  material stacks and pinned canonical Rw values under lab/field/building
+  contexts
+  - `aac_single_leaf_wall` (Ytong D700 150 mm + 10 mm cement plaster both sides, Rw=45)
+  - `masonry_brick_wall` (Wienerberger Porotherm 100 mm + 13 mm dense plaster both sides, Rw=47)
+  - `clt_wall` (140 mm CLT + 12.5 mm gypsum board both sides, Rw=40)
+  - evidence files:
+    - `apps/web/features/workbench/preset-definitions.ts`
+    - `apps/web/features/workbench/wall-full-preset-contract-matrix.test.ts`
+    - `apps/web/features/workbench/wall-preset-expansion-benchmarks.test.ts`
+- closeout cut landed in CLT second pass:
+  workbench consultant-trail and diagnostics-dossier matrices for the CLT
+  visible estimate route, mirroring the reinforced-concrete low-confidence
+  discipline on the estimate-side mass-timber corridor
+  - `apps/web/features/workbench/clt-visible-estimate-consultant-trail-matrix.test.ts`
+  - `apps/web/features/workbench/clt-visible-estimate-diagnostics-dossier-matrix.test.ts`
 - current broad-pass conclusion:
-  the Dataholz design, the `C11c` readiness design, the raw bare family, and
-  the wall-selector family all closed fail-closed, the broad audit/replanning
-  pass reran the full validation baseline, the raw helper corridor then closed
-  cleanly, the CLT-local evidence slice also closed cleanly, the bounded
-  reinforced-concrete follow-up then closed honestly, and the next active
-  slice is now the defended Dataholz CLT calibration tightening corridor
+  every upstream closeout remains frozen (reinforced-concrete follow-up,
+  raw terminal-concrete helper, CLT-local combined evidence, broad audit,
+  blocked-source refresh); the CLT second-pass closeout landed the visible
+  estimate consultant-trail and diagnostics-dossier surfaces; the wall
+  preset expansion slice then landed three benchmark-backed wall presets
+  (AAC single-leaf, masonry brick, CLT wall) with canonical Rw values
+  pinned; the probe that preceded the preset slice surfaced a
+  reorder/C-availability inconsistency on asymmetric light-heavy stacks,
+  which is now the selected next active runtime tightening slice
 - immediate next decision:
-  keep the reinforced, raw-helper, and CLT-local closeouts frozen, use the
-  landed Dataholz source-truth plus calibration audits as the new floor, then
-  decide whether Dataholz CLT yields one more defended tightening cut or this
-  slice also closes cleanly
+  investigate and fix `wall_reorder_output_set_consistency_v1`: the same
+  four-layer stack `[gypsum 12.5, rockwool 50, air_gap 50, concrete 150]`
+  and its reverse produce identical Rw=54 but different supported output
+  sets (C missing vs C live). Root-cause inside the engine airborne C
+  derivation path (`dynamic-airborne.ts` or `estimate-rw.ts`), pin the fix
+  with a wall reorder invariance test matrix, and keep every other wall
+  corridor guard test green through the change
 - first implementation question now:
-  after the source-truth audit, calibration audit, and workbench source-truth
-  route, which remaining Dataholz exact-vs-estimate or capped-visible slack is
-  still defendable without reopening `GDMTXA04A` visible exact matching
+  where exactly in the engine is the RwC value becoming order-sensitive on
+  asymmetric stacks while Rw itself stays order-invariant, and is the fix
+  a single derivation adjustment or does it require a broader family
+  classification refactor inside `dynamic-airborne.ts`
 - selected route family:
   `mass_timber_clt_floor_lane`
 - selected output surface:
@@ -91,6 +136,27 @@ Planning / implementation update: `2026-04-20`
     warnings
   - the full green pass confirmed the broad audit could select a defended live
     corridor without reopening any blocked runtime candidate by inertia
+
+- CLT second-pass closeout + timeout defense on `2026-04-20`:
+  - landed
+    `apps/web/features/workbench/clt-visible-estimate-consultant-trail-matrix.test.ts`
+  - landed
+    `apps/web/features/workbench/clt-visible-estimate-diagnostics-dossier-matrix.test.ts`
+  - landed
+    `packages/engine/src/post-dataholz-clt-calibration-tightening-second-pass-next-slice-selection-contract.test.ts`
+  - added both new web files and the new engine closeout contract to the
+    focused current gate
+  - raised `ROUTE_DEEP_HYBRID_TIMEOUT_MS` from `40_000` to `150_000` in
+    `apps/web/features/workbench/dynamic-route-deep-hybrid-test-helpers.ts`
+    after the 04-20 broad check caught the CPU-heavy scan test clocking
+    ~40.04s under `pnpm check` parallel load with zero headroom against
+    the prior 40s ceiling; new ceiling matches the existing swap cohort
+    ceiling and keeps both deep-hybrid cohorts at the same generous limit
+  - `pnpm calculator:gate:current`: green with the CLT second-pass cut
+    plus the raised timeout
+  - the second-pass cut pulled the CLT visible estimate route onto the
+    same scoped-estimate posture discipline that reinforced-concrete
+    low-confidence already enjoys, without any engine runtime change
 
 - latest checkpoint review on `2026-04-20`:
   - reread `NEXT_IMPLEMENTATION_PLAN.md`,

@@ -4,17 +4,34 @@ Use this folder for the current acoustic-calculator and workbench behavior.
 
 This is the primary living doc set for dynamic calculator work. Read these files before using anything under `docs/archive`.
 
-If the question is “what is still open and what executes next?”, start with
-[NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md), then
-[CURRENT_STATE.md](./CURRENT_STATE.md), then the latest committed checkpoint.
+## Agent Resume Triangle
 
-## New Agent Fast Start
+Three docs, in order. If any disagree with the others, stop and resolve
+the drift before starting work.
 
-1. Read [CHECKPOINT_2026-04-19_MIXED_FLOOR_WALL_SEEDED_CHAIN_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-19_MIXED_FLOOR_WALL_SEEDED_CHAIN_CLOSEOUT_HANDOFF.md).
-2. Read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md).
-3. Run `pnpm calculator:gate:current`.
-4. If green, keep the closed blocked-source family chain fail-closed and work
-   only inside the selected Dataholz CLT calibration tightening corridor.
+1. [CURRENT_STATE.md](./CURRENT_STATE.md) — snapshot (what just closed,
+   what is selected, what is frozen).
+2. [MASTER_PLAN.md](./MASTER_PLAN.md) — strategic roadmap (why the
+   current slice is the current slice, and the next ten moves).
+3. [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md) §Now and
+   §Selected Next Slice — tactical detail for the active slice.
+
+Then run `pnpm calculator:gate:current` to confirm green baseline and
+start the active slice.
+
+## Supporting Docs
+
+- [SYSTEM_AUDIT_2026-04-20.md](./SYSTEM_AUDIT_2026-04-20.md) — audit
+  findings and priority analysis feeding the master plan.
+- [WALL_COVERAGE_EXPANSION_PLAN.md](./WALL_COVERAGE_EXPANSION_PLAN.md) —
+  wall program tracked across master plan steps 2-6.
+- [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md) — source-backed and
+  deferred families ledger.
+- [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
+  — answer-origin meaning and evidence-tier composition.
+- [SYSTEM_MAP.md](./SYSTEM_MAP.md) — end-to-end runtime boundaries.
+- [CHECKPOINT_2026-04-19_MIXED_FLOOR_WALL_SEEDED_CHAIN_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-19_MIXED_FLOOR_WALL_SEEDED_CHAIN_CLOSEOUT_HANDOFF.md)
+  — most recent historical checkpoint handoff.
 
 ## Current Execution Snapshot
 

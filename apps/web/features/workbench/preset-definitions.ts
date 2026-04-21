@@ -3,6 +3,9 @@ import type { FloorRole } from "@dynecho/shared";
 export type StudyMode = "wall" | "floor";
 export type PresetId =
   | "concrete_wall"
+  | "aac_single_leaf_wall"
+  | "masonry_brick_wall"
+  | "clt_wall"
   | "clt_floor"
   | "heavy_concrete_impact_floor"
   | "dataholz_timber_frame_exact"
@@ -59,6 +62,45 @@ export const WORKBENCH_PRESETS: readonly PresetDefinition[] = [
       { materialId: "rockwool", thicknessMm: "50" },
       { materialId: "air_gap", thicknessMm: "50" },
       { materialId: "concrete", thicknessMm: "100" }
+    ]
+  },
+  {
+    id: "aac_single_leaf_wall",
+    label: "AAC Wall",
+    note: "Ytong D700 150 mm + 10 mm plaster both sides",
+    summary:
+      "Single-leaf AAC wall benchmarked against the Xella Ytong D700 150 mm reference (Rw ~47 dB). Demonstrates the masonry family lane on a mass-dominated single-leaf topology.",
+    studyMode: "wall",
+    rows: [
+      { materialId: "cement_plaster", thicknessMm: "10" },
+      { materialId: "ytong_aac_d700", thicknessMm: "150" },
+      { materialId: "cement_plaster", thicknessMm: "10" }
+    ]
+  },
+  {
+    id: "masonry_brick_wall",
+    label: "Masonry Wall",
+    note: "Porotherm 100 mm brick + 13 mm dense plaster both sides",
+    summary:
+      "Single-leaf clay brick wall benchmarked against the Wienerberger Porotherm reference (Rw ~43 dB). Demonstrates the clay-masonry family lane against a hollow-block core.",
+    studyMode: "wall",
+    rows: [
+      { materialId: "dense_plaster", thicknessMm: "13" },
+      { materialId: "porotherm_pls_100", thicknessMm: "100" },
+      { materialId: "dense_plaster", thicknessMm: "13" }
+    ]
+  },
+  {
+    id: "clt_wall",
+    label: "CLT Wall",
+    note: "140 mm cross-laminated timber + gypsum lining",
+    summary:
+      "Mass-timber wall composed of a 140 mm CLT panel with 12.5 mm gypsum board lining on both sides. Demonstrates the CLT mass-timber family lane on a symmetric lightweight-mass stack.",
+    studyMode: "wall",
+    rows: [
+      { materialId: "gypsum_board", thicknessMm: "12.5" },
+      { materialId: "clt_panel", thicknessMm: "140" },
+      { materialId: "gypsum_board", thicknessMm: "12.5" }
     ]
   },
   {

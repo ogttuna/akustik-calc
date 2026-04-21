@@ -17,11 +17,18 @@ Project status:
 - The web app now has auth-gated workbench flows and proposal PDF/DOCX export.
 - No code should be copied from `Acoustic2` until the import policy in [`docs/foundation/SOURCE_REPO_POLICY.md`](./docs/foundation/SOURCE_REPO_POLICY.md) is followed.
 
-Primary documents:
+Primary documents (agent resume triangle):
 
-- [`docs/calculator/CHECKPOINT_2026-04-14_FORMULA_PROVENANCE_DOSSIER_HANDOFF.md`](./docs/calculator/CHECKPOINT_2026-04-14_FORMULA_PROVENANCE_DOSSIER_HANDOFF.md)
-- [`docs/calculator/CURRENT_STATE.md`](./docs/calculator/CURRENT_STATE.md)
-- [`docs/README.md`](./docs/README.md)
+- [`docs/calculator/CURRENT_STATE.md`](./docs/calculator/CURRENT_STATE.md) — current snapshot
+- [`docs/calculator/MASTER_PLAN.md`](./docs/calculator/MASTER_PLAN.md) — strategic roadmap + next ten moves
+- [`docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`](./docs/calculator/NEXT_IMPLEMENTATION_PLAN.md) — tactical slice detail
+
+Supporting documents:
+
+- [`docs/calculator/WALL_COVERAGE_EXPANSION_PLAN.md`](./docs/calculator/WALL_COVERAGE_EXPANSION_PLAN.md) — wall program (master-plan steps 2-6)
+- [`docs/calculator/SYSTEM_AUDIT_2026-04-20.md`](./docs/calculator/SYSTEM_AUDIT_2026-04-20.md) — latest broad audit findings + priority analysis
+- [`docs/calculator/CHECKPOINT_2026-04-19_MIXED_FLOOR_WALL_SEEDED_CHAIN_CLOSEOUT_HANDOFF.md`](./docs/calculator/CHECKPOINT_2026-04-19_MIXED_FLOOR_WALL_SEEDED_CHAIN_CLOSEOUT_HANDOFF.md) — most recent historical checkpoint handoff
+- [`docs/README.md`](./docs/README.md) — docs hierarchy entry point
 - [`docs/foundation/PROJECT_PLAN.md`](./docs/foundation/PROJECT_PLAN.md)
 - [`docs/foundation/SOURCE_REPO_POLICY.md`](./docs/foundation/SOURCE_REPO_POLICY.md)
 

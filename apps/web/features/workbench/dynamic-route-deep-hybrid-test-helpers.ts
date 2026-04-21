@@ -13,9 +13,14 @@ export const BUILDING_CONTEXT: AirborneContext = {
 
 export const FIELD_TRACE_OUTPUTS: readonly RequestedOutputId[] = ["DnT,w"];
 // These workbench route scans are CPU-heavy and can drift upward materially under
-// full-suite load, so the swap-specific timeout keeps extra headroom for the
-// slowest cohorts instead of turning broad validation red on pure throughput.
-export const ROUTE_DEEP_HYBRID_TIMEOUT_MS = 40_000;
+// full-suite load. Both scan and swap cohorts are pinned at the same generous
+// ceiling so broad validation stays green on pure throughput instead of turning
+// red at a tight per-test timeout that is sensitive to parallel CPU contention.
+// The scan timeout was raised from 40_000 on 2026-04-20 after isolation
+// reproductions clocked at ~40.04s under `pnpm check` load on a multi-core
+// workstation; the prior 40s ceiling left zero headroom and flipped red when
+// the broad gate was otherwise green.
+export const ROUTE_DEEP_HYBRID_TIMEOUT_MS = 150_000;
 export const ROUTE_DEEP_HYBRID_SWAP_TIMEOUT_MS = 150_000;
 export const ROUTE_DEEP_HYBRID_RUNNER_YIELD_INTERVAL = 50;
 

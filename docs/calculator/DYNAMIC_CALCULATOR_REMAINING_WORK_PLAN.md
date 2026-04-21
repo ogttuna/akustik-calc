@@ -1,6 +1,6 @@
 # Dynamic Calculator Remaining Work Plan
 
-Last reviewed: 2026-04-15
+Last reviewed: 2026-04-20
 
 Document role:
 
@@ -17,9 +17,17 @@ Document role:
 Current authority note:
 
 - [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md) is the
-  authoritative immediate next-step file as of `2026-04-15`
+  authoritative immediate next-step file as of `2026-04-20`
 - this document remains the long-form remaining-work ledger across floor and
   wall and can include older closed-slice context below
+- for posture after `2026-04-15`, also consult the post-2026-04-15 checkpoint
+  chain ending at
+  [CHECKPOINT_2026-04-19_MIXED_FLOOR_WALL_SEEDED_CHAIN_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-19_MIXED_FLOOR_WALL_SEEDED_CHAIN_CLOSEOUT_HANDOFF.md)
+  and the active Dataholz CLT calibration tightening slice recorded in
+  [CURRENT_STATE.md](./CURRENT_STATE.md); the detailed ledger sections below
+  have not been rewritten to reflect those closeouts, so treat
+  `NEXT_IMPLEMENTATION_PLAN.md` and `CURRENT_STATE.md` as source of truth when
+  they disagree with any pre-`2026-04-15` item here
 
 ## 1. Non-Regressive Rules
 

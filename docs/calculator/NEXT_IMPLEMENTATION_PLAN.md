@@ -1,6 +1,20 @@
 # Next Implementation Plan
 
-Last reviewed: 2026-04-20
+Last reviewed: 2026-04-21
+
+Read this file for the tactical detail of the active slice. For the
+strategic picture (what the next ten moves are and why), read
+[MASTER_PLAN.md](./MASTER_PLAN.md). For the current snapshot (what just
+closed, what is selected), read [CURRENT_STATE.md](./CURRENT_STATE.md).
+
+These three docs are the agent resume triangle; if they disagree, the
+disagreement is the first thing to fix.
+
+## Resume Triangle
+
+- [CURRENT_STATE.md](./CURRENT_STATE.md) — snapshot
+- [MASTER_PLAN.md](./MASTER_PLAN.md) — strategic roadmap and next ten moves
+- this file — tactical slice detail
 
 Document role:
 
@@ -60,11 +74,18 @@ Use this section first when deciding what to do next.
 ### Now
 
 - active slice:
-  `dataholz_clt_calibration_tightening`
+  `wall_reorder_output_set_consistency_v1` (selected and not started)
+- latest closed implementation slice:
+  `wall_preset_expansion_v1` (closed `2026-04-20` on
+  `packages/engine/src/post-wall-preset-expansion-v1-next-slice-selection-contract.test.ts`)
 - current highest-ROI task:
-  tighten the defended Dataholz CLT exact-vs-estimate corridor from the
-  already-landed source-truth and calibration audits instead of drifting back
-  into reinforced-concrete micro-passes or any closed blocked-source family
+  root-cause and fix the asymmetric-stack reorder inconsistency where the
+  same four-layer light-heavy wall produces identical Rw but different C
+  availability on order reversal. Engine investigation path:
+  `packages/engine/src/dynamic-airborne.ts` RwC derivation and
+  `packages/engine/src/estimate-rw.ts`. Pin the fix with a reorder
+  invariance matrix that asserts supported output sets stay identical
+  across physically-equivalent stack orderings.
 - latest checkpoint review on `2026-04-20`:
   reread the living plan/state/handoff set against the active Dataholz CLT
   audit and route tests, reran the focused gate plus the broad `pnpm check`
@@ -1028,133 +1049,175 @@ Heavy-concrete closeout result:
 ## Current Position
 
 - latest committed checkpoint:
-  `CHECKPOINT_2026-04-17_DATAHOLZ_CLT_CALIBRATION_TIGHTENING_CLOSEOUT_HANDOFF.md`
+  `CHECKPOINT_2026-04-19_MIXED_FLOOR_WALL_SEEDED_CHAIN_CLOSEOUT_HANDOFF.md`
 - latest closed implementation slice:
-  `dataholz_clt_calibration_tightening`
+  `wall_preset_expansion_v1`
 - closed planning action in this pass:
-  `post_dataholz_clt_calibration_tightening_next_slice_selection_v1`
+  `post_wall_preset_expansion_v1_next_slice_selection_v1`
+- preset-expansion cut landed:
+  three new benchmark-backed wall presets (`aac_single_leaf_wall`,
+  `masonry_brick_wall`, `clt_wall`) pinned canonical Rw values under lab /
+  field / building contexts with no engine runtime change; the previous
+  `concrete_wall` preset now shares the preset surface with three
+  additional defendable wall types
 - selected next implementation slice:
-  `blocked_source_backed_widening_rerank_v1`
+  `wall_reorder_output_set_consistency_v1`
 - slice type:
-  no-runtime ROI rerank over the still-blocked source-backed widening families
+  runtime tightening on the engine airborne C derivation to make the
+  supported output set order-invariant on physically-equivalent asymmetric
+  light-heavy wall stacks
 - implementation status:
-  selected and not started; the defended CLT tightening is now closed, and the
-  next honest move is to rerank the blocked candidates before selecting
-  another runtime change
+  selected and not started; the preset expansion surfaced a real but
+  deferred bug — same four materials in reversed order give identical Rw
+  but different `supportedOutputs` (C missing vs C live). Investigation
+  anchors: `dynamic-airborne.ts`, `estimate-rw.ts`. User-trust
+  implication: moving a layer in the workbench UI should not change which
+  outputs the user sees.
 - explicit not-done item at this checkpoint:
-  the blocked-source rerank is open; raw bare open-box/open-web,
-  `GDMTXA04A`, `C11c`, and wall-selector widening still need an explicit fresh
-  candidate order before any one of them becomes the next active runtime slice
+  the reorder consistency fix has not been started; a wall reorder
+  invariance test matrix must land first to pin the current inconsistency,
+  then the engine fix, then a passing matrix. No wall corridor guard test
+  may regress during the fix.
 
 ## Selected Next Slice
 
 - slice id:
-  `blocked_source_backed_widening_rerank_v1`
+  `dataholz_clt_calibration_tightening` (second pass)
 - workstream:
-  `no_runtime_candidate_selection`
+  `defended_clt_calibration_tightening`
 - route family:
-  `deferred_floor_source_gap_candidates`
+  `mass_timber_clt_floor_lane`
 - output surface:
-  `blocked_source_backed_widening_rerank_matrix`
+  `dataholz_clt_calibration_tightening_matrix`
 - engine companion surface:
-  `source_gap_candidate_re_rank_contract`
+  `dataholz_clt_calibration_tightening_audit`
 - behavior class:
-  no-runtime selection work before any blocked widening or exact reopen
+  runtime tightening inside the already-defended Dataholz CLT
+  exact-vs-estimate corridor, without treating visible `GDMTXA04A` rows as a
+  direct exact reopen
 
 ### Scope
 
-- re-rank the still-blocked source-backed widening families without changing
-  runtime behavior
-- preserve the defended CLT closeout and the closed reinforced-concrete guard
-  posture while reranking candidates
-- keep `GDMTXA04A`, `C11c`, raw bare open-box/open-web, and wall-selector work
-  explicit as candidates rather than silently reopening them
-- use this slice to decide the next honest runtime target, not to make the
-  runtime change itself
+- tighten exact-vs-estimate and capped-visible boundaries on the defended
+  Dataholz CLT mass-timber floor lane, starting from the landed source-truth
+  and calibration audits
+- preserve every upstream closeout: reinforced-concrete low-confidence,
+  raw terminal-concrete helper, CLT-local combined evidence, broad
+  audit/replanning, wall-selector, raw bare open-box/open-web, `C11c`
+  readiness, and `GDMTXA04A` composite-surface design all stay frozen
+- keep `GDMTXA04A`, `C11c`, raw bare open-box/open-web, and wall-selector
+  fail-closed; do not reopen them by proximity to CLT work
+- close this slice with an explicit planning contract that either declares
+  the remaining Dataholz CLT slack fully bounded or selects exactly one more
+  same-family tightening cut
 
 ### Closeout Selection Result
 
 Selected now:
 
-- `blocked_source_backed_widening_rerank_v1`
-  - posture: selected after the defended CLT tightening closeout
-  - reason: CLT no longer has a higher-ROI tightening slack, so the next
-    honest move is explicit candidate selection work before another runtime
-    widening or exact reopen
+- `dataholz_clt_calibration_tightening` (second pass)
+  - posture: selected after the reinforced-concrete accuracy reopen closed
+    cleanly on the bounded low-confidence corridor
+  - reason: the reinforced-concrete low-confidence corridor is now explicitly
+    closed, the defended CLT exact/estimate corridor is already benchmarked
+    and source-truth pinned, and CLT has higher ROI than another reinforced
+    micro-pass or any blocked source-family reopen
+  - selection evidence:
+    `packages/engine/src/post-reinforced-concrete-accuracy-reopen-next-slice-selection-contract.test.ts`
 
 Conditionally reopen only if new proof appears:
 
 - `reinforced_concrete_accuracy_reopen`
-  - posture: explicitly not selected
-  - reason: the `vinyl + elastic ceiling` branch now has an explicit
-    low-confidence closeout with no hidden family overlap left to reopen
+  - posture: closed as explicit low-confidence closeout input, not active
+  - reason: no fourth defended boundary remained after matrix/provenance and
+    audit/report surfaces pinned the bounded low-confidence corridor
 
 Still blocked:
 
-- `raw_bare_open_box_open_web_impact_widening`
-  - blocked until bare-carrier impact source evidence exists
 - `dataholz_gdmtxa04a_visible_exact_reopen`
-  - blocked until the composite dry-screed surface is modeled honestly
+  - blocked until the composite dry-screed surface is modeled honestly, not
+    just matched on direct id
 - `tuas_c11c_exact_import`
   - blocked until the frequency/source anomaly is explained
+- `raw_bare_open_box_open_web_impact_widening`
+  - blocked until bare-carrier impact source evidence exists
 - `wall_selector_behavior_widening`
   - blocked until a fresh classified wall-selector red exists
 
 ### Current Implementation Anchors
 
-- planning contract:
+- selection planning contract:
+  `packages/engine/src/post-reinforced-concrete-accuracy-reopen-next-slice-selection-contract.test.ts`
+- prior first-pass CLT closeout (frozen evidence):
   `packages/engine/src/post-dataholz-clt-calibration-tightening-next-slice-selection-contract.test.ts`
-- closed CLT evidence:
+- defended CLT evidence:
+  - `packages/engine/src/dataholz-clt-source-truth-audit.test.ts`
   - `packages/engine/src/dataholz-clt-calibration-tightening-audit.test.ts`
   - `packages/engine/src/dataholz-gdmtxa04a-material-surface-recheck.test.ts`
-  - `packages/engine/src/dataholz-clt-source-truth-audit.test.ts`
   - `packages/engine/src/floor-source-corpus-contract.test.ts`
   - `apps/web/features/workbench/dataholz-clt-source-truth-route.test.ts`
-- selected rerank evidence:
-  - `packages/engine/src/source-gap-candidate-re-rank-contract.test.ts`
-  - `packages/engine/src/raw-bare-open-web-open-box-source-evidence-rerank-contract.test.ts`
-  - `packages/engine/src/remaining-source-gap-posture-matrix.test.ts`
-  - `apps/web/features/workbench/remaining-source-gap-posture-card-matrix.test.ts`
-  - `apps/web/features/workbench/output-origin-trace-card-matrix.test.ts`
-- closed reinforced-concrete guard evidence:
+- runtime edit anchors for this tightening slice:
+  - `packages/engine/src/predictor-published-family-estimate.ts`
+  - `packages/engine/src/predictor-floor-system-estimate.ts`
+  - `packages/engine/src/floor-system-estimate.ts`
+  - `packages/engine/src/calculate-assembly.ts`
+- closed reinforced-concrete guard evidence (stays frozen):
   - `packages/engine/src/reinforced-concrete-formula-family-closeout-audit.test.ts`
   - `packages/engine/src/reinforced-concrete-family-formula-fit-audit.test.ts`
+  - `packages/engine/src/reinforced-concrete-low-confidence-follow-up-matrix.test.ts`
+  - `packages/engine/src/reinforced-concrete-low-confidence-follow-up-origin-matrix.test.ts`
   - `apps/web/features/workbench/reinforced-concrete-low-confidence-proposal-honesty.test.ts`
-- likely next decision anchors:
-  - `packages/engine/src/source-gap-candidate-re-rank-contract.test.ts`
-  - `packages/engine/src/raw-bare-open-web-open-box-source-evidence-rerank-contract.test.ts`
-  - `packages/engine/src/remaining-source-gap-posture-matrix.test.ts`
-  - `docs/calculator/SOURCE_GAP_LEDGER.md`
+- closed upstream slice evidence (stays frozen):
+  - `packages/engine/src/raw-terminal-concrete-helper-widening-matrix.test.ts`
+  - `packages/engine/src/clt-local-combined-interaction-evidence-matrix.test.ts`
+  - `packages/engine/src/clt-local-combined-exact-anchor-pack.test.ts`
+- likely next planning contract (to be authored by this slice):
+  a `post_dataholz_clt_calibration_tightening_next_slice_selection` successor
+  contract that either declares the remaining CLT slack fully bounded or
+  selects exactly one more same-family tightening cut
 - focused gate entrypoint:
   `tools/dev/run-calculator-current-gate.ts`
 - source-backed boundary ledger:
   `docs/calculator/SOURCE_GAP_LEDGER.md`
 
-### Current Rerank Audit Map
+### Current Tightening Audit Map
 
 Use this map before touching runtime logic. It separates what is already
-closed, what remains blocked, and what the rerank must compare explicitly
-before any new runtime widening is selected.
+landed as first-pass CLT evidence, what stays frozen as upstream closeout
+input, and what remains fail-closed during the second-pass tightening.
 
-1. Closed defended corridors
-   - reinforced-concrete closeout stays frozen on the explicit
-     `low_confidence` lane without a hidden family overlap
-   - Dataholz CLT visible `GDMTXA04A`-like boundary stays estimate-only with
-     exact-row caps on `Ln,w`, `CI`, `CI,50-2500`, and `Ln,w+CI`
-2. Selected no-runtime rerank candidates
-   - rank 1:
-     visible `GDMTXA04A` exact reopen
-   - rank 2:
-     TUAS `C11c` exact import
-   - rank 3:
-     raw bare open-box/open-web impact widening
-   - rank 4:
-     wall-selector behavior widening
-3. Hard-stop rules during the rerank
-   - do not reopen any candidate by runtime drift
-   - do not treat nearby green tests as proof of a direct reopen
-   - do not blur blocked, exact, bound, family, formula, or low-confidence
-     ownership to make one candidate look cleaner than it is
+1. First-pass CLT evidence already landed (baseline)
+   - `dataholz-clt-source-truth-audit`: exact-vs-estimate and
+     exact-visible-vs-estimate-only source truth pinned on the active
+     mass-timber lane
+   - `dataholz-clt-calibration-tightening-audit`: visible `GDMTXA04A`
+     estimate boundary capped against the direct official exact row on
+     `Ln,w`, `CI`, `CI,50-2500`, and `Ln,w+CI`
+   - workbench: `dataholz-clt-source-truth-route` keeps the same surfaces
+     honest on the card/route side
+2. Upstream closeouts kept frozen during pass 2
+   - reinforced-concrete low-confidence corridor closed on
+     `reinforced-concrete-formula-family-closeout-audit` and
+     `reinforced-concrete-family-formula-fit-audit`
+   - raw terminal-concrete helper lane closed across widening, split
+     topology, and partial order matrices and their
+     provenance/card-origin pairs
+   - CLT-local combined interaction evidence closed on the triad matrix
+     plus the remaining exact-anchor pack
+   - broad audit / replanning, wall-selector, raw bare open-box/open-web,
+     `C11c` readiness, and `GDMTXA04A` composite-surface design all
+     closed as fail-closed evidence
+3. Fail-closed runtime candidates (must stay blocked during pass 2)
+   - `dataholz_gdmtxa04a_visible_exact_reopen`
+   - `tuas_c11c_exact_import`
+   - `raw_bare_open_box_open_web_impact_widening`
+   - `wall_selector_behavior_widening`
+4. Hard-stop rules during this tightening pass
+   - do not reopen any blocked candidate by proximity to CLT work
+   - do not treat nearby green tests as proof of a direct exact reopen
+   - do not blur exact, bound, family, formula, or low-confidence
+     ownership to make the CLT surface look cleaner than it is
+   - do not silently widen support semantics on the workbench CLT route
 
 ### Latest Parity Audit Conclusion - 2026-04-17
 
@@ -1209,9 +1272,10 @@ are kept.
      `fire_board -> firestop_board`,
      `engineered_timber_flooring + generic underlay -> engineered_timber_with_acoustic_underlay`,
      `generic_gypsum_board -> bounded gypsum ceiling corridor`
-3. The patch stays inside the current reinforced-concrete corridor.
-   - no new source family, no CLT/open-web/open-box/wall-selector widening, and
-     no reopening blocked anomalies
+3. The patch stays inside the currently selected Dataholz CLT corridor.
+   - no new source family, no reinforced-concrete/open-web/open-box/
+     wall-selector widening, and no reopening blocked anomalies
+     (`GDMTXA04A`, `C11c`, raw bare, wall-selector)
 4. The patch does not overclaim supported outputs.
    - if `DeltaLw`, `CI`, field continuations, or companion airborne outputs are
      not owned by the stronger lane, they remain formula-owned or unsupported
@@ -1225,131 +1289,201 @@ are kept.
 
 ### Execution Plan For This Slice
 
-1. Freeze the reinforced-concrete closeout as the entry contract.
-   - keep
-     `packages/engine/src/reinforced-concrete-formula-family-closeout-audit.test.ts`
+1. Freeze every upstream closeout as entry contracts for pass 2.
+   - reinforced-concrete low-confidence:
+     keep
+     `packages/engine/src/reinforced-concrete-formula-family-closeout-audit.test.ts`,
+     `packages/engine/src/reinforced-concrete-family-formula-fit-audit.test.ts`,
+     `packages/engine/src/reinforced-concrete-low-confidence-follow-up-matrix.test.ts`,
      and
-     `packages/engine/src/reinforced-concrete-family-formula-fit-audit.test.ts`
+     `packages/engine/src/reinforced-concrete-low-confidence-follow-up-origin-matrix.test.ts`
      green so the closed low-confidence corridor does not silently reopen
-2. Tighten only inside the already-defended Dataholz CLT corridor.
-   - start with exact-vs-estimate calibration and remaining exact-only slack
-     boundaries
-   - keep
+   - raw terminal-concrete helper:
+     keep the widening, split-topology, and partial-order matrices plus
+     their provenance/card-origin pairs green
+   - CLT-local combined evidence:
+     keep
+     `packages/engine/src/clt-local-combined-interaction-evidence-matrix.test.ts`
+     and
+     `packages/engine/src/clt-local-combined-exact-anchor-pack.test.ts`
+     green
+   - blocked source families:
+     keep the closed `GDMTXA04A`, `C11c`, raw bare, and wall-selector
+     fail-closed posture unchanged
+2. Start from the pass 1 Dataholz CLT baseline already landed on this repo.
+   - treat
+     `packages/engine/src/dataholz-clt-source-truth-audit.test.ts` and
+     `packages/engine/src/dataholz-clt-calibration-tightening-audit.test.ts`
+     as the baseline to tighten from, not as a reason to reopen the corridor
+   - use
      `packages/engine/src/predictor-published-family-estimate.ts`,
      `packages/engine/src/predictor-floor-system-estimate.ts`,
      `packages/engine/src/floor-system-estimate.ts`, and
      `packages/engine/src/calculate-assembly.ts` as the primary runtime edit
-     anchors
-   - do not use this slice to reopen reinforced-concrete wording work, raw
-     open-box/open-web, `GDMTXA04A`, `C11c`, selector behavior, or parity
-     probes
+     anchors for any pass 2 numerical tightening
+   - do not treat visible `GDMTXA04A` rows as a direct exact reopen, and do
+     not drift into reinforced-concrete, raw open-box/open-web, `C11c`,
+     selector behavior, or parity probes
 3. Keep exact-vs-estimate provenance explicit while tightening.
    - preserve exact-vs-family wording on engine and workbench surfaces
-   - if CLT wording reaches the workbench, keep
+   - keep
      `apps/web/features/workbench/dataholz-clt-source-truth-route.test.ts`
      green without broadening support semantics
-4. Close the tightening slice only when the tighter CLT route remains bounded
-   and repeatable.
-   - update the planning contract only after tightening edits land
-   - keep the focused gate green throughout
-   - rerun the broad repo gate before calling the slice closed
+4. Close pass 2 with an explicit planning contract.
+   - land a successor `post_dataholz_clt_calibration_tightening_next_slice_selection`
+     contract that either declares the remaining CLT slack fully bounded or
+     selects exactly one more same-family tightening cut
+   - update the planning contract only after any tightening edits land
+   - keep `pnpm calculator:gate:current` green throughout
+   - rerun the broad repo gate (`pnpm check`) before calling the slice
+     closed
 
 ### Tightening Queue
 
-1. Exact-vs-estimate calibration audit
-   - keep the defended CLT closeout frozen as a solved corridor, not a live
-     runtime target
-   - treat the CLT evidence set as the baseline for rerank decisions, not as a
-     reason to reopen the corridor
-2. Blocked-family rerank audit
-   - compare `GDMTXA04A`, `C11c`, raw bare open-box/open-web, and
-     wall-selector widening on ROI, current evidence strength, and fake-
-     confidence blast radius
-   - current order:
-     `GDMTXA04A` first because it has the strongest direct source truth,
-     `C11c` second because it has a real row but an unresolved anomaly,
-     raw bare open-box/open-web third because current evidence is still
-     packaged-only, wall-selector fourth because no fresh classified red
-     exists
+Pass 2 only works through these in order; each step must stay inside the
+already-defended Dataholz CLT corridor.
+
+1. Remaining exact-vs-estimate slack audit
+   - re-read the landed
+     `packages/engine/src/dataholz-clt-source-truth-audit.test.ts` and
+     `packages/engine/src/dataholz-clt-calibration-tightening-audit.test.ts`
+   - identify any remaining exact-vs-estimate or exact-vs-family wording
+     slack that is still defendable without reopening visible `GDMTXA04A`
+     direct exact matching
+2. Capped-visible boundary recheck
+   - re-read the capped visible `GDMTXA04A`-like dry-screed estimate route
+     against the direct official exact row for `Ln,w`, `CI`, `CI,50-2500`,
+     and `Ln,w+CI`
+   - confirm the `L'nT,50` companion path and any other capped-visible
+     outputs stay explicit on the estimate side
 3. Workbench/source carry-through audit
-   - ensure blocked-family route, support, and report surfaces stay explicit
-     while the rerank is active
+   - confirm
+     `apps/web/features/workbench/dataholz-clt-source-truth-route.test.ts`
+     still reflects the tightened boundaries without broadening support
+     semantics
+4. Slice-close decision audit
+   - decide whether the remaining CLT slack is fully bounded (close pass 2
+     with a "no further tightening defendable" planning contract) or
+     whether one more same-family cut is defendable (author that cut as
+     part of pass 2, then close with a planning contract that names it)
 
 ### Queue Status Right Now
 
-1. Reinforced-concrete closeout queue
-   - current status: closed
-   - reopen only if a new helper-vs-solver overlap or proof-backed equivalent
-     lane appears later
-2. CLT tightening queue
-   - current status: closed and guarded
-   - the visible `GDMTXA04A`-like dry-screed estimate route now caps `Ln,w`,
-     `CI`, `CI,50-2500`, and `Ln,w+CI` against the direct official exact row
-   - the same visible route now uses the standardized `L'nT,50` companion path
-   - direct `GDMTXA04A` exact reopening remains blocked
-3. Blocked source-anomaly queue
-   - current status: selected for rerank, not for runtime widening
-   - current order:
+1. Dataholz CLT tightening queue (pass 2)
+   - current status: selected and not started
+   - first pass already landed the source-truth audit, the calibration
+     tightening audit (visible `GDMTXA04A`-like dry-screed caps on `Ln,w`,
+     `CI`, `CI,50-2500`, and `Ln,w+CI`), and the workbench source-truth
+     route
+   - pass 2 must tighten any remaining exact-vs-estimate slack without
+     reopening visible `GDMTXA04A` direct exact matching
+2. Reinforced-concrete closeout queue
+   - current status: closed as explicit low-confidence closeout evidence
+   - reopen only if a new helper-vs-solver overlap or proof-backed
+     equivalent lane appears later
+3. Raw terminal-concrete helper queue
+   - current status: closed across widening, split-topology, and
+     partial-order matrices plus their provenance/card-origin pairs
+   - reopen only if a future trace shows another defended helper topology
+     that is not already pinned
+4. CLT-local combined interaction queue
+   - current status: closed on the triad matrix and remaining exact-anchor
+     pack
+   - reopen only if a new exact or predictor-backed local combined row
+     appears later
+5. Blocked source-anomaly queue
+   - current status: closed as explicit fail-closed evidence after the
+     refresh contract kept the order unchanged
+   - order still explicit:
      `GDMTXA04A`, `C11c`, raw bare open-box/open-web, wall-selector
-   - all four stay blocked until the rerank selects exactly one next runtime
-     target
+   - all four stay blocked until genuinely new evidence appears
 
 ### Step Transition Rule
 
-1. Start with the blocked candidate list, not with a runtime code change.
-2. Compare one candidate only if all of the following are true:
-   - its current blocked posture is already pinned in executable tests
-   - its evidence/source gaps are explicit enough to be compared honestly
-   - evaluating it does not silently reopen runtime behavior by inertia
-3. If any one of those checks fails, keep the candidate blocked.
-4. End the rerank only when exactly one next runtime target is selected or the
-   whole blocked set is explicitly held.
+1. Start with the landed CLT source-truth and calibration audits, not with
+   a runtime code change.
+2. Propose a tightening cut only if all of the following are true:
+   - the targeted slack is already visible in the existing audits or can be
+     pinned in a new audit without reopening the corridor
+   - the tightening does not touch visible `GDMTXA04A` direct exact matching
+   - the tightening does not silently widen support semantics on any
+     engine or workbench surface
+   - the tightening does not reopen reinforced-concrete, raw-helper,
+     CLT-local, or any blocked source-family closeout
+3. If any one of those checks fails, keep the branch on its current
+   capped-visible or estimate posture.
+4. End pass 2 only when exactly one of the following is explicit:
+   - the remaining CLT slack is declared fully bounded in a successor
+     planning contract, or
+   - exactly one more same-family tightening cut has landed and been
+     closed with its own planning contract
 
 ### Execution Loop From Here
 
-1. Refresh the current blocked candidate matrix locally and keep the current
-   order explicit:
-   `GDMTXA04A`, `C11c`, raw bare open-box/open-web, wall-selector.
-2. Reject any candidate that still depends on a blocked exact reopen, missing
-   bare-carrier source evidence, or a fresh classified red that does not
-   exist.
-3. Add or update planning-contract and posture tests that describe the rerank
-   decision explicitly.
-4. Land the smallest no-runtime documentation/contract/gate change that keeps
-   that decision executable.
-5. Run the targeted rerank engine/web pack.
-6. Run `pnpm calculator:gate:current`.
-7. Update `NEXT_IMPLEMENTATION_PLAN.md` and `CURRENT_STATE.md` if the step
-   lands.
-8. Stop the slice when one next runtime candidate is explicitly selected and
-   every non-selected candidate remains explicitly blocked.
+1. Re-read the already-landed first-pass CLT evidence to map the remaining
+   slack:
+   - `packages/engine/src/dataholz-clt-source-truth-audit.test.ts`
+   - `packages/engine/src/dataholz-clt-calibration-tightening-audit.test.ts`
+   - `apps/web/features/workbench/dataholz-clt-source-truth-route.test.ts`
+2. Enumerate every remaining exact-vs-estimate or capped-visible wording
+   slack inside the defended corridor; reject any slack whose tightening
+   would require reopening visible `GDMTXA04A` direct exact matching or
+   broadening support semantics.
+3. If no remaining slack is defendable, skip to step 7 and close pass 2
+   with a "no further tightening defendable" planning contract.
+4. Otherwise, pick exactly one same-family tightening cut. Land the
+   smallest runtime edit that tightens that slack. Runtime anchors:
+   - `packages/engine/src/predictor-published-family-estimate.ts`
+   - `packages/engine/src/predictor-floor-system-estimate.ts`
+   - `packages/engine/src/floor-system-estimate.ts`
+   - `packages/engine/src/calculate-assembly.ts`
+5. Land or update the engine audit test that pins the tightened boundary
+   on the defended mass-timber lane; land or update the workbench route
+   test if the tightening surfaces to the card/route side.
+6. Run the targeted engine/web pack plus `pnpm calculator:gate:current` and
+   `pnpm check`; reject the cut if any previously green corridor regresses
+   or any upstream closeout loosens.
+7. Land a successor
+   `post_dataholz_clt_calibration_tightening_next_slice_selection`
+   contract. The contract must record whether the slack is now fully
+   bounded, what evidence supports that conclusion, and which slice is
+   selected next.
+8. Update `NEXT_IMPLEMENTATION_PLAN.md` and `CURRENT_STATE.md` to reflect
+   the new closed slice and the new selected next slice.
+9. Stop pass 2 when exactly one of step 3 or step 7 has landed cleanly.
 
 ### Validation Commands For This Checkpoint
 
-1. `pnpm --filter @dynecho/engine exec vitest run src/post-dataholz-clt-calibration-tightening-next-slice-selection-contract.test.ts src/source-gap-candidate-re-rank-contract.test.ts src/raw-bare-open-web-open-box-source-evidence-rerank-contract.test.ts src/remaining-source-gap-posture-matrix.test.ts src/dataholz-gdmtxa04a-material-surface-recheck.test.ts src/floor-source-corpus-contract.test.ts --maxWorkers=1`
-2. `pnpm --filter @dynecho/web exec vitest run features/workbench/dataholz-clt-source-truth-route.test.ts features/workbench/remaining-source-gap-posture-card-matrix.test.ts features/workbench/output-origin-trace-card-matrix.test.ts --maxWorkers=1`
-3. `pnpm check`
-4. `pnpm build`
-5. `git diff --check`
+1. `pnpm --filter @dynecho/engine exec vitest run src/post-reinforced-concrete-accuracy-reopen-next-slice-selection-contract.test.ts src/post-dataholz-clt-calibration-tightening-next-slice-selection-contract.test.ts src/dataholz-clt-source-truth-audit.test.ts src/dataholz-clt-calibration-tightening-audit.test.ts src/dataholz-gdmtxa04a-material-surface-recheck.test.ts src/floor-source-corpus-contract.test.ts --maxWorkers=1`
+2. `pnpm --filter @dynecho/web exec vitest run features/workbench/dataholz-clt-source-truth-route.test.ts --maxWorkers=1`
+3. `pnpm calculator:gate:current`
+4. `pnpm check`
+5. `pnpm build`
+6. `git diff --check`
 
 ### Slice Stop Conditions
 
-- stop if the rerank quietly changes runtime behavior instead of only changing
-  selection/docs/contracts
+- stop if the tightening quietly widens runtime behavior instead of only
+  tightening the already-defended corridor
 - stop if exact, catalog, product-delta, lower-bound, family, formula, or
   low-confidence ownership is blurred to make the result look cleaner
 - stop if field/report/provenance surfaces become less explicit about answer
   origin
 - stop if `GDMTXA04A`, `C11c`, raw bare open-box/open-web, or wall-selector
   behavior is implicitly reopened by the same change
+- stop if any upstream closeout (reinforced-concrete, raw-helper, CLT-local,
+  blocked-source refresh) loosens in the process
+- stop if the tightening lands without a successor planning contract that
+  names the next slice
 
-## Explicitly Deferred Until This Rerank Closes
+## Explicitly Deferred Until This Tightening Closes
 
 - direct raw bare open-box/open-web impact widening
 - direct Dataholz `GDMTXA04A` visible exact reopen
 - direct TUAS `C11c` exact import
 - direct wall-selector behavior widening
 - direct reinforced-concrete reopening
+- any new raw-helper or CLT-local widening slice
 
 ## Provisional Next Phase Order
 
@@ -1407,36 +1541,56 @@ unit of risk and engineering time”.
 
 This is the mechanical sequence from the current checkpoint.
 
-1. Keep the landed blocked-source refresh closeout frozen on the explicit
-   unchanged blocked order and selected rank-1 Dataholz follow-up.
+1. Keep every upstream closeout frozen: reinforced-concrete low-confidence,
+   raw terminal-concrete helper (widening, split-topology, partial-order),
+   CLT-local combined evidence, broad audit / replanning, wall-selector,
+   raw bare open-box/open-web, `C11c` readiness, and `GDMTXA04A`
+   composite-surface design all stay closed as fail-closed or frozen
+   evidence.
 2. Keep the direct `GDMTXA04A` exact row plus the defended visible estimate
-   boundary frozen as the current truth surfaces.
-3. Execute `dataholz_gdmtxa04a_composite_surface_model_design_v1` as a
-   no-runtime design pass on visible exact surface equivalence.
-4. Use the direct exact row, current visible estimate route, and the landed
-   material-surface recheck as the design evidence inputs.
-5. Open `dataholz_gdmtxa04a_exact_visible_reopen_candidate_v1` only if this
-   design yields an honest composite-surface equivalence.
-6. Keep `C11c`, raw bare open-box/open-web, and wall-selector fail-closed
-   unless fresh evidence explicitly reorders them.
+   boundary frozen as the current truth surfaces; no direct exact reopen.
+3. Re-read the already-landed first-pass CLT audits
+   (`dataholz-clt-source-truth-audit`,
+   `dataholz-clt-calibration-tightening-audit`) as the baseline for pass 2.
+4. Enumerate every remaining exact-vs-estimate or capped-visible wording
+   slack inside the defended Dataholz CLT corridor.
+5. Either close pass 2 with a "no further tightening defendable" planning
+   contract, or pick exactly one same-family tightening cut, land the
+   smallest runtime edit that tightens that slack, and pin the tightened
+   boundary in an engine audit (and workbench route test if it surfaces
+   there).
+6. Land a successor
+   `post_dataholz_clt_calibration_tightening_next_slice_selection`
+   planning contract that names the next selected slice explicitly.
+7. Keep `GDMTXA04A`, `C11c`, raw bare open-box/open-web, and wall-selector
+   fail-closed unless fresh evidence explicitly reorders them.
 
 ## Immediate Next Steps
 
-1. Keep this file as the authoritative immediate plan until
-   `dataholz_gdmtxa04a_composite_surface_model_design_v1` is explicitly
-   closed or superseded.
-2. Treat the requested-output harness chain, the mixed seeded boundary-route
-   pack, and the blocked-source refresh closeout as closed and frozen.
+1. Keep this file as the authoritative immediate plan until the
+   second-pass `dataholz_clt_calibration_tightening` is explicitly closed
+   or superseded by a successor planning contract.
+2. Treat every upstream closeout as closed and frozen (reinforced-concrete
+   follow-up, raw terminal-concrete helper, CLT-local combined evidence,
+   broad audit / replanning, wall-selector, raw bare, `C11c` readiness,
+   `GDMTXA04A` composite-surface design, blocked-source refresh).
 3. Keep the blocked runtime-candidate posture explicit:
    `GDMTXA04A`, `C11c`, raw bare open-box/open-web, wall-selector.
-4. Implement the no-runtime Dataholz composite-surface design without
-   reopening visible exact matching in the same pass.
-5. Keep the focused current gate aligned with the landed refresh closeout
-   selection contract while the Dataholz design is active.
-6. Update [CURRENT_STATE.md](./CURRENT_STATE.md), the relevant
+4. Re-read the first-pass CLT source-truth and calibration audits and
+   enumerate every remaining defendable exact-vs-estimate or capped-visible
+   wording slack.
+5. Either close pass 2 with a "no further tightening defendable" planning
+   contract, or land exactly one more same-family tightening cut and close
+   with a planning contract that names the new selected slice.
+6. Keep the focused current gate aligned with the landed
+   `post-reinforced-concrete-accuracy-reopen` closeout selection contract
+   while pass 2 is active; carry pass 2 audit evidence into the gate as it
+   lands.
+7. Update [CURRENT_STATE.md](./CURRENT_STATE.md), the relevant
    checkpoint/handoff note, and [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md)
-   together whenever the selected Dataholz slice moves.
-7. Do not reopen reinforced-concrete, heavy-concrete parity, `GDMTXA04A`,
-   `C11c`, raw open-box/open-web, or wall-selector work unless the active
-   Dataholz design produces an explicit defended reopen candidate or a later
-   contract reorders them.
+   together whenever pass 2 lands evidence or the selected next slice
+   moves.
+8. Do not reopen reinforced-concrete, heavy-concrete parity, raw-helper,
+   CLT-local, `GDMTXA04A`, `C11c`, raw open-box/open-web, or wall-selector
+   work unless pass 2 produces an explicit defended reopen candidate or a
+   later contract reorders them.
