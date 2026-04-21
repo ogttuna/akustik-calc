@@ -165,33 +165,79 @@ green, the split is safe by construction.
 
 ## Execution Progress (2026-04-21)
 
-The split slice has started and three commits have landed so far:
+The split slice is well underway — five commits have landed:
 
 | Commit | Scope | File delta |
 |---|---|---|
 | `c0a5068` | Carve `dynamic-airborne-helpers.ts` (pure math, spectrum weights, physical constants, delegate blending, curve anchoring) | 283-line new file, main 6630 → 6420 |
 | `361d97d` | Carve material-family predicates into `dynamic-airborne-family-detection.ts` (15 `is*Layer` / `is*BuildUp` predicates) | main 6420 → 6263 |
 | `b4d32a9` | Add framing hint helpers to `dynamic-airborne-family-detection.ts` (`DynamicFramingHint`, `normalizeFramingHint`, `hasExplicitFramingHint`, `isResilientFramingHint`) | main 6263 → 6234 |
+| `a398ec9` | Move shared types `DynamicAirborneOptions` + `DynamicAirborneResult` into helpers.ts; carve Davy/Cremer masonry cap (`buildMasonryDavyProfile`, `buildMasonryDavyCremerCurve`, `applyMasonryDavyConservativeCap`) into `dynamic-airborne-davy-masonry.ts` | main 6234 → 5977 |
+| `c74e915` | Carve mixed-plain template resolvers + lab-target Rw tables into `dynamic-airborne-mixed-plain-templates.ts` | main 5977 → 5787 |
 
-Net so far: `dynamic-airborne.ts` has shed ~400 lines into two
-bounded modules. Remaining work inside the split slice is the
-predictor-scoring bulk (lines ~1500-5600 of the current file) —
-Davy masonry profile + masonry calibration lanes + predictor-
-driven curve composition. That block is tightly coupled to the
-internal `DynamicAirborneOptions` type and several internal state
-structs, so the carve needs a type-boundary design pass before
-the next commit lands.
+Net so far: `dynamic-airborne.ts` has shed 843 lines into four
+bounded modules (1015 carved-out lines total — the delta is
+bigger than the main-file savings because carves include local
+imports + re-export headers):
 
-Next agent picking this up:
+| Carved module | Lines | Purpose |
+|---|---|---|
+| `dynamic-airborne-helpers.ts` | 272 | Pure math, spectrum weights, physical constants, delegate blending, curve anchoring, **shared types** (`DynamicAirborneOptions`, `DynamicAirborneResult`, `DelegateCurve`, `DelegateBlend`) |
+| `dynamic-airborne-family-detection.ts` | 236 | Material predicates (`is*Layer`, `is*BuildUp`) + framing hint helpers (`DynamicFramingHint`, `normalizeFramingHint`, etc.) |
+| `dynamic-airborne-davy-masonry.ts` | 270 | Davy/Cremer single-leaf masonry coincidence cap (profile + Cremer curve + conservative cap) |
+| `dynamic-airborne-mixed-plain-templates.ts` | 237 | Mixed-plain premium/moderate lab-target Rw tables + template id resolvers + fill interpolation |
 
-- Read the "Target-File Purposes" section below.
-- Identify which parts of the predictor-scoring block touch
-  `DynamicAirborneOptions`. Either export that type + its siblings
-  from a shared declaration file, or rework the carve to pass only
-  the inputs each helper actually needs.
-- Commit in the same incremental style — single logical subset per
-  commit, guarded by the focused gate + spot regression sweep.
-- Update this section with each commit landed.
+### Remaining Work Inside The Slice
+
+Roughly 3787 lines still live in `dynamic-airborne.ts` after
+the easy carves. The remaining bulk is:
+
+1. **Masonry calibration lane** (`estimateAacMassiveTargetRw`,
+   `estimateSilicateMasonryTargetRw`,
+   `estimateUnfinishedAircreteTargetRw`,
+   `estimatePorothermPlasteredTargetRw`,
+   `estimateHeluzPlasteredClayTargetRw`,
+   `estimateYtongMassiefG2300TargetRw`,
+   `estimateYtongSeparatiePaneelTargetRw`,
+   `estimateYtongCellenbetonblokTargetRw`,
+   `estimateCelconFinishedAircreteTargetRw`) — ~1020 lines total,
+   similar shape (`(layers, topology, currentRw, family) →
+   { notes, shiftDb, strategySuffix, targetRw }`). Carve into
+   `dynamic-airborne-masonry-calibration.ts` as one atomic move —
+   all functions share the same predicate + helper imports that
+   are already in other modules.
+2. **Framed wall calibration** (`estimateStudWallTargetRw`,
+   `summarizeFramedBoardSystem`, `summarizeFramingEvidence`,
+   `summarizePremiumSingleBoardFramedCandidate`,
+   `summarizeDoubleStudSignature`, etc.) — ~900 lines. Carve
+   into `dynamic-airborne-framed-wall-calibration.ts`. Moderate
+   risk; shares `describePrimaryCavity` with the masonry side.
+3. **Topology summaries + cavity helpers**
+   (`describePrimaryCavity`, `summarizePrimaryCavitySegments`,
+   `summarizeSingleLeafMasonryProfile`, `trimOuterCompliantLayers`,
+   `findOuterLeafReinforcementCandidateIndex`,
+   micro-gap equivalent builders) — ~700 lines. Carve into
+   `dynamic-airborne-cavity-topology.ts` so framed-wall and
+   masonry lanes share.
+4. **Floor / cap guards** (`apply*MonotonicFloor`,
+   `apply*Cap`, `apply*Trim`) — ~800 lines. Could split into
+   `dynamic-airborne-floor-guards.ts` or keep in main composition
+   if tightly coupled.
+5. **`calculateDynamicAirborneResult`** + remaining scaffolding —
+   stays in `dynamic-airborne.ts` as the composition wrapper.
+
+### Next Agent Guidance
+
+- Pick ONE block from the list above and carve it atomically.
+- Keep the shared type imports pointed at
+  `dynamic-airborne-helpers.ts`; helpers stays the bottom-of-
+  graph module.
+- Don't deduplicate or rewrite during a carve — every move is
+  verbatim. Rewrites land in separate follow-up slices with their
+  own test coverage.
+- Re-run the regression sweep after each carve:
+  `pnpm --filter @dynecho/engine exec vitest run src/airborne-*benchmark*.test.ts src/calculate-assembly.test.ts src/dynamic-airborne-instability-repro.test.ts src/raw-wall-hostile-input-answer-matrix.test.ts`
+- Update this section's progress table with the new commit.
 
 ## Execution Strategy — Incremental, Not Monolithic
 
