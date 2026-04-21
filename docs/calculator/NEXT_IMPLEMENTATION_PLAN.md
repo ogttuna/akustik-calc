@@ -74,21 +74,27 @@ Use this section first when deciding what to do next.
 ### Now
 
 - active slice:
-  selection pending. `dynamic_airborne_split_refactor_v1` closed
-  2026-04-21 after 15 atomic commits — main `dynamic-airborne.ts`
-  fell from 6630 → 3214 lines (−52%) into seven bounded modules
-  (helpers, family-detection, davy-masonry, mixed-plain-templates,
-  cavity-topology, masonry-calibration, framed-wall). Remaining
-  ~3200 lines hold the floor / cap guards that recursively call
-  `calculateDynamicAirborneResult` — moving them needs composer
-  injection, documented as `dynamic_airborne_split_refactor_v2`
-  follow-up in
-  `docs/calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md`.
-- next strategic candidate:
-  `wall_field_continuation_value_pinning_v1` (master-plan step 5).
-  Pins every defended wall corridor × lab/field/building × every
-  field output and may surface silent accuracy bugs the way the
-  physical invariants matrix caught the masonry flanking inversion.
+  `mixed_floor_wall_edge_case_hardening_v1` (master-plan step 7).
+  Selected `2026-04-21` by the
+  `wall_field_continuation_value_pinning_v1` closeout. Plan doc to
+  be authored at slice start.
+- latest closed implementation slice:
+  `wall_field_continuation_value_pinning_v1` (closed `2026-04-21`
+  on
+  `packages/engine/src/post-wall-field-continuation-value-pinning-v1-next-slice-selection-contract.test.ts`).
+  Pinned every defended wall preset × every airborne context mode
+  × every field output as drift guards (18 cells × 10 outputs);
+  I1/I2/I3 invariants green everywhere; the lab-fallback anchor +
+  split refactor are confirmed to carry zero drift into the
+  post-split engine layout.
+- deferred follow-up tracks (documented in the slice 5
+  post-contract):
+  - `dynamic_airborne_split_refactor_v2` — composer injection to
+    unblock the last ~3200 lines of main file
+  - `wall_formula_family_widening_v1` (step 6, conditional) —
+    timber stud accuracy gap is the known trigger
+  - dimension B corridor VALUE pins — extend pin discipline to the
+    wall selector trace matrix corridors
 - latest closed implementation slice:
   `wall_hostile_input_matrix_with_airborne_cartography_v1` (closed
   `2026-04-21` on

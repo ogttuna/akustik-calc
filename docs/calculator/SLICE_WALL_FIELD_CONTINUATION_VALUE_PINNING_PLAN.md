@@ -1,10 +1,15 @@
 # Slice Plan — Wall Field Continuation Value Pinning
 
 Slice id: `wall_field_continuation_value_pinning_v1`
-Status: planning (not started)
+Status: CLOSED 2026-04-21 (closeout contract
+`packages/engine/src/post-wall-field-continuation-value-pinning-v1-next-slice-selection-contract.test.ts`)
 Authored: 2026-04-21
-Master plan step: 5
-Owner: next agent that picks up the slice
+Updated: 2026-04-21 (closed)
+Outcome: preset surface (dimension A) landed clean — 18 cells
+VALUE-pinned, I1/I2/I3 green everywhere, no new accuracy findings.
+Next: `mixed_floor_wall_edge_case_hardening_v1` (step 7).
+Follow-up: dimension B corridor VALUE pins + timber stud accuracy
+gap + split v2 composer injection.
 
 ## Why This Slice Exists
 

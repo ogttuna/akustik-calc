@@ -52,14 +52,17 @@ That is how the 2026-04-20 doc-drift problem (captured in
 ## Operator Snapshot
 
 - active slice:
-  selection pending — `dynamic_airborne_split_refactor_v1` closed
-  2026-04-21 after 15 atomic commits (−52% main-file reduction,
-  seven bounded modules). Remaining split work (floor / cap guards
-  + composer) has a circular-import blocker that a follow-up slice
-  can resolve via composer injection. Next strategic candidate:
-  master plan step 5 `wall_field_continuation_value_pinning_v1`
-  (accuracy audit on every defended wall corridor × field output
-  × context) — highest user-value ROI per primary objective.
+  `mixed_floor_wall_edge_case_hardening_v1` (master-plan step 7).
+  Selected `2026-04-21` by the
+  `wall_field_continuation_value_pinning_v1` closeout: the
+  completeness audit surfaced no new accuracy findings (I1/I2/I3
+  green on 18 cells × 10 outputs), so step 6 formula widening
+  stays conditional and step 7 cross-mode torture becomes the
+  highest-ROI next move.
+- latest closed implementation slice:
+  `wall_field_continuation_value_pinning_v1` (closed `2026-04-21`
+  on
+  `packages/engine/src/post-wall-field-continuation-value-pinning-v1-next-slice-selection-contract.test.ts`)
 - latest closed implementation slice:
   `wall_hostile_input_matrix_with_airborne_cartography_v1` (closed
   `2026-04-21` on
