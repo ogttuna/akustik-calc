@@ -74,25 +74,34 @@ Use this section first when deciding what to do next.
 ### Now
 
 - active slice:
-  `wall_field_continuation_completeness_v1` (selected and not started)
+  `wall_lsf_timber_preset_pack_with_invariants_v1` (selected, plan
+  authored in `docs/calculator/SLICE_LSF_TIMBER_PRESET_WITH_INVARIANTS_PLAN.md`,
+  not yet started)
 - latest closed implementation slice:
   `wall_reorder_output_set_consistency_v1` (closed `2026-04-21` on
   `packages/engine/src/post-wall-reorder-output-set-consistency-v1-next-slice-selection-contract.test.ts`)
 - retraction note:
-  the previously selected next slice `preset_airborne_context_injection_v1`
-  was based on a false accuracy gap (preset Rw measured with
+  the earlier `preset_airborne_context_injection_v1` selection was
+  based on a false accuracy gap (preset Rw measured with
   `airborneContext: null` rather than the real workbench
   `liveAirborneContext`). Retraction recorded in
   `docs/calculator/SYSTEM_AUDIT_2026-04-20.md` finding 10. Presets
   already produce benchmark-matching Rw under the workbench default
-  lab context.
+  lab context. Re-selection analysis led to combining three
+  priority axes (coverage / accuracy / architecture readiness) into
+  the current active slice.
 - current highest-ROI task:
-  produce `wall-field-continuation-completeness-matrix.test.ts` — a
-  full sweep of every defended wall corridor × every `contextMode`
-  (element_lab / field_between_rooms / building_prediction) × every
-  airborne output to surface any untested gap or silent drift between
-  lab and field/building mode. No engine change expected unless the
-  audit finds a real accuracy artifact.
+  execute `SLICE_LSF_TIMBER_PRESET_WITH_INVARIANTS_PLAN.md` step-by-
+  step. COVERAGE: add LSF + timber stud wall presets with
+  `airborneDefaults`-driven workbench wiring (4 → 6 wall archetypes,
+  master-plan C1). ACCURACY: land `wall-physical-invariants-matrix.test.ts`
+  (I1 R'w ≤ Rw, I2 Dn,A ≈ Dn,w + C, I3 DnT,w > Dn,w) across all 6
+  presets × 3 contexts; any invariant failure is a real engine bug
+  and blocks the slice until fixed. DRIFT GUARD: extend
+  `wall-preset-expansion-benchmarks.test.ts` with field / building
+  VALUE pins for AAC, masonry, CLT. ARCHITECTURE: introduce optional
+  `PresetDefinition.airborneDefaults` + `loadPreset` forwarding so
+  the pattern is available for future preset work.
 - latest checkpoint review on `2026-04-20`:
   reread the living plan/state/handoff set against the active Dataholz CLT
   audit and route tests, reran the focused gate plus the broad `pnpm check`

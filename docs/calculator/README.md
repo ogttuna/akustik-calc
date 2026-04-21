@@ -25,6 +25,8 @@ start the active slice.
   findings and priority analysis feeding the master plan.
 - [WALL_COVERAGE_EXPANSION_PLAN.md](./WALL_COVERAGE_EXPANSION_PLAN.md) —
   wall program tracked across master plan steps 2-6.
+- [SLICE_LSF_TIMBER_PRESET_WITH_INVARIANTS_PLAN.md](./SLICE_LSF_TIMBER_PRESET_WITH_INVARIANTS_PLAN.md) —
+  detailed plan for the currently active slice (`wall_lsf_timber_preset_pack_with_invariants_v1`).
 - [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md) — source-backed and
   deferred families ledger.
 - [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)

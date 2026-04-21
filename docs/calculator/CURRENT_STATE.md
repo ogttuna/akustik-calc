@@ -52,7 +52,7 @@ That is how the 2026-04-20 doc-drift problem (captured in
 ## Operator Snapshot
 
 - active slice:
-  `wall_field_continuation_completeness_v1` (selected and not started — master plan step 2 after retracting the `preset_airborne_context_injection_v1` slice per `SYSTEM_AUDIT_2026-04-20.md` finding 10 retraction)
+  `wall_lsf_timber_preset_pack_with_invariants_v1` (selected and not started — master plan step 2; plan doc `SLICE_LSF_TIMBER_PRESET_WITH_INVARIANTS_PLAN.md`)
 - latest closed implementation slice:
   `wall_reorder_output_set_consistency_v1` (closed `2026-04-21` on
   `packages/engine/src/post-wall-reorder-output-set-consistency-v1-next-slice-selection-contract.test.ts`)
@@ -90,25 +90,23 @@ That is how the 2026-04-20 doc-drift problem (captured in
   reorder/C-availability inconsistency on asymmetric light-heavy stacks,
   which is now the selected next active runtime tightening slice
 - immediate next decision:
-  implement `wall_field_continuation_completeness_v1`: enumerate every
-  defended wall corridor (`concrete_wall`, `aac_single_leaf_wall`,
-  `masonry_brick_wall`, `clt_wall`, plus the 6 engine wall corridors
-  wired through the airborne selector trace matrix) × every
-  `airborneContext.contextMode` (`element_lab`, `field_between_rooms`,
-  `building_prediction`) × every requested output
-  (`Rw, R'w, Dn,w, Dn,A, DnT,w, DnT,A, STC, C, Ctr`). Produce an
-  executable matrix (`wall-field-continuation-completeness-matrix.test.ts`)
-  that pins the live/unsupported/needs_input status per cell, and note
-  any cell where the engine currently produces `NaN`, `undefined`, a
-  crash, or a silently-different value than the matching benchmark
+  implement `wall_lsf_timber_preset_pack_with_invariants_v1` per
+  `SLICE_LSF_TIMBER_PRESET_WITH_INVARIANTS_PLAN.md`. Three axes in
+  one slice: (a) COVERAGE — add LSF + timber stud presets (4→6 wall
+  archetypes, advances master-plan C1 signal); (b) ACCURACY —
+  physical invariants matrix (R'w ≤ Rw flanking non-negativity,
+  Dn,A ≈ Dn,w + C ISO 717 consistency, DnT,w > Dn,w volume
+  normalisation) across all 6 presets × 3 contexts, plus field
+  VALUE pinning for AAC / masonry / CLT drift guard; (c) ARCHITECTURE
+  — `PresetDefinition.airborneDefaults` field + `loadPreset` wiring
+  pattern matures for later preset slices
 - first implementation question now:
-  which wall corridors are actually defended end-to-end across all
-  three context modes, and is there any corridor where switching from
-  `element_lab` to `field_between_rooms` or `building_prediction`
-  produces a result that does not match ISO 140-4 / EN 12354
-  expectations (e.g. `R'w` should be ≤ `Rw` for the same stack, flanking
-  must reduce field Rw relative to lab, DnT requires receiving room
-  geometry, etc.)
+  does the physical invariants matrix (I1 R'w ≤ Rw, I2 Dn,A ≈ Dn,w+C,
+  I3 DnT,w > Dn,w) hold for all 6 wall presets × 3 context modes, or
+  does the engine violate one of them on at least one cell? If yes,
+  that is a real accuracy bug and the slice stops for engine fix
+  before closing; if no, the invariants stand as drift guards going
+  forward
 - selected route family:
   `mass_timber_clt_floor_lane`
 - selected output surface:

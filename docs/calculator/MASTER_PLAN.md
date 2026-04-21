@@ -307,19 +307,18 @@ signal — the test that must be green to call it done.
 | # | Slice | What closes it |
 |---|---|---|
 | 1 | `wall_reorder_output_set_consistency_v1` ✅ landed 2026-04-21 | `wall-reorder-invariance-matrix.test.ts` green across symmetric + asymmetric topologies |
-| 2 | `wall_field_continuation_completeness_v1` ⭐ next | Executable matrix across every defended wall corridor × lab/field/building contexts × every `Rw / R'w / Dn,w / Dn,A / DnT,w / DnT,A / STC / C / Ctr` with pinned status; real accuracy audit |
-| 3 | `wall_hostile_input_matrix_v1` | `raw-wall-hostile-input-answer-matrix.test.ts` + workbench route/card matrix mirror the floor discipline |
-| 4 | `engine_thickness_guardrail_v1` | `hostile-thickness-input.test.ts` covers floor + wall × five invalid-thickness classes with defended fail-closed |
-| 5 | `wall_lsf_timber_stud_preset_pack_v1` | LSF + timber stud presets land with a preset → workbench-state defaults mapping (`studType`, `studSpacingMm`, `connectionType`) pinned in `wall-lsf-timber-stud-preset-benchmarks.test.ts` |
-| 6 | `dynamic_airborne_split_refactor_v1` (conditional) | Post-refactor regression: zero test changes, zero `Rw` changes, file sizes ≤2000 lines |
-| 7 | `wall_formula_family_widening_v1` (conditional) | Only if step 2 audit reveals a defendable gap; closes on positive/negative/precedence matrix per added lane |
-| 8 | `mixed_floor_wall_edge_case_hardening_v1` | Cross-mode torture matrix extended with new wall corridors; existing mixed-mode tests stay green |
-| 9 | `good_calculator_final_audit_v1` | All six completion signals in §8 hold; executable grid-consistency test passes |
+| 2 | `wall_lsf_timber_preset_pack_with_invariants_v1` ⭐ next | LSF + timber stud presets land (4→6 wall preset archetypes, C1 advance) **with** physical invariants matrix (R'w ≤ Rw, Dn,A ≈ Dn,w + C, DnT,w > Dn,w) across all 6 presets × 3 contexts AND field VALUE pinning for AAC / masonry / CLT. Plan in `SLICE_LSF_TIMBER_PRESET_WITH_INVARIANTS_PLAN.md`. Three axes (coverage + accuracy + architecture readiness) in one slice. |
+| 3 | `wall_hostile_input_matrix_with_airborne_cartography_v1` | Wall hostile-input matrix (floor analog: 50+ layer, unknown material, invalid thickness) + engine thickness cross-cutting guardrail + `dynamic-airborne.ts` cartography for the subsequent split slice |
+| 4 | `dynamic_airborne_split_refactor_v1` | 6630-line file → `dynamic-airborne-family-detection.ts` + `-predictor-scoring.ts` + `-helpers.ts`. Zero behavior change. Guards: slice 1 invariants matrix + slice 3 hostile-input matrix + existing wall/floor suite. Unlocks future wall/floor work velocity. |
+| 5 | `wall_field_continuation_value_pinning_v1` | Every defended wall corridor × lab/field/building × every field output VALUE pinned (extends slice 2's AAC/masonry/CLT field VALUE pinning to every corridor in `dynamic-airborne-wall-selector-trace-matrix`) |
+| 6 | `wall_formula_family_widening_v1` (conditional) | Only if slice 5 audit reveals a defendable gap; closes on positive/negative/precedence matrix per added lane |
+| 7 | `mixed_floor_wall_edge_case_hardening_v1` | Cross-mode torture matrix extended with new wall corridors; existing mixed-mode tests stay green |
+| 8 | `good_calculator_final_audit_v1` | All six completion signals in §8 hold; executable grid-consistency test passes |
 
-Steps 6 and 7 are explicitly conditional — they land only if earlier
-steps reveal they are needed. The list was shortened from ten to nine
-when the retracted `preset_airborne_context_injection_v1` slice was
-removed.
+Slice 6 is explicitly conditional — lands only if slice 5 reveals a
+defendable gap. Each slice advances all three priority axes
+(coverage, accuracy, architecture readiness) simultaneously; no
+single-axis slices remain in the plan.
 
 ---
 
