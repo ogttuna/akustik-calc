@@ -52,7 +52,7 @@ That is how the 2026-04-20 doc-drift problem (captured in
 ## Operator Snapshot
 
 - active slice:
-  `preset_airborne_context_injection_v1` (selected and not started)
+  `wall_field_continuation_completeness_v1` (selected and not started — master plan step 2 after retracting the `preset_airborne_context_injection_v1` slice per `SYSTEM_AUDIT_2026-04-20.md` finding 10 retraction)
 - latest closed implementation slice:
   `wall_reorder_output_set_consistency_v1` (closed `2026-04-21` on
   `packages/engine/src/post-wall-reorder-output-set-consistency-v1-next-slice-selection-contract.test.ts`)
@@ -90,23 +90,25 @@ That is how the 2026-04-20 doc-drift problem (captured in
   reorder/C-availability inconsistency on asymmetric light-heavy stacks,
   which is now the selected next active runtime tightening slice
 - immediate next decision:
-  implement `preset_airborne_context_injection_v1` (master-plan step 2):
-  extend `preset-definitions.ts` presets with an optional
-  `airborneContext` field and thread it through the workbench load
-  path. The same slice closes two problems identified this session:
-  (a) unblocks LSF / timber stud presets that require `studType`;
-  (b) closes the 2-4 dB benchmark fit gap on AAC and masonry presets
-  (preset Rw=47 vs Wienerberger Porotherm 100 dense plaster benchmark
-  Rw=43, and preset Rw=45 vs Xella Ytong D700 150 benchmark Rw=47)
-  by running presets under their matching `LAB_MASONRY_CONTEXT`
+  implement `wall_field_continuation_completeness_v1`: enumerate every
+  defended wall corridor (`concrete_wall`, `aac_single_leaf_wall`,
+  `masonry_brick_wall`, `clt_wall`, plus the 6 engine wall corridors
+  wired through the airborne selector trace matrix) × every
+  `airborneContext.contextMode` (`element_lab`, `field_between_rooms`,
+  `building_prediction`) × every requested output
+  (`Rw, R'w, Dn,w, Dn,A, DnT,w, DnT,A, STC, C, Ctr`). Produce an
+  executable matrix (`wall-field-continuation-completeness-matrix.test.ts`)
+  that pins the live/unsupported/needs_input status per cell, and note
+  any cell where the engine currently produces `NaN`, `undefined`, a
+  crash, or a silently-different value than the matching benchmark
 - first implementation question now:
-  where does the workbench evaluate-scenario path receive
-  airborneContext today, and what is the cleanest place to inject a
-  preset-declared airborneContext so that (a) existing non-preset
-  scenarios still default to `null`, (b) benchmark tests and preset
-  tests can share the same context, and (c) the injection is visible
-  on the workbench UI so a consultant reading the proposal knows
-  which airborneContext was applied
+  which wall corridors are actually defended end-to-end across all
+  three context modes, and is there any corridor where switching from
+  `element_lab` to `field_between_rooms` or `building_prediction`
+  produces a result that does not match ISO 140-4 / EN 12354
+  expectations (e.g. `R'w` should be ≤ `Rw` for the same stack, flanking
+  must reduce field Rw relative to lab, DnT requires receiving room
+  geometry, etc.)
 - selected route family:
   `mass_timber_clt_floor_lane`
 - selected output surface:

@@ -403,61 +403,91 @@ Medium-high for the post-A selection (Option B vs C vs D). Will
 resolve once the engine investigation surfaces how RwC is actually
 derived.
 
-## Post-Session Finding 10 (2026-04-21 plan review — real accuracy gap)
+## Post-Session Finding 10 — RETRACTED (2026-04-21 verification)
 
-Discovered while verifying master-plan v2 claims against the
-implementation: the three wall presets landed by
-`wall_preset_expansion_v1` do **not** actually match their benchmark
-Rw values because presets run through the workbench without an
-injected `airborneContext`, while benchmarks run under explicit
-`LAB_MASONRY_CONTEXT` (or similar). Same physical stack, different
-context, different engine output.
+**Claim retracted.** The "wall preset context gap" finding was a false
+alarm produced by a test artifact, not a real accuracy bug. Correcting
+the audit record so future agents do not inherit an incorrect
+"masonry preset is 4 dB over spec" claim.
 
-### Measurements
+### What the original finding claimed
 
-| Preset | Stack | Preset Rw (no context) | Benchmark Rw (with context) | Gap |
-|---|---|---|---|---|
-| `aac_single_leaf_wall` | `[cement_plaster 10, ytong_aac_d700 150, cement_plaster 10]` | 45 | 47 (Xella reference, `xella_ytong_d700_150_plaster10_official_2026`, lab tolerance ±2.5 dB) | 2 dB under |
-| `masonry_brick_wall` | `[dense_plaster 13, porotherm_pls_100 100, dense_plaster 13]` | 47 | 43 (Wienerberger Porotherm, `wienerberger_porotherm_100_dense_plaster_primary_2026`, tolerance ±1 dB) | **4 dB over (exceeds benchmark tolerance)** |
-| `clt_wall` | `[gypsum_board 12.5, clt_panel 140, gypsum_board 12.5]` | 40 | n/a (no exact CLT wall benchmark in catalog) | — |
+- `masonry_brick_wall` preset Rw=47 vs Wienerberger benchmark Rw=43
+  (±1 dB tolerance): "4 dB over manufacturer spec".
+- `aac_single_leaf_wall` preset Rw=45 vs Xella benchmark Rw=47 (±2.5 dB
+  tolerance): "2 dB under".
+- Proposed fix: inject `airborneContext` into presets via a new
+  `preset_airborne_context_injection_v1` slice.
 
-### Impact
+### Why the claim was wrong
 
-The masonry preset is **not** benchmark-backed under its current
-context. A user loading the `masonry_brick_wall` preset sees Rw=47
-while the Wienerberger reference lab measurement is Rw=43. That is a
-4 dB optimistic reading on a benchmark whose tolerance is ±1 dB. This
-violates the master-plan P1 principle (coverage growth cannot sacrifice
-accuracy).
+The measurements were taken with `evaluateScenario({ ..., airborneContext: null })`
+inside `wall-preset-expansion-benchmarks.test.ts`. That is the
+**no-context engine path**, not what the workbench UI actually sends.
 
-The AAC preset's 2 dB gap is inside the aircrete / masonry `±2.5 dB`
-tolerance bucket but still not benchmark-matching.
+The real workbench flow (`apps/web/features/workbench/workbench-shell.tsx`
+lines 284-303) builds a `liveAirborneContext` for wall mode from the
+workbench store defaults:
 
-### Root cause
+```ts
+const liveAirborneContext = studyMode === "wall" ? {
+  airtightness: "good",          // workbench-store default
+  contextMode: "element_lab",    // workbench-store default
+  /* ...plus 13 other fields, mostly undefined by default */
+} : null;
+evaluateScenario({ ..., airborneContext: liveAirborneContext });
+```
 
-Presets in `preset-definitions.ts` declare only `rows` (materials +
-thicknesses). They do not declare `airborneContext`. The workbench
-loads the preset rows and runs `evaluateScenario` with `airborneContext:
-null` (or whatever default the workbench is in). Benchmarks use an
-explicit context with `airtightness: "good"` or `contextMode:
-"element_lab"` which enters different airborne derivation paths.
+The defaults `airtightness: "good"` and `contextMode: "element_lab"`
+are the exact same shape as `LAB_MASONRY_CONTEXT` used by the engine
+benchmark suite. Under this real workbench default context the engine
+produces:
 
-### Closure
+- `masonry_brick_wall` → Rw=**43** (matches Wienerberger benchmark 43 within ±1 dB)
+- `aac_single_leaf_wall` → Rw=**47** (matches Xella benchmark 47 within ±2.5 dB)
+- `clt_wall` → Rw=40 (no exact CLT wall benchmark, formula-owned)
 
-Master-plan step 2 (`preset_airborne_context_injection_v1`) now carries
-an explicit closure criterion beyond unblocking LSF / timber stud
-presets: the AAC and masonry presets must run under their benchmark-
-matching context and produce `Rw` within the benchmark's own
-tolerance. This will re-pin `wall-preset-expansion-benchmarks.test.ts`
-expectations (likely AAC 45 → 47, masonry 47 → 43) as an explicit
-accuracy change tracked under AP3 (no silent snapshot drift).
+So the presets are already benchmark-matching in the user-visible UI.
+The 2-4 dB "gap" only appears when a test evaluates the preset stack
+with `airborneContext: null`, which corresponds to a synthetic
+engine-only code path the workbench UI never takes.
 
-### Consequence for the §3 grid
+### Correction landed in this retraction
 
-All three preset rows in `MASTER_PLAN.md` §3 wall section have been
-downgraded from 🟢 Benchmark to 🟡 Formula pending step 2 closure.
-A new cross-cutting row "Wall preset context gap" is marked ⚠️
-Known bug with explicit closure pointer to step 2.
+1. `apps/web/features/workbench/wall-preset-expansion-benchmarks.test.ts`
+   updated to pass a `WORKBENCH_DEFAULT_LAB_CONTEXT` that mirrors the
+   workbench shell's `liveAirborneContext`. The pinned Rw values are now
+   43 (masonry), 47 (AAC), 40 (CLT) — benchmark-matching.
+2. `docs/calculator/MASTER_PLAN.md` §3 wall grid: AAC and masonry
+   rows restored to 🟢 Benchmark; "Wall preset context gap" row
+   removed from the cross-cutting table.
+3. `docs/calculator/MASTER_PLAN.md` §4 ROI table: step B
+   (`preset_airborne_context_injection_v1`) accuracy rating
+   downgraded from ++ to neutral; the slice is no longer needed to
+   close an accuracy gap.
+4. `docs/calculator/MASTER_PLAN.md` §4 master sequence: step 2
+   (preset airborne context injection) removed as the selected next
+   slice. The slice rationale was entirely predicated on the now-
+   retracted gap finding.
+5. `docs/calculator/CURRENT_STATE.md` and
+   `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md` updated to reflect
+   the retraction and to select a different next slice.
+
+### Why this happened (process lesson)
+
+Writing a benchmark fit test with a plausible-looking but
+non-workbench-equivalent context produced a 2-4 dB artifact that was
+then mistaken for a user-facing accuracy gap. The lesson for future
+preset tests: **the test context must mirror the workbench shell's
+`liveAirborneContext`, not a synthetic convenience context**. Added
+an inline note in
+`apps/web/features/workbench/wall-preset-expansion-benchmarks.test.ts`
+warning future agents about this trap.
+
+### Status of findings 1-9
+
+Findings 1-9 remain valid (they were rechecked during the retraction).
+Finding 10 is the only finding that was wrong.
 
 ## Validation Posture At Audit Time
 
