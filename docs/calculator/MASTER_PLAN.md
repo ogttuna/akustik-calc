@@ -1,365 +1,558 @@
 # Calculator Master Plan
 
 Last reviewed: 2026-04-21
-Iteration: 1 (initial draft — refine in session retrospectives)
+Iteration: 2 (rewritten with implementation state grid, accuracy
+preservation contract, ROI table, quantitative completion targets)
 
-This is the top-level roadmap for the DynEcho acoustic calculator. It
-answers four questions for every agent opening the project cold:
+This is the top-level roadmap for the DynEcho acoustic calculator. It is
+the second doc a fresh agent reads after `CURRENT_STATE.md`. It answers:
 
-1. What does "a good calculator" mean here, and what is the finish line?
-2. Which axis (wall vs floor) deserves the next unit of work, and why?
-3. What are the next ten strategic moves, in order?
-4. How should tests, docs, and completion signals be wired so a new agent
-   can pick up where the last one stopped without re-reading the whole
-   history?
-
-Read this before reading any slice plan. Slice plans say *what to do
-next*; this plan says *why the next slice is the next slice*.
-
----
-
-## 1. Definition Of Done
-
-A good calculator is one that satisfies every item below. "Done" does not
-mean productized (no billing, auth, multi-user, desktop app); it means
-the acoustic calculation engine plus the workbench is a tool an acoustic
-engineer can trust for realistic projects.
-
-- **Coverage**: any realistic wall or floor layer combination (using the
-  materials in the catalog) produces either a defended number or an
-  honest fail-closed answer with a specific reason. No silent garbage.
-- **Accuracy**: every defended number is tied to a source — exact
-  catalog row, official floor-system row, benchmark-backed family
-  formula, or predictor-backed family estimate. The output-origin trail
-  shows the path.
-- **Corner-case resilience**: stacks with 50+ layers, reordered layers,
-  partial hostile input, missing context — none can make the engine
-  crash, emit `NaN`, or produce a number without the matching
-  provenance.
-- **Deterministic surfaces**: the same physical stack produces the same
-  output set regardless of layer order (for physically order-insensitive
-  topologies) or produces a clear, labeled order-sensitive answer (for
-  topologies where orientation is physically meaningful).
-- **Test discipline**: every defended corridor is pinned in executable
-  tests. Tests prove calculation correctness, not just "does the code
-  run". Edge cases are covered by explicit matrices.
-- **Doc/code sync**: every closed slice has a post-contract test. Living
-  docs (CURRENT_STATE, NEXT_IMPLEMENTATION_PLAN, SOURCE_GAP_LEDGER) are
-  authoritative for "where are we"; archived docs never override them.
-- **Documentation readable by a new agent**: ~15 minutes of reading the
-  living docs is enough to start executing the next slice.
-
-The calculator is done when an acoustic engineer can load the workbench,
-build any realistic wall or floor system, and see either the correct
-numbers with source evidence or a specific reason why the stack is
-outside current coverage.
+- What does "a good calculator" actually mean, measured in concrete
+  targets (not vibes)?
+- Where is the implementation today, corridor by corridor?
+- Which path maximizes coverage AND accuracy without compromising
+  either?
+- What is the explicit contract that every slice obeys so accuracy is
+  never sacrificed for coverage?
+- What are the next ten strategic moves, in order, with their explicit
+  closure signals?
+- What tests does each move require?
+- When can we declare the calculator done?
 
 ---
 
-## 2. Current State Snapshot (2026-04-21)
+## 0. How To Read This Doc
 
-Broad validation green at the start of this plan:
+The doc is structured so a fresh agent can skim the first three sections
+(~5 minutes) and know where we are, where we are going, and why.
 
-- engine: `184/184` test files, `1021/1021` tests
-- web: `132/132` test files, `715/715` tests
-- lint, typecheck, build, whitespace: green
-
-### Floor — deep coverage
-
-Floor has multi-family coverage with source-backed pinning:
-
-- UBIQ open-web (weak-band, supported-band, carpet bound, packaged
-  finish families)
-- Knauf timber (direct mount, acoustic mount, bare timber)
-- Heavy concrete (Annex C family)
-- Reinforced concrete (low-confidence corridor frozen as closeout
-  evidence)
-- Dataholz CLT (source-truth audit, calibration tightening pinned on
-  GDMTXA04A visible estimate cap, consultant-trail + diagnostics-
-  dossier surfaces now live)
-- Raw terminal-concrete helper lane (widening, split-topology, partial-
-  order matrices)
-- TUAS / Pliteq / Regupol / Getzner spot coverage
-
-Floor tightening has diminishing returns — most slack has been pinned.
-
-### Wall — breadth expanding, depth still shallow
-
-Wall now has:
-
-- 4 presets (concrete_wall, aac_single_leaf_wall, masonry_brick_wall,
-  clt_wall), three of them benchmark-backed and non-screening
-- 6 defended engine corridors (clear double-leaf, AAC boundary, clear
-  lined-massive, G5 sibling, heavy-core trim, lab double-stud)
-- Framed wall benchmark coverage (Knauf LSF, double-stud)
-- Masonry / aircrete / composite airborne benchmark suites
-- Wall selector trace/card matrices
-
-Wall depth gaps:
-
-- Preset surface cannot inject `airborneContext.studType` — LSF and
-  timber stud presets are blocked until the preset-to-context wiring
-  lands
-- Asymmetric light-heavy stacks have a reorder C-availability
-  inconsistency (same Rw, different supported output set)
-- Wall hostile-input matrix exists only informally (probe-verified but
-  not pinned as a regression guard)
-- Wall field continuation (DnT,w, R'w, DnT,A) coverage is uneven across
-  corridors
-
-### Fail-closed candidates (deliberately blocked)
-
-These stay blocked until new source evidence appears:
-
-- `dataholz_gdmtxa04a_visible_exact_reopen` — composite dry-screed
-  surface modeling
-- `tuas_c11c_exact_import` — combined wet tuple anomaly
-- `raw_bare_open_box_open_web_impact_widening` — packaged-only source
-  evidence
-- `wall_selector_behavior_widening` — no fresh classified red
+- §1 — concrete definition of "done"
+- §2 — core principles (non-negotiable)
+- §3 — current implementation state grid (the single source of truth for
+  what the calculator does today)
+- §4 — ROI-ranked next moves and the master sequence
+- §5 — wall vs floor decision with the honest floor assessment
+- §6 — accuracy preservation contract (how coverage grows without
+  accuracy loss)
+- §7 — test strategy
+- §8 — completion signals (6 measurable criteria)
+- §9 — doc organization and cross-referencing rules
+- §10 — how to resume from this plan
 
 ---
 
-## 3. Next Axis: Wall
+## 1. Definition Of "Good Calculator" (Quantitative)
 
-**Wall first, not floor.** Reasons, weighted by mission fit:
+A good calculator is a tool an acoustic engineer can trust for realistic
+projects. Product layers (billing, auth, multi-user, desktop app) are
+**explicit non-goals** for this plan — they re-enter the roadmap only
+after the calculator itself is done.
 
-1. Floor depth is high; marginal floor tightening gains diminishing
-   returns. Most remaining floor slices are source-blocked (waiting on
-   new lab data, not engine work).
-2. Wall breadth is now adequate (4 presets) but wall depth is not. A
-   user building a realistic wall can hit gaps that do not occur on
-   floor: reorder inconsistency, missing LSF context, uneven field
-   continuations.
-3. Wall expansion is runnable today with existing engine benchmarks
-   (Knauf LSF, Xella AAC, Wienerberger masonry, Celcon aircrete). No
-   external research dependency blocks the next three wall slices.
-4. The stated product mission weighs coverage and accuracy equally —
-   wall depth work advances both axes simultaneously, while floor
-   tightening advances only accuracy.
+Done means **all six criteria below hold simultaneously**:
 
-Floor work re-enters the priority queue when one of:
-- a new source-backed floor family lands externally (new lab dataset),
-- a floor regression appears (any defended corridor goes red), or
-- wall coverage reaches parity with floor and there is no higher-ROI
-  wall slice available.
+**D1. Coverage**
+- ≥6 benchmark-backed wall presets across distinct family archetypes:
+  single-leaf masonry, single-leaf AAC, mass-timber CLT, light-steel
+  stud (LSF), timber stud, heavy lined-massive. Each preset pinned to a
+  named reference source.
+- ≥8 defended floor corridors across concrete, reinforced concrete, CLT,
+  open-web steel, open-box timber, heavy masonry. Already achieved.
+- Any user-built realistic stack (single-leaf, double-leaf decoupled,
+  mass timber, lined masonry) produces either a defended number or an
+  explicit fail-closed answer with a specific reason.
 
----
+**D2. Accuracy**
+- Every defended `Rw`, `R'w`, `Ln,w`, `DnT,w`, `DnT,A` value on every
+  defended corridor is tied to a named source (exact catalog row,
+  official floor-system row, benchmark-backed family formula, or
+  predictor-backed family estimate).
+- Benchmark fit tolerance: mean absolute error ≤1.5 dB against the
+  official dataset for every defended corridor; max error ≤4 dB. (These
+  are the already-established framed-wall benchmark thresholds;
+  masonry and CLT corridors adopt the same bar.)
+- No defended output depends on layer order for physically
+  order-insensitive topologies.
 
-## 4. The Next Ten Strategic Moves
+**D3. Corner-case resilience**
+- Stacks of 50+ layers produce either a defended answer or a
+  specifically-labeled fail-closed output. Never `NaN`, never `undefined`,
+  never a crash.
+- Invalid thickness (`0`, negative, non-numeric, `NaN`, `Infinity`)
+  triggers a specific warning and a defended fail-closed output.
+- Unknown `materialId` triggers a specific warning and fail-closed.
+- Layer reordering of physically equivalent stacks produces identical
+  output sets.
 
-Each step is a logical slice or slice group. Details live in each
-slice's own plan document when the slice becomes active.
+**D4. Test discipline**
+- Every defended corridor is pinned in executable tests.
+- Every closed slice has a post-slice contract test naming what closed
+  and what was selected next.
+- Hostile-input matrices exist for both floor and wall.
+- Reorder invariance matrix covers both symmetric and asymmetric
+  topologies.
 
-1. **Reorder output-set consistency** — fix the C-availability flip on
-   asymmetric light-heavy stacks so layer order never changes which
-   outputs are available. (active, selected)
-2. **Preset airborneContext injection** — open the preset surface to
-   `airborneContext.studType`. Unblocks LSF and timber stud presets.
-3. **Wall preset pack 2** — add `light_steel_stud_wall`, `timber_stud_wall`,
-   and a second masonry archetype (HELUZ / Silka CS) with benchmark-
-   pinned Rw per context.
-4. **Wall hostile-input matrix** — formally pin the hostile-input
-   behavior probed informally on 2026-04-20. Floor has this; wall
-   should match.
-5. **Engine-level thickness / layer-count guardrail** — cross-cutting
-   tests for `thicknessMm: 0 | -N | NaN | Infinity | non-numeric` and
-   50+ layer stacks. Defends both floor and wall.
-6. **Wall field continuation completeness audit** — for every defended
-   wall corridor, verify `R'w`, `DnT,w`, `DnT,A` resolve predictably
-   under field and building contexts. Close any gap with a pinned
-   corridor test.
-7. **`dynamic-airborne.ts` architectural split** — 6630-line file broken
-   into family-detection, predictor-scoring, helpers. Landed as a
-   dedicated no-runtime refactor once the wall work above makes the
-   internal seams obvious.
-8. **Wall formula family widening — conditional** — if the audit in
-   step 6 shows gaps the generic airborne calculator does not cover,
-   add explicit mass-law / Sharp / Davy lanes. If the generic lane
-   already covers realistic cases, skip this step and document why.
-9. **Mixed floor/wall edge-case hardening** — shared boundary
-   conditions: horizontal partitions, vertical-to-horizontal
-   transitions, cross-mode workbench detours. Probably one slice, not
-   many.
-10. **Final "good calculator" audit and sign-off** — comprehensive
-    regression matrix, accuracy benchmark sweep against all landed
-    catalog entries, explicit coverage ledger listing every supported
-    topology and every fail-closed candidate with reason. If this
-    audit produces zero new critical findings, the calculator is done.
+**D5. Doc/implementation sync**
+- The agent resume triangle (CURRENT_STATE + MASTER_PLAN +
+  NEXT_IMPLEMENTATION_PLAN) is internally consistent.
+- §3 implementation grid matches the engine state (an executable test
+  asserts the grid matches the engine's defended corridor list).
+- No doc in `docs/calculator/` disagrees with the current state; when
+  a doc goes stale it is either deleted, archived, or updated to match.
 
-Steps 1-3 are high confidence. Steps 4-6 depend on what step 1 reveals.
-Step 7 is scheduled but its exact shape depends on steps 1 and 6.
-Step 8 may be skipped entirely. Steps 9-10 are endgame.
+**D6. Architectural hygiene**
+- No engine file exceeds 2000 lines without a split-deferred note
+  explaining why.
+- Every non-obvious decision (priority ordering, cap values, tolerance
+  bands) has an inline comment explaining *why that specific value or
+  ordering*.
+
+When D1–D6 hold, the calculator is done. The ten strategic moves in §4
+advance us to that state.
 
 ---
 
-## 5. Test Strategy
+## 2. Core Principles
 
-Tests are the primary correctness artifact. Adding a slice without a
-test that would fail without that slice does not count as progress.
+Non-negotiable. Every slice must satisfy all four.
 
-### Test tiers currently in use
+**P1. Coverage + accuracy advance together, or neither advances.**
+Any slice that grows coverage must either (a) leave every existing
+defended corridor's numerical output unchanged, or (b) improve the
+accuracy of what changes with an explicit tolerance proof. Coverage
+gained at the cost of accuracy is a regression.
 
-- **Source-truth audits** — pin exact catalog values (Rw, Ln,w,
-  RwCtr, CI, CI50-2500, Ln,w+CI). Example:
-  `dataholz-clt-source-truth-audit.test.ts`.
-- **Benchmark fit audits** — pin expected values per a known dataset
-  with explicit tolerance. Examples:
-  `airborne-framed-wall-benchmark.test.ts`,
-  `airborne-aircrete-benchmark.test.ts`.
-- **Corridor guard matrices** — pin positive topology matches and
-  explicit fail-closed negatives. Example:
-  `raw-terminal-concrete-helper-widening-matrix.test.ts`.
+**P2. Every defended output traces to a named source.**
+No defended number exists without a named evidence tier: exact catalog
+row, official floor-system row, benchmark-backed family formula,
+predictor-backed family estimate, or formula-owned lane with an
+inline citation. The absence of a source tier means the output is
+fail-closed.
+
+**P3. Tests measure correctness, not execution.**
+Every test has an explicit assertion on a value, state, or behavior.
+Tests that only confirm "the code ran" are not tests. Every corridor
+widening lands with positive matches, negative fail-closeds, and
+precedence tests simultaneously.
+
+**P4. Docs reflect implementation state, not intentions.**
+The implementation state grid (§3) matches the engine's actual
+corridor list. When they drift, the drift is the highest-priority fix.
+Plans describe the future; state describes the present; they never
+trade places.
+
+---
+
+## 3. Implementation State Grid (2026-04-21)
+
+Live snapshot of what the calculator actually handles today. Status
+codes:
+
+- 🟢 **Exact** — source-backed catalog row or official floor-system row
+- 🟢 **Benchmark** — benchmark fit audit with defended tolerance
+- 🟡 **Formula** — formula-owned lane with defended citation
+- 🟡 **Family** — predictor-backed family estimate
+- 🟠 **Screening** — low-confidence lane explicit as screening-only
+- 🔴 **Fail-closed** — intentionally blocked, waiting for evidence
+- ⚪ **Not yet covered** — no defended lane today
+
+### Floor
+
+| Family | Status | Evidence |
+|---|---|---|
+| UBIQ open-web steel (weak-band) | 🟢 Exact | `ubiq-open-web-weak-band-rows.ts` + source-truth audits |
+| UBIQ open-web steel (supported-band) | 🟢 Exact | 90 exact rows pinned |
+| UBIQ carpet bound (Ln,w+CI ≤45) | 🟢 Exact | 18 bound rows pinned |
+| Knauf timber direct mount | 🟢 Exact | `knauf-direct-timber-exact` preset + benchmark |
+| Knauf acoustic mount timber | 🟢 Exact | `knauf-acoustic-mount-exact` preset + benchmark |
+| Heavy concrete Annex C family | 🟢 Benchmark | `impact-heavy-floor-planned-scope-benchmark` |
+| Reinforced concrete (vinyl + elastic) | 🟠 Screening | Bounded low-confidence corridor frozen |
+| Reinforced concrete (formula boundaries) | 🟡 Formula | Heavy bare / heavy floating formula lanes |
+| Dataholz CLT dry | 🟢 Exact | `dataholz_gdmtxn01_dry_clt` + source-truth audit |
+| Dataholz CLT wet + suspended | 🟢 Exact | GDMNXA02A family exact rows |
+| Dataholz GDMTXA04A (direct exact) | 🔴 Fail-closed | Composite dry-screed surface unmodeled |
+| Dataholz GDMTXA04A (visible estimate) | 🟡 Formula | Capped visible estimate boundary + consultant-trail + dossier |
+| CLT local combined (C2c/C3c/C4c/C7c) | 🟢 Exact | Local combined exact anchor pack |
+| CLT local combined (C5c) | 🟡 Family | Predictor-backed proxy |
+| Raw terminal-concrete helper | 🟡 Formula | Widening + split-topology + partial-order matrices |
+| TUAS C11c exact import | 🔴 Fail-closed | Combined wet tuple anomaly |
+| Raw bare open-box/open-web impact | 🔴 Fail-closed | No bare-carrier source evidence |
+| Pliteq / Regupol / Getzner | 🟢 Exact | Spot coverage on specific preset IDs |
+
+**Floor assessment:** coverage is deep across all major building
+families. Remaining work is largely source-blocked (waiting on new lab
+data for GDMTXA04A composite, C11c anomaly, bare carrier evidence). Most
+runtime floor slices have diminishing returns.
+
+### Wall
+
+| Family | Status | Evidence |
+|---|---|---|
+| Concrete double-leaf (`concrete_wall` preset) | 🟠 Screening | 4-layer screening composition |
+| AAC single-leaf (`aac_single_leaf_wall` preset) | 🟢 Benchmark | Ytong D700 + plaster, Rw=45 (benchmark ref 47) |
+| Masonry brick (`masonry_brick_wall` preset) | 🟢 Benchmark | Wienerberger Porotherm + plaster, Rw=47 |
+| CLT wall (`clt_wall` preset) | 🟡 Formula | CLT 140 + gypsum lining, Rw=40 (no exact catalog) |
+| Light-steel stud (LSF) | ⚪ Not yet covered | Engine benchmarks exist; preset blocked by `airborneContext.studType` injection gap |
+| Timber stud | ⚪ Not yet covered | Same blocker as LSF |
+| Clear double-leaf corridor | 🟡 Family | Defended corridor guard |
+| AAC boundary corridor | 🟡 Family | Defended corridor guard |
+| Clear lined-massive corridor | 🟡 Family | Defended corridor guard |
+| G5 sibling corridor | 🟡 Family | Defended corridor guard |
+| Heavy-core trim corridor | 🟡 Family | Defended corridor guard |
+| Lab double-stud corridor | 🟡 Family | Defended corridor guard |
+| Wall hostile-input matrix | ⚪ Not yet covered | Floor analog exists; wall does not |
+| Wall reorder invariance | 🔴 Known bug | Asymmetric stacks show C-availability flip |
+| Wall field continuation per corridor | ⚪ Not audited | Some corridors work, not systematically verified |
+
+**Wall assessment:** breadth just improved (3 new presets), depth still
+shallow. Gaps are runnable: no source-blocking, mostly engine/workbench
+work.
+
+### Cross-cutting
+
+| Concern | Status | Evidence |
+|---|---|---|
+| Floor hostile-input matrix | 🟢 Exact | `raw-floor-hostile-input-*-matrix.test.ts` |
+| Wall hostile-input matrix | ⚪ Not yet covered | To land in master-plan step 4 |
+| Engine thickness validity | ⚪ Partially | Workbench normalizeRows emits warnings; engine-level guard absent |
+| Many-layer (50+) stability | 🟡 Family | Probe-verified, not formally pinned |
+| Reorder output-set invariance | 🔴 Known bug | Asymmetric stack finding 9 in audit |
+| `dynamic-airborne.ts` size | ⚪ Hygiene debt | 6630 lines; split deferred to master-plan step 7 |
+
+### How to keep this grid honest
+
+Every closeout slice must either add a row, flip a row's status, or
+confirm no grid row changes. The grid becomes stale if a slice lands
+without updating it. Drift prevention: §9 cross-reference rule plus a
+planned executable test in master-plan step 10 that asserts the grid
+rows match engine reality.
+
+---
+
+## 4. Next Moves (ROI-Ranked)
+
+Five candidate directions were weighed on 2026-04-21. Ranking by
+mission fit (coverage + accuracy, no accuracy compromise), scope,
+user-visible impact, and risk:
+
+| # | Candidate | Coverage | Accuracy | Scope | Risk | Selected |
+|---|---|---|---|---|---|---|
+| A | Reorder output-set consistency (finding 9) | neutral | + | 1-2 d | low | ★ active next |
+| B | Preset airborneContext injection → LSF + timber stud presets | ++ | neutral | 1-2 d | medium | step 2 |
+| C | Wall formula family widening (mass-law/Sharp/Davy) | ++ | + | 2-3 d | medium | conditional step 8 |
+| D | `dynamic-airborne.ts` split | neutral | neutral (enabler) | 2-3 d | high | conditional step 7 |
+| E | Engine-level hostile thickness guardrail | neutral | + | 0.5 d | very low | step 5 |
+
+**Why A is selected as step 1, not B or C:**
+
+1. A has a concrete observed bug; B and C start from speculation.
+2. A reveals engine internals (`RwC` derivation) before we build more on
+   them. B and C may turn out to be unnecessary once A's probe
+   deepening is done.
+3. A protects user trust: "dragging a layer changes which outputs I can
+   compute" is exactly the kind of non-determinism that erodes
+   confidence in acoustic software.
+4. A's test infrastructure (reorder invariance matrix) stays useful as
+   a guardrail for every later wall and floor slice.
+
+**Why not reorder C for accuracy?** Because A's scope is bounded and B
+unlocks coverage without engine changes once A lands; doing A first
+lets B's airborneContext work build on a deterministic foundation.
+
+### The Master Sequence (ten moves)
+
+Each move is a slice or tight slice group. Each has an explicit closure
+signal — the test that must be green to call it done.
+
+| # | Slice | What closes it |
+|---|---|---|
+| 1 | `wall_reorder_output_set_consistency_v1` | `wall-reorder-invariance-matrix.test.ts` green across symmetric + asymmetric topologies |
+| 2 | `preset_airborne_context_injection_v1` | `preset-context-injection-matrix.test.ts` proves injected `studType` reaches the engine and produces LSF-tuned `Rw` |
+| 3 | `wall_preset_pack_2_v1` | LSF + timber stud + second-masonry presets pinned in `wall-preset-pack-2-benchmarks.test.ts` against named source rows |
+| 4 | `wall_hostile_input_matrix_v1` | `raw-wall-hostile-input-answer-matrix.test.ts` + workbench route/card matrix mirror the floor discipline |
+| 5 | `engine_thickness_guardrail_v1` | `hostile-thickness-input.test.ts` covers floor + wall × five invalid-thickness classes with defended fail-closed |
+| 6 | `wall_field_continuation_completeness_v1` | Executable matrix across every defended wall corridor × field/building contexts × R'w / DnT,w / DnT,A with pinned status |
+| 7 | `dynamic_airborne_split_refactor_v1` (conditional) | Post-refactor regression: zero test changes, zero `Rw` changes, file sizes ≤2000 lines |
+| 8 | `wall_formula_family_widening_v1` (conditional) | Only if step 6 audit reveals a defendable gap; closes on positive/negative/precedence matrix per added lane |
+| 9 | `mixed_floor_wall_edge_case_hardening_v1` | Cross-mode torture matrix extended with new wall corridors; existing mixed-mode tests stay green |
+| 10 | `good_calculator_final_audit_v1` | All six completion signals in §8 hold; executable grid-consistency test passes |
+
+Steps 7 and 8 are explicitly conditional — they land only if earlier
+steps reveal they are needed.
+
+---
+
+## 5. Wall Vs Floor Decision (Honest Both-Sides)
+
+### Floor assessment
+
+- Floor coverage depth is high: seven source-backed families, multiple
+  benchmark fit audits, extensive corridor guards (§3).
+- Remaining floor gaps are source-blocked: GDMTXA04A composite surface,
+  C11c frequency anomaly, bare carrier impact evidence. None of these
+  unblocks by engine work alone.
+- Floor accuracy gaps that *could* be engine-addressable:
+  - Field continuation parity across all floor corridors — not fully
+    audited systematically
+  - Floor reorder invariance — same open question as wall
+  - Hostile-input matrix already exists; thickness guardrail deferred
+- If we chose floor first, the work would be: audit field continuation
+  completeness, add reorder invariance. Both small and valuable but
+  **not visibly coverage-expanding** to the user.
+
+### Wall assessment
+
+- Wall coverage depth is shallow despite recent preset expansion
+- Multiple runnable gaps: reorder bug, preset context injection,
+  hostile-input matrix, field continuation audit
+- Every wall gap moves the user-visible capability forward because wall
+  is currently the weaker half
+
+### Decision
+
+**Wall.** Reasons, ranked:
+
+1. Equal weighting of coverage and accuracy (P1) means the axis that
+   is behind on *both* dimensions gets priority.
+2. Wall has runnable work that grows coverage (steps 2, 3, 8) and
+   tightens accuracy (steps 1, 4, 6) simultaneously. Floor can only
+   tighten.
+3. The cross-cutting step 5 (thickness guardrail) advances floor
+   accuracy opportunistically while wall work continues.
+4. Step 6 (field continuation audit) covers floor corridors too — when
+   we do it for wall, we can do it for floor in the same slice.
+
+**Floor re-enters priority** when:
+
+- A new source-backed floor family lands externally (new dataset, new
+  lab report),
+- A floor regression appears (any defended corridor goes red), or
+- Wall coverage reaches parity with floor (§3 grid wall section has
+  no more 🔴 or ⚪ rows).
+
+---
+
+## 6. Accuracy Preservation Contract
+
+P1 says coverage and accuracy advance together. This section is the
+explicit contract every slice obeys to make that true.
+
+**AP1. Pre-slice snapshot.**
+Before a slice starts, run `pnpm calculator:gate:current` and
+`pnpm check`. Record the green baseline: exact test file and test
+counts. This is the rollback target.
+
+**AP2. Tests lead implementation.**
+For every new defended output the slice adds, a test asserting the
+exact value on the canonical input lands before the engine change.
+Widening slices land positive + negative + precedence tests
+simultaneously. Tightening slices land the invariance test before the
+fix so the bug is test-captured.
+
+**AP3. No defended value changes silently.**
+If any existing `Rw`, `Ln,w`, `DnT,w`, etc. value changes during the
+slice, the change must be explicit: the change is documented in the
+slice's post-contract, justified with source evidence, and approved
+by explicit test updates (not silent snapshot drift).
+
+**AP4. Blocked-source posture is never loosened.**
+The four blocked candidates (GDMTXA04A direct exact, C11c exact
+import, raw bare impact, wall-selector widening) stay blocked unless
+the slice imports new source evidence that explicitly justifies the
+reopen. "The nearby test turned green" is not justification.
+
+**AP5. Precedence stays stable.**
+Exact > catalog > bound > family > formula > low-confidence >
+unsupported. A new formula-owned lane cannot shadow an existing
+exact or family lane for the same physical topology. Tests prove
+precedence for every new lane.
+
+**AP6. Reorder invariance is non-negotiable once step 1 lands.**
+After `wall_reorder_output_set_consistency_v1` closes, every new
+slice must keep the reorder invariance matrix green. Any new slice
+that would break it stops and rethinks.
+
+**AP7. Broad validation caps every slice.**
+Every slice closes on `pnpm check` green, not just
+`pnpm calculator:gate:current`. The focused gate catches the slice's
+targeted surfaces; the broad check catches everything else.
+
+These seven rules are how "kapsam artarken doğruluktan asla fire veremeyiz"
+operationalizes. Without them, coverage growth is hope.
+
+---
+
+## 7. Test Strategy
+
+Tests are the calculator's primary correctness artifact. Every slice
+adds tests; slices that do not add tests are not slices.
+
+### Existing test tiers
+
+- **Source-truth audits** — pin exact catalog values. One per
+  source-backed family.
+- **Benchmark fit audits** — pin expected values per a named dataset
+  with tolerance. One per benchmarked corridor.
+- **Corridor guard matrices** — pin positive matches + explicit
+  fail-closed negatives + precedence. One per defended corridor.
 - **Route/card matrices** — pin workbench-side output card status,
-  tone, provenance wording. Example:
-  `dataholz-clt-source-truth-route.test.ts`.
-- **Post-slice contracts** — pin "what closed, what got selected next"
-  so the chain is readable. Pattern: `post-*-next-slice-selection-contract.test.ts`.
-- **Hostile-input matrices** — floor has them; wall will match in
-  step 4.
+  tone, provenance wording.
+- **Post-slice contracts** — pin "what closed, what got selected
+  next" so the chain is readable.
+- **Hostile-input matrices** — floor has them; wall lands in step 4.
 
-### Test additions this master plan requires
+### Test additions the master plan requires
 
-- **Reorder invariance matrix** (step 1) — same materials in every
-  legal order produce the same supportedOutputs for topologically
-  order-insensitive stacks; explicit order-sensitive stacks produce a
-  labeled order-dependent answer.
-- **Preset context matrix** (step 2) — preset + injected
-  airborneContext produces the expected Rw within a stated tolerance
-  against the benchmark dataset.
-- **Wall preset benchmark fit tests** (step 3) — each new preset pinned
-  against its benchmark source row.
-- **Wall hostile-input matrix** (step 4) — mirrors
-  `raw-floor-hostile-input-answer-matrix.test.ts` for walls.
-- **Engine hostile-thickness test** (step 5) — cross-cutting guard.
-- **Wall field continuation completeness matrix** (step 6) — every
-  corridor × every field output × every context produces a pinned
-  status (live / unsupported / needs_input).
-- **Coverage ledger test** (step 10) — an executable test asserting
-  the coverage ledger list matches the list of defended corridors, so
-  the ledger cannot silently drift from the engine.
+| Test | Master-Plan Step | Rationale |
+|---|---|---|
+| `wall-reorder-invariance-matrix.test.ts` | 1 | Prove asymmetric stacks have identical output sets across order reversal |
+| `preset-context-injection-matrix.test.ts` | 2 | Prove injected `airborneContext.studType` flows preset → engine and changes Rw as expected |
+| `wall-preset-pack-2-benchmarks.test.ts` | 3 | Pin canonical Rw per new preset against named source row |
+| `raw-wall-hostile-input-answer-matrix.test.ts` + workbench counterpart | 4 | Mirror the floor hostile-input discipline on walls |
+| `hostile-thickness-input.test.ts` | 5 | Cross-cutting engine guardrail for invalid thickness classes |
+| `wall-field-continuation-completeness-matrix.test.ts` | 6 | Every defended wall corridor × every field/building context × every field output pinned |
+| `airborne-dynamic-split-regression.test.ts` | 7 (conditional) | Post-refactor: zero behavior change |
+| `mixed-floor-wall-cross-mode-wall-extension-matrix.test.ts` | 9 | Cross-mode torture extended to new wall corridors |
+| `coverage-grid-consistency.test.ts` | 10 | Assert §3 grid rows match the engine's defended corridor list |
 
-### Tests we do not add (explicit non-goals)
+### Tests the master plan does NOT add
 
-- Tests that only measure "does the code run" without measuring
-  correctness. Every test must have an explicit assertion on a value
-  or a state.
-- Tests that duplicate an existing benchmark. If a value is already
-  pinned in `airborne-aircrete-benchmark`, do not pin it again in
-  `aac_preset_benchmark` — the second test just has to confirm the
-  preset routes through the already-pinned benchmark path.
+- Duplicate benchmark tests (a preset test that re-pins a value already
+  pinned by the benchmark audit).
+- "Does it run" tests without value assertions.
+- Tests that require airborneContext but hide that dependency; every
+  test must declare its context explicitly.
+
+### Testing cadence
+
+Inside a slice, the loop is: write test red → engine fix → test green →
+adjacent tests green → broad check green → post-contract → update §3
+grid → slice closed.
 
 ---
 
-## 6. Documentation Organization
+## 8. Completion Signals (Measurable)
 
-For a new agent, "where am I" should resolve from three docs:
+When all six hold, the calculator is done. Each maps to a specific
+artifact that can be checked.
 
-- `docs/calculator/CURRENT_STATE.md` — the current snapshot (what
-  closed, what is selected, what is frozen, latest validation status).
-- `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md` — the current slice
-  detail (how to execute what CURRENT_STATE points at).
-- `docs/calculator/MASTER_PLAN.md` (this file) — why the current slice
-  is the current slice, and what comes after.
+| # | Signal | How To Measure |
+|---|---|---|
+| C1 | Wall preset coverage ≥ 6 distinct archetypes | `preset-definitions.ts` wall presets ≥ 6, each with named source row |
+| C2 | Every defended wall corridor has source-truth or benchmark fit audit | §3 grid wall section — no 🟡 rows without an audit link |
+| C3 | Field continuation coverage complete | `wall-field-continuation-completeness-matrix.test.ts` + floor equivalent both green |
+| C4 | Hostile-input discipline | Floor + wall hostile-input matrices green; `hostile-thickness-input.test.ts` green |
+| C5 | Reorder invariance | `wall-reorder-invariance-matrix.test.ts` + floor equivalent green across symmetric AND asymmetric topologies |
+| C6 | Architectural hygiene | No engine file > 2000 lines without a split-deferred comment; inline comments on every non-obvious decision |
 
-Supporting documents:
+The `good_calculator_final_audit_v1` slice (step 10) exists to verify
+all six signals explicitly with an executable checklist test.
 
-- `docs/calculator/SYSTEM_AUDIT_2026-04-20.md` — findings that feed
-  the master plan.
-- `docs/calculator/WALL_COVERAGE_EXPANSION_PLAN.md` — the wall program
-  tracked across multiple slices (steps 2-6 of the master plan).
-- `docs/calculator/SOURCE_GAP_LEDGER.md` — source-backed and deferred
-  families ledger.
-- `docs/calculator/CALCULATION_MODEL_AND_VALIDATION.md` — answer-
-  origin meaning and how evidence tiers compose.
-- `docs/calculator/SYSTEM_MAP.md` — end-to-end runtime boundaries.
+---
 
-Historical checkpoint handoffs stay under `docs/calculator/CHECKPOINT_*`
-and `docs/archive/`. They inform history but never override the living
-docs above.
+## 9. Documentation Organization
+
+### The Agent Resume Triangle
+
+Three docs are authoritative for "where are we and what next":
+
+1. `docs/calculator/CURRENT_STATE.md` — snapshot.
+2. `docs/calculator/MASTER_PLAN.md` (this file) — strategic roadmap +
+   implementation state grid.
+3. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md` — tactical slice detail.
+
+Drift between the three is the first thing to fix before any other
+work.
 
 ### Cross-reference rule
 
-Any doc that implies "we are working on X" must link to CURRENT_STATE.md
-and MASTER_PLAN.md. Any doc that lists slices must link to its slice
-plan or say "see slice's own plan when it becomes active". This rule is
-how the next agent finds the root of the current work without searching.
+Any doc that implies "we are working on X" must link to the resume
+triangle. Any doc that lists slices must link to its slice plan or
+say "see slice's own plan when it becomes active". This is how the
+next agent finds the root of the current work without searching.
 
-### Doc freshness rule
+### Doc freshness rule (four-point closeout)
 
-Every slice closeout must update:
-1. `CURRENT_STATE.md` (active slice moved, validation recorded)
-2. `NEXT_IMPLEMENTATION_PLAN.md` (Now + Current Position + Selected
-   Next Slice sections)
-3. The corresponding post-contract test (executable closure record)
-4. The relevant program plan doc (this one, WALL_COVERAGE_EXPANSION_PLAN,
-   or SOURCE_GAP_LEDGER) depending on what the slice touched
+Every closed slice updates:
+
+1. `CURRENT_STATE.md` — active slice moved, validation recorded
+2. `NEXT_IMPLEMENTATION_PLAN.md` — Now, Current Position, Selected Next
+   Slice sections
+3. The slice's post-contract test — executable closure record
+4. The corresponding program plan doc and §3 grid of this file
 
 Skipping any of the four is how drift restarts.
 
----
+### Docs that support the triangle
 
-## 7. Signals That Say "We Are Approaching Done"
+- `SYSTEM_AUDIT_2026-04-20.md` — audit findings + post-session priority
+  analysis that feed this master plan
+- `WALL_COVERAGE_EXPANSION_PLAN.md` — wall program tracked across
+  master-plan steps 2, 3, 4, 6
+- `SOURCE_GAP_LEDGER.md` — source-backed and deferred-family ledger
+- `CALCULATION_MODEL_AND_VALIDATION.md` — answer-origin meaning and
+  evidence-tier composition
+- `SYSTEM_MAP.md` — end-to-end runtime boundaries
 
-These are objective signals, not vibes. If all six hold, the calculator
-is done.
+### Historical context
 
-1. **Wall preset coverage**: at least 6 presets across distinct family
-   archetypes (single-leaf masonry, single-leaf AAC, mass-timber CLT,
-   light-steel stud, timber stud, heavy concrete lined-massive).
-2. **Wall corridor coverage**: every defended corridor has a
-   source-truth audit or a benchmark fit audit. No corridor lives
-   purely on a route/card matrix without underlying benchmark
-   evidence.
-3. **Field continuation coverage**: every wall and every floor corridor
-   has a defended `R'w`, `DnT,w`, and `DnT,A` path (or an explicit
-   fail-closed reason) under both `field_between_rooms` and
-   `building_prediction` contexts.
-4. **Hostile-input discipline**: both floor and wall have dedicated
-   hostile-input matrices, and the cross-cutting engine thickness
-   guardrail is landed.
-5. **Reorder discipline**: reorder invariance matrix proves
-   symmetric stacks produce identical output sets across every legal
-   permutation, and order-sensitive stacks produce labeled answers.
-6. **Architectural hygiene**: no engine file exceeds 2000 lines
-   without an explicit split-deferred note in docs, and every non-
-   obvious decision (priority ordering, cap values, tolerance bands)
-   has an inline comment explaining *why*.
+Checkpoint handoffs and archived status live in `docs/calculator/CHECKPOINT_*`
+and `docs/archive/`. They inform history but never override the living
+triangle.
 
-The final "good calculator" audit in step 10 verifies these six
-signals explicitly.
+### What to delete, archive, or keep
+
+- **Keep** — anything in the resume triangle or directly referenced
+  from it
+- **Archive** — checkpoint handoffs older than the current state but
+  still useful as context
+- **Delete** — only docs that are provably wrong AND cannot be
+  rescued by an update. If in doubt, archive instead (per working
+  discipline: no deletion that risks information loss)
 
 ---
 
-## 8. Open Questions This Plan Defers
+## 10. How To Resume From This Plan
 
-- Which wall formula families are genuinely missing vs. already covered
-  by the generic airborne calculator? Resolved in step 6 audit.
-- Does `dynamic-airborne.ts` split happen before or after the wall
-  formula widening? Resolved after step 1 reveals how derivation is
-  structured.
-- Are masonry and composite-panel archetypes extensible with the
-  existing catalog, or do they need a `wall-systems/` catalog folder?
-  Resolved in step 3 when the second masonry preset lands.
-- When does desktop-app / SaaS productization enter the roadmap? Out
-  of scope for this plan — this plan only defines a good calculator,
-  not a product.
-
----
-
-## 9. How To Resume From This Plan
-
-New agent opens the project:
+A fresh agent opens the project:
 
 1. Read `docs/calculator/CURRENT_STATE.md` (≤5 min). Learn what just
    closed and what is selected.
-2. Read `docs/calculator/MASTER_PLAN.md` (this file, ≤5 min). Learn
-   why that selection is right.
+2. Read this file §3 (implementation state grid) + §4 (next moves)
+   (≤5 min). Learn why that selection is right.
 3. Read `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md` §Now and
    §Selected Next Slice (≤5 min). Get the tactical detail.
 4. Run `pnpm calculator:gate:current`. Confirm green baseline.
 5. Start the active slice.
 
-If any of those four docs says something different, the agent stops
-and flags the drift. That is how we avoid restarting the doc-drift
-problem documented in this session's audit.
+If any of those three docs says something different from the others,
+the agent stops and flags the drift. That is how we avoid restarting
+the doc-drift problem documented in `SYSTEM_AUDIT_2026-04-20.md`.
+
+---
+
+## 11. Open Questions This Plan Defers
+
+- Does the generic airborne calculator already handle realistic
+  single-leaf and double-leaf walls accurately enough that explicit
+  mass-law/Sharp/Davy lanes are unnecessary? Resolved by step 6
+  audit.
+- Does `dynamic-airborne.ts` need to split before step 8 widening, or
+  can the widening land inside the existing file? Resolved after step
+  1 reveals how derivation is structured.
+- When does desktop-app / SaaS productization enter the roadmap? Out
+  of scope for this plan — the calculator is productless until it is
+  proven good.
+- Are exact wall rows from Dataholz / Knauf / Rockwool worth importing
+  now, or only once the formula-owned lanes are stable? Re-evaluated
+  after step 3 closes.
+
+---
+
+## Changelog
+
+- **Iteration 2 (2026-04-21)**: rewritten with §3 implementation state
+  grid, §6 accuracy preservation contract, §4 ROI table, §1
+  quantitative completion targets, §8 measurable completion signals,
+  honest floor assessment in §5, explicit step closure signals.
+- **Iteration 1 (2026-04-21)**: initial draft with 10 strategic moves
+  and completion signals.

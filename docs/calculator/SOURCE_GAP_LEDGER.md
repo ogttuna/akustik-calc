@@ -8,10 +8,15 @@ Purpose:
 - record which families are already source-backed enough to tighten
 - record which families must stay fail-closed until stronger evidence exists
 
-Read together with:
+Read together with the agent resume triangle:
+
+- [CURRENT_STATE.md](./CURRENT_STATE.md) — snapshot
+- [MASTER_PLAN.md](./MASTER_PLAN.md) — §3 implementation state grid cross-references this ledger
+- [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md) — tactical slice detail
+
+And:
 
 - [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
-- [CURRENT_STATE.md](./CURRENT_STATE.md)
 - [DYNAMIC_CALCULATOR_PLAN.md](./DYNAMIC_CALCULATOR_PLAN.md)
 - [../foundation/SOURCE_REPO_POLICY.md](../foundation/SOURCE_REPO_POLICY.md)
 

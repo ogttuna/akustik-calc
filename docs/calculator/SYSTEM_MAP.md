@@ -10,10 +10,14 @@ Document role:
 - give future agents one place to answer “how does the system work?” before
   changing solver, workbench, or docs
 
-Use this together with:
+Use this together with the agent resume triangle:
 
-- [CURRENT_STATE.md](./CURRENT_STATE.md)
-- [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md)
+- [CURRENT_STATE.md](./CURRENT_STATE.md) — snapshot (what just closed, what is selected)
+- [MASTER_PLAN.md](./MASTER_PLAN.md) — strategic roadmap + implementation state grid (§3)
+- [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md) — tactical slice detail
+
+And:
+
 - [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
 
 ## Product Contract
