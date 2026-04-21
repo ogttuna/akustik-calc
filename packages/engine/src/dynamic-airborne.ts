@@ -39,6 +39,23 @@ import {
   type DelegateBlend,
   type DelegateCurve
 } from "./dynamic-airborne-helpers";
+import {
+  isAacLikeLayer,
+  isCelconAircreteLayer,
+  isCelconFinishedAircreteBuildUp,
+  isHeluzClayLayer,
+  isMasonryCoreLayer,
+  isMasonryLikeLayer,
+  isNonHomogeneousMasonryRiskLayer,
+  isPlasterLikeLayer,
+  isPorothermClayLayer,
+  isSilicateMasonryLayer,
+  isYtongCellenbetonblokBuildUp,
+  isYtongCellenbetonblokLayer,
+  isYtongMassiefG2300Layer,
+  isYtongSeparatiePaneelBuildUp,
+  isYtongSeparatiePaneelLayer
+} from "./dynamic-airborne-family-detection";
 import { computeLayerSurfaceMassKgM2 } from "./layer-surface-mass";
 import {
   MIXED_PLAIN_MODERATE_FIELD_TEMPLATES,
@@ -1316,180 +1333,6 @@ function buildMicroGapFillOnlyEquivalentLayers(
     },
     ...layers.slice(cavity.cavityEnd + 1).map((layer) => ({ ...layer, material: { ...layer.material } }))
   ];
-}
-
-function isMasonryLikeLayer(layer: ResolvedLayer): boolean {
-  const role = classifyLayerRole(layer);
-  if (!role.isSolidLeaf) {
-    return false;
-  }
-
-  return /masonry|concrete|aac|gazbeton|ytong|brick|block|stone|lime|limestone|granit|mermer|plaster|render|stucco|cement|pumice|bims|hollow|silicate|mortar/.test(
-    materialText(layer)
-  );
-}
-
-function isPlasterLikeLayer(layer: ResolvedLayer): boolean {
-  const role = classifyLayerRole(layer);
-  if (!role.isSolidLeaf) {
-    return false;
-  }
-
-  return /plaster|render|stucco|mortar|cement_plaster|skim_plaster|lime_plaster|gypsum_plaster/.test(
-    materialText(layer)
-  );
-}
-
-function isAacLikeLayer(layer: ResolvedLayer): boolean {
-  const role = classifyLayerRole(layer);
-  if (!role.isSolidLeaf) {
-    return false;
-  }
-
-  return /aac|gazbeton|autoclaved|ytong|aircrete|porenbeton|hebel/.test(materialText(layer));
-}
-
-function isSilicateMasonryLayer(layer: ResolvedLayer): boolean {
-  const role = classifyLayerRole(layer);
-  if (!role.isSolidLeaf) {
-    return false;
-  }
-
-  return /silicate|calcium-silicate|sand-lime|silka/.test(materialText(layer));
-}
-
-function isPorothermClayLayer(layer: ResolvedLayer): boolean {
-  const role = classifyLayerRole(layer);
-  if (!role.isSolidLeaf) {
-    return false;
-  }
-
-  return /porotherm|wienerberger/.test(materialText(layer));
-}
-
-function isHeluzClayLayer(layer: ResolvedLayer): boolean {
-  const role = classifyLayerRole(layer);
-  if (!role.isSolidLeaf) {
-    return false;
-  }
-
-  return /heluz/.test(materialText(layer));
-}
-
-function isYtongMassiefG2300Layer(layer: ResolvedLayer): boolean {
-  const role = classifyLayerRole(layer);
-  if (!role.isSolidLeaf) {
-    return false;
-  }
-
-  return layer.material.id === "ytong_massief_g2_300" || /ytong.*massief|g2\/300/.test(materialText(layer));
-}
-
-function isYtongSeparatiePaneelLayer(layer: ResolvedLayer): boolean {
-  const role = classifyLayerRole(layer);
-  if (!role.isSolidLeaf) {
-    return false;
-  }
-
-  return /^(ytong_separatiepaneel_aac_4_600|ytong_separatiepaneel_aac_5_750)$/.test(layer.material.id);
-}
-
-function isYtongSeparatiePaneelBuildUp(layers: readonly ResolvedLayer[]): boolean {
-  const solidLayers = layers.filter((layer) => classifyLayerRole(layer).isSolidLeaf);
-  if (solidLayers.length !== 3) {
-    return false;
-  }
-
-  const [leftLayer, coreLayer, rightLayer] = solidLayers;
-  if (!leftLayer || !coreLayer || !rightLayer) {
-    return false;
-  }
-
-  return (
-    isYtongSeparatiePaneelLayer(coreLayer) &&
-    leftLayer.material.id === rightLayer.material.id &&
-    isPlasterLikeLayer(leftLayer) &&
-    Math.abs(leftLayer.thicknessMm - rightLayer.thicknessMm) <= 0.6 &&
-    leftLayer.thicknessMm <= 6
-  );
-}
-
-function isYtongCellenbetonblokLayer(layer: ResolvedLayer): boolean {
-  const role = classifyLayerRole(layer);
-  if (!role.isSolidLeaf) {
-    return false;
-  }
-
-  return /^(ytong_cellenbetonblok_g4_600|ytong_cellenbetonblok_g5_800)$/.test(layer.material.id);
-}
-
-function isYtongCellenbetonblokBuildUp(layers: readonly ResolvedLayer[]): boolean {
-  const solidLayers = layers.filter((layer) => classifyLayerRole(layer).isSolidLeaf);
-  if (solidLayers.length !== 3) {
-    return false;
-  }
-
-  const [leftLayer, coreLayer, rightLayer] = solidLayers;
-  if (!leftLayer || !coreLayer || !rightLayer) {
-    return false;
-  }
-
-  return (
-    isYtongCellenbetonblokLayer(coreLayer) &&
-    leftLayer.material.id === rightLayer.material.id &&
-    isPlasterLikeLayer(leftLayer) &&
-    Math.abs(leftLayer.thicknessMm - rightLayer.thicknessMm) <= 0.6 &&
-    leftLayer.thicknessMm <= 6
-  );
-}
-
-function isCelconAircreteLayer(layer: ResolvedLayer): boolean {
-  const role = classifyLayerRole(layer);
-  if (!role.isSolidLeaf || layer.material.category !== "mass") {
-    return false;
-  }
-
-  return /^(celcon_solar_grade|celcon_standard_grade|celcon_high_strength)$/.test(layer.material.id);
-}
-
-function isCelconFinishedAircreteBuildUp(layers: readonly ResolvedLayer[]): boolean {
-  const solidLayers = layers.filter((layer) => classifyLayerRole(layer).isSolidLeaf);
-  if (solidLayers.length !== 3) {
-    return false;
-  }
-
-  const [leftLayer, coreLayer, rightLayer] = solidLayers;
-  if (!leftLayer || !coreLayer || !rightLayer) {
-    return false;
-  }
-
-  return (
-    isCelconAircreteLayer(coreLayer) &&
-    leftLayer.material.id === rightLayer.material.id &&
-    (leftLayer.material.id === "celcon_lwt_plaster" || leftLayer.material.id === "celcon_dense_plaster") &&
-    Math.abs(leftLayer.thicknessMm - rightLayer.thicknessMm) <= 0.6 &&
-    Math.abs(leftLayer.thicknessMm - 13) <= 0.6
-  );
-}
-
-function isMasonryCoreLayer(layer: ResolvedLayer): boolean {
-  const role = classifyLayerRole(layer);
-  if (!role.isSolidLeaf || layer.material.category !== "mass") {
-    return false;
-  }
-
-  return /aac|gazbeton|ytong|aircrete|autoclaved|pumice|bims|block|brick|masonry|silicate|stone|concrete/.test(
-    materialText(layer)
-  );
-}
-
-function isNonHomogeneousMasonryRiskLayer(layer: ResolvedLayer): boolean {
-  const role = classifyLayerRole(layer);
-  if (!role.isSolidLeaf) {
-    return false;
-  }
-
-  return /aac|gazbeton|ytong|hebel|hollow|pumice|bims|brick|block|silicate|mortar/.test(materialText(layer));
 }
 
 function summarizeSingleLeafMasonryProfile(layers: readonly ResolvedLayer[]): {
