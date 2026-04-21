@@ -40,6 +40,7 @@ import {
   type DelegateCurve
 } from "./dynamic-airborne-helpers";
 import {
+  hasExplicitFramingHint,
   isAacLikeLayer,
   isCelconAircreteLayer,
   isCelconFinishedAircreteBuildUp,
@@ -49,12 +50,15 @@ import {
   isNonHomogeneousMasonryRiskLayer,
   isPlasterLikeLayer,
   isPorothermClayLayer,
+  isResilientFramingHint,
   isSilicateMasonryLayer,
   isYtongCellenbetonblokBuildUp,
   isYtongCellenbetonblokLayer,
   isYtongMassiefG2300Layer,
   isYtongSeparatiePaneelBuildUp,
-  isYtongSeparatiePaneelLayer
+  isYtongSeparatiePaneelLayer,
+  normalizeFramingHint,
+  type DynamicFramingHint
 } from "./dynamic-airborne-family-detection";
 import { computeLayerSurfaceMassKgM2 } from "./layer-surface-mass";
 import {
@@ -372,13 +376,6 @@ function describePrimaryCavity(layers: readonly ResolvedLayer[]): {
   };
 }
 
-type DynamicFramingHint = {
-  connectionType: AirborneContext["connectionType"];
-  sharedTrack: AirborneContext["sharedTrack"];
-  studSpacingMm?: number;
-  studType: AirborneContext["studType"];
-};
-
 type BoardTier = "single_board" | "double_board" | "triple_board" | "mixed_board";
 
 type FramedBoardSystemSummary = {
@@ -450,32 +447,6 @@ type FamilyDecisionBoundarySummary = {
   secondaryRunnerUpScore: number | null;
   selectedScore: number | null;
 };
-
-function normalizeFramingHint(airborneContext?: AirborneContext | null): DynamicFramingHint {
-  return {
-    connectionType: airborneContext?.connectionType ?? "auto",
-    sharedTrack: airborneContext?.sharedTrack ?? "unknown",
-    studSpacingMm:
-      typeof airborneContext?.studSpacingMm === "number" &&
-      Number.isFinite(airborneContext.studSpacingMm) &&
-      airborneContext.studSpacingMm > 0
-        ? airborneContext.studSpacingMm
-        : undefined,
-    studType: airborneContext?.studType ?? "auto"
-  };
-}
-
-function hasExplicitFramingHint(framingHint: DynamicFramingHint): boolean {
-  return (
-    framingHint.connectionType !== "auto" ||
-    framingHint.studType !== "auto" ||
-    typeof framingHint.studSpacingMm === "number"
-  );
-}
-
-function isResilientFramingHint(framingHint: DynamicFramingHint): boolean {
-  return framingHint.connectionType === "resilient_channel" || framingHint.studType === "resilient_stud";
-}
 
 function isBoardLikeLayer(layer: ResolvedLayer): boolean {
   if (!classifyLayerRole(layer).isSolidLeaf) {

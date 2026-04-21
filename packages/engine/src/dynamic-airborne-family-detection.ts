@@ -15,9 +15,51 @@
 //   dependencies avoids circular imports between the family-
 //   detection side and the predictor-scoring side of the split.
 
-import type { ResolvedLayer } from "@dynecho/shared";
+import type { AirborneContext, ResolvedLayer } from "@dynecho/shared";
 
 import { classifyLayerRole, materialText } from "./airborne-topology";
+
+export type DynamicFramingHint = {
+  connectionType: AirborneContext["connectionType"];
+  sharedTrack: AirborneContext["sharedTrack"];
+  studSpacingMm?: number;
+  studType: AirborneContext["studType"];
+};
+
+// Normalize the airborne-context framing hint into a predictable
+// shape — undefined context collapses to `auto` on every axis, and
+// a zero / non-finite stud spacing is dropped so downstream code
+// can treat `studSpacingMm === undefined` as "unknown" rather than
+// "valid zero".
+export function normalizeFramingHint(airborneContext?: AirborneContext | null): DynamicFramingHint {
+  return {
+    connectionType: airborneContext?.connectionType ?? "auto",
+    sharedTrack: airborneContext?.sharedTrack ?? "unknown",
+    studSpacingMm:
+      typeof airborneContext?.studSpacingMm === "number" &&
+      Number.isFinite(airborneContext.studSpacingMm) &&
+      airborneContext.studSpacingMm > 0
+        ? airborneContext.studSpacingMm
+        : undefined,
+    studType: airborneContext?.studType ?? "auto"
+  };
+}
+
+// True when the caller made any explicit framing decision — even a
+// single non-`auto` field is enough, because the engine uses it to
+// skip inference heuristics that might otherwise hide the user's
+// intent.
+export function hasExplicitFramingHint(framingHint: DynamicFramingHint): boolean {
+  return (
+    framingHint.connectionType !== "auto" ||
+    framingHint.studType !== "auto" ||
+    typeof framingHint.studSpacingMm === "number"
+  );
+}
+
+export function isResilientFramingHint(framingHint: DynamicFramingHint): boolean {
+  return framingHint.connectionType === "resilient_channel" || framingHint.studType === "resilient_stud";
+}
 
 export function isMasonryLikeLayer(layer: ResolvedLayer): boolean {
   const role = classifyLayerRole(layer);
