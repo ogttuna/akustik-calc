@@ -1,8 +1,11 @@
 # Slice Plan — LSF + Timber Stud Preset Pack With Physical Invariants
 
 Slice id: `wall_lsf_timber_preset_pack_with_invariants_v1`
-Status: planning (not started)
+Status: in progress (invariants matrix step completed by the
+`masonry_flanking_inversion_fix_v1` closeout on 2026-04-21; preset
+pack + benchmark pins + field VALUE pins + post-contract still open)
 Authored: 2026-04-21
+Updated: 2026-04-21 (post masonry flanking inversion fix)
 Owner: next agent that picks up the slice
 
 ## Why This Slice Exists
@@ -257,39 +260,55 @@ the tests run green for the first time.
 
 Each step closes on `pnpm calculator:gate:current` green.
 
-1. **Extend `PresetDefinition` type** in `preset-definitions.ts` with
-   optional `airborneDefaults`. No behaviour change yet.
-2. **Add LSF preset** with its `airborneDefaults`. Verify engine
-   produces a sensible Rw by running the existing preset contract
-   matrix with the new preset (it already iterates all wall presets).
-3. **Add timber stud preset** with its `airborneDefaults`.
-4. **Extend `loadPreset`** in `workbench-store.ts` to apply
-   `airborneDefaults` when present. Verify no regression on the
-   existing 4 presets (they lack the field → unchanged).
-5. **Write `wall-physical-invariants-matrix.test.ts`** with I1 / I2 /
-   I3. Stub expected values initially with `toBeDefined()`. Run;
-   capture any failure as a real accuracy finding (STOP and fix
-   engine if so).
-6. **Pin invariant values** — convert `toBeDefined` to exact `toBe`
-   once green. If any preset/context combination fails I1 / I2 / I3,
-   stop; engine fix needed before the slice can close.
-7. **Write `wall-lsf-timber-stud-preset-benchmarks.test.ts`** with
-   LSF benchmark fit and timber stud drift-guard VALUE pin.
-8. **Extend `wall-preset-expansion-benchmarks.test.ts`** with field
-   / building VALUE pins for AAC / masonry / CLT.
+**Landed inside `masonry_flanking_inversion_fix_v1` (2026-04-21):**
+
+1. ✅ **Extend `PresetDefinition` type** — `PresetAirborneDefaults`
+   type now carries airborne defaults; backwards-compatible optional
+   field on `PresetDefinition`.
+2. ✅ **Extend `loadPreset`** in `workbench-store.ts` — airborne
+   defaults forward to `airborneAirtightness`, `airborneConnectionType`,
+   `airborneContextMode`, `airborneStudSpacingMm`, `airborneStudType`
+   when present.
+3. ✅ **Write `wall-physical-invariants-matrix.test.ts`** with I1 /
+   I2 / I3 — landed green across 4 existing wall presets × 3 context
+   modes after the masonry flanking inversion engine fix; 24 of
+   eventual 36 cells pinned (LSF + timber stud cells land with
+   their presets).
+
+**Remaining inside this slice:**
+
+4. **Add LSF preset** (`light_steel_stud_wall`) with
+   `airborneDefaults` = `{ studType: "light_steel_stud",
+   studSpacingMm: "600", connectionType: "line_connection",
+   airtightness: "good" }`. Verify engine produces Rw within the
+   framed-wall benchmark tolerance.
+5. **Add timber stud preset** (`timber_stud_wall`) with
+   `airborneDefaults` = `{ studType: "wood_stud", studSpacingMm:
+   "600", connectionType: "line_connection", airtightness: "good" }`.
+6. **Write `wall-lsf-timber-stud-preset-benchmarks.test.ts`** with
+   LSF benchmark fit (tolerance from the framed-wall benchmark audit)
+   and timber stud drift-guard VALUE pin (formula-owned, no published
+   reference — pin the engine's current output as a drift guard).
+7. **Extend `wall-preset-expansion-benchmarks.test.ts`** with field
+   / building VALUE pins for AAC / masonry / CLT (drift guards for
+   the 2026-04-21 invariants behaviour).
+8. **Re-run invariants matrix** with LSF + timber stud rows — 6
+   presets × 3 contexts = 36 cells. Fail-stop if any new cell
+   violates I1 / I2 / I3.
 9. **Verify `wall-full-preset-contract-matrix.test.ts`** — likely
    passes unchanged because it iterates `WORKBENCH_PRESETS`; confirm
    and adjust the `isScreeningConcreteWall` conditional only if a
    new preset is classified as screening.
 10. **Post-contract** — `post-wall-lsf-timber-preset-pack-with-invariants-v1-next-slice-selection-contract.test.ts`.
-11. **Focused gate update** — add the four new test files.
+11. **Focused gate update** — add the new benchmark test file plus
+    anything the previous fix did not already register.
 12. **Docs update** — MASTER_PLAN §3 grid (add 2 preset rows, flip
     C1 closer to done), §4 sequence (slice 2 closes → slice 3 becomes
-    next), §8 C1 status; CURRENT_STATE §Operator Snapshot; NEXT_IMPLEMENTATION_PLAN
-    §Now.
+    next), §8 C1 status; CURRENT_STATE §Operator Snapshot;
+    NEXT_IMPLEMENTATION_PLAN §Now.
 13. **Full validation** — `pnpm check` green, `git diff --check`
     clean, build green.
-14. **Commit** — single commit for the whole slice.
+14. **Commit** — single commit for the remaining deliverables.
 
 ## Expected Test Outcomes
 

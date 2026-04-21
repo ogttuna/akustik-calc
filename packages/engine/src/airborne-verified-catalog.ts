@@ -973,6 +973,44 @@ export function findVerifiedAirborneAssemblyMatch(
     : null;
 }
 
+// Wrap `findVerifiedAirborneAssemblyMatch` with a lab-mode fallback
+// for field/building contexts. This is the single seam enabling the
+// "lab Rw ceiling on apparent R'w" invariant for the common case
+// where catalog coverage only has a lab-mode entry (e.g. Wienerberger
+// Porotherm clay hollow brick, HELUZ, most published masonry test
+// reports). Without the fallback, mass-law-overestimating materials
+// yield field R'w > lab Rw which violates ISO 140-4.
+export type VerifiedAirborneAssemblyMatchLookupResult = {
+  match: VerifiedAirborneCatalogEntry;
+  usedLabFallback: boolean;
+};
+
+export function findVerifiedAirborneAssemblyMatchWithLabFallback(
+  inputLayers: readonly ResolvedLayer[],
+  context?: AirborneContext | null
+): VerifiedAirborneAssemblyMatchLookupResult | null {
+  const direct = findVerifiedAirborneAssemblyMatch(inputLayers, context);
+  if (direct) {
+    return { match: direct, usedLabFallback: false };
+  }
+
+  const desiredMode = preferredCatalogMode(context);
+  if (desiredMode === "lab") {
+    return null;
+  }
+
+  const labMatch = findVerifiedAirborneAssemblyMatch(inputLayers, {
+    ...(context ?? {}),
+    contextMode: "element_lab"
+  });
+
+  if (!labMatch || labMatch.sourceMode !== "lab") {
+    return null;
+  }
+
+  return { match: labMatch, usedLabFallback: true };
+}
+
 export function findApproximateAirborneFieldCompanionMatch(
   inputLayers: readonly ResolvedLayer[],
   context?: AirborneContext | null
@@ -1078,11 +1116,16 @@ export function applyVerifiedAirborneCatalogAnchor(
   curve: TransmissionLossCurve,
   ratings: AssemblyRatings,
   inputLayers: readonly ResolvedLayer[],
-  context?: AirborneContext | null
+  context?: AirborneContext | null,
+  // Flanking penalty (dB) already folded into `curve`/`ratings` by
+  // the overlay. Needed to compute the lab-fallback apparent target
+  // `lab_benchmark - flankingPenaltyDb`; defaults to 0 for callers
+  // that skip the airborne overlay entirely.
+  flankingPenaltyDb?: number
 ): VerifiedAirborneAnchorResult {
-  const match = findVerifiedAirborneAssemblyMatch(inputLayers, context);
+  const lookup = findVerifiedAirborneAssemblyMatchWithLabFallback(inputLayers, context);
 
-  if (!match) {
+  if (!lookup) {
     return {
       applied: false,
       curve,
@@ -1092,7 +1135,9 @@ export function applyVerifiedAirborneCatalogAnchor(
     };
   }
 
-  if (match.sourceMode === "lab") {
+  const { match, usedLabFallback } = lookup;
+
+  if (!usedLabFallback && match.sourceMode === "lab") {
     const anchored = anchorCurveToMetric(curve, (nextRatings) => nextRatings.iso717.Rw, match.metricValue, context);
 
     return {
@@ -1105,6 +1150,44 @@ export function applyVerifiedAirborneCatalogAnchor(
             `Curated exact airborne lab match active: ${match.label}. DynEcho anchored the dynamic curve to official ${match.metricLabel} ${match.metricValue.toFixed(1)} dB.`
           ]
         : []
+    };
+  }
+
+  if (usedLabFallback) {
+    // Field/building context with only a lab-mode benchmark present.
+    // Anchor the already-flanking-penalised curve so its Rw equals
+    // `lab_benchmark - flanking_penalty_db`. That keeps ratings
+    // consistent with physics: apparent R'w is the lab Rw ceiling
+    // reduced by the overlay's attributed flanking magnitude, never
+    // above it.
+    const residualFlankingDb = Math.max(0, Number.isFinite(flankingPenaltyDb) ? (flankingPenaltyDb as number) : 0);
+    const target = Math.max(0, match.metricValue - residualFlankingDb);
+    const anchored = anchorCurveToMetric(
+      curve,
+      (nextRatings) => nextRatings.iso717.Rw,
+      target,
+      context
+    );
+    const field = anchored.ratings.field
+      ? {
+          ...anchored.ratings.field,
+          basis: appendFieldBasis(anchored.ratings.field, "lab_fallback_apparent_ceiling")
+        }
+      : anchored.ratings.field;
+
+    return {
+      applied: anchored.applied,
+      curve: anchored.curve,
+      match,
+      ratings: {
+        ...anchored.ratings,
+        ...(field ? { field } : {})
+      },
+      warnings: [
+        anchored.applied
+          ? `Curated airborne lab fallback active in field context: ${match.label}. DynEcho capped the apparent curve at lab ${match.metricLabel} ${match.metricValue.toFixed(1)} dB and subtracted the overlay's ${residualFlankingDb.toFixed(1)} dB flanking penalty.`
+          : `Curated airborne lab fallback confirmed in field context: ${match.label}. The apparent curve already honours the lab ${match.metricLabel} ${match.metricValue.toFixed(1)} dB ceiling minus the overlay's ${residualFlankingDb.toFixed(1)} dB flanking penalty.`
+      ]
     };
   }
 

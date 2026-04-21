@@ -918,7 +918,8 @@ export function calculateAssembly(
     airborneOverlayResult.curve,
     airborneOverlayResult.ratings,
     airborneResolvedLayers,
-    airborneContext
+    airborneContext,
+    airborneOverlayResult.overlay?.fieldFlankingPenaltyDb ?? 0
   );
   const approximateAirborneFieldCompanionResult = applyApproximateAirborneFieldCompanion(
     verifiedAirborneAnchorResult.ratings,

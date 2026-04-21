@@ -24,7 +24,7 @@ Document role:
 
 ## Revalidated Snapshot
 
-Last full engine revalidation: `2026-04-20`
+Last full engine revalidation: `2026-04-21`
 
 Last full web revalidation: `2026-04-20`
 
@@ -32,7 +32,7 @@ Last cross-package build revalidation: `2026-04-20`
 
 Last focused gate revalidation: `2026-04-20`
 
-Planning / implementation update: `2026-04-20`
+Planning / implementation update: `2026-04-21`
 
 ## For The Next Agent — Resume Here
 
@@ -52,11 +52,17 @@ That is how the 2026-04-20 doc-drift problem (captured in
 ## Operator Snapshot
 
 - active slice:
-  `wall_lsf_timber_preset_pack_with_invariants_v1` (selected and not started — master plan step 2; plan doc `SLICE_LSF_TIMBER_PRESET_WITH_INVARIANTS_PLAN.md`)
+  `wall_lsf_timber_preset_pack_with_invariants_v1` (selected; resumes
+  after the masonry flanking inversion engine fix; master-plan step 2;
+  plan doc `SLICE_LSF_TIMBER_PRESET_WITH_INVARIANTS_PLAN.md`; invariants
+  matrix already landed inside the fix closeout)
 - latest closed implementation slice:
+  `masonry_flanking_inversion_fix_v1` (closed `2026-04-21` on
+  `packages/engine/src/post-masonry-flanking-inversion-fix-next-slice-selection-contract.test.ts`)
+- prior closed implementation slice:
   `wall_reorder_output_set_consistency_v1` (closed `2026-04-21` on
   `packages/engine/src/post-wall-reorder-output-set-consistency-v1-next-slice-selection-contract.test.ts`)
-- prior closed implementation slice:
+- earlier closed implementation slice:
   `wall_preset_expansion_v1` (closed `2026-04-20` on
   `packages/engine/src/post-wall-preset-expansion-v1-next-slice-selection-contract.test.ts`)
 - earlier closed implementation slice:
@@ -90,23 +96,54 @@ That is how the 2026-04-20 doc-drift problem (captured in
   reorder/C-availability inconsistency on asymmetric light-heavy stacks,
   which is now the selected next active runtime tightening slice
 - immediate next decision:
-  implement `wall_lsf_timber_preset_pack_with_invariants_v1` per
-  `SLICE_LSF_TIMBER_PRESET_WITH_INVARIANTS_PLAN.md`. Three axes in
-  one slice: (a) COVERAGE — add LSF + timber stud presets (4→6 wall
-  archetypes, advances master-plan C1 signal); (b) ACCURACY —
-  physical invariants matrix (R'w ≤ Rw flanking non-negativity,
-  Dn,A ≈ Dn,w + C ISO 717 consistency, DnT,w > Dn,w volume
-  normalisation) across all 6 presets × 3 contexts, plus field
-  VALUE pinning for AAC / masonry / CLT drift guard; (c) ARCHITECTURE
-  — `PresetDefinition.airborneDefaults` field + `loadPreset` wiring
-  pattern matures for later preset slices
+  resume `wall_lsf_timber_preset_pack_with_invariants_v1`. The
+  invariants matrix already landed inside the masonry flanking
+  inversion fix (all 6 current wall presets × 3 contexts green on
+  I1/I2/I3). Remaining deliverables for the parent slice:
+  (a) LSF preset with `airborneDefaults.studType=light_steel_stud`;
+  (b) timber stud preset with `airborneDefaults.studType=wood_stud`;
+  (c) LSF benchmark pin + timber stud drift-guard Rw pin in
+  `wall-lsf-timber-stud-preset-benchmarks.test.ts`;
+  (d) field VALUE pins for AAC / masonry / CLT in
+  `wall-preset-expansion-benchmarks.test.ts`;
+  (e) parent-slice post-contract selecting
+  `wall_hostile_input_matrix_with_airborne_cartography_v1`.
 - first implementation question now:
-  does the physical invariants matrix (I1 R'w ≤ Rw, I2 Dn,A ≈ Dn,w+C,
-  I3 DnT,w > Dn,w) hold for all 6 wall presets × 3 context modes, or
-  does the engine violate one of them on at least one cell? If yes,
-  that is a real accuracy bug and the slice stops for engine fix
-  before closing; if no, the invariants stand as drift guards going
-  forward
+  do the LSF and timber stud presets hold I1/I2/I3 under the three
+  context modes once their `airborneDefaults` flow through
+  `loadPreset`? If yes, pin the field VALUEs and close the parent
+  slice. If no, treat the failure as a real engine finding and open
+  a remediation sub-slice before closing the parent.
+- masonry flanking inversion fix landed `2026-04-21`:
+  - `findVerifiedAirborneAssemblyMatchWithLabFallback` in
+    `packages/engine/src/airborne-verified-catalog.ts` lets the field
+    anchor pipeline use lab-mode catalog entries as an apparent
+    ceiling when no dedicated field entry exists for the layer stack
+  - `applyVerifiedAirborneCatalogAnchor` gained a lab-fallback branch
+    that anchors the apparent curve to `lab_benchmark -
+    flanking_penalty_db`, restoring the ISO 140-4 R'w ≤ Rw invariant
+    for clay hollow brick (Wienerberger Porotherm) and any future
+    mass-law-overestimating material with only a lab-mode benchmark
+  - `calculate-assembly.ts` now forwards the overlay's
+    `fieldFlankingPenaltyDb` into the anchor so the fallback target
+    is computed consistently with the upstream overlay penalty
+  - audit pair:
+    `packages/engine/src/airborne-verified-catalog-lab-fallback.test.ts`
+    (unit: lookup shape across lab/field/building + no-match + null
+    context) and
+    `packages/engine/src/airborne-catalog-field-anchor-lab-fallback.test.ts`
+    (integration: Porotherm 100/140/190 lab/field/building + lab
+    lane unchanged + Ytong unchanged + non-matching layers skip
+    fallback)
+  - acceptance: `apps/web/features/workbench/wall-physical-invariants-matrix.test.ts`
+    passes 24 tests (6 presets × I1/I2/I3) including Porotherm masonry
+  - probe retired: `apps/web/features/workbench/masonry-flanking-bug-probe.test.ts`
+    removed; the invariants matrix is the durable guard
+  - upstream closeouts untouched: lab-mode anchor behaviour preserved,
+    approximate airborne field companion lookup untouched, screening
+    carrier fallthrough untouched, every frozen blocked-source family
+    kept fail-closed, every benchmark fit audit (masonry, aircrete,
+    framed-wall) reruns green
 - selected route family:
   `mass_timber_clt_floor_lane`
 - selected output surface:

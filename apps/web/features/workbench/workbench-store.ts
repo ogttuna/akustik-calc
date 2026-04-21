@@ -629,10 +629,36 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
         })),
       loadPreset: (presetId) => {
         const preset = getPresetById(presetId);
+        // Presets can declare `airborneDefaults` to bring a preset's
+        // benchmark-matching context with them (e.g. LSF needs
+        // studType=light_steel_stud for the framed-wall family lane
+        // to fire). Forward each declared field; leave the rest of
+        // the airborne state untouched so a user who has customised
+        // other fields does not lose that work.
+        const defaults = preset.airborneDefaults;
+        const airborneUpdates: Partial<WorkbenchStore> = {};
+        if (defaults) {
+          if (defaults.airtightness !== undefined) {
+            airborneUpdates.airborneAirtightness = defaults.airtightness;
+          }
+          if (defaults.connectionType !== undefined) {
+            airborneUpdates.airborneConnectionType = defaults.connectionType;
+          }
+          if (defaults.contextMode !== undefined) {
+            airborneUpdates.airborneContextMode = defaults.contextMode;
+          }
+          if (defaults.studSpacingMm !== undefined) {
+            airborneUpdates.airborneStudSpacingMm = defaults.studSpacingMm;
+          }
+          if (defaults.studType !== undefined) {
+            airborneUpdates.airborneStudType = defaults.studType;
+          }
+        }
         set({
           activePresetId: preset.id,
           rows: buildPresetRows(preset.id),
-          studyMode: preset.studyMode
+          studyMode: preset.studyMode,
+          ...airborneUpdates
         });
       },
       loadSavedScenario: (scenarioId) =>

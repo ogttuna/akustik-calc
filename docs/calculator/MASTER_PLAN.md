@@ -1,6 +1,6 @@
 # Calculator Master Plan
 
-Last reviewed: 2026-04-21
+Last reviewed: 2026-04-21 (post masonry flanking inversion fix closeout)
 Iteration: 2 (rewritten with implementation state grid, accuracy
 preservation contract, ROI table, quantitative completion targets)
 
@@ -214,7 +214,7 @@ context the preset outputs match the corresponding engine benchmarks.
 |---|---|---|
 | Concrete double-leaf (`concrete_wall` preset) | 🟠 Screening | 4-layer migration-safe composition in `preset-definitions.ts`; `wall-full-preset-contract-matrix` proves screening posture with Rw live in lab/field/building via the screening mass-law seed carrier |
 | AAC single-leaf (`aac_single_leaf_wall` preset) | 🟢 Benchmark | `wall-preset-expansion-benchmarks.test.ts` pins Rw=47 under the workbench default lab context, matching `xella_ytong_d700_150_plaster10_official_2026` (Xella reference Rw=47, ±2.5 dB) |
-| Masonry brick (`masonry_brick_wall` preset) | 🟢 Benchmark | `wall-preset-expansion-benchmarks.test.ts` pins Rw=43 under the workbench default lab context, matching `wienerberger_porotherm_100_dense_plaster_primary_2026` (Wienerberger/Lucideon Rw=43, ±1 dB) |
+| Masonry brick (`masonry_brick_wall` preset) | 🟢 Benchmark | `wall-preset-expansion-benchmarks.test.ts` pins Rw=43 under the workbench default lab context, matching `wienerberger_porotherm_100_dense_plaster_primary_2026` (Wienerberger/Lucideon Rw=43, ±1 dB); `wall-physical-invariants-matrix.test.ts` pins R'w ≤ Rw under field + building contexts after the 2026-04-21 lab-fallback anchor landed |
 | CLT wall (`clt_wall` preset) | 🟡 Formula | `wall-preset-expansion-benchmarks.test.ts` pins Rw=40 under the workbench default lab context; no exact CLT wall catalog row exists today |
 | Light-steel stud (LSF) | ⚪ Not yet covered | `airborne-framed-wall-benchmark.test.ts` benchmarks the engine path; preset surface is blocked by the `airborneContext.studType` injection gap |
 | Timber stud | ⚪ Not yet covered | Same blocker as LSF |
@@ -307,7 +307,8 @@ signal — the test that must be green to call it done.
 | # | Slice | What closes it |
 |---|---|---|
 | 1 | `wall_reorder_output_set_consistency_v1` ✅ landed 2026-04-21 | `wall-reorder-invariance-matrix.test.ts` green across symmetric + asymmetric topologies |
-| 2 | `wall_lsf_timber_preset_pack_with_invariants_v1` ⭐ next | LSF + timber stud presets land (4→6 wall preset archetypes, C1 advance) **with** physical invariants matrix (R'w ≤ Rw, Dn,A ≈ Dn,w + C, DnT,w > Dn,w) across all 6 presets × 3 contexts AND field VALUE pinning for AAC / masonry / CLT. Plan in `SLICE_LSF_TIMBER_PRESET_WITH_INVARIANTS_PLAN.md`. Three axes (coverage + accuracy + architecture readiness) in one slice. |
+| 1b | `masonry_flanking_inversion_fix_v1` ✅ landed 2026-04-21 | Engine accuracy blocker surfaced by the invariants matrix; lab-fallback anchor lane pins R'w ≤ Rw for any layer stack with a lab-mode benchmark — `wall-physical-invariants-matrix.test.ts`, `airborne-verified-catalog-lab-fallback.test.ts`, `airborne-catalog-field-anchor-lab-fallback.test.ts` all green |
+| 2 | `wall_lsf_timber_preset_pack_with_invariants_v1` ⭐ next | LSF + timber stud presets land (4→6 wall preset archetypes, C1 advance); invariants matrix already green from step 1b, so remaining work is preset rows, `loadPreset` airborne-defaults wiring, LSF benchmark + timber stud drift-guard pins, AAC / masonry / CLT field VALUE pins. Plan in `SLICE_LSF_TIMBER_PRESET_WITH_INVARIANTS_PLAN.md`. Three axes (coverage + accuracy + architecture readiness) in one slice. |
 | 3 | `wall_hostile_input_matrix_with_airborne_cartography_v1` | Wall hostile-input matrix (floor analog: 50+ layer, unknown material, invalid thickness) + engine thickness cross-cutting guardrail + `dynamic-airborne.ts` cartography for the subsequent split slice |
 | 4 | `dynamic_airborne_split_refactor_v1` | 6630-line file → `dynamic-airborne-family-detection.ts` + `-predictor-scoring.ts` + `-helpers.ts`. Zero behavior change. Guards: slice 1 invariants matrix + slice 3 hostile-input matrix + existing wall/floor suite. Unlocks future wall/floor work velocity. |
 | 5 | `wall_field_continuation_value_pinning_v1` | Every defended wall corridor × lab/field/building × every field output VALUE pinned (extends slice 2's AAC/masonry/CLT field VALUE pinning to every corridor in `dynamic-airborne-wall-selector-trace-matrix`) |

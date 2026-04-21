@@ -1,4 +1,10 @@
-import type { FloorRole } from "@dynecho/shared";
+import type {
+  AirborneConnectionType,
+  AirborneContextMode,
+  AirborneStudType,
+  AirtightnessClass,
+  FloorRole
+} from "@dynecho/shared";
 
 export type StudyMode = "wall" | "floor";
 export type PresetId =
@@ -6,6 +12,8 @@ export type PresetId =
   | "aac_single_leaf_wall"
   | "masonry_brick_wall"
   | "clt_wall"
+  | "light_steel_stud_wall"
+  | "timber_stud_wall"
   | "clt_floor"
   | "heavy_concrete_impact_floor"
   | "dataholz_timber_frame_exact"
@@ -41,6 +49,30 @@ export type PresetId =
   | "tuas_clt_260_exact"
   | "tuas_clt_exact";
 
+/**
+ * Optional airborne context overrides a wall preset can declare. When
+ * present, `loadPreset` in `workbench-store.ts` forwards these values
+ * into the corresponding `airborne*` workbench-state slots so the
+ * engine receives the preset's benchmark-matching context on load.
+ *
+ * Only wall presets populate this today (LSF + timber stud need
+ * `studType` to hit their framed-wall family lane; the earlier AAC /
+ * masonry / CLT presets already produce benchmark-matching values
+ * under the default workbench state `airtightness="good"` +
+ * `contextMode="element_lab"`, so they omit `airborneDefaults`).
+ *
+ * Fields are strings where the workbench store keeps them as strings
+ * (numeric input fields are stored raw); `studType`, `airtightness`,
+ * `connectionType`, `contextMode` are enum values.
+ */
+export type PresetAirborneDefaults = {
+  airtightness?: AirtightnessClass;
+  connectionType?: AirborneConnectionType;
+  contextMode?: AirborneContextMode;
+  studSpacingMm?: string;
+  studType?: AirborneStudType;
+};
+
 export type PresetDefinition = {
   id: PresetId;
   label: string;
@@ -48,6 +80,7 @@ export type PresetDefinition = {
   summary: string;
   studyMode: StudyMode;
   rows: Array<{ materialId: string; thicknessMm: string; floorRole?: FloorRole }>;
+  airborneDefaults?: PresetAirborneDefaults;
 };
 
 export const WORKBENCH_PRESETS: readonly PresetDefinition[] = [
@@ -102,6 +135,50 @@ export const WORKBENCH_PRESETS: readonly PresetDefinition[] = [
       { materialId: "clt_panel", thicknessMm: "140" },
       { materialId: "gypsum_board", thicknessMm: "12.5" }
     ]
+  },
+  {
+    id: "light_steel_stud_wall",
+    label: "LSF Wall",
+    note: "2+2 acoustic gypsum on light-steel stud with mineral-wool cavity",
+    summary:
+      "Light-steel stud wall benchmarked against the Knauf official primary dataset (Rw ~55 dB). Demonstrates the framed-wall family lane with an explicit studType context.",
+    studyMode: "wall",
+    rows: [
+      { materialId: "acoustic_gypsum_board", thicknessMm: "12.5" },
+      { materialId: "acoustic_gypsum_board", thicknessMm: "12.5" },
+      { materialId: "air_gap", thicknessMm: "5" },
+      { materialId: "glasswool", thicknessMm: "70" },
+      { materialId: "acoustic_gypsum_board", thicknessMm: "12.5" },
+      { materialId: "acoustic_gypsum_board", thicknessMm: "12.5" }
+    ],
+    airborneDefaults: {
+      airtightness: "good",
+      connectionType: "line_connection",
+      studSpacingMm: "600",
+      studType: "light_steel_stud"
+    }
+  },
+  {
+    id: "timber_stud_wall",
+    label: "Timber Stud Wall",
+    note: "2+2 gypsum on timber stud with mineral-wool cavity",
+    summary:
+      "Timber stud wall using the mass-timber frame-coupling penalty lane. No published exact reference in the catalog today, so Rw is formula-owned with drift-guard pinning.",
+    studyMode: "wall",
+    rows: [
+      { materialId: "gypsum_board", thicknessMm: "12.5" },
+      { materialId: "gypsum_board", thicknessMm: "12.5" },
+      { materialId: "rockwool", thicknessMm: "50" },
+      { materialId: "air_gap", thicknessMm: "50" },
+      { materialId: "gypsum_board", thicknessMm: "12.5" },
+      { materialId: "gypsum_board", thicknessMm: "12.5" }
+    ],
+    airborneDefaults: {
+      airtightness: "good",
+      connectionType: "line_connection",
+      studSpacingMm: "600",
+      studType: "wood_stud"
+    }
   },
   {
     id: "clt_floor",
