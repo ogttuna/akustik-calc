@@ -1,0 +1,218 @@
+// Masonry calibration lane carved out of `dynamic-airborne.ts`
+// during `dynamic_airborne_split_refactor_v1` commit 7. This module
+// owns the family-specific "target Rw" estimators that shift the
+// generic single-leaf masonry dynamic curve onto the corridor
+// measured by the corresponding manufacturer / lab dataset.
+//
+// Each function follows the same shape:
+//   (layers, topology, [screeningEstimatedRwDb,] currentRw, family)
+//     → { notes, shiftDb, strategySuffix, targetRw }
+//
+// All share the `masonry_nonhomogeneous` / `rigid_massive_wall`
+// family gate, the family-detection material predicates, and the
+// `interpolateLinear` helper. Carving the estimators together avoids
+// fragmenting the calibration surface across multiple commits —
+// they do not call each other.
+//
+// This first commit lifts the two generic masonry estimators
+// (`estimateAacMassiveTargetRw`, `estimateSilicateMasonryTargetRw`).
+// The material-specific estimators (Ytong / Porotherm / HELUZ /
+// Celcon / unfinished aircrete) move in follow-up commits.
+
+import type { DynamicAirborneFamily, ResolvedLayer } from "@dynecho/shared";
+
+import {
+  classifyLayerRole,
+  materialText,
+  summarizeAirborneTopology
+} from "./airborne-topology";
+import { interpolateLinear } from "./dynamic-airborne-helpers";
+import {
+  isPlasterLikeLayer,
+  isSilicateMasonryLayer
+} from "./dynamic-airborne-family-detection";
+import { clamp, ksRound1 } from "./math";
+
+export function estimateAacMassiveTargetRw(
+  layers: readonly ResolvedLayer[],
+  topology: ReturnType<typeof summarizeAirborneTopology>,
+  screeningEstimatedRwDb: number,
+  currentRw: number,
+  family: DynamicAirborneFamily
+): {
+  notes: string[];
+  shiftDb: number;
+  strategySuffix: string | null;
+  targetRw: number | null;
+} {
+  const notes: string[] = [];
+  const text = layers.map(materialText).join(" ");
+
+  if (
+    topology.visibleLeafCount > 1 ||
+    topology.cavityCount > 0 ||
+    topology.hasStudLikeSupport ||
+    !/aac|gazbeton|ytong|aircrete|autoclaved/.test(text)
+  ) {
+    return {
+      notes,
+      shiftDb: 0,
+      strategySuffix: null,
+      targetRw: null
+    };
+  }
+
+  const surfaceMassKgM2 = topology.surfaceMassKgM2;
+  let offsetDb = 0;
+
+  if (surfaceMassKgM2 <= 86.8) {
+    offsetDb = -2.5;
+  } else if (surfaceMassKgM2 < 121.5) {
+    offsetDb = interpolateLinear(surfaceMassKgM2, 86.8, -2.5, 121.5, 0);
+  } else if (surfaceMassKgM2 < 139) {
+    offsetDb = interpolateLinear(surfaceMassKgM2, 121.5, 0, 139, 2);
+  } else if (surfaceMassKgM2 < 174) {
+    offsetDb = interpolateLinear(surfaceMassKgM2, 139, 2, 174, 3);
+  } else {
+    offsetDb = 3;
+  }
+
+  const targetRw = ksRound1(clamp(screeningEstimatedRwDb + offsetDb, 28, 68));
+  const shiftDb = ksRound1(targetRw - currentRw);
+
+  if (Math.abs(shiftDb) < 0.2) {
+    return {
+      notes,
+      shiftDb: 0,
+      strategySuffix: null,
+      targetRw
+    };
+  }
+
+  notes.push(
+    `Official AAC masonry references moved the ${family === "masonry_nonhomogeneous" ? "single-leaf masonry" : "rigid-wall"} lane onto a low-density Ytong/Xella corridor (target Rw ${targetRw.toFixed(1)} dB).`
+  );
+
+  return {
+    notes,
+    shiftDb,
+    strategySuffix: "aac_massive_calibration",
+    targetRw
+  };
+}
+
+export function estimateSilicateMasonryTargetRw(
+  layers: readonly ResolvedLayer[],
+  topology: ReturnType<typeof summarizeAirborneTopology>,
+  currentRw: number,
+  family: DynamicAirborneFamily
+): {
+  notes: string[];
+  shiftDb: number;
+  strategySuffix: string | null;
+  targetRw: number | null;
+} {
+  const notes: string[] = [];
+
+  if (
+    family !== "masonry_nonhomogeneous" ||
+    topology.visibleLeafCount > 1 ||
+    topology.cavityCount > 0 ||
+    topology.hasStudLikeSupport
+  ) {
+    return {
+      notes,
+      shiftDb: 0,
+      strategySuffix: null,
+      targetRw: null
+    };
+  }
+
+  const solidLayers = layers.filter((layer) => classifyLayerRole(layer).isSolidLeaf);
+  if (
+    solidLayers.length === 0 ||
+    solidLayers.some((layer) => isPlasterLikeLayer(layer)) ||
+    !solidLayers.every((layer) => isSilicateMasonryLayer(layer))
+  ) {
+    return {
+      notes,
+      shiftDb: 0,
+      strategySuffix: null,
+      targetRw: null
+    };
+  }
+
+  const surfaceMassKgM2 = topology.surfaceMassKgM2;
+  const points = [
+    { surfaceMassKgM2: 175.3, rw: 43 },
+    { surfaceMassKgM2: 262.9, rw: 50 },
+    { surfaceMassKgM2: 306.7, rw: 52 },
+    { surfaceMassKgM2: 375.1, rw: 55 }
+  ] as const;
+
+  let targetRw: number = points[0].rw;
+  if (surfaceMassKgM2 <= points[0].surfaceMassKgM2) {
+    targetRw = interpolateLinear(
+      surfaceMassKgM2,
+      120,
+      39,
+      points[0].surfaceMassKgM2,
+      points[0].rw
+    );
+  } else if (surfaceMassKgM2 < points[1].surfaceMassKgM2) {
+    targetRw = interpolateLinear(
+      surfaceMassKgM2,
+      points[0].surfaceMassKgM2,
+      points[0].rw,
+      points[1].surfaceMassKgM2,
+      points[1].rw
+    );
+  } else if (surfaceMassKgM2 < points[2].surfaceMassKgM2) {
+    targetRw = interpolateLinear(
+      surfaceMassKgM2,
+      points[1].surfaceMassKgM2,
+      points[1].rw,
+      points[2].surfaceMassKgM2,
+      points[2].rw
+    );
+  } else if (surfaceMassKgM2 < points[3].surfaceMassKgM2) {
+    targetRw = interpolateLinear(
+      surfaceMassKgM2,
+      points[2].surfaceMassKgM2,
+      points[2].rw,
+      points[3].surfaceMassKgM2,
+      points[3].rw
+    );
+  } else {
+    targetRw = interpolateLinear(
+      surfaceMassKgM2,
+      points[3].surfaceMassKgM2,
+      points[3].rw,
+      470,
+      59
+    );
+  }
+
+  targetRw = ksRound1(clamp(targetRw, 39, 60));
+  const shiftDb = ksRound1(targetRw - currentRw);
+
+  if (Math.abs(shiftDb) < 0.2) {
+    return {
+      notes,
+      shiftDb: 0,
+      strategySuffix: null,
+      targetRw
+    };
+  }
+
+  notes.push(
+    `Official Xella Silka references moved the single-leaf silicate masonry lane onto a dense calcium-silicate corridor (target Rw ${targetRw.toFixed(1)} dB).`
+  );
+
+  return {
+    notes,
+    shiftDb,
+    strategySuffix: "silicate_masonry_calibration",
+    targetRw
+  };
+}
