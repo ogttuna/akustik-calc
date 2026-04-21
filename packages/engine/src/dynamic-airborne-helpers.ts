@@ -16,8 +16,42 @@ import type {
   AirborneContext,
   AssemblyRatings,
   DynamicAirborneDelegateMethod,
+  DynamicAirborneFamily,
+  DynamicAirborneTrace,
   TransmissionLossCurve
 } from "@dynecho/shared";
+
+// Shared types for the dynamic-airborne split. Live here (not in
+// `dynamic-airborne.ts`) so the remaining composition file and every
+// future carved module can import from one side without circular
+// dependencies.
+
+export type DynamicAirborneResult = {
+  curve: TransmissionLossCurve;
+  id: "dynamic";
+  label: string;
+  ratings: AssemblyRatings;
+  rw: number;
+  trace: DynamicAirborneTrace;
+  warnings: string[];
+};
+
+export type DynamicAirborneOptions = {
+  disableFramedReinforcementMonotonicFloor?: boolean;
+  disableFamilyBoundaryHold?: boolean;
+  airborneContext?: AirborneContext | null;
+  disableMasonryDavyCap?: boolean;
+  disableLinedMassiveMasonryFloor?: boolean;
+  disableNarrowHeavyDoubleLeafGapGuard?: boolean;
+  disableSingleLeafMasonryFloor?: boolean;
+  forcedFamily?: DynamicAirborneFamily | null;
+  framedReinforcementMonotonicGuardDepth?: number;
+  frequenciesHz?: readonly number[];
+  linedMassiveMasonryFloorGuardDepth?: number;
+  narrowHeavyDoubleLeafGapGuardDepth?: number;
+  singleLeafMasonryFloorGuardDepth?: number;
+  screeningEstimatedRwDb: number;
+};
 
 import {
   buildRatingsFromCurve,
