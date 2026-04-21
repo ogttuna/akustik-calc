@@ -18,10 +18,27 @@ import {
   calculateAirborneCalculatorResult,
   buildPanelProperties,
   estimateCriticalFrequency,
-  finitePanelRadiationEfficiency,
-  getAirborneCalculatorLabel,
-  type ComparableAirborneCalculatorId
+  finitePanelRadiationEfficiency
 } from "./airborne-calculator";
+import {
+  anchorCurveToComputedMetric,
+  anchorCurveToMetric,
+  blendDelegateCurves,
+  buildScreeningDelegate,
+  computeContextMetric,
+  computeMicroGapEquivalenceMetric,
+  DYNAMIC_AIR_DENSITY,
+  DYNAMIC_SOUND_SPEED,
+  getDelegateLabel,
+  interpolateLinear,
+  interpolateRwSeries,
+  octaveBandWindowWeight,
+  octaveGaussianDip,
+  shiftCurve,
+  smoothstep01,
+  type DelegateBlend,
+  type DelegateCurve
+} from "./dynamic-airborne-helpers";
 import { computeLayerSurfaceMassKgM2 } from "./layer-surface-mass";
 import {
   MIXED_PLAIN_MODERATE_FIELD_TEMPLATES,
@@ -80,20 +97,6 @@ type DynamicAirborneOptions = {
   narrowHeavyDoubleLeafGapGuardDepth?: number;
   singleLeafMasonryFloorGuardDepth?: number;
   screeningEstimatedRwDb: number;
-};
-
-type DelegateCurve = {
-  curve: TransmissionLossCurve;
-  label: string;
-  method: DynamicAirborneDelegateMethod;
-  rw: number;
-};
-
-type DelegateBlend = {
-  adjustmentsDb: number;
-  delegates: Array<{ method: DynamicAirborneDelegateMethod; weight: number }>;
-  selectedMethod: DynamicAirborneDelegateMethod;
-  strategy: string;
 };
 
 const FAMILY_LABELS: Record<DynamicAirborneFamily, string> = {
@@ -187,59 +190,6 @@ const MIXED_PLAIN_PREMIUM_LAB_TARGET_RW = {
     }
   }
 } as const;
-
-function getDelegateLabel(method: DynamicAirborneDelegateMethod): string {
-  if (method === "screening_mass_law_curve_seed_v3") {
-    return "Screening Seed";
-  }
-
-  return getAirborneCalculatorLabel(method as ComparableAirborneCalculatorId);
-}
-
-function buildScreeningDelegate(
-  surfaceMassKgM2: number,
-  screeningEstimatedRwDb: number,
-  frequenciesHz: readonly number[]
-): DelegateCurve {
-  const curve = buildCalibratedMassLawCurve(surfaceMassKgM2, screeningEstimatedRwDb, frequenciesHz);
-
-  return {
-    curve: {
-      frequenciesHz: [...curve.frequenciesHz],
-      transmissionLossDb: [...curve.transmissionLossDb]
-    },
-    label: getDelegateLabel("screening_mass_law_curve_seed_v3"),
-    method: "screening_mass_law_curve_seed_v3",
-    rw: buildRatingsFromCurve(curve.frequenciesHz, curve.transmissionLossDb).iso717.Rw
-  };
-}
-
-function blendDelegateCurves(
-  delegates: readonly DelegateCurve[],
-  blend: DelegateBlend
-): TransmissionLossCurve {
-  const weights = new Map(blend.delegates.map((entry) => [entry.method, entry.weight]));
-  const reference = delegates[0];
-  const totalWeight = Math.max(
-    blend.delegates.reduce((sum, entry) => sum + entry.weight, 0),
-    1e-9
-  );
-  const transmissionLossDb = reference.curve.frequenciesHz.map((_, index) => {
-    let blendedValue = 0;
-
-    for (const delegate of delegates) {
-      const weight = weights.get(delegate.method) ?? 0;
-      blendedValue += delegate.curve.transmissionLossDb[index] * weight;
-    }
-
-    return clamp((blendedValue / totalWeight) + blend.adjustmentsDb, 0, 95);
-  });
-
-  return {
-    frequenciesHz: [...reference.curve.frequenciesHz],
-    transmissionLossDb
-  };
-}
 
 type MixedPlainModerateTemplateProfile = "resilient" | "steel";
 type MixedPlainModerateTemplateFill = 35 | 42 | 50 | 60;
@@ -1368,60 +1318,6 @@ function buildMicroGapFillOnlyEquivalentLayers(
   ];
 }
 
-function shiftCurve(curve: TransmissionLossCurve, shiftDb: number): TransmissionLossCurve {
-  return {
-    frequenciesHz: [...curve.frequenciesHz],
-    transmissionLossDb: curve.transmissionLossDb.map((value) => clamp(value + shiftDb, 0, 95))
-  };
-}
-
-function interpolateLinear(x: number, x1: number, y1: number, x2: number, y2: number): number {
-  if (!Number.isFinite(x1) || !Number.isFinite(x2) || Math.abs(x2 - x1) < 1e-9) {
-    return y1;
-  }
-
-  const t = clamp((x - x1) / (x2 - x1), 0, 1);
-  return y1 + (t * (y2 - y1));
-}
-
-function interpolateRwSeries(thicknessMm: number, points: readonly { thicknessMm: number; rw: number }[]): number {
-  if (points.length === 0) {
-    return 0;
-  }
-
-  if (points.length === 1) {
-    return points[0]?.rw ?? 0;
-  }
-
-  const first = points[0];
-  const second = points[1];
-  const last = points[points.length - 1];
-  const penultimate = points[points.length - 2];
-
-  if (!first || !second || !last || !penultimate) {
-    return points[0]?.rw ?? 0;
-  }
-
-  if (thicknessMm <= first.thicknessMm) {
-    return interpolateLinear(thicknessMm, first.thicknessMm, first.rw, second.thicknessMm, second.rw);
-  }
-
-  for (let index = 1; index < points.length; index += 1) {
-    const next = points[index];
-    const previous = points[index - 1];
-
-    if (!next || !previous) {
-      continue;
-    }
-
-    if (thicknessMm <= next.thicknessMm) {
-      return interpolateLinear(thicknessMm, previous.thicknessMm, previous.rw, next.thicknessMm, next.rw);
-    }
-  }
-
-  return interpolateLinear(thicknessMm, penultimate.thicknessMm, penultimate.rw, last.thicknessMm, last.rw);
-}
-
 function isMasonryLikeLayer(layer: ResolvedLayer): boolean {
   const role = classifyLayerRole(layer);
   if (!role.isSolidLeaf) {
@@ -1699,82 +1595,6 @@ function trimOuterCompliantLayers(layers: readonly ResolvedLayer[]): {
   };
 }
 
-function computeContextMetric(curve: TransmissionLossCurve, context?: AirborneContext | null): number | null {
-  const ratings = buildRatingsFromCurve(curve.frequenciesHz, curve.transmissionLossDb, context);
-
-  if (context?.contextMode && context.contextMode !== "element_lab") {
-    return ratings.field?.DnTw ?? ratings.iso717.RwPrime ?? ratings.iso717.Rw;
-  }
-
-  return ratings.iso717.Rw;
-}
-
-function anchorCurveToMetric(
-  curve: TransmissionLossCurve,
-  targetMetric: number,
-  context?: AirborneContext | null
-): { applied: boolean; curve: TransmissionLossCurve; ratings: AssemblyRatings } {
-  return anchorCurveToComputedMetric(curve, targetMetric, context, (candidateCurve) => computeContextMetric(candidateCurve, context));
-}
-
-function anchorCurveToComputedMetric(
-  curve: TransmissionLossCurve,
-  targetMetric: number,
-  context: AirborneContext | null | undefined,
-  computeMetric: (curve: TransmissionLossCurve) => number | null
-): { applied: boolean; curve: TransmissionLossCurve; ratings: AssemblyRatings } {
-  let currentCurve: TransmissionLossCurve = {
-    frequenciesHz: [...curve.frequenciesHz],
-    transmissionLossDb: [...curve.transmissionLossDb]
-  };
-  let currentRatings = buildRatingsFromCurve(currentCurve.frequenciesHz, currentCurve.transmissionLossDb, context);
-  const sourceValues = [...currentCurve.transmissionLossDb];
-
-  for (let iteration = 0; iteration < 4; iteration += 1) {
-    const currentMetric = computeMetric(currentCurve);
-    if (!(typeof currentMetric === "number" && Number.isFinite(currentMetric))) {
-      return {
-        applied: false,
-        curve: {
-          frequenciesHz: [...curve.frequenciesHz],
-          transmissionLossDb: [...curve.transmissionLossDb]
-        },
-        ratings: buildRatingsFromCurve(curve.frequenciesHz, curve.transmissionLossDb, context)
-      };
-    }
-
-    const delta = targetMetric - currentMetric;
-    if (Math.abs(delta) < 0.05) {
-      break;
-    }
-
-    currentCurve = shiftCurve(currentCurve, delta);
-    currentRatings = buildRatingsFromCurve(currentCurve.frequenciesHz, currentCurve.transmissionLossDb, context);
-  }
-
-  return {
-    applied: currentCurve.transmissionLossDb.some((value, index) => Math.abs(value - sourceValues[index]) > 1e-6),
-    curve: currentCurve,
-    ratings: currentRatings
-  };
-}
-
-function computeMicroGapEquivalenceMetric(
-  curve: TransmissionLossCurve,
-  context?: AirborneContext | null
-): number | null {
-  const ratings = buildRatingsFromCurve(curve.frequenciesHz, curve.transmissionLossDb, context);
-
-  if (context?.contextMode && context.contextMode !== "element_lab") {
-    return ratings.field?.RwPrime ?? ratings.iso717.RwPrime ?? ratings.field?.DnTw ?? ratings.iso717.Rw;
-  }
-
-  return ratings.iso717.Rw;
-}
-
-const DYNAMIC_SOUND_SPEED = 343;
-const DYNAMIC_AIR_DENSITY = 1.21;
-
 type MasonryDavyProfile = {
   bandEndHz: number;
   bandStartHz: number;
@@ -1789,36 +1609,6 @@ type MasonryDavyProfile = {
   masonryMassRatio: number;
   transitionOctaves: number;
 };
-
-function smoothstep01(value: number): number {
-  const t = clamp(value, 0, 1);
-  return (t * t) * (3 - (2 * t));
-}
-
-function octaveBandWindowWeight(freqHz: number, startHz: number, endHz: number, transitionOctaves = 0.3): number {
-  const frequency = Math.max(freqHz, 1e-9);
-  const start = Math.max(startHz, 1e-9);
-  const end = Math.max(endHz, start + 1e-6);
-  const transition = clamp(transitionOctaves, 0.05, 1.5);
-  const left = smoothstep01((Math.log2(frequency / start) + transition) / (2 * transition));
-  const right = smoothstep01((Math.log2(end / frequency) + transition) / (2 * transition));
-
-  return clamp(Math.min(left, right), 0, 1);
-}
-
-function octaveGaussianDip(freqHz: number, centerHz: number, depthDb: number, sigmaOctaves = 0.25): number {
-  const frequency = Math.max(freqHz, 1e-9);
-  const center = Math.max(centerHz, 1e-9);
-  const depth = Math.max(depthDb, 0);
-  const sigma = Math.max(sigmaOctaves, 0.05);
-
-  if (!(depth > 0)) {
-    return 0;
-  }
-
-  const x = Math.log2(frequency / center);
-  return depth * Math.exp(-0.5 * Math.pow(x / sigma, 2));
-}
 
 function buildMasonryDavyProfile(
   layers: readonly ResolvedLayer[],
