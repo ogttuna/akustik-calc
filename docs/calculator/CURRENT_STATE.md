@@ -52,12 +52,13 @@ That is how the 2026-04-20 doc-drift problem (captured in
 ## Operator Snapshot
 
 - active slice:
-  `dynamic_airborne_split_refactor_v1` (in progress; 3 of a
-  multi-commit incremental split have landed — helpers.ts,
-  material predicates into family-detection.ts, framing-hint
-  helpers into family-detection.ts; the remaining predictor-
-  scoring bulk needs a type-boundary design pass before the next
-  commit; progress pinned in
+  `dynamic_airborne_split_refactor_v1` (in progress; **10 incremental
+  commits have landed**; main `dynamic-airborne.ts` has shed 2071
+  lines — from 6630 → 4559 — into six bounded modules: helpers,
+  family-detection, davy-masonry, mixed-plain-templates,
+  cavity-topology, and the masonry-calibration lane covering all 9
+  estimators; remaining work is framed-wall calibration + reinforcement
+  helpers + floor/cap guards; full progress table pinned in
   `docs/calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md`)
 - latest closed implementation slice:
   `wall_hostile_input_matrix_with_airborne_cartography_v1` (closed

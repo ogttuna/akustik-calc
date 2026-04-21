@@ -74,12 +74,12 @@ Use this section first when deciding what to do next.
 ### Now
 
 - active slice:
-  `dynamic_airborne_split_refactor_v1` (in progress; 3 incremental
-  commits landed — `c0a5068` helpers.ts, `361d97d` material
-  predicates into family-detection.ts, `b4d32a9` framing hint
-  helpers into family-detection.ts; main `dynamic-airborne.ts`
-  down from 6630 → 6234 lines; remaining predictor-scoring bulk
-  needs a type-boundary design pass before the next commit; status
+  `dynamic_airborne_split_refactor_v1` (in progress; **10 incremental
+  commits landed** through `1379eff`; main `dynamic-airborne.ts`
+  down from 6630 → 4559 lines; six bounded modules carved out
+  (helpers, family-detection, davy-masonry, mixed-plain-templates,
+  cavity-topology, masonry-calibration); remaining work is framed-wall
+  calibration + reinforcement helpers + floor/cap guards; status
   pinned in `docs/calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md`
   "Execution Progress" section)
 - latest closed implementation slice:

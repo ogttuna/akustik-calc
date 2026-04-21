@@ -165,66 +165,74 @@ green, the split is safe by construction.
 
 ## Execution Progress (2026-04-21)
 
-The split slice is well underway — five commits have landed:
+The split slice is well underway — **ten commits** have landed:
 
-| Commit | Scope | File delta |
+| Commit | Scope | Main-file delta |
 |---|---|---|
-| `c0a5068` | Carve `dynamic-airborne-helpers.ts` (pure math, spectrum weights, physical constants, delegate blending, curve anchoring) | 283-line new file, main 6630 → 6420 |
-| `361d97d` | Carve material-family predicates into `dynamic-airborne-family-detection.ts` (15 `is*Layer` / `is*BuildUp` predicates) | main 6420 → 6263 |
-| `b4d32a9` | Add framing hint helpers to `dynamic-airborne-family-detection.ts` (`DynamicFramingHint`, `normalizeFramingHint`, `hasExplicitFramingHint`, `isResilientFramingHint`) | main 6263 → 6234 |
-| `a398ec9` | Move shared types `DynamicAirborneOptions` + `DynamicAirborneResult` into helpers.ts; carve Davy/Cremer masonry cap (`buildMasonryDavyProfile`, `buildMasonryDavyCremerCurve`, `applyMasonryDavyConservativeCap`) into `dynamic-airborne-davy-masonry.ts` | main 6234 → 5977 |
-| `c74e915` | Carve mixed-plain template resolvers + lab-target Rw tables into `dynamic-airborne-mixed-plain-templates.ts` | main 5977 → 5787 |
+| `c0a5068` | Carve `dynamic-airborne-helpers.ts` (pure math, spectrum weights, physical constants, delegate blending, curve anchoring) | 6630 → 6420 |
+| `361d97d` | Carve material-family predicates into `dynamic-airborne-family-detection.ts` (15 `is*Layer` / `is*BuildUp` predicates) | 6420 → 6263 |
+| `b4d32a9` | Add framing hint helpers to `dynamic-airborne-family-detection.ts` | 6263 → 6234 |
+| `a398ec9` | Move shared types `DynamicAirborneOptions` + `DynamicAirborneResult` into helpers.ts; carve Davy/Cremer masonry cap into `dynamic-airborne-davy-masonry.ts` | 6234 → 5977 |
+| `c74e915` | Carve mixed-plain template resolvers + lab-target Rw tables into `dynamic-airborne-mixed-plain-templates.ts` | 5977 → 5787 |
+| `6a15f5b` | Carve cavity topology + layer-variant builders into `dynamic-airborne-cavity-topology.ts` | 5787 → 5544 |
+| `75359a7` | Open `dynamic-airborne-masonry-calibration.ts` with AAC + silicate estimators | 5565 → 5385 |
+| `40591cb` | Extend masonry-calibration with unfinished aircrete + Celcon finished aircrete estimators | 5385 → 5142 |
+| `b59ab19` | Extend masonry-calibration with Porotherm + HELUZ clay brick estimators | 5142 → 4886 |
+| `1379eff` | Close masonry-calibration with Ytong Massief / Separatiepaneel / Cellenbetonblok trio | 4888 → 4559 |
 
-Net so far: `dynamic-airborne.ts` has shed 843 lines into four
-bounded modules (1015 carved-out lines total — the delta is
-bigger than the main-file savings because carves include local
-imports + re-export headers):
+Net so far: `dynamic-airborne.ts` has shed **2071 lines** (−31%)
+into **six bounded modules**:
 
 | Carved module | Lines | Purpose |
 |---|---|---|
 | `dynamic-airborne-helpers.ts` | 272 | Pure math, spectrum weights, physical constants, delegate blending, curve anchoring, **shared types** (`DynamicAirborneOptions`, `DynamicAirborneResult`, `DelegateCurve`, `DelegateBlend`) |
-| `dynamic-airborne-family-detection.ts` | 236 | Material predicates (`is*Layer`, `is*BuildUp`) + framing hint helpers (`DynamicFramingHint`, `normalizeFramingHint`, etc.) |
-| `dynamic-airborne-davy-masonry.ts` | 270 | Davy/Cremer single-leaf masonry coincidence cap (profile + Cremer curve + conservative cap) |
-| `dynamic-airborne-mixed-plain-templates.ts` | 237 | Mixed-plain premium/moderate lab-target Rw tables + template id resolvers + fill interpolation |
+| `dynamic-airborne-family-detection.ts` | 236 | Material predicates (`is*Layer`, `is*BuildUp`) + framing hint helpers |
+| `dynamic-airborne-davy-masonry.ts` | 270 | Davy/Cremer single-leaf masonry coincidence cap |
+| `dynamic-airborne-mixed-plain-templates.ts` | 237 | Mixed-plain premium/moderate lab-target Rw tables + template id resolvers |
+| `dynamic-airborne-cavity-topology.ts` | 285 | `describePrimaryCavity`, `summarizePrimaryCavitySegments`, micro-gap + narrow-gap + reduced-thickness variant builders |
+| `dynamic-airborne-masonry-calibration.ts` | 1057 | All 9 masonry estimators (AAC + silicate + unfinished aircrete + Celcon finished + Porotherm + HELUZ + Ytong Massief + Ytong Separatiepaneel + Ytong Cellenbetonblok) |
 
 ### Remaining Work Inside The Slice
 
-Roughly 3787 lines still live in `dynamic-airborne.ts` after
-the easy carves. The remaining bulk is:
+Roughly 4559 lines still live in `dynamic-airborne.ts`. The
+remaining bulk is:
 
-1. **Masonry calibration lane** (`estimateAacMassiveTargetRw`,
-   `estimateSilicateMasonryTargetRw`,
-   `estimateUnfinishedAircreteTargetRw`,
-   `estimatePorothermPlasteredTargetRw`,
-   `estimateHeluzPlasteredClayTargetRw`,
-   `estimateYtongMassiefG2300TargetRw`,
-   `estimateYtongSeparatiePaneelTargetRw`,
-   `estimateYtongCellenbetonblokTargetRw`,
-   `estimateCelconFinishedAircreteTargetRw`) — ~1020 lines total,
-   similar shape (`(layers, topology, currentRw, family) →
-   { notes, shiftDb, strategySuffix, targetRw }`). Carve into
-   `dynamic-airborne-masonry-calibration.ts` as one atomic move —
-   all functions share the same predicate + helper imports that
-   are already in other modules.
-2. **Framed wall calibration** (`estimateStudWallTargetRw`,
-   `summarizeFramedBoardSystem`, `summarizeFramingEvidence`,
-   `summarizePremiumSingleBoardFramedCandidate`,
-   `summarizeDoubleStudSignature`, etc.) — ~900 lines. Carve
-   into `dynamic-airborne-framed-wall-calibration.ts`. Moderate
-   risk; shares `describePrimaryCavity` with the masonry side.
-3. **Topology summaries + cavity helpers**
-   (`describePrimaryCavity`, `summarizePrimaryCavitySegments`,
+1. **Framed wall calibration** (~900 lines, two discontiguous
+   blocks):
+   - First block (lines ~206-849 post split): `isBoardLikeLayer`,
+     `isEnhancedBoardLayer`, `summarizeFramedBoardSystem`,
+     `summarizeFramingEvidence`,
+     `summarizePremiumSingleBoardFramedCandidate`,
+     `isPlainGypsumFilledSingleBoardCandidate`,
+     `summarizeDoubleStudSignature`,
+     `summarizeHeavyUnframedCavityRisk`,
+     `summarizeMultileafOrderSensitivity`,
+     `normalizeBoundarySignal`, `summarizeFamilyDecisionBoundary`
+   - Second block (lines ~1019+): `estimateStudWallTargetRw`
+   - Types used: `BoardTier`, `FramedBoardSystemSummary`,
+     `DoubleStudSignature`, `FramingEvidenceSummary`,
+     `HeavyUnframedCavityRiskSummary`,
+     `MultileafOrderSensitivitySummary`,
+     `FamilyDecisionBoundarySummary`
+   - Carve target: `dynamic-airborne-framed-wall-calibration.ts`.
+     Safer in 2-4 incremental commits than one atomic move
+     because summarize functions reference each other through
+     their types — move types + predicates first, then summarize
+     layers bottom-up, then `estimateStudWallTargetRw` last.
+2. **Remaining topology + reinforcement helpers** (~250 lines):
    `summarizeSingleLeafMasonryProfile`, `trimOuterCompliantLayers`,
-   `findOuterLeafReinforcementCandidateIndex`,
-   micro-gap equivalent builders) — ~700 lines. Carve into
-   `dynamic-airborne-cavity-topology.ts` so framed-wall and
-   masonry lanes share.
-4. **Floor / cap guards** (`apply*MonotonicFloor`,
-   `apply*Cap`, `apply*Trim`) — ~800 lines. Could split into
-   `dynamic-airborne-floor-guards.ts` or keep in main composition
-   if tightly coupled.
-5. **`calculateDynamicAirborneResult`** + remaining scaffolding —
-   stays in `dynamic-airborne.ts` as the composition wrapper.
+   `compareReinforcementCandidatePriority`,
+   `findOuterLeafReinforcementCandidateIndex`. These belong in
+   `dynamic-airborne-cavity-topology.ts` — extend the module.
+3. **Floor / cap guards** (~800 lines): `apply*MonotonicFloor`,
+   `apply*Cap`, `apply*Trim`. Tightly coupled to
+   `DynamicAirborneOptions` but otherwise self-contained. Carve
+   into `dynamic-airborne-floor-guards.ts` once framed wall is
+   out.
+4. **`calculateDynamicAirborneResult`** + remaining scaffolding
+   (~600 lines after floor guards move) — stays in
+   `dynamic-airborne.ts` as the thin composition wrapper. Target
+   size: ~500 lines when the slice closes.
 
 ### Next Agent Guidance
 
