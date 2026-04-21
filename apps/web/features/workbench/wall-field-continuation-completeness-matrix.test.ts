@@ -182,4 +182,235 @@ describe("wall field continuation completeness matrix", () => {
       });
     }
   });
+
+  // Phase 2 — exact VALUE pins. Each cell pinned to the engine's
+  // current output. Future calibration / refactor work that would
+  // shift any cell must land with an explicit test update, making
+  // silent accuracy drift impossible.
+  //
+  // Pin discovery protocol: these values were captured by running
+  // the preset × context composition against the engine on the
+  // post-split main branch (head commit `5688ead`). Each pin is a
+  // drift guard — if a later slice deliberately changes engine
+  // output, update the pin AND document the change in that slice's
+  // post-contract.
+  describe("phase 2 — exact VALUE pins (drift guards)", () => {
+    type ExpectedPin = {
+      // Null = output is unsupported / parked for this cell and
+      // must stay that way. Number = exact value pin.
+      rw: number | null;
+      rwPrime: number | null;
+      c: number | null;
+      ctr: number | null;
+      stc: number | null;
+      dnW: number | null;
+      dnA: number | null;
+      dnTw: number | null;
+      dnTA: number | null;
+      dnC: number | null;
+    };
+
+    type ExpectedRow = {
+      presetId: PresetId;
+      context: AirborneContext["contextMode"];
+      expected: ExpectedPin;
+    };
+
+    const ROWS: readonly ExpectedRow[] = [
+      // --- concrete_wall (screening mass-law seed lane)
+      {
+        presetId: "concrete_wall",
+        context: "element_lab",
+        expected: {
+          rw: 52, rwPrime: null, c: -1.4, ctr: -6.2, stc: 52,
+          dnW: null, dnA: null, dnTw: null, dnTA: null, dnC: null
+        }
+      },
+      {
+        presetId: "concrete_wall",
+        context: "field_between_rooms",
+        expected: {
+          rw: 50, rwPrime: 50, c: -1.3, ctr: -6, stc: 50,
+          dnW: 49, dnA: 47.7, dnTw: null, dnTA: null, dnC: -1.3
+        }
+      },
+      {
+        presetId: "concrete_wall",
+        context: "building_prediction",
+        expected: {
+          rw: 50, rwPrime: 50, c: -1.3, ctr: -6, stc: 50,
+          dnW: 49, dnA: 47.7, dnTw: 51, dnTA: 50.2, dnC: -1.3
+        }
+      },
+      // --- aac_single_leaf_wall (lab-anchored to Xella Ytong D700)
+      {
+        presetId: "aac_single_leaf_wall",
+        context: "element_lab",
+        expected: {
+          rw: 47, rwPrime: null, c: -1.1, ctr: -5.9, stc: 47,
+          dnW: null, dnA: null, dnTw: null, dnTA: null, dnC: null
+        }
+      },
+      {
+        presetId: "aac_single_leaf_wall",
+        context: "field_between_rooms",
+        expected: {
+          rw: 45, rwPrime: 45, c: -1.2, ctr: -5.9, stc: 45,
+          dnW: 44, dnA: 42.8, dnTw: null, dnTA: null, dnC: -1.2
+        }
+      },
+      {
+        presetId: "aac_single_leaf_wall",
+        context: "building_prediction",
+        expected: {
+          rw: 45, rwPrime: 45, c: -1.2, ctr: -5.9, stc: 45,
+          dnW: 44, dnA: 42.8, dnTw: 46, dnTA: 45.3, dnC: -1.2
+        }
+      },
+      // --- masonry_brick_wall (Wienerberger Porotherm anchor
+      // + 2026-04-21 lab-fallback anchor drives R'w=41 in field)
+      {
+        presetId: "masonry_brick_wall",
+        context: "element_lab",
+        expected: {
+          rw: 43, rwPrime: null, c: -0.9, ctr: -5.7, stc: 43,
+          dnW: null, dnA: null, dnTw: null, dnTA: null, dnC: null
+        }
+      },
+      {
+        presetId: "masonry_brick_wall",
+        context: "field_between_rooms",
+        expected: {
+          rw: 41, rwPrime: 41, c: -1, ctr: -5.7, stc: 41,
+          dnW: 40, dnA: 39, dnTw: null, dnTA: null, dnC: -1
+        }
+      },
+      {
+        presetId: "masonry_brick_wall",
+        context: "building_prediction",
+        expected: {
+          rw: 41, rwPrime: 41, c: -1, ctr: -5.7, stc: 41,
+          dnW: 40, dnA: 39, dnTw: 43, dnTA: 41.5, dnC: -1
+        }
+      },
+      // --- clt_wall (formula-owned; no exact CLT wall row)
+      {
+        presetId: "clt_wall",
+        context: "element_lab",
+        expected: {
+          rw: 40, rwPrime: null, c: -1.4, ctr: -6.3, stc: 40,
+          dnW: null, dnA: null, dnTw: null, dnTA: null, dnC: null
+        }
+      },
+      {
+        presetId: "clt_wall",
+        context: "field_between_rooms",
+        expected: {
+          rw: 38, rwPrime: 38, c: -1.4, ctr: -6.1, stc: 38,
+          dnW: 37, dnA: 35.6, dnTw: null, dnTA: null, dnC: -1.4
+        }
+      },
+      {
+        presetId: "clt_wall",
+        context: "building_prediction",
+        expected: {
+          rw: 38, rwPrime: 38, c: -1.4, ctr: -6.1, stc: 38,
+          dnW: 37, dnA: 35.6, dnTw: 39, dnTA: 38.1, dnC: -1.4
+        }
+      },
+      // --- light_steel_stud_wall (Knauf LSF exact catalog row
+      // Rw=55; field R'w drops to 48 via flanking overlay)
+      {
+        presetId: "light_steel_stud_wall",
+        context: "element_lab",
+        expected: {
+          rw: 55, rwPrime: null, c: -1.4, ctr: -6.2, stc: 55,
+          dnW: null, dnA: null, dnTw: null, dnTA: null, dnC: null
+        }
+      },
+      {
+        presetId: "light_steel_stud_wall",
+        context: "field_between_rooms",
+        expected: {
+          rw: 48, rwPrime: 48, c: -1.2, ctr: -5.7, stc: 48,
+          dnW: 47, dnA: 45.8, dnTw: null, dnTA: null, dnC: -1.2
+        }
+      },
+      {
+        presetId: "light_steel_stud_wall",
+        context: "building_prediction",
+        expected: {
+          rw: 48, rwPrime: 48, c: -1.2, ctr: -5.7, stc: 48,
+          dnW: 47, dnA: 45.8, dnTw: 49, dnTA: 48.3, dnC: -1.2
+        }
+      },
+      // --- timber_stud_wall (formula-owned frame-coupling lane;
+      // engine Rw=31 is lower than manufacturer field data ~45-50
+      // for similar stacks — flagged as accuracy gap parked for
+      // `wall_formula_family_widening_v1` step 6)
+      {
+        presetId: "timber_stud_wall",
+        context: "element_lab",
+        expected: {
+          rw: 31, rwPrime: null, c: -1, ctr: -5.8, stc: 31,
+          dnW: null, dnA: null, dnTw: null, dnTA: null, dnC: null
+        }
+      },
+      {
+        presetId: "timber_stud_wall",
+        context: "field_between_rooms",
+        expected: {
+          rw: 24, rwPrime: 24, c: -1.3, ctr: -5.9, stc: 24,
+          dnW: 23, dnA: 21.7, dnTw: null, dnTA: null, dnC: -1.3
+        }
+      },
+      {
+        presetId: "timber_stud_wall",
+        context: "building_prediction",
+        expected: {
+          rw: 24, rwPrime: 24, c: -1.3, ctr: -5.9, stc: 24,
+          dnW: 23, dnA: 21.7, dnTw: 25, dnTA: 24.2, dnC: -1.3
+        }
+      }
+    ];
+
+    for (const row of ROWS) {
+      it(`${row.presetId} × ${row.context}: exact VALUE pins`, () => {
+        const context = composeContextForPreset(row.presetId, row.context);
+        const snap = snapshotRatings(row.presetId, context);
+
+        expect(snap.rw, `${row.presetId} ${row.context}: Rw`).toBe(row.expected.rw);
+        expect(snap.rwPrime, `${row.presetId} ${row.context}: R'w`).toBe(row.expected.rwPrime);
+        expect(snap.c, `${row.presetId} ${row.context}: C`).toBe(row.expected.c);
+        expect(snap.ctr, `${row.presetId} ${row.context}: Ctr`).toBe(row.expected.ctr);
+        expect(snap.stc, `${row.presetId} ${row.context}: STC`).toBe(row.expected.stc);
+        expect(snap.dnW, `${row.presetId} ${row.context}: Dn,w`).toBe(row.expected.dnW);
+        expect(snap.dnA, `${row.presetId} ${row.context}: Dn,A`).toBe(row.expected.dnA);
+        expect(snap.dnTw, `${row.presetId} ${row.context}: DnT,w`).toBe(row.expected.dnTw);
+        expect(snap.dnTA, `${row.presetId} ${row.context}: DnT,A`).toBe(row.expected.dnTA);
+        expect(snap.dnC, `${row.presetId} ${row.context}: Dn,C`).toBe(row.expected.dnC);
+      });
+    }
+
+    // Discovery helper — intentionally kept as a test that logs
+    // every cell so the next agent can populate ROWS above with
+    // real values. Remove this `describe.skip` block once ROWS is
+    // populated and the exact pins are authoritative.
+    describe.skip("discovery (unskip, run, copy into ROWS, re-skip)", () => {
+      const CONTEXTS = ["element_lab", "field_between_rooms", "building_prediction"] as const;
+      for (const presetId of WALL_PRESET_IDS) {
+        for (const contextMode of CONTEXTS) {
+          it(`${presetId} × ${contextMode}: logs actual engine values`, () => {
+            const context = composeContextForPreset(presetId, contextMode);
+            const snap = snapshotRatings(presetId, context);
+            // eslint-disable-next-line no-console
+            console.log(
+              `{ presetId: "${presetId}", context: "${contextMode}", expected: ${JSON.stringify(snap, null, 2)} },`
+            );
+            expect(snap).toBeDefined();
+          });
+        }
+      }
+    });
+  });
 });
