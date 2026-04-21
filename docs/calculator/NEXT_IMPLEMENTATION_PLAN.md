@@ -74,18 +74,18 @@ Use this section first when deciding what to do next.
 ### Now
 
 - active slice:
-  `wall_reorder_output_set_consistency_v1` (selected and not started)
+  `preset_airborne_context_injection_v1` (selected and not started)
 - latest closed implementation slice:
-  `wall_preset_expansion_v1` (closed `2026-04-20` on
-  `packages/engine/src/post-wall-preset-expansion-v1-next-slice-selection-contract.test.ts`)
+  `wall_reorder_output_set_consistency_v1` (closed `2026-04-21` on
+  `packages/engine/src/post-wall-reorder-output-set-consistency-v1-next-slice-selection-contract.test.ts`)
 - current highest-ROI task:
-  root-cause and fix the asymmetric-stack reorder inconsistency where the
-  same four-layer light-heavy wall produces identical Rw but different C
-  availability on order reversal. Engine investigation path:
-  `packages/engine/src/dynamic-airborne.ts` RwC derivation and
-  `packages/engine/src/estimate-rw.ts`. Pin the fix with a reorder
-  invariance matrix that asserts supported output sets stay identical
-  across physically-equivalent stack orderings.
+  implement master-plan step 2: thread an optional `airborneContext`
+  through `preset-definitions.ts` presets and the workbench load path
+  so (a) LSF and timber stud presets can land with their `studType`
+  context, and (b) AAC and masonry presets run under their benchmark-
+  matching `LAB_MASONRY_CONTEXT` equivalent so the 2-4 dB preset-
+  benchmark gap disappears. Accuracy closure: preset Rw must hit the
+  published benchmark within that benchmark's own tolerance.
 - latest checkpoint review on `2026-04-20`:
   reread the living plan/state/handoff set against the active Dataholz CLT
   audit and route tests, reran the focused gate plus the broad `pnpm check`

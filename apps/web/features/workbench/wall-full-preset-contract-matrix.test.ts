@@ -55,24 +55,38 @@ describe("wall full preset contract matrix", () => {
   it("keeps every wall preset aligned across lab, apparent-field, and building contexts", () => {
     const failures: string[] = [];
 
+    // Note: prior to 2026-04-21, `concrete_wall` had C suppressed in every
+    // context due to a floor-carrier fallthrough bug (reorder-invariance
+    // finding). After the fix in `packages/engine/src/target-output-support.ts`,
+    // C falls back to the curve-rating estimate when the floor carrier has
+    // no declared C and its semantic is not `ctr_term`. All four wall presets
+    // now expose C as a live lab output.
+    //
+    // The screening-vs-benchmark distinction still matters for `Rw`
+    // availability in field/building contexts: screening-only walls
+    // (`concrete_wall`) keep Rw live in field/building; benchmark-backed
+    // walls switch to R'w and mark Rw unsupported.
     for (const preset of WORKBENCH_PRESETS.filter((preset) => preset.studyMode === "wall")) {
       const labCards = evaluateWallPreset(preset.id, null);
       const fieldCards = evaluateWallPreset(preset.id, FIELD_CONTEXT);
       const buildingCards = evaluateWallPreset(preset.id, BUILDING_CONTEXT);
       const isScreeningConcreteWall = preset.id === "concrete_wall";
 
-      const labLiveOutputs: RequestedOutputId[] = isScreeningConcreteWall ? ["Rw", "STC", "Ctr"] : ["Rw", "STC", "C", "Ctr"];
+      // C is now universally live in lab mode across every wall preset.
+      // The screening split only persists on the Rw vs R'w axis in field
+      // and building contexts.
+      const labLiveOutputs: RequestedOutputId[] = ["Rw", "STC", "C", "Ctr"];
       const labParkedOutputs: RequestedOutputId[] = ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A"];
-      const labUnavailableOutputs: RequestedOutputId[] = isScreeningConcreteWall ? ["C"] : [];
+      const labUnavailableOutputs: RequestedOutputId[] = [];
       const fieldLiveOutputs: RequestedOutputId[] = isScreeningConcreteWall
-        ? ["Rw", "R'w", "Dn,w", "Dn,A", "STC", "Ctr"]
+        ? ["Rw", "R'w", "Dn,w", "Dn,A", "STC", "C", "Ctr"]
         : ["R'w", "Dn,w", "Dn,A", "STC", "C", "Ctr"];
       const fieldParkedOutputs: RequestedOutputId[] = ["DnT,w", "DnT,A"];
-      const fieldUnavailableOutputs: RequestedOutputId[] = isScreeningConcreteWall ? ["C"] : ["Rw"];
+      const fieldUnavailableOutputs: RequestedOutputId[] = isScreeningConcreteWall ? [] : ["Rw"];
       const buildingLiveOutputs: RequestedOutputId[] = isScreeningConcreteWall
-        ? ["Rw", "R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "STC", "Ctr"]
+        ? ["Rw", "R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "STC", "C", "Ctr"]
         : ["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "STC", "C", "Ctr"];
-      const buildingUnavailableOutputs: RequestedOutputId[] = isScreeningConcreteWall ? ["C"] : ["Rw"];
+      const buildingUnavailableOutputs: RequestedOutputId[] = isScreeningConcreteWall ? [] : ["Rw"];
 
       for (const output of labLiveOutputs) {
         if (labCards.get(output)?.status !== "live") {

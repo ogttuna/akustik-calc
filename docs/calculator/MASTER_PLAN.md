@@ -221,7 +221,7 @@ accuracy issue surfaced by the 2026-04-21 plan review — see the
 | Wall selector families (double-leaf, lined-massive, AAC boundary, G5 sibling, heavy-core trim, lab double-stud) | 🟡 Family | Pinned as narrative labels in `dynamic-airborne-wall-selector-trace-matrix.test.ts` and `apps/web/features/workbench/wall-selector-output-origin-card-matrix.test.ts`; engine family IDs are `double_leaf`, `lined_massive_wall`, etc. |
 | Deep-hybrid swap corridors (`heavy_core`, `aac_d700_100`, `aac_d700_120`, `aac_g5`) | 🟡 Family | Each pinned in its own `dynamic-route-deep-hybrid-swap-*.test.ts` file |
 | Wall hostile-input matrix | ⚪ Not yet covered | Floor analog `raw-floor-hostile-input-*-matrix.test.ts` exists; wall does not |
-| Wall reorder invariance | ⚠️ Known bug | Asymmetric stacks show C-availability flip on reversal; 2026-04-20 probe evidence in `SYSTEM_AUDIT_2026-04-20.md` finding 9 |
+| Wall reorder invariance | 🟢 Benchmark | `apps/web/features/workbench/wall-reorder-invariance-matrix.test.ts` pins Rw / C / Ctr / supportedOutputs invariance across asymmetric light-heavy reversals and symmetric topologies; fix landed 2026-04-21 |
 | Wall field continuation per corridor | 🟡 Family (partial) | `wall-full-preset-contract-matrix.test.ts` covers every wall preset under lab / apparent-field / building contexts; completeness across every defended corridor × every field output has not been audited |
 
 **Wall assessment:** breadth improved (4 presets), but depth gaps and
@@ -238,7 +238,7 @@ engine/workbench work.
 | Wall hostile-input matrix | ⚪ Not yet covered | To land in master-plan step 4 |
 | Engine thickness validity | 🟡 Partial | Workbench `normalize-rows` emits warnings on invalid thickness; engine-level direct guard (for API/CLI callers that bypass normalization) absent |
 | Many-layer (50+) stability | ⚪ Informal only | 2026-04-20 probe verified 50 identical / 50 mixed wall stacks complete without crash; probe file deleted; no pinned regression guard exists |
-| Reorder output-set invariance | ⚠️ Known bug | Asymmetric wall stack finding 9 in `SYSTEM_AUDIT_2026-04-20.md`; no reorder invariance matrix exists yet |
+| Reorder output-set invariance | 🟢 Benchmark | Fixed 2026-04-21 via ctr_term-guarded fallthrough in `packages/engine/src/target-output-support.ts` `getCarrierC`; pinned in `wall-reorder-invariance-matrix.test.ts` |
 | Wall preset context gap | ⚠️ Known bug | Presets do not inject `airborneContext` on load; masonry preset is 4 dB over benchmark and AAC preset 2 dB under benchmark due to this gap. Closure: master-plan step 2 |
 | `dynamic-airborne.ts` size | ⚪ Hygiene debt | 6630 lines; split deferred to master-plan step 7 unless step 1 forces it earlier |
 

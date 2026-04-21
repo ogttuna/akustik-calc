@@ -108,11 +108,36 @@ function getCarrierC(input: TargetOutputSupportInput): number | null {
   if (input.floorCarrier) {
     const c = getFloorSystemC(input.floorCarrier);
 
-    if (!isFiniteNumber(c)) {
-      return null;
+    if (isFiniteNumber(c)) {
+      return c ?? null;
     }
 
-    return c ?? null;
+    // The floor carrier has no derivable C. Whether we fall through to the
+    // curve-rating estimate depends on whether the carrier's declaration
+    // of "no C" is authoritative or incidental:
+    //
+    //   * Curated catalog rows (exact / bound / official) declare their
+    //     lab-measured companion semantic authoritatively. If such a row
+    //     declares Rw+Ctr or Ctr-only, the lab did not measure C; we must
+    //     respect that and NOT fabricate C from the curve rating — this
+    //     is what the output-combination-sweep test enforces on UBIQ
+    //     bound carpet rows (2026-04-21 regression guard).
+    //   * Screening carriers (mass-law curve seed) are not authoritative;
+    //     they are derived from the same curve that the metrics estimate
+    //     uses. When a screening carrier has no derivable C, suppressing
+    //     C would make the supported output set order-sensitive on
+    //     asymmetric wall stacks, because the workbench's floor-role
+    //     inference is order-sensitive while the underlying curve is not
+    //     — the 2026-04-21 reorder-invariance bug.
+    //
+    // So: fall through to metrics only when the carrier is screening.
+    // Otherwise respect the authoritative no-C declaration.
+    const basis = (input.floorCarrier as { basis?: string }).basis;
+    const isScreeningCarrier = typeof basis === "string" && basis.startsWith("screening_");
+
+    if (!isScreeningCarrier) {
+      return null;
+    }
   }
 
   if (isFiniteNumber(input.metrics?.estimatedCDb)) {

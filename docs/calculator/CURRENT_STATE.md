@@ -52,11 +52,14 @@ That is how the 2026-04-20 doc-drift problem (captured in
 ## Operator Snapshot
 
 - active slice:
-  `wall_reorder_output_set_consistency_v1` (selected and not started)
+  `preset_airborne_context_injection_v1` (selected and not started)
 - latest closed implementation slice:
+  `wall_reorder_output_set_consistency_v1` (closed `2026-04-21` on
+  `packages/engine/src/post-wall-reorder-output-set-consistency-v1-next-slice-selection-contract.test.ts`)
+- prior closed implementation slice:
   `wall_preset_expansion_v1` (closed `2026-04-20` on
   `packages/engine/src/post-wall-preset-expansion-v1-next-slice-selection-contract.test.ts`)
-- prior closed implementation slice:
+- earlier closed implementation slice:
   `dataholz_clt_calibration_tightening` (second pass, closed `2026-04-20` on
   `packages/engine/src/post-dataholz-clt-calibration-tightening-second-pass-next-slice-selection-contract.test.ts`)
 - closeout cut landed in wall_preset_expansion_v1:
@@ -87,18 +90,23 @@ That is how the 2026-04-20 doc-drift problem (captured in
   reorder/C-availability inconsistency on asymmetric light-heavy stacks,
   which is now the selected next active runtime tightening slice
 - immediate next decision:
-  investigate and fix `wall_reorder_output_set_consistency_v1`: the same
-  four-layer stack `[gypsum 12.5, rockwool 50, air_gap 50, concrete 150]`
-  and its reverse produce identical Rw=54 but different supported output
-  sets (C missing vs C live). Root-cause inside the engine airborne C
-  derivation path (`dynamic-airborne.ts` or `estimate-rw.ts`), pin the fix
-  with a wall reorder invariance test matrix, and keep every other wall
-  corridor guard test green through the change
+  implement `preset_airborne_context_injection_v1` (master-plan step 2):
+  extend `preset-definitions.ts` presets with an optional
+  `airborneContext` field and thread it through the workbench load
+  path. The same slice closes two problems identified this session:
+  (a) unblocks LSF / timber stud presets that require `studType`;
+  (b) closes the 2-4 dB benchmark fit gap on AAC and masonry presets
+  (preset Rw=47 vs Wienerberger Porotherm 100 dense plaster benchmark
+  Rw=43, and preset Rw=45 vs Xella Ytong D700 150 benchmark Rw=47)
+  by running presets under their matching `LAB_MASONRY_CONTEXT`
 - first implementation question now:
-  where exactly in the engine is the RwC value becoming order-sensitive on
-  asymmetric stacks while Rw itself stays order-invariant, and is the fix
-  a single derivation adjustment or does it require a broader family
-  classification refactor inside `dynamic-airborne.ts`
+  where does the workbench evaluate-scenario path receive
+  airborneContext today, and what is the cleanest place to inject a
+  preset-declared airborneContext so that (a) existing non-preset
+  scenarios still default to `null`, (b) benchmark tests and preset
+  tests can share the same context, and (c) the injection is visible
+  on the workbench UI so a consultant reading the proposal knows
+  which airborneContext was applied
 - selected route family:
   `mass_timber_clt_floor_lane`
 - selected output surface:

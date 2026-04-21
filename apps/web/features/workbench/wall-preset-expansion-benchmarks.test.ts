@@ -170,14 +170,24 @@ describe("wall preset expansion benchmarks", () => {
     }
   );
 
-  it("keeps the three new wall presets distinct from concrete_wall screening posture", () => {
+  it("keeps all four wall presets on a consistent lab output surface after the reorder-invariance fix", () => {
+    // Before 2026-04-21 the `concrete_wall` preset suppressed C in every
+    // context because the inferred floor-carrier path hid the curve-rating
+    // C estimate for any non-`rw_plus_c` semantic. The reorder-invariance
+    // fix in `packages/engine/src/target-output-support.ts` now falls
+    // through to `metrics.estimatedCDb` for `rw_plus_ctr` carriers, so
+    // every wall preset — screening or benchmark-backed — exposes the
+    // same lab output surface (Rw, STC, C, Ctr live).
     const concreteLab = evaluateWall("concrete_wall", null);
     const aacLab = evaluateWall("aac_single_leaf_wall", null);
+    const masonryLab = evaluateWall("masonry_brick_wall", null);
+    const cltLab = evaluateWall("clt_wall", null);
 
-    // concrete_wall is screening-only: C is not supported in lab mode.
-    expect(concreteLab.cards.get("C")?.status).toBe("unsupported");
-
-    // New presets are non-screening family: C is live.
-    expect(aacLab.cards.get("C")?.status).toBe("live");
+    for (const lab of [concreteLab, aacLab, masonryLab, cltLab]) {
+      expect(lab.cards.get("Rw")?.status).toBe("live");
+      expect(lab.cards.get("STC")?.status).toBe("live");
+      expect(lab.cards.get("C")?.status).toBe("live");
+      expect(lab.cards.get("Ctr")?.status).toBe("live");
+    }
   });
 });
