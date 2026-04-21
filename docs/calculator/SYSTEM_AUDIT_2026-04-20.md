@@ -403,6 +403,62 @@ Medium-high for the post-A selection (Option B vs C vs D). Will
 resolve once the engine investigation surfaces how RwC is actually
 derived.
 
+## Post-Session Finding 10 (2026-04-21 plan review — real accuracy gap)
+
+Discovered while verifying master-plan v2 claims against the
+implementation: the three wall presets landed by
+`wall_preset_expansion_v1` do **not** actually match their benchmark
+Rw values because presets run through the workbench without an
+injected `airborneContext`, while benchmarks run under explicit
+`LAB_MASONRY_CONTEXT` (or similar). Same physical stack, different
+context, different engine output.
+
+### Measurements
+
+| Preset | Stack | Preset Rw (no context) | Benchmark Rw (with context) | Gap |
+|---|---|---|---|---|
+| `aac_single_leaf_wall` | `[cement_plaster 10, ytong_aac_d700 150, cement_plaster 10]` | 45 | 47 (Xella reference, `xella_ytong_d700_150_plaster10_official_2026`, lab tolerance ±2.5 dB) | 2 dB under |
+| `masonry_brick_wall` | `[dense_plaster 13, porotherm_pls_100 100, dense_plaster 13]` | 47 | 43 (Wienerberger Porotherm, `wienerberger_porotherm_100_dense_plaster_primary_2026`, tolerance ±1 dB) | **4 dB over (exceeds benchmark tolerance)** |
+| `clt_wall` | `[gypsum_board 12.5, clt_panel 140, gypsum_board 12.5]` | 40 | n/a (no exact CLT wall benchmark in catalog) | — |
+
+### Impact
+
+The masonry preset is **not** benchmark-backed under its current
+context. A user loading the `masonry_brick_wall` preset sees Rw=47
+while the Wienerberger reference lab measurement is Rw=43. That is a
+4 dB optimistic reading on a benchmark whose tolerance is ±1 dB. This
+violates the master-plan P1 principle (coverage growth cannot sacrifice
+accuracy).
+
+The AAC preset's 2 dB gap is inside the aircrete / masonry `±2.5 dB`
+tolerance bucket but still not benchmark-matching.
+
+### Root cause
+
+Presets in `preset-definitions.ts` declare only `rows` (materials +
+thicknesses). They do not declare `airborneContext`. The workbench
+loads the preset rows and runs `evaluateScenario` with `airborneContext:
+null` (or whatever default the workbench is in). Benchmarks use an
+explicit context with `airtightness: "good"` or `contextMode:
+"element_lab"` which enters different airborne derivation paths.
+
+### Closure
+
+Master-plan step 2 (`preset_airborne_context_injection_v1`) now carries
+an explicit closure criterion beyond unblocking LSF / timber stud
+presets: the AAC and masonry presets must run under their benchmark-
+matching context and produce `Rw` within the benchmark's own
+tolerance. This will re-pin `wall-preset-expansion-benchmarks.test.ts`
+expectations (likely AAC 45 → 47, masonry 47 → 43) as an explicit
+accuracy change tracked under AP3 (no silent snapshot drift).
+
+### Consequence for the §3 grid
+
+All three preset rows in `MASTER_PLAN.md` §3 wall section have been
+downgraded from 🟢 Benchmark to 🟡 Formula pending step 2 closure.
+A new cross-cutting row "Wall preset context gap" is marked ⚠️
+Known bug with explicit closure pointer to step 2.
+
 ## Validation Posture At Audit Time
 
 - Phase 1 landed: two new workbench tests (CLT visible estimate consultant

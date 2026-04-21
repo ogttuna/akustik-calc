@@ -51,12 +51,16 @@ after the calculator itself is done.
 Done means **all six criteria below hold simultaneously**:
 
 **D1. Coverage**
-- ≥6 benchmark-backed wall presets across distinct family archetypes:
+- ≥6 wall presets across distinct family archetypes:
   single-leaf masonry, single-leaf AAC, mass-timber CLT, light-steel
-  stud (LSF), timber stud, heavy lined-massive. Each preset pinned to a
-  named reference source.
-- ≥8 defended floor corridors across concrete, reinforced concrete, CLT,
-  open-web steel, open-box timber, heavy masonry. Already achieved.
+  stud (LSF), timber stud, heavy lined-massive. Each preset must hit
+  its corresponding benchmark `Rw` within the benchmark's own
+  tolerance under an explicit `airborneContext`, or be downgraded
+  from benchmark-backed to formula-owned with an explicit honesty note.
+- ≥8 defended floor corridors across distinct families (UBIQ open-web
+  steel, Knauf timber, heavy concrete, reinforced concrete, Dataholz
+  CLT, CLT local combined, raw terminal-concrete helper, Pliteq /
+  Regupol / Getzner spot coverage). Already achieved — see §3 grid.
 - Any user-built realistic stack (single-leaf, double-leaf decoupled,
   mass timber, lined masonry) produces either a defended number or an
   explicit fail-closed answer with a specific reason.
@@ -66,10 +70,21 @@ Done means **all six criteria below hold simultaneously**:
   defended corridor is tied to a named source (exact catalog row,
   official floor-system row, benchmark-backed family formula, or
   predictor-backed family estimate).
-- Benchmark fit tolerance: mean absolute error ≤1.5 dB against the
-  official dataset for every defended corridor; max error ≤4 dB. (These
-  are the already-established framed-wall benchmark thresholds;
-  masonry and CLT corridors adopt the same bar.)
+- Benchmark fit tolerance is per-corridor and matches the thresholds
+  that already exist in each benchmark test file. Examples currently
+  in the repo:
+  - framed LSF benchmark (`airborne-framed-wall-benchmark.test.ts`):
+    MAE ≤1.5 dB, max ≤4 dB on the official primary dataset (tighter on
+    holdout datasets).
+  - masonry benchmark (`airborne-masonry-benchmark.test.ts`):
+    ±1 dB per case on Porotherm, Silka, HELUZ references.
+  - aircrete benchmark (`airborne-aircrete-benchmark.test.ts`): ±1 dB
+    per case on Celcon / Ytong references.
+- Each defended corridor adopts the bar of its matching benchmark
+  class. A preset that cannot hold the benchmark tolerance must either
+  tighten through the airborne-context / preset-context route, or be
+  downgraded from benchmark-backed to formula-owned with an explicit
+  honesty note.
 - No defended output depends on layer order for physically
   order-insensitive topologies.
 
@@ -148,11 +163,14 @@ Live snapshot of what the calculator actually handles today. Status
 codes:
 
 - 🟢 **Exact** — source-backed catalog row or official floor-system row
-- 🟢 **Benchmark** — benchmark fit audit with defended tolerance
-- 🟡 **Formula** — formula-owned lane with defended citation
+- 🟢 **Benchmark** — benchmark fit audit enforced with defended tolerance
+  in a test file
+- 🟡 **Formula** — formula-owned lane with defended citation; output
+  does not match a published benchmark under the route's default context
 - 🟡 **Family** — predictor-backed family estimate
 - 🟠 **Screening** — low-confidence lane explicit as screening-only
 - 🔴 **Fail-closed** — intentionally blocked, waiting for evidence
+- ⚠️ **Known bug** — behavior captured as broken, awaiting fix slice
 - ⚪ **Not yet covered** — no defended lane today
 
 ### Floor
@@ -185,38 +203,44 @@ runtime floor slices have diminishing returns.
 
 ### Wall
 
+Engine benchmark tests and workbench preset tests sometimes produce
+different `Rw` for the same physical stack because presets run without
+an injected `airborneContext` while benchmarks use an explicit
+`LAB_MASONRY_CONTEXT` (or similar). This context gap is a real
+accuracy issue surfaced by the 2026-04-21 plan review — see the
+"⚠️ Wall preset context gap" row in the cross-cutting table below.
+
 | Family | Status | Evidence |
 |---|---|---|
-| Concrete double-leaf (`concrete_wall` preset) | 🟠 Screening | 4-layer screening composition |
-| AAC single-leaf (`aac_single_leaf_wall` preset) | 🟢 Benchmark | Ytong D700 + plaster, Rw=45 (benchmark ref 47) |
-| Masonry brick (`masonry_brick_wall` preset) | 🟢 Benchmark | Wienerberger Porotherm + plaster, Rw=47 |
-| CLT wall (`clt_wall` preset) | 🟡 Formula | CLT 140 + gypsum lining, Rw=40 (no exact catalog) |
-| Light-steel stud (LSF) | ⚪ Not yet covered | Engine benchmarks exist; preset blocked by `airborneContext.studType` injection gap |
+| Concrete double-leaf (`concrete_wall` preset) | 🟠 Screening | 4-layer migration-safe composition in `preset-definitions.ts`; `wall-full-preset-contract-matrix` proves screening-only posture (no `C` in lab mode) |
+| AAC single-leaf (`aac_single_leaf_wall` preset) | 🟡 Formula | `wall-preset-expansion-benchmarks` pins Rw=45 under workbench default context; the engine benchmark `airborne-verified-catalog.ts` → `xella_ytong_d700_150_plaster10_official_2026` pins Rw=47 under `LAB_MASONRY_CONTEXT`. 2 dB context gap within benchmark tolerance (±2.5 dB) but not benchmark-matching |
+| Masonry brick (`masonry_brick_wall` preset) | 🟡 Formula | `wall-preset-expansion-benchmarks` pins Rw=47 under workbench default context; the engine benchmark `airborne-masonry-benchmark` → `wienerberger_porotherm_100_dense_plaster_primary_2026` expects Rw=43 with ±1 dB. **4 dB over-statement** — the preset path is not benchmark-backed under its current context |
+| CLT wall (`clt_wall` preset) | 🟡 Formula | `wall-preset-expansion-benchmarks` pins Rw=40 under workbench default context; no exact CLT wall catalog row exists today |
+| Light-steel stud (LSF) | ⚪ Not yet covered | `airborne-framed-wall-benchmark.test.ts` benchmarks the engine path; preset surface is blocked by the `airborneContext.studType` injection gap |
 | Timber stud | ⚪ Not yet covered | Same blocker as LSF |
-| Clear double-leaf corridor | 🟡 Family | Defended corridor guard |
-| AAC boundary corridor | 🟡 Family | Defended corridor guard |
-| Clear lined-massive corridor | 🟡 Family | Defended corridor guard |
-| G5 sibling corridor | 🟡 Family | Defended corridor guard |
-| Heavy-core trim corridor | 🟡 Family | Defended corridor guard |
-| Lab double-stud corridor | 🟡 Family | Defended corridor guard |
-| Wall hostile-input matrix | ⚪ Not yet covered | Floor analog exists; wall does not |
-| Wall reorder invariance | 🔴 Known bug | Asymmetric stacks show C-availability flip |
-| Wall field continuation per corridor | ⚪ Not audited | Some corridors work, not systematically verified |
+| Wall selector families (double-leaf, lined-massive, AAC boundary, G5 sibling, heavy-core trim, lab double-stud) | 🟡 Family | Pinned as narrative labels in `dynamic-airborne-wall-selector-trace-matrix.test.ts` and `apps/web/features/workbench/wall-selector-output-origin-card-matrix.test.ts`; engine family IDs are `double_leaf`, `lined_massive_wall`, etc. |
+| Deep-hybrid swap corridors (`heavy_core`, `aac_d700_100`, `aac_d700_120`, `aac_g5`) | 🟡 Family | Each pinned in its own `dynamic-route-deep-hybrid-swap-*.test.ts` file |
+| Wall hostile-input matrix | ⚪ Not yet covered | Floor analog `raw-floor-hostile-input-*-matrix.test.ts` exists; wall does not |
+| Wall reorder invariance | ⚠️ Known bug | Asymmetric stacks show C-availability flip on reversal; 2026-04-20 probe evidence in `SYSTEM_AUDIT_2026-04-20.md` finding 9 |
+| Wall field continuation per corridor | 🟡 Family (partial) | `wall-full-preset-contract-matrix.test.ts` covers every wall preset under lab / apparent-field / building contexts; completeness across every defended corridor × every field output has not been audited |
 
-**Wall assessment:** breadth just improved (3 new presets), depth still
-shallow. Gaps are runnable: no source-blocking, mostly engine/workbench
-work.
+**Wall assessment:** breadth improved (4 presets), but depth gaps and
+accuracy concerns remain. The preset context gap (AAC 2 dB, masonry
+4 dB) means the newly-landed presets are not yet benchmark-backed at
+the preset surface. Gaps are runnable: no source-blocking, mostly
+engine/workbench work.
 
 ### Cross-cutting
 
 | Concern | Status | Evidence |
 |---|---|---|
-| Floor hostile-input matrix | 🟢 Exact | `raw-floor-hostile-input-*-matrix.test.ts` |
+| Floor hostile-input matrix | 🟢 Exact | `raw-floor-hostile-input-answer-matrix.test.ts` + `raw-floor-hostile-input-route-card-matrix.test.ts` |
 | Wall hostile-input matrix | ⚪ Not yet covered | To land in master-plan step 4 |
-| Engine thickness validity | ⚪ Partially | Workbench normalizeRows emits warnings; engine-level guard absent |
-| Many-layer (50+) stability | 🟡 Family | Probe-verified, not formally pinned |
-| Reorder output-set invariance | 🔴 Known bug | Asymmetric stack finding 9 in audit |
-| `dynamic-airborne.ts` size | ⚪ Hygiene debt | 6630 lines; split deferred to master-plan step 7 |
+| Engine thickness validity | 🟡 Partial | Workbench `normalize-rows` emits warnings on invalid thickness; engine-level direct guard (for API/CLI callers that bypass normalization) absent |
+| Many-layer (50+) stability | ⚪ Informal only | 2026-04-20 probe verified 50 identical / 50 mixed wall stacks complete without crash; probe file deleted; no pinned regression guard exists |
+| Reorder output-set invariance | ⚠️ Known bug | Asymmetric wall stack finding 9 in `SYSTEM_AUDIT_2026-04-20.md`; no reorder invariance matrix exists yet |
+| Wall preset context gap | ⚠️ Known bug | Presets do not inject `airborneContext` on load; masonry preset is 4 dB over benchmark and AAC preset 2 dB under benchmark due to this gap. Closure: master-plan step 2 |
+| `dynamic-airborne.ts` size | ⚪ Hygiene debt | 6630 lines; split deferred to master-plan step 7 unless step 1 forces it earlier |
 
 ### How to keep this grid honest
 
@@ -236,9 +260,9 @@ user-visible impact, and risk:
 
 | # | Candidate | Coverage | Accuracy | Scope | Risk | Selected |
 |---|---|---|---|---|---|---|
-| A | Reorder output-set consistency (finding 9) | neutral | + | 1-2 d | low | ★ active next |
-| B | Preset airborneContext injection → LSF + timber stud presets | ++ | neutral | 1-2 d | medium | step 2 |
-| C | Wall formula family widening (mass-law/Sharp/Davy) | ++ | + | 2-3 d | medium | conditional step 8 |
+| A | Reorder output-set consistency (audit finding 9) | neutral | + | 1-2 d | low | ★ active next |
+| B | Preset airborneContext injection — also closes the 2-4 dB benchmark gap (§3 grid ⚠️) + unblocks LSF / timber stud presets | ++ | ++ | 1-2 d | medium | step 2 |
+| C | Wall formula family widening (mass-law / Sharp / Davy) | ++ | + | 2-3 d | medium | conditional step 8 |
 | D | `dynamic-airborne.ts` split | neutral | neutral (enabler) | 2-3 d | high | conditional step 7 |
 | E | Engine-level hostile thickness guardrail | neutral | + | 0.5 d | very low | step 5 |
 
@@ -266,7 +290,7 @@ signal — the test that must be green to call it done.
 | # | Slice | What closes it |
 |---|---|---|
 | 1 | `wall_reorder_output_set_consistency_v1` | `wall-reorder-invariance-matrix.test.ts` green across symmetric + asymmetric topologies |
-| 2 | `preset_airborne_context_injection_v1` | `preset-context-injection-matrix.test.ts` proves injected `studType` reaches the engine and produces LSF-tuned `Rw` |
+| 2 | `preset_airborne_context_injection_v1` | Presets carry an optional `airborneContext` that the workbench injects on load; `preset-context-injection-matrix.test.ts` proves (a) injected `studType` reaches the engine and produces LSF-tuned `Rw`, (b) the AAC and masonry presets run under `LAB_MASONRY_CONTEXT` equivalent and hit benchmark Rw within the ±1 dB masonry tolerance |
 | 3 | `wall_preset_pack_2_v1` | LSF + timber stud + second-masonry presets pinned in `wall-preset-pack-2-benchmarks.test.ts` against named source rows |
 | 4 | `wall_hostile_input_matrix_v1` | `raw-wall-hostile-input-answer-matrix.test.ts` + workbench route/card matrix mirror the floor discipline |
 | 5 | `engine_thickness_guardrail_v1` | `hostile-thickness-input.test.ts` covers floor + wall × five invalid-thickness classes with defended fail-closed |
@@ -437,9 +461,9 @@ artifact that can be checked.
 
 | # | Signal | How To Measure |
 |---|---|---|
-| C1 | Wall preset coverage ≥ 6 distinct archetypes | `preset-definitions.ts` wall presets ≥ 6, each with named source row |
-| C2 | Every defended wall corridor has source-truth or benchmark fit audit | §3 grid wall section — no 🟡 rows without an audit link |
-| C3 | Field continuation coverage complete | `wall-field-continuation-completeness-matrix.test.ts` + floor equivalent both green |
+| C1 | Wall preset coverage ≥ 6 distinct archetypes, each benchmark-matching | `preset-definitions.ts` has ≥6 wall presets, and every preset that maps to an existing benchmark (`airborne-masonry-benchmark`, `airborne-aircrete-benchmark`, `airborne-verified-catalog`, `airborne-framed-wall-benchmark`) produces an `Rw` within that benchmark's tolerance under the preset's injected `airborneContext` |
+| C2 | Every defended wall corridor has source-truth or benchmark fit audit | §3 grid wall section — no 🟡 Formula row without an engine benchmark link or explicit honesty note; no ⚠️ Known bug rows remain |
+| C3 | Field continuation coverage complete | `wall-field-continuation-completeness-matrix.test.ts` + floor equivalent both green; every defended corridor × every field/building context × every field output has a pinned status |
 | C4 | Hostile-input discipline | Floor + wall hostile-input matrices green; `hostile-thickness-input.test.ts` green |
 | C5 | Reorder invariance | `wall-reorder-invariance-matrix.test.ts` + floor equivalent green across symmetric AND asymmetric topologies |
 | C6 | Architectural hygiene | No engine file > 2000 lines without a split-deferred comment; inline comments on every non-obvious decision |
