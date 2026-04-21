@@ -74,14 +74,21 @@ Use this section first when deciding what to do next.
 ### Now
 
 - active slice:
-  `dynamic_airborne_split_refactor_v1` (in progress; **10 incremental
-  commits landed** through `1379eff`; main `dynamic-airborne.ts`
-  down from 6630 → 4559 lines; six bounded modules carved out
+  selection pending. `dynamic_airborne_split_refactor_v1` closed
+  2026-04-21 after 15 atomic commits — main `dynamic-airborne.ts`
+  fell from 6630 → 3214 lines (−52%) into seven bounded modules
   (helpers, family-detection, davy-masonry, mixed-plain-templates,
-  cavity-topology, masonry-calibration); remaining work is framed-wall
-  calibration + reinforcement helpers + floor/cap guards; status
-  pinned in `docs/calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md`
-  "Execution Progress" section)
+  cavity-topology, masonry-calibration, framed-wall). Remaining
+  ~3200 lines hold the floor / cap guards that recursively call
+  `calculateDynamicAirborneResult` — moving them needs composer
+  injection, documented as `dynamic_airborne_split_refactor_v2`
+  follow-up in
+  `docs/calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md`.
+- next strategic candidate:
+  `wall_field_continuation_value_pinning_v1` (master-plan step 5).
+  Pins every defended wall corridor × lab/field/building × every
+  field output and may surface silent accuracy bugs the way the
+  physical invariants matrix caught the masonry flanking inversion.
 - latest closed implementation slice:
   `wall_hostile_input_matrix_with_airborne_cartography_v1` (closed
   `2026-04-21` on

@@ -101,6 +101,7 @@ async function main() {
         "src/post-masonry-flanking-inversion-fix-next-slice-selection-contract.test.ts",
         "src/post-wall-lsf-timber-preset-pack-with-invariants-v1-next-slice-selection-contract.test.ts",
         "src/post-wall-hostile-input-matrix-with-airborne-cartography-v1-next-slice-selection-contract.test.ts",
+        "src/post-dynamic-airborne-split-refactor-v1-next-slice-selection-contract.test.ts",
         "src/raw-wall-hostile-input-answer-matrix.test.ts",
         "src/floor-source-corpus-contract.test.ts",
         "src/raw-floor-hostile-input-answer-matrix.test.ts",

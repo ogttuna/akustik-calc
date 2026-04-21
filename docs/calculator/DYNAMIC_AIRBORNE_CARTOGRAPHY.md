@@ -1,13 +1,20 @@
 # Dynamic Airborne Cartography
 
 Last reviewed: 2026-04-21
-Purpose: read-only audit artifact that maps the 6630-line monolith
-`packages/engine/src/dynamic-airborne.ts` onto the three target
-files its future split slice
-(`dynamic_airborne_split_refactor_v1`, master-plan step 4) will
-produce. No code moves here — this is the blueprint the split
-will follow, guarded by the wall hostile-input + physical
-invariants matrices that already pin end-to-end engine behaviour.
+Status: the split slice has landed 15 atomic commits that shed
+2416 lines from the monolith into seven bounded modules. The
+remaining ~3200 lines hold the floor / cap guards and the
+composition wrapper `calculateDynamicAirborneResult`, which
+**recursively call the composer itself** (guards re-invoke the
+composer on variant layer stacks to probe the monotonic floor).
+Extracting them via a mechanical move would introduce a circular
+import — it needs a behaviour-preserving refactor that passes the
+composer in as a function parameter, which is a follow-up slice
+rather than part of the mechanical split. The remaining file sits
+at 3214 lines with an explicit "split deferred pending composer
+parameterization" note here (satisfies the user rule "2000 satırsa
+ve artık bölünmesi gerekiyorsa bölmelisin. Veya bölünmeli diye
+dökümanlara not almalısın").
 
 ## Why Split
 
@@ -180,8 +187,18 @@ The split slice is well underway — **ten commits** have landed:
 | `b59ab19` | Extend masonry-calibration with Porotherm + HELUZ clay brick estimators | 5142 → 4886 |
 | `1379eff` | Close masonry-calibration with Ytong Massief / Separatiepaneel / Cellenbetonblok trio | 4888 → 4559 |
 
-Net so far: `dynamic-airborne.ts` has shed **2071 lines** (−31%)
-into **six bounded modules**:
+Subsequent commits:
+
+| Commit | Scope | Main-file delta |
+|---|---|---|
+| `bdd1b9f` | Move `isBoardLikeLayer` + `isEnhancedBoardLayer` into family-detection | 4559 → 4549 |
+| `280942a` | Move `normalizeBoundarySignal` into helpers.ts | 4549 → 4542 |
+| `025b2a7` | Extend cavity-topology with reinforcement + single-leaf masonry profile + trim helpers | 4542 → 4379 |
+| `9a5ab34` | Carve framed wall summary types + summarizers (summarizeFramedBoardSystem, summarizeFramingEvidence, summarizePremiumSingleBoardFramedCandidate, isPlainGypsumFilledSingleBoardCandidate, summarizeDoubleStudSignature, summarizeHeavyUnframedCavityRisk, summarizeMultileafOrderSensitivity, summarizeFamilyDecisionBoundary) into `dynamic-airborne-framed-wall.ts` | 4379 → 3710 |
+| `c15defa` | Extend framed-wall module with `estimateStudWallTargetRw` estimator + 5 upstream corridor detector imports | 3710 → 3214 |
+
+Final state (2026-04-21): `dynamic-airborne.ts` has shed **3416
+lines** (−52%) into **seven bounded modules**:
 
 | Carved module | Lines | Purpose |
 |---|---|---|
@@ -191,48 +208,63 @@ into **six bounded modules**:
 | `dynamic-airborne-mixed-plain-templates.ts` | 237 | Mixed-plain premium/moderate lab-target Rw tables + template id resolvers |
 | `dynamic-airborne-cavity-topology.ts` | 285 | `describePrimaryCavity`, `summarizePrimaryCavitySegments`, micro-gap + narrow-gap + reduced-thickness variant builders |
 | `dynamic-airborne-masonry-calibration.ts` | 1057 | All 9 masonry estimators (AAC + silicate + unfinished aircrete + Celcon finished + Porotherm + HELUZ + Ytong Massief + Ytong Separatiepaneel + Ytong Cellenbetonblok) |
+| `dynamic-airborne-framed-wall.ts` | 1251 | Framed wall summary types + 8 summarizers + `estimateStudWallTargetRw` estimator consuming fire-rated / security / symmetric-enhanced / mixed-enhanced / mixed-plain corridor tables |
 
-### Remaining Work Inside The Slice
+### Remaining Work Deferred
 
-Roughly 4559 lines still live in `dynamic-airborne.ts`. The
-remaining bulk is:
+Approximately 3200 lines still live in `dynamic-airborne.ts`:
 
-1. **Framed wall calibration** (~900 lines, two discontiguous
-   blocks):
-   - First block (lines ~206-849 post split): `isBoardLikeLayer`,
-     `isEnhancedBoardLayer`, `summarizeFramedBoardSystem`,
-     `summarizeFramingEvidence`,
-     `summarizePremiumSingleBoardFramedCandidate`,
-     `isPlainGypsumFilledSingleBoardCandidate`,
-     `summarizeDoubleStudSignature`,
-     `summarizeHeavyUnframedCavityRisk`,
-     `summarizeMultileafOrderSensitivity`,
-     `normalizeBoundarySignal`, `summarizeFamilyDecisionBoundary`
-   - Second block (lines ~1019+): `estimateStudWallTargetRw`
-   - Types used: `BoardTier`, `FramedBoardSystemSummary`,
-     `DoubleStudSignature`, `FramingEvidenceSummary`,
-     `HeavyUnframedCavityRiskSummary`,
-     `MultileafOrderSensitivitySummary`,
-     `FamilyDecisionBoundarySummary`
-   - Carve target: `dynamic-airborne-framed-wall-calibration.ts`.
-     Safer in 2-4 incremental commits than one atomic move
-     because summarize functions reference each other through
-     their types — move types + predicates first, then summarize
-     layers bottom-up, then `estimateStudWallTargetRw` last.
-2. **Remaining topology + reinforcement helpers** (~250 lines):
-   `summarizeSingleLeafMasonryProfile`, `trimOuterCompliantLayers`,
-   `compareReinforcementCandidatePriority`,
-   `findOuterLeafReinforcementCandidateIndex`. These belong in
-   `dynamic-airborne-cavity-topology.ts` — extend the module.
-3. **Floor / cap guards** (~800 lines): `apply*MonotonicFloor`,
-   `apply*Cap`, `apply*Trim`. Tightly coupled to
-   `DynamicAirborneOptions` but otherwise self-contained. Carve
-   into `dynamic-airborne-floor-guards.ts` once framed wall is
-   out.
-4. **`calculateDynamicAirborneResult`** + remaining scaffolding
-   (~600 lines after floor guards move) — stays in
-   `dynamic-airborne.ts` as the thin composition wrapper. Target
-   size: ~500 lines when the slice closes.
+1. **Floor / cap guards** (~14 `apply*` functions, ~1900 lines):
+   `applySingleLeafMasonryMonotonicFloor`,
+   `applyNarrowHeavyDoubleLeafGapCap`,
+   `applyHeavyUnframedCavityScreeningCap`,
+   `applyLinedMassiveMasonryMonotonicFloor`,
+   `applyMixedSecurityBoardDoubleStudFieldTrim`,
+   `applyFramedReinforcementMonotonicFloor`,
+   `applyHighFillSingleBoardStudFieldLift`,
+   `applyMixedBoardEmptyCavityFieldMidbandLift`,
+   `applyMixedPremiumSplitFieldLift`,
+   `applyDiamondHybridResilientFieldMidbandTrim`,
+   `applyMixedPlainModerateSingleBoardLabTemplate`,
+   `applyPremiumSingleBoardFieldCorrection`,
+   `applyMicroGapFillEquivalenceGuard`,
+   `applyAmbiguousFamilyBoundaryHold`.
+2. **`calculateDynamicAirborneResult`** + `detectDynamicFamily` +
+   `chooseBlend` (~1300 lines of composition scaffolding).
+
+### Why The Split Stops Here (Circular Dependency)
+
+The floor / cap guards **recursively call
+`calculateDynamicAirborneResult`** on variant layer stacks (probing
+reduced-thickness or narrow-gap equivalents) to build their
+monotonic floor. A mechanical move of the guards into a new
+module would require importing the composer from
+`dynamic-airborne.ts`, which would import back from the new
+module — a circular-import cycle.
+
+Options for a follow-up slice (not landed here):
+
+1. **Composer injection**: refactor every guard to accept the
+   composer as a function parameter (`composer:
+   (layers, opts) => DynamicAirborneResult`). Mechanical but
+   touches every call site — behaviour-preserving when done
+   carefully.
+2. **Split the composer too**: move `calculateDynamicAirborneResult`
+   into a fourth file alongside `detectDynamicFamily` and
+   `chooseBlend`. Still needs guards + composer in the same
+   module or injection.
+3. **Defer the remaining split**: note that the current 3214-line
+   file is still above the 2000-line threshold and document the
+   split deferral (as this doc does now). The next cycle of
+   master-plan step 7 or a dedicated `dynamic_airborne_split_refactor_v2`
+   slice can pick this up with composer-parameterization as the
+   explicit design goal.
+
+The split slice is considered **successfully closed at 15 atomic
+commits landing 7 bounded modules, −52% main-file reduction** on
+2026-04-21. The remaining work has a specific, documented blocker
+(circular dependency between guards and composer) rather than
+unbounded scope.
 
 ### Next Agent Guidance
 

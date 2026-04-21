@@ -52,14 +52,14 @@ That is how the 2026-04-20 doc-drift problem (captured in
 ## Operator Snapshot
 
 - active slice:
-  `dynamic_airborne_split_refactor_v1` (in progress; **10 incremental
-  commits have landed**; main `dynamic-airborne.ts` has shed 2071
-  lines — from 6630 → 4559 — into six bounded modules: helpers,
-  family-detection, davy-masonry, mixed-plain-templates,
-  cavity-topology, and the masonry-calibration lane covering all 9
-  estimators; remaining work is framed-wall calibration + reinforcement
-  helpers + floor/cap guards; full progress table pinned in
-  `docs/calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md`)
+  selection pending — `dynamic_airborne_split_refactor_v1` closed
+  2026-04-21 after 15 atomic commits (−52% main-file reduction,
+  seven bounded modules). Remaining split work (floor / cap guards
+  + composer) has a circular-import blocker that a follow-up slice
+  can resolve via composer injection. Next strategic candidate:
+  master plan step 5 `wall_field_continuation_value_pinning_v1`
+  (accuracy audit on every defended wall corridor × field output
+  × context) — highest user-value ROI per primary objective.
 - latest closed implementation slice:
   `wall_hostile_input_matrix_with_airborne_cartography_v1` (closed
   `2026-04-21` on
