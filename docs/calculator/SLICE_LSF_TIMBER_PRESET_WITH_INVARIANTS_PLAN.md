@@ -1,12 +1,12 @@
 # Slice Plan — LSF + Timber Stud Preset Pack With Physical Invariants
 
 Slice id: `wall_lsf_timber_preset_pack_with_invariants_v1`
-Status: in progress (invariants matrix step completed by the
-`masonry_flanking_inversion_fix_v1` closeout on 2026-04-21; preset
-pack + benchmark pins + field VALUE pins + post-contract still open)
+Status: CLOSED 2026-04-21 (closeout contract
+`packages/engine/src/post-wall-lsf-timber-preset-pack-with-invariants-v1-next-slice-selection-contract.test.ts`)
 Authored: 2026-04-21
-Updated: 2026-04-21 (post masonry flanking inversion fix)
-Owner: next agent that picks up the slice
+Updated: 2026-04-21 (closed)
+Owner: historical — next agent works from
+`SLICE_WALL_HOSTILE_INPUT_WITH_CARTOGRAPHY_PLAN.md`
 
 ## Why This Slice Exists
 

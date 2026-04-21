@@ -74,17 +74,17 @@ Use this section first when deciding what to do next.
 ### Now
 
 - active slice:
-  `wall_lsf_timber_preset_pack_with_invariants_v1` (selected; resumes
-  from the masonry flanking inversion fix; plan authored in
-  `docs/calculator/SLICE_LSF_TIMBER_PRESET_WITH_INVARIANTS_PLAN.md`;
-  invariants matrix step already landed inside the fix — remaining
-  work is the LSF + timber stud preset pack, LSF benchmark pin,
-  timber stud drift-guard pin, AAC/masonry/CLT field VALUE pins, and
-  the parent-slice post-contract)
+  `wall_hostile_input_matrix_with_airborne_cartography_v1` (selected
+  2026-04-21 by the LSF + timber preset pack closeout; master plan
+  step 3; plan doc pending — author at slice start)
 - latest closed implementation slice:
+  `wall_lsf_timber_preset_pack_with_invariants_v1` (closed
+  `2026-04-21` on
+  `packages/engine/src/post-wall-lsf-timber-preset-pack-with-invariants-v1-next-slice-selection-contract.test.ts`)
+- prior closed implementation slice:
   `masonry_flanking_inversion_fix_v1` (closed `2026-04-21` on
   `packages/engine/src/post-masonry-flanking-inversion-fix-next-slice-selection-contract.test.ts`)
-- prior closed implementation slice:
+- earlier closed implementation slice:
   `wall_reorder_output_set_consistency_v1` (closed `2026-04-21` on
   `packages/engine/src/post-wall-reorder-output-set-consistency-v1-next-slice-selection-contract.test.ts`)
 - masonry flanking inversion fix summary:

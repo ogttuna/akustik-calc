@@ -52,17 +52,23 @@ That is how the 2026-04-20 doc-drift problem (captured in
 ## Operator Snapshot
 
 - active slice:
-  `wall_lsf_timber_preset_pack_with_invariants_v1` (selected; resumes
-  after the masonry flanking inversion engine fix; master-plan step 2;
-  plan doc `SLICE_LSF_TIMBER_PRESET_WITH_INVARIANTS_PLAN.md`; invariants
-  matrix already landed inside the fix closeout)
+  `wall_hostile_input_matrix_with_airborne_cartography_v1` (selected
+  on `2026-04-21` by the LSF + timber preset pack closeout; master
+  plan step 3; mirrors the floor hostile-input matrices on walls,
+  lands the cross-cutting engine thickness guardrail, and produces
+  initial `dynamic-airborne.ts` cartography for the subsequent split
+  slice)
 - latest closed implementation slice:
+  `wall_lsf_timber_preset_pack_with_invariants_v1` (closed
+  `2026-04-21` on
+  `packages/engine/src/post-wall-lsf-timber-preset-pack-with-invariants-v1-next-slice-selection-contract.test.ts`)
+- prior closed implementation slice:
   `masonry_flanking_inversion_fix_v1` (closed `2026-04-21` on
   `packages/engine/src/post-masonry-flanking-inversion-fix-next-slice-selection-contract.test.ts`)
-- prior closed implementation slice:
+- earlier closed implementation slice:
   `wall_reorder_output_set_consistency_v1` (closed `2026-04-21` on
   `packages/engine/src/post-wall-reorder-output-set-consistency-v1-next-slice-selection-contract.test.ts`)
-- earlier closed implementation slice:
+- earliest recent closed implementation slice:
   `wall_preset_expansion_v1` (closed `2026-04-20` on
   `packages/engine/src/post-wall-preset-expansion-v1-next-slice-selection-contract.test.ts`)
 - earlier closed implementation slice:
@@ -96,24 +102,42 @@ That is how the 2026-04-20 doc-drift problem (captured in
   reorder/C-availability inconsistency on asymmetric light-heavy stacks,
   which is now the selected next active runtime tightening slice
 - immediate next decision:
-  resume `wall_lsf_timber_preset_pack_with_invariants_v1`. The
-  invariants matrix already landed inside the masonry flanking
-  inversion fix (all 6 current wall presets × 3 contexts green on
-  I1/I2/I3). Remaining deliverables for the parent slice:
-  (a) LSF preset with `airborneDefaults.studType=light_steel_stud`;
-  (b) timber stud preset with `airborneDefaults.studType=wood_stud`;
-  (c) LSF benchmark pin + timber stud drift-guard Rw pin in
-  `wall-lsf-timber-stud-preset-benchmarks.test.ts`;
-  (d) field VALUE pins for AAC / masonry / CLT in
-  `wall-preset-expansion-benchmarks.test.ts`;
-  (e) parent-slice post-contract selecting
-  `wall_hostile_input_matrix_with_airborne_cartography_v1`.
+  start `wall_hostile_input_matrix_with_airborne_cartography_v1`.
+  Three deliverables:
+  (a) wall hostile-input answer matrix mirroring the floor analog
+  (`raw-floor-hostile-input-answer-matrix.test.ts`) — 50+ layer
+  stacks, unknown material id, invalid thickness (NaN / Infinity /
+  negative / zero), mixed inputs with field/building context;
+  (b) engine-level thickness guardrail (so API/CLI callers bypassing
+  workbench normalization still hit a deterministic fail-closed
+  output, not a crash);
+  (c) `dynamic-airborne.ts` cartography pass — document the family
+  detection entry point, predictor scoring, and heuristics used by
+  hostile paths, setting up the step 4 split slice.
 - first implementation question now:
-  do the LSF and timber stud presets hold I1/I2/I3 under the three
-  context modes once their `airborneDefaults` flow through
-  `loadPreset`? If yes, pin the field VALUEs and close the parent
-  slice. If no, treat the failure as a real engine finding and open
-  a remediation sub-slice before closing the parent.
+  how many of the floor hostile-input matrix cases (route-card +
+  answer matrix + output-origin matrix) have an obvious wall analog,
+  and where do the wall-specific cases diverge (e.g. `contextMode =
+  field_between_rooms` exercises LSF flanking even without a `Rw`
+  answer)?
+- LSF + timber stud preset pack closeout summary (2026-04-21):
+  - `light_steel_stud_wall` + `timber_stud_wall` presets landed with
+    `airborneDefaults` so their framed-wall family context flows
+    through `loadPreset` into the workbench store
+  - `wall-physical-invariants-matrix.test.ts` locks I1 (R'w ≤ Rw),
+    I2 (Dn,A ≈ Dn,w + C), I3 (DnT,w − Dn,w ∈ [2,10] dB) across 6
+    wall presets × 3 context modes (24 cells)
+  - `wall-lsf-timber-stud-preset-benchmarks.test.ts` pins LSF lab
+    Rw=55 (Knauf exact catalog row), field R'w=48, building R'w=48,
+    building DnT,w=49; pins timber stud lab Rw=31, field R'w=24,
+    building R'w=24, building DnT,w=25 as drift guards
+  - `wall-preset-expansion-benchmarks.test.ts` extended with field
+    VALUE pins for AAC (45/45/46), masonry (41/41/43), CLT (38/38/39)
+  - timber stud engine output (31 dB under the composed lab context)
+    flagged as a real accuracy finding — manufacturer field data for
+    similar stacks is typically 45–50 dB; parked for
+    `wall_formula_family_widening_v1` (master-plan step 6, conditional)
+  - MASTER_PLAN §8 C1 advanced to 6/6 archetypes ✓
 - masonry flanking inversion fix landed `2026-04-21`:
   - `findVerifiedAirborneAssemblyMatchWithLabFallback` in
     `packages/engine/src/airborne-verified-catalog.ts` lets the field
