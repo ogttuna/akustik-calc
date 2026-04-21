@@ -25,6 +25,15 @@ import {
   materialText,
   summarizeAirborneTopology
 } from "./airborne-topology";
+import {
+  isAacLikeLayer,
+  isBoardLikeLayer,
+  isEnhancedBoardLayer,
+  isMasonryCoreLayer,
+  isMasonryLikeLayer,
+  isNonHomogeneousMasonryRiskLayer,
+  isPlasterLikeLayer
+} from "./dynamic-airborne-family-detection";
 import { computeLayerSurfaceMassKgM2 } from "./layer-surface-mass";
 import { clamp, ksRound1 } from "./math";
 
@@ -282,4 +291,170 @@ export function buildNarrowGapContactEquivalentLayers(
       ...layer,
       material: { ...layer.material }
     }));
+}
+export function compareReinforcementCandidatePriority(left: ResolvedLayer, right: ResolvedLayer): number {
+  const enhancedDelta = Number(isEnhancedBoardLayer(right)) - Number(isEnhancedBoardLayer(left));
+  if (enhancedDelta !== 0) {
+    return enhancedDelta;
+  }
+
+  const surfaceMassDelta = right.surfaceMassKgM2 - left.surfaceMassKgM2;
+  if (Math.abs(surfaceMassDelta) > 1e-6) {
+    return surfaceMassDelta;
+  }
+
+  const thicknessDelta = right.thicknessMm - left.thicknessMm;
+  if (Math.abs(thicknessDelta) > 1e-6) {
+    return thicknessDelta;
+  }
+
+  const densityDelta = right.material.densityKgM3 - left.material.densityKgM3;
+  if (Math.abs(densityDelta) > 1e-6) {
+    return densityDelta;
+  }
+
+  const idCompare = left.material.id.localeCompare(right.material.id);
+  if (idCompare !== 0) {
+    return -idCompare;
+  }
+
+  return -left.material.name.localeCompare(right.material.name);
+}
+
+export function findOuterLeafReinforcementCandidateIndex(
+  layers: readonly ResolvedLayer[],
+  side: "leading" | "trailing"
+): number | null {
+  const indexes =
+    side === "leading"
+      ? Array.from({ length: layers.length }, (_, index) => index)
+      : Array.from({ length: layers.length }, (_, offset) => layers.length - 1 - offset);
+  let bestIndex: number | null = null;
+  let bestLayer: ResolvedLayer | null = null;
+
+  for (const index of indexes) {
+    const layer = layers[index];
+    if (!layer) {
+      continue;
+    }
+
+    const role = classifyLayerRole(layer);
+    if (!role.isSolidLeaf) {
+      break;
+    }
+
+    if (!isBoardLikeLayer(layer)) {
+      continue;
+    }
+
+    if (!bestLayer || compareReinforcementCandidatePriority(bestLayer, layer) > 0) {
+      bestLayer = layer;
+      bestIndex = index;
+    }
+  }
+
+  return bestIndex;
+}
+
+export function summarizeSingleLeafMasonryProfile(layers: readonly ResolvedLayer[]): {
+  hasAacLike: boolean;
+  hasMasonryLike: boolean;
+  hasNonHomogeneousMasonryRisk: boolean;
+  hasPlasterLike: boolean;
+  masonryCoreMassRatio: number;
+  masonryMassRatio: number;
+} {
+  let totalSolidMassKgM2 = 0;
+  let masonryCoreMassKgM2 = 0;
+  let masonryLikeMassKgM2 = 0;
+  let hasAacLike = false;
+  let hasMasonryLike = false;
+  let hasNonHomogeneousMasonryRisk = false;
+  let hasPlasterLike = false;
+
+  for (const layer of layers) {
+    const role = classifyLayerRole(layer);
+    if (!role.isSolidLeaf || !(layer.surfaceMassKgM2 > 0)) {
+      continue;
+    }
+
+    totalSolidMassKgM2 += layer.surfaceMassKgM2;
+
+    if (isMasonryLikeLayer(layer)) {
+      masonryLikeMassKgM2 += layer.surfaceMassKgM2;
+      hasMasonryLike = true;
+    }
+
+    if (isMasonryCoreLayer(layer)) {
+      masonryCoreMassKgM2 += layer.surfaceMassKgM2;
+    }
+
+    if (isAacLikeLayer(layer)) {
+      hasAacLike = true;
+    }
+
+    if (isNonHomogeneousMasonryRiskLayer(layer)) {
+      hasNonHomogeneousMasonryRisk = true;
+    }
+
+    if (isPlasterLikeLayer(layer)) {
+      hasPlasterLike = true;
+    }
+  }
+
+  return {
+    hasAacLike,
+    hasMasonryLike,
+    hasNonHomogeneousMasonryRisk,
+    hasPlasterLike,
+    masonryCoreMassRatio:
+      totalSolidMassKgM2 > 0 ? ksRound1(masonryCoreMassKgM2 / totalSolidMassKgM2) : 0,
+    masonryMassRatio:
+      totalSolidMassKgM2 > 0 ? ksRound1(masonryLikeMassKgM2 / totalSolidMassKgM2) : 0
+  };
+}
+
+export function trimOuterCompliantLayers(layers: readonly ResolvedLayer[]): {
+  layers: ResolvedLayer[];
+  trimmed: boolean;
+  trimmedLeadingCount: number;
+  trimmedTrailingCount: number;
+} {
+  let firstSolidIndex = -1;
+  let lastSolidIndex = -1;
+
+  for (let index = 0; index < layers.length; index += 1) {
+    if (classifyLayerRole(layers[index]!).isSolidLeaf) {
+      firstSolidIndex = index;
+      break;
+    }
+  }
+
+  for (let index = layers.length - 1; index >= 0; index -= 1) {
+    if (classifyLayerRole(layers[index]!).isSolidLeaf) {
+      lastSolidIndex = index;
+      break;
+    }
+  }
+
+  if (firstSolidIndex < 0 || lastSolidIndex < firstSolidIndex) {
+    return {
+      layers: layers.map((layer) => ({ ...layer, material: { ...layer.material } })),
+      trimmed: false,
+      trimmedLeadingCount: 0,
+      trimmedTrailingCount: 0
+    };
+  }
+
+  const trimmedLeadingCount = firstSolidIndex;
+  const trimmedTrailingCount = Math.max(layers.length - 1 - lastSolidIndex, 0);
+
+  return {
+    layers: layers
+      .slice(firstSolidIndex, lastSolidIndex + 1)
+      .map((layer) => ({ ...layer, material: { ...layer.material } })),
+    trimmed: trimmedLeadingCount > 0 || trimmedTrailingCount > 0,
+    trimmedLeadingCount,
+    trimmedTrailingCount
+  };
 }
