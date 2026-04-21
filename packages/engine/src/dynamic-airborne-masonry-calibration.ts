@@ -30,7 +30,9 @@ import { interpolateLinear, interpolateRwSeries } from "./dynamic-airborne-helpe
 import {
   isAacLikeLayer,
   isCelconAircreteLayer,
+  isHeluzClayLayer,
   isPlasterLikeLayer,
+  isPorothermClayLayer,
   isSilicateMasonryLayer
 } from "./dynamic-airborne-family-detection";
 import { clamp, ksRound1 } from "./math";
@@ -461,3 +463,259 @@ export function estimateCelconFinishedAircreteTargetRw(
     targetRw
   };
 }
+export function estimatePorothermPlasteredTargetRw(
+  layers: readonly ResolvedLayer[],
+  topology: ReturnType<typeof summarizeAirborneTopology>,
+  currentRw: number,
+  family: DynamicAirborneFamily
+): {
+  notes: string[];
+  shiftDb: number;
+  strategySuffix: string | null;
+  targetRw: number | null;
+} {
+  const notes: string[] = [];
+
+  if (
+    family !== "masonry_nonhomogeneous" ||
+    topology.visibleLeafCount > 1 ||
+    topology.cavityCount > 0 ||
+    topology.hasStudLikeSupport
+  ) {
+    return {
+      notes,
+      shiftDb: 0,
+      strategySuffix: null,
+      targetRw: null
+    };
+  }
+
+  const solidLayers = layers.filter((layer) => classifyLayerRole(layer).isSolidLeaf);
+  if (solidLayers.length !== 3) {
+    return {
+      notes,
+      shiftDb: 0,
+      strategySuffix: null,
+      targetRw: null
+    };
+  }
+
+  const [leftLayer, coreLayer, rightLayer] = solidLayers;
+  if (!leftLayer || !coreLayer || !rightLayer) {
+    return {
+      notes,
+      shiftDb: 0,
+      strategySuffix: null,
+      targetRw: null
+    };
+  }
+
+  if (
+    !isPorothermClayLayer(coreLayer) ||
+    leftLayer.material.id !== rightLayer.material.id ||
+    Math.abs(leftLayer.thicknessMm - rightLayer.thicknessMm) > 0.6
+  ) {
+    return {
+      notes,
+      shiftDb: 0,
+      strategySuffix: null,
+      targetRw: null
+    };
+  }
+
+  const finishMaterialId = leftLayer.material.id;
+  const surfaceMassKgM2 = topology.surfaceMassKgM2;
+  let points: readonly { rw: number; surfaceMassKgM2: number }[] | null = null;
+  let finishLabel = "";
+
+  if (finishMaterialId === "dense_plaster") {
+    points = [
+      { surfaceMassKgM2: 149.0, rw: 43 },
+      { surfaceMassKgM2: 172.9, rw: 44 },
+      { surfaceMassKgM2: 215.5, rw: 48 }
+    ];
+    finishLabel = "13 mm dense plaster";
+  } else if (finishMaterialId === "lightweight_plaster") {
+    points = [
+      { surfaceMassKgM2: 118.6, rw: 40 },
+      { surfaceMassKgM2: 142.6, rw: 41 },
+      { surfaceMassKgM2: 185.1, rw: 46 }
+    ];
+    finishLabel = "13 mm lightweight plaster";
+  }
+
+  if (!points) {
+    return {
+      notes,
+      shiftDb: 0,
+      strategySuffix: null,
+      targetRw: null
+    };
+  }
+
+  let targetRw = points[0].rw;
+  if (surfaceMassKgM2 <= points[0].surfaceMassKgM2) {
+    targetRw = interpolateLinear(
+      surfaceMassKgM2,
+      Math.max(points[0].surfaceMassKgM2 - 35, 80),
+      points[0].rw - 3,
+      points[0].surfaceMassKgM2,
+      points[0].rw
+    );
+  } else if (surfaceMassKgM2 < points[1].surfaceMassKgM2) {
+    targetRw = interpolateLinear(
+      surfaceMassKgM2,
+      points[0].surfaceMassKgM2,
+      points[0].rw,
+      points[1].surfaceMassKgM2,
+      points[1].rw
+    );
+  } else if (surfaceMassKgM2 < points[2].surfaceMassKgM2) {
+    targetRw = interpolateLinear(
+      surfaceMassKgM2,
+      points[1].surfaceMassKgM2,
+      points[1].rw,
+      points[2].surfaceMassKgM2,
+      points[2].rw
+    );
+  } else {
+    targetRw = interpolateLinear(
+      surfaceMassKgM2,
+      points[2].surfaceMassKgM2,
+      points[2].rw,
+      points[2].surfaceMassKgM2 + 60,
+      points[2].rw + 4
+    );
+  }
+
+  targetRw = ksRound1(clamp(targetRw, 36, 58));
+  const shiftDb = ksRound1(targetRw - currentRw);
+
+  if (Math.abs(shiftDb) < 0.2) {
+    return {
+      notes,
+      shiftDb: 0,
+      strategySuffix: null,
+      targetRw
+    };
+  }
+
+  notes.push(
+    `Official Wienerberger Porotherm guidance moved the perforated-clay single-leaf lane onto the published ${finishLabel} declaration corridor (target Rw ${targetRw.toFixed(1)} dB).`
+  );
+
+  return {
+    notes,
+    shiftDb,
+    strategySuffix: "porotherm_plastered_calibration",
+    targetRw
+  };
+}
+
+export function estimateHeluzPlasteredClayTargetRw(
+  layers: readonly ResolvedLayer[],
+  topology: ReturnType<typeof summarizeAirborneTopology>,
+  currentRw: number,
+  family: DynamicAirborneFamily
+): {
+  notes: string[];
+  shiftDb: number;
+  strategySuffix: string | null;
+  targetRw: number | null;
+} {
+  const notes: string[] = [];
+
+  if (
+    family !== "masonry_nonhomogeneous" ||
+    topology.visibleLeafCount > 1 ||
+    topology.cavityCount > 0 ||
+    topology.hasStudLikeSupport
+  ) {
+    return {
+      notes,
+      shiftDb: 0,
+      strategySuffix: null,
+      targetRw: null
+    };
+  }
+
+  const solidLayers = layers.filter((layer) => classifyLayerRole(layer).isSolidLeaf);
+  if (solidLayers.length !== 3) {
+    return {
+      notes,
+      shiftDb: 0,
+      strategySuffix: null,
+      targetRw: null
+    };
+  }
+
+  const [leftLayer, coreLayer, rightLayer] = solidLayers;
+  if (!leftLayer || !coreLayer || !rightLayer) {
+    return {
+      notes,
+      shiftDb: 0,
+      strategySuffix: null,
+      targetRw: null
+    };
+  }
+
+  if (
+    !isHeluzClayLayer(coreLayer) ||
+    leftLayer.material.id !== rightLayer.material.id ||
+    Math.abs(leftLayer.thicknessMm - rightLayer.thicknessMm) > 0.6 ||
+    !/^lime_cement_plaster_/.test(leftLayer.material.id)
+  ) {
+    return {
+      notes,
+      shiftDb: 0,
+      strategySuffix: null,
+      targetRw: null
+    };
+  }
+
+  const exactTargets: Record<string, { coreThicknessMm: number; finishId: string; finishThicknessMm: number; rw: number }> = {
+    heluz_14_brushed: { coreThicknessMm: 140, finishId: "lime_cement_plaster_1300", finishThicknessMm: 15, rw: 41 },
+    heluz_aku_115: { coreThicknessMm: 115, finishId: "lime_cement_plaster_1700", finishThicknessMm: 15, rw: 47 },
+    heluz_aku_200_p15: { coreThicknessMm: 200, finishId: "lime_cement_plaster_1780", finishThicknessMm: 17, rw: 53 },
+    heluz_aku_300_333_p20: { coreThicknessMm: 300, finishId: "lime_cement_plaster_1700", finishThicknessMm: 15, rw: 56 }
+  };
+  const exactTarget = exactTargets[coreLayer.material.id];
+
+  if (
+    !exactTarget ||
+    leftLayer.material.id !== exactTarget.finishId ||
+    Math.abs(leftLayer.thicknessMm - exactTarget.finishThicknessMm) > 0.6 ||
+    Math.abs(coreLayer.thicknessMm - exactTarget.coreThicknessMm) > 0.6
+  ) {
+    return {
+      notes,
+      shiftDb: 0,
+      strategySuffix: null,
+      targetRw: null
+    };
+  }
+
+  const targetRw = ksRound1(clamp(exactTarget.rw, 37, 58));
+  const shiftDb = ksRound1(targetRw - currentRw);
+
+  if (Math.abs(shiftDb) < 0.2) {
+    return {
+      notes,
+      shiftDb: 0,
+      strategySuffix: null,
+      targetRw
+    };
+  }
+
+  notes.push(
+    `Official HELUZ measured lab rows moved the plastered hollow-clay masonry lane onto a HELUZ-specific corridor (target Rw ${targetRw.toFixed(1)} dB).`
+  );
+
+  return {
+    notes,
+    shiftDb,
+    strategySuffix: "heluz_plastered_clay_calibration",
+    targetRw
+  };
+}
+
