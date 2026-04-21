@@ -163,6 +163,36 @@ green, the split is safe by construction.
 5. **No type name changes**. The exported types keep their current
    names; a rename is a separate hygiene slice if needed.
 
+## Execution Progress (2026-04-21)
+
+The split slice has started and three commits have landed so far:
+
+| Commit | Scope | File delta |
+|---|---|---|
+| `c0a5068` | Carve `dynamic-airborne-helpers.ts` (pure math, spectrum weights, physical constants, delegate blending, curve anchoring) | 283-line new file, main 6630 → 6420 |
+| `361d97d` | Carve material-family predicates into `dynamic-airborne-family-detection.ts` (15 `is*Layer` / `is*BuildUp` predicates) | main 6420 → 6263 |
+| `b4d32a9` | Add framing hint helpers to `dynamic-airborne-family-detection.ts` (`DynamicFramingHint`, `normalizeFramingHint`, `hasExplicitFramingHint`, `isResilientFramingHint`) | main 6263 → 6234 |
+
+Net so far: `dynamic-airborne.ts` has shed ~400 lines into two
+bounded modules. Remaining work inside the split slice is the
+predictor-scoring bulk (lines ~1500-5600 of the current file) —
+Davy masonry profile + masonry calibration lanes + predictor-
+driven curve composition. That block is tightly coupled to the
+internal `DynamicAirborneOptions` type and several internal state
+structs, so the carve needs a type-boundary design pass before
+the next commit lands.
+
+Next agent picking this up:
+
+- Read the "Target-File Purposes" section below.
+- Identify which parts of the predictor-scoring block touch
+  `DynamicAirborneOptions`. Either export that type + its siblings
+  from a shared declaration file, or rework the carve to pass only
+  the inputs each helper actually needs.
+- Commit in the same incremental style — single logical subset per
+  commit, guarded by the focused gate + spot regression sweep.
+- Update this section with each commit landed.
+
 ## Execution Strategy — Incremental, Not Monolithic
 
 A 6630-line mechanical move in a single commit carries real risk:

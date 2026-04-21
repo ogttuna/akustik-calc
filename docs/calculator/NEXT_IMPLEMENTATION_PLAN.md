@@ -74,11 +74,14 @@ Use this section first when deciding what to do next.
 ### Now
 
 - active slice:
-  `dynamic_airborne_split_refactor_v1` (selected 2026-04-21 by the
-  wall hostile-input + cartography closeout; master plan step 4;
-  cartography blueprint at
-  `docs/calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md`; zero-behaviour-
-  change mechanical code move)
+  `dynamic_airborne_split_refactor_v1` (in progress; 3 incremental
+  commits landed — `c0a5068` helpers.ts, `361d97d` material
+  predicates into family-detection.ts, `b4d32a9` framing hint
+  helpers into family-detection.ts; main `dynamic-airborne.ts`
+  down from 6630 → 6234 lines; remaining predictor-scoring bulk
+  needs a type-boundary design pass before the next commit; status
+  pinned in `docs/calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md`
+  "Execution Progress" section)
 - latest closed implementation slice:
   `wall_hostile_input_matrix_with_airborne_cartography_v1` (closed
   `2026-04-21` on

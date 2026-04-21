@@ -52,10 +52,12 @@ That is how the 2026-04-20 doc-drift problem (captured in
 ## Operator Snapshot
 
 - active slice:
-  `dynamic_airborne_split_refactor_v1` (selected on `2026-04-21`
-  by the wall hostile-input + cartography closeout; master plan
-  step 4; mechanical move of the 6630-line `dynamic-airborne.ts`
-  into three target files per
+  `dynamic_airborne_split_refactor_v1` (in progress; 3 of a
+  multi-commit incremental split have landed — helpers.ts,
+  material predicates into family-detection.ts, framing-hint
+  helpers into family-detection.ts; the remaining predictor-
+  scoring bulk needs a type-boundary design pass before the next
+  commit; progress pinned in
   `docs/calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md`)
 - latest closed implementation slice:
   `wall_hostile_input_matrix_with_airborne_cartography_v1` (closed
