@@ -33,7 +33,12 @@ import {
   isHeluzClayLayer,
   isPlasterLikeLayer,
   isPorothermClayLayer,
-  isSilicateMasonryLayer
+  isSilicateMasonryLayer,
+  isYtongCellenbetonblokBuildUp,
+  isYtongCellenbetonblokLayer,
+  isYtongMassiefG2300Layer,
+  isYtongSeparatiePaneelBuildUp,
+  isYtongSeparatiePaneelLayer
 } from "./dynamic-airborne-family-detection";
 import { clamp, ksRound1 } from "./math";
 
@@ -719,3 +724,334 @@ export function estimateHeluzPlasteredClayTargetRw(
   };
 }
 
+export function estimateYtongMassiefG2300TargetRw(
+  layers: readonly ResolvedLayer[],
+  topology: ReturnType<typeof summarizeAirborneTopology>,
+  currentRw: number,
+  family: DynamicAirborneFamily
+): {
+  notes: string[];
+  shiftDb: number;
+  strategySuffix: string | null;
+  targetRw: number | null;
+} {
+  const notes: string[] = [];
+
+  if (
+    family !== "masonry_nonhomogeneous" ||
+    topology.visibleLeafCount > 1 ||
+    topology.cavityCount > 0 ||
+    topology.hasStudLikeSupport
+  ) {
+    return {
+      notes,
+      shiftDb: 0,
+      strategySuffix: null,
+      targetRw: null
+    };
+  }
+
+  const solidLayers = layers.filter((layer) => classifyLayerRole(layer).isSolidLeaf);
+  if (solidLayers.length !== 3) {
+    return {
+      notes,
+      shiftDb: 0,
+      strategySuffix: null,
+      targetRw: null
+    };
+  }
+
+  const [leftLayer, coreLayer, rightLayer] = solidLayers;
+  if (!leftLayer || !coreLayer || !rightLayer) {
+    return {
+      notes,
+      shiftDb: 0,
+      strategySuffix: null,
+      targetRw: null
+    };
+  }
+
+  if (
+    !isYtongMassiefG2300Layer(coreLayer) ||
+    leftLayer.material.id !== rightLayer.material.id ||
+    Math.abs(leftLayer.thicknessMm - rightLayer.thicknessMm) > 0.6 ||
+    !isPlasterLikeLayer(leftLayer) ||
+    leftLayer.thicknessMm > 6
+  ) {
+    return {
+      notes,
+      shiftDb: 0,
+      strategySuffix: null,
+      targetRw: null
+    };
+  }
+
+  const points = [
+    { thicknessMm: 240, rw: 46 },
+    { thicknessMm: 300, rw: 49 },
+    { thicknessMm: 365, rw: 51 }
+  ] as const;
+  let targetRw: number = points[0].rw;
+
+  if (coreLayer.thicknessMm <= points[0].thicknessMm) {
+    targetRw = interpolateLinear(coreLayer.thicknessMm, 180, 42, points[0].thicknessMm, points[0].rw);
+  } else if (coreLayer.thicknessMm < points[1].thicknessMm) {
+    targetRw = interpolateLinear(
+      coreLayer.thicknessMm,
+      points[0].thicknessMm,
+      points[0].rw,
+      points[1].thicknessMm,
+      points[1].rw
+    );
+  } else if (coreLayer.thicknessMm < points[2].thicknessMm) {
+    targetRw = interpolateLinear(
+      coreLayer.thicknessMm,
+      points[1].thicknessMm,
+      points[1].rw,
+      points[2].thicknessMm,
+      points[2].rw
+    );
+  } else {
+    targetRw = interpolateLinear(coreLayer.thicknessMm, points[2].thicknessMm, points[2].rw, 420, 52.5);
+  }
+
+  targetRw = ksRound1(clamp(targetRw, 42, 53));
+  const shiftDb = ksRound1(targetRw - currentRw);
+
+  if (Math.abs(shiftDb) < 0.2) {
+    return {
+      notes,
+      shiftDb: 0,
+      strategySuffix: null,
+      targetRw
+    };
+  }
+
+  notes.push(
+    `Official Xella Nederland Ytong Massiefblokken guidance moved the low-density AAC thin-plaster lane onto the published G2/300 corridor (target Rw ${targetRw.toFixed(1)} dB).`
+  );
+
+  return {
+    notes,
+    shiftDb,
+    strategySuffix: "ytong_massief_g2_300_calibration",
+    targetRw
+  };
+}
+
+export function estimateYtongSeparatiePaneelTargetRw(
+  layers: readonly ResolvedLayer[],
+  topology: ReturnType<typeof summarizeAirborneTopology>,
+  currentRw: number,
+  family: DynamicAirborneFamily
+): {
+  notes: string[];
+  shiftDb: number;
+  strategySuffix: string | null;
+  targetRw: number | null;
+} {
+  const notes: string[] = [];
+
+  if (
+    family !== "masonry_nonhomogeneous" ||
+    topology.visibleLeafCount > 1 ||
+    topology.cavityCount > 0 ||
+    topology.hasStudLikeSupport
+  ) {
+    return {
+      notes,
+      shiftDb: 0,
+      strategySuffix: null,
+      targetRw: null
+    };
+  }
+
+  const solidLayers = layers.filter((layer) => classifyLayerRole(layer).isSolidLeaf);
+  if (solidLayers.length !== 3) {
+    return {
+      notes,
+      shiftDb: 0,
+      strategySuffix: null,
+      targetRw: null
+    };
+  }
+
+  const [leftLayer, coreLayer, rightLayer] = solidLayers;
+  if (!leftLayer || !coreLayer || !rightLayer) {
+    return {
+      notes,
+      shiftDb: 0,
+      strategySuffix: null,
+      targetRw: null
+    };
+  }
+
+  if (
+    !isYtongSeparatiePaneelLayer(coreLayer) ||
+    leftLayer.material.id !== rightLayer.material.id ||
+    Math.abs(leftLayer.thicknessMm - rightLayer.thicknessMm) > 0.6 ||
+    !isPlasterLikeLayer(leftLayer) ||
+    leftLayer.thicknessMm > 6
+  ) {
+    return {
+      notes,
+      shiftDb: 0,
+      strategySuffix: null,
+      targetRw: null
+    };
+  }
+
+  const exactTargets: Record<string, readonly { thicknessMm: number; rw: number }[]> = {
+    ytong_separatiepaneel_aac_4_600: [
+      { thicknessMm: 70, rw: 34 },
+      { thicknessMm: 100, rw: 34 }
+    ],
+    ytong_separatiepaneel_aac_5_750: [{ thicknessMm: 100, rw: 37 }]
+  };
+  const points = exactTargets[coreLayer.material.id];
+  const exactPoint = points?.find((entry) => Math.abs(entry.thicknessMm - coreLayer.thicknessMm) <= 0.6);
+
+  if (!exactPoint) {
+    return {
+      notes,
+      shiftDb: 0,
+      strategySuffix: null,
+      targetRw: null
+    };
+  }
+
+  const targetRw = ksRound1(clamp(exactPoint.rw, 32, 40));
+  const shiftDb = ksRound1(targetRw - currentRw);
+
+  if (Math.abs(shiftDb) < 0.2) {
+    return {
+      notes,
+      shiftDb: 0,
+      strategySuffix: null,
+      targetRw
+    };
+  }
+
+  notes.push(
+    `Official Xella Nederland separatiepanelen guidance moved the prefab AAC thin-plaster lane onto the published ${coreLayer.material.name} corridor (target Rw ${targetRw.toFixed(1)} dB).`
+  );
+
+  return {
+    notes,
+    shiftDb,
+    strategySuffix: "ytong_separatiepanelen_calibration",
+    targetRw
+  };
+}
+
+export function estimateYtongCellenbetonblokTargetRw(
+  layers: readonly ResolvedLayer[],
+  topology: ReturnType<typeof summarizeAirborneTopology>,
+  currentRw: number,
+  family: DynamicAirborneFamily
+): {
+  notes: string[];
+  shiftDb: number;
+  strategySuffix: string | null;
+  targetRw: number | null;
+} {
+  const notes: string[] = [];
+
+  if (
+    family !== "masonry_nonhomogeneous" ||
+    topology.visibleLeafCount > 1 ||
+    topology.cavityCount > 0 ||
+    topology.hasStudLikeSupport
+  ) {
+    return {
+      notes,
+      shiftDb: 0,
+      strategySuffix: null,
+      targetRw: null
+    };
+  }
+
+  const solidLayers = layers.filter((layer) => classifyLayerRole(layer).isSolidLeaf);
+  if (solidLayers.length !== 3) {
+    return {
+      notes,
+      shiftDb: 0,
+      strategySuffix: null,
+      targetRw: null
+    };
+  }
+
+  const [leftLayer, coreLayer, rightLayer] = solidLayers;
+  if (!leftLayer || !coreLayer || !rightLayer) {
+    return {
+      notes,
+      shiftDb: 0,
+      strategySuffix: null,
+      targetRw: null
+    };
+  }
+
+  if (
+    !isYtongCellenbetonblokLayer(coreLayer) ||
+    leftLayer.material.id !== rightLayer.material.id ||
+    Math.abs(leftLayer.thicknessMm - rightLayer.thicknessMm) > 0.6 ||
+    !isPlasterLikeLayer(leftLayer) ||
+    leftLayer.thicknessMm > 6
+  ) {
+    return {
+      notes,
+      shiftDb: 0,
+      strategySuffix: null,
+      targetRw: null
+    };
+  }
+
+  const officialRwByCore: Record<string, readonly { thicknessMm: number; rw: number }[]> = {
+    ytong_cellenbetonblok_g4_600: [
+      { thicknessMm: 70, rw: 33 },
+      { thicknessMm: 100, rw: 37 },
+      { thicknessMm: 150, rw: 43 },
+      { thicknessMm: 200, rw: 44 },
+      { thicknessMm: 240, rw: 48 },
+      { thicknessMm: 300, rw: 49 }
+    ],
+    ytong_cellenbetonblok_g5_800: [{ thicknessMm: 100, rw: 39 }]
+  };
+
+  const points = officialRwByCore[coreLayer.material.id];
+  if (!points?.length) {
+    return {
+      notes,
+      shiftDb: 0,
+      strategySuffix: null,
+      targetRw: null
+    };
+  }
+
+  const targetRw =
+    points.length === 1
+      ? points[0]!.rw
+      : interpolateRwSeries(coreLayer.thicknessMm, points);
+  const roundedTargetRw = ksRound1(clamp(targetRw, 32, 50));
+  const shiftDb = ksRound1(roundedTargetRw - currentRw);
+
+  if (Math.abs(shiftDb) < 0.2) {
+    return {
+      notes,
+      shiftDb: 0,
+      strategySuffix: null,
+      targetRw: roundedTargetRw
+    };
+  }
+
+  notes.push(
+    `Official Xella Nederland cellenbetonblokken guidance moved the AAC block thin-plaster lane onto the published ${coreLayer.material.name} corridor (target Rw ${roundedTargetRw.toFixed(1)} dB).`
+  );
+
+  return {
+    notes,
+    shiftDb,
+    strategySuffix: "ytong_cellenbetonblokken_calibration",
+    targetRw: roundedTargetRw
+  };
+}
