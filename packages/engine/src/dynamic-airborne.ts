@@ -44,8 +44,10 @@ import {
 import {
   hasExplicitFramingHint,
   isAacLikeLayer,
+  isBoardLikeLayer,
   isCelconAircreteLayer,
   isCelconFinishedAircreteBuildUp,
+  isEnhancedBoardLayer,
   isHeluzClayLayer,
   isMasonryCoreLayer,
   isMasonryLikeLayer,
@@ -202,18 +204,6 @@ type FamilyDecisionBoundarySummary = {
   secondaryRunnerUpScore: number | null;
   selectedScore: number | null;
 };
-
-function isBoardLikeLayer(layer: ResolvedLayer): boolean {
-  if (!classifyLayerRole(layer).isSolidLeaf) {
-    return false;
-  }
-
-  return /gypsum|board|plasterboard|firestop|impactstop|acoustic|security|soundbloc/i.test(materialText(layer));
-}
-
-function isEnhancedBoardLayer(layer: ResolvedLayer): boolean {
-  return /firestop|impactstop|acoustic|security|soundbloc|diamond|diamant|silentboard|silent[_ ]board/i.test(materialText(layer));
-}
 
 function summarizeFramedBoardSystem(layers: readonly ResolvedLayer[]): FramedBoardSystemSummary {
   let leftLeafBoardCount = 0;

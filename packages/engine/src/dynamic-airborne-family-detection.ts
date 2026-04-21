@@ -61,6 +61,27 @@ export function isResilientFramingHint(framingHint: DynamicFramingHint): boolean
   return framingHint.connectionType === "resilient_channel" || framingHint.studType === "resilient_stud";
 }
 
+// Board / plasterboard predicate. Matches the canonical acoustic,
+// fire, impact, security, and enhanced board variants used by the
+// framed wall summarizers. The `isSolidLeaf` gate keeps insulation
+// and gap layers out even if their ids share a keyword.
+export function isBoardLikeLayer(layer: ResolvedLayer): boolean {
+  if (!classifyLayerRole(layer).isSolidLeaf) {
+    return false;
+  }
+
+  return /gypsum|board|plasterboard|firestop|impactstop|acoustic|security|soundbloc/i.test(materialText(layer));
+}
+
+// Upgrade-class boards (fire / impact / acoustic / security /
+// diamond / silent). Unlike `isBoardLikeLayer`, this does NOT gate
+// on solid-leaf role because some summarizers want to know whether
+// an acoustic board is present even when it is not the outermost
+// leaf.
+export function isEnhancedBoardLayer(layer: ResolvedLayer): boolean {
+  return /firestop|impactstop|acoustic|security|soundbloc|diamond|diamant|silentboard|silent[_ ]board/i.test(materialText(layer));
+}
+
 export function isMasonryLikeLayer(layer: ResolvedLayer): boolean {
   const role = classifyLayerRole(layer);
   if (!role.isSolidLeaf) {
