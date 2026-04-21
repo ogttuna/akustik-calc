@@ -52,23 +52,26 @@ That is how the 2026-04-20 doc-drift problem (captured in
 ## Operator Snapshot
 
 - active slice:
-  `wall_hostile_input_matrix_with_airborne_cartography_v1` (selected
-  on `2026-04-21` by the LSF + timber preset pack closeout; master
-  plan step 3; mirrors the floor hostile-input matrices on walls,
-  lands the cross-cutting engine thickness guardrail, and produces
-  initial `dynamic-airborne.ts` cartography for the subsequent split
-  slice)
+  `dynamic_airborne_split_refactor_v1` (selected on `2026-04-21`
+  by the wall hostile-input + cartography closeout; master plan
+  step 4; mechanical move of the 6630-line `dynamic-airborne.ts`
+  into three target files per
+  `docs/calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md`)
 - latest closed implementation slice:
+  `wall_hostile_input_matrix_with_airborne_cartography_v1` (closed
+  `2026-04-21` on
+  `packages/engine/src/post-wall-hostile-input-matrix-with-airborne-cartography-v1-next-slice-selection-contract.test.ts`)
+- prior closed implementation slice:
   `wall_lsf_timber_preset_pack_with_invariants_v1` (closed
   `2026-04-21` on
   `packages/engine/src/post-wall-lsf-timber-preset-pack-with-invariants-v1-next-slice-selection-contract.test.ts`)
-- prior closed implementation slice:
+- earlier closed implementation slice:
   `masonry_flanking_inversion_fix_v1` (closed `2026-04-21` on
   `packages/engine/src/post-masonry-flanking-inversion-fix-next-slice-selection-contract.test.ts`)
-- earlier closed implementation slice:
+- earliest recent closed implementation slice:
   `wall_reorder_output_set_consistency_v1` (closed `2026-04-21` on
   `packages/engine/src/post-wall-reorder-output-set-consistency-v1-next-slice-selection-contract.test.ts`)
-- earliest recent closed implementation slice:
+- historical recent closed implementation slice:
   `wall_preset_expansion_v1` (closed `2026-04-20` on
   `packages/engine/src/post-wall-preset-expansion-v1-next-slice-selection-contract.test.ts`)
 - earlier closed implementation slice:
@@ -102,24 +105,35 @@ That is how the 2026-04-20 doc-drift problem (captured in
   reorder/C-availability inconsistency on asymmetric light-heavy stacks,
   which is now the selected next active runtime tightening slice
 - immediate next decision:
-  start `wall_hostile_input_matrix_with_airborne_cartography_v1`.
-  Three deliverables:
-  (a) wall hostile-input answer matrix mirroring the floor analog
-  (`raw-floor-hostile-input-answer-matrix.test.ts`) — 50+ layer
-  stacks, unknown material id, invalid thickness (NaN / Infinity /
-  negative / zero), mixed inputs with field/building context;
-  (b) engine-level thickness guardrail (so API/CLI callers bypassing
-  workbench normalization still hit a deterministic fail-closed
-  output, not a crash);
-  (c) `dynamic-airborne.ts` cartography pass — document the family
-  detection entry point, predictor scoring, and heuristics used by
-  hostile paths, setting up the step 4 split slice.
-- first implementation question now:
-  how many of the floor hostile-input matrix cases (route-card +
-  answer matrix + output-origin matrix) have an obvious wall analog,
-  and where do the wall-specific cases diverge (e.g. `contextMode =
-  field_between_rooms` exercises LSF flanking even without a `Rw`
-  answer)?
+  start `dynamic_airborne_split_refactor_v1`. Mechanical move of
+  `packages/engine/src/dynamic-airborne.ts` (6630 lines) into
+  `dynamic-airborne-family-detection.ts` +
+  `dynamic-airborne-predictor-scoring.ts` +
+  `dynamic-airborne-helpers.ts`; `calculateDynamicAirborneResult`
+  stays in the original file as a composition wrapper with
+  re-exports. Zero-behaviour-change contract — cartography
+  blueprint in `docs/calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md`,
+  guarded by the hostile-input + invariants + benchmark suites
+  landed in slices 1b / 2 / 3.
+- wall hostile-input matrix + cartography closeout summary (2026-04-21):
+  - `packages/engine/src/raw-wall-hostile-input-answer-matrix.test.ts`
+    pins 13 hostile cases on the engine surface (50-layer heavy +
+    mixed, reorder invariance, empty rows, unknown material,
+    zero / NaN / Infinity / negative / extreme thickness)
+  - `apps/web/features/workbench/raw-wall-hostile-input-route-card-matrix.test.ts`
+    pins 6 cases on the workbench card surface (status + warning
+    merged across `normalize-rows` + engine layers)
+  - `packages/engine/src/assembly-input-guardrail.ts` converts
+    hostile inputs into a deterministic fail-closed
+    `AssemblyCalculation` with a specific warning (no throw)
+  - `docs/calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md` maps the
+    6630-line monolith onto three target files for the next slice
+- first implementation question now for the active split slice:
+  does `calculateDynamicAirborneResult`'s transitive call graph fit
+  cleanly into the three target files per the cartography doc, or
+  do one or more helpers belong on the boundary? Map the graph
+  before moving code; when in doubt, place the helper in the file
+  with the fewer incoming edges.
 - LSF + timber stud preset pack closeout summary (2026-04-21):
   - `light_steel_stud_wall` + `timber_stud_wall` presets landed with
     `airborneDefaults` so their framed-wall family context flows

@@ -29,6 +29,10 @@ import {
 import { buildCalibratedMassLawCurve, buildRatingsFromCurve } from "./curve-rating";
 import { applyAirborneContextOverlay } from "./apply-airborne-context";
 import { AIRBORNE_CALCULATORS, calculateAirborneCalculatorResult } from "./airborne-calculator";
+import {
+  buildFailClosedAssemblyResult,
+  evaluateAssemblyInputGuard
+} from "./assembly-input-guardrail";
 import { applyApproximateAirborneFieldCompanion, applyVerifiedAirborneCatalogAnchor } from "./airborne-verified-catalog";
 import { classifyLayerRole, materialText } from "./airborne-topology";
 import { calculateDynamicAirborneResult } from "./dynamic-airborne";
@@ -848,6 +852,23 @@ export function calculateAssembly(
   inputLayers: readonly LayerInput[],
   options: CalculateAssemblyOptions = {}
 ): AssemblyCalculation {
+  // Guardrail for API / CLI callers that bypass the workbench row
+  // normaliser. Hostile inputs (unknown materialId, NaN/Infinity/
+  // non-positive/out-of-range thickness) collapse to a deterministic
+  // fail-closed `AssemblyCalculation` with a specific warning instead
+  // of throwing a raw Zod/Error. The workbench normaliser catches the
+  // same cases earlier in the UI path; this is the last line of
+  // defense so the engine never crashes on malformed layer input.
+  const guardCatalog = mergePredictorCatalog(getDefaultMaterialCatalog(), options.catalog ?? []);
+  const guardDecision = evaluateAssemblyInputGuard(inputLayers, guardCatalog);
+  if (guardDecision.kind === "fail") {
+    return buildFailClosedAssemblyResult(
+      options.targetOutputs ?? [],
+      guardDecision.warnings,
+      options.calculator ?? undefined
+    );
+  }
+
   const layers = inputLayers.map((layer) => LayerInputSchema.parse(layer));
   const explicitPredictorInput = options.impactPredictorInput
     ? ImpactPredictorInputSchema.parse(options.impactPredictorInput)

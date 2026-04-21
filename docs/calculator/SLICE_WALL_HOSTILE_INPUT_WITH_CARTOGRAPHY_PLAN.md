@@ -1,9 +1,12 @@
 # Slice Plan — Wall Hostile Input Matrix With Airborne Cartography
 
 Slice id: `wall_hostile_input_matrix_with_airborne_cartography_v1`
-Status: planning (not started)
+Status: CLOSED 2026-04-21 (closeout contract
+`packages/engine/src/post-wall-hostile-input-matrix-with-airborne-cartography-v1-next-slice-selection-contract.test.ts`)
 Authored: 2026-04-21
-Owner: next agent that picks up the slice
+Updated: 2026-04-21 (closed)
+Owner: historical — next agent works from
+`DYNAMIC_AIRBORNE_CARTOGRAPHY.md`
 
 ## Why This Slice Exists
 

@@ -27,9 +27,11 @@ Then run `pnpm calculator:gate:current` to confirm green baseline.
   [calculator/SOURCE_GAP_LEDGER.md](./calculator/SOURCE_GAP_LEDGER.md)
 - Wall coverage expansion program (master plan steps 2-6):
   [calculator/WALL_COVERAGE_EXPANSION_PLAN.md](./calculator/WALL_COVERAGE_EXPANSION_PLAN.md)
-- Active slice detailed plan (wall hostile input matrix with airborne cartography):
+- Active slice cartography (dynamic-airborne split refactor, master-plan step 4):
+  [calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md](./calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md)
+- Previous slice detailed plan (wall hostile input matrix with airborne cartography, closed 2026-04-21):
   [calculator/SLICE_WALL_HOSTILE_INPUT_WITH_CARTOGRAPHY_PLAN.md](./calculator/SLICE_WALL_HOSTILE_INPUT_WITH_CARTOGRAPHY_PLAN.md)
-- Previous slice detailed plan (LSF + timber stud preset pack with physical invariants, closed 2026-04-21):
+- Historical slice detailed plan (LSF + timber stud preset pack with physical invariants, closed 2026-04-21):
   [calculator/SLICE_LSF_TIMBER_PRESET_WITH_INVARIANTS_PLAN.md](./calculator/SLICE_LSF_TIMBER_PRESET_WITH_INVARIANTS_PLAN.md)
 - Latest broad audit:
   [calculator/SYSTEM_AUDIT_2026-04-20.md](./calculator/SYSTEM_AUDIT_2026-04-20.md)

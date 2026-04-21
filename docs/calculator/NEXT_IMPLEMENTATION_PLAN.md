@@ -74,17 +74,23 @@ Use this section first when deciding what to do next.
 ### Now
 
 - active slice:
-  `wall_hostile_input_matrix_with_airborne_cartography_v1` (selected
-  2026-04-21 by the LSF + timber preset pack closeout; master plan
-  step 3; plan doc pending — author at slice start)
+  `dynamic_airborne_split_refactor_v1` (selected 2026-04-21 by the
+  wall hostile-input + cartography closeout; master plan step 4;
+  cartography blueprint at
+  `docs/calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md`; zero-behaviour-
+  change mechanical code move)
 - latest closed implementation slice:
+  `wall_hostile_input_matrix_with_airborne_cartography_v1` (closed
+  `2026-04-21` on
+  `packages/engine/src/post-wall-hostile-input-matrix-with-airborne-cartography-v1-next-slice-selection-contract.test.ts`)
+- prior closed implementation slice:
   `wall_lsf_timber_preset_pack_with_invariants_v1` (closed
   `2026-04-21` on
   `packages/engine/src/post-wall-lsf-timber-preset-pack-with-invariants-v1-next-slice-selection-contract.test.ts`)
-- prior closed implementation slice:
+- earlier closed implementation slice:
   `masonry_flanking_inversion_fix_v1` (closed `2026-04-21` on
   `packages/engine/src/post-masonry-flanking-inversion-fix-next-slice-selection-contract.test.ts`)
-- earlier closed implementation slice:
+- historical recent closed implementation slice:
   `wall_reorder_output_set_consistency_v1` (closed `2026-04-21` on
   `packages/engine/src/post-wall-reorder-output-set-consistency-v1-next-slice-selection-contract.test.ts`)
 - masonry flanking inversion fix summary:
