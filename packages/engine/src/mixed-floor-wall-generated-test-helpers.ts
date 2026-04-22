@@ -431,6 +431,21 @@ const MASONRY_BRICK_WALL_ROWS: readonly LayerInput[] = [
   { materialId: "dense_plaster", thicknessMm: 13 }
 ];
 
+// Step-7 gap-close: mirrors the `clt_wall` preset
+// (apps/web/features/workbench/preset-definitions.ts:133-137).
+// Exercises the framed-wall split module boundary + the CLT
+// formula-owned lane (no exact catalog row exists for CLT walls
+// today — `wall-preset-expansion-benchmarks` pins Rw=40 as a
+// drift guard). Splitting the 140 mm CLT panel into two 70 mm
+// halves is a worst-case mass-timber split — the coalesce
+// helper added in step 7 step 3 ensures both halves merge back
+// into a single logical leaf during calibration.
+const CLT_LOCAL_WALL_ROWS: readonly LayerInput[] = [
+  { materialId: "gypsum_board", thicknessMm: 12.5 },
+  { materialId: "clt_panel", thicknessMm: 140 },
+  { materialId: "gypsum_board", thicknessMm: 12.5 }
+];
+
 export const ENGINE_MIXED_GENERATED_CASES: readonly EngineMixedGeneratedCase[] = [
   {
     fieldOptions: {
@@ -960,6 +975,25 @@ export const ENGINE_MIXED_GENERATED_CASES: readonly EngineMixedGeneratedCase[] =
     // while keeping symmetric plaster facings intact.
     splitPlans: [
       { parts: [50, 50], rowIndex: 1 }
+    ],
+    studyMode: "wall"
+  },
+  {
+    fieldOptions: {
+      airborneContext: WALL_FIELD_CONTEXT,
+      calculator: "dynamic",
+      targetOutputs: WALL_FIELD_OUTPUTS
+    },
+    id: "wall-clt-local",
+    label: "CLT wall (formula-owned lane, framed-wall split boundary)",
+    labOptions: { calculator: "dynamic", targetOutputs: WALL_LAB_OUTPUTS },
+    rows: CLT_LOCAL_WALL_ROWS,
+    // Split the 140 mm CLT panel into two 70 mm halves —
+    // exercises the framed-wall split-module boundary under the
+    // duplicate-swap torture grid while the gypsum facings
+    // stay intact.
+    splitPlans: [
+      { parts: [70, 70], rowIndex: 1 }
     ],
     studyMode: "wall"
   }
