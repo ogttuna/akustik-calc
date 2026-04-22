@@ -43,30 +43,25 @@ it does not run package-wide lint or tsc).
 
 ## Active Slice
 
-`wall_corridor_surface_value_pinning_v1` (master-plan step
-7b — inserted between closed step 7 and pending step 8).
-Selected `2026-04-22` by a post-step-7 ROI re-analysis that
-re-prioritized the corridor-surface VALUE-pin gap ahead of
-the final audit. The step-7 post-contract selected step 8;
-the re-selection supersedes (not erases) that line because
-post-contracts lock what CLOSED, not what MUST come next —
-a fresh analysis with better information can revise the
-selection without loosening AP4.
-
-Scope: extend VALUE-pin discipline from presets to the 6
-wall selector corridor families (`double_leaf`,
-`lined_massive_wall`, `aac_boundary`, `g5_sibling`,
-`heavy_core_trim`, `lab_double_stud`) × 3 contexts × 9
-outputs = ~162 new numerical pins. Plan doc authored
-2026-04-22 at
-[SLICE_WALL_CORRIDOR_SURFACE_VALUE_PINNING_PLAN.md](./SLICE_WALL_CORRIDOR_SURFACE_VALUE_PINNING_PLAN.md).
-Closes C2 + C3 🟡 → ✅; after this, step 8 runs on a
-fully-green grid.
+`good_calculator_final_audit_v1` (master-plan step 8).
+Selected `2026-04-22` by the
+`wall_corridor_surface_value_pinning_v1` closeout contract
+`packages/engine/src/post-wall-corridor-surface-value-pinning-v1-next-slice-selection-contract.test.ts`.
+Plan doc not yet authored — the next agent writes
+`SLICE_GOOD_CALCULATOR_FINAL_AUDIT_PLAN.md` before starting
+implementation. Step 8 now runs against a fully-green
+C1-C5 grid (C6 split v2 remains documented-deferred per
+architectural scope): authors the executable
+grid-consistency test, verifies every completion signal
+with an executable assertion, archives the full resume
+triangle into a session-close checkpoint, and opens the
+post-calculator productization roadmap (§1 non-goals).
 
 ## Latest Closed Slices
 
 | Slice | Master-plan step | Closed | Post-contract |
 |---|---|---|---|
+| `wall_corridor_surface_value_pinning_v1` | 7b | 2026-04-22 | `post-wall-corridor-surface-value-pinning-v1-next-slice-selection-contract.test.ts` |
 | `mixed_floor_wall_edge_case_hardening_v1` | 7 | 2026-04-22 | `post-mixed-floor-wall-edge-case-hardening-v1-next-slice-selection-contract.test.ts` |
 | `wall_field_continuation_value_pinning_v1` | 5 | 2026-04-21 | `post-wall-field-continuation-value-pinning-v1-next-slice-selection-contract.test.ts` |
 | `dynamic_airborne_split_refactor_v1` | 4 | 2026-04-21 | `post-dynamic-airborne-split-refactor-v1-next-slice-selection-contract.test.ts` |
@@ -80,8 +75,8 @@ fully-green grid.
 | # | Signal | Status | Anchor |
 |---|---|---|---|
 | C1 | Wall preset coverage ≥ 6 distinct archetypes | ✅ 6/6 | `preset-definitions.ts` + `wall-preset-expansion-benchmarks.test.ts` + `wall-lsf-timber-stud-preset-benchmarks.test.ts` |
-| C2 | Every defended wall corridor source/benchmark audited | 🟡 preset surface ✓ · corridor surface deferred | `wall-full-preset-contract-matrix.test.ts` + `wall-field-continuation-completeness-matrix.test.ts` |
-| C3 | Field continuation completeness | 🟡 preset surface VALUE-pinned · corridor surface deferred | `wall-field-continuation-completeness-matrix.test.ts` |
+| C2 | Every defended wall corridor source/benchmark audited | ✅ preset + corridor surfaces both VALUE-pinned (7b closeout 2026-04-22) | `wall-full-preset-contract-matrix.test.ts` + `wall-field-continuation-completeness-matrix.test.ts` + `dynamic-airborne-wall-selector-value-pins.test.ts` |
+| C3 | Field continuation completeness | ✅ preset + corridor surfaces both VALUE-pinned | `wall-field-continuation-completeness-matrix.test.ts` + `dynamic-airborne-wall-selector-value-pins.test.ts` |
 | C4 | Floor + wall hostile-input discipline | ✅ both green + torture-matrix O1 overlay | `raw-floor-hostile-input-answer-matrix.test.ts` + `raw-wall-hostile-input-answer-matrix.test.ts` + `mixed-floor-wall-cross-mode-wall-extension-matrix.test.ts` |
 | C5 | Reorder invariance symmetric + asymmetric | ✅ | `wall-reorder-invariance-matrix.test.ts` + `mixed-floor-wall-cross-mode-wall-extension-matrix.test.ts` O2 overlay (strict on symmetric, ±10 dB bounded drift on asymmetric) |
 | C6 | Architectural hygiene (≤2000 line files) | 🟡 split v1 landed (6630 → 3152) · v2 deferred | `dynamic-airborne-*.ts` module family |
@@ -192,7 +187,8 @@ time without context loss:
    agrees on the active slice, completion signals, and deferred
    tracks. If it does not, fix the drift before starting work.
 3. Run `pnpm calculator:gate:current` — confirm green baseline.
-4. Read
-   [SLICE_WALL_CORRIDOR_SURFACE_VALUE_PINNING_PLAN.md](./SLICE_WALL_CORRIDOR_SURFACE_VALUE_PINNING_PLAN.md)
-   and start from the first un-landed deliverable in its
-   Atomic Order section.
+4. Author `SLICE_GOOD_CALCULATOR_FINAL_AUDIT_PLAN.md`
+   before writing any implementation code for the step 8
+   slice. Previous slice plan (closed 2026-04-22) archived
+   at
+   [docs/archive/handoffs/SLICE_WALL_CORRIDOR_SURFACE_VALUE_PINNING_PLAN.md](../archive/handoffs/SLICE_WALL_CORRIDOR_SURFACE_VALUE_PINNING_PLAN.md).
