@@ -28,6 +28,18 @@ export const WALL_FIELD_CONTEXT: AirborneContext = {
   receivingRoomVolumeM3: 45
 };
 
+// Workbench default lab context — mirrors the composition in
+// `apps/web/features/workbench/wall-preset-expansion-benchmarks.test.ts:53-55`
+// and the `liveAirborneContext` wiring. `contextMode:"element_lab"`
+// + `airtightness:"good"` is what the workbench shell sends
+// into `calculateAssembly` for wall presets under the default
+// lab view; torture cases that want preset-benchmark surface
+// parity must use this constant.
+export const WALL_LAB_CONTEXT: AirborneContext = {
+  airtightness: "good",
+  contextMode: "element_lab"
+};
+
 // Step-7 LSF + timber-stud wall cases carry their preset's
 // `airborneDefaults` (apps/web/features/workbench/preset-definitions.ts:
 // 154-159 + 176-181) directly into the engine-level test case.
@@ -36,7 +48,7 @@ export const WALL_FIELD_CONTEXT: AirborneContext = {
 // that path and set them inline so family-detection sees the
 // studType every time.
 const FRAMED_WALL_LAB_CONTEXT_LSF: AirborneContext = {
-  airtightness: "good",
+  ...WALL_LAB_CONTEXT,
   connectionType: "line_connection",
   studSpacingMm: 600,
   studType: "light_steel_stud"
@@ -44,11 +56,13 @@ const FRAMED_WALL_LAB_CONTEXT_LSF: AirborneContext = {
 
 const FRAMED_WALL_FIELD_CONTEXT_LSF: AirborneContext = {
   ...WALL_FIELD_CONTEXT,
-  ...FRAMED_WALL_LAB_CONTEXT_LSF
+  connectionType: "line_connection",
+  studSpacingMm: 600,
+  studType: "light_steel_stud"
 };
 
 const FRAMED_WALL_LAB_CONTEXT_TIMBER: AirborneContext = {
-  airtightness: "good",
+  ...WALL_LAB_CONTEXT,
   connectionType: "line_connection",
   studSpacingMm: 600,
   studType: "wood_stud"
@@ -56,7 +70,9 @@ const FRAMED_WALL_LAB_CONTEXT_TIMBER: AirborneContext = {
 
 const FRAMED_WALL_FIELD_CONTEXT_TIMBER: AirborneContext = {
   ...WALL_FIELD_CONTEXT,
-  ...FRAMED_WALL_LAB_CONTEXT_TIMBER
+  connectionType: "line_connection",
+  studSpacingMm: 600,
+  studType: "wood_stud"
 };
 
 export type SplitPlan = {
@@ -1035,7 +1051,11 @@ export const ENGINE_MIXED_GENERATED_CASES: readonly EngineMixedGeneratedCase[] =
     },
     id: "wall-masonry-brick",
     label: "Masonry brick wall (lab-fallback anchor exercise)",
-    labOptions: { calculator: "dynamic", targetOutputs: WALL_LAB_OUTPUTS },
+    labOptions: {
+      airborneContext: WALL_LAB_CONTEXT,
+      calculator: "dynamic",
+      targetOutputs: WALL_LAB_OUTPUTS
+    },
     rows: MASONRY_BRICK_WALL_ROWS,
     // Split the 100 mm porotherm core into two 50 mm halves —
     // ensures the duplicate-swap grid exercises the core row
@@ -1053,7 +1073,11 @@ export const ENGINE_MIXED_GENERATED_CASES: readonly EngineMixedGeneratedCase[] =
     },
     id: "wall-clt-local",
     label: "CLT wall (formula-owned lane, framed-wall split boundary)",
-    labOptions: { calculator: "dynamic", targetOutputs: WALL_LAB_OUTPUTS },
+    labOptions: {
+      airborneContext: WALL_LAB_CONTEXT,
+      calculator: "dynamic",
+      targetOutputs: WALL_LAB_OUTPUTS
+    },
     rows: CLT_LOCAL_WALL_ROWS,
     // Split the 140 mm CLT panel into two 70 mm halves —
     // exercises the framed-wall split-module boundary under the

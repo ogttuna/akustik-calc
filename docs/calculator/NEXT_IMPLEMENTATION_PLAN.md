@@ -5,7 +5,7 @@ focused, agent-resume friendly. For the strategic picture read
 [MASTER_PLAN.md](./MASTER_PLAN.md). For what is stable right now
 read [CURRENT_STATE.md](./CURRENT_STATE.md).
 
-Last reviewed: 2026-04-22 (step 7 plan doc authored).
+Last reviewed: 2026-04-22 (step 7 closed; active slice moves to step 8).
 
 ---
 
@@ -34,22 +34,29 @@ For every next slice decision:
 
 ## Now
 
-- **Active slice**: `mixed_floor_wall_edge_case_hardening_v1`
-  (master-plan step 7). Selected `2026-04-21` by the
-  `wall_field_continuation_value_pinning_v1` closeout.
-- **Plan doc**:
-  [SLICE_MIXED_FLOOR_WALL_EDGE_CASE_HARDENING_PLAN.md](./SLICE_MIXED_FLOOR_WALL_EDGE_CASE_HARDENING_PLAN.md)
-  (authored 2026-04-22).
-- **First implementation question — answered**: existing
-  `mixed-floor-wall-*` tests cover **3** wall cases only
-  (`wall-screening-concrete`, `wall-held-aac`,
-  `wall-heavy-composite-hint-suppression`) against **30** floor
-  cases. Masonry brick, CLT wall, LSF, and timber stud are
-  absent from `ENGINE_MIXED_GENERATED_CASES`. A **gap-close
-  pass lands first** (four new wall cases), then the five-overlay
-  cross-mode torture matrix builds on top. See the plan doc's
-  "First Implementation Question — Answered" section for full
-  evidence.
+- **Active slice**: `good_calculator_final_audit_v1`
+  (master-plan step 8). Selected `2026-04-22` by the
+  `mixed_floor_wall_edge_case_hardening_v1` closeout contract
+  `post-mixed-floor-wall-edge-case-hardening-v1-next-slice-selection-contract.test.ts`.
+- **Plan doc**: NOT YET AUTHORED. Next agent writes
+  `SLICE_GOOD_CALCULATOR_FINAL_AUDIT_PLAN.md` as the first
+  slice action, following the shape of the four prior slice
+  plan docs (archived under `docs/archive/handoffs/SLICE_*`).
+- **Scope preview (per MASTER_PLAN step 8)**: author
+  `coverage-grid-consistency.test.ts` that asserts §3 grid
+  rows match the engine's defended corridor list; verify each
+  C1-C6 completion signal with an executable assertion;
+  archive the full resume triangle into a session-close
+  checkpoint; open the post-calculator productization roadmap
+  (§1 non-goals: billing / auth / desktop app — re-enter the
+  roadmap only after the calculator itself is done).
+- **Previous slice closed 2026-04-22** —
+  `mixed_floor_wall_edge_case_hardening_v1` landed 7 atomic
+  commits bringing the engine wall torture surface to 6/6
+  preset parity, a 32-assertion cross-mode torture matrix,
+  and two same-material-split regression guards that
+  surfaced + fixed two real engine accuracy bugs (F1 masonry
+  calibrator, F2 catalog-match).
 
 ## Latest Closed Slices
 
@@ -103,8 +110,8 @@ Every slice under this plan obeys:
    sequence) + §6 (accuracy preservation contract) + §8
    (completion signals)
 4. This file.
-5. [SLICE_MIXED_FLOOR_WALL_EDGE_CASE_HARDENING_PLAN.md](./SLICE_MIXED_FLOOR_WALL_EDGE_CASE_HARDENING_PLAN.md)
-   — tactical plan for the active slice.
+5. Previous slice plan (closed 2026-04-22, reference only):
+   `docs/archive/handoffs/SLICE_MIXED_FLOOR_WALL_EDGE_CASE_HARDENING_PLAN.md`.
 6. Run `pnpm calculator:gate:current` — confirm green baseline.
-7. Start from the first un-landed deliverable in the slice plan's
-   Atomic Order section.
+7. Author `SLICE_GOOD_CALCULATOR_FINAL_AUDIT_PLAN.md` before
+   writing any implementation code for the step 8 slice.

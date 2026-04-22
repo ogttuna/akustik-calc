@@ -22,16 +22,18 @@ passed at vitest runtime (esbuild strips types) but failed tsc.
 Both fixed 2026-04-22. Focused gate never caught these because
 it does not run package-wide lint or tsc).
 
-- **Engine full suite**: 196 / 196 files, 1092 / 1092 tests green
-  (up from 193/1068 after step-7 atomic order steps 3-7 landed
+- **Engine full suite**: 197 / 197 files, 1108 / 1108 tests green
+  (up from 193/1068 after step-7 atomic order steps 3-10 landed
   four new wall cases in `ENGINE_MIXED_GENERATED_CASES`
   (`wall-masonry-brick`, `wall-clt-local`, `wall-lsf-knauf`,
   `wall-timber-stud`) + two engine fixes (masonry-calibration
   and catalog-match same-material-split coalesce) + two
-  same-material-split regression guards + the 5-overlay cross-
-  mode torture matrix (20 assertions covering hostile input,
-  reorder, save-load, duplicate-swap, history-replay on the
-  four new cases) on 2026-04-22)
+  same-material-split regression guards + an 8-overlay cross-
+  mode torture matrix (32 assertions covering hostile input,
+  reorder, save-load, duplicate-swap, history-replay, physical
+  invariants, engine-direct drift-guard, and many-layer
+  stability on the four new cases) + the slice-close post-
+  contract on 2026-04-22)
 - **Web full suite**: 137 / 137 files, 792 / 792 tests green + 18
   discovery helpers intentionally skipped
 - **Broad `pnpm check`**: lint + typecheck + tests + build green
@@ -41,22 +43,22 @@ it does not run package-wide lint or tsc).
 
 ## Active Slice
 
-`mixed_floor_wall_edge_case_hardening_v1` (master-plan step 7).
-Selected `2026-04-21` by the
-`wall_field_continuation_value_pinning_v1` closeout; plan doc
-authored `2026-04-22` at
-[SLICE_MIXED_FLOOR_WALL_EDGE_CASE_HARDENING_PLAN.md](./SLICE_MIXED_FLOOR_WALL_EDGE_CASE_HARDENING_PLAN.md).
-Scope (per the plan): four-case engine gap-close on
-`ENGINE_MIXED_GENERATED_CASES` (masonry brick, CLT wall, LSF,
-timber stud) + post-contract reconciliation across the 26
-`post-mixed-floor-wall-*` closeouts + a five-overlay cross-mode
-torture matrix on the new cases. Next slice after close:
-`good_calculator_final_audit_v1` (step 8).
+`good_calculator_final_audit_v1` (master-plan step 8).
+Selected `2026-04-22` by the
+`mixed_floor_wall_edge_case_hardening_v1` closeout contract
+`packages/engine/src/post-mixed-floor-wall-edge-case-hardening-v1-next-slice-selection-contract.test.ts`.
+Plan doc not yet authored — the next agent writes
+`SLICE_GOOD_CALCULATOR_FINAL_AUDIT_PLAN.md` before starting
+implementation. Step 8 authors the executable grid-consistency
+test, verifies every C1-C6 completion signal with an
+executable assertion, and opens the post-calculator
+productization roadmap (§1 non-goals).
 
 ## Latest Closed Slices
 
 | Slice | Master-plan step | Closed | Post-contract |
 |---|---|---|---|
+| `mixed_floor_wall_edge_case_hardening_v1` | 7 | 2026-04-22 | `post-mixed-floor-wall-edge-case-hardening-v1-next-slice-selection-contract.test.ts` |
 | `wall_field_continuation_value_pinning_v1` | 5 | 2026-04-21 | `post-wall-field-continuation-value-pinning-v1-next-slice-selection-contract.test.ts` |
 | `dynamic_airborne_split_refactor_v1` | 4 | 2026-04-21 | `post-dynamic-airborne-split-refactor-v1-next-slice-selection-contract.test.ts` |
 | `wall_hostile_input_matrix_with_airborne_cartography_v1` | 3 | 2026-04-21 | `post-wall-hostile-input-matrix-with-airborne-cartography-v1-next-slice-selection-contract.test.ts` |
@@ -71,15 +73,15 @@ torture matrix on the new cases. Next slice after close:
 | C1 | Wall preset coverage ≥ 6 distinct archetypes | ✅ 6/6 | `preset-definitions.ts` + `wall-preset-expansion-benchmarks.test.ts` + `wall-lsf-timber-stud-preset-benchmarks.test.ts` |
 | C2 | Every defended wall corridor source/benchmark audited | 🟡 preset surface ✓ · corridor surface deferred | `wall-full-preset-contract-matrix.test.ts` + `wall-field-continuation-completeness-matrix.test.ts` |
 | C3 | Field continuation completeness | 🟡 preset surface VALUE-pinned · corridor surface deferred | `wall-field-continuation-completeness-matrix.test.ts` |
-| C4 | Floor + wall hostile-input discipline | ✅ both green | `raw-floor-hostile-input-answer-matrix.test.ts` + `raw-wall-hostile-input-answer-matrix.test.ts` |
-| C5 | Reorder invariance symmetric + asymmetric | ✅ | `wall-reorder-invariance-matrix.test.ts` |
-| C6 | Architectural hygiene (≤2000 line files) | 🟡 split v1 landed (6630 → 3214) · v2 deferred | `dynamic-airborne-*.ts` module family |
+| C4 | Floor + wall hostile-input discipline | ✅ both green + torture-matrix O1 overlay | `raw-floor-hostile-input-answer-matrix.test.ts` + `raw-wall-hostile-input-answer-matrix.test.ts` + `mixed-floor-wall-cross-mode-wall-extension-matrix.test.ts` |
+| C5 | Reorder invariance symmetric + asymmetric | ✅ | `wall-reorder-invariance-matrix.test.ts` + `mixed-floor-wall-cross-mode-wall-extension-matrix.test.ts` O2 overlay (strict on symmetric, ±10 dB bounded drift on asymmetric) |
+| C6 | Architectural hygiene (≤2000 line files) | 🟡 split v1 landed (6630 → 3152) · v2 deferred | `dynamic-airborne-*.ts` module family |
 
 ## Step-7 Findings Ledger (live)
 
-Real engine accuracy bugs surfaced by the active slice's cross-mode
-torture matrix. Source-of-truth detail lives in
-[SLICE_MIXED_FLOOR_WALL_EDGE_CASE_HARDENING_PLAN.md](./SLICE_MIXED_FLOOR_WALL_EDGE_CASE_HARDENING_PLAN.md)
+Real engine accuracy bugs surfaced by step 7's cross-mode torture
+matrix. Source-of-truth detail lives in the archived slice plan
+[SLICE_MIXED_FLOOR_WALL_EDGE_CASE_HARDENING_PLAN.md](../archive/handoffs/SLICE_MIXED_FLOOR_WALL_EDGE_CASE_HARDENING_PLAN.md)
 "Accuracy Findings Ledger".
 
 | Id | Finding | Landed | Fix |
