@@ -62,7 +62,7 @@ function runScenario(
     });
     cards.set(output, {
       status: card?.status ?? "unsupported",
-      value: card?.formattedValue ?? ""
+      value: card?.value ?? ""
     });
   }
 

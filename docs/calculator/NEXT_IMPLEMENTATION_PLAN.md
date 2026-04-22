@@ -5,7 +5,7 @@ focused, agent-resume friendly. For the strategic picture read
 [MASTER_PLAN.md](./MASTER_PLAN.md). For what is stable right now
 read [CURRENT_STATE.md](./CURRENT_STATE.md).
 
-Last reviewed: 2026-04-21 (session-close checkpoint).
+Last reviewed: 2026-04-22 (step 7 plan doc authored).
 
 ---
 
@@ -37,17 +37,19 @@ For every next slice decision:
 - **Active slice**: `mixed_floor_wall_edge_case_hardening_v1`
   (master-plan step 7). Selected `2026-04-21` by the
   `wall_field_continuation_value_pinning_v1` closeout.
-- **Plan doc**: NOT YET AUTHORED. Next agent writes
-  `SLICE_MIXED_FLOOR_WALL_EDGE_CASE_HARDENING_PLAN.md` as the
-  first slice action.
-- **First implementation question**: do the existing
-  `mixed-floor-wall-*` tests (see
-  `packages/engine/src/mixed-floor-wall-generated-matrix.test.ts`
-  and the `post-mixed-floor-wall-*` closeout contracts) still
-  cover the new wall corridors (LSF, timber stud) + the
-  post-split engine layout + the lab-fallback anchor? If they
-  do, the slice focuses on torture extension + final-audit prep;
-  if they do not, a gap-close pass lands first.
+- **Plan doc**:
+  [SLICE_MIXED_FLOOR_WALL_EDGE_CASE_HARDENING_PLAN.md](./SLICE_MIXED_FLOOR_WALL_EDGE_CASE_HARDENING_PLAN.md)
+  (authored 2026-04-22).
+- **First implementation question — answered**: existing
+  `mixed-floor-wall-*` tests cover **3** wall cases only
+  (`wall-screening-concrete`, `wall-held-aac`,
+  `wall-heavy-composite-hint-suppression`) against **30** floor
+  cases. Masonry brick, CLT wall, LSF, and timber stud are
+  absent from `ENGINE_MIXED_GENERATED_CASES`. A **gap-close
+  pass lands first** (four new wall cases), then the five-overlay
+  cross-mode torture matrix builds on top. See the plan doc's
+  "First Implementation Question — Answered" section for full
+  evidence.
 
 ## Latest Closed Slices
 
@@ -101,6 +103,8 @@ Every slice under this plan obeys:
    sequence) + §6 (accuracy preservation contract) + §8
    (completion signals)
 4. This file.
-5. Run `pnpm calculator:gate:current` — confirm green baseline.
-6. Author step 7 slice plan doc before writing any
-   implementation code.
+5. [SLICE_MIXED_FLOOR_WALL_EDGE_CASE_HARDENING_PLAN.md](./SLICE_MIXED_FLOOR_WALL_EDGE_CASE_HARDENING_PLAN.md)
+   — tactical plan for the active slice.
+6. Run `pnpm calculator:gate:current` — confirm green baseline.
+7. Start from the first un-landed deliverable in the slice plan's
+   Atomic Order section.

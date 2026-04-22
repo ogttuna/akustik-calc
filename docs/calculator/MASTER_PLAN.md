@@ -1,6 +1,9 @@
 # Calculator Master Plan
 
-Last reviewed: 2026-04-21 (post masonry flanking inversion fix closeout)
+Last reviewed: 2026-04-22 (post session-close drift correction —
+dead-import sweep + typecheck typo fix after broad `pnpm check`
+caught gaps the focused gate missed; original iteration 2 review
+2026-04-21 after masonry flanking inversion fix closeout)
 Iteration: 2 (rewritten with implementation state grid, accuracy
 preservation contract, ROI table, quantitative completion targets)
 
@@ -240,7 +243,7 @@ no source-blocking, mostly engine/workbench work.
 | Engine thickness validity | 🟡 Partial | Workbench `normalize-rows` emits warnings on invalid thickness; engine-level direct guard (for API/CLI callers that bypass normalization) absent |
 | Many-layer (50+) stability | ⚪ Informal only | 2026-04-20 probe verified 50 identical / 50 mixed wall stacks complete without crash; probe file deleted; no pinned regression guard exists |
 | Reorder output-set invariance | 🟢 Benchmark | Fixed 2026-04-21 via ctr_term-guarded fallthrough in `packages/engine/src/target-output-support.ts` `getCarrierC`; pinned in `wall-reorder-invariance-matrix.test.ts` |
-| `dynamic-airborne.ts` size | ⚪ Hygiene debt | 6630 lines; split deferred to master-plan step 7 unless step 1 forces it earlier |
+| `dynamic-airborne.ts` size | 🟡 Split v1 landed, v2 deferred | 3152 lines (from 6630) after slice 4 split refactor v1 + 2026-04-22 dead-import sweep; remaining `apply*` guards parked for `dynamic_airborne_split_refactor_v2` (composer injection blocker) |
 
 ### How to keep this grid honest
 

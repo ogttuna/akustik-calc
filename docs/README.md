@@ -38,6 +38,9 @@ baseline.
 - [calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md](./calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md)
   — split refactor blueprint (v1 landed, v2 composer-injection
   follow-up deferred).
+- [calculator/SLICE_MIXED_FLOOR_WALL_EDGE_CASE_HARDENING_PLAN.md](./calculator/SLICE_MIXED_FLOOR_WALL_EDGE_CASE_HARDENING_PLAN.md)
+  — tactical plan for the active slice (master-plan step 7,
+  authored 2026-04-22).
 - [foundation/README.md](./foundation/README.md) — repo-level
   direction + rules.
 - [imports/README.md](./imports/README.md) — upstream import

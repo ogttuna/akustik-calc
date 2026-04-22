@@ -11,12 +11,22 @@ If you need the tactical detail on the active slice read
 
 ## Revalidated Snapshot
 
-Last revalidation cycle: `2026-04-21` (session-close checkpoint
-[CHECKPOINT_2026-04-21_SESSION_CLOSE_HANDOFF.md](./CHECKPOINT_2026-04-21_SESSION_CLOSE_HANDOFF.md)).
+Last revalidation cycle: `2026-04-22` (broad `pnpm check`
+re-verified green end-to-end after fixing two drift findings
+the 2026-04-21 session-close checkpoint had missed: (1) 54
+unused-import lint errors in `dynamic-airborne.ts` +
+`dynamic-airborne-masonry-calibration.ts` left from the v1
+split refactor, and (2) a `formattedValue` → `value` type-only
+typo in `raw-wall-hostile-input-route-card-matrix.test.ts` that
+passed at vitest runtime (esbuild strips types) but failed tsc.
+Both fixed 2026-04-22. Focused gate never caught these because
+it does not run package-wide lint or tsc).
 
 - **Engine full suite**: 193 / 193 files, 1068 / 1068 tests green
 - **Web full suite**: 137 / 137 files, 792 / 792 tests green + 18
   discovery helpers intentionally skipped
+- **Broad `pnpm check`**: lint + typecheck + tests + build green
+  (2026-04-22 verification)
 - **Focused calculator gate** (`pnpm calculator:gate:current`):
   5 / 5 tasks green
 
@@ -24,11 +34,15 @@ Last revalidation cycle: `2026-04-21` (session-close checkpoint
 
 `mixed_floor_wall_edge_case_hardening_v1` (master-plan step 7).
 Selected `2026-04-21` by the
-`wall_field_continuation_value_pinning_v1` closeout. Plan doc
-not yet authored — the next agent writes
-`SLICE_MIXED_FLOOR_WALL_EDGE_CASE_HARDENING_PLAN.md` before
-starting implementation, mirroring the shape of the preceding
-slice plans (archived under `docs/archive/handoffs/SLICE_*`).
+`wall_field_continuation_value_pinning_v1` closeout; plan doc
+authored `2026-04-22` at
+[SLICE_MIXED_FLOOR_WALL_EDGE_CASE_HARDENING_PLAN.md](./SLICE_MIXED_FLOOR_WALL_EDGE_CASE_HARDENING_PLAN.md).
+Scope (per the plan): four-case engine gap-close on
+`ENGINE_MIXED_GENERATED_CASES` (masonry brick, CLT wall, LSF,
+timber stud) + post-contract reconciliation across the 26
+`post-mixed-floor-wall-*` closeouts + a five-overlay cross-mode
+torture matrix on the new cases. Next slice after close:
+`good_calculator_final_audit_v1` (step 8).
 
 ## Latest Closed Slices
 
@@ -62,9 +76,12 @@ slice plans (archived under `docs/archive/handoffs/SLICE_*`).
 
 ## Engine Architectural Posture
 
-`packages/engine/src/dynamic-airborne.ts` is 3214 lines (down
-from 6630) after the 15-commit split refactor on 2026-04-21.
-Seven bounded modules live alongside:
+`packages/engine/src/dynamic-airborne.ts` is 3152 lines (down
+from 6630) after the 15-commit split refactor on 2026-04-21
+plus a dead-import sweep on 2026-04-22 (52 unused imports from
+the v1 split left in place; caught by broad `pnpm check` lint
+that the focused gate does not run). Seven bounded modules live
+alongside:
 
 - `dynamic-airborne-helpers.ts` (287) — pure math, spectrum
   weights, physical constants, delegate blending, curve anchoring,
@@ -78,14 +95,14 @@ Seven bounded modules live alongside:
   premium/moderate lab-target Rw tables + template resolvers
 - `dynamic-airborne-cavity-topology.ts` (460) — cavity +
   reinforcement + single-leaf masonry profile + trim helpers
-- `dynamic-airborne-masonry-calibration.ts` (1057) — all 9 masonry
+- `dynamic-airborne-masonry-calibration.ts` (1055) — all 9 masonry
   estimators (AAC / silicate / unfinished aircrete / Celcon
   finished / Porotherm / HELUZ / Ytong Massief / Ytong
   Separatiepaneel / Ytong Cellenbetonblok)
 - `dynamic-airborne-framed-wall.ts` (1251) — 8 framed wall
   summarizers + `estimateStudWallTargetRw`
 
-Remaining `dynamic-airborne.ts` (3214 lines) hosts the 14
+Remaining `dynamic-airborne.ts` (3152 lines) hosts the 14
 `apply*` floor / cap guards + `calculateDynamicAirborneResult` +
 `detectDynamicFamily` + `chooseBlend`. The split stops here
 because the guards recursively call the composer — the v2
@@ -141,5 +158,7 @@ time without context loss:
    agrees on the active slice, completion signals, and deferred
    tracks. If it does not, fix the drift before starting work.
 3. Run `pnpm calculator:gate:current` — confirm green baseline.
-4. Author `SLICE_MIXED_FLOOR_WALL_EDGE_CASE_HARDENING_PLAN.md`
-   before writing any implementation code for the step 7 slice.
+4. Read
+   [SLICE_MIXED_FLOOR_WALL_EDGE_CASE_HARDENING_PLAN.md](./SLICE_MIXED_FLOOR_WALL_EDGE_CASE_HARDENING_PLAN.md)
+   and start from the first un-landed deliverable in its Atomic
+   Order section.

@@ -34,10 +34,8 @@ import {
   isPlasterLikeLayer,
   isPorothermClayLayer,
   isSilicateMasonryLayer,
-  isYtongCellenbetonblokBuildUp,
   isYtongCellenbetonblokLayer,
   isYtongMassiefG2300Layer,
-  isYtongSeparatiePaneelBuildUp,
   isYtongSeparatiePaneelLayer
 } from "./dynamic-airborne-family-detection";
 import { clamp, ksRound1 } from "./math";

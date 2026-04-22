@@ -1,5 +1,4 @@
 import type {
-  AirborneContext,
   AssemblyRatings,
   DynamicAirborneConfidenceClass,
   DynamicAirborneFamilyDecisionClass,
@@ -14,12 +13,7 @@ import {
   buildRatingsFromCurve,
   buildCalibratedMassLawCurve
 } from "./curve-rating";
-import {
-  calculateAirborneCalculatorResult,
-  buildPanelProperties,
-  estimateCriticalFrequency,
-  finitePanelRadiationEfficiency
-} from "./airborne-calculator";
+import { calculateAirborneCalculatorResult } from "./airborne-calculator";
 import {
   anchorCurveToComputedMetric,
   anchorCurveToMetric,
@@ -27,41 +21,22 @@ import {
   buildScreeningDelegate,
   computeContextMetric,
   computeMicroGapEquivalenceMetric,
-  DYNAMIC_AIR_DENSITY,
-  DYNAMIC_SOUND_SPEED,
   getDelegateLabel,
-  interpolateLinear,
-  interpolateRwSeries,
-  normalizeBoundarySignal,
   octaveBandWindowWeight,
-  octaveGaussianDip,
   shiftCurve,
-  smoothstep01,
   type DelegateBlend,
   type DelegateCurve,
   type DynamicAirborneOptions,
   type DynamicAirborneResult
 } from "./dynamic-airborne-helpers";
 import {
-  hasExplicitFramingHint,
   isAacLikeLayer,
-  isBoardLikeLayer,
-  isCelconAircreteLayer,
   isCelconFinishedAircreteBuildUp,
-  isEnhancedBoardLayer,
   isHeluzClayLayer,
   isMasonryCoreLayer,
   isMasonryLikeLayer,
-  isNonHomogeneousMasonryRiskLayer,
-  isPlasterLikeLayer,
-  isPorothermClayLayer,
-  isResilientFramingHint,
-  isSilicateMasonryLayer,
   isYtongCellenbetonblokBuildUp,
-  isYtongCellenbetonblokLayer,
-  isYtongMassiefG2300Layer,
   isYtongSeparatiePaneelBuildUp,
-  isYtongSeparatiePaneelLayer,
   normalizeFramingHint,
   type DynamicFramingHint
 } from "./dynamic-airborne-family-detection";
@@ -73,25 +48,17 @@ import {
   getMixedPlainPremiumFamilyAndTemplateId,
   interpolateTemplateDbByFill,
   MIXED_PLAIN_MODERATE_LAB_TARGET_RW,
-  MIXED_PLAIN_PREMIUM_FIELD_TEMPLATE_FREQUENCIES_HZ,
-  MIXED_PLAIN_PREMIUM_LAB_TARGET_RW,
-  type MixedPlainModerateTemplateFill,
-  type MixedPlainModerateTemplateId,
-  type MixedPlainModerateTemplateProfile,
-  type MixedPlainPremiumTemplateId
+  type MixedPlainModerateTemplateId
 } from "./dynamic-airborne-mixed-plain-templates";
 import {
   buildMicroGapFillOnlyEquivalentLayers,
   buildNarrowGapContactEquivalentLayers,
   buildReducedThicknessVariant,
-  compareReinforcementCandidatePriority,
   describePrimaryCavity,
   findOuterLeafReinforcementCandidateIndex,
   isMicroGapHighFillEquivalentCavity,
-  summarizePrimaryCavitySegments,
   summarizeSingleLeafMasonryProfile,
-  trimOuterCompliantLayers,
-  type PrimaryCavitySegmentSummary
+  trimOuterCompliantLayers
 } from "./dynamic-airborne-cavity-topology";
 import {
   estimateStudWallTargetRw,
@@ -103,13 +70,7 @@ import {
   summarizeHeavyUnframedCavityRisk,
   summarizeMultileafOrderSensitivity,
   summarizePremiumSingleBoardFramedCandidate,
-  type BoardTier,
-  type DoubleStudSignature,
-  type FamilyDecisionBoundarySummary,
-  type FramedBoardSystemSummary,
-  type FramingEvidenceSummary,
-  type HeavyUnframedCavityRiskSummary,
-  type MultileafOrderSensitivitySummary
+  type FamilyDecisionBoundarySummary
 } from "./dynamic-airborne-framed-wall";
 import {
   estimateAacMassiveTargetRw,
@@ -122,37 +83,14 @@ import {
   estimateYtongMassiefG2300TargetRw,
   estimateYtongSeparatiePaneelTargetRw
 } from "./dynamic-airborne-masonry-calibration";
-import { computeLayerSurfaceMassKgM2 } from "./layer-surface-mass";
-import {
-  MIXED_PLAIN_MODERATE_FIELD_TEMPLATES,
-  type MixedPlainModerateFieldTemplateFamily
-} from "./mixed-plain-moderate-field-templates";
-import {
-  MIXED_PLAIN_PREMIUM_FIELD_TEMPLATES,
-  type MixedPlainPremiumFieldTemplateFamily
-} from "./mixed-plain-premium-field-templates";
-import {
-  detectFireRatedFilledSingleBoardFamily,
-  getFireRatedFilledSingleBoardProfile,
-  FIRE_RATED_FILLED_SINGLE_BOARD_LAB_TARGET_RW
-} from "./fire-rated-filled-single-board-corridor";
-import {
-  detectSecurityFilledSingleBoardFamily,
-  getSecurityFilledSingleBoardProfile,
-  SECURITY_FILLED_SINGLE_BOARD_LAB_TARGET_RW
-} from "./security-filled-single-board-corridor";
-import {
-  detectSymmetricEnhancedFilledSingleBoardFamily,
-  getSymmetricEnhancedFilledSingleBoardProfile,
-  SYMMETRIC_ENHANCED_FILLED_SINGLE_BOARD_LAB_TARGET_RW
-} from "./symmetric-enhanced-filled-single-board-corridor";
-import {
-  detectMixedEnhancedFilledSingleBoardFamily,
-  getMixedEnhancedFilledSingleBoardProfile,
-  MIXED_ENHANCED_FILLED_SINGLE_BOARD_LAB_TARGET_RW
-} from "./mixed-enhanced-filled-single-board-corridor";
-import { calculateLayerTotals, classifyLayerRole, detectLeafCoreLayout, materialText, summarizeAirborneTopology } from "./airborne-topology";
-import { clamp, ksRound1, log10Safe } from "./math";
+import { MIXED_PLAIN_MODERATE_FIELD_TEMPLATES } from "./mixed-plain-moderate-field-templates";
+import { MIXED_PLAIN_PREMIUM_FIELD_TEMPLATES } from "./mixed-plain-premium-field-templates";
+import { detectFireRatedFilledSingleBoardFamily } from "./fire-rated-filled-single-board-corridor";
+import { detectSecurityFilledSingleBoardFamily } from "./security-filled-single-board-corridor";
+import { detectSymmetricEnhancedFilledSingleBoardFamily } from "./symmetric-enhanced-filled-single-board-corridor";
+import { detectMixedEnhancedFilledSingleBoardFamily } from "./mixed-enhanced-filled-single-board-corridor";
+import { materialText, summarizeAirborneTopology } from "./airborne-topology";
+import { clamp, ksRound1 } from "./math";
 import { estimateRwDb } from "./estimate-rw";
 
 const FAMILY_LABELS: Record<DynamicAirborneFamily, string> = {
