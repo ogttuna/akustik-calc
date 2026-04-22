@@ -22,7 +22,11 @@ passed at vitest runtime (esbuild strips types) but failed tsc.
 Both fixed 2026-04-22. Focused gate never caught these because
 it does not run package-wide lint or tsc).
 
-- **Engine full suite**: 193 / 193 files, 1068 / 1068 tests green
+- **Engine full suite**: 194 / 194 files, 1070 / 1070 tests green
+  (up from 193/1068 after the step-7 atomic order step 3 landed
+  the `wall-masonry-brick` case, the masonry-calibration
+  same-material-split regression guard, and the
+  `coalesceSameMaterialSolidLeaves` engine fix on 2026-04-22)
 - **Web full suite**: 137 / 137 files, 792 / 792 tests green + 18
   discovery helpers intentionally skipped
 - **Broad `pnpm check`**: lint + typecheck + tests + build green
@@ -65,6 +69,17 @@ torture matrix on the new cases. Next slice after close:
 | C4 | Floor + wall hostile-input discipline | ✅ both green | `raw-floor-hostile-input-answer-matrix.test.ts` + `raw-wall-hostile-input-answer-matrix.test.ts` |
 | C5 | Reorder invariance symmetric + asymmetric | ✅ | `wall-reorder-invariance-matrix.test.ts` |
 | C6 | Architectural hygiene (≤2000 line files) | 🟡 split v1 landed (6630 → 3214) · v2 deferred | `dynamic-airborne-*.ts` module family |
+
+## Step-7 Findings Ledger (live)
+
+Real engine accuracy bugs surfaced by the active slice's cross-mode
+torture matrix. Source-of-truth detail lives in
+[SLICE_MIXED_FLOOR_WALL_EDGE_CASE_HARDENING_PLAN.md](./SLICE_MIXED_FLOOR_WALL_EDGE_CASE_HARDENING_PLAN.md)
+"Accuracy Findings Ledger".
+
+| Id | Finding | Landed | Fix |
+|---|---|---|---|
+| F1 | Masonry calibrators fell off lane when a same-material core was split into equal halves (engine Rw drifted +4 dB on Porotherm 50+50) | 2026-04-22 | `coalesceSameMaterialSolidLeaves` helper in `dynamic-airborne-masonry-calibration.ts`; regression guard `dynamic-airborne-masonry-same-material-split-invariance.test.ts` |
 
 ## Physical Invariants (First-Class Accuracy Contract)
 

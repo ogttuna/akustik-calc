@@ -40,6 +40,72 @@ import {
 } from "./dynamic-airborne-family-detection";
 import { clamp, ksRound1 } from "./math";
 
+// Coalesce adjacent solid-leaf layers that share a materialId so
+// calibration lanes that gate on `solidLayers.length === 3` (three-
+// layer "finish + core + finish" structure) stay on-lane when a
+// user or a torture-matrix variant splits an originally-intact
+// core or finish row into equal halves. Mass and thickness are
+// preserved — the coalesced layer keeps the first fragment's
+// material reference, sums thickness + surfaceMassKgM2 across the
+// run, and non-solid layers (gaps, porous fills) pass through
+// untouched so multi-leaf topology detection downstream is
+// unaffected. Surfaced by the step-7 `wall-masonry-brick` case
+// when splitting the 100 mm Porotherm core into 50 + 50 caused
+// the `estimatePorothermPlasteredTargetRw` lane to fall off.
+function coalesceSameMaterialSolidLeaves(
+  layers: readonly ResolvedLayer[]
+): readonly ResolvedLayer[] {
+  if (layers.length === 0) {
+    return layers;
+  }
+
+  const coalesced: ResolvedLayer[] = [];
+  let pendingFragments: ResolvedLayer[] = [];
+
+  const flushPending = (): void => {
+    if (pendingFragments.length === 0) {
+      return;
+    }
+    if (pendingFragments.length === 1) {
+      coalesced.push(pendingFragments[0]);
+    } else {
+      const head = pendingFragments[0];
+      const totalThicknessMm = pendingFragments.reduce((sum, layer) => sum + layer.thicknessMm, 0);
+      const totalSurfaceMassKgM2 = pendingFragments.reduce(
+        (sum, layer) => sum + layer.surfaceMassKgM2,
+        0
+      );
+      coalesced.push({
+        ...head,
+        surfaceMassKgM2: totalSurfaceMassKgM2,
+        thicknessMm: totalThicknessMm
+      });
+    }
+    pendingFragments = [];
+  };
+
+  for (const layer of layers) {
+    const role = classifyLayerRole(layer);
+    if (!role.isSolidLeaf) {
+      flushPending();
+      coalesced.push(layer);
+      continue;
+    }
+
+    const previousFragment = pendingFragments.at(-1);
+    if (previousFragment && previousFragment.material.id === layer.material.id) {
+      pendingFragments.push(layer);
+      continue;
+    }
+
+    flushPending();
+    pendingFragments.push(layer);
+  }
+
+  flushPending();
+  return coalesced;
+}
+
 export function estimateAacMassiveTargetRw(
   layers: readonly ResolvedLayer[],
   topology: ReturnType<typeof summarizeAirborneTopology>,
@@ -135,7 +201,9 @@ export function estimateSilicateMasonryTargetRw(
     };
   }
 
-  const solidLayers = layers.filter((layer) => classifyLayerRole(layer).isSolidLeaf);
+  const solidLayers = coalesceSameMaterialSolidLeaves(layers).filter(
+    (layer) => classifyLayerRole(layer).isSolidLeaf
+  );
   if (
     solidLayers.length === 0 ||
     solidLayers.some((layer) => isPlasterLikeLayer(layer)) ||
@@ -250,7 +318,9 @@ export function estimateUnfinishedAircreteTargetRw(
     };
   }
 
-  const solidLayers = layers.filter((layer) => classifyLayerRole(layer).isSolidLeaf);
+  const solidLayers = coalesceSameMaterialSolidLeaves(layers).filter(
+    (layer) => classifyLayerRole(layer).isSolidLeaf
+  );
   if (
     solidLayers.length === 0 ||
     solidLayers.some((layer) => isPlasterLikeLayer(layer)) ||
@@ -324,7 +394,9 @@ export function estimateCelconFinishedAircreteTargetRw(
     };
   }
 
-  const solidLayers = layers.filter((layer) => classifyLayerRole(layer).isSolidLeaf);
+  const solidLayers = coalesceSameMaterialSolidLeaves(layers).filter(
+    (layer) => classifyLayerRole(layer).isSolidLeaf
+  );
   if (solidLayers.length !== 3) {
     return {
       notes,
@@ -493,7 +565,9 @@ export function estimatePorothermPlasteredTargetRw(
     };
   }
 
-  const solidLayers = layers.filter((layer) => classifyLayerRole(layer).isSolidLeaf);
+  const solidLayers = coalesceSameMaterialSolidLeaves(layers).filter(
+    (layer) => classifyLayerRole(layer).isSolidLeaf
+  );
   if (solidLayers.length !== 3) {
     return {
       notes,
@@ -642,7 +716,9 @@ export function estimateHeluzPlasteredClayTargetRw(
     };
   }
 
-  const solidLayers = layers.filter((layer) => classifyLayerRole(layer).isSolidLeaf);
+  const solidLayers = coalesceSameMaterialSolidLeaves(layers).filter(
+    (layer) => classifyLayerRole(layer).isSolidLeaf
+  );
   if (solidLayers.length !== 3) {
     return {
       notes,
@@ -749,7 +825,9 @@ export function estimateYtongMassiefG2300TargetRw(
     };
   }
 
-  const solidLayers = layers.filter((layer) => classifyLayerRole(layer).isSolidLeaf);
+  const solidLayers = coalesceSameMaterialSolidLeaves(layers).filter(
+    (layer) => classifyLayerRole(layer).isSolidLeaf
+  );
   if (solidLayers.length !== 3) {
     return {
       notes,
@@ -864,7 +942,9 @@ export function estimateYtongSeparatiePaneelTargetRw(
     };
   }
 
-  const solidLayers = layers.filter((layer) => classifyLayerRole(layer).isSolidLeaf);
+  const solidLayers = coalesceSameMaterialSolidLeaves(layers).filter(
+    (layer) => classifyLayerRole(layer).isSolidLeaf
+  );
   if (solidLayers.length !== 3) {
     return {
       notes,
@@ -969,7 +1049,9 @@ export function estimateYtongCellenbetonblokTargetRw(
     };
   }
 
-  const solidLayers = layers.filter((layer) => classifyLayerRole(layer).isSolidLeaf);
+  const solidLayers = coalesceSameMaterialSolidLeaves(layers).filter(
+    (layer) => classifyLayerRole(layer).isSolidLeaf
+  );
   if (solidLayers.length !== 3) {
     return {
       notes,

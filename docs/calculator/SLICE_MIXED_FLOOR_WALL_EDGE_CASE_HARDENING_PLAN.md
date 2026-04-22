@@ -374,6 +374,49 @@ strategy item for step 10 — renumbered as step 8 finalisation
 test) is **out of scope for this slice**; it is authored by step
 8.
 
+## Accuracy Findings Ledger
+
+Live log of real engine bugs surfaced by this slice. Each entry
+lists what the torture matrix caught + how it was fixed + the
+regression guard that pins the fix.
+
+### F1 — Masonry calibration fell off lane when same-material core split (2026-04-22, landed)
+
+- **Surfaced by**: Atomic order step 3 (adding `wall-masonry-brick`
+  to `ENGINE_MIXED_GENERATED_CASES`). The `mixed-floor-wall-generated-matrix`
+  snapshot-equality loop saw Rw=43 on the intact `porotherm_pls_100` 100 mm
+  core but Rw=47 when the split-plan `[{parts:[50,50], rowIndex:1}]`
+  fragmented the core into two 50 mm layers. Physically equivalent
+  stack, +4 dB engine drift — real accuracy bug.
+- **Root cause**: the nine calibrators in
+  `packages/engine/src/dynamic-airborne-masonry-calibration.ts`
+  (AAC massive, Silicate, Celcon finished, unfinished aircrete,
+  Ytong Massief, Ytong Separatiepaneel, Ytong Cellenbetonblok,
+  Porotherm plastered, HELUZ plastered) gate on
+  `solidLayers.length === 3` to recognize the "finish + core +
+  finish" topology. A same-material split of the core produces 4
+  solid leaves and the calibration returns `targetRw: null`,
+  dropping back to the generic single-leaf lane that overestimates
+  Rw by ~4 dB on Porotherm geometry.
+- **Fix**: added `coalesceSameMaterialSolidLeaves(layers)` helper
+  at the top of `dynamic-airborne-masonry-calibration.ts`. Merges
+  consecutive solid-leaf layers that share `material.id` by
+  summing `thicknessMm` and `surfaceMassKgM2`, preserving non-
+  solid layers (gaps, porous fills) so downstream multi-leaf
+  topology detection stays intact. Wired into all nine calibrators
+  via `coalesceSameMaterialSolidLeaves(layers).filter(...)` before
+  the `.length === 3` check.
+- **Regression guard**:
+  `dynamic-airborne-masonry-same-material-split-invariance.test.ts`
+  pins Rw=43 for Porotherm 100 mm intact, 50+50 symmetric split,
+  40+60 asymmetric split, and 6.5+6.5 plaster-finish split —
+  every configuration must match intact.
+- **Behaviour preservation**: the coalesce pass is a no-op on
+  stacks without adjacent same-material solid leaves (the existing
+  benchmark tests). Confirmed by the preset-surface benchmark
+  tests staying green end-to-end after the fix (Rw=43 Porotherm
+  still pinned, other materials untouched).
+
 ## Deliverables
 
 1. **`mixed-floor-wall-generated-test-helpers.ts`** — four new

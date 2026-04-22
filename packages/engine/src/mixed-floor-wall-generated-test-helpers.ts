@@ -419,6 +419,18 @@ const HEAVY_COMPOSITE_WALL_ROWS: readonly LayerInput[] = [
   { materialId: "concrete", thicknessMm: 80 }
 ];
 
+// Step-7 gap-close: mirrors the `masonry_brick_wall` preset
+// (apps/web/features/workbench/preset-definitions.ts:120-123).
+// Exercises the 2026-04-21 lab-fallback anchor path that caught
+// the ISO 140-4 R'w ≤ Rw violation on Wienerberger Porotherm
+// assemblies — `applyVerifiedAirborneCatalogAnchor` falls back
+// to the lab-mode catalog row for field/building contexts.
+const MASONRY_BRICK_WALL_ROWS: readonly LayerInput[] = [
+  { materialId: "dense_plaster", thicknessMm: 13 },
+  { materialId: "porotherm_pls_100", thicknessMm: 100 },
+  { materialId: "dense_plaster", thicknessMm: 13 }
+];
+
 export const ENGINE_MIXED_GENERATED_CASES: readonly EngineMixedGeneratedCase[] = [
   {
     fieldOptions: {
@@ -929,6 +941,24 @@ export const ENGINE_MIXED_GENERATED_CASES: readonly EngineMixedGeneratedCase[] =
     rows: HEAVY_COMPOSITE_WALL_ROWS,
     splitPlans: [
       { parts: [40, 40], rowIndex: 0 },
+      { parts: [50, 50], rowIndex: 1 }
+    ],
+    studyMode: "wall"
+  },
+  {
+    fieldOptions: {
+      airborneContext: WALL_FIELD_CONTEXT,
+      calculator: "dynamic",
+      targetOutputs: WALL_FIELD_OUTPUTS
+    },
+    id: "wall-masonry-brick",
+    label: "Masonry brick wall (lab-fallback anchor exercise)",
+    labOptions: { calculator: "dynamic", targetOutputs: WALL_LAB_OUTPUTS },
+    rows: MASONRY_BRICK_WALL_ROWS,
+    // Split the 100 mm porotherm core into two 50 mm halves —
+    // ensures the duplicate-swap grid exercises the core row
+    // while keeping symmetric plaster facings intact.
+    splitPlans: [
       { parts: [50, 50], rowIndex: 1 }
     ],
     studyMode: "wall"
