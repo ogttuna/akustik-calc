@@ -24,9 +24,12 @@ baseline.
 
 ## Supporting Reads
 
-- [calculator/CHECKPOINT_2026-04-21_SESSION_CLOSE_HANDOFF.md](./calculator/CHECKPOINT_2026-04-21_SESSION_CLOSE_HANDOFF.md)
-  — latest session narrative + explicit deferral ledger. Read
-  this before any archived checkpoint.
+- [calculator/CHECKPOINT_2026-04-22_SESSION_CLOSE_HANDOFF.md](./calculator/CHECKPOINT_2026-04-22_SESSION_CLOSE_HANDOFF.md)
+  — latest session narrative (steps 7 + 7b closed, 12
+  commits, 2 real engine bug fixes) + explicit deferral
+  ledger (6 tracks). Read this before any archived checkpoint.
+  The 2026-04-21 checkpoint is now archived at
+  `docs/archive/handoffs/`.
 - [calculator/SYSTEM_MAP.md](./calculator/SYSTEM_MAP.md) —
   end-to-end system model, runtime boundaries, persistence
   posture, test surface map.
@@ -71,7 +74,7 @@ wins.
 ## Fast Paths
 
 - "Where do I resume implementation now?" →
-  [calculator/CHECKPOINT_2026-04-21_SESSION_CLOSE_HANDOFF.md](./calculator/CHECKPOINT_2026-04-21_SESSION_CLOSE_HANDOFF.md)
+  [calculator/CHECKPOINT_2026-04-22_SESSION_CLOSE_HANDOFF.md](./calculator/CHECKPOINT_2026-04-22_SESSION_CLOSE_HANDOFF.md)
   → [calculator/NEXT_IMPLEMENTATION_PLAN.md](./calculator/NEXT_IMPLEMENTATION_PLAN.md)
   → `pnpm calculator:gate:current`.
 - "What is stable right now?" →
@@ -83,14 +86,14 @@ wins.
   → [calculator/MASTER_PLAN.md](./calculator/MASTER_PLAN.md) §3
   state grid + §4 master sequence.
 - "What was the session narrative?" →
-  [calculator/CHECKPOINT_2026-04-21_SESSION_CLOSE_HANDOFF.md](./calculator/CHECKPOINT_2026-04-21_SESSION_CLOSE_HANDOFF.md).
+  [calculator/CHECKPOINT_2026-04-22_SESSION_CLOSE_HANDOFF.md](./calculator/CHECKPOINT_2026-04-22_SESSION_CLOSE_HANDOFF.md).
 
 ## Status Reading Rule
 
 - Use `CURRENT_STATE.md` for "what is stable right now".
 - Use `NEXT_IMPLEMENTATION_PLAN.md` for "what exactly should be
   implemented next".
-- Use `CHECKPOINT_2026-04-21_SESSION_CLOSE_HANDOFF.md` for the
+- Use `CHECKPOINT_2026-04-22_SESSION_CLOSE_HANDOFF.md` for the
   most recent session narrative.
 - Use older checkpoints under `docs/archive/handoffs/` only when
   you need the historical context that predates the living

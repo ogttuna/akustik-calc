@@ -112,7 +112,9 @@ Every slice under this plan obeys:
 
 ## Reading Path On Resume
 
-1. [CHECKPOINT_2026-04-21_SESSION_CLOSE_HANDOFF.md](./CHECKPOINT_2026-04-21_SESSION_CLOSE_HANDOFF.md)
+1. [CHECKPOINT_2026-04-22_SESSION_CLOSE_HANDOFF.md](./CHECKPOINT_2026-04-22_SESSION_CLOSE_HANDOFF.md)
+   — most recent session narrative; the 2026-04-21 checkpoint
+   is archived at `docs/archive/handoffs/`.
 2. [CURRENT_STATE.md](./CURRENT_STATE.md)
 3. [MASTER_PLAN.md](./MASTER_PLAN.md) §3 (state grid) + §4 (master
    sequence) + §6 (accuracy preservation contract) + §8

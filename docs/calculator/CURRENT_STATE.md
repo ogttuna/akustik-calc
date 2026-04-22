@@ -11,29 +11,22 @@ If you need the tactical detail on the active slice read
 
 ## Revalidated Snapshot
 
-Last revalidation cycle: `2026-04-22` (broad `pnpm check`
-re-verified green end-to-end after fixing two drift findings
-the 2026-04-21 session-close checkpoint had missed: (1) 54
-unused-import lint errors in `dynamic-airborne.ts` +
-`dynamic-airborne-masonry-calibration.ts` left from the v1
-split refactor, and (2) a `formattedValue` → `value` type-only
-typo in `raw-wall-hostile-input-route-card-matrix.test.ts` that
-passed at vitest runtime (esbuild strips types) but failed tsc.
-Both fixed 2026-04-22. Focused gate never caught these because
-it does not run package-wide lint or tsc).
+Last revalidation cycle: `2026-04-22` (session close —
+checkpoint
+[CHECKPOINT_2026-04-22_SESSION_CLOSE_HANDOFF.md](./CHECKPOINT_2026-04-22_SESSION_CLOSE_HANDOFF.md)).
+12 commits on main closing steps 7 + 7b with 2 real engine
+accuracy bug fixes (F1 masonry calibrator coalesce, F2
+verified-catalog coalesce) + 198 corridor-surface VALUE pins
++ 5 cross-cell physical invariant tests + the 2026-04-21 lint
++ typecheck drift corrected.
 
-- **Engine full suite**: 197 / 197 files, 1108 / 1108 tests green
-  (up from 193/1068 after step-7 atomic order steps 3-10 landed
-  four new wall cases in `ENGINE_MIXED_GENERATED_CASES`
-  (`wall-masonry-brick`, `wall-clt-local`, `wall-lsf-knauf`,
-  `wall-timber-stud`) + two engine fixes (masonry-calibration
-  and catalog-match same-material-split coalesce) + two
-  same-material-split regression guards + an 8-overlay cross-
-  mode torture matrix (32 assertions covering hostile input,
-  reorder, save-load, duplicate-swap, history-replay, physical
-  invariants, engine-direct drift-guard, and many-layer
-  stability on the four new cases) + the slice-close post-
-  contract on 2026-04-22)
+- **Engine full suite**: 199 / 199 files, 1135 / 1135 tests green
+  (up from 193/1068 pre-session; step-7 landed 4 wall cases +
+  F1/F2 engine fixes + 32-assertion cross-mode torture matrix
+  + 2 regression guards + post-contract; step-7b landed the
+  18-cell corridor VALUE matrix + 5 cross-cell invariants +
+  post-contract; one flake fix on `floor-library-sweep.test.ts`
+  timeout)
 - **Web full suite**: 137 / 137 files, 792 / 792 tests green + 18
   discovery helpers intentionally skipped
 - **Broad `pnpm check`**: lint + typecheck + tests + build green
@@ -179,8 +172,10 @@ time without context loss:
 
 ## Resume Order For The Next Agent
 
-1. Read [CHECKPOINT_2026-04-21_SESSION_CLOSE_HANDOFF.md](./CHECKPOINT_2026-04-21_SESSION_CLOSE_HANDOFF.md)
-   for the session narrative.
+1. Read [CHECKPOINT_2026-04-22_SESSION_CLOSE_HANDOFF.md](./CHECKPOINT_2026-04-22_SESSION_CLOSE_HANDOFF.md)
+   for the most recent session narrative (12 commits,
+   steps 7 + 7b closed). The 2026-04-21 checkpoint lives under
+   `docs/archive/handoffs/` for historical context.
 2. Confirm the triangle (this file +
    [MASTER_PLAN.md](./MASTER_PLAN.md) +
    [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md))
