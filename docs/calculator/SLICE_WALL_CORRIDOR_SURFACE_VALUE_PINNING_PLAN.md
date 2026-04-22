@@ -46,6 +46,134 @@ advance together):
    a fresh analysis with better information can revise the
    selection (AP4-compatible since nothing is loosened).
 
+## Implementation Recon (2026-04-22)
+
+Concrete code references so the next agent does not re-research.
+Every file path is relative to repo root; every line range is
+from the 2026-04-22 state (commit `61e2730`).
+
+### R1 — Current corridor test surface
+
+File: `packages/engine/src/dynamic-airborne-wall-selector-trace-matrix.test.ts`
+
+The `CASES` array at lines 80-233 contains **6 `WallSelectorTraceCase`
+entries** that test **3 distinct `dynamicFamily` ids** (the corridor
+"labels" in the plan below are TEST CATEGORIES, not all distinct
+family ids):
+
+| Case id (lines) | `detectedFamily` | Context | Pinned outputs (current) |
+|---|---|---|---|
+| `clear-double-leaf-field` (82) | `double_leaf` | `FIELD_CONTEXT` | `rwDb=46`, `rwPrimeDb=46`, `dnTwDb=47` |
+| `held-aac-boundary-field` (102) | `lined_massive_wall` | `FIELD_CONTEXT` | `rwDb=44`, `rwPrimeDb=44`, `dnTwDb=45` |
+| `clear-lined-massive-field` (133) | `lined_massive_wall` | `FIELD_CONTEXT` | `rwDb=47`, `rwPrimeDb=47`, `dnTwDb=47` |
+| `held-g5-sibling-building` (153) | `lined_massive_wall` *(boundary ambiguity — labelled g5_sibling)* | `BUILDING_CONTEXT` | `rwDb=45`, `rwPrimeDb=45`, `dnTwDb=47` |
+| `non-aac-heavy-core-trim-control` (183) | `lined_massive_wall` | `BUILDING_CONTEXT` | `rwDb=47`, `rwPrimeDb=47`, `dnTwDb=49` |
+| `strong-double-stud-lab-control` (211) | `double_stud_system` | `LAB_DOUBLE_STUD_CONTEXT` | `rwDb=61` |
+
+**Current coverage**: ~18 pinned cells total (6 cases × 3 outputs
+max). The 6 corridor LABELS in the plan's scope are represented
+but only under **ONE context each**, not the full 3 (lab × field
+× building). `aac_boundary`, `g5_sibling`, `heavy_core_trim`,
+`lab_double_stud` are not separate family ids — they are
+narrative labels mapped to `lined_massive_wall` or
+`double_stud_system` family detection via specific layer shapes.
+
+Context constants (same file):
+- `FIELD_CONTEXT` (14-22): panelHeight 2700, RT 0.5, V=30 m³
+- `BUILDING_CONTEXT` (24-30): panelHeight 2800, RT 0.6, V=45 m³
+- `LAB_DOUBLE_STUD_CONTEXT` (32-39): `element_lab` + studType +
+  sharedTrack=independent
+
+### R2 — Engine output plumbing per context
+
+File: `packages/engine/src/calculate-assembly.ts:1112-1123`
+
+`AssemblyCalculation.metrics` field mapping for the 9 wall
+outputs:
+
+| Output | Metric field | Available in lab | Available in field | Available in building |
+|---|---|---|---|---|
+| Rw | `estimatedRwDb` | ✅ | ✅ | ✅ |
+| R'w | `estimatedRwPrimeDb` | ❌ (null) | ✅ | ✅ |
+| Dn,w | `estimatedDnWDb` | ❌ (null) | ✅ | ✅ |
+| Dn,A | `estimatedDnADb` | ❌ (null) | ✅ | ✅ |
+| DnT,w | `estimatedDnTwDb` | ❌ (null) | ✅ | ✅ |
+| DnT,A | `estimatedDnTADb` | ❌ (null) | ✅ | ✅ |
+| STC | `estimatedStc` | ✅ | ✅ | ✅ |
+| C | `estimatedCDb` | ✅ | ✅ | ✅ |
+| Ctr | `estimatedCtrDb` | ✅ | ✅ | ✅ |
+
+Lab context only produces **4 outputs** (Rw/STC/C/Ctr); field +
+building produce all **9**. Realistic pin target:
+
+**6 corridors × (4 lab + 9 field + 9 building) = 132 numerical
+pins** (not 162 — the plan's earlier estimate was a worst-case
+count that did not account for lab being field-output-null).
+
+### R3 — Workbench parallel surface
+
+File: `apps/web/features/workbench/wall-selector-output-origin-card-matrix.test.ts:73-248`
+
+Mirrors the engine trace matrix: pins card-level `value`
+strings + `status` + `tone` but **does not** pin the underlying
+numeric metrics. Dimension C of this slice is where the
+workbench-side VALUE pins land (optional stretch per plan
+scope).
+
+### R4 — Deep-hybrid swap files (out of scope confirmed)
+
+Four files under `packages/engine/src/dynamic-airborne-deep-hybrid-swap-*.test.ts`
+(heavy_core, aac_d700_100, aac_d700_120, aac_g5). All pin the
+**no-silent-≥8-dB-adjacent-swap-jump invariant** only — not
+per-cell VALUEs. Cohorts cover porotherm, silka, concrete,
+ytong; do NOT overlap with the 6 corridor labels in this
+slice's scope. Safe to exclude per Dimension B deferral.
+
+### R5 — Sub-finding risk per corridor
+
+Predicted probability of surfacing an engine bug during VALUE
+discovery (based on step-7 F1 + F2 patterns):
+
+| Corridor | Risk | Why |
+|---|---|---|
+| `lined_massive_wall` (AAC / porotherm cases) | **high** | F1 + F2 both apply: AAC D700 masonry-calibrator gates on `solidLayers.length === 3` (coalesce-sensitive); exact catalog anchor on board type matters. Three of the 6 current cases pin this family — drift probability compounds. |
+| `g5_sibling` | **high** | Case `held-g5-sibling-building` already exhibits family-boundary ambiguity (detected as `lined_massive_wall` not a distinct `g5_sibling` family). New pins on this corridor may surface formula drift. |
+| `aac_boundary` | **medium** | Boundary-hold logic (line 114-120 of trace matrix) implies ambiguous catalog matching near the decision surface. Not currently pinned under lab OR building — new pins will reveal order sensitivity. |
+| `double_leaf` | **medium** | F2 catalog-match order sensitivity risk — gypsum vs. diamond board swap could flip catalog rank. |
+| `heavy_core_trim` | **low** | Trim logic (line 201-203) is defensive; outer rockwool/glasswool layers are not exact-catalog-gated. Formula-owned lane is stable. |
+| `lab_double_stud` | **low** | Framed-wall blend `double_stud_surrogate_blend+double_stud_calibration` is not order-sensitive. Lab-only context avoids field geometry gates. |
+
+### R6 — Physical plausibility windows (ISO 717-1:2020)
+
+External acoustics knowledge — use as sanity ceilings when
+discovering pins. A cell outside these windows is a candidate
+sub-finding.
+
+| Output | Plausibility window (lightweight + masonry walls) | Invariant |
+|---|---|---|
+| Rw (lab) | 35–65 dB | — |
+| R'w (field) | Rw − 2 to −6 dB | **I1: R'w ≤ Rw** |
+| Dn,w | Rw − 3 to −8 dB | — |
+| Dn,A | Dn,w − 5 to −10 dB | **I2: \|Dn,A − (Dn,w + C)\| ≤ 1 dB** |
+| DnT,w | Dn,w + 0 to +5 dB (V=30-45m³ RT=0.5-0.6 s) | **I3: DnT,w ≥ Dn,w for V>30m³** |
+| DnT,A | DnT,w − 5 to −10 dB | — |
+| STC | Rw ± 3 dB (ASTM tracks ISO loosely) | — |
+| C | −1 to −5 dB | — |
+| Ctr | −3 to −8 dB (Ctr < C typically) | — |
+
+Outlier flags (block slice close until explained):
+- R'w > Rw
+- Rw, R'w, DnT,w outside [30, 70] dB
+- C > 0 dB OR C < −10 dB
+- Ctr > C (traffic noise usually penalizes more than pink)
+- STC drift > 3 dB vs. Rw
+
+### R7 — Focused gate entry point
+
+File: `tools/dev/run-calculator-current-gate.ts:105` (the line
+that added the step-7 post-contract). Append this slice's new
+files to the same engine args block.
+
 ## Why This Slice Exists
 
 Primary objective alignment: **accuracy discipline on the
@@ -75,21 +203,37 @@ Three dimensions.
 
 File: `packages/engine/src/dynamic-airborne-wall-selector-value-pins.test.ts` (new)
 
-Coverage: 6 corridor families × 3 contexts × all 9 wall
-outputs = ~162 cells. Extend from the current partial pins to
-a full matrix:
+Coverage: **6 corridor labels × 3 contexts × up to 9 outputs =
+132 realistic pins** (lab produces only 4 of 9; field + building
+each produce 9). The source layer stacks are lifted directly
+from the existing trace matrix `CASES` array (§R1) so behaviour
+is identical to what's already tested — this slice adds
+missing output + context combinations rather than inventing
+new stacks.
 
-| Family | Representative layer stack | Lab context | Field context | Building context |
-|---|---|---|---|---|
-| `double_leaf` | from existing trace matrix case | Rw + STC + C + Ctr | R'w + Dn,w + Dn,A + DnT,w + DnT,A | same + building anchor |
-| `lined_massive_wall` | from existing trace matrix case | same | same | same |
-| `aac_boundary` | from existing trace matrix case | same | same | same |
-| `g5_sibling` | from existing trace matrix case | same | same | same |
-| `heavy_core_trim` | from existing trace matrix case | same | same | same |
-| `lab_double_stud` | from existing trace matrix case | same | same | same |
+| Corridor label | Layer fixture source | Detected family (per §R1) | Lab (4 outputs) | Field (9 outputs) | Building (9 outputs) |
+|---|---|---|---|---|---|
+| `double_leaf` | `CASES[0]` clear-double-leaf | `double_leaf` | Rw, STC, C, Ctr | all 9 | all 9 |
+| `lined_massive_wall` | `CASES[2]` clear-lined-massive | `lined_massive_wall` | same | all 9 | all 9 |
+| `aac_boundary` | `CASES[1]` held-aac-boundary | `lined_massive_wall` | same | all 9 | all 9 |
+| `g5_sibling` | `CASES[3]` held-g5-sibling | `lined_massive_wall` (boundary) | same | all 9 | all 9 |
+| `heavy_core_trim` | `CASES[4]` non-aac-heavy-core-trim | `lined_massive_wall` | same | all 9 | all 9 |
+| `lab_double_stud` | `CASES[5]` strong-double-stud-lab | `double_stud_system` | same | all 9 | all 9 |
 
 For each cell, pin the exact value (`toBe(exactValue)`, not
-`toBeGreaterThanOrEqual`).
+`toBeGreaterThanOrEqual`). Lab cells that are null-by-design
+(R'w, Dn,w, etc.) pin as `toBeNull()` — this is ALSO a drift
+guard because a surprising non-null value would flag a lab-
+side leak.
+
+Contexts used:
+- Lab: `LAB_DOUBLE_STUD_CONTEXT` (or a pared-down `ELEMENT_LAB_CONTEXT`
+  for non-stud corridors — define locally if `LAB_DOUBLE_STUD_CONTEXT`'s
+  studType/studSpacingMm leak into non-stud corridor results).
+- Field: `FIELD_CONTEXT` (V=30 m³ RT=0.5 s) — already used in
+  the trace matrix.
+- Building: `BUILDING_CONTEXT` (V=45 m³ RT=0.6 s) — already
+  used in the trace matrix.
 
 ### Dimension B — Deep-hybrid swap corridor VALUE pins
 
@@ -149,32 +293,73 @@ moves to a follow-up slice.
 
 ## Implementation Steps (Atomic Order)
 
-1. **Author this plan doc** (done, this commit).
+Each numbered step is its own commit unless noted. Steps 3-5
+(skeleton → discovery → pin) should land as three separate
+commits so bisect is easy if a late sub-finding surfaces.
+
+1. **Author this plan doc** (done, commit `61e2730` + recon
+   iteration 2026-04-22 further refined scope).
 2. **Pre-slice baseline snapshot** — `pnpm calculator:gate:current`
-   + `pnpm check` both green (verified 2026-04-22 ahead of plan
-   authoring — 5/5 and exit 0).
+   + `pnpm check` both green. Verified 2026-04-22 (engine
+   197/197 files + 1108/1108 tests; broad check exit 0; focused
+   gate 5/5). Rollback target per AP1.
 3. **Dimension A skeleton** — author
-   `dynamic-airborne-wall-selector-value-pins.test.ts` with
-   `it.each` over corridor families × contexts × outputs; each
-   assertion initially `toBeDefined()` + `Number.isFinite`.
-   Land + run green first.
-4. **Discover VALUE pins** — run skeleton in verbose mode,
-   capture every output value, pin with `toBe(exactValue)`.
-   Flag any physically suspect cell as a sub-finding.
-5. **Sub-finding remediation** — each flagged cell either
-   (a) explain + inline-comment + pin, or (b) open an engine
-   fix sub-slice. Close sub-findings before slice close.
-6. **Focused gate + engine full suite** after every cell pin
-   batch.
-7. **Dimension C (optional)** — if time budget allows, author
-   the workbench card-surface test.
-8. **Post-contract authoring** — record closure + select step 8.
-9. **Triangle + grid + master-plan updates.**
-10. **Focused gate config update** — add new test files.
+   `packages/engine/src/dynamic-airborne-wall-selector-value-pins.test.ts`.
+   Structure: `describe.each(CORRIDOR_LABELS)` × `describe.each(CONTEXTS)`
+   × `it('pins 9 outputs', ...)`. Each assertion initially
+   `toBeDefined()` (non-null field outputs in field/building
+   context; null-tolerant in lab). Lift layer fixtures from
+   `CASES[0..5]` in the existing trace matrix (§R1) so behaviour
+   stays identical to what's already tested. Run focused gate —
+   must stay green.
+4. **Discovery run** — replace `toBeDefined()` with
+   `console.log` + `expect(snapshotCaptured).toBe(true)`. Run
+   in verbose mode. Capture every output value. Build the
+   `EXPECTED[corridor][context]` table locally. Do not commit
+   with console.logs — this is a scratch step.
+5. **Value-pin commit** — replace assertions with
+   `toBe(exactValue)` for every non-null cell and
+   `toBeNull()` for null-by-design lab cells. Before pinning,
+   cross-check each value against the §R6 plausibility window:
+   any outlier becomes a sub-finding before the pin lands.
+6. **Sub-finding remediation (if any)** — for each flagged
+   cell, either (a) explain + inline-comment + pin the
+   observed value (if it has a defended physical explanation),
+   or (b) open an engine fix sub-slice (pattern: F1/F2 from
+   step 7). Close the sub-finding ledger before proceeding.
+   Full engine suite green after each fix.
+7. **Dimension C (optional stretch)** — if time budget allows,
+   author
+   `apps/web/features/workbench/wall-selector-output-origin-card-value-pins.test.ts`
+   pinning card-level `value`/`status`/`tone` for each corridor
+   × context cell. Cross-checks engine-to-workbench
+   consistency. Skip if (a) sub-finding remediation consumed
+   the budget OR (b) Dimension A already landed the accuracy
+   discipline without needing a card-surface audit.
+8. **Post-contract authoring** —
+   `packages/engine/src/post-wall-corridor-surface-value-pinning-v1-next-slice-selection-contract.test.ts`.
+   Follow the step-7 post-contract shape. Selects
+   `good_calculator_final_audit_v1` (step 8).
+9. **Focused gate config update** —
+   `tools/dev/run-calculator-current-gate.ts` engine args block
+   (after line 105 per §R7) gets 2 new entries: the new matrix
+   + the new post-contract. If Dimension C lands, add the
+   workbench file to the web args block too.
+10. **Triangle + grid updates** — CURRENT_STATE (active slice
+    → step 8; findings ledger; test counts); MASTER_PLAN §3
+    grid (flip wall selector families row 🟡 Family narrative
+    → 🟡 Family VALUE-pinned, deep-hybrid row noted as
+    deferred; C2/C3 rows flip to ✅); MASTER_PLAN §4 sequence
+    (step 7b marked ✅ landed; step 8 marked ⭐ next);
+    NEXT_IMPLEMENTATION_PLAN (active slice → step 8 with plan
+    doc TBD); docs/README supporting-reads swap.
 11. **Broad `pnpm check`** end-to-end green.
-12. **Slice plan archive move** — `git mv` this file to
-    `docs/archive/handoffs/`.
-13. **Atomic closing commit** with the slice summary.
+12. **Slice plan archive move** — `git mv` this file from
+    `docs/calculator/` to `docs/archive/handoffs/`.
+13. **Atomic closing commit** with the slice summary. Expected
+    delta: +1 engine test file (~160 assertions over 18 cells
+    + sub-assertions), +1 post-contract (4 assertions), +0 to
+    +1 workbench test file, ~5 doc file edits.
 
 ## Expected Outcomes
 
