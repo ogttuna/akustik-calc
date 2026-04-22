@@ -43,16 +43,25 @@ it does not run package-wide lint or tsc).
 
 ## Active Slice
 
-`good_calculator_final_audit_v1` (master-plan step 8).
-Selected `2026-04-22` by the
-`mixed_floor_wall_edge_case_hardening_v1` closeout contract
-`packages/engine/src/post-mixed-floor-wall-edge-case-hardening-v1-next-slice-selection-contract.test.ts`.
-Plan doc not yet authored — the next agent writes
-`SLICE_GOOD_CALCULATOR_FINAL_AUDIT_PLAN.md` before starting
-implementation. Step 8 authors the executable grid-consistency
-test, verifies every C1-C6 completion signal with an
-executable assertion, and opens the post-calculator
-productization roadmap (§1 non-goals).
+`wall_corridor_surface_value_pinning_v1` (master-plan step
+7b — inserted between closed step 7 and pending step 8).
+Selected `2026-04-22` by a post-step-7 ROI re-analysis that
+re-prioritized the corridor-surface VALUE-pin gap ahead of
+the final audit. The step-7 post-contract selected step 8;
+the re-selection supersedes (not erases) that line because
+post-contracts lock what CLOSED, not what MUST come next —
+a fresh analysis with better information can revise the
+selection without loosening AP4.
+
+Scope: extend VALUE-pin discipline from presets to the 6
+wall selector corridor families (`double_leaf`,
+`lined_massive_wall`, `aac_boundary`, `g5_sibling`,
+`heavy_core_trim`, `lab_double_stud`) × 3 contexts × 9
+outputs = ~162 new numerical pins. Plan doc authored
+2026-04-22 at
+[SLICE_WALL_CORRIDOR_SURFACE_VALUE_PINNING_PLAN.md](./SLICE_WALL_CORRIDOR_SURFACE_VALUE_PINNING_PLAN.md).
+Closes C2 + C3 🟡 → ✅; after this, step 8 runs on a
+fully-green grid.
 
 ## Latest Closed Slices
 
@@ -184,6 +193,6 @@ time without context loss:
    tracks. If it does not, fix the drift before starting work.
 3. Run `pnpm calculator:gate:current` — confirm green baseline.
 4. Read
-   [SLICE_MIXED_FLOOR_WALL_EDGE_CASE_HARDENING_PLAN.md](./SLICE_MIXED_FLOOR_WALL_EDGE_CASE_HARDENING_PLAN.md)
-   and start from the first un-landed deliverable in its Atomic
-   Order section.
+   [SLICE_WALL_CORRIDOR_SURFACE_VALUE_PINNING_PLAN.md](./SLICE_WALL_CORRIDOR_SURFACE_VALUE_PINNING_PLAN.md)
+   and start from the first un-landed deliverable in its
+   Atomic Order section.

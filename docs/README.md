@@ -38,6 +38,9 @@ baseline.
 - [calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md](./calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md)
   — split refactor blueprint (v1 landed, v2 composer-injection
   follow-up deferred).
+- [calculator/SLICE_WALL_CORRIDOR_SURFACE_VALUE_PINNING_PLAN.md](./calculator/SLICE_WALL_CORRIDOR_SURFACE_VALUE_PINNING_PLAN.md)
+  — tactical plan for the active slice (master-plan step 7b,
+  authored 2026-04-22).
 - [archive/handoffs/SLICE_MIXED_FLOOR_WALL_EDGE_CASE_HARDENING_PLAN.md](./archive/handoffs/SLICE_MIXED_FLOOR_WALL_EDGE_CASE_HARDENING_PLAN.md)
   — tactical plan for master-plan step 7 (closed 2026-04-22).
   Reference doc for future agents investigating the same-
