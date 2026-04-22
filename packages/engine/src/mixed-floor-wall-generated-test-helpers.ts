@@ -28,6 +28,37 @@ export const WALL_FIELD_CONTEXT: AirborneContext = {
   receivingRoomVolumeM3: 45
 };
 
+// Step-7 LSF + timber-stud wall cases carry their preset's
+// `airborneDefaults` (apps/web/features/workbench/preset-definitions.ts:
+// 154-159 + 176-181) directly into the engine-level test case.
+// The workbench-side `loadPreset` → `liveAirborneContext` path
+// composes these same four fields; engine-only fixtures skip
+// that path and set them inline so family-detection sees the
+// studType every time.
+const FRAMED_WALL_LAB_CONTEXT_LSF: AirborneContext = {
+  airtightness: "good",
+  connectionType: "line_connection",
+  studSpacingMm: 600,
+  studType: "light_steel_stud"
+};
+
+const FRAMED_WALL_FIELD_CONTEXT_LSF: AirborneContext = {
+  ...WALL_FIELD_CONTEXT,
+  ...FRAMED_WALL_LAB_CONTEXT_LSF
+};
+
+const FRAMED_WALL_LAB_CONTEXT_TIMBER: AirborneContext = {
+  airtightness: "good",
+  connectionType: "line_connection",
+  studSpacingMm: 600,
+  studType: "wood_stud"
+};
+
+const FRAMED_WALL_FIELD_CONTEXT_TIMBER: AirborneContext = {
+  ...WALL_FIELD_CONTEXT,
+  ...FRAMED_WALL_LAB_CONTEXT_TIMBER
+};
+
 export type SplitPlan = {
   parts: readonly number[];
   rowIndex: number;
@@ -444,6 +475,23 @@ const CLT_LOCAL_WALL_ROWS: readonly LayerInput[] = [
   { materialId: "gypsum_board", thicknessMm: 12.5 },
   { materialId: "clt_panel", thicknessMm: 140 },
   { materialId: "gypsum_board", thicknessMm: 12.5 }
+];
+
+// Step-7 gap-close: mirrors the `light_steel_stud_wall` preset
+// (apps/web/features/workbench/preset-definitions.ts:146-159).
+// Anchors the Knauf exact catalog row
+// `knauf_lsf_2x2_12_5_70_glasswool_lab_416702_2026` (Rw=55).
+// First case in ENGINE_MIXED_GENERATED_CASES that threads
+// `airborneDefaults` → engine `airborneContext.studType` so the
+// framed-wall family detection in `dynamic-airborne-framed-wall.ts`
+// fires on every variant + duplicate-swap permutation.
+const LSF_KNAUF_WALL_ROWS: readonly LayerInput[] = [
+  { materialId: "acoustic_gypsum_board", thicknessMm: 12.5 },
+  { materialId: "acoustic_gypsum_board", thicknessMm: 12.5 },
+  { materialId: "air_gap", thicknessMm: 5 },
+  { materialId: "glasswool", thicknessMm: 70 },
+  { materialId: "acoustic_gypsum_board", thicknessMm: 12.5 },
+  { materialId: "acoustic_gypsum_board", thicknessMm: 12.5 }
 ];
 
 export const ENGINE_MIXED_GENERATED_CASES: readonly EngineMixedGeneratedCase[] = [
@@ -994,6 +1042,34 @@ export const ENGINE_MIXED_GENERATED_CASES: readonly EngineMixedGeneratedCase[] =
     // stay intact.
     splitPlans: [
       { parts: [70, 70], rowIndex: 1 }
+    ],
+    studyMode: "wall"
+  },
+  {
+    fieldOptions: {
+      airborneContext: FRAMED_WALL_FIELD_CONTEXT_LSF,
+      calculator: "dynamic",
+      targetOutputs: WALL_FIELD_OUTPUTS
+    },
+    id: "wall-lsf-knauf",
+    label: "LSF Knauf exact (studType plumbing proof)",
+    labOptions: {
+      airborneContext: FRAMED_WALL_LAB_CONTEXT_LSF,
+      calculator: "dynamic",
+      targetOutputs: WALL_LAB_OUTPUTS
+    },
+    rows: LSF_KNAUF_WALL_ROWS,
+    // Split the 70 mm glasswool fill into two 35 mm halves —
+    // cavity-fill splits are physically no-op (glasswool is
+    // porous, coalesces at the catalog match layer). Facing
+    // splits are deliberately NOT applied here: a 12.5 mm
+    // acoustic-gypsum board split into 6.25+6.25 changes the
+    // framed-wall monotonic-floor guard's sibling-variant
+    // comparison (different layer count) and emits an extra
+    // diagnostic warning even though the numeric outputs stay
+    // identical — tracked as step-7 finding F3 (deferred).
+    splitPlans: [
+      { parts: [35, 35], rowIndex: 3 }
     ],
     studyMode: "wall"
   }

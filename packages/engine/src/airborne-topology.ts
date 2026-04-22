@@ -45,6 +45,71 @@ export type AirborneTopologySummary = {
   weightedSolidDensityKgM3: number;
 };
 
+// Canonicalize a layer sequence by merging consecutive layers
+// that share `material.id`. Mass and thickness are preserved —
+// the coalesced layer keeps the first fragment's `material`
+// reference (and therefore id / role / tags) while summing
+// `thicknessMm` + `surfaceMassKgM2` across the run.
+//
+// Used as a normalization pre-step on both sides of any
+// "does this input stack equal that reference stack" check
+// (verified catalog match, calibration gates, etc.) so
+// torture-matrix variants that split a same-material run into
+// halves stay on-lane. Symmetric application on both sides is
+// mandatory: coalescing only the input would make a legitimate
+// 6-layer catalog reference like `[gyp, gyp, air, fill, gyp, gyp]`
+// mismatch its own split forms.
+//
+// Non-adjacent same-material layers (separated by a gap, a
+// porous fill, or any layer with a different id) are NOT
+// merged — multi-leaf topology detection downstream stays
+// intact.
+export function coalesceAdjacentSameMaterialLayers(
+  layers: readonly ResolvedLayer[]
+): readonly ResolvedLayer[] {
+  if (layers.length < 2) {
+    return layers;
+  }
+
+  const coalesced: ResolvedLayer[] = [];
+  let pendingFragments: ResolvedLayer[] = [];
+
+  const flushPending = (): void => {
+    if (pendingFragments.length === 0) {
+      return;
+    }
+    if (pendingFragments.length === 1) {
+      coalesced.push(pendingFragments[0]);
+    } else {
+      const head = pendingFragments[0];
+      const totalThicknessMm = pendingFragments.reduce((sum, layer) => sum + layer.thicknessMm, 0);
+      const totalSurfaceMassKgM2 = pendingFragments.reduce(
+        (sum, layer) => sum + layer.surfaceMassKgM2,
+        0
+      );
+      coalesced.push({
+        ...head,
+        surfaceMassKgM2: totalSurfaceMassKgM2,
+        thicknessMm: totalThicknessMm
+      });
+    }
+    pendingFragments = [];
+  };
+
+  for (const layer of layers) {
+    const previousFragment = pendingFragments.at(-1);
+    if (previousFragment && previousFragment.material.id === layer.material.id) {
+      pendingFragments.push(layer);
+      continue;
+    }
+    flushPending();
+    pendingFragments.push(layer);
+  }
+  flushPending();
+
+  return coalesced;
+}
+
 export function materialText(layer: ResolvedLayer): string {
   return [
     layer.material.id,

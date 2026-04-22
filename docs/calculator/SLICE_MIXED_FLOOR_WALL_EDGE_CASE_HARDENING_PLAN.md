@@ -380,6 +380,90 @@ Live log of real engine bugs surfaced by this slice. Each entry
 lists what the torture matrix caught + how it was fixed + the
 regression guard that pins the fix.
 
+### F2 — Exact catalog match stopped firing when same-material layers split (2026-04-22, landed)
+
+- **Surfaced by**: Atomic order step 5 (adding `wall-lsf-knauf`
+  with `splitPlans` splitting the 70 mm glasswool fill into
+  35+35). The `mixed-floor-wall-generated-matrix` snapshot-
+  equality loop saw Rw=55 on the intact 6-layer baseline
+  (Knauf exact anchor `knauf_lsf_2x2_12_5_70_glasswool_lab_416702_2026`
+  firing) but Rw=60 on the 7-layer split — the exact match
+  stopped firing.
+- **Root cause**: `layersApproximatelyMatch` in
+  `packages/engine/src/airborne-verified-catalog.ts:866` required
+  strict `inputLayers.length === referenceLayers.length`
+  before the per-position material+thickness check. A same-
+  material split produced 7 input layers vs. the catalog's
+  6-layer reference.
+- **Fix**: added `coalesceAdjacentSameMaterialLayers` as an
+  exported helper in `packages/engine/src/airborne-topology.ts`.
+  Merges consecutive layers that share `material.id`, summing
+  `thicknessMm` + `surfaceMassKgM2`, preserving the first
+  fragment's material reference. Applied **only** at
+  `layersApproximatelyMatch` — symmetrically to both input and
+  reference stacks before the length + per-position check.
+  Scope is deliberately narrow: the catalog match is the only
+  site where strict-length equality is load-bearing and false-
+  match risk is bounded (catalog entries are hand-curated and
+  symmetric coalesce preserves their intended matching range).
+- **Regression guard**:
+  `airborne-verified-catalog-same-material-split-invariance.test.ts`
+  pins Rw=55 for the Knauf LSF stack under two splits — 70 mm
+  glasswool → 35+35 and one acoustic_gypsum_board facing →
+  6.25+6.25. Both must match the intact 6-layer Rw=55.
+- **What was tried and reverted**: applying the coalesce at the
+  engine entry (`calculateDynamicAirborneResult`) to fix the
+  downstream monotonic-floor warning drift also — that landed
+  18 test failures across 8 files in the full engine suite
+  because the framed-wall benchmarks are physically calibrated
+  on the non-coalesced input distinction between `2×12.5 mm
+  gypsum` (double-board topology, shear-damping) and `1×25 mm
+  gypsum` (single-board topology). Collapsing those is
+  physically incorrect even though the total mass and
+  thickness are identical. The engine-entry coalesce was
+  reverted; the monotonic-floor warning divergence on board-
+  layer splits is tracked as **F3 (deferred)**.
+- **Behaviour preservation**: the scoped coalesce at
+  `layersApproximatelyMatch` is a no-op on every catalog-match
+  call whose input does not contain adjacent same-material
+  runs. Confirmed by full engine suite green after the scoped
+  landing (194 files, 1070 tests).
+
+### F3 — Framed-wall monotonic-floor guard emits extra warning on board-facing splits (2026-04-22, deferred)
+
+- **Surfaced by**: same step-7 work as F2, during the engine-
+  entry-coalesce experiment. When a framed-wall acoustic
+  gypsum facing is split into equal halves (e.g. `12.5 → 6.25 +
+  6.25`), the numeric outputs (Rw, R'w, C, Ctr, DnT) stay
+  byte-identical to the intact baseline, but
+  `dynamic-airborne.ts:903`'s "framed reinforcement monotonic
+  floor" guard picks different sibling-variant comparison
+  stacks (7 layers vs. 6) and emits an extra diagnostic
+  warning on the split. The `resultSnapshot()` matrix
+  comparator does byte-exact warnings-array equality so the
+  split variant fails the matrix even though numbers are
+  correct.
+- **Why not fixed now**: the only surgical fix that
+  eliminates the warning-drift without regressing benchmarks
+  is either (a) a targeted topology-aware siblings generator
+  that canonicalizes by material-id runs OR (b) a warning
+  filter that suppresses the monotonic-floor diagnostic when
+  it fires due to layer-count-only sibling divergence. Both
+  are out of scope for the wall-lsf-knauf case landing — the
+  studType-plumbing proof is already served by the glasswool-
+  only split.
+- **Current mitigation**: `wall-lsf-knauf`'s `splitPlans`
+  splits only the 70 mm glasswool fill (porous cavity; safely
+  coalesces at the catalog match layer, never triggers the
+  framed monotonic-floor guard). The facing-split torture is
+  deferred until F3 can be properly fixed at the guard level.
+  Inline comment on the splitPlans entry documents the
+  deferral.
+- **Open path to close F3**: audit the monotonic-floor guard
+  in `dynamic-airborne.ts:~2985-2995` to make its sibling-
+  variant generation layer-count-invariant. Low priority —
+  cosmetic drift only, numeric outputs already correct.
+
 ### F1 — Masonry calibration fell off lane when same-material core split (2026-04-22, landed)
 
 - **Surfaced by**: Atomic order step 3 (adding `wall-masonry-brick`

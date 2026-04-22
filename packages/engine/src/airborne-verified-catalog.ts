@@ -7,6 +7,7 @@ import type {
   TransmissionLossCurve
 } from "@dynecho/shared";
 
+import { coalesceAdjacentSameMaterialLayers } from "./airborne-topology";
 import { buildRatingsFromCurve } from "./curve-rating";
 import { clamp, round1 } from "./math";
 import { resolveMaterial } from "./material-catalog";
@@ -864,12 +865,26 @@ function numericNear(left: number | null | undefined, right: number | null | und
 }
 
 function layersApproximatelyMatch(inputLayers: readonly ResolvedLayer[], referenceLayers: readonly ResolvedLayer[]): boolean {
-  if (inputLayers.length !== referenceLayers.length || inputLayers.length === 0) {
+  // Normalize both sides by coalescing adjacent same-material
+  // layers — a same-material split like glasswool 35+35 (70 total)
+  // must match the canonical glasswool 70 catalog entry, not drift
+  // to a 7-vs-6 length mismatch. Symmetric application protects
+  // catalog entries that are themselves stored with adjacent
+  // same-material layers (e.g. a [gyp, gyp, …, gyp, gyp] run).
+  // Surfaced by step-7 finding F2 (LSF Knauf 70 mm glasswool
+  // split caused Rw=55 → 60 drift before the normalizer landed).
+  const canonicalInput = coalesceAdjacentSameMaterialLayers(inputLayers);
+  const canonicalReference = coalesceAdjacentSameMaterialLayers(referenceLayers);
+
+  if (
+    canonicalInput.length !== canonicalReference.length ||
+    canonicalInput.length === 0
+  ) {
     return false;
   }
 
-  const left = inputLayers.map(canonicalMatchLayer);
-  const right = referenceLayers.map(canonicalMatchLayer);
+  const left = canonicalInput.map(canonicalMatchLayer);
+  const right = canonicalReference.map(canonicalMatchLayer);
 
   return left.every((layer, index) => {
     const reference = right[index];
