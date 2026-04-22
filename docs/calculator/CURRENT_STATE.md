@@ -23,12 +23,12 @@ Both fixed 2026-04-22. Focused gate never caught these because
 it does not run package-wide lint or tsc).
 
 - **Engine full suite**: 195 / 195 files, 1072 / 1072 tests green
-  (up from 193/1068 after step-7 atomic order steps 3-5 landed
-  four new regression guards + two engine fixes on 2026-04-22:
-  `wall-masonry-brick` + `wall-clt-local` + `wall-lsf-knauf`
-  cases, the masonry-calibration same-material-split regression
-  guard, and the catalog-match same-material-split regression
-  guard)
+  (up from 193/1068 after step-7 atomic order steps 3-6 landed
+  four new wall cases in `ENGINE_MIXED_GENERATED_CASES`
+  (`wall-masonry-brick`, `wall-clt-local`, `wall-lsf-knauf`,
+  `wall-timber-stud`) + two engine fixes (masonry-calibration
+  and catalog-match same-material-split coalesce) + two
+  regression guards on 2026-04-22)
 - **Web full suite**: 137 / 137 files, 792 / 792 tests green + 18
   discovery helpers intentionally skipped
 - **Broad `pnpm check`**: lint + typecheck + tests + build green

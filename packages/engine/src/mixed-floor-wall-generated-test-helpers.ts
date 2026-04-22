@@ -494,6 +494,25 @@ const LSF_KNAUF_WALL_ROWS: readonly LayerInput[] = [
   { materialId: "acoustic_gypsum_board", thicknessMm: 12.5 }
 ];
 
+// Step-7 gap-close: mirrors the `timber_stud_wall` preset
+// (apps/web/features/workbench/preset-definitions.ts:168-181).
+// Formula-owned lane — no exact catalog row for timber-stud
+// walls today; `wall-lsf-timber-stud-preset-benchmarks` pins
+// Rw=31 (field R'w=24) as a known-low drift guard vs. the
+// ~45-50 dB manufacturer reference. Step 6 (conditional) would
+// close the gap if external lab data justified reopening;
+// until then this case proves the wood_stud lane stays stable
+// across split variants + duplicate-swap under the framed-wall
+// family detection.
+const TIMBER_STUD_WALL_ROWS: readonly LayerInput[] = [
+  { materialId: "gypsum_board", thicknessMm: 12.5 },
+  { materialId: "gypsum_board", thicknessMm: 12.5 },
+  { materialId: "rockwool", thicknessMm: 50 },
+  { materialId: "air_gap", thicknessMm: 50 },
+  { materialId: "gypsum_board", thicknessMm: 12.5 },
+  { materialId: "gypsum_board", thicknessMm: 12.5 }
+];
+
 export const ENGINE_MIXED_GENERATED_CASES: readonly EngineMixedGeneratedCase[] = [
   {
     fieldOptions: {
@@ -1070,6 +1089,31 @@ export const ENGINE_MIXED_GENERATED_CASES: readonly EngineMixedGeneratedCase[] =
     // identical — tracked as step-7 finding F3 (deferred).
     splitPlans: [
       { parts: [35, 35], rowIndex: 3 }
+    ],
+    studyMode: "wall"
+  },
+  {
+    fieldOptions: {
+      airborneContext: FRAMED_WALL_FIELD_CONTEXT_TIMBER,
+      calculator: "dynamic",
+      targetOutputs: WALL_FIELD_OUTPUTS
+    },
+    id: "wall-timber-stud",
+    label: "Timber stud wall (wood_stud formula-owned drift guard)",
+    labOptions: {
+      airborneContext: FRAMED_WALL_LAB_CONTEXT_TIMBER,
+      calculator: "dynamic",
+      targetOutputs: WALL_LAB_OUTPUTS
+    },
+    rows: TIMBER_STUD_WALL_ROWS,
+    // Split the 50 mm rockwool fill only — porous, safely
+    // coalesces at the catalog match layer, avoids the F3
+    // framed monotonic-floor warning drift that board-layer
+    // splits trigger. Proves the wood_stud lane stays stable
+    // across variants + duplicate-swap at the parked Rw=31
+    // drift-guard value.
+    splitPlans: [
+      { parts: [25, 25], rowIndex: 2 }
     ],
     studyMode: "wall"
   }
