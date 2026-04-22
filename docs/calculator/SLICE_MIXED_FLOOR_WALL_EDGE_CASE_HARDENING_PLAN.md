@@ -99,68 +99,258 @@ contracts all run on a wall surface that is out of sync with the
 current preset pack. **A gap-close pass lands first** in this
 slice, then the cross-mode torture extension builds on top.
 
+## Implementation Recon (2026-04-22)
+
+Concrete code references so the next agent does not re-research.
+Every file path is relative to repo root; every line range is
+from the 2026-04-22 state (commit `51e560c`).
+
+### R1 — Existing wall cases in `ENGINE_MIXED_GENERATED_CASES`
+
+File: `packages/engine/src/mixed-floor-wall-generated-test-helpers.ts`
+
+| Case id | Lines | Rows fixture | splitPlans |
+|---|---|---|---|
+| `wall-screening-concrete` | 894-902 | `SCREENING_WALL_ROWS` (line 396) — 4 layers: gypsum_board 12.5, rockwool 50, air_gap 50, concrete 100 | `[{parts:[20,30], rowIndex:1}, {parts:[40,60], rowIndex:3}]` |
+| `wall-held-aac` | 904-918 | `HELD_WALL_ROWS` (line 403) — 8 layers around ytong_aac_d700 100 + air_gap 50 + rockwool 40 | `[{parts:[15,35], rowIndex:1}, {parts:[6,6.5], rowIndex:6}]` |
+| `wall-heavy-composite-hint-suppression` | 920-935 | `HEAVY_COMPOSITE_WALL_ROWS` (line 414) — concrete 80 + pumice_block 100 + air_gap 50 + gypsum 12.5 + concrete 80 | `[{parts:[40,40], rowIndex:0}, {parts:[50,50], rowIndex:1}]` |
+
+Context constants (same file):
+- `WALL_FIELD_CONTEXT` (lines 23-29): `building_prediction`, 2800×3600 mm panel, RT=0.6 s, V=45 m³
+- `WALL_LAB_OUTPUTS` (line 7): `["Rw", "STC", "C", "Ctr"]`
+- `WALL_FIELD_OUTPUTS` (line 8): `["R'w", "Dn,w", "DnT,w", "DnT,A"]`
+
+All three wall cases use the same `labOptions` shape `{ calculator:
+"dynamic", targetOutputs: WALL_LAB_OUTPUTS }` (no airborneContext
+on lab — defaults apply) and `fieldOptions` shape `{
+airborneContext: WALL_FIELD_CONTEXT, calculator: "dynamic",
+targetOutputs: WALL_FIELD_OUTPUTS }`.
+
+### R2 — `calculateAssembly` options signature
+
+File: `packages/engine/src/calculate-assembly.ts`, `CalculateAssemblyOptions`
+(lines 93-101):
+
+```
+airborneContext?: AirborneContext | null
+calculator?: AirborneCalculatorId | null
+catalog?: readonly MaterialDefinition[]
+exactImpactSource?: ExactImpactSource | null
+impactFieldContext?: ImpactFieldContext | null
+impactPredictorInput?: ImpactPredictorInput | null
+targetOutputs?: readonly RequestedOutputId[]
+```
+
+`AirborneContext` fields used by new cases: `contextMode`,
+`panelHeightMm`, `panelWidthMm`, `receivingRoomRt60S`,
+`receivingRoomVolumeM3`, `airtightness`, `connectionType`,
+`studType`, `studSpacingMm` (+ optional field modifiers).
+
+### R3 — Target preset definitions
+
+File: `apps/web/features/workbench/preset-definitions.ts`
+
+| Preset | Lines | Rows (materialId × thicknessMm) | `airborneDefaults` |
+|---|---|---|---|
+| `masonry_brick_wall` | 114-124 | dense_plaster 13 + wienerberger_porotherm_100 100 + dense_plaster 13 | `undefined` (defaults suffice) |
+| `clt_wall` | 127-137 | gypsum_board 12.5 + clt_140 140 + gypsum_board 12.5 | `undefined` |
+| `light_steel_stud_wall` | 140-159 | acoustic_gypsum 12.5 ×2 + air_gap 5 + glasswool 70 + acoustic_gypsum 12.5 ×2 (6 rows) | `{ airtightness:"good", connectionType:"line_connection", studSpacingMm:"600", studType:"light_steel_stud" }` |
+| `timber_stud_wall` | 162-181 | gypsum_board 12.5 ×2 + rockwool 50 + air_gap 50 + gypsum_board 12.5 ×2 (6 rows) | `{ airtightness:"good", connectionType:"line_connection", studSpacingMm:"600", studType:"wood_stud" }` |
+
+Note: the `timber_stud_wall` `studType` value is `"wood_stud"`,
+NOT `"timber_stud"`. This is the canonical engine identifier —
+the slice plan's earlier table had `"timber_stud"` which is
+wrong and must not propagate into the test case.
+
+### R4 — `airborneDefaults` → engine plumbing trace
+
+1. `apps/web/features/workbench/workbench-store.ts` `loadPreset`
+   (lines 630-662) reads `preset.airborneDefaults` and assigns
+   into store fields: `airborneAirtightness`, `airborneStudType`,
+   `airborneStudSpacingMm`, `airborneConnectionType`.
+2. `apps/web/features/workbench/workbench-shell.tsx`
+   `liveAirborneContext` (lines 284-302) composes store fields
+   into `AirborneContext` object under wall-mode branch, then
+   passes to `calculateAssembly`.
+
+**For engine-only test cases (Dimension A), skip the workbench
+trace and construct `AirborneContext` directly in the test
+fixture — the preset's `airborneDefaults` object shape maps 1:1
+into `AirborneContext`.**
+
+### R5 — Ground-truth benchmark pins
+
+Lab context defaults apply (no explicit `airborneContext` in
+`labOptions`).
+
+Field context = `WALL_FIELD_CONTEXT` (building_prediction).
+
+| Preset | Lab Rw | Field R'w | Building DnT,w | Tolerance | Source test |
+|---|---|---|---|---|---|
+| `masonry_brick_wall` | 43 | 41 | 43 | ±1 dB | `wall-preset-expansion-benchmarks.test.ts` 131-168 |
+| `clt_wall` | 40 | 38 | 39 | ±0 dB | same |
+| `light_steel_stud_wall` | 55 | 48 | 49 | ±0 dB | `wall-lsf-timber-stud-preset-benchmarks.test.ts` 147-177 |
+| `timber_stud_wall` | 31 | 24 | 25 | ±0 dB | same (drift guard) |
+
+Snapshot equality in `mixed-floor-wall-generated-matrix.test.ts`
+(the generated-variant stability loop) does NOT re-assert these
+values — it just proves baseline equals every variant. The
+benchmark tests above are the ground-truth source.
+
+### R6 — Post-contract hardcoded dependencies
+
+26 `post-mixed-floor-wall-*.test.ts` files under
+`packages/engine/src/`. Confirmed hardcoded-count surface found
+in `post-mixed-floor-wall-duplicate-swap-grid-next-slice-selection-contract.test.ts`
+lines 82-105: `currentSeededBoundaryRoutes` array with 6 entries
+including only **2 wall routes** (`route-wall-held-aac`,
+`route-wall-heavy-composite-hint-suppression`).
+
+**Search pattern for the grep sweep step**: `ENGINE_MIXED_GENERATED_CASES`,
+`SELECTED_ENGINE_MIXED_GENERATED_ROUTE_CASES`, `currentSeededBoundaryRoutes`,
+`.length ===` on these, `toEqual([` listing the current case ids.
+Update any contract asserting exactly 3 wall cases / 33 total /
+6-route subset to the new exact counts (7 wall cases / 37 total /
+6-route subset remains frozen unless new routes are added for
+the new cases).
+
+### R7 — Dimension C overlay primitives (already on disk)
+
+| Overlay | Primitive | File:line |
+|---|---|---|
+| Hostile input | `evaluateAssemblyInputGuard()` returning `{ kind:"fail"; warnings }` | `packages/engine/src/assembly-input-guardrail.ts` 50-95 |
+| Reorder | Forward/reverse `rows` array + re-`calculateAssembly` comparison | pattern in `apps/web/features/workbench/wall-reorder-invariance-matrix.test.ts` 40-57 |
+| Save-load | `JSON.parse(JSON.stringify({ rows, airborneContext }))` round-trip — no explicit serializer needed since inputs are already JSON-safe | plain structuredClone / JSON round-trip |
+| Duplicate-swap | `buildDuplicateSwapGridVariants(testCase)` returning `2^N` reverse-mask variants | `packages/engine/src/mixed-floor-wall-generated-matrix.test.ts` 31-54 |
+| Edit-history replay | `calculateAssembly` called 3 times with `airborneContext.studType` toggle (`light_steel_stud` → `wood_stud` → `light_steel_stud`) — assert final equals direct first call | engine-side construction; no workbench store needed |
+
+### R8 — Focused gate entry point
+
+File: `tools/dev/run-calculator-current-gate.ts`, args array
+around lines 42-111 (engine tests) and 116-150 (web tests).
+Hardcoded list of test file paths. Append the two new engine
+test files to the engine args block before the `--maxWorkers=1`
+flag:
+
+- `src/mixed-floor-wall-cross-mode-wall-extension-matrix.test.ts`
+- `src/post-mixed-floor-wall-edge-case-hardening-v1-next-slice-selection-contract.test.ts`
+
 ## Scope
 
-Four dimensions.
+Four dimensions, now with concrete references to §R above.
 
 ### Dimension A — Engine wall case gap-close
 
 Add four new wall cases to `ENGINE_MIXED_GENERATED_CASES`,
 mirroring the shape of the existing three:
 
-| New case id | Archetype | Why | Airborne context hook |
+| New case id | Rows (mirrors §R3 preset) | `airborneContext` (field + building) | Why |
 |---|---|---|---|
-| `wall-masonry-brick` | Single-leaf brick + plaster | Exercises the 2026-04-21 lab-fallback anchor (R'w ≤ Rw invariant under field + building contexts) | `xella_ytong_d700_150_plaster10_official_2026` neighbour row; lab-fallback path |
-| `wall-clt-local` | CLT wall + gypsum | Exercises the framed-wall split module boundary + formula-owned lane for CLT | No explicit `studType`; family detection via CLT predicate |
-| `wall-lsf-knauf` | 2×12.5 gyp + 70 mm glasswool + LSF + 2×12.5 gyp | Anchors Knauf exact catalog row (`knauf_lsf_2x2_12_5_70_glasswool_lab_416702_2026`) → Rw=55 | `studType=light_steel_stud`, `studSpacingMm=600`, `connectionType=direct`, `airtightness=good` |
-| `wall-timber-stud` | Same geometry, wood studs | Drift guard on the parked formula-family-widening gap (Rw=31 must remain stable across split variants + duplicate swaps) | `studType=timber_stud`, `studSpacingMm=600`, `connectionType=direct`, `airtightness=good` |
+| `wall-masonry-brick` | dense_plaster 13 + wienerberger_porotherm_100 100 + dense_plaster 13 (3 layers) | `WALL_FIELD_CONTEXT` only (preset `airborneDefaults` is `undefined`) | Exercises the 2026-04-21 lab-fallback anchor — `applyVerifiedAirborneCatalogAnchor` R'w ≤ Rw guard under field + building contexts |
+| `wall-clt-local` | gypsum_board 12.5 + clt_140 140 + gypsum_board 12.5 (3 layers) | `WALL_FIELD_CONTEXT` only | Exercises the framed-wall split module boundary + formula-owned lane for CLT (no exact catalog row) |
+| `wall-lsf-knauf` | acoustic_gypsum 12.5 ×2 + air_gap 5 + glasswool 70 + acoustic_gypsum 12.5 ×2 (6 layers) | `WALL_FIELD_CONTEXT` + `{ airtightness:"good", connectionType:"line_connection", studSpacingMm:"600", studType:"light_steel_stud" }` | Anchors Knauf exact row `knauf_lsf_2x2_12_5_70_glasswool_lab_416702_2026` → Rw=55; proves `studType` plumbing through the generated-variant loop |
+| `wall-timber-stud` | gypsum_board 12.5 ×2 + rockwool 50 + air_gap 50 + gypsum_board 12.5 ×2 (6 layers) | `WALL_FIELD_CONTEXT` + `{ airtightness:"good", connectionType:"line_connection", studSpacingMm:"600", studType:"wood_stud" }` | Drift guard on the parked formula-family-widening gap (Rw=31 must remain stable across split variants + duplicate swaps under the `wood_stud` lane) |
+
+**Canonical identifier gotcha**: the timber-stud preset's
+`studType` is `"wood_stud"`, not `"timber_stud"` (verified in
+`preset-definitions.ts:181`). Hardcode `"wood_stud"` in the
+fixture, not the preset-id short form.
 
 Each new case must include `splitPlans` that produce both
 neutral variants (thickness repartitioning) and duplicate-swap
 variants (final-row permutations) — same discipline the existing
-three wall cases use.
+three wall cases use (§R1 shapes).
+
+Proposed `splitPlans` per new case (chosen to exercise both a
+cavity row and a board row):
+
+- `wall-masonry-brick`: `[{parts:[50,50], rowIndex:1}]` — split
+  the 100 mm porotherm core into two 50 mm halves.
+- `wall-clt-local`: `[{parts:[70,70], rowIndex:1}]` — split the
+  140 mm CLT into two 70 mm halves.
+- `wall-lsf-knauf`: `[{parts:[35,35], rowIndex:3}, {parts:[6.25,6.25], rowIndex:5}]`
+  — split the 70 mm glasswool fill AND one of the 12.5 mm
+  acoustic gypsum facings.
+- `wall-timber-stud`: `[{parts:[25,25], rowIndex:2}, {parts:[6.25,6.25], rowIndex:4}]`
+  — split the 50 mm rockwool fill AND one of the 12.5 mm gypsum
+  facings.
 
 ### Dimension B — Closeout contract reconciliation
 
 Run the 26 existing `post-mixed-floor-wall-*` closeout contracts
-against the expanded `ENGINE_MIXED_GENERATED_CASES`. Identify
-which contracts encode:
+against the expanded `ENGINE_MIXED_GENERATED_CASES`. Concrete
+hardcoded dependencies confirmed by §R6 recon:
 
-- Hardcoded case counts (e.g. "expected 33 cases")
-- Hardcoded wall subset iteration
-- Snapshot comparisons pinned to the 3-case wall surface
+- `post-mixed-floor-wall-duplicate-swap-grid-next-slice-selection-contract.test.ts`
+  lines 82-105: `currentSeededBoundaryRoutes` array with 6
+  entries, 2 wall (`route-wall-held-aac`,
+  `route-wall-heavy-composite-hint-suppression`).
+- Any contract using `ENGINE_MIXED_GENERATED_CASES.length` or
+  `.filter((c) => c.studyMode === "wall")` with a hardcoded
+  count expectation.
+- `toEqual([...])` on a case-id array listing all current case
+  ids.
+
+The grep-sweep command for this step is:
+
+```
+grep -nE 'ENGINE_MIXED_GENERATED_CASES|SELECTED_ENGINE_MIXED_GENERATED_ROUTE_CASES|currentSeededBoundaryRoutes|studyMode: ?"wall"' packages/engine/src/post-mixed-floor-wall-*.test.ts
+```
 
 Update each affected contract to accept the new cases without
-loosening its assertion (no `toBeGreaterThanOrEqual(33)` softening
-— pin the new exact count with an inline comment linking to this
-slice).
+loosening its assertion (no `toBeGreaterThanOrEqual` softening —
+pin the new exact count with an inline comment linking to this
+slice). Expected counts post-slice:
+
+- `ENGINE_MIXED_GENERATED_CASES.length`: 33 → 37
+- Wall cases: 3 → 7
+- `currentSeededBoundaryRoutes`: unchanged (new cases add
+  routes only if we extend `SELECTED_ENGINE_MIXED_GENERATED_ROUTE_CASES`;
+  default posture is to leave that frozen).
 
 ### Dimension C — Cross-mode torture extension
 
 Author `mixed-floor-wall-cross-mode-wall-extension-matrix.test.ts`
-(engine side) that combines on the new wall cases:
+(engine side) combining five overlays on the four new wall
+cases. Each overlay's concrete primitive is already on disk per
+§R7:
 
-1. **Hostile input overlay** — swap one layer of the stack with an
-   invalid `thicknessMm` (NaN, Infinity, negative, zero) and
-   assert the guardrail converts to a deterministic fail-closed
-   output; the *other* layers' defended outputs stay identical to
-   the baseline.
-2. **Reorder overlay** — apply the symmetric reversal test from
-   `wall-reorder-invariance-matrix` to each new case; assert the
-   supportedOutputs / Rw / C / Ctr invariants hold.
-3. **Save-load overlay** — serialize the case's `rows` +
-   `airborneContext`, deserialize, recompute; assert byte-exact
-   snapshot equality.
-4. **Duplicate-swap overlay** — exercise the full reverse-mask
-   grid (already in `buildDuplicateSwapGridVariants`) on the new
-   cases.
-5. **Edit-history replay overlay** — for the LSF + timber stud
-   cases specifically, simulate `studType` toggling (e.g. LSF →
-   timber stud → LSF) and assert the final engine output matches
-   the direct LSF computation (idempotency under reversible edits).
+1. **Hostile input overlay** — for each new case, swap exactly
+   one layer's `thicknessMm` with each of {`NaN`, `Infinity`,
+   `-5`, `0`, `100001`}. Call `calculateAssembly`. Assert the
+   engine returns a fail-closed result (no crash, no `NaN` in
+   any output) with a specific warning mentioning the offending
+   layer. Primitive: `evaluateAssemblyInputGuard()` in
+   `assembly-input-guardrail.ts:50-95`.
+2. **Reorder overlay** — for each new case, apply `[...rows].reverse()`
+   and compare `Rw`, `C`, `Ctr`, `supportedTargetOutputs` to the
+   forward baseline. Non-asymmetric wall stacks must produce
+   identical values; asymmetric stacks (e.g. lined-massive) must
+   produce identical `supportedTargetOutputs` and either
+   identical values (symmetric invariance) or values within the
+   family's tolerance window. Pattern mirror:
+   `wall-reorder-invariance-matrix.test.ts:40-57`.
+3. **Save-load overlay** — for each new case, run
+   `JSON.parse(JSON.stringify({ rows, airborneContext }))` then
+   recompute; assert `resultSnapshot()` equality to the direct
+   call. Confirms input types are actually JSON-safe.
+4. **Duplicate-swap overlay** — for each new case, call
+   `buildDuplicateSwapGridVariants(testCase)` and assert every
+   variant's `resultSnapshot()` equals the baseline. Primitive:
+   `mixed-floor-wall-generated-matrix.test.ts:31-54`.
+5. **Edit-history replay overlay** — for `wall-lsf-knauf` and
+   `wall-timber-stud` only, run three `calculateAssembly` calls
+   in sequence with `airborneContext.studType` toggled
+   `light_steel_stud` → `wood_stud` → `light_steel_stud` (same
+   rows). Assert the third call's `resultSnapshot()` equals the
+   first call's. Engine idempotency under reversible context
+   mutation.
 
-All five overlays must compose without cross-contamination — the
-test matrix iterates `overlay × newCase`.
+All five overlays iterate independently (`overlay × newCase`
+=  5 × 4 = 20 assertions minimum). A sixth composite overlay —
+"duplicate-swap grid with hostile-input on one layer" — is
+optional stretch; skip unless time budget allows, because the
+four independent overlays already cover the primary risks.
 
 ### Dimension D — Final audit prep (step 8 seed)
 
