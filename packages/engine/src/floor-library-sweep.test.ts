@@ -399,7 +399,15 @@ describe("curated floor-library sweep", () => {
     expect(failures).toEqual([]);
   });
 
-  it("every merge-safe manual exact and bound floor-system row stays stable across multiple high split counts in the field bundle", () => {
+  // Field bundle variant: ~3x slower than the lab bundle because
+  // field mode composes the extra impactFieldContext + flanking
+  // overlays. Default 5s timeout is tight under serial CPU load
+  // (`--maxWorkers=1`) when the whole engine suite runs back-to-
+  // back; standalone the test completes in ~3s. Raised to 15s to
+  // keep the contract green under both serial and parallel vitest
+  // schedulers without masking a real regression — a 3x slowdown
+  // vs. standalone would still leave headroom.
+  it("every merge-safe manual exact and bound floor-system row stays stable across multiple high split counts in the field bundle", { timeout: 15_000 }, () => {
     const failures: string[] = [];
 
     for (const system of [...EXACT_FLOOR_SYSTEMS.filter((entry) => entry.manualMatch !== false), ...BOUND_FLOOR_SYSTEMS]) {
