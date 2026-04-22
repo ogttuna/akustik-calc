@@ -22,13 +22,16 @@ passed at vitest runtime (esbuild strips types) but failed tsc.
 Both fixed 2026-04-22. Focused gate never caught these because
 it does not run package-wide lint or tsc).
 
-- **Engine full suite**: 195 / 195 files, 1072 / 1072 tests green
-  (up from 193/1068 after step-7 atomic order steps 3-6 landed
+- **Engine full suite**: 196 / 196 files, 1092 / 1092 tests green
+  (up from 193/1068 after step-7 atomic order steps 3-7 landed
   four new wall cases in `ENGINE_MIXED_GENERATED_CASES`
   (`wall-masonry-brick`, `wall-clt-local`, `wall-lsf-knauf`,
   `wall-timber-stud`) + two engine fixes (masonry-calibration
   and catalog-match same-material-split coalesce) + two
-  regression guards on 2026-04-22)
+  same-material-split regression guards + the 5-overlay cross-
+  mode torture matrix (20 assertions covering hostile input,
+  reorder, save-load, duplicate-swap, history-replay on the
+  four new cases) on 2026-04-22)
 - **Web full suite**: 137 / 137 files, 792 / 792 tests green + 18
   discovery helpers intentionally skipped
 - **Broad `pnpm check`**: lint + typecheck + tests + build green
@@ -84,6 +87,7 @@ torture matrix. Source-of-truth detail lives in
 | F1 | Masonry calibrators fell off lane when a same-material core was split into equal halves (engine Rw drifted +4 dB on Porotherm 50+50) | 2026-04-22 | `coalesceSameMaterialSolidLeaves` helper in `dynamic-airborne-masonry-calibration.ts`; regression guard `dynamic-airborne-masonry-same-material-split-invariance.test.ts` |
 | F2 | Verified-catalog exact match stopped firing when a same-material layer split (Rw drifted +5 dB on Knauf LSF 70 mm glasswool → 35+35) | 2026-04-22 | `coalesceAdjacentSameMaterialLayers` helper in `airborne-topology.ts`; applied symmetrically at `layersApproximatelyMatch` only (engine-entry application reverted — broke framed-wall benchmarks because 2×12.5 vs 1×25 gyp board distinction is physically meaningful); regression guard `airborne-verified-catalog-same-material-split-invariance.test.ts` |
 | F3 | Framed-wall monotonic-floor guard emits an extra diagnostic warning when a board-layer is split (numeric outputs unchanged; warning drift only) | 2026-04-22 deferred | Scoped `wall-lsf-knauf` splitPlans to the porous glasswool fill only; facing-split torture deferred until the monotonic-floor guard's sibling-variant generator is made layer-count invariant |
+| F4 | Reorder overlay test initially assumed all wall cases were physically symmetric — LSF + timber-stud are NOT (internal cavity `[gap, fill]` vs. `[fill, gap]` are distinguishable); engine was correctly detecting the difference | 2026-04-22 | Test refined: `SYMMETRIC_REORDER_CASE_IDS` lists cases where strict bit-equality holds; asymmetric cases assert structural invariance (`dynamicFamily` + `supportedTargetOutputs` stable, metrics stay finite) |
 
 ## Physical Invariants (First-Class Accuracy Contract)
 

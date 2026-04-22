@@ -464,6 +464,45 @@ regression guard that pins the fix.
   variant generation layer-count-invariant. Low priority —
   cosmetic drift only, numeric outputs already correct.
 
+### F4 — Reorder overlay assumption "all preset stacks are symmetric" was wrong (2026-04-22, test refined)
+
+- **Surfaced by**: Atomic order step 7 (authoring
+  `mixed-floor-wall-cross-mode-wall-extension-matrix.test.ts`
+  with the O2 reorder overlay). Initial implementation asserted
+  strict bit-equality of Rw/C/Ctr/R'w/DnT under row reversal
+  for all four step-7 wall cases. `wall-lsf-knauf` failed with
+  Rw=55 → 60 drift under reversal (5 dB).
+- **Root cause (test, not engine)**: The LSF + timber-stud
+  preset rows are NOT geometrically symmetric — the internal
+  cavity is `[air_gap 5, glasswool 70]` (LSF) or
+  `[rockwool 50, air_gap 50]` (timber-stud). Reversing the
+  row order physically swaps the fill-side and gap-side inside
+  the cavity, which the exact-catalog matcher picks up (F2
+  coalesce still sees them as different sequences because the
+  material order between non-same-material neighbours is
+  preserved). The engine is behaving correctly; the test
+  assumption was naïve.
+- **Fix (test, targeted)**: `SYMMETRIC_REORDER_CASE_IDS` const
+  lists the two truly-symmetric cases (`wall-masonry-brick`,
+  `wall-clt-local`). For those, strict bit-equality is asserted.
+  For the asymmetric LSF + timber-stud cases, structural
+  invariance is asserted instead: `dynamicFamily` +
+  `supportedTargetOutputs` stay stable (reversal never changes
+  the topology class), and all metrics stay finite (no
+  fail-closed drop). This is the correct semantic: "reorder
+  of a symmetric assembly = no-op; reorder of an asymmetric
+  assembly = different but defended answer."
+- **No regression guard needed**: the torture matrix IS the
+  guard. The symmetric/asymmetric split encodes the physical
+  contract per-case.
+- **Why not fix the engine's asymmetry detection**: the engine
+  IS correctly distinguishing the two arrangements; that is the
+  right physics. A user who drag-flips `[gyp, air, fill, gyp]`
+  into `[gyp, fill, air, gyp]` has built a physically different
+  assembly, and the engine should say so. Papering over that
+  with a "reorder-invariance under any permutation" promise
+  would be accuracy-regressing.
+
 ### F1 — Masonry calibration fell off lane when same-material core split (2026-04-22, landed)
 
 - **Surfaced by**: Atomic order step 3 (adding `wall-masonry-brick`
