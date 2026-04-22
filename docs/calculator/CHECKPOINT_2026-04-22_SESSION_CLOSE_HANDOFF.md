@@ -361,3 +361,184 @@ plan docs (now all archived under
    drift that slipped past the focused gate shows the gate is
    a FAST path for iterative work, not a standalone quality
    bar. `pnpm check` stays the last-mile authoritative signal.
+
+## Watch-Outs For The Next Agent
+
+Subtle things that caused real pain in this session. Each is
+a tripwire someone WILL hit again if they don't read these
+first.
+
+### W1 — DO NOT re-apply `coalesceAdjacentSameMaterialLayers` at engine entry
+
+The step-7 F2 fix applies the coalesce helper only at
+`layersApproximatelyMatch` (catalog match site), symmetrically
+on both input and reference. An attempt to also apply it at
+`calculateDynamicAirborneResult` entry — to silence F3's
+cosmetic warning drift — caused **18 failures across 8
+files** because the framed-wall benchmarks are physically
+calibrated on the `2×12.5 mm` vs. `1×25 mm` distinction. The
+engine correctly treats those as different topologies
+(double-board shear damping vs. single-board). If split v2
+ever wants to do normalisation work, it must be:
+
+- gated behind a context flag that benchmarks can opt out of,
+- or applied ONLY at specific sites where the benchmarks
+  don't look (catalog match, masonry calibrator gates — both
+  already done).
+
+Do NOT "generalise the coalesce" without a concrete sub-
+slice plan that re-greens the framed-wall benchmarks.
+
+### W2 — `calculator: "dynamic"` ≠ `calculator: null` for formula-owned walls
+
+The torture matrix uses `calculator: "dynamic"`. The
+preset-benchmark tests use `calculator: null` (auto-select).
+These produce **different Rw** on formula-owned cases:
+
+| Preset | dynamic lane | auto-select lane | delta |
+|---|---|---|---|
+| `clt_wall` | 42 | 40 | 2 dB |
+| `timber_stud_wall` | 50 | 31 | **19 dB** |
+| `aac_single_leaf_wall` / `masonry_brick_wall` / `light_steel_stud_wall` | same | same | 0 (catalog anchor fires regardless) |
+
+Both lanes are defended. If someone reads
+`EXPECTED_DYNAMIC_LAB_RW_BY_CASE` in
+`mixed-floor-wall-cross-mode-wall-extension-matrix.test.ts`
+(`timber-stud = 50`) and compares it to the preset-benchmark
+pin (`timber_stud_wall = 31`) they may think the engine has
+drifted 19 dB. **It hasn't** — they're measuring different
+lanes. The comment on that constant documents this; do NOT
+"fix" either pin to match the other without understanding why
+they differ.
+
+### W3 — `lab_double_stud` corridor uses stud-aware FIELD + BUILDING variants
+
+In `dynamic-airborne-wall-selector-value-pins.test.ts`:
+
+- `FIELD_CONTEXT` + `BUILDING_CONTEXT` → plain, no stud
+  metadata. Used by the 5 non-stud corridors.
+- `FRAMED_FIELD_CONTEXT` + `FRAMED_BUILDING_CONTEXT` → spread
+  stud metadata (`studType`, `sharedTrack`, `connectionType`,
+  `studSpacingMm`). Used ONLY by `lab_double_stud`.
+
+Without the stud variants, `lab_double_stud` detects as
+`double_leaf` in field/building (the engine honestly loses
+the stud metadata). Do NOT "simplify" this by unifying
+context variants — that would silently drift the family
+detection on one corridor.
+
+Conversely: do NOT add `FRAMED_*` variants to non-stud
+corridors. That would leak stud semantics into masonry and
+change those pinned values.
+
+### W4 — timber stud Rw=31 is a drift guard, NOT a target
+
+The `timber_stud_wall` preset pins `labRw=31` / `fieldRwPrime=24`.
+Published field data for similar stacks (2+2 gyp / 50 mm
+rockwool / 50 mm air / 2+2 gyp on wood studs) is typically
+**45-50 dB**. Someone will look at Rw=31 and say "this is
+obviously wrong, fix it."
+
+**It is pinned intentionally as a known-low drift guard**
+pending external wood-stud coupling lab data. Closing the
+gap (step 6 `wall_formula_family_widening_v1`) is
+source-blocked per AP4. Do NOT re-weight the wood-stud
+formula without external evidence — that would be opening a
+blocked source under speculation, which the accuracy
+preservation contract explicitly forbids.
+
+A 2026-04-22 spike confirmed the gap is genuinely
+source-blocked:
+`packages/engine/src/dynamic-airborne-framed-wall.ts`
+`estimateStudWallTargetRw` has no lever that defends a
+re-weight without new catalog rows.
+
+### W5 — `wall-lsf-knauf` torture case's splitPlans MUST stay glasswool-only
+
+In `mixed-floor-wall-generated-test-helpers.ts` the
+`wall-lsf-knauf` case pins:
+
+```ts
+splitPlans: [
+  { parts: [35, 35], rowIndex: 3 }   // glasswool fill split only
+]
+```
+
+Do NOT extend this to split the acoustic_gypsum facings
+(e.g. `{ parts: [6.25, 6.25], rowIndex: 5 }`). The framed-
+wall monotonic-floor guard in `dynamic-airborne.ts` will
+emit an extra diagnostic warning on board-layer splits (F3,
+cosmetic only — numeric outputs stay identical) and the
+snapshot-equality loop in
+`mixed-floor-wall-generated-matrix.test.ts` will fail on the
+warnings array mismatch. F3 remediation is a future slice
+that makes the monotonic-floor guard's sibling-variant
+generator layer-count invariant.
+
+### W6 — Post-contract selection is advisory, not binding
+
+The step-7 post-contract line
+`selectedImplementationSlice: "good_calculator_final_audit_v1"`
+was superseded within the same day by the 2026-04-22
+re-analysis that opened step 7b instead. This is a FEATURE,
+not a bug. Post-contracts lock what CLOSED (the executable
+evidence of prior work), but the next-slice selection is
+advisory — a fresh analysis with better information can
+revise it.
+
+However: re-selection requires an explicit doc trail. The
+step-7b plan (`61e2730`) has a "Pressure-Test — Why 7b And
+Not Straight To 8" section that records the five candidates
+weighed and why 7b won. If you re-select again, write the
+same kind of doc trail. Do NOT silently skip a selected
+slice.
+
+### W7 — The branch is 13 commits ahead of `origin/main` as of session close
+
+No auto-push. Do NOT force-push or reset without checking with
+the user first. If you want to push, ask.
+
+### W8 — Focused gate must stay in sync with new test files
+
+`tools/dev/run-calculator-current-gate.ts` is a hardcoded args
+list. Every new test file that's load-bearing for the active
+slice's contracts must be added. In this session:
+
+- step 7 added 4 files to the gate
+- step 7b added 2 files to the gate
+
+Miss this step and the focused gate becomes a lying "fast
+path" that reports green while actually missing the new
+coverage. `pnpm check` catches this because it runs
+package-wide, but the focused gate will silently drift.
+
+### W9 — Invariants bank caught F1. Keep authoring invariants banks.
+
+The step-7 physical-invariants matrix was the thing that
+surfaced F1 (masonry flanking inversion). The step-7b cross-
+cell invariants bank caught nothing new — but that's the
+point: **absence of finding is evidence of correctness** only
+if the invariants actually cover the physics. The 5
+invariants pinned in
+`dynamic-airborne-wall-selector-value-pins.test.ts` are
+extensible; if a future finding surfaces on a cell that the
+existing invariants didn't catch, add a 6th invariant to
+close that gap. The invariants bank is not "complete" — it
+grows with findings.
+
+### W10 — Discovery runs (atomic order step 4) are scratch-only
+
+When pinning VALUE matrices, the workflow is:
+
+1. Write skeleton with `toBeDefined()` / `Number.isFinite`
+   stubs (step 3).
+2. Run discovery script (external, scratch, `tsx`-driven) to
+   capture engine outputs — DO NOT commit.
+3. Hardcode the captured values into the test file, cross-
+   check against plausibility windows, pin with `toBe()` /
+   `toBeNull()` (step 5).
+
+Step 4 discovery scripts that write to `/tmp/discover-*.ts`
+are ephemeral; never commit them. If they're useful for later
+audits, promote them into a proper repo test file with
+cleanup afterwards.
