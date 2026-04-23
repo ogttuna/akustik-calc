@@ -2,7 +2,7 @@
 
 import React from "react";
 import type { AirborneContextMode } from "@dynecho/shared";
-import { ChevronRight, Download, FilePenLine, Moon, RotateCcw, Sun } from "lucide-react";
+import { ChevronRight, CloudUpload, Download, FilePenLine, FolderOpen, Moon, RefreshCcw, RotateCcw, Sun } from "lucide-react";
 import Link from "next/link";
 
 import type { PresetDefinition, PresetId, StudyMode } from "./preset-definitions";
@@ -16,21 +16,32 @@ type SimpleWorkbenchToolbarProps = {
   airborneContextMode: AirborneContextMode;
   exportReady: boolean;
   isExportingPdf: boolean;
+  isServerProjectBusy: boolean;
   modePresets: readonly PresetDefinition[];
   onExportBrandedDocx: () => void;
   onContextModeChange: (mode: AirborneContextMode) => void;
   onExportBrandedPdf: () => void;
   onExportSimpleDocx: () => void;
   onExportSimplePdf: () => void;
+  onLoadServerProject: () => void;
   onOpenPdfSetup: () => void;
   onPresetChange: (presetId: PresetId) => void;
+  onRefreshServerProjects: () => void;
+  onSelectedServerProjectChange: (projectId: string) => void;
   onStartEmpty: () => void;
   onReset: () => void;
   onStudyModeChange: (mode: StudyMode) => void;
+  onSyncServerProject: () => void;
   onToggleTheme: () => void;
   readyOutputCount: number;
   rowCount: number;
   selectedPreset: PresetDefinition;
+  selectedServerProjectId: string;
+  serverProjectOptions: ReadonlyArray<{
+    id: string;
+    label: string;
+  }>;
+  serverProjectStatusLabel: string;
   studyMode: StudyMode;
   theme: "dark" | "light";
 };
@@ -39,21 +50,29 @@ export function SimpleWorkbenchToolbar({
   airborneContextMode,
   exportReady,
   isExportingPdf,
+  isServerProjectBusy,
   modePresets,
   onExportBrandedDocx,
   onContextModeChange,
   onExportBrandedPdf,
   onExportSimpleDocx,
   onExportSimplePdf,
+  onLoadServerProject,
   onOpenPdfSetup,
   onPresetChange,
+  onRefreshServerProjects,
+  onSelectedServerProjectChange,
   onStartEmpty,
   onReset,
   onStudyModeChange,
+  onSyncServerProject,
   onToggleTheme,
   readyOutputCount,
   rowCount,
   selectedPreset,
+  selectedServerProjectId,
+  serverProjectOptions,
+  serverProjectStatusLabel,
   studyMode,
   theme,
 }: SimpleWorkbenchToolbarProps) {
@@ -148,7 +167,7 @@ export function SimpleWorkbenchToolbar({
           </div>
         </div>
 
-        <div className="grid gap-2 md:grid-cols-[minmax(0,10rem)_minmax(0,1fr)_minmax(0,1.1fr)]">
+        <div className="grid gap-2 md:grid-cols-[minmax(0,10rem)_minmax(0,1fr)_minmax(0,1.1fr)_minmax(0,1.1fr)]">
           <label className="grid gap-1">
             <span className="text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-[color:var(--ink-faint)]">Mode</span>
             <select
@@ -207,6 +226,57 @@ export function SimpleWorkbenchToolbar({
               ))}
             </select>
           </label>
+
+          <div className="grid min-w-0 gap-1">
+            <span className="text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-[color:var(--ink-faint)]">Server Project</span>
+            <div className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto_auto_auto] gap-1.5">
+              <select
+                aria-label="Server project"
+                className="focus-ring touch-target h-10 min-w-0 rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-2 text-[0.95rem] text-[color:var(--ink)]"
+                disabled={isServerProjectBusy}
+                onChange={(event) => onSelectedServerProjectChange(event.target.value)}
+                value={selectedServerProjectId}
+              >
+                <option value="">Browser-local</option>
+                {serverProjectOptions.map((project) => (
+                  <option key={project.id} value={project.id}>
+                    {project.label}
+                  </option>
+                ))}
+              </select>
+              <button
+                aria-label="Refresh server projects"
+                className="focus-ring touch-target inline-flex h-10 w-10 items-center justify-center rounded border border-[color:var(--line)] bg-[color:var(--paper)] text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"
+                disabled={isServerProjectBusy}
+                onClick={onRefreshServerProjects}
+                title="Refresh server projects"
+                type="button"
+              >
+                <RefreshCcw className="h-3.5 w-3.5" />
+              </button>
+              <button
+                aria-label="Load server project"
+                className="focus-ring touch-target inline-flex h-10 w-10 items-center justify-center rounded border border-[color:var(--line)] bg-[color:var(--paper)] text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"
+                disabled={isServerProjectBusy || selectedServerProjectId.length === 0}
+                onClick={onLoadServerProject}
+                title="Load server project"
+                type="button"
+              >
+                <FolderOpen className="h-3.5 w-3.5" />
+              </button>
+              <button
+                aria-label="Sync current project to server"
+                className="focus-ring touch-target inline-flex h-10 w-10 items-center justify-center rounded border border-[color:var(--accent)] bg-[color:var(--accent-soft)] text-[color:var(--accent-ink)] hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50"
+                disabled={isServerProjectBusy || rowCount === 0}
+                onClick={onSyncServerProject}
+                title="Sync current project to server"
+                type="button"
+              >
+                <CloudUpload className="h-3.5 w-3.5" />
+              </button>
+            </div>
+            <span className="min-h-4 truncate text-[0.72rem] text-[color:var(--ink-faint)]">{serverProjectStatusLabel}</span>
+          </div>
         </div>
       </div>
     </div>

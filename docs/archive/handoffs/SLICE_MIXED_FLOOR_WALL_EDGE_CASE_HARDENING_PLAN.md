@@ -1,7 +1,7 @@
 # Slice Plan — Mixed Floor/Wall Edge-Case Hardening
 
 Slice id: `mixed_floor_wall_edge_case_hardening_v1`
-Status: OPEN (authored 2026-04-22)
+Status: CLOSED (implemented 2026-04-22; archived as historical plan)
 Master-plan step: 7
 Selected by: `wall_field_continuation_value_pinning_v1` closeout
 contract on 2026-04-21 (step 5 audit closed clean → step 6 stays

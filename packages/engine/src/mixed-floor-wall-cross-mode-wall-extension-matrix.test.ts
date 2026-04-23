@@ -383,8 +383,9 @@ describe("step-7 cross-mode wall extension — torture matrix", () => {
     // Non-framed cases (masonry, CLT) skip this overlay — they
     // do not carry studType so toggling does not apply.
     it("O5 history-replay overlay is idempotent under studType toggle", () => {
-      const framedContext = testCase.labOptions.airborneContext as AirborneContext | undefined;
-      if (!framedContext || framedContext.studType == null) {
+      const labOptions = testCase.labOptions;
+      const framedContext = labOptions?.airborneContext as AirborneContext | undefined;
+      if (!labOptions || !framedContext || framedContext.studType == null) {
         expect(true, "non-framed case skips O5").toBe(true);
         return;
       }
@@ -396,16 +397,16 @@ describe("step-7 cross-mode wall extension — torture matrix", () => {
       const baselineContext = framedContext;
 
       const first = resultSnapshot(
-        calculateAssembly(testCase.rows, { ...testCase.labOptions, airborneContext: baselineContext })
+        calculateAssembly(testCase.rows, { ...labOptions, airborneContext: baselineContext })
       );
       // Middle call toggles to the other studType — represents
       // a user briefly changing the context during an edit
       // session. Nothing is asserted on this call; we only care
       // that the engine produces the original output when
       // restoring the baseline.
-      calculateAssembly(testCase.rows, { ...testCase.labOptions, airborneContext: toggledContext });
+      calculateAssembly(testCase.rows, { ...labOptions, airborneContext: toggledContext });
       const restored = resultSnapshot(
-        calculateAssembly(testCase.rows, { ...testCase.labOptions, airborneContext: baselineContext })
+        calculateAssembly(testCase.rows, { ...labOptions, airborneContext: baselineContext })
       );
 
       expect(restored).toEqual(first);

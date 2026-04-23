@@ -135,6 +135,8 @@ export type SimpleWorkbenchProposalDocument = {
   reportProfile: ReportProfile;
   reportProfileLabel: string;
   responseCurves?: readonly WorkbenchResponseCurveFigure[];
+  serverProjectId?: string;
+  serverProjectScenarioId?: string;
   studyModeLabel: string;
   studyContextLabel: string;
   validationDetail: string;
@@ -423,7 +425,9 @@ export function parseSimpleWorkbenchProposalDocument(value: unknown): SimpleWork
         : inferSimpleWorkbenchReportProfile(
             typeof value.reportProfileLabel === "string" ? value.reportProfileLabel : ""
           ),
-    responseCurves: responseCurves.length > 0 ? responseCurves : undefined
+    responseCurves: responseCurves.length > 0 ? responseCurves : undefined,
+    serverProjectId: typeof value.serverProjectId === "string" ? value.serverProjectId : undefined,
+    serverProjectScenarioId: typeof value.serverProjectScenarioId === "string" ? value.serverProjectScenarioId : undefined
   };
 }
 

@@ -15,6 +15,12 @@ Project status:
 - A seed `engine`, `catalogs`, `shared`, and `ui` package set exists.
 - Docker build and compose structure exist.
 - The web app now has auth-gated workbench flows and proposal PDF/DOCX export.
+- Server-backed project storage v1 is available through explicit
+  workbench sync/list/load; editing remains local-first.
+- Project access roles/actions now have a shared pure policy contract,
+  but project/proposal routes remain owner-scoped; route integration is
+  deferred while the active slice returns to calculator accuracy and
+  coverage.
 - No code should be copied from `Acoustic2` until the import policy in [`docs/foundation/SOURCE_REPO_POLICY.md`](./docs/foundation/SOURCE_REPO_POLICY.md) is followed.
 
 Primary documents (agent resume triangle):
@@ -25,9 +31,21 @@ Primary documents (agent resume triangle):
 
 Supporting documents:
 
-- [`docs/calculator/WALL_COVERAGE_EXPANSION_PLAN.md`](./docs/calculator/WALL_COVERAGE_EXPANSION_PLAN.md) — wall program (master-plan steps 2-6)
-- [`docs/calculator/SYSTEM_AUDIT_2026-04-20.md`](./docs/calculator/SYSTEM_AUDIT_2026-04-20.md) — latest broad audit findings + priority analysis
-- [`docs/calculator/CHECKPOINT_2026-04-19_MIXED_FLOOR_WALL_SEEDED_CHAIN_CLOSEOUT_HANDOFF.md`](./docs/calculator/CHECKPOINT_2026-04-19_MIXED_FLOOR_WALL_SEEDED_CHAIN_CLOSEOUT_HANDOFF.md) — most recent historical checkpoint handoff
+- [`docs/calculator/CHECKPOINT_2026-04-23_BROAD_REVALIDATION_CALCULATOR_REFOCUS_HANDOFF.md`](./docs/calculator/CHECKPOINT_2026-04-23_BROAD_REVALIDATION_CALCULATOR_REFOCUS_HANDOFF.md) — latest checkpoint
+- [`docs/calculator/CHECKPOINT_2026-04-23_TEAM_ACCESS_MODEL_HANDOFF.md`](./docs/calculator/CHECKPOINT_2026-04-23_TEAM_ACCESS_MODEL_HANDOFF.md) — team-access model checkpoint
+- [`docs/calculator/CHECKPOINT_2026-04-23_AUTH_SESSION_HARDENING_HANDOFF.md`](./docs/calculator/CHECKPOINT_2026-04-23_AUTH_SESSION_HARDENING_HANDOFF.md) — auth-session hardening checkpoint
+- [`docs/calculator/CHECKPOINT_2026-04-23_PROJECT_ACCESS_AUTHORIZATION_HANDOFF.md`](./docs/calculator/CHECKPOINT_2026-04-23_PROJECT_ACCESS_AUTHORIZATION_HANDOFF.md) — project-access authorization checkpoint
+- [`docs/calculator/CHECKPOINT_2026-04-23_SERVER_BACKED_PROJECT_STORAGE_HANDOFF.md`](./docs/calculator/CHECKPOINT_2026-04-23_SERVER_BACKED_PROJECT_STORAGE_HANDOFF.md) — server-backed project storage checkpoint
+- [`docs/calculator/CHECKPOINT_2026-04-23_FINAL_AUDIT_HANDOFF.md`](./docs/calculator/CHECKPOINT_2026-04-23_FINAL_AUDIT_HANDOFF.md) — latest calculator checkpoint
+- [`docs/calculator/POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md`](./docs/calculator/POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md) — active productization roadmap
+- [`docs/calculator/SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md`](./docs/calculator/SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md) — active wall formula-family widening slice plan
+- [`docs/calculator/SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md`](./docs/calculator/SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md) — deferred project-access policy route integration slice plan
+- [`docs/calculator/SLICE_TEAM_ACCESS_MODEL_PLAN.md`](./docs/calculator/SLICE_TEAM_ACCESS_MODEL_PLAN.md) — closed team-access model slice plan
+- [`docs/calculator/SLICE_AUTH_SESSION_HARDENING_PLAN.md`](./docs/calculator/SLICE_AUTH_SESSION_HARDENING_PLAN.md) — closed auth-session hardening slice plan
+- [`docs/calculator/SLICE_PROJECT_ACCESS_AUTHORIZATION_PLAN.md`](./docs/calculator/SLICE_PROJECT_ACCESS_AUTHORIZATION_PLAN.md) — closed project-access slice plan
+- [`docs/calculator/SLICE_SERVER_BACKED_PROJECT_STORAGE_PLAN.md`](./docs/calculator/SLICE_SERVER_BACKED_PROJECT_STORAGE_PLAN.md) — closed project-storage slice plan
+- [`docs/calculator/SYSTEM_MAP.md`](./docs/calculator/SYSTEM_MAP.md) — runtime and test-surface map
+- [`docs/calculator/CALCULATION_MODEL_AND_VALIDATION.md`](./docs/calculator/CALCULATION_MODEL_AND_VALIDATION.md) — answer-origin semantics
 - [`docs/README.md`](./docs/README.md) — docs hierarchy entry point
 - [`docs/foundation/PROJECT_PLAN.md`](./docs/foundation/PROJECT_PLAN.md)
 - [`docs/foundation/SOURCE_REPO_POLICY.md`](./docs/foundation/SOURCE_REPO_POLICY.md)
@@ -68,13 +86,17 @@ Useful endpoints:
 - `GET /api/health`
 - `POST /api/estimate`
 - `POST /api/impact-only`
+- `GET /api/projects`
+- `POST /api/projects/import-local`
 - `POST /api/proposal-pdf`
 - `POST /api/proposal-docx`
 
 Authentication:
 
 - the landing page remains public
-- when auth is configured, `/workbench`, `/workbench/proposal`, `POST /api/estimate`, `POST /api/impact-only`, and `POST /api/proposal-pdf` require sign-in
+- when auth is configured, `/workbench`, `/workbench/proposal`,
+  project APIs, estimate APIs, and proposal PDF/DOCX APIs require
+  sign-in
 - if auth env vars are not configured locally, the app falls back to preview mode instead of forcing login
 - copy [`apps/web/.env.example`](./apps/web/.env.example) into your local env setup if you want authenticated local runs instead of preview mode
 

@@ -190,6 +190,7 @@ type WorkbenchStore = {
   clearRows: () => void;
   deleteSavedScenario: (scenarioId: string) => void;
   loadPreset: (presetId: PresetId) => void;
+  loadScenarioSnapshot: (scenario: ScenarioSnapshot) => void;
   loadSavedScenario: (scenarioId: string) => void;
   duplicateRow: (id: string) => void;
   moveRow: (id: string, direction: "up" | "down") => void;
@@ -554,6 +555,75 @@ function makeScenarioName(state: Pick<WorkbenchStore, "activePresetId" | "projec
   return `${state.projectName} · ${preset.label} ${String(state.savedScenarios.length + 1).padStart(2, "0")}`;
 }
 
+function buildLoadedScenarioState(
+  state: Pick<WorkbenchStore, "customMaterials">,
+  scenario: ScenarioSnapshot
+): Partial<WorkbenchStore> {
+  const criteriaPack = getCriteriaPackById(scenario.criteriaPackId ?? DEFAULT_CRITERIA_PACK_ID);
+
+  return {
+    activePresetId: scenario.presetId,
+    calculatorId: scenario.calculatorId ?? "dynamic",
+    airborneAirtightness: scenario.airborneAirtightness ?? "good",
+    airborneConnectionType: scenario.airborneConnectionType ?? "auto",
+    airborneContextMode: scenario.airborneContextMode ?? "element_lab",
+    airborneElectricalBoxes: scenario.airborneElectricalBoxes ?? "none",
+    airborneJunctionQuality: scenario.airborneJunctionQuality ?? "good",
+    airbornePanelHeightMm: scenario.airbornePanelHeightMm ?? "",
+    airbornePanelWidthMm: scenario.airbornePanelWidthMm ?? "",
+    airbornePenetrationState: scenario.airbornePenetrationState ?? "none",
+    airbornePerimeterSeal: scenario.airbornePerimeterSeal ?? "good",
+    airborneReceivingRoomRt60S: scenario.airborneReceivingRoomRt60S ?? "",
+    airborneReceivingRoomVolumeM3: scenario.airborneReceivingRoomVolumeM3 ?? "",
+    airborneSharedTrack: scenario.airborneSharedTrack ?? "independent",
+    airborneStudSpacingMm: scenario.airborneStudSpacingMm ?? "",
+    airborneStudType: scenario.airborneStudType ?? "auto",
+    approverTitle: scenario.approverTitle ?? "Acoustic Consultant",
+    briefNote: scenario.briefNote ?? "Record assumptions, flanking risks, and report caveats here.",
+    clientName: scenario.clientName ?? "Internal study",
+    customMaterials: mergeCustomMaterials(state.customMaterials, scenario.customMaterials ?? []),
+    consultantAddress: scenario.consultantAddress ?? "Office address not entered",
+    consultantCompany: scenario.consultantCompany ?? "DynEcho Acoustic Consulting",
+    consultantEmail: scenario.consultantEmail ?? "Contact email not entered",
+    consultantLogoDataUrl: scenario.consultantLogoDataUrl ?? "",
+    consultantPhone: scenario.consultantPhone ?? "Contact phone not entered",
+    consultantWordmarkLine: scenario.consultantWordmarkLine ?? "",
+    criteriaPackId: criteriaPack.id,
+    fieldRiskIds: [...(scenario.fieldRiskIds ?? [])],
+    impactDirectPathOffsetDb: scenario.impactDirectPathOffsetDb ?? "",
+    impactGuideCi50_2500Db: scenario.impactGuideCi50_2500Db ?? "",
+    impactGuideCiDb: scenario.impactGuideCiDb ?? "",
+    impactGuideHdDb: scenario.impactGuideHdDb ?? "",
+    impactGuideKDb: scenario.impactGuideKDb ?? "",
+    impactGuideMassRatio: scenario.impactGuideMassRatio ?? "",
+    impactExactBandInput: scenario.impactExactBandInput ?? "",
+    impactExactLabOrField: scenario.impactExactLabOrField ?? "lab",
+    impactFlankingPathsInput: scenario.impactFlankingPathsInput ?? "",
+    impactImprovementBandInput: scenario.impactImprovementBandInput ?? "",
+    impactGuideSmallRoomMode: scenario.impactGuideSmallRoomMode ?? false,
+    impactGuideSource: scenario.impactGuideSource ?? "live_stack",
+    impactGuideReceivingRoomVolumeM3: scenario.impactGuideReceivingRoomVolumeM3 ?? "",
+    impactLowerTreatmentReductionDb: scenario.impactLowerTreatmentReductionDb ?? "",
+    impactReferenceDeltaLwDb: scenario.impactReferenceDeltaLwDb ?? "",
+    preparedBy: scenario.preparedBy ?? "DynEcho Operator",
+    proposalIssueCodePrefix: scenario.proposalIssueCodePrefix ?? "",
+    proposalAttention: scenario.proposalAttention ?? "Attention line not entered",
+    proposalIssuePurpose: scenario.proposalIssuePurpose ?? DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_ISSUE_PURPOSE,
+    proposalRecipient: scenario.proposalRecipient ?? "Client delivery team",
+    projectName: scenario.projectName ?? "DynEcho Operator Deck",
+    proposalReference: scenario.proposalReference ?? "DEC-2026-001",
+    proposalRevision: scenario.proposalRevision ?? "Rev 00",
+    proposalSubject: scenario.proposalSubject ?? "Acoustic performance proposal",
+    proposalValidityNote: scenario.proposalValidityNote ?? DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_VALIDITY_NOTE,
+    reportProfile: scenario.reportProfile ?? "consultant",
+    requestedOutputs: [...(scenario.requestedOutputs ?? criteriaPack.requestedOutputs)],
+    rows: duplicateRows(scenario.rows),
+    studyMode: scenario.studyMode,
+    targetLnwDb: scenario.targetLnwDb ?? criteriaPack.targetLnwDb,
+    targetRwDb: scenario.targetRwDb ?? criteriaPack.targetRwDb
+  };
+}
+
 export const useWorkbenchStore = create<WorkbenchStore>()(
   persist(
     (set) => ({
@@ -668,70 +738,10 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
             return state;
           }
 
-          const criteriaPack = getCriteriaPackById(scenario.criteriaPackId ?? DEFAULT_CRITERIA_PACK_ID);
-
-          return {
-            activePresetId: scenario.presetId,
-            calculatorId: scenario.calculatorId ?? "dynamic",
-            airborneAirtightness: scenario.airborneAirtightness ?? "good",
-            airborneConnectionType: scenario.airborneConnectionType ?? "auto",
-            airborneContextMode: scenario.airborneContextMode ?? "element_lab",
-            airborneElectricalBoxes: scenario.airborneElectricalBoxes ?? "none",
-            airborneJunctionQuality: scenario.airborneJunctionQuality ?? "good",
-            airbornePanelHeightMm: scenario.airbornePanelHeightMm ?? "",
-            airbornePanelWidthMm: scenario.airbornePanelWidthMm ?? "",
-            airbornePenetrationState: scenario.airbornePenetrationState ?? "none",
-            airbornePerimeterSeal: scenario.airbornePerimeterSeal ?? "good",
-            airborneReceivingRoomRt60S: scenario.airborneReceivingRoomRt60S ?? "",
-            airborneReceivingRoomVolumeM3: scenario.airborneReceivingRoomVolumeM3 ?? "",
-            airborneSharedTrack: scenario.airborneSharedTrack ?? "independent",
-            airborneStudSpacingMm: scenario.airborneStudSpacingMm ?? "",
-            airborneStudType: scenario.airborneStudType ?? "auto",
-            approverTitle: scenario.approverTitle ?? "Acoustic Consultant",
-            briefNote: scenario.briefNote ?? "Record assumptions, flanking risks, and report caveats here.",
-            clientName: scenario.clientName ?? "Internal study",
-            customMaterials: mergeCustomMaterials(state.customMaterials, scenario.customMaterials ?? []),
-            consultantAddress: scenario.consultantAddress ?? "Office address not entered",
-            consultantCompany: scenario.consultantCompany ?? "DynEcho Acoustic Consulting",
-            consultantEmail: scenario.consultantEmail ?? "Contact email not entered",
-            consultantLogoDataUrl: scenario.consultantLogoDataUrl ?? "",
-            consultantPhone: scenario.consultantPhone ?? "Contact phone not entered",
-            consultantWordmarkLine: scenario.consultantWordmarkLine ?? "",
-            criteriaPackId: criteriaPack.id,
-            fieldRiskIds: [...(scenario.fieldRiskIds ?? [])],
-            impactDirectPathOffsetDb: scenario.impactDirectPathOffsetDb ?? "",
-            impactGuideCi50_2500Db: scenario.impactGuideCi50_2500Db ?? "",
-            impactGuideCiDb: scenario.impactGuideCiDb ?? "",
-            impactGuideHdDb: scenario.impactGuideHdDb ?? "",
-            impactGuideKDb: scenario.impactGuideKDb ?? "",
-            impactGuideMassRatio: scenario.impactGuideMassRatio ?? "",
-            impactExactBandInput: scenario.impactExactBandInput ?? "",
-            impactExactLabOrField: scenario.impactExactLabOrField ?? "lab",
-            impactFlankingPathsInput: scenario.impactFlankingPathsInput ?? "",
-            impactImprovementBandInput: scenario.impactImprovementBandInput ?? "",
-            impactGuideSmallRoomMode: scenario.impactGuideSmallRoomMode ?? false,
-            impactGuideSource: scenario.impactGuideSource ?? "live_stack",
-            impactGuideReceivingRoomVolumeM3: scenario.impactGuideReceivingRoomVolumeM3 ?? "",
-            impactLowerTreatmentReductionDb: scenario.impactLowerTreatmentReductionDb ?? "",
-            impactReferenceDeltaLwDb: scenario.impactReferenceDeltaLwDb ?? "",
-            preparedBy: scenario.preparedBy ?? "DynEcho Operator",
-            proposalIssueCodePrefix: scenario.proposalIssueCodePrefix ?? "",
-            proposalAttention: scenario.proposalAttention ?? "Attention line not entered",
-            proposalIssuePurpose: scenario.proposalIssuePurpose ?? DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_ISSUE_PURPOSE,
-            proposalRecipient: scenario.proposalRecipient ?? "Client delivery team",
-            projectName: scenario.projectName ?? "DynEcho Operator Deck",
-            proposalReference: scenario.proposalReference ?? "DEC-2026-001",
-            proposalRevision: scenario.proposalRevision ?? "Rev 00",
-            proposalSubject: scenario.proposalSubject ?? "Acoustic performance proposal",
-            proposalValidityNote: scenario.proposalValidityNote ?? DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_VALIDITY_NOTE,
-            reportProfile: scenario.reportProfile ?? "consultant",
-            requestedOutputs: [...(scenario.requestedOutputs ?? criteriaPack.requestedOutputs)],
-            rows: duplicateRows(scenario.rows),
-            studyMode: scenario.studyMode,
-            targetLnwDb: scenario.targetLnwDb ?? criteriaPack.targetLnwDb,
-            targetRwDb: scenario.targetRwDb ?? criteriaPack.targetRwDb
-          };
+          return buildLoadedScenarioState(state, scenario);
         }),
+      loadScenarioSnapshot: (scenario) =>
+        set((state) => buildLoadedScenarioState(state, scenario)),
       duplicateRow: (id) =>
         set((state) => {
           const index = state.rows.findIndex((row) => row.id === id);

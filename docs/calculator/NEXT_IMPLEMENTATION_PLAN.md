@@ -5,7 +5,8 @@ focused, agent-resume friendly. For the strategic picture read
 [MASTER_PLAN.md](./MASTER_PLAN.md). For what is stable right now
 read [CURRENT_STATE.md](./CURRENT_STATE.md).
 
-Last reviewed: 2026-04-22 (step 7b closed; active slice moves to step 8 `good_calculator_final_audit_v1`).
+Last reviewed: 2026-04-23 (broad revalidation green;
+`wall_formula_family_widening_v1` selected).
 
 ---
 
@@ -34,61 +35,64 @@ For every next slice decision:
 
 ## Now
 
-- **Active slice**: `good_calculator_final_audit_v1`
-  (master-plan step 8). Selected `2026-04-22` by the
-  `wall_corridor_surface_value_pinning_v1` closeout contract
-  `post-wall-corridor-surface-value-pinning-v1-next-slice-selection-contract.test.ts`.
-- **Plan doc**: NOT YET AUTHORED. Next agent writes
-  `SLICE_GOOD_CALCULATOR_FINAL_AUDIT_PLAN.md` as the first
-  slice action, following the shape of the five prior slice
-  plan docs (archived under
-  `docs/archive/handoffs/SLICE_*`).
-- **Scope preview (per MASTER_PLAN step 8)**: author
-  `coverage-grid-consistency.test.ts` asserting §3 grid
-  rows match engine reality; verify each C1-C6 completion
-  signal with an executable assertion; archive the full
-  resume triangle into a session-close checkpoint; open the
-  post-calculator productization roadmap (§1 non-goals:
-  billing / auth / desktop app — re-enter only after the
-  calculator itself is done).
-- **Previous slice closed 2026-04-22** —
-  `wall_corridor_surface_value_pinning_v1` landed the 6
-  wall selector corridor labels × 3 contexts × 9 outputs
-  VALUE-pin matrix (198 drift guards + 5 cross-cell physical
-  invariants) in
-  `dynamic-airborne-wall-selector-value-pins.test.ts`. C2 +
-  C3 corridor surfaces flipped 🟡 → ✅ (preset + corridor
-  both VALUE-pinned). No engine changes required.
-- **Step 7 closed 2026-04-22** (prior slice before 7b) —
-  `mixed_floor_wall_edge_case_hardening_v1` brought the
-  engine wall torture surface to 6/6 preset parity, authored
-  a 32-assertion cross-mode torture matrix, and surfaced +
-  fixed two real engine accuracy bugs (F1 masonry calibrator,
-  F2 catalog-match).
+- **Active slice**: `wall_formula_family_widening_v1`
+  (calculator accuracy/coverage re-entry). Selected `2026-04-23`
+  after a green broad revalidation and the explicit priority reset to
+  calculation accuracy + defensible coverage first.
+- **Planning surface**:
+  [SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md](./SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md).
+- **Calculator runtime posture**: `good_calculator_final_audit_v1`
+  is closed. The final audit reconciled `MASTER_PLAN.md` §3/§8,
+  added `coverage-grid-consistency.test.ts`, verified C1-C6 with
+  executable assertions, added the post-final-audit contract, and
+  opened the productization roadmap. The archived plan lives at
+  `docs/archive/handoffs/SLICE_GOOD_CALCULATOR_FINAL_AUDIT_PLAN.md`.
+- **Next implementation action**: author the wall formula-family
+  audit/anchor matrix before changing runtime values. Pin current
+  `timber_stud_wall`, LSF, double-leaf empty-cavity, and lined-cavity
+  outputs with trace/provenance; prove exact/catalog/benchmark
+  precedence and negative cases; only then decide whether a timber-stud
+  or double-leaf correction is defensible. `project_access_policy_route_integration_v1`
+  is deferred, not cancelled, because it does not improve acoustic
+  calculation accuracy or coverage.
 
 ## Latest Closed Slices
 
 See [CURRENT_STATE.md](./CURRENT_STATE.md) "Latest Closed Slices"
-table — six slices closed on 2026-04-21, all with explicit
-post-contract tests.
+table. `good_calculator_final_audit_v1` is the latest closed
+calculator slice and has an explicit post-contract test.
 
 ## Deferred Follow-Up Tracks
 
-Explicitly documented in
-[CHECKPOINT_2026-04-21_SESSION_CLOSE_HANDOFF.md](./CHECKPOINT_2026-04-21_SESSION_CLOSE_HANDOFF.md)
-"Planned But Not Done (Explicit Deferral Ledger)":
+Explicitly carried forward by the final-audit contract:
+
+Active now, not deferred: `wall_formula_family_widening_v1`.
+The current slice starts with an audit/anchor matrix before any runtime
+formula value changes.
 
 1. **`dynamic_airborne_split_refactor_v2`** — composer injection
    to finish the `dynamic-airborne.ts` split (last ~3200 lines +
    14 `apply*` guards). Blueprint in
    [DYNAMIC_AIRBORNE_CARTOGRAPHY.md](./DYNAMIC_AIRBORNE_CARTOGRAPHY.md)
    "Remaining Work Deferred" section.
-2. **`wall_formula_family_widening_v1`** (master-plan step 6,
-   conditional) — timber stud accuracy gap (engine Rw=31 vs
-   manufacturer ~45-50). VALUE-pinned as drift guard.
-3. **Dimension B corridor VALUE pins** — extend VALUE-pin
-   discipline from the preset surface to the
-   `dynamic-airborne-wall-selector-trace-matrix` corridors.
+2. **Dimension B deep-hybrid swap VALUE pins** — per-cell
+   VALUE pins for the deep-hybrid swap grids remain low-ROI.
+3. **Dimension C workbench card VALUE pins** — optional
+   corridor card-level VALUE audit, deferred unless the final
+   audit finds user-visible card drift.
+4. **F3 framed-wall monotonic-floor warning drift** — cosmetic
+   warning-only drift on board-layer splits; numeric outputs
+   unchanged.
+5. **Floor field continuation audit** — parallel floor
+   integrity check, non-blocking for the closed wall final audit.
+6. **Arbitrary floor reorder expansion** — not claimed by the
+   final audit beyond defended floor split/parity surfaces.
+7. **Standalone all-caller invalid-thickness guard** — direct
+   engine hardening follow-up for floor/wall callers that bypass
+   workbench normalization.
+8. **Dedicated floor 50+ layer regression** — wall 50-layer
+   behavior is pinned; floor stress coverage remains a future
+   hardening track.
 
 ## Cross-Cutting Rules
 
@@ -112,18 +116,28 @@ Every slice under this plan obeys:
 
 ## Reading Path On Resume
 
-1. [CHECKPOINT_2026-04-22_SESSION_CLOSE_HANDOFF.md](./CHECKPOINT_2026-04-22_SESSION_CLOSE_HANDOFF.md)
-   — most recent session narrative; the 2026-04-21 checkpoint
-   is archived at `docs/archive/handoffs/`.
+1. [CHECKPOINT_2026-04-23_BROAD_REVALIDATION_CALCULATOR_REFOCUS_HANDOFF.md](./CHECKPOINT_2026-04-23_BROAD_REVALIDATION_CALCULATOR_REFOCUS_HANDOFF.md)
+   — broad test revalidation and calculator accuracy/coverage refocus.
 2. [CURRENT_STATE.md](./CURRENT_STATE.md)
-3. [MASTER_PLAN.md](./MASTER_PLAN.md) §3 (state grid) + §4 (master
+3. [SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md](./SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md)
+4. [MASTER_PLAN.md](./MASTER_PLAN.md) §3 (state grid) + §4 (master
    sequence) + §6 (accuracy preservation contract) + §8
    (completion signals)
-4. This file.
-5. Previous slice plans (closed 2026-04-22, reference only):
+5. [CHECKPOINT_2026-04-23_TEAM_ACCESS_MODEL_HANDOFF.md](./CHECKPOINT_2026-04-23_TEAM_ACCESS_MODEL_HANDOFF.md)
+   — closed team-access policy model handoff, reference only.
+6. [SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md](./SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md)
+   — deferred productization route-integration slice, reference only.
+7. [SLICE_TEAM_ACCESS_MODEL_PLAN.md](./SLICE_TEAM_ACCESS_MODEL_PLAN.md)
+   — closed team-access policy model slice, reference only.
+8. [SLICE_AUTH_SESSION_HARDENING_PLAN.md](./SLICE_AUTH_SESSION_HARDENING_PLAN.md)
+   — closed auth-session hardening slice, reference only.
+9. [SLICE_PROJECT_ACCESS_AUTHORIZATION_PLAN.md](./SLICE_PROJECT_ACCESS_AUTHORIZATION_PLAN.md)
+   — closed productization authorization slice, reference only.
+10. This file.
+11. Previous calculator slice plans (closed, reference only):
+   - `docs/archive/handoffs/SLICE_GOOD_CALCULATOR_FINAL_AUDIT_PLAN.md` (step 8)
    - `docs/archive/handoffs/SLICE_WALL_CORRIDOR_SURFACE_VALUE_PINNING_PLAN.md` (step 7b)
    - `docs/archive/handoffs/SLICE_MIXED_FLOOR_WALL_EDGE_CASE_HARDENING_PLAN.md` (step 7)
-6. Run `pnpm calculator:gate:current` — confirm green baseline
-   (5/5 tasks).
-7. Author `SLICE_GOOD_CALCULATOR_FINAL_AUDIT_PLAN.md` before
-   writing any implementation code for the step 8 slice.
+12. Run `pnpm calculator:gate:current` before calculator runtime
+   changes. Productization slices should add their own focused app/API
+   tests and use `pnpm check` when they touch shared contracts.

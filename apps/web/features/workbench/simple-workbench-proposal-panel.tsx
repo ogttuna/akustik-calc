@@ -123,6 +123,8 @@ type SimpleWorkbenchProposalPanelProps = {
   reportProfile: ReportProfile;
   reportProfileLabel: string;
   result: AssemblyCalculation | null;
+  serverProjectId?: string;
+  serverProjectScenarioId?: string;
   studyModeLabel: string;
   studyContextLabel: string;
   validationDetail: string;
@@ -510,6 +512,8 @@ function buildProposalDocument(
     reportProfile: props.reportProfile,
     reportProfileLabel: props.reportProfileLabel,
     responseCurves: buildWorkbenchResponseCurveFigures(props.result),
+    serverProjectId: props.serverProjectId,
+    serverProjectScenarioId: props.serverProjectScenarioId,
     studyModeLabel: props.studyModeLabel,
     studyContextLabel: props.studyContextLabel,
     validationDetail: props.validationDetail,
@@ -670,10 +674,12 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
     try {
       if (format === "docx") {
         await downloadSimpleWorkbenchProposalDocx(proposalDocument, {
+          projectId: proposalDocument.serverProjectId,
           style
         });
       } else {
         await downloadSimpleWorkbenchProposalPdf(proposalDocument, {
+          projectId: proposalDocument.serverProjectId,
           style
         });
       }

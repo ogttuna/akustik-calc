@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { BookmarkPlus, RotateCcw, Trash2 } from "lucide-react";
+import { BookmarkPlus, CloudUpload, RotateCcw, Trash2 } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, Cell, Tooltip, XAxis, YAxis } from "recharts";
 
 import { Pill, SurfacePanel } from "@dynecho/ui";
@@ -22,10 +22,14 @@ type MetricKey = "estimatedRwDb" | "estimatedStc" | "estimatedLnwDb" | "surfaceM
 
 type ScenarioComparePanelProps = {
   currentScenario: EvaluatedScenario;
+  isServerSyncing: boolean;
   savedScenarios: readonly EvaluatedScenario[];
   onDeleteScenario: (scenarioId: string) => void;
   onLoadScenario: (scenarioId: string) => void;
   onSaveScenario: () => void;
+  onSyncScenariosToServer: () => void;
+  serverSyncLabel: string;
+  serverSyncTone: "neutral" | "accent" | "warning" | "success";
   targetLnwDb: string;
   targetRwDb: string;
 };
@@ -87,10 +91,14 @@ function getScenarioSurfaceClass(
 
 export function ScenarioComparePanel({
   currentScenario,
+  isServerSyncing,
   onDeleteScenario,
   onLoadScenario,
   onSaveScenario,
+  onSyncScenariosToServer,
   savedScenarios,
+  serverSyncLabel,
+  serverSyncTone,
   targetLnwDb,
   targetRwDb
 }: ScenarioComparePanelProps) {
@@ -147,14 +155,26 @@ export function ScenarioComparePanel({
     <SurfacePanel className="px-4 py-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-sm font-semibold text-[color:var(--ink)]">Scenario compare</h2>
-        <button
-          className="focus-ring ink-button-solid inline-flex h-8 items-center gap-1.5 rounded px-3 text-[0.8rem] font-semibold"
-          onClick={onSaveScenario}
-          type="button"
-        >
-          <BookmarkPlus className="h-3.5 w-3.5" />
-          Save live stack
-        </button>
+        <div className="flex flex-wrap items-center gap-2">
+          <Pill tone={serverSyncTone}>{serverSyncLabel}</Pill>
+          <button
+            className="focus-ring inline-flex h-8 items-center gap-1.5 rounded border border-[color:var(--line)] px-3 text-[0.8rem] font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-55"
+            disabled={savedScenarios.length === 0 || isServerSyncing}
+            onClick={onSyncScenariosToServer}
+            type="button"
+          >
+            <CloudUpload className="h-3.5 w-3.5" />
+            {isServerSyncing ? "Syncing" : "Sync to server"}
+          </button>
+          <button
+            className="focus-ring ink-button-solid inline-flex h-8 items-center gap-1.5 rounded px-3 text-[0.8rem] font-semibold"
+            onClick={onSaveScenario}
+            type="button"
+          >
+            <BookmarkPlus className="h-3.5 w-3.5" />
+            Save live stack
+          </button>
+        </div>
       </div>
 
       {activeBriefTargets.length > 0 ? (

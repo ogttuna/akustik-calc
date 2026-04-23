@@ -403,7 +403,6 @@ describe("wall field continuation completeness matrix", () => {
           it(`${presetId} × ${contextMode}: logs actual engine values`, () => {
             const context = composeContextForPreset(presetId, contextMode);
             const snap = snapshotRatings(presetId, context);
-            // eslint-disable-next-line no-console
             console.log(
               `{ presetId: "${presetId}", context: "${contextMode}", expected: ${JSON.stringify(snap, null, 2)} },`
             );

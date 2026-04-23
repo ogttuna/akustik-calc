@@ -6,21 +6,25 @@ import {
 } from "@/features/workbench/simple-workbench-proposal";
 import { renderSimpleWorkbenchProposalPdf } from "@/features/workbench/simple-workbench-proposal-pdf-server";
 import { getAuthState } from "@/lib/auth";
+import {
+  appendProposalAuditEventForProject,
+  getProposalAuditProjectId,
+  getProposalAuditScenarioIds
+} from "@/lib/project-proposal-audit";
+import {
+  projectOwnerScopeErrorResponse,
+  projectStorageRouteErrorResponse,
+  resolveProjectRouteOwner
+} from "@/lib/project-route-auth";
 
 export const runtime = "nodejs";
 
 export async function POST(request: Request) {
   const authState = await getAuthState();
+  const owner = resolveProjectRouteOwner(authState);
 
-  if (authState.configured && !authState.session) {
-    return NextResponse.json(
-      {
-        error: "Authentication required."
-      },
-      {
-        status: 401
-      }
-    );
+  if (!owner.ok) {
+    return projectOwnerScopeErrorResponse(owner);
   }
 
   const style = new URL(request.url).searchParams.get("style") === "simple" ? "simple" : "branded";
@@ -58,6 +62,21 @@ export async function POST(request: Request) {
     });
     const pdfBytes = new Uint8Array(pdfBuffer);
     const filename = `${buildSimpleWorkbenchProposalFilename(proposalDocument.projectName)}${style === "simple" ? "-simple" : ""}.pdf`;
+    const projectId = getProposalAuditProjectId(request.url, proposalDocument.serverProjectId);
+
+    if (projectId) {
+      try {
+        await appendProposalAuditEventForProject({
+          authState,
+          format: "pdf",
+          projectId,
+          scenarioIds: getProposalAuditScenarioIds(proposalDocument.serverProjectScenarioId),
+          style
+        });
+      } catch (error) {
+        return projectStorageRouteErrorResponse(error, "DynEcho could not record the proposal audit event.");
+      }
+    }
 
     return new NextResponse(pdfBytes, {
       headers: {

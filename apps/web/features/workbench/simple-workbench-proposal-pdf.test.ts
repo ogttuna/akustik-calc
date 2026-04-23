@@ -154,6 +154,24 @@ describe("simple workbench proposal pdf helper", () => {
     });
   });
 
+  it("adds the server project id to proposal export routes when present", async () => {
+    await downloadSimpleWorkbenchProposalPdf(DOCUMENT, {
+      projectId: "99f81e24-0f14-4c86-9a9b-8b0f17b77d37",
+      style: "simple"
+    });
+
+    expect(fetch).toHaveBeenCalledWith(
+      "/api/proposal-pdf?style=simple&projectId=99f81e24-0f14-4c86-9a9b-8b0f17b77d37",
+      {
+        body: JSON.stringify(DOCUMENT),
+        headers: {
+          "content-type": "application/json"
+        },
+        method: "POST"
+      }
+    );
+  });
+
   it("posts the proposal snapshot to the branded docx route when requested", async () => {
     await downloadSimpleWorkbenchProposalDocx(DOCUMENT);
 

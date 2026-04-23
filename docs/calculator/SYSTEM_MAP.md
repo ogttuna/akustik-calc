@@ -1,6 +1,6 @@
 # System Map
 
-Last reviewed: 2026-04-20
+Last reviewed: 2026-04-23
 
 Document role:
 
@@ -15,6 +15,10 @@ Use this together with the agent resume triangle:
 - [CURRENT_STATE.md](./CURRENT_STATE.md) — snapshot (what just closed, what is selected)
 - [MASTER_PLAN.md](./MASTER_PLAN.md) — strategic roadmap + implementation state grid (§3)
 - [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md) — tactical slice detail
+- [SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md](./SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md)
+  — active calculator accuracy/coverage re-entry plan
+- [POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md](./POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md)
+  — deferred productization plan after calculator final audit
 
 And:
 
@@ -80,10 +84,12 @@ are correct.
    - File:
      - `apps/web/features/workbench/simple-workbench-output-model.ts`
 7. Save/load and proposal/report surfaces.
-   - Saved scenarios are currently browser-local, not server-backed project
-     records.
-   - Proposal/report exports exist, but project persistence is not a DB-backed
-     SaaS layer yet.
+   - Local scenario editing is browser-local first.
+   - Users can explicitly sync/load owner-scoped server project records.
+   - Proposal/report exports can append server project audit events.
+   - Project access roles/actions have a pure policy contract, but route
+     access is still owner-scoped until the deferred route-integration slice
+     wires the policy through an owner-only adapter.
 
 ## Runtime Boundaries
 
@@ -132,12 +138,29 @@ engine number is correct if the UI shows `live` for something that should be
 
 ### Persistence
 
-Current persistence is browser-local scenario storage.
+Current workbench editing persistence is local-first.
 
 - store uses Zustand `persist(...)`
 - storage backend is `createJSONStorage(() => localStorage)`
 - saved scenarios are snapshots in the client store
-- there is no server-backed project database yet
+- `server_backed_project_storage_v1` has closed an owner-scoped
+  server project repository and `/api/projects` import/list/detail
+  routes backed by filesystem JSON records
+- the workbench can copy browser-local saved scenarios into a server
+  project with `Sync to server`
+- the default workbench can sync the current snapshot to a server
+  project, list server projects, and load a marked server snapshot
+  back into local Zustand
+- proposal PDF/DOCX routes append a project audit event when a
+  `projectId` is present
+- `team_access_model_v1` has closed a pure project-access policy helper
+  with owner/editor/reviewer/viewer role-action decisions and stable
+  denial reasons
+- route behavior remains owner-scoped until
+  `project_access_policy_route_integration_v1` wires that policy through
+  the current route authorization boundary
+- local Zustand remains the live editing source; server persistence is
+  explicit sync/load, not shared multi-user editing
 
 This is important because docs should not describe current save/load as shared
 multi-user project persistence.
@@ -210,6 +233,18 @@ what is explicitly deferred, and what should be implemented next.
 
 Examples live in `packages/engine/src/post-*.test.ts`.
 
+### Productization Policy Tests
+
+These prove non-calculator product contracts such as auth, project
+storage, route authorization, and access policy semantics.
+
+Examples:
+
+- `apps/web/lib/project-access-policy.test.ts`
+- `apps/web/lib/server-project-routes.test.ts`
+- `apps/web/lib/auth.test.ts`
+- `apps/web/lib/auth-routes.test.ts`
+
 ### Focused Gate
 
 `pnpm calculator:gate:current` is the current single-command checkpoint gate.
@@ -219,27 +254,32 @@ validation path before and after a refactor.
 
 ## Current Architectural Hotspots
 
-As of `2026-04-20`, the requested-output output-card harness chain is frozen at
-a clean green baseline. The reinforced-concrete accuracy follow-up slice has
-now closed honestly after its matrix, provenance, and report surfaces landed.
-The defended Dataholz CLT calibration pass is now the active tightening slice,
-while the first
-blocked source-backed rerank is closed, and the seeded mixed floor/wall
-cross-mode chain follow-up is now closed as well. The blocked-source refresh
-closeout is also closed. The Dataholz composite-surface design is now also
-closed fail-closed. The C11c readiness design is now landed and closed
-fail-closed. The raw bare open-box/open-web family is now also closed
-fail-closed. The wall-selector family is now also closed fail-closed. The
-raw helper lane has closed too, so the active risk is no longer raw-helper
-sprawl. The CLT-local combined evidence surface has now closed too: the exact
-anchors, the predictor-backed visible proxy, and the under-described
-fail-closed boundary are all explicit. The active risk is now letting the
-Dataholz CLT tightening slice blur from a defended exact-vs-estimate/capped-
-visible corridor into accidental `GDMTXA04A` exact reopening or blocked-family
-drift.
+As of `2026-04-23`, the calculator final audit is closed and the broad
+repo validation is green. Server-backed project storage,
+project/proposal owner authorization, auth-session hardening, and the pure
+team-access policy model are all closed. The active risk has moved back
+to calculator accuracy/coverage: the next selected slice is
+`wall_formula_family_widening_v1`, starting with an audit/anchor matrix
+before any wall formula value changes. Productization route integration
+is deferred, not cancelled.
 
 Current hotspots:
 
+- selected calculator re-entry anchors:
+  - `docs/calculator/SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md`
+  - `docs/calculator/CHECKPOINT_2026-04-23_BROAD_REVALIDATION_CALCULATOR_REFOCUS_HANDOFF.md`
+  - `packages/engine/src/post-team-access-model-calculator-refocus-next-slice-selection-contract.test.ts`
+  - `apps/web/features/workbench/wall-lsf-timber-stud-preset-benchmarks.test.ts`
+  - `apps/web/features/workbench/wall-field-continuation-completeness-matrix.test.ts`
+  - `packages/engine/src/coverage-grid-consistency.test.ts`
+- selected productization anchors:
+  - `apps/web/lib/project-access-policy.ts`
+  - `apps/web/lib/project-access-policy.test.ts`
+  - `apps/web/lib/project-route-auth.ts`
+  - `apps/web/lib/project-storage-auth.ts`
+  - `apps/web/lib/server-project-routes.test.ts`
+  - `docs/calculator/SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md` (deferred)
+  - `docs/calculator/CHECKPOINT_2026-04-23_TEAM_ACCESS_MODEL_HANDOFF.md`
 - selected closeout and follow-up anchors:
   - `packages/engine/src/post-blocked-source-backed-widening-rerank-next-slice-selection-contract.test.ts`
   - `packages/engine/src/post-mixed-floor-wall-seeded-cross-mode-chain-next-slice-selection-contract.test.ts`
@@ -308,28 +348,32 @@ Current hotspots:
   - `apps/web/features/workbench/raw-floor-safe-bare-split-parity.test.ts`
 - focused gate entrypoint:
   `tools/dev/run-calculator-current-gate.ts`
+- final-audit gate additions:
+  - `packages/engine/src/coverage-grid-consistency.test.ts`
+  - `packages/engine/src/post-good-calculator-final-audit-v1-next-slice-selection-contract.test.ts`
 - source-backed widening ledger:
   `docs/calculator/SOURCE_GAP_LEDGER.md`
 
-The current selected next slice no longer exists to close another blocked
-source-backed family. That wall-selector closeout is now landed and fail-closed
-as well, the broad audit already selected the raw helper lane, the raw helper
-slice closed, the CLT-local evidence slice then closed too, and the reinforced
-low-confidence follow-up has now closed as well.
-The active system risk is now keeping the Dataholz CLT tightening corridor
-bounded by its defended source-truth and calibration surfaces without
-pretending that visible `GDMTXA04A` rows have become direct exact matches, or
-that any blocked-source family has silently reopened.
-Dataholz CLT tightening is now the only still-live non-blocked defended
-runtime corridor. The closed reinforced, `GDMTXA04A`, `C11c`, raw bare, and
-wall-selector families all stay explicit closeout evidence rather than active
-runtime work while the Dataholz slice is active.
+The current selected next slice no longer exists to close another calculator
+runtime corridor. Step 8 final audit closed on 2026-04-23 with the executable
+coverage grid, C1-C6 assertions, and post-final-audit contract. The active
+system risk has moved from calculator math to productization honesty:
+`server_backed_project_storage_v1` has closed durable server project records,
+explicit workbench sync/list/load, and proposal audit append;
+`team_access_model_v1` has closed the pure role/action policy. Local
+Zustand remains the live editing source unless a project is explicitly
+synced or loaded.
+Closed reinforced, `GDMTXA04A`, `C11c`, raw bare, wall-selector, and timber-stud
+formula tracks stay explicit calculator deferrals rather than active runtime
+work during productization.
 
 ## What This System Is Not Yet
 
 To avoid docs drift, be explicit about current non-features:
 
-- not a server-backed multi-project persistence system
+- not yet a complete multi-user/team project persistence system
+- not yet route-enabled for team membership; policy exists, but routes
+  remain owner-scoped until the active integration slice lands
 - not a single-formula calculator
 - not allowed to fabricate unsupported field or low-frequency outputs
 - not complete across every possible floor/wall family corridor
@@ -342,7 +386,11 @@ To avoid docs drift, be explicit about current non-features:
   read [CURRENT_STATE.md](./CURRENT_STATE.md)
 - Want the next implementation step:
   read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md)
+- Want the active productization plan:
+  read [POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md](./POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md)
+- Want the active calculator re-entry plan:
+  read [SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md](./SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md)
 - Want answer-origin or support semantics:
   read [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
 - Want the last clean resume point:
-  read [CHECKPOINT_2026-04-19_MIXED_FLOOR_WALL_SEEDED_CHAIN_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-19_MIXED_FLOOR_WALL_SEEDED_CHAIN_CLOSEOUT_HANDOFF.md)
+  read [CHECKPOINT_2026-04-23_BROAD_REVALIDATION_CALCULATOR_REFOCUS_HANDOFF.md](./CHECKPOINT_2026-04-23_BROAD_REVALIDATION_CALCULATOR_REFOCUS_HANDOFF.md)

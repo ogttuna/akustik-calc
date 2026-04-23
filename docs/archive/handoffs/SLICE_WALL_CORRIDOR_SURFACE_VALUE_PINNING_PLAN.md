@@ -1,7 +1,7 @@
 # Slice Plan — Wall Corridor Surface Value Pinning
 
 Slice id: `wall_corridor_surface_value_pinning_v1`
-Status: OPEN (authored 2026-04-22)
+Status: CLOSED (implemented 2026-04-22; archived as historical plan)
 Master-plan step: 7b (inserted between step 7 closed
 `mixed_floor_wall_edge_case_hardening_v1` and step 8 final audit)
 Selected by: 2026-04-22 post-step-7 re-analysis (see Pressure-

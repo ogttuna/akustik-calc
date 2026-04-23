@@ -41,7 +41,7 @@ function runStep(step: Step): Promise<void> {
 async function main() {
   const steps: Step[] = [
     {
-      label: "engine reinforced-concrete closeout plus Dataholz CLT tightening gate",
+      label: "engine calculator final-audit focused gate",
       args: [
         "pnpm",
         "--filter",
@@ -114,11 +114,14 @@ async function main() {
         "src/raw-floor-hostile-input-answer-matrix.test.ts",
         "src/raw-floor-safe-bare-split-parity.test.ts",
         "src/output-origin-trace-matrix.test.ts",
+        "src/coverage-grid-consistency.test.ts",
+        "src/post-good-calculator-final-audit-v1-next-slice-selection-contract.test.ts",
+        "src/post-team-access-model-calculator-refocus-next-slice-selection-contract.test.ts",
         "--maxWorkers=1"
       ]
     },
     {
-      label: "web reinforced-concrete closeout plus Dataholz CLT tightening gate",
+      label: "web calculator final-audit focused gate",
       args: [
         "pnpm",
         "--filter",

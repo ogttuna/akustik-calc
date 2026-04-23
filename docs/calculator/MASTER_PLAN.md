@@ -160,7 +160,7 @@ trade places.
 
 ---
 
-## 3. Implementation State Grid (2026-04-21)
+## 3. Implementation State Grid (last reconciled 2026-04-23)
 
 Live snapshot of what the calculator actually handles today. Status
 codes:
@@ -223,16 +223,18 @@ context the preset outputs match the corresponding engine benchmarks.
 | Timber stud (`timber_stud_wall` preset) | 🟡 Formula | `wall-lsf-timber-stud-preset-benchmarks.test.ts` pins the engine's current formula-owned output under the composed lab context (Rw=31, field R'w=24, building R'w=24); manufacturer field data for similar stacks is typically ~45-50 dB — accuracy gap is a real finding parked for `wall_formula_family_widening_v1` (step 6, conditional); current pins serve as drift guards |
 | Wall selector families (double-leaf, lined-massive, AAC boundary, G5 sibling, heavy-core trim, lab double-stud) | 🟢 Benchmark | VALUE-pinned across 3 contexts × 9 outputs in `dynamic-airborne-wall-selector-value-pins.test.ts` (2026-04-22 step 7b) + narrative pins retained in `dynamic-airborne-wall-selector-trace-matrix.test.ts`. 5 cross-cell physical invariants (I1/I2/I3 + Ctr≤C + STC≈Rw) green on every cell. |
 | Deep-hybrid swap corridors (`heavy_core`, `aac_d700_100`, `aac_d700_120`, `aac_g5`) | 🟡 Family | Each pinned in its own `dynamic-route-deep-hybrid-swap-*.test.ts` file |
-| Wall hostile-input matrix | ⚪ Not yet covered | Floor analog `raw-floor-hostile-input-*-matrix.test.ts` exists; wall does not |
+| Wall hostile-input matrix | 🟢 Benchmark | Engine `raw-wall-hostile-input-answer-matrix.test.ts` and workbench `raw-wall-hostile-input-route-card-matrix.test.ts` cover 50-layer stacks, unknown materials, invalid thickness, empty rows, and route-card posture; step-7 torture matrix O1 adds per-case hostile-input overlays |
 | Wall reorder invariance | 🟢 Benchmark | `apps/web/features/workbench/wall-reorder-invariance-matrix.test.ts` pins Rw / C / Ctr / supportedOutputs invariance across asymmetric light-heavy reversals and symmetric topologies; fix landed 2026-04-21 |
-| Wall field continuation per corridor | 🟡 Family (partial) | `wall-full-preset-contract-matrix.test.ts` covers every wall preset under lab / apparent-field / building contexts; completeness across every defended corridor × every field output has not been audited |
+| Wall field continuation per corridor | 🟢 Benchmark | Preset surface is VALUE-pinned in `wall-field-continuation-completeness-matrix.test.ts`; selector corridor surface is VALUE-pinned across lab / field / building contexts in `dynamic-airborne-wall-selector-value-pins.test.ts` (2026-04-22 step 7b) |
 
-**Wall assessment:** breadth improved (4 presets with benchmark-matching
-Rw under the workbench default lab context). Remaining depth gaps:
-LSF and timber stud presets not yet landed (need preset-to-workbench-
-state defaults for `studType`), wall hostile-input matrix missing,
-wall field-continuation completeness not audited. Gaps are runnable:
-no source-blocking, mostly engine/workbench work.
+**Wall assessment:** breadth is now at 6/6 wall preset archetypes, plus
+the selector-corridor surface is VALUE-pinned across lab, field, and
+building contexts. The hostile-input and field-continuation gaps are
+closed. Remaining wall follow-ups are explicit deferrals, not hidden
+completion blockers: timber-stud formula accuracy is parked for
+`wall_formula_family_widening_v1`, deep-hybrid swap VALUE pins are
+low-ROI, and workbench card-level selector VALUE pins remain optional
+unless the final audit finds a user-visible card drift.
 
 ### Cross-cutting
 
@@ -243,8 +245,8 @@ no source-blocking, mostly engine/workbench work.
 | Engine mixed-mode cross-mode torture | 🟢 Benchmark | Landed 2026-04-22 as `mixed-floor-wall-cross-mode-wall-extension-matrix.test.ts` — 8 overlays × 4 new wall cases = 32 assertions |
 | Engine torture matrix wall coverage | 🟢 6/6 | `ENGINE_MIXED_GENERATED_CASES` expanded from 3 → 7 wall cases (masonry, CLT, LSF, timber-stud added) in step 7 |
 | Adjacent same-material split invariance | 🟢 Benchmark | Two regression guards landed 2026-04-22 — masonry calibrator + verified catalog matcher both use `coalesceSameMaterialSolidLeaves` / `coalesceAdjacentSameMaterialLayers` helpers to keep split variants on-lane |
-| Engine thickness validity | 🟡 Partial | Workbench `normalize-rows` emits warnings on invalid thickness; engine-level direct guard (for API/CLI callers that bypass normalization) absent |
-| Many-layer (50+) stability | ⚪ Informal only | 2026-04-20 probe verified 50 identical / 50 mixed wall stacks complete without crash; probe file deleted; no pinned regression guard exists |
+| Engine thickness validity | 🟡 Partial | Workbench `normalize-rows` emits warnings on invalid thickness; wall engine direct invalid-thickness classes are pinned in `raw-wall-hostile-input-answer-matrix.test.ts`; a standalone all-caller floor/wall engine guard remains a deferred hardening track |
+| Many-layer (50+) stability | 🟡 Partial | Wall 50-layer identical/mixed stacks are pinned in `raw-wall-hostile-input-answer-matrix.test.ts`, and step-7 O8 covers many-layer finite/monotone behavior for the new wall torture cases; a dedicated floor 50+ layer regression remains deferred |
 | Reorder output-set invariance | 🟢 Benchmark | Fixed 2026-04-21 via ctr_term-guarded fallthrough in `packages/engine/src/target-output-support.ts` `getCarrierC`; pinned in `wall-reorder-invariance-matrix.test.ts` |
 | `dynamic-airborne.ts` size | 🟡 Split v1 landed, v2 deferred | 3152 lines (from 6630) after slice 4 split refactor v1 + 2026-04-22 dead-import sweep; remaining `apply*` guards parked for `dynamic_airborne_split_refactor_v2` (composer injection blocker) |
 
@@ -252,9 +254,9 @@ no source-blocking, mostly engine/workbench work.
 
 Every closeout slice must either add a row, flip a row's status, or
 confirm no grid row changes. The grid becomes stale if a slice lands
-without updating it. Drift prevention: §9 cross-reference rule plus a
-planned executable test in master-plan step 10 that asserts the grid
-rows match engine reality.
+without updating it. Drift prevention: §9 cross-reference rule plus the
+planned executable test in master-plan step 8 that asserts the grid rows
+match engine reality.
 
 ---
 
@@ -322,7 +324,7 @@ signal — the test that must be green to call it done.
 | 6 | `wall_formula_family_widening_v1` (conditional) | Only if slice 5 audit reveals a defendable gap; closes on positive/negative/precedence matrix per added lane |
 | 7 | `mixed_floor_wall_edge_case_hardening_v1` ✅ landed 2026-04-22 | Engine wall surface consolidated from 3 → 7 cases (6/6 preset parity); 8-overlay cross-mode torture matrix green (32 assertions on the new cases); two real engine bugs caught + fixed (F1 masonry calibrator coalesce, F2 catalog-match coalesce); F3 deferred + F4 test-refined; post-contract pins closure |
 | 7b | `wall_corridor_surface_value_pinning_v1` ✅ landed 2026-04-22 | 6 wall selector corridor labels × 3 contexts × 9 outputs VALUE-pinned (`dynamic-airborne-wall-selector-value-pins.test.ts` — 198 drift guards + 5 cross-cell invariant tests). Stud-context plumbing hardened (`lab_double_stud` stays `double_stud_system` across lab/field/building via stud-aware FIELD + BUILDING variants). No engine changes required — every cell landed inside ISO 717-1 plausibility window. C2 + C3 corridor surface flips 🟡 → ✅. |
-| 8 | `good_calculator_final_audit_v1` ⭐ next | All completion signals except C6 (split v2 documented-deferred) hold; executable grid-consistency test passes; post-calculator productization roadmap opens. Runs on a fully-green C1-C5 grid after 7b closes. |
+| 8 | `good_calculator_final_audit_v1` ✅ landed 2026-04-23 | `coverage-grid-consistency.test.ts` maps §3 rows to executable evidence, verifies C1-C6 with explicit C3/C5/C6 honesty, removes stale wall hostile/field drift, updates the focused gate, and opens `POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md`. Productization has since closed `server_backed_project_storage_v1`, `project_access_authorization_v1`, `auth_session_hardening_v1`, and `team_access_model_v1`; after broad green revalidation the current selected calculator slice is `wall_formula_family_widening_v1`, while `project_access_policy_route_integration_v1` is deferred. |
 
 Slice 6 is explicitly conditional — lands only if slice 5 reveals a
 defendable gap. Each slice advances all three priority axes
@@ -448,7 +450,9 @@ adds tests; slices that do not add tests are not slices.
   tone, provenance wording.
 - **Post-slice contracts** — pin "what closed, what got selected
   next" so the chain is readable.
-- **Hostile-input matrices** — floor has them; wall lands in step 4.
+- **Hostile-input matrices** — floor and wall both have engine +
+  workbench matrices; wall invalid-thickness and 50-layer classes are
+  now pinned in `raw-wall-hostile-input-answer-matrix.test.ts`.
 
 ### Test additions the master plan requires
 
@@ -458,11 +462,11 @@ adds tests; slices that do not add tests are not slices.
 | `preset-context-injection-matrix.test.ts` | 2 | Prove injected `airborneContext.studType` flows preset → engine and changes Rw as expected |
 | `wall-preset-pack-2-benchmarks.test.ts` | 3 | Pin canonical Rw per new preset against named source row |
 | `raw-wall-hostile-input-answer-matrix.test.ts` + workbench counterpart | 4 | Mirror the floor hostile-input discipline on walls |
-| `hostile-thickness-input.test.ts` | 5 | Cross-cutting engine guardrail for invalid thickness classes |
-| `wall-field-continuation-completeness-matrix.test.ts` | 6 | Every defended wall corridor × every field/building context × every field output pinned |
+| `raw-wall-hostile-input-answer-matrix.test.ts` invalid-thickness section | 5 | Wall engine guardrail for invalid thickness classes; standalone all-caller floor/wall guard remains deferred |
+| `wall-field-continuation-completeness-matrix.test.ts` + `dynamic-airborne-wall-selector-value-pins.test.ts` | 6 + 7b | Every defended wall preset and selector corridor surface × lab/field/building context × field output pinned |
 | `airborne-dynamic-split-regression.test.ts` | 7 (conditional) | Post-refactor: zero behavior change |
 | `mixed-floor-wall-cross-mode-wall-extension-matrix.test.ts` | 9 | Cross-mode torture extended to new wall corridors |
-| `coverage-grid-consistency.test.ts` | 10 | Assert §3 grid rows match the engine's defended corridor list |
+| `coverage-grid-consistency.test.ts` | 8 | Assert §3 grid rows match executable evidence and do not carry contradictory statuses |
 
 ### Tests the master plan does NOT add
 
@@ -487,15 +491,15 @@ artifact that can be checked.
 
 | # | Signal | How To Measure |
 |---|---|---|
-| C1 | Wall preset coverage ≥ 6 distinct archetypes, each benchmark-matching | `preset-definitions.ts` has ≥6 wall presets, and every preset that maps to an existing benchmark (`airborne-masonry-benchmark`, `airborne-aircrete-benchmark`, `airborne-verified-catalog`, `airborne-framed-wall-benchmark`) produces an `Rw` within that benchmark's tolerance under the preset's injected `airborneContext` |
+| C1 | Wall preset coverage ≥ 6 distinct archetypes with honest evidence tiering | `preset-definitions.ts` has ≥6 wall presets, benchmark/exact presets map to their benchmark tolerances, and formula-owned presets (currently CLT wall and timber stud) carry explicit VALUE pins and honesty notes instead of pretending to be exact |
 | C2 | Every defended wall corridor has source-truth or benchmark fit audit | §3 grid wall section — no 🟡 Formula row without an engine benchmark link or explicit honesty note; no ⚠️ Known bug rows remain |
-| C3 | Field continuation coverage complete | `wall-field-continuation-completeness-matrix.test.ts` + floor equivalent both green; every defended corridor × every field/building context × every field output has a pinned status |
-| C4 | Hostile-input discipline | Floor + wall hostile-input matrices green; `hostile-thickness-input.test.ts` green |
-| C5 | Reorder invariance | `wall-reorder-invariance-matrix.test.ts` + floor equivalent green across symmetric AND asymmetric topologies |
-| C6 | Architectural hygiene | No engine file > 2000 lines without a split-deferred comment; inline comments on every non-obvious decision |
+| C3 | Wall field-continuation coverage complete | `wall-field-continuation-completeness-matrix.test.ts` + `dynamic-airborne-wall-selector-value-pins.test.ts`; every defended wall preset/selector corridor × lab/field/building context × field output has a pinned status. Full floor field-continuation expansion is an explicit non-blocking follow-up from the 2026-04-22 deferral ledger. |
+| C4 | Hostile-input discipline | Floor + wall hostile-input matrices green; wall invalid-thickness and 50-layer classes are pinned in `raw-wall-hostile-input-answer-matrix.test.ts`; step-7 torture O1 covers every new wall case |
+| C5 | Reorder and split invariance on defended surfaces | `wall-reorder-invariance-matrix.test.ts` + step-7 O2 cover wall symmetric/asymmetric reorder behavior; floor split/parity stability is pinned in `floor-split-layer-parity.test.ts`, `raw-floor-inferred-split-parity.test.ts`, and `floor-topology-sanity-sweep.test.ts`. Full arbitrary floor reorder expansion is not claimed by this final wall audit. |
+| C6 | Architectural hygiene | No engine file >2000 lines without a split-deferred note; `dynamic-airborne.ts` is still above 2000 lines, so C6 closes only as a documented `dynamic_airborne_split_refactor_v2` deferral via `DYNAMIC_AIRBORNE_CARTOGRAPHY.md` |
 
-The `good_calculator_final_audit_v1` slice (step 10) exists to verify
-all six signals explicitly with an executable checklist test.
+The `good_calculator_final_audit_v1` slice (step 8) verified all six
+signals explicitly with `coverage-grid-consistency.test.ts`.
 
 ---
 

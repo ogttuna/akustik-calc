@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import { MATERIAL_SOURCE_NOTE } from "@dynecho/catalogs";
 import {
   buildExactImpactImprovementReference,
@@ -48,6 +50,7 @@ import { ProjectBriefPanel } from "./project-brief-panel";
 import { ReadinessPanel } from "./readiness-panel";
 import { ResultSummary } from "./result-summary";
 import { getPresetById } from "./preset-definitions";
+import { buildServerProjectWorkbenchSnapshot } from "./server-project-workbench-snapshot";
 import { useCommandPalette } from "./use-command-palette";
 import { useReportExportActions } from "./use-report-export-actions";
 import { UpstreamRadarPanel } from "./upstream-radar-panel";
@@ -116,11 +119,31 @@ const WorkbenchCommandPalette = dynamic(
   }
 );
 
+type ServerScenarioSyncState =
+  | {
+      status: "idle";
+    }
+  | {
+      status: "syncing";
+    }
+  | {
+      projectId: string;
+      scenarioCount: number;
+      status: "synced";
+    }
+  | {
+      message: string;
+      status: "error";
+    };
+
 function parseFiniteNumber(value: string | null | undefined): number | undefined {
   return parseWorkbenchNumber(value);
 }
 
 export function WorkbenchShell() {
+  const [serverScenarioSync, setServerScenarioSync] = useState<ServerScenarioSyncState>({
+    status: "idle"
+  });
   const activePresetId = useWorkbenchStore((state) => state.activePresetId);
   const calculatorId = useWorkbenchStore((state) => state.calculatorId);
   const airborneAirtightness = useWorkbenchStore((state) => state.airborneAirtightness);
@@ -420,6 +443,9 @@ export function WorkbenchShell() {
   );
   const activePreset = getPresetById(activePresetId);
   const saveScenario = () => {
+    setServerScenarioSync({
+      status: "idle"
+    });
     saveCurrentScenario();
     toast.success("Scenario saved", {
       description: "The live assembly is now available in option studies."
@@ -447,11 +473,113 @@ export function WorkbenchShell() {
   };
   const deleteScenario = (scenarioId: string) => {
     const scenario = savedScenarios.find((entry) => entry.id === scenarioId);
+    setServerScenarioSync({
+      status: "idle"
+    });
     deleteSavedScenario(scenarioId);
     toast("Scenario removed", {
       description: scenario?.name ?? "Saved option study removed."
     });
   };
+  const syncSavedScenariosToServer = async () => {
+    if (savedScenarios.length === 0) {
+      toast("No saved scenarios", {
+        description: "Save a local scenario before creating a server project."
+      });
+      return;
+    }
+
+    const evaluatedScenarioById = new Map(evaluatedSavedScenarios.map((scenario) => [scenario.id, scenario]));
+    setServerScenarioSync({
+      status: "syncing"
+    });
+
+    try {
+      const response = await fetch("/api/projects/import-local", {
+        body: JSON.stringify({
+          clientName,
+          projectName,
+          scenarios: savedScenarios.map((scenario) => {
+            const evaluatedScenario = evaluatedScenarioById.get(scenario.id);
+
+            return {
+              inputSnapshot: buildServerProjectWorkbenchSnapshot(scenario),
+              localScenarioId: scenario.id,
+              name: scenario.name,
+              outputSnapshot: evaluatedScenario
+                ? {
+                    result: evaluatedScenario.result,
+                    warnings: evaluatedScenario.warnings
+                  }
+                : null,
+              savedAtIso: scenario.savedAtIso
+            };
+          })
+        }),
+        headers: {
+          "content-type": "application/json"
+        },
+        method: "POST"
+      });
+      const payload = (await response.json().catch(() => null)) as {
+        error?: string;
+        project?: {
+          id?: string;
+        };
+        summary?: {
+          scenarioCount?: number;
+        };
+      } | null;
+
+      if (!response.ok || !payload?.project?.id) {
+        throw new Error(payload?.error ?? "DynEcho could not create the server project.");
+      }
+
+      const scenarioCount = payload.summary?.scenarioCount ?? savedScenarios.length;
+      setServerScenarioSync({
+        projectId: payload.project.id,
+        scenarioCount,
+        status: "synced"
+      });
+      toast.success("Server project created", {
+        description: `${scenarioCount} local scenario${scenarioCount === 1 ? "" : "s"} copied into durable project storage.`
+      });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "DynEcho could not sync saved scenarios.";
+      setServerScenarioSync({
+        message,
+        status: "error"
+      });
+      toast.error("Server sync failed", {
+        description: message
+      });
+    }
+  };
+  const serverSyncStatus =
+    serverScenarioSync.status === "synced"
+      ? {
+          label: `${serverScenarioSync.scenarioCount} server-backed`,
+          tone: "success" as const
+        }
+      : serverScenarioSync.status === "syncing"
+        ? {
+            label: "Syncing",
+            tone: "accent" as const
+          }
+        : serverScenarioSync.status === "error"
+          ? {
+              label: "Sync failed",
+              tone: "warning" as const
+            }
+          : savedScenarios.length > 0
+            ? {
+                label: "Browser-local",
+                tone: "warning" as const
+              }
+            : {
+                label: "No local saves",
+                tone: "neutral" as const
+              };
   const reportMarkdown = composeWorkbenchReport({
     activeCriteriaPack,
     activePreset,
@@ -708,10 +836,14 @@ export function WorkbenchShell() {
       >
         <ScenarioComparePanel
           currentScenario={currentScenario}
+          isServerSyncing={serverScenarioSync.status === "syncing"}
           onDeleteScenario={deleteScenario}
           onLoadScenario={loadScenario}
           onSaveScenario={saveScenario}
+          onSyncScenariosToServer={syncSavedScenariosToServer}
           savedScenarios={evaluatedSavedScenarios}
+          serverSyncLabel={serverSyncStatus.label}
+          serverSyncTone={serverSyncStatus.tone}
           targetLnwDb={targetLnwDb}
           targetRwDb={targetRwDb}
         />

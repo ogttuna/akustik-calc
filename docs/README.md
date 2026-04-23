@@ -19,17 +19,31 @@ next". If they disagree, fix the drift before starting work.
 3. [calculator/NEXT_IMPLEMENTATION_PLAN.md](./calculator/NEXT_IMPLEMENTATION_PLAN.md)
    — tactical detail for the active slice
 
-Then run `pnpm calculator:gate:current` to confirm the green
-baseline.
+Then run `pnpm calculator:gate:current` before calculator runtime
+changes. Productization slices should add their own focused tests and
+use `pnpm check` when shared contracts move.
 
 ## Supporting Reads
 
-- [calculator/CHECKPOINT_2026-04-22_SESSION_CLOSE_HANDOFF.md](./calculator/CHECKPOINT_2026-04-22_SESSION_CLOSE_HANDOFF.md)
-  — latest session narrative (steps 7 + 7b closed, 12
-  commits, 2 real engine bug fixes) + explicit deferral
-  ledger (6 tracks). Read this before any archived checkpoint.
-  The 2026-04-21 checkpoint is now archived at
-  `docs/archive/handoffs/`.
+- [calculator/CHECKPOINT_2026-04-23_SERVER_BACKED_PROJECT_STORAGE_HANDOFF.md](./calculator/CHECKPOINT_2026-04-23_SERVER_BACKED_PROJECT_STORAGE_HANDOFF.md)
+  — productization closeout: server-backed project storage v1 closed.
+- [calculator/CHECKPOINT_2026-04-23_BROAD_REVALIDATION_CALCULATOR_REFOCUS_HANDOFF.md](./calculator/CHECKPOINT_2026-04-23_BROAD_REVALIDATION_CALCULATOR_REFOCUS_HANDOFF.md)
+  — latest handoff: broad validation green and calculator
+  accuracy/coverage refocus selected.
+- [calculator/CHECKPOINT_2026-04-23_TEAM_ACCESS_MODEL_HANDOFF.md](./calculator/CHECKPOINT_2026-04-23_TEAM_ACCESS_MODEL_HANDOFF.md)
+  — productization closeout: team-access policy model closed.
+- [calculator/CHECKPOINT_2026-04-23_AUTH_SESSION_HARDENING_HANDOFF.md](./calculator/CHECKPOINT_2026-04-23_AUTH_SESSION_HARDENING_HANDOFF.md)
+  — productization closeout: auth-session hardening closed.
+- [calculator/CHECKPOINT_2026-04-23_PROJECT_ACCESS_AUTHORIZATION_HANDOFF.md](./calculator/CHECKPOINT_2026-04-23_PROJECT_ACCESS_AUTHORIZATION_HANDOFF.md)
+  — productization closeout: project-access authorization closed.
+- [calculator/CHECKPOINT_2026-04-23_FINAL_AUDIT_HANDOFF.md](./calculator/CHECKPOINT_2026-04-23_FINAL_AUDIT_HANDOFF.md)
+  — latest calculator closeout: final audit closed and
+  productization handoff opened.
+- [calculator/POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md](./calculator/POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md)
+  — productization roadmap; route integration is deferred while the
+  calculator accuracy/coverage slice is active.
+- [calculator/SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md](./calculator/SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md)
+  — active calculator accuracy/coverage re-entry plan.
 - [calculator/SYSTEM_MAP.md](./calculator/SYSTEM_MAP.md) —
   end-to-end system model, runtime boundaries, persistence
   posture, test surface map.
@@ -51,6 +65,8 @@ baseline.
   Reference doc for future agents investigating the same-
   material-split fixes (F1/F2) and the cross-mode torture
   matrix authoring pattern.
+- [archive/handoffs/SLICE_GOOD_CALCULATOR_FINAL_AUDIT_PLAN.md](./archive/handoffs/SLICE_GOOD_CALCULATOR_FINAL_AUDIT_PLAN.md)
+  — tactical plan for master-plan step 8 (closed 2026-04-23).
 - [foundation/README.md](./foundation/README.md) — repo-level
   direction + rules.
 - [imports/README.md](./imports/README.md) — upstream import
@@ -74,9 +90,9 @@ wins.
 ## Fast Paths
 
 - "Where do I resume implementation now?" →
-  [calculator/CHECKPOINT_2026-04-22_SESSION_CLOSE_HANDOFF.md](./calculator/CHECKPOINT_2026-04-22_SESSION_CLOSE_HANDOFF.md)
+  [calculator/CHECKPOINT_2026-04-23_BROAD_REVALIDATION_CALCULATOR_REFOCUS_HANDOFF.md](./calculator/CHECKPOINT_2026-04-23_BROAD_REVALIDATION_CALCULATOR_REFOCUS_HANDOFF.md)
   → [calculator/NEXT_IMPLEMENTATION_PLAN.md](./calculator/NEXT_IMPLEMENTATION_PLAN.md)
-  → `pnpm calculator:gate:current`.
+  → [calculator/SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md](./calculator/SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md).
 - "What is stable right now?" →
   [calculator/CURRENT_STATE.md](./calculator/CURRENT_STATE.md)
   → [calculator/SYSTEM_MAP.md](./calculator/SYSTEM_MAP.md)
@@ -86,15 +102,17 @@ wins.
   → [calculator/MASTER_PLAN.md](./calculator/MASTER_PLAN.md) §3
   state grid + §4 master sequence.
 - "What was the session narrative?" →
-  [calculator/CHECKPOINT_2026-04-22_SESSION_CLOSE_HANDOFF.md](./calculator/CHECKPOINT_2026-04-22_SESSION_CLOSE_HANDOFF.md).
+  [calculator/CHECKPOINT_2026-04-23_BROAD_REVALIDATION_CALCULATOR_REFOCUS_HANDOFF.md](./calculator/CHECKPOINT_2026-04-23_BROAD_REVALIDATION_CALCULATOR_REFOCUS_HANDOFF.md).
 
 ## Status Reading Rule
 
 - Use `CURRENT_STATE.md` for "what is stable right now".
 - Use `NEXT_IMPLEMENTATION_PLAN.md` for "what exactly should be
   implemented next".
-- Use `CHECKPOINT_2026-04-22_SESSION_CLOSE_HANDOFF.md` for the
-  most recent session narrative.
+- Use `calculator/SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md`
+  for the active calculator re-entry slice details.
+- Use `calculator/CHECKPOINT_2026-04-23_BROAD_REVALIDATION_CALCULATOR_REFOCUS_HANDOFF.md`
+  for the most recent session narrative.
 - Use older checkpoints under `docs/archive/handoffs/` only when
   you need the historical context that predates the living
   triangle.

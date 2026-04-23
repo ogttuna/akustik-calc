@@ -11,49 +11,93 @@ If you need the tactical detail on the active slice read
 
 ## Revalidated Snapshot
 
-Last revalidation cycle: `2026-04-22` (session close —
-checkpoint
-[CHECKPOINT_2026-04-22_SESSION_CLOSE_HANDOFF.md](./CHECKPOINT_2026-04-22_SESSION_CLOSE_HANDOFF.md)).
-12 commits on main closing steps 7 + 7b with 2 real engine
-accuracy bug fixes (F1 masonry calibrator coalesce, F2
-verified-catalog coalesce) + 198 corridor-surface VALUE pins
-+ 5 cross-cell physical invariant tests + the 2026-04-21 lint
-+ typecheck drift corrected.
+Last revalidation cycle: `2026-04-23` (broad revalidation and
+calculator refocus — checkpoint
+[CHECKPOINT_2026-04-23_BROAD_REVALIDATION_CALCULATOR_REFOCUS_HANDOFF.md](./CHECKPOINT_2026-04-23_BROAD_REVALIDATION_CALCULATOR_REFOCUS_HANDOFF.md)).
+Step 8 closed the calculator runtime audit: `MASTER_PLAN.md` §3/§8
+was reconciled to implementation reality, `coverage-grid-consistency.test.ts`
+now maps the grid and C1-C6 signals to executable evidence, the
+focused calculator gate includes the final-audit tests, and
+`POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md` opens productization. The
+first four productization slices then closed server-backed project
+storage v1, project/proposal route authorization, auth-session
+hardening, and the pure team-access policy model.
 
-- **Engine full suite**: 199 / 199 files, 1135 / 1135 tests green
+- **Engine full suite**: 202 / 202 files, 1150 / 1150 tests green
   (up from 193/1068 pre-session; step-7 landed 4 wall cases +
   F1/F2 engine fixes + 32-assertion cross-mode torture matrix
   + 2 regression guards + post-contract; step-7b landed the
   18-cell corridor VALUE matrix + 5 cross-cell invariants +
-  post-contract; one flake fix on `floor-library-sweep.test.ts`
-  timeout)
-- **Web full suite**: 137 / 137 files, 792 / 792 tests green + 18
-  discovery helpers intentionally skipped
+  post-contract; step 8 landed final-audit grid consistency and
+  next-slice contract tests; one flake fix on
+  `floor-library-sweep.test.ts` timeout)
+- **Web full suite**: 143 / 143 files, 824 / 824 tests green + 18
+  discovery helpers intentionally skipped. The 2026-04-23
+  productization pass added focused server project storage/API,
+  proposal-audit, route-authorization, auth-session, login/logout,
+  server project restore snapshot, and project access policy tests.
 - **Broad `pnpm check`**: lint + typecheck + tests + build green
-  (2026-04-22 verification)
+  (2026-04-23 verification after the broad calculator refocus;
+  build still emits the known non-fatal optional
+  `sharp/@img` warnings through `@turbodocx/html-to-docx`)
 - **Focused calculator gate** (`pnpm calculator:gate:current`):
-  5 / 5 tasks green
+  includes the final-audit grid + post-contract tests and the
+  calculator-refocus contract; 68 engine files / 321 tests, 29 web
+  files / 132 tests + 18 skipped, build
+  5/5 tasks, whitespace guard clean on the 2026-04-23 closeout run.
 
 ## Active Slice
 
-`good_calculator_final_audit_v1` (master-plan step 8).
-Selected `2026-04-22` by the
-`wall_corridor_surface_value_pinning_v1` closeout contract
-`packages/engine/src/post-wall-corridor-surface-value-pinning-v1-next-slice-selection-contract.test.ts`.
-Plan doc not yet authored — the next agent writes
-`SLICE_GOOD_CALCULATOR_FINAL_AUDIT_PLAN.md` before starting
-implementation. Step 8 now runs against a fully-green
-C1-C5 grid (C6 split v2 remains documented-deferred per
-architectural scope): authors the executable
-grid-consistency test, verifies every completion signal
-with an executable assertion, archives the full resume
-triangle into a session-close checkpoint, and opens the
-post-calculator productization roadmap (§1 non-goals).
+`wall_formula_family_widening_v1` (calculator accuracy/coverage re-entry,
+selected).
+Selected `2026-04-23` after a green broad revalidation and an explicit
+priority reset to calculation accuracy and defensible coverage first.
+Planning surface:
+[SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md](./SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md).
+
+Calculator runtime status: final audit closed and green. The next work
+returns to calculator accuracy/coverage through wall formula-family
+widening, starting with a no-runtime-value-change audit/anchor matrix.
+Do not change timber-stud or double-leaf formula values before current
+outputs, traces, negative cases, and exact/benchmark precedence are
+pinned.
+
+Storage status: `server_backed_project_storage_v1` is closed. Shared
+server-project schemas, owner-scoped filesystem storage, `/api/projects`
+routes, local-scenario import, default workbench server project
+sync/list/load, and proposal export audit append have landed. The
+workbench still edits local-first; server persistence is explicit via
+sync/load, not silent shared multi-user editing.
+
+Access status: `project_access_authorization_v1` is closed. Project and
+proposal routes now share route auth helpers, and tests cover
+configured-auth rejection, configured owner success,
+preview/configured isolation, and cross-owner proposal audit denial.
+
+Auth status: `auth_session_hardening_v1` is closed. Auth helper and
+route tests cover signed session cookie readback, tamper/expiry/wrong
+user rejection, configured credential failure, safe redirect
+normalization, secure login cookie creation, and logout cookie clearing.
+
+Team access policy status: `team_access_model_v1` is closed. Shared
+project roles/actions and `apps/web/lib/project-access-policy.ts` now
+define owner/editor/reviewer/viewer project-action decisions with stable
+denial reasons.
+
+Productization route integration status:
+`project_access_policy_route_integration_v1` is deferred, not cancelled.
+Route behavior remains owner-scoped until that productization slice
+resumes and wires the policy through an owner-only adapter.
 
 ## Latest Closed Slices
 
 | Slice | Master-plan step | Closed | Post-contract |
 |---|---|---|---|
+| `team_access_model_v1` | productization 4 | 2026-04-23 | app policy tests: `project-access-policy.test.ts`; route/storage regressions: `server-project-routes.test.ts`, `server-project-storage.test.ts` |
+| `auth_session_hardening_v1` | productization 3 | 2026-04-23 | app/API tests: `auth.test.ts`, `auth-routes.test.ts`, `server-project-routes.test.ts` |
+| `project_access_authorization_v1` | productization 2 | 2026-04-23 | app/API tests: `server-project-routes.test.ts` |
+| `server_backed_project_storage_v1` | productization 1 | 2026-04-23 | app/API tests: `server-project-storage.test.ts`, `server-project-routes.test.ts`, `server-project-workbench-snapshot.test.ts` |
+| `good_calculator_final_audit_v1` | 8 | 2026-04-23 | `post-good-calculator-final-audit-v1-next-slice-selection-contract.test.ts` |
 | `wall_corridor_surface_value_pinning_v1` | 7b | 2026-04-22 | `post-wall-corridor-surface-value-pinning-v1-next-slice-selection-contract.test.ts` |
 | `mixed_floor_wall_edge_case_hardening_v1` | 7 | 2026-04-22 | `post-mixed-floor-wall-edge-case-hardening-v1-next-slice-selection-contract.test.ts` |
 | `wall_field_continuation_value_pinning_v1` | 5 | 2026-04-21 | `post-wall-field-continuation-value-pinning-v1-next-slice-selection-contract.test.ts` |
@@ -67,12 +111,12 @@ post-calculator productization roadmap (§1 non-goals).
 
 | # | Signal | Status | Anchor |
 |---|---|---|---|
-| C1 | Wall preset coverage ≥ 6 distinct archetypes | ✅ 6/6 | `preset-definitions.ts` + `wall-preset-expansion-benchmarks.test.ts` + `wall-lsf-timber-stud-preset-benchmarks.test.ts` |
-| C2 | Every defended wall corridor source/benchmark audited | ✅ preset + corridor surfaces both VALUE-pinned (7b closeout 2026-04-22) | `wall-full-preset-contract-matrix.test.ts` + `wall-field-continuation-completeness-matrix.test.ts` + `dynamic-airborne-wall-selector-value-pins.test.ts` |
-| C3 | Field continuation completeness | ✅ preset + corridor surfaces both VALUE-pinned | `wall-field-continuation-completeness-matrix.test.ts` + `dynamic-airborne-wall-selector-value-pins.test.ts` |
+| C1 | Wall preset coverage ≥ 6 distinct archetypes with honest evidence tiering | ✅ 6/6 | `preset-definitions.ts` + `wall-preset-expansion-benchmarks.test.ts` + `wall-lsf-timber-stud-preset-benchmarks.test.ts` + `coverage-grid-consistency.test.ts` |
+| C2 | Every defended wall corridor source/benchmark audited | ✅ preset + corridor surfaces both VALUE-pinned (7b closeout 2026-04-22) | `wall-full-preset-contract-matrix.test.ts` + `wall-field-continuation-completeness-matrix.test.ts` + `dynamic-airborne-wall-selector-value-pins.test.ts` + `coverage-grid-consistency.test.ts` |
+| C3 | Wall field-continuation completeness | ✅ preset + corridor surfaces both VALUE-pinned; floor expansion non-blocking | `wall-field-continuation-completeness-matrix.test.ts` + `dynamic-airborne-wall-selector-value-pins.test.ts` + `coverage-grid-consistency.test.ts` |
 | C4 | Floor + wall hostile-input discipline | ✅ both green + torture-matrix O1 overlay | `raw-floor-hostile-input-answer-matrix.test.ts` + `raw-wall-hostile-input-answer-matrix.test.ts` + `mixed-floor-wall-cross-mode-wall-extension-matrix.test.ts` |
-| C5 | Reorder invariance symmetric + asymmetric | ✅ | `wall-reorder-invariance-matrix.test.ts` + `mixed-floor-wall-cross-mode-wall-extension-matrix.test.ts` O2 overlay (strict on symmetric, ±10 dB bounded drift on asymmetric) |
-| C6 | Architectural hygiene (≤2000 line files) | 🟡 split v1 landed (6630 → 3152) · v2 deferred | `dynamic-airborne-*.ts` module family |
+| C5 | Reorder and split invariance on defended surfaces | ✅ wall reorder + floor split/parity surfaces; arbitrary floor reorder not claimed | `wall-reorder-invariance-matrix.test.ts` + `mixed-floor-wall-cross-mode-wall-extension-matrix.test.ts` O2 overlay + `floor-split-layer-parity.test.ts` + `coverage-grid-consistency.test.ts` |
+| C6 | Architectural hygiene (≤2000 line files) | 🟡 documented deferral: split v1 landed (6630 → 3152) · v2 deferred | `dynamic-airborne-*.ts` module family + `DYNAMIC_AIRBORNE_CARTOGRAPHY.md` + `coverage-grid-consistency.test.ts` |
 
 ## Step-7 Findings Ledger (live)
 
@@ -143,28 +187,35 @@ time without context loss:
    to unblock the last ~3200 lines of `dynamic-airborne.ts`.
    Blueprint in `DYNAMIC_AIRBORNE_CARTOGRAPHY.md` "Remaining Work
    Deferred" section.
-2. **`wall_formula_family_widening_v1`** (master-plan step 6,
-   conditional) — timber stud accuracy gap. Engine currently
-   produces Rw=31 / field R'w=24 under the composed lab context
-   for the `timber_stud_wall` preset; manufacturer field data
-   for similar stacks is typically 45-50 dB. Parked because the
-   value is VALUE-pinned as a drift guard with an explicit
-   inline comment, so no silent regression can occur.
-3. **Dimension B corridor VALUE pins** — extend the VALUE-pin
-   discipline from the preset surface (landed) to the
-   `dynamic-airborne-wall-selector-trace-matrix` corridors
-   (`double_leaf`, `lined_massive_wall`, `aac_boundary`, etc.).
-   Narrative pins already cover these corridors.
+2. **Deep-hybrid swap VALUE pins** — optional per-cell VALUE pins
+   for the deep-hybrid swap grids. Existing narrative/invariant pins
+   already guard the surface.
+3. **Workbench card-level selector VALUE pins** — optional unless a
+   user-visible card drift appears.
+4. **F3 framed-wall monotonic-floor warning drift** — warning-only;
+   numeric outputs unchanged.
+5. **Full floor field-continuation expansion** — non-blocking for
+   the closed wall final audit.
+6. **Arbitrary floor reorder expansion** — not claimed beyond the
+   defended floor split/parity surfaces.
+7. **Standalone all-caller invalid-thickness guard** — direct engine
+   hardening for floor/wall callers that bypass workbench
+   normalization.
+8. **Dedicated floor 50+ layer regression** — wall 50-layer behavior
+   is pinned; floor stress coverage remains a future hardening track.
 
 ## Frozen Posture — Do Not Reopen By Inertia
 
-- Every upstream closeout before 2026-04-21 remains sealed
+- Every upstream calculator closeout through 2026-04-23 remains sealed
   (reinforced-concrete follow-up, raw terminal-concrete helper,
   CLT-local combined evidence, broad audit, blocked-source
   refresh).
 - Blocked-source queue — `GDMTXA04A` direct exact, `C11c` exact
   import, raw bare open-box/open-web impact, wall-selector
   widening — remains fail-closed pending external evidence.
+- Productization work may improve persistence, auth, billing, reports,
+  and deployment, but must not change calculator runtime/source posture
+  without a selected calculator slice.
 - The 2026-04-21 masonry flanking inversion fix + lab-fallback
   anchor lane is load-bearing. Any future engine edit that
   touches `applyVerifiedAirborneCatalogAnchor` or the field
@@ -172,18 +223,18 @@ time without context loss:
 
 ## Resume Order For The Next Agent
 
-1. Read [CHECKPOINT_2026-04-22_SESSION_CLOSE_HANDOFF.md](./CHECKPOINT_2026-04-22_SESSION_CLOSE_HANDOFF.md)
-   for the most recent session narrative (12 commits,
-   steps 7 + 7b closed). The 2026-04-21 checkpoint lives under
-   `docs/archive/handoffs/` for historical context.
+1. Read [CHECKPOINT_2026-04-23_BROAD_REVALIDATION_CALCULATOR_REFOCUS_HANDOFF.md](./CHECKPOINT_2026-04-23_BROAD_REVALIDATION_CALCULATOR_REFOCUS_HANDOFF.md)
+   for the latest broad validation and calculator refocus handoff.
 2. Confirm the triangle (this file +
    [MASTER_PLAN.md](./MASTER_PLAN.md) +
    [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md))
    agrees on the active slice, completion signals, and deferred
    tracks. If it does not, fix the drift before starting work.
-3. Run `pnpm calculator:gate:current` — confirm green baseline.
-4. Author `SLICE_GOOD_CALCULATOR_FINAL_AUDIT_PLAN.md`
-   before writing any implementation code for the step 8
-   slice. Previous slice plan (closed 2026-04-22) archived
-   at
-   [docs/archive/handoffs/SLICE_WALL_CORRIDOR_SURFACE_VALUE_PINNING_PLAN.md](../archive/handoffs/SLICE_WALL_CORRIDOR_SURFACE_VALUE_PINNING_PLAN.md).
+3. Read [SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md](./SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md).
+4. Read [POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md](./POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md) only for deferred productization context.
+5. Continue `wall_formula_family_widening_v1` from
+   [SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md](./SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md).
+   Run `pnpm calculator:gate:current` before calculator runtime
+   changes; productization work should keep its own app/API tests
+   current and use `pnpm check` when shared contracts or app routes
+   move.

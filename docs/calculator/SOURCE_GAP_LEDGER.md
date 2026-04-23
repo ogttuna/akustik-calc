@@ -1,6 +1,7 @@
 # Dynamic Calculator Source Gap Ledger
 
-Last reviewed: 2026-04-20
+Last reviewed: 2026-04-23 (final-audit closeout; source-gap
+content remains floor-dominant historical context)
 
 Purpose:
 
@@ -25,6 +26,30 @@ Important scope note:
 - this ledger is floor-dominant
 - wall-side dynamic behavior still stays mostly under benchmark and stability guardrails
 - if wall-family widening becomes active work, add a separate wall ledger instead of overloading this one
+
+2026-04-23 freshness note:
+
+- The active selected slice is no longer
+  `dataholz_clt_calibration_tightening`; after the 2026-04-23 broad
+  revalidation the living triangle selects calculator accuracy/coverage
+  work (`wall_formula_family_widening_v1`). Productization slices
+  `server_backed_project_storage_v1`,
+  `project_access_authorization_v1`, `auth_session_hardening_v1`, and
+  `team_access_model_v1` are closed; `project_access_policy_route_integration_v1`
+  is deferred.
+- `good_calculator_final_audit_v1` closed without reopening any
+  source-gated calculator family. `wall_formula_family_widening_v1`
+  may improve formula-owned wall coverage/accuracy, but it must keep
+  this blocked-source ledger fail-closed unless fresh source evidence
+  explicitly justifies a reopen.
+- The detailed floor/source queue below is retained as source-gap
+  history and blocked-family context. It does not override
+  `CURRENT_STATE.md`, `MASTER_PLAN.md`, or
+  `NEXT_IMPLEMENTATION_PLAN.md`.
+- The blocked-source posture remains unchanged: `GDMTXA04A` direct
+  exact, `C11c` exact import, raw bare open-box/open-web impact, and
+  wall-selector widening stay fail-closed unless new source evidence
+  explicitly justifies a reopen.
 
 Current planning implication:
 

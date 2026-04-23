@@ -47,6 +47,11 @@ import {
 import { storeSimpleWorkbenchProposalPreview } from "./simple-workbench-proposal-preview-storage";
 import { readSimpleWorkbenchIssueSequence } from "./simple-workbench-issue-sequence";
 import { buildWorkbenchResponseCurveFigures } from "./response-curve-model";
+import {
+  buildServerProjectWorkbenchSnapshot,
+  parseServerProjectWorkbenchSnapshot,
+  type ServerProjectWorkbenchSnapshot
+} from "./server-project-workbench-snapshot";
 import { isSteelBoundSupportFormLane } from "./steel-bound-support-form-lane";
 import { useTheme } from "./use-theme";
 import {
@@ -63,7 +68,7 @@ import {
   validateCustomMaterialDraft,
   type CustomMaterialDraft
 } from "./workbench-materials";
-import { inferFloorRole, useWorkbenchStore } from "./workbench-store";
+import { inferFloorRole, useWorkbenchStore, type ScenarioSnapshot } from "./workbench-store";
 
 import {
   AIRBORNE_CONTEXT_OPTIONS,
@@ -103,6 +108,115 @@ import { WorkspacePanelButton } from "./simple-workbench-primitives";
 
 // ---------------------------------------------------------------------------
 
+type ServerProjectSummaryPayload = {
+  clientName?: string;
+  id: string;
+  latestScenarioCapturedAtIso: string | null;
+  name: string;
+  ownerLabel: string;
+  proposalAuditEventCount: number;
+  scenarioCount: number;
+  updatedAtIso: string;
+};
+
+type ServerProjectScenarioPayload = {
+  calculatorInput: {
+    payload: unknown;
+  };
+  capturedAtIso: string;
+  id: string;
+  name: string;
+  savedAtIso: string;
+};
+
+type ServerProjectRecordPayload = {
+  clientName?: string;
+  id: string;
+  name: string;
+  scenarioSnapshots: ServerProjectScenarioPayload[];
+};
+
+type ServerProjectStatus = "idle" | "loading" | "syncing" | "restoring" | "error";
+
+function isObjectRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+async function readServerProjectError(response: Response, fallback: string): Promise<string> {
+  try {
+    const payload = (await response.json()) as unknown;
+    if (isObjectRecord(payload) && typeof payload.error === "string") {
+      return payload.error;
+    }
+  } catch {
+    // Keep the caller's fallback when the response body is not JSON.
+  }
+
+  return fallback;
+}
+
+function parseServerProjectSummaries(value: unknown): ServerProjectSummaryPayload[] {
+  if (!isObjectRecord(value) || !Array.isArray(value.projects)) {
+    return [];
+  }
+
+  return value.projects.filter((project): project is ServerProjectSummaryPayload =>
+    isObjectRecord(project) &&
+    typeof project.id === "string" &&
+    typeof project.name === "string" &&
+    typeof project.ownerLabel === "string" &&
+    typeof project.scenarioCount === "number" &&
+    typeof project.updatedAtIso === "string"
+  );
+}
+
+function parseServerProjectRecord(value: unknown): ServerProjectRecordPayload | null {
+  if (!isObjectRecord(value) || !isObjectRecord(value.project)) {
+    return null;
+  }
+
+  const { project } = value;
+  if (
+    typeof project.id !== "string" ||
+    typeof project.name !== "string" ||
+    !Array.isArray(project.scenarioSnapshots)
+  ) {
+    return null;
+  }
+
+  const scenarioSnapshots = project.scenarioSnapshots.filter((scenario): scenario is ServerProjectScenarioPayload =>
+    isObjectRecord(scenario) &&
+    isObjectRecord(scenario.calculatorInput) &&
+    "payload" in scenario.calculatorInput &&
+    typeof scenario.capturedAtIso === "string" &&
+    typeof scenario.id === "string" &&
+    typeof scenario.name === "string" &&
+    typeof scenario.savedAtIso === "string"
+  );
+
+  return {
+    clientName: typeof project.clientName === "string" ? project.clientName : undefined,
+    id: project.id,
+    name: project.name,
+    scenarioSnapshots
+  };
+}
+
+function getLatestServerProjectScenario(project: ServerProjectRecordPayload): ServerProjectScenarioPayload | null {
+  return project.scenarioSnapshots.reduce<ServerProjectScenarioPayload | null>((latest, scenario) => {
+    if (!latest || scenario.capturedAtIso > latest.capturedAtIso) {
+      return scenario;
+    }
+
+    return latest;
+  }, null);
+}
+
+function formatServerProjectOptionLabel(project: ServerProjectSummaryPayload): string {
+  const scenarioLabel = `${project.scenarioCount} scenario${project.scenarioCount === 1 ? "" : "s"}`;
+  return `${project.name} · ${scenarioLabel}`;
+}
+
 export function SimpleWorkbenchShell() {
   // ── Store reads ──────────────────────────────────────────────────────────
   const addCustomMaterial = useWorkbenchStore((state) => state.addCustomMaterial);
@@ -127,6 +241,8 @@ export function SimpleWorkbenchShell() {
   const proposalSubject = useWorkbenchStore((state) => state.proposalSubject);
   const proposalValidityNote = useWorkbenchStore((state) => state.proposalValidityNote);
   const reportProfile = useWorkbenchStore((state) => state.reportProfile);
+  const criteriaPackId = useWorkbenchStore((state) => state.criteriaPackId);
+  const fieldRiskIds = useWorkbenchStore((state) => state.fieldRiskIds);
   const rows = useWorkbenchStore((state) => state.rows);
   const studyContext = useWorkbenchStore((state) => state.studyContext);
   const studyMode = useWorkbenchStore((state) => state.studyMode);
@@ -149,13 +265,27 @@ export function SimpleWorkbenchShell() {
   const airborneSharedTrack = useWorkbenchStore((state) => state.airborneSharedTrack);
   const airborneStudSpacingMm = useWorkbenchStore((state) => state.airborneStudSpacingMm);
   const airborneStudType = useWorkbenchStore((state) => state.airborneStudType);
+  const impactDirectPathOffsetDb = useWorkbenchStore((state) => state.impactDirectPathOffsetDb);
+  const impactGuideCi50_2500Db = useWorkbenchStore((state) => state.impactGuideCi50_2500Db);
+  const impactGuideCiDb = useWorkbenchStore((state) => state.impactGuideCiDb);
+  const impactGuideHdDb = useWorkbenchStore((state) => state.impactGuideHdDb);
   const impactGuideKDb = useWorkbenchStore((state) => state.impactGuideKDb);
+  const impactGuideMassRatio = useWorkbenchStore((state) => state.impactGuideMassRatio);
+  const impactExactBandInput = useWorkbenchStore((state) => state.impactExactBandInput);
+  const impactExactLabOrField = useWorkbenchStore((state) => state.impactExactLabOrField);
+  const impactFlankingPathsInput = useWorkbenchStore((state) => state.impactFlankingPathsInput);
+  const impactImprovementBandInput = useWorkbenchStore((state) => state.impactImprovementBandInput);
+  const impactGuideSmallRoomMode = useWorkbenchStore((state) => state.impactGuideSmallRoomMode);
+  const impactGuideSource = useWorkbenchStore((state) => state.impactGuideSource);
   const impactGuideReceivingRoomVolumeM3 = useWorkbenchStore((state) => state.impactGuideReceivingRoomVolumeM3);
+  const impactLowerTreatmentReductionDb = useWorkbenchStore((state) => state.impactLowerTreatmentReductionDb);
+  const impactReferenceDeltaLwDb = useWorkbenchStore((state) => state.impactReferenceDeltaLwDb);
 
   const appendRows = useWorkbenchStore((state) => state.appendRows);
   const clearRows = useWorkbenchStore((state) => state.clearRows);
   const duplicateRow = useWorkbenchStore((state) => state.duplicateRow);
   const loadPreset = useWorkbenchStore((state) => state.loadPreset);
+  const loadScenarioSnapshot = useWorkbenchStore((state) => state.loadScenarioSnapshot);
   const moveRow = useWorkbenchStore((state) => state.moveRow);
   const removeRow = useWorkbenchStore((state) => state.removeRow);
   const reset = useWorkbenchStore((state) => state.reset);
@@ -227,6 +357,15 @@ export function SimpleWorkbenchShell() {
   const [isDesktop, setIsDesktop] = useState(false);
   const [isExportingPdf, setIsExportingPdf] = useState(false);
   const [resetDialogOpen, setResetDialogOpen] = useState(false);
+  const [serverProjectStatus, setServerProjectStatus] = useState<ServerProjectStatus>("idle");
+  const [serverProjectMessage, setServerProjectMessage] = useState("Browser-local");
+  const [serverProjects, setServerProjects] = useState<ServerProjectSummaryPayload[]>([]);
+  const [selectedServerProjectId, setSelectedServerProjectId] = useState("");
+  const [activeServerProject, setActiveServerProject] = useState<{
+    id: string;
+    name: string;
+    scenarioId?: string;
+  } | null>(null);
   const previousNewLayerDraftRef = useRef(newLayerDraft);
   const draftMaterial = materials.find((material) => material.id === newLayerDraft.materialId) ?? null;
   const draftMaterialEligibleForBaseReplacement = draftMaterial ? isMaterialEligibleFloorBaseStructure(draftMaterial) : false;
@@ -472,6 +611,231 @@ export function SimpleWorkbenchShell() {
   const responseCurveFigures = buildWorkbenchResponseCurveFigures(result);
 
   // ── Callbacks ────────────────────────────────────────────────────────────
+  const buildCurrentServerScenarioSnapshot = (): ServerProjectWorkbenchSnapshot => {
+    const savedAtIso = new Date().toISOString();
+    const snapshot: ScenarioSnapshot = {
+      airborneAirtightness,
+      airborneConnectionType,
+      airborneContextMode,
+      airborneElectricalBoxes,
+      airborneJunctionQuality,
+      airbornePanelHeightMm,
+      airbornePanelWidthMm,
+      airbornePenetrationState,
+      airbornePerimeterSeal,
+      airborneReceivingRoomRt60S,
+      airborneReceivingRoomVolumeM3,
+      airborneSharedTrack,
+      airborneStudSpacingMm,
+      airborneStudType,
+      approverTitle,
+      briefNote,
+      calculatorId,
+      clientName,
+      consultantAddress,
+      consultantCompany,
+      consultantEmail,
+      consultantLogoDataUrl,
+      consultantPhone,
+      consultantWordmarkLine,
+      criteriaPackId,
+      customMaterials: [...customMaterials],
+      fieldRiskIds: [...fieldRiskIds],
+      id: crypto.randomUUID(),
+      impactDirectPathOffsetDb,
+      impactExactBandInput,
+      impactExactLabOrField,
+      impactFlankingPathsInput,
+      impactGuideCi50_2500Db,
+      impactGuideCiDb,
+      impactGuideHdDb,
+      impactGuideKDb,
+      impactGuideMassRatio,
+      impactGuideReceivingRoomVolumeM3,
+      impactGuideSmallRoomMode,
+      impactGuideSource,
+      impactImprovementBandInput,
+      impactLowerTreatmentReductionDb,
+      impactReferenceDeltaLwDb,
+      name: `${projectName.trim() || "Untitled project"} server snapshot`,
+      preparedBy,
+      proposalAttention,
+      proposalIssueCodePrefix,
+      proposalIssuePurpose,
+      proposalRecipient,
+      proposalReference,
+      proposalRevision,
+      proposalSubject,
+      proposalValidityNote,
+      presetId: activePresetId,
+      projectName,
+      reportProfile,
+      requestedOutputs: [...requestedOutputs],
+      rows: rows.map((row) => ({ ...row })),
+      savedAtIso,
+      studyMode,
+      targetLnwDb,
+      targetRwDb
+    };
+
+    return buildServerProjectWorkbenchSnapshot(snapshot);
+  };
+
+  const refreshServerProjects = async (options?: { preserveMessage?: boolean; silent?: boolean }) => {
+    if (!options?.silent) {
+      setServerProjectStatus("loading");
+      setServerProjectMessage("Loading server projects");
+    }
+
+    try {
+      const response = await fetch("/api/projects", {
+        method: "GET"
+      });
+
+      if (!response.ok) {
+        throw new Error(await readServerProjectError(response, "DynEcho could not load server projects."));
+      }
+
+      const payload = (await response.json()) as unknown;
+      const projects = parseServerProjectSummaries(payload);
+      setServerProjects(projects);
+
+      if (selectedServerProjectId && !projects.some((project) => project.id === selectedServerProjectId)) {
+        setSelectedServerProjectId("");
+      }
+
+      if (!options?.preserveMessage) {
+        setServerProjectStatus("idle");
+        setServerProjectMessage(projects.length > 0 ? `${projects.length} server project${projects.length === 1 ? "" : "s"}` : "Browser-local");
+      }
+    } catch (error) {
+      setServerProjectStatus("error");
+      setServerProjectMessage(error instanceof Error ? error.message : "Server project list failed");
+      if (!options?.silent) {
+        toast.error("Server project list failed", {
+          description: error instanceof Error ? error.message : "DynEcho could not load server projects."
+        });
+      }
+    }
+  };
+
+  useEffect(() => {
+    void refreshServerProjects({ silent: true });
+    // Server project listing is an explicit persistence surface; the
+    // initial read intentionally runs once per mounted workbench.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const syncCurrentProjectToServer = async () => {
+    const snapshot = buildCurrentServerScenarioSnapshot();
+    setServerProjectStatus("syncing");
+    setServerProjectMessage("Syncing current project");
+
+    try {
+      const response = await fetch("/api/projects/import-local", {
+        body: JSON.stringify({
+          clientName: clientName.trim() || undefined,
+          projectName: projectName.trim() || undefined,
+          scenarios: [
+            {
+              inputSnapshot: snapshot,
+              localScenarioId: snapshot.id,
+              name: snapshot.name,
+              outputSnapshot: {
+                result,
+                warnings: scenario.warnings
+              },
+              savedAtIso: snapshot.savedAtIso
+            }
+          ]
+        }),
+        headers: {
+          "content-type": "application/json"
+        },
+        method: "POST"
+      });
+
+      if (!response.ok) {
+        throw new Error(await readServerProjectError(response, "DynEcho could not sync the project."));
+      }
+
+      const payload = (await response.json()) as unknown;
+      const project = parseServerProjectRecord(payload);
+      const latestScenario = project ? getLatestServerProjectScenario(project) : null;
+
+      if (!project) {
+        throw new Error("DynEcho synced the project but the server response was incomplete.");
+      }
+
+      setActiveServerProject({
+        id: project.id,
+        name: project.name,
+        scenarioId: latestScenario?.id
+      });
+      setSelectedServerProjectId(project.id);
+      setServerProjectStatus("idle");
+      setServerProjectMessage("Synced");
+      await refreshServerProjects({ preserveMessage: true, silent: true });
+      toast.success("Server project synced", {
+        description: `${project.name} is now available from the server project list.`
+      });
+    } catch (error) {
+      setServerProjectStatus("error");
+      setServerProjectMessage(error instanceof Error ? error.message : "Server sync failed");
+      toast.error("Server sync failed", {
+        description: error instanceof Error ? error.message : "DynEcho could not sync this workbench state."
+      });
+    }
+  };
+
+  const loadServerProject = async () => {
+    if (!selectedServerProjectId) {
+      return;
+    }
+
+    setServerProjectStatus("restoring");
+    setServerProjectMessage("Loading server project");
+
+    try {
+      const response = await fetch(`/api/projects/${encodeURIComponent(selectedServerProjectId)}`, {
+        method: "GET"
+      });
+
+      if (!response.ok) {
+        throw new Error(await readServerProjectError(response, "DynEcho could not load the selected server project."));
+      }
+
+      const payload = (await response.json()) as unknown;
+      const project = parseServerProjectRecord(payload);
+      const latestScenario = project ? getLatestServerProjectScenario(project) : null;
+      const restoredSnapshot = latestScenario
+        ? parseServerProjectWorkbenchSnapshot(latestScenario.calculatorInput.payload)
+        : null;
+
+      if (!project || !latestScenario || !restoredSnapshot) {
+        throw new Error("Selected server project does not contain a restorable workbench snapshot.");
+      }
+
+      loadScenarioSnapshot(restoredSnapshot);
+      setActiveServerProject({
+        id: project.id,
+        name: project.name,
+        scenarioId: latestScenario.id
+      });
+      setServerProjectStatus("idle");
+      setServerProjectMessage("Loaded");
+      toast.success("Server project loaded", {
+        description: `${latestScenario.name} restored into the workbench.`
+      });
+    } catch (error) {
+      setServerProjectStatus("error");
+      setServerProjectMessage(error instanceof Error ? error.message : "Server project load failed");
+      toast.error("Server project load failed", {
+        description: error instanceof Error ? error.message : "DynEcho could not restore the selected project."
+      });
+    }
+  };
+
   const openWorkspacePanel = (panelId: WorkspacePanelId) => {
     setActiveWorkspacePanel(panelId);
     if (panelId === "review") setReviewExpanded(true);
@@ -550,6 +914,8 @@ export function SimpleWorkbenchShell() {
       proposalValidityNote: proposalValidityNote.trim() || DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_VALIDITY_NOTE,
       recommendationItems: proposalBrief.recommendationItems, reportProfile,
       reportProfileLabel: REPORT_PROFILE_LABELS[reportProfile], responseCurves: responseCurveFigures,
+      serverProjectId: activeServerProject?.id,
+      serverProjectScenarioId: activeServerProject?.scenarioId,
       studyModeLabel: getStudyModeLabel(studyMode), studyContextLabel: STUDY_CONTEXT_LABELS[studyContext],
       validationDetail: validationSummary.detail, validationLabel: validationSummary.value, warnings: scenario.warnings
     };
@@ -562,9 +928,9 @@ export function SimpleWorkbenchShell() {
     try {
       const doc = buildQuickProposalDocument();
       if (format === "docx") {
-        await downloadSimpleWorkbenchProposalDocx(doc, { style });
+        await downloadSimpleWorkbenchProposalDocx(doc, { projectId: activeServerProject?.id, style });
       } else {
-        await downloadSimpleWorkbenchProposalPdf(doc, { style });
+        await downloadSimpleWorkbenchProposalPdf(doc, { projectId: activeServerProject?.id, style });
       }
       toast.success(`${getSimpleWorkbenchProposalExportLabel({ format, style })} downloaded`);
     } catch {
@@ -598,6 +964,18 @@ export function SimpleWorkbenchShell() {
     startStudyMode(nextStudyMode);
   };
 
+  const serverProjectBusy =
+    serverProjectStatus === "loading" ||
+    serverProjectStatus === "syncing" ||
+    serverProjectStatus === "restoring";
+  const serverProjectOptions = serverProjects.map((project) => ({
+    id: project.id,
+    label: formatServerProjectOptionLabel(project)
+  }));
+  const serverProjectStatusLabel = activeServerProject
+    ? `${serverProjectMessage} · ${activeServerProject.name}`
+    : serverProjectMessage;
+
   // ── Render ───────────────────────────────────────────────────────────────
   return (
     <div className="grid min-w-0 gap-0" style={SIMPLE_WORKBENCH_THEME}>
@@ -606,20 +984,28 @@ export function SimpleWorkbenchShell() {
         exportReady={exportReady}
         isExportingPdf={isExportingPdf}
         modePresets={modePresets}
+        isServerProjectBusy={serverProjectBusy}
         onContextModeChange={setAirborneContextMode}
         onExportBrandedDocx={() => void handleQuickExport("branded", "docx")}
         onExportBrandedPdf={() => void handleQuickExport("branded", "pdf")}
         onExportSimpleDocx={() => void handleQuickExport("simple", "docx")}
         onExportSimplePdf={() => void handleQuickExport("simple", "pdf")}
+        onLoadServerProject={() => void loadServerProject()}
         onOpenPdfSetup={handleOpenPdfSetup}
         onPresetChange={loadPreset}
+        onRefreshServerProjects={() => void refreshServerProjects()}
         onStartEmpty={clearRows}
         onReset={() => setResetDialogOpen(true)}
+        onSelectedServerProjectChange={setSelectedServerProjectId}
         onStudyModeChange={handleStudyModeChange}
+        onSyncServerProject={() => void syncCurrentProjectToServer()}
         onToggleTheme={toggleTheme}
         readyOutputCount={readyOutputCount}
         rowCount={rows.length}
         selectedPreset={selectedPreset}
+        selectedServerProjectId={selectedServerProjectId}
+        serverProjectOptions={serverProjectOptions}
+        serverProjectStatusLabel={serverProjectStatusLabel}
         studyMode={studyMode}
         theme={theme}
       />
@@ -831,6 +1217,7 @@ export function SimpleWorkbenchShell() {
             proposalAttention, proposalIssuePurpose, proposalRecipient, projectName,
             proposalReference, proposalRevision, proposalSubject, proposalValidityNote,
             reportProfile, reportProfileLabel: REPORT_PROFILE_LABELS[reportProfile],
+            serverProjectId: activeServerProject?.id, serverProjectScenarioId: activeServerProject?.scenarioId,
             result, studyModeLabel: getStudyModeLabel(studyMode), studyContextLabel: STUDY_CONTEXT_LABELS[studyContext],
             validationDetail: validationSummary.detail, validationLabel: validationSummary.value,
             validationTone: validationSummary.tone, warnings: scenario.warnings

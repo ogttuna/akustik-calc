@@ -6,6 +6,16 @@ import {
 } from "@/features/workbench/simple-workbench-proposal";
 import { renderSimpleWorkbenchProposalDocx } from "@/features/workbench/simple-workbench-proposal-docx-server";
 import { getAuthState } from "@/lib/auth";
+import {
+  appendProposalAuditEventForProject,
+  getProposalAuditProjectId,
+  getProposalAuditScenarioIds
+} from "@/lib/project-proposal-audit";
+import {
+  projectOwnerScopeErrorResponse,
+  projectStorageRouteErrorResponse,
+  resolveProjectRouteOwner
+} from "@/lib/project-route-auth";
 
 export const runtime = "nodejs";
 
@@ -13,16 +23,10 @@ const DOCX_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.wordpro
 
 export async function POST(request: Request) {
   const authState = await getAuthState();
+  const owner = resolveProjectRouteOwner(authState);
 
-  if (authState.configured && !authState.session) {
-    return NextResponse.json(
-      {
-        error: "Authentication required."
-      },
-      {
-        status: 401
-      }
-    );
+  if (!owner.ok) {
+    return projectOwnerScopeErrorResponse(owner);
   }
 
   const style = new URL(request.url).searchParams.get("style") === "simple" ? "simple" : "branded";
@@ -60,6 +64,21 @@ export async function POST(request: Request) {
     });
     const docxBytes = new Uint8Array(docxBuffer);
     const filename = `${buildSimpleWorkbenchProposalFilename(proposalDocument.projectName)}${style === "simple" ? "-simple" : ""}.docx`;
+    const projectId = getProposalAuditProjectId(request.url, proposalDocument.serverProjectId);
+
+    if (projectId) {
+      try {
+        await appendProposalAuditEventForProject({
+          authState,
+          format: "docx",
+          projectId,
+          scenarioIds: getProposalAuditScenarioIds(proposalDocument.serverProjectScenarioId),
+          style
+        });
+      } catch (error) {
+        return projectStorageRouteErrorResponse(error, "DynEcho could not record the proposal audit event.");
+      }
+    }
 
     return new NextResponse(docxBytes, {
       headers: {

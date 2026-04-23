@@ -19,10 +19,19 @@ function parseErrorMessage(value: unknown): string | null {
 
 function getExportRoute(options: {
   format: SimpleWorkbenchProposalExportFormat;
+  projectId?: string;
   style: SimpleWorkbenchProposalExportStyle;
 }): string {
   const baseRoute = options.format === "docx" ? "/api/proposal-docx" : "/api/proposal-pdf";
-  return options.style === "simple" ? `${baseRoute}?style=simple` : baseRoute;
+  const searchParams = new URLSearchParams();
+  if (options.style === "simple") {
+    searchParams.set("style", "simple");
+  }
+  if (options.projectId && options.projectId.trim().length > 0) {
+    searchParams.set("projectId", options.projectId.trim());
+  }
+
+  return searchParams.size > 0 ? `${baseRoute}?${searchParams.toString()}` : baseRoute;
 }
 
 export function getSimpleWorkbenchProposalExportLabel(options: {
@@ -63,13 +72,16 @@ export async function downloadSimpleWorkbenchProposalExport(
   proposalDocument: SimpleWorkbenchProposalDocument,
   options?: {
     format?: SimpleWorkbenchProposalExportFormat;
+    projectId?: string;
     style?: SimpleWorkbenchProposalExportStyle;
   }
 ): Promise<void> {
   const style = options?.style === "simple" ? "simple" : "branded";
   const format = options?.format === "docx" ? "docx" : "pdf";
+  const projectId = options?.projectId ?? proposalDocument.serverProjectId;
   const route = getExportRoute({
     format,
+    projectId,
     style
   });
   const response = await fetch(route, {
@@ -112,11 +124,13 @@ export async function downloadSimpleWorkbenchProposalExport(
 export async function downloadSimpleWorkbenchProposalPdf(
   proposalDocument: SimpleWorkbenchProposalDocument,
   options?: {
+    projectId?: string;
     style?: SimpleWorkbenchProposalExportStyle;
   }
 ): Promise<void> {
   await downloadSimpleWorkbenchProposalExport(proposalDocument, {
     format: "pdf",
+    projectId: options?.projectId,
     style: options?.style
   });
 }
@@ -124,11 +138,13 @@ export async function downloadSimpleWorkbenchProposalPdf(
 export async function downloadSimpleWorkbenchProposalDocx(
   proposalDocument: SimpleWorkbenchProposalDocument,
   options?: {
+    projectId?: string;
     style?: SimpleWorkbenchProposalExportStyle;
   }
 ): Promise<void> {
   await downloadSimpleWorkbenchProposalExport(proposalDocument, {
     format: "docx",
+    projectId: options?.projectId,
     style: options?.style
   });
 }
