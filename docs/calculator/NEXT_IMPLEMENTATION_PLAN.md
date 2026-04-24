@@ -6,8 +6,8 @@ focused, agent-resume friendly. For the strategic picture read
 read [CURRENT_STATE.md](./CURRENT_STATE.md).
 
 Last reviewed: 2026-04-24 (`dynamic_airborne_split_refactor_v2`
-Gate B seventh carve landed and broad `pnpm check` revalidated; see
-`CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_SEVENTH_CARVE_HANDOFF.md`).
+Gate B seventh carve landed and post-commit checkpoint revalidated; see
+`CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_POST_COMMIT_REVALIDATION_HANDOFF.md`).
 
 ---
 
@@ -86,7 +86,9 @@ For every next slice decision:
   passed + 18 skipped, build 5/5, same known non-fatal `sharp/@img`
   warnings only. Current focused gate shape: engine 86 files /
   396 tests, web 36 files / 170 passed + 18 skipped, build 5/5,
-  whitespace guard clean.
+  whitespace guard clean. The post-commit checkpoint at `eba9859`
+  re-read docs against implementation, re-ran the focused gate and
+  broad `pnpm check`, and found no drift.
 
 ## Immediate Execution Order
 
@@ -199,10 +201,10 @@ Every slice under this plan obeys:
 
 ## Reading Path On Resume
 
-1. [CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_SEVENTH_CARVE_HANDOFF.md](./CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_SEVENTH_CARVE_HANDOFF.md)
-   — latest checkpoint: dynamic-airborne split v2 Gate A landed
-   no-runtime, Gate B seventh carve landed, and the next carve target is
-   selected.
+1. [CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_POST_COMMIT_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_POST_COMMIT_REVALIDATION_HANDOFF.md)
+   — latest checkpoint: post-commit revalidation after Gate B seventh
+   carve; no plan/implementation drift found, and the eighth carve
+   target is still selected.
 2. [SLICE_DYNAMIC_AIRBORNE_SPLIT_REFACTOR_V2_PLAN.md](./SLICE_DYNAMIC_AIRBORNE_SPLIT_REFACTOR_V2_PLAN.md)
    — active slice plan; continue Gate B with the eighth carve.
 3. [DYNAMIC_AIRBORNE_CARTOGRAPHY.md](./DYNAMIC_AIRBORNE_CARTOGRAPHY.md)
@@ -212,7 +214,8 @@ Every slice under this plan obeys:
 5. [MASTER_PLAN.md](./MASTER_PLAN.md) §3 (state grid) + §4 (master
    sequence) + §6 (accuracy preservation contract) + §8
    (completion signals)
-6. [CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_FIRST_CARVE_HANDOFF.md](./CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_FIRST_CARVE_HANDOFF.md),
+6. [CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_SEVENTH_CARVE_HANDOFF.md](./CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_SEVENTH_CARVE_HANDOFF.md),
+   [CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_FIRST_CARVE_HANDOFF.md](./CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_FIRST_CARVE_HANDOFF.md),
    [CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_A_HANDOFF.md),
    [CHECKPOINT_2026-04-24_INVALID_THICKNESS_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-24_INVALID_THICKNESS_CLOSEOUT_HANDOFF.md),
    [CHECKPOINT_2026-04-24_INVALID_THICKNESS_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-24_INVALID_THICKNESS_GATE_A_HANDOFF.md)

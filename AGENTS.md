@@ -5,7 +5,7 @@ Start here before changing calculator behavior.
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_SEVENTH_CARVE_HANDOFF.md`
+2. `docs/calculator/CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_POST_COMMIT_REVALIDATION_HANDOFF.md`
 3. `docs/calculator/CURRENT_STATE.md`
 4. `docs/calculator/SLICE_DYNAMIC_AIRBORNE_SPLIT_REFACTOR_V2_PLAN.md`
 5. `docs/calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md`
@@ -36,8 +36,9 @@ plan.
   `dynamic-airborne.ts` is now 2538 lines with 7 in-file guards. The
   follow-up broad `pnpm check` audit is green (engine 219 files / 1216
   tests, web 150 files / 864 passed + 18 skipped, build 5/5 with the
-  known non-fatal `sharp/@img` warnings). The next bounded carve target
-  is `applyMixedPlainModerateSingleBoardLabTemplate`.
+  known non-fatal `sharp/@img` warnings). The post-commit checkpoint
+  found no plan/implementation drift. The next bounded carve target is
+  `applyMixedPlainModerateSingleBoardLabTemplate`.
 - do not reopen `GDMTXA04A`, `C11c`, raw open-box/open-web, heavy-concrete
   parity or formula scope, reinforced-concrete reopening, wall-selector
   behavior, timber-stud widening, or wall exact-row follow-ups from nearby

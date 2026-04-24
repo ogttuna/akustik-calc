@@ -12,10 +12,10 @@ If you need the tactical detail on the active slice read
 ## Revalidated Snapshot
 
 Last revalidation cycle: `2026-04-24`
-(`dynamic_airborne_split_refactor_v2` Gate B seventh carve landed and
-the follow-up broad audit passed; latest
+(`dynamic_airborne_split_refactor_v2` post-commit checkpoint passed;
+latest
 checkpoint:
-[CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_SEVENTH_CARVE_HANDOFF.md](./CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_SEVENTH_CARVE_HANDOFF.md)).
+[CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_POST_COMMIT_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_POST_COMMIT_REVALIDATION_HANDOFF.md)).
 Step 8 closed the calculator runtime audit: `MASTER_PLAN.md` §3/§8
 was reconciled to implementation reality, `coverage-grid-consistency.test.ts`
 now maps the grid and C1-C6 signals to executable evidence, the
@@ -248,6 +248,14 @@ green (engine 219 / 219 files, 1216 / 1216 tests; web 150 / 150 files,
 `sharp/@img` warnings), and no implementation/plan drift was found.
 Gate C is intentionally still open because the active file is 2538
 lines, so the next correct action remains the eighth bounded carve.
+
+Post-commit checkpoint `2026-04-24`: commit `eba9859` was treated as a
+clean stopping point and re-audited. The authority docs still match the
+implementation line counts, remaining guard inventory, carved guard
+module, recursive composer callers, and current-gate static contract.
+`pnpm calculator:gate:current` and broad `pnpm check` are green at this
+checkpoint. No new implementation work is required before the eighth
+Gate B carve.
 
 Implementation refinement `2026-04-23`: the Gate A audit found that the
 timber-stud gap has two current surfaces. Existing no-calculator preset
@@ -649,7 +657,9 @@ time without context loss:
 ## Resume Order For The Next Agent
 
 1. Read [CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_SEVENTH_CARVE_HANDOFF.md](./CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_SEVENTH_CARVE_HANDOFF.md)
-   for the latest clean handoff and eighth Gate B carve selection.
+   for the seventh-carve implementation handoff, or start from
+   [CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_POST_COMMIT_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_POST_COMMIT_REVALIDATION_HANDOFF.md)
+   for the latest clean post-commit checkpoint.
 2. Read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md)
    and [SLICE_DYNAMIC_AIRBORNE_SPLIT_REFACTOR_V2_PLAN.md](./SLICE_DYNAMIC_AIRBORNE_SPLIT_REFACTOR_V2_PLAN.md).
    Continue the active slice in Gate B.

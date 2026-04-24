@@ -333,6 +333,14 @@ Follow-up general audit after the seventh carve:
 - Gate C remains open because `dynamic-airborne.ts` is still 2538
   lines, above the 2000-line C6 threshold.
 
+Post-commit checkpoint after `eba9859`:
+
+- authority docs were re-read against implementation;
+- line counts, remaining guard order, carved guard module, recursive
+  composer callers, and current-gate contract all matched the plan;
+- `pnpm calculator:gate:current` and broad `pnpm check` stayed green;
+- this is a valid stopping point, but not a Gate C closeout.
+
 Next Gate B carve target: `applyMixedPlainModerateSingleBoardLabTemplate`.
 Reason: it is the next remaining non-recursive template correction and
 can move into `dynamic-airborne-correction-guards.ts` without adding

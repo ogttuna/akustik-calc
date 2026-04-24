@@ -595,6 +595,12 @@ Fresh source snapshot after the seventh carve:
   864 passed + 18 skipped, build 5/5, and the same known non-fatal
   `sharp/@img` optional-package warnings. No behavior or plan drift was
   found; the next move remains the eighth bounded carve.
+- Post-commit checkpoint after `eba9859`:
+  the same implementation shape was re-read from source and matched
+  this cartography: 2538-line composer file, 657-line correction guard
+  module, seven in-file `apply*` guards, five recursive composer
+  callers, and seven carved guards. Focused and broad gates remained
+  green, so this is a clean handoff before the eighth carve.
 
 Next carve target: `applyMixedPlainModerateSingleBoardLabTemplate`. It
 is the next remaining non-recursive template correction and can move
