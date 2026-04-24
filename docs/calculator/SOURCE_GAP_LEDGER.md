@@ -1,6 +1,6 @@
 # Dynamic Calculator Source Gap Ledger
 
-Last reviewed: 2026-04-24 (invalid-thickness baseline-ready checkpoint;
+Last reviewed: 2026-04-24 (invalid-thickness closeout checkpoint;
 source-gap content remains floor-dominant historical context)
 
 Purpose:
@@ -36,10 +36,11 @@ Important scope note:
   `wall_timber_lightweight_source_corpus_v1`, and then
   `wall_resilient_bar_side_count_modeling_v1`,
   `floor_field_continuation_expansion_v1`,
-  `floor_many_layer_stress_regression_v1`, and
-  `floor_layer_order_edit_stability_v1`; all six are now closed.
+  `floor_many_layer_stress_regression_v1`,
+  `floor_layer_order_edit_stability_v1`, and
+  `all_caller_invalid_thickness_guard_v1`; all seven are now closed.
   The current selected slice is
-  `all_caller_invalid_thickness_guard_v1`. Productization slices
+  `dynamic_airborne_split_refactor_v2`. Productization slices
   `server_backed_project_storage_v1`,
   `project_access_authorization_v1`, `auth_session_hardening_v1`, and
   `team_access_model_v1` are closed; `project_access_policy_route_integration_v1`

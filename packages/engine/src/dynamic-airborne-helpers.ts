@@ -18,6 +18,7 @@ import type {
   DynamicAirborneDelegateMethod,
   DynamicAirborneFamily,
   DynamicAirborneTrace,
+  ResolvedLayer,
   TransmissionLossCurve
 } from "@dynecho/shared";
 
@@ -52,6 +53,11 @@ export type DynamicAirborneOptions = {
   singleLeafMasonryFloorGuardDepth?: number;
   screeningEstimatedRwDb: number;
 };
+
+export type DynamicAirborneComposer = (
+  layers: readonly ResolvedLayer[],
+  options: DynamicAirborneOptions
+) => DynamicAirborneResult;
 
 import {
   buildRatingsFromCurve,

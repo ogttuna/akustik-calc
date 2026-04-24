@@ -395,11 +395,13 @@ const GRID_ROWS: readonly GridRowExpectation[] = [
     id: "cross.engine_thickness_validity",
     section: "cross-cutting",
     labelNeedle: "Engine thickness validity",
-    statusLabel: "Partial",
-    evidenceTier: "partial",
-    deferredReason: "Standalone all-caller floor/wall direct engine guard remains deferred.",
+    statusLabel: "Benchmark",
+    evidenceTier: "benchmark",
     evidencePaths: [
+      "packages/engine/src/all-caller-invalid-thickness-guard-gate-a-matrix.test.ts",
+      "packages/engine/src/raw-floor-hostile-input-answer-matrix.test.ts",
       "packages/engine/src/raw-wall-hostile-input-answer-matrix.test.ts",
+      "apps/web/features/workbench/normalize-rows.test.ts",
       "apps/web/features/workbench/raw-wall-hostile-input-route-card-matrix.test.ts"
     ]
   },
@@ -431,13 +433,15 @@ const GRID_ROWS: readonly GridRowExpectation[] = [
     id: "cross.dynamic_airborne_size",
     section: "cross-cutting",
     labelNeedle: "`dynamic-airborne.ts` size",
-    statusLabel: "Split v1 landed, v2 deferred",
+    statusLabel: "Split v1 landed, v2 Gate B seventh carve landed",
     evidenceTier: "partial",
-    deferredReason: "dynamic-airborne.ts still exceeds 2000 lines; split v2 remains documented-deferred.",
+    deferredReason: "dynamic-airborne.ts still exceeds 2000 lines; split v2 remains active after Gate B seventh carve.",
     evidencePaths: [
       "packages/engine/src/dynamic-airborne.ts",
+      "packages/engine/src/dynamic-airborne-correction-guards.ts",
       "docs/calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md",
-      "packages/engine/src/post-dynamic-airborne-split-refactor-v1-next-slice-selection-contract.test.ts"
+      "packages/engine/src/post-dynamic-airborne-split-refactor-v1-next-slice-selection-contract.test.ts",
+      "packages/engine/src/dynamic-airborne-split-v2-gate-b-seventh-carve-contract.test.ts"
     ]
   }
 ];
@@ -471,8 +475,9 @@ const COMPLETION_SIGNALS: readonly CompletionSignalExpectation[] = [
   },
   {
     id: "C4",
-    requiredNeedles: ["Hostile-input discipline", "step-7 torture O1"],
+    requiredNeedles: ["Hostile-input discipline", "all-caller direct thickness guard"],
     evidencePaths: [
+      "packages/engine/src/all-caller-invalid-thickness-guard-gate-a-matrix.test.ts",
       "packages/engine/src/raw-floor-hostile-input-answer-matrix.test.ts",
       "packages/engine/src/raw-wall-hostile-input-answer-matrix.test.ts",
       "apps/web/features/workbench/raw-floor-hostile-input-route-card-matrix.test.ts",
@@ -493,11 +498,13 @@ const COMPLETION_SIGNALS: readonly CompletionSignalExpectation[] = [
   },
   {
     id: "C6",
-    requiredNeedles: ["documented `dynamic_airborne_split_refactor_v2` deferral", "DYNAMIC_AIRBORNE_CARTOGRAPHY.md"],
+    requiredNeedles: ["`dynamic_airborne_split_refactor_v2` Gate B seventh carve moved", "DYNAMIC_AIRBORNE_CARTOGRAPHY.md"],
     evidencePaths: [
       "packages/engine/src/dynamic-airborne.ts",
+      "packages/engine/src/dynamic-airborne-correction-guards.ts",
       "docs/calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md",
-      "packages/engine/src/post-dynamic-airborne-split-refactor-v1-next-slice-selection-contract.test.ts"
+      "packages/engine/src/post-dynamic-airborne-split-refactor-v1-next-slice-selection-contract.test.ts",
+      "packages/engine/src/dynamic-airborne-split-v2-gate-b-seventh-carve-contract.test.ts"
     ]
   }
 ];
@@ -534,7 +541,7 @@ function statusCategory(status: string): string {
   if (status.includes("Fail-closed")) return "Fail-closed";
   if (status.includes("Partial")) return "Partial";
   if (status.includes("6/6")) return "6/6";
-  if (status.includes("Split v1 landed, v2 deferred")) return "Split v1 landed, v2 deferred";
+  if (status.includes("Split v1 landed, v2 Gate B seventh carve landed")) return "Split v1 landed, v2 Gate B seventh carve landed";
   return status;
 }
 
@@ -547,7 +554,7 @@ describe("coverage grid consistency", () => {
   const parsedRows = parseTableRows(masterPlan);
 
   it("keeps MASTER_PLAN section 3 reconciled to the final-audit snapshot date", () => {
-    expect(masterPlan).toContain("## 3. Implementation State Grid (last reconciled 2026-04-23)");
+    expect(masterPlan).toContain("## 3. Implementation State Grid (last reconciled 2026-04-24)");
     expect(masterPlan).not.toMatch(/\| Wall hostile-input matrix \| .*Not yet covered/);
     expect(masterPlan).not.toMatch(/\| Wall field continuation per corridor \| .*Family \(partial\)/);
     expect(masterPlan).not.toContain("LSF and timber stud presets not yet landed");
@@ -661,7 +668,7 @@ describe("coverage grid consistency", () => {
 
     if (dynamicAirborneLines > 2000) {
       expect(cartography).toContain("dynamic_airborne_split_refactor_v2");
-      expect(masterPlan).toContain("C6 closes only as a documented `dynamic_airborne_split_refactor_v2` deferral");
+      expect(masterPlan).toContain("`dynamic_airborne_split_refactor_v2` Gate B seventh carve moved");
     }
   });
 });

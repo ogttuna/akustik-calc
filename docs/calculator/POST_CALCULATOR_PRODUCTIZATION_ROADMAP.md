@@ -92,8 +92,9 @@ Progress note 2026-04-23:
   closed as a no-runtime audit, `floor_many_layer_stress_regression_v1`
   has closed as a no-runtime many-layer audit,
   `floor_layer_order_edit_stability_v1` has closed as a no-runtime
-  layer-order audit, and the current selected calculator work has moved
-  to `all_caller_invalid_thickness_guard_v1`.
+  layer-order audit, `all_caller_invalid_thickness_guard_v1` has closed
+  as a no-runtime direct input-validity audit, and the current selected
+  calculator work has moved to `dynamic_airborne_split_refactor_v2`.
 
 ### 3. Billing
 
@@ -172,7 +173,7 @@ evidence.
 - Deferred productization follow-up:
   `project_access_policy_route_integration_v1`.
 - Current selected calculator slice:
-  `all_caller_invalid_thickness_guard_v1`.
+  `dynamic_airborne_split_refactor_v2`.
 
 Reasoning: server-backed persistence is the foundation for auth,
 billing, proposal history, collaboration, monitoring context, and any

@@ -24,9 +24,39 @@ baseline.
 
 - [CHECKPOINT_2026-04-23_SERVER_BACKED_PROJECT_STORAGE_HANDOFF.md](./CHECKPOINT_2026-04-23_SERVER_BACKED_PROJECT_STORAGE_HANDOFF.md)
   — productization closeout: server-backed project storage v1 closed.
+- [CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_SEVENTH_CARVE_HANDOFF.md](./CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_SEVENTH_CARVE_HANDOFF.md)
+  — latest calculator handoff: dynamic-airborne split v2 Gate B seventh
+  carve landed and the next bounded template carve was selected.
+- [CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_SIXTH_CARVE_HANDOFF.md](./CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_SIXTH_CARVE_HANDOFF.md)
+  — calculator handoff: dynamic-airborne split v2 Gate B sixth
+  carve landed and the next bounded field-trim carve was selected.
+- [CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_FIFTH_CARVE_HANDOFF.md](./CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_FIFTH_CARVE_HANDOFF.md)
+  — calculator handoff: dynamic-airborne split v2 Gate B fifth
+  carve landed and the next bounded field-lift carve was selected.
+- [CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_FOURTH_CARVE_HANDOFF.md](./CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_FOURTH_CARVE_HANDOFF.md)
+  — calculator handoff: dynamic-airborne split v2 Gate B fourth
+  carve landed and the next bounded field-lift carve was selected.
+- [CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_THIRD_CARVE_HANDOFF.md](./CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_THIRD_CARVE_HANDOFF.md)
+  — calculator handoff: dynamic-airborne split v2 Gate B third
+  carve landed and the next bounded field-lift carve was selected.
+- [CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_SECOND_CARVE_HANDOFF.md](./CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_SECOND_CARVE_HANDOFF.md)
+  — calculator handoff: dynamic-airborne split v2 Gate B second
+  carve landed and the next bounded field-trim carve was selected.
+- [CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_FIRST_CARVE_HANDOFF.md](./CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_FIRST_CARVE_HANDOFF.md)
+  — calculator handoff: dynamic-airborne split v2 Gate B first
+  carve landed and the next bounded cap carve was selected.
+- [CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_A_HANDOFF.md)
+  — calculator handoff: dynamic-airborne split v2 Gate A landed
+  no-runtime and selected the first Gate B composer-injection carve.
+- [CHECKPOINT_2026-04-24_INVALID_THICKNESS_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-24_INVALID_THICKNESS_CLOSEOUT_HANDOFF.md)
+  — calculator handoff: invalid-thickness closed no-runtime and
+  dynamic-airborne split v2 was selected.
+- [CHECKPOINT_2026-04-24_INVALID_THICKNESS_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-24_INVALID_THICKNESS_GATE_A_HANDOFF.md)
+  — calculator handoff: invalid-thickness Gate A landed no-runtime and
+  Gate B was not required.
 - [CHECKPOINT_2026-04-24_INVALID_THICKNESS_BASELINE_READY_HANDOFF.md](./CHECKPOINT_2026-04-24_INVALID_THICKNESS_BASELINE_READY_HANDOFF.md)
-  — latest calculator handoff: post-commit baseline revalidated and
-  invalid-thickness Gate A is ready to start.
+  — calculator handoff: post-commit baseline revalidated before
+  invalid-thickness Gate A.
 - [CHECKPOINT_2026-04-24_FLOOR_LAYER_ORDER_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-24_FLOOR_LAYER_ORDER_CLOSEOUT_HANDOFF.md)
   — calculator handoff: floor layer-order closed no-runtime and
   all-caller invalid-thickness guard was selected.
@@ -55,8 +85,10 @@ baseline.
 - [POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md](./POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md)
   — productization roadmap; project-access route integration is
   deferred.
+- [SLICE_DYNAMIC_AIRBORNE_SPLIT_REFACTOR_V2_PLAN.md](./SLICE_DYNAMIC_AIRBORNE_SPLIT_REFACTOR_V2_PLAN.md)
+  — active calculator architecture slice plan.
 - [SLICE_ALL_CALLER_INVALID_THICKNESS_GUARD_PLAN.md](./SLICE_ALL_CALLER_INVALID_THICKNESS_GUARD_PLAN.md)
-  — active calculator accuracy/robustness slice plan.
+  — closed direct invalid-thickness guard plan.
 - [SLICE_FLOOR_LAYER_ORDER_EDIT_STABILITY_PLAN.md](./SLICE_FLOOR_LAYER_ORDER_EDIT_STABILITY_PLAN.md)
   — closed floor layer-order edit stability audit plan.
 - [SLICE_FLOOR_MANY_LAYER_STRESS_REGRESSION_PLAN.md](./SLICE_FLOOR_MANY_LAYER_STRESS_REGRESSION_PLAN.md)
@@ -80,7 +112,8 @@ baseline.
   storage v1.
 - [DYNAMIC_AIRBORNE_CARTOGRAPHY.md](./DYNAMIC_AIRBORNE_CARTOGRAPHY.md)
   — `dynamic-airborne.ts` split blueprint. v1 landed 2026-04-21;
-  v2 composer-injection follow-up is the deferred track.
+  v2 Gate B has moved the micro-gap equivalence guard and heavy
+  unframed cavity cap.
 - [SYSTEM_MAP.md](./SYSTEM_MAP.md) — end-to-end system model,
   runtime boundaries, persistence posture, test surface map.
 - [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)

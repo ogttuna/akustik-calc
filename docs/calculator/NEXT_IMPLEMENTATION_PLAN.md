@@ -5,12 +5,9 @@ focused, agent-resume friendly. For the strategic picture read
 [MASTER_PLAN.md](./MASTER_PLAN.md). For what is stable right now
 read [CURRENT_STATE.md](./CURRENT_STATE.md).
 
-Last reviewed: 2026-04-24 (`floor_field_continuation_expansion_v1`
-closed as a no-runtime audit; `floor_many_layer_stress_regression_v1`
-closed as a no-runtime Gate A audit; `floor_layer_order_edit_stability_v1`
-closed no-runtime; `all_caller_invalid_thickness_guard_v1` is selected
-next; post-commit baseline revalidated in
-`CHECKPOINT_2026-04-24_INVALID_THICKNESS_BASELINE_READY_HANDOFF.md`).
+Last reviewed: 2026-04-24 (`dynamic_airborne_split_refactor_v2`
+Gate B seventh carve landed and broad `pnpm check` revalidated; see
+`CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_SEVENTH_CARVE_HANDOFF.md`).
 
 ---
 
@@ -39,53 +36,82 @@ For every next slice decision:
 
 ## Now
 
-- **Active slice**: `all_caller_invalid_thickness_guard_v1`
-  (cross-cutting direct engine invalid-thickness guard). Selected
-  `2026-04-24` immediately after
-  `floor_layer_order_edit_stability_v1` closed as a no-runtime audit.
+- **Active slice**: `dynamic_airborne_split_refactor_v2`
+  (calculator architecture hygiene / behavior-preserving split).
+  Selected `2026-04-24` immediately after
+  `all_caller_invalid_thickness_guard_v1` closed as a no-runtime audit.
 - **Planning surface**:
-  [SLICE_ALL_CALLER_INVALID_THICKNESS_GUARD_PLAN.md](./SLICE_ALL_CALLER_INVALID_THICKNESS_GUARD_PLAN.md).
+  [SLICE_DYNAMIC_AIRBORNE_SPLIT_REFACTOR_V2_PLAN.md](./SLICE_DYNAMIC_AIRBORNE_SPLIT_REFACTOR_V2_PLAN.md).
 - **Calculator runtime posture**: `good_calculator_final_audit_v1`
   is closed. The final audit reconciled `MASTER_PLAN.md` §3/§8,
   added `coverage-grid-consistency.test.ts`, verified C1-C6 with
   executable assertions, added the post-final-audit contract, and
   opened the productization roadmap. The archived plan lives at
   `docs/archive/handoffs/SLICE_GOOD_CALCULATOR_FINAL_AUDIT_PLAN.md`.
-- **Next implementation action**: execute Gate A of
-  `all_caller_invalid_thickness_guard_v1` with no runtime change first.
-  Inventory direct floor and wall engine caller behavior for `0`,
-  negative, `NaN`, `Infinity`, and non-finite thicknesses. Gate B opens
-  only if a direct caller can crash, emit non-finite values, leak an
-  unsupported live output, or return a defended-looking answer without a
-  specific invalid-thickness posture. Do not reopen `GDMTXA04A`, `C11c`,
-  bare carrier source families, wall selector behavior, or formula
-  scope from hostile-input adjacency. `project_access_policy_route_integration_v1`
-  is deferred, not cancelled, because it does not improve acoustic
-  calculation accuracy or coverage.
-- **Checkpoint status**: post-commit revalidation found no drift between
-  the plan, implementation anchors, and executable coverage grid.
-  Focused calculator gate, broad `pnpm check`, and post-build web
-  typecheck are green.
+- **Next implementation action**: continue Gate B of
+  `dynamic_airborne_split_refactor_v2`. The first composer-injection
+  carve landed: `applyMicroGapFillEquivalenceGuard` moved into
+  `dynamic-airborne-correction-guards.ts` and now receives
+  `calculateDynamicAirborneResult` through `DynamicAirborneComposer`.
+  The second carve moved `applyHeavyUnframedCavityScreeningCap` into the
+  same module, and the third carve moved
+  `applyMixedSecurityBoardDoubleStudFieldTrim`. The fourth carve moved
+  `applyHighFillSingleBoardStudFieldLift`. The fifth carve moved
+  `applyMixedBoardEmptyCavityFieldMidbandLift`. The sixth carve moved
+  `applyMixedPremiumSplitFieldLift`. The seventh carve moved
+  `applyDiamondHybridResilientFieldMidbandTrim`. Move
+  `applyMixedPlainModerateSingleBoardLabTemplate` next as a separate
+  non-recursive template carve. Do not reopen
+  `GDMTXA04A`, `C11c`, bare carrier source families, wall selector
+  behavior, or formula scope from architecture adjacency.
+  `project_access_policy_route_integration_v1` is deferred, not
+  cancelled, because it does not improve acoustic calculation accuracy or
+  coverage.
+- **Checkpoint status**: dynamic-airborne split v2 Gate A landed as a
+  no-runtime planning checkpoint, Gate B first carve moved one recursive
+  guard without behavior changes, Gate B second carve moved one
+  non-recursive cap guard, and Gate B third carve moved one
+  non-recursive field-trim guard. Gate B fourth carve moved one
+  non-recursive field-lift guard. Gate B fifth carve moved another
+  non-recursive field-lift guard. Gate B sixth carve moved one more
+  non-recursive field-lift guard. Gate B seventh carve moved one
+  non-recursive field-trim guard. Pre-edit `pnpm calculator:gate:current`
+  was green (engine 85 files / 391 tests, web 36 files / 170 passed +
+  18 skipped, build 5/5, whitespace guard clean; known non-fatal
+  `sharp/@img` warnings only). Post-seventh-carve targeted contract,
+  focused behavior sweep, engine lint/typecheck,
+  `pnpm calculator:gate:current`, post-build web typecheck, and
+  `git diff --check` are green. The follow-up broad audit also passed
+  `pnpm check`: engine 219 files / 1216 tests, web 150 files / 864
+  passed + 18 skipped, build 5/5, same known non-fatal `sharp/@img`
+  warnings only. Current focused gate shape: engine 86 files /
+  396 tests, web 36 files / 170 passed + 18 skipped, build 5/5,
+  whitespace guard clean.
 
 ## Immediate Execution Order
 
-Gate A of `all_caller_invalid_thickness_guard_v1` should now be
-executed in this order:
+Gate B of `dynamic_airborne_split_refactor_v2` should now continue in
+this order:
 
-1. Run `pnpm calculator:gate:current` as the focused baseline.
-2. Add a direct engine invalid-thickness inventory across representative
-   floor and wall callers.
-3. Pin no crash, finite outputs, support buckets, and warning/fail-closed
-   reasons for each invalid-thickness class.
-4. Reopen Gate B only if Gate A proves a concrete direct-caller failure.
-5. Keep `CURRENT_STATE.md`, this plan, the slice plan, and checkpoint
-   docs synchronized.
+1. Move `applyMixedPlainModerateSingleBoardLabTemplate` into
+   `packages/engine/src/dynamic-airborne-correction-guards.ts`.
+2. Import that guard back into `dynamic-airborne.ts`.
+3. Update the Gate B static contract and cartography counts.
+4. Run the targeted Gate B contract, focused dynamic airborne and
+   hostile-input suites as needed, `pnpm calculator:gate:current`, and
+   `git diff --check`; run post-build web typecheck if Next metadata
+   changes.
+
+The broad audit did not surface calculator drift, so the right next
+move is still a narrow mechanical carve, not a formula/source-family
+reopen. Gate C remains open because `dynamic-airborne.ts` is still 2538
+lines, above the 2000-line architecture threshold.
 
 ## Latest Closed Slices
 
 See [CURRENT_STATE.md](./CURRENT_STATE.md) "Latest Closed Slices"
-table. `floor_layer_order_edit_stability_v1` is now the latest closed
-calculator slice, and `all_caller_invalid_thickness_guard_v1` is the
+table. `all_caller_invalid_thickness_guard_v1` is now the latest closed
+calculator slice, and `dynamic_airborne_split_refactor_v2` is the
 selected active follow-up.
 
 ## Deferred Follow-Up Tracks
@@ -113,11 +139,26 @@ the all-caller invalid-thickness guard because direct engine thickness
 validity remains the last explicit cross-cutting partial item in the
 master-plan grid.
 
-1. **`dynamic_airborne_split_refactor_v2`** — composer injection
-   to finish the `dynamic-airborne.ts` split (last ~3200 lines +
-   14 `apply*` guards). Blueprint in
+Just closed: `all_caller_invalid_thickness_guard_v1`.
+Gate A pinned direct floor/wall invalid thickness behavior without
+runtime change. Gate B was not required. Gate C moved engine thickness
+validity out of partial and selected the architecture hygiene slice
+because `dynamic-airborne.ts` remains above the 2000-line threshold.
+
+1. **`dynamic_airborne_split_refactor_v2`** — now active; composer
+   injection to finish the `dynamic-airborne.ts` split. Gate B first
+   carve moved `applyMicroGapFillEquivalenceGuard`; second carve moved
+   `applyHeavyUnframedCavityScreeningCap`; third carve moved
+   `applyMixedSecurityBoardDoubleStudFieldTrim`; fourth carve moved
+   `applyHighFillSingleBoardStudFieldLift`; fifth carve moved
+   `applyMixedBoardEmptyCavityFieldMidbandLift`; sixth carve moved
+   `applyMixedPremiumSplitFieldLift`; seventh carve moved
+   `applyDiamondHybridResilientFieldMidbandTrim`, leaving
+   `dynamic-airborne.ts` at 2538 lines and 7 in-file `apply*` guards.
+   Next target: `applyMixedPlainModerateSingleBoardLabTemplate`.
+   Blueprint in
    [DYNAMIC_AIRBORNE_CARTOGRAPHY.md](./DYNAMIC_AIRBORNE_CARTOGRAPHY.md)
-   "Remaining Work Deferred" section.
+   "Gate B Seventh Carve - 2026-04-24" section.
 2. **Dimension B deep-hybrid swap VALUE pins** — per-cell
    VALUE pins for the deep-hybrid swap grids remain low-ROI.
 3. **Dimension C workbench card VALUE pins** — optional
@@ -131,9 +172,8 @@ master-plan grid.
 6. **Floor layer-order edit stability** — closed no-runtime as
    `floor_layer_order_edit_stability_v1`; broad arbitrary floor reorder
    value invariance remains unclaimed.
-7. **Standalone all-caller invalid-thickness guard** — now selected as
-   `all_caller_invalid_thickness_guard_v1` for direct floor/wall engine
-   callers that bypass workbench normalization.
+7. **Standalone all-caller invalid-thickness guard** — closed
+   no-runtime as `all_caller_invalid_thickness_guard_v1`.
 8. **Dedicated floor 50+ layer regression** — closed no-runtime as
    `floor_many_layer_stress_regression_v1`.
 
@@ -159,62 +199,29 @@ Every slice under this plan obeys:
 
 ## Reading Path On Resume
 
-1. [CHECKPOINT_2026-04-24_INVALID_THICKNESS_BASELINE_READY_HANDOFF.md](./CHECKPOINT_2026-04-24_INVALID_THICKNESS_BASELINE_READY_HANDOFF.md)
-   — latest checkpoint: post-commit baseline revalidated; start
-   invalid-thickness Gate A next.
-2. [SLICE_ALL_CALLER_INVALID_THICKNESS_GUARD_PLAN.md](./SLICE_ALL_CALLER_INVALID_THICKNESS_GUARD_PLAN.md)
-   — active slice plan; start at Gate A.
-3. [CHECKPOINT_2026-04-24_FLOOR_LAYER_ORDER_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-24_FLOOR_LAYER_ORDER_CLOSEOUT_HANDOFF.md)
-   — floor layer-order closed no-runtime and all-caller
-   invalid-thickness guard was selected next.
-4. [CHECKPOINT_2026-04-24_FLOOR_LAYER_ORDER_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-24_FLOOR_LAYER_ORDER_GATE_A_HANDOFF.md)
-   — floor layer-order Gate A inventory reference.
-5. [SLICE_FLOOR_LAYER_ORDER_EDIT_STABILITY_PLAN.md](./SLICE_FLOOR_LAYER_ORDER_EDIT_STABILITY_PLAN.md)
-   — closed slice reference.
-6. [CHECKPOINT_2026-04-24_FLOOR_MANY_LAYER_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-24_FLOOR_MANY_LAYER_CLOSEOUT_HANDOFF.md)
-   — floor many-layer closeout and layer-order selection reference.
-7. [CHECKPOINT_2026-04-24_FLOOR_MANY_LAYER_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-24_FLOOR_MANY_LAYER_GATE_A_HANDOFF.md)
-   — floor 50+ layer Gate A inventory reference.
-8. [SLICE_FLOOR_MANY_LAYER_STRESS_REGRESSION_PLAN.md](./SLICE_FLOOR_MANY_LAYER_STRESS_REGRESSION_PLAN.md)
-   — closed slice reference.
-9. [CHECKPOINT_2026-04-24_FLOOR_FIELD_CONTINUATION_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-24_FLOOR_FIELD_CONTINUATION_CLOSEOUT_HANDOFF.md)
-   — floor continuation closeout and many-layer selection reference.
-10. [CHECKPOINT_2026-04-24_FLOOR_FIELD_CONTINUATION_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-24_FLOOR_FIELD_CONTINUATION_GATE_A_HANDOFF.md)
-   — Gate A floor continuation inventory reference.
-11. [CHECKPOINT_2026-04-24_RESILIENT_SIDE_COUNT_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-24_RESILIENT_SIDE_COUNT_GATE_C_CLOSEOUT_HANDOFF.md)
-   — previous checkpoint: Gate C exact side-count imports landed and floor
-   field continuation was selected next.
-12. [SLICE_FLOOR_FIELD_CONTINUATION_EXPANSION_PLAN.md](./SLICE_FLOOR_FIELD_CONTINUATION_EXPANSION_PLAN.md)
-   — closed slice reference.
-13. [CHECKPOINT_2026-04-24_RESILIENT_SIDE_COUNT_GATE_B_LANDED_HANDOFF.md](./CHECKPOINT_2026-04-24_RESILIENT_SIDE_COUNT_GATE_B_LANDED_HANDOFF.md)
-   — Gate B explicit side-count propagation reference.
-14. [CHECKPOINT_2026-04-24_RESILIENT_SIDE_COUNT_GATE_B_READY_HANDOFF.md](./CHECKPOINT_2026-04-24_RESILIENT_SIDE_COUNT_GATE_B_READY_HANDOFF.md)
-   — pre-Gate-B baseline and official-source rationale.
-15. [CHECKPOINT_2026-04-23_WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-23_WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS_CLOSEOUT_HANDOFF.md)
-   — source-corpus closeout and resilient side-count next slice selection.
-16. [CURRENT_STATE.md](./CURRENT_STATE.md)
-17. [SLICE_WALL_RESILIENT_BAR_SIDE_COUNT_MODELING_PLAN.md](./SLICE_WALL_RESILIENT_BAR_SIDE_COUNT_MODELING_PLAN.md)
-   — closed slice reference.
-18. [MASTER_PLAN.md](./MASTER_PLAN.md) §3 (state grid) + §4 (master
+1. [CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_SEVENTH_CARVE_HANDOFF.md](./CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_SEVENTH_CARVE_HANDOFF.md)
+   — latest checkpoint: dynamic-airborne split v2 Gate A landed
+   no-runtime, Gate B seventh carve landed, and the next carve target is
+   selected.
+2. [SLICE_DYNAMIC_AIRBORNE_SPLIT_REFACTOR_V2_PLAN.md](./SLICE_DYNAMIC_AIRBORNE_SPLIT_REFACTOR_V2_PLAN.md)
+   — active slice plan; continue Gate B with the eighth carve.
+3. [DYNAMIC_AIRBORNE_CARTOGRAPHY.md](./DYNAMIC_AIRBORNE_CARTOGRAPHY.md)
+   — split-v1 map, circular-import blocker, remaining guard list, and
+   Gate A call graph.
+4. [CURRENT_STATE.md](./CURRENT_STATE.md)
+5. [MASTER_PLAN.md](./MASTER_PLAN.md) §3 (state grid) + §4 (master
    sequence) + §6 (accuracy preservation contract) + §8
    (completion signals)
-19. [SLICE_WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS_PLAN.md](./SLICE_WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS_PLAN.md)
-   — closed slice reference; Gate A/B/C landed and direct-timber exact import is closed.
-20. [CHECKPOINT_2026-04-23_TEAM_ACCESS_MODEL_HANDOFF.md](./CHECKPOINT_2026-04-23_TEAM_ACCESS_MODEL_HANDOFF.md)
-   — closed team-access policy model handoff, reference only.
-21. [SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md](./SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md)
+6. [CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_FIRST_CARVE_HANDOFF.md](./CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_FIRST_CARVE_HANDOFF.md),
+   [CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_A_HANDOFF.md),
+   [CHECKPOINT_2026-04-24_INVALID_THICKNESS_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-24_INVALID_THICKNESS_CLOSEOUT_HANDOFF.md),
+   [CHECKPOINT_2026-04-24_INVALID_THICKNESS_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-24_INVALID_THICKNESS_GATE_A_HANDOFF.md)
+   and [SLICE_ALL_CALLER_INVALID_THICKNESS_GUARD_PLAN.md](./SLICE_ALL_CALLER_INVALID_THICKNESS_GUARD_PLAN.md)
+   — closed Gate A / invalid-thickness reference only.
+7. [SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md](./SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md)
    — deferred productization route-integration slice, reference only.
-22. [SLICE_TEAM_ACCESS_MODEL_PLAN.md](./SLICE_TEAM_ACCESS_MODEL_PLAN.md)
-   — closed team-access policy model slice, reference only.
-23. [SLICE_AUTH_SESSION_HARDENING_PLAN.md](./SLICE_AUTH_SESSION_HARDENING_PLAN.md)
-   — closed auth-session hardening slice, reference only.
-24. [SLICE_PROJECT_ACCESS_AUTHORIZATION_PLAN.md](./SLICE_PROJECT_ACCESS_AUTHORIZATION_PLAN.md)
-   — closed productization authorization slice, reference only.
-25. This file.
-26. Previous calculator slice plans (closed, reference only):
-   - `docs/archive/handoffs/SLICE_GOOD_CALCULATOR_FINAL_AUDIT_PLAN.md` (step 8)
-   - `docs/archive/handoffs/SLICE_WALL_CORRIDOR_SURFACE_VALUE_PINNING_PLAN.md` (step 7b)
-   - `docs/archive/handoffs/SLICE_MIXED_FLOOR_WALL_EDGE_CASE_HARDENING_PLAN.md` (step 7)
-27. Run `pnpm calculator:gate:current` before calculator runtime
-   changes. Productization slices should add their own focused app/API
-   tests and use `pnpm check` when they touch shared contracts.
+8. Previous calculator slice plans are closed references only unless a
+   future checkpoint explicitly reopens them.
+9. Run `pnpm calculator:gate:current` before calculator runtime changes.
+   Productization slices should add their own focused app/API tests and
+   use `pnpm check` when they touch shared contracts.

@@ -5,10 +5,11 @@ Start here before changing calculator behavior.
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-04-24_INVALID_THICKNESS_BASELINE_READY_HANDOFF.md`
+2. `docs/calculator/CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_SEVENTH_CARVE_HANDOFF.md`
 3. `docs/calculator/CURRENT_STATE.md`
-4. `docs/calculator/SLICE_ALL_CALLER_INVALID_THICKNESS_GUARD_PLAN.md`
-5. `docs/calculator/CALCULATION_MODEL_AND_VALIDATION.md`
+4. `docs/calculator/SLICE_DYNAMIC_AIRBORNE_SPLIT_REFACTOR_V2_PLAN.md`
+5. `docs/calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md`
+6. `docs/calculator/CALCULATION_MODEL_AND_VALIDATION.md`
 
 Use the long-form plan files only for backlog context after reading the current
 plan.
@@ -16,23 +17,27 @@ plan.
 ## Current Workflow
 
 - current selected slice:
-  `all_caller_invalid_thickness_guard_v1`
+  `dynamic_airborne_split_refactor_v2`
 - current first decision inside the slice:
-  start `docs/calculator/SLICE_ALL_CALLER_INVALID_THICKNESS_GUARD_PLAN.md`
-  at Gate A. The latest checkpoint
-  `docs/calculator/CHECKPOINT_2026-04-24_INVALID_THICKNESS_BASELINE_READY_HANDOFF.md`
-  revalidated the post-commit baseline with focused and broad green
-  gates and found no plan/implementation drift. The previous
-  `floor_layer_order_edit_stability_v1` slice closed with no runtime
-  change: the engine and web matrices pin
-  explicit-role exact reorder stability, raw terminal-concrete helper
-  order-sensitive support changes, raw open-web impact fail-closed
-  behavior, and no unsupported card leaking `live` or `bound`. Gate B
-  was not required. The next selected slice is the remaining
-  cross-cutting engine thickness-validity gap: direct floor/wall callers
-  that bypass workbench normalization must not get crashes, non-finite
-  outputs, unsupported live leakage, or defended-looking answers from
-  `0`, negative, `NaN`, or `Infinity` thicknesses
+  start `docs/calculator/SLICE_DYNAMIC_AIRBORNE_SPLIT_REFACTOR_V2_PLAN.md`
+  in Gate B after the seventh carve. Gate A landed no-runtime: it pinned
+  the remaining `dynamic-airborne.ts` 3152-line call graph, confirmed 14
+  top-level `apply*` guards, and classified six direct recursive
+  composer callers versus eight non-recursive correction guards. Gate B
+  first carve moved `applyMicroGapFillEquivalenceGuard` into
+  `dynamic-airborne-correction-guards.ts` with
+  `DynamicAirborneComposer`; Gate B second carve moved
+  `applyHeavyUnframedCavityScreeningCap` into the same module; Gate B
+  third carve moved `applyMixedSecurityBoardDoubleStudFieldTrim`.
+  Gate B fourth carve moved `applyHighFillSingleBoardStudFieldLift`.
+  Gate B fifth carve moved `applyMixedBoardEmptyCavityFieldMidbandLift`.
+  Gate B sixth carve moved `applyMixedPremiumSplitFieldLift`.
+  Gate B seventh carve moved `applyDiamondHybridResilientFieldMidbandTrim`.
+  `dynamic-airborne.ts` is now 2538 lines with 7 in-file guards. The
+  follow-up broad `pnpm check` audit is green (engine 219 files / 1216
+  tests, web 150 files / 864 passed + 18 skipped, build 5/5 with the
+  known non-fatal `sharp/@img` warnings). The next bounded carve target
+  is `applyMixedPlainModerateSingleBoardLabTemplate`.
 - do not reopen `GDMTXA04A`, `C11c`, raw open-box/open-web, heavy-concrete
   parity or formula scope, reinforced-concrete reopening, wall-selector
   behavior, timber-stud widening, or wall exact-row follow-ups from nearby

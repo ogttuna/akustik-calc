@@ -21,8 +21,9 @@ priority was reasserted as calculation accuracy and coverage first, so
 the active calculator work has moved through wall formula-family,
 timber source-corpus, resilient side-count, and floor continuation
 closeouts, then floor many-layer closeout, to
-floor layer-order closeout. The current selected calculator slice is
-`all_caller_invalid_thickness_guard_v1`. Resume this productization
+floor layer-order closeout and all-caller invalid-thickness closeout.
+The current selected calculator slice is
+`dynamic_airborne_split_refactor_v2`. Resume this productization
 slice after the selected calculator slice closes or if deployment/access
 risk becomes the chosen priority again.
 
