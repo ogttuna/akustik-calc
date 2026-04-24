@@ -59,6 +59,12 @@ small cross-cutting correctness guard that maps directly to
   because callers that bypass workbench normalization need a dedicated
   cross-cutting audit.
 
+Post-commit checkpoint `2026-04-24`: the active docs and implementation
+anchors were re-read after commit `3b2f300`. No drift was found.
+`pnpm calculator:gate:current`, broad `pnpm check`, and post-build web
+typecheck are green. This confirms Gate A should start from the current
+runtime without first retuning formulas or adding a guard.
+
 ## Gate Plan
 
 ### Gate A - inventory current direct invalid-thickness surfaces

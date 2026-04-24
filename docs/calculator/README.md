@@ -24,8 +24,11 @@ baseline.
 
 - [CHECKPOINT_2026-04-23_SERVER_BACKED_PROJECT_STORAGE_HANDOFF.md](./CHECKPOINT_2026-04-23_SERVER_BACKED_PROJECT_STORAGE_HANDOFF.md)
   — productization closeout: server-backed project storage v1 closed.
+- [CHECKPOINT_2026-04-24_INVALID_THICKNESS_BASELINE_READY_HANDOFF.md](./CHECKPOINT_2026-04-24_INVALID_THICKNESS_BASELINE_READY_HANDOFF.md)
+  — latest calculator handoff: post-commit baseline revalidated and
+  invalid-thickness Gate A is ready to start.
 - [CHECKPOINT_2026-04-24_FLOOR_LAYER_ORDER_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-24_FLOOR_LAYER_ORDER_CLOSEOUT_HANDOFF.md)
-  — latest calculator handoff: floor layer-order closed no-runtime and
+  — calculator handoff: floor layer-order closed no-runtime and
   all-caller invalid-thickness guard was selected.
 - [CHECKPOINT_2026-04-24_FLOOR_LAYER_ORDER_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-24_FLOOR_LAYER_ORDER_GATE_A_HANDOFF.md)
   — calculator handoff: floor layer-order Gate A landed no-runtime.

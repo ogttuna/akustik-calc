@@ -282,6 +282,7 @@ deferred, not cancelled.
 Current hotspots:
 
 - selected calculator re-entry anchors:
+  - `docs/calculator/CHECKPOINT_2026-04-24_INVALID_THICKNESS_BASELINE_READY_HANDOFF.md`
   - `docs/calculator/CHECKPOINT_2026-04-24_FLOOR_LAYER_ORDER_CLOSEOUT_HANDOFF.md`
   - `docs/calculator/SLICE_ALL_CALLER_INVALID_THICKNESS_GUARD_PLAN.md`
   - `packages/engine/src/post-floor-layer-order-gate-c-v1-next-slice-selection-contract.test.ts`
@@ -401,12 +402,13 @@ Current hotspots:
   `docs/calculator/SOURCE_GAP_LEDGER.md`
 
 The current selected next slice is a calculator slice again:
-`all_caller_invalid_thickness_guard_v1`. It should start with a
-no-runtime Gate A inventory of direct floor/wall engine invalid-thickness
-surfaces. Closed reinforced, `GDMTXA04A`, `C11c`, raw bare,
-wall-selector, floor continuation, floor many-layer, floor layer-order,
-and timber-stud formula tracks stay explicit calculator deferrals or
-closed references rather than active runtime work.
+`all_caller_invalid_thickness_guard_v1`. The post-commit baseline has
+been revalidated, so it should start with a no-runtime Gate A inventory
+of direct floor/wall engine invalid-thickness surfaces. Closed
+reinforced, `GDMTXA04A`, `C11c`, raw bare, wall-selector, floor
+continuation, floor many-layer, floor layer-order, and timber-stud
+formula tracks stay explicit calculator deferrals or closed references
+rather than active runtime work.
 
 ## What This System Is Not Yet
 
@@ -434,4 +436,4 @@ To avoid docs drift, be explicit about current non-features:
 - Want answer-origin or support semantics:
   read [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
 - Want the last clean resume point:
-  read [CHECKPOINT_2026-04-24_FLOOR_LAYER_ORDER_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-24_FLOOR_LAYER_ORDER_CLOSEOUT_HANDOFF.md)
+  read [CHECKPOINT_2026-04-24_INVALID_THICKNESS_BASELINE_READY_HANDOFF.md](./CHECKPOINT_2026-04-24_INVALID_THICKNESS_BASELINE_READY_HANDOFF.md)

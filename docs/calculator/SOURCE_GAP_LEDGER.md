@@ -1,7 +1,7 @@
 # Dynamic Calculator Source Gap Ledger
 
-Last reviewed: 2026-04-24 (floor layer-order closeout; source-gap
-content remains floor-dominant historical context)
+Last reviewed: 2026-04-24 (invalid-thickness baseline-ready checkpoint;
+source-gap content remains floor-dominant historical context)
 
 Purpose:
 

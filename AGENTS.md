@@ -5,7 +5,7 @@ Start here before changing calculator behavior.
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-04-24_FLOOR_LAYER_ORDER_CLOSEOUT_HANDOFF.md`
+2. `docs/calculator/CHECKPOINT_2026-04-24_INVALID_THICKNESS_BASELINE_READY_HANDOFF.md`
 3. `docs/calculator/CURRENT_STATE.md`
 4. `docs/calculator/SLICE_ALL_CALLER_INVALID_THICKNESS_GUARD_PLAN.md`
 5. `docs/calculator/CALCULATION_MODEL_AND_VALIDATION.md`
@@ -19,8 +19,12 @@ plan.
   `all_caller_invalid_thickness_guard_v1`
 - current first decision inside the slice:
   start `docs/calculator/SLICE_ALL_CALLER_INVALID_THICKNESS_GUARD_PLAN.md`
-  at Gate A. The previous `floor_layer_order_edit_stability_v1` slice
-  closed with no runtime change: the engine and web matrices pin
+  at Gate A. The latest checkpoint
+  `docs/calculator/CHECKPOINT_2026-04-24_INVALID_THICKNESS_BASELINE_READY_HANDOFF.md`
+  revalidated the post-commit baseline with focused and broad green
+  gates and found no plan/implementation drift. The previous
+  `floor_layer_order_edit_stability_v1` slice closed with no runtime
+  change: the engine and web matrices pin
   explicit-role exact reorder stability, raw terminal-concrete helper
   order-sensitive support changes, raw open-web impact fail-closed
   behavior, and no unsupported card leaking `live` or `bound`. Gate B

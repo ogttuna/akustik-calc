@@ -12,10 +12,10 @@ If you need the tactical detail on the active slice read
 ## Revalidated Snapshot
 
 Last revalidation cycle: `2026-04-24`
-(`floor_layer_order_edit_stability_v1` closed as a no-runtime audit and
-`all_caller_invalid_thickness_guard_v1` was selected; latest
+(`all_caller_invalid_thickness_guard_v1` post-commit baseline was
+revalidated; latest
 checkpoint:
-[CHECKPOINT_2026-04-24_FLOOR_LAYER_ORDER_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-24_FLOOR_LAYER_ORDER_CLOSEOUT_HANDOFF.md)).
+[CHECKPOINT_2026-04-24_INVALID_THICKNESS_BASELINE_READY_HANDOFF.md](./CHECKPOINT_2026-04-24_INVALID_THICKNESS_BASELINE_READY_HANDOFF.md)).
 Step 8 closed the calculator runtime audit: `MASTER_PLAN.md` §3/§8
 was reconciled to implementation reality, `coverage-grid-consistency.test.ts`
 now maps the grid and C1-C6 signals to executable evidence, the
@@ -49,8 +49,8 @@ hardening, and the pure team-access policy model.
   input contract so it asserts parse behavior instead of calling
   `.keyof()` on the exported shared `AirborneContextSchema` `ZodType`.
 - **Broad `pnpm check`**: lint + typecheck + tests + build green on the
-  latest broad run (2026-04-24 floor layer-order closeout and
-  invalid-thickness guard selection; build still emits the known
+  latest broad run (2026-04-24 invalid-thickness baseline-ready
+  checkpoint; build still emits the known
   non-fatal optional `sharp/@img` warnings through
   `@turbodocx/html-to-docx`).
 - **Focused calculator gate** (`pnpm calculator:gate:current`):
@@ -122,6 +122,14 @@ values before adding any runtime guard. Gate B should open only for a
 concrete direct-caller failure such as a crash, non-finite output,
 support/card mismatch, unsupported live leakage, or a defended-looking
 answer without a specific invalid-thickness posture.
+
+Checkpoint refinement `2026-04-24`: the post-commit baseline was
+re-read against implementation and revalidated. No drift was found
+between `AGENTS.md`, `NEXT_IMPLEMENTATION_PLAN.md`, `MASTER_PLAN.md`,
+`CURRENT_STATE.md`, `coverage-grid-consistency.test.ts`, and the active
+slice plan. `pnpm calculator:gate:current`, broad `pnpm check`, and
+post-build web typecheck are green. The next action remains Gate A
+no-runtime direct invalid-thickness inventory.
 
 Implementation refinement `2026-04-23`: the Gate A audit found that the
 timber-stud gap has two current surfaces. Existing no-calculator preset
@@ -474,43 +482,45 @@ time without context loss:
 
 ## Resume Order For The Next Agent
 
-1. Read [CHECKPOINT_2026-04-24_FLOOR_LAYER_ORDER_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-24_FLOOR_LAYER_ORDER_CLOSEOUT_HANDOFF.md)
-   for the latest closeout and next-slice selection.
+1. Read [CHECKPOINT_2026-04-24_INVALID_THICKNESS_BASELINE_READY_HANDOFF.md](./CHECKPOINT_2026-04-24_INVALID_THICKNESS_BASELINE_READY_HANDOFF.md)
+   for the latest post-commit baseline revalidation.
 2. Read [SLICE_ALL_CALLER_INVALID_THICKNESS_GUARD_PLAN.md](./SLICE_ALL_CALLER_INVALID_THICKNESS_GUARD_PLAN.md)
    for the active slice. Start at Gate A.
-3. Read [CHECKPOINT_2026-04-24_FLOOR_LAYER_ORDER_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-24_FLOOR_LAYER_ORDER_GATE_A_HANDOFF.md)
+3. Read [CHECKPOINT_2026-04-24_FLOOR_LAYER_ORDER_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-24_FLOOR_LAYER_ORDER_CLOSEOUT_HANDOFF.md)
+   only for the floor layer-order closeout and next-slice selection.
+4. Read [CHECKPOINT_2026-04-24_FLOOR_LAYER_ORDER_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-24_FLOOR_LAYER_ORDER_GATE_A_HANDOFF.md)
    only for the closed floor layer-order Gate A inventory.
-4. Read [SLICE_FLOOR_LAYER_ORDER_EDIT_STABILITY_PLAN.md](./SLICE_FLOOR_LAYER_ORDER_EDIT_STABILITY_PLAN.md)
+5. Read [SLICE_FLOOR_LAYER_ORDER_EDIT_STABILITY_PLAN.md](./SLICE_FLOOR_LAYER_ORDER_EDIT_STABILITY_PLAN.md)
    only as the closed layer-order slice plan.
-5. Read [CHECKPOINT_2026-04-24_FLOOR_MANY_LAYER_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-24_FLOOR_MANY_LAYER_CLOSEOUT_HANDOFF.md)
+6. Read [CHECKPOINT_2026-04-24_FLOOR_MANY_LAYER_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-24_FLOOR_MANY_LAYER_CLOSEOUT_HANDOFF.md)
    only for the floor many-layer closeout and layer-order selection.
-6. Read [CHECKPOINT_2026-04-24_FLOOR_MANY_LAYER_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-24_FLOOR_MANY_LAYER_GATE_A_HANDOFF.md)
+7. Read [CHECKPOINT_2026-04-24_FLOOR_MANY_LAYER_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-24_FLOOR_MANY_LAYER_GATE_A_HANDOFF.md)
    only for the closed floor 50+ layer inventory.
-7. Read [SLICE_FLOOR_MANY_LAYER_STRESS_REGRESSION_PLAN.md](./SLICE_FLOOR_MANY_LAYER_STRESS_REGRESSION_PLAN.md)
+8. Read [SLICE_FLOOR_MANY_LAYER_STRESS_REGRESSION_PLAN.md](./SLICE_FLOOR_MANY_LAYER_STRESS_REGRESSION_PLAN.md)
    only as the closed many-layer slice plan.
-8. Read [CHECKPOINT_2026-04-24_FLOOR_FIELD_CONTINUATION_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-24_FLOOR_FIELD_CONTINUATION_CLOSEOUT_HANDOFF.md)
+9. Read [CHECKPOINT_2026-04-24_FLOOR_FIELD_CONTINUATION_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-24_FLOOR_FIELD_CONTINUATION_CLOSEOUT_HANDOFF.md)
    only for floor continuation closeout and many-layer selection.
-9. Read [CHECKPOINT_2026-04-24_FLOOR_FIELD_CONTINUATION_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-24_FLOOR_FIELD_CONTINUATION_GATE_A_HANDOFF.md)
+10. Read [CHECKPOINT_2026-04-24_FLOOR_FIELD_CONTINUATION_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-24_FLOOR_FIELD_CONTINUATION_GATE_A_HANDOFF.md)
    only for the closed floor continuation inventory.
-10. Read [SLICE_FLOOR_FIELD_CONTINUATION_EXPANSION_PLAN.md](./SLICE_FLOOR_FIELD_CONTINUATION_EXPANSION_PLAN.md)
+11. Read [SLICE_FLOOR_FIELD_CONTINUATION_EXPANSION_PLAN.md](./SLICE_FLOOR_FIELD_CONTINUATION_EXPANSION_PLAN.md)
    only as the closed floor continuation slice plan.
-11. Read [CHECKPOINT_2026-04-24_RESILIENT_SIDE_COUNT_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-24_RESILIENT_SIDE_COUNT_GATE_C_CLOSEOUT_HANDOFF.md)
+12. Read [CHECKPOINT_2026-04-24_RESILIENT_SIDE_COUNT_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-24_RESILIENT_SIDE_COUNT_GATE_C_CLOSEOUT_HANDOFF.md)
    only for the side-count Gate C closeout and floor-field selection.
-12. Read [CHECKPOINT_2026-04-24_RESILIENT_SIDE_COUNT_GATE_B_LANDED_HANDOFF.md](./CHECKPOINT_2026-04-24_RESILIENT_SIDE_COUNT_GATE_B_LANDED_HANDOFF.md)
+13. Read [CHECKPOINT_2026-04-24_RESILIENT_SIDE_COUNT_GATE_B_LANDED_HANDOFF.md](./CHECKPOINT_2026-04-24_RESILIENT_SIDE_COUNT_GATE_B_LANDED_HANDOFF.md)
    only for the Gate B side-count propagation details.
-13. Read [CHECKPOINT_2026-04-24_RESILIENT_SIDE_COUNT_GATE_B_READY_HANDOFF.md](./CHECKPOINT_2026-04-24_RESILIENT_SIDE_COUNT_GATE_B_READY_HANDOFF.md)
+14. Read [CHECKPOINT_2026-04-24_RESILIENT_SIDE_COUNT_GATE_B_READY_HANDOFF.md](./CHECKPOINT_2026-04-24_RESILIENT_SIDE_COUNT_GATE_B_READY_HANDOFF.md)
    only for the pre-Gate-B baseline.
-14. Read [CHECKPOINT_2026-04-23_WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-23_WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS_CLOSEOUT_HANDOFF.md)
+15. Read [CHECKPOINT_2026-04-23_WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-23_WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS_CLOSEOUT_HANDOFF.md)
    only for the source-corpus closeout and side-count slice selection.
-15. Confirm the triangle (this file +
+16. Confirm the triangle (this file +
    [MASTER_PLAN.md](./MASTER_PLAN.md) +
    [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md))
    agrees on the active slice, completion signals, and deferred
    tracks. If it does not, fix the drift before starting work.
-16. Read [SLICE_WALL_RESILIENT_BAR_SIDE_COUNT_MODELING_PLAN.md](./SLICE_WALL_RESILIENT_BAR_SIDE_COUNT_MODELING_PLAN.md)
+17. Read [SLICE_WALL_RESILIENT_BAR_SIDE_COUNT_MODELING_PLAN.md](./SLICE_WALL_RESILIENT_BAR_SIDE_COUNT_MODELING_PLAN.md)
    only as the closed side-count reference.
-17. Read [POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md](./POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md) only for deferred productization context.
-18. Continue `all_caller_invalid_thickness_guard_v1` from
+18. Read [POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md](./POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md) only for deferred productization context.
+19. Continue `all_caller_invalid_thickness_guard_v1` from
    [SLICE_ALL_CALLER_INVALID_THICKNESS_GUARD_PLAN.md](./SLICE_ALL_CALLER_INVALID_THICKNESS_GUARD_PLAN.md).
    Start at Gate A no-runtime inventory; reopen Gate B only for
    concrete direct-caller invalid-thickness drift. Productization work
