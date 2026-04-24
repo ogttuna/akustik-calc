@@ -2,7 +2,7 @@
 
 Document role: short-lived snapshot of what is stable **right
 now** on the calculator surface. If you need "how did we get
-here" read the latest checkpoint under `docs/archive/handoffs/`.
+here" read the latest checkpoint named below before older handoffs.
 If you need the strategic plan read [MASTER_PLAN.md](./MASTER_PLAN.md).
 If you need the tactical detail on the active slice read
 [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md).
@@ -11,10 +11,11 @@ If you need the tactical detail on the active slice read
 
 ## Revalidated Snapshot
 
-Last revalidation cycle: `2026-04-24` (resilient side-count Gate A
-still selected; focused gate and broad `pnpm check` both revalidated
-green after the planning refresh — latest checkpoint
-[CHECKPOINT_2026-04-24_RESILIENT_SIDE_COUNT_GATE_B_READY_HANDOFF.md](./CHECKPOINT_2026-04-24_RESILIENT_SIDE_COUNT_GATE_B_READY_HANDOFF.md)).
+Last revalidation cycle: `2026-04-24`
+(`floor_layer_order_edit_stability_v1` closed as a no-runtime audit and
+`all_caller_invalid_thickness_guard_v1` was selected; latest
+checkpoint:
+[CHECKPOINT_2026-04-24_FLOOR_LAYER_ORDER_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-24_FLOOR_LAYER_ORDER_CLOSEOUT_HANDOFF.md)).
 Step 8 closed the calculator runtime audit: `MASTER_PLAN.md` §3/§8
 was reconciled to implementation reality, `coverage-grid-consistency.test.ts`
 now maps the grid and C1-C6 signals to executable evidence, the
@@ -24,7 +25,8 @@ first four productization slices then closed server-backed project
 storage v1, project/proposal route authorization, auth-session
 hardening, and the pure team-access policy model.
 
-- **Engine full suite**: 208 / 208 files, 1175 / 1175 tests green
+- **Engine broad suite**: latest broad `pnpm check` after floor
+  layer-order closeout was 216 / 216 files, 1205 / 1205 tests green
   (up from 193/1068 pre-session; step-7 landed 4 wall cases +
   F1/F2 engine fixes + 32-assertion cross-mode torture matrix
   + 2 regression guards + post-contract; step-7b landed the
@@ -35,20 +37,22 @@ hardening, and the pure team-access policy model.
   `floor-library-sweep.test.ts` timeout; 2026-04-24 broad revalidation
   then added the side-count Gate A surfaces plus a representative
   split-cavity field swap matrix that keeps the full single-worker suite
-  under the Vitest worker timeout)
-- **Web full suite**: 147 / 147 files, 845 / 845 tests green + 18
-  discovery helpers intentionally skipped. The 2026-04-23
+  under the Vitest worker timeout; Gate B and Gate C then added focused
+  planning/value contract files).
+- **Web broad suite**: latest broad `pnpm check` after floor
+  layer-order closeout was 150 / 150 files, 864 / 864 tests green +
+  18 discovery helpers intentionally skipped. The 2026-04-23
   productization pass added focused server project storage/API,
   proposal-audit, route-authorization, auth-session, login/logout,
   server project restore snapshot, and project access policy tests. The
   2026-04-24 broad revalidation also hardened the side-count Gate A
   input contract so it asserts parse behavior instead of calling
   `.keyof()` on the exported shared `AirborneContextSchema` `ZodType`.
-- **Broad `pnpm check`**: lint + typecheck + tests + build green
-  (2026-04-24 verification after the Gate A side-count closeout and the
-  non-runtime test hardening above; build still emits the known
-  non-fatal optional
-  `sharp/@img` warnings through `@turbodocx/html-to-docx`)
+- **Broad `pnpm check`**: lint + typecheck + tests + build green on the
+  latest broad run (2026-04-24 floor layer-order closeout and
+  invalid-thickness guard selection; build still emits the known
+  non-fatal optional `sharp/@img` warnings through
+  `@turbodocx/html-to-docx`).
 - **Focused calculator gate** (`pnpm calculator:gate:current`):
   includes the final-audit grid + post-contract tests and the
   calculator-refocus contract; now also includes
@@ -67,21 +71,38 @@ hardening, and the pure team-access policy model.
   surface trio:
   `wall-resilient-bar-side-count-blind-audit.test.ts`,
   `wall-resilient-bar-side-count-route-card-matrix.test.ts`, and
-  `wall-resilient-bar-side-count-input-contract.test.ts`. Latest
-  focused expectation: 75 engine files / 355 tests, 33 web files /
-  153 passed + 18 skipped, build 5/5 tasks, whitespace guard clean on
-  the 2026-04-24 post-hardening revalidation run.
+  `wall-resilient-bar-side-count-input-contract.test.ts`, plus
+  `post-wall-resilient-side-count-gate-b-v1-next-slice-selection-contract.test.ts`
+  and
+  `post-wall-resilient-side-count-gate-c-v1-next-slice-selection-contract.test.ts`
+  for the Gate B/Gate C closeout and next-slice contracts, plus the new
+  floor continuation Gate A surfaces:
+  `floor-field-continuation-gate-a-matrix.test.ts` and
+  `floor-field-continuation-gate-a-card-matrix.test.ts`, plus
+  `post-floor-field-continuation-gate-c-v1-next-slice-selection-contract.test.ts`
+  for the closeout and next-slice selection, plus the new floor
+  many-layer Gate A surfaces:
+  `floor-many-layer-stress-gate-a-matrix.test.ts` and
+  `floor-many-layer-stress-gate-a-card-matrix.test.ts`, plus
+  `post-floor-many-layer-gate-c-v1-next-slice-selection-contract.test.ts`
+  for the closeout and next-slice selection, plus the new floor
+  layer-order Gate A surfaces:
+  `floor-layer-order-edit-stability-gate-a-matrix.test.ts` and
+  `floor-layer-order-edit-stability-gate-a-card-matrix.test.ts`, plus
+  `post-floor-layer-order-gate-c-v1-next-slice-selection-contract.test.ts`
+  for the no-runtime closeout and invalid-thickness guard selection.
+  Latest focused closeout run: 83 engine files / 385 tests,
+  36 web files / 170 passed +
+  18 skipped, build 5/5 tasks, whitespace guard clean.
 
 ## Active Slice
 
-`wall_resilient_bar_side_count_modeling_v1` (common resilient
-framed-wall input/model expansion, selected).
-Selected `2026-04-23` immediately after
-`wall_timber_lightweight_source_corpus_v1` closed. Gate A is now
-landed with no runtime change; Gate B explicit input/model plumbing is
-next.
+`all_caller_invalid_thickness_guard_v1` (direct floor/wall engine
+invalid-thickness guard, selected).
+Selected `2026-04-24` immediately after
+`floor_layer_order_edit_stability_v1` closed as a no-runtime audit.
 Planning surface:
-[SLICE_WALL_RESILIENT_BAR_SIDE_COUNT_MODELING_PLAN.md](./SLICE_WALL_RESILIENT_BAR_SIDE_COUNT_MODELING_PLAN.md).
+[SLICE_ALL_CALLER_INVALID_THICKNESS_GUARD_PLAN.md](./SLICE_ALL_CALLER_INVALID_THICKNESS_GUARD_PLAN.md).
 
 Calculator runtime status: final audit closed and green. The just-closed
 wall formula-family widening slice completed Gate A and Gate B with
@@ -93,10 +114,14 @@ proves the live workbench preset path already uses the dynamic route and
 pins the visible branch/card values. Gate C then kept runtime math
 unchanged because the source pack still defines only a broad timber
 corridor, not a precise trim target for the current preset topology.
-The active next step is Gate B of the resilient side-count slice:
-add the explicit resilient-bar side-count dimension to the shared wall
-context and workbench/store flow without changing legacy defaults when
-the new field is unset.
+The just-closed floor layer-order slice landed without runtime change
+and found no required Gate B fix. The active next step is Gate A of the
+invalid-thickness slice: inventory direct floor and wall engine caller
+behavior for `0`, negative, `NaN`, `Infinity`, and non-finite thickness
+values before adding any runtime guard. Gate B should open only for a
+concrete direct-caller failure such as a crash, non-finite output,
+support/card mismatch, unsupported live leakage, or a defended-looking
+answer without a specific invalid-thickness posture.
 
 Implementation refinement `2026-04-23`: the Gate A audit found that the
 timber-stud gap has two current surfaces. Existing no-calculator preset
@@ -139,16 +164,17 @@ lab anchor, `packages/engine/src/wall-timber-lightweight-source-audit.test.ts`
 now expects those rows on the exact lane, and
 `apps/web/features/workbench/wall-direct-timber-exact-route-card-matrix.test.ts`
 pins the user-visible lab/field/building card surface for the two exact
-rows. The 5 resilient/proprietary rows remain benchmark-only, the 2
-linked lightweight holdouts remain holdout-only, and the live timber
-preset still does not exact-match either landed direct row.
+rows. At that source-corpus closeout the 5 resilient/proprietary rows
+remained benchmark-only, the 2 linked lightweight holdouts remained
+holdout-only, and the live timber preset still did not exact-match either
+landed direct row.
 
-Implementation refinement `2026-04-23` (next selected slice): the
-highest-ROI remaining common-wall source gap is now explicit resilient
-bar side count. The current wall context can express
+Implementation refinement `2026-04-23` (side-count slice selection):
+the highest-ROI remaining common-wall source gap was explicit resilient
+bar side count. At selection time the wall context could express
 `connectionType`/`studType`, but not one-side vs both-sides resilient
-mounting, so four official timber rows cannot be promoted honestly yet.
-That is the active slice, not another timber formula retune.
+mounting. That made side-count modeling the right next slice instead of
+another timber formula retune.
 
 Implementation refinement `2026-04-24` (resilient side-count Gate A):
 `packages/engine/src/wall-resilient-bar-side-count-blind-audit.test.ts`
@@ -159,27 +185,38 @@ identical engine outputs even though each source-backed pair publishes a
 pins the same user-visible branch/card collapse across lab, field, and
 building contexts, while
 `apps/web/features/workbench/wall-resilient-bar-side-count-input-contract.test.ts`
-proves the shared schema and workbench store still have
-`connectionType`/`studType`/`studSpacingMm` only and strip any
-unmodeled `resilientBarSideCount` field. Gate A changed no calculator
-runtime values; it made the missing dimension executable and explicit.
+initially proved the shared schema and workbench store were still blind to
+`resilientBarSideCount`. Gate A changed no calculator runtime values; it
+made the missing dimension executable and explicit.
 
-Planning refresh `2026-04-24`: the active Gate B write scope has now
-been rechecked against implementation reality. The shared/model/UI
-surfaces still have no resilient-bar side-count field:
-`packages/shared/src/domain/airborne-context.ts`,
-`apps/web/features/workbench/workbench-store.ts`,
-`apps/web/features/workbench/preset-definitions.ts`,
-`apps/web/features/workbench/workbench-shell.tsx`,
-`apps/web/features/workbench/simple-workbench-shell.tsx`, and
-`apps/web/features/workbench/simple-workbench-route-panel.tsx`.
-Official source evidence remains aligned with the current corpus and
-keeps the prioritization stable: Knauf GB still publishes the defended
-RB1/RB2 56/59 dB split for the same timber family, and British Gypsum
-still publishes the matching A046005/A046006 55/58 dB split. That means
-the missing modeled dimension is still the best next accuracy/coverage
-lever; no competing implementation review reopened a higher-ROI runtime
-formula retune.
+Implementation refinement `2026-04-24` (resilient side-count Gate B):
+`packages/shared/src/domain/airborne-context.ts` now exposes
+`AirborneResilientBarSideCountSchema` and optional
+`resilientBarSideCount`; `apps/web/features/workbench/workbench-store.ts`
+persists `airborneResilientBarSideCount` with legacy `auto` fallback; both
+workbench shells pass it into runtime context; server-backed snapshots
+preserve valid values and drop invalid values before restore; both
+framed-wall UI surfaces expose `Auto / One side / Both sides`; and engine
+metadata helpers now carry/match the dimension without letting side-count
+alone trigger a framed-wall route. The Gate B tests prove schema
+recognition, invalid-value rejection, store/snapshot round-trip, explicit
+propagation, and `auto`/explicit value-stability. Gate B changed no exact
+classification or user-visible calculator value.
+
+Implementation refinement `2026-04-24` (resilient side-count Gate C):
+the four official RB1/RB2 timber rows are now promoted to
+`exact_import_landed` with reason
+`resilient_bar_side_count_topology_exactly_representable`.
+`packages/engine/src/airborne-verified-catalog.ts` now requires explicit
+`resilientBarSideCount` to match those rows, so legacy `auto` remains on
+the old side-count-blind path. The exact explicit lab anchors are:
+Knauf RB1 one-side `Rw 56`, Knauf RB2 both-sides `Rw 59`, British
+Gypsum A046005 one-side `Rw 55`, and British Gypsum A046006 both-sides
+`Rw 58`. Field/building contexts use the existing curated lab-fallback
+path and are pinned in the web route/card matrix. The proprietary
+FireLine timber row remains `secondary_benchmark`, and the live direct
+double-board timber preset still does not inherit exact rows by
+adjacency.
 
 Implementation refinement `2026-04-24` (broad revalidation hardening):
 the first broad `pnpm check` pass after Gate A surfaced two non-runtime
@@ -190,6 +227,78 @@ was switched from `.keyof()` to parse-based assertions because
 was reduced from a full 4x4 gap grid to a representative
 small/mid/large asymmetry matrix so the full single-worker suite stays
 below the Vitest worker timeout while preserving the intended invariant.
+
+Implementation refinement `2026-04-24` (floor field-continuation Gate A):
+`packages/engine/src/floor-field-continuation-gate-a-matrix.test.ts`
+now pins lab, field-between-rooms, and building-prediction support,
+origin, and value surfaces for six representative floor families: UBIQ
+exact supported-band open-web, Knauf acoustic timber exact, Dataholz CLT
+dry exact, reinforced-concrete low-confidence/formula, raw terminal
+concrete helper, and raw bare open-web impact-blocked. The paired web
+matrix
+`apps/web/features/workbench/floor-field-continuation-gate-a-card-matrix.test.ts`
+pins the visible card statuses and values for the same surfaces. The
+inventory confirms that lab cards correctly park field airborne outputs,
+field-between-rooms geometry unlocks `R'w`/`Dn,w`/`Dn,A`, `DnT,w` and
+`DnT,A` remain volume-gated until building context, and blocked bare
+open-web impact stays fail-closed while formula-owned airborne field
+companions remain live.
+
+Implementation refinement `2026-04-24` (floor field-continuation
+closeout): `floor_field_continuation_expansion_v1` is closed
+no-runtime. Gate A did not find a required Gate B fix, and
+`packages/engine/src/post-floor-field-continuation-gate-c-v1-next-slice-selection-contract.test.ts`
+selects `floor_many_layer_stress_regression_v1` next. The reason is
+explicitly operator-facing: wall 50+ layer behavior is already pinned,
+but the master plan still names floor 50+ stress coverage as a deferred
+hardening gap. At selection time, that slice had to start with a
+no-runtime Gate A matrix and avoid treating arbitrary floor layer
+reorders as value-invariant.
+
+Implementation refinement `2026-04-24` (floor many-layer Gate A):
+`packages/engine/src/floor-many-layer-stress-gate-a-matrix.test.ts`
+now pins five 50+ floor stress stacks: UBIQ split exact, Dataholz CLT dry
+split exact, raw terminal concrete helper, raw open-web impact-blocked,
+and reinforced-concrete low-confidence/formula. The paired web matrix
+`apps/web/features/workbench/floor-many-layer-stress-gate-a-card-matrix.test.ts`
+pins the visible route/card posture for exact, helper/formula, and
+blocked-impact 50+ stacks. The inventory confirms exact split-equivalent
+stacks stay exact, supported helper/formula stacks stay finite, and
+unsupported impact lanes remain `unsupported` or `needs_input` instead
+of leaking live values. Gate A found no required Gate B runtime fix.
+
+Implementation refinement `2026-04-24` (floor many-layer closeout):
+`floor_many_layer_stress_regression_v1` is closed no-runtime. Gate A did
+not find a required Gate B fix, and
+`packages/engine/src/post-floor-many-layer-gate-c-v1-next-slice-selection-contract.test.ts`
+selects `floor_layer_order_edit_stability_v1` next. The reason is
+explicitly operator-facing: after very large stacks, layer move/reorder
+editing is the next high-risk user behavior. The new slice must audit
+explicit-role reorder stability separately from raw/order-sensitive
+support changes, and it must not claim arbitrary floor order value
+invariance.
+
+Implementation refinement `2026-04-24` (floor layer-order Gate A):
+`packages/engine/src/floor-layer-order-edit-stability-gate-a-matrix.test.ts`
+now pins explicit-role exact reorder stability for UBIQ FL-28 and
+Dataholz GDMTXN01, order-sensitive raw terminal-concrete helper support
+changes, and raw open-web impact fail-closed behavior. The paired web
+matrix
+`apps/web/features/workbench/floor-layer-order-edit-stability-gate-a-card-matrix.test.ts`
+pins matching card status/value posture and proves unsupported cards do
+not leak `live` or `bound`. The inventory found no required Gate B
+runtime/card fix. Gate C later closed no-runtime, and broad arbitrary
+floor order value invariance remains unclaimed.
+
+Implementation refinement `2026-04-24` (floor layer-order closeout):
+`floor_layer_order_edit_stability_v1` is closed no-runtime.
+`packages/engine/src/post-floor-layer-order-gate-c-v1-next-slice-selection-contract.test.ts`
+records the closeout and selects
+`all_caller_invalid_thickness_guard_v1` next. The reason is
+cross-cutting and accuracy-honesty focused: workbench normalization and
+wall hostile-input paths are guarded, but the master-plan grid still
+marks direct engine thickness validity as partial for floor/wall callers
+that bypass workbench normalization.
 
 Storage status: `server_backed_project_storage_v1` is closed. Shared
 server-project schemas, owner-scoped filesystem storage, `/api/projects`
@@ -222,6 +331,10 @@ resumes and wires the policy through an owner-only adapter.
 
 | Slice | Master-plan step | Closed | Post-contract |
 |---|---|---|---|
+| `floor_layer_order_edit_stability_v1` | post-step-8 follow-up | 2026-04-24 | `post-floor-layer-order-gate-c-v1-next-slice-selection-contract.test.ts` |
+| `floor_many_layer_stress_regression_v1` | post-step-8 follow-up | 2026-04-24 | `post-floor-many-layer-gate-c-v1-next-slice-selection-contract.test.ts` |
+| `floor_field_continuation_expansion_v1` | post-step-8 follow-up | 2026-04-24 | `post-floor-field-continuation-gate-c-v1-next-slice-selection-contract.test.ts` |
+| `wall_resilient_bar_side_count_modeling_v1` | post-step-6 follow-up | 2026-04-24 | `post-wall-resilient-side-count-gate-c-v1-next-slice-selection-contract.test.ts` |
 | `wall_timber_lightweight_source_corpus_v1` | post-step-6 follow-up | 2026-04-23 | `post-wall-timber-lightweight-source-corpus-v1-next-slice-selection-contract.test.ts` |
 | `wall_formula_family_widening_v1` | 6 | 2026-04-23 | engine audit: `wall-formula-family-widening-audit.test.ts`; live-route proof: `wall-live-dynamic-preset-route-card-matrix.test.ts`; next-slice contract: `post-wall-formula-family-widening-v1-next-slice-selection-contract.test.ts` |
 | `team_access_model_v1` | productization 4 | 2026-04-23 | app policy tests: `project-access-policy.test.ts`; route/storage regressions: `server-project-routes.test.ts`, `server-project-storage.test.ts` |
@@ -325,15 +438,16 @@ time without context loss:
    user-visible card drift appears.
 4. **F3 framed-wall monotonic-floor warning drift** — warning-only;
    numeric outputs unchanged.
-5. **Full floor field-continuation expansion** — non-blocking for
-   the closed wall final audit.
-6. **Arbitrary floor reorder expansion** — not claimed beyond the
-   defended floor split/parity surfaces.
-7. **Standalone all-caller invalid-thickness guard** — direct engine
-   hardening for floor/wall callers that bypass workbench
-   normalization.
-8. **Dedicated floor 50+ layer regression** — wall 50-layer behavior
-   is pinned; floor stress coverage remains a future hardening track.
+5. **Full floor field-continuation expansion** — closed no-runtime as
+   `floor_field_continuation_expansion_v1`.
+6. **Floor layer-order edit stability** — closed no-runtime as
+   `floor_layer_order_edit_stability_v1`; broad arbitrary floor reorder
+   value invariance remains unclaimed.
+7. **Standalone all-caller invalid-thickness guard** — now active as
+   `all_caller_invalid_thickness_guard_v1` for floor/wall engine callers
+   that bypass workbench normalization.
+8. **Dedicated floor 50+ layer regression** — closed no-runtime as
+   `floor_many_layer_stress_regression_v1`.
 
 ## Frozen Posture — Do Not Reopen By Inertia
 
@@ -345,9 +459,10 @@ time without context loss:
   import, raw bare open-box/open-web impact, wall-selector
   widening — remains fail-closed pending external evidence.
 - Timber wall runtime widening is no longer an open heuristic question.
-  The source-corpus slice is closed; the current active work is the
-  missing resilient-bar side-count input/model dimension, while the
-  live direct double-board timber preset still stays parked until a
+  The source-corpus slice is closed; Gate B added the missing
+  resilient-bar side-count input/model dimension; Gate C promoted the four
+  RB1/RB2 timber rows to explicit side-count exact imports.
+  The live direct double-board timber preset still stays parked until a
   true exact topology row exists.
 - Productization work may improve persistence, auth, billing, reports,
   and deployment, but must not change calculator runtime/source posture
@@ -359,18 +474,45 @@ time without context loss:
 
 ## Resume Order For The Next Agent
 
-1. Read [CHECKPOINT_2026-04-23_WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-23_WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS_CLOSEOUT_HANDOFF.md)
-   for the source-corpus closeout and next slice selection.
-2. Confirm the triangle (this file +
+1. Read [CHECKPOINT_2026-04-24_FLOOR_LAYER_ORDER_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-24_FLOOR_LAYER_ORDER_CLOSEOUT_HANDOFF.md)
+   for the latest closeout and next-slice selection.
+2. Read [SLICE_ALL_CALLER_INVALID_THICKNESS_GUARD_PLAN.md](./SLICE_ALL_CALLER_INVALID_THICKNESS_GUARD_PLAN.md)
+   for the active slice. Start at Gate A.
+3. Read [CHECKPOINT_2026-04-24_FLOOR_LAYER_ORDER_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-24_FLOOR_LAYER_ORDER_GATE_A_HANDOFF.md)
+   only for the closed floor layer-order Gate A inventory.
+4. Read [SLICE_FLOOR_LAYER_ORDER_EDIT_STABILITY_PLAN.md](./SLICE_FLOOR_LAYER_ORDER_EDIT_STABILITY_PLAN.md)
+   only as the closed layer-order slice plan.
+5. Read [CHECKPOINT_2026-04-24_FLOOR_MANY_LAYER_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-24_FLOOR_MANY_LAYER_CLOSEOUT_HANDOFF.md)
+   only for the floor many-layer closeout and layer-order selection.
+6. Read [CHECKPOINT_2026-04-24_FLOOR_MANY_LAYER_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-24_FLOOR_MANY_LAYER_GATE_A_HANDOFF.md)
+   only for the closed floor 50+ layer inventory.
+7. Read [SLICE_FLOOR_MANY_LAYER_STRESS_REGRESSION_PLAN.md](./SLICE_FLOOR_MANY_LAYER_STRESS_REGRESSION_PLAN.md)
+   only as the closed many-layer slice plan.
+8. Read [CHECKPOINT_2026-04-24_FLOOR_FIELD_CONTINUATION_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-24_FLOOR_FIELD_CONTINUATION_CLOSEOUT_HANDOFF.md)
+   only for floor continuation closeout and many-layer selection.
+9. Read [CHECKPOINT_2026-04-24_FLOOR_FIELD_CONTINUATION_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-24_FLOOR_FIELD_CONTINUATION_GATE_A_HANDOFF.md)
+   only for the closed floor continuation inventory.
+10. Read [SLICE_FLOOR_FIELD_CONTINUATION_EXPANSION_PLAN.md](./SLICE_FLOOR_FIELD_CONTINUATION_EXPANSION_PLAN.md)
+   only as the closed floor continuation slice plan.
+11. Read [CHECKPOINT_2026-04-24_RESILIENT_SIDE_COUNT_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-24_RESILIENT_SIDE_COUNT_GATE_C_CLOSEOUT_HANDOFF.md)
+   only for the side-count Gate C closeout and floor-field selection.
+12. Read [CHECKPOINT_2026-04-24_RESILIENT_SIDE_COUNT_GATE_B_LANDED_HANDOFF.md](./CHECKPOINT_2026-04-24_RESILIENT_SIDE_COUNT_GATE_B_LANDED_HANDOFF.md)
+   only for the Gate B side-count propagation details.
+13. Read [CHECKPOINT_2026-04-24_RESILIENT_SIDE_COUNT_GATE_B_READY_HANDOFF.md](./CHECKPOINT_2026-04-24_RESILIENT_SIDE_COUNT_GATE_B_READY_HANDOFF.md)
+   only for the pre-Gate-B baseline.
+14. Read [CHECKPOINT_2026-04-23_WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-23_WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS_CLOSEOUT_HANDOFF.md)
+   only for the source-corpus closeout and side-count slice selection.
+15. Confirm the triangle (this file +
    [MASTER_PLAN.md](./MASTER_PLAN.md) +
    [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md))
    agrees on the active slice, completion signals, and deferred
    tracks. If it does not, fix the drift before starting work.
-3. Read [SLICE_WALL_RESILIENT_BAR_SIDE_COUNT_MODELING_PLAN.md](./SLICE_WALL_RESILIENT_BAR_SIDE_COUNT_MODELING_PLAN.md).
-4. Read [POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md](./POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md) only for deferred productization context.
-5. Continue `wall_resilient_bar_side_count_modeling_v1` from
-   [SLICE_WALL_RESILIENT_BAR_SIDE_COUNT_MODELING_PLAN.md](./SLICE_WALL_RESILIENT_BAR_SIDE_COUNT_MODELING_PLAN.md).
-   Start at Gate A no-runtime side-count audit + input/model contract. Run
-   `pnpm calculator:gate:current` before calculator runtime changes;
-   productization work should keep its own app/API tests current and
-   use `pnpm check` when shared contracts or app routes move.
+16. Read [SLICE_WALL_RESILIENT_BAR_SIDE_COUNT_MODELING_PLAN.md](./SLICE_WALL_RESILIENT_BAR_SIDE_COUNT_MODELING_PLAN.md)
+   only as the closed side-count reference.
+17. Read [POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md](./POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md) only for deferred productization context.
+18. Continue `all_caller_invalid_thickness_guard_v1` from
+   [SLICE_ALL_CALLER_INVALID_THICKNESS_GUARD_PLAN.md](./SLICE_ALL_CALLER_INVALID_THICKNESS_GUARD_PLAN.md).
+   Start at Gate A no-runtime inventory; reopen Gate B only for
+   concrete direct-caller invalid-thickness drift. Productization work
+   should keep its own app/API tests current and use `pnpm check` when
+   shared contracts or app routes move.

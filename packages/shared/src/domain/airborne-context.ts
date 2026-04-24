@@ -40,6 +40,9 @@ export const AirborneStudTypeSchema = z.enum([
 ]);
 export type AirborneStudType = z.infer<typeof AirborneStudTypeSchema>;
 
+export const AirborneResilientBarSideCountSchema = z.enum(["auto", "one_side", "both_sides"]);
+export type AirborneResilientBarSideCount = z.infer<typeof AirborneResilientBarSideCountSchema>;
+
 const AirborneContextShape = {
   airtightness: AirtightnessClassSchema.optional(),
   connectionType: AirborneConnectionTypeSchema.optional(),
@@ -52,6 +55,7 @@ const AirborneContextShape = {
   perimeterSeal: PerimeterSealClassSchema.optional(),
   receivingRoomRt60S: z.number().positive().optional(),
   receivingRoomVolumeM3: z.number().positive().optional(),
+  resilientBarSideCount: AirborneResilientBarSideCountSchema.optional(),
   sharedTrack: SharedTrackClassSchema.optional(),
   studSpacingMm: z.number().positive().optional(),
   studType: AirborneStudTypeSchema.optional()

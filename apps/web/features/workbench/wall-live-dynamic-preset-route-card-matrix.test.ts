@@ -119,6 +119,7 @@ async function evaluateLiveWorkbenchPreset(input: {
     perimeterSeal: state.airbornePerimeterSeal,
     receivingRoomRt60S: parsePositiveNumber(state.airborneReceivingRoomRt60S),
     receivingRoomVolumeM3: parsePositiveNumber(state.airborneReceivingRoomVolumeM3),
+    resilientBarSideCount: state.airborneResilientBarSideCount,
     sharedTrack: state.airborneSharedTrack,
     studSpacingMm: parsePositiveNumber(state.airborneStudSpacingMm),
     studType: state.airborneStudType
@@ -361,6 +362,8 @@ describe("wall live dynamic preset route card matrix", () => {
     expect(live.state.airborneStudType, "preset stud type").toBe("wood_stud");
     expect(live.state.airborneConnectionType, "preset connection type").toBe("line_connection");
     expect(live.state.airborneStudSpacingMm, "preset stud spacing").toBe("600");
+    expect(live.state.airborneResilientBarSideCount, "preset resilient bar side count").toBe("auto");
+    expect(live.airborneContext.resilientBarSideCount, "live context resilient bar side count").toBe("auto");
 
     expect(live.result.calculatorId, "live result calculator").toBe("dynamic");
     expect(live.result.ratings.iso717?.Rw, "live timber lab Rw").toBe(50);

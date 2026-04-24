@@ -21,6 +21,7 @@ import { classifyLayerRole, materialText } from "./airborne-topology";
 
 export type DynamicFramingHint = {
   connectionType: AirborneContext["connectionType"];
+  resilientBarSideCount: AirborneContext["resilientBarSideCount"];
   sharedTrack: AirborneContext["sharedTrack"];
   studSpacingMm?: number;
   studType: AirborneContext["studType"];
@@ -34,6 +35,7 @@ export type DynamicFramingHint = {
 export function normalizeFramingHint(airborneContext?: AirborneContext | null): DynamicFramingHint {
   return {
     connectionType: airborneContext?.connectionType ?? "auto",
+    resilientBarSideCount: airborneContext?.resilientBarSideCount ?? "auto",
     sharedTrack: airborneContext?.sharedTrack ?? "unknown",
     studSpacingMm:
       typeof airborneContext?.studSpacingMm === "number" &&
@@ -45,10 +47,9 @@ export function normalizeFramingHint(airborneContext?: AirborneContext | null): 
   };
 }
 
-// True when the caller made any explicit framing decision — even a
-// single non-`auto` field is enough, because the engine uses it to
-// skip inference heuristics that might otherwise hide the user's
-// intent.
+// True when the caller made an explicit framing-family decision. Side
+// count alone stays catalog-matching metadata; it should not force the
+// framed-wall family branch without connection/stud evidence.
 export function hasExplicitFramingHint(framingHint: DynamicFramingHint): boolean {
   return (
     framingHint.connectionType !== "auto" ||

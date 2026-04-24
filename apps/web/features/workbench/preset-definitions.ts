@@ -1,6 +1,7 @@
 import type {
   AirborneConnectionType,
   AirborneContextMode,
+  AirborneResilientBarSideCount,
   AirborneStudType,
   AirtightnessClass,
   FloorRole
@@ -63,12 +64,13 @@ export type PresetId =
  *
  * Fields are strings where the workbench store keeps them as strings
  * (numeric input fields are stored raw); `studType`, `airtightness`,
- * `connectionType`, `contextMode` are enum values.
+ * `connectionType`, `contextMode`, and `resilientBarSideCount` are enum values.
  */
 export type PresetAirborneDefaults = {
   airtightness?: AirtightnessClass;
   connectionType?: AirborneConnectionType;
   contextMode?: AirborneContextMode;
+  resilientBarSideCount?: AirborneResilientBarSideCount;
   studSpacingMm?: string;
   studType?: AirborneStudType;
 };

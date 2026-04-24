@@ -262,6 +262,7 @@ export function SimpleWorkbenchShell() {
   const airbornePerimeterSeal = useWorkbenchStore((state) => state.airbornePerimeterSeal);
   const airborneReceivingRoomRt60S = useWorkbenchStore((state) => state.airborneReceivingRoomRt60S);
   const airborneReceivingRoomVolumeM3 = useWorkbenchStore((state) => state.airborneReceivingRoomVolumeM3);
+  const airborneResilientBarSideCount = useWorkbenchStore((state) => state.airborneResilientBarSideCount);
   const airborneSharedTrack = useWorkbenchStore((state) => state.airborneSharedTrack);
   const airborneStudSpacingMm = useWorkbenchStore((state) => state.airborneStudSpacingMm);
   const airborneStudType = useWorkbenchStore((state) => state.airborneStudType);
@@ -301,6 +302,7 @@ export function SimpleWorkbenchShell() {
   const setAirbornePerimeterSeal = useWorkbenchStore((state) => state.setAirbornePerimeterSeal);
   const setAirborneReceivingRoomRt60S = useWorkbenchStore((state) => state.setAirborneReceivingRoomRt60S);
   const setAirborneReceivingRoomVolumeM3 = useWorkbenchStore((state) => state.setAirborneReceivingRoomVolumeM3);
+  const setAirborneResilientBarSideCount = useWorkbenchStore((state) => state.setAirborneResilientBarSideCount);
   const setAirborneSharedTrack = useWorkbenchStore((state) => state.setAirborneSharedTrack);
   const setAirborneStudSpacingMm = useWorkbenchStore((state) => state.setAirborneStudSpacingMm);
   const setAirborneStudType = useWorkbenchStore((state) => state.setAirborneStudType);
@@ -471,6 +473,7 @@ export function SimpleWorkbenchShell() {
     perimeterSeal: airbornePerimeterSeal,
     receivingRoomRt60S: parsePositiveNumber(airborneReceivingRoomRt60S),
     receivingRoomVolumeM3: parsePositiveNumber(airborneReceivingRoomVolumeM3),
+    resilientBarSideCount: airborneResilientBarSideCount,
     sharedTrack: airborneSharedTrack,
     studSpacingMm: parsePositiveNumber(airborneStudSpacingMm),
     studType: airborneStudType
@@ -625,6 +628,7 @@ export function SimpleWorkbenchShell() {
       airbornePerimeterSeal,
       airborneReceivingRoomRt60S,
       airborneReceivingRoomVolumeM3,
+      airborneResilientBarSideCount,
       airborneSharedTrack,
       airborneStudSpacingMm,
       airborneStudType,
@@ -1033,6 +1037,7 @@ export function SimpleWorkbenchShell() {
           airbornePerimeterSeal={airbornePerimeterSeal}
           airborneReceivingRoomRt60S={airborneReceivingRoomRt60S}
           airborneReceivingRoomVolumeM3={airborneReceivingRoomVolumeM3}
+          airborneResilientBarSideCount={airborneResilientBarSideCount}
           airborneSharedTrack={airborneSharedTrack}
           airborneStudSpacingMm={airborneStudSpacingMm}
           airborneStudType={airborneStudType}
@@ -1071,6 +1076,7 @@ export function SimpleWorkbenchShell() {
           setAirbornePerimeterSeal={setAirbornePerimeterSeal}
           setAirborneReceivingRoomRt60S={setAirborneReceivingRoomRt60S}
           setAirborneReceivingRoomVolumeM3={setAirborneReceivingRoomVolumeM3}
+          setAirborneResilientBarSideCount={setAirborneResilientBarSideCount}
           setAirborneSharedTrack={setAirborneSharedTrack}
           setAirborneStudSpacingMm={setAirborneStudSpacingMm}
           setAirborneStudType={setAirborneStudType}

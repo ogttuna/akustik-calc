@@ -119,11 +119,19 @@ async function main() {
         "src/raw-floor-hostile-input-answer-matrix.test.ts",
         "src/raw-floor-safe-bare-split-parity.test.ts",
         "src/output-origin-trace-matrix.test.ts",
+        "src/floor-field-continuation-gate-a-matrix.test.ts",
+        "src/post-floor-field-continuation-gate-c-v1-next-slice-selection-contract.test.ts",
+        "src/floor-many-layer-stress-gate-a-matrix.test.ts",
+        "src/post-floor-many-layer-gate-c-v1-next-slice-selection-contract.test.ts",
+        "src/floor-layer-order-edit-stability-gate-a-matrix.test.ts",
+        "src/post-floor-layer-order-gate-c-v1-next-slice-selection-contract.test.ts",
         "src/coverage-grid-consistency.test.ts",
         "src/post-good-calculator-final-audit-v1-next-slice-selection-contract.test.ts",
         "src/post-team-access-model-calculator-refocus-next-slice-selection-contract.test.ts",
         "src/post-wall-formula-family-widening-v1-next-slice-selection-contract.test.ts",
         "src/post-wall-timber-lightweight-source-corpus-v1-next-slice-selection-contract.test.ts",
+        "src/post-wall-resilient-side-count-gate-b-v1-next-slice-selection-contract.test.ts",
+        "src/post-wall-resilient-side-count-gate-c-v1-next-slice-selection-contract.test.ts",
         "--maxWorkers=1"
       ]
     },
@@ -169,6 +177,9 @@ async function main() {
         "features/workbench/raw-floor-hostile-input-route-card-matrix.test.ts",
         "features/workbench/raw-floor-safe-bare-split-parity.test.ts",
         "features/workbench/output-origin-trace-card-matrix.test.ts",
+        "features/workbench/floor-field-continuation-gate-a-card-matrix.test.ts",
+        "features/workbench/floor-many-layer-stress-gate-a-card-matrix.test.ts",
+        "features/workbench/floor-layer-order-edit-stability-gate-a-card-matrix.test.ts",
         "--maxWorkers=1"
       ]
     },

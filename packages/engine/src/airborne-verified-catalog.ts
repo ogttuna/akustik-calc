@@ -954,6 +954,7 @@ function essentialMetaMatches(
   return (
     metaFieldMatches(inputContext, referenceContext, "connectionType", ["auto"]) &&
     metaFieldMatches(inputContext, referenceContext, "studType", ["auto"]) &&
+    metaFieldMatches(inputContext, referenceContext, "resilientBarSideCount", ["auto"]) &&
     metaFieldMatches(inputContext, referenceContext, "airtightness", ["unknown"]) &&
     metaFieldMatches(inputContext, referenceContext, "studSpacingMm", [], 30)
   );
@@ -982,6 +983,7 @@ export function findVerifiedAirborneAssemblyMatch(
     const score =
       (entry.matchContext.connectionType && entry.matchContext.connectionType !== "auto" ? 10 : 0) +
       (entry.matchContext.studType && entry.matchContext.studType !== "auto" ? 6 : 0) +
+      (entry.matchContext.resilientBarSideCount && entry.matchContext.resilientBarSideCount !== "auto" ? 4 : 0) +
       (typeof entry.matchContext.studSpacingMm === "number" ? 3 : 0) +
       (entry.matchContext.airtightness && entry.matchContext.airtightness !== "unknown" ? 2 : 0);
 
@@ -1067,6 +1069,7 @@ export function findApproximateAirborneFieldCompanionMatch(
     const score =
       (entry.matchContext.connectionType && entry.matchContext.connectionType !== "auto" ? 10 : 0) +
       (entry.matchContext.studType && entry.matchContext.studType !== "auto" ? 6 : 0) +
+      (entry.matchContext.resilientBarSideCount && entry.matchContext.resilientBarSideCount !== "auto" ? 4 : 0) +
       (typeof entry.matchContext.studSpacingMm === "number" ? 3 : 0) +
       (entry.matchContext.airtightness && entry.matchContext.airtightness !== "unknown" ? 2 : 0);
 

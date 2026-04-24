@@ -157,6 +157,7 @@ export function WorkbenchShell() {
   const airbornePerimeterSeal = useWorkbenchStore((state) => state.airbornePerimeterSeal);
   const airborneReceivingRoomRt60S = useWorkbenchStore((state) => state.airborneReceivingRoomRt60S);
   const airborneReceivingRoomVolumeM3 = useWorkbenchStore((state) => state.airborneReceivingRoomVolumeM3);
+  const airborneResilientBarSideCount = useWorkbenchStore((state) => state.airborneResilientBarSideCount);
   const airborneSharedTrack = useWorkbenchStore((state) => state.airborneSharedTrack);
   const airborneStudSpacingMm = useWorkbenchStore((state) => state.airborneStudSpacingMm);
   const airborneStudType = useWorkbenchStore((state) => state.airborneStudType);
@@ -240,6 +241,7 @@ export function WorkbenchShell() {
   const setAirbornePerimeterSeal = useWorkbenchStore((state) => state.setAirbornePerimeterSeal);
   const setAirborneReceivingRoomRt60S = useWorkbenchStore((state) => state.setAirborneReceivingRoomRt60S);
   const setAirborneReceivingRoomVolumeM3 = useWorkbenchStore((state) => state.setAirborneReceivingRoomVolumeM3);
+  const setAirborneResilientBarSideCount = useWorkbenchStore((state) => state.setAirborneResilientBarSideCount);
   const setAirborneSharedTrack = useWorkbenchStore((state) => state.setAirborneSharedTrack);
   const setAirborneStudSpacingMm = useWorkbenchStore((state) => state.setAirborneStudSpacingMm);
   const setAirborneStudType = useWorkbenchStore((state) => state.setAirborneStudType);
@@ -318,6 +320,7 @@ export function WorkbenchShell() {
           perimeterSeal: airbornePerimeterSeal,
           receivingRoomRt60S: parsedAirborneReceivingRoomRt60S,
           receivingRoomVolumeM3: parsedAirborneReceivingRoomVolumeM3,
+          resilientBarSideCount: airborneResilientBarSideCount,
           sharedTrack: airborneSharedTrack,
           studSpacingMm: parsedAirborneStudSpacingMm,
           studType: airborneStudType
@@ -413,6 +416,7 @@ export function WorkbenchShell() {
                 perimeterSeal: scenario.airbornePerimeterSeal ?? "good",
                 receivingRoomRt60S: parseFiniteNumber(scenario.airborneReceivingRoomRt60S),
                 receivingRoomVolumeM3: parseFiniteNumber(scenario.airborneReceivingRoomVolumeM3),
+                resilientBarSideCount: scenario.airborneResilientBarSideCount ?? "auto",
                 sharedTrack: scenario.airborneSharedTrack ?? "independent",
                 studSpacingMm: parseFiniteNumber(scenario.airborneStudSpacingMm),
                 studType: scenario.airborneStudType ?? "auto"
@@ -929,6 +933,7 @@ export function WorkbenchShell() {
           onPerimeterSealChange={setAirbornePerimeterSeal}
           onReceivingRoomRt60SChange={setAirborneReceivingRoomRt60S}
           onReceivingRoomVolumeM3Change={setAirborneReceivingRoomVolumeM3}
+          onResilientBarSideCountChange={setAirborneResilientBarSideCount}
           onSharedTrackChange={setAirborneSharedTrack}
           onStudSpacingMmChange={setAirborneStudSpacingMm}
           onStudTypeChange={setAirborneStudType}
@@ -939,6 +944,7 @@ export function WorkbenchShell() {
           perimeterSeal={airbornePerimeterSeal}
           receivingRoomRt60S={airborneReceivingRoomRt60S}
           receivingRoomVolumeM3={airborneReceivingRoomVolumeM3}
+          resilientBarSideCount={airborneResilientBarSideCount}
           sharedTrack={airborneSharedTrack}
           studSpacingMm={airborneStudSpacingMm}
           studType={airborneStudType}

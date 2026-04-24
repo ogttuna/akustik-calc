@@ -19,6 +19,7 @@ const SCENARIO: ScenarioSnapshot = {
   airbornePerimeterSeal: "good",
   airborneReceivingRoomRt60S: "",
   airborneReceivingRoomVolumeM3: "",
+  airborneResilientBarSideCount: "both_sides",
   airborneSharedTrack: "independent",
   airborneStudSpacingMm: "",
   airborneStudType: "auto",
@@ -86,6 +87,7 @@ describe("server project workbench snapshot", () => {
 
     expect(serverSnapshot.schemaId).toBe(SERVER_PROJECT_WORKBENCH_SNAPSHOT_SCHEMA_ID);
     expect(parsed).toMatchObject({
+      airborneResilientBarSideCount: "both_sides",
       criteriaPackId: "apartment_core",
       presetId: "heavy_concrete_impact_floor",
       projectName: "Acme tower",
@@ -98,6 +100,33 @@ describe("server project workbench snapshot", () => {
       ],
       studyMode: "floor"
     });
+  });
+
+  it("keeps legacy server snapshots without side count restorable", () => {
+    const legacyScenario = { ...SCENARIO };
+    delete legacyScenario.airborneResilientBarSideCount;
+    const parsed = parseServerProjectWorkbenchSnapshot({
+      ...legacyScenario,
+      schemaId: SERVER_PROJECT_WORKBENCH_SNAPSHOT_SCHEMA_ID
+    });
+
+    expect(parsed).toMatchObject({
+      presetId: "heavy_concrete_impact_floor",
+      projectName: "Acme tower",
+      studyMode: "floor"
+    });
+    expect(parsed?.airborneResilientBarSideCount).toBeUndefined();
+  });
+
+  it("drops invalid side-count values from server snapshots before store restore", () => {
+    const parsed = parseServerProjectWorkbenchSnapshot({
+      ...SCENARIO,
+      airborneResilientBarSideCount: "invalid-side-count",
+      schemaId: SERVER_PROJECT_WORKBENCH_SNAPSHOT_SCHEMA_ID
+    });
+
+    expect(parsed).not.toBeNull();
+    expect(parsed?.airborneResilientBarSideCount).toBeUndefined();
   });
 
   it("rejects unmarked or cross-mode snapshots before restore", () => {

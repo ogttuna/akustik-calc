@@ -277,7 +277,7 @@ const GRID_ROWS: readonly GridRowExpectation[] = [
     statusLabel: "Formula",
     evidenceTier: "formula",
     deferredReason:
-      "Timber-stud runtime tightening stays parked after wall_timber_lightweight_source_corpus_v1 closed; the current selected follow-up is wall_resilient_bar_side_count_modeling_v1 because resilient-bar side count is the next source-backed common-wall gap.",
+      "Timber-stud runtime tightening stays parked after source-corpus and resilient side-count closeouts unless a true direct double-board exact topology row is sourced.",
     evidencePaths: ["apps/web/features/workbench/wall-lsf-timber-stud-preset-benchmarks.test.ts"]
   },
   {
@@ -407,12 +407,13 @@ const GRID_ROWS: readonly GridRowExpectation[] = [
     id: "cross.many_layer_stability",
     section: "cross-cutting",
     labelNeedle: "Many-layer (50+) stability",
-    statusLabel: "Partial",
-    evidenceTier: "partial",
-    deferredReason: "Wall 50-layer behavior is pinned; a dedicated floor 50+ layer regression remains deferred.",
+    statusLabel: "Benchmark",
+    evidenceTier: "benchmark",
     evidencePaths: [
       "packages/engine/src/raw-wall-hostile-input-answer-matrix.test.ts",
-      "packages/engine/src/mixed-floor-wall-cross-mode-wall-extension-matrix.test.ts"
+      "packages/engine/src/mixed-floor-wall-cross-mode-wall-extension-matrix.test.ts",
+      "packages/engine/src/floor-many-layer-stress-gate-a-matrix.test.ts",
+      "apps/web/features/workbench/floor-many-layer-stress-gate-a-card-matrix.test.ts"
     ]
   },
   {

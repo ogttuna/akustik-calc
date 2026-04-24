@@ -3,6 +3,7 @@
 import type {
   AirborneConnectionType,
   AirborneContextMode,
+  AirborneResilientBarSideCount,
   AirborneStudType,
   AirborneOverlay,
   AirtightnessClass,
@@ -81,6 +82,12 @@ const studTypeOptions: { label: string; value: AirborneStudType }[] = [
   { label: "Wood stud", value: "wood_stud" }
 ];
 
+const resilientBarSideCountOptions: { label: string; value: AirborneResilientBarSideCount }[] = [
+  { label: "Auto", value: "auto" },
+  { label: "One side", value: "one_side" },
+  { label: "Both sides", value: "both_sides" }
+];
+
 type SelectFieldProps<T extends string> = {
   id: string;
   onValueChange: (value: T) => void;
@@ -143,6 +150,7 @@ type AirborneContextPanelProps = {
   onPerimeterSealChange: (value: PerimeterSealClass) => void;
   onReceivingRoomRt60SChange: (value: string) => void;
   onReceivingRoomVolumeM3Change: (value: string) => void;
+  onResilientBarSideCountChange: (value: AirborneResilientBarSideCount) => void;
   onSharedTrackChange: (value: SharedTrackClass) => void;
   onStudSpacingMmChange: (value: string) => void;
   onStudTypeChange: (value: AirborneStudType) => void;
@@ -153,6 +161,7 @@ type AirborneContextPanelProps = {
   perimeterSeal: PerimeterSealClass;
   receivingRoomRt60S: string;
   receivingRoomVolumeM3: string;
+  resilientBarSideCount: AirborneResilientBarSideCount;
   sharedTrack: SharedTrackClass;
   studSpacingMm: string;
   studType: AirborneStudType;
@@ -176,6 +185,7 @@ export function AirborneContextPanel({
   onPerimeterSealChange,
   onReceivingRoomRt60SChange,
   onReceivingRoomVolumeM3Change,
+  onResilientBarSideCountChange,
   onSharedTrackChange,
   onStudSpacingMmChange,
   onStudTypeChange,
@@ -186,6 +196,7 @@ export function AirborneContextPanel({
   perimeterSeal,
   receivingRoomRt60S,
   receivingRoomVolumeM3,
+  resilientBarSideCount,
   sharedTrack,
   studSpacingMm,
   studType,
@@ -277,7 +288,7 @@ export function AirborneContextPanel({
         <p className="mt-2 text-sm leading-7 text-[color:var(--ink-soft)]">
           Simple cavity stacks can drift badly when the engine cannot tell whether they are plain double-leaf, light-steel stud, resilient channel, or resilient-stud walls. These inputs activate the framed-wall calibration corridor.
         </p>
-        <div className="mt-4 grid gap-3 md:grid-cols-3">
+        <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
           <label className="space-y-2 text-sm text-[color:var(--ink-soft)]" htmlFor="airborne-connection-type">
             <span className="block font-medium text-[color:var(--ink)]">Connection type</span>
             <SelectField id="airborne-connection-type" onValueChange={onConnectionTypeChange} options={connectionTypeOptions} value={connectionType} />
@@ -289,6 +300,15 @@ export function AirborneContextPanel({
           <label className="space-y-2 text-sm text-[color:var(--ink-soft)]" htmlFor="airborne-stud-spacing-mm">
             <span className="block font-medium text-[color:var(--ink)]">Stud spacing (mm)</span>
             <NumericField id="airborne-stud-spacing-mm" onValueChange={onStudSpacingMmChange} placeholder="e.g. 600" value={studSpacingMm} />
+          </label>
+          <label className="space-y-2 text-sm text-[color:var(--ink-soft)]" htmlFor="airborne-resilient-bar-side-count">
+            <span className="block font-medium text-[color:var(--ink)]">Resilient bars</span>
+            <SelectField
+              id="airborne-resilient-bar-side-count"
+              onValueChange={onResilientBarSideCountChange}
+              options={resilientBarSideCountOptions}
+              value={resilientBarSideCount}
+            />
           </label>
         </div>
       </div>

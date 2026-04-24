@@ -18,8 +18,12 @@ adapter and regression tests.
 The pure access policy remains valid, but this route-integration slice is
 no longer the current selected work. After broad revalidation the project
 priority was reasserted as calculation accuracy and coverage first, so
-`wall_formula_family_widening_v1` is selected. Resume this productization
-slice after the calculator re-entry slice closes or if deployment/access
+the active calculator work has moved through wall formula-family,
+timber source-corpus, resilient side-count, and floor continuation
+closeouts, then floor many-layer closeout, to
+floor layer-order closeout. The current selected calculator slice is
+`all_caller_invalid_thickness_guard_v1`. Resume this productization
+slice after the selected calculator slice closes or if deployment/access
 risk becomes the chosen priority again.
 
 ## Non-Goals

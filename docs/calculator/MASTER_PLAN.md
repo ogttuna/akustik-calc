@@ -1,9 +1,8 @@
 # Calculator Master Plan
 
-Last reviewed: 2026-04-22 (post session-close drift correction —
-dead-import sweep + typecheck typo fix after broad `pnpm check`
-caught gaps the focused gate missed; original iteration 2 review
-2026-04-21 after masonry flanking inversion fix closeout)
+Last reviewed: 2026-04-24 (floor layer-order closeout; broad
+validation green and all-caller invalid-thickness guard selected as the
+remaining cross-cutting engine input validity slice)
 Iteration: 2 (rewritten with implementation state grid, accuracy
 preservation contract, ROI table, quantitative completion targets)
 
@@ -220,7 +219,7 @@ context the preset outputs match the corresponding engine benchmarks.
 | Masonry brick (`masonry_brick_wall` preset) | 🟢 Benchmark | `wall-preset-expansion-benchmarks.test.ts` pins Rw=43 under the workbench default lab context, matching `wienerberger_porotherm_100_dense_plaster_primary_2026` (Wienerberger/Lucideon Rw=43, ±1 dB); `wall-physical-invariants-matrix.test.ts` pins R'w ≤ Rw under field + building contexts after the 2026-04-21 lab-fallback anchor landed |
 | CLT wall (`clt_wall` preset) | 🟡 Formula | `wall-preset-expansion-benchmarks.test.ts` pins Rw=40 under the workbench default lab context; no exact CLT wall catalog row exists today |
 | Light-steel stud (LSF) (`light_steel_stud_wall` preset) | 🟢 Exact | `wall-lsf-timber-stud-preset-benchmarks.test.ts` pins Rw=55 under the preset's composed lab context, anchoring to `knauf_lsf_2x2_12_5_70_glasswool_lab_416702_2026` (Knauf exact catalog row); field R'w=48 and building R'w=48 pinned as drift guards; preset's `airborneDefaults.studType=light_steel_stud` forwards through `loadPreset` into the workbench store |
-| Timber stud (`timber_stud_wall` preset) | 🟡 Formula | 2026-04-23 Gate A audit split the known gap into screening vs dynamic surfaces; Gate B proved the live workbench route already uses the dynamic surface; Gate C then closed honestly no-runtime. The live route stays at lab Rw=50, field R'w=42, building DnT,w=43 with low-confidence `stud_surrogate_blend+framed_wall_calibration`, while the old screening matrices remain non-user-visible drift guards. The source-corpus follow-up then landed two direct timber exact imports for narrower single-board rows but left the live preset unmatched. The current selected slice is `wall_resilient_bar_side_count_modeling_v1`, because four official timber rows are still blocked only by missing one-side vs both-sides resilient-bar modeling. |
+| Timber stud (`timber_stud_wall` preset) | 🟡 Formula | 2026-04-23 Gate A audit split the known gap into screening vs dynamic surfaces; Gate B proved the live workbench route already uses the dynamic surface; Gate C then closed honestly no-runtime. The live route stays at lab Rw=50, field R'w=42, building DnT,w=43 with low-confidence `stud_surrogate_blend+framed_wall_calibration`, while the old screening matrices remain non-user-visible drift guards. The source-corpus follow-up landed two direct timber exact imports for narrower single-board rows and the resilient side-count slice later landed four explicit RB1/RB2 exact imports for `one_side`/`both_sides`; the live direct double-board timber preset remains formula because it still does not exact-match those rows. |
 | Wall selector families (double-leaf, lined-massive, AAC boundary, G5 sibling, heavy-core trim, lab double-stud) | 🟢 Benchmark | VALUE-pinned across 3 contexts × 9 outputs in `dynamic-airborne-wall-selector-value-pins.test.ts` (2026-04-22 step 7b) + narrative pins retained in `dynamic-airborne-wall-selector-trace-matrix.test.ts`. 5 cross-cell physical invariants (I1/I2/I3 + Ctr≤C + STC≈Rw) green on every cell. |
 | Deep-hybrid swap corridors (`heavy_core`, `aac_d700_100`, `aac_d700_120`, `aac_g5`) | 🟡 Family | Each pinned in its own `dynamic-route-deep-hybrid-swap-*.test.ts` file |
 | Wall hostile-input matrix | 🟢 Benchmark | Engine `raw-wall-hostile-input-answer-matrix.test.ts` and workbench `raw-wall-hostile-input-route-card-matrix.test.ts` cover 50-layer stacks, unknown materials, invalid thickness, empty rows, and route-card posture; step-7 torture matrix O1 adds per-case hostile-input overlays |
@@ -231,12 +230,11 @@ context the preset outputs match the corresponding engine benchmarks.
 the selector-corridor surface is VALUE-pinned across lab, field, and
 building contexts. The hostile-input and field-continuation gaps are
 closed. Remaining wall follow-ups are explicit deferrals, not hidden
-completion blockers: timber-stud runtime tightening is now parked
-behind the closed `wall_timber_lightweight_source_corpus_v1` evidence pack
-while `wall_resilient_bar_side_count_modeling_v1` addresses the next
-source-backed common-wall input gap; deep-hybrid swap VALUE pins are
-low-ROI, and workbench card-level selector VALUE pins remain optional
-unless the final audit finds a user-visible card drift.
+completion blockers: timber-stud runtime tightening is parked behind
+closed source-corpus and resilient side-count evidence packs unless a true
+direct double-board exact topology row is sourced; deep-hybrid swap VALUE
+pins are low-ROI, and workbench card-level selector VALUE pins remain
+optional unless the final audit finds a user-visible card drift.
 
 ### Cross-cutting
 
@@ -247,8 +245,8 @@ unless the final audit finds a user-visible card drift.
 | Engine mixed-mode cross-mode torture | 🟢 Benchmark | Landed 2026-04-22 as `mixed-floor-wall-cross-mode-wall-extension-matrix.test.ts` — 8 overlays × 4 new wall cases = 32 assertions |
 | Engine torture matrix wall coverage | 🟢 6/6 | `ENGINE_MIXED_GENERATED_CASES` expanded from 3 → 7 wall cases (masonry, CLT, LSF, timber-stud added) in step 7 |
 | Adjacent same-material split invariance | 🟢 Benchmark | Two regression guards landed 2026-04-22 — masonry calibrator + verified catalog matcher both use `coalesceSameMaterialSolidLeaves` / `coalesceAdjacentSameMaterialLayers` helpers to keep split variants on-lane |
-| Engine thickness validity | 🟡 Partial | Workbench `normalize-rows` emits warnings on invalid thickness; wall engine direct invalid-thickness classes are pinned in `raw-wall-hostile-input-answer-matrix.test.ts`; a standalone all-caller floor/wall engine guard remains a deferred hardening track |
-| Many-layer (50+) stability | 🟡 Partial | Wall 50-layer identical/mixed stacks are pinned in `raw-wall-hostile-input-answer-matrix.test.ts`, and step-7 O8 covers many-layer finite/monotone behavior for the new wall torture cases; a dedicated floor 50+ layer regression remains deferred |
+| Engine thickness validity | 🟡 Partial / active follow-up | Workbench `normalize-rows` emits warnings on invalid thickness; wall engine direct invalid-thickness classes are pinned in `raw-wall-hostile-input-answer-matrix.test.ts`; `all_caller_invalid_thickness_guard_v1` is selected to audit direct floor/wall engine callers that bypass workbench normalization |
+| Many-layer (50+) stability | 🟢 Benchmark | Wall 50-layer identical/mixed stacks are pinned in `raw-wall-hostile-input-answer-matrix.test.ts`, step-7 O8 covers many-layer finite/monotone behavior for the new wall torture cases, and `floor_many_layer_stress_regression_v1` closed after pinning representative floor 50+ engine/web surfaces |
 | Reorder output-set invariance | 🟢 Benchmark | Fixed 2026-04-21 via ctr_term-guarded fallthrough in `packages/engine/src/target-output-support.ts` `getCarrierC`; pinned in `wall-reorder-invariance-matrix.test.ts` |
 | `dynamic-airborne.ts` size | 🟡 Split v1 landed, v2 deferred | 3152 lines (from 6630) after slice 4 split refactor v1 + 2026-04-22 dead-import sweep; remaining `apply*` guards parked for `dynamic_airborne_split_refactor_v2` (composer injection blocker) |
 
@@ -326,7 +324,7 @@ signal — the test that must be green to call it done.
 | 6 | `wall_formula_family_widening_v1` ✅ honest closeout 2026-04-23 | Gate A named screening vs dynamic timber surfaces, Gate B proved the live route already uses the dynamic lane, and Gate C closed no-runtime because current official timber rows are broad corridor evidence, not a precise trim target. Follow-up selected: `wall_timber_lightweight_source_corpus_v1`. |
 | 7 | `mixed_floor_wall_edge_case_hardening_v1` ✅ landed 2026-04-22 | Engine wall surface consolidated from 3 → 7 cases (6/6 preset parity); 8-overlay cross-mode torture matrix green (32 assertions on the new cases); two real engine bugs caught + fixed (F1 masonry calibrator coalesce, F2 catalog-match coalesce); F3 deferred + F4 test-refined; post-contract pins closure |
 | 7b | `wall_corridor_surface_value_pinning_v1` ✅ landed 2026-04-22 | 6 wall selector corridor labels × 3 contexts × 9 outputs VALUE-pinned (`dynamic-airborne-wall-selector-value-pins.test.ts` — 198 drift guards + 5 cross-cell invariant tests). Stud-context plumbing hardened (`lab_double_stud` stays `double_stud_system` across lab/field/building via stud-aware FIELD + BUILDING variants). No engine changes required — every cell landed inside ISO 717-1 plausibility window. C2 + C3 corridor surface flips 🟡 → ✅. |
-| 8 | `good_calculator_final_audit_v1` ✅ landed 2026-04-23 | `coverage-grid-consistency.test.ts` maps §3 rows to executable evidence, verifies C1-C6 with explicit C3/C5/C6 honesty, removes stale wall hostile/field drift, updates the focused gate, and opens `POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md`. Productization has since closed `server_backed_project_storage_v1`, `project_access_authorization_v1`, `auth_session_hardening_v1`, and `team_access_model_v1`; after broad green revalidation the calculator re-entry slice `wall_formula_family_widening_v1` landed Gate A audit + Gate B live-route proof and then closed Gate C honestly no-runtime, `wall_timber_lightweight_source_corpus_v1` landed the typed corpus + executable audit + two direct timber exact imports, and the current selected calculator slice is `wall_resilient_bar_side_count_modeling_v1`. `project_access_policy_route_integration_v1` is deferred. |
+| 8 | `good_calculator_final_audit_v1` ✅ landed 2026-04-23 | `coverage-grid-consistency.test.ts` maps §3 rows to executable evidence, verifies C1-C6 with explicit C3/C5/C6 honesty, removes stale wall hostile/field drift, updates the focused gate, and opens `POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md`. Productization has since closed `server_backed_project_storage_v1`, `project_access_authorization_v1`, `auth_session_hardening_v1`, and `team_access_model_v1`; after broad green revalidation the calculator re-entry slice `wall_formula_family_widening_v1` landed Gate A audit + Gate B live-route proof and then closed Gate C honestly no-runtime, `wall_timber_lightweight_source_corpus_v1` landed the typed corpus + executable audit + two direct timber exact imports, `wall_resilient_bar_side_count_modeling_v1` landed explicit side-count exact imports for four RB1/RB2 timber rows, `floor_field_continuation_expansion_v1` closed as a no-runtime floor continuation audit, `floor_many_layer_stress_regression_v1` closed as a no-runtime 50+ layer audit, `floor_layer_order_edit_stability_v1` closed as a no-runtime layer-order audit, and the current selected calculator slice is `all_caller_invalid_thickness_guard_v1`. `project_access_policy_route_integration_v1` is deferred. |
 
 Slice 6 is explicitly conditional — lands only if slice 5 reveals a
 defendable gap. Each slice advances all three priority axes
@@ -610,5 +608,9 @@ the doc-drift problem documented in `SYSTEM_AUDIT_2026-04-20.md`.
   grid, §6 accuracy preservation contract, §4 ROI table, §1
   quantitative completion targets, §8 measurable completion signals,
   honest floor assessment in §5, explicit step closure signals.
+- **2026-04-24 update**: floor continuation, floor many-layer, and floor
+  layer-order audits closed no-runtime; all-caller invalid-thickness
+  guard selected for the remaining cross-cutting engine thickness
+  validity gap.
 - **Iteration 1 (2026-04-21)**: initial draft with 10 strategic moves
   and completion signals.

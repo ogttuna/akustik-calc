@@ -53,12 +53,12 @@ const CLASSIFICATION_THRESHOLDS: Record<
   { caseCount: number; thresholdMaeDb: number; thresholdMaxDb: number }
 > = {
   exact_import_landed: {
-    caseCount: 2,
+    caseCount: 6,
     thresholdMaeDb: 0,
     thresholdMaxDb: 0
   },
   secondary_benchmark: {
-    caseCount: 5,
+    caseCount: 1,
     thresholdMaeDb: 1.5,
     thresholdMaxDb: 2
   },
@@ -296,13 +296,18 @@ describe("wall timber/lightweight source audit", () => {
         const exactMatch = findVerifiedAirborneAssemblyMatch(resolveLayers(row.layers), row.airborneContext as AirborneContext);
 
         expect(exactMatch?.id, `${row.id} exact match`).toBe(row.id);
-        expect(evaluation.result.dynamicAirborneTrace?.familyDecisionClass, `${row.id} decision`).toBe("narrow");
         expectWarning(
           evaluation.result.warnings,
           /Curated exact airborne lab match active:/i,
           `${row.id} exact warning`
         );
-        expectNoTraceNote(evaluation, /Resilient stud\/channel metadata activated/i, "resilient benchmark note");
+        if (row.classificationReasonCode === "resilient_bar_side_count_topology_exactly_representable") {
+          expect(evaluation.result.dynamicAirborneTrace?.familyDecisionClass, `${row.id} decision`).toBe("ambiguous");
+          expectTraceNote(evaluation, /Resilient stud\/channel metadata activated/i, "resilient exact note");
+        } else {
+          expect(evaluation.result.dynamicAirborneTrace?.familyDecisionClass, `${row.id} decision`).toBe("narrow");
+          expectNoTraceNote(evaluation, /Resilient stud\/channel metadata activated/i, "resilient benchmark note");
+        }
         continue;
       }
 

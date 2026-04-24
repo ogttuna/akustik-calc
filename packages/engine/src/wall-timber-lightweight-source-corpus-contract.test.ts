@@ -34,14 +34,14 @@ const EXPECTED_CORPUS_IDS = [
 
 const EXPECTED_EXACT_IMPORT_IDS = [
   "knauf_gb_en_tp_63_38_1x12p5_wb_direct_uninsulated_lab_2026",
-  "knauf_gb_en_tp_63_38_1x12p5_wb_50_acoustic_roll_lab_2026"
-] as const;
-
-const EXPECTED_SECONDARY_BENCHMARK_IDS = [
+  "knauf_gb_en_tp_63_38_1x12p5_wb_50_acoustic_roll_lab_2026",
   "knauf_gb_en_tp_89_38_rb1_2x15_soundshield_plus_90_fill_lab_2026",
   "knauf_gb_en_tp_89_38_rb2_2x15_soundshield_plus_90_fill_lab_2026",
   "british_gypsum_a046005_timber_rb1_2x12p5_soundbloc_50apr_lab_2026",
-  "british_gypsum_a046006_timber_rb2_2x12p5_soundbloc_50apr_lab_2026",
+  "british_gypsum_a046006_timber_rb2_2x12p5_soundbloc_50apr_lab_2026"
+] as const;
+
+const EXPECTED_SECONDARY_BENCHMARK_IDS = [
   "gyproc_ie_a026025_timber_2x15_fireline_uninsulated_lab_2026"
 ] as const;
 
@@ -64,7 +64,7 @@ describe("wall timber/lightweight source corpus contract", () => {
     expect(sorted(WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS.map((entry) => entry.id))).toEqual(sorted(EXPECTED_CORPUS_IDS));
   });
 
-  it("keeps the classification posture explicit: direct timber exact, resilient/proprietary rows secondary, lightweight steel links holdout-only", () => {
+  it("keeps the classification posture explicit: direct and side-count timber exact, proprietary rows secondary, lightweight steel links holdout-only", () => {
     const exactIds = WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS.filter(
       (entry) => entry.classification === "exact_import_landed"
     ).map((entry) => entry.id);
@@ -102,7 +102,7 @@ describe("wall timber/lightweight source corpus contract", () => {
     expect(holdoutRetrievedAt).toEqual(new Set(["2026-03-10"]));
   });
 
-  it("limits landed exact imports to direct timber rows the current wall vocabulary can represent exactly", () => {
+  it("limits landed exact imports to timber rows the current wall vocabulary can represent exactly", () => {
     const exactRows = WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS.filter((entry) => entry.classification === "exact_import_landed");
 
     expect(exactRows.every((entry) => entry.kind === "official_row")).toBe(true);
@@ -110,22 +110,32 @@ describe("wall timber/lightweight source corpus contract", () => {
       exactRows.every(
         (entry) =>
           entry.kind === "official_row" &&
-          entry.classificationReasonCode === "direct_timber_generic_board_topology_exactly_representable" &&
-          entry.airborneContext.connectionType === "line_connection" &&
-          entry.airborneContext.studType === "wood_stud"
+          (
+            (
+              entry.classificationReasonCode === "direct_timber_generic_board_topology_exactly_representable" &&
+              entry.airborneContext.connectionType === "line_connection" &&
+              entry.airborneContext.studType === "wood_stud"
+            ) ||
+            (
+              entry.classificationReasonCode === "resilient_bar_side_count_topology_exactly_representable" &&
+              entry.airborneContext.connectionType === "resilient_channel" &&
+              entry.airborneContext.studType === "resilient_stud" &&
+              (entry.airborneContext.resilientBarSideCount === "one_side" ||
+                entry.airborneContext.resilientBarSideCount === "both_sides")
+            )
+          )
       )
     ).toBe(true);
   });
 
-  it("keeps resilient-bar and proprietary-fire-board rows out of exact-import posture until topology/material ambiguity is resolved", () => {
+  it("keeps proprietary-fire-board rows out of exact-import posture until material ambiguity is resolved", () => {
     const secondaryRows = WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS.filter((entry) => entry.classification === "secondary_benchmark");
 
     expect(
       secondaryRows.every(
         (entry) =>
           entry.kind === "official_row" &&
-          (entry.classificationReasonCode === "resilient_bar_side_count_not_explicitly_modeled" ||
-            entry.classificationReasonCode === "proprietary_fire_board_mapping_not_exact")
+          entry.classificationReasonCode === "proprietary_fire_board_mapping_not_exact"
       )
     ).toBe(true);
   });

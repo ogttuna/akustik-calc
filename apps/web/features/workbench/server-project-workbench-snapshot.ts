@@ -1,3 +1,5 @@
+import type { AirborneResilientBarSideCount } from "@dynecho/shared";
+
 import {
   DEFAULT_CRITERIA_PACK_ID,
   getCriteriaPackById,
@@ -43,6 +45,10 @@ function parseCriteriaPackId(value: unknown): CriteriaPackId {
   } catch {
     return DEFAULT_CRITERIA_PACK_ID;
   }
+}
+
+function parseAirborneResilientBarSideCount(value: unknown): AirborneResilientBarSideCount | undefined {
+  return value === "auto" || value === "one_side" || value === "both_sides" ? value : undefined;
 }
 
 function parseLayerDraft(value: unknown): LayerDraft | null {
@@ -102,6 +108,7 @@ export function parseServerProjectWorkbenchSnapshot(value: unknown): ScenarioSna
 
   return {
     ...(value as ScenarioSnapshot),
+    airborneResilientBarSideCount: parseAirborneResilientBarSideCount(value.airborneResilientBarSideCount),
     criteriaPackId: parseCriteriaPackId(value.criteriaPackId),
     presetId,
     rows,

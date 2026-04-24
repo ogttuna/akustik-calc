@@ -2,6 +2,7 @@ import type {
   AirborneCalculatorId,
   AirborneConnectionType,
   AirborneContextMode,
+  AirborneResilientBarSideCount,
   AirborneStudType,
   AirtightnessClass,
   ElectricalBoxState,
@@ -420,6 +421,12 @@ export const STUD_TYPE_OPTIONS: readonly ControlOption<AirborneStudType>[] = [
   { label: "Light steel stud", note: "Standard light-gauge steel framing.", value: "light_steel_stud" },
   { label: "Resilient stud", note: "Higher-decoupling resilient stud family.", value: "resilient_stud" },
   { label: "Wood stud", note: "Timber stud framing.", value: "wood_stud" }
+];
+
+export const RESILIENT_BAR_SIDE_COUNT_OPTIONS: readonly ControlOption<AirborneResilientBarSideCount>[] = [
+  { label: "Auto", note: "No explicit one-side or both-sides source value.", value: "auto" },
+  { label: "One side", note: "Resilient bars are known to be installed on one face.", value: "one_side" },
+  { label: "Both sides", note: "Resilient bars are known to be installed on both faces.", value: "both_sides" }
 ];
 
 export const AIRTIGHTNESS_OPTIONS: readonly ControlOption<AirtightnessClass>[] = [

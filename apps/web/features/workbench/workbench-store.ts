@@ -7,6 +7,7 @@ import {
 import type {
   AirborneCalculatorId,
   AirborneConnectionType,
+  AirborneResilientBarSideCount,
   AirborneStudType,
   AirtightnessClass,
   AirborneContextMode,
@@ -68,6 +69,7 @@ type ScenarioSnapshot = {
   airbornePerimeterSeal: PerimeterSealClass;
   airborneReceivingRoomRt60S: string;
   airborneReceivingRoomVolumeM3: string;
+  airborneResilientBarSideCount?: AirborneResilientBarSideCount;
   airborneSharedTrack: SharedTrackClass;
   airborneStudSpacingMm: string;
   airborneStudType: AirborneStudType;
@@ -134,6 +136,7 @@ type WorkbenchStore = {
   airbornePerimeterSeal: PerimeterSealClass;
   airborneReceivingRoomRt60S: string;
   airborneReceivingRoomVolumeM3: string;
+  airborneResilientBarSideCount: AirborneResilientBarSideCount;
   airborneSharedTrack: SharedTrackClass;
   airborneStudSpacingMm: string;
   airborneStudType: AirborneStudType;
@@ -210,6 +213,7 @@ type WorkbenchStore = {
   setAirbornePerimeterSeal: (value: PerimeterSealClass) => void;
   setAirborneReceivingRoomRt60S: (value: string) => void;
   setAirborneReceivingRoomVolumeM3: (value: string) => void;
+  setAirborneResilientBarSideCount: (value: AirborneResilientBarSideCount) => void;
   setAirborneSharedTrack: (value: SharedTrackClass) => void;
   setAirborneStudSpacingMm: (value: string) => void;
   setAirborneStudType: (value: AirborneStudType) => void;
@@ -495,6 +499,7 @@ function makeDefaultState(input?: {
     airbornePerimeterSeal: "good" as const,
     airborneReceivingRoomRt60S: "",
     airborneReceivingRoomVolumeM3: "",
+    airborneResilientBarSideCount: "auto" as const,
     airborneSharedTrack: "independent" as const,
     airborneStudSpacingMm: "",
     airborneStudType: "auto" as const,
@@ -575,6 +580,7 @@ function buildLoadedScenarioState(
     airbornePerimeterSeal: scenario.airbornePerimeterSeal ?? "good",
     airborneReceivingRoomRt60S: scenario.airborneReceivingRoomRt60S ?? "",
     airborneReceivingRoomVolumeM3: scenario.airborneReceivingRoomVolumeM3 ?? "",
+    airborneResilientBarSideCount: scenario.airborneResilientBarSideCount ?? "auto",
     airborneSharedTrack: scenario.airborneSharedTrack ?? "independent",
     airborneStudSpacingMm: scenario.airborneStudSpacingMm ?? "",
     airborneStudType: scenario.airborneStudType ?? "auto",
@@ -720,6 +726,9 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
           if (defaults.studSpacingMm !== undefined) {
             airborneUpdates.airborneStudSpacingMm = defaults.studSpacingMm;
           }
+          if (defaults.resilientBarSideCount !== undefined) {
+            airborneUpdates.airborneResilientBarSideCount = defaults.resilientBarSideCount;
+          }
           if (defaults.studType !== undefined) {
             airborneUpdates.airborneStudType = defaults.studType;
           }
@@ -811,6 +820,7 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
               airbornePerimeterSeal: state.airbornePerimeterSeal,
               airborneReceivingRoomRt60S: state.airborneReceivingRoomRt60S,
               airborneReceivingRoomVolumeM3: state.airborneReceivingRoomVolumeM3,
+              airborneResilientBarSideCount: state.airborneResilientBarSideCount,
               airborneSharedTrack: state.airborneSharedTrack,
               airborneStudSpacingMm: state.airborneStudSpacingMm,
               airborneStudType: state.airborneStudType,
@@ -875,6 +885,7 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
       setAirbornePerimeterSeal: (value) => set({ airbornePerimeterSeal: value }),
       setAirborneReceivingRoomRt60S: (value) => set({ airborneReceivingRoomRt60S: value }),
       setAirborneReceivingRoomVolumeM3: (value) => set({ airborneReceivingRoomVolumeM3: value }),
+      setAirborneResilientBarSideCount: (value) => set({ airborneResilientBarSideCount: value }),
       setAirborneSharedTrack: (value) => set({ airborneSharedTrack: value }),
       setAirborneStudSpacingMm: (value) => set({ airborneStudSpacingMm: value }),
       setAirborneStudType: (value) => set({ airborneStudType: value }),

@@ -87,8 +87,13 @@ Progress note 2026-04-23:
 - 2026-04-23 refocus note: productization route integration is deferred,
   not cancelled. The calculator refocus slice
   `wall_formula_family_widening_v1` has since closed honestly no-runtime,
-  and the current selected work has moved to
-  `wall_resilient_bar_side_count_modeling_v1`.
+  `wall_resilient_bar_side_count_modeling_v1` has closed with explicit
+  side-count exact imports, `floor_field_continuation_expansion_v1` has
+  closed as a no-runtime audit, `floor_many_layer_stress_regression_v1`
+  has closed as a no-runtime many-layer audit,
+  `floor_layer_order_edit_stability_v1` has closed as a no-runtime
+  layer-order audit, and the current selected calculator work has moved
+  to `all_caller_invalid_thickness_guard_v1`.
 
 ### 3. Billing
 
@@ -167,7 +172,7 @@ evidence.
 - Deferred productization follow-up:
   `project_access_policy_route_integration_v1`.
 - Current selected calculator slice:
-  `wall_resilient_bar_side_count_modeling_v1`.
+  `all_caller_invalid_thickness_guard_v1`.
 
 Reasoning: server-backed persistence is the foundation for auth,
 billing, proposal history, collaboration, monitoring context, and any

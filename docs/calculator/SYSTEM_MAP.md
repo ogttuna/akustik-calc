@@ -1,6 +1,6 @@
 # System Map
 
-Last reviewed: 2026-04-23
+Last reviewed: 2026-04-24
 
 Document role:
 
@@ -15,8 +15,8 @@ Use this together with the agent resume triangle:
 - [CURRENT_STATE.md](./CURRENT_STATE.md) — snapshot (what just closed, what is selected)
 - [MASTER_PLAN.md](./MASTER_PLAN.md) — strategic roadmap + implementation state grid (§3)
 - [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md) — tactical slice detail
-- [SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md](./SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md)
-  — active calculator accuracy/coverage re-entry plan
+- [SLICE_ALL_CALLER_INVALID_THICKNESS_GUARD_PLAN.md](./SLICE_ALL_CALLER_INVALID_THICKNESS_GUARD_PLAN.md)
+  — active calculator accuracy/coverage plan
 - [POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md](./POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md)
   — deferred productization plan after calculator final audit
 
@@ -254,7 +254,7 @@ validation path before and after a refactor.
 
 ## Current Architectural Hotspots
 
-As of `2026-04-23`, the calculator final audit is closed and the broad
+As of `2026-04-24`, the calculator final audit is closed and the broad
 repo validation is green. Server-backed project storage,
 project/proposal owner authorization, auth-session hardening, and the pure
 team-access policy model are all closed. The wall formula-family slice
@@ -262,17 +262,55 @@ has now also closed honestly no-runtime: Gate A named the timber
 screening vs dynamic surfaces, Gate B proved the live workbench uses the
 dynamic route, and Gate C kept runtime unchanged because the current
 official timber rows define only a broad corridor. The source-corpus
-follow-up then landed two direct timber exact imports. The active risk
-is now the missing one-side vs both-sides resilient-bar model/input for
-common lightweight walls: the next selected slice is
-`wall_resilient_bar_side_count_modeling_v1`. Productization
-route integration is deferred, not cancelled.
+follow-up then landed two direct timber exact imports. The resilient
+side-count slice then landed Gate A no-runtime blind-surface proof, Gate B
+explicit `resilientBarSideCount` plumbing with legacy-stable `auto`, and
+Gate C exact imports for the four source-backed RB1/RB2 timber rows when
+explicit `one_side`/`both_sides` is selected. The floor continuation
+slice then closed no-runtime with engine/web card inventories, and the
+floor 50+ layer stress slice closed no-runtime after pinning
+representative many-layer engine/card surfaces, and the floor
+layer-order slice closed no-runtime after pinning explicit-role exact
+reorder stability, raw/order-sensitive support changes, and blocked
+impact fail-closed posture. The active calculator risk is now
+`all_caller_invalid_thickness_guard_v1`: direct engine floor/wall
+callers that bypass workbench normalization must not get crashes,
+non-finite outputs, unsupported live leakage, or defended-looking
+answers from invalid thickness. Productization route integration is
+deferred, not cancelled.
 
 Current hotspots:
 
 - selected calculator re-entry anchors:
+  - `docs/calculator/CHECKPOINT_2026-04-24_FLOOR_LAYER_ORDER_CLOSEOUT_HANDOFF.md`
+  - `docs/calculator/SLICE_ALL_CALLER_INVALID_THICKNESS_GUARD_PLAN.md`
+  - `packages/engine/src/post-floor-layer-order-gate-c-v1-next-slice-selection-contract.test.ts`
+  - `docs/calculator/CHECKPOINT_2026-04-24_FLOOR_LAYER_ORDER_GATE_A_HANDOFF.md`
+  - `docs/calculator/SLICE_FLOOR_LAYER_ORDER_EDIT_STABILITY_PLAN.md`
+  - `packages/engine/src/floor-layer-order-edit-stability-gate-a-matrix.test.ts`
+  - `apps/web/features/workbench/floor-layer-order-edit-stability-gate-a-card-matrix.test.ts`
+  - `docs/calculator/CHECKPOINT_2026-04-24_FLOOR_MANY_LAYER_CLOSEOUT_HANDOFF.md`
+  - `packages/engine/src/post-floor-many-layer-gate-c-v1-next-slice-selection-contract.test.ts`
+  - `docs/calculator/SLICE_FLOOR_MANY_LAYER_STRESS_REGRESSION_PLAN.md`
+  - `docs/calculator/CHECKPOINT_2026-04-24_FLOOR_MANY_LAYER_GATE_A_HANDOFF.md`
+  - `packages/engine/src/floor-many-layer-stress-gate-a-matrix.test.ts`
+  - `apps/web/features/workbench/floor-many-layer-stress-gate-a-card-matrix.test.ts`
+  - `docs/calculator/CHECKPOINT_2026-04-24_FLOOR_FIELD_CONTINUATION_CLOSEOUT_HANDOFF.md`
+  - `packages/engine/src/post-floor-field-continuation-gate-c-v1-next-slice-selection-contract.test.ts`
+  - `docs/calculator/SLICE_FLOOR_FIELD_CONTINUATION_EXPANSION_PLAN.md`
+  - `docs/calculator/CHECKPOINT_2026-04-24_FLOOR_FIELD_CONTINUATION_GATE_A_HANDOFF.md`
+  - `packages/engine/src/floor-field-continuation-gate-a-matrix.test.ts`
+  - `apps/web/features/workbench/floor-field-continuation-gate-a-card-matrix.test.ts`
+  - `docs/calculator/CHECKPOINT_2026-04-24_RESILIENT_SIDE_COUNT_GATE_C_CLOSEOUT_HANDOFF.md`
+  - `packages/engine/src/post-wall-resilient-side-count-gate-c-v1-next-slice-selection-contract.test.ts`
   - `docs/calculator/SLICE_WALL_RESILIENT_BAR_SIDE_COUNT_MODELING_PLAN.md`
+  - `docs/calculator/CHECKPOINT_2026-04-24_RESILIENT_SIDE_COUNT_GATE_B_LANDED_HANDOFF.md`
+  - `docs/calculator/CHECKPOINT_2026-04-24_RESILIENT_SIDE_COUNT_GATE_B_READY_HANDOFF.md`
   - `docs/calculator/CHECKPOINT_2026-04-23_WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS_CLOSEOUT_HANDOFF.md`
+  - `packages/engine/src/wall-resilient-bar-side-count-blind-audit.test.ts`
+  - `apps/web/features/workbench/wall-resilient-bar-side-count-route-card-matrix.test.ts`
+  - `apps/web/features/workbench/wall-resilient-bar-side-count-input-contract.test.ts`
+  - `packages/engine/src/post-wall-resilient-side-count-gate-b-v1-next-slice-selection-contract.test.ts`
   - `packages/engine/src/post-wall-timber-lightweight-source-corpus-v1-next-slice-selection-contract.test.ts`
   - `docs/calculator/SLICE_WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS_PLAN.md`
   - `apps/web/features/workbench/wall-lsf-timber-stud-preset-benchmarks.test.ts`
@@ -362,18 +400,13 @@ Current hotspots:
 - source-backed widening ledger:
   `docs/calculator/SOURCE_GAP_LEDGER.md`
 
-The current selected next slice no longer exists to close another calculator
-runtime corridor. Step 8 final audit closed on 2026-04-23 with the executable
-coverage grid, C1-C6 assertions, and post-final-audit contract. The active
-system risk has moved from calculator math to productization honesty:
-`server_backed_project_storage_v1` has closed durable server project records,
-explicit workbench sync/list/load, and proposal audit append;
-`team_access_model_v1` has closed the pure role/action policy. Local
-Zustand remains the live editing source unless a project is explicitly
-synced or loaded.
-Closed reinforced, `GDMTXA04A`, `C11c`, raw bare, wall-selector, and timber-stud
-formula tracks stay explicit calculator deferrals rather than active runtime
-work during productization.
+The current selected next slice is a calculator slice again:
+`all_caller_invalid_thickness_guard_v1`. It should start with a
+no-runtime Gate A inventory of direct floor/wall engine invalid-thickness
+surfaces. Closed reinforced, `GDMTXA04A`, `C11c`, raw bare,
+wall-selector, floor continuation, floor many-layer, floor layer-order,
+and timber-stud formula tracks stay explicit calculator deferrals or
+closed references rather than active runtime work.
 
 ## What This System Is Not Yet
 
@@ -394,11 +427,11 @@ To avoid docs drift, be explicit about current non-features:
   read [CURRENT_STATE.md](./CURRENT_STATE.md)
 - Want the next implementation step:
   read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md)
-- Want the active productization plan:
+- Want the deferred productization plan:
   read [POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md](./POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md)
-- Want the active calculator re-entry plan:
-  read [SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md](./SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md)
+- Want the active calculator plan:
+  read [SLICE_ALL_CALLER_INVALID_THICKNESS_GUARD_PLAN.md](./SLICE_ALL_CALLER_INVALID_THICKNESS_GUARD_PLAN.md)
 - Want answer-origin or support semantics:
   read [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
 - Want the last clean resume point:
-  read [CHECKPOINT_2026-04-23_BROAD_REVALIDATION_CALCULATOR_REFOCUS_HANDOFF.md](./CHECKPOINT_2026-04-23_BROAD_REVALIDATION_CALCULATOR_REFOCUS_HANDOFF.md)
+  read [CHECKPOINT_2026-04-24_FLOOR_LAYER_ORDER_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-24_FLOOR_LAYER_ORDER_CLOSEOUT_HANDOFF.md)

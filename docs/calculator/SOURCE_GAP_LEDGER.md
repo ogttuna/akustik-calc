@@ -1,6 +1,6 @@
 # Dynamic Calculator Source Gap Ledger
 
-Last reviewed: 2026-04-23 (final-audit closeout; source-gap
+Last reviewed: 2026-04-24 (floor layer-order closeout; source-gap
 content remains floor-dominant historical context)
 
 Purpose:
@@ -27,15 +27,19 @@ Important scope note:
 - wall-side dynamic behavior still stays mostly under benchmark and stability guardrails
 - if wall-family widening becomes active work, add a separate wall ledger instead of overloading this one
 
-2026-04-23 freshness note:
+2026-04-24 freshness note:
 
 - The active selected slice is no longer
   `dataholz_clt_calibration_tightening`; after the 2026-04-23 broad
   revalidation the living triangle selected calculator accuracy/coverage
   work on `wall_formula_family_widening_v1`, then
-  `wall_timber_lightweight_source_corpus_v1`, and both slices are now
-  closed. The current selected slice is
-  `wall_resilient_bar_side_count_modeling_v1`. Productization slices
+  `wall_timber_lightweight_source_corpus_v1`, and then
+  `wall_resilient_bar_side_count_modeling_v1`,
+  `floor_field_continuation_expansion_v1`,
+  `floor_many_layer_stress_regression_v1`, and
+  `floor_layer_order_edit_stability_v1`; all six are now closed.
+  The current selected slice is
+  `all_caller_invalid_thickness_guard_v1`. Productization slices
   `server_backed_project_storage_v1`,
   `project_access_authorization_v1`, `auth_session_hardening_v1`, and
   `team_access_model_v1` are closed; `project_access_policy_route_integration_v1`
@@ -44,11 +48,10 @@ Important scope note:
   source-gated calculator family. `wall_formula_family_widening_v1`
   then also closed without reopening any blocked family: it clarified
   the user-visible timber dynamic route, but kept runtime unchanged
-  because the source corridor stayed too broad. The new
-  `wall_resilient_bar_side_count_modeling_v1` slice may expand common
-  wall source-backed coverage, but it must keep this blocked-source ledger
-  fail-closed unless fresh source evidence explicitly justifies a
-  reopen.
+  because the source corridor stayed too broad. The resilient side-count
+  slice later expanded common wall source-backed coverage by landing
+  explicit RB1/RB2 exact rows, while keeping this blocked-source ledger
+  fail-closed.
 - The detailed floor/source queue below is retained as source-gap
   history and blocked-family context. It does not override
   `CURRENT_STATE.md`, `MASTER_PLAN.md`, or
@@ -58,7 +61,7 @@ Important scope note:
   wall-selector widening stay fail-closed unless new source evidence
   explicitly justifies a reopen.
 
-Current planning implication:
+Historical blocked-source planning implication:
 
 - 2026-04-20 reinforced closeout posture:
   - latest closed no-runtime slices:
@@ -71,7 +74,7 @@ Current planning implication:
     - `raw_terminal_concrete_helper_family_widening_v1`
     - `clt_local_combined_interaction_evidence_v1`
     - `reinforced_concrete_accuracy_reopen`
-  - selected next active slice:
+  - then-selected active slice:
     `dataholz_clt_calibration_tightening`
   - current remaining candidate order:
     - no active blocked-source candidate remains in the current queue

@@ -3,7 +3,11 @@ import { describe, expect, it } from "vitest";
 import { getDefaultMaterialCatalog, resolveMaterial } from "./material-catalog";
 import { findVerifiedAirborneAssemblyMatch } from "./airborne-verified-catalog";
 import { calculateAssembly } from "./calculate-assembly";
-import { WALL_TIMBER_LIGHTWEIGHT_EXACT_IMPORT_ROWS } from "./wall-timber-lightweight-source-corpus";
+import {
+  WALL_TIMBER_LIGHTWEIGHT_EXACT_IMPORT_ROWS,
+  WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS,
+  type WallTimberLightweightOfficialSourceRow
+} from "./wall-timber-lightweight-source-corpus";
 
 describe("airborne verified catalog anchors", () => {
   it("anchors exact lab rows to the official Rw value", () => {
@@ -60,6 +64,47 @@ describe("airborne verified catalog anchors", () => {
       expect(result.warnings.some((warning: string) => /exact airborne lab match active/i.test(warning))).toBe(true);
     }
   );
+
+  it("requires explicit resilient-bar side count for the landed RB1/RB2 timber exact rows", () => {
+    const catalog = getDefaultMaterialCatalog();
+    const rows = WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS.filter(
+      (row): row is WallTimberLightweightOfficialSourceRow =>
+        row.kind === "official_row" &&
+        row.classificationReasonCode === "resilient_bar_side_count_topology_exactly_representable"
+    );
+
+    expect(rows).toHaveLength(4);
+
+    for (const row of rows) {
+      const layers = row.layers.map((layer) => {
+        const material = resolveMaterial(layer.materialId, catalog);
+
+        return {
+          ...layer,
+          material,
+          surfaceMassKgM2: (material.densityKgM3 * layer.thicknessMm) / 1000
+        };
+      });
+      const expectedSideCount = row.airborneContext.resilientBarSideCount;
+      const oppositeSideCount = expectedSideCount === "one_side" ? "both_sides" : "one_side";
+
+      expect(findVerifiedAirborneAssemblyMatch(layers, row.airborneContext)?.id, `${row.id} exact side`).toBe(row.id);
+      expect(
+        findVerifiedAirborneAssemblyMatch(layers, {
+          ...row.airborneContext,
+          resilientBarSideCount: "auto"
+        })?.id,
+        `${row.id} auto side`
+      ).not.toBe(row.id);
+      expect(
+        findVerifiedAirborneAssemblyMatch(layers, {
+          ...row.airborneContext,
+          resilientBarSideCount: oppositeSideCount
+        })?.id,
+        `${row.id} opposite side`
+      ).not.toBe(row.id);
+    }
+  });
 
   it("anchors exact Xella masonry lab rows to the official Rw value", () => {
     const catalog = getDefaultMaterialCatalog();

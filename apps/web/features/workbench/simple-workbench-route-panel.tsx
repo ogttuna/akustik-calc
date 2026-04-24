@@ -4,6 +4,7 @@ import type {
   AirborneCalculatorId,
   AirborneConnectionType,
   AirborneContextMode,
+  AirborneResilientBarSideCount,
   AirborneStudType,
   AirtightnessClass,
   ElectricalBoxState,
@@ -28,6 +29,7 @@ import {
   ELECTRICAL_BOX_OPTIONS,
   JUNCTION_OPTIONS,
   PENETRATION_OPTIONS,
+  RESILIENT_BAR_SIDE_COUNT_OPTIONS,
   SEAL_OPTIONS,
   STEEL_BOUND_SUPPORT_FORM_ACTIONS,
   STUD_TYPE_OPTIONS,
@@ -64,6 +66,7 @@ type SimpleWorkbenchRoutePanelProps = {
   airbornePerimeterSeal: PerimeterSealClass;
   airborneReceivingRoomRt60S: string;
   airborneReceivingRoomVolumeM3: string;
+  airborneResilientBarSideCount: AirborneResilientBarSideCount;
   airborneSharedTrack: SharedTrackClass;
   airborneStudSpacingMm: string;
   airborneStudType: AirborneStudType;
@@ -102,6 +105,7 @@ type SimpleWorkbenchRoutePanelProps = {
   setAirbornePerimeterSeal: (value: PerimeterSealClass) => void;
   setAirborneReceivingRoomRt60S: (value: string) => void;
   setAirborneReceivingRoomVolumeM3: (value: string) => void;
+  setAirborneResilientBarSideCount: (value: AirborneResilientBarSideCount) => void;
   setAirborneSharedTrack: (value: SharedTrackClass) => void;
   setAirborneStudSpacingMm: (value: string) => void;
   setAirborneStudType: (value: AirborneStudType) => void;
@@ -132,6 +136,7 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
     airbornePerimeterSeal,
     airborneReceivingRoomRt60S,
     airborneReceivingRoomVolumeM3,
+    airborneResilientBarSideCount,
     airborneSharedTrack,
     airborneStudSpacingMm,
     airborneStudType,
@@ -170,6 +175,7 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
     setAirbornePerimeterSeal,
     setAirborneReceivingRoomRt60S,
     setAirborneReceivingRoomVolumeM3,
+    setAirborneResilientBarSideCount,
     setAirborneSharedTrack,
     setAirborneStudSpacingMm,
     setAirborneStudType,
@@ -568,6 +574,27 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
                           onChange={(event) => setAirborneStudSpacingMm(event.target.value)}
                           value={airborneStudSpacingMm}
                         />
+                      </FieldShell>
+
+                      <FieldShell
+                        label="Resilient bars"
+                        note="Use the tested assembly side count when known."
+                        relevance="optional"
+                        usage="Framed-wall matching when resilient bars are part of the source evidence"
+                      >
+                        <select
+                          className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                          onChange={(event) =>
+                            setAirborneResilientBarSideCount(event.target.value as AirborneResilientBarSideCount)
+                          }
+                          value={airborneResilientBarSideCount}
+                        >
+                          {RESILIENT_BAR_SIDE_COUNT_OPTIONS.map((option) => (
+                            <option key={option.value} value={option.value}>
+                              {option.label}
+                            </option>
+                          ))}
+                        </select>
                       </FieldShell>
 
                       <FieldShell

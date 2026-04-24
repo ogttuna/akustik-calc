@@ -7,6 +7,7 @@ export type WallTimberLightweightSourceCorpusClassification =
 
 export type WallTimberLightweightSourceCorpusReasonCode =
   | "direct_timber_generic_board_topology_exactly_representable"
+  | "resilient_bar_side_count_topology_exactly_representable"
   | "resilient_bar_side_count_not_explicitly_modeled"
   | "proprietary_fire_board_mapping_not_exact"
   | "existing_lightweight_holdout_companion";
@@ -81,6 +82,16 @@ const RESILIENT_TIMBER_BENCHMARK_CONTEXT = {
   studType: "resilient_stud"
 } satisfies Partial<AirborneContext>;
 
+const RESILIENT_TIMBER_ONE_SIDE_CONTEXT = {
+  ...RESILIENT_TIMBER_BENCHMARK_CONTEXT,
+  resilientBarSideCount: "one_side"
+} satisfies Partial<AirborneContext>;
+
+const RESILIENT_TIMBER_BOTH_SIDES_CONTEXT = {
+  ...RESILIENT_TIMBER_BENCHMARK_CONTEXT,
+  resilientBarSideCount: "both_sides"
+} satisfies Partial<AirborneContext>;
+
 function buildLayers(entries: readonly (readonly [string, number])[]): LayerInput[] {
   return entries.map(([materialId, thicknessMm]) => ({
     materialId,
@@ -150,10 +161,12 @@ function linkedHoldout(
 }
 
 // This corpus is classification-first: direct timber rows that the
-// current wall vocabulary can represent exactly are now marked as
-// landed exact imports, secondary benchmarks keep approximation notes
-// explicit, and lightweight steel companions remain linked to the
-// existing holdout dataset instead of being duplicated here.
+// current wall vocabulary can represent exactly are marked as landed
+// exact imports. Gate C also promotes the side-count-specific resilient
+// timber rows once the explicit one-side/both-sides context exists.
+// Secondary benchmarks keep approximation notes explicit, and
+// lightweight steel companions remain linked to the existing holdout
+// dataset instead of being duplicated here.
 export const WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS: readonly WallTimberLightweightSourceCorpusEntry[] = [
   officialRow(
     "knauf_gb_en_tp_63_38_1x12p5_wb_direct_uninsulated_lab_2026",
@@ -186,15 +199,15 @@ export const WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS: readonly WallTimberLightweig
   officialRow(
     "knauf_gb_en_tp_89_38_rb1_2x15_soundshield_plus_90_fill_lab_2026",
     "Knauf GB EN timber partition 89x38, RB1 one side, 2x15 Soundshield Plus each side, 90 mm cavity insulation",
-    "secondary_benchmark",
-    "resilient_bar_side_count_not_explicitly_modeled",
+    "exact_import_landed",
+    "resilient_bar_side_count_topology_exactly_representable",
     "timber_resilient_bar_one_side_double_board",
     "Knauf Drywall Systems Performance Guide 2026",
     KNAUF_GB_DRYWALL_SYSTEMS_PERFORMANCE_GUIDE_2026_URL,
     "EN Compliance p37, row EN-TP-RB1-89-38-6-2-15-SSP-90, Rw 56 dB.",
     56,
     3,
-    RESILIENT_TIMBER_BENCHMARK_CONTEXT,
+    RESILIENT_TIMBER_ONE_SIDE_CONTEXT,
     [
       ["acoustic_gypsum_board", 15],
       ["acoustic_gypsum_board", 15],
@@ -205,16 +218,16 @@ export const WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS: readonly WallTimberLightweig
   ),
   officialRow(
     "knauf_gb_en_tp_89_38_rb2_2x15_soundshield_plus_90_fill_lab_2026",
-    "Knauf GB EN timber partition 89x38, RB1 both sides, 2x15 Soundshield Plus each side, 90 mm cavity insulation",
-    "secondary_benchmark",
-    "resilient_bar_side_count_not_explicitly_modeled",
+    "Knauf GB EN timber partition 89x38, RB2 both sides, 2x15 Soundshield Plus each side, 90 mm cavity insulation",
+    "exact_import_landed",
+    "resilient_bar_side_count_topology_exactly_representable",
     "timber_resilient_bar_both_sides_double_board",
     "Knauf Drywall Systems Performance Guide 2026",
     KNAUF_GB_DRYWALL_SYSTEMS_PERFORMANCE_GUIDE_2026_URL,
     "EN Compliance p37, row EN-TP-RB2-89-38-6-2-15-SSP-60, published alongside the 90 mm FrameTherm 40 cavity-insulation column, Rw 59 dB.",
     59,
     3,
-    RESILIENT_TIMBER_BENCHMARK_CONTEXT,
+    RESILIENT_TIMBER_BOTH_SIDES_CONTEXT,
     [
       ["acoustic_gypsum_board", 15],
       ["acoustic_gypsum_board", 15],
@@ -226,15 +239,15 @@ export const WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS: readonly WallTimberLightweig
   officialRow(
     "british_gypsum_a046005_timber_rb1_2x12p5_soundbloc_50apr_lab_2026",
     "British Gypsum A046005 timber partition, RB1 one side, 2x12.5 SoundBloc each side, 50 mm APR",
-    "secondary_benchmark",
-    "resilient_bar_side_count_not_explicitly_modeled",
+    "exact_import_landed",
+    "resilient_bar_side_count_topology_exactly_representable",
     "timber_resilient_bar_one_side_double_board",
     "British Gypsum Technical Specification A046005",
     BRITISH_GYPSUM_A046005_URL,
     "A046005 (02 May 2024), 75x38 timber stud at 600 mm centres, one-side RB1 resilient bar, Rw 55 dB.",
     55,
     3,
-    RESILIENT_TIMBER_BENCHMARK_CONTEXT,
+    RESILIENT_TIMBER_ONE_SIDE_CONTEXT,
     [
       ["acoustic_gypsum_board", 12.5],
       ["acoustic_gypsum_board", 12.5],
@@ -246,16 +259,16 @@ export const WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS: readonly WallTimberLightweig
   ),
   officialRow(
     "british_gypsum_a046006_timber_rb2_2x12p5_soundbloc_50apr_lab_2026",
-    "British Gypsum A046006 timber partition, RB1 both sides, 2x12.5 SoundBloc each side, 50 mm APR",
-    "secondary_benchmark",
-    "resilient_bar_side_count_not_explicitly_modeled",
+    "British Gypsum A046006 timber partition, RB2 both sides, 2x12.5 SoundBloc each side, 50 mm APR",
+    "exact_import_landed",
+    "resilient_bar_side_count_topology_exactly_representable",
     "timber_resilient_bar_both_sides_double_board",
     "British Gypsum Technical Specification A046006",
     BRITISH_GYPSUM_A046006_URL,
-    "A046006 (02 May 2024), 75x38 timber stud at 600 mm centres, both-side RB1 resilient bars, Rw 58 dB.",
+    "A046006 (02 May 2024), 75x38 timber stud at 600 mm centres, both-side RB2 resilient bars, Rw 58 dB.",
     58,
     3,
-    RESILIENT_TIMBER_BENCHMARK_CONTEXT,
+    RESILIENT_TIMBER_BOTH_SIDES_CONTEXT,
     [
       ["acoustic_gypsum_board", 12.5],
       ["acoustic_gypsum_board", 12.5],

@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import type { AirborneContext, LayerInput, RequestedOutputId } from "@dynecho/shared";
 
 import { calculateAssembly } from "./calculate-assembly";
+import { hasExplicitFramingHint, normalizeFramingHint } from "./dynamic-airborne-family-detection";
 import {
   WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS,
   type WallTimberLightweightOfficialSourceRow
@@ -23,7 +24,10 @@ const WALL_OUTPUTS = [
 const RESILIENT_SIDE_COUNT_ROWS = WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS.filter(
   (entry): entry is WallTimberLightweightOfficialSourceRow =>
     entry.kind === "official_row" &&
-    entry.classificationReasonCode === "resilient_bar_side_count_not_explicitly_modeled"
+    (
+      entry.topology === "timber_resilient_bar_one_side_double_board" ||
+      entry.topology === "timber_resilient_bar_both_sides_double_board"
+    )
 );
 
 type ContextExpectation = {
@@ -54,6 +58,7 @@ const CONTEXTS: Record<keyof PairCase["expectedOutputs"], AirborneContext> = {
     airtightness: "good",
     connectionType: "resilient_channel",
     contextMode: "element_lab",
+    resilientBarSideCount: "auto",
     studSpacingMm: 600,
     studType: "resilient_stud"
   },
@@ -63,6 +68,7 @@ const CONTEXTS: Record<keyof PairCase["expectedOutputs"], AirborneContext> = {
     contextMode: "field_between_rooms",
     panelHeightMm: 3000,
     panelWidthMm: 4200,
+    resilientBarSideCount: "auto",
     studSpacingMm: 600,
     studType: "resilient_stud"
   },
@@ -74,6 +80,7 @@ const CONTEXTS: Record<keyof PairCase["expectedOutputs"], AirborneContext> = {
     panelWidthMm: 4200,
     receivingRoomRt60S: 0.7,
     receivingRoomVolumeM3: 55,
+    resilientBarSideCount: "auto",
     studSpacingMm: 600,
     studType: "resilient_stud"
   }
@@ -213,8 +220,29 @@ function evaluateWall(layers: readonly LayerInput[], airborneContext: AirborneCo
   };
 }
 
+function explicitContextFor(
+  row: WallTimberLightweightOfficialSourceRow,
+  contextId: keyof PairCase["expectedOutputs"]
+): AirborneContext {
+  return {
+    ...CONTEXTS[contextId],
+    ...row.airborneContext,
+    contextMode: CONTEXTS[contextId].contextMode
+  } as AirborneContext;
+}
+
 describe("wall resilient-bar side-count blind audit", () => {
-  it("keeps the current model side-count-blind across the source-backed RB1/RB2 timber pairs", () => {
+  it("normalizes explicit side count without making side count alone a framing-family trigger", () => {
+    const hint = normalizeFramingHint({
+      contextMode: "element_lab",
+      resilientBarSideCount: "both_sides"
+    });
+
+    expect(hint.resilientBarSideCount).toBe("both_sides");
+    expect(hasExplicitFramingHint(hint)).toBe(false);
+  });
+
+  it("keeps legacy auto side-count blind while explicit RB1/RB2 side-count rows land as exact anchors", () => {
     expect(RESILIENT_SIDE_COUNT_ROWS).toHaveLength(4);
 
     for (const pair of PAIR_CASES) {
@@ -222,7 +250,8 @@ describe("wall resilient-bar side-count blind audit", () => {
       const right = findRow(pair.ids[1]);
 
       expect(hasExactLayerSignature(left.layers, right.layers), `${pair.pairId} layer signature`).toBe(true);
-      expect(left.airborneContext, `${pair.pairId} context signature`).toEqual(right.airborneContext);
+      expect(left.airborneContext.resilientBarSideCount, `${pair.pairId} left side count`).toBe("one_side");
+      expect(right.airborneContext.resilientBarSideCount, `${pair.pairId} right side count`).toBe("both_sides");
       expect(Math.abs(left.expectedRw - right.expectedRw), `${pair.pairId} official delta`).toBe(
         pair.expectedOfficialDeltaDb
       );
@@ -231,8 +260,10 @@ describe("wall resilient-bar side-count blind audit", () => {
         const expected = pair.expectedOutputs[contextId];
         const leftEval = evaluateWall(left.layers, CONTEXTS[contextId]);
         const rightEval = evaluateWall(right.layers, CONTEXTS[contextId]);
+        const explicitOneSideEval = evaluateWall(left.layers, explicitContextFor(left, contextId));
+        const explicitBothSidesEval = evaluateWall(right.layers, explicitContextFor(right, contextId));
 
-        expect(leftEval, `${pair.pairId} ${contextId} pair equality`).toEqual(rightEval);
+        expect(leftEval, `${pair.pairId} ${contextId} legacy auto pair equality`).toEqual(rightEval);
 
         expect(leftEval.rw, `${pair.pairId} ${contextId} rw`).toBe(expected.rw);
         expect(leftEval.rwPrime, `${pair.pairId} ${contextId} rwPrime`).toBe(expected.rwPrime);
@@ -255,46 +286,88 @@ describe("wall resilient-bar side-count blind audit", () => {
           leftEval.warnings.some((warning) => /No curated exact floor-system landed/i.test(warning)),
           `${pair.pairId} ${contextId} no exact warning`
         ).toBe(true);
+
+        expect(explicitBothSidesEval.rw - explicitOneSideEval.rw, `${pair.pairId} ${contextId} explicit rw delta`).toBe(
+          pair.expectedOfficialDeltaDb
+        );
+        if (contextId === "lab") {
+          expect(explicitOneSideEval.rw, `${pair.pairId} lab one-side exact Rw`).toBe(left.expectedRw);
+          expect(explicitBothSidesEval.rw, `${pair.pairId} lab both-sides exact Rw`).toBe(right.expectedRw);
+          expect(
+            explicitOneSideEval.warnings.some((warning) => /Curated exact airborne lab match active/i.test(warning)),
+            `${pair.pairId} one-side exact warning`
+          ).toBe(true);
+          expect(
+            explicitBothSidesEval.warnings.some((warning) => /Curated exact airborne lab match active/i.test(warning)),
+            `${pair.pairId} both-sides exact warning`
+          ).toBe(true);
+        } else {
+          expect(
+            explicitBothSidesEval.rwPrime! - explicitOneSideEval.rwPrime!,
+            `${pair.pairId} ${contextId} explicit R'w delta`
+          ).toBe(pair.expectedOfficialDeltaDb);
+          expect(
+            explicitBothSidesEval.dnW! - explicitOneSideEval.dnW!,
+            `${pair.pairId} ${contextId} explicit Dn,w delta`
+          ).toBe(pair.expectedOfficialDeltaDb);
+          expect(
+            explicitBothSidesEval.dnA! - explicitOneSideEval.dnA!,
+            `${pair.pairId} ${contextId} explicit Dn,A delta`
+          ).toBe(pair.expectedOfficialDeltaDb);
+          expect(
+            explicitOneSideEval.warnings.some((warning) => /Curated airborne lab fallback active/i.test(warning)),
+            `${pair.pairId} one-side lab fallback warning`
+          ).toBe(true);
+          expect(
+            explicitBothSidesEval.warnings.some((warning) => /Curated airborne lab fallback active/i.test(warning)),
+            `${pair.pairId} both-sides lab fallback warning`
+          ).toBe(true);
+        }
       }
     }
   });
 
-  it("keeps the side-count-blocked rows explicit in the corpus classification surface", () => {
+  it("keeps the side-count exact rows explicit in the corpus classification surface", () => {
     expect(
       RESILIENT_SIDE_COUNT_ROWS.map((row) => ({
         classification: row.classification,
         expectedRw: row.expectedRw,
         id: row.id,
         reason: row.classificationReasonCode,
+        sideCount: row.airborneContext.resilientBarSideCount,
         topology: row.topology
       }))
     ).toEqual([
       {
-        classification: "secondary_benchmark",
+        classification: "exact_import_landed",
+        sideCount: "one_side",
         expectedRw: 56,
         id: "knauf_gb_en_tp_89_38_rb1_2x15_soundshield_plus_90_fill_lab_2026",
-        reason: "resilient_bar_side_count_not_explicitly_modeled",
+        reason: "resilient_bar_side_count_topology_exactly_representable",
         topology: "timber_resilient_bar_one_side_double_board"
       },
       {
-        classification: "secondary_benchmark",
+        classification: "exact_import_landed",
+        sideCount: "both_sides",
         expectedRw: 59,
         id: "knauf_gb_en_tp_89_38_rb2_2x15_soundshield_plus_90_fill_lab_2026",
-        reason: "resilient_bar_side_count_not_explicitly_modeled",
+        reason: "resilient_bar_side_count_topology_exactly_representable",
         topology: "timber_resilient_bar_both_sides_double_board"
       },
       {
-        classification: "secondary_benchmark",
+        classification: "exact_import_landed",
+        sideCount: "one_side",
         expectedRw: 55,
         id: "british_gypsum_a046005_timber_rb1_2x12p5_soundbloc_50apr_lab_2026",
-        reason: "resilient_bar_side_count_not_explicitly_modeled",
+        reason: "resilient_bar_side_count_topology_exactly_representable",
         topology: "timber_resilient_bar_one_side_double_board"
       },
       {
-        classification: "secondary_benchmark",
+        classification: "exact_import_landed",
+        sideCount: "both_sides",
         expectedRw: 58,
         id: "british_gypsum_a046006_timber_rb2_2x12p5_soundbloc_50apr_lab_2026",
-        reason: "resilient_bar_side_count_not_explicitly_modeled",
+        reason: "resilient_bar_side_count_topology_exactly_representable",
         topology: "timber_resilient_bar_both_sides_double_board"
       }
     ]);

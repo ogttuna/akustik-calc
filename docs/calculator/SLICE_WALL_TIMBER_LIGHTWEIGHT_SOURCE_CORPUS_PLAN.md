@@ -148,8 +148,9 @@ Gate C landed `2026-04-23`:
 - `apps/web/features/workbench/wall-direct-timber-exact-route-card-matrix.test.ts`
   pins the user-visible lab / field / building card surface for those
   exact rows,
-- the 5 resilient/proprietary rows remain benchmark-only because
-  resilient-side-count and proprietary-board ambiguity is still real,
+- at this source-corpus closeout the 5 resilient/proprietary rows
+  remained benchmark-only because resilient-side-count and
+  proprietary-board ambiguity was still real,
 - the 2 linked lightweight steel companions remain holdout-only,
 - the live timber preset stays on the low-confidence dynamic route
   because it is family-adjacent but not exact-topology-equal to either
@@ -169,8 +170,8 @@ Closed `2026-04-23` with the following posture:
 - the typed timber/lightweight source corpus is now in-repo and
   executable,
 - 2 direct timber rows are landed exact imports,
-- 5 resilient/proprietary rows remain benchmark-only for explicit
-  reasons instead of floating as ambiguous future work,
+- 5 resilient/proprietary rows remained benchmark-only at this closeout
+  for explicit reasons instead of floating as ambiguous future work,
 - 2 linked lightweight steel rows remain holdout-only,
 - the live timber preset still stays on its dynamic low-confidence lane
   because no landed exact row matches that direct double-board topology.
