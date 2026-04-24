@@ -13,8 +13,8 @@ If you need the tactical detail on the active slice read
 
 Last revalidation cycle: `2026-04-24` (resilient side-count Gate A
 still selected; focused gate and broad `pnpm check` both revalidated
-green after test-only hardening — checkpoint
-[CHECKPOINT_2026-04-23_WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-23_WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS_CLOSEOUT_HANDOFF.md)).
+green after the planning refresh — latest checkpoint
+[CHECKPOINT_2026-04-24_RESILIENT_SIDE_COUNT_GATE_B_READY_HANDOFF.md](./CHECKPOINT_2026-04-24_RESILIENT_SIDE_COUNT_GATE_B_READY_HANDOFF.md)).
 Step 8 closed the calculator runtime audit: `MASTER_PLAN.md` §3/§8
 was reconciled to implementation reality, `coverage-grid-consistency.test.ts`
 now maps the grid and C1-C6 signals to executable evidence, the
@@ -163,6 +163,23 @@ proves the shared schema and workbench store still have
 `connectionType`/`studType`/`studSpacingMm` only and strip any
 unmodeled `resilientBarSideCount` field. Gate A changed no calculator
 runtime values; it made the missing dimension executable and explicit.
+
+Planning refresh `2026-04-24`: the active Gate B write scope has now
+been rechecked against implementation reality. The shared/model/UI
+surfaces still have no resilient-bar side-count field:
+`packages/shared/src/domain/airborne-context.ts`,
+`apps/web/features/workbench/workbench-store.ts`,
+`apps/web/features/workbench/preset-definitions.ts`,
+`apps/web/features/workbench/workbench-shell.tsx`,
+`apps/web/features/workbench/simple-workbench-shell.tsx`, and
+`apps/web/features/workbench/simple-workbench-route-panel.tsx`.
+Official source evidence remains aligned with the current corpus and
+keeps the prioritization stable: Knauf GB still publishes the defended
+RB1/RB2 56/59 dB split for the same timber family, and British Gypsum
+still publishes the matching A046005/A046006 55/58 dB split. That means
+the missing modeled dimension is still the best next accuracy/coverage
+lever; no competing implementation review reopened a higher-ROI runtime
+formula retune.
 
 Implementation refinement `2026-04-24` (broad revalidation hardening):
 the first broad `pnpm check` pass after Gate A surfaced two non-runtime

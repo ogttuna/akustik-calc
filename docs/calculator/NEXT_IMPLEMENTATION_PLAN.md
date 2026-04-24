@@ -7,8 +7,9 @@ read [CURRENT_STATE.md](./CURRENT_STATE.md).
 
 Last reviewed: 2026-04-24 (`wall_resilient_bar_side_count_modeling_v1`
 Gate A landed with no runtime change; focused gate + broad revalidation
-are green after test-only hardening; Gate B input/model plumbing is
-still next).
+are green after test-only hardening; the planning refresh rechecked the
+active implementation surfaces and official Knauf / British Gypsum
+evidence, and Gate B input/model plumbing is still next).
 
 ---
 
@@ -83,10 +84,40 @@ For every next slice decision:
   instead of `.keyof()` on the exported `ZodType`, and the heavy
   `calculate-assembly` split-cavity field swap invariant now runs on a
   representative small/mid/large gap matrix rather than the full 4x4
-  asymmetry grid.
+  asymmetry grid. The planning refresh on `2026-04-24` also rechecked
+  the active write scope and official-source reason for the slice. The
+  shared wall context still exposes `connectionType`, `studType`, and
+  `studSpacingMm` in:
+  `packages/shared/src/domain/airborne-context.ts`,
+  `apps/web/features/workbench/workbench-store.ts`,
+  `apps/web/features/workbench/preset-definitions.ts`,
+  `apps/web/features/workbench/workbench-shell.tsx`,
+  `apps/web/features/workbench/simple-workbench-shell.tsx`, and
+  `apps/web/features/workbench/simple-workbench-route-panel.tsx`, but no
+  resilient-bar side-count dimension exists yet. Official manufacturer
+  evidence still says that omission matters: the Knauf GB 2026 guide
+  carries EN-TP-RB1 56 dB and EN-TP-RB2 59 dB on the same timber
+  family, while British Gypsum A046005 and A046006 carry the same
+  one-side vs both-sides 55/58 dB split. That keeps Gate B as the
+  highest-ROI next move because it unlocks narrower source-backed wall
+  answers without inventing new formula authority.
   `project_access_policy_route_integration_v1` is deferred, not
   cancelled, because it does not improve acoustic calculation accuracy
   or coverage.
+
+## Immediate Execution Order
+
+Gate B should now be executed in this order:
+
+1. Add a shared resilient-bar side-count enum with a legacy-stable
+   `auto` posture.
+2. Plumb the field through workbench state, snapshot persistence, preset
+   defaults, and shell-to-engine context assembly.
+3. Add the explicit workbench control only where the wall route already
+   exposes the other framed-wall context fields.
+4. Prove `auto` preserves the current side-count-blind route.
+5. Only after propagation is green, reopen the four RB1/RB2 timber rows
+   for exact-vs-benchmark posture decisions in Gate C.
 
 ## Latest Closed Slices
 
@@ -154,28 +185,30 @@ Every slice under this plan obeys:
 
 1. [CHECKPOINT_2026-04-23_WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-23_WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS_CLOSEOUT_HANDOFF.md)
    — source-corpus closeout and resilient side-count next slice selection.
-2. [CURRENT_STATE.md](./CURRENT_STATE.md)
-3. [SLICE_WALL_RESILIENT_BAR_SIDE_COUNT_MODELING_PLAN.md](./SLICE_WALL_RESILIENT_BAR_SIDE_COUNT_MODELING_PLAN.md)
-4. [MASTER_PLAN.md](./MASTER_PLAN.md) §3 (state grid) + §4 (master
+2. [CHECKPOINT_2026-04-24_RESILIENT_SIDE_COUNT_GATE_B_READY_HANDOFF.md](./CHECKPOINT_2026-04-24_RESILIENT_SIDE_COUNT_GATE_B_READY_HANDOFF.md)
+   — latest checkpoint: docs/implementation reconciliation plus focused and broad validation green.
+3. [CURRENT_STATE.md](./CURRENT_STATE.md)
+4. [SLICE_WALL_RESILIENT_BAR_SIDE_COUNT_MODELING_PLAN.md](./SLICE_WALL_RESILIENT_BAR_SIDE_COUNT_MODELING_PLAN.md)
+5. [MASTER_PLAN.md](./MASTER_PLAN.md) §3 (state grid) + §4 (master
    sequence) + §6 (accuracy preservation contract) + §8
    (completion signals)
-5. [SLICE_WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS_PLAN.md](./SLICE_WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS_PLAN.md)
+6. [SLICE_WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS_PLAN.md](./SLICE_WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS_PLAN.md)
    — closed slice reference; Gate A/B/C landed and direct-timber exact import is closed.
-6. [CHECKPOINT_2026-04-23_TEAM_ACCESS_MODEL_HANDOFF.md](./CHECKPOINT_2026-04-23_TEAM_ACCESS_MODEL_HANDOFF.md)
+7. [CHECKPOINT_2026-04-23_TEAM_ACCESS_MODEL_HANDOFF.md](./CHECKPOINT_2026-04-23_TEAM_ACCESS_MODEL_HANDOFF.md)
    — closed team-access policy model handoff, reference only.
-7. [SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md](./SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md)
+8. [SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md](./SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md)
    — deferred productization route-integration slice, reference only.
-8. [SLICE_TEAM_ACCESS_MODEL_PLAN.md](./SLICE_TEAM_ACCESS_MODEL_PLAN.md)
+9. [SLICE_TEAM_ACCESS_MODEL_PLAN.md](./SLICE_TEAM_ACCESS_MODEL_PLAN.md)
    — closed team-access policy model slice, reference only.
-9. [SLICE_AUTH_SESSION_HARDENING_PLAN.md](./SLICE_AUTH_SESSION_HARDENING_PLAN.md)
+10. [SLICE_AUTH_SESSION_HARDENING_PLAN.md](./SLICE_AUTH_SESSION_HARDENING_PLAN.md)
    — closed auth-session hardening slice, reference only.
-10. [SLICE_PROJECT_ACCESS_AUTHORIZATION_PLAN.md](./SLICE_PROJECT_ACCESS_AUTHORIZATION_PLAN.md)
+11. [SLICE_PROJECT_ACCESS_AUTHORIZATION_PLAN.md](./SLICE_PROJECT_ACCESS_AUTHORIZATION_PLAN.md)
    — closed productization authorization slice, reference only.
-11. This file.
-12. Previous calculator slice plans (closed, reference only):
+12. This file.
+13. Previous calculator slice plans (closed, reference only):
    - `docs/archive/handoffs/SLICE_GOOD_CALCULATOR_FINAL_AUDIT_PLAN.md` (step 8)
    - `docs/archive/handoffs/SLICE_WALL_CORRIDOR_SURFACE_VALUE_PINNING_PLAN.md` (step 7b)
    - `docs/archive/handoffs/SLICE_MIXED_FLOOR_WALL_EDGE_CASE_HARDENING_PLAN.md` (step 7)
-13. Run `pnpm calculator:gate:current` before calculator runtime
+14. Run `pnpm calculator:gate:current` before calculator runtime
    changes. Productization slices should add their own focused app/API
    tests and use `pnpm check` when they touch shared contracts.

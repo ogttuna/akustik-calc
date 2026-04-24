@@ -9,8 +9,8 @@ wall systems by modeling the missing one-side vs both-sides resilient
 bar dimension before any new exact or benchmark promotion.
 
 This slice exists because the current source corpus already contains
-official timber rows that are blocked primarily by one missing input:
-resilient-bar side count.
+official timber rows that are blocked primarily by one missing modeled
+input: resilient-bar side count.
 
 ## Non-Goals
 
@@ -34,6 +34,19 @@ ask:
 
 The source rows already exist in-repo. The missing piece is explicit
 model/input support, not more speculative formula work.
+
+The planning refresh on `2026-04-24` rechecked both implementation and
+official-source evidence and did not surface a better next move:
+
+- the active shared/workbench surfaces still expose `connectionType`,
+  `studType`, and `studSpacingMm`, but not resilient-bar side count,
+- Knauf GB still publishes EN-TP-RB1 `Rw 56 dB` vs EN-TP-RB2 `Rw 59 dB`
+  on the same timber family,
+- British Gypsum still publishes A046005 `Rw 55 dB` vs A046006 `Rw 58 dB`
+  on the same one-side vs both-sides family split.
+
+So the bottleneck is not missing evidence and not formula-family scope.
+It is one missing modeled dimension.
 
 ## Current Baseline
 
@@ -80,14 +93,75 @@ Outcome:
 
 Status: NEXT.
 
-Add the missing resilient-bar side-count dimension explicitly:
+Add the missing resilient-bar side-count dimension explicitly.
 
-- extend the relevant shared wall context/input model,
-- wire the workbench state and input surface,
-- keep old default behavior stable when the new field is unset,
-- add targeted tests for store/context propagation and route selection.
+#### Gate B design contract
+
+Use the same explicit-enum style already used by the nearby wall context
+fields.
+
+Preferred shape:
+
+- shared enum posture: `auto | one_side | both_sides`
+- legacy-safe behavior:
+  - omitted / `auto` => current side-count-blind route stays active
+  - explicit `one_side` or `both_sides` => route selection is allowed to
+    distinguish the source-backed lane
+
+#### Gate B write scope
+
+These files currently carry the relevant wall-context path and should
+move together:
+
+1. `packages/shared/src/domain/airborne-context.ts`
+   - add the new enum/schema/type export
+   - keep parse behavior backward-compatible
+2. `apps/web/features/workbench/workbench-store.ts`
+   - add state, setter, scenario snapshot persistence, preset loading,
+     and reset/default handling
+3. `apps/web/features/workbench/preset-definitions.ts`
+   - extend `PresetAirborneDefaults`
+   - keep current presets unchanged unless a preset truly owns explicit
+     side-count semantics
+4. `apps/web/features/workbench/workbench-shell.tsx`
+   - pass the field into the live airborne context used by
+     `evaluateScenario`
+5. `apps/web/features/workbench/simple-workbench-shell.tsx`
+   - pass the field through the guided/simple shell path as well
+6. `apps/web/features/workbench/simple-workbench-route-panel.tsx`
+   - add the explicit control only in the framed-wall context area where
+     the related wall route inputs already live
+
+#### Gate B acceptance tests
+
+At minimum, Gate B must land with:
+
+1. shared-schema parse contract
+   - the field is now recognized instead of stripped
+   - unknown values still fail closed
+2. workbench store persistence contract
+   - state + setter exist
+   - snapshot save/load round-trips the field
+   - reset/default posture is stable
+3. preset propagation contract
+   - existing presets keep current behavior when the new field is absent
+   - any future explicit resilient preset can carry the field end-to-end
+4. shell propagation contract
+   - both workbench shells pass the field into the runtime context
+5. route/card regression contract
+   - `auto` preserves the current blind behavior
+   - explicit side-count values are observable in the selected route if
+     the route changes in Gate B
+
+#### Gate B stop condition
+
+Stop Gate B once explicit side-count data can reach the runtime
+honestly. Do not retune values inside Gate B unless the propagation work
+itself makes a route/value change unavoidable and fully pinned.
 
 ### Gate C - exact/benchmark promotion decision
+
+Status: BLOCKED ON GATE B.
 
 For every current resilient timber row, choose one honest posture:
 
@@ -99,6 +173,14 @@ For every current resilient timber row, choose one honest posture:
 Any user-visible value change must be pinned through engine and web
 VALUE tests in the same gate.
 
+Gate C execution order:
+
+1. review the four current RB1/RB2 timber rows against the landed
+   side-count model,
+2. prove whether board mapping + topology are exact-representable,
+3. only then change classification or runtime route/value behavior,
+4. pin every user-visible value change in both engine and web tests.
+
 ## Initial Candidate Rows
 
 - `knauf_gb_en_tp_89_38_rb1_2x15_soundshield_plus_90_fill_lab_2026`
@@ -106,12 +188,24 @@ VALUE tests in the same gate.
 - `british_gypsum_a046005_timber_rb1_2x12p5_soundbloc_50apr_lab_2026`
 - `british_gypsum_a046006_timber_rb2_2x12p5_soundbloc_50apr_lab_2026`
 
+## Immediate Next Steps
+
+1. Run Gate B shared-schema/store/shell plumbing with a legacy-stable
+   `auto` posture.
+2. Add the explicit workbench control in the existing framed-wall route
+   context UI.
+3. Prove end-to-end propagation in focused tests.
+4. Re-run `pnpm calculator:gate:current`.
+5. If Gate B stays green, start Gate C on the four current RB1/RB2
+   timber rows only.
+
 ## Validation
 
 Minimum validation for the slice:
 
-- targeted side-count contract/audit tests,
-- `pnpm calculator:gate:current`,
+- run `pnpm calculator:gate:current` before and after touching the
+  slice,
+- keep the targeted side-count contract/audit tests green,
 - `git diff --check`.
 
 If Gate B or Gate C changes any user-visible route, output card, or
@@ -125,6 +219,7 @@ runtime value, also run:
 
 - resilient-bar side count is an explicit modeled dimension, not an
   implicit guess,
+- legacy `auto` / unset behavior stays honest and executable,
 - current source-backed timber rows state clearly which are exact,
   narrower benchmark, or still blocked,
 - user-visible route/card behavior for promoted resilient timber rows is

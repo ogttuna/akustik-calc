@@ -5,7 +5,7 @@ Start here before changing calculator behavior.
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-04-23_WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS_CLOSEOUT_HANDOFF.md`
+2. `docs/calculator/CHECKPOINT_2026-04-24_RESILIENT_SIDE_COUNT_GATE_B_READY_HANDOFF.md`
 3. `docs/calculator/CURRENT_STATE.md`
 4. `docs/calculator/SLICE_WALL_RESILIENT_BAR_SIDE_COUNT_MODELING_PLAN.md`
 5. `docs/calculator/CALCULATION_MODEL_AND_VALIDATION.md`
@@ -29,7 +29,15 @@ plan.
   `wall-resilient-bar-side-count-input-contract.test.ts` proves the
   shared schema/store still expose `connectionType`/`studType`/
   `studSpacingMm` but not resilient-bar side count. The next decision is
-  Gate B explicit input/model plumbing, not a formula retune. Broad
+  Gate B explicit input/model plumbing, not a formula retune. The
+  official-source reason remains active: the current corpus already
+  carries source-backed RB1/RB2 deltas for the common timber resilient
+  rows (Knauf GB EN-TP-RB1 56 dB vs EN-TP-RB2 59 dB; British Gypsum
+  A046005 55 dB vs A046006 58 dB), so the missing dimension is explicit
+  side count rather than a lack of evidence. Gate B therefore means:
+  add an explicit resilient-bar side-count enum with a legacy-stable
+  `auto` posture, plumb it through shared schema/store/preset/shell/UI,
+  and prove propagation before any exact/benchmark promotion. Broad
   `pnpm check` revalidation on `2026-04-24` is green again after two
   test-only hardening fixes: the side-count input contract now asserts
   schema blindness through parse behavior instead of `.keyof()` on the
