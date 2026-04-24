@@ -31,17 +31,24 @@ Important scope note:
 
 - The active selected slice is no longer
   `dataholz_clt_calibration_tightening`; after the 2026-04-23 broad
-  revalidation the living triangle selects calculator accuracy/coverage
-  work (`wall_formula_family_widening_v1`). Productization slices
+  revalidation the living triangle selected calculator accuracy/coverage
+  work on `wall_formula_family_widening_v1`, then
+  `wall_timber_lightweight_source_corpus_v1`, and both slices are now
+  closed. The current selected slice is
+  `wall_resilient_bar_side_count_modeling_v1`. Productization slices
   `server_backed_project_storage_v1`,
   `project_access_authorization_v1`, `auth_session_hardening_v1`, and
   `team_access_model_v1` are closed; `project_access_policy_route_integration_v1`
   is deferred.
 - `good_calculator_final_audit_v1` closed without reopening any
   source-gated calculator family. `wall_formula_family_widening_v1`
-  may improve formula-owned wall coverage/accuracy, but it must keep
-  this blocked-source ledger fail-closed unless fresh source evidence
-  explicitly justifies a reopen.
+  then also closed without reopening any blocked family: it clarified
+  the user-visible timber dynamic route, but kept runtime unchanged
+  because the source corridor stayed too broad. The new
+  `wall_resilient_bar_side_count_modeling_v1` slice may expand common
+  wall source-backed coverage, but it must keep this blocked-source ledger
+  fail-closed unless fresh source evidence explicitly justifies a
+  reopen.
 - The detailed floor/source queue below is retained as source-gap
   history and blocked-family context. It does not override
   `CURRENT_STATE.md`, `MASTER_PLAN.md`, or

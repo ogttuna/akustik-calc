@@ -11,6 +11,7 @@ import { coalesceAdjacentSameMaterialLayers } from "./airborne-topology";
 import { buildRatingsFromCurve } from "./curve-rating";
 import { clamp, round1 } from "./math";
 import { resolveMaterial } from "./material-catalog";
+import { WALL_TIMBER_LIGHTWEIGHT_EXACT_IMPORT_ROWS } from "./wall-timber-lightweight-source-corpus";
 
 type VerifiedAirborneCatalogMode = "field" | "lab";
 
@@ -161,7 +162,25 @@ function approximateFieldCompanionEntry(
   };
 }
 
+function verifiedEntryFromTimberLightweightSourceRow(
+  row: (typeof WALL_TIMBER_LIGHTWEIGHT_EXACT_IMPORT_ROWS)[number]
+): VerifiedAirborneCatalogEntry {
+  return verifiedEntry(
+    row.id,
+    row.label,
+    row.sourceUrl,
+    "lab",
+    "Rw",
+    row.expectedRw,
+    row.airborneContext,
+    row.layers.map((layer) => [layer.materialId, layer.thicknessMm] as const)
+  );
+}
+
 const VERIFIED_AIRBORNE_CATALOG: ResolvedVerifiedAirborneCatalogEntry[] = [
+  ...WALL_TIMBER_LIGHTWEIGHT_EXACT_IMPORT_ROWS.map((row) =>
+    verifiedEntryFromTimberLightweightSourceRow(row)
+  ),
   verifiedEntry(
     "knauf_sqp2a_nil_92_primary_2026",
     "Knauf SQP.2A Quietstud 92 Nil",

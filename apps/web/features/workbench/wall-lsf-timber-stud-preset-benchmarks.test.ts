@@ -3,13 +3,23 @@
 //
 // Each case pins:
 //  - the canonical Rw the engine produces when the preset's
-//    `airborneDefaults` are folded into the real workbench default
-//    lab context. `light_steel_stud_wall` locks onto the Knauf
+//    `airborneDefaults` are folded into the no-calculator preset-matrix
+//    lab context. This file is intentionally the screening-side drift
+//    guard, not the live user-visible workbench path. Gate B pins the
+//    live dynamic route in
+//    `wall-live-dynamic-preset-route-card-matrix.test.ts`.
+//    `light_steel_stud_wall` locks onto the Knauf
 //    primary framed-wall corpus (exact catalog row
 //    `knauf_lsf_2x2_12_5_70_glasswool_lab_416702_2026`, Rw=55).
-//    `timber_stud_wall` has no exact wall catalog row today, so its
-//    Rw is formula-owned and the test pins the engine's current
-//    output as a drift guard.
+//    `timber_stud_wall` still has no exact wall catalog row for this
+//    preset topology, so its Rw remains formula-owned and the test
+//    pins the engine's current output as a drift guard. Gate C later
+//    imported two narrower direct-timber exact rows, but they do not
+//    topologically match the preset's double-board + rockwool + air-gap
+//    stack. The live workbench default currently uses
+//    `calculator: "dynamic"` and Gate B now proves that the live
+//    workbench preset path uses that dynamic surface; this file remains
+//    the screening drift guard so both surfaces stay named.
 //  - the supported / unsupported output set under lab, field, and
 //    building airborne contexts (cross-referenced against
 //    wall-full-preset-contract-matrix.test.ts and
@@ -42,8 +52,9 @@ const WALL_OUTPUTS: readonly RequestedOutputId[] = [
 ];
 
 // Mirror the workbench-shell `liveAirborneContext` composition with
-// a preset's `airborneDefaults` folded in — that is what happens the
-// moment a user clicks the preset chip.
+// a preset's `airborneDefaults` folded in, but deliberately leave the
+// calculator unset so this file pins the no-calculator preset-matrix
+// surface.
 function composeLabContextForPreset(presetId: PresetId): AirborneContext {
   const preset = getPresetById(presetId);
   const defaults = preset.airborneDefaults ?? {};
@@ -172,7 +183,7 @@ const BENCHMARKS: readonly ExpectedBenchmark[] = [
     benchmarkRw: 31,
     toleranceDb: 0,
     note:
-      "Two 12.5 mm gypsum boards + 50 mm rockwool + 50 mm air gap + two 12.5 mm gypsum boards on a 600 mm wood-stud frame with line-connected airtightness=good. No exact catalog row exists today, so Rw is formula-owned (frame-coupling lane in dynamic-airborne.ts) and this pin acts as a drift guard for future engine changes. The current engine output (31 dB) is lower than manufacturer-reported field values for similar stacks (~45-50 dB) — that accuracy gap is a real finding for later formula widening work (master-plan step 6, conditional) and is NOT in scope for this slice. The drift guard here simply captures the present engine behaviour."
+      "Two 12.5 mm gypsum boards + 50 mm rockwool + 50 mm air gap + two 12.5 mm gypsum boards on a 600 mm wood-stud frame with line-connected airtightness=good. Narrower direct-timber exact rows now exist, but none matches this preset topology exactly, so this no-calculator / screening-seed pin still acts as a drift guard for future engine changes. The same stack under calculator: dynamic currently produces a higher low-confidence framed-wall candidate, so wall_formula_family_widening_v1 had to audit both surfaces before changing visible timber-stud behavior."
   }
 ];
 

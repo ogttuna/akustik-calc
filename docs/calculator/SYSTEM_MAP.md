@@ -257,20 +257,28 @@ validation path before and after a refactor.
 As of `2026-04-23`, the calculator final audit is closed and the broad
 repo validation is green. Server-backed project storage,
 project/proposal owner authorization, auth-session hardening, and the pure
-team-access policy model are all closed. The active risk has moved back
-to calculator accuracy/coverage: the next selected slice is
-`wall_formula_family_widening_v1`, starting with an audit/anchor matrix
-before any wall formula value changes. Productization route integration
-is deferred, not cancelled.
+team-access policy model are all closed. The wall formula-family slice
+has now also closed honestly no-runtime: Gate A named the timber
+screening vs dynamic surfaces, Gate B proved the live workbench uses the
+dynamic route, and Gate C kept runtime unchanged because the current
+official timber rows define only a broad corridor. The source-corpus
+follow-up then landed two direct timber exact imports. The active risk
+is now the missing one-side vs both-sides resilient-bar model/input for
+common lightweight walls: the next selected slice is
+`wall_resilient_bar_side_count_modeling_v1`. Productization
+route integration is deferred, not cancelled.
 
 Current hotspots:
 
 - selected calculator re-entry anchors:
-  - `docs/calculator/SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md`
-  - `docs/calculator/CHECKPOINT_2026-04-23_BROAD_REVALIDATION_CALCULATOR_REFOCUS_HANDOFF.md`
-  - `packages/engine/src/post-team-access-model-calculator-refocus-next-slice-selection-contract.test.ts`
+  - `docs/calculator/SLICE_WALL_RESILIENT_BAR_SIDE_COUNT_MODELING_PLAN.md`
+  - `docs/calculator/CHECKPOINT_2026-04-23_WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS_CLOSEOUT_HANDOFF.md`
+  - `packages/engine/src/post-wall-timber-lightweight-source-corpus-v1-next-slice-selection-contract.test.ts`
+  - `docs/calculator/SLICE_WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS_PLAN.md`
   - `apps/web/features/workbench/wall-lsf-timber-stud-preset-benchmarks.test.ts`
   - `apps/web/features/workbench/wall-field-continuation-completeness-matrix.test.ts`
+  - `apps/web/features/workbench/wall-live-dynamic-preset-route-card-matrix.test.ts`
+  - `apps/web/features/workbench/wall-direct-timber-exact-route-card-matrix.test.ts`
   - `packages/engine/src/coverage-grid-consistency.test.ts`
 - selected productization anchors:
   - `apps/web/lib/project-access-policy.ts`

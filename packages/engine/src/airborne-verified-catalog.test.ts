@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import { getDefaultMaterialCatalog, resolveMaterial } from "./material-catalog";
 import { findVerifiedAirborneAssemblyMatch } from "./airborne-verified-catalog";
 import { calculateAssembly } from "./calculate-assembly";
+import { WALL_TIMBER_LIGHTWEIGHT_EXACT_IMPORT_ROWS } from "./wall-timber-lightweight-source-corpus";
 
 describe("airborne verified catalog anchors", () => {
   it("anchors exact lab rows to the official Rw value", () => {
@@ -32,6 +33,33 @@ describe("airborne verified catalog anchors", () => {
     expect(result.metrics.estimatedRwDb).toBe(55);
     expect(result.warnings.some((warning: string) => /exact airborne lab match active/i.test(warning))).toBe(true);
   });
+
+  it.each(WALL_TIMBER_LIGHTWEIGHT_EXACT_IMPORT_ROWS)(
+    "anchors landed direct timber exact row $id to the official lab Rw",
+    (row) => {
+      const catalog = getDefaultMaterialCatalog();
+      const layers = row.layers.map((layer) => {
+        const material = resolveMaterial(layer.materialId, catalog);
+
+        return {
+          ...layer,
+          material,
+          surfaceMassKgM2: (material.densityKgM3 * layer.thicknessMm) / 1000
+        };
+      });
+      const match = findVerifiedAirborneAssemblyMatch(layers, row.airborneContext);
+      const result = calculateAssembly(row.layers, {
+        airborneContext: row.airborneContext,
+        calculator: "dynamic",
+        targetOutputs: ["Rw"]
+      });
+
+      expect(match?.id).toBe(row.id);
+      expect(result.ratings.iso717.Rw).toBe(row.expectedRw);
+      expect(result.metrics.estimatedRwDb).toBe(row.expectedRw);
+      expect(result.warnings.some((warning: string) => /exact airborne lab match active/i.test(warning))).toBe(true);
+    }
+  );
 
   it("anchors exact Xella masonry lab rows to the official Rw value", () => {
     const catalog = getDefaultMaterialCatalog();

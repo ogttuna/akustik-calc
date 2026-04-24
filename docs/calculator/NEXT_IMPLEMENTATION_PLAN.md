@@ -5,8 +5,10 @@ focused, agent-resume friendly. For the strategic picture read
 [MASTER_PLAN.md](./MASTER_PLAN.md). For what is stable right now
 read [CURRENT_STATE.md](./CURRENT_STATE.md).
 
-Last reviewed: 2026-04-23 (broad revalidation green;
-`wall_formula_family_widening_v1` selected).
+Last reviewed: 2026-04-24 (`wall_resilient_bar_side_count_modeling_v1`
+Gate A landed with no runtime change; focused gate + broad revalidation
+are green after test-only hardening; Gate B input/model plumbing is
+still next).
 
 ---
 
@@ -35,40 +37,74 @@ For every next slice decision:
 
 ## Now
 
-- **Active slice**: `wall_formula_family_widening_v1`
-  (calculator accuracy/coverage re-entry). Selected `2026-04-23`
-  after a green broad revalidation and the explicit priority reset to
-  calculation accuracy + defensible coverage first.
+- **Active slice**: `wall_resilient_bar_side_count_modeling_v1`
+  (common resilient framed-wall input/model expansion). Selected
+  `2026-04-23` immediately after
+  `wall_timber_lightweight_source_corpus_v1` closed.
 - **Planning surface**:
-  [SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md](./SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md).
+  [SLICE_WALL_RESILIENT_BAR_SIDE_COUNT_MODELING_PLAN.md](./SLICE_WALL_RESILIENT_BAR_SIDE_COUNT_MODELING_PLAN.md).
 - **Calculator runtime posture**: `good_calculator_final_audit_v1`
   is closed. The final audit reconciled `MASTER_PLAN.md` §3/§8,
   added `coverage-grid-consistency.test.ts`, verified C1-C6 with
   executable assertions, added the post-final-audit contract, and
   opened the productization roadmap. The archived plan lives at
   `docs/archive/handoffs/SLICE_GOOD_CALCULATOR_FINAL_AUDIT_PLAN.md`.
-- **Next implementation action**: author the wall formula-family
-  audit/anchor matrix before changing runtime values. Pin current
-  `timber_stud_wall`, LSF, double-leaf empty-cavity, and lined-cavity
-  outputs with trace/provenance; prove exact/catalog/benchmark
-  precedence and negative cases; only then decide whether a timber-stud
-  or double-leaf correction is defensible. `project_access_policy_route_integration_v1`
-  is deferred, not cancelled, because it does not improve acoustic
-  calculation accuracy or coverage.
+- **Next implementation action**: execute Gate B explicit
+  input/model plumbing for
+  `wall_resilient_bar_side_count_modeling_v1`. Gate A already landed:
+  `packages/engine/src/wall-resilient-bar-side-count-blind-audit.test.ts`
+  pins the current side-count-blind engine posture for the four
+  official RB1/RB2 timber rows, while
+  `apps/web/features/workbench/wall-resilient-bar-side-count-route-card-matrix.test.ts`
+  and
+  `apps/web/features/workbench/wall-resilient-bar-side-count-input-contract.test.ts`
+  pin the current workbench route/card collapse and prove the shared
+  schema/store still lack a resilient-bar side-count dimension. The
+  just-closed
+  `wall_timber_lightweight_source_corpus_v1` slice landed:
+  `packages/engine/src/wall-timber-lightweight-source-corpus.ts`,
+  `wall-timber-lightweight-source-corpus-contract.test.ts`,
+  `wall-timber-lightweight-source-audit.test.ts`,
+  `airborne-verified-catalog.test.ts`, and
+  `apps/web/features/workbench/wall-direct-timber-exact-route-card-matrix.test.ts`.
+  That slice closed with 2 direct timber rows promoted to
+  `exact_import_landed`, 5 resilient/proprietary rows held as
+  benchmark-only, and 2 linked lightweight steel rows held as
+  holdout-only. The next honest move is still not a timber formula
+  retune: it is to model the missing one-side vs both-sides
+  resilient-bar dimension that currently keeps four official timber
+  rows from becoming exact or narrower benchmark lanes. Gate A already
+  proved that today the wall context can express `connectionType` and
+  `studType`, but not resilient-bar side count, so those rows remain
+  intentionally non-exact until Gate B lands. Broad `pnpm check`
+  revalidation on `2026-04-24` changed no calculator values; it only
+  hardened two tests so the suite stays truthful under full load:
+  the shared-schema side-count contract now asserts parse behavior
+  instead of `.keyof()` on the exported `ZodType`, and the heavy
+  `calculate-assembly` split-cavity field swap invariant now runs on a
+  representative small/mid/large gap matrix rather than the full 4x4
+  asymmetry grid.
+  `project_access_policy_route_integration_v1` is deferred, not
+  cancelled, because it does not improve acoustic calculation accuracy
+  or coverage.
 
 ## Latest Closed Slices
 
 See [CURRENT_STATE.md](./CURRENT_STATE.md) "Latest Closed Slices"
-table. `good_calculator_final_audit_v1` is the latest closed
-calculator slice and has an explicit post-contract test.
+table. `wall_timber_lightweight_source_corpus_v1` is now the latest
+closed calculator slice and has an explicit post-contract test.
 
 ## Deferred Follow-Up Tracks
 
 Explicitly carried forward by the final-audit contract:
 
-Active now, not deferred: `wall_formula_family_widening_v1`.
-The current slice starts with an audit/anchor matrix before any runtime
-formula value changes.
+Just closed: `wall_timber_lightweight_source_corpus_v1`.
+Gate A authored the typed source corpus, Gate B proved all 9 rows stay
+inside the defended current-engine corridor, and Gate C imported the 2
+direct timber rows as exact lab anchors without changing the live
+double-board timber preset route. The remaining common-wall gap is now
+explicit: resilient-bar side count is not yet modeled, so four official
+timber rows remain benchmark-only.
 
 1. **`dynamic_airborne_split_refactor_v2`** — composer injection
    to finish the `dynamic-airborne.ts` split (last ~3200 lines +
@@ -116,28 +152,30 @@ Every slice under this plan obeys:
 
 ## Reading Path On Resume
 
-1. [CHECKPOINT_2026-04-23_BROAD_REVALIDATION_CALCULATOR_REFOCUS_HANDOFF.md](./CHECKPOINT_2026-04-23_BROAD_REVALIDATION_CALCULATOR_REFOCUS_HANDOFF.md)
-   — broad test revalidation and calculator accuracy/coverage refocus.
+1. [CHECKPOINT_2026-04-23_WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-23_WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS_CLOSEOUT_HANDOFF.md)
+   — source-corpus closeout and resilient side-count next slice selection.
 2. [CURRENT_STATE.md](./CURRENT_STATE.md)
-3. [SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md](./SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md)
+3. [SLICE_WALL_RESILIENT_BAR_SIDE_COUNT_MODELING_PLAN.md](./SLICE_WALL_RESILIENT_BAR_SIDE_COUNT_MODELING_PLAN.md)
 4. [MASTER_PLAN.md](./MASTER_PLAN.md) §3 (state grid) + §4 (master
    sequence) + §6 (accuracy preservation contract) + §8
    (completion signals)
-5. [CHECKPOINT_2026-04-23_TEAM_ACCESS_MODEL_HANDOFF.md](./CHECKPOINT_2026-04-23_TEAM_ACCESS_MODEL_HANDOFF.md)
+5. [SLICE_WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS_PLAN.md](./SLICE_WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS_PLAN.md)
+   — closed slice reference; Gate A/B/C landed and direct-timber exact import is closed.
+6. [CHECKPOINT_2026-04-23_TEAM_ACCESS_MODEL_HANDOFF.md](./CHECKPOINT_2026-04-23_TEAM_ACCESS_MODEL_HANDOFF.md)
    — closed team-access policy model handoff, reference only.
-6. [SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md](./SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md)
+7. [SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md](./SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md)
    — deferred productization route-integration slice, reference only.
-7. [SLICE_TEAM_ACCESS_MODEL_PLAN.md](./SLICE_TEAM_ACCESS_MODEL_PLAN.md)
+8. [SLICE_TEAM_ACCESS_MODEL_PLAN.md](./SLICE_TEAM_ACCESS_MODEL_PLAN.md)
    — closed team-access policy model slice, reference only.
-8. [SLICE_AUTH_SESSION_HARDENING_PLAN.md](./SLICE_AUTH_SESSION_HARDENING_PLAN.md)
+9. [SLICE_AUTH_SESSION_HARDENING_PLAN.md](./SLICE_AUTH_SESSION_HARDENING_PLAN.md)
    — closed auth-session hardening slice, reference only.
-9. [SLICE_PROJECT_ACCESS_AUTHORIZATION_PLAN.md](./SLICE_PROJECT_ACCESS_AUTHORIZATION_PLAN.md)
+10. [SLICE_PROJECT_ACCESS_AUTHORIZATION_PLAN.md](./SLICE_PROJECT_ACCESS_AUTHORIZATION_PLAN.md)
    — closed productization authorization slice, reference only.
-10. This file.
-11. Previous calculator slice plans (closed, reference only):
+11. This file.
+12. Previous calculator slice plans (closed, reference only):
    - `docs/archive/handoffs/SLICE_GOOD_CALCULATOR_FINAL_AUDIT_PLAN.md` (step 8)
    - `docs/archive/handoffs/SLICE_WALL_CORRIDOR_SURFACE_VALUE_PINNING_PLAN.md` (step 7b)
    - `docs/archive/handoffs/SLICE_MIXED_FLOOR_WALL_EDGE_CASE_HARDENING_PLAN.md` (step 7)
-12. Run `pnpm calculator:gate:current` before calculator runtime
+13. Run `pnpm calculator:gate:current` before calculator runtime
    changes. Productization slices should add their own focused app/API
    tests and use `pnpm check` when they touch shared contracts.

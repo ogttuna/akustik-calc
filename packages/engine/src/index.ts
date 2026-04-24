@@ -29,3 +29,4 @@ export * from "./impact-validation-regime";
 export * from "./material-catalog";
 export * from "./parse-layer-spec";
 export * from "./target-output-support";
+export * from "./wall-timber-lightweight-source-corpus";

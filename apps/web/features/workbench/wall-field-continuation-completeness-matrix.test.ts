@@ -17,9 +17,14 @@
 //      live; matrix reaches full breadth.
 //
 // The preset's `airborneDefaults` (studType, studSpacingMm,
-// connectionType) are folded into the composed context so LSF
-// and timber stud hit their framed-wall family lanes exactly as
-// the workbench would when the user clicks the preset chip.
+// connectionType) are folded into the composed context. This file
+// intentionally calls `evaluateScenario` without a calculator override,
+// so it pins the no-calculator / screening-seed preset-matrix surface.
+// Gate B of `wall_formula_family_widening_v1` now proves that the live
+// workbench preset path uses `calculator: "dynamic"` and pins that
+// user-visible route separately in
+// `wall-live-dynamic-preset-route-card-matrix.test.ts`. This file stays
+// screening-only so both surfaces remain explicit.
 //
 // This is the file that turns ACCURACY from "invariants hold" to
 // "invariants hold AND every cell's exact value is contract".
@@ -33,8 +38,9 @@ import { evaluateScenario } from "./scenario-analysis";
 const WALL_OUTPUTS = ["Rw", "R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "STC", "C", "Ctr"] as const;
 
 // Mirror the workbench-shell `liveAirborneContext` composition with
-// each preset's `airborneDefaults` folded in — that is what happens
-// the moment a user clicks the preset chip.
+// each preset's `airborneDefaults` folded in. The calculator is left
+// unset by design so this remains the no-calculator preset-matrix
+// surface, not the live dynamic workbench path.
 function composeContextForPreset(
   presetId: PresetId,
   contextMode: AirborneContext["contextMode"]
@@ -344,10 +350,11 @@ describe("wall field continuation completeness matrix", () => {
           dnW: 47, dnA: 45.8, dnTw: 49, dnTA: 48.3, dnC: -1.2
         }
       },
-      // --- timber_stud_wall (formula-owned frame-coupling lane;
-      // engine Rw=31 is lower than manufacturer field data ~45-50
-      // for similar stacks — flagged as accuracy gap parked for
-      // `wall_formula_family_widening_v1` step 6)
+      // --- timber_stud_wall (no-calculator / screening-seed surface;
+      // Rw=31 is a drift guard. The same stack under `calculator:
+      // "dynamic"` currently gives a higher low-confidence framed-wall
+      // candidate, so the active widening slice must audit both before
+      // changing either surface.)
       {
         presetId: "timber_stud_wall",
         context: "element_lab",

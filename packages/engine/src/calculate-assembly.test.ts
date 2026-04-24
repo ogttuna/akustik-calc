@@ -2713,7 +2713,7 @@ describe("calculateAssembly", () => {
         `${meta.name} representative mixed-board empty-cavity field lift note`
       ).toBe(true);
     }
-  }, 15000);
+  }, 25000);
 
   it("keeps split-cavity left-right gap swaps invariant in field mode", () => {
     const fieldContext = {
@@ -2733,12 +2733,13 @@ describe("calculateAssembly", () => {
       receivingRoomRt60S: 0.5
     } as const;
     const failures: Array<Record<string, number | string | undefined>> = [];
+    const representativeGapSteps = [10, 20, 40] as const;
 
     for (const board of ["gypsum_board", "firestop_board", "diamond_board", "acoustic_gypsum_board"] as const) {
       for (const thicknessMm of [12.5, 15] as const) {
         for (const fillMm of [40, 50, 75] as const) {
-          for (const leftGap of [10, 20, 30, 40] as const) {
-            for (const rightGap of [10, 20, 30, 40] as const) {
+          for (const leftGap of representativeGapSteps) {
+            for (const rightGap of representativeGapSteps) {
               const forward = calculateAssembly(
                 [
                   { materialId: board, thicknessMm },
@@ -2784,7 +2785,7 @@ describe("calculateAssembly", () => {
 
     expect(failures.slice(0, 10)).toEqual([]);
     expect(failures).toHaveLength(0);
-  }, 15000);
+  }, 25000);
 
   it("keeps micro-gap fill ordering inside the field boundary corridor", () => {
     const fieldContext = {

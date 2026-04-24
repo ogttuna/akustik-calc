@@ -276,7 +276,8 @@ const GRID_ROWS: readonly GridRowExpectation[] = [
     labelNeedle: "Timber stud",
     statusLabel: "Formula",
     evidenceTier: "formula",
-    deferredReason: "Formula-owned timber-stud accuracy gap is parked for wall_formula_family_widening_v1.",
+    deferredReason:
+      "Timber-stud runtime tightening stays parked after wall_timber_lightweight_source_corpus_v1 closed; the current selected follow-up is wall_resilient_bar_side_count_modeling_v1 because resilient-bar side count is the next source-backed common-wall gap.",
     evidencePaths: ["apps/web/features/workbench/wall-lsf-timber-stud-preset-benchmarks.test.ts"]
   },
   {

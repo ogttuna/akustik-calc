@@ -5,9 +5,9 @@ Start here before changing calculator behavior.
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-04-23_BROAD_REVALIDATION_CALCULATOR_REFOCUS_HANDOFF.md`
+2. `docs/calculator/CHECKPOINT_2026-04-23_WALL_TIMBER_LIGHTWEIGHT_SOURCE_CORPUS_CLOSEOUT_HANDOFF.md`
 3. `docs/calculator/CURRENT_STATE.md`
-4. `docs/calculator/SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md`
+4. `docs/calculator/SLICE_WALL_RESILIENT_BAR_SIDE_COUNT_MODELING_PLAN.md`
 5. `docs/calculator/CALCULATION_MODEL_AND_VALIDATION.md`
 
 Use the long-form plan files only for backlog context after reading the current
@@ -16,15 +16,30 @@ plan.
 ## Current Workflow
 
 - current selected slice:
-  `wall_formula_family_widening_v1`
+  `wall_resilient_bar_side_count_modeling_v1`
 - current first decision inside the slice:
-  continue `docs/calculator/SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md`;
-  broad revalidation is green, the calculator accuracy/coverage priority
-  is reasserted, and the first implementation action is a wall formula
-  family audit/anchor matrix before any runtime formula value changes
+  continue `docs/calculator/SLICE_WALL_RESILIENT_BAR_SIDE_COUNT_MODELING_PLAN.md`;
+  Gate A is now landed without runtime change. The engine audit
+  `wall-resilient-bar-side-count-blind-audit.test.ts` proves the four
+  official RB1/RB2 timber rows currently collapse onto the same
+  side-count-blind outputs despite published 3 dB lab deltas. The web
+  route/card matrix
+  `wall-resilient-bar-side-count-route-card-matrix.test.ts` pins the
+  same user-visible collapse, and
+  `wall-resilient-bar-side-count-input-contract.test.ts` proves the
+  shared schema/store still expose `connectionType`/`studType`/
+  `studSpacingMm` but not resilient-bar side count. The next decision is
+  Gate B explicit input/model plumbing, not a formula retune. Broad
+  `pnpm check` revalidation on `2026-04-24` is green again after two
+  test-only hardening fixes: the side-count input contract now asserts
+  schema blindness through parse behavior instead of `.keyof()` on the
+  exported `ZodType`, and the heavy `calculate-assembly` split-cavity
+  field swap audit now uses a representative asymmetry matrix so the
+  full single-worker suite does not hit a Vitest worker timeout
 - do not reopen `GDMTXA04A`, `C11c`, raw open-box/open-web, heavy-concrete
   parity or formula scope, reinforced-concrete reopening, wall-selector
-  behavior, or timber-stud widening from nearby green tests alone
+  behavior, timber-stud widening, or resilient-row exact promotion from
+  nearby green tests alone
 - if a slice closes, update the current plan, current state, and the relevant
   checkpoint/handoff note together
 - keep planning-contract tests in sync with the selected next slice
