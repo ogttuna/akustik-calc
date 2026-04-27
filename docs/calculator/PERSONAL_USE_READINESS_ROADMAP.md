@@ -36,7 +36,8 @@ DynEcho is personal-use ready when these conditions hold:
 
 ### 1. Heavy-Core / Concrete Wall Lane
 
-Status: selected next.
+Status: Gate B no-runtime audit contract landed; runtime tightening
+still pending.
 
 Gate A selected `wall.concrete_heavy_core_screening.field` as the
 highest-ROI runtime target. It is common, currently screening-tier, and
@@ -46,14 +47,19 @@ confidence.
 
 Gate B starts from
 [SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md](./SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md).
-The first step is a no-runtime source/formula and implementation-path
-audit that keeps the generated dynamic candidate, the workbench
+The first no-runtime audit contract is now
+`packages/engine/src/wall-heavy-core-concrete-gate-b-audit-contract.test.ts`.
+It keeps the generated dynamic candidate, the workbench
 `concrete_wall` screening preset, selector value pins, and deep-hybrid
-swap guards separate.
+swap guards separate and pins the source/formula audit result: no exact
+catalog row, no direct external benchmark match in the current audit,
+and no topology-specific tolerance for the selected concrete lining
+stack. Evidence remains `screening`.
 
-Required before implementation:
+Required before runtime implementation:
 
-- identify the defensible source/formula/family rule;
+- identify a defensible source/formula/family rule or explicitly close
+  Gate B no-runtime;
 - define expected `R'w`, `Dn,w`, `DnT,w`, and `DnT,A` support behavior;
 - define origin/confidence labels and warning/card posture;
 - add focused engine tests and web tests if the visible cards change.

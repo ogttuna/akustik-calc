@@ -6,6 +6,10 @@ Status: NEXT Gate B subplan for
 Selected: 2026-04-27 by
 `realistic-layer-combination-coverage-cartography.test.ts`
 
+Last implementation reconciliation: 2026-04-27. Gate B no-runtime
+audit and source/formula evidence contract have landed; no runtime
+tightening has landed for this lane yet.
+
 ## Objective
 
 Tighten the common concrete / heavy-core wall lane without making a
@@ -19,7 +23,7 @@ to a narrower formula/family/benchmark lane with defensible evidence or
 leave it explicitly screening while adding better guards and user-facing
 honesty.
 
-## First Step
+## First Step - Landed No-Runtime
 
 Do a source/formula and implementation-path audit before runtime math
 changes.
@@ -36,6 +40,46 @@ defend. The audit must answer:
 3. Which outputs are supported in each context: `Rw`, `R'w`, `Dn,w`,
    `DnT,w`, `DnT,A`, `C`, `Ctr`, and `STC`?
 4. Which exact/benchmark lanes must remain untouched?
+
+## Implementation Reconciliation - 2026-04-27
+
+The plan and implementation currently agree:
+
+- `wall.concrete_heavy_core_screening.field` exists in
+  `realistic-layer-combination-coverage-cartography.test.ts` as the
+  rank-1 runtime widening candidate.
+- The generated candidate is `wall-screening-concrete`, runs as
+  `lined_massive_wall`, and is still explicitly screening-tier with
+  expected field `R'w = 55`.
+- The currently supported generated-candidate field outputs are
+  `R'w`, `Dn,w`, `DnT,w`, and `DnT,A`; Gate B must not imply support for
+  other outputs unless the contract and implementation prove it.
+- The workbench `concrete_wall` preset is already covered by
+  `wall-field-continuation-completeness-matrix.test.ts`, but it is not
+  automatically the same surface as the generated Gate A candidate.
+- Selector corridor value pins and deep-hybrid heavy-core swap tests are
+  adjacent stability/value evidence only. They do not justify a blanket
+  retune of every `lined_massive_wall` or `double_leaf` route.
+- `dynamic-airborne.ts` still owns the recursive boundary hold around
+  `double_leaf` / `lined_massive_wall`; correction caps that can affect
+  nearby heavy double-leaf behavior live in
+  `dynamic-airborne-correction-guards.ts`.
+- `wall-heavy-core-concrete-gate-b-audit-contract.test.ts` now pins the
+  current selected candidate values, dynamic trace, support posture, and
+  adjacent surface boundaries before source/formula tightening.
+- The same contract now pins the source/formula audit result: no exact
+  verified airborne catalog match, no lab-fallback verified match, no
+  floor-system or bound-floor source match, no direct external benchmark
+  match in the current audit, and no topology-specific tolerance for
+  `gypsum_board_12_5_rockwool_50_air_gap_50_concrete_100`.
+- The local pieces are mass-law candidate curves, ISO 717 curve rating,
+  field flanking overlay, and `Dn,w` / `DnT,w` normalization. They are
+  formula components, not a stack-specific source row for this topology.
+
+No Gate B runtime implementation has landed yet. The next change should
+therefore choose one path: import/define a bounded source-family rule
+with target values and tolerances, or close Gate B no-runtime with the
+current screening posture and any needed user-facing honesty work.
 
 ## Current Surfaces To Keep Separate
 
@@ -131,6 +175,46 @@ Minimum web assertions if visible posture changes:
   supports that claim;
 - origin/confidence text survives layer edit, reorder, and save/load
   paths already covered by workbench history helpers.
+
+## Detailed Next-Step Plan
+
+Gate B progress:
+
+1. Baseline revalidated with `pnpm calculator:gate:current`.
+2. No-runtime Gate B audit contract landed in
+   `wall-heavy-core-concrete-gate-b-audit-contract.test.ts`, capturing
+   the current `wall.concrete_heavy_core_screening.field` values,
+   detected family, support buckets, origin/confidence posture, and the
+   surfaces that must stay separate.
+3. Source/formula evidence audit landed in the same contract. Current
+   repo evidence does not justify a formula/benchmark promotion for the
+   selected concrete lining stack; evidence remains `screening`.
+
+Remaining Gate B should proceed in this exact order:
+
+1. Decide the evidence posture for this lane:
+   keep `screening`, promote only to a bounded `family` lane, or promote
+   to `formula` / `benchmark` only after importing or defining enough
+   source/formula support for this topology.
+2. If promotion is chosen, write the proposed Gate B contract before
+   runtime changes. It must
+   state the selected topology, expected values, output support,
+   origin/confidence labels, allowed dB tolerances, exact/benchmark
+   non-drift rows, and whether workbench card wording changes.
+3. Implement the smallest runtime change that satisfies that contract.
+   If no defensible evidence exists, do not retune values; instead close
+   Gate B no-runtime with stronger audit/card honesty.
+4. Add focused engine tests for numeric behavior, support/origin
+   posture, exact/benchmark non-drift, and nearby layer-swap stability.
+   Add web tests only if a visible card, warning, support bucket, or
+   displayed origin changes.
+5. Run targeted tests, `pnpm calculator:gate:current`, and
+   `git diff --check`. Run broad `pnpm check` before Gate C closeout or
+   when shared/user-visible behavior changes.
+
+Do not move to the timber stud + CLT wall accuracy pass until this
+heavy-core/concrete Gate B either lands a defended runtime tightening or
+closes honestly no-runtime.
 
 ## Gate C Closeout
 

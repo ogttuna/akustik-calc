@@ -183,6 +183,15 @@ This Gate B selection is also the first item in
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
 The concrete/heavy-core subplan is
 [SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md](./SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md).
+The first no-runtime Gate B audit contract has landed in
+`packages/engine/src/wall-heavy-core-concrete-gate-b-audit-contract.test.ts`;
+it now includes the source/formula evidence audit. The audit found no
+exact catalog row, no direct external benchmark match in the current
+audit, and no topology-specific tolerance for the selected concrete
+lining stack, so the lane remains `screening`. The remaining Gate B work
+is a decision: either import/define a bounded source-family rule and
+write the runtime contract, or close Gate B no-runtime with the current
+screening posture.
 The remaining private-use readiness chain is timber stud + CLT wall
 accuracy, floor fallback / low-confidence cleanup, and UI/input/output
 honesty.

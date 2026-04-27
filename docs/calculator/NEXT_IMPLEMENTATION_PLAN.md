@@ -9,9 +9,9 @@ chain read
 
 Last reviewed: 2026-04-27
 (`realistic_layer_combination_coverage_cartography_v1` Gate A landed;
-heavy-core/concrete Gate B subplan added;
+heavy-core/concrete Gate B source/formula audit landed no-runtime;
 see
-`CHECKPOINT_2026-04-27_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_GATE_A_HANDOFF.md`).
+`CHECKPOINT_2026-04-27_WALL_HEAVY_CORE_CONCRETE_GATE_B_AUDIT_HANDOFF.md`).
 
 ---
 
@@ -65,12 +65,21 @@ For every next slice decision:
   landed no-runtime. It executes 29 representative floor/wall cells and
   maps evidence tier, support/card posture, output coverage, origin,
   confidence, invariants, and candidate type.
-- **Next implementation action**: Gate B planning for
+- **Next implementation action**: Gate B decision point for
   `wall.concrete_heavy_core_screening.field` using
   [SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md](./SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md).
-  Before runtime changes, name the source/formula evidence, expected
-  output/card behavior, tolerances, and regression tests for the
-  heavy-core/concrete wall widening/tightening lane.
+  The no-runtime source/formula audit found no exact catalog row, no
+  direct external benchmark match in the current audit, and no
+  topology-specific tolerance for the selected concrete lining stack.
+  Evidence remains `screening`.
+- **Latest plan/implementation reconciliation**: 2026-04-27 review
+  confirmed the Gate B runtime tightening is not implemented yet. The
+  no-runtime audit contract
+  `packages/engine/src/wall-heavy-core-concrete-gate-b-audit-contract.test.ts`
+  now records the current generated candidate values, separated
+  workbench/selector/deep-hybrid surfaces, verified-catalog non-match,
+  formula components, and runtime-retune blocker before any value
+  retune.
 - **Deferred but not cancelled**:
   `project_access_policy_route_integration_v1`. Do not resume
   productization until the selected calculator slice closes or priority
@@ -84,24 +93,31 @@ now proceed in this order:
 1. Treat Gate A as evidence, not permission to guess. The selected
    target is `wall.concrete_heavy_core_screening.field` because it is
    common, finite today, and still screening-tier.
-2. Re-read the current heavy-core/concrete wall implementation path
+2. Re-read the landed Gate B audit in
+   `wall-heavy-core-concrete-gate-b-audit-contract.test.ts`: the
+   selected generated case is `wall-screening-concrete`; field `R'w`
+   stays 55; supported field outputs stay `R'w`, `Dn,w`, `DnT,w`, and
+   `DnT,A`; evidence remains `screening`.
+3. Re-read the current heavy-core/concrete wall implementation path
    listed in
    [SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md](./SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md):
    dynamic family selection, lined massive wall handling, heavy
    composite/double-leaf guards, field output derivation, and web card
    display.
-3. Find or confirm defensible evidence before runtime math changes:
-   official manufacturer/system rows, source-corpus rows, a documented
-   formula-owned lane, or a clearly bounded screening-to-family
-   tightening rule.
-4. Write the Gate B plan/contract first. It must state expected output
-   support, origin/confidence posture, tolerances, and web-card behavior.
-5. Implement the smallest runtime widening/tightening that improves
-   honest coverage without downgrading exact/benchmark lanes.
-6. Add focused engine tests for numerical behavior and support/origin
+4. Choose the Gate B path. Either import/define a bounded source-family
+   rule and write a proposed runtime contract, or close Gate B
+   no-runtime with stronger honesty while keeping the current screening
+   values.
+5. If a runtime path is chosen, state expected output support,
+   origin/confidence posture, tolerances, web-card behavior, and
+   exact/benchmark non-drift rows before changing math.
+6. Implement only the smallest runtime widening/tightening that
+   satisfies that contract. Do not retune from nearby green selector,
+   deep-hybrid, or workbench preset tests alone.
+7. Add focused engine tests for numerical behavior and support/origin
    posture; add web tests only if user-visible cards, warnings, or
    output support change.
-7. Run targeted tests, `pnpm calculator:gate:current`, and
+8. Run targeted tests, `pnpm calculator:gate:current`, and
    `git diff --check`. Use broad `pnpm check` before Gate C closeout.
 
 ## Personal-Use Readiness Chain

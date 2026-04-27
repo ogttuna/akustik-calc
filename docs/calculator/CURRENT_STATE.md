@@ -15,9 +15,10 @@ need the private-use readiness chain read
 
 Last revalidation cycle: `2026-04-27`
 (`realistic_layer_combination_coverage_cartography_v1` Gate A landed;
-heavy-core/concrete Gate B subplan added; broad validation re-run;
+heavy-core/concrete Gate B audit landed no-runtime; latest broad
+validation remains the Gate A baseline;
 latest checkpoint:
-[CHECKPOINT_2026-04-27_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_GATE_A_HANDOFF.md)).
+[CHECKPOINT_2026-04-27_WALL_HEAVY_CORE_CONCRETE_GATE_B_AUDIT_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_HEAVY_CORE_CONCRETE_GATE_B_AUDIT_HANDOFF.md)).
 Step 8 closed the calculator runtime audit: `MASTER_PLAN.md` §3/§8
 was reconciled to implementation reality, `coverage-grid-consistency.test.ts`
 now maps the grid and C1-C6 signals to executable evidence, the
@@ -107,8 +108,11 @@ hardening, and the pure team-access policy model.
   for the Gate C closeout and realistic layer-combination cartography
   selection, plus
   `realistic-layer-combination-coverage-cartography.test.ts` for the
-  active slice Gate A matrix.
-  Latest focused closeout run: 88 engine files / 404 tests,
+  active slice Gate A matrix, plus
+  `wall-heavy-core-concrete-gate-b-audit-contract.test.ts` for the
+  first no-runtime Gate B heavy-core/concrete audit contract.
+  Latest focused gate run after the Gate B source/formula audit
+  contract: 89 engine files / 408 tests,
   36 web files / 170 passed +
   18 skipped, build 5/5 tasks, whitespace guard clean.
 
@@ -127,9 +131,19 @@ support, origin/basis, confidence posture, invariants, and candidate
 type, and selects `wall.concrete_heavy_core_screening.field` as the
 highest-ROI runtime candidate. No new paired web matrix was added
 because the selected cells already point at existing card/route evidence
-or engine-only stress artifacts. Next action: Gate B planning for the
-heavy-core/concrete wall lane before runtime math changes, starting from
+or engine-only stress artifacts. Gate B now continues from
 [SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md](./SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md).
+The 2026-04-27 plan/implementation reconciliation confirmed that this
+Gate B has not changed runtime code yet. The no-runtime audit contract
+`packages/engine/src/wall-heavy-core-concrete-gate-b-audit-contract.test.ts`
+now pins the generated `wall-screening-concrete` candidate as
+screening-tier, `lined_massive_wall`, with field `R'w = 55` and
+supported `R'w` / `Dn,w` / `DnT,w` / `DnT,A`. The same contract now
+also pins the verified-catalog non-match, lab-fallback non-match, local
+formula components, and the blocker: no source row or
+topology-specific tolerance exists for the selected concrete lining
+stack. The next valid change is either a source/bounded-family import
+contract or an honest no-runtime Gate B closeout.
 
 Personal-use readiness is now explicitly tracked in
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
@@ -176,8 +190,8 @@ injection. Gate B eleventh carve moved
 `applyNarrowHeavyDoubleLeafGapCap` with `DynamicAirborneComposer`
 injection. Gate C then closed after broad validation because
 `dynamic-airborne.ts` is below 2000 lines. The active next decision is
-now Gate B planning for the heavy-core/concrete wall lane selected by
-the realistic layer-combination cartography matrix.
+now the heavy-core/concrete Gate B path choice: import/define a bounded
+source-family rule or close honestly no-runtime.
 
 Checkpoint refinement `2026-04-24`: the post-commit baseline was
 re-read against implementation and revalidated before Gate A. No drift
