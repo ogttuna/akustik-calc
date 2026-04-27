@@ -8,10 +8,10 @@ chain read
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
 
 Last reviewed: 2026-04-27
-(`floor_fallback_low_confidence_cleanup_v1` Gate A landed no-runtime;
-Gate B source/formula decision is next;
+(`floor_fallback_low_confidence_cleanup_v1` Gate B landed no-runtime;
+Gate C closeout is next;
 see
-`CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_A_HANDOFF.md`).
+`CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_B_HANDOFF.md`).
 
 ---
 
@@ -43,7 +43,7 @@ For every next slice decision:
 - **Active slice**:
   `floor_fallback_low_confidence_cleanup_v1`.
 - **Latest checkpoint**:
-  [CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_A_HANDOFF.md).
+  [CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_B_HANDOFF.md).
 - **Planning surface**:
   [SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md](./SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md).
 - **Personal-use readiness roadmap**:
@@ -75,6 +75,14 @@ For every next slice decision:
   `L'n,w=61.3` / `L'nT,w=58.5`, and keeps `L'nT,50`
   unsupported. Pliteq and UBIQ rows remain source lineage / near
   misses, not promotion evidence.
+- **Floor fallback Gate B result**:
+  `packages/engine/src/floor-fallback-low-confidence-gate-b-source-contract.test.ts`
+  landed no-runtime. It proves exact and bound source precedence already
+  work on the true Pliteq and UBIQ source topologies, blocks promotion
+  for the generated stack because it lacks the critical INEX deck /
+  GenieMat / Pliteq ceiling or UBIQ bound topology, and finds no
+  fail-closed correction because unsupported outputs already stay
+  explicit.
 - **Heavy-core/concrete closeout**: Gate B closed no-runtime for
   `wall.concrete_heavy_core_screening.field`. The no-runtime
   source/formula audit found no exact catalog row, no direct external
@@ -112,24 +120,16 @@ order:
 
 1. Re-read
    [SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md](./SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md).
-2. Start Gate B as a source/formula decision for
-   `floor.steel_fallback_low_confidence.field` / generated
-   `floor-steel-fallback`. Do not change math by default: Gate A found
-   no exact match, no bound match, and no current `L'nT,50` basis.
-3. Allow a runtime change only if Gate B names one of these:
-   an exact source row matching roles/materials/thicknesses/context, a
-   bounded steel/open-web family rule with anchors/tolerance/exact-row
-   precedence, or a fail-closed correction for a defended-looking
-   unsupported value.
-4. Add or update a focused web contract only if engine origin/support
-   or visible card posture changes. Existing card coverage must keep
-   "low-confidence fallback" visible.
-5. Keep `GDMTXA04A`, `C11c`, raw bare open-box/open-web impact,
+2. Close Gate C for `floor_fallback_low_confidence_cleanup_v1`. Because
+   Gate B was no-runtime, keep `floor-steel-fallback` low-confidence,
+   document the blocker list, and select `ui_input_output_honesty_v1`
+   as the next calculator-readiness slice.
+3. Keep `GDMTXA04A`, `C11c`, raw bare open-box/open-web impact,
    heavy-core concrete, wall selector, timber-stud, and CLT wall
    follow-ups closed unless new evidence deliberately selects them.
-6. Run targeted tests, `pnpm calculator:gate:current`, and
-   `git diff --check`; run broad `pnpm check` before closing this
-   slice or after user-visible/runtime changes.
+4. Run `pnpm calculator:gate:current`, broad `pnpm check`, and
+   `git diff --check` before committing the closeout because this slice
+   will close.
 
 ## Personal-Use Readiness Chain
 
@@ -146,8 +146,8 @@ explicitly changes.
 
 See [CURRENT_STATE.md](./CURRENT_STATE.md) "Latest Closed Slices" table.
 `wall_timber_stud_clt_accuracy_pass_v1` is now closed and
-`floor_fallback_low_confidence_cleanup_v1` is the selected active
-follow-up.
+`floor_fallback_low_confidence_cleanup_v1` is active with Gate C
+closeout next.
 
 ## Deferred Follow-Up Tracks
 

@@ -106,15 +106,14 @@ Required before implementation:
 
 ### 3. Floor Fallback / Low-Confidence Cleanup
 
-Status: active slice; Gate A landed no-runtime, Gate B source/formula
-decision next.
+Status: active slice; Gate B landed no-runtime, Gate C closeout next.
 
 Most high-value floor lanes already have stronger evidence than the
 remaining fallback corridors. The steel suspended fallback and other
 low-confidence corridors should be tightened only when the evidence can
 improve honest coverage without reopening blocked source families.
 
-Gate A result:
+Gate A / Gate B result:
 
 - start from
   [SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md](./SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md);
@@ -130,18 +129,28 @@ Gate A result:
   `L'nT,w=58.5`, with `L'nT,50` unsupported;
 - Pliteq steel joist rows and UBIQ FL-32 bound rows remain lineage /
   near misses, not promotion evidence.
-
-Required before runtime implementation:
-
-- Gate B must name an exact source row, bounded steel/open-web family
-  rule, or fail-closed correction before any math/confidence/posture
-  change;
+- Gate B landed no-runtime in
+  `packages/engine/src/floor-fallback-low-confidence-gate-b-source-contract.test.ts`;
+- true Pliteq source topology already lands on exact source id
+  `pliteq_steel_joist_250_rst02_vinyl_lab_2026`;
+- true UBIQ FL-32 source topology already lands on bound interpolation
+  using `ubiq_fl32_steel_200_lab_2026` and
+  `ubiq_fl32_steel_300_lab_2026`;
+- the selected live generated stack lacks the critical source topology
+  for both paths, so runtime promotion remains blocked;
 - keep `GDMTXA04A`, `C11c`, and raw bare open-box/open-web impact
   source-blocked unless new source evidence is deliberately imported;
 - separate exact/product-delta rows from predicted airborne or field
   companions;
 - preserve explicit unsupported output posture for unavailable low
   frequency impact outputs.
+
+Required next:
+
+- close Gate C no-runtime with the blocker list above;
+- select `ui_input_output_honesty_v1`;
+- run broad `pnpm check` before the closeout commit because the slice
+  closes.
 
 ### 4. UI / Input / Output Honesty Pass
 
@@ -169,11 +178,11 @@ cleanup selection. Engine broad is 227 files / 1248 tests. Web broad
 keeps 150 files in scope through `tools/dev/run-web-vitest.ts` with 864
 passed + 18 skipped. Build is 5/5 with the known non-fatal
 `sharp/@img` optional-package warnings. Focused current gate after Gate
-C closeout is 94 engine files / 428 tests, 36 web files / 170 passed
-plus 18 skipped, build 5/5. Gate A targeted floor fallback validation
-is now 1 file / 4 tests green; the focused current gate after the new
-contract is 95 engine files / 432 tests, 36 web files / 170 passed plus
-18 skipped, build 5/5.
+C closeout was 94 engine files / 428 tests; after floor fallback Gate A
+it was 95 engine files / 432 tests; after Gate B it is 96 engine files /
+436 tests, 36 web files / 170 passed plus 18 skipped, build 5/5. Gate A
+and Gate B targeted floor fallback contracts are each 1 file / 4 tests
+green.
 
 Do these in order unless new evidence changes the ranking:
 

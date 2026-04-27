@@ -1,7 +1,6 @@
 # Slice Plan - Floor Fallback / Low-Confidence Cleanup
 
-Status: ACTIVE - Gate A landed no-runtime; Gate B source/formula
-decision next
+Status: ACTIVE - Gate B landed no-runtime; Gate C closeout next
 
 Selected: 2026-04-27 by
 `post-wall-timber-stud-clt-gate-c-next-slice-selection-contract.test.ts`
@@ -88,8 +87,10 @@ Pinned Gate A values:
 
 ## Gate B - Possible Runtime Tightening
 
-Gate B is next. It is a source/formula decision and is allowed to
-change runtime only if it names a defensible evidence path.
+Gate B has landed no-runtime in
+`packages/engine/src/floor-fallback-low-confidence-gate-b-source-contract.test.ts`.
+It was a source/formula decision and did not name a defensible runtime
+change path.
 
 Acceptable runtime changes:
 
@@ -114,10 +115,33 @@ Unacceptable runtime changes:
 - adding `L'nT,50` support without a source, bound, or explicit formula
   basis.
 
+Gate B result:
+
+- no exact promotion: the live stack lacks the Pliteq source topology
+  (`inex_floor_panel`, GenieMat resilient layer, Pliteq ceiling support,
+  `glasswool`, and the exact `2.5 mm` vinyl finish);
+- no bound promotion: the live stack lacks the UBIQ FL-32 source
+  topology (`inex_floor_panel`, engineered timber finish, no ceiling
+  fill);
+- no fail-closed correction: `L'nT,50`, lab `Ln,w+CI`, and lab
+  `DeltaLw` are already explicitly unsupported;
+- no web change: visible low-confidence posture is already covered by
+  existing card tests.
+
+Gate B source-precedence proof:
+
+- true Pliteq source stack lands on exact id
+  `pliteq_steel_joist_250_rst02_vinyl_lab_2026`;
+- true UBIQ FL-32 source stack lands on `bound_interpolation` using
+  `ubiq_fl32_steel_200_lab_2026` and
+  `ubiq_fl32_steel_300_lab_2026`;
+- generated `floor-steel-fallback` remains on
+  `predictor_floor_system_low_confidence_estimate`.
+
 ## Gate C - Closeout
 
-Gate C closes after Gate A and any justified Gate B work are reflected
-in implementation and docs.
+Gate C is next. It closes after Gate A and Gate B no-runtime decisions
+are reflected in implementation and docs.
 
 If Gate B is no-runtime, close the slice with an explicit blocker list
 and select the next calculator-readiness slice:
@@ -145,7 +169,7 @@ Current selection baseline:
 
 Minimum per change:
 
-- targeted Gate A engine test;
+- targeted Gate A/Gate B engine test;
 - targeted web test only if card/origin/support wording changes;
 - `pnpm calculator:gate:current`;
 - `git diff --check`.

@@ -16,9 +16,9 @@ need the private-use readiness chain read
 Last revalidation cycle: `2026-04-27`
 (`realistic_layer_combination_coverage_cartography_v1` Gate A landed;
 heavy-core/concrete Gate B closed no-runtime; timber stud + CLT wall
-accuracy pass Gate C closed no-runtime; floor fallback Gate A landed
+accuracy pass Gate C closed no-runtime; floor fallback Gate B landed
 no-runtime; broad validation is green; latest checkpoint:
-[CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_A_HANDOFF.md)).
+[CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_B_HANDOFF.md)).
 Step 8 closed the calculator runtime audit: `MASTER_PLAN.md` §3/§8
 was reconciled to implementation reality, `coverage-grid-consistency.test.ts`
 now maps the grid and C1-C6 signals to executable evidence, the
@@ -123,9 +123,11 @@ hardening, and the pure team-access policy model.
   for the no-runtime wall pass closeout and floor fallback selection,
   plus
   `floor-fallback-low-confidence-gate-a-audit-contract.test.ts` for
-  the active floor fallback no-runtime Gate A audit.
-  Latest focused gate run after the floor fallback Gate A contract:
-  95 engine files / 432 tests,
+  the active floor fallback no-runtime Gate A audit, plus
+  `floor-fallback-low-confidence-gate-b-source-contract.test.ts` for
+  the no-runtime Gate B source/formula decision.
+  Latest focused gate run after the floor fallback Gate B contract:
+  96 engine files / 436 tests,
   36 web files / 170 passed +
   18 skipped, build 5/5 tasks, whitespace guard clean.
 
@@ -198,10 +200,17 @@ It pins generated `floor-steel-fallback` as no-exact/no-bound,
 `Ln,w=58.3`, field `R'w=70` / `Ln,w=58.3` /
 `L'n,w=61.3` / `L'nT,w=58.5`, and keeps `L'nT,50`
 unsupported. Pliteq steel joist rows and UBIQ FL-32 bound rows remain
-lineage / near misses, not promotion evidence. The next bounded
-implementation step is Gate B: decide whether an exact source row,
-bounded steel/open-web family rule, or fail-closed correction exists
-before any runtime math or web posture change.
+lineage / near misses, not promotion evidence. Gate B has now landed
+no-runtime in
+`packages/engine/src/floor-fallback-low-confidence-gate-b-source-contract.test.ts`.
+It proves source precedence already works on the true Pliteq exact stack
+and true UBIQ FL-32 bound stack, but the generated stack lacks the
+critical source topology for both paths. It also finds no fail-closed
+correction because unsupported `L'nT,50`, lab `Ln,w+CI`, and lab
+`DeltaLw` already stay explicit. The next bounded implementation step
+is Gate C closeout: keep this lane low-confidence, close the slice with
+the blocker list, select `ui_input_output_honesty_v1`, and run broad
+`pnpm check` before the closeout commit.
 
 Personal-use readiness is now explicitly tracked in
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
@@ -873,14 +882,14 @@ time without context loss:
 
 ## Resume Order For The Next Agent
 
-1. Read [CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_A_HANDOFF.md)
+1. Read [CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_B_HANDOFF.md)
    for the latest active-slice handoff.
 2. Read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md),
    [SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md](./SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md),
    and [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
-   Start Gate B for `floor.steel_fallback_low_confidence.field` as a
-   source/formula decision; change runtime only with exact evidence,
-   a bounded steel/open-web family rule, or a fail-closed correction.
+   Close Gate C for `floor_fallback_low_confidence_cleanup_v1`, keep
+   `floor-steel-fallback` low-confidence, and select
+   `ui_input_output_honesty_v1`.
 3. Read [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
    for the calculator-priority chain that should stay ahead of
    productization.
@@ -893,9 +902,8 @@ time without context loss:
    agrees on the active slice, completion signals, and deferred tracks.
    If it does not, fix the drift before starting work.
 6. Run `pnpm calculator:gate:current` as the focused baseline.
-7. Re-read the floor fallback implementation path and write the Gate B
-   source/formula, tolerance, support/origin, and web-card plan before
-   changing runtime math.
+7. Run broad `pnpm check` before the closeout commit because the active
+   slice will close.
 8. Treat [CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_ELEVENTH_CARVE_HANDOFF.md](./CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_ELEVENTH_CARVE_HANDOFF.md),
    [CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_A_HANDOFF.md),
    [CHECKPOINT_2026-04-24_INVALID_THICKNESS_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-24_INVALID_THICKNESS_CLOSEOUT_HANDOFF.md),
