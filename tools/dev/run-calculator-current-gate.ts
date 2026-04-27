@@ -139,6 +139,7 @@ async function main() {
         "src/post-wall-timber-stud-clt-gate-c-next-slice-selection-contract.test.ts",
         "src/floor-fallback-low-confidence-gate-a-audit-contract.test.ts",
         "src/floor-fallback-low-confidence-gate-b-source-contract.test.ts",
+        "src/post-floor-fallback-low-confidence-gate-c-next-slice-selection-contract.test.ts",
         "src/post-good-calculator-final-audit-v1-next-slice-selection-contract.test.ts",
         "src/post-team-access-model-calculator-refocus-next-slice-selection-contract.test.ts",
         "src/post-wall-formula-family-widening-v1-next-slice-selection-contract.test.ts",

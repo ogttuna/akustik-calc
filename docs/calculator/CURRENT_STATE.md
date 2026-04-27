@@ -16,9 +16,10 @@ need the private-use readiness chain read
 Last revalidation cycle: `2026-04-27`
 (`realistic_layer_combination_coverage_cartography_v1` Gate A landed;
 heavy-core/concrete Gate B closed no-runtime; timber stud + CLT wall
-accuracy pass Gate C closed no-runtime; floor fallback Gate B landed
-no-runtime; broad validation is green; latest checkpoint:
-[CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_B_HANDOFF.md)).
+accuracy pass Gate C closed no-runtime; floor fallback Gate C closed
+no-runtime; `ui_input_output_honesty_v1` is active; broad validation is
+green; latest checkpoint:
+[CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_C_CLOSEOUT_HANDOFF.md)).
 Step 8 closed the calculator runtime audit: `MASTER_PLAN.md` §3/§8
 was reconciled to implementation reality, `coverage-grid-consistency.test.ts`
 now maps the grid and C1-C6 signals to executable evidence, the
@@ -29,7 +30,7 @@ storage v1, project/proposal route authorization, auth-session
 hardening, and the pure team-access policy model.
 
 - **Engine broad suite**: latest broad `pnpm check` on 2026-04-27 was
-  227 / 227 files, 1248 / 1248 tests green
+  230 / 230 files, 1260 / 1260 tests green
   (up from 193/1068 pre-session; step-7 landed 4 wall cases +
   F1/F2 engine fixes + 32-assertion cross-mode torture matrix
   + 2 regression guards + post-contract; step-7b landed the
@@ -56,8 +57,8 @@ hardening, and the pure team-access policy model.
   input contract so it asserts parse behavior instead of calling
   `.keyof()` on the exported shared `AirborneContextSchema` `ZodType`.
 - **Broad `pnpm check`**: lint + typecheck + tests + build green on the
-  latest broad run after timber stud + CLT wall Gate C no-runtime
-  closeout and floor fallback cleanup selection; build still emits
+  latest broad run after floor fallback Gate C no-runtime closeout and
+  UI honesty selection; build still emits
   the known non-fatal optional `sharp/@img` warnings through
   `@turbodocx/html-to-docx`.
 - **Focused calculator gate** (`pnpm calculator:gate:current`):
@@ -123,19 +124,22 @@ hardening, and the pure team-access policy model.
   for the no-runtime wall pass closeout and floor fallback selection,
   plus
   `floor-fallback-low-confidence-gate-a-audit-contract.test.ts` for
-  the active floor fallback no-runtime Gate A audit, plus
+  the closed floor fallback no-runtime Gate A audit, plus
   `floor-fallback-low-confidence-gate-b-source-contract.test.ts` for
-  the no-runtime Gate B source/formula decision.
-  Latest focused gate run after the floor fallback Gate B contract:
-  96 engine files / 436 tests,
+  the no-runtime Gate B source/formula decision, plus
+  `post-floor-fallback-low-confidence-gate-c-next-slice-selection-contract.test.ts`
+  for the no-runtime Gate C closeout and UI honesty next-slice
+  selection.
+  Latest focused gate run after the floor fallback Gate C contract:
+  97 engine files / 440 tests,
   36 web files / 170 passed +
   18 skipped, build 5/5 tasks, whitespace guard clean.
 
 ## Active Slice
 
-`floor_fallback_low_confidence_cleanup_v1` (calculator floor fallback
-accuracy/honesty, active). Planning surface:
-[SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md](./SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md).
+`ui_input_output_honesty_v1` (calculator UI/API input and output
+honesty, active). Planning surface:
+[SLICE_UI_INPUT_OUTPUT_HONESTY_PLAN.md](./SLICE_UI_INPUT_OUTPUT_HONESTY_PLAN.md).
 
 The previous cartography Gate A landed no-runtime in
 `packages/engine/src/realistic-layer-combination-coverage-cartography.test.ts`.
@@ -191,7 +195,7 @@ lane is a Sharp-delegate formula. The next bounded implementation step
 was Gate C closeout for `wall_timber_stud_clt_accuracy_pass_v1`.
 Gate C has now landed no-runtime in
 `packages/engine/src/post-wall-timber-stud-clt-gate-c-next-slice-selection-contract.test.ts`.
-The active next slice is `floor_fallback_low_confidence_cleanup_v1`.
+That selected `floor_fallback_low_confidence_cleanup_v1`.
 Gate A has now landed no-runtime in
 `packages/engine/src/floor-fallback-low-confidence-gate-a-audit-contract.test.ts`.
 It pins generated `floor-steel-fallback` as no-exact/no-bound,
@@ -207,15 +211,21 @@ It proves source precedence already works on the true Pliteq exact stack
 and true UBIQ FL-32 bound stack, but the generated stack lacks the
 critical source topology for both paths. It also finds no fail-closed
 correction because unsupported `L'nT,50`, lab `Ln,w+CI`, and lab
-`DeltaLw` already stay explicit. The next bounded implementation step
-is Gate C closeout: keep this lane low-confidence, close the slice with
-the blocker list, select `ui_input_output_honesty_v1`, and run broad
-`pnpm check` before the closeout commit.
+`DeltaLw` already stay explicit. Gate C then landed no-runtime in
+`packages/engine/src/post-floor-fallback-low-confidence-gate-c-next-slice-selection-contract.test.ts`.
+It closed `floor_fallback_low_confidence_cleanup_v1`, kept
+`floor-steel-fallback` low-confidence with unchanged field values, and
+selected `ui_input_output_honesty_v1`.
+
+The next bounded implementation step is Gate A for
+`ui_input_output_honesty_v1`: inventory required-input messages, API
+validation payloads, output support/origin/confidence cards,
+unsupported-output display, and layer edit/reorder/many-layer/save-load
+stability before changing UI/API behavior.
 
 Personal-use readiness is now explicitly tracked in
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
-The current priority chain is floor fallback/low-confidence cleanup,
-then UI/input/output honesty.
+The current priority chain is UI/input/output honesty.
 Productization remains deferred until this calculator readiness chain
 closes or priority explicitly changes.
 
@@ -692,6 +702,9 @@ resumes and wires the policy through an owner-only adapter.
 
 | Slice | Master-plan step | Closed | Post-contract |
 |---|---|---|---|
+| `floor_fallback_low_confidence_cleanup_v1` | personal-use readiness | 2026-04-27 | `post-floor-fallback-low-confidence-gate-c-next-slice-selection-contract.test.ts` |
+| `wall_timber_stud_clt_accuracy_pass_v1` | personal-use readiness | 2026-04-27 | `post-wall-timber-stud-clt-gate-c-next-slice-selection-contract.test.ts` |
+| `wall_heavy_core_concrete_gate_b_v1` | personal-use readiness | 2026-04-27 | `post-wall-heavy-core-concrete-gate-b-next-slice-selection-contract.test.ts` |
 | `dynamic_airborne_split_refactor_v2` | 4b | 2026-04-26 | `post-dynamic-airborne-split-refactor-v2-gate-c-next-slice-selection-contract.test.ts` |
 | `all_caller_invalid_thickness_guard_v1` | post-step-8 follow-up | 2026-04-24 | `post-all-caller-invalid-thickness-gate-c-v1-next-slice-selection-contract.test.ts` |
 | `floor_layer_order_edit_stability_v1` | post-step-8 follow-up | 2026-04-24 | `post-floor-layer-order-gate-c-v1-next-slice-selection-contract.test.ts` |
@@ -850,12 +863,13 @@ time without context loss:
    `floor_many_layer_stress_regression_v1`.
 9. **Realistic layer-combination coverage cartography** — closed. It
    selected heavy-core/concrete first, then the no-runtime wall
-   timber-stud + CLT pass, and the active floor fallback cleanup slice
-   through the follow-up planning contracts.
-10. **UI / input / output honesty pass** — next private-use readiness
-    slice after `floor_fallback_low_confidence_cleanup_v1` closes.
-    It remains deferred until the floor fallback Gate B/Gate C decision
-    is complete.
+   timber-stud + CLT pass, and then floor fallback cleanup through the
+   follow-up planning contracts.
+10. **Floor fallback / low-confidence cleanup** — closed no-runtime at
+    Gate C. `floor-steel-fallback` remains low-confidence until new
+    source evidence or a bounded steel/open-web family rule exists.
+11. **UI / input / output honesty pass** — active private-use readiness
+    slice. Gate A inventory is next.
 
 ## Frozen Posture — Do Not Reopen By Inertia
 
@@ -882,14 +896,14 @@ time without context loss:
 
 ## Resume Order For The Next Agent
 
-1. Read [CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_B_HANDOFF.md)
+1. Read [CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_C_CLOSEOUT_HANDOFF.md)
    for the latest active-slice handoff.
 2. Read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md),
-   [SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md](./SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md),
+   [SLICE_UI_INPUT_OUTPUT_HONESTY_PLAN.md](./SLICE_UI_INPUT_OUTPUT_HONESTY_PLAN.md),
    and [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
-   Close Gate C for `floor_fallback_low_confidence_cleanup_v1`, keep
-   `floor-steel-fallback` low-confidence, and select
-   `ui_input_output_honesty_v1`.
+   Start Gate A for `ui_input_output_honesty_v1` as a no-runtime
+   inventory of required inputs, output support, origin/confidence, and
+   unsupported-output visibility.
 3. Read [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
    for the calculator-priority chain that should stay ahead of
    productization.
@@ -902,8 +916,9 @@ time without context loss:
    agrees on the active slice, completion signals, and deferred tracks.
    If it does not, fix the drift before starting work.
 6. Run `pnpm calculator:gate:current` as the focused baseline.
-7. Run broad `pnpm check` before the closeout commit because the active
-   slice will close.
+7. Do not change runtime math during UI honesty Gate A unless the
+   inventory finds a defended-looking unsupported or invalid answer that
+   must fail closed.
 8. Treat [CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_ELEVENTH_CARVE_HANDOFF.md](./CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_ELEVENTH_CARVE_HANDOFF.md),
    [CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_A_HANDOFF.md),
    [CHECKPOINT_2026-04-24_INVALID_THICKNESS_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-24_INVALID_THICKNESS_CLOSEOUT_HANDOFF.md),

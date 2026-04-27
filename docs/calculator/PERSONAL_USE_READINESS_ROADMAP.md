@@ -106,7 +106,7 @@ Required before implementation:
 
 ### 3. Floor Fallback / Low-Confidence Cleanup
 
-Status: active slice; Gate B landed no-runtime, Gate C closeout next.
+Status: closed no-runtime at Gate C.
 
 Most high-value floor lanes already have stronger evidence than the
 remaining fallback corridors. The steel suspended fallback and other
@@ -147,14 +147,13 @@ Gate A / Gate B result:
 
 Required next:
 
-- close Gate C no-runtime with the blocker list above;
-- select `ui_input_output_honesty_v1`;
-- run broad `pnpm check` before the closeout commit because the slice
-  closes.
+- continue with `ui_input_output_honesty_v1`;
+- keep `floor-steel-fallback` low-confidence until new source evidence
+  or a bounded steel/open-web family rule exists.
 
 ### 4. UI / Input / Output Honesty Pass
 
-Status: required before calling the calculator personally ready.
+Status: active slice; Gate A inventory next.
 
 This pass should make the existing engine honesty visible and ergonomic
 for private use. It does not need full product polish, but it must avoid
@@ -170,24 +169,27 @@ Required before implementation:
 - web tests should cover the main wall/floor input flows and visible
   confidence/support states.
 
+Start from
+[SLICE_UI_INPUT_OUTPUT_HONESTY_PLAN.md](./SLICE_UI_INPUT_OUTPUT_HONESTY_PLAN.md).
+Gate A should inventory current required-input, output-support,
+origin/confidence, unsupported-output, edit/reorder, many-layer, and
+save/load behavior before changing UI/API behavior.
+
 ## Current Order
 
 Current validation baseline: 2026-04-27 `pnpm check` is green after
-timber stud + CLT wall Gate C no-runtime closeout and floor fallback
-cleanup selection. Engine broad is 227 files / 1248 tests. Web broad
-keeps 150 files in scope through `tools/dev/run-web-vitest.ts` with 864
-passed + 18 skipped. Build is 5/5 with the known non-fatal
-`sharp/@img` optional-package warnings. Focused current gate after Gate
-C closeout was 94 engine files / 428 tests; after floor fallback Gate A
-it was 95 engine files / 432 tests; after Gate B it is 96 engine files /
-436 tests, 36 web files / 170 passed plus 18 skipped, build 5/5. Gate A
-and Gate B targeted floor fallback contracts are each 1 file / 4 tests
-green.
+floor fallback Gate C no-runtime closeout and UI honesty selection.
+Engine broad is 230 files / 1260 tests. Web broad keeps 150 files in
+scope through `tools/dev/run-web-vitest.ts` with 864 passed + 18
+skipped. Build is 5/5 with the known non-fatal `sharp/@img`
+optional-package warnings. Focused current gate after floor fallback
+Gate C is 97 engine files / 440 tests, 36 web files / 170 passed plus
+18 skipped, build 5/5. Gate A, Gate B, and Gate C targeted floor
+fallback contracts are each 1 file / 4 tests green.
 
 Do these in order unless new evidence changes the ranking:
 
-1. Floor fallback / low-confidence cleanup.
-2. UI / input / output honesty pass.
+1. UI / input / output honesty pass.
 
 `project_access_policy_route_integration_v1` remains deferred until this
 calculator readiness chain closes or priority explicitly changes.

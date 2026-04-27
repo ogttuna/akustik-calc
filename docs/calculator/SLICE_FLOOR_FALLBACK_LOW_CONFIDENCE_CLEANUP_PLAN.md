@@ -1,6 +1,7 @@
 # Slice Plan - Floor Fallback / Low-Confidence Cleanup
 
-Status: ACTIVE - Gate B landed no-runtime; Gate C closeout next
+Status: CLOSED - Gate C landed no-runtime and selected
+`ui_input_output_honesty_v1`
 
 Selected: 2026-04-27 by
 `post-wall-timber-stud-clt-gate-c-next-slice-selection-contract.test.ts`
@@ -140,14 +141,25 @@ Gate B source-precedence proof:
 
 ## Gate C - Closeout
 
-Gate C is next. It closes after Gate A and Gate B no-runtime decisions
-are reflected in implementation and docs.
+Gate C landed no-runtime in
+`packages/engine/src/post-floor-fallback-low-confidence-gate-c-next-slice-selection-contract.test.ts`.
+It closed the slice with the Gate B blocker list and selected the next
+calculator-readiness slice: `ui_input_output_honesty_v1`.
 
-If Gate B is no-runtime, close the slice with an explicit blocker list
-and select the next calculator-readiness slice:
-`ui_input_output_honesty_v1`.
+Gate C result:
 
-If Gate B changes runtime or web posture, Gate C must include:
+- kept generated `floor-steel-fallback` on the
+  `predictor_floor_system_low_confidence_estimate` lane;
+- kept field values `R'w=70`, `Ln,w=58.3`, `L'n,w=61.3`,
+  `L'nT,w=58.5`;
+- kept `L'nT,50`, lab `Ln,w+CI`, and lab `DeltaLw` unsupported;
+- kept Pliteq exact and UBIQ FL-32 bound paths as source-precedence
+  proofs only, not promotion evidence for the selected generated stack;
+- selected
+  [SLICE_UI_INPUT_OUTPUT_HONESTY_PLAN.md](./SLICE_UI_INPUT_OUTPUT_HONESTY_PLAN.md)
+  for the next active slice.
+
+Historical Gate C rule if Gate B had changed runtime or web posture:
 
 - targeted engine tests for numeric values, confidence/origin, support,
   unsupported outputs, and near misses;
@@ -158,18 +170,19 @@ If Gate B changes runtime or web posture, Gate C must include:
 
 ## Validation
 
-Current selection baseline:
+Current validation baseline:
 
+- Gate C targeted contract: 1 file / 4 tests green.
 - `pnpm calculator:gate:current` after Gate C selection: engine
-  94 files / 428 tests, web 36 files / 170 passed + 18 skipped,
+  97 files / 440 tests, web 36 files / 170 passed + 18 skipped,
   build 5/5, whitespace guard clean.
-- `pnpm check` after Gate C selection: engine 227 files / 1248 tests,
+- `pnpm check` after Gate C selection: engine 230 files / 1260 tests,
   web 150 files / 864 passed + 18 skipped, build 5/5.
 - Known non-fatal `sharp/@img` optional-package warnings remain.
 
-Minimum per change:
+Minimum per historical change:
 
-- targeted Gate A/Gate B engine test;
+- targeted Gate A/Gate B/Gate C engine test;
 - targeted web test only if card/origin/support wording changes;
 - `pnpm calculator:gate:current`;
 - `git diff --check`.

@@ -5,24 +5,26 @@ Start here before changing calculator behavior.
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_B_HANDOFF.md`
+2. `docs/calculator/CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_C_CLOSEOUT_HANDOFF.md`
 3. `docs/calculator/CURRENT_STATE.md`
-4. `docs/calculator/SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md`
+4. `docs/calculator/SLICE_UI_INPUT_OUTPUT_HONESTY_PLAN.md`
 5. `docs/calculator/PERSONAL_USE_READINESS_ROADMAP.md`
-6. `docs/calculator/CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_A_HANDOFF.md`
-7. `docs/calculator/CHECKPOINT_2026-04-27_WALL_TIMBER_STUD_CLT_GATE_C_CLOSEOUT_HANDOFF.md`
-8. `docs/calculator/CHECKPOINT_2026-04-27_WALL_CLT_GATE_B_HANDOFF.md`
-9. `docs/calculator/SLICE_WALL_TIMBER_STUD_CLT_ACCURACY_PASS_PLAN.md`
-10. `docs/calculator/CHECKPOINT_2026-04-27_WALL_TIMBER_STUD_GATE_B_HANDOFF.md`
-11. `docs/calculator/CHECKPOINT_2026-04-27_WALL_TIMBER_STUD_CLT_GATE_A_HANDOFF.md`
-12. `docs/calculator/CHECKPOINT_2026-04-27_WALL_HEAVY_CORE_CONCRETE_GATE_B_CLOSEOUT_HANDOFF.md`
-13. `docs/calculator/CHECKPOINT_2026-04-27_WALL_HEAVY_CORE_CONCRETE_GATE_B_AUDIT_HANDOFF.md`
-14. `docs/calculator/CHECKPOINT_2026-04-27_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_GATE_A_HANDOFF.md`
-15. `docs/calculator/SLICE_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_PLAN.md`
-16. `docs/calculator/SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md`
-17. `docs/calculator/CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_C_CLOSEOUT_HANDOFF.md`
-18. `docs/calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md`
-19. `docs/calculator/CALCULATION_MODEL_AND_VALIDATION.md`
+6. `docs/calculator/CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_B_HANDOFF.md`
+7. `docs/calculator/SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md`
+8. `docs/calculator/CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_A_HANDOFF.md`
+9. `docs/calculator/CHECKPOINT_2026-04-27_WALL_TIMBER_STUD_CLT_GATE_C_CLOSEOUT_HANDOFF.md`
+10. `docs/calculator/CHECKPOINT_2026-04-27_WALL_CLT_GATE_B_HANDOFF.md`
+11. `docs/calculator/SLICE_WALL_TIMBER_STUD_CLT_ACCURACY_PASS_PLAN.md`
+12. `docs/calculator/CHECKPOINT_2026-04-27_WALL_TIMBER_STUD_GATE_B_HANDOFF.md`
+13. `docs/calculator/CHECKPOINT_2026-04-27_WALL_TIMBER_STUD_CLT_GATE_A_HANDOFF.md`
+14. `docs/calculator/CHECKPOINT_2026-04-27_WALL_HEAVY_CORE_CONCRETE_GATE_B_CLOSEOUT_HANDOFF.md`
+15. `docs/calculator/CHECKPOINT_2026-04-27_WALL_HEAVY_CORE_CONCRETE_GATE_B_AUDIT_HANDOFF.md`
+16. `docs/calculator/CHECKPOINT_2026-04-27_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_GATE_A_HANDOFF.md`
+17. `docs/calculator/SLICE_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_PLAN.md`
+18. `docs/calculator/SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md`
+19. `docs/calculator/CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_C_CLOSEOUT_HANDOFF.md`
+20. `docs/calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md`
+21. `docs/calculator/CALCULATION_MODEL_AND_VALIDATION.md`
 
 Use the long-form plan files only for backlog context after reading the current
 plan.
@@ -30,25 +32,23 @@ plan.
 ## Current Workflow
 
 - current selected slice:
-  `floor_fallback_low_confidence_cleanup_v1`
+  `ui_input_output_honesty_v1`
 - current first decision inside the slice:
-  Gate B landed no-runtime for
-  `floor.steel_fallback_low_confidence.field` / generated
-  `floor-steel-fallback`. The source/formula contract proves Pliteq
-  exact and UBIQ FL-32 bound source precedence already work when their
-  source topology is present, but the live generated stack lacks the
-  critical INEX deck / GenieMat / Pliteq ceiling or UBIQ bound topology.
-  The next bounded implementation step is Gate C closeout: keep the
-  lane low-confidence, close this slice with the blocker list, select
-  `ui_input_output_honesty_v1`, and run broad `pnpm check` before the
-  closeout commit.
+  Floor fallback Gate C closed no-runtime. The next bounded
+  implementation step is UI/input/output honesty Gate A: inventory
+  required-input messages, supported/unsupported output visibility,
+  evidence/confidence/origin card posture, and edit/reorder/many-layer
+  save/load stability before any UI/API behavior change. Do not change
+  acoustic formulas or runtime values during Gate A unless it finds a
+  defended-looking unsupported or invalid answer that must fail closed.
 - personal-use readiness chain:
   `docs/calculator/PERSONAL_USE_READINESS_ROADMAP.md` is active
-  calculator guidance. Finish, in order: floor fallback /
-  low-confidence cleanup and UI/input/output honesty before resuming
+  calculator guidance. Finish UI/input/output honesty before resuming
   deferred productization. Heavy-core/concrete is closed no-runtime and
   remains screening; timber stud + CLT wall are closed no-runtime and
-  remain formula-owned until new source evidence appears.
+  remain formula-owned until new source evidence appears; floor fallback
+  is closed no-runtime and remains low-confidence until new source
+  evidence or a bounded family rule appears.
 - do not reopen `GDMTXA04A`, `C11c`, raw open-box/open-web, heavy-concrete
   parity or formula scope, reinforced-concrete reopening, wall-selector
   behavior, timber-stud widening, or wall exact-row follow-ups from nearby
@@ -57,8 +57,9 @@ plan.
   checkpoint/handoff note together
 - keep planning-contract tests in sync with the selected next slice
 - `project_access_policy_route_integration_v1` is deferred, not
-  cancelled; do not resume productization until the selected calculator
-  slice closes or the priority explicitly changes
+  cancelled; do not resume productization until
+  `ui_input_output_honesty_v1` closes or the priority explicitly
+  changes
 
 ## Validation
 

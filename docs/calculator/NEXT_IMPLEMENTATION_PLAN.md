@@ -8,10 +8,10 @@ chain read
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
 
 Last reviewed: 2026-04-27
-(`floor_fallback_low_confidence_cleanup_v1` Gate B landed no-runtime;
-Gate C closeout is next;
+(`floor_fallback_low_confidence_cleanup_v1` Gate C closed no-runtime;
+`ui_input_output_honesty_v1` Gate A inventory is next;
 see
-`CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_B_HANDOFF.md`).
+`CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_C_CLOSEOUT_HANDOFF.md`).
 
 ---
 
@@ -41,26 +41,27 @@ For every next slice decision:
 ## Now
 
 - **Active slice**:
-  `floor_fallback_low_confidence_cleanup_v1`.
+  `ui_input_output_honesty_v1`.
 - **Latest checkpoint**:
-  [CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_B_HANDOFF.md).
+  [CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_C_CLOSEOUT_HANDOFF.md).
 - **Planning surface**:
-  [SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md](./SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md).
+  [SLICE_UI_INPUT_OUTPUT_HONESTY_PLAN.md](./SLICE_UI_INPUT_OUTPUT_HONESTY_PLAN.md).
 - **Personal-use readiness roadmap**:
   [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
-  fixes the remaining calculator-priority chain as floor
-  fallback/low-confidence cleanup, then UI/input/output honesty.
-  Heavy-core/concrete remains screening and timber stud + CLT wall
-  remain formula-owned until new source evidence appears.
+  fixes the remaining calculator-priority chain as UI/input/output
+  honesty before productization resumes. Heavy-core/concrete remains
+  screening, timber stud + CLT wall remain formula-owned until new
+  source evidence appears, and floor fallback remains low-confidence
+  until new source evidence or a bounded family rule appears.
 - **Just closed**: `dynamic_airborne_split_refactor_v2` Gate C.
   Gate B carved eleven correction guards into
   `dynamic-airborne-correction-guards.ts`; `dynamic-airborne.ts` is now
   1793 lines, below the 2000-line C6 threshold.
 - **Latest broad validation**: 2026-04-27 `pnpm check` is green after
-  timber stud + CLT wall Gate C no-runtime closeout and floor fallback
-  cleanup selection: engine 227 files / 1248 tests, web 150 files / 864
-  passed + 18 skipped through `tools/dev/run-web-vitest.ts`, build 5/5,
-  with only the known non-fatal `sharp/@img` optional-package warnings.
+  floor fallback Gate C no-runtime closeout and UI honesty selection:
+  engine 230 files / 1260 tests, web 150 files / 864 passed + 18 skipped
+  through `tools/dev/run-web-vitest.ts`, build 5/5, with only the known
+  non-fatal `sharp/@img` optional-package warnings.
 - **Cartography Gate A result**:
   `packages/engine/src/realistic-layer-combination-coverage-cartography.test.ts`
   landed no-runtime. It executes 29 representative floor/wall cells and
@@ -83,6 +84,12 @@ For every next slice decision:
   GenieMat / Pliteq ceiling or UBIQ bound topology, and finds no
   fail-closed correction because unsupported outputs already stay
   explicit.
+- **Floor fallback Gate C result**:
+  `packages/engine/src/post-floor-fallback-low-confidence-gate-c-next-slice-selection-contract.test.ts`
+  closed `floor_fallback_low_confidence_cleanup_v1` no-runtime and
+  selected `ui_input_output_honesty_v1`. `floor-steel-fallback` remains
+  `screening` / `low_confidence`, with field `R'w=70`, `Ln,w=58.3`,
+  `L'n,w=61.3`, `L'nT,w=58.5`, and unsupported `L'nT,50`.
 - **Heavy-core/concrete closeout**: Gate B closed no-runtime for
   `wall.concrete_heavy_core_screening.field`. The no-runtime
   source/formula audit found no exact catalog row, no direct external
@@ -115,21 +122,24 @@ For every next slice decision:
 
 ## Immediate Execution Order
 
-`floor_fallback_low_confidence_cleanup_v1` should now proceed in this
+`ui_input_output_honesty_v1` should now proceed in this
 order:
 
 1. Re-read
-   [SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md](./SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md).
-2. Close Gate C for `floor_fallback_low_confidence_cleanup_v1`. Because
-   Gate B was no-runtime, keep `floor-steel-fallback` low-confidence,
-   document the blocker list, and select `ui_input_output_honesty_v1`
-   as the next calculator-readiness slice.
-3. Keep `GDMTXA04A`, `C11c`, raw bare open-box/open-web impact,
+   [SLICE_UI_INPUT_OUTPUT_HONESTY_PLAN.md](./SLICE_UI_INPUT_OUTPUT_HONESTY_PLAN.md).
+2. Start Gate A as a no-runtime inventory of required-input messages,
+   API validation payloads, output support/origin/confidence cards,
+   unsupported-output display, and layer edit/reorder/many-layer
+   save/load stability.
+3. Change runtime only if Gate A finds a defended-looking unsupported
+   or invalid answer that must fail closed; do not retune formulas or
+   confidence scores as part of UI copy.
+4. Keep `GDMTXA04A`, `C11c`, raw bare open-box/open-web impact,
    heavy-core concrete, wall selector, timber-stud, and CLT wall
    follow-ups closed unless new evidence deliberately selects them.
-4. Run `pnpm calculator:gate:current`, broad `pnpm check`, and
-   `git diff --check` before committing the closeout because this slice
-   will close.
+5. Run targeted Gate A contracts, `pnpm calculator:gate:current`, and
+   `git diff --check`; run broad `pnpm check` before closing the slice
+   or after user-visible behavior changes.
 
 ## Personal-Use Readiness Chain
 
@@ -137,7 +147,9 @@ These are the calculator priorities before calling the project ready for
 private day-to-day use:
 
 1. Floor fallback / low-confidence cleanup.
+   - closed no-runtime at Gate C.
 2. UI / input / output honesty pass.
+   - active.
 
 Do not resume productization ahead of this chain unless priority
 explicitly changes.
@@ -145,9 +157,8 @@ explicitly changes.
 ## Latest Closed Slices
 
 See [CURRENT_STATE.md](./CURRENT_STATE.md) "Latest Closed Slices" table.
-`wall_timber_stud_clt_accuracy_pass_v1` is now closed and
-`floor_fallback_low_confidence_cleanup_v1` is active with Gate C
-closeout next.
+`floor_fallback_low_confidence_cleanup_v1` is now closed and
+`ui_input_output_honesty_v1` is active with Gate A inventory next.
 
 ## Deferred Follow-Up Tracks
 
@@ -162,5 +173,5 @@ closeout next.
    reopening, and timber exact-row follow-ups remain closed unless new
    source evidence deliberately selects a source slice.
 3. **Productization route integration** —
-   `project_access_policy_route_integration_v1` remains deferred until a
-   calculator slice closes or priority explicitly changes.
+   `project_access_policy_route_integration_v1` remains deferred until
+   `ui_input_output_honesty_v1` closes or priority explicitly changes.
