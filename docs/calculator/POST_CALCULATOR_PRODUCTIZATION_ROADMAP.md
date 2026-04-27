@@ -80,10 +80,10 @@ Progress note 2026-04-23:
   logout cookie-clearing tests, plus shared owner/editor/reviewer/viewer
   project-action vocabulary and a pure policy helper with stable denial
   reasons.
-- Current productization work is
-  `project_access_policy_route_integration_v1`. It should wire the
-  policy into existing project/proposal routes through an owner-only
-  adapter before invitations, billing, or database storage.
+- `project_access_policy_route_integration_v1` is closed. Existing
+  project/proposal route decisions now flow through the pure policy by
+  way of an owner-only adapter before invitations, billing, or database
+  storage.
 - 2026-04-27 resume note: productization route integration was deferred,
   not cancelled, and is now selected again after the calculator
   private/internal-use readiness chain closed at
@@ -124,6 +124,15 @@ Initial scope:
 - scenario comparison exports
 - PDF/DOCX consistency checks
 - visual QA against representative long labels and missing-field states
+
+Current selected work:
+
+- `proposal_report_polish_v1`
+
+Why now: calculator private/internal-use readiness is closed and route
+authorization is policy-backed. The next internal-use risk is losing
+evidence-tier honesty when calculator results move from cards into
+PDF/DOCX/workbench proposal surfaces.
 
 ### 5. Deployment And Monitoring
 
@@ -174,18 +183,17 @@ evidence.
   (closed 2026-04-23).
 - Completed follow-up slice: `team_access_model_v1`
   (closed 2026-04-23).
-- Current selected productization follow-up:
-  `project_access_policy_route_integration_v1`.
+- Completed follow-up slice: `project_access_policy_route_integration_v1`
+  (closed 2026-04-27).
+- Current selected productization follow-up: `proposal_report_polish_v1`.
 - Calculator personal/internal-use readiness:
   closed with evidence-tier caveats by `ui_input_output_honesty_v1`
   Gate C.
 
 Reasoning: server-backed persistence is the foundation for auth,
 billing, proposal history, collaboration, monitoring context, and any
-future desktop sync story. With explicit sync/list/load and the pure
-access policy now landed, the next productization step is to make
-existing project/proposal route authorization call that policy without
-claiming team membership before a real membership source exists. That
-work no longer waits behind an open calculator readiness slice, but it
-must not alter calculator formulas, values, source posture, output
-support, or confidence scores.
+future desktop sync story. With explicit sync/list/load and owner-only
+policy-backed route authorization now landed, the next productization
+step is to make proposal/report outputs carry the same evidence-tier
+honesty as the calculator cards. That work must not alter calculator
+formulas, values, source posture, output support, or confidence scores.

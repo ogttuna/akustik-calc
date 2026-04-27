@@ -18,8 +18,9 @@ Last revalidation cycle: `2026-04-27`
 heavy-core/concrete Gate B closed no-runtime; timber stud + CLT wall
 accuracy pass Gate C closed no-runtime; floor fallback Gate C closed
 no-runtime; `ui_input_output_honesty_v1` Gate C closed; calculator
-personal/internal-use readiness chain is closed; latest checkpoint:
-[CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_C_CLOSEOUT_HANDOFF.md)).
+personal/internal-use readiness chain is closed;
+`project_access_policy_route_integration_v1` closed; latest checkpoint:
+[CHECKPOINT_2026-04-27_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_HANDOFF.md](./CHECKPOINT_2026-04-27_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_HANDOFF.md)).
 Step 8 closed the calculator runtime audit: `MASTER_PLAN.md` §3/§8
 was reconciled to implementation reality, `coverage-grid-consistency.test.ts`
 now maps the grid and C1-C6 signals to executable evidence, the
@@ -44,10 +45,10 @@ hardening, and the pure team-access policy model.
   under the Vitest worker timeout; Gate B and Gate C then added focused
   planning/value contract files).
 - **Web broad suite**: latest broad `pnpm check` on 2026-04-27 kept
-  all 152 / 152 files in scope through `tools/dev/run-web-vitest.ts`:
-  871 / 871 tests green + 18 discovery helpers intentionally skipped.
+  all 154 / 154 files in scope through `tools/dev/run-web-vitest.ts`:
+  882 / 882 tests green + 18 discovery helpers intentionally skipped.
   The runner isolates six long route-scan files and batches the
-  remaining 144 files, preserving coverage while avoiding Vitest worker
+  remaining 148 files, preserving coverage while avoiding Vitest worker
   RPC timeout failures on the heavy family-boundary scans.
   The 2026-04-23
   productization pass added focused server project storage/API,
@@ -57,8 +58,8 @@ hardening, and the pure team-access policy model.
   input contract so it asserts parse behavior instead of calling
   `.keyof()` on the exported shared `AirborneContextSchema` `ZodType`.
 - **Broad `pnpm check`**: lint + typecheck + tests + build green on the
-  latest broad run after UI/input/output honesty Gate C; build still emits
-  the known non-fatal optional `sharp/@img` warnings through
+  latest broad run after project access policy route integration; build
+  still emits the known non-fatal optional `sharp/@img` warnings through
   `@turbodocx/html-to-docx`.
 - **Focused calculator gate** (`pnpm calculator:gate:current`):
   includes the final-audit grid + post-contract tests and the
@@ -136,17 +137,21 @@ hardening, and the pure team-access policy model.
   fixes, plus
   `post-ui-input-output-honesty-gate-c-next-slice-selection-contract.test.ts`
   for the private/internal-use readiness closeout and productization
-  route-policy selection.
-  Latest focused gate run after Gate C closeout:
+  route-policy selection, plus
+  `project-route-auth.test.ts`, `server-project-routes.test.ts`, and
+  `post-project-access-policy-route-integration-next-slice-selection-contract.test.ts`
+  for the owner-only route-policy adapter closeout and proposal-report
+  polish selection.
+  Latest focused gate run after route-policy integration:
   98 engine files / 445 tests,
-  39 web files / 188 passed +
+  43 web files / 211 passed +
   18 skipped, build 5/5 tasks, whitespace guard clean.
 
 ## Active Slice
 
-`project_access_policy_route_integration_v1` (productization route
-policy adapter, active). Planning surface:
-[SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md](./SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md).
+`proposal_report_polish_v1` (productization proposal/report honesty,
+active). Planning surface:
+[SLICE_PROPOSAL_REPORT_POLISH_PLAN.md](./SLICE_PROPOSAL_REPORT_POLISH_PLAN.md).
 
 The previous cartography Gate A landed no-runtime in
 `packages/engine/src/realistic-layer-combination-coverage-cartography.test.ts`.
@@ -245,8 +250,9 @@ caveats and selected `project_access_policy_route_integration_v1`.
 
 Personal-use readiness is now explicitly tracked in
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
-That chain is closed. Productization has resumed with the route-policy
-integration slice, but calculator runtime/source posture remains frozen
+That chain is closed. Productization route-policy integration has also
+closed, and `proposal_report_polish_v1` is selected. Calculator
+runtime/source posture remains frozen
 unless a new source-backed calculator slice is explicitly selected.
 
 Calculator runtime status: final audit closed and green. The just-closed
@@ -714,15 +720,22 @@ define owner/editor/reviewer/viewer project-action decisions with stable
 denial reasons.
 
 Productization route integration status:
-`project_access_policy_route_integration_v1` is now selected. Route
-behavior remains owner-scoped until this slice wires the pure policy
-through an owner-only adapter and proves team roles are not route-enabled
-without membership storage.
+`project_access_policy_route_integration_v1` is closed. Route decisions
+now flow through `apps/web/lib/project-route-auth.ts`, which adapts the
+resolved owner scope into the pure access policy while keeping routes
+owner-only. Team roles remain policy vocabulary only; routes do not
+enable them until membership storage exists.
+
+Proposal/report polish status: `proposal_report_polish_v1` is now
+selected. It should improve PDF/DOCX/workbench report honesty for
+representative wall/floor scenarios without changing calculator runtime
+values, support, confidence, or formulas.
 
 ## Latest Closed Slices
 
 | Slice | Master-plan step | Closed | Post-contract |
 |---|---|---|---|
+| `project_access_policy_route_integration_v1` | productization 5 | 2026-04-27 | `post-project-access-policy-route-integration-next-slice-selection-contract.test.ts` |
 | `ui_input_output_honesty_v1` | personal-use readiness | 2026-04-27 | `post-ui-input-output-honesty-gate-c-next-slice-selection-contract.test.ts` |
 | `floor_fallback_low_confidence_cleanup_v1` | personal-use readiness | 2026-04-27 | `post-floor-fallback-low-confidence-gate-c-next-slice-selection-contract.test.ts` |
 | `wall_timber_stud_clt_accuracy_pass_v1` | personal-use readiness | 2026-04-27 | `post-wall-timber-stud-clt-gate-c-next-slice-selection-contract.test.ts` |
@@ -918,13 +931,13 @@ time without context loss:
 
 ## Resume Order For The Next Agent
 
-1. Read [CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_C_CLOSEOUT_HANDOFF.md)
+1. Read [CHECKPOINT_2026-04-27_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_HANDOFF.md](./CHECKPOINT_2026-04-27_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_HANDOFF.md)
    for the latest active-slice handoff.
 2. Read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md),
-   [SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md](./SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md),
+   [SLICE_PROPOSAL_REPORT_POLISH_PLAN.md](./SLICE_PROPOSAL_REPORT_POLISH_PLAN.md),
    and [POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md](./POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md).
-   Start `project_access_policy_route_integration_v1` by adding the
-   owner-only route policy adapter and tests.
+   Start `proposal_report_polish_v1` by inventorying PDF/DOCX/workbench
+   proposal honesty surfaces for representative wall/floor scenarios.
 3. Read [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
    for the now-closed calculator-priority chain and its evidence-tier
    caveats.

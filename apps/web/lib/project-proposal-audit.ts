@@ -1,5 +1,9 @@
 import type { getAuthState } from "./auth";
-import { resolveProjectRouteOwner } from "./project-route-auth";
+import {
+  projectAccessRefFromRecord,
+  resolveProjectRouteAccess,
+  resolveProjectRouteOwner
+} from "./project-route-auth";
 import {
   ServerProjectStorageError,
   createDefaultServerProjectRepository
@@ -33,11 +37,31 @@ export async function appendProposalAuditEventForProject(args: {
 }): Promise<void> {
   const owner = resolveProjectRouteOwner(args.authState);
   if (!owner.ok) {
-    throw new ServerProjectStorageError(owner.error, "authentication_required", owner.status);
+    const access = resolveProjectRouteAccess({
+      action: "append_proposal_audit",
+      owner
+    });
+    throw new ServerProjectStorageError(access.error, access.decision.reason, access.status);
   }
 
   const repository = createDefaultServerProjectRepository();
-  await repository.appendProposalAuditEvent(owner.scope, args.projectId, {
+  const project = await repository.readProject(owner.scope, args.projectId);
+
+  if (!project) {
+    throw new ServerProjectStorageError("Project not found.", "project_not_found", 404);
+  }
+
+  const access = resolveProjectRouteAccess({
+    action: "append_proposal_audit",
+    owner,
+    project: projectAccessRefFromRecord(project)
+  });
+
+  if (!access.ok) {
+    throw new ServerProjectStorageError(access.error, access.decision.reason, access.status);
+  }
+
+  await repository.appendProposalAuditEvent(access.scope, args.projectId, {
     format: args.format,
     scenarioIds: args.scenarioIds,
     source: "proposal_route",

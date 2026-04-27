@@ -156,9 +156,9 @@ Current workbench editing persistence is local-first.
 - `team_access_model_v1` has closed a pure project-access policy helper
   with owner/editor/reviewer/viewer role-action decisions and stable
   denial reasons
-- route behavior remains owner-scoped until
-  `project_access_policy_route_integration_v1` wires that policy through
-  the current route authorization boundary
+- `project_access_policy_route_integration_v1` has closed; route
+  decisions now flow through an owner-only policy adapter while team
+  route access remains disabled until membership storage exists
 - local Zustand remains the live editing source; server persistence is
   explicit sync/load, not shared multi-user editing
 
@@ -282,15 +282,20 @@ UI/input/output honesty are all closed with evidence-tier caveats.
 behavior-preserving correction-guard carves; `dynamic-airborne.ts` is now
 1793 lines, C6 is closed, and the remaining three recursive composer
 guards are optional architecture backlog. Productization route
-integration is now selected.
+integration is closed, and proposal/report polish is now selected.
 
 Current hotspots:
 
-- selected route-policy integration anchors:
-  - `docs/calculator/CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_C_CLOSEOUT_HANDOFF.md`
+- selected proposal/report polish anchors:
+  - `docs/calculator/CHECKPOINT_2026-04-27_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_HANDOFF.md`
+  - `docs/calculator/SLICE_PROPOSAL_REPORT_POLISH_PLAN.md`
+  - `docs/calculator/POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md`
+  - `apps/web/lib/post-project-access-policy-route-integration-next-slice-selection-contract.test.ts`
+- closed route-policy integration anchors:
   - `docs/calculator/SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md`
   - `docs/calculator/POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md`
-  - `packages/engine/src/post-ui-input-output-honesty-gate-c-next-slice-selection-contract.test.ts`
+  - `apps/web/lib/project-route-auth.test.ts`
+  - `apps/web/lib/server-project-routes.test.ts`
 - closed calculator re-entry anchors:
   - `docs/calculator/CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_C_CLOSEOUT_HANDOFF.md`
   - `docs/calculator/SLICE_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_PLAN.md`
@@ -418,13 +423,13 @@ Current hotspots:
   `docs/calculator/SOURCE_GAP_LEDGER.md`
 
 The current selected next slice is a productization slice:
-`project_access_policy_route_integration_v1`. Start by wiring the pure
-policy through the current owner-scoped project/proposal route boundary
-without enabling team roles. Closed reinforced, `GDMTXA04A`, `C11c`, raw
+`proposal_report_polish_v1`. Start by auditing PDF/DOCX/workbench
+proposal report honesty for representative wall/floor scenarios without
+changing acoustic values. Closed reinforced, `GDMTXA04A`, `C11c`, raw
 bare, wall-selector, floor continuation, floor many-layer, floor
-layer-order, timber-stud formula, floor fallback, and UI honesty tracks
-stay explicit calculator deferrals or closed references rather than
-active runtime work.
+layer-order, timber-stud formula, floor fallback, UI honesty, and route
+policy integration tracks stay explicit deferrals or closed references
+rather than active calculator runtime work.
 
 ## What This System Is Not Yet
 
@@ -432,7 +437,7 @@ To avoid docs drift, be explicit about current non-features:
 
 - not yet a complete multi-user/team project persistence system
 - not yet route-enabled for team membership; policy exists, but routes
-  remain owner-scoped until the active integration slice lands
+  remain owner-scoped through the landed owner-only adapter
 - not a single-formula calculator
 - not allowed to fabricate unsupported field or low-frequency outputs
 - not complete across every possible floor/wall family corridor

@@ -8,10 +8,10 @@ chain read
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
 
 Last reviewed: 2026-04-27
-(`ui_input_output_honesty_v1` Gate C closed;
-`project_access_policy_route_integration_v1` is selected;
+(`project_access_policy_route_integration_v1` closed;
+`proposal_report_polish_v1` is selected;
 see
-`CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_C_CLOSEOUT_HANDOFF.md`).
+`CHECKPOINT_2026-04-27_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_HANDOFF.md`).
 
 ---
 
@@ -41,11 +41,11 @@ For every next slice decision:
 ## Now
 
 - **Active slice**:
-  `project_access_policy_route_integration_v1`.
+  `proposal_report_polish_v1`.
 - **Latest checkpoint**:
-  [CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_C_CLOSEOUT_HANDOFF.md).
+  [CHECKPOINT_2026-04-27_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_HANDOFF.md](./CHECKPOINT_2026-04-27_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_HANDOFF.md).
 - **Planning surface**:
-  [SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md](./SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md).
+  [SLICE_PROPOSAL_REPORT_POLISH_PLAN.md](./SLICE_PROPOSAL_REPORT_POLISH_PLAN.md).
 - **Personal-use readiness roadmap**:
   [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
   is closed for the current private/internal-use bar. Heavy-core/concrete
@@ -53,14 +53,14 @@ For every next slice decision:
   until new source evidence appears, floor fallback remains
   low-confidence until new source evidence or a bounded family rule
   appears, and UI/input/output honesty is validated.
-- **Just closed**: `ui_input_output_honesty_v1` Gate C.
-  The private/internal-use readiness chain is closed with evidence-tier
-  caveats, and the next selected slice is owner-only route-policy
-  integration. This does not change calculator runtime/source/confidence
-  posture.
+- **Just closed**: `project_access_policy_route_integration_v1`.
+  Project/proposal route decisions now flow through the pure access
+  policy by way of an owner-only adapter. Team route access remains
+  disabled until real membership storage exists. This did not change
+  calculator runtime/source/confidence posture.
 - **Latest broad validation**: 2026-04-27 `pnpm check` is green after
-  UI/input/output honesty Gate C: engine 231 files / 1265 tests, web
-  152 files / 871 passed + 18 skipped through
+  project access policy route integration: engine 231 files / 1265
+  tests, web 154 files / 882 passed + 18 skipped through
   `tools/dev/run-web-vitest.ts`, build 5/5, with only the known
   non-fatal `sharp/@img` optional-package warnings.
 - **Cartography Gate A result**:
@@ -116,6 +116,15 @@ For every next slice decision:
   stacks when the visible evidence-tier caveats are respected. This is
   not a certification, every-possible-family, or full productization
   claim.
+- **Project access policy route integration result**:
+  `apps/web/lib/project-route-auth.ts` now adapts resolved owner scope
+  into the pure project access policy. Project list/create/import/detail
+  and proposal audit append decisions use that policy path while keeping
+  current owner-scoped route behavior. `apps/web/lib/project-route-auth.test.ts`,
+  `apps/web/lib/server-project-routes.test.ts`, and
+  `apps/web/lib/post-project-access-policy-route-integration-next-slice-selection-contract.test.ts`
+  pin the adapter, owner-only route behavior, no team-role route
+  enablement, and next-slice selection.
 - **Heavy-core/concrete closeout**: Gate B closed no-runtime for
   `wall.concrete_heavy_core_screening.field`. The no-runtime
   source/formula audit found no exact catalog row, no direct external
@@ -142,31 +151,31 @@ For every next slice decision:
   closes the slice and selects
   `floor_fallback_low_confidence_cleanup_v1`.
 - **Selected productization follow-up**:
-  `project_access_policy_route_integration_v1`. Wire the pure policy
-  through owner-scoped project/proposal routes without enabling team
-  roles, changing calculator behavior, or making plan/role tier affect
-  acoustic outputs.
+  `proposal_report_polish_v1`. Tighten PDF/DOCX/workbench proposal
+  honesty for representative wall/floor scenarios without changing
+  calculator values, formulas, support, or confidence.
 
 ## Immediate Execution Order
 
-`project_access_policy_route_integration_v1` should now proceed in this
-order:
+`proposal_report_polish_v1` should now proceed in this order:
 
 1. Re-read
-   [SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md](./SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md).
-2. Add a thin route-policy adapter that converts the current
-   owner-scoped route subject into the pure access-policy subject.
-3. Route project list/create/import/detail and proposal audit append
-   decisions through the policy helper while preserving current
-   owner-scoped behavior.
-4. Add/extend route tests proving configured owner success, unauth
-   rejection, preview/configured isolation, cross-owner audit denial, and
-   no team-role route enablement without membership storage.
-5. Keep calculator formulas, runtime values, exact/bound/formula
+   [SLICE_PROPOSAL_REPORT_POLISH_PLAN.md](./SLICE_PROPOSAL_REPORT_POLISH_PLAN.md).
+2. Inventory current PDF, DOCX, and workbench proposal surfaces for
+   exact/source, formula, screening, bound, low-confidence, unsupported,
+   missing-field, and invalid-input states.
+3. Add focused tests that pin report-visible provenance/caveat text for
+   representative private-use floor and wall scenarios before changing
+   rendering.
+4. Tighten proposal/report sections so evidence tier, origin/support
+   posture, and unsupported outputs remain visible in generated models
+   and preview HTML.
+5. Add long-label / many-layer regression coverage where proposal tables
+   or summaries can overflow.
+6. Keep calculator formulas, runtime values, exact/bound/formula
    precedence, confidence scores, and output support unchanged.
-6. Run focused route/policy tests, `pnpm calculator:gate:current`, and
-   broad `pnpm check` because route authorization behavior moves.
-7. Keep `git diff --check` clean.
+7. Run targeted proposal/report tests, `pnpm calculator:gate:current`,
+   and broad `pnpm check`; keep `git diff --check` clean.
 
 ## Personal-Use Readiness Chain
 
@@ -178,15 +187,15 @@ private day-to-day use:
 2. UI / input / output honesty pass.
    - closed at Gate C.
 
-Productization may resume from the selected owner-scoped route-policy
-integration slice. Calculator runtime/source posture stays frozen unless
-a new source-backed calculator slice is explicitly selected.
+Productization has resumed. Calculator runtime/source posture stays
+frozen unless a new source-backed calculator slice is explicitly
+selected.
 
 ## Latest Closed Slices
 
 See [CURRENT_STATE.md](./CURRENT_STATE.md) "Latest Closed Slices" table.
-`ui_input_output_honesty_v1` is now closed and
-`project_access_policy_route_integration_v1` is active.
+`project_access_policy_route_integration_v1` is now closed and
+`proposal_report_polish_v1` is active.
 
 ## Deferred Follow-Up Tracks
 
@@ -201,6 +210,6 @@ See [CURRENT_STATE.md](./CURRENT_STATE.md) "Latest Closed Slices" table.
    reopening, and timber exact-row follow-ups remain closed unless new
    source evidence deliberately selects a source slice.
 3. **Productization route integration** —
-   now selected as `project_access_policy_route_integration_v1`. It must
-   keep route behavior owner-scoped and must not affect acoustic
-   calculations.
+   closed as `project_access_policy_route_integration_v1`. Route
+   behavior remains owner-scoped and acoustic calculations are
+   unaffected.

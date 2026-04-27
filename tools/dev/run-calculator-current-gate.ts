@@ -198,6 +198,10 @@ async function main() {
         "features/workbench/ui-input-output-honesty-gate-a-inventory.test.ts",
         "features/workbench/simple-workbench-output-model.test.ts",
         "lib/calculator-api-validation.test.ts",
+        "lib/post-project-access-policy-route-integration-next-slice-selection-contract.test.ts",
+        "lib/project-access-policy.test.ts",
+        "lib/project-route-auth.test.ts",
+        "lib/server-project-routes.test.ts",
         "--maxWorkers=1"
       ]
     },

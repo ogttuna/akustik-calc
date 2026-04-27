@@ -484,6 +484,65 @@ describe("server project API routes", () => {
     expect(configuredDetailAsPreviewResponse.status).toBe(404);
   });
 
+  it("does not accept team-role route hints until membership storage exists", async () => {
+    signInConfiguredUser("bob@example.com");
+
+    const { POST: createProject } = await import("../app/api/projects/route");
+    const { GET: readProject } = await import("../app/api/projects/[projectId]/route");
+
+    const createResponse = await createProject(
+      jsonRequest("http://localhost/api/projects", {
+        clientName: "Acme",
+        name: "Team-tagged owner project",
+        teamId: "team_acme"
+      })
+    );
+    const createBody = (await createResponse.json()) as {
+      project?: {
+        id?: string;
+      };
+    };
+    const projectId = createBody.project!.id!;
+
+    signInConfiguredUser("alice@example.com");
+
+    const teamRoleReadResponse = await readProject(
+      new Request(`http://localhost/api/projects/${projectId}`, {
+        headers: {
+          "x-dynecho-project-role": "editor",
+          "x-dynecho-team-id": "team_acme"
+        }
+      }),
+      {
+        params: Promise.resolve({
+          projectId
+        })
+      }
+    );
+
+    expect(teamRoleReadResponse.status).toBe(404);
+
+    signInConfiguredUser("bob@example.com");
+
+    const ownerReadResponse = await readProject(new Request(`http://localhost/api/projects/${projectId}`), {
+      params: Promise.resolve({
+        projectId
+      })
+    });
+    const ownerReadBody = (await ownerReadResponse.json()) as {
+      project?: {
+        ownerLabel?: string;
+        teamId?: string;
+      };
+    };
+
+    expect(ownerReadResponse.status).toBe(200);
+    expect(ownerReadBody.project).toMatchObject({
+      ownerLabel: "bob@example.com",
+      teamId: "team_acme"
+    });
+  });
+
   it("appends proposal audit events when a proposal export targets a server project", async () => {
     const { POST: importLocalScenarios } = await import("../app/api/projects/import-local/route");
     const { POST: exportProposalPdf } = await import("../app/api/proposal-pdf/route");

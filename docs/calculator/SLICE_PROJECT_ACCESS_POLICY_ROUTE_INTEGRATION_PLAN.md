@@ -1,7 +1,7 @@
 # Slice Plan - Project Access Policy Route Integration v1
 
-Status: ACTIVE (opened 2026-04-23; resumed 2026-04-27 after calculator
-personal/internal-use readiness Gate C)
+Status: CLOSED (opened 2026-04-23; resumed and closed 2026-04-27 after
+calculator personal/internal-use readiness Gate C)
 
 ## Objective
 
@@ -89,3 +89,29 @@ selected again.
 - Docs clearly state that team policy exists but route access is still
   owner-only until membership storage lands.
 - No calculator runtime behavior changes.
+
+## Closeout 2026-04-27
+
+Implemented:
+
+- `apps/web/lib/project-route-auth.ts` now contains the owner-only
+  route-policy adapter.
+- Project list/create/import/detail routes call the adapter before
+  repository work.
+- Proposal audit appends read the owner-scoped project, authorize
+  `append_proposal_audit`, then write the audit event.
+- `apps/web/lib/project-route-auth.test.ts` pins adapter behavior,
+  project-bound import checks, preview/team isolation, and no route-level
+  team-role enablement.
+- `apps/web/lib/server-project-routes.test.ts` now documents that
+  team-role route hints do not enable cross-owner access.
+- `apps/web/lib/post-project-access-policy-route-integration-next-slice-selection-contract.test.ts`
+  closes this slice and selects `proposal_report_polish_v1`.
+
+Validation:
+
+- targeted route/policy set: web 4 files / 23 tests;
+- `pnpm calculator:gate:current`: engine 98 files / 445 tests, web
+  43 files / 211 passed + 18 skipped, build 5/5;
+- `pnpm check`: lint green, typecheck green, engine 231 files /
+  1265 tests, web 154 files / 882 passed + 18 skipped, build 5/5.

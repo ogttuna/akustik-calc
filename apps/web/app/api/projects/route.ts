@@ -3,8 +3,9 @@ import { NextResponse } from "next/server";
 
 import { getAuthState } from "@/lib/auth";
 import {
-  projectOwnerScopeErrorResponse,
+  projectRouteAccessErrorResponse,
   projectStorageRouteErrorResponse,
+  resolveProjectRouteAccess,
   resolveProjectRouteOwner
 } from "@/lib/project-route-auth";
 import { createDefaultServerProjectRepository } from "@/lib/server-project-storage";
@@ -21,14 +22,18 @@ async function readRequestJson(request: Request) {
 
 export async function GET() {
   const owner = resolveProjectRouteOwner(await getAuthState());
+  const access = resolveProjectRouteAccess({
+    action: "list_projects",
+    owner
+  });
 
-  if (!owner.ok) {
-    return projectOwnerScopeErrorResponse(owner);
+  if (!access.ok) {
+    return projectRouteAccessErrorResponse(access);
   }
 
   try {
     const repository = createDefaultServerProjectRepository();
-    const projects = await repository.listProjects(owner.scope);
+    const projects = await repository.listProjects(access.scope);
 
     return NextResponse.json({
       ok: true,
@@ -41,9 +46,13 @@ export async function GET() {
 
 export async function POST(request: Request) {
   const owner = resolveProjectRouteOwner(await getAuthState());
+  const access = resolveProjectRouteAccess({
+    action: "create_project",
+    owner
+  });
 
-  if (!owner.ok) {
-    return projectOwnerScopeErrorResponse(owner);
+  if (!access.ok) {
+    return projectRouteAccessErrorResponse(access);
   }
 
   const rawPayload = await readRequestJson(request);
@@ -64,7 +73,7 @@ export async function POST(request: Request) {
 
   try {
     const repository = createDefaultServerProjectRepository();
-    const project = await repository.createProject(owner.scope, parsed.data);
+    const project = await repository.createProject(access.scope, parsed.data);
 
     return NextResponse.json(
       {

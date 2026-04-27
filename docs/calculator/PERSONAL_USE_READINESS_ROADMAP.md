@@ -201,15 +201,16 @@ Start from
 ## Current Order
 
 Current validation baseline: 2026-04-27 `pnpm check` is green after
-UI/input/output honesty Gate C. Engine broad is 231 files / 1265 tests.
-Web broad keeps 152 files in scope through
-`tools/dev/run-web-vitest.ts` with 871 passed + 18 skipped. Build is
+project access policy route integration. Engine broad is 231 files /
+1265 tests. Web broad keeps 154 files in scope through
+`tools/dev/run-web-vitest.ts` with 882 passed + 18 skipped. Build is
 5/5 with the known non-fatal `sharp/@img` optional-package warnings.
-Focused current gate after UI honesty Gate C is 98 engine files /
-445 tests, 39 web files / 188 passed plus 18 skipped, build 5/5. The
-targeted UI honesty Gate A contract is 1 file / 4 tests green. The
-targeted Gate B web set is 3 files / 18 tests green, and the targeted
-Gate C closeout contract is 1 file / 5 tests green.
+Focused current gate is 98 engine files / 445 tests, 43 web files /
+211 passed plus 18 skipped, build 5/5. The targeted UI honesty Gate A
+contract is 1 file / 4 tests green. The targeted Gate B web set is
+3 files / 18 tests green, the targeted Gate C closeout contract is
+1 file / 5 tests green, and the targeted route-policy closeout set is
+4 files / 23 tests green.
 
 ## Readiness Decision
 
@@ -226,7 +227,7 @@ families remain blocked until new evidence is deliberately imported.
 
 Next selected work:
 
-1. `project_access_policy_route_integration_v1`.
+1. `proposal_report_polish_v1`.
 
-Calculator runtime/source posture should remain frozen during that
-productization slice.
+Calculator runtime/source posture should remain frozen during
+productization slices.

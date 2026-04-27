@@ -2,8 +2,10 @@ import { NextResponse } from "next/server";
 
 import { getAuthState } from "@/lib/auth";
 import {
-  projectOwnerScopeErrorResponse,
+  projectAccessRefFromRecord,
+  projectRouteAccessErrorResponse,
   projectStorageRouteErrorResponse,
+  resolveProjectRouteAccess,
   resolveProjectRouteOwner
 } from "@/lib/project-route-auth";
 import { createDefaultServerProjectRepository } from "@/lib/server-project-storage";
@@ -20,7 +22,11 @@ export async function GET(_request: Request, context: ProjectRouteContext) {
   const owner = resolveProjectRouteOwner(await getAuthState());
 
   if (!owner.ok) {
-    return projectOwnerScopeErrorResponse(owner);
+    const authAccess = resolveProjectRouteAccess({
+      action: "read_project",
+      owner
+    });
+    return projectRouteAccessErrorResponse(authAccess);
   }
 
   try {
@@ -38,6 +44,16 @@ export async function GET(_request: Request, context: ProjectRouteContext) {
           status: 404
         }
       );
+    }
+
+    const projectAccess = resolveProjectRouteAccess({
+      action: "read_project",
+      owner,
+      project: projectAccessRefFromRecord(project)
+    });
+
+    if (!projectAccess.ok) {
+      return projectRouteAccessErrorResponse(projectAccess);
     }
 
     return NextResponse.json({

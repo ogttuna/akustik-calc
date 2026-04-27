@@ -39,12 +39,12 @@ Important scope note:
   `floor_many_layer_stress_regression_v1`,
   `floor_layer_order_edit_stability_v1`, and
   `all_caller_invalid_thickness_guard_v1`; all seven are now closed.
-  The current selected slice is
-  `dynamic_airborne_split_refactor_v2`. Productization slices
-  `server_backed_project_storage_v1`,
-  `project_access_authorization_v1`, `auth_session_hardening_v1`, and
-  `team_access_model_v1` are closed; `project_access_policy_route_integration_v1`
-  is deferred.
+  Productization slices `server_backed_project_storage_v1`,
+  `project_access_authorization_v1`, `auth_session_hardening_v1`,
+  `team_access_model_v1`, and
+  `project_access_policy_route_integration_v1` are closed. The current
+  selected slice is `proposal_report_polish_v1`, which must not reopen
+  source-gated calculator families.
 - `good_calculator_final_audit_v1` closed without reopening any
   source-gated calculator family. `wall_formula_family_widening_v1`
   then also closed without reopening any blocked family: it clarified

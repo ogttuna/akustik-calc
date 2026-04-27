@@ -18,9 +18,8 @@ fix the drift before starting work.
    — tactical detail for the active slice.
 4. [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
    — closed calculator-only chain for private/internal-use readiness.
-5. [SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md](./SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md)
-   — active productization slice plan for owner-scoped route policy
-   integration.
+5. [SLICE_PROPOSAL_REPORT_POLISH_PLAN.md](./SLICE_PROPOSAL_REPORT_POLISH_PLAN.md)
+   — active productization slice plan for proposal/report honesty.
 
 Then run `pnpm calculator:gate:current` to confirm the green
 baseline.
@@ -31,14 +30,16 @@ baseline.
   — productization closeout: server-backed project storage v1 closed.
 - [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
   — closed calculator readiness chain and private/internal-use caveats.
-- [CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_C_CLOSEOUT_HANDOFF.md)
-  — latest calculator handoff: UI/input/output honesty closed Gate C,
-  private/internal-use readiness is marked ready with caveats, and
-  project access policy route integration is selected.
+- [CHECKPOINT_2026-04-27_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_HANDOFF.md](./CHECKPOINT_2026-04-27_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_HANDOFF.md)
+  — latest productization handoff: owner-only route policy integration
+  closed, and proposal/report polish is selected.
 - [SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md](./SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md)
-  — active implementation plan: wire the pure owner/editor/reviewer/viewer
+  — closed implementation plan: wired the pure owner/editor/reviewer/viewer
   policy through existing owner-scoped project/proposal routes without
   enabling team access yet.
+- [SLICE_PROPOSAL_REPORT_POLISH_PLAN.md](./SLICE_PROPOSAL_REPORT_POLISH_PLAN.md)
+  — active implementation plan: tighten PDF/DOCX/workbench proposal
+  honesty without changing acoustic calculations.
 - [CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_C_CLOSEOUT_HANDOFF.md)
   — previous calculator closeout: dynamic-airborne split v2 Gate C
   closed, C6 moved out of partial, and realistic layer-combination
@@ -135,8 +136,11 @@ baseline.
 - [SLICE_WALL_RESILIENT_BAR_SIDE_COUNT_MODELING_PLAN.md](./SLICE_WALL_RESILIENT_BAR_SIDE_COUNT_MODELING_PLAN.md)
   — closed resilient side-count modeling slice plan.
 - [SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md](./SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md)
-  — active productization slice plan for wiring policy decisions into
+  — closed productization slice plan for wiring policy decisions into
   owner-scoped project/proposal routes.
+- [SLICE_PROPOSAL_REPORT_POLISH_PLAN.md](./SLICE_PROPOSAL_REPORT_POLISH_PLAN.md)
+  — active productization slice plan for tightening proposal/report
+  honesty without changing acoustic values.
 - [SLICE_TEAM_ACCESS_MODEL_PLAN.md](./SLICE_TEAM_ACCESS_MODEL_PLAN.md)
   — closed productization slice plan for team/project role policy.
 - [SLICE_AUTH_SESSION_HARDENING_PLAN.md](./SLICE_AUTH_SESSION_HARDENING_PLAN.md)
