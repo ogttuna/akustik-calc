@@ -1,6 +1,6 @@
 # Slice Plan - Wall Timber Stud + CLT Accuracy Pass
 
-Status: ACTIVE - Gate A landed no-runtime; Gate B starts with timber stud
+Status: ACTIVE - timber-stud Gate B landed no-runtime; CLT Gate B next
 
 Selected: 2026-04-27 by
 `post-wall-heavy-core-concrete-gate-b-next-slice-selection-contract.test.ts`
@@ -68,6 +68,55 @@ stack exactly.
 
 ## Gate B Execution
 
+### Timber Stud Gate B Result
+
+Timber-stud Gate B landed no-runtime in
+`packages/engine/src/wall-timber-stud-gate-b-source-contract.test.ts`.
+It did not change runtime math, output support, formulas, warnings, web
+cards, or confidence class.
+
+Decision:
+
+- generated id: `wall-timber-stud`;
+- candidate id: `wall.timber_stud_formula.field`;
+- current lab `Rw=50`;
+- current field `R'w=42`;
+- evidence tier remains `formula`;
+- confidence remains `low`;
+- runtime tightening is blocked until a future change names an exact
+  matching source row or a documented bounded family rule with explicit
+  tolerance.
+
+Blockers found:
+
+- no verified airborne exact match;
+- no verified airborne lab-fallback match;
+- direct timber exact imports are single-board only;
+- resilient timber exact imports require explicit side-count and
+  acoustic-board topology;
+- the direct double-board official row is a secondary benchmark, not an
+  exact match for live material/fill/cavity topology;
+- linked lightweight holdouts are steel-framed companions, not wood-stud
+  exact truth.
+
+### CLT Wall Gate B Next
+
+Start the next bounded step with `wall.clt_formula.field`.
+
+The CLT Gate B contract must pin:
+
+- generated `wall-clt-local` current values: lab `Rw=42`, field
+  `R'w=41`;
+- `laminated_single_leaf` / `laminated_leaf_sharp_delegate` formula
+  posture;
+- no verified exact or lab-fallback match;
+- no floor CLT source-truth import;
+- exact/benchmark precedence and disallowed floor-row borrowing.
+
+Only change CLT runtime if the contract names a wall-specific source
+row, a documented CLT wall formula rule, or a bounded family rule with
+explicit tolerance.
+
 ## Evidence Policy
 
 Acceptable promotion evidence:
@@ -106,17 +155,15 @@ Unacceptable promotion evidence:
 
 ## Gate B Readiness
 
-Gate B is ready to start for `wall.timber_stud_formula.field`, but
-runtime math remains blocked until the new Gate B contract names a
-defensible evidence path.
-
-The first Gate B contract must answer:
+Gate B is ready to start for `wall.clt_formula.field`, but runtime math
+remains blocked until the new CLT contract names a defensible evidence
+path.
 
 - exact current `Rw` / `R'w` / `Dn,w` / `DnT,w` values and support for
-  the generated timber stack;
+  the generated CLT stack;
 - source/formula basis and allowed dB tolerance;
-- exact/benchmark rows that must not drift or bleed into the live
-  topology;
+- exact/benchmark/floor-source rows that must not drift or bleed into
+  the live wall topology;
 - whether web card wording, warning posture, or output support changes.
 
 If visible card posture changes, add focused web tests. If only engine
@@ -131,7 +178,10 @@ Current selection baseline:
 - targeted Gate A contract:
   `pnpm --filter @dynecho/engine exec vitest run src/wall-timber-stud-clt-gate-a-audit-contract.test.ts --maxWorkers=1`
   - 1 file / 4 tests green;
-- `pnpm calculator:gate:current`: engine 91 files / 416 tests, web 36
+- targeted timber Gate B contract:
+  `pnpm --filter @dynecho/engine exec vitest run src/wall-timber-stud-gate-b-source-contract.test.ts --maxWorkers=1`
+  - 1 file / 4 tests green;
+- `pnpm calculator:gate:current`: engine 92 files / 420 tests, web 36
   files / 170 passed + 18 skipped, build 5/5;
 - broad `pnpm check`: engine 223 files / 1232 tests, web 150 files /
   864 passed + 18 skipped, build 5/5;
