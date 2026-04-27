@@ -1,6 +1,6 @@
 # System Map
 
-Last reviewed: 2026-04-26
+Last reviewed: 2026-04-27
 
 Document role:
 
@@ -15,10 +15,10 @@ Use this together with the agent resume triangle:
 - [CURRENT_STATE.md](./CURRENT_STATE.md) — snapshot (what just closed, what is selected)
 - [MASTER_PLAN.md](./MASTER_PLAN.md) — strategic roadmap + implementation state grid (§3)
 - [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md) — tactical slice detail
-- [SLICE_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_PLAN.md](./SLICE_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_PLAN.md)
-  — active calculator planning surface
+- [SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md](./SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md)
+  — active productization planning surface
 - [POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md](./POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md)
-  — deferred productization plan after calculator final audit
+  — active productization roadmap after calculator readiness closeout
 
 And:
 
@@ -254,7 +254,7 @@ validation path before and after a refactor.
 
 ## Current Architectural Hotspots
 
-As of `2026-04-24`, the calculator final audit is closed and the broad
+As of `2026-04-27`, the calculator final audit is closed and the broad
 repo validation is green. Server-backed project storage,
 project/proposal owner authorization, auth-session hardening, and the pure
 team-access policy model are all closed. The wall formula-family slice
@@ -274,18 +274,24 @@ layer-order slice closed no-runtime after pinning explicit-role exact
 reorder stability, raw/order-sensitive support changes, and blocked
 impact fail-closed posture. The all-caller invalid-thickness slice then
 closed no-runtime and moved engine thickness validity out of partial.
-The active calculator risk is now
-`realistic_layer_combination_coverage_cartography_v1`: map realistic
-floor/wall layer combinations by evidence tier before selecting the
-next runtime widening target. `dynamic_airborne_split_refactor_v2`
-closed Gate C after eleven behavior-preserving correction-guard carves;
-`dynamic-airborne.ts` is now 1793 lines, C6 is closed, and the remaining
-three recursive composer guards are optional architecture backlog.
-Productization route integration is deferred, not cancelled.
+There is no active calculator-risk slice for the current
+private/internal-use bar. Realistic combination
+cartography, heavy-core/concrete, timber stud + CLT, floor fallback, and
+UI/input/output honesty are all closed with evidence-tier caveats.
+`dynamic_airborne_split_refactor_v2` closed Gate C after eleven
+behavior-preserving correction-guard carves; `dynamic-airborne.ts` is now
+1793 lines, C6 is closed, and the remaining three recursive composer
+guards are optional architecture backlog. Productization route
+integration is now selected.
 
 Current hotspots:
 
-- selected calculator re-entry anchors:
+- selected route-policy integration anchors:
+  - `docs/calculator/CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_C_CLOSEOUT_HANDOFF.md`
+  - `docs/calculator/SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md`
+  - `docs/calculator/POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md`
+  - `packages/engine/src/post-ui-input-output-honesty-gate-c-next-slice-selection-contract.test.ts`
+- closed calculator re-entry anchors:
   - `docs/calculator/CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_C_CLOSEOUT_HANDOFF.md`
   - `docs/calculator/SLICE_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_PLAN.md`
   - `docs/calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md`
@@ -411,14 +417,14 @@ Current hotspots:
 - source-backed widening ledger:
   `docs/calculator/SOURCE_GAP_LEDGER.md`
 
-The current selected next slice is a calculator slice:
-`realistic_layer_combination_coverage_cartography_v1`. Continue from
-Gate A by creating the no-runtime executable floor/wall layer
-combination cartography. Closed reinforced, `GDMTXA04A`, `C11c`, raw
-bare, wall-selector, floor
-continuation, floor many-layer, floor layer-order, and timber-stud
-formula tracks stay explicit calculator deferrals or closed references
-rather than active runtime work.
+The current selected next slice is a productization slice:
+`project_access_policy_route_integration_v1`. Start by wiring the pure
+policy through the current owner-scoped project/proposal route boundary
+without enabling team roles. Closed reinforced, `GDMTXA04A`, `C11c`, raw
+bare, wall-selector, floor continuation, floor many-layer, floor
+layer-order, timber-stud formula, floor fallback, and UI honesty tracks
+stay explicit calculator deferrals or closed references rather than
+active runtime work.
 
 ## What This System Is Not Yet
 
@@ -439,11 +445,11 @@ To avoid docs drift, be explicit about current non-features:
   read [CURRENT_STATE.md](./CURRENT_STATE.md)
 - Want the next implementation step:
   read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md)
-- Want the deferred productization plan:
+- Want the productization roadmap:
   read [POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md](./POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md)
-- Want the active calculator plan:
-  read [SLICE_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_PLAN.md](./SLICE_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_PLAN.md)
+- Want the active implementation plan:
+  read [SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md](./SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md)
 - Want answer-origin or support semantics:
   read [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
 - Want the last clean resume point:
-  read [CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_C_CLOSEOUT_HANDOFF.md)
+  read [CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_C_CLOSEOUT_HANDOFF.md)

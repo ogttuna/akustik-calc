@@ -17,9 +17,9 @@ Last revalidation cycle: `2026-04-27`
 (`realistic_layer_combination_coverage_cartography_v1` Gate A landed;
 heavy-core/concrete Gate B closed no-runtime; timber stud + CLT wall
 accuracy pass Gate C closed no-runtime; floor fallback Gate C closed
-no-runtime; `ui_input_output_honesty_v1` Gate B implemented; broad
-Gate B validation is green; latest checkpoint:
-[CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_B_HANDOFF.md)).
+no-runtime; `ui_input_output_honesty_v1` Gate C closed; calculator
+personal/internal-use readiness chain is closed; latest checkpoint:
+[CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_C_CLOSEOUT_HANDOFF.md)).
 Step 8 closed the calculator runtime audit: `MASTER_PLAN.md` §3/§8
 was reconciled to implementation reality, `coverage-grid-consistency.test.ts`
 now maps the grid and C1-C6 signals to executable evidence, the
@@ -30,7 +30,7 @@ storage v1, project/proposal route authorization, auth-session
 hardening, and the pure team-access policy model.
 
 - **Engine broad suite**: latest broad `pnpm check` on 2026-04-27 was
-  230 / 230 files, 1260 / 1260 tests green
+  231 / 231 files, 1265 / 1265 tests green
   (up from 193/1068 pre-session; step-7 landed 4 wall cases +
   F1/F2 engine fixes + 32-assertion cross-mode torture matrix
   + 2 regression guards + post-contract; step-7b landed the
@@ -57,7 +57,7 @@ hardening, and the pure team-access policy model.
   input contract so it asserts parse behavior instead of calling
   `.keyof()` on the exported shared `AirborneContextSchema` `ZodType`.
 - **Broad `pnpm check`**: lint + typecheck + tests + build green on the
-  latest broad run after UI/input/output honesty Gate B; build still emits
+  latest broad run after UI/input/output honesty Gate C; build still emits
   the known non-fatal optional `sharp/@img` warnings through
   `@turbodocx/html-to-docx`.
 - **Focused calculator gate** (`pnpm calculator:gate:current`):
@@ -133,17 +133,20 @@ hardening, and the pure team-access policy model.
   UI honesty Gate A inventory, plus
   `simple-workbench-output-model.test.ts` and
   `calculator-api-validation.test.ts` for the Gate B API/card honesty
-  fixes.
-  Latest focused gate run after Gate B edits:
-  97 engine files / 440 tests,
+  fixes, plus
+  `post-ui-input-output-honesty-gate-c-next-slice-selection-contract.test.ts`
+  for the private/internal-use readiness closeout and productization
+  route-policy selection.
+  Latest focused gate run after Gate C closeout:
+  98 engine files / 445 tests,
   39 web files / 188 passed +
   18 skipped, build 5/5 tasks, whitespace guard clean.
 
 ## Active Slice
 
-`ui_input_output_honesty_v1` (calculator UI/API input and output
-honesty, active). Planning surface:
-[SLICE_UI_INPUT_OUTPUT_HONESTY_PLAN.md](./SLICE_UI_INPUT_OUTPUT_HONESTY_PLAN.md).
+`project_access_policy_route_integration_v1` (productization route
+policy adapter, active). Planning surface:
+[SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md](./SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md).
 
 The previous cartography Gate A landed no-runtime in
 `packages/engine/src/realistic-layer-combination-coverage-cartography.test.ts`.
@@ -235,13 +238,16 @@ genuine missing field-impact inputs from engine-rejected current-path
 companions. Active field-continuation `L'nT,50` remains non-numeric but
 now displays as `unsupported` rather than `needs_input`. The next bounded
 step is Gate C closeout; focused current gate and broad `pnpm check` are
-green for the Gate B behavior.
+green for the Gate B behavior. Gate C then landed no-runtime in
+`packages/engine/src/post-ui-input-output-honesty-gate-c-next-slice-selection-contract.test.ts`.
+It closed the private/internal-use readiness chain with evidence-tier
+caveats and selected `project_access_policy_route_integration_v1`.
 
 Personal-use readiness is now explicitly tracked in
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
-The current priority chain is UI/input/output honesty.
-Productization remains deferred until this calculator readiness chain
-closes or priority explicitly changes.
+That chain is closed. Productization has resumed with the route-policy
+integration slice, but calculator runtime/source posture remains frozen
+unless a new source-backed calculator slice is explicitly selected.
 
 Calculator runtime status: final audit closed and green. The just-closed
 wall formula-family widening slice completed Gate A and Gate B with
@@ -708,14 +714,16 @@ define owner/editor/reviewer/viewer project-action decisions with stable
 denial reasons.
 
 Productization route integration status:
-`project_access_policy_route_integration_v1` is deferred, not cancelled.
-Route behavior remains owner-scoped until that productization slice
-resumes and wires the policy through an owner-only adapter.
+`project_access_policy_route_integration_v1` is now selected. Route
+behavior remains owner-scoped until this slice wires the pure policy
+through an owner-only adapter and proves team roles are not route-enabled
+without membership storage.
 
 ## Latest Closed Slices
 
 | Slice | Master-plan step | Closed | Post-contract |
 |---|---|---|---|
+| `ui_input_output_honesty_v1` | personal-use readiness | 2026-04-27 | `post-ui-input-output-honesty-gate-c-next-slice-selection-contract.test.ts` |
 | `floor_fallback_low_confidence_cleanup_v1` | personal-use readiness | 2026-04-27 | `post-floor-fallback-low-confidence-gate-c-next-slice-selection-contract.test.ts` |
 | `wall_timber_stud_clt_accuracy_pass_v1` | personal-use readiness | 2026-04-27 | `post-wall-timber-stud-clt-gate-c-next-slice-selection-contract.test.ts` |
 | `wall_heavy_core_concrete_gate_b_v1` | personal-use readiness | 2026-04-27 | `post-wall-heavy-core-concrete-gate-b-next-slice-selection-contract.test.ts` |
@@ -882,8 +890,8 @@ time without context loss:
 10. **Floor fallback / low-confidence cleanup** — closed no-runtime at
     Gate C. `floor-steel-fallback` remains low-confidence until new
     source evidence or a bounded steel/open-web family rule exists.
-11. **UI / input / output honesty pass** — active private-use readiness
-    slice. Gate A inventory is next.
+11. **UI / input / output honesty pass** — closed private-use readiness
+    slice. Gate C selected productization route-policy integration.
 
 ## Frozen Posture — Do Not Reopen By Inertia
 
@@ -910,17 +918,16 @@ time without context loss:
 
 ## Resume Order For The Next Agent
 
-1. Read [CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_C_CLOSEOUT_HANDOFF.md)
+1. Read [CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_C_CLOSEOUT_HANDOFF.md)
    for the latest active-slice handoff.
 2. Read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md),
-   [SLICE_UI_INPUT_OUTPUT_HONESTY_PLAN.md](./SLICE_UI_INPUT_OUTPUT_HONESTY_PLAN.md),
-   and [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
-   Start Gate A for `ui_input_output_honesty_v1` as a no-runtime
-   inventory of required inputs, output support, origin/confidence, and
-   unsupported-output visibility.
+   [SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md](./SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md),
+   and [POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md](./POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md).
+   Start `project_access_policy_route_integration_v1` by adding the
+   owner-only route policy adapter and tests.
 3. Read [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
-   for the calculator-priority chain that should stay ahead of
-   productization.
+   for the now-closed calculator-priority chain and its evidence-tier
+   caveats.
 4. Read [DYNAMIC_AIRBORNE_CARTOGRAPHY.md](./DYNAMIC_AIRBORNE_CARTOGRAPHY.md)
    for the split-v1/v2 map, remaining optional guard list, and Gate C
    closeout.
@@ -930,9 +937,8 @@ time without context loss:
    agrees on the active slice, completion signals, and deferred tracks.
    If it does not, fix the drift before starting work.
 6. Run `pnpm calculator:gate:current` as the focused baseline.
-7. Do not change runtime math during UI honesty Gate A unless the
-   inventory finds a defended-looking unsupported or invalid answer that
-   must fail closed.
+7. Do not change runtime math, source posture, output support, or
+   confidence scores during route-policy integration.
 8. Treat [CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_ELEVENTH_CARVE_HANDOFF.md](./CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_ELEVENTH_CARVE_HANDOFF.md),
    [CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_A_HANDOFF.md),
    [CHECKPOINT_2026-04-24_INVALID_THICKNESS_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-24_INVALID_THICKNESS_CLOSEOUT_HANDOFF.md),

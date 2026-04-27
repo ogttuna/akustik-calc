@@ -80,12 +80,14 @@ Progress note 2026-04-23:
   logout cookie-clearing tests, plus shared owner/editor/reviewer/viewer
   project-action vocabulary and a pure policy helper with stable denial
   reasons.
-- Next productization work, when productization resumes, is
+- Current productization work is
   `project_access_policy_route_integration_v1`. It should wire the
   policy into existing project/proposal routes through an owner-only
   adapter before invitations, billing, or database storage.
-- 2026-04-23 refocus note: productization route integration is deferred,
-  not cancelled. The calculator refocus slice
+- 2026-04-27 resume note: productization route integration was deferred,
+  not cancelled, and is now selected again after the calculator
+  private/internal-use readiness chain closed at
+  `ui_input_output_honesty_v1` Gate C. The calculator refocus slice
   `wall_formula_family_widening_v1` has since closed honestly no-runtime,
   `wall_resilient_bar_side_count_modeling_v1` has closed with explicit
   side-count exact imports, `floor_field_continuation_expansion_v1` has
@@ -93,8 +95,10 @@ Progress note 2026-04-23:
   has closed as a no-runtime many-layer audit,
   `floor_layer_order_edit_stability_v1` has closed as a no-runtime
   layer-order audit, `all_caller_invalid_thickness_guard_v1` has closed
-  as a no-runtime direct input-validity audit, and the current selected
-  calculator work has moved to `dynamic_airborne_split_refactor_v2`.
+  as a no-runtime direct input-validity audit,
+  `dynamic_airborne_split_refactor_v2` has closed C6, and the
+  personal-use readiness chain has closed through heavy-core/concrete,
+  timber stud + CLT, floor fallback, and UI/input/output honesty.
 
 ### 3. Billing
 
@@ -170,10 +174,11 @@ evidence.
   (closed 2026-04-23).
 - Completed follow-up slice: `team_access_model_v1`
   (closed 2026-04-23).
-- Deferred productization follow-up:
+- Current selected productization follow-up:
   `project_access_policy_route_integration_v1`.
-- Current selected calculator slice:
-  `dynamic_airborne_split_refactor_v2`.
+- Calculator personal/internal-use readiness:
+  closed with evidence-tier caveats by `ui_input_output_honesty_v1`
+  Gate C.
 
 Reasoning: server-backed persistence is the foundation for auth,
 billing, proposal history, collaboration, monitoring context, and any
@@ -181,5 +186,6 @@ future desktop sync story. With explicit sync/list/load and the pure
 access policy now landed, the next productization step is to make
 existing project/proposal route authorization call that policy without
 claiming team membership before a real membership source exists. That
-work waits behind the current calculator accuracy/coverage re-entry
-slice.
+work no longer waits behind an open calculator readiness slice, but it
+must not alter calculator formulas, values, source posture, output
+support, or confidence scores.

@@ -1,6 +1,6 @@
 # Slice Plan - UI Input / Output Honesty
 
-Status: ACTIVE - Gate C closeout next
+Status: CLOSED - Gate C closeout landed
 
 Selected: 2026-04-27 by
 `post-floor-fallback-low-confidence-gate-c-next-slice-selection-contract.test.ts`
@@ -125,6 +125,9 @@ Disallowed changes:
 
 ## Gate C - Closeout
 
+Status: closed in
+`packages/engine/src/post-ui-input-output-honesty-gate-c-next-slice-selection-contract.test.ts`.
+
 Gate C can close when:
 
 - Gate A inventory and any Gate B UI/API fixes are reflected in docs;
@@ -134,6 +137,14 @@ Gate C can close when:
   changed;
 - the readiness roadmap states whether the calculator is now private-use
   ready or names the next calculator-only blocker.
+
+Gate C result:
+
+- calculator personal/internal-use readiness chain is closed;
+- the calculator is ready for private/internal estimates with visible
+  evidence-tier caveats;
+- no acoustic runtime behavior changed;
+- `project_access_policy_route_integration_v1` is selected next.
 
 ## Validation
 
@@ -167,6 +178,17 @@ Latest Gate B full validation:
   `sharp/@img` warnings, whitespace guard clean.
 - `pnpm check`: lint green, typecheck green, engine 230 files /
   1260 tests, web 152 files / 871 passed + 18 skipped, build 5/5 with
+  the same known non-fatal `sharp/@img` warnings.
+
+Latest Gate C closeout validation:
+
+- targeted closeout contract: 1 file / 5 tests
+  (`post-ui-input-output-honesty-gate-c-next-slice-selection-contract`).
+- `pnpm calculator:gate:current`: engine 98 files / 445 tests, web
+  39 files / 188 passed + 18 skipped, build 5/5 with known non-fatal
+  `sharp/@img` warnings, whitespace guard clean.
+- `pnpm check`: lint green, typecheck green, engine 231 files /
+  1265 tests, web 152 files / 871 passed + 18 skipped, build 5/5 with
   the same known non-fatal `sharp/@img` warnings.
 
 Minimum after Gate B or Gate C:

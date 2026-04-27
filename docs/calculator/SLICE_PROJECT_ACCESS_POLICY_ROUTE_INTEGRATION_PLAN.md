@@ -1,6 +1,7 @@
 # Slice Plan - Project Access Policy Route Integration v1
 
-Status: DEFERRED (opened 2026-04-23; deferred 2026-04-23 after broad calculator refocus)
+Status: ACTIVE (opened 2026-04-23; resumed 2026-04-27 after calculator
+personal/internal-use readiness Gate C)
 
 ## Objective
 
@@ -15,17 +16,16 @@ adapter and regression tests.
 
 ## Deferral Note
 
-The pure access policy remains valid, but this route-integration slice is
-no longer the current selected work. After broad revalidation the project
-priority was reasserted as calculation accuracy and coverage first, so
-the active calculator work has moved through wall formula-family,
-timber source-corpus, resilient side-count, and floor continuation
-closeouts, then floor many-layer closeout, to
-floor layer-order closeout and all-caller invalid-thickness closeout.
-The current selected calculator slice is
-`dynamic_airborne_split_refactor_v2`. Resume this productization
-slice after the selected calculator slice closes or if deployment/access
-risk becomes the chosen priority again.
+The pure access policy remains valid. This route-integration slice was
+deferred while calculation accuracy and coverage were reasserted as the
+priority. That calculator re-entry chain has now closed through wall
+formula-family, timber source-corpus, resilient side-count, floor
+continuation, floor many-layer, floor layer-order, all-caller
+invalid-thickness, dynamic-airborne split v2, realistic combination
+cartography, heavy-core/concrete, timber stud + CLT, floor fallback, and
+UI/input/output honesty. `ui_input_output_honesty_v1` Gate C closed the
+private/internal-use readiness chain, so this productization slice is
+selected again.
 
 ## Non-Goals
 

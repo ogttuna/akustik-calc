@@ -17,11 +17,10 @@ fix the drift before starting work.
 3. [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md)
    — tactical detail for the active slice.
 4. [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
-   — calculator-only chain for reaching private-use readiness before
-   deferred productization resumes.
-5. [SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md](./SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md)
-   — active calculator slice plan for the remaining low-confidence
-   floor fallback cleanup.
+   — closed calculator-only chain for private/internal-use readiness.
+5. [SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md](./SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md)
+   — active productization slice plan for owner-scoped route policy
+   integration.
 
 Then run `pnpm calculator:gate:current` to confirm the green
 baseline.
@@ -31,15 +30,15 @@ baseline.
 - [CHECKPOINT_2026-04-23_SERVER_BACKED_PROJECT_STORAGE_HANDOFF.md](./CHECKPOINT_2026-04-23_SERVER_BACKED_PROJECT_STORAGE_HANDOFF.md)
   — productization closeout: server-backed project storage v1 closed.
 - [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
-  — active calculator readiness chain: floor fallback cleanup, then
-  UI/input/output honesty before deferred productization resumes.
-- [SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md](./SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md)
-  — active implementation plan: audit and tighten the remaining
-  low-confidence steel suspended floor fallback without promoting
-  screening evidence beyond what sources support.
-- [CHECKPOINT_2026-04-27_WALL_TIMBER_STUD_CLT_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_TIMBER_STUD_CLT_GATE_C_CLOSEOUT_HANDOFF.md)
-  — latest active calculator handoff: timber stud + CLT wall accuracy
-  closed no-runtime and selected floor fallback cleanup.
+  — closed calculator readiness chain and private/internal-use caveats.
+- [CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_C_CLOSEOUT_HANDOFF.md)
+  — latest calculator handoff: UI/input/output honesty closed Gate C,
+  private/internal-use readiness is marked ready with caveats, and
+  project access policy route integration is selected.
+- [SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md](./SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md)
+  — active implementation plan: wire the pure owner/editor/reviewer/viewer
+  policy through existing owner-scoped project/proposal routes without
+  enabling team access yet.
 - [CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_C_CLOSEOUT_HANDOFF.md)
   — previous calculator closeout: dynamic-airborne split v2 Gate C
   closed, C6 moved out of partial, and realistic layer-combination
@@ -123,8 +122,8 @@ baseline.
 - [SLICE_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_PLAN.md](./SLICE_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_PLAN.md)
   — closed calculator planning surface; maps realistic layer
   combinations by evidence tier before selecting runtime widening.
-- [SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md](./SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md)
-  — active floor fallback cleanup slice plan.
+- [SLICE_UI_INPUT_OUTPUT_HONESTY_PLAN.md](./SLICE_UI_INPUT_OUTPUT_HONESTY_PLAN.md)
+  — closed UI/input/output honesty slice plan.
 - [SLICE_ALL_CALLER_INVALID_THICKNESS_GUARD_PLAN.md](./SLICE_ALL_CALLER_INVALID_THICKNESS_GUARD_PLAN.md)
   — closed direct invalid-thickness guard plan.
 - [SLICE_FLOOR_LAYER_ORDER_EDIT_STABILITY_PLAN.md](./SLICE_FLOOR_LAYER_ORDER_EDIT_STABILITY_PLAN.md)
@@ -136,7 +135,7 @@ baseline.
 - [SLICE_WALL_RESILIENT_BAR_SIDE_COUNT_MODELING_PLAN.md](./SLICE_WALL_RESILIENT_BAR_SIDE_COUNT_MODELING_PLAN.md)
   — closed resilient side-count modeling slice plan.
 - [SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md](./SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md)
-  — deferred productization slice plan for wiring policy decisions into
+  — active productization slice plan for wiring policy decisions into
   owner-scoped project/proposal routes.
 - [SLICE_TEAM_ACCESS_MODEL_PLAN.md](./SLICE_TEAM_ACCESS_MODEL_PLAN.md)
   — closed productization slice plan for team/project role policy.

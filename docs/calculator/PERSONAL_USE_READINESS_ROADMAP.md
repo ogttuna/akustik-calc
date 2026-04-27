@@ -4,9 +4,9 @@ Date: 2026-04-27
 
 ## Purpose
 
-This roadmap defines the remaining calculator-focused work needed before
-DynEcho is reasonable for private, day-to-day acoustic estimates across
-common wall and floor layer combinations.
+This roadmap records the calculator-focused work that made DynEcho
+reasonable for private, day-to-day acoustic estimates across common wall
+and floor layer combinations.
 
 This is not a productization roadmap. Auth, billing, deployment,
 collaboration, and polished reporting can stay deferred. The readiness
@@ -145,16 +145,15 @@ Gate A / Gate B result:
 - preserve explicit unsupported output posture for unavailable low
   frequency impact outputs.
 
-Required next:
+Closed follow-up:
 
-- continue with `ui_input_output_honesty_v1`;
+- `ui_input_output_honesty_v1` was selected and has now closed Gate C;
 - keep `floor-steel-fallback` low-confidence until new source evidence
   or a bounded steel/open-web family rule exists.
 
 ### 4. UI / Input / Output Honesty Pass
 
-Status: active slice; Gate B implemented and validated, Gate C closeout
-next.
+Status: closed at Gate C.
 
 This pass should make the existing engine honesty visible and ergonomic
 for private use. It does not need full product polish, but it must avoid
@@ -186,10 +185,15 @@ Gate B result:
 - no acoustic formula, runtime value, confidence score, or precedence
   changed.
 
-Gate C required before private-use readiness decision:
+Gate C closeout:
 
-- update the readiness roadmap to either close the calculator readiness
-  chain or name the next calculator-only blocker.
+- `packages/engine/src/post-ui-input-output-honesty-gate-c-next-slice-selection-contract.test.ts`
+  closes the readiness chain;
+- DynEcho is private/internal-use ready with evidence-tier caveats;
+- `project_access_policy_route_integration_v1` is selected next as a
+  productization slice;
+- no acoustic formula, runtime value, confidence score, or output
+  support changed.
 
 Start from
 [SLICE_UI_INPUT_OUTPUT_HONESTY_PLAN.md](./SLICE_UI_INPUT_OUTPUT_HONESTY_PLAN.md).
@@ -197,18 +201,32 @@ Start from
 ## Current Order
 
 Current validation baseline: 2026-04-27 `pnpm check` is green after
-UI/input/output honesty Gate B. Engine broad is 230 files / 1260 tests.
+UI/input/output honesty Gate C. Engine broad is 231 files / 1265 tests.
 Web broad keeps 152 files in scope through
 `tools/dev/run-web-vitest.ts` with 871 passed + 18 skipped. Build is
 5/5 with the known non-fatal `sharp/@img` optional-package warnings.
-Focused current gate after UI honesty Gate B is 97 engine files /
-440 tests, 39 web files / 188 passed plus 18 skipped, build 5/5. The
+Focused current gate after UI honesty Gate C is 98 engine files /
+445 tests, 39 web files / 188 passed plus 18 skipped, build 5/5. The
 targeted UI honesty Gate A contract is 1 file / 4 tests green. The
-targeted Gate B web set is 3 files / 18 tests green.
+targeted Gate B web set is 3 files / 18 tests green, and the targeted
+Gate C closeout contract is 1 file / 5 tests green.
 
-Do these in order unless new evidence changes the ranking:
+## Readiness Decision
 
-1. UI / input / output honesty pass.
+DynEcho is now ready for private/internal use by a knowledgeable user
+who respects the visible evidence labels.
 
-`project_access_policy_route_integration_v1` remains deferred until this
-calculator readiness chain closes or priority explicitly changes.
+This means common wall/floor stacks can be used for day-to-day estimates
+when they land on exact/source, benchmark, formula, family, screening,
+or bound lanes, and unsupported or missing-input cases stay explicit.
+
+This does not mean every possible floor/wall family corridor is covered,
+or that the app is certified for regulatory submission. Blocked source
+families remain blocked until new evidence is deliberately imported.
+
+Next selected work:
+
+1. `project_access_policy_route_integration_v1`.
+
+Calculator runtime/source posture should remain frozen during that
+productization slice.

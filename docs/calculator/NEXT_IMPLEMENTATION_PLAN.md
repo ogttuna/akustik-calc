@@ -8,10 +8,10 @@ chain read
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
 
 Last reviewed: 2026-04-27
-(`ui_input_output_honesty_v1` Gate B implemented and validated;
-Gate C closeout is next;
+(`ui_input_output_honesty_v1` Gate C closed;
+`project_access_policy_route_integration_v1` is selected;
 see
-`CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_B_HANDOFF.md`).
+`CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_C_CLOSEOUT_HANDOFF.md`).
 
 ---
 
@@ -41,24 +41,25 @@ For every next slice decision:
 ## Now
 
 - **Active slice**:
-  `ui_input_output_honesty_v1`.
+  `project_access_policy_route_integration_v1`.
 - **Latest checkpoint**:
-  [CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_B_HANDOFF.md).
+  [CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_C_CLOSEOUT_HANDOFF.md).
 - **Planning surface**:
-  [SLICE_UI_INPUT_OUTPUT_HONESTY_PLAN.md](./SLICE_UI_INPUT_OUTPUT_HONESTY_PLAN.md).
+  [SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md](./SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md).
 - **Personal-use readiness roadmap**:
   [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
-  fixes the remaining calculator-priority chain as UI/input/output
-  honesty before productization resumes. Heavy-core/concrete remains
-  screening, timber stud + CLT wall remain formula-owned until new
-  source evidence appears, and floor fallback remains low-confidence
-  until new source evidence or a bounded family rule appears.
-- **Just closed**: `dynamic_airborne_split_refactor_v2` Gate C.
-  Gate B carved eleven correction guards into
-  `dynamic-airborne-correction-guards.ts`; `dynamic-airborne.ts` is now
-  1793 lines, below the 2000-line C6 threshold.
+  is closed for the current private/internal-use bar. Heavy-core/concrete
+  remains screening, timber stud + CLT wall remain formula/source-gated
+  until new source evidence appears, floor fallback remains
+  low-confidence until new source evidence or a bounded family rule
+  appears, and UI/input/output honesty is validated.
+- **Just closed**: `ui_input_output_honesty_v1` Gate C.
+  The private/internal-use readiness chain is closed with evidence-tier
+  caveats, and the next selected slice is owner-only route-policy
+  integration. This does not change calculator runtime/source/confidence
+  posture.
 - **Latest broad validation**: 2026-04-27 `pnpm check` is green after
-  UI/input/output honesty Gate B: engine 230 files / 1260 tests, web
+  UI/input/output honesty Gate C: engine 231 files / 1265 tests, web
   152 files / 871 passed + 18 skipped through
   `tools/dev/run-web-vitest.ts`, build 5/5, with only the known
   non-fatal `sharp/@img` optional-package warnings.
@@ -107,6 +108,14 @@ For every next slice decision:
   active-continuation `L'nT,50` as `unsupported` and non-numeric. No
   acoustic runtime values, formulas, confidence scores, or support
   precedence changed.
+- **UI/input/output honesty Gate C result**:
+  `packages/engine/src/post-ui-input-output-honesty-gate-c-next-slice-selection-contract.test.ts`
+  closes the personal-use readiness chain and selects
+  `project_access_policy_route_integration_v1`. The calculator is now
+  reasonable for private/internal estimates across common wall/floor
+  stacks when the visible evidence-tier caveats are respected. This is
+  not a certification, every-possible-family, or full productization
+  claim.
 - **Heavy-core/concrete closeout**: Gate B closed no-runtime for
   `wall.concrete_heavy_core_screening.field`. The no-runtime
   source/formula audit found no exact catalog row, no direct external
@@ -132,26 +141,32 @@ For every next slice decision:
   `packages/engine/src/post-wall-timber-stud-clt-gate-c-next-slice-selection-contract.test.ts`
   closes the slice and selects
   `floor_fallback_low_confidence_cleanup_v1`.
-- **Deferred but not cancelled**:
-  `project_access_policy_route_integration_v1`. Do not resume
-  productization until the selected calculator slice closes or priority
-  explicitly changes.
+- **Selected productization follow-up**:
+  `project_access_policy_route_integration_v1`. Wire the pure policy
+  through owner-scoped project/proposal routes without enabling team
+  roles, changing calculator behavior, or making plan/role tier affect
+  acoustic outputs.
 
 ## Immediate Execution Order
 
-`ui_input_output_honesty_v1` should now proceed in this order:
+`project_access_policy_route_integration_v1` should now proceed in this
+order:
 
 1. Re-read
-   [SLICE_UI_INPUT_OUTPUT_HONESTY_PLAN.md](./SLICE_UI_INPUT_OUTPUT_HONESTY_PLAN.md).
-2. Close Gate C with a post-contract/checkpoint
-   that states whether the calculator readiness chain is complete or
-   names the next calculator-only blocker.
-3. Keep formulas, runtime values, exact/bound/formula precedence, and
-   confidence scores unchanged.
-4. Keep `GDMTXA04A`, `C11c`, raw bare open-box/open-web impact,
-   heavy-core concrete, wall selector, timber-stud, and CLT wall
-   follow-ups closed unless new evidence deliberately selects them.
-5. Keep `git diff --check` clean.
+   [SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md](./SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md).
+2. Add a thin route-policy adapter that converts the current
+   owner-scoped route subject into the pure access-policy subject.
+3. Route project list/create/import/detail and proposal audit append
+   decisions through the policy helper while preserving current
+   owner-scoped behavior.
+4. Add/extend route tests proving configured owner success, unauth
+   rejection, preview/configured isolation, cross-owner audit denial, and
+   no team-role route enablement without membership storage.
+5. Keep calculator formulas, runtime values, exact/bound/formula
+   precedence, confidence scores, and output support unchanged.
+6. Run focused route/policy tests, `pnpm calculator:gate:current`, and
+   broad `pnpm check` because route authorization behavior moves.
+7. Keep `git diff --check` clean.
 
 ## Personal-Use Readiness Chain
 
@@ -161,16 +176,17 @@ private day-to-day use:
 1. Floor fallback / low-confidence cleanup.
    - closed no-runtime at Gate C.
 2. UI / input / output honesty pass.
-   - Gate B implemented and validated; Gate C closeout is next.
+   - closed at Gate C.
 
-Do not resume productization ahead of this chain unless priority
-explicitly changes.
+Productization may resume from the selected owner-scoped route-policy
+integration slice. Calculator runtime/source posture stays frozen unless
+a new source-backed calculator slice is explicitly selected.
 
 ## Latest Closed Slices
 
 See [CURRENT_STATE.md](./CURRENT_STATE.md) "Latest Closed Slices" table.
-`floor_fallback_low_confidence_cleanup_v1` is now closed and
-`ui_input_output_honesty_v1` is active with Gate C closeout next.
+`ui_input_output_honesty_v1` is now closed and
+`project_access_policy_route_integration_v1` is active.
 
 ## Deferred Follow-Up Tracks
 
@@ -185,5 +201,6 @@ See [CURRENT_STATE.md](./CURRENT_STATE.md) "Latest Closed Slices" table.
    reopening, and timber exact-row follow-ups remain closed unless new
    source evidence deliberately selects a source slice.
 3. **Productization route integration** —
-   `project_access_policy_route_integration_v1` remains deferred until
-   `ui_input_output_honesty_v1` closes or priority explicitly changes.
+   now selected as `project_access_policy_route_integration_v1`. It must
+   keep route behavior owner-scoped and must not affect acoustic
+   calculations.

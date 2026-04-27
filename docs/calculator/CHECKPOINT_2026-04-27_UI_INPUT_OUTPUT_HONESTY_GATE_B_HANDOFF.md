@@ -4,7 +4,8 @@ Date: 2026-04-27
 
 Slice: `ui_input_output_honesty_v1`
 
-Status: Gate B implemented and validated; Gate C closeout is next.
+Status: Gate B implemented and validated. Superseded by
+`CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_C_CLOSEOUT_HANDOFF.md`.
 
 ## What Landed
 
@@ -85,12 +86,11 @@ behavior:
 - build still emits only the known non-fatal `sharp/@img`
   optional-package warnings through `@turbodocx/html-to-docx`.
 
-## Next Action
+## Superseded Next Action
 
-Gate C closeout should run next:
+Gate C closeout has now run:
 
-1. update the readiness roadmap and current-state docs to say
-   whether the calculator is private-use ready or name the next
-   calculator-only blocker;
-2. keep productization deferred unless the calculator readiness chain is
-   explicitly closed.
+- `ui_input_output_honesty_v1` is closed;
+- calculator private/internal-use readiness is marked ready with
+  evidence-tier caveats;
+- `project_access_policy_route_integration_v1` is selected next.
