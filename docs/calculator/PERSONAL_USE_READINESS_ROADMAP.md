@@ -201,11 +201,11 @@ Start from
 ## Current Order
 
 Current validation baseline: 2026-04-27 `pnpm check` is green after
-proposal/report polish closeout. Engine broad is 232 files /
-1270 tests. Web broad keeps 155 files in scope through
+source-gap revalidation Gate A. Engine broad is 233 files /
+1275 tests. Web broad keeps 155 files in scope through
 `tools/dev/run-web-vitest.ts` with 885 passed + 18 skipped. Build is
 5/5 with the known non-fatal `sharp/@img` optional-package warnings.
-Focused current gate is 99 engine files / 450 tests, 43 web files /
+Focused current gate is 100 engine files / 455 tests, 43 web files /
 211 passed plus 18 skipped, build 5/5. The targeted UI honesty Gate A
 contract is 1 file / 4 tests green. The targeted Gate B web set is
 3 files / 18 tests green, the targeted Gate C closeout contract is
@@ -228,9 +228,10 @@ families remain blocked until new evidence is deliberately imported.
 
 Next selected work:
 
-1. `calculator_source_gap_revalidation_v1`.
+1. `wall_coverage_expansion_planning_v2`.
 
+`calculator_source_gap_revalidation_v1` Gate A is closed no-runtime.
 Calculator runtime/source posture should remain frozen during Gate A of
-that slice. The next movement must be a source-backed or formula-owned
-candidate selected by an executable revalidation contract, not an
-implicit reopen from nearby green tests.
+the selected wall coverage planning slice. The next movement must be a
+source-backed or formula-owned wall candidate selected by an executable
+planning contract, not an implicit reopen from nearby green tests.

@@ -136,7 +136,7 @@ authorization is policy-backed. The proposal/report polish slice now
 keeps evidence-tier honesty visible when calculator results move from
 cards into PDF/DOCX/workbench proposal surfaces. Additional
 productization work is deferred while the active selected slice returns
-to calculator source-gap revalidation.
+to calculator wall coverage planning.
 
 ### 5. Deployment And Monitoring
 
@@ -191,8 +191,11 @@ evidence.
   (closed 2026-04-27).
 - Completed follow-up slice: `proposal_report_polish_v1`
   (closed 2026-04-27).
+- Completed calculator revalidation Gate A:
+  `calculator_source_gap_revalidation_v1` (closed no-runtime
+  2026-04-27).
 - Current selected calculator follow-up:
-  `calculator_source_gap_revalidation_v1`.
+  `wall_coverage_expansion_planning_v2`.
 - Calculator personal/internal-use readiness:
   closed with evidence-tier caveats by `ui_input_output_honesty_v1`
   Gate C.
@@ -201,7 +204,8 @@ Reasoning: server-backed persistence is the foundation for auth,
 billing, proposal history, collaboration, monitoring context, and any
 future desktop sync story. With explicit sync/list/load, owner-only
 policy-backed route authorization, and proposal/report honesty now
-landed, the next user-priority step is calculator source-gap
-revalidation. That work must not alter calculator formulas, values,
-source posture, output support, or confidence scores until a
-source-backed or formula-owned candidate is deliberately selected.
+landed, the source-gap revalidation pass closed no-runtime and selected
+wall coverage planning as the next user-priority calculator step. That
+work must not alter calculator formulas, values, source posture, output
+support, or confidence scores until a source-backed or formula-owned
+wall candidate is deliberately selected.

@@ -1,7 +1,7 @@
 # Slice Plan - Calculator Source Gap Revalidation v1
 
-Status: SELECTED (opened 2026-04-27 after
-`proposal_report_polish_v1`)
+Status: CLOSED (opened 2026-04-27 after
+`proposal_report_polish_v1`; Gate A closed no-runtime 2026-04-27)
 
 ## Objective
 
@@ -11,6 +11,12 @@ runtime or source-acquisition slice only when the evidence supports it.
 
 Gate A is intentionally no-runtime: it updates the executable map of
 what is blocked, what is source-backed, and what should be worked next.
+
+Gate A has now landed in
+`packages/engine/src/calculator-source-gap-revalidation-gate-a-contract.test.ts`.
+It selected `wall_coverage_expansion_planning_v2` because the
+historical blocked-source queue has no runtime-eligible candidate and
+wall coverage remains the highest-value scope/accuracy planning gap.
 
 ## Non-Goals
 
@@ -65,6 +71,23 @@ what is blocked, what is source-backed, and what should be worked next.
 5. Update the plan docs and handoff once the no-runtime ranking is
    green.
 
+## Gate A Closeout - Landed 2026-04-27
+
+Result:
+
+- no calculator runtime behavior changed;
+- `GDMTXA04A`, `C11c`, raw bare open-box/open-web impact, and
+  wall-selector behavior remain closed fail-closed;
+- heavy-core/concrete, timber stud, CLT wall, and floor fallback remain
+  in their current screening/formula/low-confidence posture rather than
+  being promoted from nearby green tests;
+- the selected next slice is
+  [SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md](./SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md).
+
+Handoff:
+
+- [CHECKPOINT_2026-04-27_CALCULATOR_SOURCE_GAP_REVALIDATION_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_CALCULATOR_SOURCE_GAP_REVALIDATION_GATE_A_HANDOFF.md)
+
 ## Candidate Families To Re-Rank
 
 | Candidate | Current posture | Gate A question |
@@ -94,10 +117,11 @@ what is blocked, what is source-backed, and what should be worked next.
 
 ## Next Bounded Step
 
-Start Gate A:
+Start `wall_coverage_expansion_planning_v2` Gate A:
 
 1. run the baseline focused gate;
-2. inventory the current blocked-source and recent readiness contracts;
-3. write the no-runtime source-gap revalidation contract;
-4. update docs with the selected next runtime/source candidate only
-   after the contract passes.
+2. inventory current wall coverage and source/formula/screening
+   ownership;
+3. write the no-runtime wall planning contract;
+4. select the first wall runtime/source slice only after that contract
+   passes.

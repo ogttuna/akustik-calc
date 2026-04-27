@@ -8,10 +8,10 @@ chain read
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
 
 Last reviewed: 2026-04-27
-(`proposal_report_polish_v1` closed; selected
-`calculator_source_gap_revalidation_v1`;
+(`calculator_source_gap_revalidation_v1` Gate A closed; selected
+`wall_coverage_expansion_planning_v2`;
 see
-`SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md`).
+`SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md`).
 
 ---
 
@@ -41,11 +41,11 @@ For every next slice decision:
 ## Now
 
 - **Active slice**:
-  `calculator_source_gap_revalidation_v1`.
+  `wall_coverage_expansion_planning_v2`.
 - **Latest checkpoint**:
-  [CHECKPOINT_2026-04-27_PROPOSAL_REPORT_POLISH_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_PROPOSAL_REPORT_POLISH_CLOSEOUT_HANDOFF.md).
+  [CHECKPOINT_2026-04-27_CALCULATOR_SOURCE_GAP_REVALIDATION_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_CALCULATOR_SOURCE_GAP_REVALIDATION_GATE_A_HANDOFF.md).
 - **Planning surface**:
-  [SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md](./SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md).
+  [SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md](./SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md).
 - **Personal-use readiness roadmap**:
   [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
   is closed for the current private/internal-use bar. Heavy-core/concrete
@@ -59,7 +59,7 @@ For every next slice decision:
   caveats, and many-layer / long-label report rendering is pinned.
   This did not change calculator runtime/source/confidence posture.
 - **Latest broad validation**: 2026-04-27 `pnpm check` is green after
-  proposal/report polish closeout: engine 232 files / 1270
+  calculator source-gap revalidation Gate A: engine 233 files / 1275
   tests, web 155 files / 885 passed + 18 skipped through
   `tools/dev/run-web-vitest.ts`, build 5/5, with only the known
   non-fatal `sharp/@img` optional-package warnings.
@@ -177,7 +177,7 @@ For every next slice decision:
   state when the layer table is capped. Targeted proposal/report tests
   are green across 5 files / 18 tests, web lint is green,
   `pnpm calculator:gate:current` is green, and broad `pnpm check` is
-  green with engine 232 files / 1270 tests and web 155 files / 885
+  green with engine 233 files / 1275 tests and web 155 files / 885
   passed + 18 skipped.
 - **Proposal/report polish closeout**:
   `packages/engine/src/post-proposal-report-polish-next-slice-selection-contract.test.ts`
@@ -187,31 +187,38 @@ For every next slice decision:
   `pnpm calculator:gate:current` is green after adding the closeout
   contract: engine 99 files / 450 tests, web 43 files / 211 passed +
   18 skipped, build 5/5 with the known non-fatal `sharp/@img` warnings.
+- **Calculator source-gap revalidation Gate A**:
+  `packages/engine/src/calculator-source-gap-revalidation-gate-a-contract.test.ts`
+  closes `calculator_source_gap_revalidation_v1` no-runtime and selects
+  `wall_coverage_expansion_planning_v2`. `GDMTXA04A`, `C11c`, raw bare
+  open-box/open-web impact, and wall-selector behavior remain
+  fail-closed. Heavy-core/concrete, timber stud, CLT wall, and floor
+  fallback are not promoted from nearby green tests.
+  `pnpm calculator:gate:current` is green after adding the Gate A
+  contract: engine 100 files / 455 tests, web 43 files / 211 passed +
+  18 skipped, build 5/5 with the known non-fatal `sharp/@img` warnings.
 
 ## Immediate Execution Order
 
-`calculator_source_gap_revalidation_v1` should now proceed in this
+`wall_coverage_expansion_planning_v2` should now proceed in this
 order:
 
 1. Re-read
-   [SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md](./SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md)
+   [SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md](./SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md)
    and
-   [CHECKPOINT_2026-04-27_PROPOSAL_REPORT_POLISH_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_PROPOSAL_REPORT_POLISH_CLOSEOUT_HANDOFF.md).
+   [CHECKPOINT_2026-04-27_CALCULATOR_SOURCE_GAP_REVALIDATION_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_CALCULATOR_SOURCE_GAP_REVALIDATION_GATE_A_HANDOFF.md).
 2. Run `pnpm calculator:gate:current` as the baseline.
-3. Inventory the current blocked-source and recent readiness contracts:
-   `SOURCE_GAP_LEDGER.md`, `CALCULATION_MODEL_AND_VALIDATION.md`,
-   `remaining-source-gap-posture-matrix.test.ts`,
-   `source-gap-candidate-re-rank-contract.test.ts`,
-   `blocked-source-rank-*`, recent heavy-core/timber/CLT/floor-fallback
-   contracts, and related web card route matrices.
-4. Add or update one no-runtime source-gap revalidation contract that
-   records the current candidate ranking, blocker or ready reason, and
-   evidence owner file/test for each candidate.
-5. Select the next source-acquisition or narrow Gate B runtime/source
-   slice only after that revalidation contract passes.
+3. Inventory the current wall coverage map:
+   exact/catalog/benchmark/formula/screening ownership, generated
+   wall-stack posture, preset coverage, and the landed wall guardrails.
+4. Add one no-runtime Gate A planning contract that records the current
+   wall candidate order and evidence owner files.
+5. Select the first wall Gate B runtime/source slice only if that
+   contract proves it is source-backed, benchmark-backed, bounded, or
+   formula-owned.
 6. Keep formulas, runtime values, exact/bound/formula precedence,
    confidence scores, output support, and evidence tiers unchanged
-   during Gate A.
+   during Gate A planning.
 
 ## Personal-Use Readiness Chain
 
@@ -231,8 +238,8 @@ is deferred.
 ## Latest Closed Slices
 
 See [CURRENT_STATE.md](./CURRENT_STATE.md) "Latest Closed Slices" table.
-`proposal_report_polish_v1` is now closed and
-`calculator_source_gap_revalidation_v1` is active.
+`calculator_source_gap_revalidation_v1` Gate A is now closed and
+`wall_coverage_expansion_planning_v2` is active.
 
 ## Deferred Follow-Up Tracks
 

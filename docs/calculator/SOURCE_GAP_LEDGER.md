@@ -1,7 +1,8 @@
 # Dynamic Calculator Source Gap Ledger
 
 Last reviewed: 2026-04-27 (`calculator_source_gap_revalidation_v1`
-selected; source-gap content remains floor-dominant historical context)
+Gate A closed; `wall_coverage_expansion_planning_v2` selected;
+source-gap content remains floor-dominant historical context)
 
 Purpose:
 
@@ -43,10 +44,12 @@ Important scope note:
   `project_access_authorization_v1`, `auth_session_hardening_v1`,
   `team_access_model_v1`, and
   `project_access_policy_route_integration_v1` are closed. The
-  proposal/report polish slice is also closed no-runtime. The current
-  selected slice is `calculator_source_gap_revalidation_v1`, whose Gate
-  A must inventory and rerank remaining source-gated families before any
-  runtime change.
+  proposal/report polish slice is also closed no-runtime.
+  `calculator_source_gap_revalidation_v1` Gate A is now closed. It
+  confirmed the blocked-source posture below and selected
+  `wall_coverage_expansion_planning_v2` because no blocked floor/source
+  candidate is currently runtime-eligible and wall coverage remains the
+  higher-value scope/accuracy planning gap.
 - `good_calculator_final_audit_v1` closed without reopening any
   source-gated calculator family. `wall_formula_family_widening_v1`
   then also closed without reopening any blocked family: it clarified

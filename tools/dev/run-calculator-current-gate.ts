@@ -148,6 +148,7 @@ async function main() {
         "src/post-wall-resilient-side-count-gate-b-v1-next-slice-selection-contract.test.ts",
         "src/post-wall-resilient-side-count-gate-c-v1-next-slice-selection-contract.test.ts",
         "src/post-proposal-report-polish-next-slice-selection-contract.test.ts",
+        "src/calculator-source-gap-revalidation-gate-a-contract.test.ts",
         "--maxWorkers=1"
       ]
     },

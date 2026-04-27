@@ -18,8 +18,8 @@ fix the drift before starting work.
    — tactical detail for the active slice.
 4. [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
    — closed calculator-only chain for private/internal-use readiness.
-5. [SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md](./SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md)
-   — active calculator slice plan for source-gap revalidation.
+5. [SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md](./SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md)
+   — active calculator slice plan for wall coverage expansion planning.
 
 Then run `pnpm calculator:gate:current` to confirm the green
 baseline.
@@ -30,12 +30,18 @@ baseline.
   — productization closeout: server-backed project storage v1 closed.
 - [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
   — closed calculator readiness chain and private/internal-use caveats.
-- [CHECKPOINT_2026-04-27_PROPOSAL_REPORT_POLISH_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_PROPOSAL_REPORT_POLISH_CLOSEOUT_HANDOFF.md)
-  — latest handoff: proposal/report polish closed and calculator
-  source-gap revalidation is selected.
+- [CHECKPOINT_2026-04-27_CALCULATOR_SOURCE_GAP_REVALIDATION_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_CALCULATOR_SOURCE_GAP_REVALIDATION_GATE_A_HANDOFF.md)
+  — latest handoff: source-gap revalidation Gate A closed no-runtime
+  and wall coverage planning v2 is selected.
+- [SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md](./SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md)
+  — active implementation plan: inventory current wall coverage,
+  source/formula ownership, and guardrails before any runtime change.
 - [SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md](./SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md)
-  — active implementation plan: re-inventory and re-rank remaining
-  source-gated calculator families before any runtime change.
+  — closed Gate A implementation plan: source-gap revalidation selected
+  wall coverage planning v2.
+- [CHECKPOINT_2026-04-27_PROPOSAL_REPORT_POLISH_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_PROPOSAL_REPORT_POLISH_CLOSEOUT_HANDOFF.md)
+  — prior handoff: proposal/report polish closed and calculator
+  source-gap revalidation was selected.
 - [CHECKPOINT_2026-04-27_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_HANDOFF.md](./CHECKPOINT_2026-04-27_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_HANDOFF.md)
   — productization handoff: owner-only route policy integration
   closed, and proposal/report polish was selected.
@@ -145,8 +151,10 @@ baseline.
   — closed productization slice plan for wiring policy decisions into
   owner-scoped project/proposal routes.
 - [SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md](./SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md)
-  — active calculator slice plan for source-gap inventory/rerank before
+  — closed calculator Gate A plan for source-gap inventory/rerank before
   runtime movement.
+- [SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md](./SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md)
+  — active calculator slice plan for wall coverage expansion planning.
 - [SLICE_PROPOSAL_REPORT_POLISH_PLAN.md](./SLICE_PROPOSAL_REPORT_POLISH_PLAN.md)
   — closed productization slice plan for tightening proposal/report
   honesty without changing acoustic values.

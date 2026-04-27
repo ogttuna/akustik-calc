@@ -20,8 +20,10 @@ accuracy pass Gate C closed no-runtime; floor fallback Gate C closed
 no-runtime; `ui_input_output_honesty_v1` Gate C closed; calculator
 personal/internal-use readiness chain is closed;
 `project_access_policy_route_integration_v1` closed;
-`proposal_report_polish_v1` closed; latest checkpoint:
-[CHECKPOINT_2026-04-27_PROPOSAL_REPORT_POLISH_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_PROPOSAL_REPORT_POLISH_CLOSEOUT_HANDOFF.md)).
+`proposal_report_polish_v1` closed;
+`calculator_source_gap_revalidation_v1` Gate A closed no-runtime;
+latest checkpoint:
+[CHECKPOINT_2026-04-27_CALCULATOR_SOURCE_GAP_REVALIDATION_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_CALCULATOR_SOURCE_GAP_REVALIDATION_GATE_A_HANDOFF.md)).
 Step 8 closed the calculator runtime audit: `MASTER_PLAN.md` §3/§8
 was reconciled to implementation reality, `coverage-grid-consistency.test.ts`
 now maps the grid and C1-C6 signals to executable evidence, the
@@ -32,7 +34,7 @@ storage v1, project/proposal route authorization, auth-session
 hardening, and the pure team-access policy model.
 
 - **Engine broad suite**: latest broad `pnpm check` on 2026-04-27 was
-  232 / 232 files, 1270 / 1270 tests green
+  233 / 233 files, 1275 / 1275 tests green
   (up from 193/1068 pre-session; step-7 landed 4 wall cases +
   F1/F2 engine fixes + 32-assertion cross-mode torture matrix
   + 2 regression guards + post-contract; step-7b landed the
@@ -145,17 +147,24 @@ hardening, and the pure team-access policy model.
   polish selection, plus
   `post-proposal-report-polish-next-slice-selection-contract.test.ts`
   for proposal-report polish closeout and calculator source-gap
-  revalidation selection.
-  Latest focused gate run after the closeout contract update:
-  99 engine files / 450 tests,
+  revalidation selection, plus
+  `calculator-source-gap-revalidation-gate-a-contract.test.ts` for the
+  no-runtime Gate A closeout and wall coverage planning v2 selection.
+  Latest focused gate run after the Gate A contract update:
+  100 engine files / 455 tests,
   43 web files / 211 passed +
   18 skipped, build 5/5 tasks, whitespace guard clean.
 
 ## Active Slice
 
-`calculator_source_gap_revalidation_v1` (calculator source-gap
-inventory/rerank, active). Planning surface:
-[SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md](./SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md).
+`wall_coverage_expansion_planning_v2` (wall scope/accuracy expansion
+planning, active). Planning surface:
+[SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md](./SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md).
+
+`calculator_source_gap_revalidation_v1` Gate A is now closed
+no-runtime. It added
+`packages/engine/src/calculator-source-gap-revalidation-gate-a-contract.test.ts`
+and selected `wall_coverage_expansion_planning_v2`.
 
 `proposal_report_polish_v1` is now closed. It landed the simple
 PDF/DOCX output coverage register, generated-document honesty tests for
@@ -166,13 +175,15 @@ disclosure. It did not change acoustic formulas, runtime values,
 support classifications, confidence scores, result rounding, or engine
 routes.
 
-The selected next action is Gate A of
-`calculator_source_gap_revalidation_v1`: re-inventory and re-rank the
-remaining source-gated calculator families before any runtime change.
-Gate A must stay no-runtime. It should add or update an executable
-source-gap revalidation contract that names the current candidate
-ranking, blocker or ready reason, evidence owner file/test, and selected
-next source or runtime slice.
+Source-gap revalidation Gate A confirmed the historical blocked-source
+queue has no runtime-eligible candidate: `GDMTXA04A`, `C11c`, raw bare
+open-box/open-web impact, and wall-selector behavior remain closed
+fail-closed. Heavy-core/concrete, timber stud, CLT wall, and floor
+fallback remain in their current screening/formula/low-confidence
+posture. The next action is Gate A of
+`wall_coverage_expansion_planning_v2`: inventory current wall coverage,
+source/formula ownership, guardrail coverage, and select a first wall
+Gate B runtime/source slice only if the evidence supports it.
 
 Do not reopen `GDMTXA04A`, `C11c`, raw bare open-box/open-web,
 heavy-concrete formula parity, reinforced-concrete reopening,
@@ -278,10 +289,11 @@ Personal-use readiness is now explicitly tracked in
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
 That chain is closed. Productization route-policy integration has also
 closed, and `proposal_report_polish_v1` has closed no-runtime report
-honesty. `calculator_source_gap_revalidation_v1` is selected.
-Calculator runtime/source posture remains frozen until the new
-source-gap revalidation contract deliberately selects a source-backed or
-formula-owned next slice.
+honesty. `calculator_source_gap_revalidation_v1` Gate A has closed
+no-runtime and selected `wall_coverage_expansion_planning_v2`.
+Calculator runtime/source posture remains frozen until the wall
+planning contract deliberately selects a source-backed or formula-owned
+next slice.
 
 Calculator runtime status: final audit closed and green. The just-closed
 wall formula-family widening slice completed Gate A and Gate B with
@@ -760,14 +772,16 @@ for representative wall/floor scenarios without changing calculator
 runtime values, support, confidence, or formulas.
 
 Calculator source-gap revalidation status:
-`calculator_source_gap_revalidation_v1` is selected. Gate A must
-re-rank remaining source-gated families without runtime movement before
-selecting a narrow source/acquisition or Gate B runtime slice.
+`calculator_source_gap_revalidation_v1` Gate A is closed no-runtime.
+The next selected slice is `wall_coverage_expansion_planning_v2`, which
+must inventory current wall coverage and select the first wall
+runtime/source slice without changing values during Gate A.
 
 ## Latest Closed Slices
 
 | Slice | Master-plan step | Closed | Post-contract |
 |---|---|---|---|
+| `calculator_source_gap_revalidation_v1` Gate A | calculator revalidation | 2026-04-27 | `calculator-source-gap-revalidation-gate-a-contract.test.ts` |
 | `proposal_report_polish_v1` | productization 6 | 2026-04-27 | `post-proposal-report-polish-next-slice-selection-contract.test.ts` |
 | `project_access_policy_route_integration_v1` | productization 5 | 2026-04-27 | `post-project-access-policy-route-integration-next-slice-selection-contract.test.ts` |
 | `ui_input_output_honesty_v1` | personal-use readiness | 2026-04-27 | `post-ui-input-output-honesty-gate-c-next-slice-selection-contract.test.ts` |
@@ -965,15 +979,15 @@ time without context loss:
 
 ## Resume Order For The Next Agent
 
-1. Read [CHECKPOINT_2026-04-27_PROPOSAL_REPORT_POLISH_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_PROPOSAL_REPORT_POLISH_CLOSEOUT_HANDOFF.md)
+1. Read [CHECKPOINT_2026-04-27_CALCULATOR_SOURCE_GAP_REVALIDATION_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_CALCULATOR_SOURCE_GAP_REVALIDATION_GATE_A_HANDOFF.md)
    for the latest active-slice handoff.
 2. Read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md),
-   [SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md](./SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md),
+   [SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md](./SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md),
    [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md), and
    [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md).
-   Start `calculator_source_gap_revalidation_v1` by inventorying and
-   reranking remaining source-gated calculator families without runtime
-   value changes.
+   Start `wall_coverage_expansion_planning_v2` by inventorying wall
+   archetype coverage, source/formula ownership, and guardrails without
+   runtime value changes.
 3. Read [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
    for the now-closed calculator-priority chain and its evidence-tier
    caveats.
@@ -987,8 +1001,8 @@ time without context loss:
    If it does not, fix the drift before starting work.
 6. Run `pnpm calculator:gate:current` as the focused baseline.
 7. Do not change runtime math, source posture, output support,
-   evidence tiers, or confidence scores during Gate A source-gap
-   revalidation.
+   evidence tiers, or confidence scores during Gate A wall coverage
+   planning.
 8. Treat [CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_ELEVENTH_CARVE_HANDOFF.md](./CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_ELEVENTH_CARVE_HANDOFF.md),
    [CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_A_HANDOFF.md),
    [CHECKPOINT_2026-04-24_INVALID_THICKNESS_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-24_INVALID_THICKNESS_CLOSEOUT_HANDOFF.md),
