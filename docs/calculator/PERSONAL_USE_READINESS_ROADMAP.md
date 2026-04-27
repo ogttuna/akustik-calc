@@ -65,8 +65,8 @@ Closed decision:
 
 ### 2. Timber Stud And CLT Wall Accuracy Pass
 
-Status: active slice; timber-stud Gate B landed no-runtime, CLT wall
-Gate B is next.
+Status: active slice; timber-stud Gate B and CLT wall Gate B landed
+no-runtime, Gate C closeout is next.
 
 The direct double-board timber stud and CLT wall lanes are common and
 currently formula-owned where no exact topology row matches the live
@@ -89,12 +89,18 @@ Required before implementation:
   generated `wall-timber-stud` stays at lab `Rw=50`, field `R'w=42`,
   low-confidence `stud_wall_system`, because no exact source,
   lab-fallback, or bounded family rule currently matches the live stack;
-- CLT wall Gate B is next; add a focused source/formula contract for
-  generated `wall-clt-local`, then change math only if a wall-specific
-  source row, documented CLT wall formula rule, or bounded family rule
-  supports it;
+- CLT wall Gate B landed no-runtime in
+  `packages/engine/src/wall-clt-gate-b-source-contract.test.ts`;
+  generated `wall-clt-local` stays at lab `Rw=42`, field `R'w=41`,
+  medium-confidence `laminated_single_leaf`, because no wall-specific
+  CLT source row, verified lab-fallback, documented laminated-leaf
+  solver, or bounded family rule currently matches the live wall stack;
 - keep resilient-bar and direct timber exact imports from bleeding into
   unmatched topologies;
+- keep Dataholz CLT floor-system source rows from being borrowed as wall
+  exact truth;
+- Gate C should close the slice and select floor fallback /
+  low-confidence cleanup;
 - start from
   [SLICE_WALL_TIMBER_STUD_CLT_ACCURACY_PASS_PLAN.md](./SLICE_WALL_TIMBER_STUD_CLT_ACCURACY_PASS_PLAN.md).
 
@@ -141,9 +147,9 @@ heavy-core/concrete Gate B no-runtime closeout and timber+CLT next-slice
 selection. Engine broad is 223 files / 1232 tests. Web broad keeps 150
 files in scope through `tools/dev/run-web-vitest.ts` with 864 passed +
 18 skipped. Build is 5/5 with the known non-fatal `sharp/@img`
-optional-package warnings. Focused current gate after timber-stud Gate B
-is 92 engine files / 420 tests, 36 web files / 170 passed plus 18
-skipped, build 5/5.
+optional-package warnings. Focused current gate after CLT Gate B is 93
+engine files / 424 tests, 36 web files / 170 passed plus 18 skipped,
+build 5/5.
 
 Do these in order unless new evidence changes the ranking:
 

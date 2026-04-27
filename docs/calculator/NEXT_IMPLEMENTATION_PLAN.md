@@ -8,10 +8,10 @@ chain read
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
 
 Last reviewed: 2026-04-27
-(`wall_timber_stud_clt_accuracy_pass_v1` timber-stud Gate B landed
-no-runtime; CLT wall Gate B selected next;
+(`wall_timber_stud_clt_accuracy_pass_v1` timber-stud Gate B and CLT
+wall Gate B landed no-runtime; Gate C closeout selected next;
 see
-`CHECKPOINT_2026-04-27_WALL_TIMBER_STUD_GATE_B_HANDOFF.md`).
+`CHECKPOINT_2026-04-27_WALL_CLT_GATE_B_HANDOFF.md`).
 
 ---
 
@@ -71,7 +71,7 @@ For every next slice decision:
   tolerance for the selected concrete lining stack. Evidence remains
   `screening`.
 - **Latest plan/implementation reconciliation**: 2026-04-27
-  timber-stud Gate B landed no-runtime.
+  timber-stud Gate B and CLT wall Gate B landed no-runtime.
   `packages/engine/src/wall-timber-stud-gate-b-source-contract.test.ts`
   keeps generated `wall-timber-stud` at lab `Rw=50`, field `R'w=42`,
   low-confidence `stud_wall_system`, and blocks exact/benchmark
@@ -79,8 +79,14 @@ For every next slice decision:
   Direct timber exact rows are single-board only, resilient exact rows
   require explicit side-count/acoustic-board topology, the direct
   double-board row is only a secondary benchmark, and linked holdouts
-  are steel-framed companions. Gate B now starts for
-  `wall.clt_formula.field`.
+  are steel-framed companions.
+  `packages/engine/src/wall-clt-gate-b-source-contract.test.ts` keeps
+  generated `wall-clt-local` at lab `Rw=42`, field `R'w=41`,
+  medium-confidence `laminated_single_leaf`, and blocks exact/source
+  promotion because no verified exact/lab-fallback match or
+  wall-specific CLT source row exists. Dataholz CLT rows stay floor
+  source truth, and the current laminated lane stays formula-owned.
+  Gate C closeout is next.
 - **Deferred but not cancelled**:
   `project_access_policy_route_integration_v1`. Do not resume
   productization until the selected calculator slice closes or priority
@@ -89,29 +95,26 @@ For every next slice decision:
 ## Immediate Execution Order
 
 Gate A and timber-stud Gate B of
-`wall_timber_stud_clt_accuracy_pass_v1` are complete. CLT Gate B should
-now proceed in this order:
+`wall_timber_stud_clt_accuracy_pass_v1` are complete. CLT Gate B has
+also landed no-runtime. Gate C should now proceed in this order:
 
 1. Re-read
    [SLICE_WALL_TIMBER_STUD_CLT_ACCURACY_PASS_PLAN.md](./SLICE_WALL_TIMBER_STUD_CLT_ACCURACY_PASS_PLAN.md).
-2. Start Gate B with `wall.clt_formula.field`. The current generated
-   CLT wall values from Gate A are lab `Rw=42`, field `R'w=41`,
-   medium-confidence `laminated_single_leaf`, with no verified exact,
-   lab-fallback, or floor-system/source import.
-3. Add a focused engine source/formula contract for generated
-   `wall-clt-local` before changing math. It must pin current lab/field
-   values, floor-CLT non-import status, warning/confidence posture, and
-   exact/benchmark precedence.
-4. Only change runtime if the contract names one of: a wall-specific
-   exact source row, a documented CLT wall formula rule, or a bounded
-   family rule with explicit tolerance. Do not borrow floor CLT source
-   rows as wall exact truth.
-5. Add web tests only if visible card status, warning text, support, or
-   output origin changes.
-6. If CLT Gate B also closes no-runtime, prepare Gate C closeout for the
-   timber+CLT pass and select the next readiness slice from the roadmap.
-7. Run targeted tests, `pnpm calculator:gate:current`, and
-   `git diff --check`. Use broad `pnpm check` before Gate C closeout.
+2. Summarize the landed no-runtime decisions:
+   timber stud stays formula-owned at lab `Rw=50`, field `R'w=42`;
+   CLT wall stays formula-owned at lab `Rw=42`, field `R'w=41`.
+3. Add or update the Gate C planning contract so the active selected
+   slice moves to `floor_fallback_low_confidence_cleanup` without
+   reopening timber exact rows, floor CLT source rows, heavy-core
+   concrete, `GDMTXA04A`, `C11c`, raw open-box/open-web, or wall
+   selector follow-ups.
+4. Update `CURRENT_STATE.md`, this plan, the roadmap, `AGENTS.md`, and
+   the checkpoint chain together.
+5. Run the focused targeted tests, `pnpm calculator:gate:current`, and
+   `git diff --check`.
+6. Because Gate C closes the slice, run broad `pnpm check` before the
+   closeout commit if feasible; if not feasible, document the gap.
+7. Start the next selected calculator slice only after Gate C lands.
 
 ## Personal-Use Readiness Chain
 

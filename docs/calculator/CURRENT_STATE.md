@@ -16,10 +16,10 @@ need the private-use readiness chain read
 Last revalidation cycle: `2026-04-27`
 (`realistic_layer_combination_coverage_cartography_v1` Gate A landed;
 heavy-core/concrete Gate B closed no-runtime; timber stud + CLT wall
-accuracy pass timber-stud Gate B landed no-runtime; broad validation
+accuracy pass timber-stud and CLT wall Gate B landed no-runtime; broad validation
 remains green from the heavy-core closeout run;
 latest checkpoint:
-[CHECKPOINT_2026-04-27_WALL_TIMBER_STUD_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_TIMBER_STUD_GATE_B_HANDOFF.md)).
+[CHECKPOINT_2026-04-27_WALL_CLT_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_CLT_GATE_B_HANDOFF.md)).
 Step 8 closed the calculator runtime audit: `MASTER_PLAN.md` §3/§8
 was reconciled to implementation reality, `coverage-grid-consistency.test.ts`
 now maps the grid and C1-C6 signals to executable evidence, the
@@ -117,9 +117,11 @@ hardening, and the pure team-access policy model.
   `wall-timber-stud-clt-gate-a-audit-contract.test.ts` for the active
   slice no-runtime Gate A audit and timber-first Gate B selection, plus
   `wall-timber-stud-gate-b-source-contract.test.ts` for the no-runtime
-  timber Gate B source/formula contract and CLT-next selection.
-  Latest focused gate run after the timber Gate B contract:
-  92 engine files / 420 tests,
+  timber Gate B source/formula contract and CLT-next selection, plus
+  `wall-clt-gate-b-source-contract.test.ts` for the no-runtime CLT wall
+  source/formula contract and Gate C-next selection.
+  Latest focused gate run after the CLT Gate B contract:
+  93 engine files / 424 tests,
   36 web files / 170 passed +
   18 skipped, build 5/5 tasks, whitespace guard clean.
 
@@ -171,10 +173,17 @@ no verified exact or lab-fallback match exists; direct timber exact rows
 are single-board only; resilient exact rows require explicit side-count
 and acoustic-board topology; the direct double-board row is only a
 secondary benchmark; and linked holdouts are steel-framed companions.
-The next bounded implementation step is Gate B for
-`wall.clt_formula.field`: write the CLT wall source/formula contract
-first, then change math only if a wall-specific source row, documented
-formula rule, or bounded family rule supports it.
+CLT wall Gate B has also landed no-runtime in
+`packages/engine/src/wall-clt-gate-b-source-contract.test.ts`. It keeps
+generated `wall-clt-local` at lab `Rw=42`, field `R'w=41`,
+medium-confidence `laminated_single_leaf`, strategy
+`laminated_leaf_sharp_delegate`, and blocks runtime tightening because
+no verified exact or lab-fallback match exists, the current catalog has
+no wall-specific CLT exact row, Dataholz CLT rows are floor-system
+source truth rather than wall exact truth, and the current laminated
+lane is a Sharp-delegate formula. The next bounded implementation step
+is Gate C closeout for `wall_timber_stud_clt_accuracy_pass_v1`, then
+selection of `floor_fallback_low_confidence_cleanup` from the roadmap.
 
 Personal-use readiness is now explicitly tracked in
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
@@ -221,7 +230,7 @@ injection. Gate B eleventh carve moved
 `applyNarrowHeavyDoubleLeafGapCap` with `DynamicAirborneComposer`
 injection. Gate C then closed after broad validation because
 `dynamic-airborne.ts` is below 2000 lines. The active next decision is
-now CLT wall Gate B inside the timber stud + CLT wall accuracy pass.
+now Gate C closeout for the timber stud + CLT wall accuracy pass.
 
 Checkpoint refinement `2026-04-24`: the post-commit baseline was
 re-read against implementation and revalidated before Gate A. No drift

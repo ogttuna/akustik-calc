@@ -1,6 +1,7 @@
 # Slice Plan - Wall Timber Stud + CLT Accuracy Pass
 
-Status: ACTIVE - timber-stud Gate B landed no-runtime; CLT Gate B next
+Status: ACTIVE - timber-stud and CLT Gate B landed no-runtime; Gate C
+closeout next
 
 Selected: 2026-04-27 by
 `post-wall-heavy-core-concrete-gate-b-next-slice-selection-contract.test.ts`
@@ -99,23 +100,42 @@ Blockers found:
 - linked lightweight holdouts are steel-framed companions, not wood-stud
   exact truth.
 
-### CLT Wall Gate B Next
+### CLT Wall Gate B Result
 
-Start the next bounded step with `wall.clt_formula.field`.
+CLT wall Gate B landed no-runtime in
+`packages/engine/src/wall-clt-gate-b-source-contract.test.ts`. It did
+not change runtime math, output support, formulas, warnings, web cards,
+or confidence class.
 
-The CLT Gate B contract must pin:
+Decision:
 
-- generated `wall-clt-local` current values: lab `Rw=42`, field
-  `R'w=41`;
-- `laminated_single_leaf` / `laminated_leaf_sharp_delegate` formula
-  posture;
-- no verified exact or lab-fallback match;
-- no floor CLT source-truth import;
-- exact/benchmark precedence and disallowed floor-row borrowing.
+- generated id: `wall-clt-local`;
+- candidate id: `wall.clt_formula.field`;
+- current lab `Rw=42`;
+- current field `R'w=41`;
+- evidence tier remains `formula`;
+- confidence remains `medium`;
+- runtime tightening is blocked until a future change names a
+  wall-specific CLT source row, a documented laminated-leaf solver, or a
+  bounded family rule with explicit tolerance.
 
-Only change CLT runtime if the contract names a wall-specific source
-row, a documented CLT wall formula rule, or a bounded family rule with
-explicit tolerance.
+Blockers found:
+
+- no verified airborne exact match;
+- no verified airborne lab-fallback match;
+- no wall-specific CLT exact row in the current catalog;
+- Dataholz CLT rows are floor-system source truth, not wall exact truth;
+- current `laminated_single_leaf` behavior is a Sharp-delegate formula,
+  not a source row.
+
+### Gate C Closeout Next
+
+The next bounded step is Gate C closeout for the whole
+`wall_timber_stud_clt_accuracy_pass_v1` slice. Gate C should summarize
+both no-runtime Gate B decisions, keep runtime math unchanged, update
+the plan/current-state/checkpoint chain, and select
+`floor_fallback_low_confidence_cleanup` from the personal-use readiness
+roadmap.
 
 ## Evidence Policy
 
@@ -153,18 +173,20 @@ Unacceptable promotion evidence:
 - `apps/web/features/workbench/wall-lsf-timber-stud-preset-benchmarks.test.ts`
 - `apps/web/features/workbench/wall-preset-expansion-benchmarks.test.ts`
 
-## Gate B Readiness
+## Gate C Readiness
 
-Gate B is ready to start for `wall.clt_formula.field`, but runtime math
-remains blocked until the new CLT contract names a defensible evidence
+Gate B is complete for both selected wall candidates. Runtime math
+remains blocked until a future source slice names a defensible evidence
 path.
 
-- exact current `Rw` / `R'w` / `Dn,w` / `DnT,w` values and support for
-  the generated CLT stack;
-- source/formula basis and allowed dB tolerance;
-- exact/benchmark/floor-source rows that must not drift or bleed into
-  the live wall topology;
-- whether web card wording, warning posture, or output support changes.
+- timber stud remains formula-owned at lab `Rw=50`, field `R'w=42`,
+  because no matching exact row or bounded family rule exists;
+- CLT wall remains formula-owned at lab `Rw=42`, field `R'w=41`,
+  because no wall-specific source row or laminated-leaf solver exists;
+- exact/benchmark/floor-source rows must not drift or bleed into live
+  wall topology;
+- visible web card wording, warning posture, and output support have not
+  changed in this slice.
 
 If visible card posture changes, add focused web tests. If only engine
 numeric behavior changes, keep web tests out unless existing card
@@ -181,7 +203,10 @@ Current selection baseline:
 - targeted timber Gate B contract:
   `pnpm --filter @dynecho/engine exec vitest run src/wall-timber-stud-gate-b-source-contract.test.ts --maxWorkers=1`
   - 1 file / 4 tests green;
-- `pnpm calculator:gate:current`: engine 92 files / 420 tests, web 36
+- targeted CLT Gate B contract:
+  `pnpm --filter @dynecho/engine exec vitest run src/wall-clt-gate-b-source-contract.test.ts --maxWorkers=1`
+  - 1 file / 4 tests green;
+- `pnpm calculator:gate:current`: engine 93 files / 424 tests, web 36
   files / 170 passed + 18 skipped, build 5/5;
 - broad `pnpm check`: engine 223 files / 1232 tests, web 150 files /
   864 passed + 18 skipped, build 5/5;

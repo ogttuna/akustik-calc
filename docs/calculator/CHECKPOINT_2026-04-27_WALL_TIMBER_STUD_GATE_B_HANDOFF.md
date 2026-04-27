@@ -7,9 +7,14 @@ Date: 2026-04-27
 `wall_timber_stud_clt_accuracy_pass_v1` timber-stud Gate B is landed
 no-runtime.
 
+Superseded for current workflow by
+`CHECKPOINT_2026-04-27_WALL_CLT_GATE_B_HANDOFF.md`, which records CLT
+wall Gate B as landed no-runtime and moves the slice to Gate C closeout.
+Keep this file as the historical timber-stud Gate B evidence record.
+
 No runtime values, formulas, output support, warnings, confidence
-classes, or web cards changed. The slice remains active and the next
-bounded step is CLT wall Gate B.
+classes, or web cards changed. At the time of this checkpoint the next
+bounded step was CLT wall Gate B.
 
 ## Timber Gate B Decision
 
@@ -42,9 +47,11 @@ Runtime tightening remains blocked until a future change names either an
 exact matching source row or a documented bounded family rule with an
 explicit tolerance.
 
-## Next Step
+## Next Step At This Checkpoint
 
-Start Gate B for `wall.clt_formula.field`.
+At this checkpoint, the next step was to start Gate B for
+`wall.clt_formula.field`. That step is now complete in
+`CHECKPOINT_2026-04-27_WALL_CLT_GATE_B_HANDOFF.md`.
 
 The first CLT change should be a focused engine source/formula contract
 for generated `wall-clt-local`. Do not change math until the contract
