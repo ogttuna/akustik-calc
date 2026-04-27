@@ -17,9 +17,9 @@ Last revalidation cycle: `2026-04-27`
 (`realistic_layer_combination_coverage_cartography_v1` Gate A landed;
 heavy-core/concrete Gate B closed no-runtime; timber stud + CLT wall
 accuracy pass Gate C closed no-runtime; floor fallback Gate C closed
-no-runtime; `ui_input_output_honesty_v1` is active; broad validation is
-green; latest checkpoint:
-[CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_C_CLOSEOUT_HANDOFF.md)).
+no-runtime; `ui_input_output_honesty_v1` Gate A landed no-runtime;
+broad validation is green; latest checkpoint:
+[CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_A_HANDOFF.md)).
 Step 8 closed the calculator runtime audit: `MASTER_PLAN.md` §3/§8
 was reconciled to implementation reality, `coverage-grid-consistency.test.ts`
 now maps the grid and C1-C6 signals to executable evidence, the
@@ -129,10 +129,12 @@ hardening, and the pure team-access policy model.
   the no-runtime Gate B source/formula decision, plus
   `post-floor-fallback-low-confidence-gate-c-next-slice-selection-contract.test.ts`
   for the no-runtime Gate C closeout and UI honesty next-slice
-  selection.
-  Latest focused gate run after the floor fallback Gate C contract:
+  selection, plus
+  `ui-input-output-honesty-gate-a-inventory.test.ts` for the active
+  UI honesty Gate A inventory.
+  Latest focused gate run after the UI honesty Gate A contract:
   97 engine files / 440 tests,
-  36 web files / 170 passed +
+  37 web files / 174 passed +
   18 skipped, build 5/5 tasks, whitespace guard clean.
 
 ## Active Slice
@@ -217,11 +219,15 @@ It closed `floor_fallback_low_confidence_cleanup_v1`, kept
 `floor-steel-fallback` low-confidence with unchanged field values, and
 selected `ui_input_output_honesty_v1`.
 
-The next bounded implementation step is Gate A for
-`ui_input_output_honesty_v1`: inventory required-input messages, API
-validation payloads, output support/origin/confidence cards,
-unsupported-output display, and layer edit/reorder/many-layer/save-load
-stability before changing UI/API behavior.
+Gate A for `ui_input_output_honesty_v1` has now landed no-runtime in
+`apps/web/features/workbench/ui-input-output-honesty-gate-a-inventory.test.ts`.
+It pins structured schema issue paths for missing estimate and
+impact-only inputs, field airborne geometry vs room-volume blockers, and
+non-numeric handling for explicitly unsupported requested outputs. It
+found no defended-looking unsupported live/bound value. The next bounded
+implementation step is Gate B: normalize API validation errors into
+next-field user guidance and fix the simple output-card
+unsupported-vs-missing-input label precedence.
 
 Personal-use readiness is now explicitly tracked in
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).

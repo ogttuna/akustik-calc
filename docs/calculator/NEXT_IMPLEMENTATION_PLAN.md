@@ -8,10 +8,10 @@ chain read
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
 
 Last reviewed: 2026-04-27
-(`floor_fallback_low_confidence_cleanup_v1` Gate C closed no-runtime;
-`ui_input_output_honesty_v1` Gate A inventory is next;
+(`ui_input_output_honesty_v1` Gate A landed no-runtime;
+Gate B honesty fixes are next;
 see
-`CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_C_CLOSEOUT_HANDOFF.md`).
+`CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_A_HANDOFF.md`).
 
 ---
 
@@ -43,7 +43,7 @@ For every next slice decision:
 - **Active slice**:
   `ui_input_output_honesty_v1`.
 - **Latest checkpoint**:
-  [CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_C_CLOSEOUT_HANDOFF.md).
+  [CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_A_HANDOFF.md).
 - **Planning surface**:
   [SLICE_UI_INPUT_OUTPUT_HONESTY_PLAN.md](./SLICE_UI_INPUT_OUTPUT_HONESTY_PLAN.md).
 - **Personal-use readiness roadmap**:
@@ -90,6 +90,14 @@ For every next slice decision:
   selected `ui_input_output_honesty_v1`. `floor-steel-fallback` remains
   `screening` / `low_confidence`, with field `R'w=70`, `Ln,w=58.3`,
   `L'n,w=61.3`, `L'nT,w=58.5`, and unsupported `L'nT,50`.
+- **UI/input/output honesty Gate A result**:
+  `apps/web/features/workbench/ui-input-output-honesty-gate-a-inventory.test.ts`
+  landed no-runtime. It pins structured schema issue paths for missing
+  estimate and impact-only inputs, field-airborne geometry vs room-volume
+  blockers, and non-numeric handling for explicitly unsupported requested
+  outputs. It found no defended-looking unsupported live/bound value.
+  Gate B is now limited to API next-field message mapping and simple
+  output-card unsupported-vs-missing-input label precedence.
 - **Heavy-core/concrete closeout**: Gate B closed no-runtime for
   `wall.concrete_heavy_core_screening.field`. The no-runtime
   source/formula audit found no exact catalog row, no direct external
@@ -122,22 +130,24 @@ For every next slice decision:
 
 ## Immediate Execution Order
 
-`ui_input_output_honesty_v1` should now proceed in this
-order:
+`ui_input_output_honesty_v1` should now proceed in this order:
 
 1. Re-read
    [SLICE_UI_INPUT_OUTPUT_HONESTY_PLAN.md](./SLICE_UI_INPUT_OUTPUT_HONESTY_PLAN.md).
-2. Start Gate A as a no-runtime inventory of required-input messages,
-   API validation payloads, output support/origin/confidence cards,
-   unsupported-output display, and layer edit/reorder/many-layer
-   save/load stability.
-3. Change runtime only if Gate A finds a defended-looking unsupported
-   or invalid answer that must fail closed; do not retune formulas or
-   confidence scores as part of UI copy.
-4. Keep `GDMTXA04A`, `C11c`, raw bare open-box/open-web impact,
+2. Start Gate B with a small shared validation-message mapper for
+   `/api/estimate` and `/api/impact-only`, preserving structured issue
+   detail while exposing concrete next-field guidance.
+3. Fix simple output-card precedence so an output already present in
+   `unsupportedTargetOutputs` prefers a clear unsupported/current-path
+   label over a generic missing-input label, while keeping genuine
+   missing-field cards as `needs_input`.
+4. Add focused tests for the changed API payloads and card labels.
+5. Keep formulas, runtime values, exact/bound/formula precedence, and
+   confidence scores unchanged.
+6. Keep `GDMTXA04A`, `C11c`, raw bare open-box/open-web impact,
    heavy-core concrete, wall selector, timber-stud, and CLT wall
    follow-ups closed unless new evidence deliberately selects them.
-5. Run targeted Gate A contracts, `pnpm calculator:gate:current`, and
+7. Run targeted Gate B contracts, `pnpm calculator:gate:current`, and
    `git diff --check`; run broad `pnpm check` before closing the slice
    or after user-visible behavior changes.
 
@@ -149,7 +159,7 @@ private day-to-day use:
 1. Floor fallback / low-confidence cleanup.
    - closed no-runtime at Gate C.
 2. UI / input / output honesty pass.
-   - active.
+   - Gate A landed no-runtime; Gate B fixes are next.
 
 Do not resume productization ahead of this chain unless priority
 explicitly changes.
@@ -158,7 +168,7 @@ explicitly changes.
 
 See [CURRENT_STATE.md](./CURRENT_STATE.md) "Latest Closed Slices" table.
 `floor_fallback_low_confidence_cleanup_v1` is now closed and
-`ui_input_output_honesty_v1` is active with Gate A inventory next.
+`ui_input_output_honesty_v1` is active with Gate B honesty fixes next.
 
 ## Deferred Follow-Up Tracks
 

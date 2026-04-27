@@ -153,27 +153,40 @@ Required next:
 
 ### 4. UI / Input / Output Honesty Pass
 
-Status: active slice; Gate A inventory next.
+Status: active slice; Gate A landed no-runtime, Gate B fixes next.
 
 This pass should make the existing engine honesty visible and ergonomic
 for private use. It does not need full product polish, but it must avoid
 misleading the user.
 
-Required before implementation:
+Gate A result:
 
-- missing required fields should clearly identify what to enter next;
-- output cards should distinguish exact, benchmark, formula, family,
-  screening, bound, unsupported, and fail-closed values;
-- origin/confidence and unsupported-output messages should stay visible
-  after layer edits, reorder, many-layer stacks, and save/load;
-- web tests should cover the main wall/floor input flows and visible
-  confidence/support states.
+- focused web contract:
+  `apps/web/features/workbench/ui-input-output-honesty-gate-a-inventory.test.ts`;
+- no runtime math, formula, confidence, or support-classification change;
+- schemas already reject missing estimate layers and source-less
+  impact-only requests with structured issue paths;
+- field airborne status already separates missing partition geometry from
+  missing receiving-room volume;
+- explicitly unsupported outputs stay non-numeric;
+- no defended-looking unsupported live/bound value was found.
+
+Gate B required before private-use readiness:
+
+- missing required fields should clearly identify what to enter next in
+  API/workbench-facing messages;
+- API route payloads should keep structured issue detail while exposing
+  user-facing next-field guidance;
+- simple output cards should prefer unsupported/current-path labels when
+  the engine already rejected a requested output;
+- exact, benchmark, formula, family, screening, bound, unsupported, and
+  fail-closed labels should stay visible after layer edits, reorder,
+  many-layer stacks, and save/load;
+- focused web tests should cover the changed wall/floor input and
+  visible support states.
 
 Start from
 [SLICE_UI_INPUT_OUTPUT_HONESTY_PLAN.md](./SLICE_UI_INPUT_OUTPUT_HONESTY_PLAN.md).
-Gate A should inventory current required-input, output-support,
-origin/confidence, unsupported-output, edit/reorder, many-layer, and
-save/load behavior before changing UI/API behavior.
 
 ## Current Order
 
@@ -182,10 +195,10 @@ floor fallback Gate C no-runtime closeout and UI honesty selection.
 Engine broad is 230 files / 1260 tests. Web broad keeps 150 files in
 scope through `tools/dev/run-web-vitest.ts` with 864 passed + 18
 skipped. Build is 5/5 with the known non-fatal `sharp/@img`
-optional-package warnings. Focused current gate after floor fallback
-Gate C is 97 engine files / 440 tests, 36 web files / 170 passed plus
-18 skipped, build 5/5. Gate A, Gate B, and Gate C targeted floor
-fallback contracts are each 1 file / 4 tests green.
+optional-package warnings. Focused current gate after UI honesty Gate A
+is 97 engine files / 440 tests, 37 web files / 174 passed plus 18
+skipped, build 5/5. The targeted UI honesty Gate A contract is 1 file /
+4 tests green.
 
 Do these in order unless new evidence changes the ranking:
 

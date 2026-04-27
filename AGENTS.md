@@ -5,26 +5,27 @@ Start here before changing calculator behavior.
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_C_CLOSEOUT_HANDOFF.md`
+2. `docs/calculator/CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_A_HANDOFF.md`
 3. `docs/calculator/CURRENT_STATE.md`
 4. `docs/calculator/SLICE_UI_INPUT_OUTPUT_HONESTY_PLAN.md`
 5. `docs/calculator/PERSONAL_USE_READINESS_ROADMAP.md`
-6. `docs/calculator/CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_B_HANDOFF.md`
-7. `docs/calculator/SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md`
-8. `docs/calculator/CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_A_HANDOFF.md`
-9. `docs/calculator/CHECKPOINT_2026-04-27_WALL_TIMBER_STUD_CLT_GATE_C_CLOSEOUT_HANDOFF.md`
-10. `docs/calculator/CHECKPOINT_2026-04-27_WALL_CLT_GATE_B_HANDOFF.md`
-11. `docs/calculator/SLICE_WALL_TIMBER_STUD_CLT_ACCURACY_PASS_PLAN.md`
-12. `docs/calculator/CHECKPOINT_2026-04-27_WALL_TIMBER_STUD_GATE_B_HANDOFF.md`
-13. `docs/calculator/CHECKPOINT_2026-04-27_WALL_TIMBER_STUD_CLT_GATE_A_HANDOFF.md`
-14. `docs/calculator/CHECKPOINT_2026-04-27_WALL_HEAVY_CORE_CONCRETE_GATE_B_CLOSEOUT_HANDOFF.md`
-15. `docs/calculator/CHECKPOINT_2026-04-27_WALL_HEAVY_CORE_CONCRETE_GATE_B_AUDIT_HANDOFF.md`
-16. `docs/calculator/CHECKPOINT_2026-04-27_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_GATE_A_HANDOFF.md`
-17. `docs/calculator/SLICE_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_PLAN.md`
-18. `docs/calculator/SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md`
-19. `docs/calculator/CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_C_CLOSEOUT_HANDOFF.md`
-20. `docs/calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md`
-21. `docs/calculator/CALCULATION_MODEL_AND_VALIDATION.md`
+6. `docs/calculator/CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_C_CLOSEOUT_HANDOFF.md`
+7. `docs/calculator/CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_B_HANDOFF.md`
+8. `docs/calculator/SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md`
+9. `docs/calculator/CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_A_HANDOFF.md`
+10. `docs/calculator/CHECKPOINT_2026-04-27_WALL_TIMBER_STUD_CLT_GATE_C_CLOSEOUT_HANDOFF.md`
+11. `docs/calculator/CHECKPOINT_2026-04-27_WALL_CLT_GATE_B_HANDOFF.md`
+12. `docs/calculator/SLICE_WALL_TIMBER_STUD_CLT_ACCURACY_PASS_PLAN.md`
+13. `docs/calculator/CHECKPOINT_2026-04-27_WALL_TIMBER_STUD_GATE_B_HANDOFF.md`
+14. `docs/calculator/CHECKPOINT_2026-04-27_WALL_TIMBER_STUD_CLT_GATE_A_HANDOFF.md`
+15. `docs/calculator/CHECKPOINT_2026-04-27_WALL_HEAVY_CORE_CONCRETE_GATE_B_CLOSEOUT_HANDOFF.md`
+16. `docs/calculator/CHECKPOINT_2026-04-27_WALL_HEAVY_CORE_CONCRETE_GATE_B_AUDIT_HANDOFF.md`
+17. `docs/calculator/CHECKPOINT_2026-04-27_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_GATE_A_HANDOFF.md`
+18. `docs/calculator/SLICE_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_PLAN.md`
+19. `docs/calculator/SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md`
+20. `docs/calculator/CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_C_CLOSEOUT_HANDOFF.md`
+21. `docs/calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md`
+22. `docs/calculator/CALCULATION_MODEL_AND_VALIDATION.md`
 
 Use the long-form plan files only for backlog context after reading the current
 plan.
@@ -34,13 +35,13 @@ plan.
 - current selected slice:
   `ui_input_output_honesty_v1`
 - current first decision inside the slice:
-  Floor fallback Gate C closed no-runtime. The next bounded
-  implementation step is UI/input/output honesty Gate A: inventory
-  required-input messages, supported/unsupported output visibility,
-  evidence/confidence/origin card posture, and edit/reorder/many-layer
-  save/load stability before any UI/API behavior change. Do not change
-  acoustic formulas or runtime values during Gate A unless it finds a
-  defended-looking unsupported or invalid answer that must fail closed.
+  UI/input/output honesty Gate A landed no-runtime in
+  `apps/web/features/workbench/ui-input-output-honesty-gate-a-inventory.test.ts`.
+  The next bounded implementation step is Gate B: normalize API
+  validation messages into next-field user guidance and fix the simple
+  output-card precedence where an engine-rejected field impact output can
+  still show a `needs_input` label. Do not change acoustic formulas,
+  runtime values, or confidence scores in this slice.
 - personal-use readiness chain:
   `docs/calculator/PERSONAL_USE_READINESS_ROADMAP.md` is active
   calculator guidance. Finish UI/input/output honesty before resuming
@@ -66,6 +67,9 @@ plan.
 - run `pnpm calculator:gate:current` before and after touching the active
   selected slice
 - use `pnpm check` only when you need the broad full-repo gate
+- latest focused Gate A validation: engine 97 files / 440 tests, web
+  37 files / 174 passed + 18 skipped, build 5/5 with the known
+  non-fatal `sharp/@img` warnings, whitespace guard clean
 - web broad tests run through `tools/dev/run-web-vitest.ts`; it keeps
   all 150 web test files in scope while isolating long route scans so
   Vitest worker RPC timeouts do not hide green test results

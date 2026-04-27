@@ -194,6 +194,7 @@ async function main() {
         "features/workbench/floor-field-continuation-gate-a-card-matrix.test.ts",
         "features/workbench/floor-many-layer-stress-gate-a-card-matrix.test.ts",
         "features/workbench/floor-layer-order-edit-stability-gate-a-card-matrix.test.ts",
+        "features/workbench/ui-input-output-honesty-gate-a-inventory.test.ts",
         "--maxWorkers=1"
       ]
     },

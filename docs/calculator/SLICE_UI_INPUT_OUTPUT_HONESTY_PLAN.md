@@ -1,6 +1,6 @@
 # Slice Plan - UI Input / Output Honesty
 
-Status: ACTIVE - Gate A inventory next
+Status: ACTIVE - Gate B fixes next
 
 Selected: 2026-04-27 by
 `post-floor-fallback-low-confidence-gate-c-next-slice-selection-contract.test.ts`
@@ -40,9 +40,10 @@ Outputs that must stay explicit where applicable:
 
 ## Gate A - Inventory Current Honesty Surface
 
-Gate A is next and should be no-runtime by default.
+Status: landed no-runtime in
+`apps/web/features/workbench/ui-input-output-honesty-gate-a-inventory.test.ts`.
 
-Audit and pin:
+Audited and pinned:
 
 - which fields are required for wall, floor, lab, and field outputs;
 - how missing required fields are reported in the workbench and API
@@ -54,23 +55,40 @@ Audit and pin:
 - whether requesting unsupported outputs keeps them visible as
   unsupported instead of hiding them or inventing values.
 
-Gate A deliverable:
+Gate A result:
 
-- a focused web/engine contract inventorying the current behavior;
-- a blocker list separating "already honest", "needs copy/UI wiring",
-  and "must fail closed before private use";
-- no runtime math changes unless a defended-looking unsupported value is
-  found.
+- the focused web contract inventories current behavior;
+- no runtime math, formula, confidence, or support-classification change;
+- no defended-looking unsupported live/bound value was found;
+- schema-level API validation already exposes structured issue paths;
+- field airborne status already separates partition geometry blockers
+  from receiving-room volume blockers;
+- explicitly unsupported requested outputs stay non-numeric;
+- existing card matrices already cover support parity, layer reorder,
+  many-layer, and save/load posture.
+
+Gate A blockers for Gate B:
+
+- API routes still expose generic top-level validation messages even
+  though schema issue detail is structured;
+- simple output-card precedence can label an engine-rejected field
+  impact output as `needs_input` when it should be visibly unsupported
+  on the current path.
 
 ## Gate B - Implement Honesty Fixes
 
-Gate B should implement only the fixes justified by Gate A.
+Gate B is next and should implement only the fixes justified by Gate A.
 
 Allowed changes:
 
 - make missing-input messages identify the next concrete field to enter;
+- normalize `/api/estimate` and `/api/impact-only` validation payloads
+  into user-facing next-field guidance while preserving structured issue
+  details;
 - keep support/origin/confidence labels visible on relevant cards;
-- make unsupported requested outputs visible and non-numeric;
+- make unsupported requested outputs visible and non-numeric, with
+  unsupported/current-path labels when the engine already rejected the
+  output;
 - preserve existing exact/bound/formula/screening runtime precedence;
 - add UI tests for wall/floor flows, edge edits, and persistence.
 
@@ -108,6 +126,13 @@ Minimum after Gate A:
 - targeted inventory contract(s);
 - `pnpm calculator:gate:current`;
 - `git diff --check`.
+
+Latest Gate A validation:
+
+- targeted inventory contract: 1 file / 4 tests;
+- `pnpm calculator:gate:current`: engine 97 files / 440 tests, web
+  37 files / 174 passed + 18 skipped, build 5/5 with known non-fatal
+  `sharp/@img` warnings, whitespace guard clean.
 
 Minimum after Gate B or Gate C:
 
