@@ -2406,6 +2406,8 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
       .construction-table td strong {
         display: block;
         color: var(--ink);
+        overflow-wrap: anywhere;
+        word-break: break-word;
       }
 
       .construction-table td span {
@@ -2413,6 +2415,8 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
         margin-top: 3px;
         color: var(--ink-soft);
         font-size: 10px;
+        overflow-wrap: anywhere;
+        word-break: break-word;
       }
 
       .construction-summary-card {
@@ -2509,6 +2513,7 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
       table {
         width: 100%;
         border-collapse: collapse;
+        table-layout: fixed;
         font: 400 12px/1.6 Arial, sans-serif;
         break-inside: avoid;
       }
@@ -2519,6 +2524,8 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
         border-bottom: 1px solid var(--line);
         vertical-align: top;
         text-align: left;
+        overflow-wrap: anywhere;
+        word-break: break-word;
       }
 
       th {

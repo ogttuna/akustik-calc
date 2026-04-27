@@ -201,16 +201,17 @@ Start from
 ## Current Order
 
 Current validation baseline: 2026-04-27 `pnpm check` is green after
-project access policy route integration. Engine broad is 231 files /
-1265 tests. Web broad keeps 154 files in scope through
-`tools/dev/run-web-vitest.ts` with 882 passed + 18 skipped. Build is
+proposal/report polish closeout. Engine broad is 232 files /
+1270 tests. Web broad keeps 155 files in scope through
+`tools/dev/run-web-vitest.ts` with 885 passed + 18 skipped. Build is
 5/5 with the known non-fatal `sharp/@img` optional-package warnings.
-Focused current gate is 98 engine files / 445 tests, 43 web files /
+Focused current gate is 99 engine files / 450 tests, 43 web files /
 211 passed plus 18 skipped, build 5/5. The targeted UI honesty Gate A
 contract is 1 file / 4 tests green. The targeted Gate B web set is
 3 files / 18 tests green, the targeted Gate C closeout contract is
 1 file / 5 tests green, and the targeted route-policy closeout set is
-4 files / 23 tests green.
+4 files / 23 tests green. Proposal/report polish targeted validation is
+5 files / 18 tests green.
 
 ## Readiness Decision
 
@@ -227,7 +228,9 @@ families remain blocked until new evidence is deliberately imported.
 
 Next selected work:
 
-1. `proposal_report_polish_v1`.
+1. `calculator_source_gap_revalidation_v1`.
 
-Calculator runtime/source posture should remain frozen during
-productization slices.
+Calculator runtime/source posture should remain frozen during Gate A of
+that slice. The next movement must be a source-backed or formula-owned
+candidate selected by an executable revalidation contract, not an
+implicit reopen from nearby green tests.

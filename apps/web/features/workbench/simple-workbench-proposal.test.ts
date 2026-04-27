@@ -503,6 +503,13 @@ describe("simple workbench proposal helpers", () => {
     expect(html).toContain("Construction section");
     expect(html).toContain("Measured / predicted indices");
     expect(html).toContain("Method basis");
+    expect(html).toContain("Output coverage register");
+    expect(html).toContain("Benchmark-backed estimate");
+    expect(html).toContain("Awaiting field input");
+    expect(html).toContain("Needs input");
+    expect(html).toContain("Enter partition width and height");
+    expect(html).toContain("Unsupported on lane");
+    expect(html).toContain("Unsupported on route");
     expect(html).toContain("Visible layer schedule");
     expect(html).toContain("Reference basis");
     expect(html).toContain("Source notes");

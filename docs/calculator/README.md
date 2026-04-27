@@ -18,8 +18,8 @@ fix the drift before starting work.
    — tactical detail for the active slice.
 4. [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
    — closed calculator-only chain for private/internal-use readiness.
-5. [SLICE_PROPOSAL_REPORT_POLISH_PLAN.md](./SLICE_PROPOSAL_REPORT_POLISH_PLAN.md)
-   — active productization slice plan for proposal/report honesty.
+5. [SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md](./SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md)
+   — active calculator slice plan for source-gap revalidation.
 
 Then run `pnpm calculator:gate:current` to confirm the green
 baseline.
@@ -30,15 +30,21 @@ baseline.
   — productization closeout: server-backed project storage v1 closed.
 - [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
   — closed calculator readiness chain and private/internal-use caveats.
+- [CHECKPOINT_2026-04-27_PROPOSAL_REPORT_POLISH_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_PROPOSAL_REPORT_POLISH_CLOSEOUT_HANDOFF.md)
+  — latest handoff: proposal/report polish closed and calculator
+  source-gap revalidation is selected.
+- [SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md](./SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md)
+  — active implementation plan: re-inventory and re-rank remaining
+  source-gated calculator families before any runtime change.
 - [CHECKPOINT_2026-04-27_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_HANDOFF.md](./CHECKPOINT_2026-04-27_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_HANDOFF.md)
-  — latest productization handoff: owner-only route policy integration
-  closed, and proposal/report polish is selected.
+  — productization handoff: owner-only route policy integration
+  closed, and proposal/report polish was selected.
 - [SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md](./SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md)
   — closed implementation plan: wired the pure owner/editor/reviewer/viewer
   policy through existing owner-scoped project/proposal routes without
   enabling team access yet.
 - [SLICE_PROPOSAL_REPORT_POLISH_PLAN.md](./SLICE_PROPOSAL_REPORT_POLISH_PLAN.md)
-  — active implementation plan: tighten PDF/DOCX/workbench proposal
+  — closed implementation plan: tightened PDF/DOCX/workbench proposal
   honesty without changing acoustic calculations.
 - [CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_C_CLOSEOUT_HANDOFF.md)
   — previous calculator closeout: dynamic-airborne split v2 Gate C
@@ -138,8 +144,11 @@ baseline.
 - [SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md](./SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md)
   — closed productization slice plan for wiring policy decisions into
   owner-scoped project/proposal routes.
+- [SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md](./SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md)
+  — active calculator slice plan for source-gap inventory/rerank before
+  runtime movement.
 - [SLICE_PROPOSAL_REPORT_POLISH_PLAN.md](./SLICE_PROPOSAL_REPORT_POLISH_PLAN.md)
-  — active productization slice plan for tightening proposal/report
+  — closed productization slice plan for tightening proposal/report
   honesty without changing acoustic values.
 - [SLICE_TEAM_ACCESS_MODEL_PLAN.md](./SLICE_TEAM_ACCESS_MODEL_PLAN.md)
   — closed productization slice plan for team/project role policy.

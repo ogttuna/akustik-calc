@@ -82,6 +82,20 @@ function hasMetricLabel(labels: readonly string[], matchers: readonly RegExp[]):
   return labels.some((label) => matchers.some((matcher) => matcher.test(label)));
 }
 
+function formatSimpleCoverageStatus(status: SimpleWorkbenchProposalDocument["coverageItems"][number]["status"]): string {
+  switch (status) {
+    case "live":
+      return "Live now";
+    case "bound":
+      return "Conservative bound";
+    case "needs_input":
+      return "Needs input";
+    case "unsupported":
+    default:
+      return "Unsupported on lane";
+  }
+}
+
 function hasFieldAirborne(document: SimpleWorkbenchProposalDocument, labels: readonly string[]): boolean {
   if (hasMetricLabel(labels, [/^r'w$/u, /^dnt,w$/u, /^dnt,a$/u])) {
     return true;
@@ -506,6 +520,7 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
   const standardReferences = inferStandardReferences(document);
   const visibleMetrics = getVisibleProposalMetrics(document).slice(0, MAX_SIMPLE_METRICS);
   const visibleLayers = document.layers.slice(0, MAX_SIMPLE_LAYER_ROWS);
+  const hiddenLayerCount = Math.max(0, document.layers.length - visibleLayers.length);
   const visibleCitations = document.citations.slice(0, MAX_SIMPLE_CITATIONS);
   const visibleAssumptions = document.assumptionItems.slice(0, MAX_SIMPLE_ASSUMPTIONS);
   const visibleWarnings = document.warnings.slice(0, MAX_SIMPLE_WARNINGS);
@@ -525,11 +540,34 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
           .join("")
       : `<tr><td colspan="3" style="color:var(--ink-faint)">—</td></tr>`;
 
+  const coverageRows =
+    document.coverageItems.length > 0
+      ? document.coverageItems
+          .map(
+            (item) => `
+              <tr>
+                <td>${escapeHtml(item.label)}</td>
+                <td>${escapeHtml(formatSimpleCoverageStatus(item.status))}</td>
+                <td><strong>${escapeHtml(item.postureLabel)}</strong><br />${escapeHtml(item.postureDetail)}</td>
+                <td>
+                  <strong>${escapeHtml(item.value)}</strong><br />
+                  ${escapeHtml(item.detail)}${item.nextStep ? `<br />Next action: ${escapeHtml(item.nextStep)}` : ""}
+                </td>
+              </tr>
+            `
+          )
+          .join("")
+      : `
+              <tr>
+                <td colspan="4" style="color:var(--ink-faint)">No output coverage register was packaged with this issue.</td>
+              </tr>
+            `;
+
   const layerRows =
     visibleLayers.length > 0
-      ? visibleLayers
-          .map(
-            (layer) => `
+      ? `${visibleLayers
+        .map(
+          (layer) => `
               <tr>
                 <td>${layer.index}</td>
                 <td>${escapeHtml(layer.label)}</td>
@@ -537,8 +575,16 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
                 <td>${escapeHtml(layer.roleLabel ?? layer.categoryLabel)}</td>
               </tr>
             `
-          )
-          .join("")
+        )
+        .join("")}${
+        hiddenLayerCount > 0
+          ? `
+              <tr class="layer-overflow-note">
+                <td colspan="4">${hiddenLayerCount} additional layer${hiddenLayerCount === 1 ? "" : "s"} omitted from this short-form layer table; the construction section still uses all ${document.layers.length} solver rows.</td>
+              </tr>
+            `
+          : ""
+      }`
       : "";
 
   const standardCodes = standardReferences.map((r) => r.code).join(" · ");
@@ -1093,6 +1139,7 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
       table {
         width: 100%;
         border-collapse: collapse;
+        table-layout: fixed;
         font-size: 10px;
       }
 
@@ -1102,6 +1149,8 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
         padding: 1.8mm;
         text-align: left;
         vertical-align: top;
+        overflow-wrap: anywhere;
+        word-break: break-word;
       }
 
       th {
@@ -1115,6 +1164,12 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
 
       td {
         line-height: 1.4;
+      }
+
+      .layer-overflow-note td {
+        color: var(--ink-soft);
+        font-size: 9px;
+        line-height: 1.5;
       }
 
       ul {
@@ -1341,6 +1396,23 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
             </section>
           </section>
 
+          <section class="table-panel">
+            <div class="table-title">Output coverage register</div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Metric</th>
+                  <th>Status</th>
+                  <th>Evidence class</th>
+                  <th>Current state</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${coverageRows}
+              </tbody>
+            </table>
+          </section>
+
           ${document.layers.length > 0 ? `
           <section class="panel">
             <div class="panel-title">Construction section</div>
@@ -1378,6 +1450,15 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
                     `
                   )
                   .join("")}
+                ${
+                  hiddenLayerCount > 0
+                    ? `
+                      <tr class="layer-overflow-note">
+                        <td colspan="5">${hiddenLayerCount} additional layer${hiddenLayerCount === 1 ? "" : "s"} omitted from this short-form detail table; the construction section still uses all ${document.layers.length} solver rows.</td>
+                      </tr>
+                    `
+                    : ""
+                }
               </tbody>
             </table>
           </section>

@@ -1,7 +1,7 @@
 # Dynamic Calculator Source Gap Ledger
 
-Last reviewed: 2026-04-24 (invalid-thickness closeout checkpoint;
-source-gap content remains floor-dominant historical context)
+Last reviewed: 2026-04-27 (`calculator_source_gap_revalidation_v1`
+selected; source-gap content remains floor-dominant historical context)
 
 Purpose:
 
@@ -27,7 +27,7 @@ Important scope note:
 - wall-side dynamic behavior still stays mostly under benchmark and stability guardrails
 - if wall-family widening becomes active work, add a separate wall ledger instead of overloading this one
 
-2026-04-24 freshness note:
+2026-04-27 freshness note:
 
 - The active selected slice is no longer
   `dataholz_clt_calibration_tightening`; after the 2026-04-23 broad
@@ -42,9 +42,11 @@ Important scope note:
   Productization slices `server_backed_project_storage_v1`,
   `project_access_authorization_v1`, `auth_session_hardening_v1`,
   `team_access_model_v1`, and
-  `project_access_policy_route_integration_v1` are closed. The current
-  selected slice is `proposal_report_polish_v1`, which must not reopen
-  source-gated calculator families.
+  `project_access_policy_route_integration_v1` are closed. The
+  proposal/report polish slice is also closed no-runtime. The current
+  selected slice is `calculator_source_gap_revalidation_v1`, whose Gate
+  A must inventory and rerank remaining source-gated families before any
+  runtime change.
 - `good_calculator_final_audit_v1` closed without reopening any
   source-gated calculator family. `wall_formula_family_widening_v1`
   then also closed without reopening any blocked family: it clarified

@@ -19,8 +19,9 @@ heavy-core/concrete Gate B closed no-runtime; timber stud + CLT wall
 accuracy pass Gate C closed no-runtime; floor fallback Gate C closed
 no-runtime; `ui_input_output_honesty_v1` Gate C closed; calculator
 personal/internal-use readiness chain is closed;
-`project_access_policy_route_integration_v1` closed; latest checkpoint:
-[CHECKPOINT_2026-04-27_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_HANDOFF.md](./CHECKPOINT_2026-04-27_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_HANDOFF.md)).
+`project_access_policy_route_integration_v1` closed;
+`proposal_report_polish_v1` closed; latest checkpoint:
+[CHECKPOINT_2026-04-27_PROPOSAL_REPORT_POLISH_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_PROPOSAL_REPORT_POLISH_CLOSEOUT_HANDOFF.md)).
 Step 8 closed the calculator runtime audit: `MASTER_PLAN.md` §3/§8
 was reconciled to implementation reality, `coverage-grid-consistency.test.ts`
 now maps the grid and C1-C6 signals to executable evidence, the
@@ -31,7 +32,7 @@ storage v1, project/proposal route authorization, auth-session
 hardening, and the pure team-access policy model.
 
 - **Engine broad suite**: latest broad `pnpm check` on 2026-04-27 was
-  231 / 231 files, 1265 / 1265 tests green
+  232 / 232 files, 1270 / 1270 tests green
   (up from 193/1068 pre-session; step-7 landed 4 wall cases +
   F1/F2 engine fixes + 32-assertion cross-mode torture matrix
   + 2 regression guards + post-contract; step-7b landed the
@@ -45,8 +46,8 @@ hardening, and the pure team-access policy model.
   under the Vitest worker timeout; Gate B and Gate C then added focused
   planning/value contract files).
 - **Web broad suite**: latest broad `pnpm check` on 2026-04-27 kept
-  all 154 / 154 files in scope through `tools/dev/run-web-vitest.ts`:
-  882 / 882 tests green + 18 discovery helpers intentionally skipped.
+  all 155 / 155 files in scope through `tools/dev/run-web-vitest.ts`:
+  885 / 885 tests green + 18 discovery helpers intentionally skipped.
   The runner isolates six long route-scan files and batches the
   remaining 148 files, preserving coverage while avoiding Vitest worker
   RPC timeout failures on the heavy family-boundary scans.
@@ -141,17 +142,42 @@ hardening, and the pure team-access policy model.
   `project-route-auth.test.ts`, `server-project-routes.test.ts`, and
   `post-project-access-policy-route-integration-next-slice-selection-contract.test.ts`
   for the owner-only route-policy adapter closeout and proposal-report
-  polish selection.
-  Latest focused gate run after route-policy integration:
-  98 engine files / 445 tests,
+  polish selection, plus
+  `post-proposal-report-polish-next-slice-selection-contract.test.ts`
+  for proposal-report polish closeout and calculator source-gap
+  revalidation selection.
+  Latest focused gate run after the closeout contract update:
+  99 engine files / 450 tests,
   43 web files / 211 passed +
   18 skipped, build 5/5 tasks, whitespace guard clean.
 
 ## Active Slice
 
-`proposal_report_polish_v1` (productization proposal/report honesty,
-active). Planning surface:
-[SLICE_PROPOSAL_REPORT_POLISH_PLAN.md](./SLICE_PROPOSAL_REPORT_POLISH_PLAN.md).
+`calculator_source_gap_revalidation_v1` (calculator source-gap
+inventory/rerank, active). Planning surface:
+[SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md](./SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md).
+
+`proposal_report_polish_v1` is now closed. It landed the simple
+PDF/DOCX output coverage register, generated-document honesty tests for
+real reinforced-concrete floor fallback and dynamic field-airborne wall
+workbench outputs, and a 53-row UBIQ long-label / many-layer report
+regression with wrapping guards and simple short-form layer-cap
+disclosure. It did not change acoustic formulas, runtime values,
+support classifications, confidence scores, result rounding, or engine
+routes.
+
+The selected next action is Gate A of
+`calculator_source_gap_revalidation_v1`: re-inventory and re-rank the
+remaining source-gated calculator families before any runtime change.
+Gate A must stay no-runtime. It should add or update an executable
+source-gap revalidation contract that names the current candidate
+ranking, blocker or ready reason, evidence owner file/test, and selected
+next source or runtime slice.
+
+Do not reopen `GDMTXA04A`, `C11c`, raw bare open-box/open-web,
+heavy-concrete formula parity, reinforced-concrete reopening,
+wall-selector behavior, timber-stud widening, floor fallback, or wall
+exact-row follow-ups from nearby green tests alone.
 
 The previous cartography Gate A landed no-runtime in
 `packages/engine/src/realistic-layer-combination-coverage-cartography.test.ts`.
@@ -251,9 +277,11 @@ caveats and selected `project_access_policy_route_integration_v1`.
 Personal-use readiness is now explicitly tracked in
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
 That chain is closed. Productization route-policy integration has also
-closed, and `proposal_report_polish_v1` is selected. Calculator
-runtime/source posture remains frozen
-unless a new source-backed calculator slice is explicitly selected.
+closed, and `proposal_report_polish_v1` has closed no-runtime report
+honesty. `calculator_source_gap_revalidation_v1` is selected.
+Calculator runtime/source posture remains frozen until the new
+source-gap revalidation contract deliberately selects a source-backed or
+formula-owned next slice.
 
 Calculator runtime status: final audit closed and green. The just-closed
 wall formula-family widening slice completed Gate A and Gate B with
@@ -726,15 +754,21 @@ resolved owner scope into the pure access policy while keeping routes
 owner-only. Team roles remain policy vocabulary only; routes do not
 enable them until membership storage exists.
 
-Proposal/report polish status: `proposal_report_polish_v1` is now
-selected. It should improve PDF/DOCX/workbench report honesty for
-representative wall/floor scenarios without changing calculator runtime
-values, support, confidence, or formulas.
+Proposal/report polish status: `proposal_report_polish_v1` is closed.
+PDF/DOCX/workbench report honesty now preserves visible output posture
+for representative wall/floor scenarios without changing calculator
+runtime values, support, confidence, or formulas.
+
+Calculator source-gap revalidation status:
+`calculator_source_gap_revalidation_v1` is selected. Gate A must
+re-rank remaining source-gated families without runtime movement before
+selecting a narrow source/acquisition or Gate B runtime slice.
 
 ## Latest Closed Slices
 
 | Slice | Master-plan step | Closed | Post-contract |
 |---|---|---|---|
+| `proposal_report_polish_v1` | productization 6 | 2026-04-27 | `post-proposal-report-polish-next-slice-selection-contract.test.ts` |
 | `project_access_policy_route_integration_v1` | productization 5 | 2026-04-27 | `post-project-access-policy-route-integration-next-slice-selection-contract.test.ts` |
 | `ui_input_output_honesty_v1` | personal-use readiness | 2026-04-27 | `post-ui-input-output-honesty-gate-c-next-slice-selection-contract.test.ts` |
 | `floor_fallback_low_confidence_cleanup_v1` | personal-use readiness | 2026-04-27 | `post-floor-fallback-low-confidence-gate-c-next-slice-selection-contract.test.ts` |
@@ -931,13 +965,15 @@ time without context loss:
 
 ## Resume Order For The Next Agent
 
-1. Read [CHECKPOINT_2026-04-27_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_HANDOFF.md](./CHECKPOINT_2026-04-27_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_HANDOFF.md)
+1. Read [CHECKPOINT_2026-04-27_PROPOSAL_REPORT_POLISH_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_PROPOSAL_REPORT_POLISH_CLOSEOUT_HANDOFF.md)
    for the latest active-slice handoff.
 2. Read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md),
-   [SLICE_PROPOSAL_REPORT_POLISH_PLAN.md](./SLICE_PROPOSAL_REPORT_POLISH_PLAN.md),
-   and [POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md](./POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md).
-   Start `proposal_report_polish_v1` by inventorying PDF/DOCX/workbench
-   proposal honesty surfaces for representative wall/floor scenarios.
+   [SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md](./SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md),
+   [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md), and
+   [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md).
+   Start `calculator_source_gap_revalidation_v1` by inventorying and
+   reranking remaining source-gated calculator families without runtime
+   value changes.
 3. Read [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
    for the now-closed calculator-priority chain and its evidence-tier
    caveats.
@@ -950,8 +986,9 @@ time without context loss:
    agrees on the active slice, completion signals, and deferred tracks.
    If it does not, fix the drift before starting work.
 6. Run `pnpm calculator:gate:current` as the focused baseline.
-7. Do not change runtime math, source posture, output support, or
-   confidence scores during route-policy integration.
+7. Do not change runtime math, source posture, output support,
+   evidence tiers, or confidence scores during Gate A source-gap
+   revalidation.
 8. Treat [CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_ELEVENTH_CARVE_HANDOFF.md](./CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_ELEVENTH_CARVE_HANDOFF.md),
    [CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_A_HANDOFF.md),
    [CHECKPOINT_2026-04-24_INVALID_THICKNESS_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-24_INVALID_THICKNESS_CLOSEOUT_HANDOFF.md),

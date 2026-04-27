@@ -147,6 +147,7 @@ async function main() {
         "src/post-wall-timber-lightweight-source-corpus-v1-next-slice-selection-contract.test.ts",
         "src/post-wall-resilient-side-count-gate-b-v1-next-slice-selection-contract.test.ts",
         "src/post-wall-resilient-side-count-gate-c-v1-next-slice-selection-contract.test.ts",
+        "src/post-proposal-report-polish-next-slice-selection-contract.test.ts",
         "--maxWorkers=1"
       ]
     },

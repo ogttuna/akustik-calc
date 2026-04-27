@@ -8,10 +8,10 @@ chain read
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
 
 Last reviewed: 2026-04-27
-(`project_access_policy_route_integration_v1` closed;
-`proposal_report_polish_v1` is selected;
+(`proposal_report_polish_v1` closed; selected
+`calculator_source_gap_revalidation_v1`;
 see
-`CHECKPOINT_2026-04-27_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_HANDOFF.md`).
+`SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md`).
 
 ---
 
@@ -41,11 +41,11 @@ For every next slice decision:
 ## Now
 
 - **Active slice**:
-  `proposal_report_polish_v1`.
+  `calculator_source_gap_revalidation_v1`.
 - **Latest checkpoint**:
-  [CHECKPOINT_2026-04-27_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_HANDOFF.md](./CHECKPOINT_2026-04-27_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_HANDOFF.md).
+  [CHECKPOINT_2026-04-27_PROPOSAL_REPORT_POLISH_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_PROPOSAL_REPORT_POLISH_CLOSEOUT_HANDOFF.md).
 - **Planning surface**:
-  [SLICE_PROPOSAL_REPORT_POLISH_PLAN.md](./SLICE_PROPOSAL_REPORT_POLISH_PLAN.md).
+  [SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md](./SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md).
 - **Personal-use readiness roadmap**:
   [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
   is closed for the current private/internal-use bar. Heavy-core/concrete
@@ -53,14 +53,14 @@ For every next slice decision:
   until new source evidence appears, floor fallback remains
   low-confidence until new source evidence or a bounded family rule
   appears, and UI/input/output honesty is validated.
-- **Just closed**: `project_access_policy_route_integration_v1`.
-  Project/proposal route decisions now flow through the pure access
-  policy by way of an owner-only adapter. Team route access remains
-  disabled until real membership storage exists. This did not change
-  calculator runtime/source/confidence posture.
+- **Just closed**: `proposal_report_polish_v1`.
+  Simple PDF/DOCX exports now include output coverage posture,
+  generated proposal documents preserve real floor/wall workbench
+  caveats, and many-layer / long-label report rendering is pinned.
+  This did not change calculator runtime/source/confidence posture.
 - **Latest broad validation**: 2026-04-27 `pnpm check` is green after
-  project access policy route integration: engine 231 files / 1265
-  tests, web 154 files / 882 passed + 18 skipped through
+  proposal/report polish closeout: engine 232 files / 1270
+  tests, web 155 files / 885 passed + 18 skipped through
   `tools/dev/run-web-vitest.ts`, build 5/5, with only the known
   non-fatal `sharp/@img` optional-package warnings.
 - **Cartography Gate A result**:
@@ -150,32 +150,68 @@ For every next slice decision:
   `packages/engine/src/post-wall-timber-stud-clt-gate-c-next-slice-selection-contract.test.ts`
   closes the slice and selects
   `floor_fallback_low_confidence_cleanup_v1`.
-- **Selected productization follow-up**:
-  `proposal_report_polish_v1`. Tighten PDF/DOCX/workbench proposal
-  honesty for representative wall/floor scenarios without changing
+- **Closed productization follow-up**:
+  `proposal_report_polish_v1`. PDF/DOCX/workbench proposal honesty is
+  tightened for representative wall/floor scenarios without changing
   calculator values, formulas, support, or confidence.
+- **Proposal/report polish Gate A first carve**:
+  the simple PDF/DOCX HTML path now renders an output coverage register
+  so live, `needs_input`, and `unsupported` output posture does not
+  disappear from short-form exports. The focused
+  `simple-workbench-proposal.test.ts` pins this; calculator runtime and
+  support/confidence decisions are unchanged.
+- **Proposal/report polish Gate A second carve**:
+  `simple-workbench-proposal-generated-document-honesty.test.ts` now
+  builds proposal documents from real workbench output models and pins a
+  reinforced-concrete low-confidence floor case plus a dynamic
+  field-airborne wall case across copy-ready text, branded preview, and
+  simple preview. Targeted proposal/export tests and
+  `pnpm calculator:gate:current` are green. This is still no-runtime for
+  acoustic calculations.
+- **Proposal/report polish Gate A third carve**:
+  the generated-document test now includes a 53-row UBIQ exact floor
+  stack with long material labels. Branded/simple HTML tables use fixed
+  table layout plus `overflow-wrap` / `word-break` guards, SVG
+  construction labels stay truncated, full labels remain available in
+  wrapping table/text surfaces, and simple short-form exports explicitly
+  state when the layer table is capped. Targeted proposal/report tests
+  are green across 5 files / 18 tests, web lint is green,
+  `pnpm calculator:gate:current` is green, and broad `pnpm check` is
+  green with engine 232 files / 1270 tests and web 155 files / 885
+  passed + 18 skipped.
+- **Proposal/report polish closeout**:
+  `packages/engine/src/post-proposal-report-polish-next-slice-selection-contract.test.ts`
+  closes `proposal_report_polish_v1` and selects
+  `calculator_source_gap_revalidation_v1`. The selected Gate A action
+  is a no-runtime inventory and rerank of remaining source gaps.
+  `pnpm calculator:gate:current` is green after adding the closeout
+  contract: engine 99 files / 450 tests, web 43 files / 211 passed +
+  18 skipped, build 5/5 with the known non-fatal `sharp/@img` warnings.
 
 ## Immediate Execution Order
 
-`proposal_report_polish_v1` should now proceed in this order:
+`calculator_source_gap_revalidation_v1` should now proceed in this
+order:
 
 1. Re-read
-   [SLICE_PROPOSAL_REPORT_POLISH_PLAN.md](./SLICE_PROPOSAL_REPORT_POLISH_PLAN.md).
-2. Inventory current PDF, DOCX, and workbench proposal surfaces for
-   exact/source, formula, screening, bound, low-confidence, unsupported,
-   missing-field, and invalid-input states.
-3. Add focused tests that pin report-visible provenance/caveat text for
-   representative private-use floor and wall scenarios before changing
-   rendering.
-4. Tighten proposal/report sections so evidence tier, origin/support
-   posture, and unsupported outputs remain visible in generated models
-   and preview HTML.
-5. Add long-label / many-layer regression coverage where proposal tables
-   or summaries can overflow.
-6. Keep calculator formulas, runtime values, exact/bound/formula
-   precedence, confidence scores, and output support unchanged.
-7. Run targeted proposal/report tests, `pnpm calculator:gate:current`,
-   and broad `pnpm check`; keep `git diff --check` clean.
+   [SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md](./SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md)
+   and
+   [CHECKPOINT_2026-04-27_PROPOSAL_REPORT_POLISH_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_PROPOSAL_REPORT_POLISH_CLOSEOUT_HANDOFF.md).
+2. Run `pnpm calculator:gate:current` as the baseline.
+3. Inventory the current blocked-source and recent readiness contracts:
+   `SOURCE_GAP_LEDGER.md`, `CALCULATION_MODEL_AND_VALIDATION.md`,
+   `remaining-source-gap-posture-matrix.test.ts`,
+   `source-gap-candidate-re-rank-contract.test.ts`,
+   `blocked-source-rank-*`, recent heavy-core/timber/CLT/floor-fallback
+   contracts, and related web card route matrices.
+4. Add or update one no-runtime source-gap revalidation contract that
+   records the current candidate ranking, blocker or ready reason, and
+   evidence owner file/test for each candidate.
+5. Select the next source-acquisition or narrow Gate B runtime/source
+   slice only after that revalidation contract passes.
+6. Keep formulas, runtime values, exact/bound/formula precedence,
+   confidence scores, output support, and evidence tiers unchanged
+   during Gate A.
 
 ## Personal-Use Readiness Chain
 
@@ -187,15 +223,16 @@ private day-to-day use:
 2. UI / input / output honesty pass.
    - closed at Gate C.
 
-Productization has resumed. Calculator runtime/source posture stays
-frozen unless a new source-backed calculator slice is explicitly
-selected.
+Productization route-policy and proposal/report polish slices are
+closed. Calculator runtime/source posture stays frozen during the
+selected no-runtime revalidation slice; additional productization work
+is deferred.
 
 ## Latest Closed Slices
 
 See [CURRENT_STATE.md](./CURRENT_STATE.md) "Latest Closed Slices" table.
-`project_access_policy_route_integration_v1` is now closed and
-`proposal_report_polish_v1` is active.
+`proposal_report_polish_v1` is now closed and
+`calculator_source_gap_revalidation_v1` is active.
 
 ## Deferred Follow-Up Tracks
 

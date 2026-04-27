@@ -282,15 +282,23 @@ UI/input/output honesty are all closed with evidence-tier caveats.
 behavior-preserving correction-guard carves; `dynamic-airborne.ts` is now
 1793 lines, C6 is closed, and the remaining three recursive composer
 guards are optional architecture backlog. Productization route
-integration is closed, and proposal/report polish is now selected.
+integration and proposal/report polish are closed. Calculator
+source-gap revalidation is now selected.
 
 Current hotspots:
 
-- selected proposal/report polish anchors:
-  - `docs/calculator/CHECKPOINT_2026-04-27_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_HANDOFF.md`
+- selected calculator source-gap revalidation anchors:
+  - `docs/calculator/CHECKPOINT_2026-04-27_PROPOSAL_REPORT_POLISH_CLOSEOUT_HANDOFF.md`
+  - `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md`
+  - `docs/calculator/SOURCE_GAP_LEDGER.md`
+  - `docs/calculator/CALCULATION_MODEL_AND_VALIDATION.md`
+  - `packages/engine/src/post-proposal-report-polish-next-slice-selection-contract.test.ts`
+- closed proposal/report polish anchors:
   - `docs/calculator/SLICE_PROPOSAL_REPORT_POLISH_PLAN.md`
-  - `docs/calculator/POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md`
-  - `apps/web/lib/post-project-access-policy-route-integration-next-slice-selection-contract.test.ts`
+  - `apps/web/features/workbench/simple-workbench-proposal-generated-document-honesty.test.ts`
+  - `apps/web/features/workbench/simple-workbench-proposal.test.ts`
+  - `apps/web/features/workbench/simple-workbench-proposal-simple.ts`
+  - `apps/web/features/workbench/simple-workbench-proposal.ts`
 - closed route-policy integration anchors:
   - `docs/calculator/SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md`
   - `docs/calculator/POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md`
@@ -422,14 +430,16 @@ Current hotspots:
 - source-backed widening ledger:
   `docs/calculator/SOURCE_GAP_LEDGER.md`
 
-The current selected next slice is a productization slice:
-`proposal_report_polish_v1`. Start by auditing PDF/DOCX/workbench
-proposal report honesty for representative wall/floor scenarios without
-changing acoustic values. Closed reinforced, `GDMTXA04A`, `C11c`, raw
+The current selected next slice is a calculator revalidation slice:
+`calculator_source_gap_revalidation_v1`. Start by inventorying and
+reranking the remaining source-gated families without changing acoustic
+values, support, confidence, evidence tiers, or formulas. Closed
+reinforced, `GDMTXA04A`, `C11c`, raw
 bare, wall-selector, floor continuation, floor many-layer, floor
 layer-order, timber-stud formula, floor fallback, UI honesty, and route
 policy integration tracks stay explicit deferrals or closed references
-rather than active calculator runtime work.
+rather than active calculator runtime work unless the new revalidation
+contract deliberately selects one.
 
 ## What This System Is Not Yet
 
@@ -453,8 +463,8 @@ To avoid docs drift, be explicit about current non-features:
 - Want the productization roadmap:
   read [POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md](./POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md)
 - Want the active implementation plan:
-  read [SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md](./SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md)
+  read [SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md](./SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md)
 - Want answer-origin or support semantics:
   read [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
 - Want the last clean resume point:
-  read [CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_C_CLOSEOUT_HANDOFF.md)
+  read [CHECKPOINT_2026-04-27_PROPOSAL_REPORT_POLISH_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_PROPOSAL_REPORT_POLISH_CLOSEOUT_HANDOFF.md)

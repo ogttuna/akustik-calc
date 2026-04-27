@@ -85,7 +85,7 @@ Progress note 2026-04-23:
   way of an owner-only adapter before invitations, billing, or database
   storage.
 - 2026-04-27 resume note: productization route integration was deferred,
-  not cancelled, and is now selected again after the calculator
+  not cancelled, and then selected again after the calculator
   private/internal-use readiness chain closed at
   `ui_input_output_honesty_v1` Gate C. The calculator refocus slice
   `wall_formula_family_widening_v1` has since closed honestly no-runtime,
@@ -99,6 +99,8 @@ Progress note 2026-04-23:
   `dynamic_airborne_split_refactor_v2` has closed C6, and the
   personal-use readiness chain has closed through heavy-core/concrete,
   timber stud + CLT, floor fallback, and UI/input/output honesty.
+  Route integration and proposal/report polish are now closed; the
+  selected work has returned to calculator source-gap revalidation.
 
 ### 3. Billing
 
@@ -125,14 +127,16 @@ Initial scope:
 - PDF/DOCX consistency checks
 - visual QA against representative long labels and missing-field states
 
-Current selected work:
+Closed selected work:
 
 - `proposal_report_polish_v1`
 
-Why now: calculator private/internal-use readiness is closed and route
-authorization is policy-backed. The next internal-use risk is losing
-evidence-tier honesty when calculator results move from cards into
-PDF/DOCX/workbench proposal surfaces.
+Closeout: calculator private/internal-use readiness is closed and route
+authorization is policy-backed. The proposal/report polish slice now
+keeps evidence-tier honesty visible when calculator results move from
+cards into PDF/DOCX/workbench proposal surfaces. Additional
+productization work is deferred while the active selected slice returns
+to calculator source-gap revalidation.
 
 ### 5. Deployment And Monitoring
 
@@ -185,15 +189,19 @@ evidence.
   (closed 2026-04-23).
 - Completed follow-up slice: `project_access_policy_route_integration_v1`
   (closed 2026-04-27).
-- Current selected productization follow-up: `proposal_report_polish_v1`.
+- Completed follow-up slice: `proposal_report_polish_v1`
+  (closed 2026-04-27).
+- Current selected calculator follow-up:
+  `calculator_source_gap_revalidation_v1`.
 - Calculator personal/internal-use readiness:
   closed with evidence-tier caveats by `ui_input_output_honesty_v1`
   Gate C.
 
 Reasoning: server-backed persistence is the foundation for auth,
 billing, proposal history, collaboration, monitoring context, and any
-future desktop sync story. With explicit sync/list/load and owner-only
-policy-backed route authorization now landed, the next productization
-step is to make proposal/report outputs carry the same evidence-tier
-honesty as the calculator cards. That work must not alter calculator
-formulas, values, source posture, output support, or confidence scores.
+future desktop sync story. With explicit sync/list/load, owner-only
+policy-backed route authorization, and proposal/report honesty now
+landed, the next user-priority step is calculator source-gap
+revalidation. That work must not alter calculator formulas, values,
+source posture, output support, or confidence scores until a
+source-backed or formula-owned candidate is deliberately selected.
