@@ -36,7 +36,9 @@ plan.
   double-leaf (`R'w=41`), explicit single-stud (`R'w=37`), and explicit
   double-stud (`R'w=52`) routes, plus lined-massive and triple-leaf
   negative boundaries. The follow-up planning reconciliation confirmed
-  Gate B is still unimplemented. Start by adding
+  Gate B is still unimplemented. The latest checkpoint revalidation
+  fixed only Gate A contract type-hygiene under broad typecheck. Start
+  by adding
   `packages/engine/src/wall-double-leaf-sharp-davy-scoping-gate-b-contract.test.ts`
   as a bounded current-value/source-tolerance matrix. Gate B must not
   move values unless it names a source row, benchmark envelope, formula
@@ -67,7 +69,7 @@ plan.
   43 files / 211 passed + 18 skipped, build 5/5 with the known
   non-fatal `sharp/@img` warnings, whitespace guard clean
 - latest broad validation: `pnpm check` green with engine
-  234 files / 1280 tests and web 155 files / 885 passed + 18 skipped
+  238 files / 1300 tests and web 155 files / 885 passed + 18 skipped
 - web broad tests run through `tools/dev/run-web-vitest.ts`; it keeps
   all 155 web test files in scope while isolating long route scans so
   Vitest worker RPC timeouts do not hide green test results

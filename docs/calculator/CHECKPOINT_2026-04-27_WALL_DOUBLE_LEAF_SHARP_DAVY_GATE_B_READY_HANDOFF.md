@@ -2,9 +2,10 @@
 
 Date: 2026-04-27
 
-Status: planning/implementation reconciliation only. No runtime code,
-formula, confidence, evidence-tier, output-support, or web route-card
-behavior changed in this checkpoint.
+Status: planning/implementation reconciliation plus Gate A test
+type-hygiene revalidation. No runtime code, formula, confidence,
+evidence-tier, output-support, or web route-card behavior changed in
+this checkpoint.
 
 Latest landed implementation remains:
 `wall_double_leaf_sharp_davy_scoping_v1` Gate A.
@@ -17,6 +18,14 @@ source-tolerance matrix, or no-runtime Gate B decision.
 
 The active plan is not complete. It is correctly selected, and Gate A is
 implemented, but Gate B has not been written yet.
+
+The 2026-04-27 broad checkpoint revalidation found one non-runtime gap:
+the Gate A contract executed in focused Vitest, but strict broad
+typecheck rejected an implicit callback type and optional expected-field
+guards. The contract now uses an explicit candidate callback type and
+`in` checks for optional expectation properties. This only makes the
+Gate A executable contract valid under the broad repo gate; it does not
+change calculator behavior or Gate B scope.
 
 Implemented and validated:
 
@@ -108,6 +117,12 @@ Planning reconciliation validation:
   - web 43 files / 211 passed + 18 skipped
   - build 5/5 with the known non-fatal `sharp/@img` warnings
   - whitespace guard clean
+- `pnpm --filter @dynecho/engine typecheck` green after the Gate A
+  contract type-hygiene fix.
+- Broad `pnpm check` green after checkpoint revalidation:
+  - engine 238 files / 1300 tests
+  - web 155 files / 885 passed + 18 skipped
+  - build 5/5 with the known non-fatal `sharp/@img` warnings
 - `git diff --check` clean.
 
 ## Boundaries

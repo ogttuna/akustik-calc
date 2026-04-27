@@ -479,7 +479,7 @@ describe("wall double-leaf Sharp/Davy scoping Gate A contract", () => {
         visibleLeafMassRatio: testCase.expected.visibleLeafMassRatio
       });
       expect(trace?.porousLayerCount, testCase.id).toBe(testCase.expected.porousLayerCount);
-      expect(trace?.candidateMethods.map((candidate) => candidate.method), testCase.id).toEqual([
+      expect(trace?.candidateMethods.map((candidate: { method: string }) => candidate.method), testCase.id).toEqual([
         "screening_mass_law_curve_seed_v3",
         "ks_rw_calibrated",
         "mass_law",
@@ -492,7 +492,7 @@ describe("wall double-leaf Sharp/Davy scoping Gate A contract", () => {
         selected: true
       });
 
-      if (testCase.expected.familyDecisionClass) {
+      if ("familyDecisionClass" in testCase.expected) {
         expect(trace, testCase.id).toMatchObject({
           familyDecisionClass: testCase.expected.familyDecisionClass,
           familyDecisionMargin: testCase.expected.familyDecisionMargin,
@@ -559,11 +559,11 @@ describe("wall double-leaf Sharp/Davy scoping Gate A contract", () => {
         visibleLeafCount: testCase.expected.visibleLeafCount
       });
 
-      if (typeof testCase.expected.cavityCount === "number") {
+      if ("cavityCount" in testCase.expected) {
         expect(trace?.cavityCount, testCase.id).toBe(testCase.expected.cavityCount);
       }
 
-      if (testCase.expected.familyDecisionClass) {
+      if ("familyDecisionClass" in testCase.expected) {
         expect(trace, testCase.id).toMatchObject({
           familyBoundaryHoldApplied: testCase.expected.familyBoundaryHoldApplied,
           familyDecisionClass: testCase.expected.familyDecisionClass,

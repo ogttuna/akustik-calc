@@ -3,7 +3,8 @@
 Status: GATE A LANDED NO-RUNTIME (opened 2026-04-27 after
 `wall_single_leaf_mass_law_calibration_v1` Gate C closeout; Gate B
 bounded matrix or no-runtime closeout is next; Gate B-ready
-reconciliation confirms Gate B is still unimplemented)
+reconciliation confirms Gate B is still unimplemented; checkpoint
+revalidation fixed Gate A contract type-hygiene only)
 
 ## Objective
 
@@ -76,6 +77,10 @@ answer materially.
   (`R'w=52`), plus lined-massive and triple-leaf negative boundaries.
 - Gate B is not implemented yet. The next test file should be
   `packages/engine/src/wall-double-leaf-sharp-davy-scoping-gate-b-contract.test.ts`.
+- The 2026-04-27 checkpoint revalidation fixed only Gate A contract
+  strict-typecheck hygiene. Current values, formulas, source posture,
+  output support, confidence, evidence tier, and route cards are
+  unchanged.
 
 ## Gate A - Scoping Contract
 
@@ -196,7 +201,8 @@ Expected no-runtime closeout path:
   or closes the slice no-runtime.
 - `NEXT_IMPLEMENTATION_PLAN.md`, `CURRENT_STATE.md`, `AGENTS.md`, this
   plan, and the latest checkpoint agree on the active selected slice.
-- `pnpm calculator:gate:current` and `git diff --check` are green.
+- `pnpm calculator:gate:current`, broad `pnpm check`, and
+  `git diff --check` are green before committing a checkpoint.
 
 ## Immediate Execution Order
 

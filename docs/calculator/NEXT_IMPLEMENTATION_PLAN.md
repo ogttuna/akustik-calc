@@ -10,7 +10,9 @@ chain read
 Last reviewed: 2026-04-27
 (`wall_double_leaf_sharp_davy_scoping_v1` Gate A landed no-runtime;
 Gate B planning reconciliation confirmed Gate B is unimplemented and
-ready for a bounded matrix or no-runtime decision;
+ready for a bounded matrix or no-runtime decision; checkpoint
+revalidation fixed Gate A contract type-hygiene only and kept broad
+`pnpm check` green;
 see
 `SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md`).
 
@@ -79,8 +81,8 @@ For every next slice decision:
   caveats, and many-layer / long-label report rendering is pinned.
   This did not change calculator runtime/source/confidence posture.
 - **Latest broad validation**: 2026-04-27 `pnpm check` is green after
-  wall coverage planning v2 Gate A: engine 234 files / 1280
-  tests, web 155 files / 885 passed + 18 skipped through
+  the wall double-leaf Gate A checkpoint revalidation: engine
+  238 files / 1300 tests, web 155 files / 885 passed + 18 skipped through
   `tools/dev/run-web-vitest.ts`, build 5/5, with only the known
   non-fatal `sharp/@img` optional-package warnings.
 - **Cartography Gate A result**:

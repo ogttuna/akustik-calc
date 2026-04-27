@@ -25,6 +25,7 @@ personal/internal-use readiness chain is closed;
 `wall_coverage_expansion_planning_v2` Gate A closed no-runtime;
 `wall_single_leaf_mass_law_calibration_v1` Gate C closed no-runtime;
 `wall_double_leaf_sharp_davy_scoping_v1` Gate A landed no-runtime;
+Gate A contract type-hygiene revalidated under broad typecheck;
 latest checkpoint:
 [CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_HANDOFF.md)).
 Step 8 closed the calculator runtime audit: `MASTER_PLAN.md` §3/§8
@@ -37,7 +38,7 @@ storage v1, project/proposal route authorization, auth-session
 hardening, and the pure team-access policy model.
 
 - **Engine broad suite**: latest broad `pnpm check` on 2026-04-27 was
-  234 / 234 files, 1280 / 1280 tests green
+  238 / 238 files, 1300 / 1300 tests green
   (up from 193/1068 pre-session; step-7 landed 4 wall cases +
   F1/F2 engine fixes + 32-assertion cross-mode torture matrix
   + 2 regression guards + post-contract; step-7b landed the
@@ -64,7 +65,8 @@ hardening, and the pure team-access policy model.
   input contract so it asserts parse behavior instead of calling
   `.keyof()` on the exported shared `AirborneContextSchema` `ZodType`.
 - **Broad `pnpm check`**: lint + typecheck + tests + build green on the
-  latest broad run after wall coverage planning Gate A; build
+  latest broad run after wall double-leaf Gate A checkpoint
+  revalidation; build
   still emits the known non-fatal optional `sharp/@img` warnings through
   `@turbodocx/html-to-docx`.
 - **Focused calculator gate** (`pnpm calculator:gate:current`):
@@ -168,8 +170,10 @@ hardening, and the pure team-access policy model.
   selection, plus
   `wall-double-leaf-sharp-davy-scoping-gate-a-contract.test.ts` for
   the no-runtime Gate A current-value/route-ownership inventory and
-  Gate B bounded-matrix decision. Latest focused gate run after the
-  Gate A contract update: 105 engine files / 480 tests,
+  Gate B bounded-matrix decision. The Gate A contract now also passes
+  the broad repo typecheck after explicit callback typing and optional
+  expected-field guards. Latest focused gate run after the Gate A
+  contract update: 105 engine files / 480 tests,
   43 web files / 211 passed +
   18 skipped, build 5/5 tasks, whitespace guard clean.
 
