@@ -5,22 +5,23 @@ Start here before changing calculator behavior.
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_A_HANDOFF.md`
-3. `docs/calculator/CURRENT_STATE.md`
-4. `docs/calculator/SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md`
-5. `docs/calculator/CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_C_CLOSEOUT_HANDOFF.md`
-6. `docs/calculator/SLICE_WALL_SINGLE_LEAF_MASS_LAW_CALIBRATION_PLAN.md`
-7. `docs/calculator/CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_B_HANDOFF.md`
-8. `docs/calculator/CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_A_HANDOFF.md`
-9. `docs/calculator/CHECKPOINT_2026-04-27_WALL_COVERAGE_EXPANSION_PLANNING_V2_GATE_A_HANDOFF.md`
-10. `docs/calculator/SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md`
-11. `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md`
-12. `docs/calculator/SOURCE_GAP_LEDGER.md`
-13. `docs/calculator/CALCULATION_MODEL_AND_VALIDATION.md`
-14. `docs/calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md`
-15. `docs/calculator/SLICE_PROPOSAL_REPORT_POLISH_PLAN.md`
-16. `docs/calculator/POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md`
-17. `docs/calculator/PERSONAL_USE_READINESS_ROADMAP.md`
+2. `docs/calculator/CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_HANDOFF.md`
+3. `docs/calculator/CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_A_HANDOFF.md`
+4. `docs/calculator/CURRENT_STATE.md`
+5. `docs/calculator/SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md`
+6. `docs/calculator/CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_C_CLOSEOUT_HANDOFF.md`
+7. `docs/calculator/SLICE_WALL_SINGLE_LEAF_MASS_LAW_CALIBRATION_PLAN.md`
+8. `docs/calculator/CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_B_HANDOFF.md`
+9. `docs/calculator/CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_A_HANDOFF.md`
+10. `docs/calculator/CHECKPOINT_2026-04-27_WALL_COVERAGE_EXPANSION_PLANNING_V2_GATE_A_HANDOFF.md`
+11. `docs/calculator/SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md`
+12. `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md`
+13. `docs/calculator/SOURCE_GAP_LEDGER.md`
+14. `docs/calculator/CALCULATION_MODEL_AND_VALIDATION.md`
+15. `docs/calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md`
+16. `docs/calculator/SLICE_PROPOSAL_REPORT_POLISH_PLAN.md`
+17. `docs/calculator/POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md`
+18. `docs/calculator/PERSONAL_USE_READINESS_ROADMAP.md`
 
 Use the long-form plan files only for backlog context after reading the current
 plan.
@@ -34,10 +35,12 @@ plan.
   It pins current values for empty double-leaf (`R'w=46`), porous
   double-leaf (`R'w=41`), explicit single-stud (`R'w=37`), and explicit
   double-stud (`R'w=52`) routes, plus lined-massive and triple-leaf
-  negative boundaries. Start Gate B with a bounded candidate matrix or
-  no-runtime closeout decision. Gate B must not move values unless it
-  names a source row, benchmark envelope, formula tolerance owner, or
-  bounded family rule.
+  negative boundaries. The follow-up planning reconciliation confirmed
+  Gate B is still unimplemented. Start by adding
+  `packages/engine/src/wall-double-leaf-sharp-davy-scoping-gate-b-contract.test.ts`
+  as a bounded current-value/source-tolerance matrix. Gate B must not
+  move values unless it names a source row, benchmark envelope, formula
+  tolerance owner, or bounded family rule.
 - personal-use readiness chain:
   closed. Heavy-core/concrete remains screening; timber stud + CLT wall
   remain formula/source-gated until new source evidence appears; floor
@@ -51,8 +54,9 @@ plan.
   checkpoint/handoff note together
 - keep planning-contract tests in sync with the selected next slice
 - `wall_double_leaf_sharp_davy_scoping_v1` remains selected. Gate B
-  must use the landed Gate A inventory and decide whether a bounded
-  matrix can proceed or the slice should close no-runtime.
+  must use the landed Gate A inventory and the Gate B-ready handoff to
+  decide whether a bounded matrix can proceed or the slice should close
+  no-runtime.
 
 ## Validation
 

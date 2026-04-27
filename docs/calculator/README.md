@@ -18,8 +18,12 @@ fix the drift before starting work.
    — tactical detail for the active slice.
 4. [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
    — closed calculator-only chain for private/internal-use readiness.
-5. [SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md](./SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md)
-   — active calculator slice plan for wall coverage expansion planning.
+5. [CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_HANDOFF.md)
+   — latest active-slice handoff: Gate A is implemented, Gate B is the
+   unimplemented bounded matrix / no-runtime decision.
+6. [SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md](./SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md)
+   — active calculator slice plan for double-leaf / stud-cavity wall
+   Sharp/Davy scoping.
 
 Then run `pnpm calculator:gate:current` to confirm the green
 baseline.
@@ -30,12 +34,21 @@ baseline.
   — productization closeout: server-backed project storage v1 closed.
 - [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
   — closed calculator readiness chain and private/internal-use caveats.
+- [CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_HANDOFF.md)
+  — latest calculator handoff: Gate A landed no-runtime and Gate B is
+  ready for the bounded current-value/source-tolerance matrix.
+- [CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_A_HANDOFF.md)
+  — active slice evidence: current double-leaf, single-stud, and
+  double-stud values are pinned with negative boundaries.
+- [SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md](./SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md)
+  — active implementation plan: Gate B should add the bounded
+  current-value/source-tolerance matrix before any runtime movement.
 - [CHECKPOINT_2026-04-27_CALCULATOR_SOURCE_GAP_REVALIDATION_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_CALCULATOR_SOURCE_GAP_REVALIDATION_GATE_A_HANDOFF.md)
-  — latest handoff: source-gap revalidation Gate A closed no-runtime
-  and wall coverage planning v2 is selected.
+  — prior handoff: source-gap revalidation Gate A closed no-runtime
+  and selected wall coverage planning v2.
 - [SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md](./SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md)
-  — active implementation plan: inventory current wall coverage,
-  source/formula ownership, and guardrails before any runtime change.
+  — closed planning surface: selected single-leaf first and double-leaf
+  / stud-cavity second.
 - [SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md](./SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md)
   — closed Gate A implementation plan: source-gap revalidation selected
   wall coverage planning v2.
@@ -154,7 +167,8 @@ baseline.
   — closed calculator Gate A plan for source-gap inventory/rerank before
   runtime movement.
 - [SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md](./SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md)
-  — active calculator slice plan for wall coverage expansion planning.
+  — closed calculator planning slice for wall coverage expansion
+  ordering.
 - [SLICE_PROPOSAL_REPORT_POLISH_PLAN.md](./SLICE_PROPOSAL_REPORT_POLISH_PLAN.md)
   — closed productization slice plan for tightening proposal/report
   honesty without changing acoustic values.

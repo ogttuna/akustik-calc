@@ -26,7 +26,7 @@ personal/internal-use readiness chain is closed;
 `wall_single_leaf_mass_law_calibration_v1` Gate C closed no-runtime;
 `wall_double_leaf_sharp_davy_scoping_v1` Gate A landed no-runtime;
 latest checkpoint:
-[CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_A_HANDOFF.md)).
+[CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_HANDOFF.md)).
 Step 8 closed the calculator runtime audit: `MASTER_PLAN.md` §3/§8
 was reconciled to implementation reality, `coverage-grid-consistency.test.ts`
 now maps the grid and C1-C6 signals to executable evidence, the
@@ -230,7 +230,10 @@ stack changes family only when explicit stud metadata is supplied, and
 keeps lined-massive and triple-leaf shapes as negative boundaries. Gate
 B is now the next decision: build the bounded current-value/source
 tolerance matrix, or close no-runtime if the source/tolerance basis is
-not defensible.
+not defensible. A follow-up planning reconciliation in
+[CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_HANDOFF.md)
+confirmed that Gate B is still unimplemented and should start with
+`packages/engine/src/wall-double-leaf-sharp-davy-scoping-gate-b-contract.test.ts`.
 
 Do not reopen `GDMTXA04A`, `C11c`, raw bare open-box/open-web,
 heavy-concrete formula parity, reinforced-concrete reopening,
@@ -1035,15 +1038,17 @@ time without context loss:
 
 ## Resume Order For The Next Agent
 
-1. Read [CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_A_HANDOFF.md)
+1. Read [CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_HANDOFF.md)
    for the latest active-slice handoff.
 2. Read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md),
    [SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md](./SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md),
    [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md), and
    [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md).
    Continue `wall_double_leaf_sharp_davy_scoping_v1` at Gate B by
-   writing the bounded current-value/source-tolerance matrix, or close
-   the slice no-runtime if that evidence basis is insufficient.
+   writing
+   `packages/engine/src/wall-double-leaf-sharp-davy-scoping-gate-b-contract.test.ts`
+   as the bounded current-value/source-tolerance matrix, or close the
+   slice no-runtime if that evidence basis is insufficient.
 3. Read [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
    for the now-closed calculator-priority chain and its evidence-tier
    caveats.

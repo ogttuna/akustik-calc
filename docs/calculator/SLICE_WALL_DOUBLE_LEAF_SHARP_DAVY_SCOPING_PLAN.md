@@ -2,7 +2,8 @@
 
 Status: GATE A LANDED NO-RUNTIME (opened 2026-04-27 after
 `wall_single_leaf_mass_law_calibration_v1` Gate C closeout; Gate B
-bounded matrix or no-runtime closeout is next)
+bounded matrix or no-runtime closeout is next; Gate B-ready
+reconciliation confirms Gate B is still unimplemented)
 
 ## Objective
 
@@ -73,6 +74,8 @@ answer materially.
   porous double-leaf without stud metadata (`R'w=41`), explicit
   single-stud (`R'w=37`), and explicit double-stud / split-cavity
   (`R'w=52`), plus lined-massive and triple-leaf negative boundaries.
+- Gate B is not implemented yet. The next test file should be
+  `packages/engine/src/wall-double-leaf-sharp-davy-scoping-gate-b-contract.test.ts`.
 
 ## Gate A - Scoping Contract
 
@@ -132,6 +135,55 @@ The minimum matrix before any runtime movement:
 If Gate B cannot prove that scope, it should close no-runtime and select
 the next roadmap candidate instead of widening by assumption.
 
+### Gate B Detailed Workplan
+
+Gate B should be an executable contract first, not a retune. Build it
+around the Gate A cases and keep runtime values unchanged unless a named
+evidence basis is added in the same contract.
+
+Required positive matrix:
+
+| Case | Required assertions |
+|---|---|
+| Empty double-leaf, no stud metadata | lab/field values, `double_leaf` family, empty-cavity strategy, field output support, no exact/lab-fallback source row |
+| Porous double-leaf, no stud metadata | lab/field values, `double_leaf` family, porous-fill strategy, field output support, no exact/lab-fallback source row |
+| Explicit single-stud metadata | lab/field values, `stud_wall_system` family, framed-wall calibration strategy, narrow `double_leaf` runner-up, field output support, no exact/lab-fallback source row |
+| Explicit double-stud / split-cavity metadata | lab/field values, `double_stud_system` family, double-stud calibration strategy, field output support, no exact/lab-fallback source row |
+
+Required source/tolerance decision columns for each positive route:
+
+- `currentValueIsDefensible`;
+- `directStackSourceRow`;
+- `labFallbackSourceRow`;
+- `benchmarkEnvelope`;
+- `formulaToleranceOwner`;
+- `runtimeMoveAllowedNow`;
+- `runtimeMoveBlocker`.
+
+Required negative matrix:
+
+- exact catalog and lab-fallback rows remain stronger than any
+  double-leaf/stud formula lane;
+- resilient side-count exact rows stay exact-row owned;
+- timber exact/formula surfaces stay in their existing contracts;
+- unmatched single-leaf mineral stacks stay under the single-leaf
+  mass-law contract;
+- lined-massive/heavy-core stacks remain lined-massive or screening;
+- CLT wall remains formula/source-gated and must not borrow Dataholz
+  floor rows;
+- direct-coupled leaves must not be treated as decoupled double-leaf;
+- triple-leaf / multi-cavity shapes must stay `multileaf_multicavity`.
+
+Expected no-runtime closeout path:
+
+- If all positive routes are finite and defensible but no source row,
+  benchmark envelope, formula tolerance owner, or bounded family rule is
+  present, Gate B should land no-runtime.
+- After a no-runtime Gate B, add a Gate C closeout / next-slice
+  selection contract instead of retuning from assumptions.
+- If Gate B changes value, support, confidence, evidence text, or
+  missing-input copy, add paired web route-card tests before closing.
+
 ## Completion Criteria
 
 - Gate A scoping contract is green and included in
@@ -149,16 +201,23 @@ the next roadmap candidate instead of widening by assumption.
 ## Immediate Execution Order
 
 1. Read the latest Gate A checkpoint:
+   [CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_HANDOFF.md)
+   and
    [CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_A_HANDOFF.md).
 2. Run `pnpm calculator:gate:current` as the baseline.
-3. Add Gate B current-value matrix coverage for empty double-leaf,
+3. Add
+   `packages/engine/src/wall-double-leaf-sharp-davy-scoping-gate-b-contract.test.ts`.
+4. Add Gate B current-value matrix coverage for empty double-leaf,
    porous double-leaf, explicit single-stud, and explicit double-stud
    routes.
-4. Add negative boundaries for exact/catalog rows, resilient side-count
+5. Add the source/tolerance decision table for each positive route.
+6. Add negative boundaries for exact/catalog rows, resilient side-count
    exact rows, timber exact/formula surfaces, single-leaf mass-law,
    lined-massive, CLT, direct-coupled, and triple-leaf/multi-cavity
    shapes.
-5. Keep runtime values, formulas, output support, confidence, evidence
+7. Include the new Gate B file in
+   `tools/dev/run-calculator-current-gate.ts`.
+8. Keep runtime values, formulas, output support, confidence, evidence
    text, and web route cards unchanged unless Gate B names the source
    row, benchmark envelope, formula tolerance owner, or bounded family
    rule that supports the movement.

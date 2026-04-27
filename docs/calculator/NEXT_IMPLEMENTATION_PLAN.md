@@ -9,7 +9,8 @@ chain read
 
 Last reviewed: 2026-04-27
 (`wall_double_leaf_sharp_davy_scoping_v1` Gate A landed no-runtime;
-Gate B bounded matrix or no-runtime closeout is next;
+Gate B planning reconciliation confirmed Gate B is unimplemented and
+ready for a bounded matrix or no-runtime decision;
 see
 `SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md`).
 
@@ -43,7 +44,7 @@ For every next slice decision:
 - **Active slice**:
   `wall_double_leaf_sharp_davy_scoping_v1`.
 - **Latest checkpoint**:
-  [CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_A_HANDOFF.md).
+  [CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_HANDOFF.md).
 - **Planning surface**:
   [SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md](./SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md).
 - **Personal-use readiness roadmap**:
@@ -267,6 +268,12 @@ For every next slice decision:
   and triple-leaf shapes outside the target. Gate A selects Gate B
   matrix work but blocks value movement until a source row, benchmark
   envelope, formula tolerance owner, or bounded family rule is named.
+- **Wall double-leaf Sharp/Davy Gate B-ready reconciliation**:
+  [CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_HANDOFF.md)
+  confirms the plan is not complete: Gate A is implemented and included
+  in the current gate, but no Gate B contract exists yet. The next
+  implementation file is
+  `packages/engine/src/wall-double-leaf-sharp-davy-scoping-gate-b-contract.test.ts`.
 
 ## Immediate Execution Order
 
@@ -274,20 +281,31 @@ For every next slice decision:
 order:
 
 1. Re-read
+   [CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_HANDOFF.md),
    [CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_A_HANDOFF.md),
    [SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md](./SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md)
    and the current-state active-slice section.
 2. Run `pnpm calculator:gate:current` as the baseline.
-3. Start Gate B by building a bounded current-value matrix for empty
+3. Add
+   `packages/engine/src/wall-double-leaf-sharp-davy-scoping-gate-b-contract.test.ts`.
+4. In that file, build a bounded current-value matrix for empty
    double-leaf, porous double-leaf, explicit single-stud, and explicit
-   double-stud routes.
-4. Pair that matrix with negative exact/catalog, resilient side-count,
-   timber, single-leaf, lined-massive, CLT, direct-coupled, and
-   triple-leaf/multi-cavity boundaries.
-5. Move no runtime values unless Gate B names the source row, benchmark
+   double-stud routes, preserving the Gate A field values unless source
+   evidence justifies movement.
+5. Add a source/tolerance decision table for each positive route:
+   current value defensible, exact/lab-fallback source present, benchmark
+   envelope present, formula tolerance owner present, and runtime
+   movement allowed now.
+6. Pair the positive matrix with negative exact/catalog, resilient
+   side-count, timber, single-leaf, lined-massive, CLT, direct-coupled,
+   and triple-leaf/multi-cavity boundaries.
+7. Add the Gate B test to `tools/dev/run-calculator-current-gate.ts`.
+8. Move no runtime values unless Gate B names the source row, benchmark
    envelope, formula tolerance owner, or bounded family rule for the
-   candidate family; otherwise close the slice no-runtime and select the
-   next roadmap candidate.
+   candidate family; otherwise land Gate B no-runtime and select Gate C
+   closeout.
+9. Validate with the targeted Gate B test,
+   `pnpm calculator:gate:current`, and `git diff --check`.
 
 ## Personal-Use Readiness Chain
 

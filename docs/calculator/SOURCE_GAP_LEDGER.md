@@ -1,8 +1,8 @@
 # Dynamic Calculator Source Gap Ledger
 
-Last reviewed: 2026-04-27 (`wall_single_leaf_mass_law_calibration_v1`
-Gate C closed; `wall_double_leaf_sharp_davy_scoping_v1` selected;
-source-gap content remains floor-dominant historical context)
+Last reviewed: 2026-04-27 (`wall_double_leaf_sharp_davy_scoping_v1`
+Gate A landed no-runtime; Gate B bounded matrix / no-runtime decision
+is next; source-gap content remains floor-dominant historical context)
 
 Purpose:
 
@@ -54,8 +54,10 @@ Important scope note:
   closed no-runtime at Gate C because generic single-leaf runtime
   movement needs stack-specific source rows or bounded tolerance packs.
   The active wall work is now
-  `wall_double_leaf_sharp_davy_scoping_v1`, which has its own plan and
-  must not overload this floor-dominant ledger.
+  `wall_double_leaf_sharp_davy_scoping_v1`. Gate A has landed
+  no-runtime and Gate B should proceed from the dedicated slice plan and
+  Gate B-ready handoff rather than overloading this floor-dominant
+  ledger.
 - `good_calculator_final_audit_v1` closed without reopening any
   source-gated calculator family. `wall_formula_family_widening_v1`
   then also closed without reopening any blocked family: it clarified
