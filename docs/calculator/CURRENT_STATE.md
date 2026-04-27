@@ -16,9 +16,9 @@ need the private-use readiness chain read
 Last revalidation cycle: `2026-04-27`
 (`realistic_layer_combination_coverage_cartography_v1` Gate A landed;
 heavy-core/concrete Gate B closed no-runtime; timber stud + CLT wall
-accuracy pass Gate C closed no-runtime; broad validation is green;
-latest checkpoint:
-[CHECKPOINT_2026-04-27_WALL_TIMBER_STUD_CLT_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_TIMBER_STUD_CLT_GATE_C_CLOSEOUT_HANDOFF.md)).
+accuracy pass Gate C closed no-runtime; floor fallback Gate A landed
+no-runtime; broad validation is green; latest checkpoint:
+[CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_A_HANDOFF.md)).
 Step 8 closed the calculator runtime audit: `MASTER_PLAN.md` §3/§8
 was reconciled to implementation reality, `coverage-grid-consistency.test.ts`
 now maps the grid and C1-C6 signals to executable evidence, the
@@ -120,9 +120,12 @@ hardening, and the pure team-access policy model.
   `wall-clt-gate-b-source-contract.test.ts` for the no-runtime CLT wall
   source/formula contract and Gate C-next selection, plus
   `post-wall-timber-stud-clt-gate-c-next-slice-selection-contract.test.ts`
-  for the no-runtime wall pass closeout and floor fallback selection.
-  Latest focused gate run after the Gate C closeout contract:
-  94 engine files / 428 tests,
+  for the no-runtime wall pass closeout and floor fallback selection,
+  plus
+  `floor-fallback-low-confidence-gate-a-audit-contract.test.ts` for
+  the active floor fallback no-runtime Gate A audit.
+  Latest focused gate run after the floor fallback Gate A contract:
+  95 engine files / 432 tests,
   36 web files / 170 passed +
   18 skipped, build 5/5 tasks, whitespace guard clean.
 
@@ -187,11 +190,18 @@ was Gate C closeout for `wall_timber_stud_clt_accuracy_pass_v1`.
 Gate C has now landed no-runtime in
 `packages/engine/src/post-wall-timber-stud-clt-gate-c-next-slice-selection-contract.test.ts`.
 The active next slice is `floor_fallback_low_confidence_cleanup_v1`.
-Its first bounded implementation step is a no-runtime Gate A
-source/formula audit for `floor.steel_fallback_low_confidence.field` /
-generated `floor-steel-fallback`; the audit must pin current values,
-exact/bound near misses, low-confidence origin posture, web card
-honesty, and unsupported `L'nT,50` behavior before any runtime change.
+Gate A has now landed no-runtime in
+`packages/engine/src/floor-fallback-low-confidence-gate-a-audit-contract.test.ts`.
+It pins generated `floor-steel-fallback` as no-exact/no-bound,
+`low_confidence`, fit `28%`, origin
+`predictor_floor_system_low_confidence_estimate`, lab `Rw=61` /
+`Ln,w=58.3`, field `R'w=70` / `Ln,w=58.3` /
+`L'n,w=61.3` / `L'nT,w=58.5`, and keeps `L'nT,50`
+unsupported. Pliteq steel joist rows and UBIQ FL-32 bound rows remain
+lineage / near misses, not promotion evidence. The next bounded
+implementation step is Gate B: decide whether an exact source row,
+bounded steel/open-web family rule, or fail-closed correction exists
+before any runtime math or web posture change.
 
 Personal-use readiness is now explicitly tracked in
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
@@ -829,10 +839,14 @@ time without context loss:
    as `all_caller_invalid_thickness_guard_v1`.
 8. **Dedicated floor 50+ layer regression** — closed no-runtime as
    `floor_many_layer_stress_regression_v1`.
-9. **Realistic layer-combination coverage cartography** — active. It
-   maps realistic wall/floor layer combinations by evidence tier before
-   selecting the next runtime widening target. Plan:
-   `SLICE_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_PLAN.md`.
+9. **Realistic layer-combination coverage cartography** — closed. It
+   selected heavy-core/concrete first, then the no-runtime wall
+   timber-stud + CLT pass, and the active floor fallback cleanup slice
+   through the follow-up planning contracts.
+10. **UI / input / output honesty pass** — next private-use readiness
+    slice after `floor_fallback_low_confidence_cleanup_v1` closes.
+    It remains deferred until the floor fallback Gate B/Gate C decision
+    is complete.
 
 ## Frozen Posture — Do Not Reopen By Inertia
 
@@ -859,13 +873,14 @@ time without context loss:
 
 ## Resume Order For The Next Agent
 
-1. Read [CHECKPOINT_2026-04-27_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_GATE_A_HANDOFF.md)
+1. Read [CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_A_HANDOFF.md)
    for the latest active-slice handoff.
 2. Read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md),
-   [SLICE_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_PLAN.md](./SLICE_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_PLAN.md),
-   and [SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md](./SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md).
-   Start the Gate B source/formula audit for
-   `wall.concrete_heavy_core_screening.field`.
+   [SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md](./SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md),
+   and [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
+   Start Gate B for `floor.steel_fallback_low_confidence.field` as a
+   source/formula decision; change runtime only with exact evidence,
+   a bounded steel/open-web family rule, or a fail-closed correction.
 3. Read [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
    for the calculator-priority chain that should stay ahead of
    productization.
@@ -878,9 +893,9 @@ time without context loss:
    agrees on the active slice, completion signals, and deferred tracks.
    If it does not, fix the drift before starting work.
 6. Run `pnpm calculator:gate:current` as the focused baseline.
-7. Re-read the heavy-core/concrete wall implementation path and write
-   the Gate B source/formula, tolerance, support/origin, and web-card
-   plan before changing runtime math.
+7. Re-read the floor fallback implementation path and write the Gate B
+   source/formula, tolerance, support/origin, and web-card plan before
+   changing runtime math.
 8. Treat [CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_ELEVENTH_CARVE_HANDOFF.md](./CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_ELEVENTH_CARVE_HANDOFF.md),
    [CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_A_HANDOFF.md),
    [CHECKPOINT_2026-04-24_INVALID_THICKNESS_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-24_INVALID_THICKNESS_CLOSEOUT_HANDOFF.md),

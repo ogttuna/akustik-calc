@@ -106,23 +106,36 @@ Required before implementation:
 
 ### 3. Floor Fallback / Low-Confidence Cleanup
 
-Status: active slice; Gate A source/formula audit next.
+Status: active slice; Gate A landed no-runtime, Gate B source/formula
+decision next.
 
 Most high-value floor lanes already have stronger evidence than the
 remaining fallback corridors. The steel suspended fallback and other
 low-confidence corridors should be tightened only when the evidence can
 improve honest coverage without reopening blocked source families.
 
-Required before implementation:
+Gate A result:
 
 - start from
   [SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md](./SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md);
-- add a no-runtime Gate A contract for
-  `floor.steel_fallback_low_confidence.field` / generated
-  `floor-steel-fallback` before any math change;
-- pin current values, exact/bound near misses, low-confidence estimate
-  kind, origin basis, visible web card posture, and unsupported
-  `L'nT,50`;
+- Gate A contract landed in
+  `packages/engine/src/floor-fallback-low-confidence-gate-a-audit-contract.test.ts`;
+- generated `floor-steel-fallback` is pinned as no-exact/no-bound,
+  `low_confidence`, origin
+  `predictor_floor_system_low_confidence_estimate`, fit `28%`;
+- lab values are floor-system `Rw=61`, `Ln,w=58.3`, with
+  `Ln,w+CI` and `DeltaLw` unsupported;
+- field values are floor-system `Rw=61`, `R'w=70`, `Dn,w=69`,
+  `DnT,w=72`, `DnT,A=70.6`, `Ln,w=58.3`, `L'n,w=61.3`,
+  `L'nT,w=58.5`, with `L'nT,50` unsupported;
+- Pliteq steel joist rows and UBIQ FL-32 bound rows remain lineage /
+  near misses, not promotion evidence.
+
+Required before runtime implementation:
+
+- Gate B must name an exact source row, bounded steel/open-web family
+  rule, or fail-closed correction before any math/confidence/posture
+  change;
 - keep `GDMTXA04A`, `C11c`, and raw bare open-box/open-web impact
   source-blocked unless new source evidence is deliberately imported;
 - separate exact/product-delta rows from predicted airborne or field
@@ -157,7 +170,10 @@ keeps 150 files in scope through `tools/dev/run-web-vitest.ts` with 864
 passed + 18 skipped. Build is 5/5 with the known non-fatal
 `sharp/@img` optional-package warnings. Focused current gate after Gate
 C closeout is 94 engine files / 428 tests, 36 web files / 170 passed
-plus 18 skipped, build 5/5.
+plus 18 skipped, build 5/5. Gate A targeted floor fallback validation
+is now 1 file / 4 tests green; the focused current gate after the new
+contract is 95 engine files / 432 tests, 36 web files / 170 passed plus
+18 skipped, build 5/5.
 
 Do these in order unless new evidence changes the ranking:
 

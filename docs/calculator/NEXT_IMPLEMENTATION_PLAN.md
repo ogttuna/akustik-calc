@@ -8,10 +8,10 @@ chain read
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
 
 Last reviewed: 2026-04-27
-(`wall_timber_stud_clt_accuracy_pass_v1` Gate C closed no-runtime;
-`floor_fallback_low_confidence_cleanup_v1` selected next;
+(`floor_fallback_low_confidence_cleanup_v1` Gate A landed no-runtime;
+Gate B source/formula decision is next;
 see
-`CHECKPOINT_2026-04-27_WALL_TIMBER_STUD_CLT_GATE_C_CLOSEOUT_HANDOFF.md`).
+`CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_A_HANDOFF.md`).
 
 ---
 
@@ -42,6 +42,8 @@ For every next slice decision:
 
 - **Active slice**:
   `floor_fallback_low_confidence_cleanup_v1`.
+- **Latest checkpoint**:
+  [CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_FLOOR_FALLBACK_LOW_CONFIDENCE_GATE_A_HANDOFF.md).
 - **Planning surface**:
   [SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md](./SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md).
 - **Personal-use readiness roadmap**:
@@ -59,11 +61,20 @@ For every next slice decision:
   cleanup selection: engine 227 files / 1248 tests, web 150 files / 864
   passed + 18 skipped through `tools/dev/run-web-vitest.ts`, build 5/5,
   with only the known non-fatal `sharp/@img` optional-package warnings.
-- **Gate A result**:
+- **Cartography Gate A result**:
   `packages/engine/src/realistic-layer-combination-coverage-cartography.test.ts`
   landed no-runtime. It executes 29 representative floor/wall cells and
   maps evidence tier, support/card posture, output coverage, origin,
   confidence, invariants, and candidate type.
+- **Floor fallback Gate A result**:
+  `packages/engine/src/floor-fallback-low-confidence-gate-a-audit-contract.test.ts`
+  landed no-runtime. It pins generated `floor-steel-fallback` as
+  no-exact/no-bound, `low_confidence`, fit `28%`, origin basis
+  `predictor_floor_system_low_confidence_estimate`, lab `Rw=61` /
+  `Ln,w=58.3`, field `R'w=70` / `Ln,w=58.3` /
+  `L'n,w=61.3` / `L'nT,w=58.5`, and keeps `L'nT,50`
+  unsupported. Pliteq and UBIQ rows remain source lineage / near
+  misses, not promotion evidence.
 - **Heavy-core/concrete closeout**: Gate B closed no-runtime for
   `wall.concrete_heavy_core_screening.field`. The no-runtime
   source/formula audit found no exact catalog row, no direct external
@@ -101,17 +112,18 @@ order:
 
 1. Re-read
    [SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md](./SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md).
-2. Add a no-runtime Gate A engine contract for
+2. Start Gate B as a source/formula decision for
    `floor.steel_fallback_low_confidence.field` / generated
-   `floor-steel-fallback`. Pin current lab/field values, supported and
-   unsupported outputs, `low_confidence` estimate posture, origin basis,
-   warnings, exact/bound near misses, and source precedence.
-3. Add or update a focused web contract only if Gate A finds that the
-   visible route/card posture is stale or misleading. Existing card
-   coverage must keep "low-confidence fallback" visible.
-4. Change runtime only if Gate A names an exact source row, bounded
-   family rule, or fail-closed correction with explicit tolerance and
-   exact-row precedence.
+   `floor-steel-fallback`. Do not change math by default: Gate A found
+   no exact match, no bound match, and no current `L'nT,50` basis.
+3. Allow a runtime change only if Gate B names one of these:
+   an exact source row matching roles/materials/thicknesses/context, a
+   bounded steel/open-web family rule with anchors/tolerance/exact-row
+   precedence, or a fail-closed correction for a defended-looking
+   unsupported value.
+4. Add or update a focused web contract only if engine origin/support
+   or visible card posture changes. Existing card coverage must keep
+   "low-confidence fallback" visible.
 5. Keep `GDMTXA04A`, `C11c`, raw bare open-box/open-web impact,
    heavy-core concrete, wall selector, timber-stud, and CLT wall
    follow-ups closed unless new evidence deliberately selects them.

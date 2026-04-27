@@ -1,6 +1,7 @@
 # Slice Plan - Floor Fallback / Low-Confidence Cleanup
 
-Status: ACTIVE - Gate A source/formula audit next
+Status: ACTIVE - Gate A landed no-runtime; Gate B source/formula
+decision next
 
 Selected: 2026-04-27 by
 `post-wall-timber-stud-clt-gate-c-next-slice-selection-contract.test.ts`
@@ -31,8 +32,9 @@ private use, but today it is intentionally `screening` /
 
 ## Gate A - Current Surface And Source Audit
 
-Gate A is no-runtime. It must add a focused executable contract that
-pins the current engine and web posture before any retune:
+Gate A is no-runtime and has landed in
+`packages/engine/src/floor-fallback-low-confidence-gate-a-audit-contract.test.ts`.
+It pins the current engine and web posture before any retune:
 
 - generated `floor-steel-fallback` lab and field values;
 - `floorSystemMatch`, `floorSystemEstimate`, `impact`, and origin/basis
@@ -42,7 +44,7 @@ pins the current engine and web posture before any retune:
 - route/card wording that tells the user the result is low-confidence;
 - unsupported `L'nT,50` behavior.
 
-Gate A should inspect, at minimum:
+Gate A inspected, at minimum:
 
 - `packages/engine/src/realistic-layer-combination-coverage-cartography.test.ts`;
 - `packages/engine/src/raw-floor-screening-carrier-support.test.ts`;
@@ -55,20 +57,39 @@ Gate A should inspect, at minimum:
 - `apps/web/features/workbench/impact-result-panel.tsx`;
 - `apps/web/features/workbench/result-summary.tsx`.
 
-Gate A is complete when the new contract can answer:
+Gate A answers:
 
-1. Is the selected steel fallback stack an exact, bound, formula, or
-   low-confidence fallback today?
-2. Which source/bound rows are near misses, and why do they not match?
-3. Which outputs are supported and unsupported in lab, field, and
-   building-style contexts?
-4. Does the web surface keep low-confidence posture visible?
-5. What exact evidence would be required before any runtime value or
-   confidence promotion is allowed?
+1. The selected steel fallback stack is a `low_confidence` fallback
+   today. It has no exact match, no bound match, and no formula
+   promotion.
+2. Pliteq steel joist rows and UBIQ FL-32 bound rows are near misses.
+   Pliteq requires INEX deck / GenieMat / glasswool / exact finish
+   topology; UBIQ FL-32 is 200/300 mm bound evidence with INEX deck,
+   engineered timber finish, and no ceiling fill, not the live 250 mm
+   vinyl + rockwool stack.
+3. Lab supports `Rw`, `Ln,w` and does not support `Ln,w+CI`,
+   `DeltaLw`. Field supports `Rw`, `R'w`, `DnT,w`, `Ln,w`,
+   `L'n,w`, `L'nT,w` and does not support `L'nT,50`.
+4. Existing web surface evidence keeps "low-confidence fallback"
+   visible through `impact-result-panel.tsx`, `result-summary.tsx`, and
+   route/card tests.
+5. Runtime promotion now requires exact source evidence, a bounded
+   steel/open-web family rule with anchors/tolerance/exact precedence,
+   or a fail-closed correction.
+
+Pinned Gate A values:
+
+- lab: floor-system `Rw=61`, screening `Rw=72.2`, `Ln,w=58.3`,
+  confidence low / score `0.54`;
+- field: floor-system `Rw=61`, screening `R'w=70`,
+  `Dn,w=69`, `DnT,w=72`, `DnT,A=70.6`, `Ln,w=58.3`,
+  `L'n,w=61.3`, `L'nT,w=58.5`, confidence medium / score `0.72`;
+- unsupported field output: `L'nT,50`.
 
 ## Gate B - Possible Runtime Tightening
 
-Gate B is allowed only if Gate A names a defensible evidence path.
+Gate B is next. It is a source/formula decision and is allowed to
+change runtime only if it names a defensible evidence path.
 
 Acceptable runtime changes:
 
