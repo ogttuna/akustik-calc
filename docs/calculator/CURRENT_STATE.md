@@ -22,8 +22,9 @@ personal/internal-use readiness chain is closed;
 `project_access_policy_route_integration_v1` closed;
 `proposal_report_polish_v1` closed;
 `calculator_source_gap_revalidation_v1` Gate A closed no-runtime;
+`wall_coverage_expansion_planning_v2` Gate A closed no-runtime;
 latest checkpoint:
-[CHECKPOINT_2026-04-27_CALCULATOR_SOURCE_GAP_REVALIDATION_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_CALCULATOR_SOURCE_GAP_REVALIDATION_GATE_A_HANDOFF.md)).
+[CHECKPOINT_2026-04-27_WALL_COVERAGE_EXPANSION_PLANNING_V2_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_COVERAGE_EXPANSION_PLANNING_V2_GATE_A_HANDOFF.md)).
 Step 8 closed the calculator runtime audit: `MASTER_PLAN.md` §3/§8
 was reconciled to implementation reality, `coverage-grid-consistency.test.ts`
 now maps the grid and C1-C6 signals to executable evidence, the
@@ -34,7 +35,7 @@ storage v1, project/proposal route authorization, auth-session
 hardening, and the pure team-access policy model.
 
 - **Engine broad suite**: latest broad `pnpm check` on 2026-04-27 was
-  233 / 233 files, 1275 / 1275 tests green
+  234 / 234 files, 1280 / 1280 tests green
   (up from 193/1068 pre-session; step-7 landed 4 wall cases +
   F1/F2 engine fixes + 32-assertion cross-mode torture matrix
   + 2 regression guards + post-contract; step-7b landed the
@@ -61,7 +62,7 @@ hardening, and the pure team-access policy model.
   input contract so it asserts parse behavior instead of calling
   `.keyof()` on the exported shared `AirborneContextSchema` `ZodType`.
 - **Broad `pnpm check`**: lint + typecheck + tests + build green on the
-  latest broad run after project access policy route integration; build
+  latest broad run after wall coverage planning Gate A; build
   still emits the known non-fatal optional `sharp/@img` warnings through
   `@turbodocx/html-to-docx`.
 - **Focused calculator gate** (`pnpm calculator:gate:current`):
@@ -149,22 +150,26 @@ hardening, and the pure team-access policy model.
   for proposal-report polish closeout and calculator source-gap
   revalidation selection, plus
   `calculator-source-gap-revalidation-gate-a-contract.test.ts` for the
-  no-runtime Gate A closeout and wall coverage planning v2 selection.
+  no-runtime Gate A closeout and wall coverage planning v2 selection,
+  plus
+  `wall-coverage-expansion-planning-v2-gate-a-contract.test.ts` for
+  the no-runtime wall coverage inventory and single-leaf mass-law
+  calibration selection.
   Latest focused gate run after the Gate A contract update:
-  100 engine files / 455 tests,
+  101 engine files / 460 tests,
   43 web files / 211 passed +
   18 skipped, build 5/5 tasks, whitespace guard clean.
 
 ## Active Slice
 
-`wall_coverage_expansion_planning_v2` (wall scope/accuracy expansion
-planning, active). Planning surface:
-[SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md](./SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md).
+`wall_single_leaf_mass_law_calibration_v1` (wall source/formula
+contract, active). Planning surface:
+[SLICE_WALL_SINGLE_LEAF_MASS_LAW_CALIBRATION_PLAN.md](./SLICE_WALL_SINGLE_LEAF_MASS_LAW_CALIBRATION_PLAN.md).
 
-`calculator_source_gap_revalidation_v1` Gate A is now closed
+`wall_coverage_expansion_planning_v2` Gate A is now closed
 no-runtime. It added
-`packages/engine/src/calculator-source-gap-revalidation-gate-a-contract.test.ts`
-and selected `wall_coverage_expansion_planning_v2`.
+`packages/engine/src/wall-coverage-expansion-planning-v2-gate-a-contract.test.ts`
+and selected `wall_single_leaf_mass_law_calibration_v1`.
 
 `proposal_report_polish_v1` is now closed. It landed the simple
 PDF/DOCX output coverage register, generated-document honesty tests for
@@ -178,12 +183,15 @@ routes.
 Source-gap revalidation Gate A confirmed the historical blocked-source
 queue has no runtime-eligible candidate: `GDMTXA04A`, `C11c`, raw bare
 open-box/open-web impact, and wall-selector behavior remain closed
-fail-closed. Heavy-core/concrete, timber stud, CLT wall, and floor
-fallback remain in their current screening/formula/low-confidence
-posture. The next action is Gate A of
-`wall_coverage_expansion_planning_v2`: inventory current wall coverage,
-source/formula ownership, guardrail coverage, and select a first wall
-Gate B runtime/source slice only if the evidence supports it.
+fail-closed. Wall coverage planning Gate A then inventoried current wall
+coverage and selected the unmatched massive single-leaf wall lane as the
+next no-runtime source/formula contract. Heavy-core/concrete, timber
+stud, CLT wall, and floor fallback remain in their current
+screening/formula/low-confidence posture. The next action is Gate A of
+`wall_single_leaf_mass_law_calibration_v1`: define candidate
+signatures, formula/source basis, positive cases, negative cases,
+exact/lab-fallback precedence, and UI/card coverage before any runtime
+value movement.
 
 Do not reopen `GDMTXA04A`, `C11c`, raw bare open-box/open-web,
 heavy-concrete formula parity, reinforced-concrete reopening,
@@ -290,10 +298,10 @@ Personal-use readiness is now explicitly tracked in
 That chain is closed. Productization route-policy integration has also
 closed, and `proposal_report_polish_v1` has closed no-runtime report
 honesty. `calculator_source_gap_revalidation_v1` Gate A has closed
-no-runtime and selected `wall_coverage_expansion_planning_v2`.
-Calculator runtime/source posture remains frozen until the wall
-planning contract deliberately selects a source-backed or formula-owned
-next slice.
+no-runtime, and `wall_coverage_expansion_planning_v2` Gate A has closed
+no-runtime. Calculator runtime/source posture remains frozen until the
+selected single-leaf wall source/formula contract deliberately permits a
+bounded formula-owned runtime move.
 
 Calculator runtime status: final audit closed and green. The just-closed
 wall formula-family widening slice completed Gate A and Gate B with
@@ -773,14 +781,17 @@ runtime values, support, confidence, or formulas.
 
 Calculator source-gap revalidation status:
 `calculator_source_gap_revalidation_v1` Gate A is closed no-runtime.
-The next selected slice is `wall_coverage_expansion_planning_v2`, which
-must inventory current wall coverage and select the first wall
-runtime/source slice without changing values during Gate A.
+Wall coverage planning status:
+`wall_coverage_expansion_planning_v2` Gate A is closed no-runtime. The
+next selected slice is `wall_single_leaf_mass_law_calibration_v1`, which
+must write a source/formula contract for unmatched massive single-leaf
+walls without changing values during Gate A.
 
 ## Latest Closed Slices
 
 | Slice | Master-plan step | Closed | Post-contract |
 |---|---|---|---|
+| `wall_coverage_expansion_planning_v2` Gate A | calculator wall coverage planning | 2026-04-27 | `wall-coverage-expansion-planning-v2-gate-a-contract.test.ts` |
 | `calculator_source_gap_revalidation_v1` Gate A | calculator revalidation | 2026-04-27 | `calculator-source-gap-revalidation-gate-a-contract.test.ts` |
 | `proposal_report_polish_v1` | productization 6 | 2026-04-27 | `post-proposal-report-polish-next-slice-selection-contract.test.ts` |
 | `project_access_policy_route_integration_v1` | productization 5 | 2026-04-27 | `post-project-access-policy-route-integration-next-slice-selection-contract.test.ts` |
@@ -979,15 +990,15 @@ time without context loss:
 
 ## Resume Order For The Next Agent
 
-1. Read [CHECKPOINT_2026-04-27_CALCULATOR_SOURCE_GAP_REVALIDATION_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_CALCULATOR_SOURCE_GAP_REVALIDATION_GATE_A_HANDOFF.md)
+1. Read [CHECKPOINT_2026-04-27_WALL_COVERAGE_EXPANSION_PLANNING_V2_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_COVERAGE_EXPANSION_PLANNING_V2_GATE_A_HANDOFF.md)
    for the latest active-slice handoff.
 2. Read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md),
-   [SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md](./SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md),
+   [SLICE_WALL_SINGLE_LEAF_MASS_LAW_CALIBRATION_PLAN.md](./SLICE_WALL_SINGLE_LEAF_MASS_LAW_CALIBRATION_PLAN.md),
    [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md), and
    [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md).
-   Start `wall_coverage_expansion_planning_v2` by inventorying wall
-   archetype coverage, source/formula ownership, and guardrails without
-   runtime value changes.
+   Start `wall_single_leaf_mass_law_calibration_v1` by writing the
+   no-runtime source/formula contract for unmatched massive single-leaf
+   walls without runtime value changes.
 3. Read [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
    for the now-closed calculator-priority chain and its evidence-tier
    caveats.

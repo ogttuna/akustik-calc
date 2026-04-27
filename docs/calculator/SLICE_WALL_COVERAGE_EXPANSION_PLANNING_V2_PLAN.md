@@ -1,7 +1,7 @@
 # Slice Plan - Wall Coverage Expansion Planning v2
 
-Status: SELECTED (opened 2026-04-27 after
-`calculator_source_gap_revalidation_v1` Gate A)
+Status: CLOSED at Gate A (2026-04-27, no runtime movement; selected
+`wall_single_leaf_mass_law_calibration_v1`)
 
 ## Objective
 
@@ -50,8 +50,9 @@ private-use UI honesty, and report-surface honesty.
 
 ## Gate A - Current Wall Coverage Inventory
 
-Gate A is no-runtime. It should add one executable planning contract
-that records:
+Gate A landed no-runtime in
+`packages/engine/src/wall-coverage-expansion-planning-v2-gate-a-contract.test.ts`.
+It records:
 
 1. the current wall archetype coverage map;
 2. exact/source/benchmark/formula/screening ownership per archetype;
@@ -73,6 +74,22 @@ Suggested evidence to inspect:
 - `apps/web/features/workbench/wall-live-dynamic-preset-route-card-matrix.test.ts`
 - `apps/web/features/workbench/wall-resilient-bar-side-count-route-card-matrix.test.ts`
 - `apps/web/features/workbench/raw-wall-hostile-input-route-card-matrix.test.ts`
+
+## Gate A Result
+
+The executable contract selected
+`wall_single_leaf_mass_law_calibration_v1` as the first implementable
+wall candidate. That selection is limited to a no-runtime Gate A
+source/formula contract first:
+
+- massive unmatched single-leaf concrete/masonry/dense-AAC style walls
+  are the selected candidate family;
+- exact/catalog and lab-fallback wall rows remain stronger than the
+  formula lane;
+- heavy-core/concrete remains screening and is not retuned here;
+- timber stud and CLT walls remain source/formula-gated;
+- double-leaf/stud/cavity walls remain a later Sharp/Davy scoping
+  candidate.
 
 ## Candidate Order To Validate
 
@@ -113,10 +130,11 @@ values without a Gate A contract:
 
 ## Immediate Execution Order
 
-1. Run `pnpm calculator:gate:current` as the baseline.
-2. Inventory current wall coverage and exact/formula/screening
-   ownership from the files listed above.
-3. Write the Gate A planning contract.
-4. Select the first Gate B wall runtime/source slice only if the
-   evidence supports it.
-5. Update docs and handoff together, then rerun the focused gate.
+1. Closed: baseline `pnpm calculator:gate:current` was green.
+2. Closed: current wall coverage and exact/formula/screening ownership
+   were inventoried.
+3. Closed: the Gate A planning contract was written.
+4. Closed: the first next slice was selected as
+   `wall_single_leaf_mass_law_calibration_v1`.
+5. Continue in
+   [SLICE_WALL_SINGLE_LEAF_MASS_LAW_CALIBRATION_PLAN.md](./SLICE_WALL_SINGLE_LEAF_MASS_LAW_CALIBRATION_PLAN.md).

@@ -228,10 +228,11 @@ families remain blocked until new evidence is deliberately imported.
 
 Next selected work:
 
-1. `wall_coverage_expansion_planning_v2`.
+1. `wall_single_leaf_mass_law_calibration_v1`.
 
-`calculator_source_gap_revalidation_v1` Gate A is closed no-runtime.
+`calculator_source_gap_revalidation_v1` Gate A and
+`wall_coverage_expansion_planning_v2` Gate A are closed no-runtime.
 Calculator runtime/source posture should remain frozen during Gate A of
-the selected wall coverage planning slice. The next movement must be a
-source-backed or formula-owned wall candidate selected by an executable
-planning contract, not an implicit reopen from nearby green tests.
+the selected wall single-leaf source/formula slice. The next movement
+must be a source-backed or formula-owned wall candidate selected by an
+executable contract, not an implicit reopen from nearby green tests.

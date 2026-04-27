@@ -8,10 +8,10 @@ chain read
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
 
 Last reviewed: 2026-04-27
-(`calculator_source_gap_revalidation_v1` Gate A closed; selected
-`wall_coverage_expansion_planning_v2`;
+(`wall_coverage_expansion_planning_v2` Gate A closed; selected
+`wall_single_leaf_mass_law_calibration_v1`;
 see
-`SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md`).
+`SLICE_WALL_SINGLE_LEAF_MASS_LAW_CALIBRATION_PLAN.md`).
 
 ---
 
@@ -41,11 +41,11 @@ For every next slice decision:
 ## Now
 
 - **Active slice**:
-  `wall_coverage_expansion_planning_v2`.
+  `wall_single_leaf_mass_law_calibration_v1`.
 - **Latest checkpoint**:
-  [CHECKPOINT_2026-04-27_CALCULATOR_SOURCE_GAP_REVALIDATION_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_CALCULATOR_SOURCE_GAP_REVALIDATION_GATE_A_HANDOFF.md).
+  [CHECKPOINT_2026-04-27_WALL_COVERAGE_EXPANSION_PLANNING_V2_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_COVERAGE_EXPANSION_PLANNING_V2_GATE_A_HANDOFF.md).
 - **Planning surface**:
-  [SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md](./SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md).
+  [SLICE_WALL_SINGLE_LEAF_MASS_LAW_CALIBRATION_PLAN.md](./SLICE_WALL_SINGLE_LEAF_MASS_LAW_CALIBRATION_PLAN.md).
 - **Personal-use readiness roadmap**:
   [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
   is closed for the current private/internal-use bar. Heavy-core/concrete
@@ -53,13 +53,20 @@ For every next slice decision:
   until new source evidence appears, floor fallback remains
   low-confidence until new source evidence or a bounded family rule
   appears, and UI/input/output honesty is validated.
-- **Just closed**: `proposal_report_polish_v1`.
+- **Just closed**: `wall_coverage_expansion_planning_v2` Gate A.
+  The no-runtime contract inventories current wall exact/formula/
+  screening ownership and guardrails, keeps heavy-core/concrete
+  screening, timber stud low-confidence, and CLT wall formula-owned/
+  source-blocked, and selects
+  `wall_single_leaf_mass_law_calibration_v1` as the next no-runtime
+  source/formula contract slice.
+- **Previously closed**: `proposal_report_polish_v1`.
   Simple PDF/DOCX exports now include output coverage posture,
   generated proposal documents preserve real floor/wall workbench
   caveats, and many-layer / long-label report rendering is pinned.
   This did not change calculator runtime/source/confidence posture.
 - **Latest broad validation**: 2026-04-27 `pnpm check` is green after
-  calculator source-gap revalidation Gate A: engine 233 files / 1275
+  wall coverage planning v2 Gate A: engine 234 files / 1280
   tests, web 155 files / 885 passed + 18 skipped through
   `tools/dev/run-web-vitest.ts`, build 5/5, with only the known
   non-fatal `sharp/@img` optional-package warnings.
@@ -197,28 +204,40 @@ For every next slice decision:
   `pnpm calculator:gate:current` is green after adding the Gate A
   contract: engine 100 files / 455 tests, web 43 files / 211 passed +
   18 skipped, build 5/5 with the known non-fatal `sharp/@img` warnings.
+- **Wall coverage expansion planning v2 Gate A**:
+  `packages/engine/src/wall-coverage-expansion-planning-v2-gate-a-contract.test.ts`
+  closes the wall coverage inventory no-runtime and selects
+  `wall_single_leaf_mass_law_calibration_v1`. It keeps exact/catalog
+  and lab-fallback rows precedence-protected, keeps heavy-core/concrete
+  screening, timber stud low-confidence, and CLT wall formula-owned/
+  source-blocked, and requires hostile-input, many-layer, reorder,
+  invariant, invalid-thickness, and unsupported-output guards before
+  runtime wall work.
+  `pnpm calculator:gate:current` is green after adding the Gate A
+  contract: engine 101 files / 460 tests, web 43 files / 211 passed +
+  18 skipped, build 5/5 with the known non-fatal `sharp/@img` warnings.
 
 ## Immediate Execution Order
 
-`wall_coverage_expansion_planning_v2` should now proceed in this
+`wall_single_leaf_mass_law_calibration_v1` should now proceed in this
 order:
 
 1. Re-read
-   [SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md](./SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md)
+   [SLICE_WALL_SINGLE_LEAF_MASS_LAW_CALIBRATION_PLAN.md](./SLICE_WALL_SINGLE_LEAF_MASS_LAW_CALIBRATION_PLAN.md)
    and
-   [CHECKPOINT_2026-04-27_CALCULATOR_SOURCE_GAP_REVALIDATION_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_CALCULATOR_SOURCE_GAP_REVALIDATION_GATE_A_HANDOFF.md).
+   [CHECKPOINT_2026-04-27_WALL_COVERAGE_EXPANSION_PLANNING_V2_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_COVERAGE_EXPANSION_PLANNING_V2_GATE_A_HANDOFF.md).
 2. Run `pnpm calculator:gate:current` as the baseline.
-3. Inventory the current wall coverage map:
-   exact/catalog/benchmark/formula/screening ownership, generated
-   wall-stack posture, preset coverage, and the landed wall guardrails.
-4. Add one no-runtime Gate A planning contract that records the current
-   wall candidate order and evidence owner files.
-5. Select the first wall Gate B runtime/source slice only if that
-   contract proves it is source-backed, benchmark-backed, bounded, or
-   formula-owned.
+3. Inventory candidate signatures for unmatched massive single-leaf
+   concrete/masonry/dense-AAC style walls.
+4. Add one no-runtime Gate A source/formula contract that pins formula
+   basis, coefficients/tolerance, positive cases, negative cases, and
+   exact/lab-fallback precedence.
+5. Decide Gate B only from that contract: either perform a bounded
+   formula-owned runtime move with matching UI/card tests, or close
+   no-runtime and select the next candidate.
 6. Keep formulas, runtime values, exact/bound/formula precedence,
    confidence scores, output support, and evidence tiers unchanged
-   during Gate A planning.
+   during Gate A.
 
 ## Personal-Use Readiness Chain
 
@@ -238,8 +257,8 @@ is deferred.
 ## Latest Closed Slices
 
 See [CURRENT_STATE.md](./CURRENT_STATE.md) "Latest Closed Slices" table.
-`calculator_source_gap_revalidation_v1` Gate A is now closed and
-`wall_coverage_expansion_planning_v2` is active.
+`wall_coverage_expansion_planning_v2` Gate A is now closed and
+`wall_single_leaf_mass_law_calibration_v1` is active.
 
 ## Deferred Follow-Up Tracks
 

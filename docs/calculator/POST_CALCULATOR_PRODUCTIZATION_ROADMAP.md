@@ -194,8 +194,11 @@ evidence.
 - Completed calculator revalidation Gate A:
   `calculator_source_gap_revalidation_v1` (closed no-runtime
   2026-04-27).
+- Completed wall coverage planning Gate A:
+  `wall_coverage_expansion_planning_v2` (closed no-runtime
+  2026-04-27).
 - Current selected calculator follow-up:
-  `wall_coverage_expansion_planning_v2`.
+  `wall_single_leaf_mass_law_calibration_v1`.
 - Calculator personal/internal-use readiness:
   closed with evidence-tier caveats by `ui_input_output_honesty_v1`
   Gate C.
@@ -204,8 +207,9 @@ Reasoning: server-backed persistence is the foundation for auth,
 billing, proposal history, collaboration, monitoring context, and any
 future desktop sync story. With explicit sync/list/load, owner-only
 policy-backed route authorization, and proposal/report honesty now
-landed, the source-gap revalidation pass closed no-runtime and selected
-wall coverage planning as the next user-priority calculator step. That
-work must not alter calculator formulas, values, source posture, output
-support, or confidence scores until a source-backed or formula-owned
-wall candidate is deliberately selected.
+landed, the source-gap revalidation pass closed no-runtime, then wall
+coverage planning Gate A closed no-runtime and selected the single-leaf
+mass-law calibration source/formula contract as the next user-priority
+calculator step. That work must not alter calculator formulas, values,
+source posture, output support, or confidence scores until a
+source-backed or formula-owned wall candidate is deliberately selected.

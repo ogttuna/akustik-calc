@@ -283,16 +283,19 @@ behavior-preserving correction-guard carves; `dynamic-airborne.ts` is now
 1793 lines, C6 is closed, and the remaining three recursive composer
 guards are optional architecture backlog. Productization route
 integration and proposal/report polish are closed. Calculator
-source-gap revalidation Gate A is closed; wall coverage planning v2 is
-now selected.
+source-gap revalidation Gate A and wall coverage planning v2 Gate A are
+closed; wall single-leaf mass-law calibration is now selected.
 
 Current hotspots:
 
-- selected wall coverage planning anchors:
-  - `docs/calculator/CHECKPOINT_2026-04-27_CALCULATOR_SOURCE_GAP_REVALIDATION_GATE_A_HANDOFF.md`
+- selected wall single-leaf calibration anchors:
+  - `docs/calculator/CHECKPOINT_2026-04-27_WALL_COVERAGE_EXPANSION_PLANNING_V2_GATE_A_HANDOFF.md`
+  - `docs/calculator/SLICE_WALL_SINGLE_LEAF_MASS_LAW_CALIBRATION_PLAN.md`
+  - `packages/engine/src/wall-coverage-expansion-planning-v2-gate-a-contract.test.ts`
+  - `tools/dev/run-calculator-current-gate.ts`
+- closed wall coverage planning anchors:
   - `docs/calculator/SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md`
   - `packages/engine/src/calculator-source-gap-revalidation-gate-a-contract.test.ts`
-  - `tools/dev/run-calculator-current-gate.ts`
 - closed source-gap revalidation anchors:
   - `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md`
   - `docs/calculator/SOURCE_GAP_LEDGER.md`
@@ -435,17 +438,17 @@ Current hotspots:
 - source-backed widening ledger:
   `docs/calculator/SOURCE_GAP_LEDGER.md`
 
-The current selected next slice is a wall coverage planning slice:
-`wall_coverage_expansion_planning_v2`. Start by inventorying current
-wall archetype coverage, source/formula/screening ownership, and landed
-guardrails without changing acoustic values, support, confidence,
-evidence tiers, or formulas. `calculator_source_gap_revalidation_v1`
-Gate A is closed no-runtime: closed reinforced, `GDMTXA04A`, `C11c`,
-raw bare, wall-selector, floor continuation, floor many-layer, floor
-layer-order, timber-stud formula, floor fallback, UI honesty, and route
-policy integration tracks stay explicit deferrals or closed references
-rather than active calculator runtime work unless the new wall planning
-contract deliberately selects one.
+The current selected next slice is a wall single-leaf source/formula
+contract slice: `wall_single_leaf_mass_law_calibration_v1`. Start by
+defining unmatched massive single-leaf wall signatures, formula/source
+basis, positive cases, negative cases, exact/lab-fallback precedence,
+and UI/card coverage without changing acoustic values, support,
+confidence, evidence tiers, or formulas. `calculator_source_gap_revalidation_v1`
+and `wall_coverage_expansion_planning_v2` Gate A are closed
+no-runtime: closed reinforced, `GDMTXA04A`, `C11c`, raw bare,
+wall-selector, floor continuation, floor many-layer, floor layer-order,
+timber-stud formula, CLT wall, floor fallback, UI honesty, and route
+policy integration tracks stay explicit deferrals or closed references.
 
 ## What This System Is Not Yet
 
@@ -469,8 +472,8 @@ To avoid docs drift, be explicit about current non-features:
 - Want the productization roadmap:
   read [POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md](./POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md)
 - Want the active implementation plan:
-  read [SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md](./SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md)
+  read [SLICE_WALL_SINGLE_LEAF_MASS_LAW_CALIBRATION_PLAN.md](./SLICE_WALL_SINGLE_LEAF_MASS_LAW_CALIBRATION_PLAN.md)
 - Want answer-origin or support semantics:
   read [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
 - Want the last clean resume point:
-  read [CHECKPOINT_2026-04-27_CALCULATOR_SOURCE_GAP_REVALIDATION_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_CALCULATOR_SOURCE_GAP_REVALIDATION_GATE_A_HANDOFF.md)
+  read [CHECKPOINT_2026-04-27_WALL_COVERAGE_EXPANSION_PLANNING_V2_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_COVERAGE_EXPANSION_PLANNING_V2_GATE_A_HANDOFF.md)
