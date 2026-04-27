@@ -1,13 +1,14 @@
 # Slice Plan - Wall Double-Leaf Sharp/Davy Scoping v1
 
-Status: SELECTED (opened 2026-04-27 after
-`wall_single_leaf_mass_law_calibration_v1` Gate C closeout)
+Status: GATE A LANDED NO-RUNTIME (opened 2026-04-27 after
+`wall_single_leaf_mass_law_calibration_v1` Gate C closeout; Gate B
+bounded matrix or no-runtime closeout is next)
 
 ## Objective
 
 Prepare the next wall coverage slice for common double-leaf, stud,
-double-stud, and cavity wall combinations. Gate A is a no-runtime
-scoping pass: it must map the current implementation, formula
+double-stud, and cavity wall combinations. Gate A has now landed as a
+no-runtime scoping pass: it maps the current implementation, formula
 ownership, source/benchmark surfaces, and negative boundaries before
 any value, confidence, output-support, evidence-tier, or route-card
 movement.
@@ -34,8 +35,10 @@ answer materially.
 
 ## Non-Goals
 
-- Do not change runtime values, formulas, confidence scores, output
-  support, evidence tiers, or web route-card text in Gate A.
+- Gate A changed no runtime values, formulas, confidence scores, output
+  support, evidence tiers, or web route-card text. Gate B must keep that
+  posture unless its contract names the source/tolerance basis for a
+  movement.
 - Do not retune generic single-leaf concrete, masonry, or AAC values
   without a new source row or bounded tolerance pack.
 - Do not promote heavy-core/concrete lined-massive screening, timber
@@ -64,10 +67,16 @@ answer materially.
   `apps/web/features/workbench/dynamic-route-family-boundary-scan.test.ts`
   already provide important guardrail context for framed, double-leaf,
   double-stud, and family-boundary behavior.
+- Gate A now lands in
+  `packages/engine/src/wall-double-leaf-sharp-davy-scoping-gate-a-contract.test.ts`.
+  It pins current field values for empty double-leaf (`R'w=46`),
+  porous double-leaf without stud metadata (`R'w=41`), explicit
+  single-stud (`R'w=37`), and explicit double-stud / split-cavity
+  (`R'w=52`), plus lined-massive and triple-leaf negative boundaries.
 
 ## Gate A - Scoping Contract
 
-Gate A must land a no-runtime executable contract that records:
+Gate A landed a no-runtime executable contract that records:
 
 1. current representative outputs and trace posture for:
    - simple empty-cavity double-leaf wall;
@@ -84,8 +93,8 @@ Gate A must land a no-runtime executable contract that records:
    exact rows, timber exact rows, single-leaf mass-law stacks,
    lined-massive heavy-core stacks, CLT walls, direct-coupled leaves,
    and triple-leaf or multi-cavity shapes;
-5. whether Gate B may proceed to a bounded candidate matrix, or must
-   close no-runtime because source/tolerance evidence is insufficient;
+5. that Gate B may proceed to a bounded current-value candidate matrix,
+   but no value may move unless source/tolerance evidence is named;
 6. the paired web route-card surfaces required before any future value,
    support, confidence, evidence text, missing-input copy, or
    unsupported-output behavior changes.
@@ -106,8 +115,9 @@ Suggested first evidence to inspect:
 
 ## Gate B - Conditional Runtime Candidate Matrix
 
-Gate B may only be selected if Gate A proves a bounded, source- or
-formula-owned corridor. The minimum matrix before any runtime movement:
+Gate B is the next decision point. It may only move runtime values if
+the Gate B contract proves a bounded, source- or formula-owned corridor.
+The minimum matrix before any runtime movement:
 
 - positive double-leaf/stud-cavity cases covering empty cavity, porous
   fill, single-stud, and double-stud;
@@ -119,8 +129,8 @@ formula-owned corridor. The minimum matrix before any runtime movement:
   cases from order-sensitive cavity/stud cases;
 - web route-card assertions if visible outputs or support posture move.
 
-If Gate A cannot prove that scope, Gate B should close no-runtime and
-select the next roadmap candidate instead of widening by assumption.
+If Gate B cannot prove that scope, it should close no-runtime and select
+the next roadmap candidate instead of widening by assumption.
 
 ## Completion Criteria
 
@@ -128,19 +138,27 @@ select the next roadmap candidate instead of widening by assumption.
   `pnpm calculator:gate:current`.
 - Gate A changes no runtime math, source posture, output support,
   confidence score, evidence tier, or route-card text.
-- The contract explicitly names whether Gate B may proceed to a
-  bounded runtime matrix.
+- The Gate A contract explicitly names Gate B as bounded matrix or
+  no-runtime closeout, with no value movement authorized yet.
+- Gate B either lands the bounded current-value/source-tolerance matrix
+  or closes the slice no-runtime.
 - `NEXT_IMPLEMENTATION_PLAN.md`, `CURRENT_STATE.md`, `AGENTS.md`, this
   plan, and the latest checkpoint agree on the active selected slice.
 - `pnpm calculator:gate:current` and `git diff --check` are green.
 
 ## Immediate Execution Order
 
-1. Read the latest Gate C checkpoint:
-   [CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_C_CLOSEOUT_HANDOFF.md).
+1. Read the latest Gate A checkpoint:
+   [CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_A_HANDOFF.md).
 2. Run `pnpm calculator:gate:current` as the baseline.
-3. Add `wall_double_leaf_sharp_davy_scoping_v1` Gate A no-runtime
-   scoping contract.
-4. Keep runtime values, formulas, output support, confidence, evidence
-   text, and web route cards unchanged unless Gate A deliberately
-   selects a bounded Gate B runtime matrix.
+3. Add Gate B current-value matrix coverage for empty double-leaf,
+   porous double-leaf, explicit single-stud, and explicit double-stud
+   routes.
+4. Add negative boundaries for exact/catalog rows, resilient side-count
+   exact rows, timber exact/formula surfaces, single-leaf mass-law,
+   lined-massive, CLT, direct-coupled, and triple-leaf/multi-cavity
+   shapes.
+5. Keep runtime values, formulas, output support, confidence, evidence
+   text, and web route cards unchanged unless Gate B names the source
+   row, benchmark envelope, formula tolerance owner, or bounded family
+   rule that supports the movement.

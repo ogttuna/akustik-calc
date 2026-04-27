@@ -8,8 +8,8 @@ chain read
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
 
 Last reviewed: 2026-04-27
-(`wall_single_leaf_mass_law_calibration_v1` Gate C closed no-runtime;
-`wall_double_leaf_sharp_davy_scoping_v1` selected;
+(`wall_double_leaf_sharp_davy_scoping_v1` Gate A landed no-runtime;
+Gate B bounded matrix or no-runtime closeout is next;
 see
 `SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md`).
 
@@ -43,7 +43,7 @@ For every next slice decision:
 - **Active slice**:
   `wall_double_leaf_sharp_davy_scoping_v1`.
 - **Latest checkpoint**:
-  [CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_C_CLOSEOUT_HANDOFF.md).
+  [CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_A_HANDOFF.md).
 - **Planning surface**:
   [SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md](./SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md).
 - **Personal-use readiness roadmap**:
@@ -257,6 +257,16 @@ For every next slice decision:
   `pnpm calculator:gate:current` is green after adding the Gate C
   contract: engine 104 files / 475 tests, web 43 files / 211 passed +
   18 skipped, build 5/5 with the known non-fatal `sharp/@img` warnings.
+- **Wall double-leaf Sharp/Davy scoping Gate A**:
+  `packages/engine/src/wall-double-leaf-sharp-davy-scoping-gate-a-contract.test.ts`
+  lands the no-runtime current-value and route-ownership inventory for
+  common double-leaf / stud-cavity walls. It pins empty double-leaf at
+  field `R'w=46`, porous double-leaf without stud metadata at
+  `R'w=41`, explicit single-stud at `R'w=37`, and explicit
+  double-stud / split-cavity at `R'w=52`, while keeping lined-massive
+  and triple-leaf shapes outside the target. Gate A selects Gate B
+  matrix work but blocks value movement until a source row, benchmark
+  envelope, formula tolerance owner, or bounded family rule is named.
 
 ## Immediate Execution Order
 
@@ -264,17 +274,20 @@ For every next slice decision:
 order:
 
 1. Re-read
+   [CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_A_HANDOFF.md),
    [SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md](./SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md)
-   and
-   [CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_C_CLOSEOUT_HANDOFF.md).
+   and the current-state active-slice section.
 2. Run `pnpm calculator:gate:current` as the baseline.
-3. Add Gate A no-runtime scoping contract for double-leaf, stud,
-   double-stud, and cavity wall applicability.
-4. Pin current representative outputs, trace families, Sharp/Davy/
-   framed-wall ownership, and source/tolerance blockers without runtime
-   movement.
-5. Select a bounded Gate B candidate matrix only if Gate A proves a
-   source-backed, benchmark-backed, bounded, or formula-owned corridor.
+3. Start Gate B by building a bounded current-value matrix for empty
+   double-leaf, porous double-leaf, explicit single-stud, and explicit
+   double-stud routes.
+4. Pair that matrix with negative exact/catalog, resilient side-count,
+   timber, single-leaf, lined-massive, CLT, direct-coupled, and
+   triple-leaf/multi-cavity boundaries.
+5. Move no runtime values unless Gate B names the source row, benchmark
+   envelope, formula tolerance owner, or bounded family rule for the
+   candidate family; otherwise close the slice no-runtime and select the
+   next roadmap candidate.
 
 ## Personal-Use Readiness Chain
 
@@ -288,14 +301,15 @@ private day-to-day use:
 
 Productization route-policy and proposal/report polish slices are
 closed. Calculator runtime/source posture stays frozen during the
-selected no-runtime revalidation slice; additional productization work
+selected double-leaf Gate B matrix work unless the contract names the
+source/tolerance basis for a movement; additional productization work
 is deferred.
 
 ## Latest Closed Slices
 
 See [CURRENT_STATE.md](./CURRENT_STATE.md) "Latest Closed Slices" table.
-`wall_single_leaf_mass_law_calibration_v1` is now closed no-runtime at
-Gate C and `wall_double_leaf_sharp_davy_scoping_v1` is active.
+`wall_double_leaf_sharp_davy_scoping_v1` Gate A is now landed
+no-runtime and Gate B is the next decision point.
 
 ## Deferred Follow-Up Tracks
 
