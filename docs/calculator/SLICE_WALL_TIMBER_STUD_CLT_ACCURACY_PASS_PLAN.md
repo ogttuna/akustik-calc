@@ -1,7 +1,7 @@
 # Slice Plan - Wall Timber Stud + CLT Accuracy Pass
 
-Status: ACTIVE - timber-stud and CLT Gate B landed no-runtime; Gate C
-closeout next
+Status: CLOSED - Gate C landed no-runtime; floor fallback cleanup
+selected next
 
 Selected: 2026-04-27 by
 `post-wall-heavy-core-concrete-gate-b-next-slice-selection-contract.test.ts`
@@ -128,14 +128,16 @@ Blockers found:
 - current `laminated_single_leaf` behavior is a Sharp-delegate formula,
   not a source row.
 
-### Gate C Closeout Next
+### Gate C Closeout Result
 
-The next bounded step is Gate C closeout for the whole
-`wall_timber_stud_clt_accuracy_pass_v1` slice. Gate C should summarize
-both no-runtime Gate B decisions, keep runtime math unchanged, update
-the plan/current-state/checkpoint chain, and select
-`floor_fallback_low_confidence_cleanup` from the personal-use readiness
-roadmap.
+Gate C landed no-runtime in
+`packages/engine/src/post-wall-timber-stud-clt-gate-c-next-slice-selection-contract.test.ts`.
+It summarized both no-runtime Gate B decisions, kept runtime math
+unchanged, and selected `floor_fallback_low_confidence_cleanup_v1` from
+the personal-use readiness roadmap.
+
+Next planning surface:
+`docs/calculator/SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md`.
 
 ## Evidence Policy
 
@@ -206,9 +208,12 @@ Current selection baseline:
 - targeted CLT Gate B contract:
   `pnpm --filter @dynecho/engine exec vitest run src/wall-clt-gate-b-source-contract.test.ts --maxWorkers=1`
   - 1 file / 4 tests green;
-- `pnpm calculator:gate:current`: engine 93 files / 424 tests, web 36
+- targeted Gate C contract:
+  `pnpm --filter @dynecho/engine exec vitest run src/post-wall-timber-stud-clt-gate-c-next-slice-selection-contract.test.ts --maxWorkers=1`
+  - 1 file / 4 tests green;
+- `pnpm calculator:gate:current`: engine 94 files / 428 tests, web 36
   files / 170 passed + 18 skipped, build 5/5;
-- broad `pnpm check`: engine 223 files / 1232 tests, web 150 files /
+- broad `pnpm check`: engine 227 files / 1248 tests, web 150 files /
   864 passed + 18 skipped, build 5/5;
 - known non-fatal `sharp/@img` optional-package warnings remain.
 

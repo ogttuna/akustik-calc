@@ -65,8 +65,7 @@ Closed decision:
 
 ### 2. Timber Stud And CLT Wall Accuracy Pass
 
-Status: active slice; timber-stud Gate B and CLT wall Gate B landed
-no-runtime, Gate C closeout is next.
+Status: closed no-runtime at Gate C.
 
 The direct double-board timber stud and CLT wall lanes are common and
 currently formula-owned where no exact topology row matches the live
@@ -99,14 +98,15 @@ Required before implementation:
   unmatched topologies;
 - keep Dataholz CLT floor-system source rows from being borrowed as wall
   exact truth;
-- Gate C should close the slice and select floor fallback /
-  low-confidence cleanup;
+- Gate C closed no-runtime in
+  `packages/engine/src/post-wall-timber-stud-clt-gate-c-next-slice-selection-contract.test.ts`
+  and selected floor fallback / low-confidence cleanup;
 - start from
   [SLICE_WALL_TIMBER_STUD_CLT_ACCURACY_PASS_PLAN.md](./SLICE_WALL_TIMBER_STUD_CLT_ACCURACY_PASS_PLAN.md).
 
 ### 3. Floor Fallback / Low-Confidence Cleanup
 
-Status: lower-priority calculator candidate.
+Status: active slice; Gate A source/formula audit next.
 
 Most high-value floor lanes already have stronger evidence than the
 remaining fallback corridors. The steel suspended fallback and other
@@ -115,6 +115,14 @@ improve honest coverage without reopening blocked source families.
 
 Required before implementation:
 
+- start from
+  [SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md](./SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md);
+- add a no-runtime Gate A contract for
+  `floor.steel_fallback_low_confidence.field` / generated
+  `floor-steel-fallback` before any math change;
+- pin current values, exact/bound near misses, low-confidence estimate
+  kind, origin basis, visible web card posture, and unsupported
+  `L'nT,50`;
 - keep `GDMTXA04A`, `C11c`, and raw bare open-box/open-web impact
   source-blocked unless new source evidence is deliberately imported;
 - separate exact/product-delta rows from predicted airborne or field
@@ -143,19 +151,18 @@ Required before implementation:
 ## Current Order
 
 Current validation baseline: 2026-04-27 `pnpm check` is green after
-heavy-core/concrete Gate B no-runtime closeout and timber+CLT next-slice
-selection. Engine broad is 223 files / 1232 tests. Web broad keeps 150
-files in scope through `tools/dev/run-web-vitest.ts` with 864 passed +
-18 skipped. Build is 5/5 with the known non-fatal `sharp/@img`
-optional-package warnings. Focused current gate after CLT Gate B is 93
-engine files / 424 tests, 36 web files / 170 passed plus 18 skipped,
-build 5/5.
+timber stud + CLT wall Gate C no-runtime closeout and floor fallback
+cleanup selection. Engine broad is 227 files / 1248 tests. Web broad
+keeps 150 files in scope through `tools/dev/run-web-vitest.ts` with 864
+passed + 18 skipped. Build is 5/5 with the known non-fatal
+`sharp/@img` optional-package warnings. Focused current gate after Gate
+C closeout is 94 engine files / 428 tests, 36 web files / 170 passed
+plus 18 skipped, build 5/5.
 
 Do these in order unless new evidence changes the ranking:
 
-1. Timber stud + CLT wall accuracy pass.
-2. Floor fallback / low-confidence cleanup.
-3. UI / input / output honesty pass.
+1. Floor fallback / low-confidence cleanup.
+2. UI / input / output honesty pass.
 
 `project_access_policy_route_integration_v1` remains deferred until this
 calculator readiness chain closes or priority explicitly changes.

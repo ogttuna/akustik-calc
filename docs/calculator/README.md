@@ -19,9 +19,9 @@ fix the drift before starting work.
 4. [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
    — calculator-only chain for reaching private-use readiness before
    deferred productization resumes.
-5. [SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md](./SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md)
-   — first concrete/heavy-core Gate B subplan selected by the current
-   cartography slice.
+5. [SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md](./SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md)
+   — active calculator slice plan for the remaining low-confidence
+   floor fallback cleanup.
 
 Then run `pnpm calculator:gate:current` to confirm the green
 baseline.
@@ -31,17 +31,15 @@ baseline.
 - [CHECKPOINT_2026-04-23_SERVER_BACKED_PROJECT_STORAGE_HANDOFF.md](./CHECKPOINT_2026-04-23_SERVER_BACKED_PROJECT_STORAGE_HANDOFF.md)
   — productization closeout: server-backed project storage v1 closed.
 - [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
-  — active calculator readiness chain: heavy-core/concrete wall, timber
-  stud + CLT wall accuracy, floor fallback cleanup, and UI/input/output
-  honesty.
-- [SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md](./SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md)
-  — next implementation subplan: audit and tighten the common
-  concrete/heavy-core wall lane without promoting screening evidence
-  beyond what sources support.
-- [CHECKPOINT_2026-04-27_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_GATE_A_HANDOFF.md)
-  — latest active calculator handoff: realistic layer-combination
-  cartography Gate A landed no-runtime and selected the
-  heavy-core/concrete wall lane for Gate B planning.
+  — active calculator readiness chain: floor fallback cleanup, then
+  UI/input/output honesty before deferred productization resumes.
+- [SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md](./SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md)
+  — active implementation plan: audit and tighten the remaining
+  low-confidence steel suspended floor fallback without promoting
+  screening evidence beyond what sources support.
+- [CHECKPOINT_2026-04-27_WALL_TIMBER_STUD_CLT_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_TIMBER_STUD_CLT_GATE_C_CLOSEOUT_HANDOFF.md)
+  — latest active calculator handoff: timber stud + CLT wall accuracy
+  closed no-runtime and selected floor fallback cleanup.
 - [CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_C_CLOSEOUT_HANDOFF.md)
   — previous calculator closeout: dynamic-airborne split v2 Gate C
   closed, C6 moved out of partial, and realistic layer-combination
@@ -123,8 +121,10 @@ baseline.
 - [SLICE_DYNAMIC_AIRBORNE_SPLIT_REFACTOR_V2_PLAN.md](./SLICE_DYNAMIC_AIRBORNE_SPLIT_REFACTOR_V2_PLAN.md)
   — closed calculator architecture slice plan.
 - [SLICE_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_PLAN.md](./SLICE_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_PLAN.md)
-  — active calculator planning surface; maps realistic layer
+  — closed calculator planning surface; maps realistic layer
   combinations by evidence tier before selecting runtime widening.
+- [SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md](./SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md)
+  — active floor fallback cleanup slice plan.
 - [SLICE_ALL_CALLER_INVALID_THICKNESS_GUARD_PLAN.md](./SLICE_ALL_CALLER_INVALID_THICKNESS_GUARD_PLAN.md)
   — closed direct invalid-thickness guard plan.
 - [SLICE_FLOOR_LAYER_ORDER_EDIT_STABILITY_PLAN.md](./SLICE_FLOOR_LAYER_ORDER_EDIT_STABILITY_PLAN.md)

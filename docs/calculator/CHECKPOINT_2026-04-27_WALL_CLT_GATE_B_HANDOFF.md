@@ -7,6 +7,12 @@ Date: 2026-04-27
 `wall_timber_stud_clt_accuracy_pass_v1` CLT wall Gate B is landed
 no-runtime.
 
+Superseded for current workflow by
+`CHECKPOINT_2026-04-27_WALL_TIMBER_STUD_CLT_GATE_C_CLOSEOUT_HANDOFF.md`,
+which records the timber stud + CLT wall slice as closed no-runtime and
+selects `floor_fallback_low_confidence_cleanup_v1`. Keep this file as
+the historical CLT Gate B evidence record.
+
 No runtime values, formulas, output support, warnings, confidence
 classes, or web cards changed. Timber-stud Gate B and CLT wall Gate B
 are both complete. The next bounded step is Gate C closeout for the

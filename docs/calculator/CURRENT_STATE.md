@@ -16,10 +16,9 @@ need the private-use readiness chain read
 Last revalidation cycle: `2026-04-27`
 (`realistic_layer_combination_coverage_cartography_v1` Gate A landed;
 heavy-core/concrete Gate B closed no-runtime; timber stud + CLT wall
-accuracy pass timber-stud and CLT wall Gate B landed no-runtime; broad validation
-remains green from the heavy-core closeout run;
+accuracy pass Gate C closed no-runtime; broad validation is green;
 latest checkpoint:
-[CHECKPOINT_2026-04-27_WALL_CLT_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_CLT_GATE_B_HANDOFF.md)).
+[CHECKPOINT_2026-04-27_WALL_TIMBER_STUD_CLT_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_TIMBER_STUD_CLT_GATE_C_CLOSEOUT_HANDOFF.md)).
 Step 8 closed the calculator runtime audit: `MASTER_PLAN.md` §3/§8
 was reconciled to implementation reality, `coverage-grid-consistency.test.ts`
 now maps the grid and C1-C6 signals to executable evidence, the
@@ -30,7 +29,7 @@ storage v1, project/proposal route authorization, auth-session
 hardening, and the pure team-access policy model.
 
 - **Engine broad suite**: latest broad `pnpm check` on 2026-04-27 was
-  223 / 223 files, 1232 / 1232 tests green
+  227 / 227 files, 1248 / 1248 tests green
   (up from 193/1068 pre-session; step-7 landed 4 wall cases +
   F1/F2 engine fixes + 32-assertion cross-mode torture matrix
   + 2 regression guards + post-contract; step-7b landed the
@@ -57,8 +56,8 @@ hardening, and the pure team-access policy model.
   input contract so it asserts parse behavior instead of calling
   `.keyof()` on the exported shared `AirborneContextSchema` `ZodType`.
 - **Broad `pnpm check`**: lint + typecheck + tests + build green on the
-  latest broad run after heavy-core/concrete Gate B no-runtime closeout
-  and timber+CLT next-slice selection; build still emits
+  latest broad run after timber stud + CLT wall Gate C no-runtime
+  closeout and floor fallback cleanup selection; build still emits
   the known non-fatal optional `sharp/@img` warnings through
   `@turbodocx/html-to-docx`.
 - **Focused calculator gate** (`pnpm calculator:gate:current`):
@@ -119,17 +118,19 @@ hardening, and the pure team-access policy model.
   `wall-timber-stud-gate-b-source-contract.test.ts` for the no-runtime
   timber Gate B source/formula contract and CLT-next selection, plus
   `wall-clt-gate-b-source-contract.test.ts` for the no-runtime CLT wall
-  source/formula contract and Gate C-next selection.
-  Latest focused gate run after the CLT Gate B contract:
-  93 engine files / 424 tests,
+  source/formula contract and Gate C-next selection, plus
+  `post-wall-timber-stud-clt-gate-c-next-slice-selection-contract.test.ts`
+  for the no-runtime wall pass closeout and floor fallback selection.
+  Latest focused gate run after the Gate C closeout contract:
+  94 engine files / 428 tests,
   36 web files / 170 passed +
   18 skipped, build 5/5 tasks, whitespace guard clean.
 
 ## Active Slice
 
-`wall_timber_stud_clt_accuracy_pass_v1` (calculator wall accuracy,
-active). Planning surface:
-[SLICE_WALL_TIMBER_STUD_CLT_ACCURACY_PASS_PLAN.md](./SLICE_WALL_TIMBER_STUD_CLT_ACCURACY_PASS_PLAN.md).
+`floor_fallback_low_confidence_cleanup_v1` (calculator floor fallback
+accuracy/honesty, active). Planning surface:
+[SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md](./SLICE_FLOOR_FALLBACK_LOW_CONFIDENCE_CLEANUP_PLAN.md).
 
 The previous cartography Gate A landed no-runtime in
 `packages/engine/src/realistic-layer-combination-coverage-cartography.test.ts`.
@@ -182,13 +183,20 @@ no verified exact or lab-fallback match exists, the current catalog has
 no wall-specific CLT exact row, Dataholz CLT rows are floor-system
 source truth rather than wall exact truth, and the current laminated
 lane is a Sharp-delegate formula. The next bounded implementation step
-is Gate C closeout for `wall_timber_stud_clt_accuracy_pass_v1`, then
-selection of `floor_fallback_low_confidence_cleanup` from the roadmap.
+was Gate C closeout for `wall_timber_stud_clt_accuracy_pass_v1`.
+Gate C has now landed no-runtime in
+`packages/engine/src/post-wall-timber-stud-clt-gate-c-next-slice-selection-contract.test.ts`.
+The active next slice is `floor_fallback_low_confidence_cleanup_v1`.
+Its first bounded implementation step is a no-runtime Gate A
+source/formula audit for `floor.steel_fallback_low_confidence.field` /
+generated `floor-steel-fallback`; the audit must pin current values,
+exact/bound near misses, low-confidence origin posture, web card
+honesty, and unsupported `L'nT,50` behavior before any runtime change.
 
 Personal-use readiness is now explicitly tracked in
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
-The current priority chain is timber stud + CLT wall accuracy, floor
-fallback/low-confidence cleanup, then UI/input/output honesty.
+The current priority chain is floor fallback/low-confidence cleanup,
+then UI/input/output honesty.
 Productization remains deferred until this calculator readiness chain
 closes or priority explicitly changes.
 
