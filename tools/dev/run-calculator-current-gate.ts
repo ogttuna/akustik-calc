@@ -133,6 +133,7 @@ async function main() {
         "src/realistic-layer-combination-coverage-cartography.test.ts",
         "src/wall-heavy-core-concrete-gate-b-audit-contract.test.ts",
         "src/post-wall-heavy-core-concrete-gate-b-next-slice-selection-contract.test.ts",
+        "src/wall-timber-stud-clt-gate-a-audit-contract.test.ts",
         "src/post-good-calculator-final-audit-v1-next-slice-selection-contract.test.ts",
         "src/post-team-access-model-calculator-refocus-next-slice-selection-contract.test.ts",
         "src/post-wall-formula-family-widening-v1-next-slice-selection-contract.test.ts",

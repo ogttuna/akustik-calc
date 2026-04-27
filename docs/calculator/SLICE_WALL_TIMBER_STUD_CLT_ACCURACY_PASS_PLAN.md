@@ -1,6 +1,6 @@
 # Slice Plan - Wall Timber Stud + CLT Accuracy Pass
 
-Status: ACTIVE NEXT after heavy-core/concrete Gate B no-runtime closeout
+Status: ACTIVE - Gate A landed no-runtime; Gate B starts with timber stud
 
 Selected: 2026-04-27 by
 `post-wall-heavy-core-concrete-gate-b-next-slice-selection-contract.test.ts`
@@ -22,33 +22,51 @@ field outputs, but neither should claim exact or benchmark confidence
 unless the selected topology has source, benchmark, formula, or bounded
 family evidence.
 
-## First Gate
+## Gate A Result
 
-Gate A must be no-runtime.
+Gate A landed no-runtime in
+`packages/engine/src/wall-timber-stud-clt-gate-a-audit-contract.test.ts`.
+It did not change runtime math, output support, formulas, warnings, or
+web cards.
 
-Audit the current live surfaces before changing math:
+Pinned generated timber stud surface:
 
-1. Generated timber stud case `wall-timber-stud`:
-   - current dynamic family and strategy;
-   - supported field outputs;
-   - relationship to `wall-timber-lightweight-source-corpus.ts`;
-   - whether any exact imported timber row truly matches the generated
-     stack and context.
-2. Generated CLT wall case `wall-clt-local`:
-   - current dynamic family and strategy;
-   - supported field outputs;
-   - which formula owns the lane;
-   - why floor CLT source truth is not automatically wall CLT exact
-     truth.
-3. Workbench and card surfaces already covering these rows:
-   - timber direct/exact route cards;
-   - LSF/timber preset benchmark cards;
-   - wall preset expansion benchmarks.
+- generated id: `wall-timber-stud`;
+- stack: `2x12.5 gypsum_board + 50 rockwool + 50 air_gap + 2x12.5
+  gypsum_board`;
+- lab `Rw=50`, `STC=50`, `C=0.5`, `Ctr=-4.2`;
+- field `R'w=42`, `Dn,w=42`, `DnT,w=43`, `DnT,A=43.9`;
+- dynamic family: `stud_wall_system`;
+- strategy: `stud_surrogate_blend+framed_wall_calibration`;
+- confidence: `low`, family decision `ambiguous`, runner-up
+  `double_leaf`;
+- supported field outputs: `R'w`, `Dn,w`, `DnT,w`, `DnT,A`;
+- verified exact match: none;
+- verified lab-fallback match: none;
+- exact timber source-row topology match: none across the six landed
+  timber exact rows.
 
-Gate A output should be an executable contract that states current
-values, output support, source/exact non-match status, and the proposed
-Gate B target. If no defended runtime move exists, close no-runtime and
-keep the lane formula-owned.
+Pinned generated CLT wall surface:
+
+- generated id: `wall-clt-local`;
+- stack: `12.5 gypsum_board + 140 clt_panel + 12.5 gypsum_board`;
+- lab `Rw=42`, `STC=43`, `C=-1.1`, `Ctr=-7.1`;
+- field `R'w=41`, `Dn,w=41`, `DnT,w=42`, `DnT,A=40.7`;
+- dynamic family: `laminated_single_leaf`;
+- strategy: `laminated_leaf_sharp_delegate`;
+- confidence: `medium`;
+- supported field outputs: `R'w`, `Dn,w`, `DnT,w`, `DnT,A`;
+- verified exact match: none;
+- verified lab-fallback match: none;
+- floor-system/source truth import: none.
+
+Gate A selected `wall.timber_stud_formula.field` as the first Gate B
+target because it is rank 2 before CLT rank 3 in the cartography, is a
+common personal-use wall topology, and is currently low-confidence while
+nearby timber source rows exist but do not match the live generated
+stack exactly.
+
+## Gate B Execution
 
 ## Evidence Policy
 
@@ -88,12 +106,17 @@ Unacceptable promotion evidence:
 
 ## Gate B Readiness
 
-Only start runtime implementation after Gate A answers:
+Gate B is ready to start for `wall.timber_stud_formula.field`, but
+runtime math remains blocked until the new Gate B contract names a
+defensible evidence path.
 
-- which lane is selected first: timber stud or CLT wall;
-- exact current `Rw` / `R'w` / `Dn,w` / `DnT,w` values and support;
+The first Gate B contract must answer:
+
+- exact current `Rw` / `R'w` / `Dn,w` / `DnT,w` values and support for
+  the generated timber stack;
 - source/formula basis and allowed dB tolerance;
-- exact/benchmark rows that must not drift;
+- exact/benchmark rows that must not drift or bleed into the live
+  topology;
 - whether web card wording, warning posture, or output support changes.
 
 If visible card posture changes, add focused web tests. If only engine
@@ -105,7 +128,10 @@ surfaces would misrepresent origin/confidence.
 Current selection baseline:
 
 - targeted closeout contract: 1 file / 4 tests green;
-- `pnpm calculator:gate:current`: engine 90 files / 412 tests, web 36
+- targeted Gate A contract:
+  `pnpm --filter @dynecho/engine exec vitest run src/wall-timber-stud-clt-gate-a-audit-contract.test.ts --maxWorkers=1`
+  - 1 file / 4 tests green;
+- `pnpm calculator:gate:current`: engine 91 files / 416 tests, web 36
   files / 170 passed + 18 skipped, build 5/5;
 - broad `pnpm check`: engine 223 files / 1232 tests, web 150 files /
   864 passed + 18 skipped, build 5/5;

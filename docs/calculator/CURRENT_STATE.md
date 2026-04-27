@@ -16,9 +16,10 @@ need the private-use readiness chain read
 Last revalidation cycle: `2026-04-27`
 (`realistic_layer_combination_coverage_cartography_v1` Gate A landed;
 heavy-core/concrete Gate B closed no-runtime; timber stud + CLT wall
-accuracy pass selected; broad validation re-run;
+accuracy pass Gate A landed no-runtime; broad validation remains green
+from the heavy-core closeout run;
 latest checkpoint:
-[CHECKPOINT_2026-04-27_WALL_HEAVY_CORE_CONCRETE_GATE_B_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_HEAVY_CORE_CONCRETE_GATE_B_CLOSEOUT_HANDOFF.md)).
+[CHECKPOINT_2026-04-27_WALL_TIMBER_STUD_CLT_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_TIMBER_STUD_CLT_GATE_A_HANDOFF.md)).
 Step 8 closed the calculator runtime audit: `MASTER_PLAN.md` §3/§8
 was reconciled to implementation reality, `coverage-grid-consistency.test.ts`
 now maps the grid and C1-C6 signals to executable evidence, the
@@ -112,16 +113,18 @@ hardening, and the pure team-access policy model.
   `wall-heavy-core-concrete-gate-b-audit-contract.test.ts` for the
   first no-runtime Gate B heavy-core/concrete audit contract, plus
   `post-wall-heavy-core-concrete-gate-b-next-slice-selection-contract.test.ts`
-  for the no-runtime closeout and timber+CLT next-slice selection.
-  Latest focused gate run after the Gate B no-runtime closeout
-  contract: 90 engine files / 412 tests,
+  for the no-runtime closeout and timber+CLT next-slice selection, plus
+  `wall-timber-stud-clt-gate-a-audit-contract.test.ts` for the active
+  slice no-runtime Gate A audit and timber-first Gate B selection.
+  Latest focused gate run after the timber+CLT Gate A audit contract:
+  91 engine files / 416 tests,
   36 web files / 170 passed +
   18 skipped, build 5/5 tasks, whitespace guard clean.
 
 ## Active Slice
 
 `wall_timber_stud_clt_accuracy_pass_v1` (calculator wall accuracy,
-selected). Planning surface:
+active). Planning surface:
 [SLICE_WALL_TIMBER_STUD_CLT_ACCURACY_PASS_PLAN.md](./SLICE_WALL_TIMBER_STUD_CLT_ACCURACY_PASS_PLAN.md).
 
 The previous cartography Gate A landed no-runtime in
@@ -143,6 +146,20 @@ formula components, and the blocker: no source row or
 topology-specific tolerance exists for the selected concrete lining
 stack. The closeout contract keeps the lane screening and selects
 `wall_timber_stud_clt_accuracy_pass_v1`.
+
+Gate A for `wall_timber_stud_clt_accuracy_pass_v1` has now landed
+no-runtime in
+`packages/engine/src/wall-timber-stud-clt-gate-a-audit-contract.test.ts`.
+It pins generated `wall-timber-stud` at lab `Rw=50`, field `R'w=42`,
+low-confidence `stud_wall_system`, with no verified exact,
+lab-fallback, or landed exact timber row topology match. It pins
+generated `wall-clt-local` at lab `Rw=42`, field `R'w=41`,
+medium-confidence `laminated_single_leaf`, with no verified exact,
+lab-fallback, or floor-system/source truth import. The next bounded
+implementation step is Gate B for `wall.timber_stud_formula.field`:
+write the timber-stud runtime/source contract first, then change math
+only if a named source row, documented formula-owned timber rule, or
+bounded family rule supports it.
 
 Personal-use readiness is now explicitly tracked in
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
@@ -189,8 +206,7 @@ injection. Gate B eleventh carve moved
 `applyNarrowHeavyDoubleLeafGapCap` with `DynamicAirborneComposer`
 injection. Gate C then closed after broad validation because
 `dynamic-airborne.ts` is below 2000 lines. The active next decision is
-now Gate A for the timber stud + CLT wall accuracy pass selected after
-heavy-core/concrete closed honestly no-runtime.
+now timber-stud Gate B inside the timber stud + CLT wall accuracy pass.
 
 Checkpoint refinement `2026-04-24`: the post-commit baseline was
 re-read against implementation and revalidated before Gate A. No drift

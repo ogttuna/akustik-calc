@@ -5,17 +5,18 @@ Start here before changing calculator behavior.
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-04-27_WALL_HEAVY_CORE_CONCRETE_GATE_B_CLOSEOUT_HANDOFF.md`
+2. `docs/calculator/CHECKPOINT_2026-04-27_WALL_TIMBER_STUD_CLT_GATE_A_HANDOFF.md`
 3. `docs/calculator/CURRENT_STATE.md`
 4. `docs/calculator/SLICE_WALL_TIMBER_STUD_CLT_ACCURACY_PASS_PLAN.md`
 5. `docs/calculator/PERSONAL_USE_READINESS_ROADMAP.md`
-6. `docs/calculator/CHECKPOINT_2026-04-27_WALL_HEAVY_CORE_CONCRETE_GATE_B_AUDIT_HANDOFF.md`
-7. `docs/calculator/CHECKPOINT_2026-04-27_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_GATE_A_HANDOFF.md`
-8. `docs/calculator/SLICE_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_PLAN.md`
-9. `docs/calculator/SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md`
-10. `docs/calculator/CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_C_CLOSEOUT_HANDOFF.md`
-11. `docs/calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md`
-12. `docs/calculator/CALCULATION_MODEL_AND_VALIDATION.md`
+6. `docs/calculator/CHECKPOINT_2026-04-27_WALL_HEAVY_CORE_CONCRETE_GATE_B_CLOSEOUT_HANDOFF.md`
+7. `docs/calculator/CHECKPOINT_2026-04-27_WALL_HEAVY_CORE_CONCRETE_GATE_B_AUDIT_HANDOFF.md`
+8. `docs/calculator/CHECKPOINT_2026-04-27_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_GATE_A_HANDOFF.md`
+9. `docs/calculator/SLICE_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_PLAN.md`
+10. `docs/calculator/SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md`
+11. `docs/calculator/CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_C_CLOSEOUT_HANDOFF.md`
+12. `docs/calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md`
+13. `docs/calculator/CALCULATION_MODEL_AND_VALIDATION.md`
 
 Use the long-form plan files only for backlog context after reading the current
 plan.
@@ -25,15 +26,18 @@ plan.
 - current selected slice:
   `wall_timber_stud_clt_accuracy_pass_v1`
 - current first decision inside the slice:
-  heavy-core/concrete Gate B closed no-runtime because the selected
-  concrete lining stack has no exact catalog row, no direct external
-  benchmark match, and no topology-specific tolerance in the current
-  audit. The selected next slice is
-  `wall_timber_stud_clt_accuracy_pass_v1` using
-  `docs/calculator/SLICE_WALL_TIMBER_STUD_CLT_ACCURACY_PASS_PLAN.md`.
-  Start Gate A no-runtime by auditing generated `wall-timber-stud` and
-  `wall-clt-local` against existing source/formula evidence before any
-  exact, family, or formula promotion.
+  Gate A landed no-runtime in
+  `packages/engine/src/wall-timber-stud-clt-gate-a-audit-contract.test.ts`.
+  It pins generated `wall-timber-stud` at lab `Rw=50`, field `R'w=42`,
+  low-confidence `stud_wall_system`, no verified exact or lab-fallback
+  match, and no exact match to the six landed timber exact rows. It pins
+  generated `wall-clt-local` at lab `Rw=42`, field `R'w=41`,
+  medium-confidence `laminated_single_leaf`, no verified exact or
+  lab-fallback match, and no floor-system/source truth import. The next
+  bounded implementation step is Gate B for
+  `wall.timber_stud_formula.field`: write the timber-stud runtime/source
+  contract first, then change math only if a named source row or bounded
+  family rule supports it.
 - personal-use readiness chain:
   `docs/calculator/PERSONAL_USE_READINESS_ROADMAP.md` is active
   calculator guidance. Finish, in order: timber stud + CLT wall

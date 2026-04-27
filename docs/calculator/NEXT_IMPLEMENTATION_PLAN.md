@@ -8,10 +8,10 @@ chain read
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
 
 Last reviewed: 2026-04-27
-(`wall_heavy_core_concrete_gate_b_v1` closed no-runtime;
-`wall_timber_stud_clt_accuracy_pass_v1` selected;
+(`wall_timber_stud_clt_accuracy_pass_v1` Gate A landed no-runtime;
+timber-stud Gate B selected first;
 see
-`CHECKPOINT_2026-04-27_WALL_HEAVY_CORE_CONCRETE_GATE_B_CLOSEOUT_HANDOFF.md`).
+`CHECKPOINT_2026-04-27_WALL_TIMBER_STUD_CLT_GATE_A_HANDOFF.md`).
 
 ---
 
@@ -70,12 +70,16 @@ For every next slice decision:
   benchmark match in the current audit, and no topology-specific
   tolerance for the selected concrete lining stack. Evidence remains
   `screening`.
-- **Latest plan/implementation reconciliation**: 2026-04-27 review
-  closed heavy-core/concrete no-runtime and selected
-  `wall_timber_stud_clt_accuracy_pass_v1`.
-  `packages/engine/src/post-wall-heavy-core-concrete-gate-b-next-slice-selection-contract.test.ts`
-  records that decision and keeps exact/source/productization
-  boundaries closed.
+- **Latest plan/implementation reconciliation**: 2026-04-27 Gate A
+  landed no-runtime for the timber stud + CLT wall pass.
+  `packages/engine/src/wall-timber-stud-clt-gate-a-audit-contract.test.ts`
+  pins generated `wall-timber-stud` at lab `Rw=50`, field `R'w=42`,
+  low-confidence `stud_wall_system`, with no verified exact,
+  lab-fallback, or landed timber exact-row topology match. It also pins
+  generated `wall-clt-local` at lab `Rw=42`, field `R'w=41`,
+  medium-confidence `laminated_single_leaf`, with no verified exact,
+  lab-fallback, or floor CLT source-truth import. Gate B starts with
+  `wall.timber_stud_formula.field`.
 - **Deferred but not cancelled**:
   `project_access_policy_route_integration_v1`. Do not resume
   productization until the selected calculator slice closes or priority
@@ -83,25 +87,29 @@ For every next slice decision:
 
 ## Immediate Execution Order
 
-Gate A of `wall_timber_stud_clt_accuracy_pass_v1` should now proceed in
-this order:
+Gate A of `wall_timber_stud_clt_accuracy_pass_v1` is complete. Gate B
+should now proceed in this order:
 
 1. Re-read
    [SLICE_WALL_TIMBER_STUD_CLT_ACCURACY_PASS_PLAN.md](./SLICE_WALL_TIMBER_STUD_CLT_ACCURACY_PASS_PLAN.md).
-2. Audit generated `wall-timber-stud` and `wall-clt-local` with no
-   runtime change: current values, dynamic family, strategy, support,
-   confidence, warnings, exact/source non-match, and visible card
-   evidence.
-3. Separate timber exact/source opportunities from the live generated
-   timber formula lane. Do not promote direct timber or resilient-bar
-   source rows by adjacency.
-4. Separate CLT wall formula evidence from floor CLT exact/source
-   truth. Do not borrow floor rows as wall exact rows.
-5. Pick the first Gate B target: timber stud, CLT wall, or no-runtime
-   closeout if neither has defensible source/formula support.
-6. Add focused engine tests for the selected runtime contract before
-   changing math; add web tests only if card/warning/support posture
-   changes.
+2. Start Gate B with `wall.timber_stud_formula.field`, not CLT. The
+   reason is executable in
+   `wall-timber-stud-clt-gate-a-audit-contract.test.ts`: timber rank 2
+   precedes CLT rank 3, timber is low-confidence, and the source corpus
+   is nearby but not exact for the live generated stack.
+3. Add a focused engine runtime/source contract for the generated
+   `wall-timber-stud` stack before changing math. It must pin current
+   lab/field values, exact-row non-match, warning/confidence posture,
+   and exact/benchmark precedence.
+4. Only change runtime if the contract names one of:
+   an exact matching source row, a documented formula-owned timber rule,
+   or a bounded family rule with explicit tolerance. Do not retune from
+   adjacency to direct single-board or resilient-bar rows alone.
+5. Add web tests only if visible card status, warning text, support, or
+   output origin changes.
+6. After timber Gate B closes, run the same source/formula discipline on
+   `wall.clt_formula.field`; do not borrow floor CLT rows as wall exact
+   truth.
 7. Run targeted tests, `pnpm calculator:gate:current`, and
    `git diff --check`. Use broad `pnpm check` before Gate C closeout.
 
