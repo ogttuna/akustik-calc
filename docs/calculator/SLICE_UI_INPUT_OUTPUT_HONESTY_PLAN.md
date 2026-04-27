@@ -1,6 +1,6 @@
 # Slice Plan - UI Input / Output Honesty
 
-Status: ACTIVE - Gate B fixes next
+Status: ACTIVE - Gate C closeout next
 
 Selected: 2026-04-27 by
 `post-floor-fallback-low-confidence-gate-c-next-slice-selection-contract.test.ts`
@@ -77,7 +77,13 @@ Gate A blockers for Gate B:
 
 ## Gate B - Implement Honesty Fixes
 
-Gate B is next and should implement only the fixes justified by Gate A.
+Status: implemented in
+`apps/web/lib/calculator-api-validation.ts`,
+`apps/web/app/api/estimate/route.ts`,
+`apps/web/app/api/impact-only/route.ts`, and
+`apps/web/features/workbench/simple-workbench-output-model.ts`.
+
+Gate B implemented only the fixes justified by Gate A.
 
 Allowed changes:
 
@@ -91,6 +97,20 @@ Allowed changes:
   output;
 - preserve existing exact/bound/formula/screening runtime precedence;
 - add UI tests for wall/floor flows, edge edits, and persistence.
+
+Gate B result:
+
+- `/api/estimate` invalid layer-stack requests now include a concrete
+  `nextField` payload and keep raw schema `issues`;
+- `/api/impact-only` source-less requests now include concrete source
+  guidance and keep raw schema `issues`;
+- simple output cards preserve `needs_input` for genuinely missing
+  field-impact continuation inputs;
+- active field-continuation outputs rejected by the engine, such as
+  `L'nT,50`, now stay `Not ready` with `unsupported` status instead of
+  a misleading missing-input label;
+- no acoustic formulas, runtime values, confidence scores, or
+  exact/bound/formula precedence changed.
 
 Disallowed changes:
 
@@ -133,6 +153,21 @@ Latest Gate A validation:
 - `pnpm calculator:gate:current`: engine 97 files / 440 tests, web
   37 files / 174 passed + 18 skipped, build 5/5 with known non-fatal
   `sharp/@img` warnings, whitespace guard clean.
+
+Latest Gate B targeted validation:
+
+- targeted web set: 3 files / 18 tests
+  (`ui-input-output-honesty-gate-a-inventory`,
+  `simple-workbench-output-model`, `calculator-api-validation`).
+
+Latest Gate B full validation:
+
+- `pnpm calculator:gate:current`: engine 97 files / 440 tests, web
+  39 files / 188 passed + 18 skipped, build 5/5 with known non-fatal
+  `sharp/@img` warnings, whitespace guard clean.
+- `pnpm check`: lint green, typecheck green, engine 230 files /
+  1260 tests, web 152 files / 871 passed + 18 skipped, build 5/5 with
+  the same known non-fatal `sharp/@img` warnings.
 
 Minimum after Gate B or Gate C:
 

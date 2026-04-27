@@ -8,10 +8,10 @@ chain read
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
 
 Last reviewed: 2026-04-27
-(`ui_input_output_honesty_v1` Gate A landed no-runtime;
-Gate B honesty fixes are next;
+(`ui_input_output_honesty_v1` Gate B implemented and validated;
+Gate C closeout is next;
 see
-`CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_A_HANDOFF.md`).
+`CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_B_HANDOFF.md`).
 
 ---
 
@@ -43,7 +43,7 @@ For every next slice decision:
 - **Active slice**:
   `ui_input_output_honesty_v1`.
 - **Latest checkpoint**:
-  [CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_A_HANDOFF.md).
+  [CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_B_HANDOFF.md).
 - **Planning surface**:
   [SLICE_UI_INPUT_OUTPUT_HONESTY_PLAN.md](./SLICE_UI_INPUT_OUTPUT_HONESTY_PLAN.md).
 - **Personal-use readiness roadmap**:
@@ -58,9 +58,9 @@ For every next slice decision:
   `dynamic-airborne-correction-guards.ts`; `dynamic-airborne.ts` is now
   1793 lines, below the 2000-line C6 threshold.
 - **Latest broad validation**: 2026-04-27 `pnpm check` is green after
-  floor fallback Gate C no-runtime closeout and UI honesty selection:
-  engine 230 files / 1260 tests, web 150 files / 864 passed + 18 skipped
-  through `tools/dev/run-web-vitest.ts`, build 5/5, with only the known
+  UI/input/output honesty Gate B: engine 230 files / 1260 tests, web
+  152 files / 871 passed + 18 skipped through
+  `tools/dev/run-web-vitest.ts`, build 5/5, with only the known
   non-fatal `sharp/@img` optional-package warnings.
 - **Cartography Gate A result**:
   `packages/engine/src/realistic-layer-combination-coverage-cartography.test.ts`
@@ -98,6 +98,15 @@ For every next slice decision:
   outputs. It found no defended-looking unsupported live/bound value.
   Gate B is now limited to API next-field message mapping and simple
   output-card unsupported-vs-missing-input label precedence.
+- **UI/input/output honesty Gate B result**:
+  `apps/web/lib/calculator-api-validation.ts` now gives
+  `/api/estimate` and `/api/impact-only` concrete `nextField` guidance
+  while preserving raw schema `issues`. `simple-workbench-output-model`
+  keeps genuinely missing field-impact inputs as `needs_input`, but
+  marks engine-rejected current-path field-impact companions such as
+  active-continuation `L'nT,50` as `unsupported` and non-numeric. No
+  acoustic runtime values, formulas, confidence scores, or support
+  precedence changed.
 - **Heavy-core/concrete closeout**: Gate B closed no-runtime for
   `wall.concrete_heavy_core_screening.field`. The no-runtime
   source/formula audit found no exact catalog row, no direct external
@@ -134,22 +143,15 @@ For every next slice decision:
 
 1. Re-read
    [SLICE_UI_INPUT_OUTPUT_HONESTY_PLAN.md](./SLICE_UI_INPUT_OUTPUT_HONESTY_PLAN.md).
-2. Start Gate B with a small shared validation-message mapper for
-   `/api/estimate` and `/api/impact-only`, preserving structured issue
-   detail while exposing concrete next-field guidance.
-3. Fix simple output-card precedence so an output already present in
-   `unsupportedTargetOutputs` prefers a clear unsupported/current-path
-   label over a generic missing-input label, while keeping genuine
-   missing-field cards as `needs_input`.
-4. Add focused tests for the changed API payloads and card labels.
-5. Keep formulas, runtime values, exact/bound/formula precedence, and
+2. Close Gate C with a post-contract/checkpoint
+   that states whether the calculator readiness chain is complete or
+   names the next calculator-only blocker.
+3. Keep formulas, runtime values, exact/bound/formula precedence, and
    confidence scores unchanged.
-6. Keep `GDMTXA04A`, `C11c`, raw bare open-box/open-web impact,
+4. Keep `GDMTXA04A`, `C11c`, raw bare open-box/open-web impact,
    heavy-core concrete, wall selector, timber-stud, and CLT wall
    follow-ups closed unless new evidence deliberately selects them.
-7. Run targeted Gate B contracts, `pnpm calculator:gate:current`, and
-   `git diff --check`; run broad `pnpm check` before closing the slice
-   or after user-visible behavior changes.
+5. Keep `git diff --check` clean.
 
 ## Personal-Use Readiness Chain
 
@@ -159,7 +161,7 @@ private day-to-day use:
 1. Floor fallback / low-confidence cleanup.
    - closed no-runtime at Gate C.
 2. UI / input / output honesty pass.
-   - Gate A landed no-runtime; Gate B fixes are next.
+   - Gate B implemented and validated; Gate C closeout is next.
 
 Do not resume productization ahead of this chain unless priority
 explicitly changes.
@@ -168,7 +170,7 @@ explicitly changes.
 
 See [CURRENT_STATE.md](./CURRENT_STATE.md) "Latest Closed Slices" table.
 `floor_fallback_low_confidence_cleanup_v1` is now closed and
-`ui_input_output_honesty_v1` is active with Gate B honesty fixes next.
+`ui_input_output_honesty_v1` is active with Gate C closeout next.
 
 ## Deferred Follow-Up Tracks
 

@@ -235,7 +235,7 @@ const RAW_CONCRETE_BASELINE_EXPECTED: RouteSnapshot = {
     DeltaLw: { status: "unsupported", value: "Not ready" },
     "L'n,w": { status: "live", value: "77.1 dB" },
     "L'nT,w": { status: "live", value: "74.3 dB" },
-    "L'nT,50": { status: "needs_input", value: "Not ready" },
+    "L'nT,50": { status: "unsupported", value: "Not ready" },
     Ctr: { status: "live", value: "-5.9 dB" }
   },
   origin: {

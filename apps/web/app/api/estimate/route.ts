@@ -3,6 +3,7 @@ import { EstimateRequestSchema } from "@dynecho/shared";
 import { NextResponse } from "next/server";
 
 import { getAuthState } from "@/lib/auth";
+import { buildCalculatorValidationErrorPayload } from "@/lib/calculator-api-validation";
 
 export async function POST(request: Request) {
   const authState = await getAuthState();
@@ -22,11 +23,10 @@ export async function POST(request: Request) {
 
     if (!parsed.success) {
       return NextResponse.json(
-        {
-          ok: false,
-          error: "Invalid estimate payload.",
-          issues: parsed.error.issues
-        },
+        buildCalculatorValidationErrorPayload({
+          issues: parsed.error.issues,
+          route: "estimate"
+        }),
         { status: 400 }
       );
     }

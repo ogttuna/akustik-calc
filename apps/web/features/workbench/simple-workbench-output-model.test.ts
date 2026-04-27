@@ -1,6 +1,7 @@
 import type { AssemblyCalculation } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
+import { evaluateScenario } from "./scenario-analysis";
 import { buildOutputCard } from "./simple-workbench-output-model";
 
 function buildFixture(overrides: Partial<AssemblyCalculation> = {}): AssemblyCalculation {
@@ -58,6 +59,15 @@ function buildReinforcedConcreteLowConfidenceFixture(): AssemblyCalculation {
     unsupportedTargetOutputs: []
   });
 }
+
+const FLOOR_FIELD_IMPACT_ROWS = [
+  {
+    floorRole: "base_structure",
+    id: "field-impact-base",
+    materialId: "concrete",
+    thicknessMm: "150"
+  }
+] as const;
 
 describe("simple workbench output model", () => {
   it("prefers floor-lane companion Rw over the live airborne estimate on floor studies", () => {
@@ -280,6 +290,58 @@ describe("simple workbench output model", () => {
     expect(card).toEqual(
       expect.objectContaining({
         label: "Rw",
+        status: "unsupported",
+        value: "Not ready"
+      })
+    );
+  });
+
+  it("keeps missing field-impact inputs parked but marks current-path rejected field companions unsupported", () => {
+    const missingFieldInput = evaluateScenario({
+      id: "field-impact-missing-input",
+      name: "Field impact missing input",
+      rows: FLOOR_FIELD_IMPACT_ROWS,
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: ["Ln,w", "L'nT,50"]
+    });
+    const activeFieldContinuation = evaluateScenario({
+      id: "field-impact-active-continuation",
+      impactFieldContext: {
+        fieldKDb: 3,
+        receivingRoomVolumeM3: 60
+      },
+      name: "Field impact active continuation",
+      rows: FLOOR_FIELD_IMPACT_ROWS,
+      source: "current",
+      studyMode: "floor",
+      targetOutputs: ["Ln,w", "L'n,w", "L'nT,w", "L'nT,50"]
+    });
+
+    const missingCard = buildOutputCard({
+      output: "L'nT,50",
+      result: missingFieldInput.result,
+      studyMode: "floor"
+    });
+    const unsupportedCard = buildOutputCard({
+      output: "L'nT,50",
+      result: activeFieldContinuation.result,
+      studyMode: "floor"
+    });
+
+    expect(missingFieldInput.result?.unsupportedTargetOutputs).toContain("L'nT,50");
+    expect(missingCard).toEqual(
+      expect.objectContaining({
+        detail: expect.stringContaining("Need field K together with receiving-room volume"),
+        status: "needs_input",
+        value: "Not ready"
+      })
+    );
+    expect(activeFieldContinuation.result?.supportedTargetOutputs).toEqual(["Ln,w", "L'n,w", "L'nT,w"]);
+    expect(activeFieldContinuation.result?.unsupportedTargetOutputs).toEqual(["L'nT,50"]);
+    expect(unsupportedCard).toEqual(
+      expect.objectContaining({
+        detail: expect.stringContaining("current path"),
         status: "unsupported",
         value: "Not ready"
       })

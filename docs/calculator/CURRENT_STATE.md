@@ -17,9 +17,9 @@ Last revalidation cycle: `2026-04-27`
 (`realistic_layer_combination_coverage_cartography_v1` Gate A landed;
 heavy-core/concrete Gate B closed no-runtime; timber stud + CLT wall
 accuracy pass Gate C closed no-runtime; floor fallback Gate C closed
-no-runtime; `ui_input_output_honesty_v1` Gate A landed no-runtime;
-broad validation is green; latest checkpoint:
-[CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_A_HANDOFF.md)).
+no-runtime; `ui_input_output_honesty_v1` Gate B implemented; broad
+Gate B validation is green; latest checkpoint:
+[CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-27_UI_INPUT_OUTPUT_HONESTY_GATE_B_HANDOFF.md)).
 Step 8 closed the calculator runtime audit: `MASTER_PLAN.md` §3/§8
 was reconciled to implementation reality, `coverage-grid-consistency.test.ts`
 now maps the grid and C1-C6 signals to executable evidence, the
@@ -44,8 +44,8 @@ hardening, and the pure team-access policy model.
   under the Vitest worker timeout; Gate B and Gate C then added focused
   planning/value contract files).
 - **Web broad suite**: latest broad `pnpm check` on 2026-04-27 kept
-  all 150 / 150 files in scope through `tools/dev/run-web-vitest.ts`:
-  864 / 864 tests green + 18 discovery helpers intentionally skipped.
+  all 152 / 152 files in scope through `tools/dev/run-web-vitest.ts`:
+  871 / 871 tests green + 18 discovery helpers intentionally skipped.
   The runner isolates six long route-scan files and batches the
   remaining 144 files, preserving coverage while avoiding Vitest worker
   RPC timeout failures on the heavy family-boundary scans.
@@ -57,8 +57,7 @@ hardening, and the pure team-access policy model.
   input contract so it asserts parse behavior instead of calling
   `.keyof()` on the exported shared `AirborneContextSchema` `ZodType`.
 - **Broad `pnpm check`**: lint + typecheck + tests + build green on the
-  latest broad run after floor fallback Gate C no-runtime closeout and
-  UI honesty selection; build still emits
+  latest broad run after UI/input/output honesty Gate B; build still emits
   the known non-fatal optional `sharp/@img` warnings through
   `@turbodocx/html-to-docx`.
 - **Focused calculator gate** (`pnpm calculator:gate:current`):
@@ -131,10 +130,13 @@ hardening, and the pure team-access policy model.
   for the no-runtime Gate C closeout and UI honesty next-slice
   selection, plus
   `ui-input-output-honesty-gate-a-inventory.test.ts` for the active
-  UI honesty Gate A inventory.
-  Latest focused gate run after the UI honesty Gate A contract:
+  UI honesty Gate A inventory, plus
+  `simple-workbench-output-model.test.ts` and
+  `calculator-api-validation.test.ts` for the Gate B API/card honesty
+  fixes.
+  Latest focused gate run after Gate B edits:
   97 engine files / 440 tests,
-  37 web files / 174 passed +
+  39 web files / 188 passed +
   18 skipped, build 5/5 tasks, whitespace guard clean.
 
 ## Active Slice
@@ -225,9 +227,15 @@ It pins structured schema issue paths for missing estimate and
 impact-only inputs, field airborne geometry vs room-volume blockers, and
 non-numeric handling for explicitly unsupported requested outputs. It
 found no defended-looking unsupported live/bound value. The next bounded
-implementation step is Gate B: normalize API validation errors into
-next-field user guidance and fix the simple output-card
-unsupported-vs-missing-input label precedence.
+implementation step was Gate B. Gate B is now implemented:
+`apps/web/lib/calculator-api-validation.ts` normalizes invalid calculator
+API payloads into concrete `nextField` guidance while preserving raw
+schema `issues`, and `simple-workbench-output-model.ts` now separates
+genuine missing field-impact inputs from engine-rejected current-path
+companions. Active field-continuation `L'nT,50` remains non-numeric but
+now displays as `unsupported` rather than `needs_input`. The next bounded
+step is Gate C closeout; focused current gate and broad `pnpm check` are
+green for the Gate B behavior.
 
 Personal-use readiness is now explicitly tracked in
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).

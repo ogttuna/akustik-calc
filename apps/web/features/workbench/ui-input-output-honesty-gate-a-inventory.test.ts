@@ -32,7 +32,7 @@ const GATE_A_FINDINGS = {
     "explicitly_unsupported_requested_outputs_do_not_render_live_or_bound_numbers",
     "existing_card_matrices_cover_output_support_parity_layer_reorder_many_layer_and_save_load_surfaces"
   ],
-  needsCopyUiWiring: [
+  gateBTargets: [
     "api_route_top_level_errors_remain_generic_even_though_schema_issues_are_structured",
     "explicit_unsupported_field_impact_cards_should_prefer_unsupported_label_over_needs_input_when_engine_already_rejected_output"
   ],
@@ -128,7 +128,7 @@ describe("UI input/output honesty Gate A inventory", () => {
       ]);
     }
 
-    expect(GATE_A_FINDINGS.needsCopyUiWiring).toContain(
+    expect(GATE_A_FINDINGS.gateBTargets).toContain(
       "api_route_top_level_errors_remain_generic_even_though_schema_issues_are_structured"
     );
   });
@@ -206,7 +206,7 @@ describe("UI input/output honesty Gate A inventory", () => {
     );
   });
 
-  it("keeps explicitly unsupported requested outputs non-numeric and identifies the Gate B label gap", () => {
+  it("keeps explicitly unsupported requested outputs non-numeric while missing field continuation remains needs-input", () => {
     const result = buildUnsupportedFieldImpactResult();
     const card = buildOutputCard({
       output: "L'nT,50",
@@ -230,7 +230,7 @@ describe("UI input/output honesty Gate A inventory", () => {
         label: "Unavailable on current path"
       })
     );
-    expect(GATE_A_FINDINGS.needsCopyUiWiring).toContain(
+    expect(GATE_A_FINDINGS.gateBTargets).toContain(
       "explicit_unsupported_field_impact_cards_should_prefer_unsupported_label_over_needs_input_when_engine_already_rejected_output"
     );
   });

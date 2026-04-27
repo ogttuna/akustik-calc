@@ -348,7 +348,7 @@ const CASES: readonly RouteCase[] = [
           DeltaLw: { status: "unsupported", value: "Not ready" },
           "L'n,w": { status: "live", value: "64 dB" },
           "L'nT,w": { status: "live", value: "61.2 dB" },
-          "L'nT,50": { status: "needs_input", value: "Not ready" },
+          "L'nT,50": { status: "unsupported", value: "Not ready" },
           Ctr: { status: "live", value: "-7 dB" }
         }
       }
@@ -512,7 +512,7 @@ const CASES: readonly RouteCase[] = [
           DeltaLw: { status: "unsupported", value: "Not ready" },
           "L'n,w": { status: "live", value: "53 dB" },
           "L'nT,w": { status: "live", value: "50.2 dB" },
-          "L'nT,50": { status: "needs_input", value: "Not ready" },
+          "L'nT,50": { status: "unsupported", value: "Not ready" },
           Ctr: { status: "live", value: "-8.9 dB" }
         }
       }
@@ -594,7 +594,7 @@ const CASES: readonly RouteCase[] = [
           DeltaLw: { status: "unsupported", value: "Not ready" },
           "L'n,w": { status: "live", value: "75.7 dB" },
           "L'nT,w": { status: "live", value: "72.9 dB" },
-          "L'nT,50": { status: "needs_input", value: "Not ready" },
+          "L'nT,50": { status: "unsupported", value: "Not ready" },
           Ctr: { status: "live", value: "-5.4 dB" }
         }
       }

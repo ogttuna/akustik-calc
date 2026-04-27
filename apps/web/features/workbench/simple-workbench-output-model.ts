@@ -42,6 +42,56 @@ function isExplicitlyUnsupportedOutput(
   return Boolean(result?.unsupportedTargetOutputs?.includes(output));
 }
 
+function isExplicitUnsupportedMissingInput(input: {
+  output: RequestedOutputId;
+  result: AssemblyCalculation | null;
+  studyMode: StudyMode;
+}): boolean {
+  const { output, result, studyMode } = input;
+
+  if (FIELD_AIRBORNE_OUTPUTS.has(output)) {
+    return getFieldAirborneBlockingRequirement(output, result) !== null;
+  }
+
+  if (!FIELD_IMPACT_OUTPUTS.has(output) || studyMode !== "floor") {
+    return false;
+  }
+
+  const trace = result?.dynamicImpactTrace;
+
+  if (!trace?.hasFieldContext || trace.fieldContinuation === "none") {
+    return true;
+  }
+
+  if (output === "L'n,w") {
+    return !trace.fieldOutputsActive;
+  }
+
+  if (output === "L'nT,w" || output === "L'nT,50") {
+    return !trace.standardizedFieldActive;
+  }
+
+  return false;
+}
+
+function buildExplicitUnsupportedOutputDetail(input: {
+  output: RequestedOutputId;
+  result: AssemblyCalculation | null;
+  studyMode: StudyMode;
+}): string {
+  const { output, result, studyMode } = input;
+
+  if (FIELD_IMPACT_OUTPUTS.has(output) && studyMode === "floor") {
+    if (output === "LnT,A") {
+      return "Needs an exact Dutch field-band source. The simple panel does not fabricate it.";
+    }
+
+    return `${REQUESTED_OUTPUT_SUPPORT_NOTES[output]} DynEcho is keeping this requested field-impact output explicit on the current path instead of inventing a number from nearby live values.`;
+  }
+
+  return buildUnavailableOutputDetail({ output, result, studyMode });
+}
+
 export function buildUnavailableOutputDetail(input: {
   output: RequestedOutputId;
   result: AssemblyCalculation | null;
@@ -141,11 +191,19 @@ export function buildOutputCard(input: {
     isReinforcedConcreteLowConfidenceFloorLane(result);
 
   if (isExplicitlyUnsupportedOutput(result, output)) {
+    const missingInput = isExplicitUnsupportedMissingInput({
+      output,
+      result: result ?? null,
+      studyMode
+    });
+
     return {
-      detail: buildUnavailableOutputDetail({ output, result: result ?? null, studyMode }),
+      detail: missingInput
+        ? buildUnavailableOutputDetail({ output, result: result ?? null, studyMode })
+        : buildExplicitUnsupportedOutputDetail({ output, result: result ?? null, studyMode }),
       label: REQUESTED_OUTPUT_LABELS[output],
       output,
-      status: isRouteBlockedOutput({ output, result: result ?? null, studyMode }) ? "needs_input" : "unsupported",
+      status: missingInput ? "needs_input" : "unsupported",
       value: "Not ready"
     };
   }

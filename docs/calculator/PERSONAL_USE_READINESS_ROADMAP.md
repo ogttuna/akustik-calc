@@ -153,7 +153,8 @@ Required next:
 
 ### 4. UI / Input / Output Honesty Pass
 
-Status: active slice; Gate A landed no-runtime, Gate B fixes next.
+Status: active slice; Gate B implemented and validated, Gate C closeout
+next.
 
 This pass should make the existing engine honesty visible and ergonomic
 for private use. It does not need full product polish, but it must avoid
@@ -171,19 +172,24 @@ Gate A result:
 - explicitly unsupported outputs stay non-numeric;
 - no defended-looking unsupported live/bound value was found.
 
-Gate B required before private-use readiness:
+Gate B result:
 
-- missing required fields should clearly identify what to enter next in
-  API/workbench-facing messages;
-- API route payloads should keep structured issue detail while exposing
-  user-facing next-field guidance;
-- simple output cards should prefer unsupported/current-path labels when
-  the engine already rejected a requested output;
+- missing estimate layers and source-less impact-only requests now
+  return concrete `nextField` guidance while preserving raw schema
+  issue detail;
+- simple output cards now prefer unsupported/current-path labels when
+  the engine already rejected a requested field-impact output and field
+  continuation is active;
+- genuinely missing field-impact inputs still show `needs_input`;
 - exact, benchmark, formula, family, screening, bound, unsupported, and
-  fail-closed labels should stay visible after layer edits, reorder,
-  many-layer stacks, and save/load;
-- focused web tests should cover the changed wall/floor input and
-  visible support states.
+  fail-closed labels remain covered by existing focused matrices;
+- no acoustic formula, runtime value, confidence score, or precedence
+  changed.
+
+Gate C required before private-use readiness decision:
+
+- update the readiness roadmap to either close the calculator readiness
+  chain or name the next calculator-only blocker.
 
 Start from
 [SLICE_UI_INPUT_OUTPUT_HONESTY_PLAN.md](./SLICE_UI_INPUT_OUTPUT_HONESTY_PLAN.md).
@@ -191,14 +197,14 @@ Start from
 ## Current Order
 
 Current validation baseline: 2026-04-27 `pnpm check` is green after
-floor fallback Gate C no-runtime closeout and UI honesty selection.
-Engine broad is 230 files / 1260 tests. Web broad keeps 150 files in
-scope through `tools/dev/run-web-vitest.ts` with 864 passed + 18
-skipped. Build is 5/5 with the known non-fatal `sharp/@img`
-optional-package warnings. Focused current gate after UI honesty Gate A
-is 97 engine files / 440 tests, 37 web files / 174 passed plus 18
-skipped, build 5/5. The targeted UI honesty Gate A contract is 1 file /
-4 tests green.
+UI/input/output honesty Gate B. Engine broad is 230 files / 1260 tests.
+Web broad keeps 152 files in scope through
+`tools/dev/run-web-vitest.ts` with 871 passed + 18 skipped. Build is
+5/5 with the known non-fatal `sharp/@img` optional-package warnings.
+Focused current gate after UI honesty Gate B is 97 engine files /
+440 tests, 39 web files / 188 passed plus 18 skipped, build 5/5. The
+targeted UI honesty Gate A contract is 1 file / 4 tests green. The
+targeted Gate B web set is 3 files / 18 tests green.
 
 Do these in order unless new evidence changes the ranking:
 

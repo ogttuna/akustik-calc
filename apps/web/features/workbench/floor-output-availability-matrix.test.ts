@@ -150,7 +150,7 @@ describe("floor output availability matrix", () => {
     expect(buildingCards.get("L'n,w")?.value).toBe("53 dB");
     expect(buildingCards.get("L'nT,w")?.status).toBe("live");
     expect(buildingCards.get("L'nT,w")?.value).toBe("50.2 dB");
-    expect(buildingCards.get("L'nT,50")?.status).toBe("needs_input");
+    expect(buildingCards.get("L'nT,50")?.status).toBe("unsupported");
   });
 
   it("keeps room-to-room field routes honest about low-frequency companions across exact, bound, and fallback floors", () => {
@@ -320,7 +320,7 @@ describe("floor output availability matrix", () => {
     );
     expect(cards.get("L'nT,50")).toEqual(
       expect.objectContaining({
-        status: "needs_input",
+        status: "unsupported",
         value: "Not ready"
       })
     );
@@ -391,7 +391,7 @@ describe("floor output availability matrix", () => {
     );
     expect(familyCards.get("L'nT,50")).toEqual(
       expect.objectContaining({
-        status: "needs_input",
+        status: "unsupported",
         value: "Not ready"
       })
     );
