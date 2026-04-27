@@ -150,6 +150,7 @@ async function main() {
         "src/post-proposal-report-polish-next-slice-selection-contract.test.ts",
         "src/calculator-source-gap-revalidation-gate-a-contract.test.ts",
         "src/wall-coverage-expansion-planning-v2-gate-a-contract.test.ts",
+        "src/wall-single-leaf-mass-law-calibration-gate-a-contract.test.ts",
         "--maxWorkers=1"
       ]
     },
