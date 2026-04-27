@@ -8,10 +8,10 @@ chain read
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
 
 Last reviewed: 2026-04-27
-(`wall_single_leaf_mass_law_calibration_v1` Gate B closed no-runtime;
-Gate C closeout / next-slice selection is next;
+(`wall_single_leaf_mass_law_calibration_v1` Gate C closed no-runtime;
+`wall_double_leaf_sharp_davy_scoping_v1` selected;
 see
-`SLICE_WALL_SINGLE_LEAF_MASS_LAW_CALIBRATION_PLAN.md`).
+`SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md`).
 
 ---
 
@@ -41,11 +41,11 @@ For every next slice decision:
 ## Now
 
 - **Active slice**:
-  `wall_single_leaf_mass_law_calibration_v1`.
+  `wall_double_leaf_sharp_davy_scoping_v1`.
 - **Latest checkpoint**:
-  [CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_B_HANDOFF.md).
+  [CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_C_CLOSEOUT_HANDOFF.md).
 - **Planning surface**:
-  [SLICE_WALL_SINGLE_LEAF_MASS_LAW_CALIBRATION_PLAN.md](./SLICE_WALL_SINGLE_LEAF_MASS_LAW_CALIBRATION_PLAN.md).
+  [SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md](./SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md).
 - **Personal-use readiness roadmap**:
   [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
   is closed for the current private/internal-use bar. Heavy-core/concrete
@@ -60,14 +60,18 @@ For every next slice decision:
   source-blocked, and selects
   `wall_single_leaf_mass_law_calibration_v1` as the next no-runtime
   source/formula contract slice.
-- **Just landed in active slice**:
-  `wall_single_leaf_mass_law_calibration_v1` Gate B. The no-runtime
+- **Just closed**: `wall_single_leaf_mass_law_calibration_v1` Gate C.
+  Gate A and Gate B changed no runtime math. The no-runtime
   bounded candidate matrix pins current field values for 150 mm
   concrete (`R'w=53`), 150 mm solid brick (`R'w=51`), and 150 mm
   generic AAC (`R'w=38`), plus 100/150/200 mm monotonic sensitivity.
   It blocks runtime movement because none of the generic stacks has a
-  stack-specific source row or bounded tolerance pack. Gate C closeout
-  and next-slice selection is next; no value movement has landed.
+  stack-specific source row or bounded tolerance pack.
+  `post-wall-single-leaf-mass-law-calibration-v1-next-slice-selection-contract.test.ts`
+  closes the slice no-runtime and selects
+  `wall_double_leaf_sharp_davy_scoping_v1` because double-leaf,
+  stud/double-stud, and cavity walls are the next common wall coverage
+  gap in the current roadmap.
 - **Previously closed**: `proposal_report_polish_v1`.
   Simple PDF/DOCX exports now include output coverage posture,
   generated proposal documents preserve real floor/wall workbench
@@ -243,22 +247,34 @@ For every next slice decision:
   `pnpm calculator:gate:current` is green after adding the Gate B
   contract: engine 103 files / 470 tests, web 43 files / 211 passed +
   18 skipped, build 5/5 with the known non-fatal `sharp/@img` warnings.
+- **Wall single-leaf mass-law calibration Gate C**:
+  `packages/engine/src/post-wall-single-leaf-mass-law-calibration-v1-next-slice-selection-contract.test.ts`
+  closes the slice no-runtime and selects
+  `wall_double_leaf_sharp_davy_scoping_v1`. It keeps the single-leaf
+  formula-owned values unchanged, preserves exact/catalog/lab-fallback
+  precedence, and requires a no-runtime Sharp/Davy/double-leaf/stud
+  scoping Gate A before any double-leaf runtime movement.
+  `pnpm calculator:gate:current` is green after adding the Gate C
+  contract: engine 104 files / 475 tests, web 43 files / 211 passed +
+  18 skipped, build 5/5 with the known non-fatal `sharp/@img` warnings.
 
 ## Immediate Execution Order
 
-`wall_single_leaf_mass_law_calibration_v1` should now proceed in this
+`wall_double_leaf_sharp_davy_scoping_v1` should now proceed in this
 order:
 
 1. Re-read
-   [SLICE_WALL_SINGLE_LEAF_MASS_LAW_CALIBRATION_PLAN.md](./SLICE_WALL_SINGLE_LEAF_MASS_LAW_CALIBRATION_PLAN.md)
+   [SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md](./SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md)
    and
-   [CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_B_HANDOFF.md).
+   [CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_C_CLOSEOUT_HANDOFF.md).
 2. Run `pnpm calculator:gate:current` as the baseline.
-3. Add Gate C no-runtime closeout / next-slice selection contract.
-4. Confirm that Gate A and Gate B changed no runtime math and that
-   exact/catalog/lab-fallback rows still outrank the formula lane.
-5. Select the next calculator candidate from the current roadmap instead
-   of retuning generic single-leaf values by assumption.
+3. Add Gate A no-runtime scoping contract for double-leaf, stud,
+   double-stud, and cavity wall applicability.
+4. Pin current representative outputs, trace families, Sharp/Davy/
+   framed-wall ownership, and source/tolerance blockers without runtime
+   movement.
+5. Select a bounded Gate B candidate matrix only if Gate A proves a
+   source-backed, benchmark-backed, bounded, or formula-owned corridor.
 
 ## Personal-Use Readiness Chain
 
@@ -278,8 +294,8 @@ is deferred.
 ## Latest Closed Slices
 
 See [CURRENT_STATE.md](./CURRENT_STATE.md) "Latest Closed Slices" table.
-`wall_single_leaf_mass_law_calibration_v1` Gate B is now closed
-no-runtime and Gate C closeout is active inside the same slice.
+`wall_single_leaf_mass_law_calibration_v1` is now closed no-runtime at
+Gate C and `wall_double_leaf_sharp_davy_scoping_v1` is active.
 
 ## Deferred Follow-Up Tracks
 

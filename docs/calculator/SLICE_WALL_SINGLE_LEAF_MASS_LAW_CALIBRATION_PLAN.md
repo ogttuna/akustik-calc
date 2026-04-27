@@ -1,8 +1,8 @@
 # Slice Plan - Wall Single-Leaf Mass-Law Calibration v1
 
-Status: GATE B LANDED NO-RUNTIME (opened 2026-04-27 after
-`wall_coverage_expansion_planning_v2` Gate A; next action is Gate C
-no-runtime closeout and next-slice selection)
+Status: CLOSED NO-RUNTIME AT GATE C (opened 2026-04-27 after
+`wall_coverage_expansion_planning_v2` Gate A; closed 2026-04-27 by
+selecting `wall_double_leaf_sharp_davy_scoping_v1`)
 
 ## Objective
 
@@ -147,8 +147,9 @@ adjustment is defensible. Any later value movement must be paired with:
 
 ## Gate C - Closeout
 
-Gate C should close this slice no-runtime and select the next
-calculator candidate. It must record that:
+Gate C closed this slice no-runtime and selected
+`wall_double_leaf_sharp_davy_scoping_v1` as the next calculator
+candidate. It records that:
 
 - Gate A and Gate B changed no runtime math;
 - current generic single-leaf values remain formula-owned estimates,
@@ -158,25 +159,27 @@ calculator candidate. It must record that:
   or bounded tolerance pack plus route-card coverage if visible outputs
   change.
 
+The closeout contract is
+`packages/engine/src/post-wall-single-leaf-mass-law-calibration-v1-next-slice-selection-contract.test.ts`.
+The next active planning surface is
+[SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md](./SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md).
+
 ## Completion Criteria
 
 - Gate A source/formula contract is green and included in
   `pnpm calculator:gate:current`.
 - Gate B bounded runtime-candidate matrix is green and included in
   `pnpm calculator:gate:current`.
-- Runtime behavior stays unchanged through Gate C unless new source
-  evidence deliberately reopens this lane before closeout.
+- Gate C closeout / next-slice selection contract is green and included
+  in `pnpm calculator:gate:current`.
+- Runtime behavior stayed unchanged through Gate C.
 - `NEXT_IMPLEMENTATION_PLAN.md`, `CURRENT_STATE.md`, `AGENTS.md`, this
   plan, and the latest checkpoint agree on the active selected slice.
 - `pnpm calculator:gate:current` and `git diff --check` are green.
 
 ## Immediate Execution Order
 
-1. Run `pnpm calculator:gate:current` as the baseline.
-2. Read
-   `packages/engine/src/wall-single-leaf-mass-law-calibration-gate-b-contract.test.ts`
-   and this plan.
-3. Add Gate C no-runtime closeout / next-slice selection contract.
-4. Keep runtime values, formulas, output support, confidence, evidence
-   text, and web route cards unchanged unless new source evidence is
-   deliberately introduced before closeout.
+This slice is closed. Resume active work from:
+
+1. [CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_C_CLOSEOUT_HANDOFF.md)
+2. [SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md](./SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md)

@@ -1,7 +1,7 @@
 # Dynamic Calculator Source Gap Ledger
 
-Last reviewed: 2026-04-27 (`calculator_source_gap_revalidation_v1`
-Gate A closed; `wall_coverage_expansion_planning_v2` selected;
+Last reviewed: 2026-04-27 (`wall_single_leaf_mass_law_calibration_v1`
+Gate C closed; `wall_double_leaf_sharp_davy_scoping_v1` selected;
 source-gap content remains floor-dominant historical context)
 
 Purpose:
@@ -49,7 +49,13 @@ Important scope note:
   confirmed the blocked-source posture below and selected
   `wall_coverage_expansion_planning_v2` because no blocked floor/source
   candidate is currently runtime-eligible and wall coverage remains the
-  higher-value scope/accuracy planning gap.
+  higher-value scope/accuracy planning gap. Wall coverage planning then
+  selected `wall_single_leaf_mass_law_calibration_v1`; that slice
+  closed no-runtime at Gate C because generic single-leaf runtime
+  movement needs stack-specific source rows or bounded tolerance packs.
+  The active wall work is now
+  `wall_double_leaf_sharp_davy_scoping_v1`, which has its own plan and
+  must not overload this floor-dominant ledger.
 - `good_calculator_final_audit_v1` closed without reopening any
   source-gated calculator family. `wall_formula_family_widening_v1`
   then also closed without reopening any blocked family: it clarified

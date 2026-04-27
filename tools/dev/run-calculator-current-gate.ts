@@ -152,6 +152,7 @@ async function main() {
         "src/wall-coverage-expansion-planning-v2-gate-a-contract.test.ts",
         "src/wall-single-leaf-mass-law-calibration-gate-a-contract.test.ts",
         "src/wall-single-leaf-mass-law-calibration-gate-b-contract.test.ts",
+        "src/post-wall-single-leaf-mass-law-calibration-v1-next-slice-selection-contract.test.ts",
         "--maxWorkers=1"
       ]
     },

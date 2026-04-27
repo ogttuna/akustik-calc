@@ -2,7 +2,8 @@
 
 Last reviewed: 2026-04-27
 (`wall_coverage_expansion_planning_v2` Gate A closed no-runtime;
-`wall_single_leaf_mass_law_calibration_v1` selected)
+`wall_single_leaf_mass_law_calibration_v1` Gate C closed no-runtime;
+`wall_double_leaf_sharp_davy_scoping_v1` selected)
 Iteration: 2 (rewritten with implementation state grid, accuracy
 preservation contract, ROI table, quantitative completion targets)
 
@@ -331,7 +332,7 @@ signal — the test that must be green to call it done.
 | 6 | `wall_formula_family_widening_v1` ✅ honest closeout 2026-04-23 | Gate A named screening vs dynamic timber surfaces, Gate B proved the live route already uses the dynamic lane, and Gate C closed no-runtime because current official timber rows are broad corridor evidence, not a precise trim target. Follow-up selected: `wall_timber_lightweight_source_corpus_v1`. |
 | 7 | `mixed_floor_wall_edge_case_hardening_v1` ✅ landed 2026-04-22 | Engine wall surface consolidated from 3 → 7 cases (6/6 preset parity); 8-overlay cross-mode torture matrix green (32 assertions on the new cases); two real engine bugs caught + fixed (F1 masonry calibrator coalesce, F2 catalog-match coalesce); F3 deferred + F4 test-refined; post-contract pins closure |
 | 7b | `wall_corridor_surface_value_pinning_v1` ✅ landed 2026-04-22 | 6 wall selector corridor labels × 3 contexts × 9 outputs VALUE-pinned (`dynamic-airborne-wall-selector-value-pins.test.ts` — 198 drift guards + 5 cross-cell invariant tests). Stud-context plumbing hardened (`lab_double_stud` stays `double_stud_system` across lab/field/building via stud-aware FIELD + BUILDING variants). No engine changes required — every cell landed inside ISO 717-1 plausibility window. C2 + C3 corridor surface flips 🟡 → ✅. |
-| 8 | `good_calculator_final_audit_v1` ✅ landed 2026-04-23 | `coverage-grid-consistency.test.ts` maps §3 rows to executable evidence, verifies C1-C6 with explicit C3/C5/C6 honesty, removes stale wall hostile/field drift, updates the focused gate, and opens `POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md`. Productization has since closed `server_backed_project_storage_v1`, `project_access_authorization_v1`, `auth_session_hardening_v1`, `team_access_model_v1`, `project_access_policy_route_integration_v1`, and `proposal_report_polish_v1`; after broad green revalidation the calculator re-entry slices through `all_caller_invalid_thickness_guard_v1` closed no-runtime, then `dynamic_airborne_split_refactor_v2` closed Gate C and moved C6 out of partial. The private/internal-use calculator chain in `PERSONAL_USE_READINESS_ROADMAP.md` then closed through realistic combination cartography, heavy-core/concrete, timber stud + CLT, floor fallback, and UI/input/output honesty Gate C. `calculator_source_gap_revalidation_v1` Gate A and `wall_coverage_expansion_planning_v2` Gate A closed no-runtime and selected `wall_single_leaf_mass_law_calibration_v1`, which must prove source/formula basis before any runtime movement. |
+| 8 | `good_calculator_final_audit_v1` ✅ landed 2026-04-23 | `coverage-grid-consistency.test.ts` maps §3 rows to executable evidence, verifies C1-C6 with explicit C3/C5/C6 honesty, removes stale wall hostile/field drift, updates the focused gate, and opens `POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md`. Productization has since closed `server_backed_project_storage_v1`, `project_access_authorization_v1`, `auth_session_hardening_v1`, `team_access_model_v1`, `project_access_policy_route_integration_v1`, and `proposal_report_polish_v1`; after broad green revalidation the calculator re-entry slices through `all_caller_invalid_thickness_guard_v1` closed no-runtime, then `dynamic_airborne_split_refactor_v2` closed Gate C and moved C6 out of partial. The private/internal-use calculator chain in `PERSONAL_USE_READINESS_ROADMAP.md` then closed through realistic combination cartography, heavy-core/concrete, timber stud + CLT, floor fallback, and UI/input/output honesty Gate C. `calculator_source_gap_revalidation_v1` Gate A and `wall_coverage_expansion_planning_v2` Gate A closed no-runtime and selected `wall_single_leaf_mass_law_calibration_v1`, which later closed no-runtime at Gate C; `wall_double_leaf_sharp_davy_scoping_v1` is now selected. |
 
 Slice 6 is explicitly conditional — lands only if slice 5 reveals a
 defendable gap. Each slice advances all three priority axes
@@ -640,6 +641,14 @@ the doc-drift problem documented in `SYSTEM_AUDIT_2026-04-20.md`.
   `wall_single_leaf_mass_law_calibration_v1`; Gate A of that slice must
   prove source/formula basis before changing calculator formulas,
   source posture, output support, confidence, or acoustic values.
+- **2026-04-27 update**: `wall_single_leaf_mass_law_calibration_v1`
+  closed no-runtime at Gate C. Its Gate B pinned current unmatched
+  150 mm concrete, solid-brick, and generic-AAC values as defensible
+  formula-owned estimates but blocked runtime movement without a
+  stack-specific source row or bounded tolerance pack. The next selected
+  calculator slice is `wall_double_leaf_sharp_davy_scoping_v1`, starting
+  with no-runtime Sharp/Davy/double-leaf/stud-cavity applicability
+  scoping.
 - **2026-04-24 update**: floor continuation, floor many-layer, floor
   layer-order, and all-caller invalid-thickness audits closed
   no-runtime; engine thickness validity moved out of partial, and

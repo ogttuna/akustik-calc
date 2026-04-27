@@ -228,11 +228,15 @@ families remain blocked until new evidence is deliberately imported.
 
 Next selected work:
 
-1. `wall_single_leaf_mass_law_calibration_v1`.
+1. `wall_double_leaf_sharp_davy_scoping_v1`.
 
 `calculator_source_gap_revalidation_v1` Gate A and
 `wall_coverage_expansion_planning_v2` Gate A are closed no-runtime.
-Calculator runtime/source posture should remain frozen during Gate A of
-the selected wall single-leaf source/formula slice. The next movement
-must be a source-backed or formula-owned wall candidate selected by an
-executable contract, not an implicit reopen from nearby green tests.
+`wall_single_leaf_mass_law_calibration_v1` also closed no-runtime at
+Gate C: current generic concrete, solid-brick, and AAC values stay
+formula-owned estimates until a stack-specific source row or bounded
+tolerance pack exists. Calculator runtime/source posture should remain
+frozen during Gate A of the selected double-leaf Sharp/Davy scoping
+slice. The next movement must be a source-backed, benchmark-backed,
+bounded, or formula-owned wall candidate selected by an executable
+contract, not an implicit reopen from nearby green tests.

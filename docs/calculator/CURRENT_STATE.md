@@ -23,9 +23,10 @@ personal/internal-use readiness chain is closed;
 `proposal_report_polish_v1` closed;
 `calculator_source_gap_revalidation_v1` Gate A closed no-runtime;
 `wall_coverage_expansion_planning_v2` Gate A closed no-runtime;
-`wall_single_leaf_mass_law_calibration_v1` Gate B closed no-runtime;
+`wall_single_leaf_mass_law_calibration_v1` Gate C closed no-runtime;
+`wall_double_leaf_sharp_davy_scoping_v1` selected;
 latest checkpoint:
-[CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_B_HANDOFF.md)).
+[CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_C_CLOSEOUT_HANDOFF.md)).
 Step 8 closed the calculator runtime audit: `MASTER_PLAN.md` §3/§8
 was reconciled to implementation reality, `coverage-grid-consistency.test.ts`
 now maps the grid and C1-C6 signals to executable evidence, the
@@ -160,18 +161,22 @@ hardening, and the pure team-access policy model.
   the no-runtime source/formula contract, candidate matrix, exact/
   lab-fallback precedence, and adjacent-lane boundaries, plus
   `wall-single-leaf-mass-law-calibration-gate-b-contract.test.ts` for
-  the no-runtime bounded runtime-candidate matrix and closeout blocker.
-  Latest focused gate run after the Gate B contract update:
-  103 engine files / 470 tests,
+  the no-runtime bounded runtime-candidate matrix and closeout blocker,
+  plus
+  `post-wall-single-leaf-mass-law-calibration-v1-next-slice-selection-contract.test.ts`
+  for the no-runtime Gate C closeout and double-leaf Sharp/Davy scoping
+  selection. Latest focused gate run after the Gate C contract update:
+  104 engine files / 475 tests,
   43 web files / 211 passed +
   18 skipped, build 5/5 tasks, whitespace guard clean.
 
 ## Active Slice
 
-`wall_single_leaf_mass_law_calibration_v1` (wall source/formula
-contract, Gate B landed no-runtime; Gate C closeout is active).
+`wall_double_leaf_sharp_davy_scoping_v1` (wall double-leaf / stud /
+double-stud / cavity formula applicability scoping, Gate A is next and
+must be no-runtime).
 Planning surface:
-[SLICE_WALL_SINGLE_LEAF_MASS_LAW_CALIBRATION_PLAN.md](./SLICE_WALL_SINGLE_LEAF_MASS_LAW_CALIBRATION_PLAN.md).
+[SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md](./SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md).
 
 `wall_coverage_expansion_planning_v2` Gate A is now closed
 no-runtime. It added
@@ -206,8 +211,12 @@ pins 150 mm concrete at `R'w=53`, 150 mm solid brick at `R'w=51`, and
 150 mm generic AAC at `R'w=38`, plus 100/150/200 mm monotonic
 sensitivity. Current values remain defensible formula-owned estimates,
 but runtime movement is blocked because there is no stack-specific wall
-source row or bounded tolerance pack. The next action is Gate C
-no-runtime closeout and next-slice selection.
+source row or bounded tolerance pack. Gate C has now closed the slice
+no-runtime in
+`packages/engine/src/post-wall-single-leaf-mass-law-calibration-v1-next-slice-selection-contract.test.ts`
+and selected `wall_double_leaf_sharp_davy_scoping_v1`. The next action
+is Gate A no-runtime scoping for double-leaf, stud/double-stud, and
+cavity wall Sharp/Davy/framed-wall applicability and guardrails.
 
 Do not reopen `GDMTXA04A`, `C11c`, raw bare open-box/open-web,
 heavy-concrete formula parity, reinforced-concrete reopening,
@@ -799,14 +808,17 @@ Calculator source-gap revalidation status:
 `calculator_source_gap_revalidation_v1` Gate A is closed no-runtime.
 Wall coverage planning status:
 `wall_coverage_expansion_planning_v2` Gate A is closed no-runtime. The
-next selected slice is `wall_single_leaf_mass_law_calibration_v1`, which
-must write a source/formula contract for unmatched massive single-leaf
-walls without changing values during Gate A.
+selected single-leaf slice has now closed no-runtime at Gate C. The
+next selected slice is `wall_double_leaf_sharp_davy_scoping_v1`, which
+must write a no-runtime scoping contract for double-leaf, stud/
+double-stud, and cavity wall formula applicability before any runtime
+movement.
 
 ## Latest Closed Slices
 
 | Slice | Master-plan step | Closed | Post-contract |
 |---|---|---|---|
+| `wall_single_leaf_mass_law_calibration_v1` Gate C | calculator wall coverage planning | 2026-04-27 | `post-wall-single-leaf-mass-law-calibration-v1-next-slice-selection-contract.test.ts` |
 | `wall_coverage_expansion_planning_v2` Gate A | calculator wall coverage planning | 2026-04-27 | `wall-coverage-expansion-planning-v2-gate-a-contract.test.ts` |
 | `calculator_source_gap_revalidation_v1` Gate A | calculator revalidation | 2026-04-27 | `calculator-source-gap-revalidation-gate-a-contract.test.ts` |
 | `proposal_report_polish_v1` | productization 6 | 2026-04-27 | `post-proposal-report-polish-next-slice-selection-contract.test.ts` |
@@ -1006,15 +1018,15 @@ time without context loss:
 
 ## Resume Order For The Next Agent
 
-1. Read [CHECKPOINT_2026-04-27_WALL_COVERAGE_EXPANSION_PLANNING_V2_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_COVERAGE_EXPANSION_PLANNING_V2_GATE_A_HANDOFF.md)
+1. Read [CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_C_CLOSEOUT_HANDOFF.md)
    for the latest active-slice handoff.
 2. Read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md),
-   [SLICE_WALL_SINGLE_LEAF_MASS_LAW_CALIBRATION_PLAN.md](./SLICE_WALL_SINGLE_LEAF_MASS_LAW_CALIBRATION_PLAN.md),
+   [SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md](./SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md),
    [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md), and
    [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md).
-   Start `wall_single_leaf_mass_law_calibration_v1` by writing the
-   no-runtime source/formula contract for unmatched massive single-leaf
-   walls without runtime value changes.
+   Start `wall_double_leaf_sharp_davy_scoping_v1` by writing the
+   no-runtime scoping contract for double-leaf, stud/double-stud, and
+   cavity wall formula applicability without runtime value changes.
 3. Read [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
    for the now-closed calculator-priority chain and its evidence-tier
    caveats.
@@ -1028,8 +1040,8 @@ time without context loss:
    If it does not, fix the drift before starting work.
 6. Run `pnpm calculator:gate:current` as the focused baseline.
 7. Do not change runtime math, source posture, output support,
-   evidence tiers, or confidence scores during Gate A wall coverage
-   planning.
+   evidence tiers, or confidence scores during Gate A double-leaf wall
+   scoping.
 8. Treat [CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_ELEVENTH_CARVE_HANDOFF.md](./CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_ELEVENTH_CARVE_HANDOFF.md),
    [CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_A_HANDOFF.md),
    [CHECKPOINT_2026-04-24_INVALID_THICKNESS_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-24_INVALID_THICKNESS_CLOSEOUT_HANDOFF.md),
