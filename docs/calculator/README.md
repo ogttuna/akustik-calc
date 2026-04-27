@@ -16,6 +16,12 @@ fix the drift before starting work.
    preservation contract, master sequence.
 3. [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md)
    — tactical detail for the active slice.
+4. [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
+   — calculator-only chain for reaching private-use readiness before
+   deferred productization resumes.
+5. [SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md](./SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md)
+   — first concrete/heavy-core Gate B subplan selected by the current
+   cartography slice.
 
 Then run `pnpm calculator:gate:current` to confirm the green
 baseline.
@@ -24,8 +30,37 @@ baseline.
 
 - [CHECKPOINT_2026-04-23_SERVER_BACKED_PROJECT_STORAGE_HANDOFF.md](./CHECKPOINT_2026-04-23_SERVER_BACKED_PROJECT_STORAGE_HANDOFF.md)
   — productization closeout: server-backed project storage v1 closed.
+- [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
+  — active calculator readiness chain: heavy-core/concrete wall, timber
+  stud + CLT wall accuracy, floor fallback cleanup, and UI/input/output
+  honesty.
+- [SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md](./SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md)
+  — next implementation subplan: audit and tighten the common
+  concrete/heavy-core wall lane without promoting screening evidence
+  beyond what sources support.
+- [CHECKPOINT_2026-04-27_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_GATE_A_HANDOFF.md)
+  — latest active calculator handoff: realistic layer-combination
+  cartography Gate A landed no-runtime and selected the
+  heavy-core/concrete wall lane for Gate B planning.
+- [CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_C_CLOSEOUT_HANDOFF.md)
+  — previous calculator closeout: dynamic-airborne split v2 Gate C
+  closed, C6 moved out of partial, and realistic layer-combination
+  coverage cartography was selected.
+- [CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_ELEVENTH_CARVE_HANDOFF.md](./CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_ELEVENTH_CARVE_HANDOFF.md)
+  — calculator handoff: dynamic-airborne split v2 Gate B eleventh carve
+  landed before Gate C closeout.
+- [CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_TENTH_CARVE_HANDOFF.md](./CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_TENTH_CARVE_HANDOFF.md)
+  — calculator handoff: dynamic-airborne split v2 Gate B tenth carve
+  landed and the narrow-gap cap carve was selected.
+- [CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_NINTH_CARVE_HANDOFF.md](./CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_NINTH_CARVE_HANDOFF.md)
+  — calculator handoff: dynamic-airborne split v2 Gate B ninth
+  carve landed and the next bounded recursive monotonic-floor carve was
+  selected.
+- [CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_EIGHTH_CARVE_HANDOFF.md](./CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_EIGHTH_CARVE_HANDOFF.md)
+  — calculator handoff: dynamic-airborne split v2 Gate B eighth carve
+  landed and the next bounded premium correction carve was selected.
 - [CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_SEVENTH_CARVE_HANDOFF.md](./CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_SEVENTH_CARVE_HANDOFF.md)
-  — latest calculator handoff: dynamic-airborne split v2 Gate B seventh
+  — calculator handoff: dynamic-airborne split v2 Gate B seventh
   carve landed and the next bounded template carve was selected.
 - [CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_SIXTH_CARVE_HANDOFF.md](./CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_SIXTH_CARVE_HANDOFF.md)
   — calculator handoff: dynamic-airborne split v2 Gate B sixth
@@ -86,7 +121,10 @@ baseline.
   — productization roadmap; project-access route integration is
   deferred.
 - [SLICE_DYNAMIC_AIRBORNE_SPLIT_REFACTOR_V2_PLAN.md](./SLICE_DYNAMIC_AIRBORNE_SPLIT_REFACTOR_V2_PLAN.md)
-  — active calculator architecture slice plan.
+  — closed calculator architecture slice plan.
+- [SLICE_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_PLAN.md](./SLICE_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_PLAN.md)
+  — active calculator planning surface; maps realistic layer
+  combinations by evidence tier before selecting runtime widening.
 - [SLICE_ALL_CALLER_INVALID_THICKNESS_GUARD_PLAN.md](./SLICE_ALL_CALLER_INVALID_THICKNESS_GUARD_PLAN.md)
   — closed direct invalid-thickness guard plan.
 - [SLICE_FLOOR_LAYER_ORDER_EDIT_STABILITY_PLAN.md](./SLICE_FLOOR_LAYER_ORDER_EDIT_STABILITY_PLAN.md)
@@ -112,8 +150,8 @@ baseline.
   storage v1.
 - [DYNAMIC_AIRBORNE_CARTOGRAPHY.md](./DYNAMIC_AIRBORNE_CARTOGRAPHY.md)
   — `dynamic-airborne.ts` split blueprint. v1 landed 2026-04-21;
-  v2 Gate B has moved the micro-gap equivalence guard and heavy
-  unframed cavity cap.
+  v2 Gate C closed on 2026-04-26, and the remaining recursive guards are
+  optional architecture backlog.
 - [SYSTEM_MAP.md](./SYSTEM_MAP.md) — end-to-end system model,
   runtime boundaries, persistence posture, test surface map.
 - [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)

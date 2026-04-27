@@ -15,24 +15,22 @@ const CARVED_GUARDS = [
   "applyHeavyUnframedCavityScreeningCap",
   "applyHighFillSingleBoardStudFieldLift",
   "applyMixedBoardEmptyCavityFieldMidbandLift",
+  "applyMixedPlainModerateSingleBoardLabTemplate",
   "applyMixedPremiumSplitFieldLift",
   "applyMixedSecurityBoardDoubleStudFieldTrim",
-  "applyMicroGapFillEquivalenceGuard"
+  "applyMicroGapFillEquivalenceGuard",
+  "applyNarrowHeavyDoubleLeafGapCap",
+  "applyPremiumSingleBoardFieldCorrection",
+  "applySingleLeafMasonryMonotonicFloor"
 ] as const;
 
 const REMAINING_GUARD_ORDER = [
-  "applySingleLeafMasonryMonotonicFloor",
-  "applyNarrowHeavyDoubleLeafGapCap",
   "applyLinedMassiveMasonryMonotonicFloor",
   "applyFramedReinforcementMonotonicFloor",
-  "applyMixedPlainModerateSingleBoardLabTemplate",
-  "applyPremiumSingleBoardFieldCorrection",
   "applyAmbiguousFamilyBoundaryHold"
 ] as const;
 
 const REMAINING_RECURSIVE_COMPOSER_GUARDS = [
-  "applySingleLeafMasonryMonotonicFloor",
-  "applyNarrowHeavyDoubleLeafGapCap",
   "applyLinedMassiveMasonryMonotonicFloor",
   "applyFramedReinforcementMonotonicFloor",
   "applyAmbiguousFamilyBoundaryHold"
@@ -66,7 +64,7 @@ function extractFunctionSections(source: string): Map<string, string> {
   );
 }
 
-describe("dynamic-airborne split v2 Gate B seventh carve contract", () => {
+describe("dynamic-airborne split v2 Gate B eleventh carve contract", () => {
   const source = readRepoFile(DYNAMIC_AIRBORNE_PATH);
   const guardModule = readRepoFile(GUARD_MODULE_PATH);
   const helpers = readRepoFile(HELPERS_PATH);
@@ -74,9 +72,9 @@ describe("dynamic-airborne split v2 Gate B seventh carve contract", () => {
   const slicePlan = readRepoFile(SLICE_PLAN_PATH);
   const sections = extractFunctionSections(source);
 
-  it("pins the seventh correction-guard carve and reduced composer file size", () => {
-    expect(countPhysicalLines(source)).toBe(2538);
-    expect(countPhysicalLines(guardModule)).toBe(657);
+  it("pins the eleventh correction-guard carve and reduced composer file size", () => {
+    expect(countPhysicalLines(source)).toBe(1793);
+    expect(countPhysicalLines(guardModule)).toBe(1422);
     expect([...sections.keys()]).toEqual(REMAINING_GUARD_ORDER);
   });
 
@@ -88,16 +86,34 @@ describe("dynamic-airborne split v2 Gate B seventh carve contract", () => {
     }
   });
 
-  it("keeps recursive probing injected only through the micro-gap guard", () => {
+  it("keeps recursive probing injected only through carved guard composer parameters", () => {
     expect(guardModule).toContain("composer: DynamicAirborneComposer");
     expect(guardModule).toContain("const equivalentResult = composer(equivalentLayers, {");
+    expect(guardModule).toContain("const variantResult = composer(variantLayers, {");
     expect(guardModule).not.toContain("calculateDynamicAirborneResult(");
+    expect(guardModule).toContain("buildNarrowGapContactEquivalentLayers");
+    expect(guardModule).toContain("isAacLikeLayer");
+    expect(guardModule).toContain("isMasonryLikeLayer");
+    expect(guardModule).toContain("buildReducedThicknessVariant");
+    expect(guardModule).toContain("isHeluzClayLayer");
+    expect(guardModule).toContain("isCelconFinishedAircreteBuildUp");
+    expect(guardModule).toContain("isYtongSeparatiePaneelBuildUp");
+    expect(guardModule).toContain("isYtongCellenbetonblokBuildUp");
+    expect(guardModule).toContain("isMasonryCoreLayer");
     expect(guardModule).toContain("summarizeHeavyUnframedCavityRisk");
     expect(guardModule).toContain("buildCalibratedMassLawCurve");
     expect(guardModule).toContain("shiftCurve(curve, -trimDb)");
     expect(guardModule).toContain("shiftCurve(curve, liftDb)");
     expect(guardModule).toContain("detectMixedEnhancedFilledSingleBoardFamily");
     expect(guardModule).toContain("detectSecurityFilledSingleBoardFamily");
+    expect(guardModule).toContain("getMixedPlainModerateFamilyAndTemplateId");
+    expect(guardModule).toContain("MIXED_PLAIN_MODERATE_FIELD_TEMPLATES");
+    expect(guardModule).toContain("buildInterpolatedTemplateCurve");
+    expect(guardModule).toContain("getMixedPlainPremiumFamilyAndTemplateId");
+    expect(guardModule).toContain("MIXED_PLAIN_PREMIUM_FIELD_TEMPLATES");
+    expect(guardModule).toContain("isPlainGypsumFilledSingleBoardCandidate");
+    expect(guardModule).toContain("detectFireRatedFilledSingleBoardFamily");
+    expect(guardModule).toContain("detectSymmetricEnhancedFilledSingleBoardFamily");
     expect(guardModule).toContain("octaveBandWindowWeight(curve.frequenciesHz[index] ?? 0, 100, 1600, 0.45)");
     expect(guardModule).toContain("octaveBandWindowWeight(curve.frequenciesHz[index] ?? 0, 100, 2000, 0.55)");
     expect(guardModule).toContain("octaveBandWindowWeight(curve.frequenciesHz[index] ?? 0, 500, 3150, 0.4)");
@@ -111,12 +127,12 @@ describe("dynamic-airborne split v2 Gate B seventh carve contract", () => {
     expect(recursiveGuards).toEqual(REMAINING_RECURSIVE_COMPOSER_GUARDS);
   });
 
-  it("records the landed seventh carve and next carve target in docs", () => {
+  it("records the landed eleventh carve and next carve target in docs", () => {
     for (const doc of [cartography, slicePlan]) {
-      expect(doc).toContain("Gate B seventh carve landed");
-      expect(doc).toContain("applyDiamondHybridResilientFieldMidbandTrim");
+      expect(doc).toContain("Gate B eleventh carve landed");
+      expect(doc).toContain("applyNarrowHeavyDoubleLeafGapCap");
       expect(doc).toContain("dynamic-airborne-correction-guards.ts");
-      expect(doc).toContain("applyMixedPlainModerateSingleBoardLabTemplate");
+      expect(doc).toContain("applyLinedMassiveMasonryMonotonicFloor");
     }
     expect(helpers).toContain("export type DynamicAirborneComposer");
   });

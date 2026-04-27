@@ -17,7 +17,10 @@ const BUILDING_CONTEXT: AirborneContext = {
 
 const LAB_OUTPUTS: readonly RequestedOutputId[] = ["Rw"];
 const FIELD_OUTPUTS: readonly RequestedOutputId[] = ["R'w", "DnT,w"];
-const ROUTE_SCAN_TIMEOUT_MS = 30_000;
+// This file intentionally runs broad dynamic wall route sweeps through
+// the workbench layer. Full-suite load can push the largest non-AAC
+// adjacency scan a little past Vitest's default 30s timeout.
+const ROUTE_SCAN_TIMEOUT_MS = 90_000;
 
 const REPRESENTATIVE_PREFIXES = [
   [],

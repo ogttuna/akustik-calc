@@ -5,17 +5,19 @@ now** on the calculator surface. If you need "how did we get
 here" read the latest checkpoint named below before older handoffs.
 If you need the strategic plan read [MASTER_PLAN.md](./MASTER_PLAN.md).
 If you need the tactical detail on the active slice read
-[NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md).
+[NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md). If you
+need the private-use readiness chain read
+[PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
 
 ---
 
 ## Revalidated Snapshot
 
-Last revalidation cycle: `2026-04-24`
-(`dynamic_airborne_split_refactor_v2` post-commit checkpoint passed;
-latest
-checkpoint:
-[CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_POST_COMMIT_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_POST_COMMIT_REVALIDATION_HANDOFF.md)).
+Last revalidation cycle: `2026-04-27`
+(`realistic_layer_combination_coverage_cartography_v1` Gate A landed;
+heavy-core/concrete Gate B subplan added; broad validation re-run;
+latest checkpoint:
+[CHECKPOINT_2026-04-27_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_GATE_A_HANDOFF.md)).
 Step 8 closed the calculator runtime audit: `MASTER_PLAN.md` §3/§8
 was reconciled to implementation reality, `coverage-grid-consistency.test.ts`
 now maps the grid and C1-C6 signals to executable evidence, the
@@ -25,9 +27,8 @@ first four productization slices then closed server-backed project
 storage v1, project/proposal route authorization, auth-session
 hardening, and the pure team-access policy model.
 
-- **Engine broad suite**: latest broad `pnpm check` after the
-  dynamic-airborne v2 Gate B seventh carve was 219 / 219 files,
-  1216 / 1216 tests green
+- **Engine broad suite**: latest broad `pnpm check` on 2026-04-27 was
+  221 / 221 files, 1224 / 1224 tests green
   (up from 193/1068 pre-session; step-7 landed 4 wall cases +
   F1/F2 engine fixes + 32-assertion cross-mode torture matrix
   + 2 regression guards + post-contract; step-7b landed the
@@ -40,9 +41,12 @@ hardening, and the pure team-access policy model.
   split-cavity field swap matrix that keeps the full single-worker suite
   under the Vitest worker timeout; Gate B and Gate C then added focused
   planning/value contract files).
-- **Web broad suite**: latest broad `pnpm check` after the
-  dynamic-airborne v2 Gate B seventh carve was 150 / 150 files,
+- **Web broad suite**: latest broad `pnpm check` on 2026-04-27 kept
+  all 150 / 150 files in scope through `tools/dev/run-web-vitest.ts`:
   864 / 864 tests green + 18 discovery helpers intentionally skipped.
+  The runner isolates six long route-scan files and batches the
+  remaining 144 files, preserving coverage while avoiding Vitest worker
+  RPC timeout failures on the heavy family-boundary scans.
   The 2026-04-23
   productization pass added focused server project storage/API,
   proposal-audit, route-authorization, auth-session, login/logout,
@@ -51,7 +55,8 @@ hardening, and the pure team-access policy model.
   input contract so it asserts parse behavior instead of calling
   `.keyof()` on the exported shared `AirborneContextSchema` `ZodType`.
 - **Broad `pnpm check`**: lint + typecheck + tests + build green on the
-  latest broad run after the Gate B seventh carve; build still emits
+  latest broad run after Gate A, the heavy-core subplan, and web test
+  runner stabilization; build still emits
   the known non-fatal optional `sharp/@img` warnings through
   `@turbodocx/html-to-docx`.
 - **Focused calculator gate** (`pnpm calculator:gate:current`):
@@ -96,20 +101,42 @@ hardening, and the pure team-access policy model.
   floor/wall invalid-thickness caller coverage, plus
   `post-all-caller-invalid-thickness-gate-c-v1-next-slice-selection-contract.test.ts`
   for the closeout and dynamic-airborne split v2 selection, plus
-  `dynamic-airborne-split-v2-gate-b-seventh-carve-contract.test.ts` for
-  the v2 Gate B seventh-carve contract.
-  Latest focused closeout run: 86 engine files / 396 tests,
+  `dynamic-airborne-split-v2-gate-b-eleventh-carve-contract.test.ts`
+  for the v2 Gate B eleventh-carve contract, plus
+  `post-dynamic-airborne-split-refactor-v2-gate-c-next-slice-selection-contract.test.ts`
+  for the Gate C closeout and realistic layer-combination cartography
+  selection, plus
+  `realistic-layer-combination-coverage-cartography.test.ts` for the
+  active slice Gate A matrix.
+  Latest focused closeout run: 88 engine files / 404 tests,
   36 web files / 170 passed +
   18 skipped, build 5/5 tasks, whitespace guard clean.
 
 ## Active Slice
 
-`dynamic_airborne_split_refactor_v2` (calculator architecture hygiene,
-selected).
-Selected `2026-04-24` immediately after
-`all_caller_invalid_thickness_guard_v1` closed as a no-runtime audit.
-Planning surface:
-[SLICE_DYNAMIC_AIRBORNE_SPLIT_REFACTOR_V2_PLAN.md](./SLICE_DYNAMIC_AIRBORNE_SPLIT_REFACTOR_V2_PLAN.md).
+`realistic_layer_combination_coverage_cartography_v1` (calculator
+coverage/accuracy planning, selected).
+Selected `2026-04-26` immediately after
+`dynamic_airborne_split_refactor_v2` closed Gate C. Planning surface:
+[SLICE_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_PLAN.md](./SLICE_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_PLAN.md).
+
+Gate A has landed no-runtime in
+`packages/engine/src/realistic-layer-combination-coverage-cartography.test.ts`.
+The matrix executes 29 representative floor/wall cells, pins output
+support, origin/basis, confidence posture, invariants, and candidate
+type, and selects `wall.concrete_heavy_core_screening.field` as the
+highest-ROI runtime candidate. No new paired web matrix was added
+because the selected cells already point at existing card/route evidence
+or engine-only stress artifacts. Next action: Gate B planning for the
+heavy-core/concrete wall lane before runtime math changes, starting from
+[SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md](./SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md).
+
+Personal-use readiness is now explicitly tracked in
+[PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
+The current priority chain is heavy-core/concrete wall Gate B, timber
+stud + CLT wall accuracy, floor fallback/low-confidence cleanup, then
+UI/input/output honesty. Productization remains deferred until this
+calculator readiness chain closes or priority explicitly changes.
 
 Calculator runtime status: final audit closed and green. The just-closed
 wall formula-family widening slice completed Gate A and Gate B with
@@ -141,8 +168,16 @@ module. Gate B third carve moved
 `applyHighFillSingleBoardStudFieldLift`. Gate B fifth carve moved
 `applyMixedBoardEmptyCavityFieldMidbandLift`. Gate B sixth carve moved
 `applyMixedPremiumSplitFieldLift`. Gate B seventh carve moved
-`applyDiamondHybridResilientFieldMidbandTrim`. The active next step is
-the eighth Gate B carve: `applyMixedPlainModerateSingleBoardLabTemplate`.
+`applyDiamondHybridResilientFieldMidbandTrim`. Gate B eighth carve moved
+`applyMixedPlainModerateSingleBoardLabTemplate`. Gate B ninth carve
+moved `applyPremiumSingleBoardFieldCorrection`. Gate B tenth carve moved
+`applySingleLeafMasonryMonotonicFloor` with `DynamicAirborneComposer`
+injection. Gate B eleventh carve moved
+`applyNarrowHeavyDoubleLeafGapCap` with `DynamicAirborneComposer`
+injection. Gate C then closed after broad validation because
+`dynamic-airborne.ts` is below 2000 lines. The active next decision is
+now Gate B planning for the heavy-core/concrete wall lane selected by
+the realistic layer-combination cartography matrix.
 
 Checkpoint refinement `2026-04-24`: the post-commit baseline was
 re-read against implementation and revalidated before Gate A. No drift
@@ -241,13 +276,56 @@ lines with 7 in-file guards and five remaining direct recursive
 composer guards. Next carve:
 `applyMixedPlainModerateSingleBoardLabTemplate`.
 
+Implementation refinement `2026-04-26` (dynamic-airborne split v2
+Gate B eighth carve): `packages/engine/src/dynamic-airborne-split-v2-gate-b-eighth-carve-contract.test.ts`
+now pins the eighth mechanical carve.
+`applyMixedPlainModerateSingleBoardLabTemplate` also lives in
+`dynamic-airborne-correction-guards.ts`; it stayed non-recursive and
+does not take a composer parameter. The composer file is down to 2387
+lines with 6 in-file guards and five remaining direct recursive
+composer guards. Next carve:
+`applyPremiumSingleBoardFieldCorrection`.
+
+Implementation refinement `2026-04-26` (dynamic-airborne split v2
+Gate B ninth carve): `packages/engine/src/dynamic-airborne-split-v2-gate-b-ninth-carve-contract.test.ts`
+now pins the ninth mechanical carve.
+`applyPremiumSingleBoardFieldCorrection` also lives in
+`dynamic-airborne-correction-guards.ts`; it stayed non-recursive and
+does not take a composer parameter. The composer file is down to 2105
+lines with 5 in-file guards and five remaining direct recursive
+composer guards. Next carve:
+`applySingleLeafMasonryMonotonicFloor`.
+
+Implementation refinement `2026-04-26` (dynamic-airborne split v2
+Gate B tenth carve): `packages/engine/src/dynamic-airborne-split-v2-gate-b-tenth-carve-contract.test.ts`
+now pins the first remaining recursive carve.
+`applySingleLeafMasonryMonotonicFloor` also lives in
+`dynamic-airborne-correction-guards.ts`; it takes an injected
+`DynamicAirborneComposer` for reduced-thickness sibling probes. The
+composer file is down to 1952 lines with 4 in-file guards and four
+remaining direct recursive composer guards. Next decision: Gate C
+closeout after validation, or the next recursive carve
+`applyNarrowHeavyDoubleLeafGapCap`.
+
+Implementation refinement `2026-04-26` (dynamic-airborne split v2
+Gate B eleventh carve): `packages/engine/src/dynamic-airborne-split-v2-gate-b-eleventh-carve-contract.test.ts`
+now pins the narrow-gap recursive cap carve.
+`applyNarrowHeavyDoubleLeafGapCap` also lives in
+`dynamic-airborne-correction-guards.ts`; it takes an injected
+`DynamicAirborneComposer` for contact-equivalent sibling probes. The
+composer file is down to 1793 lines with 3 in-file guards and three
+remaining direct recursive composer guards. Gate C later closed after
+broad validation; `applyLinedMassiveMasonryMonotonicFloor` is optional
+future architecture backlog.
+
 General revalidation `2026-04-24` after the seventh carve: focused
 `pnpm calculator:gate:current` stayed green, broad `pnpm check` stayed
 green (engine 219 / 219 files, 1216 / 1216 tests; web 150 / 150 files,
 864 / 864 passed + 18 skipped; build 5/5 with the known non-fatal
 `sharp/@img` warnings), and no implementation/plan drift was found.
-Gate C is intentionally still open because the active file is 2538
-lines, so the next correct action remains the eighth bounded carve.
+Gate C was still open at that checkpoint because the active file was
+above the C6 threshold. It is now closed after the eleventh carve and
+broad validation.
 
 Post-commit checkpoint `2026-04-24`: commit `eba9859` was treated as a
 clean stopping point and re-audited. The authority docs still match the
@@ -256,6 +334,52 @@ module, recursive composer callers, and current-gate static contract.
 `pnpm calculator:gate:current` and broad `pnpm check` are green at this
 checkpoint. No new implementation work is required before the eighth
 Gate B carve.
+
+Eighth-carve validation `2026-04-26`: targeted eighth-carve contract +
+coverage-grid contract passed 2 files / 10 tests. Focused dynamic
+airborne / hostile-input behavior sweep passed 13 files / 239 tests.
+`pnpm calculator:gate:current` passed with engine 86 files / 396 tests,
+web 36 files / 170 passed + 18 skipped, build 5/5, and whitespace guard
+clean. The only build warnings were the known non-fatal `sharp/@img`
+optional-package warnings. Gate C remains open because
+`dynamic-airborne.ts` is still 2387 lines.
+
+Ninth-carve validation `2026-04-26`: targeted ninth-carve contract +
+coverage-grid contract passed 2 files / 10 tests. Focused dynamic
+airborne / hostile-input behavior sweep passed 13 files / 239 tests.
+`pnpm calculator:gate:current` passed with engine 86 files / 396 tests,
+web 36 files / 170 passed + 18 skipped, build 5/5, and whitespace guard
+clean. The only build warnings were the known non-fatal `sharp/@img`
+optional-package warnings. Gate C remains open because
+`dynamic-airborne.ts` is still 2105 lines.
+
+Tenth-carve validation `2026-04-26`: targeted tenth-carve contract +
+coverage-grid contract passed 2 files / 10 tests. Focused dynamic
+airborne / hostile-input behavior sweep passed 13 files / 239 tests.
+`pnpm calculator:gate:current` passed with engine 86 files / 396 tests,
+web 36 files / 170 passed + 18 skipped, build 5/5, and whitespace guard
+clean. The only build warnings were the known non-fatal `sharp/@img`
+optional-package warnings. Gate C can now be considered because
+`dynamic-airborne.ts` is 1952 lines.
+
+Eleventh-carve validation `2026-04-26`: targeted eleventh-carve
+contract + coverage-grid contract passed 2 files / 10 tests. Focused
+dynamic airborne / hostile-input behavior sweep passed 13 files /
+239 tests. `pnpm calculator:gate:current` passed with engine 86 files /
+396 tests, web 36 files / 170 passed + 18 skipped, build 5/5, and
+whitespace guard clean. The only build warnings were the known
+non-fatal `sharp/@img` optional-package warnings. Gate C can now be
+considered because `dynamic-airborne.ts` is 1793 lines.
+
+Gate C closeout `2026-04-26`: `pnpm calculator:gate:current` passed
+with 87 engine files / 401 tests, 36 web files / 170 passed + 18
+skipped, build 5/5, and whitespace guard clean. Broad `pnpm check`
+passed with engine 219 files / 1216 tests, web 150 files / 864 passed +
+18 skipped, build 5/5, and only the known non-fatal `sharp/@img`
+warnings. C6 is closed,
+`post-dynamic-airborne-split-refactor-v2-gate-c-next-slice-selection-contract.test.ts`
+pins the closeout, and
+`realistic_layer_combination_coverage_cartography_v1` is selected next.
 
 Implementation refinement `2026-04-23`: the Gate A audit found that the
 timber-stud gap has two current surfaces. Existing no-calculator preset
@@ -488,6 +612,7 @@ resumes and wires the policy through an owner-only adapter.
 
 | Slice | Master-plan step | Closed | Post-contract |
 |---|---|---|---|
+| `dynamic_airborne_split_refactor_v2` | 4b | 2026-04-26 | `post-dynamic-airborne-split-refactor-v2-gate-c-next-slice-selection-contract.test.ts` |
 | `all_caller_invalid_thickness_guard_v1` | post-step-8 follow-up | 2026-04-24 | `post-all-caller-invalid-thickness-gate-c-v1-next-slice-selection-contract.test.ts` |
 | `floor_layer_order_edit_stability_v1` | post-step-8 follow-up | 2026-04-24 | `post-floor-layer-order-gate-c-v1-next-slice-selection-contract.test.ts` |
 | `floor_many_layer_stress_regression_v1` | post-step-8 follow-up | 2026-04-24 | `post-floor-many-layer-gate-c-v1-next-slice-selection-contract.test.ts` |
@@ -518,7 +643,7 @@ resumes and wires the policy through an owner-only adapter.
 | C3 | Wall field-continuation completeness | ✅ preset + corridor surfaces both VALUE-pinned; floor expansion non-blocking | `wall-field-continuation-completeness-matrix.test.ts` + `dynamic-airborne-wall-selector-value-pins.test.ts` + `coverage-grid-consistency.test.ts` |
 | C4 | Floor + wall hostile-input discipline | ✅ both green + all-caller direct thickness guard + torture-matrix O1 overlay | `all-caller-invalid-thickness-guard-gate-a-matrix.test.ts` + `raw-floor-hostile-input-answer-matrix.test.ts` + `raw-wall-hostile-input-answer-matrix.test.ts` + `mixed-floor-wall-cross-mode-wall-extension-matrix.test.ts` |
 | C5 | Reorder and split invariance on defended surfaces | ✅ wall reorder + floor split/parity surfaces; arbitrary floor reorder not claimed | `wall-reorder-invariance-matrix.test.ts` + `mixed-floor-wall-cross-mode-wall-extension-matrix.test.ts` O2 overlay + `floor-split-layer-parity.test.ts` + `coverage-grid-consistency.test.ts` |
-| C6 | Architectural hygiene (≤2000 line files) | 🟡 split v1 landed (6630 -> 3152) + v2 Gate B seventh carve landed; eighth carve next | `dynamic-airborne-*.ts` module family + `DYNAMIC_AIRBORNE_CARTOGRAPHY.md` + `dynamic-airborne-split-v2-gate-b-seventh-carve-contract.test.ts` + `coverage-grid-consistency.test.ts` |
+| C6 | Architectural hygiene (≤2000 line files) | ✅ `dynamic_airborne_split_refactor_v2` Gate C closed; `dynamic-airborne.ts` is 1793 lines after broad validation | `dynamic-airborne-*.ts` module family + `DYNAMIC_AIRBORNE_CARTOGRAPHY.md` + `dynamic-airborne-split-v2-gate-b-eleventh-carve-contract.test.ts` + `post-dynamic-airborne-split-refactor-v2-gate-c-next-slice-selection-contract.test.ts` + `coverage-grid-consistency.test.ts` |
 
 ## Step-7 Findings Ledger (live)
 
@@ -544,32 +669,32 @@ matrix. Source-of-truth detail lives in the archived slice plan
 
 ## Engine Architectural Posture
 
-`packages/engine/src/dynamic-airborne.ts` is 2538 lines (down
+`packages/engine/src/dynamic-airborne.ts` is 1793 lines (down
 from 6630) after the 15-commit split refactor on 2026-04-21, the
 2026-04-22 dead-import sweep (52 unused imports from the v1 split left
 in place; caught by broad `pnpm check` lint that the focused gate does
-not run), and the 2026-04-24 v2 first seven carves. Eight bounded
+not run), and the 2026-04-26 v2 first eleven carves. Eight bounded
 modules live alongside:
 
-- `dynamic-airborne-helpers.ts` (287) — pure math, spectrum
+- `dynamic-airborne-helpers.ts` (337) — pure math, spectrum
   weights, physical constants, delegate blending, curve anchoring,
   shared types (`DynamicAirborneOptions`, `DynamicAirborneResult`,
   `DelegateCurve`, `DelegateBlend`)
-- `dynamic-airborne-family-detection.ts` (257) — material + board
+- `dynamic-airborne-family-detection.ts` (258) — material + board
   predicates + framing hint helpers
-- `dynamic-airborne-davy-masonry.ts` (270) — Davy/Cremer masonry
+- `dynamic-airborne-davy-masonry.ts` (271) — Davy/Cremer masonry
   coincidence cap
 - `dynamic-airborne-mixed-plain-templates.ts` (237) — mixed-plain
   premium/moderate lab-target Rw tables + template resolvers
 - `dynamic-airborne-cavity-topology.ts` (460) — cavity +
   reinforcement + single-leaf masonry profile + trim helpers
-- `dynamic-airborne-masonry-calibration.ts` (1055) — all 9 masonry
+- `dynamic-airborne-masonry-calibration.ts` (1137) — all 9 masonry
   estimators (AAC / silicate / unfinished aircrete / Celcon
   finished / Porotherm / HELUZ / Ytong Massief / Ytong
   Separatiepaneel / Ytong Cellenbetonblok)
 - `dynamic-airborne-framed-wall.ts` (1251) — 8 framed wall
   summarizers + `estimateStudWallTargetRw`
-- `dynamic-airborne-correction-guards.ts` (657) — first seven v2
+- `dynamic-airborne-correction-guards.ts` (1422) — first eleven v2
   correction guard carves: `applyMicroGapFillEquivalenceGuard` with
   injected `DynamicAirborneComposer`,
   `applyHeavyUnframedCavityScreeningCap`,
@@ -577,13 +702,18 @@ modules live alongside:
   `applyHighFillSingleBoardStudFieldLift`, and
   `applyMixedBoardEmptyCavityFieldMidbandLift`,
   `applyMixedPremiumSplitFieldLift`, and
-  `applyDiamondHybridResilientFieldMidbandTrim`
+  `applyDiamondHybridResilientFieldMidbandTrim`, and
+  `applyMixedPlainModerateSingleBoardLabTemplate`, and
+  `applyPremiumSingleBoardFieldCorrection`, and
+  `applySingleLeafMasonryMonotonicFloor`, and
+  `applyNarrowHeavyDoubleLeafGapCap`
 
-Remaining `dynamic-airborne.ts` (2538 lines) hosts 7 in-file
-`apply*` floor / cap guards + `calculateDynamicAirborneResult` +
-`detectDynamicFamily` + `chooseBlend`. The split continues because five
-remaining guards still recursively call the composer. Gate A pinned the
-exact call graph. Gate B first carve moved
+Remaining `dynamic-airborne.ts` (1793 lines) hosts 3 in-file
+`apply*` floor / cap / correction guards + `calculateDynamicAirborneResult` +
+`detectDynamicFamily` + `chooseBlend`. The split may continue only as
+optional future architecture work because three remaining guards still
+recursively call the composer, but C6 is closed. Gate A pinned the exact
+call graph. Gate B first carve moved
 `applyMicroGapFillEquivalenceGuard` into
 `dynamic-airborne-correction-guards.ts`; Gate B second carve moved
 `applyHeavyUnframedCavityScreeningCap`; Gate B third carve moved
@@ -591,8 +721,12 @@ exact call graph. Gate B first carve moved
 `applyHighFillSingleBoardStudFieldLift`; Gate B fifth carve moved
 `applyMixedBoardEmptyCavityFieldMidbandLift`; Gate B sixth carve moved
 `applyMixedPremiumSplitFieldLift`; Gate B seventh carve moved
-`applyDiamondHybridResilientFieldMidbandTrim`. The next carve target is
-`applyMixedPlainModerateSingleBoardLabTemplate`.
+`applyDiamondHybridResilientFieldMidbandTrim`; Gate B eighth carve moved
+`applyMixedPlainModerateSingleBoardLabTemplate`; Gate B ninth carve
+moved `applyPremiumSingleBoardFieldCorrection`; Gate B tenth carve moved
+`applySingleLeafMasonryMonotonicFloor`; Gate B eleventh carve moved
+`applyNarrowHeavyDoubleLeafGapCap`. Gate C closed after broad
+validation.
 
 Blueprint:
 [DYNAMIC_AIRBORNE_CARTOGRAPHY.md](./DYNAMIC_AIRBORNE_CARTOGRAPHY.md).
@@ -602,17 +736,21 @@ Blueprint:
 Explicitly planned, not done, documented — safe to resume any
 time without context loss:
 
-1. **`dynamic_airborne_split_refactor_v2`** — now active; composer
-   injection to unblock the remaining `dynamic-airborne.ts` body. Gate B
+1. **Remaining dynamic-airborne recursive guard carves** — optional
+   architecture backlog. Gate B of the closed v2 slice
    first carve moved `applyMicroGapFillEquivalenceGuard`; second carve
    moved `applyHeavyUnframedCavityScreeningCap`; third carve moved
    `applyMixedSecurityBoardDoubleStudFieldTrim`; fourth carve moved
    `applyHighFillSingleBoardStudFieldLift`; fifth carve moved
    `applyMixedBoardEmptyCavityFieldMidbandLift`; sixth carve moved
    `applyMixedPremiumSplitFieldLift`; seventh carve moved
-   `applyDiamondHybridResilientFieldMidbandTrim`; next carve is
-   `applyMixedPlainModerateSingleBoardLabTemplate`. Blueprint in
-   `DYNAMIC_AIRBORNE_CARTOGRAPHY.md` "Gate B Seventh Carve - 2026-04-24"
+   `applyDiamondHybridResilientFieldMidbandTrim`; eighth carve moved
+   `applyMixedPlainModerateSingleBoardLabTemplate`; ninth carve moved
+   `applyPremiumSingleBoardFieldCorrection`; tenth carve moved
+   `applySingleLeafMasonryMonotonicFloor`; eleventh carve moved
+   `applyNarrowHeavyDoubleLeafGapCap`; C6 is closed, and any remaining
+   guard carve needs a new selected architecture slice. Blueprint in
+   `DYNAMIC_AIRBORNE_CARTOGRAPHY.md` "Gate C Closeout - 2026-04-26"
    section.
 2. **Deep-hybrid swap VALUE pins** — optional per-cell VALUE pins
    for the deep-hybrid swap grids. Existing narrative/invariant pins
@@ -630,6 +768,10 @@ time without context loss:
    as `all_caller_invalid_thickness_guard_v1`.
 8. **Dedicated floor 50+ layer regression** — closed no-runtime as
    `floor_many_layer_stress_regression_v1`.
+9. **Realistic layer-combination coverage cartography** — active. It
+   maps realistic wall/floor layer combinations by evidence tier before
+   selecting the next runtime widening target. Plan:
+   `SLICE_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_PLAN.md`.
 
 ## Frozen Posture — Do Not Reopen By Inertia
 
@@ -656,26 +798,30 @@ time without context loss:
 
 ## Resume Order For The Next Agent
 
-1. Read [CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_SEVENTH_CARVE_HANDOFF.md](./CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_SEVENTH_CARVE_HANDOFF.md)
-   for the seventh-carve implementation handoff, or start from
-   [CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_POST_COMMIT_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_POST_COMMIT_REVALIDATION_HANDOFF.md)
-   for the latest clean post-commit checkpoint.
-2. Read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md)
-   and [SLICE_DYNAMIC_AIRBORNE_SPLIT_REFACTOR_V2_PLAN.md](./SLICE_DYNAMIC_AIRBORNE_SPLIT_REFACTOR_V2_PLAN.md).
-   Continue the active slice in Gate B.
-3. Read [DYNAMIC_AIRBORNE_CARTOGRAPHY.md](./DYNAMIC_AIRBORNE_CARTOGRAPHY.md)
-   for the split-v1 map, circular-import blocker, remaining guard list,
-   and Gate A call graph.
-4. Confirm the triangle (this file +
+1. Read [CHECKPOINT_2026-04-27_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_GATE_A_HANDOFF.md)
+   for the latest active-slice handoff.
+2. Read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md),
+   [SLICE_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_PLAN.md](./SLICE_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_PLAN.md),
+   and [SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md](./SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md).
+   Start the Gate B source/formula audit for
+   `wall.concrete_heavy_core_screening.field`.
+3. Read [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
+   for the calculator-priority chain that should stay ahead of
+   productization.
+4. Read [DYNAMIC_AIRBORNE_CARTOGRAPHY.md](./DYNAMIC_AIRBORNE_CARTOGRAPHY.md)
+   for the split-v1/v2 map, remaining optional guard list, and Gate C
+   closeout.
+5. Confirm the triangle (this file +
    [MASTER_PLAN.md](./MASTER_PLAN.md) +
    [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md))
    agrees on the active slice, completion signals, and deferred tracks.
    If it does not, fix the drift before starting work.
-5. Run `pnpm calculator:gate:current` as the focused baseline.
-6. Continue `dynamic_airborne_split_refactor_v2` from Gate B: move
-   `applyMixedPlainModerateSingleBoardLabTemplate` into
-   `dynamic-airborne-correction-guards.ts`.
-7. Treat [CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_A_HANDOFF.md),
+6. Run `pnpm calculator:gate:current` as the focused baseline.
+7. Re-read the heavy-core/concrete wall implementation path and write
+   the Gate B source/formula, tolerance, support/origin, and web-card
+   plan before changing runtime math.
+8. Treat [CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_ELEVENTH_CARVE_HANDOFF.md](./CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_ELEVENTH_CARVE_HANDOFF.md),
+   [CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_A_HANDOFF.md),
    [CHECKPOINT_2026-04-24_INVALID_THICKNESS_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-24_INVALID_THICKNESS_CLOSEOUT_HANDOFF.md),
    [CHECKPOINT_2026-04-24_INVALID_THICKNESS_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-24_INVALID_THICKNESS_GATE_A_HANDOFF.md),
    [SLICE_ALL_CALLER_INVALID_THICKNESS_GUARD_PLAN.md](./SLICE_ALL_CALLER_INVALID_THICKNESS_GUARD_PLAN.md),

@@ -1,19 +1,19 @@
 # Slice Plan - Dynamic Airborne Split Refactor v2
 
-Status: ACTIVE (selected 2026-04-24 after
+Status: CLOSED 2026-04-26 (selected 2026-04-24 after
 `all_caller_invalid_thickness_guard_v1` closed no-runtime; Gate A
-landed no-runtime; Gate B seventh carve landed; next carve target:
-`applyMixedPlainModerateSingleBoardLabTemplate`)
+landed no-runtime; Gate B carved eleven guards; Gate C closed after
+broad validation)
 
 ## Objective
 
 Reduce the remaining `dynamic-airborne.ts` architecture debt without
 changing calculator behavior.
 
-The file is still 2538 lines after the seventh Gate B carve, above the
-2000-line hygiene threshold, and the remaining large block is not a
+The file is 1793 lines after the eleventh Gate B carve, now below the
+2000-line hygiene threshold, and the remaining block is not a
 source or formula problem. It is a composition problem: several floor /
-cap guard functions recursively call `calculateDynamicAirborneResult(...)`
+cap / correction guard functions recursively call `calculateDynamicAirborneResult(...)`
 on layer variants, so a mechanical move would create a circular import
 unless the composer is passed in as an explicit dependency.
 
@@ -27,19 +27,18 @@ unless the composer is passed in as an explicit dependency.
   exact-row follow-ups.
 - Do not deduplicate, rename, or rewrite guard logic during a mechanical
   carve.
-- Do not resume `project_access_policy_route_integration_v1` until this
-  selected calculator architecture slice closes or priority explicitly
-  changes.
+- Do not resume `project_access_policy_route_integration_v1` during this
+  calculator architecture slice.
 
 ## Why This Slice Is High ROI Now
 
 `all_caller_invalid_thickness_guard_v1` closed the last explicit
 cross-cutting engine thickness-validity partial row. The remaining
 source-family gaps are source-blocked or optional value-pin hardening.
-By contrast, `dynamic-airborne.ts` remains the main calculator file that
-still violates the architecture hygiene signal C6.
+By contrast, `dynamic-airborne.ts` was the main calculator file still
+violating the architecture hygiene signal C6 before this slice closed.
 
-This slice improves future accuracy work by shrinking review scope and
+This slice improved future accuracy work by shrinking review scope and
 making the floor/cap guard boundary explicit, while preserving every
 current numeric result.
 
@@ -48,11 +47,11 @@ current numeric result.
 - `dynamic_airborne_split_refactor_v1` already carved seven modules:
   helpers, family detection, Davy masonry, mixed-plain templates, cavity
   topology, masonry calibration, and framed-wall logic.
-- `dynamic-airborne.ts` currently has 2538 lines after the seventh v2
-  carve; `dynamic-airborne-correction-guards.ts` has 657 lines.
+- `dynamic-airborne.ts` currently has 1793 lines after the eleventh v2
+  carve; `dynamic-airborne-correction-guards.ts` has 1422 lines.
 - `docs/calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md` records the blocker:
   the remaining floor/cap guards call the composer recursively.
-- Broad `pnpm check` is green after the seventh Gate B carve:
+- Broad `pnpm check` is green after Gate C closeout:
   engine 219 files / 1216 tests, web 150 files / 864 passed +
   18 skipped, build 5/5 with known non-fatal `sharp/@img` warnings.
 
@@ -121,8 +120,9 @@ export type DynamicAirborneComposer = (
 
 ### Gate B - composer injection and first mechanical carve
 
-Status: SEVENTH CARVE LANDED 2026-04-24, continue with next bounded
-carve.
+Status: CLOSED 2026-04-26. Eleven bounded carves landed and the slice
+closed at Gate C because `dynamic-airborne.ts` is now below the C6 line
+threshold after broad validation.
 
 Valid Gate B work:
 
@@ -347,27 +347,174 @@ can move into `dynamic-airborne-correction-guards.ts` without adding
 another recursive composer path. Keep it isolated from the premium
 field-correction and monotonic floor blocks.
 
+Gate B eighth carve result:
+
+- `applyMixedPlainModerateSingleBoardLabTemplate` now lives in
+  `dynamic-airborne-correction-guards.ts`.
+- The mixed-plain moderate template guard stayed non-recursive and does
+  not take a composer parameter.
+- Source size after the move:
+  - `dynamic-airborne.ts`: 2387 physical lines.
+  - `dynamic-airborne-correction-guards.ts`: 814 physical lines.
+- Executable eighth-carve contract:
+  `packages/engine/src/dynamic-airborne-split-v2-gate-b-eighth-carve-contract.test.ts`.
+- Remaining in-file `apply*` guards: 6.
+- Remaining direct recursive composer guards: 5:
+  `applySingleLeafMasonryMonotonicFloor`,
+  `applyNarrowHeavyDoubleLeafGapCap`,
+  `applyLinedMassiveMasonryMonotonicFloor`,
+  `applyFramedReinforcementMonotonicFloor`, and
+  `applyAmbiguousFamilyBoundaryHold`.
+- Validation after the eighth carve:
+  - targeted eighth-carve contract + coverage-grid contract: 2 files /
+    10 tests green;
+  - focused dynamic airborne / hostile-input behavior sweep: 13 files /
+    239 tests green;
+  - `pnpm calculator:gate:current` green: engine 86 files / 396 tests,
+    web 36 files / 170 passed + 18 skipped, build 5/5, whitespace guard
+    clean; known non-fatal `sharp/@img` warnings only.
+
+Next Gate B carve target: `applyPremiumSingleBoardFieldCorrection`.
+Reason: it is the last remaining non-recursive correction block. It is
+larger than the template guard and should still move separately before
+the recursive monotonic floor/cap guards.
+
+Gate B ninth carve result:
+
+- `applyPremiumSingleBoardFieldCorrection` now lives in
+  `dynamic-airborne-correction-guards.ts`.
+- The premium single-board field correction stayed non-recursive and
+  does not take a composer parameter.
+- Source size after the move:
+  - `dynamic-airborne.ts`: 2105 physical lines.
+  - `dynamic-airborne-correction-guards.ts`: 1091 physical lines.
+- Executable ninth-carve contract:
+  `packages/engine/src/dynamic-airborne-split-v2-gate-b-ninth-carve-contract.test.ts`.
+- Remaining in-file `apply*` guards: 5.
+- Remaining direct recursive composer guards: 5:
+  `applySingleLeafMasonryMonotonicFloor`,
+  `applyNarrowHeavyDoubleLeafGapCap`,
+  `applyLinedMassiveMasonryMonotonicFloor`,
+  `applyFramedReinforcementMonotonicFloor`, and
+  `applyAmbiguousFamilyBoundaryHold`.
+- Validation after the ninth carve:
+  - targeted ninth-carve contract + coverage-grid contract: 2 files /
+    10 tests green;
+  - focused dynamic airborne / hostile-input behavior sweep: 13 files /
+    239 tests green;
+  - `pnpm calculator:gate:current` green: engine 86 files / 396 tests,
+    web 36 files / 170 passed + 18 skipped, build 5/5, whitespace guard
+    clean; known non-fatal `sharp/@img` warnings only.
+
+Next Gate B carve target: `applySingleLeafMasonryMonotonicFloor`.
+Reason: all non-recursive correction guards are now carved. This is the
+first remaining in-file guard and the next bounded recursive monotonic
+floor carve; it must use `DynamicAirborneComposer` injection instead of
+importing the composer.
+
+Gate B tenth carve result:
+
+- `applySingleLeafMasonryMonotonicFloor` now lives in
+  `dynamic-airborne-correction-guards.ts`.
+- The single-leaf masonry monotonic floor guard uses injected
+  `DynamicAirborneComposer` for reduced-thickness sibling probes and
+  does not import or call `calculateDynamicAirborneResult(...)`
+  directly from the guard module.
+- Source size after the move:
+  - `dynamic-airborne.ts`: 1952 physical lines.
+  - `dynamic-airborne-correction-guards.ts`: 1256 physical lines.
+- Executable tenth-carve contract:
+  `packages/engine/src/dynamic-airborne-split-v2-gate-b-tenth-carve-contract.test.ts`.
+- Remaining in-file `apply*` guards: 4.
+- Remaining direct recursive composer guards: 4:
+  `applyNarrowHeavyDoubleLeafGapCap`,
+  `applyLinedMassiveMasonryMonotonicFloor`,
+  `applyFramedReinforcementMonotonicFloor`, and
+  `applyAmbiguousFamilyBoundaryHold`.
+- Validation after the tenth carve:
+  - targeted tenth-carve contract + coverage-grid contract: 2 files /
+    10 tests green;
+  - focused dynamic airborne / hostile-input behavior sweep: 13 files /
+    239 tests green;
+  - `pnpm calculator:gate:current` green: engine 86 files / 396 tests,
+    web 36 files / 170 passed + 18 skipped, build 5/5, whitespace guard
+    clean; known non-fatal `sharp/@img` warnings only.
+
+Next Gate B carve target if the slice continues:
+`applyNarrowHeavyDoubleLeafGapCap`. Reason: it is the next in-file
+recursive cap guard and can move with the same
+`DynamicAirborneComposer` injection pattern. Because the composer file is
+now under 2000 lines, Gate C closeout should be considered after full
+validation before starting another carve.
+
+Gate B eleventh carve result:
+
+- Gate B eleventh carve landed as the final runtime carve in this slice.
+- `applyNarrowHeavyDoubleLeafGapCap` now lives in
+  `dynamic-airborne-correction-guards.ts`.
+- The narrow heavy double-leaf gap cap uses injected
+  `DynamicAirborneComposer` for contact-equivalent sibling probes and
+  does not import or call `calculateDynamicAirborneResult(...)`
+  directly from the guard module.
+- Source size after the move:
+  - `dynamic-airborne.ts`: 1793 physical lines.
+  - `dynamic-airborne-correction-guards.ts`: 1422 physical lines.
+- Executable eleventh-carve contract:
+  `packages/engine/src/dynamic-airborne-split-v2-gate-b-eleventh-carve-contract.test.ts`.
+- Remaining in-file `apply*` guards: 3.
+- Remaining direct recursive composer guards: 3:
+  `applyLinedMassiveMasonryMonotonicFloor`,
+  `applyFramedReinforcementMonotonicFloor`, and
+  `applyAmbiguousFamilyBoundaryHold`.
+- Validation after the eleventh carve:
+  - targeted eleventh-carve contract + coverage-grid contract: 2 files /
+    10 tests green;
+  - focused dynamic airborne / hostile-input behavior sweep: 13 files /
+    239 tests green;
+  - `pnpm calculator:gate:current` green: engine 86 files / 396 tests,
+    web 36 files / 170 passed + 18 skipped, build 5/5, whitespace guard
+    clean; known non-fatal `sharp/@img` warnings only.
+
+Next Gate B carve target if the slice continues:
+`applyLinedMassiveMasonryMonotonicFloor`. Reason: it is the next in-file
+recursive monotonic-floor guard and can move with the same
+`DynamicAirborneComposer` injection pattern. Because the composer file is
+now well under 2000 lines, Gate C closeout should again be considered
+after validation before starting another carve.
+
 ### Gate C - closeout and next-slice selection
 
-Close only after focused gate, broad `pnpm check`, post-build web
-typecheck, and `git diff --check` are green.
+Status: CLOSED 2026-04-26.
 
-If the bounded carves reduce `dynamic-airborne.ts` below 2000 lines,
-update C6 from documented deferral to closed. If they do not, document
-the remaining bounded block and keep C6 honest.
+Closed after focused gate, broad `pnpm check`, post-build web
+typecheck, and `git diff --check` were green.
+
+Gate C result:
+
+- `dynamic-airborne.ts` is 1793 physical lines, below the 2000-line C6
+  threshold.
+- `dynamic_airborne_split_refactor_v2` Gate C closed and C6 moved out of
+  partial.
+- Broad `pnpm check` stayed green: engine 219 files / 1216 tests, web
+  150 files / 864 passed + 18 skipped, build 5/5; known non-fatal
+  `sharp/@img` warnings only.
+- Remaining recursive composer guards are optional architecture backlog:
+  `applyLinedMassiveMasonryMonotonicFloor`,
+  `applyFramedReinforcementMonotonicFloor`, and
+  `applyAmbiguousFamilyBoundaryHold`.
+- The selected next slice is
+  `realistic_layer_combination_coverage_cartography_v1`.
 
 ## Immediate Next Steps
 
-1. Move `applyMixedPlainModerateSingleBoardLabTemplate` into
-   `dynamic-airborne-correction-guards.ts` as the next isolated
-   non-recursive template carve.
-2. Import the moved template guard into `dynamic-airborne.ts` from the
-   correction-guards module.
-3. Update the Gate B seventh-carve contract into an eighth-carve contract,
-   keeping the remaining recursive guard inventory accurate.
-4. Validate with the focused dynamic airborne/hostile input gates,
-   `pnpm calculator:gate:current`, post-build web typecheck if the build
-   touches Next metadata, and `git diff --check`.
+This plan is closed. Do not continue Gate B from nearby green tests
+alone. If the remaining recursive guards are carved later, open a new
+architecture slice and keep each carve atomic.
+
+Next active planning surface:
+`SLICE_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_PLAN.md`.
+It maps realistic user layer combinations by evidence tier before
+selecting the next runtime widening target.
 
 ## Validation
 
@@ -379,7 +526,7 @@ Per Gate B carve minimum:
 - `pnpm --filter @dynecho/web typecheck` after build;
 - `git diff --check`.
 
-Gate C closeout additionally requires broad `pnpm check`.
+Gate C closeout broad `pnpm check` was green.
 
 ## Completion Criteria
 
@@ -388,3 +535,6 @@ Gate C closeout additionally requires broad `pnpm check`.
 - defended calculator values stay unchanged;
 - `dynamic-airborne.ts` line count and C6 posture are updated honestly;
 - the next selected slice is recorded in a post-contract test.
+
+Completion result: all criteria are satisfied. Closure is pinned in
+`packages/engine/src/post-dynamic-airborne-split-refactor-v2-gate-c-next-slice-selection-contract.test.ts`.

@@ -433,15 +433,15 @@ const GRID_ROWS: readonly GridRowExpectation[] = [
     id: "cross.dynamic_airborne_size",
     section: "cross-cutting",
     labelNeedle: "`dynamic-airborne.ts` size",
-    statusLabel: "Split v1 landed, v2 Gate B seventh carve landed",
-    evidenceTier: "partial",
-    deferredReason: "dynamic-airborne.ts still exceeds 2000 lines; split v2 remains active after Gate B seventh carve.",
+    statusLabel: "Split v2 Gate C closed",
+    evidenceTier: "benchmark",
     evidencePaths: [
       "packages/engine/src/dynamic-airborne.ts",
       "packages/engine/src/dynamic-airborne-correction-guards.ts",
       "docs/calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md",
       "packages/engine/src/post-dynamic-airborne-split-refactor-v1-next-slice-selection-contract.test.ts",
-      "packages/engine/src/dynamic-airborne-split-v2-gate-b-seventh-carve-contract.test.ts"
+      "packages/engine/src/dynamic-airborne-split-v2-gate-b-eleventh-carve-contract.test.ts",
+      "packages/engine/src/post-dynamic-airborne-split-refactor-v2-gate-c-next-slice-selection-contract.test.ts"
     ]
   }
 ];
@@ -498,13 +498,14 @@ const COMPLETION_SIGNALS: readonly CompletionSignalExpectation[] = [
   },
   {
     id: "C6",
-    requiredNeedles: ["`dynamic_airborne_split_refactor_v2` Gate B seventh carve moved", "DYNAMIC_AIRBORNE_CARTOGRAPHY.md"],
+    requiredNeedles: ["`dynamic_airborne_split_refactor_v2` Gate C closed", "DYNAMIC_AIRBORNE_CARTOGRAPHY.md"],
     evidencePaths: [
       "packages/engine/src/dynamic-airborne.ts",
       "packages/engine/src/dynamic-airborne-correction-guards.ts",
       "docs/calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md",
       "packages/engine/src/post-dynamic-airborne-split-refactor-v1-next-slice-selection-contract.test.ts",
-      "packages/engine/src/dynamic-airborne-split-v2-gate-b-seventh-carve-contract.test.ts"
+      "packages/engine/src/dynamic-airborne-split-v2-gate-b-eleventh-carve-contract.test.ts",
+      "packages/engine/src/post-dynamic-airborne-split-refactor-v2-gate-c-next-slice-selection-contract.test.ts"
     ]
   }
 ];
@@ -541,7 +542,7 @@ function statusCategory(status: string): string {
   if (status.includes("Fail-closed")) return "Fail-closed";
   if (status.includes("Partial")) return "Partial";
   if (status.includes("6/6")) return "6/6";
-  if (status.includes("Split v1 landed, v2 Gate B seventh carve landed")) return "Split v1 landed, v2 Gate B seventh carve landed";
+  if (status.includes("Split v2 Gate C closed")) return "Split v2 Gate C closed";
   return status;
 }
 
@@ -668,7 +669,11 @@ describe("coverage grid consistency", () => {
 
     if (dynamicAirborneLines > 2000) {
       expect(cartography).toContain("dynamic_airborne_split_refactor_v2");
-      expect(masterPlan).toContain("`dynamic_airborne_split_refactor_v2` Gate B seventh carve moved");
+      expect(masterPlan).toContain("`dynamic_airborne_split_refactor_v2` Gate C closed");
+    }
+    if (dynamicAirborneLines <= 2000) {
+      expect(masterPlan).toContain("`dynamic_airborne_split_refactor_v2` Gate C closed");
+      expect(masterPlan).toContain("remaining 3 recursive composer guards are optional architecture backlog");
     }
   });
 });

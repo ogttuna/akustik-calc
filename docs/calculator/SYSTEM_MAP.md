@@ -1,6 +1,6 @@
 # System Map
 
-Last reviewed: 2026-04-24
+Last reviewed: 2026-04-26
 
 Document role:
 
@@ -15,8 +15,8 @@ Use this together with the agent resume triangle:
 - [CURRENT_STATE.md](./CURRENT_STATE.md) — snapshot (what just closed, what is selected)
 - [MASTER_PLAN.md](./MASTER_PLAN.md) — strategic roadmap + implementation state grid (§3)
 - [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md) — tactical slice detail
-- [SLICE_ALL_CALLER_INVALID_THICKNESS_GUARD_PLAN.md](./SLICE_ALL_CALLER_INVALID_THICKNESS_GUARD_PLAN.md)
-  — active calculator accuracy/coverage plan
+- [SLICE_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_PLAN.md](./SLICE_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_PLAN.md)
+  — active calculator planning surface
 - [POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md](./POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md)
   — deferred productization plan after calculator final audit
 
@@ -274,27 +274,22 @@ layer-order slice closed no-runtime after pinning explicit-role exact
 reorder stability, raw/order-sensitive support changes, and blocked
 impact fail-closed posture. The all-caller invalid-thickness slice then
 closed no-runtime and moved engine thickness validity out of partial.
-The active calculator risk is now `dynamic_airborne_split_refactor_v2`:
-Gate A pinned the 3152-line guard call graph, Gate B first carve moved
-`applyMicroGapFillEquivalenceGuard` into
-`dynamic-airborne-correction-guards.ts` with `DynamicAirborneComposer`,
-Gate B second carve moved `applyHeavyUnframedCavityScreeningCap`, and
-Gate B third carve moved `applyMixedSecurityBoardDoubleStudFieldTrim`,
-and Gate B fourth carve moved `applyHighFillSingleBoardStudFieldLift`.
-Gate B fifth carve moved `applyMixedBoardEmptyCavityFieldMidbandLift`.
-Gate B sixth carve moved `applyMixedPremiumSplitFieldLift`.
-Gate B seventh carve moved `applyDiamondHybridResilientFieldMidbandTrim`.
-`dynamic-airborne.ts` is now 2538 lines with 7 in-file guards. The
-next bounded carve is `applyMixedPlainModerateSingleBoardLabTemplate`.
+The active calculator risk is now
+`realistic_layer_combination_coverage_cartography_v1`: map realistic
+floor/wall layer combinations by evidence tier before selecting the
+next runtime widening target. `dynamic_airborne_split_refactor_v2`
+closed Gate C after eleven behavior-preserving correction-guard carves;
+`dynamic-airborne.ts` is now 1793 lines, C6 is closed, and the remaining
+three recursive composer guards are optional architecture backlog.
 Productization route integration is deferred, not cancelled.
 
 Current hotspots:
 
 - selected calculator re-entry anchors:
-  - `docs/calculator/CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_SEVENTH_CARVE_HANDOFF.md`
-  - `docs/calculator/SLICE_DYNAMIC_AIRBORNE_SPLIT_REFACTOR_V2_PLAN.md`
+  - `docs/calculator/CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_C_CLOSEOUT_HANDOFF.md`
+  - `docs/calculator/SLICE_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_PLAN.md`
   - `docs/calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md`
-  - `packages/engine/src/post-all-caller-invalid-thickness-gate-c-v1-next-slice-selection-contract.test.ts`
+  - `packages/engine/src/post-dynamic-airborne-split-refactor-v2-gate-c-next-slice-selection-contract.test.ts`
   - `docs/calculator/CHECKPOINT_2026-04-24_INVALID_THICKNESS_GATE_A_HANDOFF.md`
   - `docs/calculator/CHECKPOINT_2026-04-24_INVALID_THICKNESS_BASELINE_READY_HANDOFF.md`
   - `docs/calculator/CHECKPOINT_2026-04-24_FLOOR_LAYER_ORDER_CLOSEOUT_HANDOFF.md`
@@ -416,11 +411,11 @@ Current hotspots:
 - source-backed widening ledger:
   `docs/calculator/SOURCE_GAP_LEDGER.md`
 
-The current selected next slice is a calculator slice again:
-`dynamic_airborne_split_refactor_v2`. Continue from Gate B by moving
-`applyMixedPlainModerateSingleBoardLabTemplate` into
-`dynamic-airborne-correction-guards.ts`. Closed
-reinforced, `GDMTXA04A`, `C11c`, raw bare, wall-selector, floor
+The current selected next slice is a calculator slice:
+`realistic_layer_combination_coverage_cartography_v1`. Continue from
+Gate A by creating the no-runtime executable floor/wall layer
+combination cartography. Closed reinforced, `GDMTXA04A`, `C11c`, raw
+bare, wall-selector, floor
 continuation, floor many-layer, floor layer-order, and timber-stud
 formula tracks stay explicit calculator deferrals or closed references
 rather than active runtime work.
@@ -447,8 +442,8 @@ To avoid docs drift, be explicit about current non-features:
 - Want the deferred productization plan:
   read [POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md](./POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md)
 - Want the active calculator plan:
-  read [SLICE_DYNAMIC_AIRBORNE_SPLIT_REFACTOR_V2_PLAN.md](./SLICE_DYNAMIC_AIRBORNE_SPLIT_REFACTOR_V2_PLAN.md)
+  read [SLICE_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_PLAN.md](./SLICE_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_PLAN.md)
 - Want answer-origin or support semantics:
   read [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
 - Want the last clean resume point:
-  read [CHECKPOINT_2026-04-24_INVALID_THICKNESS_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-24_INVALID_THICKNESS_CLOSEOUT_HANDOFF.md)
+  read [CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_C_CLOSEOUT_HANDOFF.md)
