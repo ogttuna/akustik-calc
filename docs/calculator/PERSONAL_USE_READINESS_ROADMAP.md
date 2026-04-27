@@ -36,8 +36,8 @@ DynEcho is personal-use ready when these conditions hold:
 
 ### 1. Heavy-Core / Concrete Wall Lane
 
-Status: Gate B no-runtime audit contract landed; runtime tightening
-still pending.
+Status: closed no-runtime; remains screening until new source evidence
+appears.
 
 Gate A selected `wall.concrete_heavy_core_screening.field` as the
 highest-ROI runtime target. It is common, currently screening-tier, and
@@ -56,17 +56,16 @@ catalog row, no direct external benchmark match in the current audit,
 and no topology-specific tolerance for the selected concrete lining
 stack. Evidence remains `screening`.
 
-Required before runtime implementation:
+Closed decision:
 
-- identify a defensible source/formula/family rule or explicitly close
-  Gate B no-runtime;
-- define expected `R'w`, `Dn,w`, `DnT,w`, and `DnT,A` support behavior;
-- define origin/confidence labels and warning/card posture;
-- add focused engine tests and web tests if the visible cards change.
+- keep `wall-screening-concrete` screening-tier at field `R'w = 55`;
+- do not promote to formula/family/benchmark without a new source row or
+  bounded family rule;
+- continue personal-use readiness with the timber stud + CLT wall pass.
 
 ### 2. Timber Stud And CLT Wall Accuracy Pass
 
-Status: documented follow-up candidate.
+Status: selected active slice.
 
 The direct double-board timber stud and CLT wall lanes are common and
 currently formula-owned where no exact topology row matches the live
@@ -79,6 +78,8 @@ Required before implementation:
 - keep resilient-bar and direct timber exact imports from bleeding into
   unmatched topologies;
 - pin value tolerances and exact/benchmark precedence in focused tests.
+- start from
+  [SLICE_WALL_TIMBER_STUD_CLT_ACCURACY_PASS_PLAN.md](./SLICE_WALL_TIMBER_STUD_CLT_ACCURACY_PASS_PLAN.md).
 
 ### 3. Floor Fallback / Low-Confidence Cleanup
 
@@ -119,17 +120,17 @@ Required before implementation:
 ## Current Order
 
 Current validation baseline: 2026-04-27 `pnpm check` is green after
-cartography Gate A and web test-runner stabilization. Engine broad is
-221 files / 1224 tests. Web broad keeps 150 files in scope through
-`tools/dev/run-web-vitest.ts` with 864 passed + 18 skipped. Build is
-5/5 with the known non-fatal `sharp/@img` optional-package warnings.
+heavy-core/concrete Gate B no-runtime closeout and timber+CLT next-slice
+selection. Engine broad is 223 files / 1232 tests. Web broad keeps 150
+files in scope through `tools/dev/run-web-vitest.ts` with 864 passed +
+18 skipped. Build is 5/5 with the known non-fatal `sharp/@img`
+optional-package warnings.
 
 Do these in order unless new evidence changes the ranking:
 
-1. `wall.concrete_heavy_core_screening.field` Gate B.
-2. Timber stud + CLT wall accuracy pass.
-3. Floor fallback / low-confidence cleanup.
-4. UI / input / output honesty pass.
+1. Timber stud + CLT wall accuracy pass.
+2. Floor fallback / low-confidence cleanup.
+3. UI / input / output honesty pass.
 
 `project_access_policy_route_integration_v1` remains deferred until this
 calculator readiness chain closes or priority explicitly changes.

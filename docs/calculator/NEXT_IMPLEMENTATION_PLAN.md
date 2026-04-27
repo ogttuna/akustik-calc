@@ -8,10 +8,10 @@ chain read
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
 
 Last reviewed: 2026-04-27
-(`realistic_layer_combination_coverage_cartography_v1` Gate A landed;
-heavy-core/concrete Gate B source/formula audit landed no-runtime;
+(`wall_heavy_core_concrete_gate_b_v1` closed no-runtime;
+`wall_timber_stud_clt_accuracy_pass_v1` selected;
 see
-`CHECKPOINT_2026-04-27_WALL_HEAVY_CORE_CONCRETE_GATE_B_AUDIT_HANDOFF.md`).
+`CHECKPOINT_2026-04-27_WALL_HEAVY_CORE_CONCRETE_GATE_B_CLOSEOUT_HANDOFF.md`).
 
 ---
 
@@ -41,45 +41,41 @@ For every next slice decision:
 ## Now
 
 - **Active slice**:
-  `realistic_layer_combination_coverage_cartography_v1`.
+  `wall_timber_stud_clt_accuracy_pass_v1`.
 - **Planning surface**:
-  [SLICE_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_PLAN.md](./SLICE_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_PLAN.md).
-- **Gate B subplan**:
-  [SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md](./SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md).
+  [SLICE_WALL_TIMBER_STUD_CLT_ACCURACY_PASS_PLAN.md](./SLICE_WALL_TIMBER_STUD_CLT_ACCURACY_PASS_PLAN.md).
 - **Personal-use readiness roadmap**:
   [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
-  fixes the remaining calculator-priority chain as heavy-core/concrete
-  wall, timber stud + CLT wall accuracy, floor fallback/low-confidence
-  cleanup, then UI/input/output honesty.
+  fixes the remaining calculator-priority chain as timber stud + CLT
+  wall accuracy, floor fallback/low-confidence cleanup, then
+  UI/input/output honesty. Heavy-core/concrete remains screening until
+  new source evidence appears.
 - **Just closed**: `dynamic_airborne_split_refactor_v2` Gate C.
   Gate B carved eleven correction guards into
   `dynamic-airborne-correction-guards.ts`; `dynamic-airborne.ts` is now
   1793 lines, below the 2000-line C6 threshold.
 - **Latest broad validation**: 2026-04-27 `pnpm check` is green after
-  cartography Gate A and web-runner stabilization: engine 221 files /
-  1224 tests, web 150 files / 864 passed + 18 skipped through
-  `tools/dev/run-web-vitest.ts`, build 5/5, with only the known
-  non-fatal `sharp/@img` optional-package warnings.
+  heavy-core/concrete Gate B no-runtime closeout and timber+CLT
+  selection: engine 223 files / 1232 tests, web 150 files / 864 passed
+  + 18 skipped through `tools/dev/run-web-vitest.ts`, build 5/5, with
+  only the known non-fatal `sharp/@img` optional-package warnings.
 - **Gate A result**:
   `packages/engine/src/realistic-layer-combination-coverage-cartography.test.ts`
   landed no-runtime. It executes 29 representative floor/wall cells and
   maps evidence tier, support/card posture, output coverage, origin,
   confidence, invariants, and candidate type.
-- **Next implementation action**: Gate B decision point for
-  `wall.concrete_heavy_core_screening.field` using
-  [SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md](./SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md).
-  The no-runtime source/formula audit found no exact catalog row, no
-  direct external benchmark match in the current audit, and no
-  topology-specific tolerance for the selected concrete lining stack.
-  Evidence remains `screening`.
+- **Heavy-core/concrete closeout**: Gate B closed no-runtime for
+  `wall.concrete_heavy_core_screening.field`. The no-runtime
+  source/formula audit found no exact catalog row, no direct external
+  benchmark match in the current audit, and no topology-specific
+  tolerance for the selected concrete lining stack. Evidence remains
+  `screening`.
 - **Latest plan/implementation reconciliation**: 2026-04-27 review
-  confirmed the Gate B runtime tightening is not implemented yet. The
-  no-runtime audit contract
-  `packages/engine/src/wall-heavy-core-concrete-gate-b-audit-contract.test.ts`
-  now records the current generated candidate values, separated
-  workbench/selector/deep-hybrid surfaces, verified-catalog non-match,
-  formula components, and runtime-retune blocker before any value
-  retune.
+  closed heavy-core/concrete no-runtime and selected
+  `wall_timber_stud_clt_accuracy_pass_v1`.
+  `packages/engine/src/post-wall-heavy-core-concrete-gate-b-next-slice-selection-contract.test.ts`
+  records that decision and keeps exact/source/productization
+  boundaries closed.
 - **Deferred but not cancelled**:
   `project_access_policy_route_integration_v1`. Do not resume
   productization until the selected calculator slice closes or priority
@@ -87,37 +83,26 @@ For every next slice decision:
 
 ## Immediate Execution Order
 
-Gate B of `realistic_layer_combination_coverage_cartography_v1` should
-now proceed in this order:
+Gate A of `wall_timber_stud_clt_accuracy_pass_v1` should now proceed in
+this order:
 
-1. Treat Gate A as evidence, not permission to guess. The selected
-   target is `wall.concrete_heavy_core_screening.field` because it is
-   common, finite today, and still screening-tier.
-2. Re-read the landed Gate B audit in
-   `wall-heavy-core-concrete-gate-b-audit-contract.test.ts`: the
-   selected generated case is `wall-screening-concrete`; field `R'w`
-   stays 55; supported field outputs stay `R'w`, `Dn,w`, `DnT,w`, and
-   `DnT,A`; evidence remains `screening`.
-3. Re-read the current heavy-core/concrete wall implementation path
-   listed in
-   [SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md](./SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md):
-   dynamic family selection, lined massive wall handling, heavy
-   composite/double-leaf guards, field output derivation, and web card
-   display.
-4. Choose the Gate B path. Either import/define a bounded source-family
-   rule and write a proposed runtime contract, or close Gate B
-   no-runtime with stronger honesty while keeping the current screening
-   values.
-5. If a runtime path is chosen, state expected output support,
-   origin/confidence posture, tolerances, web-card behavior, and
-   exact/benchmark non-drift rows before changing math.
-6. Implement only the smallest runtime widening/tightening that
-   satisfies that contract. Do not retune from nearby green selector,
-   deep-hybrid, or workbench preset tests alone.
-7. Add focused engine tests for numerical behavior and support/origin
-   posture; add web tests only if user-visible cards, warnings, or
-   output support change.
-8. Run targeted tests, `pnpm calculator:gate:current`, and
+1. Re-read
+   [SLICE_WALL_TIMBER_STUD_CLT_ACCURACY_PASS_PLAN.md](./SLICE_WALL_TIMBER_STUD_CLT_ACCURACY_PASS_PLAN.md).
+2. Audit generated `wall-timber-stud` and `wall-clt-local` with no
+   runtime change: current values, dynamic family, strategy, support,
+   confidence, warnings, exact/source non-match, and visible card
+   evidence.
+3. Separate timber exact/source opportunities from the live generated
+   timber formula lane. Do not promote direct timber or resilient-bar
+   source rows by adjacency.
+4. Separate CLT wall formula evidence from floor CLT exact/source
+   truth. Do not borrow floor rows as wall exact rows.
+5. Pick the first Gate B target: timber stud, CLT wall, or no-runtime
+   closeout if neither has defensible source/formula support.
+6. Add focused engine tests for the selected runtime contract before
+   changing math; add web tests only if card/warning/support posture
+   changes.
+7. Run targeted tests, `pnpm calculator:gate:current`, and
    `git diff --check`. Use broad `pnpm check` before Gate C closeout.
 
 ## Personal-Use Readiness Chain
@@ -125,11 +110,9 @@ now proceed in this order:
 These are the calculator priorities before calling the project ready for
 private day-to-day use:
 
-1. Heavy-core / concrete wall lane:
-   `wall.concrete_heavy_core_screening.field` Gate B.
-2. Timber stud + CLT wall accuracy pass.
-3. Floor fallback / low-confidence cleanup.
-4. UI / input / output honesty pass.
+1. Timber stud + CLT wall accuracy pass.
+2. Floor fallback / low-confidence cleanup.
+3. UI / input / output honesty pass.
 
 Do not resume productization ahead of this chain unless priority
 explicitly changes.
@@ -138,8 +121,8 @@ explicitly changes.
 
 See [CURRENT_STATE.md](./CURRENT_STATE.md) "Latest Closed Slices" table.
 `dynamic_airborne_split_refactor_v2` is now closed and
-`realistic_layer_combination_coverage_cartography_v1` is the selected
-active follow-up.
+`wall_timber_stud_clt_accuracy_pass_v1` is the selected active
+follow-up.
 
 ## Deferred Follow-Up Tracks
 

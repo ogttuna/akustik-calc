@@ -92,6 +92,14 @@ function generatedCase(id: string) {
   return found;
 }
 
+function requiredOptions<T>(options: T | undefined, label: string): T {
+  if (!options) {
+    throw new Error(`${label} options missing`);
+  }
+
+  return options;
+}
+
 describe("wall heavy-core concrete Gate B audit contract", () => {
   it("records that Gate B starts with a no-runtime audit contract before any retune", () => {
     expect(HEAVY_CORE_CONCRETE_GATE_B_AUDIT).toEqual({
@@ -165,12 +173,17 @@ describe("wall heavy-core concrete Gate B audit contract", () => {
 
   it("blocks formula or benchmark promotion until a source row or bounded family rule is named", () => {
     const testCase = generatedCase("wall-screening-concrete");
-    const lab = calculateAssembly(testCase.rows, testCase.labOptions);
-    const field = calculateAssembly(testCase.rows, testCase.fieldOptions);
+    const labOptions = requiredOptions(testCase.labOptions, testCase.id);
+    const fieldOptions = requiredOptions(testCase.fieldOptions, testCase.id);
+    const lab = calculateAssembly(testCase.rows, labOptions);
+    const field = calculateAssembly(testCase.rows, fieldOptions);
+    const candidateMethods = field.dynamicAirborneTrace?.candidateMethods as
+      | readonly { method: string; rwDb?: number; selected?: boolean }[]
+      | undefined;
 
-    expect(findVerifiedAirborneAssemblyMatch(lab.layers, testCase.labOptions.airborneContext)).toBeNull();
-    expect(findVerifiedAirborneAssemblyMatch(field.layers, testCase.fieldOptions.airborneContext)).toBeNull();
-    expect(findVerifiedAirborneAssemblyMatchWithLabFallback(field.layers, testCase.fieldOptions.airborneContext))
+    expect(findVerifiedAirborneAssemblyMatch(lab.layers, labOptions.airborneContext)).toBeNull();
+    expect(findVerifiedAirborneAssemblyMatch(field.layers, fieldOptions.airborneContext)).toBeNull();
+    expect(findVerifiedAirborneAssemblyMatchWithLabFallback(field.layers, fieldOptions.airborneContext))
       .toBeNull();
 
     expect(field.floorSystemMatch).toBeNull();
@@ -183,14 +196,14 @@ describe("wall heavy-core concrete Gate B audit contract", () => {
       fieldFlankingPenaltyDb: 1.8
     });
 
-    expect(field.dynamicAirborneTrace?.candidateMethods.map((entry) => entry.method)).toEqual([
+    expect(candidateMethods?.map((entry) => entry.method)).toEqual([
       "screening_mass_law_curve_seed_v3",
       "ks_rw_calibrated",
       "mass_law",
       "sharp",
       "kurtovic"
     ]);
-    expect(field.dynamicAirborneTrace?.candidateMethods.find((entry) => entry.selected)).toMatchObject({
+    expect(candidateMethods?.find((entry) => entry.selected)).toMatchObject({
       method: "mass_law",
       rwDb: 58
     });

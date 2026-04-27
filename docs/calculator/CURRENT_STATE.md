@@ -15,10 +15,10 @@ need the private-use readiness chain read
 
 Last revalidation cycle: `2026-04-27`
 (`realistic_layer_combination_coverage_cartography_v1` Gate A landed;
-heavy-core/concrete Gate B audit landed no-runtime; latest broad
-validation remains the Gate A baseline;
+heavy-core/concrete Gate B closed no-runtime; timber stud + CLT wall
+accuracy pass selected; broad validation re-run;
 latest checkpoint:
-[CHECKPOINT_2026-04-27_WALL_HEAVY_CORE_CONCRETE_GATE_B_AUDIT_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_HEAVY_CORE_CONCRETE_GATE_B_AUDIT_HANDOFF.md)).
+[CHECKPOINT_2026-04-27_WALL_HEAVY_CORE_CONCRETE_GATE_B_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_HEAVY_CORE_CONCRETE_GATE_B_CLOSEOUT_HANDOFF.md)).
 Step 8 closed the calculator runtime audit: `MASTER_PLAN.md` §3/§8
 was reconciled to implementation reality, `coverage-grid-consistency.test.ts`
 now maps the grid and C1-C6 signals to executable evidence, the
@@ -29,7 +29,7 @@ storage v1, project/proposal route authorization, auth-session
 hardening, and the pure team-access policy model.
 
 - **Engine broad suite**: latest broad `pnpm check` on 2026-04-27 was
-  221 / 221 files, 1224 / 1224 tests green
+  223 / 223 files, 1232 / 1232 tests green
   (up from 193/1068 pre-session; step-7 landed 4 wall cases +
   F1/F2 engine fixes + 32-assertion cross-mode torture matrix
   + 2 regression guards + post-contract; step-7b landed the
@@ -56,8 +56,8 @@ hardening, and the pure team-access policy model.
   input contract so it asserts parse behavior instead of calling
   `.keyof()` on the exported shared `AirborneContextSchema` `ZodType`.
 - **Broad `pnpm check`**: lint + typecheck + tests + build green on the
-  latest broad run after Gate A, the heavy-core subplan, and web test
-  runner stabilization; build still emits
+  latest broad run after heavy-core/concrete Gate B no-runtime closeout
+  and timber+CLT next-slice selection; build still emits
   the known non-fatal optional `sharp/@img` warnings through
   `@turbodocx/html-to-docx`.
 - **Focused calculator gate** (`pnpm calculator:gate:current`):
@@ -110,31 +110,30 @@ hardening, and the pure team-access policy model.
   `realistic-layer-combination-coverage-cartography.test.ts` for the
   active slice Gate A matrix, plus
   `wall-heavy-core-concrete-gate-b-audit-contract.test.ts` for the
-  first no-runtime Gate B heavy-core/concrete audit contract.
-  Latest focused gate run after the Gate B source/formula audit
-  contract: 89 engine files / 408 tests,
+  first no-runtime Gate B heavy-core/concrete audit contract, plus
+  `post-wall-heavy-core-concrete-gate-b-next-slice-selection-contract.test.ts`
+  for the no-runtime closeout and timber+CLT next-slice selection.
+  Latest focused gate run after the Gate B no-runtime closeout
+  contract: 90 engine files / 412 tests,
   36 web files / 170 passed +
   18 skipped, build 5/5 tasks, whitespace guard clean.
 
 ## Active Slice
 
-`realistic_layer_combination_coverage_cartography_v1` (calculator
-coverage/accuracy planning, selected).
-Selected `2026-04-26` immediately after
-`dynamic_airborne_split_refactor_v2` closed Gate C. Planning surface:
-[SLICE_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_PLAN.md](./SLICE_REALISTIC_LAYER_COMBINATION_COVERAGE_CARTOGRAPHY_PLAN.md).
+`wall_timber_stud_clt_accuracy_pass_v1` (calculator wall accuracy,
+selected). Planning surface:
+[SLICE_WALL_TIMBER_STUD_CLT_ACCURACY_PASS_PLAN.md](./SLICE_WALL_TIMBER_STUD_CLT_ACCURACY_PASS_PLAN.md).
 
-Gate A has landed no-runtime in
+The previous cartography Gate A landed no-runtime in
 `packages/engine/src/realistic-layer-combination-coverage-cartography.test.ts`.
 The matrix executes 29 representative floor/wall cells, pins output
 support, origin/basis, confidence posture, invariants, and candidate
 type, and selects `wall.concrete_heavy_core_screening.field` as the
 highest-ROI runtime candidate. No new paired web matrix was added
 because the selected cells already point at existing card/route evidence
-or engine-only stress artifacts. Gate B now continues from
-[SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md](./SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md).
+or engine-only stress artifacts.
 The 2026-04-27 plan/implementation reconciliation confirmed that this
-Gate B has not changed runtime code yet. The no-runtime audit contract
+Gate B did not change runtime code. The no-runtime audit contract
 `packages/engine/src/wall-heavy-core-concrete-gate-b-audit-contract.test.ts`
 now pins the generated `wall-screening-concrete` candidate as
 screening-tier, `lined_massive_wall`, with field `R'w = 55` and
@@ -142,15 +141,15 @@ supported `R'w` / `Dn,w` / `DnT,w` / `DnT,A`. The same contract now
 also pins the verified-catalog non-match, lab-fallback non-match, local
 formula components, and the blocker: no source row or
 topology-specific tolerance exists for the selected concrete lining
-stack. The next valid change is either a source/bounded-family import
-contract or an honest no-runtime Gate B closeout.
+stack. The closeout contract keeps the lane screening and selects
+`wall_timber_stud_clt_accuracy_pass_v1`.
 
 Personal-use readiness is now explicitly tracked in
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
-The current priority chain is heavy-core/concrete wall Gate B, timber
-stud + CLT wall accuracy, floor fallback/low-confidence cleanup, then
-UI/input/output honesty. Productization remains deferred until this
-calculator readiness chain closes or priority explicitly changes.
+The current priority chain is timber stud + CLT wall accuracy, floor
+fallback/low-confidence cleanup, then UI/input/output honesty.
+Productization remains deferred until this calculator readiness chain
+closes or priority explicitly changes.
 
 Calculator runtime status: final audit closed and green. The just-closed
 wall formula-family widening slice completed Gate A and Gate B with
@@ -190,8 +189,8 @@ injection. Gate B eleventh carve moved
 `applyNarrowHeavyDoubleLeafGapCap` with `DynamicAirborneComposer`
 injection. Gate C then closed after broad validation because
 `dynamic-airborne.ts` is below 2000 lines. The active next decision is
-now the heavy-core/concrete Gate B path choice: import/define a bounded
-source-family rule or close honestly no-runtime.
+now Gate A for the timber stud + CLT wall accuracy pass selected after
+heavy-core/concrete closed honestly no-runtime.
 
 Checkpoint refinement `2026-04-24`: the post-commit baseline was
 re-read against implementation and revalidated before Gate A. No drift

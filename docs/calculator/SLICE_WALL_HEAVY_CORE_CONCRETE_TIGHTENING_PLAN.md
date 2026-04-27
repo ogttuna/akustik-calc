@@ -1,14 +1,15 @@
 # Slice Plan - Wall Heavy-Core Concrete Tightening
 
-Status: NEXT Gate B subplan for
+Status: CLOSED no-runtime Gate B subplan for
 `realistic_layer_combination_coverage_cartography_v1`
 
 Selected: 2026-04-27 by
 `realistic-layer-combination-coverage-cartography.test.ts`
 
 Last implementation reconciliation: 2026-04-27. Gate B no-runtime
-audit and source/formula evidence contract have landed; no runtime
-tightening has landed for this lane yet.
+audit and source/formula evidence contract landed; Gate B then closed
+no-runtime because no defended source/family/formula promotion was
+available. No runtime tightening landed for this lane.
 
 ## Objective
 
@@ -76,10 +77,9 @@ The plan and implementation currently agree:
   field flanking overlay, and `Dn,w` / `DnT,w` normalization. They are
   formula components, not a stack-specific source row for this topology.
 
-No Gate B runtime implementation has landed yet. The next change should
-therefore choose one path: import/define a bounded source-family rule
-with target values and tolerances, or close Gate B no-runtime with the
-current screening posture and any needed user-facing honesty work.
+No Gate B runtime implementation landed. The closeout path was selected:
+keep the current screening posture and move the personal-use readiness
+chain to timber stud + CLT wall accuracy.
 
 ## Current Surfaces To Keep Separate
 
@@ -190,31 +190,16 @@ Gate B progress:
    repo evidence does not justify a formula/benchmark promotion for the
    selected concrete lining stack; evidence remains `screening`.
 
-Remaining Gate B should proceed in this exact order:
+Gate B closeout:
 
-1. Decide the evidence posture for this lane:
-   keep `screening`, promote only to a bounded `family` lane, or promote
-   to `formula` / `benchmark` only after importing or defining enough
-   source/formula support for this topology.
-2. If promotion is chosen, write the proposed Gate B contract before
-   runtime changes. It must
-   state the selected topology, expected values, output support,
-   origin/confidence labels, allowed dB tolerances, exact/benchmark
-   non-drift rows, and whether workbench card wording changes.
-3. Implement the smallest runtime change that satisfies that contract.
-   If no defensible evidence exists, do not retune values; instead close
-   Gate B no-runtime with stronger audit/card honesty.
-4. Add focused engine tests for numeric behavior, support/origin
-   posture, exact/benchmark non-drift, and nearby layer-swap stability.
-   Add web tests only if a visible card, warning, support bucket, or
-   displayed origin changes.
-5. Run targeted tests, `pnpm calculator:gate:current`, and
-   `git diff --check`. Run broad `pnpm check` before Gate C closeout or
-   when shared/user-visible behavior changes.
-
-Do not move to the timber stud + CLT wall accuracy pass until this
-heavy-core/concrete Gate B either lands a defended runtime tightening or
-closes honestly no-runtime.
+1. Keep `screening`.
+2. Keep field `R'w = 55` for `wall-screening-concrete`.
+3. Keep supported field outputs `R'w`, `Dn,w`, `DnT,w`, and `DnT,A`.
+4. Do not retune from adjacent selector, workbench, or deep-hybrid
+   tests.
+5. Select
+   [SLICE_WALL_TIMBER_STUD_CLT_ACCURACY_PASS_PLAN.md](./SLICE_WALL_TIMBER_STUD_CLT_ACCURACY_PASS_PLAN.md)
+   as the next personal-use readiness slice.
 
 ## Gate C Closeout
 

@@ -1,7 +1,8 @@
 # Slice Plan - Realistic Layer Combination Coverage Cartography
 
-Status: ACTIVE - Gate A landed no-runtime 2026-04-27 (selected
-2026-04-26 after `dynamic_airborne_split_refactor_v2` closed Gate C)
+Status: CLOSED - Gate A landed no-runtime 2026-04-27; first Gate B
+candidate closed no-runtime; next selected slice is
+`wall_timber_stud_clt_accuracy_pass_v1`
 
 ## Objective
 
@@ -183,15 +184,16 @@ This Gate B selection is also the first item in
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
 The concrete/heavy-core subplan is
 [SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md](./SLICE_WALL_HEAVY_CORE_CONCRETE_TIGHTENING_PLAN.md).
-The first no-runtime Gate B audit contract has landed in
+The first no-runtime Gate B audit contract landed in
 `packages/engine/src/wall-heavy-core-concrete-gate-b-audit-contract.test.ts`;
 it now includes the source/formula evidence audit. The audit found no
 exact catalog row, no direct external benchmark match in the current
 audit, and no topology-specific tolerance for the selected concrete
-lining stack, so the lane remains `screening`. The remaining Gate B work
-is a decision: either import/define a bounded source-family rule and
-write the runtime contract, or close Gate B no-runtime with the current
-screening posture.
+lining stack, so the lane remains `screening`. Gate B then closed
+no-runtime in
+`post-wall-heavy-core-concrete-gate-b-next-slice-selection-contract.test.ts`
+and selected
+[SLICE_WALL_TIMBER_STUD_CLT_ACCURACY_PASS_PLAN.md](./SLICE_WALL_TIMBER_STUD_CLT_ACCURACY_PASS_PLAN.md).
 The remaining private-use readiness chain is timber stud + CLT wall
 accuracy, floor fallback / low-confidence cleanup, and UI/input/output
 honesty.
@@ -256,9 +258,10 @@ Gate C validation:
 - post-contract test naming the selected runtime widening slice.
 
 Latest validation note: 2026-04-27 broad `pnpm check` is green after
-Gate A and test-runner stabilization. Engine broad is 221 files / 1224
-tests. Web broad keeps all 150 files in scope via
-`tools/dev/run-web-vitest.ts` with 864 passed + 18 skipped; the runner
-isolates long route scans, including the heavy family-boundary scan that
-uses `--pool=threads` to avoid Vitest worker RPC timeout noise. Build is
-5/5 with the known non-fatal `sharp/@img` optional-package warnings.
+heavy-core/concrete Gate B no-runtime closeout and timber+CLT
+next-slice selection. Engine broad is 223 files / 1232 tests. Web broad
+keeps all 150 files in scope via `tools/dev/run-web-vitest.ts` with 864
+passed + 18 skipped; the runner isolates long route scans, including
+the heavy family-boundary scan that uses `--pool=threads` to avoid
+Vitest worker RPC timeout noise. Build is 5/5 with the known non-fatal
+`sharp/@img` optional-package warnings.
