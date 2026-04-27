@@ -1,8 +1,8 @@
 # Slice Plan - Wall Single-Leaf Mass-Law Calibration v1
 
-Status: GATE A LANDED NO-RUNTIME (opened 2026-04-27 after
-`wall_coverage_expansion_planning_v2` Gate A; next action is Gate B
-bounded runtime matrix or no-runtime closeout)
+Status: GATE B LANDED NO-RUNTIME (opened 2026-04-27 after
+`wall_coverage_expansion_planning_v2` Gate A; next action is Gate C
+no-runtime closeout and next-slice selection)
 
 ## Objective
 
@@ -44,6 +44,13 @@ negative cases.
   mineral single-leaf candidates, proves exact/lab-fallback precedence,
   and blocks adjacent double-leaf, CLT/timber-panel, and lined-massive
   heavy-core lanes from this formula scope.
+- Gate B landed no-runtime in
+  `packages/engine/src/wall-single-leaf-mass-law-calibration-gate-b-contract.test.ts`.
+  It pins the bounded runtime-candidate matrix for 150 mm concrete,
+  150 mm solid brick, and 150 mm generic AAC, keeps current values as
+  defensible formula-owned estimates, and blocks runtime movement
+  because there is no stack-specific source row or bounded tolerance
+  pack for those generic stacks.
 - Exact/catalog and lab-fallback wall surfaces are guarded by
   `airborne-verified-catalog.test.ts`,
   `wall-resilient-bar-side-count-blind-audit.test.ts`, and web route
@@ -112,10 +119,23 @@ If Gate A cannot prove those, close this slice no-runtime and select the
 next candidate instead of widening by assumption.
 
 Gate B's first task is not to retune immediately. It must build a
-bounded runtime-candidate matrix for the three positive Gate A stacks
-and decide whether the existing formula values are already the honest
-posture or whether a source-backed/tolerance-bounded adjustment is
-defensible. Any value movement must be paired with:
+bounded runtime-candidate matrix for the three positive Gate A stacks.
+This is now landed. The existing formula values are treated as the
+honest posture for now:
+
+- 150 mm concrete: `R'w=53`, `Dn,w=53`, `DnT,w=55`,
+  `DnT,A=54.1`, `rigid_massive_wall`, `ks_rw_calibrated`, high
+  confidence;
+- 150 mm solid brick: `R'w=51`, `Dn,w=51`, `DnT,w=53`,
+  `DnT,A=51.7`, `masonry_nonhomogeneous`, `sharp`, medium confidence;
+- 150 mm generic AAC: `R'w=38`, `Dn,w=38`, `DnT,w=40`,
+  `DnT,A=39.4`, `masonry_nonhomogeneous`, `sharp`, medium confidence.
+
+Gate B also pins 100/150/200 mm monotonic sensitivity for concrete,
+solid brick, and generic AAC.
+
+Runtime movement is blocked until a source-backed/tolerance-bounded
+adjustment is defensible. Any later value movement must be paired with:
 
 - a positive matrix for concrete / generic masonry / generic AAC;
 - a negative matrix for exact/catalog/lab-fallback, LSF/resilient,
@@ -125,12 +145,27 @@ defensible. Any value movement must be paired with:
 - web route-card updates if value, support, confidence, evidence, or
   missing-input copy changes.
 
+## Gate C - Closeout
+
+Gate C should close this slice no-runtime and select the next
+calculator candidate. It must record that:
+
+- Gate A and Gate B changed no runtime math;
+- current generic single-leaf values remain formula-owned estimates,
+  not exact/source rows;
+- exact/catalog/lab-fallback rows still outrank the formula lane;
+- future runtime movement in this lane requires a new named source row
+  or bounded tolerance pack plus route-card coverage if visible outputs
+  change.
+
 ## Completion Criteria
 
 - Gate A source/formula contract is green and included in
   `pnpm calculator:gate:current`.
-- Runtime behavior stays unchanged until a Gate B contract permits a
-  bounded change.
+- Gate B bounded runtime-candidate matrix is green and included in
+  `pnpm calculator:gate:current`.
+- Runtime behavior stays unchanged through Gate C unless new source
+  evidence deliberately reopens this lane before closeout.
 - `NEXT_IMPLEMENTATION_PLAN.md`, `CURRENT_STATE.md`, `AGENTS.md`, this
   plan, and the latest checkpoint agree on the active selected slice.
 - `pnpm calculator:gate:current` and `git diff --check` are green.
@@ -139,9 +174,9 @@ defensible. Any value movement must be paired with:
 
 1. Run `pnpm calculator:gate:current` as the baseline.
 2. Read
-   `packages/engine/src/wall-single-leaf-mass-law-calibration-gate-a-contract.test.ts`
+   `packages/engine/src/wall-single-leaf-mass-law-calibration-gate-b-contract.test.ts`
    and this plan.
-3. Start Gate B with a bounded runtime-candidate matrix for the three
-   positive Gate A stacks.
-4. If source/tolerance evidence is insufficient, close Gate B
-   no-runtime instead of moving values by assumption.
+3. Add Gate C no-runtime closeout / next-slice selection contract.
+4. Keep runtime values, formulas, output support, confidence, evidence
+   text, and web route cards unchanged unless new source evidence is
+   deliberately introduced before closeout.

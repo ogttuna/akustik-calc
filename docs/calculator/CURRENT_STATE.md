@@ -23,9 +23,9 @@ personal/internal-use readiness chain is closed;
 `proposal_report_polish_v1` closed;
 `calculator_source_gap_revalidation_v1` Gate A closed no-runtime;
 `wall_coverage_expansion_planning_v2` Gate A closed no-runtime;
-`wall_single_leaf_mass_law_calibration_v1` Gate A closed no-runtime;
+`wall_single_leaf_mass_law_calibration_v1` Gate B closed no-runtime;
 latest checkpoint:
-[CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_A_HANDOFF.md)).
+[CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_B_HANDOFF.md)).
 Step 8 closed the calculator runtime audit: `MASTER_PLAN.md` §3/§8
 was reconciled to implementation reality, `coverage-grid-consistency.test.ts`
 now maps the grid and C1-C6 signals to executable evidence, the
@@ -158,17 +158,19 @@ hardening, and the pure team-access policy model.
   calibration selection, plus
   `wall-single-leaf-mass-law-calibration-gate-a-contract.test.ts` for
   the no-runtime source/formula contract, candidate matrix, exact/
-  lab-fallback precedence, and adjacent-lane boundaries.
-  Latest focused gate run after the Gate A contract update:
-  102 engine files / 465 tests,
+  lab-fallback precedence, and adjacent-lane boundaries, plus
+  `wall-single-leaf-mass-law-calibration-gate-b-contract.test.ts` for
+  the no-runtime bounded runtime-candidate matrix and closeout blocker.
+  Latest focused gate run after the Gate B contract update:
+  103 engine files / 470 tests,
   43 web files / 211 passed +
   18 skipped, build 5/5 tasks, whitespace guard clean.
 
 ## Active Slice
 
 `wall_single_leaf_mass_law_calibration_v1` (wall source/formula
-contract, Gate A landed no-runtime; Gate B bounded runtime matrix is
-active). Planning surface:
+contract, Gate B landed no-runtime; Gate C closeout is active).
+Planning surface:
 [SLICE_WALL_SINGLE_LEAF_MASS_LAW_CALIBRATION_PLAN.md](./SLICE_WALL_SINGLE_LEAF_MASS_LAW_CALIBRATION_PLAN.md).
 
 `wall_coverage_expansion_planning_v2` Gate A is now closed
@@ -197,10 +199,15 @@ screening/formula/low-confidence posture. Gate A of
 `packages/engine/src/wall-single-leaf-mass-law-calibration-gate-a-contract.test.ts`
 defines candidate signatures, formula/source basis, positive cases,
 negative cases, exact/lab-fallback precedence, and UI/card coverage
-requirements before any runtime value movement. The next action is Gate
-B: build a bounded runtime-candidate matrix for 150 mm concrete,
-150 mm solid brick, and 150 mm generic AAC, then either move values with
-source/tolerance evidence or close no-runtime.
+requirements before any runtime value movement. Gate B has now landed
+no-runtime:
+`packages/engine/src/wall-single-leaf-mass-law-calibration-gate-b-contract.test.ts`
+pins 150 mm concrete at `R'w=53`, 150 mm solid brick at `R'w=51`, and
+150 mm generic AAC at `R'w=38`, plus 100/150/200 mm monotonic
+sensitivity. Current values remain defensible formula-owned estimates,
+but runtime movement is blocked because there is no stack-specific wall
+source row or bounded tolerance pack. The next action is Gate C
+no-runtime closeout and next-slice selection.
 
 Do not reopen `GDMTXA04A`, `C11c`, raw bare open-box/open-web,
 heavy-concrete formula parity, reinforced-concrete reopening,

@@ -8,8 +8,8 @@ chain read
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
 
 Last reviewed: 2026-04-27
-(`wall_single_leaf_mass_law_calibration_v1` Gate A closed no-runtime;
-Gate B bounded runtime matrix is next;
+(`wall_single_leaf_mass_law_calibration_v1` Gate B closed no-runtime;
+Gate C closeout / next-slice selection is next;
 see
 `SLICE_WALL_SINGLE_LEAF_MASS_LAW_CALIBRATION_PLAN.md`).
 
@@ -43,7 +43,7 @@ For every next slice decision:
 - **Active slice**:
   `wall_single_leaf_mass_law_calibration_v1`.
 - **Latest checkpoint**:
-  [CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_A_HANDOFF.md).
+  [CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_B_HANDOFF.md).
 - **Planning surface**:
   [SLICE_WALL_SINGLE_LEAF_MASS_LAW_CALIBRATION_PLAN.md](./SLICE_WALL_SINGLE_LEAF_MASS_LAW_CALIBRATION_PLAN.md).
 - **Personal-use readiness roadmap**:
@@ -61,14 +61,13 @@ For every next slice decision:
   `wall_single_leaf_mass_law_calibration_v1` as the next no-runtime
   source/formula contract slice.
 - **Just landed in active slice**:
-  `wall_single_leaf_mass_law_calibration_v1` Gate A. The no-runtime
-  contract pins the existing single-leaf mass-law/source basis, positive
-  unmatched concrete / solid-brick / AAC field candidates, exact and
-  lab-fallback precedence for Silka / Xella D700 / Porotherm rows, and
-  negative boundaries for double-leaf, CLT/timber-panel, LSF/resilient,
-  timber-stud, and lined-massive heavy-core surfaces. Gate B is now a
-  bounded runtime-candidate matrix or no-runtime closeout; no value
-  movement has landed.
+  `wall_single_leaf_mass_law_calibration_v1` Gate B. The no-runtime
+  bounded candidate matrix pins current field values for 150 mm
+  concrete (`R'w=53`), 150 mm solid brick (`R'w=51`), and 150 mm
+  generic AAC (`R'w=38`), plus 100/150/200 mm monotonic sensitivity.
+  It blocks runtime movement because none of the generic stacks has a
+  stack-specific source row or bounded tolerance pack. Gate C closeout
+  and next-slice selection is next; no value movement has landed.
 - **Previously closed**: `proposal_report_polish_v1`.
   Simple PDF/DOCX exports now include output coverage posture,
   generated proposal documents preserve real floor/wall workbench
@@ -235,6 +234,15 @@ For every next slice decision:
   `pnpm calculator:gate:current` is green after adding the Gate A
   contract: engine 102 files / 465 tests, web 43 files / 211 passed +
   18 skipped, build 5/5 with the known non-fatal `sharp/@img` warnings.
+- **Wall single-leaf mass-law calibration Gate B**:
+  `packages/engine/src/wall-single-leaf-mass-law-calibration-gate-b-contract.test.ts`
+  lands the no-runtime bounded runtime-candidate matrix. Current
+  concrete / solid-brick / generic-AAC values stay as defensible
+  formula-owned estimates; runtime movement is blocked until a
+  stack-specific source row or bounded tolerance pack exists.
+  `pnpm calculator:gate:current` is green after adding the Gate B
+  contract: engine 103 files / 470 tests, web 43 files / 211 passed +
+  18 skipped, build 5/5 with the known non-fatal `sharp/@img` warnings.
 
 ## Immediate Execution Order
 
@@ -244,18 +252,13 @@ order:
 1. Re-read
    [SLICE_WALL_SINGLE_LEAF_MASS_LAW_CALIBRATION_PLAN.md](./SLICE_WALL_SINGLE_LEAF_MASS_LAW_CALIBRATION_PLAN.md)
    and
-   [CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_A_HANDOFF.md).
+   [CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_B_HANDOFF.md).
 2. Run `pnpm calculator:gate:current` as the baseline.
-3. Start Gate B with a bounded runtime-candidate matrix for the three
-   Gate A positive stacks: 150 mm concrete, 150 mm solid brick, and
-   150 mm generic AAC.
-4. Decide whether current formula values are already the honest posture
-   or whether a source-backed/tolerance-bounded movement is defensible.
-5. If runtime moves, update positive/negative/precedence/field-output
-   tests and web route-card tests when any value/support/confidence/
-   evidence text changes.
-6. If evidence is insufficient, close Gate B no-runtime and select the
-   next candidate.
+3. Add Gate C no-runtime closeout / next-slice selection contract.
+4. Confirm that Gate A and Gate B changed no runtime math and that
+   exact/catalog/lab-fallback rows still outrank the formula lane.
+5. Select the next calculator candidate from the current roadmap instead
+   of retuning generic single-leaf values by assumption.
 
 ## Personal-Use Readiness Chain
 
@@ -275,8 +278,8 @@ is deferred.
 ## Latest Closed Slices
 
 See [CURRENT_STATE.md](./CURRENT_STATE.md) "Latest Closed Slices" table.
-`wall_single_leaf_mass_law_calibration_v1` Gate A is now closed
-no-runtime and Gate B is active inside the same slice.
+`wall_single_leaf_mass_law_calibration_v1` Gate B is now closed
+no-runtime and Gate C closeout is active inside the same slice.
 
 ## Deferred Follow-Up Tracks
 
