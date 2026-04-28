@@ -1,9 +1,8 @@
 # Slice Plan - Wall No-Stud Double-Leaf Source Research v1
 
-Status: GATE B LANDED NO-RUNTIME (by
-`packages/engine/src/wall-no-stud-double-leaf-source-research-gate-b-contract.test.ts`;
-Gate C should close the slice no-runtime and select the next accuracy
-slice)
+Status: CLOSED NO-RUNTIME AT GATE C (by
+`packages/engine/src/post-wall-no-stud-double-leaf-source-research-v1-next-slice-selection-contract.test.ts`;
+selected `wall_timber_double_board_source_research_v1`)
 
 ## Objective
 
@@ -145,6 +144,19 @@ movement, or route-card work. Gate C should close this source-research
 slice no-runtime and select the next highest-value calculator accuracy
 slice.
 
+### Gate C Result - 2026-04-28
+
+Gate C landed in
+`packages/engine/src/post-wall-no-stud-double-leaf-source-research-v1-next-slice-selection-contract.test.ts`.
+It changed no runtime behavior, closed this slice no-runtime, and
+selected
+[SLICE_WALL_TIMBER_DOUBLE_BOARD_SOURCE_RESEARCH_PLAN.md](./SLICE_WALL_TIMBER_DOUBLE_BOARD_SOURCE_RESEARCH_PLAN.md).
+
+Current empty and porous no-stud routes remain formula-owned. The next
+work moves to the common live timber double-board lane because it remains
+low-confidence formula and has nearby source corpus evidence that can be
+audited without guessing.
+
 ## Expected Tests
 
 - Add:
@@ -161,6 +173,8 @@ slice.
   `packages/engine/src/post-wall-no-stud-double-leaf-source-research-v1-next-slice-selection-contract.test.ts`.
 - Gate C should close the slice no-runtime and select the next accuracy
   slice from the still-blocked source/tolerance map.
+- Gate C landed no-runtime; next add:
+  `packages/engine/src/wall-timber-double-board-source-research-gate-a-contract.test.ts`.
 - Add paired web route-card tests only in a later slice that changes
   visible values, support, confidence, evidence text, or missing-input
   copy.
@@ -168,15 +182,12 @@ slice.
 ## Immediate Execution Order
 
 1. Read
-   [CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_B_HANDOFF.md).
-2. Run `pnpm calculator:gate:current` as the Gate C baseline.
-3. Add
-   `packages/engine/src/post-wall-no-stud-double-leaf-source-research-v1-next-slice-selection-contract.test.ts`
-   as a no-runtime closeout / next-slice selection contract.
-4. Keep runtime values, support, confidence, evidence text, and
-   route-card copy frozen.
-5. Select the next accuracy slice explicitly from the remaining source
-   and tolerance gaps.
-6. Validate with the targeted Gate C closeout test,
+   [CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_C_CLOSEOUT_HANDOFF.md).
+2. Continue from
+   [SLICE_WALL_TIMBER_DOUBLE_BOARD_SOURCE_RESEARCH_PLAN.md](./SLICE_WALL_TIMBER_DOUBLE_BOARD_SOURCE_RESEARCH_PLAN.md).
+3. Keep no-stud runtime values, support, confidence, evidence text, and
+   route-card copy frozen unless a future deliberate source/tolerance
+   slice reopens them with complete evidence.
+4. Validate with the targeted timber Gate A test,
    `pnpm calculator:gate:current`,
    and `git diff --check`.

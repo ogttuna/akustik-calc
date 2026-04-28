@@ -8,11 +8,11 @@ chain read
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
 
 Last reviewed: 2026-04-28
-(`wall_no_stud_double_leaf_source_research_v1` Gate B landed
-no-runtime; next step is Gate C no-runtime closeout / next-slice
-selection;
+(`wall_no_stud_double_leaf_source_research_v1` Gate C closed
+no-runtime; `wall_timber_double_board_source_research_v1` is selected
+for Gate A;
 see
-`SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md`).
+`SLICE_WALL_TIMBER_DOUBLE_BOARD_SOURCE_RESEARCH_PLAN.md`).
 
 ---
 
@@ -42,11 +42,11 @@ For every next slice decision:
 ## Now
 
 - **Active slice**:
-  `wall_no_stud_double_leaf_source_research_v1`.
+  `wall_timber_double_board_source_research_v1`.
 - **Latest checkpoint**:
-  [CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_B_HANDOFF.md).
+  [CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_C_CLOSEOUT_HANDOFF.md).
 - **Planning surface**:
-  [SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md](./SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md).
+  [SLICE_WALL_TIMBER_DOUBLE_BOARD_SOURCE_RESEARCH_PLAN.md](./SLICE_WALL_TIMBER_DOUBLE_BOARD_SOURCE_RESEARCH_PLAN.md).
 - **Personal-use readiness roadmap**:
   [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
   is closed for the current private/internal-use bar. Heavy-core/concrete
@@ -146,6 +146,15 @@ For every next slice decision:
   no-rail / no-coupling row proof and live material/cavity mapping are
   extracted, keeps gypsum-block rows adjacent-material only, and selects
   Gate C no-runtime closeout / next-slice selection.
+- **Just closed**: `wall_no_stud_double_leaf_source_research_v1` Gate C.
+  `packages/engine/src/post-wall-no-stud-double-leaf-source-research-v1-next-slice-selection-contract.test.ts`
+  closes the source-research slice no-runtime and selects
+  `wall_timber_double_board_source_research_v1`. Current no-stud empty
+  (`R'w=46`, `Rw=48`) and porous (`R'w=41`, `Rw=43`) routes stay
+  formula-owned. The next slice must inventory direct double-board
+  timber stud rows, adjacent single-board/resilient rows, formula or
+  tolerance candidates, and negative boundaries before any runtime,
+  confidence, support, evidence, or route-card behavior changes.
 - **Previously closed**: `proposal_report_polish_v1`.
   Simple PDF/DOCX exports now include output coverage posture,
   generated proposal documents preserve real floor/wall workbench
@@ -420,27 +429,35 @@ For every next slice decision:
   as direct imports until row/topology proof exists, preserves current
   empty and porous values, and selects Gate C closeout. Targeted Gate B
   validation is green: 1 file / 6 tests.
+- **Wall no-stud double-leaf source research Gate C**:
+  `packages/engine/src/post-wall-no-stud-double-leaf-source-research-v1-next-slice-selection-contract.test.ts`
+  closes the source-research slice no-runtime, keeps current no-stud
+  values frozen, and selects
+  `wall_timber_double_board_source_research_v1`. Targeted Gate C
+  validation is green: 1 file / 5 tests.
 
 ## Immediate Execution Order
 
-`wall_no_stud_double_leaf_source_research_v1` should now proceed in this
+`wall_timber_double_board_source_research_v1` should now proceed in this
 order:
 
 1. Re-read
-   [CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_B_HANDOFF.md),
-   [SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md](./SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md)
+   [CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_C_CLOSEOUT_HANDOFF.md),
+   [SLICE_WALL_TIMBER_DOUBLE_BOARD_SOURCE_RESEARCH_PLAN.md](./SLICE_WALL_TIMBER_DOUBLE_BOARD_SOURCE_RESEARCH_PLAN.md)
    and the current-state active-slice section.
-2. Run `pnpm calculator:gate:current` as the Gate C baseline.
+2. Run `pnpm calculator:gate:current` as the Gate A baseline.
 3. Add
-   `packages/engine/src/post-wall-no-stud-double-leaf-source-research-v1-next-slice-selection-contract.test.ts`
-   as a no-runtime closeout and next-slice selection contract.
-4. Close the source-research slice without runtime import, retune,
-   support/confidence/evidence movement, or route-card copy changes.
-5. Select the next highest-value calculator accuracy slice based on the
-   still-blocked source/tolerance map.
+   `packages/engine/src/wall-timber-double-board-source-research-gate-a-contract.test.ts`
+   as a no-runtime source/tolerance inventory.
+4. Inventory direct double-board timber rows, adjacent single-board and
+   resilient rows, linked holdouts, formula/tolerance candidates, and
+   negative boundaries.
+5. Keep all runtime values, support, confidence, evidence text, and
+   route-card copy frozen unless Gate A proves a complete direct source
+   row or bounded formula tolerance owner with executable boundaries.
 6. Add paired web route-card tests before any future change to visible support,
    confidence, evidence text, output values, or missing-input copy.
-7. Validate with the targeted Gate C closeout test,
+7. Validate with the targeted Gate A test,
    `pnpm calculator:gate:current`, and `git diff --check`.
 
 ## Personal-Use Readiness Chain
@@ -455,17 +472,17 @@ private day-to-day use:
 
 Productization route-policy and proposal/report polish slices are
 closed. Calculator runtime/source posture stays frozen during the
-selected no-stud double-leaf source research slice. The source-catalog
-slice has closed no-runtime at Gate C. Additional productization work is
-deferred until this calculator source/tolerance decision closes or the
-priority explicitly changes.
+selected timber double-board source research slice. The no-stud
+double-leaf source research slice has closed no-runtime at Gate C.
+Additional productization work is deferred until this calculator
+source/tolerance decision closes or the priority explicitly changes.
 
 ## Latest Closed Slices
 
 See [CURRENT_STATE.md](./CURRENT_STATE.md) "Latest Closed Slices" table.
-`wall_no_stud_double_leaf_source_research_v1` Gate B is landed
-no-runtime and Gate C closeout / next-slice selection is the next
-decision point.
+`wall_no_stud_double_leaf_source_research_v1` Gate C is closed
+no-runtime and `wall_timber_double_board_source_research_v1` Gate A is
+the next decision point.
 
 ## Deferred Follow-Up Tracks
 

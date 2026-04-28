@@ -223,8 +223,8 @@ families remain blocked until new evidence is deliberately imported.
 
 Next selected work:
 
-1. `wall_no_stud_double_leaf_source_research_v1` Gate C no-runtime
-   closeout / next-slice selection.
+1. `wall_timber_double_board_source_research_v1` Gate A no-runtime
+   source/tolerance inventory.
 
 `calculator_source_gap_revalidation_v1` Gate A and
 `wall_coverage_expansion_planning_v2` Gate A are closed no-runtime.
@@ -245,7 +245,10 @@ no-runtime. `wall_no_stud_double_leaf_source_research_v1` Gate B has
 landed no-runtime: Davy/Sharp remains relevant but not a current local
 tolerance owner, NRC still needs extracted no-stud/no-rail row proof and
 live mapping, and gypsum-block rows remain adjacent-material evidence.
-Calculator runtime/source posture should remain frozen during Gate C
-closeout and any next slice until a direct source row, metric owner,
-tolerance, protected boundary set, and paired route-card tests are
-named.
+Gate C closed the no-stud slice no-runtime and selected
+`wall_timber_double_board_source_research_v1` because the live
+double-board timber wall lane is common, low-confidence formula, and has
+nearby source corpus evidence that can be audited without guessing.
+Calculator runtime/source posture should remain frozen during the timber
+Gate A inventory until a direct source row, metric owner, tolerance,
+protected boundary set, and paired route-card tests are named.

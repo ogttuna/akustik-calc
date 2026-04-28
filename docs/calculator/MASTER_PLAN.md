@@ -8,8 +8,8 @@ Last reviewed: 2026-04-28
 no-runtime and selected `wall_source_catalog_acquisition_v1`;
 `wall_source_catalog_acquisition_v1` Gate C closed no-runtime and
 selected `wall_no_stud_double_leaf_source_research_v1`;
-`wall_no_stud_double_leaf_source_research_v1` Gate B landed
-no-runtime)
+`wall_no_stud_double_leaf_source_research_v1` Gate C closed no-runtime
+and selected `wall_timber_double_board_source_research_v1`)
 Iteration: 2 (rewritten with implementation state grid, accuracy
 preservation contract, ROI table, quantitative completion targets)
 
@@ -32,11 +32,14 @@ Private-use calculator readiness is tracked separately in
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
 That chain is closed for the current private/internal-use bar. The next
 selected calculator work is
-`wall_no_stud_double_leaf_source_research_v1` Gate C. Gate B found no
-bounded formula tolerance or direct runtime import row ready now:
+`wall_timber_double_board_source_research_v1` Gate A. The no-stud
+double-leaf source research slice closed no-runtime at Gate C:
 Davy/Sharp is relevant but not a local single-number tolerance owner,
 NRC still needs extracted no-stud/no-rail row proof and live mapping,
-and gypsum-block rows remain adjacent-material evidence.
+and gypsum-block rows remain adjacent-material evidence. Timber
+double-board is the next source-catalog gap because the live
+`wall-timber-stud` route remains low-confidence formula while nearby
+single-board and resilient timber rows are already topology-bounded.
 Runtime/source posture remains frozen until a future gate names a
 direct source row, metric owner, tolerance, protected boundaries, and
 paired route-card tests.
@@ -721,6 +724,13 @@ the doc-drift problem documented in `SYSTEM_AUDIT_2026-04-20.md`.
   tolerances are derived, rejected NRC and gypsum-block candidates as
   imports until row/topology proof exists, and selected Gate C closeout
   / next-slice selection.
+- **2026-04-28 update**: `wall_no_stud_double_leaf_source_research_v1`
+  Gate C closed no-runtime and selected
+  `wall_timber_double_board_source_research_v1`. Current empty and
+  porous no-stud values stay formula-owned; the next Gate A must
+  inventory direct double-board timber rows, adjacent single-board and
+  resilient rows, formula/tolerance candidates, and negative boundaries
+  before any runtime or route-card movement.
 - **2026-04-24 update**: floor continuation, floor many-layer, floor
   layer-order, and all-caller invalid-thickness audits closed
   no-runtime; engine thickness validity moved out of partial, and

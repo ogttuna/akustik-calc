@@ -30,7 +30,8 @@ No bounded formula tolerance or direct row import is ready now.
 | Gypsum-block double walls with air chamber | direct-family adjacent material | row details and material mapping are still not enough to import into the live AAC / gypsum-board route |
 | Gypsum-block double walls with absorbent material | direct-family adjacent material | absorber and material mapping are still not enough to import into the live gypsum-board / rockwool route |
 
-Gate B selects a no-runtime Gate C closeout:
+Gate B selected a no-runtime Gate C closeout, which has now landed in
+[CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_C_CLOSEOUT_HANDOFF.md):
 
 - close the no-stud double-leaf source research slice without value
   movement;
@@ -65,8 +66,8 @@ Start from:
 
 Next implementation file:
 
-- `packages/engine/src/post-wall-no-stud-double-leaf-source-research-v1-next-slice-selection-contract.test.ts`
+- `packages/engine/src/wall-timber-double-board-source-research-gate-a-contract.test.ts`
 
-Gate C should close this source-research slice no-runtime and select the
-next highest-value calculator accuracy slice. It must not import values,
-change confidence/support/evidence text, or add route-card copy.
+The no-stud Gate C closeout is now the latest handoff. Continue with
+`wall_timber_double_board_source_research_v1` Gate A. It must not import
+values, change confidence/support/evidence text, or add route-card copy.
