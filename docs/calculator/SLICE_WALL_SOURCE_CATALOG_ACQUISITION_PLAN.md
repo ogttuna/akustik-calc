@@ -1,9 +1,9 @@
 # Slice Plan - Wall Source Catalog Acquisition v1
 
-Status: SELECTED (by
-`wall_double_leaf_source_evidence_acquisition_v1` Gate C closeout;
-starts with no-runtime Gate A target inventory and import acceptance
-rules)
+Status: GATE A LANDED NO-RUNTIME (by
+`packages/engine/src/wall-source-catalog-acquisition-gate-a-contract.test.ts`;
+Gate B should close source-pack readiness no-runtime unless a direct
+row pack is complete enough for a bounded import slice)
 
 ## Objective
 
@@ -50,7 +50,7 @@ retune.
 
 ## Gate A - Target Inventory And Acceptance Rules
 
-Gate A must create an executable no-runtime contract that records:
+Gate A created an executable no-runtime contract that records:
 
 1. target source families;
 2. required fields for each row;
@@ -91,25 +91,54 @@ Gate A may select a future import slice only when a candidate row is:
 - bounded by a source tolerance or benchmark threshold;
 - paired with negative cases for adjacent rows that must not move.
 
-If a candidate is only adjacent context, Gate A must classify it as
+If a candidate is only adjacent context, Gate A classifies it as
 `bounded` or `reject` and keep runtime frozen.
+
+### Gate A Result - 2026-04-28
+
+Gate A landed in
+`packages/engine/src/wall-source-catalog-acquisition-gate-a-contract.test.ts`.
+It changed no runtime behavior and classified the source targets as:
+
+| Family | Gate A readiness | Result |
+|---|---|---|
+| W111 / W112 / W115 / W119 and adjacent manufacturer framed systems | `bounded_existing_rows` | existing bounded rows already fit; no new runtime import selected |
+| No-stud empty or porous double-leaf walls | `needs_research` | needs direct row or formula tolerance owner |
+| Timber double-board stud walls | `needs_research` | needs double-board/stud/cavity/fill/side-count metadata |
+| CLT wall assemblies | `needs_research` | needs wall-specific CLT row or laminated-leaf tolerance |
+| Lined-massive / heavy-core concrete | `needs_research` | remains screening until source row or bounded lining rule |
+| Floor / impact / product-delta adjacent rows | `reject_adjacent_context` | not wall source truth |
+
+The Gate A decision is that no direct runtime import is ready now. Gate
+B should therefore be a no-runtime source-pack readiness closeout unless
+new direct rows with complete metadata, tolerance, protected negative
+boundaries, and paired engine/web tests are deliberately introduced.
 
 ## Expected Tests
 
-- Add
+- Landed:
   `packages/engine/src/wall-source-catalog-acquisition-gate-a-contract.test.ts`.
 - Keep it no-runtime.
 - Include row-readiness and negative-boundary assertions.
+- Next: add
+  `packages/engine/src/wall-source-catalog-acquisition-gate-b-contract.test.ts`
+  for source-pack readiness closeout.
 - Add paired web route-card tests only if a later gate changes visible
   values, support, confidence, evidence text, or missing-input copy.
 
 ## Immediate Execution Order
 
 1. Read
-   [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_C_CLOSEOUT_HANDOFF.md).
-2. Run `pnpm calculator:gate:current` as the baseline.
-3. Add Gate A no-runtime wall source catalog target inventory.
-4. Decide whether any row pack is ready for a future import slice; if
-   not, close no-runtime and document the missing evidence.
-5. Validate with the targeted Gate A test, `pnpm calculator:gate:current`,
+   [CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_A_HANDOFF.md).
+2. Run `pnpm calculator:gate:current` as the Gate B baseline.
+3. Add
+   `packages/engine/src/wall-source-catalog-acquisition-gate-b-contract.test.ts`
+   as a no-runtime source-pack readiness closeout.
+4. Confirm whether any row pack is ready for a future import slice;
+   Gate A currently says no direct runtime import is ready now.
+5. If no pack is ready, close no-runtime and document the missing
+   evidence. If one is ready, select only a bounded import slice with
+   complete source metadata, tolerance, negative boundaries, and paired
+   engine/web tests.
+6. Validate with the targeted Gate B test, `pnpm calculator:gate:current`,
    and `git diff --check`.

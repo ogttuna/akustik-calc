@@ -172,8 +172,9 @@ and select a no-runtime closeout.
 - Future gates must add value tests and paired web route-card tests
   before changing visible values, support, confidence, evidence text, or
   missing-input copy.
-- `wall_source_catalog_acquisition_v1` Gate A should add a no-runtime
-  target/source-readiness inventory before any import or retune.
+- `wall_source_catalog_acquisition_v1` Gate A has added a no-runtime
+  target/source-readiness inventory; continue that slice at Gate B
+  source-pack readiness before any import or retune.
 
 ## Immediate Execution Order
 

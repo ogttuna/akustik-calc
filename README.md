@@ -31,14 +31,16 @@ Primary documents (agent resume triangle):
 
 Supporting documents:
 
-- [`docs/calculator/CHECKPOINT_2026-04-23_BROAD_REVALIDATION_CALCULATOR_REFOCUS_HANDOFF.md`](./docs/calculator/CHECKPOINT_2026-04-23_BROAD_REVALIDATION_CALCULATOR_REFOCUS_HANDOFF.md) — latest checkpoint
+- [`docs/calculator/CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_A_HANDOFF.md`](./docs/calculator/CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_A_HANDOFF.md) — latest calculator checkpoint
+- [`docs/calculator/SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md`](./docs/calculator/SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md) — active wall source catalog acquisition slice plan
+- [`docs/calculator/CHECKPOINT_2026-04-23_BROAD_REVALIDATION_CALCULATOR_REFOCUS_HANDOFF.md`](./docs/calculator/CHECKPOINT_2026-04-23_BROAD_REVALIDATION_CALCULATOR_REFOCUS_HANDOFF.md) — prior broad revalidation checkpoint
 - [`docs/calculator/CHECKPOINT_2026-04-23_TEAM_ACCESS_MODEL_HANDOFF.md`](./docs/calculator/CHECKPOINT_2026-04-23_TEAM_ACCESS_MODEL_HANDOFF.md) — team-access model checkpoint
 - [`docs/calculator/CHECKPOINT_2026-04-23_AUTH_SESSION_HARDENING_HANDOFF.md`](./docs/calculator/CHECKPOINT_2026-04-23_AUTH_SESSION_HARDENING_HANDOFF.md) — auth-session hardening checkpoint
 - [`docs/calculator/CHECKPOINT_2026-04-23_PROJECT_ACCESS_AUTHORIZATION_HANDOFF.md`](./docs/calculator/CHECKPOINT_2026-04-23_PROJECT_ACCESS_AUTHORIZATION_HANDOFF.md) — project-access authorization checkpoint
 - [`docs/calculator/CHECKPOINT_2026-04-23_SERVER_BACKED_PROJECT_STORAGE_HANDOFF.md`](./docs/calculator/CHECKPOINT_2026-04-23_SERVER_BACKED_PROJECT_STORAGE_HANDOFF.md) — server-backed project storage checkpoint
-- [`docs/calculator/CHECKPOINT_2026-04-23_FINAL_AUDIT_HANDOFF.md`](./docs/calculator/CHECKPOINT_2026-04-23_FINAL_AUDIT_HANDOFF.md) — latest calculator checkpoint
+- [`docs/calculator/CHECKPOINT_2026-04-23_FINAL_AUDIT_HANDOFF.md`](./docs/calculator/CHECKPOINT_2026-04-23_FINAL_AUDIT_HANDOFF.md) — prior final-audit checkpoint
 - [`docs/calculator/POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md`](./docs/calculator/POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md) — active productization roadmap
-- [`docs/calculator/SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md`](./docs/calculator/SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md) — active wall formula-family widening slice plan
+- [`docs/calculator/SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md`](./docs/calculator/SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md) — closed wall formula-family widening slice plan
 - [`docs/calculator/SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md`](./docs/calculator/SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md) — deferred project-access policy route integration slice plan
 - [`docs/calculator/SLICE_TEAM_ACCESS_MODEL_PLAN.md`](./docs/calculator/SLICE_TEAM_ACCESS_MODEL_PLAN.md) — closed team-access model slice plan
 - [`docs/calculator/SLICE_AUTH_SESSION_HARDENING_PLAN.md`](./docs/calculator/SLICE_AUTH_SESSION_HARDENING_PLAN.md) — closed auth-session hardening slice plan

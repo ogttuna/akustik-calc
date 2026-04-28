@@ -27,8 +27,9 @@ personal/internal-use readiness chain is closed;
 `wall_double_leaf_sharp_davy_scoping_v1` Gate C closed no-runtime;
 `wall_double_leaf_source_evidence_acquisition_v1` Gate C closed
 no-runtime;
+`wall_source_catalog_acquisition_v1` Gate A landed no-runtime;
 latest checkpoint:
-[CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_C_CLOSEOUT_HANDOFF.md)).
+[CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_A_HANDOFF.md)).
 Step 8 closed the calculator runtime audit: `MASTER_PLAN.md` §3/§8
 was reconciled to implementation reality, `coverage-grid-consistency.test.ts`
 now maps the grid and C1-C6 signals to executable evidence, the
@@ -186,9 +187,13 @@ hardening, and the pure team-access policy model.
   `wall-double-leaf-source-evidence-acquisition-gate-b-contract.test.ts`
   for the no-runtime bounded framed-wall reconciliation, plus
   `post-wall-double-leaf-source-evidence-acquisition-v1-next-slice-selection-contract.test.ts`
-  for the no-runtime Gate C closeout and wall source catalog selection.
-  Latest focused gate run after the Gate C contract update:
-  110 engine files / 505 tests, 43 web files / 211
+  for the no-runtime Gate C closeout and wall source catalog selection,
+  plus
+  `wall-source-catalog-acquisition-gate-a-contract.test.ts` for the
+  no-runtime source-target inventory, required metadata, import
+  readiness, and negative-boundary contract. Latest focused gate run
+  after the Gate A contract update:
+  111 engine files / 511 tests, 43 web files / 211
   passed + 18 skipped, build 5/5 tasks, whitespace guard clean.
 
 ## Active Slice
@@ -199,9 +204,15 @@ It was selected by
 `packages/engine/src/post-wall-double-leaf-source-evidence-acquisition-v1-next-slice-selection-contract.test.ts`
 after Gate B proved bounded W111 / W112 / W115 / W119 framed rows
 already fit current behavior and generic no-stud double-leaf rows still
-need direct sources or a named formula tolerance owner. Gate A should
-inventory source catalog targets and negative boundaries before any
-runtime/confidence/support/evidence or route-card movement.
+need direct sources or a named formula tolerance owner. Gate A has now
+landed no-runtime in
+`packages/engine/src/wall-source-catalog-acquisition-gate-a-contract.test.ts`.
+It classifies manufacturer framed systems as `bounded_existing_rows`;
+no-stud double-leaf, timber double-board, CLT wall, and lined-massive /
+heavy-core concrete as `needs_research`; and floor/product-delta
+adjacent rows as `reject_adjacent_context`. Gate B should close
+source-pack readiness no-runtime unless a complete direct row pack is
+ready.
 Planning surface:
 [SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md](./SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md).
 
@@ -265,6 +276,8 @@ has now closed it no-runtime in
 `packages/engine/src/post-wall-double-leaf-source-evidence-acquisition-v1-next-slice-selection-contract.test.ts`.
 The selected next slice is `wall_source_catalog_acquisition_v1`, starting
 with no-runtime source-target inventory and import acceptance rules.
+Gate A has now landed that inventory and selected Gate B source-pack
+readiness closeout as the next no-runtime decision.
 
 Do not reopen `GDMTXA04A`, `C11c`, raw bare open-box/open-web,
 heavy-concrete formula parity, reinforced-concrete reopening,
@@ -862,13 +875,15 @@ Wall coverage planning status:
 selected single-leaf slice has now closed no-runtime at Gate C. The
 double-leaf Sharp/Davy slice has now closed no-runtime at Gate C. The
 selected source-evidence slice has closed no-runtime at Gate C. The
-next implementation step is `wall_source_catalog_acquisition_v1` Gate A
-no-runtime target/source-readiness inventory.
+selected source-catalog slice has landed Gate A no-runtime. The next
+implementation step is `wall_source_catalog_acquisition_v1` Gate B
+no-runtime source-pack readiness closeout.
 
 ## Latest Closed Slices
 
 | Slice | Master-plan step | Closed | Post-contract |
 |---|---|---|---|
+| `wall_source_catalog_acquisition_v1` Gate A | calculator wall source catalog acquisition | 2026-04-28 | `wall-source-catalog-acquisition-gate-a-contract.test.ts` |
 | `wall_double_leaf_source_evidence_acquisition_v1` Gate C | calculator wall source evidence | 2026-04-28 | `post-wall-double-leaf-source-evidence-acquisition-v1-next-slice-selection-contract.test.ts` |
 | `wall_double_leaf_source_evidence_acquisition_v1` Gate B | calculator wall source evidence | 2026-04-28 | `wall-double-leaf-source-evidence-acquisition-gate-b-contract.test.ts` |
 | `wall_double_leaf_source_evidence_acquisition_v1` Gate A | calculator wall source evidence | 2026-04-28 | `wall-double-leaf-source-evidence-acquisition-gate-a-contract.test.ts` |
@@ -1075,14 +1090,14 @@ time without context loss:
 
 ## Resume Order For The Next Agent
 
-1. Read [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_A_HANDOFF.md)
+1. Read [CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_A_HANDOFF.md)
    for the latest active-slice handoff.
 2. Read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md),
    [SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md](./SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md),
    [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md), and
    [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md).
-   Continue `wall_source_catalog_acquisition_v1` at Gate A by adding a
-   no-runtime source-target inventory and import acceptance contract.
+   Continue `wall_source_catalog_acquisition_v1` at Gate B by adding a
+   no-runtime source-pack readiness closeout contract.
 3. Read [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
    for the now-closed calculator-priority chain and its evidence-tier
    caveats.
@@ -1096,7 +1111,7 @@ time without context loss:
    If it does not, fix the drift before starting work.
 6. Run `pnpm calculator:gate:current` as the focused baseline.
 7. Do not change runtime math, source posture, output support,
-   evidence tiers, or confidence scores during source-catalog Gate A.
+   evidence tiers, or confidence scores during source-catalog Gate B.
    Any future import must name the exact source row, metric owner,
    tolerance, protected-boundary exclusions, and paired web route-card
    tests.

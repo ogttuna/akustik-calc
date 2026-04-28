@@ -8,10 +8,9 @@ chain read
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
 
 Last reviewed: 2026-04-28
-(`wall_double_leaf_source_evidence_acquisition_v1` Gate C closed
-no-runtime and selected `wall_source_catalog_acquisition_v1`; next step
-is a no-runtime Gate A source-target inventory and import acceptance
-contract;
+(`wall_source_catalog_acquisition_v1` Gate A landed no-runtime; next
+step is a no-runtime Gate B source-pack readiness closeout unless a
+direct row pack is complete enough for a bounded import slice;
 see
 `SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md`).
 
@@ -45,7 +44,7 @@ For every next slice decision:
 - **Active slice**:
   `wall_source_catalog_acquisition_v1`.
 - **Latest checkpoint**:
-  [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_C_CLOSEOUT_HANDOFF.md).
+  [CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_A_HANDOFF.md).
 - **Planning surface**:
   [SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md](./SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md).
 - **Personal-use readiness roadmap**:
@@ -103,6 +102,16 @@ For every next slice decision:
   `wall_source_catalog_acquisition_v1`. The next slice should inventory
   wall source catalog targets and import acceptance rules before any
   runtime, confidence, support, evidence text, or route-card movement.
+- **Just landed**: `wall_source_catalog_acquisition_v1` Gate A.
+  `packages/engine/src/wall-source-catalog-acquisition-gate-a-contract.test.ts`
+  lands no-runtime target/source-readiness inventory. It classifies
+  manufacturer framed systems as `bounded_existing_rows`, no-stud
+  double-leaf, timber double-board, CLT wall, and lined-massive /
+  heavy-core concrete as `needs_research`, and floor / impact /
+  product-delta adjacent rows as `reject_adjacent_context`. Gate B
+  should close source-pack readiness no-runtime unless a direct row pack
+  has complete metadata, tolerance, protected negative boundaries, and
+  paired engine/web tests.
 - **Previously closed**: `proposal_report_polish_v1`.
   Simple PDF/DOCX exports now include output coverage posture,
   generated proposal documents preserve real floor/wall workbench
@@ -346,6 +355,12 @@ For every next slice decision:
   closes the source-evidence slice no-runtime and selects
   `wall_source_catalog_acquisition_v1`. Targeted Gate C validation is
   green: 1 file / 5 tests.
+- **Wall source catalog acquisition Gate A**:
+  `packages/engine/src/wall-source-catalog-acquisition-gate-a-contract.test.ts`
+  lands no-runtime. It pins six target families, 16 required row
+  metadata fields, seven negative boundaries, and the Gate B decision:
+  no direct runtime import is ready now. Targeted Gate A validation is
+  green: 1 file / 6 tests.
 
 ## Immediate Execution Order
 
@@ -353,20 +368,20 @@ For every next slice decision:
 order:
 
 1. Re-read
-   [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_C_CLOSEOUT_HANDOFF.md),
+   [CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_A_HANDOFF.md),
    [SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md](./SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md)
    and the current-state active-slice section.
-2. Run `pnpm calculator:gate:current` as the Gate A baseline.
+2. Run `pnpm calculator:gate:current` as the Gate B baseline.
 3. Add
-   `packages/engine/src/wall-source-catalog-acquisition-gate-a-contract.test.ts`
-   as a no-runtime target/source-readiness inventory.
-4. Classify target families, required metadata, import readiness, and
-   negative boundaries.
-5. Select a bounded future import slice only if a direct source pack is
-   ready; otherwise close no-runtime and document the missing evidence.
+   `packages/engine/src/wall-source-catalog-acquisition-gate-b-contract.test.ts`
+   as a no-runtime source-pack readiness closeout.
+4. Use the Gate A target list to confirm whether any direct source pack
+   is complete enough for a future bounded import slice. Current Gate A
+   says no direct runtime import is ready now.
+5. If no pack is ready, close no-runtime and document missing evidence.
 6. Add paired web route-card tests before any future change to visible support,
    confidence, evidence text, output values, or missing-input copy.
-7. Validate with the targeted Gate A test,
+7. Validate with the targeted Gate B test,
    `pnpm calculator:gate:current`, and `git diff --check`.
 
 ## Personal-Use Readiness Chain
@@ -381,16 +396,16 @@ private day-to-day use:
 
 Productization route-policy and proposal/report polish slices are
 closed. Calculator runtime/source posture stays frozen during the
-selected wall source-catalog acquisition slice; Gate A must classify
-source targets and import rules before any runtime or route-card
-movement. Additional productization work is deferred.
+selected wall source-catalog acquisition slice. Gate A has classified
+source targets and import rules; Gate B must close source-pack
+readiness before any runtime or route-card movement. Additional
+productization work is deferred.
 
 ## Latest Closed Slices
 
 See [CURRENT_STATE.md](./CURRENT_STATE.md) "Latest Closed Slices" table.
-`wall_double_leaf_source_evidence_acquisition_v1` Gate C is closed
-no-runtime and `wall_source_catalog_acquisition_v1` Gate A is the next
-decision point.
+`wall_source_catalog_acquisition_v1` Gate A is landed no-runtime and
+Gate B source-pack readiness is the next decision point.
 
 ## Deferred Follow-Up Tracks
 

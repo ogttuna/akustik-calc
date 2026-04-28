@@ -37,6 +37,10 @@ The next accuracy path is source acquisition rather than another retune.
 inventory of candidate wall source rows, required metadata, import
 readiness, and negative boundaries.
 
+Forward pointer: Gate A of that source-catalog slice has now landed in
+[CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_A_HANDOFF.md).
+Use that checkpoint for the active handoff.
+
 ## Validation
 
 - Baseline before Gate C edits: `pnpm calculator:gate:current` green
@@ -59,10 +63,10 @@ Start from:
 3. `docs/calculator/SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md`
 4. `docs/calculator/CURRENT_STATE.md`
 
-Immediate implementation file:
+Gate A implementation file:
 
 - `packages/engine/src/wall-source-catalog-acquisition-gate-a-contract.test.ts`
 
-Keep Gate A no-runtime. It should classify source catalog targets and
+Gate A stayed no-runtime and classified source catalog targets and
 acceptance rules before any import, runtime, confidence, support, or
-route-card behavior changes.
+route-card behavior changes. Continue from the Gate A handoff.

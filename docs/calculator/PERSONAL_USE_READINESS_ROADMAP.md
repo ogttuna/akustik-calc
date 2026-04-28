@@ -223,8 +223,8 @@ families remain blocked until new evidence is deliberately imported.
 
 Next selected work:
 
-1. `wall_source_catalog_acquisition_v1` Gate A no-runtime
-   source-target inventory and import acceptance rules.
+1. `wall_source_catalog_acquisition_v1` Gate B no-runtime
+   source-pack readiness closeout.
 
 `calculator_source_gap_revalidation_v1` Gate A and
 `wall_coverage_expansion_planning_v2` Gate A are closed no-runtime.
@@ -240,5 +240,7 @@ has now closed no-runtime at Gate C: bounded Knauf W111 / W112 / W115 /
 W119 rows already fit current behavior, while generic empty/no-stud
 double-leaf values remain source-blocked. Calculator runtime/source
 posture should remain frozen during `wall_source_catalog_acquisition_v1`
-Gate A until a direct source row, metric owner, tolerance, protected
-boundary set, and paired route-card tests are named.
+Gate B until a direct source row, metric owner, tolerance, protected
+boundary set, and paired route-card tests are named. Gate A has landed
+the source-target inventory and found no direct runtime import ready
+now.
