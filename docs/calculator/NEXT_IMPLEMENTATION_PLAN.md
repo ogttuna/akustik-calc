@@ -8,10 +8,10 @@ chain read
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
 
 Last reviewed: 2026-04-28
-(`wall_double_leaf_source_evidence_acquisition_v1` Gate A landed
-no-runtime; bounded Knauf framed-wall evidence is now classified for
-Gate B reconciliation before any double-leaf or stud-cavity runtime
-movement;
+(`wall_double_leaf_source_evidence_acquisition_v1` Gate B landed
+no-runtime; bounded Knauf W111 / W112 / W115 / W119 framed-wall rows
+already fit current lab/field behavior, so the next step is Gate C
+no-runtime closeout and next-slice selection;
 see
 `SLICE_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_ACQUISITION_PLAN.md`).
 
@@ -45,7 +45,7 @@ For every next slice decision:
 - **Active slice**:
   `wall_double_leaf_source_evidence_acquisition_v1`.
 - **Latest checkpoint**:
-  [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_A_HANDOFF.md).
+  [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_B_HANDOFF.md).
 - **Planning surface**:
   [SLICE_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_ACQUISITION_PLAN.md](./SLICE_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_ACQUISITION_PLAN.md).
 - **Personal-use readiness roadmap**:
@@ -89,6 +89,15 @@ For every next slice decision:
   and formula tolerance references before any retune or import.
   The next implementation file is
   `packages/engine/src/wall-double-leaf-source-evidence-acquisition-gate-a-contract.test.ts`.
+- **Just landed**: `wall_double_leaf_source_evidence_acquisition_v1`
+  Gate B. Gate A classified the source/tolerance candidates; Gate B
+  then reconciled bounded Knauf W111 / W112 / W115 / W119 framed-wall
+  rows against current dynamic lab/field outputs. The rows already fit:
+  W111/W112 single-stud rows sit inside tolerance, W112 field rows are
+  exact verified proxy anchors, and W115/W119 split-cavity rows already
+  match as `double_stud_system`. No runtime/support/confidence/evidence
+  or route-card behavior changed. The next implementation file should
+  be a no-runtime Gate C closeout / next-slice selection contract.
 - **Previously closed**: `proposal_report_polish_v1`.
   Simple PDF/DOCX exports now include output coverage posture,
   generated proposal documents preserve real floor/wall workbench
@@ -319,6 +328,14 @@ For every next slice decision:
   side-count, timber, single-leaf, lined-massive, heavy-core, CLT,
   direct-coupled, and triple-leaf boundaries stay protected.
   Targeted Gate A validation is green: 1 file / 6 tests.
+- **Wall double-leaf source evidence Gate B**:
+  `packages/engine/src/wall-double-leaf-source-evidence-acquisition-gate-b-contract.test.ts`
+  lands no-runtime reconciliation. It pins 16 bounded W111 / W112 /
+  W115 / W119 rows against current dynamic outputs: W111/W112
+  single-stud rows fit inside source tolerances, W112 field rows remain
+  exact verified proxy anchors, and W115/W119 split-cavity rows already
+  match on the `double_stud_system` lane. Targeted Gate B validation is
+  green: 1 file / 4 tests.
 
 ## Immediate Execution Order
 
@@ -326,23 +343,20 @@ For every next slice decision:
 order:
 
 1. Re-read
-   [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_A_HANDOFF.md),
+   [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_B_HANDOFF.md),
    [SLICE_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_ACQUISITION_PLAN.md](./SLICE_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_ACQUISITION_PLAN.md)
    and the current-state active-slice section.
-2. Run `pnpm calculator:gate:current` as the baseline.
-3. Add a Gate B no-runtime reconciliation contract that compares the
-   bounded Knauf W111 / W112 / W115 / W119 framed-wall evidence against
-   current single-stud and double-stud lab/field outputs.
-4. If every bounded row already fits current behavior or cannot map
-   cleanly to a generic material lane, close no-runtime.
-5. If a bounded runtime movement is needed, name the exact source row,
-   metric owner, tolerance, and protected-boundary exclusions before
-   changing runtime values.
+2. Run `pnpm calculator:gate:current` as the Gate C baseline.
+3. Add a Gate C no-runtime closeout / next-slice selection contract.
+4. Close the source-evidence slice without changing runtime values:
+   Gate B already proved the bounded W111 / W112 / W115 / W119 rows fit
+   current behavior.
+5. Select the next calculator accuracy gap from the current roadmap.
 6. Keep empty/no-stud double-leaf values frozen until a direct row or
    formula tolerance owner exists.
-7. Add paired web route-card tests before changing visible support,
+7. Add paired web route-card tests before any future change to visible support,
    confidence, evidence text, output values, or missing-input copy.
-8. Validate with the targeted Gate B test,
+8. Validate with the targeted Gate C test,
    `pnpm calculator:gate:current`, and `git diff --check`.
 
 ## Personal-Use Readiness Chain
@@ -364,8 +378,8 @@ is deferred.
 ## Latest Closed Slices
 
 See [CURRENT_STATE.md](./CURRENT_STATE.md) "Latest Closed Slices" table.
-`wall_double_leaf_source_evidence_acquisition_v1` Gate A is now landed
-no-runtime and Gate B bounded framed-wall reconciliation is the next
+`wall_double_leaf_source_evidence_acquisition_v1` Gate B is now landed
+no-runtime and Gate C closeout / next-slice selection is the next
 decision point.
 
 ## Deferred Follow-Up Tracks

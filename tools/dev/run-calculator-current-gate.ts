@@ -157,6 +157,7 @@ async function main() {
         "src/wall-double-leaf-sharp-davy-scoping-gate-b-contract.test.ts",
         "src/post-wall-double-leaf-sharp-davy-scoping-v1-next-slice-selection-contract.test.ts",
         "src/wall-double-leaf-source-evidence-acquisition-gate-a-contract.test.ts",
+        "src/wall-double-leaf-source-evidence-acquisition-gate-b-contract.test.ts",
         "--maxWorkers=1"
       ]
     },

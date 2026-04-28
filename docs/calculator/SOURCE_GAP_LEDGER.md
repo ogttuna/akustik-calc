@@ -58,12 +58,14 @@ Important scope note:
   The active wall work is now
   `wall_double_leaf_source_evidence_acquisition_v1`. Gate A landed
   no-runtime and classified local/external wall evidence without moving
-  values: generic empty double-leaf and no-stud porous double-leaf rows
-  remain source-blocked; Knauf W111 single-stud and W115 double-stud /
-  split-cavity rows are bounded framed-wall reconciliation candidates;
-  Knauf Quietstud, Davy double-leaf, and stud-type literature remain
-  corridor context only. The dedicated wall plan owns the next Gate B
-  decision rather than overloading this floor-dominant ledger.
+  values. Gate B then reconciled bounded Knauf W111 / W112 / W115 /
+  W119 framed-wall rows against current dynamic outputs and found no
+  runtime movement: generic empty double-leaf and no-stud porous
+  double-leaf rows remain source-blocked; W111/W112 single-stud rows
+  already fit within source tolerances; W112 field rows remain exact
+  proxy anchors; W115/W119 split-cavity rows already match on the
+  `double_stud_system` lane. The dedicated wall plan now owns the Gate C
+  no-runtime closeout rather than overloading this floor-dominant ledger.
 - `good_calculator_final_audit_v1` closed without reopening any
   source-gated calculator family. `wall_formula_family_widening_v1`
   then also closed without reopening any blocked family: it clarified

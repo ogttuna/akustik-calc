@@ -1,9 +1,10 @@
 # Slice Plan - Wall Double-Leaf Source Evidence Acquisition v1
 
-Status: GATE A LANDED NO-RUNTIME (selected by
+Status: GATE B LANDED NO-RUNTIME (selected by
 `wall_double_leaf_sharp_davy_scoping_v1` Gate C closeout; Gate A
-classified source/tolerance candidates and authorized only a bounded
-Gate B reconciliation decision, not runtime value movement)
+classified source/tolerance candidates, and Gate B proved the bounded
+Knauf W111 / W112 / W115 / W119 framed-wall rows already fit current
+lab/field behavior without runtime value movement)
 
 ## Objective
 
@@ -53,6 +54,8 @@ The selected source-evidence slice starts from:
 - `packages/engine/src/wall-double-leaf-sharp-davy-scoping-gate-b-contract.test.ts`
 - `packages/engine/src/post-wall-double-leaf-sharp-davy-scoping-v1-next-slice-selection-contract.test.ts`
 - `packages/engine/src/wall-double-leaf-source-evidence-acquisition-gate-a-contract.test.ts`
+- `packages/engine/src/wall-double-leaf-source-evidence-acquisition-gate-b-contract.test.ts`
+- `docs/calculator/CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_B_HANDOFF.md`
 - `docs/calculator/CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_A_HANDOFF.md`
 - `docs/calculator/CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_C_CLOSEOUT_HANDOFF.md`
 - `docs/calculator/SOURCE_GAP_LEDGER.md`
@@ -102,6 +105,28 @@ Gate A result:
 | Knauf Quietstud and Davy / stud-type references | `bounded` context only | useful formula/fill/stud-type corridor evidence, not direct generic runtime imports |
 | Exact catalog, resilient side-count, timber, single-leaf, lined-massive, heavy-core, CLT, direct-coupled, triple-leaf | `reject` boundary | protected from this import lane |
 
+## Gate B - Bounded Framed-Wall Reconciliation
+
+Gate B landed no-runtime in
+`packages/engine/src/wall-double-leaf-source-evidence-acquisition-gate-b-contract.test.ts`.
+It compares the bounded Knauf framed-wall evidence from Gate A against
+the current dynamic implementation.
+
+Gate B result:
+
+| Row group | Current fit | Decision |
+|---|---|---|
+| W111 single-stud lab/field holdouts | max error 0.3 dB against 3 dB tolerance | keep current runtime |
+| W112 single-stud lab holdouts | exact current match to source expected values | keep current runtime |
+| W112 field rows | exact `DnT,A,k` proxy anchors already active | keep exact source lane |
+| W115 / W119 double-stud split-cavity lab/field rows | exact current match; detected family remains `double_stud_system` | keep current runtime |
+
+Gate B explicitly does not authorize empty/no-stud double-leaf retuning.
+Those rows remain frozen until a direct source row or named formula
+tolerance owner appears. Because no visible values/support/confidence/
+evidence text changed, no paired web route-card test was required for
+this gate.
+
 ## Acceptance Rules
 
 A future runtime/import Gate B may only proceed when Gate A finds one of:
@@ -121,29 +146,27 @@ and select a no-runtime closeout.
 
 - `packages/engine/src/wall-double-leaf-source-evidence-acquisition-gate-a-contract.test.ts`
   now pins the source/tolerance candidate matrix.
-- Gate B must add
-  value tests and paired web route-card tests before changing visible
-  values, support, confidence, evidence text, or missing-input copy.
-- If Gate B finds the bounded Knauf framed rows already match current
-  lab/field posture or do not map cleanly, close no-runtime and keep the
+- `packages/engine/src/wall-double-leaf-source-evidence-acquisition-gate-b-contract.test.ts`
+  pins the no-runtime reconciliation over 16 bounded W111 / W112 /
+  W115 / W119 rows.
+- Future gates must add value tests and paired web route-card tests
+  before changing visible values, support, confidence, evidence text, or
+  missing-input copy.
+- Gate B found the bounded Knauf framed rows already match current
+  lab/field posture. Gate C should close no-runtime and keep the
   source-gap ledger updated.
 
 ## Immediate Execution Order
 
 1. Read
-   [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_A_HANDOFF.md).
-2. Run `pnpm calculator:gate:current` as the baseline.
-3. Start Gate B as a no-runtime reconciliation contract for the bounded
-   Knauf W111 / W112 / W115 / W119 framed-wall rows already present in
-   `packages/engine/src/airborne-framed-wall-benchmark.test.ts` and
-   `packages/engine/src/airborne-verified-catalog.ts`.
-4. Explicitly prove whether the current single-stud and double-stud
-   lab/field values already satisfy the bounded rows. If not, name the
-   exact runtime movement, metric owner, and tolerances before changing
-   values.
-5. Keep empty/no-stud double-leaf rows frozen unless a new direct source
+   [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_B_HANDOFF.md).
+2. Run `pnpm calculator:gate:current` as the baseline before Gate C.
+3. Add a Gate C no-runtime closeout / next-slice selection contract for
+   `wall_double_leaf_source_evidence_acquisition_v1`.
+4. Keep empty/no-stud double-leaf rows frozen unless a new direct source
    row or formula tolerance owner is added.
-6. Add paired web route-card tests before any visible value, support,
-   confidence, evidence, or missing-input text changes.
-7. Validate with the targeted Gate B test, `pnpm calculator:gate:current`,
+5. Select the next calculator accuracy gap from the current roadmap
+   without reopening closed blocked-source candidates from nearby green
+   tests alone.
+6. Validate with the targeted Gate C test, `pnpm calculator:gate:current`,
    and `git diff --check`.
