@@ -1,10 +1,11 @@
 # Slice Plan - Wall Double-Leaf Source Evidence Acquisition v1
 
-Status: GATE B LANDED NO-RUNTIME (selected by
+Status: CLOSED at Gate C (selected by
 `wall_double_leaf_sharp_davy_scoping_v1` Gate C closeout; Gate A
 classified source/tolerance candidates, and Gate B proved the bounded
 Knauf W111 / W112 / W115 / W119 framed-wall rows already fit current
-lab/field behavior without runtime value movement)
+lab/field behavior without runtime value movement; Gate C selected
+`wall_source_catalog_acquisition_v1`)
 
 ## Objective
 
@@ -55,6 +56,8 @@ The selected source-evidence slice starts from:
 - `packages/engine/src/post-wall-double-leaf-sharp-davy-scoping-v1-next-slice-selection-contract.test.ts`
 - `packages/engine/src/wall-double-leaf-source-evidence-acquisition-gate-a-contract.test.ts`
 - `packages/engine/src/wall-double-leaf-source-evidence-acquisition-gate-b-contract.test.ts`
+- `packages/engine/src/post-wall-double-leaf-source-evidence-acquisition-v1-next-slice-selection-contract.test.ts`
+- `docs/calculator/CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_C_CLOSEOUT_HANDOFF.md`
 - `docs/calculator/CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_B_HANDOFF.md`
 - `docs/calculator/CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_A_HANDOFF.md`
 - `docs/calculator/CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_C_CLOSEOUT_HANDOFF.md`
@@ -127,6 +130,21 @@ tolerance owner appears. Because no visible values/support/confidence/
 evidence text changed, no paired web route-card test was required for
 this gate.
 
+## Gate C - Closeout And Next Slice Selection
+
+Gate C closed no-runtime in
+`packages/engine/src/post-wall-double-leaf-source-evidence-acquisition-v1-next-slice-selection-contract.test.ts`.
+It selects `wall_source_catalog_acquisition_v1` because the recent wall
+accuracy slices repeatedly reached the same blocker: current formulas
+are finite and guarded, but runtime/confidence movement needs direct
+source rows, benchmark family rules, or named formula tolerance owners.
+
+Selected planning surface:
+[SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md](./SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md).
+
+No acoustic runtime values, formulas, support, confidence, evidence
+text, API behavior, or route-card copy changed during Gate C.
+
 ## Acceptance Rules
 
 A future runtime/import Gate B may only proceed when Gate A finds one of:
@@ -149,24 +167,15 @@ and select a no-runtime closeout.
 - `packages/engine/src/wall-double-leaf-source-evidence-acquisition-gate-b-contract.test.ts`
   pins the no-runtime reconciliation over 16 bounded W111 / W112 /
   W115 / W119 rows.
+- Gate C closeout is pinned by
+  `packages/engine/src/post-wall-double-leaf-source-evidence-acquisition-v1-next-slice-selection-contract.test.ts`.
 - Future gates must add value tests and paired web route-card tests
   before changing visible values, support, confidence, evidence text, or
   missing-input copy.
-- Gate B found the bounded Knauf framed rows already match current
-  lab/field posture. Gate C should close no-runtime and keep the
-  source-gap ledger updated.
+- `wall_source_catalog_acquisition_v1` Gate A should add a no-runtime
+  target/source-readiness inventory before any import or retune.
 
 ## Immediate Execution Order
 
-1. Read
-   [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_B_HANDOFF.md).
-2. Run `pnpm calculator:gate:current` as the baseline before Gate C.
-3. Add a Gate C no-runtime closeout / next-slice selection contract for
-   `wall_double_leaf_source_evidence_acquisition_v1`.
-4. Keep empty/no-stud double-leaf rows frozen unless a new direct source
-   row or formula tolerance owner is added.
-5. Select the next calculator accuracy gap from the current roadmap
-   without reopening closed blocked-source candidates from nearby green
-   tests alone.
-6. Validate with the targeted Gate C test, `pnpm calculator:gate:current`,
-   and `git diff --check`.
+This slice is closed. Continue in
+[SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md](./SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md).

@@ -25,10 +25,10 @@ personal/internal-use readiness chain is closed;
 `wall_coverage_expansion_planning_v2` Gate A closed no-runtime;
 `wall_single_leaf_mass_law_calibration_v1` Gate C closed no-runtime;
 `wall_double_leaf_sharp_davy_scoping_v1` Gate C closed no-runtime;
-`wall_double_leaf_source_evidence_acquisition_v1` Gate B landed
+`wall_double_leaf_source_evidence_acquisition_v1` Gate C closed
 no-runtime;
 latest checkpoint:
-[CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_B_HANDOFF.md)).
+[CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_C_CLOSEOUT_HANDOFF.md)).
 Step 8 closed the calculator runtime audit: `MASTER_PLAN.md` §3/§8
 was reconciled to implementation reality, `coverage-grid-consistency.test.ts`
 now maps the grid and C1-C6 signals to executable evidence, the
@@ -184,26 +184,26 @@ hardening, and the pure team-access policy model.
   `wall-double-leaf-source-evidence-acquisition-gate-a-contract.test.ts`
   for the no-runtime source/tolerance evidence inventory, plus
   `wall-double-leaf-source-evidence-acquisition-gate-b-contract.test.ts`
-  for the no-runtime bounded framed-wall reconciliation. Latest
-  focused gate run after the Gate B contract update:
-  109 engine files / 500 tests, 43 web files / 211
+  for the no-runtime bounded framed-wall reconciliation, plus
+  `post-wall-double-leaf-source-evidence-acquisition-v1-next-slice-selection-contract.test.ts`
+  for the no-runtime Gate C closeout and wall source catalog selection.
+  Latest focused gate run after the Gate C contract update:
+  110 engine files / 505 tests, 43 web files / 211
   passed + 18 skipped, build 5/5 tasks, whitespace guard clean.
 
 ## Active Slice
 
-`wall_double_leaf_source_evidence_acquisition_v1` (source/tolerance
-evidence acquisition for common double-leaf, single-stud, double-stud,
-and cavity wall assemblies before any runtime movement). Gate B has now
-landed no-runtime in
-`packages/engine/src/wall-double-leaf-source-evidence-acquisition-gate-b-contract.test.ts`.
-It reconciles bounded Knauf W111 / W112 / W115 / W119 framed-wall rows
-against current dynamic lab/field outputs and finds no runtime movement:
-W111/W112 single-stud rows fit inside tolerance, W112 field rows remain
-exact proxy anchors, and W115/W119 split-cavity rows already match as
-`double_stud_system`. Gate C should now close the slice no-runtime and
-select the next calculator accuracy gap.
+`wall_source_catalog_acquisition_v1` (no-runtime source-target
+inventory and import acceptance rules for blocked common wall families).
+It was selected by
+`packages/engine/src/post-wall-double-leaf-source-evidence-acquisition-v1-next-slice-selection-contract.test.ts`
+after Gate B proved bounded W111 / W112 / W115 / W119 framed rows
+already fit current behavior and generic no-stud double-leaf rows still
+need direct sources or a named formula tolerance owner. Gate A should
+inventory source catalog targets and negative boundaries before any
+runtime/confidence/support/evidence or route-card movement.
 Planning surface:
-[SLICE_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_ACQUISITION_PLAN.md](./SLICE_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_ACQUISITION_PLAN.md).
+[SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md](./SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md).
 
 `wall_coverage_expansion_planning_v2` Gate A is now closed
 no-runtime. It added
@@ -260,8 +260,11 @@ formula tolerance owner, or bounded family rule exists. Gate C has now
 closed no-runtime in
 `packages/engine/src/post-wall-double-leaf-sharp-davy-scoping-v1-next-slice-selection-contract.test.ts`
 and selected `wall_double_leaf_source_evidence_acquisition_v1`. Gate A
-of the selected source-evidence slice has now landed no-runtime; Gate B
-must reconcile bounded Knauf framed rows or close no-runtime.
+and Gate B of that source-evidence slice landed no-runtime, and Gate C
+has now closed it no-runtime in
+`packages/engine/src/post-wall-double-leaf-source-evidence-acquisition-v1-next-slice-selection-contract.test.ts`.
+The selected next slice is `wall_source_catalog_acquisition_v1`, starting
+with no-runtime source-target inventory and import acceptance rules.
 
 Do not reopen `GDMTXA04A`, `C11c`, raw bare open-box/open-web,
 heavy-concrete formula parity, reinforced-concrete reopening,
@@ -858,14 +861,15 @@ Wall coverage planning status:
 `wall_coverage_expansion_planning_v2` Gate A is closed no-runtime. The
 selected single-leaf slice has now closed no-runtime at Gate C. The
 double-leaf Sharp/Davy slice has now closed no-runtime at Gate C. The
-selected source-evidence slice has landed Gate B no-runtime. The next
-implementation step is Gate C no-runtime closeout and next-slice
-selection.
+selected source-evidence slice has closed no-runtime at Gate C. The
+next implementation step is `wall_source_catalog_acquisition_v1` Gate A
+no-runtime target/source-readiness inventory.
 
 ## Latest Closed Slices
 
 | Slice | Master-plan step | Closed | Post-contract |
 |---|---|---|---|
+| `wall_double_leaf_source_evidence_acquisition_v1` Gate C | calculator wall source evidence | 2026-04-28 | `post-wall-double-leaf-source-evidence-acquisition-v1-next-slice-selection-contract.test.ts` |
 | `wall_double_leaf_source_evidence_acquisition_v1` Gate B | calculator wall source evidence | 2026-04-28 | `wall-double-leaf-source-evidence-acquisition-gate-b-contract.test.ts` |
 | `wall_double_leaf_source_evidence_acquisition_v1` Gate A | calculator wall source evidence | 2026-04-28 | `wall-double-leaf-source-evidence-acquisition-gate-a-contract.test.ts` |
 | `wall_double_leaf_sharp_davy_scoping_v1` Gate C | calculator wall coverage planning | 2026-04-28 | `post-wall-double-leaf-sharp-davy-scoping-v1-next-slice-selection-contract.test.ts` |
@@ -1074,12 +1078,11 @@ time without context loss:
 1. Read [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_A_HANDOFF.md)
    for the latest active-slice handoff.
 2. Read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md),
-   [SLICE_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_ACQUISITION_PLAN.md](./SLICE_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_ACQUISITION_PLAN.md),
+   [SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md](./SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md),
    [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md), and
    [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md).
-   Continue `wall_double_leaf_source_evidence_acquisition_v1` at Gate B by
-   reconciling the bounded Knauf W111 / W112 / W115 / W119 framed-wall
-   rows against current single-stud and double-stud lab/field outputs.
+   Continue `wall_source_catalog_acquisition_v1` at Gate A by adding a
+   no-runtime source-target inventory and import acceptance contract.
 3. Read [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
    for the now-closed calculator-priority chain and its evidence-tier
    caveats.
@@ -1093,8 +1096,8 @@ time without context loss:
    If it does not, fix the drift before starting work.
 6. Run `pnpm calculator:gate:current` as the focused baseline.
 7. Do not change runtime math, source posture, output support,
-   evidence tiers, or confidence scores during source-evidence Gate B
-   unless the contract names the exact source row, metric owner,
+   evidence tiers, or confidence scores during source-catalog Gate A.
+   Any future import must name the exact source row, metric owner,
    tolerance, protected-boundary exclusions, and paired web route-card
    tests.
 8. Treat [CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_ELEVENTH_CARVE_HANDOFF.md](./CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_ELEVENTH_CARVE_HANDOFF.md),

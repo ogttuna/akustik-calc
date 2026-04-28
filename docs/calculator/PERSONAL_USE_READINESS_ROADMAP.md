@@ -223,9 +223,8 @@ families remain blocked until new evidence is deliberately imported.
 
 Next selected work:
 
-1. `wall_double_leaf_source_evidence_acquisition_v1` Gate B bounded
-   framed-wall reconciliation after the landed Gate A source/tolerance
-   inventory.
+1. `wall_source_catalog_acquisition_v1` Gate A no-runtime
+   source-target inventory and import acceptance rules.
 
 `calculator_source_gap_revalidation_v1` Gate A and
 `wall_coverage_expansion_planning_v2` Gate A are closed no-runtime.
@@ -236,9 +235,10 @@ tolerance pack exists. `wall_double_leaf_sharp_davy_scoping_v1` Gate C
 has now closed no-runtime: empty double-leaf, porous double-leaf,
 explicit single-stud, and explicit double-stud values are pinned as
 current behavior, while lined-massive and triple-leaf shapes remain
-negative boundaries. Gate A of the selected source-evidence slice has
-now landed no-runtime: generic empty/no-stud double-leaf values remain
-frozen, while Knauf W111 single-stud and W115 double-stud rows are
-bounded evidence for reconciliation only. Calculator runtime/source
-posture should remain frozen until Gate B names a source row, metric
-owner, tolerance, and paired route-card tests, or closes no-runtime.
+negative boundaries. `wall_double_leaf_source_evidence_acquisition_v1`
+has now closed no-runtime at Gate C: bounded Knauf W111 / W112 / W115 /
+W119 rows already fit current behavior, while generic empty/no-stud
+double-leaf values remain source-blocked. Calculator runtime/source
+posture should remain frozen during `wall_source_catalog_acquisition_v1`
+Gate A until a direct source row, metric owner, tolerance, protected
+boundary set, and paired route-card tests are named.

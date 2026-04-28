@@ -1,10 +1,9 @@
 # Dynamic Calculator Source Gap Ledger
 
 Last reviewed: 2026-04-28
-(`wall_double_leaf_source_evidence_acquisition_v1` Gate A landed
-no-runtime; bounded framed-wall source evidence is now classified for
-Gate B reconciliation; source-gap content remains floor-dominant
-historical context)
+(`wall_double_leaf_source_evidence_acquisition_v1` Gate C closed
+no-runtime and selected `wall_source_catalog_acquisition_v1`;
+source-gap content remains floor-dominant historical context)
 
 Purpose:
 
@@ -55,17 +54,17 @@ Important scope note:
   selected `wall_single_leaf_mass_law_calibration_v1`; that slice
   closed no-runtime at Gate C because generic single-leaf runtime
   movement needs stack-specific source rows or bounded tolerance packs.
-  The active wall work is now
-  `wall_double_leaf_source_evidence_acquisition_v1`. Gate A landed
-  no-runtime and classified local/external wall evidence without moving
-  values. Gate B then reconciled bounded Knauf W111 / W112 / W115 /
+  The active wall work is now `wall_source_catalog_acquisition_v1`.
+  `wall_double_leaf_source_evidence_acquisition_v1` closed no-runtime at
+  Gate C after Gate B reconciled bounded Knauf W111 / W112 / W115 /
   W119 framed-wall rows against current dynamic outputs and found no
-  runtime movement: generic empty double-leaf and no-stud porous
+  runtime movement. Generic empty double-leaf and no-stud porous
   double-leaf rows remain source-blocked; W111/W112 single-stud rows
   already fit within source tolerances; W112 field rows remain exact
   proxy anchors; W115/W119 split-cavity rows already match on the
-  `double_stud_system` lane. The dedicated wall plan now owns the Gate C
-  no-runtime closeout rather than overloading this floor-dominant ledger.
+  `double_stud_system` lane. The dedicated wall source-catalog plan now
+  owns the next target/source-readiness inventory rather than
+  overloading this floor-dominant ledger.
 - `good_calculator_final_audit_v1` closed without reopening any
   source-gated calculator family. `wall_formula_family_widening_v1`
   then also closed without reopening any blocked family: it clarified

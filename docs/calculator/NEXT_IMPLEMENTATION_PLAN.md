@@ -8,12 +8,12 @@ chain read
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
 
 Last reviewed: 2026-04-28
-(`wall_double_leaf_source_evidence_acquisition_v1` Gate B landed
-no-runtime; bounded Knauf W111 / W112 / W115 / W119 framed-wall rows
-already fit current lab/field behavior, so the next step is Gate C
-no-runtime closeout and next-slice selection;
+(`wall_double_leaf_source_evidence_acquisition_v1` Gate C closed
+no-runtime and selected `wall_source_catalog_acquisition_v1`; next step
+is a no-runtime Gate A source-target inventory and import acceptance
+contract;
 see
-`SLICE_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_ACQUISITION_PLAN.md`).
+`SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md`).
 
 ---
 
@@ -43,11 +43,11 @@ For every next slice decision:
 ## Now
 
 - **Active slice**:
-  `wall_double_leaf_source_evidence_acquisition_v1`.
+  `wall_source_catalog_acquisition_v1`.
 - **Latest checkpoint**:
-  [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_B_HANDOFF.md).
+  [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_C_CLOSEOUT_HANDOFF.md).
 - **Planning surface**:
-  [SLICE_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_ACQUISITION_PLAN.md](./SLICE_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_ACQUISITION_PLAN.md).
+  [SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md](./SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md).
 - **Personal-use readiness roadmap**:
   [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
   is closed for the current private/internal-use bar. Heavy-core/concrete
@@ -96,8 +96,13 @@ For every next slice decision:
   W111/W112 single-stud rows sit inside tolerance, W112 field rows are
   exact verified proxy anchors, and W115/W119 split-cavity rows already
   match as `double_stud_system`. No runtime/support/confidence/evidence
-  or route-card behavior changed. The next implementation file should
-  be a no-runtime Gate C closeout / next-slice selection contract.
+  or route-card behavior changed.
+- **Just closed**: `wall_double_leaf_source_evidence_acquisition_v1`
+  Gate C. `packages/engine/src/post-wall-double-leaf-source-evidence-acquisition-v1-next-slice-selection-contract.test.ts`
+  closes the source-evidence slice no-runtime and selects
+  `wall_source_catalog_acquisition_v1`. The next slice should inventory
+  wall source catalog targets and import acceptance rules before any
+  runtime, confidence, support, evidence text, or route-card movement.
 - **Previously closed**: `proposal_report_polish_v1`.
   Simple PDF/DOCX exports now include output coverage posture,
   generated proposal documents preserve real floor/wall workbench
@@ -336,27 +341,32 @@ For every next slice decision:
   exact verified proxy anchors, and W115/W119 split-cavity rows already
   match on the `double_stud_system` lane. Targeted Gate B validation is
   green: 1 file / 4 tests.
+- **Wall double-leaf source evidence Gate C**:
+  `packages/engine/src/post-wall-double-leaf-source-evidence-acquisition-v1-next-slice-selection-contract.test.ts`
+  closes the source-evidence slice no-runtime and selects
+  `wall_source_catalog_acquisition_v1`. Targeted Gate C validation is
+  green: 1 file / 5 tests.
 
 ## Immediate Execution Order
 
-`wall_double_leaf_source_evidence_acquisition_v1` should now proceed in this
+`wall_source_catalog_acquisition_v1` should now proceed in this
 order:
 
 1. Re-read
-   [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_B_HANDOFF.md),
-   [SLICE_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_ACQUISITION_PLAN.md](./SLICE_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_ACQUISITION_PLAN.md)
+   [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_C_CLOSEOUT_HANDOFF.md),
+   [SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md](./SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md)
    and the current-state active-slice section.
-2. Run `pnpm calculator:gate:current` as the Gate C baseline.
-3. Add a Gate C no-runtime closeout / next-slice selection contract.
-4. Close the source-evidence slice without changing runtime values:
-   Gate B already proved the bounded W111 / W112 / W115 / W119 rows fit
-   current behavior.
-5. Select the next calculator accuracy gap from the current roadmap.
-6. Keep empty/no-stud double-leaf values frozen until a direct row or
-   formula tolerance owner exists.
-7. Add paired web route-card tests before any future change to visible support,
+2. Run `pnpm calculator:gate:current` as the Gate A baseline.
+3. Add
+   `packages/engine/src/wall-source-catalog-acquisition-gate-a-contract.test.ts`
+   as a no-runtime target/source-readiness inventory.
+4. Classify target families, required metadata, import readiness, and
+   negative boundaries.
+5. Select a bounded future import slice only if a direct source pack is
+   ready; otherwise close no-runtime and document the missing evidence.
+6. Add paired web route-card tests before any future change to visible support,
    confidence, evidence text, output values, or missing-input copy.
-8. Validate with the targeted Gate C test,
+7. Validate with the targeted Gate A test,
    `pnpm calculator:gate:current`, and `git diff --check`.
 
 ## Personal-Use Readiness Chain
@@ -371,15 +381,15 @@ private day-to-day use:
 
 Productization route-policy and proposal/report polish slices are
 closed. Calculator runtime/source posture stays frozen during the
-selected double-leaf source-evidence acquisition slice until evidence
-is classified by an executable contract; additional productization work
-is deferred.
+selected wall source-catalog acquisition slice; Gate A must classify
+source targets and import rules before any runtime or route-card
+movement. Additional productization work is deferred.
 
 ## Latest Closed Slices
 
 See [CURRENT_STATE.md](./CURRENT_STATE.md) "Latest Closed Slices" table.
-`wall_double_leaf_source_evidence_acquisition_v1` Gate B is now landed
-no-runtime and Gate C closeout / next-slice selection is the next
+`wall_double_leaf_source_evidence_acquisition_v1` Gate C is closed
+no-runtime and `wall_source_catalog_acquisition_v1` Gate A is the next
 decision point.
 
 ## Deferred Follow-Up Tracks
