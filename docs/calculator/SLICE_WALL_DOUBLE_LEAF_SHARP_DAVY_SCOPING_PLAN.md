@@ -1,10 +1,10 @@
 # Slice Plan - Wall Double-Leaf Sharp/Davy Scoping v1
 
-Status: GATE A LANDED NO-RUNTIME (opened 2026-04-27 after
+Status: GATE B LANDED NO-RUNTIME (opened 2026-04-27 after
 `wall_single_leaf_mass_law_calibration_v1` Gate C closeout; Gate B
-bounded matrix or no-runtime closeout is next; Gate B-ready
-revalidation confirms Gate B is still unimplemented and the focused
-gate / broad check remain green)
+landed the bounded current-value/source-tolerance matrix with no
+runtime movement; Gate C no-runtime closeout / next-slice selection is
+next)
 
 ## Objective
 
@@ -15,10 +15,12 @@ ownership, source/benchmark surfaces, and negative boundaries before
 any value, confidence, output-support, evidence-tier, or route-card
 movement.
 
-The goal is to decide whether the next Gate B can safely build a
-bounded runtime-candidate matrix for double-leaf / stud-cavity walls,
-or whether this slice must close no-runtime until stronger source,
-benchmark, or tolerance evidence exists.
+The goal was to decide whether Gate B could safely build a bounded
+runtime-candidate matrix for double-leaf / stud-cavity walls. Gate B
+landed no-runtime: the current values are defensible formula-owned
+estimates, but no source row, benchmark envelope, formula tolerance
+owner, or bounded family rule exists to justify value movement. The
+remaining step is Gate C closeout and next-slice selection.
 
 ## Why This Slice Is Next
 
@@ -75,11 +77,14 @@ answer materially.
   porous double-leaf without stud metadata (`R'w=41`), explicit
   single-stud (`R'w=37`), and explicit double-stud / split-cavity
   (`R'w=52`), plus lined-massive and triple-leaf negative boundaries.
-- Gate B is not implemented yet. The next test file should be
+- Gate B has landed in
   `packages/engine/src/wall-double-leaf-sharp-davy-scoping-gate-b-contract.test.ts`.
-- The 2026-04-28 checkpoint revalidation found no implementation/plan
-  drift. Current values, formulas, source posture, output support,
-  confidence, evidence tier, and route cards are unchanged.
+- Gate B pins the same four positive current-value cases plus source /
+  tolerance decisions and protected boundary surfaces. Current values,
+  formulas, source posture, output support, confidence, evidence tier,
+  and route cards remain unchanged.
+- The 2026-04-28 Gate B handoff selects Gate C no-runtime closeout /
+  next-slice selection.
 
 ## Gate A - Scoping Contract
 
@@ -122,9 +127,9 @@ Suggested first evidence to inspect:
 
 ## Gate B - Conditional Runtime Candidate Matrix
 
-Gate B is the next decision point. It may only move runtime values if
-the Gate B contract proves a bounded, source- or formula-owned corridor.
-The minimum matrix before any runtime movement:
+Gate B is landed no-runtime. It was allowed to move runtime values only
+if the contract proved a bounded, source- or formula-owned corridor. The
+landed matrix preserves these required checks:
 
 - positive double-leaf/stud-cavity cases covering empty cavity, porous
   fill, single-stud, and double-stud;
@@ -136,14 +141,49 @@ The minimum matrix before any runtime movement:
   cases from order-sensitive cavity/stud cases;
 - web route-card assertions if visible outputs or support posture move.
 
-If Gate B cannot prove that scope, it should close no-runtime and select
-the next roadmap candidate instead of widening by assumption.
+Gate B proved finite current behavior and protected boundaries, but did
+not find source/tolerance evidence for a runtime move. Gate C should now
+close the slice no-runtime and select the next roadmap candidate instead
+of widening by assumption.
 
-### Gate B Detailed Workplan
+### Gate B Landed Result
 
-Gate B should be an executable contract first, not a retune. Build it
-around the Gate A cases and keep runtime values unchanged unless a named
-evidence basis is added in the same contract.
+Gate B is an executable contract, not a retune. It reuses the Gate A
+positive cases, keeps runtime values unchanged, and records one
+source/tolerance decision row per positive route.
+
+### Gate B Implementation Blueprint
+
+The implementation pass stayed no-runtime because the contract did not
+name stronger source/tolerance evidence than Gate A already found. It
+uses `wall-single-leaf-mass-law-calibration-gate-b-contract.test.ts` as
+the closest pattern: a bounded positive matrix, a source/tolerance
+decision table, explicit blocked movement, and a closeout selector.
+
+Concrete test sections:
+
+1. Gate metadata: record `wall_double_leaf_sharp_davy_scoping_v1`
+   Gate B as a bounded current-value/source-tolerance matrix with
+   `runtimeBehaviorChange=false`.
+2. Positive current-value matrix: reuse the Gate A four stacks and pin
+   lab `Rw` plus field `R'w`, `Dn,w`, `DnT,w`, `DnT,A`, support arrays,
+   trace family, strategy, confidence, selected method, selected
+   candidate `Rw`, cavity/fill metadata, and verified-source absence.
+3. Source/tolerance decision table: one row per positive stack with
+   `currentValueIsDefensible=true`, no direct stack source row, no
+   lab-fallback source row, no bounded benchmark/tolerance package, and
+   `runtimeMoveAllowedNow=false`.
+4. Negative boundary matrix: keep exact/catalog, resilient side-count,
+   timber exact/formula, single-leaf mass-law, lined-massive, CLT,
+   direct-coupled, and triple-leaf/multi-cavity surfaces outside this
+   retune lane. Use existing contract files as authority for protected
+   surfaces and keep the Gate A lined-massive/triple-leaf runtime
+   boundary checks executable.
+5. Closeout selector: if all positive rows are finite and defensible but
+   source/tolerance blockers remain, select a Gate C no-runtime closeout
+   / next-slice selection contract. Do not add web route-card tests
+   unless Gate B changes visible values, support, confidence, evidence
+   text, or missing-input copy.
 
 Required positive matrix:
 
@@ -178,12 +218,12 @@ Required negative matrix:
 - direct-coupled leaves must not be treated as decoupled double-leaf;
 - triple-leaf / multi-cavity shapes must stay `multileaf_multicavity`.
 
-Expected no-runtime closeout path:
+Selected no-runtime closeout path:
 
-- If all positive routes are finite and defensible but no source row,
+- All positive routes are finite and defensible, but no source row,
   benchmark envelope, formula tolerance owner, or bounded family rule is
-  present, Gate B should land no-runtime.
-- After a no-runtime Gate B, add a Gate C closeout / next-slice
+  present, so Gate B landed no-runtime.
+- After this no-runtime Gate B, add a Gate C closeout / next-slice
   selection contract instead of retuning from assumptions.
 - If Gate B changes value, support, confidence, evidence text, or
   missing-input copy, add paired web route-card tests before closing.
@@ -196,33 +236,31 @@ Expected no-runtime closeout path:
   confidence score, evidence tier, or route-card text.
 - The Gate A contract explicitly names Gate B as bounded matrix or
   no-runtime closeout, with no value movement authorized yet.
-- Gate B either lands the bounded current-value/source-tolerance matrix
-  or closes the slice no-runtime.
+- Gate B lands the bounded current-value/source-tolerance matrix
+  no-runtime and is included in `pnpm calculator:gate:current`.
+- Gate C no-runtime closeout / next-slice selection is still pending.
 - `NEXT_IMPLEMENTATION_PLAN.md`, `CURRENT_STATE.md`, `AGENTS.md`, this
   plan, and the latest checkpoint agree on the active selected slice.
-- `pnpm calculator:gate:current`, broad `pnpm check`, and
-  `git diff --check` are green before committing a checkpoint.
+- `pnpm calculator:gate:current` and `git diff --check` are green
+  before committing a checkpoint. Use broad `pnpm check` when runtime or
+  shared surfaces change, or when the checkpoint explicitly calls for a
+  full-repo gate.
 
 ## Immediate Execution Order
 
-1. Read the latest Gate A checkpoint:
-   [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_REVALIDATION.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_REVALIDATION.md)
-   and
-   [CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_A_HANDOFF.md).
+1. Read the latest Gate B checkpoint:
+   [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_HANDOFF.md).
 2. Run `pnpm calculator:gate:current` as the baseline.
 3. Add
-   `packages/engine/src/wall-double-leaf-sharp-davy-scoping-gate-b-contract.test.ts`.
-4. Add Gate B current-value matrix coverage for empty double-leaf,
-   porous double-leaf, explicit single-stud, and explicit double-stud
-   routes.
-5. Add the source/tolerance decision table for each positive route.
-6. Add negative boundaries for exact/catalog rows, resilient side-count
-   exact rows, timber exact/formula surfaces, single-leaf mass-law,
-   lined-massive, CLT, direct-coupled, and triple-leaf/multi-cavity
-   shapes.
-7. Include the new Gate B file in
-   `tools/dev/run-calculator-current-gate.ts`.
-8. Keep runtime values, formulas, output support, confidence, evidence
-   text, and web route cards unchanged unless Gate B names the source
-   row, benchmark envelope, formula tolerance owner, or bounded family
-   rule that supports the movement.
+   `packages/engine/src/post-wall-double-leaf-sharp-davy-scoping-v1-next-slice-selection-contract.test.ts`.
+4. Close `wall_double_leaf_sharp_davy_scoping_v1` no-runtime: Gate A and
+   Gate B changed no runtime values and found no source/tolerance basis
+   for movement.
+5. Keep route-card work out of Gate C unless it changes visible value,
+   support, confidence, evidence text, or missing-input copy.
+6. Reconcile `MASTER_PLAN.md`, `CURRENT_STATE.md`,
+   `NEXT_IMPLEMENTATION_PLAN.md`, and `SOURCE_GAP_LEDGER.md` before
+   naming the next roadmap candidate.
+7. Include the Gate C contract in `tools/dev/run-calculator-current-gate.ts`.
+8. Validate with the targeted Gate C test, `pnpm calculator:gate:current`,
+   and `git diff --check`.

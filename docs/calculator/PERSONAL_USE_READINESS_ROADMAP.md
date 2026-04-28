@@ -205,8 +205,8 @@ wall coverage planning Gate A. Engine broad is 234 files / 1280 tests.
 Web broad keeps 155 files in scope through `tools/dev/run-web-vitest.ts`
 with 885 passed + 18 skipped. Build is 5/5 with the known non-fatal
 `sharp/@img` optional-package warnings. Focused current gate after the
-double-leaf Sharp/Davy Gate A runner update is 105 engine files /
-480 tests, 43 web files / 211 passed plus 18 skipped, build 5/5.
+double-leaf Sharp/Davy Gate B runner update is 106 engine files /
+485 tests, 43 web files / 211 passed plus 18 skipped, build 5/5.
 
 ## Readiness Decision
 
@@ -223,20 +223,19 @@ families remain blocked until new evidence is deliberately imported.
 
 Next selected work:
 
-1. `wall_double_leaf_sharp_davy_scoping_v1` Gate B bounded matrix or
-   no-runtime closeout.
+1. `wall_double_leaf_sharp_davy_scoping_v1` Gate C no-runtime closeout
+   / next-slice selection.
 
 `calculator_source_gap_revalidation_v1` Gate A and
 `wall_coverage_expansion_planning_v2` Gate A are closed no-runtime.
 `wall_single_leaf_mass_law_calibration_v1` also closed no-runtime at
 Gate C: current generic concrete, solid-brick, and AAC values stay
 formula-owned estimates until a stack-specific source row or bounded
-tolerance pack exists. `wall_double_leaf_sharp_davy_scoping_v1` Gate A
+tolerance pack exists. `wall_double_leaf_sharp_davy_scoping_v1` Gate B
 has now landed no-runtime: empty double-leaf, porous double-leaf,
 explicit single-stud, and explicit double-stud values are pinned as
 current behavior, while lined-massive and triple-leaf shapes remain
 negative boundaries. Calculator runtime/source posture should remain
-frozen during Gate B unless a source-backed, benchmark-backed,
-formula-tolerance-owned, or bounded family wall candidate is selected
-by an executable contract, not an implicit reopen from nearby green
-tests.
+frozen during Gate C because Gate B found no source-backed,
+benchmark-backed, formula-tolerance-owned, or bounded family wall
+candidate for runtime movement.
