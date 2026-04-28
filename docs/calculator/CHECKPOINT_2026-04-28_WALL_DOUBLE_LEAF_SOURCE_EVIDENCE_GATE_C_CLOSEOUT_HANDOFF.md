@@ -37,9 +37,10 @@ The next accuracy path is source acquisition rather than another retune.
 inventory of candidate wall source rows, required metadata, import
 readiness, and negative boundaries.
 
-Forward pointer: Gate A of that source-catalog slice has now landed in
-[CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_A_HANDOFF.md).
-Use that checkpoint for the active handoff.
+Forward pointer: that source-catalog slice has now advanced through
+Gate B in
+[CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_B_HANDOFF.md).
+Use the Gate B checkpoint for the active handoff.
 
 ## Validation
 

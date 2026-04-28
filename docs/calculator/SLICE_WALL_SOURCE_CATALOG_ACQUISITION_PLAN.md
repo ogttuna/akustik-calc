@@ -1,9 +1,9 @@
 # Slice Plan - Wall Source Catalog Acquisition v1
 
-Status: GATE A LANDED NO-RUNTIME (by
-`packages/engine/src/wall-source-catalog-acquisition-gate-a-contract.test.ts`;
-Gate B should close source-pack readiness no-runtime unless a direct
-row pack is complete enough for a bounded import slice)
+Status: GATE B LANDED NO-RUNTIME (by
+`packages/engine/src/wall-source-catalog-acquisition-gate-b-contract.test.ts`;
+Gate C should close the source-catalog slice no-runtime and select the
+next accuracy slice)
 
 ## Objective
 
@@ -114,31 +114,51 @@ B should therefore be a no-runtime source-pack readiness closeout unless
 new direct rows with complete metadata, tolerance, protected negative
 boundaries, and paired engine/web tests are deliberately introduced.
 
+## Gate B - Source-Pack Readiness Closeout
+
+Gate B landed in
+`packages/engine/src/wall-source-catalog-acquisition-gate-b-contract.test.ts`.
+It changed no runtime behavior and selected no direct import pack:
+
+| Source pack | Gate B status | Result |
+|---|---|---|
+| Manufacturer framed W111 / W112 / W115 / W119 | `already_reconciled_no_new_import` | existing bounded rows already fit; adjacent rows need their own pack |
+| No-stud empty / porous double-leaf | `blocked_direct_source_missing` | direct no-stud row or formula tolerance owner missing |
+| Timber double-board stud | `blocked_live_topology_missing` | live double-board material/fill/cavity/stud topology not matched |
+| CLT wall | `blocked_wall_specific_source_missing` | floor CLT rows remain floor-only; wall row/tolerance missing |
+| Lined-massive / heavy-core concrete | `blocked_lining_rule_missing` | screening remains honest until source row or bounded lining rule |
+| Floor / impact / product-delta adjacent rows | `rejected_not_wall_source_truth` | not eligible for wall import |
+
+Gate B keeps eight import acceptance criteria pinned. A future import
+slice must name a direct wall source row, complete row metadata, metric
+context and tolerance owner, precedence impact, negative boundaries,
+and paired engine value plus web route-card tests.
+
 ## Expected Tests
 
 - Landed:
   `packages/engine/src/wall-source-catalog-acquisition-gate-a-contract.test.ts`.
 - Keep it no-runtime.
 - Include row-readiness and negative-boundary assertions.
-- Next: add
+- Landed:
   `packages/engine/src/wall-source-catalog-acquisition-gate-b-contract.test.ts`
   for source-pack readiness closeout.
+- Next: add
+  `packages/engine/src/post-wall-source-catalog-acquisition-v1-next-slice-selection-contract.test.ts`
+  for no-runtime Gate C closeout and next-slice selection.
 - Add paired web route-card tests only if a later gate changes visible
   values, support, confidence, evidence text, or missing-input copy.
 
 ## Immediate Execution Order
 
 1. Read
-   [CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_A_HANDOFF.md).
-2. Run `pnpm calculator:gate:current` as the Gate B baseline.
+   [CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_B_HANDOFF.md).
+2. Run `pnpm calculator:gate:current` as the Gate C baseline.
 3. Add
-   `packages/engine/src/wall-source-catalog-acquisition-gate-b-contract.test.ts`
-   as a no-runtime source-pack readiness closeout.
-4. Confirm whether any row pack is ready for a future import slice;
-   Gate A currently says no direct runtime import is ready now.
-5. If no pack is ready, close no-runtime and document the missing
-   evidence. If one is ready, select only a bounded import slice with
-   complete source metadata, tolerance, negative boundaries, and paired
-   engine/web tests.
-6. Validate with the targeted Gate B test, `pnpm calculator:gate:current`,
+   `packages/engine/src/post-wall-source-catalog-acquisition-v1-next-slice-selection-contract.test.ts`
+   as a no-runtime Gate C closeout and next-slice selection contract.
+4. Keep the source-catalog slice no-runtime because Gate B found no
+   direct runtime import pack ready now.
+5. Select the next accuracy slice from remaining source/coverage gaps.
+6. Validate with the targeted Gate C test, `pnpm calculator:gate:current`,
    and `git diff --check`.

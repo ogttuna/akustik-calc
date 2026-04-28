@@ -160,6 +160,7 @@ async function main() {
         "src/wall-double-leaf-source-evidence-acquisition-gate-b-contract.test.ts",
         "src/post-wall-double-leaf-source-evidence-acquisition-v1-next-slice-selection-contract.test.ts",
         "src/wall-source-catalog-acquisition-gate-a-contract.test.ts",
+        "src/wall-source-catalog-acquisition-gate-b-contract.test.ts",
         "--maxWorkers=1"
       ]
     },

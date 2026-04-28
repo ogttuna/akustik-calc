@@ -31,8 +31,9 @@ Primary documents (agent resume triangle):
 
 Supporting documents:
 
-- [`docs/calculator/CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_A_HANDOFF.md`](./docs/calculator/CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_A_HANDOFF.md) — latest calculator checkpoint
+- [`docs/calculator/CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_B_HANDOFF.md`](./docs/calculator/CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_B_HANDOFF.md) — latest calculator checkpoint
 - [`docs/calculator/SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md`](./docs/calculator/SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md) — active wall source catalog acquisition slice plan
+- [`docs/calculator/CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_A_HANDOFF.md`](./docs/calculator/CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_A_HANDOFF.md) — prior wall source catalog checkpoint
 - [`docs/calculator/CHECKPOINT_2026-04-23_BROAD_REVALIDATION_CALCULATOR_REFOCUS_HANDOFF.md`](./docs/calculator/CHECKPOINT_2026-04-23_BROAD_REVALIDATION_CALCULATOR_REFOCUS_HANDOFF.md) — prior broad revalidation checkpoint
 - [`docs/calculator/CHECKPOINT_2026-04-23_TEAM_ACCESS_MODEL_HANDOFF.md`](./docs/calculator/CHECKPOINT_2026-04-23_TEAM_ACCESS_MODEL_HANDOFF.md) — team-access model checkpoint
 - [`docs/calculator/CHECKPOINT_2026-04-23_AUTH_SESSION_HARDENING_HANDOFF.md`](./docs/calculator/CHECKPOINT_2026-04-23_AUTH_SESSION_HARDENING_HANDOFF.md) — auth-session hardening checkpoint

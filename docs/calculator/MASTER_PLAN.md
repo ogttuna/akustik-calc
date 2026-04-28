@@ -6,7 +6,7 @@ Last reviewed: 2026-04-28
 `wall_double_leaf_sharp_davy_scoping_v1` Gate C closed no-runtime;
 `wall_double_leaf_source_evidence_acquisition_v1` Gate C closed
 no-runtime and selected `wall_source_catalog_acquisition_v1`;
-`wall_source_catalog_acquisition_v1` Gate A landed no-runtime)
+`wall_source_catalog_acquisition_v1` Gate B landed no-runtime)
 Iteration: 2 (rewritten with implementation state grid, accuracy
 preservation contract, ROI table, quantitative completion targets)
 
@@ -29,14 +29,15 @@ Private-use calculator readiness is tracked separately in
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
 That chain is closed for the current private/internal-use bar. The next
 selected calculator work is
-`wall_source_catalog_acquisition_v1` Gate B source-pack readiness.
-Gate A found no direct runtime import ready now: manufacturer framed
-rows are bounded existing evidence, no-stud double-leaf, timber
-double-board, CLT wall, and lined-massive / heavy-core concrete need
-research, and floor/product-delta adjacent rows are rejected as wall
-source truth. Runtime/source posture remains frozen until a future gate
-names a direct source row, metric owner, tolerance, protected
-boundaries, and paired route-card tests.
+`wall_source_catalog_acquisition_v1` Gate C closeout. Gate B found no
+direct runtime import pack ready now: manufacturer framed rows already
+fit, no-stud double-leaf lacks direct rows, timber double-board lacks a
+live-topology source match, CLT wall lacks wall-specific rows,
+lined-massive / heavy-core concrete lacks a bounded lining rule, and
+floor/product-delta adjacent rows are rejected as wall source truth.
+Runtime/source posture remains frozen until a future gate names a
+direct source row, metric owner, tolerance, protected boundaries, and
+paired route-card tests.
 
 ---
 
@@ -696,6 +697,9 @@ the doc-drift problem documented in `SYSTEM_AUDIT_2026-04-20.md`.
   pinned required row metadata and negative boundaries, found no direct
   runtime import ready now, and selected Gate B source-pack readiness
   closeout unless a complete direct row pack appears.
+- **2026-04-28 update**: `wall_source_catalog_acquisition_v1` Gate B
+  landed no-runtime. It closed source-pack readiness with no import
+  selected and chose Gate C closeout / next-slice selection.
 - **2026-04-24 update**: floor continuation, floor many-layer, floor
   layer-order, and all-caller invalid-thickness audits closed
   no-runtime; engine thickness validity moved out of partial, and

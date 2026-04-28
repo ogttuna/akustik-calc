@@ -40,6 +40,10 @@ pack is actually complete. A future import slice is allowed only after a
 direct source row pack names its metric owner, tolerance, protected
 negative boundaries, and paired engine value plus web route-card tests.
 
+Forward pointer: Gate B has now landed in
+[CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_B_HANDOFF.md).
+Use that checkpoint for the active handoff.
+
 ## Validation
 
 - Baseline before Gate A edits: `pnpm calculator:gate:current` green
@@ -62,12 +66,9 @@ Start from:
 3. `docs/calculator/SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md`
 4. `docs/calculator/CURRENT_STATE.md`
 
-Next implementation file:
+Gate B implementation file:
 
 - `packages/engine/src/wall-source-catalog-acquisition-gate-b-contract.test.ts`
 
-Keep Gate B no-runtime unless a direct row pack with complete metadata,
-tolerance, protected negative boundaries, and paired engine/web tests is
-ready. Do not use adjacent framed, floor CLT, floor impact,
-product-delta, timber single-board, or generic formula-context rows as
-wall source truth.
+Gate B stayed no-runtime, selected no import pack, and chose Gate C
+closeout. Continue from the Gate B handoff.
