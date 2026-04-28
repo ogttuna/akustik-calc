@@ -1,11 +1,12 @@
 # Slice Plan - Internal Use Operating Envelope v1
 
-Status: GATE B LANDED (opened 2026-04-28 by
+Status: GATE C READY / CLEAN STOP (opened 2026-04-28 by
 `calculator-source-gap-revalidation-v3-gate-a-contract.test.ts`; Gate A
 landed the short pilot pack no-runtime; Gate B landed the regular
 internal-use visibility audit and a focused wall source-gated copy fix;
-post-Gate-B broad `pnpm check` is green; next bounded action is Gate C
-closeout / next-slice selection)
+post-Gate-B broad `pnpm check` is green; the clean-stop checkpoint
+confirmed docs and implementation still align; next bounded action is
+Gate C closeout / next-slice selection)
 
 Next implementation file:
 
@@ -116,6 +117,19 @@ Post-Gate-B broad validation:
 - engine full suite: 264 files / 1438 tests green;
 - web full suite: 157 files / 890 passed + 18 skipped;
 - build: 5/5 with known non-fatal `sharp/@img` warnings.
+
+Clean-stop checkpoint:
+
+- docs and implementation still agree that Gate B is landed and Gate C
+  is next;
+- the Gate C contract file is still absent, which is expected before
+  implementation:
+  `packages/engine/src/post-internal-use-operating-envelope-v1-next-slice-selection-contract.test.ts`;
+- no source-ready accuracy pack was identified;
+- focused current gate is green: 131 engine files / 618 tests, 45 web
+  files / 216 passed + 18 skipped, build 5/5, whitespace guard clean;
+- broad `pnpm check` is green: 264 engine files / 1438 tests, 157 web
+  files / 890 passed + 18 skipped, build 5/5.
 
 ## Gate C - Closeout And Next Selection
 

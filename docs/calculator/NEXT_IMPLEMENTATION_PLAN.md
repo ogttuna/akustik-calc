@@ -37,8 +37,9 @@ short company pilot usage note and scenario summary;
 `internal_use_operating_envelope_v1` Gate B landed the regular
 internal-use visibility audit and selected Gate C closeout /
 next-slice selection;
-the broad revalidation after Gate B is green and leaves Gate C as the
-first next action;
+the broad revalidation after Gate B is green;
+the clean-stop checkpoint confirms docs and implementation still align
+and leaves Gate C as the first next action;
 see
 `SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md`).
 
@@ -72,7 +73,7 @@ For every next slice decision:
 - **Active slice**:
   `internal_use_operating_envelope_v1`.
 - **Latest checkpoint**:
-  [CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_BROAD_REVALIDATION_GATE_C_READY_HANDOFF.md](./CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_BROAD_REVALIDATION_GATE_C_READY_HANDOFF.md).
+  [CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_CLEAN_STOP_GATE_C_READY_HANDOFF.md](./CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_CLEAN_STOP_GATE_C_READY_HANDOFF.md).
 - **Planning surface**:
   [SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md](./SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md).
 - **Pilot usage note**:
@@ -88,9 +89,11 @@ For every next slice decision:
   has Gate B landed. The next bounded action is Gate C closeout /
   next-slice selection.
 - **Latest broad validation**:
-  `pnpm check` is green after the Gate B broad revalidation: engine 264
+  `pnpm check` is green after the clean-stop checkpoint: engine 264
   files / 1438 tests, web 157 files / 890 passed + 18 skipped, build
-  5/5 with the known non-fatal `sharp/@img` warnings.
+  5/5 with the known non-fatal `sharp/@img` warnings. The focused
+  current gate is also green: engine 131 files / 618 tests, web
+  45 files / 216 passed + 18 skipped, build 5/5, whitespace guard clean.
 - **Prepared comprehensive-accuracy roadmap**:
   [CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md](./CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md)
   records the longer source-gated program. It is not an active runtime
@@ -113,6 +116,15 @@ For every next slice decision:
 3. Select a source-ready accuracy slice only if a bounded source pack is
    actually ready; otherwise leave the long source-gated work in
    `CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md` as roadmap context.
+
+- **Just revalidated**: `internal_use_operating_envelope_v1` broad
+  clean stop / Gate C readiness.
+  [CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_CLEAN_STOP_GATE_C_READY_HANDOFF.md](./CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_CLEAN_STOP_GATE_C_READY_HANDOFF.md)
+  records the latest docs/implementation comparison. Gate B remains
+  landed, the Gate C contract file is still absent as expected, focused
+  and broad validation are green, and no source-ready accuracy pack was
+  identified. The next first file remains
+  `packages/engine/src/post-internal-use-operating-envelope-v1-next-slice-selection-contract.test.ts`.
 
 - **Just revalidated**: `internal_use_operating_envelope_v1` broad
   Gate C readiness.

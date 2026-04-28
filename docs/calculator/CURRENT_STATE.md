@@ -59,7 +59,7 @@ short company pilot usage note and scenario summary;
 internal-use visibility audit and selected Gate C closeout /
 next-slice selection;
 latest checkpoint:
-[CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_BROAD_REVALIDATION_GATE_C_READY_HANDOFF.md](./CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_BROAD_REVALIDATION_GATE_C_READY_HANDOFF.md)).
+[CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_CLEAN_STOP_GATE_C_READY_HANDOFF.md](./CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_CLEAN_STOP_GATE_C_READY_HANDOFF.md)).
 The extra 2026-04-28 planning pass made the readiness ladder explicit
 and the source-gap Gate A selected the short internal pilot
 operating-envelope slice. Internal-use Gate A then produced
@@ -71,7 +71,10 @@ source-gated scoped-estimate wording visible in validation, evidence,
 and proposal/report surfaces. Gate C closeout is now selected, and the
 comprehensive source-gated accuracy program remains a longer roadmap.
 The post-Gate-B broad revalidation is green and confirms that no
-runtime/source posture should move before Gate C.
+runtime/source posture should move before Gate C. The clean-stop
+checkpoint then confirmed the Gate C contract is still absent as
+expected, docs and implementation still align, and no source-ready
+accuracy pack should be promoted before Gate C.
 See
 [SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md](./SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md)
 and
@@ -1070,6 +1073,7 @@ selected Gate C closeout / next-slice selection.
 
 | Slice | Master-plan step | Closed | Post-contract |
 |---|---|---|---|
+| `internal_use_operating_envelope_v1` clean stop | company internal Gate C readiness | 2026-04-28 | `CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_CLEAN_STOP_GATE_C_READY_HANDOFF.md` |
 | `internal_use_operating_envelope_v1` broad revalidation | company internal Gate C readiness | 2026-04-28 | `CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_BROAD_REVALIDATION_GATE_C_READY_HANDOFF.md` |
 | `internal_use_operating_envelope_v1` Gate B | company internal regular-use visibility | 2026-04-28 | `internal-use-operating-envelope-v1-gate-b-contract.test.ts` |
 | `internal_use_operating_envelope_v1` Gate A | company internal pilot operating envelope | 2026-04-28 | `internal-use-operating-envelope-v1-gate-a-contract.test.ts` |
@@ -1300,7 +1304,7 @@ time without context loss:
 
 ## Resume Order For The Next Agent
 
-1. Read [CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_BROAD_REVALIDATION_GATE_C_READY_HANDOFF.md](./CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_BROAD_REVALIDATION_GATE_C_READY_HANDOFF.md)
+1. Read [CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_CLEAN_STOP_GATE_C_READY_HANDOFF.md](./CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_CLEAN_STOP_GATE_C_READY_HANDOFF.md)
    for the latest active-slice handoff.
 2. Read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md),
    [SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md](./SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md),
