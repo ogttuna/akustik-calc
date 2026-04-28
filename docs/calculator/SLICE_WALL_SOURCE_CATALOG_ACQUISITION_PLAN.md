@@ -1,9 +1,8 @@
 # Slice Plan - Wall Source Catalog Acquisition v1
 
-Status: GATE B LANDED NO-RUNTIME (by
-`packages/engine/src/wall-source-catalog-acquisition-gate-b-contract.test.ts`;
-Gate C should close the source-catalog slice no-runtime and select the
-next accuracy slice)
+Status: CLOSED NO-RUNTIME AT GATE C (by
+`packages/engine/src/post-wall-source-catalog-acquisition-v1-next-slice-selection-contract.test.ts`;
+selected `wall_no_stud_double_leaf_source_research_v1`)
 
 ## Objective
 
@@ -134,6 +133,27 @@ slice must name a direct wall source row, complete row metadata, metric
 context and tolerance owner, precedence impact, negative boundaries,
 and paired engine value plus web route-card tests.
 
+## Gate C - Closeout And Next-Slice Selection
+
+Gate C landed in
+`packages/engine/src/post-wall-source-catalog-acquisition-v1-next-slice-selection-contract.test.ts`.
+It closed this slice no-runtime and selected
+`wall_no_stud_double_leaf_source_research_v1`.
+
+Selection reason:
+
+- no direct runtime import pack is ready now;
+- framed manufacturer rows already fit and do not need another retune;
+- no-stud empty/porous double-leaf is a common user-entered stack;
+- that family is blocked specifically by missing direct source rows or
+  a named formula tolerance owner;
+- timber double-board, CLT wall, and lined-massive/heavy-core concrete
+  remain valid gaps but have lower immediate ROI or broader source
+  blockers.
+
+Selected planning surface:
+[SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md](./SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md).
+
 ## Expected Tests
 
 - Landed:
@@ -143,7 +163,7 @@ and paired engine value plus web route-card tests.
 - Landed:
   `packages/engine/src/wall-source-catalog-acquisition-gate-b-contract.test.ts`
   for source-pack readiness closeout.
-- Next: add
+- Landed:
   `packages/engine/src/post-wall-source-catalog-acquisition-v1-next-slice-selection-contract.test.ts`
   for no-runtime Gate C closeout and next-slice selection.
 - Add paired web route-card tests only if a later gate changes visible
@@ -152,13 +172,12 @@ and paired engine value plus web route-card tests.
 ## Immediate Execution Order
 
 1. Read
-   [CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_B_HANDOFF.md).
-2. Run `pnpm calculator:gate:current` as the Gate C baseline.
+   [CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_C_CLOSEOUT_HANDOFF.md).
+2. Continue with
+   [SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md](./SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md).
 3. Add
-   `packages/engine/src/post-wall-source-catalog-acquisition-v1-next-slice-selection-contract.test.ts`
-   as a no-runtime Gate C closeout and next-slice selection contract.
-4. Keep the source-catalog slice no-runtime because Gate B found no
-   direct runtime import pack ready now.
-5. Select the next accuracy slice from remaining source/coverage gaps.
-6. Validate with the targeted Gate C test, `pnpm calculator:gate:current`,
-   and `git diff --check`.
+   `packages/engine/src/wall-no-stud-double-leaf-source-research-gate-a-contract.test.ts`
+   as a no-runtime direct-source/tolerance research contract.
+4. Keep runtime values, confidence, support, evidence text, and
+   route-card copy frozen until a complete direct source row or formula
+   tolerance owner is named with executable negative boundaries.

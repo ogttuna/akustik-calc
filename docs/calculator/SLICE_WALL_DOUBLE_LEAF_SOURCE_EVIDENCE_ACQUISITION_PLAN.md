@@ -172,11 +172,10 @@ and select a no-runtime closeout.
 - Future gates must add value tests and paired web route-card tests
   before changing visible values, support, confidence, evidence text, or
   missing-input copy.
-- `wall_source_catalog_acquisition_v1` Gate A has added a no-runtime
-  target/source-readiness inventory; continue that slice at Gate B
-  source-pack readiness before any import or retune.
+- `wall_source_catalog_acquisition_v1` has now closed no-runtime at Gate
+  C and selected `wall_no_stud_double_leaf_source_research_v1`.
 
 ## Immediate Execution Order
 
 This slice is closed. Continue in
-[SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md](./SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md).
+[SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md](./SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md).

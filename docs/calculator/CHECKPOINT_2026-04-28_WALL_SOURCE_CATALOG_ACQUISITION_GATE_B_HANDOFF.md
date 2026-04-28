@@ -33,6 +33,11 @@ needs a direct wall source row, complete row metadata, named metric
 context and tolerance owner, pinned precedence impact, executable
 negative boundaries, and paired engine value plus web route-card tests.
 
+Forward pointer: Gate C has now closed this source-catalog slice
+no-runtime in
+[CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_C_CLOSEOUT_HANDOFF.md).
+Use that checkpoint for the active handoff.
+
 ## Validation
 
 - Baseline before Gate B edits: `pnpm calculator:gate:current` green
@@ -55,11 +60,7 @@ Start from:
 3. `docs/calculator/SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md`
 4. `docs/calculator/CURRENT_STATE.md`
 
-Next implementation file:
-
-- `packages/engine/src/post-wall-source-catalog-acquisition-v1-next-slice-selection-contract.test.ts`
-
-Gate C should close the source-catalog slice no-runtime and select the
-next accuracy slice. Do not select a runtime import slice unless a
-complete direct row pack appears with source metadata, tolerance,
-protected negative boundaries, and paired engine/web tests.
+This checkpoint is now historical. The active implementation file is
+listed in the Gate C closeout checkpoint. Do not select a runtime import
+slice unless a complete direct row pack appears with source metadata,
+tolerance, protected negative boundaries, and paired engine/web tests.

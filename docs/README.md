@@ -28,8 +28,13 @@ use `pnpm check` when shared contracts move.
 - [calculator/CHECKPOINT_2026-04-23_SERVER_BACKED_PROJECT_STORAGE_HANDOFF.md](./calculator/CHECKPOINT_2026-04-23_SERVER_BACKED_PROJECT_STORAGE_HANDOFF.md)
   — productization closeout: server-backed project storage v1 closed.
 - [calculator/CHECKPOINT_2026-04-23_BROAD_REVALIDATION_CALCULATOR_REFOCUS_HANDOFF.md](./calculator/CHECKPOINT_2026-04-23_BROAD_REVALIDATION_CALCULATOR_REFOCUS_HANDOFF.md)
-  — latest handoff: broad validation green and calculator
+  — historical broad handoff: broad validation green and calculator
   accuracy/coverage refocus selected.
+- [calculator/CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_C_CLOSEOUT_HANDOFF.md](./calculator/CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_C_CLOSEOUT_HANDOFF.md)
+  — latest calculator handoff: wall source-catalog Gate C closed and
+  no-stud double-leaf source research was selected.
+- [calculator/SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md](./calculator/SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md)
+  — active calculator accuracy/coverage plan.
 - [calculator/CHECKPOINT_2026-04-23_TEAM_ACCESS_MODEL_HANDOFF.md](./calculator/CHECKPOINT_2026-04-23_TEAM_ACCESS_MODEL_HANDOFF.md)
   — productization closeout: team-access policy model closed.
 - [calculator/CHECKPOINT_2026-04-23_AUTH_SESSION_HARDENING_HANDOFF.md](./calculator/CHECKPOINT_2026-04-23_AUTH_SESSION_HARDENING_HANDOFF.md)
@@ -43,7 +48,7 @@ use `pnpm check` when shared contracts move.
   — productization roadmap; route integration is deferred while the
   calculator accuracy/coverage slice is active.
 - [calculator/SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md](./calculator/SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md)
-  — active calculator accuracy/coverage re-entry plan.
+  — closed calculator accuracy/coverage re-entry plan.
 - [calculator/SYSTEM_MAP.md](./calculator/SYSTEM_MAP.md) —
   end-to-end system model, runtime boundaries, persistence
   posture, test surface map.
@@ -90,9 +95,9 @@ wins.
 ## Fast Paths
 
 - "Where do I resume implementation now?" →
-  [calculator/CHECKPOINT_2026-04-23_BROAD_REVALIDATION_CALCULATOR_REFOCUS_HANDOFF.md](./calculator/CHECKPOINT_2026-04-23_BROAD_REVALIDATION_CALCULATOR_REFOCUS_HANDOFF.md)
+  [calculator/CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_C_CLOSEOUT_HANDOFF.md](./calculator/CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_C_CLOSEOUT_HANDOFF.md)
   → [calculator/NEXT_IMPLEMENTATION_PLAN.md](./calculator/NEXT_IMPLEMENTATION_PLAN.md)
-  → [calculator/SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md](./calculator/SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md).
+  → [calculator/SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md](./calculator/SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md).
 - "What is stable right now?" →
   [calculator/CURRENT_STATE.md](./calculator/CURRENT_STATE.md)
   → [calculator/SYSTEM_MAP.md](./calculator/SYSTEM_MAP.md)
@@ -109,9 +114,9 @@ wins.
 - Use `CURRENT_STATE.md` for "what is stable right now".
 - Use `NEXT_IMPLEMENTATION_PLAN.md` for "what exactly should be
   implemented next".
-- Use `calculator/SLICE_WALL_FORMULA_FAMILY_WIDENING_PLAN.md`
-  for the active calculator re-entry slice details.
-- Use `calculator/CHECKPOINT_2026-04-23_BROAD_REVALIDATION_CALCULATOR_REFOCUS_HANDOFF.md`
+- Use `calculator/SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md`
+  for the active calculator slice details.
+- Use `calculator/CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_C_CLOSEOUT_HANDOFF.md`
   for the most recent session narrative.
 - Use older checkpoints under `docs/archive/handoffs/` only when
   you need the historical context that predates the living

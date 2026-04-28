@@ -27,9 +27,9 @@ personal/internal-use readiness chain is closed;
 `wall_double_leaf_sharp_davy_scoping_v1` Gate C closed no-runtime;
 `wall_double_leaf_source_evidence_acquisition_v1` Gate C closed
 no-runtime;
-`wall_source_catalog_acquisition_v1` Gate B landed no-runtime;
+`wall_source_catalog_acquisition_v1` Gate C closed no-runtime;
 latest checkpoint:
-[CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_B_HANDOFF.md)).
+[CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_C_CLOSEOUT_HANDOFF.md)).
 Step 8 closed the calculator runtime audit: `MASTER_PLAN.md` §3/§8
 was reconciled to implementation reality, `coverage-grid-consistency.test.ts`
 now maps the grid and C1-C6 signals to executable evidence, the
@@ -193,36 +193,30 @@ hardening, and the pure team-access policy model.
   no-runtime source-target inventory, required metadata, import
   readiness, and negative-boundary contract, plus
   `wall-source-catalog-acquisition-gate-b-contract.test.ts` for the
-  no-runtime source-pack readiness closeout. Latest focused gate run
-  after the Gate B contract update:
-  112 engine files / 517 tests, 43 web files / 211
+  no-runtime source-pack readiness closeout, plus
+  `post-wall-source-catalog-acquisition-v1-next-slice-selection-contract.test.ts`
+  for the no-runtime Gate C closeout and no-stud double-leaf source
+  research selection. Latest focused gate run after the Gate C contract
+  update:
+  113 engine files / 522 tests, 43 web files / 211
   passed + 18 skipped, build 5/5 tasks, whitespace guard clean.
 
 ## Active Slice
 
-`wall_source_catalog_acquisition_v1` (no-runtime source-target
-inventory and import acceptance rules for blocked common wall families).
-It was selected by
-`packages/engine/src/post-wall-double-leaf-source-evidence-acquisition-v1-next-slice-selection-contract.test.ts`
-after Gate B proved bounded W111 / W112 / W115 / W119 framed rows
-already fit current behavior and generic no-stud double-leaf rows still
-need direct sources or a named formula tolerance owner. Gate A has now
-landed no-runtime in
-`packages/engine/src/wall-source-catalog-acquisition-gate-a-contract.test.ts`.
-It classifies manufacturer framed systems as `bounded_existing_rows`;
-no-stud double-leaf, timber double-board, CLT wall, and lined-massive /
-heavy-core concrete as `needs_research`; and floor/product-delta
-adjacent rows as `reject_adjacent_context`. Gate B has now landed
-no-runtime in
-`packages/engine/src/wall-source-catalog-acquisition-gate-b-contract.test.ts`.
-It found no direct runtime import pack ready now: framed rows already
-fit, no-stud double-leaf lacks direct rows, timber double-board lacks a
-live-topology match, CLT lacks wall-specific rows, lined-massive /
-heavy-core lacks a bounded lining rule, and floor/product-delta rows
-are rejected as wall source truth. Gate C should close the slice
-no-runtime and select the next accuracy slice.
+`wall_no_stud_double_leaf_source_research_v1` (no-runtime direct-source
+and formula/tolerance research for empty and porous no-stud double-leaf
+walls). It was selected by
+`packages/engine/src/post-wall-source-catalog-acquisition-v1-next-slice-selection-contract.test.ts`
+after the wall source-catalog Gate C closeout found no ready runtime
+import pack. The no-stud double-leaf family is the highest-value next
+wall accuracy target because it is a common user-entered stack and is
+blocked only by missing direct source rows or a named formula tolerance
+owner. Gate A should add
+`packages/engine/src/wall-no-stud-double-leaf-source-research-gate-a-contract.test.ts`
+as a no-runtime source/tolerance inventory before any runtime,
+confidence, support, evidence, or route-card behavior changes.
 Planning surface:
-[SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md](./SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md).
+[SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md](./SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md).
 
 `wall_coverage_expansion_planning_v2` Gate A is now closed
 no-runtime. It added
@@ -285,7 +279,10 @@ has now closed it no-runtime in
 The selected next slice is `wall_source_catalog_acquisition_v1`, starting
 with no-runtime source-target inventory and import acceptance rules.
 Gate A has now landed that inventory and selected Gate B source-pack
-readiness closeout as the next no-runtime decision.
+readiness closeout as the next no-runtime decision. Gate B then closed
+source-pack readiness with no direct import pack ready. Gate C closed
+the source-catalog slice no-runtime and selected
+`wall_no_stud_double_leaf_source_research_v1`.
 
 Do not reopen `GDMTXA04A`, `C11c`, raw bare open-box/open-web,
 heavy-concrete formula parity, reinforced-concrete reopening,
@@ -883,14 +880,14 @@ Wall coverage planning status:
 selected single-leaf slice has now closed no-runtime at Gate C. The
 double-leaf Sharp/Davy slice has now closed no-runtime at Gate C. The
 selected source-evidence slice has closed no-runtime at Gate C. The
-selected source-catalog slice has landed Gate B no-runtime. The next
-implementation step is Gate C no-runtime closeout and next-slice
-selection.
+selected source-catalog slice has closed no-runtime at Gate C. The next
+implementation step is no-stud double-leaf source research Gate A.
 
 ## Latest Closed Slices
 
 | Slice | Master-plan step | Closed | Post-contract |
 |---|---|---|---|
+| `wall_source_catalog_acquisition_v1` Gate C | calculator wall source catalog acquisition | 2026-04-28 | `post-wall-source-catalog-acquisition-v1-next-slice-selection-contract.test.ts` |
 | `wall_source_catalog_acquisition_v1` Gate B | calculator wall source catalog acquisition | 2026-04-28 | `wall-source-catalog-acquisition-gate-b-contract.test.ts` |
 | `wall_source_catalog_acquisition_v1` Gate A | calculator wall source catalog acquisition | 2026-04-28 | `wall-source-catalog-acquisition-gate-a-contract.test.ts` |
 | `wall_double_leaf_source_evidence_acquisition_v1` Gate C | calculator wall source evidence | 2026-04-28 | `post-wall-double-leaf-source-evidence-acquisition-v1-next-slice-selection-contract.test.ts` |
@@ -1099,14 +1096,14 @@ time without context loss:
 
 ## Resume Order For The Next Agent
 
-1. Read [CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_B_HANDOFF.md)
+1. Read [CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_C_CLOSEOUT_HANDOFF.md)
    for the latest active-slice handoff.
 2. Read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md),
-   [SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md](./SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md),
+   [SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md](./SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md),
    [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md), and
    [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md).
-   Continue `wall_source_catalog_acquisition_v1` at Gate C by adding a
-   no-runtime closeout and next-slice selection contract.
+   Continue `wall_no_stud_double_leaf_source_research_v1` at Gate A by
+   adding a no-runtime direct-source/tolerance inventory contract.
 3. Read [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
    for the now-closed calculator-priority chain and its evidence-tier
    caveats.
@@ -1120,7 +1117,8 @@ time without context loss:
    If it does not, fix the drift before starting work.
 6. Run `pnpm calculator:gate:current` as the focused baseline.
 7. Do not change runtime math, source posture, output support,
-   evidence tiers, or confidence scores during source-catalog Gate C.
+   evidence tiers, or confidence scores during no-stud source research
+   Gate A.
    Any future import must name the exact source row, metric owner,
    tolerance, protected-boundary exclusions, and paired web route-card
    tests.

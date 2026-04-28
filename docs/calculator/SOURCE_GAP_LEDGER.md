@@ -1,9 +1,9 @@
 # Dynamic Calculator Source Gap Ledger
 
 Last reviewed: 2026-04-28
-(`wall_source_catalog_acquisition_v1` Gate B landed no-runtime and
-selected Gate C closeout / next-slice selection; source-gap content
-remains floor-dominant historical context)
+(`wall_source_catalog_acquisition_v1` Gate C closed no-runtime and
+selected `wall_no_stud_double_leaf_source_research_v1`; source-gap
+content remains floor-dominant historical context)
 
 Purpose:
 
@@ -54,7 +54,8 @@ Important scope note:
   selected `wall_single_leaf_mass_law_calibration_v1`; that slice
   closed no-runtime at Gate C because generic single-leaf runtime
   movement needs stack-specific source rows or bounded tolerance packs.
-  The active wall work is now `wall_source_catalog_acquisition_v1`.
+  The active wall work is now
+  `wall_no_stud_double_leaf_source_research_v1`.
   `wall_double_leaf_source_evidence_acquisition_v1` closed no-runtime at
   Gate C after Gate B reconciled bounded Knauf W111 / W112 / W115 /
   W119 framed-wall rows against current dynamic outputs and found no
@@ -62,9 +63,10 @@ Important scope note:
   double-leaf rows remain source-blocked; W111/W112 single-stud rows
   already fit within source tolerances; W112 field rows remain exact
   proxy anchors; W115/W119 split-cavity rows already match on the
-  `double_stud_system` lane. The dedicated wall source-catalog plan now
-  owns Gate C closeout / next-slice selection rather than
-  overloading this floor-dominant ledger.
+  `double_stud_system` lane. The dedicated wall source-catalog plan has
+  closed Gate C no-runtime, and the selected no-stud double-leaf source
+  research plan now owns the next wall source/tolerance decision rather
+  than overloading this floor-dominant ledger.
 - `good_calculator_final_audit_v1` closed without reopening any
   source-gated calculator family. `wall_formula_family_widening_v1`
   then also closed without reopening any blocked family: it clarified

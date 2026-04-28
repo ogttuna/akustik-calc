@@ -223,8 +223,8 @@ families remain blocked until new evidence is deliberately imported.
 
 Next selected work:
 
-1. `wall_source_catalog_acquisition_v1` Gate C no-runtime closeout and
-   next-slice selection.
+1. `wall_no_stud_double_leaf_source_research_v1` Gate A no-runtime
+   direct-source/tolerance inventory.
 
 `calculator_source_gap_revalidation_v1` Gate A and
 `wall_coverage_expansion_planning_v2` Gate A are closed no-runtime.
@@ -238,9 +238,13 @@ current behavior, while lined-massive and triple-leaf shapes remain
 negative boundaries. `wall_double_leaf_source_evidence_acquisition_v1`
 has now closed no-runtime at Gate C: bounded Knauf W111 / W112 / W115 /
 W119 rows already fit current behavior, while generic empty/no-stud
-double-leaf values remain source-blocked. Calculator runtime/source
-posture should remain frozen during `wall_source_catalog_acquisition_v1`
-Gate C until a direct source row, metric owner, tolerance, protected
-boundary set, and paired route-card tests are named. Gate A landed the
-source-target inventory, and Gate B closed source-pack readiness with
-no direct runtime import pack ready now.
+double-leaf values remain source-blocked. Gate A landed the source-target
+inventory, Gate B closed source-pack readiness with no direct runtime
+import pack ready now, and Gate C closed the source-catalog slice
+no-runtime. Calculator runtime/source posture should remain frozen
+during `wall_no_stud_double_leaf_source_research_v1` Gate A until a
+direct source row, metric owner, tolerance, protected boundary set, and
+paired route-card tests are named. The selected target is no-stud
+double-leaf source research because empty/porous no-stud double-leaf
+walls are common user-entered stacks still blocked by missing direct
+rows or a named formula tolerance owner.

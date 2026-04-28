@@ -1,0 +1,128 @@
+# Slice Plan - Wall No-Stud Double-Leaf Source Research v1
+
+Status: SELECTED, GATE A READY (no-runtime source/tolerance research
+slice selected by
+`packages/engine/src/post-wall-source-catalog-acquisition-v1-next-slice-selection-contract.test.ts`)
+
+## Objective
+
+Acquire and classify direct source evidence for common no-stud
+double-leaf wall stacks before any runtime value, confidence, support,
+evidence, or route-card movement.
+
+The target is narrow on purpose: empty-cavity no-stud double-leaf walls
+and porous/absorber-filled no-stud double-leaf walls. These are common
+user-entered wall combinations, but the current calculator must keep
+them formula-owned because the recent source-catalog slice found no
+direct source row, benchmark family rule, or named formula tolerance
+owner.
+
+## Why This Slice Is Next
+
+`wall_source_catalog_acquisition_v1` Gate B closed with no direct import
+pack ready:
+
+- W111 / W112 / W115 / W119 framed rows already fit current behavior;
+- generic empty/no-stud double-leaf remains blocked only by missing
+  direct rows or a formula tolerance owner;
+- timber double-board, CLT wall, and lined-massive/heavy-core concrete
+  remain valid gaps, but each needs a broader source match before it can
+  move safely;
+- floor, impact, product-delta, report, and adjacent context rows are
+  not wall source truth.
+
+The highest-value next accuracy move is therefore a source research
+gate focused on the no-stud double-leaf family. It can unlock both
+coverage and accuracy without guessing.
+
+## Non-Goals
+
+- Do not change acoustic runtime formulas, values, confidence, support,
+  evidence tiers, warnings, API behavior, or web route-card copy during
+  Gate A.
+- Do not promote no-stud double-leaf rows from W111 / W112 / W115 /
+  W119 framed rows.
+- Do not borrow floor CLT, floor impact, product-delta, report/export,
+  triple-leaf, or framed-stud context as direct no-stud wall truth.
+- Do not reopen `GDMTXA04A`, `C11c`, raw open-box/open-web,
+  wall-selector behavior, heavy-core/concrete, timber-stud, CLT, or
+  exact-row follow-ups from nearby green tests alone.
+- Do not add route-card copy or UI changes unless a later gate changes
+  visible support/confidence/evidence/missing-input behavior and adds
+  paired web tests.
+
+## Gate A - Direct Source And Tolerance Inventory
+
+Gate A must be executable and no-runtime. It should create
+`packages/engine/src/wall-no-stud-double-leaf-source-research-gate-a-contract.test.ts`
+and record:
+
+1. direct source candidates for empty no-stud double-leaf walls;
+2. direct source candidates for porous or absorber-filled no-stud
+   double-leaf walls;
+3. any named Sharp/Davy, mass-air-mass, or other double-leaf formula
+   tolerance owner that explicitly applies to no-stud/no-coupling wall
+   stacks;
+4. source metadata completeness;
+5. negative boundaries that prevent framed, floor, product-delta,
+   triple-leaf, or lined-massive rows from leaking into this family;
+6. the next action: direct import, formula-tolerance gate, or no-runtime
+   closeout.
+
+Required evidence fields:
+
+- source label, URL or local path, page/table/row locator, and retrieval
+  date;
+- exact layer order, material names, thicknesses, density or surface
+  mass;
+- proof that the stack is no-stud/no-rail/no-mechanical-coupling;
+- cavity depth, air gap, fill/absorber type, and mounting context;
+- reported metric (`Rw`, `R'w`, `DnT,w`, `DnT,A`, spectrum adaptation,
+  lab/field context) and tolerance owner;
+- local material mapping confidence;
+- exact/bound/family/formula/screening precedence impact;
+- engine value tests and web route-card tests required before any
+  visible movement.
+
+## Acceptance Rules
+
+Gate A may select a future direct import only if:
+
+- the source row is a direct no-stud double-leaf wall stack;
+- empty and porous/filled variants are separated;
+- all row metadata and metric context are complete;
+- the tolerance owner is named;
+- negative boundaries are executable; and
+- paired engine value tests plus web route-card tests are explicitly
+  named for the import slice.
+
+Gate A may select a formula-tolerance slice only if a named published
+formula scope clearly covers the current no-stud routes and supplies a
+bounded tolerance corridor.
+
+If the available material is adjacent context only, Gate A must close
+no-runtime and leave current behavior formula-owned.
+
+## Expected Tests
+
+- Add:
+  `packages/engine/src/wall-no-stud-double-leaf-source-research-gate-a-contract.test.ts`.
+- Keep it no-runtime.
+- Assert source-candidate classification, metadata completeness,
+  negative boundaries, and the selected next action.
+- Add paired web route-card tests only in a later slice that changes
+  visible values, support, confidence, evidence text, or missing-input
+  copy.
+
+## Immediate Execution Order
+
+1. Read
+   [CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_C_CLOSEOUT_HANDOFF.md).
+2. Run `pnpm calculator:gate:current` as the Gate A baseline.
+3. Search only for direct no-stud double-leaf wall source rows or named
+   no-stud double-leaf formula tolerance references.
+4. Add the Gate A no-runtime contract listed above.
+5. Update `NEXT_IMPLEMENTATION_PLAN.md`, `CURRENT_STATE.md`, and this
+   plan with the Gate A result.
+6. Validate with the targeted Gate A test, `pnpm calculator:gate:current`,
+   and `git diff --check`.

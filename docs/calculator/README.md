@@ -18,12 +18,12 @@ fix the drift before starting work.
    — tactical detail for the active slice.
 4. [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
    — closed calculator-only chain for private/internal-use readiness.
-5. [CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_B_HANDOFF.md)
-   — latest active-slice handoff: wall source-catalog Gate B landed
-   no-runtime and selected Gate C closeout.
-6. [SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md](./SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md)
-   — active calculator slice plan for wall source target inventory and
-   import acceptance rules.
+5. [CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_C_CLOSEOUT_HANDOFF.md)
+   — latest active-slice handoff: wall source-catalog Gate C closed
+   no-runtime and selected no-stud double-leaf source research.
+6. [SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md](./SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md)
+   — active calculator slice plan for direct no-stud empty/porous
+   double-leaf wall source and formula/tolerance research.
 
 Then run `pnpm calculator:gate:current` to confirm the green
 baseline.
@@ -34,12 +34,21 @@ baseline.
   — productization closeout: server-backed project storage v1 closed.
 - [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
   — closed calculator readiness chain and private/internal-use caveats.
-- [CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_B_HANDOFF.md)
-  — latest calculator handoff: Gate B closed source-pack readiness
-  no-runtime and selected no import pack.
+- [CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_C_CLOSEOUT_HANDOFF.md)
+  — latest calculator handoff: Gate C closed the source-catalog slice
+  no-runtime and selected no-stud double-leaf source research.
+- [SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md](./SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md)
+  — active implementation plan: Gate A must classify direct no-stud
+  empty/porous double-leaf source rows, formula/tolerance references,
+  metadata completeness, and negative boundaries before any runtime
+  movement.
 - [SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md](./SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md)
-  — active implementation plan: Gate C must close the source-catalog
-  slice no-runtime and select the next accuracy slice.
+  — closed implementation plan: Gate A inventoried targets, Gate B
+  closed source-pack readiness, and Gate C selected no-stud double-leaf
+  source research.
+- [CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_B_HANDOFF.md)
+  — prior calculator handoff: Gate B closed source-pack readiness
+  no-runtime and selected no import pack.
 - [CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_A_HANDOFF.md)
   — prior calculator handoff: Gate A inventoried source targets,
   required metadata, readiness decisions, and negative boundaries.

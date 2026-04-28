@@ -8,10 +8,10 @@ chain read
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
 
 Last reviewed: 2026-04-28
-(`wall_source_catalog_acquisition_v1` Gate B landed no-runtime; next
-step is Gate C source-catalog closeout and next-slice selection;
+(`wall_source_catalog_acquisition_v1` Gate C closed no-runtime and
+selected `wall_no_stud_double_leaf_source_research_v1`;
 see
-`SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md`).
+`SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md`).
 
 ---
 
@@ -41,11 +41,11 @@ For every next slice decision:
 ## Now
 
 - **Active slice**:
-  `wall_source_catalog_acquisition_v1`.
+  `wall_no_stud_double_leaf_source_research_v1`.
 - **Latest checkpoint**:
-  [CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_B_HANDOFF.md).
+  [CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_C_CLOSEOUT_HANDOFF.md).
 - **Planning surface**:
-  [SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md](./SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md).
+  [SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md](./SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md).
 - **Personal-use readiness roadmap**:
   [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
   is closed for the current private/internal-use bar. Heavy-core/concrete
@@ -118,8 +118,16 @@ For every next slice decision:
   double-leaf lacks direct rows, timber double-board lacks a live
   topology match, CLT lacks wall-specific source rows, lined-massive /
   heavy-core lacks a bounded lining rule, and floor/product-delta rows
-  are rejected as wall source truth. Gate C should close the
-  source-catalog slice no-runtime and select the next accuracy slice.
+  are rejected as wall source truth. Gate C then closed the
+  source-catalog slice no-runtime and selected the next accuracy slice.
+- **Just closed**: `wall_source_catalog_acquisition_v1` Gate C.
+  `packages/engine/src/post-wall-source-catalog-acquisition-v1-next-slice-selection-contract.test.ts`
+  closes the source-catalog slice no-runtime and selects
+  `wall_no_stud_double_leaf_source_research_v1`. Runtime remains
+  frozen. The next slice must classify direct empty and porous no-stud
+  double-leaf rows, named formula/tolerance references, metadata
+  completeness, and negative boundaries before any import, confidence,
+  support, evidence, or route-card behavior changes.
 - **Previously closed**: `proposal_report_polish_v1`.
   Simple PDF/DOCX exports now include output coverage posture,
   generated proposal documents preserve real floor/wall workbench
@@ -374,28 +382,33 @@ For every next slice decision:
   lands no-runtime source-pack readiness closeout. It pins eight import
   acceptance criteria, six source-pack readiness decisions, and the Gate
   C action. Targeted Gate B validation is green: 1 file / 6 tests.
+- **Wall source catalog acquisition Gate C**:
+  `packages/engine/src/post-wall-source-catalog-acquisition-v1-next-slice-selection-contract.test.ts`
+  closes the source-catalog slice no-runtime and selects
+  `wall_no_stud_double_leaf_source_research_v1`. Targeted Gate C
+  validation is green: 1 file / 5 tests.
 
 ## Immediate Execution Order
 
-`wall_source_catalog_acquisition_v1` should now proceed in this
+`wall_no_stud_double_leaf_source_research_v1` should now proceed in this
 order:
 
 1. Re-read
-   [CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_B_HANDOFF.md),
-   [SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md](./SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md)
+   [CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_C_CLOSEOUT_HANDOFF.md),
+   [SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md](./SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md)
    and the current-state active-slice section.
-2. Run `pnpm calculator:gate:current` as the Gate C baseline.
+2. Run `pnpm calculator:gate:current` as the Gate A baseline.
 3. Add
-   `packages/engine/src/post-wall-source-catalog-acquisition-v1-next-slice-selection-contract.test.ts`
-   as a no-runtime Gate C closeout and next-slice selection contract.
-4. Keep `wall_source_catalog_acquisition_v1` closed no-runtime unless a
-   complete direct row pack appears. Gate B says no pack is ready now.
-5. Select the next accuracy slice from the remaining highest-value
-   source/coverage gaps without reopening closed floor/source families
-   by inertia.
+   `packages/engine/src/wall-no-stud-double-leaf-source-research-gate-a-contract.test.ts`
+   as a no-runtime direct-source/tolerance inventory.
+4. Classify empty no-stud double-leaf, porous/absorber-filled no-stud
+   double-leaf, and named no-stud formula/tolerance references.
+5. Keep all runtime values, support, confidence, evidence text, and
+   route-card copy frozen unless Gate A finds a complete direct source
+   pack or formula tolerance owner with executable boundaries.
 6. Add paired web route-card tests before any future change to visible support,
    confidence, evidence text, output values, or missing-input copy.
-7. Validate with the targeted Gate C test,
+7. Validate with the targeted Gate A test,
    `pnpm calculator:gate:current`, and `git diff --check`.
 
 ## Personal-Use Readiness Chain
@@ -410,17 +423,17 @@ private day-to-day use:
 
 Productization route-policy and proposal/report polish slices are
 closed. Calculator runtime/source posture stays frozen during the
-selected wall source-catalog acquisition slice. Gate A has classified
-source targets and import rules, and Gate B has closed source-pack
-readiness with no runtime import selected. Gate C must close the slice
-before any runtime or route-card movement. Additional productization
-work is deferred.
+selected no-stud double-leaf source research slice. The source-catalog
+slice has closed no-runtime at Gate C. Additional productization work is
+deferred until this calculator source/tolerance decision closes or the
+priority explicitly changes.
 
 ## Latest Closed Slices
 
 See [CURRENT_STATE.md](./CURRENT_STATE.md) "Latest Closed Slices" table.
-`wall_source_catalog_acquisition_v1` Gate B is landed no-runtime and
-Gate C closeout / next-slice selection is the next decision point.
+`wall_source_catalog_acquisition_v1` Gate C is closed no-runtime and
+`wall_no_stud_double_leaf_source_research_v1` Gate A is the next
+decision point.
 
 ## Deferred Follow-Up Tracks
 
