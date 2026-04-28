@@ -30,7 +30,9 @@ No direct runtime import row is ready now.
 | NRC gypsum-board wall transmission-loss archive | row archive needs extraction | strong wall data reservoir, but no extracted row has yet proven no-stud/no-rail/no-coupling fit |
 | Stud-type double-leaf studies and framed manufacturer rows | adjacent context only | useful boundary evidence, but stud/framed rows cannot promote no-stud values |
 
-Gate A selects a no-runtime Gate B feasibility audit:
+Gate A selected a no-runtime Gate B feasibility audit, which has now
+landed in
+[CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_B_HANDOFF.md):
 
 - test whether the Davy/Sharp line can produce a bounded tolerance for
   the current empty and porous no-stud routes;
@@ -61,11 +63,14 @@ Start from:
 3. `docs/calculator/SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md`
 4. `docs/calculator/CURRENT_STATE.md`
 
-Next implementation file:
+Next checkpoint:
 
-- `packages/engine/src/wall-no-stud-double-leaf-source-research-gate-b-contract.test.ts`
+- `docs/calculator/CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_B_HANDOFF.md`
 
-Gate B must stay no-runtime unless it proves a complete direct row or a
-bounded formula tolerance owner. It should not import values, change
-confidence/support/evidence text, or add route-card copy without paired
-engine value and web route-card tests.
+Next implementation file after Gate B:
+
+- `packages/engine/src/post-wall-no-stud-double-leaf-source-research-v1-next-slice-selection-contract.test.ts`
+
+Gate C should close the slice no-runtime and select the next calculator
+accuracy slice. It should not import values, change confidence/support/
+evidence text, or add route-card copy.

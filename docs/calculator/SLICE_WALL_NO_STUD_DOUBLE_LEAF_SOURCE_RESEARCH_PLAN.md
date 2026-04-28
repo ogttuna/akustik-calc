@@ -1,9 +1,9 @@
 # Slice Plan - Wall No-Stud Double-Leaf Source Research v1
 
-Status: GATE A LANDED NO-RUNTIME (by
-`packages/engine/src/wall-no-stud-double-leaf-source-research-gate-a-contract.test.ts`;
-Gate B should audit formula-tolerance and direct-row feasibility
-no-runtime)
+Status: GATE B LANDED NO-RUNTIME (by
+`packages/engine/src/wall-no-stud-double-leaf-source-research-gate-b-contract.test.ts`;
+Gate C should close the slice no-runtime and select the next accuracy
+slice)
 
 ## Objective
 
@@ -125,6 +125,26 @@ Gate A selects no direct import now. Gate B should remain no-runtime and
 decide whether either the Davy/Sharp line can provide a bounded formula
 tolerance or the NRC archive contains an extractable direct no-stud row.
 
+### Gate B Result - 2026-04-28
+
+Gate B landed in
+`packages/engine/src/wall-no-stud-double-leaf-source-research-gate-b-contract.test.ts`.
+It changed no runtime behavior and classified the feasibility posture as:
+
+| Candidate | Gate B posture | Result |
+|---|---|---|
+| Davy / Sharp cavity-wall formula line | relevant scope but not a runtime owner | no local inputs or single-number `Rw` tolerance have been derived for the live empty and porous routes |
+| NRC gypsum-board wall transmission-loss archive | useful data reservoir, not import-ready | no extracted row yet proves no-stud/no-rail/no-mechanical-coupling and live material/cavity mapping |
+| Gypsum-block air-chamber double walls | direct-family adjacent material | not a live AAC / gypsum-board stack import without row details and material mapping |
+| Gypsum-block absorbent double walls | direct-family adjacent material | not a live gypsum-board / rockwool stack import without absorber and material mapping |
+| Current empty no-stud route | formula-owned | `R'w=46`, `Rw=48`; stays frozen |
+| Current porous no-stud route | formula-owned | `R'w=41`, `Rw=43`; stays frozen |
+
+Gate B selects no runtime import, retune, support/confidence/evidence
+movement, or route-card work. Gate C should close this source-research
+slice no-runtime and select the next highest-value calculator accuracy
+slice.
+
 ## Expected Tests
 
 - Add:
@@ -137,6 +157,10 @@ tolerance or the NRC archive contains an extractable direct no-stud row.
 - Gate B should stay no-runtime unless it proves a bounded formula
   tolerance or a complete direct row; runtime movement still requires
   paired engine value and web route-card tests.
+- Gate B landed no-runtime; next add:
+  `packages/engine/src/post-wall-no-stud-double-leaf-source-research-v1-next-slice-selection-contract.test.ts`.
+- Gate C should close the slice no-runtime and select the next accuracy
+  slice from the still-blocked source/tolerance map.
 - Add paired web route-card tests only in a later slice that changes
   visible values, support, confidence, evidence text, or missing-input
   copy.
@@ -144,18 +168,15 @@ tolerance or the NRC archive contains an extractable direct no-stud row.
 ## Immediate Execution Order
 
 1. Read
-   [CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_A_HANDOFF.md).
-2. Run `pnpm calculator:gate:current` as the Gate B baseline.
+   [CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_B_HANDOFF.md).
+2. Run `pnpm calculator:gate:current` as the Gate C baseline.
 3. Add
-   `packages/engine/src/wall-no-stud-double-leaf-source-research-gate-b-contract.test.ts`
-   as a no-runtime feasibility audit.
-4. For Davy/Sharp, pin whether the published model evidence is specific
-   enough to create a bounded local tolerance for current empty and
-   porous no-stud routes.
-5. For NRC, pin whether an extracted row proves no-stud/no-rail/
-   no-coupling and maps to local material/cavity topology.
-6. Keep runtime values, support, confidence, evidence text, and
-   route-card copy frozen unless Gate B names a complete direct row or
-   tolerance owner with executable negative boundaries.
-7. Validate with the targeted Gate B test, `pnpm calculator:gate:current`,
+   `packages/engine/src/post-wall-no-stud-double-leaf-source-research-v1-next-slice-selection-contract.test.ts`
+   as a no-runtime closeout / next-slice selection contract.
+4. Keep runtime values, support, confidence, evidence text, and
+   route-card copy frozen.
+5. Select the next accuracy slice explicitly from the remaining source
+   and tolerance gaps.
+6. Validate with the targeted Gate C closeout test,
+   `pnpm calculator:gate:current`,
    and `git diff --check`.

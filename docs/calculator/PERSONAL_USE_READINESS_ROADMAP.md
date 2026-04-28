@@ -223,8 +223,8 @@ families remain blocked until new evidence is deliberately imported.
 
 Next selected work:
 
-1. `wall_no_stud_double_leaf_source_research_v1` Gate B no-runtime
-   formula-tolerance and direct-row feasibility audit.
+1. `wall_no_stud_double_leaf_source_research_v1` Gate C no-runtime
+   closeout / next-slice selection.
 
 `calculator_source_gap_revalidation_v1` Gate A and
 `wall_coverage_expansion_planning_v2` Gate A are closed no-runtime.
@@ -241,10 +241,11 @@ W119 rows already fit current behavior, while generic empty/no-stud
 double-leaf values remain source-blocked. Gate A landed the source-target
 inventory, Gate B closed source-pack readiness with no direct runtime
 import pack ready now, and Gate C closed the source-catalog slice
-no-runtime. `wall_no_stud_double_leaf_source_research_v1` Gate A has
-landed no-runtime: gypsum-block double-wall evidence is direct-family
-but adjacent material, Davy/Sharp is a formula/tolerance candidate, NRC
-needs row extraction, and stud/framed rows remain adjacent context.
-Calculator runtime/source posture should remain frozen during Gate B
-until a direct source row, metric owner, tolerance, protected boundary
-set, and paired route-card tests are named.
+no-runtime. `wall_no_stud_double_leaf_source_research_v1` Gate B has
+landed no-runtime: Davy/Sharp remains relevant but not a current local
+tolerance owner, NRC still needs extracted no-stud/no-rail row proof and
+live mapping, and gypsum-block rows remain adjacent-material evidence.
+Calculator runtime/source posture should remain frozen during Gate C
+closeout and any next slice until a direct source row, metric owner,
+tolerance, protected boundary set, and paired route-card tests are
+named.

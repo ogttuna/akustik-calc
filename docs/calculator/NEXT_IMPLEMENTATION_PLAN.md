@@ -8,9 +8,9 @@ chain read
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
 
 Last reviewed: 2026-04-28
-(`wall_no_stud_double_leaf_source_research_v1` Gate A landed
-no-runtime; next step is Gate B formula-tolerance / direct-row
-feasibility audit;
+(`wall_no_stud_double_leaf_source_research_v1` Gate B landed
+no-runtime; next step is Gate C no-runtime closeout / next-slice
+selection;
 see
 `SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md`).
 
@@ -44,7 +44,7 @@ For every next slice decision:
 - **Active slice**:
   `wall_no_stud_double_leaf_source_research_v1`.
 - **Latest checkpoint**:
-  [CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_A_HANDOFF.md).
+  [CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_B_HANDOFF.md).
 - **Planning surface**:
   [SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md](./SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md).
 - **Personal-use readiness roadmap**:
@@ -137,6 +137,15 @@ For every next slice decision:
   direct-family but adjacent material, selects Davy/Sharp formula
   tolerance and NRC row extraction for Gate B, and rejects stud/framed
   context as an import unlock.
+- **Just landed**: `wall_no_stud_double_leaf_source_research_v1` Gate B.
+  `packages/engine/src/wall-no-stud-double-leaf-source-research-gate-b-contract.test.ts`
+  lands no-runtime formula-tolerance and direct-row feasibility. It
+  keeps Davy/Sharp as relevant scope but rejects runtime ownership until
+  local route inputs and single-number `Rw` tolerances are derived,
+  keeps NRC as a useful row archive but rejects import until no-stud /
+  no-rail / no-coupling row proof and live material/cavity mapping are
+  extracted, keeps gypsum-block rows adjacent-material only, and selects
+  Gate C no-runtime closeout / next-slice selection.
 - **Previously closed**: `proposal_report_polish_v1`.
   Simple PDF/DOCX exports now include output coverage posture,
   generated proposal documents preserve real floor/wall workbench
@@ -403,6 +412,14 @@ For every next slice decision:
   tolerance candidacy, NRC row-extraction candidacy, stud/framed
   negative boundaries, and the Gate B no-runtime feasibility decision.
   Targeted Gate A validation is green: 1 file / 6 tests.
+- **Wall no-stud double-leaf source research Gate B**:
+  `packages/engine/src/wall-no-stud-double-leaf-source-research-gate-b-contract.test.ts`
+  lands no-runtime. It pins formula-tolerance acceptance criteria,
+  rejects Davy/Sharp as a current runtime tolerance owner until a local
+  tolerance derivation exists, rejects NRC and gypsum-block candidates
+  as direct imports until row/topology proof exists, preserves current
+  empty and porous values, and selects Gate C closeout. Targeted Gate B
+  validation is green: 1 file / 6 tests.
 
 ## Immediate Execution Order
 
@@ -410,22 +427,20 @@ For every next slice decision:
 order:
 
 1. Re-read
-   [CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_A_HANDOFF.md),
+   [CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_B_HANDOFF.md),
    [SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md](./SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md)
    and the current-state active-slice section.
-2. Run `pnpm calculator:gate:current` as the Gate B baseline.
+2. Run `pnpm calculator:gate:current` as the Gate C baseline.
 3. Add
-   `packages/engine/src/wall-no-stud-double-leaf-source-research-gate-b-contract.test.ts`
-   as a no-runtime formula-tolerance and direct-row feasibility audit.
-4. Check whether Davy/Sharp can provide a bounded local tolerance for
-   the current empty and porous no-stud routes, and whether the NRC
-   archive contains an extractable no-stud/no-rail row.
-5. Keep all runtime values, support, confidence, evidence text, and
-   route-card copy frozen unless Gate B proves a complete direct source
-   row or bounded formula tolerance owner with executable boundaries.
+   `packages/engine/src/post-wall-no-stud-double-leaf-source-research-v1-next-slice-selection-contract.test.ts`
+   as a no-runtime closeout and next-slice selection contract.
+4. Close the source-research slice without runtime import, retune,
+   support/confidence/evidence movement, or route-card copy changes.
+5. Select the next highest-value calculator accuracy slice based on the
+   still-blocked source/tolerance map.
 6. Add paired web route-card tests before any future change to visible support,
    confidence, evidence text, output values, or missing-input copy.
-7. Validate with the targeted Gate B test,
+7. Validate with the targeted Gate C closeout test,
    `pnpm calculator:gate:current`, and `git diff --check`.
 
 ## Personal-Use Readiness Chain
@@ -448,8 +463,9 @@ priority explicitly changes.
 ## Latest Closed Slices
 
 See [CURRENT_STATE.md](./CURRENT_STATE.md) "Latest Closed Slices" table.
-`wall_no_stud_double_leaf_source_research_v1` Gate A is landed
-no-runtime and Gate B is the next decision point.
+`wall_no_stud_double_leaf_source_research_v1` Gate B is landed
+no-runtime and Gate C closeout / next-slice selection is the next
+decision point.
 
 ## Deferred Follow-Up Tracks
 

@@ -1,7 +1,7 @@
 # Dynamic Calculator Source Gap Ledger
 
 Last reviewed: 2026-04-28
-(`wall_no_stud_double_leaf_source_research_v1` Gate A landed
+(`wall_no_stud_double_leaf_source_research_v1` Gate B landed
 no-runtime; source-gap content remains floor-dominant historical
 context)
 
@@ -65,10 +65,10 @@ Important scope note:
   proxy anchors; W115/W119 split-cavity rows already match on the
   `double_stud_system` lane. The dedicated wall source-catalog plan has
   closed Gate C no-runtime, and the selected no-stud double-leaf source
-  research plan has landed Gate A no-runtime. Gate A found no
-  import-ready row; Davy/Sharp formula tolerance and NRC row extraction
-  are now the next Gate B checks rather than overloading this
-  floor-dominant ledger.
+  research plan has landed Gate B no-runtime. Gate B found no
+  import-ready row or bounded formula tolerance; Davy/Sharp and NRC
+  remain source/tolerance follow-up evidence rather than overloading
+  this floor-dominant ledger.
 - `good_calculator_final_audit_v1` closed without reopening any
   source-gated calculator family. `wall_formula_family_widening_v1`
   then also closed without reopening any blocked family: it clarified

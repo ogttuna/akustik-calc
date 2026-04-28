@@ -8,7 +8,7 @@ Last reviewed: 2026-04-28
 no-runtime and selected `wall_source_catalog_acquisition_v1`;
 `wall_source_catalog_acquisition_v1` Gate C closed no-runtime and
 selected `wall_no_stud_double_leaf_source_research_v1`;
-`wall_no_stud_double_leaf_source_research_v1` Gate A landed
+`wall_no_stud_double_leaf_source_research_v1` Gate B landed
 no-runtime)
 Iteration: 2 (rewritten with implementation state grid, accuracy
 preservation contract, ROI table, quantitative completion targets)
@@ -32,11 +32,11 @@ Private-use calculator readiness is tracked separately in
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
 That chain is closed for the current private/internal-use bar. The next
 selected calculator work is
-`wall_no_stud_double_leaf_source_research_v1` Gate B. Gate A found no
-direct runtime import row ready now: gypsum-block double-wall evidence
-is direct-family but adjacent material, Davy/Sharp is a
-formula/tolerance candidate, NRC is a row archive that needs no-stud
-row extraction, and stud/framed evidence remains adjacent context only.
+`wall_no_stud_double_leaf_source_research_v1` Gate C. Gate B found no
+bounded formula tolerance or direct runtime import row ready now:
+Davy/Sharp is relevant but not a local single-number tolerance owner,
+NRC still needs extracted no-stud/no-rail row proof and live mapping,
+and gypsum-block rows remain adjacent-material evidence.
 Runtime/source posture remains frozen until a future gate names a
 direct source row, metric owner, tolerance, protected boundaries, and
 paired route-card tests.
@@ -715,6 +715,12 @@ the doc-drift problem documented in `SYSTEM_AUDIT_2026-04-20.md`.
   adjacent-material evidence, selected Davy/Sharp formula tolerance and
   NRC row extraction for Gate B, and kept stud/framed rows as protected
   adjacent context only.
+- **2026-04-28 update**: `wall_no_stud_double_leaf_source_research_v1`
+  Gate B landed no-runtime. It rejected Davy/Sharp as a current runtime
+  tolerance owner until local route inputs and single-number `Rw`
+  tolerances are derived, rejected NRC and gypsum-block candidates as
+  imports until row/topology proof exists, and selected Gate C closeout
+  / next-slice selection.
 - **2026-04-24 update**: floor continuation, floor many-layer, floor
   layer-order, and all-caller invalid-thickness audits closed
   no-runtime; engine thickness validity moved out of partial, and

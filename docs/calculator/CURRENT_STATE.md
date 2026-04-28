@@ -28,10 +28,10 @@ personal/internal-use readiness chain is closed;
 `wall_double_leaf_source_evidence_acquisition_v1` Gate C closed
 no-runtime;
 `wall_source_catalog_acquisition_v1` Gate C closed no-runtime;
-`wall_no_stud_double_leaf_source_research_v1` Gate A landed
+`wall_no_stud_double_leaf_source_research_v1` Gate B landed
 no-runtime;
 latest checkpoint:
-[CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_A_HANDOFF.md)).
+[CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_B_HANDOFF.md)).
 Step 8 closed the calculator runtime audit: `MASTER_PLAN.md` §3/§8
 was reconciled to implementation reality, `coverage-grid-consistency.test.ts`
 now maps the grid and C1-C6 signals to executable evidence, the
@@ -201,8 +201,11 @@ hardening, and the pure team-access policy model.
   research selection, plus
   `wall-no-stud-double-leaf-source-research-gate-a-contract.test.ts`
   for the no-runtime source/formula inventory and Gate B feasibility
-  decision. Latest focused gate run after the Gate A contract update:
-  114 engine files / 528 tests, 43 web files / 211
+  decision, plus
+  `wall-no-stud-double-leaf-source-research-gate-b-contract.test.ts`
+  for the no-runtime formula-tolerance and direct-row feasibility audit.
+  Latest focused gate run after the Gate B contract update:
+  115 engine files / 534 tests, 43 web files / 211
   passed + 18 skipped, build 5/5 tasks, whitespace guard clean.
 
 ## Active Slice
@@ -215,15 +218,20 @@ after the wall source-catalog Gate C closeout found no ready runtime
 import pack. The no-stud double-leaf family is the highest-value next
 wall accuracy target because it is a common user-entered stack and is
 blocked only by missing direct source rows or a named formula tolerance
-owner. Gate A has now landed in
+owner. Gate A landed in
 `packages/engine/src/wall-no-stud-double-leaf-source-research-gate-a-contract.test.ts`
 as a no-runtime source/tolerance inventory. It found no import-ready
 direct row: gypsum-block double-wall evidence is direct-family but
 adjacent material, Davy/Sharp is a formula/tolerance candidate, NRC is
 a row archive that still needs no-stud row extraction, and stud/framed
-evidence remains adjacent context only. The next action is Gate B
-no-runtime feasibility in
-`packages/engine/src/wall-no-stud-double-leaf-source-research-gate-b-contract.test.ts`.
+evidence remains adjacent context only. Gate B has now landed in
+`packages/engine/src/wall-no-stud-double-leaf-source-research-gate-b-contract.test.ts`
+as a no-runtime formula-tolerance and direct-row feasibility audit. It
+keeps Davy/Sharp as relevant but not a current local tolerance owner,
+keeps NRC as an unextracted row archive, keeps gypsum-block rows as
+adjacent-material evidence, and freezes current values. The next action
+is Gate C no-runtime closeout in
+`packages/engine/src/post-wall-no-stud-double-leaf-source-research-v1-next-slice-selection-contract.test.ts`.
 Planning surface:
 [SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md](./SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md).
 
@@ -890,14 +898,15 @@ selected single-leaf slice has now closed no-runtime at Gate C. The
 double-leaf Sharp/Davy slice has now closed no-runtime at Gate C. The
 selected source-evidence slice has closed no-runtime at Gate C. The
 selected source-catalog slice has closed no-runtime at Gate C. The
-no-stud double-leaf source research slice has landed Gate A
-no-runtime. The next implementation step is Gate B formula-tolerance /
-direct-row feasibility.
+no-stud double-leaf source research slice has landed Gate B
+no-runtime. The next implementation step is Gate C closeout /
+next-slice selection.
 
 ## Latest Closed Slices
 
 | Slice | Master-plan step | Closed | Post-contract |
 |---|---|---|---|
+| `wall_no_stud_double_leaf_source_research_v1` Gate B | calculator wall source research | 2026-04-28 | `wall-no-stud-double-leaf-source-research-gate-b-contract.test.ts` |
 | `wall_no_stud_double_leaf_source_research_v1` Gate A | calculator wall source research | 2026-04-28 | `wall-no-stud-double-leaf-source-research-gate-a-contract.test.ts` |
 | `wall_source_catalog_acquisition_v1` Gate C | calculator wall source catalog acquisition | 2026-04-28 | `post-wall-source-catalog-acquisition-v1-next-slice-selection-contract.test.ts` |
 | `wall_source_catalog_acquisition_v1` Gate B | calculator wall source catalog acquisition | 2026-04-28 | `wall-source-catalog-acquisition-gate-b-contract.test.ts` |
@@ -1108,15 +1117,14 @@ time without context loss:
 
 ## Resume Order For The Next Agent
 
-1. Read [CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_A_HANDOFF.md)
+1. Read [CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_B_HANDOFF.md)
    for the latest active-slice handoff.
 2. Read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md),
    [SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md](./SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md),
    [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md), and
    [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md).
-   Continue `wall_no_stud_double_leaf_source_research_v1` at Gate B by
-   adding a no-runtime formula-tolerance and direct-row feasibility
-   contract.
+   Continue `wall_no_stud_double_leaf_source_research_v1` at Gate C by
+   adding a no-runtime closeout / next-slice selection contract.
 3. Read [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
    for the now-closed calculator-priority chain and its evidence-tier
    caveats.
