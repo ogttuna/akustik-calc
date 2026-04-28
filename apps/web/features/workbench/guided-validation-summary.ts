@@ -67,9 +67,9 @@ function buildGuidedValidationDetail(input: {
     case "exact":
       return `${posture.label} is active. This route is anchored by exact or official source evidence instead of a screening-only estimate.`;
     case "estimate":
-      return `${
-        posture.label
-      } is active. Read this as a supported ${studyMode === "floor" ? "floor" : "wall"} estimate, not as a measured claim.`;
+      return `${posture.label} is active. ${
+        studyMode === "wall" ? `${posture.detail} ` : ""
+      }Read this as a supported ${studyMode === "floor" ? "floor" : "wall"} estimate, not as a measured claim.`;
     case "low_confidence":
       if (studyMode === "floor" && isImpactOnlyLowConfidenceFloorLane(result)) {
         return `${posture.label} is active. ${IMPACT_ONLY_LOW_CONFIDENCE_FLOOR_FAMILY_NOTE}`;

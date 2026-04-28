@@ -21,7 +21,10 @@ import {
   REINFORCED_CONCRETE_LOW_CONFIDENCE_EVIDENCE_DETAIL_PREFIX,
   REINFORCED_CONCRETE_LOW_CONFIDENCE_TRACE_CANDIDATE_DETAIL
 } from "./reinforced-concrete-low-confidence-floor-lane";
-import { getAirborneBoundaryPosture } from "./validation-regime";
+import {
+  describeAirborneSourcePosture,
+  getAirborneBoundaryPosture
+} from "./validation-regime";
 
 export type SimpleWorkbenchProposalDecisionItem = {
   detail: string;
@@ -232,11 +235,13 @@ export function buildSimpleWorkbenchEvidencePacket(input: {
 
   if (result?.dynamicAirborneTrace) {
     const boundaryPosture = getAirborneBoundaryPosture(result.dynamicAirborneTrace);
+    const sourcePosture = describeAirborneSourcePosture(result);
 
     citations.push({
       detail:
         `${result.dynamicAirborneTrace.detectedFamilyLabel} · ${result.dynamicAirborneTrace.selectedLabel} · ` +
         `${Math.round(result.dynamicAirborneTrace.confidenceScore * 100)}% confidence.` +
+        ` ${sourcePosture.label}. ${sourcePosture.detail}` +
         (boundaryPosture ? ` ${boundaryPosture.label}.` : ""),
       label: "Dynamic airborne anchor",
       tone:

@@ -9,6 +9,7 @@ import type {
   TransmissionLossCurve
 } from "@dynecho/shared";
 
+import { materialText, summarizeAirborneTopology } from "./airborne-topology";
 import { buildRatingsFromCurve } from "./curve-rating";
 import { calculateAirborneCalculatorResult } from "./airborne-calculator";
 import {
@@ -23,16 +24,13 @@ import {
   type DynamicAirborneOptions,
   type DynamicAirborneResult
 } from "./dynamic-airborne-helpers";
-import {
-  isMasonryCoreLayer,
-  normalizeFramingHint,
-  type DynamicFramingHint
-} from "./dynamic-airborne-family-detection";
+import { isMasonryCoreLayer, normalizeFramingHint, type DynamicFramingHint } from "./dynamic-airborne-family-detection";
 import { applyMasonryDavyConservativeCap } from "./dynamic-airborne-davy-masonry";
 import {
   buildReducedThicknessVariant,
   describePrimaryCavity,
   findOuterLeafReinforcementCandidateIndex,
+  hasOuterLeafSplitBoardFragments,
   summarizeSingleLeafMasonryProfile,
   trimOuterCompliantLayers
 } from "./dynamic-airborne-cavity-topology";
@@ -57,7 +55,6 @@ import {
   estimateYtongMassiefG2300TargetRw,
   estimateYtongSeparatiePaneelTargetRw
 } from "./dynamic-airborne-masonry-calibration";
-import { materialText, summarizeAirborneTopology } from "./airborne-topology";
 import { clamp, ksRound1 } from "./math";
 import { estimateRwDb } from "./estimate-rw";
 import {
@@ -292,8 +289,11 @@ function applyFramedReinforcementMonotonicFloor(
   const boardSystem = summarizeFramedBoardSystem(layers);
 
   if (
-    boardSystem.boardLayerCount < 3
+    boardSystem.boardLayerCount < 3 ||
+    hasOuterLeafSplitBoardFragments(layers, "leading") ||
+    hasOuterLeafSplitBoardFragments(layers, "trailing")
   ) {
+    // Split board fragments share the no-op posture of too-small board systems here.
     return {
       applied: false,
       curve,

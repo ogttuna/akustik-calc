@@ -5,8 +5,8 @@ these before anything under `docs/archive/`.
 
 ## Agent Resume Triangle
 
-Three docs, in order. If they disagree with each other, stop and
-fix the drift before starting work.
+Read these in order. If they disagree with each other, stop and fix the
+drift before starting work.
 
 1. [CURRENT_STATE.md](./CURRENT_STATE.md) — short snapshot of
    what is stable right now, completion signals, active slice,
@@ -18,12 +18,25 @@ fix the drift before starting work.
    — tactical detail for the active slice.
 4. [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
    — closed calculator-only chain for private/internal-use readiness.
-5. [CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_C_CLOSEOUT_HANDOFF.md)
-   — latest calculator handoff: no-stud double-leaf Gate C closed
-   no-runtime and selected the active timber double-board source slice.
-6. [SLICE_WALL_TIMBER_DOUBLE_BOARD_SOURCE_RESEARCH_PLAN.md](./SLICE_WALL_TIMBER_DOUBLE_BOARD_SOURCE_RESEARCH_PLAN.md)
-   — active calculator slice plan for direct double-board timber wall
-   source and formula/tolerance research.
+5. [CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_BROAD_REVALIDATION_GATE_C_READY_HANDOFF.md](./CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_BROAD_REVALIDATION_GATE_C_READY_HANDOFF.md)
+   — latest calculator handoff: full `pnpm check` is green after Gate
+   B, and Gate C closeout is the next first action.
+6. [CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_GATE_B_HANDOFF.md)
+   — prior calculator handoff: Gate B landed the regular-use visibility
+   audit and selected Gate C closeout.
+7. [CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_GATE_A_HANDOFF.md)
+   — prior calculator handoff: Gate A landed the pilot usage note and
+   scenario summary.
+8. [INTERNAL_USE_PILOT_USAGE_NOTE.md](./INTERNAL_USE_PILOT_USAGE_NOTE.md)
+   — short company pilot usage note and scenario summary.
+9. [SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md](./SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md)
+   — active calculator slice plan: Gate B visibility landed; Gate C
+   closeout / next-slice selection is next.
+10. [SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V3_PLAN.md](./SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V3_PLAN.md)
+   — closed planning slice: Gate A re-ranked remaining source and
+   accuracy gaps and selected internal-use operating envelope v1.
+11. [CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md](./CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md)
+   — prepared roadmap for the long source-gated accuracy program.
 
 Then run `pnpm calculator:gate:current` to confirm the green
 baseline.
@@ -34,12 +47,94 @@ baseline.
   — productization closeout: server-backed project storage v1 closed.
 - [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
   — closed calculator readiness chain and private/internal-use caveats.
-- [CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_C_CLOSEOUT_HANDOFF.md)
-  — latest calculator handoff: Gate C closed no-stud double-leaf
-  no-runtime and selected timber double-board source research.
+- [CHECKPOINT_2026-04-28_CALCULATOR_SOURCE_GAP_REVALIDATION_V3_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-28_CALCULATOR_SOURCE_GAP_REVALIDATION_V3_GATE_A_HANDOFF.md)
+  — prior calculator handoff: Gate A selected
+  `internal_use_operating_envelope_v1`.
+- [CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_BROAD_REVALIDATION_GATE_C_READY_HANDOFF.md](./CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_BROAD_REVALIDATION_GATE_C_READY_HANDOFF.md)
+  — latest calculator handoff: broad validation green, no runtime
+  posture movement, Gate C ready.
+- [CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_GATE_B_HANDOFF.md)
+  — prior calculator handoff: Gate B landed source-gated visible
+  honesty for dynamic wall formula routes and selected Gate C closeout.
+- [CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_GATE_A_HANDOFF.md)
+  — prior calculator handoff: pilot usage note and scenario summary
+  landed no-runtime.
+- [INTERNAL_USE_PILOT_USAGE_NOTE.md](./INTERNAL_USE_PILOT_USAGE_NOTE.md)
+  — company-internal pilot operating envelope: pilot-ready lanes,
+  caveated lanes, and fail-closed/source-gated lanes.
+- [CHECKPOINT_2026-04-28_WALL_FRAMED_FACING_SPLIT_WARNING_STABILITY_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_FRAMED_FACING_SPLIT_WARNING_STABILITY_GATE_C_CLOSEOUT_HANDOFF.md)
+  — prior calculator handoff: Gate C closed the framed split slice and
+  selected `calculator_source_gap_revalidation_v3`.
+- [CHECKPOINT_2026-04-28_WALL_FRAMED_FACING_SPLIT_WARNING_STABILITY_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_FRAMED_FACING_SPLIT_WARNING_STABILITY_GATE_B_HANDOFF.md)
+  — prior calculator handoff: Gate B fixed current LSF field +1 dB
+  value drift plus monotonic-floor warning and added paired web-card
+  coverage.
+- [SLICE_WALL_FRAMED_FACING_SPLIT_WARNING_STABILITY_PLAN.md](./SLICE_WALL_FRAMED_FACING_SPLIT_WARNING_STABILITY_PLAN.md)
+  — closed implementation plan: Gate B fixed the LSF field board-split
+  value/warning drift while keeping exact/source posture, support,
+  confidence, and board-coalescing boundaries protected.
+- [SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V3_PLAN.md](./SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V3_PLAN.md)
+  — closed implementation plan: Gate A reranked remaining source and
+  accuracy gaps after the framed split fix.
+- [SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md](./SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md)
+  — active internal-use plan: Gate B visibility hardening landed; Gate
+  C closeout is next.
+- [CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md](./CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md)
+  — source-gated accuracy roadmap: timber double-board, CLT wall,
+  lined/heavy-core wall, no-stud double-leaf, floor fallback, and
+  historical blocked floor families.
+- [CHECKPOINT_2026-04-28_FLOOR_LAYER_ORDER_INVARIANCE_EXPANSION_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_FLOOR_LAYER_ORDER_INVARIANCE_EXPANSION_GATE_C_CLOSEOUT_HANDOFF.md)
+  — prior calculator handoff: Gate C closed the expanded floor-order
+  slice no-runtime and selected
+  `wall_framed_facing_split_warning_stability_v1`.
+- [CHECKPOINT_2026-04-28_FLOOR_LAYER_ORDER_INVARIANCE_EXPANSION_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-28_FLOOR_LAYER_ORDER_INVARIANCE_EXPANSION_GATE_A_HANDOFF.md)
+  — prior calculator handoff: Gate A found no runtime/card drift and
+  selected Gate C no-runtime closeout.
+- [CHECKPOINT_2026-04-28_CALCULATOR_SOURCE_GAP_REVALIDATION_V2_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-28_CALCULATOR_SOURCE_GAP_REVALIDATION_V2_GATE_A_HANDOFF.md)
+  — prior calculator handoff: Gate A selected
+  `floor_layer_order_invariance_expansion_v1` after source/import
+  candidates remained blocked.
+- [SLICE_FLOOR_LAYER_ORDER_INVARIANCE_EXPANSION_PLAN.md](./SLICE_FLOOR_LAYER_ORDER_INVARIANCE_EXPANSION_PLAN.md)
+  — closed implementation plan: Gate A landed the role-defined exact,
+  raw order-sensitive, fail-closed impact, and many-layer/split reorder
+  audit; Gate C closed no-runtime and selected framed-wall split
+  warning stability.
+- [CHECKPOINT_2026-04-28_WALL_LINED_MASSIVE_HEAVY_CORE_SOURCE_RESEARCH_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_LINED_MASSIVE_HEAVY_CORE_SOURCE_RESEARCH_GATE_C_CLOSEOUT_HANDOFF.md)
+  — prior calculator handoff: Gate C closed lined-massive /
+  heavy-core source research no-runtime and selected source-gap
+  revalidation v2.
+- [SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V2_PLAN.md](./SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V2_PLAN.md)
+  — closed implementation plan: Gate A re-ranked remaining floor/wall
+  source and accuracy gaps and selected floor layer-order invariance
+  expansion.
+- [CHECKPOINT_2026-04-28_WALL_LINED_MASSIVE_HEAVY_CORE_SOURCE_RESEARCH_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_LINED_MASSIVE_HEAVY_CORE_SOURCE_RESEARCH_GATE_A_HANDOFF.md)
+  — prior calculator handoff: Gate A landed lined-massive /
+  heavy-core source and bounded lining-rule inventory no-runtime.
+- [SLICE_WALL_LINED_MASSIVE_HEAVY_CORE_SOURCE_RESEARCH_PLAN.md](./SLICE_WALL_LINED_MASSIVE_HEAVY_CORE_SOURCE_RESEARCH_PLAN.md)
+  — closed implementation plan: Gate A inventoried source/tolerance
+  posture and Gate C selected source-gap revalidation v2.
+- [CHECKPOINT_2026-04-28_WALL_CLT_WALL_SOURCE_RESEARCH_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_CLT_WALL_SOURCE_RESEARCH_GATE_C_CLOSEOUT_HANDOFF.md)
+  — prior calculator handoff: Gate C closed CLT wall source research
+  no-runtime and selected lined-massive / heavy-core source research.
+- [CHECKPOINT_2026-04-28_WALL_CLT_WALL_SOURCE_RESEARCH_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_CLT_WALL_SOURCE_RESEARCH_GATE_A_HANDOFF.md)
+  — prior calculator handoff: Gate A landed CLT wall source/tolerance
+  inventory no-runtime and selected Gate C closeout.
+- [SLICE_WALL_CLT_WALL_SOURCE_RESEARCH_PLAN.md](./SLICE_WALL_CLT_WALL_SOURCE_RESEARCH_PLAN.md)
+  — closed implementation plan: Gate A inventoried CLT wall
+  source/tolerance posture and Gate C selected lined-massive /
+  heavy-core source research.
+- [CHECKPOINT_2026-04-28_WALL_TIMBER_DOUBLE_BOARD_SOURCE_RESEARCH_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_TIMBER_DOUBLE_BOARD_SOURCE_RESEARCH_GATE_C_CLOSEOUT_HANDOFF.md)
+  — prior calculator handoff: Gate C closed timber double-board
+  no-runtime and selected CLT wall source research.
+- [CHECKPOINT_2026-04-28_WALL_TIMBER_DOUBLE_BOARD_SOURCE_RESEARCH_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_TIMBER_DOUBLE_BOARD_SOURCE_RESEARCH_GATE_A_HANDOFF.md)
+  — prior calculator handoff: Gate A landed timber double-board
+  source/tolerance inventory no-runtime and selected Gate C closeout.
 - [SLICE_WALL_TIMBER_DOUBLE_BOARD_SOURCE_RESEARCH_PLAN.md](./SLICE_WALL_TIMBER_DOUBLE_BOARD_SOURCE_RESEARCH_PLAN.md)
-  — active implementation plan: Gate A must inventory direct
-  double-board timber sources and tolerances before runtime movement.
+  — closed implementation plan: Gate A inventoried timber double-board
+  source/tolerance posture and Gate C selected CLT wall source research.
+- [CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_C_CLOSEOUT_HANDOFF.md)
+  — prior calculator handoff: Gate C closed no-stud double-leaf
+  no-runtime and selected timber double-board source research.
 - [CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_C_CLOSEOUT_HANDOFF.md)
   — prior calculator handoff: Gate C closed the source-catalog slice
   no-runtime and selected no-stud double-leaf source research.

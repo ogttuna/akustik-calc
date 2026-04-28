@@ -44,6 +44,33 @@ export type AirborneBoundaryPosture = {
   label: string;
 };
 
+export type AirborneSourcePosture = {
+  detail: string;
+  exactSourceActive: boolean;
+  label: string;
+};
+
+export function describeAirborneSourcePosture(result: AssemblyCalculation | null): AirborneSourcePosture {
+  const exactSourceActive =
+    result?.warnings.some((warning: string) => /Curated exact airborne lab match active/i.test(warning)) === true;
+
+  if (exactSourceActive) {
+    return {
+      detail:
+        "An exact or benchmark-backed wall row is active; keep the source warning/citation attached when issuing the result.",
+      exactSourceActive: true,
+      label: "Source-backed wall row"
+    };
+  }
+
+  return {
+    detail:
+      "No exact wall source row is active for this route; keep it as a formula-owned/source-gated scoped estimate rather than a lab or field measurement claim.",
+    exactSourceActive: false,
+    label: "Formula-owned/source-gated wall route"
+  };
+}
+
 export function getAirborneBoundaryPosture(
   trace: DynamicAirborneTrace | null | undefined
 ): AirborneBoundaryPosture | null {
@@ -203,11 +230,13 @@ export function describeAirborneValidationPosture(result: AssemblyCalculation | 
   const trace = result.dynamicAirborneTrace;
   if (trace) {
     const boundaryPosture = getAirborneBoundaryPosture(trace);
+    const sourcePosture = describeAirborneSourcePosture(result);
 
     return {
       detail:
         `${trace.detectedFamilyLabel} is the current airborne family read with ${trace.confidenceClass} confidence. ` +
-        `Solver spread is currently ${trace.solverSpreadRwDb} dB across the candidate family set.` +
+        `Solver spread is currently ${trace.solverSpreadRwDb} dB across the candidate family set. ` +
+        `${sourcePosture.detail}` +
         (boundaryPosture ? ` ${boundaryPosture.detail}` : ""),
       label: `${trace.selectedLabel} anchor`,
       posture: "estimate"

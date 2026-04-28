@@ -30,8 +30,52 @@ no-runtime;
 `wall_source_catalog_acquisition_v1` Gate C closed no-runtime;
 `wall_no_stud_double_leaf_source_research_v1` Gate C closed
 no-runtime and selected `wall_timber_double_board_source_research_v1`;
+`wall_timber_double_board_source_research_v1` Gate A landed
+no-runtime and selected Gate C closeout / next-slice selection;
+`wall_timber_double_board_source_research_v1` Gate C closed no-runtime
+and selected `wall_clt_wall_source_research_v1`;
+`wall_clt_wall_source_research_v1` Gate A landed no-runtime and
+Gate C closed no-runtime and selected
+`wall_lined_massive_heavy_core_source_research_v1`;
+`wall_lined_massive_heavy_core_source_research_v1` Gate A landed
+no-runtime and Gate C closed no-runtime and selected
+`calculator_source_gap_revalidation_v2`;
+`calculator_source_gap_revalidation_v2` Gate A landed no-runtime and
+selected `floor_layer_order_invariance_expansion_v1`;
+`floor_layer_order_invariance_expansion_v1` Gate A landed no-runtime
+and selected Gate C closeout / next-slice selection;
+`floor_layer_order_invariance_expansion_v1` Gate C closed no-runtime
+and selected `wall_framed_facing_split_warning_stability_v1`;
+`wall_framed_facing_split_warning_stability_v1` Gate A landed
+no-runtime and selected Gate B value/warning stability fix;
+`wall_framed_facing_split_warning_stability_v1` Gate B fixed the LSF
+field board-split value/warning drift and Gate C closed the slice,
+selecting `calculator_source_gap_revalidation_v3`;
+`calculator_source_gap_revalidation_v3` Gate A landed no-runtime and
+selected `internal_use_operating_envelope_v1`;
+`internal_use_operating_envelope_v1` Gate A landed no-runtime with the
+short company pilot usage note and scenario summary;
+`internal_use_operating_envelope_v1` Gate B landed the regular
+internal-use visibility audit and selected Gate C closeout /
+next-slice selection;
 latest checkpoint:
-[CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_C_CLOSEOUT_HANDOFF.md)).
+[CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_BROAD_REVALIDATION_GATE_C_READY_HANDOFF.md](./CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_BROAD_REVALIDATION_GATE_C_READY_HANDOFF.md)).
+The extra 2026-04-28 planning pass made the readiness ladder explicit
+and the source-gap Gate A selected the short internal pilot
+operating-envelope slice. Internal-use Gate A then produced
+[INTERNAL_USE_PILOT_USAGE_NOTE.md](./INTERNAL_USE_PILOT_USAGE_NOTE.md)
+and the executable scenario matrix. Gate B then landed the regular
+internal-use visible-honesty audit: dynamic wall formula routes now say
+when no exact wall source row is active and keep formula-owned /
+source-gated scoped-estimate wording visible in validation, evidence,
+and proposal/report surfaces. Gate C closeout is now selected, and the
+comprehensive source-gated accuracy program remains a longer roadmap.
+The post-Gate-B broad revalidation is green and confirms that no
+runtime/source posture should move before Gate C.
+See
+[SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md](./SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md)
+and
+[CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md](./CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md).
 Step 8 closed the calculator runtime audit: `MASTER_PLAN.md` §3/§8
 was reconciled to implementation reality, `coverage-grid-consistency.test.ts`
 now maps the grid and C1-C6 signals to executable evidence, the
@@ -42,8 +86,8 @@ storage v1, project/proposal route authorization, auth-session
 hardening, and the pure team-access policy model.
 
 - **Engine broad suite**: latest broad `pnpm check` on 2026-04-28 is
-  green; the unchanged engine test task replayed from the prior
-  238 / 238 files, 1300 / 1300 tests green run
+  green after the internal-use Gate B broad revalidation: 264 / 264
+  files, 1438 / 1438 tests green.
   (up from 193/1068 pre-session; step-7 landed 4 wall cases +
   F1/F2 engine fixes + 32-assertion cross-mode torture matrix
   + 2 regression guards + post-contract; step-7b landed the
@@ -57,11 +101,11 @@ hardening, and the pure team-access policy model.
   under the Vitest worker timeout; Gate B and Gate C then added focused
   planning/value contract files).
 - **Web broad suite**: latest broad `pnpm check` on 2026-04-28 is
-  green; the unchanged web test task replayed from the prior
-  155 / 155 files in scope through `tools/dev/run-web-vitest.ts`:
-  885 / 885 tests green + 18 discovery helpers intentionally skipped.
-  The runner isolates six long route-scan files and batches the
-  remaining 148 files, preserving coverage while avoiding Vitest worker
+  green after the internal-use Gate B broad revalidation: 157 / 157
+  files in scope through `tools/dev/run-web-vitest.ts`, 890 tests
+  passed + 18 discovery helpers intentionally skipped. The runner
+  isolates six long route-scan files and batches the
+  remaining 151 files, preserving coverage while avoiding Vitest worker
   RPC timeout failures on the heavy family-boundary scans.
   The 2026-04-23
   productization pass added focused server project storage/API,
@@ -70,12 +114,12 @@ hardening, and the pure team-access policy model.
   2026-04-24 broad revalidation also hardened the side-count Gate A
   input contract so it asserts parse behavior instead of calling
   `.keyof()` on the exported shared `AirborneContextSchema` `ZodType`.
-- **Broad `pnpm check`**: lint + typecheck + tests + build green on the
-  latest broad run from the wall double-leaf Gate B-ready checkpoint
-  revalidation; unchanged test/build tasks may replay through Turbo
-  cache, and build
-  still emits the known non-fatal optional `sharp/@img` warnings through
-  `@turbodocx/html-to-docx`.
+- **Broad `pnpm check`**: lint + typecheck + tests + build green after
+  the internal-use Gate B broad revalidation. The first broad rerun
+  caught `TS7006` implicit-`any` issues in the framed split Gate A/B
+  contract tests; those were fixed with callback parameter typing only.
+  Build still emits the known non-fatal optional `sharp/@img` warnings
+  through `@turbodocx/html-to-docx`.
 - **Focused calculator gate** (`pnpm calculator:gate:current`):
   includes the final-audit grid + post-contract tests and the
   calculator-refocus contract; now also includes
@@ -207,28 +251,124 @@ hardening, and the pure team-access policy model.
   plus
   `post-wall-no-stud-double-leaf-source-research-v1-next-slice-selection-contract.test.ts`
   for the no-runtime Gate C closeout and timber double-board source
-  research selection. Latest focused gate run after the Gate C closeout
-  contract update:
-  116 engine files / 539 tests, 43 web files / 211
-  passed + 18 skipped, build 5/5 tasks, whitespace guard clean.
+  research selection, plus
+  `wall-timber-double-board-source-research-gate-a-contract.test.ts`
+  for the no-runtime timber double-board source/tolerance inventory and
+  Gate C closeout decision, plus
+  `post-wall-timber-double-board-source-research-v1-next-slice-selection-contract.test.ts`
+  for the no-runtime Gate C closeout and CLT wall source research
+  selection, plus
+  `wall-clt-wall-source-research-gate-a-contract.test.ts` for the
+  no-runtime CLT wall source/tolerance inventory and Gate C closeout
+  decision, plus
+  `post-wall-clt-wall-source-research-v1-next-slice-selection-contract.test.ts`
+  for the no-runtime Gate C closeout and lined-massive / heavy-core
+  source research selection, plus
+  `wall-lined-massive-heavy-core-source-research-gate-a-contract.test.ts`
+  for the no-runtime lined-massive / heavy-core source and bounded
+  lining-rule inventory, plus
+  `post-wall-lined-massive-heavy-core-source-research-v1-next-slice-selection-contract.test.ts`
+  for the no-runtime Gate C closeout and source-gap revalidation v2
+  selection, plus
+  `calculator-source-gap-revalidation-v2-gate-a-contract.test.ts` for
+  the no-runtime source/accuracy rerank and floor layer-order
+  invariance expansion selection, plus
+  `floor-layer-order-invariance-expansion-gate-a-contract.test.ts` for
+  the no-runtime role-defined exact/raw order-sensitive/many-layer floor
+  order audit and Gate C closeout selection, plus
+  `post-floor-layer-order-invariance-expansion-v1-next-slice-selection-contract.test.ts`
+  for the no-runtime Gate C closeout and framed-wall split warning
+  stability selection, plus
+  `wall-framed-facing-split-warning-stability-gate-a-contract.test.ts`
+  for the no-runtime LSF/timber board-split value/warning inventory and
+  Gate B stability-fix selection, plus
+  `wall-framed-facing-split-warning-stability-gate-b-contract.test.ts`
+  and
+  `post-wall-framed-facing-split-warning-stability-v1-next-slice-selection-contract.test.ts`
+  for the bounded split fix and Gate C closeout, plus
+  `calculator-source-gap-revalidation-v3-gate-a-contract.test.ts` for
+  the no-runtime source/readiness rerank and internal-use operating
+  envelope selection, plus
+  `internal-use-operating-envelope-v1-gate-a-contract.test.ts` for the
+  short company pilot usage note, scenario matrix, and no-promotion
+  boundaries, plus
+  `internal-use-operating-envelope-v1-gate-b-contract.test.ts` and
+  `internal-use-operating-envelope-visibility-gate-b.test.ts` for the
+  regular internal-use visible-honesty audit. Latest focused gate run
+  after the internal-use Gate B implementation: 131 engine files / 618
+  tests, 45 web files / 216 passed + 18 skipped, build 5/5 tasks with
+  known non-fatal `sharp/@img` warnings, whitespace guard clean.
 
 ## Active Slice
 
-`wall_timber_double_board_source_research_v1` (no-runtime direct-source
-and formula/tolerance research for the live double-board timber-stud
-wall lane). It was selected by
-`packages/engine/src/post-wall-no-stud-double-leaf-source-research-v1-next-slice-selection-contract.test.ts`
-after the no-stud double-leaf Gate C closeout found no ready direct row
-or bounded tolerance owner. The live `wall-timber-stud` route is a common
-lightweight wall lane and remains low-confidence formula at lab `Rw=50`,
-field `R'w=42`, and building `DnT,w=43`; direct single-board timber rows
-and explicit RB1/RB2 rows are already imported only where they match
-exact topology. The next action is Gate A no-runtime inventory in
-`packages/engine/src/wall-timber-double-board-source-research-gate-a-contract.test.ts`.
+`internal_use_operating_envelope_v1` (short company pilot operating
+envelope and regular internal-use visibility). It was selected by
+`packages/engine/src/calculator-source-gap-revalidation-v3-gate-a-contract.test.ts`
+after the source/readiness rerank found no runtime drift, card
+dishonesty, or source-backed import candidate that outranks making the
+current safe/caveated calculator envelope explicit. Gate A landed
+no-runtime in
+`packages/engine/src/internal-use-operating-envelope-v1-gate-a-contract.test.ts`
+and produced
+[INTERNAL_USE_PILOT_USAGE_NOTE.md](./INTERNAL_USE_PILOT_USAGE_NOTE.md).
+Gate B landed in
+`packages/engine/src/internal-use-operating-envelope-v1-gate-b-contract.test.ts`
+with no runtime/support/confidence/evidence/API/route-card value
+movement. It added explicit source-gated scoped-estimate wording for
+dynamic wall formula routes in validation, evidence, and
+proposal/report surfaces.
+The next implementation file is
+`packages/engine/src/post-internal-use-operating-envelope-v1-next-slice-selection-contract.test.ts`.
 Planning surface:
-[SLICE_WALL_TIMBER_DOUBLE_BOARD_SOURCE_RESEARCH_PLAN.md](./SLICE_WALL_TIMBER_DOUBLE_BOARD_SOURCE_RESEARCH_PLAN.md).
+[SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md](./SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md).
 
 Closed context:
+`floor_layer_order_invariance_expansion_v1` was selected by
+`packages/engine/src/calculator-source-gap-revalidation-v2-gate-a-contract.test.ts`.
+Gate A landed in
+`packages/engine/src/floor-layer-order-invariance-expansion-gate-a-contract.test.ts`
+as a no-runtime role-defined vs raw order audit. It pinned UBIQ FL-28
+and Dataholz GDMTXN01 exact floor rows under expanded UI order edits,
+kept raw terminal concrete helper order sensitivity explicit, kept raw
+open-web impact fail-closed, and kept many-layer split raw concrete
+stacks finite without exact/bound promotion. It selected Gate C
+no-runtime closeout / next-slice selection. Gate C then closed the slice
+no-runtime in
+`packages/engine/src/post-floor-layer-order-invariance-expansion-v1-next-slice-selection-contract.test.ts`
+and selected the current framed-wall split warning-stability slice.
+
+`calculator_source_gap_revalidation_v2` was selected by
+`packages/engine/src/post-wall-lined-massive-heavy-core-source-research-v1-next-slice-selection-contract.test.ts`.
+Gate A landed in
+`packages/engine/src/calculator-source-gap-revalidation-v2-gate-a-contract.test.ts`
+as a no-runtime source/accuracy rerank. It kept wall source-chain
+holdouts, floor fallback, and historical blocked-source families closed,
+recognized floor field-continuation as already audited, deferred
+optional architecture and productization-only work, and selected the
+current floor layer-order invariance expansion slice.
+
+`wall_lined_massive_heavy_core_source_research_v1` was selected by
+`packages/engine/src/post-wall-clt-wall-source-research-v1-next-slice-selection-contract.test.ts`.
+Gate A landed in
+`packages/engine/src/wall-lined-massive-heavy-core-source-research-gate-a-contract.test.ts`
+as a no-runtime source/bounded-lining-rule inventory. It kept Knauf
+CC60 rows floor-only, found no wall-specific lined concrete / heavy
+masonry source row, found no bounded lined-massive formula tolerance
+owner, kept selector/deep-hybrid rows as stability boundaries, and
+selected Gate C closeout. Gate C then closed no-runtime and selected
+the current source-gap revalidation v2 slice.
+
+`wall_clt_wall_source_research_v1` was selected by
+`packages/engine/src/post-wall-timber-double-board-source-research-v1-next-slice-selection-contract.test.ts`.
+Gate A landed in
+`packages/engine/src/wall-clt-wall-source-research-gate-a-contract.test.ts`
+as a no-runtime source/tolerance inventory. It kept Dataholz CLT rows
+floor-only, found no wall-specific CLT row, found no bounded
+laminated-leaf tolerance owner, and selected Gate C closeout. Gate C
+then closed no-runtime and selected the current lined-massive /
+heavy-core source research slice.
+
+Earlier closed context:
 `wall_no_stud_double_leaf_source_research_v1` was selected by
 `packages/engine/src/post-wall-source-catalog-acquisition-v1-next-slice-selection-contract.test.ts`
 after the wall source-catalog Gate C closeout found no ready runtime
@@ -913,13 +1053,39 @@ double-leaf Sharp/Davy slice has now closed no-runtime at Gate C. The
 selected source-evidence slice has closed no-runtime at Gate C. The
 selected source-catalog slice has closed no-runtime at Gate C. The
 no-stud double-leaf source research slice has closed no-runtime at
-Gate C. The next implementation step is timber double-board source
-research Gate A.
+Gate C. Timber double-board source research Gate A has landed
+no-runtime and Gate C has closed no-runtime. CLT wall source research
+Gate A has landed no-runtime and Gate C has closed no-runtime.
+Lined-massive / heavy-core source research Gate A has landed
+no-runtime and Gate C has closed no-runtime. Framed-wall split warning
+stability Gate A landed no-runtime, Gate B fixed the LSF field
+value/warning drift, and Gate C closed the slice. Calculator source-gap
+revalidation v3 Gate A landed no-runtime and selected
+`internal_use_operating_envelope_v1`. Internal-use operating envelope
+Gate A landed no-runtime and selected Gate B route-card/report/docs
+visibility audit. Gate B landed the visible-honesty copy fix and
+selected Gate C closeout / next-slice selection.
 
 ## Latest Closed Slices
 
 | Slice | Master-plan step | Closed | Post-contract |
 |---|---|---|---|
+| `internal_use_operating_envelope_v1` broad revalidation | company internal Gate C readiness | 2026-04-28 | `CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_BROAD_REVALIDATION_GATE_C_READY_HANDOFF.md` |
+| `internal_use_operating_envelope_v1` Gate B | company internal regular-use visibility | 2026-04-28 | `internal-use-operating-envelope-v1-gate-b-contract.test.ts` |
+| `internal_use_operating_envelope_v1` Gate A | company internal pilot operating envelope | 2026-04-28 | `internal-use-operating-envelope-v1-gate-a-contract.test.ts` |
+| `calculator_source_gap_revalidation_v3` Gate A | calculator source/readiness rerank | 2026-04-28 | `calculator-source-gap-revalidation-v3-gate-a-contract.test.ts` |
+| `wall_framed_facing_split_warning_stability_v1` Gate C | calculator wall split stability | 2026-04-28 | `post-wall-framed-facing-split-warning-stability-v1-next-slice-selection-contract.test.ts` |
+| `wall_framed_facing_split_warning_stability_v1` Gate B | calculator wall split stability | 2026-04-28 | `wall-framed-facing-split-warning-stability-gate-b-contract.test.ts` |
+| `wall_framed_facing_split_warning_stability_v1` Gate A | calculator wall split stability | 2026-04-28 | `wall-framed-facing-split-warning-stability-gate-a-contract.test.ts` |
+| `floor_layer_order_invariance_expansion_v1` Gate C | calculator floor order accuracy | 2026-04-28 | `post-floor-layer-order-invariance-expansion-v1-next-slice-selection-contract.test.ts` |
+| `floor_layer_order_invariance_expansion_v1` Gate A | calculator floor order accuracy | 2026-04-28 | `floor-layer-order-invariance-expansion-gate-a-contract.test.ts` |
+| `calculator_source_gap_revalidation_v2` Gate A | calculator revalidation | 2026-04-28 | `calculator-source-gap-revalidation-v2-gate-a-contract.test.ts` |
+| `wall_lined_massive_heavy_core_source_research_v1` Gate C | calculator wall source research | 2026-04-28 | `post-wall-lined-massive-heavy-core-source-research-v1-next-slice-selection-contract.test.ts` |
+| `wall_lined_massive_heavy_core_source_research_v1` Gate A | calculator wall source research | 2026-04-28 | `wall-lined-massive-heavy-core-source-research-gate-a-contract.test.ts` |
+| `wall_clt_wall_source_research_v1` Gate C | calculator wall source research | 2026-04-28 | `post-wall-clt-wall-source-research-v1-next-slice-selection-contract.test.ts` |
+| `wall_clt_wall_source_research_v1` Gate A | calculator wall source research | 2026-04-28 | `wall-clt-wall-source-research-gate-a-contract.test.ts` |
+| `wall_timber_double_board_source_research_v1` Gate C | calculator wall source research | 2026-04-28 | `post-wall-timber-double-board-source-research-v1-next-slice-selection-contract.test.ts` |
+| `wall_timber_double_board_source_research_v1` Gate A | calculator wall source research | 2026-04-28 | `wall-timber-double-board-source-research-gate-a-contract.test.ts` |
 | `wall_no_stud_double_leaf_source_research_v1` Gate C | calculator wall source research | 2026-04-28 | `post-wall-no-stud-double-leaf-source-research-v1-next-slice-selection-contract.test.ts` |
 | `wall_no_stud_double_leaf_source_research_v1` Gate B | calculator wall source research | 2026-04-28 | `wall-no-stud-double-leaf-source-research-gate-b-contract.test.ts` |
 | `wall_no_stud_double_leaf_source_research_v1` Gate A | calculator wall source research | 2026-04-28 | `wall-no-stud-double-leaf-source-research-gate-a-contract.test.ts` |
@@ -985,7 +1151,7 @@ matrix. Source-of-truth detail lives in the archived slice plan
 |---|---|---|---|
 | F1 | Masonry calibrators fell off lane when a same-material core was split into equal halves (engine Rw drifted +4 dB on Porotherm 50+50) | 2026-04-22 | `coalesceSameMaterialSolidLeaves` helper in `dynamic-airborne-masonry-calibration.ts`; regression guard `dynamic-airborne-masonry-same-material-split-invariance.test.ts` |
 | F2 | Verified-catalog exact match stopped firing when a same-material layer split (Rw drifted +5 dB on Knauf LSF 70 mm glasswool → 35+35) | 2026-04-22 | `coalesceAdjacentSameMaterialLayers` helper in `airborne-topology.ts`; applied symmetrically at `layersApproximatelyMatch` only (engine-entry application reverted — broke framed-wall benchmarks because 2×12.5 vs 1×25 gyp board distinction is physically meaningful); regression guard `airborne-verified-catalog-same-material-split-invariance.test.ts` |
-| F3 | Framed-wall monotonic-floor guard emits an extra diagnostic warning when a board-layer is split (numeric outputs unchanged; warning drift only) | 2026-04-22 deferred | Scoped `wall-lsf-knauf` splitPlans to the porous glasswool fill only; facing-split torture deferred until the monotonic-floor guard's sibling-variant generator is made layer-count invariant |
+| F3 | Framed-wall monotonic-floor guard drifted when a board-layer was split; Gate A revalidation found LSF field splits were value+warning drift (+1 dB on apparent field outputs), while LSF lab and timber lab/field stayed stable | 2026-04-28 Gate B fixed / Gate C closed | `wall-framed-facing-split-warning-stability-gate-b-contract.test.ts` fixes the LSF field split drift locally; `wall-framed-facing-split-warning-stability-route-card-matrix.test.ts` pins visible cards/acoustic warnings; global board coalescing remains disallowed |
 | F4 | Reorder overlay test initially assumed all wall cases were physically symmetric — LSF + timber-stud are NOT (internal cavity `[gap, fill]` vs. `[fill, gap]` are distinguishable); engine was correctly detecting the difference | 2026-04-22 | Test refined: `SYMMETRIC_REORDER_CASE_IDS` lists cases where strict bit-equality holds; asymmetric cases assert structural invariance (`dynamicFamily` + `supportedTargetOutputs` stable, metrics stay finite) |
 
 ## Physical Invariants (First-Class Accuracy Contract)
@@ -1086,8 +1252,10 @@ time without context loss:
    already guard the surface.
 3. **Workbench card-level selector VALUE pins** — optional unless a
    user-visible card drift appears.
-4. **F3 framed-wall monotonic-floor warning drift** — warning-only;
-   numeric outputs unchanged.
+4. **F3 framed-wall monotonic-floor split drift** — closed as
+   `wall_framed_facing_split_warning_stability_v1`; Gate B fixed the
+   LSF field value+warning drift without global board coalescing, and
+   Gate C selected `calculator_source_gap_revalidation_v3`.
 5. **Full floor field-continuation expansion** — closed no-runtime as
    `floor_field_continuation_expansion_v1`.
 6. **Floor layer-order edit stability** — closed no-runtime as
@@ -1132,14 +1300,15 @@ time without context loss:
 
 ## Resume Order For The Next Agent
 
-1. Read [CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_C_CLOSEOUT_HANDOFF.md)
+1. Read [CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_BROAD_REVALIDATION_GATE_C_READY_HANDOFF.md](./CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_BROAD_REVALIDATION_GATE_C_READY_HANDOFF.md)
    for the latest active-slice handoff.
 2. Read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md),
-   [SLICE_WALL_TIMBER_DOUBLE_BOARD_SOURCE_RESEARCH_PLAN.md](./SLICE_WALL_TIMBER_DOUBLE_BOARD_SOURCE_RESEARCH_PLAN.md),
+   [SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md](./SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md),
+   [SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V3_PLAN.md](./SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V3_PLAN.md),
    [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md), and
    [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md).
-   Continue `wall_timber_double_board_source_research_v1` at Gate A by
-   adding a no-runtime source/tolerance inventory contract.
+   Continue `internal_use_operating_envelope_v1` at Gate C by adding
+   the closeout / next-slice selection contract.
 3. Read [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
    for the now-closed calculator-priority chain and its evidence-tier
    caveats.
@@ -1152,9 +1321,10 @@ time without context loss:
    agrees on the active slice, completion signals, and deferred tracks.
    If it does not, fix the drift before starting work.
 6. Run `pnpm calculator:gate:current` as the focused baseline.
-7. Do not change runtime math, source posture, output support,
-   evidence tiers, or confidence scores during no-stud source research
-   Gate A.
+7. Do not change source posture, output support, evidence tiers,
+   confidence scores, or route-card values during internal-use Gate C.
+   A source-ready accuracy slice may be selected only if the Gate C
+   contract names a bounded source pack.
    Any future import must name the exact source row, metric owner,
    tolerance, protected-boundary exclusions, and paired web route-card
    tests.

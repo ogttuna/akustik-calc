@@ -356,6 +356,49 @@ export function findOuterLeafReinforcementCandidateIndex(
   return bestIndex;
 }
 
+const FRAMED_SPLIT_BOARD_FRAGMENT_MAX_THICKNESS_MM = 9;
+const FRAMED_SPLIT_BOARD_FRAGMENT_PAIR_MAX_THICKNESS_MM = 16;
+
+export function hasOuterLeafSplitBoardFragments(
+  layers: readonly ResolvedLayer[],
+  side: "leading" | "trailing"
+): boolean {
+  const indexes =
+    side === "leading"
+      ? Array.from({ length: layers.length }, (_, index) => index)
+      : Array.from({ length: layers.length }, (_, offset) => layers.length - 1 - offset);
+  let previousBoard: ResolvedLayer | null = null;
+
+  for (const index of indexes) {
+    const layer = layers[index];
+    if (!layer) {
+      continue;
+    }
+
+    if (!classifyLayerRole(layer).isSolidLeaf) {
+      break;
+    }
+
+    if (!isBoardLikeLayer(layer)) {
+      previousBoard = null;
+      continue;
+    }
+
+    if (
+      previousBoard &&
+      previousBoard.material.id === layer.material.id &&
+      Math.min(previousBoard.thicknessMm, layer.thicknessMm) <= FRAMED_SPLIT_BOARD_FRAGMENT_MAX_THICKNESS_MM &&
+      previousBoard.thicknessMm + layer.thicknessMm <= FRAMED_SPLIT_BOARD_FRAGMENT_PAIR_MAX_THICKNESS_MM
+    ) {
+      return true;
+    }
+
+    previousBoard = layer;
+  }
+
+  return false;
+}
+
 export function summarizeSingleLeafMasonryProfile(layers: readonly ResolvedLayer[]): {
   hasAacLike: boolean;
   hasMasonryLike: boolean;

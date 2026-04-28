@@ -1105,12 +1105,10 @@ export const ENGINE_MIXED_GENERATED_CASES: readonly EngineMixedGeneratedCase[] =
     // Split the 70 mm glasswool fill into two 35 mm halves —
     // cavity-fill splits are physically no-op (glasswool is
     // porous, coalesces at the catalog match layer). Facing
-    // splits are deliberately NOT applied here: a 12.5 mm
-    // acoustic-gypsum board split into 6.25+6.25 changes the
-    // framed-wall monotonic-floor guard's sibling-variant
-    // comparison (different layer count) and emits an extra
-    // diagnostic warning even though the numeric outputs stay
-    // identical — tracked as step-7 finding F3 (deferred).
+    // board splits are covered separately by the framed facing
+    // split slice because they exercise the reinforcement
+    // monotonic-floor sibling comparison rather than the
+    // catalog coalescing path.
     splitPlans: [
       { parts: [35, 35], rowIndex: 3 }
     ],

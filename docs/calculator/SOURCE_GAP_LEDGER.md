@@ -1,10 +1,20 @@
 # Dynamic Calculator Source Gap Ledger
 
 Last reviewed: 2026-04-28
-(`wall_no_stud_double_leaf_source_research_v1` Gate C closed and
-selected `wall_timber_double_board_source_research_v1`
-no-runtime; source-gap content remains floor-dominant historical
-context)
+(`calculator_source_gap_revalidation_v2` Gate A landed no-runtime and
+selected `floor_layer_order_invariance_expansion_v1`;
+`floor_layer_order_invariance_expansion_v1` Gate A landed no-runtime
+and selected Gate C closeout / next-slice selection;
+`floor_layer_order_invariance_expansion_v1` Gate C closed no-runtime
+and selected `wall_framed_facing_split_warning_stability_v1`;
+`wall_framed_facing_split_warning_stability_v1` Gate B fixed the LSF
+field split value/warning drift and Gate C selected
+`calculator_source_gap_revalidation_v3`;
+`calculator_source_gap_revalidation_v3` Gate A landed no-runtime and
+selected `internal_use_operating_envelope_v1`;
+`internal_use_operating_envelope_v1` Gate B landed no-runtime/source
+posture change and selected Gate C closeout;
+source-gap content remains floor-dominant historical context)
 
 Purpose:
 
@@ -55,8 +65,15 @@ Important scope note:
   selected `wall_single_leaf_mass_law_calibration_v1`; that slice
   closed no-runtime at Gate C because generic single-leaf runtime
   movement needs stack-specific source rows or bounded tolerance packs.
-  The active wall work is now
-  `wall_no_stud_double_leaf_source_research_v1`.
+  The active selected slice is now
+  `floor_layer_order_invariance_expansion_v1` after
+  `calculator_source_gap_revalidation_v2` Gate A re-ranked the
+  remaining floor/wall source and accuracy gaps. Its Gate A has landed
+  no-runtime: role-defined exact floor rows stay exact under expanded
+  UI order edits, raw/helper support changes stay explicit, raw
+  open-web impact remains fail-closed, many-layer split raw stacks stay
+  finite, and Gate C closeout selected
+  `wall_framed_facing_split_warning_stability_v1`.
   `wall_double_leaf_source_evidence_acquisition_v1` closed no-runtime at
   Gate C after Gate B reconciled bounded Knauf W111 / W112 / W115 /
   W119 framed-wall rows against current dynamic outputs and found no
@@ -71,8 +88,26 @@ Important scope note:
   remain source/tolerance follow-up evidence rather than overloading
   this floor-dominant ledger. Gate C then closed the no-stud slice
   no-runtime and selected `wall_timber_double_board_source_research_v1`;
-  that work should stay in a dedicated wall slice plan rather than this
-  floor-dominant ledger.
+  timber double-board, CLT wall, and lined-massive / heavy-core wall
+  source research also closed no-runtime at Gate C.
+  `calculator_source_gap_revalidation_v2` then kept the blocked source
+  posture intact and selected a floor layer-order invariance expansion
+  audit because source/import candidates were not runtime-ready. That
+  floor-order slice closed no-runtime and selected framed-wall split
+  stability. Gate B fixed the LSF field board-split value/warning drift
+  without global board coalescing, and Gate C selected
+  `calculator_source_gap_revalidation_v3` because the local fix does
+  not unlock source-blocked wall/floor families. Gate A then landed
+  no-runtime, kept the blocked source posture intact, recorded public
+  source candidates as research intake only, and selected
+  `internal_use_operating_envelope_v1` because the next useful
+  calculator step is the short company pilot operating envelope and
+  scenario summary, not a source/runtime reopen. Internal-use operating
+  envelope Gate A then landed that pilot note and scenario matrix
+  no-runtime. Gate B then landed visible
+  formula-owned/source-gated scoped-estimate wording for dynamic wall
+  formula routes and kept the blocked source posture in this ledger
+  unchanged.
 - `good_calculator_final_audit_v1` closed without reopening any
   source-gated calculator family. `wall_formula_family_widening_v1`
   then also closed without reopening any blocked family: it clarified

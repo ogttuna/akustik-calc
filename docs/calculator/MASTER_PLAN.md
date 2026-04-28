@@ -9,7 +9,32 @@ no-runtime and selected `wall_source_catalog_acquisition_v1`;
 `wall_source_catalog_acquisition_v1` Gate C closed no-runtime and
 selected `wall_no_stud_double_leaf_source_research_v1`;
 `wall_no_stud_double_leaf_source_research_v1` Gate C closed no-runtime
-and selected `wall_timber_double_board_source_research_v1`)
+and selected `wall_timber_double_board_source_research_v1`;
+`wall_timber_double_board_source_research_v1` Gate A landed no-runtime
+and Gate C closed no-runtime and selected
+`wall_clt_wall_source_research_v1`;
+`wall_clt_wall_source_research_v1` Gate C closed no-runtime and
+selected `wall_lined_massive_heavy_core_source_research_v1`;
+`wall_lined_massive_heavy_core_source_research_v1` Gate C closed
+no-runtime and selected `calculator_source_gap_revalidation_v2`;
+`calculator_source_gap_revalidation_v2` Gate A landed no-runtime and
+selected `floor_layer_order_invariance_expansion_v1`;
+`floor_layer_order_invariance_expansion_v1` Gate A landed no-runtime
+and Gate C closed no-runtime and selected
+`wall_framed_facing_split_warning_stability_v1`;
+`wall_framed_facing_split_warning_stability_v1` Gate A landed
+no-runtime and selected Gate B value/warning stability fix;
+`wall_framed_facing_split_warning_stability_v1` Gate B fixed the LSF
+field board-split value/warning drift and Gate C selected
+`calculator_source_gap_revalidation_v3`;
+`calculator_source_gap_revalidation_v3` Gate A landed no-runtime and
+selected `internal_use_operating_envelope_v1`;
+`internal_use_operating_envelope_v1` Gate A landed no-runtime with the
+short company pilot usage note and scenario summary;
+`internal_use_operating_envelope_v1` Gate B landed the regular-use
+visibility audit and selected Gate C closeout / next-slice selection;
+post-Gate-B broad `pnpm check` is green and Gate C remains the first
+next action)
 Iteration: 2 (rewritten with implementation state grid, accuracy
 preservation contract, ROI table, quantitative completion targets)
 
@@ -32,17 +57,27 @@ Private-use calculator readiness is tracked separately in
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
 That chain is closed for the current private/internal-use bar. The next
 selected calculator work is
-`wall_timber_double_board_source_research_v1` Gate A. The no-stud
-double-leaf source research slice closed no-runtime at Gate C:
-Davy/Sharp is relevant but not a local single-number tolerance owner,
-NRC still needs extracted no-stud/no-rail row proof and live mapping,
-and gypsum-block rows remain adjacent-material evidence. Timber
-double-board is the next source-catalog gap because the live
-`wall-timber-stud` route remains low-confidence formula while nearby
-single-board and resilient timber rows are already topology-bounded.
-Runtime/source posture remains frozen until a future gate names a
-direct source row, metric owner, tolerance, protected boundaries, and
-paired route-card tests.
+`internal_use_operating_envelope_v1` Gate C. Floor layer-order
+invariance expansion closed no-runtime; framed-wall split stability
+Gate B fixed the LSF field board-split value/warning drift without
+global board coalescing; source/runtime widening candidates remained
+blocked in `calculator_source_gap_revalidation_v3` Gate A, so the next
+bounded step is the short company pilot operating envelope and scenario
+summary. Internal-use operating envelope Gate A has now landed that
+pilot pack no-runtime. Gate B then landed the regular internal-use
+visibility audit with a focused wall source-gated copy fix; the next
+bounded step is Gate C closeout / next-slice selection. The broad
+post-Gate-B revalidation is green, so there is no test-driven reason to
+change runtime/source posture before Gate C.
+
+The next planning layer is split deliberately:
+
+- [SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md](./SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md)
+  is selected for the short company pilot and the next 2-4 regular
+  internal-use hardening iterations.
+- [CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md](./CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md)
+  tracks the longer source-gated work required before claiming very
+  broad correctness across all common calculations.
 
 ---
 
@@ -707,11 +742,11 @@ the doc-drift problem documented in `SYSTEM_AUDIT_2026-04-20.md`.
   selected and chose Gate C closeout / next-slice selection.
 - **2026-04-28 update**: `wall_source_catalog_acquisition_v1` Gate C
   closed no-runtime and selected
-  `wall_no_stud_double_leaf_source_research_v1`. The next Gate A must
-  classify direct empty and porous no-stud double-leaf source rows,
-  formula/tolerance references, metadata completeness, and negative
-  boundaries before any runtime, confidence, support, evidence, or
-  route-card movement.
+  `wall_no_stud_double_leaf_source_research_v1`. That follow-up Gate A
+  later classified direct empty and porous no-stud double-leaf source
+  rows, formula/tolerance references, metadata completeness, and
+  negative boundaries before any runtime, confidence, support, evidence,
+  or route-card movement.
 - **2026-04-28 update**: `wall_no_stud_double_leaf_source_research_v1`
   Gate A landed no-runtime. It kept current empty and porous no-stud
   routes formula-owned, classified gypsum-block rows as direct-family
@@ -727,10 +762,114 @@ the doc-drift problem documented in `SYSTEM_AUDIT_2026-04-20.md`.
 - **2026-04-28 update**: `wall_no_stud_double_leaf_source_research_v1`
   Gate C closed no-runtime and selected
   `wall_timber_double_board_source_research_v1`. Current empty and
-  porous no-stud values stay formula-owned; the next Gate A must
-  inventory direct double-board timber rows, adjacent single-board and
-  resilient rows, formula/tolerance candidates, and negative boundaries
+  porous no-stud values stay formula-owned.
+- **2026-04-28 update**: `wall_timber_double_board_source_research_v1`
+  Gate A landed no-runtime. It kept the live timber double-board route
+  formula-owned and low-confidence, classified existing single-board /
+  resilient / secondary-benchmark / steel holdout evidence as adjacent
+  or blocked, found no direct import or formula/tolerance Gate B ready,
+  and selected Gate C closeout / next-slice selection.
+- **2026-04-28 update**: `wall_timber_double_board_source_research_v1`
+  Gate C closed no-runtime and selected
+  `wall_clt_wall_source_research_v1`. Timber double-board values stay
+  frozen; the next slice must classify wall-specific CLT rows,
+  laminated-leaf formula/tolerance candidates, floor-only negative
+  boundaries, and metadata completeness before any runtime or route-card
+  movement.
+- **2026-04-28 update**: `wall_clt_wall_source_research_v1` Gate A
+  landed no-runtime. It kept the live CLT wall route formula-owned and
+  medium-confidence, classified Dataholz CLT rows as floor-only source
+  truth, found no wall-specific CLT row or bounded laminated-leaf
+  tolerance owner, and selected Gate C closeout / next-slice selection.
+- **2026-04-28 update**: `wall_clt_wall_source_research_v1` Gate C
+  closed no-runtime and selected
+  `wall_lined_massive_heavy_core_source_research_v1`. CLT wall values
+  stay frozen; the next slice must inventory wall-specific lined
+  concrete / heavy masonry rows, manufacturer wall-lining rows, bounded
+  formula/tolerance candidates, and selector/deep-hybrid boundaries
   before any runtime or route-card movement.
+- **2026-04-28 update**:
+  `wall_lined_massive_heavy_core_source_research_v1` Gate A landed
+  no-runtime. It kept the live route screening-tier, kept Knauf CC60
+  rows floor-only, classified wall-specific source rows as missing,
+  manufacturer lining context as adjacent, formula framework context as
+  unbounded, selector/deep-hybrid rows as stability boundaries, and the
+  old heavy-core Gate B audit as frozen baseline. It selected Gate C
+  closeout / next-slice selection.
+- **2026-04-28 update**:
+  `wall_lined_massive_heavy_core_source_research_v1` Gate C closed
+  no-runtime and selected `calculator_source_gap_revalidation_v2`.
+  Lined-massive / heavy-core values stay frozen at lab `Rw=57`, field
+  `R'w=55`, `DnT,w=56`, `DnT,A=54.9`, with `lined_massive_wall` /
+  `lined_massive_blend`. The next slice must re-rank remaining
+  floor/wall source and accuracy gaps before runtime or productization
+  movement.
+- **2026-04-28 update**: `calculator_source_gap_revalidation_v2` Gate A
+  landed no-runtime. It kept wall source-chain holdouts, floor fallback,
+  and historical blocked-source families closed, deferred optional
+  architecture and productization-only work, and selected
+  `floor_layer_order_invariance_expansion_v1` as the next bounded
+  engine-addressable accuracy audit.
+- **2026-04-28 update**:
+  `floor_layer_order_invariance_expansion_v1` Gate A landed no-runtime.
+  It proved role-defined UBIQ FL-28 and Dataholz GDMTXN01 exact floor
+  rows remain exact under expanded UI order edits, kept raw terminal
+  concrete support changes explicit, kept raw open-web impact
+  fail-closed, kept many-layer split raw concrete finite without
+  exact/bound promotion, and selected Gate C closeout / next-slice
+  selection.
+- **2026-04-28 update**:
+  `floor_layer_order_invariance_expansion_v1` Gate C closed
+  no-runtime. It kept broad arbitrary raw floor reorder value invariance
+  unclaimed, kept source families closed, and selected
+  `wall_framed_facing_split_warning_stability_v1` because F3 is the
+  remaining documented non-source-blocked calculator drift.
+- **2026-04-28 update**:
+  `wall_framed_facing_split_warning_stability_v1` Gate A landed
+  no-runtime. It proved the old F3 warning-only description is
+  incomplete in the current LSF field lane: LSF lab remains exact and
+  timber lab/field remain stable, but splitting any one LSF acoustic
+  gypsum board row moves `R'w`, `Dn,w`, `Dn,A`, `DnT,w`, `DnT,A`, and
+  `STC` by +1 dB and adds the framed reinforcement monotonic-floor
+  warning. Gate A keeps route cards frozen, preserves the no-global
+  coalescing boundary, and selects Gate B value/warning stability fix.
+- **2026-04-28 update**:
+  `wall_framed_facing_split_warning_stability_v1` Gate B fixed the LSF
+  field board-split value/warning drift. Splits now stay at baseline
+  `R'w=51`, `Dn,w=51`, `Dn,A=49.6`, `DnT,w=52`, `DnT,A=51.1`,
+  `STC=51`, `C=-1.4`, `Ctr=-6.4`; LSF lab exact and timber lab/field
+  remain stable; paired web route-card coverage is in place; global
+  same-material board coalescing stays disallowed. Gate C then closed
+  the slice and selected `calculator_source_gap_revalidation_v3`.
+- **2026-04-28 update**:
+  `calculator_source_gap_revalidation_v3` Gate A landed no-runtime.
+  It kept the framed split fix closed, kept wall/floor source holdouts
+  blocked, recorded public source candidates as research intake only,
+  and selected `internal_use_operating_envelope_v1` for the short
+  company pilot usage note and scenario summary.
+- **2026-04-28 update**:
+  `internal_use_operating_envelope_v1` Gate A landed no-runtime. It
+  added the company pilot usage note and executable scenario matrix,
+  separated pilot-ready exact/benchmark/source-backed lanes from
+  low-confidence, screening, source-gated, unsupported, and fail-closed
+  lanes, and selected Gate B route-card/report/docs visibility audit.
+- **2026-04-28 update**:
+  `internal_use_operating_envelope_v1` Gate B landed the regular-use
+  visibility audit. Runtime, support, confidence, evidence tier, API
+  shape, route-card values, and output-card statuses stayed frozen.
+  Dynamic wall formula routes now carry explicit
+  formula-owned/source-gated scoped-estimate language through
+  validation, evidence, and proposal/report surfaces. Generated steel
+  floor fallback remains low-confidence/screening with `L'nT,50`
+  unsupported. Gate B selected Gate C closeout / next-slice selection.
+- **2026-04-28 update**:
+  A broad post-Gate-B revalidation is green. `pnpm check` passes:
+  engine 264 files / 1438 tests, web 157 files / 890 passed + 18
+  skipped, and build 5/5 with the known non-fatal `sharp/@img`
+  warnings. The only broad-gate fix was test typing for warning
+  callback parameters in the framed split Gate A/B contracts. Gate C is
+  still the first next action; do not reopen source-gated runtime
+  families from this green result alone.
 - **2026-04-24 update**: floor continuation, floor many-layer, floor
   layer-order, and all-caller invalid-thickness audits closed
   no-runtime; engine thickness validity moved out of partial, and
