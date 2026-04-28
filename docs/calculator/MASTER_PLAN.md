@@ -7,7 +7,9 @@ Last reviewed: 2026-04-28
 `wall_double_leaf_source_evidence_acquisition_v1` Gate C closed
 no-runtime and selected `wall_source_catalog_acquisition_v1`;
 `wall_source_catalog_acquisition_v1` Gate C closed no-runtime and
-selected `wall_no_stud_double_leaf_source_research_v1`)
+selected `wall_no_stud_double_leaf_source_research_v1`;
+`wall_no_stud_double_leaf_source_research_v1` Gate A landed
+no-runtime)
 Iteration: 2 (rewritten with implementation state grid, accuracy
 preservation contract, ROI table, quantitative completion targets)
 
@@ -30,15 +32,14 @@ Private-use calculator readiness is tracked separately in
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
 That chain is closed for the current private/internal-use bar. The next
 selected calculator work is
-`wall_no_stud_double_leaf_source_research_v1` Gate A. The wall
-source-catalog closeout found no direct runtime import pack ready now:
-manufacturer framed rows already fit, no-stud double-leaf lacks direct
-rows, timber double-board lacks a live-topology source match, CLT wall
-lacks wall-specific rows, lined-massive / heavy-core concrete lacks a
-bounded lining rule, and floor/product-delta adjacent rows are rejected
-as wall source truth. Runtime/source posture remains frozen until a
-future gate names a direct source row, metric owner, tolerance,
-protected boundaries, and paired route-card tests.
+`wall_no_stud_double_leaf_source_research_v1` Gate B. Gate A found no
+direct runtime import row ready now: gypsum-block double-wall evidence
+is direct-family but adjacent material, Davy/Sharp is a
+formula/tolerance candidate, NRC is a row archive that needs no-stud
+row extraction, and stud/framed evidence remains adjacent context only.
+Runtime/source posture remains frozen until a future gate names a
+direct source row, metric owner, tolerance, protected boundaries, and
+paired route-card tests.
 
 ---
 
@@ -708,6 +709,12 @@ the doc-drift problem documented in `SYSTEM_AUDIT_2026-04-20.md`.
   formula/tolerance references, metadata completeness, and negative
   boundaries before any runtime, confidence, support, evidence, or
   route-card movement.
+- **2026-04-28 update**: `wall_no_stud_double_leaf_source_research_v1`
+  Gate A landed no-runtime. It kept current empty and porous no-stud
+  routes formula-owned, classified gypsum-block rows as direct-family
+  adjacent-material evidence, selected Davy/Sharp formula tolerance and
+  NRC row extraction for Gate B, and kept stud/framed rows as protected
+  adjacent context only.
 - **2026-04-24 update**: floor continuation, floor many-layer, floor
   layer-order, and all-caller invalid-thickness audits closed
   no-runtime; engine thickness validity moved out of partial, and

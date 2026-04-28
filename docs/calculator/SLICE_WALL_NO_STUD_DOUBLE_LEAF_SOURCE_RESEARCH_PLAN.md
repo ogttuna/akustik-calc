@@ -1,8 +1,9 @@
 # Slice Plan - Wall No-Stud Double-Leaf Source Research v1
 
-Status: SELECTED, GATE A READY (no-runtime source/tolerance research
-slice selected by
-`packages/engine/src/post-wall-source-catalog-acquisition-v1-next-slice-selection-contract.test.ts`)
+Status: GATE A LANDED NO-RUNTIME (by
+`packages/engine/src/wall-no-stud-double-leaf-source-research-gate-a-contract.test.ts`;
+Gate B should audit formula-tolerance and direct-row feasibility
+no-runtime)
 
 ## Objective
 
@@ -103,6 +104,27 @@ bounded tolerance corridor.
 If the available material is adjacent context only, Gate A must close
 no-runtime and leave current behavior formula-owned.
 
+### Gate A Result - 2026-04-28
+
+Gate A landed in
+`packages/engine/src/wall-no-stud-double-leaf-source-research-gate-a-contract.test.ts`.
+It changed no runtime behavior and classified the source/tolerance
+posture as:
+
+| Candidate | Gate A posture | Result |
+|---|---|---|
+| Current empty no-stud route | formula-owned | `R'w=46`, `Rw=48`; stays frozen until direct same-stack row or named formula tolerance owner |
+| Current porous no-stud route | formula-owned | `R'w=41`, `Rw=43`; stays frozen until direct same-stack row or named formula tolerance owner |
+| Gypsum-block double walls with air chamber | direct-family adjacent material | useful no-stud family evidence, but not current AAC / gypsum-board material mapping and no imported row-level table |
+| Gypsum-block double walls with absorbent material | direct-family adjacent material | useful porous/fill evidence, but needs full row extraction and local material mapping |
+| Davy / Sharp cavity-wall formula line | formula-tolerance candidate | selected for Gate B feasibility; must translate model evidence into a bounded local tolerance |
+| NRC gypsum-board wall transmission-loss archive | row archive needs extraction | selected for Gate B feasibility; must prove any row has no-stud/no-rail/no-coupling fit |
+| Stud-type studies and framed manufacturer rows | adjacent context only | protected negative boundaries; cannot promote no-stud values |
+
+Gate A selects no direct import now. Gate B should remain no-runtime and
+decide whether either the Davy/Sharp line can provide a bounded formula
+tolerance or the NRC archive contains an extractable direct no-stud row.
+
 ## Expected Tests
 
 - Add:
@@ -110,6 +132,11 @@ no-runtime and leave current behavior formula-owned.
 - Keep it no-runtime.
 - Assert source-candidate classification, metadata completeness,
   negative boundaries, and the selected next action.
+- Next add:
+  `packages/engine/src/wall-no-stud-double-leaf-source-research-gate-b-contract.test.ts`.
+- Gate B should stay no-runtime unless it proves a bounded formula
+  tolerance or a complete direct row; runtime movement still requires
+  paired engine value and web route-card tests.
 - Add paired web route-card tests only in a later slice that changes
   visible values, support, confidence, evidence text, or missing-input
   copy.
@@ -117,12 +144,18 @@ no-runtime and leave current behavior formula-owned.
 ## Immediate Execution Order
 
 1. Read
-   [CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_C_CLOSEOUT_HANDOFF.md).
-2. Run `pnpm calculator:gate:current` as the Gate A baseline.
-3. Search only for direct no-stud double-leaf wall source rows or named
-   no-stud double-leaf formula tolerance references.
-4. Add the Gate A no-runtime contract listed above.
-5. Update `NEXT_IMPLEMENTATION_PLAN.md`, `CURRENT_STATE.md`, and this
-   plan with the Gate A result.
-6. Validate with the targeted Gate A test, `pnpm calculator:gate:current`,
+   [CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_A_HANDOFF.md).
+2. Run `pnpm calculator:gate:current` as the Gate B baseline.
+3. Add
+   `packages/engine/src/wall-no-stud-double-leaf-source-research-gate-b-contract.test.ts`
+   as a no-runtime feasibility audit.
+4. For Davy/Sharp, pin whether the published model evidence is specific
+   enough to create a bounded local tolerance for current empty and
+   porous no-stud routes.
+5. For NRC, pin whether an extracted row proves no-stud/no-rail/
+   no-coupling and maps to local material/cavity topology.
+6. Keep runtime values, support, confidence, evidence text, and
+   route-card copy frozen unless Gate B names a complete direct row or
+   tolerance owner with executable negative boundaries.
+7. Validate with the targeted Gate B test, `pnpm calculator:gate:current`,
    and `git diff --check`.

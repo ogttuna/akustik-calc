@@ -38,6 +38,11 @@ no-stud double-leaf walls. That target is common enough to matter for
 private/internal use, narrow enough to avoid guessing, and still fully
 blocked without direct evidence.
 
+Forward pointer: the selected no-stud source research slice has now
+landed Gate A in
+[CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_A_HANDOFF.md).
+Use that checkpoint for the active handoff.
+
 ## Validation
 
 - Baseline before Gate C edits: `pnpm calculator:gate:current` green
@@ -60,11 +65,7 @@ Start from:
 3. `docs/calculator/SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md`
 4. `docs/calculator/CURRENT_STATE.md`
 
-Gate A implementation file:
-
-- `packages/engine/src/wall-no-stud-double-leaf-source-research-gate-a-contract.test.ts`
-
-Gate A must stay no-runtime and classify direct no-stud empty/porous
-double-leaf source candidates, named formula/tolerance references,
-metadata completeness, and negative boundaries before any import,
-runtime, confidence, support, or route-card behavior changes.
+This checkpoint is now historical. The active implementation file is
+listed in the no-stud Gate A handoff. Runtime, confidence, support, and
+route-card behavior must remain frozen until a direct row or bounded
+formula tolerance is proven with paired tests.
