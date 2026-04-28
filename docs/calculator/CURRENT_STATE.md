@@ -13,7 +13,7 @@ need the private-use readiness chain read
 
 ## Revalidated Snapshot
 
-Last revalidation cycle: `2026-04-27`
+Last revalidation cycle: `2026-04-28`
 (`realistic_layer_combination_coverage_cartography_v1` Gate A landed;
 heavy-core/concrete Gate B closed no-runtime; timber stud + CLT wall
 accuracy pass Gate C closed no-runtime; floor fallback Gate C closed
@@ -25,9 +25,9 @@ personal/internal-use readiness chain is closed;
 `wall_coverage_expansion_planning_v2` Gate A closed no-runtime;
 `wall_single_leaf_mass_law_calibration_v1` Gate C closed no-runtime;
 `wall_double_leaf_sharp_davy_scoping_v1` Gate A landed no-runtime;
-Gate A contract type-hygiene revalidated under broad typecheck;
+Gate B-ready plan/implementation revalidated with no drift;
 latest checkpoint:
-[CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_HANDOFF.md)).
+[CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_REVALIDATION.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_REVALIDATION.md)).
 Step 8 closed the calculator runtime audit: `MASTER_PLAN.md` §3/§8
 was reconciled to implementation reality, `coverage-grid-consistency.test.ts`
 now maps the grid and C1-C6 signals to executable evidence, the
@@ -37,8 +37,9 @@ first four productization slices then closed server-backed project
 storage v1, project/proposal route authorization, auth-session
 hardening, and the pure team-access policy model.
 
-- **Engine broad suite**: latest broad `pnpm check` on 2026-04-27 was
-  238 / 238 files, 1300 / 1300 tests green
+- **Engine broad suite**: latest broad `pnpm check` on 2026-04-28 is
+  green; the unchanged engine test task replayed from the prior
+  238 / 238 files, 1300 / 1300 tests green run
   (up from 193/1068 pre-session; step-7 landed 4 wall cases +
   F1/F2 engine fixes + 32-assertion cross-mode torture matrix
   + 2 regression guards + post-contract; step-7b landed the
@@ -51,8 +52,9 @@ hardening, and the pure team-access policy model.
   split-cavity field swap matrix that keeps the full single-worker suite
   under the Vitest worker timeout; Gate B and Gate C then added focused
   planning/value contract files).
-- **Web broad suite**: latest broad `pnpm check` on 2026-04-27 kept
-  all 155 / 155 files in scope through `tools/dev/run-web-vitest.ts`:
+- **Web broad suite**: latest broad `pnpm check` on 2026-04-28 is
+  green; the unchanged web test task replayed from the prior
+  155 / 155 files in scope through `tools/dev/run-web-vitest.ts`:
   885 / 885 tests green + 18 discovery helpers intentionally skipped.
   The runner isolates six long route-scan files and batches the
   remaining 148 files, preserving coverage while avoiding Vitest worker
@@ -65,8 +67,9 @@ hardening, and the pure team-access policy model.
   input contract so it asserts parse behavior instead of calling
   `.keyof()` on the exported shared `AirborneContextSchema` `ZodType`.
 - **Broad `pnpm check`**: lint + typecheck + tests + build green on the
-  latest broad run after wall double-leaf Gate A checkpoint
-  revalidation; build
+  latest broad run after wall double-leaf Gate B-ready checkpoint
+  revalidation; unchanged test/build tasks may replay through Turbo
+  cache, and build
   still emits the known non-fatal optional `sharp/@img` warnings through
   `@turbodocx/html-to-docx`.
 - **Focused calculator gate** (`pnpm calculator:gate:current`):
@@ -173,7 +176,8 @@ hardening, and the pure team-access policy model.
   Gate B bounded-matrix decision. The Gate A contract now also passes
   the broad repo typecheck after explicit callback typing and optional
   expected-field guards. Latest focused gate run after the Gate A
-  contract update: 105 engine files / 480 tests,
+  contract update and 2026-04-28 checkpoint revalidation: 105 engine
+  files / 480 tests,
   43 web files / 211 passed +
   18 skipped, build 5/5 tasks, whitespace guard clean.
 
@@ -234,9 +238,9 @@ stack changes family only when explicit stud metadata is supplied, and
 keeps lined-massive and triple-leaf shapes as negative boundaries. Gate
 B is now the next decision: build the bounded current-value/source
 tolerance matrix, or close no-runtime if the source/tolerance basis is
-not defensible. A follow-up planning reconciliation in
-[CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_HANDOFF.md)
-confirmed that Gate B is still unimplemented and should start with
+not defensible. A follow-up checkpoint revalidation in
+[CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_REVALIDATION.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_REVALIDATION.md)
+confirmed again that Gate B is still unimplemented and should start with
 `packages/engine/src/wall-double-leaf-sharp-davy-scoping-gate-b-contract.test.ts`.
 
 Do not reopen `GDMTXA04A`, `C11c`, raw bare open-box/open-web,
@@ -1042,7 +1046,7 @@ time without context loss:
 
 ## Resume Order For The Next Agent
 
-1. Read [CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_HANDOFF.md)
+1. Read [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_REVALIDATION.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_REVALIDATION.md)
    for the latest active-slice handoff.
 2. Read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md),
    [SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md](./SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md),

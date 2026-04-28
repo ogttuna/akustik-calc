@@ -7,12 +7,12 @@ focused, agent-resume friendly. For the strategic picture read
 chain read
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
 
-Last reviewed: 2026-04-27
+Last reviewed: 2026-04-28
 (`wall_double_leaf_sharp_davy_scoping_v1` Gate A landed no-runtime;
 Gate B planning reconciliation confirmed Gate B is unimplemented and
 ready for a bounded matrix or no-runtime decision; checkpoint
-revalidation fixed Gate A contract type-hygiene only and kept broad
-`pnpm check` green;
+revalidation found no implementation/plan drift and kept the focused
+gate plus broad `pnpm check` green;
 see
 `SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md`).
 
@@ -46,7 +46,7 @@ For every next slice decision:
 - **Active slice**:
   `wall_double_leaf_sharp_davy_scoping_v1`.
 - **Latest checkpoint**:
-  [CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_HANDOFF.md).
+  [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_REVALIDATION.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_REVALIDATION.md).
 - **Planning surface**:
   [SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md](./SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md).
 - **Personal-use readiness roadmap**:
@@ -80,11 +80,13 @@ For every next slice decision:
   generated proposal documents preserve real floor/wall workbench
   caveats, and many-layer / long-label report rendering is pinned.
   This did not change calculator runtime/source/confidence posture.
-- **Latest broad validation**: 2026-04-27 `pnpm check` is green after
-  the wall double-leaf Gate A checkpoint revalidation: engine
-  238 files / 1300 tests, web 155 files / 885 passed + 18 skipped through
-  `tools/dev/run-web-vitest.ts`, build 5/5, with only the known
-  non-fatal `sharp/@img` optional-package warnings.
+- **Latest broad validation**: 2026-04-28 `pnpm check` is green after
+  the wall double-leaf Gate B-ready checkpoint revalidation. The
+  unchanged broad engine/web test tasks replayed from Turbo cache using
+  the prior green run: engine 238 files / 1300 tests, web 155 files /
+  885 passed + 18 skipped through `tools/dev/run-web-vitest.ts`,
+  build 5/5, with only the known non-fatal `sharp/@img`
+  optional-package warnings.
 - **Cartography Gate A result**:
   `packages/engine/src/realistic-layer-combination-coverage-cartography.test.ts`
   landed no-runtime. It executes 29 representative floor/wall cells and
@@ -271,7 +273,7 @@ For every next slice decision:
   matrix work but blocks value movement until a source row, benchmark
   envelope, formula tolerance owner, or bounded family rule is named.
 - **Wall double-leaf Sharp/Davy Gate B-ready reconciliation**:
-  [CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_HANDOFF.md)
+  [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_REVALIDATION.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_REVALIDATION.md)
   confirms the plan is not complete: Gate A is implemented and included
   in the current gate, but no Gate B contract exists yet. The next
   implementation file is
@@ -283,6 +285,7 @@ For every next slice decision:
 order:
 
 1. Re-read
+   [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_REVALIDATION.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_REVALIDATION.md),
    [CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_HANDOFF.md),
    [CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_A_HANDOFF.md),
    [SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md](./SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md)

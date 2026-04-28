@@ -3,8 +3,8 @@
 Status: GATE A LANDED NO-RUNTIME (opened 2026-04-27 after
 `wall_single_leaf_mass_law_calibration_v1` Gate C closeout; Gate B
 bounded matrix or no-runtime closeout is next; Gate B-ready
-reconciliation confirms Gate B is still unimplemented; checkpoint
-revalidation fixed Gate A contract type-hygiene only)
+revalidation confirms Gate B is still unimplemented and the focused
+gate / broad check remain green)
 
 ## Objective
 
@@ -77,10 +77,9 @@ answer materially.
   (`R'w=52`), plus lined-massive and triple-leaf negative boundaries.
 - Gate B is not implemented yet. The next test file should be
   `packages/engine/src/wall-double-leaf-sharp-davy-scoping-gate-b-contract.test.ts`.
-- The 2026-04-27 checkpoint revalidation fixed only Gate A contract
-  strict-typecheck hygiene. Current values, formulas, source posture,
-  output support, confidence, evidence tier, and route cards are
-  unchanged.
+- The 2026-04-28 checkpoint revalidation found no implementation/plan
+  drift. Current values, formulas, source posture, output support,
+  confidence, evidence tier, and route cards are unchanged.
 
 ## Gate A - Scoping Contract
 
@@ -207,7 +206,7 @@ Expected no-runtime closeout path:
 ## Immediate Execution Order
 
 1. Read the latest Gate A checkpoint:
-   [CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_HANDOFF.md)
+   [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_REVALIDATION.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_REVALIDATION.md)
    and
    [CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_A_HANDOFF.md).
 2. Run `pnpm calculator:gate:current` as the baseline.
