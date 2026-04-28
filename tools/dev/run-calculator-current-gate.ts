@@ -155,6 +155,7 @@ async function main() {
         "src/post-wall-single-leaf-mass-law-calibration-v1-next-slice-selection-contract.test.ts",
         "src/wall-double-leaf-sharp-davy-scoping-gate-a-contract.test.ts",
         "src/wall-double-leaf-sharp-davy-scoping-gate-b-contract.test.ts",
+        "src/post-wall-double-leaf-sharp-davy-scoping-v1-next-slice-selection-contract.test.ts",
         "--maxWorkers=1"
       ]
     },

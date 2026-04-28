@@ -5,25 +5,27 @@ Start here before changing calculator behavior.
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_HANDOFF.md`
-3. `docs/calculator/CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_REVALIDATION.md`
-4. `docs/calculator/CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_HANDOFF.md`
-5. `docs/calculator/CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_A_HANDOFF.md`
-6. `docs/calculator/CURRENT_STATE.md`
-7. `docs/calculator/SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md`
-8. `docs/calculator/CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_C_CLOSEOUT_HANDOFF.md`
-9. `docs/calculator/SLICE_WALL_SINGLE_LEAF_MASS_LAW_CALIBRATION_PLAN.md`
-10. `docs/calculator/CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_B_HANDOFF.md`
-11. `docs/calculator/CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_A_HANDOFF.md`
-12. `docs/calculator/CHECKPOINT_2026-04-27_WALL_COVERAGE_EXPANSION_PLANNING_V2_GATE_A_HANDOFF.md`
-13. `docs/calculator/SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md`
-14. `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md`
-15. `docs/calculator/SOURCE_GAP_LEDGER.md`
-16. `docs/calculator/CALCULATION_MODEL_AND_VALIDATION.md`
-17. `docs/calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md`
-18. `docs/calculator/SLICE_PROPOSAL_REPORT_POLISH_PLAN.md`
-19. `docs/calculator/POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md`
-20. `docs/calculator/PERSONAL_USE_READINESS_ROADMAP.md`
+2. `docs/calculator/CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_C_CLOSEOUT_HANDOFF.md`
+3. `docs/calculator/SLICE_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_ACQUISITION_PLAN.md`
+4. `docs/calculator/CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_HANDOFF.md`
+5. `docs/calculator/CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_REVALIDATION.md`
+6. `docs/calculator/CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_HANDOFF.md`
+7. `docs/calculator/CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_A_HANDOFF.md`
+8. `docs/calculator/CURRENT_STATE.md`
+9. `docs/calculator/SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md`
+10. `docs/calculator/CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_C_CLOSEOUT_HANDOFF.md`
+11. `docs/calculator/SLICE_WALL_SINGLE_LEAF_MASS_LAW_CALIBRATION_PLAN.md`
+12. `docs/calculator/CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_B_HANDOFF.md`
+13. `docs/calculator/CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_A_HANDOFF.md`
+14. `docs/calculator/CHECKPOINT_2026-04-27_WALL_COVERAGE_EXPANSION_PLANNING_V2_GATE_A_HANDOFF.md`
+15. `docs/calculator/SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md`
+16. `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md`
+17. `docs/calculator/SOURCE_GAP_LEDGER.md`
+18. `docs/calculator/CALCULATION_MODEL_AND_VALIDATION.md`
+19. `docs/calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md`
+20. `docs/calculator/SLICE_PROPOSAL_REPORT_POLISH_PLAN.md`
+21. `docs/calculator/POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md`
+22. `docs/calculator/PERSONAL_USE_READINESS_ROADMAP.md`
 
 Use the long-form plan files only for backlog context after reading the current
 plan.
@@ -31,17 +33,17 @@ plan.
 ## Current Workflow
 
 - current selected slice:
-  `wall_double_leaf_sharp_davy_scoping_v1`
+  `wall_double_leaf_source_evidence_acquisition_v1`
 - current first decision inside the slice:
-  Gate B of `wall_double_leaf_sharp_davy_scoping_v1` landed no-runtime.
-  It pins current values for empty double-leaf (`R'w=46`), porous
-  double-leaf (`R'w=41`), explicit single-stud (`R'w=37`), and explicit
-  double-stud (`R'w=52`) routes, proves no exact/lab-fallback source row
-  exists for those candidates, and blocks runtime movement because no
-  benchmark envelope, formula tolerance owner, or bounded family rule is
-  present. Start by adding
-  `packages/engine/src/post-wall-double-leaf-sharp-davy-scoping-v1-next-slice-selection-contract.test.ts`
-  to close the slice no-runtime and select the next roadmap candidate.
+  Gate C of `wall_double_leaf_sharp_davy_scoping_v1` landed no-runtime
+  and selected `wall_double_leaf_source_evidence_acquisition_v1`. Start
+  by adding
+  `packages/engine/src/wall-double-leaf-source-evidence-acquisition-gate-a-contract.test.ts`
+  as a no-runtime source/tolerance inventory for empty double-leaf,
+  porous double-leaf, single-stud, and double-stud / split-cavity wall
+  assemblies. Do not move runtime values unless a later contract names a
+  direct source row, benchmark envelope, formula tolerance owner, or
+  bounded family rule.
 - personal-use readiness chain:
   closed. Heavy-core/concrete remains screening; timber stud + CLT wall
   remain formula/source-gated until new source evidence appears; floor
@@ -54,17 +56,17 @@ plan.
 - if a slice closes, update the current plan, current state, and the relevant
   checkpoint/handoff note together
 - keep planning-contract tests in sync with the selected next slice
-- `wall_double_leaf_sharp_davy_scoping_v1` remains selected. Gate C
-  must use the landed Gate A inventory and Gate B source/tolerance
-  matrix to close no-runtime, then choose the next calculator roadmap
-  candidate explicitly.
+- `wall_double_leaf_source_evidence_acquisition_v1` remains selected.
+  Gate A must classify source/tolerance candidates first and close
+  no-runtime unless evidence is specific enough for a bounded import or
+  retune slice.
 
 ## Validation
 
 - run `pnpm calculator:gate:current` before and after touching the active
   selected slice
 - use `pnpm check` only when you need the broad full-repo gate
-- latest focused validation: engine 106 files / 485 tests, web
+- latest focused validation: engine 107 files / 490 tests, web
   43 files / 211 passed + 18 skipped, build 5/5 with the known
   non-fatal `sharp/@img` warnings, whitespace guard clean
 - latest broad validation: `pnpm check` green on 2026-04-28; engine/web

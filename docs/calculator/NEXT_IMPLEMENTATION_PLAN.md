@@ -8,12 +8,12 @@ chain read
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
 
 Last reviewed: 2026-04-28
-(`wall_double_leaf_sharp_davy_scoping_v1` Gate B landed no-runtime;
-the bounded current-value/source-tolerance matrix blocks runtime
-movement without source/tolerance evidence; Gate C no-runtime closeout /
-next-slice selection is next;
+(`wall_double_leaf_sharp_davy_scoping_v1` Gate C closed no-runtime;
+`wall_double_leaf_source_evidence_acquisition_v1` is selected to
+classify source/tolerance evidence before any double-leaf or stud-cavity
+runtime movement;
 see
-`SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md`).
+`SLICE_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_ACQUISITION_PLAN.md`).
 
 ---
 
@@ -43,11 +43,11 @@ For every next slice decision:
 ## Now
 
 - **Active slice**:
-  `wall_double_leaf_sharp_davy_scoping_v1`.
+  `wall_double_leaf_source_evidence_acquisition_v1`.
 - **Latest checkpoint**:
-  [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_HANDOFF.md).
+  [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_C_CLOSEOUT_HANDOFF.md).
 - **Planning surface**:
-  [SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md](./SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md).
+  [SLICE_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_ACQUISITION_PLAN.md](./SLICE_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_ACQUISITION_PLAN.md).
 - **Personal-use readiness roadmap**:
   [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
   is closed for the current private/internal-use bar. Heavy-core/concrete
@@ -81,8 +81,14 @@ For every next slice decision:
   decisions for each. Gate B changed no runtime math and blocks value
   movement because no direct source row, lab-fallback row, benchmark
   envelope, formula tolerance owner, or bounded family rule exists.
+- **Just closed**: `wall_double_leaf_sharp_davy_scoping_v1` Gate C.
+  `packages/engine/src/post-wall-double-leaf-sharp-davy-scoping-v1-next-slice-selection-contract.test.ts`
+  closes the slice no-runtime and selects
+  `wall_double_leaf_source_evidence_acquisition_v1`. Runtime remains
+  frozen; the next slice must classify direct rows, family benchmarks,
+  and formula tolerance references before any retune or import.
   The next implementation file is
-  `packages/engine/src/post-wall-double-leaf-sharp-davy-scoping-v1-next-slice-selection-contract.test.ts`.
+  `packages/engine/src/wall-double-leaf-source-evidence-acquisition-gate-a-contract.test.ts`.
 - **Previously closed**: `proposal_report_polish_v1`.
   Simple PDF/DOCX exports now include output coverage posture,
   generated proposal documents preserve real floor/wall workbench
@@ -291,28 +297,38 @@ For every next slice decision:
   `pnpm calculator:gate:current` is green after adding the Gate B
   contract: engine 106 files / 485 tests, web 43 files / 211 passed +
   18 skipped, build 5/5 with the known non-fatal `sharp/@img` warnings.
+- **Wall double-leaf Sharp/Davy Gate C**:
+  `packages/engine/src/post-wall-double-leaf-sharp-davy-scoping-v1-next-slice-selection-contract.test.ts`
+  closes the slice no-runtime and selects
+  `wall_double_leaf_source_evidence_acquisition_v1`. No value/support/
+  confidence/evidence/card behavior changed; source-evidence acquisition
+  is selected because Gate B named specific source/tolerance blockers.
+  `pnpm calculator:gate:current` is green after adding the Gate C
+  contract: engine 107 files / 490 tests, web 43 files / 211 passed +
+  18 skipped, build 5/5 with the known non-fatal `sharp/@img` warnings.
 
 ## Immediate Execution Order
 
-`wall_double_leaf_sharp_davy_scoping_v1` should now proceed in this
+`wall_double_leaf_source_evidence_acquisition_v1` should now proceed in this
 order:
 
 1. Re-read
-   [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_HANDOFF.md),
-   [SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md](./SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md)
+   [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_C_CLOSEOUT_HANDOFF.md),
+   [SLICE_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_ACQUISITION_PLAN.md](./SLICE_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_ACQUISITION_PLAN.md)
    and the current-state active-slice section.
 2. Run `pnpm calculator:gate:current` as the baseline.
 3. Add
-   `packages/engine/src/post-wall-double-leaf-sharp-davy-scoping-v1-next-slice-selection-contract.test.ts`.
-4. Close `wall_double_leaf_sharp_davy_scoping_v1` no-runtime, preserving
-   the Gate A/Gate B current values and source posture.
-5. Do not add web route-card work unless Gate C changes visible values,
-   support, confidence, evidence text, or missing-input copy.
-6. Reconcile `MASTER_PLAN.md`, `CURRENT_STATE.md`,
-   `NEXT_IMPLEMENTATION_PLAN.md`, and `SOURCE_GAP_LEDGER.md` before
-   naming the next roadmap candidate.
-7. Add the Gate C test to `tools/dev/run-calculator-current-gate.ts`.
-8. Validate with the targeted Gate C test,
+   `packages/engine/src/wall-double-leaf-source-evidence-acquisition-gate-a-contract.test.ts`.
+4. Inventory local docs/tests first for double-leaf, single-stud,
+   double-stud, cavity, fill, stud, and coupling evidence.
+5. If local evidence is insufficient, research external sources with
+   links and classify each candidate as `accept`, `bounded`, or
+   `reject`.
+6. Keep runtime values frozen unless a later Gate B names a direct row,
+   benchmark envelope, formula tolerance owner, or bounded family rule.
+7. Add the Gate A source/tolerance inventory test to
+   `tools/dev/run-calculator-current-gate.ts`.
+8. Validate with the targeted Gate A test,
    `pnpm calculator:gate:current`, and `git diff --check`.
 
 ## Personal-Use Readiness Chain
@@ -327,16 +343,16 @@ private day-to-day use:
 
 Productization route-policy and proposal/report polish slices are
 closed. Calculator runtime/source posture stays frozen during the
-selected double-leaf Gate C closeout because Gate B found no
-source/tolerance basis for movement; additional productization work is
-deferred.
+selected double-leaf source-evidence acquisition slice until evidence
+is classified by an executable contract; additional productization work
+is deferred.
 
 ## Latest Closed Slices
 
 See [CURRENT_STATE.md](./CURRENT_STATE.md) "Latest Closed Slices" table.
-`wall_double_leaf_sharp_davy_scoping_v1` Gate B is now landed
-no-runtime and Gate C closeout / next-slice selection is the next
-decision point.
+`wall_double_leaf_sharp_davy_scoping_v1` Gate C is now closed
+no-runtime and `wall_double_leaf_source_evidence_acquisition_v1` Gate A
+is the next decision point.
 
 ## Deferred Follow-Up Tracks
 

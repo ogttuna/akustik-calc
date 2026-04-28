@@ -18,12 +18,12 @@ fix the drift before starting work.
    — tactical detail for the active slice.
 4. [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
    — closed calculator-only chain for private/internal-use readiness.
-5. [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_HANDOFF.md)
-   — latest active-slice handoff: Gate B landed no-runtime and Gate C
-   closeout / next-slice selection is next.
-6. [SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md](./SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md)
-   — active calculator slice plan for double-leaf / stud-cavity wall
-   Sharp/Davy scoping.
+5. [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_C_CLOSEOUT_HANDOFF.md)
+   — latest active-slice handoff: double-leaf Sharp/Davy scoping
+   closed no-runtime and selected source-evidence acquisition.
+6. [SLICE_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_ACQUISITION_PLAN.md](./SLICE_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_ACQUISITION_PLAN.md)
+   — active calculator slice plan for double-leaf / stud-cavity source
+   and tolerance evidence acquisition.
 
 Then run `pnpm calculator:gate:current` to confirm the green
 baseline.
@@ -34,9 +34,15 @@ baseline.
   — productization closeout: server-backed project storage v1 closed.
 - [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
   — closed calculator readiness chain and private/internal-use caveats.
+- [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_C_CLOSEOUT_HANDOFF.md)
+  — latest calculator handoff: Gate C closed double-leaf Sharp/Davy
+  scoping no-runtime and selected source-evidence acquisition.
+- [SLICE_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_ACQUISITION_PLAN.md](./SLICE_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_ACQUISITION_PLAN.md)
+  — active implementation plan: source/tolerance evidence must be
+  classified before any double-leaf or stud-cavity runtime value moves.
 - [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_HANDOFF.md)
-  — latest calculator handoff: Gate B landed no-runtime, the current
-  values are pinned, and Gate C closeout / next-slice selection is next.
+  — prior calculator handoff: Gate B landed no-runtime and pinned the
+  current formula-owned double-leaf / stud-cavity values.
 - [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_REVALIDATION.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_REVALIDATION.md)
   — prior calculator handoff: Gate B was still unimplemented, the plan
   still matched implementation, and validation was green.
@@ -47,8 +53,8 @@ baseline.
   — active slice evidence: current double-leaf, single-stud, and
   double-stud values are pinned with negative boundaries.
 - [SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md](./SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md)
-  — active implementation plan: Gate B should add the bounded
-  current-value/source-tolerance matrix before any runtime movement.
+  — closed implementation plan: Gate A and Gate B pinned the current
+  double-leaf/stud posture, then Gate C closed no-runtime.
 - [CHECKPOINT_2026-04-27_CALCULATOR_SOURCE_GAP_REVALIDATION_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_CALCULATOR_SOURCE_GAP_REVALIDATION_GATE_A_HANDOFF.md)
   — prior handoff: source-gap revalidation Gate A closed no-runtime
   and selected wall coverage planning v2.

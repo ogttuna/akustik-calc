@@ -223,19 +223,19 @@ families remain blocked until new evidence is deliberately imported.
 
 Next selected work:
 
-1. `wall_double_leaf_sharp_davy_scoping_v1` Gate C no-runtime closeout
-   / next-slice selection.
+1. `wall_double_leaf_source_evidence_acquisition_v1` Gate A source /
+   tolerance inventory.
 
 `calculator_source_gap_revalidation_v1` Gate A and
 `wall_coverage_expansion_planning_v2` Gate A are closed no-runtime.
 `wall_single_leaf_mass_law_calibration_v1` also closed no-runtime at
 Gate C: current generic concrete, solid-brick, and AAC values stay
 formula-owned estimates until a stack-specific source row or bounded
-tolerance pack exists. `wall_double_leaf_sharp_davy_scoping_v1` Gate B
-has now landed no-runtime: empty double-leaf, porous double-leaf,
+tolerance pack exists. `wall_double_leaf_sharp_davy_scoping_v1` Gate C
+has now closed no-runtime: empty double-leaf, porous double-leaf,
 explicit single-stud, and explicit double-stud values are pinned as
 current behavior, while lined-massive and triple-leaf shapes remain
 negative boundaries. Calculator runtime/source posture should remain
-frozen during Gate C because Gate B found no source-backed,
+frozen during the selected source-evidence slice until a source-backed,
 benchmark-backed, formula-tolerance-owned, or bounded family wall
-candidate for runtime movement.
+candidate is classified by an executable contract.
