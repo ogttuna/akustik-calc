@@ -1,7 +1,9 @@
 # Slice Plan - Wall Double-Leaf Source Evidence Acquisition v1
 
-Status: SELECTED (selected by `wall_double_leaf_sharp_davy_scoping_v1`
-Gate C closeout; no runtime movement is authorized yet)
+Status: GATE A LANDED NO-RUNTIME (selected by
+`wall_double_leaf_sharp_davy_scoping_v1` Gate C closeout; Gate A
+classified source/tolerance candidates and authorized only a bounded
+Gate B reconciliation decision, not runtime value movement)
 
 ## Objective
 
@@ -50,6 +52,8 @@ The selected source-evidence slice starts from:
 - `packages/engine/src/wall-double-leaf-sharp-davy-scoping-gate-a-contract.test.ts`
 - `packages/engine/src/wall-double-leaf-sharp-davy-scoping-gate-b-contract.test.ts`
 - `packages/engine/src/post-wall-double-leaf-sharp-davy-scoping-v1-next-slice-selection-contract.test.ts`
+- `packages/engine/src/wall-double-leaf-source-evidence-acquisition-gate-a-contract.test.ts`
+- `docs/calculator/CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_A_HANDOFF.md`
 - `docs/calculator/CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_C_CLOSEOUT_HANDOFF.md`
 - `docs/calculator/SOURCE_GAP_LEDGER.md`
 - `docs/foundation/SOURCE_REPO_POLICY.md`
@@ -65,7 +69,9 @@ Preserved current field values:
 
 ## Gate A - Source / Tolerance Inventory
 
-Gate A should be no-runtime. It should create an executable inventory
+Gate A landed no-runtime in
+`packages/engine/src/wall-double-leaf-source-evidence-acquisition-gate-a-contract.test.ts`.
+It created an executable inventory
 contract that classifies candidate evidence for:
 
 1. empty-cavity double-leaf walls;
@@ -85,6 +91,17 @@ Required source fields for each candidate:
 - declared tolerance or benchmark-fit threshold;
 - import decision: `accept`, `bounded`, or `reject`.
 
+Gate A result:
+
+| Candidate | Decision | Why |
+|---|---|---|
+| Empty AAC / air-gap / gypsum double-leaf | `reject` | no direct stack row, no benchmark tolerance, no field/lab transfer rule |
+| No-stud porous gypsum / wool / air-gap / gypsum double-leaf | `reject` | framed mineral-wool sources are adjacent only because the live case lacks stud/coupling metadata |
+| Knauf W111 single-stud framed wall context | `bounded` | local benchmark corpus names W111 Rw / DnT,A,k rows and tolerances, but Gate B must reconcile metric choice and route-card impact before any value movement |
+| Knauf W115 double-stud / split-cavity context | `bounded` | local benchmark corpus names W115 Rw / DnT,A,k rows and tolerances for the matching family, but Gate B must prove whether current lab/field values already satisfy the row |
+| Knauf Quietstud and Davy / stud-type references | `bounded` context only | useful formula/fill/stud-type corridor evidence, not direct generic runtime imports |
+| Exact catalog, resilient side-count, timber, single-leaf, lined-massive, heavy-core, CLT, direct-coupled, triple-leaf | `reject` boundary | protected from this import lane |
+
 ## Acceptance Rules
 
 A future runtime/import Gate B may only proceed when Gate A finds one of:
@@ -103,24 +120,30 @@ and select a no-runtime closeout.
 ## Expected Tests
 
 - `packages/engine/src/wall-double-leaf-source-evidence-acquisition-gate-a-contract.test.ts`
-  for the source/tolerance candidate matrix.
-- If Gate A finds a runtime-eligible source, a later Gate B must add
+  now pins the source/tolerance candidate matrix.
+- Gate B must add
   value tests and paired web route-card tests before changing visible
   values, support, confidence, evidence text, or missing-input copy.
-- If Gate A finds no runtime-eligible source, close no-runtime and keep
-  the source-gap ledger updated.
+- If Gate B finds the bounded Knauf framed rows already match current
+  lab/field posture or do not map cleanly, close no-runtime and keep the
+  source-gap ledger updated.
 
 ## Immediate Execution Order
 
 1. Read
-   [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_C_CLOSEOUT_HANDOFF.md).
+   [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_A_HANDOFF.md).
 2. Run `pnpm calculator:gate:current` as the baseline.
-3. Search local docs/tests first for existing double-leaf, stud, and
-   cavity evidence.
-4. If local evidence is insufficient, use internet research with source
-   links and classify sources conservatively.
-5. Add the Gate A source/tolerance inventory contract.
-6. Update `SOURCE_GAP_LEDGER.md`, `NEXT_IMPLEMENTATION_PLAN.md`,
-   `CURRENT_STATE.md`, and this plan with accepted/rejected candidates.
-7. Validate with the targeted Gate A test, `pnpm calculator:gate:current`,
+3. Start Gate B as a no-runtime reconciliation contract for the bounded
+   Knauf W111 / W112 / W115 / W119 framed-wall rows already present in
+   `packages/engine/src/airborne-framed-wall-benchmark.test.ts` and
+   `packages/engine/src/airborne-verified-catalog.ts`.
+4. Explicitly prove whether the current single-stud and double-stud
+   lab/field values already satisfy the bounded rows. If not, name the
+   exact runtime movement, metric owner, and tolerances before changing
+   values.
+5. Keep empty/no-stud double-leaf rows frozen unless a new direct source
+   row or formula tolerance owner is added.
+6. Add paired web route-card tests before any visible value, support,
+   confidence, evidence, or missing-input text changes.
+7. Validate with the targeted Gate B test, `pnpm calculator:gate:current`,
    and `git diff --check`.

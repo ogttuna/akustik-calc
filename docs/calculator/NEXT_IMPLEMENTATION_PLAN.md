@@ -8,10 +8,10 @@ chain read
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
 
 Last reviewed: 2026-04-28
-(`wall_double_leaf_sharp_davy_scoping_v1` Gate C closed no-runtime;
-`wall_double_leaf_source_evidence_acquisition_v1` is selected to
-classify source/tolerance evidence before any double-leaf or stud-cavity
-runtime movement;
+(`wall_double_leaf_source_evidence_acquisition_v1` Gate A landed
+no-runtime; bounded Knauf framed-wall evidence is now classified for
+Gate B reconciliation before any double-leaf or stud-cavity runtime
+movement;
 see
 `SLICE_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_ACQUISITION_PLAN.md`).
 
@@ -45,7 +45,7 @@ For every next slice decision:
 - **Active slice**:
   `wall_double_leaf_source_evidence_acquisition_v1`.
 - **Latest checkpoint**:
-  [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_C_CLOSEOUT_HANDOFF.md).
+  [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_A_HANDOFF.md).
 - **Planning surface**:
   [SLICE_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_ACQUISITION_PLAN.md](./SLICE_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_ACQUISITION_PLAN.md).
 - **Personal-use readiness roadmap**:
@@ -306,6 +306,19 @@ For every next slice decision:
   `pnpm calculator:gate:current` is green after adding the Gate C
   contract: engine 107 files / 490 tests, web 43 files / 211 passed +
   18 skipped, build 5/5 with the known non-fatal `sharp/@img` warnings.
+- **Wall double-leaf source evidence Gate A**:
+  `packages/engine/src/wall-double-leaf-source-evidence-acquisition-gate-a-contract.test.ts`
+  lands no-runtime source/tolerance classification. It rejects the
+  generic empty AAC/gap/gypsum double-leaf and no-stud porous
+  gypsum/wool/gap/gypsum double-leaf rows for runtime movement, because
+  no direct stack row or topology-specific tolerance exists. It classifies
+  Knauf W111 single-stud and W115 double-stud / split-cavity rows as
+  bounded framed-wall evidence for Gate B reconciliation, while keeping
+  Knauf Quietstud, Davy double-leaf formula, and stud-type study
+  references as corridor context only. Exact catalog, resilient
+  side-count, timber, single-leaf, lined-massive, heavy-core, CLT,
+  direct-coupled, and triple-leaf boundaries stay protected.
+  Targeted Gate A validation is green: 1 file / 6 tests.
 
 ## Immediate Execution Order
 
@@ -313,22 +326,23 @@ For every next slice decision:
 order:
 
 1. Re-read
-   [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_C_CLOSEOUT_HANDOFF.md),
+   [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_A_HANDOFF.md),
    [SLICE_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_ACQUISITION_PLAN.md](./SLICE_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_ACQUISITION_PLAN.md)
    and the current-state active-slice section.
 2. Run `pnpm calculator:gate:current` as the baseline.
-3. Add
-   `packages/engine/src/wall-double-leaf-source-evidence-acquisition-gate-a-contract.test.ts`.
-4. Inventory local docs/tests first for double-leaf, single-stud,
-   double-stud, cavity, fill, stud, and coupling evidence.
-5. If local evidence is insufficient, research external sources with
-   links and classify each candidate as `accept`, `bounded`, or
-   `reject`.
-6. Keep runtime values frozen unless a later Gate B names a direct row,
-   benchmark envelope, formula tolerance owner, or bounded family rule.
-7. Add the Gate A source/tolerance inventory test to
-   `tools/dev/run-calculator-current-gate.ts`.
-8. Validate with the targeted Gate A test,
+3. Add a Gate B no-runtime reconciliation contract that compares the
+   bounded Knauf W111 / W112 / W115 / W119 framed-wall evidence against
+   current single-stud and double-stud lab/field outputs.
+4. If every bounded row already fits current behavior or cannot map
+   cleanly to a generic material lane, close no-runtime.
+5. If a bounded runtime movement is needed, name the exact source row,
+   metric owner, tolerance, and protected-boundary exclusions before
+   changing runtime values.
+6. Keep empty/no-stud double-leaf values frozen until a direct row or
+   formula tolerance owner exists.
+7. Add paired web route-card tests before changing visible support,
+   confidence, evidence text, output values, or missing-input copy.
+8. Validate with the targeted Gate B test,
    `pnpm calculator:gate:current`, and `git diff --check`.
 
 ## Personal-Use Readiness Chain
@@ -350,9 +364,9 @@ is deferred.
 ## Latest Closed Slices
 
 See [CURRENT_STATE.md](./CURRENT_STATE.md) "Latest Closed Slices" table.
-`wall_double_leaf_sharp_davy_scoping_v1` Gate C is now closed
-no-runtime and `wall_double_leaf_source_evidence_acquisition_v1` Gate A
-is the next decision point.
+`wall_double_leaf_source_evidence_acquisition_v1` Gate A is now landed
+no-runtime and Gate B bounded framed-wall reconciliation is the next
+decision point.
 
 ## Deferred Follow-Up Tracks
 

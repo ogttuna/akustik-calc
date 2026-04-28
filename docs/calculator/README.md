@@ -18,9 +18,9 @@ fix the drift before starting work.
    — tactical detail for the active slice.
 4. [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
    — closed calculator-only chain for private/internal-use readiness.
-5. [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_C_CLOSEOUT_HANDOFF.md)
-   — latest active-slice handoff: double-leaf Sharp/Davy scoping
-   closed no-runtime and selected source-evidence acquisition.
+5. [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_A_HANDOFF.md)
+   — latest active-slice handoff: source-evidence Gate A landed
+   no-runtime and selected bounded framed-wall Gate B reconciliation.
 6. [SLICE_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_ACQUISITION_PLAN.md](./SLICE_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_ACQUISITION_PLAN.md)
    — active calculator slice plan for double-leaf / stud-cavity source
    and tolerance evidence acquisition.
@@ -34,12 +34,15 @@ baseline.
   — productization closeout: server-backed project storage v1 closed.
 - [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
   — closed calculator readiness chain and private/internal-use caveats.
-- [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_C_CLOSEOUT_HANDOFF.md)
-  — latest calculator handoff: Gate C closed double-leaf Sharp/Davy
-  scoping no-runtime and selected source-evidence acquisition.
+- [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_A_HANDOFF.md)
+  — latest calculator handoff: Gate A classified source/tolerance
+  candidates and bounded Knauf framed-wall reconciliation is next.
 - [SLICE_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_ACQUISITION_PLAN.md](./SLICE_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_ACQUISITION_PLAN.md)
-  — active implementation plan: source/tolerance evidence must be
-  classified before any double-leaf or stud-cavity runtime value moves.
+  — active implementation plan: Gate A is landed; Gate B must reconcile
+  bounded framed rows or close no-runtime before any value moves.
+- [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_C_CLOSEOUT_HANDOFF.md)
+  — prior calculator handoff: Gate C closed double-leaf Sharp/Davy
+  scoping no-runtime and selected source-evidence acquisition.
 - [CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_HANDOFF.md)
   — prior calculator handoff: Gate B landed no-runtime and pinned the
   current formula-owned double-leaf / stud-cavity values.

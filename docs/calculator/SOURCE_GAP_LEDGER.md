@@ -1,9 +1,10 @@
 # Dynamic Calculator Source Gap Ledger
 
-Last reviewed: 2026-04-28 (`wall_double_leaf_sharp_davy_scoping_v1`
-Gate C closed no-runtime; `wall_double_leaf_source_evidence_acquisition_v1`
-is selected; source-gap content remains floor-dominant historical
-context)
+Last reviewed: 2026-04-28
+(`wall_double_leaf_source_evidence_acquisition_v1` Gate A landed
+no-runtime; bounded framed-wall source evidence is now classified for
+Gate B reconciliation; source-gap content remains floor-dominant
+historical context)
 
 Purpose:
 
@@ -55,10 +56,14 @@ Important scope note:
   closed no-runtime at Gate C because generic single-leaf runtime
   movement needs stack-specific source rows or bounded tolerance packs.
   The active wall work is now
-  `wall_double_leaf_source_evidence_acquisition_v1`. The previous
-  double-leaf Sharp/Davy scoping slice closed no-runtime at Gate C and
-  selected a dedicated wall source/tolerance inventory rather than
-  overloading this floor-dominant ledger.
+  `wall_double_leaf_source_evidence_acquisition_v1`. Gate A landed
+  no-runtime and classified local/external wall evidence without moving
+  values: generic empty double-leaf and no-stud porous double-leaf rows
+  remain source-blocked; Knauf W111 single-stud and W115 double-stud /
+  split-cavity rows are bounded framed-wall reconciliation candidates;
+  Knauf Quietstud, Davy double-leaf, and stud-type literature remain
+  corridor context only. The dedicated wall plan owns the next Gate B
+  decision rather than overloading this floor-dominant ledger.
 - `good_calculator_final_audit_v1` closed without reopening any
   source-gated calculator family. `wall_formula_family_widening_v1`
   then also closed without reopening any blocked family: it clarified

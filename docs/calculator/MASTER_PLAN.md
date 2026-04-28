@@ -1,10 +1,11 @@
 # Calculator Master Plan
 
-Last reviewed: 2026-04-27
+Last reviewed: 2026-04-28
 (`wall_coverage_expansion_planning_v2` Gate A closed no-runtime;
 `wall_single_leaf_mass_law_calibration_v1` Gate C closed no-runtime;
 `wall_double_leaf_sharp_davy_scoping_v1` Gate C closed no-runtime;
-`wall_double_leaf_source_evidence_acquisition_v1` selected)
+`wall_double_leaf_source_evidence_acquisition_v1` Gate A landed
+no-runtime)
 Iteration: 2 (rewritten with implementation state grid, accuracy
 preservation contract, ROI table, quantitative completion targets)
 
@@ -27,10 +28,12 @@ Private-use calculator readiness is tracked separately in
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
 That chain is closed for the current private/internal-use bar. The next
 selected calculator work is
-`wall_double_leaf_source_evidence_acquisition_v1` Gate A. Gate B of
-the previous slice found no source-backed, benchmark-backed,
-formula-tolerance-owned, or bounded family double-leaf/stud candidate,
-so runtime/source posture remains frozen until evidence is classified.
+`wall_double_leaf_source_evidence_acquisition_v1` Gate B. Gate A
+classified Knauf W111/W115 framed-wall rows as bounded reconciliation
+evidence, rejected generic empty/no-stud double-leaf runtime movement,
+and kept Davy / stud-type literature as corridor context. Runtime/source
+posture remains frozen until Gate B names a source row, metric owner,
+tolerance, and paired route-card tests, or closes no-runtime.
 
 ---
 
@@ -670,6 +673,13 @@ the doc-drift problem documented in `SYSTEM_AUDIT_2026-04-20.md`.
   `wall_double_leaf_source_evidence_acquisition_v1`. The next step is a
   source/tolerance inventory for common double-leaf, single-stud, and
   double-stud wall assemblies before any runtime value movement.
+- **2026-04-28 update**: `wall_double_leaf_source_evidence_acquisition_v1`
+  Gate A landed no-runtime. It rejects generic empty/no-stud double-leaf
+  movement, classifies Knauf W111 single-stud and W115 double-stud rows
+  as bounded framed-wall reconciliation evidence, and keeps Quietstud,
+  Davy, stud-type, exact/catalog, timber, single-leaf, CLT, and
+  triple-leaf contexts out of immediate runtime import. Gate B must
+  reconcile those bounded rows or close no-runtime.
 - **2026-04-24 update**: floor continuation, floor many-layer, floor
   layer-order, and all-caller invalid-thickness audits closed
   no-runtime; engine thickness validity moved out of partial, and
