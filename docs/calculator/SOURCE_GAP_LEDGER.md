@@ -44,7 +44,13 @@ no-runtime because Knauf UK/AU wall-system locators are concrete enough
 for extraction but not import; Knauf Gate A then extracted locator rows
 no-runtime and selected Gate B mapping/tolerance decision; Knauf Gate B
 then landed no-runtime, blocked every locator row from runtime import
-and visible promotion, and selected Gate C closeout;
+and visible promotion, and selected Gate C closeout; Knauf Gate C then
+closed no-runtime and selected `calculator_source_gap_revalidation_v5`
+with
+`closed_knauf_wall_systems_source_pack_no_runtime_and_selected_source_gap_revalidation_v5_because_gate_b_found_no_import_ready_row`;
+Gate B status
+`no_knauf_locator_row_has_complete_topology_metric_tolerance_and_visible_test_ownership`
+remains the Knauf row-import blocker;
 source-gap content remains floor-dominant historical context)
 
 Purpose:
@@ -180,7 +186,10 @@ Important scope note:
   masonry rows all remain blocked until topology / material mapping /
   metric policy / tolerance / visible-test ownership is complete; the
   one-side-lined timber row remains a negative boundary; staggered
-  timber and AAC rows remain adjacent context. This ledger still keeps
+  timber and AAC rows remain adjacent context. Knauf Gate C then closed
+  no-runtime and selected
+  `packages/engine/src/calculator-source-gap-revalidation-v5-gate-a-contract.test.ts`
+  for a fresh source/accuracy rerank after the Knauf closeout. This ledger still keeps
   all historical blocked families fail-closed and remains historical /
   floor-dominant context.
 - `good_calculator_final_audit_v1` closed without reopening any

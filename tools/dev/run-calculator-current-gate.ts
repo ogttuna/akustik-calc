@@ -196,6 +196,7 @@ async function main() {
         "src/calculator-source-gap-revalidation-v4-gate-a-contract.test.ts",
         "src/knauf-wall-systems-source-pack-extraction-gate-a-contract.test.ts",
         "src/knauf-wall-systems-source-pack-extraction-gate-b-contract.test.ts",
+        "src/post-knauf-wall-systems-source-pack-extraction-v1-next-slice-selection-contract.test.ts",
         "--maxWorkers=1"
       ]
     },

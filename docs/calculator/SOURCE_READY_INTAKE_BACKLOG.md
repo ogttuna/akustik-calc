@@ -9,7 +9,8 @@ generated-floor Gate C closed no-runtime; refreshed again after
 source extraction slice; refreshed after Knauf Gate A extracted source
 locators and selected Gate B mapping/tolerance decision; refreshed
 after Knauf Gate B blocked every extracted row from runtime import and
-selected Gate C closeout.
+selected Gate C closeout; refreshed after Knauf Gate C closed
+no-runtime and selected `calculator_source_gap_revalidation_v5`.
 
 Last reviewed: 2026-04-29.
 
@@ -176,6 +177,30 @@ Metric result: source lab `Rw` is a named metric context only; `Rw+Ctr`
 is not a standalone DynEcho `C` / `Ctr` / `STC` or field-output policy;
 none of the rows supplies field/building `R'w`, `Dn,w`, `DnT,w`, or
 `DnT,A` ownership.
+
+## Knauf Wall Systems Source Pack Extraction Gate C
+
+`knauf_wall_systems_source_pack_extraction_v1` Gate C closes
+no-runtime in:
+
+`packages/engine/src/post-knauf-wall-systems-source-pack-extraction-v1-next-slice-selection-contract.test.ts`
+
+Next selected slice:
+
+`calculator_source_gap_revalidation_v5`
+
+Next selected file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v5-gate-a-contract.test.ts`
+
+Gate C selection status:
+
+`closed_knauf_wall_systems_source_pack_no_runtime_and_selected_source_gap_revalidation_v5_because_gate_b_found_no_import_ready_row`
+
+Reason: Gate B found no locator row with complete topology, metric,
+tolerance, material mapping, and visible-test ownership. The Knauf
+rows remain backlog inputs, not runtime imports. The next bounded
+action is source/accuracy revalidation after the Knauf closeout.
 
 ## Source Verification Notes
 
@@ -392,9 +417,9 @@ is consolidation and explicit cross-linking, not removal.
 
 ## Immediate Next Steps
 
-1. Implement `knauf_wall_systems_source_pack_extraction_v1` Gate C:
-   `packages/engine/src/post-knauf-wall-systems-source-pack-extraction-v1-next-slice-selection-contract.test.ts`.
-2. Treat Gate B as authoritative: no extracted Knauf candidate has
+1. Implement `calculator_source_gap_revalidation_v5` Gate A:
+   `packages/engine/src/calculator-source-gap-revalidation-v5-gate-a-contract.test.ts`.
+2. Treat Knauf Gate B and Gate C as authoritative: no extracted Knauf candidate has
    complete exact topology, metric context, tolerance ownership, local
    material mapping, and visible-test ownership.
 3. Select a runtime accuracy slice only if a later gate names exact topology,

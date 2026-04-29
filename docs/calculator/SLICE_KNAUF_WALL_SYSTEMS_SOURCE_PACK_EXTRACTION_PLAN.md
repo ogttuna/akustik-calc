@@ -2,16 +2,35 @@
 
 Slice id: `knauf_wall_systems_source_pack_extraction_v1`
 
-Status: GATE B LANDED / GATE C NEXT (selected 2026-04-29 by
+Status: GATE C CLOSED / SELECTED `calculator_source_gap_revalidation_v5`
+(selected 2026-04-29 by
 `calculator-source-gap-revalidation-v4-gate-a-contract.test.ts`; Gate A
 landed 2026-04-29 by
 `knauf-wall-systems-source-pack-extraction-gate-a-contract.test.ts`;
 Gate B landed 2026-04-29 by
-`knauf-wall-systems-source-pack-extraction-gate-b-contract.test.ts`).
+`knauf-wall-systems-source-pack-extraction-gate-b-contract.test.ts`;
+Gate C closed 2026-04-29 by
+`post-knauf-wall-systems-source-pack-extraction-v1-next-slice-selection-contract.test.ts`).
 
-Current first implementation file:
+Closed implementation file:
 
 `packages/engine/src/post-knauf-wall-systems-source-pack-extraction-v1-next-slice-selection-contract.test.ts`
+
+Selected next slice:
+
+`calculator_source_gap_revalidation_v5`
+
+Selected next file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v5-gate-a-contract.test.ts`
+
+Selected next planning surface:
+
+[SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V5_PLAN.md](./SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V5_PLAN.md)
+
+Gate C selection status:
+
+`closed_knauf_wall_systems_source_pack_no_runtime_and_selected_source_gap_revalidation_v5_because_gate_b_found_no_import_ready_row`
 
 Selection reason: `calculator_source_gap_revalidation_v4` found no
 runtime-ready accuracy candidate. Official Knauf UK/AU wall-system
@@ -145,8 +164,34 @@ Remaining blockers:
 
 ## Gate C - Closeout / Next-Slice Selection
 
-Gate C should close this slice no-runtime unless a new source-ready
-runtime pack appears with all of:
+Gate C landed no-runtime in:
+
+`packages/engine/src/post-knauf-wall-systems-source-pack-extraction-v1-next-slice-selection-contract.test.ts`
+
+Gate C result:
+
+- closed this slice without runtime import, support promotion,
+  confidence promotion, evidence promotion, API movement, route-card
+  movement, output-card movement, proposal/report copy movement,
+  output support movement, or workbench-input behavior movement;
+- carried forward Gate B status
+  `no_knauf_locator_row_has_complete_topology_metric_tolerance_and_visible_test_ownership`;
+- rejected direct Knauf runtime import and direct timber double-board /
+  lined-masonry runtime slices because `TB.5A` and `MWI.2A` still lack
+  exact column/material/tolerance/field-output ownership;
+- selected `calculator_source_gap_revalidation_v5` so the next action
+  re-ranks source/accuracy candidates before runtime, promotion, or
+  productization work.
+
+Selected next file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v5-gate-a-contract.test.ts`
+
+Selected next status:
+
+`closed_knauf_wall_systems_source_pack_no_runtime_and_selected_source_gap_revalidation_v5_because_gate_b_found_no_import_ready_row`
+
+Any future runtime slice still needs all of:
 
 - exact topology or bounded family rule;
 - metric owner and lab/field context;
@@ -236,6 +281,17 @@ Protected boundary tokens for the active slice:
     45 files / 216 passed + 18 skipped, build 5/5 with known non-fatal
     `sharp/@img` warnings, whitespace guard clean;
   - `pnpm check`: lint/typecheck green, engine 280 files / 1537 tests,
+    web 157 files / 890 passed + 18 skipped, build 5/5 with known
+    non-fatal `sharp/@img` warnings.
+  - `git diff --check`: clean.
+- Gate C closeout validation is green on 2026-04-29:
+  - targeted Knauf Gate C closeout: 1 engine file / 6 tests;
+  - targeted Knauf Gate A + Gate B + Gate C compatibility: 3 engine
+    files / 19 tests;
+  - `pnpm calculator:gate:current`: engine 148 files / 723 tests, web
+    45 files / 216 passed + 18 skipped, build 5/5 with known non-fatal
+    `sharp/@img` warnings, whitespace guard clean;
+  - `pnpm check`: lint/typecheck green, engine 281 files / 1543 tests,
     web 157 files / 890 passed + 18 skipped, build 5/5 with known
     non-fatal `sharp/@img` warnings.
   - `git diff --check`: clean.

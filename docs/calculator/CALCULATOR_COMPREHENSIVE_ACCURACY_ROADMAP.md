@@ -31,7 +31,10 @@ extracted locator rows no-runtime and selected Gate B
 mapping/tolerance decision. Knauf Gate B then landed no-runtime and
 blocked every extracted row from runtime import or visible promotion
 because topology / material mapping / metric policy / tolerance /
-visible-test ownership is still incomplete; Gate C closeout is next.
+visible-test ownership is still incomplete. Gate C then closed the
+Knauf extraction slice no-runtime and selected
+`calculator_source_gap_revalidation_v5` because no import-ready row
+exists after Gate B.
 This roadmap remains the long-horizon source-gated accuracy context; it
 is not a runtime import approval.
 
@@ -172,7 +175,7 @@ comprehensive accuracy bar.
 Gate A has landed no-runtime and selected
 `knauf_wall_systems_source_pack_extraction_v1`.
 
-### 1f. Knauf Wall Systems Source Pack Extraction - Active No-Runtime
+### 1f. Knauf Wall Systems Source Pack Extraction - Closed No-Runtime
 
 `knauf_wall_systems_source_pack_extraction_v1` has extracted Knauf UK
 and Knauf AU wall-system table locators no-runtime. Gate B then
@@ -180,7 +183,8 @@ compared the extracted rows against the live implementation and found
 no runtime-ready row. `EN-PC-50-055-6-2-12.5-WB-25`, `TB.5A`,
 `TTF30.2A`, and `MWI.2A` remain research tracks; `TO120.1A` remains a
 negative boundary; `TSF120.1A` and `AAC.1A` remain adjacent context.
-Gate C closeout is next. The slice must not import rows or promote
+Gate C closed no-runtime and selected
+`calculator_source_gap_revalidation_v5`. The slice must not import rows or promote
 support, confidence, evidence, route-card, output-card, proposal/report,
 or workbench input behavior unless a later contract names exact
 topology, metric ownership, tolerance ownership, material mapping,
@@ -194,14 +198,42 @@ Latest implementation file:
 
 `packages/engine/src/knauf-wall-systems-source-pack-extraction-gate-b-contract.test.ts`
 
-Next implementation file:
+Closeout implementation file:
 
 `packages/engine/src/post-knauf-wall-systems-source-pack-extraction-v1-next-slice-selection-contract.test.ts`
+
+Gate C selection status:
+
+`closed_knauf_wall_systems_source_pack_no_runtime_and_selected_source_gap_revalidation_v5_because_gate_b_found_no_import_ready_row`
+
+Gate B status carried forward:
+
+`no_knauf_locator_row_has_complete_topology_metric_tolerance_and_visible_test_ownership`
 
 This slice is valuable because it can directly clarify timber
 double-board stud walls, masonry-upgrade / lined-heavy adjacent
 evidence, and steel-vs-timber negative boundaries without guessing from
 nearby green tests.
+
+### 1g. Calculator Source Gap Revalidation v5 - Active No-Runtime
+
+`calculator_source_gap_revalidation_v5` is the selected active planning
+slice after the Knauf closeout.
+
+Next implementation file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v5-gate-a-contract.test.ts`
+
+Planning surface:
+
+[SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V5_PLAN.md](./SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V5_PLAN.md)
+
+Gate A should re-rank current source/accuracy candidates after Knauf
+Gate C. Runtime work is allowed only if a candidate names exact
+topology, metric owner, tolerance owner, material mapping, protected
+negative boundaries, and paired engine/web visible tests. Otherwise it
+should select the next no-runtime source acquisition, extraction,
+planning, or validation slice.
 
 ### 2. Timber Double-Board Source Intake
 
