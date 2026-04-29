@@ -102,7 +102,13 @@ formula-tolerance path exists yet. Runtime values, support classes,
 confidence classes, source evidence tiers, API shape, route-card values,
 and output-card statuses remain frozen.
 
-The next bounded action is
-`internal_use_acceptance_rehearsal_v1`: build an executable 10-20
-scenario company-use acceptance matrix from this note before treating
-the calculator as comfortable for broader internal rollout.
+`internal_use_acceptance_rehearsal_v1` Gate A has now landed the
+executable company-use acceptance matrix from this note. It pins 20
+representative scenarios across ready benchmark/source corridors,
+caveated formula/screening routes, fail-closed/source-gated cases, and
+hostile many-layer/reorder/missing-input proof owners without changing
+runtime values or promoting source-gated families.
+
+The next bounded action is Gate C closeout / next-slice selection:
+close the acceptance rehearsal unless a concrete acceptance defect or a
+genuinely source-ready accuracy pack is available.

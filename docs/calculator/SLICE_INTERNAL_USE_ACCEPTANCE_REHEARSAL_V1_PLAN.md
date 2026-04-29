@@ -1,12 +1,13 @@
 # Slice Plan - Internal Use Acceptance Rehearsal v1
 
-Status: SELECTED / GATE A NEXT (selected 2026-04-29 by
+Status: GATE A LANDED / GATE C NEXT (selected 2026-04-29 by
 `post-clt-mass-timber-wall-source-pack-extraction-v1-next-slice-selection-contract.test.ts`;
-no-runtime company-internal acceptance pack).
+Gate A landed 2026-04-29 in
+`internal-use-acceptance-rehearsal-v1-gate-a-contract.test.ts`).
 
 Next implementation file:
 
-`packages/engine/src/internal-use-acceptance-rehearsal-v1-gate-a-contract.test.ts`
+`packages/engine/src/post-internal-use-acceptance-rehearsal-v1-next-slice-selection-contract.test.ts`
 
 Selection reason: `clt_mass_timber_wall_source_pack_extraction_v1`
 closed no-runtime after Gate B found no bounded metric-mapping or
@@ -42,11 +43,11 @@ The acceptance pack should answer:
 
 ## Gate A - Build Company Internal Acceptance Matrix
 
-Gate A should add:
+Gate A landed:
 
 `packages/engine/src/internal-use-acceptance-rehearsal-v1-gate-a-contract.test.ts`
 
-The contract should build a no-runtime acceptance matrix from
+The contract builds a no-runtime acceptance matrix from
 [INTERNAL_USE_PILOT_USAGE_NOTE.md](./INTERNAL_USE_PILOT_USAGE_NOTE.md).
 
 Implementation read map before coding Gate A:
@@ -147,6 +148,14 @@ If runtime time becomes too high, keep the matrix at 16-18 scenarios and
 record which optional proof-owner sentinel was deferred; do not land
 fewer than 10 scenarios.
 
+Gate A landed all 20 named scenarios. Direct engine calculations cover
+the ready wall benchmarks, exact/bound floor source corridors,
+caveated generated routes, many-layer/reorder boundaries, invalid
+thickness fail-closed behavior, and unsupported-output partitioning.
+Cross-package proof-owner assertions cover already-tested web/API
+visibility, missing-input, no-stud source-gated, historical blocked
+floor family, and save/load replay surfaces.
+
 Recommended contract shape:
 
 - define a local `ACCEPTANCE_REHEARSAL_GATE_A` object that repeats the
@@ -223,3 +232,14 @@ Latest selection validation, 2026-04-29:
 - broad `pnpm check` after selection green: lint/typecheck green,
   engine 269 files / 1469 tests, web 157 files / 890 passed + 18
   skipped, build 5/5 with the known non-fatal `sharp/@img` warnings.
+
+Latest Gate A validation, 2026-04-29:
+
+- targeted Gate A engine contract green: 1 file / 7 tests;
+- focused `pnpm calculator:gate:current` green after runner sync:
+  engine 137 files / 656 tests, web 45 files / 216 passed + 18 skipped,
+  build 5/5 with known non-fatal `sharp/@img` warnings, whitespace guard
+  clean;
+- broad `pnpm check` was not rerun for Gate A because this was a
+  no-runtime/no-web-behavior acceptance rehearsal. Latest broad remains
+  the CLT / mass-timber Gate C broad green run.

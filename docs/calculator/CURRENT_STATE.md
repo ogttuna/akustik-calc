@@ -71,8 +71,11 @@ ready now, and selected Gate C closeout / next-slice selection;
 `clt_mass_timber_wall_source_pack_extraction_v1` Gate C closed
 no-runtime and selected `internal_use_acceptance_rehearsal_v1` because
 no source-ready accuracy pack exists after Gate B;
+`internal_use_acceptance_rehearsal_v1` Gate A landed no-runtime with a
+20-scenario company-internal acceptance matrix and selected Gate C
+closeout / next-slice selection;
 latest checkpoint:
-[CHECKPOINT_2026-04-29_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-29_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_GATE_C_CLOSEOUT_HANDOFF.md)).
+[CHECKPOINT_2026-04-29_INTERNAL_USE_ACCEPTANCE_REHEARSAL_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-29_INTERNAL_USE_ACCEPTANCE_REHEARSAL_GATE_A_HANDOFF.md)).
 The extra 2026-04-28 planning pass made the readiness ladder explicit
 and the source-gap Gate A selected the short internal pilot
 operating-envelope slice. Internal-use Gate A then produced
@@ -105,6 +108,13 @@ corridors, caveated formula/screening routes, fail-closed/source-gated
 cases, and hostile many-layer/reorder/missing-input cases. Gate A needs
 no external source research because it must rehearse existing behavior;
 source research belongs only to a later source-ready accuracy slice.
+Gate A then landed that acceptance matrix no-runtime: ready wall
+benchmarks, exact/bound floor source corridors, caveated generated
+routes, many-layer/reorder edges, invalid thickness fail-closed
+behavior, unsupported-output partitioning, and cross-package proof-owner
+surfaces are now executable acceptance evidence. Gate A found no reason
+to retune formulas or promote source-gated families and selected Gate C
+closeout / next-slice selection.
 See
 [SLICE_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_PLAN.md](./SLICE_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_PLAN.md),
 [SLICE_INTERNAL_USE_ACCEPTANCE_REHEARSAL_V1_PLAN.md](./SLICE_INTERNAL_USE_ACCEPTANCE_REHEARSAL_V1_PLAN.md),
@@ -150,7 +160,9 @@ hardening, and the pure team-access policy model.
   input contract so it asserts parse behavior instead of calling
   `.keyof()` on the exported shared `AirborneContextSchema` `ZodType`.
 - **Broad `pnpm check`**: lint + typecheck + tests + build green after
-  the CLT / mass-timber extraction Gate C landing. The earlier Gate B broad rerun
+  the CLT / mass-timber extraction Gate C landing. It was not rerun for
+  internal-use acceptance Gate A because that handoff was no-runtime and
+  no-web-behavior. The earlier Gate B broad rerun
   caught `TS7006` implicit-`any` issues in the framed split Gate A/B
   contract tests; those were fixed with callback parameter typing only.
   Build still emits the known non-fatal optional `sharp/@img` warnings
@@ -344,8 +356,11 @@ hardening, and the pure team-access policy model.
   Gate C closeout selection, plus
   `post-clt-mass-timber-wall-source-pack-extraction-v1-next-slice-selection-contract.test.ts`
   for the no-runtime Gate C closeout and internal-use acceptance
-  rehearsal selection. Latest focused gate run after the CLT /
-  mass-timber extraction Gate C landing: 136 engine files / 649 tests,
+  rehearsal selection, plus
+  `internal-use-acceptance-rehearsal-v1-gate-a-contract.test.ts` for
+  the no-runtime 20-scenario company-internal acceptance matrix. Latest
+  focused gate run after internal-use acceptance Gate A: 137 engine
+  files / 656 tests,
   45 web files / 216 passed + 18 skipped,
   build 5/5 tasks with known non-fatal `sharp/@img` warnings,
   whitespace guard clean.
@@ -353,7 +368,7 @@ hardening, and the pure team-access policy model.
 ## Active Slice
 
 `internal_use_acceptance_rehearsal_v1` (no-runtime company-internal
-acceptance matrix). It was selected by
+acceptance matrix; Gate A landed, Gate C next). It was selected by
 `packages/engine/src/post-clt-mass-timber-wall-source-pack-extraction-v1-next-slice-selection-contract.test.ts`
 after CLT / mass-timber Gate C confirmed no source-ready accuracy pack
 exists after Gate B. The slice exists to turn the current internal-use
@@ -361,18 +376,25 @@ operating envelope into executable company-use scenarios before further
 runtime or source-confidence movement.
 
 The next implementation file is
-`packages/engine/src/internal-use-acceptance-rehearsal-v1-gate-a-contract.test.ts`.
+`packages/engine/src/post-internal-use-acceptance-rehearsal-v1-next-slice-selection-contract.test.ts`.
 Planning surface:
 [SLICE_INTERNAL_USE_ACCEPTANCE_REHEARSAL_V1_PLAN.md](./SLICE_INTERNAL_USE_ACCEPTANCE_REHEARSAL_V1_PLAN.md).
 
 Just landed context:
+Gate A landed no-runtime in
+`packages/engine/src/internal-use-acceptance-rehearsal-v1-gate-a-contract.test.ts`.
+It pins all 20 planned acceptance scenarios and selects Gate C closeout
+/ next-slice selection without runtime/support/confidence/evidence
+movement.
+
+Prior context:
 CLT / mass-timber Gate C closed no-runtime in
 `packages/engine/src/post-clt-mass-timber-wall-source-pack-extraction-v1-next-slice-selection-contract.test.ts`.
 It kept every Gate B roadmap track out of source-ready runtime import,
 preserved current `wall-clt-local` values and Dataholz floor-only
 boundaries, and selected internal-use acceptance rehearsal.
 
-Prior context:
+Earlier context:
 Gate B landed no-runtime in
 `packages/engine/src/clt-mass-timber-wall-source-pack-extraction-gate-b-contract.test.ts`.
 It rejected immediate bounded metric mapping and formula tolerance:
@@ -1417,7 +1439,7 @@ time without context loss:
 
 ## Resume Order For The Next Agent
 
-1. Read [CHECKPOINT_2026-04-29_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-29_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_GATE_C_CLOSEOUT_HANDOFF.md)
+1. Read [CHECKPOINT_2026-04-29_INTERNAL_USE_ACCEPTANCE_REHEARSAL_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-29_INTERNAL_USE_ACCEPTANCE_REHEARSAL_GATE_A_HANDOFF.md)
    for the latest active-slice handoff.
 2. Read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md),
    [SLICE_INTERNAL_USE_ACCEPTANCE_REHEARSAL_V1_PLAN.md](./SLICE_INTERNAL_USE_ACCEPTANCE_REHEARSAL_V1_PLAN.md),
@@ -1427,9 +1449,8 @@ time without context loss:
    [SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md](./SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md),
    [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md), and
    [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md).
-   Continue `internal_use_acceptance_rehearsal_v1` at Gate A by
-   adding
-   `packages/engine/src/internal-use-acceptance-rehearsal-v1-gate-a-contract.test.ts`.
+   Continue `internal_use_acceptance_rehearsal_v1` at Gate C by adding
+   `packages/engine/src/post-internal-use-acceptance-rehearsal-v1-next-slice-selection-contract.test.ts`.
 3. Read [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
    for the now-closed calculator-priority chain and its evidence-tier
    caveats.
@@ -1444,8 +1465,8 @@ time without context loss:
 6. Run `pnpm calculator:gate:current` as the focused baseline.
 7. Do not change source posture, output support, evidence tiers,
    confidence scores, API shape, route-card values, or output-card
-   statuses during CLT / mass-timber extraction. A future source-ready
-   accuracy slice may be selected only if a later contract names a
+   statuses during internal-use acceptance closeout. A future
+   source-ready accuracy slice may be selected only if a later contract names a
    bounded source pack. Any future import must name the exact source
    row, metric owner, tolerance, protected-boundary exclusions, and
    paired web route-card
