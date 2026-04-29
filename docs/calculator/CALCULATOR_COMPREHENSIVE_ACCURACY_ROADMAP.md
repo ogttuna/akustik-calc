@@ -23,6 +23,10 @@ and Gate C closeout is next because no source-ready runtime candidate
 was found. Gate C then closed the topology-delta slice no-runtime and
 selected `calculator_source_gap_revalidation_v4` to re-rank current
 source/accuracy candidates before more runtime or productization work.
+v4 Gate A then selected
+`knauf_wall_systems_source_pack_extraction_v1` no-runtime because
+Knauf UK/AU wall-system source locators are concrete enough for table
+locator extraction, while still not import-ready.
 This roadmap remains the long-horizon source-gated accuracy context; it
 is not a runtime import approval.
 
@@ -159,6 +163,27 @@ boundaries, and paired engine/web visible tests before implementation
 starts. Otherwise it should select a no-runtime source acquisition,
 extraction, planning, or test-coverage slice that directly advances the
 comprehensive accuracy bar.
+
+Gate A has landed no-runtime and selected
+`knauf_wall_systems_source_pack_extraction_v1`.
+
+### 1f. Knauf Wall Systems Source Pack Extraction - Active No-Runtime
+
+`knauf_wall_systems_source_pack_extraction_v1` should extract Knauf UK
+and Knauf AU wall-system table locators, system-code topology metadata,
+metric context, tolerance blockers, and positive/negative test
+requirements. It must not import rows or promote support, confidence,
+evidence, route-card, output-card, proposal/report, or workbench input
+behavior during source extraction.
+
+First implementation file:
+
+`packages/engine/src/knauf-wall-systems-source-pack-extraction-gate-a-contract.test.ts`
+
+This slice is valuable because it can directly clarify timber
+double-board stud walls, masonry-upgrade / lined-heavy adjacent
+evidence, and steel-vs-timber negative boundaries without guessing from
+nearby green tests.
 
 ### 2. Timber Double-Board Source Intake
 

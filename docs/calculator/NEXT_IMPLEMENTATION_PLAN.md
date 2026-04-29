@@ -77,8 +77,12 @@ next-slice selection;
 `generated_floor_fallback_topology_delta_v1` Gate C closed no-runtime
 and selected `calculator_source_gap_revalidation_v4` because Gate A
 found topology near misses only, not a source-ready runtime candidate;
+`calculator_source_gap_revalidation_v4` Gate A landed no-runtime and
+selected `knauf_wall_systems_source_pack_extraction_v1` because
+official Knauf UK/AU source locators are concrete enough for extraction
+but not import or confidence promotion;
 see
-`SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V4_PLAN.md`).
+`SLICE_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_PLAN.md`).
 
 ---
 
@@ -108,21 +112,28 @@ For every next slice decision:
 ## Now
 
 - **Active slice**:
-  `calculator_source_gap_revalidation_v4`.
+  `knauf_wall_systems_source_pack_extraction_v1`.
 - **Latest checkpoint**:
-  [CHECKPOINT_2026-04-29_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-29_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_GATE_C_CLOSEOUT_HANDOFF.md).
+  [CHECKPOINT_2026-04-29_CALCULATOR_SOURCE_GAP_REVALIDATION_V4_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-29_CALCULATOR_SOURCE_GAP_REVALIDATION_V4_GATE_A_HANDOFF.md).
 - **Planning surface**:
-  [SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V4_PLAN.md](./SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V4_PLAN.md)
+  [SLICE_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_PLAN.md](./SLICE_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_PLAN.md)
   and [SOURCE_READY_INTAKE_BACKLOG.md](./SOURCE_READY_INTAKE_BACKLOG.md).
 - **Next active-slice gate**:
-  `packages/engine/src/calculator-source-gap-revalidation-v4-gate-a-contract.test.ts`
-  should re-rank source/accuracy candidates after the generated floor
-  topology-delta closeout. It may select runtime work only if exact
-  topology, metric owner, tolerance owner, negative boundaries, and
-  paired engine/web visible tests are named first. It must preserve
+  `packages/engine/src/knauf-wall-systems-source-pack-extraction-gate-a-contract.test.ts`
+  should extract Knauf UK/AU wall-system source table locators, classify
+  row/topology/metric/tolerance blockers, and decide whether a later
+  mapping/tolerance gate or no-runtime closeout is justified. It must
+  preserve
   `runtime/support/confidence/evidence`,
   `API/route-card/output-card`, and `proposal/report/workbench-input`
   behavior.
+- **Just landed active-slice gate**:
+  `packages/engine/src/calculator-source-gap-revalidation-v4-gate-a-contract.test.ts`
+  re-ranks source/accuracy candidates no-runtime, confirms no runtime
+  source pack is ready, and selects
+  `knauf_wall_systems_source_pack_extraction_v1` with
+  `packages/engine/src/knauf-wall-systems-source-pack-extraction-gate-a-contract.test.ts`
+  as the next first-gate file.
 - **Just closed active-slice gate**:
   `packages/engine/src/post-generated-floor-fallback-topology-delta-v1-next-slice-selection-contract.test.ts`
   closes the topology-delta slice no-runtime, keeps the live generated
@@ -216,12 +227,12 @@ For every next slice decision:
   closed no-runtime at Gate C and selected the source-pack readiness
   triage slice.
 - **Latest broad validation**:
-  latest broad `pnpm check` is green after generated floor fallback
-  topology-delta Gate C: lint/typecheck green, engine 277 files / 1517
+  latest broad `pnpm check` is green after calculator source-gap
+  revalidation v4 Gate A: lint/typecheck green, engine 278 files / 1524
   tests, web 157 files / 890 passed + 18 skipped, build 5/5 with the
   known non-fatal `sharp/@img` warnings. Focused current gate after
-  generated floor fallback topology-delta Gate C is green: engine 144
-  files / 697 tests, web 45 files / 216 passed + 18 skipped, build 5/5
+  calculator source-gap revalidation v4 Gate A is green: engine 145
+  files / 704 tests, web 45 files / 216 passed + 18 skipped, build 5/5
   with the known non-fatal `sharp/@img` warnings, whitespace guard
   clean.
 - **Prepared comprehensive-accuracy roadmap**:
@@ -239,23 +250,30 @@ For every next slice decision:
 ## Next Steps
 
 1. Implement
-   `packages/engine/src/calculator-source-gap-revalidation-v4-gate-a-contract.test.ts`
-   as Gate A source/accuracy rerank after generated floor topology
-   closeout.
-2. Use the Gate C checkpoint and v4 plan as authority. Gate C found no
-   source-ready floor runtime candidate and selected reranking, not
-   runtime movement.
-3. Select a runtime slice only if Gate A names exact topology, metric
+   `packages/engine/src/knauf-wall-systems-source-pack-extraction-gate-a-contract.test.ts`
+   as Gate A source table locator extraction for the selected Knauf
+   wall-system pack.
+2. Use the v4 Gate A checkpoint and Knauf source-pack plan as
+   authority. v4 found no source-ready runtime candidate and selected
+   extraction, not runtime movement.
+3. Extract table/row locators, topology metadata, metric context,
+   tolerance blockers, positive/negative engine test shapes, and any
+   visible-surface tests needed before a later behavior move.
+4. Select a runtime slice only if Gate A names exact topology, metric
    owner, tolerance owner, protected negative boundaries, and paired
    engine/web visible tests.
-4. Otherwise select the highest-value no-runtime source acquisition,
-   extraction, planning, or test-coverage slice that advances accuracy.
 5. Keep `runtime/support/confidence/evidence/API/route-card/output-card`
    and `proposal/report/workbench-input` behavior frozen.
-6. Run the targeted v4 Gate A file when it lands,
+6. Run the targeted Knauf Gate A file when it lands,
    `pnpm calculator:gate:current`, and `git diff --check`. Run
    `pnpm check` if Gate A is treated as a release gate or selects
    runtime/import/visible behavior work.
+
+- **Just landed**: `calculator_source_gap_revalidation_v4` Gate A.
+  `packages/engine/src/calculator-source-gap-revalidation-v4-gate-a-contract.test.ts`
+  keeps every runtime and visible surface frozen, records official
+  Knauf UK/AU source locators as extraction inputs only, and selects
+  `knauf_wall_systems_source_pack_extraction_v1`.
 
 - **Just closed**: `generated_floor_fallback_topology_delta_v1`
   Gate C.
@@ -562,8 +580,8 @@ For every next slice decision:
   caveats, and many-layer / long-label report rendering is pinned.
   This did not change calculator runtime/source/confidence posture.
 - **Latest broad validation**: 2026-04-29 `pnpm check` is green after
-  generated floor fallback topology-delta Gate C: engine 277 files /
-  1517 tests, web
+  calculator source-gap revalidation v4 Gate A: engine 278 files /
+  1524 tests, web
   157 files / 890 passed + 18 skipped through
   `tools/dev/run-web-vitest.ts`, build 5/5, with only the known
   non-fatal `sharp/@img` optional-package warnings.
@@ -940,13 +958,15 @@ For every next slice decision:
 
 ## Immediate Execution Order
 
-`calculator_source_gap_revalidation_v4` should now proceed in
+`knauf_wall_systems_source_pack_extraction_v1` should now proceed in
 this order:
 
 1. Re-read
-   [CHECKPOINT_2026-04-29_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-29_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_GATE_C_CLOSEOUT_HANDOFF.md),
+   [CHECKPOINT_2026-04-29_CALCULATOR_SOURCE_GAP_REVALIDATION_V4_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-29_CALCULATOR_SOURCE_GAP_REVALIDATION_V4_GATE_A_HANDOFF.md),
+   [SLICE_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_PLAN.md](./SLICE_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_PLAN.md),
    [SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V4_PLAN.md](./SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V4_PLAN.md),
    [SOURCE_READY_INTAKE_BACKLOG.md](./SOURCE_READY_INTAKE_BACKLOG.md),
+   [CHECKPOINT_2026-04-29_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-29_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_GATE_C_CLOSEOUT_HANDOFF.md),
    [CHECKPOINT_2026-04-29_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-29_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_GATE_A_HANDOFF.md),
    [SLICE_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_V1_PLAN.md](./SLICE_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_V1_PLAN.md),
    [CHECKPOINT_2026-04-29_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-29_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_GATE_C_CLOSEOUT_HANDOFF.md),
@@ -957,17 +977,17 @@ this order:
    [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md), and the
    current-state active-slice section.
 2. Add
-   `packages/engine/src/calculator-source-gap-revalidation-v4-gate-a-contract.test.ts`
-   as Gate A source/accuracy rerank.
-3. Keep the generated floor Gate C result authoritative: it found no
-   runtime-ready floor candidate, so do not promote fallback support,
-   confidence, evidence, or output support from near misses.
+   `packages/engine/src/knauf-wall-systems-source-pack-extraction-gate-a-contract.test.ts`
+   as Gate A source table locator extraction.
+3. Keep the v4 Gate A result authoritative: it selected source
+   extraction only, so source locators do not promote support,
+   confidence, evidence, or output support.
 4. Preserve the no-runtime/no-promotion boundary: source pointers,
    handoff success, topology near misses, and nearby green tests are
    not source-gated family promotion.
 5. Update `NEXT_IMPLEMENTATION_PLAN.md`, `CURRENT_STATE.md`,
    `AGENTS.md`, the slice plan, and the relevant checkpoint together.
-6. Validate with the targeted v4 Gate A test,
+6. Validate with the targeted Knauf Gate A test,
    `pnpm calculator:gate:current`, and `git diff --check`. Run
    `pnpm check` if Gate A becomes the release gate or selects
    runtime/import/visible behavior work.
@@ -983,9 +1003,9 @@ private day-to-day use:
    - closed at Gate C.
 
 Productization route-policy and proposal/report polish slices are
-closed. Calculator runtime/source posture stays frozen during
-calculator source-gap revalidation v4 unless the selected Gate A
-contract names a source-ready accuracy pack. The landed framed-wall
+closed. Calculator runtime/source posture stays frozen during Knauf
+source-pack extraction unless a later contract names a source-ready
+accuracy pack. The landed framed-wall
 split fix remains protected, and the no-stud, timber double-board, CLT
 wall, lined-massive / heavy-core source research, source-intake backlog
 cleanup, and floor layer-order invariance expansion slices have closed

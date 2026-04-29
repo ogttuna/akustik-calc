@@ -3,7 +3,10 @@
 Status: Gate A artifact for `calculator_source_intake_backlog_cleanup_v1`;
 Gate C source for the selected
 `generated_floor_fallback_topology_delta_v1` follow-up; refreshed after
-generated-floor Gate C closed no-runtime.
+generated-floor Gate C closed no-runtime; refreshed again after
+`calculator_source_gap_revalidation_v4` Gate A selected
+`knauf_wall_systems_source_pack_extraction_v1` as the next no-runtime
+source extraction slice.
 
 Last reviewed: 2026-04-29.
 
@@ -92,6 +95,28 @@ bounded action is a fresh source/accuracy gap revalidation before any
 runtime, source-acquisition, productization, or pilot-promotion work is
 selected.
 
+## Calculator Source Gap Revalidation v4 Gate A
+
+`calculator_source_gap_revalidation_v4` Gate A lands no-runtime in:
+
+`packages/engine/src/calculator-source-gap-revalidation-v4-gate-a-contract.test.ts`
+
+Next selected slice:
+
+`knauf_wall_systems_source_pack_extraction_v1`
+
+Next selected file:
+
+`packages/engine/src/knauf-wall-systems-source-pack-extraction-gate-a-contract.test.ts`
+
+Reason: no source-ready runtime pack exists. The Knauf UK/AU
+wall-system sources are concrete enough for source table locator
+extraction, but not for import, support promotion, confidence
+promotion, evidence promotion, or visible card/report movement. The
+selected follow-up must extract row/table locators, topology metadata,
+metric context, tolerance blockers, and test requirements before any
+behavior can move.
+
 ## Source Verification Notes
 
 The following public source surfaces were checked during this planning
@@ -101,6 +126,10 @@ pass. They remain context only:
   `https://knauf.com/api/download-center/v1/assets/0f399ff9-ae51-4916-b290-c5f5d270a2e4?country=gb&download=true&locale=en-GB`
 - Knauf Australia Systems+ Design Guide:
   `https://knauf.com/en-AU/knauf-gypsum/services/training/systems-plus`
+- Knauf Australia Systems+ Section D Timber Stud Walls:
+  `https://knauf.com/api/download-center/v1/assets/4e58706c-df9d-4579-8d5b-8e685cf29194?country=AU&download=true&locale=en-AU`
+- Knauf Australia Systems+ Section F Masonry Upgrades:
+  `https://knauf.com/api/download-center/v1/assets/16b8f406-a9be-47bd-9e7a-7212d6f19a28?country=AU&download=true&locale=en-AU`
 - WoodWorks Acoustically Tested Mass Timber Assemblies:
   `https://www.woodworks.org/wp-content/uploads/Acoustically-Tested-Mass-Timber-Assemblies-WoodWorks.pdf`
 - WoodWorks Mass Timber Fire and Acoustic Database:
@@ -303,11 +332,13 @@ is consolidation and explicit cross-linking, not removal.
 
 ## Immediate Next Steps
 
-1. Implement `calculator_source_gap_revalidation_v4` Gate A:
-   `packages/engine/src/calculator-source-gap-revalidation-v4-gate-a-contract.test.ts`.
-2. Select a runtime accuracy slice only if Gate A names exact topology,
+1. Implement `knauf_wall_systems_source_pack_extraction_v1` Gate A:
+   `packages/engine/src/knauf-wall-systems-source-pack-extraction-gate-a-contract.test.ts`.
+2. Extract Knauf UK/AU table locators and classify candidate rows as
+   exact, adjacent, negative, or context-only before any behavior move.
+3. Select a runtime accuracy slice only if Gate A names exact topology,
    metric owner, tolerance owner, protected negative boundaries, and
    paired engine/web visible tests.
-3. Keep all validation gates green:
+4. Keep all validation gates green:
    `pnpm calculator:gate:current`, targeted Gate A/Gate C contracts,
    `git diff --check`, and `pnpm check` when the release gate is needed.

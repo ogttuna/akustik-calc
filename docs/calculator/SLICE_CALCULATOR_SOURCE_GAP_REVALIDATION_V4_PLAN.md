@@ -2,12 +2,22 @@
 
 Slice id: `calculator_source_gap_revalidation_v4`
 
-Status: SELECTED / GATE A NEXT (selected 2026-04-29 by
-`post-generated-floor-fallback-topology-delta-v1-next-slice-selection-contract.test.ts`).
+Status: GATE A LANDED / SELECTED NEXT SLICE (selected 2026-04-29 by
+`post-generated-floor-fallback-topology-delta-v1-next-slice-selection-contract.test.ts`;
+Gate A landed 2026-04-29 by
+`calculator-source-gap-revalidation-v4-gate-a-contract.test.ts`).
 
 Current first implementation file:
 
 `packages/engine/src/calculator-source-gap-revalidation-v4-gate-a-contract.test.ts`
+
+Selected next slice:
+
+`knauf_wall_systems_source_pack_extraction_v1`
+
+Selected next file:
+
+`packages/engine/src/knauf-wall-systems-source-pack-extraction-gate-a-contract.test.ts`
 
 Selection reason: `generated_floor_fallback_topology_delta_v1` Gate C
 closed no-runtime after Gate A found topology near misses only. The
@@ -68,6 +78,27 @@ Required evidence fields:
 - first missing source, metric, tolerance, or visible-test requirement;
 - negative boundaries that must stay closed;
 - selected next slice with target gate file and validation scope.
+
+## Gate A Result - Landed
+
+Gate A landed no-runtime and selected
+`knauf_wall_systems_source_pack_extraction_v1`.
+
+Decision:
+
+- no runtime import, support promotion, confidence promotion, evidence
+  promotion, route-card movement, output-card movement,
+  proposal/report copy change, or workbench-input movement;
+- official Knauf UK/AU wall-system source locators are concrete enough
+  for no-runtime extraction;
+- those locators are not import approval;
+- the selected Knauf Gate A must extract table locators, topology
+  metadata, metric context, tolerance blockers, negative boundaries, and
+  test requirements before any later behavior can move.
+
+Selected planning surface:
+
+[SLICE_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_PLAN.md](./SLICE_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_PLAN.md)
 
 ## Acceptance Rules
 
@@ -130,6 +161,13 @@ source locators are not import approval by themselves.
   - `pnpm check`: lint/typecheck green, engine 277 files / 1517 tests,
     web 157 files / 890 passed + 18 skipped, build 5/5 with known
     non-fatal `sharp/@img` warnings.
-- For Gate A, run the targeted v4 contract, `pnpm calculator:gate:current`,
-  `git diff --check`, and `pnpm check` if Gate A is used as a release
-  gate or selects a runtime/import/visible behavior candidate.
+- Gate A landed validation is green on 2026-04-29:
+  - targeted v4 Gate A contract: 1 engine file / 7 tests;
+  - targeted prior Gate C compatibility plus v4 Gate A: 2 engine files /
+    13 tests;
+  - `pnpm calculator:gate:current`: engine 145 files / 704 tests, web
+    45 files / 216 passed + 18 skipped, build 5/5 with known non-fatal
+    `sharp/@img` warnings, whitespace guard clean;
+  - `pnpm check`: lint/typecheck green, engine 278 files / 1524 tests,
+    web 157 files / 890 passed + 18 skipped, build 5/5 with known
+    non-fatal `sharp/@img` warnings.
