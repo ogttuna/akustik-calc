@@ -332,12 +332,15 @@ function calculateImpactSourceStack(rows: readonly LayerInput[]) {
 function expectSupportPartition(
   id: string,
   actual: {
-    supportedTargetOutputs: readonly RequestedOutputId[];
-    unsupportedTargetOutputs: readonly RequestedOutputId[];
+    supportedTargetOutputs?: readonly RequestedOutputId[];
+    unsupportedTargetOutputs?: readonly RequestedOutputId[];
   },
   requestedOutputs: readonly RequestedOutputId[]
 ): void {
-  const seen = [...actual.supportedTargetOutputs, ...actual.unsupportedTargetOutputs].sort();
+  expect(actual.supportedTargetOutputs, `${id}: supportedTargetOutputs must be present`).toBeDefined();
+  expect(actual.unsupportedTargetOutputs, `${id}: unsupportedTargetOutputs must be present`).toBeDefined();
+
+  const seen = [...(actual.supportedTargetOutputs ?? []), ...(actual.unsupportedTargetOutputs ?? [])].sort();
 
   expect(seen, `${id}: supported + unsupported must partition requested outputs`).toEqual([...requestedOutputs].sort());
   expect(new Set(seen).size, `${id}: output buckets must not contain duplicates`).toBe(requestedOutputs.length);

@@ -1,11 +1,15 @@
 # Slice Plan - Internal Use Pilot Handoff v1
 
-Status: SELECTED / GATE A NEXT (selected 2026-04-29 by
-`post-internal-use-acceptance-rehearsal-v1-next-slice-selection-contract.test.ts`).
+Slice id: `internal_use_pilot_handoff_v1`
+
+Status: GATE A LANDED / GATE C NEXT (selected 2026-04-29 by
+`post-internal-use-acceptance-rehearsal-v1-next-slice-selection-contract.test.ts`;
+Gate A landed 2026-04-29 in
+`internal-use-pilot-handoff-v1-gate-a-contract.test.ts`).
 
 Next implementation file:
 
-`packages/engine/src/internal-use-pilot-handoff-v1-gate-a-contract.test.ts`
+`packages/engine/src/post-internal-use-pilot-handoff-v1-next-slice-selection-contract.test.ts`
 
 Selection reason: `internal_use_acceptance_rehearsal_v1` closed
 no-runtime after Gate A landed a 20-scenario company-internal
@@ -39,9 +43,13 @@ The handoff should answer:
 
 ## Gate A - Prepare Company Internal Pilot Handoff Pack
 
-Target:
+Gate A landed:
 
 `packages/engine/src/internal-use-pilot-handoff-v1-gate-a-contract.test.ts`
+
+Handoff artifact:
+
+[INTERNAL_USE_PILOT_HANDOFF.md](./INTERNAL_USE_PILOT_HANDOFF.md)
 
 Implementation read map before coding:
 
@@ -73,9 +81,12 @@ Required Gate A artifacts:
 - an operator checklist for wall/floor selection, required inputs, layer
   entry, result review, caveat copying, and fail-closed handling.
 
-Recommended artifact location:
-
-`docs/calculator/INTERNAL_USE_PILOT_HANDOFF.md`
+Gate A landed the recommended handoff artifact at
+`docs/calculator/INTERNAL_USE_PILOT_HANDOFF.md`. It documents the
+operator workflow, all 20 acceptance scenarios, known source-gated gaps,
+and validation map without moving
+`runtime/support/confidence/evidence/API/route-card/output-card` or
+`proposal/report/workbench-input` behavior.
 
 Minimum assertions:
 
@@ -138,6 +149,10 @@ Gate C should close this slice only when:
   source-ready accuracy pack, or a no-runtime source-intake/backlog
   cleanup.
 
+Target:
+
+`packages/engine/src/post-internal-use-pilot-handoff-v1-next-slice-selection-contract.test.ts`
+
 ## Validation
 
 - Run the targeted Gate A contract while iterating.
@@ -147,3 +162,21 @@ Gate C should close this slice only when:
 - Run `git diff --check`.
 - Run `pnpm check` if the Gate A handoff is treated as the internal-use
   release candidate.
+
+Latest Gate A validation, 2026-04-29:
+
+- baseline `pnpm calculator:gate:current` before editing: engine 138
+  files / 661 tests, web 45 files / 216 passed + 18 skipped, build 5/5
+  with known non-fatal `sharp/@img` warnings, whitespace guard clean;
+- targeted Gate A engine contract green: 1 file / 6 tests;
+- prior acceptance rehearsal Gate A retest green after a type-only
+  helper fix: 1 file / 7 tests;
+- engine typecheck green after the helper fix;
+- focused `pnpm calculator:gate:current` green after runner sync:
+  engine 139 files / 667 tests, web 45 files / 216 passed + 18 skipped,
+  build 5/5 with known non-fatal `sharp/@img` warnings, whitespace guard
+  clean;
+- release-candidate broad `pnpm check` green: lint/typecheck green,
+  engine 272 files / 1487 tests, web 157 files / 890 passed + 18
+  skipped, build 5/5 with known non-fatal `sharp/@img` warnings;
+- `git diff --check` clean after final doc updates.

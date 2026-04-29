@@ -187,6 +187,7 @@ async function main() {
         "src/post-clt-mass-timber-wall-source-pack-extraction-v1-next-slice-selection-contract.test.ts",
         "src/internal-use-acceptance-rehearsal-v1-gate-a-contract.test.ts",
         "src/post-internal-use-acceptance-rehearsal-v1-next-slice-selection-contract.test.ts",
+        "src/internal-use-pilot-handoff-v1-gate-a-contract.test.ts",
         "--maxWorkers=1"
       ]
     },

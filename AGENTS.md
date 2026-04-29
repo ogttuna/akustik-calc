@@ -5,76 +5,78 @@ Start here before changing calculator behavior.
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-04-29_INTERNAL_USE_ACCEPTANCE_REHEARSAL_GATE_C_CLOSEOUT_HANDOFF.md`
-3. `docs/calculator/SLICE_INTERNAL_USE_PILOT_HANDOFF_V1_PLAN.md`
-4. `docs/calculator/CHECKPOINT_2026-04-29_INTERNAL_USE_ACCEPTANCE_REHEARSAL_GATE_A_HANDOFF.md`
-5. `docs/calculator/SLICE_INTERNAL_USE_ACCEPTANCE_REHEARSAL_V1_PLAN.md`
-6. `docs/calculator/CHECKPOINT_2026-04-29_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_GATE_C_CLOSEOUT_HANDOFF.md`
-7. `docs/calculator/CHECKPOINT_2026-04-29_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_GATE_B_HANDOFF.md`
-8. `docs/calculator/CHECKPOINT_2026-04-29_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_GATE_A_HANDOFF.md`
-9. `docs/calculator/SLICE_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_PLAN.md`
-10. `docs/calculator/CHECKPOINT_2026-04-29_CALCULATOR_SOURCE_PACK_READINESS_TRIAGE_GATE_A_HANDOFF.md`
-11. `docs/calculator/SLICE_CALCULATOR_SOURCE_PACK_READINESS_TRIAGE_PLAN.md`
-12. `docs/calculator/CHECKPOINT_2026-04-29_INTERNAL_USE_OPERATING_ENVELOPE_GATE_C_CLOSEOUT_HANDOFF.md`
-13. `docs/calculator/CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_CLEAN_STOP_GATE_C_READY_HANDOFF.md`
-14. `docs/calculator/CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_BROAD_REVALIDATION_GATE_C_READY_HANDOFF.md`
-15. `docs/calculator/CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_GATE_B_HANDOFF.md`
-16. `docs/calculator/CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_GATE_A_HANDOFF.md`
-17. `docs/calculator/INTERNAL_USE_PILOT_USAGE_NOTE.md`
-18. `docs/calculator/SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md`
-19. `docs/calculator/CHECKPOINT_2026-04-28_CALCULATOR_SOURCE_GAP_REVALIDATION_V3_GATE_A_HANDOFF.md`
-20. `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V3_PLAN.md`
-21. `docs/calculator/CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md`
-22. `docs/calculator/CHECKPOINT_2026-04-28_WALL_FRAMED_FACING_SPLIT_WARNING_STABILITY_GATE_C_CLOSEOUT_HANDOFF.md`
-23. `docs/calculator/CHECKPOINT_2026-04-28_WALL_FRAMED_FACING_SPLIT_WARNING_STABILITY_GATE_B_HANDOFF.md`
-24. `docs/calculator/CHECKPOINT_2026-04-28_WALL_FRAMED_FACING_SPLIT_WARNING_STABILITY_GATE_A_HANDOFF.md`
-25. `docs/calculator/SLICE_WALL_FRAMED_FACING_SPLIT_WARNING_STABILITY_PLAN.md`
-26. `docs/calculator/CHECKPOINT_2026-04-28_FLOOR_LAYER_ORDER_INVARIANCE_EXPANSION_GATE_C_CLOSEOUT_HANDOFF.md`
-27. `docs/calculator/CHECKPOINT_2026-04-28_FLOOR_LAYER_ORDER_INVARIANCE_EXPANSION_GATE_A_HANDOFF.md`
-28. `docs/calculator/SLICE_FLOOR_LAYER_ORDER_INVARIANCE_EXPANSION_PLAN.md`
-29. `docs/calculator/CHECKPOINT_2026-04-28_CALCULATOR_SOURCE_GAP_REVALIDATION_V2_GATE_A_HANDOFF.md`
-30. `docs/calculator/CHECKPOINT_2026-04-28_WALL_LINED_MASSIVE_HEAVY_CORE_SOURCE_RESEARCH_GATE_C_CLOSEOUT_HANDOFF.md`
-31. `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V2_PLAN.md`
-32. `docs/calculator/CHECKPOINT_2026-04-28_WALL_LINED_MASSIVE_HEAVY_CORE_SOURCE_RESEARCH_GATE_A_HANDOFF.md`
-33. `docs/calculator/SLICE_WALL_LINED_MASSIVE_HEAVY_CORE_SOURCE_RESEARCH_PLAN.md`
-34. `docs/calculator/CHECKPOINT_2026-04-28_WALL_CLT_WALL_SOURCE_RESEARCH_GATE_C_CLOSEOUT_HANDOFF.md`
-35. `docs/calculator/CHECKPOINT_2026-04-28_WALL_CLT_WALL_SOURCE_RESEARCH_GATE_A_HANDOFF.md`
-36. `docs/calculator/SLICE_WALL_CLT_WALL_SOURCE_RESEARCH_PLAN.md`
-37. `docs/calculator/CHECKPOINT_2026-04-28_WALL_TIMBER_DOUBLE_BOARD_SOURCE_RESEARCH_GATE_C_CLOSEOUT_HANDOFF.md`
-38. `docs/calculator/CHECKPOINT_2026-04-28_WALL_TIMBER_DOUBLE_BOARD_SOURCE_RESEARCH_GATE_A_HANDOFF.md`
-39. `docs/calculator/SLICE_WALL_TIMBER_DOUBLE_BOARD_SOURCE_RESEARCH_PLAN.md`
-40. `docs/calculator/CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_C_CLOSEOUT_HANDOFF.md`
-41. `docs/calculator/CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_B_HANDOFF.md`
-42. `docs/calculator/CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_A_HANDOFF.md`
-43. `docs/calculator/SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md`
-44. `docs/calculator/CURRENT_STATE.md`
-45. `docs/calculator/CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_C_CLOSEOUT_HANDOFF.md`
-46. `docs/calculator/CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_B_HANDOFF.md`
-47. `docs/calculator/SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md`
-48. `docs/calculator/CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_A_HANDOFF.md`
-49. `docs/calculator/CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_C_CLOSEOUT_HANDOFF.md`
-50. `docs/calculator/CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_B_HANDOFF.md`
-51. `docs/calculator/CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_A_HANDOFF.md`
-52. `docs/calculator/SLICE_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_ACQUISITION_PLAN.md`
-53. `docs/calculator/CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_C_CLOSEOUT_HANDOFF.md`
-54. `docs/calculator/CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_HANDOFF.md`
-55. `docs/calculator/CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_REVALIDATION.md`
-56. `docs/calculator/CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_HANDOFF.md`
-57. `docs/calculator/CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_A_HANDOFF.md`
-58. `docs/calculator/SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md`
-59. `docs/calculator/CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_C_CLOSEOUT_HANDOFF.md`
-60. `docs/calculator/SLICE_WALL_SINGLE_LEAF_MASS_LAW_CALIBRATION_PLAN.md`
-61. `docs/calculator/CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_B_HANDOFF.md`
-62. `docs/calculator/CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_A_HANDOFF.md`
-63. `docs/calculator/CHECKPOINT_2026-04-27_WALL_COVERAGE_EXPANSION_PLANNING_V2_GATE_A_HANDOFF.md`
-64. `docs/calculator/SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md`
-65. `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md`
-66. `docs/calculator/SOURCE_GAP_LEDGER.md`
-67. `docs/calculator/CALCULATION_MODEL_AND_VALIDATION.md`
-68. `docs/calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md`
-69. `docs/calculator/SLICE_PROPOSAL_REPORT_POLISH_PLAN.md`
-70. `docs/calculator/POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md`
-71. `docs/calculator/PERSONAL_USE_READINESS_ROADMAP.md`
+2. `docs/calculator/CHECKPOINT_2026-04-29_INTERNAL_USE_PILOT_HANDOFF_GATE_A_HANDOFF.md`
+3. `docs/calculator/INTERNAL_USE_PILOT_HANDOFF.md`
+4. `docs/calculator/SLICE_INTERNAL_USE_PILOT_HANDOFF_V1_PLAN.md`
+5. `docs/calculator/CHECKPOINT_2026-04-29_INTERNAL_USE_ACCEPTANCE_REHEARSAL_GATE_C_CLOSEOUT_HANDOFF.md`
+6. `docs/calculator/CHECKPOINT_2026-04-29_INTERNAL_USE_ACCEPTANCE_REHEARSAL_GATE_A_HANDOFF.md`
+7. `docs/calculator/SLICE_INTERNAL_USE_ACCEPTANCE_REHEARSAL_V1_PLAN.md`
+8. `docs/calculator/CHECKPOINT_2026-04-29_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_GATE_C_CLOSEOUT_HANDOFF.md`
+9. `docs/calculator/CHECKPOINT_2026-04-29_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_GATE_B_HANDOFF.md`
+10. `docs/calculator/CHECKPOINT_2026-04-29_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_GATE_A_HANDOFF.md`
+11. `docs/calculator/SLICE_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_PLAN.md`
+12. `docs/calculator/CHECKPOINT_2026-04-29_CALCULATOR_SOURCE_PACK_READINESS_TRIAGE_GATE_A_HANDOFF.md`
+13. `docs/calculator/SLICE_CALCULATOR_SOURCE_PACK_READINESS_TRIAGE_PLAN.md`
+14. `docs/calculator/CHECKPOINT_2026-04-29_INTERNAL_USE_OPERATING_ENVELOPE_GATE_C_CLOSEOUT_HANDOFF.md`
+15. `docs/calculator/CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_CLEAN_STOP_GATE_C_READY_HANDOFF.md`
+16. `docs/calculator/CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_BROAD_REVALIDATION_GATE_C_READY_HANDOFF.md`
+17. `docs/calculator/CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_GATE_B_HANDOFF.md`
+18. `docs/calculator/CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_GATE_A_HANDOFF.md`
+19. `docs/calculator/INTERNAL_USE_PILOT_USAGE_NOTE.md`
+20. `docs/calculator/SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md`
+21. `docs/calculator/CHECKPOINT_2026-04-28_CALCULATOR_SOURCE_GAP_REVALIDATION_V3_GATE_A_HANDOFF.md`
+22. `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V3_PLAN.md`
+23. `docs/calculator/CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md`
+24. `docs/calculator/CHECKPOINT_2026-04-28_WALL_FRAMED_FACING_SPLIT_WARNING_STABILITY_GATE_C_CLOSEOUT_HANDOFF.md`
+25. `docs/calculator/CHECKPOINT_2026-04-28_WALL_FRAMED_FACING_SPLIT_WARNING_STABILITY_GATE_B_HANDOFF.md`
+26. `docs/calculator/CHECKPOINT_2026-04-28_WALL_FRAMED_FACING_SPLIT_WARNING_STABILITY_GATE_A_HANDOFF.md`
+27. `docs/calculator/SLICE_WALL_FRAMED_FACING_SPLIT_WARNING_STABILITY_PLAN.md`
+28. `docs/calculator/CHECKPOINT_2026-04-28_FLOOR_LAYER_ORDER_INVARIANCE_EXPANSION_GATE_C_CLOSEOUT_HANDOFF.md`
+29. `docs/calculator/CHECKPOINT_2026-04-28_FLOOR_LAYER_ORDER_INVARIANCE_EXPANSION_GATE_A_HANDOFF.md`
+30. `docs/calculator/SLICE_FLOOR_LAYER_ORDER_INVARIANCE_EXPANSION_PLAN.md`
+31. `docs/calculator/CHECKPOINT_2026-04-28_CALCULATOR_SOURCE_GAP_REVALIDATION_V2_GATE_A_HANDOFF.md`
+32. `docs/calculator/CHECKPOINT_2026-04-28_WALL_LINED_MASSIVE_HEAVY_CORE_SOURCE_RESEARCH_GATE_C_CLOSEOUT_HANDOFF.md`
+33. `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V2_PLAN.md`
+34. `docs/calculator/CHECKPOINT_2026-04-28_WALL_LINED_MASSIVE_HEAVY_CORE_SOURCE_RESEARCH_GATE_A_HANDOFF.md`
+35. `docs/calculator/SLICE_WALL_LINED_MASSIVE_HEAVY_CORE_SOURCE_RESEARCH_PLAN.md`
+36. `docs/calculator/CHECKPOINT_2026-04-28_WALL_CLT_WALL_SOURCE_RESEARCH_GATE_C_CLOSEOUT_HANDOFF.md`
+37. `docs/calculator/CHECKPOINT_2026-04-28_WALL_CLT_WALL_SOURCE_RESEARCH_GATE_A_HANDOFF.md`
+38. `docs/calculator/SLICE_WALL_CLT_WALL_SOURCE_RESEARCH_PLAN.md`
+39. `docs/calculator/CHECKPOINT_2026-04-28_WALL_TIMBER_DOUBLE_BOARD_SOURCE_RESEARCH_GATE_C_CLOSEOUT_HANDOFF.md`
+40. `docs/calculator/CHECKPOINT_2026-04-28_WALL_TIMBER_DOUBLE_BOARD_SOURCE_RESEARCH_GATE_A_HANDOFF.md`
+41. `docs/calculator/SLICE_WALL_TIMBER_DOUBLE_BOARD_SOURCE_RESEARCH_PLAN.md`
+42. `docs/calculator/CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_C_CLOSEOUT_HANDOFF.md`
+43. `docs/calculator/CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_B_HANDOFF.md`
+44. `docs/calculator/CHECKPOINT_2026-04-28_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_GATE_A_HANDOFF.md`
+45. `docs/calculator/SLICE_WALL_NO_STUD_DOUBLE_LEAF_SOURCE_RESEARCH_PLAN.md`
+46. `docs/calculator/CURRENT_STATE.md`
+47. `docs/calculator/CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_C_CLOSEOUT_HANDOFF.md`
+48. `docs/calculator/CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_B_HANDOFF.md`
+49. `docs/calculator/SLICE_WALL_SOURCE_CATALOG_ACQUISITION_PLAN.md`
+50. `docs/calculator/CHECKPOINT_2026-04-28_WALL_SOURCE_CATALOG_ACQUISITION_GATE_A_HANDOFF.md`
+51. `docs/calculator/CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_C_CLOSEOUT_HANDOFF.md`
+52. `docs/calculator/CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_B_HANDOFF.md`
+53. `docs/calculator/CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_GATE_A_HANDOFF.md`
+54. `docs/calculator/SLICE_WALL_DOUBLE_LEAF_SOURCE_EVIDENCE_ACQUISITION_PLAN.md`
+55. `docs/calculator/CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_C_CLOSEOUT_HANDOFF.md`
+56. `docs/calculator/CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_HANDOFF.md`
+57. `docs/calculator/CHECKPOINT_2026-04-28_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_REVALIDATION.md`
+58. `docs/calculator/CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_B_READY_HANDOFF.md`
+59. `docs/calculator/CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_A_HANDOFF.md`
+60. `docs/calculator/SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md`
+61. `docs/calculator/CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_C_CLOSEOUT_HANDOFF.md`
+62. `docs/calculator/SLICE_WALL_SINGLE_LEAF_MASS_LAW_CALIBRATION_PLAN.md`
+63. `docs/calculator/CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_B_HANDOFF.md`
+64. `docs/calculator/CHECKPOINT_2026-04-27_WALL_SINGLE_LEAF_MASS_LAW_GATE_A_HANDOFF.md`
+65. `docs/calculator/CHECKPOINT_2026-04-27_WALL_COVERAGE_EXPANSION_PLANNING_V2_GATE_A_HANDOFF.md`
+66. `docs/calculator/SLICE_WALL_COVERAGE_EXPANSION_PLANNING_V2_PLAN.md`
+67. `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_PLAN.md`
+68. `docs/calculator/SOURCE_GAP_LEDGER.md`
+69. `docs/calculator/CALCULATION_MODEL_AND_VALIDATION.md`
+70. `docs/calculator/DYNAMIC_AIRBORNE_CARTOGRAPHY.md`
+71. `docs/calculator/SLICE_PROPOSAL_REPORT_POLISH_PLAN.md`
+72. `docs/calculator/POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md`
+73. `docs/calculator/PERSONAL_USE_READINESS_ROADMAP.md`
 
 Use the long-form plan files only for backlog context after reading the current
 plan.
@@ -84,16 +86,22 @@ plan.
 - current selected slice:
   `internal_use_pilot_handoff_v1`
 - current first decision inside the slice:
-  `packages/engine/src/internal-use-pilot-handoff-v1-gate-a-contract.test.ts`
-  should prepare a no-runtime company-internal pilot handoff pack:
-  scenario buckets, validation evidence, known gaps, and an operator
-  checklist. It must not move runtime/support/confidence/evidence/API/
-  route-card/output-card behavior.
+  `packages/engine/src/post-internal-use-pilot-handoff-v1-next-slice-selection-contract.test.ts`
+  should close the pilot handoff unless validation names a concrete
+  pilot defect or a genuinely source-ready accuracy pack. It must not
+  move `runtime/support/confidence/evidence/API/route-card/output-card`
+  or `proposal/report/workbench-input` behavior.
 - latest checkpoint:
-  `docs/calculator/CHECKPOINT_2026-04-29_INTERNAL_USE_ACCEPTANCE_REHEARSAL_GATE_C_CLOSEOUT_HANDOFF.md`
-  closes the acceptance rehearsal no-runtime and selects
-  `internal_use_pilot_handoff_v1` because no concrete acceptance defect
-  or source-ready accuracy pack exists.
+  `docs/calculator/CHECKPOINT_2026-04-29_INTERNAL_USE_PILOT_HANDOFF_GATE_A_HANDOFF.md`
+  lands the no-runtime company-internal pilot handoff pack and selects
+  Gate C closeout / next-slice selection.
+- just landed pilot handoff decision:
+  `packages/engine/src/internal-use-pilot-handoff-v1-gate-a-contract.test.ts`
+  creates `docs/calculator/INTERNAL_USE_PILOT_HANDOFF.md`, tying the
+  ready/caveated/blocked/hostile scenario buckets to validation
+  evidence, known gaps, and operator steps without moving
+  `runtime/support/confidence/evidence/API/route-card/output-card` or
+  `proposal/report/workbench-input` behavior.
 - just closed acceptance rehearsal decision:
   `packages/engine/src/post-internal-use-acceptance-rehearsal-v1-next-slice-selection-contract.test.ts`
   keeps runtime/support/confidence/evidence/API/route-card/output-card/
@@ -172,18 +180,16 @@ plan.
 - if a slice closes, update the current plan, current state, and the relevant
   checkpoint/handoff note together
 - keep planning-contract tests in sync with the selected next slice
-- `internal_use_pilot_handoff_v1` is selected because the acceptance
-  matrix is green, no acceptance defect was found, and source-pack
-  readiness still found no source-ready accuracy import. Do not promote
-  any family for company pilot convenience; the next slice must make the
-  current operating envelope usable as a controlled handoff with clear
-  caveats, validation evidence, known gaps, and operator steps. No
-  external source research is needed for Gate A; later source-ready
+- `internal_use_pilot_handoff_v1` remains selected because Gate A
+  prepared the controlled handoff pack and the slice still needs Gate C
+  closeout. Do not promote any family for company pilot convenience. No
+  external source research is needed for Gate C; later source-ready
   accuracy work must still provide exact row locators, metric policy,
   tolerance owner, and paired visible tests before runtime movement.
 - prepared planning surfaces: internal-use acceptance rehearsal is in
   `SLICE_INTERNAL_USE_ACCEPTANCE_REHEARSAL_V1_PLAN.md`; pilot handoff
-  is in `SLICE_INTERNAL_USE_PILOT_HANDOFF_V1_PLAN.md`; CLT /
+  is in `SLICE_INTERNAL_USE_PILOT_HANDOFF_V1_PLAN.md` and
+  `INTERNAL_USE_PILOT_HANDOFF.md`; CLT /
   mass-timber extraction is closed in
   `SLICE_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_PLAN.md`; source-pack
   readiness triage is landed in
@@ -198,16 +204,13 @@ plan.
 - run `pnpm calculator:gate:current` before and after touching the active
   selected slice
 - use `pnpm check` only when you need the broad full-repo gate
-- latest focused validation: engine 138 files / 661 tests, web
+- latest focused validation: engine 139 files / 667 tests, web
   45 files / 216 passed + 18 skipped, build 5/5 with the known
   non-fatal `sharp/@img` warnings, whitespace guard clean
 - latest broad validation: `pnpm check` green on 2026-04-29 after the
-  CLT / mass-timber extraction Gate C landing; lint/typecheck green,
-  engine 269 files / 1469 tests, web 157 files / 890 passed + 18
-  skipped,
-  build 5/5 with the known non-fatal `sharp/@img` warnings. Broad was
-  not rerun for internal-use acceptance Gate A because it was
-  no-runtime/no-web-behavior.
+  internal-use pilot handoff Gate A landing; lint/typecheck green,
+  engine 272 files / 1487 tests, web 157 files / 890 passed + 18
+  skipped, build 5/5 with the known non-fatal `sharp/@img` warnings.
 - web broad tests run through `tools/dev/run-web-vitest.ts`; it keeps
   all 157 web test files in scope while isolating long route scans so
   Vitest worker RPC timeouts do not hide green test results

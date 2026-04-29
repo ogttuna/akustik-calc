@@ -3,7 +3,8 @@
 Status: current company-internal pilot usage note after
 `internal_use_acceptance_rehearsal_v1` Gate C closeout. The operating
 envelope and acceptance matrix are closed no-runtime; the active next
-slice is `internal_use_pilot_handoff_v1`.
+slice is `internal_use_pilot_handoff_v1`. For the concise operator
+handoff, read [INTERNAL_USE_PILOT_HANDOFF.md](./INTERNAL_USE_PILOT_HANDOFF.md).
 
 Use this note when running short company-internal calculator pilots. It
 does not certify a design and it does not promote any low-confidence,
@@ -129,8 +130,10 @@ values or promoting source-gated families.
 
 Gate C has now closed the acceptance rehearsal no-runtime. No concrete
 acceptance defect or source-ready accuracy pack was found, so the next
-bounded action is `internal_use_pilot_handoff_v1` Gate A: prepare a
-company-internal pilot handoff pack with scenario buckets, validation
-evidence, known gaps, and an operator checklist. That handoff must keep
-runtime/support/confidence/evidence/API/route-card/output-card behavior
-frozen.
+bounded action moved to `internal_use_pilot_handoff_v1`. Gate A has now
+prepared [INTERNAL_USE_PILOT_HANDOFF.md](./INTERNAL_USE_PILOT_HANDOFF.md)
+with scenario buckets, validation evidence, known gaps, and an operator
+checklist. That handoff keeps
+`runtime/support/confidence/evidence/API/route-card/output-card` and
+`proposal/report/workbench-input` behavior frozen and selects Gate C
+closeout / next-slice selection.
