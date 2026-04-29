@@ -1,6 +1,8 @@
 # Source-Ready Intake Backlog
 
-Status: Gate A artifact for `calculator_source_intake_backlog_cleanup_v1`.
+Status: Gate A artifact for `calculator_source_intake_backlog_cleanup_v1`;
+Gate C source for the selected
+`generated_floor_fallback_topology_delta_v1` follow-up.
 
 Last reviewed: 2026-04-29.
 
@@ -32,6 +34,23 @@ Selected next file:
 Reason: every current source family is still blocked from runtime import.
 The next bounded action is Gate C closeout / next-slice selection unless
 a newly discovered source-ready pack satisfies all import prerequisites.
+
+## Gate C Decision
+
+`calculator_source_intake_backlog_cleanup_v1` Gate C closes no-runtime
+and selects:
+
+`generated_floor_fallback_topology_delta_v1`
+
+Selected first file:
+
+`packages/engine/src/generated-floor-fallback-topology-delta-gate-a-contract.test.ts`
+
+Reason: no family is source-ready for runtime import. Generated floor
+fallback has the clearest bounded no-runtime follow-up because Pliteq
+exact rows and UBIQ bound rows already provide concrete source
+topologies for a delta matrix, while the live generated fallback still
+lacks exact or bounded topology.
 
 ## Source Verification Notes
 
@@ -244,12 +263,11 @@ is consolidation and explicit cross-linking, not removal.
 
 ## Immediate Next Steps
 
-1. Close `calculator_source_intake_backlog_cleanup_v1` at Gate C with
-   no runtime movement unless a source-ready pack appears before the
-   closeout.
-2. In Gate C, choose the next slice from this backlog. The default
-   honest follow-up is another no-runtime extraction/cleanup step, not
-   a runtime import.
+1. Implement `generated_floor_fallback_topology_delta_v1` Gate A:
+   `packages/engine/src/generated-floor-fallback-topology-delta-gate-a-contract.test.ts`.
+2. Keep the follow-up no-runtime unless Gate A names exact topology,
+   metric owner, tolerance owner, protected negative boundaries, and
+   paired engine/web visible tests.
 3. Keep all validation gates green:
    `pnpm calculator:gate:current`, targeted Gate A/Gate C contracts,
    `git diff --check`, and `pnpm check` when the release gate is needed.

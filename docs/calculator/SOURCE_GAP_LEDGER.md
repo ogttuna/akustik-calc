@@ -31,7 +31,9 @@ no-runtime and selected `internal_use_acceptance_rehearsal_v1`;
 `calculator_source_intake_backlog_cleanup_v1` Gate A landed no-runtime
 with [SOURCE_READY_INTAKE_BACKLOG.md](./SOURCE_READY_INTAKE_BACKLOG.md)
 as the current cross-family source-ready prerequisite map before more
-accuracy work;
+accuracy work; Gate C then closed that cleanup no-runtime and selected
+`generated_floor_fallback_topology_delta_v1` as a no-runtime Pliteq /
+UBIQ topology-delta pass;
 source-gap content remains floor-dominant historical context)
 
 Purpose:
@@ -148,9 +150,12 @@ Important scope note:
   source-intake backlog cleanup Gate A has now consolidated the current
   source-ready backlog in
   [SOURCE_READY_INTAKE_BACKLOG.md](./SOURCE_READY_INTAKE_BACKLOG.md)
-  without reopening any fail-closed family. This ledger still keeps all
-  historical blocked families fail-closed and remains historical /
-  floor-dominant context.
+  without reopening any fail-closed family. Gate C then closed the
+  cleanup no-runtime and selected generated floor fallback topology
+  delta because Pliteq exact and UBIQ INEX / FL-32 bound source
+  topologies can be compared without importing values. This ledger still
+  keeps all historical blocked families fail-closed and remains
+  historical / floor-dominant context.
 - `good_calculator_final_audit_v1` closed without reopening any
   source-gated calculator family. `wall_formula_family_widening_v1`
   then also closed without reopening any blocked family: it clarified

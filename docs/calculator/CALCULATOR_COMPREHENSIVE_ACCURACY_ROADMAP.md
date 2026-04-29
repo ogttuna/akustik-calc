@@ -9,12 +9,15 @@ readiness then selected CLT / mass-timber extraction for no-runtime row
 and metric inspection; CLT / mass-timber Gate C closed no-runtime
 because no metric-mapping or formula-tolerance path was ready. Internal
 acceptance rehearsal and pilot handoff then closed no-runtime.
-`calculator_source_intake_backlog_cleanup_v1` Gate A has now landed
-that clean prerequisite map in
+`calculator_source_intake_backlog_cleanup_v1` Gate A landed that clean
+prerequisite map in
 [SOURCE_READY_INTAKE_BACKLOG.md](./SOURCE_READY_INTAKE_BACKLOG.md).
-Every source family remains `runtimeImportReadyNow: false`. This
-roadmap remains the long-horizon source-gated accuracy context; it is
-not a runtime import approval.
+Gate C then closed the cleanup slice no-runtime and selected
+`generated_floor_fallback_topology_delta_v1` because every source
+family remains `runtimeImportReadyNow: false`, while Pliteq exact and
+UBIQ INEX / FL-32 bound floor topologies can be delta-mapped without
+runtime movement. This roadmap remains the long-horizon source-gated
+accuracy context; it is not a runtime import approval.
 
 ## Purpose
 
@@ -115,16 +118,28 @@ not a substitute for source evidence; it is a company-use readiness
 check that keeps caveated, low-confidence, screening, unsupported, and
 fail-closed behavior executable.
 
-### 1c. Source-Ready Intake Backlog Cleanup - Gate A Landed
+### 1c. Source-Ready Intake Backlog Cleanup - Closed No-Runtime
 
 `calculator_source_intake_backlog_cleanup_v1` Gate A landed no-runtime.
 It consolidates the timber double-board, CLT / mass-timber, no-stud
 double-leaf, generated floor fallback, lined-massive / heavy-core, and
 historical blocked-family prerequisites into
 [SOURCE_READY_INTAKE_BACKLOG.md](./SOURCE_READY_INTAKE_BACKLOG.md).
-Gate C should close the cleanup slice unless a source-ready pack with
-exact topology, metric owner, tolerance owner, protected negative
-boundaries, and paired visible tests is already available.
+Gate C closed no-runtime because no source-ready pack with exact
+topology, metric owner, tolerance owner, protected negative boundaries,
+and paired visible tests is already available. It selected
+`generated_floor_fallback_topology_delta_v1`.
+
+### 1d. Generated Floor Fallback Topology Delta - Active No-Runtime
+
+`generated_floor_fallback_topology_delta_v1` should map the live
+generated floor fallback against Pliteq exact and UBIQ INEX / FL-32
+bound floor topologies. This is a no-runtime topology-delta pass: it
+must keep current fallback values, support, confidence, evidence,
+route-card, output-card, proposal/report, and workbench-input behavior
+frozen unless it selects a later bounded runtime slice with exact
+topology, metric owner, tolerance owner, negative boundaries, and paired
+visible tests.
 
 ### 2. Timber Double-Board Source Intake
 
@@ -167,6 +182,8 @@ Minimum tests:
 
 Reopen floor fallback only if a generated fallback stack can be mapped
 to exact source topology or a bounded steel/open-web family rule.
+The active generated-floor topology-delta slice is the prerequisite
+mapping pass; it is not a promotion.
 
 Minimum tests:
 

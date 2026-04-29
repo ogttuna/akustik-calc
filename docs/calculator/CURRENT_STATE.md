@@ -84,8 +84,10 @@ next-slice selection;
 `calculator_source_intake_backlog_cleanup_v1` Gate A landed no-runtime
 with the source-ready intake backlog matrix and selected Gate C
 closeout / next-slice selection;
+`calculator_source_intake_backlog_cleanup_v1` Gate C closed no-runtime
+and selected `generated_floor_fallback_topology_delta_v1`;
 latest checkpoint:
-[CHECKPOINT_2026-04-29_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-29_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_GATE_A_HANDOFF.md)).
+[CHECKPOINT_2026-04-29_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-29_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_GATE_C_CLOSEOUT_HANDOFF.md)).
 The extra 2026-04-28 planning pass made the readiness ladder explicit
 and the source-gap Gate A selected the short internal pilot
 operating-envelope slice. Internal-use Gate A then produced
@@ -146,12 +148,19 @@ heavy-core wall, and historical blocked families now have one current
 first missing requirement and negative-boundary register. All public
 source locators remain context only. No runtime/support/confidence/
 evidence/API/route-card/output-card or proposal/report/workbench-input
-surface moved. The next active file is
+surface moved. The selected Gate C file was
 `packages/engine/src/post-calculator-source-intake-backlog-cleanup-v1-next-slice-selection-contract.test.ts`.
-The landed Gate A file remains
+That Gate C closeout then closed source-intake backlog cleanup
+no-runtime, kept every backlog candidate `runtimeImportReadyNow: false`,
+and selected `generated_floor_fallback_topology_delta_v1`
+because Pliteq exact and UBIQ INEX / FL-32 bound source topologies can
+be delta-mapped without importing values. The next active file is now
+`packages/engine/src/generated-floor-fallback-topology-delta-gate-a-contract.test.ts`.
+The landed source-intake Gate A file remains
 `packages/engine/src/calculator-source-intake-backlog-cleanup-gate-a-contract.test.ts`.
 See
 [SOURCE_READY_INTAKE_BACKLOG.md](./SOURCE_READY_INTAKE_BACKLOG.md),
+[SLICE_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_V1_PLAN.md](./SLICE_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_V1_PLAN.md),
 [SLICE_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_V1_PLAN.md](./SLICE_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_V1_PLAN.md),
 [SLICE_INTERNAL_USE_PILOT_HANDOFF_V1_PLAN.md](./SLICE_INTERNAL_USE_PILOT_HANDOFF_V1_PLAN.md),
 [SLICE_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_PLAN.md](./SLICE_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_PLAN.md),
@@ -169,8 +178,8 @@ storage v1, project/proposal route authorization, auth-session
 hardening, and the pure team-access policy model.
 
 - **Engine broad suite**: latest broad `pnpm check` on 2026-04-29 is
-  green after the source-intake backlog cleanup Gate A handoff:
-  274 / 274 files, 1499 / 1499 tests green.
+  green after the source-intake backlog cleanup Gate C closeout:
+  275 / 275 files, 1505 / 1505 tests green.
   (up from 193/1068 pre-session; step-7 landed 4 wall cases +
   F1/F2 engine fixes + 32-assertion cross-mode torture matrix
   + 2 regression guards + post-contract; step-7b landed the
@@ -184,7 +193,7 @@ hardening, and the pure team-access policy model.
   under the Vitest worker timeout; Gate B and Gate C then added focused
   planning/value contract files).
 - **Web broad suite**: latest broad `pnpm check` on 2026-04-29 is
-  green after the source-intake backlog cleanup Gate A handoff: 157 / 157
+  green after the source-intake backlog cleanup Gate C closeout: 157 / 157
   files in scope through `tools/dev/run-web-vitest.ts`, 890 tests
   passed + 18 discovery helpers intentionally skipped. The runner
   isolates six long route-scan files and batches the
@@ -198,7 +207,7 @@ hardening, and the pure team-access policy model.
   input contract so it asserts parse behavior instead of calling
   `.keyof()` on the exported shared `AirborneContextSchema` `ZodType`.
 - **Broad `pnpm check`**: lint + typecheck + tests + build green after
-  the source-intake backlog cleanup Gate A handoff. The first broad pass
+  the source-intake backlog cleanup Gate C closeout. The first broad pass
   caught a no-runtime type-only helper issue in the acceptance rehearsal
   test contract; the helper now asserts target-output partitions at
   runtime while accepting the wider shared `AssemblyCalculation` type.
@@ -404,39 +413,51 @@ hardening, and the pure team-access policy model.
   for the no-runtime Gate C closeout and source-intake backlog cleanup
   selection, plus
   `calculator-source-intake-backlog-cleanup-gate-a-contract.test.ts`
-  for the no-runtime source-ready backlog matrix. Focused gate after
-  source-intake backlog Gate A: 141 engine files / 679
-  tests, 45 web files / 216 passed + 18
-  skipped, build 5/5 tasks with known non-fatal `sharp/@img` warnings,
-  whitespace guard clean. Broad `pnpm check` is green: lint/typecheck
-  green, engine 274 files / 1499 tests, web 157 files / 890 passed + 18
-  skipped, build 5/5.
+  for the no-runtime source-ready backlog matrix, plus
+  `post-calculator-source-intake-backlog-cleanup-v1-next-slice-selection-contract.test.ts`
+  for the no-runtime Gate C closeout and generated-floor topology-delta
+  selection. Focused gate after source-intake backlog Gate C: 142
+  engine files / 685 tests, 45 web files / 216 passed + 18 skipped,
+  build 5/5 tasks with known non-fatal `sharp/@img` warnings,
+  whitespace guard clean. Broad `pnpm check` is green after Gate C:
+  lint/typecheck green, engine 275 files / 1505 tests, web 157 files /
+  890 passed + 18 skipped, build 5/5.
 
 ## Active Slice
 
-`calculator_source_intake_backlog_cleanup_v1` (no-runtime source-ready
-intake backlog cleanup; Gate A landed / Gate C next). It was selected by
-`packages/engine/src/post-internal-use-pilot-handoff-v1-next-slice-selection-contract.test.ts`
-after the company-internal pilot handoff closed without a concrete
-pilot defect or source-ready accuracy pack. Gate A built one
-agent-readable backlog matrix for the blocked source-gated families in
-[SOURCE_READY_INTAKE_BACKLOG.md](./SOURCE_READY_INTAKE_BACKLOG.md) and
-kept runtime/support/confidence/evidence/API/route-card/output-card and
-proposal/report/workbench-input behavior frozen.
+`generated_floor_fallback_topology_delta_v1` (no-runtime topology-delta
+matrix; Gate A next). It was selected by
+`packages/engine/src/post-calculator-source-intake-backlog-cleanup-v1-next-slice-selection-contract.test.ts`
+after source-intake backlog cleanup closed with every family still
+`runtimeImportReadyNow: false`. The slice exists to compare the live
+generated `floor-steel-fallback` route against Pliteq exact and UBIQ
+INEX / FL-32 bound floor topologies without importing values or
+promoting support/confidence.
 
 The next implementation file is
-`packages/engine/src/post-calculator-source-intake-backlog-cleanup-v1-next-slice-selection-contract.test.ts`.
+`packages/engine/src/generated-floor-fallback-topology-delta-gate-a-contract.test.ts`.
 Planning surface:
-[SLICE_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_V1_PLAN.md](./SLICE_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_V1_PLAN.md)
+[SLICE_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_V1_PLAN.md](./SLICE_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_V1_PLAN.md)
 and [SOURCE_READY_INTAKE_BACKLOG.md](./SOURCE_READY_INTAKE_BACKLOG.md).
 
 Just closed context:
 Gate C closed no-runtime in
-`packages/engine/src/post-internal-use-pilot-handoff-v1-next-slice-selection-contract.test.ts`.
-It keeps [INTERNAL_USE_PILOT_HANDOFF.md](./INTERNAL_USE_PILOT_HANDOFF.md)
-as controlled company-use evidence and rejects promotion of
-low-confidence, screening, formula-owned, or source-gated lanes for
-pilot convenience.
+`packages/engine/src/post-calculator-source-intake-backlog-cleanup-v1-next-slice-selection-contract.test.ts`.
+It keeps [SOURCE_READY_INTAKE_BACKLOG.md](./SOURCE_READY_INTAKE_BACKLOG.md)
+as selection evidence, preserves `runtime/support/confidence/evidence`,
+`API/route-card/output-card`, and `proposal/report/workbench-input`
+behavior, and selects generated floor topology-delta work because it is
+the only concrete no-runtime next step with named exact/bound source
+topologies.
+
+Prior source-intake context:
+Gate A landed no-runtime in
+`packages/engine/src/calculator-source-intake-backlog-cleanup-gate-a-contract.test.ts`.
+It built one agent-readable backlog matrix for the blocked
+source-gated families in
+[SOURCE_READY_INTAKE_BACKLOG.md](./SOURCE_READY_INTAKE_BACKLOG.md) and
+kept runtime/support/confidence/evidence/API/route-card/output-card and
+proposal/report/workbench-input behavior frozen.
 
 Prior handoff context:
 Gate A landed no-runtime in
@@ -1283,6 +1304,7 @@ next-slice selection.
 
 | Slice | Master-plan step | Closed | Post-contract |
 |---|---|---|---|
+| `calculator_source_intake_backlog_cleanup_v1` Gate C | source-ready backlog cleanup closeout | 2026-04-29 | `post-calculator-source-intake-backlog-cleanup-v1-next-slice-selection-contract.test.ts` |
 | `calculator_source_intake_backlog_cleanup_v1` Gate A | source-ready backlog cleanup matrix | 2026-04-29 | `calculator-source-intake-backlog-cleanup-gate-a-contract.test.ts` |
 | `internal_use_pilot_handoff_v1` Gate C | company internal pilot handoff closeout | 2026-04-29 | `post-internal-use-pilot-handoff-v1-next-slice-selection-contract.test.ts` |
 | `internal_use_pilot_handoff_v1` Gate A | company internal pilot handoff pack | 2026-04-29 | `internal-use-pilot-handoff-v1-gate-a-contract.test.ts` |
@@ -1524,9 +1546,10 @@ time without context loss:
 
 ## Resume Order For The Next Agent
 
-1. Read [CHECKPOINT_2026-04-29_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-29_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_GATE_A_HANDOFF.md)
-   for the latest landed gate and selected next file.
+1. Read [CHECKPOINT_2026-04-29_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-29_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_GATE_C_CLOSEOUT_HANDOFF.md)
+   for the latest landed closeout and selected next file.
 2. Read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md),
+   [SLICE_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_V1_PLAN.md](./SLICE_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_V1_PLAN.md),
    [SLICE_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_V1_PLAN.md](./SLICE_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_V1_PLAN.md),
    [SOURCE_READY_INTAKE_BACKLOG.md](./SOURCE_READY_INTAKE_BACKLOG.md),
    [INTERNAL_USE_PILOT_HANDOFF.md](./INTERNAL_USE_PILOT_HANDOFF.md),
@@ -1538,9 +1561,9 @@ time without context loss:
    [SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md](./SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md),
    [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md), and
    [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md).
-   Continue `calculator_source_intake_backlog_cleanup_v1` at Gate C by
+   Continue `generated_floor_fallback_topology_delta_v1` at Gate A by
    adding
-   `packages/engine/src/post-calculator-source-intake-backlog-cleanup-v1-next-slice-selection-contract.test.ts`.
+   `packages/engine/src/generated-floor-fallback-topology-delta-gate-a-contract.test.ts`.
 3. Read [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
    for the now-closed calculator-priority chain and its evidence-tier
    caveats.
@@ -1556,7 +1579,7 @@ time without context loss:
 7. Do not change source posture, output support, evidence tiers,
    confidence scores, API shape, route-card values, output-card
    statuses, proposal/report copy, or workbench input behavior during
-   Gate C. Frozen surface shorthand:
+   Gate A. Frozen surface shorthand:
    `runtime/support/confidence/evidence/API/route-card/output-card` and
    `proposal/report/workbench-input`. A future
    source-ready accuracy slice may be selected only if a later contract names a
