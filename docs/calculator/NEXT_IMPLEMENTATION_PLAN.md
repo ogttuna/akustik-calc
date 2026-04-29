@@ -71,6 +71,9 @@ closeout / next-slice selection;
 `calculator_source_intake_backlog_cleanup_v1` Gate C closed no-runtime
 and selected `generated_floor_fallback_topology_delta_v1` because no
 source-ready runtime pack exists;
+`generated_floor_fallback_topology_delta_v1` Gate A landed no-runtime
+with the topology-delta matrix and selected Gate C closeout /
+next-slice selection;
 see
 `SLICE_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_V1_PLAN.md`).
 
@@ -104,17 +107,24 @@ For every next slice decision:
 - **Active slice**:
   `generated_floor_fallback_topology_delta_v1`.
 - **Latest checkpoint**:
-  [CHECKPOINT_2026-04-29_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-29_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_GATE_C_CLOSEOUT_HANDOFF.md).
+  [CHECKPOINT_2026-04-29_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-29_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_GATE_A_HANDOFF.md).
 - **Planning surface**:
   [SLICE_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_V1_PLAN.md](./SLICE_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_V1_PLAN.md)
   and [SOURCE_READY_INTAKE_BACKLOG.md](./SOURCE_READY_INTAKE_BACKLOG.md).
 - **Next active-slice gate**:
-  `packages/engine/src/generated-floor-fallback-topology-delta-gate-a-contract.test.ts`
-  should build the no-runtime topology-delta matrix for generated floor
-  fallback against Pliteq exact and UBIQ bound source topologies. It
-  must preserve `runtime/support/confidence/evidence`,
+  `packages/engine/src/post-generated-floor-fallback-topology-delta-v1-next-slice-selection-contract.test.ts`
+  should close the topology-delta slice no-runtime unless a
+  source-ready floor runtime candidate is actually available. It must
+  preserve `runtime/support/confidence/evidence`,
   `API/route-card/output-card`, and `proposal/report/workbench-input`
   behavior.
+- **Just landed active-slice gate**:
+  `packages/engine/src/generated-floor-fallback-topology-delta-gate-a-contract.test.ts`
+  lands the no-runtime topology-delta matrix for generated floor
+  fallback. The live fallback stayed low-confidence; Pliteq exact and
+  UBIQ FL-32 bound precedence stayed source-topology gated; unsupported
+  output and split-variant boundaries stayed explicit. Gate B is skipped
+  because no runtime candidate is source-ready.
 - **Just closed active-slice selection gate**:
   `packages/engine/src/post-calculator-source-intake-backlog-cleanup-v1-next-slice-selection-contract.test.ts`
   closes source-intake backlog cleanup no-runtime, keeps every backlog
@@ -196,13 +206,14 @@ For every next slice decision:
   closed no-runtime at Gate C and selected the source-pack readiness
   triage slice.
 - **Latest broad validation**:
-  latest broad `pnpm check` is green after source-intake backlog
-  cleanup Gate C: lint/typecheck green, engine 275 files / 1505 tests, web 157
-  files / 890 passed + 18 skipped, build 5/5 with the known non-fatal
-  `sharp/@img` warnings. Focused current gate after source-intake
-  backlog Gate C is green: engine 142 files / 685 tests, web 45 files /
-  216 passed + 18 skipped, build 5/5 with the known non-fatal
-  `sharp/@img` warnings, whitespace guard clean.
+  latest broad `pnpm check` is green after generated floor fallback
+  topology-delta Gate A: lint/typecheck green, engine 276 files / 1511
+  tests, web 157 files / 890 passed + 18 skipped, build 5/5 with the
+  known non-fatal `sharp/@img` warnings. Focused current gate after
+  generated floor fallback topology-delta Gate A is green: engine 143
+  files / 691 tests, web 45 files / 216 passed + 18 skipped, build 5/5
+  with the known non-fatal `sharp/@img` warnings, whitespace guard
+  clean.
 - **Prepared comprehensive-accuracy roadmap**:
   [CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md](./CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md)
   records the longer source-gated program. It is roadmap context for the
@@ -219,23 +230,29 @@ For every next slice decision:
 ## Next Steps
 
 1. Implement
-   `packages/engine/src/generated-floor-fallback-topology-delta-gate-a-contract.test.ts`
-   as the selected Gate A topology-delta contract.
-2. Use [SOURCE_READY_INTAKE_BACKLOG.md](./SOURCE_READY_INTAKE_BACKLOG.md)
-   and the Pliteq / UBIQ source-topology files named in the active slice
-   plan as context. Source pointers remain intake evidence, not runtime
-   import permission.
-3. Name the generated fallback deltas by topology role: deck,
-   resilient layer, covering, ceiling cavity, ceiling fill, and support.
+   `packages/engine/src/post-generated-floor-fallback-topology-delta-v1-next-slice-selection-contract.test.ts`
+   as Gate C closeout / next-slice selection.
+2. Use the Gate A topology-delta contract and checkpoint as evidence:
+   the live fallback has near misses only, not a source-ready runtime
+   candidate.
+3. Skip Gate B unless a source-ready floor candidate is named with exact
+   topology, metric owner, tolerance owner, protected negative
+   boundaries, and paired visible tests.
 4. Keep Pliteq exact precedence, UBIQ bound precedence, unsupported
-   `L'nT,50` / lab `Ln,w+CI` / lab `DeltaLw`, many-layer, and reorder
-   boundaries explicit.
+   `L'nT,50` / lab `Ln,w+CI` / lab `DeltaLw`, split-variant, and
+   reorder boundaries explicit.
 5. Keep `runtime/support/confidence/evidence/API/route-card/output-card`
    and `proposal/report/workbench-input` behavior frozen.
-6. Run the targeted Gate A file when it lands,
+6. Run the targeted Gate C file when it lands,
    `pnpm calculator:gate:current`, and `git diff --check`. Run
-   `pnpm check` if Gate A selects a runtime candidate, changes shared
-   contracts, or materially broadens source/topology coverage.
+   `pnpm check` if Gate C is treated as a release gate.
+
+- **Just landed**: `generated_floor_fallback_topology_delta_v1`
+  Gate A.
+  `packages/engine/src/generated-floor-fallback-topology-delta-gate-a-contract.test.ts`
+  creates the executable topology-delta matrix, keeps the live fallback
+  low-confidence, proves Pliteq exact and UBIQ FL-32 bound precedence,
+  and selects Gate C closeout with no runtime movement.
 
 - **Just closed**: `calculator_source_intake_backlog_cleanup_v1`
   Gate C.
@@ -528,7 +545,8 @@ For every next slice decision:
   caveats, and many-layer / long-label report rendering is pinned.
   This did not change calculator runtime/source/confidence posture.
 - **Latest broad validation**: 2026-04-29 `pnpm check` is green after
-  the internal-use Gate C closeout: engine 265 files / 1444 tests, web
+  generated floor fallback topology-delta Gate A: engine 276 files /
+  1511 tests, web
   157 files / 890 passed + 18 skipped through
   `tools/dev/run-web-vitest.ts`, build 5/5, with only the known
   non-fatal `sharp/@img` optional-package warnings.
@@ -909,9 +927,10 @@ For every next slice decision:
 this order:
 
 1. Re-read
-   [CHECKPOINT_2026-04-29_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-29_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_GATE_C_CLOSEOUT_HANDOFF.md),
+   [CHECKPOINT_2026-04-29_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-29_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_GATE_A_HANDOFF.md),
    [SLICE_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_V1_PLAN.md](./SLICE_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_V1_PLAN.md),
    [SOURCE_READY_INTAKE_BACKLOG.md](./SOURCE_READY_INTAKE_BACKLOG.md),
+   [CHECKPOINT_2026-04-29_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-29_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_GATE_C_CLOSEOUT_HANDOFF.md),
    [SLICE_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_V1_PLAN.md](./SLICE_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_V1_PLAN.md),
    [INTERNAL_USE_PILOT_HANDOFF.md](./INTERNAL_USE_PILOT_HANDOFF.md),
    [SLICE_INTERNAL_USE_PILOT_HANDOFF_V1_PLAN.md](./SLICE_INTERNAL_USE_PILOT_HANDOFF_V1_PLAN.md),
@@ -919,20 +938,19 @@ this order:
    [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md), and the
    current-state active-slice section.
 2. Add
-   `packages/engine/src/generated-floor-fallback-topology-delta-gate-a-contract.test.ts`
-   as Gate A topology-delta matrix for generated floor fallback.
-3. Compare the live generated fallback against Pliteq exact and UBIQ
-   INEX / FL-32 bound floor topologies; name every live-stack delta and
-   protected near miss.
+   `packages/engine/src/post-generated-floor-fallback-topology-delta-v1-next-slice-selection-contract.test.ts`
+   as Gate C closeout / next-slice selection.
+3. Keep the Gate A result authoritative: it found topology near misses
+   only, so do not select Gate B or runtime movement unless a true
+   source-ready floor candidate appears.
 4. Preserve the no-runtime/no-promotion boundary: source pointers,
    handoff success, topology near misses, and nearby green tests are
    not source-gated family promotion.
 5. Update `NEXT_IMPLEMENTATION_PLAN.md`, `CURRENT_STATE.md`,
    `AGENTS.md`, the slice plan, and the relevant checkpoint together.
-6. Validate with the targeted Gate A test,
+6. Validate with the targeted Gate C test,
    `pnpm calculator:gate:current`, and `git diff --check`. Run
-   `pnpm check` if Gate A selects a runtime candidate or materially
-   changes shared/source coverage.
+   `pnpm check` if Gate C becomes the release gate.
 
 ## Personal-Use Readiness Chain
 
@@ -945,9 +963,9 @@ private day-to-day use:
    - closed at Gate C.
 
 Productization route-policy and proposal/report polish slices are
-closed. Calculator runtime/source posture stays frozen during the
-generated floor fallback topology-delta Gate A unless a later selected
-contract names a source-ready accuracy pack. The landed framed-wall
+closed. Calculator runtime/source posture stays frozen during generated
+floor fallback topology-delta Gate C unless a later selected contract
+names a source-ready accuracy pack. The landed framed-wall
 split fix remains protected, and the no-stud, timber double-board, CLT
 wall, lined-massive / heavy-core source research, source-intake backlog
 cleanup, and floor layer-order invariance expansion slices have closed

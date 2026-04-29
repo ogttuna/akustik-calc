@@ -16,8 +16,12 @@ Gate C then closed the cleanup slice no-runtime and selected
 `generated_floor_fallback_topology_delta_v1` because every source
 family remains `runtimeImportReadyNow: false`, while Pliteq exact and
 UBIQ INEX / FL-32 bound floor topologies can be delta-mapped without
-runtime movement. This roadmap remains the long-horizon source-gated
-accuracy context; it is not a runtime import approval.
+runtime movement. That generated-floor Gate A has now landed
+no-runtime: the live fallback is still low-confidence/screening, exact
+Pliteq and UBIQ FL-32 bound precedence still require source topology,
+and Gate C closeout is next because no source-ready runtime candidate
+was found. This roadmap remains the long-horizon source-gated accuracy
+context; it is not a runtime import approval.
 
 ## Purpose
 
@@ -130,16 +134,18 @@ topology, metric owner, tolerance owner, protected negative boundaries,
 and paired visible tests is already available. It selected
 `generated_floor_fallback_topology_delta_v1`.
 
-### 1d. Generated Floor Fallback Topology Delta - Active No-Runtime
+### 1d. Generated Floor Fallback Topology Delta - Gate A Landed / Gate C Next
 
-`generated_floor_fallback_topology_delta_v1` should map the live
+`generated_floor_fallback_topology_delta_v1` Gate A mapped the live
 generated floor fallback against Pliteq exact and UBIQ INEX / FL-32
-bound floor topologies. This is a no-runtime topology-delta pass: it
-must keep current fallback values, support, confidence, evidence,
+bound floor topologies. It found only topology near misses: the live
+fallback lacks the exact INEX/GenieMat/Pliteq ceiling and finish
+topology, and it also lacks the UBIQ engineered-timber / no-fill bound
+topology. Current fallback values, support, confidence, evidence,
 route-card, output-card, proposal/report, and workbench-input behavior
-frozen unless it selects a later bounded runtime slice with exact
-topology, metric owner, tolerance owner, negative boundaries, and paired
-visible tests.
+therefore stay frozen. Gate C should close this slice no-runtime unless
+it can name a later bounded runtime slice with exact topology, metric
+owner, tolerance owner, negative boundaries, and paired visible tests.
 
 ### 2. Timber Double-Board Source Intake
 

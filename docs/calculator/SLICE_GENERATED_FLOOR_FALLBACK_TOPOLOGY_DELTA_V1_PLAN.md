@@ -2,12 +2,18 @@
 
 Slice id: `generated_floor_fallback_topology_delta_v1`
 
-Status: SELECTED / GATE A NEXT (selected 2026-04-29 by
-`post-calculator-source-intake-backlog-cleanup-v1-next-slice-selection-contract.test.ts`).
+Status: GATE A LANDED / GATE C NEXT (selected 2026-04-29 by
+`post-calculator-source-intake-backlog-cleanup-v1-next-slice-selection-contract.test.ts`;
+Gate A landed 2026-04-29 by
+`generated-floor-fallback-topology-delta-gate-a-contract.test.ts`).
+
+Current Gate A file:
+
+`packages/engine/src/generated-floor-fallback-topology-delta-gate-a-contract.test.ts`
 
 Next implementation file:
 
-`packages/engine/src/generated-floor-fallback-topology-delta-gate-a-contract.test.ts`
+`packages/engine/src/post-generated-floor-fallback-topology-delta-v1-next-slice-selection-contract.test.ts`
 
 Selection reason: `calculator_source_intake_backlog_cleanup_v1` closed
 no-runtime after Gate A made every blocked source family explicit. No
@@ -39,11 +45,15 @@ topology/metric/tolerance requirement precise enough that a later slice
 can either open a source-ready runtime implementation or keep the family
 low-confidence with no ambiguity.
 
-## Gate A - Topology Delta Matrix
+## Gate A - Topology Delta Matrix - Landed
 
-Gate A should add:
+Gate A added:
 
 `packages/engine/src/generated-floor-fallback-topology-delta-gate-a-contract.test.ts`
+
+Checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-04-29_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_GATE_A_HANDOFF.md`
 
 Required Gate A artifacts:
 
@@ -90,6 +100,23 @@ Minimum assertions:
   topology, metric owner, tolerance owner, negative boundaries, and
   paired engine/web visible tests.
 
+Gate A result:
+
+- live `floor-steel-fallback` stayed low-confidence/screening with no
+  Pliteq exact match, no UBIQ bound match, and no UBIQ bound
+  interpolation;
+- Pliteq exact rows still fire when exact Pliteq topology is present;
+- UBIQ FL-32 bound rows still fire for endpoint rows and 250 mm
+  interpolation when bound topology is present;
+- live-stack deltas are now executable for support, deck, resilient
+  layer, covering, ceiling cavity, ceiling fill, and ceiling board;
+- lab `Ln,w+CI`, lab `DeltaLw`, and field `L'nT,50` remain explicit
+  unsupported outputs;
+- split live-stack variants stay finite and do not promote to exact or
+  bound rows;
+- no runtime candidate is ready now, so Gate B is skipped and Gate C
+  closeout / next-slice selection is next.
+
 Failure response:
 
 - If the delta matrix reveals a true exact Pliteq match, do not import
@@ -116,6 +143,10 @@ Otherwise skip Gate B and go straight to Gate C.
 
 ## Gate C - Closeout And Next Slice Selection
 
+Next file:
+
+`packages/engine/src/post-generated-floor-fallback-topology-delta-v1-next-slice-selection-contract.test.ts`
+
 Gate C should close the topology-delta slice no-runtime unless Gate A
 produces a real source-ready runtime candidate. Do not promote the
 generated fallback for internal-pilot convenience.
@@ -130,11 +161,20 @@ generated fallback for internal-pilot convenience.
   - broad `pnpm check`: lint/typecheck green, engine 275 files / 1505
     tests, web 157 files / 890 passed + 18 skipped, build 5/5 with the
     known non-fatal `sharp/@img` warnings.
+- Gate A targeted validation is green on 2026-04-29:
+  - targeted Gate A: 1 engine file / 6 tests.
+- Gate A focused and broad validation is green on 2026-04-29:
+  - focused current gate: engine 143 files / 691 tests, web 45 files /
+    216 passed + 18 skipped, build 5/5 with known non-fatal
+    `sharp/@img` warnings, whitespace guard clean;
+  - broad `pnpm check`: lint/typecheck green, engine 276 files / 1511
+    tests, web 157 files / 890 passed + 18 skipped, build 5/5 with the
+    known non-fatal `sharp/@img` warnings.
 - Run `pnpm calculator:gate:current` before and after touching the
   selected slice.
 - Use the Gate A engine contract while iterating.
-- Add the Gate A contract to `tools/dev/run-calculator-current-gate.ts`
-  when it lands.
+- The Gate A contract is now included in
+  `tools/dev/run-calculator-current-gate.ts`.
 - Run `git diff --check`.
 - Run `pnpm check` if Gate A selects a runtime candidate, changes
   shared contracts, or materially broadens source/topology coverage.
