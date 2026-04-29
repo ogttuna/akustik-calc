@@ -8,9 +8,11 @@ selected `calculator_source_pack_readiness_triage_v1`; source-pack
 readiness then selected CLT / mass-timber extraction for no-runtime row
 and metric inspection; CLT / mass-timber Gate C closed no-runtime
 because no metric-mapping or formula-tolerance path was ready. Internal
-acceptance rehearsal and pilot handoff then closed no-runtime. The
-active slice is now `calculator_source_intake_backlog_cleanup_v1` so
-the next source-ready decision has one clean prerequisite map. This
+acceptance rehearsal and pilot handoff then closed no-runtime.
+`calculator_source_intake_backlog_cleanup_v1` Gate A has now landed
+that clean prerequisite map in
+[SOURCE_READY_INTAKE_BACKLOG.md](./SOURCE_READY_INTAKE_BACKLOG.md).
+Every source family remains `runtimeImportReadyNow: false`. This
 roadmap remains the long-horizon source-gated accuracy context; it is
 not a runtime import approval.
 
@@ -54,6 +56,10 @@ blend.
 | `GDMTXA04A` visible exact reopen | fail-closed | composite dry-screed surface model with source-equivalent topology |
 | `C11c` exact import | fail-closed | correction evidence for the anomalous combined wet tuple |
 | raw bare open-box/open-web impact | fail-closed | bare carrier impact data, not packaged-system rows |
+
+Current cross-family prerequisite map:
+[SOURCE_READY_INTAKE_BACKLOG.md](./SOURCE_READY_INTAKE_BACKLOG.md).
+Use it before opening any source-gated runtime slice.
 
 ## Candidate Source Intake
 
@@ -108,6 +114,17 @@ operating envelope before another source-gated runtime attempt. This is
 not a substitute for source evidence; it is a company-use readiness
 check that keeps caveated, low-confidence, screening, unsupported, and
 fail-closed behavior executable.
+
+### 1c. Source-Ready Intake Backlog Cleanup - Gate A Landed
+
+`calculator_source_intake_backlog_cleanup_v1` Gate A landed no-runtime.
+It consolidates the timber double-board, CLT / mass-timber, no-stud
+double-leaf, generated floor fallback, lined-massive / heavy-core, and
+historical blocked-family prerequisites into
+[SOURCE_READY_INTAKE_BACKLOG.md](./SOURCE_READY_INTAKE_BACKLOG.md).
+Gate C should close the cleanup slice unless a source-ready pack with
+exact topology, metric owner, tolerance owner, protected negative
+boundaries, and paired visible tests is already available.
 
 ### 2. Timber Double-Board Source Intake
 

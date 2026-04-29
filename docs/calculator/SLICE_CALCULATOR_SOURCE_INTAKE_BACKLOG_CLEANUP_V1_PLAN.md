@@ -2,12 +2,14 @@
 
 Slice id: `calculator_source_intake_backlog_cleanup_v1`
 
-Status: SELECTED / GATE A NEXT (selected 2026-04-29 by
-`post-internal-use-pilot-handoff-v1-next-slice-selection-contract.test.ts`).
+Status: GATE A LANDED / GATE C NEXT (selected 2026-04-29 by
+`post-internal-use-pilot-handoff-v1-next-slice-selection-contract.test.ts`;
+Gate A landed 2026-04-29 by
+`calculator-source-intake-backlog-cleanup-gate-a-contract.test.ts`).
 
 Next implementation file:
 
-`packages/engine/src/calculator-source-intake-backlog-cleanup-gate-a-contract.test.ts`
+`packages/engine/src/post-calculator-source-intake-backlog-cleanup-v1-next-slice-selection-contract.test.ts`
 
 Selection reason: `internal_use_pilot_handoff_v1` closed no-runtime.
 The calculator is usable for controlled company-internal estimates
@@ -21,6 +23,10 @@ No runtime import, confidence promotion, support promotion, or visible
 card movement is allowed in this slice. Keep
 `runtime/support/confidence/evidence/API/route-card/output-card` and
 `proposal/report/workbench-input` frozen.
+
+Current source-ready backlog artifact:
+
+[SOURCE_READY_INTAKE_BACKLOG.md](./SOURCE_READY_INTAKE_BACKLOG.md)
 
 ## Objective
 
@@ -44,16 +50,19 @@ The backlog must state, per family:
 - expected engine and web visible test shapes before any future import;
 - the first missing requirement that prevents runtime movement now.
 
-## Gate A - Build Source Intake Backlog Cleanup Matrix
+## Gate A - Build Source Intake Backlog Cleanup Matrix - Landed
 
-Gate A should add:
+Gate A added:
 
 `packages/engine/src/calculator-source-intake-backlog-cleanup-gate-a-contract.test.ts`
 
-Gate A may also add or update a dedicated backlog artifact if the
-matrix is too large for the slice plan alone:
+Dedicated backlog artifact:
 
 `docs/calculator/SOURCE_READY_INTAKE_BACKLOG.md`
+
+Checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-04-29_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_GATE_A_HANDOFF.md`
 
 Required Gate A artifacts:
 
@@ -62,6 +71,14 @@ Required Gate A artifacts:
 - `per_family_runtime_import_prerequisites`;
 - `negative_boundary_and_near_miss_register`;
 - `next_candidate_selection_rules`.
+
+Gate A result:
+
+- every blocked family appears exactly once in the backlog;
+- every family remains `runtimeImportReadyNow: false`;
+- public source locators are context only;
+- no stale or duplicate source doc required deletion;
+- Gate C closeout / next-slice selection is the next bounded action.
 
 Implementation read map before coding:
 
@@ -113,6 +130,10 @@ Possible Gate B scope:
 
 ## Gate C - Closeout And Next Slice Selection
 
+Next file:
+
+`packages/engine/src/post-calculator-source-intake-backlog-cleanup-v1-next-slice-selection-contract.test.ts`
+
 Gate C should select the next slice only from:
 
 - a source-ready accuracy pack with exact topology, metric owner,
@@ -127,11 +148,17 @@ source-gated lanes for pilot convenience.
 
 ## Validation
 
+- Latest Gate A validation is green on 2026-04-29:
+  - targeted Gate A: 1 engine file / 6 tests;
+  - focused current gate: engine 141 files / 679 tests, web 45 files /
+    216 passed + 18 skipped, build 5/5, whitespace guard clean;
+  - broad `pnpm check`: lint/typecheck green, engine 274 files / 1499
+    tests, web 157 files / 890 passed + 18 skipped, build 5/5.
 - Run `pnpm calculator:gate:current` before and after touching the
   selected slice.
-- Use the Gate A engine contract while iterating.
-- Add the Gate A contract to `tools/dev/run-calculator-current-gate.ts`
-  when it lands.
+- Use the Gate C engine contract while iterating.
+- The Gate A contract is now included in
+  `tools/dev/run-calculator-current-gate.ts`.
 - Run `git diff --check`.
 - Run `pnpm check` only if Gate A changes broad repo contracts,
   user-visible behavior, or enough docs/tests that a full release gate

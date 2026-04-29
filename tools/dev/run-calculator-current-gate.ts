@@ -189,6 +189,7 @@ async function main() {
         "src/post-internal-use-acceptance-rehearsal-v1-next-slice-selection-contract.test.ts",
         "src/internal-use-pilot-handoff-v1-gate-a-contract.test.ts",
         "src/post-internal-use-pilot-handoff-v1-next-slice-selection-contract.test.ts",
+        "src/calculator-source-intake-backlog-cleanup-gate-a-contract.test.ts",
         "--maxWorkers=1"
       ]
     },
