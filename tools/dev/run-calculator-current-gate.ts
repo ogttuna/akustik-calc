@@ -194,6 +194,7 @@ async function main() {
         "src/generated-floor-fallback-topology-delta-gate-a-contract.test.ts",
         "src/post-generated-floor-fallback-topology-delta-v1-next-slice-selection-contract.test.ts",
         "src/calculator-source-gap-revalidation-v4-gate-a-contract.test.ts",
+        "src/knauf-wall-systems-source-pack-extraction-gate-a-contract.test.ts",
         "--maxWorkers=1"
       ]
     },

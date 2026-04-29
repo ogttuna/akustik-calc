@@ -6,7 +6,8 @@ Gate C source for the selected
 generated-floor Gate C closed no-runtime; refreshed again after
 `calculator_source_gap_revalidation_v4` Gate A selected
 `knauf_wall_systems_source_pack_extraction_v1` as the next no-runtime
-source extraction slice.
+source extraction slice; refreshed after Knauf Gate A extracted source
+locators and selected Gate B mapping/tolerance decision.
 
 Last reviewed: 2026-04-29.
 
@@ -116,6 +117,32 @@ promotion, evidence promotion, or visible card/report movement. The
 selected follow-up must extract row/table locators, topology metadata,
 metric context, tolerance blockers, and test requirements before any
 behavior can move.
+
+## Knauf Wall Systems Source Pack Extraction Gate A
+
+`knauf_wall_systems_source_pack_extraction_v1` Gate A lands no-runtime
+in:
+
+`packages/engine/src/knauf-wall-systems-source-pack-extraction-gate-a-contract.test.ts`
+
+Next selected file:
+
+`packages/engine/src/knauf-wall-systems-source-pack-extraction-gate-b-contract.test.ts`
+
+Gate A extracted these official-source locator classes:
+
+- Knauf UK steel-stud lab `Rw` row:
+  `EN-PC-50-055-6-2-12.5-WB-25`.
+- Knauf AU timber rows: `TO120.1A`, `TB.5A`, `TSF120.1A`,
+  `TTF30.2A`.
+- Knauf AU masonry/AAC rows: `MWI.2A`, `AAC.1A`.
+
+Result: `EN-PC-50-055-6-2-12.5-WB-25`, `TB.5A`, `TTF30.2A`, and
+`MWI.2A` are Gate B mapping/tolerance candidates only. `TO120.1A` is a
+one-side-lined timber negative boundary. `TSF120.1A` and `AAC.1A` are
+adjacent context only. No runtime import, support promotion, confidence
+promotion, evidence promotion, output support movement, or visible card
+/ report / input behavior movement is approved.
 
 ## Source Verification Notes
 
@@ -332,11 +359,12 @@ is consolidation and explicit cross-linking, not removal.
 
 ## Immediate Next Steps
 
-1. Implement `knauf_wall_systems_source_pack_extraction_v1` Gate A:
-   `packages/engine/src/knauf-wall-systems-source-pack-extraction-gate-a-contract.test.ts`.
-2. Extract Knauf UK/AU table locators and classify candidate rows as
-   exact, adjacent, negative, or context-only before any behavior move.
-3. Select a runtime accuracy slice only if Gate A names exact topology,
+1. Implement `knauf_wall_systems_source_pack_extraction_v1` Gate B:
+   `packages/engine/src/knauf-wall-systems-source-pack-extraction-gate-b-contract.test.ts`.
+2. Decide exact row/column mapping, metric context, tolerance ownership,
+   local material mapping, and protected negative boundaries for the
+   extracted Knauf candidates.
+3. Select a runtime accuracy slice only if Gate B names exact topology,
    metric owner, tolerance owner, protected negative boundaries, and
    paired engine/web visible tests.
 4. Keep all validation gates green:

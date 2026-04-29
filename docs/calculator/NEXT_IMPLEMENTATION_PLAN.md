@@ -81,6 +81,9 @@ found topology near misses only, not a source-ready runtime candidate;
 selected `knauf_wall_systems_source_pack_extraction_v1` because
 official Knauf UK/AU source locators are concrete enough for extraction
 but not import or confidence promotion;
+`knauf_wall_systems_source_pack_extraction_v1` Gate A landed
+no-runtime source table locator extraction and selected Gate B
+mapping/tolerance decision;
 see
 `SLICE_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_PLAN.md`).
 
@@ -114,20 +117,28 @@ For every next slice decision:
 - **Active slice**:
   `knauf_wall_systems_source_pack_extraction_v1`.
 - **Latest checkpoint**:
-  [CHECKPOINT_2026-04-29_CALCULATOR_SOURCE_GAP_REVALIDATION_V4_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-29_CALCULATOR_SOURCE_GAP_REVALIDATION_V4_GATE_A_HANDOFF.md).
+  [CHECKPOINT_2026-04-29_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-29_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_GATE_A_HANDOFF.md).
 - **Planning surface**:
   [SLICE_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_PLAN.md](./SLICE_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_PLAN.md)
   and [SOURCE_READY_INTAKE_BACKLOG.md](./SOURCE_READY_INTAKE_BACKLOG.md).
 - **Next active-slice gate**:
-  `packages/engine/src/knauf-wall-systems-source-pack-extraction-gate-a-contract.test.ts`
-  should extract Knauf UK/AU wall-system source table locators, classify
-  row/topology/metric/tolerance blockers, and decide whether a later
-  mapping/tolerance gate or no-runtime closeout is justified. It must
-  preserve
+  `packages/engine/src/knauf-wall-systems-source-pack-extraction-gate-b-contract.test.ts`
+  should decide whether any extracted Knauf locator row has exact
+  topology, metric context, tolerance ownership, local material mapping,
+  protected negative boundaries, and paired tests for a later runtime
+  slice. It must preserve
   `runtime/support/confidence/evidence`,
   `API/route-card/output-card`, and `proposal/report/workbench-input`
   behavior.
 - **Just landed active-slice gate**:
+  `packages/engine/src/knauf-wall-systems-source-pack-extraction-gate-a-contract.test.ts`
+  extracted Knauf UK/AU source table locators no-runtime. UK steel stud
+  `EN-PC-50-055-6-2-12.5-WB-25`, AU timber `TB.5A`, AU twin timber
+  `TTF30.2A`, and AU masonry `MWI.2A` are Gate B
+  mapping/tolerance candidates only. `TO120.1A` is a one-side-lined
+  timber negative boundary; `TSF120.1A` and `AAC.1A` are adjacent
+  context.
+- **Prior active-slice gate**:
   `packages/engine/src/calculator-source-gap-revalidation-v4-gate-a-contract.test.ts`
   re-ranks source/accuracy candidates no-runtime, confirms no runtime
   source pack is ready, and selects
@@ -227,12 +238,12 @@ For every next slice decision:
   closed no-runtime at Gate C and selected the source-pack readiness
   triage slice.
 - **Latest broad validation**:
-  latest broad `pnpm check` is green after calculator source-gap
-  revalidation v4 Gate A: lint/typecheck green, engine 278 files / 1524
-  tests, web 157 files / 890 passed + 18 skipped, build 5/5 with the
+  latest broad `pnpm check` is green after Knauf wall systems
+  source-pack extraction Gate A: lint/typecheck green, engine 279 files /
+  1530 tests, web 157 files / 890 passed + 18 skipped, build 5/5 with the
   known non-fatal `sharp/@img` warnings. Focused current gate after
-  calculator source-gap revalidation v4 Gate A is green: engine 145
-  files / 704 tests, web 45 files / 216 passed + 18 skipped, build 5/5
+  Knauf wall systems source-pack extraction Gate A is green: engine 146
+  files / 710 tests, web 45 files / 216 passed + 18 skipped, build 5/5
   with the known non-fatal `sharp/@img` warnings, whitespace guard
   clean.
 - **Prepared comprehensive-accuracy roadmap**:
@@ -250,24 +261,31 @@ For every next slice decision:
 ## Next Steps
 
 1. Implement
-   `packages/engine/src/knauf-wall-systems-source-pack-extraction-gate-a-contract.test.ts`
-   as Gate A source table locator extraction for the selected Knauf
-   wall-system pack.
-2. Use the v4 Gate A checkpoint and Knauf source-pack plan as
-   authority. v4 found no source-ready runtime candidate and selected
-   extraction, not runtime movement.
-3. Extract table/row locators, topology metadata, metric context,
-   tolerance blockers, positive/negative engine test shapes, and any
-   visible-surface tests needed before a later behavior move.
-4. Select a runtime slice only if Gate A names exact topology, metric
+   `packages/engine/src/knauf-wall-systems-source-pack-extraction-gate-b-contract.test.ts`
+   as the no-runtime mapping/tolerance decision for extracted Knauf
+   locator rows.
+2. Use the Knauf Gate A checkpoint and source-pack plan as authority.
+   Gate A extracted locators only; it did not approve import,
+   confidence promotion, or visible movement.
+3. Decide exact-row/column mapping, metric owner, tolerance owner,
+   local material mapping, protected negative boundaries, and required
+   engine/web test shape for each promising locator.
+4. Select a runtime slice only if Gate B names exact topology, metric
    owner, tolerance owner, protected negative boundaries, and paired
    engine/web visible tests.
 5. Keep `runtime/support/confidence/evidence/API/route-card/output-card`
    and `proposal/report/workbench-input` behavior frozen.
-6. Run the targeted Knauf Gate A file when it lands,
+6. Run the targeted Knauf Gate B file when it lands,
    `pnpm calculator:gate:current`, and `git diff --check`. Run
-   `pnpm check` if Gate A is treated as a release gate or selects
+   `pnpm check` if Gate B is treated as a release gate or selects
    runtime/import/visible behavior work.
+
+- **Just landed**: `knauf_wall_systems_source_pack_extraction_v1`
+  Gate A.
+  `packages/engine/src/knauf-wall-systems-source-pack-extraction-gate-a-contract.test.ts`
+  extracts official Knauf UK/AU source table locators, keeps every
+  runtime and visible surface frozen, and selects
+  `packages/engine/src/knauf-wall-systems-source-pack-extraction-gate-b-contract.test.ts`.
 
 - **Just landed**: `calculator_source_gap_revalidation_v4` Gate A.
   `packages/engine/src/calculator-source-gap-revalidation-v4-gate-a-contract.test.ts`
@@ -580,8 +598,8 @@ For every next slice decision:
   caveats, and many-layer / long-label report rendering is pinned.
   This did not change calculator runtime/source/confidence posture.
 - **Latest broad validation**: 2026-04-29 `pnpm check` is green after
-  calculator source-gap revalidation v4 Gate A: engine 278 files /
-  1524 tests, web
+  Knauf wall systems source-pack extraction Gate A: engine 279 files /
+  1530 tests, web
   157 files / 890 passed + 18 skipped through
   `tools/dev/run-web-vitest.ts`, build 5/5, with only the known
   non-fatal `sharp/@img` optional-package warnings.
@@ -962,6 +980,7 @@ For every next slice decision:
 this order:
 
 1. Re-read
+   [CHECKPOINT_2026-04-29_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-29_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_GATE_A_HANDOFF.md),
    [CHECKPOINT_2026-04-29_CALCULATOR_SOURCE_GAP_REVALIDATION_V4_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-29_CALCULATOR_SOURCE_GAP_REVALIDATION_V4_GATE_A_HANDOFF.md),
    [SLICE_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_PLAN.md](./SLICE_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_PLAN.md),
    [SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V4_PLAN.md](./SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V4_PLAN.md),
@@ -977,19 +996,19 @@ this order:
    [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md), and the
    current-state active-slice section.
 2. Add
-   `packages/engine/src/knauf-wall-systems-source-pack-extraction-gate-a-contract.test.ts`
-   as Gate A source table locator extraction.
-3. Keep the v4 Gate A result authoritative: it selected source
-   extraction only, so source locators do not promote support,
-   confidence, evidence, or output support.
+   `packages/engine/src/knauf-wall-systems-source-pack-extraction-gate-b-contract.test.ts`
+   as the Gate B mapping/tolerance decision.
+3. Keep the Knauf Gate A result authoritative: it extracted source
+   locators only, so source rows do not promote support, confidence,
+   evidence, or output support.
 4. Preserve the no-runtime/no-promotion boundary: source pointers,
    handoff success, topology near misses, and nearby green tests are
    not source-gated family promotion.
 5. Update `NEXT_IMPLEMENTATION_PLAN.md`, `CURRENT_STATE.md`,
    `AGENTS.md`, the slice plan, and the relevant checkpoint together.
-6. Validate with the targeted Knauf Gate A test,
+6. Validate with the targeted Knauf Gate B test,
    `pnpm calculator:gate:current`, and `git diff --check`. Run
-   `pnpm check` if Gate A becomes the release gate or selects
+   `pnpm check` if Gate B becomes the release gate or selects
    runtime/import/visible behavior work.
 
 ## Personal-Use Readiness Chain

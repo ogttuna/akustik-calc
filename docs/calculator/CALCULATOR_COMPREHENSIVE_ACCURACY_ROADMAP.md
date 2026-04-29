@@ -26,7 +26,9 @@ source/accuracy candidates before more runtime or productization work.
 v4 Gate A then selected
 `knauf_wall_systems_source_pack_extraction_v1` no-runtime because
 Knauf UK/AU wall-system source locators are concrete enough for table
-locator extraction, while still not import-ready.
+locator extraction, while still not import-ready. Knauf Gate A then
+extracted locator rows no-runtime and selected Gate B
+mapping/tolerance decision.
 This roadmap remains the long-horizon source-gated accuracy context; it
 is not a runtime import approval.
 
@@ -169,16 +171,22 @@ Gate A has landed no-runtime and selected
 
 ### 1f. Knauf Wall Systems Source Pack Extraction - Active No-Runtime
 
-`knauf_wall_systems_source_pack_extraction_v1` should extract Knauf UK
-and Knauf AU wall-system table locators, system-code topology metadata,
-metric context, tolerance blockers, and positive/negative test
-requirements. It must not import rows or promote support, confidence,
-evidence, route-card, output-card, proposal/report, or workbench input
-behavior during source extraction.
+`knauf_wall_systems_source_pack_extraction_v1` has extracted Knauf UK
+and Knauf AU wall-system table locators no-runtime. Gate B should now
+decide whether any extracted row has exact topology, metric ownership,
+tolerance ownership, material mapping, protected negative boundaries,
+and paired tests for a later runtime slice. It must not import rows or
+promote support, confidence, evidence, route-card, output-card,
+proposal/report, or workbench input behavior during mapping/tolerance
+decision work.
 
 First implementation file:
 
 `packages/engine/src/knauf-wall-systems-source-pack-extraction-gate-a-contract.test.ts`
+
+Next implementation file:
+
+`packages/engine/src/knauf-wall-systems-source-pack-extraction-gate-b-contract.test.ts`
 
 This slice is valuable because it can directly clarify timber
 double-board stud walls, masonry-upgrade / lined-heavy adjacent

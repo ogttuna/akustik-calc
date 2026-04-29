@@ -202,8 +202,8 @@ storage v1, project/proposal route authorization, auth-session
 hardening, and the pure team-access policy model.
 
 - **Engine broad suite**: latest broad `pnpm check` on 2026-04-29 is
-  green after calculator source-gap revalidation v4 Gate A:
-  278 / 278 files, 1524 / 1524 tests green.
+  green after Knauf wall systems source-pack extraction Gate A:
+  279 / 279 files, 1530 / 1530 tests green.
   (up from 193/1068 pre-session; step-7 landed 4 wall cases +
   F1/F2 engine fixes + 32-assertion cross-mode torture matrix
   + 2 regression guards + post-contract; step-7b landed the
@@ -217,7 +217,7 @@ hardening, and the pure team-access policy model.
   under the Vitest worker timeout; Gate B and Gate C then added focused
   planning/value contract files).
 - **Web broad suite**: latest broad `pnpm check` on 2026-04-29 is
-  green after calculator source-gap revalidation v4 Gate A: 157 / 157
+  green after Knauf wall systems source-pack extraction Gate A: 157 / 157
   files in scope through `tools/dev/run-web-vitest.ts`, 890 tests
   passed + 18 discovery helpers intentionally skipped. The runner
   isolates six long route-scan files and batches the
@@ -231,7 +231,7 @@ hardening, and the pure team-access policy model.
   input contract so it asserts parse behavior instead of calling
   `.keyof()` on the exported shared `AirborneContextSchema` `ZodType`.
 - **Broad `pnpm check`**: lint + typecheck + tests + build green after
-  calculator source-gap revalidation v4 Gate A. The first broad pass
+  Knauf wall systems source-pack extraction Gate A. The first broad pass
   caught a no-runtime type-only helper issue in the acceptance rehearsal
   test contract; the helper now asserts target-output partitions at
   runtime while accepting the wider shared `AssemblyCalculation` type.
@@ -446,30 +446,44 @@ hardening, and the pure team-access policy model.
   `post-generated-floor-fallback-topology-delta-v1-next-slice-selection-contract.test.ts`
   for Gate C closeout and v4 next-slice selection, plus
   `calculator-source-gap-revalidation-v4-gate-a-contract.test.ts`
-  for no-runtime v4 rerank and Knauf extraction selection. Focused gate
-  after calculator source-gap revalidation v4 Gate A: 145 engine files /
-  704 tests,
+  for no-runtime v4 rerank and Knauf extraction selection, plus
+  `knauf-wall-systems-source-pack-extraction-gate-a-contract.test.ts`
+  for no-runtime Knauf source locator extraction and Gate B selection.
+  Focused gate after Knauf wall systems source-pack extraction Gate A:
+  146 engine files / 710 tests,
   45 web files / 216 passed + 18 skipped,
   build 5/5 tasks with known non-fatal `sharp/@img` warnings,
-  whitespace guard clean. Broad `pnpm check` is green after v4 Gate A:
-  lint/typecheck green, engine 278 files / 1524 tests, web 157 files /
+  whitespace guard clean. Broad `pnpm check` is green after Knauf Gate A:
+  lint/typecheck green, engine 279 files / 1530 tests, web 157 files /
   890 passed + 18 skipped, build 5/5.
 
 ## Active Slice
 
 `knauf_wall_systems_source_pack_extraction_v1` (no-runtime source table
-locator extraction; Gate A next). It was selected by
+locator extraction; Gate B next). It was selected by
 `packages/engine/src/calculator-source-gap-revalidation-v4-gate-a-contract.test.ts`
 after v4 re-ranked the current source/accuracy backlog and found no
-runtime-ready source pack.
+runtime-ready source pack. Gate A has now extracted official Knauf
+UK/AU locator rows without runtime movement.
 
 The next implementation file is
-`packages/engine/src/knauf-wall-systems-source-pack-extraction-gate-a-contract.test.ts`.
+`packages/engine/src/knauf-wall-systems-source-pack-extraction-gate-b-contract.test.ts`.
 Planning surface:
 [SLICE_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_PLAN.md](./SLICE_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_PLAN.md)
 and [SOURCE_READY_INTAKE_BACKLOG.md](./SOURCE_READY_INTAKE_BACKLOG.md).
 
 Just landed context:
+Gate A landed `knauf_wall_systems_source_pack_extraction_v1`
+no-runtime in
+`packages/engine/src/knauf-wall-systems-source-pack-extraction-gate-a-contract.test.ts`.
+It extracted UK steel-stud, AU timber, AU twin/staggered timber, and AU
+masonry/AAC table locators. `EN-PC-50-055-6-2-12.5-WB-25`, `TB.5A`,
+`TTF30.2A`, and `MWI.2A` proceed only to Gate B mapping/tolerance
+decision. `TO120.1A` is a one-side-lined timber negative boundary;
+`TSF120.1A` and `AAC.1A` stay adjacent context. Runtime/support/
+confidence/evidence/API/card/report/input behavior stayed frozen.
+
+Prior just landed context:
 Gate A landed `calculator_source_gap_revalidation_v4` no-runtime in
 `packages/engine/src/calculator-source-gap-revalidation-v4-gate-a-contract.test.ts`.
 It kept `runtime/support/confidence/evidence/API/route-card/output-card`
@@ -1350,12 +1364,15 @@ handoff pack and selected Gate C closeout / next-slice selection. Gate
 C then closed no-runtime and selected
 `calculator_source_intake_backlog_cleanup_v1`. Source-intake backlog
 Gate A then landed no-runtime and selected Gate C closeout /
-next-slice selection.
+next-slice selection. Calculator source-gap revalidation v4 Gate A then
+selected Knauf source-pack extraction, and Knauf Gate A extracted source
+locators no-runtime while selecting Gate B mapping/tolerance decision.
 
 ## Latest Closed Slices
 
 | Slice | Master-plan step | Closed | Post-contract |
 |---|---|---|---|
+| `knauf_wall_systems_source_pack_extraction_v1` Gate A | Knauf wall source locator extraction | 2026-04-29 | `knauf-wall-systems-source-pack-extraction-gate-a-contract.test.ts` |
 | `calculator_source_gap_revalidation_v4` Gate A | source/accuracy rerank after floor topology delta | 2026-04-29 | `calculator-source-gap-revalidation-v4-gate-a-contract.test.ts` |
 | `generated_floor_fallback_topology_delta_v1` Gate C | floor fallback topology-delta closeout | 2026-04-29 | `post-generated-floor-fallback-topology-delta-v1-next-slice-selection-contract.test.ts` |
 | `generated_floor_fallback_topology_delta_v1` Gate A | floor fallback topology-delta matrix | 2026-04-29 | `generated-floor-fallback-topology-delta-gate-a-contract.test.ts` |
@@ -1601,10 +1618,12 @@ time without context loss:
 
 ## Resume Order For The Next Agent
 
-1. Read [CHECKPOINT_2026-04-29_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-29_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_GATE_C_CLOSEOUT_HANDOFF.md)
+1. Read [CHECKPOINT_2026-04-29_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-29_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_GATE_A_HANDOFF.md)
    for the latest landed gate and selected next file.
 2. Read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md),
+   [CHECKPOINT_2026-04-29_CALCULATOR_SOURCE_GAP_REVALIDATION_V4_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-29_CALCULATOR_SOURCE_GAP_REVALIDATION_V4_GATE_A_HANDOFF.md),
    [SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V4_PLAN.md](./SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V4_PLAN.md),
+   [CHECKPOINT_2026-04-29_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-29_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_GATE_C_CLOSEOUT_HANDOFF.md),
    [CHECKPOINT_2026-04-29_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-29_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_GATE_A_HANDOFF.md),
    [SLICE_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_V1_PLAN.md](./SLICE_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_V1_PLAN.md),
    [SLICE_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_V1_PLAN.md](./SLICE_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_V1_PLAN.md),
@@ -1619,9 +1638,9 @@ time without context loss:
    [SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md](./SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md),
    [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md), and
    [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md).
-   Continue `knauf_wall_systems_source_pack_extraction_v1` at Gate A by
+   Continue `knauf_wall_systems_source_pack_extraction_v1` at Gate B by
    adding
-   `packages/engine/src/knauf-wall-systems-source-pack-extraction-gate-a-contract.test.ts`.
+   `packages/engine/src/knauf-wall-systems-source-pack-extraction-gate-b-contract.test.ts`.
 3. Read [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
    for the now-closed calculator-priority chain and its evidence-tier
    caveats.
