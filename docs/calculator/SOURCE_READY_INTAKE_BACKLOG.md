@@ -3,7 +3,7 @@
 Status: Gate A artifact for `calculator_source_intake_backlog_cleanup_v1`;
 Gate C source for the selected
 `generated_floor_fallback_topology_delta_v1` follow-up; refreshed after
-generated-floor Gate A landed no-runtime.
+generated-floor Gate C closed no-runtime.
 
 Last reviewed: 2026-04-29.
 
@@ -70,6 +70,27 @@ engineered-timber / no-fill bound topology. Exact Pliteq rows and UBIQ
 FL-32 bound rows keep precedence only when their source topologies are
 actually present. The generated fallback remains low-confidence and is
 not runtime-import-ready.
+
+## Generated Floor Topology Delta Gate C
+
+`generated_floor_fallback_topology_delta_v1` Gate C closes no-runtime in:
+
+`packages/engine/src/post-generated-floor-fallback-topology-delta-v1-next-slice-selection-contract.test.ts`
+
+Next selected slice:
+
+`calculator_source_gap_revalidation_v4`
+
+Next selected file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v4-gate-a-contract.test.ts`
+
+Reason: Gate A found near misses only. No floor fallback runtime import,
+support promotion, confidence promotion, evidence promotion, or visible
+card/report movement is justified by the topology delta. The next
+bounded action is a fresh source/accuracy gap revalidation before any
+runtime, source-acquisition, productization, or pilot-promotion work is
+selected.
 
 ## Source Verification Notes
 
@@ -282,10 +303,9 @@ is consolidation and explicit cross-linking, not removal.
 
 ## Immediate Next Steps
 
-1. Implement `generated_floor_fallback_topology_delta_v1` Gate C:
-   `packages/engine/src/post-generated-floor-fallback-topology-delta-v1-next-slice-selection-contract.test.ts`.
-2. Keep the closeout no-runtime unless a source-ready runtime candidate
-   names exact topology,
+1. Implement `calculator_source_gap_revalidation_v4` Gate A:
+   `packages/engine/src/calculator-source-gap-revalidation-v4-gate-a-contract.test.ts`.
+2. Select a runtime accuracy slice only if Gate A names exact topology,
    metric owner, tolerance owner, protected negative boundaries, and
    paired engine/web visible tests.
 3. Keep all validation gates green:

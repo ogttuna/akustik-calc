@@ -74,8 +74,11 @@ source-ready runtime pack exists;
 `generated_floor_fallback_topology_delta_v1` Gate A landed no-runtime
 with the topology-delta matrix and selected Gate C closeout /
 next-slice selection;
+`generated_floor_fallback_topology_delta_v1` Gate C closed no-runtime
+and selected `calculator_source_gap_revalidation_v4` because Gate A
+found topology near misses only, not a source-ready runtime candidate;
 see
-`SLICE_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_V1_PLAN.md`).
+`SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V4_PLAN.md`).
 
 ---
 
@@ -105,19 +108,26 @@ For every next slice decision:
 ## Now
 
 - **Active slice**:
-  `generated_floor_fallback_topology_delta_v1`.
+  `calculator_source_gap_revalidation_v4`.
 - **Latest checkpoint**:
-  [CHECKPOINT_2026-04-29_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-29_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_GATE_A_HANDOFF.md).
+  [CHECKPOINT_2026-04-29_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-29_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_GATE_C_CLOSEOUT_HANDOFF.md).
 - **Planning surface**:
-  [SLICE_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_V1_PLAN.md](./SLICE_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_V1_PLAN.md)
+  [SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V4_PLAN.md](./SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V4_PLAN.md)
   and [SOURCE_READY_INTAKE_BACKLOG.md](./SOURCE_READY_INTAKE_BACKLOG.md).
 - **Next active-slice gate**:
-  `packages/engine/src/post-generated-floor-fallback-topology-delta-v1-next-slice-selection-contract.test.ts`
-  should close the topology-delta slice no-runtime unless a
-  source-ready floor runtime candidate is actually available. It must
-  preserve `runtime/support/confidence/evidence`,
+  `packages/engine/src/calculator-source-gap-revalidation-v4-gate-a-contract.test.ts`
+  should re-rank source/accuracy candidates after the generated floor
+  topology-delta closeout. It may select runtime work only if exact
+  topology, metric owner, tolerance owner, negative boundaries, and
+  paired engine/web visible tests are named first. It must preserve
+  `runtime/support/confidence/evidence`,
   `API/route-card/output-card`, and `proposal/report/workbench-input`
   behavior.
+- **Just closed active-slice gate**:
+  `packages/engine/src/post-generated-floor-fallback-topology-delta-v1-next-slice-selection-contract.test.ts`
+  closes the topology-delta slice no-runtime, keeps the live generated
+  floor fallback low-confidence/screening, skips Gate B, and selects
+  `calculator_source_gap_revalidation_v4`.
 - **Just landed active-slice gate**:
   `packages/engine/src/generated-floor-fallback-topology-delta-gate-a-contract.test.ts`
   lands the no-runtime topology-delta matrix for generated floor
@@ -207,18 +217,17 @@ For every next slice decision:
   triage slice.
 - **Latest broad validation**:
   latest broad `pnpm check` is green after generated floor fallback
-  topology-delta Gate A: lint/typecheck green, engine 276 files / 1511
+  topology-delta Gate C: lint/typecheck green, engine 277 files / 1517
   tests, web 157 files / 890 passed + 18 skipped, build 5/5 with the
   known non-fatal `sharp/@img` warnings. Focused current gate after
-  generated floor fallback topology-delta Gate A is green: engine 143
-  files / 691 tests, web 45 files / 216 passed + 18 skipped, build 5/5
+  generated floor fallback topology-delta Gate C is green: engine 144
+  files / 697 tests, web 45 files / 216 passed + 18 skipped, build 5/5
   with the known non-fatal `sharp/@img` warnings, whitespace guard
   clean.
 - **Prepared comprehensive-accuracy roadmap**:
   [CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md](./CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md)
-  records the longer source-gated program. It is roadmap context for the
-  selected generated floor topology-delta slice, not an active runtime
-  import.
+  records the longer source-gated program. It is roadmap context for
+  the selected v4 source/accuracy rerank, not an active runtime import.
 - **Personal-use readiness roadmap**:
   [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
   is closed for the current private/internal-use bar. Heavy-core/concrete
@@ -230,22 +239,30 @@ For every next slice decision:
 ## Next Steps
 
 1. Implement
-   `packages/engine/src/post-generated-floor-fallback-topology-delta-v1-next-slice-selection-contract.test.ts`
-   as Gate C closeout / next-slice selection.
-2. Use the Gate A topology-delta contract and checkpoint as evidence:
-   the live fallback has near misses only, not a source-ready runtime
-   candidate.
-3. Skip Gate B unless a source-ready floor candidate is named with exact
-   topology, metric owner, tolerance owner, protected negative
-   boundaries, and paired visible tests.
-4. Keep Pliteq exact precedence, UBIQ bound precedence, unsupported
-   `L'nT,50` / lab `Ln,w+CI` / lab `DeltaLw`, split-variant, and
-   reorder boundaries explicit.
+   `packages/engine/src/calculator-source-gap-revalidation-v4-gate-a-contract.test.ts`
+   as Gate A source/accuracy rerank after generated floor topology
+   closeout.
+2. Use the Gate C checkpoint and v4 plan as authority. Gate C found no
+   source-ready floor runtime candidate and selected reranking, not
+   runtime movement.
+3. Select a runtime slice only if Gate A names exact topology, metric
+   owner, tolerance owner, protected negative boundaries, and paired
+   engine/web visible tests.
+4. Otherwise select the highest-value no-runtime source acquisition,
+   extraction, planning, or test-coverage slice that advances accuracy.
 5. Keep `runtime/support/confidence/evidence/API/route-card/output-card`
    and `proposal/report/workbench-input` behavior frozen.
-6. Run the targeted Gate C file when it lands,
+6. Run the targeted v4 Gate A file when it lands,
    `pnpm calculator:gate:current`, and `git diff --check`. Run
-   `pnpm check` if Gate C is treated as a release gate.
+   `pnpm check` if Gate A is treated as a release gate or selects
+   runtime/import/visible behavior work.
+
+- **Just closed**: `generated_floor_fallback_topology_delta_v1`
+  Gate C.
+  `packages/engine/src/post-generated-floor-fallback-topology-delta-v1-next-slice-selection-contract.test.ts`
+  closes the topology-delta slice no-runtime, skips Gate B, keeps the
+  generated floor fallback low-confidence/screening, and selects
+  `calculator_source_gap_revalidation_v4`.
 
 - **Just landed**: `generated_floor_fallback_topology_delta_v1`
   Gate A.
@@ -545,8 +562,8 @@ For every next slice decision:
   caveats, and many-layer / long-label report rendering is pinned.
   This did not change calculator runtime/source/confidence posture.
 - **Latest broad validation**: 2026-04-29 `pnpm check` is green after
-  generated floor fallback topology-delta Gate A: engine 276 files /
-  1511 tests, web
+  generated floor fallback topology-delta Gate C: engine 277 files /
+  1517 tests, web
   157 files / 890 passed + 18 skipped through
   `tools/dev/run-web-vitest.ts`, build 5/5, with only the known
   non-fatal `sharp/@img` optional-package warnings.
@@ -923,13 +940,15 @@ For every next slice decision:
 
 ## Immediate Execution Order
 
-`generated_floor_fallback_topology_delta_v1` should now proceed in
+`calculator_source_gap_revalidation_v4` should now proceed in
 this order:
 
 1. Re-read
+   [CHECKPOINT_2026-04-29_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-29_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_GATE_C_CLOSEOUT_HANDOFF.md),
+   [SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V4_PLAN.md](./SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V4_PLAN.md),
+   [SOURCE_READY_INTAKE_BACKLOG.md](./SOURCE_READY_INTAKE_BACKLOG.md),
    [CHECKPOINT_2026-04-29_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-29_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_GATE_A_HANDOFF.md),
    [SLICE_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_V1_PLAN.md](./SLICE_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_V1_PLAN.md),
-   [SOURCE_READY_INTAKE_BACKLOG.md](./SOURCE_READY_INTAKE_BACKLOG.md),
    [CHECKPOINT_2026-04-29_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-29_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_GATE_C_CLOSEOUT_HANDOFF.md),
    [SLICE_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_V1_PLAN.md](./SLICE_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_V1_PLAN.md),
    [INTERNAL_USE_PILOT_HANDOFF.md](./INTERNAL_USE_PILOT_HANDOFF.md),
@@ -938,19 +957,20 @@ this order:
    [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md), and the
    current-state active-slice section.
 2. Add
-   `packages/engine/src/post-generated-floor-fallback-topology-delta-v1-next-slice-selection-contract.test.ts`
-   as Gate C closeout / next-slice selection.
-3. Keep the Gate A result authoritative: it found topology near misses
-   only, so do not select Gate B or runtime movement unless a true
-   source-ready floor candidate appears.
+   `packages/engine/src/calculator-source-gap-revalidation-v4-gate-a-contract.test.ts`
+   as Gate A source/accuracy rerank.
+3. Keep the generated floor Gate C result authoritative: it found no
+   runtime-ready floor candidate, so do not promote fallback support,
+   confidence, evidence, or output support from near misses.
 4. Preserve the no-runtime/no-promotion boundary: source pointers,
    handoff success, topology near misses, and nearby green tests are
    not source-gated family promotion.
 5. Update `NEXT_IMPLEMENTATION_PLAN.md`, `CURRENT_STATE.md`,
    `AGENTS.md`, the slice plan, and the relevant checkpoint together.
-6. Validate with the targeted Gate C test,
+6. Validate with the targeted v4 Gate A test,
    `pnpm calculator:gate:current`, and `git diff --check`. Run
-   `pnpm check` if Gate C becomes the release gate.
+   `pnpm check` if Gate A becomes the release gate or selects
+   runtime/import/visible behavior work.
 
 ## Personal-Use Readiness Chain
 
@@ -963,9 +983,9 @@ private day-to-day use:
    - closed at Gate C.
 
 Productization route-policy and proposal/report polish slices are
-closed. Calculator runtime/source posture stays frozen during generated
-floor fallback topology-delta Gate C unless a later selected contract
-names a source-ready accuracy pack. The landed framed-wall
+closed. Calculator runtime/source posture stays frozen during
+calculator source-gap revalidation v4 unless the selected Gate A
+contract names a source-ready accuracy pack. The landed framed-wall
 split fix remains protected, and the no-stud, timber double-board, CLT
 wall, lined-massive / heavy-core source research, source-intake backlog
 cleanup, and floor layer-order invariance expansion slices have closed

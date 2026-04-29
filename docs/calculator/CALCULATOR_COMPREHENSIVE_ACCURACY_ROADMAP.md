@@ -20,8 +20,11 @@ runtime movement. That generated-floor Gate A has now landed
 no-runtime: the live fallback is still low-confidence/screening, exact
 Pliteq and UBIQ FL-32 bound precedence still require source topology,
 and Gate C closeout is next because no source-ready runtime candidate
-was found. This roadmap remains the long-horizon source-gated accuracy
-context; it is not a runtime import approval.
+was found. Gate C then closed the topology-delta slice no-runtime and
+selected `calculator_source_gap_revalidation_v4` to re-rank current
+source/accuracy candidates before more runtime or productization work.
+This roadmap remains the long-horizon source-gated accuracy context; it
+is not a runtime import approval.
 
 ## Purpose
 
@@ -134,7 +137,7 @@ topology, metric owner, tolerance owner, protected negative boundaries,
 and paired visible tests is already available. It selected
 `generated_floor_fallback_topology_delta_v1`.
 
-### 1d. Generated Floor Fallback Topology Delta - Gate A Landed / Gate C Next
+### 1d. Generated Floor Fallback Topology Delta - Closed No-Runtime
 
 `generated_floor_fallback_topology_delta_v1` Gate A mapped the live
 generated floor fallback against Pliteq exact and UBIQ INEX / FL-32
@@ -143,9 +146,19 @@ fallback lacks the exact INEX/GenieMat/Pliteq ceiling and finish
 topology, and it also lacks the UBIQ engineered-timber / no-fill bound
 topology. Current fallback values, support, confidence, evidence,
 route-card, output-card, proposal/report, and workbench-input behavior
-therefore stay frozen. Gate C should close this slice no-runtime unless
-it can name a later bounded runtime slice with exact topology, metric
-owner, tolerance owner, negative boundaries, and paired visible tests.
+therefore stayed frozen. Gate C closed this slice no-runtime and
+selected `calculator_source_gap_revalidation_v4`.
+
+### 1e. Calculator Source Gap Revalidation v4 - Active No-Runtime
+
+`calculator_source_gap_revalidation_v4` should re-rank the source-ready
+backlog after the generated floor topology-delta closeout. It is not a
+runtime import slice. It may select a runtime accuracy slice only if it
+names exact topology, metric owner, tolerance owner, negative
+boundaries, and paired engine/web visible tests before implementation
+starts. Otherwise it should select a no-runtime source acquisition,
+extraction, planning, or test-coverage slice that directly advances the
+comprehensive accuracy bar.
 
 ### 2. Timber Double-Board Source Intake
 
