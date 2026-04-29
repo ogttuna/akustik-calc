@@ -2,14 +2,24 @@
 
 Slice id: `internal_use_pilot_handoff_v1`
 
-Status: GATE A LANDED / GATE C NEXT (selected 2026-04-29 by
+Status: CLOSED AT GATE C (selected 2026-04-29 by
 `post-internal-use-acceptance-rehearsal-v1-next-slice-selection-contract.test.ts`;
 Gate A landed 2026-04-29 in
-`internal-use-pilot-handoff-v1-gate-a-contract.test.ts`).
+`internal-use-pilot-handoff-v1-gate-a-contract.test.ts`; Gate C closed
+2026-04-29 in
+`post-internal-use-pilot-handoff-v1-next-slice-selection-contract.test.ts`).
+
+Closed implementation file:
+
+`packages/engine/src/post-internal-use-pilot-handoff-v1-next-slice-selection-contract.test.ts`
+
+Selected follow-up:
+
+`calculator_source_intake_backlog_cleanup_v1`
 
 Next implementation file:
 
-`packages/engine/src/post-internal-use-pilot-handoff-v1-next-slice-selection-contract.test.ts`
+`packages/engine/src/calculator-source-intake-backlog-cleanup-gate-a-contract.test.ts`
 
 Selection reason: `internal_use_acceptance_rehearsal_v1` closed
 no-runtime after Gate A landed a 20-scenario company-internal
@@ -153,6 +163,13 @@ Target:
 
 `packages/engine/src/post-internal-use-pilot-handoff-v1-next-slice-selection-contract.test.ts`
 
+Gate C landed no-runtime and selected
+`calculator_source_intake_backlog_cleanup_v1` because focused/broad
+validation did not identify a concrete pilot defect and no
+source-ready accuracy pack exists. The handoff remains controlled
+company-use evidence; it is not runtime import, confidence promotion,
+or external certification permission.
+
 ## Validation
 
 - Run the targeted Gate A contract while iterating.
@@ -178,5 +195,19 @@ Latest Gate A validation, 2026-04-29:
   clean;
 - release-candidate broad `pnpm check` green: lint/typecheck green,
   engine 272 files / 1487 tests, web 157 files / 890 passed + 18
+  skipped, build 5/5 with known non-fatal `sharp/@img` warnings;
+- `git diff --check` clean after final doc updates.
+
+Gate C closeout validation, 2026-04-29:
+
+- targeted Gate C contract green: 1 file / 6 tests;
+- targeted Gate A + Gate C compatibility retest green: 2 files / 12
+  tests;
+- focused `pnpm calculator:gate:current` green after runner sync:
+  engine 140 files / 673 tests, web 45 files / 216 passed + 18 skipped,
+  build 5/5 with known non-fatal `sharp/@img` warnings, whitespace guard
+  clean;
+- release-candidate broad `pnpm check` green: lint/typecheck green,
+  engine 273 files / 1493 tests, web 157 files / 890 passed + 18
   skipped, build 5/5 with known non-fatal `sharp/@img` warnings;
 - `git diff --check` clean after final doc updates.

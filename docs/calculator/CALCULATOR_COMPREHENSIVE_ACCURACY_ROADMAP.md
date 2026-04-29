@@ -7,8 +7,10 @@ Current handoff note 2026-04-29:
 selected `calculator_source_pack_readiness_triage_v1`; source-pack
 readiness then selected CLT / mass-timber extraction for no-runtime row
 and metric inspection; CLT / mass-timber Gate C closed no-runtime
-because no metric-mapping or formula-tolerance path was ready. The
-active slice is now `internal_use_acceptance_rehearsal_v1`. This
+because no metric-mapping or formula-tolerance path was ready. Internal
+acceptance rehearsal and pilot handoff then closed no-runtime. The
+active slice is now `calculator_source_intake_backlog_cleanup_v1` so
+the next source-ready decision has one clean prerequisite map. This
 roadmap remains the long-horizon source-gated accuracy context; it is
 not a runtime import approval.
 

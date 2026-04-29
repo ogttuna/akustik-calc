@@ -79,8 +79,10 @@ selected `internal_use_pilot_handoff_v1`;
 `internal_use_pilot_handoff_v1` Gate A landed no-runtime with the
 company-internal pilot handoff pack and selected Gate C closeout /
 next-slice selection;
+`internal_use_pilot_handoff_v1` Gate C closed no-runtime and selected
+`calculator_source_intake_backlog_cleanup_v1`;
 latest checkpoint:
-[CHECKPOINT_2026-04-29_INTERNAL_USE_PILOT_HANDOFF_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-29_INTERNAL_USE_PILOT_HANDOFF_GATE_A_HANDOFF.md)).
+[CHECKPOINT_2026-04-29_INTERNAL_USE_PILOT_HANDOFF_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-29_INTERNAL_USE_PILOT_HANDOFF_GATE_C_CLOSEOUT_HANDOFF.md)).
 The extra 2026-04-28 planning pass made the readiness ladder explicit
 and the source-gap Gate A selected the short internal pilot
 operating-envelope slice. Internal-use Gate A then produced
@@ -129,8 +131,12 @@ operator-facing map of ready, caveated, blocked, and hostile/edge
 lanes, validation evidence, known gaps, and checklist steps. It did not
 move `runtime/support/confidence/evidence/API/route-card/output-card`
 or `proposal/report/workbench-input` behavior, and selected Gate C
-closeout / next-slice selection.
+closeout / next-slice selection. Gate C then closed the pilot handoff
+no-runtime, kept it as controlled-use evidence rather than source-gated
+promotion, and selected `calculator_source_intake_backlog_cleanup_v1`
+because no concrete pilot defect or source-ready accuracy pack exists.
 See
+[SLICE_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_V1_PLAN.md](./SLICE_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_V1_PLAN.md),
 [SLICE_INTERNAL_USE_PILOT_HANDOFF_V1_PLAN.md](./SLICE_INTERNAL_USE_PILOT_HANDOFF_V1_PLAN.md),
 [SLICE_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_PLAN.md](./SLICE_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_PLAN.md),
 [SLICE_INTERNAL_USE_ACCEPTANCE_REHEARSAL_V1_PLAN.md](./SLICE_INTERNAL_USE_ACCEPTANCE_REHEARSAL_V1_PLAN.md),
@@ -147,8 +153,8 @@ storage v1, project/proposal route authorization, auth-session
 hardening, and the pure team-access policy model.
 
 - **Engine broad suite**: latest broad `pnpm check` on 2026-04-29 is
-  green after the internal-use pilot handoff Gate A landing: 272 / 272
-  files, 1487 / 1487 tests green.
+  green after the internal-use pilot handoff Gate C closeout: 273 / 273
+  files, 1493 / 1493 tests green.
   (up from 193/1068 pre-session; step-7 landed 4 wall cases +
   F1/F2 engine fixes + 32-assertion cross-mode torture matrix
   + 2 regression guards + post-contract; step-7b landed the
@@ -162,7 +168,7 @@ hardening, and the pure team-access policy model.
   under the Vitest worker timeout; Gate B and Gate C then added focused
   planning/value contract files).
 - **Web broad suite**: latest broad `pnpm check` on 2026-04-29 is
-  green after the internal-use pilot handoff Gate A landing: 157 / 157
+  green after the internal-use pilot handoff Gate C closeout: 157 / 157
   files in scope through `tools/dev/run-web-vitest.ts`, 890 tests
   passed + 18 discovery helpers intentionally skipped. The runner
   isolates six long route-scan files and batches the
@@ -176,7 +182,7 @@ hardening, and the pure team-access policy model.
   input contract so it asserts parse behavior instead of calling
   `.keyof()` on the exported shared `AirborneContextSchema` `ZodType`.
 - **Broad `pnpm check`**: lint + typecheck + tests + build green after
-  the internal-use pilot handoff Gate A landing. The first broad pass
+  the internal-use pilot handoff Gate C closeout. The first broad pass
   caught a no-runtime type-only helper issue in the acceptance rehearsal
   test contract; the helper now asserts target-output partitions at
   runtime while accepting the wider shared `AssemblyCalculation` type.
@@ -377,33 +383,45 @@ hardening, and the pure team-access policy model.
   `post-internal-use-acceptance-rehearsal-v1-next-slice-selection-contract.test.ts`
   for the no-runtime Gate C closeout and pilot handoff selection, plus
   `internal-use-pilot-handoff-v1-gate-a-contract.test.ts` for the
-  no-runtime company-internal handoff pack. Focused gate after handoff
-  Gate A: 139 engine files / 667 tests, 45 web files / 216 passed + 18
+  no-runtime company-internal handoff pack, plus
+  `post-internal-use-pilot-handoff-v1-next-slice-selection-contract.test.ts`
+  for the no-runtime Gate C closeout and source-intake backlog cleanup
+  selection. Focused gate after handoff Gate C: 140 engine files / 673
+  tests, 45 web files / 216 passed + 18
   skipped, build 5/5 tasks with known non-fatal `sharp/@img` warnings,
   whitespace guard clean. Broad `pnpm check` is green: lint/typecheck
-  green, engine 272 files / 1487 tests, web 157 files / 890 passed + 18
+  green, engine 273 files / 1493 tests, web 157 files / 890 passed + 18
   skipped, build 5/5.
 
 ## Active Slice
 
-`internal_use_pilot_handoff_v1` (no-runtime company-internal pilot
-handoff; Gate A landed, Gate C next). It was selected by
-`packages/engine/src/post-internal-use-acceptance-rehearsal-v1-next-slice-selection-contract.test.ts`
-after the 20-scenario acceptance rehearsal closed without an acceptance
-defect or source-ready accuracy pack. Gate A produced the controlled
-handoff pack; Gate C should now close the slice unless validation names
-a concrete pilot defect or source-ready accuracy pack.
+`calculator_source_intake_backlog_cleanup_v1` (no-runtime source-ready
+intake backlog cleanup; Gate A next). It was selected by
+`packages/engine/src/post-internal-use-pilot-handoff-v1-next-slice-selection-contract.test.ts`
+after the company-internal pilot handoff closed without a concrete
+pilot defect or source-ready accuracy pack. Gate A should build one
+agent-readable backlog matrix for the blocked source-gated families and
+must keep runtime/support/confidence/evidence/API/route-card/output-card
+and proposal/report/workbench-input behavior frozen.
 
 The next implementation file is
-`packages/engine/src/post-internal-use-pilot-handoff-v1-next-slice-selection-contract.test.ts`.
+`packages/engine/src/calculator-source-intake-backlog-cleanup-gate-a-contract.test.ts`.
 Planning surface:
-[SLICE_INTERNAL_USE_PILOT_HANDOFF_V1_PLAN.md](./SLICE_INTERNAL_USE_PILOT_HANDOFF_V1_PLAN.md).
+[SLICE_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_V1_PLAN.md](./SLICE_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_V1_PLAN.md).
 
-Just landed context:
+Just closed context:
+Gate C closed no-runtime in
+`packages/engine/src/post-internal-use-pilot-handoff-v1-next-slice-selection-contract.test.ts`.
+It keeps [INTERNAL_USE_PILOT_HANDOFF.md](./INTERNAL_USE_PILOT_HANDOFF.md)
+as controlled company-use evidence and rejects promotion of
+low-confidence, screening, formula-owned, or source-gated lanes for
+pilot convenience.
+
+Prior handoff context:
 Gate A landed no-runtime in
 `packages/engine/src/internal-use-pilot-handoff-v1-gate-a-contract.test.ts`.
-It creates [INTERNAL_USE_PILOT_HANDOFF.md](./INTERNAL_USE_PILOT_HANDOFF.md)
-and keeps `runtime/support/confidence/evidence/API/route-card/output-card`
+It created [INTERNAL_USE_PILOT_HANDOFF.md](./INTERNAL_USE_PILOT_HANDOFF.md)
+and kept `runtime/support/confidence/evidence/API/route-card/output-card`
 and `proposal/report/workbench-input` behavior frozen.
 
 Prior context:
@@ -1234,12 +1252,15 @@ then closed no-runtime and selected
 `internal_use_acceptance_rehearsal_v1`. Acceptance rehearsal Gate A and
 Gate C then landed no-runtime and selected
 `internal_use_pilot_handoff_v1`; pilot handoff Gate A then landed the
-handoff pack and selected Gate C closeout / next-slice selection.
+handoff pack and selected Gate C closeout / next-slice selection. Gate
+C then closed no-runtime and selected
+`calculator_source_intake_backlog_cleanup_v1`.
 
 ## Latest Closed Slices
 
 | Slice | Master-plan step | Closed | Post-contract |
 |---|---|---|---|
+| `internal_use_pilot_handoff_v1` Gate C | company internal pilot handoff closeout | 2026-04-29 | `post-internal-use-pilot-handoff-v1-next-slice-selection-contract.test.ts` |
 | `internal_use_pilot_handoff_v1` Gate A | company internal pilot handoff pack | 2026-04-29 | `internal-use-pilot-handoff-v1-gate-a-contract.test.ts` |
 | `internal_use_acceptance_rehearsal_v1` Gate C | company internal acceptance closeout | 2026-04-29 | `post-internal-use-acceptance-rehearsal-v1-next-slice-selection-contract.test.ts` |
 | `internal_use_acceptance_rehearsal_v1` Gate A | company internal acceptance matrix | 2026-04-29 | `internal-use-acceptance-rehearsal-v1-gate-a-contract.test.ts` |
@@ -1479,9 +1500,10 @@ time without context loss:
 
 ## Resume Order For The Next Agent
 
-1. Read [CHECKPOINT_2026-04-29_INTERNAL_USE_PILOT_HANDOFF_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-29_INTERNAL_USE_PILOT_HANDOFF_GATE_A_HANDOFF.md)
-   for the latest active-slice handoff.
+1. Read [CHECKPOINT_2026-04-29_INTERNAL_USE_PILOT_HANDOFF_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-29_INTERNAL_USE_PILOT_HANDOFF_GATE_C_CLOSEOUT_HANDOFF.md)
+   for the latest closeout and selected active slice.
 2. Read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md),
+   [SLICE_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_V1_PLAN.md](./SLICE_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_V1_PLAN.md),
    [INTERNAL_USE_PILOT_HANDOFF.md](./INTERNAL_USE_PILOT_HANDOFF.md),
    [SLICE_INTERNAL_USE_PILOT_HANDOFF_V1_PLAN.md](./SLICE_INTERNAL_USE_PILOT_HANDOFF_V1_PLAN.md),
    [SLICE_INTERNAL_USE_ACCEPTANCE_REHEARSAL_V1_PLAN.md](./SLICE_INTERNAL_USE_ACCEPTANCE_REHEARSAL_V1_PLAN.md),
@@ -1491,8 +1513,9 @@ time without context loss:
    [SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md](./SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md),
    [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md), and
    [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md).
-   Continue `internal_use_pilot_handoff_v1` at Gate C by adding
-   `packages/engine/src/post-internal-use-pilot-handoff-v1-next-slice-selection-contract.test.ts`.
+   Continue `calculator_source_intake_backlog_cleanup_v1` at Gate A by
+   adding
+   `packages/engine/src/calculator-source-intake-backlog-cleanup-gate-a-contract.test.ts`.
 3. Read [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
    for the now-closed calculator-priority chain and its evidence-tier
    caveats.
@@ -1508,7 +1531,7 @@ time without context loss:
 7. Do not change source posture, output support, evidence tiers,
    confidence scores, API shape, route-card values, output-card
    statuses, proposal/report copy, or workbench input behavior during
-   Gate C. Frozen surface shorthand:
+   Gate A. Frozen surface shorthand:
    `runtime/support/confidence/evidence/API/route-card/output-card` and
    `proposal/report/workbench-input`. A future
    source-ready accuracy slice may be selected only if a later contract names a

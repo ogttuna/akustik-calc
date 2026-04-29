@@ -26,6 +26,10 @@ decision;
 no-runtime and selected Gate C closeout / next-slice selection;
 `clt_mass_timber_wall_source_pack_extraction_v1` Gate C closed
 no-runtime and selected `internal_use_acceptance_rehearsal_v1`;
+`internal_use_acceptance_rehearsal_v1` and
+`internal_use_pilot_handoff_v1` then closed no-runtime, and
+`calculator_source_intake_backlog_cleanup_v1` is selected to clean the
+source-ready intake backlog before more accuracy work;
 source-gap content remains floor-dominant historical context)
 
 Purpose:
@@ -137,8 +141,11 @@ Important scope note:
   outputs, one-third-octave TL is only future row recompute input, and
   no CLT/NLT/double-CLT tolerance owner is ready. Gate C then closed
   no-runtime and selected `internal_use_acceptance_rehearsal_v1`
-  because no source-ready accuracy pack exists after Gate B. This
-  ledger still keeps all historical blocked families fail-closed.
+  because no source-ready accuracy pack exists after Gate B.
+  Acceptance rehearsal and pilot handoff then closed no-runtime; the
+  current selected cleanup slice should consolidate the source-ready
+  backlog without reopening any fail-closed family. This ledger still
+  keeps all historical blocked families fail-closed.
 - `good_calculator_final_audit_v1` closed without reopening any
   source-gated calculator family. `wall_formula_family_widening_v1`
   then also closed without reopening any blocked family: it clarified

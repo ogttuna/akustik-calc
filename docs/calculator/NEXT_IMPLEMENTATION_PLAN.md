@@ -62,8 +62,11 @@ acceptance defect or source-ready accuracy pack exists;
 `internal_use_pilot_handoff_v1` Gate A landed no-runtime with the
 company-internal pilot handoff pack and selected Gate C closeout /
 next-slice selection;
+`internal_use_pilot_handoff_v1` Gate C closed no-runtime and selected
+`calculator_source_intake_backlog_cleanup_v1` because no concrete pilot
+defect or source-ready accuracy pack exists;
 see
-`SLICE_INTERNAL_USE_PILOT_HANDOFF_V1_PLAN.md`).
+`SLICE_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_V1_PLAN.md`).
 
 ---
 
@@ -93,19 +96,26 @@ For every next slice decision:
 ## Now
 
 - **Active slice**:
-  `internal_use_pilot_handoff_v1`.
+  `calculator_source_intake_backlog_cleanup_v1`.
 - **Latest checkpoint**:
-  [CHECKPOINT_2026-04-29_INTERNAL_USE_PILOT_HANDOFF_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-29_INTERNAL_USE_PILOT_HANDOFF_GATE_A_HANDOFF.md).
+  [CHECKPOINT_2026-04-29_INTERNAL_USE_PILOT_HANDOFF_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-29_INTERNAL_USE_PILOT_HANDOFF_GATE_C_CLOSEOUT_HANDOFF.md).
 - **Planning surface**:
-  [SLICE_INTERNAL_USE_PILOT_HANDOFF_V1_PLAN.md](./SLICE_INTERNAL_USE_PILOT_HANDOFF_V1_PLAN.md).
-- **Just landed active-slice gate**:
+  [SLICE_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_V1_PLAN.md](./SLICE_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_V1_PLAN.md).
+- **Just closed active-slice gate**:
+  `packages/engine/src/post-internal-use-pilot-handoff-v1-next-slice-selection-contract.test.ts`
+  closes the pilot handoff no-runtime, keeps the handoff as
+  controlled-use evidence rather than promotion permission, preserves
+  `runtime/support/confidence/evidence/API/route-card/output-card` and
+  `proposal/report/workbench-input` behavior, and selects
+  `calculator_source_intake_backlog_cleanup_v1`.
+- **Just landed pilot handoff gate**:
   `packages/engine/src/internal-use-pilot-handoff-v1-gate-a-contract.test.ts`
   lands the no-runtime company-internal pilot handoff pack:
   [INTERNAL_USE_PILOT_HANDOFF.md](./INTERNAL_USE_PILOT_HANDOFF.md).
   It ties the ready, caveated, blocked, and hostile/edge lanes to
   operator steps, validation evidence, and known gaps. It preserves
   `runtime/support/confidence/evidence/API/route-card/output-card` and
-  `proposal/report/workbench-input` behavior and selects Gate C
+  `proposal/report/workbench-input` behavior and selected Gate C
   closeout / next-slice selection.
 - **Just closed source-readiness slice**:
   `clt_mass_timber_wall_source_pack_extraction_v1` Gate C closed
@@ -158,15 +168,16 @@ For every next slice decision:
   triage slice.
 - **Latest broad validation**:
   latest broad `pnpm check` is green after internal-use pilot handoff
-  Gate A: lint/typecheck green, engine 272 files / 1487 tests, web 157
+  Gate C: lint/typecheck green, engine 273 files / 1493 tests, web 157
   files / 890 passed + 18 skipped, build 5/5 with the known non-fatal
-  `sharp/@img` warnings. Focused current gate after Gate A is green:
-  engine 139 files / 667 tests, web 45 files / 216 passed + 18 skipped,
+  `sharp/@img` warnings. Focused current gate after Gate C is green:
+  engine 140 files / 673 tests, web 45 files / 216 passed + 18 skipped,
   build 5/5, whitespace guard clean.
 - **Prepared comprehensive-accuracy roadmap**:
   [CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md](./CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md)
   records the longer source-gated program. It is roadmap context for the
-  selected triage slice, not an active runtime import.
+  selected source-intake backlog cleanup slice, not an active runtime
+  import.
 - **Personal-use readiness roadmap**:
   [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
   is closed for the current private/internal-use bar. Heavy-core/concrete
@@ -178,21 +189,28 @@ For every next slice decision:
 ## Next Steps
 
 1. Implement
-   `packages/engine/src/post-internal-use-pilot-handoff-v1-next-slice-selection-contract.test.ts`
-   as Gate C closeout / next-slice selection.
-2. Close `internal_use_pilot_handoff_v1` unless focused or broad
-   validation names a concrete pilot defect or a genuinely source-ready
-   accuracy pack.
+   `packages/engine/src/calculator-source-intake-backlog-cleanup-gate-a-contract.test.ts`
+   as the no-runtime source-ready intake backlog cleanup matrix.
+2. Reconcile `CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md`,
+   `SOURCE_GAP_LEDGER.md`, and family source plans so every blocked
+   family has one current first missing requirement and protected
+   negative-boundary list.
 3. Keep `runtime/support/confidence/evidence/API/route-card/output-card`
-   and `proposal/report/workbench-input` behavior frozen. The handoff is
-   company-use operating evidence, not source-gated family promotion.
-4. Update `AGENTS.md`, `CURRENT_STATE.md`,
-   `SLICE_INTERNAL_USE_PILOT_HANDOFF_V1_PLAN.md`, and the relevant
-   checkpoint together when Gate C lands.
-5. Run the targeted Gate C file, `pnpm calculator:gate:current`, and
-   `git diff --check`. Broad `pnpm check` should already be green from
-   the release-candidate Gate A handoff; rerun it if Gate C changes any
-   shared or user-visible behavior.
+   and `proposal/report/workbench-input` behavior frozen. The backlog is
+   selection evidence, not runtime import permission.
+4. Select a follow-up only if it is source-ready by exact topology,
+   metric owner, tolerance owner, protected negative boundaries, and
+   paired visible tests; otherwise select another no-runtime extraction
+   or cleanup step.
+5. Run the targeted Gate A file, `pnpm calculator:gate:current`, and
+   `git diff --check`. Run `pnpm check` if the cleanup touches enough
+   docs/tests to warrant a full release gate.
+
+- **Just closed**: `internal_use_pilot_handoff_v1` Gate C.
+  `packages/engine/src/post-internal-use-pilot-handoff-v1-next-slice-selection-contract.test.ts`
+  closes the pilot handoff no-runtime, keeps every runtime and visible
+  surface frozen, and selects
+  `calculator_source_intake_backlog_cleanup_v1`.
 
 - **Just landed**: `internal_use_pilot_handoff_v1` Gate A.
   `packages/engine/src/internal-use-pilot-handoff-v1-gate-a-contract.test.ts`
@@ -840,29 +858,31 @@ For every next slice decision:
 
 ## Immediate Execution Order
 
-`internal_use_pilot_handoff_v1` should now proceed in
+`calculator_source_intake_backlog_cleanup_v1` should now proceed in
 this order:
 
 1. Re-read
-   [CHECKPOINT_2026-04-29_INTERNAL_USE_PILOT_HANDOFF_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-29_INTERNAL_USE_PILOT_HANDOFF_GATE_A_HANDOFF.md),
+   [CHECKPOINT_2026-04-29_INTERNAL_USE_PILOT_HANDOFF_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-29_INTERNAL_USE_PILOT_HANDOFF_GATE_C_CLOSEOUT_HANDOFF.md),
+   [SLICE_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_V1_PLAN.md](./SLICE_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_V1_PLAN.md),
    [INTERNAL_USE_PILOT_HANDOFF.md](./INTERNAL_USE_PILOT_HANDOFF.md),
    [SLICE_INTERNAL_USE_PILOT_HANDOFF_V1_PLAN.md](./SLICE_INTERNAL_USE_PILOT_HANDOFF_V1_PLAN.md),
-   [SLICE_INTERNAL_USE_ACCEPTANCE_REHEARSAL_V1_PLAN.md](./SLICE_INTERNAL_USE_ACCEPTANCE_REHEARSAL_V1_PLAN.md),
-   [INTERNAL_USE_PILOT_USAGE_NOTE.md](./INTERNAL_USE_PILOT_USAGE_NOTE.md),
-   and the current-state active-slice section.
+   [CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md](./CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md),
+   [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md), and the
+   current-state active-slice section.
 2. Add
-   `packages/engine/src/post-internal-use-pilot-handoff-v1-next-slice-selection-contract.test.ts`
-   as Gate C closeout / next-slice selection.
-3. Close the pilot handoff unless validation names a concrete pilot
-   defect or genuinely source-ready accuracy pack.
-4. Preserve the no-runtime/no-promotion boundary: the handoff and
-   20-scenario acceptance matrix are pilot evidence, not source-gated
-   family promotion.
+   `packages/engine/src/calculator-source-intake-backlog-cleanup-gate-a-contract.test.ts`
+   as the source-ready intake backlog cleanup matrix.
+3. Make every blocked family name its current posture, first missing
+   source-ready requirement, protected negative boundaries, and required
+   future engine/web visible tests.
+4. Preserve the no-runtime/no-promotion boundary: source pointers,
+   handoff success, and nearby green tests are not source-gated family
+   promotion.
 5. Update `NEXT_IMPLEMENTATION_PLAN.md`, `CURRENT_STATE.md`,
    `AGENTS.md`, the slice plan, and the relevant checkpoint together.
-6. Validate with the targeted Gate C test,
-   `pnpm calculator:gate:current`, and `git diff --check`. Rerun
-   `pnpm check` only if Gate C moves shared or user-visible behavior.
+6. Validate with the targeted Gate A test,
+   `pnpm calculator:gate:current`, and `git diff --check`. Run
+   `pnpm check` if the cleanup becomes the next full release gate.
 
 ## Personal-Use Readiness Chain
 

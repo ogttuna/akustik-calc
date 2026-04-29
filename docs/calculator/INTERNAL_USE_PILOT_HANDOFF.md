@@ -1,9 +1,11 @@
 # Internal Use Pilot Handoff
 
-Status: Gate A handoff pack for `internal_use_pilot_handoff_v1`.
+Status: Gate C closed handoff pack for `internal_use_pilot_handoff_v1`.
 Controlled company-internal use is allowed only inside the envelope
 below. This is not regulatory certification and it does not promote any
-low-confidence, screening, or source-gated family.
+low-confidence, screening, or source-gated family. The selected follow-up
+is `calculator_source_intake_backlog_cleanup_v1`, a no-runtime source
+backlog cleanup slice.
 
 Read this file before using the calculator for an internal wall or
 floor estimate. For the executable proof, see
@@ -130,17 +132,19 @@ Required validation for this handoff:
 |---|---|---|
 | `pnpm --filter @dynecho/engine exec vitest run src/internal-use-pilot-handoff-v1-gate-a-contract.test.ts --maxWorkers=1` | proves this handoff pack is complete and internally consistent | green, 1 file / 6 tests |
 | `pnpm --filter @dynecho/engine exec vitest run src/post-internal-use-acceptance-rehearsal-v1-next-slice-selection-contract.test.ts --maxWorkers=1` | preserves the Gate C decision that selected this handoff | targeted Gate C green, 1 file / 5 tests |
-| `pnpm calculator:gate:current` | focused calculator regression gate | green, engine 139 files / 667 tests; web 45 files / 216 passed + 18 skipped; build 5/5 |
-| `pnpm check` | release-candidate broad gate for company handoff | green, engine 272 files / 1487 tests; web 157 files / 890 passed + 18 skipped; build 5/5 |
+| `pnpm --filter @dynecho/engine exec vitest run src/post-internal-use-pilot-handoff-v1-next-slice-selection-contract.test.ts --maxWorkers=1` | preserves the Gate C closeout that selected source-intake backlog cleanup | targeted Gate C green, 1 file / 6 tests |
+| `pnpm calculator:gate:current` | focused calculator regression gate | green, engine 140 files / 673 tests; web 45 files / 216 passed + 18 skipped; build 5/5 |
+| `pnpm check` | release-candidate broad gate for company handoff closeout | green, engine 273 files / 1493 tests; web 157 files / 890 passed + 18 skipped; build 5/5 |
 | `git diff --check` | whitespace guard | clean |
 
 ## Handoff Decision
 
 The current calculator can be used for controlled company-internal
 estimates inside the lanes above. It is not ready for unreviewed
-external/client certification workflows. The next slice after Gate A
-should be Gate C closeout unless focused or broad validation exposes a
-concrete pilot defect.
+external/client certification workflows. Gate C closed no-runtime
+because focused and broad validation did not expose a concrete pilot
+defect, and no source-ready accuracy pack is available. The next slice
+is source-ready intake backlog cleanup.
 
 No runtime/support/confidence/evidence/API/route-card/output-card/
 proposal/report/workbench-input behavior is allowed to move in this

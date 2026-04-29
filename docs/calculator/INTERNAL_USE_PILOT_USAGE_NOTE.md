@@ -1,10 +1,11 @@
 # Internal Use Pilot Usage Note
 
 Status: current company-internal pilot usage note after
-`internal_use_acceptance_rehearsal_v1` Gate C closeout. The operating
-envelope and acceptance matrix are closed no-runtime; the active next
-slice is `internal_use_pilot_handoff_v1`. For the concise operator
-handoff, read [INTERNAL_USE_PILOT_HANDOFF.md](./INTERNAL_USE_PILOT_HANDOFF.md).
+`internal_use_pilot_handoff_v1` Gate C closeout. The operating
+envelope, acceptance matrix, and handoff are closed no-runtime; the
+active next slice is `calculator_source_intake_backlog_cleanup_v1`. For
+the concise operator handoff, read
+[INTERNAL_USE_PILOT_HANDOFF.md](./INTERNAL_USE_PILOT_HANDOFF.md).
 
 Use this note when running short company-internal calculator pilots. It
 does not certify a design and it does not promote any low-confidence,
@@ -135,5 +136,7 @@ prepared [INTERNAL_USE_PILOT_HANDOFF.md](./INTERNAL_USE_PILOT_HANDOFF.md)
 with scenario buckets, validation evidence, known gaps, and an operator
 checklist. That handoff keeps
 `runtime/support/confidence/evidence/API/route-card/output-card` and
-`proposal/report/workbench-input` behavior frozen and selects Gate C
-closeout / next-slice selection.
+`proposal/report/workbench-input` behavior frozen. Gate C then closed
+the handoff no-runtime and selected
+`calculator_source_intake_backlog_cleanup_v1` because no concrete pilot
+defect or source-ready accuracy pack exists.
