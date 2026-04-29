@@ -184,6 +184,7 @@ async function main() {
         "src/calculator-source-pack-readiness-triage-gate-a-contract.test.ts",
         "src/clt-mass-timber-wall-source-pack-extraction-gate-a-contract.test.ts",
         "src/clt-mass-timber-wall-source-pack-extraction-gate-b-contract.test.ts",
+        "src/post-clt-mass-timber-wall-source-pack-extraction-v1-next-slice-selection-contract.test.ts",
         "--maxWorkers=1"
       ]
     },

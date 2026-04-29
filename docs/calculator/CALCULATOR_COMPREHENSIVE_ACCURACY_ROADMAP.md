@@ -4,9 +4,13 @@ Status: ROADMAP, not an active implementation slice.
 
 Current handoff note 2026-04-29:
 `internal_use_operating_envelope_v1` closed no-runtime at Gate C and
-selected `calculator_source_pack_readiness_triage_v1`. This roadmap
-remains the long-horizon source-gated accuracy context; it is not a
-runtime import approval.
+selected `calculator_source_pack_readiness_triage_v1`; source-pack
+readiness then selected CLT / mass-timber extraction for no-runtime row
+and metric inspection; CLT / mass-timber Gate C closed no-runtime
+because no metric-mapping or formula-tolerance path was ready. The
+active slice is now `internal_use_acceptance_rehearsal_v1`. This
+roadmap remains the long-horizon source-gated accuracy context; it is
+not a runtime import approval.
 
 ## Purpose
 
@@ -78,18 +82,30 @@ extract:
 
 ## Recommended Program Sequence
 
-### 1. Source-Pack Readiness Triage First
+### 1. Source-Pack Readiness Triage First - Closed No-Runtime
 
-`internal_use_operating_envelope_v1` has closed. Before new source
-import work, run `calculator_source_pack_readiness_triage_v1` Gate A to
-rank which source pack, if any, is ready for a bounded source-research
-slice.
+`internal_use_operating_envelope_v1` has closed.
+`calculator_source_pack_readiness_triage_v1` Gate A then ranked source
+packs and selected CLT / mass-timber for no-runtime extraction only.
+CLT / mass-timber Gate A/B/C closed without runtime import: WoodWorks,
+NRC, and Dataholz context stayed roadmap-only because exact row locators,
+metric policy, tolerance ownership, and paired visible tests are not
+ready.
 
 Reason: the company can now use the explicit operating envelope, but
 accuracy work still needs source-pack proof. No candidate should move
 runtime, support, confidence, or evidence posture until it names exact
 topology, metric owner, tolerance owner, protected negative boundaries,
 and paired engine/web tests.
+
+### 1b. Internal-Use Acceptance Rehearsal Before More Runtime Work
+
+The active no-runtime slice is `internal_use_acceptance_rehearsal_v1`.
+It should build a 10-20 scenario acceptance matrix over the current
+operating envelope before another source-gated runtime attempt. This is
+not a substitute for source evidence; it is a company-use readiness
+check that keeps caveated, low-confidence, screening, unsupported, and
+fail-closed behavior executable.
 
 ### 2. Timber Double-Board Source Intake
 

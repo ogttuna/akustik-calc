@@ -94,8 +94,15 @@ when no exact wall source row is active and keep
 formula-owned/source-gated scoped-estimate language visible.
 
 Gate C has now closed the operating-envelope slice no-runtime and
-selected `calculator_source_pack_readiness_triage_v1`. Runtime values,
-support classes, confidence classes, source evidence tiers, API shape,
-route-card values, and output-card statuses remain frozen. The next
-bounded action is source-pack readiness ranking before any source import
-or confidence promotion.
+selected `calculator_source_pack_readiness_triage_v1`. Source-pack
+readiness then selected CLT / mass-timber source-pack extraction for
+no-runtime row/metric inspection. That extraction has now closed at
+Gate C without runtime import because no source-ready metric-mapping or
+formula-tolerance path exists yet. Runtime values, support classes,
+confidence classes, source evidence tiers, API shape, route-card values,
+and output-card statuses remain frozen.
+
+The next bounded action is
+`internal_use_acceptance_rehearsal_v1`: build an executable 10-20
+scenario company-use acceptance matrix from this note before treating
+the calculator as comfortable for broader internal rollout.

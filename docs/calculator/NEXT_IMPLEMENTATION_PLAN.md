@@ -50,8 +50,11 @@ decision;
 `clt_mass_timber_wall_source_pack_extraction_v1` Gate B landed
 no-runtime, found no bounded metric-mapping or formula-tolerance path
 ready now, and selected Gate C closeout / next-slice selection;
+`clt_mass_timber_wall_source_pack_extraction_v1` Gate C closed
+no-runtime and selected `internal_use_acceptance_rehearsal_v1` because
+no source-ready accuracy pack exists after Gate B;
 see
-`SLICE_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_PLAN.md`).
+`SLICE_INTERNAL_USE_ACCEPTANCE_REHEARSAL_V1_PLAN.md`).
 
 ---
 
@@ -81,19 +84,25 @@ For every next slice decision:
 ## Now
 
 - **Active slice**:
-  `clt_mass_timber_wall_source_pack_extraction_v1`.
+  `internal_use_acceptance_rehearsal_v1`.
 - **Latest checkpoint**:
-  [CHECKPOINT_2026-04-29_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-29_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_GATE_B_HANDOFF.md).
+  [CHECKPOINT_2026-04-29_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-29_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_GATE_C_CLOSEOUT_HANDOFF.md).
 - **Planning surface**:
-  [SLICE_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_PLAN.md](./SLICE_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_PLAN.md).
-- **Just landed active-slice gate**:
+  [SLICE_INTERNAL_USE_ACCEPTANCE_REHEARSAL_V1_PLAN.md](./SLICE_INTERNAL_USE_ACCEPTANCE_REHEARSAL_V1_PLAN.md).
+- **Just closed source-readiness slice**:
+  `clt_mass_timber_wall_source_pack_extraction_v1` Gate C closed
+  no-runtime. It confirmed Gate B roadmap tracks are not source-ready
+  runtime packs, preserved current CLT wall values and Dataholz
+  floor-only boundaries, and selected company-internal acceptance
+  rehearsal because all source-ready accuracy packs remain blocked.
+- **Prior active-slice gate**:
   `clt_mass_timber_wall_source_pack_extraction_v1` Gate B rejected
   immediate bounded metric mapping and formula tolerance. STC/FSTC/ASTC
   stay metric-policy research; IIC is rejected for wall airborne
   outputs; one-third-octave TL is only future row recompute input;
   Dataholz CLT floor `Rw` remains floor-only. Gate B selected Gate C
   closeout / next-slice selection no-runtime.
-- **Prior active-slice gate**:
+- **Prior extraction gate**:
   `clt_mass_timber_wall_source_pack_extraction_v1` Gate A classified
   WoodWorks Table 7 Single CLT Wall and Table 9 Double CLT Wall as
   later row-mapping candidates only; WoodWorks Table 8 Single NLT Wall,
@@ -115,13 +124,12 @@ For every next slice decision:
   closed no-runtime at Gate C and selected the source-pack readiness
   triage slice.
 - **Latest broad validation**:
-  `pnpm check` is green after CLT / mass-timber extraction Gate B:
-  lint/typecheck green, engine 268 files / 1464 tests, web 157 files /
+  `pnpm check` is green after CLT / mass-timber extraction Gate C:
+  lint/typecheck green, engine 269 files / 1469 tests, web 157 files /
   890 passed + 18 skipped, build 5/5 with the known non-fatal
   `sharp/@img` warnings. The focused current gate is also green after
-  CLT / mass-timber extraction Gate B: engine 135 files / 644 tests,
-  web 45 files / 216 passed + 18 skipped, build 5/5, whitespace guard
-  clean.
+  Gate C selection: engine 136 files / 649 tests, web 45 files / 216
+  passed + 18 skipped, build 5/5, whitespace guard clean.
 - **Prepared comprehensive-accuracy roadmap**:
   [CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md](./CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md)
   records the longer source-gated program. It is roadmap context for the
@@ -137,15 +145,23 @@ For every next slice decision:
 ## Next Three Steps
 
 1. Implement
-   `packages/engine/src/post-clt-mass-timber-wall-source-pack-extraction-v1-next-slice-selection-contract.test.ts`
-   as a no-runtime Gate C closeout / next-slice selection contract.
-2. Close the CLT / mass-timber extraction slice unless a genuinely
-   source-ready accuracy pack is available. Do not treat Gate B roadmap
-   tracks as runtime-ready source packs.
-3. Re-rank the next calculator action from the current blocked posture:
-   preserve CLT wall runtime baseline, Dataholz floor-only CLT
-   boundaries, and all support/confidence/evidence/route-card/
-   output-card/proposal-report/API surfaces.
+   `packages/engine/src/internal-use-acceptance-rehearsal-v1-gate-a-contract.test.ts`
+   as a no-runtime 10-20 scenario company-internal acceptance matrix.
+2. Cover `pilot_ready_with_standard_caveat`,
+   `pilot_allowed_with_visible_caveat`,
+   `not_defended_fail_closed_or_source_gated`, and hostile/missing-input
+   edge buckets with value/status, caveat, and unsupported/needs-input
+   assertions.
+3. Preserve every runtime/support/confidence/evidence/API/route-card/
+   output-card surface unless the acceptance matrix exposes a real
+   implementation mismatch.
+
+- **Just closed**: `clt_mass_timber_wall_source_pack_extraction_v1`
+  Gate C.
+  `packages/engine/src/post-clt-mass-timber-wall-source-pack-extraction-v1-next-slice-selection-contract.test.ts`
+  closes the slice no-runtime, keeps Gate B roadmap tracks out of
+  source-ready runtime import, pins the CLT wall runtime baseline, and
+  selects `internal_use_acceptance_rehearsal_v1`.
 
 - **Just landed**: `clt_mass_timber_wall_source_pack_extraction_v1`
   Gate B.
@@ -774,29 +790,27 @@ For every next slice decision:
 
 ## Immediate Execution Order
 
-`clt_mass_timber_wall_source_pack_extraction_v1` should now proceed in
+`internal_use_acceptance_rehearsal_v1` should now proceed in
 this order:
 
 1. Re-read
+   [CHECKPOINT_2026-04-29_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-29_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_GATE_C_CLOSEOUT_HANDOFF.md),
+   [SLICE_INTERNAL_USE_ACCEPTANCE_REHEARSAL_V1_PLAN.md](./SLICE_INTERNAL_USE_ACCEPTANCE_REHEARSAL_V1_PLAN.md),
    [CHECKPOINT_2026-04-29_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-29_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_GATE_B_HANDOFF.md),
-   [CHECKPOINT_2026-04-29_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-29_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_GATE_A_HANDOFF.md),
-   [SLICE_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_PLAN.md](./SLICE_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_PLAN.md),
-   [SLICE_CALCULATOR_SOURCE_PACK_READINESS_TRIAGE_PLAN.md](./SLICE_CALCULATOR_SOURCE_PACK_READINESS_TRIAGE_PLAN.md),
+   [INTERNAL_USE_PILOT_USAGE_NOTE.md](./INTERNAL_USE_PILOT_USAGE_NOTE.md),
    and the current-state active-slice section.
 2. Add
-   `packages/engine/src/post-clt-mass-timber-wall-source-pack-extraction-v1-next-slice-selection-contract.test.ts`
-   as the Gate C closeout / next-slice selection contract.
-3. Confirm Gate B did not unlock a source-ready accuracy pack:
-   WoodWorks/NRC STC/FSTC/ASTC/IIC and one-third-octave
-   transmission-loss context stay roadmap-only until row-level metric
-   handling and tolerance ownership exist.
-4. Confirm Dataholz CLT floor rows remain floor-only truth and the live
-   CLT wall route stays formula-owned, medium-confidence, and
-   source-gated.
+   `packages/engine/src/internal-use-acceptance-rehearsal-v1-gate-a-contract.test.ts`
+   as the Gate A acceptance matrix.
+3. Build 10-20 representative company-use scenarios across ready,
+   caveated, fail-closed/source-gated, and hostile/missing-input
+   buckets.
+4. Pin values where stable; otherwise pin output support, caveat,
+   confidence/evidence, unsupported, or `needs_input` status.
 5. Update `NEXT_IMPLEMENTATION_PLAN.md`, `CURRENT_STATE.md`,
-   `MASTER_PLAN.md`, `SOURCE_GAP_LEDGER.md`, `AGENTS.md`, and the new
-   Gate B handoff together.
-6. Validate with the targeted Gate C test,
+   `MASTER_PLAN.md`, `SOURCE_GAP_LEDGER.md`, `AGENTS.md`, and the
+   acceptance handoff together.
+6. Validate with the targeted Gate A test,
    `pnpm calculator:gate:current`, `pnpm check` when broad validation is
    needed, and `git diff --check`.
 
@@ -849,7 +863,9 @@ extraction Gate A has now landed no-runtime, classified the
 WoodWorks/NRC source groups, kept `wall-clt-local` frozen, and selected
 Gate B metric-mapping / formula-tolerance decision. Gate B has now
 landed no-runtime, found no bounded mapping/tolerance path ready now,
-and selected Gate C closeout / next-slice selection.
+and selected Gate C closeout / next-slice selection. Gate C has now
+closed no-runtime and selected `internal_use_acceptance_rehearsal_v1`
+because no source-ready accuracy pack exists after Gate B.
 
 ## Deferred Follow-Up Tracks
 

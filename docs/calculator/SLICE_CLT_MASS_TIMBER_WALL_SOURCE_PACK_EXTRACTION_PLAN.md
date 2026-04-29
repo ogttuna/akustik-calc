@@ -1,11 +1,13 @@
 # Slice Plan - CLT / Mass-Timber Wall Source Pack Extraction v1
 
-Status: GATE B LANDED / GATE C NEXT (selected 2026-04-29 by
+Status: CLOSED AT GATE C (selected 2026-04-29 by
 `calculator-source-pack-readiness-triage-gate-a-contract.test.ts`;
 Gate A landed 2026-04-29 in
 `clt-mass-timber-wall-source-pack-extraction-gate-a-contract.test.ts`;
 Gate B landed 2026-04-29 in
 `clt-mass-timber-wall-source-pack-extraction-gate-b-contract.test.ts`;
+Gate C closed 2026-04-29 in
+`post-clt-mass-timber-wall-source-pack-extraction-v1-next-slice-selection-contract.test.ts`;
 no-runtime source-row and metric-context extraction slice).
 
 Landed implementation files:
@@ -14,9 +16,11 @@ Landed implementation files:
 
 `packages/engine/src/clt-mass-timber-wall-source-pack-extraction-gate-b-contract.test.ts`
 
-Next implementation file:
-
 `packages/engine/src/post-clt-mass-timber-wall-source-pack-extraction-v1-next-slice-selection-contract.test.ts`
+
+Selected next implementation file:
+
+`packages/engine/src/internal-use-acceptance-rehearsal-v1-gate-a-contract.test.ts`
 
 Selection reason: `calculator_source_pack_readiness_triage_v1` Gate A
 ranked all candidate source packs and kept every candidate
@@ -38,6 +42,14 @@ ready now. STC/FSTC/ASTC remain metric-policy research; IIC is rejected
 for wall airborne outputs; one-third-octave transmission-loss context is
 only future row recompute input; local Dataholz CLT `Rw` rows remain
 floor-only. Gate B selects Gate C closeout / next-slice selection.
+
+Gate C result: the slice is closed no-runtime. No Gate B roadmap track
+is source-ready for runtime import, support promotion, confidence
+promotion, evidence promotion, or visible card/report movement. The
+selected next slice is `internal_use_acceptance_rehearsal_v1`, because
+company use now needs an executable acceptance matrix over the current
+operating envelope rather than another source-gated runtime import
+attempt.
 
 ## Objective
 
@@ -177,14 +189,13 @@ Gate B tests assert:
 - Dataholz CLT exact rows remain floor-only;
 - the selected next action is Gate C closeout / next-slice selection.
 
-## Gate C - Closeout And Next-Slice Selection
+## Gate C - Closeout And Next-Slice Selection - Landed
 
-Gate C should add:
+Gate C added:
 
 `packages/engine/src/post-clt-mass-timber-wall-source-pack-extraction-v1-next-slice-selection-contract.test.ts`
 
-Gate C should close the CLT / mass-timber extraction slice no-runtime
-unless a genuinely source-ready accuracy pack is available. It should
+Gate C closed the CLT / mass-timber extraction slice no-runtime. It did
 not promote:
 
 - WoodWorks table groups without exact row, metric policy, and
@@ -195,15 +206,17 @@ not promote:
 - NRC NLT addendum context without an NLT wall family/tolerance owner;
 - Dataholz CLT floor rows into wall CLT truth.
 
-Minimum tests in Gate C:
+Gate C tests assert:
 
-- assert Gate C closes the slice no-runtime;
-- assert Gate B roadmap tracks are not source-ready runtime packs;
-- assert current CLT wall runtime values and visible posture remain
+- Gate C closes the slice no-runtime;
+- Gate B roadmap tracks are not source-ready runtime packs;
+- current CLT wall runtime values and visible posture remain
   frozen;
-- assert Dataholz CLT floor rows remain floor-only truth;
-- assert the selected next slice is chosen by source/readiness rank, not
-  by convenience or nearby green tests.
+- Dataholz CLT floor rows remain floor-only truth;
+- no source-ready accuracy pack outranks a company-internal acceptance
+  rehearsal;
+- the selected next slice is
+  `internal_use_acceptance_rehearsal_v1`.
 
 ## Validation
 
@@ -212,6 +225,9 @@ Minimum tests in Gate C:
   when it lands.
 - Run the targeted Gate B engine contract while iterating.
 - Add the Gate B contract to `tools/dev/run-calculator-current-gate.ts`
+  when it lands.
+- Run the targeted Gate C engine contract while iterating.
+- Add the Gate C contract to `tools/dev/run-calculator-current-gate.ts`
   when it lands.
 - Run `pnpm calculator:gate:current`.
 - Run `git diff --check`.
@@ -237,4 +253,14 @@ Latest Gate B targeted validation, 2026-04-29:
   `sharp/@img` warnings, whitespace guard clean;
 - broad `pnpm check` green: lint/typecheck green, engine 268 files /
   1464 tests, web 157 files / 890 passed + 18 skipped, build 5/5 with
+  the known non-fatal `sharp/@img` warnings.
+
+Latest Gate C targeted validation, 2026-04-29:
+
+- targeted Gate C engine contract green: 1 file / 5 tests;
+- focused current gate green: engine 136 files / 649 tests, web 45
+  files / 216 passed + 18 skipped, build 5/5 with the known non-fatal
+  `sharp/@img` warnings, whitespace guard clean;
+- broad `pnpm check` green: lint/typecheck green, engine 269 files /
+  1469 tests, web 157 files / 890 passed + 18 skipped, build 5/5 with
   the known non-fatal `sharp/@img` warnings.
