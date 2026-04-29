@@ -142,19 +142,35 @@ For every next slice decision:
   low-confidence until new source evidence or a bounded family rule
   appears, and UI/input/output honesty is validated.
 
-## Next Three Steps
+## Next Steps
 
 1. Implement
    `packages/engine/src/internal-use-acceptance-rehearsal-v1-gate-a-contract.test.ts`
-   as a no-runtime 10-20 scenario company-internal acceptance matrix.
-2. Cover `pilot_ready_with_standard_caveat`,
-   `pilot_allowed_with_visible_caveat`,
-   `not_defended_fail_closed_or_source_gated`, and hostile/missing-input
-   edge buckets with value/status, caveat, and unsupported/needs-input
-   assertions.
-3. Preserve every runtime/support/confidence/evidence/API/route-card/
-   output-card surface unless the acceptance matrix exposes a real
-   implementation mismatch.
+   as a no-runtime company-internal acceptance matrix. Start from the
+   concrete scenario matrix in
+   [SLICE_INTERNAL_USE_ACCEPTANCE_REHEARSAL_V1_PLAN.md](./SLICE_INTERNAL_USE_ACCEPTANCE_REHEARSAL_V1_PLAN.md):
+   implement at least scenarios 1-18, with 10 as the absolute floor if
+   a duplicate proof is intentionally deferred.
+2. Use `calculateAssembly`, `ENGINE_MIXED_GENERATED_CASES`, and
+   `resultSnapshot` for direct engine scenarios. Use proof-owner
+   existence checks only for web/API surfaces that are already covered
+   by focused tests and would make this engine Gate A cross-package or
+   too slow.
+3. Cover ready, caveated, fail-closed/source-gated, and hostile
+   many-layer/reorder/missing-input buckets with value/status snapshots,
+   confidence/evidence/caveat posture, unsupported/needs-input reasons,
+   and no-promotion assertions.
+4. If Gate A exposes only a user-visible honesty gap, select Gate B for
+   paired workbench/report visibility. If it exposes numeric drift,
+   treat that as a regression and fix it with targeted tests before
+   accepting new snapshots. Do not promote source-gated families in this
+   slice.
+5. After Gate A lands, add it to
+   `tools/dev/run-calculator-current-gate.ts`, update this plan,
+   `CURRENT_STATE.md`, `AGENTS.md`, and the active slice plan, then run
+   the targeted Gate A file, `pnpm calculator:gate:current`, and
+   `git diff --check`. Reserve `pnpm check` for the Gate A handoff or
+   any web/report-visible behavior movement.
 
 - **Just closed**: `clt_mass_timber_wall_source_pack_extraction_v1`
   Gate C.

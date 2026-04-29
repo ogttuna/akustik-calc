@@ -99,9 +99,15 @@ groups runtime-blocked, and selected Gate C closeout / next-slice
 selection. Gate C then closed the extraction slice no-runtime and
 selected `internal_use_acceptance_rehearsal_v1`: the next bounded work
 is a company-internal acceptance matrix over the current operating
-envelope, not a runtime import.
+envelope, not a runtime import. The active slice plan now expands Gate
+A into a concrete 20-row scenario target: ready benchmarks/source
+corridors, caveated formula/screening routes, fail-closed/source-gated
+cases, and hostile many-layer/reorder/missing-input cases. Gate A needs
+no external source research because it must rehearse existing behavior;
+source research belongs only to a later source-ready accuracy slice.
 See
 [SLICE_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_PLAN.md](./SLICE_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_PLAN.md),
+[SLICE_INTERNAL_USE_ACCEPTANCE_REHEARSAL_V1_PLAN.md](./SLICE_INTERNAL_USE_ACCEPTANCE_REHEARSAL_V1_PLAN.md),
 [SLICE_CALCULATOR_SOURCE_PACK_READINESS_TRIAGE_PLAN.md](./SLICE_CALCULATOR_SOURCE_PACK_READINESS_TRIAGE_PLAN.md),
 [SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md](./SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md),
 and [CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md](./CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md).

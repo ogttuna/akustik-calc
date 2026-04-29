@@ -84,7 +84,10 @@ plan.
   `packages/engine/src/internal-use-acceptance-rehearsal-v1-gate-a-contract.test.ts`
   should build a no-runtime 10-20 scenario company-internal acceptance
   matrix over ready-with-caveat, caveated, fail-closed/source-gated, and
-  hostile/missing-input cases.
+  hostile/missing-input cases. The active slice plan now names the
+  concrete 20-row target and implementation read map; Gate A should
+  calculate direct engine scenarios and use proof-owner existence checks
+  only for already-covered web/API surfaces.
 - latest checkpoint:
   `docs/calculator/CHECKPOINT_2026-04-29_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_GATE_C_CLOSEOUT_HANDOFF.md`
   closes CLT / mass-timber extraction no-runtime and selects
@@ -160,7 +163,10 @@ plan.
   source-pack readiness and CLT / mass-timber Gate B still found no
   source-ready accuracy import. Do not promote any family for company
   pilot convenience; the next slice must make the current operating
-  envelope executable against representative company-use scenarios.
+  envelope executable against representative company-use scenarios. No
+  external source research is needed for Gate A; later source-ready
+  accuracy work must still provide exact row locators, metric policy,
+  tolerance owner, and paired visible tests before runtime movement.
 - prepared planning surfaces: internal-use acceptance rehearsal is in
   `SLICE_INTERNAL_USE_ACCEPTANCE_REHEARSAL_V1_PLAN.md`; CLT /
   mass-timber extraction is closed in
