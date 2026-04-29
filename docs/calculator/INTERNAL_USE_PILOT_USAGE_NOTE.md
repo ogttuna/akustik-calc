@@ -1,7 +1,9 @@
 # Internal Use Pilot Usage Note
 
-Status: Gate C closed note for `internal_use_operating_envelope_v1`
-after the Gate A pilot pack and Gate B visibility addendum.
+Status: current company-internal pilot usage note after
+`internal_use_acceptance_rehearsal_v1` Gate C closeout. The operating
+envelope and acceptance matrix are closed no-runtime; the active next
+slice is `internal_use_pilot_handoff_v1`.
 
 Use this note when running short company-internal calculator pilots. It
 does not certify a design and it does not promote any low-confidence,
@@ -71,6 +73,22 @@ clearly source-gated research item.
 | `wall_no_stud_double_leaf_source_gated` | formula-owned source-gated family | no runtime or confidence promotion without direct rows or bounded formula tolerance |
 | `historical_blocked_floor_families` | closed fail-closed source gaps such as `GDMTXA04A`, `C11c`, and raw open-box/open-web | do not reopen from nearby green tests alone |
 
+### hostile_many_layer_reorder_and_missing_input_edges
+
+Use these only as robustness checks around the pilot, not as new source
+claims. They prove that hostile or messy user behavior stays finite,
+explicitly unsupported, or `needs_input` instead of silently becoming a
+defended result.
+
+| Scenario id | Current posture | Required behavior |
+|---|---|---|
+| `floor_many_layer_exact_split_stack` | exact/source corridor stress | finite supported values, unsupported companions preserved, no source promotion |
+| `floor_many_layer_raw_fail_or_screening_stack` | raw hostile stack | finite/null values only with explicit unsupported outputs; no fabricated exact match |
+| `floor_role_defined_reorder_exact_stack` | role-defined reorder/edit | exact precedence remains protected when floor roles define the stack |
+| `floor_raw_reorder_support_boundary` | raw layer-order boundary | raw order may change support posture; do not claim broad arbitrary reorder invariance |
+| `wall_field_missing_geometry_needs_input` | missing field/building inputs | `Dn,w` / `DnT,w` stay pending input until geometry and receiving-room data are supplied |
+| `mixed_study_mode_save_load_replay_owner` | save/load proof owner | rely on the existing web torture test; do not duplicate that long matrix in the pilot note |
+
 ## Pilot Checklist
 
 1. Pick wall or floor and use the matching input fields.
@@ -102,13 +120,17 @@ formula-tolerance path exists yet. Runtime values, support classes,
 confidence classes, source evidence tiers, API shape, route-card values,
 and output-card statuses remain frozen.
 
-`internal_use_acceptance_rehearsal_v1` Gate A has now landed the
-executable company-use acceptance matrix from this note. It pins 20
-representative scenarios across ready benchmark/source corridors,
-caveated formula/screening routes, fail-closed/source-gated cases, and
-hostile many-layer/reorder/missing-input proof owners without changing
-runtime values or promoting source-gated families.
+`internal_use_acceptance_rehearsal_v1` Gate A landed the executable
+company-use acceptance matrix from this note. It pins 20 representative
+scenarios across ready benchmark/source corridors, caveated
+formula/screening routes, fail-closed/source-gated cases, and hostile
+many-layer/reorder/missing-input proof owners without changing runtime
+values or promoting source-gated families.
 
-The next bounded action is Gate C closeout / next-slice selection:
-close the acceptance rehearsal unless a concrete acceptance defect or a
-genuinely source-ready accuracy pack is available.
+Gate C has now closed the acceptance rehearsal no-runtime. No concrete
+acceptance defect or source-ready accuracy pack was found, so the next
+bounded action is `internal_use_pilot_handoff_v1` Gate A: prepare a
+company-internal pilot handoff pack with scenario buckets, validation
+evidence, known gaps, and an operator checklist. That handoff must keep
+runtime/support/confidence/evidence/API/route-card/output-card behavior
+frozen.

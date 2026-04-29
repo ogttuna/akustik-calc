@@ -1,13 +1,19 @@
 # Slice Plan - Internal Use Acceptance Rehearsal v1
 
-Status: GATE A LANDED / GATE C NEXT (selected 2026-04-29 by
+Status: CLOSED AT GATE C (selected 2026-04-29 by
 `post-clt-mass-timber-wall-source-pack-extraction-v1-next-slice-selection-contract.test.ts`;
 Gate A landed 2026-04-29 in
-`internal-use-acceptance-rehearsal-v1-gate-a-contract.test.ts`).
+`internal-use-acceptance-rehearsal-v1-gate-a-contract.test.ts`; Gate C
+closed 2026-04-29 in
+`post-internal-use-acceptance-rehearsal-v1-next-slice-selection-contract.test.ts`).
 
-Next implementation file:
+Closeout file:
 
 `packages/engine/src/post-internal-use-acceptance-rehearsal-v1-next-slice-selection-contract.test.ts`
+
+Selected next slice:
+
+`internal_use_pilot_handoff_v1`
 
 Selection reason: `clt_mass_timber_wall_source_pack_extraction_v1`
 closed no-runtime after Gate B found no bounded metric-mapping or
@@ -204,14 +210,20 @@ Possible Gate B scope:
 
 ## Gate C - Pilot Readiness Closeout
 
-Gate C should close this slice only when:
+Gate C landed:
+
+`packages/engine/src/post-internal-use-acceptance-rehearsal-v1-next-slice-selection-contract.test.ts`
+
+Gate C closed this slice because:
 
 - the acceptance matrix is executable and green;
 - docs identify the exact controlled-use envelope and known source-gated
   gaps;
 - no source-gated family was promoted for pilot convenience;
-- the next slice is selected from either a concrete acceptance defect or
-  a genuinely source-ready accuracy pack.
+- no concrete acceptance defect or genuinely source-ready accuracy pack
+  exists now;
+- the next selected slice is
+  [SLICE_INTERNAL_USE_PILOT_HANDOFF_V1_PLAN.md](./SLICE_INTERNAL_USE_PILOT_HANDOFF_V1_PLAN.md).
 
 ## Validation
 
@@ -243,3 +255,14 @@ Latest Gate A validation, 2026-04-29:
 - broad `pnpm check` was not rerun for Gate A because this was a
   no-runtime/no-web-behavior acceptance rehearsal. Latest broad remains
   the CLT / mass-timber Gate C broad green run.
+
+Latest Gate C validation, 2026-04-29:
+
+- targeted Gate C engine contract green: 1 file / 5 tests;
+- focused `pnpm calculator:gate:current` green after runner sync:
+  engine 138 files / 661 tests, web 45 files / 216 passed + 18 skipped,
+  build 5/5 with known non-fatal `sharp/@img` warnings, whitespace guard
+  clean;
+- `git diff --check` clean;
+- broad `pnpm check` is reserved for the selected pilot handoff
+  release-candidate slice or any runtime/web-visible behavior movement.

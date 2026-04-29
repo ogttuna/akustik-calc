@@ -56,8 +56,11 @@ no source-ready accuracy pack exists after Gate B;
 `internal_use_acceptance_rehearsal_v1` Gate A landed no-runtime with a
 20-scenario company-internal acceptance matrix and selected Gate C
 closeout / next-slice selection;
+`internal_use_acceptance_rehearsal_v1` Gate C closed no-runtime and
+selected `internal_use_pilot_handoff_v1` because no concrete
+acceptance defect or source-ready accuracy pack exists;
 see
-`SLICE_INTERNAL_USE_ACCEPTANCE_REHEARSAL_V1_PLAN.md`).
+`SLICE_INTERNAL_USE_PILOT_HANDOFF_V1_PLAN.md`).
 
 ---
 
@@ -87,18 +90,25 @@ For every next slice decision:
 ## Now
 
 - **Active slice**:
-  `internal_use_acceptance_rehearsal_v1`.
+  `internal_use_pilot_handoff_v1`.
 - **Latest checkpoint**:
-  [CHECKPOINT_2026-04-29_INTERNAL_USE_ACCEPTANCE_REHEARSAL_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-29_INTERNAL_USE_ACCEPTANCE_REHEARSAL_GATE_A_HANDOFF.md).
+  [CHECKPOINT_2026-04-29_INTERNAL_USE_ACCEPTANCE_REHEARSAL_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-29_INTERNAL_USE_ACCEPTANCE_REHEARSAL_GATE_C_CLOSEOUT_HANDOFF.md).
 - **Planning surface**:
-  [SLICE_INTERNAL_USE_ACCEPTANCE_REHEARSAL_V1_PLAN.md](./SLICE_INTERNAL_USE_ACCEPTANCE_REHEARSAL_V1_PLAN.md).
+  [SLICE_INTERNAL_USE_PILOT_HANDOFF_V1_PLAN.md](./SLICE_INTERNAL_USE_PILOT_HANDOFF_V1_PLAN.md).
 - **Just closed source-readiness slice**:
   `clt_mass_timber_wall_source_pack_extraction_v1` Gate C closed
   no-runtime. It confirmed Gate B roadmap tracks are not source-ready
   runtime packs, preserved current CLT wall values and Dataholz
   floor-only boundaries, and selected company-internal acceptance
   rehearsal because all source-ready accuracy packs remain blocked.
-- **Just landed active-slice gate**:
+- **Just closed prior active slice**:
+  `packages/engine/src/post-internal-use-acceptance-rehearsal-v1-next-slice-selection-contract.test.ts`
+  closes the acceptance rehearsal no-runtime, confirms Gate A did not
+  reveal an acceptance defect or source-ready accuracy pack, keeps all
+  runtime/support/confidence/evidence/API/route-card/output-card/
+  proposal/report/workbench-input behavior frozen, and selects
+  `internal_use_pilot_handoff_v1`.
+- **Just landed acceptance gate**:
   `packages/engine/src/internal-use-acceptance-rehearsal-v1-gate-a-contract.test.ts`
   lands the no-runtime 20-scenario acceptance matrix and selects Gate C
   closeout / next-slice selection. It pins ready wall benchmarks, exact
@@ -139,7 +149,7 @@ For every next slice decision:
   extraction Gate C: lint/typecheck green, engine 269 files / 1469
   tests, web 157 files / 890 passed + 18 skipped, build 5/5 with the
   known non-fatal `sharp/@img` warnings. The focused current gate is
-  green after internal-use acceptance Gate A: engine 137 files / 656
+  green after internal-use acceptance Gate C: engine 138 files / 661
   tests, web 45 files / 216 passed + 18 skipped, build 5/5, whitespace
   guard clean.
 - **Prepared comprehensive-accuracy roadmap**:
@@ -157,20 +167,28 @@ For every next slice decision:
 ## Next Steps
 
 1. Implement
-   `packages/engine/src/post-internal-use-acceptance-rehearsal-v1-next-slice-selection-contract.test.ts`
-   as Gate C closeout / next-slice selection.
-2. Close `internal_use_acceptance_rehearsal_v1` unless Gate C names a
-   concrete acceptance defect or a genuinely source-ready accuracy pack.
-3. Keep all runtime/support/confidence/evidence/API/route-card/
-   output-card surfaces frozen. The landed Gate A matrix is evidence for
-   controlled company use, not permission to promote source-gated
-   families.
-4. Update `AGENTS.md`, `CURRENT_STATE.md`,
-   `SLICE_INTERNAL_USE_ACCEPTANCE_REHEARSAL_V1_PLAN.md`, and the
-   relevant next planning surface together when Gate C lands.
-5. Run the targeted Gate C file, `pnpm calculator:gate:current`, and
-   `git diff --check`. Reserve `pnpm check` for a full pilot handoff or
-   any runtime/web-visible behavior movement.
+   `packages/engine/src/internal-use-pilot-handoff-v1-gate-a-contract.test.ts`
+   as the no-runtime company-internal pilot handoff Gate A.
+2. Produce or update the handoff artifact, recommended location:
+   `docs/calculator/INTERNAL_USE_PILOT_HANDOFF.md`.
+3. The handoff must include scenario buckets, validation evidence, known
+   gaps, and an operator checklist for wall/floor selection, required
+   inputs, layer entry, result review, caveat copying, and fail-closed
+   handling.
+4. Keep all runtime/support/confidence/evidence/API/route-card/
+   output-card/proposal/report/workbench-input behavior frozen. The
+   acceptance matrix is evidence for controlled company use, not
+   permission to promote source-gated families.
+5. Run the targeted Gate A file, `pnpm calculator:gate:current`, and
+   `git diff --check`. Run `pnpm check` if this Gate A is treated as the
+   internal-use release-candidate handoff or if any runtime/web-visible
+   behavior moves.
+
+- **Just closed**: `internal_use_acceptance_rehearsal_v1` Gate C.
+  `packages/engine/src/post-internal-use-acceptance-rehearsal-v1-next-slice-selection-contract.test.ts`
+  closes the slice no-runtime, keeps the 20-scenario acceptance matrix
+  as evidence only, blocks source-gated promotion, and selects
+  `internal_use_pilot_handoff_v1`.
 
 - **Just closed**: `clt_mass_timber_wall_source_pack_extraction_v1`
   Gate C.
@@ -806,26 +824,28 @@ For every next slice decision:
 
 ## Immediate Execution Order
 
-`internal_use_acceptance_rehearsal_v1` should now proceed in
+`internal_use_pilot_handoff_v1` should now proceed in
 this order:
 
 1. Re-read
-   [CHECKPOINT_2026-04-29_INTERNAL_USE_ACCEPTANCE_REHEARSAL_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-29_INTERNAL_USE_ACCEPTANCE_REHEARSAL_GATE_A_HANDOFF.md),
+   [CHECKPOINT_2026-04-29_INTERNAL_USE_ACCEPTANCE_REHEARSAL_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-29_INTERNAL_USE_ACCEPTANCE_REHEARSAL_GATE_C_CLOSEOUT_HANDOFF.md),
+   [SLICE_INTERNAL_USE_PILOT_HANDOFF_V1_PLAN.md](./SLICE_INTERNAL_USE_PILOT_HANDOFF_V1_PLAN.md),
    [SLICE_INTERNAL_USE_ACCEPTANCE_REHEARSAL_V1_PLAN.md](./SLICE_INTERNAL_USE_ACCEPTANCE_REHEARSAL_V1_PLAN.md),
    [INTERNAL_USE_PILOT_USAGE_NOTE.md](./INTERNAL_USE_PILOT_USAGE_NOTE.md),
    and the current-state active-slice section.
 2. Add
-   `packages/engine/src/post-internal-use-acceptance-rehearsal-v1-next-slice-selection-contract.test.ts`
-   as the Gate C closeout / next-slice selection contract.
-3. Close the acceptance rehearsal unless a concrete acceptance defect or
-   genuinely source-ready accuracy pack is named.
-4. Preserve the Gate A no-runtime/no-promotion boundary: the 20-scenario
-   matrix is pilot evidence, not a source-gated family promotion.
+   `packages/engine/src/internal-use-pilot-handoff-v1-gate-a-contract.test.ts`
+   as the no-runtime company-internal pilot handoff contract.
+3. Produce or update the recommended handoff artifact:
+   `docs/calculator/INTERNAL_USE_PILOT_HANDOFF.md`.
+4. Preserve the no-runtime/no-promotion boundary: the 20-scenario
+   acceptance matrix is pilot evidence, not a source-gated family
+   promotion.
 5. Update `NEXT_IMPLEMENTATION_PLAN.md`, `CURRENT_STATE.md`,
    `AGENTS.md`, the slice plan, and the relevant checkpoint together.
-6. Validate with the targeted Gate C test,
-   `pnpm calculator:gate:current`, `pnpm check` when broad validation is
-   needed, and `git diff --check`.
+6. Validate with the targeted Gate A test,
+   `pnpm calculator:gate:current`, `pnpm check` if this is the
+   release-candidate handoff or behavior moves, and `git diff --check`.
 
 ## Personal-Use Readiness Chain
 
@@ -839,13 +859,13 @@ private day-to-day use:
 
 Productization route-policy and proposal/report polish slices are
 closed. Calculator runtime/source posture stays frozen during the
-selected internal-use operating-envelope closeout unless a selected
-Gate C contract names a source-ready accuracy pack. The landed
-framed-wall split fix remains protected, and the no-stud, timber
-double-board, CLT wall, lined-massive / heavy-core source research, and
-floor layer-order invariance expansion slices have closed no-runtime at
-Gate C. Additional productization work is deferred until this calculator
-operating-envelope slice closes or the priority explicitly changes.
+selected internal-use pilot handoff unless a later selected contract
+names a source-ready accuracy pack. The landed framed-wall split fix
+remains protected, and the no-stud, timber double-board, CLT wall,
+lined-massive / heavy-core source research, and floor layer-order
+invariance expansion slices have closed no-runtime at Gate C.
+Additional productization work is deferred until this calculator handoff
+slice closes or the priority explicitly changes.
 
 ## Latest Closed Slices
 
@@ -878,7 +898,9 @@ Gate B metric-mapping / formula-tolerance decision. Gate B has now
 landed no-runtime, found no bounded mapping/tolerance path ready now,
 and selected Gate C closeout / next-slice selection. Gate C has now
 closed no-runtime and selected `internal_use_acceptance_rehearsal_v1`
-because no source-ready accuracy pack exists after Gate B.
+because no source-ready accuracy pack exists after Gate B. Acceptance
+rehearsal Gate A then landed the 20-scenario matrix, and Gate C has now
+closed no-runtime and selected `internal_use_pilot_handoff_v1`.
 
 ## Deferred Follow-Up Tracks
 

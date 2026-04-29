@@ -74,8 +74,10 @@ no source-ready accuracy pack exists after Gate B;
 `internal_use_acceptance_rehearsal_v1` Gate A landed no-runtime with a
 20-scenario company-internal acceptance matrix and selected Gate C
 closeout / next-slice selection;
+`internal_use_acceptance_rehearsal_v1` Gate C closed no-runtime and
+selected `internal_use_pilot_handoff_v1`;
 latest checkpoint:
-[CHECKPOINT_2026-04-29_INTERNAL_USE_ACCEPTANCE_REHEARSAL_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-29_INTERNAL_USE_ACCEPTANCE_REHEARSAL_GATE_A_HANDOFF.md)).
+[CHECKPOINT_2026-04-29_INTERNAL_USE_ACCEPTANCE_REHEARSAL_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-29_INTERNAL_USE_ACCEPTANCE_REHEARSAL_GATE_C_CLOSEOUT_HANDOFF.md)).
 The extra 2026-04-28 planning pass made the readiness ladder explicit
 and the source-gap Gate A selected the short internal pilot
 operating-envelope slice. Internal-use Gate A then produced
@@ -114,8 +116,13 @@ routes, many-layer/reorder edges, invalid thickness fail-closed
 behavior, unsupported-output partitioning, and cross-package proof-owner
 surfaces are now executable acceptance evidence. Gate A found no reason
 to retune formulas or promote source-gated families and selected Gate C
-closeout / next-slice selection.
+closeout / next-slice selection. Gate C then closed the acceptance
+rehearsal no-runtime, found no concrete acceptance defect and no
+source-ready accuracy pack, and selected `internal_use_pilot_handoff_v1`
+so the next bounded work is a company-internal handoff pack over the
+already proven operating envelope.
 See
+[SLICE_INTERNAL_USE_PILOT_HANDOFF_V1_PLAN.md](./SLICE_INTERNAL_USE_PILOT_HANDOFF_V1_PLAN.md),
 [SLICE_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_PLAN.md](./SLICE_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_PLAN.md),
 [SLICE_INTERNAL_USE_ACCEPTANCE_REHEARSAL_V1_PLAN.md](./SLICE_INTERNAL_USE_ACCEPTANCE_REHEARSAL_V1_PLAN.md),
 [SLICE_CALCULATOR_SOURCE_PACK_READINESS_TRIAGE_PLAN.md](./SLICE_CALCULATOR_SOURCE_PACK_READINESS_TRIAGE_PLAN.md),
@@ -358,29 +365,39 @@ hardening, and the pure team-access policy model.
   for the no-runtime Gate C closeout and internal-use acceptance
   rehearsal selection, plus
   `internal-use-acceptance-rehearsal-v1-gate-a-contract.test.ts` for
-  the no-runtime 20-scenario company-internal acceptance matrix. Latest
-  focused gate run after internal-use acceptance Gate A: 137 engine
-  files / 656 tests,
+  the no-runtime 20-scenario company-internal acceptance matrix, plus
+  `post-internal-use-acceptance-rehearsal-v1-next-slice-selection-contract.test.ts`
+  for the no-runtime Gate C closeout and pilot handoff selection.
+  Latest focused gate run after internal-use acceptance Gate C: 138
+  engine files / 661 tests,
   45 web files / 216 passed + 18 skipped,
   build 5/5 tasks with known non-fatal `sharp/@img` warnings,
   whitespace guard clean.
 
 ## Active Slice
 
-`internal_use_acceptance_rehearsal_v1` (no-runtime company-internal
-acceptance matrix; Gate A landed, Gate C next). It was selected by
-`packages/engine/src/post-clt-mass-timber-wall-source-pack-extraction-v1-next-slice-selection-contract.test.ts`
-after CLT / mass-timber Gate C confirmed no source-ready accuracy pack
-exists after Gate B. The slice exists to turn the current internal-use
-operating envelope into executable company-use scenarios before further
-runtime or source-confidence movement.
+`internal_use_pilot_handoff_v1` (no-runtime company-internal pilot
+handoff; Gate A next). It was selected by
+`packages/engine/src/post-internal-use-acceptance-rehearsal-v1-next-slice-selection-contract.test.ts`
+after the 20-scenario acceptance rehearsal closed without an acceptance
+defect or source-ready accuracy pack. The slice exists to turn the
+proven operating envelope into a concise handoff pack for controlled
+company use before further runtime or source-confidence movement.
 
 The next implementation file is
-`packages/engine/src/post-internal-use-acceptance-rehearsal-v1-next-slice-selection-contract.test.ts`.
+`packages/engine/src/internal-use-pilot-handoff-v1-gate-a-contract.test.ts`.
 Planning surface:
-[SLICE_INTERNAL_USE_ACCEPTANCE_REHEARSAL_V1_PLAN.md](./SLICE_INTERNAL_USE_ACCEPTANCE_REHEARSAL_V1_PLAN.md).
+[SLICE_INTERNAL_USE_PILOT_HANDOFF_V1_PLAN.md](./SLICE_INTERNAL_USE_PILOT_HANDOFF_V1_PLAN.md).
 
-Just landed context:
+Just closed context:
+Gate C closed no-runtime in
+`packages/engine/src/post-internal-use-acceptance-rehearsal-v1-next-slice-selection-contract.test.ts`.
+It found no concrete acceptance defect or source-ready accuracy pack,
+kept all runtime/support/confidence/evidence/API/route-card/output-card/
+proposal/report/workbench-input surfaces frozen, and selected
+`internal_use_pilot_handoff_v1`.
+
+Prior acceptance context:
 Gate A landed no-runtime in
 `packages/engine/src/internal-use-acceptance-rehearsal-v1-gate-a-contract.test.ts`.
 It pins all 20 planned acceptance scenarios and selects Gate C closeout
@@ -1203,6 +1220,8 @@ then closed no-runtime and selected
 
 | Slice | Master-plan step | Closed | Post-contract |
 |---|---|---|---|
+| `internal_use_acceptance_rehearsal_v1` Gate C | company internal acceptance closeout | 2026-04-29 | `post-internal-use-acceptance-rehearsal-v1-next-slice-selection-contract.test.ts` |
+| `internal_use_acceptance_rehearsal_v1` Gate A | company internal acceptance matrix | 2026-04-29 | `internal-use-acceptance-rehearsal-v1-gate-a-contract.test.ts` |
 | `clt_mass_timber_wall_source_pack_extraction_v1` Gate C | calculator CLT / mass-timber closeout | 2026-04-29 | `post-clt-mass-timber-wall-source-pack-extraction-v1-next-slice-selection-contract.test.ts` |
 | `clt_mass_timber_wall_source_pack_extraction_v1` Gate B | calculator CLT / mass-timber metric decision | 2026-04-29 | `clt-mass-timber-wall-source-pack-extraction-gate-b-contract.test.ts` |
 | `clt_mass_timber_wall_source_pack_extraction_v1` Gate A | calculator CLT / mass-timber source extraction | 2026-04-29 | `clt-mass-timber-wall-source-pack-extraction-gate-a-contract.test.ts` |
@@ -1439,9 +1458,10 @@ time without context loss:
 
 ## Resume Order For The Next Agent
 
-1. Read [CHECKPOINT_2026-04-29_INTERNAL_USE_ACCEPTANCE_REHEARSAL_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-29_INTERNAL_USE_ACCEPTANCE_REHEARSAL_GATE_A_HANDOFF.md)
+1. Read [CHECKPOINT_2026-04-29_INTERNAL_USE_ACCEPTANCE_REHEARSAL_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-29_INTERNAL_USE_ACCEPTANCE_REHEARSAL_GATE_C_CLOSEOUT_HANDOFF.md)
    for the latest active-slice handoff.
 2. Read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md),
+   [SLICE_INTERNAL_USE_PILOT_HANDOFF_V1_PLAN.md](./SLICE_INTERNAL_USE_PILOT_HANDOFF_V1_PLAN.md),
    [SLICE_INTERNAL_USE_ACCEPTANCE_REHEARSAL_V1_PLAN.md](./SLICE_INTERNAL_USE_ACCEPTANCE_REHEARSAL_V1_PLAN.md),
    [INTERNAL_USE_PILOT_USAGE_NOTE.md](./INTERNAL_USE_PILOT_USAGE_NOTE.md),
    [SLICE_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_PLAN.md](./SLICE_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_PLAN.md),
@@ -1449,8 +1469,8 @@ time without context loss:
    [SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md](./SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md),
    [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md), and
    [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md).
-   Continue `internal_use_acceptance_rehearsal_v1` at Gate C by adding
-   `packages/engine/src/post-internal-use-acceptance-rehearsal-v1-next-slice-selection-contract.test.ts`.
+   Continue `internal_use_pilot_handoff_v1` at Gate A by adding
+   `packages/engine/src/internal-use-pilot-handoff-v1-gate-a-contract.test.ts`.
 3. Read [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
    for the now-closed calculator-priority chain and its evidence-tier
    caveats.
@@ -1464,8 +1484,9 @@ time without context loss:
    If it does not, fix the drift before starting work.
 6. Run `pnpm calculator:gate:current` as the focused baseline.
 7. Do not change source posture, output support, evidence tiers,
-   confidence scores, API shape, route-card values, or output-card
-   statuses during internal-use acceptance closeout. A future
+   confidence scores, API shape, route-card values, output-card
+   statuses, proposal/report copy, or workbench input behavior during
+   the pilot handoff slice. A future
    source-ready accuracy slice may be selected only if a later contract names a
    bounded source pack. Any future import must name the exact source
    row, metric owner, tolerance, protected-boundary exclusions, and
