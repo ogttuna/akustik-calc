@@ -123,7 +123,11 @@ For every next slice decision:
 - **Active slice**:
   `calculator_source_gap_revalidation_v5`.
 - **Latest checkpoint**:
-  [CHECKPOINT_2026-04-29_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-29_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_GATE_C_CLOSEOUT_HANDOFF.md).
+  [CHECKPOINT_2026-04-29_POST_KNAUF_V5_READY_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-04-29_POST_KNAUF_V5_READY_REVALIDATION_HANDOFF.md).
+  It confirms docs and implementation align before v5 Gate A: v5 is
+  selected, the v5 Gate A contract is intentionally absent and next,
+  the current-gate runner includes Knauf Gate C but not v5 yet, and no
+  source-ready runtime candidate is selected.
 - **Planning surface**:
   [SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V5_PLAN.md](./SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V5_PLAN.md)
   plus [SLICE_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_PLAN.md](./SLICE_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_PLAN.md)
@@ -259,15 +263,16 @@ For every next slice decision:
   [SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md](./SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md)
   closed no-runtime at Gate C and selected the source-pack readiness
   triage slice.
-- **Latest broad validation**:
-  latest broad `pnpm check` is green after Knauf wall systems
-  source-pack extraction Gate C: lint/typecheck green, engine 281 files /
-  1543 tests, web 157 files / 890 passed + 18 skipped, build 5/5 with the
-  known non-fatal `sharp/@img` warnings. Focused current gate after
-  Knauf wall systems source-pack extraction Gate C is green: engine 148
-  files / 723 tests, web 45 files / 216 passed + 18 skipped, build 5/5
-  with the known non-fatal `sharp/@img` warnings, whitespace guard
-  clean.
+- **Latest validation**:
+  focused `pnpm calculator:gate:current` is green during the
+  post-Knauf v5-ready revalidation checkpoint: engine 148 files / 723
+  tests, web 45 files / 216 passed + 18 skipped, build 5/5 with the
+  known non-fatal `sharp/@img` warnings, whitespace guard clean. Broad
+  `pnpm check` is green in the same checkpoint: lint/typecheck/test/
+  build chain passed, with unchanged turbo cache replay for the broad
+  package suites: engine 281 files / 1543 tests, web 157 files / 890
+  passed + 18 skipped, build 5/5 with the known non-fatal `sharp/@img`
+  warnings.
 - **Prepared comprehensive-accuracy roadmap**:
   [CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md](./CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md)
   records the longer source-gated program. It is roadmap context for
@@ -630,11 +635,11 @@ For every next slice decision:
   generated proposal documents preserve real floor/wall workbench
   caveats, and many-layer / long-label report rendering is pinned.
   This did not change calculator runtime/source/confidence posture.
-- **Latest broad validation**: 2026-04-29 `pnpm check` is green after
-  Knauf wall systems source-pack extraction Gate C: engine 281 files /
-  1543 tests, web
-  157 files / 890 passed + 18 skipped through
-  `tools/dev/run-web-vitest.ts`, build 5/5, with only the known
+- **Latest broad validation**: 2026-04-29 `pnpm check` is green during
+  the post-Knauf v5-ready revalidation checkpoint: lint/typecheck/test/
+  build chain passed, with unchanged turbo cache replay for engine 281
+  files / 1543 tests and web 157 files / 890 passed + 18 skipped
+  through `tools/dev/run-web-vitest.ts`, build 5/5, with only the known
   non-fatal `sharp/@img` optional-package warnings.
 - **Cartography Gate A result**:
   `packages/engine/src/realistic-layer-combination-coverage-cartography.test.ts`
@@ -1013,6 +1018,7 @@ For every next slice decision:
 this order:
 
 1. Re-read
+   [CHECKPOINT_2026-04-29_POST_KNAUF_V5_READY_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-04-29_POST_KNAUF_V5_READY_REVALIDATION_HANDOFF.md),
    [CHECKPOINT_2026-04-29_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-29_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_GATE_C_CLOSEOUT_HANDOFF.md),
    [CHECKPOINT_2026-04-29_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-29_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_GATE_B_HANDOFF.md),
    [CHECKPOINT_2026-04-29_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-29_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_GATE_A_HANDOFF.md),

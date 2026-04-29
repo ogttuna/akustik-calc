@@ -99,7 +99,12 @@ no-runtime and selected Gate C closeout / next-slice selection;
 `knauf_wall_systems_source_pack_extraction_v1` Gate C closed
 no-runtime and selected `calculator_source_gap_revalidation_v5`;
 latest checkpoint:
-[CHECKPOINT_2026-04-29_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-29_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_GATE_C_CLOSEOUT_HANDOFF.md)).
+[CHECKPOINT_2026-04-29_POST_KNAUF_V5_READY_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-04-29_POST_KNAUF_V5_READY_REVALIDATION_HANDOFF.md)).
+The post-Knauf v5-ready checkpoint confirms docs and implementation
+align at a clean stop: v5 is selected, the v5 Gate A contract is
+intentionally absent and next, the current-gate runner includes Knauf
+Gate C but not v5 yet, and no source-ready runtime candidate is
+selected.
 The extra 2026-04-28 planning pass made the readiness ladder explicit
 and the source-gap Gate A selected the short internal pilot
 operating-envelope slice. Internal-use Gate A then produced
@@ -216,8 +221,10 @@ storage v1, project/proposal route authorization, auth-session
 hardening, and the pure team-access policy model.
 
 - **Engine broad suite**: latest broad `pnpm check` on 2026-04-29 is
-  green after Knauf wall systems source-pack extraction Gate C:
-  281 / 281 files, 1543 / 1543 tests green.
+  green during the post-Knauf v5-ready revalidation checkpoint. The
+  command passed the lint/typecheck/test/build chain and replayed the
+  unchanged turbo cache artifact for 281 / 281 engine files and 1543 /
+  1543 tests.
   (up from 193/1068 pre-session; step-7 landed 4 wall cases +
   F1/F2 engine fixes + 32-assertion cross-mode torture matrix
   + 2 regression guards + post-contract; step-7b landed the
@@ -231,9 +238,10 @@ hardening, and the pure team-access policy model.
   under the Vitest worker timeout; Gate B and Gate C then added focused
   planning/value contract files).
 - **Web broad suite**: latest broad `pnpm check` on 2026-04-29 is
-  green after Knauf wall systems source-pack extraction Gate C: 157 / 157
-  files in scope through `tools/dev/run-web-vitest.ts`, 890 tests
-  passed + 18 discovery helpers intentionally skipped. The runner
+  green during the post-Knauf v5-ready revalidation checkpoint: 157 /
+  157 files in scope through `tools/dev/run-web-vitest.ts`, 890 tests
+  passed + 18 discovery helpers intentionally skipped from unchanged
+  turbo cache replay. The runner
   isolates six long route-scan files and batches the
   remaining 151 files, preserving coverage while avoiding Vitest worker
   RPC timeout failures on the heavy family-boundary scans.
@@ -244,8 +252,8 @@ hardening, and the pure team-access policy model.
   2026-04-24 broad revalidation also hardened the side-count Gate A
   input contract so it asserts parse behavior instead of calling
   `.keyof()` on the exported shared `AirborneContextSchema` `ZodType`.
-- **Broad `pnpm check`**: lint + typecheck + tests + build green after
-  Knauf wall systems source-pack extraction Gate B. The first broad pass
+- **Broad `pnpm check`**: lint + typecheck + tests + build green during
+  the post-Knauf v5-ready revalidation checkpoint. The first broad pass
   caught a no-runtime type-only helper issue in the acceptance rehearsal
   test contract; the helper now asserts target-output partitions at
   runtime while accepting the wider shared `AssemblyCalculation` type.
@@ -467,13 +475,14 @@ hardening, and the pure team-access policy model.
   for no-runtime Knauf mapping/tolerance decision and Gate C selection,
   plus `post-knauf-wall-systems-source-pack-extraction-v1-next-slice-selection-contract.test.ts`
   for no-runtime Knauf Gate C closeout and v5 selection.
-  Focused gate after Knauf wall systems source-pack extraction Gate C:
+  Focused gate during the post-Knauf v5-ready revalidation checkpoint:
   148 engine files / 723 tests,
   45 web files / 216 passed + 18 skipped,
   build 5/5 tasks with known non-fatal `sharp/@img` warnings,
-  whitespace guard clean. Broad `pnpm check` is green after Knauf Gate C:
-  lint/typecheck green, engine 281 files / 1543 tests, web 157 files /
-  890 passed + 18 skipped, build 5/5.
+  whitespace guard clean. Broad `pnpm check` is green in the same
+  checkpoint: lint/typecheck/test/build chain passed, with unchanged
+  turbo cache replay for engine 281 files / 1543 tests and web 157
+  files / 890 passed + 18 skipped, build 5/5.
 
 ## Active Slice
 
@@ -487,6 +496,11 @@ The next implementation file is
 Planning surface:
 [SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V5_PLAN.md](./SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V5_PLAN.md)
 and [SOURCE_READY_INTAKE_BACKLOG.md](./SOURCE_READY_INTAKE_BACKLOG.md).
+
+Latest checkpoint:
+[CHECKPOINT_2026-04-29_POST_KNAUF_V5_READY_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-04-29_POST_KNAUF_V5_READY_REVALIDATION_HANDOFF.md).
+It did not move runtime or visible behavior; it only confirms the
+implementation and docs are aligned before v5 Gate A.
 
 Just closed context:
 Gate C closed `knauf_wall_systems_source_pack_extraction_v1`
@@ -1660,9 +1674,13 @@ time without context loss:
 
 ## Resume Order For The Next Agent
 
-1. Read [CHECKPOINT_2026-04-29_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-29_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_GATE_A_HANDOFF.md)
-   for the latest landed gate and selected next file.
+1. Read [CHECKPOINT_2026-04-29_POST_KNAUF_V5_READY_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-04-29_POST_KNAUF_V5_READY_REVALIDATION_HANDOFF.md)
+   for the latest clean-stop checkpoint, validation, and selected next
+   file.
 2. Read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md),
+   [CHECKPOINT_2026-04-29_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-29_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_GATE_C_CLOSEOUT_HANDOFF.md),
+   [CHECKPOINT_2026-04-29_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-29_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_GATE_B_HANDOFF.md),
+   [CHECKPOINT_2026-04-29_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-29_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_GATE_A_HANDOFF.md),
    [CHECKPOINT_2026-04-29_CALCULATOR_SOURCE_GAP_REVALIDATION_V4_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-29_CALCULATOR_SOURCE_GAP_REVALIDATION_V4_GATE_A_HANDOFF.md),
    [SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V4_PLAN.md](./SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V4_PLAN.md),
    [CHECKPOINT_2026-04-29_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-29_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_GATE_C_CLOSEOUT_HANDOFF.md),

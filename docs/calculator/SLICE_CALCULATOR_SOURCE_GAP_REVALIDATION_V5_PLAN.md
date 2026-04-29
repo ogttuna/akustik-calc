@@ -5,6 +5,12 @@ Slice id: `calculator_source_gap_revalidation_v5`
 Status: SELECTED / GATE A NEXT (selected 2026-04-29 by
 `post-knauf-wall-systems-source-pack-extraction-v1-next-slice-selection-contract.test.ts`).
 
+Latest checkpoint:
+[CHECKPOINT_2026-04-29_POST_KNAUF_V5_READY_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-04-29_POST_KNAUF_V5_READY_REVALIDATION_HANDOFF.md)
+confirms docs and implementation align before Gate A. The v5 Gate A
+contract remains intentionally absent and next; no runtime or visible
+surface movement is approved.
+
 Current first implementation file:
 
 `packages/engine/src/calculator-source-gap-revalidation-v5-gate-a-contract.test.ts`
@@ -118,6 +124,7 @@ Gate A must not:
 
 Before implementing Gate A, read:
 
+- [CHECKPOINT_2026-04-29_POST_KNAUF_V5_READY_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-04-29_POST_KNAUF_V5_READY_REVALIDATION_HANDOFF.md)
 - [CHECKPOINT_2026-04-29_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-29_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_GATE_C_CLOSEOUT_HANDOFF.md)
 - [CHECKPOINT_2026-04-29_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-29_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_GATE_B_HANDOFF.md)
 - [SLICE_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_PLAN.md](./SLICE_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_PLAN.md)
