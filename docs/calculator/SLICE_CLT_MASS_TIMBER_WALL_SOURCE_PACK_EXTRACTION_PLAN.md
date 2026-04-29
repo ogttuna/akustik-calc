@@ -1,12 +1,18 @@
 # Slice Plan - CLT / Mass-Timber Wall Source Pack Extraction v1
 
-Status: SELECTED / NOT STARTED (selected 2026-04-29 by
+Status: GATE A LANDED / GATE B NEXT (selected 2026-04-29 by
 `calculator-source-pack-readiness-triage-gate-a-contract.test.ts`;
+Gate A landed 2026-04-29 in
+`clt-mass-timber-wall-source-pack-extraction-gate-a-contract.test.ts`;
 no-runtime source-row and metric-context extraction slice).
+
+Landed implementation file:
+
+`packages/engine/src/clt-mass-timber-wall-source-pack-extraction-gate-a-contract.test.ts`
 
 Next implementation file:
 
-`packages/engine/src/clt-mass-timber-wall-source-pack-extraction-gate-a-contract.test.ts`
+`packages/engine/src/clt-mass-timber-wall-source-pack-extraction-gate-b-contract.test.ts`
 
 Selection reason: `calculator_source_pack_readiness_triage_v1` Gate A
 ranked all candidate source packs and kept every candidate
@@ -15,6 +21,13 @@ runtime import, but it has the strongest current wall-side source
 reservoir because the WoodWorks mass-timber acoustic inventory and NRC
 mass-timber report surfaces contain explicit mass-timber wall or
 measured transmission-loss context worth extracting.
+
+Gate A result: source groups are now classified, but no runtime import
+is selected. WoodWorks Table 7 Single CLT Wall and Table 9 Double CLT
+Wall are later row-mapping candidates only. WoodWorks Table 8 Single NLT
+Wall, NRC RR-335, and the NRC NLT addendum are formula/tolerance context
+only. The WoodWorks database and local Dataholz CLT floor rows are
+rejection-only context until their specific blockers are satisfied.
 
 ## Objective
 
@@ -66,13 +79,13 @@ medium-confidence wall route pinned by:
 Dataholz CLT floor rows remain floor-only source truth. They do not
 promote CLT wall values, CLT wall confidence, or CLT wall evidence tier.
 
-## Gate A - Extract Row And Metric Eligibility
+## Gate A - Extract Row And Metric Eligibility - Landed
 
-Gate A should add:
+Gate A added:
 
 `packages/engine/src/clt-mass-timber-wall-source-pack-extraction-gate-a-contract.test.ts`
 
-The contract should be no-runtime and should classify candidate source
+The contract is no-runtime and classifies candidate source
 rows into these outcomes:
 
 - `eligible_for_later_row_mapping`: exact assembly locator exists, wall
@@ -112,6 +125,51 @@ Minimum tests in the Gate A contract:
 - assert any next follow-up names either a bounded metric-mapping slice,
   a formula-tolerance slice, or a roadmap-only closeout.
 
+Landed Gate A decision:
+
+- `directRuntimeImportReadyNow: false`
+- `nextGate:
+  gate_b_bound_metric_mapping_and_formula_tolerance_decision_no_runtime`
+- `nextGateFile:
+  packages/engine/src/clt-mass-timber-wall-source-pack-extraction-gate-b-contract.test.ts`
+- Current `wall-clt-local` runtime baseline remains formula-owned,
+  medium-confidence, and source-gated.
+- Dataholz CLT exact rows remain floor-only source truth.
+
+## Gate B - Bound Metric Mapping And Formula Tolerance Decision
+
+Gate B should add:
+
+`packages/engine/src/clt-mass-timber-wall-source-pack-extraction-gate-b-contract.test.ts`
+
+Gate B must decide whether the extracted WoodWorks/NRC context can
+support a bounded follow-up without runtime movement:
+
+- metric-mapping path: STC/FSTC/ASTC/IIC or one-third-octave
+  transmission-loss context can be mapped, converted, or explicitly
+  rejected for DynEcho ISO `Rw`, `R'w`, `DnT,w`, and report surfaces;
+- formula-tolerance path: NRC / WoodWorks context can name a bounded
+  laminated-leaf, NLT, or double-CLT tolerance owner without importing a
+  value;
+- closeout path: no bounded metric/tolerance path is defensible, so the
+  slice closes no-runtime and leaves the comprehensive accuracy roadmap
+  as context.
+
+Minimum tests in Gate B:
+
+- assert Gate B remains no-runtime and preserves all support,
+  confidence, evidence, route-card, output-card, proposal/report, and
+  API surfaces;
+- assert each Gate A source group is either promoted to bounded
+  metric/tolerance follow-up or rejected with its first missing
+  requirement;
+- assert no STC/FSTC/ASTC/IIC value is treated as ISO `Rw`, `R'w`,
+  `DnT,w`, or direct field truth without an explicit mapping rule;
+- assert current `wall-clt-local` values remain lab `Rw=42`, field
+  `R'w=41`, field `DnT,w=42`;
+- assert the selected next action names either a bounded no-runtime
+  metric/tolerance contract or a no-runtime closeout contract.
+
 ## Validation
 
 - Run the targeted Gate A engine contract while iterating.
@@ -122,3 +180,13 @@ Minimum tests in the Gate A contract:
 - Run `pnpm check` if the slice changes broad repo contracts,
   user-visible route/report behavior, or before a full release-style
   checkpoint.
+
+Latest Gate A validation, 2026-04-29:
+
+- targeted Gate A engine contract green: 1 file / 7 tests;
+- focused current gate green: engine 134 files / 637 tests, web 45
+  files / 216 passed + 18 skipped, build 5/5 with the known non-fatal
+  `sharp/@img` warnings, whitespace guard clean;
+- broad `pnpm check` green: lint/typecheck green, engine 267 files /
+  1457 tests, web 157 files / 890 passed + 18 skipped, build 5/5 with
+  the known non-fatal `sharp/@img` warnings.

@@ -19,6 +19,9 @@ selected `calculator_source_pack_readiness_triage_v1`;
 `calculator_source_pack_readiness_triage_v1` Gate A landed no-runtime
 and selected `clt_mass_timber_wall_source_pack_extraction_v1` for
 source-row and metric-context extraction only;
+`clt_mass_timber_wall_source_pack_extraction_v1` Gate A landed
+no-runtime and selected Gate B metric-mapping / formula-tolerance
+decision;
 source-gap content remains floor-dominant historical context)
 
 Purpose:
@@ -119,9 +122,15 @@ Important scope note:
   protected negative boundaries, and paired engine/web tests. Gate A has
   now landed: every candidate remains `runtimeImportReadyNow: false`,
   and CLT / mass-timber is selected only for no-runtime extraction of
-  WoodWorks/NRC row locators and STC/ASTC/ISO metric context. This
-  ledger still treats Dataholz CLT floor rows as floor-only source truth
-  and keeps all historical blocked families fail-closed.
+  WoodWorks/NRC row locators and STC/ASTC/ISO metric context. CLT /
+  mass-timber extraction Gate A then landed no-runtime: WoodWorks Table
+  7 Single CLT Wall and Table 9 Double CLT Wall are later row-mapping
+  candidates only; WoodWorks Table 8 Single NLT Wall, NRC RR-335, and
+  the NRC NLT addendum are formula/tolerance context; the WoodWorks
+  database remains pointer-only; and local Dataholz CLT floor rows stay
+  floor-only source truth. Gate B is the next no-runtime metric-mapping
+  / tolerance decision. This ledger still keeps all historical blocked
+  families fail-closed.
 - `good_calculator_final_audit_v1` closed without reopening any
   source-gated calculator family. `wall_formula_family_widening_v1`
   then also closed without reopening any blocked family: it clarified
@@ -981,6 +990,14 @@ Historical blocked-source planning implication:
 - safe next move:
   - tighten within measured and published CLT subfamilies first
   - keep dry, wet, and suspended variants distinct instead of collapsing them into one universal CLT formula
+- 2026-04-29 wall-side extraction boundary:
+  - WoodWorks Table 7 Single CLT Wall and Table 9 Double CLT Wall are
+    wall-side row-mapping candidates only, not floor-ledger imports
+  - WoodWorks Table 8 Single NLT Wall, NRC RR-335, and the NRC NLT
+    addendum are formula/tolerance context until metric mapping and
+    tolerance ownership are explicit
+  - Dataholz CLT exact rows in this ledger remain floor-only source
+    truth and do not promote the live `wall-clt-local` route
 - do not do next:
   - do not widen CLT by bypassing the existing TUAS and Dataholz branch structure
   - do not merge dry and wet packages into a single generic predictor lane
