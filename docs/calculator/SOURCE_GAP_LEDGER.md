@@ -42,7 +42,9 @@ fresh source/accuracy rerank; `calculator_source_gap_revalidation_v4`
 Gate A then selected `knauf_wall_systems_source_pack_extraction_v1`
 no-runtime because Knauf UK/AU wall-system locators are concrete enough
 for extraction but not import; Knauf Gate A then extracted locator rows
-no-runtime and selected Gate B mapping/tolerance decision;
+no-runtime and selected Gate B mapping/tolerance decision; Knauf Gate B
+then landed no-runtime, blocked every locator row from runtime import
+and visible promotion, and selected Gate C closeout;
 source-gap content remains floor-dominant historical context)
 
 Purpose:
@@ -173,8 +175,13 @@ Important scope note:
   A then selected `knauf_wall_systems_source_pack_extraction_v1` for
   no-runtime Knauf UK/AU table locator extraction. Knauf Gate A then
   extracted UK steel-stud, AU timber/twin/staggered, and AU masonry/AAC
-  locators without import approval. This ledger still keeps all
-  historical blocked families fail-closed and remains historical /
+  locators without import approval. Knauf Gate B then landed
+  no-runtime: the steel-stud, timber double-board, twin timber, and
+  masonry rows all remain blocked until topology / material mapping /
+  metric policy / tolerance / visible-test ownership is complete; the
+  one-side-lined timber row remains a negative boundary; staggered
+  timber and AAC rows remain adjacent context. This ledger still keeps
+  all historical blocked families fail-closed and remains historical /
   floor-dominant context.
 - `good_calculator_final_audit_v1` closed without reopening any
   source-gated calculator family. `wall_formula_family_widening_v1`

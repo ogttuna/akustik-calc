@@ -7,7 +7,9 @@ generated-floor Gate C closed no-runtime; refreshed again after
 `calculator_source_gap_revalidation_v4` Gate A selected
 `knauf_wall_systems_source_pack_extraction_v1` as the next no-runtime
 source extraction slice; refreshed after Knauf Gate A extracted source
-locators and selected Gate B mapping/tolerance decision.
+locators and selected Gate B mapping/tolerance decision; refreshed
+after Knauf Gate B blocked every extracted row from runtime import and
+selected Gate C closeout.
 
 Last reviewed: 2026-04-29.
 
@@ -143,6 +145,37 @@ one-side-lined timber negative boundary. `TSF120.1A` and `AAC.1A` are
 adjacent context only. No runtime import, support promotion, confidence
 promotion, evidence promotion, output support movement, or visible card
 / report / input behavior movement is approved.
+
+## Knauf Wall Systems Source Pack Extraction Gate B
+
+`knauf_wall_systems_source_pack_extraction_v1` Gate B lands no-runtime
+in:
+
+`packages/engine/src/knauf-wall-systems-source-pack-extraction-gate-b-contract.test.ts`
+
+Next selected file:
+
+`packages/engine/src/post-knauf-wall-systems-source-pack-extraction-v1-next-slice-selection-contract.test.ts`
+
+Gate B status:
+
+`no_knauf_locator_row_has_complete_topology_metric_tolerance_and_visible_test_ownership`
+
+Result: every extracted Knauf row stays out of runtime import and
+visible promotion. `EN-PC-50-055-6-2-12.5-WB-25` is adjacent to existing
+steel-stud anchors but still lacks row-specific material/stud-gauge and
+tolerance ownership. `TB.5A` remains the best timber double-board
+research row but needs exact stud-depth column, `SHEETROCK ONE`,
+`KI 75G11`, and tolerance mapping. `TTF30.2A` remains twin-timber /
+asymmetric double-leaf research. `MWI.2A` remains lined-masonry
+research and needs substrate, furring/cavity, coupling, board mapping,
+and tolerance ownership. `TO120.1A` stays a one-side-lined negative
+boundary; `TSF120.1A` and `AAC.1A` stay adjacent context only.
+
+Metric result: source lab `Rw` is a named metric context only; `Rw+Ctr`
+is not a standalone DynEcho `C` / `Ctr` / `STC` or field-output policy;
+none of the rows supplies field/building `R'w`, `Dn,w`, `DnT,w`, or
+`DnT,A` ownership.
 
 ## Source Verification Notes
 
@@ -359,12 +392,12 @@ is consolidation and explicit cross-linking, not removal.
 
 ## Immediate Next Steps
 
-1. Implement `knauf_wall_systems_source_pack_extraction_v1` Gate B:
-   `packages/engine/src/knauf-wall-systems-source-pack-extraction-gate-b-contract.test.ts`.
-2. Decide exact row/column mapping, metric context, tolerance ownership,
-   local material mapping, and protected negative boundaries for the
-   extracted Knauf candidates.
-3. Select a runtime accuracy slice only if Gate B names exact topology,
+1. Implement `knauf_wall_systems_source_pack_extraction_v1` Gate C:
+   `packages/engine/src/post-knauf-wall-systems-source-pack-extraction-v1-next-slice-selection-contract.test.ts`.
+2. Treat Gate B as authoritative: no extracted Knauf candidate has
+   complete exact topology, metric context, tolerance ownership, local
+   material mapping, and visible-test ownership.
+3. Select a runtime accuracy slice only if a later gate names exact topology,
    metric owner, tolerance owner, protected negative boundaries, and
    paired engine/web visible tests.
 4. Keep all validation gates green:

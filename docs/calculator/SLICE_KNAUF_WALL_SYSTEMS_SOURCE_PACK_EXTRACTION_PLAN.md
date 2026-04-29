@@ -2,14 +2,16 @@
 
 Slice id: `knauf_wall_systems_source_pack_extraction_v1`
 
-Status: GATE A LANDED / GATE B NEXT (selected 2026-04-29 by
+Status: GATE B LANDED / GATE C NEXT (selected 2026-04-29 by
 `calculator-source-gap-revalidation-v4-gate-a-contract.test.ts`; Gate A
 landed 2026-04-29 by
-`knauf-wall-systems-source-pack-extraction-gate-a-contract.test.ts`).
+`knauf-wall-systems-source-pack-extraction-gate-a-contract.test.ts`;
+Gate B landed 2026-04-29 by
+`knauf-wall-systems-source-pack-extraction-gate-b-contract.test.ts`).
 
 Current first implementation file:
 
-`packages/engine/src/knauf-wall-systems-source-pack-extraction-gate-b-contract.test.ts`
+`packages/engine/src/post-knauf-wall-systems-source-pack-extraction-v1-next-slice-selection-contract.test.ts`
 
 Selection reason: `calculator_source_gap_revalidation_v4` found no
 runtime-ready accuracy candidate. Official Knauf UK/AU wall-system
@@ -101,18 +103,34 @@ Gate A result:
 
 ## Gate B - Mapping / Tolerance Decision
 
-Gate B should add:
+Gate B landed no-runtime in:
 
 `packages/engine/src/knauf-wall-systems-source-pack-extraction-gate-b-contract.test.ts`
 
-Required decision:
+Gate B result:
 
-- choose whether any extracted row has exact topology and metric/tolerance
-  ownership for a later runtime slice;
-- otherwise keep all rows no-runtime as adjacent/negative context and
-  select Gate C closeout.
+- `EN-PC-50-055-6-2-12.5-WB-25`, `TB.5A`, `TTF30.2A`, and `MWI.2A`
+  are still blocked from immediate runtime import.
+- `TO120.1A` remains a one-side-lined negative boundary.
+- `TSF120.1A` and `AAC.1A` remain adjacent context only.
+- source lab `Rw` is named, but topology/material mapping/tolerance
+  ownership is incomplete;
+- `Rw+Ctr` is not treated as standalone DynEcho `C` / `Ctr` / `STC` or
+  field-output truth;
+- no row supplies DynEcho field/building outputs or flanking/room
+  normalisation ownership;
+- no runtime import, confidence/support/evidence promotion,
+  API/card/report/input movement, or output support movement happened.
 
-Required blockers to resolve:
+Selected next file:
+
+`packages/engine/src/post-knauf-wall-systems-source-pack-extraction-v1-next-slice-selection-contract.test.ts`
+
+Gate B status token:
+
+`no_knauf_locator_row_has_complete_topology_metric_tolerance_and_visible_test_ownership`
+
+Remaining blockers:
 
 - exact stud/substrate column selection where a source table gives
   multiple widths, stud depths, insulation states, or furring gaps;
@@ -125,9 +143,25 @@ Required blockers to resolve:
 - visible web route-card/report tests only if later behavior or copy
   surfaces move.
 
+## Gate C - Closeout / Next-Slice Selection
+
+Gate C should close this slice no-runtime unless a new source-ready
+runtime pack appears with all of:
+
+- exact topology or bounded family rule;
+- metric owner and lab/field context;
+- tolerance owner;
+- material/thickness mapping to engine inputs;
+- protected negative boundaries and near misses;
+- paired engine value tests and web route-card/report tests.
+
+If no such pack exists, Gate C should preserve every frozen surface and
+select the next source/accuracy revalidation or no-runtime planning
+step.
+
 ## Acceptance Rules
 
-Gate A may select a later runtime import slice only if it names all of:
+Any later gate may select a runtime import slice only if it names all of:
 
 - exact source row or bounded family rule;
 - metric owner and lab/field context;
@@ -136,13 +170,11 @@ Gate A may select a later runtime import slice only if it names all of:
 - protected negative boundaries and near misses;
 - paired engine value tests and web route-card/report tests.
 
-Gate A may select a Gate B no-runtime mapping/tolerance decision if one
-or more rows are promising but still need metric or tolerance ownership.
+Gate B has selected Gate C no-runtime because all extracted rows still
+lack at least one required topology, material, metric, tolerance, or
+visible-test owner.
 
-Gate A must close no-runtime if all extracted material is adjacent
-context only.
-
-Gate A must not:
+The slice must not:
 
 - promote timber double-board from single-board, steel-stud, or
   resilient-bar context alone;
@@ -196,3 +228,14 @@ Protected boundary tokens for the active slice:
   - `pnpm check`: lint/typecheck green, engine 279 files / 1530 tests,
     web 157 files / 890 passed + 18 skipped, build 5/5 with known
     non-fatal `sharp/@img` warnings.
+- Gate B landed validation is green on 2026-04-29:
+  - targeted Knauf Gate B contract: 1 engine file / 7 tests;
+  - targeted Knauf Gate A + Gate B compatibility: 2 engine files / 13
+    tests;
+  - `pnpm calculator:gate:current`: engine 147 files / 717 tests, web
+    45 files / 216 passed + 18 skipped, build 5/5 with known non-fatal
+    `sharp/@img` warnings, whitespace guard clean;
+  - `pnpm check`: lint/typecheck green, engine 280 files / 1537 tests,
+    web 157 files / 890 passed + 18 skipped, build 5/5 with known
+    non-fatal `sharp/@img` warnings.
+  - `git diff --check`: clean.

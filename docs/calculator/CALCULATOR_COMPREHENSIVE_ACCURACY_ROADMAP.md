@@ -28,7 +28,10 @@ v4 Gate A then selected
 Knauf UK/AU wall-system source locators are concrete enough for table
 locator extraction, while still not import-ready. Knauf Gate A then
 extracted locator rows no-runtime and selected Gate B
-mapping/tolerance decision.
+mapping/tolerance decision. Knauf Gate B then landed no-runtime and
+blocked every extracted row from runtime import or visible promotion
+because topology / material mapping / metric policy / tolerance /
+visible-test ownership is still incomplete; Gate C closeout is next.
 This roadmap remains the long-horizon source-gated accuracy context; it
 is not a runtime import approval.
 
@@ -155,7 +158,7 @@ route-card, output-card, proposal/report, and workbench-input behavior
 therefore stayed frozen. Gate C closed this slice no-runtime and
 selected `calculator_source_gap_revalidation_v4`.
 
-### 1e. Calculator Source Gap Revalidation v4 - Active No-Runtime
+### 1e. Calculator Source Gap Revalidation v4 - Closed No-Runtime
 
 `calculator_source_gap_revalidation_v4` should re-rank the source-ready
 backlog after the generated floor topology-delta closeout. It is not a
@@ -172,21 +175,28 @@ Gate A has landed no-runtime and selected
 ### 1f. Knauf Wall Systems Source Pack Extraction - Active No-Runtime
 
 `knauf_wall_systems_source_pack_extraction_v1` has extracted Knauf UK
-and Knauf AU wall-system table locators no-runtime. Gate B should now
-decide whether any extracted row has exact topology, metric ownership,
-tolerance ownership, material mapping, protected negative boundaries,
-and paired tests for a later runtime slice. It must not import rows or
-promote support, confidence, evidence, route-card, output-card,
-proposal/report, or workbench input behavior during mapping/tolerance
-decision work.
+and Knauf AU wall-system table locators no-runtime. Gate B then
+compared the extracted rows against the live implementation and found
+no runtime-ready row. `EN-PC-50-055-6-2-12.5-WB-25`, `TB.5A`,
+`TTF30.2A`, and `MWI.2A` remain research tracks; `TO120.1A` remains a
+negative boundary; `TSF120.1A` and `AAC.1A` remain adjacent context.
+Gate C closeout is next. The slice must not import rows or promote
+support, confidence, evidence, route-card, output-card, proposal/report,
+or workbench input behavior unless a later contract names exact
+topology, metric ownership, tolerance ownership, material mapping,
+protected negative boundaries, and paired tests.
 
 First implementation file:
 
 `packages/engine/src/knauf-wall-systems-source-pack-extraction-gate-a-contract.test.ts`
 
-Next implementation file:
+Latest implementation file:
 
 `packages/engine/src/knauf-wall-systems-source-pack-extraction-gate-b-contract.test.ts`
+
+Next implementation file:
+
+`packages/engine/src/post-knauf-wall-systems-source-pack-extraction-v1-next-slice-selection-contract.test.ts`
 
 This slice is valuable because it can directly clarify timber
 double-board stud walls, masonry-upgrade / lined-heavy adjacent
