@@ -60,8 +60,10 @@ internal-use visibility audit and selected Gate C closeout /
 next-slice selection;
 `internal_use_operating_envelope_v1` Gate C closed no-runtime and
 selected `calculator_source_pack_readiness_triage_v1`;
+`calculator_source_pack_readiness_triage_v1` Gate A landed no-runtime
+and selected `clt_mass_timber_wall_source_pack_extraction_v1`;
 latest checkpoint:
-[CHECKPOINT_2026-04-29_INTERNAL_USE_OPERATING_ENVELOPE_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-29_INTERNAL_USE_OPERATING_ENVELOPE_GATE_C_CLOSEOUT_HANDOFF.md)).
+[CHECKPOINT_2026-04-29_CALCULATOR_SOURCE_PACK_READINESS_TRIAGE_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-29_CALCULATOR_SOURCE_PACK_READINESS_TRIAGE_GATE_A_HANDOFF.md)).
 The extra 2026-04-28 planning pass made the readiness ladder explicit
 and the source-gap Gate A selected the short internal pilot
 operating-envelope slice. Internal-use Gate A then produced
@@ -72,10 +74,16 @@ when no exact wall source row is active and keep formula-owned /
 source-gated scoped-estimate wording visible in validation, evidence,
 and proposal/report surfaces. Gate C then closed the operating-envelope
 slice no-runtime and selected
-`calculator_source_pack_readiness_triage_v1`. The comprehensive
+`calculator_source_pack_readiness_triage_v1`. Source-pack readiness
+Gate A then ranked all candidate source packs, kept every candidate
+`runtimeImportReadyNow: false`, and selected
+`clt_mass_timber_wall_source_pack_extraction_v1` only for no-runtime
+source-row and metric-context extraction. The comprehensive
 source-gated accuracy program remains longer roadmap context; the next
-bounded action is source-pack readiness ranking, not runtime import.
+bounded action is CLT / mass-timber row and metric extraction, not
+runtime import.
 See
+[SLICE_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_PLAN.md](./SLICE_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_PLAN.md),
 [SLICE_CALCULATOR_SOURCE_PACK_READINESS_TRIAGE_PLAN.md](./SLICE_CALCULATOR_SOURCE_PACK_READINESS_TRIAGE_PLAN.md),
 [SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md](./SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md),
 and [CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md](./CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md).
@@ -89,8 +97,8 @@ storage v1, project/proposal route authorization, auth-session
 hardening, and the pure team-access policy model.
 
 - **Engine broad suite**: latest broad `pnpm check` on 2026-04-29 is
-  green after the internal-use Gate C closeout: 265 / 265 files,
-  1444 / 1444 tests green.
+  green after the source-pack readiness Gate A landing: 266 / 266
+  files, 1450 / 1450 tests green.
   (up from 193/1068 pre-session; step-7 landed 4 wall cases +
   F1/F2 engine fixes + 32-assertion cross-mode torture matrix
   + 2 regression guards + post-contract; step-7b landed the
@@ -104,7 +112,7 @@ hardening, and the pure team-access policy model.
   under the Vitest worker timeout; Gate B and Gate C then added focused
   planning/value contract files).
 - **Web broad suite**: latest broad `pnpm check` on 2026-04-29 is
-  green after the internal-use Gate C closeout: 157 / 157
+  green after the source-pack readiness Gate A landing: 157 / 157
   files in scope through `tools/dev/run-web-vitest.ts`, 890 tests
   passed + 18 discovery helpers intentionally skipped. The runner
   isolates six long route-scan files and batches the
@@ -118,7 +126,7 @@ hardening, and the pure team-access policy model.
   input contract so it asserts parse behavior instead of calling
   `.keyof()` on the exported shared `AirborneContextSchema` `ZodType`.
 - **Broad `pnpm check`**: lint + typecheck + tests + build green after
-  the internal-use Gate C closeout. The earlier Gate B broad rerun
+  the source-pack readiness Gate A landing. The earlier Gate B broad rerun
   caught `TS7006` implicit-`any` issues in the framed split Gate A/B
   contract tests; those were fixed with callback parameter typing only.
   Build still emits the known non-fatal optional `sharp/@img` warnings
@@ -300,25 +308,42 @@ hardening, and the pure team-access policy model.
   regular internal-use visible-honesty audit, plus
   `post-internal-use-operating-envelope-v1-next-slice-selection-contract.test.ts`
   for the Gate C no-runtime closeout and source-pack readiness triage
-  selection. Latest focused gate run after the Gate C closeout: 132
-  engine files / 624 tests, 45 web files / 216 passed + 18 skipped,
+  selection, plus
+  `calculator-source-pack-readiness-triage-gate-a-contract.test.ts`
+  for the no-runtime source-pack readiness ranking and CLT /
+  mass-timber extraction selection. Latest focused gate run after the
+  source-pack readiness Gate A landing: 133 engine files / 630 tests,
+  45 web files / 216 passed + 18 skipped,
   build 5/5 tasks with known non-fatal `sharp/@img` warnings,
   whitespace guard clean.
 
 ## Active Slice
 
-`calculator_source_pack_readiness_triage_v1` (no-runtime source-pack
-readiness ranking). It was selected by
-`packages/engine/src/post-internal-use-operating-envelope-v1-next-slice-selection-contract.test.ts`
-after `internal_use_operating_envelope_v1` closed Gate C no-runtime.
-The selected triage exists because no source-ready accuracy pack can yet
-name exact topology, metric owner, tolerance owner, protected negative
-boundaries, and paired engine/web route-card or report tests.
+`clt_mass_timber_wall_source_pack_extraction_v1` (no-runtime CLT /
+mass-timber wall source-row and metric-context extraction). It was
+selected by
+`packages/engine/src/calculator-source-pack-readiness-triage-gate-a-contract.test.ts`
+after `calculator_source_pack_readiness_triage_v1` Gate A ranked every
+candidate `runtimeImportReadyNow: false`. The selected extraction slice
+exists because WoodWorks/NRC mass-timber source surfaces are concrete
+enough to inspect next, but no CLT wall runtime import, confidence
+promotion, support promotion, evidence promotion, route-card movement,
+or output-card movement is allowed.
 
 The next implementation file is
-`packages/engine/src/calculator-source-pack-readiness-triage-gate-a-contract.test.ts`.
+`packages/engine/src/clt-mass-timber-wall-source-pack-extraction-gate-a-contract.test.ts`.
 Planning surface:
-[SLICE_CALCULATOR_SOURCE_PACK_READINESS_TRIAGE_PLAN.md](./SLICE_CALCULATOR_SOURCE_PACK_READINESS_TRIAGE_PLAN.md).
+[SLICE_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_PLAN.md](./SLICE_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_PLAN.md).
+
+Just landed context:
+`calculator_source_pack_readiness_triage_v1` was selected by
+`packages/engine/src/post-internal-use-operating-envelope-v1-next-slice-selection-contract.test.ts`
+after `internal_use_operating_envelope_v1` closed Gate C no-runtime.
+Gate A landed no-runtime in
+`packages/engine/src/calculator-source-pack-readiness-triage-gate-a-contract.test.ts`.
+It kept timber double-board, no-stud double-leaf, generated floor
+fallback, lined-heavy, and historical blocked families runtime-blocked,
+and selected CLT / mass-timber only for row and metric extraction.
 
 Just closed context:
 `internal_use_operating_envelope_v1` was selected by
@@ -1082,12 +1107,17 @@ Gate A landed no-runtime and selected Gate B route-card/report/docs
 visibility audit. Gate B landed the visible-honesty copy fix and
 selected Gate C closeout / next-slice selection. Gate C then closed
 no-runtime and selected `calculator_source_pack_readiness_triage_v1`
-because no source-ready accuracy import pack exists.
+because no source-ready accuracy import pack exists. Source-pack
+readiness triage Gate A then landed no-runtime, kept every candidate
+`runtimeImportReadyNow: false`, and selected
+`clt_mass_timber_wall_source_pack_extraction_v1` as a source-row and
+metric-context extraction slice only.
 
 ## Latest Closed Slices
 
 | Slice | Master-plan step | Closed | Post-contract |
 |---|---|---|---|
+| `calculator_source_pack_readiness_triage_v1` Gate A | calculator source-pack readiness | 2026-04-29 | `calculator-source-pack-readiness-triage-gate-a-contract.test.ts` |
 | `internal_use_operating_envelope_v1` Gate C | company internal operating-envelope closeout | 2026-04-29 | `post-internal-use-operating-envelope-v1-next-slice-selection-contract.test.ts` |
 | `internal_use_operating_envelope_v1` clean stop | company internal Gate C readiness | 2026-04-28 | `CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_CLEAN_STOP_GATE_C_READY_HANDOFF.md` |
 | `internal_use_operating_envelope_v1` broad revalidation | company internal Gate C readiness | 2026-04-28 | `CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_BROAD_REVALIDATION_GATE_C_READY_HANDOFF.md` |
@@ -1320,16 +1350,17 @@ time without context loss:
 
 ## Resume Order For The Next Agent
 
-1. Read [CHECKPOINT_2026-04-29_INTERNAL_USE_OPERATING_ENVELOPE_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-29_INTERNAL_USE_OPERATING_ENVELOPE_GATE_C_CLOSEOUT_HANDOFF.md)
+1. Read [CHECKPOINT_2026-04-29_CALCULATOR_SOURCE_PACK_READINESS_TRIAGE_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-29_CALCULATOR_SOURCE_PACK_READINESS_TRIAGE_GATE_A_HANDOFF.md)
    for the latest active-slice handoff.
 2. Read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md),
+   [SLICE_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_PLAN.md](./SLICE_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_PLAN.md),
    [SLICE_CALCULATOR_SOURCE_PACK_READINESS_TRIAGE_PLAN.md](./SLICE_CALCULATOR_SOURCE_PACK_READINESS_TRIAGE_PLAN.md),
    [SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md](./SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md),
    [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md), and
    [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md).
-   Continue `calculator_source_pack_readiness_triage_v1` at Gate A by
+   Continue `clt_mass_timber_wall_source_pack_extraction_v1` at Gate A by
    adding
-   `packages/engine/src/calculator-source-pack-readiness-triage-gate-a-contract.test.ts`.
+   `packages/engine/src/clt-mass-timber-wall-source-pack-extraction-gate-a-contract.test.ts`.
 3. Read [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
    for the now-closed calculator-priority chain and its evidence-tier
    caveats.
@@ -1344,10 +1375,11 @@ time without context loss:
 6. Run `pnpm calculator:gate:current` as the focused baseline.
 7. Do not change source posture, output support, evidence tiers,
    confidence scores, API shape, route-card values, or output-card
-   statuses during source-pack readiness triage. A source-ready accuracy
-   slice may be selected only if Gate A names a bounded source pack.
-   Any future import must name the exact source row, metric owner,
-   tolerance, protected-boundary exclusions, and paired web route-card
+   statuses during CLT / mass-timber extraction. A future source-ready
+   accuracy slice may be selected only if a later contract names a
+   bounded source pack. Any future import must name the exact source
+   row, metric owner, tolerance, protected-boundary exclusions, and
+   paired web route-card
    or report tests.
 8. Treat [CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_ELEVENTH_CARVE_HANDOFF.md](./CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_ELEVENTH_CARVE_HANDOFF.md),
    [CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_A_HANDOFF.md),

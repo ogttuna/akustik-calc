@@ -35,7 +35,10 @@ short company pilot usage note and scenario summary;
 visibility audit and selected Gate C closeout / next-slice selection;
 post-Gate-B broad `pnpm check` is green;
 `internal_use_operating_envelope_v1` Gate C closed no-runtime and
-selected `calculator_source_pack_readiness_triage_v1`)
+selected `calculator_source_pack_readiness_triage_v1`;
+`calculator_source_pack_readiness_triage_v1` Gate A landed no-runtime
+and selected `clt_mass_timber_wall_source_pack_extraction_v1` as a
+source-row and metric-context extraction slice)
 Iteration: 2 (rewritten with implementation state grid, accuracy
 preservation contract, ROI table, quantitative completion targets)
 
@@ -66,14 +69,21 @@ operating envelope Gate A landed that pilot pack no-runtime, Gate B
 landed the regular internal-use visibility audit with a focused wall
 source-gated copy fix, and Gate C closed the slice no-runtime. The
 current selected calculator work is
-`calculator_source_pack_readiness_triage_v1` Gate A. There is no
-test-driven reason to change runtime/source posture before the triage
-contract names a bounded source pack.
+`clt_mass_timber_wall_source_pack_extraction_v1` Gate A. Source-pack
+readiness triage Gate A already kept every candidate
+`runtimeImportReadyNow: false` and selected CLT / mass-timber only for
+no-runtime source-row and metric-context extraction. There is no
+test-driven reason to change runtime/source posture before the
+extraction contract names exact row locators, metric handling, tolerance
+ownership, protected boundaries, and paired visible tests.
 
 The next planning layer is split deliberately:
 
+- [SLICE_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_PLAN.md](./SLICE_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_PLAN.md)
+  is selected for no-runtime CLT / mass-timber wall source-row and
+  metric-context extraction.
 - [SLICE_CALCULATOR_SOURCE_PACK_READINESS_TRIAGE_PLAN.md](./SLICE_CALCULATOR_SOURCE_PACK_READINESS_TRIAGE_PLAN.md)
-  is selected for the next no-runtime source-pack readiness ranking.
+  is landed for the no-runtime source-pack readiness ranking.
 - [SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md](./SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md)
   is closed for the short company pilot and regular internal-use
   visibility pass.

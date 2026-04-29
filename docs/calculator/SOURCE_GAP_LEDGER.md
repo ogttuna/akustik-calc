@@ -16,6 +16,9 @@ selected `internal_use_operating_envelope_v1`;
 posture change and selected Gate C closeout;
 `internal_use_operating_envelope_v1` Gate C closed no-runtime and
 selected `calculator_source_pack_readiness_triage_v1`;
+`calculator_source_pack_readiness_triage_v1` Gate A landed no-runtime
+and selected `clt_mass_timber_wall_source_pack_extraction_v1` for
+source-row and metric-context extraction only;
 source-gap content remains floor-dominant historical context)
 
 Purpose:
@@ -113,7 +116,12 @@ Important scope note:
   `calculator_source_pack_readiness_triage_v1`, which should rank
   source-pack readiness without importing rows or promoting confidence
   until a candidate names topology, metric owner, tolerance owner,
-  protected negative boundaries, and paired engine/web tests.
+  protected negative boundaries, and paired engine/web tests. Gate A has
+  now landed: every candidate remains `runtimeImportReadyNow: false`,
+  and CLT / mass-timber is selected only for no-runtime extraction of
+  WoodWorks/NRC row locators and STC/ASTC/ISO metric context. This
+  ledger still treats Dataholz CLT floor rows as floor-only source truth
+  and keeps all historical blocked families fail-closed.
 - `good_calculator_final_audit_v1` closed without reopening any
   source-gated calculator family. `wall_formula_family_widening_v1`
   then also closed without reopening any blocked family: it clarified
