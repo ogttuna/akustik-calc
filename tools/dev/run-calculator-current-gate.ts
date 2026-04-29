@@ -183,6 +183,7 @@ async function main() {
         "src/post-internal-use-operating-envelope-v1-next-slice-selection-contract.test.ts",
         "src/calculator-source-pack-readiness-triage-gate-a-contract.test.ts",
         "src/clt-mass-timber-wall-source-pack-extraction-gate-a-contract.test.ts",
+        "src/clt-mass-timber-wall-source-pack-extraction-gate-b-contract.test.ts",
         "--maxWorkers=1"
       ]
     },

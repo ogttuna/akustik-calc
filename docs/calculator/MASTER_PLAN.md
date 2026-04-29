@@ -41,7 +41,9 @@ and selected `clt_mass_timber_wall_source_pack_extraction_v1` as a
 source-row and metric-context extraction slice;
 `clt_mass_timber_wall_source_pack_extraction_v1` Gate A landed
 no-runtime source-group extraction and selected Gate B metric-mapping /
-formula-tolerance decision)
+formula-tolerance decision;
+`clt_mass_timber_wall_source_pack_extraction_v1` Gate B landed
+no-runtime and selected Gate C closeout / next-slice selection)
 Iteration: 2 (rewritten with implementation state grid, accuracy
 preservation contract, ROI table, quantitative completion targets)
 
@@ -72,7 +74,7 @@ operating envelope Gate A landed that pilot pack no-runtime, Gate B
 landed the regular internal-use visibility audit with a focused wall
 source-gated copy fix, and Gate C closed the slice no-runtime. The
 current selected calculator work is
-`clt_mass_timber_wall_source_pack_extraction_v1` Gate B. Source-pack
+`clt_mass_timber_wall_source_pack_extraction_v1` Gate C. Source-pack
 readiness triage Gate A kept every candidate
 `runtimeImportReadyNow: false` and selected CLT / mass-timber only for
 no-runtime source-row and metric-context extraction. CLT / mass-timber
@@ -80,9 +82,12 @@ Gate A then classified WoodWorks Table 7 Single CLT Wall and Table 9
 Double CLT Wall as later row-mapping candidates, WoodWorks Table 8
 Single NLT Wall plus NRC RR-335/NLT addendum as formula/tolerance
 context, and Dataholz CLT floor rows plus the WoodWorks database as
-rejection-only context. There is no test-driven reason to change
-runtime/source posture before Gate B names metric handling, tolerance
-ownership, protected boundaries, and paired visible tests.
+rejection-only context. Gate B then rejected immediate bounded metric
+mapping and formula tolerance because no exact row-level metric policy
+or local CLT/NLT/double-CLT tolerance owner is ready. There is no
+test-driven reason to change runtime/source posture before Gate C
+closes the slice and selects the next source-ready action, if one
+exists.
 
 The next planning layer is split deliberately:
 
@@ -906,7 +911,17 @@ the doc-drift problem documented in `SYSTEM_AUDIT_2026-04-20.md`.
   Double CLT Wall are later row-mapping candidates; WoodWorks Table 8
   Single NLT Wall, NRC RR-335, and the NRC NLT addendum are formula /
   tolerance context; the WoodWorks database and Dataholz CLT floor rows
-  are rejection-only context. Gate B is now the next bounded decision.
+  are rejection-only context.
+- **2026-04-29 update**:
+  `clt_mass_timber_wall_source_pack_extraction_v1` Gate B landed
+  no-runtime. It rejected immediate bounded metric mapping and formula
+  tolerance for all Gate A source groups: STC/FSTC/ASTC remain
+  metric-policy research, IIC is rejected for wall airborne outputs,
+  one-third-octave TL is only future row recompute input, and Dataholz
+  CLT `Rw` remains floor-only. Gate C closeout / next-slice selection
+  is now the active bounded decision. Post-Gate-B validation is green:
+  focused current gate, broad `pnpm check`, and build all pass with only
+  the known non-fatal `sharp/@img` warnings.
 - **2026-04-24 update**: floor continuation, floor many-layer, floor
   layer-order, and all-caller invalid-thickness audits closed
   no-runtime; engine thickness validity moved out of partial, and

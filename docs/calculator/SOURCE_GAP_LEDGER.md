@@ -22,6 +22,8 @@ source-row and metric-context extraction only;
 `clt_mass_timber_wall_source_pack_extraction_v1` Gate A landed
 no-runtime and selected Gate B metric-mapping / formula-tolerance
 decision;
+`clt_mass_timber_wall_source_pack_extraction_v1` Gate B landed
+no-runtime and selected Gate C closeout / next-slice selection;
 source-gap content remains floor-dominant historical context)
 
 Purpose:
@@ -128,9 +130,12 @@ Important scope note:
   candidates only; WoodWorks Table 8 Single NLT Wall, NRC RR-335, and
   the NRC NLT addendum are formula/tolerance context; the WoodWorks
   database remains pointer-only; and local Dataholz CLT floor rows stay
-  floor-only source truth. Gate B is the next no-runtime metric-mapping
-  / tolerance decision. This ledger still keeps all historical blocked
-  families fail-closed.
+  floor-only source truth. Gate B then landed no-runtime: STC/FSTC/ASTC
+  remain metric-policy research, IIC is rejected for wall airborne
+  outputs, one-third-octave TL is only future row recompute input, and
+  no CLT/NLT/double-CLT tolerance owner is ready. Gate C closeout /
+  next-slice selection is now the active bounded decision. This ledger
+  still keeps all historical blocked families fail-closed.
 - `good_calculator_final_audit_v1` closed without reopening any
   source-gated calculator family. `wall_formula_family_widening_v1`
   then also closed without reopening any blocked family: it clarified
@@ -996,6 +1001,9 @@ Historical blocked-source planning implication:
   - WoodWorks Table 8 Single NLT Wall, NRC RR-335, and the NRC NLT
     addendum are formula/tolerance context until metric mapping and
     tolerance ownership are explicit
+  - Gate B rejected immediate bounded mapping/tolerance movement; these
+    tracks stay roadmap-only until row-level metric policy and local
+    tolerance ownership exist
   - Dataholz CLT exact rows in this ledger remain floor-only source
     truth and do not promote the live `wall-clt-local` route
 - do not do next:

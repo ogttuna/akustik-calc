@@ -65,8 +65,11 @@ and selected `clt_mass_timber_wall_source_pack_extraction_v1`;
 `clt_mass_timber_wall_source_pack_extraction_v1` Gate A landed
 no-runtime and selected Gate B metric-mapping / formula-tolerance
 decision;
+`clt_mass_timber_wall_source_pack_extraction_v1` Gate B landed
+no-runtime, found no bounded metric-mapping or formula-tolerance path
+ready now, and selected Gate C closeout / next-slice selection;
 latest checkpoint:
-[CHECKPOINT_2026-04-29_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-29_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_GATE_A_HANDOFF.md)).
+[CHECKPOINT_2026-04-29_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-29_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_GATE_B_HANDOFF.md)).
 The extra 2026-04-28 planning pass made the readiness ladder explicit
 and the source-gap Gate A selected the short internal pilot
 operating-envelope slice. Internal-use Gate A then produced
@@ -87,8 +90,10 @@ Double CLT Wall as later row-mapping candidates only; WoodWorks Table 8
 Single NLT Wall, NRC RR-335, and the NRC NLT addendum as formula /
 tolerance context; and the WoodWorks database plus Dataholz CLT floor
 rows as rejection-only context. The comprehensive source-gated accuracy
-program remains longer roadmap context; the next bounded action is Gate
-B metric mapping / formula tolerance decision, not runtime import.
+program remains longer roadmap context. Gate B then rejected immediate
+bounded metric mapping and formula-tolerance movement, kept all source
+groups runtime-blocked, and selected Gate C closeout / next-slice
+selection.
 See
 [SLICE_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_PLAN.md](./SLICE_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_PLAN.md),
 [SLICE_CALCULATOR_SOURCE_PACK_READINESS_TRIAGE_PLAN.md](./SLICE_CALCULATOR_SOURCE_PACK_READINESS_TRIAGE_PLAN.md),
@@ -104,8 +109,8 @@ storage v1, project/proposal route authorization, auth-session
 hardening, and the pure team-access policy model.
 
 - **Engine broad suite**: latest broad `pnpm check` on 2026-04-29 is
-  green after the CLT / mass-timber extraction Gate A landing: 267 /
-  267 files, 1457 / 1457 tests green.
+  green after the CLT / mass-timber extraction Gate B landing: 268 /
+  268 files, 1464 / 1464 tests green.
   (up from 193/1068 pre-session; step-7 landed 4 wall cases +
   F1/F2 engine fixes + 32-assertion cross-mode torture matrix
   + 2 regression guards + post-contract; step-7b landed the
@@ -119,7 +124,7 @@ hardening, and the pure team-access policy model.
   under the Vitest worker timeout; Gate B and Gate C then added focused
   planning/value contract files).
 - **Web broad suite**: latest broad `pnpm check` on 2026-04-29 is
-  green after the CLT / mass-timber extraction Gate A landing: 157 / 157
+  green after the CLT / mass-timber extraction Gate B landing: 157 / 157
   files in scope through `tools/dev/run-web-vitest.ts`, 890 tests
   passed + 18 discovery helpers intentionally skipped. The runner
   isolates six long route-scan files and batches the
@@ -133,7 +138,7 @@ hardening, and the pure team-access policy model.
   input contract so it asserts parse behavior instead of calling
   `.keyof()` on the exported shared `AirborneContextSchema` `ZodType`.
 - **Broad `pnpm check`**: lint + typecheck + tests + build green after
-  the CLT / mass-timber extraction Gate A landing. The earlier Gate B broad rerun
+  the CLT / mass-timber extraction Gate B landing. The earlier Gate B broad rerun
   caught `TS7006` implicit-`any` issues in the framed split Gate A/B
   contract tests; those were fixed with callback parameter typing only.
   Build still emits the known non-fatal optional `sharp/@img` warnings
@@ -321,8 +326,11 @@ hardening, and the pure team-access policy model.
   mass-timber extraction selection, plus
   `clt-mass-timber-wall-source-pack-extraction-gate-a-contract.test.ts`
   for the no-runtime source-group extraction and Gate B metric-mapping
-  decision. Latest focused gate run after the CLT / mass-timber
-  extraction Gate A landing: 134 engine files / 637 tests,
+  decision, plus
+  `clt-mass-timber-wall-source-pack-extraction-gate-b-contract.test.ts`
+  for the no-runtime metric-mapping / formula-tolerance rejection and
+  Gate C closeout selection. Latest focused gate run after the CLT /
+  mass-timber extraction Gate B landing: 135 engine files / 644 tests,
   45 web files / 216 passed + 18 skipped,
   build 5/5 tasks with known non-fatal `sharp/@img` warnings,
   whitespace guard clean.
@@ -341,11 +349,21 @@ promotion, support promotion, evidence promotion, route-card movement,
 or output-card movement is allowed.
 
 The next implementation file is
-`packages/engine/src/clt-mass-timber-wall-source-pack-extraction-gate-b-contract.test.ts`.
+`packages/engine/src/post-clt-mass-timber-wall-source-pack-extraction-v1-next-slice-selection-contract.test.ts`.
 Planning surface:
 [SLICE_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_PLAN.md](./SLICE_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_PLAN.md).
 
 Just landed context:
+Gate B landed no-runtime in
+`packages/engine/src/clt-mass-timber-wall-source-pack-extraction-gate-b-contract.test.ts`.
+It rejected immediate bounded metric mapping and formula tolerance:
+STC/FSTC/ASTC stay metric-policy research, IIC is rejected for wall
+airborne outputs, one-third-octave TL is only future row recompute
+input, Dataholz CLT floor `Rw` remains floor-only, and every Gate A
+source group remains `runtimeImportReadyNow: false`. It selected Gate C
+closeout / next-slice selection.
+
+Prior context:
 Gate A landed no-runtime in
 `packages/engine/src/clt-mass-timber-wall-source-pack-extraction-gate-a-contract.test.ts`.
 It classified WoodWorks Table 7 Single CLT Wall and Table 9 Double CLT
@@ -356,7 +374,7 @@ rejection-only context. It selected Gate B metric-mapping /
 formula-tolerance decision, with all runtime and visible surfaces
 frozen.
 
-Prior context:
+Earlier context:
 `calculator_source_pack_readiness_triage_v1` was selected by
 `packages/engine/src/post-internal-use-operating-envelope-v1-next-slice-selection-contract.test.ts`
 after `internal_use_operating_envelope_v1` closed Gate C no-runtime.
@@ -1135,12 +1153,15 @@ readiness triage Gate A then landed no-runtime, kept every candidate
 metric-context extraction slice only. CLT / mass-timber extraction Gate
 A then landed no-runtime, classified WoodWorks/NRC source groups, kept
 the live `wall-clt-local` route frozen, and selected Gate B
-metric-mapping / formula-tolerance decision.
+metric-mapping / formula-tolerance decision. Gate B then landed
+no-runtime, rejected immediate bounded metric mapping and formula
+tolerance, and selected Gate C closeout / next-slice selection.
 
 ## Latest Closed Slices
 
 | Slice | Master-plan step | Closed | Post-contract |
 |---|---|---|---|
+| `clt_mass_timber_wall_source_pack_extraction_v1` Gate B | calculator CLT / mass-timber metric decision | 2026-04-29 | `clt-mass-timber-wall-source-pack-extraction-gate-b-contract.test.ts` |
 | `clt_mass_timber_wall_source_pack_extraction_v1` Gate A | calculator CLT / mass-timber source extraction | 2026-04-29 | `clt-mass-timber-wall-source-pack-extraction-gate-a-contract.test.ts` |
 | `calculator_source_pack_readiness_triage_v1` Gate A | calculator source-pack readiness | 2026-04-29 | `calculator-source-pack-readiness-triage-gate-a-contract.test.ts` |
 | `internal_use_operating_envelope_v1` Gate C | company internal operating-envelope closeout | 2026-04-29 | `post-internal-use-operating-envelope-v1-next-slice-selection-contract.test.ts` |
@@ -1375,7 +1396,7 @@ time without context loss:
 
 ## Resume Order For The Next Agent
 
-1. Read [CHECKPOINT_2026-04-29_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-29_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_GATE_A_HANDOFF.md)
+1. Read [CHECKPOINT_2026-04-29_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-29_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_GATE_B_HANDOFF.md)
    for the latest active-slice handoff.
 2. Read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md),
    [SLICE_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_PLAN.md](./SLICE_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_PLAN.md),
@@ -1383,9 +1404,9 @@ time without context loss:
    [SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md](./SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md),
    [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md), and
    [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md).
-   Continue `clt_mass_timber_wall_source_pack_extraction_v1` at Gate B by
+   Continue `clt_mass_timber_wall_source_pack_extraction_v1` at Gate C by
    adding
-   `packages/engine/src/clt-mass-timber-wall-source-pack-extraction-gate-b-contract.test.ts`.
+   `packages/engine/src/post-clt-mass-timber-wall-source-pack-extraction-v1-next-slice-selection-contract.test.ts`.
 3. Read [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
    for the now-closed calculator-priority chain and its evidence-tier
    caveats.

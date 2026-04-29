@@ -1,18 +1,22 @@
 # Slice Plan - CLT / Mass-Timber Wall Source Pack Extraction v1
 
-Status: GATE A LANDED / GATE B NEXT (selected 2026-04-29 by
+Status: GATE B LANDED / GATE C NEXT (selected 2026-04-29 by
 `calculator-source-pack-readiness-triage-gate-a-contract.test.ts`;
 Gate A landed 2026-04-29 in
 `clt-mass-timber-wall-source-pack-extraction-gate-a-contract.test.ts`;
+Gate B landed 2026-04-29 in
+`clt-mass-timber-wall-source-pack-extraction-gate-b-contract.test.ts`;
 no-runtime source-row and metric-context extraction slice).
 
-Landed implementation file:
+Landed implementation files:
 
 `packages/engine/src/clt-mass-timber-wall-source-pack-extraction-gate-a-contract.test.ts`
 
+`packages/engine/src/clt-mass-timber-wall-source-pack-extraction-gate-b-contract.test.ts`
+
 Next implementation file:
 
-`packages/engine/src/clt-mass-timber-wall-source-pack-extraction-gate-b-contract.test.ts`
+`packages/engine/src/post-clt-mass-timber-wall-source-pack-extraction-v1-next-slice-selection-contract.test.ts`
 
 Selection reason: `calculator_source_pack_readiness_triage_v1` Gate A
 ranked all candidate source packs and kept every candidate
@@ -28,6 +32,12 @@ Wall are later row-mapping candidates only. WoodWorks Table 8 Single NLT
 Wall, NRC RR-335, and the NRC NLT addendum are formula/tolerance context
 only. The WoodWorks database and local Dataholz CLT floor rows are
 rejection-only context until their specific blockers are satisfied.
+
+Gate B result: no bounded metric-mapping or formula-tolerance path is
+ready now. STC/FSTC/ASTC remain metric-policy research; IIC is rejected
+for wall airborne outputs; one-third-octave transmission-loss context is
+only future row recompute input; local Dataholz CLT `Rw` rows remain
+floor-only. Gate B selects Gate C closeout / next-slice selection.
 
 ## Objective
 
@@ -136,44 +146,72 @@ Landed Gate A decision:
   medium-confidence, and source-gated.
 - Dataholz CLT exact rows remain floor-only source truth.
 
-## Gate B - Bound Metric Mapping And Formula Tolerance Decision
+## Gate B - Bound Metric Mapping And Formula Tolerance Decision - Landed
 
-Gate B should add:
+Gate B added:
 
 `packages/engine/src/clt-mass-timber-wall-source-pack-extraction-gate-b-contract.test.ts`
 
-Gate B must decide whether the extracted WoodWorks/NRC context can
-support a bounded follow-up without runtime movement:
+Gate B decided that the extracted WoodWorks/NRC context cannot support a
+bounded follow-up without more source work:
 
-- metric-mapping path: STC/FSTC/ASTC/IIC or one-third-octave
-  transmission-loss context can be mapped, converted, or explicitly
-  rejected for DynEcho ISO `Rw`, `R'w`, `DnT,w`, and report surfaces;
-- formula-tolerance path: NRC / WoodWorks context can name a bounded
-  laminated-leaf, NLT, or double-CLT tolerance owner without importing a
-  value;
-- closeout path: no bounded metric/tolerance path is defensible, so the
-  slice closes no-runtime and leaves the comprehensive accuracy roadmap
-  as context.
+- STC/FSTC/ASTC are kept as metric-policy research only.
+- IIC is rejected for wall airborne outputs.
+- one-third-octave transmission-loss context is only future row
+  recompute input after exact wall rows and ISO 717 handling are named.
+- local Dataholz CLT `Rw` rows remain floor-only truth.
+- WoodWorks/NRC contexts do not name a local CLT, NLT, or double-CLT
+  formula-tolerance owner.
 
-Minimum tests in Gate B:
+Gate B tests assert:
 
-- assert Gate B remains no-runtime and preserves all support,
+- Gate B remains no-runtime and preserves all support,
   confidence, evidence, route-card, output-card, proposal/report, and
   API surfaces;
-- assert each Gate A source group is either promoted to bounded
-  metric/tolerance follow-up or rejected with its first missing
-  requirement;
-- assert no STC/FSTC/ASTC/IIC value is treated as ISO `Rw`, `R'w`,
+- each Gate A source group is rejected from immediate bounded follow-up
+  with its first missing requirement;
+- no STC/FSTC/ASTC/IIC value is treated as ISO `Rw`, `R'w`,
   `DnT,w`, or direct field truth without an explicit mapping rule;
-- assert current `wall-clt-local` values remain lab `Rw=42`, field
+- current `wall-clt-local` values remain lab `Rw=42`, field
   `R'w=41`, field `DnT,w=42`;
-- assert the selected next action names either a bounded no-runtime
-  metric/tolerance contract or a no-runtime closeout contract.
+- Dataholz CLT exact rows remain floor-only;
+- the selected next action is Gate C closeout / next-slice selection.
+
+## Gate C - Closeout And Next-Slice Selection
+
+Gate C should add:
+
+`packages/engine/src/post-clt-mass-timber-wall-source-pack-extraction-v1-next-slice-selection-contract.test.ts`
+
+Gate C should close the CLT / mass-timber extraction slice no-runtime
+unless a genuinely source-ready accuracy pack is available. It should
+not promote:
+
+- WoodWorks table groups without exact row, metric policy, and
+  tolerance owner;
+- WoodWorks database pointers without underlying report/table/row;
+- NRC RR-335 ASTC/flanking context as direct `Rw` / `R'w` / `DnT,w`
+  truth;
+- NRC NLT addendum context without an NLT wall family/tolerance owner;
+- Dataholz CLT floor rows into wall CLT truth.
+
+Minimum tests in Gate C:
+
+- assert Gate C closes the slice no-runtime;
+- assert Gate B roadmap tracks are not source-ready runtime packs;
+- assert current CLT wall runtime values and visible posture remain
+  frozen;
+- assert Dataholz CLT floor rows remain floor-only truth;
+- assert the selected next slice is chosen by source/readiness rank, not
+  by convenience or nearby green tests.
 
 ## Validation
 
 - Run the targeted Gate A engine contract while iterating.
 - Add the Gate A contract to `tools/dev/run-calculator-current-gate.ts`
+  when it lands.
+- Run the targeted Gate B engine contract while iterating.
+- Add the Gate B contract to `tools/dev/run-calculator-current-gate.ts`
   when it lands.
 - Run `pnpm calculator:gate:current`.
 - Run `git diff --check`.
@@ -189,4 +227,14 @@ Latest Gate A validation, 2026-04-29:
   `sharp/@img` warnings, whitespace guard clean;
 - broad `pnpm check` green: lint/typecheck green, engine 267 files /
   1457 tests, web 157 files / 890 passed + 18 skipped, build 5/5 with
+  the known non-fatal `sharp/@img` warnings.
+
+Latest Gate B targeted validation, 2026-04-29:
+
+- targeted Gate B engine contract green: 1 file / 7 tests;
+- focused current gate green: engine 135 files / 644 tests, web 45
+  files / 216 passed + 18 skipped, build 5/5 with the known non-fatal
+  `sharp/@img` warnings, whitespace guard clean;
+- broad `pnpm check` green: lint/typecheck green, engine 268 files /
+  1464 tests, web 157 files / 890 passed + 18 skipped, build 5/5 with
   the known non-fatal `sharp/@img` warnings.
