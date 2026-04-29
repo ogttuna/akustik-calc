@@ -1,6 +1,6 @@
 # Dynamic Calculator Source Gap Ledger
 
-Last reviewed: 2026-04-28
+Last reviewed: 2026-04-29
 (`calculator_source_gap_revalidation_v2` Gate A landed no-runtime and
 selected `floor_layer_order_invariance_expansion_v1`;
 `floor_layer_order_invariance_expansion_v1` Gate A landed no-runtime
@@ -14,6 +14,8 @@ field split value/warning drift and Gate C selected
 selected `internal_use_operating_envelope_v1`;
 `internal_use_operating_envelope_v1` Gate B landed no-runtime/source
 posture change and selected Gate C closeout;
+`internal_use_operating_envelope_v1` Gate C closed no-runtime and
+selected `calculator_source_pack_readiness_triage_v1`;
 source-gap content remains floor-dominant historical context)
 
 Purpose:
@@ -107,7 +109,11 @@ Important scope note:
   no-runtime. Gate B then landed visible
   formula-owned/source-gated scoped-estimate wording for dynamic wall
   formula routes and kept the blocked source posture in this ledger
-  unchanged.
+  unchanged. Gate C then closed no-runtime and selected
+  `calculator_source_pack_readiness_triage_v1`, which should rank
+  source-pack readiness without importing rows or promoting confidence
+  until a candidate names topology, metric owner, tolerance owner,
+  protected negative boundaries, and paired engine/web tests.
 - `good_calculator_final_audit_v1` closed without reopening any
   source-gated calculator family. `wall_formula_family_widening_v1`
   then also closed without reopening any blocked family: it clarified

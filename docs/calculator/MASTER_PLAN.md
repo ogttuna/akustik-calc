@@ -1,6 +1,6 @@
 # Calculator Master Plan
 
-Last reviewed: 2026-04-28
+Last reviewed: 2026-04-29
 (`wall_coverage_expansion_planning_v2` Gate A closed no-runtime;
 `wall_single_leaf_mass_law_calibration_v1` Gate C closed no-runtime;
 `wall_double_leaf_sharp_davy_scoping_v1` Gate C closed no-runtime;
@@ -33,8 +33,9 @@ selected `internal_use_operating_envelope_v1`;
 short company pilot usage note and scenario summary;
 `internal_use_operating_envelope_v1` Gate B landed the regular-use
 visibility audit and selected Gate C closeout / next-slice selection;
-post-Gate-B broad `pnpm check` is green and Gate C remains the first
-next action)
+post-Gate-B broad `pnpm check` is green;
+`internal_use_operating_envelope_v1` Gate C closed no-runtime and
+selected `calculator_source_pack_readiness_triage_v1`)
 Iteration: 2 (rewritten with implementation state grid, accuracy
 preservation contract, ROI table, quantitative completion targets)
 
@@ -55,26 +56,27 @@ the second doc a fresh agent reads after `CURRENT_STATE.md`. It answers:
 
 Private-use calculator readiness is tracked separately in
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
-That chain is closed for the current private/internal-use bar. The next
-selected calculator work is
-`internal_use_operating_envelope_v1` Gate C. Floor layer-order
-invariance expansion closed no-runtime; framed-wall split stability
-Gate B fixed the LSF field board-split value/warning drift without
-global board coalescing; source/runtime widening candidates remained
-blocked in `calculator_source_gap_revalidation_v3` Gate A, so the next
-bounded step is the short company pilot operating envelope and scenario
-summary. Internal-use operating envelope Gate A has now landed that
-pilot pack no-runtime. Gate B then landed the regular internal-use
-visibility audit with a focused wall source-gated copy fix; the next
-bounded step is Gate C closeout / next-slice selection. The broad
-post-Gate-B revalidation is green, so there is no test-driven reason to
-change runtime/source posture before Gate C.
+That chain is closed for the current private/internal-use bar. Floor
+layer-order invariance expansion closed no-runtime; framed-wall split
+stability Gate B fixed the LSF field board-split value/warning drift
+without global board coalescing; source/runtime widening candidates
+remained blocked in `calculator_source_gap_revalidation_v3` Gate A, so
+the short company pilot operating envelope ran next. Internal-use
+operating envelope Gate A landed that pilot pack no-runtime, Gate B
+landed the regular internal-use visibility audit with a focused wall
+source-gated copy fix, and Gate C closed the slice no-runtime. The
+current selected calculator work is
+`calculator_source_pack_readiness_triage_v1` Gate A. There is no
+test-driven reason to change runtime/source posture before the triage
+contract names a bounded source pack.
 
 The next planning layer is split deliberately:
 
+- [SLICE_CALCULATOR_SOURCE_PACK_READINESS_TRIAGE_PLAN.md](./SLICE_CALCULATOR_SOURCE_PACK_READINESS_TRIAGE_PLAN.md)
+  is selected for the next no-runtime source-pack readiness ranking.
 - [SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md](./SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md)
-  is selected for the short company pilot and the next 2-4 regular
-  internal-use hardening iterations.
+  is closed for the short company pilot and regular internal-use
+  visibility pass.
 - [CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md](./CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md)
   tracks the longer source-gated work required before claiming very
   broad correctness across all common calculations.
@@ -867,9 +869,17 @@ the doc-drift problem documented in `SYSTEM_AUDIT_2026-04-20.md`.
   engine 264 files / 1438 tests, web 157 files / 890 passed + 18
   skipped, and build 5/5 with the known non-fatal `sharp/@img`
   warnings. The only broad-gate fix was test typing for warning
-  callback parameters in the framed split Gate A/B contracts. Gate C is
-  still the first next action; do not reopen source-gated runtime
-  families from this green result alone.
+  callback parameters in the framed split Gate A/B contracts. At that
+  checkpoint Gate C was still the first next action; source-gated
+  runtime families were not reopened from that green result alone.
+- **2026-04-29 update**:
+  `internal_use_operating_envelope_v1` Gate C closed no-runtime and
+  selected `calculator_source_pack_readiness_triage_v1`. Focused
+  current gate is green: engine 132 files / 624 tests, web 45 files /
+  216 passed + 18 skipped, build 5/5, whitespace guard clean. Broad
+  `pnpm check` is green: engine 265 files / 1444 tests, web 157 files /
+  890 passed + 18 skipped, build 5/5 with the known non-fatal
+  `sharp/@img` warnings.
 - **2026-04-24 update**: floor continuation, floor many-layer, floor
   layer-order, and all-caller invalid-thickness audits closed
   no-runtime; engine thickness validity moved out of partial, and

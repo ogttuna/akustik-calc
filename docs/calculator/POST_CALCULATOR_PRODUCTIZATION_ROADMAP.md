@@ -135,8 +135,8 @@ Closeout: calculator private/internal-use readiness is closed and route
 authorization is policy-backed. The proposal/report polish slice now
 keeps evidence-tier honesty visible when calculator results move from
 cards into PDF/DOCX/workbench proposal surfaces. Additional
-productization work is deferred while the active selected slice returns
-to calculator wall coverage planning.
+productization work is deferred while the active selected calculator
+slice is `calculator_source_pack_readiness_triage_v1`.
 
 ### 5. Deployment And Monitoring
 
@@ -198,7 +198,8 @@ evidence.
   `wall_coverage_expansion_planning_v2` (closed no-runtime
   2026-04-27).
 - Current selected calculator follow-up:
-  `wall_single_leaf_mass_law_calibration_v1`.
+  `calculator_source_pack_readiness_triage_v1` Gate A source-pack
+  readiness ranking.
 - Calculator personal/internal-use readiness:
   closed with evidence-tier caveats by `ui_input_output_honesty_v1`
   Gate C.
@@ -207,9 +208,10 @@ Reasoning: server-backed persistence is the foundation for auth,
 billing, proposal history, collaboration, monitoring context, and any
 future desktop sync story. With explicit sync/list/load, owner-only
 policy-backed route authorization, and proposal/report honesty now
-landed, the source-gap revalidation pass closed no-runtime, then wall
-coverage planning Gate A closed no-runtime and selected the single-leaf
-mass-law calibration source/formula contract as the next user-priority
-calculator step. That work must not alter calculator formulas, values,
-source posture, output support, or confidence scores until a
-source-backed or formula-owned wall candidate is deliberately selected.
+landed, calculator priority returned to source/readiness work. The
+internal-use operating-envelope Gate C closeout is closed no-runtime.
+The current selected calculator step is source-pack readiness triage. It
+must not alter calculator formulas, values, source posture, output
+support, confidence scores, evidence tiers, API shape, route-card
+values, or output-card statuses unless a bounded source pack is
+deliberately selected by a later contract.

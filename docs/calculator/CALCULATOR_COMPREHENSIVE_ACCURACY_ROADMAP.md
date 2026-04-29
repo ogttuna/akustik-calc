@@ -2,6 +2,12 @@
 
 Status: ROADMAP, not an active implementation slice.
 
+Current handoff note 2026-04-29:
+`internal_use_operating_envelope_v1` closed no-runtime at Gate C and
+selected `calculator_source_pack_readiness_triage_v1`. This roadmap
+remains the long-horizon source-gated accuracy context; it is not a
+runtime import approval.
+
 ## Purpose
 
 This document tracks the longer program required before DynEcho can be
@@ -72,14 +78,18 @@ extract:
 
 ## Recommended Program Sequence
 
-### 1. Internal Operating Envelope First
+### 1. Source-Pack Readiness Triage First
 
-Close `internal_use_operating_envelope_v1` before new source import
-work unless `calculator_source_gap_revalidation_v3` finds an urgent
-runtime drift.
+`internal_use_operating_envelope_v1` has closed. Before new source
+import work, run `calculator_source_pack_readiness_triage_v1` Gate A to
+rank which source pack, if any, is ready for a bounded source-research
+slice.
 
-Reason: the company can use the calculator sooner if the current
-defended/low-confidence/source-gated envelope is explicit.
+Reason: the company can now use the explicit operating envelope, but
+accuracy work still needs source-pack proof. No candidate should move
+runtime, support, confidence, or evidence posture until it names exact
+topology, metric owner, tolerance owner, protected negative boundaries,
+and paired engine/web tests.
 
 ### 2. Timber Double-Board Source Intake
 

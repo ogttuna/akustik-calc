@@ -13,7 +13,7 @@ need the private-use readiness chain read
 
 ## Revalidated Snapshot
 
-Last revalidation cycle: `2026-04-28`
+Last revalidation cycle: `2026-04-29`
 (`realistic_layer_combination_coverage_cartography_v1` Gate A landed;
 heavy-core/concrete Gate B closed no-runtime; timber stud + CLT wall
 accuracy pass Gate C closed no-runtime; floor fallback Gate C closed
@@ -58,8 +58,10 @@ short company pilot usage note and scenario summary;
 `internal_use_operating_envelope_v1` Gate B landed the regular
 internal-use visibility audit and selected Gate C closeout /
 next-slice selection;
+`internal_use_operating_envelope_v1` Gate C closed no-runtime and
+selected `calculator_source_pack_readiness_triage_v1`;
 latest checkpoint:
-[CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_CLEAN_STOP_GATE_C_READY_HANDOFF.md](./CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_CLEAN_STOP_GATE_C_READY_HANDOFF.md)).
+[CHECKPOINT_2026-04-29_INTERNAL_USE_OPERATING_ENVELOPE_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-29_INTERNAL_USE_OPERATING_ENVELOPE_GATE_C_CLOSEOUT_HANDOFF.md)).
 The extra 2026-04-28 planning pass made the readiness ladder explicit
 and the source-gap Gate A selected the short internal pilot
 operating-envelope slice. Internal-use Gate A then produced
@@ -68,17 +70,15 @@ and the executable scenario matrix. Gate B then landed the regular
 internal-use visible-honesty audit: dynamic wall formula routes now say
 when no exact wall source row is active and keep formula-owned /
 source-gated scoped-estimate wording visible in validation, evidence,
-and proposal/report surfaces. Gate C closeout is now selected, and the
-comprehensive source-gated accuracy program remains a longer roadmap.
-The post-Gate-B broad revalidation is green and confirms that no
-runtime/source posture should move before Gate C. The clean-stop
-checkpoint then confirmed the Gate C contract is still absent as
-expected, docs and implementation still align, and no source-ready
-accuracy pack should be promoted before Gate C.
+and proposal/report surfaces. Gate C then closed the operating-envelope
+slice no-runtime and selected
+`calculator_source_pack_readiness_triage_v1`. The comprehensive
+source-gated accuracy program remains longer roadmap context; the next
+bounded action is source-pack readiness ranking, not runtime import.
 See
-[SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md](./SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md)
-and
-[CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md](./CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md).
+[SLICE_CALCULATOR_SOURCE_PACK_READINESS_TRIAGE_PLAN.md](./SLICE_CALCULATOR_SOURCE_PACK_READINESS_TRIAGE_PLAN.md),
+[SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md](./SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md),
+and [CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md](./CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md).
 Step 8 closed the calculator runtime audit: `MASTER_PLAN.md` §3/§8
 was reconciled to implementation reality, `coverage-grid-consistency.test.ts`
 now maps the grid and C1-C6 signals to executable evidence, the
@@ -88,9 +88,9 @@ first four productization slices then closed server-backed project
 storage v1, project/proposal route authorization, auth-session
 hardening, and the pure team-access policy model.
 
-- **Engine broad suite**: latest broad `pnpm check` on 2026-04-28 is
-  green after the internal-use Gate B broad revalidation: 264 / 264
-  files, 1438 / 1438 tests green.
+- **Engine broad suite**: latest broad `pnpm check` on 2026-04-29 is
+  green after the internal-use Gate C closeout: 265 / 265 files,
+  1444 / 1444 tests green.
   (up from 193/1068 pre-session; step-7 landed 4 wall cases +
   F1/F2 engine fixes + 32-assertion cross-mode torture matrix
   + 2 regression guards + post-contract; step-7b landed the
@@ -103,8 +103,8 @@ hardening, and the pure team-access policy model.
   split-cavity field swap matrix that keeps the full single-worker suite
   under the Vitest worker timeout; Gate B and Gate C then added focused
   planning/value contract files).
-- **Web broad suite**: latest broad `pnpm check` on 2026-04-28 is
-  green after the internal-use Gate B broad revalidation: 157 / 157
+- **Web broad suite**: latest broad `pnpm check` on 2026-04-29 is
+  green after the internal-use Gate C closeout: 157 / 157
   files in scope through `tools/dev/run-web-vitest.ts`, 890 tests
   passed + 18 discovery helpers intentionally skipped. The runner
   isolates six long route-scan files and batches the
@@ -118,7 +118,7 @@ hardening, and the pure team-access policy model.
   input contract so it asserts parse behavior instead of calling
   `.keyof()` on the exported shared `AirborneContextSchema` `ZodType`.
 - **Broad `pnpm check`**: lint + typecheck + tests + build green after
-  the internal-use Gate B broad revalidation. The first broad rerun
+  the internal-use Gate C closeout. The earlier Gate B broad rerun
   caught `TS7006` implicit-`any` issues in the framed split Gate A/B
   contract tests; those were fixed with callback parameter typing only.
   Build still emits the known non-fatal optional `sharp/@img` warnings
@@ -297,18 +297,34 @@ hardening, and the pure team-access policy model.
   boundaries, plus
   `internal-use-operating-envelope-v1-gate-b-contract.test.ts` and
   `internal-use-operating-envelope-visibility-gate-b.test.ts` for the
-  regular internal-use visible-honesty audit. Latest focused gate run
-  after the internal-use Gate B implementation: 131 engine files / 618
-  tests, 45 web files / 216 passed + 18 skipped, build 5/5 tasks with
-  known non-fatal `sharp/@img` warnings, whitespace guard clean.
+  regular internal-use visible-honesty audit, plus
+  `post-internal-use-operating-envelope-v1-next-slice-selection-contract.test.ts`
+  for the Gate C no-runtime closeout and source-pack readiness triage
+  selection. Latest focused gate run after the Gate C closeout: 132
+  engine files / 624 tests, 45 web files / 216 passed + 18 skipped,
+  build 5/5 tasks with known non-fatal `sharp/@img` warnings,
+  whitespace guard clean.
 
 ## Active Slice
 
-`internal_use_operating_envelope_v1` (short company pilot operating
-envelope and regular internal-use visibility). It was selected by
+`calculator_source_pack_readiness_triage_v1` (no-runtime source-pack
+readiness ranking). It was selected by
+`packages/engine/src/post-internal-use-operating-envelope-v1-next-slice-selection-contract.test.ts`
+after `internal_use_operating_envelope_v1` closed Gate C no-runtime.
+The selected triage exists because no source-ready accuracy pack can yet
+name exact topology, metric owner, tolerance owner, protected negative
+boundaries, and paired engine/web route-card or report tests.
+
+The next implementation file is
+`packages/engine/src/calculator-source-pack-readiness-triage-gate-a-contract.test.ts`.
+Planning surface:
+[SLICE_CALCULATOR_SOURCE_PACK_READINESS_TRIAGE_PLAN.md](./SLICE_CALCULATOR_SOURCE_PACK_READINESS_TRIAGE_PLAN.md).
+
+Just closed context:
+`internal_use_operating_envelope_v1` was selected by
 `packages/engine/src/calculator-source-gap-revalidation-v3-gate-a-contract.test.ts`
 after the source/readiness rerank found no runtime drift, card
-dishonesty, or source-backed import candidate that outranks making the
+dishonesty, or source-backed import candidate that outranked making the
 current safe/caveated calculator envelope explicit. Gate A landed
 no-runtime in
 `packages/engine/src/internal-use-operating-envelope-v1-gate-a-contract.test.ts`
@@ -319,11 +335,8 @@ Gate B landed in
 with no runtime/support/confidence/evidence/API/route-card value
 movement. It added explicit source-gated scoped-estimate wording for
 dynamic wall formula routes in validation, evidence, and
-proposal/report surfaces.
-The next implementation file is
-`packages/engine/src/post-internal-use-operating-envelope-v1-next-slice-selection-contract.test.ts`.
-Planning surface:
-[SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md](./SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md).
+proposal/report surfaces. Gate C closed no-runtime and selected the
+current source-pack readiness triage slice.
 
 Closed context:
 `floor_layer_order_invariance_expansion_v1` was selected by
@@ -1067,12 +1080,15 @@ revalidation v3 Gate A landed no-runtime and selected
 `internal_use_operating_envelope_v1`. Internal-use operating envelope
 Gate A landed no-runtime and selected Gate B route-card/report/docs
 visibility audit. Gate B landed the visible-honesty copy fix and
-selected Gate C closeout / next-slice selection.
+selected Gate C closeout / next-slice selection. Gate C then closed
+no-runtime and selected `calculator_source_pack_readiness_triage_v1`
+because no source-ready accuracy import pack exists.
 
 ## Latest Closed Slices
 
 | Slice | Master-plan step | Closed | Post-contract |
 |---|---|---|---|
+| `internal_use_operating_envelope_v1` Gate C | company internal operating-envelope closeout | 2026-04-29 | `post-internal-use-operating-envelope-v1-next-slice-selection-contract.test.ts` |
 | `internal_use_operating_envelope_v1` clean stop | company internal Gate C readiness | 2026-04-28 | `CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_CLEAN_STOP_GATE_C_READY_HANDOFF.md` |
 | `internal_use_operating_envelope_v1` broad revalidation | company internal Gate C readiness | 2026-04-28 | `CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_BROAD_REVALIDATION_GATE_C_READY_HANDOFF.md` |
 | `internal_use_operating_envelope_v1` Gate B | company internal regular-use visibility | 2026-04-28 | `internal-use-operating-envelope-v1-gate-b-contract.test.ts` |
@@ -1304,15 +1320,16 @@ time without context loss:
 
 ## Resume Order For The Next Agent
 
-1. Read [CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_CLEAN_STOP_GATE_C_READY_HANDOFF.md](./CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_CLEAN_STOP_GATE_C_READY_HANDOFF.md)
+1. Read [CHECKPOINT_2026-04-29_INTERNAL_USE_OPERATING_ENVELOPE_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-29_INTERNAL_USE_OPERATING_ENVELOPE_GATE_C_CLOSEOUT_HANDOFF.md)
    for the latest active-slice handoff.
 2. Read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md),
+   [SLICE_CALCULATOR_SOURCE_PACK_READINESS_TRIAGE_PLAN.md](./SLICE_CALCULATOR_SOURCE_PACK_READINESS_TRIAGE_PLAN.md),
    [SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md](./SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md),
-   [SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V3_PLAN.md](./SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V3_PLAN.md),
    [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md), and
    [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md).
-   Continue `internal_use_operating_envelope_v1` at Gate C by adding
-   the closeout / next-slice selection contract.
+   Continue `calculator_source_pack_readiness_triage_v1` at Gate A by
+   adding
+   `packages/engine/src/calculator-source-pack-readiness-triage-gate-a-contract.test.ts`.
 3. Read [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
    for the now-closed calculator-priority chain and its evidence-tier
    caveats.
@@ -1326,12 +1343,12 @@ time without context loss:
    If it does not, fix the drift before starting work.
 6. Run `pnpm calculator:gate:current` as the focused baseline.
 7. Do not change source posture, output support, evidence tiers,
-   confidence scores, or route-card values during internal-use Gate C.
-   A source-ready accuracy slice may be selected only if the Gate C
-   contract names a bounded source pack.
+   confidence scores, API shape, route-card values, or output-card
+   statuses during source-pack readiness triage. A source-ready accuracy
+   slice may be selected only if Gate A names a bounded source pack.
    Any future import must name the exact source row, metric owner,
    tolerance, protected-boundary exclusions, and paired web route-card
-   tests.
+   or report tests.
 8. Treat [CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_ELEVENTH_CARVE_HANDOFF.md](./CHECKPOINT_2026-04-26_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_B_ELEVENTH_CARVE_HANDOFF.md),
    [CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-24_DYNAMIC_AIRBORNE_SPLIT_V2_GATE_A_HANDOFF.md),
    [CHECKPOINT_2026-04-24_INVALID_THICKNESS_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-24_INVALID_THICKNESS_CLOSEOUT_HANDOFF.md),

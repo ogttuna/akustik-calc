@@ -11,7 +11,7 @@ For the prepared company-internal operating-envelope slice read
 For the long source-gated accuracy program read
 [CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md](./CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md).
 
-Last reviewed: 2026-04-28
+Last reviewed: 2026-04-29
 (`wall_no_stud_double_leaf_source_research_v1` Gate C closed
 no-runtime; `wall_timber_double_board_source_research_v1` Gate C closed
 no-runtime; `wall_clt_wall_source_research_v1` Gate C closed
@@ -38,10 +38,11 @@ short company pilot usage note and scenario summary;
 internal-use visibility audit and selected Gate C closeout /
 next-slice selection;
 the broad revalidation after Gate B is green;
-the clean-stop checkpoint confirms docs and implementation still align
-and leaves Gate C as the first next action;
+`internal_use_operating_envelope_v1` Gate C closed no-runtime and
+selected `calculator_source_pack_readiness_triage_v1` because no
+source-ready accuracy import pack exists;
 see
-`SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md`).
+`SLICE_CALCULATOR_SOURCE_PACK_READINESS_TRIAGE_PLAN.md`).
 
 ---
 
@@ -71,33 +72,30 @@ For every next slice decision:
 ## Now
 
 - **Active slice**:
-  `internal_use_operating_envelope_v1`.
+  `calculator_source_pack_readiness_triage_v1`.
 - **Latest checkpoint**:
-  [CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_CLEAN_STOP_GATE_C_READY_HANDOFF.md](./CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_CLEAN_STOP_GATE_C_READY_HANDOFF.md).
+  [CHECKPOINT_2026-04-29_INTERNAL_USE_OPERATING_ENVELOPE_GATE_C_CLOSEOUT_HANDOFF.md](./CHECKPOINT_2026-04-29_INTERNAL_USE_OPERATING_ENVELOPE_GATE_C_CLOSEOUT_HANDOFF.md).
 - **Planning surface**:
-  [SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md](./SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md).
+  [SLICE_CALCULATOR_SOURCE_PACK_READINESS_TRIAGE_PLAN.md](./SLICE_CALCULATOR_SOURCE_PACK_READINESS_TRIAGE_PLAN.md).
 - **Pilot usage note**:
   [INTERNAL_USE_PILOT_USAGE_NOTE.md](./INTERNAL_USE_PILOT_USAGE_NOTE.md)
-  defines the current company-pilot operating envelope and scenario
+  defines the closed company-pilot operating envelope and scenario
   summary.
 - **Just closed planning surface**:
-  [SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V3_PLAN.md](./SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V3_PLAN.md)
-  closed no-runtime at Gate A and selected the internal-use operating
-  envelope slice.
-- **Selected internal-use plan**:
   [SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md](./SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md)
-  has Gate B landed. The next bounded action is Gate C closeout /
-  next-slice selection.
+  closed no-runtime at Gate C and selected the source-pack readiness
+  triage slice.
 - **Latest broad validation**:
-  `pnpm check` is green after the clean-stop checkpoint: engine 264
-  files / 1438 tests, web 157 files / 890 passed + 18 skipped, build
-  5/5 with the known non-fatal `sharp/@img` warnings. The focused
-  current gate is also green: engine 131 files / 618 tests, web
-  45 files / 216 passed + 18 skipped, build 5/5, whitespace guard clean.
+  `pnpm check` is green after the internal-use Gate C closeout: engine
+  265 files / 1444 tests, web 157 files / 890 passed + 18 skipped,
+  build 5/5 with the known non-fatal `sharp/@img` warnings. The focused
+  current gate is also green after Gate C: engine 132 files / 624 tests,
+  web 45 files / 216 passed + 18 skipped, build 5/5, whitespace guard
+  clean.
 - **Prepared comprehensive-accuracy roadmap**:
   [CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md](./CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md)
-  records the longer source-gated program. It is not an active runtime
-  slice.
+  records the longer source-gated program. It is roadmap context for the
+  selected triage slice, not an active runtime import.
 - **Personal-use readiness roadmap**:
   [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
   is closed for the current private/internal-use bar. Heavy-core/concrete
@@ -109,31 +107,40 @@ For every next slice decision:
 ## Next Three Steps
 
 1. Implement
-   `packages/engine/src/post-internal-use-operating-envelope-v1-next-slice-selection-contract.test.ts`.
-2. Close `internal_use_operating_envelope_v1` only if Gate C confirms
-   the pilot note, Gate B visibility proof, and focused current-gate
-   runner all agree.
-3. Select a source-ready accuracy slice only if a bounded source pack is
-   actually ready; otherwise leave the long source-gated work in
-   `CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md` as roadmap context.
+   `packages/engine/src/calculator-source-pack-readiness-triage-gate-a-contract.test.ts`.
+2. Rank timber double-board, CLT/mass-timber, lined/heavy-core,
+   no-stud double-leaf, generated floor fallback, and historical
+   blocked families by source-pack readiness without runtime, support,
+   confidence, evidence-tier, API, route-card, or output-card movement.
+3. Select a narrow source-research slice only if Gate A can name exact
+   topology, metric owner, tolerance owner, protected negative
+   boundaries, and paired engine/web tests. Otherwise keep
+   [CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md](./CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md)
+   as roadmap context.
 
-- **Just revalidated**: `internal_use_operating_envelope_v1` broad
-  clean stop / Gate C readiness.
+- **Just closed**: `internal_use_operating_envelope_v1` Gate C.
+  `packages/engine/src/post-internal-use-operating-envelope-v1-next-slice-selection-contract.test.ts`
+  closes the operating-envelope slice no-runtime, preserves Gate B
+  visible-honesty wording as the only behavior movement, keeps dynamic
+  wall formula routes source-gated scoped estimates, keeps generated
+  steel floor fallback low-confidence/screening with `L'nT,50`
+  unsupported, and selects `calculator_source_pack_readiness_triage_v1`
+  because no source-ready accuracy import pack exists.
+
+- **Prior readiness checkpoint**: `internal_use_operating_envelope_v1`
+  broad clean stop / Gate C readiness.
   [CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_CLEAN_STOP_GATE_C_READY_HANDOFF.md](./CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_CLEAN_STOP_GATE_C_READY_HANDOFF.md)
-  records the latest docs/implementation comparison. Gate B remains
-  landed, the Gate C contract file is still absent as expected, focused
-  and broad validation are green, and no source-ready accuracy pack was
-  identified. The next first file remains
-  `packages/engine/src/post-internal-use-operating-envelope-v1-next-slice-selection-contract.test.ts`.
+  recorded the docs/implementation comparison before Gate C. Gate B was
+  landed, focused and broad validation were green, and no source-ready
+  accuracy pack was identified.
 
-- **Just revalidated**: `internal_use_operating_envelope_v1` broad
+- **Prior readiness checkpoint**: `internal_use_operating_envelope_v1`
+  broad
   Gate C readiness.
   [CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_BROAD_REVALIDATION_GATE_C_READY_HANDOFF.md](./CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_BROAD_REVALIDATION_GATE_C_READY_HANDOFF.md)
   records the full repo result. `pnpm check` is green after a
   type-only cleanup in the framed split Gate A/B tests. The broad green
-  result does not reopen any source-gated runtime family. The next
-  first file remains
-  `packages/engine/src/post-internal-use-operating-envelope-v1-next-slice-selection-contract.test.ts`.
+  result did not reopen any source-gated runtime family.
 
 - **Just landed**: `internal_use_operating_envelope_v1` Gate B.
   `packages/engine/src/internal-use-operating-envelope-v1-gate-b-contract.test.ts`
@@ -333,9 +340,9 @@ For every next slice decision:
   generated proposal documents preserve real floor/wall workbench
   caveats, and many-layer / long-label report rendering is pinned.
   This did not change calculator runtime/source/confidence posture.
-- **Latest broad validation**: 2026-04-28 `pnpm check` is green after
-  the internal-use Gate B broad revalidation: engine 264 files / 1438
-  tests, web 157 files / 890 passed + 18 skipped through
+- **Latest broad validation**: 2026-04-29 `pnpm check` is green after
+  the internal-use Gate C closeout: engine 265 files / 1444 tests, web
+  157 files / 890 passed + 18 skipped through
   `tools/dev/run-web-vitest.ts`, build 5/5, with only the known
   non-fatal `sharp/@img` optional-package warnings.
 - **Cartography Gate A result**:

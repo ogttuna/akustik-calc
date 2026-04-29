@@ -1,7 +1,7 @@
 # Internal Use Pilot Usage Note
 
-Status: Gate A pilot note with Gate B visibility addendum for
-`internal_use_operating_envelope_v1` on 2026-04-28.
+Status: Gate C closed note for `internal_use_operating_envelope_v1`
+after the Gate A pilot pack and Gate B visibility addendum.
 
 Use this note when running short company-internal calculator pilots. It
 does not certify a design and it does not promote any low-confidence,
@@ -93,8 +93,9 @@ validation, evidence, and proposal/report surfaces now say explicitly
 when no exact wall source row is active and keep
 formula-owned/source-gated scoped-estimate language visible.
 
-Gate C is next. It should close the operating-envelope slice if this
-pilot note, the Gate B visibility proof, and the current focused gate
-agree. Runtime values, support classes, confidence classes, source
-evidence tiers, API shape, route-card values, and output-card statuses
-remain frozen.
+Gate C has now closed the operating-envelope slice no-runtime and
+selected `calculator_source_pack_readiness_triage_v1`. Runtime values,
+support classes, confidence classes, source evidence tiers, API shape,
+route-card values, and output-card statuses remain frozen. The next
+bounded action is source-pack readiness ranking before any source import
+or confidence promotion.
