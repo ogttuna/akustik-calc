@@ -8,8 +8,107 @@ If you need the tactical detail on the active slice read
 [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md). If you
 need the private-use readiness chain read
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
+If you need the immediate user-reported triple-leaf / rockwool reorder
+defect handoff read
+[TRIPLE_LEAF_ROCKWOOL_REORDER_DEFECT_HANDOFF.md](./TRIPLE_LEAF_ROCKWOOL_REORDER_DEFECT_HANDOFF.md).
 
 ---
+
+## Urgent Current Slice
+
+Current selected slice:
+
+`wall_triple_leaf_accuracy_recovery_v1`
+
+Latest urgent checkpoint:
+
+[CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_G3_HANDOFF.md](./CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_G3_HANDOFF.md)
+
+Gate G3 status:
+
+`gate_g3_passed_nrc_2024_source_family_calibration_holdout_and_negative_boundaries_no_runtime_selected_local_mapping_gate_g4`
+
+Next implementation file:
+
+`packages/engine/src/wall-triple-leaf-local-material-mapping-gate-g4.test.ts`
+
+Runtime posture: the user split-rockwool triple-leaf repro still stays
+on low-confidence `multileaf_screening_blend`; Gate G3 does not promote
+or retune the `Rw 41` result. Gate F adds
+`packages/engine/src/wall-triple-leaf-frequency-solver.ts` as a
+research-only three-leaf/two-cavity curve builder. It derives grouped
+leaf masses, computes two cavity spring resonance bands plus an
+interacting resonance pair, applies fill damping and coupling/support
+parameters, returns one-third-octave TL curves, and computes ISO 717
+ratings through existing curve helpers. Gate G adds
+`packages/engine/src/wall-triple-leaf-calibration-regime.ts` as the
+source-owned calibration / holdout tolerance owner: at least two
+source-owned calibration rows, at least one source-owned holdout row,
+MAE <= 2 dB, max error <= 4 dB, and dip-band placement within one
+neighboring one-third-octave band. Gate G2 adds
+`packages/engine/src/wall-triple-leaf-source-curve-digitization-intake.ts`
+as the typed NRC 2024 graph-row intake: Type C base wall plus
+assemblies A-D, reported STC values, Figure 4 / Figure 5 ownership,
+source topology, and blocked material mapping. Gate G2B adds
+`packages/engine/src/wall-triple-leaf-source-curve-digitization-qc.ts`
+as reproducible curve digitization QC: fixed render provenance, locked
+Figure 4 / Figure 5 axes, Type C plus assemblies A-D TL vectors,
+derived STC/Rw values, Figure 5 delta checks, and calibration/holdout
+role assignment. Gate G3 adds
+`packages/engine/src/wall-triple-leaf-calibration-fit.ts` as the
+NRC-like source-family calibration fit and negative-boundary proof:
+calibration rows A/B and holdout row D pass Gate G tolerance, ordinary
+double-leaf / simple-stud / lined-masonry / missing-curve /
+floor-impact / field-only negatives stay protected, and runtime remains
+blocked because local material mapping and paired visible runtime tests
+are not owned yet.
+
+What is still needed for this family:
+
+- decide whether local `rockwool`, `mlv`, `gypsum_plaster`, local
+  gypsum board, and grouped topology can map into the NRC-like source
+  family without overstating accuracy;
+- keep the source-family pass separate from local runtime eligibility;
+- use NRC 1998 only as parser-ready baseline / negative-boundary data
+  unless a true internal-leaf/two-cavity row is identified;
+- keep field `R'w` / `DnT,w` behind a later ISO 12354-style overlay
+  after lab element curves and flanking assumptions are owned.
+
+Prior Gate G2 selected
+`packages/engine/src/wall-triple-leaf-source-curve-digitization-qc.test.ts`
+with
+`gate_g2_landed_source_curve_digitization_intake_no_runtime_and_selected_reproducible_digitization_qc`.
+
+Prior Gate G selected
+`packages/engine/src/wall-triple-leaf-source-curve-digitization-intake.test.ts`
+with
+`gate_g_defined_calibration_holdout_regime_no_runtime_and_selected_source_curve_digitization_intake`.
+
+Prior Gate F selected
+`packages/engine/src/wall-triple-leaf-calibration-regime.test.ts` with
+`gate_f_landed_frequency_band_solver_skeleton_no_runtime_and_selected_calibration_holdout_gate_g`.
+
+Prior Gate E selected
+`packages/engine/src/wall-triple-leaf-frequency-solver.test.ts` with
+`gate_e_classified_triple_leaf_source_corpus_no_runtime_and_selected_frequency_band_solver_gate_f`.
+
+Prior Gate D selected
+`packages/engine/src/wall-triple-leaf-source-corpus-contract.test.ts`
+with
+`gate_d_extracted_triple_leaf_source_pack_no_runtime_and_selected_source_corpus_classifier_gate_e`.
+
+Prior Gate C selected
+`packages/engine/src/wall-triple-leaf-source-pack-extraction-gate-d-contract.test.ts`
+with
+`gate_c_researched_triple_leaf_physics_and_selected_source_pack_extraction_before_any_numeric_promotion`.
+
+Latest focused validation: Gate G3 validation is green on 2026-05-01.
+Focused Gate G3 is green: 1 file / 8 tests. Gate C + Gate D + Gate E +
+Gate F + Gate G + Gate G2 + Gate G2B + Gate G3 continuity is green: 8
+files / 54 tests. Engine lint is green. `pnpm calculator:gate:current`
+is green after Gate G3 landed in the current runner: engine 171 files /
+879 tests, web 45 files / 216 passed + 18 skipped, build 5/5 with the
+known non-fatal `sharp/@img` warnings, whitespace guard clean.
 
 ## Revalidated Snapshot
 
@@ -98,13 +197,65 @@ no-runtime and selected Gate B mapping/tolerance decision;
 no-runtime and selected Gate C closeout / next-slice selection;
 `knauf_wall_systems_source_pack_extraction_v1` Gate C closed
 no-runtime and selected `calculator_source_gap_revalidation_v5`;
+`calculator_source_gap_revalidation_v5` Gate A landed no-runtime and
+selected `timber_double_board_knauf_tb5a_mapping_tolerance_v1`;
+`timber_double_board_knauf_tb5a_mapping_tolerance_v1` Gate A landed
+no-runtime and selected Gate C closeout / next-slice selection;
+`timber_double_board_knauf_tb5a_mapping_tolerance_v1` Gate C closed
+no-runtime and selected `lined_masonry_knauf_mwi2a_mapping_tolerance_v1`;
+`lined_masonry_knauf_mwi2a_mapping_tolerance_v1` Gate A landed
+no-runtime and selected Gate C closeout / next-slice selection;
+`lined_masonry_knauf_mwi2a_mapping_tolerance_v1` Gate C closed
+no-runtime and selected `twin_timber_knauf_ttf302a_mapping_tolerance_v1`;
+`twin_timber_knauf_ttf302a_mapping_tolerance_v1` Gate A landed
+no-runtime and selected Gate C closeout / next-slice selection;
+`twin_timber_knauf_ttf302a_mapping_tolerance_v1` Gate C closed
+no-runtime and selected `calculator_source_gap_revalidation_v6`;
+`calculator_source_gap_revalidation_v6` Gate A landed no-runtime and
+selected `steel_stud_knauf_enpc_mapping_tolerance_v1`;
+`steel_stud_knauf_enpc_mapping_tolerance_v1` Gate A landed no-runtime
+and selected Gate C closeout / next-slice selection;
+`steel_stud_knauf_enpc_mapping_tolerance_v1` Gate C closed no-runtime
+and selected `calculator_source_gap_revalidation_v7`;
+`calculator_source_gap_revalidation_v7` Gate A landed no-runtime and
+selected `calculator_post_knauf_source_acquisition_v1`;
+`calculator_post_knauf_source_acquisition_v1` Gate A landed
+no-runtime and selected
+`british_gypsum_white_book_source_pack_extraction_v1`;
+`british_gypsum_white_book_source_pack_extraction_v1` Gate A landed
+no-runtime and selected Gate B mapping/tolerance decision;
 latest checkpoint:
-[CHECKPOINT_2026-04-29_POST_KNAUF_V5_READY_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-04-29_POST_KNAUF_V5_READY_REVALIDATION_HANDOFF.md)).
-The post-Knauf v5-ready checkpoint confirms docs and implementation
-align at a clean stop: v5 is selected, the v5 Gate A contract is
-intentionally absent and next, the current-gate runner includes Knauf
-Gate C but not v5 yet, and no source-ready runtime candidate is
-selected.
+[CHECKPOINT_2026-04-30_BRITISH_GYPSUM_WHITE_BOOK_SOURCE_PACK_EXTRACTION_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-30_BRITISH_GYPSUM_WHITE_BOOK_SOURCE_PACK_EXTRACTION_GATE_A_HANDOFF.md).
+The latest checkpoint extracts British Gypsum White Book rows
+no-runtime, confirms `A046006` is already represented by
+`british_gypsum_a046006_timber_rb2_2x12p5_soundbloc_50apr_lab_2026`,
+and selects Gate B mapping/tolerance decision with
+`packages/engine/src/british-gypsum-white-book-source-pack-extraction-gate-b-contract.test.ts`.
+Gate A status:
+`british_gypsum_rows_extracted_no_new_runtime_import_a046006_already_landed_others_need_mapping_tolerance_visible_tests`.
+The prior post-Knauf source acquisition decision remains active
+context: British Gypsum White Book row locators cover GypFloor Silent
+`C204006` / `C204003`, GypWall Single Frame `A206A290`, timber stud
+`A046006`, GypWall Twin Frame Audio `A326017B`, and GypLyner Single
+`B226010`, but runtime remains blocked until exact live topology,
+local material mapping, metric policy, tolerance owner, protected
+negative boundaries, and paired visible tests are extracted.
+That prior decision selected
+`packages/engine/src/british-gypsum-white-book-source-pack-extraction-gate-a-contract.test.ts`
+as the first-gate file before Gate A landed and handed off to Gate B.
+Prior post-Knauf selection status:
+`selected_british_gypsum_white_book_source_pack_extraction_after_post_knauf_acquisition_found_official_wall_floor_rows_but_no_runtime_ready_import`.
+The prior EN-PC closeout remains active context: `EN-PC-50-055-6-2-12.5-WB-25`
+is not runtime-ready because Wallboard, 25 mm Acoustic Roll, 50 mm /
+0.55 gauge stud details, field-output policy, spectrum-term policy,
+tolerance ownership, and paired visible tests remain incomplete.
+Its Gate A selected
+`packages/engine/src/post-steel-stud-knauf-enpc-mapping-tolerance-v1-next-slice-selection-contract.test.ts`
+with `gate_c_no_runtime_closeout_and_next_slice_selection`; its Gate C
+then selected `calculator_source_gap_revalidation_v7` with
+`packages/engine/src/calculator-source-gap-revalidation-v7-gate-a-contract.test.ts`
+and
+`closed_enpc_mapping_tolerance_no_runtime_and_selected_source_gap_revalidation_v7_because_all_concrete_knauf_mapping_rows_lack_exact_material_metric_tolerance_ownership`.
 The extra 2026-04-28 planning pass made the readiness ladder explicit
 and the source-gap Gate A selected the short internal pilot
 operating-envelope slice. Internal-use Gate A then produced
@@ -474,33 +625,239 @@ hardening, and the pure team-access policy model.
   plus `knauf-wall-systems-source-pack-extraction-gate-b-contract.test.ts`
   for no-runtime Knauf mapping/tolerance decision and Gate C selection,
   plus `post-knauf-wall-systems-source-pack-extraction-v1-next-slice-selection-contract.test.ts`
-  for no-runtime Knauf Gate C closeout and v5 selection.
-  Focused gate during the post-Knauf v5-ready revalidation checkpoint:
-  148 engine files / 723 tests,
-  45 web files / 216 passed + 18 skipped,
-  build 5/5 tasks with known non-fatal `sharp/@img` warnings,
-  whitespace guard clean. Broad `pnpm check` is green in the same
-  checkpoint: lint/typecheck/test/build chain passed, with unchanged
-  turbo cache replay for engine 281 files / 1543 tests and web 157
-  files / 890 passed + 18 skipped, build 5/5.
+  for no-runtime Knauf Gate C closeout and v5 selection, plus
+  `calculator-source-gap-revalidation-v5-gate-a-contract.test.ts`
+  for no-runtime v5 rerank and `TB.5A` selection, plus
+  `timber-double-board-knauf-tb5a-mapping-tolerance-gate-a-contract.test.ts`
+  for no-runtime `TB.5A` mapping/tolerance Gate A, plus
+  `post-timber-double-board-knauf-tb5a-mapping-tolerance-v1-next-slice-selection-contract.test.ts`
+  for no-runtime `TB.5A` closeout and `MWI.2A` selection, plus
+  `lined-masonry-knauf-mwi2a-mapping-tolerance-gate-a-contract.test.ts`
+  for no-runtime `MWI.2A` mapping/tolerance Gate A, plus
+  `post-lined-masonry-knauf-mwi2a-mapping-tolerance-v1-next-slice-selection-contract.test.ts`
+  for no-runtime `MWI.2A` closeout and `TTF30.2A` selection, plus
+  `twin-timber-knauf-ttf302a-mapping-tolerance-gate-a-contract.test.ts`
+  for no-runtime `TTF30.2A` mapping/tolerance Gate A, plus
+  `post-twin-timber-knauf-ttf302a-mapping-tolerance-v1-next-slice-selection-contract.test.ts`
+  for no-runtime `TTF30.2A` closeout and v6 selection, plus
+  `calculator-source-gap-revalidation-v6-gate-a-contract.test.ts` for
+  no-runtime v6 rerank and EN-PC selection, plus
+  `steel-stud-knauf-enpc-mapping-tolerance-gate-a-contract.test.ts`
+  for no-runtime `EN-PC-50-055-6-2-12.5-WB-25` mapping/tolerance Gate
+  A, plus
+  `post-steel-stud-knauf-enpc-mapping-tolerance-v1-next-slice-selection-contract.test.ts`
+  for no-runtime EN-PC Gate C closeout and v7 selection, plus
+  `calculator-source-gap-revalidation-v7-gate-a-contract.test.ts` for
+  no-runtime v7 rerank and post-Knauf source acquisition selection,
+  plus `calculator-post-knauf-source-acquisition-gate-a-contract.test.ts`
+  for no-runtime British Gypsum White Book source-pack selection, plus
+  `british-gypsum-white-book-source-pack-extraction-gate-a-contract.test.ts`
+  for no-runtime British Gypsum row extraction and Gate B selection,
+  plus `wall-triple-leaf-accuracy-recovery-gate-a-contract.test.ts`,
+  `wall-triple-leaf-accuracy-recovery-gate-b-contract.test.ts`,
+  `wall-triple-leaf-accuracy-recovery-gate-c-contract.test.ts`,
+  `wall-triple-leaf-source-pack-extraction-gate-d-contract.test.ts`,
+  `wall-triple-leaf-source-corpus-contract.test.ts`,
+  `wall-triple-leaf-frequency-solver.test.ts`,
+  `wall-triple-leaf-calibration-regime.test.ts`, and
+  `wall-triple-leaf-source-curve-digitization-intake.test.ts`,
+  `wall-triple-leaf-source-curve-digitization-qc.test.ts`, and
+  `wall-triple-leaf-calibration-fit-gate-g3.test.ts` for the active
+  triple-leaf recovery chain through Gate G3. Focused gate after
+  `wall_triple_leaf_accuracy_recovery_v1` Gate G3: 171 engine files /
+  879 tests, 45 web files / 216 passed + 18 skipped, build 5/5 tasks
+  with known non-fatal `sharp/@img` warnings, whitespace guard clean.
+  Latest broad `pnpm check` remains green from
+  the post-Knauf v5-ready revalidation checkpoint: lint/typecheck/test/
+  build chain passed, with unchanged turbo cache replay for engine 281
+  files / 1543 tests and web 157 files / 890 passed + 18 skipped,
+  build 5/5.
 
 ## Active Slice
 
-`calculator_source_gap_revalidation_v5` (no-runtime source/accuracy
-rerank after Knauf closeout). It was selected by
-`packages/engine/src/post-knauf-wall-systems-source-pack-extraction-v1-next-slice-selection-contract.test.ts`
-after Knauf Gate C closed no-runtime and found no import-ready row.
+`wall_triple_leaf_accuracy_recovery_v1` (Gate G3 source-family
+calibration fit and negative-boundary proof landed; Gate G4 local
+material mapping and runtime eligibility is next). It was selected after a user PDF repro showed that the current
+split-rockwool triple-leaf answer lands on `multileaf_screening_blend`
+and is not a validated calculation for the company-internal accuracy
+checkpoint.
 
 The next implementation file is
-`packages/engine/src/calculator-source-gap-revalidation-v5-gate-a-contract.test.ts`.
+`packages/engine/src/wall-triple-leaf-local-material-mapping-gate-g4.test.ts`.
 Planning surface:
-[SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V5_PLAN.md](./SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V5_PLAN.md)
+[SLICE_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_PLAN.md](./SLICE_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_PLAN.md),
+[TRIPLE_LEAF_ROCKWOOL_REORDER_DEFECT_HANDOFF.md](./TRIPLE_LEAF_ROCKWOOL_REORDER_DEFECT_HANDOFF.md),
+[CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_G3_HANDOFF.md](./CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_G3_HANDOFF.md),
+[CHECKPOINT_2026-04-30_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_G2B_HANDOFF.md](./CHECKPOINT_2026-04-30_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_G2B_HANDOFF.md),
+[CHECKPOINT_2026-04-30_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_G2_HANDOFF.md](./CHECKPOINT_2026-04-30_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_G2_HANDOFF.md),
+[CHECKPOINT_2026-04-30_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_G_HANDOFF.md](./CHECKPOINT_2026-04-30_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_G_HANDOFF.md),
+[CHECKPOINT_2026-04-30_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_F_HANDOFF.md](./CHECKPOINT_2026-04-30_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_F_HANDOFF.md),
+[CHECKPOINT_2026-04-30_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_E_HANDOFF.md](./CHECKPOINT_2026-04-30_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_E_HANDOFF.md),
+[CHECKPOINT_2026-04-30_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_D_HANDOFF.md](./CHECKPOINT_2026-04-30_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_D_HANDOFF.md),
+[CHECKPOINT_2026-04-30_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_C_HANDOFF.md](./CHECKPOINT_2026-04-30_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_C_HANDOFF.md),
+[CHECKPOINT_2026-04-30_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-30_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_B_HANDOFF.md),
+[CHECKPOINT_2026-04-30_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-30_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_A_HANDOFF.md),
+[SLICE_BRITISH_GYPSUM_WHITE_BOOK_SOURCE_PACK_EXTRACTION_PLAN.md](./SLICE_BRITISH_GYPSUM_WHITE_BOOK_SOURCE_PACK_EXTRACTION_PLAN.md),
+[SLICE_CALCULATOR_POST_KNAUF_SOURCE_ACQUISITION_V1_PLAN.md](./SLICE_CALCULATOR_POST_KNAUF_SOURCE_ACQUISITION_V1_PLAN.md),
+[SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V7_PLAN.md](./SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V7_PLAN.md),
+[SLICE_STEEL_STUD_KNAUF_ENPC_MAPPING_TOLERANCE_PLAN.md](./SLICE_STEEL_STUD_KNAUF_ENPC_MAPPING_TOLERANCE_PLAN.md),
+[SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V6_PLAN.md](./SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V6_PLAN.md),
+[SLICE_TWIN_TIMBER_KNAUF_TTF302A_MAPPING_TOLERANCE_PLAN.md](./SLICE_TWIN_TIMBER_KNAUF_TTF302A_MAPPING_TOLERANCE_PLAN.md),
+[SLICE_LINED_MASONRY_KNAUF_MWI2A_MAPPING_TOLERANCE_PLAN.md](./SLICE_LINED_MASONRY_KNAUF_MWI2A_MAPPING_TOLERANCE_PLAN.md),
+[SLICE_TIMBER_DOUBLE_BOARD_KNAUF_TB5A_MAPPING_TOLERANCE_PLAN.md](./SLICE_TIMBER_DOUBLE_BOARD_KNAUF_TB5A_MAPPING_TOLERANCE_PLAN.md),
+[SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V5_PLAN.md](./SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V5_PLAN.md),
 and [SOURCE_READY_INTAKE_BACKLOG.md](./SOURCE_READY_INTAKE_BACKLOG.md).
 
 Latest checkpoint:
-[CHECKPOINT_2026-04-29_POST_KNAUF_V5_READY_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-04-29_POST_KNAUF_V5_READY_REVALIDATION_HANDOFF.md).
-It did not move runtime or visible behavior; it only confirms the
-implementation and docs are aligned before v5 Gate A.
+[CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_G3_HANDOFF.md](./CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_G3_HANDOFF.md).
+It adds the NRC 2024 source-family calibration fit and
+negative-boundary proof, predicts calibration rows A/B and holdout row
+D within Gate G tolerance, keeps Assembly C as separate fill-regime
+context, protects ordinary double-leaf / simple stud / lined masonry /
+missing curve / floor-impact / field-only negatives, keeps
+numeric/runtime behavior frozen, and selects
+`packages/engine/src/wall-triple-leaf-local-material-mapping-gate-g4.test.ts`
+with
+`gate_g3_passed_nrc_2024_source_family_calibration_holdout_and_negative_boundaries_no_runtime_selected_local_mapping_gate_g4`.
+
+Prior urgent checkpoint:
+[CHECKPOINT_2026-04-30_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_G2B_HANDOFF.md](./CHECKPOINT_2026-04-30_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_G2B_HANDOFF.md).
+It adds reproducible NRC 2024 Figure 4 / Figure 5 digitization QC,
+records Type C and assemblies A-D TL vectors, derives STC/Rw as 64/63,
+64/58, 60/49, 57/51, and 65/55, keeps numeric/runtime behavior frozen,
+and selects
+`packages/engine/src/wall-triple-leaf-calibration-fit-gate-g3.test.ts`
+with
+`gate_g2b_landed_reproducible_curve_digitization_qc_no_runtime_and_selected_calibration_fit_gate_g3`.
+
+Prior urgent checkpoint:
+[CHECKPOINT_2026-04-30_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_G2_HANDOFF.md](./CHECKPOINT_2026-04-30_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_G2_HANDOFF.md).
+It adds the typed NRC 2024 source-curve intake rows, records Type C and
+assemblies A-D reported STC values 64 / 64 / 60 / 57 / 65, keeps graph
+TL vectors and derived `Rw` null until reproducible digitization exists,
+keeps numeric/runtime behavior frozen, and selects digitization QC.
+
+Prior urgent checkpoint:
+[CHECKPOINT_2026-04-30_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_G_HANDOFF.md](./CHECKPOINT_2026-04-30_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_G_HANDOFF.md).
+It defines the calibration / holdout acceptance regime and keeps runtime
+frozen while selecting source-curve digitization intake.
+
+Earlier urgent checkpoint:
+[CHECKPOINT_2026-04-30_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-30_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_A_HANDOFF.md).
+It keeps runtime and visible behavior frozen, records the adjacent
+rockwool stack as `Rw 51` medium-confidence double leaf, records the
+split rockwool stack as `Rw 41` low-confidence multi-leaf blend, and
+selects topology-input recovery with
+`selected_wall_triple_leaf_accuracy_recovery_v1_after_user_pdf_repro_showed_current_multileaf_blend_is_not_a_validated_calculation`.
+
+Paused source checkpoint:
+[CHECKPOINT_2026-04-30_BRITISH_GYPSUM_WHITE_BOOK_SOURCE_PACK_EXTRACTION_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-30_BRITISH_GYPSUM_WHITE_BOOK_SOURCE_PACK_EXTRACTION_GATE_A_HANDOFF.md).
+It did not move runtime or visible behavior; it extracts British Gypsum
+White Book rows, keeps `A046006` as an already-landed exact anchor, and
+selects
+`packages/engine/src/british-gypsum-white-book-source-pack-extraction-gate-b-contract.test.ts`
+with `gate_b_mapping_tolerance_decision_no_runtime` and
+`british_gypsum_rows_extracted_no_new_runtime_import_a046006_already_landed_others_need_mapping_tolerance_visible_tests`.
+
+Prior v7 checkpoint:
+[CHECKPOINT_2026-04-30_CALCULATOR_SOURCE_GAP_REVALIDATION_V7_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-30_CALCULATOR_SOURCE_GAP_REVALIDATION_V7_GATE_A_HANDOFF.md).
+It kept every post-Knauf candidate out of runtime and selected
+`packages/engine/src/calculator-post-knauf-source-acquisition-gate-a-contract.test.ts`
+with
+`selected_post_knauf_source_acquisition_v1_after_v7_rerank_found_no_runtime_ready_candidate_and_current_sources_exhausted`.
+
+Prior v6 checkpoint:
+[CHECKPOINT_2026-04-30_CALCULATOR_SOURCE_GAP_REVALIDATION_V6_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-30_CALCULATOR_SOURCE_GAP_REVALIDATION_V6_GATE_A_HANDOFF.md).
+It kept every post-Knauf candidate out of runtime and selected
+`packages/engine/src/steel-stud-knauf-enpc-mapping-tolerance-gate-a-contract.test.ts`
+with
+`selected_no_runtime_knauf_enpc_steel_stud_mapping_tolerance_after_v6_rerank_found_no_runtime_ready_candidate`.
+
+Just closed context:
+Gate A landed `calculator_source_gap_revalidation_v6` no-runtime in
+`packages/engine/src/calculator-source-gap-revalidation-v6-gate-a-contract.test.ts`.
+It selects `steel_stud_knauf_enpc_mapping_tolerance_v1` because
+`EN-PC-50-055-6-2-12.5-WB-25` is the highest-value remaining concrete
+Knauf locator for a common steel-stud lane, but Wallboard / Acoustic
+Roll mapping, stud-gauge equivalence, lab/field policy, tolerance
+owner, existing steel-anchor precedence, and paired visible tests
+remain incomplete. Selection status:
+`selected_no_runtime_knauf_enpc_steel_stud_mapping_tolerance_after_v6_rerank_found_no_runtime_ready_candidate`.
+
+Prior closeout context:
+Gate C closed `twin_timber_knauf_ttf302a_mapping_tolerance_v1`
+no-runtime in
+`packages/engine/src/post-twin-timber-knauf-ttf302a-mapping-tolerance-v1-next-slice-selection-contract.test.ts`.
+It carries forward the official `TTF30.2A` context pinned by Gate A:
+asymmetric `1x13 mm` side 1 / `2x13 mm` side 2 `FIBEROCK
+AQUA-TOUGH`, twin timber studs separated by a 20 mm gap, 70 / 90 mm
+stud columns, 199 / 239 mm minimum wall widths, `Nil` / `KI 50G11` /
+`KI 75G11` / `KI 90G11` variants, and source ratings spanning `Rw
+49-64` / `Rw+Ctr 41-54`. Runtime remains blocked because live timber
+is a single-frame formula-owned generic gypsum / rockwool / air-gap
+route without twin-frame gap, side asymmetry, exact column,
+field-output policy, or tolerance owner.
+Prior Gate C selection status:
+`closed_ttf302a_mapping_tolerance_no_runtime_and_selected_source_gap_revalidation_v6_because_knauf_tb5a_mwi2a_ttf302a_all_lack_exact_material_metric_tolerance_ownership`.
+
+Prior just closed context:
+Gate C closed `lined_masonry_knauf_mwi2a_mapping_tolerance_v1`
+no-runtime in
+`packages/engine/src/post-lined-masonry-knauf-mwi2a-mapping-tolerance-v1-next-slice-selection-contract.test.ts`.
+It selects `twin_timber_knauf_ttf302a_mapping_tolerance_v1` because
+`TTF30.2A` is the remaining concrete Knauf double-leaf twin timber
+locator and can map the no-stud / raw open-box / simple timber
+negative boundaries. It selected
+`packages/engine/src/twin-timber-knauf-ttf302a-mapping-tolerance-gate-a-contract.test.ts`.
+Selection status:
+`closed_mwi2a_mapping_tolerance_no_runtime_and_selected_knauf_ttf302a_twin_timber_mapping_tolerance_because_mwi2a_lacks_exact_material_metric_tolerance_ownership`.
+
+Prior just landed context:
+Gate A landed `lined_masonry_knauf_mwi2a_mapping_tolerance_v1`
+no-runtime in
+`packages/engine/src/lined-masonry-knauf-mwi2a-mapping-tolerance-gate-a-contract.test.ts`.
+It records official `MWI.2A` context: `1x13 mm SHEETROCK ONE` each
+side, side 2 on 28 mm furring channels, 30 / 50 mm cavity variants,
+`Nil` / `KI 25G24` / `KI 50G11` insulation variants, concrete panel
+and core-filled block substrate variants, and source ratings spanning
+`Rw 52-61` / `Rw+Ctr 44-51`. Runtime remains blocked because the live
+route does not exact-match the board, substrate mass, furring/cavity
+coupling, insulation, field-output policy, or tolerance owner. It
+selected `gate_c_no_runtime_closeout_and_next_slice_selection`.
+
+Just closed context:
+Gate C closed `timber_double_board_knauf_tb5a_mapping_tolerance_v1`
+no-runtime in
+`packages/engine/src/post-timber-double-board-knauf-tb5a-mapping-tolerance-v1-next-slice-selection-contract.test.ts`.
+It selects `lined_masonry_knauf_mwi2a_mapping_tolerance_v1` because
+`MWI.2A` is the next ranked concrete Knauf locator and attacks the
+lined masonry / heavy-core screening gap. Selection status:
+`closed_tb5a_mapping_tolerance_no_runtime_and_selected_knauf_mwi2a_lined_masonry_mapping_tolerance_because_tb5a_lacks_exact_material_metric_tolerance_ownership`.
+
+Prior just landed context:
+Gate A landed `timber_double_board_knauf_tb5a_mapping_tolerance_v1`
+no-runtime in
+`packages/engine/src/timber-double-board-knauf-tb5a-mapping-tolerance-gate-a-contract.test.ts`.
+It records official `TB.5A` context: 70 mm / 122 mm column at
+`Rw 46 (Rw+Ctr 39)` for `KI 75G11`, and 90 mm / 142 mm column at
+`Rw 47 (Rw+Ctr 40)` for `KI 75G11`. Runtime remains blocked because
+the live route does not exact-match `2x13 mm SHEETROCK ONE`,
+`75 mm KI 75G11`, or a selected stud-depth column; field outputs,
+`STC`, `C`, `Ctr`, and tolerance ownership remain unresolved. Gate A
+selected `gate_c_no_runtime_closeout_and_next_slice_selection` with
+`packages/engine/src/post-timber-double-board-knauf-tb5a-mapping-tolerance-v1-next-slice-selection-contract.test.ts`.
+
+Prior just landed context:
+Gate A landed `calculator_source_gap_revalidation_v5` no-runtime in
+`packages/engine/src/calculator-source-gap-revalidation-v5-gate-a-contract.test.ts`.
+It re-ranked Knauf `TB.5A`, Knauf `MWI.2A`, CLT / mass timber,
+generated floor fallback, no-stud double-leaf, historical blocked
+families, internal-use promotion, and productization-only work. Every
+candidate remains `runtimeImportReadyNow: false`; `TB.5A` is selected
+only for no-runtime mapping / tolerance because exact column, local
+material mapping, lab / field output policy, tolerance ownership, and
+paired visible tests remain incomplete. Selection status:
+`selected_no_runtime_knauf_tb5a_timber_double_board_mapping_tolerance_after_v5_rerank_found_no_runtime_ready_candidate`.
 
 Just closed context:
 Gate C closed `knauf_wall_systems_source_pack_extraction_v1`
@@ -1674,7 +2031,8 @@ time without context loss:
 
 ## Resume Order For The Next Agent
 
-1. Read [CHECKPOINT_2026-04-29_POST_KNAUF_V5_READY_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-04-29_POST_KNAUF_V5_READY_REVALIDATION_HANDOFF.md)
+1. Read [CHECKPOINT_2026-04-30_BRITISH_GYPSUM_WHITE_BOOK_SOURCE_PACK_EXTRACTION_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-30_BRITISH_GYPSUM_WHITE_BOOK_SOURCE_PACK_EXTRACTION_GATE_A_HANDOFF.md)
+   and [SLICE_BRITISH_GYPSUM_WHITE_BOOK_SOURCE_PACK_EXTRACTION_PLAN.md](./SLICE_BRITISH_GYPSUM_WHITE_BOOK_SOURCE_PACK_EXTRACTION_PLAN.md)
    for the latest clean-stop checkpoint, validation, and selected next
    file.
 2. Read [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md),
@@ -1687,6 +2045,9 @@ time without context loss:
    [CHECKPOINT_2026-04-29_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-29_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_GATE_A_HANDOFF.md),
    [SLICE_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_V1_PLAN.md](./SLICE_GENERATED_FLOOR_FALLBACK_TOPOLOGY_DELTA_V1_PLAN.md),
    [SLICE_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_V1_PLAN.md](./SLICE_CALCULATOR_SOURCE_INTAKE_BACKLOG_CLEANUP_V1_PLAN.md),
+   [SLICE_TWIN_TIMBER_KNAUF_TTF302A_MAPPING_TOLERANCE_PLAN.md](./SLICE_TWIN_TIMBER_KNAUF_TTF302A_MAPPING_TOLERANCE_PLAN.md),
+   [SLICE_LINED_MASONRY_KNAUF_MWI2A_MAPPING_TOLERANCE_PLAN.md](./SLICE_LINED_MASONRY_KNAUF_MWI2A_MAPPING_TOLERANCE_PLAN.md),
+   [SLICE_TIMBER_DOUBLE_BOARD_KNAUF_TB5A_MAPPING_TOLERANCE_PLAN.md](./SLICE_TIMBER_DOUBLE_BOARD_KNAUF_TB5A_MAPPING_TOLERANCE_PLAN.md),
    [SOURCE_READY_INTAKE_BACKLOG.md](./SOURCE_READY_INTAKE_BACKLOG.md),
    [SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V5_PLAN.md](./SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V5_PLAN.md),
    [SLICE_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_PLAN.md](./SLICE_KNAUF_WALL_SYSTEMS_SOURCE_PACK_EXTRACTION_PLAN.md),
@@ -1699,9 +2060,9 @@ time without context loss:
    [SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md](./SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md),
    [SOURCE_GAP_LEDGER.md](./SOURCE_GAP_LEDGER.md), and
    [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md).
-   Continue `calculator_source_gap_revalidation_v5` at Gate A by
-   adding
-   `packages/engine/src/calculator-source-gap-revalidation-v5-gate-a-contract.test.ts`.
+   Continue `british_gypsum_white_book_source_pack_extraction_v1` at
+   Gate B by adding
+   `packages/engine/src/british-gypsum-white-book-source-pack-extraction-gate-b-contract.test.ts`.
 3. Read [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
    for the now-closed calculator-priority chain and its evidence-tier
    caveats.

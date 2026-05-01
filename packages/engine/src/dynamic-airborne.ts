@@ -70,6 +70,10 @@ import {
   applyPremiumSingleBoardFieldCorrection,
   applySingleLeafMasonryMonotonicFloor
 } from "./dynamic-airborne-correction-guards";
+import {
+  evaluateWallTripleLeafTopologyReadiness,
+  WALL_TRIPLE_LEAF_TOPOLOGY_FIELD_LABELS
+} from "./wall-triple-leaf-topology-readiness";
 
 const FAMILY_LABELS: Record<DynamicAirborneFamily, string> = {
   double_leaf: "Double Leaf",
@@ -1005,6 +1009,12 @@ export function calculateDynamicAirborneResult(
     options.forcedFamily
       ? { family: options.forcedFamily, notes: [] as string[] }
       : detectDynamicFamily(analysisLayers, framingHint);
+  const tripleLeafTopologyReadiness = evaluateWallTripleLeafTopologyReadiness({
+    airborneContext: options.airborneContext,
+    cavityCount: topology.cavityCount,
+    detectedFamily: family.family,
+    visibleLeafCount: topology.visibleLeafCount
+  });
   const familyDecisionBoundary = summarizeFamilyDecisionBoundary(
     analysisLayers,
     topology,
@@ -1466,6 +1476,18 @@ export function calculateDynamicAirborneResult(
     );
   }
 
+  if (tripleLeafTopologyReadiness.applies) {
+    if (tripleLeafTopologyReadiness.missingTopologyFields.length > 0) {
+      warnings.push(
+        `Triple-leaf exact calculation needs grouped wall topology before this can be treated as a precise answer. Missing: ${tripleLeafTopologyReadiness.missingTopologyFields.map((field) => WALL_TRIPLE_LEAF_TOPOLOGY_FIELD_LABELS[field]).join(", ")}.`
+      );
+    } else {
+      warnings.push(
+        "Grouped triple-leaf topology is present, but DynEcho still needs a source-calibrated triple-leaf solver, tolerance owner, and paired visible tests before promoting this beyond the screening blend."
+      );
+    }
+  }
+
   if (blendSelection.blend.adjustmentsDb >= 3) {
     warnings.push(
       "A cavity-correction lift was applied because the current local delegate set underestimates this partially filled lightweight double-leaf topology."
@@ -1716,6 +1738,15 @@ export function calculateDynamicAirborneResult(
               `The detected multi-leaf topology has ${topology.visibleLeafCount} visible leaves and ${topology.cavityCount} cavities, so the assembly remains intentionally order-sensitive.`
             ]
           : []),
+      ...(tripleLeafTopologyReadiness.applies
+        ? tripleLeafTopologyReadiness.missingTopologyFields.length > 0
+          ? [
+              `Triple-leaf topology input is incomplete: ${tripleLeafTopologyReadiness.missingTopologyFields.map((field) => WALL_TRIPLE_LEAF_TOPOLOGY_FIELD_LABELS[field]).join(", ")}.`
+            ]
+          : [
+              "Triple-leaf topology input is grouped, but the source-calibrated triple-leaf solver and tolerance owner have not landed yet."
+            ]
+        : []),
       ...blendSelection.notes,
       ...framedWallCalibration.notes,
       ...aacMassiveCalibration.notes,

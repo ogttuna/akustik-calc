@@ -73,7 +73,7 @@ describe("dynamic-airborne split v2 Gate B eleventh carve contract", () => {
   const sections = extractFunctionSections(source);
 
   it("pins the eleventh correction-guard carve and reduced composer file size", () => {
-    expect(countPhysicalLines(source)).toBe(1793);
+    expect(countPhysicalLines(source)).toBe(1824);
     expect(countPhysicalLines(guardModule)).toBe(1422);
     expect([...sections.keys()]).toEqual(REMAINING_GUARD_ORDER);
   });

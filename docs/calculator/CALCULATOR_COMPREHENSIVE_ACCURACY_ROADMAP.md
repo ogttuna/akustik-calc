@@ -34,7 +34,37 @@ because topology / material mapping / metric policy / tolerance /
 visible-test ownership is still incomplete. Gate C then closed the
 Knauf extraction slice no-runtime and selected
 `calculator_source_gap_revalidation_v5` because no import-ready row
-exists after Gate B.
+exists after Gate B. v5 then selected the Knauf `TB.5A` mapping /
+tolerance chain, followed by `MWI.2A`, `TTF30.2A`, and
+`EN-PC-50-055-6-2-12.5-WB-25`; all four closed no-runtime because
+exact material, metric, tolerance, and visible-test ownership remained
+incomplete. `steel_stud_knauf_enpc_mapping_tolerance_v1` Gate C then
+selected `calculator_source_gap_revalidation_v7` as the next
+no-runtime source / accuracy rerank. v7 Gate A then landed no-runtime
+and selected `calculator_post_knauf_source_acquisition_v1` because the
+current Knauf and non-Knauf source reservoirs are exhausted for runtime
+movement and fresh official source locators are now the highest-value
+accuracy step. Post-Knauf source acquisition Gate A then landed
+no-runtime and selected
+`british_gypsum_white_book_source_pack_extraction_v1` because British
+Gypsum White Book official selector rows are concrete enough for
+row-level extraction across wall and floor gaps, but not runtime-ready
+until topology, material mapping, metric policy, tolerance ownership,
+negative boundaries, and paired visible tests are extracted. British
+Gypsum Gate A was selected through
+`packages/engine/src/british-gypsum-white-book-source-pack-extraction-gate-a-contract.test.ts`
+with
+`selected_british_gypsum_white_book_source_pack_extraction_after_post_knauf_acquisition_found_official_wall_floor_rows_but_no_runtime_ready_import`.
+British
+Gypsum extraction Gate A then landed no-runtime. It extracted
+`C204006`, `C204003`, `A206A290`, `A046006`, `A326017B`, and
+`B226010`; confirmed `A046006` is already represented by
+`british_gypsum_a046006_timber_rb2_2x12p5_soundbloc_50apr_lab_2026`;
+and selected
+`packages/engine/src/british-gypsum-white-book-source-pack-extraction-gate-b-contract.test.ts`
+with `gate_b_mapping_tolerance_decision_no_runtime`.
+Gate A status:
+`british_gypsum_rows_extracted_no_new_runtime_import_a046006_already_landed_others_need_mapping_tolerance_visible_tests`.
 This roadmap remains the long-horizon source-gated accuracy context; it
 is not a runtime import approval.
 
@@ -97,6 +127,13 @@ Candidate sources found during the 2026-04-28 planning pass:
   `https://www.woodworks.org/wp-content/uploads/Acoustically-Tested-Mass-Timber-Assemblies-WoodWorks.pdf`
 - UBIQ INEX FLOOR fire/acoustic tables:
   `https://www.ubiq.au/wp-content/uploads/2023/02/INEX-FLOOR-FLOOR-FIRE-ACOUSTIC.pdf`
+- British Gypsum White Book / Specification Selector rows:
+  `C204006`, `C204003`, `A206A290`, `A046006`, `A326017B`, and
+  `B226010`, selected for no-runtime extraction in
+  `british_gypsum_white_book_source_pack_extraction_v1`
+- Stora Enso Soundproofing for CLT:
+  official CLT wall/floor soundproofing context retained for later
+  CLT metric/tolerance mapping
 
 These sources are not import approvals. Each future source slice must
 extract:
@@ -215,14 +252,20 @@ double-board stud walls, masonry-upgrade / lined-heavy adjacent
 evidence, and steel-vs-timber negative boundaries without guessing from
 nearby green tests.
 
-### 1g. Calculator Source Gap Revalidation v5 - Active No-Runtime
+### 1g. Calculator Source Gap Revalidation v5 - Historical No-Runtime
 
-`calculator_source_gap_revalidation_v5` is the selected active planning
-slice after the Knauf closeout.
+`calculator_source_gap_revalidation_v5` is closed. It started the
+post-Knauf mapping chain and is retained here as historical context.
+The active slice is now
+`british_gypsum_white_book_source_pack_extraction_v1`.
 
-Next implementation file:
+Selected v5 Gate A file:
 
 `packages/engine/src/calculator-source-gap-revalidation-v5-gate-a-contract.test.ts`
+
+Current implementation file:
+
+`packages/engine/src/british-gypsum-white-book-source-pack-extraction-gate-b-contract.test.ts`
 
 Planning surface:
 
