@@ -398,7 +398,7 @@ export function ProposalAdjustClientPage() {
         description:
           error instanceof Error
             ? error.message
-            : `DynEcho could not generate the ${getSimpleWorkbenchProposalExportLabel({ format, style })} on the server.`
+            : `DAC could not generate the ${getSimpleWorkbenchProposalExportLabel({ format, style })} on the server.`
       });
     } finally {
       setIsDownloadingPdf(false);

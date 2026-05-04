@@ -17,7 +17,7 @@ export const REINFORCED_CONCRETE_LOW_CONFIDENCE_TRACE_CANDIDATE_DETAIL =
   `29% fit inside the active low-confidence ceiling. Ln,w stays on a mixed nearby-row concrete lane rather than a narrow same-stack family fit. ${REINFORCED_CONCRETE_LOW_CONFIDENCE_RANKING_RATIONALE}`;
 
 export const REINFORCED_CONCRETE_LOW_CONFIDENCE_CANDIDATE_ROWS_DETAIL =
-  `Nearby published rows ranked for the current mixed-row fallback. DynEcho keeps this corridor live without claiming a narrow same-stack family estimate. ${REINFORCED_CONCRETE_LOW_CONFIDENCE_RANKING_RATIONALE}`;
+  `Nearby published rows ranked for the current mixed-row fallback. DAC keeps this corridor live without claiming a narrow same-stack family estimate. ${REINFORCED_CONCRETE_LOW_CONFIDENCE_RANKING_RATIONALE}`;
 
 export const REINFORCED_CONCRETE_LOW_CONFIDENCE_NEARBY_ROW_LABEL_PREFIX = "Nearby published row";
 
@@ -43,19 +43,19 @@ export function formatReinforcedConcreteLowConfidenceAdditionalRowsDetail(hidden
 }
 
 export const REINFORCED_CONCRETE_LOW_CONFIDENCE_ESTIMATE_TIER_DETAIL =
-  "Low-confidence reinforced-concrete combined fallback. DynEcho is keeping the lane live inside a mixed nearby-row concrete corridor instead of claiming a narrower same-stack family estimate.";
+  "Low-confidence reinforced-concrete combined fallback. DAC is keeping the lane live inside a mixed nearby-row concrete corridor instead of claiming a narrower same-stack family estimate.";
 
 export const REINFORCED_CONCRETE_LOW_CONFIDENCE_FIT_DETAIL =
-  "Displayed fit is capped at 29% for this low-confidence tier. DynEcho keeps the lane explicit without overstating it as a narrow same-stack family fit.";
+  "Displayed fit is capped at 29% for this low-confidence tier. DAC keeps the lane explicit without overstating it as a narrow same-stack family fit.";
 
 export const REINFORCED_CONCRETE_LOW_CONFIDENCE_RW_DETAIL =
-  "Proxy airborne companion from the same mixed nearby-row reinforced-concrete fallback. DynEcho is keeping Rw explicit, but not treating it as a narrow same-stack family claim.";
+  "Proxy airborne companion from the same mixed nearby-row reinforced-concrete fallback. DAC is keeping Rw explicit, but not treating it as a narrow same-stack family claim.";
 
 export const REINFORCED_CONCRETE_LOW_CONFIDENCE_CTR_DETAIL =
-  "Proxy traffic-noise companion from the same mixed nearby-row reinforced-concrete fallback. DynEcho is keeping Ctr explicit, but not treating it as a narrow same-stack family claim.";
+  "Proxy traffic-noise companion from the same mixed nearby-row reinforced-concrete fallback. DAC is keeping Ctr explicit, but not treating it as a narrow same-stack family claim.";
 
 export const REINFORCED_CONCRETE_LOW_CONFIDENCE_COMPANION_BASIS_DETAIL =
-  "Proxy airborne companions from the same mixed nearby-row reinforced-concrete fallback. DynEcho keeps companion ratings explicit without treating them as a narrow same-stack family claim.";
+  "Proxy airborne companions from the same mixed nearby-row reinforced-concrete fallback. DAC keeps companion ratings explicit without treating them as a narrow same-stack family claim.";
 
 export const REINFORCED_CONCRETE_LOW_CONFIDENCE_EVIDENCE_DETAIL_PREFIX =
   `Low-confidence reinforced-concrete mixed-row estimate at 29% fit. Ln,w stays on a mixed nearby-row concrete lane, while Rw and Ctr remain proxy airborne companions instead of a narrow same-stack family claim. ${REINFORCED_CONCRETE_LOW_CONFIDENCE_RANKING_RATIONALE}`;

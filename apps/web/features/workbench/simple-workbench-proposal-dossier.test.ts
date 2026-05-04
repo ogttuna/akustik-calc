@@ -63,7 +63,7 @@ const DOCUMENT: SimpleWorkbenchProposalDocument = {
     {
       detail: "Weighted impact rating from the active impact calculator.",
       label: "Ln,w",
-      postureDetail: "DynEcho is intentionally packaging this as a one-sided support value.",
+      postureDetail: "DAC is intentionally packaging this as a one-sided support value.",
       postureLabel: "Conservative bound",
       postureTone: "warning",
       status: "bound",

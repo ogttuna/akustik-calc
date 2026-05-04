@@ -68,7 +68,7 @@ export function GuidedFactChip(props: { children: ReactNode; tone?: "neutral" | 
       : "border-[color:var(--line)] bg-[color:var(--paper)] text-[color:var(--ink-soft)]";
 
   return (
-    <span className={`inline-flex items-center rounded border px-2 py-0.5 text-[0.7rem] font-medium ${toneClass}`}>
+    <span className={`inline-flex max-w-full min-w-0 items-center break-words rounded border px-2 py-0.5 text-left text-[0.7rem] font-medium leading-4 ${toneClass}`}>
       {children}
     </span>
   );
@@ -84,7 +84,7 @@ export function DetailTag(props: { children: ReactNode; tone?: "neutral" | Field
         : "border border-[color:var(--line)] bg-[color:var(--paper)] text-[color:var(--ink-soft)]";
 
   return (
-    <span className={`inline-flex items-center rounded px-2 py-0.5 text-[0.68rem] font-medium uppercase tracking-[0.1em] ${toneClass}`}>
+    <span className={`inline-flex max-w-full min-w-0 items-center break-words rounded px-2 py-0.5 text-left text-[0.68rem] font-medium uppercase leading-4 tracking-[0.1em] ${toneClass}`}>
       {children}
     </span>
   );

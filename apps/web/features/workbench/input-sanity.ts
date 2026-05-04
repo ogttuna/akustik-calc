@@ -246,10 +246,10 @@ function getFloorCoverRoleSanityWarning(input: {
   }
 
   if (!input.hasBaseStructure) {
-    return `${material.name} is tagged as a plaster or masonry finish but is currently assigned to the floor covering role with no base structure in the stack. DynEcho will keep the run live as a broad screening estimate only; add the structural floor or switch to a tested floor-cover path before trusting impact outputs.`;
+    return `${material.name} is tagged as a plaster or masonry finish but is currently assigned to the floor covering role with no base structure in the stack. DAC will keep the run live as a broad screening estimate only; add the structural floor or switch to a tested floor-cover path before trusting impact outputs.`;
   }
 
-  return `${material.name} is tagged as a plaster or masonry finish but is currently assigned to the floor covering role. DynEcho will keep the run live, but this is not treated like a validated trafficable floor cover. Recheck the role assignment or switch to a tested floor build-up before trusting impact outputs.`;
+  return `${material.name} is tagged as a plaster or masonry finish but is currently assigned to the floor covering role. DAC will keep the run live, but this is not treated like a validated trafficable floor cover. Recheck the role assignment or switch to a tested floor build-up before trusting impact outputs.`;
 }
 
 export function collectScenarioInputWarnings(input: {
@@ -321,7 +321,7 @@ export function collectScenarioInputWarnings(input: {
 
     if (hasCeilingSideSupport && !hasCeilingBoard) {
       warnings.push(
-        "Ceiling-side support or fill layers are present without any ceiling board. DynEcho keeps the lower-treatment lane inactive, so these products may not change the result until at least one ceiling board is added."
+        "Ceiling-side support or fill layers are present without any ceiling board. DAC keeps the lower-treatment lane inactive, so these products may not change the result until at least one ceiling board is added."
       );
     }
   }

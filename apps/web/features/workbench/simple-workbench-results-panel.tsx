@@ -95,20 +95,22 @@ export function SimpleWorkbenchResultsPanel(props: {
   } = props;
   const liveStackDetail =
     parkedRowCount > 0
-      ? `${formatCountLabel(liveRowCount, "live row")} currently resolve to ${formatCountLabel(solverLayerCount, "solver layer")}. ${formatCountLabel(parkedRowCount, "parked row")} ${parkedRowCount === 1 ? "stays" : "stay"} outside the active read.`
+      ? `${formatCountLabel(liveRowCount, "live row")} used, ${formatCountLabel(parkedRowCount, "parked row")} outside the active read.`
       : collapsedLiveRowCount > 0
-        ? `${formatCountLabel(liveRowCount, "live row")} collapse to ${formatCountLabel(solverLayerCount, "solver layer")} before the read is solved.`
-        : "Every visible row currently contributes to the guided answer.";
+        ? `${formatCountLabel(liveRowCount, "live row")} collapse to ${formatCountLabel(solverLayerCount, "solver layer")} before solving.`
+        : "Every visible row contributes to the active read.";
   const briefTargets = [
     targetRwDb && targetRwDb.trim().length > 0 ? `Rw >= ${targetRwDb.trim()} dB` : null,
     targetLnwDb && targetLnwDb.trim().length > 0 ? `Ln,w <= ${targetLnwDb.trim()} dB` : null
   ].filter((value): value is string => Boolean(value));
+  const firstWarning = warnings[0] ?? null;
+  const pendingOutputCount = needsInputCards.length + unsupportedCards.length;
 
   return (
     <div
       className={isDesktop
-        ? "col-start-2 row-start-1 row-span-2 min-w-0 overflow-y-auto px-4 py-4 sticky top-0 self-start max-h-screen"
-        : `stage-enter-3 min-w-0 overflow-hidden px-4 py-4 ${activeWorkspacePanel === "results" ? "block" : "hidden"}`
+        ? "col-start-3 row-start-1 min-h-0 min-w-0 overflow-y-auto px-4 py-4"
+        : `stage-enter-3 min-h-0 min-w-0 overflow-y-auto px-4 py-4 ${activeWorkspacePanel === "results" ? "block" : "hidden"}`
       }
     >
       {isDesktop ? (
@@ -117,19 +119,19 @@ export function SimpleWorkbenchResultsPanel(props: {
         </div>
       ) : null}
       <div className="flex flex-col">
-          <div className="flex min-w-0 flex-wrap items-start justify-between gap-4">
-            <SectionLead title="Results" tone="results" />
+        <div className="flex min-w-0 flex-wrap items-start justify-between gap-4">
+          <SectionLead title="Results" tone="results" />
         </div>
 
-          <div className="mt-4 space-y-4">
-            <OutputCoverageSummary
-              boundCount={boundOutputCardCount}
-              liveCount={liveOutputCardCount}
-              parkedCount={needsInputCards.length}
-              readyCount={readyCardCount}
-              totalCount={totalOutputCount}
-              unsupportedCount={unsupportedCards.length}
-            />
+        <div className="mt-4 space-y-4">
+          <OutputCoverageSummary
+            boundCount={boundOutputCardCount}
+            liveCount={liveOutputCardCount}
+            parkedCount={needsInputCards.length}
+            readyCount={readyCardCount}
+            totalCount={totalOutputCount}
+            unsupportedCount={unsupportedCards.length}
+          />
 
             <div className="flex flex-wrap gap-2 text-[0.72rem] leading-5 text-[color:var(--ink-soft)]">
               <GuidedFactChip>{routeCoverageLabel}</GuidedFactChip>
@@ -138,17 +140,15 @@ export function SimpleWorkbenchResultsPanel(props: {
 
             {primaryReadyCard ? (
               <>
-                <section className="relative overflow-hidden rounded-[1.4rem] border border-[color:color-mix(in_oklch,var(--ink)_8%,var(--line))] bg-[linear-gradient(180deg,color-mix(in_oklch,var(--paper)_96%,white)_0%,color-mix(in_oklch,var(--panel)_68%,white)_100%)] px-4 py-4 shadow-[0_26px_60px_-46px_rgba(12,23,33,0.56)]">
-                  <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-[radial-gradient(circle_at_top_left,color-mix(in_oklch,var(--accent)_12%,transparent),transparent_68%)]" />
-                  <div className="pointer-events-none absolute right-[-3rem] top-[-3rem] h-36 w-36 rounded-full bg-[radial-gradient(circle,color-mix(in_oklch,var(--warning)_10%,transparent),transparent_68%)]" />
-                  <div className="relative">
+                <section className="rounded border border-[color:var(--line)] bg-[color:var(--panel)] px-4 py-4">
+                  <div>
                     <div className="flex flex-wrap items-start justify-between gap-4">
                       <div className="min-w-0 max-w-3xl">
                         <div className="text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">
-                          {studyMode === "floor" ? "Guided floor answer" : "Guided wall answer"}
+                          Primary result
                         </div>
-                        <h3 className="mt-1 text-[1.2rem] font-semibold tracking-[-0.03em] text-[color:var(--ink)]">{heroHeadline}</h3>
-                        <p className="mt-2 max-w-2xl text-[0.82rem] leading-6 text-[color:var(--ink-soft)]">{validationSummary.detail}</p>
+                        <h3 className="mt-1 text-[1.05rem] font-semibold text-[color:var(--ink)]">{heroHeadline}</h3>
+                        <p className="mt-2 max-w-2xl text-[0.82rem] leading-5 text-[color:var(--ink-soft)]">{validationSummary.detail}</p>
                       </div>
                       <div className="flex flex-wrap justify-end gap-2">
                         <span className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.14em] ${getValidationHeroChipClass(validationSummary.tone)}`}>
@@ -162,13 +162,13 @@ export function SimpleWorkbenchResultsPanel(props: {
 
                     <div className="mt-5 grid gap-4 3xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] 3xl:items-start">
                       <div className="grid gap-4">
-                        <article className="rounded-[1.15rem] border border-[color:color-mix(in_oklch,var(--ink)_8%,var(--line))] bg-[linear-gradient(180deg,color-mix(in_oklch,var(--paper)_92%,white)_0%,color-mix(in_oklch,var(--panel)_74%,white)_100%)] px-4 py-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.44)]">
+                        <article className="rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-4 py-4">
                           <div className="flex flex-wrap items-start justify-between gap-3">
                             <div className="min-w-0">
                               <div className="text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
                                 {primaryReadyCard.label}
                               </div>
-                              <div className="mt-2 text-[clamp(2.7rem,6vw,4rem)] font-semibold leading-[0.9] tracking-[-0.06em] text-[color:var(--ink)]">
+                              <div className="mt-2 text-[clamp(2.35rem,4vw,3.35rem)] font-semibold leading-none text-[color:var(--ink)]">
                                 {primaryReadyCard.value}
                               </div>
                             </div>
@@ -189,18 +189,18 @@ export function SimpleWorkbenchResultsPanel(props: {
                           </div>
 
                           <div className="mt-4 grid gap-2 sm:grid-cols-2">
-                            <div className="rounded-[0.95rem] border border-[color:color-mix(in_oklch,var(--ink)_8%,var(--line))] bg-[color:var(--paper)]/82 px-3 py-3">
+                            <div className="rounded border border-[color:var(--line)] bg-[color:var(--panel)] px-3 py-3">
                               <div className="text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Stack contribution</div>
                               <div className="mt-2 text-[0.95rem] font-semibold text-[color:var(--ink)]">{formatCountLabel(liveRowCount, "live row")} active</div>
                               <div className="mt-1 text-[0.76rem] leading-5 text-[color:var(--ink-soft)]">{liveStackDetail}</div>
                             </div>
-                            <div className="rounded-[0.95rem] border border-[color:color-mix(in_oklch,var(--ink)_8%,var(--line))] bg-[color:var(--paper)]/82 px-3 py-3">
+                            <div className="rounded border border-[color:var(--line)] bg-[color:var(--panel)] px-3 py-3">
                               <div className="text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Brief thresholds</div>
                               <div className="mt-2 text-[0.95rem] font-semibold text-[color:var(--ink)]">
                                 {briefTargets[0] ?? "No target armed"}
                               </div>
                               <div className="mt-1 text-[0.76rem] leading-5 text-[color:var(--ink-soft)]">
-                                {briefTargets.length > 1 ? briefTargets.slice(1).join(" · ") : "Set project thresholds in the brief to compare the live read against delivery intent."}
+                                {briefTargets.length > 1 ? briefTargets.slice(1).join(" · ") : "Set brief thresholds to compare the active read."}
                               </div>
                             </div>
                           </div>
@@ -236,7 +236,7 @@ export function SimpleWorkbenchResultsPanel(props: {
                           <div className="min-w-0">
                             <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Live frequency curves</div>
                             <p className="mt-1 max-w-2xl text-[0.8rem] leading-5 text-[color:var(--ink-soft)]">
-                              Band-by-band evidence now sits directly under the weighted answer instead of reading like a separate diagnostics block.
+                              Frequency-band trace for the weighted read.
                             </p>
                           </div>
                           <div className="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
@@ -266,10 +266,13 @@ export function SimpleWorkbenchResultsPanel(props: {
           <OutputUnlockRail groups={outputUnlockGroups} />
 
           {warnings.length ? (
-            <details className="rounded border border-[color:var(--warning)] bg-[color:var(--warning-soft)] px-4 py-3 text-[color:var(--warning-ink)]">
+            <details className="rounded border border-[color:var(--warning)] bg-[color:var(--warning-soft)] px-3 py-2.5 text-[color:var(--warning-ink)]">
               <summary className="cursor-pointer list-none">
                 <div className="flex flex-wrap items-center justify-between gap-3">
-                  <div className="font-semibold">Check these inputs before trusting the read.</div>
+                  <div className="min-w-0">
+                    <div className="font-semibold">Warnings</div>
+                    {firstWarning ? <div className="mt-0.5 truncate text-[0.78rem] font-medium">{firstWarning}</div> : null}
+                  </div>
                   <GuidedFactChip tone="warning">{`${warnings.length} warning${warnings.length === 1 ? "" : "s"}`}</GuidedFactChip>
                 </div>
               </summary>
@@ -282,11 +285,17 @@ export function SimpleWorkbenchResultsPanel(props: {
             </details>
           ) : null}
 
-          {(needsInputCards.length > 0 || unsupportedCards.length > 0) ? (
-            <details className={`rounded border px-3 py-3 ${workbenchSectionMutedCardClass("results")}`}>
-              <summary className="cursor-pointer list-none text-[0.72rem] font-semibold uppercase tracking-[0.12em] text-[color:var(--ink-faint)] [&::-webkit-details-marker]:hidden">
-                Pending outputs
-                <span className="ml-2 font-normal">{needsInputCards.length + unsupportedCards.length} pending</span>
+          {pendingOutputCount > 0 ? (
+            <details className={`rounded border px-3 py-2.5 ${workbenchSectionMutedCardClass("results")}`}>
+              <summary className="cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span className="text-[0.72rem] font-semibold uppercase tracking-[0.12em] text-[color:var(--ink-faint)]">Pending outputs</span>
+                  <span className="text-[0.72rem] font-semibold text-[color:var(--ink-soft)]">
+                    {needsInputCards.length ? `${needsInputCards.length} parked` : null}
+                    {needsInputCards.length && unsupportedCards.length ? " / " : null}
+                    {unsupportedCards.length ? `${unsupportedCards.length} unsupported` : null}
+                  </span>
+                </div>
               </summary>
               <div className="mt-3 grid gap-3">
                 {needsInputCards.length > 0 ? (

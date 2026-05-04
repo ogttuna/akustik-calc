@@ -38,7 +38,7 @@ export function UpstreamRadarPanel() {
           <div className="eyebrow">Upstream radar</div>
           <h2 className="mt-1 font-display text-[1.9rem] leading-none tracking-[-0.04em]">Read-only parity watch</h2>
           <p className="mt-3 text-sm leading-7 text-[color:var(--ink-soft)]">
-            DynEcho does not depend on the live upstream repo, but it should stay aware of where Acoustic2 is moving.
+            DAC does not depend on the live upstream repo, but it should stay aware of where Acoustic2 is moving.
           </p>
         </div>
       </div>

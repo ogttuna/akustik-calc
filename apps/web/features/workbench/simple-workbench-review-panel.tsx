@@ -87,7 +87,16 @@ export function SimpleWorkbenchReviewPanel(props: SimpleWorkbenchReviewPanelProp
   }
 
   return (
-    <section className={`${isDesktop || activeWorkspacePanel === "review" ? "grid" : "hidden"} gap-4 px-4 py-4`} id="guided-review-deck">
+    <section
+      className={`min-h-0 min-w-0 overflow-y-auto border-t border-[color:var(--line)] bg-[color:var(--paper)] px-4 py-4 ${
+        isDesktop
+          ? "grid max-h-[42svh] shrink-0"
+          : activeWorkspacePanel === "review"
+            ? "grid flex-1"
+            : "hidden"
+      } gap-4`}
+      id="guided-review-deck"
+    >
       <div className="border-b border-[color:var(--line)] pb-4">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <h2 className="text-sm font-semibold text-[color:var(--ink)]">Review</h2>

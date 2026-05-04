@@ -536,7 +536,7 @@ export function WorkbenchShell() {
       } | null;
 
       if (!response.ok || !payload?.project?.id) {
-        throw new Error(payload?.error ?? "DynEcho could not create the server project.");
+        throw new Error(payload?.error ?? "DAC could not create the server project.");
       }
 
       const scenarioCount = payload.summary?.scenarioCount ?? savedScenarios.length;
@@ -549,7 +549,7 @@ export function WorkbenchShell() {
         description: `${scenarioCount} local scenario${scenarioCount === 1 ? "" : "s"} copied into durable project storage.`
       });
     } catch (error) {
-      const message = error instanceof Error ? error.message : "DynEcho could not sync saved scenarios.";
+      const message = error instanceof Error ? error.message : "DAC could not sync saved scenarios.";
       setServerScenarioSync({
         message,
         status: "error"

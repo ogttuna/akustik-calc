@@ -121,13 +121,13 @@ export const STEEL_BOUND_SUPPORT_FORM_ACTIONS = [
     id: "set-steel-joist-purlin-carrier",
     label: "Set steel joist / purlin carrier",
     materialId: "steel_joist_floor",
-    note: "Switch the base row to steel joist / purlin so DynEcho can leave the crossover bound and stay inside the narrower FL-32 family."
+    note: "Switch the base row to steel joist / purlin so DAC can leave the crossover bound and stay inside the narrower FL-32 family."
   },
   {
     id: "set-open-web-carrier",
     label: "Set open-web / rolled carrier",
     materialId: "open_web_steel_floor",
-    note: "Switch the base row to open-web / rolled steel so DynEcho can leave the crossover bound and stay inside the narrower FL-33 family."
+    note: "Switch the base row to open-web / rolled steel so DAC can leave the crossover bound and stay inside the narrower FL-33 family."
   }
 ] as const;
 

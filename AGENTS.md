@@ -326,6 +326,24 @@ plan.
   `multileaf_screening_blend_fail_closed_until_grouped_topology` with a
   flat-list adjacent-swap guard warning until grouped topology and
   source validation exist.
+- follow-up broad audit:
+  `broad_check_2026_05_04_toolbar_copy_alignment_passed`,
+  `full_check_found_toolbar_copy_test_drift_not_calculator_runtime_drift`,
+  `wrong_lane_broad_suites_green_no_runtime_movement_selected`,
+  `gate_b_closeout_remains_first_implementation_step_after_broad_check`,
+  and `rockwool_uris_status_unchanged_after_broad_check`.
+  Full `pnpm check` passed after updating the toolbar test to current
+  commands `Report` and `PDF setup` while confirming `Example Stack`
+  is absent; this was UI-copy drift, not
+  calculator runtime drift. Engine passed 368 files / 2170 tests; web
+  passed 161 files / 907 passed + 18 skipped; build passed 5 / 5 with
+  known non-fatal `sharp/@img` warnings. Wrong-lane suites remained
+  green across dynamic family-boundary scans, deep hybrid and AAC swap
+  scans, floor order/duplicate/many-layer histories, raw floor role and
+  hostile-input guards, wall flat-list multileaf guards, grouped-topology
+  route cards, and wall reorder invariance. The next implementation step
+  is still the Gate B floor tolerance closeout contract; rockwool/Uris
+  `Rw 41` remains unfixed screening output.
 - prior checkpoint:
   `docs/calculator/CHECKPOINT_2026-05-04_CALCULATOR_SOURCE_GAP_REVALIDATION_V18_GATE_A_HANDOFF.md`
   lands `calculator_source_gap_revalidation_v18` Gate A no-runtime with

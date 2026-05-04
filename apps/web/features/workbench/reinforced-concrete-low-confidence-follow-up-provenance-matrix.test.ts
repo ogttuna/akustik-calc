@@ -54,7 +54,7 @@ const CASES: readonly ProvenanceCase[] = [
         },
         {
           detail:
-            "Nearby published rows ranked for the current mixed-row fallback. DynEcho keeps this corridor live without claiming a narrow same-stack family estimate. Ranking keeps the elastic-ceiling nearby row first, the rigid-ceiling row second, and the timber-underlay row as a farther fallback when cavity and board geometry drift away from the mixed-row corridor.",
+            "Nearby published rows ranked for the current mixed-row fallback. DAC keeps this corridor live without claiming a narrow same-stack family estimate. Ranking keeps the elastic-ceiling nearby row first, the rigid-ceiling row second, and the timber-underlay row as a farther fallback when cavity and board geometry drift away from the mixed-row corridor.",
           label: "Nearby-row fallback rationale",
           tone: "warning"
         },

@@ -31,7 +31,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
     <main className="ui-shell flex min-h-screen items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
       <section className="surface-shadow grid w-full max-w-[30rem] gap-6 rounded-[2rem] border hairline bg-[color:var(--panel)] px-6 py-6 sm:px-7 sm:py-7">
         <div className="space-y-3">
-          <div className="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Protected DynEcho access</div>
+          <div className="text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Protected DAC access</div>
           <div className="space-y-2">
             <h1 className="font-display text-[clamp(2rem,4vw,2.6rem)] leading-none text-[color:var(--ink)]">Sign in to the workbench</h1>
             <p className="text-sm leading-7 text-[color:var(--ink-soft)]">

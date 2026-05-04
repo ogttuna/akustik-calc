@@ -362,7 +362,7 @@ describe("simple workbench output model", () => {
     expect(card).toEqual(
       expect.objectContaining({
         detail:
-          "Conservative upper bound from a bound-only floor family lane. DynEcho keeps this separate from any live airborne companion still shown on the same route.",
+          "Conservative upper bound from a bound-only floor family lane. DAC keeps this separate from any live airborne companion still shown on the same route.",
         label: "Ln,w",
         status: "bound",
         value: "<= 51 dB"

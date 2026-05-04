@@ -344,7 +344,7 @@ export function buildImpactBandFieldGuides(input: {
             ? "The imported curve is currently treated as field evidence, so it yields L'nT,w."
             : "The imported curve is currently treated as lab evidence, so it yields Ln,w.",
           kind: "active",
-          meaning: "Source posture tells DynEcho whether the imported curve represents lab test data or field data."
+          meaning: "Source posture tells DAC whether the imported curve represents lab test data or field data."
         }
       : hasValue(input.input)
         ? {

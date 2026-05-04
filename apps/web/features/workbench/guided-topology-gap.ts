@@ -72,7 +72,7 @@ export function getGuidedTopologyGap(input: {
 
     return {
       detail:
-        "This wall has three visible leaves and two cavities, so DynEcho keeps it on the triple-leaf screening route until grouped topology and source validation are both visible.",
+        "This wall has three visible leaves and two cavities, so DAC keeps it on the triple-leaf screening route until grouped topology and source validation are both visible.",
       value: "Triple-leaf screening"
     };
   }

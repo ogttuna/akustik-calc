@@ -20,7 +20,7 @@ export async function POST(request: Request) {
   } catch {
     return NextResponse.json(
       {
-        error: "DynEcho could not read the login payload.",
+        error: "DAC could not read the login payload.",
         ok: false
       },
       {
@@ -67,7 +67,7 @@ export async function POST(request: Request) {
   } catch {
     return NextResponse.json(
       {
-        error: "DynEcho could not complete the sign-in request.",
+        error: "DAC could not complete the sign-in request.",
         ok: false
       },
       {

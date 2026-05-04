@@ -61,7 +61,7 @@ export const REQUESTED_OUTPUT_DESCRIPTIONS: Record<RequestedOutputId, string> = 
 };
 
 export const REQUESTED_OUTPUT_SUPPORT_NOTES: Record<RequestedOutputId, string> = {
-  "AIIC": "Tracked as an ASTM field-impact lane. DynEcho keeps it visible as research scope until a standards-backed adapter ships.",
+  "AIIC": "Tracked as an ASTM field-impact lane. DAC keeps it visible as research scope until a standards-backed adapter ships.",
   "C": "Live from the calibrated airborne curve.",
   "CI": "Live when an exact impact curve, exact family, or supported guide lane provides it.",
   "CI,50-2500": "Live when exact impact data or curated family data carries the extended low-frequency companion.",
@@ -143,7 +143,7 @@ export const CAPABILITY_ROWS = [
     status: "live" as const
   },
   {
-    detail: "A curated Knauf, Dataholz, TUAS, and UBIQ floor-family slice can now exact-match role-tagged floor build-ups across timber, concrete, CLT, open-box, and open-web steel examples, then surface published Ln,w, CI, and companion Rw values. When a family omits C or Ctr, DynEcho carries that honestly as unavailable rather than fabricating it. When the stack is close but not exact, DynEcho now shows the nearest curated families and missing signals.",
+    detail: "A curated Knauf, Dataholz, TUAS, and UBIQ floor-family slice can now exact-match role-tagged floor build-ups across timber, concrete, CLT, open-box, and open-web steel examples, then surface published Ln,w, CI, and companion Rw values. When a family omits C or Ctr, DAC carries that honestly as unavailable rather than fabricating it. When the stack is close but not exact, DAC shows the nearest curated families and missing signals.",
     family: "Exact floor systems",
     label: "Curated Ln,w, CI, Ln,w+CI, Rw, Rw + C, Rw + Ctr",
     status: "live" as const

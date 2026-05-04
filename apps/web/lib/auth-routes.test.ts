@@ -117,7 +117,7 @@ describe("auth API routes", () => {
 
     expect(response.status).toBe(400);
     expect(body).toEqual({
-      error: "DynEcho could not read the login payload.",
+      error: "DAC could not read the login payload.",
       ok: false
     });
     expect(response.headers.get("set-cookie")).toBeNull();

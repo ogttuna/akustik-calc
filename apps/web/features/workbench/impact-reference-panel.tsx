@@ -66,7 +66,7 @@ export function ImpactReferencePanel({
           Heavy-reference quick derive
         </h2>
         <p className="mt-3 max-w-2xl text-sm leading-7 text-[color:var(--ink-soft)]">
-          Use this when a manufacturer gives only a DeltaLw value. DynEcho derives an Ln,w check against a fixed heavy
+          Use this when a manufacturer gives only a DeltaLw value. DAC derives an Ln,w check against a fixed heavy
           floor reference so you can screen products before exact floor-family import lands here.
         </p>
       </div>

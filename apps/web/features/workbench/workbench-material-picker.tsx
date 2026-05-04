@@ -2,7 +2,8 @@
 
 import type { MaterialDefinition } from "@dynecho/shared";
 import { Check, ChevronDown, Search } from "lucide-react";
-import { useEffect, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 import { formatDecimal } from "@/lib/format";
 
@@ -24,6 +25,13 @@ type WorkbenchMaterialPickerProps = {
   label?: string;
   onSelect: (materialId: string) => void;
   searchPlaceholder?: string;
+};
+
+type PickerPanelGeometry = {
+  left: number;
+  maxHeight: number;
+  top: number;
+  width: number;
 };
 
 function formatMaterialDensity(material: MaterialDefinition): string {
@@ -92,7 +100,9 @@ export function WorkbenchMaterialPicker(props: WorkbenchMaterialPickerProps) {
   } = props;
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [panelGeometry, setPanelGeometry] = useState<PickerPanelGeometry | null>(null);
   const rootRef = useRef<HTMLDivElement | null>(null);
+  const panelRef = useRef<HTMLDivElement | null>(null);
   const searchRef = useRef<HTMLInputElement | null>(null);
   const generatedTriggerId = useId();
   const panelId = useId();
@@ -107,6 +117,28 @@ export function WorkbenchMaterialPicker(props: WorkbenchMaterialPickerProps) {
   const totalFiltered = filteredGroups.reduce((sum, g) => sum + g.materials.length, 0);
   const selectedDensity = formatMaterialDensity(currentMaterial);
   const selectedBadge = getMaterialBadge(currentMaterial);
+  const updatePanelGeometry = useCallback(() => {
+    const root = rootRef.current;
+    if (!root) {
+      return;
+    }
+
+    const margin = 8;
+    const rect = root.getBoundingClientRect();
+    const availableWidth = Math.max(window.innerWidth - margin * 2, 240);
+    const width = Math.min(Math.max(rect.width, 280), availableWidth);
+    const left = Math.min(Math.max(rect.left, margin), window.innerWidth - width - margin);
+    const spaceBelow = window.innerHeight - rect.bottom - margin;
+    const spaceAbove = rect.top - margin;
+    const openUp = spaceBelow < 280 && spaceAbove > spaceBelow;
+    const availableHeight = Math.max((openUp ? spaceAbove : spaceBelow) - 4, 160);
+    const maxHeight = Math.min(448, availableHeight);
+    const top = openUp
+      ? Math.max(margin, rect.top - maxHeight - 4)
+      : Math.max(margin, Math.min(rect.bottom + 4, window.innerHeight - maxHeight - margin));
+
+    setPanelGeometry({ left, maxHeight, top, width });
+  }, []);
 
   useEffect(() => {
     if (!open) {
@@ -114,7 +146,8 @@ export function WorkbenchMaterialPicker(props: WorkbenchMaterialPickerProps) {
     }
 
     const handlePointerDown = (event: PointerEvent) => {
-      if (!rootRef.current?.contains(event.target as Node)) {
+      const target = event.target as Node;
+      if (!rootRef.current?.contains(target) && !panelRef.current?.contains(target)) {
         setOpen(false);
         setQuery("");
       }
@@ -135,6 +168,22 @@ export function WorkbenchMaterialPicker(props: WorkbenchMaterialPickerProps) {
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [open]);
+
+  useLayoutEffect(() => {
+    if (!open) {
+      setPanelGeometry(null);
+      return undefined;
+    }
+
+    updatePanelGeometry();
+    window.addEventListener("resize", updatePanelGeometry);
+    window.addEventListener("scroll", updatePanelGeometry, true);
+
+    return () => {
+      window.removeEventListener("resize", updatePanelGeometry);
+      window.removeEventListener("scroll", updatePanelGeometry, true);
+    };
+  }, [open, updatePanelGeometry]);
 
   useEffect(() => {
     if (!open) {
@@ -183,10 +232,17 @@ export function WorkbenchMaterialPicker(props: WorkbenchMaterialPickerProps) {
         />
       </button>
 
-      {open ? (
+      {open && panelGeometry ? createPortal(
         <div
-          className="absolute left-0 right-0 top-full z-50 mt-1 flex max-h-[min(28rem,60vh)] flex-col overflow-hidden rounded-lg border border-[color:var(--line-strong)] bg-[color:var(--paper)] shadow-lg"
+          className="fixed z-[1000] flex flex-col overflow-hidden rounded-lg border border-[color:var(--line-strong)] bg-[color:var(--paper)] shadow-[0_24px_60px_-28px_rgba(0,0,0,0.55)]"
           id={panelId}
+          ref={panelRef}
+          style={{
+            left: panelGeometry.left,
+            maxHeight: panelGeometry.maxHeight,
+            top: panelGeometry.top,
+            width: panelGeometry.width
+          }}
         >
           {/* Sticky search header */}
           <div className="shrink-0 border-b border-[color:var(--line)] bg-[color:var(--paper)] px-3 pb-3 pt-3">
@@ -265,7 +321,8 @@ export function WorkbenchMaterialPicker(props: WorkbenchMaterialPickerProps) {
               {emptyMessage}
             </div>
           )}
-        </div>
+        </div>,
+        document.body
       ) : null}
     </div>
   );

@@ -35,7 +35,7 @@ export async function POST(request: Request) {
   } catch {
     return NextResponse.json(
       {
-        error: "DynEcho could not read the proposal payload."
+        error: "DAC could not read the proposal payload."
       },
       {
         status: 400
@@ -48,7 +48,7 @@ export async function POST(request: Request) {
   if (!proposalDocument) {
     return NextResponse.json(
       {
-        error: "DynEcho rejected the proposal payload because the issue sheet snapshot is incomplete."
+        error: "DAC rejected the proposal payload because the issue sheet snapshot is incomplete."
       },
       {
         status: 400
@@ -74,7 +74,7 @@ export async function POST(request: Request) {
           style
         });
       } catch (error) {
-        return projectStorageRouteErrorResponse(error, "DynEcho could not record the proposal audit event.");
+        return projectStorageRouteErrorResponse(error, "DAC could not record the proposal audit event.");
       }
     }
 
@@ -91,8 +91,8 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         error: detail
-          ? `DynEcho could not generate the ${style === "simple" ? "simple" : "branded"} PDF on the server. ${detail}`
-          : `DynEcho could not generate the ${style === "simple" ? "simple" : "branded"} PDF on the server.`
+          ? `DAC could not generate the ${style === "simple" ? "simple" : "branded"} PDF on the server. ${detail}`
+          : `DAC could not generate the ${style === "simple" ? "simple" : "branded"} PDF on the server.`
       },
       {
         status: 500

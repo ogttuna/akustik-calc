@@ -96,7 +96,7 @@ function buildExplicitUnsupportedOutputDetail(input: {
       return "Needs an exact Dutch field-band source. The simple panel does not fabricate it.";
     }
 
-    return `${REQUESTED_OUTPUT_SUPPORT_NOTES[output]} DynEcho is keeping this requested field-impact output explicit on the current path instead of inventing a number from nearby live values.`;
+    return `${REQUESTED_OUTPUT_SUPPORT_NOTES[output]} DAC is keeping this requested field-impact output explicit on the current path instead of inventing a number from nearby live values.`;
   }
 
   return buildUnavailableOutputDetail({ output, result, studyMode });
@@ -394,7 +394,7 @@ export function buildOutputCard(input: {
       if (typeof result?.lowerBoundImpact?.LnWUpperBound === "number") {
         return {
           detail:
-            "Conservative upper bound from a bound-only floor family lane. DynEcho keeps this separate from any live airborne companion still shown on the same route.",
+            "Conservative upper bound from a bound-only floor family lane. DAC keeps this separate from any live airborne companion still shown on the same route.",
           label: "Ln,w",
           output,
           status: "bound",

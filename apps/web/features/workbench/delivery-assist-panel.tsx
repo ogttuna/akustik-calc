@@ -117,7 +117,7 @@ export function DeliveryAssistPanel({
       ? `Requested outputs still waiting for parity import: ${outputSummary.parityImport.map((status) => status.output).join(", ")}.`
       : "No requested output is blocked purely by parity-import scope.",
     outputSummary.research.length > 0
-      ? `Research-tracked outputs stay explicit: ${outputSummary.research.map((status) => status.output).join(", ")}. DynEcho will not fabricate ASTM or low-frequency ratings before the adapter and validation suite exist.`
+      ? `Research-tracked outputs stay explicit: ${outputSummary.research.map((status) => status.output).join(", ")}. DAC will not fabricate ASTM or low-frequency ratings before the adapter and validation suite exist.`
       : "No research-only output is currently being requested.",
     outputSummary.engineLive.length + outputSummary.engineBound.length > 0
       ? effectiveImpact

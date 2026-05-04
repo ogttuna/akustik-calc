@@ -132,7 +132,7 @@ function buildValidationRecommendation(input: {
 
   if (validationLabel === "Exact evidence") {
     return {
-      detail: `${validationDetail} Keep the cited family or catalog row attached when the sheet is shared outside DynEcho.`,
+      detail: `${validationDetail} Keep the cited family or catalog row attached when the sheet is shared outside DAC.`,
       label: "Issue as source-backed",
       tone: "success"
     };
@@ -201,8 +201,8 @@ export function buildSimpleWorkbenchProposalBrief(input: {
   const executiveSummary =
     `${input.projectName} currently reads ${input.primaryMetricLabel} ${input.primaryMetricValue}. ` +
     (lowConfidenceFallback
-      ? `DynEcho is carrying the stack on a screening-only low-confidence fallback route. `
-      : `DynEcho is carrying the stack on the ${input.dynamicBranchLabel.toLowerCase()} route with a ${input.validationLabel.toLowerCase()} posture. `) +
+      ? `DAC is carrying the stack on a screening-only low-confidence fallback route. `
+      : `DAC is carrying the stack on the ${input.dynamicBranchLabel.toLowerCase()} route with a ${input.validationLabel.toLowerCase()} posture. `) +
     `${input.studyContextLabel} issue under the ${input.reportProfileLabel.toLowerCase()} profile in ${input.contextLabel.toLowerCase()} context. ` +
     `${input.citations.length} ${lowConfidenceFallback ? "nearby-row " : ""}citation${input.citations.length === 1 ? "" : "s"} are attached` +
     (input.warnings.length > 0

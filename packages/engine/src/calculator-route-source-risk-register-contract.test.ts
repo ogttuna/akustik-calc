@@ -75,7 +75,12 @@ const PLANNING_PASS_TOKENS = [
   "direct_floor_system_id_bypass_is_not_layer_match_promotion",
   "field_context_warning_copy_not_field_metric_promotion",
   "gate_b_validation_order_engine_contract_then_runner_then_current_gate",
-  "web_visible_changes_deferred_until_gate_b_selects_bounded_fix"
+  "web_visible_changes_deferred_until_gate_b_selects_bounded_fix",
+  "broad_check_2026_05_04_toolbar_copy_alignment_passed",
+  "full_check_found_toolbar_copy_test_drift_not_calculator_runtime_drift",
+  "wrong_lane_broad_suites_green_no_runtime_movement_selected",
+  "gate_b_closeout_remains_first_implementation_step_after_broad_check",
+  "rockwool_uris_status_unchanged_after_broad_check"
 ] as const;
 
 const CURRENT_ROCKWOOL_TOKENS = [

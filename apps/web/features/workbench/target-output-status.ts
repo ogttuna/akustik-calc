@@ -388,7 +388,7 @@ export function getTargetOutputStatus(input: {
       note:
         isImpactOnlyLowConfidenceLane && isImpactOnlyLowConfidenceUnavailableOutput(output)
           ? IMPACT_ONLY_LOW_CONFIDENCE_UNAVAILABLE_DETAIL
-          : `${supportNote} DynEcho is keeping this requested output explicit instead of inventing a number for the current stack/path.`,
+          : `${supportNote} DAC is keeping this requested output explicit instead of inventing a number for the current stack/path.`,
       output,
       tone: "warning"
     };

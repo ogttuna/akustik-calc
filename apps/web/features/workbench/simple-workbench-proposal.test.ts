@@ -122,7 +122,7 @@ const BASE_DOCUMENT = {
   dynamicBranchDetail: "Published family estimate is active through reinforced concrete.",
   dynamicBranchLabel: "Heavy floating floor",
   executiveSummary:
-    "Riverside Residences currently reads Rw 61 dB. DynEcho is carrying the stack on the heavy floating floor route with a scoped estimate posture.",
+    "Riverside Residences currently reads Rw 61 dB. DAC is carrying the stack on the heavy floating floor route with a scoped estimate posture.",
   issueBaseReference: "MAC-RR-20260321",
   issueNextReference: "MAC-RR-20260321-03",
   issueRegisterItems: [
@@ -424,7 +424,7 @@ describe("simple workbench proposal helpers", () => {
     expect(html).toContain("Memo-grade reading");
     expect(html).toContain("Template");
     expect(html).toContain("DAC");
-    expect(html).toContain("DAC | DynEcho Acoustic Calculator");
+    expect(html).toContain("DAC | DYNECHO ACOUSTIC CALCULATOR");
     expect(html).toContain("ISO-aligned acoustic report");
     expect(html).toContain("Building Acoustics and Vibration Control");
     expect(html).toContain('alt="Machinity Acoustic Consultants logo"');
@@ -487,14 +487,14 @@ describe("simple workbench proposal helpers", () => {
     expect(html).toContain("432 kg/m²");
     expect(html).toContain("Check flanking &lt;risk&gt; before tender issue.");
     expect(html).not.toContain("Check flanking <risk> before tender issue.");
-    expect(html).toContain("Prepared from the DynEcho Acoustic Calculator.");
+    expect(html).toContain("Prepared from the DYNECHO ACOUSTIC CALCULATOR.");
     expect(html).toContain("This DAC sheet summarizes a project estimate");
   });
 
   it("builds a lightweight summary html for the simple pdf path", () => {
     const html = buildSimpleWorkbenchProposalSimpleHtml(BASE_DOCUMENT);
 
-    expect(html).toContain("DynEcho Acoustic Calculator");
+    expect(html).toContain("DYNECHO ACOUSTIC CALCULATOR");
     expect(html).toContain("ISO-aligned acoustic report");
     expect(html).toContain("Short-form issue");
     expect(html).toContain("Frequency response curves");
@@ -527,7 +527,7 @@ describe("simple workbench proposal helpers", () => {
     expect(html).toContain("Ln,w");
     expect(html).toContain("Riverside Development Team");
     expect(html).toContain("Published family estimate is active through reinforced concrete.");
-    expect(html).toContain("This short-form report summarises the current DynEcho Acoustic Calculator reading.");
+    expect(html).toContain("This short-form report summarises the current DYNECHO ACOUSTIC CALCULATOR reading.");
   });
 
   it("omits hidden metrics and the hidden primary headline metric from branded and simple html", () => {

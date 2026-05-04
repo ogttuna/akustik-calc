@@ -38,7 +38,7 @@ export async function POST(request: Request) {
   } catch {
     return NextResponse.json(
       {
-        error: "DynEcho could not read the local scenario import payload.",
+        error: "DAC could not read the local scenario import payload.",
         ok: false
       },
       {

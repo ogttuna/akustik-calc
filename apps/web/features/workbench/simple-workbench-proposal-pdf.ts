@@ -51,13 +51,13 @@ function getDefaultExportErrorMessage(options: {
 }): string {
   if (options.format === "docx") {
     return options.style === "simple"
-      ? "DynEcho could not generate the simple DOCX on the server."
-      : "DynEcho could not generate the branded DOCX on the server.";
+      ? "DAC could not generate the simple DOCX on the server."
+      : "DAC could not generate the branded DOCX on the server.";
   }
 
   return options.style === "simple"
-    ? "DynEcho could not generate the simple PDF on the server."
-    : "DynEcho could not generate the branded PDF on the server.";
+    ? "DAC could not generate the simple PDF on the server."
+    : "DAC could not generate the branded PDF on the server.";
 }
 
 function getDownloadFilename(options: {

@@ -188,6 +188,41 @@ Validation order for Gate B:
    visible wording fix; otherwise web behavior remains frozen.
 
 Last reviewed: 2026-05-04
+
+## Broad Audit Result - 2026-05-04
+
+`broad_check_2026_05_04_toolbar_copy_alignment_passed`
+
+`full_check_found_toolbar_copy_test_drift_not_calculator_runtime_drift`
+
+`wrong_lane_broad_suites_green_no_runtime_movement_selected`
+
+`gate_b_closeout_remains_first_implementation_step_after_broad_check`
+
+`rockwool_uris_status_unchanged_after_broad_check`
+
+Full `pnpm check` now passes after aligning
+`simple-workbench-toolbar.test.ts` with the current toolbar copy
+(`Report` and `PDF setup`, with `Example Stack` absent). The failing snapshot was UI-copy
+drift, not calculator runtime, route-family, support, confidence,
+evidence, field-output, or numeric-behavior drift.
+
+The broad lane-safety suites stayed green, including deep hybrid
+adjacent-swap scans, AAC boundary scans, dynamic route family-boundary
+scans, many-layer and duplicate-stack histories, raw floor role guards,
+hostile raw input guards, wall flat-list multileaf guards, grouped
+topology route cards, and wall reorder invariance. That result supports
+the current no-runtime posture; it does not justify a new promotion.
+
+The first implementation step remains unchanged: create
+`packages/engine/src/post-floor-tolerance-edge-promotion-guard-v1-next-slice-selection-contract.test.ts`,
+add it to the current-gate runner after creation, and let Gate B select
+either a no-runtime closeout / next-slice rerank or one bounded fix with
+paired engine and visible tests. The rockwool/Uris issue also remains
+unchanged: `Rw 41` is still fail-closed `multileaf_screening_blend`
+screening output and still waits for a rights-safe source packet or
+equivalent source-owned proof before exact/runtime movement.
+
 (`common_combination_lane_misclassification_sentinel_v1` Gate A landed
 no-runtime on 2026-05-04 with
 `common_combination_lane_sentinel_inventory_landed_no_runtime_selected_gate_b_reprobes`,

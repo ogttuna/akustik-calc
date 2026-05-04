@@ -36,7 +36,7 @@ export const LOW_CONFIDENCE_FLOOR_FAMILY_NOTE =
   "Low-confidence published-family fallback is active on the impact lane. Ln,w stays source-backed, but the family fit is weak, so narrow the topology before treating this as a delivery-ready claim.";
 
 export function buildWorkbenchWarningNotes(result: AssemblyCalculation | null, warnings: readonly string[]): string[] {
-  const dedupedWarnings = Array.from(new Set(warnings));
+  const dedupedWarnings = Array.from(new Set(warnings.map((warning) => warning.replaceAll("DynEcho", "DAC"))));
   const isLowConfidenceFloorEstimate =
     result?.dynamicImpactTrace?.estimateTier === "low_confidence" ||
     result?.impact?.basis === "predictor_floor_system_low_confidence_estimate" ||

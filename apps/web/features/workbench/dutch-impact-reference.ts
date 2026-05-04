@@ -162,8 +162,8 @@ export function getDutchResidentialImpactReferenceRows(
 
   const liveProxy = getCurrentImpactProxyContext(result);
   const metricTail = liveProxy
-    ? `${liveProxy.summary}, but Dutch residential contact-sound checks use NEN 5077 LnT,A, so DynEcho does not treat this as a compliance verdict.`
-    : "Dutch residential contact-sound checks use NEN 5077 LnT,A, and DynEcho does not yet compute LnT,A directly, so no compliance verdict is emitted.";
+    ? `${liveProxy.summary}, but Dutch residential contact-sound checks use NEN 5077 LnT,A, so DAC does not treat this as a compliance verdict.`
+    : "Dutch residential contact-sound checks use NEN 5077 LnT,A, and DAC does not yet compute LnT,A directly, so no compliance verdict is emitted.";
 
   return DUTCH_IMPACT_REFERENCE_RULES.map((rule) => ({
     ...rule,

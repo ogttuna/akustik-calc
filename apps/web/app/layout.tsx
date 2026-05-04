@@ -17,8 +17,8 @@ const displayFont = Fraunces({
 });
 
 export const metadata: Metadata = {
-  title: "DynEcho",
-  description: "Web-first acoustic product shell with a portable engine boundary.",
+  title: "DYNECHO ACOUSTIC CALCULATOR",
+  description: "DAC is a web-first acoustic calculator with a portable engine boundary.",
   icons: {
     icon: "/icon.svg"
   }

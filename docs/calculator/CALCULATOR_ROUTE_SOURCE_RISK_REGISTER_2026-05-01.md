@@ -110,6 +110,36 @@ typecheck passed, engine tests passed 368 files / 2169 tests, web
 tests passed 161 files / 908 passed + 18 skipped, and build passed
 5 / 5 packages with the known non-fatal `sharp/@img` warnings.
 
+Follow-up broad audit on 2026-05-04:
+
+`broad_check_2026_05_04_toolbar_copy_alignment_passed`
+
+`full_check_found_toolbar_copy_test_drift_not_calculator_runtime_drift`
+
+`wrong_lane_broad_suites_green_no_runtime_movement_selected`
+
+`gate_b_closeout_remains_first_implementation_step_after_broad_check`
+
+`rockwool_uris_status_unchanged_after_broad_check`
+
+Full `pnpm check` passed after aligning the toolbar test with the
+current commands `Report` and `PDF setup` while confirming
+`Example Stack` is absent. That was UI-copy test
+drift, not calculator runtime drift. Engine passed 368 files / 2170
+tests; web passed 161 files / 907 passed + 18 skipped; build passed 5 /
+5 packages with the known non-fatal `sharp/@img` warnings. The
+wrong-lane suites stayed green, including deep hybrid adjacent-swap
+scans, AAC boundary scans, dynamic family-boundary scans,
+duplicate/many-layer floor histories, raw floor role guards, hostile
+input guards, wall flat-list multileaf guards, grouped-topology route
+cards, and wall reorder invariance.
+
+Risk action from this audit: keep the no-runtime posture. The first
+implementation step is still the Gate B closeout contract for floor
+tolerance edges. Rockwool/Uris remains unchanged: `Rw 41` is still
+screening on `multileaf_screening_blend`, not exact source validation
+or a fixed triple-leaf runtime answer.
+
 ## Planning Pass - 2026-05-04 Wrong Measurement Discipline
 
 `gate_b_closeout_file_currently_absent_and_next_to_create`

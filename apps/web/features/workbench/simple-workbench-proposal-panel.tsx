@@ -137,7 +137,7 @@ function buildProposalBriefInput(props: SimpleWorkbenchProposalPanelProps) {
   return {
     briefNote: props.briefNote,
     citations: props.citations,
-    consultantCompany: props.consultantCompany.trim() || "DynEcho Acoustic Consulting",
+    consultantCompany: props.consultantCompany.trim() || "DYNECHO Acoustic Consulting",
     contextLabel: props.contextLabel,
     dynamicBranchDetail: props.dynamicBranchDetail,
     dynamicBranchLabel: props.dynamicBranchLabel,
@@ -174,10 +174,10 @@ function getStudyModeAwareProposalSubject(projectName: string, studyModeLabel: s
 const GENERIC_PROPOSAL_IDENTITY = {
   approverTitle: "Acoustic Consultant",
   consultantAddress: "Office address not entered",
-  consultantCompany: "DynEcho Acoustic Consulting",
+  consultantCompany: "DYNECHO Acoustic Consulting",
   consultantEmail: "Contact email not entered",
   consultantPhone: "Contact phone not entered",
-  preparedBy: "DynEcho Operator"
+  preparedBy: "DAC Operator"
 } as const;
 
 function isBlankOrDefaultIdentityValue(value: string, fallback: string): boolean {
@@ -458,7 +458,7 @@ function buildProposalDocument(
     clientName: props.clientName.trim() || "Unnamed client",
     consultantAddress: props.consultantAddress.trim() || "Office address not entered",
     citations: props.citations,
-    consultantCompany: props.consultantCompany.trim() || "DynEcho Acoustic Consulting",
+    consultantCompany: props.consultantCompany.trim() || "DYNECHO Acoustic Consulting",
     consultantEmail: props.consultantEmail.trim() || "Contact email not entered",
     consultantLogoDataUrl: props.consultantLogoDataUrl.trim(),
     consultantPhone: props.consultantPhone.trim() || "Contact phone not entered",
@@ -497,7 +497,7 @@ function buildProposalDocument(
               value: "Waiting for supported output"
             }
           ],
-    preparedBy: props.preparedBy.trim() || "DynEcho Operator",
+    preparedBy: props.preparedBy.trim() || "DAC Operator",
     primaryMetricLabel: primaryMetric.label,
     primaryMetricValue: primaryMetric.value,
     projectName: props.projectName.trim() || "Untitled acoustic proposal",
@@ -632,7 +632,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
     onConsultantAddressChange(defaultCompanyProfile.consultantAddress);
     setProfileDraftLabel(defaultCompanyProfile.label);
     toast.success("Default office loaded", {
-      description: `${defaultCompanyProfile.label} replaced the generic DynEcho identity so this issue sheet opens on your saved office preset.`
+      description: `${defaultCompanyProfile.label} replaced the generic DYNECHO identity so this issue sheet opens on your saved office preset.`
     });
   }, [
     activeCompanyProfile?.id,
@@ -686,17 +686,17 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
       toast.success(`${getSimpleWorkbenchProposalExportLabel({ format, style })} downloaded`, {
         description:
           format === "docx"
-            ? "DynEcho prepared the Word document on the server from the current proposal snapshot."
+            ? "DAC prepared the Word document on the server from the current proposal snapshot."
             : style === "simple"
-              ? "DynEcho prepared the lightweight calculation-summary PDF on the server."
-              : "DynEcho prepared the formal proposal PDF on the server."
+              ? "DAC prepared the lightweight calculation-summary PDF on the server."
+              : "DAC prepared the formal proposal PDF on the server."
       });
     } catch (error) {
       toast.error(`${getSimpleWorkbenchProposalExportLabel({ format, style })} failed`, {
         description:
           error instanceof Error
             ? error.message
-            : `DynEcho could not generate the ${getSimpleWorkbenchProposalExportLabel({ format, style })} on the server. Use the print view as a fallback.`
+            : `DAC could not generate the ${getSimpleWorkbenchProposalExportLabel({ format, style })} on the server. Use the print view as a fallback.`
       });
     } finally {
       setIsDownloadingPdf(false);
@@ -709,7 +709,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
 
     if (!printWindow) {
       toast.error("Print window blocked", {
-        description: "Allow pop-ups so DynEcho can open the print-ready proposal view."
+        description: "Allow pop-ups so DAC can open the print-ready proposal view."
       });
       return;
     }
@@ -721,7 +721,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
 
     if (!adjustmentWindow) {
       toast.error("PDF editor blocked", {
-        description: "Allow pop-ups so DynEcho can open the PDF editor."
+        description: "Allow pop-ups so DAC can open the PDF editor."
       });
     }
   }
@@ -764,7 +764,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
     toast.success(mode === "autoload" ? "Default office loaded" : "Company profile applied", {
       description:
         mode === "autoload"
-          ? `${profile.label} replaced the generic DynEcho identity so this issue sheet opens on your saved office preset.`
+          ? `${profile.label} replaced the generic DYNECHO identity so this issue sheet opens on your saved office preset.`
           : `${profile.label} is now driving the consultant identity block, template profile, issue coding, and default clause policy.`
     });
   }

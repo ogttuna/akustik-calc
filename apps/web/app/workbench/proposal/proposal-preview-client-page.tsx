@@ -209,17 +209,17 @@ export function ProposalPreviewClientPage() {
       toast.success(`${getSimpleWorkbenchProposalExportLabel({ format, style })} downloaded`, {
         description:
           format === "docx"
-            ? "DynEcho prepared the Word document on the server from the active preview snapshot."
+            ? "DAC prepared the Word document on the server from the active preview snapshot."
             : style === "simple"
-              ? "DynEcho prepared the lightweight calculation-summary PDF on the server."
-              : "DynEcho prepared the formal proposal PDF on the server."
+              ? "DAC prepared the lightweight calculation-summary PDF on the server."
+              : "DAC prepared the formal proposal PDF on the server."
       });
     } catch (error) {
       toast.error(`${getSimpleWorkbenchProposalExportLabel({ format, style })} failed`, {
         description:
           error instanceof Error
             ? error.message
-            : `DynEcho could not generate the ${getSimpleWorkbenchProposalExportLabel({ format, style })} on the server.`
+            : `DAC could not generate the ${getSimpleWorkbenchProposalExportLabel({ format, style })} on the server.`
       });
     } finally {
       setIsDownloadingPdf(false);

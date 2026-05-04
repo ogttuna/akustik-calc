@@ -21,19 +21,19 @@ export function OutputCard(props: { card: OutputCardModel }) {
 
   return (
     <article
-      className={`min-w-0 rounded-md border px-4 py-4 ${outputStatusClass(card.status)}`}
+      className={`min-w-0 rounded border px-3 py-3 ${outputStatusClass(card.status)}`}
       title={card.detail}
     >
-      <div className="flex min-w-0 flex-wrap items-start justify-between gap-3">
+      <div className="flex min-w-0 flex-wrap items-start justify-between gap-2">
         <div className="min-w-0">
           <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">{card.label}</div>
-          <div className="mt-2 text-[1.65rem] font-semibold leading-none tracking-[-0.04em] text-[color:var(--ink)]">{card.value}</div>
+          <div className="mt-1.5 text-[1.38rem] font-semibold leading-none text-[color:var(--ink)]">{card.value}</div>
         </div>
         <span className={`text-[0.7rem] font-semibold uppercase tracking-[0.16em] ${outputStatusTextClass(card.status)}`}>
           {statusLabel(card.status)}
         </span>
       </div>
-      <div className="mt-2 text-[0.72rem] font-medium text-[color:var(--ink-soft)]">{card.postureLabel}</div>
+      <div className="mt-1.5 truncate text-[0.72rem] font-medium text-[color:var(--ink-soft)]">{card.postureLabel}</div>
     </article>
   );
 }
@@ -49,8 +49,8 @@ export function OutputCoverageSummary(props: {
   const { boundCount, liveCount, parkedCount, readyCount, totalCount, unsupportedCount } = props;
 
   return (
-    <section className={`rounded border px-3 py-3 ${workbenchSectionCardClass("results")}`}>
-      <div className="flex min-w-0 flex-wrap items-center justify-between gap-3">
+    <section className={`border-y px-1 py-2 ${workbenchSectionCardClass("results")}`}>
+      <div className="flex min-w-0 flex-wrap items-center justify-between gap-2">
         <div className="text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Coverage</div>
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.72rem] text-[color:var(--ink-faint)]">
           <span className="font-semibold text-[color:var(--ink-soft)]">{readyCount}/{totalCount} ready</span>
@@ -78,19 +78,19 @@ export function OutputUnlockRail(props: {
   }
 
   return (
-    <details className="rounded-md border hairline bg-[color:var(--paper)]/72 px-4 py-3">
+    <details className="rounded border border-[color:var(--line)] bg-[color:var(--panel)] px-3 py-2.5">
       <summary className="cursor-pointer list-none">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="text-sm font-semibold text-[color:var(--ink)]">Unlock parked outputs</div>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="text-[0.82rem] font-semibold text-[color:var(--ink)]">Unlock parked outputs</div>
           <div className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">
             {formatCountLabel(groups.length, "next step")}
           </div>
         </div>
       </summary>
 
-      <div className="mt-3 grid gap-2 md:grid-cols-2">
+      <div className="mt-2 grid gap-2 md:grid-cols-2">
         {groups.map((group) => (
-          <div className="flex items-start gap-3 px-1 py-2" key={`unlock-${group.title}`}>
+          <div className="flex items-start gap-3 border-t border-[color:var(--line)] px-1 py-2 first:border-t-0" key={`unlock-${group.title}`}>
             <div className="min-w-0 flex-1">
               <div className="text-[0.78rem] font-semibold text-[color:var(--ink)]">{group.title}</div>
               <p className="mt-0.5 text-[0.72rem] leading-4 text-[color:var(--ink-soft)]">{group.detail}</p>
@@ -155,7 +155,7 @@ export function PrimaryResultCard(props: {
       <div className="mt-4 grid gap-4 lg:grid-cols-[auto_minmax(0,1fr)] lg:items-start">
         <div className="min-w-0 text-right">
           <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">{card.label}</div>
-          <div className="mt-1 text-[clamp(2.4rem,4vw,3.2rem)] font-semibold leading-[0.92] tracking-[-0.05em] text-[color:var(--ink)]">
+          <div className="mt-1 text-[clamp(2.4rem,4vw,3.2rem)] font-semibold leading-[0.92] text-[color:var(--ink)]">
             {card.value}
           </div>
           <div className={`mt-1 text-[0.72rem] font-semibold uppercase tracking-[0.14em] ${outputStatusTextClass(card.status)}`}>
@@ -180,7 +180,7 @@ export function PendingOutputRow(props: { card: OutputCardModel }) {
   const postureTextClass = outputPostureTextClass(card.postureTone);
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[color:var(--line)] px-1 py-2 last:border-b-0">
+    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[color:var(--line)] px-1 py-2 last:border-b-0" title={card.detail}>
       <div className="min-w-0">
         <div className="text-[0.78rem] font-semibold text-[color:var(--ink)]">{card.label}</div>
         <div className={`mt-0.5 text-[0.68rem] font-medium ${postureTextClass}`}>{card.postureLabel}</div>

@@ -640,7 +640,7 @@ function inferProposalStandardReferences(
     references.push({
       code: "ISO 717-2",
       detail:
-        "Weighted impact ratings on this issue are stated using ISO 717-2 language. DynEcho only presents Ln,w, L'n,w, L'nT,w, CI, or DeltaLw when the active route exposes them defensibly.",
+        "Weighted impact ratings on this issue are stated using ISO 717-2 language. DAC only presents Ln,w, L'n,w, L'nT,w, CI, or DeltaLw when the active route exposes them defensibly.",
       label: "Weighted impact rating basis"
     });
   }

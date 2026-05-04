@@ -58,8 +58,8 @@ export function getDynamicCalcBranchSummary(input: {
     return {
       detail:
         studyMode === "floor"
-          ? "Choose the route, then build a floor stack so DynEcho can resolve the active impact family or formula branch."
-          : "Choose the route, then build a wall stack so DynEcho can resolve the active airborne branch.",
+          ? "Choose the route, then build a floor stack so DAC can resolve the active impact family or formula branch."
+          : "Choose the route, then build a wall stack so DAC can resolve the active airborne branch.",
       tone: "neutral",
       value: "Waiting for stack"
     };

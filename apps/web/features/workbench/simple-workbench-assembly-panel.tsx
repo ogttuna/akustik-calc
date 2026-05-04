@@ -2,7 +2,7 @@
 
 import type { AssemblyCalculation, FloorRole, MaterialDefinition } from "@dynecho/shared";
 import { Plus } from "lucide-react";
-import type { Dispatch, SetStateAction } from "react";
+import { useRef, useState, type Dispatch, type DragEvent, type SetStateAction } from "react";
 
 import { formatDecimal } from "@/lib/format";
 
@@ -23,6 +23,14 @@ import {
 import type { WorkbenchMaterialOptionGroup } from "./workbench-material-picker";
 import { inferFloorRole } from "./workbench-store";
 import type { LayerDraft } from "./workbench-store";
+
+type LayerDropPosition = "after" | "before";
+
+type LayerDragState = {
+  draggedRowId: string;
+  overRowId: string | null;
+  position: LayerDropPosition | null;
+};
 
 export function SimpleWorkbenchAssemblyPanel(props: {
   activeAssemblyTool: AssemblyToolPanel | null;
@@ -104,12 +112,107 @@ export function SimpleWorkbenchAssemblyPanel(props: {
     updateMaterial,
     updateThickness
   } = props;
+  const layerDragRowIdRef = useRef<string | null>(null);
+  const [layerDragState, setLayerDragState] = useState<LayerDragState | null>(null);
+
+  function moveRowToIndex(rowId: string, fromIndex: number, toIndex: number) {
+    if (fromIndex === toIndex) {
+      return;
+    }
+
+    const direction = toIndex < fromIndex ? "up" : "down";
+    const steps = Math.abs(toIndex - fromIndex);
+
+    for (let step = 0; step < steps; step += 1) {
+      moveRowWithFeedback(rowId, direction);
+    }
+
+    setActiveRowId(rowId);
+  }
+
+  function handleLayerDragStart(event: DragEvent<HTMLElement>, rowId: string) {
+    event.dataTransfer.effectAllowed = "move";
+    event.dataTransfer.setData("application/x-dynecho-layer-id", rowId);
+    event.dataTransfer.setData("text/plain", rowId);
+    layerDragRowIdRef.current = rowId;
+    setLayerDragState({
+      draggedRowId: rowId,
+      overRowId: null,
+      position: null
+    });
+    setActiveRowId(rowId);
+  }
+
+  function handleLayerDragEnd() {
+    layerDragRowIdRef.current = null;
+    setLayerDragState(null);
+  }
+
+  function handleLayerDragOver(event: DragEvent<HTMLElement>, rowId: string) {
+    const draggedRowId = layerDragState?.draggedRowId ?? layerDragRowIdRef.current;
+    if (!draggedRowId) {
+      return;
+    }
+
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "move";
+
+    if (draggedRowId === rowId) {
+      setLayerDragState((current) =>
+        current?.draggedRowId === draggedRowId && current.overRowId === null && current.position === null
+          ? current
+          : { draggedRowId, overRowId: null, position: null }
+      );
+      return;
+    }
+
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const position: LayerDropPosition = event.clientY < bounds.top + bounds.height / 2 ? "before" : "after";
+    setLayerDragState((current) =>
+      current?.draggedRowId === draggedRowId && current.overRowId === rowId && current.position === position
+        ? current
+        : { draggedRowId, overRowId: rowId, position }
+    );
+  }
+
+  function handleLayerDrop(event: DragEvent<HTMLElement>, rowId: string) {
+    event.preventDefault();
+
+    const draggedRowId =
+      layerDragState?.draggedRowId ||
+      layerDragRowIdRef.current ||
+      event.dataTransfer.getData("application/x-dynecho-layer-id") ||
+      event.dataTransfer.getData("text/plain");
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const fallbackPosition: LayerDropPosition = event.clientY < bounds.top + bounds.height / 2 ? "before" : "after";
+    const position = layerDragState?.overRowId === rowId ? (layerDragState.position ?? fallbackPosition) : fallbackPosition;
+
+    layerDragRowIdRef.current = null;
+    setLayerDragState(null);
+
+    if (!draggedRowId || !position || draggedRowId === rowId) {
+      return;
+    }
+
+    const fromIndex = rows.findIndex((row) => row.id === draggedRowId);
+    const hoverIndex = rows.findIndex((row) => row.id === rowId);
+    if (fromIndex === -1 || hoverIndex === -1) {
+      return;
+    }
+
+    let toIndex = position === "after" ? hoverIndex + 1 : hoverIndex;
+    if (fromIndex < toIndex) {
+      toIndex -= 1;
+    }
+
+    moveRowToIndex(draggedRowId, fromIndex, toIndex);
+  }
 
   return (
     <div
       className={isDesktop
-        ? "col-start-1 row-start-2 min-w-0 border-r border-[color:var(--line)] px-4 pb-4"
-        : `stage-enter-2 min-w-0 px-4 py-4 ${activeWorkspacePanel === "stack" ? "block" : "hidden"}`
+        ? "col-start-2 row-start-1 min-h-0 min-w-0 overflow-y-auto border-r border-[color:var(--line)] px-4 py-4"
+        : `stage-enter-2 min-h-0 min-w-0 overflow-y-auto px-4 py-4 ${activeWorkspacePanel === "stack" ? "block" : "hidden"}`
       }
     >
       <div className="flex flex-col">
@@ -259,6 +362,8 @@ export function SimpleWorkbenchAssemblyPanel(props: {
               rows.map((row, index) => (
                 <SimpleLayerRow
                   active={row.id === activeRowId}
+                  dragPosition={layerDragState?.overRowId === row.id ? layerDragState.position : null}
+                  dragState={layerDragState?.draggedRowId === row.id ? "dragging" : "idle"}
                   expanded={row.id === expandedRowId}
                   index={index}
                   key={row.id}
@@ -266,6 +371,10 @@ export function SimpleWorkbenchAssemblyPanel(props: {
                   materialGroups={buildMaterialGroups(studyMode, materials, row.materialId, row.floorRole)}
                   moveFlashDirection={movedRowFlash?.rowId === row.id ? movedRowFlash.direction : undefined}
                   onActiveRowChange={setActiveRowId}
+                  onLayerDragEnd={handleLayerDragEnd}
+                  onLayerDragOver={handleLayerDragOver}
+                  onLayerDragStart={handleLayerDragStart}
+                  onLayerDrop={handleLayerDrop}
                   onExpandedChange={setExpandedRowId}
                   onDensityChange={updateDensity}
                   onDuplicateRow={duplicateRow}

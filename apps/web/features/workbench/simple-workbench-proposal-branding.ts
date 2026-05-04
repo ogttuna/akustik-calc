@@ -64,7 +64,7 @@ export function buildSimpleWorkbenchProposalMonogram(consultantCompany: string):
 export function getSimpleWorkbenchProposalBranding(
   input: SimpleWorkbenchProposalBrandingInput
 ): SimpleWorkbenchProposalBranding {
-  const company = input.consultantCompany.trim() || "DynEcho Acoustic Consulting";
+  const company = input.consultantCompany.trim() || "DYNECHO Acoustic Consulting";
   const customWordmarkLine = input.consultantWordmarkLine?.trim() ?? "";
   const project = input.projectName.trim() || "Untitled acoustic proposal";
   const monogram = buildSimpleWorkbenchProposalMonogram(company);

@@ -1,7 +1,8 @@
 "use client";
 
 import type { FloorRole, MaterialDefinition } from "@dynecho/shared";
-import { ArrowDown, ArrowUp, Copy } from "lucide-react";
+import { ArrowDown, ArrowUp, Copy, GripVertical, Trash2 } from "lucide-react";
+import type { DragEvent } from "react";
 
 import { formatDecimal } from "@/lib/format";
 
@@ -35,6 +36,8 @@ import type { LayerDraft } from "./workbench-store";
 
 export function SimpleLayerRow(props: {
   active: boolean;
+  dragPosition?: "after" | "before" | null;
+  dragState?: "dragging" | "idle";
   expanded: boolean;
   index: number;
   materials: readonly MaterialDefinition[];
@@ -44,6 +47,10 @@ export function SimpleLayerRow(props: {
   materialGroups: readonly WorkbenchMaterialOptionGroup[];
   moveFlashDirection?: "down" | "up";
   onActiveRowChange: (rowId: string | null) => void;
+  onLayerDragEnd: () => void;
+  onLayerDragOver: (event: DragEvent<HTMLElement>, rowId: string) => void;
+  onLayerDragStart: (event: DragEvent<HTMLElement>, rowId: string) => void;
+  onLayerDrop: (event: DragEvent<HTMLElement>, rowId: string) => void;
   onExpandedChange: (rowId: string | null) => void;
   onFloorRoleChange: (id: string, floorRole?: FloorRole) => void;
   onMaterialChange: (id: string, materialId: string) => void;
@@ -57,12 +64,18 @@ export function SimpleLayerRow(props: {
 }) {
   const {
     active,
+    dragPosition,
+    dragState = "idle",
     expanded,
     index,
     materials: allMaterials,
     materialGroups,
     moveFlashDirection,
     onActiveRowChange,
+    onLayerDragEnd,
+    onLayerDragOver,
+    onLayerDragStart,
+    onLayerDrop,
     onExpandedChange,
     onDensityChange,
     onDuplicateRow,
@@ -116,11 +129,18 @@ export function SimpleLayerRow(props: {
       })
     : null;
   const stateLabel = thicknessReady ? "Live row" : "Parked";
+  const thicknessLabel = thicknessReady ? `${row.thicknessMm} mm` : "Pending";
+  const roleOrStateLabel = studyMode === "floor" ? (row.floorRole ? FLOOR_ROLE_LABELS[row.floorRole] : "Unassigned") : stateLabel;
   const rowMeta = compactValues([edgeLabel, stateLabel, studyMode === "floor" && row.floorRole ? FLOOR_ROLE_LABELS[row.floorRole] : null]).join(" • ");
+  const secondaryFacts = compactValues([
+    surfaceMassLabel,
+    densityLabel,
+    studyMode === "floor" ? dynamicStiffnessLabel : null
+  ]).join(" • ");
 
   return (
     <article
-      className={`workbench-row min-w-0 rounded border px-3 py-3 ${
+      className={`workbench-row min-w-0 rounded border px-2.5 py-2.5 ${
         active
           ? "border-[color:var(--line-strong)] bg-[color:var(--panel)]"
           : thicknessReady
@@ -128,6 +148,8 @@ export function SimpleLayerRow(props: {
             : "border-[color:var(--warning)] bg-[color:color-mix(in_oklch,var(--warning)_8%,var(--paper))]"
       }`}
       data-active={active ? "true" : "false"}
+      data-drag-state={dragState}
+      data-drop-position={dragPosition ?? "none"}
       data-move-flash={moveFlashDirection ?? "idle"}
       data-row-id={row.id}
       data-ready={thicknessReady ? "true" : "false"}
@@ -138,21 +160,57 @@ export function SimpleLayerRow(props: {
         }
       }}
       onFocusCapture={() => onActiveRowChange(row.id)}
+      onDragOver={(event) => onLayerDragOver(event, row.id)}
+      onDrop={(event) => onLayerDrop(event, row.id)}
       onMouseEnter={() => onActiveRowChange(row.id)}
       onMouseLeave={() => onActiveRowChange(null)}
     >
-      <div className="flex min-w-0 flex-wrap items-start justify-between gap-3">
-        <div className="flex min-w-0 flex-wrap items-center gap-2">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[color:var(--line)] bg-[color:color-mix(in_oklch,var(--ink)_3%,var(--paper))] text-xs font-semibold text-[color:var(--ink)]">
-            {index + 1}
+      <div className="grid min-w-0 gap-2 2xl:grid-cols-[2.5rem_minmax(0,1.5fr)_7rem_10rem_auto] 2xl:items-center">
+        <div className="hidden h-7 w-7 items-center justify-center rounded border border-[color:var(--line)] bg-[color:color-mix(in_oklch,var(--ink)_3%,var(--paper))] text-[0.72rem] font-semibold text-[color:var(--ink)] 2xl:flex">
+          {index + 1}
+        </div>
+
+        <div className="min-w-0">
+          <div className="flex min-w-0 items-center gap-2">
+            <button
+              aria-grabbed={dragState === "dragging"}
+              aria-label={`Drag layer ${index + 1} to reorder`}
+              className="focus-ring inline-flex h-7 w-7 shrink-0 cursor-grab items-center justify-center rounded border border-[color:var(--line)] text-[color:var(--ink-faint)] hover:border-[color:var(--line-strong)] hover:bg-[color:var(--panel)] active:cursor-grabbing"
+              draggable={totalRows > 1}
+              onDragEnd={onLayerDragEnd}
+              onDragStart={(event) => onLayerDragStart(event, row.id)}
+              title="Drag to reorder"
+              type="button"
+            >
+              <GripVertical className="h-3.5 w-3.5" />
+            </button>
+            <span
+              aria-hidden="true"
+              className={`h-2 w-2 shrink-0 rounded-full ${thicknessReady ? "bg-[color:var(--success)]" : "bg-[color:var(--warning)]"}`}
+            />
+            <div className="min-w-0 truncate text-[0.88rem] font-semibold text-[color:var(--ink)]">{material.name}</div>
           </div>
-          <div className="min-w-0">
-            <div className="truncate text-[0.9rem] font-semibold text-[color:var(--ink)]">{material.name}</div>
-            <div className="mt-1 text-[0.72rem] leading-5 text-[color:var(--ink-soft)]">{rowMeta}</div>
+          <div className="mt-1 truncate text-[0.72rem] leading-5 text-[color:var(--ink-soft)]">
+            <span className="2xl:hidden">{`${index + 1}. ${rowMeta}`}</span>
+            <span className="hidden 2xl:inline">{compactValues([edgeLabel, categoryLabel]).join(" • ")}</span>
           </div>
         </div>
 
-        <div className="flex shrink-0 items-center gap-1">
+        <div className="min-w-0">
+          <div className="text-[0.82rem] font-semibold text-[color:var(--ink)]">{thicknessLabel}</div>
+          <div className="mt-0.5 text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-[color:var(--ink-faint)] 2xl:hidden">Thickness</div>
+        </div>
+
+        <div className="min-w-0">
+          <div className={`truncate text-[0.82rem] font-semibold ${thicknessReady ? "text-[color:var(--ink)]" : "text-[color:var(--warning-ink)]"}`}>
+            {roleOrStateLabel}
+          </div>
+          <div className="mt-0.5 text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-[color:var(--ink-faint)] 2xl:hidden">
+            {studyMode === "floor" ? "Role" : "State"}
+          </div>
+        </div>
+
+        <div className="flex shrink-0 items-center justify-start gap-1 2xl:justify-end">
           <button
             aria-label={`Move layer ${index + 1} up`}
             className="focus-ring inline-flex h-7 w-7 items-center justify-center rounded border border-[color:var(--line)] text-[color:var(--ink-soft)] enabled:hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-35"
@@ -181,16 +239,18 @@ export function SimpleLayerRow(props: {
             <Copy className="h-3.5 w-3.5" />
           </button>
           <button
-            className="focus-ring rounded px-2.5 py-1.5 text-sm font-medium text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
+            aria-label={`Remove layer ${index + 1}`}
+            className="focus-ring inline-flex h-7 w-7 items-center justify-center rounded border border-transparent text-[color:var(--warning-ink)] hover:border-[color:var(--warning)] hover:bg-[color:var(--warning-soft)]"
             onClick={() => onRemoveRow(row.id)}
+            title="Remove"
             type="button"
           >
-            Remove
+            <Trash2 className="h-3.5 w-3.5" />
           </button>
           <button
             aria-label={expanded ? "Hide details" : "Edit row"}
             aria-expanded={expanded}
-            className="focus-ring inline-flex items-center justify-center rounded border border-[color:var(--line)] px-2.5 py-1.5 text-sm font-medium text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
+            className="focus-ring inline-flex h-7 items-center justify-center rounded border border-[color:var(--line)] px-2 text-[0.75rem] font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
             onClick={() => onExpandedChange(expanded ? null : row.id)}
             type="button"
           >
@@ -199,16 +259,13 @@ export function SimpleLayerRow(props: {
         </div>
       </div>
 
-      <div className="mt-3 flex flex-wrap gap-2">
-        <GuidedFactChip>{thicknessReady ? `${row.thicknessMm} mm` : "Pending thickness"}</GuidedFactChip>
-        <GuidedFactChip>{studyMode === "floor" ? (row.floorRole ? FLOOR_ROLE_LABELS[row.floorRole] : "Unassigned role") : stateLabel}</GuidedFactChip>
-        <GuidedFactChip>{densityLabel}</GuidedFactChip>
-        <GuidedFactChip>{surfaceMassLabel}</GuidedFactChip>
+      <div className="mt-2 truncate text-[0.72rem] leading-5 text-[color:var(--ink-soft)]" title={secondaryFacts}>
+        {secondaryFacts}
       </div>
 
       {expanded ? (
         <div className="mt-3 grid gap-3">
-          <div className={`grid min-w-0 gap-3 ${studyMode === "floor" ? "md:grid-cols-2" : "md:grid-cols-3"}`}>
+          <div className={`grid min-w-0 gap-3 ${studyMode === "floor" ? "2xl:grid-cols-2" : "2xl:grid-cols-3"}`}>
             <WorkbenchMaterialPicker
               currentMaterial={material}
               groups={materialGroups}

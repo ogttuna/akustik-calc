@@ -992,7 +992,7 @@ describe("scenario analysis", () => {
     expect(scenario.result).not.toBeNull();
     expect(scenario.result?.impactCatalogMatch).toBeNull();
     expect(scenario.warnings).toContain(
-      "REGUPOL sonus multi 4.5 is in the stack, but no official product row matched the current topology and no generic dynamic stiffness fallback is available for this product. DynEcho kept the result on the broader predictor/family lane instead of inventing product-backed impact credit."
+      "REGUPOL sonus multi 4.5 is in the stack, but no official product row matched the current topology and no generic dynamic stiffness fallback is available for this product. DAC kept the result on the broader predictor/family lane instead of inventing product-backed impact credit."
     );
   });
 
@@ -1012,7 +1012,7 @@ describe("scenario analysis", () => {
     expect(scenario.result).not.toBeNull();
     expect(scenario.result?.impact?.LnW).toBeCloseTo(76.4, 1);
     expect(scenario.warnings).toContain(
-      "Cement Plaster is tagged as a plaster or masonry finish but is currently assigned to the floor covering role with no base structure in the stack. DynEcho will keep the run live as a broad screening estimate only; add the structural floor or switch to a tested floor-cover path before trusting impact outputs."
+      "Cement Plaster is tagged as a plaster or masonry finish but is currently assigned to the floor covering role with no base structure in the stack. DAC will keep the run live as a broad screening estimate only; add the structural floor or switch to a tested floor-cover path before trusting impact outputs."
     );
   });
 
@@ -1229,7 +1229,7 @@ describe("scenario analysis", () => {
     expect(scenario.result?.supportedTargetOutputs).toEqual(["Rw"]);
     expect(scenario.result?.unsupportedTargetOutputs).toEqual(["Ln,w", "Ln,w+CI", "DeltaLw", "L'n,w", "L'nT,w"]);
     expect(scenario.warnings).toContain(
-      "Impact sound outputs are not available for the current input/path: Ln,w, Ln,w+CI, DeltaLw, L'n,w, L'nT,w. DynEcho kept those outputs explicit instead of fabricating unsupported ratings."
+      "Impact sound outputs are not available for the current input/path: Ln,w, Ln,w+CI, DeltaLw, L'n,w, L'nT,w. DAC kept those outputs explicit instead of fabricating unsupported ratings."
     );
     expect(scenario.warnings).toContain("Screening estimate only. This result is coming from the local calibrated seed lane.");
   });
@@ -1642,7 +1642,7 @@ describe("scenario analysis", () => {
     expect(scenario.result).toBeNull();
     expect(
       scenario.warnings.some((warning) =>
-        warning.includes("DynEcho could not evaluate the current scenario and kept the workspace live instead of crashing.")
+        warning.includes("DAC could not evaluate the current scenario and kept the workspace live instead of crashing.")
       )
     ).toBe(true);
     expect(scenario.warnings.some((warning) => warning.includes("Expected number, received nan"))).toBe(true);
@@ -1688,7 +1688,7 @@ describe("scenario analysis", () => {
     expect(scenario.result).toBeNull();
     expect(
       scenario.warnings.some((warning) =>
-        warning.includes("DynEcho could not evaluate the current scenario and kept the workspace live instead of crashing.")
+        warning.includes("DAC could not evaluate the current scenario and kept the workspace live instead of crashing.")
       )
     ).toBe(true);
     expect(scenario.warnings.some((warning) => warning.includes("Expected number, received nan"))).toBe(true);
@@ -2089,7 +2089,7 @@ describe("scenario analysis", () => {
     expect(scenario.result?.supportedTargetOutputs).toEqual(["Rw", "Ln,w"]);
     expect(scenario.result?.unsupportedTargetOutputs).toEqual(["Ln,w+CI", "DeltaLw", "L'n,w", "L'nT,w"]);
     expect(scenario.warnings).toContain(
-      "Ceiling-side support or fill layers are present without any ceiling board. DynEcho keeps the lower-treatment lane inactive, so these products may not change the result until at least one ceiling board is added."
+      "Ceiling-side support or fill layers are present without any ceiling board. DAC keeps the lower-treatment lane inactive, so these products may not change the result until at least one ceiling board is added."
     );
     expect(scenario.warnings).toContain(
       "No curated exact floor-system landed. Closest family candidate is Knauf CC60.1A | 150 mm concrete | timber + acoustic underlay."
@@ -2116,7 +2116,7 @@ describe("scenario analysis", () => {
     expect(scenario.result?.impact?.LnW).toBeCloseTo(76.4, 1);
     expect(scenario.result?.floorSystemRatings?.Rw).toBeCloseTo(43.6, 1);
     expect(scenario.warnings).toContain(
-      "Cement Plaster is tagged as a plaster or masonry finish but is currently assigned to the floor covering role with no base structure in the stack. DynEcho will keep the run live as a broad screening estimate only; add the structural floor or switch to a tested floor-cover path before trusting impact outputs."
+      "Cement Plaster is tagged as a plaster or masonry finish but is currently assigned to the floor covering role with no base structure in the stack. DAC will keep the run live as a broad screening estimate only; add the structural floor or switch to a tested floor-cover path before trusting impact outputs."
     );
   });
 

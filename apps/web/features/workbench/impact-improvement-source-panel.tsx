@@ -59,7 +59,7 @@ export function ImpactImprovementSourcePanel({
         <div className="eyebrow">Heavy-reference evidence</div>
         <h2 className="mt-1 font-display text-[1.95rem] leading-none tracking-[-0.04em]">Exact improvement curve</h2>
         <p className="mt-3 max-w-2xl text-sm leading-7 text-[color:var(--ink-soft)]">
-          Paste a measured DeltaLw improvement curve on the ISO heavy-reference floor. DynEcho will derive exact
+          Paste a measured DeltaLw improvement curve on the ISO heavy-reference floor. DAC will derive exact
           `DeltaLw` and the treated heavy-reference `Ln,w` without pretending it solved the current floor assembly.
         </p>
       </div>
@@ -91,7 +91,7 @@ export function ImpactImprovementSourcePanel({
           <article className="rounded-md border hairline bg-[color:var(--panel)] px-4 py-4 text-sm leading-7 text-[color:var(--ink-soft)]">
             <div className="font-semibold text-[color:var(--ink)]">Quick format</div>
             <p className="mt-2">
-              Either paste 16 freq/value rows or 16 improvement values. DynEcho assumes the ISO heavy-reference floor
+              Either paste 16 freq/value rows or 16 improvement values. DAC assumes the ISO heavy-reference floor
               and rates the treated reference curve.
             </p>
           </article>

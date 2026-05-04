@@ -763,7 +763,7 @@ export function SimpleWorkbenchShell() {
       });
 
       if (!response.ok) {
-        throw new Error(await readServerProjectError(response, "DynEcho could not load server projects."));
+        throw new Error(await readServerProjectError(response, "DAC could not load server projects."));
       }
 
       const payload = (await response.json()) as unknown;
@@ -783,7 +783,7 @@ export function SimpleWorkbenchShell() {
       setServerProjectMessage(error instanceof Error ? error.message : "Server project list failed");
       if (!options?.silent) {
         toast.error("Server project list failed", {
-          description: error instanceof Error ? error.message : "DynEcho could not load server projects."
+          description: error instanceof Error ? error.message : "DAC could not load server projects."
         });
       }
     }
@@ -826,7 +826,7 @@ export function SimpleWorkbenchShell() {
       });
 
       if (!response.ok) {
-        throw new Error(await readServerProjectError(response, "DynEcho could not sync the project."));
+        throw new Error(await readServerProjectError(response, "DAC could not sync the project."));
       }
 
       const payload = (await response.json()) as unknown;
@@ -834,7 +834,7 @@ export function SimpleWorkbenchShell() {
       const latestScenario = project ? getLatestServerProjectScenario(project) : null;
 
       if (!project) {
-        throw new Error("DynEcho synced the project but the server response was incomplete.");
+        throw new Error("DAC synced the project but the server response was incomplete.");
       }
 
       setActiveServerProject({
@@ -853,7 +853,7 @@ export function SimpleWorkbenchShell() {
       setServerProjectStatus("error");
       setServerProjectMessage(error instanceof Error ? error.message : "Server sync failed");
       toast.error("Server sync failed", {
-        description: error instanceof Error ? error.message : "DynEcho could not sync this workbench state."
+        description: error instanceof Error ? error.message : "DAC could not sync this workbench state."
       });
     }
   };
@@ -872,7 +872,7 @@ export function SimpleWorkbenchShell() {
       });
 
       if (!response.ok) {
-        throw new Error(await readServerProjectError(response, "DynEcho could not load the selected server project."));
+        throw new Error(await readServerProjectError(response, "DAC could not load the selected server project."));
       }
 
       const payload = (await response.json()) as unknown;
@@ -901,7 +901,7 @@ export function SimpleWorkbenchShell() {
       setServerProjectStatus("error");
       setServerProjectMessage(error instanceof Error ? error.message : "Server project load failed");
       toast.error("Server project load failed", {
-        description: error instanceof Error ? error.message : "DynEcho could not restore the selected project."
+        description: error instanceof Error ? error.message : "DAC could not restore the selected project."
       });
     }
   };
@@ -959,7 +959,7 @@ export function SimpleWorkbenchShell() {
       approverTitle: approverTitle.trim() || "Acoustic Consultant", assemblyHeadline: heroHeadline,
       assumptionItems: proposalBrief.assumptionItems, briefNote,
       clientName: clientName.trim() || "Unnamed client", consultantAddress: consultantAddress.trim() || "Office address not entered",
-      citations: proposalEvidence.citations, consultantCompany: consultantCompany.trim() || "DynEcho Acoustic Consulting",
+      citations: proposalEvidence.citations, consultantCompany: consultantCompany.trim() || "DYNECHO Acoustic Consulting",
       consultantEmail: consultantEmail.trim() || "Contact email not entered", consultantLogoDataUrl: consultantLogoDataUrl.trim(),
       consultantPhone: consultantPhone.trim() || "Contact phone not entered", consultantWordmarkLine: consultantWordmarkLine.trim(),
       corridorDossierCards: corridorDossier.cards, corridorDossierHeadline: corridorDossier.headline,
@@ -972,7 +972,7 @@ export function SimpleWorkbenchShell() {
       methodDossierCards: methodDossier.cards, methodDossierHeadline: methodDossier.headline,
       methodTraceGroups: methodDossier.traceGroups,
       metrics: proposalMetrics.length > 0 ? proposalMetrics : [{ detail: "No live outputs yet.", label: "Status", value: "Waiting" }],
-      preparedBy: preparedBy.trim() || "DynEcho Operator",
+      preparedBy: preparedBy.trim() || "DAC Operator",
       primaryMetricLabel: proposalMetrics[0]?.label ?? "Primary read", primaryMetricValue: proposalMetrics[0]?.value ?? "Waiting",
       projectName: projectName.trim() || "Untitled acoustic proposal",
       proposalAttention: proposalAttention.trim() || "Attention line not entered",
@@ -1048,40 +1048,25 @@ export function SimpleWorkbenchShell() {
 
   // ── Render ───────────────────────────────────────────────────────────────
   return (
-    <div className="grid min-w-0 gap-0" style={SIMPLE_WORKBENCH_THEME}>
+    <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded border border-[color:var(--line)] bg-[color:var(--paper)]" style={SIMPLE_WORKBENCH_THEME}>
       <SimpleWorkbenchToolbar
-        airborneContextMode={airborneContextMode}
         exportReady={exportReady}
         isExportingPdf={isExportingPdf}
-        modePresets={modePresets}
-        isServerProjectBusy={serverProjectBusy}
-        onContextModeChange={setAirborneContextMode}
         onExportBrandedDocx={() => void handleQuickExport("branded", "docx")}
         onExportBrandedPdf={() => void handleQuickExport("branded", "pdf")}
         onExportSimpleDocx={() => void handleQuickExport("simple", "docx")}
         onExportSimplePdf={() => void handleQuickExport("simple", "pdf")}
-        onLoadServerProject={() => void loadServerProject()}
         onOpenPdfSetup={handleOpenPdfSetup}
-        onPresetChange={loadPreset}
-        onRefreshServerProjects={() => void refreshServerProjects()}
-        onStartEmpty={clearRows}
         onReset={() => setResetDialogOpen(true)}
-        onSelectedServerProjectChange={setSelectedServerProjectId}
-        onStudyModeChange={handleStudyModeChange}
-        onSyncServerProject={() => void syncCurrentProjectToServer()}
         onToggleTheme={toggleTheme}
         readyOutputCount={readyOutputCount}
         rowCount={rows.length}
-        selectedPreset={selectedPreset}
-        selectedServerProjectId={selectedServerProjectId}
-        serverProjectOptions={serverProjectOptions}
-        serverProjectStatusLabel={serverProjectStatusLabel}
         studyMode={studyMode}
         theme={theme}
       />
 
       {!isDesktop ? (
-        <div className="flex border-b border-[color:var(--line)] bg-[color:var(--paper)] px-4">
+        <div className="flex shrink-0 border-b border-[color:var(--line)] bg-[color:var(--paper)] px-4">
           <WorkspacePanelButton active={activeWorkspacePanel === "setup"} label="Setup" onClick={() => openWorkspacePanel("setup")} />
           <WorkspacePanelButton active={activeWorkspacePanel === "stack"} label="Assembly" onClick={() => openWorkspacePanel("stack")} />
           <WorkspacePanelButton active={activeWorkspacePanel === "results"} label="Results" onClick={() => openWorkspacePanel("results")} />
@@ -1089,7 +1074,11 @@ export function SimpleWorkbenchShell() {
         </div>
       ) : null}
 
-      <section className={`grid min-w-0 ${isDesktop ? "grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]" : ""}`}>
+      <section
+        className={`${!isDesktop && activeWorkspacePanel === "review" ? "hidden" : "grid"} min-h-0 min-w-0 flex-1 overflow-hidden ${
+          isDesktop ? "grid-cols-[minmax(15rem,0.72fr)_minmax(22rem,1fr)_minmax(24rem,1.12fr)]" : ""
+        }`}
+      >
         <SimpleWorkbenchRoutePanel
           activeWorkspacePanel={activeWorkspacePanel}
           airborneAirtightness={airborneAirtightness}
@@ -1135,17 +1124,31 @@ export function SimpleWorkbenchShell() {
           impactGuideReceivingRoomVolumeM3={impactGuideReceivingRoomVolumeM3}
           impactKSanityWarning={impactKSanityWarning}
           impactVolumeSanityWarning={impactVolumeSanityWarning}
+          isServerProjectBusy={serverProjectBusy}
           isDesktop={isDesktop}
           lightweightSteelBaseRow={lightweightSteelBaseRow ? { id: lightweightSteelBaseRow.id } : null}
           liveRowCount={liveRowCount}
+          modePresets={modePresets}
+          onContextModeChange={setAirborneContextMode}
+          onLoadServerProject={() => void loadServerProject()}
+          onPresetChange={loadPreset}
+          onRefreshServerProjects={() => void refreshServerProjects()}
+          onSelectedServerProjectChange={setSelectedServerProjectId}
+          onStartEmpty={clearRows}
+          onStudyModeChange={handleStudyModeChange}
+          onSyncServerProject={() => void syncCurrentProjectToServer()}
           panelHeightSanityWarning={panelHeightSanityWarning}
           panelWidthSanityWarning={panelWidthSanityWarning}
           parkedRowCount={parkedRowCount}
           readyOutputCount={readyOutputCount}
+          rowCount={rows.length}
           routeSignals={routeSignals}
           rt60SanityWarning={rt60SanityWarning}
           selectedContextOption={selectedContextOption}
           selectedPreset={selectedPreset}
+          selectedServerProjectId={selectedServerProjectId}
+          serverProjectOptions={serverProjectOptions}
+          serverProjectStatusLabel={serverProjectStatusLabel}
           setAirborneAirtightness={setAirborneAirtightness}
           setAirborneConnectionType={setAirborneConnectionType}
           setAirborneElectricalBoxes={setAirborneElectricalBoxes}
@@ -1181,6 +1184,7 @@ export function SimpleWorkbenchShell() {
           showTimberImpactOnlyGuidedActions={showTimberImpactOnlyGuidedActions}
           standardizedAirborneActive={standardizedAirborneActive}
           standardizedImpactOutputsActive={standardizedImpactOutputsActive}
+          studyMode={studyMode}
           topologyGap={topologyGap}
           updateMaterial={updateMaterial}
           validationSummary={validationSummary}

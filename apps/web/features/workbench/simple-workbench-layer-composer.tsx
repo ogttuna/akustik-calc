@@ -132,7 +132,7 @@ export function CustomMaterialComposer(props: {
             {draftNotePreview ? <p className="text-[0.76rem] leading-5 text-[color:var(--ink-soft)]">{draftNotePreview}</p> : null}
           </div>
 
-          <div className="grid gap-3 md:grid-cols-2">
+          <div className="grid gap-3 2xl:grid-cols-2">
             <label className="grid min-w-0 gap-2">
               <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Custom material name</span>
               <input
@@ -336,7 +336,7 @@ export function NewLayerComposer(props: {
         </div>
       </div>
 
-      <div className={`mt-3 grid min-w-0 gap-3 ${studyMode === "floor" ? "md:grid-cols-2" : "md:grid-cols-3"}`}>
+      <div className={`mt-3 grid min-w-0 gap-3 ${studyMode === "floor" ? "2xl:grid-cols-2" : "2xl:grid-cols-3"}`}>
         <WorkbenchMaterialPicker
           currentMaterial={material}
           groups={materialGroups}

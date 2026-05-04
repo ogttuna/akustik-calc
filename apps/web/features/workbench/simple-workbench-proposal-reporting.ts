@@ -7,7 +7,7 @@ import {
 import { distributeIllustrationSizes } from "./simple-workbench-illustration";
 
 export const SIMPLE_WORKBENCH_REPORT_MARK = "DAC";
-export const SIMPLE_WORKBENCH_REPORT_PRODUCT_NAME = "DynEcho Acoustic Calculator";
+export const SIMPLE_WORKBENCH_REPORT_PRODUCT_NAME = "DYNECHO ACOUSTIC CALCULATOR";
 export const SIMPLE_WORKBENCH_REPORT_SERIES = "ISO-aligned acoustic report";
 
 type ProposalConstructionRender = {

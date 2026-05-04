@@ -174,7 +174,7 @@ export function describeImpactValidationPosture(result: AssemblyCalculation | nu
   if (result.lowerBoundImpact && !result.impact) {
     return {
       detail:
-        "Only a conservative impact-support lane is available right now. DynEcho is intentionally refusing to fabricate a precise live Ln,w family result outside supported scope.",
+        "Only a conservative impact-support lane is available right now. DAC is intentionally refusing to fabricate a precise live Ln,w family result outside supported scope.",
       label: "Bound support only",
       posture: "bound"
     };

@@ -8,11 +8,11 @@ export function SiteHeader() {
     <header className="surface-shadow stage-enter flex flex-col gap-4 rounded-[2rem] border hairline bg-[color:var(--panel)]/90 px-5 py-4 backdrop-blur sm:flex-row sm:items-center sm:justify-between">
       <div className="flex items-center gap-3">
         <div className="surface-subtle flex h-11 w-11 items-center justify-center rounded-full border hairline font-display text-lg">
-          Dy
+          DAC
         </div>
         <div>
-          <div className="font-display text-xl">DynEcho</div>
-          <div className="text-sm text-[color:var(--ink-soft)]">portable acoustic engine, web-first product shell</div>
+          <div className="font-display text-xl">DYNECHO ACOUSTIC CALCULATOR</div>
+          <div className="text-sm text-[color:var(--ink-soft)]">DAC portable acoustic engine, web-first product shell</div>
         </div>
       </div>
       <div className="flex flex-wrap items-center gap-3">

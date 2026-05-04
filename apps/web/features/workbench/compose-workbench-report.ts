@@ -498,13 +498,13 @@ export function composeWorkbenchReport({
     `- Pack note: ${activeCriteriaPack.note}`,
     `- Pack emphasis: ${activeCriteriaPack.emphasis.join(", ")}`,
     `- Pack requested outputs: ${listOutputs(activeCriteriaPack.requestedOutputs) || "None"}`,
-    "- Brief templates in DynEcho are internal starting points, not jurisdictional code defaults.",
+    "- Brief templates in DAC are internal starting points, not jurisdictional code defaults.",
     "",
     "## Requested outputs",
     ...requestedOutputCoverageLines,
     ...(outputSummary.research.length > 0
       ? [
-          "- Research-only outputs are kept visible for briefing and auditability, but DynEcho does not fabricate ASTM or low-frequency ratings before their standards-backed adapters ship."
+          "- Research-only outputs are kept visible for briefing and auditability, but DAC does not fabricate ASTM or low-frequency ratings before their standards-backed adapters ship."
         ]
       : []),
     "",
@@ -561,7 +561,7 @@ export function composeWorkbenchReport({
             ? [
                 hasExactDutchImpactChecks
                   ? "- Dutch LnT,A lines below are direct reference checks only on the narrow exact 125..2000 Hz field-octave lane; broader Ln,w / L'n,w / L'nT,w lanes still do not count as Dutch contact-sound compliance verdicts."
-                  : "- Dutch LnT,A lines below stay staged until DynEcho exposes NEN 5077 LnT,A directly; current Ln,w / L'n,w / L'nT,w lanes are not treated as Dutch contact-sound compliance verdicts.",
+                  : "- Dutch LnT,A lines below stay staged until DAC exposes NEN 5077 LnT,A directly; current Ln,w / L'n,w / L'nT,w lanes are not treated as Dutch contact-sound compliance verdicts.",
                 ...dutchImpactReferenceLines
               ]
             : [])
@@ -839,8 +839,8 @@ export function composeWorkbenchReport({
     ...fieldRiskSummary.actions.map((action) => `- Action: ${action}`),
     "",
     "## Delivery boundary",
-    "- DynEcho is currently a web-first operator desk with a portable engine boundary.",
+    "- DAC is currently a web-first operator desk with a portable engine boundary.",
     "- Acoustic2 remains read-only and is not modified by this workspace.",
-    "- Impact support in DynEcho now includes exact lab/field band import, exact heavy-reference DeltaLw import, official product catalog rows, curated exact timber, concrete, CLT, open-box timber, open-web steel, FL-28 steel interpolation, dry-floor measured families, bound-only steel support, and the scoped heavy-concrete formulas, while broad family coverage and deeper predictor chains remain staged for parity import."
+    "- Impact support in DAC now includes exact lab/field band import, exact heavy-reference DeltaLw import, official product catalog rows, curated exact timber, concrete, CLT, open-box timber, open-web steel, FL-28 steel interpolation, dry-floor measured families, bound-only steel support, and the scoped heavy-concrete formulas, while broad family coverage and deeper predictor chains remain staged for parity import."
   ].join("\n");
 }

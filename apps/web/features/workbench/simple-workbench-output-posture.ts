@@ -104,7 +104,7 @@ export function buildSimpleWorkbenchOutputPosture(input: {
   if (status === "bound") {
     return {
       detail:
-        "DynEcho is intentionally packaging this as a one-sided support value. It is useful for scoping, but it should not be read as a claimed exact readout, and other live cards can still stay visible beside it.",
+        "DAC is intentionally packaging this as a one-sided support value. It is useful for scoping, but it should not be read as a claimed exact readout, and other live cards can still stay visible beside it.",
       label: "Conservative bound",
       tone: "warning"
     };

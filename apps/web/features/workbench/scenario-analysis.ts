@@ -56,7 +56,7 @@ function collectInactiveOfficialProductWarnings(input: {
     }
 
     warnings.push(
-      `${material.name} is in the stack, but no official product row matched the current topology and no generic dynamic stiffness fallback is available for this product. DynEcho kept the result on the broader predictor/family lane instead of inventing product-backed impact credit.`
+      `${material.name} is in the stack, but no official product row matched the current topology and no generic dynamic stiffness fallback is available for this product. DAC kept the result on the broader predictor/family lane instead of inventing product-backed impact credit.`
     );
   }
 
@@ -117,7 +117,7 @@ export function evaluateScenario(input: {
     } catch (error) {
       const detail = error instanceof Error && error.message.trim().length > 0 ? error.message.trim() : "Unknown evaluation error.";
       scenarioWarnings.push(
-        `DynEcho could not evaluate the current scenario and kept the workspace live instead of crashing. ${detail}`
+        `DAC could not evaluate the current scenario and kept the workspace live instead of crashing. ${detail}`
       );
     }
   }

@@ -30,7 +30,7 @@ const SCENARIO: ScenarioSnapshot = {
   calculatorId: "dynamic",
   clientName: "Acme",
   consultantAddress: "Office address",
-  consultantCompany: "DynEcho",
+  consultantCompany: "DAC",
   consultantEmail: "hello@example.com",
   consultantLogoDataUrl: "",
   consultantPhone: "+90 212 000 00 00",

@@ -108,7 +108,7 @@ function buildWaitingCorridorDossier(studyMode: StudyMode): SimpleWorkbenchCorri
     return {
       cards: [
         {
-          detail: "No live wall result is attached yet, so DynEcho cannot name the current airborne lane.",
+          detail: "No live wall result is attached yet, so DAC cannot name the current airborne lane.",
           label: "Airborne lane",
           tone: "neutral",
           value: "Waiting for wall route"
@@ -133,14 +133,14 @@ function buildWaitingCorridorDossier(studyMode: StudyMode): SimpleWorkbenchCorri
         }
       ],
       headline:
-        "No airborne validation corridor is attached yet. Build a supported wall route first so DynEcho can name the active airborne lane, route posture, selector spread, and any field-side continuation."
+        "No airborne validation corridor is attached yet. Build a supported wall route first so DAC can name the active airborne lane, route posture, selector spread, and any field-side continuation."
     };
   }
 
   return {
     cards: [
       {
-        detail: "No live result is attached yet, so DynEcho cannot lock a tracked family corridor.",
+        detail: "No live result is attached yet, so DAC cannot lock a tracked family corridor.",
         label: "Active family",
         tone: "neutral",
         value: "Waiting for supported route"
@@ -165,7 +165,7 @@ function buildWaitingCorridorDossier(studyMode: StudyMode): SimpleWorkbenchCorri
       }
     ],
     headline:
-      "No validation corridor is attached yet. Build a supported route first so DynEcho can name the active family, benchmark mode, tolerance band, and field continuation posture."
+      "No validation corridor is attached yet. Build a supported route first so DAC can name the active family, benchmark mode, tolerance band, and field continuation posture."
   };
 }
 
@@ -251,7 +251,7 @@ function buildWallCorridorDossier(result: AssemblyCalculation): SimpleWorkbenchC
       {
         detail: trace
           ? `${formatCount(trace.candidateMethods.length, "candidate method")} remain in the active family set. Lower spread means the current wall read is less sensitive to selector choice.`
-          : "Without a family-ranked airborne trace, DynEcho cannot report selector spread on this wall route yet.",
+          : "Without a family-ranked airborne trace, DAC cannot report selector spread on this wall route yet.",
         label: "Solver spread",
         tone: trace ? mapSolverSpreadTone(trace.solverSpreadRwDb) : "neutral",
         value: spreadValue

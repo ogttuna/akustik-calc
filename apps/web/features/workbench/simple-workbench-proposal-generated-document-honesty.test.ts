@@ -285,7 +285,7 @@ function buildGeneratedProposalDocument(testCase: GeneratedProposalCase): {
       methodDossierHeadline: methodDossier.headline,
       methodTraceGroups: methodDossier.traceGroups,
       metrics,
-      preparedBy: "DynEcho QA",
+      preparedBy: "DAC QA",
       primaryMetricLabel: metrics[0]?.label ?? "Primary read",
       primaryMetricValue: metrics[0]?.value ?? "Waiting",
       projectName: testCase.projectName,

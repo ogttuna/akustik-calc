@@ -332,7 +332,7 @@ export const WORKBENCH_PRESETS: readonly PresetDefinition[] = [
     id: "steel_suspended_fallback",
     label: "Steel Suspended Family",
     note: "vinyl + suspended ceiling + joist floor family-general lane",
-    summary: "A narrow lightweight-steel sample so the guided shell can show how DynEcho behaves when the stack lands on a supported suspended-ceiling family lane without an exact floor-system match.",
+    summary: "A narrow lightweight-steel sample so DAC can show how the stack lands on a supported suspended-ceiling family lane without an exact floor-system match.",
     studyMode: "floor",
     rows: [
       { materialId: "firestop_board", thicknessMm: "16", floorRole: "ceiling_board" },
@@ -514,7 +514,7 @@ export const WORKBENCH_PRESETS: readonly PresetDefinition[] = [
     id: "ubiq_steel_250_bound",
     label: "UBIQ Bound 250",
     note: "steel joist / purlin family interpolation with conservative impact support",
-    summary: "A bound-interpolation preset that demonstrates how DynEcho carries Ln,w <= ... instead of fabricating a steel family exact metric.",
+    summary: "A bound-interpolation preset that demonstrates how DAC carries Ln,w <= ... instead of fabricating a steel family exact metric.",
     studyMode: "floor",
     rows: [
       { materialId: "firestop_board", thicknessMm: "16", floorRole: "ceiling_board" },
@@ -530,7 +530,7 @@ export const WORKBENCH_PRESETS: readonly PresetDefinition[] = [
     label: "UBIQ Bound Unified 200",
     note: "lightweight steel + INEX 19 + 2 x 16 mm ceiling where both support families converge",
     summary:
-      "A lightweight-steel bound preset with the carrier still left as generic lightweight steel, but at 200 mm both official UBIQ bound families publish the same support envelope so DynEcho does not need the conservative crossover warning.",
+      "A lightweight-steel bound preset with the carrier still left as generic lightweight steel, but at 200 mm both official UBIQ bound families publish the same support envelope so DAC does not need the conservative crossover warning.",
     studyMode: "floor",
     rows: [
       { materialId: "firestop_board", thicknessMm: "16", floorRole: "ceiling_board" },

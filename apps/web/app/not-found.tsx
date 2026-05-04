@@ -9,7 +9,7 @@ export default function NotFoundPage() {
           This route is not part of the current acoustic workspace.
         </h1>
         <p className="mt-4 max-w-xl text-sm leading-7 text-[color:var(--ink-soft)]">
-          Return to the landing page or open the workbench. DynEcho keeps unsupported routes explicit rather than
+          Return to the landing page or open the workbench. DAC keeps unsupported routes explicit rather than
           pretending they exist.
         </p>
         <div className="mt-6 flex flex-wrap gap-3">

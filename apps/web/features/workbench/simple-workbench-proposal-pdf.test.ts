@@ -203,14 +203,14 @@ describe("simple workbench proposal pdf helper", () => {
       "fetch",
       vi.fn(async () => ({
         json: async () => ({
-          error: "DynEcho could not generate the branded PDF on the server. Browser binary missing."
+          error: "DAC could not generate the branded PDF on the server. Browser binary missing."
         }),
         ok: false
       }))
     );
 
     await expect(downloadSimpleWorkbenchProposalPdf(DOCUMENT)).rejects.toThrow(
-      "DynEcho could not generate the branded PDF on the server. Browser binary missing."
+      "DAC could not generate the branded PDF on the server. Browser binary missing."
     );
   });
 });

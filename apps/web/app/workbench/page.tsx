@@ -17,12 +17,12 @@ export default async function WorkbenchPage({ searchParams }: WorkbenchPageProps
   const session = await requireAuthenticatedPage(view === "advanced" ? "/workbench?view=advanced" : "/workbench");
 
   return (
-    <>
+    <div className="flex h-svh min-h-0 flex-col overflow-hidden bg-[color:var(--paper)]">
       <WorkbenchSessionBar username={session.username} />
       <Suspense
         fallback={
-          <main className="flex min-h-screen flex-col gap-8 overflow-x-clip px-[clamp(0.75rem,1.6vw,1.5rem)] pb-10 pt-4">
-            <div className="rounded-[1.5rem] border hairline bg-[color:var(--panel)] px-6 py-8 text-sm text-[color:var(--ink-soft)]">
+          <main className="flex min-h-0 flex-1 flex-col overflow-hidden px-3 pb-3 pt-3">
+            <div className="rounded border hairline bg-[color:var(--panel)] px-6 py-8 text-sm text-[color:var(--ink-soft)]">
               Loading workbench...
             </div>
           </main>
@@ -30,6 +30,6 @@ export default async function WorkbenchPage({ searchParams }: WorkbenchPageProps
       >
         <WorkbenchClientPage />
       </Suspense>
-    </>
+    </div>
   );
 }

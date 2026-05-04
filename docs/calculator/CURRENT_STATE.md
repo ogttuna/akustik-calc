@@ -175,6 +175,33 @@ typecheck passed, engine tests passed 368 files / 2169 tests, web
 tests passed 161 files / 908 passed + 18 skipped, and build passed
 5 / 5 packages with the known non-fatal `sharp/@img` warnings.
 
+Follow-up broad audit on 2026-05-04:
+
+`broad_check_2026_05_04_toolbar_copy_alignment_passed`
+
+`full_check_found_toolbar_copy_test_drift_not_calculator_runtime_drift`
+
+`wrong_lane_broad_suites_green_no_runtime_movement_selected`
+
+`gate_b_closeout_remains_first_implementation_step_after_broad_check`
+
+`rockwool_uris_status_unchanged_after_broad_check`
+
+Full `pnpm check` passed after updating the toolbar snapshot to the
+current commands `Report` and `PDF setup` while confirming
+`Example Stack` is absent. The failing check was
+stale toolbar copy, not a calculator runtime or numeric regression.
+Engine tests passed 368 files / 2170 tests; web tests passed 161 files
+/ 907 passed + 18 skipped; build passed 5 / 5 packages with the known
+non-fatal `sharp/@img` warnings. Wrong-lane and hostile-input coverage
+remained green across dynamic route family-boundary scans, deep hybrid
+swap scans, AAC boundary scans, floor stack/order/history matrices, raw
+floor role guards, wall flat-list multileaf guards, grouped-topology
+route cards, wall reorder invariance, and calculator API validation.
+No runtime movement was selected. Gate B closeout remains the first
+implementation step, and rockwool/Uris remains blocked with `Rw 41` as
+unfixed screening output.
+
 The first implementation step remains the selected no-runtime closeout:
 `packages/engine/src/post-floor-tolerance-edge-promotion-guard-v1-next-slice-selection-contract.test.ts`
 with `gate_b_no_runtime_closeout_and_next_slice_selection`. Do not

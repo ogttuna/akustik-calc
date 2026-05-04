@@ -254,7 +254,7 @@ export function ImpactResultPanel({ result }: ImpactResultPanelProps) {
                   </Pill>
                 </div>
                 <p className="mt-3 text-sm leading-7 text-[color:var(--ink-soft)]">
-                  An official or bound-only source also published a conservative support lane. DynEcho keeps it visible
+                  An official or bound-only source also published a conservative support lane. DAC keeps it visible
                   alongside the live impact metric instead of overwriting the active Ln,w result.
                 </p>
               </div>

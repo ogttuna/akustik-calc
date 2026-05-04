@@ -216,6 +216,33 @@ Gate B validation order:
 4. Keep web visible behavior frozen unless the closeout explicitly
    selects a bounded visible wording fix with paired tests.
 
+### Broad Audit Confirmation
+
+Follow-up broad audit on 2026-05-04:
+
+`broad_check_2026_05_04_toolbar_copy_alignment_passed`
+
+`full_check_found_toolbar_copy_test_drift_not_calculator_runtime_drift`
+
+`wrong_lane_broad_suites_green_no_runtime_movement_selected`
+
+`gate_b_closeout_remains_first_implementation_step_after_broad_check`
+
+`rockwool_uris_status_unchanged_after_broad_check`
+
+Full `pnpm check` passed after the stale toolbar-copy snapshot was
+updated to the current labels. Treat that as UI test maintenance, not
+calculator behavior movement. The broad wrong-lane protection suites
+stayed green across floor order/duplicate/many-layer histories, raw
+floor role guards, hostile raw input, dynamic family-boundary scans,
+deep hybrid and AAC swap scans, wall flat-list multileaf guards,
+grouped-topology route cards, and wall reorder invariance.
+
+Gate B therefore remains a no-runtime closeout decision until the
+contract proves otherwise. Do not promote exact/bound support, field
+outputs, visible certainty wording, source rows, or rockwool/Uris
+runtime behavior from this audit alone.
+
 ## Required Gate A Artifacts
 
 Gate A must produce:

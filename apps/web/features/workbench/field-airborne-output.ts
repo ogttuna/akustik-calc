@@ -136,11 +136,11 @@ export function getFieldAirbornePendingDetail(
     case "curated_field_source":
       return `${output} stays unavailable until a curated official field source publishes it for the current airborne assembly.`;
     case "field_mode":
-      return `DynEcho keeps ${output} parked until the airborne lane leaves lab mode and becomes an apparent field or building route.`;
+      return `DAC keeps ${output} parked until the airborne lane leaves lab mode and becomes an apparent field or building route.`;
     case "partition_geometry":
-      return `${routeLabel} is active, but ${output} still needs partition width and height before DynEcho can derive it from the apparent field curve.`;
+      return `${routeLabel} is active, but ${output} still needs partition width and height before DAC can derive it from the apparent field curve.`;
     case "room_volume":
-      return `${routeLabel} is active, but ${output} still needs the receiving-room volume before DynEcho can standardize the apparent field curve.`;
+      return `${routeLabel} is active, but ${output} still needs the receiving-room volume before DAC can standardize the apparent field curve.`;
     default:
       return "";
   }

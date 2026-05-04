@@ -48,7 +48,7 @@ export async function renderSimpleWorkbenchProposalDocx(
       : buildSimpleWorkbenchProposalHtml(proposalDocument);
 
   const docx = await HtmlToDocx(html, null, {
-    creator: proposalDocument.consultantCompany || "DynEcho",
+    creator: proposalDocument.consultantCompany || "DAC",
     description: `${style === "simple" ? "Simple" : "Branded"} DOCX export for ${proposalDocument.projectName}.`,
     footer: false,
     header: false,

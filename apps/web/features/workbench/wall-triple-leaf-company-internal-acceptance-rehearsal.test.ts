@@ -435,7 +435,7 @@ function buildReportVisibilitySnapshot(input: {
     approverTitle: "Lead Acoustic Consultant",
     briefNote: "Gate J internal rehearsal: keep triple-leaf caveats visible on generated reports.",
     citations: evidence.citations,
-    clientName: "Internal DynEcho QA",
+    clientName: "Internal DAC QA",
     consultantAddress: "Istanbul",
     consultantCompany: "Machinity Acoustic Consultants",
     consultantEmail: "qa@machinity.local",
@@ -473,7 +473,7 @@ function buildReportVisibilitySnapshot(input: {
       cards: input.snapshot.cards,
       outputs: input.outputs
     }),
-    preparedBy: "DynEcho QA",
+    preparedBy: "DAC QA",
     primaryMetricLabel: primaryCard.label,
     primaryMetricValue: primaryCard.value,
     projectName: "Triple-leaf acceptance rehearsal",

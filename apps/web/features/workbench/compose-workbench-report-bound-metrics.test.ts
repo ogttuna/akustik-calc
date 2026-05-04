@@ -80,6 +80,6 @@ describe("workbench report bound metrics", () => {
 
     expect(lines).toHaveLength(4);
     expect(lines.join("\n")).toContain("Current live lab metric is Ln,w+CI upper bound <= 45.0 dB");
-    expect(lines.join("\n")).toContain("DynEcho does not treat this as a compliance verdict");
+    expect(lines.join("\n")).toContain("DAC does not treat this as a compliance verdict");
   });
 });

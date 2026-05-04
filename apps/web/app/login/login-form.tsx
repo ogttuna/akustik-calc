@@ -70,7 +70,7 @@ export function LoginForm({ authConfigured, configurationMessage, nextPath }: Lo
 
       window.location.assign(readRedirectTarget(payload) ?? nextPath);
     } catch {
-      setErrorMessage("DynEcho could not reach the sign-in route.");
+      setErrorMessage("DAC could not reach the sign-in route.");
     } finally {
       setIsPending(false);
     }

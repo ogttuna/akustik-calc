@@ -19,15 +19,16 @@ import type {
   WallSupportTopology,
   WallTopologyMode
 } from "@dynecho/shared";
-import { Plus } from "lucide-react";
+import { CloudUpload, FolderOpen, Plus, RefreshCcw } from "lucide-react";
 
 import type { GuidedRouteSignals } from "./guided-route-signals";
 import type { GuidedTopologyGap } from "./guided-topology-gap";
 import type { GuidedValidationSummary } from "./guided-validation-summary";
 import type { DynamicCalcBranchSummary } from "./dynamic-calc-branch";
-import type { PresetDefinition } from "./preset-definitions";
+import type { PresetDefinition, PresetId, StudyMode } from "./preset-definitions";
 import { GUIDED_INPUT_SANITY_BANDS, formatGuidedSanityBand } from "./input-sanity";
 import {
+  AIRBORNE_CONTEXT_OPTIONS,
   AIRTIGHTNESS_OPTIONS,
   CALCULATOR_OPTIONS,
   CONNECTION_OPTIONS,
@@ -52,6 +53,7 @@ import {
   workbenchSectionEyebrowClass,
   workbenchSectionMutedCardClass
 } from "./simple-workbench-layer-visuals";
+import { buildSimpleWorkbenchPresetGroups } from "./simple-workbench-preset-groups";
 import {
   ContextBucket,
   ContextSubsection,
@@ -62,6 +64,8 @@ import {
   SectionLead
 } from "./simple-workbench-primitives";
 import { getEnvironmentLabel, getTextInputClassName } from "./simple-workbench-utils";
+
+const EMPTY_EXAMPLE_VALUE = "__start_empty__";
 
 type SimpleWorkbenchRoutePanelProps = {
   activeWorkspacePanel: WorkspacePanelId;
@@ -108,17 +112,34 @@ type SimpleWorkbenchRoutePanelProps = {
   impactGuideReceivingRoomVolumeM3: string;
   impactKSanityWarning: string | null;
   impactVolumeSanityWarning: string | null;
+  isServerProjectBusy: boolean;
   isDesktop: boolean;
   lightweightSteelBaseRow: { id: string } | null;
   liveRowCount: number;
+  modePresets: readonly PresetDefinition[];
+  onContextModeChange: (mode: AirborneContextMode) => void;
+  onLoadServerProject: () => void;
+  onPresetChange: (presetId: PresetId) => void;
+  onRefreshServerProjects: () => void;
+  onSelectedServerProjectChange: (projectId: string) => void;
+  onStartEmpty: () => void;
+  onStudyModeChange: (mode: StudyMode) => void;
+  onSyncServerProject: () => void;
   panelHeightSanityWarning: string | null;
   panelWidthSanityWarning: string | null;
   parkedRowCount: number;
   readyOutputCount: number;
+  rowCount: number;
   routeSignals: GuidedRouteSignals;
   rt60SanityWarning: string | null;
   selectedContextOption: { note: string };
-  selectedPreset: Pick<PresetDefinition, "label" | "summary">;
+  selectedPreset: PresetDefinition;
+  selectedServerProjectId: string;
+  serverProjectOptions: ReadonlyArray<{
+    id: string;
+    label: string;
+  }>;
+  serverProjectStatusLabel: string;
   setAirborneAirtightness: (value: AirtightnessClass) => void;
   setAirborneConnectionType: (value: AirborneConnectionType) => void;
   setAirborneElectricalBoxes: (value: ElectricalBoxState) => void;
@@ -154,6 +175,7 @@ type SimpleWorkbenchRoutePanelProps = {
   showTimberImpactOnlyGuidedActions: boolean;
   standardizedAirborneActive: boolean;
   standardizedImpactOutputsActive: boolean;
+  studyMode: StudyMode;
   topologyGap: GuidedTopologyGap | null;
   updateMaterial: (id: string, materialId: string) => void;
   validationSummary: GuidedValidationSummary;
@@ -207,17 +229,31 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
     impactGuideReceivingRoomVolumeM3,
     impactKSanityWarning,
     impactVolumeSanityWarning,
+    isServerProjectBusy,
     isDesktop,
     lightweightSteelBaseRow,
     liveRowCount,
+    modePresets,
+    onContextModeChange,
+    onLoadServerProject,
+    onPresetChange,
+    onRefreshServerProjects,
+    onSelectedServerProjectChange,
+    onStartEmpty,
+    onStudyModeChange,
+    onSyncServerProject,
     panelHeightSanityWarning,
     panelWidthSanityWarning,
     parkedRowCount,
     readyOutputCount,
+    rowCount,
     routeSignals,
     rt60SanityWarning,
     selectedContextOption,
     selectedPreset,
+    selectedServerProjectId,
+    serverProjectOptions,
+    serverProjectStatusLabel,
     setAirborneAirtightness,
     setAirborneConnectionType,
     setAirborneElectricalBoxes,
@@ -253,26 +289,144 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
     showTimberImpactOnlyGuidedActions,
     standardizedAirborneActive,
     standardizedImpactOutputsActive,
+    studyMode,
     topologyGap,
     updateMaterial,
     validationSummary,
     wallTopologyControlsActive,
     wallModifiersActive
   } = props;
+  const presetGroups = buildSimpleWorkbenchPresetGroups(modePresets);
+  const selectedExampleValue = rowCount === 0 ? EMPTY_EXAMPLE_VALUE : selectedPreset.id;
 
   return (
     <div
       className={isDesktop
-        ? "col-start-1 row-start-1 min-w-0 border-r border-[color:var(--line)] px-4 py-4"
-        : `stage-enter-2 min-w-0 overflow-hidden px-4 py-4 ${activeWorkspacePanel === "setup" ? "block" : "hidden"}`
+        ? "col-start-1 row-start-1 min-h-0 min-w-0 overflow-y-auto border-r border-[color:var(--line)] px-4 py-4"
+        : `stage-enter-2 min-h-0 min-w-0 overflow-y-auto px-4 py-4 ${activeWorkspacePanel === "setup" ? "block" : "hidden"}`
       }
     >
       <div className="flex flex-col">
-        <SectionLead title="Route" tone="route" />
+        <SectionLead title="Setup" tone="route" />
 
         <div className="mt-4 space-y-4">
           <section className={`rounded border px-3 py-3 ${workbenchSectionCardClass("route")}`}>
-            <div className={`text-[0.68rem] font-semibold uppercase tracking-[0.14em] ${workbenchSectionEyebrowClass("route")}`}>Route summary</div>
+            <div className={`text-[0.68rem] font-semibold uppercase tracking-[0.14em] ${workbenchSectionEyebrowClass("route")}`}>Study</div>
+            <div className="mt-3 grid gap-3">
+              <label className="grid min-w-0 gap-1.5">
+                <span className="text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-[color:var(--ink-faint)]">Mode</span>
+                <select
+                  aria-label="Study type"
+                  className="focus-ring touch-target h-10 min-w-0 rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-2 text-[0.9rem] text-[color:var(--ink)]"
+                  onChange={(event) => onStudyModeChange(event.target.value as StudyMode)}
+                  value={studyMode}
+                >
+                  <option value="floor">Floor</option>
+                  <option value="wall">Wall</option>
+                </select>
+              </label>
+
+              <label className="grid min-w-0 gap-1.5">
+                <span className="text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-[color:var(--ink-faint)]">Context</span>
+                <select
+                  aria-label="Project context"
+                  className="focus-ring touch-target h-10 min-w-0 rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-2 text-[0.9rem] text-[color:var(--ink)]"
+                  onChange={(event) => onContextModeChange(event.target.value as AirborneContextMode)}
+                  value={airborneContextMode}
+                >
+                  {AIRBORNE_CONTEXT_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <label className="grid min-w-0 gap-1.5">
+                <span className="text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-[color:var(--ink-faint)]">Example Stack</span>
+                <select
+                  aria-label="Load sample rows"
+                  className="focus-ring touch-target h-10 min-w-0 rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-2 text-[0.9rem] text-[color:var(--ink)]"
+                  onChange={(event) => {
+                    const nextValue = event.target.value;
+
+                    if (nextValue === EMPTY_EXAMPLE_VALUE) {
+                      onStartEmpty();
+                      return;
+                    }
+
+                    onPresetChange(nextValue as PresetId);
+                  }}
+                  value={selectedExampleValue}
+                >
+                  <option value={EMPTY_EXAMPLE_VALUE}>Start empty</option>
+                  {presetGroups.map((group) => (
+                    <optgroup key={group.id} label={group.label}>
+                      {group.options.map((preset) => (
+                        <option key={preset.id} value={preset.id}>
+                          {preset.label}
+                        </option>
+                      ))}
+                    </optgroup>
+                  ))}
+                </select>
+              </label>
+
+              <div className="grid min-w-0 gap-1.5">
+                <span className="text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-[color:var(--ink-faint)]">Server Project</span>
+                <div className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto_auto_auto] gap-1.5">
+                  <select
+                    aria-label="Server project"
+                    className="focus-ring touch-target h-10 min-w-0 rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-2 text-[0.9rem] text-[color:var(--ink)]"
+                    disabled={isServerProjectBusy}
+                    onChange={(event) => onSelectedServerProjectChange(event.target.value)}
+                    value={selectedServerProjectId}
+                  >
+                    <option value="">Browser-local</option>
+                    {serverProjectOptions.map((project) => (
+                      <option key={project.id} value={project.id}>
+                        {project.label}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    aria-label="Refresh server projects"
+                    className="focus-ring touch-target inline-flex h-10 w-10 items-center justify-center rounded border border-[color:var(--line)] bg-[color:var(--paper)] text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"
+                    disabled={isServerProjectBusy}
+                    onClick={onRefreshServerProjects}
+                    title="Refresh server projects"
+                    type="button"
+                  >
+                    <RefreshCcw className="h-3.5 w-3.5" />
+                  </button>
+                  <button
+                    aria-label="Load server project"
+                    className="focus-ring touch-target inline-flex h-10 w-10 items-center justify-center rounded border border-[color:var(--line)] bg-[color:var(--paper)] text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"
+                    disabled={isServerProjectBusy || selectedServerProjectId.length === 0}
+                    onClick={onLoadServerProject}
+                    title="Load server project"
+                    type="button"
+                  >
+                    <FolderOpen className="h-3.5 w-3.5" />
+                  </button>
+                  <button
+                    aria-label="Sync current project to server"
+                    className="focus-ring touch-target inline-flex h-10 w-10 items-center justify-center rounded border border-[color:var(--accent)] bg-[color:var(--accent-soft)] text-[color:var(--accent-ink)] hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50"
+                    disabled={isServerProjectBusy || rowCount === 0}
+                    onClick={onSyncServerProject}
+                    title="Sync current project to server"
+                    type="button"
+                  >
+                    <CloudUpload className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+                <span className="min-h-4 break-words text-[0.72rem] leading-4 text-[color:var(--ink-faint)]">{serverProjectStatusLabel}</span>
+              </div>
+            </div>
+          </section>
+
+          <section className={`rounded border px-3 py-3 ${workbenchSectionCardClass("route")}`}>
+            <div className={`text-[0.68rem] font-semibold uppercase tracking-[0.14em] ${workbenchSectionEyebrowClass("route")}`}>Route status</div>
             <div className="mt-2 flex flex-wrap gap-2">
               <GuidedFactChip>{getEnvironmentLabel(airborneContextMode)}</GuidedFactChip>
               <GuidedFactChip>{selectedPreset.label}</GuidedFactChip>
@@ -280,7 +434,7 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
               <GuidedFactChip>{`${liveRowCount} live / ${parkedRowCount} parked`}</GuidedFactChip>
             </div>
             <p className="mt-3 text-[0.8rem] leading-5 text-[color:var(--ink-soft)]">{selectedContextOption.note}</p>
-            <div className="mt-3 grid gap-2 md:grid-cols-2">
+            <div className="mt-3 grid gap-2">
               <GuidedRouteRow detail={routeSignals.primaryRead.detail} label="Primary output" tone="route" value={routeSignals.primaryRead.value} />
               <GuidedRouteRow detail={dynamicCalcBranch.detail} label="Solver lane" tone="route" value={dynamicCalcBranch.value} />
               <GuidedRouteRow detail={validationSummary.detail} label="Validation" tone="route" value={validationSummary.value} />
@@ -312,7 +466,7 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
                       }
                       title="Airborne route"
                     >
-                      <div className="grid grid-cols-2 gap-3">
+                      <div className="grid gap-3">
                         <FieldShell
                           advisory={`Guided sanity band ${formatGuidedSanityBand(GUIDED_INPUT_SANITY_BANDS.panelWidthMm)}.`}
                           label="Partition width (mm)"
@@ -613,7 +767,7 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
 
                       {airborneWallTopologyMode === "grouped_triple_leaf" ? (
                         <div className="grid gap-3">
-                          <div className="grid gap-3 md:grid-cols-2">
+                          <div className="grid gap-3">
                             <FieldShell
                               label="Side A leaf rows"
                               note="Visible row numbers, comma separated."
@@ -681,7 +835,7 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
                             </FieldShell>
                           </div>
 
-                          <div className="grid gap-3 md:grid-cols-2">
+                          <div className="grid gap-3">
                             <FieldShell
                               label="Cavity 1 rows"
                               note="Visible row numbers for the Side A to internal-leaf cavity."
@@ -755,7 +909,7 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
                             </FieldShell>
                           </div>
 
-                          <div className="grid gap-3 md:grid-cols-2">
+                          <div className="grid gap-3">
                             <FieldShell
                               label="Cavity 2 rows"
                               note="Visible row numbers for the internal-leaf to Side B cavity."

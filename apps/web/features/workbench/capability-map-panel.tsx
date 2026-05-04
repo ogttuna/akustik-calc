@@ -62,7 +62,7 @@ export function CapabilityMapPanel() {
         </div>
         <div className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-[color:var(--ink-soft)]">
           <ArrowUpRight className="h-4 w-4" />
-          DynEcho should evolve from calculator to decision platform.
+          DAC should evolve from calculator to decision platform.
         </div>
       </div>
     </SurfacePanel>

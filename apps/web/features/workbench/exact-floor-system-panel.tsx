@@ -276,7 +276,7 @@ export function ExactFloorSystemPanel({ result }: ExactFloorSystemPanelProps) {
                   {estimate.structuralFamily}
                 </div>
                 <p className="mt-3 max-w-3xl text-sm leading-7 text-[color:var(--ink-soft)]">
-                  DynEcho blended nearby published rows in the same family because no strict exact row landed for the
+                  DAC blended nearby published rows in the same family because no strict exact row landed for the
                   current topology. This is a labeled family estimate, not an exact match.
                 </p>
               </div>
@@ -412,7 +412,7 @@ export function ExactFloorSystemPanel({ result }: ExactFloorSystemPanelProps) {
                   {boundEstimate.structuralFamily}
                 </div>
                 <p className="mt-3 max-w-3xl text-sm leading-7 text-[color:var(--ink-soft)]">
-                  No strict bound-only row landed, so DynEcho interpolated official lightweight-steel family rows and
+                  No strict bound-only row landed, so DAC interpolated official lightweight-steel family rows and
                   kept impact as a conservative upper bound.
                 </p>
               </div>
@@ -518,7 +518,7 @@ export function ExactFloorSystemPanel({ result }: ExactFloorSystemPanelProps) {
           ))}
         </div>
         <p className="max-w-2xl text-sm leading-7 text-[color:var(--ink-soft)]">
-          This is the exact-family slice that now lives locally in DynEcho. Active matches turn green, near misses stay
+          This is the exact-family slice that now lives locally in DAC. Active matches turn green, near misses stay
           highlighted, and the remaining families remain available as curated targets while parity import continues.
         </p>
         <div className="grid gap-3 xl:grid-cols-2">
