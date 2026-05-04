@@ -405,7 +405,8 @@ export function buildOutputCard(input: {
     case "L'n,w":
       if (typeof result?.impact?.LPrimeNW === "number") {
         return {
-          detail: "Field-side impact value after K or direct-path carry-over.",
+          detail:
+            "Field-side impact value after K or direct-path carry-over; this is a field-impact continuation, not an independent exact field measurement.",
           label: "L'n,w",
           output,
           status: "live",
@@ -415,7 +416,8 @@ export function buildOutputCard(input: {
 
       if (typeof result?.lowerBoundImpact?.LPrimeNWUpperBound === "number") {
         return {
-          detail: "Conservative field-side impact upper bound carried from the same bound-only lane.",
+          detail:
+            "Conservative field-side impact upper bound carried from the same bound-only lane; this is not an independent exact field measurement.",
           label: "L'n,w",
           output,
           status: "bound",
@@ -491,7 +493,8 @@ export function buildOutputCard(input: {
     case "L'nT,w":
       if (typeof result?.impact?.LPrimeNTw === "number") {
         return {
-          detail: "Standardized field impact result with receiving-room normalization.",
+          detail:
+            "Standardized field impact result with receiving-room normalization; this is a field-impact continuation, not an independent exact field measurement.",
           label: "L'nT,w",
           output,
           status: "live",
@@ -501,7 +504,8 @@ export function buildOutputCard(input: {
 
       if (typeof result?.lowerBoundImpact?.LPrimeNTwUpperBound === "number") {
         return {
-          detail: "Conservative standardized field impact upper bound carried from the same bound-only lane.",
+          detail:
+            "Conservative standardized field impact upper bound carried from the same bound-only lane; this is not an independent exact field measurement.",
           label: "L'nT,w",
           output,
           status: "bound",
@@ -512,7 +516,8 @@ export function buildOutputCard(input: {
     case "L'nT,50":
       if (typeof result?.impact?.LPrimeNT50 === "number") {
         return {
-          detail: "Standardized field impact value with the extended low-frequency companion.",
+          detail:
+            "Standardized field impact value with the extended low-frequency companion; this is a field-impact continuation, not an independent exact field measurement.",
           label: "L'nT,50",
           output,
           status: "live",
@@ -522,7 +527,7 @@ export function buildOutputCard(input: {
 
       if (typeof result?.lowerBoundImpact?.LPrimeNT50UpperBound === "number") {
         return {
-          detail: "Conservative L'nT,50 upper bound.",
+          detail: "Conservative L'nT,50 upper bound; this is not an independent exact field measurement.",
           label: "L'nT,50",
           output,
           status: "bound",

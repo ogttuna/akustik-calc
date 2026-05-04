@@ -6,6 +6,8 @@ export const FIELD_AIRBORNE_OUTPUTS = new Set<RequestedOutputId>(["R'w", "Dn,w",
 export const STANDARDIZED_AIRBORNE_OUTPUTS = new Set<RequestedOutputId>(["DnT,w", "DnT,A"]);
 
 const AREA_NORMALIZED_AIRBORNE_OUTPUTS = new Set<RequestedOutputId>(["Dn,w", "Dn,A"]);
+const FIELD_CONTINUATION_BASIS_GUARD =
+  "This is a field continuation from the active lab, screening, or apparent lane, not an independent exact field measurement.";
 
 type FieldAirborneBlockingRequirement =
   | "curated_field_source"
@@ -177,27 +179,27 @@ export function getFieldAirborneLiveDetail(
   const curveLabel = getApparentCurveLabel(result);
 
   if (output === "R'w") {
-    return `${routeLabel} is active. R'w is being read as the apparent on-site airborne single number from the ${curveLabel}.`;
+    return `${routeLabel} is active. R'w is being read as the apparent on-site airborne single number from the ${curveLabel}. ${FIELD_CONTINUATION_BASIS_GUARD}`;
   }
 
   if (output === "Dn,w") {
-    return `${routeLabel} is active. Dn,w is being derived from the same apparent field curve using the current partition area only.`;
+    return `${routeLabel} is active. Dn,w is being derived from the same apparent field curve using the current partition area only. ${FIELD_CONTINUATION_BASIS_GUARD}`;
   }
 
   if (output === "Dn,A") {
-    return `${routeLabel} is active. Dn,A is being carried as Dn,w + C from the same apparent field curve and partition area.`;
+    return `${routeLabel} is active. Dn,A is being carried as Dn,w + C from the same apparent field curve and partition area. ${FIELD_CONTINUATION_BASIS_GUARD}`;
   }
 
   if (output === "DnT,w") {
-    return `${routeLabel} is active. DnT,w is being standardized from the same apparent field curve using the current partition area and receiving-room volume.`;
+    return `${routeLabel} is active. DnT,w is being standardized from the same apparent field curve using the current partition area and receiving-room volume. ${FIELD_CONTINUATION_BASIS_GUARD}`;
   }
 
   if (output === "DnT,A") {
-    return `${routeLabel} is active. DnT,A is being carried as DnT,w + C on the standardized field lane.`;
+    return `${routeLabel} is active. DnT,A is being carried as DnT,w + C on the standardized field lane. ${FIELD_CONTINUATION_BASIS_GUARD}`;
   }
 
   if (output === "DnT,A,k") {
-    return `${routeLabel} is active. ${getDnTAkDetail(result)}.`;
+    return `${routeLabel} is active. ${getDnTAkDetail(result)}. ${FIELD_CONTINUATION_BASIS_GUARD}`;
   }
 
   return `${routeLabel} is active for ${output}.`;

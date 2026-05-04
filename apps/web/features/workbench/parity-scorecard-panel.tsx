@@ -75,12 +75,12 @@ export function ParityScorecardPanel() {
                 style={{ width: `${row.score}%` }}
               />
             </div>
-            <p className="mt-3 text-sm leading-7 text-[color:var(--ink-soft)]">{row.detail}</p>
+            <p className="mt-3 line-clamp-4 text-sm leading-7 text-[color:var(--ink-soft)]">{row.detail}</p>
           </article>
         ))}
       </div>
 
-      <div className="mt-5 grid gap-3 md:grid-cols-3">
+      <div className="mt-5 grid gap-3">
         <article className="rounded-md border hairline bg-[color:var(--panel-strong)] px-4 py-4">
           <div className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
             <Sigma className="h-4 w-4" />
@@ -96,7 +96,7 @@ export function ParityScorecardPanel() {
             <Radar className="h-4 w-4" />
             Current web scope
           </div>
-          <p className="mt-3 text-sm leading-7 text-[color:var(--ink-soft)]">
+          <p className="mt-3 line-clamp-4 text-sm leading-7 text-[color:var(--ink-soft)]">
             {calculatorCoverage}. Dynamic airborne selection is live, comparison calculators are live, exact impact-band import is live, exact DeltaLw reference import is live, official product catalog rows and lower-bound support are live, curated timber, concrete, hollow-core, CLT, composite, measured open-box/dry-floor, open-web steel, and FL-28 steel interpolation families are landing, heavy-floor impact is scoped, field-side outputs are partly guide/manual, and the main floor families now sit under explicit fixture-backed coverage guards instead of presence-only checks.
           </p>
         </article>

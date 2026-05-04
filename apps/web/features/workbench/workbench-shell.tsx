@@ -1096,18 +1096,32 @@ export function WorkbenchShell() {
         savedScenarioCount={savedScenarios.length}
         studyMode={studyMode}
       />
-      <WorkbenchFlowMap items={flowItems} />
-      <WorkbenchCommandDeck
-        currentScenario={currentScenario}
-        onOpenCommands={() => commandPalette.setOpen(true)}
-        onSaveScenario={saveScenario}
-        projectName={projectName}
-        requestedOutputs={requestedOutputs}
-        savedScenarios={evaluatedSavedScenarios}
-        studyMode={studyMode}
-        targetLnwDb={targetLnwDb}
-        targetRwDb={targetRwDb}
-      />
+      <details className="rounded-lg border hairline bg-[color:var(--panel)]">
+        <summary className="cursor-pointer px-4 py-3 text-sm font-semibold text-[color:var(--ink)]">
+          Operator map
+        </summary>
+        <div className="border-t border-[color:var(--line)] p-3">
+          <WorkbenchFlowMap items={flowItems} />
+        </div>
+      </details>
+      <details className="rounded-lg border hairline bg-[color:var(--panel)]">
+        <summary className="cursor-pointer px-4 py-3 text-sm font-semibold text-[color:var(--ink)]">
+          Command deck
+        </summary>
+        <div className="border-t border-[color:var(--line)] p-3">
+          <WorkbenchCommandDeck
+            currentScenario={currentScenario}
+            onOpenCommands={() => commandPalette.setOpen(true)}
+            onSaveScenario={saveScenario}
+            projectName={projectName}
+            requestedOutputs={requestedOutputs}
+            savedScenarios={evaluatedSavedScenarios}
+            studyMode={studyMode}
+            targetLnwDb={targetLnwDb}
+            targetRwDb={targetRwDb}
+          />
+        </div>
+      </details>
 
       <WorkbenchRailLayout centerRail={centerRail} leftRail={leftRail} rightRail={rightRail} />
     </>

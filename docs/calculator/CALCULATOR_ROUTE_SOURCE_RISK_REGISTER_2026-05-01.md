@@ -9,58 +9,59 @@ before ROCKWOOL source-pack extraction or any later runtime movement.
 
 Current urgent slice:
 
-`field_output_lab_screening_leakage_guard_v1`
+`calculator_source_gap_revalidation_v21`
 
 Current urgent status:
 
-`gate_a_inventoried_field_output_lab_screening_leakage_no_runtime_selected_visible_wording_guard_gate_b`
+`gate_b_strengthened_visible_field_output_basis_copy_no_runtime_selected_source_gap_revalidation_with_rockwool_and_misclassification_blockers`
 
 Current urgent next file:
 
-`apps/web/features/workbench/field-output-lab-screening-leakage-gate-b-card-copy.test.ts`
+`packages/engine/src/calculator-source-gap-revalidation-v21-gate-a-contract.test.ts`
 
 Current urgent next action:
 
-`gate_b_strengthen_visible_field_output_basis_copy_with_paired_engine_web_report_tests`
+`gate_a_revalidate_source_gap_order_after_field_output_guard_and_company_internal_blocker`
 
-Just landed field-output guard slice:
+Just landed field-output Gate B slice:
 
 `field_output_lab_screening_leakage_guard_v1`
 
-Just landed field-output guard status:
+Just landed field-output Gate B status:
 
-`gate_a_inventoried_field_output_lab_screening_leakage_no_runtime_selected_visible_wording_guard_gate_b`
+`gate_b_strengthened_visible_field_output_basis_copy_no_runtime_selected_source_gap_revalidation_with_rockwool_and_misclassification_blockers`
 
-Just landed field-output guard file:
+Just landed field-output Gate B file:
 
-`packages/engine/src/field-output-lab-screening-leakage-guard-gate-a-contract.test.ts`
+`apps/web/features/workbench/field-output-lab-screening-leakage-gate-b-card-copy.test.ts`
 
-Just landed field-output guard checkpoint:
+Just landed field-output Gate B checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-04_FIELD_OUTPUT_LAB_SCREENING_LEAKAGE_GUARD_GATE_A_HANDOFF.md`
+`docs/calculator/CHECKPOINT_2026-05-04_FIELD_OUTPUT_LAB_SCREENING_LEAKAGE_GUARD_GATE_B_HANDOFF.md`
 
-Just landed field-output guard artifacts:
+Just landed field-output Gate B artifacts:
 
-`field_output_lab_screening_leakage_inventory`
+`airborne_field_continuation_card_copy_guard`
 
-`low_confidence_airborne_field_output_snapshot_matrix`
+`impact_field_continuation_card_copy_guard`
 
-`floor_impact_field_output_basis_snapshot_matrix`
+`proposal_report_field_output_coverage_copy_guard`
 
-`visible_output_card_and_report_copy_inventory`
+`missing_room_volume_and_missing_field_k_boundaries`
 
-`negative_boundaries_for_exact_field_or_design_grade_wording`
+`selected_source_gap_revalidation_v21`
 
-`selected_gate_b_guard_or_no_runtime_closeout_with_target_file`
+Just landed field-output Gate B validation:
 
-Just landed field-output guard validation:
-
-focused Gate A passed 1 file / 7 tests; continuity with v20, Uris Gate
-U, v19, and this risk register passed 5 files / 33 tests;
-`pnpm calculator:gate:current` passed engine 240 files / 1384 tests,
-web 49 files / 234 passed + 18 skipped, repo build 5 / 5 tasks with
-known non-fatal `sharp/@img` warnings, and whitespace guard passed
-after restoring `apps/web/next-env.d.ts` to `.next-typecheck`.
+focused Gate B passed 1 file / 4 tests; continuity with output-card
+model, flat-list multileaf guard, triple-leaf company-internal
+rehearsal, and floor field continuation passed 4 files / 24 tests. The
+current-gate runner now includes the Gate B web test. Full current-gate
+validation passed with engine 241 files / 1388 tests, web 50 files /
+238 passed + 18 skipped, repo build 5 / 5 tasks, and whitespace guard
+green. The first build attempt hit a transient
+`next-font-manifest.json` artifact miss; the immediate web-build rerun
+and current-gate rerun passed without calculator/runtime changes.
 
 Just landed source-gap slice:
 
@@ -73,6 +74,10 @@ Just landed source-gap status:
 Just landed source-gap file:
 
 `packages/engine/src/calculator-source-gap-revalidation-v20-gate-a-contract.test.ts`
+
+V20 selected field-output Gate A file, kept for aligned contract handoff:
+
+`packages/engine/src/field-output-lab-screening-leakage-guard-gate-a-contract.test.ts`
 
 Just landed source-gap checkpoint:
 
@@ -257,6 +262,37 @@ fail-closed boundary, not as an exact rockwool fix. Continue to log,
 test, and document any frequent combination that appears to select the
 wrong lane; only make an easy fix when it is bounded and covered by
 engine plus visible web/report tests.
+
+Company-internal high-accuracy opening blocker:
+
+`company_internal_high_accuracy_opening_blocked_until_misclassification_blockers_close`
+
+`triple_leaf_like_lane_source_field_errors_are_company_use_blockers`
+
+This register is a release blocker for high-accuracy company-internal
+use, not only a backlog note. The earlier internal-use envelope remains
+controlled / caveated pilot context. Before company rollout, every
+triple-leaf-like lane/source/field-output defect must either be fixed
+with owned source/topology/material/tolerance/negative-boundary/visible
+tests or remain explicitly fail-closed / screening-only in engine and
+visible surfaces.
+
+`pre_company_internal_use_exit_criteria`
+
+- `rockwool_triple_leaf_exact_or_explicit_screening_only`
+- `field_outputs_never_design_grade_without_owner`
+- `frequent_wall_floor_lane_snapshots_green`
+- `source_promotion_requires_topology_material_metric_tolerance_negatives_visible_tests`
+- `hostile_api_import_payloads_fail_closed`
+- `calculator_gate_current_and_full_check_green`
+
+Executable blocker contract:
+
+`packages/engine/src/company-internal-misclassification-readiness-blocker-contract.test.ts`
+
+Current next action:
+
+`complete_gate_b_field_output_visible_basis_guard_then_reopen_source_gap_order_with_rockwool_and_misclassification_blockers`
 
 After fixes, broad `pnpm check` passed on 2026-05-04: lint passed,
 typecheck passed, engine tests passed 368 files / 2169 tests, web
@@ -2304,6 +2340,8 @@ own field performance.
 
 Current guard evidence:
 
+- Field-output Gate B visible copy guard:
+  `apps/web/features/workbench/field-output-lab-screening-leakage-gate-b-card-copy.test.ts`
 - Gate J company-internal acceptance rehearsal for field caveats
 - `wall-field-continuation-completeness-matrix.test.ts`
 - output-card and proposal/report field continuation coverage
@@ -2326,6 +2364,8 @@ Fix strategy:
 Tests to add or keep:
 
 - Keep field-only negative tests.
+- Keep Gate B card/report copy tests proving field outputs are not
+  independent exact field measurements.
 - Add paired lab-vs-field output card tests for any promoted
   triple-leaf runtime lane.
 - Keep missing-field prompt tests for geometry and reverberation inputs.

@@ -121,7 +121,8 @@ export function buildSimpleWorkbenchOutputPosture(input: {
 
   if (isFieldAirborneOutput(output) || FIELD_IMPACT_OUTPUTS.has(output) || output === "DnT,A,k") {
     return {
-      detail: "This metric is carried through the active field continuation chain from the current lab or apparent curve. It is not being framed as an independent exact source row.",
+      detail:
+        "This metric is carried through the active field continuation chain from the current lab or apparent curve. It is not being framed as an independent exact source row or measured field result.",
       label: "Field continuation",
       tone: "accent"
     };

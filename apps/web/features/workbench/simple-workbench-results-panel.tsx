@@ -158,7 +158,6 @@ export function SimpleWorkbenchResultsPanel(props: {
                           Primary result
                         </div>
                         <h3 className="mt-1 text-[1.05rem] font-semibold text-[color:var(--ink)]">{heroHeadline}</h3>
-                        <p className="mt-2 max-w-2xl text-[0.82rem] leading-5 text-[color:var(--ink-soft)]">{validationSummary.detail}</p>
                       </div>
                       <div className="flex flex-wrap justify-end gap-2">
                         <span className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.14em] ${getValidationHeroChipClass(validationSummary.tone)}`}>
@@ -169,6 +168,12 @@ export function SimpleWorkbenchResultsPanel(props: {
                         {warnings.length ? <GuidedFactChip tone="warning">{`${warnings.length} warning${warnings.length === 1 ? "" : "s"}`}</GuidedFactChip> : null}
                       </div>
                     </div>
+                    <details className="mt-3 rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-3 py-2">
+                      <summary className="cursor-pointer text-[0.78rem] font-semibold text-[color:var(--ink)]">
+                        Information
+                      </summary>
+                      <p className="mt-2 max-w-2xl text-[0.82rem] leading-5 text-[color:var(--ink-soft)]">{validationSummary.detail}</p>
+                    </details>
 
                     <div className="mt-5 grid gap-4 3xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] 3xl:items-start">
                       <div className="grid gap-4">

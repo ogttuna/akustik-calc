@@ -5,11 +5,13 @@ Start here before changing calculator behavior.
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-05-04_FIELD_OUTPUT_LAB_SCREENING_LEAKAGE_GUARD_GATE_A_HANDOFF.md`
-3. `docs/calculator/SLICE_FIELD_OUTPUT_LAB_SCREENING_LEAKAGE_GUARD_PLAN.md`
-4. `docs/calculator/CHECKPOINT_2026-05-04_CALCULATOR_SOURCE_GAP_REVALIDATION_V20_GATE_A_HANDOFF.md`
-5. `docs/calculator/CHECKPOINT_2026-05-04_WALL_TRIPLE_LEAF_URIS_2006_SOURCE_PACKET_ACQUISITION_GATE_U_HANDOFF.md`
-6. `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V20_PLAN.md`
+2. `docs/calculator/CHECKPOINT_2026-05-04_FIELD_OUTPUT_LAB_SCREENING_LEAKAGE_GUARD_GATE_B_HANDOFF.md`
+3. `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V21_PLAN.md`
+4. `docs/calculator/CHECKPOINT_2026-05-04_FIELD_OUTPUT_LAB_SCREENING_LEAKAGE_GUARD_GATE_A_HANDOFF.md`
+5. `docs/calculator/SLICE_FIELD_OUTPUT_LAB_SCREENING_LEAKAGE_GUARD_PLAN.md`
+6. `docs/calculator/CHECKPOINT_2026-05-04_CALCULATOR_SOURCE_GAP_REVALIDATION_V20_GATE_A_HANDOFF.md`
+7. `docs/calculator/CHECKPOINT_2026-05-04_WALL_TRIPLE_LEAF_URIS_2006_SOURCE_PACKET_ACQUISITION_GATE_U_HANDOFF.md`
+8. `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V20_PLAN.md`
 4. `docs/calculator/CHECKPOINT_2026-05-04_CALCULATOR_SOURCE_GAP_REVALIDATION_V19_GATE_A_HANDOFF.md`
 5. `docs/calculator/SLICE_WALL_TRIPLE_LEAF_URIS_2006_SOURCE_PACKET_ACQUISITION_PLAN.md`
 6. `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V19_PLAN.md`
@@ -225,31 +227,37 @@ plan.
 ## Current Workflow
 
 - current selected slice:
-  `field_output_lab_screening_leakage_guard_v1`
+  `calculator_source_gap_revalidation_v21`
 - current next decision inside the slice:
-  `apps/web/features/workbench/field-output-lab-screening-leakage-gate-b-card-copy.test.ts`
+  `packages/engine/src/calculator-source-gap-revalidation-v21-gate-a-contract.test.ts`
   should run
-  `gate_b_strengthen_visible_field_output_basis_copy_with_paired_engine_web_report_tests`.
+  `gate_a_revalidate_source_gap_order_after_field_output_guard_and_company_internal_blocker`.
   The file is intentionally absent until the next implementation step.
-  Field-output leakage Gate A landed
+- just landed field-output Gate B:
+  `apps/web/features/workbench/field-output-lab-screening-leakage-gate-b-card-copy.test.ts`
+  strengthened visible output/report copy no-runtime. `R'w`, `DnT,w`,
+  `L'n,w`, `L'nT,w`, and related field outputs are now framed as
+  continuations from active lab/screening/apparent/bound basis, not
+  independent exact field measurements. Runtime values, support,
+  confidence, evidence promotion, API shape, route-card values,
+  output-card status, and workbench input behavior stayed frozen. Gate B
+  selected `calculator_source_gap_revalidation_v21` with
+  `gate_b_strengthened_visible_field_output_basis_copy_no_runtime_selected_source_gap_revalidation_with_rockwool_and_misclassification_blockers`.
+  Validation completed on 2026-05-04: focused Gate B passed 1 file / 4
+  tests; continuity with output-card model, flat-list multileaf guard,
+  triple-leaf company-internal rehearsal, and floor field continuation
+  passed 4 files / 24 tests; `pnpm calculator:gate:current` passed
+  engine 241 files / 1388 tests, web 50 files / 238 passed + 18
+  skipped, repo build 5 / 5 tasks, and whitespace guard. A first build
+  attempt hit a transient `next-font-manifest.json` artifact miss; the
+  immediate web-build rerun and full current-gate rerun passed without
+  calculator/runtime changes.
+- prior field-output Gate A:
   `gate_a_inventoried_field_output_lab_screening_leakage_no_runtime_selected_visible_wording_guard_gate_b`
-  at
-  `packages/engine/src/field-output-lab-screening-leakage-guard-gate-a-contract.test.ts`.
-  Gate A inventoried low-confidence split-rockwool `R'w` / `DnT,w`,
-  exact floor field continuations, low-confidence reinforced-concrete
-  floor continuations, raw generated fallback field continuations, and
-  missing geometry / volume boundaries. Runtime values, support,
-  confidence, evidence, API shape, route-card values, output-card
-  status, proposal/report copy, and workbench input behavior stayed
-  frozen. Gate B may move visible wording only with paired engine,
-  web-card, and report-copy tests.
-  Validation completed on 2026-05-04: focused Gate A passed 1 file / 7
-  tests; continuity with v20, Uris Gate U, v19, and route/source risk
-  register passed 5 files / 33 tests; `pnpm calculator:gate:current`
-  passed engine 240 files / 1384 tests, web 49 files / 234 passed + 18
-  skipped, repo build 5 / 5 tasks with known non-fatal `sharp/@img`
-  warnings, and whitespace guard passed after restoring
-  `apps/web/next-env.d.ts` to `.next-typecheck`.
+  landed at
+  `packages/engine/src/field-output-lab-screening-leakage-guard-gate-a-contract.test.ts`
+  and selected
+  `apps/web/features/workbench/field-output-lab-screening-leakage-gate-b-card-copy.test.ts`.
 - 2026-05-04 broad validation / UI integration pass:
   user-authored workbench UI changes were validated as navigation and
   layout-only changes around setup/assembly/results/review/proposal,
@@ -261,6 +269,22 @@ plan.
   passed + 18 skipped; repo build 5 / 5 tasks with known non-fatal
   `sharp/@img` warnings. This does not move the selected calculator
   slice or promote rockwool triple-leaf.
+- company-internal high-accuracy opening blocker:
+  `company_internal_high_accuracy_opening_blocked_until_misclassification_blockers_close`.
+  The old internal-use envelope remains only controlled / caveated pilot
+  context. Before the calculator is opened as high-accuracy
+  company-internal tooling, treat
+  `triple_leaf_like_lane_source_field_errors_are_company_use_blockers`
+  as active. `pre_company_internal_use_exit_criteria`: rockwool
+  triple-leaf must be exact with source-owned topology/material/metric/
+  tolerance/negative-boundary/visible-test ownership or explicitly
+  screening-only; field outputs must not look design-grade without a
+  field owner; frequent wall/floor lane snapshots must stay green;
+  source promotion must require topology, material, metric, tolerance,
+  negative-boundary, and paired visible tests; hostile API/import inputs
+  must fail closed; `pnpm calculator:gate:current` and `pnpm check`
+  must pass. Current next action:
+  `gate_a_revalidate_source_gap_order_after_field_output_guard_and_company_internal_blocker`.
 - prior selected slice:
   `field_output_lab_screening_leakage_guard_v1`
 - prior decision inside the slice:

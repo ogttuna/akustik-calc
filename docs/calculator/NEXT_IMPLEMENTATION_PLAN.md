@@ -16,109 +16,141 @@ read
 For the active route/source boundary risk register read
 [CALCULATOR_ROUTE_SOURCE_RISK_REGISTER_2026-05-01.md](./CALCULATOR_ROUTE_SOURCE_RISK_REGISTER_2026-05-01.md).
 
-## Active Decision Map - 2026-05-04 Field-Output Gate A Closeout
+## Active Decision Map - 2026-05-04 Field-Output Gate B Closeout
 
 Current implementation position:
-`field_output_lab_screening_leakage_guard_v1`.
+`calculator_source_gap_revalidation_v21`.
 
-Field-output leakage Gate A landed no-runtime and selected a bounded
-visible wording / posture guard for Gate B. The selected next
-implementation file,
-`apps/web/features/workbench/field-output-lab-screening-leakage-gate-b-card-copy.test.ts`,
-does not exist yet; this is the next file to create.
+Field-output leakage Gate B landed visible copy / posture only and
+selected a fresh source-gap revalidation. The selected next
+implementation file is:
+
+`packages/engine/src/calculator-source-gap-revalidation-v21-gate-a-contract.test.ts`
+
+This file does not exist yet; it is the next file to create.
+
+Current selected status:
+
+`gate_b_strengthened_visible_field_output_basis_copy_no_runtime_selected_source_gap_revalidation_with_rockwool_and_misclassification_blockers`
+
+Latest checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-04_FIELD_OUTPUT_LAB_SCREENING_LEAKAGE_GUARD_GATE_B_HANDOFF.md`
+
+Active planning surface:
+
+`docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V21_PLAN.md`
+
+Gate B facts:
+
+1. Runtime values, support, confidence, evidence, API behavior, route
+   cards, output-card status, proposal/report values, and workbench
+   input behavior stayed frozen.
+2. Proposal/report copy did move intentionally: field-style live cards
+   now state that `R'w`, `DnT,w`, `L'n,w`, `L'nT,w`, and related field
+   outputs are continuations from lab/screening/apparent/bound basis,
+   not independent exact field measurements.
+3. Low-confidence grouped split-rockwool still exposes finite `R'w 34`
+   and `DnT,w 36` from the apparent field continuation while the
+   dynamic wall strategy remains `multileaf_screening_blend`, low
+   confidence, not fixed, and not source-validated.
+4. Exact floor rows can still expose `L'n,w`, `L'nT,w`, and
+   `L'nT,50`, but Gate B now forces report/card copy to keep those as
+   field-impact continuations rather than independent exact field
+   measurements.
+5. Missing receiving-room volume and missing field `K` remain
+   needs-input boundaries.
+
+Gate B validation completed on 2026-05-04: focused Gate B passed 1 file
+/ 4 tests. Continuity validation with output-card model, flat-list
+multileaf guard, triple-leaf company-internal rehearsal, and floor field
+continuation passed 4 files / 24 tests. The Gate B web file is now
+included in `tools/dev/run-calculator-current-gate.ts`. The full
+current gate then passed with engine 241 files / 1388 tests, web 50
+files / 238 passed + 18 skipped, repo build 5 / 5 tasks, and whitespace
+guard green. A first build attempt produced a transient
+`next-font-manifest.json` artifact miss; the immediate web-build rerun
+and full current-gate rerun passed without calculator/runtime changes.
+
+Prior field-output Gate A status, kept for aligned contract handoff:
 
 `gate_a_inventoried_field_output_lab_screening_leakage_no_runtime_selected_visible_wording_guard_gate_b`
 
-`docs/calculator/CHECKPOINT_2026-05-04_FIELD_OUTPUT_LAB_SCREENING_LEAKAGE_GUARD_GATE_A_HANDOFF.md`
-
-`field_output_lab_screening_leakage_guard_v1`
+Gate A selected:
 
 `apps/web/features/workbench/field-output-lab-screening-leakage-gate-b-card-copy.test.ts`
 
-Gate A facts:
+Company-internal high-accuracy opening blocker:
 
-1. Runtime values, support, confidence, evidence, API behavior, route
-   cards, output-card status, proposal/report copy, and workbench input
-   behavior stayed frozen.
-2. Low-confidence split-rockwool still exposes finite `R'w 39` and
-   `DnT,w 40` from
-   `apparent_curve_overlay + 10log10(0.32V/S)` while the dynamic wall
-   strategy remains `multileaf_screening_blend`, low confidence, not
-   fixed, and not source-validated.
-3. Exact floor rows can expose field continuations such as `R'w`,
-   `DnT,w`, `L'n,w`, and `L'nT,w`, but those companions are not
-   independent exact field measurements.
-4. Low-confidence reinforced-concrete and raw generated fallback floor
-   lanes can expose precise-looking field companions from predictor /
-   screening basis and need visible basis language.
-5. Missing partition geometry, room volume, field K, or direct field
-   evidence must remain needs-input / unsupported boundaries.
+`company_internal_high_accuracy_opening_blocked_until_misclassification_blockers_close`
 
-Gate A validation completed on 2026-05-04: focused Gate A passed 1 file
-/ 7 tests; continuity with v20, Uris Gate U, v19, and route/source risk
-register passed 5 files / 33 tests; `pnpm calculator:gate:current`
-passed engine 240 files / 1384 tests, web 49 files / 234 passed + 18
-skipped, repo build 5 / 5 tasks with known non-fatal `sharp/@img`
-warnings, and whitespace guard passed after restoring
-`apps/web/next-env.d.ts` to `.next-typecheck`.
+`triple_leaf_like_lane_source_field_errors_are_company_use_blockers`
 
-Broad validation / UI integration pass on 2026-05-04:
+The earlier internal-use envelope is historical controlled / caveated
+pilot context only. Do not treat it as permission to open the calculator
+as high-accuracy company-internal tooling while the current
+misclassification and source-readiness blockers remain active. The new
+planning contract is:
 
-1. User-authored workbench UI changes were reviewed as ergonomics and
-   navigation changes only: mobile panel badges, assembly/results/review
-   panel transitions, results-panel review actions, stack-visual
-   disclosure, proposal panel layout, command palette/material picker
-   layout, and small overflow/readability adjustments.
-2. The pass found one committed engine fixture type issue:
-   `partitionAreaM2` was present in two `AirborneContext` test fixtures
-   even though the live context derives area from `panelWidthMm` and
-   `panelHeightMm`. The fixtures now rely on the 4000 x 2500 mm panel
-   dimensions instead of a stale direct area field.
-3. The pass found one full-suite timing issue:
-   `dynamic-airborne-family-boundary-scan.test.ts` exceeded the default
-   20 s Vitest budget for the non-AAC family-boundary scan under
-   full-suite load. This is not a value/lane behavior failure; the scan
-   was already passing assertions. `HOLD_SCAN_TIMEOUT_MS` is now 45 s,
-   and the focused file passed 6 tests.
-4. `pnpm calculator:gate:current` passed before the broad check.
-5. Final `pnpm check` passed: lint and typecheck clean; engine full
-   suite passed 373 files / 2204 tests; web full suite passed 161 files
-   / 907 passed + 18 skipped; repo build passed 5 / 5 tasks with the
-   known non-fatal `sharp/@img` warnings.
+`packages/engine/src/company-internal-misclassification-readiness-blocker-contract.test.ts`
 
-Planning conclusion after this pass:
+It keeps runtime values, support, confidence, evidence, API, route-card,
+output-card, proposal/report, and workbench-input behavior frozen. It
+asserts that company-internal high-accuracy opening is blocked until:
 
-- The UI changes are valid to commit, but they do not change the active
-  calculator accuracy plan.
-- The first technical next step remains Gate B visible wording guard at
-  `apps/web/features/workbench/field-output-lab-screening-leakage-gate-b-card-copy.test.ts`.
-- Gate B must stay copy/posture-only unless paired engine, web-card, and
-  report-copy tests prove a narrower movement.
-- Rockwool triple-leaf remains unresolved: `Rw 41` is still
-  low-confidence `multileaf_screening_blend`, not exact and not fixed.
+`pre_company_internal_use_exit_criteria`
 
-Gate B must produce:
+1. `rockwool_triple_leaf_exact_or_explicit_screening_only`: the split
+   rockwool / gypsum / MLV triple-leaf path is either source-validated
+   with owned topology, material mapping, metric, tolerance, negative
+   boundaries, and paired visible tests, or remains visibly
+   screening-only.
+2. `field_outputs_never_design_grade_without_owner`: finite `R'w`,
+   `DnT,w`, `L'n,w`, and `L'nT,w` values never look design-grade unless
+   a field-output owner exists.
+3. `frequent_wall_floor_lane_snapshots_green`: frequent wall/floor
+   route-family snapshots stay green; any suspected wrong lane must be
+   noted, tested, documented, and fixed immediately only when the fix is
+   bounded.
+4. `source_promotion_requires_topology_material_metric_tolerance_negatives_visible_tests`:
+   near-source manufacturer rows cannot promote without exact topology,
+   material/alias mapping, metric context, tolerance owner, protected
+   negative boundaries, and paired engine/web/report tests.
+5. `hostile_api_import_payloads_fail_closed`: UI normalization does not
+   replace API/import guards for NaN, Infinity, negative thickness,
+   unknown materials, duplicate stacks, or excessive layers.
+6. `calculator_gate_current_and_full_check_green`: both
+   `pnpm calculator:gate:current` and `pnpm check` must pass before a
+   company-internal high-accuracy handoff.
 
-- paired web output-card snapshots for airborne field outputs and floor
-  field-impact outputs;
-- report/evidence copy snapshots proving apparent / screening /
-  low-confidence / bound basis remains visible;
-- negative boundaries proving finite `R'w`, `DnT,w`, `L'n,w`, and
-  `L'nT,w` are not labeled exact/design-grade without an owner;
-- no runtime value, support, confidence, evidence, API, route-card, or
-  workbench-input movement.
+Current next action after Gate B:
 
-Validation order for Gate B:
+`gate_a_revalidate_source_gap_order_after_field_output_guard_and_company_internal_blocker`
+
+V21 Gate A must produce:
+
+- `post_gate_b_source_gap_candidate_order`;
+- `rockwool_triple_leaf_fix_path_status`;
+- `company_internal_high_accuracy_blocker_alignment`;
+- `field_output_guard_consumed_as_prerequisite`;
+- `frequent_combination_lane_snapshot_risk_order`;
+- `selected_next_slice_or_no_runtime_closeout`.
+
+Validation order for V21 Gate A:
 
 1. Create
-   `apps/web/features/workbench/field-output-lab-screening-leakage-gate-b-card-copy.test.ts`.
-2. Add paired web/report copy snapshots before changing wording.
-3. If wording changes are needed, keep them limited to basis/posture
-   language and do not retune any values.
-4. Add the Gate B web test to `tools/dev/run-calculator-current-gate.ts`
-   only after the file exists.
-5. Run focused Gate B validation, continuity with Gate A / v20 / Gate U
-   / route-source risk register, then `pnpm calculator:gate:current`.
+   `packages/engine/src/calculator-source-gap-revalidation-v21-gate-a-contract.test.ts`.
+2. Re-rank source/accuracy candidates after Gate B, explicitly
+   accounting for rockwool triple-leaf, frequent-combination lane
+   snapshots, field-output posture, hostile API/import guards, and
+   near-source promotion blockers.
+3. Keep runtime values frozen unless the contract explicitly selects a
+   later bounded implementation gate.
+4. Add the V21 file to `tools/dev/run-calculator-current-gate.ts` only
+   after it exists.
+5. Run focused V21 validation, continuity with Gate B / company blocker
+   / v20 / Gate U / route-source risk register, then
+   `pnpm calculator:gate:current`.
 
 The previous v20 decision map is preserved below for handoff history.
 

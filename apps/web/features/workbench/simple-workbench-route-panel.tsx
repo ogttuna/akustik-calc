@@ -433,14 +433,19 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
               <GuidedFactChip>{`${readyOutputCount}/${automaticOutputsLength} ready`}</GuidedFactChip>
               <GuidedFactChip>{`${liveRowCount} live / ${parkedRowCount} parked`}</GuidedFactChip>
             </div>
-            <p className="mt-3 text-[0.8rem] leading-5 text-[color:var(--ink-soft)]">{selectedContextOption.note}</p>
-            <div className="mt-3 grid gap-2">
+            <details className="mt-3 rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-3 py-2">
+              <summary className="cursor-pointer text-[0.78rem] font-semibold text-[color:var(--ink)]">
+                Information
+              </summary>
+              <p className="mt-2 text-[0.8rem] leading-5 text-[color:var(--ink-soft)]">{selectedContextOption.note}</p>
+              <div className="mt-3 grid gap-2">
               <GuidedRouteRow detail={routeSignals.primaryRead.detail} label="Primary output" tone="route" value={routeSignals.primaryRead.value} />
               <GuidedRouteRow detail={dynamicCalcBranch.detail} label="Solver lane" tone="route" value={dynamicCalcBranch.value} />
               <GuidedRouteRow detail={validationSummary.detail} label="Validation" tone="route" value={validationSummary.value} />
               <GuidedRouteRow detail={routeSignals.nextAction.detail} label="Next step" tone="route" value={routeSignals.nextAction.value} />
               {topologyGap ? <GuidedRouteRow detail={topologyGap.detail} label="Topology gap" tone="route" value={topologyGap.value} /> : null}
-            </div>
+              </div>
+            </details>
           </section>
 
           {geometryActive || impactFieldActive ? (

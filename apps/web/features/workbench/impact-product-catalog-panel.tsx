@@ -40,6 +40,37 @@ export function ImpactProductCatalogPanel({ result }: ImpactProductCatalogPanelP
   const liveImpact = match?.impact ?? null;
   const lowerBoundImpact = match?.lowerBoundImpact ?? null;
   const primaryConfidence = liveImpact?.confidence ?? lowerBoundImpact?.confidence ?? null;
+  const renderProductCard = (entry: ImpactProductCatalogEntry) => {
+    const isActive = match?.catalog.id === entry.id;
+
+    return (
+      <article className="rounded-md border hairline bg-[color:var(--paper)] px-4 py-4" key={entry.id}>
+        <div className="flex min-w-0 flex-wrap items-start justify-between gap-3">
+          <div className="min-w-0">
+            <div className="line-clamp-2 font-semibold text-[color:var(--ink)]">{entry.label}</div>
+            <div className="mt-1 line-clamp-2 text-sm leading-7 text-[color:var(--ink-soft)]">
+              {SOURCE_TYPE_LABELS[entry.sourceType]} · {MATCH_MODE_LABELS[entry.matchMode]}
+            </div>
+          </div>
+          <Pill tone={isActive ? "success" : "neutral"}>{isActive ? "Active" : "Library"}</Pill>
+        </div>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {typeof entry.impactRatings.LnW === "number" ? (
+            <Pill tone="neutral">{formatDecimal(entry.impactRatings.LnW)} dB Ln,w</Pill>
+          ) : null}
+          {typeof entry.impactRatings.DeltaLw === "number" ? (
+            <Pill tone="neutral">{formatDecimal(entry.impactRatings.DeltaLw)} dB DeltaLw</Pill>
+          ) : null}
+          {typeof entry.impactRatings.LnWUpperBound === "number" ? (
+            <Pill tone="neutral">{`<= ${formatDecimal(entry.impactRatings.LnWUpperBound)} dB Ln,w`}</Pill>
+          ) : null}
+          {typeof entry.impactRatings.DeltaLwLowerBound === "number" ? (
+            <Pill tone="neutral">{`>= ${formatDecimal(entry.impactRatings.DeltaLwLowerBound)} dB DeltaLw`}</Pill>
+          ) : null}
+        </div>
+      </article>
+    );
+  };
 
   return (
     <SurfacePanel className="px-5 py-5">
@@ -186,38 +217,14 @@ export function ImpactProductCatalogPanel({ result }: ImpactProductCatalogPanelP
           <div className="eyebrow">Official product library</div>
           <Pill tone="neutral">{OFFICIAL_IMPACT_PRODUCT_CATALOG.length} product rows ported</Pill>
         </div>
-        <div className="grid gap-3 xl:grid-cols-2">
-          {OFFICIAL_IMPACT_PRODUCT_CATALOG.map((entry: ImpactProductCatalogEntry) => {
-            const isActive = match?.catalog.id === entry.id;
-            return (
-              <article className="rounded-md border hairline bg-[color:var(--paper)] px-4 py-4" key={entry.id}>
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div>
-                    <div className="font-semibold text-[color:var(--ink)]">{entry.label}</div>
-                    <div className="mt-1 text-sm leading-7 text-[color:var(--ink-soft)]">
-                      {SOURCE_TYPE_LABELS[entry.sourceType]} · {MATCH_MODE_LABELS[entry.matchMode]}
-                    </div>
-                  </div>
-                  <Pill tone={isActive ? "success" : "neutral"}>{isActive ? "Active" : "Library"}</Pill>
-                </div>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {typeof entry.impactRatings.LnW === "number" ? (
-                    <Pill tone="neutral">{formatDecimal(entry.impactRatings.LnW)} dB Ln,w</Pill>
-                  ) : null}
-                  {typeof entry.impactRatings.DeltaLw === "number" ? (
-                    <Pill tone="neutral">{formatDecimal(entry.impactRatings.DeltaLw)} dB DeltaLw</Pill>
-                  ) : null}
-                  {typeof entry.impactRatings.LnWUpperBound === "number" ? (
-                    <Pill tone="neutral">{`<= ${formatDecimal(entry.impactRatings.LnWUpperBound)} dB Ln,w`}</Pill>
-                  ) : null}
-                  {typeof entry.impactRatings.DeltaLwLowerBound === "number" ? (
-                    <Pill tone="neutral">{`>= ${formatDecimal(entry.impactRatings.DeltaLwLowerBound)} dB DeltaLw`}</Pill>
-                  ) : null}
-                </div>
-              </article>
-            );
-          })}
-        </div>
+        <details className="rounded-lg border hairline bg-[color:var(--panel)]">
+          <summary className="cursor-pointer px-4 py-3 text-sm font-semibold text-[color:var(--ink)]">
+            Browse official product rows
+          </summary>
+          <div className="grid max-h-[32rem] gap-3 overflow-y-auto border-t border-[color:var(--line)] p-3 xl:grid-cols-2">
+            {OFFICIAL_IMPACT_PRODUCT_CATALOG.map(renderProductCard)}
+          </div>
+        </details>
       </div>
     </SurfacePanel>
   );

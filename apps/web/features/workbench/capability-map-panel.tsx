@@ -39,7 +39,7 @@ export function CapabilityMapPanel() {
               </Pill>
             </div>
             <div className="mt-3 text-sm font-semibold text-[color:var(--ink)]">{row.label}</div>
-            <p className="mt-2 text-sm leading-7 text-[color:var(--ink-soft)]">{row.detail}</p>
+            <p className="mt-2 line-clamp-4 text-sm leading-7 text-[color:var(--ink-soft)]">{row.detail}</p>
           </article>
         ))}
       </div>
@@ -56,7 +56,7 @@ export function CapabilityMapPanel() {
                 <FileSearch className="h-4 w-4" />
                 {row.title}
               </div>
-              <p className="mt-2 text-sm leading-7 text-[color:var(--ink-soft)]">{row.body}</p>
+              <p className="mt-2 line-clamp-4 text-sm leading-7 text-[color:var(--ink-soft)]">{row.body}</p>
             </article>
           ))}
         </div>

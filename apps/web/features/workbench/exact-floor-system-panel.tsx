@@ -63,6 +63,45 @@ export function ExactFloorSystemPanel({ result }: ExactFloorSystemPanelProps) {
       return accumulator;
     }, {})
   );
+  const renderLibraryCard = (system: CuratedFloorSystem) => {
+    const recommendation = recommendationById.get(system.id);
+    const isActive = match?.system.id === system.id || boundMatch?.system.id === system.id;
+    const companion = getFloorSystemCompanionPresentation(system.airborneRatings, "library");
+    const impactPillText =
+      "impactRatings" in system
+        ? `${formatDecimal(system.impactRatings.LnW)} dB Ln,w`
+        : typeof system.impactBounds.LnWUpperBound === "number"
+          ? `<= ${formatDecimal(system.impactBounds.LnWUpperBound)} dB Ln,w`
+          : `<= ${formatDecimal(system.impactBounds.LnWPlusCIUpperBound ?? 0)} dB Ln,w+CI`;
+
+    return (
+      <article className="rounded-md border hairline bg-[color:var(--paper)] px-4 py-4" key={system.id}>
+        <div className="flex min-w-0 flex-wrap items-start justify-between gap-3">
+          <div className="min-w-0">
+            <div className="line-clamp-2 font-semibold text-[color:var(--ink)]">{system.label}</div>
+            <div className="mt-1 line-clamp-2 text-sm leading-7 text-[color:var(--ink-soft)]">
+              {system.sourceLabel} · {system.trustTier.replaceAll("_", " ")}
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Pill tone={isActive ? "success" : recommendation ? "accent" : "neutral"}>
+              {isActive ? "Active" : recommendation ? `${recommendation.fitPercent}% fit` : "Library"}
+            </Pill>
+          </div>
+        </div>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <Pill tone="neutral">{impactPillText}</Pill>
+          <Pill tone="neutral">{formatDecimal(system.airborneRatings.Rw)} dB Rw</Pill>
+          <Pill tone="neutral">{companion.pillText}</Pill>
+        </div>
+        {recommendation ? (
+          <div className="mt-3 line-clamp-3 rounded-md border hairline bg-[color:var(--panel)] px-3 py-3 text-sm leading-7 text-[color:var(--ink-soft)]">
+            Missing signals: {recommendation.missingSignals.join(" ")}
+          </div>
+        ) : null}
+      </article>
+    );
+  };
 
   return (
     <SurfacePanel className="px-5 py-5">
@@ -521,47 +560,14 @@ export function ExactFloorSystemPanel({ result }: ExactFloorSystemPanelProps) {
           This is the exact-family slice that now lives locally in DAC. Active matches turn green, near misses stay
           highlighted, and the remaining families remain available as curated targets while parity import continues.
         </p>
-        <div className="grid gap-3 xl:grid-cols-2">
-          {curatedLibrary.map((system: CuratedFloorSystem) => {
-            const recommendation = recommendationById.get(system.id);
-            const isActive = match?.system.id === system.id || boundMatch?.system.id === system.id;
-            const companion = getFloorSystemCompanionPresentation(system.airborneRatings, "library");
-            const impactPillText =
-              "impactRatings" in system
-                ? `${formatDecimal(system.impactRatings.LnW)} dB Ln,w`
-                : typeof system.impactBounds.LnWUpperBound === "number"
-                  ? `<= ${formatDecimal(system.impactBounds.LnWUpperBound)} dB Ln,w`
-                  : `<= ${formatDecimal(system.impactBounds.LnWPlusCIUpperBound ?? 0)} dB Ln,w+CI`;
-
-            return (
-              <article className="rounded-md border hairline bg-[color:var(--paper)] px-4 py-4" key={system.id}>
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div>
-                    <div className="font-semibold text-[color:var(--ink)]">{system.label}</div>
-                    <div className="mt-1 text-sm leading-7 text-[color:var(--ink-soft)]">
-                      {system.sourceLabel} · {system.trustTier.replaceAll("_", " ")}
-                    </div>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    <Pill tone={isActive ? "success" : recommendation ? "accent" : "neutral"}>
-                      {isActive ? "Active" : recommendation ? `${recommendation.fitPercent}% fit` : "Library"}
-                    </Pill>
-                  </div>
-                </div>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  <Pill tone="neutral">{impactPillText}</Pill>
-                  <Pill tone="neutral">{formatDecimal(system.airborneRatings.Rw)} dB Rw</Pill>
-                  <Pill tone="neutral">{companion.pillText}</Pill>
-                </div>
-                {recommendation ? (
-                  <div className="mt-3 rounded-md border hairline bg-[color:var(--panel)] px-3 py-3 text-sm leading-7 text-[color:var(--ink-soft)]">
-                    Missing signals: {recommendation.missingSignals.join(" ")}
-                  </div>
-                ) : null}
-              </article>
-            );
-          })}
-        </div>
+        <details className="rounded-lg border hairline bg-[color:var(--panel)]">
+          <summary className="cursor-pointer px-4 py-3 text-sm font-semibold text-[color:var(--ink)]">
+            Browse full curated family library
+          </summary>
+          <div className="grid max-h-[36rem] gap-3 overflow-y-auto border-t border-[color:var(--line)] p-3 xl:grid-cols-2">
+            {curatedLibrary.map(renderLibraryCard)}
+          </div>
+        </details>
       </div>
     </SurfacePanel>
   );

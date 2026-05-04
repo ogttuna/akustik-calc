@@ -71,30 +71,19 @@ export function SimpleWorkbenchToolbar({
   const closeReportMenu = () => setReportMenuOpen(false);
 
   return (
-    <div className="stage-enter relative z-30 shrink-0 border-b border-[color:var(--line)] bg-[color:var(--paper)] px-4 py-3">
-      <div className="grid gap-3">
-        <div className="flex min-w-0 flex-wrap items-start justify-between gap-3">
-          <div className="min-w-0">
-            <div className="flex min-w-0 flex-wrap items-center gap-2">
-              <span className="inline-flex h-7 items-center rounded border border-[color:var(--line-strong)] bg-[color:var(--ink)] px-2 text-[0.68rem] font-semibold tracking-[0.14em] text-[color:var(--paper)]">
-                DAC
-              </span>
-              <h1 className="min-w-0 max-w-full text-sm font-semibold uppercase leading-5 tracking-[0.08em] text-[color:var(--ink)]">
-                DYNECHO ACOUSTIC CALCULATOR
-              </h1>
-            </div>
-            <div className="mt-1 flex flex-wrap items-center gap-2 text-[0.72rem] text-[color:var(--ink-faint)]">
-              <span className="rounded-full border border-[color:var(--line)] bg-[color:var(--paper)] px-2 py-0.5 font-semibold text-[color:var(--ink-soft)]">
-                {getStudyModeLabel(studyMode)}
-              </span>
-              <span className="rounded-full border border-[color:var(--line)] bg-[color:var(--paper)] px-2 py-0.5 font-semibold text-[color:var(--ink-soft)]">
-                {`${readyOutputCount} ready`}
-              </span>
-              <span>{`${rowCount} row${rowCount === 1 ? "" : "s"}`}</span>
-            </div>
-          </div>
+    <div className="stage-enter relative z-30 shrink-0 border-b border-[color:var(--line)] bg-[color:var(--paper)] px-4 py-2">
+      <div className="flex min-w-0 flex-wrap items-center justify-between gap-3">
+        <div className="flex min-w-0 flex-wrap items-center gap-2 text-[0.72rem] text-[color:var(--ink-faint)]">
+          <span className="rounded-full border border-[color:var(--line)] bg-[color:var(--paper)] px-2 py-0.5 font-semibold text-[color:var(--ink-soft)]">
+            {getStudyModeLabel(studyMode)}
+          </span>
+          <span className="rounded-full border border-[color:var(--line)] bg-[color:var(--paper)] px-2 py-0.5 font-semibold text-[color:var(--ink-soft)]">
+            {`${readyOutputCount} ready`}
+          </span>
+          <span>{`${rowCount} row${rowCount === 1 ? "" : "s"}`}</span>
+        </div>
 
-          <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
             <details className="relative" onToggle={(event) => setReportMenuOpen(event.currentTarget.open)} open={reportMenuOpen} ref={reportMenuRef}>
               <summary
                 className="focus-ring touch-target inline-flex h-8 cursor-pointer list-none items-center gap-1.5 rounded border border-[color:var(--accent)] bg-[color:var(--accent-soft)] px-2.5 text-[0.8rem] font-semibold text-[color:var(--accent-ink)] hover:brightness-95 [&::-webkit-details-marker]:hidden"
@@ -192,7 +181,6 @@ export function SimpleWorkbenchToolbar({
             >
               {theme === "dark" ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
             </button>
-          </div>
         </div>
       </div>
     </div>

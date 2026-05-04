@@ -268,7 +268,7 @@ export function NewLayerComposer(props: {
       dynamicStiffnessOverride: draft.dynamicStiffnessMNm3,
       material,
       thicknessMm: draft.thicknessMm
-    }).find((fact) => fact.includes("kg/m²")) ?? "Pending thickness";
+    }).find((fact) => fact.includes("kg/m²"))?.replace(/\s+at this layer\b/i, "") ?? "Pending thickness";
   const dynamicStiffnessLabel = formatDynamicStiffnessLabel(material, draft.dynamicStiffnessMNm3);
   const densityWarning = getDensityInputWarning(material, draft.densityKgM3);
   const dynamicStiffnessWarning = getDynamicStiffnessInputWarning(draft.dynamicStiffnessMNm3);

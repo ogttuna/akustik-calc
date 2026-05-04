@@ -937,6 +937,11 @@ export function SimpleWorkbenchShell() {
     setActiveWorkspacePanel(rows.length > 0 ? "results" : "stack");
   };
   const selectReviewTab = (tabId: ReviewTabId) => {
+    if (tabId === "proposal") {
+      handleOpenPdfSetup();
+      return;
+    }
+
     setActiveReviewTab(tabId);
     setReviewExpanded(true);
     setActiveWorkspacePanel("review");
@@ -1038,15 +1043,11 @@ export function SimpleWorkbenchShell() {
       setIsExportingPdf(false);
     }
   };
-  const handleOpenPdfSetup = () => {
+  function handleOpenPdfSetup() {
     const doc = buildQuickProposalDocument();
     storeSimpleWorkbenchProposalPreview(doc);
-    const adjustmentWindow = window.open("/workbench/proposal/configure?style=simple", "_blank");
-
-    if (!adjustmentWindow) {
-      toast.error("Simple PDF editor blocked");
-    }
-  };
+    window.location.assign("/workbench/proposal/configure?style=simple");
+  }
   const moveRowWithFeedback = (rowId: string, direction: "up" | "down") => {
     moveRow(rowId, direction);
     setActiveRowId(rowId);
@@ -1118,7 +1119,7 @@ export function SimpleWorkbenchShell() {
 
       <section
         className={`${!isDesktop && activeWorkspacePanel === "review" ? "hidden" : "grid"} min-h-0 min-w-0 flex-1 overflow-hidden ${
-          isDesktop ? "grid-cols-[minmax(15rem,0.72fr)_minmax(22rem,1fr)_minmax(24rem,1.12fr)]" : ""
+          isDesktop ? "grid-cols-[minmax(15rem,0.65fr)_minmax(30rem,1.35fr)_minmax(24rem,0.95fr)]" : ""
         }`}
       >
         <SimpleWorkbenchRoutePanel

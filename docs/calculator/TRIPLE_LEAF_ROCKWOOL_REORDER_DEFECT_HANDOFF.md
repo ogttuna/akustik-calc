@@ -6,50 +6,92 @@ any runtime movement for triple-leaf walls.
 
 Current slice:
 
-`field_output_lab_screening_leakage_guard_v1`
+`calculator_source_gap_revalidation_v21`
 
 Current selection status:
 
-`gate_a_inventoried_field_output_lab_screening_leakage_no_runtime_selected_visible_wording_guard_gate_b`
+`gate_b_strengthened_visible_field_output_basis_copy_no_runtime_selected_source_gap_revalidation_with_rockwool_and_misclassification_blockers`
 
 Current next file:
 
-`apps/web/features/workbench/field-output-lab-screening-leakage-gate-b-card-copy.test.ts`
+`packages/engine/src/calculator-source-gap-revalidation-v21-gate-a-contract.test.ts`
 
 Current next action:
 
-`gate_b_strengthen_visible_field_output_basis_copy_with_paired_engine_web_report_tests`
+`gate_a_revalidate_source_gap_order_after_field_output_guard_and_company_internal_blocker`
 
-Just landed field-output guard file:
+Just landed field-output Gate B file:
 
-`packages/engine/src/field-output-lab-screening-leakage-guard-gate-a-contract.test.ts`
+`apps/web/features/workbench/field-output-lab-screening-leakage-gate-b-card-copy.test.ts`
 
-Just landed field-output guard checkpoint:
+Just landed field-output Gate B checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-04_FIELD_OUTPUT_LAB_SCREENING_LEAKAGE_GUARD_GATE_A_HANDOFF.md`
+`docs/calculator/CHECKPOINT_2026-05-04_FIELD_OUTPUT_LAB_SCREENING_LEAKAGE_GUARD_GATE_B_HANDOFF.md`
 
-Just landed field-output guard status:
+Just landed field-output Gate B status:
+
+`gate_b_strengthened_visible_field_output_basis_copy_no_runtime_selected_source_gap_revalidation_with_rockwool_and_misclassification_blockers`
+
+Just landed field-output Gate B result:
+
+Gate B strengthened visible output/report copy so `R'w`, `DnT,w`,
+`L'n,w`, `L'nT,w`, and related field outputs are framed as field
+continuations from the active lab/screening/apparent/bound basis, not
+independent exact field measurements. It did not fix the rockwool
+triple-leaf calculation and did not move runtime values, support,
+confidence, evidence promotion, API shape, route-card values,
+output-card status, or workbench inputs.
+
+Company-internal high-accuracy opening blocker:
+
+`company_internal_high_accuracy_opening_blocked_until_misclassification_blockers_close`
+
+`triple_leaf_like_lane_source_field_errors_are_company_use_blockers`
+
+The split-rockwool / gypsum / MLV triple-leaf defect is a company-use
+blocker for high-accuracy rollout until it is either source-owned exact
+or visibly screening-only across engine, route cards, output cards, and
+reports. The earlier internal-use envelope remains controlled /
+caveated pilot context only.
+
+`pre_company_internal_use_exit_criteria`: rockwool triple-leaf exact or
+explicit screening-only, field outputs never design-grade without an
+owner, frequent wall/floor lane snapshots green, source promotion
+requires topology/material/metric/tolerance/negative-boundary/visible
+tests, hostile API/import payloads fail closed, and both
+`pnpm calculator:gate:current` and `pnpm check` pass.
+
+Executable blocker contract:
+
+`packages/engine/src/company-internal-misclassification-readiness-blocker-contract.test.ts`
+
+Current next action:
+
+`gate_a_revalidate_source_gap_order_after_field_output_guard_and_company_internal_blocker`
+
+Just landed field-output Gate B validation:
+
+Focused Gate B passed 1 file / 4 tests. Continuity with output-card
+model, flat-list multileaf guard, triple-leaf company-internal
+rehearsal, and floor field continuation passed 4 files / 24 tests.
+`tools/dev/run-calculator-current-gate.ts` now includes the Gate B web
+test. Full current-gate validation passed with engine 241 files / 1388
+tests, web 50 files / 238 passed + 18 skipped, repo build 5 / 5 tasks,
+and whitespace guard green. The first build attempt hit a transient
+`next-font-manifest.json` artifact miss; the immediate web-build rerun
+and current-gate rerun passed without calculator/runtime changes.
+
+Prior field-output Gate A status, kept for aligned contract handoff:
 
 `gate_a_inventoried_field_output_lab_screening_leakage_no_runtime_selected_visible_wording_guard_gate_b`
 
-Just landed field-output guard result:
+Prior field-output Gate A file, kept for aligned contract handoff:
 
-Gate A inventoried finite field outputs from low-confidence
-split-rockwool, exact floor field continuations, low-confidence
-reinforced-concrete continuations, raw generated fallback continuations,
-and missing geometry / volume boundaries. It did not fix the rockwool
-triple-leaf calculation and did not move runtime values, support,
-confidence, evidence, API shape, route-card values, output-card status,
-proposal/report copy, or workbench inputs.
+`packages/engine/src/field-output-lab-screening-leakage-guard-gate-a-contract.test.ts`
 
-Just landed field-output guard validation:
+Gate A selected:
 
-Focused Gate A passed 1 file / 7 tests; continuity with v20, Uris Gate
-U, v19, and route/source risk register passed 5 files / 33 tests;
-`pnpm calculator:gate:current` passed engine 240 files / 1384 tests,
-web 49 files / 234 passed + 18 skipped, repo build 5 / 5 tasks with
-known non-fatal `sharp/@img` warnings, and whitespace guard passed
-after restoring `apps/web/next-env.d.ts` to `.next-typecheck`.
+`apps/web/features/workbench/field-output-lab-screening-leakage-gate-b-card-copy.test.ts`
 
 Just landed source-gap slice:
 
@@ -1932,21 +1974,22 @@ High-risk sibling failure modes:
 
 ## Next Agent Instructions
 
-Continue with field-output lab / screening leakage guard Gate B:
+Continue with calculator source-gap revalidation v21:
 
-`apps/web/features/workbench/field-output-lab-screening-leakage-gate-b-card-copy.test.ts`
+`packages/engine/src/calculator-source-gap-revalidation-v21-gate-a-contract.test.ts`
 
 The selected action is:
 
-`gate_b_strengthen_visible_field_output_basis_copy_with_paired_engine_web_report_tests`
+`gate_a_revalidate_source_gap_order_after_field_output_guard_and_company_internal_blocker`
 
-Field-output Gate A has already inventoried where `R'w`, `DnT,w`,
-`L'n,w`, and `L'nT,w` can be live from lab-derived, screening, bound,
-formula-owned, or low-confidence basis. Gate B should add paired web
-output-card and report-copy snapshots, then strengthen visible basis
-wording only if the snapshots show exact/design-grade overread risk.
-It must not move runtime values, support, confidence, evidence, API
-shape, route-card values, or workbench inputs.
+Field-output Gate B has already landed the visible copy guard: finite
+`R'w`, `DnT,w`, `L'n,w`, and `L'nT,w` values are now framed as
+field-continuation outputs, not independent exact field measurements.
+V21 must consume that guard and re-rank the next source/accuracy target
+with the company-internal high-accuracy blockers still active. It must
+not move runtime values, support, confidence, evidence, API shape,
+route-card values, output-card statuses, proposal/report values, or
+workbench inputs.
 
 The Uris 2006 lane remains blocked by
 `rights_safe_source_owned_curve_payload_absent`. Any future triple-leaf
@@ -1975,15 +2018,15 @@ Do not:
 
 Selected next file:
 
-`apps/web/features/workbench/field-output-lab-screening-leakage-gate-b-card-copy.test.ts`
+`packages/engine/src/calculator-source-gap-revalidation-v21-gate-a-contract.test.ts`
 
 Selected status:
 
-`gate_a_inventoried_field_output_lab_screening_leakage_no_runtime_selected_visible_wording_guard_gate_b`
+`gate_b_strengthened_visible_field_output_basis_copy_no_runtime_selected_source_gap_revalidation_with_rockwool_and_misclassification_blockers`
 
 Selected action:
 
-`gate_b_strengthen_visible_field_output_basis_copy_with_paired_engine_web_report_tests`
+`gate_a_revalidate_source_gap_order_after_field_output_guard_and_company_internal_blocker`
 
 ## Acceptance Target
 

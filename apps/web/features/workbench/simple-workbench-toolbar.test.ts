@@ -24,7 +24,7 @@ describe("simple workbench toolbar", () => {
       })
     );
 
-    expect(html).toContain("DYNECHO ACOUSTIC CALCULATOR");
+    expect(html).not.toContain("DYNECHO ACOUSTIC CALCULATOR");
     expect(html).toContain("Report");
     expect(html).toContain("PDF setup");
     expect(html).toContain("Simple DOCX");

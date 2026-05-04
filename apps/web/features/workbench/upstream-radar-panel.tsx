@@ -52,7 +52,7 @@ export function UpstreamRadarPanel() {
         <Pill tone="neutral">Snapshot {formatDate(snapshot.generatedAt)}</Pill>
       </div>
 
-      <div className="mt-5 grid gap-3 sm:grid-cols-2">
+      <div className="mt-5 grid gap-3">
         <article className="rounded-lg border hairline bg-[color:var(--panel-strong)] px-4 py-4">
           <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--ink)]">
             <Activity className="h-4 w-4" />
@@ -78,7 +78,7 @@ export function UpstreamRadarPanel() {
           <FolderSearch2 className="h-4 w-4" />
           Current watchlines
         </div>
-        <div className="mt-3 flex flex-wrap gap-2">
+        <div className="mt-3 flex max-h-40 flex-wrap gap-2 overflow-y-auto pr-1">
           {snapshot.upstream.watchLines.map((line) => (
             <Pill key={line} tone={getWatchTone(line)}>
               {line}

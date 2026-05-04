@@ -12,12 +12,12 @@ type PresetStripProps = {
 
 export function PresetStrip({ activePresetId, onPreset, onReset }: PresetStripProps) {
   return (
-    <div className="rounded-lg border hairline bg-[color:var(--panel)] px-3 py-3">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
+    <div className="min-w-0 rounded-lg border hairline bg-[color:var(--panel)] px-3 py-3">
+      <div className="flex min-w-0 flex-wrap items-center justify-between gap-3">
+        <div className="min-w-0">
           <div className="eyebrow">Preset lane</div>
           <p className="mt-2 text-sm leading-7 text-[color:var(--ink-soft)]">
-            Use presets as calibrated entry points. On small screens this lane scrolls horizontally to keep the shell short.
+            Use presets as calibrated entry points.
           </p>
         </div>
         <button
@@ -29,7 +29,7 @@ export function PresetStrip({ activePresetId, onPreset, onReset }: PresetStripPr
         </button>
       </div>
 
-      <div className="-mx-1 mt-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-1 pb-2 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0">
+      <div className="-mx-1 mt-4 flex min-w-0 snap-x snap-mandatory gap-3 overflow-x-auto px-1 pb-2">
         {WORKBENCH_PRESETS.map((preset) => (
           <button
             aria-label={`Load preset ${preset.label}`}

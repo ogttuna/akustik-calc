@@ -2,7 +2,7 @@
 
 Slice id: `field_output_lab_screening_leakage_guard_v1`
 
-Status: GATE A LANDED / GATE B NEXT
+Status: GATE B LANDED / SELECTED SOURCE-GAP V21
 
 Selected by:
 
@@ -40,6 +40,30 @@ Selected Gate B action:
 
 `gate_b_strengthen_visible_field_output_basis_copy_with_paired_engine_web_report_tests`
 
+Landed Gate B status:
+
+`gate_b_strengthened_visible_field_output_basis_copy_no_runtime_selected_source_gap_revalidation_with_rockwool_and_misclassification_blockers`
+
+Landed Gate B file:
+
+`apps/web/features/workbench/field-output-lab-screening-leakage-gate-b-card-copy.test.ts`
+
+Landed Gate B checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-04_FIELD_OUTPUT_LAB_SCREENING_LEAKAGE_GUARD_GATE_B_HANDOFF.md`
+
+Selected next slice:
+
+`calculator_source_gap_revalidation_v21`
+
+Selected next file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v21-gate-a-contract.test.ts`
+
+Selected next action:
+
+`gate_a_revalidate_source_gap_order_after_field_output_guard_and_company_internal_blocker`
+
 Prior checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-04_CALCULATOR_SOURCE_GAP_REVALIDATION_V20_GATE_A_HANDOFF.md`
@@ -61,6 +85,30 @@ blocked by `rights_safe_source_owned_curve_payload_absent`, and the
 grouped split-rockwool stack remains `Rw 41`,
 `multileaf_screening_blend`, low confidence, not fixed, and not
 source-validated.
+
+Company-internal high-accuracy opening blocker relation:
+
+`company_internal_high_accuracy_opening_blocked_until_misclassification_blockers_close`
+
+`triple_leaf_like_lane_source_field_errors_are_company_use_blockers`
+
+This slice is now part of the pre-company-use blocker chain. Gate B is
+the first required step because finite field-style values can look more
+defended than their basis. It does not fix rockwool triple-leaf by
+itself, but it is required before any high-accuracy company-internal
+handoff.
+
+`pre_company_internal_use_exit_criteria`: rockwool triple-leaf must be
+source-owned exact or visibly screening-only; field outputs must never
+look design-grade without an owner; frequent wall/floor lane snapshots
+must remain green; source promotion requires topology/material/metric/
+tolerance/negative-boundary/visible-test ownership; hostile API/import
+payloads must fail closed; `pnpm calculator:gate:current` and
+`pnpm check` must pass.
+
+Current next action after Gate B:
+
+`gate_a_revalidate_source_gap_order_after_field_output_guard_and_company_internal_blocker`
 
 ## Gate A Must Produce
 
@@ -108,9 +156,12 @@ engine full suite 373 files / 2204 tests, web full suite 161 files /
 907 passed + 18 skipped, and repo build 5 / 5 tasks with known
 non-fatal `sharp/@img` warnings.
 
-This does not change the selected next step. Gate B is still the first
-implementation target and must strengthen visible basis wording without
-retuning or promoting values.
+Gate B has now landed. It did not change any runtime values, support,
+confidence, evidence promotion, API shape, route-card values,
+output-card statuses, or workbench input behavior. It did intentionally
+change visible copy on output/report surfaces so finite field-style
+outputs are framed as continuations rather than independent exact field
+measurements.
 
 ## Gate A Findings
 
@@ -127,6 +178,23 @@ retuning or promoting values.
 - Missing partition geometry, receiving-room volume, field K, or direct
   field evidence remains needs-input / unsupported and must not be
   silently promoted.
+
+## Gate B Findings
+
+- Low-confidence grouped split-rockwool field outputs remain live in
+  building context, but `R'w 34` and `DnT,w 36` are now visibly tied to
+  apparent field continuation wording and the dynamic route still shows
+  low-confidence `multileaf_screening_blend`.
+- Exact UBIQ open-web floor rows still expose `L'n,w`, `L'nT,w`, and
+  `L'nT,50`, but the card/report copy now says these are field-impact
+  continuations, not independent exact field measurements.
+- Missing receiving-room volume still parks standardized airborne
+  outputs as needs-input.
+- Missing field `K` still parks field-impact outputs as needs-input
+  instead of deriving them from adjacent live `Ln,w` values.
+- Proposal text now carries the copy guard through the output coverage
+  register and the standard "does not replace accredited laboratory or
+  site measurements" warning.
 
 ## Candidate Surfaces
 
@@ -156,14 +224,21 @@ normalization with geometry.
 
 ## Validation
 
-Required for Gate B:
+Gate B completed:
 
-1. focused Gate A carry-forward plus Gate B web copy contract:
+1. focused Gate B web copy contract:
    `pnpm --filter @dynecho/web exec vitest run features/workbench/field-output-lab-screening-leakage-gate-b-card-copy.test.ts --maxWorkers=1`
-2. focused Gate A contract remains:
-   `pnpm --filter @dynecho/engine exec vitest run src/field-output-lab-screening-leakage-guard-gate-a-contract.test.ts --maxWorkers=1`
-3. continuity with v20, Gate U, v19, and route/source risk register;
-4. add Gate B to `tools/dev/run-calculator-current-gate.ts` only after
-   the web file exists;
-5. `pnpm calculator:gate:current`;
-6. `git diff --check`.
+   passed 1 file / 4 tests.
+2. focused continuity:
+   `pnpm --filter @dynecho/web exec vitest run features/workbench/simple-workbench-output-model.test.ts features/workbench/wall-flat-list-multileaf-family-guard-route-card.test.ts features/workbench/wall-triple-leaf-company-internal-acceptance-rehearsal.test.ts features/workbench/floor-field-continuation-gate-a-card-matrix.test.ts --maxWorkers=1`
+   passed 4 files / 24 tests.
+3. Gate B was added to `tools/dev/run-calculator-current-gate.ts`.
+
+Required next for V21:
+
+1. create
+   `packages/engine/src/calculator-source-gap-revalidation-v21-gate-a-contract.test.ts`;
+2. run focused V21 plus continuity with Gate B, company-internal
+   blocker, v20, Gate U, and route-source risk register;
+3. run `pnpm calculator:gate:current`;
+4. run `git diff --check`.

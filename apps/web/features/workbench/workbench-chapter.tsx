@@ -33,7 +33,7 @@ export function WorkbenchChapter({
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="min-w-0">
               <div className="eyebrow">{eyebrow ?? "Workbench chapter"}</div>
-              <h2 className="mt-2 text-[clamp(1.35rem,2.4vw,2.05rem)] font-display leading-[0.95] tracking-[-0.04em] text-[color:var(--ink)]">
+              <h2 className="mt-2 text-[1.55rem] font-display leading-tight text-[color:var(--ink)] md:text-[1.8rem]">
                 {title}
               </h2>
             </div>

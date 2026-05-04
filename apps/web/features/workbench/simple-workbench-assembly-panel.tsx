@@ -2,7 +2,7 @@
 
 import type { AssemblyCalculation, FloorRole, MaterialDefinition } from "@dynecho/shared";
 import { Plus } from "lucide-react";
-import { useRef, useState, type Dispatch, type DragEvent, type SetStateAction } from "react";
+import { useRef, useState, type Dispatch, type DragEvent, type PointerEvent, type SetStateAction } from "react";
 
 import { formatDecimal } from "@/lib/format";
 
@@ -30,6 +30,13 @@ type LayerDragState = {
   draggedRowId: string;
   overRowId: string | null;
   position: LayerDropPosition | null;
+};
+
+type LayerPointerDragState = LayerDragState & {
+  dragging: boolean;
+  pointerId: number;
+  startX: number;
+  startY: number;
 };
 
 export function SimpleWorkbenchAssemblyPanel(props: {
@@ -115,6 +122,7 @@ export function SimpleWorkbenchAssemblyPanel(props: {
     updateThickness
   } = props;
   const layerDragRowIdRef = useRef<string | null>(null);
+  const layerPointerDragRef = useRef<LayerPointerDragState | null>(null);
   const [layerDragState, setLayerDragState] = useState<LayerDragState | null>(null);
 
   function moveRowToIndex(rowId: string, fromIndex: number, toIndex: number) {
@@ -130,6 +138,125 @@ export function SimpleWorkbenchAssemblyPanel(props: {
     }
 
     setActiveRowId(rowId);
+  }
+
+  function getPointerDropTarget(clientY: number, draggedRowId: string): Pick<LayerDragState, "overRowId" | "position"> {
+    const rowElements = rows
+      .map((row) => ({
+        element: document.querySelector<HTMLElement>(`[data-row-id="${row.id}"]`),
+        id: row.id
+      }))
+      .filter((entry): entry is { element: HTMLElement; id: string } => Boolean(entry.element));
+
+    if (rowElements.length === 0) {
+      return { overRowId: null, position: null };
+    }
+
+    for (const { element, id } of rowElements) {
+      const bounds = element.getBoundingClientRect();
+      if (clientY <= bounds.bottom) {
+        return {
+          overRowId: id === draggedRowId ? null : id,
+          position: clientY < bounds.top + bounds.height / 2 ? "before" : "after"
+        };
+      }
+    }
+
+    const lastRowId = rowElements[rowElements.length - 1]?.id ?? null;
+    return {
+      overRowId: lastRowId === draggedRowId ? null : lastRowId,
+      position: lastRowId ? "after" : null
+    };
+  }
+
+  function finishPointerDrag(dragState: LayerDragState | null) {
+    layerPointerDragRef.current = null;
+    setLayerDragState(null);
+
+    if (!dragState?.overRowId || !dragState.position || dragState.draggedRowId === dragState.overRowId) {
+      return;
+    }
+
+    const fromIndex = rows.findIndex((row) => row.id === dragState.draggedRowId);
+    const hoverIndex = rows.findIndex((row) => row.id === dragState.overRowId);
+    if (fromIndex === -1 || hoverIndex === -1) {
+      return;
+    }
+
+    let toIndex = dragState.position === "after" ? hoverIndex + 1 : hoverIndex;
+    if (fromIndex < toIndex) {
+      toIndex -= 1;
+    }
+
+    moveRowToIndex(dragState.draggedRowId, fromIndex, toIndex);
+  }
+
+  function handleLayerPointerDown(event: PointerEvent<HTMLElement>, rowId: string) {
+    if (event.button !== 0 || rows.length < 2) {
+      return;
+    }
+
+    event.currentTarget.setPointerCapture(event.pointerId);
+    layerPointerDragRef.current = {
+      draggedRowId: rowId,
+      dragging: false,
+      overRowId: null,
+      pointerId: event.pointerId,
+      position: null,
+      startX: event.clientX,
+      startY: event.clientY
+    };
+    setActiveRowId(rowId);
+  }
+
+  function handleLayerPointerMove(event: PointerEvent<HTMLElement>) {
+    const current = layerPointerDragRef.current;
+    if (!current || current.pointerId !== event.pointerId) {
+      return;
+    }
+
+    const movedEnough = Math.hypot(event.clientX - current.startX, event.clientY - current.startY) > 6;
+    if (!current.dragging && !movedEnough) {
+      return;
+    }
+
+    event.preventDefault();
+    const target = getPointerDropTarget(event.clientY, current.draggedRowId);
+    const nextState: LayerPointerDragState = {
+      ...current,
+      dragging: true,
+      overRowId: target.overRowId,
+      position: target.position
+    };
+    layerPointerDragRef.current = nextState;
+    setLayerDragState({
+      draggedRowId: nextState.draggedRowId,
+      overRowId: nextState.overRowId,
+      position: nextState.position
+    });
+  }
+
+  function handleLayerPointerEnd(event: PointerEvent<HTMLElement>) {
+    const current = layerPointerDragRef.current;
+    if (!current || current.pointerId !== event.pointerId) {
+      return;
+    }
+
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+
+    if (!current.dragging) {
+      layerPointerDragRef.current = null;
+      setLayerDragState(null);
+      return;
+    }
+
+    finishPointerDrag({
+      draggedRowId: current.draggedRowId,
+      overRowId: current.overRowId,
+      position: current.position
+    });
   }
 
   function handleLayerDragStart(event: DragEvent<HTMLElement>, rowId: string) {
@@ -359,8 +486,11 @@ export function SimpleWorkbenchAssemblyPanel(props: {
           ) : null}
 
           {rows.length ? (
-            <div className={`hidden items-center gap-3 rounded border px-3 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)] 2xl:grid 2xl:grid-cols-[2.5rem_minmax(0,1.5fr)_7rem_10rem_auto] ${workbenchSectionMutedCardClass("assembly")}`}>
+            <div
+              className={`hidden items-center gap-2 rounded border px-3 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)] xl:grid xl:grid-cols-[2.25rem_2.25rem_minmax(8rem,1fr)_5.5rem_5.5rem_12.5rem] ${workbenchSectionMutedCardClass("assembly")}`}
+            >
               <span>#</span>
+              <span />
               <span>Layer</span>
               <span>Thickness</span>
               {studyMode === "floor" ? <span>Role</span> : <span>State</span>}
@@ -384,6 +514,9 @@ export function SimpleWorkbenchAssemblyPanel(props: {
                   onActiveRowChange={setActiveRowId}
                   onLayerDragEnd={handleLayerDragEnd}
                   onLayerDragOver={handleLayerDragOver}
+                  onLayerPointerDown={handleLayerPointerDown}
+                  onLayerPointerEnd={handleLayerPointerEnd}
+                  onLayerPointerMove={handleLayerPointerMove}
                   onLayerDragStart={handleLayerDragStart}
                   onLayerDrop={handleLayerDrop}
                   onExpandedChange={setExpandedRowId}
