@@ -5,10 +5,11 @@ Start here before changing calculator behavior.
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-05-04_CALCULATOR_SOURCE_GAP_REVALIDATION_V20_GATE_A_HANDOFF.md`
+2. `docs/calculator/CHECKPOINT_2026-05-04_FIELD_OUTPUT_LAB_SCREENING_LEAKAGE_GUARD_GATE_A_HANDOFF.md`
 3. `docs/calculator/SLICE_FIELD_OUTPUT_LAB_SCREENING_LEAKAGE_GUARD_PLAN.md`
-4. `docs/calculator/CHECKPOINT_2026-05-04_WALL_TRIPLE_LEAF_URIS_2006_SOURCE_PACKET_ACQUISITION_GATE_U_HANDOFF.md`
-5. `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V20_PLAN.md`
+4. `docs/calculator/CHECKPOINT_2026-05-04_CALCULATOR_SOURCE_GAP_REVALIDATION_V20_GATE_A_HANDOFF.md`
+5. `docs/calculator/CHECKPOINT_2026-05-04_WALL_TRIPLE_LEAF_URIS_2006_SOURCE_PACKET_ACQUISITION_GATE_U_HANDOFF.md`
+6. `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V20_PLAN.md`
 4. `docs/calculator/CHECKPOINT_2026-05-04_CALCULATOR_SOURCE_GAP_REVALIDATION_V19_GATE_A_HANDOFF.md`
 5. `docs/calculator/SLICE_WALL_TRIPLE_LEAF_URIS_2006_SOURCE_PACKET_ACQUISITION_PLAN.md`
 6. `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V19_PLAN.md`
@@ -226,10 +227,32 @@ plan.
 - current selected slice:
   `field_output_lab_screening_leakage_guard_v1`
 - current next decision inside the slice:
-  `packages/engine/src/field-output-lab-screening-leakage-guard-gate-a-contract.test.ts`
+  `apps/web/features/workbench/field-output-lab-screening-leakage-gate-b-card-copy.test.ts`
   should run
-  `gate_a_inventory_field_output_lab_screening_leakage_without_runtime_value_movement`.
+  `gate_b_strengthen_visible_field_output_basis_copy_with_paired_engine_web_report_tests`.
   The file is intentionally absent until the next implementation step.
+  Field-output leakage Gate A landed
+  `gate_a_inventoried_field_output_lab_screening_leakage_no_runtime_selected_visible_wording_guard_gate_b`
+  at
+  `packages/engine/src/field-output-lab-screening-leakage-guard-gate-a-contract.test.ts`.
+  Gate A inventoried low-confidence split-rockwool `R'w` / `DnT,w`,
+  exact floor field continuations, low-confidence reinforced-concrete
+  floor continuations, raw generated fallback field continuations, and
+  missing geometry / volume boundaries. Runtime values, support,
+  confidence, evidence, API shape, route-card values, output-card
+  status, proposal/report copy, and workbench input behavior stayed
+  frozen. Gate B may move visible wording only with paired engine,
+  web-card, and report-copy tests.
+  Validation completed on 2026-05-04: focused Gate A passed 1 file / 7
+  tests; continuity with v20, Uris Gate U, v19, and route/source risk
+  register passed 5 files / 33 tests; `pnpm calculator:gate:current`
+  passed engine 240 files / 1384 tests, web 49 files / 234 passed + 18
+  skipped, repo build 5 / 5 tasks with known non-fatal `sharp/@img`
+  warnings, and whitespace guard passed after restoring
+  `apps/web/next-env.d.ts` to `.next-typecheck`.
+- prior selected slice:
+  `field_output_lab_screening_leakage_guard_v1`
+- prior decision inside the slice:
   `calculator_source_gap_revalidation_v20` Gate A landed
   `selected_field_output_lab_screening_leakage_guard_after_v20_rerank_found_no_source_ready_runtime_candidate_and_uris_packet_absent`
   at

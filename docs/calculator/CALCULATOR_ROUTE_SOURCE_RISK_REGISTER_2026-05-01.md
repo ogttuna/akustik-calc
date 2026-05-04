@@ -13,15 +13,54 @@ Current urgent slice:
 
 Current urgent status:
 
-`selected_field_output_lab_screening_leakage_guard_after_v20_rerank_found_no_source_ready_runtime_candidate_and_uris_packet_absent`
+`gate_a_inventoried_field_output_lab_screening_leakage_no_runtime_selected_visible_wording_guard_gate_b`
 
-Current urgent first file:
+Current urgent next file:
+
+`apps/web/features/workbench/field-output-lab-screening-leakage-gate-b-card-copy.test.ts`
+
+Current urgent next action:
+
+`gate_b_strengthen_visible_field_output_basis_copy_with_paired_engine_web_report_tests`
+
+Just landed field-output guard slice:
+
+`field_output_lab_screening_leakage_guard_v1`
+
+Just landed field-output guard status:
+
+`gate_a_inventoried_field_output_lab_screening_leakage_no_runtime_selected_visible_wording_guard_gate_b`
+
+Just landed field-output guard file:
 
 `packages/engine/src/field-output-lab-screening-leakage-guard-gate-a-contract.test.ts`
 
-Current urgent first action:
+Just landed field-output guard checkpoint:
 
-`gate_a_inventory_field_output_lab_screening_leakage_without_runtime_value_movement`
+`docs/calculator/CHECKPOINT_2026-05-04_FIELD_OUTPUT_LAB_SCREENING_LEAKAGE_GUARD_GATE_A_HANDOFF.md`
+
+Just landed field-output guard artifacts:
+
+`field_output_lab_screening_leakage_inventory`
+
+`low_confidence_airborne_field_output_snapshot_matrix`
+
+`floor_impact_field_output_basis_snapshot_matrix`
+
+`visible_output_card_and_report_copy_inventory`
+
+`negative_boundaries_for_exact_field_or_design_grade_wording`
+
+`selected_gate_b_guard_or_no_runtime_closeout_with_target_file`
+
+Just landed field-output guard validation:
+
+focused Gate A passed 1 file / 7 tests; continuity with v20, Uris Gate
+U, v19, and this risk register passed 5 files / 33 tests;
+`pnpm calculator:gate:current` passed engine 240 files / 1384 tests,
+web 49 files / 234 passed + 18 skipped, repo build 5 / 5 tasks with
+known non-fatal `sharp/@img` warnings, and whitespace guard passed
+after restoring `apps/web/next-env.d.ts` to `.next-typecheck`.
 
 Just landed source-gap slice:
 

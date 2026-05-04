@@ -28,17 +28,56 @@ Field-output lab / screening leakage guard no-runtime inventory.
 
 Current selected status:
 
-`selected_field_output_lab_screening_leakage_guard_after_v20_rerank_found_no_source_ready_runtime_candidate_and_uris_packet_absent`
+`gate_a_inventoried_field_output_lab_screening_leakage_no_runtime_selected_visible_wording_guard_gate_b`
 
 Selected next implementation file:
 
-`packages/engine/src/field-output-lab-screening-leakage-guard-gate-a-contract.test.ts`
+`apps/web/features/workbench/field-output-lab-screening-leakage-gate-b-card-copy.test.ts`
 
 Selected next action:
 
-`gate_a_inventory_field_output_lab_screening_leakage_without_runtime_value_movement`
+`gate_b_strengthen_visible_field_output_basis_copy_with_paired_engine_web_report_tests`
 
 Latest closeout:
+
+`field_output_lab_screening_leakage_guard_v1` Gate A
+
+Gate A implementation file:
+
+`packages/engine/src/field-output-lab-screening-leakage-guard-gate-a-contract.test.ts`
+
+Gate A status:
+
+`gate_a_inventoried_field_output_lab_screening_leakage_no_runtime_selected_visible_wording_guard_gate_b`
+
+Gate A checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-04_FIELD_OUTPUT_LAB_SCREENING_LEAKAGE_GUARD_GATE_A_HANDOFF.md`
+
+Selected planning surface:
+
+`docs/calculator/SLICE_FIELD_OUTPUT_LAB_SCREENING_LEAKAGE_GUARD_PLAN.md`
+
+Gate A inventoried live field-style output risk without moving runtime
+values or visible copy. The low-confidence split-rockwool building
+route still emits `R'w 39` and `DnT,w 40` from
+`apparent_curve_overlay + 10log10(0.32V/S)` while the wall strategy is
+`multileaf_screening_blend`; this remains screening, not exact. Gate A
+also pinned exact floor field continuations, low-confidence
+reinforced-concrete floor continuations, raw generated fallback field
+continuations, visible output-card/report-copy inventory, and missing
+geometry / volume / field-K boundaries. Gate B is selected to harden
+visible basis wording with paired web-card and report-copy tests.
+
+Validation completed on 2026-05-04: focused Gate A passed 1 file / 7
+tests; continuity with v20, Uris Gate U, v19, and route/source risk
+register passed 5 files / 33 tests; `pnpm calculator:gate:current`
+passed engine 240 files / 1384 tests, web 49 files / 234 passed + 18
+skipped, repo build 5 / 5 tasks with known non-fatal `sharp/@img`
+warnings, and whitespace guard passed after restoring
+`apps/web/next-env.d.ts` to `.next-typecheck`.
+
+Prior closeout:
 
 `calculator_source_gap_revalidation_v20` Gate A
 

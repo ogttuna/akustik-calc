@@ -16,7 +16,78 @@ read
 For the active route/source boundary risk register read
 [CALCULATOR_ROUTE_SOURCE_RISK_REGISTER_2026-05-01.md](./CALCULATOR_ROUTE_SOURCE_RISK_REGISTER_2026-05-01.md).
 
-## Active Decision Map - 2026-05-04 V20 Gate A Closeout
+## Active Decision Map - 2026-05-04 Field-Output Gate A Closeout
+
+Current implementation position:
+`field_output_lab_screening_leakage_guard_v1`.
+
+Field-output leakage Gate A landed no-runtime and selected a bounded
+visible wording / posture guard for Gate B. The selected next
+implementation file,
+`apps/web/features/workbench/field-output-lab-screening-leakage-gate-b-card-copy.test.ts`,
+does not exist yet; this is the next file to create.
+
+`gate_a_inventoried_field_output_lab_screening_leakage_no_runtime_selected_visible_wording_guard_gate_b`
+
+`docs/calculator/CHECKPOINT_2026-05-04_FIELD_OUTPUT_LAB_SCREENING_LEAKAGE_GUARD_GATE_A_HANDOFF.md`
+
+`field_output_lab_screening_leakage_guard_v1`
+
+`apps/web/features/workbench/field-output-lab-screening-leakage-gate-b-card-copy.test.ts`
+
+Gate A facts:
+
+1. Runtime values, support, confidence, evidence, API behavior, route
+   cards, output-card status, proposal/report copy, and workbench input
+   behavior stayed frozen.
+2. Low-confidence split-rockwool still exposes finite `R'w 39` and
+   `DnT,w 40` from
+   `apparent_curve_overlay + 10log10(0.32V/S)` while the dynamic wall
+   strategy remains `multileaf_screening_blend`, low confidence, not
+   fixed, and not source-validated.
+3. Exact floor rows can expose field continuations such as `R'w`,
+   `DnT,w`, `L'n,w`, and `L'nT,w`, but those companions are not
+   independent exact field measurements.
+4. Low-confidence reinforced-concrete and raw generated fallback floor
+   lanes can expose precise-looking field companions from predictor /
+   screening basis and need visible basis language.
+5. Missing partition geometry, room volume, field K, or direct field
+   evidence must remain needs-input / unsupported boundaries.
+
+Gate A validation completed on 2026-05-04: focused Gate A passed 1 file
+/ 7 tests; continuity with v20, Uris Gate U, v19, and route/source risk
+register passed 5 files / 33 tests; `pnpm calculator:gate:current`
+passed engine 240 files / 1384 tests, web 49 files / 234 passed + 18
+skipped, repo build 5 / 5 tasks with known non-fatal `sharp/@img`
+warnings, and whitespace guard passed after restoring
+`apps/web/next-env.d.ts` to `.next-typecheck`.
+
+Gate B must produce:
+
+- paired web output-card snapshots for airborne field outputs and floor
+  field-impact outputs;
+- report/evidence copy snapshots proving apparent / screening /
+  low-confidence / bound basis remains visible;
+- negative boundaries proving finite `R'w`, `DnT,w`, `L'n,w`, and
+  `L'nT,w` are not labeled exact/design-grade without an owner;
+- no runtime value, support, confidence, evidence, API, route-card, or
+  workbench-input movement.
+
+Validation order for Gate B:
+
+1. Create
+   `apps/web/features/workbench/field-output-lab-screening-leakage-gate-b-card-copy.test.ts`.
+2. Add paired web/report copy snapshots before changing wording.
+3. If wording changes are needed, keep them limited to basis/posture
+   language and do not retune any values.
+4. Add the Gate B web test to `tools/dev/run-calculator-current-gate.ts`
+   only after the file exists.
+5. Run focused Gate B validation, continuity with Gate A / v20 / Gate U
+   / route-source risk register, then `pnpm calculator:gate:current`.
+
+The previous v20 decision map is preserved below for handoff history.
+
+## Prior Active Decision Map - 2026-05-04 V20 Gate A Closeout
 
 Current implementation position:
 `field_output_lab_screening_leakage_guard_v1`.

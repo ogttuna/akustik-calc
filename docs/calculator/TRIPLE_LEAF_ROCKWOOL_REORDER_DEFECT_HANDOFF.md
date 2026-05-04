@@ -10,15 +10,46 @@ Current slice:
 
 Current selection status:
 
-`selected_field_output_lab_screening_leakage_guard_after_v20_rerank_found_no_source_ready_runtime_candidate_and_uris_packet_absent`
+`gate_a_inventoried_field_output_lab_screening_leakage_no_runtime_selected_visible_wording_guard_gate_b`
 
 Current next file:
 
-`packages/engine/src/field-output-lab-screening-leakage-guard-gate-a-contract.test.ts`
+`apps/web/features/workbench/field-output-lab-screening-leakage-gate-b-card-copy.test.ts`
 
 Current next action:
 
-`gate_a_inventory_field_output_lab_screening_leakage_without_runtime_value_movement`
+`gate_b_strengthen_visible_field_output_basis_copy_with_paired_engine_web_report_tests`
+
+Just landed field-output guard file:
+
+`packages/engine/src/field-output-lab-screening-leakage-guard-gate-a-contract.test.ts`
+
+Just landed field-output guard checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-04_FIELD_OUTPUT_LAB_SCREENING_LEAKAGE_GUARD_GATE_A_HANDOFF.md`
+
+Just landed field-output guard status:
+
+`gate_a_inventoried_field_output_lab_screening_leakage_no_runtime_selected_visible_wording_guard_gate_b`
+
+Just landed field-output guard result:
+
+Gate A inventoried finite field outputs from low-confidence
+split-rockwool, exact floor field continuations, low-confidence
+reinforced-concrete continuations, raw generated fallback continuations,
+and missing geometry / volume boundaries. It did not fix the rockwool
+triple-leaf calculation and did not move runtime values, support,
+confidence, evidence, API shape, route-card values, output-card status,
+proposal/report copy, or workbench inputs.
+
+Just landed field-output guard validation:
+
+Focused Gate A passed 1 file / 7 tests; continuity with v20, Uris Gate
+U, v19, and route/source risk register passed 5 files / 33 tests;
+`pnpm calculator:gate:current` passed engine 240 files / 1384 tests,
+web 49 files / 234 passed + 18 skipped, repo build 5 / 5 tasks with
+known non-fatal `sharp/@img` warnings, and whitespace guard passed
+after restoring `apps/web/next-env.d.ts` to `.next-typecheck`.
 
 Just landed source-gap slice:
 
@@ -1901,20 +1932,21 @@ High-risk sibling failure modes:
 
 ## Next Agent Instructions
 
-Continue with field-output lab / screening leakage guard Gate A:
+Continue with field-output lab / screening leakage guard Gate B:
 
-`packages/engine/src/field-output-lab-screening-leakage-guard-gate-a-contract.test.ts`
+`apps/web/features/workbench/field-output-lab-screening-leakage-gate-b-card-copy.test.ts`
 
 The selected action is:
 
-`gate_a_inventory_field_output_lab_screening_leakage_without_runtime_value_movement`
+`gate_b_strengthen_visible_field_output_basis_copy_with_paired_engine_web_report_tests`
 
-V20 Gate A found no source-ready runtime candidate after Uris Gate U
-and selected a bounded source-independent honesty guard. The next slice
-must inventory where `R'w`, `DnT,w`, `L'n,w`, and `L'nT,w` can be live
-from lab-derived, screening, bound, formula-owned, or low-confidence
-basis and where output cards / proposal reports might make those
-values look design-grade.
+Field-output Gate A has already inventoried where `R'w`, `DnT,w`,
+`L'n,w`, and `L'nT,w` can be live from lab-derived, screening, bound,
+formula-owned, or low-confidence basis. Gate B should add paired web
+output-card and report-copy snapshots, then strengthen visible basis
+wording only if the snapshots show exact/design-grade overread risk.
+It must not move runtime values, support, confidence, evidence, API
+shape, route-card values, or workbench inputs.
 
 The Uris 2006 lane remains blocked by
 `rights_safe_source_owned_curve_payload_absent`. Any future triple-leaf
@@ -1943,15 +1975,15 @@ Do not:
 
 Selected next file:
 
-`packages/engine/src/field-output-lab-screening-leakage-guard-gate-a-contract.test.ts`
+`apps/web/features/workbench/field-output-lab-screening-leakage-gate-b-card-copy.test.ts`
 
 Selected status:
 
-`selected_field_output_lab_screening_leakage_guard_after_v20_rerank_found_no_source_ready_runtime_candidate_and_uris_packet_absent`
+`gate_a_inventoried_field_output_lab_screening_leakage_no_runtime_selected_visible_wording_guard_gate_b`
 
 Selected action:
 
-`gate_a_inventory_field_output_lab_screening_leakage_without_runtime_value_movement`
+`gate_b_strengthen_visible_field_output_basis_copy_with_paired_engine_web_report_tests`
 
 ## Acceptance Target
 

@@ -260,6 +260,7 @@ async function main() {
         "src/calculator-source-gap-revalidation-v19-gate-a-contract.test.ts",
         "src/wall-triple-leaf-uris2006-source-packet-acquisition-gate-u.test.ts",
         "src/calculator-source-gap-revalidation-v20-gate-a-contract.test.ts",
+        "src/field-output-lab-screening-leakage-guard-gate-a-contract.test.ts",
         "src/calculator-route-source-risk-register-contract.test.ts",
         "src/wall-triple-leaf-accuracy-recovery-gate-a-contract.test.ts",
         "src/wall-triple-leaf-accuracy-recovery-gate-b-contract.test.ts",

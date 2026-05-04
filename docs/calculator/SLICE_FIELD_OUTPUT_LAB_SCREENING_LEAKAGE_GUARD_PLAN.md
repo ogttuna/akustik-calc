@@ -2,7 +2,7 @@
 
 Slice id: `field_output_lab_screening_leakage_guard_v1`
 
-Status: SELECTED / GATE A NEXT
+Status: GATE A LANDED / GATE B NEXT
 
 Selected by:
 
@@ -19,6 +19,26 @@ Selected first file:
 Selected first action:
 
 `gate_a_inventory_field_output_lab_screening_leakage_without_runtime_value_movement`
+
+Landed Gate A status:
+
+`gate_a_inventoried_field_output_lab_screening_leakage_no_runtime_selected_visible_wording_guard_gate_b`
+
+Landed Gate A file:
+
+`packages/engine/src/field-output-lab-screening-leakage-guard-gate-a-contract.test.ts`
+
+Landed Gate A checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-04_FIELD_OUTPUT_LAB_SCREENING_LEAKAGE_GUARD_GATE_A_HANDOFF.md`
+
+Selected Gate B file:
+
+`apps/web/features/workbench/field-output-lab-screening-leakage-gate-b-card-copy.test.ts`
+
+Selected Gate B action:
+
+`gate_b_strengthen_visible_field_output_basis_copy_with_paired_engine_web_report_tests`
 
 Prior checkpoint:
 
@@ -51,6 +71,35 @@ source-validated.
 - `negative_boundaries_for_exact_field_or_design_grade_wording`
 - `selected_gate_b_guard_or_no_runtime_closeout_with_target_file`
 
+Gate A has landed these artifacts no-runtime. It selected Gate B
+because finite `R'w`, `DnT,w`, `L'n,w`, and `L'nT,w` values are already
+available on lab-derived / screening / low-confidence / exact-plus-field
+continuation paths and need stronger visible basis wording.
+
+Gate A validation completed on 2026-05-04: focused Gate A passed 1 file
+/ 7 tests; continuity with v20, Uris Gate U, v19, and route/source risk
+register passed 5 files / 33 tests; `pnpm calculator:gate:current`
+passed engine 240 files / 1384 tests, web 49 files / 234 passed + 18
+skipped, repo build 5 / 5 tasks with known non-fatal `sharp/@img`
+warnings, and whitespace guard passed after restoring
+`apps/web/next-env.d.ts` to `.next-typecheck`.
+
+## Gate A Findings
+
+- Low-confidence grouped split-rockwool still emits `R'w 39` and
+  `DnT,w 40` from
+  `apparent_curve_overlay + 10log10(0.32V/S)`. This is not the
+  rockwool triple-leaf fix; the wall strategy remains
+  `multileaf_screening_blend`.
+- Exact floor rows can expose field continuations, but those outputs
+  are not independent exact field measurements.
+- Low-confidence reinforced-concrete and raw generated fallback floor
+  lanes can expose precise-looking field companions from predictor /
+  screening basis.
+- Missing partition geometry, receiving-room volume, field K, or direct
+  field evidence remains needs-input / unsupported and must not be
+  silently promoted.
+
 ## Candidate Surfaces
 
 1. Wall airborne low-confidence and screening lanes where `R'w` or
@@ -79,12 +128,14 @@ normalization with geometry.
 
 ## Validation
 
-Required for Gate A:
+Required for Gate B:
 
-1. focused field-output guard contract:
+1. focused Gate A carry-forward plus Gate B web copy contract:
+   `pnpm --filter @dynecho/web exec vitest run features/workbench/field-output-lab-screening-leakage-gate-b-card-copy.test.ts --maxWorkers=1`
+2. focused Gate A contract remains:
    `pnpm --filter @dynecho/engine exec vitest run src/field-output-lab-screening-leakage-guard-gate-a-contract.test.ts --maxWorkers=1`
-2. continuity with v20, Gate U, v19, and route/source risk register;
-3. add Gate A to `tools/dev/run-calculator-current-gate.ts` only after
-   the file exists;
-4. `pnpm calculator:gate:current`;
-5. `git diff --check`.
+3. continuity with v20, Gate U, v19, and route/source risk register;
+4. add Gate B to `tools/dev/run-calculator-current-gate.ts` only after
+   the web file exists;
+5. `pnpm calculator:gate:current`;
+6. `git diff --check`.
