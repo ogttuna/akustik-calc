@@ -74,6 +74,66 @@ is supplied. The original rockwool/Uris issue remains blocked on
 `multileaf_screening_blend` answer is not fixed, exact, or
 source-validated.
 
+## Gate B Implementation Blueprint - 2026-05-04 Follow-Up Pass
+
+Implementation surfaces inspected for the next step:
+
+`inspected_floor_exact_bound_implementation_surfaces`
+
+`gate_b_contract_blueprint_snapshot_matrix`
+
+`exact_bound_screening_visible_surface_parity_check`
+
+`contiguous_duplicate_vs_disjoint_duplicate_role_boundary`
+
+`current_gate_runner_must_include_gate_b_after_creation`
+
+`source_gap_revalidation_v19_candidate_after_floor_closeout`
+
+`no_internet_research_before_gate_b_selects_source_acquisition`
+
+The closeout contract should use the current implementation shape
+instead of guessing:
+
+- `packages/engine/src/floor-system-evaluation.ts` owns the `+/- 2 mm`
+  exact/bound thickness tolerance and the split/ambiguous role topology
+  helpers.
+- `packages/engine/src/floor-system-match.ts` and
+  `packages/engine/src/bound-floor-system-match.ts` own exact floor rows
+  and official bound-only rows.
+- `packages/engine/src/impact-lane.ts`,
+  `packages/engine/src/floor-system-ratings.ts`, and
+  `packages/engine/src/calculate-assembly.ts` decide exact, bound,
+  family-estimate, lower-bound, target-output support, and warning
+  surfaces.
+- `apps/web/features/workbench/impact-result-panel.tsx` and
+  `apps/web/features/workbench/simple-workbench-evidence.ts` are the
+  visible parity surfaces for exact/bound/screening wording.
+- `tools/dev/run-calculator-current-gate.ts` must be updated once
+  `post-floor-tolerance-edge-promotion-guard-v1-next-slice-selection-contract.test.ts`
+  exists so the selected Gate B closeout is part of the current gate.
+
+Gate B should create one closeout contract with these assertions:
+
+1. `gate_b_contract_blueprint_snapshot_matrix`: pin exact-inside,
+   exact-just-outside, bound-inside, and bound-just-outside floor
+   snapshots using existing representative rows. No support/confidence/
+   evidence promotion should occur.
+2. `contiguous_duplicate_vs_disjoint_duplicate_role_boundary`: distinguish
+   merge-safe packed/contiguous same-role inputs from disjoint duplicate
+   role schedules. Disjoint duplicates must not reopen exact or
+   bound-only lanes just because the total thickness still looks close.
+3. `exact_bound_screening_visible_surface_parity_check`: require exact
+   warning/evidence copy, bound-only warning/evidence copy, and
+   just-outside family/screening copy to remain visibly different.
+4. `current_gate_runner_must_include_gate_b_after_creation`: after the
+   file lands, update `tools/dev/run-calculator-current-gate.ts` and pin
+   that inclusion in the closeout or its checkpoint.
+5. Selection matrix: the likely next rerank candidate is
+   `calculator_source_gap_revalidation_v19`, but Gate B must explicitly
+   select or reject it. If no bounded fix is proven, select source-gap
+   revalidation rather than runtime movement or source research.
+
 Last reviewed: 2026-05-04
 (`common_combination_lane_misclassification_sentinel_v1` Gate A landed
 no-runtime on 2026-05-04 with

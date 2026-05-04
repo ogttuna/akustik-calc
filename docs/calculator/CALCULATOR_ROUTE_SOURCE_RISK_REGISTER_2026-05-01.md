@@ -144,6 +144,33 @@ rockwool/Uris lane remains `paused_waiting_rights_safe_source_packet`;
 `Rw 41` on `multileaf_screening_blend` remains an unfixed screening
 answer, not exact source evidence.
 
+Follow-up implementation inspection:
+
+`inspected_floor_exact_bound_implementation_surfaces`
+
+`gate_b_contract_blueprint_snapshot_matrix`
+
+`exact_bound_screening_visible_surface_parity_check`
+
+`contiguous_duplicate_vs_disjoint_duplicate_role_boundary`
+
+`current_gate_runner_must_include_gate_b_after_creation`
+
+`source_gap_revalidation_v19_candidate_after_floor_closeout`
+
+`no_internet_research_before_gate_b_selects_source_acquisition`
+
+The floor closeout risk is not missing source data; it is accidental
+over-certainty near exact/bound tolerance edges. Gate B must therefore
+pin the implementation surfaces that can make a wrong measurement look
+valid: floor role scoring and `+/- 2 mm` tolerance, exact vs bound-only
+precedence, disjoint duplicate role schedules, target-output support,
+visible route/output copy, evidence citations, and current-gate runner
+coverage. If these remain stable and no bounded fix is selected, the
+next honest move is a source-gap revalidation candidate such as
+`calculator_source_gap_revalidation_v19`, not internet research or
+runtime/source promotion.
+
 Prior urgent status:
 
 `selected_floor_tolerance_edge_promotion_guard_after_v18_rerank_found_no_source_ready_runtime_candidate_and_common_combination_sentinel_closed`

@@ -105,6 +105,66 @@ because the current decision is not a source-row acquisition. External
 research starts only if the closeout selects a source-acquisition gate
 or a rights-safe source packet/source locator arrives.
 
+## Gate B Contract Blueprint - Follow-Up Planning Pass
+
+Implementation surfaces inspected:
+
+`inspected_floor_exact_bound_implementation_surfaces`
+
+`gate_b_contract_blueprint_snapshot_matrix`
+
+`exact_bound_screening_visible_surface_parity_check`
+
+`contiguous_duplicate_vs_disjoint_duplicate_role_boundary`
+
+`current_gate_runner_must_include_gate_b_after_creation`
+
+`source_gap_revalidation_v19_candidate_after_floor_closeout`
+
+`no_internet_research_before_gate_b_selects_source_acquisition`
+
+Gate B should create
+`packages/engine/src/post-floor-tolerance-edge-promotion-guard-v1-next-slice-selection-contract.test.ts`
+with a closeout shape similar to prior no-runtime closeout contracts,
+but grounded in the floor implementation:
+
+- use `floor-system-evaluation.ts` as the tolerance/topology source of
+  truth: `THICKNESS_TOLERANCE_MM`, split single-entry role schedules,
+  ambiguous single-entry role topology, and merge-safe packed role
+  behavior;
+- use `floor-system-match.ts` and `bound-floor-system-match.ts` for
+  exact row vs official bound-only precedence;
+- use `impact-lane.ts`, `floor-system-ratings.ts`, and
+  `calculate-assembly.ts` for impact/lower-bound/floor-carrier/output
+  support and warning assertions;
+- use `impact-result-panel.tsx` and `simple-workbench-evidence.ts` as
+  the visible wording/evidence surfaces that must not make screening or
+  bound-only values look exact.
+
+Required Gate B assertions:
+
+1. Exact inside / exact just-outside snapshots remain as Gate A pinned
+   them; just-outside exact rows must stay family/screening, not exact.
+2. Bound inside / bound just-outside snapshots remain as Gate A pinned
+   them; just-outside bound rows must stay bound-interpolation or
+   family/screening, not official bound match.
+3. Disjoint duplicate schedules stay blocked from exact and bound-only
+   lanes even when the total thickness remains close; contiguous
+   merge-safe packed same-material schedules must be named separately so
+   future tests do not flatten both cases into one rule.
+4. Raw role prompt, duplicate role, hostile API/import, material alias,
+   field-output leakage, and curve-provenance boundaries remain closed.
+5. Visible warning/evidence wording keeps exact family, official
+   bound-only, published family estimate, and low-confidence/screening
+   lanes visibly distinct.
+6. Once the Gate B file exists, `tools/dev/run-calculator-current-gate.ts`
+   must include it. This avoids a green current gate that silently skips
+   the active selected closeout.
+7. If no bounded fix is selected, close no-runtime and select the next
+   source-gap rerank. `calculator_source_gap_revalidation_v19` is the
+   natural candidate name after v18, but Gate B must explicitly select
+   or reject it in the contract.
+
 ## Required Gate A Artifacts
 
 Gate A must produce:

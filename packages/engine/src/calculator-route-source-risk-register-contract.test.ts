@@ -62,7 +62,14 @@ const PLANNING_PASS_TOKENS = [
   "wrong_measurement_triage_loop",
   "frequent_combination_lane_suspicion_reproduce_trace_document_or_bounded_fix",
   "external_source_research_deferred_until_source_acquisition_gate_or_source_packet",
-  "exact_promotion_requires_source_topology_material_metric_tolerance_negative_visible_proof"
+  "exact_promotion_requires_source_topology_material_metric_tolerance_negative_visible_proof",
+  "inspected_floor_exact_bound_implementation_surfaces",
+  "gate_b_contract_blueprint_snapshot_matrix",
+  "exact_bound_screening_visible_surface_parity_check",
+  "contiguous_duplicate_vs_disjoint_duplicate_role_boundary",
+  "current_gate_runner_must_include_gate_b_after_creation",
+  "source_gap_revalidation_v19_candidate_after_floor_closeout",
+  "no_internet_research_before_gate_b_selects_source_acquisition"
 ] as const;
 
 const CURRENT_ROCKWOOL_TOKENS = [
@@ -247,5 +254,8 @@ describe("calculator route/source risk register contract", () => {
     expect(riskRegister).toContain("Every calculator-hardening slice must treat wrong route-family/source");
     expect(riskRegister).toContain("No external source research is selected for the immediate Gate B");
     expect(riskRegister).toContain("creating it is the next implementation");
+    expect(riskRegister).toMatch(/accidental\s+over-certainty near exact\/bound tolerance edges/);
+    expect(riskRegister).toContain("floor role scoring and `+/- 2 mm` tolerance");
+    expect(riskRegister).toMatch(/current-gate runner\s+coverage/);
   });
 });

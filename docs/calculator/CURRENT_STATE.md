@@ -63,6 +63,32 @@ No external source research is needed for the immediate next step. Open
 internet/source-packet research only after a source-acquisition gate is
 selected or a rights-safe source packet/source locator is available.
 
+Follow-up planning pass:
+
+`inspected_floor_exact_bound_implementation_surfaces`
+
+`gate_b_contract_blueprint_snapshot_matrix`
+
+`exact_bound_screening_visible_surface_parity_check`
+
+`contiguous_duplicate_vs_disjoint_duplicate_role_boundary`
+
+`current_gate_runner_must_include_gate_b_after_creation`
+
+`source_gap_revalidation_v19_candidate_after_floor_closeout`
+
+`no_internet_research_before_gate_b_selects_source_acquisition`
+
+The next Gate B file should be written against the inspected floor
+implementation surfaces: `floor-system-evaluation.ts`,
+`floor-system-match.ts`, `bound-floor-system-match.ts`,
+`impact-lane.ts`, `floor-system-ratings.ts`, `calculate-assembly.ts`,
+`impact-result-panel.tsx`, and `simple-workbench-evidence.ts`. The
+contract should pin exact/bound just-inside and just-outside snapshots,
+contiguous-vs-disjoint duplicate role behavior, visible exact/bound/
+screening wording parity, and current-gate runner inclusion after the
+file exists.
+
 Selected next planning surface:
 
 `docs/calculator/SLICE_FLOOR_TOLERANCE_EDGE_PROMOTION_GUARD_PLAN.md`

@@ -264,6 +264,22 @@ plan.
   internet/source-packet research for the immediate Gate B closeout
   unless a source-acquisition gate is selected or a rights-safe source
   locator/source packet arrives.
+- follow-up 2026-05-04 implementation inspection:
+  `inspected_floor_exact_bound_implementation_surfaces`,
+  `gate_b_contract_blueprint_snapshot_matrix`,
+  `exact_bound_screening_visible_surface_parity_check`,
+  `contiguous_duplicate_vs_disjoint_duplicate_role_boundary`,
+  `current_gate_runner_must_include_gate_b_after_creation`,
+  `source_gap_revalidation_v19_candidate_after_floor_closeout`, and
+  `no_internet_research_before_gate_b_selects_source_acquisition`.
+  Gate B should use `floor-system-evaluation.ts`,
+  `floor-system-match.ts`, `bound-floor-system-match.ts`,
+  `impact-lane.ts`, `floor-system-ratings.ts`,
+  `calculate-assembly.ts`, `impact-result-panel.tsx`, and
+  `simple-workbench-evidence.ts` as inspected surfaces. After the
+  closeout file is created, add it to
+  `tools/dev/run-calculator-current-gate.ts`; otherwise the selected
+  active closeout can be absent from the current-gate runner.
 - latest checkpoint:
   `docs/calculator/CHECKPOINT_2026-05-04_FLOOR_TOLERANCE_EDGE_PROMOTION_GUARD_GATE_A_HANDOFF.md`
   lands `floor_tolerance_edge_promotion_guard_v1` Gate A no-runtime
