@@ -374,7 +374,7 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
 
               <div className="grid min-w-0 gap-1.5">
                 <span className="text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-[color:var(--ink-faint)]">Server Project</span>
-                <div className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto_auto_auto] gap-1.5">
+                <div className="grid min-w-0 gap-1.5">
                   <select
                     aria-label="Server project"
                     className="focus-ring touch-target h-10 min-w-0 rounded border border-[color:var(--line)] bg-[color:var(--paper)] px-2 text-[0.9rem] text-[color:var(--ink)]"
@@ -389,36 +389,38 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
                       </option>
                     ))}
                   </select>
-                  <button
-                    aria-label="Refresh server projects"
-                    className="focus-ring touch-target inline-flex h-10 w-10 items-center justify-center rounded border border-[color:var(--line)] bg-[color:var(--paper)] text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"
-                    disabled={isServerProjectBusy}
-                    onClick={onRefreshServerProjects}
-                    title="Refresh server projects"
-                    type="button"
-                  >
-                    <RefreshCcw className="h-3.5 w-3.5" />
-                  </button>
-                  <button
-                    aria-label="Load server project"
-                    className="focus-ring touch-target inline-flex h-10 w-10 items-center justify-center rounded border border-[color:var(--line)] bg-[color:var(--paper)] text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"
-                    disabled={isServerProjectBusy || selectedServerProjectId.length === 0}
-                    onClick={onLoadServerProject}
-                    title="Load server project"
-                    type="button"
-                  >
-                    <FolderOpen className="h-3.5 w-3.5" />
-                  </button>
-                  <button
-                    aria-label="Sync current project to server"
-                    className="focus-ring touch-target inline-flex h-10 w-10 items-center justify-center rounded border border-[color:var(--accent)] bg-[color:var(--accent-soft)] text-[color:var(--accent-ink)] hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50"
-                    disabled={isServerProjectBusy || rowCount === 0}
-                    onClick={onSyncServerProject}
-                    title="Sync current project to server"
-                    type="button"
-                  >
-                    <CloudUpload className="h-3.5 w-3.5" />
-                  </button>
+                  <div className="grid grid-cols-3 gap-1.5">
+                    <button
+                      aria-label="Refresh server projects"
+                      className="focus-ring touch-target inline-flex h-10 min-w-0 items-center justify-center rounded border border-[color:var(--line)] bg-[color:var(--paper)] text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"
+                      disabled={isServerProjectBusy}
+                      onClick={onRefreshServerProjects}
+                      title="Refresh server projects"
+                      type="button"
+                    >
+                      <RefreshCcw className="h-3.5 w-3.5" />
+                    </button>
+                    <button
+                      aria-label="Load server project"
+                      className="focus-ring touch-target inline-flex h-10 min-w-0 items-center justify-center rounded border border-[color:var(--line)] bg-[color:var(--paper)] text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"
+                      disabled={isServerProjectBusy || selectedServerProjectId.length === 0}
+                      onClick={onLoadServerProject}
+                      title="Load server project"
+                      type="button"
+                    >
+                      <FolderOpen className="h-3.5 w-3.5" />
+                    </button>
+                    <button
+                      aria-label="Sync current project to server"
+                      className="focus-ring touch-target inline-flex h-10 min-w-0 items-center justify-center rounded border border-[color:var(--accent)] bg-[color:var(--accent-soft)] text-[color:var(--accent-ink)] hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50"
+                      disabled={isServerProjectBusy || rowCount === 0}
+                      onClick={onSyncServerProject}
+                      title="Sync current project to server"
+                      type="button"
+                    >
+                      <CloudUpload className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
                 </div>
                 <span className="min-h-4 break-words text-[0.72rem] leading-4 text-[color:var(--ink-faint)]">{serverProjectStatusLabel}</span>
               </div>

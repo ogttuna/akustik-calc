@@ -28,8 +28,9 @@ export function WorkspacePanelButton(props: {
   badge?: string;
   label: string;
   onClick: () => void;
+  shortLabel?: string;
 }) {
-  const { active, badge, label, onClick } = props;
+  const { active, badge, label, onClick, shortLabel } = props;
 
   return (
     <button
@@ -42,10 +43,17 @@ export function WorkspacePanelButton(props: {
       onClick={onClick}
       type="button"
     >
-      <span className="truncate">{label}</span>
+      {shortLabel ? (
+        <>
+          <span className="truncate sm:hidden">{shortLabel}</span>
+          <span className="hidden truncate sm:inline">{label}</span>
+        </>
+      ) : (
+        <span className="truncate">{label}</span>
+      )}
       {badge ? (
         <span
-          className={`shrink-0 rounded-full border px-1.5 py-0.5 text-[0.62rem] leading-none ${
+          className={`hidden shrink-0 rounded-full border px-1.5 py-0.5 text-[0.62rem] leading-none sm:inline-flex ${
             active
               ? "border-[color:var(--accent)] bg-[color:var(--accent-soft)] text-[color:var(--accent-ink)]"
               : "border-[color:var(--line)] text-[color:var(--ink-faint)]"

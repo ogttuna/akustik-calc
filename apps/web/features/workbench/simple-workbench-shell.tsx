@@ -1111,15 +1111,15 @@ export function SimpleWorkbenchShell() {
       {!isDesktop ? (
         <div className="flex shrink-0 border-b border-[color:var(--line)] bg-[color:var(--paper)] px-2">
           <WorkspacePanelButton active={activeWorkspacePanel === "setup"} label="Setup" onClick={() => openWorkspacePanel("setup")} />
-          <WorkspacePanelButton active={activeWorkspacePanel === "stack"} badge={rows.length ? String(rows.length) : undefined} label="Assembly" onClick={() => openWorkspacePanel("stack")} />
-          <WorkspacePanelButton active={activeWorkspacePanel === "results"} badge={readyOutputCount ? String(readyOutputCount) : undefined} label="Results" onClick={() => openWorkspacePanel("results")} />
-          <WorkspacePanelButton active={activeWorkspacePanel === "review"} badge={scenario.warnings.length ? String(scenario.warnings.length) : undefined} label="Review" onClick={() => openWorkspacePanel("review")} />
+          <WorkspacePanelButton active={activeWorkspacePanel === "stack"} badge={rows.length ? String(rows.length) : undefined} label="Assembly" onClick={() => openWorkspacePanel("stack")} shortLabel="Stack" />
+          <WorkspacePanelButton active={activeWorkspacePanel === "results"} badge={readyOutputCount ? String(readyOutputCount) : undefined} label="Results" onClick={() => openWorkspacePanel("results")} shortLabel="Result" />
+          <WorkspacePanelButton active={activeWorkspacePanel === "review"} badge={scenario.warnings.length ? String(scenario.warnings.length) : undefined} label="Review" onClick={() => openWorkspacePanel("review")} shortLabel="Review" />
         </div>
       ) : null}
 
       <section
         className={`${!isDesktop && activeWorkspacePanel === "review" ? "hidden" : "grid"} min-h-0 min-w-0 flex-1 overflow-hidden ${
-          isDesktop ? "grid-cols-[minmax(15rem,0.65fr)_minmax(30rem,1.35fr)_minmax(24rem,0.95fr)]" : ""
+          isDesktop ? "grid-cols-[minmax(13rem,0.58fr)_minmax(40rem,1.55fr)_minmax(22rem,0.82fr)]" : ""
         }`}
       >
         <SimpleWorkbenchRoutePanel
