@@ -2,7 +2,7 @@
 
 Slice id: `company_internal_frequent_combination_lane_snapshot_guard_v1`
 
-Status: GATE B LANDED / GATE C NEXT
+Status: CLOSED NO-RUNTIME / V22 NEXT
 
 Selected by:
 
@@ -51,6 +51,26 @@ Selected Gate C file:
 Selected Gate C action:
 
 `gate_c_no_runtime_closeout_and_next_slice_selection`
+
+Gate C checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-04_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_GATE_C_CLOSEOUT_HANDOFF.md`
+
+Gate C status:
+
+`closed_company_internal_frequent_combination_lane_snapshot_guard_no_runtime_and_selected_source_gap_revalidation_v22`
+
+Selected next slice:
+
+`calculator_source_gap_revalidation_v22`
+
+Selected V22 file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v22-gate-a-contract.test.ts`
+
+Selected V22 action:
+
+`gate_a_revalidate_source_accuracy_gap_order_after_company_internal_snapshot_guard_closeout`
 
 Prior checkpoint:
 
@@ -148,6 +168,30 @@ Gate B selected Gate C no-runtime closeout and next-slice selection:
 
 `gate_c_no_runtime_closeout_and_next_slice_selection`
 
+## Gate C Landed
+
+Gate C added
+`packages/engine/src/post-company-internal-frequent-combination-lane-snapshot-guard-v1-next-slice-selection-contract.test.ts`
+and closed this slice no-runtime. It keeps runtime values, support,
+confidence, evidence, API behavior, route-card values, output-card
+status, proposal/report copy, and workbench-input behavior frozen.
+
+Gate C artifacts now present:
+
+- `company_internal_gate_c_closeout_summary`
+- `rockwool_rw41_screening_and_uris_packet_status`
+- `frequent_combination_guard_green_carry_forward`
+- `field_output_near_source_hostile_input_and_curve_provenance_status`
+- `repeat_uris_acquisition_blocked_without_new_packet`
+- `company_internal_high_accuracy_opening_still_blocked`
+- `selected_next_slice_with_target_file_and_validation_scope`
+
+Gate C selected `calculator_source_gap_revalidation_v22` because Gate
+A/B made frequent-combination posture visible but no source-ready
+runtime candidate or direct rockwool exact fix exists. V22 must re-rank
+rockwool/Uris, remaining visible/API guardrails, near-source aliases,
+hostile inputs, field-output owner status, and company opening blockers.
+
 ## Required Snapshot Cells
 
 The first matrix should cover at least these risk families:
@@ -222,10 +266,9 @@ Gate B validation completed on 2026-05-04:
 - `git diff --check` passed.
 
 Known non-fatal `sharp/@img` warnings remain through
-`@turbodocx/html-to-docx`. `pnpm check` remains required before any
-company-internal high-accuracy handoff.
+`@turbodocx/html-to-docx`.
 
-Required for Gate C:
+Gate C completed:
 
 1. create
    `packages/engine/src/post-company-internal-frequent-combination-lane-snapshot-guard-v1-next-slice-selection-contract.test.ts`;
@@ -236,3 +279,35 @@ Required for Gate C:
 4. select the next bounded implementation or research gate without
    promoting exact runtime values unless source/topology/material/
    metric/tolerance/negative-boundary/visible-test ownership exists.
+
+Gate C validation completed on 2026-05-04:
+
+- focused Gate C passed 1 file / 6 tests;
+- engine continuity passed 6 files / 38 tests;
+- `pnpm calculator:gate:current` passed with engine 244 files / 1410
+  tests, web 51 files / 246 passed + 18 skipped, repo build 5 / 5
+  tasks, and whitespace guard green;
+- `pnpm check` passed with lint/typecheck clean, engine 377 files /
+  2230 tests, web 163 files / 919 passed + 18 skipped, and build
+  5 / 5 tasks;
+- `git diff --check` passed after restoring `apps/web/next-env.d.ts` to
+  `.next-typecheck`.
+
+Known non-fatal `sharp/@img` warnings remain through
+`@turbodocx/html-to-docx`. `pnpm check` must still be rerun before any
+future company-internal high-accuracy handoff.
+
+Required for V22:
+
+1. create
+   `packages/engine/src/calculator-source-gap-revalidation-v22-gate-a-contract.test.ts`;
+2. re-rank using `company_internal_gate_c_closeout_summary`,
+   `rockwool_rw41_screening_and_uris_packet_status`,
+   `frequent_combination_guard_green_carry_forward`,
+   `field_output_near_source_hostile_input_and_curve_provenance_status`,
+   and `company_internal_high_accuracy_opening_blocker_status`;
+3. preserve `standing_lane_misclassification_monitoring_mandate` and
+   `note_test_document_or_easy_fix`;
+4. keep `repeat_uris_acquisition_blocked_without_new_packet` active
+   unless a new rights-safe packet or authorized source-owned payload
+   arrives.

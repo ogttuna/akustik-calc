@@ -16,7 +16,129 @@ read
 For the active route/source boundary risk register read
 [CALCULATOR_ROUTE_SOURCE_RISK_REGISTER_2026-05-01.md](./CALCULATOR_ROUTE_SOURCE_RISK_REGISTER_2026-05-01.md).
 
-## Active Decision Map - 2026-05-04 Company Snapshot Guard Gate B Closeout
+## Active Decision Map - 2026-05-04 V22 Gate A
+
+Current implementation position:
+`calculator_source_gap_revalidation_v22`.
+
+`company_internal_frequent_combination_lane_snapshot_guard_v1` Gate C
+closed no-runtime and selected V22 source-gap revalidation. The selected
+next implementation file is:
+
+`packages/engine/src/calculator-source-gap-revalidation-v22-gate-a-contract.test.ts`
+
+This file does not exist yet; it is the next file to create.
+
+Current selected status:
+
+`closed_company_internal_frequent_combination_lane_snapshot_guard_no_runtime_and_selected_source_gap_revalidation_v22`
+
+Latest checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-04_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_GATE_C_CLOSEOUT_HANDOFF.md`
+
+Active planning surface:
+
+`docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V22_PLAN.md`
+
+Gate C facts:
+
+1. Runtime values, support, confidence, evidence, API behavior, route
+   cards, output cards, proposal/report copy, and workbench input
+   behavior stayed frozen.
+2. Gate C added
+   `packages/engine/src/post-company-internal-frequent-combination-lane-snapshot-guard-v1-next-slice-selection-contract.test.ts`
+   and closed `company_internal_frequent_combination_lane_snapshot_guard_v1`.
+3. `company_internal_gate_c_closeout_summary` records that Gate A/B
+   proved engine and web posture honesty, not exact source readiness.
+4. `rockwool_rw41_screening_and_uris_packet_status` stays active:
+   rockwool triple-leaf remains `Rw 41`, `multileaf_screening_blend`,
+   low confidence, screening only, not exact, and not source-validated.
+5. `repeat_uris_acquisition_blocked_without_new_packet`: Gate U already
+   confirmed Uris identity and no rights-safe local or authorized curve
+   payload. Do not retry acquisition without a new packet.
+6. `company_internal_high_accuracy_opening_still_blocked` remains true
+   until `pre_company_internal_use_exit_criteria` close.
+7. `standing_lane_misclassification_monitoring_mandate` and
+   `note_test_document_or_easy_fix` remain active for every suspicious
+   common-combination lane/source/output result.
+
+Gate C validation completed on 2026-05-04:
+
+- focused Gate C passed 1 file / 6 tests;
+- engine continuity passed 6 files / 38 tests;
+- `pnpm calculator:gate:current` passed with engine 244 files / 1410
+  tests, web 51 files / 246 passed + 18 skipped, repo build 5 / 5
+  tasks, and whitespace guard green;
+- `pnpm check` passed with lint/typecheck clean, engine 377 files /
+  2230 tests, web 163 files / 919 passed + 18 skipped, and build
+  5 / 5 tasks;
+- `git diff --check` passed after restoring `apps/web/next-env.d.ts` to
+  `.next-typecheck`.
+
+Known non-fatal `sharp/@img` warnings remain through
+`@turbodocx/html-to-docx`.
+
+Current next action:
+
+`gate_a_revalidate_source_accuracy_gap_order_after_company_internal_snapshot_guard_closeout`
+
+V22 Gate A must compare at least these candidates:
+
+- rockwool/Uris source-owned closure or packet-intake readiness;
+- remaining frequent-combination visible/API guardrail gaps;
+- near-source material alias/source promotion ownership;
+- hostile API/import guardrails;
+- field-output owner and design-grade policy;
+- productization/report polish only after correctness blockers are
+  controlled.
+
+Validation order for the selected V22 Gate A:
+
+1. Create
+   `packages/engine/src/calculator-source-gap-revalidation-v22-gate-a-contract.test.ts`.
+2. Re-rank the backlog using `company_internal_gate_c_closeout_summary`,
+   `rockwool_rw41_screening_and_uris_packet_status`,
+   `frequent_combination_guard_green_carry_forward`,
+   `field_output_near_source_hostile_input_and_curve_provenance_status`,
+   and `company_internal_high_accuracy_opening_blocker_status`.
+3. Keep exact runtime promotion blocked unless topology, material
+   mapping, metric context, tolerance ownership, negative boundaries,
+   source/curve provenance, and paired engine/web/report tests all
+   exist.
+4. Run focused V22 validation, continuity with company Gate C/Gate B/
+   Gate A and Uris Gate U, then `pnpm calculator:gate:current` and
+   `git diff --check`.
+5. Run `pnpm check` before any company-internal high-accuracy handoff.
+
+The previous company Gate C decision map is preserved below for handoff
+history.
+
+## Prior Active Decision Map - 2026-05-04 Company Snapshot Guard Gate C Closeout
+
+`company_internal_frequent_combination_lane_snapshot_guard_v1` Gate C
+closed no-runtime and selected `calculator_source_gap_revalidation_v22`
+with:
+
+`closed_company_internal_frequent_combination_lane_snapshot_guard_no_runtime_and_selected_source_gap_revalidation_v22`
+
+Gate C checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-04_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_GATE_C_CLOSEOUT_HANDOFF.md`
+
+Gate C artifacts:
+
+- `company_internal_gate_c_closeout_summary`
+- `rockwool_rw41_screening_and_uris_packet_status`
+- `frequent_combination_guard_green_carry_forward`
+- `field_output_near_source_hostile_input_and_curve_provenance_status`
+- `repeat_uris_acquisition_blocked_without_new_packet`
+- `company_internal_high_accuracy_opening_still_blocked`
+- `selected_next_slice_with_target_file_and_validation_scope`
+
+The previous Gate B decision map is preserved below for handoff history.
+
+## Prior Active Decision Map - 2026-05-04 Company Snapshot Guard Gate B Closeout
 
 Current implementation position:
 `company_internal_frequent_combination_lane_snapshot_guard_v1`.

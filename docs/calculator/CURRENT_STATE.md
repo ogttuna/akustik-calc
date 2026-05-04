@@ -20,25 +20,79 @@ If you need the active route/source boundary risk register read
 
 Current selected slice:
 
-`company_internal_frequent_combination_lane_snapshot_guard_v1`
+`calculator_source_gap_revalidation_v22`
 
 Source label:
 
-Company-internal frequent wall/floor lane snapshot guard.
+Post-company-snapshot source/accuracy gap revalidation.
 
 Current selected status:
 
-`company_internal_frequent_combination_visible_guard_landed_no_runtime_selected_gate_c_closeout`
+`closed_company_internal_frequent_combination_lane_snapshot_guard_no_runtime_and_selected_source_gap_revalidation_v22`
 
 Selected next implementation file:
 
-`packages/engine/src/post-company-internal-frequent-combination-lane-snapshot-guard-v1-next-slice-selection-contract.test.ts`
+`packages/engine/src/calculator-source-gap-revalidation-v22-gate-a-contract.test.ts`
 
 Selected next action:
 
-`gate_c_no_runtime_closeout_and_next_slice_selection`
+`gate_a_revalidate_source_accuracy_gap_order_after_company_internal_snapshot_guard_closeout`
+
+Active planning surface:
+
+`docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V22_PLAN.md`
 
 Latest closeout:
+
+`company_internal_frequent_combination_lane_snapshot_guard_v1` Gate C
+
+Gate C implementation file:
+
+`packages/engine/src/post-company-internal-frequent-combination-lane-snapshot-guard-v1-next-slice-selection-contract.test.ts`
+
+Gate C action:
+
+`gate_c_no_runtime_closeout_and_next_slice_selection`
+
+Gate C checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-04_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_GATE_C_CLOSEOUT_HANDOFF.md`
+
+Gate C status:
+
+`closed_company_internal_frequent_combination_lane_snapshot_guard_no_runtime_and_selected_source_gap_revalidation_v22`
+
+Gate C landed `company_internal_gate_c_closeout_summary`,
+`rockwool_rw41_screening_and_uris_packet_status`,
+`frequent_combination_guard_green_carry_forward`,
+`field_output_near_source_hostile_input_and_curve_provenance_status`,
+`repeat_uris_acquisition_blocked_without_new_packet`,
+`company_internal_high_accuracy_opening_still_blocked`, and
+`selected_next_slice_with_target_file_and_validation_scope`.
+
+Runtime values, support, confidence, evidence, API behavior,
+route-card values, output-card status, proposal/report copy, and
+workbench-input behavior stayed frozen.
+
+Rockwool triple-leaf remains not fixed. The grouped split-rockwool
+building route still emits `Rw 41` from `multileaf_screening_blend`,
+low confidence, screening only, not exact, and not source-validated.
+Uris 2006 remains `paused_waiting_rights_safe_source_packet`.
+
+Gate C selected `calculator_source_gap_revalidation_v22`.
+
+Gate C validation completed on 2026-05-04: focused Gate C passed 1
+file / 6 tests; engine continuity passed 6 files / 38 tests; `pnpm
+calculator:gate:current` passed with engine 244 files / 1410 tests,
+web 51 files / 246 passed + 18 skipped, repo build 5 / 5 tasks, and
+whitespace guard green; `pnpm check` passed with lint/typecheck clean,
+engine 377 files / 2230 tests, web 163 files / 919 passed + 18
+skipped, and build 5 / 5 tasks; `git diff --check` passed after
+restoring `apps/web/next-env.d.ts` to `.next-typecheck`. Known
+non-fatal `sharp/@img` warnings remain through
+`@turbodocx/html-to-docx`.
+
+Prior closeout:
 
 `company_internal_frequent_combination_lane_snapshot_guard_v1` Gate B
 

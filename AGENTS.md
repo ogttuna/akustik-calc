@@ -5,10 +5,12 @@ Start here before changing calculator behavior.
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-05-04_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_GATE_B_HANDOFF.md`
-3. `docs/calculator/CHECKPOINT_2026-05-04_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_GATE_A_HANDOFF.md`
-4. `docs/calculator/SLICE_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_PLAN.md`
-5. `docs/calculator/CHECKPOINT_2026-05-04_CALCULATOR_SOURCE_GAP_REVALIDATION_V21_GATE_A_HANDOFF.md`
+2. `docs/calculator/CHECKPOINT_2026-05-04_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_GATE_C_CLOSEOUT_HANDOFF.md`
+3. `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V22_PLAN.md`
+4. `docs/calculator/CHECKPOINT_2026-05-04_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_GATE_B_HANDOFF.md`
+5. `docs/calculator/CHECKPOINT_2026-05-04_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_GATE_A_HANDOFF.md`
+6. `docs/calculator/SLICE_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_PLAN.md`
+7. `docs/calculator/CHECKPOINT_2026-05-04_CALCULATOR_SOURCE_GAP_REVALIDATION_V21_GATE_A_HANDOFF.md`
 6. `docs/calculator/CHECKPOINT_2026-05-04_FIELD_OUTPUT_LAB_SCREENING_LEAKAGE_GUARD_GATE_B_HANDOFF.md`
 5. `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V21_PLAN.md`
 6. `docs/calculator/CHECKPOINT_2026-05-04_FIELD_OUTPUT_LAB_SCREENING_LEAKAGE_GUARD_GATE_A_HANDOFF.md`
@@ -231,12 +233,45 @@ plan.
 ## Current Workflow
 
 - current selected slice:
-  `company_internal_frequent_combination_lane_snapshot_guard_v1`
+  `calculator_source_gap_revalidation_v22`
 - current next decision inside the slice:
-  `packages/engine/src/post-company-internal-frequent-combination-lane-snapshot-guard-v1-next-slice-selection-contract.test.ts`
+  `packages/engine/src/calculator-source-gap-revalidation-v22-gate-a-contract.test.ts`
   should run
-  `gate_c_no_runtime_closeout_and_next_slice_selection`.
+  `gate_a_revalidate_source_accuracy_gap_order_after_company_internal_snapshot_guard_closeout`.
   The file is intentionally absent until the next implementation step.
+- just landed company-internal frequent-combination Gate C closeout:
+  `packages/engine/src/post-company-internal-frequent-combination-lane-snapshot-guard-v1-next-slice-selection-contract.test.ts`
+  closed `company_internal_frequent_combination_lane_snapshot_guard_v1`
+  and selected `calculator_source_gap_revalidation_v22`. It
+  landed
+  `closed_company_internal_frequent_combination_lane_snapshot_guard_no_runtime_and_selected_source_gap_revalidation_v22`
+  no-runtime. It added `company_internal_gate_c_closeout_summary`,
+  `rockwool_rw41_screening_and_uris_packet_status`,
+  `frequent_combination_guard_green_carry_forward`,
+  `field_output_near_source_hostile_input_and_curve_provenance_status`,
+  `repeat_uris_acquisition_blocked_without_new_packet`,
+  `company_internal_high_accuracy_opening_still_blocked`, and
+  `selected_next_slice_with_target_file_and_validation_scope`.
+  Runtime values, support, confidence, evidence, API, route-card,
+  output-card, proposal/report, and workbench-input behavior stayed
+  frozen. Rockwool triple-leaf remains not fixed: grouped
+  split-rockwool is still `Rw 41`, `multileaf_screening_blend`, low
+  confidence, screening only, not exact, and not source-validated.
+  Uris 2006 remains `paused_waiting_rights_safe_source_packet`.
+  Validation passed on 2026-05-04: focused Gate C 1 file / 6 tests,
+  engine continuity 6 files / 38 tests, final
+  `pnpm calculator:gate:current` with engine 244 files / 1410 tests,
+  web 51 files / 246 passed + 18 skipped, repo build 5 / 5 tasks,
+  whitespace guard green, broad `pnpm check` with lint/typecheck clean,
+  engine 377 files / 2230 tests, web 163 files / 919 passed + 18
+  skipped, build 5 / 5 tasks, and final `git diff --check` green after
+  restoring `apps/web/next-env.d.ts` to `.next-typecheck`. Known
+  non-fatal `sharp/@img` warnings remain through
+  `@turbodocx/html-to-docx`.
+- just landed company-internal Gate C checkpoint:
+  `docs/calculator/CHECKPOINT_2026-05-04_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_GATE_C_CLOSEOUT_HANDOFF.md`
+  and selected V22 plan:
+  `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V22_PLAN.md`
 - just landed company-internal frequent-combination Gate B:
   `apps/web/features/workbench/company-internal-frequent-combination-lane-snapshot-guard-gate-b-visible.test.ts`
   landed
@@ -2466,15 +2501,15 @@ plan.
   selected slice
 - use `pnpm check` only when you need the broad full-repo gate
 - latest focused validation: `pnpm calculator:gate:current` green on
-  2026-05-04 after `floor_tolerance_edge_promotion_guard_v1` Gate A;
-  engine 235 files / 1349 tests, web 49 files / 234 passed + 18 skipped,
-  build 5/5 with the known non-fatal `sharp/@img` warnings, whitespace
-  guard clean.
-- latest broad validation: `pnpm check` green on 2026-05-04 after the
-  broad review fixes; lint/typecheck/build all passed 5/5 packages,
-  engine tests passed 368 files / 2169 tests, web tests passed 161
-  files / 908 passed + 18 skipped, with the known non-fatal
-  `sharp/@img` build warnings.
+  2026-05-04 after company-internal frequent-combination Gate C
+  closeout; engine 244 files / 1410 tests, web 51 files / 246 passed +
+  18 skipped, build 5/5 with the known non-fatal `sharp/@img` warnings,
+  whitespace guard clean.
+- latest broad validation: `pnpm check` green on 2026-05-04 after
+  company-internal frequent-combination Gate C closeout; lint/typecheck
+  clean, engine tests passed 377 files / 2230 tests, web tests passed
+  163 files / 919 passed + 18 skipped, build 5 / 5 with the known
+  non-fatal `sharp/@img` build warnings.
 - web broad tests run through `tools/dev/run-web-vitest.ts`; it keeps
   all 157 web test files in scope while isolating long route scans so
   Vitest worker RPC timeouts do not hide green test results

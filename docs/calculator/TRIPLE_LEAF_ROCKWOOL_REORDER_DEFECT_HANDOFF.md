@@ -6,19 +6,57 @@ any runtime movement for triple-leaf walls.
 
 Current slice:
 
-`company_internal_frequent_combination_lane_snapshot_guard_v1`
+`calculator_source_gap_revalidation_v22`
 
 Current selection status:
 
-`company_internal_frequent_combination_visible_guard_landed_no_runtime_selected_gate_c_closeout`
+`closed_company_internal_frequent_combination_lane_snapshot_guard_no_runtime_and_selected_source_gap_revalidation_v22`
 
 Current next file:
 
-`packages/engine/src/post-company-internal-frequent-combination-lane-snapshot-guard-v1-next-slice-selection-contract.test.ts`
+`packages/engine/src/calculator-source-gap-revalidation-v22-gate-a-contract.test.ts`
 
 Current next action:
 
-`gate_c_no_runtime_closeout_and_next_slice_selection`
+`gate_a_revalidate_source_accuracy_gap_order_after_company_internal_snapshot_guard_closeout`
+
+Just landed company-internal frequent-combination Gate C file:
+
+`packages/engine/src/post-company-internal-frequent-combination-lane-snapshot-guard-v1-next-slice-selection-contract.test.ts`
+
+Just landed company-internal Gate C checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-04_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_GATE_C_CLOSEOUT_HANDOFF.md`
+
+Just landed company-internal Gate C status:
+
+`closed_company_internal_frequent_combination_lane_snapshot_guard_no_runtime_and_selected_source_gap_revalidation_v22`
+
+Just landed Gate C result:
+
+Gate C closed `company_internal_frequent_combination_lane_snapshot_guard_v1`
+and added `company_internal_gate_c_closeout_summary`,
+`rockwool_rw41_screening_and_uris_packet_status`,
+`frequent_combination_guard_green_carry_forward`,
+`field_output_near_source_hostile_input_and_curve_provenance_status`,
+`repeat_uris_acquisition_blocked_without_new_packet`,
+`company_internal_high_accuracy_opening_still_blocked`, and
+`selected_next_slice_with_target_file_and_validation_scope` no-runtime.
+It selected `calculator_source_gap_revalidation_v22`. Rockwool
+triple-leaf remains not fixed, Uris 2006 remains
+`paused_waiting_rights_safe_source_packet`, and the
+`standing_lane_misclassification_monitoring_mandate` /
+`note_test_document_or_easy_fix` rules stay active.
+
+Gate C validation passed on 2026-05-04: focused Gate C 1 file / 6
+tests, engine continuity 6 files / 38 tests,
+`pnpm calculator:gate:current` with engine 244 files / 1410 tests, web
+51 files / 246 passed + 18 skipped, repo build 5 / 5 tasks, whitespace
+guard green, broad `pnpm check` with lint/typecheck clean, engine 377
+files / 2230 tests, web 163 files / 919 passed + 18 skipped, build
+5 / 5 tasks, and final `git diff --check` green after restoring
+`apps/web/next-env.d.ts` to `.next-typecheck`. Known non-fatal
+`sharp/@img` warnings remain through `@turbodocx/html-to-docx`.
 
 Just landed company-internal frequent-combination Gate B file:
 
