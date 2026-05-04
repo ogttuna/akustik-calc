@@ -16,12 +16,147 @@ read
 For the active route/source boundary risk register read
 [CALCULATOR_ROUTE_SOURCE_RISK_REGISTER_2026-05-01.md](./CALCULATOR_ROUTE_SOURCE_RISK_REGISTER_2026-05-01.md).
 
-## Active Decision Map - 2026-05-04 Planning Pass
+## Active Decision Map - 2026-05-04 V19 Gate A
 
-Current implementation position: `floor_tolerance_edge_promotion_guard_v1`
-Gate A is green and no-runtime. The selected next implementation file,
+Current implementation position:
+`wall_triple_leaf_uris_2006_rights_safe_source_packet_acquisition_v1`.
+
+`calculator_source_gap_revalidation_v19` Gate A landed no-runtime and
+selected the Uris 2006 / equivalent rockwool two-cavity source-packet
+acquisition lane as the next highest-impact step. The selected next
+implementation file,
+`packages/engine/src/wall-triple-leaf-uris2006-source-packet-acquisition-gate-u.test.ts`,
+does not exist yet; this is the next file to create.
+
+`selected_uris_2006_rights_safe_source_packet_acquisition_after_v19_rerank_prioritized_unfixed_split_rockwool_and_found_no_runtime_ready_candidate`
+
+`wall_triple_leaf_uris_2006_rights_safe_source_packet_acquisition_v1`
+
+`packages/engine/src/wall-triple-leaf-uris2006-source-packet-acquisition-gate-u.test.ts`
+
+V19 Gate A facts:
+
+1. Floor Gate B evidence was carried forward as protected no-runtime
+   behavior, not support/confidence/evidence promotion.
+2. The grouped split-rockwool stack remains `Rw 41`,
+   `multileaf_screening_blend`, low confidence, not fixed.
+3. The Uris 2006 lane remains `paused_waiting_rights_safe_source_packet`.
+4. Field-output leakage, material alias / near-source false promotion,
+   hostile API/import input, and curve-provenance risks remain active.
+5. Runtime promotion remains illegal until source packet, curve/rating
+   derivation, local material mapping, topology guard, negative
+   boundaries, and paired visible tests all pass.
+
+Gate U must produce:
+
+- `uris_2006_rights_safe_source_packet_acquisition_attempt`
+- `equivalent_rockwool_two_cavity_source_payload_scan`
+- `source_packet_runtime_readiness_or_rejection_reason`
+- `nrc_2024_comparator_boundary_still_not_local_runtime`
+- `rw41_screening_answer_remains_not_fixed_until_packet_mapping_and_visible_tests`
+- `selected_next_gate_with_target_file_and_validation_scope`
+
+Validation order for Gate U:
+
+1. Create
+   `packages/engine/src/wall-triple-leaf-uris2006-source-packet-acquisition-gate-u.test.ts`.
+2. Decide whether a rights-safe Uris 2006 packet or equivalent
+   rockwool two-cavity curve payload exists.
+3. Keep runtime frozen unless all source/topology/material/tolerance/
+   negative-boundary/visible-test prerequisites are owned.
+4. Add Gate U to `tools/dev/run-calculator-current-gate.ts` only after
+   the file exists.
+5. Run focused Gate U validation, then `pnpm calculator:gate:current`.
+
+The previous v19 decision map is preserved below for handoff history.
+
+## Prior Active Decision Map - 2026-05-04 Gate B Closeout
+
+Current implementation position: `calculator_source_gap_revalidation_v19`.
+The floor tolerance-edge slice closed no-runtime at Gate B and selected
+the next source-gap rerank. The selected next implementation file,
+`packages/engine/src/calculator-source-gap-revalidation-v19-gate-a-contract.test.ts`,
+does not exist yet; this is the next file to create.
+
+`floor_tolerance_edge_gate_b_closeout_summary`
+
+`closed_floor_tolerance_edge_promotion_guard_no_runtime_and_selected_source_gap_revalidation_v19`
+
+`gate_b_exact_bound_edges_remained_protected_no_support_promotion`
+
+`calculator_source_gap_revalidation_v19`
+
+`packages/engine/src/calculator-source-gap-revalidation-v19-gate-a-contract.test.ts`
+
+Gate B closeout facts:
+
+1. `floor_tolerance_edge_promotion_guard_v1` is closed no-runtime.
+2. `+2 mm` exact/bound floor tolerance edges remained inside their
+   exact/bound rows; `+2.1 mm` remained outside and did not promote.
+3. Raw floor role prompts, duplicate-role negatives, direct
+   `officialFloorSystemId` bypass boundaries, and visible exact/bound/
+   screening wording separation remain protected.
+4. Runtime values, support, confidence, evidence, field-output copy,
+   API behavior, route cards, output cards, proposal/report copy, and
+   workbench input behavior stayed frozen.
+5. The next implementation step is v19 Gate A source-gap revalidation,
+   not internet/source research or a speculative runtime promotion.
+
+V19 Gate A must produce:
+
+- `floor_tolerance_edge_gate_b_closeout_summary`
+- `exact_bound_tolerance_edge_and_visible_wording_carry_forward`
+- `post_floor_tolerance_source_ready_runtime_candidate_rerank`
+- `rockwool_uris_2006_source_packet_status`
+- `field_output_alias_hostile_input_curve_provenance_status`
+- `selected_next_slice_with_target_gate_file_and_validation_scope`
+
+V19 pre-contract decision matrix:
+
+1. Evaluate `wall_triple_leaf_uris_2006_source_packet_or_acquisition_lane`
+   first because it is the highest-impact unresolved user defect. It is
+   not runtime-ready unless a rights-safe Uris 2006 or equivalent
+   rockwool two-cavity curve packet exists with band data, rating
+   derivation, uncertainty, local material mapping, grouped topology
+   guard, and paired visible tests. If the packet is still absent, Gate
+   A may select a formal source-acquisition slice but must keep `Rw 41`
+   as screening.
+2. Evaluate field-output leakage next. Do not let lab/screening basis
+   values look exact for `R'w`, `DnT,w`, `L'nT,w`, or similar outputs.
+3. Evaluate near-source/material-alias false promotion: rockwool vs
+   glass-fiber, generic gypsum vs Type C, MLV/plaster, and
+   manufacturer-context rows remain blocked without mapping and
+   tolerance ownership.
+4. Evaluate hostile API/import and curve-provenance risks. Unknown,
+   non-finite, negative, or undocumented digitized inputs must stay
+   fail-closed.
+5. If none of the above is source-ready or bounded-fix ready, close v19
+   no-runtime into the next explicitly named slice.
+
+Validation order for v19 Gate A:
+
+1. Create
+   `packages/engine/src/calculator-source-gap-revalidation-v19-gate-a-contract.test.ts`.
+2. Re-rank source-ready candidates after the floor tolerance-edge
+   closeout, carrying forward wrong-lane, field-output, material alias,
+   hostile input, and curve-provenance guards.
+3. Select either a concrete source-ready next slice or another
+   no-runtime closeout/rerank. Exact/runtime movement still requires
+   source topology, local material mapping, metric/tolerance owner,
+   negative boundaries, and paired engine plus visible tests.
+4. Add v19 to `tools/dev/run-calculator-current-gate.ts` only after the
+   file exists.
+5. Run focused v19 validation, then `pnpm calculator:gate:current`.
+
+The previous Gate B planning pass is preserved below for handoff
+history.
+
+## Prior Active Decision Map - 2026-05-04 Planning Pass
+
+Prior implementation position: `floor_tolerance_edge_promotion_guard_v1`
+Gate A was green and no-runtime. The selected next implementation file,
 `packages/engine/src/post-floor-tolerance-edge-promotion-guard-v1-next-slice-selection-contract.test.ts`,
-does not exist yet; this is the next file to create, not a runtime gap.
+is now created and closed no-runtime.
 
 `gate_b_closeout_file_currently_absent_and_next_to_create`
 
@@ -189,6 +324,55 @@ Validation order for Gate B:
 
 Last reviewed: 2026-05-04
 
+## Implementation Cross-Check - 2026-05-04
+
+`gate_b_implementation_cross_check_passed`
+
+`gate_b_file_absent_runner_absent_by_design_until_creation`
+
+`gate_a_fixture_ids_verified_in_catalog_and_existing_tests`
+
+`packed_same_role_merge_safe_but_split_single_entry_schedules_blocked`
+
+`official_floor_system_id_bypass_must_not_seed_layer_match_proof`
+
+`gate_b_no_external_research_needed_until_source_acquisition_selected`
+
+`gate_b_next_steps_order_contract_runner_current_gate_then_rerank`
+
+`targeted_gate_a_v18_risk_register_validation_green`
+
+Implementation read confirmed the plan is still executable and no
+source lookup is needed before Gate B:
+
+- The selected Gate B file is absent. This is expected until the next
+  implementation step creates it.
+- `tools/dev/run-calculator-current-gate.ts` currently runs v18 Gate A,
+  floor tolerance Gate A, and the route/source risk register, but not
+  Gate B. Add Gate B immediately after creating the file.
+- `THICKNESS_TOLERANCE_MM` is `2`. Gate A already pins
+  `tuas_x3_clt140_measured_2026` and
+  `ubiq_fl33_open_web_steel_300_lab_2026` at `+2 mm` inside tolerance
+  and `+2.1 mm` outside tolerance.
+- `floor-system-evaluation.ts` intentionally permits packed same-role
+  equivalents when they are contiguous/material-consistent, while
+  `hasSplitSingleEntryRoleSchedules` blocks split/disjoint single-entry
+  schedules from exact and bound matching. Gate B must keep that
+  distinction explicit.
+- Direct `officialFloorSystemId` resolution is a known-id bypass and
+  its notes say layer scoring was bypassed. It must not be used as
+  proof that an ambiguous layer stack earned exact or bound support.
+- The current visible surfaces already separate exact match, bound-only
+  match, published family estimate, and bound interpolation warnings.
+  Gate B should only change visible wording if it selects a bounded
+  wording fix with paired web/report tests.
+
+Validation in this planning iteration passed:
+`floor-tolerance-edge-promotion-guard-gate-a-contract.test.ts`,
+`calculator-source-gap-revalidation-v18-gate-a-contract.test.ts`, and
+`calculator-route-source-risk-register-contract.test.ts` passed 3 files
+/ 21 tests; `git diff --check` passed.
+
 ## Broad Audit Result - 2026-05-04
 
 `broad_check_2026_05_04_toolbar_copy_alignment_passed`
@@ -214,14 +398,14 @@ hostile raw input guards, wall flat-list multileaf guards, grouped
 topology route cards, and wall reorder invariance. That result supports
 the current no-runtime posture; it does not justify a new promotion.
 
-The first implementation step remains unchanged: create
-`packages/engine/src/post-floor-tolerance-edge-promotion-guard-v1-next-slice-selection-contract.test.ts`,
-add it to the current-gate runner after creation, and let Gate B select
-either a no-runtime closeout / next-slice rerank or one bounded fix with
-paired engine and visible tests. The rockwool/Uris issue also remains
-unchanged: `Rw 41` is still fail-closed `multileaf_screening_blend`
-screening output and still waits for a rights-safe source packet or
-equivalent source-owned proof before exact/runtime movement.
+Historical note: this broad audit was completed before the Gate B
+closeout existed. Gate B has since landed no-runtime and selected v19.
+The current first implementation step is now
+`packages/engine/src/calculator-source-gap-revalidation-v19-gate-a-contract.test.ts`.
+The rockwool/Uris issue also remains unchanged: `Rw 41` is still
+fail-closed `multileaf_screening_blend` screening output and still
+waits for a rights-safe source packet or equivalent source-owned proof
+before exact/runtime movement.
 
 (`common_combination_lane_misclassification_sentinel_v1` Gate A landed
 no-runtime on 2026-05-04 with

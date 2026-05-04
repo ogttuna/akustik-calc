@@ -11,6 +11,7 @@ const TRIPLE_LEAF_HANDOFF_PATH = "docs/calculator/TRIPLE_LEAF_ROCKWOOL_REORDER_D
 const CURRENT_STATE_PATH = "docs/calculator/CURRENT_STATE.md";
 const NEXT_PLAN_PATH = "docs/calculator/NEXT_IMPLEMENTATION_PLAN.md";
 const FLOOR_TOLERANCE_PLAN_PATH = "docs/calculator/SLICE_FLOOR_TOLERANCE_EDGE_PROMOTION_GUARD_PLAN.md";
+const SOURCE_GAP_REVALIDATION_V19_PLAN_PATH = "docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V19_PLAN.md";
 const AGENTS_PATH = "AGENTS.md";
 
 const RISK_IDS = ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9"] as const;
@@ -80,7 +81,20 @@ const PLANNING_PASS_TOKENS = [
   "full_check_found_toolbar_copy_test_drift_not_calculator_runtime_drift",
   "wrong_lane_broad_suites_green_no_runtime_movement_selected",
   "gate_b_closeout_remains_first_implementation_step_after_broad_check",
-  "rockwool_uris_status_unchanged_after_broad_check"
+  "rockwool_uris_status_unchanged_after_broad_check",
+  "gate_b_implementation_cross_check_passed",
+  "gate_b_file_absent_runner_absent_by_design_until_creation",
+  "gate_a_fixture_ids_verified_in_catalog_and_existing_tests",
+  "packed_same_role_merge_safe_but_split_single_entry_schedules_blocked",
+  "official_floor_system_id_bypass_must_not_seed_layer_match_proof",
+  "gate_b_no_external_research_needed_until_source_acquisition_selected",
+  "gate_b_next_steps_order_contract_runner_current_gate_then_rerank",
+  "targeted_gate_a_v18_risk_register_validation_green",
+  "floor_tolerance_edge_gate_b_closeout_summary",
+  "closed_floor_tolerance_edge_promotion_guard_no_runtime_and_selected_source_gap_revalidation_v19",
+  "gate_b_exact_bound_edges_remained_protected_no_support_promotion",
+  "calculator_source_gap_revalidation_v19",
+  "packages/engine/src/calculator-source-gap-revalidation-v19-gate-a-contract.test.ts"
 ] as const;
 
 const CURRENT_ROCKWOOL_TOKENS = [
@@ -246,7 +260,7 @@ describe("calculator route/source risk register contract", () => {
     expect(riskRegister).toContain("Field metrics, API responses, output cards, and reports");
   });
 
-  it("documents the current Gate B planning pass and wrong-measurement triage loop", () => {
+  it("documents the current v19 planning refresh and historical wrong-measurement triage loop", () => {
     const docs = [
       readRepoFile(RISK_REGISTER_PATH),
       readRepoFile(CURRENT_STATE_PATH),
@@ -263,8 +277,11 @@ describe("calculator route/source risk register contract", () => {
 
     const riskRegister = docs[0];
     expect(riskRegister).toContain("Every calculator-hardening slice must treat wrong route-family/source");
-    expect(riskRegister).toContain("No external source research is selected for the immediate Gate B");
-    expect(riskRegister).toContain("creating it is the next implementation");
+    expect(riskRegister).toMatch(/Gate B\s+has now landed; the current next implementation step is v19 Gate A/);
+    expect(riskRegister).toMatch(/The older Gate B planning notes below are historical/);
+    expect(riskRegister).toMatch(/Research should now start only if\s+v19 selects source acquisition/);
+    expect(riskRegister).toContain("v19_candidate_matrix_must_rank_uris_field_alias_hostile_and_closeout_paths");
+    expect(riskRegister).toContain("Uris 2006 / equivalent rockwool two-cavity source packet");
     expect(riskRegister).toMatch(/accidental\s+over-certainty near exact\/bound tolerance edges/);
     expect(riskRegister).toContain("floor role scoring and `+/- 2 mm` tolerance");
     expect(riskRegister).toMatch(/current-gate runner\s+coverage/);
@@ -273,5 +290,13 @@ describe("calculator route/source risk register contract", () => {
     expect(riskRegister).toMatch(/\+2 mm[\s\S]+\+2\.1 mm/);
     expect(riskRegister).toContain("Direct `officialFloorSystemId`");
     expect(riskRegister).toContain("not proof that an ambiguous layer stack has earned exact support");
+
+    const v19Plan = readRepoFile(SOURCE_GAP_REVALIDATION_V19_PLAN_PATH);
+    expect(v19Plan).toContain("Candidate Buckets To Evaluate");
+    expect(v19Plan).toContain("wall_triple_leaf_uris_2006_source_packet_or_acquisition_lane");
+    expect(v19Plan).toContain("field_output_lab_screening_leakage_guard");
+    expect(v19Plan).toContain("material_alias_and_near_source_false_promotion_guard");
+    expect(v19Plan).toContain("hostile_input_and_curve_provenance_guard");
+    expect(v19Plan).toContain("Expected Gate A Contract Shape");
   });
 });

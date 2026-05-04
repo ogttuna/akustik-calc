@@ -9,7 +9,45 @@ before ROCKWOOL source-pack extraction or any later runtime movement.
 
 Current urgent slice:
 
+`wall_triple_leaf_uris_2006_rights_safe_source_packet_acquisition_v1`
+
+Current urgent status:
+
+`selected_uris_2006_rights_safe_source_packet_acquisition_after_v19_rerank_prioritized_unfixed_split_rockwool_and_found_no_runtime_ready_candidate`
+
+Current urgent first file:
+
+`packages/engine/src/wall-triple-leaf-uris2006-source-packet-acquisition-gate-u.test.ts`
+
+Just landed source-gap slice:
+
+`calculator_source_gap_revalidation_v19`
+
+Just landed source-gap status:
+
+`selected_uris_2006_rights_safe_source_packet_acquisition_after_v19_rerank_prioritized_unfixed_split_rockwool_and_found_no_runtime_ready_candidate`
+
+Just landed source-gap file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v19-gate-a-contract.test.ts`
+
+Just landed source-gap checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-04_CALCULATOR_SOURCE_GAP_REVALIDATION_V19_GATE_A_HANDOFF.md`
+
+Just closed floor accuracy slice:
+
 `floor_tolerance_edge_promotion_guard_v1`
+
+Just closed floor accuracy status:
+
+`floor_tolerance_edge_gate_b_closeout_summary`
+
+`closed_floor_tolerance_edge_promotion_guard_no_runtime_and_selected_source_gap_revalidation_v19`
+
+Selected v19 first file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v19-gate-a-contract.test.ts`
 
 Just selected floor accuracy slice:
 
@@ -45,9 +83,17 @@ Prior closed urgent slice:
 
 Latest urgent status:
 
-`floor_tolerance_edge_inventory_landed_no_runtime_selected_closeout_next_slice_selection`
+`closed_floor_tolerance_edge_promotion_guard_no_runtime_and_selected_source_gap_revalidation_v19`
 
 Latest urgent artifact summary:
+
+`floor_tolerance_edge_gate_b_closeout_summary`
+
+`gate_b_exact_bound_edges_remained_protected_no_support_promotion`
+
+`official_floor_system_id_bypass_must_not_seed_layer_match_proof`
+
+Prior Gate A artifact summary:
 
 `role_tagged_exact_floor_tolerance_edge_inventory`
 
@@ -63,9 +109,17 @@ Latest urgent artifact summary:
 
 Selected next file:
 
-`packages/engine/src/post-floor-tolerance-edge-promotion-guard-v1-next-slice-selection-contract.test.ts`
+`packages/engine/src/calculator-source-gap-revalidation-v19-gate-a-contract.test.ts`
 
 Selected next action:
+
+`gate_a_revalidate_source_accuracy_gap_order_after_floor_tolerance_edge_closeout`
+
+Prior Gate A selected next file:
+
+`packages/engine/src/post-floor-tolerance-edge-promotion-guard-v1-next-slice-selection-contract.test.ts`
+
+Prior Gate A selected next action:
 
 `gate_b_no_runtime_closeout_and_next_slice_selection`
 
@@ -134,11 +188,81 @@ duplicate/many-layer floor histories, raw floor role guards, hostile
 input guards, wall flat-list multileaf guards, grouped-topology route
 cards, and wall reorder invariance.
 
-Risk action from this audit: keep the no-runtime posture. The first
-implementation step is still the Gate B closeout contract for floor
-tolerance edges. Rockwool/Uris remains unchanged: `Rw 41` is still
-screening on `multileaf_screening_blend`, not exact source validation
-or a fixed triple-leaf runtime answer.
+Historical risk action from this audit: keep the no-runtime posture.
+At that moment the first implementation step was the Gate B closeout
+contract for floor tolerance edges. Gate B has since closed
+no-runtime and selected `calculator_source_gap_revalidation_v19`.
+Rockwool/Uris remains unchanged: `Rw 41` is still screening on
+`multileaf_screening_blend`, not exact source validation or a fixed
+triple-leaf runtime answer.
+
+Follow-up implementation cross-check on 2026-05-04:
+
+`gate_b_implementation_cross_check_passed`
+
+`gate_b_file_absent_runner_absent_by_design_until_creation`
+
+`gate_a_fixture_ids_verified_in_catalog_and_existing_tests`
+
+`packed_same_role_merge_safe_but_split_single_entry_schedules_blocked`
+
+`official_floor_system_id_bypass_must_not_seed_layer_match_proof`
+
+`gate_b_no_external_research_needed_until_source_acquisition_selected`
+
+`gate_b_next_steps_order_contract_runner_current_gate_then_rerank`
+
+`targeted_gate_a_v18_risk_register_validation_green`
+
+The implementation read found no new runtime defect to fix before Gate
+B. This note is now consumed by the landed Gate B closeout. Gate A
+fixture ids are present in the catalogs and already pin `+2 mm` inside
+/ `+2.1 mm` outside exact and bound edges. Packed same-role equivalents
+and split/disjoint duplicate schedules are separate risk classes:
+merge-safe contiguous packing can match, while split single-entry role
+schedules remain blocked from exact and bound support. Direct
+`officialFloorSystemId` remains a known-row bypass, not proof that an
+ambiguous layer stack has earned exact support.
+
+No external internet/source research was selected for that Gate B step.
+The current next step is v19 Gate A. Research should now start only if
+v19 selects source acquisition or a rights-safe source packet/source
+locator arrives. Targeted validation passed 3 files / 21 tests for
+floor tolerance Gate A, v18 Gate A, and the route/source risk register;
+`git diff --check` passed.
+
+## V19 Planning Refresh - 2026-05-04
+
+`v19_candidate_matrix_must_rank_uris_field_alias_hostile_and_closeout_paths`
+
+`uris_source_packet_or_acquisition_lane_first_but_no_runtime_without_packet`
+
+`field_output_alias_hostile_input_curve_provenance_status_must_be_explicit`
+
+`gate_b_history_consumed_current_first_file_is_v19_gate_a`
+
+`rw41_remains_screening_not_fixed_after_floor_gate_b`
+
+The current first implementation file is
+`packages/engine/src/calculator-source-gap-revalidation-v19-gate-a-contract.test.ts`.
+The older Gate B planning notes below are historical and should not be
+read as the current next file.
+
+V19 must rank at least these buckets:
+
+1. Uris 2006 / equivalent rockwool two-cavity source packet or formal
+   source-acquisition lane.
+2. Field-output lab/screening leakage guard.
+3. Material alias and near-source false-promotion guard.
+4. Hostile API/import and curve-provenance guard.
+5. No-runtime closeout into the next explicitly named slice if no
+   source-ready or bounded-fix candidate exists.
+
+The Uris/rockwool lane is high priority but still blocked from runtime
+unless the packet includes source-owned band curves or equivalent
+measured data, rating derivation, uncertainty, local material mapping,
+grouped topology guard, negative boundaries, and paired engine plus
+web-visible tests.
 
 ## Planning Pass - 2026-05-04 Wrong Measurement Discipline
 
@@ -153,10 +277,9 @@ or a fixed triple-leaf runtime answer.
 `exact_promotion_requires_source_topology_material_metric_tolerance_negative_visible_proof`
 
 Every calculator-hardening slice must treat wrong route-family/source
-lane selection as a first-class accuracy defect. The active floor
-tolerance-edge slice has a selected next file, but that closeout
-contract does not exist yet; creating it is the next implementation
-step before any runtime or visible-surface movement.
+lane selection as a first-class accuracy defect. This section was
+written before the floor tolerance-edge Gate B closeout existed. Gate B
+has now landed; the current next implementation step is v19 Gate A.
 
 When a frequent wall/floor combination appears to measure through the
 wrong lane, first reproduce the issue with focused engine snapshots and

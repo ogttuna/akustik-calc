@@ -6,6 +6,34 @@ any runtime movement for triple-leaf walls.
 
 Current slice:
 
+`wall_triple_leaf_uris_2006_rights_safe_source_packet_acquisition_v1`
+
+Current selection status:
+
+`selected_uris_2006_rights_safe_source_packet_acquisition_after_v19_rerank_prioritized_unfixed_split_rockwool_and_found_no_runtime_ready_candidate`
+
+Prior floor Gate B next file:
+
+`packages/engine/src/wall-triple-leaf-uris2006-source-packet-acquisition-gate-u.test.ts`
+
+Prior floor Gate B next action:
+
+`gate_u_acquire_or_reject_rights_safe_uris_2006_source_packet_no_runtime`
+
+Just landed source-gap slice:
+
+`calculator_source_gap_revalidation_v19`
+
+Just landed source-gap file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v19-gate-a-contract.test.ts`
+
+Just landed source-gap checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-04_CALCULATOR_SOURCE_GAP_REVALIDATION_V19_GATE_A_HANDOFF.md`
+
+Prior current slice:
+
 `floor_tolerance_edge_promotion_guard_v1`
 
 Just selected floor accuracy slice:
@@ -40,7 +68,7 @@ Current next action:
 
 `gate_b_no_runtime_closeout_and_next_slice_selection`
 
-Current planning surface:
+Prior floor planning surface:
 
 `docs/calculator/SLICE_FLOOR_TOLERANCE_EDGE_PROMOTION_GUARD_PLAN.md`
 

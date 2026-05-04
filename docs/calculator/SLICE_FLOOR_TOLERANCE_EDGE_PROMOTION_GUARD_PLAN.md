@@ -2,7 +2,7 @@
 
 Slice id: `floor_tolerance_edge_promotion_guard_v1`
 
-Status: GATE A LANDED / GATE B CLOSEOUT NEXT
+Status: GATE B CLOSED NO-RUNTIME / SOURCE-GAP V19 SELECTED
 
 Selected by:
 
@@ -31,6 +31,41 @@ Selected next file:
 Selected next action:
 
 `gate_b_no_runtime_closeout_and_next_slice_selection`
+
+Landed Gate B status:
+
+`floor_tolerance_edge_gate_b_closeout_summary`
+
+`closed_floor_tolerance_edge_promotion_guard_no_runtime_and_selected_source_gap_revalidation_v19`
+
+Gate B implementation file:
+
+`packages/engine/src/post-floor-tolerance-edge-promotion-guard-v1-next-slice-selection-contract.test.ts`
+
+Gate B checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-04_FLOOR_TOLERANCE_EDGE_PROMOTION_GUARD_GATE_B_CLOSEOUT_HANDOFF.md`
+
+Selected next implementation slice:
+
+`calculator_source_gap_revalidation_v19`
+
+Selected next first file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v19-gate-a-contract.test.ts`
+
+Selected next planning surface:
+
+`docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V19_PLAN.md`
+
+Gate B closeout kept runtime, support, confidence, evidence, API,
+route-card, output-card, proposal/report, and workbench-input behavior
+frozen. Exact/bound `+2 mm` and `+2.1 mm` tolerance edges stayed
+protected with
+`gate_b_exact_bound_edges_remained_protected_no_support_promotion`,
+raw-role and duplicate-role negatives remained closed, and direct
+`officialFloorSystemId` stayed a known-row bypass rather than layer-match
+proof.
 
 Gate A checkpoint:
 
@@ -61,7 +96,7 @@ promoted.
 
 Gate A did not move runtime behavior.
 
-## Gate B Closeout Plan - 2026-05-04 Planning Pass
+## Gate B Closeout Plan - 2026-05-04 Planning Pass, Now Closed
 
 `gate_b_closeout_file_currently_absent_and_next_to_create`
 
@@ -75,10 +110,9 @@ Gate A did not move runtime behavior.
 
 The selected next file
 `packages/engine/src/post-floor-tolerance-edge-promotion-guard-v1-next-slice-selection-contract.test.ts`
-is not present yet. Creating that file is the first implementation
-step. It should close this slice no-runtime unless it proves one small,
-bounded floor tolerance / support wording fix that can be covered by
-engine and visible web/report tests in the same slice.
+has now landed. Gate B closed this slice no-runtime because it did not
+prove a small, bounded floor tolerance / support wording fix that could
+justify behavior movement.
 
 Gate B must explicitly decide and document:
 
@@ -215,6 +249,52 @@ Gate B validation order:
 3. Run `pnpm calculator:gate:current`.
 4. Keep web visible behavior frozen unless the closeout explicitly
    selects a bounded visible wording fix with paired tests.
+
+### Gate B Implementation Cross-Check
+
+Third-pass implementation read:
+
+`gate_b_implementation_cross_check_passed`
+
+`gate_b_file_absent_runner_absent_by_design_until_creation`
+
+`gate_a_fixture_ids_verified_in_catalog_and_existing_tests`
+
+`packed_same_role_merge_safe_but_split_single_entry_schedules_blocked`
+
+`official_floor_system_id_bypass_must_not_seed_layer_match_proof`
+
+`gate_b_no_external_research_needed_until_source_acquisition_selected`
+
+`gate_b_next_steps_order_contract_runner_current_gate_then_rerank`
+
+`targeted_gate_a_v18_risk_register_validation_green`
+
+Concrete read results:
+
+- The Gate B file is absent; this is the intended next implementation
+  gap, not a hidden runtime defect.
+- The current-gate runner includes v18 Gate A, floor tolerance Gate A,
+  and the route/source risk register. Add Gate B to the runner as soon
+  as the file exists.
+- The fixture ids in the preflight map are present in the catalogs and
+  already exercised by Gate A and floor-family regression coverage.
+- Packed same-role duplicates can be merge-safe when contiguous and
+  material-consistent. Split/disjoint single-entry role schedules are
+  separately blocked from exact and bound matching; Gate B must not
+  collapse these cases into one duplicate rule.
+- Direct `officialFloorSystemId` resolution is an explicit known-row
+  bypass. It is useful for preset/direct-id behavior but cannot prove
+  that an ambiguous layer list earned layer-scored exact support.
+- External internet/source research remains deferred. Gate B is about
+  closeout/rerank and visible honesty around existing rows, not about
+  acquiring new source rows.
+
+Targeted validation for this planning pass passed:
+`floor-tolerance-edge-promotion-guard-gate-a-contract.test.ts`,
+`calculator-source-gap-revalidation-v18-gate-a-contract.test.ts`, and
+`calculator-route-source-risk-register-contract.test.ts` passed 3 files
+/ 21 tests; `git diff --check` passed.
 
 ### Broad Audit Confirmation
 

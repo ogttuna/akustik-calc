@@ -20,25 +20,111 @@ If you need the active route/source boundary risk register read
 
 Current selected slice:
 
-`floor_tolerance_edge_promotion_guard_v1`
+`wall_triple_leaf_uris_2006_rights_safe_source_packet_acquisition_v1`
 
 Source label:
 
-exact/bound floor tolerance-edge guard no-runtime.
+Uris 2006 / equivalent rockwool two-cavity source-packet acquisition
+no-runtime.
 
 Current selected status:
 
-`floor_tolerance_edge_inventory_landed_no_runtime_selected_closeout_next_slice_selection`
+`selected_uris_2006_rights_safe_source_packet_acquisition_after_v19_rerank_prioritized_unfixed_split_rockwool_and_found_no_runtime_ready_candidate`
 
 Selected next implementation file:
 
-`packages/engine/src/post-floor-tolerance-edge-promotion-guard-v1-next-slice-selection-contract.test.ts`
+`packages/engine/src/wall-triple-leaf-uris2006-source-packet-acquisition-gate-u.test.ts`
 
 Selected next action:
 
-`gate_b_no_runtime_closeout_and_next_slice_selection`
+`gate_u_acquire_or_reject_rights_safe_uris_2006_source_packet_no_runtime`
 
-Planning-pass status:
+Latest closeout:
+
+`calculator_source_gap_revalidation_v19` Gate A
+
+Gate A implementation file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v19-gate-a-contract.test.ts`
+
+Gate A status:
+
+`selected_uris_2006_rights_safe_source_packet_acquisition_after_v19_rerank_prioritized_unfixed_split_rockwool_and_found_no_runtime_ready_candidate`
+
+Gate A checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-04_CALCULATOR_SOURCE_GAP_REVALIDATION_V19_GATE_A_HANDOFF.md`
+
+Selected planning surface:
+
+`docs/calculator/SLICE_WALL_TRIPLE_LEAF_URIS_2006_SOURCE_PACKET_ACQUISITION_PLAN.md`
+
+The grouped split-rockwool stack remains `Rw 41`,
+`multileaf_screening_blend`, low confidence, not fixed, and still
+blocked on `paused_waiting_rights_safe_source_packet`. Gate U is a
+source-acquisition decision, not runtime promotion.
+
+Prior closeout:
+
+`floor_tolerance_edge_promotion_guard_v1` Gate B
+
+Gate B implementation file:
+
+`packages/engine/src/post-floor-tolerance-edge-promotion-guard-v1-next-slice-selection-contract.test.ts`
+
+Gate B status:
+
+`floor_tolerance_edge_gate_b_closeout_summary`
+
+`closed_floor_tolerance_edge_promotion_guard_no_runtime_and_selected_source_gap_revalidation_v19`
+
+Gate B checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-04_FLOOR_TOLERANCE_EDGE_PROMOTION_GUARD_GATE_B_CLOSEOUT_HANDOFF.md`
+
+Gate B rechecked exact/bound `+2 mm` inside and `+2.1 mm` outside
+tolerance edges, raw role prompts, duplicate-role negatives,
+visible wording separation, and direct `officialFloorSystemId` bypass
+notes. It found no bounded support/confidence/evidence/field-output/
+visible wording fix and selected `calculator_source_gap_revalidation_v19`.
+Runtime, support, confidence, evidence, API, route-card, output-card,
+proposal/report, and workbench-input behavior stayed frozen.
+
+Next selected planning surface:
+
+`docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V19_PLAN.md`
+
+Next selected scope:
+
+`exact_bound_tolerance_edge_and_visible_wording_carry_forward`
+
+`post_floor_tolerance_source_ready_runtime_candidate_rerank`
+
+`rockwool_uris_2006_source_packet_status`
+
+`field_output_alias_hostile_input_curve_provenance_status`
+
+`selected_next_slice_with_target_gate_file_and_validation_scope`
+
+Carry-forward boundaries:
+
+`gate_b_exact_bound_edges_remained_protected_no_support_promotion`
+
+`official_floor_system_id_bypass_must_not_seed_layer_match_proof`
+
+`standing_lane_misclassification_monitoring_mandate`
+
+`note_test_document_or_easy_fix`
+
+`paused_waiting_rights_safe_source_packet`
+
+`multileaf_screening_blend_fail_closed_until_grouped_topology`
+
+`raw_floor_role_inference`
+
+`arbitrary_raw_floor_reorder_value_invariance_remains_unclaimed`
+
+Prior planning-pass status, now resolved by Gate B:
 
 `gate_b_closeout_file_currently_absent_and_next_to_create`
 
@@ -50,20 +136,18 @@ Planning-pass status:
 
 `exact_promotion_requires_source_topology_material_metric_tolerance_negative_visible_proof`
 
-The selected Gate B closeout file has not been created yet. That file
-is the next concrete implementation step. It should either close the
-floor tolerance-edge guard no-runtime and select the next source-gap
-revalidation, or name one bounded floor tolerance / support wording fix
-with paired engine and visible tests. Do not start runtime import,
+The selected Gate B closeout file was absent during planning and has
+now landed no-runtime. It closed the floor tolerance-edge guard and
+selected v19 source-gap revalidation without runtime import,
 support/confidence/evidence promotion, field-output copy, API movement,
 route/output-card movement, proposal/report copy, workbench-input
-movement, or rockwool exact promotion before that closeout.
+movement, or rockwool exact promotion.
 
-No external source research is needed for the immediate next step. Open
-internet/source-packet research only after a source-acquisition gate is
-selected or a rights-safe source packet/source locator is available.
+No external source research is needed for the immediate v19 Gate A
+unless that gate selects source acquisition or a rights-safe source
+packet/source locator becomes available.
 
-Follow-up planning pass:
+Prior follow-up planning pass, now consumed by Gate B:
 
 `inspected_floor_exact_bound_implementation_surfaces`
 
@@ -79,12 +163,12 @@ Follow-up planning pass:
 
 `no_internet_research_before_gate_b_selects_source_acquisition`
 
-The next Gate B file should be written against the inspected floor
+The Gate B file was written against the inspected floor
 implementation surfaces: `floor-system-evaluation.ts`,
 `floor-system-match.ts`, `bound-floor-system-match.ts`,
 `impact-lane.ts`, `floor-system-ratings.ts`, `calculate-assembly.ts`,
 `impact-result-panel.tsx`, and `simple-workbench-evidence.ts`. The
-contract should pin exact/bound just-inside and just-outside snapshots,
+contract pins exact/bound just-inside and just-outside snapshots,
 contiguous-vs-disjoint duplicate role behavior, visible exact/bound/
 screening wording parity, and current-gate runner inclusion after the
 file exists.
@@ -112,6 +196,38 @@ negative controls. Direct `officialFloorSystemId` lookup is a known-id
 bypass, not layer-match proof; field-context warnings prove visible copy
 honesty, not new field source ownership.
 
+Third follow-up planning pass:
+
+`gate_b_implementation_cross_check_passed`
+
+`gate_b_file_absent_runner_absent_by_design_until_creation`
+
+`gate_a_fixture_ids_verified_in_catalog_and_existing_tests`
+
+`packed_same_role_merge_safe_but_split_single_entry_schedules_blocked`
+
+`official_floor_system_id_bypass_must_not_seed_layer_match_proof`
+
+`gate_b_no_external_research_needed_until_source_acquisition_selected`
+
+`gate_b_next_steps_order_contract_runner_current_gate_then_rerank`
+
+`targeted_gate_a_v18_risk_register_validation_green`
+
+The implementation cross-check confirmed the selected Gate B file is
+still absent and the current-gate runner correctly omits it until the
+file exists. The next action is to create that closeout contract, add it
+to `tools/dev/run-calculator-current-gate.ts`, run the current gate, and
+then either close no-runtime into a rerank or select one bounded fix with
+paired tests. No internet/source research is selected before a source
+acquisition gate or rights-safe source packet exists.
+
+Targeted planning validation passed on 2026-05-04:
+`floor-tolerance-edge-promotion-guard-gate-a-contract.test.ts`,
+`calculator-source-gap-revalidation-v18-gate-a-contract.test.ts`, and
+`calculator-route-source-risk-register-contract.test.ts` passed 3 files
+/ 21 tests; `git diff --check` passed.
+
 Selected next planning surface:
 
 `docs/calculator/SLICE_FLOOR_TOLERANCE_EDGE_PROMOTION_GUARD_PLAN.md`
@@ -127,6 +243,10 @@ Gate A implementation file:
 Gate A status:
 
 `floor_tolerance_edge_inventory_landed_no_runtime_selected_closeout_next_slice_selection`
+
+Gate A selected next action, now historical because Gate B has landed:
+
+`gate_b_no_runtime_closeout_and_next_slice_selection`
 
 Gate A checkpoint:
 
@@ -198,16 +318,21 @@ remained green across dynamic route family-boundary scans, deep hybrid
 swap scans, AAC boundary scans, floor stack/order/history matrices, raw
 floor role guards, wall flat-list multileaf guards, grouped-topology
 route cards, wall reorder invariance, and calculator API validation.
-No runtime movement was selected. Gate B closeout remains the first
-implementation step, and rockwool/Uris remains blocked with `Rw 41` as
+No runtime movement was selected. At that moment Gate B closeout
+remained the first implementation step; that closeout has since landed
+and selected v19. Rockwool/Uris remains blocked with `Rw 41` as
 unfixed screening output.
 
-The first implementation step remains the selected no-runtime closeout:
-`packages/engine/src/post-floor-tolerance-edge-promotion-guard-v1-next-slice-selection-contract.test.ts`
-with `gate_b_no_runtime_closeout_and_next_slice_selection`. Do not
-start a runtime import, support promotion, field-output copy, or
-rockwool exact fix before that closeout either selects a bounded next
-slice or re-ranks the backlog.
+Historical note: that broad audit happened before the Gate B closeout.
+Gate B has since landed no-runtime. The current first implementation
+step is now
+`packages/engine/src/calculator-source-gap-revalidation-v19-gate-a-contract.test.ts`
+with
+`gate_a_revalidate_source_accuracy_gap_order_after_floor_tolerance_edge_closeout`.
+Do not start a runtime import, support promotion, field-output copy, or
+rockwool exact fix unless v19 selects a bounded next slice or formal
+source-acquisition path with the required source/topology/material/
+tolerance/negative-boundary/visible-test proof.
 
 Just landed source-gap revalidation:
 
