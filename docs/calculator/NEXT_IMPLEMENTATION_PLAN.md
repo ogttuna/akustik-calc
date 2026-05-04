@@ -16,7 +16,68 @@ read
 For the active route/source boundary risk register read
 [CALCULATOR_ROUTE_SOURCE_RISK_REGISTER_2026-05-01.md](./CALCULATOR_ROUTE_SOURCE_RISK_REGISTER_2026-05-01.md).
 
-## Active Decision Map - 2026-05-04 Gate U Closeout
+## Active Decision Map - 2026-05-04 V20 Gate A Closeout
+
+Current implementation position:
+`field_output_lab_screening_leakage_guard_v1`.
+
+`calculator_source_gap_revalidation_v20` Gate A landed no-runtime and
+selected the bounded field-output honesty guard. The selected next
+implementation file,
+`packages/engine/src/field-output-lab-screening-leakage-guard-gate-a-contract.test.ts`,
+does not exist yet; this is the next file to create.
+
+`selected_field_output_lab_screening_leakage_guard_after_v20_rerank_found_no_source_ready_runtime_candidate_and_uris_packet_absent`
+
+`docs/calculator/CHECKPOINT_2026-05-04_CALCULATOR_SOURCE_GAP_REVALIDATION_V20_GATE_A_HANDOFF.md`
+
+`field_output_lab_screening_leakage_guard_v1`
+
+`packages/engine/src/field-output-lab-screening-leakage-guard-gate-a-contract.test.ts`
+
+V20 Gate A facts:
+
+1. Uris 2006 remains blocked by
+   `rights_safe_source_owned_curve_payload_absent`; it is an
+   external/manual source-packet dependency, not a runtime lane.
+2. The grouped split-rockwool stack remains `Rw 41`,
+   `multileaf_screening_blend`, low confidence, not fixed, not exact,
+   and not source-validated.
+3. No wall or floor source row has complete topology, metric,
+   material mapping, tolerance, negative-boundary, and visible-test
+   ownership.
+4. Field-style outputs such as `R'w`, `DnT,w`, `L'n,w`, and
+   `L'nT,w` can be live from lab/screening/formula/bound basis and must
+   not look design-grade without a field overlay owner.
+5. Runtime values, support, confidence, evidence, API behavior, route
+   cards, output cards, proposal/report copy, and workbench input
+   behavior stayed frozen.
+
+Field-output Gate A must produce:
+
+- `field_output_lab_screening_leakage_inventory`
+- `low_confidence_airborne_field_output_snapshot_matrix`
+- `floor_impact_field_output_basis_snapshot_matrix`
+- `visible_output_card_and_report_copy_inventory`
+- `negative_boundaries_for_exact_field_or_design_grade_wording`
+- `selected_gate_b_guard_or_no_runtime_closeout_with_target_file`
+
+Validation order for field-output Gate A:
+
+1. Create
+   `packages/engine/src/field-output-lab-screening-leakage-guard-gate-a-contract.test.ts`.
+2. Inventory field-style outputs across low-confidence airborne,
+   floor exact/bound, generated floor fallback, and visible output/report
+   copy surfaces.
+3. Keep runtime values frozen unless a later gate explicitly selects a
+   bounded visible wording guard with paired engine and web/report tests.
+4. Add Gate A to `tools/dev/run-calculator-current-gate.ts` only after
+   the file exists.
+5. Run focused Gate A validation, then `pnpm calculator:gate:current`.
+
+The previous v20 decision map is preserved below for handoff history.
+
+## Prior Active Decision Map - 2026-05-04 Gate U Closeout
 
 Current implementation position: `calculator_source_gap_revalidation_v20`.
 

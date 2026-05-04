@@ -20,26 +20,54 @@ If you need the active route/source boundary risk register read
 
 Current selected slice:
 
-`calculator_source_gap_revalidation_v20`
+`field_output_lab_screening_leakage_guard_v1`
 
 Source label:
 
-Post Uris 2006 source-packet acquisition source-gap revalidation
-no-runtime.
+Field-output lab / screening leakage guard no-runtime inventory.
 
 Current selected status:
 
-`gate_u_rechecked_uris_2006_rights_safe_source_packet_absent_no_runtime_selected_source_gap_revalidation_v20`
+`selected_field_output_lab_screening_leakage_guard_after_v20_rerank_found_no_source_ready_runtime_candidate_and_uris_packet_absent`
 
 Selected next implementation file:
 
-`packages/engine/src/calculator-source-gap-revalidation-v20-gate-a-contract.test.ts`
+`packages/engine/src/field-output-lab-screening-leakage-guard-gate-a-contract.test.ts`
 
 Selected next action:
 
-`gate_a_revalidate_source_accuracy_gap_order_after_uris_2006_acquisition_attempt`
+`gate_a_inventory_field_output_lab_screening_leakage_without_runtime_value_movement`
 
 Latest closeout:
+
+`calculator_source_gap_revalidation_v20` Gate A
+
+Gate A implementation file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v20-gate-a-contract.test.ts`
+
+Gate A status:
+
+`selected_field_output_lab_screening_leakage_guard_after_v20_rerank_found_no_source_ready_runtime_candidate_and_uris_packet_absent`
+
+Gate A checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-04_CALCULATOR_SOURCE_GAP_REVALIDATION_V20_GATE_A_HANDOFF.md`
+
+Selected planning surface:
+
+`docs/calculator/SLICE_FIELD_OUTPUT_LAB_SCREENING_LEAKAGE_GUARD_PLAN.md`
+
+V20 found no source-ready runtime candidate after Uris Gate U. Uris
+remains blocked by `rights_safe_source_owned_curve_payload_absent`, and
+the grouped split-rockwool stack remains `Rw 41`,
+`multileaf_screening_blend`, low confidence, not fixed, and not
+source-validated. The next bounded source-independent work is to guard
+field-style outputs so finite `R'w`, `DnT,w`, `L'n,w`, and `L'nT,w`
+values do not look design-grade when their basis is lab-derived,
+screening, bound, formula-owned, or low-confidence.
+
+Prior closeout:
 
 `wall_triple_leaf_uris_2006_rights_safe_source_packet_acquisition_v1` Gate U
 

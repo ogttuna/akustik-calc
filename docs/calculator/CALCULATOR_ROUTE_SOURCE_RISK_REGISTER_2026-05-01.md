@@ -9,19 +9,47 @@ before ROCKWOOL source-pack extraction or any later runtime movement.
 
 Current urgent slice:
 
-`calculator_source_gap_revalidation_v20`
+`field_output_lab_screening_leakage_guard_v1`
 
 Current urgent status:
 
-`gate_u_rechecked_uris_2006_rights_safe_source_packet_absent_no_runtime_selected_source_gap_revalidation_v20`
+`selected_field_output_lab_screening_leakage_guard_after_v20_rerank_found_no_source_ready_runtime_candidate_and_uris_packet_absent`
 
 Current urgent first file:
 
-`packages/engine/src/calculator-source-gap-revalidation-v20-gate-a-contract.test.ts`
+`packages/engine/src/field-output-lab-screening-leakage-guard-gate-a-contract.test.ts`
 
 Current urgent first action:
 
-`gate_a_revalidate_source_accuracy_gap_order_after_uris_2006_acquisition_attempt`
+`gate_a_inventory_field_output_lab_screening_leakage_without_runtime_value_movement`
+
+Just landed source-gap slice:
+
+`calculator_source_gap_revalidation_v20`
+
+Just landed source-gap status:
+
+`selected_field_output_lab_screening_leakage_guard_after_v20_rerank_found_no_source_ready_runtime_candidate_and_uris_packet_absent`
+
+Just landed source-gap file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v20-gate-a-contract.test.ts`
+
+Just landed source-gap checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-04_CALCULATOR_SOURCE_GAP_REVALIDATION_V20_GATE_A_HANDOFF.md`
+
+Just landed source-gap artifacts:
+
+`uris_2006_gate_u_acquisition_closeout_summary`
+
+`source_packet_absence_and_external_dependency_carry_forward`
+
+`post_uris_acquisition_source_ready_runtime_candidate_rerank`
+
+`wrong_lane_and_frequent_combination_monitoring_carry_forward`
+
+`field_output_alias_hostile_input_curve_provenance_status`
 
 Just closed source-packet acquisition slice:
 

@@ -5,8 +5,10 @@ Start here before changing calculator behavior.
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-05-04_WALL_TRIPLE_LEAF_URIS_2006_SOURCE_PACKET_ACQUISITION_GATE_U_HANDOFF.md`
-3. `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V20_PLAN.md`
+2. `docs/calculator/CHECKPOINT_2026-05-04_CALCULATOR_SOURCE_GAP_REVALIDATION_V20_GATE_A_HANDOFF.md`
+3. `docs/calculator/SLICE_FIELD_OUTPUT_LAB_SCREENING_LEAKAGE_GUARD_PLAN.md`
+4. `docs/calculator/CHECKPOINT_2026-05-04_WALL_TRIPLE_LEAF_URIS_2006_SOURCE_PACKET_ACQUISITION_GATE_U_HANDOFF.md`
+5. `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V20_PLAN.md`
 4. `docs/calculator/CHECKPOINT_2026-05-04_CALCULATOR_SOURCE_GAP_REVALIDATION_V19_GATE_A_HANDOFF.md`
 5. `docs/calculator/SLICE_WALL_TRIPLE_LEAF_URIS_2006_SOURCE_PACKET_ACQUISITION_PLAN.md`
 6. `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V19_PLAN.md`
@@ -222,12 +224,25 @@ plan.
 ## Current Workflow
 
 - current selected slice:
-  `calculator_source_gap_revalidation_v20`
+  `field_output_lab_screening_leakage_guard_v1`
 - current next decision inside the slice:
-  `packages/engine/src/calculator-source-gap-revalidation-v20-gate-a-contract.test.ts`
+  `packages/engine/src/field-output-lab-screening-leakage-guard-gate-a-contract.test.ts`
   should run
-  `gate_a_revalidate_source_accuracy_gap_order_after_uris_2006_acquisition_attempt`.
+  `gate_a_inventory_field_output_lab_screening_leakage_without_runtime_value_movement`.
   The file is intentionally absent until the next implementation step.
+  `calculator_source_gap_revalidation_v20` Gate A landed
+  `selected_field_output_lab_screening_leakage_guard_after_v20_rerank_found_no_source_ready_runtime_candidate_and_uris_packet_absent`
+  at
+  `packages/engine/src/calculator-source-gap-revalidation-v20-gate-a-contract.test.ts`.
+  V20 confirmed that Uris 2006 remains blocked by
+  `rights_safe_source_owned_curve_payload_absent`, no source-ready
+  runtime candidate exists, and the grouped split-rockwool `Rw 41`
+  answer remains low-confidence `multileaf_screening_blend`, not fixed
+  and not source-validated. The selected planning surface is
+  `docs/calculator/SLICE_FIELD_OUTPUT_LAB_SCREENING_LEAKAGE_GUARD_PLAN.md`.
+- prior selected slice:
+  `calculator_source_gap_revalidation_v20`
+- prior decision inside the slice:
   `wall_triple_leaf_uris_2006_rights_safe_source_packet_acquisition_v1`
   Gate U landed
   `gate_u_rechecked_uris_2006_rights_safe_source_packet_absent_no_runtime_selected_source_gap_revalidation_v20`
@@ -236,10 +251,7 @@ plan.
   Gate U confirmed Uris 2006 identity metadata and authorized access
   paths, but found no rights-safe local source packet, page image,
   numeric table, authorized TDM payload, source-owned curve, or band
-  vector. Runtime remains frozen and the grouped split-rockwool `Rw 41`
-  answer remains low-confidence `multileaf_screening_blend`, not fixed
-  and not source-validated. The selected planning surface is
-  `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V20_PLAN.md`.
+  vector.
 - prior selected slice:
   `wall_triple_leaf_uris_2006_rights_safe_source_packet_acquisition_v1`
 - prior decision inside the slice:

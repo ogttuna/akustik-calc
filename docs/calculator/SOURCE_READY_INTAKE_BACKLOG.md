@@ -159,6 +159,18 @@ and selected `gate_b_no_runtime_closeout_and_next_slice_selection`.
 
 Last reviewed: 2026-05-04.
 
+Latest refresh: `calculator_source_gap_revalidation_v20` Gate A landed
+`selected_field_output_lab_screening_leakage_guard_after_v20_rerank_found_no_source_ready_runtime_candidate_and_uris_packet_absent`
+and selected
+`packages/engine/src/field-output-lab-screening-leakage-guard-gate-a-contract.test.ts`.
+No source-ready wall or floor row was promoted. Uris 2006 remains
+blocked by `rights_safe_source_owned_curve_payload_absent`; the grouped
+split-rockwool `Rw 41` answer remains low-confidence
+`multileaf_screening_blend`, not fixed, and not source-validated.
+Field-output leakage is now the next bounded source-independent guard
+because finite `R'w`, `DnT,w`, `L'n,w`, and `L'nT,w` values must not
+look design-grade without a field overlay owner.
+
 This document is the single current backlog for source-ready calculator
 accuracy work. It does not approve runtime imports, support promotion,
 confidence promotion, evidence-tier promotion, route-card movement,

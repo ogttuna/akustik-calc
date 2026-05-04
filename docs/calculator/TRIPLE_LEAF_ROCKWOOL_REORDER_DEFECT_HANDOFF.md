@@ -6,19 +6,35 @@ any runtime movement for triple-leaf walls.
 
 Current slice:
 
-`calculator_source_gap_revalidation_v20`
+`field_output_lab_screening_leakage_guard_v1`
 
 Current selection status:
 
-`gate_u_rechecked_uris_2006_rights_safe_source_packet_absent_no_runtime_selected_source_gap_revalidation_v20`
+`selected_field_output_lab_screening_leakage_guard_after_v20_rerank_found_no_source_ready_runtime_candidate_and_uris_packet_absent`
 
 Current next file:
 
-`packages/engine/src/calculator-source-gap-revalidation-v20-gate-a-contract.test.ts`
+`packages/engine/src/field-output-lab-screening-leakage-guard-gate-a-contract.test.ts`
 
 Current next action:
 
-`gate_a_revalidate_source_accuracy_gap_order_after_uris_2006_acquisition_attempt`
+`gate_a_inventory_field_output_lab_screening_leakage_without_runtime_value_movement`
+
+Just landed source-gap slice:
+
+`calculator_source_gap_revalidation_v20`
+
+Just landed source-gap file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v20-gate-a-contract.test.ts`
+
+Just landed source-gap checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-04_CALCULATOR_SOURCE_GAP_REVALIDATION_V20_GATE_A_HANDOFF.md`
+
+Just landed source-gap status:
+
+`selected_field_output_lab_screening_leakage_guard_after_v20_rerank_found_no_source_ready_runtime_candidate_and_uris_packet_absent`
 
 Just closed source-packet acquisition slice:
 
@@ -31,6 +47,10 @@ Just closed source-packet acquisition file:
 Just closed source-packet acquisition checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-04_WALL_TRIPLE_LEAF_URIS_2006_SOURCE_PACKET_ACQUISITION_GATE_U_HANDOFF.md`
+
+Just closed source-packet acquisition status:
+
+`gate_u_rechecked_uris_2006_rights_safe_source_packet_absent_no_runtime_selected_source_gap_revalidation_v20`
 
 Just closed source-packet acquisition result:
 
@@ -1881,25 +1901,23 @@ High-risk sibling failure modes:
 
 ## Next Agent Instructions
 
-Continue with source-gap revalidation v14 Gate A:
+Continue with field-output lab / screening leakage guard Gate A:
 
-`packages/engine/src/calculator-source-gap-revalidation-v14-gate-a-contract.test.ts`
+`packages/engine/src/field-output-lab-screening-leakage-guard-gate-a-contract.test.ts`
 
 The selected action is:
 
-`gate_a_revalidate_source_accuracy_gap_order_after_pabco_source_pack_closeout`
+`gate_a_inventory_field_output_lab_screening_leakage_without_runtime_value_movement`
 
-PABCO Gate C closed the PABCO QuietRock Sound Design Guide source-pack
-slice no-runtime because Gate B found no runtime-ready row. V14 Gate A
-must re-rank the source/accuracy backlog after PABCO, keep PABCO /
-Georgia-Pacific / National Gypsum / USG / ROCKWOOL / British Gypsum /
-Knauf rows as closed no-runtime context unless exact readiness is
-proved, and select only a bounded first-gate action.
+V20 Gate A found no source-ready runtime candidate after Uris Gate U
+and selected a bounded source-independent honesty guard. The next slice
+must inventory where `R'w`, `DnT,w`, `L'n,w`, and `L'nT,w` can be live
+from lab-derived, screening, bound, formula-owned, or low-confidence
+basis and where output cards / proposal reports might make those
+values look design-grade.
 
-The Uris 2006 lane remains paused on
-`paused_waiting_rights_safe_source_packet`. The first backlog item is
-still `uris_2006_authorized_curve_packet`; Uris 2008 remains a separate
-negative-boundary lane, not a runtime row. Any future triple-leaf
+The Uris 2006 lane remains blocked by
+`rights_safe_source_owned_curve_payload_absent`. Any future triple-leaf
 runtime movement still requires all of these to be owned together:
 
 - full one-third-octave curves, source page/figure/table locator,
@@ -1925,15 +1943,15 @@ Do not:
 
 Selected next file:
 
-`packages/engine/src/calculator-source-gap-revalidation-v14-gate-a-contract.test.ts`
+`packages/engine/src/field-output-lab-screening-leakage-guard-gate-a-contract.test.ts`
 
 Selected status:
 
-`closed_pabco_quietrock_sound_design_guide_source_pack_no_runtime_and_selected_source_gap_revalidation_v14_because_gate_b_found_no_runtime_ready_row`
+`selected_field_output_lab_screening_leakage_guard_after_v20_rerank_found_no_source_ready_runtime_candidate_and_uris_packet_absent`
 
 Selected action:
 
-`gate_a_revalidate_source_accuracy_gap_order_after_pabco_source_pack_closeout`
+`gate_a_inventory_field_output_lab_screening_leakage_without_runtime_value_movement`
 
 ## Acceptance Target
 

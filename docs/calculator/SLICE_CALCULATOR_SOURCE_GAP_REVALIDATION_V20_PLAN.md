@@ -2,7 +2,7 @@
 
 Slice id: `calculator_source_gap_revalidation_v20`
 
-Status: SELECTED / GATE A NEXT
+Status: LANDED / GATE A COMPLETE
 
 Selected by:
 
@@ -21,6 +21,26 @@ Selected first action:
 
 `gate_a_revalidate_source_accuracy_gap_order_after_uris_2006_acquisition_attempt`
 
+Landed status:
+
+`selected_field_output_lab_screening_leakage_guard_after_v20_rerank_found_no_source_ready_runtime_candidate_and_uris_packet_absent`
+
+Selected next slice:
+
+`field_output_lab_screening_leakage_guard_v1`
+
+Selected next file:
+
+`packages/engine/src/field-output-lab-screening-leakage-guard-gate-a-contract.test.ts`
+
+Selected next action:
+
+`gate_a_inventory_field_output_lab_screening_leakage_without_runtime_value_movement`
+
+Gate A checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-04_CALCULATOR_SOURCE_GAP_REVALIDATION_V20_GATE_A_HANDOFF.md`
+
 Prior Gate U checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-04_WALL_TRIPLE_LEAF_URIS_2006_SOURCE_PACKET_ACQUISITION_GATE_U_HANDOFF.md`
@@ -28,6 +48,21 @@ Prior Gate U checkpoint:
 Prior Gate U implementation file:
 
 `packages/engine/src/wall-triple-leaf-uris2006-source-packet-acquisition-gate-u.test.ts`
+
+## Gate A Closeout
+
+Gate A re-ranked the post-Uris backlog and found no source-ready
+runtime candidate. Uris remains an external/manual source-packet
+dependency because `rights_safe_source_owned_curve_payload_absent`
+still blocks any exact triple-leaf promotion. The selected bounded next
+step is `field_output_lab_screening_leakage_guard_v1`, because
+field-style outputs can be finite and precise-looking while the basis
+is still lab-derived, screening, bound, formula-owned, or
+low-confidence.
+
+Runtime values, support, confidence, evidence, API behavior, route
+cards, output cards, proposal/report copy, and workbench input behavior
+remain frozen.
 
 ## Objective
 
