@@ -101,6 +101,7 @@ export function SimpleLayerRow(props: {
   const thicknessSanityWarning = getLayerThicknessSanityWarning(row, index + 1, allMaterials);
   const densityWarning = getDensityInputWarning(material, row.densityKgM3);
   const dynamicStiffnessWarning = getDynamicStiffnessInputWarning(row.dynamicStiffnessMNm3);
+  const overrideActive = Boolean(row.densityKgM3?.trim() || row.dynamicStiffnessMNm3?.trim());
   const categoryLabel = getMaterialCategoryLabel(material);
   const densityLabel = formatDensityLabel(material, row.densityKgM3);
   const surfaceMassLabel =
@@ -188,9 +189,9 @@ export function SimpleLayerRow(props: {
               aria-hidden="true"
               className={`h-2 w-2 shrink-0 rounded-full ${thicknessReady ? "bg-[color:var(--success)]" : "bg-[color:var(--warning)]"}`}
             />
-            <div className="min-w-0 truncate text-[0.88rem] font-semibold text-[color:var(--ink)]">{material.name}</div>
+            <div className="line-clamp-2 min-w-0 text-[0.88rem] font-semibold leading-5 text-[color:var(--ink)]">{material.name}</div>
           </div>
-          <div className="mt-1 truncate text-[0.72rem] leading-5 text-[color:var(--ink-soft)]">
+          <div className="mt-1 line-clamp-2 text-[0.72rem] leading-5 text-[color:var(--ink-soft)]">
             <span className="2xl:hidden">{`${index + 1}. ${rowMeta}`}</span>
             <span className="hidden 2xl:inline">{compactValues([edgeLabel, categoryLabel]).join(" • ")}</span>
           </div>
@@ -259,13 +260,13 @@ export function SimpleLayerRow(props: {
         </div>
       </div>
 
-      <div className="mt-2 truncate text-[0.72rem] leading-5 text-[color:var(--ink-soft)]" title={secondaryFacts}>
+      <div className="mt-2 line-clamp-2 text-[0.72rem] leading-5 text-[color:var(--ink-soft)]" title={secondaryFacts}>
         {secondaryFacts}
       </div>
 
       {expanded ? (
         <div className="mt-3 grid gap-3">
-          <div className={`grid min-w-0 gap-3 ${studyMode === "floor" ? "2xl:grid-cols-2" : "2xl:grid-cols-3"}`}>
+          <div className="grid min-w-0 gap-3 2xl:grid-cols-2">
             <WorkbenchMaterialPicker
               currentMaterial={material}
               groups={materialGroups}
@@ -285,34 +286,6 @@ export function SimpleLayerRow(props: {
               />
             </label>
 
-            <label className="grid min-w-0 gap-2">
-              <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Density</span>
-              <input
-                aria-invalid={Boolean(densityWarning)}
-                aria-label={`Layer ${index + 1} density`}
-                className={getTextInputClassName(Boolean(densityWarning))}
-                inputMode="decimal"
-                onChange={(event) => onDensityChange(row.id, event.target.value)}
-                placeholder={typeof catalogDensity === "number" ? formatDecimal(catalogDensity) : "kg/m³"}
-                value={row.densityKgM3 ?? ""}
-              />
-            </label>
-
-            {studyMode === "floor" ? (
-              <label className="grid min-w-0 gap-2">
-                <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Dynamic stiffness</span>
-                <input
-                  aria-invalid={Boolean(dynamicStiffnessWarning)}
-                  aria-label={`Layer ${index + 1} dynamic stiffness`}
-                  className={getTextInputClassName(Boolean(dynamicStiffnessWarning))}
-                  inputMode="decimal"
-                  onChange={(event) => onDynamicStiffnessChange(row.id, event.target.value)}
-                  placeholder={typeof catalogDynamicStiffness === "number" ? formatDecimal(catalogDynamicStiffness) : "MN/m³"}
-                  value={row.dynamicStiffnessMNm3 ?? ""}
-                />
-              </label>
-            ) : null}
-
             {studyMode === "floor" ? (
               <label className="grid min-w-0 gap-2">
                 <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Floor role</span>
@@ -331,6 +304,50 @@ export function SimpleLayerRow(props: {
               </label>
             ) : null}
           </div>
+
+          <details
+            className={`rounded border px-3 py-2.5 ${workbenchSectionMutedCardClass("assembly")}`}
+            open={Boolean(densityWarning || dynamicStiffnessWarning || overrideActive)}
+          >
+            <summary className="cursor-pointer list-none">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="text-[0.82rem] font-semibold text-[color:var(--ink)]">Optional overrides</div>
+                <GuidedFactChip tone={densityWarning || dynamicStiffnessWarning ? "warning" : "neutral"}>
+                  {densityWarning || dynamicStiffnessWarning ? "Check values" : overrideActive ? "Overrides set" : "Catalog defaults"}
+                </GuidedFactChip>
+              </div>
+            </summary>
+
+            <div className={`mt-3 grid min-w-0 gap-3 ${studyMode === "floor" ? "2xl:grid-cols-2" : ""}`}>
+              <label className="grid min-w-0 gap-2">
+                <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Density</span>
+                <input
+                  aria-invalid={Boolean(densityWarning)}
+                  aria-label={`Layer ${index + 1} density`}
+                  className={getTextInputClassName(Boolean(densityWarning))}
+                  inputMode="decimal"
+                  onChange={(event) => onDensityChange(row.id, event.target.value)}
+                  placeholder={typeof catalogDensity === "number" ? formatDecimal(catalogDensity) : "kg/m³"}
+                  value={row.densityKgM3 ?? ""}
+                />
+              </label>
+
+              {studyMode === "floor" ? (
+                <label className="grid min-w-0 gap-2">
+                  <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">Dynamic stiffness</span>
+                  <input
+                    aria-invalid={Boolean(dynamicStiffnessWarning)}
+                    aria-label={`Layer ${index + 1} dynamic stiffness`}
+                    className={getTextInputClassName(Boolean(dynamicStiffnessWarning))}
+                    inputMode="decimal"
+                    onChange={(event) => onDynamicStiffnessChange(row.id, event.target.value)}
+                    placeholder={typeof catalogDynamicStiffness === "number" ? formatDecimal(catalogDynamicStiffness) : "MN/m³"}
+                    value={row.dynamicStiffnessMNm3 ?? ""}
+                  />
+                </label>
+              ) : null}
+            </div>
+          </details>
 
           <div className="flex flex-wrap gap-2">
             <GuidedFactChip>{categoryLabel}</GuidedFactChip>

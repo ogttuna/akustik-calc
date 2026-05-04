@@ -250,6 +250,17 @@ plan.
   skipped, repo build 5 / 5 tasks with known non-fatal `sharp/@img`
   warnings, and whitespace guard passed after restoring
   `apps/web/next-env.d.ts` to `.next-typecheck`.
+- 2026-05-04 broad validation / UI integration pass:
+  user-authored workbench UI changes were validated as navigation and
+  layout-only changes around setup/assembly/results/review/proposal,
+  command palette, and material picker surfaces. The pass fixed stale
+  `partitionAreaM2` engine test-fixture fields and raised the
+  full-suite `dynamic-airborne-family-boundary-scan` hold-scan timeout
+  to 45 s. Final `pnpm check` passed: lint and typecheck clean; engine
+  full suite 373 files / 2204 tests; web full suite 161 files / 907
+  passed + 18 skipped; repo build 5 / 5 tasks with known non-fatal
+  `sharp/@img` warnings. This does not move the selected calculator
+  slice or promote rockwool triple-leaf.
 - prior selected slice:
   `field_output_lab_screening_leakage_guard_v1`
 - prior decision inside the slice:

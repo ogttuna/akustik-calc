@@ -125,17 +125,22 @@ export function WorkbenchMaterialPicker(props: WorkbenchMaterialPickerProps) {
 
     const margin = 8;
     const rect = root.getBoundingClientRect();
-    const availableWidth = Math.max(window.innerWidth - margin * 2, 240);
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    const availableWidth = Math.max(viewportWidth - margin * 2, 160);
     const width = Math.min(Math.max(rect.width, 280), availableWidth);
-    const left = Math.min(Math.max(rect.left, margin), window.innerWidth - width - margin);
-    const spaceBelow = window.innerHeight - rect.bottom - margin;
+    const maxLeft = Math.max(margin, viewportWidth - width - margin);
+    const left = Math.min(Math.max(rect.left, margin), maxLeft);
+    const spaceBelow = viewportHeight - rect.bottom - margin;
     const spaceAbove = rect.top - margin;
     const openUp = spaceBelow < 280 && spaceAbove > spaceBelow;
-    const availableHeight = Math.max((openUp ? spaceAbove : spaceBelow) - 4, 160);
-    const maxHeight = Math.min(448, availableHeight);
+    const safeViewportHeight = Math.max(viewportHeight - margin * 2, 120);
+    const minimumUsableHeight = Math.min(160, safeViewportHeight);
+    const availableHeight = Math.max((openUp ? spaceAbove : spaceBelow) - 4, minimumUsableHeight);
+    const maxHeight = Math.min(448, availableHeight, safeViewportHeight);
     const top = openUp
       ? Math.max(margin, rect.top - maxHeight - 4)
-      : Math.max(margin, Math.min(rect.bottom + 4, window.innerHeight - maxHeight - margin));
+      : Math.max(margin, Math.min(rect.bottom + 4, viewportHeight - maxHeight - margin));
 
     setPanelGeometry({ left, maxHeight, top, width });
   }, []);
@@ -219,7 +224,7 @@ export function WorkbenchMaterialPicker(props: WorkbenchMaterialPickerProps) {
         <span className="flex min-w-0 items-center gap-3">
           <span className={`h-3 w-3 shrink-0 rounded-full ${getCategoryColor(currentMaterial)}`} />
           <span className="min-w-0">
-            <span className="block truncate text-sm font-semibold text-[color:var(--ink)]">{currentMaterial.name}</span>
+            <span className="line-clamp-2 text-sm font-semibold leading-5 text-[color:var(--ink)]">{currentMaterial.name}</span>
             <span className="mt-0.5 flex min-w-0 flex-wrap items-center gap-x-2 gap-y-0.5 text-[0.72rem] leading-5 text-[color:var(--ink-soft)]">
               <span className="truncate">{selectedDensity}</span>
               <span className="text-[color:var(--line-strong)]">/</span>
@@ -298,7 +303,7 @@ export function WorkbenchMaterialPicker(props: WorkbenchMaterialPickerProps) {
                           >
                             <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${getCategoryColor(material)}`} />
                             <span className="min-w-0 flex-1">
-                              <span className={`block truncate text-[0.82rem] font-medium ${selected ? "text-[color:var(--accent-ink)]" : "text-[color:var(--ink)]"}`}>
+                              <span className={`line-clamp-2 text-[0.82rem] font-medium leading-4 ${selected ? "text-[color:var(--accent-ink)]" : "text-[color:var(--ink)]"}`}>
                                 {material.name}
                               </span>
                               <span className="mt-0.5 flex min-w-0 flex-wrap items-center gap-x-2 gap-y-0.5 text-[0.7rem] leading-4 text-[color:var(--ink-soft)]">

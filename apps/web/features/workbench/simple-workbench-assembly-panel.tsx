@@ -52,6 +52,7 @@ export function SimpleWorkbenchAssemblyPanel(props: {
   moveRowWithFeedback: (id: string, direction: "up" | "down") => void;
   newLayerDraft: NewLayerDraft;
   newLayerMaterialGroups: readonly WorkbenchMaterialOptionGroup[];
+  onOpenResults: () => void;
   parkedRowCount: number;
   replaceConfiguredBaseLayer: () => void;
   replaceConfiguredBaseLayerAvailable: boolean;
@@ -92,6 +93,7 @@ export function SimpleWorkbenchAssemblyPanel(props: {
     moveRowWithFeedback,
     newLayerDraft,
     newLayerMaterialGroups,
+    onOpenResults,
     parkedRowCount,
     replaceConfiguredBaseLayer,
     replaceConfiguredBaseLayerAvailable,
@@ -275,6 +277,15 @@ export function SimpleWorkbenchAssemblyPanel(props: {
                 type="button"
               >
                 Preview
+              </button>
+            ) : null}
+            {!isDesktop && rows.length ? (
+              <button
+                className="focus-ring inline-flex h-8 items-center gap-1.5 rounded border border-[color:var(--accent)] bg-[color:var(--accent-soft)] px-3 text-[0.8rem] font-semibold text-[color:var(--accent-ink)] hover:brightness-95"
+                onClick={onOpenResults}
+                type="button"
+              >
+                View results
               </button>
             ) : null}
           </div>

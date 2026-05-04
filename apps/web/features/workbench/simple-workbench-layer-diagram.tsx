@@ -60,7 +60,7 @@ export function LayerLegendRow(props: {
         </div>
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-1.5">
-            <div className="truncate text-[0.82rem] font-semibold text-[color:var(--ink)]">{material.name}</div>
+            <div className="line-clamp-2 min-w-0 text-[0.82rem] font-semibold leading-5 text-[color:var(--ink)]">{material.name}</div>
             <DetailTag>{thicknessLabel}</DetailTag>
             {studyMode === "floor" && floorRole ? <DetailTag>{FLOOR_ROLE_LABELS[floorRole]}</DetailTag> : null}
           </div>

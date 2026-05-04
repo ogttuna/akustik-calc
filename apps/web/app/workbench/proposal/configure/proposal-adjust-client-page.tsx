@@ -84,13 +84,13 @@ function EditorField(props: {
   const { label, note, onChange, placeholder, value } = props;
 
   return (
-    <label className="grid gap-2">
-      <div className="grid gap-1">
+    <label className="grid min-w-0 gap-2">
+      <div className="grid min-w-0 gap-1">
         <span className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">{label}</span>
         {note ? <p className="text-[0.78rem] leading-5 text-[color:var(--ink-soft)]">{note}</p> : null}
       </div>
       <input
-        className="focus-ring rounded-[0.9rem] border hairline bg-[color:var(--paper)] px-3 py-3 text-sm text-[color:var(--ink)]"
+        className="focus-ring min-w-0 rounded-[0.9rem] border hairline bg-[color:var(--paper)] px-3 py-3 text-sm text-[color:var(--ink)]"
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
         value={value}
@@ -110,13 +110,13 @@ function EditorTextarea(props: {
   const { label, note, onChange, placeholder, rows = 4, value } = props;
 
   return (
-    <label className="grid gap-2">
-      <div className="grid gap-1">
+    <label className="grid min-w-0 gap-2">
+      <div className="grid min-w-0 gap-1">
         <span className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">{label}</span>
         {note ? <p className="text-[0.78rem] leading-5 text-[color:var(--ink-soft)]">{note}</p> : null}
       </div>
       <textarea
-        className="focus-ring rounded-[0.9rem] border hairline bg-[color:var(--paper)] px-3 py-3 text-sm leading-6 text-[color:var(--ink)]"
+        className="focus-ring min-w-0 rounded-[0.9rem] border hairline bg-[color:var(--paper)] px-3 py-3 text-sm leading-6 text-[color:var(--ink)]"
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
         rows={rows}
@@ -135,10 +135,10 @@ function EditorSelect<T extends string>(props: {
   const { label, onChange, options, value } = props;
 
   return (
-    <label className="grid gap-2">
+    <label className="grid min-w-0 gap-2">
       <span className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">{label}</span>
       <select
-        className="focus-ring rounded-[0.9rem] border hairline bg-[color:var(--paper)] px-3 py-3 text-sm text-[color:var(--ink)]"
+        className="focus-ring min-w-0 rounded-[0.9rem] border hairline bg-[color:var(--paper)] px-3 py-3 text-sm text-[color:var(--ink)]"
         onChange={(event) => onChange(event.target.value as T)}
         value={value}
       >
@@ -209,14 +209,14 @@ function CollapsibleEditorSection(props: {
   return (
     <SurfacePanel className="px-5 py-5 sm:px-6">
       <details open={defaultOpen}>
-        <summary className="flex cursor-pointer list-none items-start justify-between gap-4 rounded-[1rem] border hairline bg-[color:var(--paper)]/72 px-4 py-4">
-          <div>
+        <summary className="flex cursor-pointer list-none flex-wrap items-start justify-between gap-4 rounded-[1rem] border hairline bg-[color:var(--paper)]/72 px-4 py-4">
+          <div className="min-w-0">
             <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">{eyebrow}</div>
             <h2 className="mt-1 font-display text-[1.25rem] leading-none tracking-[-0.04em] text-[color:var(--ink)]">{title}</h2>
             <p className="mt-2 max-w-3xl text-sm leading-6 text-[color:var(--ink-soft)]">{description}</p>
           </div>
-          <div className="inline-flex shrink-0 items-center gap-2 rounded-full border hairline bg-[color:var(--paper)]/82 px-3 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
-            <span>{summary}</span>
+          <div className="inline-flex max-w-full min-w-0 items-center gap-2 rounded-full border hairline bg-[color:var(--paper)]/82 px-3 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
+            <span className="min-w-0 break-words">{summary}</span>
             <ChevronDown className="h-4 w-4" />
           </div>
         </summary>

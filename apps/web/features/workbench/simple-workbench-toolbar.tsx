@@ -106,7 +106,7 @@ export function SimpleWorkbenchToolbar({
                 <Download className="h-3.5 w-3.5" />
                 Report
               </summary>
-              <div className="absolute right-0 z-50 mt-2 grid w-48 gap-1 rounded border border-[color:var(--line-strong)] bg-[color:var(--paper)] p-1.5 shadow-[0_20px_50px_-26px_rgba(0,0,0,0.55)]">
+              <div className="absolute left-0 z-50 mt-2 grid w-48 max-w-[calc(100vw-2rem)] gap-1 rounded border border-[color:var(--line-strong)] bg-[color:var(--paper)] p-1.5 shadow-[0_20px_50px_-26px_rgba(0,0,0,0.55)] sm:left-auto sm:right-0">
                 <button
                   className="focus-ring flex min-w-0 items-center justify-between gap-2 rounded px-2.5 py-2 text-left text-[0.8rem] font-semibold text-[color:var(--ink)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"
                   disabled={!exportReady || isExportingPdf}

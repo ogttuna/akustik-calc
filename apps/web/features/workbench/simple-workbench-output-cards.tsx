@@ -33,7 +33,8 @@ export function OutputCard(props: { card: OutputCardModel }) {
           {statusLabel(card.status)}
         </span>
       </div>
-      <div className="mt-1.5 truncate text-[0.72rem] font-medium text-[color:var(--ink-soft)]">{card.postureLabel}</div>
+      <div className="mt-1.5 text-[0.72rem] font-medium leading-5 text-[color:var(--ink-soft)]">{card.postureLabel}</div>
+      <p className="mt-1 line-clamp-2 text-[0.72rem] leading-5 text-[color:var(--ink-soft)]">{card.detail}</p>
     </article>
   );
 }
@@ -76,12 +77,18 @@ export function OutputUnlockRail(props: {
   if (!groups.length) {
     return null;
   }
+  const firstGroup = groups[0]!;
 
   return (
     <details className="rounded border border-[color:var(--line)] bg-[color:var(--panel)] px-3 py-2.5">
       <summary className="cursor-pointer list-none">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <div className="text-[0.82rem] font-semibold text-[color:var(--ink)]">Unlock parked outputs</div>
+          <div className="min-w-0">
+            <div className="text-[0.82rem] font-semibold text-[color:var(--ink)]">Next unlock</div>
+            <div className="mt-0.5 line-clamp-1 text-[0.72rem] font-medium text-[color:var(--ink-soft)]">
+              {`${firstGroup.title}: ${firstGroup.detail}`}
+            </div>
+          </div>
           <div className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">
             {formatCountLabel(groups.length, "next step")}
           </div>
@@ -180,10 +187,11 @@ export function PendingOutputRow(props: { card: OutputCardModel }) {
   const postureTextClass = outputPostureTextClass(card.postureTone);
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[color:var(--line)] px-1 py-2 last:border-b-0" title={card.detail}>
-      <div className="min-w-0">
+    <div className="flex flex-wrap items-start justify-between gap-3 border-b border-[color:var(--line)] px-1 py-2 last:border-b-0" title={card.detail}>
+      <div className="min-w-0 flex-1">
         <div className="text-[0.78rem] font-semibold text-[color:var(--ink)]">{card.label}</div>
         <div className={`mt-0.5 text-[0.68rem] font-medium ${postureTextClass}`}>{card.postureLabel}</div>
+        <p className="mt-1 line-clamp-2 text-[0.72rem] leading-5 text-[color:var(--ink-soft)]">{card.detail}</p>
       </div>
       <span className={`text-[0.68rem] font-semibold uppercase tracking-[0.16em] ${outputStatusTextClass(card.status)}`}>
         {statusLabel(card.status)}

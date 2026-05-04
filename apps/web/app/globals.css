@@ -334,7 +334,7 @@ button {
 [cmdk-overlay] {
   position: fixed;
   inset: 0;
-  z-index: 80;
+  z-index: 1100;
   background: rgba(18, 36, 38, 0.32);
   backdrop-filter: blur(8px);
 }
@@ -343,9 +343,9 @@ button {
   position: fixed;
   inset-inline: 1rem;
   top: clamp(1rem, 7vh, 4rem);
-  z-index: 90;
+  z-index: 1110;
   margin-inline: auto;
-  width: min(100%, 44rem);
+  width: min(calc(100% - 2rem), 44rem);
 }
 
 .command-shell {
@@ -559,6 +559,7 @@ button {
   [cmdk-dialog] {
     inset-inline: 0.75rem;
     top: 0.75rem;
+    width: calc(100% - 1.5rem);
   }
 
   [data-sonner-toaster] {

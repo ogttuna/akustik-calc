@@ -209,7 +209,6 @@ const COMPLETE_TRIPLE_LEAF_BUILDING_CONTEXT: AirborneContext = {
   contextMode: "building_prediction",
   panelHeightMm: 2500,
   panelWidthMm: 4000,
-  partitionAreaM2: 10,
   receivingRoomRt60S: 0.6,
   receivingRoomVolumeM3: 45,
   wallTopology: {

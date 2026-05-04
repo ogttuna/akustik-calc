@@ -62,6 +62,41 @@ skipped, repo build 5 / 5 tasks with known non-fatal `sharp/@img`
 warnings, and whitespace guard passed after restoring
 `apps/web/next-env.d.ts` to `.next-typecheck`.
 
+Broad validation / UI integration pass on 2026-05-04:
+
+1. User-authored workbench UI changes were reviewed as ergonomics and
+   navigation changes only: mobile panel badges, assembly/results/review
+   panel transitions, results-panel review actions, stack-visual
+   disclosure, proposal panel layout, command palette/material picker
+   layout, and small overflow/readability adjustments.
+2. The pass found one committed engine fixture type issue:
+   `partitionAreaM2` was present in two `AirborneContext` test fixtures
+   even though the live context derives area from `panelWidthMm` and
+   `panelHeightMm`. The fixtures now rely on the 4000 x 2500 mm panel
+   dimensions instead of a stale direct area field.
+3. The pass found one full-suite timing issue:
+   `dynamic-airborne-family-boundary-scan.test.ts` exceeded the default
+   20 s Vitest budget for the non-AAC family-boundary scan under
+   full-suite load. This is not a value/lane behavior failure; the scan
+   was already passing assertions. `HOLD_SCAN_TIMEOUT_MS` is now 45 s,
+   and the focused file passed 6 tests.
+4. `pnpm calculator:gate:current` passed before the broad check.
+5. Final `pnpm check` passed: lint and typecheck clean; engine full
+   suite passed 373 files / 2204 tests; web full suite passed 161 files
+   / 907 passed + 18 skipped; repo build passed 5 / 5 tasks with the
+   known non-fatal `sharp/@img` warnings.
+
+Planning conclusion after this pass:
+
+- The UI changes are valid to commit, but they do not change the active
+  calculator accuracy plan.
+- The first technical next step remains Gate B visible wording guard at
+  `apps/web/features/workbench/field-output-lab-screening-leakage-gate-b-card-copy.test.ts`.
+- Gate B must stay copy/posture-only unless paired engine, web-card, and
+  report-copy tests prove a narrower movement.
+- Rockwool triple-leaf remains unresolved: `Rw 41` is still
+  low-confidence `multileaf_screening_blend`, not exact and not fixed.
+
 Gate B must produce:
 
 - paired web output-card snapshots for airborne field outputs and floor

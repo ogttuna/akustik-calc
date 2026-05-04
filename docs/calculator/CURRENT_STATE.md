@@ -77,6 +77,32 @@ skipped, repo build 5 / 5 tasks with known non-fatal `sharp/@img`
 warnings, and whitespace guard passed after restoring
 `apps/web/next-env.d.ts` to `.next-typecheck`.
 
+Broad validation / UI integration pass completed on 2026-05-04:
+`pnpm calculator:gate:current` passed, then `pnpm check` passed after
+two non-runtime fixes. The first fix removed stale `partitionAreaM2`
+test-fixture fields from v20 and field-output Gate A engine contracts;
+the live context derives partition area from panel width/height. The
+second fix raised the explicit timeout for the full-suite
+`dynamic-airborne-family-boundary-scan` hold scan from 20 s to 45 s
+after the assertions passed but the default Vitest budget was too tight
+under full-suite load. Final broad check evidence: lint and typecheck
+clean; engine full suite 373 files / 2204 tests passed; web full suite
+161 files / 907 passed + 18 skipped; repo build 5 / 5 tasks passed with
+known non-fatal `sharp/@img` warnings.
+
+The user-authored UI changes validated in that pass are limited to
+workbench ergonomics and navigation: mobile workspace badges,
+assembly/results/review transitions, results-panel review actions,
+stack-visual disclosure, proposal panel layout, command palette/material
+picker layout, and overflow/readability adjustments. No runtime value,
+support, confidence, source evidence, API, or calculator lane decision
+was intentionally moved.
+
+Immediate next step remains Gate B visible wording guard at
+`apps/web/features/workbench/field-output-lab-screening-leakage-gate-b-card-copy.test.ts`.
+The rockwool triple-leaf defect remains unresolved and `Rw 41` remains
+screening, not exact.
+
 Prior closeout:
 
 `calculator_source_gap_revalidation_v20` Gate A

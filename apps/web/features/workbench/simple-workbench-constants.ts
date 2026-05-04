@@ -58,14 +58,14 @@ export type WorkspacePanelId = "results" | "review" | "setup" | "stack";
 
 export const REVIEW_TABS: readonly { id: ReviewTabId; label: string; note: string }[] = [
   {
-    id: "proposal",
-    label: "Proposal",
-    note: "Shape the live dynamic result into a client-facing offer sheet with issue control metadata."
-  },
-  {
     id: "method",
     label: "Method detail",
     note: "Explain why the current route is active, which outputs are defensible, and what is still parked."
+  },
+  {
+    id: "proposal",
+    label: "Proposal",
+    note: "Shape the live dynamic result into a client-facing offer sheet with issue control metadata."
   },
   {
     id: "diagnostics",

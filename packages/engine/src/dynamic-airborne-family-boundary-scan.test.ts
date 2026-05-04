@@ -154,7 +154,9 @@ const FRAMED_MULTI_CANDIDATE_CAVITIES: readonly (readonly LayerInput[])[] = [
   ]
 ] as const;
 
-const HOLD_SCAN_TIMEOUT_MS = 20_000;
+// These boundary scans intentionally sweep broad layer palettes; full-suite
+// load can push the non-AAC hold scan past Vitest's default 20s budget.
+const HOLD_SCAN_TIMEOUT_MS = 45_000;
 // The non-AAC swap sweep is CPU-heavy and occasionally crosses the tighter
 // threshold under full-suite load without signaling a behavioral regression.
 const NON_AAC_SWAP_TIMEOUT_MS = 60_000;

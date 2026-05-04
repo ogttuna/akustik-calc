@@ -993,6 +993,55 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
         </div>
       </div>
 
+      <div className="mt-5 rounded-md border border-[color:color-mix(in_oklch,var(--accent)_22%,var(--line))] bg-[color:color-mix(in_oklch,var(--accent)_8%,var(--paper))] px-4 py-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="min-w-0">
+            <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Issue actions</div>
+            <div className="mt-1 text-sm font-semibold text-[color:var(--ink)]">
+              {exportReady ? "Ready to package" : "Waiting for a supported result"}
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <button
+              className="focus-ring inline-flex items-center gap-2 rounded-full border hairline bg-[color:var(--paper)] px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={!exportReady}
+              onClick={() => void handleCopySummary()}
+              type="button"
+            >
+              <Copy className="h-4 w-4" />
+              Copy summary
+            </button>
+            <button
+              className="focus-ring inline-flex items-center gap-2 rounded-full bg-[color:var(--accent)] px-4 py-2 text-sm font-semibold text-[color:var(--paper)] disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={!exportReady || isDownloadingPdf}
+              onClick={() => void handleDownloadExport()}
+              type="button"
+            >
+              <Download className="h-4 w-4" />
+              {isDownloadingPdf ? "Preparing..." : "Branded PDF"}
+            </button>
+            <button
+              className="focus-ring inline-flex items-center gap-2 rounded-full border hairline bg-[color:var(--paper)] px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={!exportReady}
+              onClick={openProposalAdjustmentView}
+              type="button"
+            >
+              <FilePenLine className="h-4 w-4" />
+              PDF setup
+            </button>
+            <button
+              className="focus-ring inline-flex items-center gap-2 rounded-full border hairline bg-[color:var(--paper)] px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={!exportReady}
+              onClick={() => openProposalPrintView(false)}
+              type="button"
+            >
+              <FileText className="h-4 w-4" />
+              Print view
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,0.94fr)_minmax(0,1.06fr)]">
         <div className="grid gap-4">
           <div className="rounded-lg border hairline bg-[color:var(--paper)]/78 px-4 py-4">

@@ -128,9 +128,9 @@ export function SimpleWorkbenchProposalConstructionFigure({
                 {band.indexLabel}
               </div>
               <div className="min-w-0">
-                <div className="flex items-center gap-2">
+                <div className="flex min-w-0 items-start gap-2">
                   <div className="h-3 w-10 rounded-full border border-white/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.18)]" style={surface.frontStyle} />
-                  <div className="truncate text-sm font-semibold text-[color:var(--ink)]">{band.label}</div>
+                  <div className="line-clamp-2 min-w-0 text-sm font-semibold leading-5 text-[color:var(--ink)]">{band.label}</div>
                 </div>
                 <div className="mt-1 text-xs leading-5 text-[color:var(--ink-soft)]">
                   {band.metaLabel}

@@ -92,7 +92,7 @@ export function CustomMaterialComposer(props: {
               >
                 <div className="flex min-w-0 items-start justify-between gap-3">
                   <div className="min-w-0">
-                    <div className="truncate text-sm font-semibold text-[color:var(--ink)]">{material.name}</div>
+                    <div className="line-clamp-2 text-sm font-semibold leading-5 text-[color:var(--ink)]">{material.name}</div>
                     <div className="mt-1 flex flex-wrap gap-2">
                       <DetailTag>Local</DetailTag>
                       <DetailTag>{getMaterialCategoryLabel(material)}</DetailTag>
@@ -272,6 +272,7 @@ export function NewLayerComposer(props: {
   const dynamicStiffnessLabel = formatDynamicStiffnessLabel(material, draft.dynamicStiffnessMNm3);
   const densityWarning = getDensityInputWarning(material, draft.densityKgM3);
   const dynamicStiffnessWarning = getDynamicStiffnessInputWarning(draft.dynamicStiffnessMNm3);
+  const overrideActive = draft.densityKgM3.trim().length > 0 || draft.dynamicStiffnessMNm3.trim().length > 0;
   const catalogDynamicStiffness = getCatalogDynamicStiffness(material);
   const catalogDensity = getCatalogDensity(material);
   const thicknessWarning = getLayerThicknessSanityWarning(
@@ -336,7 +337,7 @@ export function NewLayerComposer(props: {
         </div>
       </div>
 
-      <div className={`mt-3 grid min-w-0 gap-3 ${studyMode === "floor" ? "2xl:grid-cols-2" : "2xl:grid-cols-3"}`}>
+      <div className="mt-3 grid min-w-0 gap-3 2xl:grid-cols-2">
         <WorkbenchMaterialPicker
           currentMaterial={material}
           groups={materialGroups}
@@ -357,34 +358,6 @@ export function NewLayerComposer(props: {
           />
         </label>
 
-        <label className="grid min-w-0 gap-2">
-          <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">New layer density</span>
-          <input
-            aria-invalid={Boolean(densityWarning)}
-            aria-label="New layer density"
-            className={getTextInputClassName(Boolean(densityWarning))}
-            inputMode="decimal"
-            onChange={(event) => onDensityChange(event.target.value)}
-            placeholder={typeof catalogDensity === "number" ? formatDecimal(catalogDensity) : "kg/m³"}
-            value={draft.densityKgM3}
-          />
-        </label>
-
-        {studyMode === "floor" ? (
-          <label className="grid min-w-0 gap-2">
-            <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">New layer dynamic stiffness</span>
-            <input
-              aria-invalid={Boolean(dynamicStiffnessWarning)}
-              aria-label="New layer dynamic stiffness"
-              className={getTextInputClassName(Boolean(dynamicStiffnessWarning))}
-              inputMode="decimal"
-              onChange={(event) => onDynamicStiffnessChange(event.target.value)}
-              placeholder={typeof catalogDynamicStiffness === "number" ? formatDecimal(catalogDynamicStiffness) : "MN/m³"}
-              value={draft.dynamicStiffnessMNm3}
-            />
-          </label>
-        ) : null}
-
         {studyMode === "floor" ? (
           <label className="grid min-w-0 gap-2">
             <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">New layer role</span>
@@ -404,6 +377,50 @@ export function NewLayerComposer(props: {
           </label>
         ) : null}
       </div>
+
+      <details
+        className={`mt-3 rounded border px-3 py-2.5 ${workbenchSectionMutedCardClass("assembly")}`}
+        open={Boolean(densityWarning || dynamicStiffnessWarning || overrideActive)}
+      >
+        <summary className="cursor-pointer list-none">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="text-[0.82rem] font-semibold text-[color:var(--ink)]">Optional overrides</div>
+            <GuidedFactChip tone={densityWarning || dynamicStiffnessWarning ? "warning" : "neutral"}>
+              {densityWarning || dynamicStiffnessWarning ? "Check values" : overrideActive ? "Overrides set" : "Catalog defaults"}
+            </GuidedFactChip>
+          </div>
+        </summary>
+
+        <div className={`mt-3 grid min-w-0 gap-3 ${studyMode === "floor" ? "2xl:grid-cols-2" : ""}`}>
+          <label className="grid min-w-0 gap-2">
+            <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">New layer density</span>
+            <input
+              aria-invalid={Boolean(densityWarning)}
+              aria-label="New layer density"
+              className={getTextInputClassName(Boolean(densityWarning))}
+              inputMode="decimal"
+              onChange={(event) => onDensityChange(event.target.value)}
+              placeholder={typeof catalogDensity === "number" ? formatDecimal(catalogDensity) : "kg/m³"}
+              value={draft.densityKgM3}
+            />
+          </label>
+
+          {studyMode === "floor" ? (
+            <label className="grid min-w-0 gap-2">
+              <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">New layer dynamic stiffness</span>
+              <input
+                aria-invalid={Boolean(dynamicStiffnessWarning)}
+                aria-label="New layer dynamic stiffness"
+                className={getTextInputClassName(Boolean(dynamicStiffnessWarning))}
+                inputMode="decimal"
+                onChange={(event) => onDynamicStiffnessChange(event.target.value)}
+                placeholder={typeof catalogDynamicStiffness === "number" ? formatDecimal(catalogDynamicStiffness) : "MN/m³"}
+                value={draft.dynamicStiffnessMNm3}
+              />
+            </label>
+          ) : null}
+        </div>
+      </details>
 
       <div className="mt-3 grid gap-2 sm:grid-cols-2 2xl:grid-cols-4">
         <InlinePair label="Category" value={categoryLabel} />

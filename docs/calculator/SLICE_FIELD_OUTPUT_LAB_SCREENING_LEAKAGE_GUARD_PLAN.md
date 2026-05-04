@@ -84,6 +84,34 @@ skipped, repo build 5 / 5 tasks with known non-fatal `sharp/@img`
 warnings, and whitespace guard passed after restoring
 `apps/web/next-env.d.ts` to `.next-typecheck`.
 
+## Broad Check / UI Pass - 2026-05-04
+
+A broad validation pass was run after user-authored workbench UI
+ergonomics changes. The UI changes do not move this slice's runtime
+values or exact/screening posture; they affect navigation and layout
+around setup, assembly, results, review, proposal, command palette, and
+material picker surfaces.
+
+The broad check found and fixed two test-quality issues before commit:
+
+1. `partitionAreaM2` was removed from the v20 and Gate A test fixtures
+   because `AirborneContext` derives partition area from panel width and
+   height.
+2. `dynamic-airborne-family-boundary-scan.test.ts` now has a 45 s
+   explicit hold-scan timeout because the non-AAC boundary scan can
+   exceed 20 s under full-suite load while still passing assertions.
+
+Final validation evidence: `pnpm calculator:gate:current` passed;
+focused engine typecheck and Gate A/v20 tests passed; the focused
+family-boundary scan passed 6 tests; final `pnpm check` passed with
+engine full suite 373 files / 2204 tests, web full suite 161 files /
+907 passed + 18 skipped, and repo build 5 / 5 tasks with known
+non-fatal `sharp/@img` warnings.
+
+This does not change the selected next step. Gate B is still the first
+implementation target and must strengthen visible basis wording without
+retuning or promoting values.
+
 ## Gate A Findings
 
 - Low-confidence grouped split-rockwool still emits `R'w 39` and

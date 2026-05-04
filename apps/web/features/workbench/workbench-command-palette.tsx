@@ -39,7 +39,7 @@ type WorkbenchCommandPaletteProps = {
 
 function Shortcut({ children }: { children: string }) {
   return (
-    <span className="rounded-full border hairline px-2 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">
+    <span className="shrink-0 rounded-full border hairline px-2 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-faint)]">
       {children}
     </span>
   );
@@ -63,7 +63,7 @@ function PaletteTag({
 
   return (
     <span
-      className={`rounded-full px-2 py-1 text-[0.63rem] font-semibold uppercase tracking-[0.16em] ${toneClass}`}
+      className={`inline-flex max-w-full min-w-0 break-words rounded-full px-2 py-1 text-left text-[0.63rem] font-semibold uppercase tracking-[0.16em] ${toneClass}`}
     >
       {children}
     </span>
@@ -118,28 +118,28 @@ export function WorkbenchCommandPalette({
       <Dialog.Description className="sr-only">
         Search presets, outputs, saved scenarios, and reporting actions for the active acoustic study.
       </Dialog.Description>
-      <div className="command-shell">
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b hairline px-5 py-4">
-          <div>
+      <div className="command-shell flex max-h-[calc(100svh-2rem)] flex-col">
+        <div className="flex min-w-0 flex-wrap items-center justify-between gap-3 border-b hairline px-5 py-4">
+          <div className="min-w-0">
             <div className="eyebrow">Command center</div>
-            <div className="mt-1 font-display text-[1.45rem] leading-none tracking-[-0.04em] text-[color:var(--ink)]">
+            <div className="mt-1 break-words font-display text-[1.45rem] leading-tight tracking-[-0.04em] text-[color:var(--ink)]">
               {projectName}
             </div>
           </div>
           <Shortcut>Ctrl K</Shortcut>
         </div>
 
-        <div className="flex items-center gap-3 border-b hairline px-5 py-3">
-          <Search className="h-4 w-4 text-[color:var(--ink-faint)]" />
+        <div className="flex min-w-0 items-center gap-3 border-b hairline px-5 py-3">
+          <Search className="h-4 w-4 shrink-0 text-[color:var(--ink-faint)]" />
           <Command.Input
-            className="w-full bg-transparent text-sm text-[color:var(--ink)] outline-none placeholder:text-[color:var(--ink-faint)]"
+            className="min-w-0 flex-1 bg-transparent text-sm text-[color:var(--ink)] outline-none placeholder:text-[color:var(--ink-faint)]"
             onValueChange={setSearch}
             placeholder="Search commands, presets, outputs, and saved scenarios..."
             value={search}
           />
         </div>
 
-        <Command.List className="max-h-[24rem] overflow-y-auto px-3 py-3">
+        <Command.List className="min-h-0 flex-1 overflow-y-auto px-3 py-3">
           <Command.Empty className="px-3 py-8 text-center text-sm text-[color:var(--ink-soft)]">
             No matching workbench command.
           </Command.Empty>
@@ -147,32 +147,32 @@ export function WorkbenchCommandPalette({
           <Command.Group heading="Workspace">
             <Command.Item keywords={["snapshot", "save", "compare"]} onSelect={() => runAndClose(onSaveScenario)} value="save current scenario">
               <Sparkles className="h-4 w-4" />
-              <span>Save current scenario</span>
+              <span className="min-w-0 break-words">Save current scenario</span>
             </Command.Item>
             <Command.Item keywords={["reset", "clear", "workspace"]} onSelect={() => runAndClose(onReset)} value="reset workspace">
               <RotateCcw className="h-4 w-4" />
-              <span>Reset workspace</span>
+              <span className="min-w-0 break-words">Reset workspace</span>
             </Command.Item>
             <Command.Item
               keywords={["copy", "markdown", "report"]} onSelect={() => runAndClose(onCopyReport)}
               value="copy markdown report"
             >
               <FileText className="h-4 w-4" />
-              <span>Copy markdown report</span>
+              <span className="min-w-0 break-words">Copy markdown report</span>
             </Command.Item>
             <Command.Item
               keywords={["download", "brief", "report"]} onSelect={() => runAndClose(onDownloadReport)}
               value="download markdown report"
             >
               <Download className="h-4 w-4" />
-              <span>Download markdown report</span>
+              <span className="min-w-0 break-words">Download markdown report</span>
             </Command.Item>
             <Command.Item
               keywords={["overview", "home", "landing"]} onSelect={() => runAndClose(() => router.push("/"))}
               value="go to overview"
             >
               <CommandIcon className="h-4 w-4" />
-              <span>Back to overview</span>
+              <span className="min-w-0 break-words">Back to overview</span>
             </Command.Item>
           </Command.Group>
 
@@ -184,9 +184,9 @@ export function WorkbenchCommandPalette({
                 onSelect={() => runAndClose(() => onLoadPreset(preset.id))}
                 value={preset.label}
               >
-                <Layers3 className="h-4 w-4" />
-                <div className="flex flex-1 items-center justify-between gap-3">
-                  <span>{preset.label}</span>
+                <Layers3 className="h-4 w-4 shrink-0" />
+                <div className="flex min-w-0 flex-1 items-center justify-between gap-3">
+                  <span className="min-w-0 break-words">{preset.label}</span>
                   {preset.id === currentPresetId ? <Shortcut>Live</Shortcut> : null}
                 </div>
               </Command.Item>
@@ -201,9 +201,9 @@ export function WorkbenchCommandPalette({
                 onSelect={() => runAndClose(() => onApplyCriteriaPack(criteriaPack.id))}
                 value={criteriaPack.label}
               >
-                <Sparkles className="h-4 w-4" />
-                <div className="flex flex-1 items-center justify-between gap-3">
-                  <span>{criteriaPack.label}</span>
+                <Sparkles className="h-4 w-4 shrink-0" />
+                <div className="flex min-w-0 flex-1 items-center justify-between gap-3">
+                  <span className="min-w-0 break-words">{criteriaPack.label}</span>
                   {criteriaPack.id === activeCriteriaPackId ? <Shortcut>Active</Shortcut> : null}
                 </div>
               </Command.Item>
@@ -221,9 +221,9 @@ export function WorkbenchCommandPalette({
                   onSelect={() => runAndClose(() => onToggleRequestedOutput(value as keyof typeof REQUESTED_OUTPUT_LABELS))}
                   value={`toggle ${label}`}
                 >
-                  <Layers3 className="h-4 w-4" />
-                  <div className="flex flex-1 items-center justify-between gap-3">
-                    <span>{isActive ? `Disable ${label}` : `Enable ${label}`}</span>
+                  <Layers3 className="h-4 w-4 shrink-0" />
+                  <div className="flex min-w-0 flex-1 items-center justify-between gap-3">
+                    <span className="min-w-0 break-words">{isActive ? `Disable ${label}` : `Enable ${label}`}</span>
                     <Shortcut>{isActive ? "On" : "Off"}</Shortcut>
                   </div>
                 </Command.Item>
@@ -270,8 +270,8 @@ export function WorkbenchCommandPalette({
                     <div className="min-w-0 flex-1">
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
-                          <div className="truncate font-semibold text-[color:var(--ink)]">{scenario.name}</div>
-                          <p className="mt-1 truncate text-xs leading-6 text-[color:var(--ink-soft)]">{subline}</p>
+                          <div className="line-clamp-2 font-semibold text-[color:var(--ink)]">{scenario.name}</div>
+                          <p className="mt-1 line-clamp-2 text-xs leading-5 text-[color:var(--ink-soft)]">{subline}</p>
                         </div>
                         <PaletteTag tone={getValidationPostureTone(summary.impactPosture.posture)}>
                           {summary.impactLabel}

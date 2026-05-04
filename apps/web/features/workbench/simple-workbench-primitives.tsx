@@ -25,15 +25,16 @@ export function SectionLead(props: { description?: string; step?: string; title:
 
 export function WorkspacePanelButton(props: {
   active: boolean;
+  badge?: string;
   label: string;
   onClick: () => void;
 }) {
-  const { active, label, onClick } = props;
+  const { active, badge, label, onClick } = props;
 
   return (
     <button
       aria-pressed={active}
-      className={`focus-ring inline-flex items-center justify-center border-b-2 px-3 py-2 text-sm font-medium transition-colors ${
+      className={`focus-ring inline-flex min-w-0 flex-1 items-center justify-center gap-1.5 border-b-2 px-2 py-2 text-xs font-semibold transition-colors ${
         active
           ? "border-[color:var(--accent)] text-[color:var(--ink)]"
           : "border-transparent text-[color:var(--ink-faint)] hover:text-[color:var(--ink-soft)]"
@@ -41,7 +42,18 @@ export function WorkspacePanelButton(props: {
       onClick={onClick}
       type="button"
     >
-      {label}
+      <span className="truncate">{label}</span>
+      {badge ? (
+        <span
+          className={`shrink-0 rounded-full border px-1.5 py-0.5 text-[0.62rem] leading-none ${
+            active
+              ? "border-[color:var(--accent)] bg-[color:var(--accent-soft)] text-[color:var(--accent-ink)]"
+              : "border-[color:var(--line)] text-[color:var(--ink-faint)]"
+          }`}
+        >
+          {badge}
+        </span>
+      ) : null}
     </button>
   );
 }

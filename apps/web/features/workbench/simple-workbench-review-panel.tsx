@@ -100,7 +100,7 @@ export function SimpleWorkbenchReviewPanel(props: SimpleWorkbenchReviewPanelProp
       <div className="border-b border-[color:var(--line)] pb-4">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <h2 className="text-sm font-semibold text-[color:var(--ink)]">Review</h2>
-          <div className="flex gap-3 text-[0.72rem] font-medium text-[color:var(--ink-faint)]">
+          <div className="flex flex-wrap gap-x-3 gap-y-1 text-[0.72rem] font-medium text-[color:var(--ink-faint)]">
             <div>{`${proposalMetricsCount} live metric${proposalMetricsCount === 1 ? "" : "s"}`}</div>
             <div>{`${proposalLayersCount} visible row${proposalLayersCount === 1 ? "" : "s"}`}</div>
             <div>{warnings.length > 0 ? `${warnings.length} warning${warnings.length === 1 ? "" : "s"}` : "No live warnings"}</div>

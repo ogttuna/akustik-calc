@@ -27,7 +27,7 @@ import { deriveGuidedRouteSignals } from "./guided-route-signals";
 import { getGuidedValidationSummary } from "./guided-validation-summary";
 import { isImpactOnlyLowConfidenceFloorLane } from "./impact-only-low-confidence-floor-lane";
 import { getGuidedNumericSanityWarning, GUIDED_INPUT_SANITY_BANDS } from "./input-sanity";
-import { getPresetById } from "./preset-definitions";
+import { getPresetById, type PresetId } from "./preset-definitions";
 import { evaluateScenario } from "./scenario-analysis";
 import { buildSimpleWorkbenchEvidencePacket } from "./simple-workbench-evidence";
 import { buildSimpleWorkbenchMethodDossier } from "./simple-workbench-method-dossier";
@@ -906,9 +906,31 @@ export function SimpleWorkbenchShell() {
     }
   };
 
+  const revealReviewDeck = () => {
+    const reveal = () => {
+      const reviewDeck = document.getElementById("guided-review-deck");
+      if (!reviewDeck) {
+        return;
+      }
+
+      reviewDeck.scrollTop = 0;
+      if (typeof reviewDeck.scrollIntoView === "function") {
+        reviewDeck.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+    };
+
+    if (typeof window.requestAnimationFrame === "function") {
+      window.requestAnimationFrame(reveal);
+    } else {
+      window.setTimeout(reveal, 0);
+    }
+  };
   const openWorkspacePanel = (panelId: WorkspacePanelId) => {
     setActiveWorkspacePanel(panelId);
-    if (panelId === "review") setReviewExpanded(true);
+    if (panelId === "review") {
+      setReviewExpanded(true);
+      revealReviewDeck();
+    }
   };
   const closeReviewPanel = () => {
     setReviewExpanded(false);
@@ -918,6 +940,11 @@ export function SimpleWorkbenchShell() {
     setActiveReviewTab(tabId);
     setReviewExpanded(true);
     setActiveWorkspacePanel("review");
+    revealReviewDeck();
+  };
+  const focusAssemblyPanel = () => {
+    setActiveWorkspacePanel("stack");
+    setReviewExpanded(false);
   };
   const appendConfiguredLayer = () => {
     if (!parsePositiveNumber(newLayerDraft.thicknessMm)) return;
@@ -927,13 +954,15 @@ export function SimpleWorkbenchShell() {
       materialId: newLayerDraft.materialId, thicknessMm: newLayerDraft.thicknessMm
     }]);
     setNewLayerDraft(buildDefaultNewLayerDraft(studyMode));
-    setActiveAssemblyTool(null);
+    focusAssemblyPanel();
+    setActiveAssemblyTool("composer");
   };
   const replaceConfiguredBaseLayer = () => {
     if (!(replaceConfiguredBaseLayerAvailable && parsePositiveNumber(newLayerDraft.thicknessMm))) return;
     replaceSingleBaseStructure(newLayerDraft.materialId, newLayerDraft.thicknessMm);
     setNewLayerDraft(buildDefaultNewLayerDraft(studyMode));
-    setActiveAssemblyTool(null);
+    focusAssemblyPanel();
+    setActiveAssemblyTool("composer");
   };
   const createCustomMaterial = () => {
     const errors = validateCustomMaterialDraft(customMaterialDraft, materials);
@@ -1032,6 +1061,19 @@ export function SimpleWorkbenchShell() {
   const handleStudyModeChange = (nextStudyMode: "floor" | "wall") => {
     setAirborneContextMode("element_lab");
     startStudyMode(nextStudyMode);
+    setActiveWorkspacePanel("setup");
+    setReviewExpanded(false);
+    setActiveAssemblyTool(null);
+  };
+  const handlePresetChange = (presetId: PresetId) => {
+    loadPreset(presetId);
+    focusAssemblyPanel();
+    setActiveAssemblyTool(null);
+  };
+  const handleStartEmpty = () => {
+    clearRows();
+    focusAssemblyPanel();
+    setActiveAssemblyTool("composer");
   };
 
   const serverProjectBusy =
@@ -1066,11 +1108,11 @@ export function SimpleWorkbenchShell() {
       />
 
       {!isDesktop ? (
-        <div className="flex shrink-0 border-b border-[color:var(--line)] bg-[color:var(--paper)] px-4">
+        <div className="flex shrink-0 border-b border-[color:var(--line)] bg-[color:var(--paper)] px-2">
           <WorkspacePanelButton active={activeWorkspacePanel === "setup"} label="Setup" onClick={() => openWorkspacePanel("setup")} />
-          <WorkspacePanelButton active={activeWorkspacePanel === "stack"} label="Assembly" onClick={() => openWorkspacePanel("stack")} />
-          <WorkspacePanelButton active={activeWorkspacePanel === "results"} label="Results" onClick={() => openWorkspacePanel("results")} />
-          <WorkspacePanelButton active={activeWorkspacePanel === "review"} label="Details" onClick={() => openWorkspacePanel("review")} />
+          <WorkspacePanelButton active={activeWorkspacePanel === "stack"} badge={rows.length ? String(rows.length) : undefined} label="Assembly" onClick={() => openWorkspacePanel("stack")} />
+          <WorkspacePanelButton active={activeWorkspacePanel === "results"} badge={readyOutputCount ? String(readyOutputCount) : undefined} label="Results" onClick={() => openWorkspacePanel("results")} />
+          <WorkspacePanelButton active={activeWorkspacePanel === "review"} badge={scenario.warnings.length ? String(scenario.warnings.length) : undefined} label="Review" onClick={() => openWorkspacePanel("review")} />
         </div>
       ) : null}
 
@@ -1131,10 +1173,10 @@ export function SimpleWorkbenchShell() {
           modePresets={modePresets}
           onContextModeChange={setAirborneContextMode}
           onLoadServerProject={() => void loadServerProject()}
-          onPresetChange={loadPreset}
+          onPresetChange={handlePresetChange}
           onRefreshServerProjects={() => void refreshServerProjects()}
           onSelectedServerProjectChange={setSelectedServerProjectId}
-          onStartEmpty={clearRows}
+          onStartEmpty={handleStartEmpty}
           onStudyModeChange={handleStudyModeChange}
           onSyncServerProject={() => void syncCurrentProjectToServer()}
           panelHeightSanityWarning={panelHeightSanityWarning}
@@ -1212,6 +1254,7 @@ export function SimpleWorkbenchShell() {
           moveRowWithFeedback={moveRowWithFeedback}
           newLayerDraft={newLayerDraft}
           newLayerMaterialGroups={newLayerMaterialGroups}
+          onOpenResults={() => openWorkspacePanel("results")}
           parkedRowCount={parkedRowCount}
           replaceConfiguredBaseLayer={replaceConfiguredBaseLayer}
           replaceConfiguredBaseLayerAvailable={replaceConfiguredBaseLayerAvailable}
@@ -1245,6 +1288,8 @@ export function SimpleWorkbenchShell() {
           liveRowCount={liveRowCount}
           materials={materials}
           needsInputCards={needsInputCards}
+          onOpenAssembly={() => openWorkspacePanel("stack")}
+          onSelectReviewTab={selectReviewTab}
           outputUnlockGroups={outputUnlockGroups}
           parkedRowCount={parkedRowCount}
           primaryReadyCard={primaryReadyCard}

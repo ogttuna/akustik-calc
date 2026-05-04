@@ -22,7 +22,7 @@ export function SimpleWorkbenchResetDialog({ onCancel, onConfirm, open, rowCount
   return (
     <dialog
       ref={dialogRef}
-      className="m-auto rounded-lg border border-[color:var(--line)] bg-[color:var(--paper)] p-6 shadow-xl backdrop:bg-black/40"
+      className="m-auto max-h-[calc(100svh-2rem)] w-[min(calc(100vw-2rem),28rem)] overflow-y-auto rounded-lg border border-[color:var(--line)] bg-[color:var(--paper)] p-6 shadow-xl backdrop:bg-black/40"
       onClose={onCancel}
     >
       <h3 className="text-sm font-semibold text-[color:var(--ink)]">Reset workbench?</h3>
