@@ -2,7 +2,7 @@
 
 Slice id: `company_internal_frequent_combination_lane_snapshot_guard_v1`
 
-Status: GATE A LANDED / GATE B NEXT
+Status: GATE B LANDED / GATE C NEXT
 
 Selected by:
 
@@ -35,6 +35,22 @@ Selected Gate B file:
 Selected Gate B action:
 
 `gate_b_add_company_internal_visible_route_output_snapshot_guard_no_runtime`
+
+Gate B checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-04_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_GATE_B_HANDOFF.md`
+
+Gate B status:
+
+`company_internal_frequent_combination_visible_guard_landed_no_runtime_selected_gate_c_closeout`
+
+Selected Gate C file:
+
+`packages/engine/src/post-company-internal-frequent-combination-lane-snapshot-guard-v1-next-slice-selection-contract.test.ts`
+
+Selected Gate C action:
+
+`gate_c_no_runtime_closeout_and_next_slice_selection`
 
 Prior checkpoint:
 
@@ -107,6 +123,31 @@ prompt, near-source alias, hostile input, and field-output continuation
 states do not look exact or design-grade in the UI when their engine
 posture is screening, fail-closed, needs-input, or context-only.
 
+## Gate B Landed
+
+Gate B added
+`apps/web/features/workbench/company-internal-frequent-combination-lane-snapshot-guard-gate-b-visible.test.ts`
+with the `company_internal_visible_route_output_snapshot_guard`. It
+keeps runtime values, support, confidence, evidence, API behavior,
+route-card values, output-card status, proposal/report copy, and
+workbench-input behavior frozen.
+
+Gate B artifacts now present:
+
+- `rockwool_triple_leaf_visible_screening_not_fixed`
+- `flat_list_swap_visible_fail_closed`
+- `ordinary_double_leaf_stud_lined_boundary_visible_negatives`
+- `raw_floor_role_prompt_and_exact_raw_parity_visible_split`
+- `near_source_alias_visible_context_only`
+- `hostile_input_visible_no_numeric_estimate`
+- `field_outputs_never_design_grade_without_owner`
+
+Gate B selected Gate C no-runtime closeout and next-slice selection:
+
+`packages/engine/src/post-company-internal-frequent-combination-lane-snapshot-guard-v1-next-slice-selection-contract.test.ts`
+
+`gate_c_no_runtime_closeout_and_next_slice_selection`
+
 ## Required Snapshot Cells
 
 The first matrix should cover at least these risk families:
@@ -162,15 +203,36 @@ Gate A validation completed on 2026-05-04:
   tests, web 50 files / 238 passed + 18 skipped, repo build 5 / 5
   tasks, and whitespace guard green.
 
-Required for Gate B:
+Gate B completed:
 
 1. create
    `apps/web/features/workbench/company-internal-frequent-combination-lane-snapshot-guard-gate-b-visible.test.ts`;
 2. assert route/output posture for the Gate A matrix rows;
 3. keep runtime values frozen unless a later bounded implementation gate
-   is explicitly selected;
-4. run focused web validation, relevant engine/web continuity, and
-   `pnpm calculator:gate:current`;
-5. run `pnpm check` before any company-internal high-accuracy handoff;
-6. update this plan and the latest checkpoint with exact validation
-   counts.
+   is explicitly selected.
+
+Gate B validation completed on 2026-05-04:
+
+- focused web validation passed 1 file / 8 tests;
+- engine continuity passed 7 files / 50 tests;
+- web continuity passed 6 files / 27 tests;
+- `pnpm calculator:gate:current` passed with engine 243 files / 1404
+  tests, web 51 files / 246 passed + 18 skipped, repo build 5 / 5
+  tasks, and whitespace guard green;
+- `git diff --check` passed.
+
+Known non-fatal `sharp/@img` warnings remain through
+`@turbodocx/html-to-docx`. `pnpm check` remains required before any
+company-internal high-accuracy handoff.
+
+Required for Gate C:
+
+1. create
+   `packages/engine/src/post-company-internal-frequent-combination-lane-snapshot-guard-v1-next-slice-selection-contract.test.ts`;
+2. close this slice no-runtime;
+3. re-rank rockwool source closure, frequent-combination guardrails,
+   source promotion ownership, hostile API/import guardrails, and any
+   newly discovered lane/output drift;
+4. select the next bounded implementation or research gate without
+   promoting exact runtime values unless source/topology/material/
+   metric/tolerance/negative-boundary/visible-test ownership exists.

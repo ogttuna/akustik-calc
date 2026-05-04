@@ -16,46 +16,45 @@ read
 For the active route/source boundary risk register read
 [CALCULATOR_ROUTE_SOURCE_RISK_REGISTER_2026-05-01.md](./CALCULATOR_ROUTE_SOURCE_RISK_REGISTER_2026-05-01.md).
 
-## Active Decision Map - 2026-05-04 Company Snapshot Guard Gate A Closeout
+## Active Decision Map - 2026-05-04 Company Snapshot Guard Gate B Closeout
 
 Current implementation position:
 `company_internal_frequent_combination_lane_snapshot_guard_v1`.
 
-`company_internal_frequent_combination_lane_snapshot_guard_v1` Gate A
-landed no-runtime and selected the visible Gate B guard. The selected
-next implementation file is:
+`company_internal_frequent_combination_lane_snapshot_guard_v1` Gate B
+landed no-runtime and selected Gate C closeout / next-slice selection.
+The selected next implementation file is:
 
-`apps/web/features/workbench/company-internal-frequent-combination-lane-snapshot-guard-gate-b-visible.test.ts`
+`packages/engine/src/post-company-internal-frequent-combination-lane-snapshot-guard-v1-next-slice-selection-contract.test.ts`
 
-This file does not exist yet; it is the next file to create after Gate A
+This file does not exist yet; it is the next file to create after Gate B
 validation is green.
 
 Current selected status:
 
-`company_internal_frequent_combination_snapshot_matrix_landed_no_runtime_selected_visible_gate_b`
+`company_internal_frequent_combination_visible_guard_landed_no_runtime_selected_gate_c_closeout`
 
 Latest checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-04_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_GATE_A_HANDOFF.md`
+`docs/calculator/CHECKPOINT_2026-05-04_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_GATE_B_HANDOFF.md`
 
 Active planning surface:
 
 `docs/calculator/SLICE_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_PLAN.md`
 
-Gate A facts:
+Gate B facts:
 
 1. Runtime values, support, confidence, evidence, API behavior, route
    cards, output cards, proposal/report copy, and workbench input
    behavior stayed frozen.
-2. Gate A added
-   `packages/engine/src/company-internal-frequent-combination-lane-snapshot-guard-gate-a-contract.test.ts`
-   and the `company_internal_frequent_combination_snapshot_matrix`.
-3. The matrix pins frequent wall/floor family, strategy, support,
-   confidence, source/origin, warnings, and visible posture snapshots
-   for rockwool triple-leaf, flat-list swaps, ordinary double-leaf/stud,
-   masonry / lined-massive boundary hybrids, raw floor role inference,
-   near-source aliases, hostile API/import payloads, and field-output
-   continuations.
+2. Gate B added
+   `apps/web/features/workbench/company-internal-frequent-combination-lane-snapshot-guard-gate-b-visible.test.ts`
+   and the `company_internal_visible_route_output_snapshot_guard`.
+3. The visible guard proves frequent rockwool triple-leaf, flat-list
+   swaps, ordinary double-leaf/stud, masonry / lined-massive boundary
+   hybrids, raw floor role inference, near-source aliases, hostile
+   API/import payloads, and field-output continuations do not look exact
+   or design-grade in route/output helper surfaces.
 4. The split-rockwool / gypsum / MLV triple-leaf defect remains
    unresolved. `Rw 41` is still screening, low confidence, not exact,
    not fixed, and not source-validated.
@@ -73,6 +72,59 @@ Gate A facts:
    source / false exact promotion, use `note_test_document_or_easy_fix`
    before moving on.
 
+Gate B validation completed on 2026-05-04: focused web validation
+passed 1 file / 8 tests; engine continuity passed 7 files / 50 tests;
+web continuity passed 6 files / 27 tests; `pnpm calculator:gate:current`
+passed with engine 243 files / 1404 tests, web 51 files / 246 passed +
+18 skipped, repo build 5 / 5 tasks, and whitespace guard green; `git
+diff --check` passed. Known non-fatal `sharp/@img` warnings remain
+through `@turbodocx/html-to-docx`.
+
+Current next action:
+
+`gate_c_no_runtime_closeout_and_next_slice_selection`
+
+The next gate must close this slice no-runtime and select the next
+bounded source/accuracy step. It must compare at least these candidates:
+
+- rockwool triple-leaf source-owned closure;
+- any remaining frequent-combination visible/API guardrails;
+- source promotion ownership for near-source rows;
+- hostile API/import guardrails;
+- any new lane/output drift discovered by the Gate A/B matrix.
+
+Gate B closeout validation is recorded in this plan and the Gate B
+checkpoint. `pnpm check` remains required before a later
+company-internal high-accuracy handoff.
+
+Validation order for the selected Gate C:
+
+1. Create
+   `packages/engine/src/post-company-internal-frequent-combination-lane-snapshot-guard-v1-next-slice-selection-contract.test.ts`.
+2. Close the slice no-runtime.
+3. Re-rank next work against company-internal high-accuracy exit
+   criteria.
+4. Keep exact runtime promotion blocked unless topology, material
+   mapping, metric context, tolerance ownership, negative boundaries,
+   and paired engine/web/report tests all exist.
+
+The previous Gate A decision map is preserved below for handoff history.
+
+## Prior Active Decision Map - 2026-05-04 Company Snapshot Guard Gate A Closeout
+
+Gate A landed no-runtime and selected the visible Gate B guard. The
+selected Gate B implementation file was:
+
+`apps/web/features/workbench/company-internal-frequent-combination-lane-snapshot-guard-gate-b-visible.test.ts`
+
+Gate A selected status:
+
+`company_internal_frequent_combination_snapshot_matrix_landed_no_runtime_selected_visible_gate_b`
+
+Gate A checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-04_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_GATE_A_HANDOFF.md`
+
 Gate A validation completed on 2026-05-04: focused Gate A passed 1
 file / 8 tests; engine continuity passed 7 files / 50 tests; web
 continuity passed 4 files / 15 tests; final
@@ -80,35 +132,6 @@ continuity passed 4 files / 15 tests; final
 tests, web 50 files / 238 passed + 18 skipped, repo build 5 / 5 tasks,
 and whitespace guard green. Known non-fatal `sharp/@img` warnings remain
 through `@turbodocx/html-to-docx`.
-
-Current next action:
-
-`gate_b_add_company_internal_visible_route_output_snapshot_guard_no_runtime`
-
-The next gate must prove the web surface shows the Gate A posture:
-
-- frequent rockwool triple-leaf and flat-list swap rows look
-  screening/fail-closed, not fixed;
-- ordinary double-leaf and simple stud rows do not get mislabeled as a
-  triple-leaf fix;
-- masonry / lined-massive boundary rows expose boundary-hold posture;
-- raw floor role prompts remain visible before impact-output promotion;
-- near-source aliases stay context-only;
-- hostile API/import failures show no numeric estimate;
-- field-output continuations do not look design-grade.
-
-Validation order for the selected Gate B:
-
-1. Create
-   `apps/web/features/workbench/company-internal-frequent-combination-lane-snapshot-guard-gate-b-visible.test.ts`.
-2. Use the Gate A matrix as the engine truth source for visible
-   route/output posture assertions.
-3. Keep runtime values frozen unless a later gate explicitly selects a
-   bounded implementation change.
-4. Run focused web validation, engine/web continuity, and
-   `pnpm calculator:gate:current`.
-5. Record exact validation counts in this plan and the Gate B
-   checkpoint.
 
 The previous V21 decision map is preserved below for handoff history.
 

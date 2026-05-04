@@ -13,15 +13,58 @@ Current urgent slice:
 
 Current urgent status:
 
-`company_internal_frequent_combination_snapshot_matrix_landed_no_runtime_selected_visible_gate_b`
+`company_internal_frequent_combination_visible_guard_landed_no_runtime_selected_gate_c_closeout`
 
 Current urgent next file:
 
-`apps/web/features/workbench/company-internal-frequent-combination-lane-snapshot-guard-gate-b-visible.test.ts`
+`packages/engine/src/post-company-internal-frequent-combination-lane-snapshot-guard-v1-next-slice-selection-contract.test.ts`
 
 Current urgent next action:
 
-`gate_b_add_company_internal_visible_route_output_snapshot_guard_no_runtime`
+`gate_c_no_runtime_closeout_and_next_slice_selection`
+
+Just landed company-internal frequent-combination Gate B:
+
+`company_internal_frequent_combination_visible_guard_landed_no_runtime_selected_gate_c_closeout`
+
+Gate B file:
+
+`apps/web/features/workbench/company-internal-frequent-combination-lane-snapshot-guard-gate-b-visible.test.ts`
+
+Gate B checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-04_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_GATE_B_HANDOFF.md`
+
+Gate B artifacts:
+
+`company_internal_visible_route_output_snapshot_guard`
+
+`rockwool_triple_leaf_visible_screening_not_fixed`
+
+`flat_list_swap_visible_fail_closed`
+
+`near_source_alias_visible_context_only`
+
+`hostile_input_visible_no_numeric_estimate`
+
+`field_outputs_never_design_grade_without_owner`
+
+Gate B risk result:
+
+Frequent route/output helper surfaces now prove the current screening,
+fail-closed, context-only, and needs-input postures remain visible.
+Rockwool triple-leaf remains not fixed: grouped split-rockwool is still
+`Rw 41`, `multileaf_screening_blend`, low confidence, screening only,
+not exact, and not source-validated. Uris 2006 remains
+`paused_waiting_rights_safe_source_packet`. Gate C must close this slice
+and select the next bounded source/accuracy step.
+
+Gate B validation passed on 2026-05-04: focused web validation 1 file /
+8 tests, engine continuity 7 files / 50 tests, web continuity 6 files /
+27 tests, `pnpm calculator:gate:current` with engine 243 files / 1404
+tests, web 51 files / 246 passed + 18 skipped, repo build 5 / 5 tasks,
+and whitespace guard green; `git diff --check` passed. Known non-fatal
+`sharp/@img` warnings remain through `@turbodocx/html-to-docx`.
 
 Just landed company-internal frequent-combination Gate A:
 

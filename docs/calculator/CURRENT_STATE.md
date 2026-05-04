@@ -28,17 +28,65 @@ Company-internal frequent wall/floor lane snapshot guard.
 
 Current selected status:
 
-`company_internal_frequent_combination_snapshot_matrix_landed_no_runtime_selected_visible_gate_b`
+`company_internal_frequent_combination_visible_guard_landed_no_runtime_selected_gate_c_closeout`
 
 Selected next implementation file:
 
-`apps/web/features/workbench/company-internal-frequent-combination-lane-snapshot-guard-gate-b-visible.test.ts`
+`packages/engine/src/post-company-internal-frequent-combination-lane-snapshot-guard-v1-next-slice-selection-contract.test.ts`
 
 Selected next action:
 
-`gate_b_add_company_internal_visible_route_output_snapshot_guard_no_runtime`
+`gate_c_no_runtime_closeout_and_next_slice_selection`
 
 Latest closeout:
+
+`company_internal_frequent_combination_lane_snapshot_guard_v1` Gate B
+
+Gate B implementation file:
+
+`apps/web/features/workbench/company-internal-frequent-combination-lane-snapshot-guard-gate-b-visible.test.ts`
+
+Gate B action:
+
+`gate_b_add_company_internal_visible_route_output_snapshot_guard_no_runtime`
+
+Gate B checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-04_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_GATE_B_HANDOFF.md`
+
+Gate B status:
+
+`company_internal_frequent_combination_visible_guard_landed_no_runtime_selected_gate_c_closeout`
+
+Gate B landed the no-runtime
+`company_internal_visible_route_output_snapshot_guard`. It proves web
+route/output helper surfaces keep frequent rockwool triple-leaf,
+flat-list swaps, ordinary double-leaf/stud, masonry / lined-massive
+boundary hybrids, raw floor role inference, near-source aliases,
+hostile API/import payloads, and field-output continuations visibly
+screening, fail-closed, needs-input, or context-only when exactness is
+not defended.
+
+Runtime values, support, confidence, evidence, API behavior,
+route-card values, output-card status, proposal/report copy, and
+workbench-input behavior stayed frozen.
+
+Rockwool triple-leaf remains not fixed. The grouped split-rockwool
+building route still emits `Rw 41` from `multileaf_screening_blend`,
+low confidence, screening only, not exact, and not source-validated.
+Uris 2006 remains `paused_waiting_rights_safe_source_packet`.
+
+Gate B selected Gate C no-runtime closeout and next-slice selection.
+
+Gate B validation completed on 2026-05-04: focused web validation
+passed 1 file / 8 tests; engine continuity passed 7 files / 50 tests;
+web continuity passed 6 files / 27 tests; `pnpm calculator:gate:current`
+passed with engine 243 files / 1404 tests, web 51 files / 246 passed +
+18 skipped, repo build 5 / 5 tasks, and whitespace guard green; `git
+diff --check` passed. Known non-fatal `sharp/@img` warnings remain
+through `@turbodocx/html-to-docx`.
+
+Prior closeout:
 
 `company_internal_frequent_combination_lane_snapshot_guard_v1` Gate A
 
@@ -73,10 +121,6 @@ Rockwool triple-leaf remains not fixed. The grouped split-rockwool
 building route still emits `Rw 41` from `multileaf_screening_blend`,
 low confidence, screening only, not exact, and not source-validated.
 Uris 2006 remains `paused_waiting_rights_safe_source_packet`.
-
-The next gate is web-visible: the UI must show frequent combination
-posture as screening, fail-closed, needs-input, or context-only when the
-engine cannot defend exactness.
 
 Gate A validation completed on 2026-05-04: focused Gate A passed 1 file
 / 8 tests; engine continuity passed 7 files / 50 tests; web continuity
@@ -201,13 +245,11 @@ picker layout, and overflow/readability adjustments. No runtime value,
 support, confidence, source evidence, API, or calculator lane decision
 was intentionally moved.
 
-Immediate next step is the company-internal frequent-combination
-visible Gate B guard at
-`apps/web/features/workbench/company-internal-frequent-combination-lane-snapshot-guard-gate-b-visible.test.ts`.
-It must prove common wall/floor route/output cards cannot make
-screening or fail-closed results look exact before any high-accuracy
-internal opening. The rockwool triple-leaf defect remains unresolved
-and `Rw 41` remains screening, not exact.
+Immediate next step is Gate C closeout / next-slice selection at
+`packages/engine/src/post-company-internal-frequent-combination-lane-snapshot-guard-v1-next-slice-selection-contract.test.ts`.
+It must close the snapshot guard slice no-runtime and select the next
+bounded source/accuracy step. The rockwool triple-leaf defect remains
+unresolved and `Rw 41` remains screening, not exact.
 
 Company-internal high-accuracy opening is currently blocked:
 
@@ -234,7 +276,7 @@ company-internal high-accuracy handoff.
 
 Current next action for that blocker:
 
-`gate_b_add_company_internal_visible_route_output_snapshot_guard_no_runtime`
+`gate_c_no_runtime_closeout_and_next_slice_selection`
 
 Prior closeout:
 

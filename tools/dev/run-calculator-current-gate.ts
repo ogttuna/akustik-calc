@@ -333,6 +333,7 @@ async function main() {
         "features/workbench/wall-triple-leaf-grouped-topology-route-card.test.ts",
         "features/workbench/wall-flat-list-multileaf-family-guard-route-card.test.ts",
         "features/workbench/wall-triple-leaf-company-internal-acceptance-rehearsal.test.ts",
+        "features/workbench/company-internal-frequent-combination-lane-snapshot-guard-gate-b-visible.test.ts",
         "features/workbench/field-output-lab-screening-leakage-gate-b-card-copy.test.ts",
         "features/workbench/wall-physical-invariants-matrix.test.ts",
         "features/workbench/wall-reorder-invariance-matrix.test.ts",

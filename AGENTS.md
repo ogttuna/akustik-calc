@@ -5,10 +5,11 @@ Start here before changing calculator behavior.
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-05-04_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_GATE_A_HANDOFF.md`
-3. `docs/calculator/SLICE_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_PLAN.md`
-4. `docs/calculator/CHECKPOINT_2026-05-04_CALCULATOR_SOURCE_GAP_REVALIDATION_V21_GATE_A_HANDOFF.md`
-5. `docs/calculator/CHECKPOINT_2026-05-04_FIELD_OUTPUT_LAB_SCREENING_LEAKAGE_GUARD_GATE_B_HANDOFF.md`
+2. `docs/calculator/CHECKPOINT_2026-05-04_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_GATE_B_HANDOFF.md`
+3. `docs/calculator/CHECKPOINT_2026-05-04_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_GATE_A_HANDOFF.md`
+4. `docs/calculator/SLICE_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_PLAN.md`
+5. `docs/calculator/CHECKPOINT_2026-05-04_CALCULATOR_SOURCE_GAP_REVALIDATION_V21_GATE_A_HANDOFF.md`
+6. `docs/calculator/CHECKPOINT_2026-05-04_FIELD_OUTPUT_LAB_SCREENING_LEAKAGE_GUARD_GATE_B_HANDOFF.md`
 5. `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V21_PLAN.md`
 6. `docs/calculator/CHECKPOINT_2026-05-04_FIELD_OUTPUT_LAB_SCREENING_LEAKAGE_GUARD_GATE_A_HANDOFF.md`
 7. `docs/calculator/SLICE_FIELD_OUTPUT_LAB_SCREENING_LEAKAGE_GUARD_PLAN.md`
@@ -232,10 +233,36 @@ plan.
 - current selected slice:
   `company_internal_frequent_combination_lane_snapshot_guard_v1`
 - current next decision inside the slice:
-  `apps/web/features/workbench/company-internal-frequent-combination-lane-snapshot-guard-gate-b-visible.test.ts`
+  `packages/engine/src/post-company-internal-frequent-combination-lane-snapshot-guard-v1-next-slice-selection-contract.test.ts`
   should run
-  `gate_b_add_company_internal_visible_route_output_snapshot_guard_no_runtime`.
+  `gate_c_no_runtime_closeout_and_next_slice_selection`.
   The file is intentionally absent until the next implementation step.
+- just landed company-internal frequent-combination Gate B:
+  `apps/web/features/workbench/company-internal-frequent-combination-lane-snapshot-guard-gate-b-visible.test.ts`
+  landed
+  `company_internal_frequent_combination_visible_guard_landed_no_runtime_selected_gate_c_closeout`
+  no-runtime. It added
+  `company_internal_visible_route_output_snapshot_guard`,
+  `rockwool_triple_leaf_visible_screening_not_fixed`,
+  `flat_list_swap_visible_fail_closed`,
+  `near_source_alias_visible_context_only`,
+  `hostile_input_visible_no_numeric_estimate`, and
+  `field_outputs_never_design_grade_without_owner`. Runtime values,
+  support, confidence, evidence, API, route-card, output-card,
+  proposal/report, and workbench-input behavior stayed frozen.
+  Rockwool triple-leaf remains not fixed: grouped split-rockwool is
+  still `Rw 41`, `multileaf_screening_blend`, low confidence,
+  screening only, not exact, and not source-validated. Uris 2006 remains
+  `paused_waiting_rights_safe_source_packet`.
+  Validation passed on 2026-05-04: focused web validation 1 file / 8
+  tests, engine continuity 7 files / 50 tests, web continuity 6 files /
+  27 tests, final `pnpm calculator:gate:current` with engine 243 files /
+  1404 tests, web 51 files / 246 passed + 18 skipped, repo build
+  5 / 5 tasks, whitespace guard green, and `git diff --check` green.
+- just landed company-internal Gate B checkpoint:
+  `docs/calculator/CHECKPOINT_2026-05-04_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_GATE_B_HANDOFF.md`
+  and selected Gate C closeout file:
+  `packages/engine/src/post-company-internal-frequent-combination-lane-snapshot-guard-v1-next-slice-selection-contract.test.ts`
 - just landed company-internal frequent-combination Gate A:
   `packages/engine/src/company-internal-frequent-combination-lane-snapshot-guard-gate-a-contract.test.ts`
   landed
