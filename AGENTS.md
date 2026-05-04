@@ -247,6 +247,23 @@ plan.
   `next_guard_or_closeout_decision_before_any_floor_support_promotion`.
   Gate A did not move runtime, support, confidence, evidence, API,
   route-card, output-card, proposal/report, or workbench-input behavior.
+- 2026-05-04 planning pass:
+  `gate_b_closeout_file_currently_absent_and_next_to_create`.
+  The selected next file above is not present yet; creating it is the
+  next implementation step. Keep `wrong_measurement_triage_loop`,
+  `frequent_combination_lane_suspicion_reproduce_trace_document_or_bounded_fix`,
+  `external_source_research_deferred_until_source_acquisition_gate_or_source_packet`,
+  and
+  `exact_promotion_requires_source_topology_material_metric_tolerance_negative_visible_proof`
+  active for every following calculator slice. If a frequent
+  wall/floor combination appears to switch route family/source lane
+  after a small reorder, duplicate-stack edit, material alias, hostile
+  input, or tolerance-edge edit, reproduce it in a focused contract,
+  compare engine trace and visible copy, then document it or land only a
+  bounded easy fix with paired engine and visible tests. Do not open
+  internet/source-packet research for the immediate Gate B closeout
+  unless a source-acquisition gate is selected or a rights-safe source
+  locator/source packet arrives.
 - latest checkpoint:
   `docs/calculator/CHECKPOINT_2026-05-04_FLOOR_TOLERANCE_EDGE_PROMOTION_GUARD_GATE_A_HANDOFF.md`
   lands `floor_tolerance_edge_promotion_guard_v1` Gate A no-runtime

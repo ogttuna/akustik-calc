@@ -110,6 +110,40 @@ typecheck passed, engine tests passed 368 files / 2169 tests, web
 tests passed 161 files / 908 passed + 18 skipped, and build passed
 5 / 5 packages with the known non-fatal `sharp/@img` warnings.
 
+## Planning Pass - 2026-05-04 Wrong Measurement Discipline
+
+`gate_b_closeout_file_currently_absent_and_next_to_create`
+
+`wrong_measurement_triage_loop`
+
+`frequent_combination_lane_suspicion_reproduce_trace_document_or_bounded_fix`
+
+`external_source_research_deferred_until_source_acquisition_gate_or_source_packet`
+
+`exact_promotion_requires_source_topology_material_metric_tolerance_negative_visible_proof`
+
+Every calculator-hardening slice must treat wrong route-family/source
+lane selection as a first-class accuracy defect. The active floor
+tolerance-edge slice has a selected next file, but that closeout
+contract does not exist yet; creating it is the next implementation
+step before any runtime or visible-surface movement.
+
+When a frequent wall/floor combination appears to measure through the
+wrong lane, first reproduce the issue with focused engine snapshots and
+visible route/output wording checks. Inspect family, strategy, support,
+confidence, warnings, origin/evidence, and field-output copy. If the
+result is finite but fail-closed or low-confidence, keep it documented
+as screening/boundary behavior. If the easy fix is bounded and testable,
+land it with paired engine plus web/report coverage; otherwise leave it
+as a tracked risk and select the next gate.
+
+No external source research is selected for the immediate Gate B
+closeout. Source research resumes only when a source-acquisition gate is
+selected or a rights-safe source packet/source locator arrives. The
+rockwool/Uris lane remains `paused_waiting_rights_safe_source_packet`;
+`Rw 41` on `multileaf_screening_blend` remains an unfixed screening
+answer, not exact source evidence.
+
 Prior urgent status:
 
 `selected_floor_tolerance_edge_promotion_guard_after_v18_rerank_found_no_source_ready_runtime_candidate_and_common_combination_sentinel_closed`

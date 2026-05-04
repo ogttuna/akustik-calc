@@ -38,6 +38,31 @@ Selected next action:
 
 `gate_b_no_runtime_closeout_and_next_slice_selection`
 
+Planning-pass status:
+
+`gate_b_closeout_file_currently_absent_and_next_to_create`
+
+`wrong_measurement_triage_loop`
+
+`frequent_combination_lane_suspicion_reproduce_trace_document_or_bounded_fix`
+
+`external_source_research_deferred_until_source_acquisition_gate_or_source_packet`
+
+`exact_promotion_requires_source_topology_material_metric_tolerance_negative_visible_proof`
+
+The selected Gate B closeout file has not been created yet. That file
+is the next concrete implementation step. It should either close the
+floor tolerance-edge guard no-runtime and select the next source-gap
+revalidation, or name one bounded floor tolerance / support wording fix
+with paired engine and visible tests. Do not start runtime import,
+support/confidence/evidence promotion, field-output copy, API movement,
+route/output-card movement, proposal/report copy, workbench-input
+movement, or rockwool exact promotion before that closeout.
+
+No external source research is needed for the immediate next step. Open
+internet/source-packet research only after a source-acquisition gate is
+selected or a rights-safe source packet/source locator is available.
+
 Selected next planning surface:
 
 `docs/calculator/SLICE_FLOOR_TOLERANCE_EDGE_PROMOTION_GUARD_PLAN.md`

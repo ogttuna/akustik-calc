@@ -10,6 +10,8 @@ const RISK_REGISTER_PATH = "docs/calculator/CALCULATOR_ROUTE_SOURCE_RISK_REGISTE
 const TRIPLE_LEAF_HANDOFF_PATH = "docs/calculator/TRIPLE_LEAF_ROCKWOOL_REORDER_DEFECT_HANDOFF.md";
 const CURRENT_STATE_PATH = "docs/calculator/CURRENT_STATE.md";
 const NEXT_PLAN_PATH = "docs/calculator/NEXT_IMPLEMENTATION_PLAN.md";
+const FLOOR_TOLERANCE_PLAN_PATH = "docs/calculator/SLICE_FLOOR_TOLERANCE_EDGE_PROMOTION_GUARD_PLAN.md";
+const AGENTS_PATH = "AGENTS.md";
 
 const RISK_IDS = ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9"] as const;
 
@@ -53,6 +55,14 @@ const HOTSPOT_TOKENS = [
   "Source metric / digitization mix-up",
   "Output copy over-certainty",
   "Near-term triage"
+] as const;
+
+const PLANNING_PASS_TOKENS = [
+  "gate_b_closeout_file_currently_absent_and_next_to_create",
+  "wrong_measurement_triage_loop",
+  "frequent_combination_lane_suspicion_reproduce_trace_document_or_bounded_fix",
+  "external_source_research_deferred_until_source_acquisition_gate_or_source_packet",
+  "exact_promotion_requires_source_topology_material_metric_tolerance_negative_visible_proof"
 ] as const;
 
 const CURRENT_ROCKWOOL_TOKENS = [
@@ -216,5 +226,26 @@ describe("calculator route/source risk register contract", () => {
     expect(riskRegister).toContain("If topology");
     expect(riskRegister).toContain("boundary hold over a precise-looking value");
     expect(riskRegister).toContain("Field metrics, API responses, output cards, and reports");
+  });
+
+  it("documents the current Gate B planning pass and wrong-measurement triage loop", () => {
+    const docs = [
+      readRepoFile(RISK_REGISTER_PATH),
+      readRepoFile(CURRENT_STATE_PATH),
+      readRepoFile(NEXT_PLAN_PATH),
+      readRepoFile(FLOOR_TOLERANCE_PLAN_PATH),
+      readRepoFile(AGENTS_PATH)
+    ];
+
+    for (const doc of docs) {
+      for (const token of PLANNING_PASS_TOKENS) {
+        expect(doc, token).toContain(token);
+      }
+    }
+
+    const riskRegister = docs[0];
+    expect(riskRegister).toContain("Every calculator-hardening slice must treat wrong route-family/source");
+    expect(riskRegister).toContain("No external source research is selected for the immediate Gate B");
+    expect(riskRegister).toContain("creating it is the next implementation");
   });
 });

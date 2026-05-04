@@ -61,6 +61,50 @@ promoted.
 
 Gate A did not move runtime behavior.
 
+## Gate B Closeout Plan - 2026-05-04 Planning Pass
+
+`gate_b_closeout_file_currently_absent_and_next_to_create`
+
+`wrong_measurement_triage_loop`
+
+`frequent_combination_lane_suspicion_reproduce_trace_document_or_bounded_fix`
+
+`external_source_research_deferred_until_source_acquisition_gate_or_source_packet`
+
+`exact_promotion_requires_source_topology_material_metric_tolerance_negative_visible_proof`
+
+The selected next file
+`packages/engine/src/post-floor-tolerance-edge-promotion-guard-v1-next-slice-selection-contract.test.ts`
+is not present yet. Creating that file is the first implementation
+step. It should close this slice no-runtime unless it proves one small,
+bounded floor tolerance / support wording fix that can be covered by
+engine and visible web/report tests in the same slice.
+
+Gate B must explicitly decide and document:
+
+- whether any just-inside / just-outside exact or bound floor tolerance
+  edge can be promoted without making a finite screening value look
+  source-validated;
+- whether route-card and output-card wording still clearly separates
+  exact floor rows, bound-only floor rows, and screening/family
+  estimates;
+- whether raw floor role inference, duplicate roles, hostile API/import
+  input, and field-output leakage remain blocked;
+- whether no-runtime closeout should select the next source-gap
+  revalidation rather than a source acquisition or runtime movement.
+
+Wrong-measurement caution for this slice: if a frequent floor
+combination changes exact/bound/screening lane after a small thickness,
+role, duplicate-stack, or layer-order edit, reproduce the case in the
+contract before changing behavior. If it is already fail-closed or
+low-confidence, document it as such. If the easy fix is not bounded and
+paired with visible tests, do not implement it in Gate B.
+
+No internet/source research is required before this Gate B closeout
+because the current decision is not a source-row acquisition. External
+research starts only if the closeout selects a source-acquisition gate
+or a rights-safe source packet/source locator arrives.
+
 ## Required Gate A Artifacts
 
 Gate A must produce:

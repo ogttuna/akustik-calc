@@ -16,6 +16,64 @@ read
 For the active route/source boundary risk register read
 [CALCULATOR_ROUTE_SOURCE_RISK_REGISTER_2026-05-01.md](./CALCULATOR_ROUTE_SOURCE_RISK_REGISTER_2026-05-01.md).
 
+## Active Decision Map - 2026-05-04 Planning Pass
+
+Current implementation position: `floor_tolerance_edge_promotion_guard_v1`
+Gate A is green and no-runtime. The selected next implementation file,
+`packages/engine/src/post-floor-tolerance-edge-promotion-guard-v1-next-slice-selection-contract.test.ts`,
+does not exist yet; this is the next file to create, not a runtime gap.
+
+`gate_b_closeout_file_currently_absent_and_next_to_create`
+
+`wrong_measurement_triage_loop`
+
+`frequent_combination_lane_suspicion_reproduce_trace_document_or_bounded_fix`
+
+`external_source_research_deferred_until_source_acquisition_gate_or_source_packet`
+
+`exact_promotion_requires_source_topology_material_metric_tolerance_negative_visible_proof`
+
+Gate B closeout must make the next state unambiguous:
+
+1. Create
+   `packages/engine/src/post-floor-tolerance-edge-promotion-guard-v1-next-slice-selection-contract.test.ts`.
+2. Close `floor_tolerance_edge_promotion_guard_v1` no-runtime unless
+   the contract proves a small bounded floor tolerance / support wording
+   fix that is covered by paired engine and visible web/report tests.
+3. Keep runtime values, support, confidence, evidence, field-output
+   copy, API behavior, route cards, output cards, proposal/report copy,
+   and workbench input behavior frozen unless the closeout explicitly
+   selects a bounded fix with tests.
+4. Carry forward `standing_lane_misclassification_monitoring_mandate`,
+   `note_test_document_or_easy_fix`,
+   `paused_waiting_rights_safe_source_packet`,
+   `multileaf_screening_blend_fail_closed_until_grouped_topology`,
+   `raw_floor_role_inference`, and
+   `arbitrary_raw_floor_reorder_value_invariance_remains_unclaimed`.
+5. Select the next slice by re-ranking source-ready accuracy work
+   after the floor tolerance closeout. If no bounded source-ready path
+   exists, the honest next step is a source-gap revalidation slice, not
+   a speculative runtime promotion.
+
+Wrong-measurement rule for every following slice: when a frequent wall
+or floor combination appears to switch route family/source lane after a
+small layer reorder, duplicate-stack edit, many-layer edit, material
+alias, or near-thickness-boundary edit, first reproduce it in a focused
+contract. Compare `detectedFamily`, strategy, support, confidence,
+warnings, origin/evidence, and visible route/output wording. If the
+answer is finite but fail-closed or low-confidence, document that state
+instead of calling it exact. Implement immediately only when the fix is
+bounded and covered by engine plus visible tests; otherwise record the
+risk and select the next gate.
+
+No external source research is selected for the immediate next step.
+Internet/source-packet research should start only if Gate B selects a
+source-acquisition lane or if a rights-safe source packet/source locator
+is supplied. The original rockwool/Uris issue remains blocked on
+`paused_waiting_rights_safe_source_packet`; the current `Rw 41`
+`multileaf_screening_blend` answer is not fixed, exact, or
+source-validated.
+
 Last reviewed: 2026-05-04
 (`common_combination_lane_misclassification_sentinel_v1` Gate A landed
 no-runtime on 2026-05-04 with
