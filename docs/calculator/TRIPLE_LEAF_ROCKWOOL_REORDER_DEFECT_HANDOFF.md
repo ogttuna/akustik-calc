@@ -10,15 +10,48 @@ Current slice:
 
 Current selection status:
 
-`selected_company_internal_frequent_combination_lane_snapshot_guard_after_v21_consumed_field_output_guard_and_kept_rockwool_source_blocked`
+`company_internal_frequent_combination_snapshot_matrix_landed_no_runtime_selected_visible_gate_b`
 
 Current next file:
 
-`packages/engine/src/company-internal-frequent-combination-lane-snapshot-guard-gate-a-contract.test.ts`
+`apps/web/features/workbench/company-internal-frequent-combination-lane-snapshot-guard-gate-b-visible.test.ts`
 
 Current next action:
 
-`gate_a_pin_company_internal_frequent_combination_lane_snapshot_matrix_no_runtime`
+`gate_b_add_company_internal_visible_route_output_snapshot_guard_no_runtime`
+
+Just landed company-internal frequent-combination Gate A file:
+
+`packages/engine/src/company-internal-frequent-combination-lane-snapshot-guard-gate-a-contract.test.ts`
+
+Just landed company-internal Gate A checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-04_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_GATE_A_HANDOFF.md`
+
+Just landed company-internal Gate A status:
+
+`company_internal_frequent_combination_snapshot_matrix_landed_no_runtime_selected_visible_gate_b`
+
+Just landed Gate A result:
+
+Gate A added `company_internal_frequent_combination_snapshot_matrix`,
+`rockwool_triple_leaf_screening_and_flat_swap_negative_rows`,
+`near_source_alias_and_hostile_input_negative_rows`,
+`field_outputs_never_design_grade_without_owner`,
+`standing_lane_misclassification_monitoring_mandate`, and
+`note_test_document_or_easy_fix` posture no-runtime. It pins the current
+rockwool grouped row as `Rw 41`, `multileaf_screening_blend`, low
+confidence, screening only, not exact, and not source-validated. The
+flat-list swap remains
+`multileaf_screening_blend_fail_closed_until_grouped_topology`.
+Rockwool triple-leaf remains not fixed and Uris 2006 remains
+`paused_waiting_rights_safe_source_packet`.
+
+Gate A validation passed on 2026-05-04: focused Gate A 1 file / 8
+tests, engine continuity 7 files / 50 tests, web continuity 4 files /
+15 tests, and `pnpm calculator:gate:current` with engine 243 files /
+1404 tests, web 50 files / 238 passed + 18 skipped, repo build 5 / 5
+tasks, and whitespace guard green.
 
 Just landed V21 source-gap file:
 
@@ -102,7 +135,7 @@ Executable blocker contract:
 
 Current next action:
 
-`gate_a_revalidate_source_gap_order_after_field_output_guard_and_company_internal_blocker`
+`gate_b_add_company_internal_visible_route_output_snapshot_guard_no_runtime`
 
 Just landed field-output Gate B validation:
 

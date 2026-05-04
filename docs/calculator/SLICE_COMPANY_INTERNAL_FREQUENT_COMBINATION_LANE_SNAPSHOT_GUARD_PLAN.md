@@ -2,7 +2,7 @@
 
 Slice id: `company_internal_frequent_combination_lane_snapshot_guard_v1`
 
-Status: SELECTED / GATE A NEXT
+Status: GATE A LANDED / GATE B NEXT
 
 Selected by:
 
@@ -12,13 +12,29 @@ Selection status:
 
 `selected_company_internal_frequent_combination_lane_snapshot_guard_after_v21_consumed_field_output_guard_and_kept_rockwool_source_blocked`
 
-Selected first file:
+Landed Gate A file:
 
 `packages/engine/src/company-internal-frequent-combination-lane-snapshot-guard-gate-a-contract.test.ts`
 
-Selected first action:
+Landed Gate A action:
 
 `gate_a_pin_company_internal_frequent_combination_lane_snapshot_matrix_no_runtime`
+
+Gate A checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-04_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_GATE_A_HANDOFF.md`
+
+Gate A status:
+
+`company_internal_frequent_combination_snapshot_matrix_landed_no_runtime_selected_visible_gate_b`
+
+Selected Gate B file:
+
+`apps/web/features/workbench/company-internal-frequent-combination-lane-snapshot-guard-gate-b-visible.test.ts`
+
+Selected Gate B action:
+
+`gate_b_add_company_internal_visible_route_output_snapshot_guard_no_runtime`
 
 Prior checkpoint:
 
@@ -38,7 +54,17 @@ unsafe to market as high-accuracy if common combinations silently fall
 into the wrong lane, promote a near-source row, or show finite
 screening/field-continuation values too confidently.
 
-## Gate A Must Produce
+## Gate A Landed
+
+Gate A added the no-runtime
+`company_internal_frequent_combination_snapshot_matrix` executable
+contract. It pins the current family, strategy, support, confidence,
+source/origin, warnings, and intended visible posture for frequent
+wall/floor combinations. It intentionally does not change runtime
+values, support, confidence, evidence, API behavior, route-card values,
+output-card status, proposal/report copy, or workbench-input behavior.
+
+Gate A artifacts now present:
 
 - `company_internal_frequent_combination_snapshot_matrix`
 - `rockwool_triple_leaf_screening_and_flat_swap_negative_rows`
@@ -46,11 +72,40 @@ screening/field-continuation values too confidently.
 - `masonry_lined_massive_boundary_snapshot_rows`
 - `floor_role_inference_duplicate_stack_snapshot_rows`
 - `near_source_alias_and_hostile_input_negative_rows`
+- `field_outputs_never_design_grade_without_owner`
 - `selected_gate_b_visible_or_api_guard_or_no_runtime_closeout`
 
-Gate A must keep runtime values, support, confidence, evidence, API,
-route-card, output-card, proposal/report, and workbench-input behavior
-frozen unless it explicitly selects a later bounded implementation gate.
+Rockwool triple-leaf remains not fixed: grouped split-rockwool is still
+`Rw 41`, `multileaf_screening_blend`, low confidence, screening only,
+not exact, and not source-validated. Uris 2006 remains
+`paused_waiting_rights_safe_source_packet`.
+
+Gate A also carries forward the
+`standing_lane_misclassification_monitoring_mandate`: every future
+implementation pass must keep looking for wrong lane / wrong source /
+false exact promotion / field-output leakage in common combinations.
+When suspicious behavior appears, follow `note_test_document_or_easy_fix`:
+note it, test the repro, document it if it is not immediately fixable,
+and only apply a bounded easy fix when the contract is clear.
+
+## Gate B Must Produce
+
+Gate B must make the Gate A snapshot posture visible in web route/output
+coverage before any company-internal high-accuracy opening decision.
+
+Selected Gate B file:
+
+`apps/web/features/workbench/company-internal-frequent-combination-lane-snapshot-guard-gate-b-visible.test.ts`
+
+Selected Gate B action:
+
+`gate_b_add_company_internal_visible_route_output_snapshot_guard_no_runtime`
+
+Gate B must prove frequent rockwool triple-leaf, flat-list swap,
+ordinary double-leaf/stud, lined-massive boundary, raw floor role
+prompt, near-source alias, hostile input, and field-output continuation
+states do not look exact or design-grade in the UI when their engine
+posture is screening, fail-closed, needs-input, or context-only.
 
 ## Required Snapshot Cells
 
@@ -88,17 +143,34 @@ The first matrix should cover at least these risk families:
 
 ## Validation
 
-Required for Gate A:
+Gate A completed:
 
 1. create
    `packages/engine/src/company-internal-frequent-combination-lane-snapshot-guard-gate-a-contract.test.ts`;
-2. run the focused engine guard;
-3. run continuity with V21, company-internal blocker, route/source risk
-   register, rockwool visible tests, flat-list multileaf guard, field
-   output Gate B, and hostile input tests if present;
-4. add the Gate A file to `tools/dev/run-calculator-current-gate.ts`
-   only after it exists;
-5. run `pnpm calculator:gate:current`;
-6. run `pnpm check` before any company-internal high-accuracy handoff;
-7. update this plan and the latest checkpoint with exact validation
+2. pin frequent wall/floor family, strategy, support, confidence,
+   source/origin, warnings, and visible posture snapshots;
+3. preserve runtime values, support, confidence, evidence, API,
+   route-card, output-card, proposal/report, and workbench-input
+   behavior.
+
+Gate A validation completed on 2026-05-04:
+
+- focused Gate A passed 1 file / 8 tests;
+- engine continuity passed 7 files / 50 tests;
+- web continuity passed 4 files / 15 tests;
+- `pnpm calculator:gate:current` passed with engine 243 files / 1404
+  tests, web 50 files / 238 passed + 18 skipped, repo build 5 / 5
+  tasks, and whitespace guard green.
+
+Required for Gate B:
+
+1. create
+   `apps/web/features/workbench/company-internal-frequent-combination-lane-snapshot-guard-gate-b-visible.test.ts`;
+2. assert route/output posture for the Gate A matrix rows;
+3. keep runtime values frozen unless a later bounded implementation gate
+   is explicitly selected;
+4. run focused web validation, relevant engine/web continuity, and
+   `pnpm calculator:gate:current`;
+5. run `pnpm check` before any company-internal high-accuracy handoff;
+6. update this plan and the latest checkpoint with exact validation
    counts.

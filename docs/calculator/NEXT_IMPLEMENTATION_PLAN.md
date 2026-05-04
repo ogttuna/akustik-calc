@@ -16,48 +16,120 @@ read
 For the active route/source boundary risk register read
 [CALCULATOR_ROUTE_SOURCE_RISK_REGISTER_2026-05-01.md](./CALCULATOR_ROUTE_SOURCE_RISK_REGISTER_2026-05-01.md).
 
-## Active Decision Map - 2026-05-04 V21 Gate A Closeout
+## Active Decision Map - 2026-05-04 Company Snapshot Guard Gate A Closeout
+
+Current implementation position:
+`company_internal_frequent_combination_lane_snapshot_guard_v1`.
+
+`company_internal_frequent_combination_lane_snapshot_guard_v1` Gate A
+landed no-runtime and selected the visible Gate B guard. The selected
+next implementation file is:
+
+`apps/web/features/workbench/company-internal-frequent-combination-lane-snapshot-guard-gate-b-visible.test.ts`
+
+This file does not exist yet; it is the next file to create after Gate A
+validation is green.
+
+Current selected status:
+
+`company_internal_frequent_combination_snapshot_matrix_landed_no_runtime_selected_visible_gate_b`
+
+Latest checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-04_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_GATE_A_HANDOFF.md`
+
+Active planning surface:
+
+`docs/calculator/SLICE_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_PLAN.md`
+
+Gate A facts:
+
+1. Runtime values, support, confidence, evidence, API behavior, route
+   cards, output cards, proposal/report copy, and workbench input
+   behavior stayed frozen.
+2. Gate A added
+   `packages/engine/src/company-internal-frequent-combination-lane-snapshot-guard-gate-a-contract.test.ts`
+   and the `company_internal_frequent_combination_snapshot_matrix`.
+3. The matrix pins frequent wall/floor family, strategy, support,
+   confidence, source/origin, warnings, and visible posture snapshots
+   for rockwool triple-leaf, flat-list swaps, ordinary double-leaf/stud,
+   masonry / lined-massive boundary hybrids, raw floor role inference,
+   near-source aliases, hostile API/import payloads, and field-output
+   continuations.
+4. The split-rockwool / gypsum / MLV triple-leaf defect remains
+   unresolved. `Rw 41` is still screening, low confidence, not exact,
+   not fixed, and not source-validated.
+5. Uris 2006 remains
+   `paused_waiting_rights_safe_source_packet`; exact runtime promotion
+   is blocked until source curves, material mapping, tolerance,
+   negative boundaries, and paired visible tests exist.
+6. Field outputs follow
+   `field_outputs_never_design_grade_without_owner`; finite `R'w`,
+   `DnT,w`, `L'n,w`, or `L'nT,w` values must stay visibly tied to
+   lab/screening/apparent/bound continuations unless a later owner
+   exists.
+7. The `standing_lane_misclassification_monitoring_mandate` remains
+   active: when a common combination looks like wrong lane / wrong
+   source / false exact promotion, use `note_test_document_or_easy_fix`
+   before moving on.
+
+Gate A validation completed on 2026-05-04: focused Gate A passed 1
+file / 8 tests; engine continuity passed 7 files / 50 tests; web
+continuity passed 4 files / 15 tests; final
+`pnpm calculator:gate:current` passed with engine 243 files / 1404
+tests, web 50 files / 238 passed + 18 skipped, repo build 5 / 5 tasks,
+and whitespace guard green. Known non-fatal `sharp/@img` warnings remain
+through `@turbodocx/html-to-docx`.
+
+Current next action:
+
+`gate_b_add_company_internal_visible_route_output_snapshot_guard_no_runtime`
+
+The next gate must prove the web surface shows the Gate A posture:
+
+- frequent rockwool triple-leaf and flat-list swap rows look
+  screening/fail-closed, not fixed;
+- ordinary double-leaf and simple stud rows do not get mislabeled as a
+  triple-leaf fix;
+- masonry / lined-massive boundary rows expose boundary-hold posture;
+- raw floor role prompts remain visible before impact-output promotion;
+- near-source aliases stay context-only;
+- hostile API/import failures show no numeric estimate;
+- field-output continuations do not look design-grade.
+
+Validation order for the selected Gate B:
+
+1. Create
+   `apps/web/features/workbench/company-internal-frequent-combination-lane-snapshot-guard-gate-b-visible.test.ts`.
+2. Use the Gate A matrix as the engine truth source for visible
+   route/output posture assertions.
+3. Keep runtime values frozen unless a later gate explicitly selects a
+   bounded implementation change.
+4. Run focused web validation, engine/web continuity, and
+   `pnpm calculator:gate:current`.
+5. Record exact validation counts in this plan and the Gate B
+   checkpoint.
+
+The previous V21 decision map is preserved below for handoff history.
+
+## Prior Active Decision Map - 2026-05-04 V21 Gate A Closeout
 
 Current implementation position:
 `company_internal_frequent_combination_lane_snapshot_guard_v1`.
 
 `calculator_source_gap_revalidation_v21` Gate A landed no-runtime and
 selected the company-internal frequent-combination lane snapshot guard.
-The selected next implementation file is:
+The selected next implementation file was:
 
 `packages/engine/src/company-internal-frequent-combination-lane-snapshot-guard-gate-a-contract.test.ts`
 
-This file does not exist yet; it is the next file to create.
-
-Current selected status:
+V21 selected status:
 
 `selected_company_internal_frequent_combination_lane_snapshot_guard_after_v21_consumed_field_output_guard_and_kept_rockwool_source_blocked`
 
-Latest checkpoint:
+V21 checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-04_CALCULATOR_SOURCE_GAP_REVALIDATION_V21_GATE_A_HANDOFF.md`
-
-Active planning surface:
-
-`docs/calculator/SLICE_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_PLAN.md`
-
-V21 Gate A facts:
-
-1. Runtime values, support, confidence, evidence, API behavior, route
-   cards, output cards, proposal/report copy, and workbench input
-   behavior stayed frozen.
-2. Field-output Gate B was consumed as a prerequisite, but it is not a
-   design-grade field-output owner.
-3. The split-rockwool / gypsum / MLV triple-leaf defect remains
-   unresolved. `Rw 41` is still screening, low confidence, not exact,
-   not fixed, and not source-validated.
-4. Uris 2006 remains
-   `paused_waiting_rights_safe_source_packet`; exact runtime promotion
-   is blocked until source curves, material mapping, tolerance,
-   negative boundaries, and paired visible tests exist.
-5. Company-internal high-accuracy opening remains blocked until
-   frequent wall/floor lane snapshots, hostile-input guards, source
-   promotion ownership, and visible posture tests are green.
 
 V21 validation completed on 2026-05-04: focused V21 passed 1 file / 8
 tests; engine continuity passed 5 files / 31 tests; web continuity
@@ -67,34 +139,6 @@ skipped, repo build 5 / 5 tasks, and whitespace guard green. Earlier
 current-gate build attempts hit transient Next manifest artifact misses;
 the standalone root build and final retry passed with only the known
 non-fatal `sharp/@img` warnings.
-
-Current next action:
-
-`gate_a_pin_company_internal_frequent_combination_lane_snapshot_matrix_no_runtime`
-
-The next gate must produce:
-
-- `company_internal_frequent_combination_snapshot_matrix`;
-- `rockwool_triple_leaf_screening_and_flat_swap_negative_rows`;
-- `ordinary_lsf_timber_layer_swap_snapshot_rows`;
-- `masonry_lined_massive_boundary_snapshot_rows`;
-- `floor_role_inference_duplicate_stack_snapshot_rows`;
-- `near_source_alias_and_hostile_input_negative_rows`;
-- `selected_gate_b_visible_or_api_guard_or_no_runtime_closeout`.
-
-Validation order for the selected snapshot guard:
-
-1. Create
-   `packages/engine/src/company-internal-frequent-combination-lane-snapshot-guard-gate-a-contract.test.ts`.
-2. Pin frequent wall/floor family, strategy, support, confidence,
-   source/origin, warnings, and visible posture snapshots.
-3. Keep runtime values frozen unless a later gate explicitly selects a
-   bounded implementation change.
-4. Add the snapshot guard file to
-   `tools/dev/run-calculator-current-gate.ts` only after it exists.
-5. Run focused validation, continuity with V21 / company blocker /
-   route-source risk / rockwool visible tests / field-output Gate B,
-   then `pnpm calculator:gate:current`.
 
 The previous field-output Gate B decision map is preserved below for
 handoff history.

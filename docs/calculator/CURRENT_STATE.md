@@ -28,17 +28,64 @@ Company-internal frequent wall/floor lane snapshot guard.
 
 Current selected status:
 
-`selected_company_internal_frequent_combination_lane_snapshot_guard_after_v21_consumed_field_output_guard_and_kept_rockwool_source_blocked`
+`company_internal_frequent_combination_snapshot_matrix_landed_no_runtime_selected_visible_gate_b`
 
 Selected next implementation file:
 
-`packages/engine/src/company-internal-frequent-combination-lane-snapshot-guard-gate-a-contract.test.ts`
+`apps/web/features/workbench/company-internal-frequent-combination-lane-snapshot-guard-gate-b-visible.test.ts`
 
 Selected next action:
 
-`gate_a_pin_company_internal_frequent_combination_lane_snapshot_matrix_no_runtime`
+`gate_b_add_company_internal_visible_route_output_snapshot_guard_no_runtime`
 
 Latest closeout:
+
+`company_internal_frequent_combination_lane_snapshot_guard_v1` Gate A
+
+Gate A implementation file:
+
+`packages/engine/src/company-internal-frequent-combination-lane-snapshot-guard-gate-a-contract.test.ts`
+
+Gate A action:
+
+`gate_a_pin_company_internal_frequent_combination_lane_snapshot_matrix_no_runtime`
+
+Gate A checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-04_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_GATE_A_HANDOFF.md`
+
+Gate A status:
+
+`company_internal_frequent_combination_snapshot_matrix_landed_no_runtime_selected_visible_gate_b`
+
+Gate A landed the no-runtime
+`company_internal_frequent_combination_snapshot_matrix`. It pins
+frequent wall/floor family, strategy, support, confidence,
+source/origin, warnings, and visible posture snapshots for rockwool
+triple-leaf, flat-list swaps, ordinary double-leaf/stud, masonry /
+lined-massive boundary hybrids, raw floor role inference, near-source
+aliases, hostile API/import payloads, and field-output continuations.
+Runtime values, support, confidence, evidence, API behavior,
+route-card values, output-card status, proposal/report copy, and
+workbench-input behavior stayed frozen.
+
+Rockwool triple-leaf remains not fixed. The grouped split-rockwool
+building route still emits `Rw 41` from `multileaf_screening_blend`,
+low confidence, screening only, not exact, and not source-validated.
+Uris 2006 remains `paused_waiting_rights_safe_source_packet`.
+
+The next gate is web-visible: the UI must show frequent combination
+posture as screening, fail-closed, needs-input, or context-only when the
+engine cannot defend exactness.
+
+Gate A validation completed on 2026-05-04: focused Gate A passed 1 file
+/ 8 tests; engine continuity passed 7 files / 50 tests; web continuity
+passed 4 files / 15 tests; `pnpm calculator:gate:current` passed with
+engine 243 files / 1404 tests, web 50 files / 238 passed + 18 skipped,
+repo build 5 / 5 tasks, and whitespace guard green. Known non-fatal
+`sharp/@img` warnings remain through `@turbodocx/html-to-docx`.
+
+Prior closeout:
 
 `calculator_source_gap_revalidation_v21` Gate A
 
@@ -154,10 +201,11 @@ picker layout, and overflow/readability adjustments. No runtime value,
 support, confidence, source evidence, API, or calculator lane decision
 was intentionally moved.
 
-Immediate next step is the company-internal frequent-combination lane
-snapshot guard at
-`packages/engine/src/company-internal-frequent-combination-lane-snapshot-guard-gate-a-contract.test.ts`.
-It must pin common wall/floor lane snapshots before any high-accuracy
+Immediate next step is the company-internal frequent-combination
+visible Gate B guard at
+`apps/web/features/workbench/company-internal-frequent-combination-lane-snapshot-guard-gate-b-visible.test.ts`.
+It must prove common wall/floor route/output cards cannot make
+screening or fail-closed results look exact before any high-accuracy
 internal opening. The rockwool triple-leaf defect remains unresolved
 and `Rw 41` remains screening, not exact.
 
@@ -186,7 +234,7 @@ company-internal high-accuracy handoff.
 
 Current next action for that blocker:
 
-`gate_a_pin_company_internal_frequent_combination_lane_snapshot_matrix_no_runtime`
+`gate_b_add_company_internal_visible_route_output_snapshot_guard_no_runtime`
 
 Prior closeout:
 
