@@ -5,13 +5,15 @@ Start here before changing calculator behavior.
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-05-04_FIELD_OUTPUT_LAB_SCREENING_LEAKAGE_GUARD_GATE_B_HANDOFF.md`
-3. `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V21_PLAN.md`
-4. `docs/calculator/CHECKPOINT_2026-05-04_FIELD_OUTPUT_LAB_SCREENING_LEAKAGE_GUARD_GATE_A_HANDOFF.md`
-5. `docs/calculator/SLICE_FIELD_OUTPUT_LAB_SCREENING_LEAKAGE_GUARD_PLAN.md`
-6. `docs/calculator/CHECKPOINT_2026-05-04_CALCULATOR_SOURCE_GAP_REVALIDATION_V20_GATE_A_HANDOFF.md`
-7. `docs/calculator/CHECKPOINT_2026-05-04_WALL_TRIPLE_LEAF_URIS_2006_SOURCE_PACKET_ACQUISITION_GATE_U_HANDOFF.md`
-8. `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V20_PLAN.md`
+2. `docs/calculator/CHECKPOINT_2026-05-04_CALCULATOR_SOURCE_GAP_REVALIDATION_V21_GATE_A_HANDOFF.md`
+3. `docs/calculator/SLICE_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_PLAN.md`
+4. `docs/calculator/CHECKPOINT_2026-05-04_FIELD_OUTPUT_LAB_SCREENING_LEAKAGE_GUARD_GATE_B_HANDOFF.md`
+5. `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V21_PLAN.md`
+6. `docs/calculator/CHECKPOINT_2026-05-04_FIELD_OUTPUT_LAB_SCREENING_LEAKAGE_GUARD_GATE_A_HANDOFF.md`
+7. `docs/calculator/SLICE_FIELD_OUTPUT_LAB_SCREENING_LEAKAGE_GUARD_PLAN.md`
+8. `docs/calculator/CHECKPOINT_2026-05-04_CALCULATOR_SOURCE_GAP_REVALIDATION_V20_GATE_A_HANDOFF.md`
+9. `docs/calculator/CHECKPOINT_2026-05-04_WALL_TRIPLE_LEAF_URIS_2006_SOURCE_PACKET_ACQUISITION_GATE_U_HANDOFF.md`
+10. `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V20_PLAN.md`
 4. `docs/calculator/CHECKPOINT_2026-05-04_CALCULATOR_SOURCE_GAP_REVALIDATION_V19_GATE_A_HANDOFF.md`
 5. `docs/calculator/SLICE_WALL_TRIPLE_LEAF_URIS_2006_SOURCE_PACKET_ACQUISITION_PLAN.md`
 6. `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V19_PLAN.md`
@@ -227,12 +229,31 @@ plan.
 ## Current Workflow
 
 - current selected slice:
-  `calculator_source_gap_revalidation_v21`
+  `company_internal_frequent_combination_lane_snapshot_guard_v1`
 - current next decision inside the slice:
-  `packages/engine/src/calculator-source-gap-revalidation-v21-gate-a-contract.test.ts`
+  `packages/engine/src/company-internal-frequent-combination-lane-snapshot-guard-gate-a-contract.test.ts`
   should run
-  `gate_a_revalidate_source_gap_order_after_field_output_guard_and_company_internal_blocker`.
+  `gate_a_pin_company_internal_frequent_combination_lane_snapshot_matrix_no_runtime`.
   The file is intentionally absent until the next implementation step.
+- just landed V21 source-gap revalidation:
+  `packages/engine/src/calculator-source-gap-revalidation-v21-gate-a-contract.test.ts`
+  landed
+  `selected_company_internal_frequent_combination_lane_snapshot_guard_after_v21_consumed_field_output_guard_and_kept_rockwool_source_blocked`
+  no-runtime. It consumed the field-output visible-basis guard,
+  confirmed `Rw 41` remains screening and not exact/source-validated,
+  kept Uris 2006 on `paused_waiting_rights_safe_source_packet`, and
+  selected
+  `packages/engine/src/company-internal-frequent-combination-lane-snapshot-guard-gate-a-contract.test.ts`
+  as the next bounded company-internal lane snapshot guard.
+  Validation passed on 2026-05-04: focused V21 1 file / 8 tests,
+  engine continuity 5 files / 31 tests, web continuity 3 files / 14
+  tests, and final `pnpm calculator:gate:current` with engine 242 files
+  / 1396 tests, web 50 files / 238 passed + 18 skipped, repo build
+  5 / 5 tasks, and whitespace guard green.
+- just landed V21 checkpoint:
+  `docs/calculator/CHECKPOINT_2026-05-04_CALCULATOR_SOURCE_GAP_REVALIDATION_V21_GATE_A_HANDOFF.md`
+  and selected plan:
+  `docs/calculator/SLICE_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_PLAN.md`
 - just landed field-output Gate B:
   `apps/web/features/workbench/field-output-lab-screening-leakage-gate-b-card-copy.test.ts`
   strengthened visible output/report copy no-runtime. `R'w`, `DnT,w`,

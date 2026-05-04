@@ -9,19 +9,71 @@ before ROCKWOOL source-pack extraction or any later runtime movement.
 
 Current urgent slice:
 
-`calculator_source_gap_revalidation_v21`
+`company_internal_frequent_combination_lane_snapshot_guard_v1`
 
 Current urgent status:
 
-`gate_b_strengthened_visible_field_output_basis_copy_no_runtime_selected_source_gap_revalidation_with_rockwool_and_misclassification_blockers`
+`selected_company_internal_frequent_combination_lane_snapshot_guard_after_v21_consumed_field_output_guard_and_kept_rockwool_source_blocked`
 
 Current urgent next file:
 
-`packages/engine/src/calculator-source-gap-revalidation-v21-gate-a-contract.test.ts`
+`packages/engine/src/company-internal-frequent-combination-lane-snapshot-guard-gate-a-contract.test.ts`
 
 Current urgent next action:
 
+`gate_a_pin_company_internal_frequent_combination_lane_snapshot_matrix_no_runtime`
+
+Just landed V21 source-gap slice:
+
+`calculator_source_gap_revalidation_v21`
+
+Just landed V21 status:
+
+`selected_company_internal_frequent_combination_lane_snapshot_guard_after_v21_consumed_field_output_guard_and_kept_rockwool_source_blocked`
+
+Just landed V21 file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v21-gate-a-contract.test.ts`
+
+Just landed V21 Gate A action:
+
 `gate_a_revalidate_source_gap_order_after_field_output_guard_and_company_internal_blocker`
+
+Just landed V21 checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-04_CALCULATOR_SOURCE_GAP_REVALIDATION_V21_GATE_A_HANDOFF.md`
+
+Just selected company-internal snapshot guard file:
+
+`packages/engine/src/company-internal-frequent-combination-lane-snapshot-guard-gate-a-contract.test.ts`
+
+Just landed V21 artifacts:
+
+`post_gate_b_source_gap_candidate_order`
+
+`rockwool_triple_leaf_fix_path_status`
+
+`company_internal_high_accuracy_blocker_alignment`
+
+`field_output_guard_consumed_as_prerequisite`
+
+`frequent_combination_lane_snapshot_risk_order`
+
+`selected_next_slice_or_no_runtime_closeout`
+
+V21 risk result:
+
+No source-ready runtime candidate exists. `Rw 41` rockwool triple-leaf
+remains screening and Uris 2006 remains
+`paused_waiting_rights_safe_source_packet`. The selected urgent risk is
+now the frequent wall/floor lane snapshot matrix needed before any
+company-internal high-accuracy opening.
+
+V21 validation passed on 2026-05-04: focused V21 1 file / 8 tests,
+engine continuity 5 files / 31 tests, web continuity 3 files / 14
+tests, and final `pnpm calculator:gate:current` with engine 242 files /
+1396 tests, web 50 files / 238 passed + 18 skipped, repo build 5 / 5
+tasks, and whitespace guard green.
 
 Just landed field-output Gate B slice:
 

@@ -6,19 +6,54 @@ any runtime movement for triple-leaf walls.
 
 Current slice:
 
-`calculator_source_gap_revalidation_v21`
+`company_internal_frequent_combination_lane_snapshot_guard_v1`
 
 Current selection status:
 
-`gate_b_strengthened_visible_field_output_basis_copy_no_runtime_selected_source_gap_revalidation_with_rockwool_and_misclassification_blockers`
+`selected_company_internal_frequent_combination_lane_snapshot_guard_after_v21_consumed_field_output_guard_and_kept_rockwool_source_blocked`
 
 Current next file:
 
-`packages/engine/src/calculator-source-gap-revalidation-v21-gate-a-contract.test.ts`
+`packages/engine/src/company-internal-frequent-combination-lane-snapshot-guard-gate-a-contract.test.ts`
 
 Current next action:
 
-`gate_a_revalidate_source_gap_order_after_field_output_guard_and_company_internal_blocker`
+`gate_a_pin_company_internal_frequent_combination_lane_snapshot_matrix_no_runtime`
+
+Just landed V21 source-gap file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v21-gate-a-contract.test.ts`
+
+Just landed V21 checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-04_CALCULATOR_SOURCE_GAP_REVALIDATION_V21_GATE_A_HANDOFF.md`
+
+Just landed V21 status:
+
+`selected_company_internal_frequent_combination_lane_snapshot_guard_after_v21_consumed_field_output_guard_and_kept_rockwool_source_blocked`
+
+Just selected company-internal snapshot guard file:
+
+`packages/engine/src/company-internal-frequent-combination-lane-snapshot-guard-gate-a-contract.test.ts`
+
+Just selected company-internal snapshot guard action:
+
+`gate_a_pin_company_internal_frequent_combination_lane_snapshot_matrix_no_runtime`
+
+V21 result:
+
+V21 consumed the field-output visible-basis guard, kept runtime behavior
+frozen, and selected a no-runtime frequent-combination lane snapshot
+guard. The rockwool triple-leaf defect remains unresolved: grouped
+split-rockwool still has `Rw 41`, `multileaf_screening_blend`, low
+confidence, not exact, not fixed, and not source-validated. Uris 2006
+remains `paused_waiting_rights_safe_source_packet`.
+
+V21 validation passed on 2026-05-04: focused V21 1 file / 8 tests,
+engine continuity 5 files / 31 tests, web continuity 3 files / 14
+tests, and final `pnpm calculator:gate:current` with engine 242 files /
+1396 tests, web 50 files / 238 passed + 18 skipped, repo build 5 / 5
+tasks, and whitespace guard green.
 
 Just landed field-output Gate B file:
 

@@ -20,26 +20,73 @@ If you need the active route/source boundary risk register read
 
 Current selected slice:
 
-`calculator_source_gap_revalidation_v21`
+`company_internal_frequent_combination_lane_snapshot_guard_v1`
 
 Source label:
 
-Post-field-output-guard source gap revalidation with rockwool and
-company-internal blocker alignment.
+Company-internal frequent wall/floor lane snapshot guard.
 
 Current selected status:
 
-`gate_b_strengthened_visible_field_output_basis_copy_no_runtime_selected_source_gap_revalidation_with_rockwool_and_misclassification_blockers`
+`selected_company_internal_frequent_combination_lane_snapshot_guard_after_v21_consumed_field_output_guard_and_kept_rockwool_source_blocked`
 
 Selected next implementation file:
 
-`packages/engine/src/calculator-source-gap-revalidation-v21-gate-a-contract.test.ts`
+`packages/engine/src/company-internal-frequent-combination-lane-snapshot-guard-gate-a-contract.test.ts`
 
 Selected next action:
 
-`gate_a_revalidate_source_gap_order_after_field_output_guard_and_company_internal_blocker`
+`gate_a_pin_company_internal_frequent_combination_lane_snapshot_matrix_no_runtime`
 
 Latest closeout:
+
+`calculator_source_gap_revalidation_v21` Gate A
+
+V21 implementation file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v21-gate-a-contract.test.ts`
+
+V21 Gate A action:
+
+`gate_a_revalidate_source_gap_order_after_field_output_guard_and_company_internal_blocker`
+
+V21 status:
+
+`selected_company_internal_frequent_combination_lane_snapshot_guard_after_v21_consumed_field_output_guard_and_kept_rockwool_source_blocked`
+
+V21 checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-04_CALCULATOR_SOURCE_GAP_REVALIDATION_V21_GATE_A_HANDOFF.md`
+
+Selected planning surface:
+
+`docs/calculator/SLICE_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_PLAN.md`
+
+V21 consumed the field-output visible-basis guard and re-ranked the
+current source / accuracy backlog. It made no runtime, support,
+confidence, evidence, API, route-card, output-card, proposal/report, or
+workbench-input change. It selected the company-internal frequent
+combination lane snapshot guard because high-accuracy internal opening
+still needs a current matrix of frequent wall/floor family, strategy,
+support, confidence, source/origin, warnings, and visible posture
+snapshots.
+
+The rockwool triple-leaf defect remains unresolved. The grouped
+split-rockwool building route still emits `Rw 41` from
+`multileaf_screening_blend`, low confidence, not fixed, and not
+source-validated. Uris 2006 remains
+`paused_waiting_rights_safe_source_packet`.
+
+V21 validation completed on 2026-05-04: focused V21 passed 1 file / 8
+tests; engine continuity passed 5 files / 31 tests; web continuity
+passed 3 files / 14 tests; final `pnpm calculator:gate:current` passed
+with engine 242 files / 1396 tests, web 50 files / 238 passed + 18
+skipped, repo build 5 / 5 tasks, and whitespace guard green. Earlier
+current-gate build attempts hit transient Next manifest artifact misses;
+the standalone root build and final current-gate retry passed with only
+the known non-fatal `sharp/@img` warnings.
+
+Prior closeout:
 
 `field_output_lab_screening_leakage_guard_v1` Gate B
 
@@ -55,7 +102,7 @@ Gate B checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-04_FIELD_OUTPUT_LAB_SCREENING_LEAKAGE_GUARD_GATE_B_HANDOFF.md`
 
-Selected planning surface:
+Prior selected planning surface:
 
 `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V21_PLAN.md`
 
@@ -107,12 +154,12 @@ picker layout, and overflow/readability adjustments. No runtime value,
 support, confidence, source evidence, API, or calculator lane decision
 was intentionally moved.
 
-Immediate next step is V21 Gate A source-gap revalidation at
-`packages/engine/src/calculator-source-gap-revalidation-v21-gate-a-contract.test.ts`.
-It must re-rank the next bounded accuracy target after consuming the
-field-output guard and the company-internal blocker. The rockwool
-triple-leaf defect remains unresolved and `Rw 41` remains screening,
-not exact.
+Immediate next step is the company-internal frequent-combination lane
+snapshot guard at
+`packages/engine/src/company-internal-frequent-combination-lane-snapshot-guard-gate-a-contract.test.ts`.
+It must pin common wall/floor lane snapshots before any high-accuracy
+internal opening. The rockwool triple-leaf defect remains unresolved
+and `Rw 41` remains screening, not exact.
 
 Company-internal high-accuracy opening is currently blocked:
 
@@ -139,7 +186,7 @@ company-internal high-accuracy handoff.
 
 Current next action for that blocker:
 
-`gate_a_revalidate_source_gap_order_after_field_output_guard_and_company_internal_blocker`
+`gate_a_pin_company_internal_frequent_combination_lane_snapshot_matrix_no_runtime`
 
 Prior closeout:
 
