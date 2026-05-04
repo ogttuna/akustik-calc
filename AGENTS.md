@@ -5,10 +5,12 @@ Start here before changing calculator behavior.
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-05-04_CALCULATOR_SOURCE_GAP_REVALIDATION_V19_GATE_A_HANDOFF.md`
-3. `docs/calculator/SLICE_WALL_TRIPLE_LEAF_URIS_2006_SOURCE_PACKET_ACQUISITION_PLAN.md`
-4. `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V19_PLAN.md`
-5. `docs/calculator/CHECKPOINT_2026-05-04_FLOOR_TOLERANCE_EDGE_PROMOTION_GUARD_GATE_B_CLOSEOUT_HANDOFF.md`
+2. `docs/calculator/CHECKPOINT_2026-05-04_WALL_TRIPLE_LEAF_URIS_2006_SOURCE_PACKET_ACQUISITION_GATE_U_HANDOFF.md`
+3. `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V20_PLAN.md`
+4. `docs/calculator/CHECKPOINT_2026-05-04_CALCULATOR_SOURCE_GAP_REVALIDATION_V19_GATE_A_HANDOFF.md`
+5. `docs/calculator/SLICE_WALL_TRIPLE_LEAF_URIS_2006_SOURCE_PACKET_ACQUISITION_PLAN.md`
+6. `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V19_PLAN.md`
+7. `docs/calculator/CHECKPOINT_2026-05-04_FLOOR_TOLERANCE_EDGE_PROMOTION_GUARD_GATE_B_CLOSEOUT_HANDOFF.md`
 2. `docs/calculator/CHECKPOINT_2026-05-04_FLOOR_TOLERANCE_EDGE_PROMOTION_GUARD_GATE_A_HANDOFF.md`
 3. `docs/calculator/SLICE_FLOOR_TOLERANCE_EDGE_PROMOTION_GUARD_PLAN.md`
 4. `docs/calculator/CHECKPOINT_2026-05-04_CALCULATOR_SOURCE_GAP_REVALIDATION_V18_GATE_A_HANDOFF.md`
@@ -220,12 +222,27 @@ plan.
 ## Current Workflow
 
 - current selected slice:
-  `wall_triple_leaf_uris_2006_rights_safe_source_packet_acquisition_v1`
+  `calculator_source_gap_revalidation_v20`
 - current next decision inside the slice:
-  `packages/engine/src/wall-triple-leaf-uris2006-source-packet-acquisition-gate-u.test.ts`
+  `packages/engine/src/calculator-source-gap-revalidation-v20-gate-a-contract.test.ts`
   should run
-  `gate_u_acquire_or_reject_rights_safe_uris_2006_source_packet_no_runtime`.
+  `gate_a_revalidate_source_accuracy_gap_order_after_uris_2006_acquisition_attempt`.
   The file is intentionally absent until the next implementation step.
+  `wall_triple_leaf_uris_2006_rights_safe_source_packet_acquisition_v1`
+  Gate U landed
+  `gate_u_rechecked_uris_2006_rights_safe_source_packet_absent_no_runtime_selected_source_gap_revalidation_v20`
+  at
+  `packages/engine/src/wall-triple-leaf-uris2006-source-packet-acquisition-gate-u.test.ts`.
+  Gate U confirmed Uris 2006 identity metadata and authorized access
+  paths, but found no rights-safe local source packet, page image,
+  numeric table, authorized TDM payload, source-owned curve, or band
+  vector. Runtime remains frozen and the grouped split-rockwool `Rw 41`
+  answer remains low-confidence `multileaf_screening_blend`, not fixed
+  and not source-validated. The selected planning surface is
+  `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V20_PLAN.md`.
+- prior selected slice:
+  `wall_triple_leaf_uris_2006_rights_safe_source_packet_acquisition_v1`
+- prior decision inside the slice:
   `calculator_source_gap_revalidation_v19` Gate A landed
   `selected_uris_2006_rights_safe_source_packet_acquisition_after_v19_rerank_prioritized_unfixed_split_rockwool_and_found_no_runtime_ready_candidate`
   at

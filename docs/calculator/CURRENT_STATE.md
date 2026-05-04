@@ -20,26 +20,53 @@ If you need the active route/source boundary risk register read
 
 Current selected slice:
 
-`wall_triple_leaf_uris_2006_rights_safe_source_packet_acquisition_v1`
+`calculator_source_gap_revalidation_v20`
 
 Source label:
 
-Uris 2006 / equivalent rockwool two-cavity source-packet acquisition
+Post Uris 2006 source-packet acquisition source-gap revalidation
 no-runtime.
 
 Current selected status:
 
-`selected_uris_2006_rights_safe_source_packet_acquisition_after_v19_rerank_prioritized_unfixed_split_rockwool_and_found_no_runtime_ready_candidate`
+`gate_u_rechecked_uris_2006_rights_safe_source_packet_absent_no_runtime_selected_source_gap_revalidation_v20`
 
 Selected next implementation file:
 
-`packages/engine/src/wall-triple-leaf-uris2006-source-packet-acquisition-gate-u.test.ts`
+`packages/engine/src/calculator-source-gap-revalidation-v20-gate-a-contract.test.ts`
 
 Selected next action:
 
-`gate_u_acquire_or_reject_rights_safe_uris_2006_source_packet_no_runtime`
+`gate_a_revalidate_source_accuracy_gap_order_after_uris_2006_acquisition_attempt`
 
 Latest closeout:
+
+`wall_triple_leaf_uris_2006_rights_safe_source_packet_acquisition_v1` Gate U
+
+Gate U implementation file:
+
+`packages/engine/src/wall-triple-leaf-uris2006-source-packet-acquisition-gate-u.test.ts`
+
+Gate U status:
+
+`gate_u_rechecked_uris_2006_rights_safe_source_packet_absent_no_runtime_selected_source_gap_revalidation_v20`
+
+Gate U checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-04_WALL_TRIPLE_LEAF_URIS_2006_SOURCE_PACKET_ACQUISITION_GATE_U_HANDOFF.md`
+
+Selected planning surface:
+
+`docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V20_PLAN.md`
+
+Gate U confirmed source identity metadata and authorized access paths,
+but no rights-safe local source packet, page image, numeric table,
+authorized TDM payload, source-owned curve, or band vector is available.
+The grouped split-rockwool stack remains `Rw 41`,
+`multileaf_screening_blend`, low confidence, not fixed, and still
+blocked on `paused_waiting_rights_safe_source_packet`.
+
+Prior closeout:
 
 `calculator_source_gap_revalidation_v19` Gate A
 
@@ -55,14 +82,14 @@ Gate A checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-04_CALCULATOR_SOURCE_GAP_REVALIDATION_V19_GATE_A_HANDOFF.md`
 
-Selected planning surface:
+Prior planning surface:
 
 `docs/calculator/SLICE_WALL_TRIPLE_LEAF_URIS_2006_SOURCE_PACKET_ACQUISITION_PLAN.md`
 
 The grouped split-rockwool stack remains `Rw 41`,
 `multileaf_screening_blend`, low confidence, not fixed, and still
 blocked on `paused_waiting_rights_safe_source_packet`. Gate U is a
-source-acquisition decision, not runtime promotion.
+source-acquisition closeout, not runtime promotion.
 
 Prior closeout:
 

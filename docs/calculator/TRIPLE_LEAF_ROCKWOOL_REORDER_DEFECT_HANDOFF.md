@@ -6,19 +6,43 @@ any runtime movement for triple-leaf walls.
 
 Current slice:
 
-`wall_triple_leaf_uris_2006_rights_safe_source_packet_acquisition_v1`
+`calculator_source_gap_revalidation_v20`
 
 Current selection status:
 
-`selected_uris_2006_rights_safe_source_packet_acquisition_after_v19_rerank_prioritized_unfixed_split_rockwool_and_found_no_runtime_ready_candidate`
+`gate_u_rechecked_uris_2006_rights_safe_source_packet_absent_no_runtime_selected_source_gap_revalidation_v20`
 
-Prior floor Gate B next file:
+Current next file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v20-gate-a-contract.test.ts`
+
+Current next action:
+
+`gate_a_revalidate_source_accuracy_gap_order_after_uris_2006_acquisition_attempt`
+
+Just closed source-packet acquisition slice:
+
+`wall_triple_leaf_uris_2006_rights_safe_source_packet_acquisition_v1`
+
+Just closed source-packet acquisition file:
 
 `packages/engine/src/wall-triple-leaf-uris2006-source-packet-acquisition-gate-u.test.ts`
 
-Prior floor Gate B next action:
+Just closed source-packet acquisition checkpoint:
 
-`gate_u_acquire_or_reject_rights_safe_uris_2006_source_packet_no_runtime`
+`docs/calculator/CHECKPOINT_2026-05-04_WALL_TRIPLE_LEAF_URIS_2006_SOURCE_PACKET_ACQUISITION_GATE_U_HANDOFF.md`
+
+Just closed source-packet acquisition result:
+
+`uris_2006_rights_safe_source_packet_acquisition_attempt`
+
+`source_packet_runtime_readiness_or_rejection_reason`
+
+`rights_safe_source_owned_curve_payload_absent`
+
+`nrc_2024_comparator_boundary_still_not_local_runtime`
+
+`rw41_screening_answer_remains_not_fixed_until_packet_mapping_and_visible_tests`
 
 Just landed source-gap slice:
 
@@ -27,6 +51,10 @@ Just landed source-gap slice:
 Just landed source-gap file:
 
 `packages/engine/src/calculator-source-gap-revalidation-v19-gate-a-contract.test.ts`
+
+Just landed source-gap status:
+
+`selected_uris_2006_rights_safe_source_packet_acquisition_after_v19_rerank_prioritized_unfixed_split_rockwool_and_found_no_runtime_ready_candidate`
 
 Just landed source-gap checkpoint:
 
@@ -60,11 +88,11 @@ V17 selection status:
 
 `selected_common_combination_lane_misclassification_sentinel_after_v17_rerank_found_no_source_ready_runtime_candidate_and_user_reinforced_always_on_wrong_lane_monitoring`
 
-Current next file:
+Historical floor Gate B next file:
 
 `packages/engine/src/post-floor-tolerance-edge-promotion-guard-v1-next-slice-selection-contract.test.ts`
 
-Current next action:
+Historical floor Gate B next action:
 
 `gate_b_no_runtime_closeout_and_next_slice_selection`
 

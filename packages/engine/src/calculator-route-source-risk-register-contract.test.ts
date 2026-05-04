@@ -12,6 +12,9 @@ const CURRENT_STATE_PATH = "docs/calculator/CURRENT_STATE.md";
 const NEXT_PLAN_PATH = "docs/calculator/NEXT_IMPLEMENTATION_PLAN.md";
 const FLOOR_TOLERANCE_PLAN_PATH = "docs/calculator/SLICE_FLOOR_TOLERANCE_EDGE_PROMOTION_GUARD_PLAN.md";
 const SOURCE_GAP_REVALIDATION_V19_PLAN_PATH = "docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V19_PLAN.md";
+const SOURCE_GAP_REVALIDATION_V20_PLAN_PATH = "docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V20_PLAN.md";
+const URIS_2006_SOURCE_PACKET_PLAN_PATH =
+  "docs/calculator/SLICE_WALL_TRIPLE_LEAF_URIS_2006_SOURCE_PACKET_ACQUISITION_PLAN.md";
 const AGENTS_PATH = "AGENTS.md";
 
 const RISK_IDS = ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9"] as const;
@@ -95,6 +98,23 @@ const PLANNING_PASS_TOKENS = [
   "gate_b_exact_bound_edges_remained_protected_no_support_promotion",
   "calculator_source_gap_revalidation_v19",
   "packages/engine/src/calculator-source-gap-revalidation-v19-gate-a-contract.test.ts"
+] as const;
+
+const GATE_U_CORE_TOKENS = [
+  "gate_u_rechecked_uris_2006_rights_safe_source_packet_absent_no_runtime_selected_source_gap_revalidation_v20",
+  "wall_triple_leaf_uris_2006_rights_safe_source_packet_acquisition_v1",
+  "packages/engine/src/wall-triple-leaf-uris2006-source-packet-acquisition-gate-u.test.ts",
+  "docs/calculator/CHECKPOINT_2026-05-04_WALL_TRIPLE_LEAF_URIS_2006_SOURCE_PACKET_ACQUISITION_GATE_U_HANDOFF.md",
+  "calculator_source_gap_revalidation_v20",
+  "packages/engine/src/calculator-source-gap-revalidation-v20-gate-a-contract.test.ts"
+] as const;
+
+const GATE_U_ARTIFACT_TOKENS = [
+  "uris_2006_rights_safe_source_packet_acquisition_attempt",
+  "source_packet_runtime_readiness_or_rejection_reason",
+  "rights_safe_source_owned_curve_payload_absent",
+  "nrc_2024_comparator_boundary_still_not_local_runtime",
+  "rw41_screening_answer_remains_not_fixed_until_packet_mapping_and_visible_tests"
 ] as const;
 
 const CURRENT_ROCKWOOL_TOKENS = [
@@ -277,9 +297,11 @@ describe("calculator route/source risk register contract", () => {
 
     const riskRegister = docs[0];
     expect(riskRegister).toContain("Every calculator-hardening slice must treat wrong route-family/source");
-    expect(riskRegister).toMatch(/Gate B\s+has now landed; the current next implementation step is v19 Gate A/);
-    expect(riskRegister).toMatch(/The older Gate B planning notes below are historical/);
-    expect(riskRegister).toMatch(/Research should now start only if\s+v19 selects source acquisition/);
+    expect(riskRegister).toMatch(
+      /Gate B\s+has now landed; v19 Gate A and Uris Gate U have also landed; the\s+current next implementation step is v20 Gate A/
+    );
+    expect(riskRegister).toMatch(/The older Gate B and v19 planning notes below are historical/);
+    expect(riskRegister).toMatch(/V19 later selected source acquisition; Gate U has now landed/);
     expect(riskRegister).toContain("v19_candidate_matrix_must_rank_uris_field_alias_hostile_and_closeout_paths");
     expect(riskRegister).toContain("Uris 2006 / equivalent rockwool two-cavity source packet");
     expect(riskRegister).toMatch(/accidental\s+over-certainty near exact\/bound tolerance edges/);
@@ -298,5 +320,46 @@ describe("calculator route/source risk register contract", () => {
     expect(v19Plan).toContain("material_alias_and_near_source_false_promotion_guard");
     expect(v19Plan).toContain("hostile_input_and_curve_provenance_guard");
     expect(v19Plan).toContain("Expected Gate A Contract Shape");
+  });
+
+  it("documents Gate U source-packet acquisition closeout and the selected v20 rerank", () => {
+    const docs = [
+      readRepoFile(RISK_REGISTER_PATH),
+      readRepoFile(CURRENT_STATE_PATH),
+      readRepoFile(NEXT_PLAN_PATH),
+      readRepoFile(URIS_2006_SOURCE_PACKET_PLAN_PATH),
+      readRepoFile(SOURCE_GAP_REVALIDATION_V20_PLAN_PATH),
+      readRepoFile(TRIPLE_LEAF_HANDOFF_PATH),
+      readRepoFile(AGENTS_PATH)
+    ];
+
+    for (const doc of docs) {
+      for (const token of GATE_U_CORE_TOKENS) {
+        expect(doc, token).toContain(token);
+      }
+    }
+
+    const artifactDocs = [
+      readRepoFile(RISK_REGISTER_PATH),
+      readRepoFile(URIS_2006_SOURCE_PACKET_PLAN_PATH),
+      readRepoFile(TRIPLE_LEAF_HANDOFF_PATH),
+      readRepoFile("docs/calculator/CHECKPOINT_2026-05-04_WALL_TRIPLE_LEAF_URIS_2006_SOURCE_PACKET_ACQUISITION_GATE_U_HANDOFF.md")
+    ];
+    for (const doc of artifactDocs) {
+      for (const token of GATE_U_ARTIFACT_TOKENS) {
+        expect(doc, token).toContain(token);
+      }
+    }
+
+    const urisPlan = readRepoFile(URIS_2006_SOURCE_PACKET_PLAN_PATH);
+    expect(urisPlan).toContain("crossref_metadata_record");
+    expect(urisPlan).toContain("elsevier_tdm_endpoint_for_pii_s0003682x05001799");
+    expect(urisPlan).toContain("opendeved_catalog_metadata_mirror");
+    expect(urisPlan).toContain("metadata_only_not_source_packet");
+
+    const v20Plan = readRepoFile(SOURCE_GAP_REVALIDATION_V20_PLAN_PATH);
+    expect(v20Plan).toContain("post_uris_acquisition_source_ready_runtime_candidate_rerank");
+    expect(v20Plan).toContain("wrong_lane_and_frequent_combination_monitoring_carry_forward");
+    expect(v20Plan).toContain("field_output_alias_hostile_input_curve_provenance_status");
   });
 });

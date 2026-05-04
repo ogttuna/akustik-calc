@@ -2,7 +2,7 @@
 
 Slice id: `wall_triple_leaf_uris_2006_rights_safe_source_packet_acquisition_v1`
 
-Status: SELECTED / GATE U NEXT
+Status: GATE U LANDED / CLOSED NO-RUNTIME / V20 NEXT
 
 Selected by:
 
@@ -20,6 +20,26 @@ Selected first action:
 
 `gate_u_acquire_or_reject_rights_safe_uris_2006_source_packet_no_runtime`
 
+Gate U status:
+
+`gate_u_rechecked_uris_2006_rights_safe_source_packet_absent_no_runtime_selected_source_gap_revalidation_v20`
+
+Gate U checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-04_WALL_TRIPLE_LEAF_URIS_2006_SOURCE_PACKET_ACQUISITION_GATE_U_HANDOFF.md`
+
+Selected next slice:
+
+`calculator_source_gap_revalidation_v20`
+
+Selected next file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v20-gate-a-contract.test.ts`
+
+Selected next action:
+
+`gate_a_revalidate_source_accuracy_gap_order_after_uris_2006_acquisition_attempt`
+
 Prior v19 checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-04_CALCULATOR_SOURCE_GAP_REVALIDATION_V19_GATE_A_HANDOFF.md`
@@ -35,6 +55,42 @@ runtime movement.
 This is not a runtime-promotion slice. The live grouped split-rockwool
 answer remains `multileaf_screening_blend`, `Rw 41`, low confidence,
 and not fixed.
+
+## Gate U Result - 2026-05-04
+
+Gate U confirmed the source identity but did not find a runtime-ready
+source packet.
+
+Inspected acquisition candidates:
+
+- `crossref_metadata_record`: confirms DOI/PII/title/journal identity
+  only; it does not supply page images, curve identity, band vectors, or
+  rating derivation.
+- `elsevier_tdm_endpoint_for_pii_s0003682x05001799`: authorized access
+  path only; no authorized local payload is present.
+- `sciencedirect_article_page`: concrete article locator only; no local
+  rights-safe PDF, page image, table, or authorized TDM output is
+  present.
+- `local_uris_2006_source_packet_path`: absent in the local rights-safe
+  corpus.
+- `opendeved_catalog_metadata_mirror`: public catalogue metadata only;
+  not source-owned curve payload.
+
+Equivalent payload scan:
+
+- `nrc_2024_comparator_boundary_still_not_local_runtime`
+- `uris_2008_perforated_facing_not_uris_2006_internal_board_runtime`
+- `near_source_manufacturer_rows_do_not_fix_uris_2006_split_rockwool`
+- `metadata_only_not_source_packet`
+
+First runtime blocker:
+
+`rights_safe_source_owned_curve_payload_absent`
+
+The result is a hard no-runtime closeout. Gate U selected
+`calculator_source_gap_revalidation_v20` so the project can re-rank the
+remaining accuracy backlog while keeping the Uris source packet absence
+explicit.
 
 ## Gate U Required Artifacts
 

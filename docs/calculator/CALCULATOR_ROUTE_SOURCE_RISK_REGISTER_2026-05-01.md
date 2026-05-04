@@ -9,15 +9,47 @@ before ROCKWOOL source-pack extraction or any later runtime movement.
 
 Current urgent slice:
 
-`wall_triple_leaf_uris_2006_rights_safe_source_packet_acquisition_v1`
+`calculator_source_gap_revalidation_v20`
 
 Current urgent status:
 
-`selected_uris_2006_rights_safe_source_packet_acquisition_after_v19_rerank_prioritized_unfixed_split_rockwool_and_found_no_runtime_ready_candidate`
+`gate_u_rechecked_uris_2006_rights_safe_source_packet_absent_no_runtime_selected_source_gap_revalidation_v20`
 
 Current urgent first file:
 
+`packages/engine/src/calculator-source-gap-revalidation-v20-gate-a-contract.test.ts`
+
+Current urgent first action:
+
+`gate_a_revalidate_source_accuracy_gap_order_after_uris_2006_acquisition_attempt`
+
+Just closed source-packet acquisition slice:
+
+`wall_triple_leaf_uris_2006_rights_safe_source_packet_acquisition_v1`
+
+Just closed source-packet acquisition status:
+
+`gate_u_rechecked_uris_2006_rights_safe_source_packet_absent_no_runtime_selected_source_gap_revalidation_v20`
+
+Just closed source-packet acquisition file:
+
 `packages/engine/src/wall-triple-leaf-uris2006-source-packet-acquisition-gate-u.test.ts`
+
+Just closed source-packet acquisition checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-04_WALL_TRIPLE_LEAF_URIS_2006_SOURCE_PACKET_ACQUISITION_GATE_U_HANDOFF.md`
+
+Just closed source-packet acquisition artifact:
+
+`uris_2006_rights_safe_source_packet_acquisition_attempt`
+
+`source_packet_runtime_readiness_or_rejection_reason`
+
+`rights_safe_source_owned_curve_payload_absent`
+
+`nrc_2024_comparator_boundary_still_not_local_runtime`
+
+`rw41_screening_answer_remains_not_fixed_until_packet_mapping_and_visible_tests`
 
 Just landed source-gap slice:
 
@@ -225,10 +257,11 @@ schedules remain blocked from exact and bound support. Direct
 ambiguous layer stack has earned exact support.
 
 No external internet/source research was selected for that Gate B step.
-The current next step is v19 Gate A. Research should now start only if
-v19 selects source acquisition or a rights-safe source packet/source
-locator arrives. Targeted validation passed 3 files / 21 tests for
-floor tolerance Gate A, v18 Gate A, and the route/source risk register;
+V19 later selected source acquisition; Gate U has now landed and found
+no runtime-ready rights-safe Uris packet. The current next
+implementation step is v20 Gate A source-gap revalidation.
+Historical targeted validation passed 3 files / 21 tests for floor
+tolerance Gate A, v18 Gate A, and the route/source risk register;
 `git diff --check` passed.
 
 ## V19 Planning Refresh - 2026-05-04
@@ -243,10 +276,13 @@ floor tolerance Gate A, v18 Gate A, and the route/source risk register;
 
 `rw41_remains_screening_not_fixed_after_floor_gate_b`
 
-The current first implementation file is
+The v19 first implementation file was
 `packages/engine/src/calculator-source-gap-revalidation-v19-gate-a-contract.test.ts`.
-The older Gate B planning notes below are historical and should not be
-read as the current next file.
+V19 has landed and selected Gate U. Gate U has also landed no-runtime;
+the current first implementation file is now
+`packages/engine/src/calculator-source-gap-revalidation-v20-gate-a-contract.test.ts`.
+The older Gate B and v19 planning notes below are historical and should
+not be read as the current next file.
 
 V19 must rank at least these buckets:
 
@@ -279,7 +315,8 @@ web-visible tests.
 Every calculator-hardening slice must treat wrong route-family/source
 lane selection as a first-class accuracy defect. This section was
 written before the floor tolerance-edge Gate B closeout existed. Gate B
-has now landed; the current next implementation step is v19 Gate A.
+has now landed; v19 Gate A and Uris Gate U have also landed; the
+current next implementation step is v20 Gate A.
 
 When a frequent wall/floor combination appears to measure through the
 wrong lane, first reproduce the issue with focused engine snapshots and

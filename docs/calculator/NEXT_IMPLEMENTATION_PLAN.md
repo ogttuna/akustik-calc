@@ -16,9 +16,69 @@ read
 For the active route/source boundary risk register read
 [CALCULATOR_ROUTE_SOURCE_RISK_REGISTER_2026-05-01.md](./CALCULATOR_ROUTE_SOURCE_RISK_REGISTER_2026-05-01.md).
 
-## Active Decision Map - 2026-05-04 V19 Gate A
+## Active Decision Map - 2026-05-04 Gate U Closeout
 
-Current implementation position:
+Current implementation position: `calculator_source_gap_revalidation_v20`.
+
+`wall_triple_leaf_uris_2006_rights_safe_source_packet_acquisition_v1`
+Gate U landed no-runtime and selected the next source-gap
+revalidation. The selected next implementation file,
+`packages/engine/src/calculator-source-gap-revalidation-v20-gate-a-contract.test.ts`,
+does not exist yet; this is the next file to create.
+
+`gate_u_rechecked_uris_2006_rights_safe_source_packet_absent_no_runtime_selected_source_gap_revalidation_v20`
+
+`docs/calculator/CHECKPOINT_2026-05-04_WALL_TRIPLE_LEAF_URIS_2006_SOURCE_PACKET_ACQUISITION_GATE_U_HANDOFF.md`
+
+`calculator_source_gap_revalidation_v20`
+
+`packages/engine/src/calculator-source-gap-revalidation-v20-gate-a-contract.test.ts`
+
+Gate U facts:
+
+1. Uris 2006 identity is confirmed by DOI/PII/title/journal metadata,
+   but metadata is not a rights-safe runtime source packet.
+2. Elsevier TDM / ScienceDirect paths are authorized access paths only;
+   no authorized local payload, page image, table, curve identity, or
+   band vector exists in the repo.
+3. NRC 2024, Uris 2008, manufacturer STC/IIC/OITC rows, public
+   catalogue metadata, user repro PDFs, and unrelated PDFs remain
+   negative boundaries.
+4. The grouped split-rockwool stack remains `Rw 41`,
+   `multileaf_screening_blend`, low confidence, not fixed, not exact,
+   and not source-validated.
+5. Runtime promotion remains illegal until source packet, curve/rating
+   derivation, local material mapping, topology guard, negative
+   boundaries, and paired visible tests all pass.
+
+V20 Gate A must produce:
+
+- `uris_2006_gate_u_acquisition_closeout_summary`
+- `source_packet_absence_and_external_dependency_carry_forward`
+- `post_uris_acquisition_source_ready_runtime_candidate_rerank`
+- `wrong_lane_and_frequent_combination_monitoring_carry_forward`
+- `field_output_alias_hostile_input_curve_provenance_status`
+- `selected_next_slice_with_target_file_and_validation_scope`
+
+Validation order for v20 Gate A:
+
+1. Create
+   `packages/engine/src/calculator-source-gap-revalidation-v20-gate-a-contract.test.ts`.
+2. Re-rank the backlog after Gate U confirmed the Uris source packet is
+   still absent and runtime remains frozen.
+3. Select only a source-ready row or bounded guard fix with topology,
+   metric, material mapping, tolerance, negative-boundary, and visible
+   test ownership; otherwise close no-runtime.
+4. Add v20 to `tools/dev/run-calculator-current-gate.ts` only after the
+   file exists.
+5. Run focused v20 validation, then `pnpm calculator:gate:current`.
+
+The previous Gate U decision map is preserved below for handoff
+history.
+
+## Prior Active Decision Map - 2026-05-04 V19 Gate A
+
+Prior implementation position:
 `wall_triple_leaf_uris_2006_rights_safe_source_packet_acquisition_v1`.
 
 `calculator_source_gap_revalidation_v19` Gate A landed no-runtime and
