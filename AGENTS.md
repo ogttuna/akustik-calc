@@ -280,6 +280,23 @@ plan.
   closeout file is created, add it to
   `tools/dev/run-calculator-current-gate.ts`; otherwise the selected
   active closeout can be absent from the current-gate runner.
+- second follow-up 2026-05-04 preflight:
+  `gate_b_preflight_exact_bound_fixture_map`,
+  `gate_b_plus_2mm_inside_plus_2p1mm_outside_boundary`,
+  `direct_floor_system_id_bypass_is_not_layer_match_promotion`,
+  `field_context_warning_copy_not_field_metric_promotion`,
+  `gate_b_validation_order_engine_contract_then_runner_then_current_gate`,
+  and
+  `web_visible_changes_deferred_until_gate_b_selects_bounded_fix`.
+  Gate B should start from `tuas_x3_clt140_measured_2026` exact
+  `base_structure` and `ubiq_fl33_open_web_steel_300_lab_2026`
+  bound-only `base_structure`: `+2 mm` stays inside tolerance, `+2.1 mm`
+  must drop out of the exact/bound source lane. Keep raw
+  `tuas_x4_clt140_measured_2026` and raw
+  `tuas_r7b_open_box_timber_measured_2026` as prompt/duplicate-role
+  negative controls. Treat direct `officialFloorSystemId` resolution as
+  a known-id bypass, not layer-match proof; treat field-context warnings
+  as visible-copy evidence, not new field source ownership.
 - latest checkpoint:
   `docs/calculator/CHECKPOINT_2026-05-04_FLOOR_TOLERANCE_EDGE_PROMOTION_GUARD_GATE_A_HANDOFF.md`
   lands `floor_tolerance_edge_promotion_guard_v1` Gate A no-runtime

@@ -171,6 +171,31 @@ next honest move is a source-gap revalidation candidate such as
 `calculator_source_gap_revalidation_v19`, not internet research or
 runtime/source promotion.
 
+Second follow-up implementation inspection:
+
+`gate_b_preflight_exact_bound_fixture_map`
+
+`gate_b_plus_2mm_inside_plus_2p1mm_outside_boundary`
+
+`direct_floor_system_id_bypass_is_not_layer_match_promotion`
+
+`field_context_warning_copy_not_field_metric_promotion`
+
+`gate_b_validation_order_engine_contract_then_runner_then_current_gate`
+
+`web_visible_changes_deferred_until_gate_b_selects_bounded_fix`
+
+Concrete wrong-measurement trap for Gate B: numeric values can stay
+similar while the source lane changes. `tuas_x3_clt140_measured_2026`
+must remain exact at `+2 mm` on `base_structure` but must lose exact
+match at `+2.1 mm`. `ubiq_fl33_open_web_steel_300_lab_2026` must remain
+the official bound-only row at `+2 mm` but must become
+`bound_interpolation` at `+2.1 mm`. If a visible card shows similar
+`Rw`, `Ln,w`, or upper-bound values on both sides of the boundary, the
+copy must still expose the lane change. Direct `officialFloorSystemId`
+resolution and field-context warnings are useful guards, but they are
+not proof that an ambiguous layer stack has earned exact support.
+
 Prior urgent status:
 
 `selected_floor_tolerance_edge_promotion_guard_after_v18_rerank_found_no_source_ready_runtime_candidate_and_common_combination_sentinel_closed`

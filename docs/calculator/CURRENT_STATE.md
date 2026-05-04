@@ -89,6 +89,29 @@ contiguous-vs-disjoint duplicate role behavior, visible exact/bound/
 screening wording parity, and current-gate runner inclusion after the
 file exists.
 
+Second follow-up planning pass:
+
+`gate_b_preflight_exact_bound_fixture_map`
+
+`gate_b_plus_2mm_inside_plus_2p1mm_outside_boundary`
+
+`direct_floor_system_id_bypass_is_not_layer_match_promotion`
+
+`field_context_warning_copy_not_field_metric_promotion`
+
+`gate_b_validation_order_engine_contract_then_runner_then_current_gate`
+
+`web_visible_changes_deferred_until_gate_b_selects_bounded_fix`
+
+Gate B should use `tuas_x3_clt140_measured_2026` and
+`ubiq_fl33_open_web_steel_300_lab_2026` as the first exact/bound edge
+fixtures: `+2 mm` stays inside tolerance, `+2.1 mm` drops out of the
+exact or bound row. Raw `tuas_x4_clt140_measured_2026` and raw
+`tuas_r7b_open_box_timber_measured_2026` stay as prompt/duplicate-role
+negative controls. Direct `officialFloorSystemId` lookup is a known-id
+bypass, not layer-match proof; field-context warnings prove visible copy
+honesty, not new field source ownership.
+
 Selected next planning surface:
 
 `docs/calculator/SLICE_FLOOR_TOLERANCE_EDGE_PROMOTION_GUARD_PLAN.md`

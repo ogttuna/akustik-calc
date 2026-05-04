@@ -69,7 +69,13 @@ const PLANNING_PASS_TOKENS = [
   "contiguous_duplicate_vs_disjoint_duplicate_role_boundary",
   "current_gate_runner_must_include_gate_b_after_creation",
   "source_gap_revalidation_v19_candidate_after_floor_closeout",
-  "no_internet_research_before_gate_b_selects_source_acquisition"
+  "no_internet_research_before_gate_b_selects_source_acquisition",
+  "gate_b_preflight_exact_bound_fixture_map",
+  "gate_b_plus_2mm_inside_plus_2p1mm_outside_boundary",
+  "direct_floor_system_id_bypass_is_not_layer_match_promotion",
+  "field_context_warning_copy_not_field_metric_promotion",
+  "gate_b_validation_order_engine_contract_then_runner_then_current_gate",
+  "web_visible_changes_deferred_until_gate_b_selects_bounded_fix"
 ] as const;
 
 const CURRENT_ROCKWOOL_TOKENS = [
@@ -257,5 +263,10 @@ describe("calculator route/source risk register contract", () => {
     expect(riskRegister).toMatch(/accidental\s+over-certainty near exact\/bound tolerance edges/);
     expect(riskRegister).toContain("floor role scoring and `+/- 2 mm` tolerance");
     expect(riskRegister).toMatch(/current-gate runner\s+coverage/);
+    expect(riskRegister).toContain("tuas_x3_clt140_measured_2026");
+    expect(riskRegister).toContain("ubiq_fl33_open_web_steel_300_lab_2026");
+    expect(riskRegister).toMatch(/\+2 mm[\s\S]+\+2\.1 mm/);
+    expect(riskRegister).toContain("Direct `officialFloorSystemId`");
+    expect(riskRegister).toContain("not proof that an ambiguous layer stack has earned exact support");
   });
 });

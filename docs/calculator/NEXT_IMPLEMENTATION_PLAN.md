@@ -134,6 +134,59 @@ Gate B should create one closeout contract with these assertions:
    select or reject it. If no bounded fix is proven, select source-gap
    revalidation rather than runtime movement or source research.
 
+## Gate B Preflight Fixture Map - 2026-05-04 Second Planning Pass
+
+Second-pass implementation read:
+
+`gate_b_preflight_exact_bound_fixture_map`
+
+`gate_b_plus_2mm_inside_plus_2p1mm_outside_boundary`
+
+`direct_floor_system_id_bypass_is_not_layer_match_promotion`
+
+`field_context_warning_copy_not_field_metric_promotion`
+
+`gate_b_validation_order_engine_contract_then_runner_then_current_gate`
+
+`web_visible_changes_deferred_until_gate_b_selects_bounded_fix`
+
+Use these fixtures before adding any broader logic:
+
+- Exact edge fixture:
+  `tuas_x3_clt140_measured_2026`, role `base_structure`, expected
+  CLT `140 mm`. `+2 mm` must remain exact with `Rw 49`, `Ln,w 52`,
+  and basis `open_measured_floor_system_exact_match`; `+2.1 mm` must
+  drop to `family_general` with no exact `floorSystemMatch`.
+- Bound edge fixture:
+  `ubiq_fl33_open_web_steel_300_lab_2026`, role `base_structure`,
+  expected open-web steel `300 mm`. `+2 mm` must remain the official
+  bound-only row with `Rw 63`, `Ln,w upper bound 51`, and basis
+  `official_floor_system_bound_support`; `+2.1 mm` must drop to
+  `bound_interpolation` with basis
+  `predictor_lightweight_steel_bound_interpolation_estimate`, even if
+  the displayed numeric values remain close.
+- Raw-role negative fixture:
+  raw `tuas_x4_clt140_measured_2026` must keep impact unsupported and
+  ask for floor roles before impact/output promotion.
+- Duplicate-role negative fixture:
+  raw `tuas_r7b_open_box_timber_measured_2026` must stay
+  `family_general`, not exact, when single-entry roles are duplicated.
+
+Do not use `officialFloorSystemId` / direct id resolution as proof that
+a layer stack qualifies for exact or bound matching. That path is a
+known-id bypass and should be tested separately from layer-scored
+matching. Field-context warnings likewise prove visible copy behavior,
+not new field-metric source ownership.
+
+Validation order for Gate B:
+
+1. Add the engine closeout contract and run it with Gate A plus v18 and
+   the route/source risk register.
+2. Add the new Gate B file to `tools/dev/run-calculator-current-gate.ts`.
+3. Run `pnpm calculator:gate:current`.
+4. Only add or change web visible tests if Gate B selects a bounded
+   visible wording fix; otherwise web behavior remains frozen.
+
 Last reviewed: 2026-05-04
 (`common_combination_lane_misclassification_sentinel_v1` Gate A landed
 no-runtime on 2026-05-04 with

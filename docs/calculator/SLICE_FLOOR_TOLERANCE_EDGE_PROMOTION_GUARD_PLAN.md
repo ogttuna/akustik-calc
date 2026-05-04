@@ -165,6 +165,57 @@ Required Gate B assertions:
    natural candidate name after v18, but Gate B must explicitly select
    or reject it in the contract.
 
+### Gate B Preflight Fixture Map
+
+Second-pass implementation read:
+
+`gate_b_preflight_exact_bound_fixture_map`
+
+`gate_b_plus_2mm_inside_plus_2p1mm_outside_boundary`
+
+`direct_floor_system_id_bypass_is_not_layer_match_promotion`
+
+`field_context_warning_copy_not_field_metric_promotion`
+
+`gate_b_validation_order_engine_contract_then_runner_then_current_gate`
+
+`web_visible_changes_deferred_until_gate_b_selects_bounded_fix`
+
+The closeout should start with the smallest source-owned fixtures, not a
+new broad fixture generator:
+
+- Exact edge: `tuas_x3_clt140_measured_2026`, `base_structure`,
+  CLT `140 mm`. `+2 mm` is still inside
+  `THICKNESS_TOLERANCE_MM` and must remain exact (`Rw 49`, `Ln,w 52`,
+  `open_measured_floor_system_exact_match`). `+2.1 mm` is outside and
+  must drop to `family_general` with no exact `floorSystemMatch`.
+- Bound edge: `ubiq_fl33_open_web_steel_300_lab_2026`,
+  `base_structure`, open-web steel `300 mm`. `+2 mm` must remain the
+  official bound-only row (`Rw 63`, `Ln,w upper bound 51`,
+  `official_floor_system_bound_support`). `+2.1 mm` must become
+  `bound_interpolation` with
+  `predictor_lightweight_steel_bound_interpolation_estimate`.
+- Raw-role prompt: raw `tuas_x4_clt140_measured_2026` must not promote
+  impact or field outputs before role ownership is explicit.
+- Duplicate-role boundary: raw `tuas_r7b_open_box_timber_measured_2026`
+  must remain `family_general` when single-entry roles are duplicated.
+
+`officialFloorSystemId` direct resolution is not layer-scored matching.
+Gate B may assert the bypass remains explicit, but it must not use that
+path as evidence that an ambiguous layer list qualifies for exact or
+bound support. Field-context warning checks are also not field-metric
+source ownership; they only prove that visible copy stays honest when
+the required field inputs are supplied.
+
+Gate B validation order:
+
+1. Create the engine closeout contract and run it with Gate A, v18, and
+   the route/source risk-register contract.
+2. Add the new Gate B file to `tools/dev/run-calculator-current-gate.ts`.
+3. Run `pnpm calculator:gate:current`.
+4. Keep web visible behavior frozen unless the closeout explicitly
+   selects a bounded visible wording fix with paired tests.
+
 ## Required Gate A Artifacts
 
 Gate A must produce:
