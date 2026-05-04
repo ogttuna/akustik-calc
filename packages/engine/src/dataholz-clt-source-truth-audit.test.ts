@@ -225,6 +225,17 @@ function labSnapshot(layers: readonly LayerInput[]) {
   };
 }
 
+function withoutRawFloorRoleGuardWarnings(snapshot: ReturnType<typeof labSnapshot>) {
+  return {
+    ...snapshot,
+    warnings: snapshot.warnings.filter(
+      (warning: string) =>
+        !/does not claim arbitrary raw floor reorder value invariance/i.test(warning) &&
+        !/Floor roles needed before (impact output|exact floor-family) promotion/i.test(warning)
+    )
+  };
+}
+
 function fieldSnapshot(layers: readonly LayerInput[]) {
   const result = calculateAssembly(layers, {
     impactFieldContext: FIELD_CONTEXT,
@@ -303,7 +314,32 @@ describe("Dataholz CLT source-truth audit", () => {
       const raw = labSnapshot(buildFloorTestLayersFromCriteria(system.match, "raw"));
       const tagged = labSnapshot(buildFloorTestLayersFromCriteria(system.match, "tagged"));
 
-      expect(raw, `${expected.id} raw/tagged parity`).toEqual(tagged);
+      const hasRawParityGuard = raw.warnings.some((warning: string) =>
+        /does not claim arbitrary raw floor reorder value invariance/i.test(warning)
+      );
+      const hasRawPromptGuard = raw.warnings.some((warning: string) =>
+        /Floor roles needed before (impact output|exact floor-family) promotion/i.test(warning)
+      );
+
+      expect(withoutRawFloorRoleGuardWarnings(raw), `${expected.id} raw/tagged parity`).toEqual(tagged);
+      expect(
+        tagged.warnings.some((warning: string) => /does not claim arbitrary raw floor reorder value invariance/i.test(warning)),
+        `${expected.id} tagged route should not show raw parity guard`
+      ).toBe(false);
+      expect(
+        tagged.warnings.some((warning: string) => /Floor roles needed before (impact output|exact floor-family) promotion/i.test(warning)),
+        `${expected.id} tagged route should not show raw role prompt guard`
+      ).toBe(false);
+
+      if (raw.floorSystemMatchId === expected.id) {
+        expect(hasRawParityGuard, `${expected.id} raw route should keep bounded parity guard visible`).toBe(true);
+      }
+
+      if (hasRawPromptGuard) {
+        expect(raw.floorSystemMatchId, `${expected.id} prompted raw route should not exact-match without roles`).toBeNull();
+        expect(raw.supportedTargetOutputs, `${expected.id} prompted raw route should not support Ln,w`).not.toContain("Ln,w");
+        expect(raw.supportedTargetOutputs, `${expected.id} prompted raw route should not support Ln,w+CI`).not.toContain("Ln,w+CI");
+      }
 
       if (expected.manualMatch !== false) {
         expect(raw, `${expected.id} exact visible route`).toEqual(

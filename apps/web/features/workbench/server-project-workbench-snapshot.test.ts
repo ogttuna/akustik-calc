@@ -5,6 +5,7 @@ import {
   buildServerProjectWorkbenchSnapshot,
   parseServerProjectWorkbenchSnapshot
 } from "./server-project-workbench-snapshot";
+import { DEFAULT_WORKBENCH_WALL_TOPOLOGY_DRAFT } from "./simple-workbench-wall-topology";
 import type { ScenarioSnapshot } from "./workbench-store";
 
 const SCENARIO: ScenarioSnapshot = {
@@ -23,6 +24,7 @@ const SCENARIO: ScenarioSnapshot = {
   airborneSharedTrack: "independent",
   airborneStudSpacingMm: "",
   airborneStudType: "auto",
+  ...DEFAULT_WORKBENCH_WALL_TOPOLOGY_DRAFT,
   approverTitle: "Acoustic Consultant",
   briefNote: "Server-backed restore test.",
   calculatorId: "dynamic",

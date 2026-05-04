@@ -208,7 +208,7 @@ describe("wall triple-leaf frequency solver Gate F", () => {
 
     expect(liveResult.metrics.estimatedRwDb).toBe(41);
     expect(liveResult.dynamicAirborneTrace?.strategy).toBe("multileaf_screening_blend");
-    expect(liveResult.warnings.some((warning) => warning.includes("source-calibrated triple-leaf solver"))).toBe(true);
+    expect(liveResult.warnings.some((warning: string) => warning.includes("source-calibrated triple-leaf solver"))).toBe(true);
   });
 
   it("keeps active docs aligned with Gate F and the selected Gate G calibration gate", () => {

@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import type { AirborneContext, LayerInput } from "@dynecho/shared";
 
 import { calculateAssembly } from "./calculate-assembly";
+import { FLAT_LIST_MULTILEAF_GUARD_STRATEGY } from "./dynamic-airborne-flat-list-multileaf-guard";
 
 const LAB_CONTEXT: AirborneContext = {
   contextMode: "element_lab"
@@ -42,17 +43,17 @@ const TRIPLE_LEAF_VARIANTS = [
       rwPrime: 30,
       strategy: "multileaf_screening_blend"
     },
-    name: "gypsum",
-    stack: CLASSIC_TRIPLE_LEAF_STACK,
-    swapped: {
-      confidence: "medium",
-      dnTw: 44,
-      family: "double_leaf",
-      rw: 44,
-      rwPrime: 42,
-      strategy: "double_leaf_porous_fill_delegate"
-    }
-  },
+	    name: "gypsum",
+	    stack: CLASSIC_TRIPLE_LEAF_STACK,
+	    swapped: {
+	      confidence: "low",
+	      dnTw: 33,
+	      family: "multileaf_multicavity",
+	      rw: 33,
+	      rwPrime: 31,
+	      strategy: FLAT_LIST_MULTILEAF_GUARD_STRATEGY
+	    }
+	  },
   {
     base: {
       confidence: "low",
@@ -69,16 +70,16 @@ const TRIPLE_LEAF_VARIANTS = [
       { materialId: "gypsum_board", thicknessMm: 12.5 },
       { materialId: "air_gap", thicknessMm: 50 },
       { materialId: "firestop_board", thicknessMm: 15 }
-    ] as const,
-    swapped: {
-      confidence: "medium",
-      dnTw: 45,
-      family: "double_leaf",
-      rw: 45,
-      rwPrime: 43,
-      strategy: "double_leaf_porous_fill_delegate"
-    }
-  },
+	    ] as const,
+	    swapped: {
+	      confidence: "low",
+	      dnTw: 34,
+	      family: "multileaf_multicavity",
+	      rw: 35,
+	      rwPrime: 33,
+	      strategy: FLAT_LIST_MULTILEAF_GUARD_STRATEGY
+	    }
+	  },
   {
     base: {
       confidence: "low",
@@ -95,17 +96,17 @@ const TRIPLE_LEAF_VARIANTS = [
       { materialId: "gypsum_board", thicknessMm: 12.5 },
       { materialId: "air_gap", thicknessMm: 50 },
       { materialId: "diamond_board", thicknessMm: 12.5 }
-    ] as const,
-    swapped: {
-      confidence: "medium",
-      dnTw: 45,
-      family: "double_leaf",
-      rw: 45,
-      rwPrime: 43,
-      strategy: "double_leaf_porous_fill_delegate"
-    }
-  }
-] as const;
+	    ] as const,
+	    swapped: {
+	      confidence: "low",
+	      dnTw: 34,
+	      family: "multileaf_multicavity",
+	      rw: 34,
+	      rwPrime: 32,
+	      strategy: FLAT_LIST_MULTILEAF_GUARD_STRATEGY
+	    }
+	  }
+	] as const;
 
 function calculateDynamicWall(layers: readonly LayerInput[], airborneContext: AirborneContext) {
   return calculateAssembly(layers, {
@@ -181,7 +182,7 @@ describe("dynamic airborne order-sensitive multileaf contracts", () => {
     expectFragment(duplicated.warnings, "intentionally order-sensitive", "duplicated multileaf warning");
   });
 
-  it("keeps lightweight triple-leaf reorder jumps explicit instead of silently smoothing them away", () => {
+	  it("keeps lightweight flat-list triple-leaf swaps fail-closed instead of promoting them to double-leaf", () => {
     for (const variant of TRIPLE_LEAF_VARIANTS) {
       const base = snapshot(variant.stack);
       const swapped = snapshot(swapInnerLeaf(variant.stack));
@@ -202,13 +203,15 @@ describe("dynamic airborne order-sensitive multileaf contracts", () => {
         rwPrime: swapped.rwPrime,
         strategy: swapped.strategy
       }).toEqual(variant.swapped);
-      expect(swapped.rw - base.rw, `${variant.name} lab delta`).toBeGreaterThanOrEqual(12);
-      expect(swapped.rwPrime - base.rwPrime, `${variant.name} field R'w delta`).toBeGreaterThanOrEqual(12);
-      expect(swapped.dnTw - base.dnTw, `${variant.name} field DnT,w delta`).toBeGreaterThanOrEqual(12);
-      expectFragment(base.warnings, "triple-leaf partition", `${variant.name} base warning`);
-      expect(
-        swapped.warnings.some((warning: string) => warning.includes("triple-leaf partition")),
-        `${variant.name} swapped should not stay on the triple-leaf warning`
+	      expect(swapped.rw - base.rw, `${variant.name} lab delta`).toBeLessThanOrEqual(2);
+	      expect(swapped.rwPrime - base.rwPrime, `${variant.name} field R'w delta`).toBeLessThanOrEqual(2);
+	      expect(swapped.dnTw - base.dnTw, `${variant.name} field DnT,w delta`).toBeLessThanOrEqual(2);
+	      expectFragment(base.warnings, "triple-leaf partition", `${variant.name} base warning`);
+	      expectFragment(swapped.warnings, "Flat-list adjacent-swap sensitivity guard", `${variant.name} swapped guard`);
+	      expectFragment(swapped.warnings, "fail-closed screening", `${variant.name} swapped fail-closed warning`);
+	      expect(
+	        swapped.warnings.some((warning: string) => warning.includes("triple-leaf partition")),
+	        `${variant.name} swapped should not stay on the triple-leaf warning`
       ).toBe(false);
     }
   });

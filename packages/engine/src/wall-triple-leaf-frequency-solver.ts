@@ -189,19 +189,19 @@ function getCompleteTopology(context: AirborneContext): CompleteWallTripleLeafTo
   }
 
   return {
-    cavity1AbsorptionClass: topology.cavity1AbsorptionClass,
+    cavity1AbsorptionClass: topology.cavity1AbsorptionClass ?? "unknown",
     cavity1DepthMm: topology.cavity1DepthMm,
-    cavity1FillCoverage: topology.cavity1FillCoverage,
+    cavity1FillCoverage: topology.cavity1FillCoverage ?? "unknown",
     cavity1LayerIndices: topology.cavity1LayerIndices,
-    cavity2AbsorptionClass: topology.cavity2AbsorptionClass,
+    cavity2AbsorptionClass: topology.cavity2AbsorptionClass ?? "unknown",
     cavity2DepthMm: topology.cavity2DepthMm,
-    cavity2FillCoverage: topology.cavity2FillCoverage,
+    cavity2FillCoverage: topology.cavity2FillCoverage ?? "unknown",
     cavity2LayerIndices: topology.cavity2LayerIndices,
-    internalLeafCoupling: topology.internalLeafCoupling,
+    internalLeafCoupling: topology.internalLeafCoupling ?? "unknown",
     internalLeafLayerIndices: topology.internalLeafLayerIndices,
     sideALeafLayerIndices: topology.sideALeafLayerIndices,
     sideBLeafLayerIndices: topology.sideBLeafLayerIndices,
-    supportTopology: topology.supportTopology
+    supportTopology: topology.supportTopology ?? "unknown"
   };
 }
 

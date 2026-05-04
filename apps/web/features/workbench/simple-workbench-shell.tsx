@@ -44,6 +44,10 @@ import {
   DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_ISSUE_PURPOSE,
   DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_VALIDITY_NOTE
 } from "./simple-workbench-proposal-policy-presets";
+import {
+  buildWorkbenchWallTopology,
+  hasActiveWorkbenchWallTopologyDraft
+} from "./simple-workbench-wall-topology";
 import { storeSimpleWorkbenchProposalPreview } from "./simple-workbench-proposal-preview-storage";
 import { readSimpleWorkbenchIssueSequence } from "./simple-workbench-issue-sequence";
 import { buildWorkbenchResponseCurveFigures } from "./response-curve-model";
@@ -266,6 +270,20 @@ export function SimpleWorkbenchShell() {
   const airborneSharedTrack = useWorkbenchStore((state) => state.airborneSharedTrack);
   const airborneStudSpacingMm = useWorkbenchStore((state) => state.airborneStudSpacingMm);
   const airborneStudType = useWorkbenchStore((state) => state.airborneStudType);
+  const airborneWallCavity1AbsorptionClass = useWorkbenchStore((state) => state.airborneWallCavity1AbsorptionClass);
+  const airborneWallCavity1DepthMm = useWorkbenchStore((state) => state.airborneWallCavity1DepthMm);
+  const airborneWallCavity1FillCoverage = useWorkbenchStore((state) => state.airborneWallCavity1FillCoverage);
+  const airborneWallCavity1LayerIndices = useWorkbenchStore((state) => state.airborneWallCavity1LayerIndices);
+  const airborneWallCavity2AbsorptionClass = useWorkbenchStore((state) => state.airborneWallCavity2AbsorptionClass);
+  const airborneWallCavity2DepthMm = useWorkbenchStore((state) => state.airborneWallCavity2DepthMm);
+  const airborneWallCavity2FillCoverage = useWorkbenchStore((state) => state.airborneWallCavity2FillCoverage);
+  const airborneWallCavity2LayerIndices = useWorkbenchStore((state) => state.airborneWallCavity2LayerIndices);
+  const airborneWallInternalLeafCoupling = useWorkbenchStore((state) => state.airborneWallInternalLeafCoupling);
+  const airborneWallInternalLeafLayerIndices = useWorkbenchStore((state) => state.airborneWallInternalLeafLayerIndices);
+  const airborneWallSideALeafLayerIndices = useWorkbenchStore((state) => state.airborneWallSideALeafLayerIndices);
+  const airborneWallSideBLeafLayerIndices = useWorkbenchStore((state) => state.airborneWallSideBLeafLayerIndices);
+  const airborneWallSupportTopology = useWorkbenchStore((state) => state.airborneWallSupportTopology);
+  const airborneWallTopologyMode = useWorkbenchStore((state) => state.airborneWallTopologyMode);
   const impactDirectPathOffsetDb = useWorkbenchStore((state) => state.impactDirectPathOffsetDb);
   const impactGuideCi50_2500Db = useWorkbenchStore((state) => state.impactGuideCi50_2500Db);
   const impactGuideCiDb = useWorkbenchStore((state) => state.impactGuideCiDb);
@@ -306,6 +324,20 @@ export function SimpleWorkbenchShell() {
   const setAirborneSharedTrack = useWorkbenchStore((state) => state.setAirborneSharedTrack);
   const setAirborneStudSpacingMm = useWorkbenchStore((state) => state.setAirborneStudSpacingMm);
   const setAirborneStudType = useWorkbenchStore((state) => state.setAirborneStudType);
+  const setAirborneWallCavity1AbsorptionClass = useWorkbenchStore((state) => state.setAirborneWallCavity1AbsorptionClass);
+  const setAirborneWallCavity1DepthMm = useWorkbenchStore((state) => state.setAirborneWallCavity1DepthMm);
+  const setAirborneWallCavity1FillCoverage = useWorkbenchStore((state) => state.setAirborneWallCavity1FillCoverage);
+  const setAirborneWallCavity1LayerIndices = useWorkbenchStore((state) => state.setAirborneWallCavity1LayerIndices);
+  const setAirborneWallCavity2AbsorptionClass = useWorkbenchStore((state) => state.setAirborneWallCavity2AbsorptionClass);
+  const setAirborneWallCavity2DepthMm = useWorkbenchStore((state) => state.setAirborneWallCavity2DepthMm);
+  const setAirborneWallCavity2FillCoverage = useWorkbenchStore((state) => state.setAirborneWallCavity2FillCoverage);
+  const setAirborneWallCavity2LayerIndices = useWorkbenchStore((state) => state.setAirborneWallCavity2LayerIndices);
+  const setAirborneWallInternalLeafCoupling = useWorkbenchStore((state) => state.setAirborneWallInternalLeafCoupling);
+  const setAirborneWallInternalLeafLayerIndices = useWorkbenchStore((state) => state.setAirborneWallInternalLeafLayerIndices);
+  const setAirborneWallSideALeafLayerIndices = useWorkbenchStore((state) => state.setAirborneWallSideALeafLayerIndices);
+  const setAirborneWallSideBLeafLayerIndices = useWorkbenchStore((state) => state.setAirborneWallSideBLeafLayerIndices);
+  const setAirborneWallSupportTopology = useWorkbenchStore((state) => state.setAirborneWallSupportTopology);
+  const setAirborneWallTopologyMode = useWorkbenchStore((state) => state.setAirborneWallTopologyMode);
   const setBriefNote = useWorkbenchStore((state) => state.setBriefNote);
   const setCalculatorId = useWorkbenchStore((state) => state.setCalculatorId);
   const setClientName = useWorkbenchStore((state) => state.setClientName);
@@ -460,6 +492,23 @@ export function SimpleWorkbenchShell() {
   const selectedContextOption = AIRBORNE_CONTEXT_OPTIONS.find((option) => option.value === airborneContextMode) ?? AIRBORNE_CONTEXT_OPTIONS[0]!;
   const newLayerMaterialGroups = buildMaterialGroups(studyMode, materials, newLayerDraft.materialId, newLayerDraft.floorRole);
   const customMaterialErrors = validateCustomMaterialDraft(customMaterialDraft, materials);
+  const wallTopologyDraft = {
+    airborneWallCavity1AbsorptionClass,
+    airborneWallCavity1DepthMm,
+    airborneWallCavity1FillCoverage,
+    airborneWallCavity1LayerIndices,
+    airborneWallCavity2AbsorptionClass,
+    airborneWallCavity2DepthMm,
+    airborneWallCavity2FillCoverage,
+    airborneWallCavity2LayerIndices,
+    airborneWallInternalLeafCoupling,
+    airborneWallInternalLeafLayerIndices,
+    airborneWallSideALeafLayerIndices,
+    airborneWallSideBLeafLayerIndices,
+    airborneWallSupportTopology,
+    airborneWallTopologyMode
+  };
+  const liveWallTopology = studyMode === "wall" ? buildWorkbenchWallTopology(wallTopologyDraft, rows.length) : undefined;
 
   const liveAirborneContext: AirborneContext = {
     airtightness: airborneAirtightness,
@@ -476,7 +525,8 @@ export function SimpleWorkbenchShell() {
     resilientBarSideCount: airborneResilientBarSideCount,
     sharedTrack: airborneSharedTrack,
     studSpacingMm: parsePositiveNumber(airborneStudSpacingMm),
-    studType: airborneStudType
+    studType: airborneStudType,
+    wallTopology: liveWallTopology
   };
 
   const liveImpactFieldContext: ImpactFieldContext | null =
@@ -506,7 +556,9 @@ export function SimpleWorkbenchShell() {
   const wallModifiersActive = studyMode === "wall" && airborneContextMode !== "element_lab";
   const impactFieldActive = studyMode === "floor" && fieldImpactRequested;
   const standardizedImpactOutputsActive = automaticOutputs.includes("L'nT,w") || automaticOutputs.includes("L'nT,50");
-  const expertInputsActive = wallModifiersActive || calculatorId !== "dynamic";
+  const wallTopologyControlsActive = studyMode === "wall";
+  const wallTopologyInputsActive = wallTopologyControlsActive && hasActiveWorkbenchWallTopologyDraft(wallTopologyDraft);
+  const expertInputsActive = wallModifiersActive || wallTopologyInputsActive || calculatorId !== "dynamic";
   const validThicknessCount = countValidThicknessRows(rows);
   const assignedFloorRoleCount = countAssignedFloorRoles(rows);
   const missingFloorRoleCount = studyMode === "floor" ? Math.max(rows.length - assignedFloorRoleCount, 0) : 0;
@@ -632,6 +684,20 @@ export function SimpleWorkbenchShell() {
       airborneSharedTrack,
       airborneStudSpacingMm,
       airborneStudType,
+      airborneWallCavity1AbsorptionClass,
+      airborneWallCavity1DepthMm,
+      airborneWallCavity1FillCoverage,
+      airborneWallCavity1LayerIndices,
+      airborneWallCavity2AbsorptionClass,
+      airborneWallCavity2DepthMm,
+      airborneWallCavity2FillCoverage,
+      airborneWallCavity2LayerIndices,
+      airborneWallInternalLeafCoupling,
+      airborneWallInternalLeafLayerIndices,
+      airborneWallSideALeafLayerIndices,
+      airborneWallSideBLeafLayerIndices,
+      airborneWallSupportTopology,
+      airborneWallTopologyMode,
       approverTitle,
       briefNote,
       calculatorId,
@@ -1041,6 +1107,20 @@ export function SimpleWorkbenchShell() {
           airborneSharedTrack={airborneSharedTrack}
           airborneStudSpacingMm={airborneStudSpacingMm}
           airborneStudType={airborneStudType}
+          airborneWallCavity1AbsorptionClass={airborneWallCavity1AbsorptionClass}
+          airborneWallCavity1DepthMm={airborneWallCavity1DepthMm}
+          airborneWallCavity1FillCoverage={airborneWallCavity1FillCoverage}
+          airborneWallCavity1LayerIndices={airborneWallCavity1LayerIndices}
+          airborneWallCavity2AbsorptionClass={airborneWallCavity2AbsorptionClass}
+          airborneWallCavity2DepthMm={airborneWallCavity2DepthMm}
+          airborneWallCavity2FillCoverage={airborneWallCavity2FillCoverage}
+          airborneWallCavity2LayerIndices={airborneWallCavity2LayerIndices}
+          airborneWallInternalLeafCoupling={airborneWallInternalLeafCoupling}
+          airborneWallInternalLeafLayerIndices={airborneWallInternalLeafLayerIndices}
+          airborneWallSideALeafLayerIndices={airborneWallSideALeafLayerIndices}
+          airborneWallSideBLeafLayerIndices={airborneWallSideBLeafLayerIndices}
+          airborneWallSupportTopology={airborneWallSupportTopology}
+          airborneWallTopologyMode={airborneWallTopologyMode}
           airborneVolumeSanityWarning={airborneVolumeSanityWarning}
           appendRows={appendRows}
           automaticOutputsLength={automaticOutputs.length}
@@ -1080,6 +1160,20 @@ export function SimpleWorkbenchShell() {
           setAirborneSharedTrack={setAirborneSharedTrack}
           setAirborneStudSpacingMm={setAirborneStudSpacingMm}
           setAirborneStudType={setAirborneStudType}
+          setAirborneWallCavity1AbsorptionClass={setAirborneWallCavity1AbsorptionClass}
+          setAirborneWallCavity1DepthMm={setAirborneWallCavity1DepthMm}
+          setAirborneWallCavity1FillCoverage={setAirborneWallCavity1FillCoverage}
+          setAirborneWallCavity1LayerIndices={setAirborneWallCavity1LayerIndices}
+          setAirborneWallCavity2AbsorptionClass={setAirborneWallCavity2AbsorptionClass}
+          setAirborneWallCavity2DepthMm={setAirborneWallCavity2DepthMm}
+          setAirborneWallCavity2FillCoverage={setAirborneWallCavity2FillCoverage}
+          setAirborneWallCavity2LayerIndices={setAirborneWallCavity2LayerIndices}
+          setAirborneWallInternalLeafCoupling={setAirborneWallInternalLeafCoupling}
+          setAirborneWallInternalLeafLayerIndices={setAirborneWallInternalLeafLayerIndices}
+          setAirborneWallSideALeafLayerIndices={setAirborneWallSideALeafLayerIndices}
+          setAirborneWallSideBLeafLayerIndices={setAirborneWallSideBLeafLayerIndices}
+          setAirborneWallSupportTopology={setAirborneWallSupportTopology}
+          setAirborneWallTopologyMode={setAirborneWallTopologyMode}
           setCalculatorId={setCalculatorId}
           setImpactGuideKDb={setImpactGuideKDb}
           setImpactGuideReceivingRoomVolumeM3={setImpactGuideReceivingRoomVolumeM3}
@@ -1090,6 +1184,7 @@ export function SimpleWorkbenchShell() {
           topologyGap={topologyGap}
           updateMaterial={updateMaterial}
           validationSummary={validationSummary}
+          wallTopologyControlsActive={wallTopologyControlsActive}
           wallModifiersActive={wallModifiersActive}
         />
 

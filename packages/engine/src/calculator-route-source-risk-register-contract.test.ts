@@ -1,0 +1,220 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+import { describe, expect, it } from "vitest";
+
+const REPO_ROOT = fileURLToPath(new URL("../../..", import.meta.url));
+
+const RISK_REGISTER_PATH = "docs/calculator/CALCULATOR_ROUTE_SOURCE_RISK_REGISTER_2026-05-01.md";
+const TRIPLE_LEAF_HANDOFF_PATH = "docs/calculator/TRIPLE_LEAF_ROCKWOOL_REORDER_DEFECT_HANDOFF.md";
+const CURRENT_STATE_PATH = "docs/calculator/CURRENT_STATE.md";
+const NEXT_PLAN_PATH = "docs/calculator/NEXT_IMPLEMENTATION_PLAN.md";
+
+const RISK_IDS = ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9"] as const;
+
+const RISK_NAMES = [
+  "Flat-list route-family flip",
+  "Duplicate / Many-Layer Stack Drift",
+  "Masonry / Lined-Massive Boundary Drift",
+  "Raw Floor Role Inference",
+  "Near-Source False Promotion",
+  "Field-Output Leakage",
+  "Material Alias / Coalescing",
+  "Hostile API Input",
+  "Curve Digitization / Provenance"
+] as const;
+
+const REMEDIATION_TOKENS = [
+  "grouped topology",
+  "Duplicate-stack matrix",
+  "Boundary-scan tests",
+  "Role-row reorder tests",
+  "No-runtime mapping/tolerance contract",
+  "field/ISO 12354-style overlay policy",
+  "per-role material mapping",
+  "shared fail-closed guards at engine boundary",
+  "Gate-O-style provenance/QC"
+] as const;
+
+const HOTSPOT_IDS = ["H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10", "H11", "H12"] as const;
+
+const HOTSPOT_TOKENS = [
+  "ROCKWOOL ISS / IWS / ESS source rows",
+  "Heavy multileaf -> lined-massive swap",
+  "AAC / pumice / lightweight masonry lining boundary",
+  "One-side lining vs independent leaf",
+  "Twin-frame / double-frame timber and steel sources",
+  "Raw floor role inference and duplicate roles",
+  "Floor tolerance-edge promotions",
+  "Same-material split / coalescing",
+  "Field-output leakage",
+  "Hostile API/import input",
+  "Source metric / digitization mix-up",
+  "Output copy over-certainty",
+  "Near-term triage"
+] as const;
+
+const CURRENT_ROCKWOOL_TOKENS = [
+  "rockwool_acoustic_wall_assemblies_source_pack_extraction_v1",
+  "packages/engine/src/rockwool-acoustic-wall-assemblies-source-pack-extraction-gate-a-contract.test.ts",
+  "gate_a_extract_rockwool_acoustic_wall_assemblies_rows_without_runtime_import",
+  "rockwool_acoustic_wall_assemblies_rows_extracted_no_runtime_selected_mapping_tolerance_gate_b",
+  "packages/engine/src/rockwool-acoustic-wall-assemblies-source-pack-extraction-gate-b-contract.test.ts",
+  "gate_b_mapping_tolerance_decision_no_runtime",
+  "rockwool_gate_b_found_no_runtime_ready_row_selected_closeout",
+  "packages/engine/src/post-rockwool-acoustic-wall-assemblies-source-pack-extraction-v1-next-slice-selection-contract.test.ts",
+  "gate_c_closeout_and_next_slice_selection_no_runtime",
+  "closed_rockwool_acoustic_wall_assemblies_source_pack_no_runtime_and_selected_source_gap_revalidation_v10_because_gate_b_found_no_runtime_ready_row",
+  "calculator_source_gap_revalidation_v10",
+  "packages/engine/src/calculator-source-gap-revalidation-v10-gate-a-contract.test.ts",
+  "gate_a_revalidate_source_accuracy_gap_order_after_rockwool_source_pack_closeout",
+  "usg_acoustical_assemblies_source_pack_extraction_v1",
+  "packages/engine/src/usg-acoustical-assemblies-source-pack-extraction-gate-a-contract.test.ts",
+  "gate_a_extract_usg_acoustical_assemblies_rows_without_runtime_import",
+  "selected_usg_acoustical_assemblies_source_pack_extraction_after_v10_rerank_found_official_floor_wall_stc_iic_rows_but_no_runtime_ready_import",
+  "usg_acoustical_assemblies_rows_extracted_no_runtime_selected_mapping_tolerance_gate_b",
+  "packages/engine/src/usg-acoustical-assemblies-source-pack-extraction-gate-b-contract.test.ts",
+  "usg_gate_b_found_no_runtime_ready_row_selected_closeout",
+  "packages/engine/src/post-usg-acoustical-assemblies-source-pack-extraction-v1-next-slice-selection-contract.test.ts",
+  "gate_c_closeout_and_next_slice_selection_no_runtime",
+  "closed_usg_acoustical_assemblies_source_pack_no_runtime_and_selected_source_gap_revalidation_v11_because_gate_b_found_no_runtime_ready_row",
+  "calculator_source_gap_revalidation_v11",
+  "packages/engine/src/calculator-source-gap-revalidation-v11-gate-a-contract.test.ts",
+  "gate_a_revalidate_source_accuracy_gap_order_after_usg_source_pack_closeout",
+  "national_gypsum_fire_sound_selector_source_pack_extraction_v1",
+  "packages/engine/src/national-gypsum-fire-sound-selector-source-pack-extraction-gate-a-contract.test.ts",
+  "gate_a_extract_national_gypsum_fire_sound_selector_rows_without_runtime_import",
+  "selected_national_gypsum_fire_sound_selector_source_pack_extraction_after_v11_rerank_found_official_selector_context_but_no_runtime_ready_import",
+  "national_gypsum_fire_sound_selector_rows_extracted_no_runtime_selected_mapping_tolerance_gate_b",
+  "packages/engine/src/national-gypsum-fire-sound-selector-source-pack-extraction-gate-b-contract.test.ts",
+  "national_gypsum_gate_b_found_no_runtime_ready_row_selected_closeout",
+  "packages/engine/src/post-national-gypsum-fire-sound-selector-source-pack-extraction-v1-next-slice-selection-contract.test.ts",
+  "gate_c_closeout_and_next_slice_selection_no_runtime",
+  "closed_national_gypsum_fire_sound_selector_source_pack_no_runtime_and_selected_source_gap_revalidation_v12_because_gate_b_found_no_runtime_ready_row",
+  "calculator_source_gap_revalidation_v12",
+  "packages/engine/src/calculator-source-gap-revalidation-v12-gate-a-contract.test.ts",
+  "gate_a_revalidate_source_accuracy_gap_order_after_national_gypsum_source_pack_closeout",
+  "selected_georgia_pacific_fire_sound_assemblies_source_pack_extraction_after_v12_rerank_found_official_planning_context_but_no_runtime_ready_import",
+  "georgia_pacific_fire_sound_assemblies_source_pack_extraction_v1",
+  "packages/engine/src/georgia-pacific-fire-sound-assemblies-source-pack-extraction-gate-a-contract.test.ts",
+  "gate_a_extract_georgia_pacific_fire_sound_assemblies_rows_without_runtime_import",
+  "georgia_pacific_fire_sound_assemblies_rows_extracted_no_runtime_selected_mapping_tolerance_gate_b",
+  "packages/engine/src/georgia-pacific-fire-sound-assemblies-source-pack-extraction-gate-b-contract.test.ts",
+  "gate_b_mapping_tolerance_decision_no_runtime",
+  "georgia_pacific_gate_b_found_no_runtime_ready_row_selected_closeout",
+  "packages/engine/src/post-georgia-pacific-fire-sound-assemblies-source-pack-extraction-v1-next-slice-selection-contract.test.ts",
+  "gate_c_closeout_and_next_slice_selection_no_runtime",
+  "closed_georgia_pacific_fire_sound_assemblies_source_pack_no_runtime_and_selected_source_gap_revalidation_v13_because_gate_b_found_no_runtime_ready_row",
+  "calculator_source_gap_revalidation_v13",
+  "packages/engine/src/calculator-source-gap-revalidation-v13-gate-a-contract.test.ts",
+  "gate_a_revalidate_source_accuracy_gap_order_after_georgia_pacific_source_pack_closeout",
+  "docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V13_PLAN.md",
+  "selected_post_georgia_pacific_source_acquisition_v1_after_v13_rerank_found_no_runtime_ready_candidate_and_post_british_gypsum_official_locators_closed_no_runtime",
+  "calculator_post_georgia_pacific_source_acquisition_v1",
+  "packages/engine/src/calculator-post-georgia-pacific-source-acquisition-gate-a-contract.test.ts",
+  "gate_a_acquire_and_classify_post_georgia_pacific_source_locators_without_runtime_import",
+  "docs/calculator/SLICE_CALCULATOR_POST_GEORGIA_PACIFIC_SOURCE_ACQUISITION_V1_PLAN.md",
+  "GP_TOUGHROCK_INTERIOR_STEEL_UL_U465_STC45_49_RAL_TL99_103",
+  "GP_TOUGHROCK_INTERIOR_STEEL_UL_U411_STC55_59_RAL_TL09_331",
+  "GP_TOUGHROCK_SHAFTLINER_AREA_SEPARATION_GP_WA_120_04_STC66_RAL_TL_10_291",
+  "GP_DENSGLASS_FIREGUARD_SHEATHING_UL_U305_U337_STC30_34_OR_64_8",
+  "GP_DENSGLASS_FIREGUARD_SHEATHING_UL_U425_STC55_59_IRC_IR_761",
+  "GP_DENSGLASS_SHAFTLINER_UL_V473_1HR_RC_STC48_RAL_TL09_363",
+  "Georgia-Pacific Fire & Sound Assemblies",
+  "NATIONAL_GYPSUM_V438_U465_20EQ_RC1_STC50",
+  "NATIONAL_GYPSUM_W419_U499_SHAFTWALL_STC44",
+  "NATIONAL_GYPSUM_W469_LOAD_BEARING_RC1_STC51",
+  "NATIONAL_GYPSUM_W454_AREA_SEPARATION_STC43",
+  "NATIONAL_GYPSUM_P540_ROOF_CEILING_STC_NA",
+  "national_gypsum_stc_rows_do_not_directly_promote_dyn_echo_rw_or_field_outputs",
+  "national_gypsum_gate_b_source_rows_are_not_runtime_import_approval",
+  "national_gypsum_gate_b_stc_report_locators_do_not_promote_dyn_echo_rw_or_field_outputs",
+  "national_gypsum_gate_b_rows_do_not_fix_the_uris_2006_split_rockwool_triple_leaf_rw_41_screening_result",
+  "National Gypsum Fire & Sound Assembly Selector",
+  "LEVELROCK_I_JOIST_SRM25_CARPET",
+  "USG_STEEL_FRAMED_A8",
+  "STC",
+  "IIC",
+  "USG Acoustical Assemblies",
+  "paused_waiting_rights_safe_source_packet",
+  "ROCKWOOL Acoustic Wall Assemblies Catalog",
+  "multileaf_screening_blend",
+  "Rw 41"
+] as const;
+
+function readRepoFile(path: string): string {
+  return readFileSync(join(REPO_ROOT, path), "utf8");
+}
+
+describe("calculator route/source risk register contract", () => {
+  it("documents all nine risk classes and their 2026-05-02 remediation pass", () => {
+    const riskRegister = readRepoFile(RISK_REGISTER_PATH);
+
+    expect(riskRegister).toContain("Latest risk-analysis pass: 2026-05-02");
+    expect(riskRegister).toContain("## Remediation Matrix - 2026-05-02");
+    expect(riskRegister).toContain("## Cross-Risk Implementation Order");
+
+    for (const riskId of RISK_IDS) {
+      expect(riskRegister, riskId).toContain(`| ${riskId} |`);
+      expect(riskRegister, riskId).toContain(`## ${riskId} -`);
+    }
+
+    for (const riskName of RISK_NAMES) {
+      expect(riskRegister, riskName).toContain(riskName);
+    }
+
+    for (const token of REMEDIATION_TOKENS) {
+      expect(riskRegister, token).toContain(token);
+    }
+  });
+
+  it("documents concrete sibling hotspots that can fail like the rockwool route flip", () => {
+    const riskRegister = readRepoFile(RISK_REGISTER_PATH);
+
+    expect(riskRegister).toContain("## Concrete Hotspot Scan - 2026-05-02");
+
+    for (const hotspotId of HOTSPOT_IDS) {
+      expect(riskRegister, hotspotId).toContain(`| ${hotspotId} |`);
+    }
+
+    for (const token of HOTSPOT_TOKENS) {
+      expect(riskRegister, token).toContain(token);
+    }
+
+    expect(riskRegister).toContain("Treat H1, H5, and H11 as the highest-risk ROCKWOOL v10 rerank blockers");
+    expect(riskRegister).toContain("Treat H6 and H7 as floor-side equivalents of the rockwool issue");
+    expect(riskRegister).toContain("Any new source/runtime lane needs paired engine and web tests");
+  });
+
+  it("keeps the original rockwool triple-leaf problem blocked, current, and not falsely fixed", () => {
+    const docs = [
+      readRepoFile(RISK_REGISTER_PATH),
+      readRepoFile(TRIPLE_LEAF_HANDOFF_PATH),
+      readRepoFile(CURRENT_STATE_PATH),
+      readRepoFile(NEXT_PLAN_PATH)
+    ];
+
+    for (const doc of docs) {
+      for (const token of CURRENT_ROCKWOOL_TOKENS) {
+        expect(doc, token).toContain(token);
+      }
+    }
+
+    const riskRegister = docs[0];
+    expect(riskRegister).toContain("Status on 2026-05-02");
+    expect(riskRegister).toContain("does not validate the live split-rockwool");
+    expect(riskRegister).toContain("Local exact runtime is still blocked");
+  });
+
+  it("keeps every high-risk failure mode tied to required proof before runtime promotion", () => {
+    const riskRegister = readRepoFile(RISK_REGISTER_PATH);
+
+    expect(riskRegister).toContain("Required proof before promotion");
+    expect(riskRegister).toContain("A green source");
+    expect(riskRegister).toContain("locator test is not enough to close any risk by itself");
+    expect(riskRegister).toContain("If topology");
+    expect(riskRegister).toContain("boundary hold over a precise-looking value");
+    expect(riskRegister).toContain("Field metrics, API responses, output cards, and reports");
+  });
+});

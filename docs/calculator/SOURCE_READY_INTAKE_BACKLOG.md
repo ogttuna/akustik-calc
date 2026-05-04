@@ -27,9 +27,137 @@ no-runtime and selected Gate C closeout / next-slice selection;
 refreshed after `steel_stud_knauf_enpc_mapping_tolerance_v1` Gate C
 closed no-runtime and selected `calculator_source_gap_revalidation_v7`;
 refreshed after `calculator_source_gap_revalidation_v7` Gate A landed
-no-runtime and selected `calculator_post_knauf_source_acquisition_v1`.
+no-runtime and selected `calculator_post_knauf_source_acquisition_v1`;
+refreshed after post-Knauf source acquisition and British Gypsum Gate A
+extracted White Book rows; refreshed again after
+`calculator_source_gap_revalidation_v8` selected British Gypsum Gate B;
+refreshed after British Gypsum Gate B found no new runtime-ready row,
+kept `A046006` as the already-landed exact anchor, and selected
+`gate_c_closeout_and_next_slice_selection_no_runtime`; refreshed after
+British Gypsum Gate C closed no-runtime and selected
+`calculator_source_gap_revalidation_v9`; refreshed after
+`calculator_source_gap_revalidation_v9` Gate A found no runtime-ready
+candidate and selected
+`calculator_post_british_gypsum_source_acquisition_v1`; refreshed after
+`calculator_post_british_gypsum_source_acquisition_v1` Gate A selected
+`rockwool_acoustic_wall_assemblies_source_pack_extraction_v1`;
+refreshed after ROCKWOOL Gate A extracted ISS / IWS / ESS rows
+no-runtime and selected Gate B mapping/tolerance; refreshed after
+ROCKWOOL Gate B found no runtime-ready row and selected Gate C
+closeout / next-slice selection; refreshed after ROCKWOOL Gate C closed
+no-runtime and selected `calculator_source_gap_revalidation_v10`;
+refreshed after `calculator_source_gap_revalidation_v10` Gate A landed
+no-runtime and selected
+`usg_acoustical_assemblies_source_pack_extraction_v1`; refreshed after
+USG Acoustical Assemblies Gate A extracted `STC` / `IIC` source rows
+no-runtime and selected `gate_b_mapping_tolerance_decision_no_runtime`;
+refreshed after USG Gate B found no runtime-ready row and selected
+`gate_c_closeout_and_next_slice_selection_no_runtime`; refreshed after
+USG Gate C closed no-runtime and selected
+`calculator_source_gap_revalidation_v11`; refreshed after
+`calculator_source_gap_revalidation_v11` Gate A selected
+`national_gypsum_fire_sound_selector_source_pack_extraction_v1`;
+refreshed after National Gypsum Gate A extracted selector rows
+no-runtime and selected `gate_b_mapping_tolerance_decision_no_runtime`;
+refreshed after National Gypsum Gate B found no runtime-ready row and
+selected `gate_c_closeout_and_next_slice_selection_no_runtime`;
+refreshed after National Gypsum Gate C closed no-runtime and selected
+`calculator_source_gap_revalidation_v12`; refreshed after v12 Gate A
+selected
+`georgia_pacific_fire_sound_assemblies_source_pack_extraction_v1`;
+refreshed after Georgia-Pacific Gate A extracted context rows
+no-runtime and selected `gate_b_mapping_tolerance_decision_no_runtime`;
+refreshed after Georgia-Pacific Gate B found no runtime-ready row and
+selected `gate_c_closeout_and_next_slice_selection_no_runtime`;
+refreshed after Georgia-Pacific Gate C closed no-runtime and selected
+`calculator_source_gap_revalidation_v13`; refreshed after v13 Gate A
+found no runtime-ready candidate and selected
+`calculator_post_georgia_pacific_source_acquisition_v1`; refreshed
+after post-Georgia-Pacific Gate A selected
+`pabco_quietrock_sound_design_guide_source_pack_extraction_v1`;
+refreshed after PABCO Gate A extracted six QuietRock row locators
+no-runtime and selected `gate_b_mapping_tolerance_decision_no_runtime`;
+refreshed after PABCO Gate B found no runtime-ready row and selected
+`gate_c_closeout_and_next_slice_selection_no_runtime`; refreshed after
+PABCO Gate C closed no-runtime and selected
+`calculator_source_gap_revalidation_v14`; refreshed after
+`calculator_source_gap_revalidation_v14` Gate A selected
+`certainteed_silentfx_nrc_astc_source_pack_extraction_v1` with
+`selected_certainteed_silentfx_nrc_astc_source_pack_extraction_after_v14_rerank_found_official_astc_product_stc_context_but_no_runtime_ready_import`;
+refreshed after CertainTeed Gate B found no runtime-ready row and
+selected `gate_c_closeout_and_next_slice_selection_no_runtime`;
+refreshed after CertainTeed Gate C closed no-runtime and selected
+`calculator_source_gap_revalidation_v15`; refreshed after
+`calculator_source_gap_revalidation_v15` Gate A found no source-ready
+runtime candidate and selected
+`route_family_lane_drift_common_stack_watchlist_v1`; refreshed after
+`route_family_lane_drift_common_stack_watchlist_v1` Gate A landed the
+common-stack lane-drift inventory no-runtime and selected
+`gate_b_reprobe_common_stack_route_family_and_value_drift_no_runtime`;
+refreshed after `route_family_lane_drift_common_stack_watchlist_v1`
+Gate B landed no-runtime reprobes with
+`common_stack_lane_drift_reprobes_landed_no_runtime_selected_gate_c_classification`
+and selected
+`gate_c_classify_reprobe_findings_and_select_bounded_fix_or_closeout_no_runtime`;
+refreshed after `route_family_lane_drift_common_stack_watchlist_v1`
+Gate C landed no-runtime classification with
+`common_stack_lane_drift_classification_landed_no_runtime_selected_gate_d_flat_list_family_guard_design`
+and selected
+`gate_d_design_flat_list_multileaf_family_guard_with_negative_boundaries_no_runtime`;
+refreshed after `route_family_lane_drift_common_stack_watchlist_v1`
+Gate D landed no-runtime guard design with
+`common_stack_lane_drift_flat_list_guard_design_landed_no_runtime_selected_gate_e_implementation`
+and selected
+`gate_e_implement_flat_list_multileaf_family_guard_with_engine_web_negative_boundaries`;
+refreshed after `route_family_lane_drift_common_stack_watchlist_v1`
+Gate E landed bounded flat-list guard runtime movement with
+`common_stack_lane_drift_flat_list_guard_runtime_landed_selected_gate_f_closeout_next_slice`
+and selected
+`gate_f_closeout_and_next_slice_selection_after_flat_list_guard_runtime_landing`;
+refreshed after `route_family_lane_drift_common_stack_watchlist_v1`
+Gate F closed the watchlist with
+`closed_route_family_lane_drift_common_stack_watchlist_after_gate_e_guard_landed_and_selected_source_gap_revalidation_v16`
+and selected `calculator_source_gap_revalidation_v16`; refreshed after
+`calculator_source_gap_revalidation_v16` Gate A found no source-ready
+runtime candidate and selected `floor_raw_role_inference_guardrail_v1`
+with
+`selected_floor_raw_role_inference_guardrail_after_v16_rerank_found_no_source_ready_runtime_candidate_and_prioritized_floor_side_wrong_lane_risk`;
+refreshed after `floor_raw_role_inference_guardrail_v1` Gate A landed
+`floor_raw_role_inference_inventory_landed_no_runtime_selected_gate_b_prompt_guard_design`
+and selected
+`gate_b_design_raw_floor_role_prompt_and_negative_boundary_guard_no_runtime`;
+refreshed after `floor_raw_role_inference_guardrail_v1` Gate B landed
+`floor_raw_role_inference_prompt_guard_design_landed_no_runtime_selected_gate_c_implementation`
+and selected
+`gate_c_implement_raw_floor_role_prompt_guard_with_engine_web_visible_tests`;
+refreshed after `floor_raw_role_inference_guardrail_v1` Gate C landed
+`floor_raw_role_prompt_guard_runtime_landed_selected_source_gap_revalidation_v17`
+and selected
+`gate_a_revalidate_source_accuracy_gap_order_after_floor_raw_role_prompt_guard_landing`;
+refreshed after `calculator_source_gap_revalidation_v17` Gate A landed
+`selected_common_combination_lane_misclassification_sentinel_after_v17_rerank_found_no_source_ready_runtime_candidate_and_user_reinforced_always_on_wrong_lane_monitoring`
+and selected
+`gate_a_inventory_frequent_wall_floor_lane_sentinel_no_runtime`;
+refreshed after `common_combination_lane_misclassification_sentinel_v1`
+Gate A landed
+`common_combination_lane_sentinel_inventory_landed_no_runtime_selected_gate_b_reprobes`
+and selected `gate_b_reprobe_frequent_wall_floor_lane_sentinel_matrix_no_runtime`;
+refreshed after Gate B landed
+`common_combination_lane_sentinel_reprobes_landed_no_runtime_selected_gate_c_closeout_next_slice`
+and selected
+`gate_c_closeout_and_next_slice_selection_after_gate_b_reprobes_no_runtime`;
+refreshed after Gate C closed
+`closed_common_combination_lane_misclassification_sentinel_no_runtime_and_selected_source_gap_revalidation_v18`
+and selected
+`gate_a_revalidate_source_accuracy_gap_order_after_common_combination_sentinel_closeout`;
+refreshed after `calculator_source_gap_revalidation_v18` Gate A landed
+`selected_floor_tolerance_edge_promotion_guard_after_v18_rerank_found_no_source_ready_runtime_candidate_and_common_combination_sentinel_closed`
+and selected `gate_a_inventory_exact_floor_tolerance_edges_no_runtime`;
+refreshed after `floor_tolerance_edge_promotion_guard_v1` Gate A landed
+`floor_tolerance_edge_inventory_landed_no_runtime_selected_closeout_next_slice_selection`
+and selected `gate_b_no_runtime_closeout_and_next_slice_selection`.
 
-Last reviewed: 2026-04-30.
+Last reviewed: 2026-05-04.
 
 This document is the single current backlog for source-ready calculator
 accuracy work. It does not approve runtime imports, support promotion,
@@ -45,6 +173,1541 @@ Runtime and visible behavior stay frozen until a future slice names:
 - material/thickness mapping to engine inputs;
 - protected negative boundaries and near misses;
 - paired engine and web visible tests.
+
+## Current Floor Tolerance-Edge Guard Selection
+
+`floor_tolerance_edge_promotion_guard_v1` Gate A landed with:
+
+`floor_tolerance_edge_inventory_landed_no_runtime_selected_closeout_next_slice_selection`
+
+Selected next file:
+
+`packages/engine/src/post-floor-tolerance-edge-promotion-guard-v1-next-slice-selection-contract.test.ts`
+
+Selected next action:
+
+`gate_b_no_runtime_closeout_and_next_slice_selection`
+
+Landed Gate A file:
+
+`packages/engine/src/floor-tolerance-edge-promotion-guard-gate-a-contract.test.ts`
+
+Landed Gate A checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-04_FLOOR_TOLERANCE_EDGE_PROMOTION_GUARD_GATE_A_HANDOFF.md`
+
+Gate A produced `role_tagged_exact_floor_tolerance_edge_inventory`,
+`bound_floor_near_miss_and_exact_drop_snapshot_matrix`,
+`just_inside_just_outside_thickness_corridor_tests`,
+`raw_role_prompt_and_duplicate_role_negative_boundaries`,
+`visible_exact_bound_screening_support_wording_requirements`, and
+`next_guard_or_closeout_decision_before_any_floor_support_promotion`.
+It kept `standing_lane_misclassification_monitoring_mandate`,
+`note_test_document_or_easy_fix`, `paused_waiting_rights_safe_source_packet`,
+`multileaf_screening_blend_fail_closed_until_grouped_topology`,
+`raw_floor_role_inference`, and
+`arbitrary_raw_floor_reorder_value_invariance_remains_unclaimed`
+active. No runtime, support, confidence, evidence, API, route-card,
+output-card, proposal/report, or workbench-input behavior moved.
+
+Gate A validation completed on 2026-05-04: focused Gate A passed 1
+file / 7 tests; continuity with v18, common-combination Gate C / Gate
+B / Gate A, floor raw-role Gate C, route-family lane-drift Gate E /
+Gate F, and route-source risk register passed 9 files / 64 tests;
+`pnpm calculator:gate:current` passed engine 235 files / 1349 tests,
+web 49 files / 234 passed + 18 skipped, repo build 5 / 5 successful
+with known non-fatal `sharp/@img` warnings; `apps/web/next-env.d.ts`
+restored to `.next-typecheck`; final `git diff --check` passed.
+
+2026-05-04 broad review: no source-ready runtime candidate was found
+while preparing the release gate. The only correctness-contract drift
+was a stale flat-list triple-leaf order-sensitivity snapshot; current
+behavior keeps those swaps fail-closed on low-confidence multileaf
+screening. This does not unblock Uris 2006, ROCKWOOL, Knauf, British
+Gypsum, USG, National Gypsum, Georgia-Pacific, PABCO, CertainTeed, or
+floor bound-row promotions. Any next source import still requires exact
+topology, metric owner, tolerance owner, material mapping,
+negative-boundary tests, and visible tests.
+
+After fixes, broad `pnpm check` passed on 2026-05-04: lint passed,
+typecheck passed, engine tests passed 368 files / 2169 tests, web
+tests passed 161 files / 908 passed + 18 skipped, and build passed
+5 / 5 packages with the known non-fatal `sharp/@img` warnings.
+
+## Prior Floor Tolerance-Edge Guard Selection
+
+`calculator_source_gap_revalidation_v18` Gate A landed with:
+
+`selected_floor_tolerance_edge_promotion_guard_after_v18_rerank_found_no_source_ready_runtime_candidate_and_common_combination_sentinel_closed`
+
+Selected next slice:
+
+`floor_tolerance_edge_promotion_guard_v1`
+
+Selected next file:
+
+`packages/engine/src/floor-tolerance-edge-promotion-guard-gate-a-contract.test.ts`
+
+Selected next action:
+
+`gate_a_inventory_exact_floor_tolerance_edges_no_runtime`
+
+Selected next planning surface:
+
+`docs/calculator/SLICE_FLOOR_TOLERANCE_EDGE_PROMOTION_GUARD_PLAN.md`
+
+Landed v18 file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v18-gate-a-contract.test.ts`
+
+Landed v18 checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-04_CALCULATOR_SOURCE_GAP_REVALIDATION_V18_GATE_A_HANDOFF.md`
+
+V18 produced `common_combination_gate_b_reprobe_summary`,
+`sentinel_guard_green_and_fail_closed_boundary_carry_forward`,
+`post_sentinel_source_ready_runtime_candidate_rerank`,
+`rockwool_uris_2006_source_packet_status`,
+`floor_raw_role_field_output_near_source_hostile_input_and_curve_provenance_status`,
+and `selected_next_slice_with_target_gate_file_and_validation_scope`.
+It found no source-ready runtime candidate and selected
+`floor_tolerance_edge_promotion_guard` while keeping
+`gate_b_reprobe_findings`,
+`standing_lane_misclassification_monitoring_mandate`,
+`note_test_document_or_easy_fix`,
+`paused_waiting_rights_safe_source_packet`,
+`multileaf_screening_blend_fail_closed_until_grouped_topology`,
+`raw_floor_role_inference`, and
+`arbitrary_raw_floor_reorder_value_invariance_remains_unclaimed`
+active.
+
+V18 validation completed on 2026-05-04: focused v18 Gate A 1 file / 9
+tests; continuity with common-combination Gate C / Gate B / Gate A,
+v17, floor raw-role Gate C, route-family lane-drift Gate E / Gate F,
+and route-source risk register 9 files / 67 tests; `pnpm
+calculator:gate:current` engine 234 files / 1342 tests, web 49 files /
+234 passed + 18 skipped, repo build 5 / 5 successful with known
+non-fatal `sharp/@img` warnings; `apps/web/next-env.d.ts` restored to
+`.next-typecheck`; final `git diff --check` passed.
+
+## Prior Source-Gap Revalidation V18 Selection
+
+`common_combination_lane_misclassification_sentinel_v1` Gate C closed
+with:
+
+`closed_common_combination_lane_misclassification_sentinel_no_runtime_and_selected_source_gap_revalidation_v18`
+
+Selected next slice:
+
+`calculator_source_gap_revalidation_v18`
+
+Selected next file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v18-gate-a-contract.test.ts`
+
+Selected next action:
+
+`gate_a_revalidate_source_accuracy_gap_order_after_common_combination_sentinel_closeout`
+
+Selected next planning surface:
+
+`docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V18_PLAN.md`
+
+Landed Gate C file:
+
+`packages/engine/src/post-common-combination-lane-misclassification-sentinel-v1-next-slice-selection-contract.test.ts`
+
+Landed Gate C checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-04_COMMON_COMBINATION_LANE_MISCLASSIFICATION_SENTINEL_GATE_C_CLOSEOUT_HANDOFF.md`
+
+Gate C validation completed on 2026-05-04: focused closeout 1 file / 6
+tests; continuity with Gate A, Gate B, v17, floor raw-role Gate C,
+route-family lane-drift Gate E / Gate F, and route-source risk register
+8 files / 58 tests; `pnpm calculator:gate:current` engine 233 files /
+1333 tests, web 49 files / 234 passed + 18 skipped, repo build 5 / 5
+successful with known non-fatal `sharp/@img` warnings;
+`apps/web/next-env.d.ts` restored to `.next-typecheck`; final
+`git diff --check` passed.
+
+Gate C is no-runtime and keeps source-ready backlog posture unchanged:
+runtime, support, confidence, evidence, API, route-card, output-card,
+proposal/report, and workbench-input behavior stay frozen. V18 must
+rerank source-ready candidates against `gate_b_reprobe_findings`,
+`standing_lane_misclassification_monitoring_mandate`,
+`note_test_document_or_easy_fix`,
+`paused_waiting_rights_safe_source_packet`,
+`multileaf_screening_blend_fail_closed_until_grouped_topology`,
+`raw_floor_role_inference`, and
+`arbitrary_raw_floor_reorder_value_invariance_remains_unclaimed`.
+
+V18 Gate A must produce `common_combination_gate_b_reprobe_summary`,
+`sentinel_guard_green_and_fail_closed_boundary_carry_forward`,
+`post_sentinel_source_ready_runtime_candidate_rerank`,
+`rockwool_uris_2006_source_packet_status`,
+`floor_raw_role_field_output_near_source_hostile_input_and_curve_provenance_status`,
+and `selected_next_slice_with_target_gate_file_and_validation_scope`.
+
+## Prior Common-Combination Lane Sentinel Selection
+
+`calculator_source_gap_revalidation_v17` Gate A landed with:
+
+`selected_common_combination_lane_misclassification_sentinel_after_v17_rerank_found_no_source_ready_runtime_candidate_and_user_reinforced_always_on_wrong_lane_monitoring`
+
+Selected next slice:
+
+`common_combination_lane_misclassification_sentinel_v1`
+
+Selected next file:
+
+`packages/engine/src/post-common-combination-lane-misclassification-sentinel-v1-next-slice-selection-contract.test.ts`
+
+Selected next action:
+
+`gate_c_closeout_and_next_slice_selection_after_gate_b_reprobes_no_runtime`
+
+Selected next planning surface:
+
+`docs/calculator/SLICE_COMMON_COMBINATION_LANE_MISCLASSIFICATION_SENTINEL_PLAN.md`
+
+Landed Gate A file:
+
+`packages/engine/src/common-combination-lane-misclassification-sentinel-gate-a-contract.test.ts`
+
+Landed Gate A action:
+
+`gate_a_inventory_frequent_wall_floor_lane_sentinel_no_runtime`
+
+Landed Gate A status:
+
+`common_combination_lane_sentinel_inventory_landed_no_runtime_selected_gate_b_reprobes`
+
+Landed Gate A checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-04_COMMON_COMBINATION_LANE_MISCLASSIFICATION_SENTINEL_GATE_A_HANDOFF.md`
+
+Landed Gate B file:
+
+`packages/engine/src/common-combination-lane-misclassification-sentinel-gate-b-reprobes.test.ts`
+
+Landed Gate B action:
+
+`gate_b_reprobe_frequent_wall_floor_lane_sentinel_matrix_no_runtime`
+
+Landed Gate B status:
+
+`common_combination_lane_sentinel_reprobes_landed_no_runtime_selected_gate_c_closeout_next_slice`
+
+Landed Gate B checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-04_COMMON_COMBINATION_LANE_MISCLASSIFICATION_SENTINEL_GATE_B_HANDOFF.md`
+
+Selected Gate C file:
+
+`packages/engine/src/post-common-combination-lane-misclassification-sentinel-v1-next-slice-selection-contract.test.ts`
+
+Gate B findings:
+
+`gate_b_reprobe_findings`
+
+- `split_rockwool_grouped_rw41_blocked_source_packet`
+- `split_rockwool_flat_swap_fail_closed_guard_green`
+- `classic_framed_adjacent_swap_fail_closed_guard_green`
+- `aac_board_fill_gap_lined_massive_boundary_documented_fail_closed`
+- `duplicate_many_layer_classic_stack_finite_watch`
+- `raw_floor_open_box_parity_green`
+- `raw_floor_clt_role_prompt_guard_green`
+- `near_source_alias_context_only_watch`
+- `field_output_copy_leakage_watch`
+- `hostile_api_import_fail_closed_green`
+- `curve_digitization_provenance_blocked_source_qc`
+
+V17 checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-03_CALCULATOR_SOURCE_GAP_REVALIDATION_V17_GATE_A_HANDOFF.md`
+
+V17 did not add a source-ready runtime candidate. Gate A created
+`frequent_wall_floor_combination_inventory`,
+`route_family_source_lane_support_confidence_output_warning_snapshot_matrix`,
+`small_layer_reorder_duplicate_many_layer_boundary_and_hostile_input_variants`,
+`note_test_document_or_easy_fix_decision_log`,
+`paired_engine_and_web_visible_tests_before_any_route_or_output_copy_movement`,
+and `next_closeout_or_bounded_easy_fix_decision`.
+
+Gate A and Gate B are no-runtime and keep source-ready backlog posture
+unchanged: runtime, support, confidence, evidence, API, route-card,
+output-card, proposal/report, and workbench-input behavior stay frozen.
+Gate B found no source-ready runtime candidate, no value retune, and no
+small bounded fix ready now; Gate C must close the sentinel slice or
+select the next source-gap slice while carrying forward
+`standing_lane_misclassification_monitoring_mandate`,
+`note_test_document_or_easy_fix`,
+`frequent_combination_wrong_lane_suspicion_requires_repro_or_documented_fail_closed_risk`,
+`easy_fix_requires_small_bounded_change_with_engine_and_web_visible_regression_tests`,
+`paused_waiting_rights_safe_source_packet`,
+`multileaf_screening_blend_fail_closed_until_grouped_topology`,
+`raw_floor_role_inference`, and
+`arbitrary_raw_floor_reorder_value_invariance_remains_unclaimed`.
+
+Gate B validation completed on 2026-05-04: focused Gate B 1 file / 9
+tests; continuity with Gate A, v17, floor raw-role Gate C,
+route-family lane-drift Gate E / Gate F, and route-source risk register
+7 files / 52 tests; `pnpm calculator:gate:current` engine 232 files /
+1327 tests, web 49 files / 234 passed + 18 skipped, repo build 5 / 5
+successful with known non-fatal `sharp/@img` warnings;
+`apps/web/next-env.d.ts` restored to `.next-typecheck`; final
+`git diff --check` passed.
+
+Gate A validation completed on 2026-05-04: focused Gate A 1 file / 8
+tests; continuity 6 files / 43 tests; `pnpm calculator:gate:current`
+engine 231 files / 1318 tests, web 49 files / 234 passed + 18 skipped,
+repo build 5 / 5 successful with known non-fatal `sharp/@img`
+warnings; `apps/web/next-env.d.ts` restored to `.next-typecheck`;
+final `git diff --check` passed.
+
+Standing rule:
+
+`standing_lane_misclassification_monitoring_mandate`
+
+Every future calculator slice must keep looking for wrong lane
+behavior on frequent wall/floor stacks. Suspicious behavior must be
+reproduced with a focused test where possible, fixed only when the fix
+is small and bounded, or documented while outputs stay fail-closed or
+visibly screening.
+
+Protected carry-forward:
+
+`note_test_document_or_easy_fix`
+
+`frequent_combination_wrong_lane_suspicion_requires_repro_or_documented_fail_closed_risk`
+
+`easy_fix_requires_small_bounded_change_with_engine_and_web_visible_regression_tests`
+
+`paused_waiting_rights_safe_source_packet`
+
+`multileaf_screening_blend_fail_closed_until_grouped_topology`
+
+`arbitrary_raw_floor_reorder_value_invariance_remains_unclaimed`
+
+V17 validation completed on 2026-05-03: focused v17 Gate A 1 file / 10
+tests; continuity with floor raw-role Gate C / Gate B / Gate A, v16,
+lane-drift Gate E / Gate F, and the route-source risk register 8 files
+/ 59 tests; `pnpm calculator:gate:current` engine 230 files / 1310
+tests, web 49 files / 234 passed + 18 skipped, repo build 5 / 5
+successful with known non-fatal `sharp/@img` warnings, and whitespace
+guard passed; `apps/web/next-env.d.ts` restored to `.next-typecheck`.
+
+## Prior Floor Raw Role Inference Guardrail Selection
+
+`floor_raw_role_inference_guardrail_v1` Gate C landed with:
+
+`floor_raw_role_prompt_guard_runtime_landed_selected_source_gap_revalidation_v17`
+
+Selected next source-gap file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v17-gate-a-contract.test.ts`
+
+Selected next action:
+
+`gate_a_revalidate_source_accuracy_gap_order_after_floor_raw_role_prompt_guard_landing`
+
+Gate C implementation file:
+
+`packages/engine/src/floor-raw-role-inference-guardrail-gate-c-implementation.test.ts`
+
+Gate C checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-03_FLOOR_RAW_ROLE_INFERENCE_GUARDRAIL_GATE_C_HANDOFF.md`
+
+Gate C does not add a source-ready runtime candidate. It carries
+forward `raw_floor_role_inference`,
+`arbitrary_raw_floor_reorder_value_invariance_remains_unclaimed`,
+`raw_tagged_drift_requires_floor_role_prompt`,
+`raw_no_safe_inference_requires_floor_role_prompt`,
+`duplicate_single_entry_role_requires_floor_role_prompt`,
+`standing_lane_misclassification_monitoring_mandate`, and
+`note_test_document_or_easy_fix`.
+
+The original rockwool source lane remains
+`paused_waiting_rights_safe_source_packet`, and the flat-list wall guard
+remains `multileaf_screening_blend_fail_closed_until_grouped_topology`.
+
+## Prior Floor Raw Role Inference Guardrail Selection
+
+`calculator_source_gap_revalidation_v16` Gate A landed with:
+
+`selected_floor_raw_role_inference_guardrail_after_v16_rerank_found_no_source_ready_runtime_candidate_and_prioritized_floor_side_wrong_lane_risk`
+
+Selected next slice:
+
+`floor_raw_role_inference_guardrail_v1`
+
+Selected next file:
+
+`packages/engine/src/floor-raw-role-inference-guardrail-gate-c-implementation.test.ts`
+
+Selected next action:
+
+`gate_c_implement_raw_floor_role_prompt_guard_with_engine_web_visible_tests`
+
+Selected next planning surface:
+
+`docs/calculator/SLICE_FLOOR_RAW_ROLE_INFERENCE_GUARDRAIL_PLAN.md`
+
+Landed Gate B file:
+
+`packages/engine/src/floor-raw-role-inference-guardrail-gate-b-design-contract.test.ts`
+
+Landed Gate B status:
+
+`floor_raw_role_inference_prompt_guard_design_landed_no_runtime_selected_gate_c_implementation`
+
+Landed Gate B checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-03_FLOOR_RAW_ROLE_INFERENCE_GUARDRAIL_GATE_B_HANDOFF.md`
+
+Gate B prompt boundaries:
+
+`raw_tagged_drift_requires_floor_role_prompt`
+
+`raw_no_safe_inference_requires_floor_role_prompt`
+
+`duplicate_single_entry_role_requires_floor_role_prompt`
+
+Gate C must prove:
+
+`paired_engine_and_web_visible_tests_before_route_card_output_card_or_warning_copy_movement`
+
+Landed Gate A file:
+
+`packages/engine/src/floor-raw-role-inference-guardrail-gate-a-contract.test.ts`
+
+Landed Gate A status:
+
+`floor_raw_role_inference_inventory_landed_no_runtime_selected_gate_b_prompt_guard_design`
+
+Landed Gate A checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-03_FLOOR_RAW_ROLE_INFERENCE_GUARDRAIL_GATE_A_HANDOFF.md`
+
+Current floor boundary:
+
+`raw_floor_role_inference`
+
+`arbitrary_raw_floor_reorder_value_invariance_remains_unclaimed`
+
+Exact role-tagged floor rows are the promoted exact path. Raw floor
+inference must stay screening-only or prompt for missing roles when
+exact floor outputs require role ownership. This selection does not
+promote runtime, support, confidence, evidence, output support, field
+outputs, route cards, output cards, proposal/report copy, or workbench
+input behavior.
+
+Gate A inventory found 173 exact floor rows, 167 manual exact rows, 166
+raw-inference rows, one no-safe-inference row, 12 raw-vs-role-tagged
+drift rows, and 23 bound floor rows. Runtime and visible behavior
+remain frozen until Gate B proves prompt/guard ownership.
+
+Gate B proved the prompt/guard design no-runtime. Role-tagged exact
+floor rows remain the promoted path. Raw-parity green controls can stay
+only without an arbitrary raw reorder invariance claim. Raw/tagged
+drift, no-safe-inference, and duplicate single-entry role cases require
+a floor-role prompt before exact output, support, confidence,
+route-card, or output-card promotion.
+
+Gate A validation completed on 2026-05-03: focused floor raw-role Gate
+A 1 file / 7 tests; continuity with v16 Gate A, floor-library raw
+parity, raw-floor inferred split parity, floor order invariance/edit
+stability, raw-floor hostile input, and route-source risk register 8
+files / 39 tests; `pnpm calculator:gate:current` engine 227 files /
+1284 tests, web 48 files / 230 passed + 18 skipped, repo build 5 / 5
+passed with known non-fatal `sharp/@img` warnings, and whitespace guard
+passed; `apps/web/next-env.d.ts` restored to `.next-typecheck`.
+
+Gate B validation completed on 2026-05-03: focused floor raw-role Gate
+B 1 file / 7 tests; continuity with v16 Gate A, Gate A,
+floor-library raw parity, raw-floor inferred split parity, floor order
+invariance/edit stability, raw-floor hostile input, and route-source
+risk register 9 files / 46 tests; `pnpm calculator:gate:current`
+engine 228 files / 1291 tests, web 48 files / 230 passed + 18 skipped,
+repo build 5 / 5 passed with known non-fatal `sharp/@img` warnings,
+and whitespace guard passed; `apps/web/next-env.d.ts` restored to
+`.next-typecheck`.
+
+Original rockwool posture remains unchanged: the Uris 2006 lane is
+`paused_waiting_rights_safe_source_packet`, and Gate E's
+`multileaf_screening_blend_fail_closed_until_grouped_topology` guard is
+a bounded flat-list wrong-lane guard, not a source-validated
+triple-leaf solver.
+
+## Current Lane-Drift Watchlist Selection
+
+`calculator_source_gap_revalidation_v15` Gate A landed with:
+
+`selected_route_family_lane_drift_common_stack_watchlist_after_v15_rerank_found_no_runtime_ready_source_candidate_and_user_prioritized_rockwool_like_lane_errors`
+
+Selected next slice:
+
+`route_family_lane_drift_common_stack_watchlist_v1`
+
+Landed Gate A file:
+
+`packages/engine/src/route-family-lane-drift-common-stack-watchlist-gate-a-contract.test.ts`
+
+Landed Gate A action:
+
+`gate_a_inventory_common_wall_floor_lane_drift_watchlist_no_runtime`
+
+Landed Gate A status:
+
+`common_stack_lane_drift_inventory_landed_no_runtime_selected_gate_b_reprobes`
+
+Landed Gate B file:
+
+`packages/engine/src/route-family-lane-drift-common-stack-watchlist-gate-b-reprobes.test.ts`
+
+Landed Gate B action:
+
+`gate_b_reprobe_common_stack_route_family_and_value_drift_no_runtime`
+
+Landed Gate B status:
+
+`common_stack_lane_drift_reprobes_landed_no_runtime_selected_gate_c_classification`
+
+Landed Gate C file:
+
+`packages/engine/src/route-family-lane-drift-common-stack-watchlist-gate-c-classification.test.ts`
+
+Landed Gate C action:
+
+`gate_c_classify_reprobe_findings_and_select_bounded_fix_or_closeout_no_runtime`
+
+Landed Gate C status:
+
+`common_stack_lane_drift_classification_landed_no_runtime_selected_gate_d_flat_list_family_guard_design`
+
+Landed Gate D file:
+
+`packages/engine/src/route-family-lane-drift-common-stack-watchlist-gate-d-flat-list-family-guard-design.test.ts`
+
+Landed Gate D action:
+
+`gate_d_design_flat_list_multileaf_family_guard_with_negative_boundaries_no_runtime`
+
+Landed Gate D status:
+
+`common_stack_lane_drift_flat_list_guard_design_landed_no_runtime_selected_gate_e_implementation`
+
+Landed Gate E file:
+
+`packages/engine/src/route-family-lane-drift-common-stack-watchlist-gate-e-flat-list-family-guard-implementation.test.ts`
+
+Landed Gate E action:
+
+`gate_e_implement_flat_list_multileaf_family_guard_with_engine_web_negative_boundaries`
+
+Landed Gate E status:
+
+`common_stack_lane_drift_flat_list_guard_runtime_landed_selected_gate_f_closeout_next_slice`
+
+Closed Gate F file:
+
+`packages/engine/src/post-route-family-lane-drift-common-stack-watchlist-v1-next-slice-selection-contract.test.ts`
+
+Closed Gate F action:
+
+`gate_f_closeout_and_next_slice_selection_after_flat_list_guard_runtime_landing`
+
+Closed Gate F status:
+
+`closed_route_family_lane_drift_common_stack_watchlist_after_gate_e_guard_landed_and_selected_source_gap_revalidation_v16`
+
+Selected next slice:
+
+`calculator_source_gap_revalidation_v16`
+
+Selected next file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v16-gate-a-contract.test.ts`
+
+Selected next action:
+
+`gate_a_revalidate_source_accuracy_gap_order_after_lane_drift_guard_runtime_landing`
+
+Selected next planning surface:
+
+`docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V16_PLAN.md`
+
+V16 Gate A landed with:
+
+`selected_floor_raw_role_inference_guardrail_after_v16_rerank_found_no_source_ready_runtime_candidate_and_prioritized_floor_side_wrong_lane_risk`
+
+V16 selected next slice:
+
+`floor_raw_role_inference_guardrail_v1`
+
+V16 selected next file:
+
+`packages/engine/src/floor-raw-role-inference-guardrail-gate-a-contract.test.ts`
+
+V16 selected next action:
+
+`gate_a_inventory_raw_floor_role_inference_guardrail_no_runtime`
+
+V16 selected planning surface:
+
+`docs/calculator/SLICE_FLOOR_RAW_ROLE_INFERENCE_GUARDRAIL_PLAN.md`
+
+Selected planning surface:
+
+`docs/calculator/SLICE_ROUTE_FAMILY_LANE_DRIFT_COMMON_STACK_WATCHLIST_PLAN.md`
+
+Gate F validation completed on 2026-05-03: focused Gate F closeout 1
+file / 6 tests; continuity with v15 Gate A, watchlist Gate A/B/C/D/E/F,
+and the route-source risk register 8 files / 58 tests; `pnpm
+calculator:gate:current` engine 225 files / 1267 tests, web 48 files /
+230 passed + 18 skipped, repo build 5 / 5 passed with known non-fatal
+`sharp/@img` warnings, and whitespace guard passed; `apps/web/next-env.d.ts`
+restored to `.next-typecheck`; final `git diff --check` passed after
+validation docs sync.
+
+V16 Gate A validation completed on 2026-05-03: focused v16 Gate A 1
+file / 10 tests; continuity with v15 Gate A, watchlist Gate A/B/C/D/E/F,
+and the route-source risk register 9 files / 68 tests; `pnpm
+calculator:gate:current` engine 226 files / 1277 tests, web 48 files /
+230 passed + 18 skipped, repo build 5 / 5 passed with known non-fatal
+`sharp/@img` warnings, and whitespace guard passed; `apps/web/next-env.d.ts`
+restored to `.next-typecheck`; final `git diff --check` passed after
+validation docs sync.
+
+Standing mandate:
+
+`standing_lane_misclassification_monitoring_mandate`
+
+If a common wall or floor stack appears to use the wrong route family
+or source lane, jumps after a small layer edit, promotes a near-source
+row as exact, leaks field metrics, or returns an absurd value, apply
+`note_test_document_or_easy_fix`: write a focused repro test if
+possible, fix immediately only when bounded, otherwise document the risk
+and keep output fail-closed.
+
+This watchlist does not approve source imports or value movement. It
+exists because all current manufacturer source rows remain no-runtime,
+GA-600 lacks rights-safe current row payloads, and the Uris 2006 lane
+remains `paused_waiting_rights_safe_source_packet`; the split-rockwool
+answer remains low-confidence `multileaf_screening_blend`, `Rw 41`.
+Gate B now also records
+`split_rockwool_flat_swap_3_4_wrong_lane_reproduced`: a small flat-list
+rockwool/internal-board swap changes the split stack from `Rw 41` to
+`Rw 51` by changing the route family to `double_leaf`. It also records
+`ordinary_classic_triple_leaf_swap_wrong_lane_reproduced` and
+`heavy_multileaf_lined_massive_boundary_reproduced`. Gate C classifies
+the first two findings as `bounded_fix_candidate` and the heavy
+AAC / lined-massive flip as `negative_boundary_for_fix`. These findings
+stay no-runtime through Gate D, which designs
+`flat_list_adjacent_swap_sensitivity_probe`, sets the future fail-closed
+target to `multileaf_screening_blend_fail_closed_until_grouped_topology`,
+and protects `ordinary_double_leaf_negative_boundary`,
+`lined_massive_boundary_hold_negative_boundary`, and
+`paired_engine_and_web_visible_tests_before_runtime`. Gate E lands that
+bounded guard in
+`packages/engine/src/route-family-lane-drift-common-stack-watchlist-gate-e-flat-list-family-guard-implementation.test.ts`
+and `packages/engine/src/dynamic-airborne-flat-list-multileaf-guard.ts`.
+`engine_split_rockwool_swapped_flat_list_holds_multileaf_fail_closed`
+keeps the split-rockwool swap on low-confidence `multileaf_multicavity`,
+`Rw 42`, `R'w 40`, `DnT,w 41`, with
+`multileaf_screening_blend_fail_closed_until_grouped_topology`.
+`engine_classic_swapped_flat_list_holds_multileaf_fail_closed` keeps the
+classic swap at `Rw 33`, `R'w 31`, `DnT,w 33`.
+`apps/web/features/workbench/wall-flat-list-multileaf-family-guard-route-card.test.ts`
+proves `web_route_card_shows_fail_closed_multileaf_screening_not_exact`
+and `web_output_card_does_not_promote_rw_prime_or_dntw_as_exact`.
+`ordinary_double_leaf_negative_boundary` and
+`lined_massive_boundary_hold_negative_boundary` remain protected. This
+is not a source-ready import or exact rockwool fix; Uris 2006 remains
+`paused_waiting_rights_safe_source_packet`. Gate F closes the watchlist
+and selects `calculator_source_gap_revalidation_v16` so the next slice
+can rerank the source/accuracy backlog against the guarded posture
+before any source import, exact solver promotion, or additional runtime
+guard movement.
+
+## CertainTeed SilentFX NRC ASTC Source Pack Extraction
+
+`calculator_source_gap_revalidation_v14` Gate A selected:
+
+`certainteed_silentfx_nrc_astc_source_pack_extraction_v1`
+
+Label:
+
+CertainTeed SilentFX NRC ASTC source-pack extraction
+
+Selection status:
+
+`selected_certainteed_silentfx_nrc_astc_source_pack_extraction_after_v14_rerank_found_official_astc_product_stc_context_but_no_runtime_ready_import`
+
+Gate A status:
+
+`certainteed_silentfx_nrc_astc_rows_extracted_no_runtime_selected_mapping_tolerance_gate_b`
+
+Gate B status:
+
+`certainteed_gate_b_found_no_runtime_ready_row_selected_closeout`
+
+Gate C closeout status:
+
+`closed_certainteed_silentfx_nrc_astc_source_pack_no_runtime_and_selected_source_gap_revalidation_v15_because_gate_b_found_no_runtime_ready_row`
+
+Landed Gate A file:
+
+`packages/engine/src/certainteed-silentfx-nrc-astc-source-pack-extraction-gate-a-contract.test.ts`
+
+Landed Gate A action:
+
+`gate_a_extract_certainteed_silentfx_nrc_astc_rows_without_runtime_import`
+
+Landed Gate B file:
+
+`packages/engine/src/certainteed-silentfx-nrc-astc-source-pack-extraction-gate-b-contract.test.ts`
+
+Landed Gate B action:
+
+`gate_b_mapping_tolerance_decision_no_runtime`
+
+Selected next file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v15-gate-a-contract.test.ts`
+
+Selected next action:
+
+`gate_a_revalidate_source_accuracy_gap_order_after_certainteed_source_pack_closeout`
+
+Selected planning surface:
+
+`docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V15_PLAN.md`
+
+Landed v14 file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v14-gate-a-contract.test.ts`
+
+Landed v14 action:
+
+`gate_a_revalidate_source_accuracy_gap_order_after_pabco_source_pack_closeout`
+
+CertainTeed source posture:
+
+Gate A extracted these no-runtime source-context rows:
+
+- `NRC_CERTAINTEED_SILENTFX_ASTC_HIGH_RISE_22_EXAMPLES_2018` from
+  `https://publications-cnrc.canada.ca/eng/view/object/?id=f308069f-1b20-4aac-bc6d-e7b174ff21bb`;
+  boundary
+  `certainteed_nrc_astc_high_rise_examples_do_not_promote_dyn_echo_rw_or_field_outputs`.
+- `CERTAINTEED_CTG_2481_SILENTFX_U465_STC57_PRODUCT_DATA_EXAMPLE`
+  from `https://ctonesource.certainteed.com/Products/PDF/CTG-2481.pdf`;
+  boundary
+  `certainteed_ctg_2481_u465_stc57_product_row_does_not_replace_existing_lsf_or_generic_gypsum_routes`.
+- `CERTAINTEED_CTG_2481_SILENTFX_U309_STC51_PRODUCT_DATA_EXAMPLE`
+  from `https://ctonesource.certainteed.com/Products/PDF/CTG-2481.pdf`;
+  boundary
+  `certainteed_ctg_2481_u309_stc51_product_row_does_not_promote_dyn_echo_rw_or_field_outputs`.
+
+Supporting public pages are `https://www.certainteed.com/acoustic-gypsum-board`
+and
+`https://www.certainteed.com/products/drywall-products/silentfx-quickcut-drywall`.
+ASTC / field / flanking examples must stay separate from lab or
+product metric rows, and SilentFX, generic gypsum, QuietRock, PABCO
+Type X, and local gypsum board aliases stay separate until material
+mapping and tolerance ownership are explicit.
+
+Protected boundaries:
+
+- `certainteed_silentfx_astc_field_flanking_examples_do_not_promote_dyn_echo_rw_or_dntw`
+- `certainteed_silentfx_product_stc_examples_do_not_promote_runtime_without_metric_topology_tolerance_and_visible_tests`
+- `silentfx_and_generic_gypsum_or_quietrock_do_not_coalesce_without_material_mapping_tolerance_owner`
+- `certainteed_context_does_not_fix_uris_2006_split_rockwool_rw_41_screening_result`
+- `certainteed_ctg_2481_onesource_login_redirect_blocks_current_product_pdf_payload_runtime_claim`
+- `certainteed_astc_and_stc_context_does_not_override_closed_pabco_georgia_pacific_national_gypsum_usg_rockwool_british_gypsum_or_knauf_rows`
+- `certainteed_nrc_astc_gate_b_high_rise_examples_do_not_promote_dyn_echo_rw_dntw_or_field_outputs`
+- `certainteed_ctg_2481_u465_gate_b_stc57_login_locator_does_not_replace_existing_lsf_or_generic_gypsum_routes`
+- `certainteed_ctg_2481_u309_gate_b_stc51_login_locator_does_not_promote_dyn_echo_rw_or_field_outputs`
+- `certainteed_gate_b_source_rows_are_not_runtime_import_approval`
+- `certainteed_gate_b_astc_field_flanking_examples_do_not_promote_dyn_echo_rw_dntw_or_field_outputs`
+- `certainteed_gate_b_product_stc_values_do_not_promote_dyn_echo_rw_or_field_outputs`
+- `certainteed_gate_b_silentfx_typex_certainteed_typex_generic_gypsum_quietrock_and_pabco_type_x_do_not_coalesce_without_mapping_tolerance`
+- `certainteed_gate_b_onesource_login_redirect_blocks_runtime_import_and_confidence_promotion`
+- `certainteed_gate_b_rows_do_not_override_closed_pabco_georgia_pacific_national_gypsum_usg_rockwool_british_gypsum_knauf_or_existing_anchors`
+- `certainteed_gate_b_rows_do_not_fix_the_uris_2006_split_rockwool_triple_leaf_rw_41_screening_result`
+- `certainteed_astc_rows_do_not_promote_lab_rw_dntw_or_field_output_routes`
+- `certainteed_product_stc_rows_do_not_replace_existing_lsf_anchors`
+- `certainteed_silentfx_and_type_x_rows_do_not_promote_generic_gypsum_or_quietrock_aliases`
+- `certainteed_onesource_login_locator_rows_do_not_promote_runtime_truth_without_payload`
+
+Material alias tokens:
+
+- `silentfx_quickcut_type_x_does_not_coalesce_with_generic_gypsum_without_source_tolerance_owner`
+- `certainteed_type_x_does_not_coalesce_with_pabco_type_x_quietrock_type_c_or_generic_gypsum_without_row_policy`
+- `certainteed_product_stc_ul_u465_u309_rows_need_full_payload_before_exact_lsf_or_generic_wall_mapping`
+- `nrc_astc_25_gauge_steel_stud_high_rise_examples_do_not_replace_existing_lsf_lab_anchors`
+- `astc_field_flanking_context_does_not_coalesce_with_lab_rw_or_dntw_outputs`
+- `silentfx_context_does_not_coalesce_with_local_mlv_or_uris_2006_triple_leaf_route`
+
+Rockwool posture:
+
+The Uris 2006 lane remains `paused_waiting_rights_safe_source_packet`;
+the split-rockwool grouped stack remains low-confidence
+`multileaf_screening_blend`, `Rw 41`, and is not fixed by CertainTeed,
+PABCO, or GA-600 context.
+
+CertainTeed Gate A validation:
+
+Completed on 2026-05-03: focused CertainTeed Gate A 1 file / 8 tests;
+continuity with v14, PABCO Gate C / Gate B / Gate A,
+post-Georgia-Pacific Gate A, v13, Georgia-Pacific Gate C, and the
+route-source risk register 9 files / 66 tests; `pnpm
+calculator:gate:current` engine 216 files / 1198 tests, web 47 files /
+227 passed + 18 skipped, build 5 / 5 with known non-fatal
+`sharp/@img` warnings, and whitespace guard passed;
+`apps/web/next-env.d.ts` restored to `.next-typecheck` after the build
+side-effect; `git diff --check` passed after the final documentation
+sync.
+
+CertainTeed Gate B validation:
+
+Completed on 2026-05-03: focused CertainTeed Gate B 1 file / 8 tests;
+continuity with Gate A, v14, PABCO Gate C / Gate B / Gate A,
+post-Georgia-Pacific Gate A, v13, Georgia-Pacific Gate C, and the
+route-source risk register 10 files / 74 tests; `pnpm
+calculator:gate:current` engine 217 files / 1206 tests, web 47 files /
+227 passed + 18 skipped, build 5 / 5 with known non-fatal
+`sharp/@img` warnings, and whitespace guard passed;
+`apps/web/next-env.d.ts` restored to `.next-typecheck` after the build
+side-effect; `git diff --check` passed after the final documentation
+sync.
+
+CertainTeed Gate C validation:
+
+Completed on 2026-05-03: focused CertainTeed Gate C closeout 1 file /
+7 tests; continuity with CertainTeed Gate B, Gate A, v14, PABCO Gate C
+/ Gate B / Gate A, post-Georgia-Pacific Gate A, v13, Georgia-Pacific
+Gate C, and the route-source risk register 11 files / 81 tests; `pnpm
+calculator:gate:current` engine 218 files / 1213 tests, web 47 files /
+227 passed + 18 skipped, build 5 / 5 with known non-fatal
+`sharp/@img` warnings, and whitespace guard passed;
+`apps/web/next-env.d.ts` restored to `.next-typecheck` after the build
+side-effect; `git diff --check` passed after the final documentation
+sync.
+
+## PABCO QuietRock Sound Design Guide Source Pack Extraction
+
+`calculator_post_georgia_pacific_source_acquisition_v1` Gate A selected:
+
+`pabco_quietrock_sound_design_guide_source_pack_extraction_v1`
+
+Label:
+
+PABCO Gypsum / QuietRock Sound Design Guide source-pack extraction
+
+Gate C status:
+
+`closed_pabco_quietrock_sound_design_guide_source_pack_no_runtime_and_selected_source_gap_revalidation_v14_because_gate_b_found_no_runtime_ready_row`
+
+Gate B status:
+
+`pabco_gate_b_found_no_runtime_ready_row_selected_closeout`
+
+Prior selection status:
+
+`selected_pabco_quietrock_sound_design_guide_source_pack_extraction_after_post_georgia_pacific_acquisition_found_official_row_pages_but_no_runtime_ready_import`
+
+Landed Gate A file:
+
+`packages/engine/src/pabco-quietrock-sound-design-guide-source-pack-extraction-gate-a-contract.test.ts`
+
+Landed Gate A action:
+
+`gate_a_extract_pabco_quietrock_sound_design_guide_rows_without_runtime_import`
+
+Landed Gate B file:
+
+`packages/engine/src/pabco-quietrock-sound-design-guide-source-pack-extraction-gate-b-contract.test.ts`
+
+Landed Gate B action:
+
+`gate_b_mapping_tolerance_decision_no_runtime`
+
+Landed Gate C file:
+
+`packages/engine/src/post-pabco-quietrock-sound-design-guide-source-pack-extraction-v1-next-slice-selection-contract.test.ts`
+
+Landed Gate C action:
+
+`gate_c_closeout_and_next_slice_selection_no_runtime`
+
+Selected next file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v14-gate-a-contract.test.ts`
+
+Selected next action:
+
+`gate_a_revalidate_source_accuracy_gap_order_after_pabco_source_pack_closeout`
+
+Selected next slice:
+
+`calculator_source_gap_revalidation_v14`
+
+Selected next planning surface:
+
+`docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V14_PLAN.md`
+
+Planning file:
+
+`docs/calculator/SLICE_PABCO_QUIETROCK_SOUND_DESIGN_GUIDE_SOURCE_PACK_EXTRACTION_PLAN.md`
+
+Prior post-Georgia-Pacific file:
+
+`packages/engine/src/calculator-post-georgia-pacific-source-acquisition-gate-a-contract.test.ts`
+
+Prior post-Georgia-Pacific action:
+
+`gate_a_acquire_and_classify_post_georgia_pacific_source_locators_without_runtime_import`
+
+Gate C validation:
+
+Completed on 2026-05-03: focused PABCO Gate C closeout 1 file / 7
+tests; PABCO Gate C / Gate B / Gate A / post-Georgia-Pacific / v13 /
+Georgia-Pacific Gate C / route-source risk continuity 7 files / 50
+tests; `pnpm calculator:gate:current` engine 214 files / 1182 tests,
+web 47 files / 227 passed + 18 skipped, repo build 5 / 5 with known
+non-fatal `sharp/@img` warnings, whitespace guard passed;
+`apps/web/next-env.d.ts` restored to `.next-typecheck` after the build
+side-effect; `git diff --check` passed after the final documentation
+sync.
+
+Gate B validation:
+
+Completed on 2026-05-03: focused PABCO Gate B 1 file / 8 tests;
+PABCO Gate B / Gate A / post-Georgia-Pacific / v13 / route-source
+risk continuity 5 files / 36 tests; `pnpm calculator:gate:current`
+engine 213 files / 1175 tests, web 47 files / 227 passed + 18 skipped,
+build 5 / 5 with known non-fatal `sharp/@img` warnings; whitespace
+guard passed; `apps/web/next-env.d.ts` restored to `.next-typecheck`
+after the build side-effect; `git diff --check` passed.
+
+Gate A validation:
+
+Completed on 2026-05-03: focused PABCO Gate A 1 file / 8 tests;
+continuity 21 files / 150 tests; `pnpm calculator:gate:current`
+engine 212 files / 1167 tests, web 47 files / 227 passed + 18 skipped,
+build 5 / 5 with known non-fatal `sharp/@img` warnings; whitespace
+guard clean; `apps/web/next-env.d.ts` restored to `.next-typecheck`
+after the build side-effect; `git diff --check` passed.
+
+Prior selection validation:
+
+Completed on 2026-05-02 by post-Georgia-Pacific Gate A: focused
+post-Georgia-Pacific Gate A 1 file / 8 tests; continuity 20 files /
+142 tests; `pnpm calculator:gate:current` engine 211 files / 1159
+tests, web 47 files / 227 passed + 18 skipped, build 5 / 5 with known
+non-fatal `sharp/@img` warnings; `apps/web/next-env.d.ts` restored to
+`.next-typecheck` after the build side-effect; `git diff --check`
+passed.
+
+Gate A extracted the PABCO Gypsum / QuietRock Sound Design Guide and
+Sound Assembly Tool as official source context with `PGD-*`
+identifiers, `STC`, fire design context, product layers, stud
+type/spacing, insulation, resilient channel, and test report numbers.
+This is concrete enough for no-runtime extraction, but not
+runtime-ready until `STC` -> DynEcho metric policy, local material
+mapping, tolerance ownership, retrieved summary-report payloads,
+protected negative boundaries, and paired visible tests are owned.
+
+Source locators:
+
+- `https://go.pabcogypsum.com/tsdg`
+- `https://quietrock.com/resources/sound-control-assembly-selector/`
+
+Gate B rows and row boundaries:
+
+- `PABCO_PGD_W_646_16_QR_ES_WOOD_2X4_16OC_STC41_NOAL17_0730` from
+  `https://pabcogypsum.com/resources/sound-control-assembly-selector/pgd-w-646-16/`;
+  boundary
+  `pabco_pgd_w_646_16_gate_b_stc41_does_not_replace_existing_timber_or_generic_wood_stud_routes`.
+- `PABCO_PGD_W_445_16_QR_ES_WOOD_2X4_RC_16OC_STC57_NOAL17_0745` from
+  `https://pabcogypsum.com/resources/sound-control-assembly-selector/pgd-w-445-16/`;
+  boundary
+  `pabco_pgd_w_445_16_gate_b_resilient_channel_stc57_does_not_promote_dyn_echo_rw_or_generic_resilient_bar`.
+- `PABCO_PGD_W_449_24_QR530_WOOD_2X4_24OC_THREE_LAYERS_STC57_NRC_TLA_04_035`
+  from
+  `https://pabcogypsum.com/resources/sound-control-assembly-selector/pgd-w-449-24/`;
+  boundary
+  `pabco_pgd_w_449_24_gate_b_indexed_locator_missing_payload_blocks_runtime_and_confidence_promotion`.
+  Current direct retrieval did not capture a live payload, so this
+  stays locator-only.
+- `PABCO_PGD_68_534_16_QR_ES_STEEL_68MIL_RC_16OC_STC50_NOAL18_0611`
+  from
+  `https://pabcogypsum.com/resources/sound-control-assembly-selector/pgd-68-534-16/`;
+  boundary
+  `pabco_pgd_68_534_16_gate_b_68mil_steel_resilient_channel_row_does_not_replace_lsf_anchors`.
+- `PABCO_PGD_546_407_16_QR_ES_STEEL_54MIL_RC_16OC_DOUBLE_TYPEX_STC60_NOAL21_0358`
+  from
+  `https://pabcogypsum.com/resources/sound-control-assembly-selector/pgd-546-407-16/`;
+  boundary
+  `pabco_pgd_546_407_16_gate_b_stc60_does_not_promote_field_outputs_or_existing_lsf_anchors`.
+- `PABCO_PGD_W6_467_24_QR530_WOOD_2X6_24OC_STC56_NOAL21_1053` from
+  `https://pabcogypsum.com/resources/sound-control-assembly-selector/pgd-w6-467-24/`;
+  boundary
+  `pabco_pgd_w6_467_24_gate_b_quietrock_530_row_does_not_promote_generic_wood_stud_route`.
+
+Protected boundaries:
+
+- `pabco_gate_b_source_rows_are_not_runtime_import_approval`
+- `pabco_gate_b_stc_values_and_report_locators_do_not_promote_dyn_echo_rw_or_field_outputs`
+- `pabco_gate_b_quietrock_es_530_pabco_type_x_and_generic_gypsum_do_not_coalesce_without_mapping_tolerance`
+- `pabco_gate_b_glass_fiber_does_not_coalesce_with_local_rockwool_or_fix_uris_2006`
+- `pabco_gate_b_resilient_channel_stud_depth_spacing_gauge_and_bearing_do_not_promote_generic_routes`
+- `pabco_gate_b_pgd_w_449_24_indexed_payload_missing_blocks_runtime_import`
+- `pabco_gate_b_rows_do_not_override_closed_georgia_pacific_national_gypsum_usg_rockwool_british_gypsum_knauf_or_existing_anchors`
+- `pabco_gate_b_rows_do_not_fix_the_uris_2006_split_rockwool_triple_leaf_rw_41_screening_result`
+- `pabco_wood_stud_quietrock_rows_do_not_replace_existing_timber_or_generic_wood_stud_routes`
+- `pabco_steel_stud_quietrock_rows_do_not_replace_existing_lsf_anchors`
+- `pabco_resilient_channel_rows_do_not_promote_generic_resilient_bar_routes`
+- `pabco_quietrock_multilayer_rows_do_not_promote_nrc_triple_leaf_or_local_mlv_routes`
+- `pabco_high_stc_rows_do_not_promote_field_outputs_without_field_overlay`
+- `pabco_indexed_or_summary_report_locator_rows_do_not_promote_runtime_truth_without_payload`
+- `runtime_support_confidence_evidence_api_route_card_output_card_proposal_report_and_workbench_input_surfaces_remain_frozen`
+
+## Post-Georgia-Pacific Source Acquisition
+
+`calculator_source_gap_revalidation_v13` Gate A selected:
+
+`calculator_post_georgia_pacific_source_acquisition_v1`
+
+Label:
+
+post-Georgia-Pacific source acquisition
+
+Selection status:
+
+`selected_post_georgia_pacific_source_acquisition_v1_after_v13_rerank_found_no_runtime_ready_candidate_and_post_british_gypsum_official_locators_closed_no_runtime`
+
+Selected file:
+
+`packages/engine/src/calculator-post-georgia-pacific-source-acquisition-gate-a-contract.test.ts`
+
+Selected action:
+
+`gate_a_acquire_and_classify_post_georgia_pacific_source_locators_without_runtime_import`
+
+Planning file:
+
+`docs/calculator/SLICE_CALCULATOR_POST_GEORGIA_PACIFIC_SOURCE_ACQUISITION_V1_PLAN.md`
+
+Prior v13 file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v13-gate-a-contract.test.ts`
+
+Prior v13 action:
+
+`gate_a_revalidate_source_accuracy_gap_order_after_georgia_pacific_source_pack_closeout`
+
+v13 validation:
+
+Completed on 2026-05-02: focused v13 Gate A 1 file / 8 tests;
+route-source risk register 1 file / 4 tests; continuity 19 files /
+134 tests; `pnpm calculator:gate:current` engine 210 files / 1151
+tests, web 47 files / 227 passed + 18 skipped, build 5 / 5 with known
+non-fatal `sharp/@img` warnings, whitespace guard passed,
+`apps/web/next-env.d.ts` restored to `.next-typecheck`, and
+`git diff --check` passed.
+
+Why selected: Georgia-Pacific, National Gypsum, USG, ROCKWOOL, British
+Gypsum, and Knauf source rows are all closed no-runtime from nearby
+context alone; the Uris 2006 rockwool / triple-leaf source lane remains
+`paused_waiting_rights_safe_source_packet`; CLT / mass timber,
+generated floor, no-stud, lined-heavy, field-output, and historical
+blocked families still need new exact topology, metric policy,
+tolerance owner, material mapping, protected negative boundaries, and
+paired visible tests. A fresh source-acquisition pass is the next
+accuracy move.
+
+Why no runtime: no candidate currently names exact source row or packet,
+metric policy, tolerance owner, local material mapping, negative
+boundaries, and paired engine/web visible tests together.
+
+Protected boundaries:
+
+- `closed_georgia_pacific_national_gypsum_usg_rockwool_british_gypsum_and_knauf_rows_remain_context_only`
+- `paused_uris_2006_lane_does_not_promote_rw_41_screening_without_rights_safe_packet`
+- `clt_floor_no_stud_lined_heavy_and_historical_routes_do_not_reopen_from_nearby_green_tests`
+- `runtime_support_confidence_evidence_api_route_card_output_card_proposal_report_and_workbench_input_surfaces_remain_frozen`
+
+The split-rockwool grouped stack remains low-confidence
+`multileaf_screening_blend`, `Rw 41`, and not source-validated.
+
+## Georgia-Pacific Fire & Sound Assemblies Source Pack Extraction
+
+`calculator_source_gap_revalidation_v12` Gate A selected:
+
+`georgia_pacific_fire_sound_assemblies_source_pack_extraction_v1`
+
+Selection status:
+
+`selected_georgia_pacific_fire_sound_assemblies_source_pack_extraction_after_v12_rerank_found_official_planning_context_but_no_runtime_ready_import`
+
+Selected file:
+
+`packages/engine/src/georgia-pacific-fire-sound-assemblies-source-pack-extraction-gate-a-contract.test.ts`
+
+Selected action:
+
+`gate_a_extract_georgia_pacific_fire_sound_assemblies_rows_without_runtime_import`
+
+Gate A status:
+
+`georgia_pacific_fire_sound_assemblies_rows_extracted_no_runtime_selected_mapping_tolerance_gate_b`
+
+Gate B file:
+
+`packages/engine/src/georgia-pacific-fire-sound-assemblies-source-pack-extraction-gate-b-contract.test.ts`
+
+Gate B action:
+
+`gate_b_mapping_tolerance_decision_no_runtime`
+
+Gate B status:
+
+`georgia_pacific_gate_b_found_no_runtime_ready_row_selected_closeout`
+
+Next file:
+
+`packages/engine/src/post-georgia-pacific-fire-sound-assemblies-source-pack-extraction-v1-next-slice-selection-contract.test.ts`
+
+Next action:
+
+`gate_c_closeout_and_next_slice_selection_no_runtime`
+
+Planning file:
+
+`docs/calculator/SLICE_GEORGIA_PACIFIC_FIRE_SOUND_ASSEMBLIES_SOURCE_PACK_EXTRACTION_PLAN.md`
+
+Source locator:
+
+Georgia-Pacific Fire & Sound Assemblies:
+`https://www.buildgp.com/resources/assemblies`
+
+Technical guide locators:
+
+- `https://www.buildgp.com/wp-content/uploads/2018/10/Toughrock-Technical-guide.pdf`
+- `https://www.buildgp.com/wp-content/uploads/2018/11/DensGlass-Technical-Guide.pdf`
+- `https://www.buildgp.com/wp-content/uploads/2018/11/DensGlass-Shaftliner-shaftwell-stairwell-systems-technical-guide.pdf?x98189=`
+
+Why selected: National Gypsum, USG, ROCKWOOL, British Gypsum, and Knauf
+source rows are closed no-runtime; the Uris 2006 two-cavity
+rockwool/internal-board lane remains
+`paused_waiting_rights_safe_source_packet`; Georgia-Pacific is the
+highest-ranked remaining official locator from the post-British-Gypsum
+source acquisition pass.
+
+Why no runtime: the resource is planning / assembly context until
+actual directory rows or test reports are resolved. Exact assembly
+topology, `STC` metric policy, material mapping, tolerance ownership,
+negative boundaries, and paired engine/web visible tests remain
+missing.
+
+Protected boundaries:
+
+- `georgia_pacific_gate_b_actual_directory_or_test_report_payload_missing_blocks_runtime_import`
+- `georgia_pacific_gate_b_source_rows_are_not_runtime_import_approval`
+- `georgia_pacific_gate_b_stc_ranges_and_sound_report_locators_do_not_promote_dyn_echo_rw_or_field_outputs`
+- `georgia_pacific_gate_b_densglass_toughrock_soundbreak_and_generic_gypsum_do_not_coalesce_without_mapping_tolerance`
+- `georgia_pacific_gate_b_exterior_sheathing_shaftliner_area_separation_and_stairwell_rows_do_not_promote_generic_wall_routes`
+- `georgia_pacific_gate_b_rows_do_not_override_closed_national_gypsum_usg_rockwool_british_gypsum_knauf_or_existing_lsf_anchors`
+- `georgia_pacific_gate_b_rows_do_not_fix_the_uris_2006_split_rockwool_triple_leaf_rw_41_screening_result`
+- `gp_planning_resource_does_not_count_as_a_runtime_ready_stc_source_row`
+- `actual_directory_or_test_report_information_is_required_before_complete_use`
+- `gp_context_does_not_override_closed_national_gypsum_usg_rockwool_british_gypsum_knauf_or_existing_lsf_anchors`
+- `georgia_pacific_stc_context_does_not_promote_dyn_echo_rw_or_field_outputs`
+- `gp_densglass_toughrock_soundbreak_and_generic_gypsum_do_not_coalesce_without_mapping_tolerance`
+- `gp_wall_floor_ceiling_roof_context_does_not_cross_promote_route_families`
+- `georgia_pacific_rows_do_not_fix_the_uris_2006_split_rockwool_triple_leaf_rw_41_screening_result`
+- `runtime_support_confidence_evidence_api_route_card_output_card_proposal_report_and_workbench_input_surfaces_remain_frozen`
+
+The split-rockwool grouped stack remains low-confidence
+`multileaf_screening_blend`, `Rw 41`, and not source-validated.
+
+Gate A extracted these Georgia-Pacific rows as context only:
+
+- `GP_TOUGHROCK_INTERIOR_STEEL_UL_U465_STC45_49_RAL_TL99_103`
+- `GP_TOUGHROCK_INTERIOR_STEEL_UL_U411_STC55_59_RAL_TL09_331`
+- `GP_TOUGHROCK_SHAFTLINER_AREA_SEPARATION_GP_WA_120_04_STC66_RAL_TL_10_291`
+- `GP_DENSGLASS_FIREGUARD_SHEATHING_UL_U305_U337_STC30_34_OR_64_8`
+- `GP_DENSGLASS_FIREGUARD_SHEATHING_UL_U425_STC55_59_IRC_IR_761`
+- `GP_DENSGLASS_SHAFTLINER_UL_V473_1HR_RC_STC48_RAL_TL09_363`
+
+Row boundaries:
+
+- `gp_toughrock_interior_stc_range_rows_do_not_replace_existing_lsf_or_timber_routes`
+- `gp_densglass_exterior_sheathing_rows_do_not_promote_generic_interior_wall_or_lined_masonry`
+- `gp_shaftliner_area_separation_rows_do_not_promote_simple_double_leaf_no_stud_or_triple_leaf_routes`
+- `gp_sound_report_numbers_are_locators_not_full_band_curves`
+- `gp_stc_ranges_are_not_single_rw_values`
+- `gp_toughrock_ul_u465_gate_b_stc_range_does_not_replace_lsf_anchor_or_timber_routes`
+- `gp_toughrock_ul_u411_gate_b_stc_range_does_not_promote_dyn_echo_rw_or_field_outputs`
+- `gp_toughrock_gp_wa_120_04_gate_b_area_separation_stc66_does_not_promote_simple_double_leaf_or_triple_leaf_routes`
+- `gp_densglass_ul_u305_u337_gate_b_exterior_sheathing_stc30_34_does_not_promote_generic_interior_wall_routes`
+- `gp_densglass_ul_u425_gate_b_exterior_sheathing_stc55_59_does_not_replace_lsf_or_lined_masonry_anchors`
+- `gp_densglass_shaftliner_ul_v473_gate_b_stc48_remains_shaftwall_context_only`
+
+Family boundaries:
+
+- `interior_steel_partition_rows_do_not_replace_existing_lsf_timber_or_triple_leaf_routes`
+- `exterior_sheathing_wall_rows_do_not_promote_generic_interior_wall_or_lined_masonry_routes`
+- `area_separation_wall_rows_do_not_promote_simple_double_leaf_no_stud_or_triple_leaf_routes`
+- `shaftwall_stairwell_rows_do_not_promote_simple_wall_lsf_or_lined_masonry_routes`
+- `floor_ceiling_roof_context_from_gp_resources_does_not_promote_lnw_or_impact_outputs`
+
+Gate B found no runtime-ready row. Gate C closed this source pack
+no-runtime and selected `calculator_source_gap_revalidation_v13`
+without moving runtime or visible behavior.
+
+Gate B validation completed on 2026-05-02: focused 1 file / 7 tests;
+continuity 17 files / 119 tests; current gate engine 208 files / 1136
+tests, web 47 files / 227 passed + 18 skipped, build 5 / 5 with known
+non-fatal `sharp/@img` warnings and whitespace guard passed;
+`apps/web/next-env.d.ts` restored to `.next-typecheck`; `git diff --check`
+passed.
+
+Gate C closeout file:
+
+`packages/engine/src/post-georgia-pacific-fire-sound-assemblies-source-pack-extraction-v1-next-slice-selection-contract.test.ts`
+
+Gate C action:
+
+`gate_c_closeout_and_next_slice_selection_no_runtime`
+
+Gate C status:
+
+`closed_georgia_pacific_fire_sound_assemblies_source_pack_no_runtime_and_selected_source_gap_revalidation_v13_because_gate_b_found_no_runtime_ready_row`
+
+Selected v13 file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v13-gate-a-contract.test.ts`
+
+Selected v13 action:
+
+`gate_a_revalidate_source_accuracy_gap_order_after_georgia_pacific_source_pack_closeout`
+
+Selected v13 plan:
+
+`docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V13_PLAN.md`
+
+Gate C validation completed on 2026-05-02: focused Gate C closeout
+1 file / 7 tests; route-source risk register 1 file / 4 tests;
+continuity 18 files / 126 tests; current gate engine 209 files / 1143
+tests, web 47 files / 227 passed + 18 skipped, build 5 / 5 with known
+non-fatal `sharp/@img` warnings and whitespace guard passed;
+`apps/web/next-env.d.ts` restored to `.next-typecheck`; `git diff --check`
+passed.
+
+## National Gypsum Fire & Sound Selector Source Pack Extraction
+
+`calculator_source_gap_revalidation_v11` Gate A selected, and National
+Gypsum Gate B has now landed no-runtime:
+
+`national_gypsum_fire_sound_selector_source_pack_extraction_v1`
+
+Gate A file:
+
+`packages/engine/src/national-gypsum-fire-sound-selector-source-pack-extraction-gate-a-contract.test.ts`
+
+Gate A action:
+
+`gate_a_extract_national_gypsum_fire_sound_selector_rows_without_runtime_import`
+
+Gate A status:
+
+`national_gypsum_fire_sound_selector_rows_extracted_no_runtime_selected_mapping_tolerance_gate_b`
+
+Gate B file:
+
+`packages/engine/src/national-gypsum-fire-sound-selector-source-pack-extraction-gate-b-contract.test.ts`
+
+Gate B action:
+
+`gate_b_mapping_tolerance_decision_no_runtime`
+
+Gate B status:
+
+`national_gypsum_gate_b_found_no_runtime_ready_row_selected_closeout`
+
+Next file:
+
+`packages/engine/src/post-national-gypsum-fire-sound-selector-source-pack-extraction-v1-next-slice-selection-contract.test.ts`
+
+Next action:
+
+`gate_c_closeout_and_next_slice_selection_no_runtime`
+
+Selection status:
+
+`selected_national_gypsum_fire_sound_selector_source_pack_extraction_after_v11_rerank_found_official_selector_context_but_no_runtime_ready_import`
+
+Source locator:
+
+National Gypsum Fire & Sound Assembly Selector:
+`https://www.nationalgypsum.com/newsroom/press-releases/introducing-national-gypsums-fire-sound-assembly-selector`
+
+Gate A representative rows:
+
+- `NATIONAL_GYPSUM_V438_U465_20EQ_RC1_STC50`:
+  `https://www.nationalgypsum.com/design-resource-center/fire-sound-assemblies/v438-u465-358-20eq-m24-rc1`
+- `NATIONAL_GYPSUM_W419_U499_SHAFTWALL_STC44`:
+  `https://www.nationalgypsum.com/design-resource-center/fire-sound-assemblies/w419-u499-212-25ga-ct-sb`
+- `NATIONAL_GYPSUM_W469_LOAD_BEARING_RC1_STC51`:
+  `https://www.nationalgypsum.com/design-resource-center/fire-sound-assemblies/w469-358-16ga-metalstuds-16oc-rc1-sb`
+- `NATIONAL_GYPSUM_W454_AREA_SEPARATION_STC43`:
+  `https://www.nationalgypsum.com/design-resource-center/fire-sound-assemblies/w454-3hr-1xinsul`
+- `NATIONAL_GYPSUM_P540_ROOF_CEILING_STC_NA`:
+  `https://www.nationalgypsum.com/design-resource-center/fire-sound-assemblies/p540-steel-truss-roof-58c`
+
+Gate B keeps every National Gypsum row context-only. Row-specific
+boundaries:
+
+- `national_gypsum_v438_gate_b_stc50_does_not_replace_knauf_lsf_or_generic_steel_partition_routes`
+- `national_gypsum_w419_gate_b_shaftwall_stc44_does_not_promote_generic_wall_lsf_or_lined_masonry_routes`
+- `national_gypsum_w469_gate_b_load_bearing_stc51_does_not_replace_existing_non_load_bearing_lsf_anchors`
+- `national_gypsum_w454_gate_b_area_separation_wall_does_not_promote_simple_stud_no_stud_or_triple_leaf_routes`
+- `national_gypsum_p540_gate_b_stc_na_roof_ceiling_row_remains_negative_boundary_for_floor_wall_and_impact_outputs`
+
+Why selected: ROCKWOOL and USG official source packs are closed
+no-runtime; the Uris 2006 rockwool/two-cavity lane remains
+`paused_waiting_rights_safe_source_packet`; National Gypsum is the
+highest-ranked remaining official locator with selector and related
+sound-test context. Georgia-Pacific remains planning context until
+actual directory rows or test reports are resolved.
+
+Protected boundaries:
+
+- selector surfaces do not count as runtime-ready rows without row
+  payload and test-report capture;
+- UL/fire design context does not promote DynEcho `Rw`, `R'w`, `Ln,w`,
+  `DnT,w`, `Dn,w`, `DnT,A`, support, confidence, evidence, field
+  outputs, route-card values, output-card status, or proposal/report
+  copy without an acoustic metric owner;
+- National Gypsum material names do not coalesce with generic gypsum,
+  USG, Knauf, British Gypsum, ROCKWOOL, local rockwool, glass fiber,
+  generic mineral wool, or generic resilient bar without source/tolerance
+  ownership;
+- the split-rockwool grouped stack remains low-confidence
+  `multileaf_screening_blend`, `Rw 41`, and not source-validated.
+- `national_gypsum_selector_surface_does_not_count_as_runtime_ready_row_without_report_payload`
+- `national_gypsum_stc_rows_do_not_directly_promote_dyn_echo_rw_or_field_outputs`
+- `national_gypsum_wall_rows_do_not_override_usg_knauf_rockwool_british_gypsum_or_existing_lsf_anchors`
+- `national_gypsum_glass_fiber_does_not_fix_the_uris_2006_split_rockwool_triple_leaf_rw_41_screening_result`
+- `national_gypsum_soundbreak_fire_shield_shaftliner_do_not_coalesce_with_generic_gypsum_or_mlv_without_mapping`
+- `national_gypsum_roof_ceiling_or_stc_na_rows_do_not_promote_floor_wall_or_triple_leaf_routes`
+- `runtime_support_confidence_evidence_api_route_card_output_card_proposal_report_and_workbench_input_surfaces_remain_frozen`
+- `national_gypsum_gate_b_source_rows_are_not_runtime_import_approval`
+- `national_gypsum_gate_b_stc_report_locators_do_not_promote_dyn_echo_rw_or_field_outputs`
+- `national_gypsum_gate_b_fire_shield_soundbreak_shaftliner_do_not_coalesce_with_generic_gypsum_or_mlv`
+- `national_gypsum_gate_b_glass_fiber_does_not_coalesce_with_rockwool_or_generic_mineral_wool`
+- `national_gypsum_gate_b_resilient_channel_ct_h_stud_load_bearing_and_roof_truss_roles_do_not_promote_generic_routes`
+- `national_gypsum_gate_b_rows_do_not_override_usg_knauf_rockwool_british_gypsum_or_existing_lsf_anchors`
+- `national_gypsum_gate_b_rows_do_not_fix_the_uris_2006_split_rockwool_triple_leaf_rw_41_screening_result`
+
+Gate B validation completed on 2026-05-02: focused National Gypsum Gate
+B 1 file / 7 tests; National Gypsum Gate B / Gate A / v11 / USG Gate C
+/ Gate B / Gate A / v10 / ROCKWOOL Gate C / Gate B / Gate A /
+post-British-Gypsum acquisition / v9 / route-source-risk continuity 13
+files / 89 tests; current gate engine 204 files / 1106 tests, web 47
+files / 227 passed + 18 skipped, build 5 / 5 with known non-fatal
+`sharp/@img` warnings and whitespace guard passed;
+`apps/web/next-env.d.ts` restored to `.next-typecheck`; `git diff --check`
+passed.
+
+Gate C closeout status:
+
+`closed_national_gypsum_fire_sound_selector_source_pack_no_runtime_and_selected_source_gap_revalidation_v12_because_gate_b_found_no_runtime_ready_row`
+
+Gate C closeout file:
+
+`packages/engine/src/post-national-gypsum-fire-sound-selector-source-pack-extraction-v1-next-slice-selection-contract.test.ts`
+
+Gate C selected next slice:
+
+`calculator_source_gap_revalidation_v12`
+
+Gate C selected next file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v12-gate-a-contract.test.ts`
+
+Gate C selected next action:
+
+`gate_a_revalidate_source_accuracy_gap_order_after_national_gypsum_source_pack_closeout`
+
+Gate C closes the National Gypsum selector pack no-runtime. The next
+v12 pass must re-rank closed National Gypsum / USG / ROCKWOOL /
+British Gypsum / Knauf rows, the paused Uris 2006 source-packet lane,
+Georgia-Pacific / remaining official locators, and CLT / floor /
+no-stud / lined-heavy / historical blockers before any runtime or
+visible movement.
+
+Gate C validation completed on 2026-05-02: focused National Gypsum Gate
+C closeout 1 file / 7 tests; National Gypsum Gate C / Gate B / Gate A /
+v11 / USG Gate C / Gate B / Gate A / v10 / ROCKWOOL Gate C / Gate B /
+Gate A / post-British-Gypsum acquisition / v9 / route-source-risk
+continuity 14 files / 96 tests; current gate engine 205 files / 1113
+tests, web 47 files / 227 passed + 18 skipped, build 5 / 5 with known
+non-fatal `sharp/@img` warnings and whitespace guard passed;
+`apps/web/next-env.d.ts` restored to `.next-typecheck`; `git diff --check`
+passed.
+
+## USG Acoustical Assemblies Source Pack Extraction Gate A
+
+`usg_acoustical_assemblies_source_pack_extraction_v1` Gate A lands
+no-runtime in:
+
+`packages/engine/src/usg-acoustical-assemblies-source-pack-extraction-gate-a-contract.test.ts`
+
+Gate A status:
+
+`usg_acoustical_assemblies_rows_extracted_no_runtime_selected_mapping_tolerance_gate_b`
+
+Next selected file:
+
+`packages/engine/src/usg-acoustical-assemblies-source-pack-extraction-gate-b-contract.test.ts`
+
+Next selected action:
+
+`gate_b_mapping_tolerance_decision_no_runtime`
+
+Source locator:
+
+`https://www.usg.com/content/dam/USG_Marketing_Communications/united_states/product_promotional_materials/finished_assets/acoustical-assemblies-en-SA200.pdf`
+
+Extracted rows:
+
+- `LEVELROCK_I_JOIST_SRM25_CARPET`: `IIC 77`, `STC 65`.
+- `LEVELROCK_I_JOIST_SRM25_SHEET_VINYL`: `IIC 55-58`, `STC 60-64`.
+- `LEVELROCK_I_JOIST_SRB_WOOD_LAMINATE`: `IIC 61`, `STC 65`.
+- `LEVELROCK_TRUSS_SRM25_CERAMIC_TILE`: `IIC 56`, `STC 61`.
+- `USG_STEEL_FRAMED_A1`: `STC 40`, test `USG-860808`.
+- `USG_STEEL_FRAMED_A8`: `STC 58`, test `RAL-TL-83-215`.
+
+Protected boundaries:
+
+- `usg_stc_iic_rows_do_not_directly_promote_dyn_echo_rw_lnw_or_field_outputs`
+- `usg_floor_ceiling_rows_do_not_become_wall_or_triple_leaf_truth`
+- `usg_levelrock_srm_srb_i_joist_truss_rows_do_not_promote_generated_floor_without_mapping_tolerance`
+- `usg_steel_partition_rows_do_not_override_knauf_rockwool_british_gypsum_or_existing_lsf_anchors`
+- `usg_sheetrock_thermafiber_rows_do_not_coalesce_with_generic_gypsum_rockwool_or_glass_fiber_without_mapping`
+- `usg_rows_do_not_fix_the_uris_2006_split_rockwool_triple_leaf_rw_41_screening_result`
+- `runtime_support_confidence_evidence_api_route_card_output_card_proposal_report_and_workbench_input_surfaces_remain_frozen`
+
+Result: `STC`, `IIC`, ranges, and test numbers are source context only.
+No DynEcho `Rw`, `Ln,w`, `R'w`, `Dn,w`, `DnT,w`, `DnT,A`, support,
+confidence, evidence, route-card, output-card, proposal/report, API, or
+workbench-input behavior is approved for movement.
+
+Validation completed on 2026-05-02: focused USG Gate A 1 file / 6 tests;
+continuity 8 files / 54 tests; current gate engine 199 files / 1071
+tests, web 47 files / 227 passed + 18 skipped, build 5 / 5 with known
+non-fatal `sharp/@img` warnings; `apps/web/next-env.d.ts` restored to
+`.next-typecheck`; whitespace guard passed through
+`pnpm calculator:gate:current`.
+
+## USG Acoustical Assemblies Source Pack Extraction Gate B
+
+`usg_acoustical_assemblies_source_pack_extraction_v1` Gate B lands
+no-runtime in:
+
+`packages/engine/src/usg-acoustical-assemblies-source-pack-extraction-gate-b-contract.test.ts`
+
+Gate B status:
+
+`usg_gate_b_found_no_runtime_ready_row_selected_closeout`
+
+Next selected file:
+
+`packages/engine/src/post-usg-acoustical-assemblies-source-pack-extraction-v1-next-slice-selection-contract.test.ts`
+
+Next selected action:
+
+`gate_c_closeout_and_next_slice_selection_no_runtime`
+
+Gate B keeps every USG row out of runtime import:
+
+- `LEVELROCK_I_JOIST_SRM25_CARPET`
+- `LEVELROCK_I_JOIST_SRM25_SHEET_VINYL`
+- `LEVELROCK_I_JOIST_SRB_WOOD_LAMINATE`
+- `LEVELROCK_TRUSS_SRM25_CERAMIC_TILE`
+- `USG_STEEL_FRAMED_A1`
+- `USG_STEEL_FRAMED_A8`
+
+Protected Gate B boundaries:
+
+- `usg_gate_b_source_rows_are_not_runtime_import_approval`
+- `usg_gate_b_stc_iic_test_numbers_do_not_promote_dyn_echo_rw_lnw_or_field_outputs`
+- `usg_gate_b_levelrock_srm_srb_i_joist_truss_do_not_promote_generated_floor_or_wall_routes`
+- `usg_gate_b_floor_rows_do_not_override_exact_or_bound_floor_catalog_without_mapping_tolerance`
+- `usg_gate_b_steel_partition_rows_do_not_override_knauf_rockwool_british_gypsum_or_existing_lsf_anchors`
+- `usg_gate_b_sheetrock_thermafiber_rc_channel_do_not_coalesce_with_generic_gypsum_rockwool_glass_fiber_or_resilient_bar`
+- `usg_gate_b_rows_do_not_fix_the_uris_2006_split_rockwool_triple_leaf_rw_41_screening_result`
+- `runtime_support_confidence_evidence_api_route_card_output_card_proposal_report_and_workbench_input_surfaces_remain_frozen`
+
+Validation completed on 2026-05-02: focused USG Gate B 1 file / 7
+tests; continuity 9 files / 61 tests; current gate engine 200 files /
+1078 tests, web 47 files / 227 passed + 18 skipped, build 5 / 5 with
+known non-fatal `sharp/@img` warnings; `apps/web/next-env.d.ts`
+restored to `.next-typecheck`; whitespace guard passed through
+`pnpm calculator:gate:current`.
+
+## USG Acoustical Assemblies Source Pack Extraction Gate C
+
+`usg_acoustical_assemblies_source_pack_extraction_v1` Gate C closes
+no-runtime in:
+
+`packages/engine/src/post-usg-acoustical-assemblies-source-pack-extraction-v1-next-slice-selection-contract.test.ts`
+
+Gate C status:
+
+`closed_usg_acoustical_assemblies_source_pack_no_runtime_and_selected_source_gap_revalidation_v11_because_gate_b_found_no_runtime_ready_row`
+
+Next selected slice:
+
+`calculator_source_gap_revalidation_v11`
+
+Next selected file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v11-gate-a-contract.test.ts`
+
+Next selected action:
+
+`gate_a_revalidate_source_accuracy_gap_order_after_usg_source_pack_closeout`
+
+Gate C keeps every USG row context-only and out of runtime import:
+
+- `LEVELROCK_I_JOIST_SRM25_CARPET`
+- `LEVELROCK_I_JOIST_SRM25_SHEET_VINYL`
+- `LEVELROCK_I_JOIST_SRB_WOOD_LAMINATE`
+- `LEVELROCK_TRUSS_SRM25_CERAMIC_TILE`
+- `USG_STEEL_FRAMED_A1`
+- `USG_STEEL_FRAMED_A8`
+
+Gate C selects v11 source-gap revalidation instead of directly opening
+runtime, National Gypsum / Georgia-Pacific extraction, internal pilot,
+or productization work. V11 must re-rank closed USG / ROCKWOOL /
+British Gypsum / Knauf rows, the paused Uris 2006 source lane, National
+Gypsum / Georgia-Pacific locators, CLT / generated-floor / no-stud /
+lined-heavy follow-ups, and historical blockers before any runtime or
+visible behavior moves.
+
+Validation completed on 2026-05-02: focused USG Gate C closeout 1 file
+/ 7 tests; USG Gate C / Gate B / Gate A / v10 / ROCKWOOL /
+post-British-Gypsum / v9 / route-source-risk continuity 10 files / 68
+tests; `pnpm calculator:gate:current` engine 201 files / 1085 tests,
+web 47 files / 227 passed + 18 skipped, build 5 / 5 with known
+non-fatal `sharp/@img` warnings; `apps/web/next-env.d.ts` restored to
+`.next-typecheck`; `git diff --check` passed.
 
 ## Gate A Decision
 
@@ -588,6 +2251,316 @@ These are valid intake locators, not source-ready runtime packs. A future
 runtime slice must still extract rows, map metrics, define tolerance, and
 write positive and negative tests.
 
+## British Gypsum White Book Source Pack Extraction Gate B
+
+Slice:
+
+`british_gypsum_white_book_source_pack_extraction_v1`
+
+Gate B status:
+
+`british_gypsum_gate_b_found_no_new_runtime_ready_row_kept_a046006_existing_anchor_and_selected_closeout`
+
+Selected next action:
+
+`gate_c_closeout_and_next_slice_selection_no_runtime`
+
+Selected next file:
+
+`packages/engine/src/post-british-gypsum-white-book-source-pack-extraction-v1-next-slice-selection-contract.test.ts`
+
+Gate B lands no-runtime in:
+
+`packages/engine/src/british-gypsum-white-book-source-pack-extraction-gate-b-contract.test.ts`
+
+Result: `C204006`, `C204003`, `A206A290`, `A326017B`, and `B226010`
+remain source context only because exact live topology, material
+mapping, metric policy, tolerance ownership, protected negative
+boundaries, and paired visible tests are not all owned. `A046006`
+remains represented by the existing exact timber corpus row
+`british_gypsum_a046006_timber_rb2_2x12p5_soundbloc_50apr_lab_2026`
+and is not re-imported.
+
+Protected backlog rules from Gate B:
+
+- GypFloor Silent `C204006` and `C204003` stay floor-only and do not
+  promote wall outputs or generic generated floor fallback truth.
+- `A206A290` does not override the current Knauf LSF exact anchor.
+- `A326017B` does not reopen no-stud, raw open-box, or simple timber
+  routes.
+- `B226010` does not promote generic lined concrete, `MWI.2A`, or
+  heavy-core screening.
+- `Rw+Ctr` context does not promote standalone `C`, `Ctr`, or field
+  outputs.
+
+Gate C closeout lands no-runtime in:
+
+`packages/engine/src/post-british-gypsum-white-book-source-pack-extraction-v1-next-slice-selection-contract.test.ts`
+
+Gate C status:
+
+`closed_british_gypsum_white_book_source_pack_no_runtime_and_selected_source_gap_revalidation_v9_because_gate_b_found_no_new_import_ready_row`
+
+The Uris 2006 triple-leaf lane remains paused on
+`paused_waiting_rights_safe_source_packet` and must be re-ranked in v9
+without treating the split-rockwool `Rw 41` screening result as fixed.
+
+Selected next slice:
+
+`calculator_source_gap_revalidation_v9`
+
+Selected next file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v9-gate-a-contract.test.ts`
+
+Selected action:
+
+`gate_a_revalidate_source_accuracy_gap_order_after_british_gypsum_source_pack_closeout`
+
+## Calculator Source Gap Revalidation v9 Gate A
+
+`calculator_source_gap_revalidation_v9` Gate A lands no-runtime in:
+
+`packages/engine/src/calculator-source-gap-revalidation-v9-gate-a-contract.test.ts`
+
+Next selected slice:
+
+`calculator_post_british_gypsum_source_acquisition_v1`
+
+Next selected file:
+
+`packages/engine/src/calculator-post-british-gypsum-source-acquisition-gate-a-contract.test.ts`
+
+Selected action:
+
+`gate_a_acquire_and_classify_post_british_gypsum_source_locators_without_runtime_import`
+
+Gate A status:
+
+`selected_post_british_gypsum_source_acquisition_v1_after_v9_rerank_found_no_runtime_ready_candidate_and_british_gypsum_closed_no_runtime`
+
+Reason: no current source candidate is runtime-ready after British
+Gypsum Gate B / Gate C. The Uris 2006 triple-leaf lane remains paused
+on `paused_waiting_rights_safe_source_packet`; closed British Gypsum
+rows and closed Knauf rows remain no-runtime; CLT / mass timber,
+generated floor, no-stud double-leaf, lined-heavy, and historical
+blocked families still need exact topology, metric owner, tolerance
+owner, material mapping, protected negative boundaries, and paired
+visible tests. The next honest accuracy step is a fresh official source
+locator / rights-safe source packet acquisition pass.
+
+## Calculator Post-British-Gypsum Source Acquisition Gate A
+
+`calculator_post_british_gypsum_source_acquisition_v1` Gate A lands
+no-runtime in:
+
+`packages/engine/src/calculator-post-british-gypsum-source-acquisition-gate-a-contract.test.ts`
+
+Next selected slice:
+
+`rockwool_acoustic_wall_assemblies_source_pack_extraction_v1`
+
+Next selected file:
+
+`packages/engine/src/rockwool-acoustic-wall-assemblies-source-pack-extraction-gate-a-contract.test.ts`
+
+Selected action:
+
+`gate_a_extract_rockwool_acoustic_wall_assemblies_rows_without_runtime_import`
+
+Gate A status:
+
+`selected_rockwool_acoustic_wall_assemblies_source_pack_extraction_after_post_british_gypsum_acquisition_found_official_stone_wool_wall_rows_but_no_runtime_ready_import`
+
+Reason: the `ROCKWOOL Acoustic Wall Assemblies Catalog` is the clearest
+fresh official stone-wool wall locator after British Gypsum closeout,
+with concrete ISS / IWS / ESS row families and STC / OITC / report
+number context. It is selected for source-pack extraction only, not
+runtime import. USG SA200, National Gypsum, Georgia-Pacific, and
+existing mass-timber context remain nearby source context only. The
+source acquisition pass does not fix the Uris 2006 split-rockwool
+triple-leaf issue, does not validate the live `Rw 41`
+`multileaf_screening_blend` answer, and does not coalesce AFB /
+Comfortbatt / Cavityrock with glass-fiber or generic mineral-wool
+materials without a future material-mapping and tolerance owner.
+
+## ROCKWOOL Acoustic Wall Assemblies Source Pack Extraction Gate A
+
+`rockwool_acoustic_wall_assemblies_source_pack_extraction_v1` Gate A
+lands no-runtime in:
+
+`packages/engine/src/rockwool-acoustic-wall-assemblies-source-pack-extraction-gate-a-contract.test.ts`
+
+Selected next file:
+
+`packages/engine/src/rockwool-acoustic-wall-assemblies-source-pack-extraction-gate-b-contract.test.ts`
+
+Selected action:
+
+`gate_b_mapping_tolerance_decision_no_runtime`
+
+Gate A status:
+
+`rockwool_acoustic_wall_assemblies_rows_extracted_no_runtime_selected_mapping_tolerance_gate_b`
+
+Gate A extracted representative official ROCKWOOL rows from:
+
+`https://www.rockwool.com/siteassets/o2-rockwool/documentation/technical-guides/commercial/acoustic-wall-assemblies-catalog-techincal-guide.pdf`
+
+Rows needing Gate B mapping/tolerance:
+
+- `ISS-00`: steel stud, `AFB 1.5"`, `STC 43`, `OITC 28`.
+- `ISS-22`: asymmetric steel stud, `AFB 1.5"`, `STC 50`.
+- `ISS-39`: double-board steel stud, `AFB 3"`, `STC 57`.
+- `IWS-04`: wood stud, `AFB 3"`, `STC 40`, `OITC 32`.
+- `ESS-05`: exterior steel stud, `Comfortbatt 3.5"` plus
+  `Cavityrock 2"`, `STC 49`, `OITC 32`.
+
+Protected backlog boundaries from Gate A:
+
+- `rockwool_acoustic_catalog_stc_oitc_rows_do_not_fix_the_uris_2006_split_rockwool_triple_leaf_rw_41_screening_result`
+- `rockwool_afb_comfortbatt_cavityrock_do_not_coalesce_with_glass_fiber_or_generic_mineral_wool_without_mapping_tolerance`
+- `rockwool_single_stud_iss_iws_rows_do_not_replace_nrc_2024_internal_board_glass_fiber_triple_leaf_comparator`
+- `rockwool_catalog_rows_do_not_reopen_closed_british_gypsum_or_knauf_rows_without_new_gate_b_mapping`
+- `rockwool_catalog_rows_do_not_promote_floor_only_generated_floor_masonry_lined_heavy_or_no_stud_routes`
+- `runtime_support_confidence_evidence_api_route_card_output_card_proposal_report_and_workbench_input_surfaces_remain_frozen`
+
+Reason: the catalog rows are official source context, but they are
+`STC` / `OITC` rows with product/report references, not ISO `Rw`
+runtime rows or one-third-octave TL curve packets. Gate B must decide
+row-by-row whether exact topology, metric policy, material/product
+mapping, tolerance ownership, negative boundaries, and paired visible
+tests exist. Until then, every runtime/support/confidence/evidence/API/
+route-card/output-card/proposal-report/workbench-input surface stays
+frozen.
+
+## ROCKWOOL Acoustic Wall Assemblies Source Pack Extraction Gate B
+
+`rockwool_acoustic_wall_assemblies_source_pack_extraction_v1` Gate B
+lands no-runtime in:
+
+`packages/engine/src/rockwool-acoustic-wall-assemblies-source-pack-extraction-gate-b-contract.test.ts`
+
+Gate B status:
+
+`rockwool_gate_b_found_no_runtime_ready_row_selected_closeout`
+
+Selected next file:
+
+`packages/engine/src/post-rockwool-acoustic-wall-assemblies-source-pack-extraction-v1-next-slice-selection-contract.test.ts`
+
+Selected action:
+
+`gate_c_closeout_and_next_slice_selection_no_runtime`
+
+Gate B result: `ISS-00`, `ISS-22`, `ISS-39`, `IWS-04`, and `ESS-05`
+remain source context only. No new ROCKWOOL runtime import, support
+promotion, confidence promotion, evidence promotion, API movement,
+route-card movement, output-card movement, proposal/report movement, or
+workbench-input movement is selected.
+
+Protected backlog rules from Gate B:
+
+- `rockwool_gate_b_source_rows_are_not_runtime_import_approval`
+- `rockwool_gate_b_stc_oitc_report_numbers_do_not_promote_iso_rw_or_field_outputs`
+- `rockwool_gate_b_afb_comfortbatt_cavityrock_do_not_coalesce_with_local_rockwool_glass_fiber_or_generic_mineral_wool`
+- `rockwool_gate_b_iss_rows_do_not_override_knauf_lsf_or_nrc_uris_triple_leaf_lanes`
+- `rockwool_gate_b_iws_04_does_not_reopen_a046006_or_generic_timber_routes`
+- `rockwool_gate_b_ess_05_does_not_promote_interior_wall_floor_masonry_lined_heavy_or_triple_leaf_routes`
+- `runtime_support_confidence_evidence_api_route_card_output_card_proposal_report_and_workbench_input_surfaces_remain_frozen`
+
+Material alias blockers from Gate B:
+
+- `afb_does_not_coalesce_with_local_rockwool_without_density_flow_resistivity_thickness_and_source_family_owner`
+- `afb_does_not_coalesce_with_glass_fiber_or_generic_mineral_wool`
+- `comfortbatt_is_not_generic_interior_cavity_absorber_truth`
+- `cavityrock_is_continuous_exterior_board_context_not_cavity_batt_truth`
+- `rockwool_catalog_rows_do_not_override_nrc_2024_glass_fiber_or_uris_2006_rockwool_source_lane`
+
+Gate C closeout lands no-runtime next in:
+
+`packages/engine/src/post-rockwool-acoustic-wall-assemblies-source-pack-extraction-v1-next-slice-selection-contract.test.ts`
+
+## ROCKWOOL Acoustic Wall Assemblies Source Pack Extraction Gate C
+
+`rockwool_acoustic_wall_assemblies_source_pack_extraction_v1` Gate C
+closes no-runtime in:
+
+`packages/engine/src/post-rockwool-acoustic-wall-assemblies-source-pack-extraction-v1-next-slice-selection-contract.test.ts`
+
+Gate C status:
+
+`closed_rockwool_acoustic_wall_assemblies_source_pack_no_runtime_and_selected_source_gap_revalidation_v10_because_gate_b_found_no_runtime_ready_row`
+
+Selected next slice:
+
+`calculator_source_gap_revalidation_v10`
+
+Selected next file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v10-gate-a-contract.test.ts`
+
+Selected action:
+
+`gate_a_revalidate_source_accuracy_gap_order_after_rockwool_source_pack_closeout`
+
+Gate C result: no ROCKWOOL `ISS`, `IWS`, or `ESS` row is runtime import
+ready. The official ROCKWOOL catalog remains useful source context, but
+it does not fix the Uris 2006 split-rockwool triple-leaf defect or
+validate the current `Rw 41` `multileaf_screening_blend` answer.
+
+Protected backlog rules from Gate C:
+
+- `iss_00_remains_context_only_and_does_not_replace_knauf_lsf_or_uris_2006_triple_leaf_routes`
+- `iss_22_remains_asymmetric_context_only_and_does_not_promote_symmetric_double_leaf_or_triple_leaf_routes`
+- `iss_39_high_stc_single_frame_context_does_not_override_knauf_lsf_nrc_or_uris_triple_leaf_families`
+- `iws_04_remains_context_only_and_does_not_reopen_a046006_or_generic_timber_routes`
+- `ess_05_remains_exterior_envelope_context_and_does_not_promote_interior_wall_floor_masonry_lined_heavy_or_triple_leaf_routes`
+
+## Calculator Source Gap Revalidation v10 Gate A
+
+`calculator_source_gap_revalidation_v10` Gate A lands no-runtime in:
+
+`packages/engine/src/calculator-source-gap-revalidation-v10-gate-a-contract.test.ts`
+
+Gate A status:
+
+`selected_usg_acoustical_assemblies_source_pack_extraction_after_v10_rerank_found_official_floor_wall_stc_iic_rows_but_no_runtime_ready_import`
+
+Selected next slice:
+
+`usg_acoustical_assemblies_source_pack_extraction_v1`
+
+Selected next file:
+
+`packages/engine/src/usg-acoustical-assemblies-source-pack-extraction-gate-a-contract.test.ts`
+
+Selected action:
+
+`gate_a_extract_usg_acoustical_assemblies_rows_without_runtime_import`
+
+Gate A result: after ROCKWOOL Gate C closed no-runtime, v10 re-ranked
+the remaining post-British-Gypsum source locators and selected the
+official USG Acoustical Assemblies SA200 locator as the next
+extraction-only source slice. Known source-context examples are
+`Levelrock_I_joist_SRM25_carpet_IIC77_STC65`,
+`Levelrock_I_joist_SRB_wood_laminate_IIC61_STC65`, and
+`Levelrock_truss_SRM25_ceramic_tile_IIC56_STC61`.
+
+Protected backlog rules from v10:
+
+- USG `STC` / `IIC` rows do not directly promote DynEcho `Rw`, `R'w`,
+  `Ln,w`, `DnT,w`, `Dn,w`, `DnT,A`, or field outputs.
+- USG floor/ceiling rows do not become wall, triple-leaf, or generated
+  floor truth without exact topology and metric policy.
+- Levelrock / SRM / SRB / joist / truss materials do not coalesce with
+  generic floor layers without material-mapping and tolerance ownership.
+- The original split-rockwool stack remains `multileaf_screening_blend`,
+  `Rw 41`, low confidence, and paused on
+  `paused_waiting_rights_safe_source_packet`.
+- Runtime, support, confidence, evidence, API, route-card, output-card,
+  proposal/report, and workbench-input surfaces remain frozen.
+
 ## source_ready_intake_backlog_matrix
 
 | Family | Current runtime posture | User-visible risk | Context source pointers | First missing requirement | Runtime import ready now |
@@ -771,14 +2744,23 @@ is consolidation and explicit cross-linking, not removal.
 
 ## Immediate Next Steps
 
-1. Implement `calculator_source_gap_revalidation_v5` Gate A:
-   `packages/engine/src/calculator-source-gap-revalidation-v5-gate-a-contract.test.ts`.
-2. Treat Knauf Gate B and Gate C as authoritative: no extracted Knauf candidate has
-   complete exact topology, metric context, tolerance ownership, local
-   material mapping, and visible-test ownership.
-3. Select a runtime accuracy slice only if a later gate names exact topology,
+1. Implement `calculator_source_gap_revalidation_v14` Gate A:
+   `packages/engine/src/calculator-source-gap-revalidation-v14-gate-a-contract.test.ts`
+   with `gate_a_revalidate_source_accuracy_gap_order_after_pabco_source_pack_closeout`.
+2. Treat the landed PABCO Gypsum / QuietRock Sound Design Guide Gate C
+   closeout as no-runtime only until row-by-row `PGD-*` topology,
+   `STC` metric policy, material alias boundaries, tolerance ownership,
+   Uris 2006 triple-leaf negative boundaries, summary-report payloads,
+   and paired engine/web visible tests are owned.
+3. Treat ROCKWOOL Gate C, USG Gate C, National Gypsum Gate C,
+   Georgia-Pacific Gate C, PABCO Gate C, British Gypsum Gate C, Knauf
+   Gate C, v13, and post-Georgia-Pacific Gate A as
+   authoritative: no extracted candidate has complete exact topology,
+   metric context, tolerance ownership, local material mapping, and
+   visible-test ownership for new runtime import.
+4. Select a runtime accuracy slice only if a later gate names exact topology,
    metric owner, tolerance owner, protected negative boundaries, and
    paired engine/web visible tests.
-4. Keep all validation gates green:
+5. Keep all validation gates green:
    `pnpm calculator:gate:current`, targeted Gate A/Gate C contracts,
    `git diff --check`, and `pnpm check` when the release gate is needed.

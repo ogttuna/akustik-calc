@@ -49,6 +49,16 @@ type ResolvedLayerStackEntry = LayerInput & {
   material: MaterialDefinition;
 };
 
+export type RawFloorRolePromptGuardReason =
+  | "duplicate_single_entry_role_requires_floor_role_prompt"
+  | "raw_no_safe_inference_requires_floor_role_prompt"
+  | "raw_tagged_drift_requires_floor_role_prompt";
+
+export type RawFloorRolePromptGuard = {
+  reason: RawFloorRolePromptGuardReason;
+  warning: string;
+};
+
 const PRODUCT_ID_TO_MATERIAL_ID: Record<string, string> = {
   getzner_afm_21: "getzner_afm_21",
   getzner_afm_23: "getzner_afm_23",
@@ -1740,6 +1750,80 @@ export function getVisibleLayerPredictorBlockerWarning(
   }
 
   return `Visible-layer predictor matching is parked because single-entry floor roles are duplicated: ${conflicts.map(formatPredictorRoleConflict).join("; ")}. DynEcho stayed on the broader layer-scoring lane instead of collapsing that topology into a false family/exact match.`;
+}
+
+export function getRawFloorParityGuardWarning(input: {
+  exactFloorSystemMatchActive: boolean;
+  rawLayers: readonly BuildImpactPredictorLayerInput[];
+  requestedOutputs: readonly string[];
+}): string | null {
+  if (!input.exactFloorSystemMatchActive) {
+    return null;
+  }
+
+  if (!input.requestedOutputs.some((output) => output.startsWith("L") || output === "CI" || output === "DeltaLw")) {
+    return null;
+  }
+
+  if (input.rawLayers.length === 0 || input.rawLayers.some((layer) => Boolean(layer.floorRole))) {
+    return null;
+  }
+
+  if (!hasPotentialFloorRoleInferenceEvidence(input.rawLayers)) {
+    return null;
+  }
+
+  return "Raw floor role inference matched the current curated floor-system snapshot, but DynEcho does not claim arbitrary raw floor reorder value invariance. Assign floor roles before relying on edited raw order as exact impact topology.";
+}
+
+export function getRawFloorRolePromptGuard(input: {
+  catalog?: readonly MaterialDefinition[];
+  exactFloorSystemMatchActive: boolean;
+  hasLiveImpactSupport: boolean;
+  inferredLayers: readonly LayerInput[] | null;
+  rawLayers: readonly BuildImpactPredictorLayerInput[];
+  requestedOutputs: readonly string[];
+}): RawFloorRolePromptGuard | null {
+  if (!input.requestedOutputs.some((output) => output.startsWith("L") || output === "CI" || output === "DeltaLw")) {
+    return null;
+  }
+
+  if (input.rawLayers.length === 0 || input.rawLayers.some((layer) => Boolean(layer.floorRole))) {
+    return null;
+  }
+
+  if (!hasPotentialFloorRoleInferenceEvidence(input.rawLayers)) {
+    return null;
+  }
+
+  const catalog = input.catalog ?? getDefaultMaterialCatalog();
+  const normalizedLayers = normalizeImpactPredictorLayerStack(input.rawLayers, catalog);
+  const conflicts = collectPredictorRoleConflicts(normalizedLayers);
+
+  if (conflicts.length > 0) {
+    return {
+      reason: "duplicate_single_entry_role_requires_floor_role_prompt",
+      warning: `Floor roles needed before exact floor-family promotion: single-entry floor roles are duplicated (${conflicts.map(formatPredictorRoleConflict).join("; ")}). DynEcho kept the raw stack away from exact floor-family promotion until roles are assigned or contiguous same-material splits are merged.`
+    };
+  }
+
+  if (!input.inferredLayers) {
+    return {
+      reason: "raw_no_safe_inference_requires_floor_role_prompt",
+      warning:
+        "Floor roles needed before impact output promotion: DynEcho could not safely infer the base, ceiling, and upper-floor roles from this raw floor stack, so impact outputs stay blocked until floor roles are assigned."
+    };
+  }
+
+  if (!input.exactFloorSystemMatchActive && !input.hasLiveImpactSupport) {
+    return {
+      reason: "raw_tagged_drift_requires_floor_role_prompt",
+      warning:
+        "Floor roles needed before impact output promotion: this raw stack has floor-family hints, but the untagged order does not land on a defended exact impact row. Assign floor roles before promoting Ln,w or Ln,w+CI."
+    };
+  }
+
+  return null;
 }
 
 function createPredictorCustomLayerMaterial(input: {

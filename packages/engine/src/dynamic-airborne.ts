@@ -25,6 +25,7 @@ import {
   type DynamicAirborneResult
 } from "./dynamic-airborne-helpers";
 import { isMasonryCoreLayer, normalizeFramingHint, type DynamicFramingHint } from "./dynamic-airborne-family-detection";
+import { applyFlatListMultileafFamilyGuard } from "./dynamic-airborne-flat-list-multileaf-guard";
 import { applyMasonryDavyConservativeCap } from "./dynamic-airborne-davy-masonry";
 import {
   buildReducedThicknessVariant,
@@ -1009,6 +1010,10 @@ export function calculateDynamicAirborneResult(
     options.forcedFamily
       ? { family: options.forcedFamily, notes: [] as string[] }
       : detectDynamicFamily(analysisLayers, framingHint);
+
+  const guardedFlatList = applyFlatListMultileafFamilyGuard({ calculate: calculateDynamicAirborneResult, estimateScreeningRw: estimateRwDb, family: family.family, framingHint, layers: analysisLayers, options });
+  if (guardedFlatList) return guardedFlatList;
+
   const tripleLeafTopologyReadiness = evaluateWallTripleLeafTopologyReadiness({
     airborneContext: options.airborneContext,
     cavityCount: topology.cavityCount,

@@ -21,7 +21,12 @@ import type {
   ReportProfile,
   RequestedOutputId,
   SharedTrackClass,
-  StudyContext
+  StudyContext,
+  WallCavityAbsorptionClass,
+  WallCavityFillCoverage,
+  WallInternalLeafCoupling,
+  WallSupportTopology,
+  WallTopologyMode
 } from "@dynecho/shared";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
@@ -43,6 +48,10 @@ import {
   DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_ISSUE_PURPOSE,
   DEFAULT_SIMPLE_WORKBENCH_PROPOSAL_VALIDITY_NOTE
 } from "./simple-workbench-proposal-policy-presets";
+import {
+  DEFAULT_WORKBENCH_WALL_TOPOLOGY_DRAFT,
+  type WorkbenchWallTopologyDraft
+} from "./simple-workbench-wall-topology";
 import { getWorkbenchMaterialById } from "./workbench-materials";
 
 type LayerDraft = {
@@ -56,7 +65,7 @@ type LayerDraft = {
 
 type AppendLayerDraftInput = Pick<LayerDraft, "densityKgM3" | "dynamicStiffnessMNm3" | "floorRole" | "materialId" | "thicknessMm">;
 
-type ScenarioSnapshot = {
+type ScenarioSnapshot = WorkbenchWallTopologyDraft & {
   calculatorId: AirborneCalculatorId;
   airborneAirtightness: AirtightnessClass;
   airborneConnectionType: AirborneConnectionType;
@@ -122,7 +131,7 @@ type ScenarioSnapshot = {
   targetRwDb: string;
 };
 
-type WorkbenchStore = {
+type WorkbenchStore = WorkbenchWallTopologyDraft & {
   activePresetId: PresetId;
   calculatorId: AirborneCalculatorId;
   airborneAirtightness: AirtightnessClass;
@@ -217,6 +226,20 @@ type WorkbenchStore = {
   setAirborneSharedTrack: (value: SharedTrackClass) => void;
   setAirborneStudSpacingMm: (value: string) => void;
   setAirborneStudType: (value: AirborneStudType) => void;
+  setAirborneWallCavity1AbsorptionClass: (value: WallCavityAbsorptionClass) => void;
+  setAirborneWallCavity1DepthMm: (value: string) => void;
+  setAirborneWallCavity1FillCoverage: (value: WallCavityFillCoverage) => void;
+  setAirborneWallCavity1LayerIndices: (value: string) => void;
+  setAirborneWallCavity2AbsorptionClass: (value: WallCavityAbsorptionClass) => void;
+  setAirborneWallCavity2DepthMm: (value: string) => void;
+  setAirborneWallCavity2FillCoverage: (value: WallCavityFillCoverage) => void;
+  setAirborneWallCavity2LayerIndices: (value: string) => void;
+  setAirborneWallInternalLeafCoupling: (value: WallInternalLeafCoupling) => void;
+  setAirborneWallInternalLeafLayerIndices: (value: string) => void;
+  setAirborneWallSideALeafLayerIndices: (value: string) => void;
+  setAirborneWallSideBLeafLayerIndices: (value: string) => void;
+  setAirborneWallSupportTopology: (value: WallSupportTopology) => void;
+  setAirborneWallTopologyMode: (value: WallTopologyMode) => void;
   setClientName: (value: string) => void;
   setBriefNote: (value: string) => void;
   setConsultantCompany: (value: string) => void;
@@ -503,6 +526,7 @@ function makeDefaultState(input?: {
     airborneSharedTrack: "independent" as const,
     airborneStudSpacingMm: "",
     airborneStudType: "auto" as const,
+    ...DEFAULT_WORKBENCH_WALL_TOPOLOGY_DRAFT,
     approverTitle: "Acoustic Consultant",
     briefNote: "Record assumptions, flanking risks, and report caveats here.",
     clientName: "Internal study",
@@ -584,6 +608,34 @@ function buildLoadedScenarioState(
     airborneSharedTrack: scenario.airborneSharedTrack ?? "independent",
     airborneStudSpacingMm: scenario.airborneStudSpacingMm ?? "",
     airborneStudType: scenario.airborneStudType ?? "auto",
+    airborneWallCavity1AbsorptionClass:
+      scenario.airborneWallCavity1AbsorptionClass ?? DEFAULT_WORKBENCH_WALL_TOPOLOGY_DRAFT.airborneWallCavity1AbsorptionClass,
+    airborneWallCavity1DepthMm:
+      scenario.airborneWallCavity1DepthMm ?? DEFAULT_WORKBENCH_WALL_TOPOLOGY_DRAFT.airborneWallCavity1DepthMm,
+    airborneWallCavity1FillCoverage:
+      scenario.airborneWallCavity1FillCoverage ?? DEFAULT_WORKBENCH_WALL_TOPOLOGY_DRAFT.airborneWallCavity1FillCoverage,
+    airborneWallCavity1LayerIndices:
+      scenario.airborneWallCavity1LayerIndices ?? DEFAULT_WORKBENCH_WALL_TOPOLOGY_DRAFT.airborneWallCavity1LayerIndices,
+    airborneWallCavity2AbsorptionClass:
+      scenario.airborneWallCavity2AbsorptionClass ?? DEFAULT_WORKBENCH_WALL_TOPOLOGY_DRAFT.airborneWallCavity2AbsorptionClass,
+    airborneWallCavity2DepthMm:
+      scenario.airborneWallCavity2DepthMm ?? DEFAULT_WORKBENCH_WALL_TOPOLOGY_DRAFT.airborneWallCavity2DepthMm,
+    airborneWallCavity2FillCoverage:
+      scenario.airborneWallCavity2FillCoverage ?? DEFAULT_WORKBENCH_WALL_TOPOLOGY_DRAFT.airborneWallCavity2FillCoverage,
+    airborneWallCavity2LayerIndices:
+      scenario.airborneWallCavity2LayerIndices ?? DEFAULT_WORKBENCH_WALL_TOPOLOGY_DRAFT.airborneWallCavity2LayerIndices,
+    airborneWallInternalLeafCoupling:
+      scenario.airborneWallInternalLeafCoupling ?? DEFAULT_WORKBENCH_WALL_TOPOLOGY_DRAFT.airborneWallInternalLeafCoupling,
+    airborneWallInternalLeafLayerIndices:
+      scenario.airborneWallInternalLeafLayerIndices ?? DEFAULT_WORKBENCH_WALL_TOPOLOGY_DRAFT.airborneWallInternalLeafLayerIndices,
+    airborneWallSideALeafLayerIndices:
+      scenario.airborneWallSideALeafLayerIndices ?? DEFAULT_WORKBENCH_WALL_TOPOLOGY_DRAFT.airborneWallSideALeafLayerIndices,
+    airborneWallSideBLeafLayerIndices:
+      scenario.airborneWallSideBLeafLayerIndices ?? DEFAULT_WORKBENCH_WALL_TOPOLOGY_DRAFT.airborneWallSideBLeafLayerIndices,
+    airborneWallSupportTopology:
+      scenario.airborneWallSupportTopology ?? DEFAULT_WORKBENCH_WALL_TOPOLOGY_DRAFT.airborneWallSupportTopology,
+    airborneWallTopologyMode:
+      scenario.airborneWallTopologyMode ?? DEFAULT_WORKBENCH_WALL_TOPOLOGY_DRAFT.airborneWallTopologyMode,
     approverTitle: scenario.approverTitle ?? "Acoustic Consultant",
     briefNote: scenario.briefNote ?? "Record assumptions, flanking risks, and report caveats here.",
     clientName: scenario.clientName ?? "Internal study",
@@ -735,6 +787,7 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
         }
         set({
           activePresetId: preset.id,
+          ...DEFAULT_WORKBENCH_WALL_TOPOLOGY_DRAFT,
           rows: buildPresetRows(preset.id),
           studyMode: preset.studyMode,
           ...airborneUpdates
@@ -824,6 +877,20 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
               airborneSharedTrack: state.airborneSharedTrack,
               airborneStudSpacingMm: state.airborneStudSpacingMm,
               airborneStudType: state.airborneStudType,
+              airborneWallCavity1AbsorptionClass: state.airborneWallCavity1AbsorptionClass,
+              airborneWallCavity1DepthMm: state.airborneWallCavity1DepthMm,
+              airborneWallCavity1FillCoverage: state.airborneWallCavity1FillCoverage,
+              airborneWallCavity1LayerIndices: state.airborneWallCavity1LayerIndices,
+              airborneWallCavity2AbsorptionClass: state.airborneWallCavity2AbsorptionClass,
+              airborneWallCavity2DepthMm: state.airborneWallCavity2DepthMm,
+              airborneWallCavity2FillCoverage: state.airborneWallCavity2FillCoverage,
+              airborneWallCavity2LayerIndices: state.airborneWallCavity2LayerIndices,
+              airborneWallInternalLeafCoupling: state.airborneWallInternalLeafCoupling,
+              airborneWallInternalLeafLayerIndices: state.airborneWallInternalLeafLayerIndices,
+              airborneWallSideALeafLayerIndices: state.airborneWallSideALeafLayerIndices,
+              airborneWallSideBLeafLayerIndices: state.airborneWallSideBLeafLayerIndices,
+              airborneWallSupportTopology: state.airborneWallSupportTopology,
+              airborneWallTopologyMode: state.airborneWallTopologyMode,
               approverTitle: state.approverTitle,
               briefNote: state.briefNote,
               clientName: state.clientName,
@@ -889,6 +956,20 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
       setAirborneSharedTrack: (value) => set({ airborneSharedTrack: value }),
       setAirborneStudSpacingMm: (value) => set({ airborneStudSpacingMm: value }),
       setAirborneStudType: (value) => set({ airborneStudType: value }),
+      setAirborneWallCavity1AbsorptionClass: (value) => set({ airborneWallCavity1AbsorptionClass: value }),
+      setAirborneWallCavity1DepthMm: (value) => set({ airborneWallCavity1DepthMm: value }),
+      setAirborneWallCavity1FillCoverage: (value) => set({ airborneWallCavity1FillCoverage: value }),
+      setAirborneWallCavity1LayerIndices: (value) => set({ airborneWallCavity1LayerIndices: value }),
+      setAirborneWallCavity2AbsorptionClass: (value) => set({ airborneWallCavity2AbsorptionClass: value }),
+      setAirborneWallCavity2DepthMm: (value) => set({ airborneWallCavity2DepthMm: value }),
+      setAirborneWallCavity2FillCoverage: (value) => set({ airborneWallCavity2FillCoverage: value }),
+      setAirborneWallCavity2LayerIndices: (value) => set({ airborneWallCavity2LayerIndices: value }),
+      setAirborneWallInternalLeafCoupling: (value) => set({ airborneWallInternalLeafCoupling: value }),
+      setAirborneWallInternalLeafLayerIndices: (value) => set({ airborneWallInternalLeafLayerIndices: value }),
+      setAirborneWallSideALeafLayerIndices: (value) => set({ airborneWallSideALeafLayerIndices: value }),
+      setAirborneWallSideBLeafLayerIndices: (value) => set({ airborneWallSideBLeafLayerIndices: value }),
+      setAirborneWallSupportTopology: (value) => set({ airborneWallSupportTopology: value }),
+      setAirborneWallTopologyMode: (value) => set({ airborneWallTopologyMode: value }),
       setBriefNote: (value) => set({ briefNote: value }),
       setClientName: (value) => set({ clientName: value }),
       setConsultantAddress: (value) => set({ consultantAddress: value }),
@@ -929,6 +1010,7 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
         set({
           activePresetId: studyMode === "floor" ? "heavy_concrete_impact_floor" : "concrete_wall",
           airborneContextMode: "element_lab",
+          ...DEFAULT_WORKBENCH_WALL_TOPOLOGY_DRAFT,
           requestedOutputs: buildDefaultRequestedOutputs(studyMode),
           rows: [],
           studyMode

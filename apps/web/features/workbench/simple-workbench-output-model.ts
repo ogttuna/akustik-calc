@@ -35,6 +35,16 @@ export type OutputCardModel = BaseOutputCardModel & {
   postureTone: "accent" | "neutral" | "success" | "warning";
 };
 
+const FLOOR_ROLE_PROMPT_OUTPUTS = new Set<RequestedOutputId>(["Ln,w", "Ln,w+CI", "CI", "CI,50-2500", "DeltaLw"]);
+
+function hasFloorRolePromptGuard(result: AssemblyCalculation | null | undefined): boolean {
+  return Boolean(
+    result?.warnings?.some((warning: string) =>
+      /Floor roles needed before (?:impact output|exact floor-family) promotion/i.test(warning)
+    )
+  );
+}
+
 function isExplicitlyUnsupportedOutput(
   result: AssemblyCalculation | null | undefined,
   output: RequestedOutputId
@@ -102,6 +112,10 @@ export function buildUnavailableOutputDetail(input: {
 
   if (!result) {
     return "Add a valid layer stack first.";
+  }
+
+  if (studyMode === "floor" && FLOOR_ROLE_PROMPT_OUTPUTS.has(output) && hasFloorRolePromptGuard(result)) {
+    return "Assign floor roles before treating this impact output as supported.";
   }
 
   if (FIELD_AIRBORNE_OUTPUTS.has(output)) {

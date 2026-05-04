@@ -11,7 +11,12 @@ import type {
   PenetrationState,
   PerimeterSealClass,
   RequestedOutputId,
-  SharedTrackClass
+  SharedTrackClass,
+  WallCavityAbsorptionClass,
+  WallCavityFillCoverage,
+  WallInternalLeafCoupling,
+  WallSupportTopology,
+  WallTopologyMode
 } from "@dynecho/shared";
 import type { CSSProperties } from "react";
 
@@ -469,6 +474,43 @@ export const TRACK_OPTIONS: readonly ControlOption<SharedTrackClass>[] = [
   { label: "Unknown", note: "Shared support condition not declared.", value: "unknown" },
   { label: "Independent", note: "Separate support path. Better field posture.", value: "independent" },
   { label: "Shared", note: "Shared support path and more coupling risk.", value: "shared" }
+];
+
+export const WALL_TOPOLOGY_MODE_OPTIONS: readonly ControlOption<WallTopologyMode>[] = [
+  { label: "Auto", note: "Use the current flat layer interpretation.", value: "auto" },
+  { label: "Flat layer order", note: "Keep the wall as an ordered layer stack without role groups.", value: "flat_layer_order" },
+  { label: "Grouped triple leaf", note: "Declare Side A, cavity 1, internal leaf, cavity 2, and Side B groups explicitly.", value: "grouped_triple_leaf" }
+];
+
+export const WALL_CAVITY_FILL_COVERAGE_OPTIONS: readonly ControlOption<WallCavityFillCoverage>[] = [
+  { label: "Unknown", note: "No declared fill coverage.", value: "unknown" },
+  { label: "Empty", note: "No fill is declared inside this cavity.", value: "empty" },
+  { label: "Partial", note: "Only part of this cavity is filled.", value: "partial" },
+  { label: "Full", note: "The cavity fill is declared as full-depth or fully present.", value: "full" }
+];
+
+export const WALL_CAVITY_ABSORPTION_OPTIONS: readonly ControlOption<WallCavityAbsorptionClass>[] = [
+  { label: "Unknown", note: "No declared absorption class.", value: "unknown" },
+  { label: "None", note: "No absorptive fill is declared.", value: "none" },
+  { label: "Porous absorptive", note: "Mineral wool or another porous absorber is declared.", value: "porous_absorptive" }
+];
+
+export const WALL_INTERNAL_LEAF_COUPLING_OPTIONS: readonly ControlOption<WallInternalLeafCoupling>[] = [
+  { label: "Unknown", note: "No coupling class declared.", value: "unknown" },
+  { label: "Independent", note: "Internal leaf is treated as independently supported.", value: "independent" },
+  { label: "Attached to Side A", note: "Internal leaf is attached toward Side A.", value: "attached_to_side_a" },
+  { label: "Attached to Side B", note: "Internal leaf is attached toward Side B.", value: "attached_to_side_b" },
+  { label: "Shared stud bridge", note: "A shared-stud bridge is declared.", value: "shared_stud_bridge" },
+  { label: "Direct bridge", note: "A direct bridge is declared.", value: "direct_bridge" }
+];
+
+export const WALL_SUPPORT_TOPOLOGY_OPTIONS: readonly ControlOption<WallSupportTopology>[] = [
+  { label: "Unknown", note: "No support topology declared.", value: "unknown" },
+  { label: "Independent frames", note: "Leaves are on independent frame paths.", value: "independent_frames" },
+  { label: "Single shared stud", note: "A single shared stud path is declared.", value: "single_shared_stud" },
+  { label: "Twin frame", note: "A twin-frame support path is declared.", value: "twin_frame" },
+  { label: "Resilient channel", note: "A resilient-channel support path is declared.", value: "resilient_channel" },
+  { label: "Direct fixed", note: "Direct-fixed support is declared.", value: "direct_fixed" }
 ];
 
 export const WALL_OUTPUT_PRESET_LAB: readonly RequestedOutputId[] = ["Rw", "STC", "C", "Ctr"];

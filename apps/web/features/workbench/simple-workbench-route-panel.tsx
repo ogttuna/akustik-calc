@@ -12,7 +12,12 @@ import type {
   JunctionQuality,
   PenetrationState,
   PerimeterSealClass,
-  SharedTrackClass
+  SharedTrackClass,
+  WallCavityAbsorptionClass,
+  WallCavityFillCoverage,
+  WallInternalLeafCoupling,
+  WallSupportTopology,
+  WallTopologyMode
 } from "@dynecho/shared";
 import { Plus } from "lucide-react";
 
@@ -35,6 +40,11 @@ import {
   STUD_TYPE_OPTIONS,
   TIMBER_IMPACT_ONLY_GUIDED_ACTIONS,
   TRACK_OPTIONS,
+  WALL_CAVITY_ABSORPTION_OPTIONS,
+  WALL_CAVITY_FILL_COVERAGE_OPTIONS,
+  WALL_INTERNAL_LEAF_COUPLING_OPTIONS,
+  WALL_SUPPORT_TOPOLOGY_OPTIONS,
+  WALL_TOPOLOGY_MODE_OPTIONS,
   type WorkspacePanelId
 } from "./simple-workbench-constants";
 import {
@@ -70,6 +80,20 @@ type SimpleWorkbenchRoutePanelProps = {
   airborneSharedTrack: SharedTrackClass;
   airborneStudSpacingMm: string;
   airborneStudType: AirborneStudType;
+  airborneWallCavity1AbsorptionClass: WallCavityAbsorptionClass;
+  airborneWallCavity1DepthMm: string;
+  airborneWallCavity1FillCoverage: WallCavityFillCoverage;
+  airborneWallCavity1LayerIndices: string;
+  airborneWallCavity2AbsorptionClass: WallCavityAbsorptionClass;
+  airborneWallCavity2DepthMm: string;
+  airborneWallCavity2FillCoverage: WallCavityFillCoverage;
+  airborneWallCavity2LayerIndices: string;
+  airborneWallInternalLeafCoupling: WallInternalLeafCoupling;
+  airborneWallInternalLeafLayerIndices: string;
+  airborneWallSideALeafLayerIndices: string;
+  airborneWallSideBLeafLayerIndices: string;
+  airborneWallSupportTopology: WallSupportTopology;
+  airborneWallTopologyMode: WallTopologyMode;
   airborneVolumeSanityWarning: string | null;
   appendRows: (rows: readonly { densityKgM3?: string; dynamicStiffnessMNm3?: string; floorRole?: FloorRole; materialId: string; thicknessMm: string }[]) => void;
   automaticOutputsLength: number;
@@ -109,6 +133,20 @@ type SimpleWorkbenchRoutePanelProps = {
   setAirborneSharedTrack: (value: SharedTrackClass) => void;
   setAirborneStudSpacingMm: (value: string) => void;
   setAirborneStudType: (value: AirborneStudType) => void;
+  setAirborneWallCavity1AbsorptionClass: (value: WallCavityAbsorptionClass) => void;
+  setAirborneWallCavity1DepthMm: (value: string) => void;
+  setAirborneWallCavity1FillCoverage: (value: WallCavityFillCoverage) => void;
+  setAirborneWallCavity1LayerIndices: (value: string) => void;
+  setAirborneWallCavity2AbsorptionClass: (value: WallCavityAbsorptionClass) => void;
+  setAirborneWallCavity2DepthMm: (value: string) => void;
+  setAirborneWallCavity2FillCoverage: (value: WallCavityFillCoverage) => void;
+  setAirborneWallCavity2LayerIndices: (value: string) => void;
+  setAirborneWallInternalLeafCoupling: (value: WallInternalLeafCoupling) => void;
+  setAirborneWallInternalLeafLayerIndices: (value: string) => void;
+  setAirborneWallSideALeafLayerIndices: (value: string) => void;
+  setAirborneWallSideBLeafLayerIndices: (value: string) => void;
+  setAirborneWallSupportTopology: (value: WallSupportTopology) => void;
+  setAirborneWallTopologyMode: (value: WallTopologyMode) => void;
   setCalculatorId: (value: AirborneCalculatorId) => void;
   setImpactGuideKDb: (value: string) => void;
   setImpactGuideReceivingRoomVolumeM3: (value: string) => void;
@@ -119,6 +157,7 @@ type SimpleWorkbenchRoutePanelProps = {
   topologyGap: GuidedTopologyGap | null;
   updateMaterial: (id: string, materialId: string) => void;
   validationSummary: GuidedValidationSummary;
+  wallTopologyControlsActive: boolean;
   wallModifiersActive: boolean;
 };
 
@@ -140,6 +179,20 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
     airborneSharedTrack,
     airborneStudSpacingMm,
     airborneStudType,
+    airborneWallCavity1AbsorptionClass,
+    airborneWallCavity1DepthMm,
+    airborneWallCavity1FillCoverage,
+    airborneWallCavity1LayerIndices,
+    airborneWallCavity2AbsorptionClass,
+    airborneWallCavity2DepthMm,
+    airborneWallCavity2FillCoverage,
+    airborneWallCavity2LayerIndices,
+    airborneWallInternalLeafCoupling,
+    airborneWallInternalLeafLayerIndices,
+    airborneWallSideALeafLayerIndices,
+    airborneWallSideBLeafLayerIndices,
+    airborneWallSupportTopology,
+    airborneWallTopologyMode,
     airborneVolumeSanityWarning,
     appendRows,
     automaticOutputsLength,
@@ -179,6 +232,20 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
     setAirborneSharedTrack,
     setAirborneStudSpacingMm,
     setAirborneStudType,
+    setAirborneWallCavity1AbsorptionClass,
+    setAirborneWallCavity1DepthMm,
+    setAirborneWallCavity1FillCoverage,
+    setAirborneWallCavity1LayerIndices,
+    setAirborneWallCavity2AbsorptionClass,
+    setAirborneWallCavity2DepthMm,
+    setAirborneWallCavity2FillCoverage,
+    setAirborneWallCavity2LayerIndices,
+    setAirborneWallInternalLeafCoupling,
+    setAirborneWallInternalLeafLayerIndices,
+    setAirborneWallSideALeafLayerIndices,
+    setAirborneWallSideBLeafLayerIndices,
+    setAirborneWallSupportTopology,
+    setAirborneWallTopologyMode,
     setCalculatorId,
     setImpactGuideKDb,
     setImpactGuideReceivingRoomVolumeM3,
@@ -189,6 +256,7 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
     topologyGap,
     updateMaterial,
     validationSummary,
+    wallTopologyControlsActive,
     wallModifiersActive
   } = props;
 
@@ -521,6 +589,268 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
                         </select>
                       </FieldShell>
                   </div>
+
+                  {wallTopologyControlsActive ? (
+                    <div className="grid gap-3">
+                      <FieldShell
+                        label="Wall topology mode"
+                        note="Use explicit groups when flat order is ambiguous."
+                        relevance="optional"
+                        usage="Triple-leaf role ownership and route-card diagnostics"
+                      >
+                        <select
+                          className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                          onChange={(event) => setAirborneWallTopologyMode(event.target.value as WallTopologyMode)}
+                          value={airborneWallTopologyMode}
+                        >
+                          {WALL_TOPOLOGY_MODE_OPTIONS.map((option) => (
+                            <option key={option.value} value={option.value}>
+                              {option.label}
+                            </option>
+                          ))}
+                        </select>
+                      </FieldShell>
+
+                      {airborneWallTopologyMode === "grouped_triple_leaf" ? (
+                        <div className="grid gap-3">
+                          <div className="grid gap-3 md:grid-cols-2">
+                            <FieldShell
+                              label="Side A leaf rows"
+                              note="Visible row numbers, comma separated."
+                              relevance="optional"
+                              usage="Triple-leaf Side A group"
+                            >
+                              <input
+                                className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                                inputMode="numeric"
+                                onChange={(event) => setAirborneWallSideALeafLayerIndices(event.target.value)}
+                                placeholder="1, 2, 3"
+                                value={airborneWallSideALeafLayerIndices}
+                              />
+                            </FieldShell>
+
+                            <FieldShell
+                              label="Internal leaf rows"
+                              note="Visible row numbers, comma separated."
+                              relevance="optional"
+                              usage="Triple-leaf internal leaf group"
+                            >
+                              <input
+                                className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                                inputMode="numeric"
+                                onChange={(event) => setAirborneWallInternalLeafLayerIndices(event.target.value)}
+                                placeholder="5"
+                                value={airborneWallInternalLeafLayerIndices}
+                              />
+                            </FieldShell>
+
+                            <FieldShell
+                              label="Side B leaf rows"
+                              note="Visible row numbers, comma separated."
+                              relevance="optional"
+                              usage="Triple-leaf Side B group"
+                            >
+                              <input
+                                className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                                inputMode="numeric"
+                                onChange={(event) => setAirborneWallSideBLeafLayerIndices(event.target.value)}
+                                placeholder="7, 8, 9"
+                                value={airborneWallSideBLeafLayerIndices}
+                              />
+                            </FieldShell>
+
+                            <FieldShell
+                              label="Internal leaf coupling"
+                              note="Declare bridge or coupling when known."
+                              relevance="optional"
+                              usage="Triple-leaf bridge guard"
+                            >
+                              <select
+                                className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                                onChange={(event) =>
+                                  setAirborneWallInternalLeafCoupling(event.target.value as WallInternalLeafCoupling)
+                                }
+                                value={airborneWallInternalLeafCoupling}
+                              >
+                                {WALL_INTERNAL_LEAF_COUPLING_OPTIONS.map((option) => (
+                                  <option key={option.value} value={option.value}>
+                                    {option.label}
+                                  </option>
+                                ))}
+                              </select>
+                            </FieldShell>
+                          </div>
+
+                          <div className="grid gap-3 md:grid-cols-2">
+                            <FieldShell
+                              label="Cavity 1 rows"
+                              note="Visible row numbers for the Side A to internal-leaf cavity."
+                              relevance="optional"
+                              usage="Triple-leaf cavity 1 group"
+                            >
+                              <input
+                                className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                                inputMode="numeric"
+                                onChange={(event) => setAirborneWallCavity1LayerIndices(event.target.value)}
+                                placeholder="4"
+                                value={airborneWallCavity1LayerIndices}
+                              />
+                            </FieldShell>
+
+                            <FieldShell
+                              label="Cavity 1 depth (mm)"
+                              note="Declared cavity depth."
+                              relevance="optional"
+                              usage="Triple-leaf cavity 1 spring"
+                            >
+                              <input
+                                className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                                inputMode="decimal"
+                                onChange={(event) => setAirborneWallCavity1DepthMm(event.target.value)}
+                                placeholder="50"
+                                value={airborneWallCavity1DepthMm}
+                              />
+                            </FieldShell>
+
+                            <FieldShell
+                              label="Cavity 1 fill"
+                              note="Declared fill coverage."
+                              relevance="optional"
+                              usage="Triple-leaf cavity 1 damping"
+                            >
+                              <select
+                                className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                                onChange={(event) =>
+                                  setAirborneWallCavity1FillCoverage(event.target.value as WallCavityFillCoverage)
+                                }
+                                value={airborneWallCavity1FillCoverage}
+                              >
+                                {WALL_CAVITY_FILL_COVERAGE_OPTIONS.map((option) => (
+                                  <option key={option.value} value={option.value}>
+                                    {option.label}
+                                  </option>
+                                ))}
+                              </select>
+                            </FieldShell>
+
+                            <FieldShell
+                              label="Cavity 1 absorption"
+                              note="Declared absorption class."
+                              relevance="optional"
+                              usage="Triple-leaf cavity 1 damping"
+                            >
+                              <select
+                                className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                                onChange={(event) =>
+                                  setAirborneWallCavity1AbsorptionClass(event.target.value as WallCavityAbsorptionClass)
+                                }
+                                value={airborneWallCavity1AbsorptionClass}
+                              >
+                                {WALL_CAVITY_ABSORPTION_OPTIONS.map((option) => (
+                                  <option key={option.value} value={option.value}>
+                                    {option.label}
+                                  </option>
+                                ))}
+                              </select>
+                            </FieldShell>
+                          </div>
+
+                          <div className="grid gap-3 md:grid-cols-2">
+                            <FieldShell
+                              label="Cavity 2 rows"
+                              note="Visible row numbers for the internal-leaf to Side B cavity."
+                              relevance="optional"
+                              usage="Triple-leaf cavity 2 group"
+                            >
+                              <input
+                                className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                                inputMode="numeric"
+                                onChange={(event) => setAirborneWallCavity2LayerIndices(event.target.value)}
+                                placeholder="6"
+                                value={airborneWallCavity2LayerIndices}
+                              />
+                            </FieldShell>
+
+                            <FieldShell
+                              label="Cavity 2 depth (mm)"
+                              note="Declared cavity depth."
+                              relevance="optional"
+                              usage="Triple-leaf cavity 2 spring"
+                            >
+                              <input
+                                className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                                inputMode="decimal"
+                                onChange={(event) => setAirborneWallCavity2DepthMm(event.target.value)}
+                                placeholder="50"
+                                value={airborneWallCavity2DepthMm}
+                              />
+                            </FieldShell>
+
+                            <FieldShell
+                              label="Cavity 2 fill"
+                              note="Declared fill coverage."
+                              relevance="optional"
+                              usage="Triple-leaf cavity 2 damping"
+                            >
+                              <select
+                                className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                                onChange={(event) =>
+                                  setAirborneWallCavity2FillCoverage(event.target.value as WallCavityFillCoverage)
+                                }
+                                value={airborneWallCavity2FillCoverage}
+                              >
+                                {WALL_CAVITY_FILL_COVERAGE_OPTIONS.map((option) => (
+                                  <option key={option.value} value={option.value}>
+                                    {option.label}
+                                  </option>
+                                ))}
+                              </select>
+                            </FieldShell>
+
+                            <FieldShell
+                              label="Cavity 2 absorption"
+                              note="Declared absorption class."
+                              relevance="optional"
+                              usage="Triple-leaf cavity 2 damping"
+                            >
+                              <select
+                                className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                                onChange={(event) =>
+                                  setAirborneWallCavity2AbsorptionClass(event.target.value as WallCavityAbsorptionClass)
+                                }
+                                value={airborneWallCavity2AbsorptionClass}
+                              >
+                                {WALL_CAVITY_ABSORPTION_OPTIONS.map((option) => (
+                                  <option key={option.value} value={option.value}>
+                                    {option.label}
+                                  </option>
+                                ))}
+                              </select>
+                            </FieldShell>
+                          </div>
+
+                          <FieldShell
+                            label="Support topology"
+                            note="Declare the support path when known."
+                            relevance="optional"
+                            usage="Triple-leaf support and route guards"
+                          >
+                            <select
+                              className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                              onChange={(event) => setAirborneWallSupportTopology(event.target.value as WallSupportTopology)}
+                              value={airborneWallSupportTopology}
+                            >
+                              {WALL_SUPPORT_TOPOLOGY_OPTIONS.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                  {option.label}
+                                </option>
+                              ))}
+                            </select>
+                          </FieldShell>
+                        </div>
+                      ) : null}
+                    </div>
+                  ) : null}
 
                   {wallModifiersActive ? (
                     <div className="grid gap-3">

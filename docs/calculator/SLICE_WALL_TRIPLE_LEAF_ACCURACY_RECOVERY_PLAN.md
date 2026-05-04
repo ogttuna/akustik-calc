@@ -2,7 +2,7 @@
 
 Slice id: `wall_triple_leaf_accuracy_recovery_v1`
 
-Status: GATE G3 LANDED / GATE G4 NEXT (selected 2026-04-30 after a user
+Status: GATE T LANDED / SOURCE GAP REVALIDATION V8 NEXT (selected 2026-04-30 after a user
 PDF repro showed the current multi-leaf result is not a validated
 calculation, Gate D extracted the source-pack candidates, Gate E
 classified the source corpus, and Gate F added a research-only
@@ -14,21 +14,274 @@ non-numeric plot data, and selected reproducible digitization QC. Gate
 G2B digitized the plotted curves into bounded source rows for Gate G3
 calibration while keeping runtime frozen. Gate G3 then passed the
 NRC-like source-family calibration/holdout and negative-boundary proof
-while keeping local material mapping and runtime frozen).
+while keeping local material mapping and runtime frozen. Gate G4 then
+blocked the local material/topology mapping and selected Gate G5
+diagnostics/source acquisition. Gate G5 then landed blocked diagnostics
+and selected Gate G6 local source/effect-model requirements. Gate G6
+then landed local source/effect-model requirements and selected Gate G7
+local source-pack acquisition intake. Gate G7 then landed blocked local
+source-pack intake plus an order/topology risk register and selected
+Gate G8 source-gap/order-risk follow-up. Gate G8 then landed source-gap
+and order-risk classification and selected Gate G9 visible diagnostics
+and grouped topology guard work. Gate G9 then landed visible diagnostic
+and grouped topology guard ownership and selected Gate H fail-closed
+engine-integration prerequisite checking. Gate H then landed the
+fail-closed integration prerequisite matrix and selected Gate I
+web-visible grouped topology inputs. Gate I then landed workbench
+grouped topology inputs and route-card topology-gap visibility, then
+selected Gate J company-internal acceptance rehearsal. Gate J then
+landed company-internal acceptance rehearsal across the user rockwool
+PDF stacks, source controls, negative boundaries, hostile inputs, field
+outputs, and report visibility, then selected Gate K runtime-promotion
+readiness / source-gap closure. Gate K then landed runtime-promotion
+readiness, blocked promotion on local material mapping, usable source
+pack, source-gap closure, runtime-ready topology guards, and paired
+runtime tests, and selected Gate L source-gap closure. Gate L then
+landed source-gap closure, confirmed all six local gaps remain open
+from current evidence, and selected Gate M source evidence
+acquisition. Gate M then landed source evidence acquisition, selected
+the rockwool two-cavity band-curve source pack first, kept Type C board
+mapping / support topology / MLV / gypsum plaster as follow-on
+blockers, and selected Gate N rockwool two-cavity source locator
+intake. Gate N then landed source locator intake, selected Uris 2006 as
+the primary 50 mm mineral-wool/internal-board full-curve retrieval
+target, kept NRC 2024 as an adjacent graph-owned comparator, kept
+rockwool-density and stone/glass-wool double-leaf papers as equivalence
+context only, rejected NRC 1998 baseline rows from this lane, and
+selected Gate O full-curve retrieval / provenance QC. Gate O then
+verified the Uris 2006 locator but found no runtime-ready full
+one-third-octave curves, source PDF/page image, plot axes, curve
+identity, or Rw/STC derivation in the local/public corpus, rejected the
+reported 7-8 dB weighted-index decrease as a reusable runtime penalty,
+and selected Gate P source access or alternative measured-row
+acquisition. Gate P then kept Uris 2006 as the primary source-access
+target but found no runtime-ready access path or equivalent measured
+alternative row, classified Uris 2008 perforated absorptive-facing data
+as accessible adjacent negative-boundary context, kept method/glazing/
+comparator rows out of runtime, and selected Gate Q source-access
+backlog and runtime-blocker revalidation. Gate Q then turned the source
+access decision into an ordered manual backlog, revalidated every Gate P
+runtime blocker as still open, and selected Gate R manual source packet
+intake. Gate R then formalized the Uris 2006 manual source-packet
+artifact contract, recorded no packet provided now, kept digitization
+and runtime blocked, and selected Gate S source packet availability
+checking. Gate S then confirmed no rights-safe Uris 2006 packet is
+available in the local corpus, kept metadata / NRC graph data / user
+repro PDFs / unrelated PDFs out of source-packet promotion, and
+selected Gate T manual source-packet acquisition handoff. Gate T then
+formalized the manual acquisition handoff, paused the Uris 2006 source
+lane on `paused_waiting_rights_safe_source_packet`, kept runtime
+frozen, and selected source-gap revalidation v8).
 
 Latest checkpoint:
 
-[CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_G3_HANDOFF.md](./CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_G3_HANDOFF.md)
-lands Gate G3 source-family calibration fit and negative-boundary proof
-no-runtime, keeps the live split-rockwool result frozen, and selects
-Gate G4 local material mapping / runtime eligibility decision.
+[CHECKPOINT_2026-05-02_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_T_HANDOFF.md](./CHECKPOINT_2026-05-02_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_T_HANDOFF.md)
+lands Gate T manual source-packet acquisition handoff no-runtime, keeps
+the live split-rockwool result frozen, formalizes the Uris 2006 manual
+acquisition checklist, pauses the Uris 2006 source lane on
+`paused_waiting_rights_safe_source_packet`, and selects
+`calculator_source_gap_revalidation_v8_no_runtime`.
+
+Prior checkpoint:
+
+[CHECKPOINT_2026-05-02_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_S_HANDOFF.md](./CHECKPOINT_2026-05-02_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_S_HANDOFF.md)
+lands Gate S source-packet availability no-runtime, keeps the live
+split-rockwool result frozen, confirms no rights-safe Uris 2006 source
+packet is available now, keeps metadata / NRC graph data / user repro
+PDFs / unrelated PDFs out of source-packet promotion, and selects Gate T
+manual source-packet acquisition handoff.
+
+Prior checkpoint:
+
+[CHECKPOINT_2026-05-02_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_R_HANDOFF.md](./CHECKPOINT_2026-05-02_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_R_HANDOFF.md)
+lands Gate R manual source-packet intake no-runtime, keeps the live
+split-rockwool result frozen, formalizes the Uris 2006 packet artifact
+contract, records no source packet provided now, keeps digitization and
+runtime blocked, and selects Gate S source packet availability
+checking.
+
+Prior checkpoint:
+
+[CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_Q_HANDOFF.md](./CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_Q_HANDOFF.md)
+lands Gate Q source-access backlog and runtime-blocker revalidation
+no-runtime, keeps the live split-rockwool result frozen, converts the
+Gate P result into `uris_2006_authorized_curve_packet`,
+`uris_2006_digitization_qc_packet`,
+`local_material_and_effect_mapping_packet`,
+`support_topology_mapping_packet`,
+`paired_visible_runtime_acceptance_packet`, and
+`uris_2008_perforated_facing_separate_lane`, confirms every Gate P
+runtime blocker is still open, and selects Gate R manual source packet
+intake.
+
+Prior checkpoint:
+
+[CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_P_HANDOFF.md](./CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_P_HANDOFF.md)
+lands Gate P source access / alternative measured-row acquisition
+no-runtime, keeps the live split-rockwool result frozen, keeps Uris
+2006 as the primary source-access target, blocks current access paths
+without source-owned curves/table data, records Uris 2008 as accessible
+adjacent negative-boundary context because of its perforated
+absorptive-facing topology, and selects Gate Q source-access backlog /
+runtime-blocker revalidation.
+
+Prior checkpoint:
+
+[CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_O_HANDOFF.md](./CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_O_HANDOFF.md)
+lands Gate O full-curve retrieval and provenance QC no-runtime, keeps
+the live split-rockwool result frozen, verifies the Uris 2006
+DOI/PII/pages/metadata locator, records that current accessible paths
+expose only summary / metadata or HTTP 403 rather than source-owned
+curves, rejects fixed 7-8 dB penalty promotion, and selects Gate P
+source access or alternative measured-row acquisition.
+
+Prior checkpoint:
+
+[CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_N_HANDOFF.md](./CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_N_HANDOFF.md)
+lands Gate N source locator intake no-runtime, keeps the live
+split-rockwool result frozen, selects
+`uris_2006_internal_gypsum_50mm_mineral_wool_double_frame` as the
+primary full-curve retrieval target, keeps NRC 2024 as an adjacent
+graph-owned comparator, keeps rockwool-density and stone/glass-wool
+double-leaf papers as equivalence context only, rejects NRC 1998
+baseline rows from this lane, and selects Gate O full-curve retrieval /
+provenance QC.
+
+Prior checkpoint:
+
+[CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_M_HANDOFF.md](./CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_M_HANDOFF.md)
+lands Gate M source evidence acquisition no-runtime, keeps the live
+split-rockwool result frozen, selects
+`rockwool_two_cavity_band_curve_source_pack` as the first evidence path,
+keeps Type C board mapping / support topology / MLV / gypsum plaster as
+follow-on blockers, and selects Gate N rockwool two-cavity source
+locator intake.
 
 Focused user-defect handoff:
 
 [TRIPLE_LEAF_ROCKWOOL_REORDER_DEFECT_HANDOFF.md](./TRIPLE_LEAF_ROCKWOOL_REORDER_DEFECT_HANDOFF.md)
 explains why moving rockwool in the flat list exposed a real
 triple-leaf modeling/input defect, why it is not enough to call this
-user error, and what Gate G4 must decide before any runtime movement.
+user error, and what Gate S+ must still prove before any runtime
+movement.
+
+Active adjacent-risk register:
+
+[CALCULATOR_ROUTE_SOURCE_RISK_REGISTER_2026-05-01.md](./CALCULATOR_ROUTE_SOURCE_RISK_REGISTER_2026-05-01.md)
+tracks the sibling route-family, duplicate-stack, masonry-boundary,
+raw-floor, near-source, field-output, material-alias, hostile-input,
+and curve-provenance risks that must stay fail-closed or explicitly
+tested before runtime promotion.
+
+Prior checkpoint:
+
+[CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_L_HANDOFF.md](./CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_L_HANDOFF.md)
+lands Gate L source-gap closure no-runtime, keeps the live
+split-rockwool result frozen, confirms the six local source gaps remain
+open from current evidence, and selects Gate M source evidence
+acquisition.
+Gate L status:
+`gate_l_confirmed_source_gaps_remain_open_no_runtime_selected_source_evidence_acquisition_gate_m`.
+
+Prior checkpoint:
+
+[CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_K_HANDOFF.md](./CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_K_HANDOFF.md)
+lands Gate K runtime-promotion readiness no-runtime, keeps the live
+split-rockwool result frozen, converts open source gaps into the Gate L
+closure plan, and selects Gate L source-gap closure.
+Gate K status:
+`gate_k_blocked_runtime_promotion_no_runtime_selected_source_gap_closure_gate_l`.
+
+Prior checkpoint:
+
+[CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_J_HANDOFF.md](./CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_J_HANDOFF.md)
+lands Gate J company-internal acceptance rehearsal no-runtime, keeps
+the live split-rockwool result frozen, keeps field/report caveats
+visible, and selects Gate K runtime-promotion readiness / source-gap
+closure.
+Gate J status:
+`gate_j_landed_company_internal_acceptance_rehearsal_no_runtime_selected_runtime_promotion_readiness_gate_k`.
+
+Prior checkpoint:
+
+[CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_I_HANDOFF.md](./CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_I_HANDOFF.md)
+lands Gate I web-visible grouped topology inputs no-runtime, keeps the
+live split-rockwool result frozen, and selects Gate J
+company-internal acceptance rehearsal.
+Gate I status:
+`gate_i_landed_web_visible_grouped_topology_inputs_no_runtime_selected_company_internal_acceptance_rehearsal_gate_j`.
+
+Prior checkpoint:
+
+[CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_H_HANDOFF.md](./CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_H_HANDOFF.md)
+lands Gate H engine-integration fail-closed prerequisite checking
+no-runtime, keeps the live split-rockwool result frozen, and selects
+Gate I web-visible grouped topology inputs.
+Gate H status:
+`gate_h_landed_engine_integration_fail_closed_prerequisite_check_no_runtime_selected_web_visible_grouped_topology_inputs_gate_i`.
+
+Prior checkpoint:
+
+[CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_G9_HANDOFF.md](./CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_G9_HANDOFF.md)
+lands Gate G9 visible diagnostic and grouped topology guard ownership
+no-runtime, keeps the live split-rockwool result frozen, and selects
+Gate H fail-closed engine-integration prerequisite checking.
+Gate G9 status:
+`gate_g9_landed_visible_diagnostics_and_grouped_topology_guard_no_runtime_selected_engine_integration_fail_closed_gate_h`.
+
+Prior checkpoint:
+
+[CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_G8_HANDOFF.md](./CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_G8_HANDOFF.md)
+lands Gate G8 source-gap and order/topology risk classification
+no-runtime, keeps the live split-rockwool result frozen, and selects
+Gate G9 visible diagnostics and grouped topology guard work.
+Gate G8 status:
+`gate_g8_landed_source_gap_and_order_risk_register_no_runtime_selected_visible_diagnostics_and_topology_guard_gate_g9`.
+
+Prior checkpoint:
+
+[CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_G7_HANDOFF.md](./CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_G7_HANDOFF.md)
+lands Gate G7 blocked local source-pack intake and order/topology risk
+register no-runtime, keeps the live split-rockwool result frozen, and
+selects Gate G8 source-gap/order-risk follow-up.
+Gate G7 status:
+`gate_g7_landed_local_source_pack_intake_no_runtime_selected_source_gap_and_order_risk_register_gate_g8`.
+
+Prior checkpoint:
+
+[CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_G6_HANDOFF.md](./CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_G6_HANDOFF.md)
+lands Gate G6 local source acquisition and bounded effect-model
+requirements no-runtime, keeps the live split-rockwool result frozen,
+and selects Gate G7 local source-pack acquisition intake.
+Gate G6 status:
+`gate_g6_landed_local_source_and_effect_model_requirements_no_runtime_selected_source_pack_acquisition_gate_g7`.
+
+Prior checkpoint:
+
+[CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_G5_HANDOFF.md](./CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_G5_HANDOFF.md)
+lands Gate G5 blocked diagnostics and source-acquisition decision
+no-runtime, keeps the live split-rockwool result frozen, and selects
+Gate G6 local source/effect-model requirements.
+Gate G5 status:
+`gate_g5_landed_blocked_diagnostics_no_runtime_selected_local_source_acquisition_gate_g6`.
+
+Prior checkpoint:
+
+[CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_G4_HANDOFF.md](./CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_G4_HANDOFF.md)
+lands Gate G4 local material mapping and runtime eligibility
+no-runtime, keeps the live split-rockwool result frozen, and selects
+Gate G5 blocked diagnostics / source acquisition.
+Gate G4 status:
+`gate_g4_blocked_local_material_and_topology_mapping_no_runtime_selected_blocked_diagnostics_and_source_acquisition_gate_g5`.
+
+Prior checkpoint:
+
+[CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_G3_HANDOFF.md](./CHECKPOINT_2026-05-01_WALL_TRIPLE_LEAF_ACCURACY_RECOVERY_GATE_G3_HANDOFF.md)
+lands Gate G3 source-family calibration fit and negative-boundary proof
+no-runtime, keeps the live split-rockwool result frozen, and selects
+Gate G4 local material mapping / runtime eligibility decision.
+Gate G3 status:
+`gate_g3_passed_nrc_2024_source_family_calibration_holdout_and_negative_boundaries_no_runtime_selected_local_mapping_gate_g4`.
 
 Prior checkpoint:
 
@@ -95,11 +348,11 @@ movement with
 
 Selection status:
 
-`gate_g3_passed_nrc_2024_source_family_calibration_holdout_and_negative_boundaries_no_runtime_selected_local_mapping_gate_g4`
+`gate_o_verified_uris_locator_but_full_curves_not_runtime_ready_no_runtime_selected_source_access_gate_p`
 
 Next implementation file:
 
-`packages/engine/src/wall-triple-leaf-local-material-mapping-gate-g4.test.ts`
+`packages/engine/src/wall-triple-leaf-source-access-gate-p.test.ts`
 
 ## Problem
 
@@ -110,7 +363,8 @@ two `50 mm` rockwool layers adjacent, while the other inserted a
 
 Current engine behavior:
 
-- adjacent rockwool stack: `Rw 51`, family `double_leaf`, strategy
+- adjacent rockwool stack: currently `Rw 50` on the web acceptance
+  surface, family `double_leaf`, strategy
   `double_leaf_porous_fill_delegate`, medium confidence;
 - split rockwool stack: `Rw 41`, family `multileaf_multicavity`,
   strategy `multileaf_screening_blend`, low confidence;
@@ -149,7 +403,32 @@ must have at least two calibration rows, at least one holdout row, MAE
 neighboring one-third-octave band. Because the current corpus has no
 digitized triple-leaf TL rows and no source-owned holdouts, Gate G kept
 the solver research-only and selected Gate G2 source-curve
-digitization.
+digitization. Gate G2 created typed graph-row intake, Gate G2B
+digitized the NRC 2024 curves reproducibly, and Gate G3 passed the
+source-family calibration/holdout and negative-boundary proof. Gate G4
+then kept runtime blocked because local generic gypsum board,
+rockwool, MLV, gypsum plaster, 50 mm cavities, and generic support
+topology are not source-owned for exact NRC-like runtime. Gate G5 then
+converted those blockers into explicit diagnostics and selected Gate G6
+local source/effect-model requirements. Gate G6 then kept all local
+requirements blocked, separated direct source-row needs from bounded
+effect-model needs, and selected Gate G7 local source-pack acquisition
+intake. Gate G7 then compared those requirements with implementation,
+kept every source-pack candidate blocked, documented sibling
+order/topology route-flip risks, and selected Gate G8 source-gap /
+order-risk follow-up. Gate G8 then classified the remaining source
+acquisition, bounded effect-model, and topology-input-owner gaps,
+selected the new wall route-flip risks for visible diagnostics and
+grouped topology guard ownership, preserved existing sibling
+order-sensitive boundaries, and selected Gate G9. Gate G9 then
+converted those source gaps and route risks into visible diagnostic ids
+and grouped topology guard definitions, kept web-visible runtime tests
+not ready, and selected Gate H fail-closed prerequisite checking. Gate
+H then verified the full prerequisite chain, passed source-family
+curves / calibration / negative boundaries / complete grouped test
+topology, blocked local material mapping, usable source pack, source
+gap closure, runtime-ready guards, and paired visible runtime tests,
+and selected Gate I web-visible grouped topology input work.
 
 ## Required Topology Model
 
@@ -580,7 +859,7 @@ returns the user split-rockwool repro as low-confidence
 
 ### Gate G2B - Reproducible Curve Digitization QC
 
-Next file:
+Landed in:
 
 `packages/engine/src/wall-triple-leaf-source-curve-digitization-qc.test.ts`
 
@@ -661,9 +940,13 @@ engine integration are not owned.
 
 ### Gate G4 - Local Material Mapping and Runtime Eligibility Decision
 
-Next file:
+Landed in:
 
 `packages/engine/src/wall-triple-leaf-local-material-mapping-gate-g4.test.ts`
+
+Local mapping module:
+
+`packages/engine/src/wall-triple-leaf-local-material-mapping.ts`
 
 Required behavior:
 
@@ -682,15 +965,252 @@ Required behavior:
 - select Gate H only if source-family fit, local mapping, negative
   boundaries, and paired engine/web visible runtime tests are all named.
 
-Exit condition: local mapping is either owned narrowly enough for a
-source-family runtime candidate, or explicitly blocked with the next
-source acquisition / UI diagnostic gate selected.
+Exit condition: complete. Gate G4 proves the Gate G3 source-family
+calibration still passes but blocks local runtime eligibility. Generic
+local `gypsum_board` is not owned as NRC Type C gypsum board, and local
+`rockwool` is not owned as NRC glass-fiber batt. Gate G4 states that
+local `rockwool`, `mlv`, and `gypsum_plaster` remain outside exact NRC-like runtime.
+The user repro's 50 mm cavities, MLV/plaster side-leaf mass, and
+generic support topology also stay outside the NRC 92.1 mm / 18 gauge
+steel-stud source family. Runtime remains frozen on low-confidence
+`multileaf_screening_blend` `Rw 41`, and Gate G4 selects
+`packages/engine/src/wall-triple-leaf-blocked-diagnostics-gate-g5.test.ts`
+with
+`gate_g4_blocked_local_material_and_topology_mapping_no_runtime_selected_blocked_diagnostics_and_source_acquisition_gate_g5`.
+
+### Gate G5 - Blocked Diagnostics and Source Acquisition Decision
+
+Landed in:
+
+`packages/engine/src/wall-triple-leaf-blocked-diagnostics-gate-g5.test.ts`
+
+Blocked diagnostics module:
+
+`packages/engine/src/wall-triple-leaf-blocked-diagnostics.ts`
+
+Required behavior:
+
+- turn the Gate G4 blockers into exact user/developer diagnostics:
+  generic gypsum board vs Type C, rockwool vs glass-fiber batt, MLV
+  absent, gypsum plaster absent, 50 mm cavities vs 92.1 mm source
+  family, and missing 18 gauge / 92.1 mm steel-stud support ownership;
+- keep the current `Rw 41` answer visibly caveated as screening, not a
+  fixed or validated triple-leaf calculation;
+- decide whether the next work should be source acquisition for local
+  rockwool/MLV/plaster rows, a bounded effect model, or web-visible
+  blocked diagnostics before Gate H;
+- keep all runtime/support/confidence/evidence/API/route-card/
+  output-card/proposal-report/workbench-input behavior frozen.
+
+Exit condition: complete. Gate G5 keeps the current `Rw 41` answer visibly caveated as screening, not a fixed or validated triple-leaf calculation. It maps Gate G4 blockers to diagnostics for generic gypsum board vs Type C, rockwool vs glass-fiber batt, MLV absent, gypsum plaster absent, 50 mm cavities vs 92.1 mm source family, missing internal Type C ownership, missing support gauge/depth/spacing ownership, out-of-family face-leaf mass, and missing paired visible runtime tests. Runtime remains frozen, and Gate G5 selects
+`packages/engine/src/wall-triple-leaf-local-source-acquisition-gate-g6.test.ts`
+with
+`gate_g5_landed_blocked_diagnostics_no_runtime_selected_local_source_acquisition_gate_g6`.
+
+### Gate G6 - Local Source Acquisition and Effect Model Requirements
+
+Landed in:
+
+`packages/engine/src/wall-triple-leaf-local-source-acquisition-gate-g6.test.ts`
+
+Local source acquisition module:
+
+`packages/engine/src/wall-triple-leaf-local-source-acquisition.ts`
+
+Required behavior:
+
+- decide whether local Type C board product mapping can be owned from
+  catalog/source evidence or must remain blocked;
+- decide whether rockwool/mineral-wool absorber equivalence can be
+  owned by source rows, flow-resistivity/density equivalence, or
+  one-third-octave tolerance;
+- decide whether the local 50 mm rockwool cavity family needs a direct
+  measured row before any runtime path;
+- decide whether MLV and gypsum plaster can be bounded by effect models
+  or must stay source-acquisition blockers;
+- decide whether support gauge/depth/spacing can be expressed and
+  mapped into the source family;
+- keep every runtime/support/confidence/evidence/API/route-card/
+  output-card/proposal-report/workbench-input surface frozen unless
+  all source/effect-model requirements, tolerance ownership, negative
+  boundaries, and paired visible tests are owned.
+
+Gate G6 keeps every requirement blocked before runtime.
+
+Exit condition: complete. Gate G6 names the pre-runtime acquisition
+requirements for local Type C board product mapping, direct
+rockwool/mineral-wool absorber evidence, direct local 50 mm cavity
+evidence, MLV bounded limp-mass effect modeling, gypsum plaster
+face-finish modeling, and support gauge/depth/spacing mapping. Runtime
+remains frozen on low-confidence `multileaf_screening_blend` `Rw 41`,
+and Gate G6 selects
+`packages/engine/src/wall-triple-leaf-local-source-pack-acquisition-gate-g7.test.ts`
+with
+`gate_g6_landed_local_source_and_effect_model_requirements_no_runtime_selected_source_pack_acquisition_gate_g7`.
+
+### Gate G7 - Local Source-Pack Acquisition Intake
+
+Landed in:
+
+`packages/engine/src/wall-triple-leaf-local-source-pack-acquisition-gate-g7.test.ts`
+
+Local source-pack intake module:
+
+`packages/engine/src/wall-triple-leaf-local-source-pack-acquisition.ts`
+
+Required behavior:
+
+- intake candidate source rows or equivalence evidence for local Type C
+  board product mapping against NRC 12.7 mm Type C board mass/thickness;
+- intake rockwool/mineral-wool absorber rows or flow-resistivity/density
+  equivalence evidence with one-third-octave tolerance;
+- intake a measured or graph-digitized local 50 mm two-cavity
+  rockwool triple-leaf source row, or keep the cavity substitution
+  blocked;
+- intake MLV limp-mass and gypsum plaster face-finish source rows or
+  bounded effect-model evidence, rejecting source-less effect claims;
+- intake support gauge/depth/spacing and frame-independence mapping
+  evidence against the NRC-like support family;
+- keep runtime/support/confidence/evidence/API/route-card/output-card/
+  proposal-report/workbench-input behavior frozen.
+
+Exit condition: complete. Gate G7 records exact source-pack gaps and
+keeps Gate H blocked. The intake has only adjacent/reference evidence
+for NRC Type C board, glass-fiber batt, NRC 92.1 mm cavities, and NRC
+support context; it does not have local product datasheets,
+rockwool/mineral-wool flow-resistivity/density equivalence, a measured
+or graph-digitized 50 mm two-cavity rockwool row, MLV effect evidence,
+gypsum plaster effect evidence, or exact local support gauge/depth/
+spacing input ownership. Runtime remains frozen on low-confidence
+`multileaf_screening_blend` `Rw 41`.
+
+Gate G7 also documents sibling order/topology risks:
+
+- `triple_leaf_double_leaf_route_flip`;
+- `heavy_multileaf_lined_massive_boundary_flip`;
+- `masonry_lined_massive_swap_flip`;
+- `duplicate_stack_family_flip`;
+- `raw_floor_order_role_inference_sensitivity`.
+
+Representative tests pin the user rockwool route flip (`Rw 51` double
+leaf to `Rw 41` multileaf screening), a classic triple-leaf swap
+(`Rw 32` to `Rw 44`), and a heavy multileaf / lined-massive boundary
+swap (`Rw 39` to `Rw 49`). These are risk findings, not runtime
+corrections. Gate G7 selects
+`packages/engine/src/wall-triple-leaf-source-gap-and-order-risk-gate-g8.test.ts`
+with
+`gate_g7_landed_local_source_pack_intake_no_runtime_selected_source_gap_and_order_risk_register_gate_g8`.
+
+### Gate G8 - Source Gap and Order-Risk Register
+
+Landed in:
+
+`packages/engine/src/wall-triple-leaf-source-gap-and-order-risk-gate-g8.test.ts`
+
+Source-gap/order-risk module:
+
+`packages/engine/src/wall-triple-leaf-source-gap-and-order-risk.ts`
+
+Required behavior:
+
+- decide whether the blocked Gate G7 source-pack intake should continue
+  to source acquisition, visible diagnostics, or a bounded local
+  material/effect-model research slice;
+- keep `triple_leaf_double_leaf_route_flip` and
+  `duplicate_stack_family_flip` as explicit watch items until grouped
+  topology or route-guard ownership exists;
+- preserve existing pinned order-sensitive behavior for
+  `heavy_multileaf_lined_massive_boundary_flip`,
+  `masonry_lined_massive_swap_flip`, and
+  `raw_floor_order_role_inference_sensitivity`;
+- specify which engine and web-visible tests must be added before any
+  route smoothing, source-family widening, or runtime promotion;
+- keep runtime/support/confidence/evidence/API/route-card/output-card/
+  proposal-report/workbench-input behavior frozen.
+
+Exit condition: complete. Gate G8 keeps all source gaps open, records
+zero usable runtime source-pack candidates, and classifies the
+remaining work:
+
+- `source_acquisition_required`: local Type C board product mapping,
+  rockwool/mineral-wool absorber equivalence or direct measured band
+  curve, and local 50 mm two-cavity rockwool source row;
+- `bounded_effect_model_required`: MLV limp-mass effect and gypsum
+  plaster face-finish effect;
+- `topology_input_owner_required`: support gauge/depth/spacing and
+  frame-independence mapping.
+
+Gate G8 selects `triple_leaf_double_leaf_route_flip` and
+`duplicate_stack_family_flip` for Gate G9 visible diagnostics and
+grouped topology guard work, while preserving the existing pinned
+order-sensitive boundaries for `heavy_multileaf_lined_massive_boundary_flip`,
+`masonry_lined_massive_swap_flip`, and
+`raw_floor_order_role_inference_sensitivity`.
+
+### Gate G9 - Visible Diagnostics and Grouped Topology Guard
+
+Landed in:
+
+`packages/engine/src/wall-triple-leaf-visible-diagnostics-and-topology-guard-gate-g9.test.ts`
+
+Visible diagnostic / topology guard module:
+
+`packages/engine/src/wall-triple-leaf-visible-diagnostics-and-topology-guard.ts`
+
+Required behavior:
+
+- convert the Gate G8 source-gap and order-risk state into
+  user/developer-visible blocked diagnostics without changing the
+  numeric answer;
+- keep `triple_leaf_double_leaf_route_flip` and
+  `duplicate_stack_family_flip` visible as grouped-topology / route
+  guard issues until explicit grouped topology ownership exists;
+- preserve paired engine and web-visible test ownership before any
+  route smoothing, source-family widening, or runtime promotion;
+- keep runtime/support/confidence/evidence/API/route-card/output-card/
+  proposal-report/workbench-input behavior frozen unless Gate G9
+  explicitly owns the visible diagnostic surface.
+
+Exit condition: complete. Gate G9 records the visible diagnostic ids
+that must block runtime promotion:
+
+- `triple_leaf_visible_screening_result_not_validated`;
+- `triple_leaf_visible_local_type_c_board_source_gap`;
+- `triple_leaf_visible_rockwool_equivalence_source_gap`;
+- `triple_leaf_visible_50mm_cavity_source_gap`;
+- `triple_leaf_visible_mlv_effect_model_gap`;
+- `triple_leaf_visible_gypsum_plaster_effect_model_gap`;
+- `triple_leaf_visible_support_topology_owner_gap`;
+- `triple_leaf_visible_route_flip_grouped_topology_guard`;
+- `triple_leaf_visible_duplicate_stack_grouped_topology_guard`;
+- `triple_leaf_visible_runtime_promotion_missing_paired_tests`.
+
+Gate G9 also owns grouped topology guard definitions for
+`grouped_triple_leaf_roles_required`,
+`flat_list_route_flip_guard_required`,
+`duplicate_stack_guard_required`, `source_gap_runtime_block_guard`, and
+`paired_visible_tests_runtime_block_guard`. Web-visible runtime tests
+remain not ready. Gate G9 selects Gate H fail-closed prerequisite
+checking with
+`gate_g9_landed_visible_diagnostics_and_grouped_topology_guard_no_runtime_selected_engine_integration_fail_closed_gate_h`.
 
 ### Gate H - Engine Integration Fail-Closed
 
+Landed in:
+
+`packages/engine/src/wall-triple-leaf-engine-integration-fail-closed-gate-h.test.ts`
+
+Fail-closed prerequisite module:
+
+`packages/engine/src/wall-triple-leaf-engine-integration-fail-closed.ts`
+
 Integrate only after Gate G2B supplies executable source curves, Gate
-G3 proves calibration / holdout / negative-boundary pass, and Gate G4
-owns local material/topology mapping.
+G3 proves calibration / holdout / negative-boundary pass, Gate G4 owns
+local material/topology mapping, Gate G5 has paired diagnostics, Gate
+G6 owns source/effect-model requirements, Gate G7 lands a usable local
+source pack, Gate G8 closes the source-gap/order-risk register, Gate G9
+owns visible diagnostics/grouped topology guards, and visible
+runtime-test ownership exists.
 
 Runtime promotion requires:
 
@@ -701,14 +1221,42 @@ Runtime promotion requires:
 - material mapping within owned corpus;
 - negative-boundary checks clean.
 
+Exit condition: complete. Gate H passes:
+
+- `gate_g2b_executable_source_curves`;
+- `gate_g3_calibration_holdout_negative_boundaries`;
+- `complete_grouped_wall_topology`.
+
+Gate H blocks:
+
+- `gate_g4_local_material_mapping`;
+- `gate_g7_usable_local_source_pack`;
+- `gate_g8_source_gaps_closed`;
+- `gate_g9_route_topology_guards_runtime_ready`;
+- `paired_engine_web_visible_runtime_tests`.
+
 If any condition fails, keep `multileaf_screening_blend` low confidence
-and show missing-field / missing-source diagnostics.
+and show missing-field / missing-source diagnostics. Gate H keeps
+runtime fail-closed and selects Gate I web-visible grouped topology
+inputs with
+`gate_h_landed_engine_integration_fail_closed_prerequisite_check_no_runtime_selected_web_visible_grouped_topology_inputs_gate_i`.
 
 ### Gate I - Web-Visible Grouped Topology Inputs
 
-Add workbench controls only after the engine contract is stable.
+Landed in:
 
-UI needs:
+`apps/web/features/workbench/wall-triple-leaf-grouped-topology-route-card.test.ts`
+
+Gate I adds:
+
+- `apps/web/features/workbench/simple-workbench-wall-topology.ts`;
+- grouped wall topology fields to `workbench-store.ts` snapshots;
+- `AirborneContext.wallTopology` plumbing in `simple-workbench-shell.tsx`;
+- grouped topology controls in `simple-workbench-route-panel.tsx`;
+- wall triple-leaf topology-gap handling in `guided-topology-gap.ts`.
+
+The workbench can now express the PDF repro without relying only on
+ambiguous flat layer order:
 
 - Side A leaf group;
 - cavity 1 depth/fill/absorption;
@@ -716,35 +1264,414 @@ UI needs:
 - internal leaf coupling/bridge class;
 - cavity 2 depth/fill/absorption;
 - Side B leaf group;
-- support topology;
-- lab/field target policy;
-- visible route-card, output-card, diagnostics, and proposal/report
-  language.
+- support topology.
+
+Gate I also makes the route-card topology gap distinguish:
+
+- missing grouped topology fields; from
+- complete grouped topology that is still blocked by source validation.
+
+The live split-rockwool result remains low-confidence
+`multileaf_screening_blend` `Rw 41`; output-card value/status,
+confidence, evidence tier, support status, API shape, and proposal
+metric claims do not move.
 
 Exit condition: web tests prove the user can express the PDF repro
-without relying on ambiguous flat order.
+without relying on ambiguous flat order. Complete.
 
 ### Gate J - Company-Internal Acceptance Rehearsal
 
-Run a focused acceptance pack before declaring this family company-use
-ready.
+Landed in:
 
-The pack must include:
+`apps/web/features/workbench/wall-triple-leaf-company-internal-acceptance-rehearsal.test.ts`
 
-- the two user PDF stacks;
-- complete and missing grouped-topology cases;
-- exact source rows;
-- bounded near-source rows;
-- double-leaf negatives;
-- lined-masonry and one-side-lining negatives;
-- many-layer and reorder hostile cases;
-- lab `Rw`;
-- field `R'w`;
-- `DnT,w` with geometry/volume/RT60;
-- PDF/report visibility.
+Gate J runs a focused acceptance pack before declaring this family
+company-use ready.
 
-Exit condition: triple-leaf can be classified as ready, caveated, or
-blocked with no hidden precise-looking unsupported number.
+Gate J proves:
+
+- the adjacent-rockwool user stack remains the current double-leaf
+  control at `Rw 50`, `double_leaf_porous_fill_delegate`, medium
+  confidence;
+- the split-rockwool user stack remains `multileaf_screening_blend`
+  `Rw 41`, low confidence;
+- missing grouped topology shows `Grouped topology missing`;
+- complete grouped topology shows `Source validation blocked`;
+- field `R'w 34` and `DnT,w 36` remain live but visibly caveated;
+- report/proposal text and HTML carry the grouped triple-leaf source
+  validation blocker and keep `Rw` unsupported in the field issue;
+- exact source controls do not leak into near-source local substitutions;
+- ordinary double-leaf, lined-masonry, and one-side-lining negatives do
+  not ask for triple-leaf topology;
+- many-layer/reorder hostile wall inputs stay finite and card-renderable.
+
+Exit condition: complete. Gate J classifies the current user family as
+blocked/caveated rather than ready for exact runtime. It selects Gate K
+runtime-promotion readiness / source-gap closure with
+`gate_j_landed_company_internal_acceptance_rehearsal_no_runtime_selected_runtime_promotion_readiness_gate_k`.
+
+### Gate K - Runtime Promotion Readiness and Source-Gap Closure
+
+Landed in:
+
+`packages/engine/src/wall-triple-leaf-runtime-promotion-readiness-gate-k.test.ts`
+
+Gate K decides whether the triple-leaf lane can move out of
+fail-closed screening. It confirms the source-family curves,
+calibration / holdout, negative boundaries, complete grouped topology,
+and Gate J company-internal acceptance rehearsal are available, but
+runtime promotion remains blocked because these are still not proven
+together:
+
+- local `gypsum_board`, `rockwool`, `mlv`, and `gypsum_plaster` mapping;
+- usable local source-pack / tolerance owner for the user stack;
+- source-gap closure for two 50 mm rockwool cavities and local support
+  topology;
+- grouped topology guards ready for runtime, including route-flip and
+  duplicate-stack risks;
+- paired engine and web visible runtime tests for lab `Rw`, field
+  `R'w`, `DnT,w`, route-card, output-card, and report surfaces.
+
+Gate K keeps the split-rockwool grouped stack on low-confidence
+`multileaf_screening_blend` `Rw 41`, maps each blocked prerequisite to
+visible diagnostics, and selects Gate L source-gap closure with
+`gate_k_blocked_runtime_promotion_no_runtime_selected_source_gap_closure_gate_l`.
+
+The Gate K readiness decision is
+`runtime_promotion_blocked_select_source_gap_closure`.
+
+### Gate L - Source-Gap Closure
+
+Landed in:
+
+`packages/engine/src/wall-triple-leaf-source-gap-closure-gate-l.test.ts`
+
+Gate L decides which source gaps can be closed from the available
+evidence and which remain blocked. It starts from the Gate K closure
+plan and keeps every source gap open:
+
+- `local_type_c_board_product_mapping`:
+  `open_missing_local_product_mapping`;
+- `rockwool_absorber_equivalence_or_measured_row`:
+  `open_missing_direct_row_or_equivalence`;
+- `local_50mm_rockwool_cavity_source_row`:
+  `open_adjacent_reference_only`;
+- `mlv_limp_mass_triple_leaf_effect_model`:
+  `open_missing_bounded_effect_model`;
+- `gypsum_plaster_face_finish_effect_model`:
+  `open_missing_bounded_effect_model`;
+- `support_gauge_depth_and_spacing_mapping`:
+  `open_missing_topology_input_owner`.
+
+Gate L refuses to treat adjacent NRC Type C board, glass-fiber batt,
+92.1 mm cavity, or double-stud support references as local runtime
+evidence. The source gaps remain open. It keeps
+`multileaf_screening_blend` fail-closed and selects Gate M source
+evidence acquisition with
+`gate_l_confirmed_source_gaps_remain_open_no_runtime_selected_source_evidence_acquisition_gate_m`.
+
+### Gate M - Source Evidence Acquisition
+
+Landed in:
+
+`packages/engine/src/wall-triple-leaf-source-evidence-acquisition-gate-m.test.ts`
+
+Gate M decides which evidence acquisition path is concrete enough to
+pursue first for the still-open local gaps. It selects
+`rockwool_two_cavity_band_curve_source_pack` as the first path because
+one source/equivalence pack can cover both:
+
+- `rockwool_absorber_equivalence_or_measured_row`; and
+- `local_50mm_rockwool_cavity_source_row`.
+
+The selected Gate N evidence needs measured or reproducibly
+graph-digitized one-third-octave TL data for a triple-leaf two-cavity
+wall with rockwool/mineral-wool fill, 50 mm-class cavity depth,
+two-cavity topology, fill coverage, Rw/STC derivation, and source-owned
+uncertainty. The acquisition status is
+`gate_m_selected_rockwool_two_cavity_source_evidence_first_no_runtime_selected_source_locator_intake_gate_n`.
+
+Gate M keeps these follow-on blockers open:
+
+- local gypsum-board Type C product identity and mass/thickness
+  tolerance;
+- MLV limp-mass triple-leaf effect model or same-position measured row;
+- gypsum plaster face-finish delta row or bounded damping model;
+- support gauge/depth/spacing and frame-independence input ownership.
+
+Exit condition: no runtime movement unless a later gate proves all
+local material/source-pack/tolerance/topology/test prerequisites
+together. If any prerequisite remains open, keep
+`multileaf_screening_blend` fail-closed and select the next bounded
+source-evidence step.
+
+### Gate N - Rockwool Two-Cavity Source Locator Intake
+
+Landed in:
+
+`packages/engine/src/wall-triple-leaf-source-locator-intake-gate-n.test.ts`
+
+Gate N action:
+
+`gate_n_rockwool_two_cavity_source_locator_intake_no_runtime`
+
+Gate N should intake source locators for
+`rockwool_two_cavity_band_curve_source_pack`. It should classify each
+candidate as direct measured row, reproducible graph-digitized row,
+flow-resistivity/density equivalence pack, adjacent context only, or
+rejected context. It must keep runtime frozen unless the intake can
+name source-owned one-third-octave curves, Rw/STC derivation,
+digitization uncertainty, local material mapping, tolerance owner,
+negative boundaries, and paired engine/web visible runtime tests.
+It must also preserve the active risk register in
+[CALCULATOR_ROUTE_SOURCE_RISK_REGISTER_2026-05-01.md](./CALCULATOR_ROUTE_SOURCE_RISK_REGISTER_2026-05-01.md):
+flat-list route-family flips, duplicate/many-layer drift, masonry /
+lined-massive boundary drift, raw floor role inference, near-source
+false promotion, field-output leakage, material alias/coalescing,
+hostile API input, and curve provenance cannot be softened into
+runtime behavior without explicit tests.
+
+Exit condition: complete. Gate N selects
+`uris_2006_internal_gypsum_50mm_mineral_wool_double_frame` as the
+primary Gate O full-curve retrieval target because it is the closest
+located source for 50 mm mineral-wool double-frame partitions with an
+internal gypsum board layer. It keeps
+`nrc_2024_internal_board_glass_fiber_92mm_source_family` as a
+graph-owned adjacent comparator, keeps
+`uris_1999_rockwool_bulk_density_double_wall` and
+`wang_2022_lightweight_double_leaf_stone_wool_glass_wool` as
+equivalence context only, rejects
+`nrc_1998_gypsum_board_walls_baseline_numeric_rows` from this lane, and
+keeps `multileaf_screening_blend` fail-closed with
+`gate_n_classified_rockwool_two_cavity_source_locators_no_runtime_selected_full_curve_retrieval_and_provenance_gate_o`.
+
+### Gate O - Full Curve Retrieval and Provenance QC
+
+Landed in:
+
+`packages/engine/src/wall-triple-leaf-source-locator-provenance-gate-o.test.ts`
+
+Gate O action:
+
+`gate_o_full_curve_retrieval_and_provenance_qc_no_runtime`
+
+Gate O should retrieve, digitize, or explicitly reject full
+one-third-octave curves for the Uris 2006 primary locator. It must own
+source provenance, page/figure/table locator, extraction method,
+Rw/STC derivation, digitization/measurement uncertainty, local
+material/support mapping blockers, and negative boundaries against
+fixed-penalty or near-source promotion. Runtime must remain frozen
+unless all later mapping/tolerance/topology and paired visible runtime
+tests pass.
+
+Exit condition: complete. Gate O verifies the Uris 2006 locator
+identity but records that current accessible paths expose only summary /
+metadata or unauthenticated HTTP 403:
+`sciencedirect_article_page_public_summary`,
+`doi_linkinghub_redirect`,
+`crossref_doi_metadata_and_elsevier_tdm_links`, and
+`sciencedirect_pdf_route_local_http_403`. No current path provides a
+source PDF/page image, plot axes, curve identity, one-third-octave band
+vector, Rw/STC derivation, or uncertainty owner. Gate O also rejects
+`fixed_weighted_index_penalty_not_curve`, keeps
+`multileaf_screening_blend` fail-closed, and selects
+`gate_o_verified_uris_locator_but_full_curves_not_runtime_ready_no_runtime_selected_source_access_gate_p`.
+
+### Gate P - Source Access or Alternative Measured Row Acquisition
+
+Landed in:
+
+`packages/engine/src/wall-triple-leaf-source-access-gate-p.test.ts`
+
+Gate P action:
+
+`gate_p_source_access_or_alternative_measured_row_acquisition_no_runtime`
+
+Gate P should either acquire source-owned numeric curves/tables for the
+Uris 2006 lane or select an alternative measured rockwool/mineral-wool
+two-cavity internal-leaf row. It must keep runtime frozen unless a row
+or curve pack includes provenance, one-third-octave band data,
+Rw/STC derivation, uncertainty, local material/support mapping,
+negative boundaries, and paired visible runtime tests.
+
+Exit condition: complete. Gate P keeps
+`uris_2006_internal_gypsum_50mm_mineral_wool_double_frame` as the
+primary source-access target, but `authorized_elsevier_full_text_or_tdm`,
+`manual_author_or_library_source_packet`,
+`local_pdf_or_page_image_upload`, and
+`public_summary_and_metadata_recheck` are all blocked from runtime
+because none provides source-owned one-third-octave curves or a direct
+numeric table now. Gate P records
+`uris_2008_perforated_absorptive_facing_accessible_adjacent` as an
+accessible adjacent negative boundary: it has useful 50 mm mineral-wool
+and plot context, but its perforated absorptive-facing topology and
+Helmholtz-facing behavior are not equivalent to the local internal
+gypsum-board defect lane. The explicit blocker id is
+`accessible_alternative_has_perforated_facing_topology`. Gate P keeps
+Utley/Brekke/Vinokur as method/physics context, rejects Quirt/Tadeu
+glazing rows, keeps NRC 2024 as comparator only, keeps
+`multileaf_screening_blend` fail-closed, and selects
+`gate_p_found_no_runtime_ready_access_or_equivalent_measured_row_no_runtime_selected_source_access_followup_gate_q`.
+
+### Gate Q - Source Access Backlog and Runtime Blocker Revalidation
+
+Landed in:
+
+`packages/engine/src/wall-triple-leaf-source-access-followup-gate-q.test.ts`
+
+Gate Q action:
+
+`gate_q_source_access_backlog_and_runtime_blocker_revalidation_no_runtime`
+
+Gate Q should turn the Gate P source-access result into a concrete
+manual/source-backlog and runtime-blocker revalidation contract. It
+must keep runtime frozen unless a later gate provides source-owned
+curves/table data, provenance, uncertainty/rating derivation, local
+material/support mapping, usable source-pack/tolerance ownership,
+source-gap closure, runtime-ready topology guards, and paired
+engine/web visible runtime tests together.
+
+Exit condition: complete. Gate Q creates the ordered source-access and
+runtime-blocker backlog:
+
+- `uris_2006_authorized_curve_packet`
+- `uris_2006_digitization_qc_packet`
+- `local_material_and_effect_mapping_packet`
+- `support_topology_mapping_packet`
+- `paired_visible_runtime_acceptance_packet`
+- `uris_2008_perforated_facing_separate_lane`
+
+Every Gate P runtime blocker remains `still_open_no_runtime`. Gate Q
+keeps `multileaf_screening_blend` fail-closed and selects
+`gate_q_landed_source_access_backlog_and_blocker_revalidation_no_runtime_selected_manual_source_packet_gate_r`.
+
+### Gate R - Manual Source Packet Intake Contract
+
+Landed in:
+
+`packages/engine/src/wall-triple-leaf-manual-source-packet-gate-r.test.ts`
+
+Gate R action:
+
+`gate_r_manual_source_packet_intake_contract_no_runtime`
+
+Gate R should formalize the manual source-packet intake contract for
+the Uris 2006 source row. It must specify artifact requirements,
+provenance checks, rights-safe local storage expectations, curve/table
+identity, and fail-closed behavior when no source packet exists. It
+must not promote runtime without source-owned curves/table data,
+material/support mapping, source-gap closure, topology guards, and
+paired visible tests.
+
+Exit condition: complete. Gate R requires:
+
+- `rights_safe_source_file`
+- `source_locator_metadata`
+- `page_figure_table_locator`
+- `curve_identity_map`
+- `band_vector_or_digitization_payload`
+- `rating_derivation_and_uncertainty`
+- `chain_of_custody_and_rights_note`
+
+No source packet is provided now, so `readyForDigitizationNow` and
+`readyForRuntimeNow` remain false. Gate R keeps
+`multileaf_screening_blend` fail-closed and selects
+`gate_r_formalized_manual_source_packet_intake_no_runtime_selected_source_packet_availability_gate_s`.
+
+### Gate S - Source Packet Availability Check
+
+Landed in:
+
+`packages/engine/src/wall-triple-leaf-source-packet-availability-gate-s.test.ts`
+
+Gate S action:
+
+`gate_s_source_packet_availability_check_no_runtime`
+
+Gate S should check whether the required rights-safe Uris 2006 source
+packet is actually present in the local corpus. It must keep runtime
+frozen when the packet is absent, when rights/provenance are unclear, or
+when any required curve identity / page locator / band vector /
+digitization / rating artifact is incomplete. It may only prepare
+digitization work if the packet is present and sufficient for
+reproducible one-third-octave extraction.
+
+Exit condition: complete. Gate S confirms:
+
+- `rights_safe_packet_absent`
+- `no_uris_2006_page_image_or_pdf`
+- `no_source_owned_band_vectors`
+- `metadata_only_not_rights_safe_packet`
+- `adjacent_nrc_packet_not_primary_uris_2006_packet`
+- `local_user_repro_pdfs_not_source_evidence`
+- `unrelated_local_pdfs_not_source_packet`
+
+The local availability items include
+`tmp_nrc_2024_graph_digitization_packet`, but it remains an adjacent
+comparator and not the primary Uris 2006 packet. Gate S keeps
+`multileaf_screening_blend` fail-closed and selects
+`gate_s_confirmed_no_rights_safe_uris_2006_packet_no_runtime_selected_manual_source_packet_handoff_gate_t`.
+
+### Gate T - Manual Source Packet Acquisition Handoff
+
+Landed in:
+
+`packages/engine/src/wall-triple-leaf-manual-source-packet-handoff-gate-t.test.ts`
+
+Gate T action:
+
+`gate_t_manual_source_packet_acquisition_handoff_no_runtime`
+
+Gate T should document the exact manual acquisition checklist for the
+Uris 2006 packet, including rights-safe storage, page/figure/table
+locator, curve identity, band vectors or digitization payload,
+rating/uncertainty derivation, and chain-of-custody notes. If the
+packet is still absent, Gate T should keep runtime frozen and decide
+whether to pause this source lane until packet supply or re-rank to
+another implementable calculator accuracy slice.
+
+Exit condition: complete. Gate T requires and documents:
+
+- `authorized_source_file_or_tdm_payload`
+- `rights_and_storage_note`
+- `source_identity_metadata`
+- `page_figure_table_locator`
+- `curve_identity_map`
+- `band_vector_or_digitization_payload`
+- `rating_derivation_and_uncertainty`
+- `chain_of_custody_review`
+
+The Uris 2006 lane is paused on
+`paused_waiting_rights_safe_source_packet`. Gate T keeps
+`multileaf_screening_blend` fail-closed, keeps the split-rockwool
+answer at low confidence, and selects
+`gate_t_paused_uris_2006_source_lane_no_runtime_selected_source_gap_revalidation_v8`.
+
+### Post-Gate T - Source Gap Revalidation v8
+
+Next file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v8-gate-a-contract.test.ts`
+
+Next action:
+
+`calculator_source_gap_revalidation_v8_no_runtime`
+
+The v8 revalidation should compare the paused Uris 2006 lane against
+the remaining source/accuracy backlog and select the next implementable
+calculator slice. It must not promote runtime unless source-owned
+evidence, material/topology mapping, tolerance ownership, and paired
+engine/web visible runtime tests all pass together.
+
+Exit condition: complete. Source-gap revalidation v8 kept the Uris 2006
+lane paused on `paused_waiting_rights_safe_source_packet`, kept the
+split-rockwool result frozen, and selected
+`british_gypsum_white_book_source_pack_extraction_v1` Gate B with
+`selected_british_gypsum_gate_b_mapping_tolerance_after_v8_rerank_paused_uris_2006_lane_and_found_official_rows_waiting_mapping`.
+
+Next file after v8:
+
+`packages/engine/src/british-gypsum-white-book-source-pack-extraction-gate-b-contract.test.ts`
 
 ## Frozen Surfaces
 
@@ -756,12 +1683,79 @@ movement, these stay frozen:
 - confidence promotion;
 - evidence tier;
 - API shape;
-- route-card values;
+- output-card values;
 - output-card status;
-- proposal/report copy;
-- workbench input behavior.
+- proposal/report metric claims.
+
+Gate I intentionally moved workbench input behavior and route-card
+topology-gap visibility so grouped triple-leaf roles can be captured
+without numeric promotion. Gate J adds acceptance-test and report
+visibility coverage only; it does not promote runtime, support,
+confidence, evidence tier, output-card values/status, API shape, or
+proposal metric claims. Gate K adds runtime-promotion readiness and
+source-gap closure planning only; it also does not promote runtime,
+support, confidence, evidence tier, output-card values/status, API
+shape, or proposal metric claims. Gate L adds source-gap closure
+classification only; it also does not promote runtime, support,
+confidence, evidence tier, output-card values/status, API shape, or
+proposal metric claims. Gate P adds source-access and alternative-row
+classification only; Gate Q adds source-access backlog ownership only;
+Gate R adds source-packet intake contract ownership only; Gate S adds
+source-packet availability checking only; and Gate T adds manual
+source-packet acquisition handoff / source-lane pause ownership only.
+None of these gates
+promote runtime, support, confidence, evidence tier, output-card
+values/status, API shape, or proposal metric claims.
 
 ## Validation
+
+Gate T validation completed:
+
+- `pnpm --filter @dynecho/engine exec vitest run src/wall-triple-leaf-manual-source-packet-handoff-gate-t.test.ts --maxWorkers=1`
+  green on 2026-05-02: 1 file / 7 tests.
+- `pnpm --filter @dynecho/engine exec vitest run src/wall-triple-leaf-manual-source-packet-handoff-gate-t.test.ts src/wall-triple-leaf-source-packet-availability-gate-s.test.ts src/wall-triple-leaf-manual-source-packet-gate-r.test.ts src/wall-triple-leaf-source-access-followup-gate-q.test.ts src/wall-triple-leaf-source-access-gate-p.test.ts src/wall-triple-leaf-source-locator-provenance-gate-o.test.ts src/wall-triple-leaf-source-locator-intake-gate-n.test.ts src/wall-triple-leaf-source-evidence-acquisition-gate-m.test.ts src/wall-triple-leaf-runtime-promotion-readiness-gate-k.test.ts --maxWorkers=1`
+  green on 2026-05-02: 9 files / 63 tests.
+- `pnpm --filter @dynecho/web exec vitest run features/workbench/wall-triple-leaf-company-internal-acceptance-rehearsal.test.ts --maxWorkers=1`
+  green on 2026-05-02: 1 file / 7 tests.
+- `pnpm calculator:gate:current`
+  green on 2026-05-02 after adding Gate T to the current runner:
+  engine 188 files / 995 tests, web 47 files / 227 passed + 18
+  skipped, build 5/5 with the known non-fatal `sharp/@img` warnings,
+  whitespace guard clean.
+- `git diff --check`
+  clean on 2026-05-02.
+
+Gate S validation completed:
+
+- `pnpm --filter @dynecho/engine exec vitest run src/wall-triple-leaf-source-packet-availability-gate-s.test.ts --maxWorkers=1`
+  green on 2026-05-02: 1 file / 7 tests.
+- `pnpm --filter @dynecho/engine exec vitest run src/wall-triple-leaf-source-packet-availability-gate-s.test.ts src/wall-triple-leaf-manual-source-packet-gate-r.test.ts src/wall-triple-leaf-source-access-followup-gate-q.test.ts src/wall-triple-leaf-source-access-gate-p.test.ts src/wall-triple-leaf-source-locator-provenance-gate-o.test.ts src/wall-triple-leaf-source-locator-intake-gate-n.test.ts src/wall-triple-leaf-source-evidence-acquisition-gate-m.test.ts src/wall-triple-leaf-runtime-promotion-readiness-gate-k.test.ts --maxWorkers=1`
+  green on 2026-05-02: 8 files / 56 tests.
+- `pnpm --filter @dynecho/web exec vitest run features/workbench/wall-triple-leaf-company-internal-acceptance-rehearsal.test.ts --maxWorkers=1`
+  green on 2026-05-02: 1 file / 7 tests.
+- `pnpm calculator:gate:current`
+  green on 2026-05-02 after adding Gate S to the current runner:
+  engine 187 files / 988 tests, web 47 files / 227 passed + 18
+  skipped, build 5/5 with the known non-fatal `sharp/@img` warnings,
+  whitespace guard clean.
+- `git diff --check`
+  clean on 2026-05-02.
+
+Gate R validation completed:
+
+- `pnpm --filter @dynecho/engine exec vitest run src/wall-triple-leaf-manual-source-packet-gate-r.test.ts --maxWorkers=1`
+  green on 2026-05-02: 1 file / 7 tests.
+- `pnpm --filter @dynecho/engine exec vitest run src/wall-triple-leaf-source-access-followup-gate-q.test.ts src/wall-triple-leaf-source-access-gate-p.test.ts src/wall-triple-leaf-source-locator-provenance-gate-o.test.ts src/wall-triple-leaf-source-locator-intake-gate-n.test.ts src/wall-triple-leaf-source-evidence-acquisition-gate-m.test.ts src/wall-triple-leaf-runtime-promotion-readiness-gate-k.test.ts --maxWorkers=1`
+  green on 2026-05-02: 6 files / 42 tests.
+- `pnpm --filter @dynecho/web exec vitest run features/workbench/wall-triple-leaf-company-internal-acceptance-rehearsal.test.ts --maxWorkers=1`
+  green on 2026-05-02: 1 file / 7 tests.
+- `pnpm calculator:gate:current`
+  green on 2026-05-02 after adding Gate R to the current runner:
+  engine 186 files / 981 tests, web 47 files / 227 passed + 18
+  skipped, build 5/5 with the known non-fatal `sharp/@img` warnings,
+  whitespace guard clean.
+- `git diff --check`
+  clean on 2026-05-02.
 
 Gate A validation completed:
 
@@ -940,5 +1934,289 @@ Gate G3 current-gate validation completed:
 - `pnpm calculator:gate:current`
   green on 2026-05-01 after adding Gate G3 to the current runner:
   engine 171 files / 879 tests, web 45 files / 216 passed + 18
+  skipped, build 5/5 with the known non-fatal `sharp/@img` warnings,
+  whitespace guard clean.
+
+Gate G4 focused validation completed:
+
+- `pnpm --filter @dynecho/engine exec vitest run src/wall-triple-leaf-local-material-mapping-gate-g4.test.ts --maxWorkers=1`
+  green on 2026-05-01: 1 file / 6 tests.
+- `pnpm --filter @dynecho/engine exec vitest run src/wall-triple-leaf-accuracy-recovery-gate-c-contract.test.ts src/wall-triple-leaf-source-pack-extraction-gate-d-contract.test.ts src/wall-triple-leaf-source-corpus-contract.test.ts src/wall-triple-leaf-frequency-solver.test.ts src/wall-triple-leaf-calibration-regime.test.ts src/wall-triple-leaf-source-curve-digitization-intake.test.ts src/wall-triple-leaf-source-curve-digitization-qc.test.ts src/wall-triple-leaf-calibration-fit-gate-g3.test.ts src/wall-triple-leaf-local-material-mapping-gate-g4.test.ts --maxWorkers=1`
+  green on 2026-05-01 after preserving Gate G3 doc continuity: 9 files
+  / 60 tests.
+- `pnpm --filter @dynecho/engine lint`
+  green on 2026-05-01.
+
+Gate G4 current-gate validation completed:
+
+- `pnpm calculator:gate:current`
+  green on 2026-05-01 after adding Gate G4 to the current runner:
+  engine 172 files / 885 tests, web 45 files / 216 passed + 18
+  skipped, build 5/5 with the known non-fatal `sharp/@img` warnings,
+  whitespace guard clean.
+
+Gate G5 focused validation completed:
+
+- `pnpm --filter @dynecho/engine exec vitest run src/wall-triple-leaf-blocked-diagnostics-gate-g5.test.ts --maxWorkers=1`
+  green on 2026-05-01: 1 file / 6 tests.
+- `pnpm --filter @dynecho/engine exec vitest run src/wall-triple-leaf-accuracy-recovery-gate-c-contract.test.ts src/wall-triple-leaf-source-pack-extraction-gate-d-contract.test.ts src/wall-triple-leaf-source-corpus-contract.test.ts src/wall-triple-leaf-frequency-solver.test.ts src/wall-triple-leaf-calibration-regime.test.ts src/wall-triple-leaf-source-curve-digitization-intake.test.ts src/wall-triple-leaf-source-curve-digitization-qc.test.ts src/wall-triple-leaf-calibration-fit-gate-g3.test.ts src/wall-triple-leaf-local-material-mapping-gate-g4.test.ts src/wall-triple-leaf-blocked-diagnostics-gate-g5.test.ts --maxWorkers=1`
+  green on 2026-05-01 after preserving Gate G4 doc continuity: 10
+  files / 66 tests.
+- `pnpm --filter @dynecho/engine lint`
+  green on 2026-05-01.
+
+Gate G5 current-gate validation completed:
+
+- `pnpm calculator:gate:current`
+  green on 2026-05-01 after adding Gate G5 to the current runner:
+  engine 173 files / 891 tests, web 45 files / 216 passed + 18
+  skipped, build 5/5 with the known non-fatal `sharp/@img` warnings,
+  whitespace guard clean.
+
+Gate G6 focused validation completed:
+
+- `pnpm --filter @dynecho/engine exec vitest run src/wall-triple-leaf-local-source-acquisition-gate-g6.test.ts --maxWorkers=1`
+  green on 2026-05-01: 1 file / 6 tests.
+- `pnpm --filter @dynecho/engine exec vitest run src/wall-triple-leaf-accuracy-recovery-gate-c-contract.test.ts src/wall-triple-leaf-source-pack-extraction-gate-d-contract.test.ts src/wall-triple-leaf-source-corpus-contract.test.ts src/wall-triple-leaf-frequency-solver.test.ts src/wall-triple-leaf-calibration-regime.test.ts src/wall-triple-leaf-source-curve-digitization-intake.test.ts src/wall-triple-leaf-source-curve-digitization-qc.test.ts src/wall-triple-leaf-calibration-fit-gate-g3.test.ts src/wall-triple-leaf-local-material-mapping-gate-g4.test.ts src/wall-triple-leaf-blocked-diagnostics-gate-g5.test.ts src/wall-triple-leaf-local-source-acquisition-gate-g6.test.ts --maxWorkers=1`
+  green on 2026-05-01 after preserving Gate G5 doc continuity: 11
+  files / 72 tests.
+- `pnpm --filter @dynecho/engine lint`
+  green on 2026-05-01.
+
+Gate G6 current-gate validation completed:
+
+- `pnpm calculator:gate:current`
+  green on 2026-05-01 after adding Gate G6 to the current runner:
+  engine 174 files / 897 tests, web 45 files / 216 passed + 18
+  skipped, build 5/5 with the known non-fatal `sharp/@img` warnings,
+  whitespace guard clean.
+
+Gate G7 focused validation completed:
+
+- `pnpm --filter @dynecho/engine exec vitest run src/wall-triple-leaf-local-source-pack-acquisition-gate-g7.test.ts --maxWorkers=1`
+  green on 2026-05-01: 1 file / 7 tests.
+- `pnpm --filter @dynecho/engine exec vitest run src/wall-triple-leaf-accuracy-recovery-gate-c-contract.test.ts src/wall-triple-leaf-source-pack-extraction-gate-d-contract.test.ts src/wall-triple-leaf-source-corpus-contract.test.ts src/wall-triple-leaf-frequency-solver.test.ts src/wall-triple-leaf-calibration-regime.test.ts src/wall-triple-leaf-source-curve-digitization-intake.test.ts src/wall-triple-leaf-source-curve-digitization-qc.test.ts src/wall-triple-leaf-calibration-fit-gate-g3.test.ts src/wall-triple-leaf-local-material-mapping-gate-g4.test.ts src/wall-triple-leaf-blocked-diagnostics-gate-g5.test.ts src/wall-triple-leaf-local-source-acquisition-gate-g6.test.ts src/wall-triple-leaf-local-source-pack-acquisition-gate-g7.test.ts --maxWorkers=1`
+  green on 2026-05-01 after preserving Gate G6 doc continuity: 12
+  files / 79 tests.
+- `pnpm --filter @dynecho/engine lint`
+  green on 2026-05-01.
+
+Gate G7 current-gate validation completed:
+
+- `pnpm calculator:gate:current`
+  green on 2026-05-01 after adding Gate G7 to the current runner:
+  engine 175 files / 904 tests, web 45 files / 216 passed + 18
+  skipped, build 5/5 with the known non-fatal `sharp/@img` warnings,
+  whitespace guard clean.
+
+Gate G8 focused validation completed:
+
+- `pnpm --filter @dynecho/engine exec vitest run src/wall-triple-leaf-source-gap-and-order-risk-gate-g8.test.ts --maxWorkers=1`
+  green on 2026-05-01: 1 file / 7 tests.
+- `pnpm --filter @dynecho/engine exec vitest run src/wall-triple-leaf-accuracy-recovery-gate-c-contract.test.ts src/wall-triple-leaf-source-pack-extraction-gate-d-contract.test.ts src/wall-triple-leaf-source-corpus-contract.test.ts src/wall-triple-leaf-frequency-solver.test.ts src/wall-triple-leaf-calibration-regime.test.ts src/wall-triple-leaf-source-curve-digitization-intake.test.ts src/wall-triple-leaf-source-curve-digitization-qc.test.ts src/wall-triple-leaf-calibration-fit-gate-g3.test.ts src/wall-triple-leaf-local-material-mapping-gate-g4.test.ts src/wall-triple-leaf-blocked-diagnostics-gate-g5.test.ts src/wall-triple-leaf-local-source-acquisition-gate-g6.test.ts src/wall-triple-leaf-local-source-pack-acquisition-gate-g7.test.ts src/wall-triple-leaf-source-gap-and-order-risk-gate-g8.test.ts --maxWorkers=1`
+  green on 2026-05-01 after preserving Gate G7 doc continuity: 13
+  files / 86 tests.
+- `pnpm --filter @dynecho/engine lint`
+  green on 2026-05-01.
+
+Gate G8 current-gate validation completed:
+
+- `pnpm calculator:gate:current`
+  green on 2026-05-01 after adding Gate G8 to the current runner:
+  engine 176 files / 911 tests, web 45 files / 216 passed + 18
+  skipped, build 5/5 with the known non-fatal `sharp/@img` warnings,
+  whitespace guard clean.
+
+Gate G9 focused validation completed:
+
+- `pnpm --filter @dynecho/engine exec vitest run src/wall-triple-leaf-visible-diagnostics-and-topology-guard-gate-g9.test.ts --maxWorkers=1`
+  green on 2026-05-01: 1 file / 7 tests.
+- `pnpm --filter @dynecho/engine exec vitest run src/wall-triple-leaf-accuracy-recovery-gate-c-contract.test.ts src/wall-triple-leaf-source-pack-extraction-gate-d-contract.test.ts src/wall-triple-leaf-source-corpus-contract.test.ts src/wall-triple-leaf-frequency-solver.test.ts src/wall-triple-leaf-calibration-regime.test.ts src/wall-triple-leaf-source-curve-digitization-intake.test.ts src/wall-triple-leaf-source-curve-digitization-qc.test.ts src/wall-triple-leaf-calibration-fit-gate-g3.test.ts src/wall-triple-leaf-local-material-mapping-gate-g4.test.ts src/wall-triple-leaf-blocked-diagnostics-gate-g5.test.ts src/wall-triple-leaf-local-source-acquisition-gate-g6.test.ts src/wall-triple-leaf-local-source-pack-acquisition-gate-g7.test.ts src/wall-triple-leaf-source-gap-and-order-risk-gate-g8.test.ts src/wall-triple-leaf-visible-diagnostics-and-topology-guard-gate-g9.test.ts --maxWorkers=1`
+  green on 2026-05-01 after preserving Gate G8 doc continuity: 14
+  files / 93 tests.
+- `pnpm --filter @dynecho/engine lint`
+  green on 2026-05-01.
+
+Gate G9 current-gate validation completed:
+
+- `pnpm calculator:gate:current`
+  green on 2026-05-01 after adding Gate G9 to the current runner:
+  engine 177 files / 918 tests, web 45 files / 216 passed + 18
+  skipped, build 5/5 with the known non-fatal `sharp/@img` warnings,
+  whitespace guard clean.
+
+Gate H focused validation completed:
+
+- `pnpm --filter @dynecho/engine exec vitest run src/wall-triple-leaf-engine-integration-fail-closed-gate-h.test.ts --maxWorkers=1`
+  green on 2026-05-01: 1 file / 7 tests.
+- `pnpm --filter @dynecho/engine exec vitest run src/wall-triple-leaf-accuracy-recovery-gate-c-contract.test.ts src/wall-triple-leaf-source-pack-extraction-gate-d-contract.test.ts src/wall-triple-leaf-source-corpus-contract.test.ts src/wall-triple-leaf-frequency-solver.test.ts src/wall-triple-leaf-calibration-regime.test.ts src/wall-triple-leaf-source-curve-digitization-intake.test.ts src/wall-triple-leaf-source-curve-digitization-qc.test.ts src/wall-triple-leaf-calibration-fit-gate-g3.test.ts src/wall-triple-leaf-local-material-mapping-gate-g4.test.ts src/wall-triple-leaf-blocked-diagnostics-gate-g5.test.ts src/wall-triple-leaf-local-source-acquisition-gate-g6.test.ts src/wall-triple-leaf-local-source-pack-acquisition-gate-g7.test.ts src/wall-triple-leaf-source-gap-and-order-risk-gate-g8.test.ts src/wall-triple-leaf-visible-diagnostics-and-topology-guard-gate-g9.test.ts src/wall-triple-leaf-engine-integration-fail-closed-gate-h.test.ts --maxWorkers=1`
+  green on 2026-05-01 after preserving Gate G9 doc continuity: 15
+  files / 100 tests.
+- `pnpm --filter @dynecho/engine lint`
+  green on 2026-05-01.
+
+Gate H current-gate validation completed:
+
+- `pnpm calculator:gate:current`
+  green on 2026-05-01 after adding Gate H to the current runner:
+  engine 178 files / 925 tests, web 45 files / 216 passed + 18
+  skipped, build 5/5 with the known non-fatal `sharp/@img` warnings,
+  whitespace guard clean.
+
+Gate I focused validation completed:
+
+- `pnpm --filter @dynecho/web exec vitest run features/workbench/wall-triple-leaf-grouped-topology-route-card.test.ts --maxWorkers=1`
+  green on 2026-05-01: 1 file / 4 tests.
+- `pnpm --filter @dynecho/web exec vitest run features/workbench/wall-triple-leaf-grouped-topology-route-card.test.ts features/workbench/server-project-workbench-snapshot.test.ts --maxWorkers=1`
+  green on 2026-05-01 after preserving server-project snapshot
+  persistence: 2 files / 8 tests.
+- `pnpm --filter @dynecho/web typecheck`
+  green on 2026-05-01.
+- `pnpm --filter @dynecho/web lint`
+  green on 2026-05-01.
+
+Gate I current-gate validation completed:
+
+- `pnpm calculator:gate:current`
+  green on 2026-05-01 after adding Gate I to the current runner:
+  engine 178 files / 925 tests, web 46 files / 220 passed + 18
+  skipped, build 5/5 with the known non-fatal `sharp/@img` warnings,
+  whitespace guard clean.
+
+Gate J focused validation completed:
+
+- `pnpm --filter @dynecho/web exec vitest run features/workbench/wall-triple-leaf-company-internal-acceptance-rehearsal.test.ts --maxWorkers=1`
+  green on 2026-05-01 after docs alignment: 1 file / 7 tests.
+- `pnpm --filter @dynecho/web typecheck`
+  green on 2026-05-01.
+- `pnpm --filter @dynecho/web lint`
+  green on 2026-05-01.
+
+Gate J current-gate validation completed:
+
+- `pnpm calculator:gate:current`
+  green on 2026-05-01 after adding Gate J to the current runner:
+  engine 178 files / 925 tests, web 47 files / 227 passed + 18
+  skipped, build 5/5 with the known non-fatal `sharp/@img` warnings,
+  whitespace guard clean.
+
+Gate K focused validation completed:
+
+- `pnpm --filter @dynecho/engine exec vitest run src/wall-triple-leaf-runtime-promotion-readiness-gate-k.test.ts --maxWorkers=1`
+  green on 2026-05-01: 1 file / 7 tests.
+- `pnpm --filter @dynecho/engine lint`
+  green on 2026-05-01.
+- `pnpm --filter @dynecho/web exec vitest run features/workbench/wall-triple-leaf-company-internal-acceptance-rehearsal.test.ts --maxWorkers=1`
+  green on 2026-05-01 after handoff continuity alignment: 1 file / 7
+  tests.
+
+Gate K current-gate validation completed:
+
+- `pnpm calculator:gate:current`
+  green on 2026-05-01 after adding Gate K to the current runner:
+  engine 179 files / 932 tests, web 47 files / 227 passed + 18
+  skipped, build 5/5 with the known non-fatal `sharp/@img` warnings,
+  whitespace guard clean.
+
+Gate L focused validation completed:
+
+- `pnpm --filter @dynecho/engine exec vitest run src/wall-triple-leaf-source-gap-closure-gate-l.test.ts --maxWorkers=1`
+  green on 2026-05-01: 1 file / 7 tests.
+- `pnpm --filter @dynecho/engine lint`
+  green on 2026-05-01.
+
+Gate L current-gate validation completed:
+
+- `pnpm calculator:gate:current`
+  green on 2026-05-01 after adding Gate L to the current runner:
+  engine 180 files / 939 tests, web 47 files / 227 passed + 18
+  skipped, build 5/5 with the known non-fatal `sharp/@img` warnings,
+  whitespace guard clean.
+
+Gate M focused validation completed:
+
+- `pnpm --filter @dynecho/engine exec vitest run src/wall-triple-leaf-source-evidence-acquisition-gate-m.test.ts --maxWorkers=1`
+  green on 2026-05-01: 1 file / 7 tests.
+- `pnpm --filter @dynecho/engine exec vitest run src/wall-triple-leaf-source-gap-closure-gate-l.test.ts --maxWorkers=1`
+  green on 2026-05-01 after preserving Gate L doc continuity: 1 file /
+  7 tests.
+- `pnpm --filter @dynecho/engine exec vitest run src/wall-triple-leaf-runtime-promotion-readiness-gate-k.test.ts --maxWorkers=1`
+  green on 2026-05-01 after preserving Gate K doc continuity: 1 file /
+  7 tests.
+- `pnpm --filter @dynecho/web exec vitest run features/workbench/wall-triple-leaf-company-internal-acceptance-rehearsal.test.ts --maxWorkers=1`
+  green on 2026-05-01 after preserving Gate J web continuity: 1 file /
+  7 tests.
+- `pnpm --filter @dynecho/engine lint`
+  green on 2026-05-01.
+
+Gate M current-gate validation completed:
+
+- `pnpm calculator:gate:current`
+  green on 2026-05-01 after adding Gate M to the current runner:
+  engine 181 files / 946 tests, web 47 files / 227 passed + 18
+  skipped, build 5/5 with the known non-fatal `sharp/@img` warnings,
+  whitespace guard clean.
+
+Gate N validation completed:
+
+- `pnpm --filter @dynecho/engine exec vitest run src/wall-triple-leaf-source-locator-intake-gate-n.test.ts --maxWorkers=1`
+  green on 2026-05-01: 1 file / 7 tests.
+- `pnpm --filter @dynecho/engine exec vitest run src/wall-triple-leaf-source-evidence-acquisition-gate-m.test.ts src/wall-triple-leaf-source-gap-closure-gate-l.test.ts src/wall-triple-leaf-runtime-promotion-readiness-gate-k.test.ts --maxWorkers=1`
+  green on 2026-05-01 after preserving Gate M/L/K continuity: 3
+  files / 21 tests.
+- `pnpm --filter @dynecho/web exec vitest run features/workbench/wall-triple-leaf-company-internal-acceptance-rehearsal.test.ts --maxWorkers=1`
+  green on 2026-05-01 after preserving Gate J web continuity: 1 file /
+  7 tests.
+- `pnpm calculator:gate:current`
+  green on 2026-05-01 after adding Gate N to the current runner:
+  engine 182 files / 953 tests, web 47 files / 227 passed + 18
+  skipped, build 5/5 with the known non-fatal `sharp/@img` warnings,
+  whitespace guard clean.
+
+Gate O validation completed:
+
+- `pnpm --filter @dynecho/engine exec vitest run src/wall-triple-leaf-source-locator-provenance-gate-o.test.ts --maxWorkers=1`
+  green on 2026-05-01: 1 file / 7 tests.
+- `pnpm --filter @dynecho/engine exec vitest run src/wall-triple-leaf-source-locator-intake-gate-n.test.ts src/wall-triple-leaf-source-evidence-acquisition-gate-m.test.ts src/wall-triple-leaf-source-gap-closure-gate-l.test.ts src/wall-triple-leaf-runtime-promotion-readiness-gate-k.test.ts --maxWorkers=1`
+  green on 2026-05-01 after preserving Gate N/M/L/K continuity: 4
+  files / 28 tests.
+- `pnpm --filter @dynecho/web exec vitest run features/workbench/wall-triple-leaf-company-internal-acceptance-rehearsal.test.ts --maxWorkers=1`
+  green on 2026-05-01 after preserving Gate J web continuity: 1 file /
+  7 tests.
+- `pnpm calculator:gate:current`
+  green on 2026-05-01 after adding Gate O to the current runner:
+  engine 183 files / 960 tests, web 47 files / 227 passed + 18
+  skipped, build 5/5 with the known non-fatal `sharp/@img` warnings,
+  whitespace guard clean.
+
+Gate P validation completed:
+
+- `pnpm --filter @dynecho/engine exec vitest run src/wall-triple-leaf-source-access-gate-p.test.ts --maxWorkers=1`
+  green on 2026-05-01: 1 file / 7 tests.
+- `pnpm --filter @dynecho/engine exec vitest run src/wall-triple-leaf-source-locator-provenance-gate-o.test.ts src/wall-triple-leaf-source-locator-intake-gate-n.test.ts src/wall-triple-leaf-source-evidence-acquisition-gate-m.test.ts src/wall-triple-leaf-source-gap-closure-gate-l.test.ts src/wall-triple-leaf-runtime-promotion-readiness-gate-k.test.ts --maxWorkers=1`
+  green on 2026-05-01 after preserving Gate O/N/M/L/K continuity: 5
+  files / 35 tests.
+- `pnpm --filter @dynecho/web exec vitest run features/workbench/wall-triple-leaf-company-internal-acceptance-rehearsal.test.ts --maxWorkers=1`
+  green on 2026-05-01 after preserving Gate J web continuity: 1 file /
+  7 tests.
+- `pnpm calculator:gate:current`
+  green on 2026-05-01 after adding Gate P to the current runner:
+  engine 184 files / 967 tests, web 47 files / 227 passed + 18
+  skipped, build 5/5 with the known non-fatal `sharp/@img` warnings,
+  whitespace guard clean.
+
+Gate Q validation completed:
+
+- `pnpm --filter @dynecho/engine exec vitest run src/wall-triple-leaf-source-access-followup-gate-q.test.ts --maxWorkers=1`
+  green on 2026-05-01: 1 file / 7 tests.
+- `pnpm --filter @dynecho/engine exec vitest run src/wall-triple-leaf-source-access-gate-p.test.ts src/wall-triple-leaf-source-locator-provenance-gate-o.test.ts src/wall-triple-leaf-source-locator-intake-gate-n.test.ts src/wall-triple-leaf-source-evidence-acquisition-gate-m.test.ts src/wall-triple-leaf-runtime-promotion-readiness-gate-k.test.ts --maxWorkers=1`
+  green on 2026-05-01 after preserving Gate P/O/N/M/K continuity: 5
+  files / 35 tests.
+- `pnpm --filter @dynecho/web exec vitest run features/workbench/wall-triple-leaf-company-internal-acceptance-rehearsal.test.ts --maxWorkers=1`
+  green on 2026-05-01 after preserving Gate J web continuity: 1 file /
+  7 tests.
+- `pnpm calculator:gate:current`
+  green on 2026-05-01 after adding Gate Q to the current runner:
+  engine 185 files / 974 tests, web 47 files / 227 passed + 18
   skipped, build 5/5 with the known non-fatal `sharp/@img` warnings,
   whitespace guard clean.

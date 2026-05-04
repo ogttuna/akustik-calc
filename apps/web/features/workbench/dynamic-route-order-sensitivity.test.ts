@@ -129,7 +129,7 @@ describe("dynamic route order-sensitive multileaf contracts", () => {
     expectFragment(base.notes, "triple-leaf partition", "classic workbench triple-leaf note");
   });
 
-  it("keeps the classic workbench triple-leaf reorder jump explicit and labelled as order-sensitive", () => {
+  it("keeps the classic workbench triple-leaf reorder guarded as fail-closed multileaf screening", () => {
     const base = evaluateDynamicWall(CLASSIC_TRIPLE_LEAF_STACK, "classic-triple-base");
     const swapped = evaluateDynamicWall(swapInnerLeaf(CLASSIC_TRIPLE_LEAF_STACK), "classic-triple-swapped");
 
@@ -141,21 +141,21 @@ describe("dynamic route order-sensitive multileaf contracts", () => {
       rwPrime: swapped.rwPrime,
       strategy: swapped.strategy
     }).toEqual({
-      confidence: "medium",
-      dnTw: 44,
-      family: "double_leaf",
-      rw: 44,
-      rwPrime: 42,
-      strategy: "double_leaf_porous_fill_delegate"
+      confidence: "low",
+      dnTw: 33,
+      family: "multileaf_multicavity",
+      rw: 33,
+      rwPrime: 31,
+      strategy: "multileaf_screening_blend_fail_closed_until_grouped_topology"
     });
-    expect(swapped.rw - base.rw).toBeGreaterThanOrEqual(12);
-    expect(swapped.rwPrime - base.rwPrime).toBeGreaterThanOrEqual(12);
-    expect(swapped.dnTw - base.dnTw).toBeGreaterThanOrEqual(12);
+    expect(swapped.rw - base.rw).toBeLessThanOrEqual(1);
+    expect(swapped.rwPrime - base.rwPrime).toBeLessThanOrEqual(1);
+    expect(swapped.dnTw - base.dnTw).toBeLessThanOrEqual(2);
     expectFragment(base.warnings, "triple-leaf partition", "classic triple base warning");
     expect(
-      swapped.warnings.some((warning: string) => warning.includes("triple-leaf partition")),
-      "collapsed swap should no longer report the triple-leaf warning"
-    ).toBe(false);
+      swapped.warnings.some((warning: string) => warning.includes("Flat-list adjacent-swap sensitivity guard")),
+      "collapsed swap should show the fail-closed flat-list guard"
+    ).toBe(true);
   });
 
   it("marks heavier workbench multi-leaf stacks as intentionally order-sensitive without pretending they are framed or stable", () => {

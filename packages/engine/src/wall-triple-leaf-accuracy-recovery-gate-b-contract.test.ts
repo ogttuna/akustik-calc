@@ -102,7 +102,7 @@ function calculateDynamicWall(layers: readonly LayerInput[], airborneContext: Ai
 }
 
 function expectWarning(result: ReturnType<typeof calculateDynamicWall>, fragment: string) {
-  expect(result.warnings.some((warning) => warning.includes(fragment)), `missing warning: ${fragment}`).toBe(true);
+  expect(result.warnings.some((warning: string) => warning.includes(fragment)), `missing warning: ${fragment}`).toBe(true);
 }
 
 describe("wall triple-leaf accuracy recovery Gate B", () => {
@@ -178,7 +178,7 @@ describe("wall triple-leaf accuracy recovery Gate B", () => {
     ]);
   });
 
-  it("does not force ordinary double-leaf walls through the triple-leaf recovery path", () => {
+  it("does not force guarded flat-list screening through the exact triple-leaf recovery path", () => {
     const result = calculateDynamicWall(ADJACENT_ROCKWOOL_STACK, LAB_CONTEXT);
     const readiness = evaluateWallTripleLeafTopologyReadiness({
       airborneContext: LAB_CONTEXT,
@@ -187,8 +187,11 @@ describe("wall triple-leaf accuracy recovery Gate B", () => {
       visibleLeafCount: result.dynamicAirborneTrace?.visibleLeafCount ?? 0
     });
 
-    expect(result.metrics.estimatedRwDb).toBe(51);
-    expect(result.dynamicAirborneTrace?.detectedFamily).toBe("double_leaf");
+    expect(result.metrics.estimatedRwDb).toBe(42);
+    expect(result.dynamicAirborneTrace?.detectedFamily).toBe("multileaf_multicavity");
+    expect(result.dynamicAirborneTrace?.strategy).toBe(
+      "multileaf_screening_blend_fail_closed_until_grouped_topology"
+    );
     expect(readiness).toEqual({
       applies: false,
       implementationBlockers: [],

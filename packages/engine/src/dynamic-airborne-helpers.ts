@@ -40,6 +40,7 @@ export type DynamicAirborneResult = {
 export type DynamicAirborneOptions = {
   disableFramedReinforcementMonotonicFloor?: boolean;
   disableFamilyBoundaryHold?: boolean;
+  disableFlatListMultileafFamilyGuard?: boolean;
   airborneContext?: AirborneContext | null;
   disableMasonryDavyCap?: boolean;
   disableLinedMassiveMasonryFloor?: boolean;

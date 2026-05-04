@@ -43,6 +43,8 @@ import { buildFloorSystemRatings } from "./floor-system-ratings";
 import { buildExactImpactFromSource } from "./impact-exact";
 import {
   adaptImpactPredictorInput,
+  getRawFloorParityGuardWarning,
+  getRawFloorRolePromptGuard,
   getVisibleLayerPredictorBlockerWarning,
   maybeInferFloorRoleLayerStack,
   maybeBuildImpactPredictorInputFromLayerStack,
@@ -1047,6 +1049,33 @@ export function calculateAssembly(
       }
     }
   }
+  const rawFloorRolePromptGuard =
+    !explicitPredictorInput && !exactImpactSource
+      ? getRawFloorRolePromptGuard({
+          catalog,
+          exactFloorSystemMatchActive: Boolean(floorSystemMatch),
+          hasLiveImpactSupport: Boolean(
+            floorSystemMatch ||
+              boundFloorSystemMatch ||
+              impactCatalogMatch ||
+              floorSystemEstimate ||
+              boundFloorSystemEstimate ||
+              explicitDeltaImpact ||
+              narrowImpact
+          ),
+          inferredLayers: inferredImpactLayers,
+          rawLayers: layers,
+          requestedOutputs: options.targetOutputs ?? []
+        })
+      : null;
+  const rawFloorParityGuardWarning =
+    !explicitPredictorInput && !exactImpactSource
+      ? getRawFloorParityGuardWarning({
+          exactFloorSystemMatchActive: Boolean(floorSystemMatch),
+          rawLayers: layers,
+          requestedOutputs: options.targetOutputs ?? []
+        })
+      : null;
   const { impact, lowerBoundImpact } = finalizeResolvedImpactLane({
     boundFloorSystemEstimate,
     boundFloorSystemMatch,
@@ -1170,6 +1199,10 @@ export function calculateAssembly(
     warnings.push(visibleLayerPredictorBlockerWarning);
   }
 
+  if (rawFloorRolePromptGuard) {
+    warnings.push(rawFloorRolePromptGuard.warning);
+  }
+
   if (exactImpact) {
     warnings.push(
       `Impact ratings were derived from an exact ${exactImpactSource?.labOrField ?? "lab"} impact-band source on the ISO 717-2 nominal grid; the airborne TL curve stayed on the ${selectedCalculatorLabel ?? "screening"} path.`
@@ -1184,6 +1217,9 @@ export function calculateAssembly(
     warnings.push(
       `Curated exact floor-system match active: ${floorSystemMatch.system.label}. Exact floor-family impact and airborne companion ratings are available in the operator deck.`
     );
+    if (rawFloorParityGuardWarning) {
+      warnings.push(rawFloorParityGuardWarning);
+    }
   } else if (boundFloorSystemMatch) {
     warnings.push(
       `Curated bound-only floor-system match active: ${boundFloorSystemMatch.system.label}. Airborne family data is exact, while impact stays conservative as an upper-bound lane.`

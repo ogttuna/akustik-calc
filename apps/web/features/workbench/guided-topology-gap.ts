@@ -39,6 +39,44 @@ export function getGuidedTopologyGap(input: {
   rows: readonly LayerDraft[];
   studyMode: "floor" | "wall";
 }): GuidedTopologyGap | null {
+  if (input.studyMode === "wall") {
+    const trace = input.result?.dynamicAirborneTrace ?? null;
+    if (
+      !trace ||
+      trace.detectedFamily !== "multileaf_multicavity" ||
+      trace.visibleLeafCount < 3 ||
+      trace.cavityCount < 2
+    ) {
+      return null;
+    }
+
+    const tripleLeafWarning = input.result?.warnings.find(
+      (warning: string) =>
+        /^Triple-leaf exact calculation needs grouped wall topology/u.test(warning) ||
+        /^Grouped triple-leaf topology is present/u.test(warning)
+    );
+
+    if (tripleLeafWarning && /^Triple-leaf exact calculation needs grouped wall topology/u.test(tripleLeafWarning)) {
+      return {
+        detail: tripleLeafWarning,
+        value: "Grouped topology missing"
+      };
+    }
+
+    if (tripleLeafWarning) {
+      return {
+        detail: tripleLeafWarning,
+        value: "Source validation blocked"
+      };
+    }
+
+    return {
+      detail:
+        "This wall has three visible leaves and two cavities, so DynEcho keeps it on the triple-leaf screening route until grouped topology and source validation are both visible.",
+      value: "Triple-leaf screening"
+    };
+  }
+
   if (input.studyMode !== "floor") {
     return null;
   }
