@@ -23,6 +23,7 @@ import {
   type SimpleWorkbenchProposalMetric
 } from "./simple-workbench-proposal";
 import { buildSimpleWorkbenchProposalBrief } from "./simple-workbench-proposal-brief";
+import { ROCKWOOL_SPLIT_TRIPLE_LEAF_OUTPUT_WITHHELD_GUARD } from "./rockwool-triple-leaf-screening-policy-copy";
 import {
   buildWorkbenchWallTopology,
   type WorkbenchWallTopologyDraft
@@ -535,7 +536,7 @@ describe("wall triple-leaf company-internal acceptance rehearsal Gate J", () => 
     );
   });
 
-  it("rehearses both user PDF stacks and keeps the rockwool flat-list flip fail-closed, not exact", () => {
+  it("rehearses both user PDF stacks and keeps adjacent rockwool on the double-leaf numeric lane", () => {
     const adjacent = evaluateWallScenario({
       id: "user-adjacent-rockwool",
       outputs: WALL_LAB_OUTPUTS,
@@ -554,20 +555,27 @@ describe("wall triple-leaf company-internal acceptance rehearsal Gate J", () => 
     });
 
     expect(adjacent.result.dynamicAirborneTrace).toMatchObject({
-      confidenceClass: "low",
-      detectedFamily: "multileaf_multicavity",
-      strategy: "multileaf_screening_blend_fail_closed_until_grouped_topology"
+      confidenceClass: "medium",
+      detectedFamily: "double_leaf",
+      strategy: "double_leaf_porous_fill_delegate+flat_list_adjacent_swap_numeric_hold_until_grouped_topology"
     });
-    expect(getCard(adjacent.cards, "Rw")).toMatchObject({ status: "live", value: "41 dB" });
+    expect(getCard(adjacent.cards, "Rw")).toMatchObject({ status: "live", value: "50 dB" });
     expect(adjacent.topologyGap).toBeNull();
     expectWarning(adjacent.warnings, /Flat-list adjacent-swap sensitivity guard/i, "flat-list guard");
+    expectWarning(adjacent.warnings, /kept the current double-leaf numeric lane/i, "numeric hold");
 
     expect(splitFlat.result.dynamicAirborneTrace).toMatchObject({
       confidenceClass: "low",
       detectedFamily: "multileaf_multicavity",
       strategy: "multileaf_screening_blend"
     });
-    expect(getCard(splitFlat.cards, "Rw")).toMatchObject({ status: "live", value: "41 dB" });
+    expect(splitFlat.result.supportedTargetOutputs).toEqual([]);
+    expect(splitFlat.result.unsupportedTargetOutputs).toEqual([...WALL_LAB_OUTPUTS]);
+    expect(getCard(splitFlat.cards, "Rw")).toMatchObject({
+      detail: ROCKWOOL_SPLIT_TRIPLE_LEAF_OUTPUT_WITHHELD_GUARD,
+      status: "unsupported",
+      value: "Not ready"
+    });
     expect(splitFlat.topologyGap).toMatchObject({ value: "Grouped topology missing" });
     expect(splitFlat.topologyGap?.detail).toContain("Missing: side A leaf layer group");
 
@@ -580,7 +588,7 @@ describe("wall triple-leaf company-internal acceptance rehearsal Gate J", () => 
     expect(splitGrouped.topologyGap).toMatchObject({ value: "Source validation blocked" });
     expect(splitGrouped.topologyGap?.detail).toContain("source-calibrated triple-leaf solver");
 
-    expect(Math.abs((adjacent.result.metrics.estimatedRwDb ?? 0) - (splitGrouped.result.metrics.estimatedRwDb ?? 0))).toBeLessThanOrEqual(1);
+    expect((adjacent.result.metrics.estimatedRwDb ?? 0) - (splitGrouped.result.metrics.estimatedRwDb ?? 0)).toBeGreaterThanOrEqual(8);
     expectWarning(splitGrouped.warnings, /Grouped triple-leaf topology is present/i, "grouped topology source block");
   });
 

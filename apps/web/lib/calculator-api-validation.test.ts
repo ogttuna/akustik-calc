@@ -14,6 +14,16 @@ function jsonRequest(url: string, payload: unknown) {
   });
 }
 
+function rawJsonRequest(url: string, body: string) {
+  return new Request(url, {
+    body,
+    headers: {
+      "content-type": "application/json"
+    },
+    method: "POST"
+  });
+}
+
 beforeEach(() => {
   originalEnv = Object.fromEntries(AUTH_ENV_KEYS.map((key) => [key, process.env[key]] as const));
 
@@ -99,5 +109,44 @@ describe("calculator API validation guidance", () => {
         path: ["layers"]
       })
     ]);
+  });
+
+  it("rejects non-finite JSON layer thickness before estimate or impact calculation", async () => {
+    const { POST: estimate } = await import("../app/api/estimate/route");
+    const { POST: impactOnly } = await import("../app/api/impact-only/route");
+
+    const estimateResponse = await estimate(
+      rawJsonRequest(
+        "http://localhost/api/estimate",
+        '{"layers":[{"materialId":"gypsum_board","thicknessMm":1e309}],"targetOutputs":["Rw"]}'
+      )
+    );
+    const estimateBody = (await estimateResponse.json()) as {
+      issues?: Array<{ path: string[] }>;
+      ok?: boolean;
+      result?: unknown;
+    };
+
+    expect(estimateResponse.status).toBe(400);
+    expect(estimateBody.ok).toBe(false);
+    expect(estimateBody.result).toBeUndefined();
+    expect(estimateBody.issues?.map((issue) => issue.path.join("."))).toContain("layers.0.thicknessMm");
+
+    const impactResponse = await impactOnly(
+      rawJsonRequest(
+        "http://localhost/api/impact-only",
+        '{"layers":[{"materialId":"concrete","thicknessMm":1e309}],"targetOutputs":["Ln,w"]}'
+      )
+    );
+    const impactBody = (await impactResponse.json()) as {
+      issues?: Array<{ path: string[] }>;
+      ok?: boolean;
+      result?: unknown;
+    };
+
+    expect(impactResponse.status).toBe(400);
+    expect(impactBody.ok).toBe(false);
+    expect(impactBody.result).toBeUndefined();
+    expect(impactBody.issues?.map((issue) => issue.path.join("."))).toContain("layers.0.thicknessMm");
   });
 });

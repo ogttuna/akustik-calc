@@ -16,7 +16,7 @@ export const FloorRoleSchema = z.enum([
 export const LayerInputSchema = z.object({
   floorRole: FloorRoleSchema.optional(),
   materialId: z.string().min(1),
-  thicknessMm: z.number().positive()
+  thicknessMm: z.number().finite().positive()
 });
 
 export const ResolvedLayerSchema = LayerInputSchema.extend({

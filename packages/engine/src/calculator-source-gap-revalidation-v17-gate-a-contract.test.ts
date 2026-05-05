@@ -513,8 +513,9 @@ describe("calculator source-gap revalidation v17 Gate A contract", () => {
     expect(grouped.metrics.estimatedRwDb).toBe(41);
     expect(grouped.dynamicAirborneTrace?.strategy).toBe("multileaf_screening_blend");
     expect(swapped.dynamicAirborneTrace?.strategy).toBe(
-      "multileaf_screening_blend_fail_closed_until_grouped_topology"
+      "double_leaf_porous_fill_delegate+flat_list_adjacent_swap_numeric_hold_until_grouped_topology"
     );
+    expect(swapped.metrics.estimatedRwDb).toBe(51);
   });
 
   it("keeps closed manufacturer rows and GA-600 context out of runtime promotion", () => {

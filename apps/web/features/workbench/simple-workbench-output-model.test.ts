@@ -1,6 +1,7 @@
 import type { AssemblyCalculation } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
+import { FIELD_OUTPUT_OWNER_POLICY_GUARD } from "./field-output-owner-policy-copy";
 import { evaluateScenario } from "./scenario-analysis";
 import { buildOutputCard } from "./simple-workbench-output-model";
 
@@ -383,8 +384,7 @@ describe("simple workbench output model", () => {
 
     expect(card).toEqual(
       expect.objectContaining({
-        detail:
-          "Conservative standardized field impact upper bound carried from the same bound-only lane; this is not an independent exact field measurement.",
+        detail: expect.stringContaining(FIELD_OUTPUT_OWNER_POLICY_GUARD),
         label: "L'nT,w",
         status: "bound",
         value: "<= 51 dB"

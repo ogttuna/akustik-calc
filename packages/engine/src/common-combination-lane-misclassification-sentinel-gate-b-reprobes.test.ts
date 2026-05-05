@@ -452,15 +452,15 @@ describe("common-combination lane-misclassification sentinel Gate B reprobes", (
       strategy: "multileaf_screening_blend"
     });
     expect(swappedInternalLeaf).toMatchObject({
-      confidence: "low",
-      dnTw: 41,
-      family: "multileaf_multicavity",
-      rw: 42,
-      rwPrime: 40,
-      stc: 42,
-      strategy: "multileaf_screening_blend_fail_closed_until_grouped_topology"
+      confidence: "medium",
+      dnTw: 51,
+      family: "double_leaf",
+      rw: 51,
+      rwPrime: 49,
+      stc: 51,
+      strategy: "double_leaf_porous_fill_delegate+flat_list_adjacent_swap_numeric_hold_until_grouped_topology"
     });
-    expect(swappedInternalLeaf.rw - flat.rw).toBe(1);
+    expect(swappedInternalLeaf.rw - flat.rw).toBe(10);
     expect(hasWarning(swappedInternalLeaf.warnings, /Flat-list adjacent-swap sensitivity guard/i)).toBe(true);
     expect(
       GATE_B_REPROBE_FINDINGS.find((finding) => finding.id === "split_rockwool_grouped_rw41_blocked_source_packet")
@@ -494,12 +494,12 @@ describe("common-combination lane-misclassification sentinel Gate B reprobes", (
       strategy: "multileaf_screening_blend"
     });
     expect(swapped).toMatchObject({
-      confidence: "low",
-      dnTw: 33,
-      family: "multileaf_multicavity",
-      rw: 33,
-      rwPrime: 31,
-      strategy: "multileaf_screening_blend_fail_closed_until_grouped_topology"
+      confidence: "medium",
+      dnTw: 44,
+      family: "double_leaf",
+      rw: 44,
+      rwPrime: 42,
+      strategy: "double_leaf_porous_fill_delegate+flat_list_adjacent_swap_numeric_hold_until_grouped_topology"
     });
     expect(hasWarning(swapped.warnings, /Flat-list adjacent-swap sensitivity guard/i)).toBe(true);
     expect(duplicated).toMatchObject({

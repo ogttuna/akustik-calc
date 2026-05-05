@@ -309,11 +309,11 @@ describe("post company-internal frequent-combination Gate C next-slice selection
     expect(grouped.warnings).toContain("source-calibrated triple-leaf solver");
 
     expect(flatSwap).toMatchObject({
-      confidence: "low",
-      family: "multileaf_multicavity",
-      rw: 42,
-      stc: 42,
-      strategy: "multileaf_screening_blend_fail_closed_until_grouped_topology",
+      confidence: "medium",
+      family: "double_leaf",
+      rw: 51,
+      stc: 51,
+      strategy: "double_leaf_porous_fill_delegate+flat_list_adjacent_swap_numeric_hold_until_grouped_topology",
       supported: ["Rw", "STC"]
     });
     expect(flatSwap.warnings).toContain("Flat-list adjacent-swap sensitivity guard");

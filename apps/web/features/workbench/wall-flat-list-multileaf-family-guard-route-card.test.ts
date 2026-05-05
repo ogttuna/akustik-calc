@@ -88,7 +88,7 @@ function outputCard(output: RequestedOutputId, result: NonNullable<ReturnType<ty
 }
 
 describe("wall flat-list multileaf family guard route-card Gate E", () => {
-  it("shows guarded flat-list rockwool as fail-closed multileaf screening rather than exact or double-leaf", () => {
+  it("shows guarded flat-list rockwool as a double-leaf numeric hold rather than applying the multileaf penalty", () => {
     const result = evaluateWall({
       airborneContext: LAB_CONTEXT,
       id: "guarded-split-rockwool-route",
@@ -99,20 +99,21 @@ describe("wall flat-list multileaf family guard route-card Gate E", () => {
     const rwCard = outputCard("Rw", result);
 
     expect(result.dynamicAirborneTrace).toMatchObject({
-      confidenceClass: "low",
-      detectedFamily: "multileaf_multicavity",
-      strategy: "multileaf_screening_blend_fail_closed_until_grouped_topology"
+      confidenceClass: "medium",
+      detectedFamily: "double_leaf",
+      strategy: "double_leaf_porous_fill_delegate+flat_list_adjacent_swap_numeric_hold_until_grouped_topology"
     });
     expect(branch).toMatchObject({
-      tone: "warning",
-      value: "Multi-Leaf / Multi-Cavity"
+      tone: "neutral",
+      value: "Double Leaf"
     });
-    expect(branch.detail).toContain("multileaf screening blend fail closed until grouped topology");
+    expect(branch.detail).toContain("flat list adjacent swap numeric hold until grouped topology");
     expect(rwCard).toMatchObject({
       postureLabel: "Airborne screening lane",
       status: "live",
-      value: "42 dB"
+      value: "51 dB"
     });
+    expect(rwCard.detail).toContain("active airborne calculator");
     expect(rwCard.postureDetail).toContain("No exact wall source row is active");
     expect(result.warnings.some((warning: string) => /Curated exact airborne lab match active/i.test(warning))).toBe(false);
   });
@@ -128,24 +129,24 @@ describe("wall flat-list multileaf family guard route-card Gate E", () => {
     const dnTw = outputCard("DnT,w", result);
 
     expect(result.dynamicAirborneTrace?.strategy).toBe(
-      "multileaf_screening_blend_fail_closed_until_grouped_topology"
+      "double_leaf_porous_fill_delegate+flat_list_adjacent_swap_numeric_hold_until_grouped_topology"
     );
     expect(rwPrime).toMatchObject({
       postureLabel: "Field continuation",
       status: "live",
-      value: "40 dB"
+      value: "49 dB"
     });
     expect(dnTw).toMatchObject({
       postureLabel: "Field continuation",
       status: "live",
-      value: "41 dB"
+      value: "51 dB"
     });
     expect(rwPrime.postureDetail).toContain("not being framed as an independent exact source row");
     expect(dnTw.postureDetail).toContain("not being framed as an independent exact source row");
     expect(result.warnings.some((warning: string) => /Curated exact airborne lab match active/i.test(warning))).toBe(false);
   });
 
-  it("also guards ordinary classic flat-list swaps and leaves ordinary double-leaf visible as double-leaf", () => {
+  it("also keeps ordinary classic flat-list swaps numeric-stable and leaves ordinary double-leaf visible as double-leaf", () => {
     const guardedClassic = evaluateWall({
       airborneContext: LAB_CONTEXT,
       id: "guarded-classic-route",
@@ -160,13 +161,13 @@ describe("wall flat-list multileaf family guard route-card Gate E", () => {
     });
 
     expect(guardedClassic.dynamicAirborneTrace).toMatchObject({
-      confidenceClass: "low",
-      detectedFamily: "multileaf_multicavity",
-      strategy: "multileaf_screening_blend_fail_closed_until_grouped_topology"
+      confidenceClass: "medium",
+      detectedFamily: "double_leaf",
+      strategy: "double_leaf_porous_fill_delegate+flat_list_adjacent_swap_numeric_hold_until_grouped_topology"
     });
     expect(outputCard("Rw", guardedClassic)).toMatchObject({
       postureLabel: "Airborne screening lane",
-      value: "33 dB"
+      value: "44 dB"
     });
     expect(ordinaryDoubleLeaf.dynamicAirborneTrace).toMatchObject({
       confidenceClass: "medium",

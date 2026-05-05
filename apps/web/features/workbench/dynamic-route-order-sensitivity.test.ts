@@ -129,7 +129,7 @@ describe("dynamic route order-sensitive multileaf contracts", () => {
     expectFragment(base.notes, "triple-leaf partition", "classic workbench triple-leaf note");
   });
 
-  it("keeps the classic workbench triple-leaf reorder guarded as fail-closed multileaf screening", () => {
+  it("keeps the classic workbench reorder on the double-leaf numeric lane with a topology warning", () => {
     const base = evaluateDynamicWall(CLASSIC_TRIPLE_LEAF_STACK, "classic-triple-base");
     const swapped = evaluateDynamicWall(swapInnerLeaf(CLASSIC_TRIPLE_LEAF_STACK), "classic-triple-swapped");
 
@@ -141,20 +141,20 @@ describe("dynamic route order-sensitive multileaf contracts", () => {
       rwPrime: swapped.rwPrime,
       strategy: swapped.strategy
     }).toEqual({
-      confidence: "low",
-      dnTw: 33,
-      family: "multileaf_multicavity",
-      rw: 33,
-      rwPrime: 31,
-      strategy: "multileaf_screening_blend_fail_closed_until_grouped_topology"
+      confidence: "medium",
+      dnTw: 44,
+      family: "double_leaf",
+      rw: 44,
+      rwPrime: 42,
+      strategy: "double_leaf_porous_fill_delegate+flat_list_adjacent_swap_numeric_hold_until_grouped_topology"
     });
-    expect(swapped.rw - base.rw).toBeLessThanOrEqual(1);
-    expect(swapped.rwPrime - base.rwPrime).toBeLessThanOrEqual(1);
-    expect(swapped.dnTw - base.dnTw).toBeLessThanOrEqual(2);
+    expect(swapped.rw - base.rw).toBeGreaterThanOrEqual(11);
+    expect(swapped.rwPrime - base.rwPrime).toBeGreaterThanOrEqual(11);
+    expect(swapped.dnTw - base.dnTw).toBeGreaterThanOrEqual(11);
     expectFragment(base.warnings, "triple-leaf partition", "classic triple base warning");
     expect(
       swapped.warnings.some((warning: string) => warning.includes("Flat-list adjacent-swap sensitivity guard")),
-      "collapsed swap should show the fail-closed flat-list guard"
+      "collapsed swap should show the flat-list numeric-hold guard"
     ).toBe(true);
   });
 

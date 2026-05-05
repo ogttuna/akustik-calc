@@ -546,9 +546,9 @@ describe("calculator source-gap revalidation v16 Gate A contract", () => {
     expect(GATE_E_FLAT_LIST_GUARD_LANDING_SUMMARY.sourceValidatedNow).toBe(false);
     expect(grouped.metrics.estimatedRwDb).toBe(41);
     expect(grouped.dynamicAirborneTrace?.strategy).toBe("multileaf_screening_blend");
-    expect(swapped.metrics.estimatedRwDb).toBe(42);
+    expect(swapped.metrics.estimatedRwDb).toBe(51);
     expect(swapped.dynamicAirborneTrace?.strategy).toBe(
-      "multileaf_screening_blend_fail_closed_until_grouped_topology"
+      "double_leaf_porous_fill_delegate+flat_list_adjacent_swap_numeric_hold_until_grouped_topology"
     );
   });
 

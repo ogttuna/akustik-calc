@@ -5,12 +5,59 @@ Start here before changing calculator behavior.
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-05-04_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_GATE_C_CLOSEOUT_HANDOFF.md`
-3. `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V22_PLAN.md`
-4. `docs/calculator/CHECKPOINT_2026-05-04_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_GATE_B_HANDOFF.md`
-5. `docs/calculator/CHECKPOINT_2026-05-04_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_GATE_A_HANDOFF.md`
-6. `docs/calculator/SLICE_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_PLAN.md`
-7. `docs/calculator/CHECKPOINT_2026-05-04_CALCULATOR_SOURCE_GAP_REVALIDATION_V21_GATE_A_HANDOFF.md`
+2. `docs/calculator/CHECKPOINT_2026-05-05_BROAD_REVALIDATION_AND_NEXT_STEP_HANDOFF.md`
+3. `docs/calculator/CHECKPOINT_2026-05-05_CALCULATOR_SOURCE_GAP_REVALIDATION_V27_GATE_A_HANDOFF.md`
+4. `docs/calculator/SLICE_UBIQ_OPEN_WEB_PACKAGED_FINISH_CURRENT_GATE_GUARD_V1_PLAN.md`
+5. `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V27_PLAN.md`
+6. `docs/calculator/CHECKPOINT_2026-05-05_UBIQ_OPEN_WEB_SUPPORTED_BAND_CURRENT_GATE_GUARD_GATE_C_CLOSEOUT_HANDOFF.md`
+7. `docs/calculator/CHECKPOINT_2026-05-05_UBIQ_OPEN_WEB_SUPPORTED_BAND_CURRENT_GATE_GUARD_GATE_A_HANDOFF.md`
+8. `docs/calculator/CHECKPOINT_2026-05-05_UBIQ_OPEN_WEB_WEAK_BAND_CURRENT_GATE_GUARD_GATE_C_CLOSEOUT_HANDOFF.md`
+9. `docs/calculator/SLICE_UBIQ_OPEN_WEB_SUPPORTED_BAND_CURRENT_GATE_GUARD_V1_PLAN.md`
+10. `docs/calculator/CHECKPOINT_2026-05-05_UBIQ_OPEN_WEB_WEAK_BAND_CURRENT_GATE_GUARD_GATE_A_HANDOFF.md`
+11. `docs/calculator/SLICE_UBIQ_OPEN_WEB_WEAK_BAND_CURRENT_GATE_GUARD_V1_PLAN.md`
+12. `docs/calculator/CHECKPOINT_2026-05-05_CALCULATOR_SOURCE_GAP_REVALIDATION_V26_GATE_A_HANDOFF.md`
+4. `docs/calculator/CHECKPOINT_2026-05-05_ROCKWOOL_SPLIT_TRIPLE_LEAF_NUMERIC_SOURCE_CLOSURE_GATE_C_CLOSEOUT_HANDOFF.md`
+5. `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V26_PLAN.md`
+4. `docs/calculator/CHECKPOINT_2026-05-05_ROCKWOOL_SPLIT_TRIPLE_LEAF_NUMERIC_SOURCE_CLOSURE_GATE_B_HANDOFF.md`
+5. `docs/calculator/CHECKPOINT_2026-05-05_ROCKWOOL_SPLIT_TRIPLE_LEAF_NUMERIC_SOURCE_CLOSURE_GATE_A_HANDOFF.md`
+6. `docs/calculator/SLICE_ROCKWOOL_SPLIT_TRIPLE_LEAF_NUMERIC_SOURCE_CLOSURE_V1_PLAN.md`
+4. `docs/calculator/CHECKPOINT_2026-05-05_CALCULATOR_SOURCE_GAP_REVALIDATION_V25_GATE_A_HANDOFF.md`
+5. `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V25_PLAN.md`
+5. `docs/calculator/CHECKPOINT_2026-05-05_ROCKWOOL_TRIPLE_LEAF_SUPPORT_POSTURE_GATE_A_HANDOFF.md`
+6. `docs/calculator/SLICE_ROCKWOOL_TRIPLE_LEAF_SUPPORT_POSTURE_V1_PLAN.md`
+5. `docs/calculator/CHECKPOINT_2026-05-05_ROCKWOOL_TRIPLE_LEAF_RESOLUTION_GATE_A_HANDOFF.md`
+6. `docs/calculator/SLICE_ROCKWOOL_TRIPLE_LEAF_RESOLUTION_V1_PLAN.md`
+7. `docs/calculator/CHECKPOINT_2026-05-05_SOURCE_PROMOTION_OWNER_SET_READINESS_GUARD_GATE_A_HANDOFF.md`
+8. `docs/calculator/SLICE_SOURCE_PROMOTION_OWNER_SET_READINESS_GUARD_V1_PLAN.md`
+9. `docs/calculator/CHECKPOINT_2026-05-05_CALCULATOR_SOURCE_GAP_REVALIDATION_V24_GATE_A_HANDOFF.md`
+10. `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V24_PLAN.md`
+11. `docs/calculator/CHECKPOINT_2026-05-05_COMPANY_INTERNAL_CONTROLLED_USE_HANDOFF_GATE_C_CLOSEOUT_HANDOFF.md`
+12. `docs/calculator/CHECKPOINT_2026-05-05_COMPANY_INTERNAL_CONTROLLED_USE_HANDOFF_GATE_A_HANDOFF.md`
+13. `docs/calculator/COMPANY_INTERNAL_CONTROLLED_USE_HANDOFF.md`
+14. `docs/calculator/SLICE_COMPANY_INTERNAL_CONTROLLED_USE_HANDOFF_V1_PLAN.md`
+5. `docs/calculator/CHECKPOINT_2026-05-05_COMPANY_INTERNAL_HIGH_ACCURACY_OPENING_REHEARSAL_GATE_C_CLOSEOUT_HANDOFF.md`
+6. `docs/calculator/CHECKPOINT_2026-05-05_COMPANY_INTERNAL_HIGH_ACCURACY_OPENING_REHEARSAL_GATE_A_HANDOFF.md`
+7. `docs/calculator/SLICE_COMPANY_INTERNAL_HIGH_ACCURACY_OPENING_REHEARSAL_V1_PLAN.md`
+6. `docs/calculator/CHECKPOINT_2026-05-05_SOURCE_PROMOTION_HOSTILE_INPUT_READINESS_GUARD_GATE_C_CLOSEOUT_HANDOFF.md`
+4. `docs/calculator/CHECKPOINT_2026-05-05_SOURCE_PROMOTION_HOSTILE_INPUT_READINESS_GUARD_GATE_A_HANDOFF.md`
+5. `docs/calculator/SLICE_SOURCE_PROMOTION_HOSTILE_INPUT_READINESS_GUARD_V1_PLAN.md`
+6. `docs/calculator/CHECKPOINT_2026-05-05_ROCKWOOL_TRIPLE_LEAF_EXPLICIT_SCREENING_ONLY_POLICY_GATE_C_CLOSEOUT_HANDOFF.md`
+5. `docs/calculator/CHECKPOINT_2026-05-05_ROCKWOOL_TRIPLE_LEAF_EXPLICIT_SCREENING_ONLY_POLICY_GATE_B_HANDOFF.md`
+6. `docs/calculator/CHECKPOINT_2026-05-05_ROCKWOOL_TRIPLE_LEAF_EXPLICIT_SCREENING_ONLY_POLICY_GATE_A_HANDOFF.md`
+7. `docs/calculator/SLICE_ROCKWOOL_TRIPLE_LEAF_EXPLICIT_SCREENING_ONLY_POLICY_V1_PLAN.md`
+8. `docs/calculator/CHECKPOINT_2026-05-05_CALCULATOR_SOURCE_GAP_REVALIDATION_V23_GATE_A_HANDOFF.md`
+9. `docs/calculator/CHECKPOINT_2026-05-05_FIELD_OUTPUT_OWNER_AND_DESIGN_GRADE_POLICY_GATE_C_CLOSEOUT_HANDOFF.md`
+10. `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V23_PLAN.md`
+6. `docs/calculator/CHECKPOINT_2026-05-05_FIELD_OUTPUT_OWNER_AND_DESIGN_GRADE_POLICY_GATE_B_HANDOFF.md`
+7. `docs/calculator/CHECKPOINT_2026-05-05_FIELD_OUTPUT_OWNER_AND_DESIGN_GRADE_POLICY_GATE_A_HANDOFF.md`
+8. `docs/calculator/CHECKPOINT_2026-05-05_CALCULATOR_SOURCE_GAP_REVALIDATION_V22_GATE_A_HANDOFF.md`
+9. `docs/calculator/SLICE_FIELD_OUTPUT_OWNER_AND_DESIGN_GRADE_POLICY_V1_PLAN.md`
+10. `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V22_PLAN.md`
+6. `docs/calculator/CHECKPOINT_2026-05-04_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_GATE_C_CLOSEOUT_HANDOFF.md`
+7. `docs/calculator/CHECKPOINT_2026-05-04_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_GATE_B_HANDOFF.md`
+8. `docs/calculator/CHECKPOINT_2026-05-04_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_GATE_A_HANDOFF.md`
+9. `docs/calculator/SLICE_COMPANY_INTERNAL_FREQUENT_COMBINATION_LANE_SNAPSHOT_GUARD_PLAN.md`
+10. `docs/calculator/CHECKPOINT_2026-05-04_CALCULATOR_SOURCE_GAP_REVALIDATION_V21_GATE_A_HANDOFF.md`
 6. `docs/calculator/CHECKPOINT_2026-05-04_FIELD_OUTPUT_LAB_SCREENING_LEAKAGE_GUARD_GATE_B_HANDOFF.md`
 5. `docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V21_PLAN.md`
 6. `docs/calculator/CHECKPOINT_2026-05-04_FIELD_OUTPUT_LAB_SCREENING_LEAKAGE_GUARD_GATE_A_HANDOFF.md`
@@ -233,12 +280,886 @@ plan.
 ## Current Workflow
 
 - current selected slice:
-  `calculator_source_gap_revalidation_v22`
+  `ubiq_open_web_packaged_finish_current_gate_guard_v1`
 - current next decision inside the slice:
-  `packages/engine/src/calculator-source-gap-revalidation-v22-gate-a-contract.test.ts`
+  `packages/engine/src/ubiq-open-web-packaged-finish-current-gate-guard-gate-a-contract.test.ts`
   should run
-  `gate_a_revalidate_source_accuracy_gap_order_after_company_internal_snapshot_guard_closeout`.
-  The file is intentionally absent until the next implementation step.
+  `gate_a_promote_ubiq_open_web_packaged_finish_engine_visible_guards_into_current_gate`.
+- broad validation and next-step refresh completed on 2026-05-05:
+  `docs/calculator/CHECKPOINT_2026-05-05_BROAD_REVALIDATION_AND_NEXT_STEP_HANDOFF.md`
+  recorded `pnpm check` green: lint clean, typecheck clean, engine
+  full suite 403 files / 2374 tests, web full suite 166 files / 936
+  passed + 18 skipped, and repo build 5 / 5 tasks. There is no broad
+  test failure requiring emergency repair before the selected next
+  slice. The correct immediate step remains
+  `ubiq_open_web_packaged_finish_current_gate_guard_v1` Gate A. Known
+  non-fatal `sharp/@img` warnings remain through
+  `@turbodocx/html-to-docx`.
+- just landed calculator source-gap revalidation V27 Gate A:
+  `packages/engine/src/calculator-source-gap-revalidation-v27-gate-a-contract.test.ts`
+  landed
+  `selected_ubiq_open_web_packaged_finish_current_gate_guard_after_v27_rerank_preserved_rockwool_and_raw_open_web_blockers`.
+  It selected
+  `ubiq_open_web_packaged_finish_current_gate_guard_v1` with target file
+  `packages/engine/src/ubiq-open-web-packaged-finish-current-gate-guard-gate-a-contract.test.ts`
+  and action
+  `gate_a_promote_ubiq_open_web_packaged_finish_engine_visible_guards_into_current_gate`.
+  It added `remaining_accuracy_gap_order_after_ubiq_supported_band_closeout`,
+  `ubiq_packaged_finish_ready_surfaces_after_v27`,
+  `packaged_finish_current_gate_guard_selected_after_v27`, and
+  `rockwool_source_blockers_carry_forward_after_v27`.
+  The selected guard promotes existing UBIQ packaged-finish coverage for
+  `90 exact` and `21 bound` source-backed open-web rows across engine
+  family-design, near-miss, packaged-lane trace, visible card, and
+  saved/edit history replay tests. Runtime values, support semantics,
+  confidence, evidence, API, route-card values, output-card statuses,
+  proposal/report copy, and workbench input behavior stay frozen.
+  Rockwool exact runtime remains blocked by
+  `rights_safe_source_owned_curve_payload_absent`; generic/raw open-web
+  widening remains blocked by
+  `source_owned_raw_carrier_negative_boundary_absent`. Validation
+  passed on 2026-05-05: focused V27 Gate A 1 file / 5 tests, focused
+  UBIQ packaged-finish engine continuity 5 files / 15 tests, focused
+  UBIQ packaged-finish visible continuity 4 files / 5 tests, final
+  `pnpm calculator:gate:current` with engine 275 files / 1567 tests,
+  web 57 files / 268 passed + 18 skipped, repo build 5 / 5 tasks, and
+  whitespace guard green. Known non-fatal `sharp/@img` warnings remain
+  through `@turbodocx/html-to-docx`; `apps/web/next-env.d.ts` was
+  restored to `.next-typecheck` after the Next build.
+- just landed UBIQ open-web supported-band current-gate guard Gate C closeout:
+  `packages/engine/src/post-ubiq-open-web-supported-band-current-gate-guard-v1-next-slice-selection-contract.test.ts`
+  landed
+  `closed_ubiq_open_web_supported_band_current_gate_guard_selected_source_gap_revalidation_v27`.
+  It closed `ubiq_open_web_supported_band_current_gate_guard_v1`
+  no-runtime and selected `calculator_source_gap_revalidation_v27`
+  with target file
+  `packages/engine/src/calculator-source-gap-revalidation-v27-gate-a-contract.test.ts`
+  and action
+  `gate_a_revalidate_source_gap_order_after_ubiq_supported_band_current_gate_closeout`.
+  It added `closed_ubiq_supported_band_current_gate_guard_summary`,
+  `supported_band_current_gate_pack_carry_forward`,
+  `source_gap_revalidation_v27_selected_after_ubiq_supported_band_closeout`,
+  and
+  `rockwool_blockers_still_carry_forward_after_ubiq_supported_band_closeout`.
+  The UBIQ weak-band and supported-band source-backed guard packs remain
+  in `pnpm calculator:gate:current`. Rockwool exact runtime remains
+  blocked by `rights_safe_source_owned_curve_payload_absent`, and
+  generic/raw open-web widening remains blocked until V27 names
+  source-owned negative boundaries. Validation passed on 2026-05-05:
+  focused supported-band Gate C closeout 1 file / 5 tests, focused UBIQ
+  continuity with engine 7 files / 27 tests and web 3 files / 5 tests,
+  final `pnpm calculator:gate:current` with engine 274 files / 1562
+  tests, web 57 files / 268 passed + 18 skipped, repo build 5 / 5
+  tasks, and whitespace guard green. Known non-fatal `sharp/@img`
+  warnings remain through `@turbodocx/html-to-docx`;
+  `apps/web/next-env.d.ts` was restored to `.next-typecheck` after the
+  Next build.
+- just landed UBIQ open-web supported-band current-gate guard Gate A:
+  `packages/engine/src/ubiq-open-web-supported-band-current-gate-guard-gate-a-contract.test.ts`
+  landed
+  `gate_a_promoted_ubiq_supported_band_exact_and_bound_guards_into_current_gate_selected_closeout`.
+  It promoted the source-backed UBIQ FL-24/26/28 supported-band
+  current-gate pack:
+  `src/ubiq-open-web-supported-band-current-gate-guard-gate-a-contract.test.ts`,
+  `src/ubiq-open-web-supported-band-finish-completion.test.ts`,
+  `src/ubiq-lnw-plus-ci-bound-history-guard.test.ts`,
+  `src/ubiq-lnw-plus-ci-near-miss-estimate-posture.test.ts`,
+  `features/workbench/ubiq-lnw-plus-ci-bound-history-guard.test.ts`,
+  and
+  `features/workbench/ubiq-lnw-plus-ci-near-miss-estimate-posture.test.ts`.
+  It added `ubiq_supported_band_current_gate_guard_gate_a_summary`,
+  `current_gate_promoted_ubiq_supported_band_engine_visible_pack`, and
+  `rockwool_blockers_still_carry_forward_after_ubiq_supported_band_gate_a`.
+  Protected values include FL-24 bare `Rw 61 / Ln,w 62 / Ln,w+CI 60`,
+  FL-26 bare `Rw 60 / Ln,w 62 / Ln,w+CI 61`, FL-28 bare
+  `Rw 64 / Ln,w 58 / Ln,w+CI 56`, and FL-28 carpet bound `Rw 64 /
+  Ln,w+CI <= 45` with no exact `Ln,w`. Runtime values, source rows,
+  support semantics, confidence, evidence, API, route-card values,
+  output-card statuses, proposal/report copy, and workbench input
+  behavior stayed frozen. Rockwool exact runtime remains blocked by
+  `rights_safe_source_owned_curve_payload_absent`. It selected
+  `packages/engine/src/post-ubiq-open-web-supported-band-current-gate-guard-v1-next-slice-selection-contract.test.ts`
+  with
+  `gate_c_closeout_ubiq_open_web_supported_band_current_gate_guard_and_select_next_accuracy_slice`.
+  Validation passed on 2026-05-05: focused supported-band Gate A
+  1 file / 5 tests, focused supported-band continuity with engine
+  3 files / 7 tests and web 2 files / 3 tests, focused V26 +
+  weak-band + supported-band doc continuity 4 files / 20 tests, final
+  `pnpm calculator:gate:current` with engine 273 files / 1557 tests,
+  web 57 files / 268 passed + 18 skipped, repo build 5 / 5 tasks, and
+  whitespace guard green. Known non-fatal `sharp/@img` warnings remain
+  through `@turbodocx/html-to-docx`; `apps/web/next-env.d.ts` was
+  restored to `.next-typecheck` after the Next build.
+- just landed UBIQ open-web weak-band current-gate guard Gate C closeout:
+  `packages/engine/src/post-ubiq-open-web-weak-band-current-gate-guard-v1-next-slice-selection-contract.test.ts`
+  landed
+  `closed_ubiq_open_web_weak_band_current_gate_guard_selected_supported_band_current_gate_guard`.
+  It closed `ubiq_open_web_weak_band_current_gate_guard_v1` no-runtime
+  and selected `ubiq_open_web_supported_band_current_gate_guard_v1` with
+  target file
+  `packages/engine/src/ubiq-open-web-supported-band-current-gate-guard-gate-a-contract.test.ts`
+  and action
+  `gate_a_promote_source_backed_ubiq_supported_band_exact_and_bound_guards_into_current_gate`.
+  It added `closed_ubiq_weak_band_current_gate_guard_summary`,
+  `weak_band_current_gate_pack_carry_forward`,
+  `ubiq_supported_band_source_ready_next`, and
+  `rockwool_blockers_still_carry_forward_after_ubiq_weak_band_closeout`.
+  The selected next guard protects 36 UBIQ FL-24/26/28 exact
+  bare/timber rows and 18 carpet bound rows before any generic open-web
+  widening. Rockwool exact runtime remains blocked by
+  `rights_safe_source_owned_curve_payload_absent`.
+- just landed UBIQ open-web weak-band current-gate guard Gate A:
+  `packages/engine/src/ubiq-open-web-weak-band-current-gate-guard-gate-a-contract.test.ts`
+  landed
+  `gate_a_promoted_ubiq_weak_band_exact_and_fail_closed_guards_into_current_gate_selected_closeout`.
+  It promoted the UBIQ FL-23/25/27 weak-band current-gate pack:
+  `src/ubiq-open-web-weak-band-current-gate-guard-gate-a-contract.test.ts`,
+  `src/ubiq-open-web-weak-band-exact-source-mapping.test.ts`,
+  `src/ubiq-open-web-weaker-band-posture-guard.test.ts`, and
+  `features/workbench/ubiq-open-web-weaker-band-card-posture.test.ts`.
+  It added `ubiq_weak_band_current_gate_guard_gate_a_summary`,
+  `current_gate_promoted_ubiq_weak_band_engine_visible_pack`, and
+  `rockwool_source_blockers_carry_forward_after_ubiq_gate_a`. Runtime
+  values, source rows, support semantics, confidence, evidence, API,
+  route-card values, output-card statuses, proposal/report copy, and
+  workbench input behavior stayed frozen. Rockwool exact runtime
+  remains blocked by `rights_safe_source_owned_curve_payload_absent`.
+  It selected
+  `packages/engine/src/post-ubiq-open-web-weak-band-current-gate-guard-v1-next-slice-selection-contract.test.ts`
+  with
+  `gate_c_closeout_ubiq_open_web_weak_band_current_gate_guard_and_select_next_accuracy_slice`.
+  Validation passed on 2026-05-05: focused UBIQ Gate A 1 file / 5
+  tests, focused UBIQ continuity with engine 2 files / 6 tests and web
+  1 file / 2 tests, final `pnpm calculator:gate:current` with engine
+  268 files / 1540 tests, web 55 files / 265 passed + 18 skipped, repo
+  build 5 / 5 tasks, whitespace guard green, and final
+  `git diff --check` green. Known non-fatal `sharp/@img` warnings
+  remain through `@turbodocx/html-to-docx`; `apps/web/next-env.d.ts`
+  was restored to `.next-typecheck` after the Next build.
+- just landed V26 source-gap revalidation Gate A:
+  `packages/engine/src/calculator-source-gap-revalidation-v26-gate-a-contract.test.ts`
+  landed
+  `selected_ubiq_open_web_weak_band_current_gate_guard_after_v26_rerank_preserved_rockwool_blockers_and_found_source_backed_floor_exact_guard_gap`.
+  It selected `ubiq_open_web_weak_band_current_gate_guard_v1` with
+  target file
+  `packages/engine/src/ubiq-open-web-weak-band-current-gate-guard-gate-a-contract.test.ts`
+  and action
+  `gate_a_promote_source_backed_ubiq_weak_band_exact_and_fail_closed_guards_into_current_gate`.
+  It added `remaining_accuracy_gap_order_after_rockwool_closeout`,
+  `rockwool_source_blockers_carry_forward_after_v26`, and
+  `selected_ubiq_open_web_weak_band_current_gate_guard`. The selected
+  guard is source-backed and calculation-relevant: UBIQ FL-23/25/27
+  exact lower-board stacks must stay live on published `Rw`, `Ln,w`,
+  `Ln,w+CI`, `R'w`, `DnT,w`, `L'n,w`, and `L'nT,w` values, while
+  upper-only open-web weak-band stacks must keep impact outputs
+  fail-closed. Rockwool exact runtime remains blocked by
+  `rights_safe_source_owned_curve_payload_absent`; adjacent Rockwool
+  stays supported at `Rw 51 / R'w 49 / DnT,w 51`, flat-list split
+  Rockwool stays withheld with diagnostic `Rw 41 / R'w 39 / DnT,w 40`,
+  and grouped Rockwool stays `Rw 41` screening-only on
+  `multileaf_screening_blend`.
+- just landed Rockwool split triple-leaf numeric source closure Gate C:
+  `packages/engine/src/post-rockwool-split-triple-leaf-numeric-source-closure-v1-next-slice-selection-contract.test.ts`
+  landed
+  `closed_rockwool_split_triple_leaf_numeric_source_closure_selected_source_gap_revalidation_v26`.
+  It closed `rockwool_split_triple_leaf_numeric_source_closure_v1` and
+  selected `calculator_source_gap_revalidation_v26` with target file
+  `packages/engine/src/calculator-source-gap-revalidation-v26-gate-a-contract.test.ts`
+  and action
+  `gate_a_revalidate_source_gap_order_after_rockwool_split_numeric_closure_closeout`.
+  It carried forward `rockwool_split_numeric_closure_gate_c_summary`,
+  `flat_list_split_output_withhold_carry_forward`,
+  `adjacent_rockwool_51_49_51_carry_forward`,
+  `grouped_rockwool_screening_source_blocker_status`,
+  `remaining_accuracy_gap_order_after_rockwool_closeout`, and
+  `selected_gate_a_source_gap_revalidation_v26_with_target_file`.
+  Protected boundaries: flat-list split/internal gypsum-leaf Rockwool
+  still calculates `Rw 41 / R'w 39 / DnT,w 40` but requested wall
+  airborne outputs stay out of `supportedTargetOutputs`; adjacent
+  Rockwool stays corrected and supported at `Rw 51 / R'w 49 / DnT,w 51`;
+  grouped Rockwool stays live screening-only/source-blocked at `Rw 41`,
+  not exact and not source-validated. V26 must re-rank remaining
+  accuracy/source gaps and select one implementable next slice, not a
+  confidence-only or productization pass.
+  Validation passed on 2026-05-05: focused Gate C 1 file / 6 tests, and
+  final `pnpm calculator:gate:current` with engine 264 files / 1524
+  tests, web 54 files / 263 passed + 18 skipped, repo build 5 / 5
+  tasks, and whitespace guard green.
+- just landed Rockwool split triple-leaf numeric source closure Gate B:
+  `packages/engine/src/rockwool-split-triple-leaf-numeric-source-closure-gate-b-runtime.test.ts`
+  landed
+  `gate_b_withheld_flat_list_split_internal_leaf_exact_outputs_until_grouped_topology_or_source_owned_model`.
+  Selection status:
+  `gate_b_withheld_flat_list_split_internal_leaf_supported_outputs_selected_closeout`.
+  It added runtime output-support withholding for flat-list
+  split/internal gypsum-leaf Rockwool stacks: the finite diagnostic
+  values remain internally visible as `Rw 41 / R'w 39 / DnT,w 40`, but
+  requested wall airborne outputs are moved out of `supportedTargetOutputs`
+  into `unsupportedTargetOutputs` until grouped topology and a
+  source-owned calibrated model exist. Workbench output cards now show
+  `Not ready` with explicit grouped-topology/source-owned-model copy for
+  the flat-list split stack. Adjacent Rockwool remains corrected and
+  supported at `Rw 51 / R'w 49 / DnT,w 51`; grouped Rockwool remains
+  screening-only/live with source validation blocked, not exact. Gate B
+  selected
+  `packages/engine/src/post-rockwool-split-triple-leaf-numeric-source-closure-v1-next-slice-selection-contract.test.ts`
+  with
+  `gate_c_closeout_split_triple_leaf_numeric_source_closure_and_select_next_accuracy_slice`.
+  Gate B checkpoint:
+  `docs/calculator/CHECKPOINT_2026-05-05_ROCKWOOL_SPLIT_TRIPLE_LEAF_NUMERIC_SOURCE_CLOSURE_GATE_B_HANDOFF.md`.
+  Validation passed on 2026-05-05: focused engine Gate B 1 file / 5
+  tests, focused web Gate B 1 file / 3 tests, web Rockwool continuity 5
+  files / 28 tests, focused Rockwool engine continuity 7 files / 38
+  tests, and final `pnpm calculator:gate:current` with engine 263 files
+  / 1518 tests, web 54 files / 263 passed + 18 skipped, repo build
+  5 / 5 tasks, and whitespace guard green. Known non-fatal `sharp/@img`
+  warnings remain through `@turbodocx/html-to-docx`;
+  `apps/web/next-env.d.ts` was restored to `.next-typecheck` after the
+  Next build. Broad validation after Gate B: lint and typecheck passed,
+  engine full suite passed 396 files / 2338 tests, web full suite passed
+  on rerun with 166 files / 936 passed + 18 skipped, repo build passed
+  5 / 5 tasks, and final `git diff --check` passed. The first
+  monolithic `pnpm check` run hit a transient timeout in the long AAC-G5
+  web route scan; the isolated rerun and full web-suite rerun passed.
+- just landed Rockwool split triple-leaf numeric source closure Gate A:
+  `packages/engine/src/rockwool-split-triple-leaf-numeric-source-closure-gate-a-contract.test.ts`
+  landed
+  `gate_a_kept_split_internal_leaf_finite_screening_diagnostic_but_rejected_exact_numeric_closure_selected_runtime_withhold_gate_b`.
+  Gate action:
+  `gate_a_decided_split_internal_leaf_requires_source_owned_topology_before_exact_numeric_closure`.
+  It added
+  `rockwool_split_internal_leaf_exact_numeric_rejected_without_source_owned_topology`.
+  Adjacent Rockwool stays corrected at `Rw 51 / R'w 49 / DnT,w 51`.
+  The split/internal gypsum-leaf stack still returns the finite
+  screening diagnostic `Rw 41 / R'w 39 / DnT,w 40` through
+  `multileaf_screening_blend`, but Gate A rejects treating it as a
+  defended physical triple-leaf penalty. NRC 2024, Uris 2006, and
+  Ballagh 2013 remain source/model context only; exact closure still
+  needs source-owned curves, topology/coupling owner, local Rockwool
+  material mapping, metric/tolerance owner, negative boundaries,
+  calibration holdout, and paired visible/API tests. Selected next file:
+  `packages/engine/src/rockwool-split-triple-leaf-numeric-source-closure-gate-b-runtime.test.ts`;
+  selected next action:
+  `gate_b_withhold_flat_list_split_internal_leaf_exact_outputs_until_grouped_topology_or_source_owned_model`.
+  Validation passed on 2026-05-05: focused Gate A 1 file / 4 tests,
+  Rockwool triple-leaf engine continuity 9 files / 49 tests, and final
+  `pnpm calculator:gate:current` with engine 262 files / 1513 tests, web
+  53 files / 260 passed + 18 skipped, repo build 5 / 5 tasks, and
+  whitespace guard green. Broad `pnpm check` was not run because Gate A
+  made no runtime, shared-schema, API, report/proposal, or visible-output
+  behavior movement. Known non-fatal `sharp/@img` warnings remain through
+  `@turbodocx/html-to-docx`; `apps/web/next-env.d.ts` was restored to
+  `.next-typecheck` after the Next build.
+- just landed calculator source-gap revalidation V25 Gate A:
+  `packages/engine/src/calculator-source-gap-revalidation-v25-gate-a-contract.test.ts`
+  landed
+  `v25_fixed_adjacent_rockwool_flat_list_numeric_hold_selected_split_internal_leaf_numeric_source_closure`
+  with a runtime numeric correction. It added
+  `rockwool_adjacent_flat_list_numeric_recovery`: the PDF-like adjacent
+  Rockwool stack now stays on the double-leaf numeric lane at `Rw 51`,
+  `R'w 49`, and `DnT,w 51` using
+  `double_leaf_porous_fill_delegate+flat_list_adjacent_swap_numeric_hold_until_grouped_topology`
+  instead of being pulled down to the prior bad
+  `multileaf_screening_blend_fail_closed_until_grouped_topology`
+  corridor. It also added
+  `rockwool_split_internal_leaf_remains_numeric_open`: the split/internal
+  gypsum-leaf stack still returns `Rw 41`, `R'w 39`, and `DnT,w 40` via
+  `multileaf_screening_blend`, and that value is not closed as correct.
+  Selected next slice:
+  `rockwool_split_triple_leaf_numeric_source_closure_v1`; selected next
+  file:
+  `packages/engine/src/rockwool-split-triple-leaf-numeric-source-closure-gate-a-contract.test.ts`;
+  selected next action:
+  `gate_a_decide_split_internal_leaf_numeric_model_or_topology_required_stop`.
+- just landed Rockwool triple-leaf support posture Gate A:
+  `packages/engine/src/rockwool-triple-leaf-support-posture-gate-a-contract.test.ts`
+  landed
+  `gate_a_kept_rockwool_source_required_values_screening_supported_no_runtime_selected_source_gap_revalidation_v25`
+  no-runtime and selected `calculator_source_gap_revalidation_v25` with
+  target file
+  `packages/engine/src/calculator-source-gap-revalidation-v25-gate-a-contract.test.ts`.
+  It added `rockwool_support_semantics_decision`,
+  `rockwool_screening_supported_values_not_exact`,
+  `rockwool_posture_surface_map`,
+  `rockwool_unsupported_without_preview_rejected`, and
+  `source_gap_revalidation_v25_selected`. `supportedTargetOutputs`
+  stays a finite-screening-metric availability surface, not
+  source-backed exactness. Unsupported exact posture is rejected until a
+  separate screening-preview value channel exists, because otherwise the
+  workbench would hide the useful `Rw 41` diagnostic as `Not ready`.
+  Runtime values, support, confidence, evidence, API shape, route-card
+  values, output-card status, proposal/report values, visible behavior,
+  and workbench-input behavior stayed frozen. Rockwool remains grouped
+  `Rw 41` / `STC 41`, flat-list adjacent swap `Rw 42` / `STC 42`, and
+  field `R'w 34` / `DnT,w 36`, screening-supported, not exact, not
+  source-validated, and not design-grade.
+  Validation passed on 2026-05-05: focused Gate A 1 file / 5 tests,
+  engine continuity 8 files / 49 tests, web Rockwool/output continuity
+  4 files / 29 tests, final `pnpm calculator:gate:current` with engine
+  260 files / 1505 tests, web 53 files / 260 passed + 18 skipped, repo
+  build 5 / 5 tasks, and whitespace guard green. Broad `pnpm check`
+  passed with lint and typecheck clean, engine 393 files / 2325 tests,
+  web 165 files / 933 passed + 18 skipped, and repo build 5 / 5 tasks.
+  Known non-fatal `sharp/@img` warnings remain through
+  `@turbodocx/html-to-docx`; `apps/web/next-env.d.ts` was restored to
+  `.next-typecheck` after the Next build.
+- just landed Rockwool triple-leaf resolution Gate A:
+  `packages/engine/src/rockwool-triple-leaf-resolution-gate-a-contract.test.ts`
+  landed
+  `gate_a_confirmed_rockwool_triple_leaf_source_packet_absent_runtime_diagnostic_selected_support_posture`
+  and selected `rockwool_triple_leaf_support_posture_v1` with target
+  file
+  `packages/engine/src/rockwool-triple-leaf-support-posture-gate-a-contract.test.ts`.
+  It added `rockwool_exact_source_packet_decision`,
+  `rockwool_source_required_screening_boundary`,
+  `rockwool_flat_list_reorder_boundary`, and
+  `rockwool_support_posture_selected`. Exact/source-backed Rockwool
+  runtime remains blocked by `rights_safe_source_owned_curve_payload_absent`;
+  source acquisition is not repeated without a new packet. Runtime
+  values stay grouped `Rw 41`, flat-list `Rw 42`, and field `R'w 34` /
+  `DnT,w 36`, but grouped topology now carries the source-required
+  runtime warning:
+  `Grouped triple-leaf topology is present, but DynEcho still needs a source-calibrated triple-leaf solver, rights-safe source-owned curve payload, local Rockwool/material mapping, metric context owner, tolerance owner, negative boundaries, and paired visible tests before promoting this beyond the screening blend; treat it as source-required screening, not exact or design-grade.`
+  Validation passed on 2026-05-05: focused Gate A 1 file / 6 tests,
+  engine continuity 9 files / 55 tests, web Rockwool continuity 2 files
+  / 14 tests, split-refactor size pin 1 file / 5 tests after updating
+  `dynamic-airborne.ts` from 1829 to 1828 physical lines, final `pnpm
+  calculator:gate:current` with engine 259 files / 1500 tests, web 53
+  files / 260 passed + 18 skipped, repo build 5 / 5 tasks, and
+  whitespace guard green. Broad `pnpm check` passed after removing one
+  unused source-promotion Gate A import: lint and typecheck clean,
+  engine 392 files / 2320 tests, web 165 files / 933 passed + 18
+  skipped, and repo build 5 / 5 tasks. Known non-fatal `sharp/@img`
+  warnings remain through `@turbodocx/html-to-docx`;
+  `apps/web/next-env.d.ts` was restored to `.next-typecheck` after the
+  Next build.
+- just landed source-promotion owner-set readiness Gate A:
+  `packages/engine/src/source-promotion-owner-set-readiness-guard-gate-a-contract.test.ts`
+  landed
+  `gate_a_locked_source_promotion_owner_set_no_runtime_selected_rockwool_triple_leaf_resolution`
+  no-runtime and selected `rockwool_triple_leaf_resolution_v1` with
+  target file
+  `packages/engine/src/rockwool-triple-leaf-resolution-gate-a-contract.test.ts`.
+  It added `source_promotion_owner_set_inventory`,
+  `ownerless_source_promotion_blocked`,
+  `hostile_import_snapshot_not_evidence_carry_forward`, and
+  `rockwool_resolution_selected_as_next_accuracy_target`. Runtime
+  values, support, confidence, evidence, API shape, route-card values,
+  output-card status, proposal/report values, visible behavior, and
+  workbench-input behavior stayed frozen. Source-like names, near-source
+  aliases, source locators, imported snapshots, finite copied numbers,
+  and visible copy cannot promote runtime evidence without source
+  provenance, topology owner, material mapping owner, metric context
+  owner, tolerance owner, negative boundaries, paired engine tests, and
+  paired visible tests. Rockwool remains screening-only: grouped
+  `Rw 41`, flat-list `Rw 42`, field `R'w 34` and `DnT,w 36`, not
+  exact/source-validated, Uris 2006 still
+  `paused_waiting_rights_safe_source_packet`. The next slice must decide
+  exact/source-backed runtime if a rights-safe packet and full owner set
+  exist, otherwise fail closed or keep the result explicitly
+  screening-only.
+  Validation passed on 2026-05-05: focused Gate A 1 file / 6 tests,
+  engine continuity 7 files / 42 tests, web continuity 2 files / 15
+  tests, `pnpm calculator:gate:current` with engine 258 files / 1494
+  tests, web 53 files / 260 passed + 18 skipped, repo build 5 / 5
+  tasks, and whitespace guard green; final `git diff --check` green
+  after restoring `apps/web/next-env.d.ts` to `.next-typecheck`. Broad
+  `pnpm check` was not run because Gate A made no runtime, visible,
+  shared-schema, API, report/proposal, or workbench-input behavior
+  movement.
+- just landed calculator source-gap revalidation V24 Gate A:
+  `packages/engine/src/calculator-source-gap-revalidation-v24-gate-a-contract.test.ts`
+  landed
+  `selected_source_promotion_owner_set_readiness_guard_after_v24_confirmed_rockwool_uris_blocked_and_controlled_use_handoff_closed`
+  no-runtime and selected
+  `source_promotion_owner_set_readiness_guard_v1` with target file
+  `packages/engine/src/source-promotion-owner-set-readiness-guard-gate-a-contract.test.ts`.
+  It consumed the controlled-use handoff closeout and added
+  `controlled_use_handoff_gate_c_closeout_consumed`,
+  `rockwool_uris_exact_runtime_still_blocked_after_controlled_use`,
+  `source_promotion_owner_set_guard_selected`,
+  `hostile_api_import_and_frequent_combination_green_carry_forward`,
+  and `field_outputs_non_design_grade_carry_forward`. Runtime values,
+  support, confidence, evidence, API shape, route-card values,
+  output-card status, proposal/report values, and workbench-input
+  behavior stayed frozen. Rockwool remains screening-only: grouped
+  `Rw 41`, flat-list `Rw 42`, field `R'w 34` and `DnT,w 36`, not
+  exact/source-validated, Uris 2006 still
+  `paused_waiting_rights_safe_source_packet`. The next slice must
+  require source provenance, topology owner, material mapping owner,
+  metric context owner, tolerance owner, negative boundaries, paired
+  engine tests, and paired visible tests before any future
+  exact/source-backed promotion.
+  Validation passed on 2026-05-05: focused V24 Gate A 1 file / 7
+  tests, engine continuity 8 files / 47 tests, web visible
+  frequent-combination continuity 1 file / 8 tests, `pnpm
+  calculator:gate:current` with engine 257 files / 1488 tests, web 53
+  files / 260 passed + 18 skipped, repo build 5 / 5 tasks, and
+  whitespace guard green; final `git diff --check` green after
+  restoring `apps/web/next-env.d.ts` to `.next-typecheck`. Broad
+  `pnpm check` was not run because V24 Gate A made no runtime, visible,
+  shared-schema, API, report/proposal, or workbench-input behavior
+  movement.
+- just landed company-internal controlled-use handoff Gate C closeout:
+  `packages/engine/src/post-company-internal-controlled-use-handoff-v1-next-slice-selection-contract.test.ts`
+  landed
+  `closed_company_internal_controlled_use_handoff_no_runtime_and_selected_source_gap_revalidation_v24`
+  no-runtime and selected `calculator_source_gap_revalidation_v24`
+  with target file
+  `packages/engine/src/calculator-source-gap-revalidation-v24-gate-a-contract.test.ts`.
+  It consumed `current_operator_workflow`,
+  `current_acceptance_bucket_table`, `ready_values_snapshot`,
+  `caveated_blocked_stop_rules`, `validation_command_log`,
+  `rockwool_screening_only_notice`, and
+  `selected_closeout_or_source_gap_followup`; it added
+  `company_internal_controlled_use_handoff_closed`,
+  `controlled_use_pack_is_current_operator_handoff`, and
+  `calculator_source_gap_revalidation_v24_selected`. Runtime values,
+  support, confidence, evidence, API shape, route-card values,
+  output-card status, proposal/report values, and workbench-input
+  behavior stayed frozen. Controlled use remains bounded to the handoff
+  envelope and is not a broad high-accuracy opening. V24 must carry
+  forward `rockwool_screening_only_not_fixed`,
+  `field_outputs_non_design_grade`,
+  `source_promotion_owner_set_required`,
+  `hostile_api_import_fail_closed`, and
+  `frequent_combination_snapshots_stay_green`. Rockwool remains
+  screening-only: grouped `Rw 41`, flat-list `Rw 42`, field `R'w 34`
+  and `DnT,w 36`, not exact/source-validated, Uris 2006 still
+  `paused_waiting_rights_safe_source_packet`.
+  Validation passed on 2026-05-05: focused Gate C 1 file / 5 tests,
+  continuity 8 files / 43 tests, `pnpm calculator:gate:current` with
+  engine 256 files / 1481 tests, web 53 files / 260 passed + 18
+  skipped, repo build 5 / 5 tasks, and whitespace guard green; broad
+  `pnpm check` with lint/typecheck clean, engine 389 files / 2301
+  tests, web 165 files / 933 passed + 18 skipped, repo build 5 / 5
+  tasks, and final `git diff --check` green. Known non-fatal `sharp/@img` warnings remain through
+  `@turbodocx/html-to-docx`; `apps/web/next-env.d.ts` stayed restored
+  to `.next-typecheck`.
+- just landed company-internal controlled-use handoff Gate A:
+  `packages/engine/src/company-internal-controlled-use-handoff-gate-a-contract.test.ts`
+  landed
+  `gate_a_prepared_company_internal_controlled_use_handoff_no_runtime_selected_closeout`
+  no-runtime and selected
+  `packages/engine/src/post-company-internal-controlled-use-handoff-v1-next-slice-selection-contract.test.ts`.
+  It created
+  `docs/calculator/COMPANY_INTERNAL_CONTROLLED_USE_HANDOFF.md` and added
+  `current_operator_workflow`, `current_acceptance_bucket_table`,
+  `ready_values_snapshot`, `caveated_blocked_stop_rules`,
+  `validation_command_log`, `rockwool_screening_only_notice`, and
+  `selected_closeout_or_source_gap_followup`. Runtime values, support,
+  confidence, evidence, API shape, route-card values, output-card
+  status, proposal/report values, and workbench-input behavior stayed
+  frozen. Ready controlled-use values are pinned as LSF exact `Rw=55`,
+  `R'w=48`, building `DnT,w=50`; AAC benchmark `Rw=47`, `R'w=45`,
+  building `DnT,w=47`; masonry benchmark `Rw=43`, `R'w=41`, building
+  `DnT,w=43`; Pliteq floor `Rw=60`, `Ln,w=58`, `L'n,w=61`,
+  `L'nT,w=58.2`; Ubiq bound floor `Rw=62`, `Ln,w=52`, `L'n,w=55`,
+  `L'nT,w=52.2`. Direct high-accuracy copy remains forbidden.
+  Rockwool remains screening-only: grouped `Rw 41`, flat-list `Rw 42`,
+  field `R'w 34` and `DnT,w 36`, not exact/source-validated, Uris 2006
+  still `paused_waiting_rights_safe_source_packet`.
+  Validation passed on 2026-05-05: focused Gate A 1 file / 6 tests,
+  continuity 6 files / 33 tests, `pnpm calculator:gate:current` with
+  engine 255 files / 1476 tests, web 53 files / 260 passed + 18
+  skipped, repo build 5 / 5 tasks, and whitespace guard green. Final
+  `git diff --check` passed after restoring `apps/web/next-env.d.ts` to
+  `.next-typecheck`. Broad `pnpm check` is reserved for the selected
+  Gate C closeout or later runtime/user-visible movement.
+- just landed company-internal high-accuracy opening rehearsal Gate C closeout:
+  `packages/engine/src/post-company-internal-high-accuracy-opening-rehearsal-v1-next-slice-selection-contract.test.ts`
+  landed
+  `closed_company_internal_high_accuracy_opening_rehearsal_no_runtime_and_selected_controlled_use_handoff`
+  no-runtime and selected
+  `company_internal_controlled_use_handoff_v1` with target file
+  `packages/engine/src/company-internal-controlled-use-handoff-gate-a-contract.test.ts`.
+  It consumed `company_internal_opening_acceptance_matrix`,
+  `final_validation_evidence_map`,
+  `rockwool_screening_and_source_blocker_registry`,
+  `source_promotion_no_runtime_boundary_register`,
+  `hostile_api_import_fail_closed_evidence`,
+  `operator_caveat_and_usage_handoff_pack`, and
+  `selected_opening_handoff_or_backlog_followup`; it added
+  `company_internal_controlled_use_handoff_selected`. Runtime values,
+  support, confidence, evidence, API shape, route-card values,
+  output-card status, proposal/report values, and workbench-input
+  behavior stayed frozen. Direct high-accuracy opening copy remains
+  blocked; the next slice must prepare a current controlled-use handoff
+  with updated values, Rockwool screening-only language, caveats, and
+  stop rules before any use label is refreshed.
+  Validation passed on 2026-05-05: focused Gate C 1 file / 5 tests,
+  continuity 9 files / 47 tests, `pnpm calculator:gate:current` with
+  engine 254 files / 1470 tests, web 53 files / 260 passed + 18
+  skipped, repo build 5 / 5 tasks, and whitespace guard green, broad
+  `pnpm check` with lint/typecheck clean, engine 387 files / 2290
+  tests, web 165 files / 933 passed + 18 skipped, repo build 5 / 5
+  tasks, and final `git diff --check` green.
+- just landed company-internal high-accuracy opening rehearsal Gate A:
+  `packages/engine/src/company-internal-high-accuracy-opening-rehearsal-gate-a-contract.test.ts`
+  landed
+  `gate_a_rehearsed_company_internal_high_accuracy_opening_no_runtime_selected_closeout`
+  no-runtime and selected
+  `packages/engine/src/post-company-internal-high-accuracy-opening-rehearsal-v1-next-slice-selection-contract.test.ts`.
+  It added `company_internal_opening_acceptance_matrix`,
+  `final_validation_evidence_map`,
+  `rockwool_screening_and_source_blocker_registry`,
+  `source_promotion_no_runtime_boundary_register`,
+  `hostile_api_import_fail_closed_evidence`,
+  `operator_caveat_and_usage_handoff_pack`, and
+  `selected_opening_handoff_or_backlog_followup`. Runtime values,
+  support, confidence, evidence, API shape, route-card values,
+  output-card status, proposal/report values, and workbench-input
+  behavior stayed frozen. Ready source/benchmark wall/floor corridors
+  are pinned to current values; Rockwool triple-leaf, generated and
+  screening lanes, field continuations, near-source rows, Uris 2006,
+  hostile API/import payloads, many-layer, and reorder edges remain
+  caveated, blocked, or fail-closed. High-accuracy opening is not
+  allowed by Gate A alone and needs closeout validation evidence first.
+  Validation passed on 2026-05-05: focused Gate A 1 file / 6 tests,
+  continuity 8 files / 42 tests, `pnpm calculator:gate:current` with
+  engine 253 files / 1465 tests, web 53 files / 260 passed + 18 skipped,
+  repo build 5 / 5 tasks, and whitespace guard green. Broad `pnpm check`
+  passed with lint/typecheck clean, engine 386 files / 2285 tests, web
+  165 files / 933 passed + 18 skipped, repo build 5 / 5 tasks. Known
+  non-fatal `sharp/@img` warnings remain through
+  `@turbodocx/html-to-docx`; `apps/web/next-env.d.ts` was restored to
+  `.next-typecheck` after Next rewrote it.
+- just landed source-promotion hostile-input readiness Gate C closeout:
+  `packages/engine/src/post-source-promotion-hostile-input-readiness-guard-v1-next-slice-selection-contract.test.ts`
+  landed
+  `closed_source_promotion_hostile_input_readiness_guard_no_runtime_and_selected_company_internal_high_accuracy_opening_rehearsal`
+  no-runtime and selected
+  `company_internal_high_accuracy_opening_rehearsal_v1` with target file
+  `packages/engine/src/company-internal-high-accuracy-opening-rehearsal-gate-a-contract.test.ts`.
+  It consumed `source_promotion_surface_inventory`,
+  `hostile_api_import_fail_closed_surface_inventory`,
+  `estimate_json_1e309_rejected_by_finite_layer_schema`,
+  `server_import_snapshot_not_runtime_promotion_surface`,
+  `near_source_rows_context_only_until_owner_set_exists`,
+  `rockwool_gate_c_policy_freeze_carry_forward`, and
+  `selected_source_promotion_hostile_closeout_with_target_file`; it
+  added `company_internal_high_accuracy_opening_rehearsal_selected`.
+  Runtime values, support, confidence, evidence, route-card values,
+  output-card status, proposal/report values, and workbench-input
+  behavior stayed frozen. Estimate / impact-only `1e309` payloads stay
+  rejected by finite layer schema before calculation. Rockwool remains
+  explicit screening-only, not exact/source-validated: grouped `Rw 41`,
+  flat-list `Rw 42`, field `R'w 34`, `DnT,w 36`, Uris 2006
+  `paused_waiting_rights_safe_source_packet`. Company-internal
+  high-accuracy opening remains blocked until the selected rehearsal
+  produces a current acceptance matrix, validation evidence, and green
+  current-gate plus broad `pnpm check` evidence.
+  Validation passed on 2026-05-05: focused Gate C 1 file / 5 tests,
+  engine continuity 7 files / 36 tests, `pnpm calculator:gate:current`
+  with engine 252 files / 1459 tests, web 53 files / 260 passed + 18
+  skipped, repo build 5 / 5 tasks, and whitespace guard green. Broad
+  `pnpm check` passed with lint/typecheck clean, engine 385 files / 2279
+  tests, web 165 files / 933 passed + 18 skipped, repo build 5 / 5
+  tasks. Known non-fatal `sharp/@img` warnings remain through
+  `@turbodocx/html-to-docx`; final `git diff --check` was green and
+  `apps/web/next-env.d.ts` had no final diff.
+- just landed source-promotion hostile-input readiness Gate A:
+  `packages/engine/src/source-promotion-hostile-input-readiness-guard-gate-a-contract.test.ts`
+  landed
+  `gate_a_inventoried_source_promotion_hostile_input_readiness_landed_finite_schema_tightening_selected_closeout`
+  and selected
+  `packages/engine/src/post-source-promotion-hostile-input-readiness-guard-v1-next-slice-selection-contract.test.ts`.
+  It added `source_promotion_surface_inventory`,
+  `hostile_api_import_fail_closed_surface_inventory`,
+  `estimate_json_1e309_rejected_by_finite_layer_schema`,
+  `server_import_snapshot_not_runtime_promotion_surface`,
+  `near_source_rows_context_only_until_owner_set_exists`,
+  `rockwool_gate_c_policy_freeze_carry_forward`, and
+  `selected_source_promotion_hostile_closeout_with_target_file`.
+  Gate A found and fixed a bounded hostile API validation gap:
+  JSON `1e309` parses to `Infinity`, so shared layer validation now
+  requires `thicknessMm: z.number().finite().positive()` and estimate /
+  impact-only routes reject the payload before calculation. Numeric
+  calculator runtime values, support, confidence, evidence,
+  route-card values, output-card status, proposal/report values, and
+  workbench-input behavior stayed frozen. Exact source controls and
+  near-source rows remain separated; server import remains snapshot
+  persistence only, not runtime promotion. Rockwool remains frozen:
+  grouped `Rw 41`, flat-list `Rw 42`, field `R'w 34` and `DnT,w 36`,
+  screening-only, not exact/source-validated, Uris 2006 still
+  `paused_waiting_rights_safe_source_packet`.
+  Validation passed on 2026-05-05: focused Gate A 1 file / 6 tests,
+  focused web API validation 1 file / 3 tests, engine continuity 8
+  files / 44 tests, `pnpm calculator:gate:current` with engine 251
+  files / 1454 tests, web 53 files / 260 passed + 18 skipped, repo
+  build 5 / 5 tasks, and whitespace guard green. Broad `pnpm check`
+  passed after removing a lint-only unused test constant: lint and
+  typecheck clean, engine 384 files / 2274 tests, web 165 files / 933
+  passed + 18 skipped, repo build 5 / 5 tasks. Known non-fatal
+  `sharp/@img` warnings remain through `@turbodocx/html-to-docx`;
+  final `git diff --check` was green after `apps/web/next-env.d.ts` was
+  restored to `.next-typecheck` after Next build rewrote the route-types
+  path.
+- just landed Rockwool triple-leaf explicit screening-only policy Gate C:
+  `packages/engine/src/post-rockwool-triple-leaf-explicit-screening-only-policy-v1-next-slice-selection-contract.test.ts`
+  landed
+  `closed_rockwool_triple_leaf_explicit_screening_only_policy_no_runtime_and_selected_source_promotion_hostile_input_readiness_guard`
+  no-runtime and selected
+  `source_promotion_hostile_input_readiness_guard_v1` with target file
+  `packages/engine/src/source-promotion-hostile-input-readiness-guard-gate-a-contract.test.ts`.
+  It added `rockwool_policy_gate_c_closeout_summary`,
+  `rockwool_exact_or_screening_company_criterion_closed`,
+  `source_promotion_hostile_input_opening_blockers_carry_forward`,
+  `source_promotion_hostile_input_readiness_guard_selected`, and
+  `selected_gate_a_source_promotion_hostile_input_readiness_with_target_file`.
+  Runtime values, support, confidence, evidence, API behavior,
+  route-card values, output-card status, proposal/report values, and
+  workbench-input behavior stayed frozen. The Rockwool company-internal
+  criterion is closed as explicit screening-only, not exact runtime.
+  Grouped split-rockwool remains `Rw 41`,
+  `multileaf_screening_blend`, low confidence, screening-only, not
+  exact, and not source-validated. Flat-list adjacent swaps remain
+  `Rw 42` fail-closed until grouped topology is supplied. Field `R'w 34`
+  and `DnT,w 36` remain continuations from the Rockwool screening lane.
+  Uris 2006 remains `paused_waiting_rights_safe_source_packet`.
+  Company-internal high-accuracy opening remains blocked by source
+  promotion ownership, hostile API/import fail-closed proof, and final
+  current-gate plus broad-check evidence at opening handoff.
+  Validation passed on 2026-05-05: focused Gate C 1 file / 6 tests,
+  engine continuity 6 files / 37 tests, focused web Gate B compatibility
+  1 file / 7 tests, final `pnpm calculator:gate:current` with engine
+  250 files / 1448 tests, web 53 files / 259 passed + 18 skipped, repo
+  build 5 / 5 tasks, whitespace guard green, and final
+  `git diff --check` green after restoring `apps/web/next-env.d.ts` to
+  `.next-typecheck`. Broad `pnpm check` was not run because Gate C made
+  no runtime, API, shared-schema, route/report, or workbench-input
+  behavior change. Known non-fatal `sharp/@img` warnings remain through
+  `@turbodocx/html-to-docx`.
+- just landed Rockwool triple-leaf explicit screening-only policy Gate B:
+  `apps/web/features/workbench/rockwool-triple-leaf-explicit-screening-only-policy-gate-b-visible.test.ts`
+  landed
+  `gate_b_pin_visible_rockwool_triple_leaf_screening_only_policy` with
+  `gate_b_pinned_visible_rockwool_triple_leaf_screening_only_policy_no_runtime_selected_gate_c_closeout`
+  visible-copy only and selected
+  `packages/engine/src/post-rockwool-triple-leaf-explicit-screening-only-policy-v1-next-slice-selection-contract.test.ts`.
+  It added `visible_rockwool_screening_only_policy_guard`,
+  `rockwool_output_card_screening_only_copy`,
+  `rockwool_proposal_report_screening_only_copy`,
+  `rockwool_field_continuation_screening_bridge`,
+  `rockwool_non_target_boundary_copy_guard`, and
+  `selected_gate_c_closeout_or_next_slice_with_target_file`.
+  Runtime values, support, confidence, evidence, API, route-card
+  values, output-card status, proposal/report values, and
+  workbench-input behavior stayed frozen. Grouped split-rockwool remains
+  `Rw 41`, `multileaf_screening_blend`, low confidence, screening-only,
+  not exact, and not source-validated, but visible output-card and
+  proposal/report copy now names `Rockwool screening-only`. Flat-list
+  adjacent swaps remain `Rw 42` and visibly fail closed until grouped
+  topology is supplied. Field `R'w 34` and `DnT,w 36` remain
+  continuations from the Rockwool screening lane, not independent
+  measured field or design-grade results. Uris 2006 remains
+  `paused_waiting_rights_safe_source_packet`.
+  Validation passed on 2026-05-05: focused Gate B 1 file / 7 tests,
+  web visible continuity 5 files / 31 tests, engine continuity 5 files
+  / 29 tests, final `pnpm calculator:gate:current` with engine 249
+  files / 1442 tests, web 53 files / 259 passed + 18 skipped, repo
+  build 5 / 5 tasks, whitespace guard green, broad `pnpm check` with
+  lint/typecheck clean, engine 382 files / 2262 tests, web 165 files /
+  932 passed + 18 skipped, repo build 5 / 5 tasks, and final
+  `git diff --check` green after restoring `apps/web/next-env.d.ts` to
+  `.next-typecheck`. Known non-fatal `sharp/@img` warnings remain
+  through `@turbodocx/html-to-docx`.
+- just landed Rockwool triple-leaf explicit screening-only policy Gate A:
+  `packages/engine/src/rockwool-triple-leaf-explicit-screening-only-policy-gate-a-contract.test.ts`
+  landed
+  `gate_a_inventoried_rockwool_triple_leaf_screening_only_policy_no_runtime_selected_visible_gate_b`
+  no-runtime and selected
+  `apps/web/features/workbench/rockwool-triple-leaf-explicit-screening-only-policy-gate-b-visible.test.ts`.
+  It added `rockwool_triple_leaf_screening_surface_inventory`,
+  `grouped_rw41_and_flat_rw42_runtime_freeze`,
+  `visible_route_output_report_policy_gap`,
+  `rockwool_visible_gate_b_selected`,
+  `source_promotion_hostile_input_carry_forward`, and
+  `pre_company_internal_use_exit_criteria`. Runtime values, support,
+  confidence, evidence, API, route-card values, output-card status,
+  proposal/report values, and workbench-input behavior stayed frozen.
+  Grouped split-rockwool remains `Rw 41`,
+  `multileaf_screening_blend`, low confidence, screening-only, not
+  exact, and not source-validated. Flat-list adjacent swaps remain
+  `Rw 42` on
+  `multileaf_screening_blend_fail_closed_until_grouped_topology`. Field
+  `R'w 34` and `DnT,w 36` remain continuations from the screening lane,
+  not design-grade field results. Gate A selected visible Gate B because
+  output-card/report surfaces can still show generic live/screening copy
+  without a Rockwool-specific screening-only label. Uris 2006 remains
+  `paused_waiting_rights_safe_source_packet`.
+  Validation passed on 2026-05-05: focused Gate A 1 file / 6 tests,
+  engine continuity 5 files / 29 tests, web visible continuity 3 files
+  / 16 tests, final `pnpm calculator:gate:current` with engine 249
+  files / 1442 tests, web 52 files / 252 passed + 18 skipped, repo
+  build 5 / 5 tasks, whitespace guard green, and final
+  `git diff --check` green after restoring `apps/web/next-env.d.ts` to
+  `.next-typecheck`. Broad `pnpm check` was not run because Gate A made
+  no runtime, visible, API, shared-schema, route/report, or
+  workbench-input behavior change. Known non-fatal `sharp/@img` warnings
+  remain through `@turbodocx/html-to-docx`.
+- just landed V23 source-gap revalidation:
+  `packages/engine/src/calculator-source-gap-revalidation-v23-gate-a-contract.test.ts`
+  landed
+  `selected_rockwool_triple_leaf_explicit_screening_only_policy_after_v23_confirmed_uris_source_blocked_and_field_output_owner_closed`
+  no-runtime and selected
+  `rockwool_triple_leaf_explicit_screening_only_policy_v1` with target
+  file
+  `packages/engine/src/rockwool-triple-leaf-explicit-screening-only-policy-gate-a-contract.test.ts`.
+  It added `field_output_owner_policy_gate_c_closeout_summary`,
+  `rockwool_uris_exact_runtime_still_blocked`,
+  `rockwool_explicit_screening_only_policy_selected`,
+  `source_promotion_and_hostile_input_ownership_carry_forward`,
+  `repeat_uris_acquisition_blocked_without_new_packet`, and
+  `pre_company_internal_use_exit_criteria`. Runtime values, support,
+  confidence, evidence, API, route-card values, output-card status,
+  proposal/report values, and workbench-input behavior stayed frozen.
+  Direct Rockwool/Uris exact runtime promotion remains blocked by the
+  missing rights-safe source-owned curve payload, local material
+  mapping, metric context, tolerance owner, source-curve provenance,
+  and complete negative-boundary / paired visible tests. Grouped
+  split-rockwool remains `Rw 41`, `multileaf_screening_blend`, low
+  confidence, screening-only, not exact, and not source-validated. V23
+  selected the bounded no-runtime Rockwool explicit screening-only
+  policy slice because company-internal opening requires Rockwool to be
+  exact or explicitly screening-only before higher-trust private use.
+  Validation passed on 2026-05-05: focused V23 1 file / 7 tests,
+  engine continuity 6 files / 36 tests, web visible continuity 3 files
+  / 16 tests, final `pnpm calculator:gate:current` with engine 248
+  files / 1436 tests, web 52 files / 252 passed + 18 skipped, repo
+  build 5 / 5 tasks, whitespace guard green, and final
+  `git diff --check` green after restoring `apps/web/next-env.d.ts` to
+  `.next-typecheck`. Broad `pnpm check` was not run because V23 made no
+  runtime, visible, API, shared-schema, route/report, or workbench-input
+  behavior change. Known non-fatal `sharp/@img` warnings remain through
+  `@turbodocx/html-to-docx`.
+- just landed field-output owner/design-grade policy Gate C:
+  `packages/engine/src/post-field-output-owner-and-design-grade-policy-v1-next-slice-selection-contract.test.ts`
+  closed `field_output_owner_and_design_grade_policy_v1` no-runtime
+  with
+  `closed_field_output_owner_design_grade_policy_no_runtime_and_selected_source_gap_revalidation_v23`
+  and selected `calculator_source_gap_revalidation_v23`. It added
+  `field_output_owner_policy_gate_c_closeout_summary`,
+  `field_output_owner_and_design_grade_policy_closed_carry_forward`,
+  `rockwool_rw41_screening_and_uris_packet_status`,
+  `pre_company_internal_use_exit_criteria`, and
+  `selected_source_gap_revalidation_v23_with_target_file_and_validation_scope`.
+  Runtime values, support, confidence, evidence, API, route-card,
+  output-card status, proposal/report values, and workbench-input
+  behavior stayed frozen. Field-output owner policy is closed as a
+  visibility/honesty boundary, not runtime source evidence; finite
+  `R'w`, `DnT,w`, `DnT,A`, `L'n,w`, `L'nT,w`, and `L'nT,50` remain
+  non-design-grade until metric/source/geometry/tolerance/
+  negative-boundary and paired engine/web/report ownership exists.
+  Rockwool triple-leaf remains not fixed: grouped split-rockwool is
+  still `Rw 41`, `multileaf_screening_blend`, low confidence,
+  screening only, not exact, and not source-validated. Uris 2006 remains
+  `paused_waiting_rights_safe_source_packet`.
+  `pre_company_internal_use_exit_criteria` remains active. The
+  field-output criterion is closed, but company-internal high-accuracy
+  opening remains blocked by Rockwool exact-or-explicit-screening,
+  source-promotion ownership, hostile-input proof, and final validation
+  at opening handoff. Validation completed on 2026-05-05: focused Gate C
+  1 file / 6 tests, engine continuity 5 files / 30 tests, web
+  continuity 7 files / 73 passed + 18 skipped, `pnpm
+  calculator:gate:current` with engine 247 files / 1429 tests, web 52
+  files / 252 passed + 18 skipped, repo build 5 / 5 tasks, and
+  whitespace guard green, and broad `pnpm check` with lint/typecheck
+  clean, engine 380 files / 2249 tests, web 164 files / 925 passed + 18
+  skipped, and build 5 / 5 tasks. Final `git diff --check` was green.
+  Known non-fatal `sharp/@img` warnings remain through
+  `@turbodocx/html-to-docx`.
+- just landed field-output owner/design-grade policy Gate B:
+  `apps/web/features/workbench/field-output-owner-and-design-grade-policy-gate-b-visible.test.ts`
+  landed
+  `gate_b_pinned_visible_field_output_design_grade_owner_policy_no_runtime_selected_gate_c_closeout`
+  visible-copy only and selected
+  `packages/engine/src/post-field-output-owner-and-design-grade-policy-v1-next-slice-selection-contract.test.ts`.
+  It added `visible_field_output_design_grade_policy_guard`,
+  `output_card_owner_policy_copy`, `proposal_report_owner_policy_copy`,
+  `needs_input_field_policy_visible_boundaries`,
+  `rockwool_field_output_screening_policy_carry_forward`, and
+  `selected_gate_c_closeout_or_next_slice_with_target_file`. Runtime
+  values, support, confidence, evidence,
+  API, route-card, output-card status, and workbench-input behavior
+  stayed frozen. Output-card and proposal/report wording now explicitly
+  says no design-grade field owner is active until source basis,
+  geometry, tolerance, negative-boundary, and report-test ownership
+  close. Rockwool triple-leaf remains not fixed: grouped
+  split-rockwool is still `Rw 41`, `multileaf_screening_blend`, low
+  confidence, screening only, not exact, and not source-validated.
+  Uris 2006 remains `paused_waiting_rights_safe_source_packet`.
+  `pre_company_internal_use_exit_criteria` remains active.
+  Validation completed on 2026-05-05: focused Gate B 1 file / 6 tests,
+  engine continuity 4 files / 24 tests, web continuity 7 files / 73
+  passed + 18 skipped, `pnpm calculator:gate:current` with engine 246
+  files / 1423 tests, web 52 files / 252 passed + 18 skipped, repo
+  build 5 / 5 tasks, whitespace guard green, and broad `pnpm check`
+  with lint/typecheck clean, engine 379 files / 2243 tests, web 164
+  files / 925 passed + 18 skipped, and build 5 / 5 tasks. Known
+  non-fatal `sharp/@img` warnings remain through
+  `@turbodocx/html-to-docx`.
+- just landed field-output owner/design-grade policy Gate A:
+  `packages/engine/src/field-output-owner-and-design-grade-policy-gate-a-contract.test.ts`
+  landed
+  `gate_a_inventoried_field_output_owner_design_grade_policy_no_runtime_selected_visible_policy_gate_b`
+  no-runtime and selected
+  `gate_b_pin_visible_field_output_design_grade_owner_policy` at
+  `apps/web/features/workbench/field-output-owner-and-design-grade-policy-gate-b-visible.test.ts`.
+  It added `field_output_owner_design_grade_policy_inventory`,
+  `field_metric_owner_matrix`,
+  `source_basis_and_tolerance_requirement_matrix`,
+  `missing_geometry_and_missing_field_input_negative_boundaries`,
+  `rockwool_screening_field_output_carry_forward`, and the visible Gate B
+  selection. Runtime values, support, confidence, evidence, API,
+  route-card, output-card, proposal/report, and workbench-input
+  behavior stayed frozen. Finite `R'w`, `DnT,w`, `DnT,A`, `L'n,w`,
+  `L'nT,w`, and `L'nT,50` values remain non-design-grade without
+  metric/source/geometry/tolerance/negative-boundary and paired
+  engine/web/report ownership. Rockwool triple-leaf remains not fixed:
+  grouped split-rockwool is still `Rw 41`,
+  `multileaf_screening_blend`, low confidence, screening only, not
+  exact, and not source-validated. Uris 2006 remains
+  `paused_waiting_rights_safe_source_packet`.
+  `pre_company_internal_use_exit_criteria` remains active.
+  Validation passed on 2026-05-05: focused Gate A 1 file / 6 tests,
+  engine continuity 4 files / 24 tests, web continuity 4 files /
+  50 passed + 18 skipped, `pnpm calculator:gate:current` with engine
+  246 files / 1423 tests, web 51 files / 246 passed + 18 skipped, repo
+  build 5 / 5 tasks, and whitespace guard green. Broad `pnpm check`
+  also passed with lint/typecheck clean, engine full suite 379 files /
+  2243 tests, web full suite 163 files / 919 passed + 18 skipped, and
+  repo build 5 / 5 tasks.
+- just landed V22 source-gap revalidation:
+  `packages/engine/src/calculator-source-gap-revalidation-v22-gate-a-contract.test.ts`
+  landed
+  `selected_field_output_owner_design_grade_policy_after_v22_confirmed_rockwool_source_blocked_and_company_snapshot_green`
+  no-runtime and selected `field_output_owner_and_design_grade_policy_v1`.
+  It added `company_internal_gate_c_closeout_summary`,
+  `rockwool_rw41_screening_and_uris_packet_status`,
+  `repeat_uris_acquisition_blocked_without_new_packet`,
+  `field_output_near_source_hostile_input_and_curve_provenance_status`,
+  `company_internal_high_accuracy_opening_blocker_status`, and
+  `selected_next_slice_with_target_file_and_validation_scope`.
+  Runtime values, support, confidence, evidence, API, route-card,
+  output-card, proposal/report, and workbench-input behavior stayed
+  frozen. Rockwool triple-leaf remains not fixed: grouped
+  split-rockwool is still `Rw 41`, `multileaf_screening_blend`, low
+  confidence, screening only, not exact, and not source-validated.
+  Uris 2006 remains `paused_waiting_rights_safe_source_packet`.
+  The next actionable correctness boundary is field-output owner and
+  design-grade policy: finite `R'w`, `DnT,w`, `L'n,w`, `L'nT,w`, and
+  related outputs must never become design-grade without metric/source/
+  tolerance/geometry/visible-test ownership. Selected next plan:
+  `docs/calculator/SLICE_FIELD_OUTPUT_OWNER_AND_DESIGN_GRADE_POLICY_V1_PLAN.md`.
+  Validation passed on 2026-05-05: focused V22 Gate A 1 file / 7 tests,
+  engine continuity 8 files / 52 tests, web continuity 4 files / 22
+  tests, and final `pnpm calculator:gate:current` with engine 245 files
+  / 1417 tests, web 51 files / 246 passed + 18 skipped, repo build
+  5 / 5 tasks, and whitespace guard green. Broad `pnpm check` also
+  passed after the V22 test typecheck issue was fixed: lint/typecheck
+  clean, engine full suite 378 files / 2237 tests, web full suite
+  163 files / 919 passed + 18 skipped, and repo build 5 / 5 tasks.
 - just landed company-internal frequent-combination Gate C closeout:
   `packages/engine/src/post-company-internal-frequent-combination-lane-snapshot-guard-v1-next-slice-selection-contract.test.ts`
   closed `company_internal_frequent_combination_lane_snapshot_guard_v1`
@@ -2501,17 +3422,17 @@ plan.
   selected slice
 - use `pnpm check` only when you need the broad full-repo gate
 - latest focused validation: `pnpm calculator:gate:current` green on
-  2026-05-04 after company-internal frequent-combination Gate C
-  closeout; engine 244 files / 1410 tests, web 51 files / 246 passed +
-  18 skipped, build 5/5 with the known non-fatal `sharp/@img` warnings,
+  2026-05-05 after Rockwool explicit screening-only policy Gate C;
+  engine 250 files / 1448 tests, web 53 files / 259 passed + 18
+  skipped, build 5/5 with the known non-fatal `sharp/@img` warnings,
   whitespace guard clean.
-- latest broad validation: `pnpm check` green on 2026-05-04 after
-  company-internal frequent-combination Gate C closeout; lint/typecheck
-  clean, engine tests passed 377 files / 2230 tests, web tests passed
-  163 files / 919 passed + 18 skipped, build 5 / 5 with the known
-  non-fatal `sharp/@img` build warnings.
+- latest broad validation: `pnpm check` green on 2026-05-05 after
+  Rockwool explicit screening-only policy Gate B; lint/typecheck clean,
+  engine tests passed 382 files / 2262 tests, web tests passed 165
+  files / 932 passed + 18 skipped, build 5 / 5 with the known non-fatal
+  `sharp/@img` build warnings.
 - web broad tests run through `tools/dev/run-web-vitest.ts`; it keeps
-  all 157 web test files in scope while isolating long route scans so
+  the full web test file set in scope while isolating long route scans so
   Vitest worker RPC timeouts do not hide green test results
 - keep `git diff --check` clean
 

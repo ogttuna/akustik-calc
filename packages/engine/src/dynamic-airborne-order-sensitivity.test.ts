@@ -46,11 +46,11 @@ const TRIPLE_LEAF_VARIANTS = [
 	    name: "gypsum",
 	    stack: CLASSIC_TRIPLE_LEAF_STACK,
 	    swapped: {
-	      confidence: "low",
-	      dnTw: 33,
-	      family: "multileaf_multicavity",
-	      rw: 33,
-	      rwPrime: 31,
+	      confidence: "medium",
+	      dnTw: 44,
+	      family: "double_leaf",
+	      rw: 44,
+	      rwPrime: 42,
 	      strategy: FLAT_LIST_MULTILEAF_GUARD_STRATEGY
 	    }
 	  },
@@ -72,11 +72,11 @@ const TRIPLE_LEAF_VARIANTS = [
       { materialId: "firestop_board", thicknessMm: 15 }
 	    ] as const,
 	    swapped: {
-	      confidence: "low",
-	      dnTw: 34,
-	      family: "multileaf_multicavity",
-	      rw: 35,
-	      rwPrime: 33,
+	      confidence: "medium",
+	      dnTw: 45,
+	      family: "double_leaf",
+	      rw: 45,
+	      rwPrime: 43,
 	      strategy: FLAT_LIST_MULTILEAF_GUARD_STRATEGY
 	    }
 	  },
@@ -98,11 +98,11 @@ const TRIPLE_LEAF_VARIANTS = [
       { materialId: "diamond_board", thicknessMm: 12.5 }
 	    ] as const,
 	    swapped: {
-	      confidence: "low",
-	      dnTw: 34,
-	      family: "multileaf_multicavity",
-	      rw: 34,
-	      rwPrime: 32,
+	      confidence: "medium",
+	      dnTw: 45,
+	      family: "double_leaf",
+	      rw: 45,
+	      rwPrime: 43,
 	      strategy: FLAT_LIST_MULTILEAF_GUARD_STRATEGY
 	    }
 	  }
@@ -182,7 +182,7 @@ describe("dynamic airborne order-sensitive multileaf contracts", () => {
     expectFragment(duplicated.warnings, "intentionally order-sensitive", "duplicated multileaf warning");
   });
 
-	  it("keeps lightweight flat-list triple-leaf swaps fail-closed instead of promoting them to double-leaf", () => {
+	  it("keeps lightweight flat-list adjacent swaps on the current double-leaf numeric lane with a topology warning", () => {
     for (const variant of TRIPLE_LEAF_VARIANTS) {
       const base = snapshot(variant.stack);
       const swapped = snapshot(swapInnerLeaf(variant.stack));
@@ -203,12 +203,12 @@ describe("dynamic airborne order-sensitive multileaf contracts", () => {
         rwPrime: swapped.rwPrime,
         strategy: swapped.strategy
       }).toEqual(variant.swapped);
-	      expect(swapped.rw - base.rw, `${variant.name} lab delta`).toBeLessThanOrEqual(2);
-	      expect(swapped.rwPrime - base.rwPrime, `${variant.name} field R'w delta`).toBeLessThanOrEqual(2);
-	      expect(swapped.dnTw - base.dnTw, `${variant.name} field DnT,w delta`).toBeLessThanOrEqual(2);
+	      expect(swapped.rw - base.rw, `${variant.name} lab delta`).toBeGreaterThanOrEqual(11);
+	      expect(swapped.rwPrime - base.rwPrime, `${variant.name} field R'w delta`).toBeGreaterThanOrEqual(11);
+	      expect(swapped.dnTw - base.dnTw, `${variant.name} field DnT,w delta`).toBeGreaterThanOrEqual(11);
 	      expectFragment(base.warnings, "triple-leaf partition", `${variant.name} base warning`);
 	      expectFragment(swapped.warnings, "Flat-list adjacent-swap sensitivity guard", `${variant.name} swapped guard`);
-	      expectFragment(swapped.warnings, "fail-closed screening", `${variant.name} swapped fail-closed warning`);
+	      expectFragment(swapped.warnings, "kept the current double-leaf numeric lane", `${variant.name} swapped numeric hold warning`);
 	      expect(
 	        swapped.warnings.some((warning: string) => warning.includes("triple-leaf partition")),
 	        `${variant.name} swapped should not stay on the triple-leaf warning`

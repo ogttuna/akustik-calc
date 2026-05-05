@@ -9,19 +9,777 @@ before ROCKWOOL source-pack extraction or any later runtime movement.
 
 Current urgent slice:
 
-`calculator_source_gap_revalidation_v22`
+`calculator_source_gap_revalidation_v25`
 
 Current urgent status:
 
-`closed_company_internal_frequent_combination_lane_snapshot_guard_no_runtime_and_selected_source_gap_revalidation_v22`
+`gate_a_kept_rockwool_source_required_values_screening_supported_no_runtime_selected_source_gap_revalidation_v25`
 
 Current urgent next file:
 
-`packages/engine/src/calculator-source-gap-revalidation-v22-gate-a-contract.test.ts`
+`packages/engine/src/calculator-source-gap-revalidation-v25-gate-a-contract.test.ts`
 
 Current urgent next action:
 
-`gate_a_revalidate_source_accuracy_gap_order_after_company_internal_snapshot_guard_closeout`
+`gate_a_revalidate_source_gap_order_after_rockwool_support_posture`
+
+Just landed Rockwool triple-leaf support posture Gate A:
+
+`rockwool_triple_leaf_support_posture_v1`
+
+`gate_a_kept_rockwool_source_required_values_screening_supported_no_runtime_selected_source_gap_revalidation_v25`
+
+Gate A file:
+
+`packages/engine/src/rockwool-triple-leaf-support-posture-gate-a-contract.test.ts`
+
+Gate A checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-05_ROCKWOOL_TRIPLE_LEAF_SUPPORT_POSTURE_GATE_A_HANDOFF.md`
+
+Gate A selected next slice:
+
+`calculator_source_gap_revalidation_v25`
+
+Gate A selected next file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v25-gate-a-contract.test.ts`
+
+Gate A artifacts:
+
+`rockwool_support_semantics_decision`
+
+`rockwool_screening_supported_values_not_exact`
+
+`rockwool_posture_surface_map`
+
+`rockwool_unsupported_without_preview_rejected`
+
+`source_gap_revalidation_v25_selected`
+
+Gate A risk result:
+
+The urgent support-semantics risk is closed for the current API shape:
+Rockwool source-required values stay in `supportedTargetOutputs` only as
+finite screening metrics, not exact/source-backed results. Unsupported
+exact posture is blocked until a separate screening-preview value
+channel exists, because the current unsupported card would hide the
+`Rw 41` diagnostic as `Not ready`.
+
+Current Rockwool risk remains exactness/source ownership, not output
+support ambiguity: grouped `Rw 41` / `STC 41`, flat-list `Rw 42` /
+`STC 42`, and field `R'w 34` / `DnT,w 36` are not exact, not
+source-validated, and not design-grade.
+
+Gate A validation:
+
+Focused Gate A passed 1 file / 5 tests; engine continuity passed 8
+files / 49 tests; web Rockwool/output continuity passed 4 files / 29
+tests; final `pnpm calculator:gate:current` passed with engine 260 files
+/ 1505 tests, web 53 files / 260 passed + 18 skipped, repo build 5 / 5
+tasks, and whitespace guard green. Broad `pnpm check` passed with lint
+and typecheck clean, engine 393 files / 2325 tests, web 165 files / 933
+passed + 18 skipped, and repo build 5 / 5 tasks. Known non-fatal
+`sharp/@img` warnings remain through `@turbodocx/html-to-docx`;
+`apps/web/next-env.d.ts` was restored to `.next-typecheck` after the
+Next build.
+
+Just landed Rockwool triple-leaf resolution Gate A:
+
+`rockwool_triple_leaf_resolution_v1`
+
+`gate_a_confirmed_rockwool_triple_leaf_source_packet_absent_runtime_diagnostic_selected_support_posture`
+
+Gate A file:
+
+`packages/engine/src/rockwool-triple-leaf-resolution-gate-a-contract.test.ts`
+
+Gate A checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-05_ROCKWOOL_TRIPLE_LEAF_RESOLUTION_GATE_A_HANDOFF.md`
+
+Gate A selected next slice:
+
+`rockwool_triple_leaf_support_posture_v1`
+
+Gate A selected next file:
+
+`packages/engine/src/rockwool-triple-leaf-support-posture-gate-a-contract.test.ts`
+
+Gate A artifacts:
+
+`rockwool_exact_source_packet_decision`
+
+`rockwool_source_required_screening_boundary`
+
+`rockwool_flat_list_reorder_boundary`
+
+`rockwool_support_posture_selected`
+
+Gate A risk result:
+
+Exact/source-backed Rockwool runtime remains blocked by
+`rights_safe_source_owned_curve_payload_absent`; source acquisition is
+not repeated without a new packet. Runtime values stay grouped `Rw 41`,
+flat-list `Rw 42`, and field `R'w 34` / `DnT,w 36`, but the grouped
+diagnostic now names the source-required boundary:
+
+`Grouped triple-leaf topology is present, but DynEcho still needs a source-calibrated triple-leaf solver, rights-safe source-owned curve payload, local Rockwool/material mapping, metric context owner, tolerance owner, negative boundaries, and paired visible tests before promoting this beyond the screening blend; treat it as source-required screening, not exact or design-grade.`
+
+The urgent risk is now output-support semantics: source-required
+screening values must not look like exact/design-grade supported
+outputs.
+
+Gate A validation:
+
+Focused Gate A passed 1 file / 6 tests; engine continuity passed 9 files
+/ 55 tests; web Rockwool continuity passed 2 files / 14 tests;
+split-refactor size pin passed 1 file / 5 tests after updating
+`dynamic-airborne.ts` from 1829 to 1828 physical lines; final `pnpm
+calculator:gate:current` passed with engine 259 files / 1500 tests, web
+53 files / 260 passed + 18 skipped, repo build 5 / 5 tasks, and
+whitespace guard green. Broad `pnpm check` passed after removing one
+unused source-promotion Gate A import: lint and typecheck clean, engine
+392 files / 2320 tests, web 165 files / 933 passed + 18 skipped, and
+repo build 5 / 5 tasks. Known non-fatal `sharp/@img` warnings remain
+through `@turbodocx/html-to-docx`; `apps/web/next-env.d.ts` was restored
+to `.next-typecheck` after the Next build.
+
+Just landed source-promotion owner-set readiness Gate A:
+
+`source_promotion_owner_set_readiness_guard_v1`
+
+`gate_a_locked_source_promotion_owner_set_no_runtime_selected_rockwool_triple_leaf_resolution`
+
+Gate A file:
+
+`packages/engine/src/source-promotion-owner-set-readiness-guard-gate-a-contract.test.ts`
+
+Gate A checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-05_SOURCE_PROMOTION_OWNER_SET_READINESS_GUARD_GATE_A_HANDOFF.md`
+
+Gate A selected next slice:
+
+`rockwool_triple_leaf_resolution_v1`
+
+Gate A selected next file:
+
+`packages/engine/src/rockwool-triple-leaf-resolution-gate-a-contract.test.ts`
+
+Gate A artifacts:
+
+`source_promotion_owner_set_inventory`
+
+`ownerless_source_promotion_blocked`
+
+`hostile_import_snapshot_not_evidence_carry_forward`
+
+`rockwool_resolution_selected_as_next_accuracy_target`
+
+Gate A risk result:
+
+The generic source-promotion owner-set boundary is now explicit and did
+not move runtime values, support, confidence, evidence, API shape,
+route-card values, output-card status, proposal/report values, visible
+behavior, or workbench-input behavior. Source-like names, near-source
+aliases, source locators, imported snapshots, finite copied numbers, and
+visible copy cannot promote runtime evidence without the full owner set.
+The urgent risk now returns to Rockwool triple-leaf resolution: exact
+runtime needs a rights-safe source-owned packet and complete owner set;
+otherwise the result must fail closed or stay explicitly screening-only.
+
+Gate A validation:
+
+Focused source-promotion owner-set Gate A passed 1 file / 6 tests;
+engine continuity passed 7 files / 42 tests; web continuity passed 2
+files / 15 tests; `pnpm calculator:gate:current` passed with engine 258
+files / 1494 tests, web 53 files / 260 passed + 18 skipped, repo build
+5 / 5 tasks, and whitespace guard green; final `git diff --check`
+passed after restoring `apps/web/next-env.d.ts` to `.next-typecheck`.
+Broad `pnpm check` was not run because Gate A made no runtime, visible,
+shared-schema, API, report/proposal, or workbench-input behavior
+movement.
+
+Just landed calculator source-gap revalidation V24 Gate A:
+
+`calculator_source_gap_revalidation_v24`
+
+`selected_source_promotion_owner_set_readiness_guard_after_v24_confirmed_rockwool_uris_blocked_and_controlled_use_handoff_closed`
+
+Gate A file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v24-gate-a-contract.test.ts`
+
+Gate A checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-05_CALCULATOR_SOURCE_GAP_REVALIDATION_V24_GATE_A_HANDOFF.md`
+
+Gate A selected next slice:
+
+`source_promotion_owner_set_readiness_guard_v1`
+
+Gate A selected next file:
+
+`packages/engine/src/source-promotion-owner-set-readiness-guard-gate-a-contract.test.ts`
+
+Gate A artifacts:
+
+`controlled_use_handoff_gate_c_closeout_consumed`
+
+`rockwool_uris_exact_runtime_still_blocked_after_controlled_use`
+
+`source_promotion_owner_set_guard_selected`
+
+`hostile_api_import_and_frequent_combination_green_carry_forward`
+
+`field_outputs_non_design_grade_carry_forward`
+
+Gate A risk result:
+
+V24 confirmed Rockwool/Uris exact runtime is still blocked by missing
+rights-safe source-owned curve payload and incomplete local owner set.
+It did not move runtime values, support, confidence, evidence, API
+shape, route-card values, output-card status, proposal/report values,
+or workbench-input behavior. Hostile API/import and
+frequent-combination guards are green, so the urgent risk is false
+source promotion from near-source aliases, source rows, source locator
+metadata, imported snapshots, or official-sounding names without source
+provenance, topology owner, material mapping owner, metric context
+owner, tolerance owner, negative boundaries, paired engine tests, and
+paired visible tests.
+
+Gate A validation:
+
+Focused V24 Gate A passed 1 file / 7 tests; engine continuity passed 8
+files / 47 tests; web visible frequent-combination continuity passed 1
+file / 8 tests; `pnpm calculator:gate:current` passed with engine 257
+files / 1488 tests, web 53 files / 260 passed + 18 skipped, repo build
+5 / 5 tasks, and whitespace guard green; final `git diff --check`
+passed after restoring `apps/web/next-env.d.ts` to `.next-typecheck`.
+Broad `pnpm check` was not run because V24 Gate A made no runtime,
+visible, shared-schema, API, report/proposal, or workbench-input
+behavior movement.
+
+Just landed company-internal controlled-use handoff Gate C closeout:
+
+`company_internal_controlled_use_handoff_v1`
+
+`closed_company_internal_controlled_use_handoff_no_runtime_and_selected_source_gap_revalidation_v24`
+
+Gate C file:
+
+`packages/engine/src/post-company-internal-controlled-use-handoff-v1-next-slice-selection-contract.test.ts`
+
+Gate C checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-05_COMPANY_INTERNAL_CONTROLLED_USE_HANDOFF_GATE_C_CLOSEOUT_HANDOFF.md`
+
+Gate C selected next slice:
+
+`calculator_source_gap_revalidation_v24`
+
+Gate C selected next file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v24-gate-a-contract.test.ts`
+
+Gate C artifacts:
+
+`company_internal_controlled_use_handoff_closed`
+
+`controlled_use_pack_is_current_operator_handoff`
+
+`calculator_source_gap_revalidation_v24_selected`
+
+Gate C risk result:
+
+Gate C closed the handoff no-runtime and kept the controlled-use pack as
+the current operator handoff. Runtime values, support, confidence,
+evidence, API shape, route-card values, output-card status,
+proposal/report values, and workbench-input behavior stayed frozen.
+Controlled use is still bounded to the documented envelope, not a broad
+high-accuracy opening. V24 must carry forward
+`rockwool_screening_only_not_fixed`, `field_outputs_non_design_grade`,
+`source_promotion_owner_set_required`, `hostile_api_import_fail_closed`,
+and `frequent_combination_snapshots_stay_green`.
+
+Gate C validation:
+
+Focused Gate C passed 1 file / 5 tests; continuity passed 8 files / 43
+tests; `pnpm calculator:gate:current` passed with engine 256 files /
+1481 tests, web 53 files / 260 passed + 18 skipped, repo build 5 / 5
+tasks, and whitespace guard green; broad `pnpm check` passed with
+lint/typecheck clean, engine 389 files / 2301 tests, web 165 files /
+933 passed + 18 skipped, repo build 5 / 5 tasks, and final
+`git diff --check` green. Known non-fatal
+`sharp/@img` warnings remain through `@turbodocx/html-to-docx`.
+
+Just landed company-internal controlled-use handoff Gate A:
+
+`company_internal_controlled_use_handoff_v1`
+
+`gate_a_prepared_company_internal_controlled_use_handoff_no_runtime_selected_closeout`
+
+Gate A file:
+
+`packages/engine/src/company-internal-controlled-use-handoff-gate-a-contract.test.ts`
+
+Gate A checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-05_COMPANY_INTERNAL_CONTROLLED_USE_HANDOFF_GATE_A_HANDOFF.md`
+
+Current handoff:
+
+`docs/calculator/COMPANY_INTERNAL_CONTROLLED_USE_HANDOFF.md`
+
+Gate A selected closeout:
+
+`packages/engine/src/post-company-internal-controlled-use-handoff-v1-next-slice-selection-contract.test.ts`
+
+Gate A risk result:
+
+Gate A landed the current operator handoff pack no-runtime and kept the
+high-accuracy label forbidden. Runtime values, support, confidence,
+evidence, API shape, route-card values, output-card status,
+proposal/report values, and workbench-input behavior stayed frozen. The
+handoff pins the current ready values, caveated/screening lanes,
+source-promotion stop rules, and hostile/many-layer/reorder guard
+boundaries before closeout.
+
+Gate A validation:
+
+Focused Gate A passed 1 file / 6 tests; continuity passed 6 files / 33
+tests; `pnpm calculator:gate:current` passed with engine 255 files /
+1476 tests, web 53 files / 260 passed + 18 skipped, repo build 5 / 5
+tasks, and whitespace guard green; final `git diff --check` passed after
+restoring `apps/web/next-env.d.ts` to `.next-typecheck`. Broad
+`pnpm check` is reserved for the selected Gate C closeout or later
+runtime/user-visible movement.
+
+Just landed company-internal high-accuracy opening rehearsal Gate C closeout:
+
+`company_internal_high_accuracy_opening_rehearsal_v1`
+
+`closed_company_internal_high_accuracy_opening_rehearsal_no_runtime_and_selected_controlled_use_handoff`
+
+Gate C file:
+
+`packages/engine/src/post-company-internal-high-accuracy-opening-rehearsal-v1-next-slice-selection-contract.test.ts`
+
+Gate C checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-05_COMPANY_INTERNAL_HIGH_ACCURACY_OPENING_REHEARSAL_GATE_C_CLOSEOUT_HANDOFF.md`
+
+Gate C selected next slice:
+
+`company_internal_controlled_use_handoff_v1`
+
+Gate C selected first file:
+
+`packages/engine/src/company-internal-controlled-use-handoff-gate-a-contract.test.ts`
+
+Gate C artifacts:
+
+`company_internal_opening_acceptance_matrix`
+
+`final_validation_evidence_map`
+
+`rockwool_screening_and_source_blocker_registry`
+
+`source_promotion_no_runtime_boundary_register`
+
+`hostile_api_import_fail_closed_evidence`
+
+`operator_caveat_and_usage_handoff_pack`
+
+`selected_opening_handoff_or_backlog_followup`
+
+`company_internal_controlled_use_handoff_selected`
+
+Gate C risk result:
+
+Gate C closed no-runtime without opening a direct high-accuracy label.
+Runtime values, support, confidence, evidence, API shape, route-card
+values, output-card status, proposal/report values, and workbench-input
+behavior stayed frozen. The selected handoff slice must prepare current
+controlled-use operator guidance with updated values, Rockwool
+screening-only language, caveats, and stop rules before any use label is
+refreshed.
+
+Gate C validation:
+
+Focused Gate C passed 1 file / 5 tests; continuity passed 9 files / 47
+tests; `pnpm calculator:gate:current` passed with engine 254 files /
+1470 tests, web 53 files / 260 passed + 18 skipped, repo build 5 / 5
+tasks, and whitespace guard green; broad `pnpm check` passed with lint
+and typecheck clean, engine 387 files / 2290 tests, web 165 files / 933
+passed + 18 skipped, repo build 5 / 5 tasks, and final
+`git diff --check` green.
+
+Just landed company-internal high-accuracy opening rehearsal Gate A:
+
+`company_internal_high_accuracy_opening_rehearsal_v1`
+
+`gate_a_rehearsed_company_internal_high_accuracy_opening_no_runtime_selected_closeout`
+
+Gate A file:
+
+`packages/engine/src/company-internal-high-accuracy-opening-rehearsal-gate-a-contract.test.ts`
+
+Gate A checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-05_COMPANY_INTERNAL_HIGH_ACCURACY_OPENING_REHEARSAL_GATE_A_HANDOFF.md`
+
+Gate A selected closeout file:
+
+`packages/engine/src/post-company-internal-high-accuracy-opening-rehearsal-v1-next-slice-selection-contract.test.ts`
+
+Gate A artifacts:
+
+`company_internal_opening_acceptance_matrix`
+
+`final_validation_evidence_map`
+
+`rockwool_screening_and_source_blocker_registry`
+
+`source_promotion_no_runtime_boundary_register`
+
+`hostile_api_import_fail_closed_evidence`
+
+`operator_caveat_and_usage_handoff_pack`
+
+`selected_opening_handoff_or_backlog_followup`
+
+Gate A risk result:
+
+Gate A rehearsed the current opening posture without moving runtime
+values, support, confidence, evidence, API shape, route-card values,
+output-card status, proposal/report values, or workbench-input behavior.
+Only current source/benchmark corridors are ready with caveat. Rockwool
+triple-leaf, generated/screening lanes, field continuations,
+near-source rows, Uris 2006, hostile API/import payloads, many-layer,
+and reorder edges remain caveated, blocked, or fail-closed.
+High-accuracy opening remains blocked until closeout validation consumes this
+matrix and records green current-gate plus broad-check evidence.
+
+Gate A validation completed on 2026-05-05: focused Gate A passed 1
+file / 6 tests; continuity passed 8 files / 42 tests;
+`pnpm calculator:gate:current` passed with engine 253 files / 1465
+tests, web 53 files / 260 passed + 18 skipped, repo build 5 / 5 tasks,
+and whitespace guard green; broad `pnpm check` passed with lint and
+typecheck clean, engine 386 files / 2285 tests, web 165 files / 933
+passed + 18 skipped, and repo build 5 / 5 tasks.
+
+Just landed source-promotion hostile-input readiness Gate C closeout:
+
+`source_promotion_hostile_input_readiness_guard_v1`
+
+`closed_source_promotion_hostile_input_readiness_guard_no_runtime_and_selected_company_internal_high_accuracy_opening_rehearsal`
+
+Gate C closeout file:
+
+`packages/engine/src/post-source-promotion-hostile-input-readiness-guard-v1-next-slice-selection-contract.test.ts`
+
+Gate C checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-05_SOURCE_PROMOTION_HOSTILE_INPUT_READINESS_GUARD_GATE_C_CLOSEOUT_HANDOFF.md`
+
+Gate C selected next slice:
+
+`company_internal_high_accuracy_opening_rehearsal_v1`
+
+Gate C selected first file:
+
+`packages/engine/src/company-internal-high-accuracy-opening-rehearsal-gate-a-contract.test.ts`
+
+Gate C selected planning surface:
+
+`docs/calculator/SLICE_COMPANY_INTERNAL_HIGH_ACCURACY_OPENING_REHEARSAL_V1_PLAN.md`
+
+Gate C landed artifact:
+
+`company_internal_high_accuracy_opening_rehearsal_selected`
+
+Gate C risk result:
+
+Gate C consumed the source-promotion and hostile-input inventories
+without moving runtime values or source evidence. Estimate /
+impact-only `1e309` payloads remain rejected by finite layer schema,
+server import remains snapshot persistence only, near-source rows
+remain context-only, and Rockwool remains explicit screening-only.
+The next slice is a no-runtime opening rehearsal; it must build a
+current acceptance matrix and validation evidence before any
+high-accuracy label is allowed.
+
+Just landed source-promotion hostile-input readiness Gate A:
+
+`source_promotion_hostile_input_readiness_guard_v1`
+
+`gate_a_inventoried_source_promotion_hostile_input_readiness_landed_finite_schema_tightening_selected_closeout`
+
+Gate A file:
+
+`packages/engine/src/source-promotion-hostile-input-readiness-guard-gate-a-contract.test.ts`
+
+Gate A checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-05_SOURCE_PROMOTION_HOSTILE_INPUT_READINESS_GUARD_GATE_A_HANDOFF.md`
+
+Gate A selected closeout file:
+
+`packages/engine/src/post-source-promotion-hostile-input-readiness-guard-v1-next-slice-selection-contract.test.ts`
+
+Gate A artifacts:
+
+`source_promotion_surface_inventory`
+
+`hostile_api_import_fail_closed_surface_inventory`
+
+`estimate_json_1e309_rejected_by_finite_layer_schema`
+
+`server_import_snapshot_not_runtime_promotion_surface`
+
+`near_source_rows_context_only_until_owner_set_exists`
+
+`rockwool_gate_c_policy_freeze_carry_forward`
+
+`selected_source_promotion_hostile_closeout_with_target_file`
+
+Gate A risk result:
+
+The only bounded hostile API gap found was non-finite JSON layer
+thickness. A request body can encode `1e309`, which parses to
+`Infinity`; `packages/shared/src/domain/layer.ts` now requires
+`thicknessMm: z.number().finite().positive()`, and
+`apps/web/lib/calculator-api-validation.test.ts` pins estimate and
+impact-only 400 responses. No source row was promoted. Near-source rows
+remain context-only until topology, material mapping, metric context,
+tolerance, source provenance, negative-boundary, and paired visible-test
+ownership exist. Server import remains snapshot persistence, not
+runtime promotion. Rockwool remains frozen at grouped `Rw 41`, flat-list
+`Rw 42`, field `R'w 34` / `DnT,w 36`, screening-only, not exact/source
+validated.
+
+Gate A validation completed on 2026-05-05: focused Gate A 1 file / 6
+tests; focused web API validation 1 file / 3 tests; engine continuity 8
+files / 44 tests; `pnpm calculator:gate:current` with engine 251 files
+/ 1454 tests, web 53 files / 260 passed + 18 skipped, repo build 5 / 5
+tasks, and whitespace guard green; broad `pnpm check` with lint/typecheck
+clean, engine 384 files / 2274 tests, web 165 files / 933 passed + 18
+skipped, repo build 5 / 5 tasks. Known non-fatal `sharp/@img` warnings
+remain through `@turbodocx/html-to-docx`; final `git diff --check` was
+green after restoring `apps/web/next-env.d.ts`.
+
+Just landed Rockwool explicit screening-only policy Gate C:
+
+`rockwool_triple_leaf_explicit_screening_only_policy_v1`
+
+`closed_rockwool_triple_leaf_explicit_screening_only_policy_no_runtime_and_selected_source_promotion_hostile_input_readiness_guard`
+
+Gate C file:
+
+`packages/engine/src/post-rockwool-triple-leaf-explicit-screening-only-policy-v1-next-slice-selection-contract.test.ts`
+
+Gate C action:
+
+`gate_c_no_runtime_closeout_and_next_slice_selection`
+
+Gate C checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-05_ROCKWOOL_TRIPLE_LEAF_EXPLICIT_SCREENING_ONLY_POLICY_GATE_C_CLOSEOUT_HANDOFF.md`
+
+Gate C selected first file:
+
+`packages/engine/src/source-promotion-hostile-input-readiness-guard-gate-a-contract.test.ts`
+
+Gate C selected planning surface:
+
+`docs/calculator/SLICE_SOURCE_PROMOTION_HOSTILE_INPUT_READINESS_GUARD_V1_PLAN.md`
+
+Gate C artifacts:
+
+`rockwool_policy_gate_c_closeout_summary`
+
+`rockwool_exact_or_screening_company_criterion_closed`
+
+`source_promotion_hostile_input_opening_blockers_carry_forward`
+
+`source_promotion_hostile_input_readiness_guard_selected`
+
+`selected_gate_a_source_promotion_hostile_input_readiness_with_target_file`
+
+Gate C risk result:
+
+The Rockwool company-internal criterion is closed as explicit
+screening-only, not exact runtime. Grouped split-rockwool remains
+`Rw 41`, `multileaf_screening_blend`, low confidence, screening-only,
+not exact, and not source-validated. Flat-list adjacent swaps remain
+`Rw 42` on
+`multileaf_screening_blend_fail_closed_until_grouped_topology`. Field
+`R'w 34` and `DnT,w 36` remain continuations from the Rockwool screening
+lane, not independent measured field or design-grade results. Uris 2006
+remains `paused_waiting_rights_safe_source_packet`. Company-internal
+high-accuracy opening remains blocked by source promotion ownership,
+hostile API/import fail-closed proof, and final current-gate plus
+broad-check evidence at opening handoff.
+
+Gate C validation completed on 2026-05-05: focused Gate C 1 file / 6
+tests; engine continuity 6 files / 37 tests; focused web Gate B
+compatibility 1 file / 7 tests; `pnpm calculator:gate:current` passed
+with engine 250 files / 1448 tests, web 53 files / 259 passed + 18
+skipped, repo build 5 / 5 tasks, and whitespace guard green. Final
+`git diff --check` was green after restoring `apps/web/next-env.d.ts` to
+`.next-typecheck`. Broad `pnpm check` was not run because Gate C made no
+runtime, API, shared-schema, route/report, or workbench-input behavior
+change. Known non-fatal `sharp/@img` warnings remain through
+`@turbodocx/html-to-docx`.
+
+Just landed Rockwool explicit screening-only policy Gate B:
+
+`rockwool_triple_leaf_explicit_screening_only_policy_v1`
+
+`gate_b_pinned_visible_rockwool_triple_leaf_screening_only_policy_no_runtime_selected_gate_c_closeout`
+
+Gate B file:
+
+`apps/web/features/workbench/rockwool-triple-leaf-explicit-screening-only-policy-gate-b-visible.test.ts`
+
+Gate B action:
+
+`gate_b_pin_visible_rockwool_triple_leaf_screening_only_policy`
+
+Gate B checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-05_ROCKWOOL_TRIPLE_LEAF_EXPLICIT_SCREENING_ONLY_POLICY_GATE_B_HANDOFF.md`
+
+Gate B selected closeout file:
+
+`packages/engine/src/post-rockwool-triple-leaf-explicit-screening-only-policy-v1-next-slice-selection-contract.test.ts`
+
+Gate B artifacts:
+
+`visible_rockwool_screening_only_policy_guard`
+
+`rockwool_output_card_screening_only_copy`
+
+`rockwool_proposal_report_screening_only_copy`
+
+`rockwool_field_continuation_screening_bridge`
+
+`rockwool_non_target_boundary_copy_guard`
+
+`selected_gate_c_closeout_or_next_slice_with_target_file`
+
+Gate B risk result:
+
+Grouped split-rockwool remains `Rw 41`, `multileaf_screening_blend`,
+low confidence, screening-only, not exact, and not source-validated,
+but output-card and proposal/report coverage now visibly label it
+`Rockwool screening-only` and state that it is not exact, not
+source-validated, and not design-grade. Flat-list adjacent swaps remain
+`Rw 42` and visibly fail closed until grouped topology is supplied.
+Field `R'w 34` and `DnT,w 36` remain continuations from the Rockwool
+screening lane, not independent measured field or design-grade results.
+Uris 2006 remains `paused_waiting_rights_safe_source_packet`.
+
+Gate B validation completed on 2026-05-05: focused Gate B 1 file / 7
+tests; web visible continuity 5 files / 31 tests; engine continuity 5
+files / 29 tests; `pnpm calculator:gate:current` passed with engine 249
+files / 1442 tests, web 53 files / 259 passed + 18 skipped, repo build
+5 / 5 tasks, and whitespace guard green. Broad `pnpm check` passed with
+lint/typecheck clean, engine 382 files / 2262 tests, web 165 files /
+932 passed + 18 skipped, and repo build 5 / 5 tasks. Final
+`git diff --check` was green after restoring `apps/web/next-env.d.ts` to
+`.next-typecheck`. Known non-fatal `sharp/@img` warnings remain through
+`@turbodocx/html-to-docx`.
+
+Just landed Rockwool explicit screening-only policy Gate A:
+
+`rockwool_triple_leaf_explicit_screening_only_policy_v1`
+
+`gate_a_inventoried_rockwool_triple_leaf_screening_only_policy_no_runtime_selected_visible_gate_b`
+
+Gate A file:
+
+`packages/engine/src/rockwool-triple-leaf-explicit-screening-only-policy-gate-a-contract.test.ts`
+
+Gate A checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-05_ROCKWOOL_TRIPLE_LEAF_EXPLICIT_SCREENING_ONLY_POLICY_GATE_A_HANDOFF.md`
+
+Gate A selected visible file:
+
+`apps/web/features/workbench/rockwool-triple-leaf-explicit-screening-only-policy-gate-b-visible.test.ts`
+
+Gate A artifacts:
+
+`rockwool_triple_leaf_screening_surface_inventory`
+
+`grouped_rw41_and_flat_rw42_runtime_freeze`
+
+`visible_route_output_report_policy_gap`
+
+`rockwool_visible_gate_b_selected`
+
+`source_promotion_hostile_input_carry_forward`
+
+`pre_company_internal_use_exit_criteria`
+
+Gate A risk result:
+
+Grouped split-rockwool remains `Rw 41`, `multileaf_screening_blend`,
+low confidence, screening-only, not exact, and not source-validated.
+Flat-list adjacent swaps remain `Rw 42` on
+`multileaf_screening_blend_fail_closed_until_grouped_topology`. Field
+`R'w 34` and `DnT,w 36` remain continuations from the screening lane,
+not design-grade field results. Output-card/report surfaces still need
+Rockwool-specific screening-only wording before company-internal
+high-accuracy opening. Uris 2006 remains
+`paused_waiting_rights_safe_source_packet`.
+
+Just landed V23 source-gap revalidation:
+
+`calculator_source_gap_revalidation_v23`
+
+`selected_rockwool_triple_leaf_explicit_screening_only_policy_after_v23_confirmed_uris_source_blocked_and_field_output_owner_closed`
+
+V23 file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v23-gate-a-contract.test.ts`
+
+V23 checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-05_CALCULATOR_SOURCE_GAP_REVALIDATION_V23_GATE_A_HANDOFF.md`
+
+V23 selected planning surface:
+
+`docs/calculator/SLICE_ROCKWOOL_TRIPLE_LEAF_EXPLICIT_SCREENING_ONLY_POLICY_V1_PLAN.md`
+
+V23 artifacts:
+
+`field_output_owner_policy_gate_c_closeout_summary`
+
+`rockwool_uris_exact_runtime_still_blocked`
+
+`rockwool_explicit_screening_only_policy_selected`
+
+`source_promotion_and_hostile_input_ownership_carry_forward`
+
+`repeat_uris_acquisition_blocked_without_new_packet`
+
+`pre_company_internal_use_exit_criteria`
+
+V23 risk result:
+
+Direct Rockwool/Uris exact runtime promotion remains blocked by the
+missing rights-safe source-owned curve payload, local material mapping,
+metric context, tolerance owner, source-curve provenance, and complete
+negative-boundary / paired visible tests. Grouped split-rockwool remains
+`Rw 41`, `multileaf_screening_blend`, low confidence, screening-only,
+not exact, and not source-validated. V23 selected the bounded no-runtime
+Rockwool explicit screening-only policy slice because
+company-internal high-accuracy opening requires Rockwool to be exact or
+explicitly screening-only before higher-trust private use.
 
 Just landed company-internal frequent-combination Gate C:
 
@@ -29,9 +787,19 @@ Just landed company-internal frequent-combination Gate C:
 
 `closed_company_internal_frequent_combination_lane_snapshot_guard_no_runtime_and_selected_source_gap_revalidation_v22`
 
+`calculator_source_gap_revalidation_v22`
+
 Gate C file:
 
 `packages/engine/src/post-company-internal-frequent-combination-lane-snapshot-guard-v1-next-slice-selection-contract.test.ts`
+
+Gate C selected V22 first file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v22-gate-a-contract.test.ts`
+
+Gate C selected V22 planning surface:
+
+`docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V22_PLAN.md`
 
 Gate C checkpoint:
 

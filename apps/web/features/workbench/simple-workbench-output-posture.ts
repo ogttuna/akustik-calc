@@ -1,12 +1,14 @@
 import type { AssemblyCalculation, RequestedOutputId } from "@dynecho/shared";
 
 import { isFieldAirborneOutput } from "./field-airborne-output";
+import { FIELD_OUTPUT_DESIGN_GRADE_POSTURE_GUARD } from "./field-output-owner-policy-copy";
 import type { StudyMode } from "./preset-definitions";
 import {
   describeAirborneValidationPosture,
   describeImpactValidationPosture,
   type ValidationPosture
 } from "./validation-regime";
+import { getRockwoolTripleLeafScreeningPolicyCopy } from "./rockwool-triple-leaf-screening-policy-copy";
 
 export type SimpleWorkbenchOutputPostureTone = "accent" | "neutral" | "success" | "warning";
 
@@ -88,7 +90,8 @@ export function buildSimpleWorkbenchOutputPosture(input: {
   if (status === "needs_input") {
     if (isFieldAirborneOutput(output) || FIELD_IMPACT_OUTPUTS.has(output)) {
       return {
-        detail: "The field route is recognized, but it still needs geometry, room-volume, K, or imported field evidence before this metric can be defended.",
+        detail:
+          `The field route is recognized, but it still needs geometry, room-volume, K, or imported field evidence before this metric can be defended. ${FIELD_OUTPUT_DESIGN_GRADE_POSTURE_GUARD}`,
         label: "Awaiting field input",
         tone: "warning"
       };
@@ -122,7 +125,7 @@ export function buildSimpleWorkbenchOutputPosture(input: {
   if (isFieldAirborneOutput(output) || FIELD_IMPACT_OUTPUTS.has(output) || output === "DnT,A,k") {
     return {
       detail:
-        "This metric is carried through the active field continuation chain from the current lab or apparent curve. It is not being framed as an independent exact source row or measured field result.",
+        `This metric is carried through the active field continuation chain from the current lab or apparent curve. It is not being framed as an independent exact source row or measured field result. ${FIELD_OUTPUT_DESIGN_GRADE_POSTURE_GUARD}`,
       label: "Field continuation",
       tone: "accent"
     };
@@ -171,6 +174,16 @@ export function buildSimpleWorkbenchOutputPosture(input: {
   }
 
   const posture = describeAirborneValidationPosture(result);
+  const rockwoolTripleLeafScreeningPolicy = getRockwoolTripleLeafScreeningPolicyCopy(result);
+
+  if (rockwoolTripleLeafScreeningPolicy) {
+    return {
+      detail: `${rockwoolTripleLeafScreeningPolicy.outputDetail} ${posture.detail}`,
+      label: rockwoolTripleLeafScreeningPolicy.label,
+      tone: "warning"
+    };
+  }
+
   return {
     detail: posture.detail,
     label: "Airborne screening lane",

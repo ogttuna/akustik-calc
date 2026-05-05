@@ -357,17 +357,17 @@ describe("post common-combination lane-misclassification sentinel Gate C next-sl
       strategy: "multileaf_screening_blend"
     });
     expect(splitSwapped).toMatchObject({
-      confidence: "low",
-      family: "multileaf_multicavity",
-      rw: 42,
-      strategy: "multileaf_screening_blend_fail_closed_until_grouped_topology"
+      confidence: "medium",
+      family: "double_leaf",
+      rw: 51,
+      strategy: "double_leaf_porous_fill_delegate+flat_list_adjacent_swap_numeric_hold_until_grouped_topology"
     });
     expect(splitSwapped.warnings).toContain("Flat-list adjacent-swap sensitivity guard");
     expect(classicSwapped).toMatchObject({
-      confidence: "low",
-      family: "multileaf_multicavity",
-      rw: 33,
-      strategy: "multileaf_screening_blend_fail_closed_until_grouped_topology"
+      confidence: "medium",
+      family: "double_leaf",
+      rw: 44,
+      strategy: "double_leaf_porous_fill_delegate+flat_list_adjacent_swap_numeric_hold_until_grouped_topology"
     });
     expect(heavyBoundary).toMatchObject({
       confidence: "low",

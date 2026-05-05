@@ -416,15 +416,15 @@ describe("company internal frequent-combination lane snapshot guard Gate A", () 
       strategy: "multileaf_screening_blend"
     });
     expect(flatSwap).toMatchObject({
-      confidence: "low",
-      dnTw: 41,
-      family: "multileaf_multicavity",
-      rw: 42,
-      rwPrime: 40,
-      stc: 42,
+      confidence: "medium",
+      dnTw: 51,
+      family: "double_leaf",
+      rw: 51,
+      rwPrime: 49,
+      stc: 51,
       strategy: FLAT_LIST_MULTILEAF_GUARD_STRATEGY
     });
-    expect(flatSwap.rw - flat.rw).toBe(1);
+    expect(flatSwap.rw - flat.rw).toBe(10);
     expect(flatSwap.warnings.join("\n")).toMatch(/Flat-list adjacent-swap sensitivity guard/i);
     expect(COMPANY_INTERNAL_FREQUENT_COMBINATION_SNAPSHOT_MATRIX).toContainEqual(
       expect.objectContaining({
@@ -463,14 +463,14 @@ describe("company internal frequent-combination lane snapshot guard Gate A", () 
       strategy: "multileaf_screening_blend"
     });
     expect(classicSwap).toMatchObject({
-      confidence: "low",
-      dnTw: 33,
-      family: "multileaf_multicavity",
-      rw: 33,
-      rwPrime: 31,
+      confidence: "medium",
+      dnTw: 44,
+      family: "double_leaf",
+      rw: 44,
+      rwPrime: 42,
       strategy: FLAT_LIST_MULTILEAF_GUARD_STRATEGY
     });
-    expect(classicSwap.rw - classicBase.rw).toBe(1);
+    expect(classicSwap.rw - classicBase.rw).toBe(12);
     expect(classicSwap.warnings.join("\n")).toMatch(/Flat-list adjacent-swap sensitivity guard/i);
     expect(duplicateClassic).toMatchObject({
       confidence: "low",

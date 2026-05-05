@@ -322,17 +322,17 @@ describe("route-family lane-drift common-stack watchlist Gate C classification",
       rw: splitSwapped.rw,
       strategy: splitSwapped.strategy
     }).toEqual({
-      confidence: "low",
-      family: "multileaf_multicavity",
-      rw: 42,
-      strategy: "multileaf_screening_blend_fail_closed_until_grouped_topology"
+      confidence: "medium",
+      family: "double_leaf",
+      rw: 51,
+      strategy: "double_leaf_porous_fill_delegate+flat_list_adjacent_swap_numeric_hold_until_grouped_topology"
     });
     expect(classicBase.rw).toBe(32);
     expect(classicSwapped).toMatchObject({
-      confidence: "low",
-      family: "multileaf_multicavity",
-      rw: 33,
-      strategy: "multileaf_screening_blend_fail_closed_until_grouped_topology"
+      confidence: "medium",
+      family: "double_leaf",
+      rw: 44,
+      strategy: "double_leaf_porous_fill_delegate+flat_list_adjacent_swap_numeric_hold_until_grouped_topology"
     });
 
     for (const id of [

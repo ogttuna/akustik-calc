@@ -75,6 +75,7 @@ import {
   evaluateWallTripleLeafTopologyReadiness,
   WALL_TRIPLE_LEAF_TOPOLOGY_FIELD_LABELS
 } from "./wall-triple-leaf-topology-readiness";
+import { ROCKWOOL_TRIPLE_LEAF_SOURCE_REQUIRED_RUNTIME_WARNING } from "./rockwool-triple-leaf-source-required-boundary";
 
 const FAMILY_LABELS: Record<DynamicAirborneFamily, string> = {
   double_leaf: "Double Leaf",
@@ -1487,9 +1488,7 @@ export function calculateDynamicAirborneResult(
         `Triple-leaf exact calculation needs grouped wall topology before this can be treated as a precise answer. Missing: ${tripleLeafTopologyReadiness.missingTopologyFields.map((field) => WALL_TRIPLE_LEAF_TOPOLOGY_FIELD_LABELS[field]).join(", ")}.`
       );
     } else {
-      warnings.push(
-        "Grouped triple-leaf topology is present, but DynEcho still needs a source-calibrated triple-leaf solver, tolerance owner, and paired visible tests before promoting this beyond the screening blend."
-      );
+      warnings.push(ROCKWOOL_TRIPLE_LEAF_SOURCE_REQUIRED_RUNTIME_WARNING);
     }
   }
 

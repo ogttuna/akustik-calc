@@ -187,10 +187,10 @@ describe("wall triple-leaf accuracy recovery Gate B", () => {
       visibleLeafCount: result.dynamicAirborneTrace?.visibleLeafCount ?? 0
     });
 
-    expect(result.metrics.estimatedRwDb).toBe(42);
-    expect(result.dynamicAirborneTrace?.detectedFamily).toBe("multileaf_multicavity");
+    expect(result.metrics.estimatedRwDb).toBe(51);
+    expect(result.dynamicAirborneTrace?.detectedFamily).toBe("double_leaf");
     expect(result.dynamicAirborneTrace?.strategy).toBe(
-      "multileaf_screening_blend_fail_closed_until_grouped_topology"
+      "double_leaf_porous_fill_delegate+flat_list_adjacent_swap_numeric_hold_until_grouped_topology"
     );
     expect(readiness).toEqual({
       applies: false,

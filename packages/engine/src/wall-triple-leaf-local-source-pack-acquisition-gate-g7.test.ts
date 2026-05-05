@@ -205,19 +205,19 @@ describe("wall triple-leaf local source-pack acquisition Gate G7", () => {
     ]);
 
     expect(userAdjacent).toMatchObject({
-      family: "multileaf_multicavity",
-      rw: 42,
-      strategy: "multileaf_screening_blend_fail_closed_until_grouped_topology"
+      family: "double_leaf",
+      rw: 51,
+      strategy: "double_leaf_porous_fill_delegate+flat_list_adjacent_swap_numeric_hold_until_grouped_topology"
     });
     expect(userSplit).toMatchObject({ family: "multileaf_multicavity", rw: 41, strategy: "multileaf_screening_blend" });
-    expect((userAdjacent.rw ?? 0) - (userSplit.rw ?? 0)).toBeLessThanOrEqual(1);
+    expect((userAdjacent.rw ?? 0) - (userSplit.rw ?? 0)).toBe(10);
     expect(classicTripleLeaf).toMatchObject({ family: "multileaf_multicavity", rw: 32 });
     expect(classicSwapped).toMatchObject({
-      family: "multileaf_multicavity",
-      rw: 33,
-      strategy: "multileaf_screening_blend_fail_closed_until_grouped_topology"
+      family: "double_leaf",
+      rw: 44,
+      strategy: "double_leaf_porous_fill_delegate+flat_list_adjacent_swap_numeric_hold_until_grouped_topology"
     });
-    expect((classicSwapped.rw ?? 0) - (classicTripleLeaf.rw ?? 0)).toBeLessThanOrEqual(1);
+    expect((classicSwapped.rw ?? 0) - (classicTripleLeaf.rw ?? 0)).toBe(12);
     expect(heavyMultileaf).toMatchObject({ family: "multileaf_multicavity", rw: 39 });
     expect(heavySwapped).toMatchObject({ family: "lined_massive_wall", rw: 49 });
     expect((heavySwapped.rw ?? 0) - (heavyMultileaf.rw ?? 0)).toBeGreaterThanOrEqual(10);

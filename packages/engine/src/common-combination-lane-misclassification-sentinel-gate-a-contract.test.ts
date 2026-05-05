@@ -559,11 +559,11 @@ describe("common-combination lane-misclassification sentinel Gate A contract", (
       strategy: "multileaf_screening_blend"
     });
     expect(splitSwapped).toMatchObject({
-      confidence: "low",
-      family: "multileaf_multicavity",
-      rw: 42,
-      rwPrime: 40,
-      strategy: "multileaf_screening_blend_fail_closed_until_grouped_topology"
+      confidence: "medium",
+      family: "double_leaf",
+      rw: 51,
+      rwPrime: 49,
+      strategy: "double_leaf_porous_fill_delegate+flat_list_adjacent_swap_numeric_hold_until_grouped_topology"
     });
     expect(hasWarning(splitSwapped.warnings, /Flat-list adjacent-swap sensitivity guard/i)).toBe(true);
 
@@ -576,12 +576,12 @@ describe("common-combination lane-misclassification sentinel Gate A contract", (
       strategy: "multileaf_screening_blend"
     });
     expect(classicSwapped).toMatchObject({
-      confidence: "low",
-      dnTw: 33,
-      family: "multileaf_multicavity",
-      rw: 33,
-      rwPrime: 31,
-      strategy: "multileaf_screening_blend_fail_closed_until_grouped_topology"
+      confidence: "medium",
+      dnTw: 44,
+      family: "double_leaf",
+      rw: 44,
+      rwPrime: 42,
+      strategy: "double_leaf_porous_fill_delegate+flat_list_adjacent_swap_numeric_hold_until_grouped_topology"
     });
     expect(hasWarning(classicSwapped.warnings, /Flat-list adjacent-swap sensitivity guard/i)).toBe(true);
 

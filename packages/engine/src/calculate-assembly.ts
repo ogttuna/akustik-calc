@@ -90,6 +90,7 @@ import {
   getSymmetricEnhancedFilledSingleBoardProfile,
   SYMMETRIC_ENHANCED_FILLED_SINGLE_BOARD_FIELD_TARGET_RW_PRIME
 } from "./symmetric-enhanced-filled-single-board-corridor";
+import { withholdRockwoolSplitTripleLeafExactTargetOutputs } from "./rockwool-split-triple-leaf-numeric-source-closure";
 import { analyzeTargetOutputSupport, buildTargetOutputWarnings } from "./target-output-support";
 
 export type CalculateAssemblyOptions = {
@@ -1134,7 +1135,7 @@ export function calculateAssembly(
       explicitDeltaImpact ||
       hasImpactBackedScreeningFloorCarrierSignal
   );
-  const targetOutputSupport = analyzeTargetOutputSupport({
+  const initialTargetOutputSupport = analyzeTargetOutputSupport({
     floorCarrier: hasFloorSupportCarrierSignal ? floorSystemRatings ?? floorCarrier : null,
     impact,
     lowerBoundImpact,
@@ -1153,6 +1154,14 @@ export function calculateAssembly(
     },
     targetOutputs: options.targetOutputs ?? []
   });
+  const rockwoolSplitTripleLeafExactOutputWithhold =
+    withholdRockwoolSplitTripleLeafExactTargetOutputs({
+      airborneContext,
+      layers: resolvedLayers,
+      targetOutputSupport: initialTargetOutputSupport,
+      trace: dynamicAirborneResult?.trace
+    });
+  const targetOutputSupport = rockwoolSplitTripleLeafExactOutputWithhold.targetOutputSupport;
   const {
     dynamicImpactTrace,
     impactPredictorStatus,
@@ -1177,6 +1186,9 @@ export function calculateAssembly(
   warnings.push(...airborneOverlayResult.warnings);
   warnings.push(...verifiedAirborneAnchorResult.warnings);
   warnings.push(...approximateAirborneFieldCompanionResult.warnings);
+  if (rockwoolSplitTripleLeafExactOutputWithhold.warning) {
+    warnings.push(rockwoolSplitTripleLeafExactOutputWithhold.warning);
+  }
   warnings.push(...buildTargetOutputWarnings(targetOutputSupport));
 
   if (predictorAdaptation) {

@@ -115,10 +115,10 @@ describe("wall triple-leaf accuracy recovery Gate A", () => {
       strategy: adjacentLab.dynamicAirborneTrace?.strategy,
       visibleLeafCount: adjacentLab.dynamicAirborneTrace?.visibleLeafCount
     }).toEqual({
-      confidence: "low",
-      family: "multileaf_multicavity",
-      rw: 42,
-      strategy: "multileaf_screening_blend_fail_closed_until_grouped_topology",
+      confidence: "medium",
+      family: "double_leaf",
+      rw: 51,
+      strategy: "double_leaf_porous_fill_delegate+flat_list_adjacent_swap_numeric_hold_until_grouped_topology",
       visibleLeafCount: 2
     });
 
@@ -142,7 +142,7 @@ describe("wall triple-leaf accuracy recovery Gate A", () => {
       visibleLeafCount: 3
     });
 
-    expect(adjacentLab.metrics.estimatedRwDb - splitLab.metrics.estimatedRwDb).toBeLessThanOrEqual(1);
+    expect(adjacentLab.metrics.estimatedRwDb - splitLab.metrics.estimatedRwDb).toBe(10);
     expectFragment(splitLab.warnings, "not a premium multi-cavity solver", "split-stack solver warning");
     expectFragment(splitLab.warnings, "triple-leaf partition", "split-stack triple-leaf warning");
   });

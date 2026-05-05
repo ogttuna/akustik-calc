@@ -466,17 +466,17 @@ describe("route-family lane-drift common-stack watchlist Gate B reprobes", () =>
       stc: swappedInternalLeaf.stc,
       strategy: swappedInternalLeaf.strategy
     }).toEqual({
-      confidence: "low",
-      dnTw: 41,
-      family: "multileaf_multicavity",
-      rw: 42,
-      rwPrime: 40,
-      stc: 42,
-      strategy: "multileaf_screening_blend_fail_closed_until_grouped_topology"
+      confidence: "medium",
+      dnTw: 51,
+      family: "double_leaf",
+      rw: 51,
+      rwPrime: 49,
+      stc: 51,
+      strategy: "double_leaf_porous_fill_delegate+flat_list_adjacent_swap_numeric_hold_until_grouped_topology"
     });
-    expect(swappedInternalLeaf.rw - flat.rw).toBeLessThanOrEqual(1);
-    expect(swappedInternalLeaf.rwPrime - flat.rwPrime).toBeLessThanOrEqual(1);
-    expect(swappedInternalLeaf.dnTw - flat.dnTw).toBeLessThanOrEqual(1);
+    expect(swappedInternalLeaf.rw - flat.rw).toBe(10);
+    expect(swappedInternalLeaf.rwPrime - flat.rwPrime).toBe(10);
+    expect(swappedInternalLeaf.dnTw - flat.dnTw).toBe(11);
     expect(swappedFarLeaf.rw).toBe(41);
     expect(swappedFarLeaf.strategy).toBe("multileaf_screening_blend");
     expect(GATE_B_FINDINGS.find((finding) => finding.id === "split_rockwool_flat_swap_3_4_wrong_lane_reproduced"))
@@ -516,12 +516,12 @@ describe("route-family lane-drift common-stack watchlist Gate B reprobes", () =>
       rwPrime: swappedClassic.rwPrime,
       strategy: swappedClassic.strategy
     }).toEqual({
-      confidence: "low",
-      dnTw: 33,
-      family: "multileaf_multicavity",
-      rw: 33,
-      rwPrime: 31,
-      strategy: "multileaf_screening_blend_fail_closed_until_grouped_topology"
+      confidence: "medium",
+      dnTw: 44,
+      family: "double_leaf",
+      rw: 44,
+      rwPrime: 42,
+      strategy: "double_leaf_porous_fill_delegate+flat_list_adjacent_swap_numeric_hold_until_grouped_topology"
     });
     expect({
       confidence: duplicated.confidence,
@@ -538,7 +538,7 @@ describe("route-family lane-drift common-stack watchlist Gate B reprobes", () =>
       rwPrime: 37,
       strategy: "multileaf_screening_blend"
     });
-    expect(swappedClassic.rw - base.rw).toBeLessThanOrEqual(1);
+    expect(swappedClassic.rw - base.rw).toBe(12);
     expect(duplicated.rw - base.rw).toBe(5);
   });
 

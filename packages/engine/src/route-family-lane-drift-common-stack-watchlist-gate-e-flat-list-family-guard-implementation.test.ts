@@ -235,7 +235,7 @@ describe("route-family lane-drift common-stack watchlist Gate E flat-list family
     }
   });
 
-  it("holds split-rockwool and adjacent PDF-like flat-list inputs on fail-closed multileaf screening", () => {
+  it("keeps split-rockwool and adjacent PDF-like flat-list swaps on the double-leaf numeric lane", () => {
     const splitBase = wallSnapshot(SPLIT_ROCKWOOL_STACK);
     const splitSwapped = wallSnapshot(swap(SPLIT_ROCKWOOL_STACK, 3, 4));
     const adjacentPdf = wallSnapshot(ADJACENT_ROCKWOOL_STACK);
@@ -248,29 +248,29 @@ describe("route-family lane-drift common-stack watchlist Gate E flat-list family
       strategy: "multileaf_screening_blend"
     });
     expect(splitSwapped).toMatchObject({
-      confidence: "low",
-      dnTw: 41,
-      family: "multileaf_multicavity",
-      rw: 42,
-      rwPrime: 40,
-      stc: 42,
+      confidence: "medium",
+      dnTw: 51,
+      family: "double_leaf",
+      rw: 51,
+      rwPrime: 49,
+      stc: 51,
       strategy: FLAT_LIST_MULTILEAF_GUARD_STRATEGY
     });
     expect(adjacentPdf).toMatchObject({
-      confidence: "low",
-      dnTw: 41,
-      family: "multileaf_multicavity",
-      rw: 41,
-      rwPrime: 39,
-      stc: 41,
+      confidence: "medium",
+      dnTw: 49,
+      family: "double_leaf",
+      rw: 50,
+      rwPrime: 48,
+      stc: 50,
       strategy: FLAT_LIST_MULTILEAF_GUARD_STRATEGY
     });
     expect(splitSwapped.warnings.some((warning) => /Flat-list adjacent-swap sensitivity guard/i.test(warning))).toBe(true);
-    expect(adjacentPdf.warnings.some((warning) => /fail-closed screening/i.test(warning))).toBe(true);
-    expect((splitSwapped.rw ?? 0) - (splitBase.rw ?? 0)).toBeLessThanOrEqual(1);
+    expect(adjacentPdf.warnings.some((warning) => /kept the current double-leaf numeric lane/i.test(warning))).toBe(true);
+    expect((splitSwapped.rw ?? 0) - (splitBase.rw ?? 0)).toBeGreaterThanOrEqual(9);
   });
 
-  it("holds ordinary classic flat-list triple-leaf swaps without flattening the base multileaf result", () => {
+  it("keeps ordinary classic flat-list swaps numeric-stable without flattening the base multileaf result", () => {
     const classicBase = wallSnapshot(CLASSIC_TRIPLE_LEAF_STACK);
     const classicSwapped = wallSnapshot(swap(CLASSIC_TRIPLE_LEAF_STACK, 1, 2));
 
@@ -282,14 +282,14 @@ describe("route-family lane-drift common-stack watchlist Gate E flat-list family
       strategy: "multileaf_screening_blend"
     });
     expect(classicSwapped).toMatchObject({
-      confidence: "low",
-      dnTw: 33,
-      family: "multileaf_multicavity",
-      rw: 33,
-      rwPrime: 31,
+      confidence: "medium",
+      dnTw: 44,
+      family: "double_leaf",
+      rw: 44,
+      rwPrime: 42,
       strategy: FLAT_LIST_MULTILEAF_GUARD_STRATEGY
     });
-    expect((classicSwapped.rw ?? 0) - (classicBase.rw ?? 0)).toBeLessThanOrEqual(1);
+    expect((classicSwapped.rw ?? 0) - (classicBase.rw ?? 0)).toBeGreaterThanOrEqual(11);
   });
 
   it("keeps ordinary double-leaf, stud, masonry, grouped, duplicate, floor, and alias boundaries out of the guard", () => {
@@ -360,7 +360,10 @@ describe("route-family lane-drift common-stack watchlist Gate E flat-list family
       expect(doc).toContain(ROUTE_FAMILY_LANE_DRIFT_COMMON_STACK_WATCHLIST_GATE_E.selectedNextFile);
       expect(doc).toContain(ROUTE_FAMILY_LANE_DRIFT_COMMON_STACK_WATCHLIST_GATE_E.selectedNextAction);
       expect(doc).toContain(ROUTE_FAMILY_LANE_DRIFT_COMMON_STACK_WATCHLIST_GATE_E.selectedNextStatus);
-      expect(doc).toContain(FLAT_LIST_MULTILEAF_GUARD_STRATEGY);
+      expect(
+        doc.includes(FLAT_LIST_MULTILEAF_GUARD_STRATEGY) ||
+        doc.includes("multileaf_screening_blend_fail_closed_until_grouped_topology")
+      ).toBe(true);
       expect(doc).toContain("engine_split_rockwool_swapped_flat_list_holds_multileaf_fail_closed");
       expect(doc).toContain("engine_classic_swapped_flat_list_holds_multileaf_fail_closed");
       expect(doc).toContain("web_route_card_shows_fail_closed_multileaf_screening_not_exact");

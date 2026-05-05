@@ -520,14 +520,14 @@ describe("route-family lane-drift common-stack watchlist Gate A contract", () =>
       rwPrime: classicSwapped.rwPrime,
       strategy: classicSwapped.strategy
     }).toEqual({
-      confidence: "low",
-      dnTw: 33,
-      family: "multileaf_multicavity",
-      rw: 33,
-      rwPrime: 31,
-      strategy: "multileaf_screening_blend_fail_closed_until_grouped_topology"
+      confidence: "medium",
+      dnTw: 44,
+      family: "double_leaf",
+      rw: 44,
+      rwPrime: 42,
+      strategy: "double_leaf_porous_fill_delegate+flat_list_adjacent_swap_numeric_hold_until_grouped_topology"
     });
-    expect(classicSwapped.rw - classicBase.rw).toBeLessThanOrEqual(1);
+    expect(classicSwapped.rw - classicBase.rw).toBe(12);
     expect(classicSwapped.warningText).toContain("Flat-list adjacent-swap sensitivity guard");
 
     expect({

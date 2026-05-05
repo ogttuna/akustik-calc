@@ -428,16 +428,19 @@ describe("company-internal frequent-combination lane snapshot guard Gate B visib
     });
     expect(grouped.topologyGap?.detail).toContain("source-calibrated triple-leaf solver");
     expect(rwCard).toMatchObject({
-      postureLabel: "Airborne screening lane",
+      postureLabel: "Rockwool screening-only",
       status: "live",
       value: "41 dB"
     });
+    expect(rwCard.detail).toContain("not exact");
+    expect(rwCard.detail).toContain("not source-validated");
+    expect(rwCard.detail).toContain("not design-grade");
     expect(rwCard.postureDetail).toContain("No exact wall source row is active");
     expect(grouped.warnings.join("\n")).toMatch(/Grouped triple-leaf topology is present/i);
     expectNoExactSourceWarning(grouped.warnings, "grouped rockwool");
   });
 
-  it("keeps flat-list rockwool swaps visibly fail-closed rather than exact or double-leaf", () => {
+  it("keeps flat-list rockwool swaps on the double-leaf numeric lane with a topology warning", () => {
     const swapped = evaluate({
       airborneContext: WALL_LAB_CONTEXT,
       id: "company-gate-b-flat-swap-rockwool",
@@ -448,22 +451,24 @@ describe("company-internal frequent-combination lane snapshot guard Gate B visib
     const rwCard = outputCard("Rw", swapped);
 
     expect(swapped.result.dynamicAirborneTrace).toMatchObject({
-      confidenceClass: "low",
-      detectedFamily: "multileaf_multicavity",
-      strategy: "multileaf_screening_blend_fail_closed_until_grouped_topology"
+      confidenceClass: "medium",
+      detectedFamily: "double_leaf",
+      strategy: "double_leaf_porous_fill_delegate+flat_list_adjacent_swap_numeric_hold_until_grouped_topology"
     });
     expect(swapped.branch).toMatchObject({
-      tone: "warning",
-      value: "Multi-Leaf / Multi-Cavity"
+      tone: "neutral",
+      value: "Double Leaf"
     });
-    expect(swapped.branch.detail).toContain("multileaf screening blend fail closed until grouped topology");
+    expect(swapped.branch.detail).toContain("flat list adjacent swap numeric hold until grouped topology");
     expect(rwCard).toMatchObject({
       postureLabel: "Airborne screening lane",
       status: "live",
-      value: "42 dB"
+      value: "51 dB"
     });
+    expect(rwCard.detail).toContain("active airborne calculator");
     expect(rwCard.postureDetail).toContain("No exact wall source row is active");
     expect(swapped.warnings.join("\n")).toMatch(/Flat-list adjacent-swap sensitivity guard/i);
+    expect(swapped.warnings.join("\n")).toMatch(/kept the current double-leaf numeric lane/i);
     expectNoExactSourceWarning(swapped.warnings, "flat-list rockwool swap");
   });
 

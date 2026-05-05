@@ -7,6 +7,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { getDynamicCalcBranchSummary } from "./dynamic-calc-branch";
 import { getGuidedTopologyGap } from "./guided-topology-gap";
+import { ROCKWOOL_SPLIT_TRIPLE_LEAF_OUTPUT_WITHHELD_GUARD } from "./rockwool-triple-leaf-screening-policy-copy";
 import { evaluateScenario } from "./scenario-analysis";
 import { buildOutputCard } from "./simple-workbench-output-model";
 import {
@@ -204,7 +205,13 @@ describe("wall triple-leaf grouped topology route-card Gate I", () => {
 
     expect(snapshot.result.dynamicAirborneTrace?.strategy).toBe("multileaf_screening_blend");
     expect(snapshot.result.dynamicAirborneTrace?.confidenceClass).toBe("low");
-    expect(snapshot.rwCard).toMatchObject({ status: "live", value: "41 dB" });
+    expect(snapshot.result.supportedTargetOutputs).toEqual([]);
+    expect(snapshot.result.unsupportedTargetOutputs).toEqual([...WALL_OUTPUTS]);
+    expect(snapshot.rwCard).toMatchObject({
+      detail: ROCKWOOL_SPLIT_TRIPLE_LEAF_OUTPUT_WITHHELD_GUARD,
+      status: "unsupported",
+      value: "Not ready"
+    });
     expect(snapshot.topologyGap).toMatchObject({
       value: "Grouped topology missing"
     });

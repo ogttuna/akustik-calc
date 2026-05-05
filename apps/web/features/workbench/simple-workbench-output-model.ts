@@ -8,6 +8,7 @@ import {
 import { formatDecimal } from "@/lib/format";
 
 import { FIELD_AIRBORNE_OUTPUTS, getFieldAirborneBlockingRequirement, getFieldAirborneLiveDetail, getFieldAirbornePendingDetail } from "./field-airborne-output";
+import { FIELD_OUTPUT_OWNER_POLICY_GUARD } from "./field-output-owner-policy-copy";
 import { IMPACT_ONLY_LOW_CONFIDENCE_CTR_DETAIL, IMPACT_ONLY_LOW_CONFIDENCE_LNW_DETAIL, IMPACT_ONLY_LOW_CONFIDENCE_RW_DETAIL, IMPACT_ONLY_LOW_CONFIDENCE_UNAVAILABLE_DETAIL, isImpactOnlyLowConfidenceFloorLane, isImpactOnlyLowConfidenceUnavailableOutput } from "./impact-only-low-confidence-floor-lane";
 import type { StudyMode } from "./preset-definitions";
 import {
@@ -19,6 +20,10 @@ import {
 import { FIELD_IMPACT_OUTPUTS } from "./simple-workbench-constants";
 import { buildSimpleWorkbenchOutputPosture } from "./simple-workbench-output-posture";
 import { formatSignedDb } from "./simple-workbench-utils";
+import {
+  getRockwoolSplitTripleLeafWithheldOutputDetail,
+  getRockwoolTripleLeafScreeningPolicyCopy
+} from "./rockwool-triple-leaf-screening-policy-copy";
 import { REQUESTED_OUTPUT_LABELS, REQUESTED_OUTPUT_SUPPORT_NOTES } from "./workbench-data";
 
 export type BaseOutputCardModel = {
@@ -90,6 +95,11 @@ function buildExplicitUnsupportedOutputDetail(input: {
   studyMode: StudyMode;
 }): string {
   const { output, result, studyMode } = input;
+  const rockwoolSplitWithheldDetail = getRockwoolSplitTripleLeafWithheldOutputDetail(result, output);
+
+  if (rockwoolSplitWithheldDetail && studyMode === "wall") {
+    return rockwoolSplitWithheldDetail;
+  }
 
   if (FIELD_IMPACT_OUTPUTS.has(output) && studyMode === "floor") {
     if (output === "LnT,A") {
@@ -203,6 +213,7 @@ export function buildOutputCard(input: {
   const isImpactOnlyLowConfidenceLane = isImpactOnlyLowConfidenceFloorLane(result);
   const isReinforcedConcreteLowConfidenceLane =
     isReinforcedConcreteLowConfidenceFloorLane(result);
+  const rockwoolTripleLeafScreeningPolicy = getRockwoolTripleLeafScreeningPolicyCopy(result);
 
   if (isExplicitlyUnsupportedOutput(result, output)) {
     const missingInput = isExplicitUnsupportedMissingInput({
@@ -238,7 +249,10 @@ export function buildOutputCard(input: {
 
       if (typeof result?.metrics.estimatedRwDb === "number") {
         return {
-          detail: isImpactOnlyLowConfidenceLane ? IMPACT_ONLY_LOW_CONFIDENCE_RW_DETAIL : "Weighted airborne element rating from the active airborne calculator.",
+          detail: isImpactOnlyLowConfidenceLane
+            ? IMPACT_ONLY_LOW_CONFIDENCE_RW_DETAIL
+            : rockwoolTripleLeafScreeningPolicy?.outputDetail ??
+              "Weighted airborne element rating from the active airborne calculator.",
           label: "Rw",
           output,
           status: "live",
@@ -406,7 +420,7 @@ export function buildOutputCard(input: {
       if (typeof result?.impact?.LPrimeNW === "number") {
         return {
           detail:
-            "Field-side impact value after K or direct-path carry-over; this is a field-impact continuation, not an independent exact field measurement.",
+            `Field-side impact value after K or direct-path carry-over; this is a field-impact continuation, not an independent exact field measurement. ${FIELD_OUTPUT_OWNER_POLICY_GUARD}`,
           label: "L'n,w",
           output,
           status: "live",
@@ -417,7 +431,7 @@ export function buildOutputCard(input: {
       if (typeof result?.lowerBoundImpact?.LPrimeNWUpperBound === "number") {
         return {
           detail:
-            "Conservative field-side impact upper bound carried from the same bound-only lane; this is not an independent exact field measurement.",
+            `Conservative field-side impact upper bound carried from the same bound-only lane; this is not an independent exact field measurement. ${FIELD_OUTPUT_OWNER_POLICY_GUARD}`,
           label: "L'n,w",
           output,
           status: "bound",
@@ -494,7 +508,7 @@ export function buildOutputCard(input: {
       if (typeof result?.impact?.LPrimeNTw === "number") {
         return {
           detail:
-            "Standardized field impact result with receiving-room normalization; this is a field-impact continuation, not an independent exact field measurement.",
+            `Standardized field impact result with receiving-room normalization; this is a field-impact continuation, not an independent exact field measurement. ${FIELD_OUTPUT_OWNER_POLICY_GUARD}`,
           label: "L'nT,w",
           output,
           status: "live",
@@ -505,7 +519,7 @@ export function buildOutputCard(input: {
       if (typeof result?.lowerBoundImpact?.LPrimeNTwUpperBound === "number") {
         return {
           detail:
-            "Conservative standardized field impact upper bound carried from the same bound-only lane; this is not an independent exact field measurement.",
+            `Conservative standardized field impact upper bound carried from the same bound-only lane; this is not an independent exact field measurement. ${FIELD_OUTPUT_OWNER_POLICY_GUARD}`,
           label: "L'nT,w",
           output,
           status: "bound",
@@ -517,7 +531,7 @@ export function buildOutputCard(input: {
       if (typeof result?.impact?.LPrimeNT50 === "number") {
         return {
           detail:
-            "Standardized field impact value with the extended low-frequency companion; this is a field-impact continuation, not an independent exact field measurement.",
+            `Standardized field impact value with the extended low-frequency companion; this is a field-impact continuation, not an independent exact field measurement. ${FIELD_OUTPUT_OWNER_POLICY_GUARD}`,
           label: "L'nT,50",
           output,
           status: "live",
@@ -527,7 +541,8 @@ export function buildOutputCard(input: {
 
       if (typeof result?.lowerBoundImpact?.LPrimeNT50UpperBound === "number") {
         return {
-          detail: "Conservative L'nT,50 upper bound; this is not an independent exact field measurement.",
+          detail:
+            `Conservative L'nT,50 upper bound; this is not an independent exact field measurement. ${FIELD_OUTPUT_OWNER_POLICY_GUARD}`,
           label: "L'nT,50",
           output,
           status: "bound",
