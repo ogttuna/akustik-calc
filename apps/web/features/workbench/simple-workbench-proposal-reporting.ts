@@ -39,6 +39,9 @@ type AxisBand = {
   start: number;
 };
 
+const FLOOR_SVG_BASE_HEIGHT = 380;
+const WALL_SVG_BASE_HEIGHT = 326;
+
 export type ProposalConstructionAnnotationLayout = {
   compact: boolean;
   labelLineLimit: number;
@@ -175,6 +178,45 @@ function distributeAxisPositions(
   }
 
   return positions.map((position) => Math.min(maximum, Math.max(minimum, position)));
+}
+
+export function resolveConstructionAnnotationRowPositions(input: {
+  layout: ProposalConstructionAnnotationLayout;
+  targets: readonly number[];
+}): number[] {
+  if (input.targets.length === 0) {
+    return [];
+  }
+
+  if (!input.layout.compact || input.targets.length === 1) {
+    return distributeAxisPositions(input.targets, input.layout.minGap, input.layout.rowMin, input.layout.rowMax);
+  }
+
+  const span = Math.max(0, input.layout.rowMax - input.layout.rowMin);
+
+  return input.targets.map((_, index) => input.layout.rowMin + (span * index) / Math.max(1, input.targets.length - 1));
+}
+
+export function resolveConstructionSvgHeight(input: {
+  bandCount: number;
+  orientation: "floor" | "wall";
+}): number {
+  if (input.orientation === "floor") {
+    return FLOOR_SVG_BASE_HEIGHT + Math.max(0, input.bandCount - 8) * 28;
+  }
+
+  return WALL_SVG_BASE_HEIGHT + Math.max(0, input.bandCount - 7) * 24;
+}
+
+export function resolveConstructionLayerRunLength(input: {
+  bandCount: number;
+  orientation: "floor" | "wall";
+}): number {
+  if (input.orientation === "floor") {
+    return 236 + Math.max(0, input.bandCount - 8) * 22;
+  }
+
+  return 274 + Math.max(0, input.bandCount - 7) * 10;
 }
 
 function buildElbowLeader(start: Point, end: Point, elbowX: number): string {
@@ -482,14 +524,25 @@ function buildFloorSvg(section: SimpleWorkbenchProposalConstructionSection): str
     section.bands.map((band) => band.thicknessMm),
     "proposalFloor"
   );
+  const width = 860;
+  const height = resolveConstructionSvgHeight({
+    bandCount: section.bands.length,
+    orientation: "floor"
+  });
+  const targetRunLength = resolveConstructionLayerRunLength({
+    bandCount: section.bands.length,
+    orientation: "floor"
+  });
   const rawTotalHeight = rawAllocations.reduce((sum, allocation) => sum + allocation.sizePx, 0);
-  const scale = rawTotalHeight > 0 ? 236 / rawTotalHeight : 1;
+  const scale = rawTotalHeight > 0 ? targetRunLength / rawTotalHeight : 1;
   const allocations = rawAllocations.map((allocation) => ({
     ...allocation,
     sizePx: Math.round(allocation.sizePx * scale * 10) / 10
   }));
-  const width = 860;
-  const height = 380;
+  const outerPanelY = 34;
+  const outerPanelHeight = height - 74;
+  const innerPanelY = 48;
+  const innerPanelHeight = height - 102;
   const sectionX = 148;
   const sectionY = 76;
   const sectionWidth = 214;
@@ -505,7 +558,10 @@ function buildFloorSvg(section: SimpleWorkbenchProposalConstructionSection): str
     const offset = allocations.slice(0, index).reduce((sum, entry) => sum + entry.sizePx, 0);
     return sectionY + offset + allocations[index]!.sizePx / 2;
   });
-  const rowYs = distributeAxisPositions(rowTargets, annotationLayout.minGap, annotationLayout.rowMin, annotationLayout.rowMax);
+  const rowYs = resolveConstructionAnnotationRowPositions({
+    layout: annotationLayout,
+    targets: rowTargets
+  });
 
   let defs = createArrowHead("construction-arrow-floor", "#223241");
   defs += createSectionSheenDefs("construction-floor");
@@ -567,12 +623,12 @@ function buildFloorSvg(section: SimpleWorkbenchProposalConstructionSection): str
   const totalCenterY = sectionY + totalHeight / 2;
 
   return `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" style="display:block;width:100%;height:auto;max-height:340px;">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" style="display:block;width:100%;height:auto;max-height:${height}px;">
       <defs>${defs}</defs>
-      <rect x="48" y="34" width="760" height="306" rx="26" fill="#faf7f1" stroke="#e4e8eb" stroke-width="1.2"></rect>
-      <rect x="62" y="48" width="732" height="278" rx="20" fill="#fffdfa" stroke="#ece7de" stroke-width="1"></rect>
+      <rect x="48" y="${outerPanelY}" width="760" height="${outerPanelHeight}" rx="26" fill="#faf7f1" stroke="#e4e8eb" stroke-width="1.2"></rect>
+      <rect x="62" y="${innerPanelY}" width="732" height="${innerPanelHeight}" rx="20" fill="#fffdfa" stroke="#ece7de" stroke-width="1"></rect>
       <rect x="${sectionX - 2}" y="${sectionY + 8}" width="${sectionWidth + 22}" height="${totalHeight + 18}" rx="18" fill="rgba(79,64,48,0.08)"></rect>
-      ${Array.from({ length: 6 })
+      ${Array.from({ length: Math.max(6, Math.floor((innerPanelHeight - 38) / 40)) })
         .map(
           (_, index) =>
             `<line x1="86" y1="${76 + index * 40}" x2="514" y2="${76 + index * 40}" stroke="rgba(142,128,112,0.12)" stroke-dasharray="3 7" stroke-width="1"></line>`
@@ -600,14 +656,25 @@ function buildWallSvg(section: SimpleWorkbenchProposalConstructionSection): stri
     section.bands.map((band) => band.thicknessMm),
     "proposalWall"
   );
+  const width = 860;
+  const height = resolveConstructionSvgHeight({
+    bandCount: section.bands.length,
+    orientation: "wall"
+  });
+  const targetRunLength = resolveConstructionLayerRunLength({
+    bandCount: section.bands.length,
+    orientation: "wall"
+  });
   const rawTotalWidth = rawAllocations.reduce((sum, allocation) => sum + allocation.sizePx, 0);
-  const scale = rawTotalWidth > 0 ? 274 / rawTotalWidth : 1;
+  const scale = rawTotalWidth > 0 ? targetRunLength / rawTotalWidth : 1;
   const allocations = rawAllocations.map((allocation) => ({
     ...allocation,
     sizePx: Math.round(allocation.sizePx * scale * 10) / 10
   }));
-  const width = 860;
-  const height = 326;
+  const outerPanelY = 30;
+  const outerPanelHeight = height - 50;
+  const innerPanelY = 44;
+  const innerPanelHeight = height - 80;
   const sectionX = 104;
   const sectionY = 108;
   const sectionHeight = 146;
@@ -620,7 +687,10 @@ function buildWallSvg(section: SimpleWorkbenchProposalConstructionSection): stri
     orientation: "wall"
   });
   const rowTargets = allocations.map((_, index) => 78 + index * 42);
-  const rowYs = distributeAxisPositions(rowTargets, annotationLayout.minGap, annotationLayout.rowMin, annotationLayout.rowMax);
+  const rowYs = resolveConstructionAnnotationRowPositions({
+    layout: annotationLayout,
+    targets: rowTargets
+  });
 
   let defs = createArrowHead("construction-arrow-wall", "#223241");
   defs += createSectionSheenDefs("construction-wall");
@@ -681,15 +751,15 @@ function buildWallSvg(section: SimpleWorkbenchProposalConstructionSection): stri
   const totalDimY = sectionY + sectionHeight + 48;
 
   return `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" style="display:block;width:100%;height:auto;max-height:300px;">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" style="display:block;width:100%;height:auto;max-height:${height}px;">
       <defs>${defs}</defs>
-      <rect x="48" y="30" width="760" height="262" rx="26" fill="#faf7f1" stroke="#e4e8eb" stroke-width="1.2"></rect>
-      <rect x="62" y="44" width="732" height="234" rx="20" fill="#fffdfa" stroke="#ece7de" stroke-width="1"></rect>
+      <rect x="48" y="${outerPanelY}" width="760" height="${outerPanelHeight}" rx="26" fill="#faf7f1" stroke="#e4e8eb" stroke-width="1.2"></rect>
+      <rect x="62" y="${innerPanelY}" width="732" height="${innerPanelHeight}" rx="20" fill="#fffdfa" stroke="#ece7de" stroke-width="1"></rect>
       <rect x="${sectionX + 10}" y="${sectionY + 8}" width="${totalWidth + 18}" height="${sectionHeight + 16}" rx="18" fill="rgba(79,64,48,0.07)"></rect>
       ${Array.from({ length: 7 })
         .map(
           (_, index) =>
-            `<line x1="${72 + index * 64}" y1="56" x2="${72 + index * 64}" y2="278" stroke="rgba(142,128,112,0.12)" stroke-dasharray="3 7" stroke-width="1"></line>`
+            `<line x1="${72 + index * 64}" y1="${innerPanelY + 12}" x2="${72 + index * 64}" y2="${innerPanelY + innerPanelHeight}" stroke="rgba(142,128,112,0.12)" stroke-dasharray="3 7" stroke-width="1"></line>`
         )
         .join("")}
       <text x="${sectionX}" y="${sectionY - 54}" font-family="Arial, Helvetica Neue, sans-serif" font-size="10.8" font-weight="700" letter-spacing="1.8" fill="#5a6a79">${escapeMarkup(section.anchorFromLabel.toUpperCase())}</text>

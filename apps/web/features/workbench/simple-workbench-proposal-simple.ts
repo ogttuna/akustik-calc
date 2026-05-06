@@ -7,10 +7,7 @@ import {
 import { getSimpleWorkbenchProposalBranding } from "./simple-workbench-proposal-branding";
 import {
   buildSimpleWorkbenchProposalConstructionRender,
-  SIMPLE_WORKBENCH_REPORT_PRODUCT_NAME,
-  SIMPLE_WORKBENCH_REPORT_SERIES
 } from "./simple-workbench-proposal-reporting";
-import { buildSimpleWorkbenchReportMarkSvgMarkup } from "./simple-workbench-report-mark";
 
 type SimplePdfStandardReference = {
   code: string;
@@ -27,10 +24,10 @@ type SimpleCurveReadout = {
 };
 
 const MAX_SIMPLE_CITATIONS = 4;
-const MAX_SIMPLE_LAYER_ROWS = 8;
+const MAX_SIMPLE_LAYER_ROWS = 16;
 const MAX_SIMPLE_ASSUMPTIONS = 5;
-const MAX_SIMPLE_WARNINGS = 5;
 const MAX_SIMPLE_METRICS = 6;
+const SIMPLE_PROPOSAL_FORM_LABEL = "Acoustic proposal";
 
 const SIMPLE_CURVE_BANDS = [
   {
@@ -68,6 +65,36 @@ function escapeHtml(value: string): string {
     .replaceAll("'", "&#39;");
 }
 
+const CLIENT_OFFER_HIDDEN_TEXT_PATTERNS = [
+  /\bdynamic topology\b/i,
+  /\bguardrails?\b/i,
+  /\binternal\b/i,
+  /\boperator deck\b/i,
+  /\bshould not print\b/i,
+  /\bsolver\b/i
+] as const;
+
+function cleanClientProposalText(
+  value: string,
+  fallback = "Calculation basis is limited to the listed build-up and proposal scope."
+): string {
+  const trimmedValue = value.trim();
+
+  if (CLIENT_OFFER_HIDDEN_TEXT_PATTERNS.some((pattern) => pattern.test(trimmedValue))) {
+    return fallback;
+  }
+
+  return trimmedValue
+    .replace(/\bdynamic topology\b/giu, "calculation setup")
+    .replace(/\btopology\b/giu, "assembly")
+    .replace(/\bsolver\b/giu, "calculator")
+    .replace(/\boperator deck\b/giu, "internal workspace")
+    .replace(/\bdynamic route\b/giu, "calculation basis")
+    .replace(/\bfield route\b/giu, "field calculation basis")
+    .replace(/\broute posture\b/giu, "calculation status")
+    .replace(/\bguardrails?\b/giu, "notes");
+}
+
 function slugMetricLabels(document: SimpleWorkbenchProposalDocument): string[] {
   return [
     ...(isPrimaryProposalMetricVisible(document) ? [{ label: document.primaryMetricLabel }] : []),
@@ -80,20 +107,6 @@ function slugMetricLabels(document: SimpleWorkbenchProposalDocument): string[] {
 
 function hasMetricLabel(labels: readonly string[], matchers: readonly RegExp[]): boolean {
   return labels.some((label) => matchers.some((matcher) => matcher.test(label)));
-}
-
-function formatSimpleCoverageStatus(status: SimpleWorkbenchProposalDocument["coverageItems"][number]["status"]): string {
-  switch (status) {
-    case "live":
-      return "Live now";
-    case "bound":
-      return "Conservative bound";
-    case "needs_input":
-      return "Needs input";
-    case "unsupported":
-    default:
-      return "Unsupported on lane";
-  }
 }
 
 function hasFieldAirborne(document: SimpleWorkbenchProposalDocument, labels: readonly string[]): boolean {
@@ -182,7 +195,7 @@ function inferStandardReferences(document: SimpleWorkbenchProposalDocument): Sim
     standards.push({
       code: "ISO 16283-1",
       detail: "Field measurement of airborne sound insulation",
-      label: "Field airborne route"
+      label: "Field airborne measurement"
     });
   }
 
@@ -190,7 +203,7 @@ function inferStandardReferences(document: SimpleWorkbenchProposalDocument): Sim
     standards.push({
       code: "ISO 16283-2",
       detail: "Field measurement of impact sound insulation",
-      label: "Field impact route"
+      label: "Field impact measurement"
     });
   }
 
@@ -204,15 +217,15 @@ function inferStandardReferences(document: SimpleWorkbenchProposalDocument): Sim
     standards.push({
       code: document.studyModeLabel.trim().toLowerCase().includes("wall") ? "ISO 12354-1" : "ISO 12354-2",
       detail: "Building acoustics prediction model",
-      label: "Prediction route"
+      label: "Prediction method"
     });
   }
 
   if (standards.length === 0) {
     standards.push({
       code: "Standards",
-      detail: "Explicit route disclosure",
-      label: "Explicit route disclosure"
+      detail: "Calculation basis stated on the proposal",
+      label: "Calculation basis"
     });
   }
 
@@ -510,20 +523,12 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
     reportProfile: document.reportProfile,
     reportProfileLabel: document.reportProfileLabel
   });
-  const reportMarkSvg = buildSimpleWorkbenchReportMarkSvgMarkup({
-    accent: branding.accent,
-    accentStrong: branding.accentStrong,
-    ink: "#1c2f40",
-    panel: "#fffdf9",
-    variant: "symbol"
-  });
   const standardReferences = inferStandardReferences(document);
   const visibleMetrics = getVisibleProposalMetrics(document).slice(0, MAX_SIMPLE_METRICS);
   const visibleLayers = document.layers.slice(0, MAX_SIMPLE_LAYER_ROWS);
   const hiddenLayerCount = Math.max(0, document.layers.length - visibleLayers.length);
   const visibleCitations = document.citations.slice(0, MAX_SIMPLE_CITATIONS);
   const visibleAssumptions = document.assumptionItems.slice(0, MAX_SIMPLE_ASSUMPTIONS);
-  const visibleWarnings = document.warnings.slice(0, MAX_SIMPLE_WARNINGS);
 
   const metricRows =
     visibleMetrics.length > 0
@@ -533,35 +538,12 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
               <tr>
                 <td>${escapeHtml(metric.label)}</td>
                 <td><strong>${escapeHtml(metric.value)}</strong></td>
-                <td>${escapeHtml(metric.detail)}</td>
+                <td>${escapeHtml(cleanClientProposalText(metric.detail))}</td>
               </tr>
             `
           )
           .join("")
       : `<tr><td colspan="3" style="color:var(--ink-faint)">—</td></tr>`;
-
-  const coverageRows =
-    document.coverageItems.length > 0
-      ? document.coverageItems
-          .map(
-            (item) => `
-              <tr>
-                <td>${escapeHtml(item.label)}</td>
-                <td>${escapeHtml(formatSimpleCoverageStatus(item.status))}</td>
-                <td><strong>${escapeHtml(item.postureLabel)}</strong><br />${escapeHtml(item.postureDetail)}</td>
-                <td>
-                  <strong>${escapeHtml(item.value)}</strong><br />
-                  ${escapeHtml(item.detail)}${item.nextStep ? `<br />Next action: ${escapeHtml(item.nextStep)}` : ""}
-                </td>
-              </tr>
-            `
-          )
-          .join("")
-      : `
-              <tr>
-                <td colspan="4" style="color:var(--ink-faint)">No output coverage register was packaged with this issue.</td>
-              </tr>
-            `;
 
   const layerRows =
     visibleLayers.length > 0
@@ -580,7 +562,7 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
         hiddenLayerCount > 0
           ? `
               <tr class="layer-overflow-note">
-                <td colspan="4">${hiddenLayerCount} additional layer${hiddenLayerCount === 1 ? "" : "s"} omitted from this short-form layer table; the construction section still uses all ${document.layers.length} solver rows.</td>
+                <td colspan="4">${hiddenLayerCount} additional layer${hiddenLayerCount === 1 ? "" : "s"} omitted from this compact table; the construction section still uses all ${document.layers.length} rows.</td>
               </tr>
             `
           : ""
@@ -595,19 +577,19 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
   });
   const methodSnapshotItems = [
     {
-      detail: document.dynamicBranchDetail,
-      label: "Dynamic route",
-      value: document.dynamicBranchLabel
+      detail: cleanClientProposalText(document.validationDetail),
+      label: "Calculation basis",
+      value: `${document.studyModeLabel} · ${document.contextLabel}`
     },
     {
-      detail: document.validationDetail,
-      label: "Validation posture",
-      value: document.validationLabel
+      detail: document.proposalValidityNote,
+      label: "Offer purpose",
+      value: document.proposalIssuePurpose
     },
     {
-      detail: `${document.studyModeLabel} · ${document.contextLabel} · ${document.reportProfileLabel}`,
-      label: "Study scope",
-      value: primaryMetricVisible ? document.primaryMetricLabel : "Headline metric hidden"
+      detail: document.proposalAttention,
+      label: "Prepared for",
+      value: document.proposalRecipient
     }
   ];
   const methodSnapshotHtml = methodSnapshotItems
@@ -615,7 +597,7 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
       (item) => `
         <li>
           <strong>${escapeHtml(item.label)}</strong>
-          <span>${escapeHtml(item.value)} · ${escapeHtml(item.detail)}</span>
+          <span>${escapeHtml(cleanClientProposalText(item.value))} · ${escapeHtml(cleanClientProposalText(item.detail))}</span>
         </li>
       `
     )
@@ -633,7 +615,7 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
 
   const INTERNAL_SOURCE_PATTERNS = [
     /anchor/i, /delegate/i, /screening seed/i, /topology/i, /solver/i,
-    /confidence/i, /sharp \(simple\)/i, /dynamic airborne/i, /operator/i
+    /confidence/i, /provenance/i, /sharp \(simple\)/i, /dynamic airborne/i, /operator/i
   ];
   const clientCitations = visibleCitations.filter(
     (citation) => !INTERNAL_SOURCE_PATTERNS.some((pattern) => pattern.test(citation.label) || pattern.test(citation.detail))
@@ -645,7 +627,7 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
             (citation) => `
               <li>
                 <strong>${escapeHtml(citation.label)}</strong>
-                <span>${escapeHtml(citation.detail)}</span>
+                <span>${escapeHtml(cleanClientProposalText(citation.detail))}</span>
                 ${citation.href ? `<span class="source-link">${escapeHtml(citation.href)}</span>` : ""}
               </li>
             `
@@ -656,17 +638,18 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
   const INTERNAL_ASSUMPTION_PATTERNS = [
     /evidence posture/i, /active route/i, /issue frame/i, /live warning/i,
     /anchor is active/i, /sharp \(simple\)/i, /dynamic topology/i,
-    /screening seed/i, /solver/i, /delegate/i, /operator deck/i
+    /screening seed/i, /solver/i, /delegate/i, /operator deck/i,
+    /audit/i, /citation coverage/i, /linked source line/i
   ];
   const clientAssumptions = visibleAssumptions.filter(
     (item) => !INTERNAL_ASSUMPTION_PATTERNS.some((pattern) => pattern.test(item.label) || pattern.test(item.detail))
   );
   const noteAndAssumptionItems = [
     ...(document.briefNote.trim().length > 0
-      ? [`<li><strong>Consultant note</strong><span>${escapeHtml(document.briefNote.trim())}</span></li>`]
+      ? [`<li><strong>Consultant note</strong><span>${escapeHtml(cleanClientProposalText(document.briefNote.trim()))}</span></li>`]
       : []),
     ...clientAssumptions.map(
-      (item) => `<li><strong>${escapeHtml(item.label)}</strong><span>${escapeHtml(item.detail)}</span></li>`
+      (item) => `<li><strong>${escapeHtml(item.label)}</strong><span>${escapeHtml(cleanClientProposalText(item.detail))}</span></li>`
     )
   ].join("");
 
@@ -674,10 +657,6 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
     clientCitations.length > 0 ||
     clientAssumptions.length > 0 ||
     document.briefNote.trim().length > 0;
-  const warningItems =
-    visibleWarnings.length > 0
-      ? visibleWarnings.map((warning) => `<li><strong>Issue note</strong><span>${escapeHtml(warning)}</span></li>`).join("")
-      : `<li><strong>Issue note</strong><span>No live warning flags are currently attached to the active route.</span></li>`;
   const hasSecondPage = true;
 
   return `<!DOCTYPE html>
@@ -745,16 +724,7 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
       }
 
       .report-kicker {
-        display: flex;
-        align-items: center;
-        gap: 4mm;
         margin-bottom: 3mm;
-      }
-
-      .report-kicker-mark {
-        width: 60px;
-        height: 60px;
-        flex: 0 0 auto;
       }
 
       .report-kicker-text {
@@ -1236,15 +1206,14 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
       <section class="page">
         <header class="report-header">
           <div class="report-kicker">
-            <div class="report-kicker-mark">${reportMarkSvg}</div>
             <div>
-              <div class="report-kicker-text">${escapeHtml(SIMPLE_WORKBENCH_REPORT_PRODUCT_NAME)}</div>
-              <div class="report-kicker-series">${escapeHtml(SIMPLE_WORKBENCH_REPORT_SERIES)}</div>
+              <div class="report-kicker-text">${escapeHtml(document.consultantCompany)}</div>
+              <div class="report-kicker-series">${escapeHtml(SIMPLE_PROPOSAL_FORM_LABEL)}</div>
             </div>
           </div>
           <div class="report-title-row">
             <div>
-              <h1>${escapeHtml(SIMPLE_WORKBENCH_REPORT_PRODUCT_NAME)}</h1>
+              <h1>Acoustic Proposal</h1>
               <p class="report-subject">${escapeHtml(document.projectName)} · ${escapeHtml(document.proposalSubject)}</p>
             </div>
             ${document.consultantLogoDataUrl ? `<img class="report-logo" src="${escapeHtml(document.consultantLogoDataUrl)}" alt="${escapeHtml(document.consultantCompany)} logo" />` : ""}
@@ -1290,14 +1259,14 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
               : ""
           }
           <article class="result-card">
-            <strong>Dynamic route</strong>
-            <span>${escapeHtml(document.dynamicBranchLabel)}</span>
-            <small>${escapeHtml(document.dynamicBranchDetail)}</small>
+            <strong>Proposal scope</strong>
+            <span>${escapeHtml(document.studyModeLabel)}</span>
+            <small>${escapeHtml(document.proposalIssuePurpose)}</small>
           </article>
           <article class="result-card">
-            <strong>Validation</strong>
+            <strong>Review status</strong>
             <span>${escapeHtml(document.validationLabel)}</span>
-            <small>${escapeHtml(document.validationDetail)}</small>
+            <small>${escapeHtml(cleanClientProposalText(document.validationDetail))}</small>
           </article>
           <article class="result-card">
             <strong>Reference basis</strong>
@@ -1377,7 +1346,7 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
 
         <footer class="page-footer">
           <span>${escapeHtml(document.consultantCompany)} · ${escapeHtml(document.reportProfileLabel)}</span>
-          <span>${escapeHtml(standardCodes || SIMPLE_WORKBENCH_REPORT_SERIES)} · ${escapeHtml(document.proposalReference)}</span>
+          <span>${escapeHtml(standardCodes || SIMPLE_PROPOSAL_FORM_LABEL)} · ${escapeHtml(document.proposalReference)}</span>
         </footer>
       </section>
 
@@ -1387,30 +1356,13 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
         <section class="page">
           <section class="page-grid">
             <section class="notes-panel">
-              <div class="table-title">Method basis</div>
+              <div class="table-title">Proposal basis</div>
               <ul>${methodSnapshotHtml}</ul>
             </section>
             <section class="notes-panel">
               <div class="table-title">Reference basis</div>
               <ul>${referenceBasisHtml}</ul>
             </section>
-          </section>
-
-          <section class="table-panel">
-            <div class="table-title">Output coverage register</div>
-            <table>
-              <thead>
-                <tr>
-                  <th>Metric</th>
-                  <th>Status</th>
-                  <th>Evidence class</th>
-                  <th>Current state</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${coverageRows}
-              </tbody>
-            </table>
           </section>
 
           ${document.layers.length > 0 ? `
@@ -1420,7 +1372,7 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
             <div class="construction-summary">
               <strong>Total thickness</strong>
               <span>${escapeHtml(construction.section.totalThicknessLabel)}</span>
-              <small>${escapeHtml(construction.section.anchorFromLabel)} to ${escapeHtml(construction.section.anchorToLabel)} in solver order.</small>
+              <small>${escapeHtml(construction.section.anchorFromLabel)} to ${escapeHtml(construction.section.anchorToLabel)}.</small>
             </div>
           </section>
 
@@ -1454,7 +1406,7 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
                   hiddenLayerCount > 0
                     ? `
                       <tr class="layer-overflow-note">
-                        <td colspan="5">${hiddenLayerCount} additional layer${hiddenLayerCount === 1 ? "" : "s"} omitted from this short-form detail table; the construction section still uses all ${document.layers.length} solver rows.</td>
+                        <td colspan="5">${hiddenLayerCount} additional layer${hiddenLayerCount === 1 ? "" : "s"} omitted from this compact detail table; the construction section still uses all ${document.layers.length} rows.</td>
                       </tr>
                     `
                     : ""
@@ -1468,31 +1420,26 @@ export function buildSimpleWorkbenchProposalSimpleHtml(document: SimpleWorkbench
           <section class="notes-grid">
             ${sourceItems ? `
             <section class="notes-panel">
-              <div class="table-title">Source notes</div>
+              <div class="table-title">References</div>
               <ul>${sourceItems}</ul>
             </section>
             ` : ""}
             ${noteAndAssumptionItems ? `
             <section class="notes-panel">
-              <div class="table-title">Consultant note and assumptions</div>
+              <div class="table-title">Proposal notes</div>
               <ul>${noteAndAssumptionItems}</ul>
             </section>
             ` : ""}
           </section>
           ` : ""}
 
-          <section class="notes-panel">
-            <div class="table-title">Warnings and issue guardrails</div>
-            <ul>${warningItems}</ul>
-          </section>
-
           <p class="footnote">
-            This short-form report summarises the current ${escapeHtml(SIMPLE_WORKBENCH_REPORT_PRODUCT_NAME)} reading. It states the active ISO basis, route posture, and visible build-up, but does not replace accredited laboratory or field measurements.
+            This offer form summarises the acoustic calculation for the listed build-up and project scope. It is not an accredited laboratory or field test certificate unless separately stated.
           </p>
 
           <footer class="page-footer">
             <span>${escapeHtml(document.issueBaseReference)}</span>
-            <span>${escapeHtml(document.consultantCompany)} · Short-form issue</span>
+            <span>${escapeHtml(document.consultantCompany)} · Acoustic proposal</span>
           </footer>
         </section>
       `

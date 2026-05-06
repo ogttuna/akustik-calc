@@ -75,34 +75,34 @@ export function getSimpleWorkbenchProposalBranding(
         accent: "#40627a",
         accentSoft: "#eaf0f5",
         accentStrong: "#294456",
-        coverKicker: `Commercial coordination memo for ${project}. Route choice, live outputs, and parked metrics remain explicit so the client team can read delivery risk without opening the operator desk.`,
-        coverLabel: "Developer memo",
-        coverTitle: "Acoustic Coordination Memo",
+        coverKicker: `Commercial acoustic proposal for ${project}. Key acoustic values, construction scope, assumptions, and validity are stated for client review.`,
+        coverLabel: "Developer proposal",
+        coverTitle: "Acoustic Proposal",
         heroFrom: "#f4f7fa",
         heroTo: "#e7eef3",
         line: "rgba(64, 98, 122, 0.22)",
         monogram,
-        profileDetail: "Commercial coordination issue with delivery-facing solver posture.",
+        profileDetail: "Commercial issue prepared for project coordination and client review.",
         templateLabel: input.reportProfileLabel,
         wordmarkPrimary: company,
-        wordmarkSecondary: customWordmarkLine || "Developer memo template"
+        wordmarkSecondary: customWordmarkLine || "Acoustic proposal"
       };
     case "lab_ready":
       return {
         accent: "#2f6453",
         accentSoft: "#e9f3ee",
         accentStrong: "#21493d",
-        coverKicker: `Laboratory-facing technical brief for ${project}. The issue sheet keeps the branch, validation posture, and citation trail visible so the package can move into measured verification without rewriting the calculator reading by hand.`,
-        coverLabel: "Lab-ready brief",
-        coverTitle: "Laboratory Submission Brief",
+        coverKicker: `Acoustic verification proposal for ${project}. Key values, construction details, reference standards, and notes are stated for technical review.`,
+        coverLabel: "Verification proposal",
+        coverTitle: "Acoustic Proposal",
         heroFrom: "#f5faf7",
         heroTo: "#e7f0ea",
         line: "rgba(47, 100, 83, 0.22)",
         monogram,
-        profileDetail: "Technical brief for lab or verification teams.",
+        profileDetail: "Technical issue prepared for verification review.",
         templateLabel: input.reportProfileLabel,
         wordmarkPrimary: company,
-        wordmarkSecondary: customWordmarkLine || "Lab-ready template"
+        wordmarkSecondary: customWordmarkLine || "Acoustic proposal"
       };
     case "consultant":
     default:
@@ -110,17 +110,17 @@ export function getSimpleWorkbenchProposalBranding(
         accent: "#935d42",
         accentSoft: "#f4e7dc",
         accentStrong: "#6f402a",
-        coverKicker: `Formal consultant issue sheet for ${project}. This package preserves route choice, evidence posture, and unsupported lanes instead of flattening them into sales copy.`,
-        coverLabel: "Consultant issue",
+        coverKicker: `Acoustic proposal for ${project}. Key values, construction details, assumptions, and validity are stated for client review.`,
+        coverLabel: "Consultant proposal",
         coverTitle: "Acoustic Proposal",
         heroFrom: "#fff7ef",
         heroTo: "#f7ecdf",
         line: "rgba(147, 93, 66, 0.2)",
         monogram,
-        profileDetail: "Client transmittal with signature-ready consultant framing.",
+        profileDetail: "Client issue prepared with consultant contact and revision control.",
         templateLabel: input.reportProfileLabel,
         wordmarkPrimary: company,
-        wordmarkSecondary: customWordmarkLine || "Consultant issue template"
+        wordmarkSecondary: customWordmarkLine || "Acoustic proposal"
       };
   }
 }

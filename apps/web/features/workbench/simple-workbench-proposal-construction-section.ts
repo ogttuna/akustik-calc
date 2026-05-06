@@ -148,7 +148,7 @@ export function buildSimpleWorkbenchProposalConstructionSection(
     anchorFromLabel,
     anchorToLabel,
     bands,
-    headline: layers.length > 0 ? `${layers.length} visible row${layers.length === 1 ? "" : "s"} in solver order.` : "No visible rows are packaged yet.",
+    headline: layers.length > 0 ? `${layers.length} visible row${layers.length === 1 ? "" : "s"} in layer order.` : "No visible rows are packaged yet.",
     isWall,
     totalThicknessLabel:
       totalThicknessOverrideLabel && totalThicknessOverrideLabel.length > 0

@@ -64,17 +64,20 @@ const DOCUMENT: SimpleWorkbenchProposalDocument = {
 };
 
 describe("simple workbench proposal preview html helper", () => {
-  it("builds branded html by default", () => {
-    const html = buildSimpleWorkbenchProposalPreviewHtml(DOCUMENT);
+    it("builds branded html by default", () => {
+      const html = buildSimpleWorkbenchProposalPreviewHtml(DOCUMENT);
 
-    expect(html).toContain("This DAC sheet summarizes a project estimate");
-    expect(html).not.toContain("This short-form report summarises the current DYNECHO ACOUSTIC CALCULATOR reading.");
-  });
+      expect(html).toContain("This acoustic proposal summarizes a project estimate");
+      expect(html).toContain("Proposal Summary");
+      expect(html).toContain("Consultant note");
+      expect(html).not.toContain("This DAC sheet summarizes a project estimate");
+      expect(html).not.toContain("This offer form summarises the acoustic calculation");
+    });
 
   it("builds the lightweight summary html for the simple preview path", () => {
     const html = buildSimpleWorkbenchProposalPreviewHtml(DOCUMENT, "simple");
 
-    expect(html).toContain("This short-form report summarises the current DYNECHO ACOUSTIC CALCULATOR reading.");
+    expect(html).toContain("This offer form summarises the acoustic calculation");
     expect(html).toContain("Measured / predicted indices");
     expect(html).not.toContain("This DAC sheet summarizes a project estimate");
   });

@@ -28,7 +28,7 @@ describe("simple workbench proposal construction section", () => {
     expect(section.anchorFromLabel).toBe("Walking side");
     expect(section.anchorToLabel).toBe("Ceiling side");
     expect(section.totalThicknessLabel).toBe("184 mm total");
-    expect(section.headline).toBe("2 visible rows in solver order.");
+    expect(section.headline).toBe("2 visible rows in layer order.");
     expect(section.bands).toEqual([
       {
         category: "top finish",
@@ -86,7 +86,7 @@ describe("simple workbench proposal construction section", () => {
     expect(section.anchorFromLabel).toBe("Side A");
     expect(section.anchorToLabel).toBe("Side B");
     expect(section.totalThicknessLabel).toBe("100 mm total");
-    expect(section.headline).toBe("3 visible rows in solver order.");
+    expect(section.headline).toBe("3 visible rows in layer order.");
     expect(section.bands.map((band) => band.tone)).toEqual(["leading", "interior", "trailing"]);
     expect(section.bands[1]).toMatchObject({
       indexLabel: "02",

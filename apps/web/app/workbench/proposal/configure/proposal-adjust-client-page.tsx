@@ -1,7 +1,7 @@
 "use client";
 
 import { SurfacePanel } from "@dynecho/ui";
-import { ArrowLeft, ChevronDown, Download, Eye, RefreshCcw, RotateCcw, Save } from "lucide-react";
+import { ArrowLeft, ChevronDown, Download, Eye, FileText, Layers3, RefreshCcw, RotateCcw, Save, Send, SlidersHorizontal } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { type ReactNode, useDeferredValue, useEffect, useMemo, useState } from "react";
@@ -11,6 +11,14 @@ import {
   type SimpleWorkbenchProposalCoverageStatus,
   type SimpleWorkbenchProposalDocument
 } from "@/features/workbench/simple-workbench-proposal";
+import {
+  applyPrimaryMetricLabelEdit,
+  applyPrimaryMetricValueEdit,
+  applyProposalCoverageLabelEdit,
+  applyProposalCoverageValueEdit,
+  applyProposalMetricLabelEdit,
+  applyProposalMetricValueEdit
+} from "@/features/workbench/proposal-adjust-output-edits";
 import { buildSimpleWorkbenchProposalConstructionSection } from "@/features/workbench/simple-workbench-proposal-construction-section";
 import { SimpleWorkbenchProposalConstructionFigure } from "@/features/workbench/simple-workbench-proposal-construction-figure";
 import {
@@ -30,7 +38,6 @@ import {
 import {
   getProposalEditorStateLabel,
   getProposalPdfStyleDescriptor,
-  PROPOSAL_EDITOR_TABS,
   PROPOSAL_PDF_STYLE_OPTIONS,
   type ProposalEditorTabId,
   type ProposalPdfStyle
@@ -51,6 +58,67 @@ const COVERAGE_STATUS_OPTIONS = [
 ] as const;
 
 type ToneValue = (typeof TONE_OPTIONS)[number]["value"];
+
+type ProposalEditorSection = {
+  detail: string;
+  icon: typeof FileText;
+  label: string;
+  tab: ProposalEditorTabId;
+};
+
+const SIMPLE_PDF_SECTION_MAP: readonly ProposalEditorSection[] = [
+  {
+    detail: "Project, recipient, issue, revision",
+    icon: FileText,
+    label: "Header",
+    tab: "essentials"
+  },
+  {
+    detail: "Rw, Ln,w, summary, proposal note",
+    icon: SlidersHorizontal,
+    label: "Results",
+    tab: "copy"
+  },
+  {
+    detail: "Construction, layer rows, curves",
+    icon: Layers3,
+    label: "Layers & charts",
+    tab: "details"
+  },
+  {
+    detail: "Consultant and contact lines",
+    icon: Send,
+    label: "Sender",
+    tab: "issuer"
+  }
+];
+
+const BRANDED_PDF_SECTION_MAP: readonly ProposalEditorSection[] = [
+  {
+    detail: "Cover, client, issue, validity",
+    icon: FileText,
+    label: "Cover & client",
+    tab: "essentials"
+  },
+  {
+    detail: "Headline values, summary, consultant note",
+    icon: SlidersHorizontal,
+    label: "Offer values",
+    tab: "copy"
+  },
+  {
+    detail: "Build-up, layer schedule, response curves",
+    icon: Layers3,
+    label: "Build-up & curves",
+    tab: "details"
+  },
+  {
+    detail: "Company identity, logo, prepared-by, contact",
+    icon: Send,
+    label: "Brand & sender",
+    tab: "issuer"
+  }
+];
 
 function formatSavedAtLabel(savedAtIso: string): string {
   return new Intl.DateTimeFormat("en-GB", {
@@ -253,7 +321,7 @@ export function ProposalAdjustClientPage() {
   const [customizedAtIso, setCustomizedAtIso] = useState<string | undefined>(undefined);
   const [lastSavedSignature, setLastSavedSignature] = useState("");
   const [isDownloadingExport, setIsDownloadingExport] = useState(false);
-  const [activePdfStyle, setActivePdfStyle] = useState<ProposalPdfStyle>("branded");
+  const [activePdfStyle, setActivePdfStyle] = useState<ProposalPdfStyle>("simple");
   const [activeEditorTab, setActiveEditorTab] = useState<ProposalEditorTabId>("copy");
 
   function loadStoredPreview() {
@@ -272,7 +340,7 @@ export function ProposalAdjustClientPage() {
   }, []);
 
   useEffect(() => {
-    setActivePdfStyle(searchParams.get("style") === "simple" ? "simple" : "branded");
+    setActivePdfStyle(searchParams.get("style") === "branded" ? "branded" : "simple");
   }, [searchParams]);
 
   const deferredDocument = useDeferredValue(editableDocument);
@@ -299,6 +367,8 @@ export function ProposalAdjustClientPage() {
     [deferredDocument]
   );
   const responseCurves = editableDocument?.responseCurves ?? [];
+  const isSimplePdfMode = activePdfStyle === "simple";
+  const editorSectionMap = isSimplePdfMode ? SIMPLE_PDF_SECTION_MAP : BRANDED_PDF_SECTION_MAP;
 
   function updateDocument(mutator: (current: SimpleWorkbenchProposalDocument) => SimpleWorkbenchProposalDocument) {
     setEditableDocument((current) => (current ? mutator(current) : current));
@@ -345,11 +415,11 @@ export function ProposalAdjustClientPage() {
     return true;
   }
 
-  function handleReloadStoredPreview() {
-    loadStoredPreview();
-    toast.success("Saved report state reloaded", {
-      description: "The report editor now matches the latest stored proposal snapshot."
-    });
+    function handleReloadStoredPreview() {
+      loadStoredPreview();
+      toast.success("Saved PDF state reloaded", {
+        description: "The PDF editor now matches the latest stored proposal snapshot."
+      });
   }
 
   function handleResetToPackagedSnapshot() {
@@ -359,11 +429,11 @@ export function ProposalAdjustClientPage() {
 
     resetSimpleWorkbenchProposalPreviewCustomizations();
     setEditableDocument(baseDocument);
-    setCustomizedAtIso(undefined);
-    setLastSavedSignature(baseSignature);
-    toast.success("Packaged snapshot restored", {
-      description: "Manual report edits were cleared. The calculator result package is active again."
-    });
+      setCustomizedAtIso(undefined);
+      setLastSavedSignature(baseSignature);
+      toast.success("Packaged snapshot restored", {
+        description: "Manual PDF edits were cleared. The packaged calculator result is active again."
+      });
   }
 
   function handleOpenPreview() {
@@ -402,15 +472,15 @@ export function ProposalAdjustClientPage() {
       toast.success(`${getSimpleWorkbenchProposalExportLabel({ format, style })} downloaded`, {
         description:
           format === "docx"
-            ? "The current proposal-adjustment snapshot was sent to the Word renderer."
-            : "The current proposal-adjustment snapshot was sent to the PDF renderer."
+            ? "The current proposal snapshot was sent to the Word renderer."
+            : "The current proposal snapshot was sent to the PDF renderer."
       });
     } catch (error) {
       toast.error(`${getSimpleWorkbenchProposalExportLabel({ format, style })} failed`, {
         description:
           error instanceof Error
             ? error.message
-            : `DAC could not generate the ${getSimpleWorkbenchProposalExportLabel({ format, style })} on the server.`
+            : `The server could not generate the ${getSimpleWorkbenchProposalExportLabel({ format, style })}.`
       });
     } finally {
       setIsDownloadingExport(false);
@@ -423,7 +493,7 @@ export function ProposalAdjustClientPage() {
         <SurfacePanel className="px-5 py-6 sm:px-6">
           <div className="eyebrow">No Proposal Snapshot</div>
           <h1 className="mt-1 font-display text-[1.7rem] leading-none tracking-[-0.05em] text-[color:var(--ink)]">
-            Package a proposal before opening the report editor
+            Package a proposal before opening the PDF editor
           </h1>
           <p className="mt-3 max-w-2xl text-sm leading-7 text-[color:var(--ink-soft)]">
             This page only edits the packaged proposal snapshot that feeds the preview, PDF renderer, and DOCX renderer. Return to the workbench proposal tab and
@@ -448,13 +518,15 @@ export function ProposalAdjustClientPage() {
       <SurfacePanel className="px-5 py-4 sm:px-6">
         <div className="flex min-w-0 flex-wrap items-start justify-between gap-4">
           <div className="min-w-0">
-            <div className="eyebrow">Report Editor</div>
+            <div className="eyebrow">{isSimplePdfMode ? "Simple PDF Editor" : "Branded PDF Editor"}</div>
             <h1 className="mt-1 font-display text-[1.65rem] leading-none tracking-[-0.04em] text-[color:var(--ink)]">
-              Edit exported report values
+              {isSimplePdfMode ? "Edit the simple PDF in document order" : "Edit the branded proposal values"}
             </h1>
             <p className="mt-2 max-w-4xl text-sm leading-6 text-[color:var(--ink-soft)]">
-              Manual edits change the packaged proposal snapshot only. PDF and DOCX exports use these edited values, while calculator inputs,
-              solver routes, and engine outputs stay untouched.
+              {isSimplePdfMode
+                ? "Manual edits change the simple offer PDF snapshot only. The sections below follow the compact form: header, results, layers and charts, then sender details."
+                : "Manual edits change the branded offer PDF snapshot only. The sections below follow the branded proposal: cover and client details, offer values, build-up and curves, then brand and sender details."}{" "}
+              Calculator inputs and engine outputs stay untouched.
             </p>
           </div>
           <Link
@@ -481,41 +553,55 @@ export function ProposalAdjustClientPage() {
         </div>
       </SurfacePanel>
 
+      <SurfacePanel className="px-4 py-4 sm:px-5">
+        <div className="grid gap-4 lg:grid-cols-[minmax(15rem,0.55fr)_minmax(0,1.45fr)] lg:items-center">
+          <div className="min-w-0">
+            <div className="eyebrow">Edit section</div>
+            <h2 className="mt-1 font-display text-[1.25rem] leading-none tracking-[-0.04em] text-[color:var(--ink)]">
+              Choose one area to edit
+            </h2>
+          </div>
+          <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
+            {editorSectionMap.map((section, index) => {
+              const Icon = section.icon;
+              const active = activeEditorTab === section.tab;
+
+              return (
+                <button
+                  aria-pressed={active}
+                  className={`focus-ring min-w-0 rounded-[1rem] border px-3 py-3 text-left transition ${
+                    active
+                      ? "border-[color:var(--accent)] bg-[color:var(--accent-soft)] text-[color:var(--accent-ink)]"
+                      : "border-[color:var(--line)] bg-[color:var(--paper)] text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
+                  }`}
+                  key={section.label}
+                  onClick={() => setActiveEditorTab(section.tab)}
+                  type="button"
+                >
+                  <div className="flex min-w-0 items-center gap-2">
+                    <Icon className="h-4 w-4 shrink-0" />
+                    <span className="min-w-0 text-sm font-semibold">{index + 1}. {section.label}</span>
+                  </div>
+                  <p className="mt-2 text-[0.78rem] leading-5 opacity-80">{section.detail}</p>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </SurfacePanel>
+
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1.08fr)_minmax(28rem,0.92fr)] 2xl:grid-cols-[minmax(0,1.02fr)_minmax(32rem,0.98fr)]">
         <div className="grid gap-4">
-          <SurfacePanel className="px-3 py-3 sm:px-4">
-            <div className="flex flex-wrap gap-2">
-              {PROPOSAL_EDITOR_TABS.map((tab) => {
-                const active = tab.value === activeEditorTab;
-
-                return (
-                  <button
-                    aria-pressed={active}
-                    className={`focus-ring rounded-full px-3 py-2 text-left text-sm font-semibold transition ${
-                      active
-                        ? "bg-[color:var(--accent-soft)] text-[color:var(--accent-ink)]"
-                        : "bg-[color:var(--paper)] text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)]"
-                    }`}
-                    key={tab.value}
-                    onClick={() => setActiveEditorTab(tab.value)}
-                    type="button"
-                  >
-                    {tab.label}
-                  </button>
-                );
-              })}
-            </div>
-            <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">
-              {PROPOSAL_EDITOR_TABS.find((tab) => tab.value === activeEditorTab)?.detail}
-            </p>
-          </SurfacePanel>
-
-          {activeEditorTab === "essentials" ? (
-            <EditorSection
-              description="Burada sadece PDF kapağında en çok dokunulan alanlar açık kalır."
-              eyebrow="Essentials"
-              title="Cover and recipient"
-            >
+            {activeEditorTab === "essentials" ? (
+              <EditorSection
+                description={
+                  isSimplePdfMode
+                    ? "These fields feed the simple PDF header and the issue metadata strip."
+                    : "These fields feed the branded cover, client transmittal, subject, issue reference, purpose, and validity blocks."
+                }
+                eyebrow={isSimplePdfMode ? "Simple PDF header" : "Branded cover"}
+                title={isSimplePdfMode ? "Project, recipient, issue" : "Cover, client, issue"}
+              >
               <div className="grid gap-4 md:grid-cols-2">
                 <EditorField label="Project name" onChange={(value) => updateField("projectName", value)} value={editableDocument.projectName} />
                 <EditorField label="Client name" onChange={(value) => updateField("clientName", value)} value={editableDocument.clientName} />
@@ -532,102 +618,54 @@ export function ProposalAdjustClientPage() {
 
           {activeEditorTab === "copy" ? (
             <>
-              <EditorSection
-                description="Ön yüzde görünen ana metin ve solver anlatımı burada tutulur."
-                eyebrow="Content"
-                title="Summary and route copy"
-              >
+                <EditorSection
+                  description={
+                    isSimplePdfMode
+                      ? "This is the first content block after the simple PDF header. Use it for the headline acoustic answer and the visible result table."
+                      : "These fields control the branded proposal headline value, offer summary, review status, and printed consultant note."
+                  }
+                  eyebrow={isSimplePdfMode ? "Simple PDF results" : "Branded offer values"}
+                  title={isSimplePdfMode ? "Primary answer, Rw / Ln,w, summary" : "Offer values, summary, consultant note"}
+                >
                 <div className="grid gap-3 md:grid-cols-2">
                   <EditorCheckbox
-                    checked={editableDocument.primaryMetricVisible !== false}
-                    label="Show primary headline metric in PDF"
-                    note="Controls the main Rw / Ln,w headline card in branded and simple PDF layouts."
-                    onChange={(checked) => updateField("primaryMetricVisible", checked)}
+                      checked={editableDocument.primaryMetricVisible !== false}
+                      label="Show primary headline metric in PDF"
+                      note="Controls the main Rw / Ln,w headline card in the active PDF layout."
+                      onChange={(checked) => updateField("primaryMetricVisible", checked)}
+                    />
+                </div>
+                <div className="grid gap-4 md:grid-cols-2">
+                  <EditorField
+                    label="Top PDF metric label"
+                    note="Controls the headline acoustic index at the top of the PDF."
+                    onChange={(value) => updateDocument((current) => applyPrimaryMetricLabelEdit(current, value))}
+                    value={editableDocument.primaryMetricLabel}
+                  />
+                  <EditorField
+                    label="Top PDF metric value"
+                    note="Syncs matching Rw, Ln,w, and related rows in this PDF snapshot."
+                    onChange={(value) => updateDocument((current) => applyPrimaryMetricValueEdit(current, value))}
+                    value={editableDocument.primaryMetricValue}
                   />
                 </div>
                 <div className="grid gap-4 md:grid-cols-2">
-                  <EditorField label="Primary metric label" onChange={(value) => updateField("primaryMetricLabel", value)} value={editableDocument.primaryMetricLabel} />
-                  <EditorField label="Primary metric value" onChange={(value) => updateField("primaryMetricValue", value)} value={editableDocument.primaryMetricValue} />
-                </div>
-                {responseCurves.length > 0 ? (
-                  <div className="rounded-[1rem] border hairline bg-[color:var(--paper)]/82 px-4 py-4">
-                    <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Manual chart numbers</div>
-                    <div className="mt-1 text-sm font-semibold text-[color:var(--ink)]">Active frequency / dB values</div>
-                    <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">
-                      These fields edit the report chart snapshot only. They do not change calculator rows or solver output.
-                    </p>
-                    <div className="mt-4 grid gap-4">
-                      {responseCurves.map((figure, figureIndex) => {
-                        const activeSeriesIndex = Math.max(
-                          0,
-                          figure.series.findIndex((series) => series.id === figure.activeSeriesId || series.active)
-                        );
-                        const activeSeries = figure.series[activeSeriesIndex];
-
-                        if (!activeSeries) {
-                          return null;
-                        }
-
-                        return (
-                          <div className="rounded-[0.9rem] border hairline bg-[color:var(--panel)] px-4 py-4" key={figure.id}>
-                            <div className="flex flex-wrap items-start justify-between gap-3">
-                              <div>
-                                <div className="text-sm font-semibold text-[color:var(--ink)]">{figure.title}</div>
-                                <div className="mt-1 text-[0.78rem] leading-5 text-[color:var(--ink-soft)]">{activeSeries.label}</div>
-                              </div>
-                              <div className="rounded-full border hairline bg-[color:var(--paper)] px-3 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">
-                                Report only
-                              </div>
-                            </div>
-                            <div className="mt-4 grid gap-4 md:grid-cols-2">
-                              <EditorTextarea
-                                label="Frequencies Hz"
-                                note="Comma or space separated."
-                                onChange={(value) =>
-                                  updateDocument((current) => {
-                                    const figures = current.responseCurves ?? [];
-                                    return {
-                                      ...current,
-                                      responseCurves: patchArrayItem(figures, figureIndex, {
-                                        series: patchArrayItem(figure.series, activeSeriesIndex, { frequenciesHz: parseNumberList(value) })
-                                      })
-                                    };
-                                  })
-                                }
-                                rows={3}
-                                value={formatNumberList(activeSeries.frequenciesHz)}
-                              />
-                              <EditorTextarea
-                                label="Values dB"
-                                note="Must align with the frequency list."
-                                onChange={(value) =>
-                                  updateDocument((current) => {
-                                    const figures = current.responseCurves ?? [];
-                                    return {
-                                      ...current,
-                                      responseCurves: patchArrayItem(figures, figureIndex, {
-                                        series: patchArrayItem(figure.series, activeSeriesIndex, { valuesDb: parseNumberList(value) })
-                                      })
-                                    };
-                                  })
-                                }
-                                rows={3}
-                                value={formatNumberList(activeSeries.valuesDb)}
-                              />
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                ) : null}
-                <div className="grid gap-4 md:grid-cols-2">
-                  <EditorField label="Validation label" onChange={(value) => updateField("validationLabel", value)} value={editableDocument.validationLabel} />
-                  <EditorField label="Context label" onChange={(value) => updateField("contextLabel", value)} value={editableDocument.contextLabel} />
-                  <EditorField label="Dynamic branch label" onChange={(value) => updateField("dynamicBranchLabel", value)} value={editableDocument.dynamicBranchLabel} />
-                  <EditorField label="Study mode label" onChange={(value) => updateField("studyModeLabel", value)} value={editableDocument.studyModeLabel} />
-                  <EditorField label="Study context label" onChange={(value) => updateField("studyContextLabel", value)} value={editableDocument.studyContextLabel} />
-                  <EditorField label="Assembly headline" onChange={(value) => updateField("assemblyHeadline", value)} value={editableDocument.assemblyHeadline} />
+                    <EditorField
+                      label={isSimplePdfMode ? "Validation label" : "Review status label"}
+                      onChange={(value) => updateField("validationLabel", value)}
+                      value={editableDocument.validationLabel}
+                    />
+                    <EditorField
+                      label={isSimplePdfMode ? "Context label" : "Calculation context"}
+                      onChange={(value) => updateField("contextLabel", value)}
+                      value={editableDocument.contextLabel}
+                    />
+                    {isSimplePdfMode ? (
+                      <EditorField label="Calculation branch label" onChange={(value) => updateField("dynamicBranchLabel", value)} value={editableDocument.dynamicBranchLabel} />
+                    ) : null}
+                    <EditorField label="Study mode label" onChange={(value) => updateField("studyModeLabel", value)} value={editableDocument.studyModeLabel} />
+                    <EditorField label="Study context label" onChange={(value) => updateField("studyContextLabel", value)} value={editableDocument.studyContextLabel} />
+                    <EditorField label="Assembly headline" onChange={(value) => updateField("assemblyHeadline", value)} value={editableDocument.assemblyHeadline} />
                 </div>
                 <EditorTextarea
                   label="Executive summary"
@@ -635,27 +673,39 @@ export function ProposalAdjustClientPage() {
                   rows={5}
                   value={editableDocument.executiveSummary}
                 />
-                <EditorTextarea label="Brief note" onChange={(value) => updateField("briefNote", value)} rows={4} value={editableDocument.briefNote} />
-                <EditorTextarea
-                  label="Validation detail"
-                  onChange={(value) => updateField("validationDetail", value)}
-                  rows={3}
-                  value={editableDocument.validationDetail}
-                />
-                <EditorTextarea
-                  label="Dynamic branch detail"
-                  onChange={(value) => updateField("dynamicBranchDetail", value)}
-                  rows={3}
-                  value={editableDocument.dynamicBranchDetail}
-                />
-              </EditorSection>
+                  <EditorTextarea
+                    label={isSimplePdfMode ? "Proposal note shown in PDF" : "Consultant note shown in branded PDF"}
+                    note={isSimplePdfMode ? "This is the consultant note printed in the simple offer form." : "This text prints in the branded proposal under Proposal note."}
+                    onChange={(value) => updateField("briefNote", value)}
+                    rows={4}
+                    value={editableDocument.briefNote}
+                  />
+                  <EditorTextarea
+                    label={isSimplePdfMode ? "Validation detail" : "Calculation basis detail"}
+                    onChange={(value) => updateField("validationDetail", value)}
+                    rows={3}
+                    value={editableDocument.validationDetail}
+                  />
+                  {isSimplePdfMode ? (
+                    <EditorTextarea
+                      label="Calculation branch detail"
+                      onChange={(value) => updateField("dynamicBranchDetail", value)}
+                      rows={3}
+                      value={editableDocument.dynamicBranchDetail}
+                    />
+                  ) : null}
+                </EditorSection>
 
-              <CollapsibleEditorSection
-                defaultOpen={editableDocument.metrics.length <= 1}
-                description="Packaged live-output rows bu blokta düzenlenir. PDF ve DOCX export aynı düzenlenmiş snapshot'ı kullanır."
-                eyebrow="Optional"
-                summary={`${editableDocument.metrics.length} packaged metric${editableDocument.metrics.length === 1 ? "" : "s"}`}
-                title="Metric detail rows"
+                <CollapsibleEditorSection
+                  defaultOpen
+                  description={
+                    isSimplePdfMode
+                      ? "These rows are the simple PDF table named Measured / predicted indices. Editing Rw or Ln,w here also syncs matching headline and coverage values."
+                      : "These rows are printed as the branded proposal acoustic indices. Editing Rw or Ln,w also syncs matching headline and coverage values."
+                  }
+                  eyebrow={isSimplePdfMode ? "Simple PDF table" : "Branded index table"}
+                  summary={`${editableDocument.metrics.length} packaged metric${editableDocument.metrics.length === 1 ? "" : "s"}`}
+                  title="Measured / predicted indices"
               >
                 {editableDocument.metrics.length === 0 ? (
                   <EmptyArrayNote>No packaged live-output rows exist on this snapshot yet.</EmptyArrayNote>
@@ -680,18 +730,12 @@ export function ProposalAdjustClientPage() {
                         <div className="mt-3 grid gap-4 md:grid-cols-2">
                           <EditorField
                             label="Label"
-                            onChange={(value) => updateDocument((current) => ({
-                              ...current,
-                              metrics: patchArrayItem(current.metrics, index, { label: value })
-                            }))}
+                            onChange={(value) => updateDocument((current) => applyProposalMetricLabelEdit(current, index, value))}
                             value={metric.label}
                           />
                           <EditorField
                             label="Value"
-                            onChange={(value) => updateDocument((current) => ({
-                              ...current,
-                              metrics: patchArrayItem(current.metrics, index, { value })
-                            }))}
+                            onChange={(value) => updateDocument((current) => applyProposalMetricValueEdit(current, index, value))}
                             value={metric.value}
                           />
                         </div>
@@ -714,17 +758,21 @@ export function ProposalAdjustClientPage() {
             </>
           ) : null}
 
-          {activeEditorTab === "issuer" ? (
-            <EditorSection
-              description="Consultant identity ve issue metadata tek blokta tutulur."
-              eyebrow="Issuer"
-              title="Consultant and issue metadata"
-            >
+            {activeEditorTab === "issuer" ? (
+              <EditorSection
+                description={
+                  isSimplePdfMode
+                    ? "These fields feed the sender block, prepared-by line, and contact metadata."
+                    : "These fields feed the branded cover identity, sender signature, contact block, and issue metadata."
+                }
+                eyebrow={isSimplePdfMode ? "Simple PDF sender" : "Branded sender and identity"}
+                title={isSimplePdfMode ? "Consultant and contact lines" : "Brand, sender, contact"}
+              >
               <div className="grid gap-4 md:grid-cols-2">
                 <EditorField label="Consultant company" onChange={(value) => updateField("consultantCompany", value)} value={editableDocument.consultantCompany} />
                 <EditorField label="Prepared by" onChange={(value) => updateField("preparedBy", value)} value={editableDocument.preparedBy} />
                 <EditorField label="Approver title" onChange={(value) => updateField("approverTitle", value)} value={editableDocument.approverTitle} />
-                <EditorField label="Report profile label" onChange={(value) => updateField("reportProfileLabel", value)} value={editableDocument.reportProfileLabel} />
+                <EditorField label="PDF profile label" onChange={(value) => updateField("reportProfileLabel", value)} value={editableDocument.reportProfileLabel} />
                 <EditorField label="Consultant wordmark" onChange={(value) => updateField("consultantWordmarkLine", value)} value={editableDocument.consultantWordmarkLine} />
                 <EditorField label="Issue code prefix" onChange={(value) => updateField("issueCodePrefix", value)} value={editableDocument.issueCodePrefix} />
                 <EditorField label="Consultant email" onChange={(value) => updateField("consultantEmail", value)} value={editableDocument.consultantEmail} />
@@ -737,11 +785,15 @@ export function ProposalAdjustClientPage() {
 
           {activeEditorTab === "details" ? (
             <>
-              <EditorSection
-                description="Layer rows PDF render’dan önce burada düzenlenir. Manual total alanı isterse row toplamından ayrışabilir."
-                eyebrow="Construction"
-                title="Layer schedule and total override"
-              >
+                <EditorSection
+                  description={
+                    isSimplePdfMode
+                      ? "These fields feed the construction section, visible layer schedule, and frequency response curves."
+                      : "These fields feed the branded construction section, layer schedule, and response curve blocks."
+                  }
+                  eyebrow={isSimplePdfMode ? "Simple PDF layers and charts" : "Branded build-up and curves"}
+                  title={isSimplePdfMode ? "Construction, layer rows, curves" : "Build-up, layers, curves"}
+                >
                 <EditorField
                   label="Manual total thickness label"
                   note="Leave blank to use the thickness sum generated from the visible rows."
@@ -991,12 +1043,16 @@ export function ProposalAdjustClientPage() {
                 )}
               </CollapsibleEditorSection>
 
-              <CollapsibleEditorSection
-                description="Dossier kartları, method trace notları ve coverage metinleri sık kullanılmadığı için kapalı gelir."
-                eyebrow="Optional"
-                summary={`${editableDocument.corridorDossierCards.length + editableDocument.methodDossierCards.length + editableDocument.methodTraceGroups.length + editableDocument.coverageItems.length} packaged blocks`}
-                title="Narratives, method blocks, and coverage"
-              >
+                <CollapsibleEditorSection
+                  description={
+                    isSimplePdfMode
+                      ? "Dossier cards, method trace notes, and coverage text stay closed because the simple PDF does not need them for normal offer edits."
+                      : "Internal trace and coverage data is retained for the snapshot but is not printed in the branded offer form."
+                  }
+                  eyebrow="Optional"
+                  summary={`${editableDocument.corridorDossierCards.length + editableDocument.methodDossierCards.length + editableDocument.methodTraceGroups.length + editableDocument.coverageItems.length} packaged blocks`}
+                  title={isSimplePdfMode ? "Narratives, method blocks, and coverage" : "Internal calculation data"}
+                >
             <div className="grid gap-4 md:grid-cols-2">
               <EditorTextarea
                 label="Corridor dossier headline"
@@ -1214,22 +1270,12 @@ export function ProposalAdjustClientPage() {
                     <div className="mt-3 grid gap-4 md:grid-cols-3">
                       <EditorField
                         label="Label"
-                        onChange={(value) =>
-                          updateDocument((current) => ({
-                            ...current,
-                            coverageItems: patchArrayItem(current.coverageItems, index, { label: value })
-                          }))
-                        }
+                        onChange={(value) => updateDocument((current) => applyProposalCoverageLabelEdit(current, index, value))}
                         value={item.label}
                       />
                       <EditorField
                         label="Value"
-                        onChange={(value) =>
-                          updateDocument((current) => ({
-                            ...current,
-                            coverageItems: patchArrayItem(current.coverageItems, index, { value })
-                          }))
-                        }
+                        onChange={(value) => updateDocument((current) => applyProposalCoverageValueEdit(current, index, value))}
                         value={item.value}
                       />
                       <EditorSelect<SimpleWorkbenchProposalCoverageStatus>
@@ -1296,12 +1342,16 @@ export function ProposalAdjustClientPage() {
             ) : null}
               </CollapsibleEditorSection>
 
-              <CollapsibleEditorSection
-                description="Issue register, assumptions, citations ve warnings burada tutulur. Gerekmiyorsa hiç açmadan ilerleyebilirsiniz."
-                eyebrow="Optional"
-                summary={`${editableDocument.issueRegisterItems.length + editableDocument.decisionTrailItems.length + editableDocument.assumptionItems.length + editableDocument.recommendationItems.length + editableDocument.citations.length} rows + warnings`}
-                title="Registers, citations, and warnings"
-              >
+                <CollapsibleEditorSection
+                  description={
+                    isSimplePdfMode
+                      ? "Internal registers and raw warnings stay here. Simple PDF hides raw warnings from the customer-facing offer form."
+                      : "Internal registers and raw warnings stay here for traceability. Branded PDF hides these from the client offer form."
+                  }
+                  eyebrow="Optional"
+                  summary={`${editableDocument.issueRegisterItems.length + editableDocument.decisionTrailItems.length + editableDocument.assumptionItems.length + editableDocument.recommendationItems.length + editableDocument.citations.length} rows + warnings`}
+                  title={isSimplePdfMode ? "Internal registers, citations, and warnings" : "References, assumptions, and hidden internal rows"}
+                >
             {editableDocument.issueRegisterItems.length > 0 ? (
               <div className="grid gap-4">
                 {editableDocument.issueRegisterItems.map((item, index) => (
@@ -1589,18 +1639,18 @@ export function ProposalAdjustClientPage() {
               <div>
                 <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
                   Live preview
+                  </div>
+                  <h2 className="mt-1 font-display text-[1.35rem] leading-none tracking-[-0.05em] text-[color:var(--ink)]">
+                    Current PDF composition
+                  </h2>
                 </div>
-                <h2 className="mt-1 font-display text-[1.35rem] leading-none tracking-[-0.05em] text-[color:var(--ink)]">
-                  Current report composition
-                </h2>
-              </div>
               <div className="rounded-full border hairline bg-[color:var(--paper)]/78 px-3 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
                 {activeStyleDescriptor.shortLabel}
               </div>
             </div>
-            <p className="mt-3 text-sm leading-6 text-[color:var(--ink-soft)]">
-              The iframe updates immediately as you edit. Save changes when you want this snapshot to become the shared preview baseline.
-            </p>
+              <p className="mt-3 text-sm leading-6 text-[color:var(--ink-soft)]">
+                The iframe updates immediately as you edit. Save changes when you want this snapshot to become the shared PDF baseline.
+              </p>
             <div className="mt-5 border-t hairline pt-5">
               <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Export target</div>
               <div className="mt-3 grid grid-cols-2 gap-2">

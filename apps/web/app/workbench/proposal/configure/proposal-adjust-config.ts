@@ -4,12 +4,12 @@ export type ProposalEditorTabId = "essentials" | "copy" | "issuer" | "details";
 
 export const PROPOSAL_PDF_STYLE_OPTIONS: readonly { description: string; label: string; value: ProposalPdfStyle }[] = [
   {
-    description: "Formal consultant issue with full branded sheet framing.",
+    description: "Branded acoustic offer form with cover, sender identity, values, notes, and construction details.",
     label: "Branded PDF",
     value: "branded"
   },
   {
-    description: "Lightweight export with the same content and simpler chrome.",
+    description: "Compact acoustic offer form with simpler document chrome.",
     label: "Simple PDF",
     value: "simple"
   }
@@ -17,23 +17,23 @@ export const PROPOSAL_PDF_STYLE_OPTIONS: readonly { description: string; label: 
 
 export const PROPOSAL_EDITOR_TABS: readonly { detail: string; label: string; value: ProposalEditorTabId }[] = [
   {
-    detail: "Rw, Ln,w, validation copy, and the visible metric rows.",
-    label: "Metrics",
+    detail: "Primary answer, Rw / Ln,w rows, executive summary, consultant note, and review copy.",
+    label: "Results",
     value: "copy"
   },
   {
-    detail: "Visible layer rows, thickness, density, mass, and role wording.",
-    label: "Layers",
-    value: "details"
-  },
-  {
-    detail: "Project, recipient, subject, summary, and issue lines.",
-    label: "Cover",
+    detail: "Project, recipient, subject, issue reference, revision, purpose, and validity line.",
+    label: "Header",
     value: "essentials"
   },
   {
-    detail: "Consultant identity, sender metadata, and contact info.",
-    label: "Issuer",
+    detail: "Construction illustration, visible layer schedule, response curves, and appendix tables.",
+    label: "Layers & charts",
+    value: "details"
+  },
+  {
+    detail: "Consultant identity, sender metadata, contact info, and issue date.",
+    label: "Sender",
     value: "issuer"
   }
 ] as const;
@@ -46,14 +46,14 @@ export function getProposalPdfStyleDescriptor(style: ProposalPdfStyle): {
   if (style === "simple") {
     return {
       downloadLabel: "Download simple PDF",
-      note: "Simple uses the same edited report snapshot for PDF and DOCX, with lightweight framing.",
+      note: "Simple uses the edited proposal snapshot with lightweight framing.",
       shortLabel: "Simple PDF"
     };
   }
 
   return {
     downloadLabel: "Download branded PDF",
-    note: "Branded keeps the consultant-sheet framing while reusing the same edited report snapshot for PDF and DOCX.",
+    note: "Branded uses the edited proposal snapshot with cover, sender identity, values, notes, and construction details.",
     shortLabel: "Branded PDF"
   };
 }
@@ -67,7 +67,7 @@ export function getProposalEditorStateLabel(options: {
   }
 
   if (options.hasManualOverrides) {
-    return "Saved report override";
+    return "Saved PDF override";
   }
 
   return "Packaged baseline";

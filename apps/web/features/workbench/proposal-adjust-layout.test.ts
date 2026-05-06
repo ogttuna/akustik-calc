@@ -31,13 +31,17 @@ describe("proposal adjust layout", () => {
       "utf8"
     );
 
-    expect(source).toContain("Edit exported report values");
-    expect(source).toContain("PDF and DOCX exports use these edited values");
+    expect(source).toContain("Edit the simple PDF in document order");
+    expect(source).toContain("Choose one area to edit");
+    expect(source).toContain("Measured / predicted indices");
+    expect(source).toContain("Calculator inputs and engine outputs stay untouched");
+    expect(source).toContain("Proposal note shown in PDF");
     expect(source).toContain("Download branded DOCX");
     expect(source).toContain("Download simple DOCX");
-    expect(source).toContain("report chart snapshot only");
-    expect(source).toContain("Report only");
+    expect(source).toContain("PDF and DOCX charts use this packaged snapshot");
+    expect(source).toContain("Simple PDF hides raw warnings");
     expect(source).not.toContain("PDF chart snapshot only");
     expect(source).not.toContain("PDF only");
+    expect(source).not.toContain("Simple PDF map");
   });
 });

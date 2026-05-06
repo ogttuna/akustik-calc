@@ -309,12 +309,26 @@ function buildGeneratedProposalDocument(testCase: GeneratedProposalCase): {
   };
 }
 
-function expectEveryReportSurfaceToContain(
+function expectProposalTextToContain(
   document: SimpleWorkbenchProposalDocument,
   expectedTexts: readonly string[]
 ): void {
-  const surfaces = [
-    buildSimpleWorkbenchProposalText(document),
+  const proposalText = buildSimpleWorkbenchProposalText(document)
+    .replaceAll("&#39;", "'")
+    .replaceAll("&amp;", "&")
+    .toLowerCase();
+
+  for (const expectedText of expectedTexts) {
+    const normalizedExpectedText = expectedText.toLowerCase();
+    expect(proposalText).toContain(normalizedExpectedText);
+  }
+}
+
+function expectOfferPreviewsToOmitInternalPosture(
+  document: SimpleWorkbenchProposalDocument,
+  omittedTexts: readonly string[]
+): void {
+  const offerPreviews = [
     buildSimpleWorkbenchProposalPreviewHtml(document, "branded"),
     buildSimpleWorkbenchProposalPreviewHtml(document, "simple")
   ].map((surface) =>
@@ -324,10 +338,10 @@ function expectEveryReportSurfaceToContain(
       .toLowerCase()
   );
 
-  for (const expectedText of expectedTexts) {
-    const normalizedExpectedText = expectedText.toLowerCase();
-    for (const surface of surfaces) {
-      expect(surface).toContain(normalizedExpectedText);
+  for (const omittedText of omittedTexts) {
+    const normalizedOmittedText = omittedText.toLowerCase();
+    for (const surface of offerPreviews) {
+      expect(surface).not.toContain(normalizedOmittedText);
     }
   }
 }
@@ -354,7 +368,7 @@ function expectHtmlToUseLongTextWrapGuards(html: string): void {
 }
 
 describe("simple workbench generated proposal document honesty", () => {
-  it("keeps low-confidence floor live, missing-input, and unsupported posture visible across report surfaces", () => {
+  it("keeps low-confidence floor live, missing-input, and unsupported posture visible in proposal text", () => {
     const { coverageItems, document, scenario } = buildGeneratedProposalDocument({
       contextLabel: "Building prediction",
       id: "generated-rc-low-confidence-report",
@@ -377,18 +391,18 @@ describe("simple workbench generated proposal document honesty", () => {
       expect.objectContaining({ postureLabel: "Unsupported on route", status: "unsupported", value: "Not ready" })
     );
 
-    expectEveryReportSurfaceToContain(document, [
+    expectProposalTextToContain(document, [
       "Low-confidence fallback",
       "mixed nearby-row concrete lane",
-      "Output coverage register",
       "L'n,w",
       "Awaiting field input",
       "DeltaLw",
       "Unsupported on route"
     ]);
+    expectOfferPreviewsToOmitInternalPosture(document, ["Awaiting field input", "Unsupported on route"]);
   });
 
-  it("keeps wall field-airborne support posture and blocked Rw visible across report surfaces", () => {
+  it("keeps wall field-airborne support posture and blocked Rw visible in proposal text", () => {
     const { coverageItems, document, scenario } = buildGeneratedProposalDocument({
       airborneContext: WALL_FIELD_CONTEXT,
       calculator: "dynamic",
@@ -416,15 +430,15 @@ describe("simple workbench generated proposal document honesty", () => {
       expect.objectContaining({ postureLabel: "Unsupported on route", status: "unsupported", value: "Not ready" })
     );
 
-    expectEveryReportSurfaceToContain(document, [
+    expectProposalTextToContain(document, [
       "Field continuation",
       "R'w",
       "Dn,w",
       "DnT,w",
       "Unsupported on route",
-      "Rw",
-      "Output coverage register"
+      "Rw"
     ]);
+    expectOfferPreviewsToOmitInternalPosture(document, ["Unsupported on route"]);
   });
 
   it("keeps many-layer long labels contained while preserving full table labels across report surfaces", () => {
@@ -464,8 +478,8 @@ describe("simple workbench generated proposal document honesty", () => {
     expect(brandedHtml).toContain(lastLongLabel);
     expect(simpleHtml).toContain(firstLongLabel);
     expect(simpleHtml).toContain(eighthLongLabel);
-    expect(simpleHtml).toContain("45 additional layers omitted from this short-form layer table");
-    expect(simpleHtml).toContain("the construction section still uses all 53 solver rows");
+    expect(simpleHtml).toContain("37 additional layers omitted from this compact table");
+    expect(simpleHtml).toContain("the construction section still uses all 53 rows");
     expect(construction.svgMarkup).not.toContain(firstLongLabel);
     expect(construction.legendRowsHtml).toContain(firstLongLabel);
   });

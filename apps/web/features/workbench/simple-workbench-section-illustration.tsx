@@ -566,15 +566,21 @@ export function SectionIllustration(props: SectionIllustrationProps) {
 
   if (orientation === "floor") {
     const viewWidth = compact ? 560 : 640;
-    const viewHeight = compact ? 336 : 384;
+    const denseFloorCallouts = compact && layers.length > 10;
+    const viewHeight = compact ? Math.max(336, denseFloorCallouts ? 126 + layers.length * 30 : 336) : 384;
     const sectionX = compact ? 92 : 108;
     const sectionWidth = compact ? 270 : 316;
     const totalHeight = allocations.reduce((sum, entry) => sum + entry.sizePx, 0);
-    const sectionY = Math.max(42, viewHeight - totalHeight - 54);
+    const sectionY = denseFloorCallouts ? Math.max(48, (viewHeight - totalHeight) / 2) : Math.max(42, viewHeight - totalHeight - 54);
     const calloutX = compact ? 406 : 474;
     const dimensionX = sectionX - 24;
     const topRuleY = sectionY - 12;
     const bottomRuleY = sectionY + totalHeight + 12;
+    const calloutRowMin = 54;
+    const calloutRowMax = viewHeight - 54;
+    const calloutRows = layers.map((_, index) =>
+      denseFloorCallouts ? calloutRowMin + ((calloutRowMax - calloutRowMin) * index) / Math.max(1, layers.length - 1) : 0
+    );
     let currentY = sectionY;
 
     return (
@@ -642,6 +648,7 @@ export function SectionIllustration(props: SectionIllustrationProps) {
             const height = allocation.sizePx;
             const frontY = currentY;
             const leaderY = frontY + height / 2;
+            const calloutY = denseFloorCallouts ? calloutRows[index]! : leaderY;
             const badgeHeight = height < 28 ? 18 : 22;
             const badgeY = Math.max(frontY + 4, Math.min(frontY + height - badgeHeight - 4, frontY + height / 2 - badgeHeight / 2));
             const pillW = labelWidth(layer.thicknessLabel);
@@ -691,15 +698,25 @@ export function SectionIllustration(props: SectionIllustrationProps) {
                   x: sectionX + 10,
                   y: badgeY
                 })}
-                <line
-                  stroke={`${appearance.stroke}${alphaHex(0.48)}`}
-                  strokeDasharray="4 5"
-                  strokeWidth="1.1"
-                  x1={sectionX + sectionWidth + 8}
-                  x2={calloutX - 10}
-                  y1={leaderY}
-                  y2={leaderY}
-                />
+                {denseFloorCallouts ? (
+                  <path
+                    d={`M ${sectionX + sectionWidth + 8} ${leaderY} H ${calloutX - 20} V ${calloutY} H ${calloutX - 10}`}
+                    fill="none"
+                    stroke={`${appearance.stroke}${alphaHex(0.48)}`}
+                    strokeDasharray="4 5"
+                    strokeWidth="1.1"
+                  />
+                ) : (
+                  <line
+                    stroke={`${appearance.stroke}${alphaHex(0.48)}`}
+                    strokeDasharray="4 5"
+                    strokeWidth="1.1"
+                    x1={sectionX + sectionWidth + 8}
+                    x2={calloutX - 10}
+                    y1={leaderY}
+                    y2={leaderY}
+                  />
+                )}
                 <circle cx={sectionX + sectionWidth + 8} cy={leaderY} fill={appearance.stroke} r="2" />
                 {renderPill({
                   fill: layer.ready === false ? "#fff5eb" : "#fffdf9",
@@ -709,7 +726,7 @@ export function SectionIllustration(props: SectionIllustrationProps) {
                   textColor: "#243041",
                   width: pillW,
                   x: calloutX,
-                  y: leaderY - 11
+                  y: calloutY - 11
                 })}
               </g>
             );

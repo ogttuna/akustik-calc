@@ -12,10 +12,8 @@ import { buildSimpleWorkbenchProposalConstructionSection } from "./simple-workbe
 import { buildSimpleWorkbenchProposalDossier } from "./simple-workbench-proposal-dossier";
 import {
   buildSimpleWorkbenchProposalConstructionRender,
-  SIMPLE_WORKBENCH_REPORT_MARK,
   SIMPLE_WORKBENCH_REPORT_PRODUCT_NAME
 } from "./simple-workbench-proposal-reporting";
-import { buildSimpleWorkbenchReportMarkSvgMarkup } from "./simple-workbench-report-mark";
 import type { SimpleWorkbenchProposalBriefItem } from "./simple-workbench-proposal-brief";
 import {
   getFallbackSimpleWorkbenchOutputPosture,
@@ -448,6 +446,59 @@ function escapeHtml(value: string): string {
     .replaceAll("'", "&#39;");
 }
 
+const CLIENT_OFFER_HIDDEN_TEXT_PATTERNS = [
+  /\bdynamic topology\b/i,
+  /\bguardrails?\b/i,
+  /\binternal\b/i,
+  /\boperator deck\b/i,
+  /\bshould not print\b/i,
+  /\bsolver\b/i
+] as const;
+
+function cleanClientProposalText(
+  value: string,
+  fallback = "Calculation basis is limited to the listed build-up and proposal scope."
+): string {
+  const trimmedValue = value.trim();
+
+  if (CLIENT_OFFER_HIDDEN_TEXT_PATTERNS.some((pattern) => pattern.test(trimmedValue))) {
+    return fallback;
+  }
+
+  return trimmedValue
+    .replace(/\bdynamic topology\b/giu, "calculation setup")
+    .replace(/\btopology\b/giu, "assembly")
+    .replace(/\bsolver\b/giu, "calculator")
+    .replace(/\boperator deck\b/giu, "internal workspace")
+    .replace(/\bdynamic route\b/giu, "calculation basis")
+    .replace(/\bfield route\b/giu, "field calculation basis")
+    .replace(/\broute posture\b/giu, "calculation status")
+    .replace(/\bguardrails?\b/giu, "notes")
+    .replace(/\bDAC\b/gu, "The calculator");
+}
+
+const CLIENT_OFFER_INTERNAL_PATTERNS = [
+  /anchor/i,
+  /audit/i,
+  /citation coverage/i,
+  /delegate/i,
+  /dynamic airborne/i,
+  /dynamic topology/i,
+  /evidence posture/i,
+  /linked source line/i,
+  /live warning/i,
+  /operator/i,
+  /provenance/i,
+  /screening seed/i,
+  /sharp \(simple\)/i,
+  /solver/i,
+  /topology/i
+] as const;
+
+function isClientOfferLine(label: string, detail: string): boolean {
+  return !CLIENT_OFFER_INTERNAL_PATTERNS.some((pattern) => pattern.test(label) || pattern.test(detail));
+}
+
 function slugify(value: string): string {
   return value
     .trim()
@@ -456,42 +507,11 @@ function slugify(value: string): string {
     .replace(/^-+|-+$/g, "");
 }
 
-function renderListItems(values: readonly string[]): string {
-  return values.map((value) => `<li>${escapeHtml(value)}</li>`).join("");
-}
-
-function renderDecisionTrailItems(items: readonly SimpleWorkbenchProposalDecisionItem[]): string {
-  return items
-    .map(
-      (item) => `
-        <div class="method-box">
-          <div class="eyebrow" style="margin-bottom: 8px;">${escapeHtml(item.label)}</div>
-          <p>${escapeHtml(item.detail)}</p>
-        </div>
-      `
-    )
-    .join("");
-}
-
-function renderDossierItems(items: readonly { detail: string; label: string; value: string }[]): string {
-  return items
-    .map(
-      (item) => `
-        <div class="method-box">
-          <div class="eyebrow" style="margin-bottom: 8px;">${escapeHtml(item.label)}</div>
-          <h3>${escapeHtml(item.value)}</h3>
-          <p>${escapeHtml(item.detail)}</p>
-        </div>
-      `
-    )
-    .join("");
-}
-
-function renderCompactBriefList(
+function renderClientOfferBriefItems(
   items: readonly SimpleWorkbenchProposalBriefItem[],
   fallback: string
 ): string {
-  const visibleItems = items.slice(0, 3);
+  const visibleItems = items.filter((item) => isClientOfferLine(item.label, item.detail)).slice(0, 5);
 
   if (visibleItems.length === 0) {
     return `<li>${escapeHtml(fallback)}</li>`;
@@ -502,47 +522,31 @@ function renderCompactBriefList(
       (item) => `
         <li>
           <strong>${escapeHtml(item.label)}</strong>
-          <span>${escapeHtml(item.detail)}</span>
+          <span>${escapeHtml(cleanClientProposalText(item.detail))}</span>
         </li>
       `
     )
     .join("");
 }
 
-function renderCompactCitationList(
+function renderClientOfferCitationItems(
   citations: readonly SimpleWorkbenchProposalCitation[],
   fallback: string
 ): string {
-  const visibleCitations = citations.slice(0, 3);
+  const visibleCitations = citations.filter((citation) => isClientOfferLine(citation.label, citation.detail)).slice(0, 5);
 
   if (visibleCitations.length === 0) {
     return `<li>${escapeHtml(fallback)}</li>`;
   }
 
   return visibleCitations
-    .map((citation) => {
-      const href = citation.href ? ` ${citation.href}` : "";
-
-      return `
+    .map(
+      (citation) => `
         <li>
           <strong>${escapeHtml(citation.label)}</strong>
-          <span>${escapeHtml(`${citation.detail}${href}`)}</span>
+          <span>${escapeHtml(cleanClientProposalText(citation.detail))}</span>
+          ${citation.href ? `<span class="citation-link">${escapeHtml(citation.href)}</span>` : ""}
         </li>
-      `;
-    })
-    .join("");
-}
-
-function renderMethodTraceGroups(groups: readonly SimpleWorkbenchProposalMethodTraceGroup[]): string {
-  return groups
-    .map(
-      (group) => `
-        <div class="method-box">
-          <div class="eyebrow" style="margin-bottom: 8px;">${escapeHtml(group.label)}</div>
-          <h3>${escapeHtml(group.value)}</h3>
-          <p>${escapeHtml(group.detail)}</p>
-          ${group.notes.length > 0 ? `<ul style="margin-top: 12px;">${renderListItems(group.notes)}</ul>` : ""}
-        </div>
       `
     )
     .join("");
@@ -631,7 +635,7 @@ function inferProposalStandardReferences(
     references.push({
       code: "ISO 717-1",
       detail:
-        "Weighted airborne ratings on this issue are stated using ISO 717-1 single-number language, including airborne adaptation terms only when the active route can defend them.",
+        "Weighted airborne ratings on this issue are stated using ISO 717-1 single-number language, including airborne adaptation terms only when available for the current calculation basis.",
       label: "Weighted airborne rating basis"
     });
   }
@@ -640,7 +644,7 @@ function inferProposalStandardReferences(
     references.push({
       code: "ISO 717-2",
       detail:
-        "Weighted impact ratings on this issue are stated using ISO 717-2 language. DAC only presents Ln,w, L'n,w, L'nT,w, CI, or DeltaLw when the active route exposes them defensibly.",
+        "Weighted impact ratings on this issue are stated using ISO 717-2 language. Ln,w, L'n,w, L'nT,w, CI, or DeltaLw are presented only when available for the current calculation basis.",
       label: "Weighted impact rating basis"
     });
   }
@@ -649,7 +653,7 @@ function inferProposalStandardReferences(
     references.push({
       code: "ISO 16283-1",
       detail:
-        "Where field airborne continuation is active, the report keeps the room-to-room measurement posture explicit and does not relabel the result as a laboratory claim.",
+        "Where field airborne continuation is included, room-to-room measurement context is stated and the result is not relabelled as a laboratory claim.",
       label: "Field airborne continuation"
     });
   }
@@ -663,7 +667,7 @@ function inferProposalStandardReferences(
     references.push({
       code: "ISO 16283-2",
       detail:
-        "Where field impact continuation is active, the report keeps field-side normalization posture explicit and avoids presenting it as direct laboratory evidence.",
+        "Where field impact continuation is included, field-side normalization context is stated and the result is not presented as direct laboratory evidence.",
       label: "Field impact continuation"
     });
   }
@@ -677,8 +681,8 @@ function inferProposalStandardReferences(
     references.push({
       code: document.studyModeLabel.trim().toLowerCase().includes("wall") ? "ISO 12354-1" : "ISO 12354-2",
       detail:
-        "Prediction routes remain labelled as estimates on this sheet. DAC output is transparent about solver posture and is not presented as an accredited laboratory or field certificate.",
-      label: "Prediction route posture"
+        "Prediction results remain labelled as estimates on this sheet and are not presented as accredited laboratory or field certificates.",
+      label: "Prediction method"
     });
   }
 
@@ -686,8 +690,8 @@ function inferProposalStandardReferences(
     references.push({
       code: "Method basis",
       detail:
-        "The report keeps route choice, validation posture, and cited evidence explicit so the packaged result can be reviewed without overstating confidence.",
-      label: "Explicit route disclosure"
+        "The calculation basis, review status, and cited references are stated so the packaged result can be reviewed without overstating confidence.",
+      label: "Calculation basis"
     });
   }
 
@@ -861,7 +865,7 @@ function renderProposalMetricHighlights(metrics: readonly SimpleWorkbenchProposa
     return `
       <div class="method-box">
         <h3>No live result set packaged</h3>
-        <p>Build a supported stack and active route first so DAC can issue a numeric result schedule.</p>
+        <p>Build a supported stack first so the proposal can include a numeric result schedule.</p>
       </div>
     `;
   }
@@ -870,9 +874,9 @@ function renderProposalMetricHighlights(metrics: readonly SimpleWorkbenchProposa
     .map(
       (metric) => `
         <div class="result-chip">
-          <strong>${escapeHtml(metric.label)}</strong>
-          <span>${escapeHtml(metric.value)}</span>
-          <small>${escapeHtml(metric.detail)}</small>
+            <strong>${escapeHtml(metric.label)}</strong>
+            <span>${escapeHtml(metric.value)}</span>
+            <small>${escapeHtml(cleanClientProposalText(metric.detail))}</small>
         </div>
       `
     )
@@ -930,17 +934,17 @@ function renderProposalMetricGraph(document: SimpleWorkbenchProposalDocument): s
         <div>
           <div class="eyebrow">Weighted Result Graph</div>
           <h3>Acoustic result profile</h3>
-          <p>Primary answer first. Weighted airborne ratings read higher-is-better; weighted impact ratings read lower-is-better on the shared dB reference band.</p>
-        </div>
-        <div class="chart-meta-stack">
-          <div class="chart-meta chart-meta-accent">${PROPOSAL_GRAPH_MIN_DB} to ${PROPOSAL_GRAPH_MAX_DB} dB reference band</div>
-          <div class="chart-meta">Primary metric first</div>
-        </div>
+            <p>Primary answer first. Weighted airborne ratings read higher-is-better; weighted impact ratings read lower-is-better on the shared dB reference band.</p>
+          </div>
+          <div class="chart-meta-stack">
+            <div class="chart-meta chart-meta-accent">${PROPOSAL_GRAPH_MIN_DB} to ${PROPOSAL_GRAPH_MAX_DB} dB reference band</div>
+            <div class="chart-meta">Primary metric first</div>
+          </div>
       </div>
-      <div class="chart-band-strip">
-        <span class="chart-band-pill">Weighted indices</span>
-        <span class="chart-band-pill">Shared dB ruler</span>
-        <span class="chart-band-pill">Route-aware interpretation</span>
+        <div class="chart-band-strip">
+          <span class="chart-band-pill">Weighted indices</span>
+          <span class="chart-band-pill">Shared dB ruler</span>
+          <span class="chart-band-pill">Proposal interpretation</span>
       </div>
       <div class="plot-shell">
         ${renderProposalMetricPlotSvg(rows)}
@@ -1279,7 +1283,7 @@ function renderProposalResponseCurves(document: SimpleWorkbenchProposalDocument)
                       <div class="curve-legend-swatch curve-legend-swatch-${escapeHtml(series.id)}"></div>
                       <div class="result-row-copy">
                         <strong>${escapeHtml(series.label)}</strong>
-                        <small>${series.active ? "Active answer curve on this lane." : "Supporting comparison curve."}</small>
+                        <small>${series.active ? "Active answer curve." : "Supporting comparison curve."}</small>
                       </div>
                     </div>
                   `
@@ -1293,83 +1297,18 @@ function renderProposalResponseCurves(document: SimpleWorkbenchProposalDocument)
   `;
 }
 
-function renderCoverageRows(items: readonly SimpleWorkbenchProposalCoverageItem[]): string {
-  return items
-    .map((item) => {
-      const nextStep = item.nextStep ? ` Next action: ${escapeHtml(item.nextStep)}.` : "";
+function renderClientOfferMetricRows(metrics: readonly SimpleWorkbenchProposalMetric[]): string {
+  if (metrics.length === 0) {
+    return `<tr><td colspan="3">No acoustic index is packaged on this proposal yet.</td></tr>`;
+  }
 
-      return `
-        <tr>
-          <td>${escapeHtml(item.label)}</td>
-          <td>${escapeHtml(formatCoverageStatus(item.status))}</td>
-          <td>${escapeHtml(item.postureLabel)}</td>
-          <td>${escapeHtml(item.value)}</td>
-          <td>${escapeHtml(item.detail)}${nextStep} Evidence class: ${escapeHtml(item.postureDetail)}</td>
-        </tr>
-      `;
-    })
-    .join("");
-}
-
-function renderIssueRegisterRows(items: readonly SimpleWorkbenchProposalIssueRegisterItem[]): string {
-  return items
-    .map(
-      (item) => `
-        <tr>
-          <td>${escapeHtml(item.label)}</td>
-          <td>${escapeHtml(item.reference)}</td>
-          <td>${escapeHtml(item.statusLabel)}</td>
-          <td>${escapeHtml(item.issuedOnLabel)}</td>
-          <td>${escapeHtml(item.detail)}</td>
-        </tr>
-      `
-    )
-    .join("");
-}
-
-function renderMetricRows(metrics: readonly SimpleWorkbenchProposalMetric[]): string {
   return metrics
     .map(
       (metric) => `
         <tr>
           <td>${escapeHtml(metric.label)}</td>
-          <td>${escapeHtml(metric.value)}</td>
-          <td>${escapeHtml(metric.detail)}</td>
-        </tr>
-      `
-    )
-    .join("");
-}
-
-function renderMethodBasisRows(document: SimpleWorkbenchProposalDocument): string {
-  return [
-    {
-      basis: document.dynamicBranchLabel,
-      detail: document.dynamicBranchDetail,
-      label: "Dynamic route"
-    },
-    {
-      basis: document.validationLabel,
-      detail: document.validationDetail,
-      label: "Validation posture"
-    },
-    {
-      basis: `${document.studyModeLabel} · ${document.contextLabel}`,
-      detail: `${document.studyContextLabel} workflow running under the ${document.reportProfileLabel.toLowerCase()} profile.`,
-      label: "Study scope"
-    },
-    {
-      basis: document.proposalIssuePurpose,
-      detail: `Issued to ${document.proposalRecipient}. ${document.proposalValidityNote}`,
-      label: "Deliverable basis"
-    }
-  ]
-    .map(
-      (item) => `
-        <tr>
-          <td>${escapeHtml(item.label)}</td>
-          <td>${escapeHtml(item.basis)}</td>
-          <td>${escapeHtml(item.detail)}</td>
+          <td><strong>${escapeHtml(metric.value)}</strong></td>
+          <td>${escapeHtml(cleanClientProposalText(metric.detail))}</td>
         </tr>
       `
     )
@@ -1407,7 +1346,7 @@ function renderConstructionFigure(document: SimpleWorkbenchProposalDocument): st
     <div class="construction-grid">
       <div class="construction-figure">
         ${construction.svgMarkup}
-        <div class="construction-figure-note">Indicative build-up section drawn from the visible solver stack. Thin finish and resilient layers use a minimum graphic width so the sheet stays readable in print.</div>
+        <div class="construction-figure-note">Indicative build-up section drawn from the visible layer schedule. Thin finish and resilient layers use a minimum graphic width so the sheet stays readable in print.</div>
       </div>
       <div class="construction-legend">
         <table class="construction-table">
@@ -1417,7 +1356,7 @@ function renderConstructionFigure(document: SimpleWorkbenchProposalDocument): st
         <div class="construction-summary-card">
           <strong>Total thickness</strong>
           <span>${escapeHtml(construction.section.totalThicknessLabel)}</span>
-          <small>${escapeHtml(construction.section.anchorFromLabel)} to ${escapeHtml(construction.section.anchorToLabel)} in solver order.</small>
+          <small>${escapeHtml(construction.section.anchorFromLabel)} to ${escapeHtml(construction.section.anchorToLabel)}.</small>
         </div>
       </div>
     </div>
@@ -1589,45 +1528,39 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
     reportProfile: document.reportProfile,
     reportProfileLabel: document.reportProfileLabel
   });
-  const dossier = buildSimpleWorkbenchProposalDossier(document);
   const constructionSection = buildSimpleWorkbenchProposalConstructionSection(document.layers, document.studyModeLabel, {
     totalThicknessLabelOverride: document.constructionTotalThicknessOverrideLabel
   });
-  const warningItems =
-    document.warnings.length > 0
-      ? renderListItems(document.warnings)
-      : "<li>No live warning flags on the active route.</li>";
   const consultantNote =
     document.briefNote.trim().length > 0
-      ? escapeHtml(document.briefNote.trim())
-      : "No additional consultant note entered.";
-  const liveCoverageCount = dossier.readyCoverageCount;
-  const parkedCoverageCount = dossier.parkedCoverageCount;
-  const unsupportedCoverageCount = dossier.unsupportedCoverageCount;
+      ? escapeHtml(cleanClientProposalText(document.briefNote.trim()))
+      : "No additional proposal note entered.";
   const standardReferences = inferProposalStandardReferences(document);
   const stackDensityCount = document.layers.filter((layer) => typeof layer.densityLabel === "string" && layer.densityLabel.trim().length > 0).length;
   const stackSurfaceMassCount = document.layers.filter(
     (layer) => typeof layer.surfaceMassLabel === "string" && layer.surfaceMassLabel.trim().length > 0
   ).length;
-  const reportMarkSvg = buildSimpleWorkbenchReportMarkSvgMarkup({
-    accent: branding.accent,
-    accentStrong: branding.accentStrong,
-    ink: "#1c2f40",
-    panel: "#fffdf9",
-    variant: "cover"
-  });
-  const compactRecommendationList = renderCompactBriefList(
+  const preparedBy =
+    document.preparedBy.trim().toLowerCase() === "dac operator" ? "Acoustic consultant" : document.preparedBy;
+  const brandMarkHtml =
+    document.consultantLogoDataUrl.trim().length > 0
+      ? `<img class="brand-logo" src="${escapeHtml(document.consultantLogoDataUrl)}" alt="${escapeHtml(document.consultantCompany)} logo" />`
+      : `<div class="brand-monogram">${escapeHtml(branding.monogram)}</div>`;
+  const offerRecommendationList = renderClientOfferBriefItems(
     document.recommendationItems,
-    "No additional recommendation lines are packaged on this issue."
+    "No additional next-step line is entered for this proposal."
   );
-  const compactAssumptionList = renderCompactBriefList(
+  const offerAssumptionList = renderClientOfferBriefItems(
     document.assumptionItems,
-    "No additional assumption lines are packaged on this issue."
+    "No additional assumption line is entered for this proposal."
   );
-  const compactCitationList = renderCompactCitationList(
+  const offerCitationList = renderClientOfferCitationItems(
     document.citations,
-    "No external source line is packaged on this issue."
+    "No external reference line is entered for this proposal."
   );
+  const calculationBasisDetail = cleanClientProposalText(document.validationDetail);
+  const executiveSummary = cleanClientProposalText(document.executiveSummary);
+  const issueAuthorityText = `${preparedBy}, ${document.approverTitle}, prepared ${document.proposalReference} ${document.proposalRevision} on behalf of ${document.consultantCompany} for ${document.clientName}.`;
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -2497,11 +2430,11 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
         background: linear-gradient(180deg, rgba(248, 251, 253, 0.98), rgba(255, 255, 255, 0.98));
       }
 
-      .page-header-grid {
-        display: grid;
-        gap: 12px;
-        grid-template-columns: 1.1fr 0.9fr;
-      }
+        .page-header-grid {
+          display: grid;
+          gap: 12px;
+          grid-template-columns: 1fr;
+        }
 
       .appendix-strip {
         display: grid;
@@ -2592,7 +2525,7 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
         color: var(--ink-soft);
       }
 
-      @media (max-width: 900px) {
+        @media screen and (max-width: 900px) {
         .hero-grid,
         .cover-grid,
         .cover-standard-strip,
@@ -2624,466 +2557,349 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
     </style>
   </head>
   <body>
-    <main class="sheet">
-      <section class="frame cover-frame page">
-        <header class="cover-hero">
-          <div class="brand-hero-row">
-            <div class="brand-mark">
-              ${
-                document.consultantLogoDataUrl
-                  ? `<img alt="${escapeHtml(document.consultantCompany)} logo" class="brand-logo" src="${escapeHtml(document.consultantLogoDataUrl)}" />`
-                  : `<div class="brand-monogram">${escapeHtml(branding.monogram)}</div>`
-              }
-              <div class="brand-stack">
-                <div class="eyebrow">${escapeHtml(branding.coverLabel)}</div>
-                <strong>${escapeHtml(branding.wordmarkPrimary)}</strong>
-                <small>${escapeHtml(branding.wordmarkSecondary)}</small>
+      <main class="sheet">
+        <section class="frame cover-frame page">
+          <header class="cover-hero">
+            <div class="brand-hero-row">
+              <div class="brand-mark">
+                ${brandMarkHtml}
+                <div class="brand-stack">
+                  <strong>${escapeHtml(document.consultantCompany)}</strong>
+                  <small>${escapeHtml(branding.wordmarkSecondary)}</small>
+                </div>
+              </div>
+              <div class="template-pill">Acoustic proposal <span>${escapeHtml(document.proposalReference)} · ${escapeHtml(document.proposalRevision)}</span></div>
+            </div>
+            <h1 class="cover-title">Acoustic Proposal</h1>
+            <p class="cover-kicker">${escapeHtml(branding.coverKicker)}</p>
+            <div class="cover-standard-strip">
+              ${renderProposalStandardPills(standardReferences)}
+            </div>
+            <div class="cover-grid">
+              <div class="cover-stack">
+                <div class="card">
+                  <strong>Project</strong>
+                  <span>${escapeHtml(document.projectName)}</span>
+                  <small>${escapeHtml(document.clientName)} | ${escapeHtml(document.studyContextLabel)} | ${escapeHtml(document.reportProfileLabel)}</small>
+                </div>
+                <div class="card">
+                  <strong>Issued to</strong>
+                  <span>${escapeHtml(document.proposalRecipient)}</span>
+                  <small>${escapeHtml(document.proposalAttention)}<br />${escapeHtml(document.proposalSubject)}<br />${escapeHtml(document.proposalIssuePurpose)}<br />${escapeHtml(document.proposalValidityNote)}</small>
+                </div>
+                <div class="cover-summary">
+                  <div class="eyebrow">Proposal summary</div>
+                  <h3 style="margin: 10px 0 0;">${escapeHtml(document.proposalSubject)}</h3>
+                  <p>${escapeHtml(executiveSummary)}</p>
+                </div>
+              </div>
+              <div class="cover-stack">
+                ${
+                  primaryMetricVisible
+                    ? `
+                <div class="metric primary-metric">
+                  <strong>Primary acoustic value</strong>
+                  <span>${escapeHtml(document.primaryMetricLabel)} ${escapeHtml(document.primaryMetricValue)}</span>
+                  <small>${escapeHtml(document.assemblyHeadline)}</small>
+                </div>
+                `
+                    : ""
+                }
+                <div class="card">
+                  <strong>Issue</strong>
+                  <span>${escapeHtml(document.proposalReference)}</span>
+                  <small>${escapeHtml(document.proposalRevision)} | ${escapeHtml(document.issuedOnLabel)}</small>
+                </div>
+                <div class="card">
+                  <strong>Consultant</strong>
+                  <span>${escapeHtml(document.consultantCompany)}</span>
+                  <small>${escapeHtml(preparedBy)} | ${escapeHtml(document.approverTitle)}</small>
+                </div>
+                <div class="card">
+                  <strong>Contact</strong>
+                  <span>${escapeHtml(document.consultantEmail)}</span>
+                  <small>${escapeHtml(document.consultantPhone)}<br />${escapeHtml(document.consultantAddress)}</small>
+                </div>
               </div>
             </div>
-            <div class="template-pill">
-              Template
-              <span>${escapeHtml(branding.templateLabel)}</span>
-            </div>
-          </div>
-          <div class="report-kicker-row">
-            <div class="dac-mark">${reportMarkSvg}</div>
-          </div>
-          <h1 class="cover-title">${escapeHtml(branding.coverTitle)}</h1>
-          <p class="cover-kicker">
-            ${escapeHtml(branding.coverKicker)}
-          </p>
-          <div class="cover-standard-strip">
-            ${renderProposalStandardPills(standardReferences)}
-          </div>
-          <div class="cover-grid">
-            <div class="cover-stack">
-              <div class="card">
-                <strong>Project</strong>
-                <span>${escapeHtml(document.projectName)}</span>
-                <small>${escapeHtml(document.clientName)} | ${escapeHtml(document.studyContextLabel)} | ${escapeHtml(document.reportProfileLabel)}</small>
+          </header>
+
+          <section class="section" style="padding-top: 10mm;">
+            <div class="detail-grid" style="padding: 0;">
+              <div class="method-box">
+                <div class="eyebrow" style="margin-bottom: 8px;">Scope</div>
+                <h3>Acoustic calculation basis</h3>
+                <p>${escapeHtml(document.studyModeLabel)} · ${escapeHtml(document.contextLabel)}. ${escapeHtml(calculationBasisDetail)}</p>
               </div>
-              <div class="card">
-                <strong>Issued to</strong>
-                <span>${escapeHtml(document.proposalRecipient)}</span>
-                <small>${escapeHtml(document.proposalAttention)}<br />${escapeHtml(document.proposalSubject)}<br />${escapeHtml(document.proposalIssuePurpose)}<br />${escapeHtml(document.proposalValidityNote)}</small>
+              <div class="method-box">
+                <div class="eyebrow" style="margin-bottom: 8px;">Issue authority</div>
+                <h3>Prepared for client review</h3>
+                <p>${escapeHtml(issueAuthorityText)}</p>
               </div>
-              <div class="cover-summary">
-                <div class="eyebrow">${escapeHtml(branding.coverLabel)}</div>
-                <h3 style="margin: 10px 0 0;">${escapeHtml(branding.profileDetail)}</h3>
-                <p>${escapeHtml(document.executiveSummary)}</p>
+              <div class="method-box">
+                <div class="eyebrow" style="margin-bottom: 8px;">Validity</div>
+                <h3>Offer basis</h3>
+                <p>${escapeHtml(document.proposalIssuePurpose)}. ${escapeHtml(document.proposalValidityNote)}</p>
+              </div>
+              <div class="method-box">
+                <div class="eyebrow" style="margin-bottom: 8px;">Transmittal</div>
+                <h3>Recipient and subject</h3>
+                <p>Issued to ${escapeHtml(document.proposalRecipient)}. ${escapeHtml(document.proposalAttention)}. Subject: ${escapeHtml(document.proposalSubject)}.</p>
               </div>
             </div>
-            <div class="cover-stack">
+          </section>
+
+          <section class="section" style="margin-top: auto; padding-bottom: 12mm;">
+            <div class="eyebrow" style="margin: 18px 0 8px;">Signature and Issue Authority</div>
+            <div class="signature-grid">
+              <div class="signature-box">
+                <div class="eyebrow">Issued by</div>
+                <h3>${escapeHtml(preparedBy)}</h3>
+                <p>${escapeHtml(document.consultantCompany)}</p>
+                <p class="signature-meta">${escapeHtml(document.approverTitle)} · ${escapeHtml(document.consultantEmail)} · ${escapeHtml(document.consultantPhone)}</p>
+                <p class="signature-meta">${escapeHtml(document.consultantAddress)}</p>
+                <div class="signature-line">Authorized consultant signature</div>
+              </div>
+              <div class="signature-box">
+                <div class="eyebrow">Issue control</div>
+                <h3>${escapeHtml(document.proposalReference)} · ${escapeHtml(document.proposalRevision)}</h3>
+                <p>Issued on ${escapeHtml(document.issuedOnLabel)} for ${escapeHtml(document.clientName)}.</p>
+                <p class="signature-meta">Primary issue contact: ${escapeHtml(document.consultantEmail)} · ${escapeHtml(document.consultantPhone)}</p>
+                <p class="signature-meta">Issued to: ${escapeHtml(document.proposalRecipient)} · ${escapeHtml(document.proposalAttention)}</p>
+                <p class="signature-meta">Purpose: ${escapeHtml(document.proposalIssuePurpose)} · ${escapeHtml(document.proposalValidityNote)}</p>
+                <div class="signature-line">Issue date and transmittal confirmation</div>
+              </div>
+            </div>
+          </section>
+        </section>
+
+        <section class="frame page">
+          <header class="page-header">
+            <div class="eyebrow">${escapeHtml(document.consultantCompany)} | Acoustic proposal</div>
+            <div class="page-header-grid">
+              <div>
+                <h1 style="margin-top: 8px;">Proposal Summary</h1>
+                <p class="lede">Acoustic indices, construction basis, proposal notes, and client issue details for this offer form.</p>
+              </div>
+              <div class="summary-grid" style="margin-top: 0;">
+                <div class="metric">
+                  <strong>Study</strong>
+                  <span>${escapeHtml(document.studyModeLabel)}</span>
+                  <small>${escapeHtml(document.contextLabel)} | ${escapeHtml(document.reportProfileLabel)}</small>
+                </div>
+                <div class="metric">
+                  <strong>Review status</strong>
+                  <span>${escapeHtml(document.validationLabel)}</span>
+                  <small>${escapeHtml(calculationBasisDetail)}</small>
+                </div>
+                <div class="metric">
+                  <strong>Build-up</strong>
+                  <span>${escapeHtml(constructionSection.totalThicknessLabel)}</span>
+                  <small>${document.layers.length} visible row${document.layers.length === 1 ? "" : "s"} · ${stackDensityCount} density line${stackDensityCount === 1 ? "" : "s"} · ${stackSurfaceMassCount} surface-mass line${stackSurfaceMassCount === 1 ? "" : "s"}</small>
+                </div>
+                <div class="metric">
+                  <strong>Validity</strong>
+                  <span>${escapeHtml(document.proposalRevision)}</span>
+                  <small>${escapeHtml(document.proposalValidityNote)}</small>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          <section class="section">
+            <div class="eyebrow" style="margin: 18px 0 8px;">Executive Summary</div>
+            <div class="method-box">
+              <h3>Offer summary</h3>
+              <p>${escapeHtml(executiveSummary)}</p>
+            </div>
+          </section>
+
+          <section class="section">
+            <div class="eyebrow" style="margin: 18px 0 8px;">Acoustic Indices</div>
+            <div class="summary-grid" style="margin-top: 0;">
               ${
                 primaryMetricVisible
                   ? `
-              <div class="metric primary-metric">
-                <strong>Primary read</strong>
+              <div class="metric">
+                <strong>Primary acoustic value</strong>
                 <span>${escapeHtml(document.primaryMetricLabel)} ${escapeHtml(document.primaryMetricValue)}</span>
                 <small>${escapeHtml(document.assemblyHeadline)}</small>
               </div>
               `
                   : ""
               }
-              <div class="card">
-                <strong>Issue</strong>
-                <span>${escapeHtml(document.proposalReference)}</span>
-                <small>${escapeHtml(document.proposalRevision)} | ${escapeHtml(document.issuedOnLabel)}<br />Prefix ${escapeHtml(buildIssueCodePrefixLabel(document))} · Base ${escapeHtml(document.issueBaseReference)}</small>
+              <div class="metric">
+                <strong>Project stage</strong>
+                <span>${escapeHtml(document.studyContextLabel)}</span>
+                <small>${escapeHtml(document.proposalIssuePurpose)}</small>
               </div>
-              <div class="card">
-                <strong>Consultant</strong>
-                <span>${escapeHtml(document.consultantCompany)}</span>
-                <small>${escapeHtml(document.preparedBy)} | ${escapeHtml(document.approverTitle)} | ${escapeHtml(document.studyModeLabel)} study</small>
+              <div class="metric">
+                <strong>Validation</strong>
+                <span>${escapeHtml(document.validationLabel)}</span>
+                <small>${escapeHtml(calculationBasisDetail)}</small>
               </div>
-              <div class="card">
-                <strong>Company identity</strong>
-                <span>${escapeHtml(document.consultantEmail)}</span>
-                <small>${escapeHtml(document.consultantPhone)}<br />${escapeHtml(document.consultantAddress)}</small>
+              <div class="metric">
+                <strong>Stack</strong>
+                <span>${escapeHtml(constructionSection.totalThicknessLabel)}</span>
+                <small>${document.layers.length} visible row${document.layers.length === 1 ? "" : "s"} · ${stackDensityCount} density line${stackDensityCount === 1 ? "" : "s"} · ${stackSurfaceMassCount} surface-mass line${stackSurfaceMassCount === 1 ? "" : "s"}</small>
               </div>
             </div>
-          </div>
-        </header>
+          </section>
 
-        <section class="section" style="padding-top: 10mm;">
-          <div class="detail-grid" style="padding: 0;">
-            <div class="method-box">
-              <div class="eyebrow" style="margin-bottom: 8px;">Scope</div>
-              <h3>Client transmittal reading</h3>
-              <p>${escapeHtml(document.dynamicBranchLabel)} is active on the current route. ${escapeHtml(document.validationLabel)} remains explicit so the issue can move into review without overstating evidence quality.</p>
+          <section class="section">
+            <div class="eyebrow" style="margin: 18px 0 8px;">Acoustic Result Profile</div>
+            <div class="result-board">
+              <div class="result-brief">
+                <div class="method-box">
+                  <h3>Result summary</h3>
+                  <p>${
+                    primaryMetricVisible
+                      ? `${escapeHtml(document.primaryMetricLabel)} ${escapeHtml(document.primaryMetricValue)} is the current headline answer.`
+                      : "The primary single-number answer is hidden on this issue."
+                  } Single-number ratings on this proposal are expressed using the relevant ISO rating language.</p>
+                </div>
+                <div class="result-chip-grid">
+                  ${renderProposalMetricHighlights(visibleMetrics)}
+                </div>
+                <div class="method-box">
+                  <div class="eyebrow" style="margin-bottom: 8px;">Result interpretation</div>
+                  <h3>How to read the values</h3>
+                  <p>Weighted airborne ratings target higher values; weighted impact ratings target lower values. Where band data is available, the response curve is included for review.</p>
+                </div>
+              </div>
+              ${renderProposalResponseCurves(document)}
             </div>
-            <div class="method-box">
-              <div class="eyebrow" style="margin-bottom: 8px;">Issue authority</div>
-              <h3>Prepared for client review</h3>
-              <p>${escapeHtml(buildIssueAuthorityText(document))}</p>
-            </div>
-            <div class="method-box">
-              <div class="eyebrow" style="margin-bottom: 8px;">Issue register</div>
-              <h3>Revision control snapshot</h3>
-              <p>Code prefix ${escapeHtml(buildIssueCodePrefixLabel(document))} is feeding the base stem. Base reference ${escapeHtml(document.issueBaseReference)} is active. Next browser-local issue number currently reads ${escapeHtml(document.issueNextReference)}.</p>
-            </div>
-            <div class="method-box">
-              <div class="eyebrow" style="margin-bottom: 8px;">Transmittal</div>
-              <h3>Recipient and subject</h3>
-              <p>Issued to ${escapeHtml(document.proposalRecipient)}. ${escapeHtml(document.proposalAttention)}. Subject: ${escapeHtml(document.proposalSubject)}. Purpose: ${escapeHtml(document.proposalIssuePurpose)}. Validity: ${escapeHtml(document.proposalValidityNote)}.</p>
-            </div>
-          </div>
-        </section>
+          </section>
 
-        <section class="section" style="margin-top: auto; padding-bottom: 12mm;">
-          <div class="eyebrow" style="margin: 18px 0 8px;">Signature and Issue Authority</div>
-          <div class="signature-grid">
-            <div class="signature-box">
-              <div class="eyebrow">Issued by</div>
-              <h3>${escapeHtml(document.preparedBy)}</h3>
-              <p>${escapeHtml(document.consultantCompany)}</p>
-              <p class="signature-meta">${escapeHtml(document.approverTitle)} · ${escapeHtml(document.consultantEmail)} · ${escapeHtml(document.consultantPhone)}</p>
-              <p class="signature-meta">${escapeHtml(document.consultantAddress)}</p>
-              <div class="signature-line">Authorized consultant signature</div>
+          <section class="section">
+            <div class="eyebrow" style="margin: 18px 0 8px;">Reference Standards</div>
+            <div class="method-box">
+              <h3>Calculation basis</h3>
+              <p>Calculations and single-number ratings are expressed using the relevant ISO basis for the proposal. This offer form is a design estimate and does not replace accredited laboratory or site measurements.</p>
             </div>
-            <div class="signature-box">
-              <div class="eyebrow">Issue control</div>
-              <h3>${escapeHtml(document.proposalReference)} · ${escapeHtml(document.proposalRevision)}</h3>
-              <p>Issued on ${escapeHtml(document.issuedOnLabel)} for ${escapeHtml(document.clientName)}.</p>
-              <p class="signature-meta">Primary issue contact: ${escapeHtml(document.consultantEmail)} · ${escapeHtml(document.consultantPhone)}</p>
-              <p class="signature-meta">Issued to: ${escapeHtml(document.proposalRecipient)} · ${escapeHtml(document.proposalAttention)}</p>
-              <p class="signature-meta">Purpose: ${escapeHtml(document.proposalIssuePurpose)} · ${escapeHtml(document.proposalValidityNote)}</p>
-              <div class="signature-line">Issue date and transmittal confirmation</div>
+            <div class="standards-grid" style="padding-top: 12px;">
+              ${renderProposalStandardCards(standardReferences)}
             </div>
-          </div>
-        </section>
-      </section>
+          </section>
 
-      <section class="frame page">
-        <header class="page-header">
-          <div class="eyebrow">${escapeHtml(SIMPLE_WORKBENCH_REPORT_MARK)} | ${escapeHtml(SIMPLE_WORKBENCH_REPORT_PRODUCT_NAME)}</div>
-          <div class="page-header-grid">
-            <div>
-              <h1 style="margin-top: 8px;">Technical Schedule</h1>
-              <p class="lede">
-                Working schedule of live outputs, coverage posture, dynamic branch choice, and the current layer structure.
+          <section class="section">
+            <div class="eyebrow" style="margin: 18px 0 8px;">Client Details</div>
+            <div class="detail-grid" style="padding: 0;">
+              <div class="method-box">
+                <div class="eyebrow" style="margin-bottom: 8px;">Recipient</div>
+                <h3>Transmittal recipient</h3>
+                <p>${escapeHtml(document.proposalRecipient)}</p>
+                <p style="margin-top: 8px;">${escapeHtml(document.proposalAttention)}</p>
+              </div>
+              <div class="method-box">
+                <div class="eyebrow" style="margin-bottom: 8px;">Subject</div>
+                <h3>Issue subject line</h3>
+                <p>${escapeHtml(document.proposalSubject)}</p>
+                <p style="margin-top: 8px;">Purpose: ${escapeHtml(document.proposalIssuePurpose)}</p>
+                <p style="margin-top: 8px;">Validity: ${escapeHtml(document.proposalValidityNote)}</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="section">
+            <div class="eyebrow" style="margin: 18px 0 8px;">Measured / Predicted Indices</div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Metric</th>
+                  <th>Value</th>
+                  <th>Meaning</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${renderClientOfferMetricRows(visibleMetrics)}
+              </tbody>
+            </table>
+          </section>
+
+          <section class="section">
+            <div class="eyebrow" style="margin: 18px 0 8px;">Scope and Basis</div>
+            <div class="detail-grid" style="padding: 0;">
+              <div class="method-box">
+                <div class="eyebrow" style="margin-bottom: 8px;">Calculation basis</div>
+                <h3>${escapeHtml(document.studyModeLabel)} · ${escapeHtml(document.contextLabel)}</h3>
+                <p>${escapeHtml(calculationBasisDetail)}</p>
+              </div>
+              <div class="method-box">
+                <div class="eyebrow" style="margin-bottom: 8px;">Deliverable basis</div>
+                <h3>${escapeHtml(document.proposalIssuePurpose)}</h3>
+                <p>Issued to ${escapeHtml(document.proposalRecipient)}. ${escapeHtml(document.proposalValidityNote)}</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="section">
+            <div class="eyebrow" style="margin: 18px 0 8px;">Construction Section</div>
+            <div class="method-box">
+              <h3>Visible layer build-up</h3>
+              <p>${escapeHtml(constructionSection.anchorFromLabel)} to ${escapeHtml(constructionSection.anchorToLabel)}. ${escapeHtml(constructionSection.totalThicknessLabel)} is shown so the build-up can be reviewed from the PDF.</p>
+            </div>
+            <div style="padding-top: 12px;">
+              ${renderConstructionFigure(document)}
+            </div>
+          </section>
+
+          <section class="section">
+            <div class="eyebrow" style="margin: 18px 0 8px;">Layer Schedule</div>
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Layer</th>
+                  <th>Thickness</th>
+                  <th>Density</th>
+                  <th>Surface Mass</th>
+                  <th>Assigned role</th>
+                  <th>Category</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${renderLayerRows(document.layers)}
+              </tbody>
+            </table>
+          </section>
+
+          <section class="detail-grid" style="padding-top: 0;">
+            <div class="method-box">
+              <div class="eyebrow" style="margin-bottom: 8px;">Proposal note</div>
+              <h3>Consultant note</h3>
+              <p>${consultantNote}</p>
+            </div>
+            <div class="method-box">
+              <div class="eyebrow" style="margin-bottom: 8px;">Assumptions</div>
+              <h3>Proposal assumptions</h3>
+              <ul>${offerAssumptionList}</ul>
+            </div>
+          </section>
+
+          <section class="detail-grid" style="padding-top: 12px;">
+            <div class="method-box">
+              <div class="eyebrow" style="margin-bottom: 8px;">Next steps</div>
+              <h3>Recommended actions</h3>
+              <ul>${offerRecommendationList}</ul>
+            </div>
+            <div class="method-box">
+              <div class="eyebrow" style="margin-bottom: 8px;">References</div>
+              <h3>Reference lines</h3>
+              <ul>${offerCitationList}</ul>
+            </div>
+          </section>
+
+          <section class="footer">
+            <div class="note-box">
+              <p>This acoustic proposal summarizes a project estimate and should be read together with the stated ISO basis, assumptions, validity note, and any required laboratory or site verification.</p>
+              <p style="margin-top: 8px;">
+                ${escapeHtml(document.consultantCompany)} · ${escapeHtml(preparedBy)} · ${escapeHtml(document.approverTitle)} · ${escapeHtml(document.consultantEmail)} · ${escapeHtml(document.consultantPhone)} · ${escapeHtml(document.consultantAddress)}
               </p>
             </div>
-            <div class="summary-grid" style="margin-top: 0;">
-              <div class="metric">
-                <strong>Study</strong>
-                <span>${escapeHtml(document.studyModeLabel)}</span>
-                <small>${escapeHtml(document.contextLabel)} | ${escapeHtml(document.reportProfileLabel)}</small>
-              </div>
-              <div class="metric">
-                <strong>Dynamic branch</strong>
-                <span>${escapeHtml(document.dynamicBranchLabel)}</span>
-                <small>${escapeHtml(document.dynamicBranchDetail)}</small>
-              </div>
-              <div class="metric">
-                <strong>Validation posture</strong>
-                <span>${escapeHtml(document.validationLabel)}</span>
-                <small>${escapeHtml(document.validationDetail)}</small>
-              </div>
-              <div class="metric">
-                <strong>Coverage register</strong>
-                <span>${liveCoverageCount} ready · ${parkedCoverageCount} parked</span>
-                <small>${unsupportedCoverageCount} unsupported lane${unsupportedCoverageCount === 1 ? "" : "s"} stay explicit in the appendix.</small>
-              </div>
-            </div>
-          </div>
-        </header>
-
-        <section class="section">
-          <div class="eyebrow" style="margin: 18px 0 8px;">Executive Summary</div>
-          <div class="method-box">
-            <h3>Memo-grade reading</h3>
-            <p>${escapeHtml(document.executiveSummary)}</p>
-          </div>
+          </section>
         </section>
-
-        <section class="section">
-          <div class="eyebrow" style="margin: 18px 0 8px;">Issue Snapshot</div>
-          <div class="summary-grid" style="margin-top: 0;">
-            ${
-              primaryMetricVisible
-                ? `
-            <div class="metric">
-              <strong>Primary read</strong>
-              <span>${escapeHtml(document.primaryMetricLabel)} ${escapeHtml(document.primaryMetricValue)}</span>
-              <small>${escapeHtml(document.assemblyHeadline)}</small>
-            </div>
-            `
-                : ""
-            }
-            <div class="metric">
-              <strong>Route</strong>
-              <span>${escapeHtml(document.dynamicBranchLabel)}</span>
-              <small>${escapeHtml(document.dynamicBranchDetail)}</small>
-            </div>
-            <div class="metric">
-              <strong>Validation</strong>
-              <span>${escapeHtml(document.validationLabel)}</span>
-              <small>${escapeHtml(document.validationDetail)}</small>
-            </div>
-            <div class="metric">
-              <strong>Stack</strong>
-              <span>${escapeHtml(constructionSection.totalThicknessLabel)}</span>
-              <small>${document.layers.length} visible row${document.layers.length === 1 ? "" : "s"} · ${stackDensityCount} density line${stackDensityCount === 1 ? "" : "s"} · ${stackSurfaceMassCount} surface-mass line${stackSurfaceMassCount === 1 ? "" : "s"}</small>
-            </div>
-          </div>
-        </section>
-
-        <section class="section">
-          <div class="eyebrow" style="margin: 18px 0 8px;">Acoustic Result Profile</div>
-          <div class="result-board">
-            <div class="result-brief">
-              <div class="method-box">
-                <h3>DAC technical reading</h3>
-                <p>${
-                  primaryMetricVisible
-                    ? `${escapeHtml(document.primaryMetricLabel)} ${escapeHtml(document.primaryMetricValue)} is the current headline answer.`
-                    : "The primary single-number answer is intentionally hidden on this issue."
-                } Single-number ratings on this issue are expressed in the active ISO rating language, while route choice and validation posture remain explicit below.</p>
-              </div>
-              <div class="result-chip-grid">
-                ${renderProposalMetricHighlights(visibleMetrics)}
-              </div>
-              <div class="method-box">
-                <div class="eyebrow" style="margin-bottom: 8px;">Result interpretation</div>
-                <h3>Consultant-facing answer set</h3>
-                <p>Weighted airborne ratings target higher values; weighted impact ratings target lower values. Where the active lane exposes real band data, DAC plots the actual response curve instead of a proxy summary chart.</p>
-              </div>
-            </div>
-            ${renderProposalResponseCurves(document)}
-          </div>
-        </section>
-
-        <section class="section">
-          <div class="eyebrow" style="margin: 18px 0 8px;">ISO &amp; Method Basis</div>
-          <div class="method-box">
-            <h3>ISO-aligned calculation basis</h3>
-            <p>Calculations and single-number ratings are expressed using the active ISO basis relevant to the current route. ${escapeHtml(SIMPLE_WORKBENCH_REPORT_MARK)} output keeps prediction, field continuation, and evidence posture explicit instead of presenting the result as an accredited test certificate.</p>
-          </div>
-          <div class="standards-grid" style="padding-top: 12px;">
-            ${renderProposalStandardCards(standardReferences)}
-          </div>
-        </section>
-
-        <section class="section">
-          <div class="eyebrow" style="margin: 18px 0 8px;">Issue Dossier</div>
-          <div class="method-box">
-            <h3>Audit posture</h3>
-            <p>${escapeHtml(dossier.headline)}</p>
-          </div>
-          <div class="detail-grid" style="padding: 12px 0 0;">
-            ${renderDossierItems(dossier.items)}
-          </div>
-        </section>
-
-        ${
-          document.corridorDossierCards.length > 0
-            ? `
-        <section class="section">
-          <div class="eyebrow" style="margin: 18px 0 8px;">Validation Corridor Package</div>
-          <div class="method-box">
-            <h3>Benchmarked family and mode posture</h3>
-            <p>${escapeHtml(document.corridorDossierHeadline)}</p>
-          </div>
-          <div class="detail-grid" style="padding: 12px 0 0;">
-            ${renderDossierItems(document.corridorDossierCards)}
-          </div>
-        </section>`
-            : ""
-        }
-
-        <section class="section">
-          <div class="eyebrow" style="margin: 18px 0 8px;">Solver Rationale Appendix</div>
-          <div class="method-box">
-            <h3>Why the calculator is reading the stack this way</h3>
-            <p>${escapeHtml(document.methodDossierHeadline)}</p>
-          </div>
-          <div class="detail-grid" style="padding: 12px 0 0;">
-            ${renderDossierItems(document.methodDossierCards)}
-          </div>
-          ${
-            document.methodTraceGroups.length > 0
-              ? `<div class="detail-grid" style="padding: 12px 0 0;">${renderMethodTraceGroups(document.methodTraceGroups)}</div>`
-              : ""
-          }
-        </section>
-
-        <section class="detail-grid">
-          <div class="method-box">
-            <div class="eyebrow" style="margin-bottom: 8px;">Recipient</div>
-            <h3>Transmittal recipient</h3>
-            <p>${escapeHtml(document.proposalRecipient)}</p>
-            <p style="margin-top: 8px;">${escapeHtml(document.proposalAttention)}</p>
-          </div>
-          <div class="method-box">
-            <div class="eyebrow" style="margin-bottom: 8px;">Subject</div>
-            <h3>Issue subject line</h3>
-            <p>${escapeHtml(document.proposalSubject)}</p>
-            <p style="margin-top: 8px;">Purpose: ${escapeHtml(document.proposalIssuePurpose)}</p>
-            <p style="margin-top: 8px;">Validity: ${escapeHtml(document.proposalValidityNote)}</p>
-          </div>
-        </section>
-
-        <section class="section">
-          <div class="eyebrow" style="margin: 18px 0 8px;">Live Output Schedule</div>
-          <table>
-            <thead>
-              <tr>
-                <th>Metric</th>
-                <th>Value</th>
-                <th>Meaning on this route</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${renderMetricRows(visibleMetrics)}
-            </tbody>
-          </table>
-        </section>
-
-        <section class="section">
-          <div class="eyebrow" style="margin: 18px 0 8px;">Applied Method &amp; Deliverable Basis</div>
-          <table>
-            <thead>
-              <tr>
-                <th>Basis</th>
-                <th>Current reading</th>
-                <th>Issue note</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${renderMethodBasisRows(document)}
-            </tbody>
-          </table>
-        </section>
-
-        <section class="section">
-          <div class="eyebrow" style="margin: 18px 0 8px;">Output Coverage Register</div>
-          <table>
-            <thead>
-              <tr>
-                <th>Metric</th>
-                <th>Status</th>
-                <th>Evidence class</th>
-                <th>Current state</th>
-                <th>Audit reading</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${renderCoverageRows(document.coverageItems)}
-            </tbody>
-          </table>
-        </section>
-
-        <section class="section">
-          <div class="eyebrow" style="margin: 18px 0 8px;">Issue Control Register</div>
-          <table>
-            <thead>
-              <tr>
-                <th>Line</th>
-                <th>Reference</th>
-                <th>Status</th>
-                <th>Date</th>
-                <th>Reading</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${renderIssueRegisterRows(document.issueRegisterItems)}
-            </tbody>
-          </table>
-        </section>
-
-        <section class="detail-grid">
-          <div class="method-box">
-            <div class="eyebrow" style="margin-bottom: 8px;">Method</div>
-            <h3>Why this route is active</h3>
-            <p>${escapeHtml(document.dynamicBranchDetail)}</p>
-          </div>
-          <div class="method-box">
-            <div class="eyebrow" style="margin-bottom: 8px;">Confidence</div>
-            <h3>How to read the result</h3>
-            <p>${escapeHtml(document.validationDetail)}</p>
-          </div>
-        </section>
-
-        <section class="section">
-          <div class="eyebrow" style="margin: 18px 0 8px;">Decision Trail</div>
-          <div class="method-box">
-            <h3>Audit headline</h3>
-            <p>${escapeHtml(document.decisionTrailHeadline)}</p>
-          </div>
-          <div class="detail-grid" style="padding: 12px 0 0;">
-            ${renderDecisionTrailItems(document.decisionTrailItems)}
-          </div>
-        </section>
-
-        <section class="section">
-          <div class="eyebrow" style="margin: 18px 0 8px;">Construction Section</div>
-          <div class="method-box">
-            <h3>Visible layer stack in solver order</h3>
-            <p>${escapeHtml(constructionSection.anchorFromLabel)} to ${escapeHtml(constructionSection.anchorToLabel)}. ${escapeHtml(constructionSection.totalThicknessLabel)} stays visible so the client-facing issue can read the build-up without opening the operator desk.</p>
-          </div>
-          <div style="padding-top: 12px;">
-            ${renderConstructionFigure(document)}
-          </div>
-        </section>
-
-        <section class="section">
-          <div class="eyebrow" style="margin: 18px 0 8px;">Layer Schedule</div>
-          <table>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Layer</th>
-                <th>Thickness</th>
-                <th>Density</th>
-                <th>Surface Mass</th>
-                <th>Assigned role</th>
-                <th>Category</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${renderLayerRows(document.layers)}
-            </tbody>
-          </table>
-        </section>
-
-        <section class="detail-grid" style="padding-top: 0;">
-          <div class="method-box">
-            <div class="eyebrow" style="margin-bottom: 8px;">Warnings</div>
-            <h3>Live checks</h3>
-            <ul>${warningItems}</ul>
-          </div>
-          <div class="method-box">
-            <div class="eyebrow" style="margin-bottom: 8px;">Consultant note</div>
-            <h3>Project note</h3>
-            <p>${consultantNote}</p>
-          </div>
-        </section>
-
-        <section class="detail-grid" style="padding-top: 12px;">
-          <div class="method-box">
-            <div class="eyebrow" style="margin-bottom: 8px;">Project Notes</div>
-            <h3>Key actions and assumptions</h3>
-            <ul>${compactRecommendationList}${compactAssumptionList}</ul>
-          </div>
-          <div class="method-box">
-            <div class="eyebrow" style="margin-bottom: 8px;">Sources</div>
-            <h3>Packaged reference lines</h3>
-            <ul>${compactCitationList}</ul>
-          </div>
-        </section>
-
-        <section class="footer">
-          <div class="note-box">
-            <p>
-              Prepared from the ${escapeHtml(SIMPLE_WORKBENCH_REPORT_PRODUCT_NAME)}. This ${escapeHtml(SIMPLE_WORKBENCH_REPORT_MARK)} sheet summarizes a project estimate and should be read together with the visible solver posture, ISO basis, assumptions, and any required laboratory or site verification.
-            </p>
-            <p style="margin-top: 8px;">
-              ${escapeHtml(document.consultantCompany)} · ${escapeHtml(document.preparedBy)} · ${escapeHtml(document.approverTitle)} · ${escapeHtml(document.consultantEmail)} · ${escapeHtml(document.consultantPhone)} · ${escapeHtml(document.consultantAddress)}
-            </p>
-          </div>
-        </section>
-      </section>
-    </main>
+      </main>
   </body>
 </html>`;
 }
