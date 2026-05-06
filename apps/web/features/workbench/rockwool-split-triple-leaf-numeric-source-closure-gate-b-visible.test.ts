@@ -217,14 +217,14 @@ describe("Rockwool split triple-leaf numeric source closure Gate B visible guard
     expect(adjacent.result.supportedTargetOutputs).toEqual([...WALL_LAB_OUTPUTS]);
 
     expect(grouped.result.dynamicAirborneTrace).toMatchObject({
-      confidenceClass: "low",
+      confidenceClass: "medium",
       detectedFamily: "multileaf_multicavity",
-      strategy: "multileaf_screening_blend"
+      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
     });
     expect(card(grouped.cards, "Rw")).toMatchObject({
       detail: ROCKWOOL_GROUPED_TRIPLE_LEAF_SCREENING_ONLY_GUARD,
       status: "live",
-      value: "41 dB"
+      value: "50 dB"
     });
     expect(grouped.result.supportedTargetOutputs).toEqual([...WALL_LAB_OUTPUTS]);
     expect(grouped.topologyGap).toMatchObject({ value: "Source validation blocked" });

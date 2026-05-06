@@ -2,17 +2,50 @@
 
 Start here before changing calculator behavior.
 
+## Product Goal
+
+DynEcho is an acoustic calculator, not a source-library/catalog app.
+The priority is personal-use readiness: a user selects wall or floor,
+enters the physical inputs required for that route, adds layer materials
+and thicknesses, and receives defensible `Rw`, `R'w`, `DnT,w`, `Ln,w`,
+and related outputs.
+
+The calculator must maximize both coverage and accuracy. Exact measured
+or trusted source rows win when they truly match, and nearby measured
+rows can anchor or calibrate predictions when their topology and metric
+scope allow it. But source rows cannot be the whole product because
+layer combinations are effectively unbounded. When source rows are
+absent, DynEcho must calculate with the best family-specific physics
+model available, label the basis/origin honestly, expose tolerance or
+error budget, and ask for missing physical inputs instead of guessing.
+
+Treat lab, field, and building-prediction contexts as different output
+bases. Do not casually alias `Rw` with `STC`, `Ln,w` with `IIC`, or lab
+values with field/apparent values. Tests must prove acoustic correctness
+and boundaries, not just that code runs: expected values, basis/origin,
+support bucket, visible card/report parity, tolerance, nearby negatives,
+and hostile input cases such as many layers, duplicates, splits, and
+safe/unsafe reorders.
+
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_GATE_A_REVALIDATION_COMMIT_HANDOFF.md`
-3. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_A_HANDOFF.md`
-4. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_BENCHMARK_ACCEPTANCE_HANDOFF.md`
-5. `docs/calculator/CHECKPOINT_2026-05-05_MODEL_FIRST_MILESTONE_RESEARCH_HANDOFF.md`
-6. `docs/calculator/CHECKPOINT_2026-05-05_STANDARDS_RESEARCH_PLAN_DETAIL_HANDOFF.md`
-7. `docs/calculator/CHECKPOINT_2026-05-05_DOC_IMPLEMENTATION_RECONCILIATION_HANDOFF.md`
-8. `docs/calculator/CHECKPOINT_2026-05-05_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_REPLAN_HANDOFF.md`
-9. `docs/calculator/SLICE_CALCULATOR_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_V1_PLAN.md`
+2. `docs/calculator/CHECKPOINT_2026-05-06_GATE_H_AND_REPORT_EXPORT_WRAPUP_HANDOFF.md`
+3. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_H_HANDOFF.md`
+4. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_G_HANDOFF.md`
+5. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_E_HANDOFF.md`
+6. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_D_HANDOFF.md`
+7. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_C_HANDOFF.md`
+8. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_B_HANDOFF.md`
+9. `docs/calculator/CHECKPOINT_2026-05-06_ACOUSTIC_CALCULATOR_PLAN_REVALIDATION_HANDOFF.md`
+10. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_GATE_A_REVALIDATION_COMMIT_HANDOFF.md`
+11. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_A_HANDOFF.md`
+12. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_BENCHMARK_ACCEPTANCE_HANDOFF.md`
+13. `docs/calculator/CHECKPOINT_2026-05-05_MODEL_FIRST_MILESTONE_RESEARCH_HANDOFF.md`
+14. `docs/calculator/CHECKPOINT_2026-05-05_STANDARDS_RESEARCH_PLAN_DETAIL_HANDOFF.md`
+15. `docs/calculator/CHECKPOINT_2026-05-05_DOC_IMPLEMENTATION_RECONCILIATION_HANDOFF.md`
+16. `docs/calculator/CHECKPOINT_2026-05-05_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_REPLAN_HANDOFF.md`
+17. `docs/calculator/SLICE_CALCULATOR_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_V1_PLAN.md`
 
 Entries below are historical/backlog authority context unless the
 current workflow above promotes them again.
@@ -300,9 +333,112 @@ plan.
 - current selected slice:
   `calculator_model_first_physics_prediction_pivot_v1`
 - current next decision inside the slice:
-  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-b-basis-contract.test.ts`
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-i-family-material-expansion-contract.test.ts`
   should run
-  `gate_b_define_shared_airborne_basis_candidate_schema_without_value_movement`.
+  `gate_i_expand_family_material_properties_and_benchmark_scenarios`.
+- latest wrap-up checkpoint:
+  `docs/calculator/CHECKPOINT_2026-05-06_GATE_H_AND_REPORT_EXPORT_WRAPUP_HANDOFF.md`
+  confirms Gate H is validated, `pnpm calculator:gate:current` is green,
+  broad `pnpm check` is green, the report editor edits only the packaged
+  proposal snapshot, and PDF plus DOCX exports both use the same
+  manually editable snapshot.
+- just landed model-first physics prediction pivot Gate H:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-h-source-calibration-exact-promotion-contract.test.ts`
+  landed
+  `gate_h_calibrate_sources_and_exact_promotion_without_deleting_physics_solver`.
+  It adds the source-promotion readiness policy for exact full-stack,
+  calibrated family, and exact-subassembly-plus-delta candidates without
+  moving runtime values. Source rows can promote only when rights-safe
+  evidence, topology/material/metric/tolerance owners, paired positive
+  and negative tests, and calibration holdout metadata are present.
+  Exact, calibrated, anchored-delta, and uncalibrated physics candidates
+  coexist in the resolver; eligible source candidates can win by
+  precedence, but the Gate G family-physics prediction candidate is not
+  deleted. Selection status:
+  `gate_h_source_calibration_exact_promotion_policy_landed_no_runtime_selected_family_material_expansion_gate_i`.
+  Latest checkpoint:
+  `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_H_HANDOFF.md`.
+- just landed model-first physics prediction pivot Gate G:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-g-grouped-rockwool-prediction-contract.test.ts`
+  landed
+  `gate_g_promote_grouped_rockwool_triple_leaf_family_physics_prediction_with_benchmarks`.
+  It makes the first model-first runtime prediction movement for the
+  explicit grouped Rockwool triple-leaf case. Complete grouped topology
+  with two 50 mm full porous Rockwool cavities and an internal gypsum
+  leaf now selects `family_physics_prediction` on
+  `triple_leaf_two_cavity_frequency_solver`, returning lab `Rw 50 /
+  STC 55 / C 0.8 / Ctr -7.3` and building-prediction `R'w 50 /
+  DnT,w 51 / DnT,A 51.3`. Exact/source-validated promotion remains
+  false; missing source evidence rejects exact/calibrated candidates
+  only. Flat-list split/internal Rockwool remains guarded at diagnostic
+  `Rw 41` with unsupported target outputs. Selection status:
+  `gate_g_grouped_rockwool_family_physics_prediction_landed_selected_source_calibration_gate_h`.
+  Latest checkpoint:
+  `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_G_HANDOFF.md`.
+- just landed model-first physics prediction pivot Gate E:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-e-airborne-candidate-resolver-contract.test.ts`
+  landed
+  `gate_e_define_airborne_candidate_resolver_selected_rejected_candidates_without_value_movement`.
+  It added shared optional `airborneCandidateResolution` metadata and a
+  model-first resolver policy without moving runtime values. It records
+  selected and rejected airborne candidates, pins precedence from exact
+  full-stack rows through anchored delta, calibrated family physics,
+  uncalibrated family physics prediction, bounded/screening fallbacks,
+  `needs_input`, and `unsupported`, and makes rejection reasons
+  executable. It proves source absence blocks exact/calibration
+  promotion only, missing topology selects `needs_input`, deterministic
+  tie-breakers survive duplicate rows and safe candidate reorders, and
+  grouped Rockwool remains frozen at `Rw 41` / `multileaf_screening_blend`.
+  Selection status:
+  `gate_e_airborne_candidate_resolver_landed_no_runtime_selected_grouped_rockwool_prediction_gate_g`.
+  Latest checkpoint:
+  `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_E_HANDOFF.md`.
+- just landed model-first physics prediction pivot Gate D:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-d-input-completeness-contract.test.ts`
+  landed
+  `gate_d_define_physical_input_completeness_needs_input_matrix_without_value_movement`.
+  It added shared optional `inputCompletenessSet` metadata and
+  `input-completeness` schemas without moving runtime values. It defines
+  the minimum physical input matrix for single-leaf airborne,
+  double/framed airborne, triple-leaf/multicavity airborne, porous-fill
+  modifiers, floating-floor impact, and field/apparent output contexts.
+  It proves source absence remains an exact/calibration blocker only,
+  physical input absence yields `needs_input`, and optional precision
+  gaps widen uncertainty rather than blocking when documented defaults
+  exist. It freezes Rockwool values and selects Gate E airborne
+  candidate resolver as the next no-runtime step. Selection status:
+  `gate_d_input_completeness_matrix_landed_no_runtime_selected_airborne_candidate_resolver_gate_e`.
+  Latest checkpoint:
+  `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_D_HANDOFF.md`.
+- just landed model-first physics prediction pivot Gate C:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-c-rating-adapter-contract.test.ts`
+  landed
+  `gate_c_inventory_rating_adapter_integrity_without_value_movement`.
+  It added shared optional `ratingAdapterBasisSet` metadata and
+  `rating-adapter` schemas without moving runtime values. It inventories
+  ISO 717-1, ISO 717-2, ASTM E413, and ASTM E989 rating lanes, proves
+  `Rw`/`STC` and `Ln,w`/`IIC` are not silent aliases, marks ASTM E989
+  IIC as planned/not implemented until a real adapter or exact source
+  owner exists, freezes Rockwool values, and selects Gate D physical
+  input completeness / `needs_input` matrix as the next no-runtime step.
+  Selection status:
+  `gate_c_rating_adapter_integrity_landed_no_runtime_selected_input_completeness_gate_d`.
+  Latest checkpoint:
+  `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_C_HANDOFF.md`.
+- just landed model-first physics prediction pivot Gate B:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-b-basis-contract.test.ts`
+  landed
+  `gate_b_defined_shared_airborne_basis_candidate_schema_without_value_movement`.
+  It added shared airborne `airborneBasis` / `airborneCandidateSet`
+  schema support without moving runtime values. It kept source absence
+  and physical-input absence separate, kept legacy `AssemblyCalculation`
+  payloads parse-compatible, required uncertainty metadata for
+  formula-backed prediction candidates, froze Rockwool values, and
+  selected Gate C rating-adapter integrity as the next no-runtime step.
+  Selection status:
+  `gate_b_shared_airborne_basis_candidate_schema_landed_no_runtime_selected_rating_adapter_gate_c`.
+  Latest checkpoint:
+  `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_B_HANDOFF.md`.
 - just landed model-first physics prediction pivot Gate A:
   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-a-contract.test.ts`
   landed
@@ -315,6 +451,8 @@ plan.
   B0-B12 benchmark lanes, runtime stop rules, and selected Gate B shared
   airborne basis/candidate schema. Grouped Rockwool remains unchanged at
   `Rw 41` / `multileaf_screening_blend` until M6.
+  Gate A selected Gate B action:
+  `gate_b_define_shared_airborne_basis_candidate_schema_without_value_movement`.
   Latest checkpoint:
   `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_A_HANDOFF.md`.
 - checkpoint/revalidation after Gate A:

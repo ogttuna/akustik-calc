@@ -139,7 +139,7 @@ describe("wall triple-leaf accuracy recovery Gate B", () => {
     expectWarning(result, "internal leaf coupling/bridge class");
   });
 
-  it("keeps the contract generic by accepting complete topology but blocking numeric promotion until Gate C", () => {
+  it("keeps the contract generic and now observes the Gate G family-physics runtime promotion", () => {
     const result = calculateDynamicWall(SPLIT_ROCKWOOL_STACK, COMPLETE_TRIPLE_LEAF_CONTEXT);
     const readiness = evaluateWallTripleLeafTopologyReadiness({
       airborneContext: COMPLETE_TRIPLE_LEAF_CONTEXT,
@@ -148,16 +148,18 @@ describe("wall triple-leaf accuracy recovery Gate B", () => {
       visibleLeafCount: result.dynamicAirborneTrace?.visibleLeafCount ?? 0
     });
 
-    expect(result.metrics.estimatedRwDb).toBe(41);
-    expect(result.dynamicAirborneTrace?.strategy).toBe("multileaf_screening_blend");
+    expect(result.metrics.estimatedRwDb).toBe(50);
+    expect(result.dynamicAirborneTrace?.strategy).toBe(
+      "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
+    );
     expect(readiness).toEqual({
       applies: true,
       implementationBlockers: WALL_TRIPLE_LEAF_IMPLEMENTATION_BLOCKERS,
       missingTopologyFields: [],
       readyForExactTripleLeafCalculation: false
     });
-    expectWarning(result, "source-calibrated triple-leaf solver");
-    expectWarning(result, "tolerance owner");
+    expectWarning(result, "family physics prediction");
+    expectWarning(result, "5 dB uncalibrated error budget");
   });
 
   it("reports only the missing grouped fields when partial topology is supplied", () => {

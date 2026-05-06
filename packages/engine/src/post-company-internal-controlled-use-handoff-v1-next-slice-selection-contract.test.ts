@@ -503,11 +503,11 @@ describe("post company-internal controlled-use handoff Gate C next-slice selecti
       sourceLaneDisposition: "paused_waiting_rights_safe_source_packet"
     });
     expect(grouped).toMatchObject({
-      confidence: "low",
+      confidence: "medium",
       family: "multileaf_multicavity",
-      rw: 41,
-      stc: 41,
-      strategy: "multileaf_screening_blend"
+      rw: 50,
+      stc: 55,
+      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
     });
     expect(flatSwap).toMatchObject({
       confidence: "medium",
@@ -516,11 +516,11 @@ describe("post company-internal controlled-use handoff Gate C next-slice selecti
       strategy: FLAT_LIST_MULTILEAF_GUARD_STRATEGY
     });
     expect(field).toMatchObject({
-      confidence: "low",
-      dnTw: 36,
+      confidence: "medium",
+      dnTw: 50,
       family: "multileaf_multicavity",
-      rwPrime: 34,
-      strategy: "multileaf_screening_blend"
+      rwPrime: 49,
+      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
     });
 
     expect(estimateNonFinite.success).toBe(false);

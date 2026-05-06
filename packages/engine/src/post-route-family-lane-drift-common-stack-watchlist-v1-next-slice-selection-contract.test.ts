@@ -302,7 +302,12 @@ describe("post route-family lane-drift common-stack watchlist Gate F next-slice 
     const classicSwapped = labSnapshot(swap(CLASSIC_TRIPLE_LEAF_STACK, 1, 2));
     const heavyBoundary = labSnapshot(HEAVY_MULTILEAF_STACK);
 
-    expect(splitGrouped).toMatchObject({ confidence: "low", family: "multileaf_multicavity", rw: 41, strategy: "multileaf_screening_blend" });
+    expect(splitGrouped).toMatchObject({
+      confidence: "medium",
+      family: "multileaf_multicavity",
+      rw: 50,
+      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
+    });
     expect(splitSwapped).toMatchObject({
       confidence: "medium",
       family: "double_leaf",

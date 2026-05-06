@@ -198,6 +198,52 @@ describe("simple workbench proposal pdf helper", () => {
     });
   });
 
+  it("sends the manually edited proposal snapshot to the DOCX renderer", async () => {
+    const editedDocument: SimpleWorkbenchProposalDocument = {
+      ...DOCUMENT,
+      executiveSummary: "Manual report wording is active on this exported issue.",
+      metrics: [
+        {
+          detail: "Manual consultant correction applied to the issue snapshot only.",
+          label: "Rw",
+          value: "59 dB (manual)"
+        }
+      ],
+      primaryMetricValue: "59 dB (manual)",
+      responseCurves: [
+        {
+          activeSeriesId: "manual-airborne",
+          direction: "higher_better",
+          domainLabel: "Frequency, Hz",
+          id: "airborne",
+          note: "Manual chart values for the issued report snapshot.",
+          series: [
+            {
+              active: true,
+              frequenciesHz: [125, 250, 500],
+              id: "manual-airborne",
+              label: "Manual airborne curve",
+              valuesDb: [42, 49, 55]
+            }
+          ],
+          title: "Manual airborne response"
+        }
+      ]
+    };
+
+    await downloadSimpleWorkbenchProposalDocx(editedDocument, {
+      style: "simple"
+    });
+
+    expect(fetch).toHaveBeenCalledWith("/api/proposal-docx?style=simple", {
+      body: JSON.stringify(editedDocument),
+      headers: {
+        "content-type": "application/json"
+      },
+      method: "POST"
+    });
+  });
+
   it("surfaces the server error message when generation fails", async () => {
     vi.stubGlobal(
       "fetch",

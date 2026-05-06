@@ -235,7 +235,7 @@ export function ProposalPreviewClientPage() {
     resetSimpleWorkbenchProposalPreviewCustomizations();
     setFrameReady(false);
     setLoadedPreview(readSimpleWorkbenchProposalPreview());
-    toast.success("PDF edits cleared", {
+    toast.success("Report edits cleared", {
       description: "The packaged proposal snapshot is active again."
     });
   }
@@ -293,7 +293,7 @@ export function ProposalPreviewClientPage() {
               type="button"
             >
               <FilePenLine className="h-4 w-4" />
-              Edit PDFs
+              Edit report
             </button>
             <button
               className="focus-ring surface-subtle-hover inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)]"
@@ -310,7 +310,7 @@ export function ProposalPreviewClientPage() {
                 type="button"
               >
                 <RotateCcw className="h-4 w-4" />
-                Reset PDF edits
+                Reset report edits
               </button>
             ) : null}
             <button
@@ -452,7 +452,7 @@ export function ProposalPreviewClientPage() {
                 <PreviewFactCard
                   detail={
                     loadedPreview?.hasCustomizations
-                      ? "Manual PDF edits are active on this preview."
+                      ? "Manual report edits are active on this preview."
                       : frameReady
                         ? "Preview frame ready for print."
                         : "Preview frame is still loading."

@@ -351,10 +351,10 @@ describe("post common-combination lane-misclassification sentinel Gate C next-sl
     const rawCltPrompt = floorSnapshot(exactFloorLayers("tuas_x4_clt140_measured_2026", "raw"));
 
     expect(splitGrouped).toMatchObject({
-      confidence: "low",
+      confidence: "medium",
       family: "multileaf_multicavity",
-      rw: 41,
-      strategy: "multileaf_screening_blend"
+      rw: 50,
+      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
     });
     expect(splitSwapped).toMatchObject({
       confidence: "medium",

@@ -720,8 +720,8 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
     const adjustmentWindow = window.open("/workbench/proposal/configure", "_blank");
 
     if (!adjustmentWindow) {
-      toast.error("PDF editor blocked", {
-        description: "Allow pop-ups so DAC can open the PDF editor."
+      toast.error("Report editor blocked", {
+        description: "Allow pop-ups so DAC can open the report editor."
       });
     }
   }
@@ -1979,7 +1979,7 @@ export function SimpleWorkbenchProposalPanel(props: SimpleWorkbenchProposalPanel
               type="button"
             >
               <FilePenLine className="h-4 w-4" />
-              Edit PDFs
+              Edit report
             </button>
             <button
               className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"

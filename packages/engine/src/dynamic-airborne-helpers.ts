@@ -14,6 +14,9 @@
 
 import type {
   AirborneContext,
+  AirborneCandidate,
+  AirborneCandidateResolution,
+  AirborneResultBasis,
   AssemblyRatings,
   DynamicAirborneDelegateMethod,
   DynamicAirborneFamily,
@@ -28,6 +31,9 @@ import type {
 // dependencies.
 
 export type DynamicAirborneResult = {
+  airborneBasis?: AirborneResultBasis;
+  airborneCandidateResolution?: AirborneCandidateResolution;
+  airborneCandidateSet?: AirborneCandidate[];
   curve: TransmissionLossCurve;
   id: "dynamic";
   label: string;
@@ -287,6 +293,10 @@ export function computeMicroGapEquivalenceMetric(
 export function getDelegateLabel(method: DynamicAirborneDelegateMethod): string {
   if (method === "screening_mass_law_curve_seed_v3") {
     return "Screening Seed";
+  }
+
+  if (method === "triple_leaf_two_cavity_frequency_solver") {
+    return "Triple-Leaf Two-Cavity Solver";
   }
 
   return getAirborneCalculatorLabel(method as ComparableAirborneCalculatorId);

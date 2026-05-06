@@ -552,11 +552,11 @@ describe("common-combination lane-misclassification sentinel Gate A contract", (
     const duplicatedClassic = wallSnapshot([...CLASSIC_TRIPLE_LEAF_STACK, ...CLASSIC_TRIPLE_LEAF_STACK]);
 
     expect(splitGrouped).toMatchObject({
-      confidence: "low",
+      confidence: "medium",
       family: "multileaf_multicavity",
-      rw: 41,
+      rw: 50,
       rwPrime: 39,
-      strategy: "multileaf_screening_blend"
+      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
     });
     expect(splitSwapped).toMatchObject({
       confidence: "medium",

@@ -461,9 +461,9 @@ describe("field-output owner and design-grade policy Gate B visible guard", () =
     });
 
     expect(snapshot.result.dynamicAirborneTrace).toMatchObject({
-      confidenceClass: "low",
+      confidenceClass: "medium",
       detectedFamily: "multileaf_multicavity",
-      strategy: "multileaf_screening_blend"
+      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
     });
 
     for (const output of ["R'w", "DnT,w", "DnT,A"] as const satisfies readonly RequestedOutputId[]) {
@@ -481,8 +481,8 @@ describe("field-output owner and design-grade policy Gate B visible guard", () =
       expect(posture.detail, output).toContain(FIELD_OUTPUT_DESIGN_GRADE_POSTURE_GUARD);
     }
 
-    expect(getCard(snapshot.cards, "R'w")).toMatchObject({ value: "34 dB" });
-    expect(getCard(snapshot.cards, "DnT,w")).toMatchObject({ value: "36 dB" });
+    expect(getCard(snapshot.cards, "R'w")).toMatchObject({ value: "49 dB" });
+    expect(getCard(snapshot.cards, "DnT,w")).toMatchObject({ value: "50 dB" });
 
     const proposalText = buildProposalText({
       outputs: WALL_OUTPUTS,
@@ -490,8 +490,8 @@ describe("field-output owner and design-grade policy Gate B visible guard", () =
       snapshot
     });
 
-    expect(proposalText).toContain("R'w: Live now | Field continuation | 34 dB");
-    expect(proposalText).toContain("DnT,w: Live now | Field continuation | 36 dB");
+    expect(proposalText).toContain("R'w: Live now | Field continuation | 49 dB");
+    expect(proposalText).toContain("DnT,w: Live now | Field continuation | 50 dB");
     expect(proposalText).toContain(FIELD_OUTPUT_OWNER_POLICY_GUARD);
     expect(proposalText).toContain(FIELD_OUTPUT_DESIGN_GRADE_POSTURE_GUARD);
     expect(proposalText).toContain("do not replace accredited laboratory, site, or design-grade field measurements");
@@ -598,7 +598,7 @@ describe("field-output owner and design-grade policy Gate B visible guard", () =
     });
   });
 
-  it("carries forward rockwool screening and Uris source-packet blockers in visible policy", () => {
+  it("carries forward rockwool source-gated prediction and Uris source-packet blockers in visible policy", () => {
     const snapshot = evaluate({
       airborneContext: completeTripleLeafContext(TRIPLE_LEAF_BUILDING_CONTEXT),
       id: "gate-b-owner-rockwool-screening-carry-forward",
@@ -613,29 +613,29 @@ describe("field-output owner and design-grade policy Gate B visible guard", () =
     });
 
     expect(snapshot.result.dynamicAirborneTrace).toMatchObject({
-      confidenceClass: "low",
+      confidenceClass: "medium",
       detectedFamily: "multileaf_multicavity",
-      strategy: "multileaf_screening_blend"
+      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
     });
-    expect(snapshot.warnings.join("\n")).toContain("source-calibrated triple-leaf solver");
+    expect(snapshot.warnings.join("\n")).toContain("family physics prediction");
     expect(evidence.citations).toContainEqual(
       expect.objectContaining({
         detail: expect.stringContaining("No exact wall source row is active"),
         label: "Dynamic airborne anchor",
-        tone: "warning"
+        tone: "accent"
       })
     );
     expect({
-      artifact: "rockwool_field_output_screening_policy_carry_forward",
+      artifact: "rockwool_field_output_source_gated_prediction_policy_carry_forward",
       designGradeFieldOwnerActiveNow: false,
-      groupedScreeningAnswer: "Rw 41",
-      groupedStrategy: "multileaf_screening_blend",
+      groupedPredictionAnswer: "Rw 50",
+      groupedStrategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction",
       sourceLaneDisposition: "paused_waiting_rights_safe_source_packet"
     }).toEqual({
-      artifact: "rockwool_field_output_screening_policy_carry_forward",
+      artifact: "rockwool_field_output_source_gated_prediction_policy_carry_forward",
       designGradeFieldOwnerActiveNow: false,
-      groupedScreeningAnswer: "Rw 41",
-      groupedStrategy: "multileaf_screening_blend",
+      groupedPredictionAnswer: "Rw 50",
+      groupedStrategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction",
       sourceLaneDisposition: "paused_waiting_rights_safe_source_packet"
     });
   });

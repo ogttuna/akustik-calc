@@ -378,7 +378,7 @@ describe("field-output lab/screening leakage Gate B visible copy guard", () => {
     expect(FIELD_OUTPUT_LAB_SCREENING_LEAKAGE_GATE_B.selectionStatus).toContain("no_runtime");
   });
 
-  it("keeps low-confidence rockwool triple-leaf R'w and DnT,w visibly tied to apparent field continuation", () => {
+  it("keeps source-gated rockwool triple-leaf R'w and DnT,w visibly tied to apparent field continuation", () => {
     const snapshot = evaluate({
       airborneContext: completeTripleLeafContext(TRIPLE_LEAF_BUILDING_CONTEXT),
       id: "gate-b-wall-split-rockwool-field-copy",
@@ -390,12 +390,12 @@ describe("field-output lab/screening leakage Gate B visible copy guard", () => {
     const dnTw = getCard(snapshot.cards, "DnT,w");
 
     expect(snapshot.result.dynamicAirborneTrace).toMatchObject({
-      confidenceClass: "low",
+      confidenceClass: "medium",
       detectedFamily: "multileaf_multicavity",
-      strategy: "multileaf_screening_blend"
+      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
     });
-    expect(rwPrime).toMatchObject({ status: "live", value: "34 dB" });
-    expect(dnTw).toMatchObject({ status: "live", value: "36 dB" });
+    expect(rwPrime).toMatchObject({ status: "live", value: "49 dB" });
+    expect(dnTw).toMatchObject({ status: "live", value: "50 dB" });
     expect(rwPrime.detail).toContain("apparent on-site airborne single number");
     expect(rwPrime.detail).toContain(FIELD_COPY_GUARD);
     expect(dnTw.detail).toContain("same apparent field curve");
@@ -427,7 +427,7 @@ describe("field-output lab/screening leakage Gate B visible copy guard", () => {
       expect.objectContaining({
         detail: expect.stringContaining("No exact wall source row is active"),
         label: "Dynamic airborne anchor",
-        tone: "warning"
+        tone: "accent"
       })
     );
     expect(evidence.citations).toContainEqual(
@@ -442,8 +442,8 @@ describe("field-output lab/screening leakage Gate B visible copy guard", () => {
       snapshot
     });
 
-    expect(proposalText).toContain(`R'w: Live now | Field continuation | 34 dB`);
-    expect(proposalText).toContain("DnT,w: Live now | Field continuation | 36 dB");
+    expect(proposalText).toContain(`R'w: Live now | Field continuation | 49 dB`);
+    expect(proposalText).toContain("DnT,w: Live now | Field continuation | 50 dB");
     expect(proposalText).toContain(FIELD_COPY_GUARD);
     expect(proposalText).toContain(FIELD_POSTURE_GUARD);
     expect(proposalText).toContain("does not replace accredited laboratory or site measurements");

@@ -348,17 +348,16 @@ describe("Rockwool triple-leaf resolution Gate A contract", () => {
       "paired_visible_tests"
     ]);
     expect(grouped).toMatchObject({
-      confidence: "low",
+      confidence: "medium",
       family: "multileaf_multicavity",
-      rw: 41,
-      stc: 41,
-      strategy: "multileaf_screening_blend",
+      rw: 50,
+      stc: 55,
+      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction",
       supported: ["Rw", "STC", "C", "Ctr"],
       unsupported: []
     });
-    expect(grouped.warnings).toContain(ROCKWOOL_TRIPLE_LEAF_SOURCE_REQUIRED_RUNTIME_WARNING);
-    expect(grouped.warnings).toContain("rights-safe source-owned curve payload");
-    expect(grouped.warnings).toContain("not exact or design-grade");
+    expect(grouped.warnings).toContain("family physics prediction");
+    expect(grouped.warnings).toContain("not measured exact or source-validated");
   });
 
   it("keeps flat-list reorder and field continuations inside the same source-required boundary", () => {
@@ -391,15 +390,15 @@ describe("Rockwool triple-leaf resolution Gate A contract", () => {
     });
     expect(flatSwap.warnings).toContain("Flat-list adjacent-swap sensitivity guard");
     expect(field).toMatchObject({
-      confidence: "low",
-      dnTw: 36,
+      confidence: "medium",
+      dnTw: 50,
       family: "multileaf_multicavity",
-      rwPrime: 34,
-      strategy: "multileaf_screening_blend",
+      rwPrime: 49,
+      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction",
       supported: ["R'w", "DnT,w"],
       unsupported: []
     });
-    expect(field.warnings).toContain(ROCKWOOL_TRIPLE_LEAF_SOURCE_REQUIRED_RUNTIME_WARNING);
+    expect(field.warnings).toContain("family physics prediction");
   });
 
   it("selects support-posture work and avoids exact runtime or another generic guard chain", () => {

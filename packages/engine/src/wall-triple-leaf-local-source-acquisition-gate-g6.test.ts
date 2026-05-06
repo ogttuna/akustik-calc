@@ -137,9 +137,9 @@ describe("wall triple-leaf local source acquisition Gate G6", () => {
     });
 
     expect(evaluation.sourceAcquisitionPackReady).toBe(false);
-    expect(liveResult.metrics.estimatedRwDb).toBe(41);
-    expect(liveResult.dynamicAirborneTrace?.strategy).toBe("multileaf_screening_blend");
-    expect(liveResult.dynamicAirborneTrace?.confidenceClass).toBe("low");
+    expect(liveResult.metrics.estimatedRwDb).toBe(50);
+    expect(liveResult.dynamicAirborneTrace?.strategy).toBe("triple_leaf_two_cavity_frequency_solver_family_physics_prediction");
+    expect(liveResult.dynamicAirborneTrace?.confidenceClass).toBe("medium");
   });
 
   it("keeps active docs aligned with Gate G6 and the selected Gate G7 source-pack acquisition intake", () => {

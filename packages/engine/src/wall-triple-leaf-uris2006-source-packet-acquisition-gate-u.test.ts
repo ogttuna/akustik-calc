@@ -352,10 +352,10 @@ describe("wall triple-leaf Uris 2006 source packet acquisition Gate U", () => {
       visiblePosture: "low_confidence_screening_not_exact_not_source_validated"
     });
     expect(grouped).toMatchObject({
-      confidence: "low",
+      confidence: "medium",
       family: "multileaf_multicavity",
-      rw: 41,
-      strategy: "multileaf_screening_blend"
+      rw: 50,
+      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
     });
     expect(flatSwap).toMatchObject({
       confidence: "medium",

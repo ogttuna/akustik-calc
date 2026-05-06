@@ -193,9 +193,9 @@ describe("wall triple-leaf source access follow-up Gate Q", () => {
     expect(evaluation.numericRuntimeBehaviorChange).toBe(false);
     expect(evaluation.routeCardValueChange).toBe(false);
     expect(evaluation.outputCardStatusChange).toBe(false);
-    expect(liveResult.metrics.estimatedRwDb).toBe(41);
-    expect(liveResult.dynamicAirborneTrace?.strategy).toBe("multileaf_screening_blend");
-    expect(liveResult.dynamicAirborneTrace?.confidenceClass).toBe("low");
+    expect(liveResult.metrics.estimatedRwDb).toBe(50);
+    expect(liveResult.dynamicAirborneTrace?.strategy).toBe("triple_leaf_two_cavity_frequency_solver_family_physics_prediction");
+    expect(liveResult.dynamicAirborneTrace?.confidenceClass).toBe("medium");
   });
 
   it("keeps active docs aligned with Gate Q, Gate R, and the manual source packet backlog", () => {

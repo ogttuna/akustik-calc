@@ -199,16 +199,16 @@ describe("wall triple-leaf frequency solver Gate F", () => {
     expect(emptyBandGrid.blockers).toContain("frequency_band_grid_required");
   });
 
-  it("does not integrate the Gate F curve into the live dynamic calculator", () => {
+  it("keeps the Gate F curve integrated through the Gate G family-physics runtime path", () => {
     const liveResult = calculateAssembly(SPLIT_ROCKWOOL_STACK, {
       airborneContext: COMPLETE_TRIPLE_LEAF_CONTEXT,
       calculator: "dynamic",
       targetOutputs: ["Rw"]
     });
 
-    expect(liveResult.metrics.estimatedRwDb).toBe(41);
-    expect(liveResult.dynamicAirborneTrace?.strategy).toBe("multileaf_screening_blend");
-    expect(liveResult.warnings.some((warning: string) => warning.includes("source-calibrated triple-leaf solver"))).toBe(true);
+    expect(liveResult.metrics.estimatedRwDb).toBe(50);
+    expect(liveResult.dynamicAirborneTrace?.strategy).toBe("triple_leaf_two_cavity_frequency_solver_family_physics_prediction");
+    expect(liveResult.warnings.some((warning: string) => warning.includes("family physics prediction"))).toBe(true);
   });
 
   it("keeps active docs aligned with Gate F and the selected Gate G calibration gate", () => {

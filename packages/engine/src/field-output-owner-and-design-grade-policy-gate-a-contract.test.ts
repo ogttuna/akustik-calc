@@ -443,16 +443,17 @@ describe("field-output owner and design-grade policy Gate A contract", () => {
     const rawFallbackFloor = floorBuildingSnapshot(RAW_TERMINAL_CONCRETE_HELPER_LAYERS);
 
     expect(wall).toMatchObject({
-      confidence: "low",
-      dnTw: 40,
+      confidence: "medium",
+      dnTw: 52,
       family: "multileaf_multicavity",
       fieldBasis: "apparent_curve_overlay + 10log10(0.32V/S)",
-      rwPrime: 39,
-      strategy: "multileaf_screening_blend",
+      rwPrime: 50,
+      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction",
       supported: ["R'w", "DnT,w"],
       unsupported: []
     });
-    expect(wall.warnings).toContain("source-calibrated triple-leaf solver");
+    expect(wall.warnings).toContain("family physics prediction");
+    expect(wall.warnings).toContain("Dynamic airborne confidence is medium");
 
     expect(exactFloor).toMatchObject({
       dnTw: 70,

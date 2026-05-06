@@ -514,9 +514,9 @@ describe("PABCO QuietRock Sound Design Guide source-pack extraction Gate B contr
     expect(PROTECTED_BOUNDARIES).toContain(
       "pabco_gate_b_rows_do_not_fix_the_uris_2006_split_rockwool_triple_leaf_rw_41_screening_result"
     );
-    expect(splitRockwool.metrics.estimatedRwDb).toBe(41);
-    expect(splitRockwool.dynamicAirborneTrace?.strategy).toBe("multileaf_screening_blend");
-    expect(splitRockwool.dynamicAirborneTrace?.confidenceClass).toBe("low");
+    expect(splitRockwool.metrics.estimatedRwDb).toBe(50);
+    expect(splitRockwool.dynamicAirborneTrace?.strategy).toBe("triple_leaf_two_cavity_frequency_solver_family_physics_prediction");
+    expect(splitRockwool.dynamicAirborneTrace?.confidenceClass).toBe("medium");
     expect(PABCO_GATE_B.numericRuntimeBehaviorChange).toBe(false);
     expect(PABCO_GATE_B.runtimeWidening).toBe(false);
     expect(FROZEN_SURFACES).toEqual([

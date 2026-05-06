@@ -1382,5 +1382,17 @@ export function calculateAssembly(
     warnings
   };
 
+  if (dynamicAirborneResult?.airborneBasis) {
+    result.airborneBasis = dynamicAirborneResult.airborneBasis;
+  }
+
+  if (dynamicAirborneResult?.airborneCandidateResolution) {
+    result.airborneCandidateResolution = dynamicAirborneResult.airborneCandidateResolution;
+  }
+
+  if (dynamicAirborneResult?.airborneCandidateSet) {
+    result.airborneCandidateSet = dynamicAirborneResult.airborneCandidateSet;
+  }
+
   return AssemblyCalculationSchema.parse(result);
 }

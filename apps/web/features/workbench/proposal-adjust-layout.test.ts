@@ -24,4 +24,20 @@ describe("proposal adjust layout", () => {
     expect(source).toContain('>Export target<');
     expect(source).not.toContain('grid gap-5 xl:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)]');
   });
+
+  it("makes manual report edits explicit for both PDF and DOCX exports", () => {
+    const source = readFileSync(
+      new URL("../../app/workbench/proposal/configure/proposal-adjust-client-page.tsx", import.meta.url),
+      "utf8"
+    );
+
+    expect(source).toContain("Edit exported report values");
+    expect(source).toContain("PDF and DOCX exports use these edited values");
+    expect(source).toContain("Download branded DOCX");
+    expect(source).toContain("Download simple DOCX");
+    expect(source).toContain("report chart snapshot only");
+    expect(source).toContain("Report only");
+    expect(source).not.toContain("PDF chart snapshot only");
+    expect(source).not.toContain("PDF only");
+  });
 });

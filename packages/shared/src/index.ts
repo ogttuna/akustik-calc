@@ -1,5 +1,6 @@
 export * from "./api/estimate";
 export * from "./api/impact-only";
+export * from "./domain/airborne-basis";
 export * from "./domain/assembly";
 export * from "./domain/airborne-context";
 export * from "./domain/airborne-overlay";
@@ -19,8 +20,10 @@ export * from "./domain/impact-bound";
 export * from "./domain/impact-predictor-status";
 export * from "./domain/impact-product-catalog";
 export * from "./domain/impact-support";
+export * from "./domain/input-completeness";
 export * from "./domain/layer";
 export * from "./domain/material";
 export * from "./domain/output";
 export * from "./domain/project";
 export * from "./domain/rating";
+export * from "./domain/rating-adapter";

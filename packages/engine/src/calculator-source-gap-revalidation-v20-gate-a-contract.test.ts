@@ -530,18 +530,17 @@ describe("calculator source-gap revalidation v20 Gate A contract", () => {
     const snapshot = splitRockwoolBuildingFieldSnapshot();
 
     expect(snapshot).toMatchObject({
-      confidence: "low",
-      dnTw: 40,
+      confidence: "medium",
+      dnTw: 52,
       family: "multileaf_multicavity",
       fieldBasis: "apparent_curve_overlay + 10log10(0.32V/S)",
-      rwPrime: 39,
-      strategy: "multileaf_screening_blend",
+      rwPrime: 50,
+      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction",
       supported: ["R'w", "DnT,w"],
       unsupported: []
     });
-    expect(snapshot.warnings).toContain("Grouped triple-leaf topology is present");
-    expect(snapshot.warnings).toContain("source-calibrated triple-leaf solver");
-    expect(snapshot.warnings).toContain("Dynamic airborne confidence is low");
+    expect(snapshot.warnings).toContain("family physics prediction");
+    expect(snapshot.warnings).toContain("Dynamic airborne confidence is medium");
   });
 
   it("keeps alias, near-source, hostile-input, and curve-provenance boundaries explicit", () => {

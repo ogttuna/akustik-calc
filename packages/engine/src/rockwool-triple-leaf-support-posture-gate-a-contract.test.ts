@@ -253,25 +253,25 @@ describe("Rockwool triple-leaf support posture Gate A contract", () => {
       unsupportedWouldHideCurrentDiagnosticValue: true
     });
     expect(grouped).toMatchObject({
-      confidence: "low",
+      confidence: "medium",
       family: "multileaf_multicavity",
-      rw: 41,
-      stc: 41,
-      strategy: "multileaf_screening_blend",
+      rw: 50,
+      stc: 55,
+      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction",
       supported: ["Rw", "STC", "C", "Ctr"],
       unsupported: []
     });
     expect(grouped.posture).toMatchObject({
-      applies: true,
+      applies: false,
       exactDesignGradeAllowed: false,
       outputSupportChangeRequiredNow: false,
-      postureId: "screening_supported_not_exact",
-      screeningPreviewRequiredIfUnsupportedSelected: true,
-      supportSemantics: "finite_screening_metric_available",
+      postureId: "not_rockwool_triple_leaf",
+      screeningPreviewRequiredIfUnsupportedSelected: false,
+      supportSemantics: "not_applicable",
       unsupportedWithoutSeparatePreviewAllowed: false
     });
-    expect(grouped.posture.sourceRequiredBlockers).toContain("rights_safe_source_owned_curve_payload");
-    expect(grouped.warnings).toContain("not exact or design-grade");
+    expect(grouped.posture.sourceRequiredBlockers).toEqual([]);
+    expect(grouped.warnings).toContain("not measured exact or source-validated");
   });
 
   it("keeps flat-list adjacent swaps on the double-leaf numeric lane and field outputs as screening continuations", () => {
@@ -310,18 +310,18 @@ describe("Rockwool triple-leaf support posture Gate A contract", () => {
       unsupportedWithoutSeparatePreviewAllowed: false
     });
     expect(field).toMatchObject({
-      confidence: "low",
-      dnTw: 36,
+      confidence: "medium",
+      dnTw: 50,
       family: "multileaf_multicavity",
-      rwPrime: 34,
-      strategy: "multileaf_screening_blend",
+      rwPrime: 49,
+      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction",
       supported: ["R'w", "DnT,w"],
       unsupported: []
     });
     expect(field.posture).toMatchObject({
       exactDesignGradeAllowed: false,
-      postureId: "field_continuation_screening_supported",
-      supportSemantics: "field_continuation_from_screening_metric"
+      postureId: "not_rockwool_triple_leaf",
+      supportSemantics: "not_applicable"
     });
   });
 

@@ -16,7 +16,32 @@ read
 For the active route/source boundary risk register read
 [CALCULATOR_ROUTE_SOURCE_RISK_REGISTER_2026-05-01.md](./CALCULATOR_ROUTE_SOURCE_RISK_REGISTER_2026-05-01.md).
 
-## Active Decision Map - 2026-05-06 Model-First Physics Prediction Pivot Gate A Landed / Gate B Selected
+## Product Goal - Acoustic Calculator First
+
+DynEcho's near-term product goal is personal-use readiness for a real
+acoustic calculator. A user should be able to choose wall or floor, fill
+the route-specific physical inputs, add layer materials and thicknesses,
+and receive defensible `Rw`, `R'w`, `DnT,w`, `Ln,w`, and related values.
+If a required physical field is missing, the calculator should identify
+that missing input instead of inventing a high-confidence answer.
+
+The core success criteria are coverage and accuracy together. The engine
+must handle many wall/floor layer combinations with family-specific
+physics, while still preferring exact measured/source rows when the full
+assembly truly matches. Trusted source rows can also anchor deltas,
+calibrate family solvers, define holdouts, and set tolerance boundaries,
+but missing source packets must not block formula-backed prediction.
+
+Development work should therefore be judged by acoustic correctness, not
+only software green status. Tests must assert numeric expectations,
+origin/basis, tolerance or error budget, support buckets, workbench and
+report parity, nearby negative cases, and hostile input behavior such as
+many layers, duplicate/split roles, ambiguous topology, and safe or
+unsafe reorders. Lab, field, and building-prediction bases must stay
+separate; `Rw`/`STC`, `Ln,w`/`IIC`, and lab/field values are not
+interchangeable without a named rating and measurement basis.
+
+## Active Decision Map - 2026-05-06 Model-First Physics Prediction Pivot Gate H Landed / Gate I Selected
 
 Current implementation position:
 `calculator_model_first_physics_prediction_pivot_v1`.
@@ -41,7 +66,51 @@ Latest benchmark / acceptance refinement:
 
 `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_BENCHMARK_ACCEPTANCE_HANDOFF.md`
 
-Latest landed Gate A checkpoint:
+Latest wrap-up / report-export readiness checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-06_GATE_H_AND_REPORT_EXPORT_WRAPUP_HANDOFF.md`
+
+Latest landed Gate H checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_H_HANDOFF.md`
+
+Previous landed Gate G checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_G_HANDOFF.md`
+
+Previous Gate G selection status:
+
+`gate_g_grouped_rockwool_family_physics_prediction_landed_selected_source_calibration_gate_h`
+
+Gate G selected Gate H file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-h-source-calibration-exact-promotion-contract.test.ts`
+
+Gate G selected Gate H action:
+
+`gate_h_calibrate_sources_and_exact_promotion_without_deleting_physics_solver`
+
+Previous landed Gate E checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_E_HANDOFF.md`
+
+Previous Gate E selection status:
+
+`gate_e_airborne_candidate_resolver_landed_no_runtime_selected_grouped_rockwool_prediction_gate_g`
+
+Previous landed Gate D checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_D_HANDOFF.md`
+
+Previous landed Gate C checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_C_HANDOFF.md`
+
+Previous landed Gate B checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_B_HANDOFF.md`
+
+Previous landed Gate A checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_A_HANDOFF.md`
 
@@ -49,17 +118,21 @@ Latest checkpoint / revalidation handoff:
 
 `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_GATE_A_REVALIDATION_COMMIT_HANDOFF.md`
 
+Latest acoustic-calculator plan revalidation / execution handoff:
+
+`docs/calculator/CHECKPOINT_2026-05-06_ACOUSTIC_CALCULATOR_PLAN_REVALIDATION_HANDOFF.md`
+
 Selection status:
 
-`gate_a_model_first_direction_contract_landed_no_runtime_selected_basis_gate_b`
+`gate_h_source_calibration_exact_promotion_policy_landed_no_runtime_selected_family_material_expansion_gate_i`
 
 Selected next file:
 
-`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-b-basis-contract.test.ts`
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-i-family-material-expansion-contract.test.ts`
 
 Selected next action:
 
-`gate_b_define_shared_airborne_basis_candidate_schema_without_value_movement`
+`gate_i_expand_family_material_properties_and_benchmark_scenarios`
 
 Active planning surface:
 
@@ -76,12 +149,28 @@ splitting exact-source promotion from formula-backed prediction.
 
 Checkpoint assessment:
 
-The plan remains correct after Gate A and current-gate validation. The
-next step is still Gate B, not a runtime value move. Gate B must add
-shared airborne basis/candidate metadata first so later Rockwool and
-broader family predictions can surface as calculated predictions with
-explicit standards, assumptions, tolerance/error budget, and rejected
-candidate traceability.
+The plan remains correct after Gate H. Gate B added shared airborne
+basis/candidate metadata, Gate C added optional rating-adapter basis
+metadata, Gate D added optional physical input-completeness metadata,
+Gate E added optional airborne candidate-resolution metadata, and Gate G
+used that stack for the first deliberate runtime prediction movement.
+The explicit grouped Rockwool triple-leaf case is now labelled
+`family_physics_prediction` on
+`triple_leaf_two_cavity_frequency_solver`, not measured exact or source
+validated. Gate H added the no-runtime source-promotion policy that
+keeps exact full-stack, calibrated family, anchored-delta, and
+uncalibrated prediction candidates separate. Source candidates may win
+only with rights-safe evidence, owned topology/material/metric/tolerance
+scope, paired positive/negative tests, and calibration holdout metadata.
+The next step is Gate I/M8: family/material expansion and benchmark
+scenario widening without repeating one-off Rockwool-only fixes.
+
+Clean next-step queue:
+
+1. Gate I/M8 family/material expansion.
+2. M9 personal-use readiness scenario pack.
+3. source packet acquisition/calibration rows can be promoted later only
+   through the Gate H policy.
 
 Corrected operating model:
 
@@ -120,16 +209,26 @@ Research-backed standards frame:
 Current implementation facts from the re-analysis:
 
 - `impact-lane.ts` already has the desired precedence pattern.
-- airborne/wall lacks an equivalent first-class candidate/basis resolver.
+- airborne/wall now has first-class candidate/basis metadata for the
+  grouped Rockwool prediction lane; broader families still need runtime
+  population.
 - `airborne-verified-catalog.ts` has whole-stack exact anchoring but no
   partial anchor plus delta candidate.
-- `wall-triple-leaf-frequency-solver.ts` can produce a grouped
-  triple-leaf curve and ratings, but is trapped behind research/source
-  promotion flags.
-- grouped Rockwool currently returns `Rw 41` on
-  `multileaf_screening_blend`; the existing research solver calculates a
-  finite different prediction for the same grouped topology. That is the
-  first architecture benchmark, not an exact value claim.
+- `wall-triple-leaf-frequency-solver.ts` now feeds the explicit grouped
+  Rockwool runtime path as uncalibrated family physics prediction.
+- `airborne-source-promotion.ts` now defines the source-promotion
+  readiness policy for exact full-stack, calibrated family, and
+  exact-subassembly-plus-delta candidates. It keeps source rows from
+  promoting outside the topology/material/metric/tolerance scope they
+  own and requires paired positive/negative tests plus calibration
+  holdout metadata.
+- grouped Rockwool explicit topology returns lab `Rw 50 / STC 55 /
+  C 0.8 / Ctr -7.3`; flat-list split/internal Rockwool remains guarded
+  at diagnostic `Rw 41` until topology is explicit.
+- the report editor at `/workbench/proposal/configure` lets the user
+  manually correct packaged report values before issue. PDF and DOCX use
+  the same edited snapshot; report edits do not mutate calculator inputs,
+  solver routes, or engine outputs.
 
 Milestone execution order:
 
@@ -191,6 +290,10 @@ Just landed Gate A:
 
 `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-a-contract.test.ts`
 
+Gate A selection status:
+
+`gate_a_model_first_direction_contract_landed_no_runtime_selected_basis_gate_b`
+
 Gate A status:
 
 `gate_a_defined_model_first_candidate_basis_and_benchmark_acceptance_no_runtime`
@@ -216,6 +319,210 @@ Gate B validation order:
 5. Preserve current Rockwool values and keep M6 as the first runtime
    prediction movement.
 6. Run focused Gate B and `git diff --check`.
+
+Gate B implementation detail from the 2026-05-06 plan validation pass:
+
+Gate B landed implementation check:
+
+- Gate B is now implemented in
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-b-basis-contract.test.ts`.
+- Gate B landed
+  `gate_b_defined_shared_airborne_basis_candidate_schema_without_value_movement`;
+  Gate B selection status was
+  `gate_b_shared_airborne_basis_candidate_schema_landed_no_runtime_selected_rating_adapter_gate_c`;
+  Gate A had selected
+  `gate_b_define_shared_airborne_basis_candidate_schema_without_value_movement`.
+- Shared schema now exposes optional `airborneBasis` and
+  `airborneCandidateSet` fields.
+- Gate A and `pnpm calculator:gate:current` are green with the current
+  runtime values frozen.
+
+Preferred Gate B edit scope:
+
+1. Add shared airborne basis/candidate schemas, preferably in a small
+   shared domain file such as
+   `packages/shared/src/domain/airborne-basis.ts`.
+2. Export the new shared schemas/types from `packages/shared/src/index.ts`.
+3. Add optional `airborneBasis` and `airborneCandidateSet` fields to
+   `packages/shared/src/domain/assembly.ts` so existing callers that do
+   not send or read the new metadata still parse.
+4. Create the focused Gate B contract test in the selected engine file.
+5. Add the Gate B contract to `tools/dev/run-calculator-current-gate.ts`
+   only after the focused Gate B test is passing.
+
+Gate B schema contract:
+
+- origins:
+  `measured_exact_full_stack`,
+  `measured_exact_subassembly_plus_calculated_delta`,
+  `calibrated_family_physics`, `family_physics_prediction`,
+  `bounded_prediction`, `screening_fallback`, `needs_input`, and
+  `unsupported`;
+- basis fields:
+  `kind`, `origin`, `family`, `method`, `measurementStandard`,
+  `calculationStandard`, `ratingStandard`, `frequencyBands`,
+  `curveBasis`, `exactSourceId`, `anchorSourceId`, `errorBudgetDb`,
+  `toleranceClass`, `requiredInputs`, `assumptions`,
+  `propertyDefaults`, `missingSourceEvidence`, and
+  `missingPhysicalInputs`;
+- candidate fields:
+  candidate id/origin, selected flag, output ids or metric ids, basis
+  metadata, and rejected-candidate reasons when not selected;
+- source absence and physical input absence must be represented as
+  separate arrays/fields. Missing source evidence can block exact or
+  calibration promotion only; missing topology/geometry/input can
+  produce `needs_input`.
+
+Gate B tests must prove:
+
+- a legacy `AssemblyCalculation` without `airborneBasis` and
+  `airborneCandidateSet` still parses;
+- exact/catalog examples can carry measurement and rating basis;
+- formula-backed prediction examples can carry calculation and rating
+  basis plus `errorBudgetDb` or `toleranceClass`;
+- `missingSourceEvidence` and `missingPhysicalInputs` are distinct;
+- current Rockwool values remain frozen:
+  adjacent Rockwool stays `Rw 51 / R'w 49 / DnT,w 51`, and split or
+  grouped unresolved Rockwool stays `Rw 41` screening until M6;
+- no support bucket, confidence, route-card value, output-card status,
+  proposal/report copy, or workbench input behavior changes in Gate B.
+
+Gate B validation commands:
+
+```sh
+pnpm --filter @dynecho/engine exec vitest run src/calculator-model-first-physics-prediction-pivot-gate-a-contract.test.ts src/calculator-model-first-physics-prediction-pivot-gate-b-basis-contract.test.ts --maxWorkers=1
+git diff --check
+```
+
+Run `pnpm calculator:gate:current` after adding Gate B to the current
+gate runner or after any authority-doc/current-gate alignment changes.
+
+Gate C validation order:
+
+1. Create
+   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-c-rating-adapter-contract.test.ts`.
+2. Inventory existing airborne and impact single-number rating paths.
+3. Prove `Rw`/`STC`, `Ln,w`/`IIC`, lab, field, and
+   building-prediction values remain basis-owned and cannot silently
+   alias.
+4. Keep runtime values, support buckets, visible cards, reports, and
+   workbench input behavior frozen.
+5. Run focused Gate C, Gate B continuity, `pnpm calculator:gate:current`,
+   and `git diff --check`.
+
+Gate C landed implementation check:
+
+- Gate C is now implemented in
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-c-rating-adapter-contract.test.ts`.
+- Gate C landed
+  `gate_c_inventory_rating_adapter_integrity_without_value_movement`.
+- Shared schema now exposes optional `ratingAdapterBasisSet` metadata
+  through `packages/shared/src/domain/rating-adapter.ts` and
+  `AssemblyCalculationSchema`.
+- The Gate C contract inventories ISO 717-1, ISO 717-2, ASTM E413, and
+  ASTM E989. `Rw`/`STC`, `Ln,w`/`IIC`, and lab/field contexts are
+  rejected as silent aliases. ASTM E989/IIC is recorded as
+  `planned_not_implemented` until a real runtime adapter or exact source
+  owner lands.
+- Current Rockwool values remain frozen; M6 is still the first runtime
+  prediction movement.
+- Gate C validation passed on 2026-05-06: focused Gate C 1 file / 6
+  tests, focused Gate A/B/C continuity 3 files / 17 tests, and
+  `pnpm calculator:gate:current` with engine 284 files / 1604 tests,
+  web 61 files / 273 passed + 18 skipped, repo build 5 / 5 tasks, and
+  whitespace guard green. Broad `pnpm check` also passed with
+  lint/typecheck clean, engine 409 files / 2406 tests, web 166 files /
+  936 passed + 18 skipped, repo build 5 / 5 tasks, and final
+  `git diff --check` green after `apps/web/next-env.d.ts` restoration.
+- Gate C selection status:
+  `gate_c_rating_adapter_integrity_landed_no_runtime_selected_input_completeness_gate_d`.
+
+Gate D validation order:
+
+1. Create
+   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-d-input-completeness-contract.test.ts`.
+2. Define the minimum physical input matrix for single leaf,
+   double/framed, triple leaf, porous fill, floating floor, and
+   field/apparent outputs.
+3. Prove missing source evidence and missing physical inputs remain
+   separate: source absence blocks exact/calibration only; missing
+   physical inputs produce `needs_input`.
+4. Keep runtime values, support buckets, visible cards, reports, and
+   workbench input behavior frozen.
+5. Run focused Gate D plus Gate A/B/C continuity, then
+   `pnpm calculator:gate:current` and `git diff --check`.
+
+Gate D landed implementation check:
+
+- Gate D is now implemented in
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-d-input-completeness-contract.test.ts`.
+- Gate D landed
+  `gate_d_define_physical_input_completeness_needs_input_matrix_without_value_movement`.
+- Shared schema now exposes optional `inputCompletenessSet` metadata
+  through `packages/shared/src/domain/input-completeness.ts` and
+  `AssemblyCalculationSchema`.
+- The Gate D contract defines minimum physical inputs for single leaf,
+  double/framed, triple-leaf/multicavity, porous fill, floating floor,
+  and field/apparent output contexts.
+- Missing exact/source evidence is separated from missing physical
+  inputs: source absence blocks exact/calibration only, while physical
+  input absence produces `needs_input`.
+- Optional precision gaps can widen uncertainty only through documented
+  defaults; they are not `needs_input` blockers.
+- Current Rockwool values remain frozen; M6 is still the first runtime
+  prediction movement.
+- Gate D validation passed on 2026-05-06: focused Gate D 1 file / 7
+  tests, focused Gate A/B/C/D continuity 4 files / 24 tests, and
+  `pnpm calculator:gate:current` with engine 285 files / 1611 tests,
+  web 61 files / 273 passed + 18 skipped, repo build 5 / 5 tasks, and
+  whitespace guard green. Broad `pnpm check` also passed with
+  lint/typecheck clean, engine 410 files / 2413 tests, web 166 files /
+  936 passed + 18 skipped, repo build 5 / 5 tasks, and final
+  `git diff --check` green.
+
+Gate D selected Gate E:
+
+`gate_d_input_completeness_matrix_landed_no_runtime_selected_airborne_candidate_resolver_gate_e`
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-e-airborne-candidate-resolver-contract.test.ts`
+
+`gate_e_define_airborne_candidate_resolver_selected_rejected_candidates_without_value_movement`
+
+Gate E landed implementation check:
+
+- Gate E is now implemented in
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-e-airborne-candidate-resolver-contract.test.ts`.
+- Gate E landed
+  `gate_e_define_airborne_candidate_resolver_selected_rejected_candidates_without_value_movement`.
+- Shared schema now exposes optional `airborneCandidateResolution`
+  metadata through `packages/shared/src/domain/airborne-basis.ts` and
+  `AssemblyCalculationSchema`.
+- The resolver contract pins the model-first airborne precedence:
+  exact full-stack, anchored delta, calibrated family physics,
+  uncalibrated family physics prediction, bounded prediction, screening
+  fallback, `needs_input`, then `unsupported`.
+- The selected candidate must be exactly one candidate, cannot carry
+  rejection reasons, and every rejected candidate must explain why it
+  lost or was blocked.
+- Missing source evidence blocks exact/calibration promotion only;
+  missing physical topology selects `needs_input`; deterministic
+  tie-breakers cover duplicate rows and safe candidate reorders.
+- Current Rockwool values remain frozen; Gate G/M6 is still the first
+  runtime prediction movement.
+- Gate E validation passed on 2026-05-06: focused Gate E 1 file / 8
+  tests, focused Gate A/B/C/D/E continuity 5 files / 32 tests, and
+  `pnpm calculator:gate:current` with engine 286 files / 1619 tests,
+  web 61 files / 273 passed + 18 skipped, repo build 5 / 5 tasks, and
+  whitespace guard green. Broad `pnpm check` also passed with
+  lint/typecheck clean, engine 411 files / 2421 tests, web 166 files /
+  936 passed + 18 skipped, repo build 5 / 5 tasks, and final
+  `git diff --check` green.
+
+Gate E selected Gate G:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-g-grouped-rockwool-prediction-contract.test.ts`
+
+`gate_g_promote_grouped_rockwool_triple_leaf_family_physics_prediction_with_benchmarks`
 
 Everything below this line is chronology/history unless a future top
 section promotes it again. Older blocks may still contain words such as

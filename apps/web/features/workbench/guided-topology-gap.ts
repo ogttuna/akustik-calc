@@ -53,7 +53,8 @@ export function getGuidedTopologyGap(input: {
     const tripleLeafWarning = input.result?.warnings.find(
       (warning: string) =>
         /^Triple-leaf exact calculation needs grouped wall topology/u.test(warning) ||
-        /^Grouped triple-leaf topology is present/u.test(warning)
+        /^Grouped triple-leaf topology is present/u.test(warning) ||
+        /^Grouped Rockwool triple-leaf family physics prediction/u.test(warning)
     );
 
     if (tripleLeafWarning && /^Triple-leaf exact calculation needs grouped wall topology/u.test(tripleLeafWarning)) {
@@ -72,8 +73,8 @@ export function getGuidedTopologyGap(input: {
 
     return {
       detail:
-        "This wall has three visible leaves and two cavities, so DAC keeps it on the triple-leaf screening route until grouped topology and source validation are both visible.",
-      value: "Triple-leaf screening"
+        "This wall has three visible leaves and two cavities, so DAC keeps it on the triple-leaf prediction route until grouped topology and source validation are both visible.",
+      value: "Triple-leaf prediction"
     };
   }
 

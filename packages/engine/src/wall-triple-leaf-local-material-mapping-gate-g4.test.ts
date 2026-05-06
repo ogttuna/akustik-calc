@@ -185,9 +185,9 @@ describe("wall triple-leaf local material mapping Gate G4", () => {
     });
 
     expect(evaluation.negativeBoundariesPreserved).toBe(true);
-    expect(liveResult.metrics.estimatedRwDb).toBe(41);
-    expect(liveResult.dynamicAirborneTrace?.strategy).toBe("multileaf_screening_blend");
-    expect(liveResult.dynamicAirborneTrace?.confidenceClass).toBe("low");
+    expect(liveResult.metrics.estimatedRwDb).toBe(50);
+    expect(liveResult.dynamicAirborneTrace?.strategy).toBe("triple_leaf_two_cavity_frequency_solver_family_physics_prediction");
+    expect(liveResult.dynamicAirborneTrace?.confidenceClass).toBe("medium");
   });
 
   it("keeps active docs aligned with Gate G4 and the selected blocked diagnostics/source acquisition gate", () => {

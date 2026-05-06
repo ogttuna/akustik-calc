@@ -252,7 +252,7 @@ export function ProposalAdjustClientPage() {
   const [savedAtIso, setSavedAtIso] = useState<string>("");
   const [customizedAtIso, setCustomizedAtIso] = useState<string | undefined>(undefined);
   const [lastSavedSignature, setLastSavedSignature] = useState("");
-  const [isDownloadingPdf, setIsDownloadingPdf] = useState(false);
+  const [isDownloadingExport, setIsDownloadingExport] = useState(false);
   const [activePdfStyle, setActivePdfStyle] = useState<ProposalPdfStyle>("branded");
   const [activeEditorTab, setActiveEditorTab] = useState<ProposalEditorTabId>("copy");
 
@@ -325,7 +325,7 @@ export function ProposalAdjustClientPage() {
       setCustomizedAtIso(undefined);
       setLastSavedSignature(currentSignature);
       if (!options?.silent) {
-        toast.success("PDF edits cleared", {
+        toast.success("Report edits cleared", {
           description: "The packaged proposal snapshot is active again."
         });
       }
@@ -337,7 +337,7 @@ export function ProposalAdjustClientPage() {
     setLastSavedSignature(currentSignature);
 
     if (!options?.silent) {
-      toast.success("PDF edits saved", {
+      toast.success("Report edits saved", {
         description: "Only the proposal snapshot was updated. Calculator inputs and engine results stay untouched."
       });
     }
@@ -347,8 +347,8 @@ export function ProposalAdjustClientPage() {
 
   function handleReloadStoredPreview() {
     loadStoredPreview();
-    toast.success("Saved PDF state reloaded", {
-      description: "The PDF editor now matches the latest stored proposal snapshot."
+    toast.success("Saved report state reloaded", {
+      description: "The report editor now matches the latest stored proposal snapshot."
     });
   }
 
@@ -362,7 +362,7 @@ export function ProposalAdjustClientPage() {
     setCustomizedAtIso(undefined);
     setLastSavedSignature(baseSignature);
     toast.success("Packaged snapshot restored", {
-      description: "Manual PDF edits were cleared. The calculator result package is active again."
+      description: "Manual report edits were cleared. The calculator result package is active again."
     });
   }
 
@@ -387,7 +387,7 @@ export function ProposalAdjustClientPage() {
     }
 
     persistCurrentDocument({ silent: true });
-    setIsDownloadingPdf(true);
+    setIsDownloadingExport(true);
 
     try {
       if (format === "docx") {
@@ -413,7 +413,7 @@ export function ProposalAdjustClientPage() {
             : `DAC could not generate the ${getSimpleWorkbenchProposalExportLabel({ format, style })} on the server.`
       });
     } finally {
-      setIsDownloadingPdf(false);
+      setIsDownloadingExport(false);
     }
   }
 
@@ -423,10 +423,10 @@ export function ProposalAdjustClientPage() {
         <SurfacePanel className="px-5 py-6 sm:px-6">
           <div className="eyebrow">No Proposal Snapshot</div>
           <h1 className="mt-1 font-display text-[1.7rem] leading-none tracking-[-0.05em] text-[color:var(--ink)]">
-            Package a proposal before opening the PDF editor
+            Package a proposal before opening the report editor
           </h1>
           <p className="mt-3 max-w-2xl text-sm leading-7 text-[color:var(--ink-soft)]">
-            This page only edits the packaged proposal snapshot that feeds the preview and PDF renderer. Return to the workbench proposal tab and
+            This page only edits the packaged proposal snapshot that feeds the preview, PDF renderer, and DOCX renderer. Return to the workbench proposal tab and
             package an issue first.
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
@@ -448,12 +448,13 @@ export function ProposalAdjustClientPage() {
       <SurfacePanel className="px-5 py-4 sm:px-6">
         <div className="flex min-w-0 flex-wrap items-start justify-between gap-4">
           <div className="min-w-0">
-            <div className="eyebrow">PDF Editor</div>
+            <div className="eyebrow">Report Editor</div>
             <h1 className="mt-1 font-display text-[1.65rem] leading-none tracking-[-0.04em] text-[color:var(--ink)]">
-              Edit exported PDF values
+              Edit exported report values
             </h1>
             <p className="mt-2 max-w-4xl text-sm leading-6 text-[color:var(--ink-soft)]">
-              Manual edits change the packaged proposal snapshot only. Calculator inputs, solver routes, and engine outputs stay untouched.
+              Manual edits change the packaged proposal snapshot only. PDF and DOCX exports use these edited values, while calculator inputs,
+              solver routes, and engine outputs stay untouched.
             </p>
           </div>
           <Link
@@ -553,7 +554,7 @@ export function ProposalAdjustClientPage() {
                     <div className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">Manual chart numbers</div>
                     <div className="mt-1 text-sm font-semibold text-[color:var(--ink)]">Active frequency / dB values</div>
                     <p className="mt-2 text-sm leading-6 text-[color:var(--ink-soft)]">
-                      These fields edit the PDF chart snapshot only. They do not change calculator rows or solver output.
+                      These fields edit the report chart snapshot only. They do not change calculator rows or solver output.
                     </p>
                     <div className="mt-4 grid gap-4">
                       {responseCurves.map((figure, figureIndex) => {
@@ -575,7 +576,7 @@ export function ProposalAdjustClientPage() {
                                 <div className="mt-1 text-[0.78rem] leading-5 text-[color:var(--ink-soft)]">{activeSeries.label}</div>
                               </div>
                               <div className="rounded-full border hairline bg-[color:var(--paper)] px-3 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--ink-faint)]">
-                                PDF only
+                                Report only
                               </div>
                             </div>
                             <div className="mt-4 grid gap-4 md:grid-cols-2">
@@ -651,7 +652,7 @@ export function ProposalAdjustClientPage() {
 
               <CollapsibleEditorSection
                 defaultOpen={editableDocument.metrics.length <= 1}
-                description="Packaged live-output rows bu blokta düzenlenir."
+                description="Packaged live-output rows bu blokta düzenlenir. PDF ve DOCX export aynı düzenlenmiş snapshot'ı kullanır."
                 eyebrow="Optional"
                 summary={`${editableDocument.metrics.length} packaged metric${editableDocument.metrics.length === 1 ? "" : "s"}`}
                 title="Metric detail rows"
@@ -861,7 +862,7 @@ export function ProposalAdjustClientPage() {
 
               <CollapsibleEditorSection
                 defaultOpen={responseCurves.length > 0}
-                description="PDF charts use this packaged snapshot. Change the labels or the dB series here when the calculator output must be manually corrected for the issued document."
+                description="PDF and DOCX charts use this packaged snapshot. Change the labels or the dB series here when the calculator output must be manually corrected for the issued document."
                 eyebrow="Manual numbers"
                 summary={`${responseCurves.length} chart${responseCurves.length === 1 ? "" : "s"}`}
                 title="Chart and curve values"
@@ -1590,7 +1591,7 @@ export function ProposalAdjustClientPage() {
                   Live preview
                 </div>
                 <h2 className="mt-1 font-display text-[1.35rem] leading-none tracking-[-0.05em] text-[color:var(--ink)]">
-                  Current PDF composition
+                  Current report composition
                 </h2>
               </div>
               <div className="rounded-full border hairline bg-[color:var(--paper)]/78 px-3 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-faint)]">
@@ -1660,21 +1661,21 @@ export function ProposalAdjustClientPage() {
                 </button>
                 <button
                   className="focus-ring ink-button-solid inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-50"
-                  disabled={isDownloadingPdf}
+                  disabled={isDownloadingExport}
                   onClick={() => void handleDownloadExport(activePdfStyle, "pdf")}
                   type="button"
                 >
                   <Download className="h-4 w-4" />
-                  {isDownloadingPdf ? "Preparing file..." : activeStyleDescriptor.downloadLabel}
+                  {isDownloadingExport ? "Preparing file..." : activeStyleDescriptor.downloadLabel}
                 </button>
                 <button
                   className="focus-ring inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 text-sm font-semibold text-[color:var(--ink-soft)] hover:bg-[color:var(--panel)] disabled:cursor-not-allowed disabled:opacity-50"
-                  disabled={isDownloadingPdf}
+                  disabled={isDownloadingExport}
                   onClick={() => void handleDownloadExport(activePdfStyle, "docx")}
                   type="button"
                 >
                   <Download className="h-4 w-4" />
-                  {isDownloadingPdf ? "Preparing file..." : activePdfStyle === "simple" ? "Download simple DOCX" : "Download branded DOCX"}
+                  {isDownloadingExport ? "Preparing file..." : activePdfStyle === "simple" ? "Download simple DOCX" : "Download branded DOCX"}
                 </button>
               </div>
 

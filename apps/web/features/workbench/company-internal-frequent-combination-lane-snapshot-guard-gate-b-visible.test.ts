@@ -404,7 +404,7 @@ describe("company-internal frequent-combination lane snapshot guard Gate B visib
     }
   });
 
-  it("keeps grouped rockwool triple-leaf visibly screening and not fixed", () => {
+  it("keeps grouped rockwool triple-leaf visibly source-gated and not exact", () => {
     const grouped = evaluate({
       airborneContext: completeTripleLeafContext(WALL_LAB_CONTEXT),
       id: "company-gate-b-grouped-rockwool",
@@ -415,28 +415,28 @@ describe("company-internal frequent-combination lane snapshot guard Gate B visib
     const rwCard = outputCard("Rw", grouped);
 
     expect(grouped.result.dynamicAirborneTrace).toMatchObject({
-      confidenceClass: "low",
+      confidenceClass: "medium",
       detectedFamily: "multileaf_multicavity",
-      strategy: "multileaf_screening_blend"
+      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
     });
     expect(grouped.branch).toMatchObject({
-      tone: "warning",
+      tone: "neutral",
       value: "Multi-Leaf / Multi-Cavity"
     });
     expect(grouped.topologyGap).toMatchObject({
       value: "Source validation blocked"
     });
-    expect(grouped.topologyGap?.detail).toContain("source-calibrated triple-leaf solver");
+    expect(grouped.topologyGap?.detail).toContain("family physics prediction");
     expect(rwCard).toMatchObject({
-      postureLabel: "Rockwool screening-only",
+      postureLabel: "Rockwool source-gated prediction",
       status: "live",
-      value: "41 dB"
+      value: "50 dB"
     });
-    expect(rwCard.detail).toContain("not exact");
+    expect(rwCard.detail).toContain("not measured exact");
     expect(rwCard.detail).toContain("not source-validated");
     expect(rwCard.detail).toContain("not design-grade");
     expect(rwCard.postureDetail).toContain("No exact wall source row is active");
-    expect(grouped.warnings.join("\n")).toMatch(/Grouped triple-leaf topology is present/i);
+    expect(grouped.warnings.join("\n")).toMatch(/Grouped Rockwool triple-leaf family physics prediction/i);
     expectNoExactSourceWarning(grouped.warnings, "grouped rockwool");
   });
 
@@ -644,19 +644,19 @@ describe("company-internal frequent-combination lane snapshot guard Gate B visib
     const dnTw = outputCard("DnT,w", field);
 
     expect(field.result.dynamicAirborneTrace).toMatchObject({
-      confidenceClass: "low",
+      confidenceClass: "medium",
       detectedFamily: "multileaf_multicavity",
-      strategy: "multileaf_screening_blend"
+      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
     });
     expect(rwPrime).toMatchObject({
       postureLabel: "Field continuation",
       status: "live",
-      value: "34 dB"
+      value: "49 dB"
     });
     expect(dnTw).toMatchObject({
       postureLabel: "Field continuation",
       status: "live",
-      value: "36 dB"
+      value: "50 dB"
     });
     expect(rwPrime.postureDetail).toContain("not being framed as an independent exact source row");
     expect(dnTw.postureDetail).toContain("not being framed as an independent exact source row");

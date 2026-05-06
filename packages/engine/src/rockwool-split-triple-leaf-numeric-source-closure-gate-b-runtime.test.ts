@@ -212,18 +212,18 @@ describe("Rockwool split triple-leaf numeric source closure Gate B", () => {
     });
 
     expect(grouped.dynamicAirborneTrace).toMatchObject({
-      confidenceClass: "low",
+      confidenceClass: "medium",
       detectedFamily: "multileaf_multicavity",
-      strategy: "multileaf_screening_blend"
+      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
     });
     expect(grouped.metrics).toMatchObject({
-      estimatedRwDb: 41,
-      estimatedStc: 41
+      estimatedRwDb: 50,
+      estimatedStc: 55
     });
     expect(grouped.supportedTargetOutputs).toEqual([...WALL_LAB_OUTPUTS]);
     expect(grouped.unsupportedTargetOutputs).toEqual([]);
     expect(grouped.warnings).not.toContain(ROCKWOOL_SPLIT_TRIPLE_LEAF_EXACT_OUTPUT_WITHHOLD_WARNING);
-    expect(grouped.warnings.join("\n")).toContain("Grouped triple-leaf topology is present");
+    expect(grouped.warnings.join("\n")).toContain("family physics prediction");
     expect(
       isFlatListSplitInternalRockwoolDiagnostic({
         airborneContext: GROUPED_TRIPLE_LEAF_LAB_CONTEXT,

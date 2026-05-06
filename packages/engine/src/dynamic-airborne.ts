@@ -75,6 +75,7 @@ import {
   evaluateWallTripleLeafTopologyReadiness,
   WALL_TRIPLE_LEAF_TOPOLOGY_FIELD_LABELS
 } from "./wall-triple-leaf-topology-readiness";
+import { maybeCalculateGateGGroupedRockwoolPrediction } from "./dynamic-airborne-gate-g-rockwool";
 import { ROCKWOOL_TRIPLE_LEAF_SOURCE_REQUIRED_RUNTIME_WARNING } from "./rockwool-triple-leaf-source-required-boundary";
 
 const FAMILY_LABELS: Record<DynamicAirborneFamily, string> = {
@@ -1021,6 +1022,15 @@ export function calculateDynamicAirborneResult(
     detectedFamily: family.family,
     visibleLeafCount: topology.visibleLeafCount
   });
+  const gateGGroupedRockwoolPrediction = maybeCalculateGateGGroupedRockwoolPrediction({
+    family,
+    layers: analysisLayers,
+    options,
+    topology
+  });
+  if (gateGGroupedRockwoolPrediction) {
+    return gateGGroupedRockwoolPrediction;
+  }
   const familyDecisionBoundary = summarizeFamilyDecisionBoundary(
     analysisLayers,
     topology,

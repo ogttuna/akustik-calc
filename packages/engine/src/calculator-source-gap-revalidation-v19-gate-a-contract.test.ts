@@ -450,10 +450,10 @@ describe("calculator source-gap revalidation v19 Gate A contract", () => {
     const flatSwap = wallSnapshot(swap(SPLIT_ROCKWOOL_STACK, 3, 4), WALL_LAB_CONTEXT);
 
     expect(grouped).toMatchObject({
-      confidence: "low",
+      confidence: "medium",
       family: "multileaf_multicavity",
-      rw: 41,
-      strategy: "multileaf_screening_blend"
+      rw: 50,
+      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
     });
     expect(flatSwap).toMatchObject({
       confidence: "medium",

@@ -480,9 +480,9 @@ describe("route-family lane-drift common-stack watchlist Gate A contract", () =>
       targetOutputs: ["Rw"]
     });
 
-    expect(liveResult.metrics.estimatedRwDb).toBe(41);
-    expect(liveResult.dynamicAirborneTrace?.strategy).toBe("multileaf_screening_blend");
-    expect(liveResult.dynamicAirborneTrace?.confidenceClass).toBe("low");
+    expect(liveResult.metrics.estimatedRwDb).toBe(50);
+    expect(liveResult.dynamicAirborneTrace?.strategy).toBe("triple_leaf_two_cavity_frequency_solver_family_physics_prediction");
+    expect(liveResult.dynamicAirborneTrace?.confidenceClass).toBe("medium");
     expect(COMMON_STACK_WATCHLIST[0]).toMatchObject({
       currentKnownPosture:
         "live grouped input still returns low-confidence multileaf_screening_blend Rw 41 and must not be called fixed",

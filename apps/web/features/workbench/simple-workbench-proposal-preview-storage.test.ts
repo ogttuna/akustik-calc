@@ -245,7 +245,7 @@ describe("simple workbench proposal preview storage", () => {
     const customizedAtIso = storeSimpleWorkbenchProposalPreviewCustomizations({
       ...DOCUMENT,
       constructionTotalThicknessOverrideLabel: "224 mm total (manual)",
-      executiveSummary: "Manual PDF wording is active on this preview.",
+      executiveSummary: "Manual report wording is active on this preview.",
       layers: [
         {
           categoryLabel: "Finish",
@@ -256,6 +256,33 @@ describe("simple workbench proposal preview storage", () => {
           surfaceMassLabel: "12 kg/m2",
           thicknessLabel: "14 mm"
         }
+      ],
+      metrics: [
+        {
+          detail: "Manual consultant correction applied to the issue snapshot only.",
+          label: "Rw",
+          value: "59 dB (manual)"
+        }
+      ],
+      primaryMetricValue: "59 dB (manual)",
+      responseCurves: [
+        {
+          activeSeriesId: "manual-airborne",
+          direction: "higher_better",
+          domainLabel: "Frequency, Hz",
+          id: "airborne",
+          note: "Manual chart values for the issued report snapshot.",
+          series: [
+            {
+              active: true,
+              frequenciesHz: [125, 250, 500],
+              id: "manual-airborne",
+              label: "Manual airborne curve",
+              valuesDb: [42, 49, 55]
+            }
+          ],
+          title: "Manual airborne response"
+        }
       ]
     });
 
@@ -263,10 +290,15 @@ describe("simple workbench proposal preview storage", () => {
 
     expect(customizedAtIso).toMatch(/^20/);
     expect(loaded?.hasCustomizations).toBe(true);
-    expect(loaded?.document.executiveSummary).toBe("Manual PDF wording is active on this preview.");
+    expect(loaded?.document.executiveSummary).toBe("Manual report wording is active on this preview.");
     expect(loaded?.document.constructionTotalThicknessOverrideLabel).toBe("224 mm total (manual)");
     expect(loaded?.document.layers).toHaveLength(1);
+    expect(loaded?.document.primaryMetricValue).toBe("59 dB (manual)");
+    expect(loaded?.document.metrics[0]?.value).toBe("59 dB (manual)");
+    expect(loaded?.document.responseCurves?.[0]?.series[0]?.valuesDb).toEqual([42, 49, 55]);
     expect(loaded?.baseDocument.executiveSummary).toBe("Riverside Residences currently reads Rw 61 dB.");
+    expect(loaded?.baseDocument.primaryMetricValue).toBe("61 dB");
+    expect(loaded?.baseDocument.responseCurves).toBeUndefined();
     expect(loaded?.baseDocument.layers).toHaveLength(0);
     expect(loaded?.customizedAtIso).toBe(customizedAtIso);
   });

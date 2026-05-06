@@ -560,9 +560,9 @@ describe("Georgia-Pacific Fire & Sound Assemblies source-pack extraction Gate A 
       "georgia_pacific_rows_do_not_fix_the_uris_2006_split_rockwool"
     );
     expect(ROW_BOUNDARIES.join("\n")).toContain("gp_stc_ranges_are_not_single_rw_values");
-    expect(liveResult.metrics.estimatedRwDb).toBe(41);
-    expect(liveResult.dynamicAirborneTrace?.strategy).toBe("multileaf_screening_blend");
-    expect(liveResult.dynamicAirborneTrace?.confidenceClass).toBe("low");
+    expect(liveResult.metrics.estimatedRwDb).toBe(50);
+    expect(liveResult.dynamicAirborneTrace?.strategy).toBe("triple_leaf_two_cavity_frequency_solver_family_physics_prediction");
+    expect(liveResult.dynamicAirborneTrace?.confidenceClass).toBe("medium");
   });
 
   it("keeps active docs aligned on Gate B as the next no-runtime action", () => {

@@ -233,8 +233,8 @@ describe("wall triple-leaf calibration regime Gate G", () => {
     expect(gate.blockers).toEqual(["no_digitized_triple_leaf_source_rows", "no_source_owned_holdout_rows"]);
     expect(gate.selectedNextFile).toBe("packages/engine/src/wall-triple-leaf-source-curve-digitization-intake.test.ts");
 
-    expect(liveResult.metrics.estimatedRwDb).toBe(41);
-    expect(liveResult.dynamicAirborneTrace?.strategy).toBe("multileaf_screening_blend");
+    expect(liveResult.metrics.estimatedRwDb).toBe(50);
+    expect(liveResult.dynamicAirborneTrace?.strategy).toBe("triple_leaf_two_cavity_frequency_solver_family_physics_prediction");
   });
 
   it("keeps active docs aligned with Gate G and the selected source curve digitization gate", () => {

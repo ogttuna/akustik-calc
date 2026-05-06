@@ -453,7 +453,7 @@ describe("route-family lane-drift common-stack watchlist Gate D flat-list family
 
     expect(groupedTripleLeaf.guardCandidate).toBe(false);
     expect(groupedTripleLeaf.rejectionReasons).toContain("grouped_triple_leaf_topology_negative_boundary");
-    expect(groupedTripleLeaf.current.strategy).toBe("multileaf_screening_blend");
+    expect(groupedTripleLeaf.current.strategy).toBe("triple_leaf_two_cavity_frequency_solver_family_physics_prediction");
 
     expect(duplicateClassic.guardCandidate).toBe(false);
     expect(duplicateClassic.rejectionReasons).toContain("duplicate_many_layer_finite_output_negative_boundary");

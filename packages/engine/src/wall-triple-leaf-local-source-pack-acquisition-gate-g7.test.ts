@@ -167,9 +167,9 @@ describe("wall triple-leaf local source-pack acquisition Gate G7", () => {
     });
 
     expect(evaluation.runtimeImportReadyNow).toBe(false);
-    expect(liveResult.metrics.estimatedRwDb).toBe(41);
-    expect(liveResult.dynamicAirborneTrace?.strategy).toBe("multileaf_screening_blend");
-    expect(liveResult.dynamicAirborneTrace?.confidenceClass).toBe("low");
+    expect(liveResult.metrics.estimatedRwDb).toBe(50);
+    expect(liveResult.dynamicAirborneTrace?.strategy).toBe("triple_leaf_two_cavity_frequency_solver_family_physics_prediction");
+    expect(liveResult.dynamicAirborneTrace?.confidenceClass).toBe("medium");
   });
 
   it("pins rockwool-like sibling route flips as source-gap/order-risk findings", () => {

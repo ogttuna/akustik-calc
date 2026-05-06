@@ -379,18 +379,17 @@ describe("field-output lab/screening leakage guard Gate A contract", () => {
     });
 
     expect(wall).toMatchObject({
-      confidence: "low",
-      dnTw: 40,
+      confidence: "medium",
+      dnTw: 52,
       family: "multileaf_multicavity",
       fieldBasis: "apparent_curve_overlay + 10log10(0.32V/S)",
-      rwPrime: 39,
-      strategy: "multileaf_screening_blend",
+      rwPrime: 50,
+      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction",
       supported: ["R'w", "DnT,w"],
       unsupported: []
     });
-    expect(wall.warnings).toContain("Grouped triple-leaf topology is present");
-    expect(wall.warnings).toContain("source-calibrated triple-leaf solver");
-    expect(wall.warnings).toContain("Dynamic airborne confidence is low");
+    expect(wall.warnings).toContain("family physics prediction");
+    expect(wall.warnings).toContain("Dynamic airborne confidence is medium");
   });
 
   it("pins exact, low-confidence, and raw floor field-output bases before visible copy movement", () => {

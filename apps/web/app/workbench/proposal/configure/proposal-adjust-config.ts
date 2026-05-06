@@ -46,14 +46,14 @@ export function getProposalPdfStyleDescriptor(style: ProposalPdfStyle): {
   if (style === "simple") {
     return {
       downloadLabel: "Download simple PDF",
-      note: "Simple uses the same edited content, but exports with the lightweight renderer.",
+      note: "Simple uses the same edited report snapshot for PDF and DOCX, with lightweight framing.",
       shortLabel: "Simple PDF"
     };
   }
 
   return {
     downloadLabel: "Download branded PDF",
-    note: "Branded keeps the consultant-sheet framing while reusing the same edited content.",
+    note: "Branded keeps the consultant-sheet framing while reusing the same edited report snapshot for PDF and DOCX.",
     shortLabel: "Branded PDF"
   };
 }
@@ -67,7 +67,7 @@ export function getProposalEditorStateLabel(options: {
   }
 
   if (options.hasManualOverrides) {
-    return "Saved PDF override";
+    return "Saved report override";
   }
 
   return "Packaged baseline";

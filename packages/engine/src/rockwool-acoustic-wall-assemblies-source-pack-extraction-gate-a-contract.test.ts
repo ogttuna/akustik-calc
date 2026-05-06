@@ -371,9 +371,9 @@ describe("ROCKWOOL Acoustic Wall Assemblies source-pack extraction Gate A contra
     expect(PROTECTED_NEGATIVE_BOUNDARIES.join("\n")).toContain("do_not_fix_the_uris_2006_split_rockwool");
     expect(PROTECTED_NEGATIVE_BOUNDARIES.join("\n")).toContain("do_not_coalesce_with_glass_fiber");
     expect(PROTECTED_NEGATIVE_BOUNDARIES.join("\n")).toContain("do_not_promote_floor_only_generated_floor_masonry");
-    expect(liveResult.metrics.estimatedRwDb).toBe(41);
-    expect(liveResult.dynamicAirborneTrace?.strategy).toBe("multileaf_screening_blend");
-    expect(liveResult.dynamicAirborneTrace?.confidenceClass).toBe("low");
+    expect(liveResult.metrics.estimatedRwDb).toBe(50);
+    expect(liveResult.dynamicAirborneTrace?.strategy).toBe("triple_leaf_two_cavity_frequency_solver_family_physics_prediction");
+    expect(liveResult.dynamicAirborneTrace?.confidenceClass).toBe("medium");
   });
 
   it("keeps active docs aligned on Gate B as the next no-runtime action", () => {

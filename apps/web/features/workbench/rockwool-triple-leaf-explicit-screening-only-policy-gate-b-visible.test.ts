@@ -296,7 +296,7 @@ function buildProposalText(input: {
       })
     );
   const document = {
-    assemblyHeadline: "Rockwool grouped triple-leaf screening-only policy rehearsal",
+    assemblyHeadline: "Rockwool grouped triple-leaf source-gated prediction policy rehearsal",
     assumptionItems: [
       {
         detail: ROCKWOOL_GROUPED_TRIPLE_LEAF_SCREENING_ONLY_GUARD,
@@ -305,7 +305,7 @@ function buildProposalText(input: {
       }
     ],
     approverTitle: "Acoustic Consultant",
-    briefNote: "Visible copy policy rehearsal only.",
+    briefNote: "Visible source-gated prediction copy rehearsal only.",
     clientName: "DynEcho internal",
     consultantAddress: "Office address not entered",
     consultantCompany: "DynEcho",
@@ -322,14 +322,14 @@ function buildProposalText(input: {
     decisionTrailItems: [
       {
         detail:
-          "Gate B changes visible wording only; Rockwool triple-leaf runtime values and evidence status remain frozen.",
-        label: "Gate B policy",
+          "Gate G now reports Rockwool grouped triple-leaf through a labelled family physics prediction; measured-exact and source-validated promotion remain blocked.",
+        label: "Gate G policy",
         tone: "warning"
       }
     ],
-    dynamicBranchDetail: "Rockwool triple-leaf remains on a multileaf screening blend.",
+    dynamicBranchDetail: "Rockwool triple-leaf uses the source-gated two-cavity family physics prediction.",
     dynamicBranchLabel: "Multi-Leaf / Multi-Cavity",
-    executiveSummary: "Rockwool triple-leaf values are screening-only and not design-grade.",
+    executiveSummary: "Rockwool triple-leaf values are source-gated family physics predictions and not design-grade.",
     issuedOnIso: "2026-05-05T00:00:00.000Z",
     issuedOnLabel: "5 May 2026",
     issueBaseReference: "RW-BASE-000",
@@ -344,13 +344,13 @@ function buildProposalText(input: {
     preparedBy: "DynEcho",
     primaryMetricLabel: primaryCard.label,
     primaryMetricValue: primaryCard.value,
-    projectName: "Rockwool triple-leaf screening-only policy",
+    projectName: "Rockwool triple-leaf source-gated prediction policy",
     proposalAttention: "Internal reviewer",
-    proposalIssuePurpose: "Visible screening-only guard",
+    proposalIssuePurpose: "Visible source-gated prediction guard",
     proposalRecipient: "DynEcho internal",
     proposalReference: "RW-SCREENING-001",
     proposalRevision: "Rev 00",
-    proposalSubject: "Rockwool triple-leaf visible screening-only policy",
+    proposalSubject: "Rockwool triple-leaf visible source-gated prediction policy",
     proposalValidityNote:
       "This issue is for internal screening visibility and does not replace accredited laboratory, site, or design-grade field measurements.",
     recommendationItems: [
@@ -364,7 +364,7 @@ function buildProposalText(input: {
     reportProfileLabel: "Consultant issue",
     studyContextLabel: "Option screening",
     studyModeLabel: "Wall",
-    validationDetail: "Visible Rockwool screening-only guard; calculation basis unchanged.",
+    validationDetail: "Visible Rockwool source-gated prediction guard with exact/source validation still blocked.",
     validationLabel: "Scoped estimate",
     warnings: input.warnings
   } satisfies SimpleWorkbenchProposalDocument;
@@ -403,7 +403,7 @@ describe("Rockwool triple-leaf explicit screening-only policy Gate B visible gua
     expect(existsSync(join(REPO_ROOT, ROCKWOOL_TRIPLE_LEAF_SCREENING_POLICY_GATE_B.selectedNextFile))).toBe(true);
   });
 
-  it("pins grouped Rockwool Rw 41 output card copy as screening-only, not exact or design-grade", () => {
+  it("pins grouped Rockwool Rw 50 output card copy as source-gated prediction, not exact or design-grade", () => {
     const snapshot = evaluate({
       airborneContext: completeTripleLeafContext(WALL_LAB_CONTEXT),
       id: "gate-b-rockwool-grouped-lab",
@@ -413,23 +413,23 @@ describe("Rockwool triple-leaf explicit screening-only policy Gate B visible gua
     const rwCard = getCard(snapshot.cards, "Rw");
 
     expect(snapshot.result.dynamicAirborneTrace).toMatchObject({
-      confidenceClass: "low",
+      confidenceClass: "medium",
       detectedFamily: "multileaf_multicavity",
-      strategy: "multileaf_screening_blend"
+      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
     });
     expect(rwCard).toMatchObject({
       detail: ROCKWOOL_GROUPED_TRIPLE_LEAF_SCREENING_ONLY_GUARD,
       postureLabel: ROCKWOOL_TRIPLE_LEAF_SCREENING_ONLY_LABEL,
       status: "live",
-      value: "41 dB"
+      value: "50 dB"
     });
     expect(rwCard.postureDetail).toContain(ROCKWOOL_GROUPED_TRIPLE_LEAF_SCREENING_ONLY_GUARD);
     expect(rwCard.postureDetail).toContain("No exact wall source row is active");
-    expect(rwCard.detail).toContain("not exact");
+    expect(rwCard.detail).toContain("not measured exact");
     expect(rwCard.detail).toContain("not source-validated");
     expect(rwCard.detail).toContain("not design-grade");
-    expect(snapshot.warnings.join("\n")).toContain("Grouped triple-leaf topology is present");
-    expect(snapshot.warnings.join("\n")).toContain("source-calibrated triple-leaf solver");
+    expect(snapshot.warnings.join("\n")).toContain("Grouped Rockwool triple-leaf family physics prediction");
+    expect(snapshot.warnings.join("\n")).toContain("5 dB uncalibrated error budget");
   });
 
   it("keeps Rockwool flat-list adjacent swaps on the double-leaf numeric lane, not screening-only copy", () => {
@@ -457,7 +457,7 @@ describe("Rockwool triple-leaf explicit screening-only policy Gate B visible gua
     expect(snapshot.warnings.join("\n")).toContain("kept the current double-leaf numeric lane");
   });
 
-  it("pins Rockwool field outputs as continuations from the screening lane", () => {
+  it("pins Rockwool field outputs as continuations from the source-gated prediction lane", () => {
     const snapshot = evaluate({
       airborneContext: completeTripleLeafContext(TRIPLE_LEAF_FIELD_CONTEXT),
       id: "gate-b-rockwool-grouped-field",
@@ -468,19 +468,19 @@ describe("Rockwool triple-leaf explicit screening-only policy Gate B visible gua
     const dnTw = getCard(snapshot.cards, "DnT,w");
 
     expect(snapshot.result.dynamicAirborneTrace).toMatchObject({
-      confidenceClass: "low",
+      confidenceClass: "medium",
       detectedFamily: "multileaf_multicavity",
-      strategy: "multileaf_screening_blend"
+      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
     });
     expect(rwPrime).toMatchObject({
       postureLabel: "Field continuation",
       status: "live",
-      value: "34 dB"
+      value: "49 dB"
     });
     expect(dnTw).toMatchObject({
       postureLabel: "Field continuation",
       status: "live",
-      value: "36 dB"
+      value: "50 dB"
     });
 
     for (const card of [rwPrime, dnTw]) {
@@ -492,7 +492,7 @@ describe("Rockwool triple-leaf explicit screening-only policy Gate B visible gua
     }
   });
 
-  it("carries the Rockwool screening-only policy into proposal/report text", () => {
+  it("carries the Rockwool source-gated prediction policy into proposal/report text", () => {
     const lab = evaluate({
       airborneContext: completeTripleLeafContext(WALL_LAB_CONTEXT),
       id: "gate-b-rockwool-lab-report",
@@ -521,13 +521,13 @@ describe("Rockwool triple-leaf explicit screening-only policy Gate B visible gua
       warnings: field.warnings
     });
 
-    expect(labText).toContain(`Rw: Live now | ${ROCKWOOL_TRIPLE_LEAF_SCREENING_ONLY_LABEL} | 41 dB`);
+    expect(labText).toContain(`Rw: Live now | ${ROCKWOOL_TRIPLE_LEAF_SCREENING_ONLY_LABEL} | 50 dB`);
     expect(labText).toContain(ROCKWOOL_GROUPED_TRIPLE_LEAF_SCREENING_ONLY_GUARD);
-    expect(labText).toContain("not exact");
+    expect(labText).toContain("not measured exact");
     expect(labText).toContain("not source-validated");
     expect(labText).toContain("not design-grade");
-    expect(fieldText).toContain("R'w: Live now | Field continuation | 34 dB");
-    expect(fieldText).toContain("DnT,w: Live now | Field continuation | 36 dB");
+    expect(fieldText).toContain("R'w: Live now | Field continuation | 49 dB");
+    expect(fieldText).toContain("DnT,w: Live now | Field continuation | 50 dB");
     expect(fieldText).toContain(ROCKWOOL_TRIPLE_LEAF_FIELD_CONTINUATION_GUARD);
     expect(fieldText).toContain(FIELD_OUTPUT_OWNER_POLICY_GUARD);
     expect(fieldText).toContain("does not replace accredited laboratory, site, or design-grade field measurements");

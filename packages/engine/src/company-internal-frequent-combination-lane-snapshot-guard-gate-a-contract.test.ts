@@ -400,13 +400,13 @@ describe("company internal frequent-combination lane snapshot guard Gate A", () 
     const flatSwap = wallSnapshot(swapAdjacent(SPLIT_ROCKWOOL_STACK, 3));
 
     expect(grouped).toMatchObject({
-      confidence: "low",
+      confidence: "medium",
       dnTw: 40,
       family: "multileaf_multicavity",
-      rw: 41,
+      rw: 50,
       rwPrime: 39,
-      stc: 41,
-      strategy: "multileaf_screening_blend"
+      stc: 55,
+      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
     });
     expect(flat).toMatchObject({
       confidence: "low",

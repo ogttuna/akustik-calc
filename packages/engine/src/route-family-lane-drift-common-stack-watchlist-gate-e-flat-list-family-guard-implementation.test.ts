@@ -320,10 +320,10 @@ describe("route-family lane-drift common-stack watchlist Gate E flat-list family
       strategy: "multileaf_screening_blend"
     });
     expect(groupedTripleLeaf).toMatchObject({
-      confidence: "low",
+      confidence: "medium",
       family: "multileaf_multicavity",
-      rw: 41,
-      strategy: "multileaf_screening_blend"
+      rw: 50,
+      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
     });
     expect(duplicateClassic).toMatchObject({
       confidence: "low",

@@ -12,12 +12,12 @@ describe("proposal adjust config helpers", () => {
     expect(PROPOSAL_PDF_STYLE_OPTIONS.map((option) => option.value)).toEqual(["branded", "simple"]);
     expect(getProposalPdfStyleDescriptor("branded")).toEqual({
       downloadLabel: "Download branded PDF",
-      note: "Branded keeps the consultant-sheet framing while reusing the same edited content.",
+      note: "Branded keeps the consultant-sheet framing while reusing the same edited report snapshot for PDF and DOCX.",
       shortLabel: "Branded PDF"
     });
     expect(getProposalPdfStyleDescriptor("simple")).toEqual({
       downloadLabel: "Download simple PDF",
-      note: "Simple uses the same edited content, but exports with the lightweight renderer.",
+      note: "Simple uses the same edited report snapshot for PDF and DOCX, with lightweight framing.",
       shortLabel: "Simple PDF"
     });
   });
@@ -28,7 +28,7 @@ describe("proposal adjust config helpers", () => {
 
   it("prioritizes unsaved state over saved override and baseline labels", () => {
     expect(getProposalEditorStateLabel({ hasManualOverrides: false, hasUnsavedChanges: true })).toBe("Unsaved local edits");
-    expect(getProposalEditorStateLabel({ hasManualOverrides: true, hasUnsavedChanges: false })).toBe("Saved PDF override");
+    expect(getProposalEditorStateLabel({ hasManualOverrides: true, hasUnsavedChanges: false })).toBe("Saved report override");
     expect(getProposalEditorStateLabel({ hasManualOverrides: false, hasUnsavedChanges: false })).toBe("Packaged baseline");
   });
 });

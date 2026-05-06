@@ -324,15 +324,15 @@ describe("rockwool triple-leaf explicit screening-only policy Gate A contract", 
       sourceValidatedExactNow: false
     });
     expect(grouped).toMatchObject({
-      confidence: "low",
+      confidence: "medium",
       family: "multileaf_multicavity",
-      rw: 41,
-      stc: 41,
-      strategy: "multileaf_screening_blend",
+      rw: 50,
+      stc: 55,
+      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction",
       supported: ["Rw", "STC", "C", "Ctr"]
     });
-    expect(grouped.warnings).toContain("Grouped triple-leaf topology is present");
-    expect(grouped.warnings).toContain("source-calibrated triple-leaf solver");
+    expect(grouped.warnings).toContain("family physics prediction");
+    expect(grouped.warnings).toContain("Dynamic airborne confidence is medium");
 
     expect(flatSwap).toMatchObject({
       confidence: "medium",
@@ -353,15 +353,15 @@ describe("rockwool triple-leaf explicit screening-only policy Gate A contract", 
     });
 
     expect(field).toMatchObject({
-      confidence: "low",
-      dnTw: 36,
+      confidence: "medium",
+      dnTw: 50,
       family: "multileaf_multicavity",
-      rwPrime: 34,
-      strategy: "multileaf_screening_blend",
+      rwPrime: 49,
+      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction",
       supported: ["R'w", "DnT,w"]
     });
-    expect(field.warnings).toContain("Grouped triple-leaf topology is present");
-    expect(field.warnings).toContain("source-calibrated triple-leaf solver");
+    expect(field.warnings).toContain("family physics prediction");
+    expect(field.warnings).toContain("Dynamic airborne confidence is medium");
   });
 
   it("inventories visible surfaces and selects Gate B only for the concrete copy gap", () => {

@@ -500,9 +500,9 @@ describe("National Gypsum Fire & Sound Selector source-pack extraction Gate A co
     expect(PROTECTED_NEGATIVE_BOUNDARIES.join("\n")).toContain("do_not_directly_promote_dyn_echo_rw");
     expect(PROTECTED_NEGATIVE_BOUNDARIES.join("\n")).toContain("does_not_fix_the_uris_2006_split_rockwool");
     expect(PROTECTED_NEGATIVE_BOUNDARIES.join("\n")).toContain("stc_na_rows_do_not_promote");
-    expect(liveResult.metrics.estimatedRwDb).toBe(41);
-    expect(liveResult.dynamicAirborneTrace?.strategy).toBe("multileaf_screening_blend");
-    expect(liveResult.dynamicAirborneTrace?.confidenceClass).toBe("low");
+    expect(liveResult.metrics.estimatedRwDb).toBe(50);
+    expect(liveResult.dynamicAirborneTrace?.strategy).toBe("triple_leaf_two_cavity_frequency_solver_family_physics_prediction");
+    expect(liveResult.dynamicAirborneTrace?.confidenceClass).toBe("medium");
   });
 
   it("keeps active docs aligned on Gate B as the next no-runtime action", () => {

@@ -580,16 +580,16 @@ describe("wall triple-leaf company-internal acceptance rehearsal Gate J", () => 
     expect(splitFlat.topologyGap?.detail).toContain("Missing: side A leaf layer group");
 
     expect(splitGrouped.result.dynamicAirborneTrace).toMatchObject({
-      confidenceClass: "low",
+      confidenceClass: "medium",
       detectedFamily: "multileaf_multicavity",
-      strategy: "multileaf_screening_blend"
+      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
     });
-    expect(getCard(splitGrouped.cards, "Rw")).toMatchObject({ status: "live", value: "41 dB" });
+    expect(getCard(splitGrouped.cards, "Rw")).toMatchObject({ status: "live", value: "50 dB" });
     expect(splitGrouped.topologyGap).toMatchObject({ value: "Source validation blocked" });
-    expect(splitGrouped.topologyGap?.detail).toContain("source-calibrated triple-leaf solver");
+    expect(splitGrouped.topologyGap?.detail).toContain("family physics prediction");
 
-    expect((adjacent.result.metrics.estimatedRwDb ?? 0) - (splitGrouped.result.metrics.estimatedRwDb ?? 0)).toBeGreaterThanOrEqual(8);
-    expectWarning(splitGrouped.warnings, /Grouped triple-leaf topology is present/i, "grouped topology source block");
+    expect(Math.abs((adjacent.result.metrics.estimatedRwDb ?? 0) - (splitGrouped.result.metrics.estimatedRwDb ?? 0))).toBeLessThanOrEqual(1);
+    expectWarning(splitGrouped.warnings, /Grouped Rockwool triple-leaf family physics prediction/i, "grouped source-gated prediction");
   });
 
   it("keeps field R'w and DnT,w live but visibly caveated on report/PDF surfaces", () => {
@@ -600,13 +600,13 @@ describe("wall triple-leaf company-internal acceptance rehearsal Gate J", () => 
       rows: SPLIT_ROCKWOOL_ROWS
     });
 
-    expect(getCard(field.cards, "R'w")).toMatchObject({ status: "live", value: "34 dB" });
-    expect(getCard(field.cards, "DnT,w")).toMatchObject({ status: "live", value: "36 dB" });
+    expect(getCard(field.cards, "R'w")).toMatchObject({ status: "live", value: "49 dB" });
+    expect(getCard(field.cards, "DnT,w")).toMatchObject({ status: "live", value: "50 dB" });
     expect(getCard(field.cards, "Rw")).toMatchObject({ status: "unsupported", value: "Not ready" });
     expect(field.result.dynamicAirborneTrace).toMatchObject({
-      confidenceClass: "low",
+      confidenceClass: "medium",
       detectedFamily: "multileaf_multicavity",
-      strategy: "multileaf_screening_blend"
+      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
     });
     expect(field.topologyGap).toMatchObject({ value: "Source validation blocked" });
 
@@ -621,16 +621,16 @@ describe("wall triple-leaf company-internal acceptance rehearsal Gate J", () => 
       expect.objectContaining({
         detail: expect.stringContaining("No exact wall source row is active"),
         label: "Dynamic airborne anchor",
-        tone: "warning"
+        tone: "accent"
       })
     );
     expect(report.diagnostics.warningCount).toBeGreaterThanOrEqual(1);
     expect(report.brief.executiveSummary).toContain("scoped estimate posture");
     expect(report.text).toContain("DnT,w: Live now");
     expect(report.text).toContain("Rw: Unsupported on lane");
-    expect(report.text).toContain("Grouped triple-leaf topology is present");
+    expect(report.text).toContain("Grouped Rockwool triple-leaf family physics prediction");
     expect(report.text).toContain("does not replace accredited laboratory or site measurements");
-    expect(report.html).toContain("Grouped triple-leaf topology is present");
+    expect(report.html).toContain("Grouped Rockwool triple-leaf family physics prediction");
   });
 
   it("separates exact source controls from near-source rows without promoting nearby local substitutions", () => {

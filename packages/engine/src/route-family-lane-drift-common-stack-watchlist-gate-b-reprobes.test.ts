@@ -434,13 +434,13 @@ describe("route-family lane-drift common-stack watchlist Gate B reprobes", () =>
       stc: grouped.stc,
       strategy: grouped.strategy
     }).toEqual({
-      confidence: "low",
-      dnTw: 40,
+      confidence: "medium",
+      dnTw: 51,
       family: "multileaf_multicavity",
-      rw: 41,
-      rwPrime: 39,
-      stc: 41,
-      strategy: "multileaf_screening_blend"
+      rw: 50,
+      rwPrime: 50,
+      stc: 55,
+      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
     });
     expect({
       confidence: flat.confidence,

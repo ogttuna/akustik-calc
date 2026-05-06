@@ -428,9 +428,9 @@ describe("ROCKWOOL Acoustic Wall Assemblies source-pack extraction Gate B contra
       localMaterialMapping: "blocked_comfortbatt_cavityrock_z_girt_air_barrier_and_cladding_mapping_missing"
     });
     expect(resultSnapshot(linedLab)).toMatchObject({ c: -1.6, ctr: -6.5, rw: 57, rwDb: 57, stc: 57 });
-    expect(splitRockwool.metrics.estimatedRwDb).toBe(41);
-    expect(splitRockwool.dynamicAirborneTrace?.strategy).toBe("multileaf_screening_blend");
-    expect(splitRockwool.dynamicAirborneTrace?.confidenceClass).toBe("low");
+    expect(splitRockwool.metrics.estimatedRwDb).toBe(50);
+    expect(splitRockwool.dynamicAirborneTrace?.strategy).toBe("triple_leaf_two_cavity_frequency_solver_family_physics_prediction");
+    expect(splitRockwool.dynamicAirborneTrace?.confidenceClass).toBe("medium");
   });
 
   it("blocks STC/OITC/report-number over-read into DynEcho Rw, field outputs, or spectrum policy", () => {

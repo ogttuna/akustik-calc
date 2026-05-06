@@ -470,11 +470,11 @@ describe("source-promotion owner-set readiness guard Gate A", () => {
     expect(alias.warnings).not.toMatch(/Curated exact airborne lab match active/i);
 
     expect(rockwool).toMatchObject({
-      confidence: "low",
+      confidence: "medium",
       family: "multileaf_multicavity",
-      rw: 41,
-      stc: 41,
-      strategy: "multileaf_screening_blend",
+      rw: 50,
+      stc: 55,
+      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction",
       supported: ["Rw", "STC", "C", "Ctr"]
     });
   });

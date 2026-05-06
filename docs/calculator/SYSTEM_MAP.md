@@ -190,6 +190,10 @@ Current workbench editing persistence is local-first.
 - the default workbench can sync the current snapshot to a server
   project, list server projects, and load a marked server snapshot
   back into local Zustand
+- `/workbench/proposal/configure` edits the packaged proposal/report
+  snapshot only. This is the manual report-correction path for issued
+  PDF and DOCX output; it must not mutate calculator inputs, solver
+  routes, or engine result state.
 - proposal PDF/DOCX routes append a project audit event when a
   `projectId` is present
 - `team_access_model_v1` has closed a pure project-access policy helper

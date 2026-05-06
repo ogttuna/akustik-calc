@@ -1,5 +1,10 @@
 import { z } from "zod";
 
+import {
+  AirborneCandidateResolutionSchema,
+  AirborneCandidateSchema,
+  AirborneResultBasisSchema
+} from "./airborne-basis";
 import { AirborneOverlaySchema } from "./airborne-overlay";
 import { AirborneCalculatorIdSchema, AirborneCalculatorSchema } from "./calculator";
 import { DynamicAirborneTraceSchema } from "./dynamic-airborne";
@@ -17,9 +22,11 @@ import { ImpactCalculationSchema } from "./impact";
 import { ImpactPredictorStatusSchema } from "./impact-predictor-status";
 import { ImpactCatalogMatchResultSchema } from "./impact-product-catalog";
 import { ImpactSupportSchema } from "./impact-support";
+import { AcousticInputCompletenessSchema } from "./input-completeness";
 import { ResolvedLayerSchema } from "./layer";
 import { RequestedOutputSchema } from "./output";
 import { AssemblyRatingsSchema, TransmissionLossCurveSchema } from "./rating";
+import { RatingAdapterBasisSchema } from "./rating-adapter";
 
 export const AssemblyMethodSchema = z.enum([
   "screening_mass_law_seed_v2",
@@ -55,6 +62,9 @@ const AssemblyMetricsSchemaInternal = z.object(AssemblyMetricsShape);
 
 const AssemblyCalculationShape: z.ZodRawShape = {
   availableCalculators: z.array(AirborneCalculatorSchema).default([]),
+  airborneBasis: AirborneResultBasisSchema.optional(),
+  airborneCandidateResolution: AirborneCandidateResolutionSchema.optional(),
+  airborneCandidateSet: z.array(AirborneCandidateSchema).optional(),
   boundFloorSystemEstimate: FloorSystemBoundEstimateResultSchema.nullable().optional(),
   boundFloorSystemMatch: FloorSystemBoundMatchResultSchema.nullable().optional(),
   airborneOverlay: AirborneOverlaySchema.nullable().optional(),
@@ -76,6 +86,8 @@ const AssemblyCalculationShape: z.ZodRawShape = {
   layers: z.array(ResolvedLayerSchema),
   metrics: AssemblyMetricsSchemaInternal,
   ratings: AssemblyRatingsSchema,
+  inputCompletenessSet: z.array(AcousticInputCompletenessSchema).optional(),
+  ratingAdapterBasisSet: z.array(RatingAdapterBasisSchema).optional(),
   supportedImpactOutputs: z.array(RequestedOutputSchema).default([]),
   supportedTargetOutputs: z.array(RequestedOutputSchema).default([]),
   targetOutputs: z.array(RequestedOutputSchema).default([]),

@@ -218,7 +218,7 @@ describe("wall triple-leaf grouped topology route-card Gate I", () => {
     expect(snapshot.topologyGap?.detail).toContain("Missing: side A leaf layer group");
   });
 
-  it("accepts complete grouped topology but keeps the visible result fail-closed on source validation blockers", () => {
+  it("accepts complete grouped topology and shows the source-gated prediction with source validation blockers", () => {
     const wallTopology = buildWorkbenchWallTopology(
       COMPLETE_TRIPLE_LEAF_TOPOLOGY_DRAFT,
       SPLIT_ROCKWOOL_ROWS.length
@@ -231,18 +231,20 @@ describe("wall triple-leaf grouped topology route-card Gate I", () => {
       id: "triple-leaf-grouped"
     });
 
-    expect(snapshot.result.dynamicAirborneTrace?.strategy).toBe("multileaf_screening_blend");
-    expect(snapshot.result.dynamicAirborneTrace?.confidenceClass).toBe("low");
-    expect(snapshot.rwCard).toMatchObject({ status: "live", value: "41 dB" });
+    expect(snapshot.result.dynamicAirborneTrace?.strategy).toBe(
+      "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
+    );
+    expect(snapshot.result.dynamicAirborneTrace?.confidenceClass).toBe("medium");
+    expect(snapshot.rwCard).toMatchObject({ status: "live", value: "50 dB" });
     expect(snapshot.branch).toMatchObject({
-      tone: "warning",
+      tone: "neutral",
       value: "Multi-Leaf / Multi-Cavity"
     });
     expect(snapshot.topologyGap).toMatchObject({
       value: "Source validation blocked"
     });
-    expect(snapshot.topologyGap?.detail).toContain("Grouped triple-leaf topology is present");
+    expect(snapshot.topologyGap?.detail).toContain("Grouped Rockwool triple-leaf family physics prediction");
     expect(snapshot.topologyGap?.detail).not.toContain("Missing:");
-    expect(snapshot.warnings.some((warning) => /screening blend/i.test(warning))).toBe(true);
+    expect(snapshot.warnings.some((warning) => /family physics prediction/i.test(warning))).toBe(true);
   });
 });

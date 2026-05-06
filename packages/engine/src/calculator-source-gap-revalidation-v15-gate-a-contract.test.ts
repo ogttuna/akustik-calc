@@ -502,9 +502,9 @@ describe("calculator source-gap revalidation v15 Gate A contract", () => {
     expect(PAUSED_TRIPLE_LEAF_SOURCE_LANE.requiredBeforeRuntime).toContain(
       "route_family_and_grouped_topology_runtime_guard"
     );
-    expect(splitRockwool.metrics.estimatedRwDb).toBe(41);
-    expect(splitRockwool.dynamicAirborneTrace?.strategy).toBe("multileaf_screening_blend");
-    expect(splitRockwool.dynamicAirborneTrace?.confidenceClass).toBe("low");
+    expect(splitRockwool.metrics.estimatedRwDb).toBe(50);
+    expect(splitRockwool.dynamicAirborneTrace?.strategy).toBe("triple_leaf_two_cavity_frequency_solver_family_physics_prediction");
+    expect(splitRockwool.dynamicAirborneTrace?.confidenceClass).toBe("medium");
   });
 
   it("makes route-family and source-lane misclassification monitoring a standing rule", () => {

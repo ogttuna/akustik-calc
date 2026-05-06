@@ -608,11 +608,11 @@ describe("company-internal controlled-use handoff v1 Gate A contract", () => {
     const steelFallback = generatedCase("floor-steel-fallback");
 
     expect(grouped).toMatchObject({
-      confidence: "low",
+      confidence: "medium",
       family: "multileaf_multicavity",
-      rw: 41,
-      stc: 41,
-      strategy: "multileaf_screening_blend"
+      rw: 50,
+      stc: 55,
+      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
     });
     expect(flatSwap).toMatchObject({
       confidence: "medium",
@@ -621,11 +621,11 @@ describe("company-internal controlled-use handoff v1 Gate A contract", () => {
       strategy: FLAT_LIST_MULTILEAF_GUARD_STRATEGY
     });
     expect(field).toMatchObject({
-      confidence: "low",
-      dnTw: 36,
+      confidence: "medium",
+      dnTw: 50,
       family: "multileaf_multicavity",
-      rwPrime: 34,
-      strategy: "multileaf_screening_blend"
+      rwPrime: 49,
+      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
     });
     expect(exactSource).toMatchObject({ confidence: "low", family: "stud_wall_system", rw: 55 });
     expect(exactSource.warnings).toMatch(/Curated exact airborne lab match active/i);

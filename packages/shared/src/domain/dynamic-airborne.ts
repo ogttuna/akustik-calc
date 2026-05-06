@@ -24,7 +24,8 @@ export const DynamicAirborneDelegateMethodSchema = z.enum([
   "ks_rw_calibrated",
   "mass_law",
   "sharp",
-  "kurtovic"
+  "kurtovic",
+  "triple_leaf_two_cavity_frequency_solver"
 ]);
 export type DynamicAirborneDelegateMethod = z.infer<typeof DynamicAirborneDelegateMethodSchema>;
 

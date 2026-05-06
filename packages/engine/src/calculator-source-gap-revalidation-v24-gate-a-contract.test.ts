@@ -615,11 +615,11 @@ describe("calculator source-gap revalidation v24 Gate A contract", () => {
       sourceLaneDisposition: "paused_waiting_rights_safe_source_packet"
     });
     expect(grouped).toMatchObject({
-      confidence: "low",
+      confidence: "medium",
       family: "multileaf_multicavity",
-      rw: 41,
-      stc: 41,
-      strategy: "multileaf_screening_blend",
+      rw: 50,
+      stc: 55,
+      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction",
       supported: ["Rw", "STC", "C", "Ctr"]
     });
     expect(flatSwap).toMatchObject({
@@ -631,11 +631,11 @@ describe("calculator source-gap revalidation v24 Gate A contract", () => {
       supported: ["Rw", "STC", "C", "Ctr"]
     });
     expect(field).toMatchObject({
-      confidence: "low",
-      dnTw: 36,
+      confidence: "medium",
+      dnTw: 50,
       family: "multileaf_multicavity",
-      rwPrime: 34,
-      strategy: "multileaf_screening_blend",
+      rwPrime: 49,
+      strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction",
       supported: ["R'w", "DnT,w"]
     });
   });

@@ -182,9 +182,9 @@ describe("wall triple-leaf blocked diagnostics Gate G5", () => {
     expect(evaluation.screeningCaveat.expectedLiveRwDb).toBe(41);
     expect(evaluation.screeningCaveat.expectedLiveStrategy).toBe("multileaf_screening_blend");
     expect(evaluation.screeningCaveat.message).toContain("screening only");
-    expect(liveResult.metrics.estimatedRwDb).toBe(41);
-    expect(liveResult.dynamicAirborneTrace?.strategy).toBe("multileaf_screening_blend");
-    expect(liveResult.dynamicAirborneTrace?.confidenceClass).toBe("low");
+    expect(liveResult.metrics.estimatedRwDb).toBe(50);
+    expect(liveResult.dynamicAirborneTrace?.strategy).toBe("triple_leaf_two_cavity_frequency_solver_family_physics_prediction");
+    expect(liveResult.dynamicAirborneTrace?.confidenceClass).toBe("medium");
   });
 
   it("keeps active docs aligned with Gate G5 and the selected Gate G6 source/effect-model step", () => {
