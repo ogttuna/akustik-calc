@@ -27,10 +27,14 @@ export const AcousticMaterialPropertyFieldSchema = z.enum([
   "lossFactor",
   "flowResistivityPaSM2",
   "porosity",
+  "absorberClass",
   "limpMassBehavior",
   "dynamicStiffnessMNm3"
 ]);
 export type AcousticMaterialPropertyField = z.infer<typeof AcousticMaterialPropertyFieldSchema>;
+
+export const AcousticAbsorberClassSchema = z.enum(["unknown", "none", "porous_absorptive"]);
+export type AcousticAbsorberClass = z.infer<typeof AcousticAbsorberClassSchema>;
 
 export const AcousticMaterialPropertySourceStatusSchema = z.enum([
   "source_owned",
@@ -44,6 +48,7 @@ export type AcousticMaterialPropertySourceStatus = z.infer<
 >;
 
 export const MaterialAcousticPropertiesSchema = z.object({
+  absorberClass: AcousticAbsorberClassSchema.optional(),
   behavior: AcousticMaterialBehaviorSchema,
   flowResistivityPaSM2: z.number().positive().optional(),
   lossFactor: z.number().positive().max(1).optional(),

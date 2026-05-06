@@ -29,15 +29,15 @@ path was found too narrow for the user's calculator-first goal.
 
 Current selected status:
 
-`gate_i_family_material_properties_and_benchmark_scenarios_landed_no_runtime_selected_personal_use_readiness_gate_j`
+`gate_u_next_solver_or_calibration_selection_landed_no_runtime_selected_floor_impact_gate_v`
 
 Selected next implementation file:
 
-`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-j-personal-use-readiness-scenario-pack-contract.test.ts`
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-v-floor-impact-dynamic-stiffness-contract.test.ts`
 
 Selected next action:
 
-`gate_j_build_personal_use_readiness_scenario_pack`
+`gate_v_define_floor_impact_dynamic_stiffness_input_and_adapter_contract_for_dynamic_calculator`
 
 Active planning surface:
 
@@ -45,10 +45,137 @@ Active planning surface:
 
 Latest landed gate:
 
-2026-05-06 model-first physics prediction pivot Gate I family/material
-property expansion and benchmark readiness contract.
+2026-05-06 model-first physics prediction pivot Gate U next solver /
+calibration lane selection.
 
 Latest checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_U_HANDOFF.md`
+
+Latest revalidation / commit-prep checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_U_REVALIDATION_AND_COMMIT_HANDOFF.md`
+
+Revalidation result:
+
+- `main` is even with `origin/main` after `git fetch origin --prune`;
+- `pnpm calculator:gate:current` passed with engine 301 files / 1716
+  tests, web 62 files / 275 tests plus 18 skipped, and repo build green;
+- broad `pnpm check` passed after fixing two web proposal-surface
+  regressions that the focused gate did not cover;
+- developer and lab-ready proposal profiles again render distinct cover
+  titles, and client proposal HTML keeps missing-input caveats visible
+  without exposing the raw `Warnings` heading;
+- Gate V remains the next correct move: define floor-impact dynamic
+  stiffness input and adapter contracts before runtime promotion.
+
+Previous Gate T checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_T_HANDOFF.md`
+
+Gate T selection status:
+
+`gate_t_family_material_property_gap_closure_landed_no_runtime_selected_next_solver_or_calibration_gate_u`
+
+Gate T selected Gate U file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-u-next-solver-or-calibration-selection-contract.test.ts`
+
+Gate T selected Gate U action:
+
+`gate_u_select_next_solver_or_calibration_lane_after_material_gap_closure`
+
+Gate U selection reality:
+
+- floor-impact dynamic-stiffness input/adapter ownership is selected for
+  Gate V because it closes a large personal-use floor coverage gap after
+  Gate T material readiness;
+- calibration holdouts for Gate O/S runtime lanes remain useful but are
+  not selected ahead of broader floor algorithm coverage;
+- generalized multi-cavity, lined masonry/CLT, and field/building
+  continuation remain explicit candidates with their blockers named;
+- `Ln,w`, `L'n,w`, `L'nT,w`, `IIC`, and `AIIC` remain basis-separated
+  until ISO 717-2 and ASTM E989 adapter boundaries are executable;
+- runtime values and support buckets remain unchanged.
+
+Previous Gate S checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_S_HANDOFF.md`
+
+Gate S selection status:
+
+`gate_s_double_leaf_framed_bridge_runtime_landed_selected_family_material_gap_gate_t`
+
+Gate S selected Gate T file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-t-family-material-gap-closure-contract.test.ts`
+
+Gate S selected Gate T action:
+
+`gate_t_close_remaining_family_material_property_gaps_for_dynamic_calculator`
+
+Gate T material-property reality:
+
+- `absorberClass` is now a shared acoustic material field for porous
+  absorber readiness instead of ad hoc material-name inference;
+- board leaves/finishes, masonry cores, porous absorbers, floor
+  decks/screeds, limp membranes, and resilient impact layers have
+  engineering-default acoustic properties in the seed catalog;
+- those defaults are explicitly not source-owned rows and do not imply
+  measured exact evidence;
+- required property gaps still return `needs_input`, while optional
+  precision gaps widen uncertainty through explicit default metadata;
+- runtime values and support buckets remain unchanged, including the
+  Gate S double-leaf/framed value pins.
+
+Previous Gate R checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_R_HANDOFF.md`
+
+Gate S runtime reality:
+
+- complete explicit independent absorbed double-leaf/framed gypsum /
+  rockwool / gypsum selects the double-leaf bridge family physics
+  candidate with `Rw 45`, `STC 45`, `C -1`, `Ctr -6.1`, origin
+  `family_physics_prediction`, and `errorBudgetDb: 7`;
+- complete resilient both-side bridge selects `Rw 46` / `STC 46` with
+  `errorBudgetDb: 8`;
+- exact source rows still win when eligible through Gate H precedence;
+- missing `resilientBarSideCount` stays `needs_input` and the explicit
+  double-leaf/framed route/output/report surfaces are parked instead of
+  showing fallback numbers;
+- direct-fixed and non-explicit multi-cavity flat-list boundaries do not
+  promote.
+
+Previous Gate Q checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Q_HANDOFF.md`
+
+Previous Gate P checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_P_HANDOFF.md`
+
+Previous Gate O checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_O_HANDOFF.md`
+
+Previous Gate N checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_N_HANDOFF.md`
+
+Previous Gate M checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_M_HANDOFF.md`
+
+Previous Gate K checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_K_HANDOFF.md`
+
+Previous Gate J checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_J_HANDOFF.md`
+
+Latest Gate I / report-export manual validation checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-06_GATE_I_REPORT_EXPORT_MANUAL_EDIT_VALIDATION_HANDOFF.md`
 
@@ -108,6 +235,11 @@ Core correction:
 
 - DynEcho is an acoustic calculator first, not a lookup/source-packet
   queue.
+- long-term target is an industry-leading calculator: INSUL is a useful
+  reference for family-specific prediction structure, but DynEcho should
+  exceed it with exact-source override, source-anchored deltas, strong
+  physics solvers, rejected-candidate traces, explicit uncertainty, and
+  strict lab/field/building-prediction basis separation.
 - personal-use readiness is the near-term target: wall/floor selection,
   required physical inputs, layer materials/thicknesses, calculated
   outputs, and missing-input prompts must work as one coherent workflow.
@@ -156,6 +288,12 @@ Current implementation facts:
   explicit grouped Rockwool case it now selects
   `triple_leaf_two_cavity_frequency_solver`; ambiguous flat-list
   triple-leaf stacks still stay on the guarded screening path.
+- `airborne-calculator.ts` currently exposes KS `Rw` calibration,
+  mass-law, Sharp, and Kurtovic delegate calculators. KS is a mass-curve
+  reference for owned massive routes; Sharp and Kurtovic are single-panel
+  curve delegates with limited double-leaf adjustment. They are not a
+  complete dynamic solver for framed, multi-cavity, impact, field, or
+  building-prediction outputs.
 - `wall-triple-leaf-frequency-solver.ts` can calculate a grouped
   three-leaf/two-cavity curve and ratings. Gate G uses it only as an
   uncalibrated `family_physics_prediction`, not measured exact or
@@ -179,10 +317,49 @@ Current implementation facts:
   passed zip integrity and Word XML text checks for the same manual
   values. `soffice`/LibreOffice is not installed in this environment, so
   DOCX visual rendering was not available in the checkpoint.
+- `dynamic-calculator-route-input-topology.ts` now defines the Gate K
+  no-runtime route/input topology assessment for the Dynamic Calculator.
+  It separates source absence from missing physical inputs, detects
+  grouped multi-cavity wall requirements, asks for field/building room
+  context, asks for floating-floor dynamic stiffness/load basis, and
+  keeps unsupported `IIC`/`AIIC` style outputs explicit.
+- `dynamic-calculator-topology-normalizer.ts` now defines the Gate L
+  no-runtime topology normalizer and hostile input guard. It canonicalizes
+  role-defined floor edits only where the physical role makes the split
+  or UI reorder invariant, preserves grouped multi-cavity wall order,
+  blocks ambiguous flat-list auto-grouping, traces unsafe multi-cavity
+  reorders, and fails closed for excessive or invalid layer input.
+- `dynamic-airborne-gate-o-single-leaf.ts` now promotes complete
+  single-leaf / laminated single-leaf / rigid massive panel Dynamic
+  Calculator results to `family_physics_prediction` without changing
+  numeric values or target-output support. It keeps exact source
+  precedence ahead of the solver and keeps CLT/mass timber deferred
+  until orthotropic/directional properties are owned.
+- `dynamic-calculator-next-family-solver-upgrade-selection.ts` now
+  selects the next Dynamic Calculator family after Gate O without moving
+  runtime values. It picks double-leaf / framed bridge for Gate Q and
+  blocks runtime promotion until frame bridge, stud spacing, resilient
+  side, support topology, porous damping, and mass-air-mass resonance
+  owners are contracted.
+- `dynamic-calculator-double-leaf-framed-bridge-input-contract.ts` now
+  defines the explicit double-leaf / framed bridge input and benchmark
+  contract. `wallTopology.topologyMode: "double_leaf_framed"` opens
+  targeted prompts for leaf grouping, cavity depth, frame bridge class,
+  support topology, support spacing, and resilient-bar side count while
+  keeping source absence as exact/calibration-only evidence.
+- `dynamic-calculator-double-leaf-framed-bridge-solver-contract.ts` now
+  defines the no-runtime Gate R solver-candidate/equation contract for
+  explicit double-leaf / framed bridge walls. It owns side-leaf surface
+  mass partitioning, mass-air-mass resonance, bridge coupling, porous
+  cavity damping, ISO 717-1 `Rw`, and ASTM E413 `STC` adapter boundaries
+  with benchmark corridors and negative boundaries before runtime
+  promotion.
 
 Current selected scope:
 
-- create Gate J personal-use readiness scenario pack.
+- implement Gate S double-leaf / framed bridge runtime promotion after
+  the Gate R solver-candidate contract landed, with pinned values,
+  explicit basis/origin, and visible/report parity.
 - keep Gate G grouped Rockwool runtime values unchanged unless a future
   rights-safe source candidate is actually eligible under the Gate H
   promotion policy.
@@ -190,25 +367,142 @@ Current selected scope:
   and holdout validation when their topology/metric/material/tolerance
   ownership is complete.
 - keep flat-list triple-leaf guarded when topology is ambiguous.
+- keep the newly documented source-absent solver contract model-first:
+  material properties, grouped topology, family solver, frequency curve,
+  rating adapter, basis, and error budget.
+- treat INSUL as the minimum competitor/category bar: useful public
+  evidence for family-specific prediction shape and expected uncertainty,
+  not the target ceiling and not a reason to turn DynEcho into a source
+  library.
+- Gate J already turned the ACON-like multi-leaf/multi-cavity wall case
+  into an anti-library-drift scenario before further broad runtime
+  movement.
+- Gate J also proved candidate selection across exact source,
+  similar-source anchored delta, calibrated solver, uncalibrated solver,
+  bounded prediction, screening, `needs_input`, and `unsupported`, with
+  rejected reasons and metric-basis separation visible.
+- Gate K consumed that map and defined the route/topology input contract.
+  Gate L made hostile layer edits deterministic: normalize only
+  physically invariant floor inputs, preserve meaningful multi-cavity
+  wall order, and ask for grouped topology where flat input is
+  ambiguous.
+- Gate M now populates the dynamic candidate resolver runtime surface so
+  selected/rejected candidates are visible before any broader family
+  solver movement.
+- Gate N selected the first broader family solver movement: single-leaf
+  / laminated single-leaf / rigid massive panel. This is not a source
+  library path; exact/source rows remain override/calibration evidence,
+  while source-absent physics remains the calculator engine.
+
+2026-05-06 Gate R landed
+`gate_r_define_double_leaf_framed_bridge_solver_candidate_without_runtime_value_movement`.
+Gate R selected the Gate S action
+`gate_s_promote_double_leaf_framed_bridge_solver_runtime_for_dynamic_calculator`
+at
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-s-double-leaf-framed-bridge-runtime-contract.test.ts`.
+Gate R selection status:
+`gate_r_double_leaf_framed_bridge_solver_contract_landed_no_runtime_selected_runtime_promotion_gate_s`.
+Runtime values remain pinned; Gate R only owns the solver candidate
+method contract, benchmark corridors, and direct-fixed / missing-input /
+multi-cavity negative boundaries.
+
+2026-05-06 Gate Q landed
+`gate_q_define_double_leaf_framed_bridge_input_and_benchmark_contract_for_dynamic_calculator`.
+Gate Q selected the Gate R action
+`gate_r_define_double_leaf_framed_bridge_solver_candidate_without_runtime_value_movement`
+at
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-r-double-leaf-framed-bridge-solver-contract.test.ts`.
+Gate Q selection status:
+`gate_q_double_leaf_framed_bridge_input_contract_landed_no_runtime_selected_solver_candidate_gate_r`.
+Runtime values remain pinned; explicit double-leaf/framed contexts now
+own missing-input prompts for `sideALeafGroup`, `cavity1DepthMm`,
+`sideBLeafGroup`, `frameBridgeClass`, `supportTopology`,
+`supportSpacingMm`, and conditional `resilientBarSideCount`.
+
+2026-05-06 Gate P landed
+`gate_p_select_next_family_solver_upgrade_after_single_leaf_runtime_promotion`.
+Gate P selected the Gate Q action
+`gate_q_define_double_leaf_framed_bridge_input_and_benchmark_contract_for_dynamic_calculator`
+at
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-q-double-leaf-framed-bridge-input-contract.test.ts`.
+Gate P selection status:
+`gate_p_next_family_solver_selection_landed_no_runtime_selected_double_leaf_framed_bridge_gate_q`.
+Runtime values remain pinned; Gate P only selects double-leaf / framed
+bridge as the next family contract and keeps runtime promotion blocked
+until `frameBridgeClass`, `studSpacingMm`, `resilientSideCount`,
+`supportTopology`, porous cavity damping, and mass-air-mass resonance
+owners are defined with positive and nearby-negative benchmarks.
+
+2026-05-06 Gate O landed
+`gate_o_promote_single_leaf_massive_panel_family_solver_runtime_for_dynamic_calculator`.
+Gate O selected the Gate P action
+`gate_p_select_next_family_solver_upgrade_after_single_leaf_runtime_promotion`
+at
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-p-next-family-solver-upgrade-selection-contract.test.ts`.
+Gate O selection status:
+`gate_o_single_leaf_massive_panel_runtime_promotion_landed_no_value_selected_next_family_solver_gate_p`.
+Runtime values remain pinned: single 12.5 mm gypsum board `Rw 31 / STC 31`,
+two 12.5 mm gypsum boards `Rw 34 / STC 34`, and 150 mm concrete
+`Rw 55 / STC 55`; the basis/origin moves from screening to
+`family_physics_prediction` with `runtimeValueMovement: false`.
+
+2026-05-06 Gate N landed
+`gate_n_select_first_family_solver_upgrade_runtime_gate_for_dynamic_calculator`.
+Gate N selected the Gate O action
+`gate_o_promote_single_leaf_massive_panel_family_solver_runtime_for_dynamic_calculator`
+at
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-o-single-leaf-massive-panel-runtime-contract.test.ts`.
+Gate N selection status:
+`gate_n_family_solver_upgrade_selection_landed_no_runtime_selected_single_leaf_massive_panel_gate_o`.
+
+2026-05-06 Gate M landed
+`gate_m_populate_dynamic_candidate_resolver_runtime_for_dynamic_calculator`.
+Gate M selected the Gate N action
+`gate_n_select_first_family_solver_upgrade_runtime_gate_for_dynamic_calculator`
+at
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-n-family-solver-upgrade-contract.test.ts`.
+Gate M selection status:
+`gate_m_dynamic_candidate_resolver_runtime_landed_no_value_selected_family_solver_upgrade_gate_n`.
+
+2026-05-06 Gate L landed
+`gate_l_define_topology_normalizer_and_hostile_input_guard_for_dynamic_calculator`.
+Gate L selected the Gate M action
+`gate_m_populate_dynamic_candidate_resolver_runtime_for_dynamic_calculator`
+at
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-m-dynamic-candidate-resolver-runtime-contract.test.ts`.
+Gate L selection status:
+`gate_l_topology_normalizer_hostile_input_guard_landed_no_runtime_selected_candidate_resolver_gate_m`.
+
+2026-05-06 Gate K landed
+`gate_k_define_route_input_topology_contracts_for_dynamic_calculator`.
+Gate K selected the Gate L action
+`gate_l_define_topology_normalizer_and_hostile_input_guard_for_dynamic_calculator`
+at
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-l-topology-normalizer-hostile-input-contract.test.ts`.
+Gate K selection status:
+`gate_k_route_input_topology_contract_landed_no_runtime_selected_topology_normalizer_gate_l`.
+
+2026-05-06 Gate J landed
+`gate_j_build_personal_use_readiness_scenario_pack`.
+Gate J selected the Gate K action
+`gate_k_define_route_input_topology_contracts_for_dynamic_calculator`
+at
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-k-route-input-topology-contract.test.ts`.
+Gate J selection status:
+`gate_j_personal_use_readiness_scenario_pack_landed_no_runtime_selected_route_input_topology_gate_k`.
 
 Current validation:
 
-Gate I validation is green in this working tree. Focused Gate I passed 1
-file / 7 tests. Gate A/B/C/D/E/G/H/I pivot continuity passed 8 files /
-52 tests. `pnpm calculator:gate:current` passed with engine 289 files /
-1639 tests, web 61 files / 273 passed + 18 skipped, repo build 5 / 5
-tasks, and whitespace guard green. Shared and engine typecheck passed;
-shared, engine, and catalogs lint passed; catalogs typecheck passed. The
-known non-fatal `sharp` optional dependency warning still appears during
-the web build, and `apps/web/next-env.d.ts` was restored to
-`.next-typecheck` after the Next build side effect. `git diff --check`
-passed. Report editor/export focused web tests passed 4 files / 20
-tests after adding a manual PDF snapshot assertion. Web lint and web
-typecheck passed after the export assertion. A broad `pnpm check` run
-was intentionally stopped when the user said to skip remaining tests;
-before the stop, lint and typecheck were green, engine full test was
-green at 414 files / 2441 tests, and web long tests plus batch 1 were
-green.
+Gate L validation is green in this working tree. Focused Gate L passed 1
+file / 9 tests. Gate A/B/C/D/E/G/H/I/J/K/L pivot continuity passed 11
+files / 77 tests. Engine typecheck passed. `pnpm calculator:gate:current`
+passed on rerun with engine 292 files / 1664 tests, web 61 files / 273
+passed + 18 skipped, repo build 5 / 5 tasks, and whitespace guard green.
+The first `pnpm calculator:gate:current` attempt reached repo build and
+failed on a transient Google Fonts fetch timeout for `Fraunces` and
+`Instrument Sans`; the immediate rerun completed. `git diff --check` is
+green. The known non-fatal `sharp` optional dependency warning still
+appears during the web build, then the build completes successfully.
 
 2026-05-06 Gate I landed
 `gate_i_expand_family_material_properties_and_benchmark_scenarios`.
@@ -272,12 +566,12 @@ Gate A had selected the Gate B file/action:
 and
 `gate_b_define_shared_airborne_basis_candidate_schema_without_value_movement`.
 The selected next file is now
-`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-j-personal-use-readiness-scenario-pack-contract.test.ts`.
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-k-route-input-topology-contract.test.ts`.
 Gate C had selected the Gate D file/action:
 `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-d-input-completeness-contract.test.ts`
 and
 `gate_d_define_physical_input_completeness_needs_input_matrix_without_value_movement`.
-Do not select a new slice until Gate J lands or this plan is explicitly
+Do not select a new slice until Gate K lands or this plan is explicitly
 superseded.
 
 Current protected numeric boundaries:

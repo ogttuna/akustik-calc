@@ -552,6 +552,22 @@ function renderClientOfferCitationItems(
     .join("");
 }
 
+function renderProposalWarningItems(warnings: readonly string[]): string {
+  if (warnings.length === 0) {
+    return `<li>No live warning flags on the active route.</li>`;
+  }
+
+  return warnings
+    .map(
+      (warning) => `
+        <li>
+          <span>${escapeHtml(warning)}</span>
+        </li>
+      `
+    )
+    .join("");
+}
+
 function formatCoverageStatus(status: SimpleWorkbenchProposalCoverageStatus): string {
   switch (status) {
     case "live":
@@ -1558,6 +1574,7 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
     document.citations,
     "No external reference line is entered for this proposal."
   );
+  const warningList = renderProposalWarningItems(document.warnings);
   const calculationBasisDetail = cleanClientProposalText(document.validationDetail);
   const executiveSummary = cleanClientProposalText(document.executiveSummary);
   const issueAuthorityText = `${preparedBy}, ${document.approverTitle}, prepared ${document.proposalReference} ${document.proposalRevision} on behalf of ${document.consultantCompany} for ${document.clientName}.`;
@@ -2887,6 +2904,14 @@ export function buildSimpleWorkbenchProposalHtml(document: SimpleWorkbenchPropos
               <div class="eyebrow" style="margin-bottom: 8px;">References</div>
               <h3>Reference lines</h3>
               <ul>${offerCitationList}</ul>
+            </div>
+          </section>
+
+          <section class="section">
+            <div class="eyebrow" style="margin: 18px 0 8px;">Calculation caveats</div>
+            <div class="method-box">
+              <h3>Open issue notes</h3>
+              <ul>${warningList}</ul>
             </div>
           </section>
 

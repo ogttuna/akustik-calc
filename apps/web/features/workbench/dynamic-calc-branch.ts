@@ -6,6 +6,7 @@ import {
   isReinforcedConcreteLowConfidenceFloorLane,
   REINFORCED_CONCRETE_LOW_CONFIDENCE_FLOOR_FAMILY_NOTE
 } from "./reinforced-concrete-low-confidence-floor-lane";
+import { getDoubleLeafFramedBridgeAirbornePromptInputs } from "./airborne-physical-input-prompt";
 import { isSteelBoundSupportFormLane, STEEL_BOUND_SUPPORT_FORM_ROUTE_NOTE } from "./steel-bound-support-form-lane";
 
 export type DynamicCalcBranchSummary = {
@@ -127,6 +128,17 @@ export function getDynamicCalcBranchSummary(input: {
       detail: "No supported floor impact branch is live yet. Complete the stack or land an exact/published family lane first.",
       tone: "warning",
       value: "Awaiting supported topology"
+    };
+  }
+
+  const doubleLeafFramedBridgePromptInputs = getDoubleLeafFramedBridgeAirbornePromptInputs(result);
+  if (doubleLeafFramedBridgePromptInputs.length > 0) {
+    return {
+      detail:
+        `Complete ${doubleLeafFramedBridgePromptInputs.join(", ")} before DAC can promote the double-leaf/framed bridge runtime. ` +
+        "The previous numeric screening trace is held back from the route card until the required physical inputs are explicit.",
+      tone: "warning",
+      value: "Awaiting physical input"
     };
   }
 

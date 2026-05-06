@@ -671,7 +671,11 @@ describe("calculator model-first physics prediction pivot Gate E", () => {
       selectedCandidateId: "candidate_grouped_rockwool_family_physics_prediction"
     });
     expect(parsed.airborneCandidateSet).toHaveLength(4);
-    expect(legacyResult).not.toHaveProperty("airborneCandidateResolution");
+    expect(legacyResult.airborneCandidateResolution).toMatchObject({
+      policyId: "model_first_airborne_candidate_precedence_v1",
+      selectedCandidateId: "candidate_dynamic_needs_input",
+      selectedOrigin: "needs_input"
+    });
   });
 
   it("keeps resolver metadata populated after Gate G grouped Rockwool prediction movement", () => {

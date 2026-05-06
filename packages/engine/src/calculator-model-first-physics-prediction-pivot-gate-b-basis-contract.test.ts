@@ -321,8 +321,10 @@ describe("calculator model-first physics prediction pivot Gate B", () => {
     });
     const legacyParsed = AssemblyCalculationSchema.parse(legacyResult);
 
-    expect(legacyParsed.airborneBasis).toBeUndefined();
-    expect(legacyParsed.airborneCandidateSet).toBeUndefined();
+    expect(legacyParsed.airborneBasis).toMatchObject({
+      origin: "needs_input"
+    });
+    expect(legacyParsed.airborneCandidateSet).toHaveLength(8);
 
     const exactCandidate = exactFullStackCandidate();
     const parsedWithBasis = AssemblyCalculationSchema.parse({

@@ -76,6 +76,11 @@ import {
   WALL_TRIPLE_LEAF_TOPOLOGY_FIELD_LABELS
 } from "./wall-triple-leaf-topology-readiness";
 import { maybeCalculateGateGGroupedRockwoolPrediction } from "./dynamic-airborne-gate-g-rockwool";
+import {
+  GATE_O_SINGLE_LEAF_MASSIVE_PANEL_PREDICTION_WARNING,
+  maybeBuildGateOSingleLeafMassivePanelBasis
+} from "./dynamic-airborne-gate-o-single-leaf";
+import { maybeCalculateGateSDoubleLeafFramedBridgeRuntime } from "./dynamic-airborne-gate-s-double-leaf-framed";
 import { ROCKWOOL_TRIPLE_LEAF_SOURCE_REQUIRED_RUNTIME_WARNING } from "./rockwool-triple-leaf-source-required-boundary";
 
 const FAMILY_LABELS: Record<DynamicAirborneFamily, string> = {
@@ -1031,6 +1036,15 @@ export function calculateDynamicAirborneResult(
   if (gateGGroupedRockwoolPrediction) {
     return gateGGroupedRockwoolPrediction;
   }
+  const gateSDoubleLeafFramedBridgeRuntime = maybeCalculateGateSDoubleLeafFramedBridgeRuntime({
+    family,
+    layers: analysisLayers,
+    options,
+    topology
+  });
+  if (gateSDoubleLeafFramedBridgeRuntime) {
+    return gateSDoubleLeafFramedBridgeRuntime;
+  }
   const familyDecisionBoundary = summarizeFamilyDecisionBoundary(
     analysisLayers,
     topology,
@@ -1825,8 +1839,22 @@ export function calculateDynamicAirborneResult(
     visibleLeafCount: topology.visibleLeafCount,
     visibleLeafMassRatio: topology.visibleLeafMassRatio
   };
+  const gateOSingleLeafMassivePanelBasis = maybeBuildGateOSingleLeafMassivePanelBasis({
+    confidenceClass,
+    curve: dynamicCurve,
+    family: family.family,
+    layers: analysisLayers,
+    selectedMethod: blendSelection.blend.selectedMethod,
+    strategy,
+    topology
+  });
+
+  if (gateOSingleLeafMassivePanelBasis) {
+    warnings.push(GATE_O_SINGLE_LEAF_MASSIVE_PANEL_PREDICTION_WARNING);
+  }
 
   return {
+    airborneBasis: gateOSingleLeafMassivePanelBasis ?? undefined,
     curve: dynamicCurve,
     id: "dynamic",
     label: "Dynamic Topology",

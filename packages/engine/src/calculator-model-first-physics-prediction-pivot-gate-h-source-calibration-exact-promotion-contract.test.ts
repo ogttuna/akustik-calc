@@ -623,7 +623,15 @@ describe("calculator model-first physics prediction pivot Gate H", () => {
       (result.airborneCandidateSet ?? [])
         .filter((candidate: AirborneCandidate) => !candidate.selected)
         .flatMap((candidate: AirborneCandidate) => candidate.rejectionReasons.map((reason) => reason.code))
-    ).toEqual(["missing_source_evidence", "missing_source_evidence", "lower_precedence_than_selected"]);
+    ).toEqual([
+      "missing_source_evidence",
+      "missing_source_evidence",
+      "missing_source_evidence",
+      "lower_precedence_than_selected",
+      "lower_precedence_than_selected",
+      "lower_precedence_than_selected",
+      "lower_precedence_than_selected"
+    ]);
   });
 
   it("keeps docs and current-gate runner aligned with Gate H closeout", () => {

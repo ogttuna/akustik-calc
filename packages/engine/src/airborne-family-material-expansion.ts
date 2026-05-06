@@ -154,6 +154,10 @@ export function listMaterialAcousticPropertyFields(
     fields.push("porosity");
   }
 
+  if (material.acoustic?.absorberClass !== undefined) {
+    fields.push("absorberClass");
+  }
+
   if (material.acoustic?.behavior === "limp_mass_membrane" || material.tags.includes("limp-mass")) {
     fields.push("limpMassBehavior");
   }

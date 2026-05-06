@@ -43,7 +43,12 @@ export type AirborneStudType = z.infer<typeof AirborneStudTypeSchema>;
 export const AirborneResilientBarSideCountSchema = z.enum(["auto", "one_side", "both_sides"]);
 export type AirborneResilientBarSideCount = z.infer<typeof AirborneResilientBarSideCountSchema>;
 
-export const WallTopologyModeSchema = z.enum(["auto", "flat_layer_order", "grouped_triple_leaf"]);
+export const WallTopologyModeSchema = z.enum([
+  "auto",
+  "flat_layer_order",
+  "double_leaf_framed",
+  "grouped_triple_leaf"
+]);
 export type WallTopologyMode = z.infer<typeof WallTopologyModeSchema>;
 
 export const WallInternalLeafCouplingSchema = z.enum([

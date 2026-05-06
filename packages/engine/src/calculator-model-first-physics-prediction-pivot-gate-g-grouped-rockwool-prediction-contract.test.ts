@@ -228,14 +228,26 @@ describe("calculator model-first physics prediction pivot Gate G", () => {
     });
     expect(result.airborneCandidateResolution?.rejectedCandidateIds).toEqual([
       "candidate_blocked_rockwool_exact_source",
+      "candidate_dynamic_exact_subassembly_plus_calculated_delta",
       "candidate_calibrated_triple_leaf_family",
-      "candidate_multileaf_screening_fallback"
+      "candidate_dynamic_bounded_prediction",
+      "candidate_multileaf_screening_fallback",
+      "candidate_dynamic_needs_input",
+      "candidate_dynamic_unsupported"
     ]);
     expect(
       (result.airborneCandidateSet ?? [])
         .filter((candidate: AirborneCandidate) => !candidate.selected)
         .flatMap((candidate: AirborneCandidate) => candidate.rejectionReasons.map((reason) => reason.code))
-    ).toEqual(["missing_source_evidence", "missing_source_evidence", "lower_precedence_than_selected"]);
+    ).toEqual([
+      "missing_source_evidence",
+      "missing_source_evidence",
+      "missing_source_evidence",
+      "lower_precedence_than_selected",
+      "lower_precedence_than_selected",
+      "lower_precedence_than_selected",
+      "lower_precedence_than_selected"
+    ]);
   });
 
   it("keeps flat-list and incomplete topology from fake solver promotion", () => {
@@ -254,11 +266,16 @@ describe("calculator model-first physics prediction pivot Gate G", () => {
     expect(flatList.dynamicAirborneTrace?.strategy).toBe("multileaf_screening_blend");
     expect(flatList.supportedTargetOutputs).toEqual([]);
     expect(flatList.unsupportedTargetOutputs).toEqual(["Rw", "STC", "C", "Ctr"]);
-    expect(flatList.airborneCandidateResolution).toBeUndefined();
+    expect(flatList.airborneCandidateResolution).toMatchObject({
+      selectedCandidateId: "candidate_dynamic_needs_input",
+      selectedOrigin: "needs_input"
+    });
 
     expect(incomplete.dynamicAirborneTrace?.selectedMethod).not.toBe("triple_leaf_two_cavity_frequency_solver");
     expect(incomplete.dynamicAirborneTrace?.strategy).toBe("multileaf_screening_blend");
-    expect(incomplete.airborneBasis).toBeUndefined();
+    expect(incomplete.airborneBasis).toMatchObject({
+      origin: "needs_input"
+    });
     expect(incomplete.warnings.join("\n")).toContain("Missing:");
   });
 

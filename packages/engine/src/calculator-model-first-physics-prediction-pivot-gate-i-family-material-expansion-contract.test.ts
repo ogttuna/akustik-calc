@@ -174,7 +174,8 @@ describe("calculator model-first physics prediction pivot Gate I", () => {
     expect(listMaterialAcousticPropertyFields(rockwool)).toEqual([
       "densityKgM3",
       "flowResistivityPaSM2",
-      "porosity"
+      "porosity",
+      "absorberClass"
     ]);
 
     expect(listMaterialAcousticPropertyFields(mlv)).toEqual([

@@ -36,6 +36,10 @@ import {
 import { applyApproximateAirborneFieldCompanion, applyVerifiedAirborneCatalogAnchor } from "./airborne-verified-catalog";
 import { classifyLayerRole, materialText } from "./airborne-topology";
 import { calculateDynamicAirborneResult } from "./dynamic-airborne";
+import {
+  buildDynamicCalculatorCandidateResolverRuntime,
+  inferDynamicCalculatorRuntimeRoute
+} from "./dynamic-calculator-candidate-resolver-runtime";
 import { clamp, round1 } from "./math";
 import { buildEstimateWarnings, estimateRwDb } from "./estimate-rw";
 import { hasBoundOnlyUbiqOpenWebCarpetCombinedProfile } from "./bound-only-floor-near-miss";
@@ -1181,6 +1185,38 @@ export function calculateAssembly(
     resolvedLayers: impactResolvedLayers,
     targetOutputSupport
   });
+  const dynamicCandidateResolverRuntime = options.calculator === "dynamic"
+    ? buildDynamicCalculatorCandidateResolverRuntime({
+        airborneContext,
+        layers,
+        route: inferDynamicCalculatorRuntimeRoute({
+          layers,
+          targetOutputs: targetOutputSupport.targetOutputs
+        }),
+        runtimeSignal: dynamicAirborneResult
+          ? {
+              airborneBasis: dynamicAirborneResult.airborneBasis,
+              detectedFamily: dynamicAirborneResult.trace.detectedFamily,
+              runtimeValueMovement: dynamicAirborneResult.airborneCandidateResolution?.runtimeValueMovement,
+              selectedMethod: dynamicAirborneResult.trace.selectedMethod,
+              strategy: dynamicAirborneResult.trace.strategy
+            }
+          : null,
+        sourceAnchor: {
+          applied: verifiedAirborneAnchorResult.applied,
+          match: verifiedAirborneAnchorResult.match
+            ? {
+                id: verifiedAirborneAnchorResult.match.id,
+                label: verifiedAirborneAnchorResult.match.label,
+                metricLabel: verifiedAirborneAnchorResult.match.metricLabel,
+                metricValue: verifiedAirborneAnchorResult.match.metricValue,
+                sourceMode: verifiedAirborneAnchorResult.match.sourceMode
+              }
+            : null
+        },
+        targetOutputs: targetOutputSupport.targetOutputs
+      })
+    : null;
   const warnings = buildEstimateWarnings(resolvedLayers, selectedCalculatorLabel);
   warnings.push(...(dynamicAirborneResult?.warnings ?? []));
   warnings.push(...airborneOverlayResult.warnings);
@@ -1382,15 +1418,21 @@ export function calculateAssembly(
     warnings
   };
 
-  if (dynamicAirborneResult?.airborneBasis) {
+  if (dynamicCandidateResolverRuntime?.resolution.selectedBasis) {
+    result.airborneBasis = dynamicCandidateResolverRuntime.resolution.selectedBasis;
+  } else if (dynamicAirborneResult?.airborneBasis) {
     result.airborneBasis = dynamicAirborneResult.airborneBasis;
   }
 
-  if (dynamicAirborneResult?.airborneCandidateResolution) {
+  if (dynamicCandidateResolverRuntime?.resolution) {
+    result.airborneCandidateResolution = dynamicCandidateResolverRuntime.resolution;
+  } else if (dynamicAirborneResult?.airborneCandidateResolution) {
     result.airborneCandidateResolution = dynamicAirborneResult.airborneCandidateResolution;
   }
 
-  if (dynamicAirborneResult?.airborneCandidateSet) {
+  if (dynamicCandidateResolverRuntime?.resolution.candidates) {
+    result.airborneCandidateSet = dynamicCandidateResolverRuntime.resolution.candidates;
+  } else if (dynamicAirborneResult?.airborneCandidateSet) {
     result.airborneCandidateSet = dynamicAirborneResult.airborneCandidateSet;
   }
 

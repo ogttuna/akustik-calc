@@ -20,6 +20,7 @@ import {
 import { FIELD_IMPACT_OUTPUTS } from "./simple-workbench-constants";
 import { buildSimpleWorkbenchOutputPosture } from "./simple-workbench-output-posture";
 import { formatSignedDb } from "./simple-workbench-utils";
+import { getDoubleLeafFramedBridgeAirbornePromptDetail } from "./airborne-physical-input-prompt";
 import {
   getRockwoolSplitTripleLeafWithheldOutputDetail,
   getRockwoolTripleLeafScreeningPolicyCopy
@@ -41,6 +42,7 @@ export type OutputCardModel = BaseOutputCardModel & {
 };
 
 const FLOOR_ROLE_PROMPT_OUTPUTS = new Set<RequestedOutputId>(["Ln,w", "Ln,w+CI", "CI", "CI,50-2500", "DeltaLw"]);
+const AIRBORNE_PHYSICAL_PROMPT_OUTPUTS = new Set<RequestedOutputId>(["Rw", "STC", "C", "Ctr"]);
 
 function hasFloorRolePromptGuard(result: AssemblyCalculation | null | undefined): boolean {
   return Boolean(
@@ -229,6 +231,21 @@ export function buildOutputCard(input: {
       label: REQUESTED_OUTPUT_LABELS[output],
       output,
       status: missingInput ? "needs_input" : "unsupported",
+      value: "Not ready"
+    };
+  }
+
+  const airbornePhysicalPromptDetail =
+    AIRBORNE_PHYSICAL_PROMPT_OUTPUTS.has(output)
+      ? getDoubleLeafFramedBridgeAirbornePromptDetail(result)
+      : null;
+
+  if (airbornePhysicalPromptDetail) {
+    return {
+      detail: airbornePhysicalPromptDetail,
+      label: REQUESTED_OUTPUT_LABELS[output],
+      output,
+      status: "needs_input",
       value: "Not ready"
     };
   }

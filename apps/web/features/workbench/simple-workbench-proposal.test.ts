@@ -446,6 +446,9 @@ describe("simple workbench proposal helpers", () => {
       expect(html).toContain("Recommended actions");
       expect(html).toContain("Reference lines");
       expect(html).toContain("Exact floor family: Knauf CT30 1C");
+      expect(html).toContain("Calculation caveats");
+      expect(html).toContain("Open issue notes");
+      expect(html).toContain("Receiving-room volume is still missing for standardized field outputs.");
       expect(html).not.toContain("https://example.com/source");
       expect(html).toContain("Rw");
     expect(html).toContain("Ln,w");

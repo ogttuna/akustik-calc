@@ -19,6 +19,25 @@ absent, DynEcho must calculate with the best family-specific physics
 model available, label the basis/origin honestly, expose tolerance or
 error budget, and ask for missing physical inputs instead of guessing.
 
+Dynamic calculator north star:
+
+- user chooses `wall` or `floor`;
+- the app opens only the physical input fields required by that route and
+  output basis;
+- the user adds layer materials, order, thicknesses, and explicit
+  topology/context where needed;
+- the engine calculates `Rw`, `R'w`, `DnT,w`, `Ln,w`, `L'n,w`, `STC`,
+  `C`, `Ctr`, and related outputs from the best available candidate;
+- if a physical field is missing, the answer is `needs_input` with the
+  exact missing fields, not a guessed high-confidence result.
+
+Do not drift this project back into a library/catalog exercise. Source
+rows are candidates, anchors, calibration evidence, holdouts, bounds, and
+exact overrides. They are not the product. If a change primarily gathers
+more rows while leaving source-absent family solvers, input contracts, and
+accuracy tests untouched, it is probably the wrong next step unless the
+active plan explicitly selected exact-source promotion.
+
 Treat lab, field, and building-prediction contexts as different output
 bases. Do not casually alias `Rw` with `STC`, `Ln,w` with `IIC`, or lab
 values with field/apparent values. Tests must prove acoustic correctness
@@ -27,27 +46,55 @@ support bucket, visible card/report parity, tolerance, nearby negatives,
 and hostile input cases such as many layers, duplicates, splits, and
 safe/unsafe reorders.
 
+Personal-use readiness means the dynamic calculator can handle realistic
+and hostile layer combinations across wall and floor routes with named
+algorithms, bounded uncertainty, and visible missing-input prompts. It is
+not ready just because a finite catalog of known assemblies passes.
+
+Before implementing calculator behavior, re-read the current local engine
+shape in `packages/engine/src/airborne-calculator.ts` and
+`packages/engine/src/dynamic-airborne.ts`. The existing KS, mass-law,
+Sharp, and Kurtovic paths are useful delegate engines and benchmark
+signals, but they are not complete dynamic coverage for double/framed,
+triple/multi-cavity, floor-impact, field, or building-prediction routes.
+Gate V must define the floor-impact dynamic-stiffness input and adapter
+contract after Gate U selected that lane, without turning the calculator
+back into a finite source catalog or aliasing `Ln,w` with `IIC`.
+
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-05-06_GATE_I_REPORT_EXPORT_MANUAL_EDIT_VALIDATION_HANDOFF.md`
-3. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_I_HANDOFF.md`
-4. `docs/calculator/CHECKPOINT_2026-05-06_GATE_H_AND_REPORT_EXPORT_WRAPUP_HANDOFF.md`
-5. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_H_HANDOFF.md`
-6. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_G_HANDOFF.md`
-7. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_E_HANDOFF.md`
-8. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_D_HANDOFF.md`
-9. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_C_HANDOFF.md`
-10. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_B_HANDOFF.md`
-11. `docs/calculator/CHECKPOINT_2026-05-06_ACOUSTIC_CALCULATOR_PLAN_REVALIDATION_HANDOFF.md`
-12. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_GATE_A_REVALIDATION_COMMIT_HANDOFF.md`
-13. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_A_HANDOFF.md`
-14. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_BENCHMARK_ACCEPTANCE_HANDOFF.md`
-15. `docs/calculator/CHECKPOINT_2026-05-05_MODEL_FIRST_MILESTONE_RESEARCH_HANDOFF.md`
-16. `docs/calculator/CHECKPOINT_2026-05-05_STANDARDS_RESEARCH_PLAN_DETAIL_HANDOFF.md`
-17. `docs/calculator/CHECKPOINT_2026-05-05_DOC_IMPLEMENTATION_RECONCILIATION_HANDOFF.md`
-18. `docs/calculator/CHECKPOINT_2026-05-05_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_REPLAN_HANDOFF.md`
-19. `docs/calculator/SLICE_CALCULATOR_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_V1_PLAN.md`
+2. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_U_REVALIDATION_AND_COMMIT_HANDOFF.md`
+3. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_U_HANDOFF.md`
+4. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_T_HANDOFF.md`
+5. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_S_HANDOFF.md`
+6. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_R_HANDOFF.md`
+7. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Q_HANDOFF.md`
+8. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_P_HANDOFF.md`
+9. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_O_HANDOFF.md`
+10. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_N_HANDOFF.md`
+11. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_M_HANDOFF.md`
+12. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_L_HANDOFF.md`
+13. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_K_HANDOFF.md`
+14. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_J_HANDOFF.md`
+15. `docs/calculator/CHECKPOINT_2026-05-06_GATE_I_REPORT_EXPORT_MANUAL_EDIT_VALIDATION_HANDOFF.md`
+16. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_I_HANDOFF.md`
+17. `docs/calculator/CHECKPOINT_2026-05-06_GATE_H_AND_REPORT_EXPORT_WRAPUP_HANDOFF.md`
+18. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_H_HANDOFF.md`
+19. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_G_HANDOFF.md`
+20. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_E_HANDOFF.md`
+21. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_D_HANDOFF.md`
+22. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_C_HANDOFF.md`
+23. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_B_HANDOFF.md`
+24. `docs/calculator/CHECKPOINT_2026-05-06_ACOUSTIC_CALCULATOR_PLAN_REVALIDATION_HANDOFF.md`
+25. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_GATE_A_REVALIDATION_COMMIT_HANDOFF.md`
+26. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_A_HANDOFF.md`
+27. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_BENCHMARK_ACCEPTANCE_HANDOFF.md`
+28. `docs/calculator/CHECKPOINT_2026-05-05_MODEL_FIRST_MILESTONE_RESEARCH_HANDOFF.md`
+29. `docs/calculator/CHECKPOINT_2026-05-05_STANDARDS_RESEARCH_PLAN_DETAIL_HANDOFF.md`
+30. `docs/calculator/CHECKPOINT_2026-05-05_DOC_IMPLEMENTATION_RECONCILIATION_HANDOFF.md`
+31. `docs/calculator/CHECKPOINT_2026-05-05_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_REPLAN_HANDOFF.md`
+32. `docs/calculator/SLICE_CALCULATOR_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_V1_PLAN.md`
 
 Entries below are historical/backlog authority context unless the
 current workflow above promotes them again.
@@ -335,9 +382,221 @@ plan.
 - current selected slice:
   `calculator_model_first_physics_prediction_pivot_v1`
 - current next decision inside the slice:
-  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-j-personal-use-readiness-scenario-pack-contract.test.ts`
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-v-floor-impact-dynamic-stiffness-contract.test.ts`
   should run
+  `gate_v_define_floor_impact_dynamic_stiffness_input_and_adapter_contract_for_dynamic_calculator`.
+- latest revalidation / commit-prep checkpoint:
+  `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_U_REVALIDATION_AND_COMMIT_HANDOFF.md`
+  confirms `main` is even with `origin/main`,
+  `pnpm calculator:gate:current` is green, broad `pnpm check` is green after
+  fixing two proposal-surface regressions, and Gate V remains the right
+  first implementation step. The proposal fix keeps client-facing
+  missing-input caveats visible without exposing the raw `Warnings`
+  heading and restores distinct developer/lab-ready cover branding.
+- just landed model-first physics prediction pivot Gate U:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-u-next-solver-or-calibration-selection-contract.test.ts`
+  landed
+  `gate_u_select_next_solver_or_calibration_lane_after_material_gap_closure`.
+  It ranks the next solver/calibration candidates after Gate T material
+  gap closure and selects floor-impact dynamic-stiffness input/adapter
+  ownership for Gate V. Calibration holdouts remain useful later for
+  error-budget tightening, but they are not selected ahead of the
+  larger floor coverage gap. `Ln,w`, `L'n,w`, `L'nT,w`, and `IIC` stay
+  basis-separated; runtime values and support buckets stay unchanged.
+  Selection status:
+  `gate_u_next_solver_or_calibration_selection_landed_no_runtime_selected_floor_impact_gate_v`.
+  Latest checkpoint:
+  `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_U_HANDOFF.md`.
+  Selected next file:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-v-floor-impact-dynamic-stiffness-contract.test.ts`.
+  Selected next action:
+  `gate_v_define_floor_impact_dynamic_stiffness_input_and_adapter_contract_for_dynamic_calculator`.
+- just landed model-first physics prediction pivot Gate T:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-t-family-material-gap-closure-contract.test.ts`
+  landed
+  `gate_t_close_remaining_family_material_property_gaps_for_dynamic_calculator`.
+  It closes the high-impact material-property gaps needed by Dynamic
+  Calculator family physics without creating a finite source catalog.
+  Shared material acoustic metadata now includes `absorberClass`; seed
+  materials carry engineering-default acoustic properties for board
+  leaves/finishes, masonry cores, porous absorbers, floor decks/screeds,
+  limp membranes, and resilient impact layers. Required property gaps
+  remain executable `needs_input`; optional precision gaps widen
+  uncertainty through explicit defaults. Runtime values and support
+  buckets stay unchanged, and Gate S double-leaf/framed value pins remain
+  stable. Selection status:
+  `gate_t_family_material_property_gap_closure_landed_no_runtime_selected_next_solver_or_calibration_gate_u`.
+  Latest checkpoint:
+  `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_T_HANDOFF.md`.
+  Selected next file:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-u-next-solver-or-calibration-selection-contract.test.ts`.
+  Selected next action:
+  `gate_u_select_next_solver_or_calibration_lane_after_material_gap_closure`.
+- just landed model-first physics prediction pivot Gate S:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-s-double-leaf-framed-bridge-runtime-contract.test.ts`
+  landed
+  `gate_s_promote_double_leaf_framed_bridge_solver_runtime_for_dynamic_calculator`.
+  It wires the Gate R double-leaf / framed bridge solver into Dynamic
+  Calculator runtime for explicit complete contexts only. Independent
+  absorbed gypsum / rockwool / gypsum now selects the family physics
+  candidate with `Rw 45`, `STC 45`, `C -1`, `Ctr -6.1`, and a `7 dB`
+  uncalibrated error budget; resilient both-side bridge selects
+  `Rw 46` / `STC 46` with an `8 dB` error budget. Exact source rows
+  remain higher precedence through the Gate H policy. Missing
+  `resilientBarSideCount` stays `needs_input` and explicit
+  double-leaf/framed visible cards are parked instead of showing
+  fallback numbers; direct-fixed and multi-cavity flat-list boundaries
+  do not promote. Selection status:
+  `gate_s_double_leaf_framed_bridge_runtime_landed_selected_family_material_gap_gate_t`.
+  Latest checkpoint:
+  `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_S_HANDOFF.md`.
+- just landed model-first physics prediction pivot Gate R:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-r-double-leaf-framed-bridge-solver-contract.test.ts`
+  landed
+  `gate_r_define_double_leaf_framed_bridge_solver_candidate_without_runtime_value_movement`.
+  It adds the no-runtime double-leaf / framed bridge solver-candidate
+  contract in
+  `dynamic-calculator-double-leaf-framed-bridge-solver-contract.ts`.
+  Gate R owns the formula/method contract before runtime selection:
+  explicit side-leaf surface masses, mass-air-mass resonance, bridge
+  coupling, porous cavity damping, ISO 717-1 `Rw` adapter, and ASTM E413
+  `STC` adapter boundary. It creates positive benchmark corridors for
+  independent absorbed and resilient bridge cases, carries Gate Q
+  `needs_input` for missing resilient side count, and protects
+  direct-fixed plus multi-cavity flat-list negative boundaries. Runtime
+  values stay unchanged. Selection status:
+  `gate_r_double_leaf_framed_bridge_solver_contract_landed_no_runtime_selected_runtime_promotion_gate_s`.
+  Latest checkpoint:
+  `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_R_HANDOFF.md`.
+- just landed model-first physics prediction pivot Gate Q:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-q-double-leaf-framed-bridge-input-contract.test.ts`
+  landed
+  `gate_q_define_double_leaf_framed_bridge_input_and_benchmark_contract_for_dynamic_calculator`.
+  It adds the explicit Dynamic Calculator double-leaf / framed bridge
+  input contract in
+  `dynamic-calculator-double-leaf-framed-bridge-input-contract.ts`,
+  extends `wallTopology.topologyMode` with `double_leaf_framed`, and
+  wires explicit double-leaf/framed contexts into
+  `dynamic-calculator-route-input-topology.ts`. Missing grouping,
+  cavity depth, bridge class, support topology, support spacing, and
+  resilient-bar side count become targeted `needs_input` prompts;
+  source absence remains exact/calibration-only. Runtime values stay
+  unchanged. Selection status:
+  `gate_q_double_leaf_framed_bridge_input_contract_landed_no_runtime_selected_solver_candidate_gate_r`.
+  Latest checkpoint:
+  `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Q_HANDOFF.md`.
+- just landed model-first physics prediction pivot Gate P:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-p-next-family-solver-upgrade-selection-contract.test.ts`
+  landed
+  `gate_p_select_next_family_solver_upgrade_after_single_leaf_runtime_promotion`.
+  It adds the no-runtime next-family solver selection helper in
+  `dynamic-calculator-next-family-solver-upgrade-selection.ts`. Gate P
+  excludes the Gate O single-leaf family from the next ranking and
+  selects double-leaf / framed bridge as the next calculator family
+  because it unlocks common wall coverage without requiring source rows.
+  Runtime promotion is explicitly blocked until `frameBridgeClass`,
+  `studSpacingMm`, `resilientSideCount`, `supportTopology`, porous
+  cavity damping, and mass-air-mass resonance owners are contracted with
+  positive and nearby-negative benchmarks. Selection status:
+  `gate_p_next_family_solver_selection_landed_no_runtime_selected_double_leaf_framed_bridge_gate_q`.
+  Latest checkpoint:
+  `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_P_HANDOFF.md`.
+- just landed model-first physics prediction pivot Gate O:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-o-single-leaf-massive-panel-runtime-contract.test.ts`
+  landed
+  `gate_o_promote_single_leaf_massive_panel_family_solver_runtime_for_dynamic_calculator`.
+  It adds the narrow Dynamic Calculator single-leaf / laminated
+  single-leaf / rigid massive panel runtime promotion helper in
+  `dynamic-airborne-gate-o-single-leaf.ts` and wires it into
+  `dynamic-airborne.ts`. Ordinary single 12.5 mm gypsum board, laminated
+  double gypsum board, and 150 mm concrete keep the same values and
+  target-output support, but their selected candidate origin is now
+  `family_physics_prediction` with `runtimeValueMovement: false`.
+  Exact source rows still win when eligible, grouped Rockwool Gate G
+  stays unchanged, and CLT/mass timber remains screening until
+  orthotropic/directional properties are owned. Selection status:
+  `gate_o_single_leaf_massive_panel_runtime_promotion_landed_no_value_selected_next_family_solver_gate_p`.
+  Latest checkpoint:
+  `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_O_HANDOFF.md`.
+- just landed model-first physics prediction pivot Gate N:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-n-family-solver-upgrade-contract.test.ts`
+  landed
+  `gate_n_select_first_family_solver_upgrade_runtime_gate_for_dynamic_calculator`.
+  It adds the no-runtime Dynamic Calculator family-solver upgrade
+  selection helper in
+  `dynamic-calculator-family-solver-upgrade-selection.ts`. Gate N
+  selects single-leaf / laminated single-leaf / rigid massive panel as
+  the first runtime family upgrade because the current family candidate
+  is already visible but still selected as `screening_fallback`, the
+  material inputs are complete, and the blast radius is lower than
+  double/framed, generalized multi-cavity, lined masonry/CLT, floor
+  impact, or field/building continuations. Runtime numeric values,
+  support buckets, confidence, evidence, and report/workbench behavior
+  stay unchanged. Selection status:
+  `gate_n_family_solver_upgrade_selection_landed_no_runtime_selected_single_leaf_massive_panel_gate_o`.
+  Latest checkpoint:
+  `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_N_HANDOFF.md`.
+- just landed model-first physics prediction pivot Gate M:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-m-dynamic-candidate-resolver-runtime-contract.test.ts`
+  landed
+  `gate_m_populate_dynamic_candidate_resolver_runtime_for_dynamic_calculator`.
+  It adds the Dynamic Calculator candidate resolver runtime surface in
+  `dynamic-calculator-candidate-resolver-runtime.ts` and wires it into
+  `calculateAssembly` for dynamic calculator results. Runtime numeric
+  values and support buckets stay unchanged, but selected/rejected
+  candidates are now visible for exact source, anchored delta,
+  calibrated family, uncalibrated family physics, bounded, screening,
+  `needs_input`, and `unsupported` lanes. ACON-like flat-list
+  multi-cavity walls now expose `needs_input` candidate metadata instead
+  of a silent screening-only surface. Selection status:
+  `gate_m_dynamic_candidate_resolver_runtime_landed_no_value_selected_family_solver_upgrade_gate_n`.
+  Latest checkpoint:
+  `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_M_HANDOFF.md`.
+- just landed model-first physics prediction pivot Gate L:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-l-topology-normalizer-hostile-input-contract.test.ts`
+  landed
+  `gate_l_define_topology_normalizer_and_hostile_input_guard_for_dynamic_calculator`.
+  It adds the no-runtime Dynamic Calculator topology normalizer and
+  hostile input guard in `dynamic-calculator-topology-normalizer.ts`.
+  Role-defined floor input can be canonicalized/coalesced where the
+  physics is invariant to split rows or UI reorder; grouped multi-cavity
+  wall order is preserved; ambiguous flat-list multi-cavity walls are not
+  auto-grouped and delegate missing topology prompts to Gate K; unsafe
+  multi-cavity reorders and hostile layer inputs fail closed with trace.
+  Runtime values stay unchanged. Selection status:
+  `gate_l_topology_normalizer_hostile_input_guard_landed_no_runtime_selected_candidate_resolver_gate_m`.
+  Latest checkpoint:
+  `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_L_HANDOFF.md`.
+- just landed model-first physics prediction pivot Gate K:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-k-route-input-topology-contract.test.ts`
+  landed
+  `gate_k_define_route_input_topology_contracts_for_dynamic_calculator`.
+  It adds the no-runtime Dynamic Calculator route/input topology
+  contract in `dynamic-calculator-route-input-topology.ts`: wall/floor
+  route assessment, lab/field/building output-basis requirements,
+  grouped multi-cavity wall topology prompts, field/building room and
+  flanking prompts, floating-floor dynamic-stiffness/load prompts, and
+  unsupported output posture for `IIC`/`AIIC` style outputs. Source
+  absence remains a source-promotion blocker only and never becomes a
+  physical `needs_input` prompt by itself. Runtime values stay
+  unchanged. Selection status:
+  `gate_k_route_input_topology_contract_landed_no_runtime_selected_topology_normalizer_gate_l`.
+  Latest checkpoint:
+  `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_K_HANDOFF.md`.
+- just landed model-first physics prediction pivot Gate J:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-j-personal-use-readiness-scenario-pack-contract.test.ts`
+  landed
   `gate_j_build_personal_use_readiness_scenario_pack`.
+  It adds the personal-use readiness scenario pack and engine-inventory
+  guard in `airborne-personal-use-readiness-scenario-pack.ts`, proving
+  wall/floor coverage, exact/source-anchored/calibrated/uncalibrated/
+  bounded/screening/needs_input/unsupported method selection, ACON-like
+  flat-list multi-cavity guarding, current grouped Rockwool source-absent
+  family prediction, and floor impact support gaps without moving runtime
+  values. Selection status:
+  `gate_j_personal_use_readiness_scenario_pack_landed_no_runtime_selected_route_input_topology_gate_k`.
+  Latest checkpoint:
+  `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_J_HANDOFF.md`.
 - just landed model-first physics prediction pivot Gate I:
   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-i-family-material-expansion-contract.test.ts`
   landed

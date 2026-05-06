@@ -15,7 +15,7 @@ answer it actually measures; it does not make the whole acoustic domain complete
 
 Latest checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_GATE_A_REVALIDATION_COMMIT_HANDOFF.md`
+`docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_U_HANDOFF.md`
 
 ## Core Rule
 
@@ -32,6 +32,8 @@ Calculator-first rule:
 - exact measured/source rows win when the full assembly matches them;
 - exact measured/source rows can anchor subassembly-plus-delta
   candidates;
+- similar measured rows can calibrate, bound, or anchor a delta only
+  through a named algorithm and basis-compatible tolerance policy;
 - when no exact row exists, the calculator must use the best
   family-specific physics model available and label the result as a
   prediction;
@@ -44,10 +46,199 @@ The implementation is correct only when all of these are true:
 
 - the numeric value is produced by the right origin for that route
 - the origin is source/formula/predictor/bound/unsupported as documented
+- the selected output basis is correct: lab element, field/apparent, or
+  building prediction
+- `Rw`, `STC`, `Ln,w`, `IIC`, `R'w`, and `DnT,w` are not aliases unless a
+  named adapter/source explicitly owns that relationship
 - unsupported outputs stay explicit instead of being guessed
 - workbench cards show the same support posture as the engine
 - split, duplicated, reordered, or saved/replayed input does not silently switch
   to a broader lane
+
+## Dynamic Calculator Validation Contract
+
+Personal-use readiness requires tests that prove acoustic correctness,
+not only that code paths run.
+
+Every runtime-moving calculator change should add or update tests for:
+
+- numeric expectation: exact value for exact/source rows, or a documented
+  range/tolerance for physics predictions;
+- curve integrity: frequency-band changes make sense, not only final
+  integer ratings;
+- rating adapter basis: ISO 717 / ASTM E413 / impact adapters are used
+  explicitly and not copied;
+- candidate selection: selected and rejected candidates explain exact
+  source, anchored delta, calibrated solver, uncalibrated solver, bound,
+  screening, `needs_input`, and `unsupported` decisions;
+- missing-input posture: missing physical fields produce targeted prompts,
+  while missing source evidence does not;
+- hostile input: long layer lists, duplicate layers, split roles, extreme
+  thickness, tiny gaps, unsafe reorder, saved replay, and manual report
+  edits;
+- visible parity: engine result, workbench cards, saved scenarios, PDF,
+  and DOCX agree on value, basis, support bucket, assumptions, and
+  uncertainty.
+
+Current model-first helper contracts:
+
+- Gate K:
+  `packages/engine/src/dynamic-calculator-route-input-topology.ts`
+  assesses wall/floor route, output basis, missing physical inputs,
+  source absence, and unsupported outputs without moving runtime values.
+- Gate L:
+  `packages/engine/src/dynamic-calculator-topology-normalizer.ts`
+  guards layer input before candidate selection. Role-defined floor
+  reorder/split edits can normalize when physically invariant; grouped
+  multi-cavity wall order is preserved; ambiguous flat-list multi-cavity
+  stacks ask for topology instead of being auto-grouped; invalid or
+  excessive layer input fails closed.
+- Gate M:
+  `packages/engine/src/dynamic-calculator-candidate-resolver-runtime.ts`
+  populates the runtime candidate resolver surface. Exact source,
+  anchored delta, calibrated family, family physics, bounded, screening,
+  `needs_input`, and `unsupported` candidates coexist with selected and
+  rejected reasons; numeric values and support buckets stay unchanged.
+- Gate N:
+  `packages/engine/src/dynamic-calculator-family-solver-upgrade-selection.ts`
+  selects the first family solver runtime upgrade without moving
+  values. The selected Gate O target is single-leaf / laminated
+  single-leaf / rigid massive panel because the family candidate is
+  already visible but still screening-selected, material readiness is
+  complete, and exact/source rows are not required for source-absent
+  physics. Double/framed, generalized multi-cavity, lined masonry/CLT,
+  floor impact, and field/building continuations remain deferred behind
+  explicit physical owners.
+- Gate O:
+  `packages/engine/src/dynamic-airborne-gate-o-single-leaf.ts`
+  promotes complete single-leaf / laminated single-leaf / rigid massive
+  panel Dynamic Calculator results to `family_physics_prediction`
+  without changing numeric values or target-output support. Exact
+  full-stack rows remain higher precedence, Gate G grouped Rockwool
+  remains unchanged, and CLT/mass timber stays screening until
+  orthotropic/directional properties are owned. Selection status:
+  `gate_o_single_leaf_massive_panel_runtime_promotion_landed_no_value_selected_next_family_solver_gate_p`.
+- Gate P:
+  `packages/engine/src/dynamic-calculator-next-family-solver-upgrade-selection.ts`
+  selects the next Dynamic Calculator family after Gate O without moving
+  runtime values. It excludes the already-landed single-leaf family and
+  selects double-leaf / framed bridge for Gate Q because it unlocks
+  common wall calculator coverage through source-absent physics, while
+  explicitly blocking runtime promotion until `frameBridgeClass`,
+  `studSpacingMm`, `resilientSideCount`, `supportTopology`, porous
+  cavity damping, and mass-air-mass resonance owners have positive and
+  nearby-negative benchmarks. Selection status:
+  `gate_p_next_family_solver_selection_landed_no_runtime_selected_double_leaf_framed_bridge_gate_q`.
+  Next file:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-q-double-leaf-framed-bridge-input-contract.test.ts`.
+  Next action:
+  `gate_q_define_double_leaf_framed_bridge_input_and_benchmark_contract_for_dynamic_calculator`.
+- Gate Q:
+  `packages/engine/src/dynamic-calculator-double-leaf-framed-bridge-input-contract.ts`
+  defines the explicit double-leaf / framed bridge input and benchmark
+  contract. `wallTopology.topologyMode: "double_leaf_framed"` now lets
+  the route-input assessment ask for side leaf groups, cavity depth,
+  frame bridge class, support topology, support spacing, and conditional
+  resilient-bar side count before any solver promotion. Source absence
+  stays exact/calibration-only; runtime values and support buckets stay
+  unchanged. Selection status:
+  `gate_q_double_leaf_framed_bridge_input_contract_landed_no_runtime_selected_solver_candidate_gate_r`.
+  Next file:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-r-double-leaf-framed-bridge-solver-contract.test.ts`.
+  Next action:
+  `gate_r_define_double_leaf_framed_bridge_solver_candidate_without_runtime_value_movement`.
+- Gate R:
+  `packages/engine/src/dynamic-calculator-double-leaf-framed-bridge-solver-contract.ts`
+  defines the no-runtime double-leaf / framed bridge solver-candidate
+  contract. It owns explicit side-leaf surface masses, mass-air-mass
+  resonance, bridge coupling, porous damping, ISO 717-1 `Rw`, and ASTM
+  E413 `STC` adapter boundaries before runtime promotion. Positive
+  benchmark corridors cover independent absorbed and resilient bridge
+  cases; nearby negatives cover missing resilient side count,
+  direct-fixed bridges, and non-explicit multi-cavity flat lists.
+  Selection status:
+  `gate_r_double_leaf_framed_bridge_solver_contract_landed_no_runtime_selected_runtime_promotion_gate_s`.
+  Next file:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-s-double-leaf-framed-bridge-runtime-contract.test.ts`.
+  Next action:
+  `gate_s_promote_double_leaf_framed_bridge_solver_runtime_for_dynamic_calculator`.
+- Gate S:
+  `packages/engine/src/dynamic-airborne-gate-s-double-leaf-framed.ts`
+  promotes the double-leaf / framed bridge solver into Dynamic
+  Calculator runtime for complete explicit contexts. Independent
+  absorbed gypsum / rockwool / gypsum pins `Rw 45`, `STC 45`, `C -1`,
+  `Ctr -6.1`, origin `family_physics_prediction`, and `errorBudgetDb:
+  7`; resilient both-side bridge pins `Rw 46` / `STC 46` with
+  `errorBudgetDb: 8`. Exact source rows remain higher precedence,
+  missing `resilientBarSideCount` remains `needs_input`, and direct
+  fixed / multi-cavity flat-list negative boundaries do not promote.
+  Selection status:
+  `gate_s_double_leaf_framed_bridge_runtime_landed_selected_family_material_gap_gate_t`.
+  Next file:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-t-family-material-gap-closure-contract.test.ts`.
+  Next action:
+  `gate_t_close_remaining_family_material_property_gaps_for_dynamic_calculator`.
+- Gate T:
+  `packages/engine/src/airborne-family-material-gap-closure.ts`
+  closes high-impact material-property gaps for Dynamic Calculator
+  family physics without replacing calculation with a finite source
+  catalog. `absorberClass` is now part of shared acoustic material
+  metadata, and the seed catalog has engineering-default acoustic
+  properties for board leaves/finishes, masonry cores, porous
+  absorbers, floor decks/screeds, limp membranes, and resilient impact
+  layers. Required gaps stay `needs_input`; optional precision gaps
+  widen uncertainty through explicit defaults; runtime values and
+  support buckets stay unchanged. Selection status:
+  `gate_t_family_material_property_gap_closure_landed_no_runtime_selected_next_solver_or_calibration_gate_u`.
+  Next file:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-u-next-solver-or-calibration-selection-contract.test.ts`.
+  Next action:
+  `gate_u_select_next_solver_or_calibration_lane_after_material_gap_closure`.
+- Gate U:
+  `packages/engine/src/dynamic-calculator-next-solver-or-calibration-selection.ts`
+  selects the next solver/calibration lane after Gate T material gap
+  closure without moving runtime values. It ranks floor-impact dynamic
+  stiffness, field/building continuation, generalized multi-cavity,
+  lined masonry/CLT, and calibration holdout lanes, then selects floor
+  impact for Gate V because it is the largest remaining personal-use
+  floor coverage gap with complete material readiness. Calibration
+  holdouts stay later error-budget tightening work; source rows still do
+  not replace the algorithm. Selection status:
+  `gate_u_next_solver_or_calibration_selection_landed_no_runtime_selected_floor_impact_gate_v`.
+  Next file:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-v-floor-impact-dynamic-stiffness-contract.test.ts`.
+  Next action:
+  `gate_v_define_floor_impact_dynamic_stiffness_input_and_adapter_contract_for_dynamic_calculator`.
+- Post-Gate-U revalidation:
+  `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_U_REVALIDATION_AND_COMMIT_HANDOFF.md`
+  confirms the current gate and broad `pnpm check` are green after
+  fixing proposal-surface regressions. The validation result reinforces
+  the same modeling boundary: Gate V should contract floor-impact
+  dynamic stiffness, load basis, ISO 717-2 lab impact adapters, field
+  impact context, and ASTM E989 `IIC`/`AIIC` separation before any
+  runtime impact promotion.
+
+Do not accept broad runtime movement from one happy-path number. A family
+solver is ready only when it has required inputs, named equations or
+method, positive benchmark, nearby negative, hostile-input guard,
+error-budget ownership, and report-visible basis.
+
+Current airborne engine reading before implementation:
+
+- `packages/engine/src/airborne-calculator.ts` currently provides KS
+  `Rw` calibration, mass-law, Sharp, and Kurtovic delegate engines.
+- KS is appropriate as a massive/mineral mass-curve reference where its
+  mass/type range is owned; it is not a generic answer for cavities,
+  framing, field, or impact outputs.
+- Sharp and Kurtovic currently provide single-panel frequency curves and
+  coincidence behavior, plus a limited double-leaf gap adjustment. They
+  are inputs to family solvers, not complete double/framed or multi-leaf
+  solvers by themselves.
+- `packages/engine/src/dynamic-airborne.ts` currently blends these
+  delegates and still uses screening/surrogate strategies for
+  multi-cavity and framed routes. Tests must make those strategies
+  visible and prevent them from being reported as design-grade dynamic
+  calculation.
 
 ## Runtime Pipeline
 
@@ -228,6 +419,12 @@ Use this distinction when deciding whether an answer is "right":
   - source absence is not formula absence; when topology and material inputs are
     sufficient, a formula-backed prediction should still calculate and carry a
     non-exact basis
+- similar-source truth:
+  - measured rows that are close but not exact
+  - can support anchored deltas, calibration corridors, response surfaces,
+    holdouts, or conservative bounds only through a named algorithm
+  - tests should assert topology/metric/basis scope, delta method, residuals or
+    error budget, and a nearby negative that must not borrow the row
 - predictor truth:
   - source-family or published-family estimates that are not exact source rows
   - tests should assert fit/candidate/basis labels and fail-closed boundaries
