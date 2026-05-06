@@ -295,20 +295,27 @@ describe("calculator model-first physics prediction pivot Gate J", () => {
     expect(result.warnings.join("\n")).toContain("not a premium multi-cavity solver");
   });
 
-  it("keeps floor personal-use outputs split between current support and explicit gaps", () => {
+  it("keeps floor personal-use outputs split between current support and explicit physical-input prompts", () => {
     const result = calculateAssembly(FLOATING_HEAVY_FLOOR_STACK, {
       calculator: "dynamic",
       targetOutputs: FLOOR_PERSONAL_USE_OUTPUTS
     });
 
-    expect(result.supportedTargetOutputs).toEqual(["Rw", "Ln,w"]);
-    expect(result.unsupportedTargetOutputs).toEqual(["DeltaLw", "L'n,w", "L'nT,w"]);
-    expect(result.impact).toMatchObject({
-      basis: "predictor_heavy_bare_floor_iso12354_annexc_estimate",
-      scope: "narrow_heavy_concrete_only"
+    expect(result.supportedTargetOutputs).toEqual(["Rw"]);
+    expect(result.unsupportedTargetOutputs).toEqual(["Ln,w", "DeltaLw", "L'n,w", "L'nT,w"]);
+    expect(result.impact).toBeNull();
+    expect(result.airborneBasis).toMatchObject({
+      missingPhysicalInputs: [
+        "loadBasisKgM2",
+        "contextMode",
+        "partitionAreaM2",
+        "receivingRoomVolumeM3",
+        "receivingRoomRt60S"
+      ],
+      origin: "needs_input"
     });
     expect(result.warnings.join("\n")).toContain(
-      "Some requested impact sound outputs are still unavailable for the current input/path"
+      "Dynamic Calculator floor-impact runtime is waiting for loadBasisKgM2"
     );
   });
 

@@ -36,6 +36,7 @@ export async function POST(request: Request) {
       airborneContext: payload.airborneContext ?? null,
       calculator: payload.calculator ?? undefined,
       exactImpactSource: payload.exactImpactSource ?? null,
+      floorImpactContext: payload.floorImpactContext ?? null,
       impactFieldContext: payload.impactFieldContext ?? null,
       impactPredictorInput: payload.impactPredictorInput ?? null,
       targetOutputs: payload.targetOutputs ?? []

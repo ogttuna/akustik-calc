@@ -66,8 +66,9 @@ adapter boundaries pinned.
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_V_HANDOFF.md`
-3. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_U_REVALIDATION_AND_COMMIT_HANDOFF.md`
+2. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_W_HANDOFF.md`
+3. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_V_HANDOFF.md`
+4. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_U_REVALIDATION_AND_COMMIT_HANDOFF.md`
 4. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_U_HANDOFF.md`
 4. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_T_HANDOFF.md`
 5. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_S_HANDOFF.md`
@@ -385,11 +386,28 @@ plan.
 - current selected slice:
   `calculator_model_first_physics_prediction_pivot_v1`
 - current next decision inside the slice:
-  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-w-floor-impact-runtime-contract.test.ts`
+  Gate X planning / contract file for the next Dynamic Calculator solver
+  or field-context boundary should be selected next
   should run
-  `gate_w_promote_floor_impact_dynamic_stiffness_runtime_for_dynamic_calculator`.
+  `gate_x_select_next_dynamic_calculator_solver_or_field_context_boundary`.
 - latest checkpoint:
-  `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_V_HANDOFF.md`.
+  `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_W_HANDOFF.md`.
+- just landed model-first physics prediction pivot Gate W:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-w-floor-impact-runtime-contract.test.ts`
+  landed
+  `gate_w_promote_floor_impact_dynamic_stiffness_runtime_for_dynamic_calculator`.
+  It promotes the complete Dynamic Calculator resilient floating-floor
+  ISO 717-2 lab lane for `Ln,w` / `DeltaLw` only when Gate V's physical
+  input boundary is ready. The runtime predictor now carries explicit
+  `loadBasisKgM2` plus dynamic stiffness into the heavy floating-floor
+  formula, pins the visible support bucket and trace basis to
+  `predictor_heavy_floating_floor_iso12354_annexc_estimate`, and keeps
+  missing load, missing dynamic stiffness, field impact without room
+  context, and ASTM `IIC` / `AIIC` as non-promoted boundaries.
+  Selection status:
+  `gate_w_floor_impact_runtime_landed_selected_next_dynamic_calculator_solver_or_field_context_gate_x`.
+  Selected next action:
+  `gate_x_select_next_dynamic_calculator_solver_or_field_context_boundary`.
 - just landed model-first physics prediction pivot Gate V:
   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-v-floor-impact-dynamic-stiffness-contract.test.ts`
   landed

@@ -1,4 +1,4 @@
-import type { ImpactCalculation, ResolvedLayer } from "@dynecho/shared";
+import type { ImpactCalculation, ImpactPredictorInput, ResolvedLayer } from "@dynecho/shared";
 
 import { isResolvedHeavyConcreteCarrierEligible } from "./heavy-concrete-carrier-eligibility";
 import { getImpactConfidenceForBasis } from "./impact-confidence";
@@ -195,6 +195,80 @@ export function estimateImpactFromLayers(layers: readonly ResolvedLayer[]): Impa
     notes: [
       "Ln,w and DeltaLw are using the narrow heavy-concrete floating-floor estimate path only.",
       `Heavy floating-floor estimate used DeltaLw ≈ 13 log10(m'load) - 14.2 log10(s') + 20.8, with m'load = ${floatingLoadSurfaceMassKgM2} kg/m² and s' = ${ksRound1(dynamicStiffnessMNm3)} MN/m³.`,
+      `Resonance check used f0 ≈ 160 * sqrt(s'/m'load) = ${ksRound1(predictorResonanceHz)} Hz.`
+    ],
+    predictorResonanceHz: ksRound1(predictorResonanceHz),
+    resilientDynamicStiffnessMNm3: ksRound1(dynamicStiffnessMNm3),
+    scope: "narrow_heavy_concrete_only"
+  };
+}
+
+function computePredictorBaseSurfaceMassKgM2(
+  input: ImpactPredictorInput
+): number | null {
+  const densityKgM3 = input.baseSlab?.densityKgM3;
+  const thicknessMm = input.baseSlab?.thicknessMm;
+
+  if (!(typeof densityKgM3 === "number" && densityKgM3 > 0 && typeof thicknessMm === "number" && thicknessMm > 0)) {
+    return null;
+  }
+
+  const surfaceMassKgM2 = round1(densityKgM3 * (thicknessMm / 1000));
+  return meetsHeavyConcreteBaseSurfaceMassThreshold(surfaceMassKgM2) ? surfaceMassKgM2 : null;
+}
+
+export function estimateImpactFromPredictorInput(
+  input: ImpactPredictorInput
+): ImpactCalculation | null {
+  if (
+    input.structuralSupportType !== "reinforced_concrete" ||
+    input.impactSystemType !== "heavy_floating_floor"
+  ) {
+    return null;
+  }
+
+  const baseSurfaceMassKgM2 = computePredictorBaseSurfaceMassKgM2(input);
+  const dynamicStiffnessMNm3 = input.resilientLayer?.dynamicStiffnessMNm3;
+  const loadBasisKgM2 = input.loadBasisKgM2;
+
+  if (
+    !(typeof baseSurfaceMassKgM2 === "number" && baseSurfaceMassKgM2 > 0) ||
+    !(typeof dynamicStiffnessMNm3 === "number" && dynamicStiffnessMNm3 > 0) ||
+    !(typeof loadBasisKgM2 === "number" && loadBasisKgM2 > 0)
+  ) {
+    return null;
+  }
+
+  const bareReferenceLnW = computeBareMassiveFloorLnWEstimate(baseSurfaceMassKgM2);
+  const deltaLw = computeFloatingFloorDeltaLwEstimate(loadBasisKgM2, dynamicStiffnessMNm3);
+  const predictorResonanceHz = computeFloatingFloorResonanceHz(loadBasisKgM2, dynamicStiffnessMNm3);
+
+  if (!Number.isFinite(bareReferenceLnW) || !Number.isFinite(deltaLw) || !Number.isFinite(predictorResonanceHz)) {
+    return null;
+  }
+
+  const roundedDeltaLw = ksRound1(deltaLw);
+  const lnW = ksRound1(bareReferenceLnW - deltaLw);
+
+  return {
+    LnW: lnW,
+    DeltaLw: roundedDeltaLw,
+    availableOutputs: ["Ln,w", "DeltaLw"],
+    bareReferenceLnW: ksRound1(bareReferenceLnW),
+    baseSurfaceMassKgM2,
+    basis: "predictor_heavy_floating_floor_iso12354_annexc_estimate",
+    confidence: getImpactConfidenceForBasis("predictor_heavy_floating_floor_iso12354_annexc_estimate"),
+    metricBasis: buildUniformImpactMetricBasis(
+      {
+        DeltaLw: roundedDeltaLw,
+        LnW: lnW
+      },
+      "predictor_heavy_floating_floor_iso12354_annexc_estimate"
+    ),
+    floatingLoadSurfaceMassKgM2: ksRound1(loadBasisKgM2),
+    notes: [
+      "Ln,w and DeltaLw are using the Dynamic Calculator heavy-concrete floating-floor estimate path.",
+      `Heavy floating-floor estimate used DeltaLw ≈ 13 log10(m'load) - 14.2 log10(s') + 20.8, with explicit m'load = ${ksRound1(loadBasisKgM2)} kg/m² and s' = ${ksRound1(dynamicStiffnessMNm3)} MN/m³.`,
       `Resonance check used f0 ≈ 160 * sqrt(s'/m'load) = ${ksRound1(predictorResonanceHz)} Hz.`
     ],
     predictorResonanceHz: ksRound1(predictorResonanceHz),

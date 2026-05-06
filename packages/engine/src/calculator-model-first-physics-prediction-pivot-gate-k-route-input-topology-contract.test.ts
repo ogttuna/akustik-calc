@@ -345,7 +345,7 @@ describe("calculator model-first physics prediction pivot Gate K", () => {
     });
   });
 
-  it("does not move current Dynamic Calculator runtime values while adding the input contract", () => {
+  it("keeps later floor-impact runtime honest when required physical inputs are missing", () => {
     const grouped = calculateAssembly(GROUPED_SPLIT_ROCKWOOL_STACK, {
       airborneContext: GROUPED_SPLIT_ROCKWOOL_CONTEXT,
       calculator: "dynamic",
@@ -370,8 +370,19 @@ describe("calculator model-first physics prediction pivot Gate K", () => {
     expect(aconLike.metrics.estimatedRwDb).toBe(40);
     expect(aconLike.supportedTargetOutputs).toEqual([]);
     expect(aconLike.unsupportedTargetOutputs).toEqual(["Rw", "STC", "C", "Ctr"]);
-    expect(floor.supportedTargetOutputs).toEqual(["Rw", "Ln,w"]);
-    expect(floor.unsupportedTargetOutputs).toEqual(["DeltaLw", "L'n,w", "L'nT,w"]);
+    expect(floor.supportedTargetOutputs).toEqual(["Rw"]);
+    expect(floor.unsupportedTargetOutputs).toEqual(["Ln,w", "DeltaLw", "L'n,w", "L'nT,w"]);
+    expect(floor.impact).toBeNull();
+    expect(floor.airborneBasis).toMatchObject({
+      missingPhysicalInputs: [
+        "loadBasisKgM2",
+        "contextMode",
+        "partitionAreaM2",
+        "receivingRoomVolumeM3",
+        "receivingRoomRt60S"
+      ],
+      origin: "needs_input"
+    });
   });
 
   it("keeps docs and current-gate runner aligned with Gate K closeout", () => {

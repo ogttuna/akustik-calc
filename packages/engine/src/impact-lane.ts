@@ -29,7 +29,7 @@ import {
 } from "./floor-system-match";
 import { buildExactImpactFromSource } from "./impact-exact";
 import { applyImpactFieldContextToBoundImpact, applyImpactFieldContextToImpact } from "./impact-field-context";
-import { estimateImpactFromLayers } from "./impact-estimate";
+import { estimateImpactFromLayers, estimateImpactFromPredictorInput } from "./impact-estimate";
 import { buildImpactPredictorStatus } from "./impact-predictor-status";
 import {
   filterImpactCatalogMatchForExplicitPredictorInput,
@@ -172,18 +172,28 @@ export function resolveLayerBasedImpactLane(
   const floorSystemRecommendations = floorSystemMatch
     ? []
     : recommendFloorSystems(input.resolvedLayers, FLOOR_SYSTEM_VISIBLE_RECOMMENDATION_LIMIT);
+  const predictorFormulaImpact =
+    input.predictorInput &&
+    !input.officialFloorSystemId &&
+    !floorSystemMatch &&
+    !boundFloorSystemMatch &&
+    !impactCatalogMatch &&
+    !explicitDeltaImpact
+      ? estimateImpactFromPredictorInput(input.predictorInput)
+      : null;
   const predictorSpecificFloorSystemEstimate =
     input.predictorInput &&
     !input.officialFloorSystemId &&
     !floorSystemMatch &&
     !boundFloorSystemMatch &&
-    !impactCatalogMatch
+    !impactCatalogMatch &&
+    !predictorFormulaImpact
       ? derivePredictorSpecificFloorSystemEstimate(input.predictorInput)
       : null;
   const narrowImpact =
     input.officialFloorSystemId || explicitDeltaImpact || rejectProductDeltaFormulaFallback
       ? null
-      : estimateImpactFromLayers(input.resolvedLayers);
+      : predictorFormulaImpact ?? estimateImpactFromLayers(input.resolvedLayers);
   const boundFloorSystemEstimate =
     !input.exactImpact &&
     !floorSystemMatch &&

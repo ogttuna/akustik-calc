@@ -2,7 +2,7 @@
 
 Slice id: `calculator_model_first_physics_prediction_pivot_v1`
 
-Status: SELECTED / GATE W NEXT / GATE V LANDED
+Status: SELECTED / GATE W LANDED / GATE X SELECTION NEXT
 
 Selected by:
 
@@ -12,19 +12,34 @@ queue.
 
 Selection status:
 
-`gate_v_floor_impact_dynamic_stiffness_contract_landed_no_runtime_selected_floor_impact_runtime_gate_w`
+`gate_w_floor_impact_runtime_landed_selected_next_dynamic_calculator_solver_or_field_context_gate_x`
 
-Latest Gate V checkpoint:
+Latest Gate W checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_V_HANDOFF.md`
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_W_HANDOFF.md`
 
-Selected Gate W file:
+Gate W landed file:
 
 `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-w-floor-impact-runtime-contract.test.ts`
 
-Selected Gate W action:
+Gate W landed action:
 
 `gate_w_promote_floor_impact_dynamic_stiffness_runtime_for_dynamic_calculator`
+
+Selected next Gate X action:
+
+`gate_x_select_next_dynamic_calculator_solver_or_field_context_boundary`
+
+Gate W validation result:
+
+Focused Gate W, focused Gate V, Gate J/K regressions, engine typecheck,
+`pnpm calculator:gate:current`, broad `pnpm check`, and
+`git diff --check` are green. Known optional `sharp/@img` Next build
+warnings remain non-fatal.
+
+Previous Gate V selection status:
+
+`gate_v_floor_impact_dynamic_stiffness_contract_landed_no_runtime_selected_floor_impact_runtime_gate_w`
 
 Latest revalidation / commit-prep checkpoint:
 
@@ -421,6 +436,19 @@ dynamic stiffness, missing load, field impact without room context, and
 reorders normalize, source absence remains only an exact/calibration
 blocker, and runtime values do not move. Gate W is selected for runtime
 promotion using this contract boundary.
+
+Gate W landing note:
+
+Gate W promotes only the complete Dynamic Calculator resilient
+floating-floor ISO 717-2 lab lane for `Ln,w` / `DeltaLw`. It adds
+`loadBasisKgM2` to the impact predictor input, carries explicit load and
+dynamic stiffness through the heavy floating-floor formula, and pins the
+runtime support bucket to
+`predictor_heavy_floating_floor_iso12354_annexc_estimate` at
+`DeltaLw 24.3` / `LnW 50.3`. Missing load, missing dynamic stiffness,
+field impact without room context, and ASTM `IIC` / `AIIC` remain
+non-promoted boundaries. Gate X is selected to choose the next Dynamic
+Calculator solver or field-context boundary.
 
 Selected planning surface:
 

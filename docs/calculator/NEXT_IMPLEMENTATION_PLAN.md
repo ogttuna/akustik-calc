@@ -65,7 +65,7 @@ unsafe reorders. Lab, field, and building-prediction bases must stay
 separate; `Rw`/`STC`, `Ln,w`/`IIC`, and lab/field values are not
 interchangeable without a named rating and measurement basis.
 
-## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate V Landed / Gate W Selected
+## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate W Landed / Gate X Selection Next
 
 Current implementation position:
 `calculator_model_first_physics_prediction_pivot_v1`.
@@ -498,37 +498,53 @@ and nearby-negative tests. `L'n,w` / `L'nT,w` remain field-context
 outputs and `IIC` / `AIIC` remain blocked until ASTM E989 ownership is
 implemented.
 
-Runtime numeric values and support buckets did not move in Gate V.
-Current floor pins remain `DeltaLw 24.3` / `LnW 50.3` for the heavy
-floating-floor predictor scenario. Safe role-defined floor reorders
-normalize through the existing topology normalizer without moving
-runtime values.
+Gate W moved Dynamic Calculator floor-impact runtime only inside the
+complete Gate V lab boundary. Current promoted floor pins are
+`DeltaLw 24.3` / `LnW 50.3` for the heavy floating-floor predictor
+scenario with explicit `loadBasisKgM2` and dynamic stiffness. Missing
+load, missing dynamic stiffness, field impact without room context, and
+ASTM `IIC` / `AIIC` remain non-promoted boundaries.
 
 Clean next-step queue:
 
-1. Gate W floor-impact dynamic-stiffness runtime promotion for Dynamic
-   Calculator, using the Gate V contract as the acceptance boundary.
+1. Gate X selection for the next Dynamic Calculator solver or
+   field-context boundary after Gate W floor-impact runtime promotion.
 2. Keep source packet acquisition/calibration rows as later anchors or
    exact overrides only
    through the Gate H policy.
 
-Gate W implementation breakdown:
+Gate W landed summary:
 
-1. Add
+1. Added
    `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-w-floor-impact-runtime-contract.test.ts`.
-2. Promote only the complete resilient floating-floor lab lane where
-   Gate V reports `ready_for_runtime_gate` for `Ln,w` / `DeltaLw`.
-3. Keep `L'n,w`, `L'nT,w`, `IIC`, and `AIIC` out of runtime promotion
-   unless their Gate V adapter boundaries are ready; do not alias lab
-   `Ln,w` to field or ASTM ratings.
-4. Pin visible card/report parity and runtime values against the
-   predictor scenario, including support bucket, basis/origin, and error
-   budget.
-5. Add nearby negatives for missing `loadBasisKgM2`, missing
+2. Promoted only the complete resilient floating-floor lab lane where
+   Gate V's ISO 717-2 adapter is ready for `Ln,w` / `DeltaLw`.
+3. Added `loadBasisKgM2` to the impact predictor input and fed it into
+   the heavy floating-floor formula instead of relying on a hidden
+   source row.
+4. Kept `L'n,w`, `L'nT,w`, `IIC`, and `AIIC` out of runtime promotion;
+   lab `Ln,w` is not aliased to field or ASTM ratings.
+5. Added nearby negatives for missing `loadBasisKgM2`, missing
    `resilientLayerDynamicStiffnessMNm3`, unsupported ASTM ratings, and
    field outputs without room context.
-6. Run focused Gate W, Gate V, `pnpm calculator:gate:current`, and
-   broad checks before selecting the next step.
+
+Gate W landed status:
+
+`gate_w_floor_impact_runtime_landed_selected_next_dynamic_calculator_solver_or_field_context_gate_x`
+
+Gate W selected next action:
+
+`gate_x_select_next_dynamic_calculator_solver_or_field_context_boundary`
+
+Gate W validation result:
+
+- focused Gate W, focused Gate V, and Gate J/K regression tests are
+  green;
+- `pnpm --filter @dynecho/engine typecheck` is green;
+- `pnpm calculator:gate:current` is green;
+- broad `pnpm check` is green, including full engine/web tests and
+  build; the known optional `sharp/@img` warnings remain non-fatal;
+- `git diff --check` is green.
 
 Gate V landed status:
 

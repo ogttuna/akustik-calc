@@ -40,6 +40,13 @@ import {
   buildDynamicCalculatorCandidateResolverRuntime,
   inferDynamicCalculatorRuntimeRoute
 } from "./dynamic-calculator-candidate-resolver-runtime";
+import {
+  type DynamicCalculatorFloorImpactContext
+} from "./dynamic-calculator-route-input-topology";
+import {
+  buildGateVFloorImpactDynamicStiffnessContract,
+  type GateVFloorImpactDynamicStiffnessContract
+} from "./dynamic-calculator-floor-impact-dynamic-stiffness-contract";
 import { clamp, round1 } from "./math";
 import { buildEstimateWarnings, estimateRwDb } from "./estimate-rw";
 import { hasBoundOnlyUbiqOpenWebCarpetCombinedProfile } from "./bound-only-floor-near-miss";
@@ -102,10 +109,88 @@ export type CalculateAssemblyOptions = {
   calculator?: AirborneCalculatorId | null;
   catalog?: readonly MaterialDefinition[];
   exactImpactSource?: ExactImpactSource | null;
+  floorImpactContext?: DynamicCalculatorFloorImpactContext | null;
   impactFieldContext?: ImpactFieldContext | null;
   impactPredictorInput?: ImpactPredictorInput | null;
   targetOutputs?: readonly RequestedOutputId[];
 };
+
+const GATE_W_FLOOR_IMPACT_OUTPUTS = new Set<RequestedOutputId>([
+  "AIIC",
+  "DeltaLw",
+  "HIIC",
+  "IIC",
+  "LIIC",
+  "L'n,w",
+  "L'nT,50",
+  "L'nT,w",
+  "Ln,w",
+  "LnT,A"
+]);
+
+function hasGateWFloorImpactRequest(targetOutputs: readonly RequestedOutputId[]): boolean {
+  return targetOutputs.some((output) => GATE_W_FLOOR_IMPACT_OUTPUTS.has(output));
+}
+
+function gateWLabImpactRuntimeReady(
+  contract: GateVFloorImpactDynamicStiffnessContract | null
+): boolean {
+  const labBoundary = contract?.adapterBoundaries.find(
+    (boundary) => boundary.adapterId === "ISO_717_2_Lnw_DeltaLw"
+  );
+
+  return Boolean(
+    labBoundary &&
+      labBoundary.status === "ready" &&
+      labBoundary.requestedOutputs.length > 0 &&
+      labBoundary.missingPhysicalInputs.length === 0
+  );
+}
+
+function resolveFloorImpactDynamicStiffness(input: {
+  catalog: readonly MaterialDefinition[];
+  floorImpactContext?: DynamicCalculatorFloorImpactContext | null;
+  layers: readonly LayerInput[];
+}): number | undefined {
+  const explicit = input.floorImpactContext?.resilientLayerDynamicStiffnessMNm3;
+  if (typeof explicit === "number" && explicit > 0) {
+    return explicit;
+  }
+
+  for (const layer of input.layers) {
+    if (layer.floorRole !== "resilient_layer") {
+      continue;
+    }
+
+    const material = input.catalog.find((entry) => entry.id === layer.materialId);
+    const dynamicStiffnessMNm3 = material?.impact?.dynamicStiffnessMNm3;
+    if (typeof dynamicStiffnessMNm3 === "number" && dynamicStiffnessMNm3 > 0) {
+      return dynamicStiffnessMNm3;
+    }
+  }
+
+  return undefined;
+}
+
+function buildGateWImpactPredictorSeed(input: {
+  catalog: readonly MaterialDefinition[];
+  floorImpactContext?: DynamicCalculatorFloorImpactContext | null;
+  layers: readonly LayerInput[];
+}): ImpactPredictorInput {
+  const dynamicStiffnessMNm3 = resolveFloorImpactDynamicStiffness(input);
+  const loadBasisKgM2 = input.floorImpactContext?.loadBasisKgM2;
+
+  return {
+    ...(typeof loadBasisKgM2 === "number" && loadBasisKgM2 > 0 ? { loadBasisKgM2 } : {}),
+    ...(typeof dynamicStiffnessMNm3 === "number" && dynamicStiffnessMNm3 > 0
+      ? {
+          resilientLayer: {
+            dynamicStiffnessMNm3
+          }
+        }
+      : {})
+  };
+}
 
 function resolveLayers(
   layers: readonly LayerInput[],
@@ -889,6 +974,26 @@ export function calculateAssembly(
   const exactImpactSource = options.exactImpactSource ? ExactImpactSourceSchema.parse(options.exactImpactSource) : null;
   const impactFieldContext = options.impactFieldContext ? ImpactFieldContextSchema.parse(options.impactFieldContext) : null;
   const airborneContext = options.airborneContext ? AirborneContextSchema.parse(options.airborneContext) : null;
+  const targetOutputs = options.targetOutputs ?? [];
+  const floorImpactContext = options.floorImpactContext ?? null;
+  const gateWFloorImpactContract =
+    options.calculator === "dynamic" && hasGateWFloorImpactRequest(targetOutputs)
+      ? buildGateVFloorImpactDynamicStiffnessContract({
+          airborneContext: airborneContext ?? undefined,
+          catalog: baseCatalog,
+          floorImpactContext: floorImpactContext ?? undefined,
+          layers,
+          targetOutputs
+        })
+      : null;
+  const gateWLabRuntimeReady = gateWLabImpactRuntimeReady(gateWFloorImpactContract);
+  const gateWImpactPredictorSeed = gateWLabRuntimeReady
+    ? buildGateWImpactPredictorSeed({
+        catalog: baseCatalog,
+        floorImpactContext,
+        layers
+      })
+    : {};
   const resolvedLayers = resolveLayers(layers, catalog);
   const hasFullyTaggedFloorStack = layers.length > 0 && layers.every((layer) => Boolean(layer.floorRole));
   const normalizedExplicitImpactLayers = hasFullyTaggedFloorStack
@@ -1002,7 +1107,12 @@ export function calculateAssembly(
     !directImpactLane.boundFloorSystemMatch &&
     !directImpactLane.impactCatalogMatch
   ) {
-    const derivedPredictorInput = maybeBuildImpactPredictorInputFromLayerStack(layers, {}, undefined, catalog);
+    const derivedPredictorInput = maybeBuildImpactPredictorInputFromLayerStack(
+      layers,
+      gateWImpactPredictorSeed,
+      undefined,
+      catalog
+    );
 
     if (derivedPredictorInput) {
       const derivedPredictorAdaptation = adaptImpactPredictorInput(derivedPredictorInput);
@@ -1022,11 +1132,12 @@ export function calculateAssembly(
         !blocksBoundOnlyUbiqOpenWebCarpetDerivedEstimate &&
         (
           Boolean(
-            derivedImpactLane.floorSystemMatch ||
+              derivedImpactLane.floorSystemMatch ||
               derivedImpactLane.boundFloorSystemMatch ||
               derivedImpactLane.impactCatalogMatch ||
-              derivedImpactLane.predictorSpecificFloorSystemEstimate
-          ) ||
+              derivedImpactLane.predictorSpecificFloorSystemEstimate ||
+              (gateWLabRuntimeReady && derivedImpactLane.narrowImpact)
+            ) ||
           (!directNarrowImpact &&
             !directImpactLane.floorSystemEstimate &&
             !directImpactLane.boundFloorSystemEstimate &&
@@ -1054,6 +1165,26 @@ export function calculateAssembly(
       }
     }
   }
+
+  const shouldWithholdUnreadyDynamicFloorImpactRuntime = Boolean(
+    options.calculator === "dynamic" &&
+      gateWFloorImpactContract &&
+      !gateWLabRuntimeReady &&
+      !exactImpact &&
+      !floorSystemMatch &&
+      !boundFloorSystemMatch &&
+      !impactCatalogMatch
+  );
+
+  if (shouldWithholdUnreadyDynamicFloorImpactRuntime) {
+    predictorInput = explicitPredictorInput;
+    predictorInputMode = explicitPredictorInput ? "explicit_predictor_input" : undefined;
+    floorSystemEstimate = null;
+    boundFloorSystemEstimate = null;
+    narrowImpact = null;
+    explicitDeltaImpact = null;
+  }
+
   const rawFloorRolePromptGuard =
     !explicitPredictorInput && !exactImpactSource
       ? getRawFloorRolePromptGuard({
@@ -1188,6 +1319,7 @@ export function calculateAssembly(
   const dynamicCandidateResolverRuntime = options.calculator === "dynamic"
     ? buildDynamicCalculatorCandidateResolverRuntime({
         airborneContext,
+        floorImpactContext,
         layers,
         route: inferDynamicCalculatorRuntimeRoute({
           layers,
@@ -1226,6 +1358,14 @@ export function calculateAssembly(
     warnings.push(rockwoolSplitTripleLeafExactOutputWithhold.warning);
   }
   warnings.push(...buildTargetOutputWarnings(targetOutputSupport));
+
+  if (shouldWithholdUnreadyDynamicFloorImpactRuntime && gateWFloorImpactContract) {
+    warnings.push(
+      gateWFloorImpactContract.missingPhysicalInputs.length > 0
+        ? `Dynamic Calculator floor-impact runtime is waiting for ${gateWFloorImpactContract.missingPhysicalInputs.join(", ")} before promoting Ln,w / DeltaLw from the physics lane.`
+        : "Dynamic Calculator floor-impact runtime did not promote this adapter set; lab Ln,w / DeltaLw, field impact, and ASTM IIC/AIIC stay on separate runtime boundaries."
+    );
+  }
 
   if (predictorAdaptation) {
     warnings.push(...predictorAdaptation.notes);

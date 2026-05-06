@@ -29,15 +29,16 @@ path was found too narrow for the user's calculator-first goal.
 
 Current selected status:
 
-`gate_v_floor_impact_dynamic_stiffness_contract_landed_no_runtime_selected_floor_impact_runtime_gate_w`
+`gate_w_floor_impact_runtime_landed_selected_next_dynamic_calculator_solver_or_field_context_gate_x`
 
 Selected next implementation file:
 
-`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-w-floor-impact-runtime-contract.test.ts`
+Gate X planning / contract file for the next Dynamic Calculator solver
+or field-context boundary is the next selection item.
 
 Selected next action:
 
-`gate_w_promote_floor_impact_dynamic_stiffness_runtime_for_dynamic_calculator`
+`gate_x_select_next_dynamic_calculator_solver_or_field_context_boundary`
 
 Active planning surface:
 
@@ -45,36 +46,56 @@ Active planning surface:
 
 Latest landed gate:
 
-2026-05-07 model-first physics prediction pivot Gate V floor-impact
-dynamic-stiffness input / adapter contract.
+2026-05-07 model-first physics prediction pivot Gate W floor-impact
+dynamic-stiffness runtime promotion.
 
 Latest checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_V_HANDOFF.md`
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_W_HANDOFF.md`
 
-Gate V result:
+Gate W result:
 
-- Dynamic Calculator now has a no-runtime floor-impact input/adapter
-  contract in
-  `packages/engine/src/dynamic-calculator-floor-impact-dynamic-stiffness-contract.ts`;
-- resilient floating-floor `Ln,w` / `DeltaLw` requires
-  `resilientLayerDynamicStiffnessMNm3` and `loadBasisKgM2`;
-- missing dynamic stiffness, missing load basis, field-output requests
-  without room context, and `IIC` / `AIIC` requests are executable
-  positive/nearby-negative scenarios;
-- `L'n,w` / `L'nT,w` stay field-context outputs and `IIC` / `AIIC`
-  remain unsupported until ASTM E989 ownership is implemented;
-- safe role-defined floor reorders normalize without runtime value
-  movement; current floor runtime pins remain `DeltaLw 24.3` /
-  `LnW 50.3`.
+- Dynamic Calculator promotes only the complete ISO 717-2 lab
+  resilient floating-floor `Ln,w` / `DeltaLw` lane when
+  `resilientLayerDynamicStiffnessMNm3` and `loadBasisKgM2` are ready;
+- the runtime predictor carries explicit `loadBasisKgM2` into the
+  heavy floating-floor formula and pins the promoted scenario at
+  `DeltaLw 24.3` / `LnW 50.3` with basis
+  `predictor_heavy_floating_floor_iso12354_annexc_estimate`;
+- missing load basis, missing dynamic stiffness, field impact without
+  room context, and ASTM `IIC` / `AIIC` stay non-promoted boundaries;
+- safe role-defined floor reorders keep the same promoted values.
 
-Gate V selected Gate W file:
+Gate W landed file:
 
 `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-w-floor-impact-runtime-contract.test.ts`
 
-Gate V selected Gate W action:
+Gate W landed action:
 
 `gate_w_promote_floor_impact_dynamic_stiffness_runtime_for_dynamic_calculator`
+
+Gate W selected next action:
+
+`gate_x_select_next_dynamic_calculator_solver_or_field_context_boundary`
+
+Previous Gate V selection status:
+
+`gate_v_floor_impact_dynamic_stiffness_contract_landed_no_runtime_selected_floor_impact_runtime_gate_w`
+
+Gate W validation result:
+
+- focused Gate W passed: 1 file / 6 tests;
+- focused Gate V regression passed: 1 file / 6 tests;
+- Gate J/K historical floor-output regressions now assert the Gate W
+  `needs_input` boundary and pass: 2 files / 16 tests;
+- `pnpm --filter @dynecho/engine typecheck` passed;
+- `pnpm calculator:gate:current` passed with engine 303 files / 1728
+  tests, web 62 files / 275 tests plus 18 skipped, repo build, and
+  whitespace guard;
+- `pnpm check` passed with full engine 428 files / 2530 tests and full
+  web 168 files / 950 tests plus 18 skipped; known optional
+  `sharp/@img` Next build warnings remain non-fatal;
+- `git diff --check` passed.
 
 Latest revalidation / commit-prep checkpoint:
 

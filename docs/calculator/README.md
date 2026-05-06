@@ -19,7 +19,7 @@ required topology and material inputs are present.
 
 Gate A, Gate B, Gate C, Gate D, Gate E, Gate G, Gate H, Gate I,
 Gate J, Gate K, Gate L, Gate M, Gate N, Gate O, Gate P, Gate Q, Gate R,
-Gate S, Gate T, Gate U, and Gate V for this pivot have
+Gate S, Gate T, Gate U, Gate V, and Gate W for this pivot have
 landed. Gate A made the corrected rule executable: source absence
 blocks exact/calibration promotion only, not formula-backed prediction.
 Gate B added shared airborne `airborneBasis` / `airborneCandidateSet`
@@ -136,18 +136,44 @@ values produce targeted `needs_input`. `L'n,w` / `L'nT,w` stay field
 context outputs, `IIC` / `AIIC` remain blocked behind an ASTM E989
 adapter owner, and safe role-defined floor reorders normalize without
 runtime value movement.
+Gate W promotes that floor-impact dynamic-stiffness lane into Dynamic
+Calculator runtime only for complete ISO 717-2 lab resilient
+floating-floor `Ln,w` / `DeltaLw` requests. The runtime predictor carries
+explicit `loadBasisKgM2` into the heavy floating-floor estimate and pins
+the promoted scenario at `DeltaLw 24.3` / `LnW 50.3` with basis
+`predictor_heavy_floating_floor_iso12354_annexc_estimate`. Missing load
+basis, missing dynamic stiffness, field impact outputs without
+room/context ownership, and ASTM `IIC` / `AIIC` remain non-promoted
+boundaries.
 
 Current selection status:
 
+`gate_w_floor_impact_runtime_landed_selected_next_dynamic_calculator_solver_or_field_context_gate_x`
+
+Selected next Gate X file:
+
+Gate X planning / contract file for the next Dynamic Calculator solver
+or field-context boundary is the next selection item.
+
+Selected next Gate X action:
+
+`gate_x_select_next_dynamic_calculator_solver_or_field_context_boundary`
+
+Previous Gate V selection status:
+
 `gate_v_floor_impact_dynamic_stiffness_contract_landed_no_runtime_selected_floor_impact_runtime_gate_w`
 
-Selected next Gate W file:
+Gate V selected Gate W file:
 
 `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-w-floor-impact-runtime-contract.test.ts`
 
-Selected next Gate W action:
+Gate V selected Gate W action:
 
 `gate_w_promote_floor_impact_dynamic_stiffness_runtime_for_dynamic_calculator`
+
+Latest Gate W checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_W_HANDOFF.md`
 
 Previous Gate U selection status:
 
@@ -161,7 +187,7 @@ Gate U selected Gate V action:
 
 `gate_v_define_floor_impact_dynamic_stiffness_input_and_adapter_contract_for_dynamic_calculator`
 
-Latest Gate V checkpoint:
+Previous Gate V checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_V_HANDOFF.md`
 

@@ -89,6 +89,7 @@ const ImpactPredictorInputSchemaInternal = z.object({
   floorCovering: ImpactPredictorFloorCoveringSchema.optional(),
   floatingScreed: ImpactPredictorSectionSchema.optional(),
   impactSystemType: ImpactPredictorSystemTypeSchema.optional(),
+  loadBasisKgM2: z.number().positive().optional(),
   lowerTreatment: ImpactPredictorLowerTreatmentSchema.optional(),
   officialFloorSystemId: z.string().min(1).optional(),
   referenceFloorType: z.string().min(1).optional(),

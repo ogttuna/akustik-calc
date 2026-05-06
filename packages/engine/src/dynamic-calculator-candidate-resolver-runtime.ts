@@ -15,6 +15,7 @@ import {
 import {
   buildDynamicCalculatorRouteInputTopologyAssessment,
   type DynamicCalculatorRoute,
+  type DynamicCalculatorFloorImpactContext,
   type DynamicCalculatorRouteInputTopologyAssessment
 } from "./dynamic-calculator-route-input-topology";
 import {
@@ -47,6 +48,7 @@ export type DynamicCalculatorCandidateResolverRuntimeSignal = {
 
 export type DynamicCalculatorCandidateResolverRuntimeInput = {
   airborneContext?: AirborneContext | null;
+  floorImpactContext?: DynamicCalculatorFloorImpactContext | null;
   layers: readonly LayerInput[];
   route: DynamicCalculatorRoute;
   runtimeSignal?: DynamicCalculatorCandidateResolverRuntimeSignal | null;
@@ -733,12 +735,14 @@ export function buildDynamicCalculatorCandidateResolverRuntime(
   const targetOutputs = outputIds(input.targetOutputs, input.route);
   const topologyNormalization = normalizeDynamicCalculatorTopologyInput({
     airborneContext: input.airborneContext ?? undefined,
+    floorImpactContext: input.floorImpactContext ?? undefined,
     layers: input.layers,
     route: input.route,
     targetOutputs
   });
   const routeInputAssessment = buildDynamicCalculatorRouteInputTopologyAssessment({
     airborneContext: input.airborneContext ?? undefined,
+    floorImpactContext: input.floorImpactContext ?? undefined,
     layers: topologyNormalization.normalizedLayers,
     route: input.route,
     sourceEvidenceAvailable: Boolean(input.sourceAnchor?.applied),
