@@ -1,6 +1,6 @@
 # System Map
 
-Last reviewed: 2026-04-27
+Last reviewed: 2026-05-05
 
 Document role:
 
@@ -12,17 +12,25 @@ Document role:
 
 Use this together with the agent resume triangle:
 
+- [../../AGENTS.md](../../AGENTS.md) — repository-level calculator
+  authority order
+- [SLICE_CALCULATOR_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_V1_PLAN.md](./SLICE_CALCULATOR_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_V1_PLAN.md)
+  — active model-first physics prediction pivot
+- [CHECKPOINT_2026-05-05_DOC_IMPLEMENTATION_RECONCILIATION_HANDOFF.md](./CHECKPOINT_2026-05-05_DOC_IMPLEMENTATION_RECONCILIATION_HANDOFF.md)
+  — latest doc/implementation reconciliation
+- [CHECKPOINT_2026-05-05_STANDARDS_RESEARCH_PLAN_DETAIL_HANDOFF.md](./CHECKPOINT_2026-05-05_STANDARDS_RESEARCH_PLAN_DETAIL_HANDOFF.md)
+  — latest standards research and plan detail
 - [CURRENT_STATE.md](./CURRENT_STATE.md) — snapshot (what just closed, what is selected)
 - [MASTER_PLAN.md](./MASTER_PLAN.md) — strategic roadmap + implementation state grid (§3)
 - [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md) — tactical slice detail
-- [SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md](./SLICE_PROJECT_ACCESS_POLICY_ROUTE_INTEGRATION_PLAN.md)
-  — active productization planning surface
-- [POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md](./POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md)
-  — active productization roadmap after calculator readiness closeout
+- [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
+  — answer-origin and validation contract
 
 And:
 
-- [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
+- [POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md](./POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md)
+  for productization backlog only; it is not the active calculator
+  behavior plan.
 
 ## Product Contract
 
@@ -32,14 +40,45 @@ The user picks a study mode, builds a layer stack, fills any required context,
 and requests outputs such as `Rw`, `R'w`, `DnT,w`, `Ln,w`, `L'n,w`, or
 `L'nT,w`. The system must do three things correctly:
 
-- calculate the right value when a route legitimately supports that output
-- refuse to fabricate unsupported outputs and instead surface `needs_input` or
-  `unsupported`
+- calculate the right value when a route legitimately supports that
+  output, using exact data when available and family-specific physics
+  when exact data is absent
+- surface `needs_input` only when required physical/context inputs are
+  missing, and `unsupported` only when the route genuinely has no
+  bounded calculation path
 - keep the same answer/support posture stable under duplicate rows, row reorders,
   save/load replay, study-mode detours, and other hostile operator behavior
 
 A green result is only valid if both the number and its support/origin posture
 are correct.
+
+## Active Model-First Correction
+
+The current active correction is that this project is not a lookup
+database. Lab/source rows are allowed to win exact whole-stack matches,
+anchor known subassemblies, calibrate solver families, benchmark
+tolerances, and provide regression tests. They must not replace the
+calculator engine.
+
+When no exact whole-stack row exists, the engine should still build the
+best calculation candidate it can:
+
+- exact full-stack source row;
+- exact subassembly plus calculated delta;
+- calibrated family physics;
+- family physics prediction;
+- bounded prediction;
+- screening fallback;
+- `needs_input`;
+- `unsupported`.
+
+Implementation is not fully there yet. Impact already has the closest
+candidate precedence pattern in `packages/engine/src/impact-lane.ts`.
+Airborne/wall still needs the equivalent candidate/basis resolver.
+`packages/engine/src/wall-triple-leaf-frequency-solver.ts` can produce
+triple-leaf/two-cavity ratings, but current runtime still uses
+`multileaf_screening_blend` for grouped Rockwool until the model-first
+runtime gate deliberately promotes a labelled prediction.
 
 ## End-To-End User Flow
 
@@ -167,14 +206,18 @@ multi-user project persistence.
 
 ## Answer Model
 
-There is no single universal acoustic formula in the repo.
+There is no single universal acoustic formula in the repo, and there
+must not be a lookup-only answer path either.
 
 A visible answer can be owned by:
 
 - exact imported/source-backed rows
-- local formula lanes
-- predictor/family estimate lanes
+- exact subassembly anchors plus calculated deltas
+- calibrated family-specific formula lanes
+- family physics prediction lanes
 - conservative bound lanes
+- screening fallback lanes
+- needs-input state
 - unsupported state
 
 For the full origin rules, read
@@ -254,37 +297,30 @@ validation path before and after a refactor.
 
 ## Current Architectural Hotspots
 
-As of `2026-04-27`, the calculator final audit is closed and the broad
-repo validation is green. Server-backed project storage,
-project/proposal owner authorization, auth-session hardening, and the pure
-team-access policy model are all closed. The wall formula-family slice
-has now also closed honestly no-runtime: Gate A named the timber
-screening vs dynamic surfaces, Gate B proved the live workbench uses the
-dynamic route, and Gate C kept runtime unchanged because the current
-official timber rows define only a broad corridor. The source-corpus
-follow-up then landed two direct timber exact imports. The resilient
-side-count slice then landed Gate A no-runtime blind-surface proof, Gate B
-explicit `resilientBarSideCount` plumbing with legacy-stable `auto`, and
-Gate C exact imports for the four source-backed RB1/RB2 timber rows when
-explicit `one_side`/`both_sides` is selected. The floor continuation
-slice then closed no-runtime with engine/web card inventories, and the
-floor 50+ layer stress slice closed no-runtime after pinning
-representative many-layer engine/card surfaces, and the floor
-layer-order slice closed no-runtime after pinning explicit-role exact
-reorder stability, raw/order-sensitive support changes, and blocked
-impact fail-closed posture. The all-caller invalid-thickness slice then
-closed no-runtime and moved engine thickness validity out of partial.
-There is no active calculator-risk slice for the current
-private/internal-use bar. Realistic combination
-cartography, heavy-core/concrete, timber stud + CLT, floor fallback, and
-UI/input/output honesty are all closed with evidence-tier caveats.
-`dynamic_airborne_split_refactor_v2` closed Gate C after eleven
-behavior-preserving correction-guard carves; `dynamic-airborne.ts` is now
-1793 lines, C6 is closed, and the remaining three recursive composer
-guards are optional architecture backlog. Productization route
-integration and proposal/report polish are closed. Calculator
-source-gap revalidation Gate A and wall coverage planning v2 Gate A are
-closed; wall single-leaf mass-law calibration is now selected.
+As of 2026-05-05, the current calculator hotspots are:
+
+- `packages/engine/src/calculate-assembly.ts` composes dynamic airborne,
+  exact/catalog, impact, support, and Rockwool withholding decisions, but
+  does not yet expose a unified airborne candidate/basis selection model.
+- `packages/engine/src/impact-lane.ts` already shows the desired
+  precedence pattern for exact rows, source/bounds, product catalog,
+  explicit deltas, and predictor lanes.
+- `packages/engine/src/airborne-verified-catalog.ts` has whole-stack
+  exact anchoring, but no exact subassembly plus calculated-delta
+  candidate.
+- `packages/engine/src/dynamic-airborne.ts` still routes grouped
+  multi-leaf/multi-cavity walls through `multileaf_screening_blend`.
+- `packages/engine/src/wall-triple-leaf-frequency-solver.ts` can
+  calculate grouped triple-leaf/two-cavity curves and ratings, but it is
+  marked research-only/runtime-ineligible.
+- shared result schemas do not yet carry first-class airborne candidate
+  origins such as exact, anchored delta, calibrated physics, physics
+  prediction, bounded, screening, needs-input, or unsupported.
+
+### Historical 2026-04-27 Snapshot
+
+The following anchors are retained as historical architecture context.
+They are not the active next-slice map.
 
 Current hotspots:
 
@@ -438,8 +474,9 @@ Current hotspots:
 - source-backed widening ledger:
   `docs/calculator/SOURCE_GAP_LEDGER.md`
 
-The current selected next slice is a wall single-leaf source/formula
-contract slice: `wall_single_leaf_mass_law_calibration_v1`. Start by
+In this historical 2026-04-27 snapshot, the then-selected next slice was
+a wall single-leaf source/formula contract slice:
+`wall_single_leaf_mass_law_calibration_v1`. It started by
 defining unmatched massive single-leaf wall signatures, formula/source
 basis, positive cases, negative cases, exact/lab-fallback precedence,
 and UI/card coverage without changing acoustic values, support,
@@ -458,10 +495,12 @@ To avoid docs drift, be explicit about current non-features:
 - not yet route-enabled for team membership; policy exists, but routes
   remain owner-scoped through the landed owner-only adapter
 - not a single-formula calculator
+- not a lookup-only calculator; missing exact source data must not block
+  a labelled physics prediction when the required inputs are sufficient
 - not allowed to fabricate unsupported field or low-frequency outputs
 - not complete across every possible floor/wall family corridor
-- not free to reopen deferred source families without explicit source-backed or
-  guarded planning work
+- not free to promote measured-exact/source-validated claims without
+  explicit source-backed or guarded planning work
 
 ## Reading Guide
 
@@ -472,8 +511,8 @@ To avoid docs drift, be explicit about current non-features:
 - Want the productization roadmap:
   read [POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md](./POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md)
 - Want the active implementation plan:
-  read [SLICE_WALL_SINGLE_LEAF_MASS_LAW_CALIBRATION_PLAN.md](./SLICE_WALL_SINGLE_LEAF_MASS_LAW_CALIBRATION_PLAN.md)
+  read [SLICE_CALCULATOR_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_V1_PLAN.md](./SLICE_CALCULATOR_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_V1_PLAN.md)
 - Want answer-origin or support semantics:
   read [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
 - Want the last clean resume point:
-  read [CHECKPOINT_2026-04-27_WALL_COVERAGE_EXPANSION_PLANNING_V2_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_COVERAGE_EXPANSION_PLANNING_V2_GATE_A_HANDOFF.md)
+  read [CHECKPOINT_2026-05-05_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_REPLAN_HANDOFF.md](./CHECKPOINT_2026-05-05_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_REPLAN_HANDOFF.md)

@@ -1,6 +1,6 @@
 # Calculator Master Plan
 
-Last reviewed: 2026-04-29
+Last reviewed: 2026-05-05
 (`wall_coverage_expansion_planning_v2` Gate A closed no-runtime;
 `wall_single_leaf_mass_law_calibration_v1` Gate C closed no-runtime;
 `wall_double_leaf_sharp_davy_scoping_v1` Gate C closed no-runtime;
@@ -48,6 +48,15 @@ no-runtime and selected Gate C closeout / next-slice selection;
 no-runtime and selected `internal_use_acceptance_rehearsal_v1`)
 Iteration: 2 (rewritten with implementation state grid, accuracy
 preservation contract, ROI table, quantitative completion targets)
+
+Current tactical state is governed by
+[NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md). As of
+2026-05-05 the active correction is the model-first physics prediction
+pivot:
+[SLICE_CALCULATOR_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_V1_PLAN.md](./SLICE_CALCULATOR_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_V1_PLAN.md).
+This master plan remains the strategic frame, but any older source-pack
+or internal-use selected-slice wording below must not override the
+current calculator-first pivot.
 
 This is the top-level roadmap for the DynEcho acoustic calculator. It is
 the second doc a fresh agent reads after `CURRENT_STATE.md`. It answers:
@@ -150,14 +159,19 @@ Done means **all six criteria below hold simultaneously**:
   CLT, CLT local combined, raw terminal-concrete helper, Pliteq /
   Regupol / Getzner spot coverage). Already achieved — see §3 grid.
 - Any user-built realistic stack (single-leaf, double-leaf decoupled,
-  mass timber, lined masonry) produces either a defended number or an
-  explicit fail-closed answer with a specific reason.
+  triple-leaf/multi-cavity, mass timber, lined masonry, realistic floor
+  build-up) produces a labelled calculated prediction when required
+  topology/material/field inputs are sufficient. It may fail closed only
+  when a necessary input is physically ambiguous or unavailable, and the
+  reason must be specific.
 
 **D2. Accuracy**
 - Every defended `Rw`, `R'w`, `Ln,w`, `DnT,w`, `DnT,A` value on every
-  defended corridor is tied to a named source (exact catalog row,
-  official floor-system row, benchmark-backed family formula, or
-  predictor-backed family estimate).
+  defended corridor is tied to a named origin: exact source row,
+  source-anchored delta, calibrated family physics, family physics
+  prediction, bounded estimate, or screening fallback. Source rows are
+  exact/anchor/calibration truth; missing source rows must not prevent a
+  labelled physics prediction.
 - Benchmark fit tolerance is per-corridor and matches the thresholds
   that already exist in each benchmark test file. Examples currently
   in the repo:

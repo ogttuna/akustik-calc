@@ -20,54 +20,204 @@ If you need the active route/source boundary risk register read
 
 Current selected slice:
 
-`ubiq_open_web_packaged_finish_current_gate_guard_v1`
+`calculator_model_first_physics_prediction_pivot_v1`
 
 Source label:
 
-UBIQ open-web packaged-finish current-gate guard after V27 source-gap
-revalidation.
+Calculator model-first physics prediction pivot after the source-packet
+path was found too narrow for the user's calculator-first goal.
 
 Current selected status:
 
-`selected_ubiq_open_web_packaged_finish_current_gate_guard_after_v27_rerank_preserved_rockwool_and_raw_open_web_blockers`
+`selected_model_first_physics_prediction_pivot_after_source_packet_path_found_too_narrow`
 
 Selected next implementation file:
 
-`packages/engine/src/ubiq-open-web-packaged-finish-current-gate-guard-gate-a-contract.test.ts`
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-b-basis-contract.test.ts`
 
 Selected next action:
 
-`gate_a_promote_ubiq_open_web_packaged_finish_engine_visible_guards_into_current_gate`
+`gate_b_define_shared_airborne_basis_candidate_schema_without_value_movement`
 
 Active planning surface:
 
-`docs/calculator/SLICE_UBIQ_OPEN_WEB_PACKAGED_FINISH_CURRENT_GATE_GUARD_V1_PLAN.md`
+`docs/calculator/SLICE_CALCULATOR_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_V1_PLAN.md`
 
 Latest landed gate:
 
-`calculator_source_gap_revalidation_v27` Gate A
+2026-05-06 model-first physics prediction pivot Gate A no-runtime
+direction contract.
 
-V27 Gate A implementation file:
+Latest checkpoint:
 
-`packages/engine/src/calculator-source-gap-revalidation-v27-gate-a-contract.test.ts`
+`docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_A_HANDOFF.md`
 
-V27 Gate A checkpoint:
+Latest checkpoint / revalidation handoff:
 
-`docs/calculator/CHECKPOINT_2026-05-05_CALCULATOR_SOURCE_GAP_REVALIDATION_V27_GATE_A_HANDOFF.md`
+`docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_GATE_A_REVALIDATION_COMMIT_HANDOFF.md`
 
-Latest broad validation checkpoint:
+Latest doc/implementation reconciliation:
 
-`docs/calculator/CHECKPOINT_2026-05-05_BROAD_REVALIDATION_AND_NEXT_STEP_HANDOFF.md`
+`docs/calculator/CHECKPOINT_2026-05-05_DOC_IMPLEMENTATION_RECONCILIATION_HANDOFF.md`
 
-Gate A artifacts:
+Latest standards research / plan detail:
 
-- `remaining_accuracy_gap_order_after_ubiq_supported_band_closeout`
-- `ubiq_packaged_finish_ready_surfaces_after_v27`
-- `packaged_finish_current_gate_guard_selected_after_v27`
-- `rockwool_source_blockers_carry_forward_after_v27`
+`docs/calculator/CHECKPOINT_2026-05-05_STANDARDS_RESEARCH_PLAN_DETAIL_HANDOFF.md`
 
-Selected guard pack to promote into current gate:
+Core correction:
 
+- DynEcho is an acoustic calculator first, not a lookup/source-packet
+  queue.
+- exact lab/source rows override or anchor calculation when present.
+- source absence blocks measured-exact/source-validated/calibration
+  promotion only; it is not formula absence.
+- unknown assemblies must still produce labelled, family-specific
+  physics predictions when required topology/material inputs are
+  sufficient.
+- source data is for exact override, calibration, benchmark validation,
+  tolerance ownership, and regression tests; it must not replace the
+  solver engine.
+
+Current implementation facts:
+
+- `impact-lane.ts` already shows the desired candidate precedence model.
+- airborne/wall lacks an equivalent candidate/basis resolver.
+- `airborne-verified-catalog.ts` has full-stack exact anchoring but no
+  exact subassembly plus calculated-delta candidate.
+- `dynamic-airborne.ts` detects `multileaf_multicavity`, but the selected
+  method is still `multileaf_screening_blend`.
+- `wall-triple-leaf-frequency-solver.ts` can calculate a grouped
+  three-leaf/two-cavity curve and ratings, but is marked research-only
+  and runtime-ineligible.
+
+Current selected scope:
+
+- create the model-first pivot Gate B shared basis/candidate schema
+  contract.
+- represent airborne candidate origin/basis terms without moving values.
+- keep source absence and physical input absence as separate fields.
+- keep Gate B no-runtime while adding basis metadata shape.
+- make grouped Rockwool triple-leaf the first runtime benchmark after
+  the basis/candidate schema and resolver gates land.
+- keep flat-list triple-leaf guarded when topology is ambiguous.
+
+Current validation:
+
+Gate A is now the latest no-runtime contract and was revalidated as a
+checkpoint. Focused Gate A, focused V28+Gate A continuity,
+`pnpm calculator:gate:current`, `git diff --check`, and trailing
+whitespace checks passed on 2026-05-06. The next implementation should
+create the focused Gate B contract and run that focused test plus
+`git diff --check`; run `pnpm calculator:gate:current` again if
+authority-doc alignment or current-gate coverage changes.
+
+Current protected numeric boundaries:
+
+- UBIQ packaged-finish remains current-gate owned for `90 exact` and
+  `21 bound` open-web rows.
+- adjacent Rockwool remains corrected and supported at
+  `Rw 51 / R'w 49 / DnT,w 51`.
+- flat-list split/internal gypsum-leaf Rockwool remains withheld from
+  supported outputs with diagnostic `Rw 41 / R'w 39 / DnT,w 40`.
+- grouped Rockwool remains live screening-only/source-blocked at
+  `Rw 41` on `multileaf_screening_blend`, not exact, not
+  source-validated, and not design-grade until the model-first runtime
+  gate deliberately changes it.
+- direct exact Rockwool promotion remains blocked by
+  `rights_safe_source_owned_curve_payload_absent`, but formula-backed
+  prediction must not stay blocked on that source packet.
+
+Everything below this line is chronological history unless this top
+section explicitly promotes it again. Older blocks may still contain
+words such as "current", "active", or "selected next action"; read
+those as current only for that historical slice.
+
+## Superseded Selected Slice - Rockwool Source-Packet Refresh V2
+
+Superseded slice:
+
+`rockwool_split_triple_leaf_rights_safe_source_packet_refresh_v2`
+
+Superseded plan:
+
+`docs/calculator/SLICE_ROCKWOOL_SPLIT_TRIPLE_LEAF_RIGHTS_SAFE_SOURCE_PACKET_REFRESH_V2_PLAN.md`
+
+This plan is retained for later measured-exact/source-calibration work.
+It is no longer the active next step because missing source packets must
+not block the calculator from producing labelled physics predictions.
+
+## Prior Selected Slice - Before V28 Gate A
+
+Prior selected slice:
+
+`calculator_source_gap_revalidation_v28`
+
+Source label:
+
+Source/accuracy gap revalidation after UBIQ packaged-finish
+current-gate closeout.
+
+Historical selected status:
+
+`closed_ubiq_open_web_packaged_finish_current_gate_guard_selected_source_gap_revalidation_v28`
+
+Historical selected implementation file:
+
+`packages/engine/src/calculator-source-gap-revalidation-v28-gate-a-contract.test.ts`
+
+Historical selected next action:
+
+`gate_a_revalidate_source_gap_order_after_ubiq_packaged_finish_current_gate_closeout`
+
+Historical planning surface:
+
+`docs/calculator/SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V28_PLAN.md`
+
+Historical V28 Gate A landed selection:
+
+`selected_rockwool_split_triple_leaf_rights_safe_source_packet_refresh_after_v28_rerank_no_runtime_candidates_after_ubiq_packaged_finish`
+
+Historical V28 selected implementation slice:
+
+`rockwool_split_triple_leaf_rights_safe_source_packet_refresh_v2`
+
+Historical V28 selected next action:
+
+`gate_a_refresh_rights_safe_rockwool_triple_leaf_source_packet_search_without_runtime`
+
+Historical V28 first gate file:
+
+`packages/engine/src/rockwool-split-triple-leaf-rights-safe-source-packet-refresh-v2-gate-a-contract.test.ts`
+
+Historical V28 retained artifacts:
+
+- `rockwool_rights_safe_source_packet_refresh_selected_after_v28`
+- `rockwool_numeric_boundaries_after_v28`
+- `ubiq_packaged_finish_current_gate_pack_preserved_after_v28`
+
+Latest landed gate:
+
+`ubiq_open_web_packaged_finish_current_gate_guard_v1` Gate C closeout
+
+UBIQ packaged-finish Gate C implementation file:
+
+`packages/engine/src/post-ubiq-open-web-packaged-finish-current-gate-guard-v1-next-slice-selection-contract.test.ts`
+
+UBIQ packaged-finish Gate C checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-05_UBIQ_OPEN_WEB_PACKAGED_FINISH_CURRENT_GATE_GUARD_GATE_C_CLOSEOUT_HANDOFF.md`
+
+Gate C artifacts:
+
+- `closed_ubiq_packaged_finish_current_gate_guard_summary`
+- `packaged_finish_current_gate_pack_carry_forward`
+- `source_gap_revalidation_v28_selected_after_ubiq_packaged_finish_closeout`
+- `rockwool_and_raw_open_web_blockers_carry_forward_after_ubiq_packaged_finish_closeout`
+
+Current-gate protected guard pack:
+
+- `packages/engine/src/ubiq-open-web-packaged-finish-current-gate-guard-gate-a-contract.test.ts`
+- `packages/engine/src/post-ubiq-open-web-packaged-finish-current-gate-guard-v1-next-slice-selection-contract.test.ts`
 - `packages/engine/src/ubiq-open-web-packaged-finish-family-design.test.ts`
 - `packages/engine/src/ubiq-open-web-packaged-finish-near-miss-matrix.test.ts`
 - `packages/engine/src/ubiq-open-web-packaged-lane-trace-matrix.test.ts`
@@ -78,8 +228,111 @@ Selected guard pack to promote into current gate:
 
 Current selected scope:
 
-- promote the existing source-backed UBIQ packaged-finish tests covering
-  `90 exact` and `21 bound` open-web rows into
+- create the V28 source-gap revalidation Gate A contract.
+- re-rank the remaining source-backed accuracy gaps after UBIQ
+  packaged-finish current-gate closeout.
+- keep runtime values, support semantics, confidence, evidence, API,
+  route-card values, output-card statuses, proposal/report copy, and
+  workbench-input behavior frozen unless V28 identifies a fully
+  source-owned runtime candidate.
+- keep direct Rockwool exact runtime blocked by
+  `rights_safe_source_owned_curve_payload_absent`.
+- keep generic/raw open-web widening blocked by
+  `source_owned_raw_carrier_negative_boundary_absent`.
+
+Current validation:
+
+Gate C validation completed on 2026-05-05: focused Gate C closeout
+passed 1 file / 5 tests; focused packaged-finish continuity passed
+with engine 5 files / 15 tests and web 4 files / 5 tests; final
+`pnpm calculator:gate:current` passed with engine 280 files / 1582
+tests, web 61 files / 273 passed + 18 skipped, repo build 5 / 5 tasks,
+and whitespace guard green. Final `git diff --check` passed. Known
+non-fatal `sharp/@img` warnings remain through
+`@turbodocx/html-to-docx`; `apps/web/next-env.d.ts` was restored to
+`.next-typecheck` after the Next build.
+
+Current protected Rockwool boundaries remain unchanged:
+
+- adjacent Rockwool remains corrected and supported at
+  `Rw 51 / R'w 49 / DnT,w 51`.
+- flat-list split/internal gypsum-leaf Rockwool remains withheld from
+  supported outputs with diagnostic `Rw 41 / R'w 39 / DnT,w 40`.
+- grouped Rockwool remains live screening-only/source-blocked at
+  `Rw 41` on `multileaf_screening_blend`, not exact, not
+  source-validated, and not design-grade.
+- direct exact Rockwool runtime remains blocked by
+  `rights_safe_source_owned_curve_payload_absent`.
+
+## Prior Selected Slice - Before Packaged-Finish Gate C
+
+Prior selected slice:
+
+`ubiq_open_web_packaged_finish_current_gate_guard_v1`
+
+Source label:
+
+UBIQ open-web packaged-finish current-gate guard after Gate A promotion.
+
+Current selected status:
+
+`gate_a_promoted_ubiq_packaged_finish_engine_visible_guards_into_current_gate_selected_closeout`
+
+Selected next implementation file:
+
+`packages/engine/src/post-ubiq-open-web-packaged-finish-current-gate-guard-v1-next-slice-selection-contract.test.ts`
+
+Selected next action:
+
+`gate_c_closeout_ubiq_open_web_packaged_finish_current_gate_guard_and_select_next_accuracy_slice`
+
+Active planning surface:
+
+`docs/calculator/SLICE_UBIQ_OPEN_WEB_PACKAGED_FINISH_CURRENT_GATE_GUARD_V1_PLAN.md`
+
+Latest landed gate:
+
+`ubiq_open_web_packaged_finish_current_gate_guard_v1` Gate A
+
+UBIQ packaged-finish Gate A implementation file:
+
+`packages/engine/src/ubiq-open-web-packaged-finish-current-gate-guard-gate-a-contract.test.ts`
+
+UBIQ packaged-finish Gate A checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-05_UBIQ_OPEN_WEB_PACKAGED_FINISH_CURRENT_GATE_GUARD_GATE_A_HANDOFF.md`
+
+Latest broad validation checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-05_BROAD_REVALIDATION_AND_NEXT_STEP_HANDOFF.md`
+
+Latest pre-implementation analysis checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-05_PRE_UBIQ_PACKAGED_FINISH_GATE_A_ANALYSIS_REPLAN_HANDOFF.md`
+
+Gate A artifacts:
+
+- `ubiq_packaged_finish_current_gate_guard_gate_a_summary`
+- `current_gate_promoted_ubiq_packaged_finish_engine_visible_pack`
+- `source_verified_ubiq_packaged_finish_pdf_status`
+- `rockwool_and_raw_open_web_blockers_still_carry_forward_after_packaged_finish_gate_a`
+
+Current-gate promoted guard pack:
+
+- `packages/engine/src/ubiq-open-web-packaged-finish-current-gate-guard-gate-a-contract.test.ts`
+- `packages/engine/src/ubiq-open-web-packaged-finish-family-design.test.ts`
+- `packages/engine/src/ubiq-open-web-packaged-finish-near-miss-matrix.test.ts`
+- `packages/engine/src/ubiq-open-web-packaged-lane-trace-matrix.test.ts`
+- `apps/web/features/workbench/ubiq-open-web-packaged-finish-family-card-design.test.ts`
+- `apps/web/features/workbench/ubiq-open-web-packaged-finish-near-miss-card-matrix.test.ts`
+- `apps/web/features/workbench/ubiq-open-web-packaged-finish-history-replay-matrix.test.ts`
+- `apps/web/features/workbench/ubiq-open-web-packaged-lane-card-matrix.test.ts`
+
+Current selected scope:
+
+- close out the packaged-finish current-gate guard and select the next
+  bounded accuracy slice.
+- keep the promoted UBIQ packaged-finish current-gate pack in
   `pnpm calculator:gate:current`.
 - keep runtime values, support semantics, confidence, evidence, API,
   route-card values, output-card statuses, proposal/report copy, and
@@ -103,6 +356,15 @@ Current protected Rockwool boundaries remain unchanged:
 
 Current validation:
 
+Packaged-finish Gate A validation completed on 2026-05-05: focused
+Gate A passed 1 file / 5 tests; focused packaged-finish continuity
+passed with engine 4 files / 10 tests and web 4 files / 5 tests; final
+`pnpm calculator:gate:current` passed with engine 279 files / 1577
+tests, web 61 files / 273 passed + 18 skipped, repo build 5 / 5 tasks,
+and whitespace guard green. Known non-fatal `sharp/@img` warnings
+remain through `@turbodocx/html-to-docx`; `apps/web/next-env.d.ts` was
+restored to `.next-typecheck` after the Next build.
+
 V27 Gate A validation completed on 2026-05-05: focused V27 Gate A
 passed 1 file / 5 tests; focused UBIQ packaged-finish engine continuity
 passed 5 files / 15 tests; focused UBIQ packaged-finish visible
@@ -120,6 +382,45 @@ skipped, and repo build 5 / 5 tasks. The broad result confirms there is
 no immediate test failure to repair before the selected packaged-finish
 current-gate guard. Known non-fatal `sharp/@img` warnings remain through
 `@turbodocx/html-to-docx`.
+
+Pre-Gate A analysis refresh completed on 2026-05-05: implementation and
+docs still agree that the only active gap is current-gate ownership for
+the existing UBIQ packaged-finish guard pack. The selected target file
+does not exist yet, the seven existing UBIQ guard files do exist, and
+focused continuity passed with engine 4 files / 10 tests and web
+4 files / 5 tests. The official UBIQ PDF source is accessible. No
+runtime repair is required before Gate A, and no Rockwool exact runtime
+promotion is allowed without the missing rights-safe source-owned packet.
+
+## Prior Selected Slice - Before Packaged-Finish Gate A
+
+Prior selected status:
+
+`selected_ubiq_open_web_packaged_finish_current_gate_guard_after_v27_rerank_preserved_rockwool_and_raw_open_web_blockers`
+
+Prior selected implementation slice:
+
+`ubiq_open_web_packaged_finish_current_gate_guard_v1`
+
+Prior selected implementation file:
+
+`packages/engine/src/ubiq-open-web-packaged-finish-current-gate-guard-gate-a-contract.test.ts`
+
+Prior selected action:
+
+`gate_a_promote_ubiq_open_web_packaged_finish_engine_visible_guards_into_current_gate`
+
+Prior V27 artifacts:
+
+- `remaining_accuracy_gap_order_after_ubiq_supported_band_closeout`
+- `ubiq_packaged_finish_ready_surfaces_after_v27`
+- `packaged_finish_current_gate_guard_selected_after_v27`
+- `rockwool_source_blockers_carry_forward_after_v27`
+
+Prior V27 selected coverage:
+
+- `90 exact` UBIQ open-web rows.
+- `21 bound` UBIQ open-web rows.
 
 ## Prior Selected Slice - Before V27 Gate A
 

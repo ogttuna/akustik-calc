@@ -4,6 +4,15 @@ Checkpoint role:
 
 Broad calculator/repo validation and plan refresh after V27 Gate A.
 
+Supersession notice - 2026-05-05:
+
+This checkpoint is historical validation context. Its selected
+UBIQ-packaged-finish next step was later completed, V28 selected a
+Rockwool source-packet refresh, and that source-packet path was then
+superseded as active work by the model-first physics prediction pivot.
+For the current next action read
+`docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`.
+
 Current selected slice:
 
 `ubiq_open_web_packaged_finish_current_gate_guard_v1`

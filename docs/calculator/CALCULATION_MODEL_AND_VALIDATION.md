@@ -1,6 +1,6 @@
 # Calculation Model And Validation
 
-Last reviewed: 2026-04-14
+Last reviewed: 2026-05-06
 
 Document role:
 
@@ -13,14 +13,32 @@ Document role:
 Read this before selecting a new widening slice. A green test can only prove the
 answer it actually measures; it does not make the whole acoustic domain complete.
 
+Latest checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_GATE_A_REVALIDATION_COMMIT_HANDOFF.md`
+
 ## Core Rule
 
-There is no single formula that owns every output.
+There is no single formula that owns every output, and there is no
+single source catalog that replaces calculation.
 
 `calculateAssembly` builds multiple candidate lanes, then support gating decides
 which requested outputs are allowed to surface. A visible `Rw`, `Ln,w`, `R'w`,
 or `DnT,w` can therefore come from different origins depending on the active
 route.
+
+Calculator-first rule:
+
+- exact measured/source rows win when the full assembly matches them;
+- exact measured/source rows can anchor subassembly-plus-delta
+  candidates;
+- when no exact row exists, the calculator must use the best
+  family-specific physics model available and label the result as a
+  prediction;
+- missing source packets block measured-exact/source-validated
+  promotion, not formula-backed calculation;
+- source/lab rows are used for exact override, calibration, benchmark
+  validation, tolerance ownership, and regression tests.
 
 The implementation is correct only when all of these are true:
 
@@ -54,6 +72,10 @@ Main stages:
    - dynamic/imported calculator overlays can replace the screening curve
    - verified catalog anchors and approximate field companions can overlay the
      selected airborne result
+   - model-first pivot target: replace this single selected-curve flow
+     with an airborne candidate resolver that can compare whole-stack
+     exact source, exact subassembly anchor plus calculated delta,
+     family-specific physics, bounded prediction, and screening fallback
 4. Build the impact lane.
    - exact impact source, exact floor system, bound floor system, official
      product row, explicit `DeltaLw`, predictor-specific floor system, narrow
@@ -200,9 +222,12 @@ Use this distinction when deciding whether an answer is "right":
     buckets
 - formula truth:
   - local mass-law screening, curve rating, field normalization, guide lookup,
-    and predictor formulas
+    family-specific physics solvers, and predictor formulas
   - tests should assert numeric outputs, formula basis, and nearby negative
     cases
+  - source absence is not formula absence; when topology and material inputs are
+    sufficient, a formula-backed prediction should still calculate and carry a
+    non-exact basis
 - predictor truth:
   - source-family or published-family estimates that are not exact source rows
   - tests should assert fit/candidate/basis labels and fail-closed boundaries
@@ -213,6 +238,76 @@ Use this distinction when deciding whether an answer is "right":
 - unsupported truth:
   - intentionally unavailable outputs
   - tests should assert unsupported buckets and workbench `Not ready` cards
+
+## Airborne Model-First Pivot
+
+The 2026-05-05 replan identified a gap in the airborne/wall side:
+impact/floor has a precedence-based lane resolver, but airborne/wall
+does not yet have an equivalent first-class candidate/basis model.
+
+The next architecture target is to make airborne output origin explicit:
+
+1. `measured_exact_full_stack`
+2. `measured_exact_subassembly_plus_calculated_delta`
+3. `calibrated_family_physics`
+4. `family_physics_prediction`
+5. `bounded_prediction`
+6. `screening_fallback`
+7. `needs_input`
+8. `unsupported`
+
+Rockwool/triple-leaf is the first benchmark for this pivot. Complete
+grouped topology should be enough to run a triple-leaf physics
+prediction. It is not enough to claim measured exact or source
+validation. Flat-list triple-leaf remains guarded when layer roles are
+ambiguous.
+
+### Standards Alignment
+
+The model-first pivot is standards-aware, not standards-blind:
+
+- ISO 12354-1 and ISO 12354-2 define the building-estimation frame for
+  airborne and impact performance from element performance, flanking
+  paths, and theoretical propagation methods.
+- ISO 717-1 and ISO 717-2 define rating conversion from band results to
+  single-number airborne/impact quantities.
+- ISO 10140-2 and ISO 10140-3 are lab element measurement contexts.
+- ISO 16283-1 and ISO 16283-2 are field measurement contexts.
+- ASTM E90/E336/E413 define the US airborne lab/field/STC lane.
+- ASTM E492/E989 define the US impact/IIC lane.
+- ISO 9053, ISO 354, and ASTM C423 describe porous/absorption input
+  evidence. NRC/absorption can inform absorber/cavity assumptions, but
+  it is not transmission-loss or impact-isolation evidence by itself.
+- ISO 9052-1 dynamic stiffness is a required input context for
+  design-grade floating-floor impact prediction; thickness and density
+  alone are not enough.
+
+Every non-trivial result should eventually expose:
+
+- `measurementStandard` when the result comes from a measured row;
+- `calculationStandard` when the result is predicted;
+- `ratingStandard` when a curve is collapsed to a single number;
+- `frequencyBands` and `curveBasis` when the engine has a curve;
+- `errorBudgetDb` or `toleranceClass` when the result is not exact.
+
+This prevents the old failure mode where a missing source packet was
+treated as "no calculation possible". The corrected rule is:
+
+- missing exact source packet -> no measured-exact/source-validated
+  claim;
+- sufficient physical inputs and family solver -> calculated prediction
+  is still allowed;
+- missing physical inputs/topology -> `needs_input`;
+- unsupported family/output -> `unsupported`.
+
+The planned airborne basis contract must therefore expose the difference
+between evidence absence and input absence:
+
+- `missingSourceEvidence`: exact/promotion/calibration blocker only;
+- `missingPhysicalInputs`: fields the UI must ask the user to provide;
+- `propertyDefaults`: conservative defaults the selected solver used;
+- `errorBudgetDb`: widened uncertainty caused by defaults or
+  uncalibrated family physics.
 
 ## How Tests Prove Correctness
 

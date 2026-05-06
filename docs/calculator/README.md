@@ -1,51 +1,94 @@
 # Calculator Docs
 
-Living reference docs for the DynEcho acoustic calculator. Read
-these before anything under `docs/archive/`.
+Living reference docs for the DynEcho acoustic calculator. Read these
+before anything under `docs/archive/` and before older dated
+checkpoints in this folder.
+
+## Current Source Of Truth
+
+As of 2026-05-06 the active calculator direction is the
+model-first physics prediction pivot:
+
+`calculator_model_first_physics_prediction_pivot_v1`
+
+This is a correction to the previous source-packet-first route.
+DynEcho is an acoustic calculator first. Exact lab/source rows can
+override or anchor known assemblies, but missing source packets must
+not block a labelled family-specific physics prediction when the
+required topology and material inputs are present.
+
+Gate A for this pivot has landed no-runtime. It made the corrected rule
+executable: source absence blocks exact/calibration promotion only, not
+formula-backed prediction.
+
+Current runtime reality is still unchanged: grouped Rockwool
+triple-leaf still returns `Rw 41` through `multileaf_screening_blend`
+until the model-first runtime gates deliberately replace that path.
+The triple-leaf frequency solver already exists as research/runtime
+ineligible code; it is the first benchmark for the pivot, not yet the
+live answer.
+
+The selected next file is intentionally absent until the next Gate B
+implementation step:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-b-basis-contract.test.ts`
+
+Selected next action:
+
+`gate_b_define_shared_airborne_basis_candidate_schema_without_value_movement`
+
+If an untracked similarly named file such as
+`packages/engine/src/calculator-model-first-pivot-gate-a-contract.test.ts`
+is present, treat it as a stale/partial local artifact. The landed Gate A
+target is
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-a-contract.test.ts`.
 
 ## Agent Resume Triangle
 
 Read these in order. If they disagree with each other, stop and fix the
-drift before starting work.
+drift before starting implementation.
 
-1. [CURRENT_STATE.md](./CURRENT_STATE.md) — short snapshot of
-   what is stable right now, completion signals, active slice,
-   deferred follow-up tracks.
-2. [MASTER_PLAN.md](./MASTER_PLAN.md) — strategic roadmap,
-   quantitative completion targets, ROI table, accuracy
-   preservation contract, master sequence.
-3. [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md)
-   — tactical detail for the active slice.
-4. [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md)
-   — closed calculator-only chain for private/internal-use readiness.
-5. [CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_CLEAN_STOP_GATE_C_READY_HANDOFF.md](./CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_CLEAN_STOP_GATE_C_READY_HANDOFF.md)
-   — latest calculator handoff: docs and implementation align, focused
-   and broad gates are green, and Gate C closeout is the next first
-   action.
-6. [CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_BROAD_REVALIDATION_GATE_C_READY_HANDOFF.md](./CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_BROAD_REVALIDATION_GATE_C_READY_HANDOFF.md)
-   — prior calculator handoff: full `pnpm check` is green after Gate
-   B, and Gate C closeout is the next first action.
-7. [CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_GATE_B_HANDOFF.md](./CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_GATE_B_HANDOFF.md)
-   — prior calculator handoff: Gate B landed the regular-use visibility
-   audit and selected Gate C closeout.
-8. [CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_GATE_A_HANDOFF.md)
-   — prior calculator handoff: Gate A landed the pilot usage note and
-   scenario summary.
-9. [INTERNAL_USE_PILOT_USAGE_NOTE.md](./INTERNAL_USE_PILOT_USAGE_NOTE.md)
-   — short company pilot usage note and scenario summary.
-10. [SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md](./SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md)
-   — active calculator slice plan: Gate B visibility landed; Gate C
-   closeout / next-slice selection is next.
-11. [SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V3_PLAN.md](./SLICE_CALCULATOR_SOURCE_GAP_REVALIDATION_V3_PLAN.md)
-   — closed planning slice: Gate A re-ranked remaining source and
-   accuracy gaps and selected internal-use operating envelope v1.
-12. [CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md](./CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md)
-   — prepared roadmap for the long source-gated accuracy program.
+1. [../../AGENTS.md](../../AGENTS.md) — repository-level calculator
+   authority order and current workflow.
+2. [NEXT_IMPLEMENTATION_PLAN.md](./NEXT_IMPLEMENTATION_PLAN.md) —
+   tactical detail for the active slice.
+3. [CURRENT_STATE.md](./CURRENT_STATE.md) — short snapshot of what is
+   stable right now, active slice, and deferred follow-up tracks.
+4. [SLICE_CALCULATOR_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_V1_PLAN.md](./SLICE_CALCULATOR_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_V1_PLAN.md)
+   — active model-first pivot plan.
+5. [CHECKPOINT_2026-05-06_MODEL_FIRST_GATE_A_REVALIDATION_COMMIT_HANDOFF.md](./CHECKPOINT_2026-05-06_MODEL_FIRST_GATE_A_REVALIDATION_COMMIT_HANDOFF.md)
+   — checkpoint/revalidation handoff after Gate A; confirms Gate B is
+   still next and the goal is model-first calculation, not lookup.
+6. [CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_A_HANDOFF.md](./CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_A_HANDOFF.md)
+   — latest landed Gate A no-runtime contract and Gate B selection.
+7. [CHECKPOINT_2026-05-06_MODEL_FIRST_BENCHMARK_ACCEPTANCE_HANDOFF.md](./CHECKPOINT_2026-05-06_MODEL_FIRST_BENCHMARK_ACCEPTANCE_HANDOFF.md)
+   — benchmark/acceptance lanes and runtime stop rules.
+8. [CHECKPOINT_2026-05-05_STANDARDS_RESEARCH_PLAN_DETAIL_HANDOFF.md](./CHECKPOINT_2026-05-05_STANDARDS_RESEARCH_PLAN_DETAIL_HANDOFF.md)
+   — latest standards research and detailed gate plan.
+9. [CHECKPOINT_2026-05-05_DOC_IMPLEMENTATION_RECONCILIATION_HANDOFF.md](./CHECKPOINT_2026-05-05_DOC_IMPLEMENTATION_RECONCILIATION_HANDOFF.md)
+   — latest doc/implementation reconciliation checkpoint.
+10. [CHECKPOINT_2026-05-05_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_REPLAN_HANDOFF.md](./CHECKPOINT_2026-05-05_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_REPLAN_HANDOFF.md)
+   — model-first re-analysis checkpoint.
+11. [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
+   — answer-origin contract: exact, anchored delta, calibrated physics,
+   physics prediction, bounded, screening, needs-input, unsupported.
+12. [SYSTEM_MAP.md](./SYSTEM_MAP.md) — runtime file map and user-flow
+   boundaries.
+13. [MASTER_PLAN.md](./MASTER_PLAN.md) — strategic roadmap and
+   implementation sequence.
 
-Then run `pnpm calculator:gate:current` to confirm the green
-baseline.
+Older `CHECKPOINT_*` and `SLICE_*` docs are historical snapshots unless
+one of the files above explicitly promotes them. Their words like
+"current", "active", or "selected next action" are only true for the
+date/slice they recorded.
+
+Then run `pnpm calculator:gate:current` when runtime behavior changes,
+and always run `git diff --check` before handoff.
 
 ## Supporting Reads
+
+The entries below are backlog/history context. They are not the active
+source of truth when they conflict with the resume triangle above.
 
 - [CHECKPOINT_2026-04-23_SERVER_BACKED_PROJECT_STORAGE_HANDOFF.md](./CHECKPOINT_2026-04-23_SERVER_BACKED_PROJECT_STORAGE_HANDOFF.md)
   — productization closeout: server-backed project storage v1 closed.
@@ -55,9 +98,8 @@ baseline.
   — prior calculator handoff: Gate A selected
   `internal_use_operating_envelope_v1`.
 - [CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_CLEAN_STOP_GATE_C_READY_HANDOFF.md](./CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_CLEAN_STOP_GATE_C_READY_HANDOFF.md)
-  — latest calculator handoff: docs/implementation comparison is clean,
-  focused and broad gates are green, no source-ready accuracy pack was
-  identified, and Gate C remains next.
+  — historical 2026-04-28 handoff for internal-use operating-envelope
+  context.
 - [CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_BROAD_REVALIDATION_GATE_C_READY_HANDOFF.md](./CHECKPOINT_2026-04-28_INTERNAL_USE_OPERATING_ENVELOPE_BROAD_REVALIDATION_GATE_C_READY_HANDOFF.md)
   — prior calculator handoff: broad validation green, no runtime
   posture movement, Gate C ready.
@@ -85,8 +127,7 @@ baseline.
   — closed implementation plan: Gate A reranked remaining source and
   accuracy gaps after the framed split fix.
 - [SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md](./SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md)
-  — active internal-use plan: Gate B visibility hardening landed; Gate
-  C closeout is next.
+  — historical internal-use operating-envelope plan.
 - [CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md](./CALCULATOR_COMPREHENSIVE_ACCURACY_ROADMAP.md)
   — source-gated accuracy roadmap: timber double-board, CLT wall,
   lined/heavy-core wall, no-stud double-leaf, floor fallback, and
@@ -182,8 +223,8 @@ baseline.
   — prior calculator handoff: Gate A landed no-runtime and Gate B was
   made ready for the bounded current-value/source-tolerance matrix.
 - [CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_A_HANDOFF.md](./CHECKPOINT_2026-04-27_WALL_DOUBLE_LEAF_SHARP_DAVY_GATE_A_HANDOFF.md)
-  — active slice evidence: current double-leaf, single-stud, and
-  double-stud values are pinned with negative boundaries.
+  — historical slice evidence: double-leaf, single-stud, and
+  double-stud values were pinned with negative boundaries.
 - [SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md](./SLICE_WALL_DOUBLE_LEAF_SHARP_DAVY_SCOPING_PLAN.md)
   — closed implementation plan: Gate A and Gate B pinned the current
   double-leaf/stud posture, then Gate C closed no-runtime.
@@ -282,7 +323,7 @@ baseline.
 - [CHECKPOINT_2026-04-23_PROJECT_ACCESS_AUTHORIZATION_HANDOFF.md](./CHECKPOINT_2026-04-23_PROJECT_ACCESS_AUTHORIZATION_HANDOFF.md)
   — productization closeout: project-access authorization closed.
 - [CHECKPOINT_2026-04-23_FINAL_AUDIT_HANDOFF.md](./CHECKPOINT_2026-04-23_FINAL_AUDIT_HANDOFF.md)
-  — latest calculator closeout: final audit closed and
+  — historical calculator closeout: final audit closed and
   productization handoff opened.
 - [POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md](./POST_CALCULATOR_PRODUCTIZATION_ROADMAP.md)
   — productization roadmap; project-access route integration is
