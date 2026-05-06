@@ -298,6 +298,9 @@ describe("calculator model-first physics prediction pivot Gate K", () => {
       targetOutputs: ["DeltaLw", "L'n,w", "L'nT,w"]
     });
     const supportedNarrow = buildDynamicCalculatorRouteInputTopologyAssessment({
+      floorImpactContext: {
+        loadBasisKgM2: 100
+      },
       layers: FLOATING_HEAVY_FLOOR_STACK,
       route: "floor",
       targetOutputs: ["Rw", "Ln,w"]
@@ -310,7 +313,7 @@ describe("calculator model-first physics prediction pivot Gate K", () => {
 
     expect(floating.status).toBe("needs_input");
     expect(floating.missingPhysicalInputs).toEqual([
-      "resilientLayerDynamicStiffnessMNPerM3",
+      "resilientLayerDynamicStiffnessMNm3",
       "loadBasisKgM2",
       "contextMode",
       "partitionAreaM2",
@@ -329,7 +332,7 @@ describe("calculator model-first physics prediction pivot Gate K", () => {
     expect(supportedNarrow).toMatchObject({
       missingPhysicalInputs: [],
       outputBasis: "element_lab",
-      routeFamilies: [],
+      routeFamilies: ["floating_floor_impact"],
       status: "complete",
       unsupportedOutputs: []
     });

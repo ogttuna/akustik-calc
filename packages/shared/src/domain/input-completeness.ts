@@ -42,6 +42,7 @@ export const AcousticInputFieldIdSchema = z.enum([
   "conservativeAbsorberClassDefault",
   "baseSlabOrFloor",
   "toppingOrFloatingLayer",
+  "resilientLayerDynamicStiffnessMNm3",
   "resilientLayerDynamicStiffnessMNPerM3",
   "loadBasisKgM2",
   "ceilingOrLowerAssembly",

@@ -37,6 +37,11 @@ export type DynamicCalculatorRouteInputPrompt = {
   targetOutputs: readonly RequestedOutputId[];
 };
 
+export type DynamicCalculatorFloorImpactContext = {
+  loadBasisKgM2?: number;
+  resilientLayerDynamicStiffnessMNm3?: number;
+};
+
 export type DynamicCalculatorRouteInputTopologyAssessment = {
   inputCompletenessSet: readonly AcousticInputCompleteness[];
   missingPhysicalInputs: readonly AcousticInputFieldId[];
@@ -57,6 +62,7 @@ export type DynamicCalculatorRouteInputTopologyAssessment = {
 export type DynamicCalculatorRouteInputTopologyInput = {
   airborneContext?: AirborneContext;
   catalog?: readonly MaterialDefinition[];
+  floorImpactContext?: DynamicCalculatorFloorImpactContext;
   layers: readonly LayerInput[];
   route: DynamicCalculatorRoute;
   sourceEvidenceAvailable?: boolean;
@@ -491,8 +497,13 @@ function hasFloorRole(layers: readonly LayerInput[], role: LayerInput["floorRole
 
 function resilientLayerHasDynamicStiffness(
   layers: readonly LayerInput[],
-  catalog: readonly MaterialDefinition[]
+  catalog: readonly MaterialDefinition[],
+  floorImpactContext: DynamicCalculatorFloorImpactContext | undefined
 ): boolean {
+  if (typeof floorImpactContext?.resilientLayerDynamicStiffnessMNm3 === "number") {
+    return floorImpactContext.resilientLayerDynamicStiffnessMNm3 > 0;
+  }
+
   return layers
     .filter((layer) => layer.floorRole === "resilient_layer")
     .some((layer) => {
@@ -501,8 +512,13 @@ function resilientLayerHasDynamicStiffness(
     });
 }
 
+function hasPositiveLoadBasis(floorImpactContext: DynamicCalculatorFloorImpactContext | undefined): boolean {
+  return typeof floorImpactContext?.loadBasisKgM2 === "number" && floorImpactContext.loadBasisKgM2 > 0;
+}
+
 function addFloatingFloorContract(input: {
   catalog: readonly MaterialDefinition[];
+  floorImpactContext?: DynamicCalculatorFloorImpactContext;
   layers: readonly LayerInput[];
   missingSourceEvidence: readonly string[];
   prompts: DynamicCalculatorRouteInputPrompt[];
@@ -532,15 +548,19 @@ function addFloatingFloorContract(input: {
     },
     {
       detail: "Enter or select resilient-layer dynamic stiffness in MN/m3.",
-      fieldId: "resilientLayerDynamicStiffnessMNPerM3",
-      isMissing: !resilientLayerHasDynamicStiffness(input.layers, input.catalog),
+      fieldId: "resilientLayerDynamicStiffnessMNm3",
+      isMissing: !resilientLayerHasDynamicStiffness(
+        input.layers,
+        input.catalog,
+        input.floorImpactContext
+      ),
       label: "Resilient-layer dynamic stiffness",
       source: "material_property"
     },
     {
       detail: "Enter the load basis for the floating layer before high-accuracy impact prediction.",
       fieldId: "loadBasisKgM2",
-      isMissing: true,
+      isMissing: !hasPositiveLoadBasis(input.floorImpactContext),
       label: "Floating-floor load basis",
       source: "floor_role"
     }
@@ -572,7 +592,7 @@ function addFloatingFloorContract(input: {
     requiredFields: [
       "baseSlabOrFloor",
       "toppingOrFloatingLayer",
-      "resilientLayerDynamicStiffnessMNPerM3",
+      "resilientLayerDynamicStiffnessMNm3",
       "loadBasisKgM2"
     ],
     routeFamily: "floating_floor_impact",
@@ -665,15 +685,17 @@ export function buildDynamicCalculatorRouteInputTopologyAssessment(
   }
 
   if (input.route === "floor") {
+    const hasResilientFloatingFloor = hasFloorRole(input.layers, "resilient_layer");
     const requiresFloatingFloor =
       input.targetOutputs.some((output) => FLOATING_OR_FIELD_IMPACT_OUTPUTS.has(output)) ||
-      (hasFloorRole(input.layers, "resilient_layer") &&
-        input.targetOutputs.some((output) => output === "DeltaLw"));
+      (hasResilientFloatingFloor &&
+        input.targetOutputs.some((output) => output === "DeltaLw" || output === "Ln,w"));
 
     if (requiresFloatingFloor) {
       inputCompletenessSet.push(
         addFloatingFloorContract({
           catalog,
+          floorImpactContext: input.floorImpactContext,
           layers: input.layers,
           missingSourceEvidence,
           prompts,

@@ -166,6 +166,9 @@ describe("calculator model-first physics prediction pivot Gate L", () => {
 
   it("normalizes role-defined floor splits and safe UI reorder without moving runtime support", () => {
     const result = normalizeDynamicCalculatorTopologyInput({
+      floorImpactContext: {
+        loadBasisKgM2: 100
+      },
       layers: ROLE_DEFINED_SPLIT_REORDERED_FLOOR,
       route: "floor",
       targetOutputs: ["Rw", "Ln,w"]

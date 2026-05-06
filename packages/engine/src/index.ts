@@ -12,6 +12,7 @@ export * from "./dynamic-airborne-gate-o-single-leaf";
 export * from "./dynamic-calculator-candidate-resolver-runtime";
 export * from "./dynamic-calculator-double-leaf-framed-bridge-input-contract";
 export * from "./dynamic-calculator-double-leaf-framed-bridge-solver-contract";
+export * from "./dynamic-calculator-floor-impact-dynamic-stiffness-contract";
 export * from "./dynamic-airborne-gate-s-double-leaf-framed";
 export * from "./dynamic-calculator-family-solver-upgrade-selection";
 export * from "./dynamic-calculator-next-family-solver-upgrade-selection";

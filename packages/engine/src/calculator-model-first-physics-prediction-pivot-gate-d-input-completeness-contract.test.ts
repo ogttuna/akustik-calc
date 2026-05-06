@@ -197,7 +197,7 @@ function inputCompletenessMatrix(): AcousticInputCompleteness[] {
       requiredFields: [
         "baseSlabOrFloor",
         "toppingOrFloatingLayer",
-        "resilientLayerDynamicStiffnessMNPerM3",
+        "resilientLayerDynamicStiffnessMNm3",
         "loadBasisKgM2"
       ],
       conditionalFields: ["ceilingOrLowerAssembly"],
@@ -281,7 +281,7 @@ describe("calculator model-first physics prediction pivot Gate D", () => {
       "supportTopology"
     ]);
     expect(byFamily.get("floating_floor_impact")?.requiredFields).toContain(
-      "resilientLayerDynamicStiffnessMNPerM3"
+      "resilientLayerDynamicStiffnessMNm3"
     );
     expect(byFamily.get("field_apparent_output_context")?.requiredFields).toEqual([
       "contextMode",

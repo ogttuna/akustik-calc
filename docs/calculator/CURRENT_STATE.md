@@ -29,15 +29,15 @@ path was found too narrow for the user's calculator-first goal.
 
 Current selected status:
 
-`gate_u_next_solver_or_calibration_selection_landed_no_runtime_selected_floor_impact_gate_v`
+`gate_v_floor_impact_dynamic_stiffness_contract_landed_no_runtime_selected_floor_impact_runtime_gate_w`
 
 Selected next implementation file:
 
-`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-v-floor-impact-dynamic-stiffness-contract.test.ts`
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-w-floor-impact-runtime-contract.test.ts`
 
 Selected next action:
 
-`gate_v_define_floor_impact_dynamic_stiffness_input_and_adapter_contract_for_dynamic_calculator`
+`gate_w_promote_floor_impact_dynamic_stiffness_runtime_for_dynamic_calculator`
 
 Active planning surface:
 
@@ -45,16 +45,52 @@ Active planning surface:
 
 Latest landed gate:
 
-2026-05-06 model-first physics prediction pivot Gate U next solver /
-calibration lane selection.
+2026-05-07 model-first physics prediction pivot Gate V floor-impact
+dynamic-stiffness input / adapter contract.
 
 Latest checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_U_HANDOFF.md`
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_V_HANDOFF.md`
+
+Gate V result:
+
+- Dynamic Calculator now has a no-runtime floor-impact input/adapter
+  contract in
+  `packages/engine/src/dynamic-calculator-floor-impact-dynamic-stiffness-contract.ts`;
+- resilient floating-floor `Ln,w` / `DeltaLw` requires
+  `resilientLayerDynamicStiffnessMNm3` and `loadBasisKgM2`;
+- missing dynamic stiffness, missing load basis, field-output requests
+  without room context, and `IIC` / `AIIC` requests are executable
+  positive/nearby-negative scenarios;
+- `L'n,w` / `L'nT,w` stay field-context outputs and `IIC` / `AIIC`
+  remain unsupported until ASTM E989 ownership is implemented;
+- safe role-defined floor reorders normalize without runtime value
+  movement; current floor runtime pins remain `DeltaLw 24.3` /
+  `LnW 50.3`.
+
+Gate V selected Gate W file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-w-floor-impact-runtime-contract.test.ts`
+
+Gate V selected Gate W action:
+
+`gate_w_promote_floor_impact_dynamic_stiffness_runtime_for_dynamic_calculator`
 
 Latest revalidation / commit-prep checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_U_REVALIDATION_AND_COMMIT_HANDOFF.md`
+
+Previous Gate U selection status:
+
+`gate_u_next_solver_or_calibration_selection_landed_no_runtime_selected_floor_impact_gate_v`
+
+Gate U selected Gate V file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-v-floor-impact-dynamic-stiffness-contract.test.ts`
+
+Gate U selected Gate V action:
+
+`gate_v_define_floor_impact_dynamic_stiffness_input_and_adapter_contract_for_dynamic_calculator`
 
 Revalidation result:
 
@@ -66,8 +102,8 @@ Revalidation result:
 - developer and lab-ready proposal profiles again render distinct cover
   titles, and client proposal HTML keeps missing-input caveats visible
   without exposing the raw `Warnings` heading;
-- Gate V remains the next correct move: define floor-impact dynamic
-  stiffness input and adapter contracts before runtime promotion.
+- this was the pre-Gate-V validation that confirmed Gate V was the next
+  correct move before the contract landed.
 
 Previous Gate T checkpoint:
 

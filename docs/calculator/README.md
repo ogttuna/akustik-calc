@@ -6,7 +6,7 @@ checkpoints in this folder.
 
 ## Current Source Of Truth
 
-As of 2026-05-06 the active calculator direction is the
+As of 2026-05-07 the active calculator direction is the
 model-first physics prediction pivot:
 
 `calculator_model_first_physics_prediction_pivot_v1`
@@ -19,7 +19,7 @@ required topology and material inputs are present.
 
 Gate A, Gate B, Gate C, Gate D, Gate E, Gate G, Gate H, Gate I,
 Gate J, Gate K, Gate L, Gate M, Gate N, Gate O, Gate P, Gate Q, Gate R,
-Gate S, Gate T, and Gate U for this pivot have
+Gate S, Gate T, Gate U, and Gate V for this pivot have
 landed. Gate A made the corrected rule executable: source absence
 blocks exact/calibration promotion only, not formula-backed prediction.
 Gate B added shared airborne `airborneBasis` / `airborneCandidateSet`
@@ -129,18 +129,41 @@ not a source-library move: calibration holdouts stay later, exact source
 rows still override only through owned policy, and `Ln,w`, `L'n,w`,
 `L'nT,w`, `IIC`, and `AIIC` remain basis-separated before runtime
 promotion.
+Gate V adds the no-runtime floor-impact dynamic-stiffness input and
+adapter contract. Resilient floating-floor `Ln,w` / `DeltaLw` now require
+owned `resilientLayerDynamicStiffnessMNm3` and `loadBasisKgM2`; missing
+values produce targeted `needs_input`. `L'n,w` / `L'nT,w` stay field
+context outputs, `IIC` / `AIIC` remain blocked behind an ASTM E989
+adapter owner, and safe role-defined floor reorders normalize without
+runtime value movement.
 
 Current selection status:
 
+`gate_v_floor_impact_dynamic_stiffness_contract_landed_no_runtime_selected_floor_impact_runtime_gate_w`
+
+Selected next Gate W file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-w-floor-impact-runtime-contract.test.ts`
+
+Selected next Gate W action:
+
+`gate_w_promote_floor_impact_dynamic_stiffness_runtime_for_dynamic_calculator`
+
+Previous Gate U selection status:
+
 `gate_u_next_solver_or_calibration_selection_landed_no_runtime_selected_floor_impact_gate_v`
 
-Selected next Gate V file:
+Gate U selected Gate V file:
 
 `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-v-floor-impact-dynamic-stiffness-contract.test.ts`
 
-Selected next Gate V action:
+Gate U selected Gate V action:
 
 `gate_v_define_floor_impact_dynamic_stiffness_input_and_adapter_contract_for_dynamic_calculator`
+
+Latest Gate V checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_V_HANDOFF.md`
 
 Latest Gate U revalidation / commit-prep checkpoint:
 

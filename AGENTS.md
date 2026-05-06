@@ -57,15 +57,18 @@ shape in `packages/engine/src/airborne-calculator.ts` and
 Sharp, and Kurtovic paths are useful delegate engines and benchmark
 signals, but they are not complete dynamic coverage for double/framed,
 triple/multi-cavity, floor-impact, field, or building-prediction routes.
-Gate V must define the floor-impact dynamic-stiffness input and adapter
+Gate V has defined the floor-impact dynamic-stiffness input and adapter
 contract after Gate U selected that lane, without turning the calculator
-back into a finite source catalog or aliasing `Ln,w` with `IIC`.
+back into a finite source catalog or aliasing `Ln,w` with `IIC`. Gate W
+is the next runtime-promotion gate and must keep the Gate V input and
+adapter boundaries pinned.
 
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_U_REVALIDATION_AND_COMMIT_HANDOFF.md`
-3. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_U_HANDOFF.md`
+2. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_V_HANDOFF.md`
+3. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_U_REVALIDATION_AND_COMMIT_HANDOFF.md`
+4. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_U_HANDOFF.md`
 4. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_T_HANDOFF.md`
 5. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_S_HANDOFF.md`
 6. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_R_HANDOFF.md`
@@ -382,17 +385,34 @@ plan.
 - current selected slice:
   `calculator_model_first_physics_prediction_pivot_v1`
 - current next decision inside the slice:
-  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-v-floor-impact-dynamic-stiffness-contract.test.ts`
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-w-floor-impact-runtime-contract.test.ts`
   should run
+  `gate_w_promote_floor_impact_dynamic_stiffness_runtime_for_dynamic_calculator`.
+- latest checkpoint:
+  `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_V_HANDOFF.md`.
+- just landed model-first physics prediction pivot Gate V:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-v-floor-impact-dynamic-stiffness-contract.test.ts`
+  landed
   `gate_v_define_floor_impact_dynamic_stiffness_input_and_adapter_contract_for_dynamic_calculator`.
-- latest revalidation / commit-prep checkpoint:
+  It adds the no-runtime floor-impact dynamic-stiffness input/adapter
+  contract for Dynamic Calculator. `resilientLayerDynamicStiffnessMNm3`
+  and `loadBasisKgM2` are executable physical inputs for resilient
+  floating-floor `Ln,w` / `DeltaLw`; missing values produce targeted
+  `needs_input`. `L'n,w` / `L'nT,w` require explicit field context, and
+  `IIC` / `AIIC` remain unsupported until an ASTM E989 adapter owner
+  exists. Safe role-defined floor reorders normalize without moving
+  runtime values. Selection status:
+  `gate_v_floor_impact_dynamic_stiffness_contract_landed_no_runtime_selected_floor_impact_runtime_gate_w`.
+  Selected next file:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-w-floor-impact-runtime-contract.test.ts`.
+  Selected next action:
+  `gate_w_promote_floor_impact_dynamic_stiffness_runtime_for_dynamic_calculator`.
+- latest Gate U revalidation / commit-prep checkpoint:
   `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_U_REVALIDATION_AND_COMMIT_HANDOFF.md`
-  confirms `main` is even with `origin/main`,
-  `pnpm calculator:gate:current` is green, broad `pnpm check` is green after
-  fixing two proposal-surface regressions, and Gate V remains the right
-  first implementation step. The proposal fix keeps client-facing
-  missing-input caveats visible without exposing the raw `Warnings`
-  heading and restores distinct developer/lab-ready cover branding.
+  confirms `main` was even with `origin/main`,
+  `pnpm calculator:gate:current` was green, broad `pnpm check` was green after
+  fixing two proposal-surface regressions, and Gate V was the right
+  first implementation step.
 - just landed model-first physics prediction pivot Gate U:
   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-u-next-solver-or-calibration-selection-contract.test.ts`
   landed

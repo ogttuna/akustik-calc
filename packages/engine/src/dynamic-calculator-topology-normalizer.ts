@@ -8,6 +8,7 @@ import {
 
 import {
   buildDynamicCalculatorRouteInputTopologyAssessment,
+  type DynamicCalculatorFloorImpactContext,
   type DynamicCalculatorRoute,
   type DynamicCalculatorRouteInputTopologyAssessment
 } from "./dynamic-calculator-route-input-topology";
@@ -51,6 +52,7 @@ export type DynamicCalculatorTopologyNormalizationBlocker = {
 export type DynamicCalculatorTopologyNormalizerInput = {
   airborneContext?: AirborneContext;
   catalog?: readonly MaterialDefinition[];
+  floorImpactContext?: DynamicCalculatorFloorImpactContext;
   layers: readonly LayerInput[];
   maxLayerCount?: number;
   previousLayers?: readonly LayerInput[];
@@ -434,6 +436,7 @@ export function normalizeDynamicCalculatorTopologyInput(
   const routeInputAssessment = buildDynamicCalculatorRouteInputTopologyAssessment({
     airborneContext: input.airborneContext,
     catalog,
+    floorImpactContext: input.floorImpactContext,
     layers: normalizedLayers,
     route: input.route,
     targetOutputs: input.targetOutputs.length > 0 ? input.targetOutputs : WALL_AIRBORNE_OUTPUTS

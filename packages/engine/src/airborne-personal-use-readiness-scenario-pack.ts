@@ -172,7 +172,7 @@ export const GATE_J_PERSONAL_USE_READINESS_SCENARIOS = [
     description:
       "Floating-floor impact requests need dynamic stiffness, load basis, base/floating layer roles, and field context for field metrics.",
     expectedMissingInputPrompts: [
-      "resilientLayerDynamicStiffnessMNPerM3",
+      "resilientLayerDynamicStiffnessMNm3",
       "loadBasisKgM2",
       "baseSlabOrFloor",
       "toppingOrFloatingLayer",

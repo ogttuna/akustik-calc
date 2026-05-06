@@ -65,7 +65,7 @@ unsafe reorders. Lab, field, and building-prediction bases must stay
 separate; `Rw`/`STC`, `Ln,w`/`IIC`, and lab/field values are not
 interchangeable without a named rating and measurement basis.
 
-## Active Decision Map - 2026-05-06 Model-First Physics Prediction Pivot Gate U Landed / Gate V Selected
+## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate V Landed / Gate W Selected
 
 Current implementation position:
 `calculator_model_first_physics_prediction_pivot_v1`.
@@ -97,6 +97,10 @@ Latest landed Gate U checkpoint:
 Latest Gate U revalidation / commit-prep checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_U_REVALIDATION_AND_COMMIT_HANDOFF.md`
+
+Latest landed Gate V checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_V_HANDOFF.md`
 
 Previous landed Gate T checkpoint:
 
@@ -481,53 +485,74 @@ decks/screeds, limp membranes, and resilient impact layers. Required
 property gaps still become `needs_input`; optional precision gaps widen
 uncertainty through explicit defaults; no runtime values, support
 buckets, card behavior, or report copy moved.
-Gate U landed the no-runtime next solver/calibration lane selection
-after material gap closure. It ranks floor impact, field/building
-continuation, generalized multi-cavity, lined masonry/CLT, and
-calibration holdout candidates, then selects floor-impact
-dynamic-stiffness input/adapter ownership for Gate V. This is the next
-calculator-first coverage move because floor impact is still a large
-personal-use gap, Gate T closed resilient layer / screed / membrane
-material readiness, and `Ln,w`, `L'n,w`, `L'nT,w`, `IIC`, and `AIIC`
-need explicit ISO 717-2 / ASTM E989 adapter boundaries before runtime
-promotion.
+Gate V landed the no-runtime floor-impact dynamic-stiffness input and
+adapter contract for Dynamic Calculator. It keeps the calculator-first
+strategy intact: source rows can still anchor, calibrate, or override
+when they truly match, but resilient floating-floor `Ln,w` / `DeltaLw`
+now has executable physical input ownership instead of waiting on a
+finite catalog. `resilientLayerDynamicStiffnessMNm3` and
+`loadBasisKgM2` are required for the resilient floating-floor lane;
+missing dynamic stiffness, missing load basis, field-output requests
+without room context, and `IIC` / `AIIC` requests are covered by positive
+and nearby-negative tests. `L'n,w` / `L'nT,w` remain field-context
+outputs and `IIC` / `AIIC` remain blocked until ASTM E989 ownership is
+implemented.
 
-The post-Gate-U revalidation keeps this queue unchanged. `main` is even
-with `origin/main`; `pnpm calculator:gate:current` passed; broad
-`pnpm check` passed after fixing proposal-surface regressions outside the
-focused current gate. The fixes are intentionally proposal-only:
-developer/lab-ready branding is distinct again, and branded printable
-HTML keeps missing-input caveats visible without exposing the raw
-`Warnings` heading. No calculator runtime value or support bucket moved.
+Runtime numeric values and support buckets did not move in Gate V.
+Current floor pins remain `DeltaLw 24.3` / `LnW 50.3` for the heavy
+floating-floor predictor scenario. Safe role-defined floor reorders
+normalize through the existing topology normalizer without moving
+runtime values.
 
 Clean next-step queue:
 
-1. Gate V floor-impact dynamic-stiffness input and adapter contract for
-   Dynamic Calculator.
-2. Re-run floor-impact readiness with positive and nearby-negative
-   dynamic-stiffness/load-basis scenarios before any runtime promotion.
-3. source packet acquisition/calibration rows can be promoted later only
+1. Gate W floor-impact dynamic-stiffness runtime promotion for Dynamic
+   Calculator, using the Gate V contract as the acceptance boundary.
+2. Keep source packet acquisition/calibration rows as later anchors or
+   exact overrides only
    through the Gate H policy.
 
-Gate V implementation breakdown:
+Gate W implementation breakdown:
 
-1. Add the Gate V contract file
-   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-v-floor-impact-dynamic-stiffness-contract.test.ts`.
-2. Add a small engine helper for the floor-impact input/adapter contract
-   rather than changing runtime selection immediately.
-3. Require `resilientLayerDynamicStiffnessMNm3` and `loadBasisKgM2` for
-   the resilient floating-floor lane; missing either must produce
-   targeted `needs_input`.
-4. Keep lab impact, field impact, and rating adapters separate:
-   `Ln,w` / `DeltaLw` through ISO 717-2, `L'n,w` / `L'nT,w` only with
-   field context, and `IIC` / `AIIC` blocked until ASTM E989 ownership
-   is executable.
-5. Add positive and nearby-negative tests for complete heavy
-   floating-floor input, missing dynamic stiffness, missing load basis,
-   field-output requests without field context, `IIC`/`AIIC` requests,
-   and safe/unsafe floor layer edits.
-6. Update the current-gate runner and docs only after the contract is
-   green; leave runtime numeric promotion for the next selected gate.
+1. Add
+   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-w-floor-impact-runtime-contract.test.ts`.
+2. Promote only the complete resilient floating-floor lab lane where
+   Gate V reports `ready_for_runtime_gate` for `Ln,w` / `DeltaLw`.
+3. Keep `L'n,w`, `L'nT,w`, `IIC`, and `AIIC` out of runtime promotion
+   unless their Gate V adapter boundaries are ready; do not alias lab
+   `Ln,w` to field or ASTM ratings.
+4. Pin visible card/report parity and runtime values against the
+   predictor scenario, including support bucket, basis/origin, and error
+   budget.
+5. Add nearby negatives for missing `loadBasisKgM2`, missing
+   `resilientLayerDynamicStiffnessMNm3`, unsupported ASTM ratings, and
+   field outputs without room context.
+6. Run focused Gate W, Gate V, `pnpm calculator:gate:current`, and
+   broad checks before selecting the next step.
+
+Gate V landed status:
+
+`gate_v_floor_impact_dynamic_stiffness_contract_landed_no_runtime_selected_floor_impact_runtime_gate_w`
+
+Gate V selected Gate W file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-w-floor-impact-runtime-contract.test.ts`
+
+Gate V selected Gate W action:
+
+`gate_w_promote_floor_impact_dynamic_stiffness_runtime_for_dynamic_calculator`
+
+Previous Gate U selection status:
+
+`gate_u_next_solver_or_calibration_selection_landed_no_runtime_selected_floor_impact_gate_v`
+
+Gate U selected Gate V file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-v-floor-impact-dynamic-stiffness-contract.test.ts`
+
+Gate U selected Gate V action:
+
+`gate_v_define_floor_impact_dynamic_stiffness_input_and_adapter_contract_for_dynamic_calculator`
 
 Corrected operating model:
 

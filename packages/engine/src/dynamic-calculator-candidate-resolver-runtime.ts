@@ -171,7 +171,7 @@ function missingInputNames(assessment: DynamicCalculatorRouteInputTopologyAssess
 
   return assessment.route === "wall"
     ? ["sideALeafGroup", "cavity1DepthMm", "internalLeafGroup", "supportTopology"]
-    : ["baseSlabOrFloor", "resilientLayerDynamicStiffnessMNPerM3", "loadBasisKgM2"];
+    : ["baseSlabOrFloor", "resilientLayerDynamicStiffnessMNm3", "loadBasisKgM2"];
 }
 
 function familyFrom(input: DynamicCalculatorCandidateResolverRuntimeInput): DynamicAirborneFamily | undefined {

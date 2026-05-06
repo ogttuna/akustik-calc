@@ -2,7 +2,7 @@
 
 Slice id: `calculator_model_first_physics_prediction_pivot_v1`
 
-Status: SELECTED / GATE V NEXT / POST-GATE-U REVALIDATED
+Status: SELECTED / GATE W NEXT / GATE V LANDED
 
 Selected by:
 
@@ -12,14 +12,30 @@ queue.
 
 Selection status:
 
-`gate_u_next_solver_or_calibration_selection_landed_no_runtime_selected_floor_impact_gate_v`
+`gate_v_floor_impact_dynamic_stiffness_contract_landed_no_runtime_selected_floor_impact_runtime_gate_w`
+
+Latest Gate V checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_V_HANDOFF.md`
+
+Selected Gate W file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-w-floor-impact-runtime-contract.test.ts`
+
+Selected Gate W action:
+
+`gate_w_promote_floor_impact_dynamic_stiffness_runtime_for_dynamic_calculator`
 
 Latest revalidation / commit-prep checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_U_REVALIDATION_AND_COMMIT_HANDOFF.md`
 
-Revalidation result: current gate and broad `pnpm check` are green after
-proposal-surface fixes; Gate V remains the first implementation step.
+Revalidation result: current gate and broad `pnpm check` were green after
+proposal-surface fixes; that selected Gate V, which has now landed.
+
+Previous Gate U selection status:
+
+`gate_u_next_solver_or_calibration_selection_landed_no_runtime_selected_floor_impact_gate_v`
 
 Gate A file landed:
 
@@ -353,6 +369,18 @@ Gate V selected action:
 
 `gate_v_define_floor_impact_dynamic_stiffness_input_and_adapter_contract_for_dynamic_calculator`
 
+Gate V file landed:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-v-floor-impact-dynamic-stiffness-contract.test.ts`
+
+Gate V landed action:
+
+`gate_v_define_floor_impact_dynamic_stiffness_input_and_adapter_contract_for_dynamic_calculator`
+
+Gate V selection status:
+
+`gate_v_floor_impact_dynamic_stiffness_contract_landed_no_runtime_selected_floor_impact_runtime_gate_w`
+
 Gate S runtime note:
 
 Complete explicit double-leaf/framed gypsum / rockwool / gypsum now
@@ -380,6 +408,19 @@ single-leaf and double-leaf runtime lanes remain useful later, but the
 larger personal-use gap is floor impact coverage. Gate V must keep
 `Ln,w`, `L'n,w`, `L'nT,w`, `IIC`, and `AIIC` basis-separated and must
 ask for missing dynamic stiffness/load-basis inputs instead of guessing.
+
+Gate V landing note:
+
+Gate V adds
+`packages/engine/src/dynamic-calculator-floor-impact-dynamic-stiffness-contract.ts`
+and the Gate V contract test. Complete resilient floating-floor
+`Ln,w` / `DeltaLw` input now requires
+`resilientLayerDynamicStiffnessMNm3` plus `loadBasisKgM2`; missing
+dynamic stiffness, missing load, field impact without room context, and
+`IIC` / `AIIC` are executable nearby negatives. Safe role-defined floor
+reorders normalize, source absence remains only an exact/calibration
+blocker, and runtime values do not move. Gate W is selected for runtime
+promotion using this contract boundary.
 
 Selected planning surface:
 

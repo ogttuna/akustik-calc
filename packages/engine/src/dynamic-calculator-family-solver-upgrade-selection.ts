@@ -298,7 +298,7 @@ const CANDIDATE_SEEDS = [
     requiredPhysicalInputs: [
       "baseSlabOrFloor",
       "toppingOrFloatingLayer",
-      "resilientLayerDynamicStiffnessMNPerM3",
+      "resilientLayerDynamicStiffnessMNm3",
       "loadBasisKgM2"
     ],
     route: "floor",
