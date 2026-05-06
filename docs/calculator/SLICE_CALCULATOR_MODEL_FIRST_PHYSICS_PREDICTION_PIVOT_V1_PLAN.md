@@ -2,7 +2,7 @@
 
 Slice id: `calculator_model_first_physics_prediction_pivot_v1`
 
-Status: SELECTED / GATE I NEXT
+Status: SELECTED / GATE J NEXT
 
 Selected by:
 
@@ -12,7 +12,7 @@ queue.
 
 Selection status:
 
-`gate_h_source_calibration_exact_promotion_policy_landed_no_runtime_selected_family_material_expansion_gate_i`
+`gate_i_family_material_properties_and_benchmark_scenarios_landed_no_runtime_selected_personal_use_readiness_gate_j`
 
 Gate A file landed:
 
@@ -94,13 +94,25 @@ Gate H selection status:
 
 `gate_h_source_calibration_exact_promotion_policy_landed_no_runtime_selected_family_material_expansion_gate_i`
 
-Gate I selected file:
+Gate I file landed:
 
 `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-i-family-material-expansion-contract.test.ts`
 
-Gate I selected action:
+Gate I landed action:
 
 `gate_i_expand_family_material_properties_and_benchmark_scenarios`
+
+Gate I selection status:
+
+`gate_i_family_material_properties_and_benchmark_scenarios_landed_no_runtime_selected_personal_use_readiness_gate_j`
+
+Gate J selected file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-j-personal-use-readiness-scenario-pack-contract.test.ts`
+
+Gate J selected action:
+
+`gate_j_build_personal_use_readiness_scenario_pack`
 
 Selected planning surface:
 
@@ -110,6 +122,10 @@ Latest acoustic-calculator plan revalidation / execution handoff:
 
 `docs/calculator/CHECKPOINT_2026-05-06_ACOUSTIC_CALCULATOR_PLAN_REVALIDATION_HANDOFF.md`
 
+Latest Gate I / report-export manual validation handoff:
+
+`docs/calculator/CHECKPOINT_2026-05-06_GATE_I_REPORT_EXPORT_MANUAL_EDIT_VALIDATION_HANDOFF.md`
+
 Latest Gate H / report-export wrap-up handoff:
 
 `docs/calculator/CHECKPOINT_2026-05-06_GATE_H_AND_REPORT_EXPORT_WRAPUP_HANDOFF.md`
@@ -117,6 +133,10 @@ Latest Gate H / report-export wrap-up handoff:
 Latest landed Gate H handoff:
 
 `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_H_HANDOFF.md`
+
+Latest landed Gate I handoff:
+
+`docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_I_HANDOFF.md`
 
 Previous landed Gate G handoff:
 
@@ -583,6 +603,22 @@ Done when:
   named solver or explicit unsupported/needs-input boundary;
 - scenario tests cover common professional layer combinations and hostile
   reorder/split/duplicate cases.
+
+Gate I landed shape:
+
+- shared material definitions now accept optional acoustic properties:
+  behaviour, modulus, Poisson ratio, loss factor, flow resistivity,
+  porosity, and source status;
+- seed catalog common materials now carry nominal engineering defaults
+  for readiness checks, not measured-exact source ownership;
+- `airborne-family-material-expansion.ts` defines M8 benchmark scenarios
+  and a readiness evaluator for single-leaf, double/framed, triple-leaf,
+  lined masonry, CLT/mass timber, and floating-floor routes;
+- missing required material properties produce `needs_input`; optional
+  precision gaps produce `complete_with_defaults` plus error-budget
+  adjustment;
+- runtime values remain frozen and Gate J is selected for personal-use
+  readiness scenario pack coverage.
 
 ### M9 - Personal-Use Readiness Gate
 

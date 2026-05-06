@@ -17,7 +17,7 @@ override or anchor known assemblies, but missing source packets must
 not block a labelled family-specific physics prediction when the
 required topology and material inputs are present.
 
-Gate A, Gate B, Gate C, Gate D, Gate E, Gate G, and Gate H for this pivot have
+Gate A, Gate B, Gate C, Gate D, Gate E, Gate G, Gate H, and Gate I for this pivot have
 landed. Gate A made the corrected rule executable: source absence
 blocks exact/calibration promotion only, not formula-backed prediction.
 Gate B added shared airborne `airborneBasis` / `airborneCandidateSet`
@@ -34,13 +34,19 @@ triple-leaf topology now uses
 `triple_leaf_two_cavity_frequency_solver_family_physics_prediction`.
 Gate H added the source-promotion policy for exact full-stack,
 calibrated family, and exact-subassembly-plus-delta candidates without
-moving runtime values or deleting the physics-prediction lane.
+moving runtime values or deleting the physics-prediction lane. Gate I
+added shared material acoustic property fields, nominal catalog
+properties, and a family benchmark/readiness helper for single-leaf,
+double/framed, triple-leaf, lined masonry, CLT/mass timber, and
+floating-floor routes without moving runtime values.
 
-The latest wrap-up checkpoint also confirms the report-export workflow:
-manual edits in `/workbench/proposal/configure` change only the packaged
-proposal snapshot, and both PDF and DOCX exports use that edited
-snapshot. Calculator inputs, solver routes, and engine outputs remain
-untouched by report edits.
+The latest manual export checkpoint also confirms the report-export
+workflow with real generated artifacts: manual edits in
+`/workbench/proposal/configure` change only the packaged proposal
+snapshot, and both PDF and DOCX exports use that edited snapshot. PDF
+was rendered to PNG and checked visually; DOCX package integrity and
+Word XML content confirmed the same manual values. Calculator inputs,
+solver routes, and engine outputs remain untouched by report edits.
 
 Current runtime reality: grouped explicit-topology Rockwool triple-leaf
 returns lab `Rw 50 / STC 55 / C 0.8 / Ctr -7.3` as uncalibrated
@@ -49,23 +55,43 @@ source-validated. The flat-list split/internal Rockwool stack remains
 guarded at diagnostic `Rw 41` with unsupported target outputs until the
 user supplies grouped topology.
 
-Gate H landed file:
-
-`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-h-source-calibration-exact-promotion-contract.test.ts`
-
-Gate H landed action:
-
-`gate_h_calibrate_sources_and_exact_promotion_without_deleting_physics_solver`
-
-Gate H selection status:
-
-`gate_h_source_calibration_exact_promotion_policy_landed_no_runtime_selected_family_material_expansion_gate_i`
-
-Selected next file:
+Gate I landed file:
 
 `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-i-family-material-expansion-contract.test.ts`
 
+Gate I landed action:
+
+`gate_i_expand_family_material_properties_and_benchmark_scenarios`
+
+Gate I selection status:
+
+`gate_i_family_material_properties_and_benchmark_scenarios_landed_no_runtime_selected_personal_use_readiness_gate_j`
+
+Selected next file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-j-personal-use-readiness-scenario-pack-contract.test.ts`
+
 Selected next action:
+
+`gate_j_build_personal_use_readiness_scenario_pack`
+
+Previous Gate H landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-h-source-calibration-exact-promotion-contract.test.ts`
+
+Previous Gate H landed action:
+
+`gate_h_calibrate_sources_and_exact_promotion_without_deleting_physics_solver`
+
+Previous Gate H selection status:
+
+`gate_h_source_calibration_exact_promotion_policy_landed_no_runtime_selected_family_material_expansion_gate_i`
+
+Gate H selected Gate I file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-i-family-material-expansion-contract.test.ts`
+
+Gate H selected Gate I action:
 
 `gate_i_expand_family_material_properties_and_benchmark_scenarios`
 
@@ -156,48 +182,54 @@ drift before starting implementation.
    stable right now, active slice, and deferred follow-up tracks.
 4. [SLICE_CALCULATOR_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_V1_PLAN.md](./SLICE_CALCULATOR_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_V1_PLAN.md)
    — active model-first pivot plan.
-5. [CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_H_HANDOFF.md](./CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_H_HANDOFF.md)
+5. [CHECKPOINT_2026-05-06_GATE_I_REPORT_EXPORT_MANUAL_EDIT_VALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-06_GATE_I_REPORT_EXPORT_MANUAL_EDIT_VALIDATION_HANDOFF.md)
+   — latest Gate I/report-export checkpoint with generated PDF/DOCX
+   manual-edit verification and Gate J handoff.
+6. [CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_I_HANDOFF.md](./CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_I_HANDOFF.md)
+   — latest landed Gate I material-property expansion / benchmark
+   readiness contract and Gate J selection.
+7. [CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_H_HANDOFF.md](./CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_H_HANDOFF.md)
    — latest landed Gate H source calibration / exact-promotion policy
    contract and Gate I selection.
-6. [CHECKPOINT_2026-05-06_GATE_H_AND_REPORT_EXPORT_WRAPUP_HANDOFF.md](./CHECKPOINT_2026-05-06_GATE_H_AND_REPORT_EXPORT_WRAPUP_HANDOFF.md)
+8. [CHECKPOINT_2026-05-06_GATE_H_AND_REPORT_EXPORT_WRAPUP_HANDOFF.md](./CHECKPOINT_2026-05-06_GATE_H_AND_REPORT_EXPORT_WRAPUP_HANDOFF.md)
    — Gate H validation, report editor PDF/DOCX export readiness, and
    Gate I handoff.
-7. [CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_G_HANDOFF.md](./CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_G_HANDOFF.md)
+9. [CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_G_HANDOFF.md](./CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_G_HANDOFF.md)
    — landed Gate G grouped Rockwool family-physics prediction contract
    and Gate H selection.
-8. [CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_E_HANDOFF.md](./CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_E_HANDOFF.md)
+10. [CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_E_HANDOFF.md](./CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_E_HANDOFF.md)
    — latest landed Gate E no-runtime airborne candidate resolver
    contract and Gate G selection.
-9. [CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_D_HANDOFF.md](./CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_D_HANDOFF.md)
+11. [CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_D_HANDOFF.md](./CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_D_HANDOFF.md)
    — landed Gate D no-runtime input-completeness contract and Gate E
    selection.
-10. [CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_C_HANDOFF.md](./CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_C_HANDOFF.md)
+12. [CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_C_HANDOFF.md](./CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_C_HANDOFF.md)
    — latest landed Gate C no-runtime rating-adapter integrity contract
    and Gate D selection.
-11. [CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_B_HANDOFF.md](./CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_B_HANDOFF.md)
+13. [CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_B_HANDOFF.md](./CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_B_HANDOFF.md)
    — latest landed Gate B no-runtime schema contract and Gate C
    selection.
-12. [CHECKPOINT_2026-05-06_ACOUSTIC_CALCULATOR_PLAN_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-06_ACOUSTIC_CALCULATOR_PLAN_REVALIDATION_HANDOFF.md)
+14. [CHECKPOINT_2026-05-06_ACOUSTIC_CALCULATOR_PLAN_REVALIDATION_HANDOFF.md](./CHECKPOINT_2026-05-06_ACOUSTIC_CALCULATOR_PLAN_REVALIDATION_HANDOFF.md)
    — acoustic-calculator plan revalidation and execution handoff.
-13. [CHECKPOINT_2026-05-06_MODEL_FIRST_GATE_A_REVALIDATION_COMMIT_HANDOFF.md](./CHECKPOINT_2026-05-06_MODEL_FIRST_GATE_A_REVALIDATION_COMMIT_HANDOFF.md)
+15. [CHECKPOINT_2026-05-06_MODEL_FIRST_GATE_A_REVALIDATION_COMMIT_HANDOFF.md](./CHECKPOINT_2026-05-06_MODEL_FIRST_GATE_A_REVALIDATION_COMMIT_HANDOFF.md)
    — checkpoint/revalidation handoff after Gate A; historical Gate B
    selection context and model-first calculation goal.
-14. [CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_A_HANDOFF.md](./CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_A_HANDOFF.md)
+16. [CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_A_HANDOFF.md](./CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_A_HANDOFF.md)
    — latest landed Gate A no-runtime contract and Gate B selection.
-15. [CHECKPOINT_2026-05-06_MODEL_FIRST_BENCHMARK_ACCEPTANCE_HANDOFF.md](./CHECKPOINT_2026-05-06_MODEL_FIRST_BENCHMARK_ACCEPTANCE_HANDOFF.md)
+17. [CHECKPOINT_2026-05-06_MODEL_FIRST_BENCHMARK_ACCEPTANCE_HANDOFF.md](./CHECKPOINT_2026-05-06_MODEL_FIRST_BENCHMARK_ACCEPTANCE_HANDOFF.md)
    — benchmark/acceptance lanes and runtime stop rules.
-16. [CHECKPOINT_2026-05-05_STANDARDS_RESEARCH_PLAN_DETAIL_HANDOFF.md](./CHECKPOINT_2026-05-05_STANDARDS_RESEARCH_PLAN_DETAIL_HANDOFF.md)
+18. [CHECKPOINT_2026-05-05_STANDARDS_RESEARCH_PLAN_DETAIL_HANDOFF.md](./CHECKPOINT_2026-05-05_STANDARDS_RESEARCH_PLAN_DETAIL_HANDOFF.md)
    — latest standards research and detailed gate plan.
-17. [CHECKPOINT_2026-05-05_DOC_IMPLEMENTATION_RECONCILIATION_HANDOFF.md](./CHECKPOINT_2026-05-05_DOC_IMPLEMENTATION_RECONCILIATION_HANDOFF.md)
+19. [CHECKPOINT_2026-05-05_DOC_IMPLEMENTATION_RECONCILIATION_HANDOFF.md](./CHECKPOINT_2026-05-05_DOC_IMPLEMENTATION_RECONCILIATION_HANDOFF.md)
    — latest doc/implementation reconciliation checkpoint.
-18. [CHECKPOINT_2026-05-05_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_REPLAN_HANDOFF.md](./CHECKPOINT_2026-05-05_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_REPLAN_HANDOFF.md)
+20. [CHECKPOINT_2026-05-05_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_REPLAN_HANDOFF.md](./CHECKPOINT_2026-05-05_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_REPLAN_HANDOFF.md)
    — model-first re-analysis checkpoint.
-19. [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
+21. [CALCULATION_MODEL_AND_VALIDATION.md](./CALCULATION_MODEL_AND_VALIDATION.md)
    — answer-origin contract: exact, anchored delta, calibrated physics,
    physics prediction, bounded, screening, needs-input, unsupported.
-20. [SYSTEM_MAP.md](./SYSTEM_MAP.md) — runtime file map and user-flow
+22. [SYSTEM_MAP.md](./SYSTEM_MAP.md) — runtime file map and user-flow
    boundaries.
-21. [MASTER_PLAN.md](./MASTER_PLAN.md) — strategic roadmap and
+23. [MASTER_PLAN.md](./MASTER_PLAN.md) — strategic roadmap and
    implementation sequence.
 
 Older `CHECKPOINT_*` and `SLICE_*` docs are historical snapshots unless

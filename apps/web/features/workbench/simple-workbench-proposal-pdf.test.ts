@@ -92,6 +92,38 @@ const DOCUMENT: SimpleWorkbenchProposalDocument = {
   warnings: []
 };
 
+const MANUALLY_EDITED_DOCUMENT: SimpleWorkbenchProposalDocument = {
+  ...DOCUMENT,
+  executiveSummary: "Manual report wording is active on this exported issue.",
+  metrics: [
+    {
+      detail: "Manual consultant correction applied to the issue snapshot only.",
+      label: "Rw",
+      value: "59 dB (manual)"
+    }
+  ],
+  primaryMetricValue: "59 dB (manual)",
+  responseCurves: [
+    {
+      activeSeriesId: "manual-airborne",
+      direction: "higher_better",
+      domainLabel: "Frequency, Hz",
+      id: "airborne",
+      note: "Manual chart values for the issued report snapshot.",
+      series: [
+        {
+          active: true,
+          frequenciesHz: [125, 250, 500],
+          id: "manual-airborne",
+          label: "Manual airborne curve",
+          valuesDb: [42, 49, 55]
+        }
+      ],
+      title: "Manual airborne response"
+    }
+  ]
+};
+
 describe("simple workbench proposal pdf helper", () => {
   beforeEach(() => {
     const anchor = {
@@ -198,45 +230,27 @@ describe("simple workbench proposal pdf helper", () => {
     });
   });
 
-  it("sends the manually edited proposal snapshot to the DOCX renderer", async () => {
-    const editedDocument: SimpleWorkbenchProposalDocument = {
-      ...DOCUMENT,
-      executiveSummary: "Manual report wording is active on this exported issue.",
-      metrics: [
-        {
-          detail: "Manual consultant correction applied to the issue snapshot only.",
-          label: "Rw",
-          value: "59 dB (manual)"
-        }
-      ],
-      primaryMetricValue: "59 dB (manual)",
-      responseCurves: [
-        {
-          activeSeriesId: "manual-airborne",
-          direction: "higher_better",
-          domainLabel: "Frequency, Hz",
-          id: "airborne",
-          note: "Manual chart values for the issued report snapshot.",
-          series: [
-            {
-              active: true,
-              frequenciesHz: [125, 250, 500],
-              id: "manual-airborne",
-              label: "Manual airborne curve",
-              valuesDb: [42, 49, 55]
-            }
-          ],
-          title: "Manual airborne response"
-        }
-      ]
-    };
+  it("sends the manually edited proposal snapshot to the PDF renderer", async () => {
+    await downloadSimpleWorkbenchProposalPdf(MANUALLY_EDITED_DOCUMENT, {
+      style: "simple"
+    });
 
-    await downloadSimpleWorkbenchProposalDocx(editedDocument, {
+    expect(fetch).toHaveBeenCalledWith("/api/proposal-pdf?style=simple", {
+      body: JSON.stringify(MANUALLY_EDITED_DOCUMENT),
+      headers: {
+        "content-type": "application/json"
+      },
+      method: "POST"
+    });
+  });
+
+  it("sends the manually edited proposal snapshot to the DOCX renderer", async () => {
+    await downloadSimpleWorkbenchProposalDocx(MANUALLY_EDITED_DOCUMENT, {
       style: "simple"
     });
 
     expect(fetch).toHaveBeenCalledWith("/api/proposal-docx?style=simple", {
-      body: JSON.stringify(editedDocument),
+      body: JSON.stringify(MANUALLY_EDITED_DOCUMENT),
       headers: {
         "content-type": "application/json"
       },

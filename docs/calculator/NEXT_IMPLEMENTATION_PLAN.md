@@ -41,7 +41,7 @@ unsafe reorders. Lab, field, and building-prediction bases must stay
 separate; `Rw`/`STC`, `Ln,w`/`IIC`, and lab/field values are not
 interchangeable without a named rating and measurement basis.
 
-## Active Decision Map - 2026-05-06 Model-First Physics Prediction Pivot Gate H Landed / Gate I Selected
+## Active Decision Map - 2026-05-06 Model-First Physics Prediction Pivot Gate I Landed / Gate J Selected
 
 Current implementation position:
 `calculator_model_first_physics_prediction_pivot_v1`.
@@ -66,13 +66,33 @@ Latest benchmark / acceptance refinement:
 
 `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_BENCHMARK_ACCEPTANCE_HANDOFF.md`
 
-Latest wrap-up / report-export readiness checkpoint:
+Latest checkpoint / manual export validation:
+
+`docs/calculator/CHECKPOINT_2026-05-06_GATE_I_REPORT_EXPORT_MANUAL_EDIT_VALIDATION_HANDOFF.md`
+
+Previous wrap-up / report-export readiness checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-06_GATE_H_AND_REPORT_EXPORT_WRAPUP_HANDOFF.md`
 
-Latest landed Gate H checkpoint:
+Latest landed Gate I checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_I_HANDOFF.md`
+
+Previous landed Gate H checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_H_HANDOFF.md`
+
+Previous Gate H selection status:
+
+`gate_h_source_calibration_exact_promotion_policy_landed_no_runtime_selected_family_material_expansion_gate_i`
+
+Gate H selected Gate I file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-i-family-material-expansion-contract.test.ts`
+
+Gate H selected Gate I action:
+
+`gate_i_expand_family_material_properties_and_benchmark_scenarios`
 
 Previous landed Gate G checkpoint:
 
@@ -124,15 +144,15 @@ Latest acoustic-calculator plan revalidation / execution handoff:
 
 Selection status:
 
-`gate_h_source_calibration_exact_promotion_policy_landed_no_runtime_selected_family_material_expansion_gate_i`
+`gate_i_family_material_properties_and_benchmark_scenarios_landed_no_runtime_selected_personal_use_readiness_gate_j`
 
 Selected next file:
 
-`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-i-family-material-expansion-contract.test.ts`
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-j-personal-use-readiness-scenario-pack-contract.test.ts`
 
 Selected next action:
 
-`gate_i_expand_family_material_properties_and_benchmark_scenarios`
+`gate_j_build_personal_use_readiness_scenario_pack`
 
 Active planning surface:
 
@@ -149,7 +169,7 @@ splitting exact-source promotion from formula-backed prediction.
 
 Checkpoint assessment:
 
-The plan remains correct after Gate H. Gate B added shared airborne
+The plan remains correct after Gate I. Gate B added shared airborne
 basis/candidate metadata, Gate C added optional rating-adapter basis
 metadata, Gate D added optional physical input-completeness metadata,
 Gate E added optional airborne candidate-resolution metadata, and Gate G
@@ -162,13 +182,20 @@ keeps exact full-stack, calibrated family, anchored-delta, and
 uncalibrated prediction candidates separate. Source candidates may win
 only with rights-safe evidence, owned topology/material/metric/tolerance
 scope, paired positive/negative tests, and calibration holdout metadata.
-The next step is Gate I/M8: family/material expansion and benchmark
-scenario widening without repeating one-off Rockwool-only fixes.
+Gate I added the first material-property widening contract and benchmark
+scenario readiness helper for single-leaf, double/framed, triple-leaf,
+lined masonry, CLT/mass timber, and floating-floor routes without moving
+runtime values. The latest manual export validation generated edited
+PDF/DOCX artifacts from the same report snapshot: PDF rendered cleanly to
+PNG, and DOCX package/XML checks confirmed the same manual values. The
+next step is Gate J/M9: personal-use readiness scenario pack and
+visible/report parity.
 
 Clean next-step queue:
 
-1. Gate I/M8 family/material expansion.
-2. M9 personal-use readiness scenario pack.
+1. Gate J/M9 personal-use readiness scenario pack.
+2. Fill remaining family material-property gaps discovered by the Gate I
+   readiness helper.
 3. source packet acquisition/calibration rows can be promoted later only
    through the Gate H policy.
 
@@ -222,6 +249,16 @@ Current implementation facts from the re-analysis:
   promoting outside the topology/material/metric/tolerance scope they
   own and requires paired positive/negative tests plus calibration
   holdout metadata.
+- `packages/shared/src/domain/material.ts` now has optional acoustic
+  material properties: behaviour, modulus, Poisson ratio, loss factor,
+  flow resistivity, porosity, and source status. The seed catalog has
+  nominal engineering defaults for the common materials needed by the
+  first Gate I benchmark scenarios, but these defaults do not imply
+  source-owned exactness.
+- `airborne-family-material-expansion.ts` now defines the M8 benchmark
+  scenario matrix and readiness evaluator. Missing required material
+  properties produce `needs_input`; optional precision gaps produce
+  `complete_with_defaults` plus an error-budget adjustment.
 - grouped Rockwool explicit topology returns lab `Rw 50 / STC 55 /
   C 0.8 / Ctr -7.3`; flat-list split/internal Rockwool remains guarded
   at diagnostic `Rw 41` until topology is explicit.

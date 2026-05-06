@@ -29,15 +29,15 @@ path was found too narrow for the user's calculator-first goal.
 
 Current selected status:
 
-`gate_h_source_calibration_exact_promotion_policy_landed_no_runtime_selected_family_material_expansion_gate_i`
+`gate_i_family_material_properties_and_benchmark_scenarios_landed_no_runtime_selected_personal_use_readiness_gate_j`
 
 Selected next implementation file:
 
-`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-i-family-material-expansion-contract.test.ts`
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-j-personal-use-readiness-scenario-pack-contract.test.ts`
 
 Selected next action:
 
-`gate_i_expand_family_material_properties_and_benchmark_scenarios`
+`gate_j_build_personal_use_readiness_scenario_pack`
 
 Active planning surface:
 
@@ -45,10 +45,18 @@ Active planning surface:
 
 Latest landed gate:
 
-2026-05-06 model-first physics prediction pivot Gate H source
-calibration / exact-promotion policy contract.
+2026-05-06 model-first physics prediction pivot Gate I family/material
+property expansion and benchmark readiness contract.
 
 Latest checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-06_GATE_I_REPORT_EXPORT_MANUAL_EDIT_VALIDATION_HANDOFF.md`
+
+Latest Gate I checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_I_HANDOFF.md`
+
+Latest Gate H / report-export wrap-up checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-06_GATE_H_AND_REPORT_EXPORT_WRAPUP_HANDOFF.md`
 
@@ -152,15 +160,29 @@ Current implementation facts:
   three-leaf/two-cavity curve and ratings. Gate G uses it only as an
   uncalibrated `family_physics_prediction`, not measured exact or
   source-validated evidence.
+- `packages/shared/src/domain/material.ts` now accepts optional
+  `acoustic` material properties. Gate I added nominal engineering
+  defaults for common concrete, gypsum board, AAC, CLT, plaster, MLV,
+  mineral-wool, air-gap, and resilient-underlay materials, plus
+  `airborne-family-material-expansion.ts` to test family/material
+  benchmark readiness without promoting those defaults to exact source
+  evidence.
 - `/workbench/proposal/configure` is now documented and labelled as the
   report editor. It edits the packaged proposal snapshot only; PDF and
   DOCX exports both use that same manually editable snapshot while
   calculator inputs, solver routes, and engine outputs stay untouched.
+- generated manual-edit export artifacts confirmed the report path:
+  `output/report-checkpoint/manual-edit-report-simple.pdf` rendered as a
+  valid 4-page A4 PDF and its rendered PNG pages visibly show the manual
+  `Rw 59 dB`, `DnT,w 54 dB`, response curve, and `224 mm total`
+  override; `output/report-checkpoint/manual-edit-report-simple.docx`
+  passed zip integrity and Word XML text checks for the same manual
+  values. `soffice`/LibreOffice is not installed in this environment, so
+  DOCX visual rendering was not available in the checkpoint.
 
 Current selected scope:
 
-- create Gate I family/material expansion contract and benchmark
-  scenario plan.
+- create Gate J personal-use readiness scenario pack.
 - keep Gate G grouped Rockwool runtime values unchanged unless a future
   rights-safe source candidate is actually eligible under the Gate H
   promotion policy.
@@ -171,20 +193,31 @@ Current selected scope:
 
 Current validation:
 
-Gate H and the report-export wrap-up are green in this working tree.
-Focused Gate H passed 1 file / 7 tests. Gate A/B/C/D/E/G/H continuity
-passed 7 files / 45 tests. `pnpm calculator:gate:current` passed with
-engine 288 files / 1632 tests, web 61 files / 273 passed + 18 skipped,
-repo build 5 / 5 tasks, and whitespace guard green. Focused report
-editor/export tests passed 6 files / 24 tests. DOCX renderer smoke
-returned 78227 bytes with `PK`; PDF renderer smoke returned 63528 bytes
-with `%PDF`. The latest broad `pnpm check` is green after Gate H and the
-report-export wrap-up: lint clean, typecheck clean, engine full test
-413 files / 2434 tests, web full test 166 files green through
-`run-web-vitest`, and repo build 5 / 5 tasks. Known non-fatal
-`sharp/@img` warnings remain through `@turbodocx/html-to-docx`, and
-`apps/web/next-env.d.ts` was restored to `.next-typecheck` after the
-Next build side effect.
+Gate I validation is green in this working tree. Focused Gate I passed 1
+file / 7 tests. Gate A/B/C/D/E/G/H/I pivot continuity passed 8 files /
+52 tests. `pnpm calculator:gate:current` passed with engine 289 files /
+1639 tests, web 61 files / 273 passed + 18 skipped, repo build 5 / 5
+tasks, and whitespace guard green. Shared and engine typecheck passed;
+shared, engine, and catalogs lint passed; catalogs typecheck passed. The
+known non-fatal `sharp` optional dependency warning still appears during
+the web build, and `apps/web/next-env.d.ts` was restored to
+`.next-typecheck` after the Next build side effect. `git diff --check`
+passed. Report editor/export focused web tests passed 4 files / 20
+tests after adding a manual PDF snapshot assertion. Web lint and web
+typecheck passed after the export assertion. A broad `pnpm check` run
+was intentionally stopped when the user said to skip remaining tests;
+before the stop, lint and typecheck were green, engine full test was
+green at 414 files / 2441 tests, and web long tests plus batch 1 were
+green.
+
+2026-05-06 Gate I landed
+`gate_i_expand_family_material_properties_and_benchmark_scenarios`.
+Gate I selected the Gate J action
+`gate_j_build_personal_use_readiness_scenario_pack`
+at
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-j-personal-use-readiness-scenario-pack-contract.test.ts`.
+Gate I selection status:
+`gate_i_family_material_properties_and_benchmark_scenarios_landed_no_runtime_selected_personal_use_readiness_gate_j`.
 
 2026-05-06 Gate H landed
 `gate_h_calibrate_sources_and_exact_promotion_without_deleting_physics_solver`.
@@ -239,12 +272,12 @@ Gate A had selected the Gate B file/action:
 and
 `gate_b_define_shared_airborne_basis_candidate_schema_without_value_movement`.
 The selected next file is now
-`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-i-family-material-expansion-contract.test.ts`.
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-j-personal-use-readiness-scenario-pack-contract.test.ts`.
 Gate C had selected the Gate D file/action:
 `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-d-input-completeness-contract.test.ts`
 and
 `gate_d_define_physical_input_completeness_needs_input_matrix_without_value_movement`.
-Do not select a new slice until Gate I lands or this plan is explicitly
+Do not select a new slice until Gate J lands or this plan is explicitly
 superseded.
 
 Current protected numeric boundaries:

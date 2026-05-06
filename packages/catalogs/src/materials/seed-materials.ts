@@ -8,6 +8,14 @@ const BASE_SEED_MATERIALS: readonly MaterialDefinition[] = [
     name: "Concrete",
     category: "mass",
     densityKgM3: 2400,
+    acoustic: {
+      behavior: "rigid_mass",
+      lossFactor: 0.015,
+      notes: ["Nominal concrete stiffness/damping for model-first material readiness; not an exact source row."],
+      poissonRatio: 0.2,
+      propertySourceStatus: "engineering_default",
+      youngModulusPa: 30000000000
+    },
     notes: "Seed catalog entry for the new product repo.",
     tags: ["structural", "baseline", "heavy-base"]
   },
@@ -24,6 +32,14 @@ const BASE_SEED_MATERIALS: readonly MaterialDefinition[] = [
     name: "Heavy Concrete",
     category: "mass",
     densityKgM3: 3000,
+    acoustic: {
+      behavior: "rigid_mass",
+      lossFactor: 0.015,
+      notes: ["Nominal heavy concrete stiffness/damping for material-readiness routing; not source-owned calibration."],
+      poissonRatio: 0.2,
+      propertySourceStatus: "engineering_default",
+      youngModulusPa: 32000000000
+    },
     notes: "Ported from the Acoustic2 base catalog for dense mineral slab studies and heavy support comparisons.",
     tags: ["structural", "concrete", "masonry", "heavy-base", "dense-mineral"]
   },
@@ -32,6 +48,14 @@ const BASE_SEED_MATERIALS: readonly MaterialDefinition[] = [
     name: "Gypsum Board",
     category: "finish",
     densityKgM3: 850,
+    acoustic: {
+      behavior: "panel_leaf",
+      lossFactor: 0.03,
+      notes: ["Nominal board stiffness/damping for uncalibrated family solvers and uncertainty accounting."],
+      poissonRatio: 0.25,
+      propertySourceStatus: "engineering_default",
+      youngModulusPa: 2500000000
+    },
     tags: ["lining", "board"]
   },
   {
@@ -39,6 +63,14 @@ const BASE_SEED_MATERIALS: readonly MaterialDefinition[] = [
     name: "Acoustic Gypsum Board",
     category: "finish",
     densityKgM3: 1024,
+    acoustic: {
+      behavior: "panel_leaf",
+      lossFactor: 0.035,
+      notes: ["Nominal enhanced gypsum-board stiffness/damping; exact product curves still require source ownership."],
+      poissonRatio: 0.25,
+      propertySourceStatus: "engineering_default",
+      youngModulusPa: 2800000000
+    },
     notes: "Curated acoustic board entry aligned to the upstream Acoustic2 reference surface mass of 12.8 kg/m² at 12.5 mm.",
     tags: ["lining", "board", "acoustic-board", "soundbloc", "diamond-board"]
   },
@@ -47,6 +79,14 @@ const BASE_SEED_MATERIALS: readonly MaterialDefinition[] = [
     name: "Diamond Board",
     category: "finish",
     densityKgM3: 1024,
+    acoustic: {
+      behavior: "panel_leaf",
+      lossFactor: 0.035,
+      notes: ["Nominal dense board properties for material-readiness checks; not a measured acoustic curve."],
+      poissonRatio: 0.25,
+      propertySourceStatus: "engineering_default",
+      youngModulusPa: 3000000000
+    },
     notes: "Curated Diamant/DB board entry aligned to the upstream Acoustic2 diamond-board profile at 12.8 kg/m² for 12.5 mm.",
     tags: ["lining", "board", "diamond-board", "db-board", "enhanced-board"]
   },
@@ -63,6 +103,14 @@ const BASE_SEED_MATERIALS: readonly MaterialDefinition[] = [
     name: "Silentboard",
     category: "finish",
     densityKgM3: 1472,
+    acoustic: {
+      behavior: "panel_leaf",
+      lossFactor: 0.04,
+      notes: ["Nominal high-mass board properties used only with explicit uncertainty until source calibration lands."],
+      poissonRatio: 0.25,
+      propertySourceStatus: "engineering_default",
+      youngModulusPa: 3200000000
+    },
     notes: "Curated Silentboard entry aligned to the upstream Acoustic2 silentboard profile at 18.4 kg/m² for 12.5 mm.",
     tags: ["lining", "board", "silentboard", "enhanced-board"]
   },
@@ -104,6 +152,14 @@ const BASE_SEED_MATERIALS: readonly MaterialDefinition[] = [
     name: "Cement Plaster",
     category: "finish",
     densityKgM3: 1700,
+    acoustic: {
+      behavior: "rigid_mass",
+      lossFactor: 0.02,
+      notes: ["Nominal mineral plaster properties for masonry finish modelling."],
+      poissonRatio: 0.2,
+      propertySourceStatus: "engineering_default",
+      youngModulusPa: 8000000000
+    },
     notes: "Curated mineral plaster layer used by the Xella/Ytong masonry reference slice.",
     tags: ["plaster", "render", "mineral-finish", "masonry-finish"]
   },
@@ -176,6 +232,14 @@ const BASE_SEED_MATERIALS: readonly MaterialDefinition[] = [
     name: "Gypsum Plaster",
     category: "finish",
     densityKgM3: 1000,
+    acoustic: {
+      behavior: "rigid_mass",
+      lossFactor: 0.02,
+      notes: ["Nominal gypsum plaster properties for finish-layer physics readiness."],
+      poissonRatio: 0.22,
+      propertySourceStatus: "engineering_default",
+      youngModulusPa: 4000000000
+    },
     notes: "Ported from the Acoustic2 base catalog for lighter wet plaster finish studies.",
     tags: ["plaster", "gypsum-plaster", "mineral-finish", "lightweight-finish"]
   },
@@ -192,6 +256,14 @@ const BASE_SEED_MATERIALS: readonly MaterialDefinition[] = [
     name: "Ytong AAC D700",
     category: "mass",
     densityKgM3: 700,
+    acoustic: {
+      behavior: "rigid_mass",
+      lossFactor: 0.03,
+      notes: ["Nominal AAC stiffness/damping aligned with existing benchmark fixtures; still not an exact source curve."],
+      poissonRatio: 0.2,
+      propertySourceStatus: "engineering_default",
+      youngModulusPa: 3500000000
+    },
     notes: "Curated AAC block entry for the official Ytong D700 single-leaf wall references.",
     tags: ["aac", "ytong", "autoclaved-aerated-concrete", "block", "masonry", "lightweight-mineral"]
   },
@@ -200,6 +272,14 @@ const BASE_SEED_MATERIALS: readonly MaterialDefinition[] = [
     name: "Ytong G5/800",
     category: "mass",
     densityKgM3: 800,
+    acoustic: {
+      behavior: "rigid_mass",
+      lossFactor: 0.03,
+      notes: ["Nominal AAC panel stiffness/damping for material-property coverage checks."],
+      poissonRatio: 0.2,
+      propertySourceStatus: "engineering_default",
+      youngModulusPa: 3500000000
+    },
     notes: "Curated AAC panel entry for the official Xella modular building system reference.",
     tags: ["aac", "ytong", "autoclaved-aerated-concrete", "panel", "masonry", "lightweight-mineral"]
   },
@@ -372,6 +452,14 @@ const BASE_SEED_MATERIALS: readonly MaterialDefinition[] = [
     name: "CLT Panel",
     category: "mass",
     densityKgM3: 470,
+    acoustic: {
+      behavior: "mass_timber",
+      lossFactor: 0.025,
+      notes: ["Nominal CLT stiffness is an isotropic placeholder for readiness checks; orthotropic calibration remains future work."],
+      poissonRatio: 0.3,
+      propertySourceStatus: "engineering_default",
+      youngModulusPa: 11000000000
+    },
     tags: ["mass-timber", "structural"]
   },
   {
@@ -379,6 +467,14 @@ const BASE_SEED_MATERIALS: readonly MaterialDefinition[] = [
     name: "Mineral Screed",
     category: "mass",
     densityKgM3: 2000,
+    acoustic: {
+      behavior: "rigid_mass",
+      lossFactor: 0.02,
+      notes: ["Nominal mineral screed properties for floor airborne/impact readiness."],
+      poissonRatio: 0.2,
+      propertySourceStatus: "engineering_default",
+      youngModulusPa: 20000000000
+    },
     tags: ["floor", "mass"]
   },
   {
@@ -432,6 +528,12 @@ const BASE_SEED_MATERIALS: readonly MaterialDefinition[] = [
     name: "MLV Sound Barrier",
     category: "finish",
     densityKgM3: 1900,
+    acoustic: {
+      behavior: "limp_mass_membrane",
+      lossFactor: 0.12,
+      notes: ["Nominal limp-mass membrane behaviour; position-specific one-third-octave delta evidence is still required for exact promotion."],
+      propertySourceStatus: "engineering_default"
+    },
     notes: "Ported from the Acoustic2 membrane catalog for limp-mass barrier layers and local custom stack studies.",
     tags: ["membrane", "barrier", "limp-mass", "acoustic-barrier"]
   },
@@ -448,6 +550,13 @@ const BASE_SEED_MATERIALS: readonly MaterialDefinition[] = [
     name: "Rock Wool",
     category: "insulation",
     densityKgM3: 45,
+    acoustic: {
+      behavior: "porous_absorber",
+      flowResistivityPaSM2: 15000,
+      notes: ["Nominal porous absorber default for family physics; source-owned product flow-resistivity can replace it later."],
+      porosity: 0.95,
+      propertySourceStatus: "engineering_default"
+    },
     tags: ["cavity-fill", "porous"]
   },
   {
@@ -455,6 +564,13 @@ const BASE_SEED_MATERIALS: readonly MaterialDefinition[] = [
     name: "High Density Rock Wool",
     category: "insulation",
     densityKgM3: 90,
+    acoustic: {
+      behavior: "porous_absorber",
+      flowResistivityPaSM2: 30000,
+      notes: ["Nominal high-density mineral-wool absorber default for model-first readiness checks."],
+      porosity: 0.93,
+      propertySourceStatus: "engineering_default"
+    },
     notes: "Ported from the Acoustic2 infill catalog for denser cavity-fill and board-style mineral wool studies.",
     tags: ["cavity-fill", "porous", "rockwool", "high-density", "board-insulation"]
   },
@@ -463,6 +579,13 @@ const BASE_SEED_MATERIALS: readonly MaterialDefinition[] = [
     name: "Glass Wool Board",
     category: "insulation",
     densityKgM3: 30,
+    acoustic: {
+      behavior: "porous_absorber",
+      flowResistivityPaSM2: 10000,
+      notes: ["Nominal glass-wool absorber default; not a source-owned product curve."],
+      porosity: 0.97,
+      propertySourceStatus: "engineering_default"
+    },
     notes: "Ported from the Acoustic2 infill catalog for semi-rigid glass wool slab studies.",
     tags: ["cavity-fill", "porous", "glasswool", "board-insulation"]
   },
@@ -495,6 +618,11 @@ const BASE_SEED_MATERIALS: readonly MaterialDefinition[] = [
     name: "Air Gap",
     category: "gap",
     densityKgM3: 0,
+    acoustic: {
+      behavior: "air_cavity",
+      notes: ["Air cavity marker for family-material readiness; geometry remains supplied by layer/context thickness."],
+      propertySourceStatus: "catalog_nominal"
+    },
     tags: ["cavity"]
   },
   {
@@ -525,6 +653,12 @@ const BASE_SEED_MATERIALS: readonly MaterialDefinition[] = [
     name: "Generic Resilient Underlay",
     category: "support",
     densityKgM3: 700,
+    acoustic: {
+      behavior: "resilient_layer",
+      lossFactor: 0.08,
+      notes: ["Nominal resilient-layer behaviour paired with the explicit impact dynamic stiffness value."],
+      propertySourceStatus: "engineering_default"
+    },
     impact: {
       dynamicStiffnessMNm3: 10
     },
@@ -536,6 +670,12 @@ const BASE_SEED_MATERIALS: readonly MaterialDefinition[] = [
     name: "Generic Resilient Underlay S30",
     category: "support",
     densityKgM3: 700,
+    acoustic: {
+      behavior: "resilient_layer",
+      lossFactor: 0.08,
+      notes: ["Nominal resilient-layer behaviour paired with the explicit s'=30 MN/m3 impact value."],
+      propertySourceStatus: "engineering_default"
+    },
     impact: {
       dynamicStiffnessMNm3: 30
     },
