@@ -121,6 +121,10 @@ Latest landed Gate AE checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AE_HANDOFF.md`
 
+Latest Gate AE broad revalidation / Gate AF planning checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_GATE_AE_REVALIDATION_GATE_AF_PLAN_HANDOFF.md`
+
 Gate AE selection status:
 
 `gate_ae_steel_formula_card_report_parity_landed_selected_input_surface_gate_af`
@@ -168,6 +172,51 @@ tests; focused web output/model/dossier/formula report regressions passed
 engine 311 files / 1770 tests, web 63 files / 276 tests plus 18 skipped,
 repo build, and whitespace guard. The Next build still emits the known
 non-fatal optional `sharp/@img` package warnings.
+
+Broad revalidation was repeated on 2026-05-07 after the repo-level
+audit. `pnpm calculator:gate:current` passed again with engine 311 files
+/ 1770 tests, web 63 files / 276 tests plus 18 skipped, repo build, and
+whitespace guard. This pass found no runtime correction needed before
+Gate AF; the remaining gap is the missing first-class Dynamic Calculator
+input surface for the physical steel-floor formula fields.
+
+## Gate AF Implementation Order - Steel Floor Formula Input Surface
+
+Gate AF is the right next step because the current Gate AD/AE behavior
+is correct only when the caller provides explicit `impactPredictorInput`.
+That proves the physics corridor, but it does not yet satisfy the user
+workflow of choosing `floor`, entering route-specific physical fields,
+adding layers, and getting a defensible `Ln,w` / `DeltaLw` result.
+
+Implement Gate AF in this order:
+
+1. Add the Gate AF executable contract and scenario pack at
+   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-af-steel-floor-formula-input-surface-contract.test.ts`.
+   It should assert the selected slice/status, required fields, positive
+   and negative scenarios, exact-source precedence, and no numeric
+   retune of the Gate AD formula.
+2. Bridge user-facing floor-route inputs into the existing
+   `ImpactPredictorInput` shape. Required fields are
+   `steelSupportForm`, `steelCarrierDepthMm`,
+   `steelCarrierSpacingMm`, `resilientLayerDynamicStiffnessMNm3`,
+   `loadBasisKgM2`, and `lowerCeilingIsolationSupportForm`.
+3. Add workbench controls only when the floor impact route requires
+   them, and make the visible missing-input prompts match the engine
+   field IDs. Partial values should reduce prompts deterministically.
+4. Preserve parity: a complete UI-derived open-web steel stack must
+   still calculate lab `LnW 55.6`, `DeltaLw 22.4`, basis
+   `predictor_lightweight_steel_mass_spring_holdout_corridor_estimate`,
+   and `+/-4.5 dB` / `+/-2.0 dB` tolerances across card, trace, saved
+   replay, PDF/DOCX inputs if touched, and Markdown report.
+5. Add hostile-input coverage for invalid numbers, many layers,
+   duplicate/split carriers, safe reorder, unsafe reorder, and generic
+   `lightweight_steel_floor` stacks. Missing or unsafe inputs must stay
+   `needs_input`; they must not fall back to broad steel-family blending.
+
+Gate AF non-goals: no source-packet crawl, no formula retune unless the
+input-surface contract proves a numeric bug, no lab/field aliasing, and
+no field/building-prediction promotion without explicit field-context
+ownership.
 
 Previous Gate AD selection status:
 

@@ -53,6 +53,10 @@ formula card/report parity.
 
 Latest checkpoint:
 
+`docs/calculator/CHECKPOINT_2026-05-07_GATE_AE_REVALIDATION_GATE_AF_PLAN_HANDOFF.md`
+
+Latest landed-gate checkpoint:
+
 `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AE_HANDOFF.md`
 
 Gate AE result:
@@ -101,6 +105,28 @@ tests; focused web output/model/dossier/formula report regressions passed
 engine 311 files / 1770 tests, web 63 files / 276 tests plus 18 skipped,
 repo build, and whitespace guard. The Next build still emits the known
 non-fatal optional `sharp/@img` package warnings.
+
+Broad Gate AE revalidation was repeated on 2026-05-07 with `pnpm
+calculator:gate:current`: engine 311 files / 1770 tests, web 63 files /
+276 tests plus 18 skipped, repo build, and whitespace guard all passed.
+No runtime fix was required by that pass. The first implementation step
+remains Gate AF: expose the Gate AC/AD steel-floor formula physical
+inputs on the Dynamic Calculator floor route instead of relying on
+hidden explicit `impactPredictorInput`.
+
+Gate AF first-action plan:
+
+- executable input-surface contract and scenario pack;
+- user/API-to-`ImpactPredictorInput` bridge for steel support form,
+  carrier depth/spacing, resilient dynamic stiffness, load basis, and
+  lower ceiling isolation;
+- workbench controls and missing-input prompts that appear only for the
+  relevant floor impact route;
+- parity proof that complete UI-derived open-web steel still returns
+  lab `LnW 55.6`, `DeltaLw 22.4`, the Gate AD formula basis, and the
+  Gate AE tolerance/card/report language;
+- hostile-input coverage for invalid values, many layers, duplicates,
+  splits, safe reorder, and unsafe reorder.
 
 Previous Gate AD checkpoint:
 

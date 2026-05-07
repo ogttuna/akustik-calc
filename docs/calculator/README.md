@@ -219,6 +219,17 @@ and web 63 files / 276 tests plus 18 skipped, repo build, and whitespace
 guard all passed. The Next build still emits the known non-fatal
 optional `sharp/@img` package warnings.
 
+Gate AE was broadly revalidated again on 2026-05-07 in
+`docs/calculator/CHECKPOINT_2026-05-07_GATE_AE_REVALIDATION_GATE_AF_PLAN_HANDOFF.md`.
+`pnpm calculator:gate:current` passed with the same engine/web/build
+coverage. No runtime fix was needed; Gate AF remains the first
+implementation task because the steel formula currently depends on
+explicit `impactPredictorInput` instead of a first-class Dynamic
+Calculator floor input surface. Gate AF should add the executable
+input-surface contract, bridge user fields into `ImpactPredictorInput`,
+show exact missing-input prompts, preserve `LnW 55.6` / `DeltaLw 22.4`
+for complete open-web steel, and prove hostile input behavior.
+
 Previous Gate AD selection status:
 `gate_ad_steel_floor_impact_formula_corridor_landed_selected_card_report_parity_gate_ae`.
 Previous Gate AD landed file:
