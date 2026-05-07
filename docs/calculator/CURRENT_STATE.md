@@ -53,11 +53,31 @@ formula source-owned DeltaLw holdout packet contract.
 
 Latest checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AK_HANDOFF.md`
+`docs/calculator/CHECKPOINT_2026-05-07_GATE_AK_REPORT_EXPORT_REVALIDATION_AND_PUSH_HANDOFF.md`
 
 Latest landed-gate checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AK_HANDOFF.md`
+
+Latest report export/manual-edit checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_GATE_AK_REPORT_EXPORT_REVALIDATION_AND_PUSH_HANDOFF.md`
+
+Report export/manual-edit state:
+
+- `/workbench/proposal/configure` remains a report editor, not a solver
+  mutation surface;
+- manual edits change only the packaged proposal snapshot used for issue
+  exports;
+- PDF and DOCX exports both consume the same edited snapshot;
+- manual report edits can override primary metric values, metric rows,
+  coverage rows, response curves, layer labels, construction notes,
+  warnings, method/corridor narrative, and issue text;
+- real manual-edit PDF and DOCX exports were generated and validated on
+  2026-05-07; PDF text extraction, PDF PNG render/visual review, DOCX
+  zip integrity, and DOCX XML content checks passed;
+- `soffice`/LibreOffice is not installed in this environment, so DOCX
+  visual rendering was not available here.
 
 Gate AK result:
 

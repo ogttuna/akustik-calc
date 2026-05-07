@@ -149,6 +149,10 @@ Latest landed Gate AK checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AK_HANDOFF.md`
 
+Latest Gate AK report export/manual-edit revalidation checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_GATE_AK_REPORT_EXPORT_REVALIDATION_AND_PUSH_HANDOFF.md`
+
 Gate AK selection status:
 
 `gate_ak_delta_lw_holdout_packet_contract_landed_selected_first_source_owned_holdout_gate_al`
@@ -195,6 +199,20 @@ calculator:gate:current` passed with engine 317 files / 1798 tests, web
 guard clean; `git diff --check` passed. Known non-fatal warnings remain
 the Node/Vitest Zustand persist storage warning and optional `sharp` /
 `@img` Next build warnings via the DOCX export dependency.
+
+Report export/manual-edit validation result:
+
+Revalidated on 2026-05-07 after Gate AK. The report editor remains a
+packaged proposal snapshot editor rather than a solver mutation surface.
+Focused report editor/export web tests passed 6 files / 29 tests. Real
+manual-edit PDF and DOCX exports were generated; PDF text extraction,
+PDF PNG rendering and visual review, DOCX zip integrity, and DOCX XML
+content checks passed. `soffice`/LibreOffice is not installed in this
+environment, so DOCX visual rendering was not available here. Final
+`pnpm calculator:gate:current` passed after the checkpoint documentation
+update: engine 317 files / 1798 tests, web 65 files / 284 passed with 18
+skipped, repo build 5/5 successful, whitespace guard clean; diff check
+passed with `git diff --check`.
 
 ## Gate AL Implementation Order - First Source-Owned DeltaLw Holdout
 

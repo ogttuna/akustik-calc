@@ -345,6 +345,14 @@ guard clean; `git diff --check` passed. Known non-fatal warnings remain
 the Node/Vitest Zustand persist storage warning and optional `sharp` /
 `@img` Next build warnings via the DOCX export dependency.
 
+Gate AK report export/manual-edit revalidation checkpoint:
+`docs/calculator/CHECKPOINT_2026-05-07_GATE_AK_REPORT_EXPORT_REVALIDATION_AND_PUSH_HANDOFF.md`.
+The report editor remains a packaged proposal snapshot editor, not a
+solver mutation surface. PDF and DOCX exports both consume the same
+edited snapshot. Real manual-edit PDF and DOCX exports were generated
+and checked with PDF text extraction, PDF PNG rendering/visual review,
+DOCX zip integrity, and DOCX XML value extraction.
+
 Previous Gate AF selection status:
 `gate_af_steel_floor_formula_input_surface_landed_selected_acceptance_revalidation_gate_ag`.
 Previous Gate AF landed file:
