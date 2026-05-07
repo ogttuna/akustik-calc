@@ -2,7 +2,7 @@
 
 Slice id: `calculator_model_first_physics_prediction_pivot_v1`
 
-Status: SELECTED / GATE W LANDED / GATE X SELECTION NEXT
+Status: SELECTED / GATE X LANDED / GATE Y FIELD-CONTEXT CONTRACT NEXT
 
 Selected by:
 
@@ -12,34 +12,49 @@ queue.
 
 Selection status:
 
-`gate_w_floor_impact_runtime_landed_selected_next_dynamic_calculator_solver_or_field_context_gate_x`
+`gate_x_next_solver_or_field_context_selection_landed_no_runtime_selected_floor_impact_field_context_gate_y`
 
-Latest Gate W checkpoint:
+Latest Gate X checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_W_HANDOFF.md`
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_X_HANDOFF.md`
 
-Gate W landed file:
+Gate X landed file:
 
-`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-w-floor-impact-runtime-contract.test.ts`
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-x-next-solver-or-field-context-selection-contract.test.ts`
 
-Gate W landed action:
-
-`gate_w_promote_floor_impact_dynamic_stiffness_runtime_for_dynamic_calculator`
-
-Selected next Gate X action:
+Gate X landed action:
 
 `gate_x_select_next_dynamic_calculator_solver_or_field_context_boundary`
 
-Gate W validation result:
+Selected next Gate Y file:
 
-Focused Gate W, focused Gate V, Gate J/K regressions, engine typecheck,
-`pnpm calculator:gate:current`, broad `pnpm check`, and
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-y-floor-impact-field-context-contract.test.ts`
+
+Selected next Gate Y action:
+
+`gate_y_define_floor_impact_field_context_boundary_for_dynamic_calculator`
+
+Gate X validation result:
+
+Focused Gate X, `pnpm calculator:gate:current`, broad `pnpm check`, and
 `git diff --check` are green. Known optional `sharp/@img` Next build
 warnings remain non-fatal.
+
+Previous Gate W selection status:
+
+`gate_w_floor_impact_runtime_landed_selected_next_dynamic_calculator_solver_or_field_context_gate_x`
 
 Previous Gate V selection status:
 
 `gate_v_floor_impact_dynamic_stiffness_contract_landed_no_runtime_selected_floor_impact_runtime_gate_w`
+
+Gate V selected Gate W file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-w-floor-impact-runtime-contract.test.ts`
+
+Gate V selected Gate W action:
+
+`gate_w_promote_floor_impact_dynamic_stiffness_runtime_for_dynamic_calculator`
 
 Latest revalidation / commit-prep checkpoint:
 
@@ -449,6 +464,22 @@ runtime support bucket to
 field impact without room context, and ASTM `IIC` / `AIIC` remain
 non-promoted boundaries. Gate X is selected to choose the next Dynamic
 Calculator solver or field-context boundary.
+
+Gate X landing note:
+
+Gate X lands a no-runtime selection contract for the next Dynamic
+Calculator solver or field-context boundary. It ranks floor-impact field
+context, floor-impact input surfacing, wall field/building context,
+generalized multi-cavity solving, ASTM impact adapters, and double-leaf
+calibration holdouts. The selected next move is Gate Y:
+`gate_y_define_floor_impact_field_context_boundary_for_dynamic_calculator`
+at
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-y-floor-impact-field-context-contract.test.ts`.
+The reason is continuity and user value: Gate W already owns lab
+`Ln,w` / `DeltaLw`, while `L'n,w`, `L'nT,w`, and `L'nT,50` still need
+explicit room/context/flanking and ISO 717-2 field adapter ownership.
+Gate X keeps lab pins unchanged and keeps source rows as later anchors or
+calibration evidence.
 
 Selected planning surface:
 

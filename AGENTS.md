@@ -60,14 +60,17 @@ triple/multi-cavity, floor-impact, field, or building-prediction routes.
 Gate V has defined the floor-impact dynamic-stiffness input and adapter
 contract after Gate U selected that lane, without turning the calculator
 back into a finite source catalog or aliasing `Ln,w` with `IIC`. Gate W
-is the next runtime-promotion gate and must keep the Gate V input and
-adapter boundaries pinned.
+promoted only the complete lab `Ln,w` / `DeltaLw` lane. Gate X selected
+the floor-impact field-context boundary next; Gate Y must keep lab,
+field, and ASTM impact bases separate before any field runtime value
+movement.
 
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_W_HANDOFF.md`
-3. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_V_HANDOFF.md`
+2. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_X_HANDOFF.md`
+3. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_W_HANDOFF.md`
+4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_V_HANDOFF.md`
 4. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_U_REVALIDATION_AND_COMMIT_HANDOFF.md`
 4. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_U_HANDOFF.md`
 4. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_T_HANDOFF.md`
@@ -386,12 +389,28 @@ plan.
 - current selected slice:
   `calculator_model_first_physics_prediction_pivot_v1`
 - current next decision inside the slice:
-  Gate X planning / contract file for the next Dynamic Calculator solver
-  or field-context boundary should be selected next
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-y-floor-impact-field-context-contract.test.ts`
   should run
-  `gate_x_select_next_dynamic_calculator_solver_or_field_context_boundary`.
+  `gate_y_define_floor_impact_field_context_boundary_for_dynamic_calculator`.
 - latest checkpoint:
-  `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_W_HANDOFF.md`.
+  `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_X_HANDOFF.md`.
+- just landed model-first physics prediction pivot Gate X:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-x-next-solver-or-field-context-selection-contract.test.ts`
+  landed
+  `gate_x_select_next_dynamic_calculator_solver_or_field_context_boundary`.
+  It compares the remaining high-impact Dynamic Calculator gaps after
+  Gate W and selects floor-impact field-context ownership for Gate Y.
+  The selected path is explicitly no-runtime: lab `Ln,w` / `DeltaLw`
+  pins stay on Gate W, `L'n,w` / `L'nT,w` remain blocked until room
+  geometry, RT60/absorption, impact field context, flanking policy, and
+  ISO 717-2 field adapter ownership are contracted, and source rows stay
+  as anchors/calibration/overrides rather than the product. Selection
+  status:
+  `gate_x_next_solver_or_field_context_selection_landed_no_runtime_selected_floor_impact_field_context_gate_y`.
+  Selected next file:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-y-floor-impact-field-context-contract.test.ts`.
+  Selected next action:
+  `gate_y_define_floor_impact_field_context_boundary_for_dynamic_calculator`.
 - just landed model-first physics prediction pivot Gate W:
   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-w-floor-impact-runtime-contract.test.ts`
   landed

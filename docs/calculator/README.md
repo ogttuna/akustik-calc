@@ -145,17 +145,34 @@ the promoted scenario at `DeltaLw 24.3` / `LnW 50.3` with basis
 basis, missing dynamic stiffness, field impact outputs without
 room/context ownership, and ASTM `IIC` / `AIIC` remain non-promoted
 boundaries.
+Gate X is a no-runtime selection gate after Gate W. It selects
+floor-impact field-context ownership for Gate Y because `L'n,w` /
+`L'nT,w` are the direct personal-use continuation of the promoted lab
+impact lane, but must not be created by relabelling lab `Ln,w`. Gate Y
+must define the room/context/flanking/input boundary before any field
+impact value promotion.
 
 Current selection status:
 
+`gate_x_next_solver_or_field_context_selection_landed_no_runtime_selected_floor_impact_field_context_gate_y`
+
+Selected next Gate Y file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-y-floor-impact-field-context-contract.test.ts`
+
+Selected next Gate Y action:
+
+`gate_y_define_floor_impact_field_context_boundary_for_dynamic_calculator`
+
+Latest Gate X checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_X_HANDOFF.md`
+
+Previous Gate W selection status:
+
 `gate_w_floor_impact_runtime_landed_selected_next_dynamic_calculator_solver_or_field_context_gate_x`
 
-Selected next Gate X file:
-
-Gate X planning / contract file for the next Dynamic Calculator solver
-or field-context boundary is the next selection item.
-
-Selected next Gate X action:
+Previous Gate W selected Gate X action:
 
 `gate_x_select_next_dynamic_calculator_solver_or_field_context_boundary`
 

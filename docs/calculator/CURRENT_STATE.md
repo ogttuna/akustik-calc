@@ -29,16 +29,15 @@ path was found too narrow for the user's calculator-first goal.
 
 Current selected status:
 
-`gate_w_floor_impact_runtime_landed_selected_next_dynamic_calculator_solver_or_field_context_gate_x`
+`gate_x_next_solver_or_field_context_selection_landed_no_runtime_selected_floor_impact_field_context_gate_y`
 
 Selected next implementation file:
 
-Gate X planning / contract file for the next Dynamic Calculator solver
-or field-context boundary is the next selection item.
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-y-floor-impact-field-context-contract.test.ts`
 
 Selected next action:
 
-`gate_x_select_next_dynamic_calculator_solver_or_field_context_boundary`
+`gate_y_define_floor_impact_field_context_boundary_for_dynamic_calculator`
 
 Active planning surface:
 
@@ -46,12 +45,39 @@ Active planning surface:
 
 Latest landed gate:
 
-2026-05-07 model-first physics prediction pivot Gate W floor-impact
-dynamic-stiffness runtime promotion.
+2026-05-07 model-first physics prediction pivot Gate X next
+solver/field-context selection.
 
 Latest checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_W_HANDOFF.md`
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_X_HANDOFF.md`
+
+Gate X result:
+
+- after Gate W's lab floor-impact runtime promotion, the highest-value
+  next Dynamic Calculator gap is floor-impact field-context ownership;
+- Gate Y is selected to define the missing field inputs and adapter
+  boundary for `L'n,w`, `L'nT,w`, and `L'nT,50`;
+- lab `Ln,w` / `DeltaLw` pins remain unchanged at `DeltaLw 24.3` /
+  `LnW 50.3`; Gate X has no runtime value movement;
+- source rows remain later anchors/calibration/overrides, not the
+  selected product path.
+
+Gate X landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-x-next-solver-or-field-context-selection-contract.test.ts`
+
+Gate X landed action:
+
+`gate_x_select_next_dynamic_calculator_solver_or_field_context_boundary`
+
+Gate X selected next file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-y-floor-impact-field-context-contract.test.ts`
+
+Gate X selected next action:
+
+`gate_y_define_floor_impact_field_context_boundary_for_dynamic_calculator`
 
 Gate W result:
 
@@ -73,6 +99,10 @@ Gate W landed file:
 Gate W landed action:
 
 `gate_w_promote_floor_impact_dynamic_stiffness_runtime_for_dynamic_calculator`
+
+Gate W landed status:
+
+`gate_w_floor_impact_runtime_landed_selected_next_dynamic_calculator_solver_or_field_context_gate_x`
 
 Gate W selected next action:
 

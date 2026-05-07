@@ -65,7 +65,7 @@ unsafe reorders. Lab, field, and building-prediction bases must stay
 separate; `Rw`/`STC`, `Ln,w`/`IIC`, and lab/field values are not
 interchangeable without a named rating and measurement basis.
 
-## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate W Landed / Gate X Selection Next
+## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate X Landed / Gate Y Field Context Next
 
 Current implementation position:
 `calculator_model_first_physics_prediction_pivot_v1`.
@@ -98,7 +98,15 @@ Latest Gate U revalidation / commit-prep checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_U_REVALIDATION_AND_COMMIT_HANDOFF.md`
 
-Latest landed Gate V checkpoint:
+Latest landed Gate X checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_X_HANDOFF.md`
+
+Previous landed Gate W checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_W_HANDOFF.md`
+
+Previous landed Gate V checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_V_HANDOFF.md`
 
@@ -505,13 +513,52 @@ scenario with explicit `loadBasisKgM2` and dynamic stiffness. Missing
 load, missing dynamic stiffness, field impact without room context, and
 ASTM `IIC` / `AIIC` remain non-promoted boundaries.
 
+Gate X compared the remaining high-impact Dynamic Calculator gaps and
+selected floor-impact field-context ownership as the next move. This is
+the most direct continuation of Gate W: lab `Ln,w` / `DeltaLw` is now
+owned, while `L'n,w`, `L'nT,w`, and `L'nT,50` still require explicit
+room/context/flanking and ISO 717-2 field-adapter inputs. Gate X did not
+move runtime values and deliberately keeps source rows as later anchors,
+calibration, or exact overrides.
+
 Clean next-step queue:
 
-1. Gate X selection for the next Dynamic Calculator solver or
-   field-context boundary after Gate W floor-impact runtime promotion.
-2. Keep source packet acquisition/calibration rows as later anchors or
+1. Gate Y floor-impact field-context contract:
+   define required inputs, basis labels, missing-input posture, positive
+   and nearby-negative cases, card/report parity, and no lab-to-field
+   aliasing for `L'n,w`, `L'nT,w`, and `L'nT,50`.
+2. After Gate Y, choose whether to promote field runtime, surface the
+   new inputs in the workbench, or continue to wall field/building or
+   multi-cavity solver work based on the contract result.
+3. Keep source packet acquisition/calibration rows as later anchors or
    exact overrides only
    through the Gate H policy.
+
+Gate X landed summary:
+
+1. Added
+   `packages/engine/src/dynamic-calculator-next-solver-or-field-context-selection.ts`.
+2. Added
+   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-x-next-solver-or-field-context-selection-contract.test.ts`.
+3. Ranked floor-impact field context, floor-impact input surfacing, wall
+   field/building context, generalized multi-cavity solving, ASTM impact
+   adapter work, and double-leaf calibration holdouts.
+4. Selected Gate Y because it increases personal-use floor coverage
+   without treating a finite source catalog as the product.
+5. Proved Gate W lab runtime pins remain unchanged while field impact
+   outputs stay `needs_input` until their context boundary is owned.
+
+Gate X landed status:
+
+`gate_x_next_solver_or_field_context_selection_landed_no_runtime_selected_floor_impact_field_context_gate_y`
+
+Gate X selected Gate Y file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-y-floor-impact-field-context-contract.test.ts`
+
+Gate X selected Gate Y action:
+
+`gate_y_define_floor_impact_field_context_boundary_for_dynamic_calculator`
 
 Gate W landed summary:
 
