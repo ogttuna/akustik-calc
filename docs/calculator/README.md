@@ -290,6 +290,33 @@ non-fatal warnings remain the Node/Vitest Zustand persist storage warning
 and optional `sharp` / `@img` Next build warnings via the DOCX export
 dependency.
 
+Gate AJ has now landed steel-floor formula negative boundaries and
+measured `DeltaLw` holdout intake. The four paired negatives protect
+wrong support family selection, exact measured row precedence,
+lab-to-field/building leakage, and source-absent design references. The
+paired-negative blocker is removed from the residual-policy input, but
+runtime values still hold because source-owned open-web formula inputs,
+field/building owners, and accepted measured `DeltaLw` holdouts are not
+complete. Product-catalog, Annex-C/inferred, field/ASTM, and
+building-basis values cannot tighten the lab `DeltaLw` corridor.
+Gate AJ selection status:
+`gate_aj_steel_formula_negative_boundary_delta_lw_intake_landed_selected_source_owned_delta_lw_gate_ak`.
+Gate AJ landed file:
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-aj-steel-floor-formula-negative-boundary-and-delta-lw-holdout-contract.test.ts`.
+Gate AJ landed action:
+`gate_aj_steel_floor_formula_negative_boundaries_and_delta_lw_holdout_intake_plan`.
+Gate AJ selected Gate AK file:
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ak-steel-floor-formula-source-owned-delta-lw-holdout-contract.test.ts`.
+Gate AJ selected Gate AK action:
+`gate_ak_steel_floor_formula_source_owned_delta_lw_holdout_acquisition_plan`.
+Gate AJ focused validation completed on 2026-05-07: Gate AJ engine
+contract 1 file / 5 tests and engine typecheck passed. Full `pnpm
+calculator:gate:current` passed with engine 316 files / 1793 tests, web
+65 files / 284 passed + 18 skipped, repo build 5/5 tasks, and whitespace
+guard clean. Known non-fatal warnings remain the Node/Vitest Zustand
+persist storage warning and optional `sharp` / `@img` Next build
+warnings via the DOCX export dependency.
+
 Previous Gate AF selection status:
 `gate_af_steel_floor_formula_input_surface_landed_selected_acceptance_revalidation_gate_ag`.
 Previous Gate AF landed file:

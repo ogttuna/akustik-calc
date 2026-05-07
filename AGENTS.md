@@ -105,20 +105,26 @@ retune. Gate AI has now landed the steel-floor residual policy:
 `retune_candidate` decisions. Current evidence holds the corridor,
 keeps runtime values unchanged, keeps UBIQ open-web rows as anchors, and
 requires paired negative boundaries plus measured `DeltaLw` holdouts
-before any retune/tightening. Gate AJ is next:
-`gate_aj_steel_floor_formula_negative_boundaries_and_delta_lw_holdout_intake_plan`.
+before any retune/tightening. Gate AJ has now landed the paired
+negative-boundary and measured `DeltaLw` intake gate: wrong support
+family, exact source precedence, lab-to-field/building leakage, and
+source-absent design references are protected, product/inferred/wrong
+basis `DeltaLw` values cannot tighten the lab corridor, and Gate AK is
+next:
+`gate_ak_steel_floor_formula_source_owned_delta_lw_holdout_acquisition_plan`.
 
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AI_HANDOFF.md`
-3. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AH_HANDOFF.md`
-4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AG_HANDOFF.md`
-5. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AF_HANDOFF.md`
-6. `docs/calculator/CHECKPOINT_2026-05-07_GATE_AE_REVALIDATION_GATE_AF_PLAN_HANDOFF.md`
-7. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AE_HANDOFF.md`
-8. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AD_HANDOFF.md`
-9. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AC_HANDOFF.md`
+2. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AJ_HANDOFF.md`
+3. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AI_HANDOFF.md`
+4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AH_HANDOFF.md`
+5. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AG_HANDOFF.md`
+6. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AF_HANDOFF.md`
+7. `docs/calculator/CHECKPOINT_2026-05-07_GATE_AE_REVALIDATION_GATE_AF_PLAN_HANDOFF.md`
+8. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AE_HANDOFF.md`
+9. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AD_HANDOFF.md`
+10. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AC_HANDOFF.md`
 4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AB_HANDOFF.md`
 4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AA_HANDOFF.md`
 4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Z_HANDOFF.md`
@@ -445,12 +451,36 @@ plan.
 - current selected slice:
   `calculator_model_first_physics_prediction_pivot_v1`
 - current next decision inside the slice:
-  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-aj-steel-floor-formula-negative-boundary-and-delta-lw-holdout-contract.test.ts`
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ak-steel-floor-formula-source-owned-delta-lw-holdout-contract.test.ts`
   should run
-  `gate_aj_steel_floor_formula_negative_boundaries_and_delta_lw_holdout_intake_plan`.
+  `gate_ak_steel_floor_formula_source_owned_delta_lw_holdout_acquisition_plan`.
 - latest checkpoint:
-  `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AI_HANDOFF.md`.
-- just landed model-first physics prediction pivot Gate AI:
+  `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AJ_HANDOFF.md`.
+- just landed model-first physics prediction pivot Gate AJ:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-aj-steel-floor-formula-negative-boundary-and-delta-lw-holdout-contract.test.ts`
+  landed
+  `gate_aj_steel_floor_formula_negative_boundaries_and_delta_lw_holdout_intake_plan`.
+  It adds four paired negative-boundary cases for the steel-floor
+  formula lane: wrong support family, exact source precedence,
+  lab-to-field/building basis leakage, and source-absent design
+  references that cannot count as measured residuals. It also separates
+  measured `DeltaLw` holdout intake from product-catalog, Annex-C or
+  companion inferred, field/ASTM, and building-basis values. Runtime
+  values stay unchanged; exact measured rows remain first; UBIQ
+  open-web rows remain exact rows or calibration anchors until carrier
+  spacing, load basis, dynamic stiffness, lower support class, and
+  upper-resilient topology are source-owned. Selection status:
+  `gate_aj_steel_formula_negative_boundary_delta_lw_intake_landed_selected_source_owned_delta_lw_gate_ak`.
+  Focused validation completed on 2026-05-07: Gate AJ engine contract
+  passed 1 file / 5 tests, and engine typecheck passed. Full `pnpm
+  calculator:gate:current` passed with engine 316 files / 1793 tests,
+  web 65 files / 284 passed + 18 skipped, repo build 5/5 tasks, and
+  whitespace guard clean. Known non-fatal warnings remain the
+  Node/Vitest Zustand persist storage warning and optional `sharp` /
+  `@img` Next build warnings via the DOCX export dependency.
+  Selected next action:
+  `gate_ak_steel_floor_formula_source_owned_delta_lw_holdout_acquisition_plan`.
+- previously landed model-first physics prediction pivot Gate AI:
   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ai-steel-floor-formula-residual-policy-contract.test.ts`
   landed
   `gate_ai_steel_floor_formula_residual_policy_and_calibration_readiness_plan`.
@@ -459,11 +489,10 @@ plan.
   `retune_candidate` decisions. Current evidence holds the `+/-4.5 dB
   Ln,w` and `+/-2.0 dB DeltaLw` corridors: `Ln,w` residuals are low but
   only three same-family Pliteq holdouts exist, `DeltaLw` measured
-  residual count is zero, paired negatives are not landed, UBIQ
-  open-web formula inputs are not source-owned, and field/building basis
-  owners are absent. Runtime values stay unchanged; exact measured rows
-  remain first; source rows remain calibration evidence rather than the
-  product. Selection status:
+  residual count is zero, UBIQ open-web formula inputs are not
+  source-owned, and field/building basis owners are absent. Runtime
+  values stay unchanged; exact measured rows remain first; source rows
+  remain calibration evidence rather than the product. Selection status:
   `gate_ai_steel_floor_formula_residual_policy_landed_selected_negative_boundary_delta_lw_gate_aj`.
   Focused validation completed on 2026-05-07: Gate AI engine contract
   passed 1 file / 5 tests, and engine typecheck passed. Full `pnpm
