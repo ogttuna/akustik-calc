@@ -41,6 +41,7 @@ import { buildImpactSupport } from "./impact-support";
 import { attachImpactTraceFromExactSource } from "./impact-trace";
 import { buildDynamicImpactTrace } from "./dynamic-impact";
 import { derivePredictorSpecificFloorSystemEstimate } from "./predictor-floor-system-estimate";
+import { shouldBlockSteelFloorImpactFormulaFallback } from "./steel-floor-impact-formula-corridor";
 import {
   inferImpactSupportingElementFamilyFromExactFloorSystem,
   inferImpactSupportingElementFamilyFromFloorSystemEstimate,
@@ -170,6 +171,7 @@ export function resolveLayerBasedImpactLane(
     Boolean(input.explicitPredictorInput) &&
     rawImpactCatalogMatch?.catalog.matchMode === "product_property_delta" &&
     !impactCatalogMatch;
+  const blockSteelFormulaFallback = shouldBlockSteelFloorImpactFormulaFallback(input.predictorInput);
   const floorSystemRecommendations = floorSystemMatch
     ? []
     : recommendFloorSystems(input.resolvedLayers, FLOOR_SYSTEM_VISIBLE_RECOMMENDATION_LIMIT);
@@ -188,11 +190,12 @@ export function resolveLayerBasedImpactLane(
     !floorSystemMatch &&
     !boundFloorSystemMatch &&
     !impactCatalogMatch &&
-    !predictorFormulaImpact
+    !predictorFormulaImpact &&
+    !blockSteelFormulaFallback
       ? derivePredictorSpecificFloorSystemEstimate(input.predictorInput)
       : null;
   const narrowImpact =
-    input.officialFloorSystemId || explicitDeltaImpact || rejectProductDeltaFormulaFallback
+    input.officialFloorSystemId || explicitDeltaImpact || rejectProductDeltaFormulaFallback || blockSteelFormulaFallback
       ? null
       : predictorFormulaImpact ?? estimateImpactFromLayers(input.resolvedLayers);
   const boundFloorSystemEstimate =
@@ -202,7 +205,8 @@ export function resolveLayerBasedImpactLane(
     !impactCatalogMatch &&
     !explicitDeltaImpact &&
     !predictorSpecificFloorSystemEstimate &&
-    !narrowImpact
+    !narrowImpact &&
+    !blockSteelFormulaFallback
       ? deriveBoundFloorSystemEstimate(input.resolvedLayers)
       : null;
   const floorSystemEstimate =
@@ -215,7 +219,8 @@ export function resolveLayerBasedImpactLane(
           !boundFloorSystemMatch &&
           !boundFloorSystemEstimate &&
           !impactCatalogMatch &&
-          !narrowImpact
+          !narrowImpact &&
+          !blockSteelFormulaFallback
             ? deriveFloorSystemEstimate(input.resolvedLayers, floorSystemRecommendations)
             : null
         );

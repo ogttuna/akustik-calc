@@ -188,12 +188,36 @@ same-family bound rows still resolve. Gate AC has now landed the
 steel-floor physics input/formula readiness boundary: source-absent
 steel floors require explicit support form, carrier depth/spacing, upper
 dynamic stiffness, load basis, and lower ceiling isolation before a
-formula corridor can promote. Runtime values are unchanged. Gate AC
-selection status:
-`gate_ac_steel_floor_physics_input_contract_landed_selected_formula_corridor_gate_ad`.
-Gate AC selected Gate AD file:
+formula corridor can promote. Gate AD has now landed the first runtime
+steel-floor impact formula corridor: complete explicit source-absent
+steel predictor input now returns lab `Ln,w` / `DeltaLw` from
+`predictor_lightweight_steel_mass_spring_holdout_corridor_estimate`
+instead of broad family blending, while exact measured rows remain first
+precedence and missing carrier/lower-isolation inputs block fallback.
+Gate AD selection status:
+`gate_ad_steel_floor_impact_formula_corridor_landed_selected_card_report_parity_gate_ae`.
+Gate AD landed file:
 `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ad-steel-floor-impact-formula-corridor-contract.test.ts`.
-Gate AC selected Gate AD action:
+Gate AD landed action:
+`gate_ad_steel_floor_impact_formula_numeric_corridor_plan`.
+Gate AD selected Gate AE file:
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ae-steel-floor-formula-card-report-parity-contract.test.ts`.
+Gate AD selected Gate AE action:
+`gate_ae_steel_floor_formula_card_and_report_parity_plan`.
+Gate AD validation completed on 2026-05-07: focused Gate AD 1 file / 6
+tests, Gate AC/Gate AD plus predictor-input regression 3 files / 55
+tests, impact-only fallback regression 1 file / 102 tests, engine
+typecheck, final `pnpm calculator:gate:current` with engine 310 files /
+1766 tests and web 62 files / 275 tests plus 18 skipped, repo build,
+whitespace guard, and final `git diff --check` all passed. The Next
+build still emits the known non-fatal `sharp` optional `@img` package
+warnings.
+
+Previous Gate AC selection status:
+`gate_ac_steel_floor_physics_input_contract_landed_selected_formula_corridor_gate_ad`.
+Previous Gate AC selected Gate AD file:
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ad-steel-floor-impact-formula-corridor-contract.test.ts`.
+Previous Gate AC selected Gate AD action:
 `gate_ad_steel_floor_impact_formula_numeric_corridor_plan`.
 
 Previous Gate AB selection status:

@@ -295,6 +295,8 @@ function formatImpactBasisLabel(value: ImpactCalculation["basis"] | ImpactBoundC
       return "Low-confidence family fallback";
     case "predictor_lightweight_steel_fl28_interpolation_estimate":
       return "Lightweight-steel FL-28 interpolation";
+    case "predictor_lightweight_steel_mass_spring_holdout_corridor_estimate":
+      return "Lightweight-steel formula corridor";
     case "predictor_lightweight_steel_bound_interpolation_estimate":
       return "Lightweight-steel bound interpolation";
     case "predictor_lightweight_steel_missing_support_form_bound_estimate":

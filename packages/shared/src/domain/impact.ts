@@ -29,6 +29,7 @@ export const ImpactEstimateBasisSchema = z.enum([
   "predictor_mass_timber_clt_dataholz_dry_estimate",
   "predictor_mass_timber_clt_dry_interaction_estimate",
   "predictor_lightweight_steel_fl28_interpolation_estimate",
+  "predictor_lightweight_steel_mass_spring_holdout_corridor_estimate",
   "predictor_lightweight_steel_bound_interpolation_estimate",
   "predictor_lightweight_steel_missing_support_form_bound_estimate",
   "predictor_floor_system_family_archetype_estimate",
@@ -93,7 +94,8 @@ export const ImpactScopeSchema = z.enum([
   "family_bound_estimate",
   "exact_improvement_reference_floor",
   "narrow_heavy_concrete_only",
-  "reference_heavy_floor_derived"
+  "reference_heavy_floor_derived",
+  "steel_floor_formula_corridor"
 ]);
 
 export const ImpactLabOrFieldSchema = z.enum(["lab", "field"]);

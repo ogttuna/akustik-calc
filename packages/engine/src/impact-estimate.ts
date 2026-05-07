@@ -4,6 +4,7 @@ import { isResolvedHeavyConcreteCarrierEligible } from "./heavy-concrete-carrier
 import { getImpactConfidenceForBasis } from "./impact-confidence";
 import { buildUniformImpactMetricBasis } from "./impact-metric-basis";
 import { ksRound1, log10Safe, round1 } from "./math";
+import { estimateSteelFloorImpactFromPredictorInput } from "./steel-floor-impact-formula-corridor";
 import { inferStructuralSupportTypeFromMaterial } from "./structural-material-classification";
 
 const IMPACT_LOAD_ROLES = new Set(["floating_screed", "upper_fill", "floor_covering"]);
@@ -220,6 +221,11 @@ function computePredictorBaseSurfaceMassKgM2(
 export function estimateImpactFromPredictorInput(
   input: ImpactPredictorInput
 ): ImpactCalculation | null {
+  const steelFormulaImpact = estimateSteelFloorImpactFromPredictorInput(input);
+  if (steelFormulaImpact) {
+    return steelFormulaImpact;
+  }
+
   if (
     input.structuralSupportType !== "reinforced_concrete" ||
     input.impactSystemType !== "heavy_floating_floor"

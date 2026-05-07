@@ -68,7 +68,7 @@ unsafe reorders. Lab, field, and building-prediction bases must stay
 separate; `Rw`/`STC`, `Ln,w`/`IIC`, and lab/field values are not
 interchangeable without a named rating and measurement basis.
 
-## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate AC Landed / Gate AD Steel Floor Formula Corridor Next
+## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate AD Landed / Gate AE Steel Floor Card-Report Parity Next
 
 Current implementation position:
 `calculator_model_first_physics_prediction_pivot_v1`.
@@ -113,27 +113,76 @@ Latest landed Gate AC checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AC_HANDOFF.md`
 
-Gate AC selection status:
+Latest landed Gate AD checkpoint:
 
-`gate_ac_steel_floor_physics_input_contract_landed_selected_formula_corridor_gate_ad`
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AD_HANDOFF.md`
 
-Gate AC landed file:
+Gate AD selection status:
 
-`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ac-steel-floor-physics-input-contract.test.ts`
+`gate_ad_steel_floor_impact_formula_corridor_landed_selected_card_report_parity_gate_ae`
 
-Gate AC landed action:
-
-`gate_ac_steel_floor_physics_input_contract_and_formula_readiness_plan`
-
-Gate AC selected next file:
+Gate AD landed file:
 
 `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ad-steel-floor-impact-formula-corridor-contract.test.ts`
 
-Gate AC selected next action:
+Gate AD landed action:
 
 `gate_ad_steel_floor_impact_formula_numeric_corridor_plan`
 
-Gate AC result:
+Gate AD selected next file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ae-steel-floor-formula-card-report-parity-contract.test.ts`
+
+Gate AD selected next action:
+
+`gate_ae_steel_floor_formula_card_and_report_parity_plan`
+
+Gate AD result:
+
+- complete explicit source-absent steel floors now calculate lab
+  `Ln,w` / `DeltaLw` through
+  `predictor_lightweight_steel_mass_spring_holdout_corridor_estimate`
+  instead of broad nearby-source family blending;
+- the open-web reference scenario is pinned at `LnW 55.6`,
+  `DeltaLw 22.4`, with `+/-4.5 dB` / `+/-2.0 dB` formula corridors;
+- carrier spacing and lower ceiling isolation are runtime blockers, not
+  reasons to fall through to generic family estimates;
+- exact measured rows remain first precedence; same-family rows are
+  holdouts/calibration evidence, not the whole calculator.
+
+Gate AD validation result:
+
+Gate AD validation completed on 2026-05-07. Focused Gate AD passed 1
+file / 6 tests; focused Gate AC/Gate AD plus predictor-input regression
+passed 3 files / 55 tests; focused impact-only fallback regression
+passed 1 file / 102 tests; engine typecheck passed; final
+`pnpm calculator:gate:current` passed with engine 310 files / 1766
+tests, web 62 files / 275 tests plus 18 skipped, repo build, and
+whitespace guard. The Next build still emits the known non-fatal `sharp`
+optional `@img` package warnings. Final `git diff --check` passed after
+this validation note update.
+
+Previous Gate AC selection status:
+
+`gate_ac_steel_floor_physics_input_contract_landed_selected_formula_corridor_gate_ad`
+
+Previous Gate AC landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ac-steel-floor-physics-input-contract.test.ts`
+
+Previous Gate AC landed action:
+
+`gate_ac_steel_floor_physics_input_contract_and_formula_readiness_plan`
+
+Previous Gate AC selected Gate AD file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ad-steel-floor-impact-formula-corridor-contract.test.ts`
+
+Previous Gate AC selected Gate AD action:
+
+`gate_ad_steel_floor_impact_formula_numeric_corridor_plan`
+
+Previous Gate AC result:
 
 - steel-floor source-absent impact routes now have a no-runtime
   input/formula readiness contract instead of only a source guard;

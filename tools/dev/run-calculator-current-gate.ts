@@ -322,6 +322,7 @@ async function main() {
         "src/calculator-model-first-physics-prediction-pivot-gate-aa-construction-image-accuracy-incident-contract.test.ts",
         "src/calculator-model-first-physics-prediction-pivot-gate-ab-floor-family-source-guard-contract.test.ts",
         "src/calculator-model-first-physics-prediction-pivot-gate-ac-steel-floor-physics-input-contract.test.ts",
+        "src/calculator-model-first-physics-prediction-pivot-gate-ad-steel-floor-impact-formula-corridor-contract.test.ts",
         "src/ubiq-open-web-packaged-finish-family-design.test.ts",
         "src/ubiq-open-web-packaged-finish-near-miss-matrix.test.ts",
         "src/ubiq-open-web-packaged-lane-trace-matrix.test.ts",

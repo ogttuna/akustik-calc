@@ -220,6 +220,15 @@ export function getImpactConfidenceForBasis(basis: ImpactEstimateBasis): ImpactC
     };
   }
 
+  if (basis === "predictor_lightweight_steel_mass_spring_holdout_corridor_estimate") {
+    return {
+      level: "medium",
+      provenance: "formula_estimate_narrow_scope",
+      score: 0.72,
+      summary: "Lightweight-steel floor mass-spring formula corridor with explicit carrier geometry, dynamic stiffness, lower isolation, and same-family holdout checks."
+    };
+  }
+
   if (basis === "predictor_floor_system_family_archetype_estimate") {
     return {
       level: "medium",

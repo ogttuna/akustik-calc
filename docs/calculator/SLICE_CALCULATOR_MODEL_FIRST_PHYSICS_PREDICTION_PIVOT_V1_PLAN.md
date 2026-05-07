@@ -2,7 +2,7 @@
 
 Slice id: `calculator_model_first_physics_prediction_pivot_v1`
 
-Status: SELECTED / GATE AC LANDED / GATE AD STEEL FLOOR FORMULA CORRIDOR NEXT
+Status: SELECTED / GATE AD LANDED / GATE AE STEEL FLOOR CARD-REPORT PARITY NEXT
 
 Selected by:
 
@@ -12,9 +12,52 @@ queue.
 
 Selection status:
 
-`gate_ac_steel_floor_physics_input_contract_landed_selected_formula_corridor_gate_ad`
+`gate_ad_steel_floor_impact_formula_corridor_landed_selected_card_report_parity_gate_ae`
 
-Latest Gate AC checkpoint:
+Latest Gate AD checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AD_HANDOFF.md`
+
+Gate AD landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ad-steel-floor-impact-formula-corridor-contract.test.ts`
+
+Gate AD landed action:
+
+`gate_ad_steel_floor_impact_formula_numeric_corridor_plan`
+
+Gate AD selected Gate AE file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ae-steel-floor-formula-card-report-parity-contract.test.ts`
+
+Gate AD selected Gate AE action:
+
+`gate_ae_steel_floor_formula_card_and_report_parity_plan`
+
+Gate AD landed summary:
+
+Gate AD promotes the first source-absent lightweight-steel floor impact
+formula corridor. Complete explicit steel predictor input now uses
+`predictor_lightweight_steel_mass_spring_holdout_corridor_estimate`
+instead of broad floor-system family blending, with pinned lab
+`Ln,w 55.6` and `DeltaLw 22.4` for the open-web example. Missing
+carrier spacing or lower isolation blocks runtime fallback, exact
+measured rows still outrank the formula, and Pliteq steel-joist rows are
+used as holdouts rather than as the whole calculator.
+
+Gate AD validation result:
+
+Gate AD validation completed on 2026-05-07. Focused Gate AD passed 1
+file / 6 tests; focused Gate AC/Gate AD plus predictor-input regression
+passed 3 files / 55 tests; focused impact-only fallback regression
+passed 1 file / 102 tests; engine typecheck passed; final
+`pnpm calculator:gate:current` passed with engine 310 files / 1766
+tests, web 62 files / 275 tests plus 18 skipped, repo build, and
+whitespace guard. The Next build still emits the known non-fatal `sharp`
+optional `@img` package warnings. Final `git diff --check` passed after
+this validation note update.
+
+Previous Gate AC checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AC_HANDOFF.md`
 

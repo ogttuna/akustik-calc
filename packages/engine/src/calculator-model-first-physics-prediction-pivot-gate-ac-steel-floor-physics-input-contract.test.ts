@@ -167,7 +167,7 @@ describe("calculator model-first physics prediction pivot Gate AC", () => {
     expect(contract.prompts.map((prompt) => prompt.fieldId)).toEqual(contract.missingPhysicalInputs);
   });
 
-  it("marks complete steel predictor input as formula-corridor ready without moving runtime values", () => {
+  it("marks complete steel predictor input as formula-corridor ready before Gate AD runtime promotion", () => {
     const contract = buildGateACSteelFloorPhysicsInputContract({
       impactPredictorInput: COMPLETE_OPEN_WEB_STEEL_INPUT,
       targetOutputs: IMPACT_TARGET_OUTPUTS
@@ -210,10 +210,10 @@ describe("calculator model-first physics prediction pivot Gate AC", () => {
       })
     );
 
-    expect(runtime.impact?.basis).toBe("predictor_floor_system_family_general_estimate");
+    expect(runtime.impact?.basis).toBe("predictor_lightweight_steel_mass_spring_holdout_corridor_estimate");
     expect(runtime.impactPredictorStatus).toMatchObject({
-      implementedFamilyEstimate: true,
-      implementedFormulaEstimate: false,
+      implementedFamilyEstimate: false,
+      implementedFormulaEstimate: true,
       implementedLowConfidenceEstimate: false
     });
   });
@@ -267,9 +267,7 @@ describe("calculator model-first physics prediction pivot Gate AC", () => {
   it("keeps docs and current-gate runner aligned with Gate AC closeout", () => {
     for (const path of CURRENT_SELECTION_DOCS) {
       const text = readRepoFile(path);
-      expect(text, path).toContain(
-        "gate_ac_steel_floor_physics_input_contract_landed_selected_formula_corridor_gate_ad"
-      );
+      expect(text, path).toContain("gate_ac_steel_floor_physics_input_contract_and_formula_readiness_plan");
       expect(text, path).toContain(
         "packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ad-steel-floor-impact-formula-corridor-contract.test.ts"
       );

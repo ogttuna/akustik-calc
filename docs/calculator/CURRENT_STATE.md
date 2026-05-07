@@ -32,15 +32,15 @@ path was found too narrow for the user's calculator-first goal.
 
 Current selected status:
 
-`gate_ac_steel_floor_physics_input_contract_landed_selected_formula_corridor_gate_ad`
+`gate_ad_steel_floor_impact_formula_corridor_landed_selected_card_report_parity_gate_ae`
 
 Selected next implementation file:
 
-`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ad-steel-floor-impact-formula-corridor-contract.test.ts`
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ae-steel-floor-formula-card-report-parity-contract.test.ts`
 
 Selected next action:
 
-`gate_ad_steel_floor_impact_formula_numeric_corridor_plan`
+`gate_ae_steel_floor_formula_card_and_report_parity_plan`
 
 Active planning surface:
 
@@ -48,10 +48,60 @@ Active planning surface:
 
 Latest landed gate:
 
-2026-05-07 model-first physics prediction pivot Gate AC steel-floor
-physics input/formula readiness.
+2026-05-07 model-first physics prediction pivot Gate AD steel-floor
+impact formula numeric corridor.
 
 Latest checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AD_HANDOFF.md`
+
+Gate AD result:
+
+- complete explicit source-absent steel floor predictor input now
+  selects
+  `predictor_lightweight_steel_mass_spring_holdout_corridor_estimate`
+  instead of broad floor-system family blending;
+- the pinned open-web steel example returns lab `LnW 55.6` and
+  `DeltaLw 22.4`, with `+/-4.5 dB` `Ln,w` corridor tolerance and
+  `+/-2.0 dB` `DeltaLw` corridor tolerance;
+- exact measured full-stack rows still outrank the formula corridor;
+- missing carrier spacing or lower ceiling isolation blocks formula
+  runtime and does not fall through to a broad steel-family blend;
+- Pliteq steel-joist rows are holdout checks, not the whole calculator.
+
+Gate AD landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ad-steel-floor-impact-formula-corridor-contract.test.ts`
+
+Gate AD landed action:
+
+`gate_ad_steel_floor_impact_formula_numeric_corridor_plan`
+
+Gate AD landed status:
+
+`gate_ad_steel_floor_impact_formula_corridor_landed_selected_card_report_parity_gate_ae`
+
+Gate AD selected next file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ae-steel-floor-formula-card-report-parity-contract.test.ts`
+
+Gate AD selected next action:
+
+`gate_ae_steel_floor_formula_card_and_report_parity_plan`
+
+Gate AD validation result:
+
+Gate AD validation completed on 2026-05-07. Focused Gate AD passed 1
+file / 6 tests; focused Gate AC/Gate AD plus predictor-input regression
+passed 3 files / 55 tests; focused impact-only fallback regression
+passed 1 file / 102 tests; engine typecheck passed; final
+`pnpm calculator:gate:current` passed with engine 310 files / 1766
+tests, web 62 files / 275 tests plus 18 skipped, repo build, and
+whitespace guard. The Next build still emits the known non-fatal `sharp`
+optional `@img` package warnings. Final `git diff --check` passed after
+this validation note update.
+
+Previous Gate AC checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AC_HANDOFF.md`
 
