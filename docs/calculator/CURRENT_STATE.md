@@ -32,15 +32,15 @@ path was found too narrow for the user's calculator-first goal.
 
 Current selected status:
 
-`gate_z_floor_impact_field_runtime_landed_selected_construction_image_accuracy_incident_gate_aa`
+`gate_aa_construction_image_route_selection_recovered_selected_floor_family_guard_gate_ab`
 
 Selected next implementation file:
 
-`docs/calculator/ACCURACY_INCIDENT_2026-05-07_CONSTRUCTION_IMAGE_ROUTE_SELECTION.md`
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ab-floor-family-source-guard-contract.test.ts`
 
 Selected next action:
 
-`gate_aa_construction_image_accuracy_incident_route_selection_and_solver_recovery_plan`
+`gate_ab_construction_image_floor_family_source_guard_and_steel_impact_route_plan`
 
 Active planning surface:
 
@@ -48,14 +48,57 @@ Active planning surface:
 
 Latest landed gate:
 
-2026-05-07 model-first physics prediction pivot Gate Z floor-impact
-field runtime.
+2026-05-07 model-first physics prediction pivot Gate AA construction
+image route-selection recovery.
 
 Latest checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Z_HANDOFF.md`
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AA_HANDOFF.md`
 
-Gate Z result:
+Gate AA result:
+
+- the shared-wall construction-image grouped topology with explicit
+  80/80 mm mineral-wool cavities now selects
+  `triple_leaf_two_cavity_frequency_solver` instead of
+  `multileaf_screening_blend`;
+- the app path matches the direct solver at `Rw 61`, `STC 61`, `C -1.7`,
+  and `Ctr -6.8`;
+- the selector is domain-based, with non-80 asymmetric cavity checks
+  proving this is not a new fixture-specific patch;
+- flat-list ACON-like construction-image input still returns
+  `needs_input` for grouped topology instead of fake design-grade
+  support.
+
+Gate AA landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-aa-construction-image-accuracy-incident-contract.test.ts`
+
+Gate AA landed action:
+
+`gate_aa_construction_image_accuracy_incident_route_selection_and_solver_recovery_plan`
+
+Gate AA landed status:
+
+`gate_aa_construction_image_route_selection_recovered_selected_floor_family_guard_gate_ab`
+
+Gate AA selected next file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ab-floor-family-source-guard-contract.test.ts`
+
+Gate AA selected next action:
+
+`gate_ab_construction_image_floor_family_source_guard_and_steel_impact_route_plan`
+
+Gate AA validation result:
+
+Validation completed on 2026-05-07: focused Gate I/AA/G/J/M regression
+passed 5 files / 32 tests. Engine typecheck passed. `pnpm
+calculator:gate:current` passed with engine 307 files / 1749 tests, web
+62 files / 275 tests plus 18 skipped, repo build, and whitespace guard.
+Known optional `sharp/@img` Next build warnings remain non-fatal. Final
+`git diff --check` passed after this validation note update.
+
+Previous Gate Z result:
 
 - field-only Dynamic Calculator floor-impact `L'n,w` / `L'nT,w`
   requests now promote from the owned Gate W lab impact anchor plus the

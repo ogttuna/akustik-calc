@@ -2,7 +2,7 @@
 
 Slice id: `calculator_model_first_physics_prediction_pivot_v1`
 
-Status: SELECTED / GATE Z LANDED / GATE AA ACCURACY INCIDENT NEXT
+Status: SELECTED / GATE AA LANDED / GATE AB FLOOR FAMILY GUARD NEXT
 
 Selected by:
 
@@ -11,6 +11,48 @@ DynEcho must be an acoustic calculator first, not a lookup/source-packet
 queue.
 
 Selection status:
+
+`gate_aa_construction_image_route_selection_recovered_selected_floor_family_guard_gate_ab`
+
+Latest Gate AA checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AA_HANDOFF.md`
+
+Gate AA landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-aa-construction-image-accuracy-incident-contract.test.ts`
+
+Gate AA landed action:
+
+`gate_aa_construction_image_accuracy_incident_route_selection_and_solver_recovery_plan`
+
+Gate AA selected Gate AB file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ab-floor-family-source-guard-contract.test.ts`
+
+Gate AA selected Gate AB action:
+
+`gate_ab_construction_image_floor_family_source_guard_and_steel_impact_route_plan`
+
+Gate AA landed summary:
+
+The construction-image shared-wall grouped topology now reaches the
+triple-leaf two-cavity frequency solver by physical domain. The explicit
+80/80 mm mineral-wool scenario returns `Rw 61`, `STC 61`, `C -1.7`, and
+`Ctr -6.8` from the same curve as the direct solver. Flat-list ACON-like
+input remains `needs_input`, so the change recovers complete grouped
+physics without turning image examples into a finite lookup table.
+
+Gate AA validation result:
+
+Validation completed on 2026-05-07: focused Gate I/AA/G/J/M regression
+passed 5 files / 32 tests. Engine typecheck passed. `pnpm
+calculator:gate:current` passed with engine 307 files / 1749 tests, web
+62 files / 275 tests plus 18 skipped, repo build, and whitespace guard.
+Known optional `sharp/@img` Next build warnings remain non-fatal. Final
+`git diff --check` passed after this validation note update.
+
+Previous Gate Z selection status:
 
 `gate_z_floor_impact_field_runtime_landed_selected_construction_image_accuracy_incident_gate_aa`
 

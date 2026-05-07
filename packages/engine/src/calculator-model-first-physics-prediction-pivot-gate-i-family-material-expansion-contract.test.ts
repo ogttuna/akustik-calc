@@ -310,7 +310,7 @@ describe("calculator model-first physics prediction pivot Gate I", () => {
       toleranceClass: "uncalibrated_prediction"
     });
     expect(grouped.airborneBasis?.propertyDefaults.map((entry: { field: string }) => entry.field)).toEqual([
-      "rockwool.flowResistivity",
+      "mineralWool.flowResistivity",
       "tripleLeaf.cavityDamping"
     ]);
 

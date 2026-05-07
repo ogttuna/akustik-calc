@@ -43,8 +43,16 @@ function groupContainsLayerText(
   });
 }
 
-function isApproximately(value: number | undefined, target: number, tolerance: number): boolean {
-  return typeof value === "number" && Number.isFinite(value) && Math.abs(value - target) <= tolerance;
+function hasLayerGroup(value: readonly number[] | undefined): boolean {
+  return Array.isArray(value) && value.length > 0;
+}
+
+function hasKnownTopologyToken(value: string | undefined): boolean {
+  return typeof value === "string" && value !== "unknown" && value !== "auto";
+}
+
+function isWithinGateAATripleLeafCavityDomain(value: number | undefined): boolean {
+  return typeof value === "number" && Number.isFinite(value) && value >= 25 && value <= 220;
 }
 
 function isGateGGroupedRockwoolTripleLeafTarget(layers: readonly ResolvedLayer[], options: DynamicAirborneOptions): boolean {
@@ -58,12 +66,19 @@ function isGateGGroupedRockwoolTripleLeafTarget(layers: readonly ResolvedLayer[]
   const gypsumPattern = /gypsum|plasterboard|drywall/;
 
   return (
-    isApproximately(topology.cavity1DepthMm, 50, 1) &&
-    isApproximately(topology.cavity2DepthMm, 50, 1) &&
+    hasLayerGroup(topology.sideALeafLayerIndices) &&
+    hasLayerGroup(topology.cavity1LayerIndices) &&
+    hasLayerGroup(topology.internalLeafLayerIndices) &&
+    hasLayerGroup(topology.cavity2LayerIndices) &&
+    hasLayerGroup(topology.sideBLeafLayerIndices) &&
+    isWithinGateAATripleLeafCavityDomain(topology.cavity1DepthMm) &&
+    isWithinGateAATripleLeafCavityDomain(topology.cavity2DepthMm) &&
     topology.cavity1FillCoverage === "full" &&
     topology.cavity2FillCoverage === "full" &&
     topology.cavity1AbsorptionClass === "porous_absorptive" &&
     topology.cavity2AbsorptionClass === "porous_absorptive" &&
+    hasKnownTopologyToken(topology.internalLeafCoupling) &&
+    hasKnownTopologyToken(topology.supportTopology) &&
     groupContainsLayerText(layers, topology.cavity1LayerIndices, rockwoolPattern) &&
     groupContainsLayerText(layers, topology.cavity2LayerIndices, rockwoolPattern) &&
     groupContainsLayerText(layers, topology.internalLeafLayerIndices, gypsumPattern)
@@ -75,12 +90,13 @@ type GateGAirborneCandidateSeed = Omit<AirborneCandidate, "rejectionReasons" | "
 };
 
 function buildGateGGroupedRockwoolPhysicsBasis(input: {
+  cavityDepthsMm: readonly [number, number];
   frequenciesHz: readonly number[];
 }): AirborneResultBasis {
   return {
     assumptions: [
       "grouped triple-leaf topology is explicit",
-      "both 50 mm Rockwool cavities are full porous absorptive layers",
+      `two explicit mineral-wool cavities are full porous absorptive layers (${input.cavityDepthsMm[0].toFixed(0)} mm / ${input.cavityDepthsMm[1].toFixed(0)} mm)`,
       "internal gypsum leaf and independent support are treated by the uncalibrated two-cavity solver",
       "missing source rows block exact/calibrated promotion only, not this formula-backed prediction"
     ],
@@ -99,7 +115,7 @@ function buildGateGGroupedRockwoolPhysicsBasis(input: {
     origin: "family_physics_prediction",
     propertyDefaults: [
       {
-        field: "rockwool.flowResistivity",
+        field: "mineralWool.flowResistivity",
         reason: "No calibrated project material property exists yet; prediction carries the Gate G uncalibrated error budget.",
         source: "engine_family_default_until_material_property_widening",
         unit: "Pa.s/m2",
@@ -303,7 +319,12 @@ export function maybeCalculateGateGGroupedRockwoolPrediction(input: {
   }
 
   const ratings = buildRatingsFromCurve(solver.curve.frequenciesHz, solver.curve.transmissionLossDb);
+  const topology = input.options.airborneContext?.wallTopology;
   const basis = buildGateGGroupedRockwoolPhysicsBasis({
+    cavityDepthsMm: [
+      topology?.cavity1DepthMm ?? solver.cavities[0]?.depthMm ?? 0,
+      topology?.cavity2DepthMm ?? solver.cavities[1]?.depthMm ?? 0
+    ],
     frequenciesHz: solver.curve.frequenciesHz
   });
   const candidateResolution = buildGateGGroupedRockwoolCandidateResolution({ basis });
@@ -341,7 +362,7 @@ export function maybeCalculateGateGGroupedRockwoolPrediction(input: {
     hasStudLikeSupport: input.topology.hasStudLikeSupport,
     notes: [
       ...input.family.notes,
-      "Grouped Rockwool triple-leaf topology selected the model-first family physics prediction lane.",
+      "Grouped mineral-wool triple-leaf topology selected the model-first family physics prediction lane.",
       `Two-cavity solver leaf masses: ${leafMassNote}.`,
       `Solver mass-air-mass resonances: ${resonanceNote}.`,
       "Source absence is retained as an exact/calibration blocker, not a blocker for formula-backed prediction."

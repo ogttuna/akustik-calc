@@ -65,16 +65,19 @@ the floor-impact field-context boundary, and Gate Y landed that
 no-runtime boundary. Gate Z promoted field-only `L'n,w` and `L'nT,w`
 runtime through the owned Gate W lab anchor plus explicit field context,
 while keeping `L'nT,50` blocked until a low-frequency owner exists.
-Gate AA is next: `gate_aa_construction_image_accuracy_incident_route_selection_and_solver_recovery_plan`.
-It should treat the construction-image examples as an accuracy incident,
-not a warning-copy issue.
+Gate AA recovered the construction-image shared-wall route selection:
+complete grouped mineral-wool triple-leaf topology now reaches the
+triple-leaf two-cavity frequency solver by physical domain instead of
+the old 50/50 mm fixture gate. Gate AB is next:
+`gate_ab_construction_image_floor_family_source_guard_and_steel_impact_route_plan`.
 
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Z_HANDOFF.md`
-3. `docs/calculator/ACCURACY_INCIDENT_2026-05-07_CONSTRUCTION_IMAGE_ROUTE_SELECTION.md`
-4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Y_HANDOFF.md`
+2. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AA_HANDOFF.md`
+3. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Z_HANDOFF.md`
+4. `docs/calculator/ACCURACY_INCIDENT_2026-05-07_CONSTRUCTION_IMAGE_ROUTE_SELECTION.md`
+5. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Y_HANDOFF.md`
 5. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_X_HANDOFF.md`
 6. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_W_HANDOFF.md`
 7. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_V_HANDOFF.md`
@@ -396,11 +399,25 @@ plan.
 - current selected slice:
   `calculator_model_first_physics_prediction_pivot_v1`
 - current next decision inside the slice:
-  `docs/calculator/ACCURACY_INCIDENT_2026-05-07_CONSTRUCTION_IMAGE_ROUTE_SELECTION.md`
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ab-floor-family-source-guard-contract.test.ts`
   should run
-  `gate_aa_construction_image_accuracy_incident_route_selection_and_solver_recovery_plan`.
+  `gate_ab_construction_image_floor_family_source_guard_and_steel_impact_route_plan`.
 - latest checkpoint:
-  `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Z_HANDOFF.md`.
+  `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AA_HANDOFF.md`.
+- just landed model-first physics prediction pivot Gate AA:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-aa-construction-image-accuracy-incident-contract.test.ts`
+  landed
+  `gate_aa_construction_image_accuracy_incident_route_selection_and_solver_recovery_plan`.
+  It replaces the 50/50 mm grouped Rockwool fixture selector with a
+  domain-based grouped triple-leaf path. The shared-wall construction
+  image with explicit 80/80 mm mineral-wool cavities now selects
+  `triple_leaf_two_cavity_frequency_solver`, returns `Rw 61`, `STC 61`,
+  `C -1.7`, and `Ctr -6.8`, and rejects
+  `multileaf_screening_blend` as lower precedence. Flat-list ACON-like
+  input remains `needs_input`. Selection status:
+  `gate_aa_construction_image_route_selection_recovered_selected_floor_family_guard_gate_ab`.
+  Selected next action:
+  `gate_ab_construction_image_floor_family_source_guard_and_steel_impact_route_plan`.
 - just landed model-first physics prediction pivot Gate Z:
   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-z-floor-impact-field-runtime-contract.test.ts`
   landed

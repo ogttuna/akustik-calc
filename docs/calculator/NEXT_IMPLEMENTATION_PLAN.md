@@ -68,7 +68,7 @@ unsafe reorders. Lab, field, and building-prediction bases must stay
 separate; `Rw`/`STC`, `Ln,w`/`IIC`, and lab/field values are not
 interchangeable without a named rating and measurement basis.
 
-## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate Z Landed / Gate AA Accuracy Incident Next
+## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate AA Landed / Gate AB Floor Family Guard Next
 
 Current implementation position:
 `calculator_model_first_physics_prediction_pivot_v1`.
@@ -101,23 +101,65 @@ Latest Gate U revalidation / commit-prep checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_U_REVALIDATION_AND_COMMIT_HANDOFF.md`
 
-Latest landed Gate Z checkpoint:
+Latest landed Gate AA checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Z_HANDOFF.md`
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AA_HANDOFF.md`
 
-Gate Z selection status:
+Gate AA selection status:
+
+`gate_aa_construction_image_route_selection_recovered_selected_floor_family_guard_gate_ab`
+
+Gate AA landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-aa-construction-image-accuracy-incident-contract.test.ts`
+
+Gate AA landed action:
+
+`gate_aa_construction_image_accuracy_incident_route_selection_and_solver_recovery_plan`
+
+Gate AA selected next file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ab-floor-family-source-guard-contract.test.ts`
+
+Gate AA selected next action:
+
+`gate_ab_construction_image_floor_family_source_guard_and_steel_impact_route_plan`
+
+Gate AA result:
+
+- the shared-wall construction-image grouped topology with explicit
+  80/80 mm mineral-wool cavities now selects
+  `triple_leaf_two_cavity_frequency_solver` instead of
+  `multileaf_screening_blend`;
+- the app path matches the direct solver at `Rw 61`, `STC 61`, `C -1.7`,
+  and `Ctr -6.8`;
+- 65/95 and 95/65 grouped cavity checks prove the selector is a physical
+  domain gate, not a new 80/80 fixture gate;
+- flat-list ACON-like construction-image input remains `needs_input`
+  for grouped topology.
+
+Gate AA validation result:
+
+Validation completed on 2026-05-07: focused Gate I/AA/G/J/M regression
+passed 5 files / 32 tests. Engine typecheck passed. `pnpm
+calculator:gate:current` passed with engine 307 files / 1749 tests, web
+62 files / 275 tests plus 18 skipped, repo build, and whitespace guard.
+Known optional `sharp/@img` Next build warnings remain non-fatal. Final
+`git diff --check` passed after this validation note update.
+
+Previous Gate Z selection status:
 
 `gate_z_floor_impact_field_runtime_landed_selected_construction_image_accuracy_incident_gate_aa`
 
-Gate Z landed file:
+Previous Gate Z landed file:
 
 `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-z-floor-impact-field-runtime-contract.test.ts`
 
-Gate Z landed action:
+Previous Gate Z landed action:
 
 `gate_z_promote_floor_impact_field_context_runtime_for_dynamic_calculator`
 
-Gate Z selected next action:
+Previous Gate Z selected next action:
 
 `gate_aa_construction_image_accuracy_incident_route_selection_and_solver_recovery_plan`
 
@@ -157,25 +199,29 @@ and underpredict. A modular lightweight-steel floor example also shows
 the same class of risk on the floor side: broad nearby source-family
 blends must not become numeric anchors when explicit steel support is
 present. Gate Z has now finished the selected field-impact runtime
-boundary. The next calculator work is
-`gate_aa_construction_image_accuracy_incident_route_selection_and_solver_recovery_plan`:
-add the five construction-image scenarios, numeric acoustic acceptance
-bands, solver-domain route invariants, same-family floor source guards,
-and INSUL / measured-reference comparison notes.
+boundary, and Gate AA has recovered the wall-side construction-image
+route selection. The next calculator work is
+`gate_ab_construction_image_floor_family_source_guard_and_steel_impact_route_plan`:
+add floor same-structural-family source guards, steel/lightweight impact
+route classification, and measured/INSUL-style comparison notes without
+letting unrelated concrete or timber rows own steel floor metrics.
 
 2026-05-07 plan iteration:
 
 - Gate Z is landed and closed for this boundary.
-- Gate AA is the immediate post-Gate-Z accuracy incident gate. Its
-  plan has been expanded with an implementation comparison against
+- Gate AA is landed for the wall-side construction-image route miss. Its
+  plan was expanded with an implementation comparison against
   `dynamic-airborne-gate-g-rockwool.ts`, `dynamic-airborne.ts`,
   `wall-triple-leaf-frequency-solver.ts`, `curve-rating.ts`,
   `impact-estimate.ts`, `lightweight-steel-bound-estimate.ts`, and
   `floor-system-estimate.ts`.
-- Gate AA must start from tests, not a small runtime patch: create the
-  construction-image scenario pack, assert app-path/direct-solver parity,
-  reject `multileaf_screening_blend` for complete grouped multi-cavity
-  topology, and add floor same-structural-family source guards.
+- Gate AA started from tests, not a small runtime patch: the
+  construction-image scenario pack now asserts app-path/direct-solver
+  parity and rejects `multileaf_screening_blend` for complete grouped
+  multi-cavity wall topology.
+- Gate AB carries the floor half of the incident: add
+  same-structural-family source guards and steel/lightweight floor
+  route classification before any steel floor metric can promote.
 - Formula ownership for Gate AA is family-specific: single/laminated
   leaf, double leaf/framed, triple leaf/two-cavity, generalized
   multi-layer airborne, heavy concrete impact, and lightweight steel

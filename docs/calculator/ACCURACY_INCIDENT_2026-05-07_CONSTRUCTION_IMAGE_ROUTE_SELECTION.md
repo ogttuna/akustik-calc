@@ -8,7 +8,8 @@ runtime work.
 
 ## Status
 
-Status: queued after Gate Z.
+Status: Gate AA wall route-selection recovery landed; Gate AB floor
+family/source guard remains next.
 
 Do not solve this as a narrow `50 mm -> 80 mm` patch. The important
 defect is that the calculator can have a physically relevant solver
@@ -24,15 +25,33 @@ The strongest repro is the shared-wall detail with gypsum/MLV/80 mm
 mineral wool/internal gypsum/air/gypsum/80 mm mineral wool/gypsum/MLV
 leaves.
 
-Observed local probe:
+Observed local probe before Gate AA:
 
 - Flat or incomplete route selection produced roughly `Rw 40-42`, via
   the generic multi-leaf screening blend.
 - Calling the existing three-leaf/two-cavity frequency solver directly
-  on the explicit grouped 80/80 mm topology produced `Rw 55`.
+  on the explicit grouped 80/80 mm topology produced a materially higher
+  result than screening, proving the primary defect was route selection.
 - The app path therefore underpredicted primarily because it failed to
   route the stack to the better physics solver, not because no physics
   solver existed.
+
+Gate AA result:
+
+- the explicit grouped shared-wall construction-image stack now selects
+  `triple_leaf_two_cavity_frequency_solver`;
+- app path and direct solver agree at `Rw 61`, `STC 61`, `C -1.7`, and
+  `Ctr -6.8`;
+- the selector accepts a physical grouped triple-leaf cavity domain
+  rather than a `50/50 mm` or `80/80 mm` fixture;
+- flat-list ACON-like input remains `needs_input` until grouped topology
+  is provided.
+
+Gate AA validation completed on 2026-05-07: focused Gate I/AA/G/J/M
+regression passed 5 files / 32 tests. Engine typecheck passed. `pnpm
+calculator:gate:current` passed with engine 307 files / 1749 tests, web
+62 files / 275 tests plus 18 skipped, repo build, and whitespace guard.
+Known optional `sharp/@img` Next build warnings remain non-fatal.
 
 This is an accuracy bug. Confidence labels, caveats, or final-answer
 wording are not the fix. The calculator must select and run the correct

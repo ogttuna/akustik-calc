@@ -19,7 +19,7 @@ required topology and material inputs are present.
 
 Gate A, Gate B, Gate C, Gate D, Gate E, Gate G, Gate H, Gate I,
 Gate J, Gate K, Gate L, Gate M, Gate N, Gate O, Gate P, Gate Q, Gate R,
-Gate S, Gate T, Gate U, Gate V, Gate W, Gate X, Gate Y, and Gate Z for this pivot have
+Gate S, Gate T, Gate U, Gate V, Gate W, Gate X, Gate Y, Gate Z, and Gate AA for this pivot have
 landed. Gate A made the corrected rule executable: source absence
 blocks exact/calibration promotion only, not formula-backed prediction.
 Gate B added shared airborne `airborneBasis` / `airborneCandidateSet`
@@ -175,33 +175,49 @@ a physically relevant multi-leaf solver because selector eligibility is
 too benchmark-fixture-specific, then fall to a screening blend. They
 also exposed the floor-side risk of wrong-family nearby source blending
 for explicit lightweight-steel support. Gate Z is landed; the incident
-is now the selected next action:
-`gate_aa_construction_image_accuracy_incident_route_selection_and_solver_recovery_plan`.
-It should be opened as a numeric acceptance and solver-domain hardening
-gate, not as a warning copy patch.
-The incident doc now carries the implementation gap matrix, external
-formula/research baseline, and Gate AA step order so the next agent can
-move directly from Gate Z into tests and route hardening.
+has now been split into landed wall route recovery and selected floor
+family/source guard follow-up. Gate AA landed the numeric acceptance and
+solver-domain hardening for complete grouped walls, not warning copy.
+Gate AB is selected for the floor-side lightweight-steel source-family
+guard.
+
+Gate AA recovered the construction-image shared-wall accuracy incident:
+complete grouped mineral-wool triple-leaf topology now routes to the
+triple-leaf two-cavity frequency solver by physical domain, not by the
+old `50 mm / 50 mm` benchmark fixture. The explicit 80/80 mm grouped
+construction-image scenario now returns `Rw 61`, `STC 61`, `C -1.7`,
+and `Ctr -6.8` from the same curve as the direct solver; flat-list
+ACON-like input still remains `needs_input`.
+
+Gate AA validation completed on 2026-05-07: focused Gate I/AA/G/J/M
+regression passed 5 files / 32 tests. Engine typecheck passed. `pnpm
+calculator:gate:current` passed with engine 307 files / 1749 tests, web
+62 files / 275 tests plus 18 skipped, repo build, and whitespace guard.
+Known optional `sharp/@img` Next build warnings remain non-fatal.
 
 Current selection status:
 
-`gate_z_floor_impact_field_runtime_landed_selected_construction_image_accuracy_incident_gate_aa`
+`gate_aa_construction_image_route_selection_recovered_selected_floor_family_guard_gate_ab`
 
-Gate Z landed action:
-
-`gate_z_promote_floor_impact_field_context_runtime_for_dynamic_calculator`
-
-Selected next Gate AA planning surface:
-
-`docs/calculator/ACCURACY_INCIDENT_2026-05-07_CONSTRUCTION_IMAGE_ROUTE_SELECTION.md`
-
-Selected next Gate AA action:
+Gate AA landed action:
 
 `gate_aa_construction_image_accuracy_incident_route_selection_and_solver_recovery_plan`
 
-Latest Gate Z checkpoint:
+Selected next Gate AB file:
 
-`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Z_HANDOFF.md`
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ab-floor-family-source-guard-contract.test.ts`
+
+Selected next Gate AB action:
+
+`gate_ab_construction_image_floor_family_source_guard_and_steel_impact_route_plan`
+
+Latest Gate AA checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AA_HANDOFF.md`
+
+Previous Gate Z selection status:
+
+`gate_z_floor_impact_field_runtime_landed_selected_construction_image_accuracy_incident_gate_aa`
 
 Previous Gate Y selection status:
 
