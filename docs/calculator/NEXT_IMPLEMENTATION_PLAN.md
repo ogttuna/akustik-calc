@@ -68,7 +68,7 @@ unsafe reorders. Lab, field, and building-prediction bases must stay
 separate; `Rw`/`STC`, `Ln,w`/`IIC`, and lab/field values are not
 interchangeable without a named rating and measurement basis.
 
-## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate AH Landed / Gate AI Residual Policy Next
+## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate AI Landed / Gate AJ Negative Boundary Next
 
 Current implementation position:
 `calculator_model_first_physics_prediction_pivot_v1`.
@@ -137,6 +137,85 @@ Latest landed Gate AH checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AH_HANDOFF.md`
 
+Latest landed Gate AI checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AI_HANDOFF.md`
+
+Gate AI selection status:
+
+`gate_ai_steel_floor_formula_residual_policy_landed_selected_negative_boundary_delta_lw_gate_aj`
+
+Gate AI landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ai-steel-floor-formula-residual-policy-contract.test.ts`
+
+Gate AI landed action:
+
+`gate_ai_steel_floor_formula_residual_policy_and_calibration_readiness_plan`
+
+Gate AI selected next file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-aj-steel-floor-formula-negative-boundary-and-delta-lw-holdout-contract.test.ts`
+
+Gate AI selected next action:
+
+`gate_aj_steel_floor_formula_negative_boundaries_and_delta_lw_holdout_intake_plan`
+
+Gate AI result:
+
+- Gate AI landed a no-runtime residual policy for the steel-floor formula
+  corridor;
+- current `Ln,w` policy is `hold` because the three Pliteq holdouts are
+  low-error but below the policy threshold and do not yet have paired
+  negative boundaries, source-owned open-web formula inputs, or separate
+  field/building basis owners;
+- current `DeltaLw` policy is `hold` because there are no measured
+  `DeltaLw` residual holdouts;
+- the policy has executable `hold`, `tighten`, `widen`, and
+  `retune_candidate` branches;
+- UBIQ open-web exact rows remain calibration anchors only until formula
+  inputs and topology are source-owned;
+- exact measured rows remain precedence, and source rows remain
+  calibration evidence rather than a finite replacement for the
+  calculator.
+
+Gate AI validation result:
+
+Focused validation completed on 2026-05-07: Gate AI engine contract
+passed 1 file / 5 tests; engine typecheck passed. Full `pnpm
+calculator:gate:current` passed with engine 315 files / 1788 tests, web
+65 files / 284 passed + 18 skipped, and repo build 5/5 tasks. Known
+non-fatal warnings remain the Node/Vitest Zustand persist storage warning
+and optional `sharp` / `@img` Next build warnings via the DOCX export
+dependency.
+
+## Gate AJ Implementation Order - Steel Formula Negative Boundaries And DeltaLw Holdout Intake
+
+Gate AJ is the right next step because Gate AI now blocks any retune or
+tightening until paired negative boundaries and measured `DeltaLw`
+holdout intake are explicit.
+
+Gate AJ order:
+
+1. Create the Gate AJ contract at
+   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-aj-steel-floor-formula-negative-boundary-and-delta-lw-holdout-contract.test.ts`.
+2. Add paired negative-boundary cases for wrong support family, exact row
+   precedence, field/building basis leakage, and source-absent design
+   references.
+3. Define measured `DeltaLw` holdout intake rules separately from
+   product-catalog `DeltaLw` or inferred Annex-C companions.
+4. Keep UBIQ exact rows as anchors until carrier spacing, load basis,
+   dynamic stiffness, lower support class, and upper-resilient topology
+   are source-owned.
+5. Preserve current runtime values and exact-source precedence.
+
+Non-goals for Gate AJ:
+
+- no broad source crawl;
+- no runtime formula retune;
+- no DeltaLw tightening from inferred or product-only values;
+- no field/building promotion from lab evidence.
+
 Gate AH selection status:
 
 `gate_ah_steel_floor_formula_accuracy_benchmark_landed_selected_residual_policy_gate_ai`
@@ -182,7 +261,7 @@ non-fatal warnings remain the Node/Vitest Zustand persist storage warning
 and optional `sharp` / `@img` Next build warnings via the DOCX export
 dependency.
 
-## Gate AI Implementation Order - Steel Formula Residual Policy And Calibration Readiness
+## Consumed Gate AI Implementation Order - Steel Formula Residual Policy And Calibration Readiness
 
 Gate AI is the right next step because Gate AH now owns the benchmark
 matrix but has not yet turned the benchmark outcome into an explicit

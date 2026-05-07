@@ -2,7 +2,7 @@
 
 Slice id: `calculator_model_first_physics_prediction_pivot_v1`
 
-Status: SELECTED / GATE AH LANDED / GATE AI RESIDUAL POLICY NEXT
+Status: SELECTED / GATE AI LANDED / GATE AJ NEGATIVE BOUNDARY NEXT
 
 Selected by:
 
@@ -12,7 +12,60 @@ queue.
 
 Selection status:
 
-`gate_ah_steel_floor_formula_accuracy_benchmark_landed_selected_residual_policy_gate_ai`
+`gate_ai_steel_floor_formula_residual_policy_landed_selected_negative_boundary_delta_lw_gate_aj`
+
+Latest Gate AI checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AI_HANDOFF.md`
+
+Gate AI landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ai-steel-floor-formula-residual-policy-contract.test.ts`
+
+Gate AI landed action:
+
+`gate_ai_steel_floor_formula_residual_policy_and_calibration_readiness_plan`
+
+Gate AI selected Gate AJ file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-aj-steel-floor-formula-negative-boundary-and-delta-lw-holdout-contract.test.ts`
+
+Gate AI selected Gate AJ action:
+
+`gate_aj_steel_floor_formula_negative_boundaries_and_delta_lw_holdout_intake_plan`
+
+Gate AI landed summary:
+
+Gate AI adds a no-runtime residual policy for the steel-floor formula
+corridor. Current `Ln,w` evidence resolves to `hold`: max residual is
+low, but the evidence set is only three same-family Pliteq holdouts and
+lacks paired negative boundaries, source-owned open-web formula inputs,
+and separate field/building basis owners. Current `DeltaLw` evidence
+also resolves to `hold` because measured `DeltaLw` residual count is
+zero. The policy defines executable `hold`, `tighten`, `widen`, and
+`retune_candidate` branches and keeps UBIQ exact rows as anchors.
+
+Gate AI validation result:
+
+Focused validation completed on 2026-05-07. Gate AI engine contract
+passed 1 file / 5 tests; engine typecheck passed. Full `pnpm
+calculator:gate:current` passed with engine 315 files / 1788 tests, web
+65 files / 284 passed + 18 skipped, and repo build 5/5 tasks. Known
+non-fatal warnings remain the Node/Vitest Zustand persist storage warning
+and optional `sharp` / `@img` Next build warnings via the DOCX export
+dependency.
+
+Gate AJ implementation plan:
+
+1. Create
+   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-aj-steel-floor-formula-negative-boundary-and-delta-lw-holdout-contract.test.ts`.
+2. Add paired negative-boundary cases before any retune or tightening.
+3. Define measured `DeltaLw` holdout intake separately from inferred or
+   product-only `DeltaLw`.
+4. Keep UBIQ exact rows as anchors until formula inputs and topology are
+   source-owned.
+5. Preserve exact-source precedence and lab/field/building basis
+   separation.
 
 Latest Gate AH checkpoint:
 

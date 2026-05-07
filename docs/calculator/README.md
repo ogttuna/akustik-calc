@@ -264,6 +264,32 @@ non-fatal warnings remain the Node/Vitest Zustand persist storage warning
 and optional `sharp` / `@img` Next build warnings via the DOCX export
 dependency.
 
+Gate AI has now landed steel-floor formula residual policy and
+calibration readiness: `Ln,w` and `DeltaLw` each resolve through
+executable `hold`, `tighten`, `widen`, or `retune_candidate` decisions.
+The current evidence holds the corridor: `Ln,w` residuals are low but
+come from only three same-family Pliteq holdouts; measured `DeltaLw`
+residual count remains zero; paired negatives, source-owned open-web
+formula inputs, and field/building basis owners are still missing. UBIQ
+open-web exact rows remain calibration anchors only.
+Gate AI selection status:
+`gate_ai_steel_floor_formula_residual_policy_landed_selected_negative_boundary_delta_lw_gate_aj`.
+Gate AI landed file:
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ai-steel-floor-formula-residual-policy-contract.test.ts`.
+Gate AI landed action:
+`gate_ai_steel_floor_formula_residual_policy_and_calibration_readiness_plan`.
+Gate AI selected Gate AJ file:
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-aj-steel-floor-formula-negative-boundary-and-delta-lw-holdout-contract.test.ts`.
+Gate AI selected Gate AJ action:
+`gate_aj_steel_floor_formula_negative_boundaries_and_delta_lw_holdout_intake_plan`.
+Gate AI focused validation completed on 2026-05-07: Gate AI engine
+contract 1 file / 5 tests and engine typecheck passed. Full `pnpm
+calculator:gate:current` passed with engine 315 files / 1788 tests, web
+65 files / 284 passed + 18 skipped, and repo build 5/5 tasks. Known
+non-fatal warnings remain the Node/Vitest Zustand persist storage warning
+and optional `sharp` / `@img` Next build warnings via the DOCX export
+dependency.
+
 Previous Gate AF selection status:
 `gate_af_steel_floor_formula_input_surface_landed_selected_acceptance_revalidation_gate_ag`.
 Previous Gate AF landed file:
