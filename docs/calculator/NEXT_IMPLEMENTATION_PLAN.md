@@ -68,7 +68,7 @@ unsafe reorders. Lab, field, and building-prediction bases must stay
 separate; `Rw`/`STC`, `Ln,w`/`IIC`, and lab/field values are not
 interchangeable without a named rating and measurement basis.
 
-## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate AM Landed / Gate AN Next
+## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate AN Landed / Gate AO Next
 
 Current implementation position:
 `calculator_model_first_physics_prediction_pivot_v1`.
@@ -164,6 +164,59 @@ Latest landed Gate AL checkpoint:
 Latest landed Gate AM checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AM_HANDOFF.md`
+
+Latest landed Gate AN checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AN_HANDOFF.md`
+
+Gate AN selection status:
+
+`gate_an_source_absent_uncertainty_landed_no_runtime_selected_error_budget_surface_parity_gate_ao`
+
+Gate AN landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-an-steel-floor-formula-source-absent-uncertainty-contract.test.ts`
+
+Gate AN landed action:
+
+`gate_an_steel_floor_formula_source_absent_uncertainty_and_error_budget_plan`
+
+Gate AN selected next file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ao-steel-floor-formula-error-budget-surface-parity-contract.test.ts`
+
+Gate AN selected next action:
+
+`gate_ao_steel_floor_formula_error_budget_surface_parity_plan`
+
+Gate AN result:
+
+- Gate AN lands a no-runtime structured error-budget contract for the
+  source-absent steel-floor formula corridor;
+- complete formula cases keep the same `Ln,w 55.6` / `DeltaLw 22.4`
+  runtime estimates while exposing `Ln,w +/-4.5 dB` and
+  `DeltaLw +/-2.0 dB` as metric-specific budget objects;
+- budget terms distinguish missing source-owned `DeltaLw` holdouts,
+  bare steel reference modelling, transfer efficiency, dynamic
+  stiffness precision, load-basis precision, lower support class, and
+  upper resilient topology;
+- exact-source, needs-input, and unsafe-topology cases do not expose a
+  formula error budget;
+- Gate AK/AM source rules remain unchanged and still report zero
+  accepted source-owned same-stack ISO lab `DeltaLw` holdouts;
+- Gate AO is selected to carry the error-budget payload across cards,
+  reports, calculator API, and impact-only API parity surfaces.
+
+Gate AN validation result:
+
+Focused validation completed on 2026-05-07: Gate AN focused engine
+contract passed 1 file / 6 tests, engine typecheck passed, focused Gate
+AM/AN contracts passed 2 files / 11 tests, focused Gate AJ/AK/AL/AM/AN
+contracts passed 5 files / 25 tests, full `pnpm
+calculator:gate:current` passed, and `git diff --check` passed before
+this validation-doc sync. Current gate totals: engine 320 files / 1813
+tests, web 65 files / 284 passed + 18 skipped, repo build 5/5
+successful, and whitespace guard clean.
 
 Gate AM selection status:
 
@@ -262,37 +315,52 @@ diff --check` passed. Known non-fatal warnings remain the Node/Vitest
 Zustand persist storage warning and optional `sharp` / `@img` Next build
 warnings via the DOCX export dependency.
 
-## Gate AN Implementation Order - Source-Absent Steel-Floor Formula Uncertainty
+## Gate AO Implementation Order - Steel-Floor Error-Budget Surface Parity
 
-Gate AN is the right next step because Gate AM found no qualifying
-source-owned same-stack ISO lab `DeltaLw` steel-floor packet and did not
-weaken the acceptance rule. The calculator still needs to calculate
-realistic source-absent steel floor combinations, so the next work should
-improve the formula corridor's uncertainty and missing-input posture
-instead of broadening source-library search.
+Gate AO is the right next step because Gate AN made the source-absent
+steel-floor error budget explicit but did not yet carry that structured
+payload through every user-visible surface. The calculator should show
+the same uncertainty basis in cards, reports, calculator API, and
+impact-only API without presenting it as measured evidence.
 
-Gate AN order:
+Gate AO order:
 
-1. Make the source-absent steel-floor formula expose an explicit
-   error-budget object for `Ln,w` and `DeltaLw`, including which terms
-   are from measured holdouts, source-absent assumptions, support-form
-   uncertainty, load-basis defaults, and dynamic-stiffness precision.
-2. Keep exact source rows first and keep Gate AK/AM source packet rules
-   unchanged.
-3. Add hostile/nearby cases where `DeltaLw` sources are absent but all
-   physical formula inputs are present, partially missing, or unsafe.
-4. Ensure card/report/API payloads can surface the formula uncertainty
-   without pretending it is measured evidence.
-5. Decide whether the current `+/-4.5 dB Ln,w` / `+/-2.0 dB DeltaLw`
-   corridor should remain as-is, widen, or split by source-absent input
-   completeness without retuning runtime values.
+1. Add the structured Gate AN error-budget payload to the steel formula
+   runtime/support trace path without changing `Ln,w` or `DeltaLw`
+   numeric values.
+2. Show the same `origin`, `notMeasuredEvidence`, metric corridor, and
+   terms on output cards, method dossier, Markdown report, calculator
+   API payload, and impact-only API payload.
+3. Keep exact-source, needs-input, and unsafe-topology cases free of
+   formula budgets.
+4. Add parity tests that compare the visible text against the structured
+   error-budget object rather than duplicating free-form copy.
+5. Preserve Gate AK/AM source-packet strictness and Gate AN corridor
+   values.
 
-Non-goals for Gate AN:
+Non-goals for Gate AO:
 
 - no runtime formula retune;
 - no DeltaLw tightening from inferred or product-only values;
 - no field/building promotion from lab evidence;
 - no broad source-library crawl disconnected from formula holdout needs.
+
+## Consumed Gate AN Implementation Order - Source-Absent Steel-Floor Formula Uncertainty
+
+Gate AN made the current tolerance corridor structured and testable.
+
+Gate AN order completed:
+
+1. Added explicit `Ln,w` and `DeltaLw` source-absent error-budget
+   objects for complete steel-floor formula cases.
+2. Attributed uncertainty to missing source-owned holdouts,
+   source-absent steel reference modelling, transfer efficiency, input
+   precision, and topology simplification.
+3. Kept exact source precedence and Gate AK/AM source packet rules
+   unchanged.
+4. Added needs-input and unsafe-topology guards where no formula budget
+   can be surfaced.
+5. Selected Gate AO for card/report/API surface parity.
 
 ## Consumed Gate AM Implementation Order - Source-Owned DeltaLw Source Packet Acquisition
 

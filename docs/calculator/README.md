@@ -21,7 +21,7 @@ Gate A, Gate B, Gate C, Gate D, Gate E, Gate G, Gate H, Gate I,
 Gate J, Gate K, Gate L, Gate M, Gate N, Gate O, Gate P, Gate Q, Gate R,
 Gate S, Gate T, Gate U, Gate V, Gate W, Gate X, Gate Y, Gate Z, Gate AA,
 Gate AB, Gate AC, Gate AD, Gate AE, Gate AF, Gate AG, Gate AH, Gate AI,
-Gate AJ, Gate AK, Gate AL, and Gate AM for this pivot have
+Gate AJ, Gate AK, Gate AL, Gate AM, and Gate AN for this pivot have
 landed. Gate A made the corrected rule executable: source absence
 blocks exact/calibration promotion only, not formula-backed prediction.
 Gate B added shared airborne `airborneBasis` / `airborneCandidateSet`
@@ -415,6 +415,30 @@ contracts 4 files / 19 tests, full `pnpm calculator:gate:current`, and
 `git diff --check` passed. Current gate totals: engine 319 files / 1807
 tests, web 65 files / 284 passed + 18 skipped, repo build 5/5
 successful, and whitespace guard clean.
+
+Gate AN has now landed the source-absent steel-floor error-budget
+contract. It keeps runtime values unchanged: complete steel formula
+cases still report `Ln,w 55.6` and `DeltaLw 22.4`, with `Ln,w +/-4.5
+dB` and `DeltaLw +/-2.0 dB` split into structured uncertainty terms.
+Exact-source, needs-input, and unsafe-topology cases do not expose a
+formula budget, and Gate AK/AM source rules remain strict.
+Gate AN selection status:
+`gate_an_source_absent_uncertainty_landed_no_runtime_selected_error_budget_surface_parity_gate_ao`.
+Gate AN landed file:
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-an-steel-floor-formula-source-absent-uncertainty-contract.test.ts`.
+Gate AN landed action:
+`gate_an_steel_floor_formula_source_absent_uncertainty_and_error_budget_plan`.
+Gate AN selected Gate AO file:
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ao-steel-floor-formula-error-budget-surface-parity-contract.test.ts`.
+Gate AN selected Gate AO action:
+`gate_ao_steel_floor_formula_error_budget_surface_parity_plan`.
+Gate AN focused validation completed on 2026-05-07: Gate AN engine
+contract 1 file / 6 tests, engine typecheck, focused Gate AM/AN
+contracts 2 files / 11 tests, focused Gate AJ/AK/AL/AM/AN contracts 5
+files / 25 tests, full `pnpm calculator:gate:current`, and `git diff
+--check` passed before this validation-doc sync. Current gate totals:
+engine 320 files / 1813 tests, web 65 files / 284 passed + 18 skipped,
+repo build 5/5 successful, and whitespace guard clean.
 
 Previous Gate AF selection status:
 `gate_af_steel_floor_formula_input_surface_landed_selected_acceptance_revalidation_gate_ag`.

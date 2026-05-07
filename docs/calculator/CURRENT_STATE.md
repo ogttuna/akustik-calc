@@ -32,15 +32,15 @@ path was found too narrow for the user's calculator-first goal.
 
 Current selected status:
 
-`gate_am_source_packet_acquisition_landed_no_runtime_selected_source_absent_uncertainty_gate_an`
+`gate_an_source_absent_uncertainty_landed_no_runtime_selected_error_budget_surface_parity_gate_ao`
 
 Selected next implementation file:
 
-`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-an-steel-floor-formula-source-absent-uncertainty-contract.test.ts`
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ao-steel-floor-formula-error-budget-surface-parity-contract.test.ts`
 
 Selected next action:
 
-`gate_an_steel_floor_formula_source_absent_uncertainty_and_error_budget_plan`
+`gate_ao_steel_floor_formula_error_budget_surface_parity_plan`
 
 Active planning surface:
 
@@ -48,16 +48,16 @@ Active planning surface:
 
 Latest landed gate:
 
-2026-05-07 model-first physics prediction pivot Gate AM steel-floor
-formula source-owned DeltaLw source-packet acquisition ledger.
+2026-05-07 model-first physics prediction pivot Gate AN steel-floor
+formula source-absent uncertainty and error-budget contract.
 
 Latest checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AM_HANDOFF.md`
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AN_HANDOFF.md`
 
 Latest landed-gate checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AM_HANDOFF.md`
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AN_HANDOFF.md`
 
 Latest landed / report export checkpoint:
 
@@ -71,7 +71,57 @@ Latest broad revalidation / Gate AL handoff checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-07_BROAD_REVALIDATION_GATE_AK_TO_GATE_AL_HANDOFF.md`
 
-Gate AM result:
+Gate AN result:
+
+- Gate AN landed a structured source-absent steel-floor formula error
+  budget without moving runtime values;
+- complete source-absent steel formula cases still calculate
+  `Ln,w 55.6` and `DeltaLw 22.4`, but now expose explicit budget terms:
+  missing source-owned `DeltaLw` holdouts, source-absent bare steel
+  reference modelling, steel transfer efficiency, dynamic stiffness
+  precision, load-basis precision, lower-support simplification, and
+  upper-resilient topology simplification;
+- `Ln,w` keeps the existing `+/-4.5 dB` corridor and `DeltaLw` keeps
+  the existing `+/-2.0 dB` corridor;
+- exact-source precedence, missing-input cases, and unsafe topology
+  cases do not surface an error budget;
+- Gate AK/AM source-packet rules remain strict, with zero accepted
+  source-owned same-stack ISO lab `DeltaLw` holdouts;
+- Gate AO is selected to carry this error-budget payload through cards,
+  reports, calculator API, and impact-only API surfaces.
+
+Gate AN landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-an-steel-floor-formula-source-absent-uncertainty-contract.test.ts`
+
+Gate AN landed action:
+
+`gate_an_steel_floor_formula_source_absent_uncertainty_and_error_budget_plan`
+
+Gate AN landed status:
+
+`gate_an_source_absent_uncertainty_landed_no_runtime_selected_error_budget_surface_parity_gate_ao`
+
+Gate AN selected next file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ao-steel-floor-formula-error-budget-surface-parity-contract.test.ts`
+
+Gate AN selected next action:
+
+`gate_ao_steel_floor_formula_error_budget_surface_parity_plan`
+
+Gate AN validation result:
+
+Focused validation completed on 2026-05-07: Gate AN focused engine
+contract passed 1 file / 6 tests, engine typecheck passed, focused Gate
+AM/AN contracts passed 2 files / 11 tests, focused Gate AJ/AK/AL/AM/AN
+contracts passed 5 files / 25 tests, full `pnpm
+calculator:gate:current` passed, and `git diff --check` passed before
+this validation-doc sync. Current gate totals: engine 320 files / 1813
+tests, web 65 files / 284 passed + 18 skipped, repo build 5/5
+successful, and whitespace guard clean.
+
+Prior Gate AM result:
 
 - Gate AM landed an executable narrow source-packet acquisition ledger
   after Gate AL's first-holdout guard;

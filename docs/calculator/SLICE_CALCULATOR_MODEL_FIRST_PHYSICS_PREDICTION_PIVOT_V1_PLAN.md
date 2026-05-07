@@ -2,7 +2,7 @@
 
 Slice id: `calculator_model_first_physics_prediction_pivot_v1`
 
-Status: SELECTED / GATE AM LANDED / GATE AN SOURCE-ABSENT UNCERTAINTY NEXT
+Status: SELECTED / GATE AN LANDED / GATE AO ERROR-BUDGET SURFACE PARITY NEXT
 
 Selected by:
 
@@ -12,7 +12,50 @@ queue.
 
 Selection status:
 
-`gate_am_source_packet_acquisition_landed_no_runtime_selected_source_absent_uncertainty_gate_an`
+`gate_an_source_absent_uncertainty_landed_no_runtime_selected_error_budget_surface_parity_gate_ao`
+
+Latest Gate AN checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AN_HANDOFF.md`
+
+Gate AN landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-an-steel-floor-formula-source-absent-uncertainty-contract.test.ts`
+
+Gate AN landed action:
+
+`gate_an_steel_floor_formula_source_absent_uncertainty_and_error_budget_plan`
+
+Gate AN selected Gate AO file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ao-steel-floor-formula-error-budget-surface-parity-contract.test.ts`
+
+Gate AN selected Gate AO action:
+
+`gate_ao_steel_floor_formula_error_budget_surface_parity_plan`
+
+Gate AN landed summary:
+
+Gate AN adds a no-runtime structured error-budget contract for the
+source-absent steel-floor formula corridor. Complete steel formula cases
+keep the same `Ln,w 55.6` / `DeltaLw 22.4` estimates while exposing
+`Ln,w +/-4.5 dB` and `DeltaLw +/-2.0 dB` as metric-specific error
+budgets. The terms name missing source-owned holdouts, source-absent
+bare steel reference modelling, transfer efficiency, dynamic stiffness
+precision, load-basis precision, lower support class simplification, and
+upper resilient topology simplification. Exact-source, needs-input, and
+unsafe-topology cases do not expose a formula budget.
+
+Gate AN validation result:
+
+Focused validation completed on 2026-05-07: Gate AN focused engine
+contract passed 1 file / 6 tests, engine typecheck passed, focused Gate
+AM/AN contracts passed 2 files / 11 tests, focused Gate AJ/AK/AL/AM/AN
+contracts passed 5 files / 25 tests, full `pnpm
+calculator:gate:current` passed, and `git diff --check` passed before
+this validation-doc sync. Current gate totals: engine 320 files / 1813
+tests, web 65 files / 284 passed + 18 skipped, repo build 5/5
+successful, and whitespace guard clean.
 
 Latest Gate AM checkpoint:
 
@@ -112,7 +155,7 @@ Consumed Gate AM implementation plan:
 4. If no packet qualifies, land the rejection ledger and next acquisition
    decision without weakening Gate AK/AL.
 
-Gate AN implementation plan:
+Consumed Gate AN implementation plan:
 
 1. Add an explicit source-absent error-budget object for steel-floor
    `Ln,w` and `DeltaLw`.
@@ -125,6 +168,19 @@ Gate AN implementation plan:
    present, partially missing, duplicated, or unsafe.
 5. Preserve card/report/API parity for the uncertainty posture without
    presenting it as measured evidence.
+
+Gate AO implementation plan:
+
+1. Carry Gate AN's structured error-budget payload into the steel formula
+   runtime/support trace without changing numeric values.
+2. Surface the same `origin`, `notMeasuredEvidence`, metric corridor, and
+   terms on output cards, method dossier, Markdown report, calculator
+   API, and impact-only API.
+3. Keep exact-source, needs-input, and unsafe-topology cases free of
+   formula budgets.
+4. Add parity tests that compare visible output against the structured
+   budget object.
+5. Keep Gate AK/AM source-packet strictness unchanged.
 
 Latest Gate AK checkpoint:
 
