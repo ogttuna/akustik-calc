@@ -9,6 +9,10 @@ import {
   type ValidationPosture
 } from "./validation-regime";
 import { getRockwoolTripleLeafScreeningPolicyCopy } from "./rockwool-triple-leaf-screening-policy-copy";
+import {
+  getSteelFloorFormulaCorridorPosture,
+  isSteelFloorFormulaCorridorImpact
+} from "./steel-floor-formula-corridor-view";
 
 export type SimpleWorkbenchOutputPostureTone = "accent" | "neutral" | "success" | "warning";
 
@@ -140,6 +144,10 @@ export function buildSimpleWorkbenchOutputPosture(input: {
   }
 
   if (studyMode === "floor") {
+    if (isSteelFloorFormulaCorridorImpact(result) && (output === "Ln,w" || output === "DeltaLw")) {
+      return getSteelFloorFormulaCorridorPosture();
+    }
+
     const posture = describeImpactValidationPosture(result);
 
     switch (posture.posture) {

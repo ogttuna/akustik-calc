@@ -194,15 +194,40 @@ steel predictor input now returns lab `Ln,w` / `DeltaLw` from
 `predictor_lightweight_steel_mass_spring_holdout_corridor_estimate`
 instead of broad family blending, while exact measured rows remain first
 precedence and missing carrier/lower-isolation inputs block fallback.
-Gate AD selection status:
-`gate_ad_steel_floor_impact_formula_corridor_landed_selected_card_report_parity_gate_ae`.
-Gate AD landed file:
-`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ad-steel-floor-impact-formula-corridor-contract.test.ts`.
-Gate AD landed action:
-`gate_ad_steel_floor_impact_formula_numeric_corridor_plan`.
-Gate AD selected Gate AE file:
+Gate AE has now landed steel-floor formula card/report parity: the Gate
+AD runtime values stay unchanged, while workbench cards, output posture,
+dynamic trace, support formula notes, validation mode, proposal dossier,
+and Markdown report all expose `Lightweight-steel formula corridor`,
+source-absent lab basis, and `+/-4.5 dB` / `+/-2.0 dB` tolerances
+instead of generic scoped/heavy-reference wording. Gate AE selection
+status:
+`gate_ae_steel_formula_card_report_parity_landed_selected_input_surface_gate_af`.
+Gate AE landed file:
 `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ae-steel-floor-formula-card-report-parity-contract.test.ts`.
-Gate AD selected Gate AE action:
+Gate AE landed action:
+`gate_ae_steel_floor_formula_card_and_report_parity_plan`.
+Gate AE selected Gate AF file:
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-af-steel-floor-formula-input-surface-contract.test.ts`.
+Gate AE selected Gate AF action:
+`gate_af_steel_floor_formula_input_surface_plan`.
+Gate AE validation completed on 2026-05-07: focused Gate AE engine
+contract 1 file / 4 tests, focused web steel formula card/report parity
+1 file / 1 test, focused Gate AD regression 1 file / 6 tests, focused
+web output/model/dossier/formula report regressions 3 files / 16 tests,
+final `pnpm calculator:gate:current` with engine 311 files / 1770 tests
+and web 63 files / 276 tests plus 18 skipped, repo build, and whitespace
+guard all passed. The Next build still emits the known non-fatal
+optional `sharp/@img` package warnings.
+
+Previous Gate AD selection status:
+`gate_ad_steel_floor_impact_formula_corridor_landed_selected_card_report_parity_gate_ae`.
+Previous Gate AD landed file:
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ad-steel-floor-impact-formula-corridor-contract.test.ts`.
+Previous Gate AD landed action:
+`gate_ad_steel_floor_impact_formula_numeric_corridor_plan`.
+Previous Gate AD selected Gate AE file:
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ae-steel-floor-formula-card-report-parity-contract.test.ts`.
+Previous Gate AD selected Gate AE action:
 `gate_ae_steel_floor_formula_card_and_report_parity_plan`.
 Gate AD validation completed on 2026-05-07: focused Gate AD 1 file / 6
 tests, Gate AC/Gate AD plus predictor-input regression 3 files / 55

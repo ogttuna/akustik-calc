@@ -9,7 +9,9 @@ import { getImpactConfidenceForBasis } from "./impact-confidence";
 import { buildUniformImpactMetricBasis } from "./impact-metric-basis";
 import { clamp, ksRound1, log10Safe, round1 } from "./math";
 
-const STEEL_FORMULA_BASIS = "predictor_lightweight_steel_mass_spring_holdout_corridor_estimate" as const;
+export const STEEL_FLOOR_FORMULA_BASIS = "predictor_lightweight_steel_mass_spring_holdout_corridor_estimate" as const;
+export const STEEL_FLOOR_FORMULA_LN_W_TOLERANCE_DB = 4.5;
+export const STEEL_FLOOR_FORMULA_DELTA_LW_TOLERANCE_DB = 2;
 const REQUIRED_PHYSICAL_INPUTS = [
   "steelSupportForm",
   "steelCarrierDepthMm",
@@ -27,8 +29,6 @@ const OPEN_WEB_FL24_BARE_ROWS = [
   { carrierDepthMm: 300, lnW: 62 },
   { carrierDepthMm: 400, lnW: 61 }
 ] as const;
-const LN_W_TOLERANCE_DB = 4.5;
-const DELTA_LW_TOLERANCE_DB = 2;
 
 export type GateADSteelFloorImpactFormulaStatus =
   | "exact_source_precedence"
@@ -65,7 +65,7 @@ export type GateADSteelFloorImpactFormulaCorridorContract = {
     DeltaLw: GateADSteelFloorImpactFormulaCorridorMetric | null;
     LnW: GateADSteelFloorImpactFormulaCorridorMetric | null;
   };
-  formulaBasis: typeof STEEL_FORMULA_BASIS;
+  formulaBasis: typeof STEEL_FLOOR_FORMULA_BASIS;
   holdoutComparisons: readonly GateADSteelFloorImpactFormulaHoldoutComparison[];
   impact: ImpactCalculation | null;
   landedGate: "gate_ad_steel_floor_impact_formula_numeric_corridor_plan";
@@ -369,8 +369,8 @@ export function estimateSteelFloorImpactFromPredictorInput(
     LnW: lnW,
     availableOutputs: ["Ln,w", "DeltaLw"],
     bareReferenceLnW: roundedBareReferenceLnW,
-    basis: STEEL_FORMULA_BASIS,
-    confidence: getImpactConfidenceForBasis(STEEL_FORMULA_BASIS),
+    basis: STEEL_FLOOR_FORMULA_BASIS,
+    confidence: getImpactConfidenceForBasis(STEEL_FLOOR_FORMULA_BASIS),
     floatingLoadSurfaceMassKgM2: ksRound1(loadBasisKgM2),
     labOrField: "lab",
     metricBasis: buildUniformImpactMetricBasis(
@@ -378,13 +378,13 @@ export function estimateSteelFloorImpactFromPredictorInput(
         DeltaLw: roundedDeltaLw,
         LnW: lnW
       },
-      STEEL_FORMULA_BASIS
+      STEEL_FLOOR_FORMULA_BASIS
     ),
     notes: [
       "Steel-floor impact estimate used the Gate AD mass-spring formula corridor instead of the broad floor-system family blend.",
       `Reference DeltaLw used the existing Annex-C style relation with m'load = ${ksRound1(loadBasisKgM2)} kg/m² and s' = ${ksRound1(dynamicStiffnessMNm3)} MN/m³.`,
       `Steel carrier correction applied ${ksRound1(effectiveDeltaLw)} dB of the ${roundedDeltaLw} dB upper-package reduction against a ${roundedBareReferenceLnW} dB bare steel reference.`,
-      `Corridor tolerance is +/-${LN_W_TOLERANCE_DB} dB for Ln,w and +/-${DELTA_LW_TOLERANCE_DB} dB for DeltaLw until the next source-calibration gate tightens it.`
+      `Corridor tolerance is +/-${STEEL_FLOOR_FORMULA_LN_W_TOLERANCE_DB} dB for Ln,w and +/-${STEEL_FLOOR_FORMULA_DELTA_LW_TOLERANCE_DB} dB for DeltaLw until the next source-calibration gate tightens it.`
     ],
     predictorResonanceHz: ksRound1(predictorResonanceHz),
     resilientDynamicStiffnessMNm3: ksRound1(dynamicStiffnessMNm3),
@@ -420,10 +420,10 @@ export function buildGateADSteelFloorImpactFormulaCorridorContract(
         ? "needs_input"
         : "formula_corridor_ready";
   const lnWCorridor = typeof impact?.LnW === "number"
-    ? corridorFor(impact.LnW, LN_W_TOLERANCE_DB)
+    ? corridorFor(impact.LnW, STEEL_FLOOR_FORMULA_LN_W_TOLERANCE_DB)
     : null;
   const deltaLwCorridor = typeof impact?.DeltaLw === "number"
-    ? corridorFor(impact.DeltaLw, DELTA_LW_TOLERANCE_DB)
+    ? corridorFor(impact.DeltaLw, STEEL_FLOOR_FORMULA_DELTA_LW_TOLERANCE_DB)
     : null;
   const holdoutComparison =
     input.holdoutSourceId && typeof input.holdoutActualLnW === "number" && impact?.LnW && lnWCorridor
@@ -446,7 +446,7 @@ export function buildGateADSteelFloorImpactFormulaCorridorContract(
       DeltaLw: deltaLwCorridor,
       LnW: lnWCorridor
     },
-    formulaBasis: STEEL_FORMULA_BASIS,
+    formulaBasis: STEEL_FLOOR_FORMULA_BASIS,
     holdoutComparisons: holdoutComparison,
     impact,
     landedGate: "gate_ad_steel_floor_impact_formula_numeric_corridor_plan",

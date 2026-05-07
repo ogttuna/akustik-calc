@@ -2,7 +2,7 @@
 
 Slice id: `calculator_model_first_physics_prediction_pivot_v1`
 
-Status: SELECTED / GATE AD LANDED / GATE AE STEEL FLOOR CARD-REPORT PARITY NEXT
+Status: SELECTED / GATE AE LANDED / GATE AF STEEL FLOOR INPUT SURFACE NEXT
 
 Selected by:
 
@@ -12,29 +12,74 @@ queue.
 
 Selection status:
 
-`gate_ad_steel_floor_impact_formula_corridor_landed_selected_card_report_parity_gate_ae`
+`gate_ae_steel_formula_card_report_parity_landed_selected_input_surface_gate_af`
 
-Latest Gate AD checkpoint:
+Latest Gate AE checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AD_HANDOFF.md`
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AE_HANDOFF.md`
 
-Gate AD landed file:
-
-`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ad-steel-floor-impact-formula-corridor-contract.test.ts`
-
-Gate AD landed action:
-
-`gate_ad_steel_floor_impact_formula_numeric_corridor_plan`
-
-Gate AD selected Gate AE file:
+Gate AE landed file:
 
 `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ae-steel-floor-formula-card-report-parity-contract.test.ts`
 
-Gate AD selected Gate AE action:
+Gate AE landed action:
 
 `gate_ae_steel_floor_formula_card_and_report_parity_plan`
 
-Gate AD landed summary:
+Gate AE selected Gate AF file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-af-steel-floor-formula-input-surface-contract.test.ts`
+
+Gate AE selected Gate AF action:
+
+`gate_af_steel_floor_formula_input_surface_plan`
+
+Gate AE landed summary:
+
+Gate AE does not move the Gate AD numeric answer; it makes the existing
+steel formula result defensible on every user-facing surface. The
+workbench `Ln,w` / `DeltaLw` cards, output posture, dynamic impact
+trace, impact-support formula notes, validation mode, proposal method
+dossier, and Markdown report now all say `Lightweight-steel formula
+corridor` and carry the same source-absent lab estimate/tolerance
+language. The validation ladder has a dedicated
+`steel_formula_corridor_estimate` mode, and the lightweight-steel family
+now exposes the `4.5 dB` corridor tolerance instead of hiding under a
+generic scoped formula/family estimate bucket. Exact source rows still
+win on true matches.
+
+Gate AE validation result:
+
+Validation completed on 2026-05-07. Focused Gate AE engine contract
+passed 1 file / 4 tests; focused web steel formula card/report parity
+passed 1 file / 1 test; focused Gate AD regression passed 1 file / 6
+tests; focused web output/model/dossier/formula report regressions passed
+3 files / 16 tests; final `pnpm calculator:gate:current` passed with
+engine 311 files / 1770 tests, web 63 files / 276 tests plus 18 skipped,
+repo build, and whitespace guard. The Next build still emits the known
+non-fatal optional `sharp/@img` package warnings.
+
+Previous Gate AD checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AD_HANDOFF.md`
+
+Previous Gate AD landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ad-steel-floor-impact-formula-corridor-contract.test.ts`
+
+Previous Gate AD landed action:
+
+`gate_ad_steel_floor_impact_formula_numeric_corridor_plan`
+
+Previous Gate AD selected Gate AE file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ae-steel-floor-formula-card-report-parity-contract.test.ts`
+
+Previous Gate AD selected Gate AE action:
+
+`gate_ae_steel_floor_formula_card_and_report_parity_plan`
+
+Previous Gate AD landed summary:
 
 Gate AD promotes the first source-absent lightweight-steel floor impact
 formula corridor. Complete explicit steel predictor input now uses

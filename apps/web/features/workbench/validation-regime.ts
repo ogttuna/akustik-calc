@@ -15,6 +15,7 @@ import {
   isReinforcedConcreteLowConfidenceFloorLane,
   REINFORCED_CONCRETE_LOW_CONFIDENCE_TRACE_CANDIDATE_DETAIL
 } from "./reinforced-concrete-low-confidence-floor-lane";
+import { STEEL_FLOOR_FORMULA_BASIS } from "./steel-floor-formula-corridor-view";
 
 export type ValidationPosture = {
   detail: string;
@@ -163,6 +164,15 @@ export function describeImpactValidationPosture(result: AssemblyCalculation | nu
       };
     }
 
+    if (result.impact?.basis === STEEL_FLOOR_FORMULA_BASIS) {
+      return {
+        detail:
+          "The active floor lane is the Gate AD lightweight-steel formula corridor with explicit carrier geometry, load mass, dynamic stiffness, and lower isolation. Keep the +/-4.5 dB Ln,w and +/-2.0 dB DeltaLw tolerances attached.",
+        label: trace.selectedLabel,
+        posture: "estimate"
+      };
+    }
+
     return {
       detail:
         "The active floor lane is a scoped estimate. It is benchmark-guarded, but it still needs explicit source citation or tolerance notes before it is presented as a final acoustic claim.",
@@ -299,6 +309,10 @@ export function getActiveValidationMode(result: AssemblyCalculation | null) {
 
   if (trace?.selectionKind === "official_catalog") {
     return getImpactValidationModeRegimeById("official_catalog_exact");
+  }
+
+  if (impactBasis === STEEL_FLOOR_FORMULA_BASIS) {
+    return getImpactValidationModeRegimeById("steel_formula_corridor_estimate");
   }
 
   if (

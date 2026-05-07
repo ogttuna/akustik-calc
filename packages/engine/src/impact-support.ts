@@ -15,6 +15,11 @@ import {
   REINFORCED_CONCRETE_LOW_CONFIDENCE_NEARBY_ROW_RANKING_SUPPORT_NOTE,
   REINFORCED_CONCRETE_LOW_CONFIDENCE_PROXY_AIRBORNE_SUPPORT_NOTE
 } from "./reinforced-concrete-low-confidence-airborne";
+import {
+  STEEL_FLOOR_FORMULA_BASIS,
+  STEEL_FLOOR_FORMULA_DELTA_LW_TOLERANCE_DB,
+  STEEL_FLOOR_FORMULA_LN_W_TOLERANCE_DB
+} from "./steel-floor-impact-formula-corridor";
 
 type BuildImpactSupportInput = {
   boundFloorSystemEstimate?: FloorSystemBoundEstimateResult | null;
@@ -134,6 +139,16 @@ export function buildImpactSupport(input: BuildImpactSupportInput): ImpactSuppor
     if (typeof input.impact.predictorResonanceHz === "number") {
       pushUnique(formulaNotes, "The carried DeltaLw companion kept the floating-floor resonance cross-check f0 ~= 160 * sqrt(s'/m'load).");
     }
+  }
+
+  if (input.impact?.basis === STEEL_FLOOR_FORMULA_BASIS || hasMetricBasis(input.impact, STEEL_FLOOR_FORMULA_BASIS)) {
+    notes.push("Steel-floor formula corridor is active; exact measured rows still outrank it when a source truly matches.");
+    pushUnique(formulaNotes, "Gate AD steel-floor mass-spring formula corridor remains a source-absent lab estimate, not a measured row.");
+    pushUnique(formulaNotes, "Steel DeltaLw uses 13 log10(m'load) - 14.2 log10(s') + 20.8 before steel carrier-transfer correction.");
+    pushUnique(
+      formulaNotes,
+      `Corridor tolerance remains +/-${STEEL_FLOOR_FORMULA_LN_W_TOLERANCE_DB} dB for Ln,w and +/-${STEEL_FLOOR_FORMULA_DELTA_LW_TOLERANCE_DB} dB for DeltaLw.`
+    );
   }
 
   if (input.impact && (input.impact.basis === "exact_source_band_curve_iso7172" || hasMetricBasis(input.impact, "exact_source_band_curve_iso7172"))) {

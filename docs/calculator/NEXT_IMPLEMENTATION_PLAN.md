@@ -68,7 +68,7 @@ unsafe reorders. Lab, field, and building-prediction bases must stay
 separate; `Rw`/`STC`, `Ln,w`/`IIC`, and lab/field values are not
 interchangeable without a named rating and measurement basis.
 
-## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate AD Landed / Gate AE Steel Floor Card-Report Parity Next
+## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate AE Landed / Gate AF Steel Floor Input Surface Next
 
 Current implementation position:
 `calculator_model_first_physics_prediction_pivot_v1`.
@@ -117,27 +117,79 @@ Latest landed Gate AD checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AD_HANDOFF.md`
 
-Gate AD selection status:
+Latest landed Gate AE checkpoint:
 
-`gate_ad_steel_floor_impact_formula_corridor_landed_selected_card_report_parity_gate_ae`
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AE_HANDOFF.md`
 
-Gate AD landed file:
+Gate AE selection status:
 
-`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ad-steel-floor-impact-formula-corridor-contract.test.ts`
+`gate_ae_steel_formula_card_report_parity_landed_selected_input_surface_gate_af`
 
-Gate AD landed action:
-
-`gate_ad_steel_floor_impact_formula_numeric_corridor_plan`
-
-Gate AD selected next file:
+Gate AE landed file:
 
 `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ae-steel-floor-formula-card-report-parity-contract.test.ts`
 
-Gate AD selected next action:
+Gate AE landed action:
 
 `gate_ae_steel_floor_formula_card_and_report_parity_plan`
 
-Gate AD result:
+Gate AE selected next file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-af-steel-floor-formula-input-surface-contract.test.ts`
+
+Gate AE selected next action:
+
+`gate_af_steel_floor_formula_input_surface_plan`
+
+Gate AE result:
+
+- Gate AD steel formula runtime values stay pinned (`LnW 55.6`,
+  `DeltaLw 22.4`), but card/report/dossier/trace surfaces now expose
+  the same `Lightweight-steel formula corridor` label;
+- output cards and posture copy keep the source-absent lab estimate
+  basis and `+/-4.5 dB` / `+/-2.0 dB` tolerances attached to `Ln,w` and
+  `DeltaLw`;
+- dynamic impact trace, impact support notes, formula notes, validation
+  mode, report, and proposal method dossier all show the same steel
+  formula corridor instead of generic scoped/heavy-reference wording;
+- the validation ladder now tracks a dedicated
+  `steel_formula_corridor_estimate` mode and raises the lightweight
+  steel family tolerance envelope to `4.5 dB`;
+- exact measured rows still outrank the formula corridor and source rows
+  remain calibration/holdout evidence, not the whole calculator.
+
+Gate AE validation result:
+
+Validation completed on 2026-05-07. Focused Gate AE engine contract
+passed 1 file / 4 tests; focused web steel formula card/report parity
+passed 1 file / 1 test; focused Gate AD regression passed 1 file / 6
+tests; focused web output/model/dossier/formula report regressions passed
+3 files / 16 tests; final `pnpm calculator:gate:current` passed with
+engine 311 files / 1770 tests, web 63 files / 276 tests plus 18 skipped,
+repo build, and whitespace guard. The Next build still emits the known
+non-fatal optional `sharp/@img` package warnings.
+
+Previous Gate AD selection status:
+
+`gate_ad_steel_floor_impact_formula_corridor_landed_selected_card_report_parity_gate_ae`
+
+Previous Gate AD landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ad-steel-floor-impact-formula-corridor-contract.test.ts`
+
+Previous Gate AD landed action:
+
+`gate_ad_steel_floor_impact_formula_numeric_corridor_plan`
+
+Previous Gate AD selected Gate AE file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ae-steel-floor-formula-card-report-parity-contract.test.ts`
+
+Previous Gate AD selected Gate AE action:
+
+`gate_ae_steel_floor_formula_card_and_report_parity_plan`
+
+Previous Gate AD result:
 
 - complete explicit source-absent steel floors now calculate lab
   `Ln,w` / `DeltaLw` through

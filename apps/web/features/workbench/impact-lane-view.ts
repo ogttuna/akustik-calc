@@ -1,5 +1,10 @@
 import type { ImpactBoundCalculation, ImpactCalculation } from "@dynecho/shared";
 
+import {
+  getSteelFloorFormulaCorridorNarrative,
+  isSteelFloorFormulaCorridorImpact
+} from "./steel-floor-formula-corridor-view";
+
 export type ImpactLaneKind =
   | "bound_only"
   | "exact_family"
@@ -8,6 +13,7 @@ export type ImpactLaneKind =
   | "official_catalog"
   | "published_family"
   | "scoped_formula"
+  | "steel_formula_corridor"
   | "unavailable";
 
 export function getImpactLaneKind(input: {
@@ -39,6 +45,10 @@ export function getImpactLaneKind(input: {
     return "low_confidence_fallback";
   }
 
+  if (isSteelFloorFormulaCorridorImpact(impact)) {
+    return "steel_formula_corridor";
+  }
+
   if (impact.confidence.provenance === "published_family_estimate" && impact.scope === "family_estimate") {
     return "published_family";
   }
@@ -62,6 +72,8 @@ export function getImpactLanePillLabel(kind: ImpactLaneKind): string {
       return "Bound support live";
     case "scoped_formula":
       return "Scoped live";
+    case "steel_formula_corridor":
+      return "Steel formula live";
     case "unavailable":
       return "Awaiting supported topology";
   }
@@ -83,6 +95,8 @@ export function getImpactLaneHeadline(kind: ImpactLaneKind): string {
       return "Conservative upper-bound support";
     case "scoped_formula":
       return "Ln,w and DeltaLw";
+    case "steel_formula_corridor":
+      return "Steel floor formula corridor";
     case "unavailable":
       return "Ln,w and DeltaLw";
   }
@@ -104,6 +118,8 @@ export function getImpactLaneNarrative(kind: ImpactLaneKind, hasExactFamilyCompa
               ? "Some official rows publish conservative impact support only, such as Ln,w upper bounds, Ln,w+CI upper bounds, or DeltaLw lower bounds. DAC now carries those bounds honestly instead of inventing a precise live metric."
               : kind === "scoped_formula"
                 ? "This lane stays honest: the local formula and predictor branch still covers the narrow heavy-floor estimate path, while exact families, official rows, exact imports, and labeled published-family fallbacks can light up their own evidence lanes when the topology supports them. Broader family import and deeper field-side continuations still need more adoption work."
+                : kind === "steel_formula_corridor"
+                  ? getSteelFloorFormulaCorridorNarrative()
                 : "The current stack does not yet hit a supported impact lane.";
 
   return hasExactFamilyCompanion ? `${narrative} A curated exact family match is active below, so use that lane for family-published Ln,w and companion terms.` : narrative;

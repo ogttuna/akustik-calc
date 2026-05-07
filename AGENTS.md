@@ -80,14 +80,19 @@ steel-floor impact formula corridor: complete explicit steel predictor
 input calculates lab `Ln,w` / `DeltaLw` through
 `predictor_lightweight_steel_mass_spring_holdout_corridor_estimate`,
 while exact rows stay first and missing carrier/lower-isolation inputs
-block broad fallback. Gate AE is next:
-`gate_ae_steel_floor_formula_card_and_report_parity_plan`.
+block broad fallback. Gate AE has now landed card/report parity for
+that formula corridor: cards, posture, dynamic trace, support notes,
+validation mode, proposal dossier, and Markdown report all show
+`Lightweight-steel formula corridor` with the same source-absent lab
+tolerances. Gate AF is next:
+`gate_af_steel_floor_formula_input_surface_plan`.
 
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AD_HANDOFF.md`
-3. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AC_HANDOFF.md`
+2. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AE_HANDOFF.md`
+3. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AD_HANDOFF.md`
+4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AC_HANDOFF.md`
 4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AB_HANDOFF.md`
 4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AA_HANDOFF.md`
 4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Z_HANDOFF.md`
@@ -414,11 +419,30 @@ plan.
 - current selected slice:
   `calculator_model_first_physics_prediction_pivot_v1`
 - current next decision inside the slice:
-  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ae-steel-floor-formula-card-report-parity-contract.test.ts`
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-af-steel-floor-formula-input-surface-contract.test.ts`
   should run
-  `gate_ae_steel_floor_formula_card_and_report_parity_plan`.
+  `gate_af_steel_floor_formula_input_surface_plan`.
 - latest checkpoint:
-  `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AD_HANDOFF.md`.
+  `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AE_HANDOFF.md`.
+- just landed model-first physics prediction pivot Gate AE:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ae-steel-floor-formula-card-report-parity-contract.test.ts`
+  landed
+  `gate_ae_steel_floor_formula_card_and_report_parity_plan`.
+  It keeps Gate AD runtime values unchanged but exposes
+  `Lightweight-steel formula corridor` consistently across workbench
+  cards, output posture, dynamic impact trace, impact-support formula
+  notes, validation mode, proposal method dossier, and Markdown report.
+  Selection status:
+  `gate_ae_steel_formula_card_report_parity_landed_selected_input_surface_gate_af`.
+  Validation completed on 2026-05-07: focused Gate AE engine contract 1
+  file / 4 tests, focused web steel formula card/report parity 1 file /
+  1 test, focused Gate AD regression 1 file / 6 tests, focused web
+  output/model/dossier/formula report regressions 3 files / 16 tests,
+  final `pnpm calculator:gate:current` with engine 311 files / 1770
+  tests and web 63 files / 276 tests plus 18 skipped, repo build, and
+  whitespace guard all passed. The Next build still emits the known
+  non-fatal optional `sharp/@img` package warnings. Selected next
+  action: `gate_af_steel_floor_formula_input_surface_plan`.
 - just landed model-first physics prediction pivot Gate AD:
   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ad-steel-floor-impact-formula-corridor-contract.test.ts`
   landed

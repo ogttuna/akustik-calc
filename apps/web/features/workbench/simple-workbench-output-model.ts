@@ -20,6 +20,10 @@ import {
 import { FIELD_IMPACT_OUTPUTS } from "./simple-workbench-constants";
 import { buildSimpleWorkbenchOutputPosture } from "./simple-workbench-output-posture";
 import { formatSignedDb } from "./simple-workbench-utils";
+import {
+  getSteelFloorFormulaCorridorOutputDetail,
+  isSteelFloorFormulaCorridorImpact
+} from "./steel-floor-formula-corridor-view";
 import { getDoubleLeafFramedBridgeAirbornePromptDetail } from "./airborne-physical-input-prompt";
 import {
   getRockwoolSplitTripleLeafWithheldOutputDetail,
@@ -215,6 +219,7 @@ export function buildOutputCard(input: {
   const isImpactOnlyLowConfidenceLane = isImpactOnlyLowConfidenceFloorLane(result);
   const isReinforcedConcreteLowConfidenceLane =
     isReinforcedConcreteLowConfidenceFloorLane(result);
+  const isSteelFloorFormulaCorridor = isSteelFloorFormulaCorridorImpact(result);
   const rockwoolTripleLeafScreeningPolicy = getRockwoolTripleLeafScreeningPolicyCopy(result);
 
   if (isExplicitlyUnsupportedOutput(result, output)) {
@@ -414,6 +419,8 @@ export function buildOutputCard(input: {
             ? REINFORCED_CONCRETE_LOW_CONFIDENCE_LNW_DETAIL
             : isImpactOnlyLowConfidenceLane
               ? IMPACT_ONLY_LOW_CONFIDENCE_LNW_DETAIL
+              : isSteelFloorFormulaCorridor
+                ? getSteelFloorFormulaCorridorOutputDetail("Ln,w") ?? "Lab-side Ln,w from the active steel formula corridor."
               : "Lab-side weighted normalized impact sound level.",
           label: "Ln,w",
           output,
@@ -503,7 +510,9 @@ export function buildOutputCard(input: {
     case "DeltaLw":
       if (typeof result?.impact?.DeltaLw === "number") {
         return {
-          detail: "Heavy-reference improvement term from the active impact lane.",
+          detail: isSteelFloorFormulaCorridor
+            ? getSteelFloorFormulaCorridorOutputDetail("DeltaLw") ?? "DeltaLw from the active steel formula corridor."
+            : "Heavy-reference improvement term from the active impact lane.",
           label: "DeltaLw",
           output,
           status: "live",

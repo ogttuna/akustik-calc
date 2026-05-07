@@ -26,6 +26,7 @@ import {
   inferImpactSupportingElementFamilyFromPredictorInput
 } from "./impact-supporting-element-family";
 import { maybeBuildImpactPredictorInputFromLayerStack } from "./impact-predictor-input";
+import { STEEL_FLOOR_FORMULA_BASIS } from "./steel-floor-impact-formula-corridor";
 
 type BuildDynamicImpactTraceInput = {
   boundFloorSystemEstimate?: FloorSystemBoundEstimateResult | null;
@@ -92,6 +93,10 @@ function getScopedFormulaSelectionLabel(
 
   if (basisLabels.has(FORMULA_PUBLISHED_UPPER_TREATMENT_BASIS)) {
     return "Heavy concrete published upper-treatment estimate";
+  }
+
+  if (basisLabels.has(STEEL_FLOOR_FORMULA_BASIS)) {
+    return "Lightweight-steel formula corridor";
   }
 
   return null;

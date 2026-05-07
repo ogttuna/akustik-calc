@@ -17,6 +17,7 @@ export type ImpactValidationModeId =
   | "official_catalog_exact"
   | "formula_estimate"
   | "formula_plus_lower_bound"
+  | "steel_formula_corridor_estimate"
   | "family_specific_estimate"
   | "family_specific_bound_estimate"
   | "family_archetype_estimate"
@@ -98,6 +99,13 @@ export const IMPACT_VALIDATION_MODE_MATRIX: readonly ImpactValidationModeRegime[
     label: "Formula plus lower-bound support",
     note: "Heavy-floor formula lane with an attached conservative product lower-bound guard to stop optimistic drift.",
     posture: "bound"
+  },
+  {
+    caseCount: 1,
+    id: "steel_formula_corridor_estimate",
+    label: "Lightweight-steel formula corridor",
+    note: "Gate AD mass-spring holdout corridor for source-absent lightweight steel floors with explicit carrier geometry, load mass, dynamic stiffness, and lower isolation inputs.",
+    posture: "estimate"
   },
   {
     caseCount: 8,
@@ -291,21 +299,22 @@ export const IMPACT_VALIDATION_FAMILY_MATRIX: readonly ImpactValidationFamilyReg
   createImpactValidationFamilyRegime({
     fieldCaseCount: 1,
     fieldCoverage: "bound",
-    floorCaseCount: 1,
-    floorCoverage: "bound",
+    floorCaseCount: 2,
+    floorCoverage: "estimate",
     id: "lightweight_steel",
     label: "lightweight steel / open-web joists",
-    maxToleranceDb: 0,
+    maxToleranceDb: 4.5,
     modeDistribution: [
       { caseCount: 8, id: "official_floor_system" },
       { caseCount: 2, id: "official_floor_system_bound" },
+      { caseCount: 1, id: "steel_formula_corridor_estimate" },
       { caseCount: 1, id: "family_specific_estimate" },
       { caseCount: 1, id: "family_specific_bound_estimate" },
       { caseCount: 1, id: "family_archetype_estimate" },
       { caseCount: 2, id: "family_general_estimate" },
       { caseCount: 1, id: "low_confidence_estimate" }
     ],
-    note: "Published UBIQ and Pliteq support remains conservative on both lab and field chains. Most steel predictor fallbacks stay on narrower same-family lanes, while the joist-or-purlin suspended vinyl fallback is now explicitly labeled low-confidence."
+    note: "Published UBIQ and Pliteq support remains conservative on both lab and field chains. The Gate AD lightweight-steel formula corridor now supplies source-absent lab Ln,w / DeltaLw only when carrier geometry, load mass, dynamic stiffness, and lower isolation are explicit; exact source rows still outrank it, and the joist-or-purlin suspended vinyl fallback remains explicitly low-confidence."
   }),
   createImpactValidationFamilyRegime({
     fieldCaseCount: 1,
