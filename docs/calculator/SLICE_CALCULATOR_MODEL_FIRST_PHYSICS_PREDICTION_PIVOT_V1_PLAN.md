@@ -2,7 +2,7 @@
 
 Slice id: `calculator_model_first_physics_prediction_pivot_v1`
 
-Status: SELECTED / GATE AE REVALIDATED / GATE AF STEEL FLOOR INPUT SURFACE NEXT
+Status: SELECTED / GATE AF LANDED / GATE AG ACCEPTANCE REVALIDATION NEXT
 
 Selected by:
 
@@ -12,7 +12,65 @@ queue.
 
 Selection status:
 
-`gate_ae_steel_formula_card_report_parity_landed_selected_input_surface_gate_af`
+`gate_af_steel_floor_formula_input_surface_landed_selected_acceptance_revalidation_gate_ag`
+
+Latest Gate AF checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AF_HANDOFF.md`
+
+Gate AF landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-af-steel-floor-formula-input-surface-contract.test.ts`
+
+Gate AF landed action:
+
+`gate_af_steel_floor_formula_input_surface_plan`
+
+Gate AF selected Gate AG file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ag-steel-floor-formula-input-surface-acceptance-contract.test.ts`
+
+Gate AF selected Gate AG action:
+
+`gate_ag_steel_floor_formula_input_surface_acceptance_revalidation_plan`
+
+Gate AF landed summary:
+
+Gate AF moves the steel formula corridor from hidden explicit
+`impactPredictorInput` only into the Dynamic Calculator floor workflow.
+Workbench route controls, scenario analysis, local/server snapshots, and
+the engine helper now bridge steel support form, carrier depth/spacing,
+upper dynamic stiffness, load basis, and lower ceiling isolation into the
+same predictor input that Gate AD uses. Complete construction-image style
+steel rows plus UI fields return lab `LnW 55.6`, `DeltaLw 22.4`, and
+`predictor_lightweight_steel_mass_spring_holdout_corridor_estimate`.
+Partial fields do not generate a fake formula answer, unsafe duplicate
+steel carriers are refused, and exact measured rows remain first
+precedence.
+
+Gate AF validation result:
+
+Validation completed on 2026-05-07. Focused Gate AF engine contract
+passed 1 file / 5 tests; focused web steel formula input-surface test
+passed 1 file / 4 tests; engine typecheck passed; web typecheck passed;
+final `pnpm calculator:gate:current` passed with engine 312 files / 1775
+tests, web 64 files / 280 tests plus 18 skipped, repo build, and
+whitespace guard. The Next build still emits the known non-fatal optional
+`sharp/@img` package warnings.
+
+Gate AG implementation plan:
+
+1. Create
+   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ag-steel-floor-formula-input-surface-acceptance-contract.test.ts`.
+2. Prove complete steel input-surface parity across live workbench, saved
+   scenario replay, server snapshot replay, report payloads, output cards,
+   and API payloads.
+3. Make missing/invalid steel fields visibly precise in route unlocks and
+   output posture.
+4. Add hostile UI cases for invalid values, comma decimals, many layers,
+   split/reordered layers, unsafe duplicate carriers, and steel/non-steel
+   base toggles.
+5. Keep exact-source precedence and lab/field/building bases separate.
 
 Latest Gate AE checkpoint:
 
@@ -74,7 +132,7 @@ works from explicit `impactPredictorInput`, but the user-facing Dynamic
 Calculator floor route still needs to ask for and persist the same
 physical fields.
 
-Gate AF implementation plan:
+Consumed Gate AF implementation plan:
 
 1. Create the Gate AF contract at
    `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-af-steel-floor-formula-input-surface-contract.test.ts`.
@@ -98,9 +156,8 @@ Gate AF implementation plan:
 6. Cover hostile edits: invalid zero/negative values, many layers,
    duplicate or split steel carriers, safe reorder, and unsafe reorder.
 
-Gate AF should not expand source packets, retune the formula, or promote
-field/building-prediction values unless the existing field-context owner
-is explicit in the scenario.
+Gate AF did not expand source packets, retune the formula, or promote
+field/building-prediction values.
 
 Previous Gate AD checkpoint:
 

@@ -84,19 +84,23 @@ block broad fallback. Gate AE has now landed card/report parity for
 that formula corridor: cards, posture, dynamic trace, support notes,
 validation mode, proposal dossier, and Markdown report all show
 `Lightweight-steel formula corridor` with the same source-absent lab
-tolerances. A 2026-05-07 broad revalidation after Gate AE passed the
-current gate again without runtime fixes. Gate AF is next and should
-start from a first-class Dynamic Calculator floor input surface for the
-same physical steel-floor fields:
-`gate_af_steel_floor_formula_input_surface_plan`.
+tolerances. Gate AF has now landed the first-class Dynamic Calculator
+floor input surface for the same physical steel-floor fields. Workbench
+controls, scenario analysis, local/server snapshots, and the engine
+bridge now feed the Gate AD predictor input; complete UI-derived steel
+returns lab `LnW 55.6` / `DeltaLw 22.4`, partial fields stay parked,
+unsafe duplicate steel carriers are refused, and exact source rows still
+win. Gate AG is next:
+`gate_ag_steel_floor_formula_input_surface_acceptance_revalidation_plan`.
 
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-05-07_GATE_AE_REVALIDATION_GATE_AF_PLAN_HANDOFF.md`
-3. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AE_HANDOFF.md`
-4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AD_HANDOFF.md`
-5. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AC_HANDOFF.md`
+2. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AF_HANDOFF.md`
+3. `docs/calculator/CHECKPOINT_2026-05-07_GATE_AE_REVALIDATION_GATE_AF_PLAN_HANDOFF.md`
+4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AE_HANDOFF.md`
+5. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AD_HANDOFF.md`
+6. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AC_HANDOFF.md`
 4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AB_HANDOFF.md`
 4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AA_HANDOFF.md`
 4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Z_HANDOFF.md`
@@ -423,12 +427,37 @@ plan.
 - current selected slice:
   `calculator_model_first_physics_prediction_pivot_v1`
 - current next decision inside the slice:
-  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-af-steel-floor-formula-input-surface-contract.test.ts`
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ag-steel-floor-formula-input-surface-acceptance-contract.test.ts`
   should run
-  `gate_af_steel_floor_formula_input_surface_plan`.
+  `gate_ag_steel_floor_formula_input_surface_acceptance_revalidation_plan`.
 - latest checkpoint:
-  `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AE_HANDOFF.md`.
-- just landed model-first physics prediction pivot Gate AE:
+  `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AF_HANDOFF.md`.
+- just landed model-first physics prediction pivot Gate AF:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-af-steel-floor-formula-input-surface-contract.test.ts`
+  landed
+  `gate_af_steel_floor_formula_input_surface_plan`.
+  It adds a first-class Dynamic Calculator steel-floor formula input
+  surface for `steelSupportForm`, `steelCarrierDepthMm`,
+  `steelCarrierSpacingMm`, `resilientLayerDynamicStiffnessMNm3`,
+  `loadBasisKgM2`, and `lowerCeilingIsolationSupportForm`. The workbench
+  route controls, scenario analysis, local/server snapshots, and engine
+  helper now bridge those user-facing fields into the Gate AD
+  `ImpactPredictorInput`. Complete construction-image style steel rows
+  plus the UI surface return lab `LnW 55.6`, `DeltaLw 22.4`, and
+  `predictor_lightweight_steel_mass_spring_holdout_corridor_estimate`;
+  partial fields stay parked, unsafe duplicate steel carrier topology is
+  refused, and exact measured full-stack rows remain above the formula
+  corridor. Selection status:
+  `gate_af_steel_floor_formula_input_surface_landed_selected_acceptance_revalidation_gate_ag`.
+  Validation completed on 2026-05-07: focused Gate AF engine contract 1
+  file / 5 tests, focused web steel formula input-surface test 1 file /
+  4 tests, engine typecheck, web typecheck, and final `pnpm
+  calculator:gate:current` with engine 312 files / 1775 tests and web 64
+  files / 280 tests plus 18 skipped, repo build, and whitespace guard all
+  passed. The Next build still emits the known non-fatal optional
+  `sharp/@img` package warnings. Selected next action:
+  `gate_ag_steel_floor_formula_input_surface_acceptance_revalidation_plan`.
+- previously landed model-first physics prediction pivot Gate AE:
   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ae-steel-floor-formula-card-report-parity-contract.test.ts`
   landed
   `gate_ae_steel_floor_formula_card_and_report_parity_plan`.

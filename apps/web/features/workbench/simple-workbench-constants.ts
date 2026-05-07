@@ -7,6 +7,7 @@ import type {
   AirtightnessClass,
   ElectricalBoxState,
   FloorRole,
+  ImpactPredictorSupportForm,
   JunctionQuality,
   PenetrationState,
   PerimeterSealClass,
@@ -21,6 +22,7 @@ import type {
 import type { CSSProperties } from "react";
 
 import type { PresetId, StudyMode } from "./preset-definitions";
+import type { WorkbenchSteelFloorFormulaLowerCeilingIsolationSupportForm } from "./steel-floor-formula-input-surface";
 
 export type MaterialIdGroup = {
   ids: readonly string[];
@@ -128,6 +130,39 @@ export const STEEL_BOUND_SUPPORT_FORM_ACTIONS = [
     label: "Set open-web / rolled carrier",
     materialId: "open_web_steel_floor",
     note: "Switch the base row to open-web / rolled steel so DAC can leave the crossover bound and stay inside the narrower FL-33 family."
+  }
+] as const;
+
+export const STEEL_FLOOR_FORMULA_SUPPORT_FORM_OPTIONS: readonly ControlOption<ImpactPredictorSupportForm>[] = [
+  {
+    label: "Open-web / rolled",
+    note: "Use for open-web steel joists, rolled beams, or similar open steel carriers.",
+    value: "open_web_or_rolled"
+  },
+  {
+    label: "Joist / purlin",
+    note: "Use for regular steel joists or purlins where the transfer path is closer to the FL-32 family.",
+    value: "joist_or_purlin"
+  }
+] as const;
+
+export const STEEL_FLOOR_FORMULA_LOWER_ISOLATION_OPTIONS: readonly ControlOption<
+  Exclude<WorkbenchSteelFloorFormulaLowerCeilingIsolationSupportForm, "">
+>[] = [
+  {
+    label: "Elastic furred ceiling",
+    note: "Suspended isolated ceiling with furred channels or equivalent resilient support.",
+    value: "elastic_furred_channels"
+  },
+  {
+    label: "Rigid furred ceiling",
+    note: "Suspended or furred ceiling where the lower support is not resiliently isolated.",
+    value: "rigid_furred_channels"
+  },
+  {
+    label: "Direct to joists",
+    note: "Direct fixed ceiling support. Use only when the visible layers still carry the board and cavity dimensions.",
+    value: "direct_to_joists"
   }
 ] as const;
 

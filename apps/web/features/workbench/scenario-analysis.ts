@@ -16,6 +16,10 @@ import { collectScenarioInputWarnings } from "./input-sanity";
 import { buildWorkbenchMaterialCatalog } from "./workbench-materials";
 import { buildWorkbenchWarningNotes } from "./workbench-warning-notes";
 import type { LayerDraft } from "./workbench-store";
+import {
+  buildWorkbenchSteelFloorFormulaInputSurface,
+  type WorkbenchSteelFloorFormulaInputSurfaceDraft
+} from "./steel-floor-formula-input-surface";
 
 function collectInactiveOfficialProductWarnings(input: {
   layers: readonly LayerInput[];
@@ -85,6 +89,7 @@ export function evaluateScenario(input: {
   rows: readonly LayerDraft[];
   savedAtIso?: string;
   source: "current" | "saved";
+  steelFloorFormulaInputSurface?: WorkbenchSteelFloorFormulaInputSurfaceDraft | null;
   studyMode: StudyMode;
   targetOutputs?: readonly RequestedOutputId[];
 }): EvaluatedScenario {
@@ -102,6 +107,21 @@ export function evaluateScenario(input: {
     targetOutputs: input.targetOutputs ?? []
   });
   const scenarioWarnings = [...normalized.warnings, ...inputWarnings];
+  const targetOutputs = input.targetOutputs ?? [];
+  const steelFloorFormulaInputSurface =
+    input.studyMode === "floor" && input.steelFloorFormulaInputSurface
+      ? buildWorkbenchSteelFloorFormulaInputSurface({
+          catalog: runtimeCatalog,
+          layers: normalized.layers,
+          surface: input.steelFloorFormulaInputSurface,
+          targetOutputs
+        })
+      : null;
+  if (steelFloorFormulaInputSurface?.status === "unsafe_topology") {
+    scenarioWarnings.push(
+      "Steel-floor formula input surface is parked because the visible steel carrier topology is unsafe to collapse. Keep one explicit base_structure carrier before relying on the steel formula lane."
+    );
+  }
   let result: AssemblyCalculation | null = null;
 
   if (normalized.layers.length > 0) {
@@ -112,7 +132,8 @@ export function evaluateScenario(input: {
         catalog: runtimeCatalog,
         exactImpactSource: input.exactImpactSource ?? null,
         impactFieldContext: input.impactFieldContext ?? null,
-        targetOutputs: input.targetOutputs ?? []
+        impactPredictorInput: steelFloorFormulaInputSurface?.impactPredictorInput ?? null,
+        targetOutputs
       });
     } catch (error) {
       const detail = error instanceof Error && error.message.trim().length > 0 ? error.message.trim() : "Unknown evaluation error.";

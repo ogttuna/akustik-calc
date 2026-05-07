@@ -142,6 +142,13 @@ type ServerProjectRecordPayload = {
 
 type ServerProjectStatus = "idle" | "loading" | "syncing" | "restoring" | "error";
 
+const STEEL_FLOOR_FORMULA_BASE_MATERIAL_IDS = new Set([
+  "lightweight_steel_floor",
+  "open_web_steel_floor",
+  "open_web_steel_joist",
+  "steel_joist_floor"
+]);
+
 function isObjectRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }
@@ -299,6 +306,12 @@ export function SimpleWorkbenchShell() {
   const impactGuideReceivingRoomVolumeM3 = useWorkbenchStore((state) => state.impactGuideReceivingRoomVolumeM3);
   const impactLowerTreatmentReductionDb = useWorkbenchStore((state) => state.impactLowerTreatmentReductionDb);
   const impactReferenceDeltaLwDb = useWorkbenchStore((state) => state.impactReferenceDeltaLwDb);
+  const impactSteelCarrierDepthMm = useWorkbenchStore((state) => state.impactSteelCarrierDepthMm);
+  const impactSteelCarrierSpacingMm = useWorkbenchStore((state) => state.impactSteelCarrierSpacingMm);
+  const impactSteelLoadBasisKgM2 = useWorkbenchStore((state) => state.impactSteelLoadBasisKgM2);
+  const impactSteelLowerCeilingIsolationSupportForm = useWorkbenchStore((state) => state.impactSteelLowerCeilingIsolationSupportForm);
+  const impactSteelResilientLayerDynamicStiffnessMNm3 = useWorkbenchStore((state) => state.impactSteelResilientLayerDynamicStiffnessMNm3);
+  const impactSteelSupportForm = useWorkbenchStore((state) => state.impactSteelSupportForm);
 
   const appendRows = useWorkbenchStore((state) => state.appendRows);
   const clearRows = useWorkbenchStore((state) => state.clearRows);
@@ -349,6 +362,12 @@ export function SimpleWorkbenchShell() {
   const setConsultantWordmarkLine = useWorkbenchStore((state) => state.setConsultantWordmarkLine);
   const setImpactGuideKDb = useWorkbenchStore((state) => state.setImpactGuideKDb);
   const setImpactGuideReceivingRoomVolumeM3 = useWorkbenchStore((state) => state.setImpactGuideReceivingRoomVolumeM3);
+  const setImpactSteelCarrierDepthMm = useWorkbenchStore((state) => state.setImpactSteelCarrierDepthMm);
+  const setImpactSteelCarrierSpacingMm = useWorkbenchStore((state) => state.setImpactSteelCarrierSpacingMm);
+  const setImpactSteelLoadBasisKgM2 = useWorkbenchStore((state) => state.setImpactSteelLoadBasisKgM2);
+  const setImpactSteelLowerCeilingIsolationSupportForm = useWorkbenchStore((state) => state.setImpactSteelLowerCeilingIsolationSupportForm);
+  const setImpactSteelResilientLayerDynamicStiffnessMNm3 = useWorkbenchStore((state) => state.setImpactSteelResilientLayerDynamicStiffnessMNm3);
+  const setImpactSteelSupportForm = useWorkbenchStore((state) => state.setImpactSteelSupportForm);
   const setApproverTitle = useWorkbenchStore((state) => state.setApproverTitle);
   const setPreparedBy = useWorkbenchStore((state) => state.setPreparedBy);
   const setProposalIssueCodePrefix = useWorkbenchStore((state) => state.setProposalIssueCodePrefix);
@@ -373,6 +392,14 @@ export function SimpleWorkbenchShell() {
   const materials = buildWorkbenchMaterialCatalog(customMaterials);
   const modePresets = MODE_PRESETS[studyMode].map((presetId) => getPresetById(presetId));
   const automaticOutputs = getAutomaticOutputs(studyMode, airborneContextMode);
+  const steelFloorFormulaInputSurfaceActive =
+    studyMode === "floor" &&
+    automaticOutputs.some((output) => output === "Ln,w" || output === "DeltaLw" || FIELD_IMPACT_OUTPUTS.has(output)) &&
+    rows.some(
+      (row) =>
+        row.floorRole === "base_structure" &&
+        STEEL_FLOOR_FORMULA_BASE_MATERIAL_IDS.has(row.materialId)
+    );
   const totalThickness = sumThickness(rows);
   const { collapsedLiveRowCount, liveRowCount, parkedRowCount, solverLayerCount } = getRowActivityCounts(rows, materials);
 
@@ -543,6 +570,16 @@ export function SimpleWorkbenchShell() {
     name: projectName,
     rows,
     source: "current",
+    steelFloorFormulaInputSurface: steelFloorFormulaInputSurfaceActive
+      ? {
+          impactSteelCarrierDepthMm,
+          impactSteelCarrierSpacingMm,
+          impactSteelLoadBasisKgM2,
+          impactSteelLowerCeilingIsolationSupportForm,
+          impactSteelResilientLayerDynamicStiffnessMNm3,
+          impactSteelSupportForm
+        }
+      : null,
     studyMode,
     targetOutputs: automaticOutputs
   });
@@ -572,6 +609,7 @@ export function SimpleWorkbenchShell() {
     contextNotes.push("RT60 stays optional here. DnT outputs standardize with partition geometry and receiving-room volume; RT60 only feeds absorption-aware sidecars.");
   }
   if (studyMode === "floor") {
+    if (steelFloorFormulaInputSurfaceActive) contextNotes.push("Steel floor formula inputs are active for the source-absent lab impact lane.");
     if (!impactFieldActive) contextNotes.push("Field K and floor-side room-volume corrections stay hidden until field impact outputs are requested.");
     else if (!standardizedImpactOutputsActive) contextNotes.push("Floor field volume is optional right now because only L'n,w is active; standardized L'nT outputs are not requested yet.");
   }
@@ -727,6 +765,12 @@ export function SimpleWorkbenchShell() {
       impactImprovementBandInput,
       impactLowerTreatmentReductionDb,
       impactReferenceDeltaLwDb,
+      impactSteelCarrierDepthMm,
+      impactSteelCarrierSpacingMm,
+      impactSteelLoadBasisKgM2,
+      impactSteelLowerCeilingIsolationSupportForm,
+      impactSteelResilientLayerDynamicStiffnessMNm3,
+      impactSteelSupportForm,
       name: `${projectName.trim() || "Untitled project"} server snapshot`,
       preparedBy,
       proposalAttention,
@@ -1165,6 +1209,12 @@ export function SimpleWorkbenchShell() {
           impactFieldActive={impactFieldActive}
           impactGuideKDb={impactGuideKDb}
           impactGuideReceivingRoomVolumeM3={impactGuideReceivingRoomVolumeM3}
+          impactSteelCarrierDepthMm={impactSteelCarrierDepthMm}
+          impactSteelCarrierSpacingMm={impactSteelCarrierSpacingMm}
+          impactSteelLoadBasisKgM2={impactSteelLoadBasisKgM2}
+          impactSteelLowerCeilingIsolationSupportForm={impactSteelLowerCeilingIsolationSupportForm}
+          impactSteelResilientLayerDynamicStiffnessMNm3={impactSteelResilientLayerDynamicStiffnessMNm3}
+          impactSteelSupportForm={impactSteelSupportForm}
           impactKSanityWarning={impactKSanityWarning}
           impactVolumeSanityWarning={impactVolumeSanityWarning}
           isServerProjectBusy={serverProjectBusy}
@@ -1223,7 +1273,14 @@ export function SimpleWorkbenchShell() {
           setCalculatorId={setCalculatorId}
           setImpactGuideKDb={setImpactGuideKDb}
           setImpactGuideReceivingRoomVolumeM3={setImpactGuideReceivingRoomVolumeM3}
+          setImpactSteelCarrierDepthMm={setImpactSteelCarrierDepthMm}
+          setImpactSteelCarrierSpacingMm={setImpactSteelCarrierSpacingMm}
+          setImpactSteelLoadBasisKgM2={setImpactSteelLoadBasisKgM2}
+          setImpactSteelLowerCeilingIsolationSupportForm={setImpactSteelLowerCeilingIsolationSupportForm}
+          setImpactSteelResilientLayerDynamicStiffnessMNm3={setImpactSteelResilientLayerDynamicStiffnessMNm3}
+          setImpactSteelSupportForm={setImpactSteelSupportForm}
           showSteelBoundSupportFormActions={showSteelBoundSupportFormActions}
+          steelFloorFormulaInputSurfaceActive={steelFloorFormulaInputSurfaceActive}
           showTimberImpactOnlyGuidedActions={showTimberImpactOnlyGuidedActions}
           standardizedAirborneActive={standardizedAirborneActive}
           standardizedImpactOutputsActive={standardizedImpactOutputsActive}

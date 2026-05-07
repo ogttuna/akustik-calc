@@ -68,7 +68,7 @@ unsafe reorders. Lab, field, and building-prediction bases must stay
 separate; `Rw`/`STC`, `Ln,w`/`IIC`, and lab/field values are not
 interchangeable without a named rating and measurement basis.
 
-## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate AE Landed / Gate AF Steel Floor Input Surface Next
+## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate AF Landed / Gate AG Acceptance Revalidation Next
 
 Current implementation position:
 `calculator_model_first_physics_prediction_pivot_v1`.
@@ -125,6 +125,91 @@ Latest Gate AE broad revalidation / Gate AF planning checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-07_GATE_AE_REVALIDATION_GATE_AF_PLAN_HANDOFF.md`
 
+Latest landed Gate AF checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AF_HANDOFF.md`
+
+Gate AF selection status:
+
+`gate_af_steel_floor_formula_input_surface_landed_selected_acceptance_revalidation_gate_ag`
+
+Gate AF landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-af-steel-floor-formula-input-surface-contract.test.ts`
+
+Gate AF landed action:
+
+`gate_af_steel_floor_formula_input_surface_plan`
+
+Gate AF selected next file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ag-steel-floor-formula-input-surface-acceptance-contract.test.ts`
+
+Gate AF selected next action:
+
+`gate_ag_steel_floor_formula_input_surface_acceptance_revalidation_plan`
+
+Gate AF result:
+
+- the Dynamic Calculator floor route now has a first-class steel-floor
+  formula input surface for support form, carrier depth/spacing,
+  resilient dynamic stiffness, load basis, and lower ceiling isolation;
+- workbench route controls, scenario analysis, local/server snapshots,
+  and the engine helper bridge those fields into the Gate AD
+  `ImpactPredictorInput`;
+- complete construction-image style steel rows plus the UI surface still
+  return lab `LnW 55.6`, `DeltaLw 22.4`, and
+  `predictor_lightweight_steel_mass_spring_holdout_corridor_estimate`;
+- partial fields stay parked instead of producing a fake formula value;
+- unsafe duplicate steel carrier topology is refused;
+- exact measured full-stack rows still outrank the formula corridor.
+
+Gate AF validation result:
+
+Validation completed on 2026-05-07. Focused Gate AF engine contract
+passed 1 file / 5 tests; focused web steel formula input-surface test
+passed 1 file / 4 tests; engine typecheck passed; web typecheck passed;
+final `pnpm calculator:gate:current` passed with engine 312 files / 1775
+tests, web 64 files / 280 tests plus 18 skipped, repo build, and
+whitespace guard. The Next build still emits the known non-fatal optional
+`sharp/@img` package warnings.
+
+## Gate AG Implementation Order - Steel Input Surface Acceptance Revalidation
+
+Gate AG is the right next step because Gate AF landed the functional
+input bridge, but the calculator should now prove the new surface remains
+stable across the surfaces a user will actually touch: workbench UI,
+local saved replay, server snapshot replay, output cards, report payloads,
+and API payloads.
+
+Gate AG order:
+
+1. Create the Gate AG contract at
+   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ag-steel-floor-formula-input-surface-acceptance-contract.test.ts`.
+   It should select the next calculator-first accuracy step only after
+   input-surface acceptance is stable.
+2. Add web acceptance coverage for a complete steel formula scenario
+   through live workbench state, local saved scenario replay, and server
+   snapshot replay. All paths must return lab `LnW 55.6`, `DeltaLw
+   22.4`, the Gate AD basis, and the Gate AE card/report tolerance
+   language.
+3. Add route-panel/output-unlock assertions for missing and invalid steel
+   fields: empty, zero, negative, comma decimal, and field removal after a
+   previously complete calculation.
+4. Expand hostile UI coverage for many layers, safe reorder, unsafe
+   duplicate carriers, split-but-contiguous layers, and toggling between
+   steel and non-steel base structures.
+5. Preserve exact-source precedence and do not promote field/building
+   impact outputs from the lab formula unless the field-context owner is
+   explicitly active.
+
+Non-goals for Gate AG:
+
+- no steel formula retune;
+- no source crawl;
+- no `Ln,w` / `IIC` aliasing;
+- no field/building-prediction promotion from lab values.
+
 Gate AE selection status:
 
 `gate_ae_steel_formula_card_report_parity_landed_selected_input_surface_gate_af`
@@ -180,13 +265,12 @@ whitespace guard. This pass found no runtime correction needed before
 Gate AF; the remaining gap is the missing first-class Dynamic Calculator
 input surface for the physical steel-floor formula fields.
 
-## Gate AF Implementation Order - Steel Floor Formula Input Surface
+## Consumed Gate AF Implementation Order - Steel Floor Formula Input Surface
 
-Gate AF is the right next step because the current Gate AD/AE behavior
-is correct only when the caller provides explicit `impactPredictorInput`.
-That proves the physics corridor, but it does not yet satisfy the user
-workflow of choosing `floor`, entering route-specific physical fields,
-adding layers, and getting a defensible `Ln,w` / `DeltaLw` result.
+Gate AF was selected because the Gate AD/AE behavior was correct only
+when the caller provided explicit `impactPredictorInput`. Gate AF has
+now consumed that gap by adding the first-class Dynamic Calculator steel
+floor input surface.
 
 Implement Gate AF in this order:
 

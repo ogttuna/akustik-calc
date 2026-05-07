@@ -9,6 +9,7 @@ import type {
   AirtightnessClass,
   ElectricalBoxState,
   FloorRole,
+  ImpactPredictorSupportForm,
   JunctionQuality,
   PenetrationState,
   PerimeterSealClass,
@@ -38,6 +39,8 @@ import {
   RESILIENT_BAR_SIDE_COUNT_OPTIONS,
   SEAL_OPTIONS,
   STEEL_BOUND_SUPPORT_FORM_ACTIONS,
+  STEEL_FLOOR_FORMULA_LOWER_ISOLATION_OPTIONS,
+  STEEL_FLOOR_FORMULA_SUPPORT_FORM_OPTIONS,
   STUD_TYPE_OPTIONS,
   TIMBER_IMPACT_ONLY_GUIDED_ACTIONS,
   TRACK_OPTIONS,
@@ -64,6 +67,7 @@ import {
   SectionLead
 } from "./simple-workbench-primitives";
 import { getEnvironmentLabel, getTextInputClassName } from "./simple-workbench-utils";
+import type { WorkbenchSteelFloorFormulaLowerCeilingIsolationSupportForm } from "./steel-floor-formula-input-surface";
 
 const EMPTY_EXAMPLE_VALUE = "__start_empty__";
 
@@ -110,6 +114,12 @@ type SimpleWorkbenchRoutePanelProps = {
   impactFieldActive: boolean;
   impactGuideKDb: string;
   impactGuideReceivingRoomVolumeM3: string;
+  impactSteelCarrierDepthMm: string;
+  impactSteelCarrierSpacingMm: string;
+  impactSteelLoadBasisKgM2: string;
+  impactSteelLowerCeilingIsolationSupportForm: WorkbenchSteelFloorFormulaLowerCeilingIsolationSupportForm;
+  impactSteelResilientLayerDynamicStiffnessMNm3: string;
+  impactSteelSupportForm: "" | ImpactPredictorSupportForm;
   impactKSanityWarning: string | null;
   impactVolumeSanityWarning: string | null;
   isServerProjectBusy: boolean;
@@ -171,7 +181,14 @@ type SimpleWorkbenchRoutePanelProps = {
   setCalculatorId: (value: AirborneCalculatorId) => void;
   setImpactGuideKDb: (value: string) => void;
   setImpactGuideReceivingRoomVolumeM3: (value: string) => void;
+  setImpactSteelCarrierDepthMm: (value: string) => void;
+  setImpactSteelCarrierSpacingMm: (value: string) => void;
+  setImpactSteelLoadBasisKgM2: (value: string) => void;
+  setImpactSteelLowerCeilingIsolationSupportForm: (value: WorkbenchSteelFloorFormulaLowerCeilingIsolationSupportForm) => void;
+  setImpactSteelResilientLayerDynamicStiffnessMNm3: (value: string) => void;
+  setImpactSteelSupportForm: (value: "" | ImpactPredictorSupportForm) => void;
   showSteelBoundSupportFormActions: boolean;
+  steelFloorFormulaInputSurfaceActive: boolean;
   showTimberImpactOnlyGuidedActions: boolean;
   standardizedAirborneActive: boolean;
   standardizedImpactOutputsActive: boolean;
@@ -227,6 +244,12 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
     impactFieldActive,
     impactGuideKDb,
     impactGuideReceivingRoomVolumeM3,
+    impactSteelCarrierDepthMm,
+    impactSteelCarrierSpacingMm,
+    impactSteelLoadBasisKgM2,
+    impactSteelLowerCeilingIsolationSupportForm,
+    impactSteelResilientLayerDynamicStiffnessMNm3,
+    impactSteelSupportForm,
     impactKSanityWarning,
     impactVolumeSanityWarning,
     isServerProjectBusy,
@@ -285,7 +308,14 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
     setCalculatorId,
     setImpactGuideKDb,
     setImpactGuideReceivingRoomVolumeM3,
+    setImpactSteelCarrierDepthMm,
+    setImpactSteelCarrierSpacingMm,
+    setImpactSteelLoadBasisKgM2,
+    setImpactSteelLowerCeilingIsolationSupportForm,
+    setImpactSteelResilientLayerDynamicStiffnessMNm3,
+    setImpactSteelSupportForm,
     showSteelBoundSupportFormActions,
+    steelFloorFormulaInputSurfaceActive,
     showTimberImpactOnlyGuidedActions,
     standardizedAirborneActive,
     standardizedImpactOutputsActive,
@@ -450,7 +480,7 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
             </details>
           </section>
 
-          {geometryActive || impactFieldActive ? (
+          {geometryActive || impactFieldActive || steelFloorFormulaInputSurfaceActive ? (
             <section className={`rounded border px-3 py-3 ${workbenchSectionCardClass("route")}`}>
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="text-[0.84rem] font-semibold text-[color:var(--ink)]">Input map</div>
@@ -460,10 +490,125 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
               <div className="mt-3 grid gap-3">
                 <ContextBucket
                   description="Directly gates the live read."
-                  hasContent={geometryActive || impactFieldActive}
+                  hasContent={geometryActive || impactFieldActive || steelFloorFormulaInputSurfaceActive}
                   title="Required now"
                   tone="required"
                 >
+                  {steelFloorFormulaInputSurfaceActive ? (
+                    <ContextSubsection
+                      note="These fields feed the source-absent steel floor formula lane."
+                      title="Steel floor formula"
+                    >
+                      <div className="grid gap-3">
+                        <FieldShell
+                          label="Steel support form"
+                          note="Carrier family for the steel transfer path."
+                          relevance="required"
+                          usage="Ln,w and DeltaLw"
+                        >
+                          <select
+                            aria-label="Steel support form"
+                            className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                            onChange={(event) => setImpactSteelSupportForm(event.target.value as "" | ImpactPredictorSupportForm)}
+                            value={impactSteelSupportForm}
+                          >
+                            <option value="">Select support form</option>
+                            {STEEL_FLOOR_FORMULA_SUPPORT_FORM_OPTIONS.map((option) => (
+                              <option key={option.value} value={option.value}>
+                                {option.label}
+                              </option>
+                            ))}
+                          </select>
+                        </FieldShell>
+
+                        <FieldShell
+                          label="Carrier depth (mm)"
+                          note="Overrides the base_structure layer depth when entered."
+                          relevance="required"
+                          usage="Ln,w and DeltaLw"
+                        >
+                          <input
+                            className={getTextInputClassName(false)}
+                            inputMode="decimal"
+                            onChange={(event) => setImpactSteelCarrierDepthMm(event.target.value)}
+                            placeholder="e.g. 200"
+                            value={impactSteelCarrierDepthMm}
+                          />
+                        </FieldShell>
+
+                        <FieldShell
+                          label="Carrier spacing (mm)"
+                          note="Centre-to-centre spacing for the steel carrier."
+                          relevance="required"
+                          usage="Ln,w and DeltaLw"
+                        >
+                          <input
+                            className={getTextInputClassName(false)}
+                            inputMode="decimal"
+                            onChange={(event) => setImpactSteelCarrierSpacingMm(event.target.value)}
+                            placeholder="e.g. 600"
+                            value={impactSteelCarrierSpacingMm}
+                          />
+                        </FieldShell>
+
+                        <FieldShell
+                          label="Dynamic stiffness (MN/m³)"
+                          note="Upper impact layer stiffness."
+                          relevance="required"
+                          usage="DeltaLw"
+                        >
+                          <input
+                            className={getTextInputClassName(false)}
+                            inputMode="decimal"
+                            onChange={(event) => setImpactSteelResilientLayerDynamicStiffnessMNm3(event.target.value)}
+                            placeholder="e.g. 35"
+                            value={impactSteelResilientLayerDynamicStiffnessMNm3}
+                          />
+                        </FieldShell>
+
+                        <FieldShell
+                          label="Load basis (kg/m²)"
+                          note="Surface mass carried by the resilient layer."
+                          relevance="required"
+                          usage="DeltaLw"
+                        >
+                          <input
+                            className={getTextInputClassName(false)}
+                            inputMode="decimal"
+                            onChange={(event) => setImpactSteelLoadBasisKgM2(event.target.value)}
+                            placeholder="e.g. 64"
+                            value={impactSteelLoadBasisKgM2}
+                          />
+                        </FieldShell>
+
+                        <FieldShell
+                          label="Lower isolation"
+                          note="Support class for the ceiling-side isolation package."
+                          relevance="required"
+                          usage="Ln,w"
+                        >
+                          <select
+                            aria-label="Steel lower ceiling isolation"
+                            className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                            onChange={(event) =>
+                              setImpactSteelLowerCeilingIsolationSupportForm(
+                                event.target.value as WorkbenchSteelFloorFormulaLowerCeilingIsolationSupportForm
+                              )
+                            }
+                            value={impactSteelLowerCeilingIsolationSupportForm}
+                          >
+                            <option value="">Select lower isolation</option>
+                            {STEEL_FLOOR_FORMULA_LOWER_ISOLATION_OPTIONS.map((option) => (
+                              <option key={option.value} value={option.value}>
+                                {option.label}
+                              </option>
+                            ))}
+                          </select>
+                        </FieldShell>
+                      </div>
+                    </ContextSubsection>
+                  ) : null}
+
                   {geometryActive ? (
                     <ContextSubsection
                       note={

@@ -14,6 +14,7 @@ import type {
   ElectricalBoxState,
   ExactImpactSourceLabOrField,
   FloorRole,
+  ImpactPredictorSupportForm,
   JunctionQuality,
   MaterialDefinition,
   PerimeterSealClass,
@@ -53,6 +54,7 @@ import {
   type WorkbenchWallTopologyDraft
 } from "./simple-workbench-wall-topology";
 import { getWorkbenchMaterialById } from "./workbench-materials";
+import type { WorkbenchSteelFloorFormulaLowerCeilingIsolationSupportForm } from "./steel-floor-formula-input-surface";
 
 type LayerDraft = {
   densityKgM3?: string;
@@ -108,6 +110,12 @@ type ScenarioSnapshot = WorkbenchWallTopologyDraft & {
   impactGuideReceivingRoomVolumeM3: string;
   impactLowerTreatmentReductionDb: string;
   impactReferenceDeltaLwDb: string;
+  impactSteelCarrierDepthMm: string;
+  impactSteelCarrierSpacingMm: string;
+  impactSteelLoadBasisKgM2: string;
+  impactSteelLowerCeilingIsolationSupportForm: WorkbenchSteelFloorFormulaLowerCeilingIsolationSupportForm;
+  impactSteelResilientLayerDynamicStiffnessMNm3: string;
+  impactSteelSupportForm: "" | ImpactPredictorSupportForm;
   id: string;
   name: string;
   preparedBy: string;
@@ -175,6 +183,12 @@ type WorkbenchStore = WorkbenchWallTopologyDraft & {
   impactGuideReceivingRoomVolumeM3: string;
   impactLowerTreatmentReductionDb: string;
   impactReferenceDeltaLwDb: string;
+  impactSteelCarrierDepthMm: string;
+  impactSteelCarrierSpacingMm: string;
+  impactSteelLoadBasisKgM2: string;
+  impactSteelLowerCeilingIsolationSupportForm: WorkbenchSteelFloorFormulaLowerCeilingIsolationSupportForm;
+  impactSteelResilientLayerDynamicStiffnessMNm3: string;
+  impactSteelSupportForm: "" | ImpactPredictorSupportForm;
   approverTitle: string;
   preparedBy: string;
   proposalIssueCodePrefix: string;
@@ -263,6 +277,12 @@ type WorkbenchStore = WorkbenchWallTopologyDraft & {
   setImpactGuideReceivingRoomVolumeM3: (value: string) => void;
   setImpactLowerTreatmentReductionDb: (value: string) => void;
   setImpactReferenceDeltaLwDb: (value: string) => void;
+  setImpactSteelCarrierDepthMm: (value: string) => void;
+  setImpactSteelCarrierSpacingMm: (value: string) => void;
+  setImpactSteelLoadBasisKgM2: (value: string) => void;
+  setImpactSteelLowerCeilingIsolationSupportForm: (value: WorkbenchSteelFloorFormulaLowerCeilingIsolationSupportForm) => void;
+  setImpactSteelResilientLayerDynamicStiffnessMNm3: (value: string) => void;
+  setImpactSteelSupportForm: (value: "" | ImpactPredictorSupportForm) => void;
   setPreparedBy: (value: string) => void;
   setProposalIssueCodePrefix: (value: string) => void;
   setApproverTitle: (value: string) => void;
@@ -554,6 +574,12 @@ function makeDefaultState(input?: {
     impactGuideReceivingRoomVolumeM3: "",
     impactLowerTreatmentReductionDb: "",
     impactReferenceDeltaLwDb: "",
+    impactSteelCarrierDepthMm: "",
+    impactSteelCarrierSpacingMm: "",
+    impactSteelLoadBasisKgM2: "",
+    impactSteelLowerCeilingIsolationSupportForm: "" as const,
+    impactSteelResilientLayerDynamicStiffnessMNm3: "",
+    impactSteelSupportForm: "" as const,
     preparedBy: "DAC Operator",
     proposalIssueCodePrefix: "",
     proposalAttention: "Attention line not entered",
@@ -663,6 +689,12 @@ function buildLoadedScenarioState(
     impactGuideReceivingRoomVolumeM3: scenario.impactGuideReceivingRoomVolumeM3 ?? "",
     impactLowerTreatmentReductionDb: scenario.impactLowerTreatmentReductionDb ?? "",
     impactReferenceDeltaLwDb: scenario.impactReferenceDeltaLwDb ?? "",
+    impactSteelCarrierDepthMm: scenario.impactSteelCarrierDepthMm ?? "",
+    impactSteelCarrierSpacingMm: scenario.impactSteelCarrierSpacingMm ?? "",
+    impactSteelLoadBasisKgM2: scenario.impactSteelLoadBasisKgM2 ?? "",
+    impactSteelLowerCeilingIsolationSupportForm: scenario.impactSteelLowerCeilingIsolationSupportForm ?? "",
+    impactSteelResilientLayerDynamicStiffnessMNm3: scenario.impactSteelResilientLayerDynamicStiffnessMNm3 ?? "",
+    impactSteelSupportForm: scenario.impactSteelSupportForm ?? "",
     preparedBy: scenario.preparedBy ?? "DAC Operator",
     proposalIssueCodePrefix: scenario.proposalIssueCodePrefix ?? "",
     proposalAttention: scenario.proposalAttention ?? "Attention line not entered",
@@ -917,6 +949,12 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
               impactGuideReceivingRoomVolumeM3: state.impactGuideReceivingRoomVolumeM3,
               impactLowerTreatmentReductionDb: state.impactLowerTreatmentReductionDb,
               impactReferenceDeltaLwDb: state.impactReferenceDeltaLwDb,
+              impactSteelCarrierDepthMm: state.impactSteelCarrierDepthMm,
+              impactSteelCarrierSpacingMm: state.impactSteelCarrierSpacingMm,
+              impactSteelLoadBasisKgM2: state.impactSteelLoadBasisKgM2,
+              impactSteelLowerCeilingIsolationSupportForm: state.impactSteelLowerCeilingIsolationSupportForm,
+              impactSteelResilientLayerDynamicStiffnessMNm3: state.impactSteelResilientLayerDynamicStiffnessMNm3,
+              impactSteelSupportForm: state.impactSteelSupportForm,
               name: makeScenarioName(state),
               preparedBy: state.preparedBy,
               proposalIssueCodePrefix: state.proposalIssueCodePrefix,
@@ -993,6 +1031,12 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
       setImpactGuideReceivingRoomVolumeM3: (value) => set({ impactGuideReceivingRoomVolumeM3: value }),
       setImpactLowerTreatmentReductionDb: (value) => set({ impactLowerTreatmentReductionDb: value }),
       setImpactReferenceDeltaLwDb: (value) => set({ impactReferenceDeltaLwDb: value }),
+      setImpactSteelCarrierDepthMm: (value) => set({ impactSteelCarrierDepthMm: value }),
+      setImpactSteelCarrierSpacingMm: (value) => set({ impactSteelCarrierSpacingMm: value }),
+      setImpactSteelLoadBasisKgM2: (value) => set({ impactSteelLoadBasisKgM2: value }),
+      setImpactSteelLowerCeilingIsolationSupportForm: (value) => set({ impactSteelLowerCeilingIsolationSupportForm: value }),
+      setImpactSteelResilientLayerDynamicStiffnessMNm3: (value) => set({ impactSteelResilientLayerDynamicStiffnessMNm3: value }),
+      setImpactSteelSupportForm: (value) => set({ impactSteelSupportForm: value }),
       setApproverTitle: (value) => set({ approverTitle: value }),
       setPreparedBy: (value) => set({ preparedBy: value }),
       setProposalIssueCodePrefix: (value) => set({ proposalIssueCodePrefix: value }),
