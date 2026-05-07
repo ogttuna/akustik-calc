@@ -68,7 +68,7 @@ unsafe reorders. Lab, field, and building-prediction bases must stay
 separate; `Rw`/`STC`, `Ln,w`/`IIC`, and lab/field values are not
 interchangeable without a named rating and measurement basis.
 
-## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate AO Landed / Gate AP Next
+## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate AP Landed / Gate AQ Next
 
 Current implementation position:
 `calculator_model_first_physics_prediction_pivot_v1`.
@@ -173,43 +173,76 @@ Latest landed Gate AO checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AO_HANDOFF.md`
 
-Gate AO selection status:
+Latest landed Gate AP checkpoint:
 
-`gate_ao_error_budget_surface_parity_landed_no_runtime_selected_error_budget_hostile_input_gate_ap`
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AP_HANDOFF.md`
 
-Gate AO landed file:
+Gate AP selection status:
 
-`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ao-steel-floor-formula-error-budget-surface-parity-contract.test.ts`
+`gate_ap_error_budget_hostile_input_landed_no_runtime_selected_calibration_readiness_gate_aq`
 
-Gate AO landed action:
-
-`gate_ao_steel_floor_formula_error_budget_surface_parity_plan`
-
-Gate AO selected next file:
+Gate AP landed file:
 
 `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ap-steel-floor-formula-error-budget-hostile-input-contract.test.ts`
 
-Gate AO selected next action:
+Gate AP landed action:
 
 `gate_ap_steel_floor_formula_error_budget_hostile_input_plan`
 
-Gate AO result:
+Gate AP selected next file:
 
-- Gate AO moves Gate AN's structured error-budget payload into the
-  steel formula runtime and shared `ImpactCalculation` schema;
-- complete formula cases keep the same `Ln,w 55.6` / `DeltaLw 22.4`
-  runtime estimates and the same `+/-4.5 dB` / `+/-2.0 dB` corridors;
-- output cards, method dossier, corridor dossier, Markdown report,
-  calculator API, and impact-only API all expose the same `origin`,
-  `notMeasuredEvidence`, metric range, tolerance, and terms;
-- exact-source, needs-input, and unsafe-topology cases remain
-  budget-free;
-- Gate AK/AM source rules remain unchanged and still report zero
-  accepted source-owned same-stack ISO lab `DeltaLw` holdouts;
-- Gate AP is selected to harden hostile-input parity around this
-  budget surface.
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-aq-steel-floor-formula-error-budget-calibration-readiness-contract.test.ts`
 
-Gate AO validation result:
+Gate AP selected next action:
+
+`gate_aq_steel_floor_formula_error_budget_calibration_readiness_plan`
+
+Gate AP result:
+
+- Gate AP keeps complete source-absent steel formula, safe reorder, and
+  saved/API replay cases on the same `Ln,w 55.6` / `DeltaLw 22.4`
+  runtime values and identical structured error-budget payloads;
+- missing `steelCarrierSpacingMm`, duplicate/ambiguous steel
+  base-structure rows, and exact-source precedence stay budget-free;
+- field requests for `L'n,w` / `L'nT,w` remain unsupported unless a
+  field-context route owns them, and no lab budget is copied onto field
+  metric ids;
+- no runtime formula retune or source-packet relaxation happened;
+- Gate AQ is selected to turn the now-stable budget surface toward
+  calibration-readiness: what source-owned evidence would tighten,
+  widen, or retune the steel formula corridor.
+
+Gate AP validation result:
+
+Focused Gate AP validation completed on 2026-05-07: Gate AP engine
+contract passed 1 file / 7 tests. Full `pnpm calculator:gate:current`
+passed with engine 322 files / 1825 tests, web 66 files / 286 passed +
+18 skipped, repo build 5/5 successful, and whitespace guard clean. Known
+non-fatal warnings remain the Node/Vitest Zustand persist storage
+warning and optional `sharp` / `@img` Next build warnings via the DOCX
+export dependency.
+
+Prior Gate AO selection status:
+
+`gate_ao_error_budget_surface_parity_landed_no_runtime_selected_error_budget_hostile_input_gate_ap`
+
+Prior Gate AO landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ao-steel-floor-formula-error-budget-surface-parity-contract.test.ts`
+
+Prior Gate AO landed action:
+
+`gate_ao_steel_floor_formula_error_budget_surface_parity_plan`
+
+Prior Gate AO selected next file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ap-steel-floor-formula-error-budget-hostile-input-contract.test.ts`
+
+Prior Gate AO selected next action:
+
+`gate_ap_steel_floor_formula_error_budget_hostile_input_plan`
+
+Prior Gate AO validation result:
 
 Validation completed on 2026-05-07: focused Gate AE/AN/AO engine
 contracts passed 3 files / 15 tests, focused web steel-floor card /
@@ -370,7 +403,39 @@ diff --check` passed. Known non-fatal warnings remain the Node/Vitest
 Zustand persist storage warning and optional `sharp` / `@img` Next build
 warnings via the DOCX export dependency.
 
-## Gate AP Implementation Order - Steel-Floor Error-Budget Hostile Input
+## Gate AQ Implementation Order - Steel-Floor Error-Budget Calibration Readiness
+
+Gate AQ is the right next step because Gate AP now proves the steel
+formula error-budget payload survives hostile input without leaking into
+wrong routes. The next accuracy move is to define how that budget can be
+tightened, widened, or retuned when source-owned evidence finally exists,
+without falling back into a broad source-library crawl.
+
+Gate AQ order:
+
+1. Define the calibration-readiness contract for the steel-floor formula
+   error budget: source-owned same-stack `DeltaLw`, source-owned
+   same-stack `Ln,w`, topology owner, support/carrier/load/stiffness
+   owner, lower-support owner, and paired negative boundary owner.
+2. Map each Gate AN/AP budget term to the exact owner/evidence that can
+   shrink it, and to the blocker that keeps it at the current tolerance.
+3. Assert no product-only, inferred, lab-to-field, STC/IIC, or
+   concrete-reference `DeltaLw` rows can tighten the steel formula
+   corridor.
+4. Add calibration decision cases for hold, tighten candidate, widen
+   candidate, and retune candidate while keeping runtime values pinned
+   until the holdout threshold is met.
+5. Keep Gate AP hostile-input stability and Gate AO surface parity
+   unchanged.
+
+Non-goals for Gate AQ:
+
+- no runtime formula retune;
+- no broad source-library crawl;
+- no field/building promotion from lab evidence;
+- no source row promotion without paired positive and negative tests.
+
+## Consumed Gate AP Implementation Order - Steel-Floor Error-Budget Hostile Input
 
 Gate AP is the right next step because Gate AO made the source-absent
 steel-floor formula budget visible on every main surface. The next risk
@@ -380,7 +445,7 @@ must not leak a budget when the formula is not actually selected, and
 must preserve the same budget when the topology is still physically the
 same complete source-absent steel formula case.
 
-Gate AP order:
+Gate AP order completed:
 
 1. Build a hostile-input matrix for the steel-floor formula budget:
    complete, safe reorder, saved/API replay, missing physical input,
@@ -394,13 +459,6 @@ Gate AP order:
    lab formula budgets as `L'n,w` / `L'nT,w`.
 5. Keep Gate AK/AM source-packet strictness and Gate AO surface parity
    unchanged.
-
-Non-goals for Gate AP:
-
-- no runtime formula retune;
-- no DeltaLw tightening from inferred or product-only values;
-- no field/building promotion from lab evidence;
-- no broad source-library crawl disconnected from formula holdout needs.
 
 ## Consumed Gate AO Implementation Order - Steel-Floor Error-Budget Surface Parity
 

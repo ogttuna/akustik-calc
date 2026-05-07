@@ -133,8 +133,15 @@ simplification. Gate AO has now landed that structured payload on the
 runtime impact schema, support trace, output cards, method/corridor
 dossiers, Markdown report, calculator API, and impact-only API without
 moving `Ln,w 55.6` / `DeltaLw 22.4` or presenting the budget as measured
-evidence. Gate AP is next:
-`gate_ap_steel_floor_formula_error_budget_hostile_input_plan`.
+evidence. Gate AP has now landed the hostile-input guard around that
+budget surface: complete, safe-reordered, and saved/API-replayed steel
+formula cases keep the same structured `Ln,w` / `DeltaLw` budget, while
+missing physical inputs, duplicate/ambiguous steel carriers, and exact
+source precedence remain budget-free. Field requests stay explicit:
+`L'n,w` and `L'nT,w` remain unsupported unless a field-context route owns
+them, and the lab budget is not aliased onto field metric ids. Gate AQ is
+next:
+`gate_aq_steel_floor_formula_error_budget_calibration_readiness_plan`.
 The 2026-05-07 broad revalidation after Gate AK is complete: `pnpm
 check` passed after aligning steel-floor validation corpora and
 ambiguous duplicate/disjoint lightweight-steel floor schedule
@@ -143,9 +150,10 @@ expectations. Runtime values remain unchanged.
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AO_HANDOFF.md`
-3. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AN_HANDOFF.md`
-4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AM_HANDOFF.md`
+2. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AP_HANDOFF.md`
+3. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AO_HANDOFF.md`
+4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AN_HANDOFF.md`
+5. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AM_HANDOFF.md`
 4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AL_HANDOFF.md`
 5. `docs/calculator/CHECKPOINT_2026-05-07_BROAD_REVALIDATION_GATE_AK_TO_GATE_AL_HANDOFF.md`
 6. `docs/calculator/CHECKPOINT_2026-05-07_GATE_AK_REPORT_EXPORT_REVALIDATION_AND_PUSH_HANDOFF.md`
@@ -485,11 +493,35 @@ plan.
 - current selected slice:
   `calculator_model_first_physics_prediction_pivot_v1`
 - current next decision inside the slice:
-  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ap-steel-floor-formula-error-budget-hostile-input-contract.test.ts`
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-aq-steel-floor-formula-error-budget-calibration-readiness-contract.test.ts`
   should run
-  `gate_ap_steel_floor_formula_error_budget_hostile_input_plan`.
+  `gate_aq_steel_floor_formula_error_budget_calibration_readiness_plan`.
 - latest checkpoint:
-  `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AO_HANDOFF.md`.
+  `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AP_HANDOFF.md`.
+- just landed model-first physics prediction pivot Gate AP:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ap-steel-floor-formula-error-budget-hostile-input-contract.test.ts`
+  landed
+  `gate_ap_steel_floor_formula_error_budget_hostile_input_plan`.
+  It hardens the Gate AO steel-floor formula error-budget payload against
+  hostile input drift. Complete source-absent steel formula, safe reorder,
+  and saved/API replay cases preserve the same `Ln,w 55.6` /
+  `DeltaLw 22.4` estimates and identical structured budget objects.
+  Missing `steelCarrierSpacingMm`, duplicate/ambiguous steel base
+  structures, and exact ISO band source precedence do not expose formula
+  budgets. Field requests remain lab/field separated: `L'n,w` and
+  `L'nT,w` are unsupported without field context, and no field metric id
+  inherits the lab formula budget.
+  Selection status:
+  `gate_ap_error_budget_hostile_input_landed_no_runtime_selected_calibration_readiness_gate_aq`.
+  Selected next action:
+  `gate_aq_steel_floor_formula_error_budget_calibration_readiness_plan`.
+  Focused Gate AP validation completed on 2026-05-07: Gate AP engine
+  contract passed 1 file / 7 tests. Full `pnpm calculator:gate:current`
+  passed with engine 322 files / 1825 tests, web 66 files / 286 passed
+  + 18 skipped, repo build 5/5 successful, and whitespace guard clean.
+  Known non-fatal warnings remain the Node/Vitest Zustand persist
+  storage warning and optional `sharp` / `@img` Next build warnings via
+  the DOCX export dependency.
 - just landed model-first physics prediction pivot Gate AO:
   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ao-steel-floor-formula-error-budget-surface-parity-contract.test.ts`
   landed

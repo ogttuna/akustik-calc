@@ -32,15 +32,15 @@ path was found too narrow for the user's calculator-first goal.
 
 Current selected status:
 
-`gate_ao_error_budget_surface_parity_landed_no_runtime_selected_error_budget_hostile_input_gate_ap`
+`gate_ap_error_budget_hostile_input_landed_no_runtime_selected_calibration_readiness_gate_aq`
 
 Selected next implementation file:
 
-`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ap-steel-floor-formula-error-budget-hostile-input-contract.test.ts`
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-aq-steel-floor-formula-error-budget-calibration-readiness-contract.test.ts`
 
 Selected next action:
 
-`gate_ap_steel_floor_formula_error_budget_hostile_input_plan`
+`gate_aq_steel_floor_formula_error_budget_calibration_readiness_plan`
 
 Active planning surface:
 
@@ -48,16 +48,16 @@ Active planning surface:
 
 Latest landed gate:
 
-2026-05-07 model-first physics prediction pivot Gate AO steel-floor
-formula error-budget surface parity.
+2026-05-07 model-first physics prediction pivot Gate AP steel-floor
+formula error-budget hostile-input guard.
 
 Latest checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AO_HANDOFF.md`
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AP_HANDOFF.md`
 
 Latest landed-gate checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AO_HANDOFF.md`
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AP_HANDOFF.md`
 
 Latest landed / report export checkpoint:
 
@@ -71,47 +71,56 @@ Latest broad revalidation / Gate AL handoff checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-07_BROAD_REVALIDATION_GATE_AK_TO_GATE_AL_HANDOFF.md`
 
-Gate AO result:
+Gate AP result:
 
-- Gate AO carries Gate AN's source-absent steel-floor formula error
-  budget into the shared `ImpactCalculation` payload and the live
-  steel-floor formula runtime;
-- complete source-absent steel formula cases still calculate
-  `Ln,w 55.6` and `DeltaLw 22.4`; runtime values and tolerance
-  corridors do not move;
-- output cards, method dossier, corridor dossier, Markdown report,
-  calculator API, and impact-only API now show the same `origin`,
-  `notMeasuredEvidence`, metric range, tolerance, and terms from the
-  structured budget payload;
-- exact-source precedence, missing-input cases, and unsafe topology
-  cases remain budget-free;
-- Gate AK/AM source-packet rules remain strict, with zero accepted
-  source-owned same-stack ISO lab `DeltaLw` holdouts;
-- Gate AP is selected for hostile-input parity around this budget
-  surface so duplicates, partial physical inputs, reorders, and
-  exact-source boundaries cannot leak a formula budget.
+Gate AP hardens the Gate AO steel-floor formula error-budget payload:
 
-Gate AO landed file:
+- complete source-absent steel formula, safe-reordered rows, and
+  saved/API-replayed predictor input all preserve the same `Ln,w 55.6`
+  / `DeltaLw 22.4` values and the same structured budget objects;
+- missing physical inputs such as `steelCarrierSpacingMm` do not leak a
+  formula budget;
+- duplicate or ambiguous steel base-structure rows remain
+  `unsafe_topology` and budget-free;
+- exact ISO impact-band source precedence stays budget-free even when
+  complete steel formula physical inputs are present;
+- field impact requests keep `L'n,w` and `L'nT,w` unsupported unless a
+  field-context route owns them; lab `Ln,w` / `DeltaLw` budgets are not
+  aliased onto field metric ids;
+- runtime values and the Gate AO card/report/API surface contract do not
+  move.
 
-`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ao-steel-floor-formula-error-budget-surface-parity-contract.test.ts`
-
-Gate AO landed action:
-
-`gate_ao_steel_floor_formula_error_budget_surface_parity_plan`
-
-Gate AO landed status:
-
-`gate_ao_error_budget_surface_parity_landed_no_runtime_selected_error_budget_hostile_input_gate_ap`
-
-Gate AO selected next file:
+Gate AP landed file:
 
 `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ap-steel-floor-formula-error-budget-hostile-input-contract.test.ts`
 
-Gate AO selected next action:
+Gate AP landed action:
 
 `gate_ap_steel_floor_formula_error_budget_hostile_input_plan`
 
-Gate AO validation result:
+Gate AP landed status:
+
+`gate_ap_error_budget_hostile_input_landed_no_runtime_selected_calibration_readiness_gate_aq`
+
+Gate AP selected next file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-aq-steel-floor-formula-error-budget-calibration-readiness-contract.test.ts`
+
+Gate AP selected next action:
+
+`gate_aq_steel_floor_formula_error_budget_calibration_readiness_plan`
+
+Gate AP validation result:
+
+Focused Gate AP validation completed on 2026-05-07: Gate AP engine
+contract passed 1 file / 7 tests. Full `pnpm calculator:gate:current`
+passed with engine 322 files / 1825 tests, web 66 files / 286 passed +
+18 skipped, repo build 5/5 successful, and whitespace guard clean. Known
+non-fatal warnings remain the Node/Vitest Zustand persist storage
+warning and optional `sharp` / `@img` Next build warnings via the DOCX
+export dependency.
+
+Prior Gate AO result:
 
 Validation completed on 2026-05-07: focused Gate AE/AN/AO engine
 contracts passed 3 files / 15 tests, focused web steel-floor card /

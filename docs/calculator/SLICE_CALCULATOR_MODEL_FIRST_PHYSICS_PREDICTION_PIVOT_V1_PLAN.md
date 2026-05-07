@@ -2,7 +2,7 @@
 
 Slice id: `calculator_model_first_physics_prediction_pivot_v1`
 
-Status: SELECTED / GATE AO LANDED / GATE AP ERROR-BUDGET HOSTILE INPUT NEXT
+Status: SELECTED / GATE AP LANDED / GATE AQ CALIBRATION READINESS NEXT
 
 Selected by:
 
@@ -12,7 +12,48 @@ queue.
 
 Selection status:
 
-`gate_ao_error_budget_surface_parity_landed_no_runtime_selected_error_budget_hostile_input_gate_ap`
+`gate_ap_error_budget_hostile_input_landed_no_runtime_selected_calibration_readiness_gate_aq`
+
+Latest Gate AP checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AP_HANDOFF.md`
+
+Gate AP landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ap-steel-floor-formula-error-budget-hostile-input-contract.test.ts`
+
+Gate AP landed action:
+
+`gate_ap_steel_floor_formula_error_budget_hostile_input_plan`
+
+Gate AP selected Gate AQ file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-aq-steel-floor-formula-error-budget-calibration-readiness-contract.test.ts`
+
+Gate AP selected Gate AQ action:
+
+`gate_aq_steel_floor_formula_error_budget_calibration_readiness_plan`
+
+Gate AP landed summary:
+
+Gate AP hardens the Gate AO steel-floor formula error-budget payload
+against hostile input drift. Complete steel formula, safe-reordered
+rows, and saved/API-replayed predictor input preserve the same
+`Ln,w 55.6` / `DeltaLw 22.4` values and identical budget objects.
+Missing physical inputs, duplicate/ambiguous steel carriers, and exact
+source precedence remain budget-free. Field requests keep `L'n,w` and
+`L'nT,w` unsupported without field context and do not alias lab budget
+metrics onto field ids.
+
+Gate AP validation result:
+
+Focused Gate AP validation completed on 2026-05-07: Gate AP engine
+contract passed 1 file / 7 tests. Full `pnpm calculator:gate:current`
+passed with engine 322 files / 1825 tests, web 66 files / 286 passed +
+18 skipped, repo build 5/5 successful, and whitespace guard clean. Known
+non-fatal warnings remain the Node/Vitest Zustand persist storage
+warning and optional `sharp` / `@img` Next build warnings via the DOCX
+export dependency.
 
 Latest Gate AO checkpoint:
 
@@ -214,7 +255,19 @@ Consumed Gate AN implementation plan:
 5. Preserve card/report/API parity for the uncertainty posture without
    presenting it as measured evidence.
 
-Gate AP implementation plan:
+Gate AQ implementation plan:
+
+1. Define the calibration-readiness contract for the steel-floor formula
+   error budget.
+2. Map each budget term to the exact source-owned evidence that can
+   shrink it and the blocker that keeps it at current tolerance.
+3. Assert product-only, inferred, STC/IIC, field/building, and
+   concrete-reference rows cannot tighten the steel formula corridor.
+4. Add hold, tighten-candidate, widen-candidate, and retune-candidate
+   cases without moving runtime values.
+5. Keep Gate AP hostile-input stability and Gate AO parity unchanged.
+
+Consumed Gate AP implementation plan:
 
 1. Build hostile-input cases for complete, safe reorder, saved/API
    replay, missing physical input, duplicate/ambiguous base structure,
