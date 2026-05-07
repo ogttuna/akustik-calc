@@ -32,15 +32,15 @@ path was found too narrow for the user's calculator-first goal.
 
 Current selected status:
 
-`gate_al_source_owned_delta_lw_first_holdout_guard_landed_no_runtime_selected_source_packet_acquisition_gate_am`
+`gate_am_source_packet_acquisition_landed_no_runtime_selected_source_absent_uncertainty_gate_an`
 
 Selected next implementation file:
 
-`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-am-steel-floor-formula-source-owned-delta-lw-source-packet-acquisition-contract.test.ts`
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-an-steel-floor-formula-source-absent-uncertainty-contract.test.ts`
 
 Selected next action:
 
-`gate_am_steel_floor_formula_source_owned_delta_lw_source_packet_acquisition_plan`
+`gate_an_steel_floor_formula_source_absent_uncertainty_and_error_budget_plan`
 
 Active planning surface:
 
@@ -48,16 +48,16 @@ Active planning surface:
 
 Latest landed gate:
 
-2026-05-07 model-first physics prediction pivot Gate AL steel-floor
-formula first source-owned DeltaLw holdout guard.
+2026-05-07 model-first physics prediction pivot Gate AM steel-floor
+formula source-owned DeltaLw source-packet acquisition ledger.
 
 Latest checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AL_HANDOFF.md`
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AM_HANDOFF.md`
 
 Latest landed-gate checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AL_HANDOFF.md`
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AM_HANDOFF.md`
 
 Latest landed / report export checkpoint:
 
@@ -71,7 +71,61 @@ Latest broad revalidation / Gate AL handoff checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-07_BROAD_REVALIDATION_GATE_AK_TO_GATE_AL_HANDOFF.md`
 
-Gate AL result:
+Gate AM result:
+
+- Gate AM landed an executable narrow source-packet acquisition ledger
+  after Gate AL's first-holdout guard;
+- no accepted source-owned same-stack ISO lab `DeltaLw` steel-floor
+  packet was found;
+- REGUPOL US steel deck / steel joist L0146-style rows and the REGUPOL
+  sonus core 5 steel C-joist lead remain wrong-basis STC/IIC evidence,
+  not ISO lab `DeltaLw` holdouts;
+- REGUPOL ISO `DeltaLw` rows found in the acquisition pass are
+  solid/concrete reference-floor rows, not same-stack steel-floor
+  formula holdouts;
+- SoundAdvisor is recorded as a useful ISO `DeltaLw` scope boundary:
+  it reinforces that `DeltaLw` belongs to a 150 mm concrete reference
+  floor comparison, but it is not itself a steel-floor packet;
+- residual retune stays blocked by
+  `delta_lw_measured_holdouts_missing` and
+  `source_owned_metric_holdouts_missing`;
+- broad source-library crawl remains blocked because the calculator now
+  needs source-absent steel-floor formula uncertainty/error-budget work
+  rather than looser source acceptance.
+
+Gate AM landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-am-steel-floor-formula-source-owned-delta-lw-source-packet-acquisition-contract.test.ts`
+
+Gate AM landed action:
+
+`gate_am_steel_floor_formula_source_owned_delta_lw_source_packet_acquisition_plan`
+
+Gate AM landed status:
+
+`gate_am_source_packet_acquisition_landed_no_runtime_selected_source_absent_uncertainty_gate_an`
+
+Gate AM selected next file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-an-steel-floor-formula-source-absent-uncertainty-contract.test.ts`
+
+Gate AM selected next action:
+
+`gate_an_steel_floor_formula_source_absent_uncertainty_and_error_budget_plan`
+
+Gate AM validation result:
+
+Focused validation completed on 2026-05-07: Gate AM focused engine
+contract passed 1 file / 5 tests, engine typecheck passed, and focused
+Gate AJ/AK/AL/AM contracts passed 4 files / 19 tests. Full `pnpm
+calculator:gate:current` passed: engine 319 files / 1807 tests, web 65
+files / 284 passed + 18 skipped, repo build 5/5 successful, and
+whitespace guard clean. `git diff --check` passed. Known non-fatal
+warnings remain the Node/Vitest Zustand persist storage warning and
+optional `sharp` / `@img` Next build warnings via the DOCX export
+dependency.
+
+Prior Gate AL result:
 
 - Gate AL landed an executable first-holdout guard for source-owned
   same-stack ISO lab `DeltaLw` steel-floor packets without moving

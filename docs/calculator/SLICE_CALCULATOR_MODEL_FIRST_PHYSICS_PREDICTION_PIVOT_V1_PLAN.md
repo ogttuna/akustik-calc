@@ -2,7 +2,7 @@
 
 Slice id: `calculator_model_first_physics_prediction_pivot_v1`
 
-Status: SELECTED / GATE AL LANDED / GATE AM SOURCE PACKET ACQUISITION NEXT
+Status: SELECTED / GATE AM LANDED / GATE AN SOURCE-ABSENT UNCERTAINTY NEXT
 
 Selected by:
 
@@ -12,7 +12,50 @@ queue.
 
 Selection status:
 
-`gate_al_source_owned_delta_lw_first_holdout_guard_landed_no_runtime_selected_source_packet_acquisition_gate_am`
+`gate_am_source_packet_acquisition_landed_no_runtime_selected_source_absent_uncertainty_gate_an`
+
+Latest Gate AM checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AM_HANDOFF.md`
+
+Gate AM landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-am-steel-floor-formula-source-owned-delta-lw-source-packet-acquisition-contract.test.ts`
+
+Gate AM landed action:
+
+`gate_am_steel_floor_formula_source_owned_delta_lw_source_packet_acquisition_plan`
+
+Gate AM selected Gate AN file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-an-steel-floor-formula-source-absent-uncertainty-contract.test.ts`
+
+Gate AM selected Gate AN action:
+
+`gate_an_steel_floor_formula_source_absent_uncertainty_and_error_budget_plan`
+
+Gate AM landed summary:
+
+Gate AM adds a no-runtime source-packet acquisition ledger for
+source-owned same-stack ISO lab `DeltaLw` steel-floor holdouts. The
+narrow pass rejects REGUPOL steel deck/joist and steel C-joist leads as
+wrong-basis STC/IIC evidence, rejects REGUPOL ISO `DeltaLw` leads as
+solid/concrete reference-floor evidence, and keeps SoundAdvisor as a
+metric-scope boundary rather than a candidate steel packet. The accepted
+source-owned holdout count remains zero, so Gate AN is selected for
+source-absent steel-floor formula uncertainty and error-budget work.
+
+Gate AM validation result:
+
+Focused validation completed on 2026-05-07: Gate AM focused engine
+contract passed 1 file / 5 tests, engine typecheck passed, and focused
+Gate AJ/AK/AL/AM contracts passed 4 files / 19 tests. Full `pnpm
+calculator:gate:current` passed: engine 319 files / 1807 tests, web 65
+files / 284 passed + 18 skipped, repo build 5/5 successful, and
+whitespace guard clean. `git diff --check` passed. Known non-fatal
+warnings remain the Node/Vitest Zustand persist storage warning and
+optional `sharp` / `@img` Next build warnings via the DOCX export
+dependency.
 
 Latest Gate AL checkpoint:
 
@@ -56,7 +99,7 @@ clean. `git diff --check` passed. Known non-fatal warnings remain the
 Node/Vitest Zustand persist storage warning and optional `sharp` / `@img`
 Next build warnings via the DOCX export dependency.
 
-Gate AM implementation plan:
+Consumed Gate AM implementation plan:
 
 1. Search narrowly for ISO 10140 / ISO 717-2 steel-floor or steel-joist
    same-stack lab `DeltaLw` sources that own the Gate AK fields.
@@ -68,6 +111,20 @@ Gate AM implementation plan:
    replacements or product rows.
 4. If no packet qualifies, land the rejection ledger and next acquisition
    decision without weakening Gate AK/AL.
+
+Gate AN implementation plan:
+
+1. Add an explicit source-absent error-budget object for steel-floor
+   `Ln,w` and `DeltaLw`.
+2. Attribute uncertainty terms to measured holdout absence, support-form
+   assumptions, load-basis defaults, dynamic-stiffness precision, lower
+   support class, and upper resilient topology.
+3. Keep exact source precedence and Gate AK/AM source packet rules
+   unchanged.
+4. Add hostile source-absent cases where all physical inputs are
+   present, partially missing, duplicated, or unsafe.
+5. Preserve card/report/API parity for the uncertainty posture without
+   presenting it as measured evidence.
 
 Latest Gate AK checkpoint:
 

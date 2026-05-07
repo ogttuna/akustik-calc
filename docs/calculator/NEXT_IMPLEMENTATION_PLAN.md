@@ -68,7 +68,7 @@ unsafe reorders. Lab, field, and building-prediction bases must stay
 separate; `Rw`/`STC`, `Ln,w`/`IIC`, and lab/field values are not
 interchangeable without a named rating and measurement basis.
 
-## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate AL Landed / Gate AM Next
+## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate AM Landed / Gate AN Next
 
 Current implementation position:
 `calculator_model_first_physics_prediction_pivot_v1`.
@@ -161,6 +161,58 @@ Latest landed Gate AL checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AL_HANDOFF.md`
 
+Latest landed Gate AM checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AM_HANDOFF.md`
+
+Gate AM selection status:
+
+`gate_am_source_packet_acquisition_landed_no_runtime_selected_source_absent_uncertainty_gate_an`
+
+Gate AM landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-am-steel-floor-formula-source-owned-delta-lw-source-packet-acquisition-contract.test.ts`
+
+Gate AM landed action:
+
+`gate_am_steel_floor_formula_source_owned_delta_lw_source_packet_acquisition_plan`
+
+Gate AM selected next file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-an-steel-floor-formula-source-absent-uncertainty-contract.test.ts`
+
+Gate AM selected next action:
+
+`gate_an_steel_floor_formula_source_absent_uncertainty_and_error_budget_plan`
+
+Gate AM result:
+
+- Gate AM lands an executable narrow source-packet acquisition ledger
+  without moving runtime values;
+- no searched lead qualifies as a source-owned same-stack ISO lab
+  `DeltaLw` steel-floor holdout;
+- REGUPOL steel deck / steel joist and steel C-joist leads are rejected
+  as wrong-basis STC/IIC evidence;
+- REGUPOL ISO `DeltaLw` leads are rejected as solid/concrete
+  reference-floor evidence rather than same-stack steel formula
+  holdouts;
+- SoundAdvisor is retained as a metric-scope boundary reference, not a
+  candidate packet;
+- broad source-library crawl remains blocked, so the next step is
+  source-absent steel-floor formula uncertainty and error-budget work.
+
+Gate AM validation result:
+
+Focused validation completed on 2026-05-07: Gate AM focused engine
+contract passed 1 file / 5 tests, engine typecheck passed, and focused
+Gate AJ/AK/AL/AM contracts passed 4 files / 19 tests. Full `pnpm
+calculator:gate:current` passed: engine 319 files / 1807 tests, web 65
+files / 284 passed + 18 skipped, repo build 5/5 successful, and
+whitespace guard clean. `git diff --check` passed. Known non-fatal
+warnings remain the Node/Vitest Zustand persist storage warning and
+optional `sharp` / `@img` Next build warnings via the DOCX export
+dependency.
+
 Gate AL selection status:
 
 `gate_al_source_owned_delta_lw_first_holdout_guard_landed_no_runtime_selected_source_packet_acquisition_gate_am`
@@ -210,38 +262,54 @@ diff --check` passed. Known non-fatal warnings remain the Node/Vitest
 Zustand persist storage warning and optional `sharp` / `@img` Next build
 warnings via the DOCX export dependency.
 
-## Gate AM Implementation Order - Source-Owned DeltaLw Source Packet Acquisition
+## Gate AN Implementation Order - Source-Absent Steel-Floor Formula Uncertainty
 
-Gate AM is the right next step because Gate AL showed that the current
-inventory does not yet contain a real source-owned same-stack ISO lab
-`DeltaLw` steel-floor holdout. The work must stay calculator-first:
-sources are admissible only as exact rows, anchors, holdouts, or
-calibration evidence for the formula lane, not as a finite product
-catalog that replaces the solver.
+Gate AN is the right next step because Gate AM found no qualifying
+source-owned same-stack ISO lab `DeltaLw` steel-floor packet and did not
+weaken the acceptance rule. The calculator still needs to calculate
+realistic source-absent steel floor combinations, so the next work should
+improve the formula corridor's uncertainty and missing-input posture
+instead of broadening source-library search.
 
-Gate AM order:
+Gate AN order:
 
-1. Search narrowly for ISO 10140 / ISO 717-2 steel-floor or steel-joist
-   same-stack lab sources that publish `DeltaLw` with enough assembly
-   detail to own the Gate AK fields.
-2. Encode a packet only when the source owns the measured metric,
-   topology/support family, carrier spacing, load basis, dynamic
-   stiffness, lower support class, upper-resilient topology, and paired
-   negative boundary owner.
-3. Keep the first accepted packet as holdout/calibration evidence; do
-   not replace exact rows, product rows, or runtime formula values.
-4. If no accepted packet is found, land the rejection ledger and next
-   acquisition decision without weakening the Gate AK/AL acceptance rule.
-5. Preserve nearby negatives for `Ln,w`/`Rw`-only rows, product catalog
-   `DeltaLw`, inferred Annex/companion values, ASTM/IIC/STC rows,
-   building-prediction rows, and missing-owner rows.
+1. Make the source-absent steel-floor formula expose an explicit
+   error-budget object for `Ln,w` and `DeltaLw`, including which terms
+   are from measured holdouts, source-absent assumptions, support-form
+   uncertainty, load-basis defaults, and dynamic-stiffness precision.
+2. Keep exact source rows first and keep Gate AK/AM source packet rules
+   unchanged.
+3. Add hostile/nearby cases where `DeltaLw` sources are absent but all
+   physical formula inputs are present, partially missing, or unsafe.
+4. Ensure card/report/API payloads can surface the formula uncertainty
+   without pretending it is measured evidence.
+5. Decide whether the current `+/-4.5 dB Ln,w` / `+/-2.0 dB DeltaLw`
+   corridor should remain as-is, widen, or split by source-absent input
+   completeness without retuning runtime values.
 
-Non-goals for Gate AM:
+Non-goals for Gate AN:
 
 - no runtime formula retune;
 - no DeltaLw tightening from inferred or product-only values;
 - no field/building promotion from lab evidence;
 - no broad source-library crawl disconnected from formula holdout needs.
+
+## Consumed Gate AM Implementation Order - Source-Owned DeltaLw Source Packet Acquisition
+
+Gate AM kept source acquisition narrow and calculator-first.
+
+Gate AM order completed:
+
+1. Searched and encoded narrow source leads for REGUPOL steel
+   deck/steel joist rows, REGUPOL steel C-joist evidence, REGUPOL ISO
+   `DeltaLw` reference-floor rows, and SoundAdvisor ISO `DeltaLw` scope
+   boundary evidence.
+2. Rejected every lead that failed to own the same-stack ISO lab
+   `DeltaLw` metric plus the Gate AK owner fields.
+3. Kept accepted packet count at zero instead of treating wrong-basis or
+   reference-floor values as holdouts.
+4. Selected Gate AN so source-absent formula uncertainty improves next
+   without turning the calculator into a source catalog.
 
 ## Consumed Gate AL Implementation Order - First Source-Owned DeltaLw Holdout Guard
 

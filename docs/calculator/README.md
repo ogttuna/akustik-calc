@@ -21,7 +21,7 @@ Gate A, Gate B, Gate C, Gate D, Gate E, Gate G, Gate H, Gate I,
 Gate J, Gate K, Gate L, Gate M, Gate N, Gate O, Gate P, Gate Q, Gate R,
 Gate S, Gate T, Gate U, Gate V, Gate W, Gate X, Gate Y, Gate Z, Gate AA,
 Gate AB, Gate AC, Gate AD, Gate AE, Gate AF, Gate AG, Gate AH, Gate AI,
-Gate AJ, Gate AK, and Gate AL for this pivot have
+Gate AJ, Gate AK, Gate AL, and Gate AM for this pivot have
 landed. Gate A made the corrected rule executable: source absence
 blocks exact/calibration promotion only, not formula-backed prediction.
 Gate B added shared airborne `airborneBasis` / `airborneCandidateSet`
@@ -390,6 +390,31 @@ skipped, repo build 5/5 successful, and whitespace guard clean. `git
 diff --check` passed. Known non-fatal warnings remain the Node/Vitest
 Zustand persist storage warning and optional `sharp` / `@img` Next build
 warnings via the DOCX export dependency.
+
+Gate AM has now landed the source-owned `DeltaLw` source-packet
+acquisition ledger. It did not loosen Gate AK/AL: REGUPOL steel
+deck/joist and steel C-joist leads are wrong-basis STC/IIC evidence,
+REGUPOL ISO `DeltaLw` leads are solid/concrete reference-floor evidence,
+and SoundAdvisor is a metric-scope boundary reference rather than a
+steel packet. Accepted source-owned same-stack ISO lab `DeltaLw`
+holdouts remain zero, runtime values remain unchanged, and broad
+source-library crawl remains blocked.
+Gate AM selection status:
+`gate_am_source_packet_acquisition_landed_no_runtime_selected_source_absent_uncertainty_gate_an`.
+Gate AM landed file:
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-am-steel-floor-formula-source-owned-delta-lw-source-packet-acquisition-contract.test.ts`.
+Gate AM landed action:
+`gate_am_steel_floor_formula_source_owned_delta_lw_source_packet_acquisition_plan`.
+Gate AM selected Gate AN file:
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-an-steel-floor-formula-source-absent-uncertainty-contract.test.ts`.
+Gate AM selected Gate AN action:
+`gate_an_steel_floor_formula_source_absent_uncertainty_and_error_budget_plan`.
+Gate AM focused validation completed on 2026-05-07: Gate AM engine
+contract 1 file / 5 tests, engine typecheck, focused Gate AJ/AK/AL/AM
+contracts 4 files / 19 tests, full `pnpm calculator:gate:current`, and
+`git diff --check` passed. Current gate totals: engine 319 files / 1807
+tests, web 65 files / 284 passed + 18 skipped, repo build 5/5
+successful, and whitespace guard clean.
 
 Previous Gate AF selection status:
 `gate_af_steel_floor_formula_input_surface_landed_selected_acceptance_revalidation_gate_ag`.
