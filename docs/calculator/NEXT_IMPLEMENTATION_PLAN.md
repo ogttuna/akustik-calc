@@ -68,7 +68,7 @@ unsafe reorders. Lab, field, and building-prediction bases must stay
 separate; `Rw`/`STC`, `Ln,w`/`IIC`, and lab/field values are not
 interchangeable without a named rating and measurement basis.
 
-## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate AJ Landed / Gate AK DeltaLw Holdout Next
+## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate AK Landed / Gate AL First Source-Owned DeltaLw Holdout Next
 
 Current implementation position:
 `calculator_model_first_physics_prediction_pivot_v1`.
@@ -145,80 +145,107 @@ Latest landed Gate AJ checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AJ_HANDOFF.md`
 
-Gate AJ selection status:
+Latest landed Gate AK checkpoint:
 
-`gate_aj_steel_formula_negative_boundary_delta_lw_intake_landed_selected_source_owned_delta_lw_gate_ak`
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AK_HANDOFF.md`
 
-Gate AJ landed file:
+Gate AK selection status:
 
-`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-aj-steel-floor-formula-negative-boundary-and-delta-lw-holdout-contract.test.ts`
+`gate_ak_delta_lw_holdout_packet_contract_landed_selected_first_source_owned_holdout_gate_al`
 
-Gate AJ landed action:
-
-`gate_aj_steel_floor_formula_negative_boundaries_and_delta_lw_holdout_intake_plan`
-
-Gate AJ selected next file:
+Gate AK landed file:
 
 `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ak-steel-floor-formula-source-owned-delta-lw-holdout-contract.test.ts`
 
-Gate AJ selected next action:
+Gate AK landed action:
 
 `gate_ak_steel_floor_formula_source_owned_delta_lw_holdout_acquisition_plan`
 
-Gate AJ result:
+Gate AK selected next file:
 
-- Gate AJ lands four paired negative-boundary cases around the
-  steel-floor formula lane: wrong support family, exact source
-  precedence, lab-to-field/building leakage, and source-absent design
-  references;
-- the paired-negative blocker is removed from the executable residual
-  policy inputs, while runtime values and retune permission remain held;
-- `DeltaLw` measured holdout intake now rejects product-catalog-only
-  values, Annex-C or companion inferences, and field/ASTM/building-basis
-  values from lab formula residual tightening;
-- UBIQ open-web exact rows remain exact rows or calibration anchors until
-  carrier spacing, load basis, dynamic stiffness, lower support class,
-  and upper-resilient topology are source-owned;
-- exact measured rows remain precedence, and source rows remain
-  calibration evidence rather than a finite replacement for the
-  calculator.
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-al-steel-floor-formula-source-owned-delta-lw-first-holdout-contract.test.ts`
 
-Gate AJ validation result:
+Gate AK selected next action:
 
-Focused validation completed on 2026-05-07: Gate AJ engine contract
-passed 1 file / 5 tests; engine typecheck passed. Full `pnpm
-calculator:gate:current` passed with engine 316 files / 1793 tests, web
+`gate_al_steel_floor_formula_source_owned_delta_lw_first_holdout_plan`
+
+Gate AK result:
+
+- Gate AK lands an executable same-stack lab `DeltaLw` holdout packet
+  contract for the steel-floor formula lane;
+- a candidate can count toward formula residual tightening only when the
+  measured metric value, topology/support family, carrier spacing, load
+  basis, dynamic stiffness, lower support class, upper-resilient
+  topology, and paired negative boundary owner are all source-owned;
+- current Pliteq steel-joist rows remain `Ln,w` holdouts only, UBIQ
+  open-web exact rows remain anchors only, and product catalog, Annex-C
+  or companion-inferred, field, ASTM, and building-prediction values are
+  explicitly rejected for lab `DeltaLw` residual tightening;
+- the accepted measured `DeltaLw` holdout count remains zero, so runtime
+  values and residual retune permission stay frozen;
+- exact measured rows remain precedence, and source rows remain anchors,
+  holdouts, or calibration evidence rather than the product.
+
+Gate AK validation result:
+
+Validation completed on 2026-05-07: Gate AK focused engine contract
+passed 1 file / 5 tests; engine typecheck passed; full `pnpm
+calculator:gate:current` passed with engine 317 files / 1798 tests, web
 65 files / 284 passed + 18 skipped, repo build 5/5 tasks, and whitespace
-guard clean. Known non-fatal warnings remain the Node/Vitest Zustand
-persist storage warning and optional `sharp` / `@img` Next build
-warnings via the DOCX export dependency.
+guard clean; `git diff --check` passed. Known non-fatal warnings remain
+the Node/Vitest Zustand persist storage warning and optional `sharp` /
+`@img` Next build warnings via the DOCX export dependency.
 
-## Gate AK Implementation Order - Source-Owned DeltaLw Holdout Acquisition
+## Gate AL Implementation Order - First Source-Owned DeltaLw Holdout
 
-Gate AK is the right next step because Gate AJ defined what can and
-cannot count as a measured `DeltaLw` holdout, but the accepted measured
-holdout count is still zero.
+Gate AL is the right next step because Gate AK made the `DeltaLw`
+holdout acceptance rules executable, but no local row currently satisfies
+those rules. The next useful move is to acquire or encode the first real
+source-owned same-stack lab `DeltaLw` holdout packet without weakening
+the gate.
 
-Gate AK order:
+Gate AL order:
 
-1. Create the Gate AK contract at
-   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ak-steel-floor-formula-source-owned-delta-lw-holdout-contract.test.ts`.
-2. Add a source-owned measured same-stack lab `DeltaLw` holdout intake
-   packet shape for steel-floor formula evidence.
-3. Require source ownership for metric value, topology/support family,
-   carrier spacing, load basis, dynamic stiffness, lower support class,
-   upper-resilient topology, and paired negative boundary owner.
-4. Keep product-only, inferred, field, ASTM, and building-basis values as
-   rejections or context, not residual-tightening rows.
-5. Preserve current runtime values and exact-source precedence unless a
-   later residual policy explicitly promotes a correction.
+1. Create the Gate AL contract at
+   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-al-steel-floor-formula-source-owned-delta-lw-first-holdout-contract.test.ts`.
+2. Add the first source-owned measured same-stack lab `DeltaLw` holdout
+   packet only if its metric value and all formula-relevant owner fields
+   are explicitly owned by the source packet.
+3. Keep the packet as calibration/holdout evidence, not an exact-source
+   replacement and not a product catalog row.
+4. Re-run the residual policy and keep runtime values frozen unless the
+   measured holdout count and paired negative boundaries satisfy the
+   explicit promotion policy.
+5. Record nearby negative cases for product-only, inferred, wrong-basis,
+   and missing-owner variants next to the accepted packet.
 
-Non-goals for Gate AK:
+Non-goals for Gate AL:
 
 - no broad source crawl;
 - no runtime formula retune;
 - no DeltaLw tightening from inferred or product-only values;
 - no field/building promotion from lab evidence.
+
+## Consumed Gate AK Implementation Order - Source-Owned DeltaLw Holdout Packet Contract
+
+Gate AK closed the next residual-policy gap by making source ownership
+for measured same-stack lab `DeltaLw` executable before any row can
+tighten the steel-floor formula residual.
+
+Gate AK order completed:
+
+1. Created the Gate AK contract at
+   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ak-steel-floor-formula-source-owned-delta-lw-holdout-contract.test.ts`.
+2. Added the source-owned `DeltaLw` holdout evaluator in
+   `packages/engine/src/steel-floor-formula-source-owned-delta-lw-holdout.ts`.
+3. Required source ownership for metric value, topology/support family,
+   carrier spacing, load basis, dynamic stiffness, lower support class,
+   upper-resilient topology, and paired negative boundary owner.
+4. Audited current Pliteq, UBIQ, product-catalog, inferred, and
+   wrong-basis candidates without allowing any of them to tighten lab
+   `DeltaLw` residuals.
+5. Preserved current runtime values, exact-source precedence, and the
+   residual-policy hold.
 
 ## Consumed Gate AJ Implementation Order - Steel Formula Negative Boundaries And DeltaLw Holdout Intake
 

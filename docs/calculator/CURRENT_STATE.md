@@ -32,15 +32,15 @@ path was found too narrow for the user's calculator-first goal.
 
 Current selected status:
 
-`gate_aj_steel_formula_negative_boundary_delta_lw_intake_landed_selected_source_owned_delta_lw_gate_ak`
+`gate_ak_delta_lw_holdout_packet_contract_landed_selected_first_source_owned_holdout_gate_al`
 
 Selected next implementation file:
 
-`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ak-steel-floor-formula-source-owned-delta-lw-holdout-contract.test.ts`
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-al-steel-floor-formula-source-owned-delta-lw-first-holdout-contract.test.ts`
 
 Selected next action:
 
-`gate_ak_steel_floor_formula_source_owned_delta_lw_holdout_acquisition_plan`
+`gate_al_steel_floor_formula_source_owned_delta_lw_first_holdout_plan`
 
 Active planning surface:
 
@@ -48,16 +48,64 @@ Active planning surface:
 
 Latest landed gate:
 
-2026-05-07 model-first physics prediction pivot Gate AJ steel-floor
-formula negative boundaries and DeltaLw holdout intake.
+2026-05-07 model-first physics prediction pivot Gate AK steel-floor
+formula source-owned DeltaLw holdout packet contract.
 
 Latest checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AJ_HANDOFF.md`
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AK_HANDOFF.md`
 
 Latest landed-gate checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AJ_HANDOFF.md`
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AK_HANDOFF.md`
+
+Gate AK result:
+
+- Gate AK landed an executable source-owned same-stack lab `DeltaLw`
+  holdout packet contract without moving runtime values;
+- a row can count toward steel-floor formula residual tightening only
+  when the measured metric value, topology/support family, carrier
+  spacing, load basis, dynamic stiffness, lower support class,
+  upper-resilient topology, and paired negative boundary owner are all
+  source-owned;
+- current Pliteq steel-joist rows remain `Ln,w` holdouts only, UBIQ
+  open-web exact rows remain anchors only, and product-only,
+  Annex-C/companion-inferred, field, ASTM, and building-prediction values
+  are rejected from lab `DeltaLw` residual tightening;
+- accepted measured `DeltaLw` holdout count remains zero, so the
+  residual policy and runtime values remain held;
+- exact measured rows remain precedence, and source rows remain anchors,
+  holdouts, or calibration evidence rather than the product.
+
+Gate AK landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ak-steel-floor-formula-source-owned-delta-lw-holdout-contract.test.ts`
+
+Gate AK landed action:
+
+`gate_ak_steel_floor_formula_source_owned_delta_lw_holdout_acquisition_plan`
+
+Gate AK landed status:
+
+`gate_ak_delta_lw_holdout_packet_contract_landed_selected_first_source_owned_holdout_gate_al`
+
+Gate AK selected next file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-al-steel-floor-formula-source-owned-delta-lw-first-holdout-contract.test.ts`
+
+Gate AK selected next action:
+
+`gate_al_steel_floor_formula_source_owned_delta_lw_first_holdout_plan`
+
+Gate AK validation result:
+
+Validation completed on 2026-05-07: Gate AK focused engine contract
+passed 1 file / 5 tests; engine typecheck passed; full `pnpm
+calculator:gate:current` passed with engine 317 files / 1798 tests, web
+65 files / 284 passed + 18 skipped, repo build 5/5 tasks, and whitespace
+guard clean; `git diff --check` passed. Known non-fatal warnings remain
+the Node/Vitest Zustand persist storage warning and optional `sharp` /
+`@img` Next build warnings via the DOCX export dependency.
 
 Gate AJ result:
 
@@ -107,13 +155,14 @@ guard clean. Known non-fatal warnings remain the Node/Vitest Zustand
 persist storage warning and optional `sharp` / `@img` Next build
 warnings via the DOCX export dependency.
 
-Gate AK first-action plan:
+Gate AL first-action plan:
 
-- acquire or encode source-owned measured same-stack lab `DeltaLw`
-  holdout candidates for the steel formula lane;
+- acquire or encode the first real source-owned measured same-stack lab
+  `DeltaLw` holdout packet for the steel formula lane;
 - require metric value, topology/support family, carrier spacing, load
-  basis, dynamic stiffness, lower support class, and upper-resilient
-  topology ownership before any candidate can count;
+  basis, dynamic stiffness, lower support class, upper-resilient
+  topology, and paired negative boundary ownership before the candidate
+  can count;
 - keep product-only, inferred, field, ASTM, and building-basis values out
   of formula residual tightening;
 - preserve exact-source precedence and runtime value freeze unless the

@@ -109,22 +109,29 @@ before any retune/tightening. Gate AJ has now landed the paired
 negative-boundary and measured `DeltaLw` intake gate: wrong support
 family, exact source precedence, lab-to-field/building leakage, and
 source-absent design references are protected, product/inferred/wrong
-basis `DeltaLw` values cannot tighten the lab corridor, and Gate AK is
-next:
-`gate_ak_steel_floor_formula_source_owned_delta_lw_holdout_acquisition_plan`.
+basis `DeltaLw` values cannot tighten the lab corridor. Gate AK has now
+landed the source-owned same-stack lab `DeltaLw` holdout packet
+contract: metric value, topology/support family, carrier spacing, load
+basis, dynamic stiffness, lower support class, upper-resilient topology,
+and paired negative boundary owner must all be source-owned before a row
+can tighten the steel-floor formula residual. Current Pliteq, UBIQ,
+product-only, inferred, and wrong-basis candidates do not count, runtime
+values remain unchanged, and Gate AL is next:
+`gate_al_steel_floor_formula_source_owned_delta_lw_first_holdout_plan`.
 
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AJ_HANDOFF.md`
-3. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AI_HANDOFF.md`
-4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AH_HANDOFF.md`
-5. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AG_HANDOFF.md`
-6. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AF_HANDOFF.md`
-7. `docs/calculator/CHECKPOINT_2026-05-07_GATE_AE_REVALIDATION_GATE_AF_PLAN_HANDOFF.md`
-8. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AE_HANDOFF.md`
-9. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AD_HANDOFF.md`
-10. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AC_HANDOFF.md`
+2. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AK_HANDOFF.md`
+3. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AJ_HANDOFF.md`
+4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AI_HANDOFF.md`
+5. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AH_HANDOFF.md`
+6. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AG_HANDOFF.md`
+7. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AF_HANDOFF.md`
+8. `docs/calculator/CHECKPOINT_2026-05-07_GATE_AE_REVALIDATION_GATE_AF_PLAN_HANDOFF.md`
+9. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AE_HANDOFF.md`
+10. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AD_HANDOFF.md`
+11. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AC_HANDOFF.md`
 4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AB_HANDOFF.md`
 4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AA_HANDOFF.md`
 4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Z_HANDOFF.md`
@@ -451,11 +458,36 @@ plan.
 - current selected slice:
   `calculator_model_first_physics_prediction_pivot_v1`
 - current next decision inside the slice:
-  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ak-steel-floor-formula-source-owned-delta-lw-holdout-contract.test.ts`
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-al-steel-floor-formula-source-owned-delta-lw-first-holdout-contract.test.ts`
   should run
-  `gate_ak_steel_floor_formula_source_owned_delta_lw_holdout_acquisition_plan`.
+  `gate_al_steel_floor_formula_source_owned_delta_lw_first_holdout_plan`.
 - latest checkpoint:
-  `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AJ_HANDOFF.md`.
+  `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AK_HANDOFF.md`.
+- just landed model-first physics prediction pivot Gate AK:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ak-steel-floor-formula-source-owned-delta-lw-holdout-contract.test.ts`
+  landed
+  `gate_ak_steel_floor_formula_source_owned_delta_lw_holdout_acquisition_plan`.
+  It adds an executable source-owned same-stack lab `DeltaLw` holdout
+  packet contract for the steel-floor formula lane. A candidate can
+  count toward formula residual tightening only when the measured metric
+  value, topology/support family, carrier spacing, load basis, dynamic
+  stiffness, lower support class, upper-resilient topology, and paired
+  negative boundary owner are all source-owned. Current Pliteq steel
+  joist rows remain `Ln,w` holdouts only; UBIQ open-web exact rows
+  remain anchors only; product-only, Annex-C/companion inferred,
+  field/ASTM, and building-basis values are rejected from lab `DeltaLw`
+  residual tightening. Runtime values stay unchanged. Selection status:
+  `gate_ak_delta_lw_holdout_packet_contract_landed_selected_first_source_owned_holdout_gate_al`.
+  Focused validation completed on 2026-05-07: Gate AK engine contract
+  passed 1 file / 5 tests, and engine typecheck passed. Full `pnpm
+  calculator:gate:current` passed with engine 317 files / 1798 tests,
+  web 65 files / 284 passed + 18 skipped, repo build 5/5 tasks, and
+  whitespace guard clean; `git diff --check` passed. Known non-fatal
+  warnings remain the Node/Vitest Zustand persist storage warning and
+  optional `sharp` / `@img` Next build warnings via the DOCX export
+  dependency.
+  Selected next action:
+  `gate_al_steel_floor_formula_source_owned_delta_lw_first_holdout_plan`.
 - just landed model-first physics prediction pivot Gate AJ:
   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-aj-steel-floor-formula-negative-boundary-and-delta-lw-holdout-contract.test.ts`
   landed

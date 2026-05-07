@@ -20,7 +20,8 @@ required topology and material inputs are present.
 Gate A, Gate B, Gate C, Gate D, Gate E, Gate G, Gate H, Gate I,
 Gate J, Gate K, Gate L, Gate M, Gate N, Gate O, Gate P, Gate Q, Gate R,
 Gate S, Gate T, Gate U, Gate V, Gate W, Gate X, Gate Y, Gate Z, Gate AA,
-and Gate AB for this pivot have
+Gate AB, Gate AC, Gate AD, Gate AE, Gate AF, Gate AG, Gate AH, Gate AI,
+Gate AJ, and Gate AK for this pivot have
 landed. Gate A made the corrected rule executable: source absence
 blocks exact/calibration promotion only, not formula-backed prediction.
 Gate B added shared airborne `airborneBasis` / `airborneCandidateSet`
@@ -316,6 +317,33 @@ calculator:gate:current` passed with engine 316 files / 1793 tests, web
 guard clean. Known non-fatal warnings remain the Node/Vitest Zustand
 persist storage warning and optional `sharp` / `@img` Next build
 warnings via the DOCX export dependency.
+
+Gate AK has now landed the source-owned same-stack lab `DeltaLw`
+holdout packet contract. A candidate can tighten the steel-floor formula
+residual only when the measured metric value, topology/support family,
+carrier spacing, load basis, dynamic stiffness, lower support class,
+upper-resilient topology, and paired negative boundary owner are all
+source-owned. Current Pliteq rows remain `Ln,w` holdouts only; UBIQ
+open-web rows remain anchors only; product-only, inferred, field, ASTM,
+and building-prediction values are rejected for lab `DeltaLw` residual
+tightening. Runtime values remain unchanged.
+Gate AK selection status:
+`gate_ak_delta_lw_holdout_packet_contract_landed_selected_first_source_owned_holdout_gate_al`.
+Gate AK landed file:
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ak-steel-floor-formula-source-owned-delta-lw-holdout-contract.test.ts`.
+Gate AK landed action:
+`gate_ak_steel_floor_formula_source_owned_delta_lw_holdout_acquisition_plan`.
+Gate AK selected Gate AL file:
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-al-steel-floor-formula-source-owned-delta-lw-first-holdout-contract.test.ts`.
+Gate AK selected Gate AL action:
+`gate_al_steel_floor_formula_source_owned_delta_lw_first_holdout_plan`.
+Gate AK focused validation completed on 2026-05-07: Gate AK engine
+contract 1 file / 5 tests and engine typecheck passed. Full `pnpm
+calculator:gate:current` passed with engine 317 files / 1798 tests, web
+65 files / 284 passed + 18 skipped, repo build 5/5 tasks, and whitespace
+guard clean; `git diff --check` passed. Known non-fatal warnings remain
+the Node/Vitest Zustand persist storage warning and optional `sharp` /
+`@img` Next build warnings via the DOCX export dependency.
 
 Previous Gate AF selection status:
 `gate_af_steel_floor_formula_input_surface_landed_selected_acceptance_revalidation_gate_ag`.

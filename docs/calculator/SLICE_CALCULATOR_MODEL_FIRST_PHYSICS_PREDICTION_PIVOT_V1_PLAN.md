@@ -2,7 +2,7 @@
 
 Slice id: `calculator_model_first_physics_prediction_pivot_v1`
 
-Status: SELECTED / GATE AJ LANDED / GATE AK DELTALW HOLDOUT NEXT
+Status: SELECTED / GATE AK LANDED / GATE AL FIRST SOURCE-OWNED DELTALW HOLDOUT NEXT
 
 Selected by:
 
@@ -12,7 +12,48 @@ queue.
 
 Selection status:
 
-`gate_aj_steel_formula_negative_boundary_delta_lw_intake_landed_selected_source_owned_delta_lw_gate_ak`
+`gate_ak_delta_lw_holdout_packet_contract_landed_selected_first_source_owned_holdout_gate_al`
+
+Latest Gate AK checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AK_HANDOFF.md`
+
+Gate AK landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ak-steel-floor-formula-source-owned-delta-lw-holdout-contract.test.ts`
+
+Gate AK landed action:
+
+`gate_ak_steel_floor_formula_source_owned_delta_lw_holdout_acquisition_plan`
+
+Gate AK selected Gate AL file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-al-steel-floor-formula-source-owned-delta-lw-first-holdout-contract.test.ts`
+
+Gate AK selected Gate AL action:
+
+`gate_al_steel_floor_formula_source_owned_delta_lw_first_holdout_plan`
+
+Gate AK landed summary:
+
+Gate AK adds a no-runtime source-owned same-stack lab `DeltaLw`
+holdout packet contract for the steel-floor formula lane. A candidate
+can count toward formula residual tightening only when the measured
+metric value, topology/support family, carrier spacing, load basis,
+dynamic stiffness, lower support class, upper-resilient topology, and
+paired negative boundary owner are source-owned. Current Pliteq, UBIQ,
+product-only, inferred, and wrong-basis candidates do not count, so
+runtime values and residual retune permission remain held.
+
+Gate AK validation result:
+
+Validation completed on 2026-05-07. Gate AK focused engine contract
+passed 1 file / 5 tests; engine typecheck passed; full `pnpm
+calculator:gate:current` passed with engine 317 files / 1798 tests, web
+65 files / 284 passed + 18 skipped, repo build 5/5 tasks, and whitespace
+guard clean; `git diff --check` passed. Known non-fatal warnings remain
+the Node/Vitest Zustand persist storage warning and optional `sharp` /
+`@img` Next build warnings via the DOCX export dependency.
 
 Latest Gate AJ checkpoint:
 
@@ -54,7 +95,7 @@ guard clean. Known non-fatal warnings remain the Node/Vitest Zustand
 persist storage warning and optional `sharp` / `@img` Next build
 warnings via the DOCX export dependency.
 
-Gate AK implementation plan:
+Consumed Gate AK implementation plan:
 
 1. Create
    `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ak-steel-floor-formula-source-owned-delta-lw-holdout-contract.test.ts`.
@@ -67,6 +108,17 @@ Gate AK implementation plan:
    out of residual tightening.
 5. Preserve exact-source precedence and runtime value freeze unless a
    later residual policy explicitly promotes correction.
+
+Gate AL implementation plan:
+
+1. Create
+   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-al-steel-floor-formula-source-owned-delta-lw-first-holdout-contract.test.ts`.
+2. Add the first real source-owned measured same-stack lab `DeltaLw`
+   holdout only when every Gate AK owner field is source-owned.
+3. Keep the accepted packet as calibration/holdout evidence, not a
+   product row and not an exact-source replacement.
+4. Preserve runtime values unless the residual policy explicitly
+   promotes a correction after enough measured holdouts exist.
 
 Latest Gate AI checkpoint:
 

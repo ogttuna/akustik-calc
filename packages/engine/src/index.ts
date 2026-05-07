@@ -47,6 +47,7 @@ export * from "./steel-floor-formula-card-report-parity";
 export * from "./steel-floor-formula-accuracy-benchmark";
 export * from "./steel-floor-formula-negative-boundary-delta-lw-intake";
 export * from "./steel-floor-formula-residual-policy";
+export * from "./steel-floor-formula-source-owned-delta-lw-holdout";
 export * from "./steel-floor-formula-input-surface";
 export * from "./steel-floor-impact-formula-corridor";
 export * from "./steel-floor-impact-physics-input-contract";
