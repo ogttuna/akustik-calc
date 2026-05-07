@@ -24,6 +24,7 @@ type ValidationBenchmarkCase = {
     | "official_catalog_exact"
     | "formula_estimate"
     | "formula_plus_lower_bound"
+    | "steel_formula_corridor_estimate"
     | "field_explicit_k_estimate"
     | "field_standardized_volume_estimate"
     | "family_specific_bound_estimate"
@@ -91,6 +92,7 @@ describe("impact validation benchmark corpus", () => {
         "official_catalog_exact",
         "formula_estimate",
         "formula_plus_lower_bound",
+        "steel_formula_corridor_estimate",
         "field_explicit_k_estimate",
         "field_standardized_volume_estimate",
         "family_specific_bound_estimate",
@@ -239,6 +241,42 @@ describe("impact validation benchmark corpus", () => {
 
         if (!result.impactPredictorStatus?.implementedFormulaEstimate && !result.impactPredictorStatus?.matchedFloorSystemId) {
           errors.push(`${entry.id}: expected either the formula estimate path or a better exact floor-system override`);
+        }
+      } else if (entry.mode === "steel_formula_corridor_estimate") {
+        const lnw = numberOrNull(impact?.LnW);
+        const delta = numberOrNull(impact?.DeltaLw);
+        const rw = numberOrNull(floorRatings?.Rw);
+        const expectedLnw = Number(entry.expected.lnwDb);
+        const expectedDelta = Number(entry.expected.deltaLwDb);
+        const expectedRw = Number(entry.expected.rwDb);
+        const lnwTol = Number(entry.tolerances?.lnwDb ?? 0);
+        const deltaTol = Number(entry.tolerances?.deltaLwDb ?? 0);
+        const rwTol = Number(entry.tolerances?.rwDb ?? 0);
+
+        if (lnw === null || Math.abs(lnw - expectedLnw) > lnwTol) {
+          errors.push(`${entry.id}: Ln,w error ${lnw === null ? "null" : Math.abs(lnw - expectedLnw).toFixed(2)} dB exceeds tolerance ${lnwTol}`);
+        }
+
+        if (delta === null || Math.abs(delta - expectedDelta) > deltaTol) {
+          errors.push(
+            `${entry.id}: DeltaLw error ${delta === null ? "null" : Math.abs(delta - expectedDelta).toFixed(2)} dB exceeds tolerance ${deltaTol}`
+          );
+        }
+
+        if (rw === null || Math.abs(rw - expectedRw) > rwTol) {
+          errors.push(`${entry.id}: Rw error ${rw === null ? "null" : Math.abs(rw - expectedRw).toFixed(2)} dB exceeds tolerance ${rwTol}`);
+        }
+
+        if (entry.expectedBasis && (impact?.basis ?? "").trim().toLowerCase() !== entry.expectedBasis.trim().toLowerCase()) {
+          errors.push(`${entry.id}: expected impact basis ${entry.expectedBasis}`);
+        }
+
+        if (!result.impactPredictorStatus?.implementedFormulaEstimate) {
+          errors.push(`${entry.id}: expected steel formula corridor to be active`);
+        }
+
+        if ((result.impactPredictorStatus?.inputMode ?? "").trim().toLowerCase() !== "explicit_predictor_input") {
+          errors.push(`${entry.id}: expected explicit predictor input mode`);
         }
       } else if (entry.mode === "formula_plus_lower_bound") {
         const lnw = numberOrNull(impact?.LnW);

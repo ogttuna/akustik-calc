@@ -266,47 +266,35 @@ function hardFinishCouplingPenaltyDb(input: ImpactPredictorInput): number {
   return dynamicStiffness <= 80 ? 3.7 : 2.4;
 }
 
+const STEEL_FORMULA_MISSING_INPUT_CHECKS = {
+  steelSupportForm: (input: ImpactPredictorInput) => !input.supportForm,
+  steelCarrierDepthMm: (input: ImpactPredictorInput) => !hasPositiveNumber(input.baseSlab?.thicknessMm),
+  steelCarrierSpacingMm: (input: ImpactPredictorInput) => !hasPositiveNumber(input.carrierSpacingMm),
+  resilientLayerDynamicStiffnessMNm3: (input: ImpactPredictorInput) =>
+    !hasPositiveNumber(input.resilientLayer?.dynamicStiffnessMNm3),
+  loadBasisKgM2: (input: ImpactPredictorInput) => !hasPositiveNumber(input.loadBasisKgM2),
+  lowerCeilingIsolationSupportForm: (input: ImpactPredictorInput) => {
+    const lower = input.lowerTreatment;
+
+    return (
+      !lower ||
+      lower.type === "none" ||
+      !lower.supportClass ||
+      !hasPositiveNumber(lower.cavityDepthMm) ||
+      (
+        !hasPositiveNumber(lower.boardThicknessMm) &&
+        !(lower.boardThicknessScheduleMm && lower.boardThicknessScheduleMm.length > 0)
+      )
+    );
+  }
+} as const satisfies Record<(typeof REQUIRED_PHYSICAL_INPUTS)[number], (input: ImpactPredictorInput) => boolean>;
+
 function missingSteelFormulaInputs(input: ImpactPredictorInput | null | undefined): AcousticInputFieldId[] {
   if (!input || input.structuralSupportType !== "steel_joists") {
     return [];
   }
 
-  const missing: AcousticInputFieldId[] = [];
-
-  if (!input.supportForm) {
-    missing.push("steelSupportForm");
-  }
-
-  if (!hasPositiveNumber(input.baseSlab?.thicknessMm)) {
-    missing.push("steelCarrierDepthMm");
-  }
-
-  if (!hasPositiveNumber(input.carrierSpacingMm)) {
-    missing.push("steelCarrierSpacingMm");
-  }
-
-  if (!hasPositiveNumber(input.resilientLayer?.dynamicStiffnessMNm3)) {
-    missing.push("resilientLayerDynamicStiffnessMNm3");
-  }
-
-  if (!hasPositiveNumber(input.loadBasisKgM2)) {
-    missing.push("loadBasisKgM2");
-  }
-
-  if (
-    !input.lowerTreatment ||
-    input.lowerTreatment.type === "none" ||
-    !input.lowerTreatment.supportClass ||
-    !hasPositiveNumber(input.lowerTreatment.cavityDepthMm) ||
-    (
-      !hasPositiveNumber(input.lowerTreatment.boardThicknessMm) &&
-      !(input.lowerTreatment.boardThicknessScheduleMm && input.lowerTreatment.boardThicknessScheduleMm.length > 0)
-    )
-  ) {
-    missing.push("lowerCeilingIsolationSupportForm");
-  }
-
-  return missing;
+  return REQUIRED_PHYSICAL_INPUTS.filter((field) => STEEL_FORMULA_MISSING_INPUT_CHECKS[field](input));
 }
 
 function isSourceAbsentSteelFormulaRoute(input: ImpactPredictorInput | null | undefined): boolean {

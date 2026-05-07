@@ -1611,12 +1611,19 @@ describe("scenario analysis", () => {
     expect(baselineScenario.result?.lowerBoundImpact?.basis).toBe("predictor_lightweight_steel_bound_interpolation_estimate");
     expect(ambiguousScenario.result?.lowerBoundImpact).toBeNull();
     expect(ambiguousScenario.result?.boundFloorSystemEstimate).toBeNull();
-    expect(ambiguousScenario.result?.floorSystemEstimate?.kind).toBe("family_general");
+    expect(ambiguousScenario.result?.floorSystemEstimate).toBeNull();
+    expect(ambiguousScenario.result?.supportedTargetOutputs).toEqual(["Rw"]);
+    expect(ambiguousScenario.result?.unsupportedTargetOutputs).toEqual(["Ln,w", "Ln,w+CI"]);
     expect(
       ambiguousScenario.warnings.some((warning) =>
         /Visible-layer predictor matching is parked because single-entry floor roles are duplicated: floor covering x2 \(Engineered Timber \+ Acoustic Underlay\)/i.test(
           warning
         )
+      )
+    ).toBe(true);
+    expect(
+      ambiguousScenario.warnings.some((warning) =>
+        /Generic lightweight-steel floor impact route needs steel support form/i.test(warning)
       )
     ).toBe(true);
   });

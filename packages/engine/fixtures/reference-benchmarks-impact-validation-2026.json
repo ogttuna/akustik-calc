@@ -565,6 +565,57 @@
       }
     },
     {
+      "id": "gate_ad_open_web_steel_formula_corridor",
+      "mode": "steel_formula_corridor_estimate",
+      "source": "https://www.ubiq.au/wp-content/uploads/2023/02/INEX-FLOOR-FLOOR-FIRE-ACOUSTIC.pdf",
+      "expectedBasis": "predictor_lightweight_steel_mass_spring_holdout_corridor_estimate",
+      "targetOutputs": ["Ln,w", "DeltaLw"],
+      "impactPredictorInput": {
+        "structuralSupportType": "steel_joists",
+        "supportForm": "open_web_or_rolled",
+        "impactSystemType": "combined_upper_lower_system",
+        "carrierSpacingMm": 600,
+        "loadBasisKgM2": 64,
+        "baseSlab": {
+          "materialClass": "lightweight_steel_carrier",
+          "thicknessMm": 200
+        },
+        "floatingScreed": {
+          "densityKgM3": 1250,
+          "materialClass": "cement_board",
+          "thicknessMm": 18
+        },
+        "floorCovering": {
+          "materialClass": "ceramic_tile",
+          "mode": "material_layer",
+          "thicknessMm": 10
+        },
+        "resilientLayer": {
+          "dynamicStiffnessMNm3": 35,
+          "thicknessMm": 4.5
+        },
+        "lowerTreatment": {
+          "boardLayerCount": 1,
+          "boardMaterialClass": "gypsum_board",
+          "boardThicknessMm": 12.5,
+          "cavityDepthMm": 200,
+          "cavityFillThicknessMm": 100,
+          "supportClass": "furred_channels",
+          "type": "suspended_ceiling_elastic_hanger"
+        }
+      },
+      "expected": {
+        "deltaLwDb": 22.4,
+        "lnwDb": 55.6,
+        "rwDb": 71.0
+      },
+      "tolerances": {
+        "deltaLwDb": 2.0,
+        "lnwDb": 4.5,
+        "rwDb": 0.0
+      }
+    },
+    {
       "id": "pliteq_hcp200_bare_manual_exact",
       "mode": "official_floor_system",
       "source": "https://pliteq.com.au/wp-content/uploads/sites/7/AUS-GenieClip-Brochure_Digital.pdf",

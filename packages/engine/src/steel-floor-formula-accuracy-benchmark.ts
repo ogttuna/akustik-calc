@@ -77,8 +77,6 @@ export type GateAHSteelFloorFormulaAccuracyBenchmarkContract = {
   };
 };
 
-const TARGET_OUTPUTS = ["Ln,w", "DeltaLw"] as const;
-
 const PLITEQ_STEEL_JOIST_SOURCE_IDS = [
   "pliteq_steel_joist_250_rst02_vinyl_lab_2026",
   "pliteq_steel_joist_250_rst12_porcelain_lab_2026",

@@ -92,7 +92,26 @@ function toLayerInputs(rows: readonly LayerDraft[]): LayerInput[] {
 }
 
 function withoutIds(rows: readonly LayerDraft[]): Array<Omit<LayerDraft, "id">> {
-  return rows.map(({ id: _id, ...row }) => row);
+  return rows.map((row) => {
+    const draft: Omit<LayerDraft, "id"> = {
+      materialId: row.materialId,
+      thicknessMm: row.thicknessMm
+    };
+
+    if (row.densityKgM3 !== undefined) {
+      draft.densityKgM3 = row.densityKgM3;
+    }
+
+    if (row.dynamicStiffnessMNm3 !== undefined) {
+      draft.dynamicStiffnessMNm3 = row.dynamicStiffnessMNm3;
+    }
+
+    if (row.floorRole !== undefined) {
+      draft.floorRole = row.floorRole;
+    }
+
+    return draft;
+  });
 }
 
 function surfaceFromScenario(snapshot: Pick<

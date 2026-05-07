@@ -281,6 +281,66 @@
         "floorRwDb": 0,
         "lnwUpperBoundDb": 0
       }
+    },
+    {
+      "id": "open_web_steel_formula_corridor_family",
+      "family": "lightweight_steel",
+      "kind": "estimate",
+      "source": "Gate AD steel floor formula corridor, anchored by UBIQ/Pliteq same-family holdouts + docs/calculator/NEXT_IMPLEMENTATION_PLAN.md",
+      "layers": [
+        { "floorRole": "floor_covering", "materialId": "ceramic_tile", "thicknessMm": 10 },
+        { "floorRole": "floating_screed", "materialId": "cement_board", "thicknessMm": 18 },
+        { "floorRole": "resilient_layer", "materialId": "generic_resilient_underlay", "thicknessMm": 4.5 },
+        { "floorRole": "base_structure", "materialId": "lightweight_steel_floor", "thicknessMm": 200 },
+        { "floorRole": "ceiling_cavity", "materialId": "air_gap", "thicknessMm": 200 },
+        { "floorRole": "ceiling_fill", "materialId": "rockwool", "thicknessMm": 100 },
+        { "floorRole": "ceiling_board", "materialId": "gypsum_board", "thicknessMm": 12.5 }
+      ],
+      "targetOutputs": ["Ln,w", "DeltaLw"],
+      "impactPredictorInput": {
+        "structuralSupportType": "steel_joists",
+        "supportForm": "open_web_or_rolled",
+        "impactSystemType": "combined_upper_lower_system",
+        "carrierSpacingMm": 600,
+        "loadBasisKgM2": 64,
+        "baseSlab": {
+          "materialClass": "lightweight_steel_carrier",
+          "thicknessMm": 200
+        },
+        "floatingScreed": {
+          "densityKgM3": 1250,
+          "materialClass": "cement_board",
+          "thicknessMm": 18
+        },
+        "floorCovering": {
+          "materialClass": "ceramic_tile",
+          "mode": "material_layer",
+          "thicknessMm": 10
+        },
+        "resilientLayer": {
+          "dynamicStiffnessMNm3": 35,
+          "thicknessMm": 4.5
+        },
+        "lowerTreatment": {
+          "boardLayerCount": 1,
+          "boardMaterialClass": "gypsum_board",
+          "boardThicknessMm": 12.5,
+          "cavityDepthMm": 200,
+          "cavityFillThicknessMm": 100,
+          "supportClass": "furred_channels",
+          "type": "suspended_ceiling_elastic_hanger"
+        }
+      },
+      "expected": {
+        "floorRwDb": 71,
+        "impactBasis": "predictor_lightweight_steel_mass_spring_holdout_corridor_estimate",
+        "impactMetric": "LnW",
+        "impactValueDb": 55.6
+      },
+      "tolerances": {
+        "floorRwDb": 0,
+        "impactValueDb": 4.5
+      }
     }
   ]
 }

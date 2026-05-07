@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
 
-import type { LayerInput } from "@dynecho/shared";
+import type { ImpactPredictorInput, LayerInput, RequestedOutputId } from "@dynecho/shared";
 
 import { calculateAssembly } from "./calculate-assembly";
 
@@ -18,9 +18,11 @@ type RealWorldFloorCoverageCase = {
   };
   family: string;
   id: string;
+  impactPredictorInput?: ImpactPredictorInput;
   kind: "bound_estimate" | "bound_match" | "estimate" | "exact_match";
   layers: LayerInput[];
   source: string;
+  targetOutputs?: RequestedOutputId[];
   tolerances?: {
     floorRwDb?: number;
     impactValueDb?: number;
@@ -68,7 +70,10 @@ describe("representative real-world floor coverage", () => {
     const failures: string[] = [];
 
     for (const entry of dataset.cases) {
-      const result = calculateAssembly(entry.layers);
+      const result = calculateAssembly(entry.layers, {
+        impactPredictorInput: entry.impactPredictorInput,
+        targetOutputs: entry.targetOutputs
+      });
       const floorRw = numberOrNull(result.floorSystemRatings?.Rw);
       const floorRwTolerance = Number(entry.tolerances?.floorRwDb ?? 0);
 

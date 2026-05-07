@@ -68,7 +68,7 @@ unsafe reorders. Lab, field, and building-prediction bases must stay
 separate; `Rw`/`STC`, `Ln,w`/`IIC`, and lab/field values are not
 interchangeable without a named rating and measurement basis.
 
-## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate AK Landed / Gate AL First Source-Owned DeltaLw Holdout Next
+## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate AK Landed / Broad Revalidation Complete / Gate AL Next
 
 Current implementation position:
 `calculator_model_first_physics_prediction_pivot_v1`.
@@ -153,6 +153,10 @@ Latest Gate AK report export/manual-edit revalidation checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-07_GATE_AK_REPORT_EXPORT_REVALIDATION_AND_PUSH_HANDOFF.md`
 
+Latest broad revalidation / Gate AL handoff checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_BROAD_REVALIDATION_GATE_AK_TO_GATE_AL_HANDOFF.md`
+
 Gate AK selection status:
 
 `gate_ak_delta_lw_holdout_packet_contract_landed_selected_first_source_owned_holdout_gate_al`
@@ -214,13 +218,32 @@ update: engine 317 files / 1798 tests, web 65 files / 284 passed with 18
 skipped, repo build 5/5 successful, whitespace guard clean; diff check
 passed with `git diff --check`.
 
+Broad revalidation result:
+
+Broad validation completed on 2026-05-07 after Gate AK and report
+export/manual-edit validation. `pnpm check` passed after fixing stale
+lint pins, impact validation fixture drift, and web expectation drift
+around ambiguous duplicate/disjoint lightweight-steel floor schedules.
+Engine Vitest passed 442 files / 2600 tests; web Vitest passed 171 files
+/ 959 tests with 18 skipped; repo production build passed 5/5 tasks.
+The Gate AD steel-floor formula corridor is now present in the real-world
+floor and impact validation benchmark corpora as an explicit
+predictor-input estimate lane. Hostile duplicate/disjoint steel floor
+covering schedules now fail closed for impact outputs instead of
+reopening broad `family_general` fallback; `Rw` screening can remain
+available because it does not depend on the steel impact package inputs.
+Runtime calculator values were not retuned.
+
 ## Gate AL Implementation Order - First Source-Owned DeltaLw Holdout
 
 Gate AL is the right next step because Gate AK made the `DeltaLw`
 holdout acceptance rules executable, but no local row currently satisfies
 those rules. The next useful move is to acquire or encode the first real
 source-owned same-stack lab `DeltaLw` holdout packet without weakening
-the gate.
+the gate. This remains the first implementation step after the broad
+revalidation because the revalidation fixes aligned tests and fixtures
+with existing Gate AD/AK behavior; they did not create a measured
+source-owned `DeltaLw` residual set and did not justify formula retuning.
 
 Gate AL order:
 

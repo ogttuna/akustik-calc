@@ -53,6 +53,10 @@ formula source-owned DeltaLw holdout packet contract.
 
 Latest checkpoint:
 
+`docs/calculator/CHECKPOINT_2026-05-07_BROAD_REVALIDATION_GATE_AK_TO_GATE_AL_HANDOFF.md`
+
+Latest landed / report export checkpoint:
+
 `docs/calculator/CHECKPOINT_2026-05-07_GATE_AK_REPORT_EXPORT_REVALIDATION_AND_PUSH_HANDOFF.md`
 
 Latest landed-gate checkpoint:
@@ -62,6 +66,10 @@ Latest landed-gate checkpoint:
 Latest report export/manual-edit checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-07_GATE_AK_REPORT_EXPORT_REVALIDATION_AND_PUSH_HANDOFF.md`
+
+Latest broad revalidation / Gate AL handoff checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_BROAD_REVALIDATION_GATE_AK_TO_GATE_AL_HANDOFF.md`
 
 Report export/manual-edit state:
 
@@ -126,6 +134,22 @@ calculator:gate:current` passed with engine 317 files / 1798 tests, web
 guard clean; `git diff --check` passed. Known non-fatal warnings remain
 the Node/Vitest Zustand persist storage warning and optional `sharp` /
 `@img` Next build warnings via the DOCX export dependency.
+
+Broad revalidation result:
+
+Completed on 2026-05-07 after Gate AK and report export/manual-edit
+validation. `pnpm check` passed after fixing stale lint pins, impact
+validation fixture drift, and web expectation drift around ambiguous
+duplicate/disjoint lightweight-steel floor schedules. Engine Vitest
+passed 442 files / 2600 tests; web Vitest passed 171 files / 959 tests
+with 18 skipped; repo production build passed 5/5 tasks. The Gate AD
+steel-floor formula corridor is now represented in the real-world floor
+and impact validation benchmark corpora as an explicit predictor-input
+estimate lane. Ambiguous duplicate/disjoint steel floor covering
+schedules now keep impact outputs unsupported/`needs_input` instead of
+reopening a broad `family_general` fallback; `Rw` screening can remain
+available. Runtime calculator values were not retuned. Gate AL remains
+the selected next implementation step.
 
 Gate AJ result:
 

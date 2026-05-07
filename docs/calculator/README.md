@@ -353,6 +353,16 @@ edited snapshot. Real manual-edit PDF and DOCX exports were generated
 and checked with PDF text extraction, PDF PNG rendering/visual review,
 DOCX zip integrity, and DOCX XML value extraction.
 
+Broad Gate AK to Gate AL revalidation checkpoint:
+`docs/calculator/CHECKPOINT_2026-05-07_BROAD_REVALIDATION_GATE_AK_TO_GATE_AL_HANDOFF.md`.
+`pnpm check` passed after stale lint pins, impact validation fixture
+drift, and ambiguous duplicate/disjoint lightweight-steel floor schedule
+expectations were corrected. The Gate AD steel-floor formula corridor is
+now present in the real-world floor and impact validation benchmark
+corpora as an explicit predictor-input estimate lane. Runtime calculator
+values were not retuned, and Gate AL remains the next step for a first
+source-owned measured same-stack lab `DeltaLw` holdout packet.
+
 Previous Gate AF selection status:
 `gate_af_steel_floor_formula_input_surface_landed_selected_acceptance_revalidation_gate_ag`.
 Previous Gate AF landed file:
