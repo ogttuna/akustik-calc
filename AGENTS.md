@@ -61,16 +61,18 @@ Gate V has defined the floor-impact dynamic-stiffness input and adapter
 contract after Gate U selected that lane, without turning the calculator
 back into a finite source catalog or aliasing `Ln,w` with `IIC`. Gate W
 promoted only the complete lab `Ln,w` / `DeltaLw` lane. Gate X selected
-the floor-impact field-context boundary next; Gate Y must keep lab,
-field, and ASTM impact bases separate before any field runtime value
-movement.
+the floor-impact field-context boundary, and Gate Y landed that
+no-runtime boundary. Gate Z is next and must own field-only runtime,
+visible support, and report parity while keeping lab, field, and ASTM
+impact bases separate.
 
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_X_HANDOFF.md`
-3. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_W_HANDOFF.md`
-4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_V_HANDOFF.md`
+2. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Y_HANDOFF.md`
+3. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_X_HANDOFF.md`
+4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_W_HANDOFF.md`
+5. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_V_HANDOFF.md`
 4. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_U_REVALIDATION_AND_COMMIT_HANDOFF.md`
 4. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_U_HANDOFF.md`
 4. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_T_HANDOFF.md`
@@ -389,11 +391,33 @@ plan.
 - current selected slice:
   `calculator_model_first_physics_prediction_pivot_v1`
 - current next decision inside the slice:
-  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-y-floor-impact-field-context-contract.test.ts`
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-z-floor-impact-field-runtime-contract.test.ts`
   should run
-  `gate_y_define_floor_impact_field_context_boundary_for_dynamic_calculator`.
+  `gate_z_promote_floor_impact_field_context_runtime_for_dynamic_calculator`.
 - latest checkpoint:
-  `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_X_HANDOFF.md`.
+  `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Y_HANDOFF.md`.
+- just landed model-first physics prediction pivot Gate Y:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-y-floor-impact-field-context-contract.test.ts`
+  landed
+  `gate_y_define_floor_impact_field_context_boundary_for_dynamic_calculator`.
+  It defines the Dynamic Calculator floor-impact field-context adapter
+  boundary without runtime value movement. Required fields are
+  `contextMode`, `partitionAreaM2`, `receivingRoomVolumeM3`,
+  `receivingRoomRt60S`, and `impactFieldContext`; required owners are
+  the Gate W lab impact anchor, field K / mass-ratio /
+  direct-flanking policy, flanking path or junction policy, and a
+  low-frequency owner before `L'nT,50`. Field-only requests stay blocked
+  until Gate Z; lab-anchored mixed requests already reach the existing
+  field supplement and Gate Z must own that as a coherent runtime/card/
+  report path. Selection status:
+  `gate_y_floor_impact_field_context_contract_landed_no_runtime_selected_field_runtime_gate_z`.
+  Validation passed: focused Gate Y 1 file / 5 tests; focused
+  Gate V/W/X/Y 4 files / 22 tests; engine typecheck; current gate;
+  broad `pnpm check`; and `git diff --check`.
+  Selected next file:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-z-floor-impact-field-runtime-contract.test.ts`.
+  Selected next action:
+  `gate_z_promote_floor_impact_field_context_runtime_for_dynamic_calculator`.
 - just landed model-first physics prediction pivot Gate X:
   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-x-next-solver-or-field-context-selection-contract.test.ts`
   landed

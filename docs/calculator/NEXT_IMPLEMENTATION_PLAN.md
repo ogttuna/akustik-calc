@@ -65,7 +65,7 @@ unsafe reorders. Lab, field, and building-prediction bases must stay
 separate; `Rw`/`STC`, `Ln,w`/`IIC`, and lab/field values are not
 interchangeable without a named rating and measurement basis.
 
-## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate X Landed / Gate Y Field Context Next
+## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate Y Landed / Gate Z Field Runtime Next
 
 Current implementation position:
 `calculator_model_first_physics_prediction_pivot_v1`.
@@ -98,7 +98,56 @@ Latest Gate U revalidation / commit-prep checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_U_REVALIDATION_AND_COMMIT_HANDOFF.md`
 
-Latest landed Gate X checkpoint:
+Latest landed Gate Y checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Y_HANDOFF.md`
+
+Gate Y selection status:
+
+`gate_y_floor_impact_field_context_contract_landed_no_runtime_selected_field_runtime_gate_z`
+
+Gate Y landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-y-floor-impact-field-context-contract.test.ts`
+
+Gate Y landed action:
+
+`gate_y_define_floor_impact_field_context_boundary_for_dynamic_calculator`
+
+Gate Y selected Gate Z file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-z-floor-impact-field-runtime-contract.test.ts`
+
+Gate Y selected Gate Z action:
+
+`gate_z_promote_floor_impact_field_context_runtime_for_dynamic_calculator`
+
+Gate Y validation result:
+
+Focused Gate Y passed 1 file / 5 tests, focused Gate V/W/X/Y regression
+passed 4 files / 22 tests, `pnpm --filter @dynecho/engine typecheck`
+passed, `pnpm calculator:gate:current` passed, broad `pnpm check`
+passed, and `git diff --check` passed. The broad check covered full
+engine 430 files / 2540 tests and full web 168 files / 950 tests plus
+18 skipped. Known optional `sharp/@img` Next build warnings remain
+non-fatal.
+
+Gate Y result:
+
+- the field-context input boundary for Dynamic Calculator floor impact is
+  now executable and source-row independent;
+- `L'n,w` / `L'nT,w` require the Gate W lab impact anchor plus
+  `contextMode`, `partitionAreaM2`, `receivingRoomVolumeM3`,
+  `receivingRoomRt60S`, and `impactFieldContext`;
+- field `K` / mass-ratio / direct-flanking policy and flanking path or
+  junction policy are named owners before promotion;
+- `L'nT,50` remains blocked until a low-frequency spectrum or
+  `CI,50-2500` owner exists;
+- field-only runtime stays blocked until Gate Z; lab-anchored mixed
+  field supplement is documented as existing behavior that Gate Z must
+  own across support/card/report parity.
+
+Previous landed Gate X checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_X_HANDOFF.md`
 
@@ -521,18 +570,51 @@ room/context/flanking and ISO 717-2 field-adapter inputs. Gate X did not
 move runtime values and deliberately keeps source rows as later anchors,
 calibration, or exact overrides.
 
+Gate Y then landed the no-runtime field-context contract. The contract
+names the required physical fields, lab anchor, field `K` / mass-ratio /
+direct-flanking policy, flanking owner, and low-frequency owner for
+`L'nT,50`. It also documents that field-only Dynamic Calculator runtime
+is still blocked before Gate Z, while lab-anchored mixed requests already
+reach the existing field supplement and must be normalized under one
+owned runtime/support/report policy.
+
 Clean next-step queue:
 
-1. Gate Y floor-impact field-context contract:
-   define required inputs, basis labels, missing-input posture, positive
-   and nearby-negative cases, card/report parity, and no lab-to-field
-   aliasing for `L'n,w`, `L'nT,w`, and `L'nT,50`.
-2. After Gate Y, choose whether to promote field runtime, surface the
-   new inputs in the workbench, or continue to wall field/building or
-   multi-cavity solver work based on the contract result.
+1. Gate Z floor-impact field runtime:
+   promote field-only `L'n,w` / `L'nT,w` by using the owned Gate W lab
+   anchor internally when all Gate Y inputs are present, keep
+   `L'nT,50` blocked until the low-frequency owner exists, and pin API /
+   workbench / report parity.
+2. After Gate Z, surface any remaining missing input controls in the
+   workbench and proposal editor if the runtime path exposes a UI gap.
 3. Keep source packet acquisition/calibration rows as later anchors or
    exact overrides only
    through the Gate H policy.
+
+Gate Y landed summary:
+
+1. Added
+   `packages/engine/src/dynamic-calculator-floor-impact-field-context-contract.ts`.
+2. Added
+   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-y-floor-impact-field-context-contract.test.ts`.
+3. Defined positive and nearby-negative readiness for `contextMode`,
+   `partitionAreaM2`, `receivingRoomVolumeM3`, `receivingRoomRt60S`,
+   `impactFieldContext`, field/flanking policy, lab dynamic stiffness,
+   and the low-frequency `L'nT,50` owner.
+4. Selected Gate Z for floor-impact field runtime promotion and visible
+   parity after this no-runtime contract.
+
+Gate Y landed status:
+
+`gate_y_floor_impact_field_context_contract_landed_no_runtime_selected_field_runtime_gate_z`
+
+Gate Y selected Gate Z file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-z-floor-impact-field-runtime-contract.test.ts`
+
+Gate Y selected Gate Z action:
+
+`gate_z_promote_floor_impact_field_context_runtime_for_dynamic_calculator`
 
 Gate X landed summary:
 

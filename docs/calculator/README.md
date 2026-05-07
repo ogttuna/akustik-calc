@@ -19,7 +19,7 @@ required topology and material inputs are present.
 
 Gate A, Gate B, Gate C, Gate D, Gate E, Gate G, Gate H, Gate I,
 Gate J, Gate K, Gate L, Gate M, Gate N, Gate O, Gate P, Gate Q, Gate R,
-Gate S, Gate T, Gate U, Gate V, and Gate W for this pivot have
+Gate S, Gate T, Gate U, Gate V, Gate W, Gate X, and Gate Y for this pivot have
 landed. Gate A made the corrected rule executable: source absence
 blocks exact/calibration promotion only, not formula-backed prediction.
 Gate B added shared airborne `airborneBasis` / `airborneCandidateSet`
@@ -151,20 +151,44 @@ floor-impact field-context ownership for Gate Y because `L'n,w` /
 impact lane, but must not be created by relabelling lab `Ln,w`. Gate Y
 must define the room/context/flanking/input boundary before any field
 impact value promotion.
+Gate Y landed that no-runtime floor-impact field-context contract. It
+requires `contextMode`, `partitionAreaM2`, `receivingRoomVolumeM3`,
+`receivingRoomRt60S`, and `impactFieldContext`, plus lab-impact anchor,
+field `K` / mass-ratio / direct-flanking policy, flanking path or
+junction policy, and low-frequency owner before `L'nT,50`. Field-only
+Dynamic Calculator requests remain blocked until Gate Z; the existing
+lab-anchored mixed supplement is documented and must be normalized by
+Gate Z across runtime support, cards, and reports.
 
 Current selection status:
 
+`gate_y_floor_impact_field_context_contract_landed_no_runtime_selected_field_runtime_gate_z`
+
+Selected next Gate Z file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-z-floor-impact-field-runtime-contract.test.ts`
+
+Selected next Gate Z action:
+
+`gate_z_promote_floor_impact_field_context_runtime_for_dynamic_calculator`
+
+Latest Gate Y checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Y_HANDOFF.md`
+
+Previous Gate X selection status:
+
 `gate_x_next_solver_or_field_context_selection_landed_no_runtime_selected_floor_impact_field_context_gate_y`
 
-Selected next Gate Y file:
+Previous Gate X selected Gate Y file:
 
 `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-y-floor-impact-field-context-contract.test.ts`
 
-Selected next Gate Y action:
+Previous Gate X selected Gate Y action:
 
 `gate_y_define_floor_impact_field_context_boundary_for_dynamic_calculator`
 
-Latest Gate X checkpoint:
+Previous Gate X checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_X_HANDOFF.md`
 

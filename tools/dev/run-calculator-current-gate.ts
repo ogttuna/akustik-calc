@@ -317,6 +317,7 @@ async function main() {
         "src/calculator-model-first-physics-prediction-pivot-gate-v-floor-impact-dynamic-stiffness-contract.test.ts",
         "src/calculator-model-first-physics-prediction-pivot-gate-w-floor-impact-runtime-contract.test.ts",
         "src/calculator-model-first-physics-prediction-pivot-gate-x-next-solver-or-field-context-selection-contract.test.ts",
+        "src/calculator-model-first-physics-prediction-pivot-gate-y-floor-impact-field-context-contract.test.ts",
         "src/ubiq-open-web-packaged-finish-family-design.test.ts",
         "src/ubiq-open-web-packaged-finish-near-miss-matrix.test.ts",
         "src/ubiq-open-web-packaged-lane-trace-matrix.test.ts",

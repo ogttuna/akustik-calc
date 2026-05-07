@@ -2,7 +2,7 @@
 
 Slice id: `calculator_model_first_physics_prediction_pivot_v1`
 
-Status: SELECTED / GATE X LANDED / GATE Y FIELD-CONTEXT CONTRACT NEXT
+Status: SELECTED / GATE Y LANDED / GATE Z FIELD-RUNTIME NEXT
 
 Selected by:
 
@@ -12,9 +12,42 @@ queue.
 
 Selection status:
 
+`gate_y_floor_impact_field_context_contract_landed_no_runtime_selected_field_runtime_gate_z`
+
+Latest Gate Y checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Y_HANDOFF.md`
+
+Gate Y landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-y-floor-impact-field-context-contract.test.ts`
+
+Gate Y landed action:
+
+`gate_y_define_floor_impact_field_context_boundary_for_dynamic_calculator`
+
+Gate Y selected Gate Z file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-z-floor-impact-field-runtime-contract.test.ts`
+
+Gate Y selected Gate Z action:
+
+`gate_z_promote_floor_impact_field_context_runtime_for_dynamic_calculator`
+
+Gate Y validation result:
+
+Focused Gate Y passed 1 file / 5 tests. Focused Gate V/W/X/Y
+regression passed 4 files / 22 tests. `pnpm --filter @dynecho/engine
+typecheck`, `pnpm calculator:gate:current`, broad `pnpm check`, and
+`git diff --check` are green. Broad `pnpm check` covered full engine 430
+files / 2540 tests and full web 168 files / 950 tests plus 18 skipped.
+Known optional `sharp/@img` Next build warnings remain non-fatal.
+
+Previous Gate X selection status:
+
 `gate_x_next_solver_or_field_context_selection_landed_no_runtime_selected_floor_impact_field_context_gate_y`
 
-Latest Gate X checkpoint:
+Previous Gate X checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_X_HANDOFF.md`
 

@@ -29,15 +29,15 @@ path was found too narrow for the user's calculator-first goal.
 
 Current selected status:
 
-`gate_x_next_solver_or_field_context_selection_landed_no_runtime_selected_floor_impact_field_context_gate_y`
+`gate_y_floor_impact_field_context_contract_landed_no_runtime_selected_field_runtime_gate_z`
 
 Selected next implementation file:
 
-`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-y-floor-impact-field-context-contract.test.ts`
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-z-floor-impact-field-runtime-contract.test.ts`
 
 Selected next action:
 
-`gate_y_define_floor_impact_field_context_boundary_for_dynamic_calculator`
+`gate_z_promote_floor_impact_field_context_runtime_for_dynamic_calculator`
 
 Active planning surface:
 
@@ -45,10 +45,75 @@ Active planning surface:
 
 Latest landed gate:
 
-2026-05-07 model-first physics prediction pivot Gate X next
-solver/field-context selection.
+2026-05-07 model-first physics prediction pivot Gate Y floor-impact
+field-context contract.
 
 Latest checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Y_HANDOFF.md`
+
+Gate Y result:
+
+- Dynamic Calculator floor-impact field-context ownership is now an
+  executable no-runtime contract for `L'n,w`, `L'nT,w`, and `L'nT,50`;
+- required physical fields are `contextMode`, `partitionAreaM2`,
+  `receivingRoomVolumeM3`, `receivingRoomRt60S`, and
+  `impactFieldContext`;
+- required owners before runtime promotion are the lab impact anchor,
+  field `K` / mass-ratio / direct-flanking policy, flanking path or
+  junction policy, and low-frequency `CI,50-2500` or impact spectrum for
+  `L'nT,50`;
+- field-only runtime requests remain blocked until Gate Z, while the
+  existing lab-anchored mixed path is documented and must be owned by
+  Gate Z for field-only runtime, output support, card, and report parity;
+- no new numeric runtime values moved in Gate Y.
+
+Gate Y landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-y-floor-impact-field-context-contract.test.ts`
+
+Gate Y landed action:
+
+`gate_y_define_floor_impact_field_context_boundary_for_dynamic_calculator`
+
+Gate Y landed status:
+
+`gate_y_floor_impact_field_context_contract_landed_no_runtime_selected_field_runtime_gate_z`
+
+Gate Y selected next file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-z-floor-impact-field-runtime-contract.test.ts`
+
+Gate Y selected next action:
+
+`gate_z_promote_floor_impact_field_context_runtime_for_dynamic_calculator`
+
+Gate Y validation result:
+
+- focused Gate Y passed: 1 file / 5 tests;
+- focused Gate V/W/X/Y regression passed: 4 files / 22 tests;
+- `pnpm --filter @dynecho/engine typecheck` passed;
+- `pnpm calculator:gate:current` passed with engine 305 files / 1738
+  tests, web 62 files / 275 tests plus 18 skipped, repo build, and
+  whitespace guard;
+- broad `pnpm check` passed with full engine 430 files / 2540 tests and
+  full web 168 files / 950 tests plus 18 skipped; known optional
+  `sharp/@img` Next build warnings remain non-fatal;
+- `git diff --check` passed.
+
+Previous Gate X selection status:
+
+`gate_x_next_solver_or_field_context_selection_landed_no_runtime_selected_floor_impact_field_context_gate_y`
+
+Previous Gate X selected Gate Y file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-y-floor-impact-field-context-contract.test.ts`
+
+Previous Gate X selected Gate Y action:
+
+`gate_y_define_floor_impact_field_context_boundary_for_dynamic_calculator`
+
+Previous Gate X checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_X_HANDOFF.md`
 
