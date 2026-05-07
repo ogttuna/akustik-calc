@@ -237,9 +237,32 @@ repo build, and whitespace guard. The Gate AG web acceptance test emits
 known non-fatal Zustand persist storage warnings under Node/Vitest; the
 web build still emits the known non-fatal optional `sharp/@img` package
 warnings.
-Gate AH should now expand the steel formula accuracy benchmark matrix
-from rights-safe measured/holdout evidence without turning the calculator
-back into a source-row catalog.
+Gate AH has now landed steel-floor formula accuracy benchmark expansion:
+three same-family Pliteq steel-joist lab `Ln,w` holdouts compare against
+explicit formula inputs and stay within the current `+/-4.5 dB Ln,w`
+corridor, with max residual `0.6 dB` and mean residual `0.4 dB`.
+`DeltaLw` measured residual count is still zero, so the `+/-2.0 dB
+DeltaLw` corridor is kept but not tightened. 36 UBIQ open-web exact rows
+are counted as source anchors but do not become residual rows when
+carrier spacing, load basis, resilient dynamic stiffness, lower support
+class, or upper-resilient topology is missing.
+Gate AH selection status:
+`gate_ah_steel_floor_formula_accuracy_benchmark_landed_selected_residual_policy_gate_ai`.
+Gate AH landed file:
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ah-steel-floor-formula-accuracy-benchmark-contract.test.ts`.
+Gate AH landed action:
+`gate_ah_steel_floor_formula_accuracy_benchmark_expansion_plan`.
+Gate AH selected Gate AI file:
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ai-steel-floor-formula-residual-policy-contract.test.ts`.
+Gate AH selected Gate AI action:
+`gate_ai_steel_floor_formula_residual_policy_and_calibration_readiness_plan`.
+Gate AH focused validation completed on 2026-05-07: Gate AH engine
+contract 1 file / 5 tests and engine typecheck passed. Full `pnpm
+calculator:gate:current` passed with engine 314 files / 1783 tests, web
+65 files / 284 passed + 18 skipped, and repo build 5/5 tasks. Known
+non-fatal warnings remain the Node/Vitest Zustand persist storage warning
+and optional `sharp` / `@img` Next build warnings via the DOCX export
+dependency.
 
 Previous Gate AF selection status:
 `gate_af_steel_floor_formula_input_surface_landed_selected_acceptance_revalidation_gate_ag`.

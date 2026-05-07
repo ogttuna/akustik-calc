@@ -44,6 +44,7 @@ export * from "./impact-validation-regime";
 export * from "./material-catalog";
 export * from "./parse-layer-spec";
 export * from "./steel-floor-formula-card-report-parity";
+export * from "./steel-floor-formula-accuracy-benchmark";
 export * from "./steel-floor-formula-input-surface";
 export * from "./steel-floor-impact-formula-corridor";
 export * from "./steel-floor-impact-physics-input-contract";

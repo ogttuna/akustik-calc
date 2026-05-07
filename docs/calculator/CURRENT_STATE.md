@@ -32,15 +32,15 @@ path was found too narrow for the user's calculator-first goal.
 
 Current selected status:
 
-`gate_ag_steel_floor_formula_input_surface_acceptance_landed_selected_accuracy_benchmark_gate_ah`
+`gate_ah_steel_floor_formula_accuracy_benchmark_landed_selected_residual_policy_gate_ai`
 
 Selected next implementation file:
 
-`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ah-steel-floor-formula-accuracy-benchmark-contract.test.ts`
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ai-steel-floor-formula-residual-policy-contract.test.ts`
 
 Selected next action:
 
-`gate_ah_steel_floor_formula_accuracy_benchmark_expansion_plan`
+`gate_ai_steel_floor_formula_residual_policy_and_calibration_readiness_plan`
 
 Active planning surface:
 
@@ -48,16 +48,75 @@ Active planning surface:
 
 Latest landed gate:
 
-2026-05-07 model-first physics prediction pivot Gate AG steel-floor
-formula input-surface acceptance revalidation.
+2026-05-07 model-first physics prediction pivot Gate AH steel-floor
+formula accuracy benchmark expansion.
 
 Latest checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AG_HANDOFF.md`
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AH_HANDOFF.md`
 
 Latest landed-gate checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AG_HANDOFF.md`
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AH_HANDOFF.md`
+
+Gate AH result:
+
+- Gate AH landed a steel-floor formula accuracy benchmark matrix without
+  moving runtime values;
+- three same-family Pliteq steel-joist lab `Ln,w` holdouts are residual
+  checks with explicit support form, carrier geometry, load basis,
+  resilient dynamic stiffness, and lower isolation inputs;
+- residuals are `0.3 dB`, `0.3 dB`, and `0.6 dB`, so max residual is
+  `0.6 dB`, mean residual is `0.4 dB`, and all are within the current
+  `+/-4.5 dB Ln,w` corridor;
+- `DeltaLw` residual count is still zero because the local measured rows
+  do not own measured `DeltaLw`, so `+/-2.0 dB DeltaLw` is kept but not
+  tightened;
+- 36 UBIQ open-web exact rows are counted as exact source anchors, but
+  anchor rows stay non-residual when formula inputs or upper-resilient
+  topology are missing;
+- source rows are calibration evidence and exact overrides, not the
+  product.
+
+Gate AH landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ah-steel-floor-formula-accuracy-benchmark-contract.test.ts`
+
+Gate AH landed action:
+
+`gate_ah_steel_floor_formula_accuracy_benchmark_expansion_plan`
+
+Gate AH landed status:
+
+`gate_ah_steel_floor_formula_accuracy_benchmark_landed_selected_residual_policy_gate_ai`
+
+Gate AH selected next file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ai-steel-floor-formula-residual-policy-contract.test.ts`
+
+Gate AH selected next action:
+
+`gate_ai_steel_floor_formula_residual_policy_and_calibration_readiness_plan`
+
+Gate AH validation result:
+
+Focused validation completed on 2026-05-07: Gate AH engine contract
+passed 1 file / 5 tests; engine typecheck passed. Full `pnpm
+calculator:gate:current` passed with engine 314 files / 1783 tests, web
+65 files / 284 passed + 18 skipped, and repo build 5/5 tasks. Known
+non-fatal warnings remain the Node/Vitest Zustand persist storage warning
+and optional `sharp` / `@img` Next build warnings via the DOCX export
+dependency.
+
+Gate AI first-action plan:
+
+- convert the Gate AH benchmark matrix into an explicit residual policy;
+- keep current runtime values unless residual policy names a source-owned
+  correction and paired negative tests;
+- require measured `DeltaLw` holdouts before tightening `DeltaLw`;
+- require source-owned open-web formula inputs before calibrating exact
+  UBIQ anchors into residual rows;
+- preserve lab, field, and building-prediction separation.
 
 Gate AG result:
 

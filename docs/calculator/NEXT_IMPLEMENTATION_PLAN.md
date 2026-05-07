@@ -68,7 +68,7 @@ unsafe reorders. Lab, field, and building-prediction bases must stay
 separate; `Rw`/`STC`, `Ln,w`/`IIC`, and lab/field values are not
 interchangeable without a named rating and measurement basis.
 
-## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate AG Landed / Gate AH Accuracy Benchmark Expansion Next
+## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate AH Landed / Gate AI Residual Policy Next
 
 Current implementation position:
 `calculator_model_first_physics_prediction_pivot_v1`.
@@ -133,6 +133,83 @@ Latest landed Gate AG checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AG_HANDOFF.md`
 
+Latest landed Gate AH checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AH_HANDOFF.md`
+
+Gate AH selection status:
+
+`gate_ah_steel_floor_formula_accuracy_benchmark_landed_selected_residual_policy_gate_ai`
+
+Gate AH landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ah-steel-floor-formula-accuracy-benchmark-contract.test.ts`
+
+Gate AH landed action:
+
+`gate_ah_steel_floor_formula_accuracy_benchmark_expansion_plan`
+
+Gate AH selected next file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ai-steel-floor-formula-residual-policy-contract.test.ts`
+
+Gate AH selected next action:
+
+`gate_ai_steel_floor_formula_residual_policy_and_calibration_readiness_plan`
+
+Gate AH result:
+
+- Gate AH landed a no-runtime steel-floor formula accuracy benchmark
+  matrix;
+- three same-family Pliteq steel-joist `Ln,w` holdouts compare against
+  explicit Gate AD formula inputs and all stay inside the current
+  corridor;
+- max `Ln,w` residual is `0.6 dB`; mean `Ln,w` residual is `0.4 dB`;
+- `DeltaLw` measured residual count remains zero, so the current
+  `+/-2.0 dB DeltaLw` tolerance is kept but not tightened;
+- 36 UBIQ open-web exact rows are counted as exact source anchors but
+  stay non-residual until formula inputs and topology are source-owned;
+- measured/source rows remain calibration evidence and exact overrides,
+  not a finite replacement for the calculator.
+
+Gate AH validation result:
+
+Focused validation completed on 2026-05-07: Gate AH engine contract
+passed 1 file / 5 tests; engine typecheck passed. Full `pnpm
+calculator:gate:current` passed with engine 314 files / 1783 tests, web
+65 files / 284 passed + 18 skipped, and repo build 5/5 tasks. Known
+non-fatal warnings remain the Node/Vitest Zustand persist storage warning
+and optional `sharp` / `@img` Next build warnings via the DOCX export
+dependency.
+
+## Gate AI Implementation Order - Steel Formula Residual Policy And Calibration Readiness
+
+Gate AI is the right next step because Gate AH now owns the benchmark
+matrix but has not yet turned the benchmark outcome into an explicit
+policy for when the formula may be retuned, tightened, widened, or held.
+
+Gate AI order:
+
+1. Create the Gate AI contract at
+   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ai-steel-floor-formula-residual-policy-contract.test.ts`.
+2. Convert Gate AH residual evidence into an executable policy:
+   `hold`, `tighten`, `widen`, or `retune_candidate`.
+3. Keep current runtime values unless a source-owned correction has
+   paired positive and negative tests.
+4. Require measured `DeltaLw` holdouts before tightening `DeltaLw`.
+5. Keep UBIQ open-web exact rows as anchors until carrier spacing, load
+   basis, dynamic stiffness, lower support class, and upper-resilient
+   topology are owned as formula inputs.
+6. Preserve exact-source precedence and lab/field/building basis
+   separation.
+
+Non-goals for Gate AI:
+
+- no broad source crawl;
+- no measured-row catalog replacement;
+- no field/building output promotion from lab formula values;
+- no formula retune from the Pliteq-only limited holdout set.
+
 Gate AG selection status:
 
 `gate_ag_steel_floor_formula_input_surface_acceptance_landed_selected_accuracy_benchmark_gate_ah`
@@ -184,12 +261,13 @@ test emits known non-fatal Zustand persist storage warnings under
 Node/Vitest; the web build still emits the known non-fatal optional
 `sharp/@img` package warnings.
 
-## Gate AH Implementation Order - Steel Formula Accuracy Benchmark Expansion
+## Consumed Gate AH Implementation Order - Steel Formula Accuracy Benchmark Expansion
 
 Gate AH is the right next step because Gate AG proved the new input
 surface is stable across user-facing and API surfaces. The remaining
 calculator-first risk is numeric accuracy across nearby steel-floor
 families, not another UI plumbing pass and not a source-library crawl.
+Gate AH has now consumed that benchmark gap.
 
 Gate AH order:
 

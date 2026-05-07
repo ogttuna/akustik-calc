@@ -2,7 +2,7 @@
 
 Slice id: `calculator_model_first_physics_prediction_pivot_v1`
 
-Status: SELECTED / GATE AG LANDED / GATE AH ACCURACY BENCHMARK EXPANSION NEXT
+Status: SELECTED / GATE AH LANDED / GATE AI RESIDUAL POLICY NEXT
 
 Selected by:
 
@@ -12,7 +12,59 @@ queue.
 
 Selection status:
 
-`gate_ag_steel_floor_formula_input_surface_acceptance_landed_selected_accuracy_benchmark_gate_ah`
+`gate_ah_steel_floor_formula_accuracy_benchmark_landed_selected_residual_policy_gate_ai`
+
+Latest Gate AH checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AH_HANDOFF.md`
+
+Gate AH landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ah-steel-floor-formula-accuracy-benchmark-contract.test.ts`
+
+Gate AH landed action:
+
+`gate_ah_steel_floor_formula_accuracy_benchmark_expansion_plan`
+
+Gate AH selected Gate AI file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ai-steel-floor-formula-residual-policy-contract.test.ts`
+
+Gate AH selected Gate AI action:
+
+`gate_ai_steel_floor_formula_residual_policy_and_calibration_readiness_plan`
+
+Gate AH landed summary:
+
+Gate AH adds a no-runtime steel-floor formula accuracy benchmark matrix.
+Three same-family Pliteq steel-joist lab `Ln,w` holdouts are residual
+checks and all stay inside the current `+/-4.5 dB Ln,w` corridor; max
+residual is `0.6 dB` and mean residual is `0.4 dB`. `DeltaLw` residual
+count remains zero because the local measured rows do not own measured
+`DeltaLw`. UBIQ open-web exact rows remain source anchors only when
+formula inputs or upper-resilient topology are missing.
+
+Gate AH validation result:
+
+Focused validation completed on 2026-05-07. Gate AH engine contract
+passed 1 file / 5 tests; engine typecheck passed. Full `pnpm
+calculator:gate:current` passed with engine 314 files / 1783 tests, web
+65 files / 284 passed + 18 skipped, and repo build 5/5 tasks. Known
+non-fatal warnings remain the Node/Vitest Zustand persist storage warning
+and optional `sharp` / `@img` Next build warnings via the DOCX export
+dependency.
+
+Gate AI implementation plan:
+
+1. Create
+   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ai-steel-floor-formula-residual-policy-contract.test.ts`.
+2. Turn Gate AH residual evidence into explicit hold/tighten/widen/retune
+   policy.
+3. Keep current runtime values unless a source-owned correction has paired
+   positive and negative tests.
+4. Require measured `DeltaLw` holdouts before tightening `DeltaLw`.
+5. Keep UBIQ exact rows as anchors until formula inputs and topology are
+   source-owned.
 
 Latest Gate AG checkpoint:
 

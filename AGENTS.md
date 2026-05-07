@@ -94,18 +94,25 @@ win. Gate AG has now landed input-surface acceptance: live workbench
 evaluation, local saved replay, server snapshot replay, output cards,
 Markdown report payload, estimate API payload, impact-only API payload,
 and hostile UI edits all preserve the steel formula basis while precise
-missing-input warnings name the blocked physical fields. Gate AH is next:
-`gate_ah_steel_floor_formula_accuracy_benchmark_expansion_plan`.
+missing-input warnings name the blocked physical fields. Gate AH has now
+landed the steel-floor formula accuracy benchmark matrix:
+three same-family Pliteq lab `Ln,w` holdouts run residual checks, UBIQ
+open-web exact rows stay calibration anchors only when `s'`, load, or
+topology inputs are missing, and the current `+/-4.5 dB Ln,w` /
+`+/-2.0 dB DeltaLw` corridor is kept until a larger holdout set supports
+retune. Gate AI is next:
+`gate_ai_steel_floor_formula_residual_policy_and_calibration_readiness_plan`.
 
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AG_HANDOFF.md`
-3. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AF_HANDOFF.md`
-4. `docs/calculator/CHECKPOINT_2026-05-07_GATE_AE_REVALIDATION_GATE_AF_PLAN_HANDOFF.md`
-5. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AE_HANDOFF.md`
-6. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AD_HANDOFF.md`
-7. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AC_HANDOFF.md`
+2. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AH_HANDOFF.md`
+3. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AG_HANDOFF.md`
+4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AF_HANDOFF.md`
+5. `docs/calculator/CHECKPOINT_2026-05-07_GATE_AE_REVALIDATION_GATE_AF_PLAN_HANDOFF.md`
+6. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AE_HANDOFF.md`
+7. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AD_HANDOFF.md`
+8. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AC_HANDOFF.md`
 4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AB_HANDOFF.md`
 4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AA_HANDOFF.md`
 4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Z_HANDOFF.md`
@@ -432,12 +439,36 @@ plan.
 - current selected slice:
   `calculator_model_first_physics_prediction_pivot_v1`
 - current next decision inside the slice:
-  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ah-steel-floor-formula-accuracy-benchmark-contract.test.ts`
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ai-steel-floor-formula-residual-policy-contract.test.ts`
   should run
-  `gate_ah_steel_floor_formula_accuracy_benchmark_expansion_plan`.
+  `gate_ai_steel_floor_formula_residual_policy_and_calibration_readiness_plan`.
 - latest checkpoint:
-  `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AG_HANDOFF.md`.
-- just landed model-first physics prediction pivot Gate AG:
+  `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AH_HANDOFF.md`.
+- just landed model-first physics prediction pivot Gate AH:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ah-steel-floor-formula-accuracy-benchmark-contract.test.ts`
+  landed
+  `gate_ah_steel_floor_formula_accuracy_benchmark_expansion_plan`.
+  It adds a source-bounded steel-floor formula accuracy benchmark matrix
+  without moving runtime values. Three same-family Pliteq steel-joist
+  lab `Ln,w` holdouts compare against the Gate AD formula with max
+  residual `0.6 dB` and mean residual `0.4 dB`, all inside the current
+  `+/-4.5 dB Ln,w` corridor. UBIQ open-web exact rows are counted as 36
+  exact anchors but do not become residual rows when formula inputs such
+  as carrier spacing, load basis, resilient dynamic stiffness, lower
+  isolation support, or upper-resilient topology are missing. `DeltaLw`
+  measured residual count remains zero, so the `+/-2.0 dB DeltaLw`
+  tolerance is kept but not tightened. Selection status:
+  `gate_ah_steel_floor_formula_accuracy_benchmark_landed_selected_residual_policy_gate_ai`.
+  Focused validation completed on 2026-05-07: Gate AH engine contract
+  passed 1 file / 5 tests, and engine typecheck passed. Full `pnpm
+  calculator:gate:current` passed with engine 314 files / 1783 tests,
+  web 65 files / 284 passed + 18 skipped, and repo build 5/5 tasks.
+  Known non-fatal warnings remain the Node/Vitest Zustand persist
+  storage warning and optional `sharp` / `@img` Next build warnings via
+  the DOCX export dependency.
+  Selected next action:
+  `gate_ai_steel_floor_formula_residual_policy_and_calibration_readiness_plan`.
+- previously landed model-first physics prediction pivot Gate AG:
   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ag-steel-floor-formula-input-surface-acceptance-contract.test.ts`
   landed
   `gate_ag_steel_floor_formula_input_surface_acceptance_revalidation_plan`.
