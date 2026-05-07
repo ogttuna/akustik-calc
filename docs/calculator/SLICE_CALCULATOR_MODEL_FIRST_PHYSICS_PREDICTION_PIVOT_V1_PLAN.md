@@ -18,6 +18,10 @@ Latest Gate AP checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AP_HANDOFF.md`
 
+Latest Gate AP report export/manual-edit checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_GATE_AP_REPORT_EXPORT_REVALIDATION_AND_PUSH_HANDOFF.md`
+
 Gate AP landed file:
 
 `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ap-steel-floor-formula-error-budget-hostile-input-contract.test.ts`
@@ -54,6 +58,17 @@ passed with engine 322 files / 1825 tests, web 66 files / 286 passed +
 non-fatal warnings remain the Node/Vitest Zustand persist storage
 warning and optional `sharp` / `@img` Next build warnings via the DOCX
 export dependency.
+
+Gate AP report export/manual-edit validation result:
+
+Focused report editor/export tests passed 6 files / 29 tests. Real
+manual-edit PDF and DOCX exports were generated from the same edited
+proposal snapshot under `output/report-checkpoint-2026-05-07-gate-ap/`;
+PDF text extraction, PDF PNG rendering/visual review, DOCX zip
+integrity, and DOCX XML value checks passed for `Rw 64 dB`, `DnT,w 57
+dB`, `Ln,w 49 dB`, the manual response curve, and the edited layer
+label. `soffice`/LibreOffice is not installed here, so DOCX visual
+rendering was not available.
 
 Latest Gate AO checkpoint:
 

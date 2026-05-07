@@ -177,6 +177,10 @@ Latest landed Gate AP checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AP_HANDOFF.md`
 
+Latest Gate AP report export/manual-edit revalidation checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_GATE_AP_REPORT_EXPORT_REVALIDATION_AND_PUSH_HANDOFF.md`
+
 Gate AP selection status:
 
 `gate_ap_error_budget_hostile_input_landed_no_runtime_selected_calibration_readiness_gate_aq`
@@ -573,17 +577,20 @@ the Node/Vitest Zustand persist storage warning and optional `sharp` /
 
 Report export/manual-edit validation result:
 
-Revalidated on 2026-05-07 after Gate AK. The report editor remains a
+Revalidated on 2026-05-07 after Gate AP. The report editor remains a
 packaged proposal snapshot editor rather than a solver mutation surface.
 Focused report editor/export web tests passed 6 files / 29 tests. Real
-manual-edit PDF and DOCX exports were generated; PDF text extraction,
-PDF PNG rendering and visual review, DOCX zip integrity, and DOCX XML
-content checks passed. `soffice`/LibreOffice is not installed in this
-environment, so DOCX visual rendering was not available here. Final
-`pnpm calculator:gate:current` passed after the checkpoint documentation
-update: engine 317 files / 1798 tests, web 65 files / 284 passed with 18
-skipped, repo build 5/5 successful, whitespace guard clean; diff check
-passed with `git diff --check`.
+manual-edit PDF and DOCX exports were generated under
+`output/report-checkpoint-2026-05-07-gate-ap/`; PDF text extraction, PDF
+PNG rendering and visual review, DOCX zip integrity, and DOCX XML
+content checks passed for `Rw 64 dB (manual checkpoint)`, `DnT,w 57 dB
+(manual checkpoint)`, `Ln,w 49 dB (manual checkpoint)`, the manual
+response curve, and the edited layer label. `soffice`/LibreOffice is not
+installed in this environment, so DOCX visual rendering was not
+available here. Full `pnpm calculator:gate:current` passed: engine 322
+files / 1825 tests, web 66 files / 286 passed with 18 skipped, repo
+build 5/5 successful, and whitespace guard clean. `git diff --check`
+passed after the checkpoint documentation update.
 
 Gate AK broad revalidation result:
 

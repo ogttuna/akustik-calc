@@ -150,10 +150,11 @@ expectations. Runtime values remain unchanged.
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AP_HANDOFF.md`
-3. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AO_HANDOFF.md`
-4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AN_HANDOFF.md`
-5. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AM_HANDOFF.md`
+2. `docs/calculator/CHECKPOINT_2026-05-07_GATE_AP_REPORT_EXPORT_REVALIDATION_AND_PUSH_HANDOFF.md`
+3. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AP_HANDOFF.md`
+4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AO_HANDOFF.md`
+5. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AN_HANDOFF.md`
+6. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AM_HANDOFF.md`
 4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AL_HANDOFF.md`
 5. `docs/calculator/CHECKPOINT_2026-05-07_BROAD_REVALIDATION_GATE_AK_TO_GATE_AL_HANDOFF.md`
 6. `docs/calculator/CHECKPOINT_2026-05-07_GATE_AK_REPORT_EXPORT_REVALIDATION_AND_PUSH_HANDOFF.md`
@@ -496,7 +497,9 @@ plan.
   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-aq-steel-floor-formula-error-budget-calibration-readiness-contract.test.ts`
   should run
   `gate_aq_steel_floor_formula_error_budget_calibration_readiness_plan`.
-- latest checkpoint:
+- latest checkpoint / report export revalidation:
+  `docs/calculator/CHECKPOINT_2026-05-07_GATE_AP_REPORT_EXPORT_REVALIDATION_AND_PUSH_HANDOFF.md`.
+- latest landed calculator gate checkpoint:
   `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AP_HANDOFF.md`.
 - just landed model-first physics prediction pivot Gate AP:
   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ap-steel-floor-formula-error-budget-hostile-input-contract.test.ts`
@@ -620,16 +623,20 @@ plan.
   and impact validation benchmark corpora as an explicit predictor-input
   estimate lane. Runtime values remain unchanged.
 - latest report export/manual edit revalidation:
-  `docs/calculator/CHECKPOINT_2026-05-07_GATE_AK_REPORT_EXPORT_REVALIDATION_AND_PUSH_HANDOFF.md`
+  `docs/calculator/CHECKPOINT_2026-05-07_GATE_AP_REPORT_EXPORT_REVALIDATION_AND_PUSH_HANDOFF.md`
   confirms the report editor remains a packaged proposal snapshot editor
   rather than a solver mutation surface. Manual edits can change issue
   export values/text/curves/layers/warnings, and both PDF and DOCX use
   the same edited snapshot. Real exports were generated:
-  `manual-edit-checkpoint-simple.pdf` and
-  `manual-edit-checkpoint-simple.docx`; PDF text extraction, PDF PNG
-  rendering and visual review, DOCX zip integrity, and DOCX XML value
-  checks passed. `soffice` was not available, so DOCX visual rendering
-  was not available in this environment.
+  `gate-ap-manual-edit-checkpoint-simple.pdf` and
+  `gate-ap-manual-edit-checkpoint-simple.docx`; PDF text extraction, PDF
+  PNG rendering and visual review, DOCX zip integrity, and DOCX XML
+  value checks passed. Focused report editor/export tests passed 6 files
+  / 29 tests. Full `pnpm calculator:gate:current` passed with engine
+  322 files / 1825 tests, web 66 files / 286 passed + 18 skipped, repo
+  build 5/5 successful, and whitespace guard clean. `soffice` was not
+  available, so DOCX visual rendering was not available in this
+  environment.
 - just landed model-first physics prediction pivot Gate AK:
   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ak-steel-floor-formula-source-owned-delta-lw-holdout-contract.test.ts`
   landed

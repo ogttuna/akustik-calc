@@ -53,7 +53,7 @@ formula error-budget hostile-input guard.
 
 Latest checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AP_HANDOFF.md`
+`docs/calculator/CHECKPOINT_2026-05-07_GATE_AP_REPORT_EXPORT_REVALIDATION_AND_PUSH_HANDOFF.md`
 
 Latest landed-gate checkpoint:
 
@@ -61,11 +61,11 @@ Latest landed-gate checkpoint:
 
 Latest landed / report export checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-07_GATE_AK_REPORT_EXPORT_REVALIDATION_AND_PUSH_HANDOFF.md`
+`docs/calculator/CHECKPOINT_2026-05-07_GATE_AP_REPORT_EXPORT_REVALIDATION_AND_PUSH_HANDOFF.md`
 
 Latest report export/manual-edit checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-07_GATE_AK_REPORT_EXPORT_REVALIDATION_AND_PUSH_HANDOFF.md`
+`docs/calculator/CHECKPOINT_2026-05-07_GATE_AP_REPORT_EXPORT_REVALIDATION_AND_PUSH_HANDOFF.md`
 
 Latest broad revalidation / Gate AL handoff checkpoint:
 
@@ -294,9 +294,17 @@ Report export/manual-edit state:
 - manual report edits can override primary metric values, metric rows,
   coverage rows, response curves, layer labels, construction notes,
   warnings, method/corridor narrative, and issue text;
-- real manual-edit PDF and DOCX exports were generated and validated on
-  2026-05-07; PDF text extraction, PDF PNG render/visual review, DOCX
-  zip integrity, and DOCX XML content checks passed;
+- latest real manual-edit PDF and DOCX exports were generated and
+  validated on 2026-05-07 under
+  `output/report-checkpoint-2026-05-07-gate-ap/`; PDF text extraction,
+  PDF PNG render/visual review, DOCX zip integrity, and DOCX XML content
+  checks passed for the same edited snapshot values: `Rw 64 dB (manual
+  checkpoint)`, `DnT,w 57 dB (manual checkpoint)`, and `Ln,w 49 dB
+  (manual checkpoint)`;
+- focused report editor/export tests passed 6 files / 29 tests after
+  Gate AP, and full `pnpm calculator:gate:current` passed with engine
+  322 files / 1825 tests, web 66 files / 286 passed + 18 skipped, repo
+  build 5/5 successful, and whitespace guard clean;
 - `soffice`/LibreOffice is not installed in this environment, so DOCX
   visual rendering was not available here.
 
