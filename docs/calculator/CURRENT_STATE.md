@@ -32,15 +32,15 @@ path was found too narrow for the user's calculator-first goal.
 
 Current selected status:
 
-`gate_aa_construction_image_route_selection_recovered_selected_floor_family_guard_gate_ab`
+`gate_ab_floor_family_source_guard_landed_selected_steel_floor_physics_input_gate_ac`
 
 Selected next implementation file:
 
-`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ab-floor-family-source-guard-contract.test.ts`
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ac-steel-floor-physics-input-contract.test.ts`
 
 Selected next action:
 
-`gate_ab_construction_image_floor_family_source_guard_and_steel_impact_route_plan`
+`gate_ac_steel_floor_physics_input_contract_and_formula_readiness_plan`
 
 Active planning surface:
 
@@ -48,12 +48,56 @@ Active planning surface:
 
 Latest landed gate:
 
-2026-05-07 model-first physics prediction pivot Gate AA construction
-image route-selection recovery.
+2026-05-07 model-first physics prediction pivot Gate AB floor-family
+source guard.
 
 Latest checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AA_HANDOFF.md`
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AB_HANDOFF.md`
+
+Gate AB result:
+
+- generic `lightweight_steel_floor` impact-only stacks with upper/lower
+  impact packages now stay `needs_input` / unsupported for impact
+  outputs until `open_web_or_rolled` vs `joist_or_purlin`, carrier
+  geometry, upper package dynamic stiffness/source row, and lower
+  isolation form are explicit;
+- the old failure mode that produced `Ln,w 53.3` by blending UBIQ
+  open-web rows for a generic modular steel floor is blocked;
+- exact same-family Pliteq steel-joist rows still promote when the full
+  topology truly matches;
+- same-family UBIQ bound rows remain visible as bound support and are not
+  converted into exact `Ln,w`.
+
+Gate AB landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ab-floor-family-source-guard-contract.test.ts`
+
+Gate AB landed action:
+
+`gate_ab_construction_image_floor_family_source_guard_and_steel_impact_route_plan`
+
+Gate AB landed status:
+
+`gate_ab_floor_family_source_guard_landed_selected_steel_floor_physics_input_gate_ac`
+
+Gate AB selected next file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ac-steel-floor-physics-input-contract.test.ts`
+
+Gate AB selected next action:
+
+`gate_ac_steel_floor_physics_input_contract_and_formula_readiness_plan`
+
+Gate AB validation result:
+
+Validation completed on 2026-05-07: focused Gate AB passed 1 file / 5
+tests; focused floor-impact source/fallback regression passed 7 files /
+140 tests; focused Gate AA/AB pair passed 2 files / 10 tests; engine
+typecheck passed; `pnpm calculator:gate:current` passed with engine 308
+files / 1754 tests, web 62 files / 275 tests plus 18 skipped, repo
+build, and whitespace guard. Known optional `sharp/@img` Next build
+warnings remain non-fatal.
 
 Gate AA result:
 

@@ -17,6 +17,7 @@ import {
 } from "./reinforced-concrete-low-confidence-airborne";
 
 type BuildImpactPredictorStatusInput = {
+  additionalWarnings?: readonly string[];
   boundFloorSystemEstimate?: FloorSystemBoundEstimateResult | null;
   boundFloorSystemMatch?: FloorSystemBoundMatchResult | null;
   floorSystemEstimate?: FloorSystemEstimateResult | null;
@@ -146,6 +147,8 @@ export function buildImpactPredictorStatus(
   if (input.lowerBoundImpact && !input.impact) {
     warnings.push("Only conservative upper-bound impact support is available on the current lane.");
   }
+
+  warnings.push(...(input.additionalWarnings ?? []));
 
   return {
     active,

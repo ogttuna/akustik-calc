@@ -19,7 +19,8 @@ required topology and material inputs are present.
 
 Gate A, Gate B, Gate C, Gate D, Gate E, Gate G, Gate H, Gate I,
 Gate J, Gate K, Gate L, Gate M, Gate N, Gate O, Gate P, Gate Q, Gate R,
-Gate S, Gate T, Gate U, Gate V, Gate W, Gate X, Gate Y, Gate Z, and Gate AA for this pivot have
+Gate S, Gate T, Gate U, Gate V, Gate W, Gate X, Gate Y, Gate Z, Gate AA,
+and Gate AB for this pivot have
 landed. Gate A made the corrected rule executable: source absence
 blocks exact/calibration promotion only, not formula-backed prediction.
 Gate B added shared airborne `airborneBasis` / `airborneCandidateSet`
@@ -178,6 +179,17 @@ for explicit lightweight-steel support. Gate Z is landed; the incident
 has now been split into landed wall route recovery and selected floor
 family/source guard follow-up. Gate AA landed the numeric acceptance and
 solver-domain hardening for complete grouped walls, not warning copy.
+Gate AB landed the floor-family source guard: generic
+`lightweight_steel_floor` impact routes now stay `needs_input` /
+unsupported for `Ln,w`-family outputs until steel support form, carrier
+geometry, upper impact package dynamic stiffness or source row, and
+lower ceiling isolation are explicit. Exact same-family steel rows and
+same-family bound rows still resolve. Gate AB selection status:
+`gate_ab_floor_family_source_guard_landed_selected_steel_floor_physics_input_gate_ac`.
+Gate AB selected Gate AC file:
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ac-steel-floor-physics-input-contract.test.ts`.
+Gate AB selected Gate AC action:
+`gate_ac_steel_floor_physics_input_contract_and_formula_readiness_plan`.
 Gate AB is selected for the floor-side lightweight-steel source-family
 guard.
 

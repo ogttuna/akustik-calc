@@ -49,6 +49,7 @@ import {
   shouldHideLowConfidenceProxyAirborne
 } from "./impact-lane";
 import { computeLayerSurfaceMassKgM2 } from "./layer-surface-mass";
+import { getFloorFamilySourceGuard } from "./floor-family-source-guard";
 import { getDefaultMaterialCatalog, resolveMaterial } from "./material-catalog";
 import {
   hasReinforcedConcreteLowConfidenceProxyAirborne,
@@ -330,6 +331,11 @@ export function calculateImpactOnly(
     lowerBoundImpact,
     targetOutputs: options.targetOutputs ?? []
   });
+  const floorFamilySourceGuard = getFloorFamilySourceGuard(resolvedSourceLayers);
+  const floorFamilySourceGuardWarnings =
+    !impact && !lowerBoundImpact && targetOutputSupport.unsupportedImpactOutputs.length > 0 && floorFamilySourceGuard
+      ? [floorFamilySourceGuard.warning]
+      : [];
   const { dynamicImpactTrace, impactPredictorStatus, impactSupport } = buildResolvedImpactArtifacts({
     boundFloorSystemEstimate,
     boundFloorSystemMatch,
@@ -337,6 +343,7 @@ export function calculateImpactOnly(
     floorSystemMatch,
     impact,
     impactCatalogMatch,
+    impactPredictorAdditionalWarnings: floorFamilySourceGuardWarnings,
     impactFieldContext,
     lowerBoundImpact,
     predictorInput,
@@ -357,6 +364,7 @@ export function calculateImpactOnly(
         screeningLayers: explicitDeltaImpact ? pickReferenceFloorRatingLayers(resolvedSourceLayers) : resolvedSourceLayers
       });
   const warnings = buildTargetOutputWarnings(targetOutputSupport);
+  warnings.push(...floorFamilySourceGuardWarnings);
 
   if (sourceMode === "source_layers") {
     warnings.push(

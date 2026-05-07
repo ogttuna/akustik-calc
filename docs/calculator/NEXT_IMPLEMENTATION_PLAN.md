@@ -68,7 +68,7 @@ unsafe reorders. Lab, field, and building-prediction bases must stay
 separate; `Rw`/`STC`, `Ln,w`/`IIC`, and lab/field values are not
 interchangeable without a named rating and measurement basis.
 
-## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate AA Landed / Gate AB Floor Family Guard Next
+## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate AB Landed / Gate AC Steel Floor Physics Inputs Next
 
 Current implementation position:
 `calculator_model_first_physics_prediction_pivot_v1`.
@@ -104,6 +104,53 @@ Latest Gate U revalidation / commit-prep checkpoint:
 Latest landed Gate AA checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AA_HANDOFF.md`
+
+Latest landed Gate AB checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AB_HANDOFF.md`
+
+Gate AB selection status:
+
+`gate_ab_floor_family_source_guard_landed_selected_steel_floor_physics_input_gate_ac`
+
+Gate AB landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ab-floor-family-source-guard-contract.test.ts`
+
+Gate AB landed action:
+
+`gate_ab_construction_image_floor_family_source_guard_and_steel_impact_route_plan`
+
+Gate AB selected next file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ac-steel-floor-physics-input-contract.test.ts`
+
+Gate AB selected next action:
+
+`gate_ac_steel_floor_physics_input_contract_and_formula_readiness_plan`
+
+Gate AB result:
+
+- the generic modular/lightweight steel floor repro no longer turns into
+  `Ln,w 53.3` by blending UBIQ open-web rows;
+- generic `lightweight_steel_floor` impact routes now require explicit
+  `open_web_or_rolled` vs `joist_or_purlin`, carrier depth/spacing,
+  upper impact package dynamic stiffness or a matching source row, and
+  lower ceiling isolation form before impact metrics promote;
+- exact same-family Pliteq steel-joist rows still promote when full
+  topology truly matches;
+- UBIQ same-family bound rows remain visible as bound support and are
+  not converted into exact `Ln,w`.
+
+Gate AB validation result:
+
+Validation completed on 2026-05-07: focused Gate AB passed 1 file / 5
+tests; focused floor-impact source/fallback regression passed 7 files /
+140 tests; focused Gate AA/AB pair passed 2 files / 10 tests; engine
+typecheck passed; `pnpm calculator:gate:current` passed with engine 308
+files / 1754 tests, web 62 files / 275 tests plus 18 skipped, repo
+build, and whitespace guard. Known optional `sharp/@img` Next build
+warnings remain non-fatal.
 
 Gate AA selection status:
 
@@ -199,12 +246,13 @@ and underpredict. A modular lightweight-steel floor example also shows
 the same class of risk on the floor side: broad nearby source-family
 blends must not become numeric anchors when explicit steel support is
 present. Gate Z has now finished the selected field-impact runtime
-boundary, and Gate AA has recovered the wall-side construction-image
-route selection. The next calculator work is
-`gate_ab_construction_image_floor_family_source_guard_and_steel_impact_route_plan`:
-add floor same-structural-family source guards, steel/lightweight impact
-route classification, and measured/INSUL-style comparison notes without
-letting unrelated concrete or timber rows own steel floor metrics.
+boundary, Gate AA recovered the wall-side construction-image route
+selection, and Gate AB has now closed the floor-side nearby-source
+borrowing failure. The next calculator work is
+`gate_ac_steel_floor_physics_input_contract_and_formula_readiness_plan`:
+define the required physical input contract and formula/solver readiness
+for steel floor impact predictions so source-absent steel floors can be
+calculated instead of only blocked or source-matched.
 
 2026-05-07 plan iteration:
 
@@ -219,9 +267,14 @@ letting unrelated concrete or timber rows own steel floor metrics.
   construction-image scenario pack now asserts app-path/direct-solver
   parity and rejects `multileaf_screening_blend` for complete grouped
   multi-cavity wall topology.
-- Gate AB carries the floor half of the incident: add
-  same-structural-family source guards and steel/lightweight floor
-  route classification before any steel floor metric can promote.
+- Gate AB carries the floor half of the incident and is landed: generic
+  lightweight-steel floors no longer borrow UBIQ open-web or Pliteq
+  steel-joist source rows when the steel support form is unspecified.
+- Gate AC should convert that blocked generic steel route into a real
+  calculator input/formula contract: support form, carrier geometry,
+  joist/section spacing, deck/board schedule, resilient layer dynamic
+  stiffness, lower ceiling isolation, lab/field metric scope, and
+  calibration/holdout requirements.
 - Formula ownership for Gate AA is family-specific: single/laminated
   leaf, double leaf/framed, triple leaf/two-cavity, generalized
   multi-layer airborne, heavy concrete impact, and lightweight steel

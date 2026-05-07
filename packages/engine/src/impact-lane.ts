@@ -100,6 +100,7 @@ type BuildResolvedImpactArtifactsInput = {
   impact: ImpactCalculation | null;
   impactCatalogMatch?: ImpactCatalogMatchResult | null;
   impactFieldContext?: ImpactFieldContext | null;
+  impactPredictorAdditionalWarnings?: readonly string[];
   lowerBoundImpact: ImpactBoundCalculation | null;
   predictorInput?: ImpactPredictorInput | null;
   predictorInputMode?: ImpactPredictorInputMode;
@@ -292,6 +293,7 @@ export function buildResolvedImpactArtifacts(
 ): ResolvedImpactArtifacts {
   const hideLowConfidenceProxyAirborne = shouldHideLowConfidenceProxyAirborne(input.floorSystemEstimate);
   const impactPredictorStatus = buildImpactPredictorStatus({
+    additionalWarnings: input.impactPredictorAdditionalWarnings,
     boundFloorSystemEstimate: input.boundFloorSystemEstimate,
     boundFloorSystemMatch: input.boundFloorSystemMatch,
     floorSystemEstimate: input.floorSystemEstimate,

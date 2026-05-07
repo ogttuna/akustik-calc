@@ -54,6 +54,7 @@ import {
 import { clamp, round1 } from "./math";
 import { buildEstimateWarnings, estimateRwDb } from "./estimate-rw";
 import { hasBoundOnlyUbiqOpenWebCarpetCombinedProfile } from "./bound-only-floor-near-miss";
+import { getFloorFamilySourceGuard } from "./floor-family-source-guard";
 import { buildFloorSystemRatings } from "./floor-system-ratings";
 import { buildExactImpactFromSource } from "./impact-exact";
 import {
@@ -1364,6 +1365,12 @@ export function calculateAssembly(
       trace: dynamicAirborneResult?.trace
     });
   const targetOutputSupport = rockwoolSplitTripleLeafExactOutputWithhold.targetOutputSupport;
+  const floorFamilySourceGuard =
+    getFloorFamilySourceGuard(impactResolvedLayers) ?? getFloorFamilySourceGuard(resolvedLayers);
+  const floorFamilySourceGuardWarnings =
+    !impact && !lowerBoundImpact && targetOutputSupport.unsupportedImpactOutputs.length > 0 && floorFamilySourceGuard
+      ? [floorFamilySourceGuard.warning]
+      : [];
   const {
     dynamicImpactTrace,
     impactPredictorStatus,
@@ -1377,6 +1384,7 @@ export function calculateAssembly(
     impact,
     impactCatalogMatch,
     impactFieldContext,
+    impactPredictorAdditionalWarnings: floorFamilySourceGuardWarnings,
     lowerBoundImpact,
     predictorInput,
     predictorInputMode,
@@ -1425,6 +1433,7 @@ export function calculateAssembly(
     warnings.push(rockwoolSplitTripleLeafExactOutputWithhold.warning);
   }
   warnings.push(...buildTargetOutputWarnings(targetOutputSupport));
+  warnings.push(...floorFamilySourceGuardWarnings);
 
   if (shouldWithholdUnreadyDynamicFloorImpactRuntime && gateWFloorImpactContract) {
     const gateZFieldWarning = buildGateZFieldImpactRuntimeWarning(gateZFloorImpactFieldAssessment);

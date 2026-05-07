@@ -68,14 +68,18 @@ while keeping `L'nT,50` blocked until a low-frequency owner exists.
 Gate AA recovered the construction-image shared-wall route selection:
 complete grouped mineral-wool triple-leaf topology now reaches the
 triple-leaf two-cavity frequency solver by physical domain instead of
-the old 50/50 mm fixture gate. Gate AB is next:
-`gate_ab_construction_image_floor_family_source_guard_and_steel_impact_route_plan`.
+the old 50/50 mm fixture gate. Gate AB has now landed the floor-side
+source guard: generic lightweight-steel floors no longer borrow UBIQ
+open-web or Pliteq steel-joist rows until the steel support form and
+impact package inputs are explicit. Gate AC is next:
+`gate_ac_steel_floor_physics_input_contract_and_formula_readiness_plan`.
 
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AA_HANDOFF.md`
-3. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Z_HANDOFF.md`
+2. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AB_HANDOFF.md`
+3. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AA_HANDOFF.md`
+4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Z_HANDOFF.md`
 4. `docs/calculator/ACCURACY_INCIDENT_2026-05-07_CONSTRUCTION_IMAGE_ROUTE_SELECTION.md`
 5. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Y_HANDOFF.md`
 5. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_X_HANDOFF.md`
@@ -399,11 +403,23 @@ plan.
 - current selected slice:
   `calculator_model_first_physics_prediction_pivot_v1`
 - current next decision inside the slice:
-  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ab-floor-family-source-guard-contract.test.ts`
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ac-steel-floor-physics-input-contract.test.ts`
   should run
-  `gate_ab_construction_image_floor_family_source_guard_and_steel_impact_route_plan`.
+  `gate_ac_steel_floor_physics_input_contract_and_formula_readiness_plan`.
 - latest checkpoint:
-  `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AA_HANDOFF.md`.
+  `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AB_HANDOFF.md`.
+- just landed model-first physics prediction pivot Gate AB:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ab-floor-family-source-guard-contract.test.ts`
+  landed
+  `gate_ab_construction_image_floor_family_source_guard_and_steel_impact_route_plan`.
+  It adds `floor-family-source-guard.ts`, withholds generic
+  `lightweight_steel_floor` family estimates when support form is
+  unspecified, and surfaces missing-input warnings instead of borrowing
+  UBIQ open-web or Pliteq steel-joist rows. Exact same-family steel rows
+  and same-family bound rows remain visible. Selection status:
+  `gate_ab_floor_family_source_guard_landed_selected_steel_floor_physics_input_gate_ac`.
+  Selected next action:
+  `gate_ac_steel_floor_physics_input_contract_and_formula_readiness_plan`.
 - just landed model-first physics prediction pivot Gate AA:
   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-aa-construction-image-accuracy-incident-contract.test.ts`
   landed

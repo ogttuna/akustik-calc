@@ -11,6 +11,7 @@ import type {
 import { getFloorSystemCompanionSemantic } from "@dynecho/shared";
 
 import { hasInvalidExplicitFloorBaseStructure } from "./floor-base-structure-eligibility";
+import { shouldWithholdFloorFamilyEstimateForSourceGuard } from "./floor-family-source-guard";
 import {
   GDMTXA04A_VISIBLE_ESTIMATE_IMPACT_CAP,
   isDataholzGdmtxa04aVisibleEstimateBoundary
@@ -760,6 +761,9 @@ export function deriveFloorSystemEstimate(
     return null;
   }
   const currentProfile = getLayerProfile(layers);
+  if (shouldWithholdFloorFamilyEstimateForSourceGuard(layers)) {
+    return null;
+  }
   let predictorInputFromLayers:
     | ReturnType<typeof buildImpactPredictorInputFromLayerStack>
     | undefined;
