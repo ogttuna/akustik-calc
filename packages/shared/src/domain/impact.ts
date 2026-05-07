@@ -130,6 +130,26 @@ export const ImpactConfidenceSchema = z.object({
   summary: z.string().min(1)
 });
 
+export const ImpactErrorBudgetTermSchema = z.object({
+  db: z.number().nonnegative(),
+  origin: z.string().min(1),
+  reason: z.string().min(1),
+  termId: z.string().min(1),
+  tightenRequires: z.array(z.string().min(1))
+});
+
+export const ImpactErrorBudgetSchema = z.object({
+  estimate: z.number(),
+  max: z.number(),
+  metricId: z.string().min(1),
+  min: z.number(),
+  notMeasuredEvidence: z.boolean(),
+  origin: z.string().min(1),
+  terms: z.array(ImpactErrorBudgetTermSchema).min(1),
+  toleranceDb: z.number().nonnegative(),
+  totalBudgetDb: z.number().nonnegative()
+});
+
 export const ImpactCalculationSchema = z
   .object({
     CI: z.number().optional(),
@@ -159,6 +179,7 @@ export const ImpactCalculationSchema = z
     ciBandSet: z.string().min(1).optional(),
     confidence: ImpactConfidenceSchema,
     estimateCandidateIds: z.array(z.string().min(1)).min(1).optional(),
+    errorBudgets: z.array(ImpactErrorBudgetSchema).optional(),
     metricBasis: ImpactMetricBasisSchema.optional(),
     fieldEstimateDefaultSupportingElementFamily: z.string().min(1).optional(),
     fieldEstimateDirectOffsetDb: z.number().optional(),
@@ -207,6 +228,8 @@ export type ImpactConfidenceLevel = z.infer<typeof ImpactConfidenceLevelSchema>;
 export type ImpactConfidenceProvenance = z.infer<typeof ImpactConfidenceProvenanceSchema>;
 export type ImpactBandCurve = z.infer<typeof ImpactBandCurveSchema>;
 export type ImpactCalculation = z.infer<typeof ImpactCalculationSchema>;
+export type ImpactErrorBudget = z.infer<typeof ImpactErrorBudgetSchema>;
+export type ImpactErrorBudgetTerm = z.infer<typeof ImpactErrorBudgetTermSchema>;
 export type ImpactLabOrField = z.infer<typeof ImpactLabOrFieldSchema>;
 export type ImpactMetricBasis = z.infer<typeof ImpactMetricBasisSchema>;
 export type ImpactMetricBasisLabel = z.infer<typeof ImpactMetricBasisLabelSchema>;

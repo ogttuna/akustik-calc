@@ -1,8 +1,12 @@
-import type { AssemblyCalculation } from "@dynecho/shared";
+import type { AssemblyCalculation, ImpactErrorBudget } from "@dynecho/shared";
 
 import { getFieldAirborneProvenanceSummary } from "./field-airborne-provenance";
 import type { StudyMode } from "./preset-definitions";
 import { getScenarioCorridorSummary, getValidationPostureTone } from "./scenario-corridor-summary";
+import {
+  formatSteelFloorFormulaErrorBudgetSummary,
+  formatSteelFloorFormulaErrorBudgetTerms
+} from "./steel-floor-formula-corridor-view";
 import {
   describeAirborneValidationPosture,
   describeImpactValidationPosture,
@@ -103,6 +107,15 @@ function mapSolverSpreadTone(value: number): SimpleWorkbenchCorridorDossierCard[
   return "warning";
 }
 
+function buildSteelFormulaErrorBudgetCards(result: AssemblyCalculation): SimpleWorkbenchCorridorDossierCard[] {
+  return (result.impact?.errorBudgets ?? []).map((budget: ImpactErrorBudget) => ({
+    detail: `${formatSteelFloorFormulaErrorBudgetSummary(budget)}. Terms: ${formatSteelFloorFormulaErrorBudgetTerms(budget)}.`,
+    label: `${budget.metricId} error budget`,
+    tone: "warning",
+    value: `+/-${budget.toleranceDb.toFixed(1)} dB`
+  }));
+}
+
 function buildWaitingCorridorDossier(studyMode: StudyMode): SimpleWorkbenchCorridorDossier {
   if (studyMode === "wall") {
     return {
@@ -175,6 +188,7 @@ function buildFloorCorridorDossier(result: AssemblyCalculation): SimpleWorkbench
   const activeMode = getActiveValidationMode(result);
   const impactPosture = describeImpactValidationPosture(result);
   const toleranceLabel = formatImpactValidationTolerance(activeFamily?.maxToleranceDb ?? IMPACT_VALIDATION_CORPUS_SUMMARY.toleranceBandMaxDb);
+  const errorBudgetCards = buildSteelFormulaErrorBudgetCards(result);
   const primaryRouteLabel =
     activeMode?.label ??
     (impactPosture.posture !== "inactive" ? corridorSummary.impactLabel : corridorSummary.airborneLabel);
@@ -213,12 +227,14 @@ function buildFloorCorridorDossier(result: AssemblyCalculation): SimpleWorkbench
         label: "Field continuation",
         tone: corridorSummary.fieldContinuationLabel ? "accent" : corridorSummary.airborneProvenanceLabel ? "neutral" : "neutral",
         value: corridorSummary.fieldContinuationLabel ?? corridorSummary.airborneProvenanceLabel ?? "Lab-side only"
-      }
+      },
+      ...errorBudgetCards
     ],
     headline:
       `${primaryRouteLabel} is the active benchmark mode${activeFamily ? ` on ${activeFamily.label}` : ""}. ` +
       `${activeFamily ? `${toleranceLabel} family tolerance remains attached to this route.` : `${toleranceLabel} repo-wide fallback guardrail is active because no tracked family corridor is attached.`} ` +
-      `${corridorSummary.fieldContinuationLabel ? `${corridorSummary.fieldContinuationLabel} is live on the field-side chain.` : corridorSummary.airborneProvenanceLabel ? `${corridorSummary.airborneProvenanceLabel} remains explicit on the airborne side.` : "Field continuation is currently lab-side only or still staged."}`
+      `${corridorSummary.fieldContinuationLabel ? `${corridorSummary.fieldContinuationLabel} is live on the field-side chain.` : corridorSummary.airborneProvenanceLabel ? `${corridorSummary.airborneProvenanceLabel} remains explicit on the airborne side.` : "Field continuation is currently lab-side only or still staged."}` +
+      `${errorBudgetCards.length > 0 ? " Source-absent steel formula budgets are structured and marked not measured evidence." : ""}`
   };
 }
 

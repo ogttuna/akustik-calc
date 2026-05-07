@@ -7,6 +7,7 @@ import {
   type ImpactBoundCalculation,
   type ImpactCalculation,
   type ImpactCatalogMatchResult,
+  type ImpactErrorBudget,
   type ImpactSupport
 } from "@dynecho/shared";
 
@@ -43,6 +44,22 @@ function pushUnique(target: string[], line: string) {
 
 function formatDbValue(value: number): string {
   return Number.isInteger(value) ? String(value) : value.toFixed(1);
+}
+
+function formatErrorBudgetRange(budget: ImpactErrorBudget): string {
+  return `${formatDbValue(budget.estimate)} dB [${formatDbValue(budget.min)}..${formatDbValue(budget.max)}] +/-${formatDbValue(budget.toleranceDb)} dB`;
+}
+
+function buildSteelFormulaErrorBudgetFormulaNote(impact: ImpactCalculation): string | null {
+  const budgets = impact.errorBudgets ?? [];
+
+  if (budgets.length === 0) {
+    return null;
+  }
+
+  return `Gate AN error budgets are structured: ${budgets
+    .map((budget) => `${budget.metricId} ${formatErrorBudgetRange(budget)}`)
+    .join("; ")}; origin source_absent_formula_error_budget; not measured evidence.`;
 }
 
 function hasMetricBasis(impact: ImpactCalculation | null, label: string): boolean {
@@ -145,6 +162,10 @@ export function buildImpactSupport(input: BuildImpactSupportInput): ImpactSuppor
     notes.push("Steel-floor formula corridor is active; exact measured rows still outrank it when a source truly matches.");
     pushUnique(formulaNotes, "Gate AD steel-floor mass-spring formula corridor remains a source-absent lab estimate, not a measured row.");
     pushUnique(formulaNotes, "Steel DeltaLw uses 13 log10(m'load) - 14.2 log10(s') + 20.8 before steel carrier-transfer correction.");
+    const errorBudgetNote = input.impact ? buildSteelFormulaErrorBudgetFormulaNote(input.impact) : null;
+    if (errorBudgetNote) {
+      pushUnique(formulaNotes, errorBudgetNote);
+    }
     pushUnique(
       formulaNotes,
       `Corridor tolerance remains +/-${STEEL_FLOOR_FORMULA_LN_W_TOLERANCE_DB} dB for Ln,w and +/-${STEEL_FLOOR_FORMULA_DELTA_LW_TOLERANCE_DB} dB for DeltaLw.`

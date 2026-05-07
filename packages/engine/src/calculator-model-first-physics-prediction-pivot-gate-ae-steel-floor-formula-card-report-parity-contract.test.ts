@@ -144,6 +144,7 @@ describe("calculator model-first physics prediction pivot Gate AE", () => {
     expect(runtime.impactSupport?.formulaNotes).toEqual([
       "Gate AD steel-floor mass-spring formula corridor remains a source-absent lab estimate, not a measured row.",
       "Steel DeltaLw uses 13 log10(m'load) - 14.2 log10(s') + 20.8 before steel carrier-transfer correction.",
+      "Gate AN error budgets are structured: Ln,w 55.6 dB [51.1..60.1] +/-4.5 dB; DeltaLw 22.4 dB [20.4..24.4] +/-2 dB; origin source_absent_formula_error_budget; not measured evidence.",
       "Corridor tolerance remains +/-4.5 dB for Ln,w and +/-2 dB for DeltaLw."
     ]);
     expect(runtime.impactPredictorStatus).toMatchObject({

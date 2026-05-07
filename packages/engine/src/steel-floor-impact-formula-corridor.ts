@@ -1,6 +1,8 @@
 import type {
   AcousticInputFieldId,
   ImpactCalculation,
+  ImpactErrorBudget,
+  ImpactErrorBudgetTerm,
   ImpactPredictorInput,
   RequestedOutputId
 } from "@dynecho/shared";
@@ -12,6 +14,24 @@ import { clamp, ksRound1, log10Safe, round1 } from "./math";
 export const STEEL_FLOOR_FORMULA_BASIS = "predictor_lightweight_steel_mass_spring_holdout_corridor_estimate" as const;
 export const STEEL_FLOOR_FORMULA_LN_W_TOLERANCE_DB = 4.5;
 export const STEEL_FLOOR_FORMULA_DELTA_LW_TOLERANCE_DB = 2;
+
+export type SteelFloorFormulaErrorBudgetMetricId = "DeltaLw" | "Ln,w";
+
+type SteelFloorFormulaErrorBudgetTermId =
+  | "dynamic_stiffness_precision"
+  | "load_basis_precision"
+  | "lower_support_class_simplification"
+  | "source_absent_bare_steel_reference_model"
+  | "source_owned_delta_lw_holdout_absence"
+  | "support_form_transfer_efficiency"
+  | "upper_resilient_topology_simplification";
+
+type SteelFloorFormulaErrorBudgetTermOrigin =
+  | "explicit_user_input_precision"
+  | "missing_source_owned_holdout"
+  | "source_absent_formula_assumption"
+  | "topology_simplification";
+
 const REQUIRED_PHYSICAL_INPUTS = [
   "steelSupportForm",
   "steelCarrierDepthMm",
@@ -92,6 +112,139 @@ export type GateADSteelFloorImpactFormulaScenarioPackEntry = {
   description: string;
   id: GateADSteelFloorImpactFormulaScenarioId;
 };
+
+function sumTermDb(terms: readonly ImpactErrorBudgetTerm[]): number {
+  return ksRound1(terms.reduce((sum, term) => sum + term.db, 0));
+}
+
+const term = (
+  termId: SteelFloorFormulaErrorBudgetTermId,
+  db: number,
+  origin: SteelFloorFormulaErrorBudgetTermOrigin,
+  reason: string,
+  tightenRequires: readonly string[]
+): ImpactErrorBudgetTerm => ({
+  db,
+  origin,
+  reason,
+  termId,
+  tightenRequires: [...tightenRequires]
+});
+
+const lnWErrorBudgetTerms = (): ImpactErrorBudgetTerm[] => [
+  term(
+    "source_owned_delta_lw_holdout_absence",
+    1.1,
+    "missing_source_owned_holdout",
+    "Gate AM found no source-owned same-stack ISO DeltaLw steel-floor holdout.",
+    ["accepted_source_owned_same_stack_iso_delta_lw_holdouts"]
+  ),
+  term(
+    "source_absent_bare_steel_reference_model",
+    0.9,
+    "source_absent_formula_assumption",
+    "Bare steel reference Ln,w is modelled from support form, carrier depth, lower mass, cavity, and fill instead of a measured same-stack row.",
+    ["same_stack_bare_steel_reference_rows"]
+  ),
+  term(
+    "support_form_transfer_efficiency",
+    0.8,
+    "source_absent_formula_assumption",
+    "Steel carrier transfer applies a bounded efficiency factor because the source-owned transfer curve is still absent.",
+    ["source_owned_steel_transfer_efficiency_curve"]
+  ),
+  term(
+    "lower_support_class_simplification",
+    0.7,
+    "topology_simplification",
+    "Lower isolation support is explicit but still reduced to support class, board mass, cavity depth, and fill thickness.",
+    ["lower_ceiling_support_family_holdouts"]
+  ),
+  term(
+    "dynamic_stiffness_precision",
+    0.6,
+    "explicit_user_input_precision",
+    "Dynamic stiffness is user-provided as a scalar s' value without a full frequency-dependent resilient layer curve.",
+    ["frequency_dependent_dynamic_stiffness_or_product_curve_owner"]
+  ),
+  term(
+    "load_basis_precision",
+    0.4,
+    "explicit_user_input_precision",
+    "Load basis is explicit but still an aggregate kg/m2 input rather than a source-owned load schedule.",
+    ["source_owned_load_basis_schedule"]
+  )
+];
+
+const deltaLwErrorBudgetTerms = (): ImpactErrorBudgetTerm[] => [
+  term(
+    "source_owned_delta_lw_holdout_absence",
+    0.7,
+    "missing_source_owned_holdout",
+    "No accepted source-owned same-stack ISO DeltaLw steel-floor holdout exists after Gate AM.",
+    ["accepted_source_owned_same_stack_iso_delta_lw_holdouts"]
+  ),
+  term(
+    "dynamic_stiffness_precision",
+    0.5,
+    "explicit_user_input_precision",
+    "DeltaLw is sensitive to s'; current input owns the scalar but not a full tested resilient-product response.",
+    ["frequency_dependent_dynamic_stiffness_or_product_curve_owner"]
+  ),
+  term(
+    "load_basis_precision",
+    0.4,
+    "explicit_user_input_precision",
+    "DeltaLw is sensitive to m'load; current input owns aggregate load rather than a measured load schedule.",
+    ["source_owned_load_basis_schedule"]
+  ),
+  term(
+    "upper_resilient_topology_simplification",
+    0.4,
+    "topology_simplification",
+    "Upper resilient topology is represented by dynamic stiffness and package load, not a measured same-stack construction packet.",
+    ["upper_resilient_topology_holdouts"]
+  )
+];
+
+export function buildSteelFloorFormulaErrorBudgetFor(
+  metricId: SteelFloorFormulaErrorBudgetMetricId,
+  estimate: number
+): ImpactErrorBudget {
+  const terms = metricId === "Ln,w" ? lnWErrorBudgetTerms() : deltaLwErrorBudgetTerms();
+  const toleranceDb =
+    metricId === "Ln,w"
+      ? STEEL_FLOOR_FORMULA_LN_W_TOLERANCE_DB
+      : STEEL_FLOOR_FORMULA_DELTA_LW_TOLERANCE_DB;
+
+  return {
+    estimate,
+    max: ksRound1(estimate + toleranceDb),
+    metricId,
+    min: ksRound1(estimate - toleranceDb),
+    notMeasuredEvidence: true,
+    origin: "source_absent_formula_error_budget",
+    terms,
+    toleranceDb,
+    totalBudgetDb: sumTermDb(terms)
+  };
+}
+
+export function buildSteelFloorFormulaErrorBudgets(
+  impact: Pick<ImpactCalculation, "DeltaLw" | "LnW">
+): ImpactErrorBudget[] {
+  const budgets: ImpactErrorBudget[] = [];
+
+  if (typeof impact.LnW === "number") {
+    budgets.push(buildSteelFloorFormulaErrorBudgetFor("Ln,w", impact.LnW));
+  }
+
+  if (typeof impact.DeltaLw === "number") {
+    budgets.push(buildSteelFloorFormulaErrorBudgetFor("DeltaLw", impact.DeltaLw));
+  }
+
+  return budgets;
+}
 
 function hasPositiveNumber(value: unknown): value is number {
   return typeof value === "number" && Number.isFinite(value) && value > 0;
@@ -359,6 +512,10 @@ export function estimateSteelFloorImpactFromPredictorInput(
     bareReferenceLnW: roundedBareReferenceLnW,
     basis: STEEL_FLOOR_FORMULA_BASIS,
     confidence: getImpactConfidenceForBasis(STEEL_FLOOR_FORMULA_BASIS),
+    errorBudgets: buildSteelFloorFormulaErrorBudgets({
+      DeltaLw: roundedDeltaLw,
+      LnW: lnW
+    }),
     floatingLoadSurfaceMassKgM2: ksRound1(loadBasisKgM2),
     labOrField: "lab",
     metricBasis: buildUniformImpactMetricBasis(

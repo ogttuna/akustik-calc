@@ -11,6 +11,7 @@ import {
   getFloorSystemCompanionLabel,
   getFloorSystemDerivedRwPlusCtr,
   type ImpactCalculation,
+  type ImpactErrorBudget,
   type ReportProfile,
   type RequestedOutputId,
   type StudyContext
@@ -170,6 +171,17 @@ function buildImpactMetricBasisLines(impact: ImpactCalculation | null | undefine
   return getActiveImpactMetricBasisRows(impact).map(
     (row) => `- Impact ${row.label} provenance: ${formatImpactMetricBasisLabel(row.basis)}. ${row.description}`
   );
+}
+
+function buildImpactErrorBudgetReportLines(impact: ImpactCalculation | null | undefined): string[] {
+  const budgets = impact?.errorBudgets ?? [];
+
+  return budgets.flatMap((budget: ImpactErrorBudget) => [
+    `- Impact error budget ${budget.metricId}: ${formatMetric(budget.estimate)} dB, range ${formatMetric(budget.min)}-${formatMetric(budget.max)} dB, tolerance +/-${formatMetric(budget.toleranceDb)} dB, origin ${budget.origin}, not measured evidence ${budget.notMeasuredEvidence ? "yes" : "no"}.`,
+    `- Impact error budget ${budget.metricId} terms: ${budget.terms
+      .map((term) => `${term.termId} ${formatMetric(term.db)} dB`)
+      .join("; ")}`
+  ]);
 }
 
 function buildScenarioReportLines(input: {
@@ -422,6 +434,7 @@ export function composeWorkbenchReport({
                 ? [`- DeltaLw: ${formatMetric(currentScenario.result.impact.DeltaLw)} dB`]
                 : []),
               ...buildImpactMetricBasisLines(currentScenario.result.impact),
+              ...buildImpactErrorBudgetReportLines(currentScenario.result.impact),
               `- Impact confidence: ${currentScenario.result.impact.confidence.level} (${Math.round(currentScenario.result.impact.confidence.score * 100)}%)`,
               `- Impact provenance: ${currentScenario.result.impact.confidence.provenance}`,
               `- Impact basis: ${currentScenario.result.impact.basis}`,

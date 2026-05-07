@@ -124,14 +124,17 @@ leads are wrong-basis STC/IIC evidence, REGUPOL ISO `DeltaLw` leads are
 solid/concrete reference-floor evidence, and SoundAdvisor is a useful
 ISO `DeltaLw` scope boundary rather than a steel packet. Runtime values
 remain unchanged, broad source-library crawl is still blocked. Gate AN
-has now landed the source-absent steel-floor formula error-budget
-contract: `Ln,w` keeps the existing `+/-4.5 dB` corridor and `DeltaLw`
-keeps the existing `+/-2.0 dB` corridor, but each metric now has a
-structured uncertainty decomposition for missing source-owned holdouts,
-bare steel reference modelling, transfer efficiency, input precision,
-and topology simplification. Runtime values remain unchanged, and Gate
-AO is next:
-`gate_ao_steel_floor_formula_error_budget_surface_parity_plan`.
+landed the source-absent steel-floor formula error-budget contract:
+`Ln,w` keeps the existing `+/-4.5 dB` corridor and `DeltaLw` keeps the
+existing `+/-2.0 dB` corridor, but each metric now has a structured
+uncertainty decomposition for missing source-owned holdouts, bare steel
+reference modelling, transfer efficiency, input precision, and topology
+simplification. Gate AO has now landed that structured payload on the
+runtime impact schema, support trace, output cards, method/corridor
+dossiers, Markdown report, calculator API, and impact-only API without
+moving `Ln,w 55.6` / `DeltaLw 22.4` or presenting the budget as measured
+evidence. Gate AP is next:
+`gate_ap_steel_floor_formula_error_budget_hostile_input_plan`.
 The 2026-05-07 broad revalidation after Gate AK is complete: `pnpm
 check` passed after aligning steel-floor validation corpora and
 ambiguous duplicate/disjoint lightweight-steel floor schedule
@@ -140,8 +143,9 @@ expectations. Runtime values remain unchanged.
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AN_HANDOFF.md`
-3. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AM_HANDOFF.md`
+2. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AO_HANDOFF.md`
+3. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AN_HANDOFF.md`
+4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AM_HANDOFF.md`
 4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AL_HANDOFF.md`
 5. `docs/calculator/CHECKPOINT_2026-05-07_BROAD_REVALIDATION_GATE_AK_TO_GATE_AL_HANDOFF.md`
 6. `docs/calculator/CHECKPOINT_2026-05-07_GATE_AK_REPORT_EXPORT_REVALIDATION_AND_PUSH_HANDOFF.md`
@@ -481,11 +485,38 @@ plan.
 - current selected slice:
   `calculator_model_first_physics_prediction_pivot_v1`
 - current next decision inside the slice:
-  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ao-steel-floor-formula-error-budget-surface-parity-contract.test.ts`
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ap-steel-floor-formula-error-budget-hostile-input-contract.test.ts`
   should run
-  `gate_ao_steel_floor_formula_error_budget_surface_parity_plan`.
+  `gate_ap_steel_floor_formula_error_budget_hostile_input_plan`.
 - latest checkpoint:
-  `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AN_HANDOFF.md`.
+  `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AO_HANDOFF.md`.
+- just landed model-first physics prediction pivot Gate AO:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ao-steel-floor-formula-error-budget-surface-parity-contract.test.ts`
+  landed
+  `gate_ao_steel_floor_formula_error_budget_surface_parity_plan`.
+  It moves Gate AN's source-absent steel-floor error-budget payload into
+  the shared impact schema/runtime, impact-support formula notes,
+  output cards, method/corridor dossiers, Markdown report, estimate API,
+  and impact-only API. Runtime values stay pinned at `Ln,w 55.6` /
+  `DeltaLw 22.4`; exact-source, needs-input, and unsafe topology lanes
+  stay budget-free; `origin source_absent_formula_error_budget` and
+  `notMeasuredEvidence true` remain visible.
+  Selection status:
+  `gate_ao_error_budget_surface_parity_landed_no_runtime_selected_error_budget_hostile_input_gate_ap`.
+  Selected next action:
+  `gate_ap_steel_floor_formula_error_budget_hostile_input_plan`.
+  Validation completed on 2026-05-07: focused Gate AE/AN/AO engine
+  contracts passed 3 files / 15 tests, focused web steel-floor card /
+  budget-surface / input-surface parity passed 3 files / 7 tests, full
+  `pnpm calculator:gate:current` passed with engine 321 files / 1818
+  tests, web 66 files / 286 passed + 18 skipped, repo build 5/5
+  successful, and whitespace guard clean. Broad `pnpm check` passed
+  after a transient Google Fonts fetch timeout was isolated by a
+  successful build retry: lint, typecheck, engine 446 files / 2620
+  tests, web 172 files / 961 passed + 18 skipped, and build all passed.
+  `git diff --check` passed. Known non-fatal warnings remain the
+  Node/Vitest Zustand persist storage warning and optional `sharp` /
+  `@img` Next build warnings via the DOCX export dependency.
 - just landed model-first physics prediction pivot Gate AN:
   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-an-steel-floor-formula-source-absent-uncertainty-contract.test.ts`
   landed

@@ -2,7 +2,7 @@
 
 Slice id: `calculator_model_first_physics_prediction_pivot_v1`
 
-Status: SELECTED / GATE AN LANDED / GATE AO ERROR-BUDGET SURFACE PARITY NEXT
+Status: SELECTED / GATE AO LANDED / GATE AP ERROR-BUDGET HOSTILE INPUT NEXT
 
 Selected by:
 
@@ -12,7 +12,52 @@ queue.
 
 Selection status:
 
-`gate_an_source_absent_uncertainty_landed_no_runtime_selected_error_budget_surface_parity_gate_ao`
+`gate_ao_error_budget_surface_parity_landed_no_runtime_selected_error_budget_hostile_input_gate_ap`
+
+Latest Gate AO checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AO_HANDOFF.md`
+
+Gate AO landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ao-steel-floor-formula-error-budget-surface-parity-contract.test.ts`
+
+Gate AO landed action:
+
+`gate_ao_steel_floor_formula_error_budget_surface_parity_plan`
+
+Gate AO selected Gate AP file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ap-steel-floor-formula-error-budget-hostile-input-contract.test.ts`
+
+Gate AO selected Gate AP action:
+
+`gate_ap_steel_floor_formula_error_budget_hostile_input_plan`
+
+Gate AO landed summary:
+
+Gate AO carries Gate AN's structured steel-floor formula error-budget
+payload into the runtime `ImpactCalculation`, shared schema,
+impact-support formula notes, output cards, method/corridor dossiers,
+Markdown report, calculator API, and impact-only API. Complete steel
+formula cases keep the same `Ln,w 55.6` / `DeltaLw 22.4` estimates and
+the same `+/-4.5 dB` / `+/-2.0 dB` corridors; exact-source,
+needs-input, and unsafe-topology cases remain budget-free.
+
+Gate AO validation result:
+
+Validation completed on 2026-05-07: focused Gate AE/AN/AO engine
+contracts passed 3 files / 15 tests, focused web steel-floor card /
+budget-surface / input-surface parity passed 3 files / 7 tests, and
+full `pnpm calculator:gate:current` passed with engine 321 files / 1818
+tests, web 66 files / 286 passed + 18 skipped, repo build 5/5
+successful, and whitespace guard clean. Broad `pnpm check` passed after
+a transient Google Fonts fetch timeout was isolated by a successful
+build retry: lint, typecheck, engine 446 files / 2620 tests, web 172
+files / 961 passed + 18 skipped, and build all passed. `git diff
+--check` passed. Known non-fatal warnings remain the Node/Vitest Zustand
+persist storage warning and optional `sharp` / `@img` Next build
+warnings via the DOCX export dependency.
 
 Latest Gate AN checkpoint:
 
@@ -169,18 +214,31 @@ Consumed Gate AN implementation plan:
 5. Preserve card/report/API parity for the uncertainty posture without
    presenting it as measured evidence.
 
-Gate AO implementation plan:
+Gate AP implementation plan:
 
-1. Carry Gate AN's structured error-budget payload into the steel formula
-   runtime/support trace without changing numeric values.
-2. Surface the same `origin`, `notMeasuredEvidence`, metric corridor, and
-   terms on output cards, method dossier, Markdown report, calculator
-   API, and impact-only API.
-3. Keep exact-source, needs-input, and unsafe-topology cases free of
+1. Build hostile-input cases for complete, safe reorder, saved/API
+   replay, missing physical input, duplicate/ambiguous base structure,
+   exact-source precedence, and field-output requests.
+2. Assert complete/safe-reorder/replay cases keep the same structured
+   `Ln,w` and `DeltaLw` budget payload.
+3. Assert missing-input, unsafe-topology, and exact-source cases do not
+   surface formula budgets.
+4. Assert field outputs remain unsupported or field-context-owned, not
+   lab-budget aliases.
+5. Keep Gate AK/AM source-packet strictness and Gate AO parity unchanged.
+
+Consumed Gate AO implementation plan:
+
+1. Carried Gate AN's structured error-budget payload into the steel
+   formula runtime/support trace without changing numeric values.
+2. Surfaced the same `origin`, `notMeasuredEvidence`, metric corridor,
+   and terms on output cards, method dossier, corridor dossier, Markdown
+   report, calculator API, and impact-only API.
+3. Kept exact-source, needs-input, and unsafe-topology cases free of
    formula budgets.
-4. Add parity tests that compare visible output against the structured
+4. Added parity tests that compare visible output against the structured
    budget object.
-5. Keep Gate AK/AM source-packet strictness unchanged.
+5. Kept Gate AK/AM source-packet strictness unchanged.
 
 Latest Gate AK checkpoint:
 

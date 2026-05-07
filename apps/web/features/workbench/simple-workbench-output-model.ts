@@ -420,7 +420,7 @@ export function buildOutputCard(input: {
             : isImpactOnlyLowConfidenceLane
               ? IMPACT_ONLY_LOW_CONFIDENCE_LNW_DETAIL
               : isSteelFloorFormulaCorridor
-                ? getSteelFloorFormulaCorridorOutputDetail("Ln,w") ?? "Lab-side Ln,w from the active steel formula corridor."
+                ? getSteelFloorFormulaCorridorOutputDetail("Ln,w", result.impact) ?? "Lab-side Ln,w from the active steel formula corridor."
               : "Lab-side weighted normalized impact sound level.",
           label: "Ln,w",
           output,
@@ -511,7 +511,7 @@ export function buildOutputCard(input: {
       if (typeof result?.impact?.DeltaLw === "number") {
         return {
           detail: isSteelFloorFormulaCorridor
-            ? getSteelFloorFormulaCorridorOutputDetail("DeltaLw") ?? "DeltaLw from the active steel formula corridor."
+            ? getSteelFloorFormulaCorridorOutputDetail("DeltaLw", result.impact) ?? "DeltaLw from the active steel formula corridor."
             : "Heavy-reference improvement term from the active impact lane.",
           label: "DeltaLw",
           output,

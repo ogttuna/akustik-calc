@@ -21,7 +21,7 @@ Gate A, Gate B, Gate C, Gate D, Gate E, Gate G, Gate H, Gate I,
 Gate J, Gate K, Gate L, Gate M, Gate N, Gate O, Gate P, Gate Q, Gate R,
 Gate S, Gate T, Gate U, Gate V, Gate W, Gate X, Gate Y, Gate Z, Gate AA,
 Gate AB, Gate AC, Gate AD, Gate AE, Gate AF, Gate AG, Gate AH, Gate AI,
-Gate AJ, Gate AK, Gate AL, Gate AM, and Gate AN for this pivot have
+Gate AJ, Gate AK, Gate AL, Gate AM, Gate AN, and Gate AO for this pivot have
 landed. Gate A made the corrected rule executable: source absence
 blocks exact/calibration promotion only, not formula-backed prediction.
 Gate B added shared airborne `airborneBasis` / `airborneCandidateSet`
@@ -439,6 +439,37 @@ files / 25 tests, full `pnpm calculator:gate:current`, and `git diff
 --check` passed before this validation-doc sync. Current gate totals:
 engine 320 files / 1813 tests, web 65 files / 284 passed + 18 skipped,
 repo build 5/5 successful, and whitespace guard clean.
+
+Gate AO has now landed the steel-floor formula error-budget surface
+parity contract. It carries Gate AN's structured payload through the
+runtime impact schema, support trace, output cards, method/corridor
+dossiers, Markdown report, calculator API, and impact-only API. Runtime
+values remain unchanged at `Ln,w 55.6` and `DeltaLw 22.4`; exact-source,
+needs-input, and unsafe-topology cases remain budget-free; the visible
+payload keeps `origin source_absent_formula_error_budget` and
+`notMeasuredEvidence true`.
+Gate AO selection status:
+`gate_ao_error_budget_surface_parity_landed_no_runtime_selected_error_budget_hostile_input_gate_ap`.
+Gate AO landed file:
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ao-steel-floor-formula-error-budget-surface-parity-contract.test.ts`.
+Gate AO landed action:
+`gate_ao_steel_floor_formula_error_budget_surface_parity_plan`.
+Gate AO selected Gate AP file:
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ap-steel-floor-formula-error-budget-hostile-input-contract.test.ts`.
+Gate AO selected Gate AP action:
+`gate_ap_steel_floor_formula_error_budget_hostile_input_plan`.
+Gate AO validation completed on 2026-05-07: focused Gate AE/AN/AO
+engine contracts passed 3 files / 15 tests, focused web steel-floor
+card / budget-surface / input-surface parity passed 3 files / 7 tests,
+full `pnpm calculator:gate:current` passed with engine 321 files / 1818
+tests, web 66 files / 286 passed + 18 skipped, repo build 5/5
+successful, and whitespace guard clean. Broad `pnpm check` passed after
+a transient Google Fonts fetch timeout was isolated by a successful
+build retry: lint, typecheck, engine 446 files / 2620 tests, web 172
+files / 961 passed + 18 skipped, and build all passed. `git diff
+--check` passed. Known non-fatal warnings remain the Node/Vitest Zustand
+persist storage warning and optional `sharp` / `@img` Next build
+warnings via the DOCX export dependency.
 
 Previous Gate AF selection status:
 `gate_af_steel_floor_formula_input_surface_landed_selected_acceptance_revalidation_gate_ag`.

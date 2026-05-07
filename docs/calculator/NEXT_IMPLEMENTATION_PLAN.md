@@ -68,7 +68,7 @@ unsafe reorders. Lab, field, and building-prediction bases must stay
 separate; `Rw`/`STC`, `Ln,w`/`IIC`, and lab/field values are not
 interchangeable without a named rating and measurement basis.
 
-## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate AN Landed / Gate AO Next
+## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate AO Landed / Gate AP Next
 
 Current implementation position:
 `calculator_model_first_physics_prediction_pivot_v1`.
@@ -168,6 +168,61 @@ Latest landed Gate AM checkpoint:
 Latest landed Gate AN checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AN_HANDOFF.md`
+
+Latest landed Gate AO checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AO_HANDOFF.md`
+
+Gate AO selection status:
+
+`gate_ao_error_budget_surface_parity_landed_no_runtime_selected_error_budget_hostile_input_gate_ap`
+
+Gate AO landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ao-steel-floor-formula-error-budget-surface-parity-contract.test.ts`
+
+Gate AO landed action:
+
+`gate_ao_steel_floor_formula_error_budget_surface_parity_plan`
+
+Gate AO selected next file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ap-steel-floor-formula-error-budget-hostile-input-contract.test.ts`
+
+Gate AO selected next action:
+
+`gate_ap_steel_floor_formula_error_budget_hostile_input_plan`
+
+Gate AO result:
+
+- Gate AO moves Gate AN's structured error-budget payload into the
+  steel formula runtime and shared `ImpactCalculation` schema;
+- complete formula cases keep the same `Ln,w 55.6` / `DeltaLw 22.4`
+  runtime estimates and the same `+/-4.5 dB` / `+/-2.0 dB` corridors;
+- output cards, method dossier, corridor dossier, Markdown report,
+  calculator API, and impact-only API all expose the same `origin`,
+  `notMeasuredEvidence`, metric range, tolerance, and terms;
+- exact-source, needs-input, and unsafe-topology cases remain
+  budget-free;
+- Gate AK/AM source rules remain unchanged and still report zero
+  accepted source-owned same-stack ISO lab `DeltaLw` holdouts;
+- Gate AP is selected to harden hostile-input parity around this
+  budget surface.
+
+Gate AO validation result:
+
+Validation completed on 2026-05-07: focused Gate AE/AN/AO engine
+contracts passed 3 files / 15 tests, focused web steel-floor card /
+budget-surface / input-surface parity passed 3 files / 7 tests, and
+full `pnpm calculator:gate:current` passed with engine 321 files / 1818
+tests, web 66 files / 286 passed + 18 skipped, repo build 5/5
+successful, and whitespace guard clean. Broad `pnpm check` passed after
+a transient Google Fonts fetch timeout was isolated by a successful
+build retry: lint, typecheck, engine 446 files / 2620 tests, web 172
+files / 961 passed + 18 skipped, and build all passed. `git diff
+--check` passed. Known non-fatal warnings remain the Node/Vitest Zustand
+persist storage warning and optional `sharp` / `@img` Next build
+warnings via the DOCX export dependency.
 
 Gate AN selection status:
 
@@ -315,35 +370,57 @@ diff --check` passed. Known non-fatal warnings remain the Node/Vitest
 Zustand persist storage warning and optional `sharp` / `@img` Next build
 warnings via the DOCX export dependency.
 
-## Gate AO Implementation Order - Steel-Floor Error-Budget Surface Parity
+## Gate AP Implementation Order - Steel-Floor Error-Budget Hostile Input
 
-Gate AO is the right next step because Gate AN made the source-absent
-steel-floor error budget explicit but did not yet carry that structured
-payload through every user-visible surface. The calculator should show
-the same uncertainty basis in cards, reports, calculator API, and
-impact-only API without presenting it as measured evidence.
+Gate AP is the right next step because Gate AO made the source-absent
+steel-floor formula budget visible on every main surface. The next risk
+is hostile input drift: duplicate steel carriers, partial physical
+inputs, safe reorders, exact-source precedence, or saved/API replays
+must not leak a budget when the formula is not actually selected, and
+must preserve the same budget when the topology is still physically the
+same complete source-absent steel formula case.
 
-Gate AO order:
+Gate AP order:
 
-1. Add the structured Gate AN error-budget payload to the steel formula
-   runtime/support trace path without changing `Ln,w` or `DeltaLw`
-   numeric values.
-2. Show the same `origin`, `notMeasuredEvidence`, metric corridor, and
-   terms on output cards, method dossier, Markdown report, calculator
-   API payload, and impact-only API payload.
-3. Keep exact-source, needs-input, and unsafe-topology cases free of
-   formula budgets.
-4. Add parity tests that compare the visible text against the structured
-   error-budget object rather than duplicating free-form copy.
-5. Preserve Gate AK/AM source-packet strictness and Gate AN corridor
-   values.
+1. Build a hostile-input matrix for the steel-floor formula budget:
+   complete, safe reorder, saved/API replay, missing physical input,
+   duplicate/ambiguous base structure, exact-source precedence, and
+   requested field outputs.
+2. Assert complete/safe-reorder/replay cases keep the same runtime
+   `Ln,w 55.6` / `DeltaLw 22.4` and the same structured budget object.
+3. Assert missing-input, unsafe-topology, and exact-source cases do not
+   expose formula budgets in runtime, cards, reports, or API payloads.
+4. Assert unsupported field outputs remain explicit and do not inherit
+   lab formula budgets as `L'n,w` / `L'nT,w`.
+5. Keep Gate AK/AM source-packet strictness and Gate AO surface parity
+   unchanged.
 
-Non-goals for Gate AO:
+Non-goals for Gate AP:
 
 - no runtime formula retune;
 - no DeltaLw tightening from inferred or product-only values;
 - no field/building promotion from lab evidence;
 - no broad source-library crawl disconnected from formula holdout needs.
+
+## Consumed Gate AO Implementation Order - Steel-Floor Error-Budget Surface Parity
+
+Gate AO carried the structured budget onto user-visible and API
+surfaces.
+
+Gate AO order completed:
+
+1. Added the structured Gate AN error-budget payload to the steel formula
+   runtime/support trace path without changing `Ln,w` or `DeltaLw`
+   numeric values.
+2. Showed the same `origin`, `notMeasuredEvidence`, metric corridor, and
+   terms on output cards, method dossier, corridor dossier, Markdown
+   report, calculator API payload, and impact-only API payload.
+3. Kept exact-source, needs-input, and unsafe-topology cases free of
+   formula budgets.
+4. Added parity tests comparing visible text and API payloads against
+   the structured budget object.
+5. Preserved Gate AK/AM source-packet strictness and Gate AN corridor
+   values.
 
 ## Consumed Gate AN Implementation Order - Source-Absent Steel-Floor Formula Uncertainty
 
