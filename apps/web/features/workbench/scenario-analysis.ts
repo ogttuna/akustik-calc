@@ -18,6 +18,7 @@ import { buildWorkbenchWarningNotes } from "./workbench-warning-notes";
 import type { LayerDraft } from "./workbench-store";
 import {
   buildWorkbenchSteelFloorFormulaInputSurface,
+  formatWorkbenchSteelFloorFormulaMissingInputWarning,
   type WorkbenchSteelFloorFormulaInputSurfaceDraft
 } from "./steel-floor-formula-input-surface";
 
@@ -121,6 +122,12 @@ export function evaluateScenario(input: {
     scenarioWarnings.push(
       "Steel-floor formula input surface is parked because the visible steel carrier topology is unsafe to collapse. Keep one explicit base_structure carrier before relying on the steel formula lane."
     );
+  }
+  const steelFormulaMissingInputWarning = steelFloorFormulaInputSurface
+    ? formatWorkbenchSteelFloorFormulaMissingInputWarning(steelFloorFormulaInputSurface)
+    : null;
+  if (steelFormulaMissingInputWarning) {
+    scenarioWarnings.push(steelFormulaMissingInputWarning);
   }
   let result: AssemblyCalculation | null = null;
 

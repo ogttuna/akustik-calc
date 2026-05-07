@@ -32,15 +32,15 @@ path was found too narrow for the user's calculator-first goal.
 
 Current selected status:
 
-`gate_af_steel_floor_formula_input_surface_landed_selected_acceptance_revalidation_gate_ag`
+`gate_ag_steel_floor_formula_input_surface_acceptance_landed_selected_accuracy_benchmark_gate_ah`
 
 Selected next implementation file:
 
-`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ag-steel-floor-formula-input-surface-acceptance-contract.test.ts`
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ah-steel-floor-formula-accuracy-benchmark-contract.test.ts`
 
 Selected next action:
 
-`gate_ag_steel_floor_formula_input_surface_acceptance_revalidation_plan`
+`gate_ah_steel_floor_formula_accuracy_benchmark_expansion_plan`
 
 Active planning surface:
 
@@ -48,16 +48,87 @@ Active planning surface:
 
 Latest landed gate:
 
-2026-05-07 model-first physics prediction pivot Gate AF steel-floor
-formula input surface.
+2026-05-07 model-first physics prediction pivot Gate AG steel-floor
+formula input-surface acceptance revalidation.
 
 Latest checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AF_HANDOFF.md`
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AG_HANDOFF.md`
 
 Latest landed-gate checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AF_HANDOFF.md`
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AG_HANDOFF.md`
+
+Gate AG result:
+
+- Gate AG did not retune the steel formula and did not add source rows;
+- the engine contract now owns the acceptance pass and selects Gate AH
+  accuracy benchmark expansion;
+- web acceptance now proves the complete steel input surface through live
+  workbench evaluation, local saved replay, server snapshot replay,
+  output cards, Markdown report payload, estimate API payload, and
+  impact-only API payload;
+- complete UI-derived steel rows still return lab `LnW 55.6`,
+  `DeltaLw 22.4`, and
+  `predictor_lightweight_steel_mass_spring_holdout_corridor_estimate`;
+- missing/invalid steel fields now generate precise warnings naming the
+  required physical fields, including carrier spacing, load basis, and
+  dynamic stiffness;
+- comma decimals are accepted, field removal after a complete calculation
+  parks the formula lane, many parked rows do not crash or move the
+  result, safe reorder stays stable, split-contiguous same steel carriers
+  stay stable, unsafe duplicate carrier topology is refused, and toggling
+  the base to non-steel deactivates the steel formula surface;
+- field impact requests such as `L'n,w` and `L'nT,w` remain unsupported
+  instead of being promoted from the lab `Ln,w` formula.
+
+Gate AG landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ag-steel-floor-formula-input-surface-acceptance-contract.test.ts`
+
+Gate AG landed action:
+
+`gate_ag_steel_floor_formula_input_surface_acceptance_revalidation_plan`
+
+Gate AG landed status:
+
+`gate_ag_steel_floor_formula_input_surface_acceptance_landed_selected_accuracy_benchmark_gate_ah`
+
+Gate AG selected next file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ah-steel-floor-formula-accuracy-benchmark-contract.test.ts`
+
+Gate AG selected next action:
+
+`gate_ah_steel_floor_formula_accuracy_benchmark_expansion_plan`
+
+Gate AG validation result:
+
+Focused validation completed on 2026-05-07: Gate AG engine contract
+passed 1 file / 3 tests; web steel formula input-surface acceptance
+passed 1 file / 4 tests; Gate AF + Gate AG web input-surface focused
+suite passed 2 files / 8 tests; engine typecheck passed; web typecheck
+passed; preflight `git diff --check` passed. Final `pnpm
+calculator:gate:current` passed with engine 313 files / 1778 tests, web
+65 files / 284 tests plus 18 skipped, repo build, and whitespace guard.
+The Gate AG web acceptance test emits known non-fatal Zustand persist
+storage warnings under Node/Vitest; the web build still emits the known
+non-fatal optional `sharp/@img` package warnings.
+
+Gate AH first-action plan:
+
+- build a benchmark-expansion contract for the steel formula corridor
+  using existing rights-safe measured/holdout rows and explicit physics
+  inputs;
+- keep exact full-stack measured rows first, use measured rows as anchors
+  only when topology and metric basis match, and do not let the source
+  packet become the product;
+- compare formula residuals across open-web/joist support forms, carrier
+  spacing/depth, upper dynamic stiffness, load basis, and lower isolation
+  variants;
+- tighten or widen the error budget only from measured/source-backed
+  residual evidence, not from desired output values;
+- preserve lab, field, and building-prediction separation.
 
 Gate AF result:
 

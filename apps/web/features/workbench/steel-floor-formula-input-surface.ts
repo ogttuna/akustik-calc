@@ -6,6 +6,7 @@ import {
   type SteelFloorLowerCeilingIsolationSupportForm
 } from "@dynecho/engine";
 import type {
+  AcousticInputFieldId,
   ImpactPredictorSupportForm,
   LayerInput,
   MaterialDefinition,
@@ -24,6 +25,15 @@ export type WorkbenchSteelFloorFormulaInputSurfaceDraft = {
   impactSteelLowerCeilingIsolationSupportForm: WorkbenchSteelFloorFormulaLowerCeilingIsolationSupportForm;
   impactSteelResilientLayerDynamicStiffnessMNm3: string;
   impactSteelSupportForm: "" | ImpactPredictorSupportForm;
+};
+
+export const WORKBENCH_STEEL_FLOOR_FORMULA_INPUT_LABELS: Partial<Record<AcousticInputFieldId, string>> = {
+  loadBasisKgM2: "Load basis (kg/m2)",
+  lowerCeilingIsolationSupportForm: "Lower isolation",
+  resilientLayerDynamicStiffnessMNm3: "Dynamic stiffness (MN/m3)",
+  steelCarrierDepthMm: "Carrier depth (mm)",
+  steelCarrierSpacingMm: "Carrier spacing (mm)",
+  steelSupportForm: "Steel support form"
 };
 
 export function normalizeWorkbenchSteelFloorFormulaInputSurface(
@@ -53,6 +63,20 @@ export function buildWorkbenchSteelFloorFormulaInputSurface(input: {
     surface: normalizeWorkbenchSteelFloorFormulaInputSurface(input.surface),
     targetOutputs: input.targetOutputs
   });
+}
+
+export function formatWorkbenchSteelFloorFormulaMissingInputWarning(
+  result: SteelFloorFormulaInputSurfaceResult
+): string | null {
+  if (result.status !== "needs_input" || result.missingPhysicalInputs.length === 0) {
+    return null;
+  }
+
+  const missingLabels = result.missingPhysicalInputs.map(
+    (field) => WORKBENCH_STEEL_FLOOR_FORMULA_INPUT_LABELS[field] ?? field
+  );
+
+  return `Steel-floor formula lane needs these physical inputs before calculating Ln,w / DeltaLw: ${missingLabels.join(", ")}.`;
 }
 
 export function hasWorkbenchSteelFloorFormulaInputSurfaceRoute(input: {

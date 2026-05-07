@@ -90,17 +90,22 @@ controls, scenario analysis, local/server snapshots, and the engine
 bridge now feed the Gate AD predictor input; complete UI-derived steel
 returns lab `LnW 55.6` / `DeltaLw 22.4`, partial fields stay parked,
 unsafe duplicate steel carriers are refused, and exact source rows still
-win. Gate AG is next:
-`gate_ag_steel_floor_formula_input_surface_acceptance_revalidation_plan`.
+win. Gate AG has now landed input-surface acceptance: live workbench
+evaluation, local saved replay, server snapshot replay, output cards,
+Markdown report payload, estimate API payload, impact-only API payload,
+and hostile UI edits all preserve the steel formula basis while precise
+missing-input warnings name the blocked physical fields. Gate AH is next:
+`gate_ah_steel_floor_formula_accuracy_benchmark_expansion_plan`.
 
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AF_HANDOFF.md`
-3. `docs/calculator/CHECKPOINT_2026-05-07_GATE_AE_REVALIDATION_GATE_AF_PLAN_HANDOFF.md`
-4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AE_HANDOFF.md`
-5. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AD_HANDOFF.md`
-6. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AC_HANDOFF.md`
+2. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AG_HANDOFF.md`
+3. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AF_HANDOFF.md`
+4. `docs/calculator/CHECKPOINT_2026-05-07_GATE_AE_REVALIDATION_GATE_AF_PLAN_HANDOFF.md`
+5. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AE_HANDOFF.md`
+6. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AD_HANDOFF.md`
+7. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AC_HANDOFF.md`
 4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AB_HANDOFF.md`
 4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AA_HANDOFF.md`
 4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Z_HANDOFF.md`
@@ -427,12 +432,39 @@ plan.
 - current selected slice:
   `calculator_model_first_physics_prediction_pivot_v1`
 - current next decision inside the slice:
-  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ag-steel-floor-formula-input-surface-acceptance-contract.test.ts`
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ah-steel-floor-formula-accuracy-benchmark-contract.test.ts`
   should run
-  `gate_ag_steel_floor_formula_input_surface_acceptance_revalidation_plan`.
+  `gate_ah_steel_floor_formula_accuracy_benchmark_expansion_plan`.
 - latest checkpoint:
-  `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AF_HANDOFF.md`.
-- just landed model-first physics prediction pivot Gate AF:
+  `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AG_HANDOFF.md`.
+- just landed model-first physics prediction pivot Gate AG:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ag-steel-floor-formula-input-surface-acceptance-contract.test.ts`
+  landed
+  `gate_ag_steel_floor_formula_input_surface_acceptance_revalidation_plan`.
+  It keeps the Gate AD steel-floor formula values unchanged while proving
+  the Gate AF input surface through live workbench evaluation, local saved
+  replay, server snapshot replay, output cards, Markdown report payload,
+  estimate API payload, impact-only API payload, and hostile UI edits.
+  Complete UI-derived steel rows still return lab `LnW 55.6`,
+  `DeltaLw 22.4`, and
+  `predictor_lightweight_steel_mass_spring_holdout_corridor_estimate`.
+  Missing/invalid steel physical fields now name the precise blockers;
+  field impact requests such as `L'n,w` and `L'nT,w` remain unsupported
+  instead of being promoted from lab `Ln,w`. Selection status:
+  `gate_ag_steel_floor_formula_input_surface_acceptance_landed_selected_accuracy_benchmark_gate_ah`.
+  Validation completed on 2026-05-07: Gate AG engine contract 1 file / 3
+  tests, web steel formula input-surface acceptance 1 file / 4 tests,
+  Gate AF + Gate AG web focused suite 2 files / 8 tests, engine
+  typecheck, web typecheck, preflight `git diff --check`, and final
+  `pnpm calculator:gate:current` all passed. The final current gate
+  covered engine 313 files / 1778 tests, web 65 files / 284 tests plus
+  18 skipped, repo build, and whitespace guard. The Gate AG web
+  acceptance test emits known non-fatal Zustand persist storage warnings
+  under Node/Vitest; the web build still emits the known non-fatal
+  optional `sharp/@img` package warnings.
+  Selected next action:
+  `gate_ah_steel_floor_formula_accuracy_benchmark_expansion_plan`.
+- previously landed model-first physics prediction pivot Gate AF:
   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-af-steel-floor-formula-input-surface-contract.test.ts`
   landed
   `gate_af_steel_floor_formula_input_surface_plan`.

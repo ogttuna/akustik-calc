@@ -208,25 +208,49 @@ plus UI fields return lab `LnW 55.6`, `DeltaLw 22.4`, and
 `predictor_lightweight_steel_mass_spring_holdout_corridor_estimate`;
 partial fields do not produce fake formula answers; unsafe duplicate
 steel carriers are refused; exact measured rows remain first.
-Gate AF selection status:
-`gate_af_steel_floor_formula_input_surface_landed_selected_acceptance_revalidation_gate_ag`.
-Gate AF landed file:
-`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-af-steel-floor-formula-input-surface-contract.test.ts`.
-Gate AF landed action:
-`gate_af_steel_floor_formula_input_surface_plan`.
-Gate AF selected Gate AG file:
+Gate AG has now landed steel-floor formula input-surface acceptance:
+live workbench evaluation, local saved replay, server snapshot replay,
+output cards, Markdown report payload, estimate API payload, impact-only
+API payload, and hostile UI edits all preserve the same formula basis and
+the same lab `LnW 55.6` / `DeltaLw 22.4` result for the complete
+construction-image steel case. Missing and invalid steel physical fields
+now name the exact blockers; field impact requests such as `L'n,w` and
+`L'nT,w` remain unsupported instead of being promoted from the lab
+formula.
+Gate AG selection status:
+`gate_ag_steel_floor_formula_input_surface_acceptance_landed_selected_accuracy_benchmark_gate_ah`.
+Gate AG landed file:
 `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ag-steel-floor-formula-input-surface-acceptance-contract.test.ts`.
-Gate AF selected Gate AG action:
+Gate AG landed action:
 `gate_ag_steel_floor_formula_input_surface_acceptance_revalidation_plan`.
-Gate AF validation completed on 2026-05-07: focused Gate AF engine
-contract 1 file / 5 tests, focused web steel formula input-surface test
-1 file / 4 tests, engine typecheck, web typecheck, and final
-`pnpm calculator:gate:current` with engine 312 files / 1775 tests and
-web 64 files / 280 tests plus 18 skipped, repo build, and whitespace
-guard all passed. The Next build still emits the known non-fatal
-optional `sharp/@img` package warnings. Gate AG should now harden this
-input surface across live UI, saved replay, server snapshot replay,
-route unlock prompts, report/API payloads, and hostile UI edits.
+Gate AG selected Gate AH file:
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ah-steel-floor-formula-accuracy-benchmark-contract.test.ts`.
+Gate AG selected Gate AH action:
+`gate_ah_steel_floor_formula_accuracy_benchmark_expansion_plan`.
+Gate AG validation completed on 2026-05-07: Gate AG engine contract 1
+file / 3 tests, web steel formula input-surface acceptance 1 file / 4
+tests, Gate AF + Gate AG web focused suite 2 files / 8 tests, engine
+typecheck, web typecheck, preflight `git diff --check`, and final `pnpm
+calculator:gate:current` all passed. The final current gate covered
+engine 313 files / 1778 tests, web 65 files / 284 tests plus 18 skipped,
+repo build, and whitespace guard. The Gate AG web acceptance test emits
+known non-fatal Zustand persist storage warnings under Node/Vitest; the
+web build still emits the known non-fatal optional `sharp/@img` package
+warnings.
+Gate AH should now expand the steel formula accuracy benchmark matrix
+from rights-safe measured/holdout evidence without turning the calculator
+back into a source-row catalog.
+
+Previous Gate AF selection status:
+`gate_af_steel_floor_formula_input_surface_landed_selected_acceptance_revalidation_gate_ag`.
+Previous Gate AF landed file:
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-af-steel-floor-formula-input-surface-contract.test.ts`.
+Previous Gate AF landed action:
+`gate_af_steel_floor_formula_input_surface_plan`.
+Previous Gate AF selected Gate AG file:
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ag-steel-floor-formula-input-surface-acceptance-contract.test.ts`.
+Previous Gate AF selected Gate AG action:
+`gate_ag_steel_floor_formula_input_surface_acceptance_revalidation_plan`.
 
 Previous Gate AD selection status:
 `gate_ad_steel_floor_impact_formula_corridor_landed_selected_card_report_parity_gate_ae`.

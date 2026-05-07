@@ -68,7 +68,7 @@ unsafe reorders. Lab, field, and building-prediction bases must stay
 separate; `Rw`/`STC`, `Ln,w`/`IIC`, and lab/field values are not
 interchangeable without a named rating and measurement basis.
 
-## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate AF Landed / Gate AG Acceptance Revalidation Next
+## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate AG Landed / Gate AH Accuracy Benchmark Expansion Next
 
 Current implementation position:
 `calculator_model_first_physics_prediction_pivot_v1`.
@@ -129,6 +129,91 @@ Latest landed Gate AF checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AF_HANDOFF.md`
 
+Latest landed Gate AG checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AG_HANDOFF.md`
+
+Gate AG selection status:
+
+`gate_ag_steel_floor_formula_input_surface_acceptance_landed_selected_accuracy_benchmark_gate_ah`
+
+Gate AG landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ag-steel-floor-formula-input-surface-acceptance-contract.test.ts`
+
+Gate AG landed action:
+
+`gate_ag_steel_floor_formula_input_surface_acceptance_revalidation_plan`
+
+Gate AG selected next file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ah-steel-floor-formula-accuracy-benchmark-contract.test.ts`
+
+Gate AG selected next action:
+
+`gate_ah_steel_floor_formula_accuracy_benchmark_expansion_plan`
+
+Gate AG result:
+
+- Gate AG acceptance landed without retuning the Gate AD steel formula;
+- complete UI-derived steel rows remain lab `LnW 55.6` / `DeltaLw
+  22.4` with the same source-absent formula basis and card/report
+  tolerance copy;
+- live workbench, local saved replay, server snapshot replay, output
+  cards, Markdown report payload, estimate API payload, and impact-only
+  API payload now have paired acceptance coverage;
+- missing/invalid fields name the precise physical blockers instead of
+  silently parking the formula lane;
+- hostile edits cover comma decimals, empty/zero/negative values, field
+  removal, many parked rows, safe reorder, split-contiguous same steel
+  carriers, unsafe duplicate carriers, steel/non-steel base toggles, and
+  field impact output requests;
+- field outputs such as `L'n,w` and `L'nT,w` stay unsupported unless a
+  field-context owner is active.
+
+Gate AG validation result:
+
+Focused validation completed on 2026-05-07: Gate AG engine contract
+passed 1 file / 3 tests; web steel formula input-surface acceptance
+passed 1 file / 4 tests; Gate AF + Gate AG web focused suite passed 2
+files / 8 tests; engine typecheck passed; web typecheck passed; preflight
+`git diff --check` passed. Final `pnpm calculator:gate:current` passed
+with engine 313 files / 1778 tests, web 65 files / 284 tests plus 18
+skipped, repo build, and whitespace guard. The Gate AG web acceptance
+test emits known non-fatal Zustand persist storage warnings under
+Node/Vitest; the web build still emits the known non-fatal optional
+`sharp/@img` package warnings.
+
+## Gate AH Implementation Order - Steel Formula Accuracy Benchmark Expansion
+
+Gate AH is the right next step because Gate AG proved the new input
+surface is stable across user-facing and API surfaces. The remaining
+calculator-first risk is numeric accuracy across nearby steel-floor
+families, not another UI plumbing pass and not a source-library crawl.
+
+Gate AH order:
+
+1. Create the Gate AH contract at
+   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ah-steel-floor-formula-accuracy-benchmark-contract.test.ts`.
+2. Build a rights-safe benchmark matrix from existing measured/holdout
+   steel-floor rows and explicit physics input cases. Include support
+   form, carrier depth/spacing, resilient dynamic stiffness, load basis,
+   lower isolation, metric basis, and tolerance owner for each case.
+3. Compare formula residuals against exact measured values where
+   topology and metric scope truly match; use near rows only as anchors
+   or calibration checks when their family and basis are defensible.
+4. Decide whether the current `+/-4.5 dB Ln,w` and `+/-2.0 dB DeltaLw`
+   corridor tolerances should stay, widen, or narrow from evidence.
+5. Preserve exact-source precedence and keep lab, field, and
+   building-prediction outputs separate. Do not alias `Ln,w` with `IIC`.
+
+Non-goals for Gate AH:
+
+- no broad source crawl;
+- no replacing the physics calculator with a measured-row catalog;
+- no field/building output promotion from lab values;
+- no formula retune without residual evidence and paired negative tests.
+
 Gate AF selection status:
 
 `gate_af_steel_floor_formula_input_surface_landed_selected_acceptance_revalidation_gate_ag`
@@ -174,13 +259,13 @@ tests, web 64 files / 280 tests plus 18 skipped, repo build, and
 whitespace guard. The Next build still emits the known non-fatal optional
 `sharp/@img` package warnings.
 
-## Gate AG Implementation Order - Steel Input Surface Acceptance Revalidation
+## Consumed Gate AG Implementation Order - Steel Input Surface Acceptance Revalidation
 
-Gate AG is the right next step because Gate AF landed the functional
-input bridge, but the calculator should now prove the new surface remains
-stable across the surfaces a user will actually touch: workbench UI,
-local saved replay, server snapshot replay, output cards, report payloads,
-and API payloads.
+Gate AG was selected because Gate AF landed the functional input bridge,
+but the calculator still needed proof that the new surface stayed stable
+across the surfaces a user actually touches: workbench UI, local saved
+replay, server snapshot replay, output cards, report payloads, and API
+payloads. Gate AG has now consumed that acceptance gap.
 
 Gate AG order:
 

@@ -2,7 +2,7 @@
 
 Slice id: `calculator_model_first_physics_prediction_pivot_v1`
 
-Status: SELECTED / GATE AF LANDED / GATE AG ACCEPTANCE REVALIDATION NEXT
+Status: SELECTED / GATE AG LANDED / GATE AH ACCURACY BENCHMARK EXPANSION NEXT
 
 Selected by:
 
@@ -12,7 +12,68 @@ queue.
 
 Selection status:
 
-`gate_af_steel_floor_formula_input_surface_landed_selected_acceptance_revalidation_gate_ag`
+`gate_ag_steel_floor_formula_input_surface_acceptance_landed_selected_accuracy_benchmark_gate_ah`
+
+Latest Gate AG checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AG_HANDOFF.md`
+
+Gate AG landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ag-steel-floor-formula-input-surface-acceptance-contract.test.ts`
+
+Gate AG landed action:
+
+`gate_ag_steel_floor_formula_input_surface_acceptance_revalidation_plan`
+
+Gate AG selected Gate AH file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ah-steel-floor-formula-accuracy-benchmark-contract.test.ts`
+
+Gate AG selected Gate AH action:
+
+`gate_ah_steel_floor_formula_accuracy_benchmark_expansion_plan`
+
+Gate AG landed summary:
+
+Gate AG keeps the Gate AD steel formula values unchanged while proving
+the Gate AF input surface across live workbench evaluation, local saved
+replay, server snapshot replay, output cards, Markdown report payload,
+estimate API payload, impact-only API payload, and hostile edits.
+Complete UI-derived steel rows still return lab `LnW 55.6`, `DeltaLw
+22.4`, and
+`predictor_lightweight_steel_mass_spring_holdout_corridor_estimate`.
+Missing/invalid fields now name precise physical blockers; field impact
+outputs remain unsupported instead of being promoted from the lab
+formula.
+
+Gate AG validation result:
+
+Focused validation completed on 2026-05-07. Gate AG engine contract
+passed 1 file / 3 tests; web steel formula input-surface acceptance
+passed 1 file / 4 tests; Gate AF + Gate AG web focused suite passed 2
+files / 8 tests; engine typecheck passed; web typecheck passed; preflight
+`git diff --check` passed. Final `pnpm calculator:gate:current` passed
+with engine 313 files / 1778 tests, web 65 files / 284 tests plus 18
+skipped, repo build, and whitespace guard. The Gate AG web acceptance
+test emits known non-fatal Zustand persist storage warnings under
+Node/Vitest; the web build still emits the known non-fatal optional
+`sharp/@img` package warnings.
+
+Gate AH implementation plan:
+
+1. Create
+   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ah-steel-floor-formula-accuracy-benchmark-contract.test.ts`.
+2. Build a rights-safe steel benchmark matrix from existing measured and
+   holdout cases with explicit support form, carrier geometry, dynamic
+   stiffness, load basis, lower isolation, metric basis, and tolerance
+   owner.
+3. Compare residuals only where topology and metric basis match; use near
+   rows as calibration anchors, not as a replacement for the physics
+   calculator.
+4. Decide whether the current steel formula tolerance should stay,
+   widen, or narrow based on evidence.
+5. Keep exact-source precedence and lab/field/building bases separate.
 
 Latest Gate AF checkpoint:
 
@@ -58,7 +119,7 @@ tests, web 64 files / 280 tests plus 18 skipped, repo build, and
 whitespace guard. The Next build still emits the known non-fatal optional
 `sharp/@img` package warnings.
 
-Gate AG implementation plan:
+Consumed Gate AG implementation plan:
 
 1. Create
    `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ag-steel-floor-formula-input-surface-acceptance-contract.test.ts`.
