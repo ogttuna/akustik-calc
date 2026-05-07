@@ -47,6 +47,10 @@ import {
   buildGateVFloorImpactDynamicStiffnessContract,
   type GateVFloorImpactDynamicStiffnessContract
 } from "./dynamic-calculator-floor-impact-dynamic-stiffness-contract";
+import {
+  buildGateYFloorImpactFieldContextAssessment,
+  type GateYFloorImpactFieldContextAssessment
+} from "./dynamic-calculator-floor-impact-field-context-contract";
 import { clamp, round1 } from "./math";
 import { buildEstimateWarnings, estimateRwDb } from "./estimate-rw";
 import { hasBoundOnlyUbiqOpenWebCarpetCombinedProfile } from "./bound-only-floor-near-miss";
@@ -128,8 +132,16 @@ const GATE_W_FLOOR_IMPACT_OUTPUTS = new Set<RequestedOutputId>([
   "LnT,A"
 ]);
 
+const GATE_Z_FIELD_IMPACT_OUTPUTS = new Set<RequestedOutputId>(["L'n,w", "L'nT,w", "L'nT,50"]);
+const GATE_Z_RUNTIME_READY_FIELD_IMPACT_OUTPUTS = new Set<RequestedOutputId>(["L'n,w", "L'nT,w"]);
+const GATE_Z_LOW_FREQUENCY_OWNER = "lowFrequencyImpactSpectrumOrCI50_2500Owner";
+
 function hasGateWFloorImpactRequest(targetOutputs: readonly RequestedOutputId[]): boolean {
   return targetOutputs.some((output) => GATE_W_FLOOR_IMPACT_OUTPUTS.has(output));
+}
+
+function hasGateZFloorImpactFieldRequest(targetOutputs: readonly RequestedOutputId[]): boolean {
+  return targetOutputs.some((output) => GATE_Z_FIELD_IMPACT_OUTPUTS.has(output));
 }
 
 function gateWLabImpactRuntimeReady(
@@ -145,6 +157,46 @@ function gateWLabImpactRuntimeReady(
       labBoundary.requestedOutputs.length > 0 &&
       labBoundary.missingPhysicalInputs.length === 0
   );
+}
+
+function gateZFloorImpactFieldRuntimeReady(
+  assessment: GateYFloorImpactFieldContextAssessment | null
+): boolean {
+  return Boolean(
+    assessment &&
+      assessment.missingPhysicalInputs.length === 0 &&
+      assessment.missingOwnerInputs.every((owner) => owner === GATE_Z_LOW_FREQUENCY_OWNER) &&
+      assessment.readyOutputs.some((output) => GATE_Z_RUNTIME_READY_FIELD_IMPACT_OUTPUTS.has(output))
+  );
+}
+
+function buildGateZFieldImpactRuntimeWarning(
+  assessment: GateYFloorImpactFieldContextAssessment | null
+): string | null {
+  if (!assessment || assessment.requestedOutputs.length === 0) {
+    return null;
+  }
+
+  if (assessment.missingPhysicalInputs.length > 0) {
+    return `Dynamic Calculator floor-impact field runtime is waiting for ${assessment.missingPhysicalInputs.join(", ")} before promoting L'n,w / L'nT,w from the lab impact anchor.`;
+  }
+
+  const nonLowFrequencyOwners = assessment.missingOwnerInputs.filter(
+    (owner) => owner !== GATE_Z_LOW_FREQUENCY_OWNER
+  );
+  if (nonLowFrequencyOwners.length > 0) {
+    return `Dynamic Calculator floor-impact field runtime is waiting for ${nonLowFrequencyOwners.join(", ")} before promoting L'n,w / L'nT,w from the lab impact anchor.`;
+  }
+
+  if (
+    assessment.readyOutputs.length === 0 &&
+    assessment.blockedOutputs.includes("L'nT,50") &&
+    assessment.missingOwnerInputs.includes(GATE_Z_LOW_FREQUENCY_OWNER)
+  ) {
+    return `Dynamic Calculator floor-impact low-frequency runtime is waiting for ${GATE_Z_LOW_FREQUENCY_OWNER} before promoting L'nT,50.`;
+  }
+
+  return null;
 }
 
 function resolveFloorImpactDynamicStiffness(input: {
@@ -986,8 +1038,22 @@ export function calculateAssembly(
           targetOutputs
         })
       : null;
+  const gateZFloorImpactFieldAssessment =
+    options.calculator === "dynamic" && hasGateZFloorImpactFieldRequest(targetOutputs)
+      ? buildGateYFloorImpactFieldContextAssessment({
+          airborneContext: airborneContext ?? undefined,
+          catalog: baseCatalog,
+          floorImpactContext: floorImpactContext ?? undefined,
+          impactFieldContext: impactFieldContext ?? undefined,
+          layers,
+          scenarioId: "gate_y_complete_lab_anchor_and_field_context_ready_except_low_frequency",
+          targetOutputs
+        })
+      : null;
   const gateWLabRuntimeReady = gateWLabImpactRuntimeReady(gateWFloorImpactContract);
-  const gateWImpactPredictorSeed = gateWLabRuntimeReady
+  const gateZFieldImpactRuntimeReady =
+    gateZFloorImpactFieldRuntimeReady(gateZFloorImpactFieldAssessment);
+  const gateWImpactPredictorSeed = gateWLabRuntimeReady || gateZFieldImpactRuntimeReady
     ? buildGateWImpactPredictorSeed({
         catalog: baseCatalog,
         floorImpactContext,
@@ -1136,7 +1202,7 @@ export function calculateAssembly(
               derivedImpactLane.boundFloorSystemMatch ||
               derivedImpactLane.impactCatalogMatch ||
               derivedImpactLane.predictorSpecificFloorSystemEstimate ||
-              (gateWLabRuntimeReady && derivedImpactLane.narrowImpact)
+              ((gateWLabRuntimeReady || gateZFieldImpactRuntimeReady) && derivedImpactLane.narrowImpact)
             ) ||
           (!directNarrowImpact &&
             !directImpactLane.floorSystemEstimate &&
@@ -1170,6 +1236,7 @@ export function calculateAssembly(
     options.calculator === "dynamic" &&
       gateWFloorImpactContract &&
       !gateWLabRuntimeReady &&
+      !gateZFieldImpactRuntimeReady &&
       !exactImpact &&
       !floorSystemMatch &&
       !boundFloorSystemMatch &&
@@ -1360,10 +1427,13 @@ export function calculateAssembly(
   warnings.push(...buildTargetOutputWarnings(targetOutputSupport));
 
   if (shouldWithholdUnreadyDynamicFloorImpactRuntime && gateWFloorImpactContract) {
-    warnings.push(
+    const gateZFieldWarning = buildGateZFieldImpactRuntimeWarning(gateZFloorImpactFieldAssessment);
+    const gateWImpactWarning =
       gateWFloorImpactContract.missingPhysicalInputs.length > 0
         ? `Dynamic Calculator floor-impact runtime is waiting for ${gateWFloorImpactContract.missingPhysicalInputs.join(", ")} before promoting Ln,w / DeltaLw from the physics lane.`
-        : "Dynamic Calculator floor-impact runtime did not promote this adapter set; lab Ln,w / DeltaLw, field impact, and ASTM IIC/AIIC stay on separate runtime boundaries."
+        : "Dynamic Calculator floor-impact runtime did not promote this adapter set; lab Ln,w / DeltaLw, field impact, and ASTM IIC/AIIC stay on separate runtime boundaries.";
+    warnings.push(
+      gateZFieldWarning ?? gateWImpactWarning
     );
   }
 

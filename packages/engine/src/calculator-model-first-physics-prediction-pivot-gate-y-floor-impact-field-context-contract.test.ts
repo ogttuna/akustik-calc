@@ -229,7 +229,7 @@ describe("calculator model-first physics prediction pivot Gate Y", () => {
     }
   });
 
-  it("documents the pre-Gate-Z runtime boundary for field-only and lab-anchored mixed requests", () => {
+  it("keeps the Gate Y boundary historical while Gate Z owns the current field-only runtime", () => {
     const fieldOnly = calculateAssembly(HEAVY_FLOATING_FLOOR_STACK, {
       airborneContext: COMPLETE_AIRBORNE_FIELD_CONTEXT,
       calculator: "dynamic",
@@ -245,13 +245,18 @@ describe("calculator model-first physics prediction pivot Gate Y", () => {
       targetOutputs: ["Ln,w", "DeltaLw", "L'n,w", "L'nT,w", "L'nT,50"]
     });
 
-    expect(fieldOnly.impact).toBeNull();
-    expect(fieldOnly.supportedTargetOutputs).toEqual([]);
-    expect(fieldOnly.unsupportedTargetOutputs).toEqual(["L'n,w", "L'nT,w"]);
+    expect(fieldOnly.impact).toMatchObject({
+      DeltaLw: 24.3,
+      LPrimeNTw: 49.9,
+      LPrimeNW: 52.3,
+      LnW: 50.3,
+      basis: "mixed_predicted_plus_estimated_standardized_field_volume_normalization"
+    });
+    expect(fieldOnly.supportedTargetOutputs).toEqual(["L'n,w", "L'nT,w"]);
+    expect(fieldOnly.unsupportedTargetOutputs).toEqual([]);
     expect(fieldOnly.warnings).toContain(
-      "Dynamic Calculator floor-impact runtime did not promote this adapter set; lab Ln,w / DeltaLw, field impact, and ASTM IIC/AIIC stay on separate runtime boundaries."
+      "Live field-side supplement is active on the main impact lane. K and receiving-room context are now carried through the engine boundary, not only the guide lane."
     );
-
     expect(labAnchoredMixed.impact).toMatchObject({
       DeltaLw: 24.3,
       LPrimeNTw: 49.9,
@@ -271,6 +276,8 @@ describe("calculator model-first physics prediction pivot Gate Y", () => {
       "L'nT,w"
     ]);
     expect(labAnchoredMixed.unsupportedTargetOutputs).toEqual(["L'nT,50"]);
+    expect(fieldOnly.impact?.LPrimeNW).toBe(labAnchoredMixed.impact?.LPrimeNW);
+    expect(fieldOnly.impact?.LPrimeNTw).toBe(labAnchoredMixed.impact?.LPrimeNTw);
     expect(buildGateYFloorImpactFieldContextContract().currentRuntimeBoundary).toEqual({
       fieldOnlyRequestsStillBlockedBeforeGateZ: true,
       labAnchoredMixedRequestsCanReachExistingFieldSupplement: true,

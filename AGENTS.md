@@ -62,17 +62,22 @@ contract after Gate U selected that lane, without turning the calculator
 back into a finite source catalog or aliasing `Ln,w` with `IIC`. Gate W
 promoted only the complete lab `Ln,w` / `DeltaLw` lane. Gate X selected
 the floor-impact field-context boundary, and Gate Y landed that
-no-runtime boundary. Gate Z is next and must own field-only runtime,
-visible support, and report parity while keeping lab, field, and ASTM
-impact bases separate.
+no-runtime boundary. Gate Z promoted field-only `L'n,w` and `L'nT,w`
+runtime through the owned Gate W lab anchor plus explicit field context,
+while keeping `L'nT,50` blocked until a low-frequency owner exists.
+Gate AA is next: `gate_aa_construction_image_accuracy_incident_route_selection_and_solver_recovery_plan`.
+It should treat the construction-image examples as an accuracy incident,
+not a warning-copy issue.
 
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Y_HANDOFF.md`
-3. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_X_HANDOFF.md`
-4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_W_HANDOFF.md`
-5. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_V_HANDOFF.md`
+2. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Z_HANDOFF.md`
+3. `docs/calculator/ACCURACY_INCIDENT_2026-05-07_CONSTRUCTION_IMAGE_ROUTE_SELECTION.md`
+4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Y_HANDOFF.md`
+5. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_X_HANDOFF.md`
+6. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_W_HANDOFF.md`
+7. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_V_HANDOFF.md`
 4. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_U_REVALIDATION_AND_COMMIT_HANDOFF.md`
 4. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_U_HANDOFF.md`
 4. `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_T_HANDOFF.md`
@@ -391,11 +396,26 @@ plan.
 - current selected slice:
   `calculator_model_first_physics_prediction_pivot_v1`
 - current next decision inside the slice:
-  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-z-floor-impact-field-runtime-contract.test.ts`
+  `docs/calculator/ACCURACY_INCIDENT_2026-05-07_CONSTRUCTION_IMAGE_ROUTE_SELECTION.md`
   should run
-  `gate_z_promote_floor_impact_field_context_runtime_for_dynamic_calculator`.
+  `gate_aa_construction_image_accuracy_incident_route_selection_and_solver_recovery_plan`.
 - latest checkpoint:
-  `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Y_HANDOFF.md`.
+  `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Z_HANDOFF.md`.
+- just landed model-first physics prediction pivot Gate Z:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-z-floor-impact-field-runtime-contract.test.ts`
+  landed
+  `gate_z_promote_floor_impact_field_context_runtime_for_dynamic_calculator`.
+  It promotes Dynamic Calculator field-only floor-impact `L'n,w` and
+  `L'nT,w` when the Gate W lab `Ln,w` / `DeltaLw` anchor and Gate Y
+  field context are complete. The promoted reference scenario pins
+  `LnW 50.3`, `DeltaLw 24.3`, `LPrimeNW 52.3`, and `LPrimeNTw 49.9`
+  on basis
+  `mixed_predicted_plus_estimated_standardized_field_volume_normalization`.
+  `L'nT,50` stays unsupported until
+  `lowFrequencyImpactSpectrumOrCI50_2500Owner` exists. Selection status:
+  `gate_z_floor_impact_field_runtime_landed_selected_construction_image_accuracy_incident_gate_aa`.
+  Selected next action:
+  `gate_aa_construction_image_accuracy_incident_route_selection_and_solver_recovery_plan`.
 - just landed model-first physics prediction pivot Gate Y:
   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-y-floor-impact-field-context-contract.test.ts`
   landed

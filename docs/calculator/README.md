@@ -19,7 +19,7 @@ required topology and material inputs are present.
 
 Gate A, Gate B, Gate C, Gate D, Gate E, Gate G, Gate H, Gate I,
 Gate J, Gate K, Gate L, Gate M, Gate N, Gate O, Gate P, Gate Q, Gate R,
-Gate S, Gate T, Gate U, Gate V, Gate W, Gate X, and Gate Y for this pivot have
+Gate S, Gate T, Gate U, Gate V, Gate W, Gate X, Gate Y, and Gate Z for this pivot have
 landed. Gate A made the corrected rule executable: source absence
 blocks exact/calibration promotion only, not formula-backed prediction.
 Gate B added shared airborne `airborneBasis` / `airborneCandidateSet`
@@ -155,26 +155,61 @@ Gate Y landed that no-runtime floor-impact field-context contract. It
 requires `contextMode`, `partitionAreaM2`, `receivingRoomVolumeM3`,
 `receivingRoomRt60S`, and `impactFieldContext`, plus lab-impact anchor,
 field `K` / mass-ratio / direct-flanking policy, flanking path or
-junction policy, and low-frequency owner before `L'nT,50`. Field-only
-Dynamic Calculator requests remain blocked until Gate Z; the existing
-lab-anchored mixed supplement is documented and must be normalized by
-Gate Z across runtime support, cards, and reports.
+junction policy, and low-frequency owner before `L'nT,50`. It documented
+the pre-Gate-Z blocked field-only boundary and the existing lab-anchored
+mixed supplement that Gate Z needed to normalize.
+Gate Z promoted that field-context runtime for complete field-only
+`L'n,w` / `L'nT,w` requests. The runtime now uses the Gate W lab
+`Ln,w` / `DeltaLw` anchor internally, then applies explicit field `K`
+and receiving-room volume normalization. The pinned reference scenario
+returns `LnW 50.3`, `DeltaLw 24.3`, `LPrimeNW 52.3`, and
+`LPrimeNTw 49.9` on basis
+`mixed_predicted_plus_estimated_standardized_field_volume_normalization`.
+Missing field context still blocks field outputs, and `L'nT,50` remains
+unsupported until `lowFrequencyImpactSpectrumOrCI50_2500Owner` exists.
+
+Post-Gate-Z accuracy incident:
+[ACCURACY_INCIDENT_2026-05-07_CONSTRUCTION_IMAGE_ROUTE_SELECTION.md](./ACCURACY_INCIDENT_2026-05-07_CONSTRUCTION_IMAGE_ROUTE_SELECTION.md).
+The construction-image examples showed that Dynamic Calculator can miss
+a physically relevant multi-leaf solver because selector eligibility is
+too benchmark-fixture-specific, then fall to a screening blend. They
+also exposed the floor-side risk of wrong-family nearby source blending
+for explicit lightweight-steel support. Gate Z is landed; the incident
+is now the selected next action:
+`gate_aa_construction_image_accuracy_incident_route_selection_and_solver_recovery_plan`.
+It should be opened as a numeric acceptance and solver-domain hardening
+gate, not as a warning copy patch.
+The incident doc now carries the implementation gap matrix, external
+formula/research baseline, and Gate AA step order so the next agent can
+move directly from Gate Z into tests and route hardening.
 
 Current selection status:
 
-`gate_y_floor_impact_field_context_contract_landed_no_runtime_selected_field_runtime_gate_z`
+`gate_z_floor_impact_field_runtime_landed_selected_construction_image_accuracy_incident_gate_aa`
 
-Selected next Gate Z file:
-
-`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-z-floor-impact-field-runtime-contract.test.ts`
-
-Selected next Gate Z action:
+Gate Z landed action:
 
 `gate_z_promote_floor_impact_field_context_runtime_for_dynamic_calculator`
 
-Latest Gate Y checkpoint:
+Selected next Gate AA planning surface:
 
-`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Y_HANDOFF.md`
+`docs/calculator/ACCURACY_INCIDENT_2026-05-07_CONSTRUCTION_IMAGE_ROUTE_SELECTION.md`
+
+Selected next Gate AA action:
+
+`gate_aa_construction_image_accuracy_incident_route_selection_and_solver_recovery_plan`
+
+Latest Gate Z checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Z_HANDOFF.md`
+
+Previous Gate Y selection status:
+
+`gate_y_floor_impact_field_context_contract_landed_no_runtime_selected_field_runtime_gate_z`
+
+Previous Gate Y selected Gate Z action:
+
+`gate_z_promote_floor_impact_field_context_runtime_for_dynamic_calculator`
 
 Previous Gate X selection status:
 

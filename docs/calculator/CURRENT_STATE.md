@@ -11,6 +11,9 @@ need the private-use readiness chain read
 If you need the immediate user-reported triple-leaf / rockwool reorder
 defect handoff read
 [TRIPLE_LEAF_ROCKWOOL_REORDER_DEFECT_HANDOFF.md](./TRIPLE_LEAF_ROCKWOOL_REORDER_DEFECT_HANDOFF.md).
+If you need the queued post-Gate-Z construction-image route-selection
+accuracy incident read
+[ACCURACY_INCIDENT_2026-05-07_CONSTRUCTION_IMAGE_ROUTE_SELECTION.md](./ACCURACY_INCIDENT_2026-05-07_CONSTRUCTION_IMAGE_ROUTE_SELECTION.md).
 If you need the active route/source boundary risk register read
 [CALCULATOR_ROUTE_SOURCE_RISK_REGISTER_2026-05-01.md](./CALCULATOR_ROUTE_SOURCE_RISK_REGISTER_2026-05-01.md).
 
@@ -29,15 +32,15 @@ path was found too narrow for the user's calculator-first goal.
 
 Current selected status:
 
-`gate_y_floor_impact_field_context_contract_landed_no_runtime_selected_field_runtime_gate_z`
+`gate_z_floor_impact_field_runtime_landed_selected_construction_image_accuracy_incident_gate_aa`
 
 Selected next implementation file:
 
-`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-z-floor-impact-field-runtime-contract.test.ts`
+`docs/calculator/ACCURACY_INCIDENT_2026-05-07_CONSTRUCTION_IMAGE_ROUTE_SELECTION.md`
 
 Selected next action:
 
-`gate_z_promote_floor_impact_field_context_runtime_for_dynamic_calculator`
+`gate_aa_construction_image_accuracy_incident_route_selection_and_solver_recovery_plan`
 
 Active planning surface:
 
@@ -45,14 +48,45 @@ Active planning surface:
 
 Latest landed gate:
 
-2026-05-07 model-first physics prediction pivot Gate Y floor-impact
-field-context contract.
+2026-05-07 model-first physics prediction pivot Gate Z floor-impact
+field runtime.
 
 Latest checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Y_HANDOFF.md`
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Z_HANDOFF.md`
 
-Gate Y result:
+Gate Z result:
+
+- field-only Dynamic Calculator floor-impact `L'n,w` / `L'nT,w`
+  requests now promote from the owned Gate W lab impact anchor plus the
+  Gate Y field-context inputs;
+- the pinned reference stack returns `LnW 50.3`, `DeltaLw 24.3`,
+  `LPrimeNW 52.3`, and `LPrimeNTw 49.9` on basis
+  `mixed_predicted_plus_estimated_standardized_field_volume_normalization`;
+- field-only and lab-anchored mixed requests share the same values for
+  `L'n,w` / `L'nT,w`;
+- missing `impactFieldContext` still blocks field impact output instead
+  of fabricating a result;
+- `L'nT,50` remains unsupported until
+  `lowFrequencyImpactSpectrumOrCI50_2500Owner` exists.
+
+Gate Z landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-z-floor-impact-field-runtime-contract.test.ts`
+
+Gate Z landed action:
+
+`gate_z_promote_floor_impact_field_context_runtime_for_dynamic_calculator`
+
+Gate Z landed status:
+
+`gate_z_floor_impact_field_runtime_landed_selected_construction_image_accuracy_incident_gate_aa`
+
+Gate Z selected next action:
+
+`gate_aa_construction_image_accuracy_incident_route_selection_and_solver_recovery_plan`
+
+Previous Gate Y result:
 
 - Dynamic Calculator floor-impact field-context ownership is now an
   executable no-runtime contract for `L'n,w`, `L'nT,w`, and `L'nT,50`;
@@ -63,9 +97,9 @@ Gate Y result:
   field `K` / mass-ratio / direct-flanking policy, flanking path or
   junction policy, and low-frequency `CI,50-2500` or impact spectrum for
   `L'nT,50`;
-- field-only runtime requests remain blocked until Gate Z, while the
-  existing lab-anchored mixed path is documented and must be owned by
-  Gate Z for field-only runtime, output support, card, and report parity;
+- Gate Z now supersedes the pre-runtime field-only boundary for complete
+  `L'n,w` / `L'nT,w` requests; Gate Y remains the owner of required
+  field-context inputs and the blocked `L'nT,50` low-frequency owner;
 - no new numeric runtime values moved in Gate Y.
 
 Gate Y landed file:
@@ -87,6 +121,23 @@ Gate Y selected next file:
 Gate Y selected next action:
 
 `gate_z_promote_floor_impact_field_context_runtime_for_dynamic_calculator`
+
+Queued post-Gate-Z accuracy incident:
+
+`docs/calculator/ACCURACY_INCIDENT_2026-05-07_CONSTRUCTION_IMAGE_ROUTE_SELECTION.md`
+
+This incident records that the construction-image examples exposed a
+calculation route-selection failure mode. The strongest wall repro can
+miss the existing triple/multi-cavity solver and fall to
+`multileaf_screening_blend`; the floor repro shows the related risk of
+wrong-family nearby source blending for explicit lightweight-steel
+support. Gate Z is now landed, so the first post-Gate-Z calculator work
+is `gate_aa_construction_image_accuracy_incident_route_selection_and_solver_recovery_plan`.
+It should turn this incident into a numeric acceptance/solver-domain gate.
+The incident plan now includes an implementation comparison against the
+current Dynamic Calculator engine, formula-family workbench notes, and a
+step-by-step Gate AA plan that starts from scenario tests and
+app-path/direct-solver parity before any runtime patch.
 
 Gate Y validation result:
 

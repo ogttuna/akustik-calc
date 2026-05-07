@@ -2,7 +2,7 @@
 
 Slice id: `calculator_model_first_physics_prediction_pivot_v1`
 
-Status: SELECTED / GATE Y LANDED / GATE Z FIELD-RUNTIME NEXT
+Status: SELECTED / GATE Z LANDED / GATE AA ACCURACY INCIDENT NEXT
 
 Selected by:
 
@@ -12,29 +12,71 @@ queue.
 
 Selection status:
 
-`gate_y_floor_impact_field_context_contract_landed_no_runtime_selected_field_runtime_gate_z`
+`gate_z_floor_impact_field_runtime_landed_selected_construction_image_accuracy_incident_gate_aa`
 
-Latest Gate Y checkpoint:
+Latest Gate Z checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Y_HANDOFF.md`
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Z_HANDOFF.md`
 
-Gate Y landed file:
-
-`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-y-floor-impact-field-context-contract.test.ts`
-
-Gate Y landed action:
-
-`gate_y_define_floor_impact_field_context_boundary_for_dynamic_calculator`
-
-Gate Y selected Gate Z file:
+Gate Z landed file:
 
 `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-z-floor-impact-field-runtime-contract.test.ts`
 
-Gate Y selected Gate Z action:
+Gate Z landed action:
 
 `gate_z_promote_floor_impact_field_context_runtime_for_dynamic_calculator`
 
-Gate Y validation result:
+Gate Z selected Gate AA planning surface:
+
+`docs/calculator/ACCURACY_INCIDENT_2026-05-07_CONSTRUCTION_IMAGE_ROUTE_SELECTION.md`
+
+Gate Z selected Gate AA action:
+
+`gate_aa_construction_image_accuracy_incident_route_selection_and_solver_recovery_plan`
+
+Gate Z landed summary:
+
+Field-only Dynamic Calculator floor-impact `L'n,w` / `L'nT,w` now
+promotes from the owned Gate W lab `Ln,w` / `DeltaLw` anchor plus Gate Y
+field context. The reference stack pins `LnW 50.3`, `DeltaLw 24.3`,
+`LPrimeNW 52.3`, and `LPrimeNTw 49.9` on basis
+`mixed_predicted_plus_estimated_standardized_field_volume_normalization`.
+`L'nT,50` stays blocked until
+`lowFrequencyImpactSpectrumOrCI50_2500Owner` exists.
+
+Previous Gate Y landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-y-floor-impact-field-context-contract.test.ts`
+
+Previous Gate Y landed action:
+
+`gate_y_define_floor_impact_field_context_boundary_for_dynamic_calculator`
+
+Previous Gate Y selected Gate Z file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-z-floor-impact-field-runtime-contract.test.ts`
+
+Previous Gate Y selected Gate Z action:
+
+`gate_z_promote_floor_impact_field_context_runtime_for_dynamic_calculator`
+
+Previous Gate Y selection status:
+
+`gate_y_floor_impact_field_context_contract_landed_no_runtime_selected_field_runtime_gate_z`
+
+Gate Z validation result:
+
+Validation completed on 2026-05-07: focused Gate Z passed 1 file / 6
+tests. Focused Gate V/W/X/Y/Z regression passed 5 files / 28 tests.
+Focused Gate J readiness pack regression passed 1 file / 8 tests after
+updating the expected Gate Z field-context warning. Engine typecheck
+passed. `pnpm calculator:gate:current` passed with engine 306 files /
+1744 tests, web 62 files / 275 tests plus 18 skipped, repo build, and
+whitespace guard. Known optional `sharp/@img` Next build warnings remain
+non-fatal. Final `git diff --check` passed after this validation note
+update.
+
+Previous Gate Y validation result:
 
 Focused Gate Y passed 1 file / 5 tests. Focused Gate V/W/X/Y
 regression passed 4 files / 22 tests. `pnpm --filter @dynecho/engine

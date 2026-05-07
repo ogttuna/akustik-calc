@@ -13,6 +13,9 @@ For the long source-gated accuracy program read
 For the immediate user-reported triple-leaf / rockwool reorder defect
 read
 [TRIPLE_LEAF_ROCKWOOL_REORDER_DEFECT_HANDOFF.md](./TRIPLE_LEAF_ROCKWOOL_REORDER_DEFECT_HANDOFF.md).
+For the 2026-05-07 construction-image route-selection accuracy
+incident, planned after Gate Z, read
+[ACCURACY_INCIDENT_2026-05-07_CONSTRUCTION_IMAGE_ROUTE_SELECTION.md](./ACCURACY_INCIDENT_2026-05-07_CONSTRUCTION_IMAGE_ROUTE_SELECTION.md).
 For the active route/source boundary risk register read
 [CALCULATOR_ROUTE_SOURCE_RISK_REGISTER_2026-05-01.md](./CALCULATOR_ROUTE_SOURCE_RISK_REGISTER_2026-05-01.md).
 
@@ -65,7 +68,7 @@ unsafe reorders. Lab, field, and building-prediction bases must stay
 separate; `Rw`/`STC`, `Ln,w`/`IIC`, and lab/field values are not
 interchangeable without a named rating and measurement basis.
 
-## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate Y Landed / Gate Z Field Runtime Next
+## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate Z Landed / Gate AA Accuracy Incident Next
 
 Current implementation position:
 `calculator_model_first_physics_prediction_pivot_v1`.
@@ -98,31 +101,103 @@ Latest Gate U revalidation / commit-prep checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_U_REVALIDATION_AND_COMMIT_HANDOFF.md`
 
-Latest landed Gate Y checkpoint:
+Latest landed Gate Z checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Y_HANDOFF.md`
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Z_HANDOFF.md`
 
-Gate Y selection status:
+Gate Z selection status:
 
-`gate_y_floor_impact_field_context_contract_landed_no_runtime_selected_field_runtime_gate_z`
+`gate_z_floor_impact_field_runtime_landed_selected_construction_image_accuracy_incident_gate_aa`
 
-Gate Y landed file:
-
-`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-y-floor-impact-field-context-contract.test.ts`
-
-Gate Y landed action:
-
-`gate_y_define_floor_impact_field_context_boundary_for_dynamic_calculator`
-
-Gate Y selected Gate Z file:
+Gate Z landed file:
 
 `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-z-floor-impact-field-runtime-contract.test.ts`
 
-Gate Y selected Gate Z action:
+Gate Z landed action:
 
 `gate_z_promote_floor_impact_field_context_runtime_for_dynamic_calculator`
 
-Gate Y validation result:
+Gate Z selected next action:
+
+`gate_aa_construction_image_accuracy_incident_route_selection_and_solver_recovery_plan`
+
+Gate Z result:
+
+- field-only Dynamic Calculator floor-impact `L'n,w` / `L'nT,w`
+  requests now promote when the Gate W lab anchor and Gate Y field
+  context are complete;
+- the pinned reference stack returns `LnW 50.3`, `DeltaLw 24.3`,
+  `LPrimeNW 52.3`, and `LPrimeNTw 49.9` on basis
+  `mixed_predicted_plus_estimated_standardized_field_volume_normalization`;
+- field-only and lab-anchored mixed requests now share the same numeric
+  field outputs and support buckets for `L'n,w` / `L'nT,w`;
+- missing `impactFieldContext` remains `needs_input` style behavior and
+  does not fabricate field outputs;
+- `L'nT,50` remains blocked until
+  `lowFrequencyImpactSpectrumOrCI50_2500Owner` exists.
+
+Previous Gate Y landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-y-floor-impact-field-context-contract.test.ts`
+
+Previous Gate Y landed action:
+
+`gate_y_define_floor_impact_field_context_boundary_for_dynamic_calculator`
+
+Selected Gate AA accuracy incident:
+
+`docs/calculator/ACCURACY_INCIDENT_2026-05-07_CONSTRUCTION_IMAGE_ROUTE_SELECTION.md`
+
+The construction-image examples exposed a route-selection accuracy
+incident, not a warning-copy problem. A realistic grouped multi-leaf
+wall with 80/80 mm mineral-wool cavities can miss the existing
+three-leaf/two-cavity solver because the Gate G selector is tied to the
+50/50 mm benchmark fixture, then fall through to `multileaf_screening_blend`
+and underpredict. A modular lightweight-steel floor example also shows
+the same class of risk on the floor side: broad nearby source-family
+blends must not become numeric anchors when explicit steel support is
+present. Gate Z has now finished the selected field-impact runtime
+boundary. The next calculator work is
+`gate_aa_construction_image_accuracy_incident_route_selection_and_solver_recovery_plan`:
+add the five construction-image scenarios, numeric acoustic acceptance
+bands, solver-domain route invariants, same-family floor source guards,
+and INSUL / measured-reference comparison notes.
+
+2026-05-07 plan iteration:
+
+- Gate Z is landed and closed for this boundary.
+- Gate AA is the immediate post-Gate-Z accuracy incident gate. Its
+  plan has been expanded with an implementation comparison against
+  `dynamic-airborne-gate-g-rockwool.ts`, `dynamic-airborne.ts`,
+  `wall-triple-leaf-frequency-solver.ts`, `curve-rating.ts`,
+  `impact-estimate.ts`, `lightweight-steel-bound-estimate.ts`, and
+  `floor-system-estimate.ts`.
+- Gate AA must start from tests, not a small runtime patch: create the
+  construction-image scenario pack, assert app-path/direct-solver parity,
+  reject `multileaf_screening_blend` for complete grouped multi-cavity
+  topology, and add floor same-structural-family source guards.
+- Formula ownership for Gate AA is family-specific: single/laminated
+  leaf, double leaf/framed, triple leaf/two-cavity, generalized
+  multi-layer airborne, heavy concrete impact, and lightweight steel
+  impact are separate model lanes. Exact measured rows can override or
+  calibrate only when topology/material/metric/basis ownership exists.
+- Gate AA should document residual numeric error as solver backlog
+  after measured/INSUL-style curve comparison. Confidence copy is not a
+  substitute for correcting the selected calculation route.
+
+Gate Z validation result:
+
+Validation completed on 2026-05-07: focused Gate Z passed 1 file / 6
+tests; focused Gate V/W/X/Y/Z regression passed 5 files / 28 tests;
+focused Gate J readiness pack regression passed 1 file / 8 tests after
+updating the expected Gate Z field-context warning; engine typecheck
+passed; `pnpm calculator:gate:current` passed with engine 306 files /
+1744 tests, web 62 files / 275 tests plus 18 skipped, repo build, and
+whitespace guard. Known optional `sharp/@img` Next build warnings remain
+non-fatal. Final `git diff --check` passed after this validation note
+update.
+
+Previous Gate Y validation result:
 
 Focused Gate Y passed 1 file / 5 tests, focused Gate V/W/X/Y regression
 passed 4 files / 22 tests, `pnpm --filter @dynecho/engine typecheck`
@@ -143,9 +218,9 @@ Gate Y result:
   junction policy are named owners before promotion;
 - `L'nT,50` remains blocked until a low-frequency spectrum or
   `CI,50-2500` owner exists;
-- field-only runtime stays blocked until Gate Z; lab-anchored mixed
-  field supplement is documented as existing behavior that Gate Z must
-  own across support/card/report parity.
+- Gate Z now supersedes the pre-runtime boundary for complete
+  field-only `L'n,w` / `L'nT,w`; the Gate Y contract remains the owner
+  for required fields and the blocked `L'nT,50` low-frequency owner.
 
 Previous landed Gate X checkpoint:
 
@@ -573,23 +648,30 @@ calibration, or exact overrides.
 Gate Y then landed the no-runtime field-context contract. The contract
 names the required physical fields, lab anchor, field `K` / mass-ratio /
 direct-flanking policy, flanking owner, and low-frequency owner for
-`L'nT,50`. It also documents that field-only Dynamic Calculator runtime
-is still blocked before Gate Z, while lab-anchored mixed requests already
-reach the existing field supplement and must be normalized under one
-owned runtime/support/report policy.
+`L'nT,50`. Gate Z has now normalized field-only and lab-anchored mixed
+`L'n,w` / `L'nT,w` runtime behavior under one owned
+runtime/support/report policy.
 
 Clean next-step queue:
 
-1. Gate Z floor-impact field runtime:
-   promote field-only `L'n,w` / `L'nT,w` by using the owned Gate W lab
-   anchor internally when all Gate Y inputs are present, keep
-   `L'nT,50` blocked until the low-frequency owner exists, and pin API /
-   workbench / report parity.
-2. After Gate Z, surface any remaining missing input controls in the
-   workbench and proposal editor if the runtime path exposes a UI gap.
+1. Gate AA construction-image accuracy incident:
+   create scenario tests, compare app-path and direct solver behavior,
+   reject wrong route/source-family selections, and recover the solver
+   domain for realistic grouped multi-leaf walls and explicit
+   lightweight-steel floors.
+2. Surface any remaining missing input controls in the workbench and
+   proposal editor if Gate AA exposes a UI gap.
 3. Keep source packet acquisition/calibration rows as later anchors or
    exact overrides only
    through the Gate H policy.
+
+Gate Z landed status:
+
+`gate_z_floor_impact_field_runtime_landed_selected_construction_image_accuracy_incident_gate_aa`
+
+Gate Z selected Gate AA action:
+
+`gate_aa_construction_image_accuracy_incident_route_selection_and_solver_recovery_plan`
 
 Gate Y landed summary:
 

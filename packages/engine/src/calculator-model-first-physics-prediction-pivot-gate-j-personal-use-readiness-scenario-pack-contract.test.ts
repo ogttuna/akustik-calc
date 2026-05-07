@@ -315,7 +315,7 @@ describe("calculator model-first physics prediction pivot Gate J", () => {
       origin: "needs_input"
     });
     expect(result.warnings.join("\n")).toContain(
-      "Dynamic Calculator floor-impact runtime is waiting for loadBasisKgM2"
+      "Dynamic Calculator floor-impact field runtime is waiting for loadBasisKgM2, contextMode, partitionAreaM2, receivingRoomVolumeM3, receivingRoomRt60S, impactFieldContext"
     );
   });
 
