@@ -2,7 +2,7 @@
 
 Slice id: `calculator_model_first_physics_prediction_pivot_v1`
 
-Status: SELECTED / GATE AK LANDED / GATE AL FIRST SOURCE-OWNED DELTALW HOLDOUT NEXT
+Status: SELECTED / GATE AL LANDED / GATE AM SOURCE PACKET ACQUISITION NEXT
 
 Selected by:
 
@@ -12,7 +12,62 @@ queue.
 
 Selection status:
 
-`gate_ak_delta_lw_holdout_packet_contract_landed_selected_first_source_owned_holdout_gate_al`
+`gate_al_source_owned_delta_lw_first_holdout_guard_landed_no_runtime_selected_source_packet_acquisition_gate_am`
+
+Latest Gate AL checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AL_HANDOFF.md`
+
+Gate AL landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-al-steel-floor-formula-source-owned-delta-lw-first-holdout-contract.test.ts`
+
+Gate AL landed action:
+
+`gate_al_steel_floor_formula_source_owned_delta_lw_first_holdout_plan`
+
+Gate AL selected Gate AM file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-am-steel-floor-formula-source-owned-delta-lw-source-packet-acquisition-contract.test.ts`
+
+Gate AL selected Gate AM action:
+
+`gate_am_steel_floor_formula_source_owned_delta_lw_source_packet_acquisition_plan`
+
+Gate AL landed summary:
+
+Gate AL adds a no-runtime first-holdout guard for source-owned
+same-stack ISO lab `DeltaLw` steel-floor packets. The current inventory
+still has zero accepted measured `DeltaLw` holdouts: Pliteq and UBIQ are
+`Ln,w`/`Rw` evidence without owned `DeltaLw`, product catalog `DeltaLw`
+does not own a same-stack steel-floor assembly, Annex/companion values
+are inferred, and the checked REGUPOL steel C-joist source is
+ASTM/IIC/STC basis rather than ISO lab `DeltaLw`. Runtime values remain
+unchanged and Gate AM is selected for narrow source-packet acquisition.
+
+Gate AL validation result:
+
+Focused validation completed on 2026-05-07. Gate AL focused engine
+contract passed 1 file / 4 tests, and engine typecheck passed. Full
+`pnpm calculator:gate:current` passed after the Gate AJ/AK/AL
+doc-alignment repair: engine 318 files / 1802 tests, web 65 files / 284
+passed + 18 skipped, repo build 5/5 successful, and whitespace guard
+clean. `git diff --check` passed. Known non-fatal warnings remain the
+Node/Vitest Zustand persist storage warning and optional `sharp` / `@img`
+Next build warnings via the DOCX export dependency.
+
+Gate AM implementation plan:
+
+1. Search narrowly for ISO 10140 / ISO 717-2 steel-floor or steel-joist
+   same-stack lab `DeltaLw` sources that own the Gate AK fields.
+2. Encode a packet only when metric value, topology/support family,
+   carrier spacing, load basis, dynamic stiffness, lower support class,
+   upper-resilient topology, and paired negative boundary owner are
+   source-owned.
+3. Keep accepted rows as holdout/calibration evidence rather than exact
+   replacements or product rows.
+4. If no packet qualifies, land the rejection ledger and next acquisition
+   decision without weakening Gate AK/AL.
 
 Latest Gate AK checkpoint:
 
@@ -109,15 +164,17 @@ Consumed Gate AK implementation plan:
 5. Preserve exact-source precedence and runtime value freeze unless a
    later residual policy explicitly promotes correction.
 
-Gate AL implementation plan:
+Consumed Gate AL implementation plan:
 
 1. Create
    `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-al-steel-floor-formula-source-owned-delta-lw-first-holdout-contract.test.ts`.
-2. Add the first real source-owned measured same-stack lab `DeltaLw`
-   holdout only when every Gate AK owner field is source-owned.
-3. Keep the accepted packet as calibration/holdout evidence, not a
-   product row and not an exact-source replacement.
-4. Preserve runtime values unless the residual policy explicitly
+2. Add the Gate AL helper at
+   `packages/engine/src/steel-floor-formula-first-source-owned-delta-lw-holdout.ts`.
+3. Reject `Ln,w`/`Rw`-only, product-only, inferred, and wrong-basis
+   candidates from source-owned ISO `DeltaLw` residual tightening.
+4. Prove a future source-owned packet would be accepted only when every
+   Gate AK owner field is source-owned.
+5. Preserve runtime values unless the residual policy explicitly
    promotes a correction after enough measured holdouts exist.
 
 Latest Gate AI checkpoint:

@@ -21,7 +21,7 @@ Gate A, Gate B, Gate C, Gate D, Gate E, Gate G, Gate H, Gate I,
 Gate J, Gate K, Gate L, Gate M, Gate N, Gate O, Gate P, Gate Q, Gate R,
 Gate S, Gate T, Gate U, Gate V, Gate W, Gate X, Gate Y, Gate Z, Gate AA,
 Gate AB, Gate AC, Gate AD, Gate AE, Gate AF, Gate AG, Gate AH, Gate AI,
-Gate AJ, and Gate AK for this pivot have
+Gate AJ, Gate AK, and Gate AL for this pivot have
 landed. Gate A made the corrected rule executable: source absence
 blocks exact/calibration promotion only, not formula-backed prediction.
 Gate B added shared airborne `airborneBasis` / `airborneCandidateSet`
@@ -360,8 +360,36 @@ drift, and ambiguous duplicate/disjoint lightweight-steel floor schedule
 expectations were corrected. The Gate AD steel-floor formula corridor is
 now present in the real-world floor and impact validation benchmark
 corpora as an explicit predictor-input estimate lane. Runtime calculator
-values were not retuned, and Gate AL remains the next step for a first
+values were not retuned, and Gate AL remained the next step for a first
 source-owned measured same-stack lab `DeltaLw` holdout packet.
+
+Gate AL has now landed the first-holdout guard for source-owned
+same-stack ISO lab `DeltaLw` steel-floor packets. It did not accept a
+near-miss as a measured holdout: current Pliteq and UBIQ rows are
+`Ln,w`/`Rw` evidence without owned `DeltaLw`, product-catalog `DeltaLw`
+rows are not same-stack steel-floor formula holdouts, Annex/companion
+values are inferred, and the checked REGUPOL steel C-joist source is
+ASTM/IIC/STC basis rather than ISO lab `DeltaLw`. Runtime values remain
+unchanged, and residual retune remains blocked until a real source-owned
+packet exists.
+Gate AL selection status:
+`gate_al_source_owned_delta_lw_first_holdout_guard_landed_no_runtime_selected_source_packet_acquisition_gate_am`.
+Gate AL landed file:
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-al-steel-floor-formula-source-owned-delta-lw-first-holdout-contract.test.ts`.
+Gate AL landed action:
+`gate_al_steel_floor_formula_source_owned_delta_lw_first_holdout_plan`.
+Gate AL selected Gate AM file:
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-am-steel-floor-formula-source-owned-delta-lw-source-packet-acquisition-contract.test.ts`.
+Gate AL selected Gate AM action:
+`gate_am_steel_floor_formula_source_owned_delta_lw_source_packet_acquisition_plan`.
+Gate AL focused validation completed on 2026-05-07: Gate AL engine
+contract 1 file / 4 tests and engine typecheck passed. Full `pnpm
+calculator:gate:current` passed after the Gate AJ/AK/AL doc-alignment
+repair: engine 318 files / 1802 tests, web 65 files / 284 passed + 18
+skipped, repo build 5/5 successful, and whitespace guard clean. `git
+diff --check` passed. Known non-fatal warnings remain the Node/Vitest
+Zustand persist storage warning and optional `sharp` / `@img` Next build
+warnings via the DOCX export dependency.
 
 Previous Gate AF selection status:
 `gate_af_steel_floor_formula_input_surface_landed_selected_acceptance_revalidation_gate_ag`.

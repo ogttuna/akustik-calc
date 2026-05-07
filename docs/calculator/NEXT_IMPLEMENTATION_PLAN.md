@@ -68,7 +68,7 @@ unsafe reorders. Lab, field, and building-prediction bases must stay
 separate; `Rw`/`STC`, `Ln,w`/`IIC`, and lab/field values are not
 interchangeable without a named rating and measurement basis.
 
-## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate AK Landed / Broad Revalidation Complete / Gate AL Next
+## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate AL Landed / Gate AM Next
 
 Current implementation position:
 `calculator_model_first_physics_prediction_pivot_v1`.
@@ -157,9 +157,113 @@ Latest broad revalidation / Gate AL handoff checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-07_BROAD_REVALIDATION_GATE_AK_TO_GATE_AL_HANDOFF.md`
 
-Gate AK selection status:
+Latest landed Gate AL checkpoint:
 
-`gate_ak_delta_lw_holdout_packet_contract_landed_selected_first_source_owned_holdout_gate_al`
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AL_HANDOFF.md`
+
+Gate AL selection status:
+
+`gate_al_source_owned_delta_lw_first_holdout_guard_landed_no_runtime_selected_source_packet_acquisition_gate_am`
+
+Gate AL landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-al-steel-floor-formula-source-owned-delta-lw-first-holdout-contract.test.ts`
+
+Gate AL landed action:
+
+`gate_al_steel_floor_formula_source_owned_delta_lw_first_holdout_plan`
+
+Gate AL selected next file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-am-steel-floor-formula-source-owned-delta-lw-source-packet-acquisition-contract.test.ts`
+
+Gate AL selected next action:
+
+`gate_am_steel_floor_formula_source_owned_delta_lw_source_packet_acquisition_plan`
+
+Gate AL result:
+
+- Gate AL lands an executable first-holdout guard for source-owned
+  same-stack lab `DeltaLw` packets without moving runtime values;
+- current local/open candidate inventory still has zero accepted
+  measured `DeltaLw` holdouts because Pliteq and UBIQ are `Ln,w`/`Rw`
+  rows without owned `DeltaLw`, product-catalog `DeltaLw` rows are not
+  same-stack steel-floor holdouts, Annex/companion values are inferred,
+  and the checked REGUPOL steel C-joist source is ASTM/IIC/STC basis
+  rather than ISO lab `DeltaLw`;
+- Gate AL proves a future packet would be accepted only when the metric
+  and every Gate AK owner field are source-owned;
+- residual retune remains blocked by
+  `delta_lw_measured_holdouts_missing` and
+  `source_owned_metric_holdouts_missing`;
+- exact measured rows remain precedence, and source rows remain anchors,
+  holdouts, or calibration evidence rather than the product.
+
+Gate AL validation result:
+
+Focused validation completed on 2026-05-07: Gate AL engine contract
+passed 1 file / 4 tests, and engine typecheck passed. Full `pnpm
+calculator:gate:current` passed after the Gate AJ/AK/AL doc-alignment
+repair: engine 318 files / 1802 tests, web 65 files / 284 passed + 18
+skipped, repo build 5/5 successful, and whitespace guard clean. `git
+diff --check` passed. Known non-fatal warnings remain the Node/Vitest
+Zustand persist storage warning and optional `sharp` / `@img` Next build
+warnings via the DOCX export dependency.
+
+## Gate AM Implementation Order - Source-Owned DeltaLw Source Packet Acquisition
+
+Gate AM is the right next step because Gate AL showed that the current
+inventory does not yet contain a real source-owned same-stack ISO lab
+`DeltaLw` steel-floor holdout. The work must stay calculator-first:
+sources are admissible only as exact rows, anchors, holdouts, or
+calibration evidence for the formula lane, not as a finite product
+catalog that replaces the solver.
+
+Gate AM order:
+
+1. Search narrowly for ISO 10140 / ISO 717-2 steel-floor or steel-joist
+   same-stack lab sources that publish `DeltaLw` with enough assembly
+   detail to own the Gate AK fields.
+2. Encode a packet only when the source owns the measured metric,
+   topology/support family, carrier spacing, load basis, dynamic
+   stiffness, lower support class, upper-resilient topology, and paired
+   negative boundary owner.
+3. Keep the first accepted packet as holdout/calibration evidence; do
+   not replace exact rows, product rows, or runtime formula values.
+4. If no accepted packet is found, land the rejection ledger and next
+   acquisition decision without weakening the Gate AK/AL acceptance rule.
+5. Preserve nearby negatives for `Ln,w`/`Rw`-only rows, product catalog
+   `DeltaLw`, inferred Annex/companion values, ASTM/IIC/STC rows,
+   building-prediction rows, and missing-owner rows.
+
+Non-goals for Gate AM:
+
+- no runtime formula retune;
+- no DeltaLw tightening from inferred or product-only values;
+- no field/building promotion from lab evidence;
+- no broad source-library crawl disconnected from formula holdout needs.
+
+## Consumed Gate AL Implementation Order - First Source-Owned DeltaLw Holdout Guard
+
+Gate AL made the first-holdout acquisition decision executable without
+pretending that a near-miss row is a source-owned ISO `DeltaLw` holdout.
+
+Gate AL order completed:
+
+1. Created the Gate AL contract at
+   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-al-steel-floor-formula-source-owned-delta-lw-first-holdout-contract.test.ts`.
+2. Added the Gate AL helper in
+   `packages/engine/src/steel-floor-formula-first-source-owned-delta-lw-holdout.ts`.
+3. Rejected current Pliteq/UBIQ `Ln,w`/`Rw`-only rows, product catalog
+   `DeltaLw`, inferred Annex/companion values, and REGUPOL ASTM/IIC/STC
+   wrong-basis evidence from source-owned ISO `DeltaLw` residual
+   tightening.
+4. Proved a future same-stack ISO lab packet can count only when every
+   Gate AK owner field is source-owned.
+5. Preserved the runtime value freeze and selected Gate AM for a narrow
+   source-packet acquisition pass.
+
+## Consumed Gate AK Implementation Order - Source-Owned DeltaLw Holdout Packet Contract
 
 Gate AK landed file:
 
@@ -168,14 +272,6 @@ Gate AK landed file:
 Gate AK landed action:
 
 `gate_ak_steel_floor_formula_source_owned_delta_lw_holdout_acquisition_plan`
-
-Gate AK selected next file:
-
-`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-al-steel-floor-formula-source-owned-delta-lw-first-holdout-contract.test.ts`
-
-Gate AK selected next action:
-
-`gate_al_steel_floor_formula_source_owned_delta_lw_first_holdout_plan`
 
 Gate AK result:
 
@@ -218,7 +314,7 @@ update: engine 317 files / 1798 tests, web 65 files / 284 passed with 18
 skipped, repo build 5/5 successful, whitespace guard clean; diff check
 passed with `git diff --check`.
 
-Broad revalidation result:
+Gate AK broad revalidation result:
 
 Broad validation completed on 2026-05-07 after Gate AK and report
 export/manual-edit validation. `pnpm check` passed after fixing stale
@@ -233,41 +329,6 @@ covering schedules now fail closed for impact outputs instead of
 reopening broad `family_general` fallback; `Rw` screening can remain
 available because it does not depend on the steel impact package inputs.
 Runtime calculator values were not retuned.
-
-## Gate AL Implementation Order - First Source-Owned DeltaLw Holdout
-
-Gate AL is the right next step because Gate AK made the `DeltaLw`
-holdout acceptance rules executable, but no local row currently satisfies
-those rules. The next useful move is to acquire or encode the first real
-source-owned same-stack lab `DeltaLw` holdout packet without weakening
-the gate. This remains the first implementation step after the broad
-revalidation because the revalidation fixes aligned tests and fixtures
-with existing Gate AD/AK behavior; they did not create a measured
-source-owned `DeltaLw` residual set and did not justify formula retuning.
-
-Gate AL order:
-
-1. Create the Gate AL contract at
-   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-al-steel-floor-formula-source-owned-delta-lw-first-holdout-contract.test.ts`.
-2. Add the first source-owned measured same-stack lab `DeltaLw` holdout
-   packet only if its metric value and all formula-relevant owner fields
-   are explicitly owned by the source packet.
-3. Keep the packet as calibration/holdout evidence, not an exact-source
-   replacement and not a product catalog row.
-4. Re-run the residual policy and keep runtime values frozen unless the
-   measured holdout count and paired negative boundaries satisfy the
-   explicit promotion policy.
-5. Record nearby negative cases for product-only, inferred, wrong-basis,
-   and missing-owner variants next to the accepted packet.
-
-Non-goals for Gate AL:
-
-- no broad source crawl;
-- no runtime formula retune;
-- no DeltaLw tightening from inferred or product-only values;
-- no field/building promotion from lab evidence.
-
-## Consumed Gate AK Implementation Order - Source-Owned DeltaLw Holdout Packet Contract
 
 Gate AK closed the next residual-policy gap by making source ownership
 for measured same-stack lab `DeltaLw` executable before any row can

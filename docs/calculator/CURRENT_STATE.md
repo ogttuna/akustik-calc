@@ -32,15 +32,15 @@ path was found too narrow for the user's calculator-first goal.
 
 Current selected status:
 
-`gate_ak_delta_lw_holdout_packet_contract_landed_selected_first_source_owned_holdout_gate_al`
+`gate_al_source_owned_delta_lw_first_holdout_guard_landed_no_runtime_selected_source_packet_acquisition_gate_am`
 
 Selected next implementation file:
 
-`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-al-steel-floor-formula-source-owned-delta-lw-first-holdout-contract.test.ts`
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-am-steel-floor-formula-source-owned-delta-lw-source-packet-acquisition-contract.test.ts`
 
 Selected next action:
 
-`gate_al_steel_floor_formula_source_owned_delta_lw_first_holdout_plan`
+`gate_am_steel_floor_formula_source_owned_delta_lw_source_packet_acquisition_plan`
 
 Active planning surface:
 
@@ -48,20 +48,20 @@ Active planning surface:
 
 Latest landed gate:
 
-2026-05-07 model-first physics prediction pivot Gate AK steel-floor
-formula source-owned DeltaLw holdout packet contract.
+2026-05-07 model-first physics prediction pivot Gate AL steel-floor
+formula first source-owned DeltaLw holdout guard.
 
 Latest checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-07_BROAD_REVALIDATION_GATE_AK_TO_GATE_AL_HANDOFF.md`
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AL_HANDOFF.md`
+
+Latest landed-gate checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AL_HANDOFF.md`
 
 Latest landed / report export checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-07_GATE_AK_REPORT_EXPORT_REVALIDATION_AND_PUSH_HANDOFF.md`
-
-Latest landed-gate checkpoint:
-
-`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AK_HANDOFF.md`
 
 Latest report export/manual-edit checkpoint:
 
@@ -70,6 +70,55 @@ Latest report export/manual-edit checkpoint:
 Latest broad revalidation / Gate AL handoff checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-07_BROAD_REVALIDATION_GATE_AK_TO_GATE_AL_HANDOFF.md`
+
+Gate AL result:
+
+- Gate AL landed an executable first-holdout guard for source-owned
+  same-stack ISO lab `DeltaLw` steel-floor packets without moving
+  runtime values;
+- current local/open candidate inventory still has zero accepted
+  measured `DeltaLw` holdouts: Pliteq and UBIQ are `Ln,w`/`Rw` rows
+  without owned `DeltaLw`, product-catalog `DeltaLw` rows are not
+  same-stack steel-floor holdouts, Annex/companion values are inferred,
+  and the checked REGUPOL steel C-joist source is ASTM/IIC/STC basis
+  rather than ISO lab `DeltaLw`;
+- a future packet can count only when the metric value and every Gate AK
+  owner field are source-owned;
+- residual retune stays blocked by
+  `delta_lw_measured_holdouts_missing` and
+  `source_owned_metric_holdouts_missing`;
+- Gate AM is selected for a narrow source-packet acquisition pass.
+
+Gate AL landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-al-steel-floor-formula-source-owned-delta-lw-first-holdout-contract.test.ts`
+
+Gate AL landed action:
+
+`gate_al_steel_floor_formula_source_owned_delta_lw_first_holdout_plan`
+
+Gate AL landed status:
+
+`gate_al_source_owned_delta_lw_first_holdout_guard_landed_no_runtime_selected_source_packet_acquisition_gate_am`
+
+Gate AL selected next file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-am-steel-floor-formula-source-owned-delta-lw-source-packet-acquisition-contract.test.ts`
+
+Gate AL selected next action:
+
+`gate_am_steel_floor_formula_source_owned_delta_lw_source_packet_acquisition_plan`
+
+Gate AL validation result:
+
+Focused validation completed on 2026-05-07: Gate AL focused engine
+contract passed 1 file / 4 tests, and engine typecheck passed. Full
+`pnpm calculator:gate:current` passed after the Gate AJ/AK/AL
+doc-alignment repair: engine 318 files / 1802 tests, web 65 files / 284
+passed + 18 skipped, repo build 5/5 successful, and whitespace guard
+clean. `git diff --check` passed. Known non-fatal warnings remain the
+Node/Vitest Zustand persist storage warning and optional `sharp` / `@img`
+Next build warnings via the DOCX export dependency.
 
 Report export/manual-edit state:
 
@@ -135,7 +184,7 @@ guard clean; `git diff --check` passed. Known non-fatal warnings remain
 the Node/Vitest Zustand persist storage warning and optional `sharp` /
 `@img` Next build warnings via the DOCX export dependency.
 
-Broad revalidation result:
+Gate AK broad revalidation result:
 
 Completed on 2026-05-07 after Gate AK and report export/manual-edit
 validation. `pnpm check` passed after fixing stale lint pins, impact

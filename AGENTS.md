@@ -109,38 +109,42 @@ before any retune/tightening. Gate AJ has now landed the paired
 negative-boundary and measured `DeltaLw` intake gate: wrong support
 family, exact source precedence, lab-to-field/building leakage, and
 source-absent design references are protected, product/inferred/wrong
-basis `DeltaLw` values cannot tighten the lab corridor. Gate AK has now
-landed the source-owned same-stack lab `DeltaLw` holdout packet
-contract: metric value, topology/support family, carrier spacing, load
-basis, dynamic stiffness, lower support class, upper-resilient topology,
-and paired negative boundary owner must all be source-owned before a row
-can tighten the steel-floor formula residual. Current Pliteq, UBIQ,
-product-only, inferred, and wrong-basis candidates do not count, runtime
-values remain unchanged, and Gate AL is next:
-`gate_al_steel_floor_formula_source_owned_delta_lw_first_holdout_plan`.
+basis `DeltaLw` values cannot tighten the lab corridor. Gate AK landed
+the source-owned same-stack lab `DeltaLw` holdout packet contract:
+metric value, topology/support family, carrier spacing, load basis,
+dynamic stiffness, lower support class, upper-resilient topology, and
+paired negative boundary owner must all be source-owned before a row can
+tighten the steel-floor formula residual. Gate AL has now landed the
+first-holdout guard for that rule: current Pliteq/UBIQ `Ln,w`/`Rw` rows,
+product-only `DeltaLw`, inferred Annex/companion values, and the checked
+REGUPOL ASTM/IIC/STC steel C-joist source do not count as source-owned
+ISO lab `DeltaLw` holdouts. Runtime values remain unchanged, and Gate AM
+is next:
+`gate_am_steel_floor_formula_source_owned_delta_lw_source_packet_acquisition_plan`.
 The 2026-05-07 broad revalidation after Gate AK is complete: `pnpm
 check` passed after aligning steel-floor validation corpora and
 ambiguous duplicate/disjoint lightweight-steel floor schedule
-expectations. Runtime values remain unchanged and Gate AL remains next.
+expectations. Runtime values remain unchanged.
 
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-05-07_BROAD_REVALIDATION_GATE_AK_TO_GATE_AL_HANDOFF.md`
-3. `docs/calculator/CHECKPOINT_2026-05-07_GATE_AK_REPORT_EXPORT_REVALIDATION_AND_PUSH_HANDOFF.md`
-4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AK_HANDOFF.md`
-5. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AJ_HANDOFF.md`
-6. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AI_HANDOFF.md`
-7. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AH_HANDOFF.md`
-8. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AG_HANDOFF.md`
-9. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AF_HANDOFF.md`
-10. `docs/calculator/CHECKPOINT_2026-05-07_GATE_AE_REVALIDATION_GATE_AF_PLAN_HANDOFF.md`
-11. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AE_HANDOFF.md`
-12. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AD_HANDOFF.md`
-13. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AC_HANDOFF.md`
-14. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AB_HANDOFF.md`
-15. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AA_HANDOFF.md`
-16. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Z_HANDOFF.md`
+2. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AL_HANDOFF.md`
+3. `docs/calculator/CHECKPOINT_2026-05-07_BROAD_REVALIDATION_GATE_AK_TO_GATE_AL_HANDOFF.md`
+4. `docs/calculator/CHECKPOINT_2026-05-07_GATE_AK_REPORT_EXPORT_REVALIDATION_AND_PUSH_HANDOFF.md`
+5. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AK_HANDOFF.md`
+6. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AJ_HANDOFF.md`
+7. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AI_HANDOFF.md`
+8. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AH_HANDOFF.md`
+9. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AG_HANDOFF.md`
+10. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AF_HANDOFF.md`
+11. `docs/calculator/CHECKPOINT_2026-05-07_GATE_AE_REVALIDATION_GATE_AF_PLAN_HANDOFF.md`
+12. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AE_HANDOFF.md`
+13. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AD_HANDOFF.md`
+14. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AC_HANDOFF.md`
+15. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AB_HANDOFF.md`
+16. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AA_HANDOFF.md`
+17. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Z_HANDOFF.md`
 4. `docs/calculator/ACCURACY_INCIDENT_2026-05-07_CONSTRUCTION_IMAGE_ROUTE_SELECTION.md`
 5. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Y_HANDOFF.md`
 5. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_X_HANDOFF.md`
@@ -464,11 +468,32 @@ plan.
 - current selected slice:
   `calculator_model_first_physics_prediction_pivot_v1`
 - current next decision inside the slice:
-  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-al-steel-floor-formula-source-owned-delta-lw-first-holdout-contract.test.ts`
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-am-steel-floor-formula-source-owned-delta-lw-source-packet-acquisition-contract.test.ts`
   should run
-  `gate_al_steel_floor_formula_source_owned_delta_lw_first_holdout_plan`.
+  `gate_am_steel_floor_formula_source_owned_delta_lw_source_packet_acquisition_plan`.
 - latest checkpoint:
-  `docs/calculator/CHECKPOINT_2026-05-07_BROAD_REVALIDATION_GATE_AK_TO_GATE_AL_HANDOFF.md`.
+  `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AL_HANDOFF.md`.
+- just landed model-first physics prediction pivot Gate AL:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-al-steel-floor-formula-source-owned-delta-lw-first-holdout-contract.test.ts`
+  landed
+  `gate_al_steel_floor_formula_source_owned_delta_lw_first_holdout_plan`.
+  It adds the first-holdout guard for source-owned same-stack ISO lab
+  `DeltaLw` steel-floor packets. Current inventory still has zero
+  accepted measured `DeltaLw` holdouts: Pliteq and UBIQ are `Ln,w`/`Rw`
+  evidence without owned `DeltaLw`, product catalog `DeltaLw` rows are
+  not same-stack steel-floor formula holdouts, Annex/companion values are
+  inferred, and the checked REGUPOL steel C-joist source is ASTM/IIC/STC
+  basis rather than ISO lab `DeltaLw`. Runtime values stay unchanged.
+  Selection status:
+  `gate_al_source_owned_delta_lw_first_holdout_guard_landed_no_runtime_selected_source_packet_acquisition_gate_am`.
+  Focused validation completed on 2026-05-07: Gate AL engine contract
+  passed 1 file / 4 tests, and engine typecheck passed. Full `pnpm
+  calculator:gate:current` passed after the Gate AJ/AK/AL doc-alignment
+  repair: engine 318 files / 1802 tests, web 65 files / 284 passed + 18
+  skipped, repo build 5/5 successful, and whitespace guard clean. `git
+  diff --check` passed.
+  Selected next action:
+  `gate_am_steel_floor_formula_source_owned_delta_lw_source_packet_acquisition_plan`.
 - latest broad revalidation / Gate AL handoff:
   `docs/calculator/CHECKPOINT_2026-05-07_BROAD_REVALIDATION_GATE_AK_TO_GATE_AL_HANDOFF.md`
   confirms `pnpm check` passed after stale lint pins, impact validation
@@ -476,8 +501,7 @@ plan.
   floor schedule expectations were corrected. Gate AD steel-floor
   formula corridor coverage is now represented in the real-world floor
   and impact validation benchmark corpora as an explicit predictor-input
-  estimate lane. Runtime values remain unchanged, and Gate AL remains
-  the selected next implementation step.
+  estimate lane. Runtime values remain unchanged.
 - latest report export/manual edit revalidation:
   `docs/calculator/CHECKPOINT_2026-05-07_GATE_AK_REPORT_EXPORT_REVALIDATION_AND_PUSH_HANDOFF.md`
   confirms the report editor remains a packaged proposal snapshot editor
