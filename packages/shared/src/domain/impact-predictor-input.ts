@@ -86,6 +86,7 @@ const ImpactPredictorLowerTreatmentSchema = z
 
 const ImpactPredictorInputSchemaInternal = z.object({
   baseSlab: ImpactPredictorSectionSchema.optional(),
+  carrierSpacingMm: z.number().positive().optional(),
   floorCovering: ImpactPredictorFloorCoveringSchema.optional(),
   floatingScreed: ImpactPredictorSectionSchema.optional(),
   impactSystemType: ImpactPredictorSystemTypeSchema.optional(),

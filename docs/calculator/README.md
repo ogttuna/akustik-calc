@@ -184,14 +184,24 @@ Gate AB landed the floor-family source guard: generic
 unsupported for `Ln,w`-family outputs until steel support form, carrier
 geometry, upper impact package dynamic stiffness or source row, and
 lower ceiling isolation are explicit. Exact same-family steel rows and
-same-family bound rows still resolve. Gate AB selection status:
+same-family bound rows still resolve. Gate AC has now landed the
+steel-floor physics input/formula readiness boundary: source-absent
+steel floors require explicit support form, carrier depth/spacing, upper
+dynamic stiffness, load basis, and lower ceiling isolation before a
+formula corridor can promote. Runtime values are unchanged. Gate AC
+selection status:
+`gate_ac_steel_floor_physics_input_contract_landed_selected_formula_corridor_gate_ad`.
+Gate AC selected Gate AD file:
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ad-steel-floor-impact-formula-corridor-contract.test.ts`.
+Gate AC selected Gate AD action:
+`gate_ad_steel_floor_impact_formula_numeric_corridor_plan`.
+
+Previous Gate AB selection status:
 `gate_ab_floor_family_source_guard_landed_selected_steel_floor_physics_input_gate_ac`.
-Gate AB selected Gate AC file:
+Previous Gate AB selected Gate AC file:
 `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ac-steel-floor-physics-input-contract.test.ts`.
-Gate AB selected Gate AC action:
+Previous Gate AB selected Gate AC action:
 `gate_ac_steel_floor_physics_input_contract_and_formula_readiness_plan`.
-Gate AB is selected for the floor-side lightweight-steel source-family
-guard.
 
 Gate AA recovered the construction-image shared-wall accuracy incident:
 complete grouped mineral-wool triple-leaf topology now routes to the

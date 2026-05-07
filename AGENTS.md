@@ -71,14 +71,19 @@ triple-leaf two-cavity frequency solver by physical domain instead of
 the old 50/50 mm fixture gate. Gate AB has now landed the floor-side
 source guard: generic lightweight-steel floors no longer borrow UBIQ
 open-web or Pliteq steel-joist rows until the steel support form and
-impact package inputs are explicit. Gate AC is next:
-`gate_ac_steel_floor_physics_input_contract_and_formula_readiness_plan`.
+impact package inputs are explicit. Gate AC has now landed the
+steel-floor physics input/formula-readiness contract: source-absent
+steel floors name support form, carrier depth/spacing, upper dynamic
+stiffness/load basis, and lower isolation requirements before any
+formula corridor can promote. Gate AD is next:
+`gate_ad_steel_floor_impact_formula_numeric_corridor_plan`.
 
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AB_HANDOFF.md`
-3. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AA_HANDOFF.md`
+2. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AC_HANDOFF.md`
+3. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AB_HANDOFF.md`
+4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AA_HANDOFF.md`
 4. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Z_HANDOFF.md`
 4. `docs/calculator/ACCURACY_INCIDENT_2026-05-07_CONSTRUCTION_IMAGE_ROUTE_SELECTION.md`
 5. `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_Y_HANDOFF.md`
@@ -403,11 +408,25 @@ plan.
 - current selected slice:
   `calculator_model_first_physics_prediction_pivot_v1`
 - current next decision inside the slice:
-  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ac-steel-floor-physics-input-contract.test.ts`
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ad-steel-floor-impact-formula-corridor-contract.test.ts`
   should run
-  `gate_ac_steel_floor_physics_input_contract_and_formula_readiness_plan`.
+  `gate_ad_steel_floor_impact_formula_numeric_corridor_plan`.
 - latest checkpoint:
-  `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AB_HANDOFF.md`.
+  `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AC_HANDOFF.md`.
+- just landed model-first physics prediction pivot Gate AC:
+  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ac-steel-floor-physics-input-contract.test.ts`
+  landed
+  `gate_ac_steel_floor_physics_input_contract_and_formula_readiness_plan`.
+  It adds `steel-floor-impact-physics-input-contract.ts`, extends the
+  shared impact predictor input with `carrierSpacingMm`, and adds steel
+  floor prompt field ids for support form, carrier depth/spacing, and
+  lower ceiling isolation. It does not move runtime values: complete
+  open-web steel input becomes formula-corridor ready only, exact source
+  rows remain highest precedence, and missing spacing/lower isolation are
+  protected nearby negatives. Selection status:
+  `gate_ac_steel_floor_physics_input_contract_landed_selected_formula_corridor_gate_ad`.
+  Selected next action:
+  `gate_ad_steel_floor_impact_formula_numeric_corridor_plan`.
 - just landed model-first physics prediction pivot Gate AB:
   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ab-floor-family-source-guard-contract.test.ts`
   landed

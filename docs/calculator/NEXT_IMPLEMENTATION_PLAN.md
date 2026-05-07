@@ -68,7 +68,7 @@ unsafe reorders. Lab, field, and building-prediction bases must stay
 separate; `Rw`/`STC`, `Ln,w`/`IIC`, and lab/field values are not
 interchangeable without a named rating and measurement basis.
 
-## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate AB Landed / Gate AC Steel Floor Physics Inputs Next
+## Active Decision Map - 2026-05-07 Model-First Physics Prediction Pivot Gate AC Landed / Gate AD Steel Floor Formula Corridor Next
 
 Current implementation position:
 `calculator_model_first_physics_prediction_pivot_v1`.
@@ -108,6 +108,54 @@ Latest landed Gate AA checkpoint:
 Latest landed Gate AB checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AB_HANDOFF.md`
+
+Latest landed Gate AC checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AC_HANDOFF.md`
+
+Gate AC selection status:
+
+`gate_ac_steel_floor_physics_input_contract_landed_selected_formula_corridor_gate_ad`
+
+Gate AC landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ac-steel-floor-physics-input-contract.test.ts`
+
+Gate AC landed action:
+
+`gate_ac_steel_floor_physics_input_contract_and_formula_readiness_plan`
+
+Gate AC selected next file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ad-steel-floor-impact-formula-corridor-contract.test.ts`
+
+Gate AC selected next action:
+
+`gate_ad_steel_floor_impact_formula_numeric_corridor_plan`
+
+Gate AC result:
+
+- steel-floor source-absent impact routes now have a no-runtime
+  input/formula readiness contract instead of only a source guard;
+- required physical inputs are `steelSupportForm`,
+  `steelCarrierDepthMm`, `steelCarrierSpacingMm`,
+  `resilientLayerDynamicStiffnessMNm3`, `loadBasisKgM2`, and
+  `lowerCeilingIsolationSupportForm`;
+- complete explicit open-web steel input is
+  `ready_for_formula_corridor_gate`, but runtime values remain on the
+  current family-estimate lane until Gate AD owns numeric corridors;
+- exact full-stack measured source rows remain first precedence and do
+  not need formula readiness;
+- nearby negatives cover missing spacing and missing lower isolation.
+
+Gate AC validation result:
+
+Validation completed on 2026-05-07: focused Gate AC passed 1 file / 6
+tests; focused Gate AB + Gate AC + predictor input regression passed 3
+files / 54 tests; engine typecheck passed; `pnpm
+calculator:gate:current` passed with engine 309 files / 1760 tests, web
+62 files / 275 tests plus 18 skipped, repo build, and whitespace guard.
+Known optional `sharp/@img` Next build warnings remain non-fatal.
 
 Gate AB selection status:
 
@@ -248,11 +296,13 @@ blends must not become numeric anchors when explicit steel support is
 present. Gate Z has now finished the selected field-impact runtime
 boundary, Gate AA recovered the wall-side construction-image route
 selection, and Gate AB has now closed the floor-side nearby-source
-borrowing failure. The next calculator work is
-`gate_ac_steel_floor_physics_input_contract_and_formula_readiness_plan`:
-define the required physical input contract and formula/solver readiness
-for steel floor impact predictions so source-absent steel floors can be
-calculated instead of only blocked or source-matched.
+borrowing failure. Gate AC has now converted that blocked generic steel
+route into a no-runtime input/formula readiness contract. The next
+calculator work is
+`gate_ad_steel_floor_impact_formula_numeric_corridor_plan`: define and
+test the first numeric steel-floor impact formula corridor so
+source-absent steel floors can calculate from physics rather than only
+blocked/source-matched routes.
 
 2026-05-07 plan iteration:
 
@@ -270,11 +320,14 @@ calculated instead of only blocked or source-matched.
 - Gate AB carries the floor half of the incident and is landed: generic
   lightweight-steel floors no longer borrow UBIQ open-web or Pliteq
   steel-joist source rows when the steel support form is unspecified.
-- Gate AC should convert that blocked generic steel route into a real
-  calculator input/formula contract: support form, carrier geometry,
+- Gate AC is landed and no-runtime: support form, carrier geometry,
   joist/section spacing, deck/board schedule, resilient layer dynamic
   stiffness, lower ceiling isolation, lab/field metric scope, and
-  calibration/holdout requirements.
+  calibration/holdout requirements are now executable contract inputs.
+- Gate AD should implement the numeric corridor around that contract:
+  expected `Ln,w` / `DeltaLw` corridor, source holdout comparison,
+  rejection of missing spacing/lower-isolation negatives, and no
+  promotion outside declared lab/field basis.
 - Formula ownership for Gate AA is family-specific: single/laminated
   leaf, double leaf/framed, triple leaf/two-cavity, generalized
   multi-layer airborne, heavy concrete impact, and lightweight steel

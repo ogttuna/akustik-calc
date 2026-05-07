@@ -32,15 +32,15 @@ path was found too narrow for the user's calculator-first goal.
 
 Current selected status:
 
-`gate_ab_floor_family_source_guard_landed_selected_steel_floor_physics_input_gate_ac`
+`gate_ac_steel_floor_physics_input_contract_landed_selected_formula_corridor_gate_ad`
 
 Selected next implementation file:
 
-`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ac-steel-floor-physics-input-contract.test.ts`
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ad-steel-floor-impact-formula-corridor-contract.test.ts`
 
 Selected next action:
 
-`gate_ac_steel_floor_physics_input_contract_and_formula_readiness_plan`
+`gate_ad_steel_floor_impact_formula_numeric_corridor_plan`
 
 Active planning surface:
 
@@ -48,12 +48,57 @@ Active planning surface:
 
 Latest landed gate:
 
-2026-05-07 model-first physics prediction pivot Gate AB floor-family
-source guard.
+2026-05-07 model-first physics prediction pivot Gate AC steel-floor
+physics input/formula readiness.
 
 Latest checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AB_HANDOFF.md`
+`docs/calculator/CHECKPOINT_2026-05-07_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AC_HANDOFF.md`
+
+Gate AC result:
+
+- source-absent steel floor impact routes now have an executable
+  no-runtime input/formula readiness contract;
+- required physical inputs are steel support form, carrier depth,
+  carrier spacing, upper impact package dynamic stiffness, load basis,
+  and lower ceiling isolation/support form;
+- complete explicit open-web steel predictor input is
+  `ready_for_formula_corridor_gate`, but runtime values remain on the
+  pre-existing family-estimate lane until Gate AD owns numeric corridor
+  promotion;
+- exact full-stack measured source rows remain highest precedence and
+  can promote without formula readiness;
+- nearby negatives cover missing carrier spacing and missing lower
+  isolation.
+
+Gate AC landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ac-steel-floor-physics-input-contract.test.ts`
+
+Gate AC landed action:
+
+`gate_ac_steel_floor_physics_input_contract_and_formula_readiness_plan`
+
+Gate AC landed status:
+
+`gate_ac_steel_floor_physics_input_contract_landed_selected_formula_corridor_gate_ad`
+
+Gate AC selected next file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ad-steel-floor-impact-formula-corridor-contract.test.ts`
+
+Gate AC selected next action:
+
+`gate_ad_steel_floor_impact_formula_numeric_corridor_plan`
+
+Gate AC validation result:
+
+Validation completed on 2026-05-07: focused Gate AC passed 1 file / 6
+tests; focused Gate AB + Gate AC + predictor input regression passed 3
+files / 54 tests; engine typecheck passed; `pnpm
+calculator:gate:current` passed with engine 309 files / 1760 tests, web
+62 files / 275 tests plus 18 skipped, repo build, and whitespace guard.
+Known optional `sharp/@img` Next build warnings remain non-fatal.
 
 Gate AB result:
 
