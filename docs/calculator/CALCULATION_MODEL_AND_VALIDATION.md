@@ -1,6 +1,6 @@
 # Calculation Model And Validation
 
-Last reviewed: 2026-05-06
+Last reviewed: 2026-05-08
 
 Document role:
 
@@ -15,7 +15,21 @@ answer it actually measures; it does not make the whole acoustic domain complete
 
 Latest checkpoint:
 
-`docs/calculator/CHECKPOINT_2026-05-06_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_U_HANDOFF.md`
+`docs/calculator/CHECKPOINT_2026-05-08_STRATEGIC_ROI_REPLAN_HANDOFF.md`
+
+Latest landed implementation checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-08_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_BH_HANDOFF.md`
+
+Current validation posture:
+
+Gate BH landed a no-runtime steel-floor residual-policy closed-owner
+revalidation. It produced only a policy `tighten` candidate; runtime
+values, tolerances, exact-source precedence, formulas, and lab/field/
+building basis boundaries remain unchanged. Gate BI is selected as a
+minimal no-runtime governance guard, then the plan pivots to a
+Personal-Use MVP Coverage Sprint so the next algorithmic solver is
+chosen from an executable wall/floor scenario matrix.
 
 ## Core Rule
 
@@ -41,6 +55,10 @@ Calculator-first rule:
   promotion, not formula-backed calculation;
 - source/lab rows are used for exact override, calibration, benchmark
   validation, tolerance ownership, and regression tests.
+- narrow residual-policy work must not continue indefinitely when the
+  broader calculator lacks an executable personal-use coverage matrix;
+  after Gate BI, select solver work from common wall/floor matrix
+  failures by coverage ROI and accuracy risk.
 
 The implementation is correct only when all of these are true:
 

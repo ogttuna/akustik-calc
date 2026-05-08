@@ -2,6 +2,8 @@
 
 Date: 2026-04-27
 
+Current review note: 2026-05-08
+
 ## Purpose
 
 This roadmap records the calculator-focused work that made DynEcho
@@ -14,6 +16,15 @@ bar here is calculation functionality: common combinations should return
 defensible values, unsupported combinations should fail honestly, and
 the UI should make the evidence/confidence posture clear enough for a
 single knowledgeable user.
+
+2026-05-08 correction: the older private/internal-use readiness decision
+below was a narrower controlled-use bar. It is not enough for the
+current product goal. The active plan now treats broad personal-use
+readiness as still open until the post-Gate-BI Personal-Use MVP Coverage
+Sprint builds an executable wall/floor scenario matrix and proves common
+calculator cases with numeric/basis/tolerance assertions, visible
+missing-input prompts, and hostile-input coverage. See
+[CHECKPOINT_2026-05-08_STRATEGIC_ROI_REPLAN_HANDOFF.md](./CHECKPOINT_2026-05-08_STRATEGIC_ROI_REPLAN_HANDOFF.md).
 
 ## Readiness Definition
 
@@ -200,26 +211,32 @@ Start from
 
 ## Current Order
 
-Current validation baseline: 2026-04-27 `pnpm check` is green after
-wall coverage planning Gate A. Engine broad is 234 files / 1280 tests.
-Web broad keeps 155 files in scope through `tools/dev/run-web-vitest.ts`
-with 885 passed + 18 skipped. Build is 5/5 with the known non-fatal
-`sharp/@img` optional-package warnings. Focused current gate after the
-double-leaf Sharp/Davy Gate B runner update is 106 engine files /
-485 tests, 43 web files / 211 passed plus 18 skipped, build 5/5.
+Current validation baseline for this older roadmap is historical. The
+current active chain is the model-first physics prediction pivot through
+Gate BH, with Gate BI selected only as a no-runtime governance guard and
+`personal_use_mvp_coverage_sprint_after_gate_bi` selected afterward.
+Latest Gate BH validation passed `pnpm calculator:gate:current` with
+engine 340 files / 1965 tests, web 66 files / 286 passed + 18 skipped,
+repo build 5/5, and whitespace clean.
 
 ## Readiness Decision
 
-DynEcho is now ready for private/internal use by a knowledgeable user
-who respects the visible evidence labels.
+Historical controlled-use decision:
 
-This means common wall/floor stacks can be used for day-to-day estimates
-when they land on exact/source, benchmark, formula, family, screening,
-or bound lanes, and unsupported or missing-input cases stay explicit.
+DynEcho reached a knowledgeable-user/internal-use bar for the corridors
+covered by the old readiness chain, provided the user respected evidence
+labels and unsupported/missing-input prompts.
 
-This does not mean every possible floor/wall family corridor is covered,
-or that the app is certified for regulatory submission. Blocked source
-families remain blocked until new evidence is deliberately imported.
+Current 2026-05-08 decision:
+
+Broad personal-use readiness is still open. DynEcho should not be called
+a generally usable calculator until the post-Gate-BI coverage matrix
+proves the common wall/floor routes, field/lab/building basis handling,
+numeric tolerances, card/report/API parity, and hostile-input behavior.
+Exact/source, benchmark, formula, family, screening, and bound lanes are
+allowed, but every defended answer must say which one it is. Source rows
+remain overrides, anchors, holdouts, and calibration evidence; they are
+not the product.
 
 Next selected work:
 

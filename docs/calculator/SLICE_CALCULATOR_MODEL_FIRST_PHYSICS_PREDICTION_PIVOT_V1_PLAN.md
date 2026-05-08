@@ -2,7 +2,7 @@
 
 Slice id: `calculator_model_first_physics_prediction_pivot_v1`
 
-Status: SELECTED / GATE AP LANDED / GATE AQ CALIBRATION READINESS NEXT
+Status: SELECTED / GATE BH LANDED / GATE BI MINIMAL GOVERNANCE NEXT / POST-GATE-BI PERSONAL-USE MVP COVERAGE SPRINT SELECTED
 
 Selected by:
 
@@ -12,7 +12,777 @@ queue.
 
 Selection status:
 
-`gate_ap_error_budget_hostile_input_landed_no_runtime_selected_calibration_readiness_gate_aq`
+`gate_bh_same_stack_iso_delta_lw_residual_policy_closed_owner_revalidation_landed_no_runtime_selected_tighten_candidate_governance_gate_bi`
+
+Latest strategic ROI replan:
+
+`docs/calculator/CHECKPOINT_2026-05-08_STRATEGIC_ROI_REPLAN_HANDOFF.md`
+
+Latest Gate BH checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-08_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_BH_HANDOFF.md`
+
+Gate BI scope after replan:
+
+Gate BI remains selected only as a no-runtime governance guard for Gate
+BH's policy-only `tighten` candidate. It must prove no runtime value,
+tolerance, formula coefficient, exact source row, source text/document,
+card/report/API surface, or lab/field/building alias moves at Gate BI.
+After that guard, the selected lane is
+`personal_use_mvp_coverage_sprint_after_gate_bi`, starting with an
+executable wall/floor scenario matrix.
+
+Post-Gate-BI first file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-a-scenario-matrix-contract.test.ts`
+
+Post-Gate-BI first action:
+
+`gate_a_personal_use_mvp_coverage_matrix_plan`
+
+Previous Gate BG checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-08_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_BG_HANDOFF.md`
+
+Gate BG landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-bg-steel-floor-formula-same-stack-iso-delta-lw-field-building-basis-owner-closure-contract.test.ts`
+
+Gate BG landed action:
+
+`gate_bg_steel_floor_formula_same_stack_iso_delta_lw_field_building_basis_owner_closure_plan`
+
+Gate BG selected Gate BH file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-bh-steel-floor-formula-same-stack-iso-delta-lw-residual-policy-closed-owner-revalidation-contract.test.ts`
+
+Gate BG selected Gate BH action:
+
+`gate_bh_steel_floor_formula_same_stack_iso_delta_lw_residual_policy_closed_owner_revalidation_plan`
+
+Gate BH landed summary:
+
+Gate BH revalidates the same-stack ISO lab `DeltaLw` residual policy
+after Gate BG closed the final ranked owner lane. Gate BD holdout-count
+closure, Gate BE paired-negative closure, Gate BF open-web input
+ownership, and Gate BG field/building basis ownership are represented as
+closed evidence-only gates. The closed map reaches three policy-only
+`DeltaLw` residual cases and four paired negative boundaries, then
+classifies as a `tighten` candidate with `max 0.6 dB` / `mean 0.6 dB`.
+That signal is not a runtime action: no closure row becomes measured
+runtime evidence, no exact row is promoted, no tolerance is changed, and
+lab/field/building bases remain separate. Gate BI is selected for
+tighten-candidate governance before any corridor movement.
+
+Gate BH validation result:
+
+Focused Gate BH validation completed on 2026-05-08. Gate BH passed 1
+file / 8 tests, focused Gate BG/BH continuity passed 2 files / 17
+tests, focused Gate BD/BE/BF/BG/BH closure continuity passed 5 files /
+45 tests, Gate AE doc breadcrumb regression passed 1 file / 4 tests,
+engine typecheck passed, engine DTS build passed, and full `pnpm
+calculator:gate:current` passed with engine 340 files / 1965 tests, web
+66 files / 286 passed + 18 skipped, repo build 5/5 successful, and
+whitespace guard clean. Known warnings were the existing Zustand
+unavailable test-storage warnings and optional sharp package resolution
+warnings during web build. Broad `pnpm check` was not rerun because Gate
+BH has no runtime/API/UI surface change.
+
+Latest Gate BH checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-08_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_BH_HANDOFF.md`
+
+Gate BH landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-bh-steel-floor-formula-same-stack-iso-delta-lw-residual-policy-closed-owner-revalidation-contract.test.ts`
+
+Gate BH landed action:
+
+`gate_bh_steel_floor_formula_same_stack_iso_delta_lw_residual_policy_closed_owner_revalidation_plan`
+
+Gate BH selected Gate BI file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-bi-steel-floor-formula-same-stack-iso-delta-lw-tighten-candidate-governance-contract.test.ts`
+
+Gate BH selected Gate BI action:
+
+`gate_bi_steel_floor_formula_same_stack_iso_delta_lw_tighten_candidate_governance_plan`
+
+Gate BG landed summary:
+
+Gate BG defines the separate field/building basis owner closure boundary
+after Gate BF selected the field/building lane. Only Gate BF's selected
+lane can feed closure evidence. Field apparent impact packets must own
+`L'n,w` / `L'nT,w` context, building-prediction packets must own separate
+building context, and both must own room geometry/volume, separating
+element area, junction/flanking context, reverberation/normalization
+basis, and rights-safe locator or project-context metadata. Complete
+future packets count only as residual-policy readiness evidence; lab
+`Ln,w` / `DeltaLw` still cannot alias to field or building outputs, and
+exact promotion, tolerance movement, formula retune, source text/document
+ingestion, and runtime movement remain blocked. Gate BH is selected for
+residual-policy closed-owner revalidation.
+
+Gate BG validation result:
+
+Focused Gate BG validation completed on 2026-05-08. Gate BG passed 1
+file / 9 tests, focused Gate BF/BG continuity passed 2 files / 18 tests,
+engine typecheck passed, engine DTS build passed, and full `pnpm
+calculator:gate:current` passed with engine 339 files / 1957 tests, web
+66 files / 286 passed + 18 skipped, repo build 5/5 successful, and
+whitespace guard clean. Known warnings were the existing Zustand
+unavailable test-storage warnings and optional sharp package resolution
+warnings during web build. Broad `pnpm check` was not rerun because Gate
+BG has no runtime/API/UI surface change.
+
+Latest Gate BG checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-08_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_BG_HANDOFF.md`
+
+Gate BG landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-bg-steel-floor-formula-same-stack-iso-delta-lw-field-building-basis-owner-closure-contract.test.ts`
+
+Gate BG landed action:
+
+`gate_bg_steel_floor_formula_same_stack_iso_delta_lw_field_building_basis_owner_closure_plan`
+
+Gate BG selected Gate BH file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-bh-steel-floor-formula-same-stack-iso-delta-lw-residual-policy-closed-owner-revalidation-contract.test.ts`
+
+Gate BG selected Gate BH action:
+
+`gate_bh_steel_floor_formula_same_stack_iso_delta_lw_residual_policy_closed_owner_revalidation_plan`
+
+Gate BF landed summary:
+
+Gate BF defines the source-owned open-web formula input ownership
+closure boundary after Gate BE selected the open-web input ownership
+lane. Only Gate BE's selected lane can feed closure evidence. A complete
+future packet must own support form, carrier depth, carrier spacing,
+load basis, dynamic stiffness, lower support class, upper resilient
+topology, and rights-safe locator metadata. Complete future packets
+count only as residual-policy readiness evidence; exact promotion,
+tolerance movement, formula retune, source text/document ingestion,
+field/building alias, and runtime movement remain blocked. Gate BG is
+selected for field/building basis owner closure.
+
+Gate BF validation result:
+
+Focused Gate BF validation completed on 2026-05-08. Gate BF passed 1 file
+/ 9 tests, focused Gate BE/BF continuity passed 2 files / 19 tests,
+engine typecheck passed, engine DTS build passed, and full
+`pnpm calculator:gate:current` passed with engine 338 files / 1948 tests,
+web 66 files / 286 passed + 18 skipped, repo build 5/5 successful, and
+whitespace guard clean. Broad `pnpm check` was not rerun because Gate BF
+has no runtime/API/UI surface change.
+
+Latest Gate BE checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-08_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_BE_HANDOFF.md`
+
+Gate BE landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-be-steel-floor-formula-same-stack-iso-delta-lw-paired-negative-closure-contract.test.ts`
+
+Gate BE landed action:
+
+`gate_be_steel_floor_formula_same_stack_iso_delta_lw_paired_negative_closure_plan`
+
+Gate BE selected Gate BF file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-bf-steel-floor-formula-same-stack-iso-delta-lw-open-web-input-ownership-closure-contract.test.ts`
+
+Gate BE selected Gate BF action:
+
+`gate_bf_steel_floor_formula_same_stack_iso_delta_lw_open_web_input_ownership_closure_plan`
+
+Gate BE landed summary:
+
+Gate BE defines the paired negative-boundary closure boundary after Gate
+BD selected the paired-negative lane. Only Gate BD's selected lane can
+feed closure evidence. Three additional boundaries must own the target
+metric family, ISO lab basis, explicit wrong-support or wrong-reference
+boundary, boundary identity, same-stack steel exclusion reason,
+not-holdout scope, and rights-safe locator metadata. Complete future
+boundaries count only as residual-policy readiness evidence; exact
+promotion, tolerance movement, formula retune, source text/document
+ingestion, field/building alias, and runtime movement remain blocked.
+Gate BF is selected for open-web formula input ownership closure.
+
+Gate BE validation result:
+
+Focused Gate BE validation completed on 2026-05-08. Gate BE passed 1 file
+/ 10 tests, focused Gate BD/BE continuity passed 2 files / 19 tests,
+engine typecheck passed, engine DTS build passed, and full
+`pnpm calculator:gate:current` passed with engine 337 files / 1939 tests,
+web 66 files / 286 passed + 18 skipped, repo build 5/5 successful, and
+whitespace guard clean. Broad `pnpm check` was not rerun because Gate BE
+has no runtime/API/UI surface change.
+
+Latest Gate BD checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-08_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_BD_HANDOFF.md`
+
+Gate BD landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-bd-steel-floor-formula-same-stack-iso-delta-lw-holdout-closure-contract.test.ts`
+
+Gate BD landed action:
+
+`gate_bd_steel_floor_formula_same_stack_iso_delta_lw_holdout_closure_plan`
+
+Gate BD selected Gate BE file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-be-steel-floor-formula-same-stack-iso-delta-lw-paired-negative-closure-contract.test.ts`
+
+Gate BD selected Gate BE action:
+
+`gate_be_steel_floor_formula_same_stack_iso_delta_lw_paired_negative_closure_plan`
+
+Gate BD landed summary:
+
+Gate BD defines the holdout-count closure boundary after Gate BC
+selected the source-owned same-stack ISO lab `DeltaLw` holdout-count
+lane. Only that selected Gate BC lane can feed closure evidence. Two
+additional holdouts must own the measured `DeltaLw` value, same-stack
+steel reference, ISO lab basis, all Gate AT/AK owner fields, paired
+negative-boundary ownership, and rights-safe locator metadata. Complete
+future packets count only as residual-readiness evidence; exact
+promotion, tolerance movement, formula retune, source text/document
+ingestion, field/building alias, and runtime movement remain blocked.
+
+Latest Gate BC checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-08_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_BC_HANDOFF.md`
+
+Gate BC landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-bc-steel-floor-formula-same-stack-iso-delta-lw-residual-blocker-closure-contract.test.ts`
+
+Gate BC landed action:
+
+`gate_bc_steel_floor_formula_same_stack_iso_delta_lw_residual_blocker_closure_plan`
+
+Gate BC selected Gate BD file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-bd-steel-floor-formula-same-stack-iso-delta-lw-holdout-closure-contract.test.ts`
+
+Gate BC selected Gate BD action:
+
+`gate_bd_steel_floor_formula_same_stack_iso_delta_lw_holdout_closure_plan`
+
+Gate BC landed summary:
+
+Gate BC ranks residual blocker-closure lanes after Gate BB policy
+decision. Only Gate BB accepted policy-decision rows can feed the
+ranking. The source-owned same-stack ISO lab `DeltaLw` holdout-count
+closure lane is selected for Gate BD because it directly improves
+residual case-count readiness and has a shortfall of 2. Paired
+negative-boundary, open-web input ownership, and field/building basis
+owner lanes remain ranked follow-ups. Gate BC does not start a broad
+source crawl and does not move runtime or tolerance values.
+
+Latest Gate BB checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-08_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_BB_HANDOFF.md`
+
+Gate BB landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-bb-steel-floor-formula-same-stack-iso-delta-lw-residual-policy-decision-contract.test.ts`
+
+Gate BB landed action:
+
+`gate_bb_steel_floor_formula_same_stack_iso_delta_lw_residual_policy_decision_plan`
+
+Gate BB selected Gate BC file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-bc-steel-floor-formula-same-stack-iso-delta-lw-residual-blocker-closure-contract.test.ts`
+
+Gate BB selected Gate BC action:
+
+`gate_bc_steel_floor_formula_same_stack_iso_delta_lw_residual_blocker_closure_plan`
+
+Gate BB landed summary:
+
+Gate BB defines the residual-policy decision surface after Gate BA
+residual admission. Only Gate BA residual-admitted rows can reach policy
+decision; blocked rows stay out. The accepted future same-stack ISO lab
+`DeltaLw` row remains `hold`, with blocker shortfalls explicit: 2 more
+source-owned holdouts, 3 more paired negative boundaries, source-owned
+open-web formula inputs, and field/building basis owners. Future
+retune/tighten/widen labels are later-gate signals only, not runtime or
+tolerance movement.
+
+Gate BB validation result:
+
+Focused Gate BB validation completed on 2026-05-08. Gate BB passed 1 file
+/ 8 tests, focused Gate BA/BB continuity passed 2 files / 16 tests,
+engine typecheck passed, engine DTS build passed, and full
+`pnpm calculator:gate:current` passed with engine 334 files / 1912 tests,
+web 66 files / 286 passed + 18 skipped, repo build 5/5 successful, and
+whitespace guard clean. Broad `pnpm check` was not rerun because Gate BB
+has no runtime/API/UI surface change.
+
+Latest Gate BA checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-08_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_BA_HANDOFF.md`
+
+Gate BA landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ba-steel-floor-formula-same-stack-iso-delta-lw-residual-admission-boundary-contract.test.ts`
+
+Gate BA landed action:
+
+`gate_ba_steel_floor_formula_same_stack_iso_delta_lw_residual_admission_boundary_plan`
+
+Gate BA selected Gate BB file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-bb-steel-floor-formula-same-stack-iso-delta-lw-residual-policy-decision-contract.test.ts`
+
+Gate BA selected Gate BB action:
+
+`gate_bb_steel_floor_formula_same_stack_iso_delta_lw_residual_policy_decision_plan`
+
+Gate BA landed summary:
+
+Gate BA defines the residual-admission boundary after Gate AZ
+calibration candidate selection. Only Gate AZ accepted calibration
+evidence candidates can enter same-stack ISO lab `DeltaLw`
+residual-policy evaluation. Current request-status rows and rejected or
+blocked candidates stay out. The accepted future source-owned packet
+candidate preserves rights-safe locator metadata and all owner fields,
+but its residual policy remains `hold`; threshold blockers still cover
+holdout count, paired negative boundaries, open-web formula input
+ownership, and field/building owners. Gate BA does not retune, tighten,
+widen, exact-promote, alias field/building metrics, or move runtime.
+
+Gate BA validation result:
+
+Focused Gate BA validation completed on 2026-05-08. Gate BA passed 1 file
+/ 8 tests, focused Gate AZ/BA continuity passed 2 files / 16 tests,
+engine typecheck passed, engine DTS build passed, and full
+`pnpm calculator:gate:current` passed with engine 333 files / 1904 tests,
+web 66 files / 286 passed + 18 skipped, repo build 5/5 successful, and
+whitespace guard clean. Broad `pnpm check` was not rerun because Gate BA
+has no runtime/API/UI surface change.
+
+Latest Gate AZ checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-08_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AZ_HANDOFF.md`
+
+Gate AZ landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-az-steel-floor-formula-same-stack-iso-delta-lw-packet-calibration-candidate-contract.test.ts`
+
+Gate AZ landed action:
+
+`gate_az_steel_floor_formula_same_stack_iso_delta_lw_packet_calibration_candidate_plan`
+
+Gate AZ selected Gate BA file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ba-steel-floor-formula-same-stack-iso-delta-lw-residual-admission-boundary-contract.test.ts`
+
+Gate AZ selected Gate BA action:
+
+`gate_ba_steel_floor_formula_same_stack_iso_delta_lw_residual_admission_boundary_plan`
+
+Gate AZ landed summary:
+
+Gate AZ defines the calibration evidence candidate boundary after Gate
+AY packet acceptance. Current request-status rows and rejected Gate AY
+probes stay blocked. The accepted future same-stack ISO lab `DeltaLw`
+packet boundary probe can become a calibration evidence candidate only
+when rights-safe citation/locator metadata is preserved. Candidate
+status is still not residual-policy admission, exact-source promotion,
+tolerance movement, field/building aliasing, retune, or runtime
+movement.
+
+Gate AZ validation result:
+
+Focused Gate AZ validation completed on 2026-05-08. Gate AZ passed 1 file
+/ 8 tests, focused Gate AY/AZ continuity passed 2 files / 16 tests,
+engine typecheck passed, engine DTS build passed, and full
+`pnpm calculator:gate:current` passed with engine 332 files / 1896 tests,
+web 66 files / 286 passed + 18 skipped, repo build 5/5 successful, and
+whitespace guard clean. Broad `pnpm check` was not rerun because Gate AZ
+has no runtime/API/UI surface change.
+
+Latest Gate AY checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-08_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AY_HANDOFF.md`
+
+Gate AY landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ay-steel-floor-formula-same-stack-iso-delta-lw-packet-acceptance-boundary-contract.test.ts`
+
+Gate AY landed action:
+
+`gate_ay_steel_floor_formula_same_stack_iso_delta_lw_packet_acceptance_boundary_plan`
+
+Gate AY selected Gate AZ file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-az-steel-floor-formula-same-stack-iso-delta-lw-packet-calibration-candidate-contract.test.ts`
+
+Gate AY selected Gate AZ action:
+
+`gate_az_steel_floor_formula_same_stack_iso_delta_lw_packet_calibration_candidate_plan`
+
+Gate AY landed summary:
+
+Gate AY defines the source-packet acceptance boundary after the Gate AX
+request ledger. Current request-ledger rows stay in request status until
+a source-owned packet exists. A complete future same-stack ISO lab
+`DeltaLw` packet probe can leave request status only with measured
+`DeltaLw`, same-stack steel reference, ISO 10140 / 717-2 lab basis, all
+Gate AT/AK owner fields, and paired negative-boundary ownership.
+Wrong-basis, wrong-reference, product/inferred, rights-blocked,
+missing-owner, and blocked-ledger probes stay rejected. Accepted boundary
+packets are not calibration evidence yet, not exact rows, not retune
+input, not field/building aliases, and not runtime movement.
+
+Gate AY validation result:
+
+Focused Gate AY validation completed on 2026-05-08. Gate AY passed 1 file
+/ 8 tests, focused Gate AX/AY continuity passed 2 files / 15 tests,
+engine typecheck passed, engine DTS build passed, and full
+`pnpm calculator:gate:current` passed with engine 331 files / 1888 tests,
+web 66 files / 286 passed + 18 skipped, repo build 5/5 successful, and
+whitespace guard clean. Broad `pnpm check` was not rerun because Gate AY
+has no runtime/API/UI surface change.
+
+Latest Gate AX checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-08_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AX_HANDOFF.md`
+
+Gate AX landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ax-steel-floor-formula-same-stack-iso-delta-lw-packet-request-ledger-contract.test.ts`
+
+Gate AX landed action:
+
+`gate_ax_steel_floor_formula_same_stack_iso_delta_lw_packet_request_ledger_plan`
+
+Gate AX selected Gate AY file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ay-steel-floor-formula-same-stack-iso-delta-lw-packet-acceptance-boundary-contract.test.ts`
+
+Gate AX selected Gate AY action:
+
+`gate_ay_steel_floor_formula_same_stack_iso_delta_lw_packet_acceptance_boundary_plan`
+
+Gate AX landed summary:
+
+Gate AX converts only Gate AW ready packet request rows into rights-safe
+request-ledger entries. Blocked rows stay out, locator-only metadata and
+the Gate AT/AK owner checklist are preserved, and ledger entries remain
+separate from source packets, measured rows, calibration evidence, exact
+overrides, retune evidence, and runtime movement. Source documents,
+source text, and measured metric values are not ingested.
+
+Gate AX validation result:
+
+Focused Gate AX validation completed on 2026-05-08. Gate AX passed 1 file
+/ 7 tests, focused Gate AW/AX continuity passed 2 files / 14 tests,
+engine typecheck passed, engine DTS build passed, and full
+`pnpm calculator:gate:current` passed with engine 330 files / 1880 tests,
+web 66 files / 286 passed + 18 skipped, repo build 5/5 successful, and
+whitespace guard clean. Broad `pnpm check` was not rerun because Gate AX
+has no runtime/API/UI surface change.
+
+Latest Gate AW checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-08_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AW_HANDOFF.md`
+
+Gate AW landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-aw-steel-floor-formula-same-stack-iso-delta-lw-packet-acquisition-readiness-contract.test.ts`
+
+Gate AW landed action:
+
+`gate_aw_steel_floor_formula_same_stack_iso_delta_lw_packet_acquisition_readiness_plan`
+
+Gate AW selected Gate AX file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ax-steel-floor-formula-same-stack-iso-delta-lw-packet-request-ledger-contract.test.ts`
+
+Gate AW selected Gate AX action:
+
+`gate_ax_steel_floor_formula_same_stack_iso_delta_lw_packet_request_ledger_plan`
+
+Gate AW landed summary:
+
+Gate AW uses only Gate AV accepted intake rows as packet request
+candidates, requires rights-safe locator metadata plus every Gate AT/AK
+source-owned owner field, and blocks rejected intake rows. Ready packet
+requests are not source packets, measured rows, calibration evidence,
+exact overrides, retune evidence, or runtime movement. Source documents,
+source text, and measured metric values are not ingested.
+
+Gate AW validation result:
+
+Focused Gate AW validation completed on 2026-05-08. Gate AW passed 1 file
+/ 7 tests, focused Gate AV/AW continuity passed 2 files / 14 tests,
+engine typecheck passed, engine DTS build passed, and full
+`pnpm calculator:gate:current` passed with engine 329 files / 1873 tests,
+web 66 files / 286 passed + 18 skipped, repo build 5/5 successful, and
+whitespace guard clean. Broad `pnpm check` was not rerun because Gate AW
+has no runtime/API/UI surface change.
+
+Latest Gate AV checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-08_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AV_HANDOFF.md`
+
+Gate AV landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-av-steel-floor-formula-same-stack-iso-delta-lw-source-lead-intake-contract.test.ts`
+
+Gate AV landed action:
+
+`gate_av_steel_floor_formula_same_stack_iso_delta_lw_source_lead_intake_plan`
+
+Gate AV selected Gate AW file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-aw-steel-floor-formula-same-stack-iso-delta-lw-packet-acquisition-readiness-contract.test.ts`
+
+Gate AV selected Gate AW action:
+
+`gate_aw_steel_floor_formula_same_stack_iso_delta_lw_packet_acquisition_readiness_plan`
+
+Gate AV landed summary:
+
+Gate AV converts the Gate AU accepted manufacturer lab-report index,
+accredited lab-report index, and internal measurement packet leads into
+metadata-only acquisition request targets. It does not ingest source
+text or measured metric values, does not create source packets,
+calibration evidence, exact overrides, or retune evidence, and keeps
+all rejected Gate AU lead buckets blocked. Runtime values and basis
+separation remain unchanged.
+
+Gate AV validation result:
+
+Focused Gate AV validation completed on 2026-05-08. Gate AV passed 1 file
+/ 7 tests, focused Gate AU/AV continuity passed 2 files / 14 tests,
+engine typecheck passed, engine DTS build passed, and full
+`pnpm calculator:gate:current` passed with engine 328 files / 1866 tests,
+web 66 files / 286 passed + 18 skipped, repo build 5/5 successful, and
+whitespace guard clean. Broad `pnpm check` was not rerun because Gate AV
+has no runtime/API/UI surface change.
+
+Latest Gate AU checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-08_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AU_HANDOFF.md`
+
+Gate AU landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-au-steel-floor-formula-same-stack-iso-delta-lw-narrow-source-lead-contract.test.ts`
+
+Gate AU landed action:
+
+`gate_au_steel_floor_formula_same_stack_iso_delta_lw_narrow_source_lead_plan`
+
+Gate AU selected Gate AV file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-av-steel-floor-formula-same-stack-iso-delta-lw-source-lead-intake-contract.test.ts`
+
+Gate AU selected Gate AV action:
+
+`gate_av_steel_floor_formula_same_stack_iso_delta_lw_source_lead_intake_plan`
+
+Gate AU landed summary:
+
+Gate AU uses the Gate AT same-stack ISO lab `DeltaLw` packet acceptance
+surface as the only source-lead scope. Manufacturer lab-report index,
+accredited lab-report index, and internal measurement packet leads can
+proceed only as metadata-only acquisition targets; product-only,
+wrong-basis, concrete-reference, boundary-only, missing-owner, and
+rights-blocked leads stay rejected. Runtime values and basis separation
+remain unchanged.
+
+Gate AU validation result:
+
+Focused Gate AU validation completed on 2026-05-08. Gate AU passed 1 file
+/ 7 tests, focused Gate AT/AU continuity passed 2 files / 14 tests,
+engine typecheck passed, engine DTS build passed, and full
+`pnpm calculator:gate:current` passed with engine 327 files / 1859 tests,
+web 66 files / 286 passed + 18 skipped, repo build 5/5 successful, and
+whitespace guard clean. Broad `pnpm check` was not rerun because Gate AU
+has no runtime/API/UI surface change.
+
+Latest Gate AT checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-08_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AT_HANDOFF.md`
+
+Gate AT landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-at-steel-floor-formula-same-stack-iso-delta-lw-packet-target-contract.test.ts`
+
+Gate AT landed action:
+
+`gate_at_steel_floor_formula_same_stack_iso_delta_lw_packet_target_plan`
+
+Gate AT selected Gate AU file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-au-steel-floor-formula-same-stack-iso-delta-lw-narrow-source-lead-contract.test.ts`
+
+Gate AT selected Gate AU action:
+
+`gate_au_steel_floor_formula_same_stack_iso_delta_lw_narrow_source_lead_plan`
+
+Gate AT landed summary:
+
+Gate AT uses the Gate AS selected same-stack ISO lab `DeltaLw` packet
+target as the only acceptance surface. It accepts only the future
+source-owned same-stack fixture as calibration evidence, rejects
+product-only, wrong-basis, concrete-reference, boundary-only,
+missing-owner, and rights-blocked fixtures, and keeps residual policy on
+`hold` without runtime movement.
+
+Gate AT validation result:
+
+Focused Gate AT validation completed on 2026-05-08: Gate AT engine
+contract passed 1 file / 7 tests. Focused Gate AS/AT continuity passed
+2 files / 13 tests. Engine typecheck passed. Engine DTS build passed.
+Full `pnpm calculator:gate:current` passed with engine 326 files / 1852
+tests, web 66 files / 286 passed + 18 skipped, repo build 5/5
+successful, and whitespace guard clean. Broad `pnpm check` was not
+rerun because Gate AT is no-runtime/no-API/no-UI and the current-gate
+plus engine typecheck/build cover the changed surfaces. Known non-fatal
+warnings remain the Node/Vitest Zustand persist storage warning and
+optional `sharp` / `@img` Next build warnings via the DOCX export
+dependency.
+
+Latest Gate AS checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-08_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AS_HANDOFF.md`
+
+Gate AS landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-as-steel-floor-formula-owner-evidence-targeting-contract.test.ts`
+
+Gate AS landed action:
+
+`gate_as_steel_floor_formula_owner_evidence_targeting_plan`
+
+Gate AS selected Gate AT file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-at-steel-floor-formula-same-stack-iso-delta-lw-packet-target-contract.test.ts`
+
+Gate AS selected Gate AT action:
+
+`gate_at_steel_floor_formula_same_stack_iso_delta_lw_packet_target_plan`
+
+Gate AS landed summary:
+
+Gate AS ranks all seven Gate AQ evidence owners by calculator impact,
+acquisition feasibility, current ledger gap, and rejection-boundary risk.
+It selects same-stack ISO lab `DeltaLw` packet ownership as the next
+narrow target because it covers both `Ln,w` and `DeltaLw` and current
+accepted local source-owned packet count remains zero. Runtime values,
+current tolerances, exact-source precedence, and lab/field/building
+basis separation remain unchanged.
+
+Gate AS validation result:
+
+Focused Gate AS validation completed on 2026-05-08: Gate AS engine
+contract passed 1 file / 6 tests. Focused Gate AR/AS continuity passed
+2 files / 13 tests. Engine typecheck passed. Engine DTS build passed.
+Full `pnpm calculator:gate:current` passed with engine 325 files / 1845
+tests, web 66 files / 286 passed + 18 skipped, repo build 5/5
+successful, and whitespace guard clean. Broad `pnpm check` was not
+rerun because Gate AS is no-runtime/no-API/no-UI and the current-gate
+plus engine typecheck/build cover the changed surfaces. Known non-fatal
+warnings remain the Node/Vitest Zustand persist storage warning and
+optional `sharp` / `@img` Next build warnings via the DOCX export
+dependency.
+
+Latest Gate AR checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-08_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AR_HANDOFF.md`
+
+Gate AR landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ar-steel-floor-formula-calibration-evidence-intake-contract.test.ts`
+
+Gate AR landed action:
+
+`gate_ar_steel_floor_formula_calibration_evidence_intake_plan`
+
+Gate AR selected Gate AS file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-as-steel-floor-formula-owner-evidence-targeting-contract.test.ts`
+
+Gate AR selected Gate AS action:
+
+`gate_as_steel_floor_formula_owner_evidence_targeting_plan`
+
+Gate AR landed summary:
+
+Gate AR classifies the current local Gate AK/AM calibration evidence
+against the Gate AQ owner map. The current ledger has no accepted
+source-owned calibration packet; wrong-basis, wrong-reference-floor,
+product/inferred, missing-owner-field, and boundary-only evidence stay
+rejected. A future source-owned same-stack ISO `DeltaLw` packet can
+satisfy the `source_owned_delta_lw_holdout_absence` owner, but still
+cannot move runtime values until residual-policy thresholds are met.
+
+Gate AR validation result:
+
+Focused Gate AR validation completed on 2026-05-08: Gate AR engine
+contract passed 1 file / 7 tests. Focused Gate AQ/AR continuity passed
+2 files / 14 tests. Engine DTS build passed. Full `pnpm
+calculator:gate:current` passed with engine 324 files / 1839 tests, web
+66 files / 286 passed + 18 skipped, repo build 5/5 successful, and
+whitespace guard clean. Broad `pnpm check` passed with lint/typecheck
+clean, engine 449 files / 2641 tests, web 172 files / 961 passed + 18
+skipped, and repo build 5/5 successful. Known non-fatal warnings remain
+the Node/Vitest Zustand persist storage warning and optional `sharp` /
+`@img` Next build warnings via the DOCX export dependency.
+
+Latest Gate AQ checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-08_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_AQ_HANDOFF.md`
+
+Gate AQ landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-aq-steel-floor-formula-error-budget-calibration-readiness-contract.test.ts`
+
+Gate AQ landed action:
+
+`gate_aq_steel_floor_formula_error_budget_calibration_readiness_plan`
+
+Gate AQ selected Gate AR file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-ar-steel-floor-formula-calibration-evidence-intake-contract.test.ts`
+
+Gate AQ selected Gate AR action:
+
+`gate_ar_steel_floor_formula_calibration_evidence_intake_plan`
+
+Gate AQ landed summary:
+
+Gate AQ turns the stable Gate AO/AP steel-floor error-budget payload into
+an executable calibration-readiness contract. It maps every current
+runtime budget term to a source-owned evidence owner and current blocker,
+proves the mapping is exhaustive against the actual runtime
+`ImpactErrorBudget.terms`, keeps current `Ln,w` / `DeltaLw` policies on
+`hold`, rejects wrong evidence from shrinking terms or tightening the
+corridor, and defines no-runtime future `hold`, `tighten`, `widen`, and
+`retune_candidate` branches.
+
+Gate AQ validation result:
+
+Focused Gate AQ validation completed on 2026-05-08: Gate AQ engine
+contract passed 1 file / 7 tests. Focused Gate AP/AQ continuity passed
+2 files / 14 tests. Full `pnpm calculator:gate:current` passed with
+engine 323 files / 1832 tests, web 66 files / 286 passed + 18 skipped,
+repo build 5/5 successful, and whitespace guard clean. Post-doc
+`git diff --check` passed. Broad `pnpm check` also passed after Gate AQ:
+lint, typecheck, engine 448 files / 2634 tests, web 172 files / 961
+passed + 18 skipped, and build 5/5 successful. Known non-fatal warnings
+remain the Node/Vitest Zustand persist storage warning and optional
+`sharp` / `@img` Next build warnings via the DOCX export dependency.
 
 Latest Gate AP checkpoint:
 
@@ -270,17 +1040,62 @@ Consumed Gate AN implementation plan:
 5. Preserve card/report/API parity for the uncertainty posture without
    presenting it as measured evidence.
 
-Gate AQ implementation plan:
+Consumed Gate AQ implementation plan:
 
-1. Define the calibration-readiness contract for the steel-floor formula
-   error budget.
-2. Map each budget term to the exact source-owned evidence that can
-   shrink it and the blocker that keeps it at current tolerance.
-3. Assert product-only, inferred, STC/IIC, field/building, and
-   concrete-reference rows cannot tighten the steel formula corridor.
-4. Add hold, tighten-candidate, widen-candidate, and retune-candidate
-   cases without moving runtime values.
-5. Keep Gate AP hostile-input stability and Gate AO parity unchanged.
+Implementation comparison on 2026-05-08:
+
+- Gate AP is implemented and selects Gate AQ, but no `gate-aq`
+  contract/helper exists yet.
+- The steel formula runtime basis, current `Ln,w 55.6` /
+  `DeltaLw 22.4` values, `+/-4.5 dB` / `+/-2.0 dB` tolerances, and
+  error-budget terms already live in
+  `packages/engine/src/steel-floor-impact-formula-corridor.ts`.
+- Residual decisions already live in
+  `packages/engine/src/steel-floor-formula-residual-policy.ts`; Gate AQ
+  should reuse those hold/tighten/widen/retune mechanics.
+- Gate AK/AM/AL already prove current `DeltaLw` evidence is not
+  source-owned same-stack ISO lab evidence, so the current corridor must
+  still hold.
+
+Gate AQ implementation order completed:
+
+1. Add
+   `packages/engine/src/steel-floor-formula-error-budget-calibration-readiness.ts`
+   and the selected Gate AQ contract test file.
+2. Use the detailed execution checklist in
+   `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md` as the canonical Gate AQ
+   format. Gate AQ does not need a web/source crawl; it is a no-runtime
+   readiness contract over the already-landed Gate AI/AK/AM/AN/AP
+   evidence and policy helpers.
+3. Define the calibration-readiness contract for both steel formula
+   budget metrics, including owners for same-stack `DeltaLw`, same-stack
+   `Ln,w`, topology/support family, carrier depth/spacing, load basis,
+   dynamic stiffness/product curve, lower support, upper resilient
+   topology, bare reference, transfer efficiency, and paired negative
+   boundary.
+4. Map every runtime budget term to its owner/blocker:
+   `source_owned_delta_lw_holdout_absence`,
+   `source_absent_bare_steel_reference_model`,
+   `support_form_transfer_efficiency`,
+   `lower_support_class_simplification`,
+   `dynamic_stiffness_precision`, `load_basis_precision`, and
+   `upper_resilient_topology_simplification`.
+5. Assert the term mapping is exhaustive against the actual
+   `ImpactErrorBudget.terms` from a complete source-absent steel formula
+   calculation.
+6. Prove current evidence still resolves to hold because accepted
+   source-owned same-stack `DeltaLw` holdouts, source-owned formula
+   inputs, correction ownership, and paired negative boundary thresholds
+   are incomplete.
+7. Assert product-only, inferred, STC/IIC, field/building,
+   wrong-reference-floor, and concrete-reference rows cannot tighten or
+   shrink the steel formula corridor.
+8. Add no-runtime future cases for `hold`, `tighten`, `widen`, and
+   `retune_candidate` while keeping runtime values and tolerances pinned.
+9. Keep Gate AP hostile-input stability and Gate AO parity unchanged.
+10. After Gate AQ lands, update the current-gate runner and docs, then
+    select Gate AR as a calibration-evidence intake/decision-ledger gate,
+    not an automatic source crawl or formula retune.
 
 Consumed Gate AP implementation plan:
 

@@ -1,6 +1,6 @@
 # Calculator Master Plan
 
-Last reviewed: 2026-05-05
+Last reviewed: 2026-05-08
 (`wall_coverage_expansion_planning_v2` Gate A closed no-runtime;
 `wall_single_leaf_mass_law_calibration_v1` Gate C closed no-runtime;
 `wall_double_leaf_sharp_davy_scoping_v1` Gate C closed no-runtime;
@@ -54,9 +54,13 @@ Current tactical state is governed by
 2026-05-05 the active correction is the model-first physics prediction
 pivot:
 [SLICE_CALCULATOR_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_V1_PLAN.md](./SLICE_CALCULATOR_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_V1_PLAN.md).
-This master plan remains the strategic frame, but any older source-pack
-or internal-use selected-slice wording below must not override the
-current calculator-first pivot.
+As of 2026-05-08 Gate BH is landed and the current strategic ROI replan
+is:
+[CHECKPOINT_2026-05-08_STRATEGIC_ROI_REPLAN_HANDOFF.md](./CHECKPOINT_2026-05-08_STRATEGIC_ROI_REPLAN_HANDOFF.md).
+This master plan remains the strategic frame, but any older source-pack,
+internal-use, or steel-floor-only selected-slice wording below must not
+override the current calculator-first pivot and post-Gate-BI Personal-Use
+MVP Coverage Sprint.
 
 This is the top-level roadmap for the DynEcho acoustic calculator. It is
 the second doc a fresh agent reads after `CURRENT_STATE.md`. It answers:
@@ -75,38 +79,24 @@ the second doc a fresh agent reads after `CURRENT_STATE.md`. It answers:
 
 Private-use calculator readiness is tracked separately in
 [PERSONAL_USE_READINESS_ROADMAP.md](./PERSONAL_USE_READINESS_ROADMAP.md).
-That chain is closed for the current private/internal-use bar. Floor
-layer-order invariance expansion closed no-runtime; framed-wall split
-stability Gate B fixed the LSF field board-split value/warning drift
-without global board coalescing; source/runtime widening candidates
-remained blocked in `calculator_source_gap_revalidation_v3` Gate A, so
-the short company pilot operating envelope ran next. Internal-use
-operating envelope Gate A landed that pilot pack no-runtime, Gate B
-landed the regular internal-use visibility audit with a focused wall
-source-gated copy fix, and Gate C closed the slice no-runtime. The
-current selected calculator work is
-`internal_use_acceptance_rehearsal_v1` Gate A. Source-pack
-readiness triage Gate A kept every candidate
-`runtimeImportReadyNow: false` and selected CLT / mass-timber only for
-no-runtime source-row and metric-context extraction. CLT / mass-timber
-Gate A then classified WoodWorks Table 7 Single CLT Wall and Table 9
-Double CLT Wall as later row-mapping candidates, WoodWorks Table 8
-Single NLT Wall plus NRC RR-335/NLT addendum as formula/tolerance
-context, and Dataholz CLT floor rows plus the WoodWorks database as
-rejection-only context. Gate B then rejected immediate bounded metric
-mapping and formula tolerance because no exact row-level metric policy
-or local CLT/NLT/double-CLT tolerance owner is ready. Gate C closed the
-slice no-runtime and selected an internal-use acceptance rehearsal
-because no source-ready accuracy import exists after Gate B. There is
-no test-driven reason to change runtime/source posture before the
-acceptance matrix names a real implementation mismatch or a later slice
-names a source-ready pack.
+Older sections there recorded a narrower knowledgeable-user/internal-use
+bar. The current user goal is stronger: DynEcho must become a broadly
+usable personal acoustic calculator, not merely a set of known supported
+corridors. Treat those older readiness claims as historical caveats
+until the post-Gate-BI Personal-Use MVP Coverage Sprint produces an
+executable scenario matrix and shows common wall/floor cases returning
+defensible values or precise `needs_input` / `unsupported` answers.
 
 The next planning layer is split deliberately:
 
+- [CHECKPOINT_2026-05-08_STRATEGIC_ROI_REPLAN_HANDOFF.md](./CHECKPOINT_2026-05-08_STRATEGIC_ROI_REPLAN_HANDOFF.md)
+  is authoritative after Gate BH: Gate BI is a minimal no-runtime
+  governance guard, then the selected lane is
+  `personal_use_mvp_coverage_sprint_after_gate_bi`.
+- [SLICE_CALCULATOR_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_V1_PLAN.md](./SLICE_CALCULATOR_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_V1_PLAN.md)
+  remains the active model-first implementation chain through Gate BI.
 - [SLICE_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_PLAN.md](./SLICE_CLT_MASS_TIMBER_WALL_SOURCE_PACK_EXTRACTION_PLAN.md)
-  is selected for no-runtime CLT / mass-timber wall source-row and
-  metric-context extraction.
+  is historical unless promoted again by the active coverage matrix.
 - [SLICE_CALCULATOR_SOURCE_PACK_READINESS_TRIAGE_PLAN.md](./SLICE_CALCULATOR_SOURCE_PACK_READINESS_TRIAGE_PLAN.md)
   is landed for the no-runtime source-pack readiness ranking.
 - [SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md](./SLICE_INTERNAL_USE_OPERATING_ENVELOPE_V1_PLAN.md)
