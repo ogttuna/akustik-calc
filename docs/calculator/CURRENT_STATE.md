@@ -19,6 +19,15 @@ If you need the active route/source boundary risk register read
 If you need the latest strategic ROI revalidation and Gate G handoff
 read
 [CHECKPOINT_2026-05-10_STRATEGIC_ROI_REVALIDATION_AND_GATE_G_PLAN_HANDOFF.md](./CHECKPOINT_2026-05-10_STRATEGIC_ROI_REVALIDATION_AND_GATE_G_PLAN_HANDOFF.md).
+If you need the current Personal-Use MVP Coverage Sprint Gate H
+checkpoint read
+[CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_H_HANDOFF.md](./CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_H_HANDOFF.md).
+If you need the current Personal-Use MVP Coverage Sprint Gate I
+checkpoint read
+[CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_I_HANDOFF.md](./CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_I_HANDOFF.md).
+If you need the preceding Personal-Use MVP Coverage Sprint Gate G
+checkpoint read
+[CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_G_HANDOFF.md](./CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_G_HANDOFF.md).
 If you need the current Personal-Use MVP Coverage Sprint Gate F
 checkpoint read
 [CHECKPOINT_2026-05-08_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_F_HANDOFF.md](./CHECKPOINT_2026-05-08_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_F_HANDOFF.md).
@@ -57,15 +66,15 @@ path was found too narrow for the user's calculator-first goal.
 
 Current selected status:
 
-`gate_f_personal_use_mvp_timber_clt_floor_impact_delta_lw_input_surface_landed_selected_wall_multicavity_gate_g`
+`gate_i_personal_use_mvp_airborne_field_context_continuation_landed_selected_field_surface_parity_gate_j`
 
 Selected next implementation file:
 
-`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-g-generalized-wall-multicavity-route-readiness-contract.test.ts`
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-j-airborne-field-context-surface-parity-contract.test.ts`
 
 Selected next action:
 
-`gate_g_personal_use_mvp_generalized_wall_multicavity_route_readiness_plan`
+`gate_j_personal_use_mvp_airborne_field_context_surface_parity_plan`
 
 Strategic ROI replan:
 
@@ -113,16 +122,147 @@ Current strategy:
   parity for the same timber/CLT physical fields. Workbench controls,
   live evaluation, local/server snapshots, calculator API payload, and
   impact-only API payload feed the Gate D/E predictor input.
-- Gate G is now selected to return to wall coverage: generalized
-  multi-cavity / triple-leaf route readiness beyond fixture gates.
-- The 2026-05-10 ROI revalidation confirms Gate G is still first: it
-  moves the broadest user-visible wall coverage blocker before lined
+- Gate G has now landed generalized wall coverage: multi-cavity /
+  triple-leaf route readiness beyond fixture gates.
+- Gate H has now landed lined massive/masonry and CLT wall lab
+  family-physics origin promotion without numeric retuning.
+- Gate H selection status was
+  `gate_h_personal_use_mvp_lined_masonry_clt_wall_upgrade_landed_selected_airborne_field_context_gate_i`.
+- Gate H selected
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-i-airborne-field-context-continuation-contract.test.ts`
+  with action
+  `gate_i_personal_use_mvp_airborne_field_context_continuation_plan`.
+- Gate I has now landed airborne field-context continuation for
+  already-owned lab family routes without numeric retuning.
+- The 2026-05-10 ROI revalidation selected Gate G first because it moved
+  the broadest user-visible wall coverage blocker before lined
   masonry/CLT wall upgrades, field/building continuations, or any return
   to steel tolerance tightening.
+- Gate G proves complete grouped 50/50 and non-50/50 mineral-wool
+  triple-leaf routes, unequal cavity readiness, safe reorder stability,
+  flat-list and partial-topology `needs_input`, duplicate/overlapping
+  group refusal, lined masonry/CLT negatives, field-output non-aliasing,
+  and exact-source precedence.
+- Current grouped wall value pins remain `Rw 50 / STC 55` for the 50/50
+  mineral-wool case and `Rw 55 / STC 56` for the non-50/50
+  construction-image topology. Gate G landed without retuning those
+  values.
+- Gate H keeps lined massive/masonry at `Rw 60 / STC 60` and CLT at
+  `Rw 42 / STC 42`, but the selected origin is now explicit
+  `family_physics_prediction` with uncalibrated error budgets instead of
+  `screening_fallback`.
+- Partial explicit lined or mass-timber wall intent is `needs_input`;
+  ordinary single leaf, double/framed, grouped triple-leaf, and field
+  outputs remain outside the Gate H lab corridor.
+- Gate J is now selected for airborne field-context surface parity.
 - Broad source crawling remains blocked unless the active matrix names a
   specific source or holdout as the highest-impact unblocker.
 
-Current Gate F result:
+Current Gate I result:
+
+- Gate I adds the focused airborne field-context continuation contract
+  and `dynamic-airborne-gate-i-airborne-field-context.ts`;
+- complete `field_between_rooms` requests for grouped mineral-wool
+  triple-leaf, lined massive/masonry, and CLT/mass-timber wall families
+  now use
+  `gate_i_airborne_field_apparent_context_adapter_runtime`;
+- current field values remain numeric-stable: lined massive/masonry
+  stays `R'w 58 / DnT,w 59`, CLT/mass-timber stays
+  `R'w 40 / DnT,w 41`, and grouped triple-leaf stays
+  `R'w 50 / DnT,w 51`;
+- missing field context remains `needs_input` with exact physical fields,
+  building-prediction/flanking stays blocked, and exact field source rows
+  still outrank the Gate I family adapter;
+- Gate J is selected for visible/API/report surface parity of the new
+  field-context basis.
+
+Gate I validation result:
+
+Validation completed on 2026-05-10: focused Gate I passed 1 file / 6
+tests; Gate G/H/I plus Gate O/P continuity passed 5 files / 30 tests;
+engine typecheck passed; dynamic-airborne split line-count guard passed
+after updating the current composer size to 1912 physical lines; final
+`pnpm calculator:gate:current` passed with engine 350 files / 2030
+tests, web 68 files / 294 passed + 18 skipped, repo build 5/5
+successful, and whitespace guard clean. Known non-fatal warnings remain
+the existing Zustand unavailable test-storage warnings and optional
+`sharp/@img` package resolution warnings during the Next build.
+
+Previous Gate H result:
+
+- Gate H adds the focused lined massive/masonry + CLT wall upgrade
+  contract and `dynamic-airborne-gate-h-lined-masonry-clt.ts`;
+- complete source-absent lab lined massive/masonry wall remains
+  `Rw 60 / STC 60`, but its origin is now
+  `family_physics_prediction` through
+  `gate_h_lined_massive_wall_cavity_aware_family_physics_runtime`;
+- complete source-absent lab CLT/mass-timber wall remains
+  `Rw 42 / STC 42`, with `Ctr` still unsupported, and its origin is now
+  `family_physics_prediction` through
+  `gate_h_clt_mass_timber_wall_single_leaf_family_physics_runtime`;
+- exact full-stack source rows remain higher precedence than the Gate H
+  formula corridor;
+- partial explicit lined-wall and mass-timber intent returns
+  `needs_input` with physical fields, not source-catalog tasks;
+- ordinary single leaf, double/framed, grouped triple-leaf, and field
+  outputs stay outside this lab-only promotion;
+- Gate I promotes complete `field_between_rooms` requests for grouped
+  mineral-wool triple-leaf, lined massive/masonry, and CLT/mass-timber
+  wall families to a field/apparent family-physics basis, while keeping
+  missing field context as `needs_input` and building-prediction/flanking
+  out of scope.
+- Gate J is selected for airborne field-context surface parity.
+
+Previous Gate H validation result:
+
+Validation completed on 2026-05-10: focused Gate H passed 1 file / 7
+tests; Gate A/G/H plus Gate O CLT continuity passed 4 files / 26 tests;
+Gate P CLT continuity plus dynamic-airborne split line-count guard
+passed 2 files / 10 tests; engine typecheck passed; final
+`pnpm calculator:gate:current` passed with engine 349 files / 2024
+tests, web 68 files / 294 passed + 18 skipped, repo build 5/5
+successful, and whitespace guard clean. The build still emits the known
+optional `sharp/@img` warnings through the DOCX route. `git diff
+--check` passed after validation-result doc updates.
+
+Previous Gate G result:
+
+- Gate G adds the focused generalized wall multi-cavity route-readiness
+  contract and a shared grouped layer validation helper;
+- Gate G selection status was
+  `gate_g_personal_use_mvp_generalized_wall_multicavity_route_readiness_landed_selected_lined_masonry_clt_wall_gate_h`;
+- Gate G selected
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-h-lined-masonry-clt-wall-upgrade-contract.test.ts`
+  with action
+  `gate_h_personal_use_mvp_lined_masonry_clt_wall_upgrade_plan`;
+- complete grouped 50/50 mineral-wool triple-leaf remains `Rw 50 /
+  STC 55` on `triple_leaf_two_cavity_frequency_solver`;
+- complete grouped non-50/50 construction-image topology remains
+  `Rw 55 / STC 56` on the same solver;
+- unequal cavities and safe explicit group reorders stay stable;
+- flat-list, partial grouped, duplicate, overlapping, and out-of-range
+  grouped topology cases stay `needs_input` instead of solver
+  promotion;
+- lined massive/masonry and CLT wall negatives stay out of the
+  triple-leaf route;
+- field/apparent outputs and exact-source precedence remain
+  basis-explicit;
+- Gate H is selected for lined massive/masonry + CLT wall upgrade.
+
+Previous Gate G validation result:
+
+Validation completed on 2026-05-10: focused Gate G engine contract
+passed 1 file / 8 tests; Gate E/G doc-alignment continuity passed 2
+files / 12 tests; Gate A/F/G coverage continuity plus route-input
+topology and grouped Rockwool regressions passed 5 files / 33 tests;
+engine typecheck passed; final `pnpm calculator:gate:current` passed
+with engine 348 files / 2017 tests, web 68 files / 294 passed + 18
+skipped, repo build 5/5, and whitespace guard clean. Known non-fatal
+warnings remain the existing Zustand unavailable test-storage warnings
+and optional `sharp/@img` package resolution warnings during the Next
+build.
+
+Previous Gate F result:
 
 - Gate F adds `timber-clt-delta-lw-input-surface.ts`, the focused Gate F
   engine contract, and the focused web input-surface acceptance test;
@@ -135,7 +275,8 @@ Current Gate F result:
 - exact-source precedence, field/ASTM non-aliasing, wrong-family steel
   boundaries, duplicate timber/CLT carrier refusal, and safe reorder
   stability are guarded;
-- Gate G is selected for generalized wall multi-cavity route readiness.
+- Gate G was selected for generalized wall multi-cavity route readiness
+  and has now landed.
 
 Gate F landed file:
 
@@ -145,11 +286,11 @@ Gate F landed action:
 
 `gate_f_personal_use_mvp_timber_clt_floor_impact_delta_lw_input_surface_plan`
 
-Gate F selected next file:
+Gate F selected next file, now landed by Gate G:
 
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-g-generalized-wall-multicavity-route-readiness-contract.test.ts`
 
-Gate F selected next action:
+Gate F selected next action, now landed by Gate G:
 
 `gate_g_personal_use_mvp_generalized_wall_multicavity_route_readiness_plan`
 
@@ -8736,7 +8877,7 @@ Knauf Gate C then closed no-runtime and selected
 | C3 | Wall field-continuation completeness | ✅ preset + corridor surfaces both VALUE-pinned; floor expansion non-blocking | `wall-field-continuation-completeness-matrix.test.ts` + `dynamic-airborne-wall-selector-value-pins.test.ts` + `coverage-grid-consistency.test.ts` |
 | C4 | Floor + wall hostile-input discipline | ✅ both green + all-caller direct thickness guard + torture-matrix O1 overlay | `all-caller-invalid-thickness-guard-gate-a-matrix.test.ts` + `raw-floor-hostile-input-answer-matrix.test.ts` + `raw-wall-hostile-input-answer-matrix.test.ts` + `mixed-floor-wall-cross-mode-wall-extension-matrix.test.ts` |
 | C5 | Reorder and split invariance on defended surfaces | ✅ wall reorder + floor split/parity surfaces; arbitrary floor reorder not claimed | `wall-reorder-invariance-matrix.test.ts` + `mixed-floor-wall-cross-mode-wall-extension-matrix.test.ts` O2 overlay + `floor-split-layer-parity.test.ts` + `coverage-grid-consistency.test.ts` |
-| C6 | Architectural hygiene (≤2000 line files) | ✅ `dynamic_airborne_split_refactor_v2` Gate C closed; `dynamic-airborne.ts` is 1793 lines after broad validation | `dynamic-airborne-*.ts` module family + `DYNAMIC_AIRBORNE_CARTOGRAPHY.md` + `dynamic-airborne-split-v2-gate-b-eleventh-carve-contract.test.ts` + `post-dynamic-airborne-split-refactor-v2-gate-c-next-slice-selection-contract.test.ts` + `coverage-grid-consistency.test.ts` |
+| C6 | Architectural hygiene (≤2000 line files) | ✅ `dynamic_airborne_split_refactor_v2` Gate C closed; `dynamic-airborne.ts` is 1912 lines after Gate I and still below threshold | `dynamic-airborne-*.ts` module family + `DYNAMIC_AIRBORNE_CARTOGRAPHY.md` + `dynamic-airborne-split-v2-gate-b-eleventh-carve-contract.test.ts` + `post-dynamic-airborne-split-refactor-v2-gate-c-next-slice-selection-contract.test.ts` + `coverage-grid-consistency.test.ts` |
 
 ## Step-7 Findings Ledger (live)
 
@@ -8762,12 +8903,13 @@ matrix. Source-of-truth detail lives in the archived slice plan
 
 ## Engine Architectural Posture
 
-`packages/engine/src/dynamic-airborne.ts` is 1793 lines (down
+`packages/engine/src/dynamic-airborne.ts` is 1912 lines (down
 from 6630) after the 15-commit split refactor on 2026-04-21, the
 2026-04-22 dead-import sweep (52 unused imports from the v1 split left
 in place; caught by broad `pnpm check` lint that the focused gate does
-not run), and the 2026-04-26 v2 first eleven carves. Eight bounded
-modules live alongside:
+not run), the 2026-04-26 v2 first eleven carves, and the 2026-05-10
+Gate I airborne field-context continuation. Eight bounded modules live
+alongside:
 
 - `dynamic-airborne-helpers.ts` (337) — pure math, spectrum
   weights, physical constants, delegate blending, curve anchoring,
@@ -8801,7 +8943,7 @@ modules live alongside:
   `applySingleLeafMasonryMonotonicFloor`, and
   `applyNarrowHeavyDoubleLeafGapCap`
 
-Remaining `dynamic-airborne.ts` (1793 lines) hosts 3 in-file
+Remaining `dynamic-airborne.ts` (1912 lines) hosts 3 in-file
 `apply*` floor / cap / correction guards + `calculateDynamicAirborneResult` +
 `detectDynamicFamily` + `chooseBlend`. The split may continue only as
 optional future architecture work because three remaining guards still

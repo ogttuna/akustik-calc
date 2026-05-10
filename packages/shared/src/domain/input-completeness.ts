@@ -4,6 +4,8 @@ import { RequestedOutputSchema } from "./output";
 
 export const AcousticInputRouteFamilySchema = z.enum([
   "single_leaf_airborne",
+  "lined_massive_airborne",
+  "mass_timber_airborne",
   "double_leaf_framed_airborne",
   "triple_leaf_multicavity_airborne",
   "porous_fill_cavity_modifier",

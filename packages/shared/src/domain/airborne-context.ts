@@ -47,7 +47,9 @@ export const WallTopologyModeSchema = z.enum([
   "auto",
   "flat_layer_order",
   "double_leaf_framed",
-  "grouped_triple_leaf"
+  "grouped_triple_leaf",
+  "lined_massive_wall",
+  "mass_timber_panel"
 ]);
 export type WallTopologyMode = z.infer<typeof WallTopologyModeSchema>;
 

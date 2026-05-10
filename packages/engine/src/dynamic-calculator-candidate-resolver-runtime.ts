@@ -26,6 +26,16 @@ import {
   GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_RUNTIME_METHOD,
   GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_SELECTED_CANDIDATE_ID
 } from "./dynamic-airborne-gate-s-double-leaf-framed";
+import {
+  GATE_H_CLT_MASS_TIMBER_WALL_RUNTIME_METHOD,
+  GATE_H_CLT_MASS_TIMBER_WALL_SELECTED_CANDIDATE_ID,
+  GATE_H_LINED_MASSIVE_WALL_RUNTIME_METHOD,
+  GATE_H_LINED_MASSIVE_WALL_SELECTED_CANDIDATE_ID
+} from "./dynamic-airborne-gate-h-lined-masonry-clt";
+import {
+  GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD,
+  GATE_I_AIRBORNE_FIELD_CONTEXT_SELECTED_CANDIDATE_ID
+} from "./dynamic-airborne-gate-i-airborne-field-context";
 
 export type DynamicCalculatorCandidateResolverSourceAnchor = {
   applied: boolean;
@@ -458,6 +468,18 @@ function selectLane(input: {
 function familyPhysicsCandidateId(runtimeBasis?: AirborneResultBasis): string {
   if (runtimeBasis?.method === GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_RUNTIME_METHOD) {
     return GATE_S_DOUBLE_LEAF_FRAMED_BRIDGE_SELECTED_CANDIDATE_ID;
+  }
+
+  if (runtimeBasis?.method === GATE_H_LINED_MASSIVE_WALL_RUNTIME_METHOD) {
+    return GATE_H_LINED_MASSIVE_WALL_SELECTED_CANDIDATE_ID;
+  }
+
+  if (runtimeBasis?.method === GATE_H_CLT_MASS_TIMBER_WALL_RUNTIME_METHOD) {
+    return GATE_H_CLT_MASS_TIMBER_WALL_SELECTED_CANDIDATE_ID;
+  }
+
+  if (runtimeBasis?.method === GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD) {
+    return GATE_I_AIRBORNE_FIELD_CONTEXT_SELECTED_CANDIDATE_ID;
   }
 
   return "candidate_grouped_rockwool_family_physics_prediction";

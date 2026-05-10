@@ -11,6 +11,7 @@ import {
 
 import { getDefaultMaterialCatalog, resolveMaterial } from "./material-catalog";
 import { buildGateQDoubleLeafFramedBridgeInputContract } from "./dynamic-calculator-double-leaf-framed-bridge-input-contract";
+import { validateWallTripleLeafLayerGroups } from "./wall-triple-leaf-topology-readiness";
 
 export type DynamicCalculatorRoute = "wall" | "floor";
 export type DynamicCalculatorOutputBasis = "element_lab" | "field_apparent" | "building_prediction";
@@ -178,6 +179,78 @@ function hasExplicitDoubleLeafFramedTopology(context: AirborneContext | undefine
   return context?.wallTopology?.topologyMode === "double_leaf_framed";
 }
 
+function hasExplicitLinedMassiveWallTopology(context: AirborneContext | undefined): boolean {
+  return context?.wallTopology?.topologyMode === "lined_massive_wall";
+}
+
+function hasExplicitMassTimberPanelTopology(context: AirborneContext | undefined): boolean {
+  return context?.wallTopology?.topologyMode === "mass_timber_panel";
+}
+
+function hasKnownTopologyValue(value: string | undefined): boolean {
+  return typeof value === "string" && value !== "unknown" && value !== "auto";
+}
+
+function isValidLayerGroup(indices: readonly number[] | undefined, layerCount: number): boolean {
+  return Array.isArray(indices) &&
+    indices.length > 0 &&
+    indices.every((index) => Number.isInteger(index) && index >= 0 && index < layerCount);
+}
+
+function hasDisjointLayerGroups(groups: readonly (readonly number[] | undefined)[]): boolean {
+  const seen = new Set<number>();
+
+  for (const group of groups) {
+    if (!Array.isArray(group)) {
+      continue;
+    }
+
+    for (const index of group) {
+      if (seen.has(index)) {
+        return false;
+      }
+
+      seen.add(index);
+    }
+  }
+
+  return true;
+}
+
+function hasMassTimberLayer(
+  layers: readonly LayerInput[],
+  catalog: readonly MaterialDefinition[]
+): boolean {
+  return layers.some((layer) => {
+    const material = resolveLayerMaterial(layer, catalog);
+    if (!material) {
+      return false;
+    }
+
+    const tags = material.tags.map((tag) => tag.toLowerCase());
+    return (
+      material.acoustic?.behavior === "mass_timber" ||
+      tags.includes("mass-timber") ||
+      tags.includes("clt")
+    );
+  });
+}
+
+function massTimberLayersHaveDensity(
+  layers: readonly LayerInput[],
+  catalog: readonly MaterialDefinition[]
+): boolean {
+  return layers
+    .filter((layer) => {
+      const material = resolveLayerMaterial(layer, catalog);
+      return material?.acoustic?.behavior === "mass_timber" || material?.tags.includes("mass-timber");
+    })
+    .every((layer) => {
+      const material = resolveLayerMaterial(layer, catalog);
+      return typeof material?.densityKgM3 === "number" && material.densityKgM3 > 0;
+    });
+}
+
 function looksLikeMultiCavityWall(
   layers: readonly LayerInput[],
   catalog: readonly MaterialDefinition[]
@@ -280,6 +353,13 @@ function addGroupedWallTopologyContract(input: {
   targetOutputs: readonly RequestedOutputId[];
 }): AcousticInputCompleteness {
   const topology = input.context?.wallTopology;
+  const groupedMode = topology?.topologyMode === "grouped_triple_leaf";
+  const layerGroupValidation = groupedMode
+    ? validateWallTripleLeafLayerGroups({
+        layerCount: input.layers.length,
+        topology
+      })
+    : null;
   const missing: AcousticInputFieldId[] = [];
   const groupedRequirements: readonly {
     detail: string;
@@ -294,10 +374,22 @@ function addGroupedWallTopologyContract(input: {
       label: "Side A leaf group"
     },
     {
+      detail: "Grouped leaf and cavity layer ownership must be non-overlapping and inside the current layer list.",
+      fieldId: "leafGrouping",
+      isMissing: Boolean(layerGroupValidation && !layerGroupValidation.valid),
+      label: "Valid grouped layer ownership"
+    },
+    {
       detail: "Enter the first cavity depth in millimetres.",
       fieldId: "cavity1DepthMm",
       isMissing: typeof topology?.cavity1DepthMm !== "number",
       label: "Cavity 1 depth"
+    },
+    {
+      detail: "Select whether the first cavity is empty, partially filled, or fully filled.",
+      fieldId: "cavity1FillCoverage",
+      isMissing: groupedMode && (!topology?.cavity1FillCoverage || topology.cavity1FillCoverage === "unknown"),
+      label: "Cavity 1 fill coverage"
     },
     {
       detail: "Group the internal leaf separately from both outer leaves.",
@@ -316,6 +408,23 @@ function addGroupedWallTopologyContract(input: {
       fieldId: "cavity2DepthMm",
       isMissing: typeof topology?.cavity2DepthMm !== "number",
       label: "Cavity 2 depth"
+    },
+    {
+      detail: "Select whether the second cavity is empty, partially filled, or fully filled.",
+      fieldId: "cavity2FillCoverage",
+      isMissing: groupedMode && (!topology?.cavity2FillCoverage || topology.cavity2FillCoverage === "unknown"),
+      label: "Cavity 2 fill coverage"
+    },
+    {
+      detail: "Classify the cavity absorption before the multi-cavity solver can treat the fill as physical.",
+      fieldId: "absorberClass",
+      isMissing:
+        groupedMode &&
+        (!topology?.cavity1AbsorptionClass ||
+          topology.cavity1AbsorptionClass === "unknown" ||
+          !topology.cavity2AbsorptionClass ||
+          topology.cavity2AbsorptionClass === "unknown"),
+      label: "Cavity absorption class"
     },
     {
       detail: "Group the receiving-side leaf before the stack can leave screening posture.",
@@ -369,12 +478,13 @@ function addGroupedWallTopologyContract(input: {
           }
         ]
       : [],
-    conditionalFields: ["cavity1FillCoverage", "cavity2FillCoverage"],
+    conditionalFields: ["cavity1FillCoverage", "cavity2FillCoverage", "absorberClass"],
     id: "gate_k_triple_leaf_multicavity_route_inputs",
     missingPhysicalInputs: missing,
     missingSourceEvidence: input.missingSourceEvidence,
-    optionalPrecisionFields: ["cavity1FillCoverage", "cavity2FillCoverage", "flowResistivityPaSM2"],
+    optionalPrecisionFields: ["flowResistivityPaSM2"],
     requiredFields: [
+      "leafGrouping",
       "sideALeafGroup",
       "cavity1DepthMm",
       "internalLeafGroup",
@@ -487,6 +597,229 @@ function addFieldContextContract(input: {
     missingSourceEvidence: input.missingSourceEvidence,
     requiredFields: ["contextMode", "partitionAreaM2", "receivingRoomVolumeM3"],
     routeFamily: "field_apparent_output_context",
+    targetOutputs: input.targetOutputs
+  });
+}
+
+function addLinedMassiveWallContract(input: {
+  catalog: readonly MaterialDefinition[];
+  context: AirborneContext | undefined;
+  layers: readonly LayerInput[];
+  missingSourceEvidence: readonly string[];
+  prompts: DynamicCalculatorRouteInputPrompt[];
+  targetOutputs: readonly RequestedOutputId[];
+}): AcousticInputCompleteness {
+  const topology = input.context?.wallTopology;
+  const layerCount = input.layers.length;
+  const missing: AcousticInputFieldId[] = [];
+  const groupsAreValid =
+    isValidLayerGroup(topology?.sideALeafLayerIndices, layerCount) &&
+    isValidLayerGroup(topology?.cavity1LayerIndices, layerCount) &&
+    isValidLayerGroup(topology?.sideBLeafLayerIndices, layerCount) &&
+    hasDisjointLayerGroups([
+      topology?.sideALeafLayerIndices,
+      topology?.cavity1LayerIndices,
+      topology?.sideBLeafLayerIndices
+    ]);
+  const requirements: readonly {
+    detail: string;
+    fieldId: AcousticInputFieldId;
+    isMissing: boolean;
+    label: string;
+  }[] = [
+    {
+      detail: "Group the light lining leaf before the lined massive-wall formula corridor can promote.",
+      fieldId: "sideALeafGroup",
+      isMissing: !topology?.sideALeafLayerIndices,
+      label: "Lining leaf group"
+    },
+    {
+      detail: "Group the cavity or porous-fill layers between the lining and heavy base.",
+      fieldId: "cavityDepthMm",
+      isMissing: !topology?.cavity1LayerIndices,
+      label: "Lined-wall cavity group"
+    },
+    {
+      detail: "Lining, cavity, and heavy-base groups must be non-overlapping and inside the current layer list.",
+      fieldId: "leafGrouping",
+      isMissing: !groupsAreValid,
+      label: "Valid lined-wall group ownership"
+    },
+    {
+      detail: "Enter the lined-wall cavity depth in millimetres.",
+      fieldId: "cavity1DepthMm",
+      isMissing: typeof topology?.cavity1DepthMm !== "number",
+      label: "Lined-wall cavity depth"
+    },
+    {
+      detail: "Select whether the lined-wall cavity is empty, partially filled, or fully filled.",
+      fieldId: "cavity1FillCoverage",
+      isMissing: !topology?.cavity1FillCoverage || topology.cavity1FillCoverage === "unknown",
+      label: "Lined-wall fill coverage"
+    },
+    {
+      detail: "Classify the lined-wall cavity absorption before family physics can leave screening.",
+      fieldId: "absorberClass",
+      isMissing: !topology?.cavity1AbsorptionClass || topology.cavity1AbsorptionClass === "unknown",
+      label: "Lined-wall absorber class"
+    },
+    {
+      detail: "Group the heavy masonry or concrete base leaf.",
+      fieldId: "sideBLeafGroup",
+      isMissing: !topology?.sideBLeafLayerIndices,
+      label: "Heavy base leaf group"
+    },
+    {
+      detail: "Select whether the lining is direct-fixed, resilient, or otherwise supported.",
+      fieldId: "supportTopology",
+      isMissing: !hasKnownTopologyValue(topology?.supportTopology),
+      label: "Lined-wall support topology"
+    }
+  ];
+
+  for (const requirement of requirements) {
+    if (!requirement.isMissing) {
+      continue;
+    }
+
+    missing.push(requirement.fieldId);
+    addPrompt(
+      input.prompts,
+      makePrompt({
+        detail: requirement.detail,
+        fieldId: requirement.fieldId,
+        label: requirement.label,
+        source: "wall_topology",
+        targetOutputs: input.targetOutputs
+      })
+    );
+  }
+
+  const hasEngineeringFlowDefault = input.layers.some((layer) => {
+    const material = resolveLayerMaterial(layer, input.catalog);
+    return (
+      material?.acoustic?.behavior === "porous_absorber" &&
+      typeof material.acoustic.flowResistivityPaSM2 === "number" &&
+      material.acoustic.propertySourceStatus === "engineering_default"
+    );
+  });
+
+  return buildInputCompleteness({
+    appliedDefaults: hasEngineeringFlowDefault
+      ? [
+          {
+            fieldId: "flowResistivityPaSM2",
+            reason:
+              "Porous lined-wall fill uses the catalog engineering flow-resistivity default until product-specific data is entered.",
+            uncertaintyEffect: "widen_error_budget"
+          }
+        ]
+      : [],
+    conditionalFields: ["cavity1FillCoverage", "absorberClass"],
+    id: "gate_h_lined_massive_wall_route_inputs",
+    missingPhysicalInputs: missing,
+    missingSourceEvidence: input.missingSourceEvidence,
+    optionalPrecisionFields: ["flowResistivityPaSM2"],
+    requiredFields: [
+      "leafGrouping",
+      "sideALeafGroup",
+      "cavity1DepthMm",
+      "cavity1FillCoverage",
+      "absorberClass",
+      "sideBLeafGroup",
+      "supportTopology"
+    ],
+    routeFamily: "lined_massive_airborne",
+    targetOutputs: input.targetOutputs
+  });
+}
+
+function addMassTimberPanelWallContract(input: {
+  catalog: readonly MaterialDefinition[];
+  layers: readonly LayerInput[];
+  missingSourceEvidence: readonly string[];
+  prompts: DynamicCalculatorRouteInputPrompt[];
+  targetOutputs: readonly RequestedOutputId[];
+}): AcousticInputCompleteness {
+  const missing: AcousticInputFieldId[] = [];
+  const hasMassTimber = hasMassTimberLayer(input.layers, input.catalog);
+  const hasDensity = hasMassTimber && massTimberLayersHaveDensity(input.layers, input.catalog);
+  const requirements: readonly {
+    detail: string;
+    fieldId: AcousticInputFieldId;
+    isMissing: boolean;
+    label: string;
+  }[] = [
+    {
+      detail: "Select a CLT or mass-timber panel material before the mass-timber wall route can promote.",
+      fieldId: "materialClass",
+      isMissing: !hasMassTimber,
+      label: "Mass-timber material class"
+    },
+    {
+      detail: "The mass-timber wall route needs a positive panel thickness.",
+      fieldId: "thicknessMm",
+      isMissing: !input.layers.some((layer) => layer.thicknessMm > 0),
+      label: "Mass-timber panel thickness"
+    },
+    {
+      detail: "Mass-timber density must be known before surface mass and the panel delegate curve are trusted.",
+      fieldId: "densityKgM3",
+      isMissing: !hasDensity,
+      label: "Mass-timber panel density"
+    }
+  ];
+
+  for (const requirement of requirements) {
+    if (!requirement.isMissing) {
+      continue;
+    }
+
+    missing.push(requirement.fieldId);
+    addPrompt(
+      input.prompts,
+      makePrompt({
+        detail: requirement.detail,
+        fieldId: requirement.fieldId,
+        label: requirement.label,
+        source: "material_property",
+        targetOutputs: input.targetOutputs
+      })
+    );
+  }
+
+  const usesEngineeringAcousticProperties = input.layers.some((layer) => {
+    const material = resolveLayerMaterial(layer, input.catalog);
+    return (
+      material?.acoustic?.behavior === "mass_timber" &&
+      material.acoustic.propertySourceStatus === "engineering_default"
+    );
+  });
+
+  return buildInputCompleteness({
+    appliedDefaults: usesEngineeringAcousticProperties
+      ? [
+          {
+            fieldId: "youngModulusPa",
+            reason:
+              "CLT orthotropic stiffness is still represented by the catalog engineering default in Gate H.",
+            uncertaintyEffect: "widen_error_budget"
+          },
+          {
+            fieldId: "lossFactor",
+            reason:
+              "CLT loss factor is still represented by the catalog engineering default in Gate H.",
+            uncertaintyEffect: "widen_error_budget"
+          }
+        ]
+      : [],
+    conditionalFields: ["youngModulusPa", "lossFactor"],
+    id: "gate_h_mass_timber_wall_route_inputs",
+    missingPhysicalInputs: missing,
+    missingSourceEvidence: input.missingSourceEvidence,
+    optionalPrecisionFields: ["youngModulusPa", "lossFactor"],
+    requiredFields: ["materialClass", "densityKgM3", "thicknessMm", "surfaceMassKgM2"],
+    routeFamily: "mass_timber_airborne",
     targetOutputs: input.targetOutputs
   });
 }
@@ -637,6 +970,15 @@ export function buildDynamicCalculatorRouteInputTopologyAssessment(
       looksLikeMultiCavityWall(input.layers, catalog);
     const needsDoubleLeafFramedTopology =
       !needsGroupedTopology && hasExplicitDoubleLeafFramedTopology(input.airborneContext);
+    const needsLinedMassiveWallTopology =
+      !needsGroupedTopology &&
+      !needsDoubleLeafFramedTopology &&
+      hasExplicitLinedMassiveWallTopology(input.airborneContext);
+    const needsMassTimberPanelTopology =
+      !needsGroupedTopology &&
+      !needsDoubleLeafFramedTopology &&
+      !needsLinedMassiveWallTopology &&
+      hasExplicitMassTimberPanelTopology(input.airborneContext);
 
     if (needsGroupedTopology) {
       inputCompletenessSet.push(
@@ -664,6 +1006,31 @@ export function buildDynamicCalculatorRouteInputTopologyAssessment(
       for (const prompt of doubleLeafContract.prompts) {
         addPrompt(prompts, prompt);
       }
+    }
+
+    if (needsLinedMassiveWallTopology) {
+      inputCompletenessSet.push(
+        addLinedMassiveWallContract({
+          catalog,
+          context: input.airborneContext,
+          layers: input.layers,
+          missingSourceEvidence,
+          prompts,
+          targetOutputs: supportedRequestedOutputs.length > 0 ? supportedRequestedOutputs : WALL_AIRBORNE_OUTPUTS
+        })
+      );
+    }
+
+    if (needsMassTimberPanelTopology) {
+      inputCompletenessSet.push(
+        addMassTimberPanelWallContract({
+          catalog,
+          layers: input.layers,
+          missingSourceEvidence,
+          prompts,
+          targetOutputs: supportedRequestedOutputs.length > 0 ? supportedRequestedOutputs : WALL_AIRBORNE_OUTPUTS
+        })
+      );
     }
 
     if (

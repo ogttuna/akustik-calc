@@ -80,6 +80,16 @@ import {
   GATE_O_SINGLE_LEAF_MASSIVE_PANEL_PREDICTION_WARNING,
   maybeBuildGateOSingleLeafMassivePanelBasis
 } from "./dynamic-airborne-gate-o-single-leaf";
+import {
+  GATE_H_CLT_MASS_TIMBER_WALL_WARNING,
+  GATE_H_LINED_MASSIVE_WALL_RUNTIME_METHOD,
+  GATE_H_LINED_MASSIVE_WALL_WARNING,
+  maybeBuildGateHLinedMasonryCltWallBasis
+} from "./dynamic-airborne-gate-h-lined-masonry-clt";
+import {
+  GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING,
+  maybeBuildGateIAirborneFieldContextBasis
+} from "./dynamic-airborne-gate-i-airborne-field-context";
 import { maybeCalculateGateSDoubleLeafFramedBridgeRuntime } from "./dynamic-airborne-gate-s-double-leaf-framed";
 import { ROCKWOOL_TRIPLE_LEAF_SOURCE_REQUIRED_RUNTIME_WARNING } from "./rockwool-triple-leaf-source-required-boundary";
 
@@ -1852,9 +1862,45 @@ export function calculateDynamicAirborneResult(
   if (gateOSingleLeafMassivePanelBasis) {
     warnings.push(GATE_O_SINGLE_LEAF_MASSIVE_PANEL_PREDICTION_WARNING);
   }
+  const gateHLinedMasonryCltWallBasis = maybeBuildGateHLinedMasonryCltWallBasis({
+    confidenceClass,
+    curve: dynamicCurve,
+    family: family.family,
+    layers: analysisLayers,
+    options,
+    selectedMethod: blendSelection.blend.selectedMethod,
+    strategy,
+    topology
+  });
+
+  if (gateHLinedMasonryCltWallBasis) {
+    warnings.push(
+      gateHLinedMasonryCltWallBasis.method === GATE_H_LINED_MASSIVE_WALL_RUNTIME_METHOD
+        ? GATE_H_LINED_MASSIVE_WALL_WARNING
+        : GATE_H_CLT_MASS_TIMBER_WALL_WARNING
+    );
+  }
+  const gateIAirborneFieldContextBasis = maybeBuildGateIAirborneFieldContextBasis({
+    confidenceClass,
+    curve: dynamicCurve,
+    family: family.family,
+    layers: analysisLayers,
+    options,
+    selectedMethod: blendSelection.blend.selectedMethod,
+    strategy,
+    topology
+  });
+
+  if (gateIAirborneFieldContextBasis) {
+    warnings.push(GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING);
+  }
 
   return {
-    airborneBasis: gateOSingleLeafMassivePanelBasis ?? undefined,
+    airborneBasis:
+      gateIAirborneFieldContextBasis ??
+      gateHLinedMasonryCltWallBasis ??
+      gateOSingleLeafMassivePanelBasis ??
+      undefined,
     curve: dynamicCurve,
     id: "dynamic",
     label: "Dynamic Topology",

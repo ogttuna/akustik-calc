@@ -17,16 +17,26 @@ override or anchor known assemblies, but missing source packets must
 not block a labelled family-specific physics prediction when the
 required topology and material inputs are present.
 
-As of 2026-05-08, Personal-Use MVP Coverage Sprint Gate F has landed
-first-class Dynamic Calculator input-surface parity for the timber/CLT
-floor-impact `DeltaLw` runtime formula corridor. Gate D first promoted
-explicit complete timber/CLT predictor input; Gate E proved
-visible/API/report parity; Gate F now proves workbench controls, live
-evaluation, local/server snapshots, calculator API payload, and
-impact-only API payload feed the same source-absent `DeltaLw` values,
-metric basis, and `+/-7.5 dB` not-measured error budget. The current
-selected next lane is Gate G generalized wall multi-cavity route
-readiness beyond fixture gates. Gate A landed in
+As of 2026-05-10, Personal-Use MVP Coverage Sprint Gate I has landed
+airborne field-context continuation for owned lab-family wall routes
+after Gate H lined massive/masonry and CLT wall lab family-physics
+promotion and Gate G generalized wall multi-cavity / triple-leaf route
+readiness beyond fixture gates. Gate D first promoted explicit complete timber/CLT
+predictor input; Gate E proved visible/API/report parity; Gate F proved
+first-class Dynamic Calculator input-surface parity for those
+timber/CLT `DeltaLw` values; Gate G now proves complete grouped 50/50
+and non-50/50 mineral-wool triple-leaf routes, flat-list and partial
+topology `needs_input`, duplicate/overlapping group refusal, field
+non-aliasing, and exact-source precedence; Gate H now proves complete
+lined massive/masonry `Rw 60 / STC 60` and CLT `Rw 42 / STC 42` stay
+numeric-stable while their origin moves from `screening_fallback` to
+named `family_physics_prediction` with visible error budgets; Gate I now
+promotes complete `field_between_rooms` requests for grouped
+triple-leaf, lined massive/masonry, and CLT/mass-timber wall families to
+a field/apparent family-physics basis without numeric retune. The
+current selected next lane is Gate J airborne field-context surface
+parity. Gate A
+landed in
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-a-scenario-matrix-contract.test.ts`
 with action `gate_a_personal_use_mvp_coverage_matrix_plan`; it selects
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-b-timber-clt-floor-impact-delta-lw-contract.test.ts`
@@ -56,11 +66,32 @@ Gate F landed in that file and selected
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-g-generalized-wall-multicavity-route-readiness-contract.test.ts`
 with action
 `gate_g_personal_use_mvp_generalized_wall_multicavity_route_readiness_plan`.
+Gate G landed in that file with selection status
+`gate_g_personal_use_mvp_generalized_wall_multicavity_route_readiness_landed_selected_lined_masonry_clt_wall_gate_h`
+and selected
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-h-lined-masonry-clt-wall-upgrade-contract.test.ts`
+with action
+`gate_h_personal_use_mvp_lined_masonry_clt_wall_upgrade_plan`.
+Gate H landed in that file with selection status
+`gate_h_personal_use_mvp_lined_masonry_clt_wall_upgrade_landed_selected_airborne_field_context_gate_i`
+and selected
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-i-airborne-field-context-continuation-contract.test.ts`
+with action
+`gate_i_personal_use_mvp_airborne_field_context_continuation_plan`.
+Gate I landed in that file with selection status
+`gate_i_personal_use_mvp_airborne_field_context_continuation_landed_selected_field_surface_parity_gate_j`
+and selected
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-j-airborne-field-context-surface-parity-contract.test.ts`
+with action
+`gate_j_personal_use_mvp_airborne_field_context_surface_parity_plan`.
 Gate BI landed in
 `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-bi-steel-floor-formula-same-stack-iso-delta-lw-tighten-candidate-governance-contract.test.ts`
 with action
 `gate_bi_steel_floor_formula_same_stack_iso_delta_lw_tighten_candidate_governance_plan`.
 See
+[CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_I_HANDOFF.md](./CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_I_HANDOFF.md),
+[CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_H_HANDOFF.md](./CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_H_HANDOFF.md),
+[CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_G_HANDOFF.md](./CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_G_HANDOFF.md),
 [CHECKPOINT_2026-05-10_STRATEGIC_ROI_REVALIDATION_AND_GATE_G_PLAN_HANDOFF.md](./CHECKPOINT_2026-05-10_STRATEGIC_ROI_REVALIDATION_AND_GATE_G_PLAN_HANDOFF.md),
 [CHECKPOINT_2026-05-08_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_F_HANDOFF.md](./CHECKPOINT_2026-05-08_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_F_HANDOFF.md),
 [CHECKPOINT_2026-05-08_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_E_HANDOFF.md](./CHECKPOINT_2026-05-08_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_E_HANDOFF.md),
@@ -71,13 +102,17 @@ See
 and
 [CHECKPOINT_2026-05-08_STRATEGIC_ROI_REPLAN_HANDOFF.md](./CHECKPOINT_2026-05-08_STRATEGIC_ROI_REPLAN_HANDOFF.md).
 
-The 2026-05-10 ROI revalidation confirms that Gate G remains the next
-highest-ROI lane after Gate F: generalized wall multi-cavity /
-triple-leaf route readiness beyond fixture gates. Lined massive/masonry
-and CLT wall upgrades follow Gate G; field/building continuations follow
-after lab/family routes are basis-owned; steel-floor tolerance
-tightening stays deferred until independent source-owned same-stack ISO
-`DeltaLw` packets exist.
+The 2026-05-10 ROI revalidation selected Gate G after Gate F, Gate G
+then selected Gate H, and Gate H selected Gate I. Gate I has now
+landed. Gate J is next: visible surface parity for the new airborne
+field-context basis; steel-floor tolerance tightening stays deferred
+until independent source-owned same-stack ISO `DeltaLw` packets exist.
+Gate H validation passed with focused engine coverage, Gate A/G/H/O
+continuity, Gate P CLT continuity, engine typecheck, full
+`pnpm calculator:gate:current` (engine 349 files / 2024 tests, web 68
+files / 294 passed + 18 skipped, repo build 5/5), and `git diff
+--check`. The build still emits the known optional `sharp/@img` warnings
+through the DOCX route.
 
 Gate A, Gate B, Gate C, Gate D, Gate E, Gate G, Gate H, Gate I,
 Gate J, Gate K, Gate L, Gate M, Gate N, Gate O, Gate P, Gate Q, Gate R,
@@ -87,7 +122,7 @@ Gate AJ, Gate AK, Gate AL, Gate AM, Gate AN, Gate AO, Gate AP, Gate AQ,
 Gate AR, Gate AS, Gate AT, Gate AU, Gate AV, Gate AW, Gate AX, Gate AY,
 Gate AZ, Gate BA, Gate BB, Gate BC, Gate BD, Gate BE, Gate BF, Gate BG,
 Gate BH, Gate BI, and Personal-Use MVP Coverage Sprint Gate A, Gate B,
-Gate C, Gate D, Gate E, and Gate F for this
+Gate C, Gate D, Gate E, Gate F, Gate G, and Gate H for this
 pivot have landed. The original pivot Gate A made the corrected rule
 executable: source absence
 blocks exact/calibration promotion only, not formula-backed prediction.

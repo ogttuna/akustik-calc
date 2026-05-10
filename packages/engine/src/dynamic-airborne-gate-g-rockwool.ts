@@ -22,6 +22,11 @@ import {
 } from "./dynamic-airborne-helpers";
 import { ksRound1 } from "./math";
 import { solveWallTripleLeafFrequencyBands } from "./wall-triple-leaf-frequency-solver";
+import { validateWallTripleLeafLayerGroups } from "./wall-triple-leaf-topology-readiness";
+import {
+  GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING,
+  maybeBuildGateIAirborneFieldContextBasisFromBase
+} from "./dynamic-airborne-gate-i-airborne-field-context";
 
 const GROUPED_ROCKWOOL_TRIPLE_LEAF_PREDICTION_STRATEGY =
   "triple_leaf_two_cavity_frequency_solver_family_physics_prediction";
@@ -59,6 +64,10 @@ function isGateGGroupedRockwoolTripleLeafTarget(layers: readonly ResolvedLayer[]
   const topology = options.airborneContext?.wallTopology;
 
   if (topology?.topologyMode !== "grouped_triple_leaf") {
+    return false;
+  }
+
+  if (!validateWallTripleLeafLayerGroups({ layerCount: layers.length, topology }).valid) {
     return false;
   }
 
@@ -327,7 +336,17 @@ export function maybeCalculateGateGGroupedRockwoolPrediction(input: {
     ],
     frequenciesHz: solver.curve.frequenciesHz
   });
-  const candidateResolution = buildGateGGroupedRockwoolCandidateResolution({ basis });
+  const fieldContextBasis = maybeBuildGateIAirborneFieldContextBasisFromBase({
+    baseBasis: basis,
+    context: input.options.airborneContext,
+    family: "multileaf_multicavity",
+    frequencyBands: {
+      bandSet: "third_octave_solver_grid",
+      frequenciesHz: [...solver.curve.frequenciesHz]
+    }
+  });
+  const selectedBasis = fieldContextBasis ?? basis;
+  const candidateResolution = buildGateGGroupedRockwoolCandidateResolution({ basis: selectedBasis });
   const solverRw = ratings.iso717.Rw;
   const screeningRw = input.options.screeningEstimatedRwDb;
   const leafMassNote = solver.leafMasses
@@ -382,7 +401,7 @@ export function maybeCalculateGateGGroupedRockwoolPrediction(input: {
   };
 
   return {
-    airborneBasis: basis,
+    airborneBasis: selectedBasis,
     airborneCandidateResolution: candidateResolution,
     airborneCandidateSet: candidateResolution.candidates,
     curve: solver.curve,
@@ -392,6 +411,7 @@ export function maybeCalculateGateGGroupedRockwoolPrediction(input: {
     rw: solverRw,
     trace,
     warnings: [
+      ...(fieldContextBasis ? [GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING] : []),
       GROUPED_ROCKWOOL_TRIPLE_LEAF_PREDICTION_WARNING,
       "Dynamic airborne confidence is medium because the topology is explicit, but calibration and holdout rows have not landed."
     ]

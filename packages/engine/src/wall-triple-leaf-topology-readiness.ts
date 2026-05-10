@@ -21,6 +21,17 @@ export type WallTripleLeafTopologyReadiness = {
   readyForExactTripleLeafCalculation: boolean;
 };
 
+export type WallTripleLeafLayerGroupValidationIssueId =
+  | "duplicate_layer_group_indices"
+  | "out_of_range_layer_group_indices";
+
+export type WallTripleLeafLayerGroupValidation = {
+  duplicateLayerIndices: readonly number[];
+  issueIds: readonly WallTripleLeafLayerGroupValidationIssueId[];
+  outOfRangeLayerIndices: readonly number[];
+  valid: boolean;
+};
+
 export const REQUIRED_WALL_TRIPLE_LEAF_TOPOLOGY_FIELDS: readonly WallTripleLeafTopologyFieldId[] = [
   "side_a_leaf_layer_group",
   "cavity_1_depth_fill_and_absorption_group",
@@ -61,6 +72,14 @@ const CAVITY_2_FIELDS = [
   "cavity2AbsorptionClass"
 ] as const;
 
+const LAYER_GROUP_FIELDS = [
+  "sideALeafLayerIndices",
+  "cavity1LayerIndices",
+  "internalLeafLayerIndices",
+  "cavity2LayerIndices",
+  "sideBLeafLayerIndices"
+] as const;
+
 function hasLayerGroup(value: readonly number[] | undefined): boolean {
   return Array.isArray(value) && value.length > 0;
 }
@@ -88,6 +107,45 @@ function hasCompleteCavity(
     hasKnownToken(topology[fillField]) &&
     hasKnownToken(topology[absorptionField])
   );
+}
+
+export function validateWallTripleLeafLayerGroups(input: {
+  layerCount: number;
+  topology: NonNullable<AirborneContext["wallTopology"]> | undefined;
+}): WallTripleLeafLayerGroupValidation {
+  const seen = new Set<number>();
+  const duplicateLayerIndices = new Set<number>();
+  const outOfRangeLayerIndices = new Set<number>();
+
+  for (const field of LAYER_GROUP_FIELDS) {
+    for (const index of input.topology?.[field] ?? []) {
+      if (!Number.isInteger(index) || index < 0 || index >= input.layerCount) {
+        outOfRangeLayerIndices.add(index);
+      }
+
+      if (seen.has(index)) {
+        duplicateLayerIndices.add(index);
+      }
+
+      seen.add(index);
+    }
+  }
+
+  const issueIds: WallTripleLeafLayerGroupValidationIssueId[] = [];
+  if (duplicateLayerIndices.size > 0) {
+    issueIds.push("duplicate_layer_group_indices");
+  }
+
+  if (outOfRangeLayerIndices.size > 0) {
+    issueIds.push("out_of_range_layer_group_indices");
+  }
+
+  return {
+    duplicateLayerIndices: [...duplicateLayerIndices].sort((left, right) => left - right),
+    issueIds,
+    outOfRangeLayerIndices: [...outOfRangeLayerIndices].sort((left, right) => left - right),
+    valid: issueIds.length === 0
+  };
 }
 
 export function evaluateWallTripleLeafTopologyReadiness(input: {
