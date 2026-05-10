@@ -379,8 +379,18 @@ building-prediction uncertainty budget owner. Complete building requests
 remain `unsupported`; field/apparent Gate I values and lab `Rw`/`STC`
 are not reused as building metrics. Gate N selection status:
 `gate_n_personal_use_mvp_airborne_building_prediction_runtime_adapter_landed_no_runtime_selected_formula_corridor_gate_o`.
-Gate O is next:
+Gate O has now landed:
 `gate_o_personal_use_mvp_airborne_building_prediction_formula_corridor_plan`.
+It defines the building-prediction formula corridor and `+/-9 dB`
+source-absent design budget for `R'w` and `DnT,w`, but keeps runtime
+parked because current flanking path terms are still design-owned rather
+than runtime-owned. The corridor requires the direct separating-element
+curve, flanking path energy sum, junction vibration reduction index,
+room absorption standardization, and same-building holdout uncertainty
+before promotion. Gate O selection status:
+`gate_o_personal_use_mvp_airborne_building_prediction_formula_corridor_landed_no_runtime_selected_runtime_corridor_gate_p`.
+Gate P is next:
+`gate_p_personal_use_mvp_airborne_building_prediction_runtime_corridor_plan`.
 Do not keep adding narrow steel-floor source/packet gates unless the
 active matrix or a later runtime proposal names a specific source-owned
 unblocker.

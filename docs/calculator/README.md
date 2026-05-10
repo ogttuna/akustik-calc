@@ -52,8 +52,10 @@ junction coupling length, and building output basis as the minimum
 building-prediction owner set. Complete owner sets still select
 `unsupported`; Gate N now scopes the building-prediction runtime
 adapter and names the missing ISO 12354-1 flanking formula terms without
-moving runtime values. The current selected next lane is Gate O airborne
-building-prediction formula corridor.
+moving runtime values. Gate O now defines the building-prediction
+formula corridor and same-building holdout budget without moving runtime
+values. The current selected next lane is Gate P airborne
+building-prediction runtime corridor.
 Gate A
 landed in
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-a-scenario-matrix-contract.test.ts`
@@ -133,11 +135,18 @@ and selected
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-o-airborne-building-prediction-formula-corridor-contract.test.ts`
 with action
 `gate_o_personal_use_mvp_airborne_building_prediction_formula_corridor_plan`.
+Gate O landed in that file with selection status
+`gate_o_personal_use_mvp_airborne_building_prediction_formula_corridor_landed_no_runtime_selected_runtime_corridor_gate_p`
+and selected
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-p-airborne-building-prediction-runtime-corridor-contract.test.ts`
+with action
+`gate_p_personal_use_mvp_airborne_building_prediction_runtime_corridor_plan`.
 Gate BI landed in
 `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-bi-steel-floor-formula-same-stack-iso-delta-lw-tighten-candidate-governance-contract.test.ts`
 with action
 `gate_bi_steel_floor_formula_same_stack_iso_delta_lw_tighten_candidate_governance_plan`.
 See
+[CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_O_HANDOFF.md](./CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_O_HANDOFF.md),
 [CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_N_HANDOFF.md](./CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_N_HANDOFF.md),
 [CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_M_HANDOFF.md](./CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_M_HANDOFF.md),
 [CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_L_HANDOFF.md](./CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_L_HANDOFF.md),
@@ -159,7 +168,8 @@ and
 The 2026-05-10 ROI revalidation selected Gate G after Gate F, Gate G
 then selected Gate H, Gate H selected Gate I, Gate I selected Gate J,
 Gate J selected Gate K, Gate K selected Gate L, Gate L selected Gate M,
-Gate M selected Gate N, and Gate N has now selected Gate O. Gate K keeps
+Gate M selected Gate N, Gate N selected Gate O, and Gate O has now
+selected Gate P. Gate K keeps
 the new airborne field-context basis first-class on the wall input
 surface and makes RT60 a visible blocker before `DnT,w` / `DnT,A` can be
 defended. Gate L adds the explicit building-prediction flanking/junction
@@ -172,9 +182,21 @@ building-prediction runtime adapter owner boundary: direct
 separating-element curve ownership, flanking formula terms, junction
 vibration reduction, room absorption normalization, and an explicit
 building-prediction uncertainty budget are required before Gate O can
-consider a formula corridor.
+consider a formula corridor. Gate O now defines that source-absent
+building-prediction formula corridor with separate `R'w` and `DnT,w`
+lanes, `+/-9 dB` not-measured design budgets, same-building holdout
+uncertainty, and strict alias blocks; runtime stays parked for Gate P.
 Steel-floor tolerance tightening stays deferred until
 independent source-owned same-stack ISO `DeltaLw` packets exist.
+Gate O validation result:
+focused Gate O validation passed 1 file / 6 tests; Gate O/N/M/L plus
+Gate I/J/K continuity passed 7 files / 38 tests; engine typecheck
+passed; final `pnpm calculator:gate:current` passed with engine 356
+files / 2062 tests, web 71 files / 306 passed + 18 skipped, repo build
+5/5 successful, whitespace guard clean, and final `git diff --check`
+passed after the validation-doc sync. Known non-fatal warnings:
+test-environment Zustand storage-unavailable messages and optional
+`sharp` `@img/*` resolution warnings during web build.
 Gate N validation completed on 2026-05-10: focused Gate N engine
 runtime adapter contract passed 1 file / 6 tests; Gate M/L continuity
 plus Gate I/J/K field continuity passed 6 files / 32 tests; focused

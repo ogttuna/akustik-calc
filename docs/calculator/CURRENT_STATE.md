@@ -28,6 +28,9 @@ checkpoint read
 If you need the current Personal-Use MVP Coverage Sprint Gate N
 checkpoint read
 [CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_N_HANDOFF.md](./CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_N_HANDOFF.md).
+If you need the current Personal-Use MVP Coverage Sprint Gate O
+checkpoint read
+[CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_O_HANDOFF.md](./CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_O_HANDOFF.md).
 If you need the preceding Personal-Use MVP Coverage Sprint Gate L
 checkpoint read
 [CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_L_HANDOFF.md](./CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_L_HANDOFF.md).
@@ -81,15 +84,15 @@ path was found too narrow for the user's calculator-first goal.
 
 Current selected status:
 
-`gate_n_personal_use_mvp_airborne_building_prediction_runtime_adapter_landed_no_runtime_selected_formula_corridor_gate_o`
+`gate_o_personal_use_mvp_airborne_building_prediction_formula_corridor_landed_no_runtime_selected_runtime_corridor_gate_p`
 
 Selected next implementation file:
 
-`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-o-airborne-building-prediction-formula-corridor-contract.test.ts`
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-p-airborne-building-prediction-runtime-corridor-contract.test.ts`
 
 Selected next action:
 
-`gate_o_personal_use_mvp_airborne_building_prediction_formula_corridor_plan`
+`gate_p_personal_use_mvp_airborne_building_prediction_runtime_corridor_plan`
 
 Strategic ROI replan:
 
@@ -197,12 +200,53 @@ Current strategy:
   requests now name missing ISO 12354-1 flanking formula terms and stay
   `unsupported` instead of reusing Gate I field budgets or lab values as
   building metrics. Short label: building-prediction runtime adapter.
-- Gate O is now selected to decide whether a narrow formula corridor can
-  promote only after the direct separating-element curve, flanking path
-  transmission terms, junction vibration reduction index, room
-  absorption normalization, and uncertainty-budget owners are explicit.
+- Gate O has now landed the airborne building-prediction formula
+  corridor without numeric runtime movement. It defines separate
+  `R'w` and `DnT,w` source-absent formula corridors, a `+/-9 dB`
+  design budget, same-building holdout uncertainty, and strict alias
+  blocks for lab `Rw`/`STC`, Gate I field budgets, and source
+  single-number rows without an owned curve. Short label:
+  building-prediction formula corridor.
+- Gate P is now selected to decide whether that corridor can promote
+  runtime values safely. If path-by-path flanking terms cannot be owned,
+  Gate P must keep building prediction parked instead of pretending the
+  current heuristic field overlay is design-grade.
 - Broad source crawling remains blocked unless the active matrix names a
   specific source or holdout as the highest-impact unblocker.
+
+Current Gate O result:
+
+- Gate O adds
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-o-airborne-building-prediction-formula-corridor-contract.test.ts`
+  and
+  `packages/engine/src/dynamic-airborne-gate-o-building-prediction-formula-corridor.ts`.
+- The formula corridor names five terms: direct separating-element
+  frequency curve, flanking path energy sum, junction vibration
+  reduction index, room absorption standardization, and
+  building-prediction uncertainty budget.
+- Gate O defines `R'w` and `DnT,w` candidate formula corridors with
+  `proposedRuntimeEstimateDb: null`; runtime stays Gate N
+  `candidate_dynamic_unsupported` until Gate P.
+- The corridor carries `+/-9 dB` source-absent design budgets and
+  explicitly marks them as not measured evidence.
+- Negative boundaries keep missing physical inputs, missing formula
+  owners, non-building field context, and lab/source alias attempts
+  parked.
+- Gate O selected Gate P:
+  `gate_p_personal_use_mvp_airborne_building_prediction_runtime_corridor_plan`.
+
+Gate O validation result:
+
+Validation completed on 2026-05-10: focused Gate O engine formula
+corridor contract passed 1 file / 6 tests; Gate O/N/M/L plus Gate
+I/J/K continuity passed 7 files / 38 tests; engine typecheck passed;
+final `pnpm calculator:gate:current` passed with engine 356 files /
+2062 tests, web 71 files / 306 passed + 18 skipped, repo build 5/5
+successful, whitespace guard clean, and final `git diff --check`
+passed after the validation-doc sync. Known non-fatal validation
+warnings remain the test-environment Zustand storage-unavailable
+messages and optional `sharp` `@img/*` resolution warnings during web
+build.
 
 Current Gate N result:
 

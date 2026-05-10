@@ -12,6 +12,7 @@ export * from "./dynamic-airborne";
 export * from "./dynamic-airborne-gate-l-building-prediction-boundary";
 export * from "./dynamic-airborne-gate-m-building-prediction-input-contract";
 export * from "./dynamic-airborne-gate-n-building-prediction-runtime-adapter";
+export * from "./dynamic-airborne-gate-o-building-prediction-formula-corridor";
 export * from "./dynamic-airborne-gate-i-airborne-field-context";
 export * from "./dynamic-airborne-gate-o-single-leaf";
 export * from "./dynamic-calculator-candidate-resolver-runtime";
