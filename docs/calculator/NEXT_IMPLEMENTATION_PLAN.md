@@ -189,27 +189,65 @@ Fresh external checks still support this direction:
   that scope with stricter candidate rejection and basis/error-budget
   transparency.
 
-Gate L and Gate M have now landed from that decision chain:
+Gate L, Gate M, and Gate N have now landed from that decision chain:
 
 `gate_l_personal_use_mvp_airborne_building_prediction_boundary_plan`
 
 `gate_m_personal_use_mvp_airborne_building_prediction_input_contract_plan`
 
+`gate_n_personal_use_mvp_airborne_building_prediction_runtime_adapter_plan`
+
 The immediate next action is:
 
-`gate_n_personal_use_mvp_airborne_building_prediction_runtime_adapter_plan`
+`gate_o_personal_use_mvp_airborne_building_prediction_formula_corridor_plan`
 
 Target:
 
-`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-n-airborne-building-prediction-runtime-adapter-contract.test.ts`
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-o-airborne-building-prediction-formula-corridor-contract.test.ts`
 
 Gate M defines the first positive input contract for airborne
 `building_prediction`: source-room volume, receiving-room volume/RT60,
 flanking/junction class, conservative flanking assumption, junction
 coupling length, building output basis, and the existing separating
-element area. Gate N should decide the first runtime-adapter boundary for
-ISO 12354-1 style airborne building prediction, without reusing Gate I
-field budgets or lab `Rw` values as building metrics.
+element area. Gate N has now decided the first runtime-adapter boundary
+for ISO 12354-1 style airborne building prediction, without reusing Gate
+I field budgets or lab `Rw` values as building metrics. Gate O should
+decide whether a narrow formula corridor can promote only after direct
+separating-element curve, flanking path transmission, junction vibration
+reduction, room absorption normalization, and uncertainty-budget owners
+are explicit.
+
+Gate N landed execution summary:
+
+1. Created
+   `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-n-airborne-building-prediction-runtime-adapter-contract.test.ts`.
+2. Added
+   `packages/engine/src/dynamic-airborne-gate-n-building-prediction-runtime-adapter.ts`
+   for the Gate N plan id, status id, scenario pack, warning, runtime
+   adapter method, formula owner inputs, and Gate O selection constants.
+3. Complete Gate M physical and adapter owner sets now distinguish
+   missing formula ownership from missing physical inputs and missing
+   metric-basis owners. Gate N formula owners are:
+   direct separating-element frequency curve owner, flanking path
+   transmission terms owner, junction vibration reduction index owner,
+   room absorption normalization owner, and building-prediction
+   uncertainty-budget owner.
+4. Complete physical building requests still select
+   `candidate_dynamic_unsupported`, now with method
+   `dynamic_calculator_building_prediction_runtime_adapter_owner_missing`.
+5. Gate N keeps `R'w` / `DnT,w` building runtime numeric values parked,
+   keeps Gate I field values live and separate, and does not crawl broad
+   source rows.
+6. Next selected gate:
+   `gate_o_personal_use_mvp_airborne_building_prediction_formula_corridor_plan`.
+7. Validation completed on 2026-05-10 after implementation: focused
+   Gate N passed 1 file / 6 tests; Gate M/L continuity plus Gate I/J/K
+   field continuity passed 6 files / 32 tests; focused workbench
+   building/field input surfaces passed 2 files / 8 tests; engine/web
+   typechecks passed; final `pnpm calculator:gate:current` passed with
+   engine 355 files / 2056 tests, web 71 files / 306 passed + 18
+   skipped, repo build 5/5 successful, and whitespace guard clean;
+   final `git diff --check` passed after the validation-doc sync.
 
 Gate M landed execution summary:
 
@@ -3150,40 +3188,86 @@ Zustand unavailable test-storage warnings and optional sharp package
 resolution warnings during web build. Broad `pnpm check` was not rerun
 because Gate BI has no runtime/API/UI surface change.
 
-## Next Implementation Order - Personal-Use MVP Coverage Sprint Gate N Airborne Building-Prediction Runtime Adapter
+## Next Implementation Order - Personal-Use MVP Coverage Sprint Gate O Airborne Building-Prediction Formula Corridor
 
-Gate M has landed the no-runtime input contract: airborne
-`building_prediction` now has a complete physical owner set, but complete
-requests still select `unsupported` until the ISO 12354-1
-flanking/runtime adapter owns a formula. Gate N should define that first
+Gate N has landed the no-runtime building-prediction runtime adapter
+boundary: airborne
+`building_prediction` now has complete physical inputs, metric-basis
+adapter owners, and named missing ISO 12354-1 flanking formula terms.
+Complete requests still select `unsupported` until a later gate owns a
+defensible formula corridor. Gate O should decide whether such a narrow
+formula corridor can promote without aliasing Gate I field/apparent
+values or lab `Rw` / `STC` values onto building metrics.
+
+Gate O order:
+
+1. Add
+   `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-o-airborne-building-prediction-formula-corridor-contract.test.ts`.
+2. Re-read Gate I/J/K/L/M/N contracts,
+   `dynamic-calculator-route-input-topology.ts`,
+   `dynamic-calculator-candidate-resolver-runtime.ts`,
+   `dynamic-airborne-gate-n-building-prediction-runtime-adapter.ts`,
+   `apply-airborne-context.ts`, `calculate-assembly.ts`, workbench
+   field/building cards, report/API payloads, and ISO 12354-1 basis
+   notes before changing behavior.
+3. Decide the formula-corridor threshold. Runtime promotion is allowed
+   only if the direct separating-element frequency curve, flanking path
+   transmission terms, junction vibration reduction index, room
+   absorption normalization, and uncertainty-budget owners are
+   explicitly represented and testable.
+4. If the formula corridor cannot own defensible frequency terms, keep
+   complete requests `unsupported`, preserve the Gate N method and
+   warning, and select the next highest-ROI calculator coverage lane
+   instead of pretending building prediction is solved.
+5. If the formula corridor can safely promote, add numeric assertions for
+   `R'w` / `DnT,w`, basis/origin, tolerance or error budget, candidate
+   rejection reasons, exact-source precedence, lab/field/building
+   separation, and nearby negative cases.
+6. Preserve Gate G/H/I/K/M/N numeric and posture pins: grouped
+   triple-leaf, lined massive/masonry, CLT, field-context values,
+   precise Gate M `needs_input`, and Gate N formula-owner blockers must
+   stay stable.
+7. Run focused Gate O validation, Gate N/M/L continuity, Gate I/J/K field
+   continuity, relevant web/API/report tests if selected candidate or
+   visible posture changes, `pnpm calculator:gate:current`, and
+   `git diff --check`.
+
+## Consumed Gate N Implementation Order - Personal-Use MVP Coverage Sprint Airborne Building-Prediction Runtime Adapter
+
+Gate M landed the no-runtime input contract: airborne
+`building_prediction` had a complete physical owner set, but complete
+requests still selected `unsupported` until the ISO 12354-1
+flanking/runtime adapter owned a formula. Gate N defined that first
 runtime adapter boundary without aliasing Gate I field/apparent values or
 lab `Rw` / `STC` values onto building metrics.
 
-Gate N order:
+Gate N order completed:
 
-1. Add
+1. Added
    `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-n-airborne-building-prediction-runtime-adapter-contract.test.ts`.
 2. Re-read Gate I/J/K/L/M contracts, `dynamic-calculator-route-input-topology.ts`,
    `dynamic-calculator-candidate-resolver-runtime.ts`,
    `apply-airborne-context.ts`, `calculate-assembly.ts`, workbench
    field/building cards, report/API payloads, and current ISO 12354-1
    basis notes before changing behavior.
-3. Define the minimum no-value-movement runtime adapter owner set:
+3. Defined the minimum no-value-movement runtime adapter owner set:
    flanking transmission adapter owner, apparent building metric basis
    owner, standardized building metric basis owner, source-room volume,
    receiving-room volume/RT60, junction class, conservative flanking
-   assumption, junction coupling length, and building output basis.
-4. Decide whether Gate N remains a no-runtime adapter-readiness gate or
-   can safely promote a bounded formula corridor. If runtime cannot be
-   owned with defensible frequency terms, keep complete requests
-   `unsupported` and record the exact missing runtime owner.
-5. Preserve exact-source precedence, lab/field/building separation, Gate
-   G/H/I/K numeric pins, and Gate M precise `needs_input` behavior.
-6. Add visible/API/report assertions only if a selected candidate or
-   blocking posture changes; otherwise keep Gate N engine-contract only.
-7. Run focused Gate N validation, Gate M/L continuity, Gate I/J/K field
-   continuity, relevant web card/API tests if touched,
-   `pnpm calculator:gate:current`, and `git diff --check`.
+   assumption, junction coupling length, building output basis, direct
+   separating-element frequency curve owner, flanking path transmission
+   terms owner, junction vibration reduction index owner, room
+   absorption normalization owner, and uncertainty-budget owner.
+4. Kept Gate N as a no-runtime adapter-readiness gate. Complete requests
+   remain `unsupported`; the exact missing runtime owner set is now
+   visible in the selected basis.
+5. Preserved exact-source precedence, lab/field/building separation,
+   Gate G/H/I/K numeric pins, and Gate M precise `needs_input` behavior.
+6. Added visible warning/basis assertions because the unsupported method
+   and warning changed from the Gate M runtime placeholder to the Gate N
+   runtime-adapter owner boundary.
+7. Selected Gate O:
+   `gate_o_personal_use_mvp_airborne_building_prediction_formula_corridor_plan`.
 
 ## Consumed Gate M Implementation Order - Personal-Use MVP Coverage Sprint Airborne Building-Prediction Input Contract
 

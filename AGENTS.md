@@ -363,12 +363,24 @@ receiving-room volume/RT60, flanking/junction class, conservative
 flanking assumption, junction coupling length, and building output basis.
 Partial owner sets stay `needs_input`; complete physical input sets
 select `unsupported` with
-`dynamic_calculator_building_prediction_runtime_owner_missing` until the
-ISO 12354-1 flanking/runtime adapter has an explicit owner. Gate M
+`dynamic_calculator_building_prediction_runtime_adapter_owner_missing`
+after Gate N, because the ISO 12354-1 flanking formula terms are not
+owned yet. Gate M
 selection status:
 `gate_m_personal_use_mvp_airborne_building_prediction_input_contract_landed_no_runtime_selected_runtime_adapter_gate_n`.
-Gate N is next:
+Gate N has now landed:
 `gate_n_personal_use_mvp_airborne_building_prediction_runtime_adapter_plan`.
+It defines the building-prediction runtime adapter owner boundary
+without numeric runtime movement. Complete Gate M physical and adapter
+owner sets now name the missing direct separating-element frequency
+curve owner, flanking path transmission terms owner, junction vibration
+reduction index owner, room absorption normalization owner, and
+building-prediction uncertainty budget owner. Complete building requests
+remain `unsupported`; field/apparent Gate I values and lab `Rw`/`STC`
+are not reused as building metrics. Gate N selection status:
+`gate_n_personal_use_mvp_airborne_building_prediction_runtime_adapter_landed_no_runtime_selected_formula_corridor_gate_o`.
+Gate O is next:
+`gate_o_personal_use_mvp_airborne_building_prediction_formula_corridor_plan`.
 Do not keep adding narrow steel-floor source/packet gates unless the
 active matrix or a later runtime proposal names a specific source-owned
 unblocker.

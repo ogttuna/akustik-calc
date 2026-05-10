@@ -36,6 +36,10 @@ import {
   GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD,
   GATE_I_AIRBORNE_FIELD_CONTEXT_SELECTED_CANDIDATE_ID
 } from "./dynamic-airborne-gate-i-airborne-field-context";
+import {
+  GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_METHOD,
+  GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_OWNER_INPUTS
+} from "./dynamic-airborne-gate-n-building-prediction-runtime-adapter";
 
 export type DynamicCalculatorCandidateResolverSourceAnchor = {
   applied: boolean;
@@ -382,23 +386,19 @@ function unsupportedBasis(input: {
   if (input.assessment.outputBasis === "building_prediction") {
     return {
       assumptions: [
-        "building-prediction physical inputs are separated from runtime adapter ownership",
-        "complete Gate M inputs do not promote R'w/DnT,w until a later ISO 12354-1 flanking adapter owns the formula"
+        "building-prediction physical inputs are separated from runtime adapter and formula ownership",
+        "complete Gate M inputs do not promote R'w/DnT,w until the Gate N ISO 12354-1 runtime adapter owners and a later formula corridor own the frequency terms"
       ],
       calculationStandard: "none",
       curveBasis: "no_curve",
       kind: "airborne_unsupported",
-      method: "dynamic_calculator_building_prediction_runtime_owner_missing",
+      method: GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_METHOD,
       missingPhysicalInputs: [],
       missingSourceEvidence: [],
       origin: "unsupported",
       propertyDefaults: [],
       ratingStandard: "none",
-      requiredInputs: [
-        "ISO_12354_1_flanking_transmission_adapter_owner",
-        "junctionCouplingLengthOwner",
-        "buildingMetricBasisOwner"
-      ]
+      requiredInputs: [...GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_OWNER_INPUTS]
     };
   }
 

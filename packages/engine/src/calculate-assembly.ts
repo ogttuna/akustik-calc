@@ -37,7 +37,7 @@ import { applyApproximateAirborneFieldCompanion, applyVerifiedAirborneCatalogAnc
 import { classifyLayerRole, materialText } from "./airborne-topology";
 import { calculateDynamicAirborneResult } from "./dynamic-airborne";
 import { GATE_L_AIRBORNE_BUILDING_PREDICTION_BOUNDARY_WARNING } from "./dynamic-airborne-gate-l-building-prediction-boundary";
-import { GATE_M_AIRBORNE_BUILDING_PREDICTION_RUNTIME_BOUNDARY_WARNING } from "./dynamic-airborne-gate-m-building-prediction-input-contract";
+import { GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_WARNING } from "./dynamic-airborne-gate-n-building-prediction-runtime-adapter";
 import {
   buildDynamicCalculatorCandidateResolverRuntime,
   inferDynamicCalculatorRuntimeRoute
@@ -1490,7 +1490,7 @@ export function calculateAssembly(
     dynamicCandidateResolverRuntime?.routeInputAssessment.outputBasis === "building_prediction" &&
     dynamicCandidateResolverRuntime.resolution.selectedOrigin === "unsupported"
   ) {
-    warnings.push(GATE_M_AIRBORNE_BUILDING_PREDICTION_RUNTIME_BOUNDARY_WARNING);
+    warnings.push(GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_WARNING);
   }
 
   if (shouldWithholdUnreadyDynamicFloorImpactRuntime && gateWFloorImpactContract) {

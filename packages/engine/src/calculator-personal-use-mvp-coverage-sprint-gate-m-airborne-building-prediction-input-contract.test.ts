@@ -11,10 +11,14 @@ import {
   buildGateMAirborneBuildingPredictionScenarioPack,
   GATE_M_AIRBORNE_BUILDING_PREDICTION_INPUT_CONTRACT_PLAN,
   GATE_M_AIRBORNE_BUILDING_PREDICTION_INPUT_CONTRACT_STATUS,
-  GATE_M_AIRBORNE_BUILDING_PREDICTION_RUNTIME_BOUNDARY_WARNING,
   GATE_M_AIRBORNE_BUILDING_PREDICTION_SELECTED_NEXT_ACTION,
   GATE_M_AIRBORNE_BUILDING_PREDICTION_SELECTED_NEXT_FILE
 } from "./dynamic-airborne-gate-m-building-prediction-input-contract";
+import {
+  GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_METHOD,
+  GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_OWNER_INPUTS,
+  GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_WARNING
+} from "./dynamic-airborne-gate-n-building-prediction-runtime-adapter";
 import {
   buildDynamicCalculatorRouteInputTopologyAssessment,
   GATE_M_AIRBORNE_BUILDING_PREDICTION_OWNER_INPUTS,
@@ -236,13 +240,9 @@ describe("Personal-Use MVP Coverage Sprint Gate M airborne building-prediction i
       selectedOrigin: "unsupported"
     });
     expect(result.airborneBasis).toMatchObject({
-      method: "dynamic_calculator_building_prediction_runtime_owner_missing",
+      method: GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_METHOD,
       origin: "unsupported",
-      requiredInputs: [
-        "ISO_12354_1_flanking_transmission_adapter_owner",
-        "junctionCouplingLengthOwner",
-        "buildingMetricBasisOwner"
-      ]
+      requiredInputs: [...GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_OWNER_INPUTS]
     });
     expect(result.airborneCandidateResolution?.selectedBasis?.missingPhysicalInputs ?? []).toEqual([]);
     expect(result.airborneCandidateResolution?.runtimeValueMovement).toBe(false);
@@ -251,7 +251,7 @@ describe("Personal-Use MVP Coverage Sprint Gate M airborne building-prediction i
         candidate.id === "candidate_airborne_field_context_family_physics_prediction"
       )?.selected
     ).not.toBe(true);
-    expect(result.warnings).toContain(GATE_M_AIRBORNE_BUILDING_PREDICTION_RUNTIME_BOUNDARY_WARNING);
+    expect(result.warnings).toContain(GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_WARNING);
     expect(result.warnings).not.toContain(GATE_L_AIRBORNE_BUILDING_PREDICTION_BOUNDARY_WARNING);
     expect(result.warnings.join("\n")).not.toContain("Airborne field-side overlay active");
   });
@@ -269,7 +269,7 @@ describe("Personal-Use MVP Coverage Sprint Gate M airborne building-prediction i
     });
     expect(field.metrics.estimatedRwPrimeDb).toBe(58);
     expect(field.metrics.estimatedDnTwDb).toBe(59);
-    expect(field.warnings).not.toContain(GATE_M_AIRBORNE_BUILDING_PREDICTION_RUNTIME_BOUNDARY_WARNING);
+    expect(field.warnings).not.toContain(GATE_N_AIRBORNE_BUILDING_PREDICTION_RUNTIME_ADAPTER_WARNING);
   });
 
   it("keeps docs and the current-gate runner aligned with Gate M and Gate N", () => {
