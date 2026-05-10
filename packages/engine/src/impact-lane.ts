@@ -43,6 +43,10 @@ import { buildDynamicImpactTrace } from "./dynamic-impact";
 import { derivePredictorSpecificFloorSystemEstimate } from "./predictor-floor-system-estimate";
 import { shouldBlockSteelFloorImpactFormulaFallback } from "./steel-floor-impact-formula-corridor";
 import {
+  estimateTimberCltDeltaLwFromPredictorInput,
+  mergeTimberCltDeltaLwFormulaCompanion
+} from "./timber-clt-floor-impact-delta-lw-runtime-corridor";
+import {
   inferImpactSupportingElementFamilyFromExactFloorSystem,
   inferImpactSupportingElementFamilyFromFloorSystemEstimate,
   inferImpactSupportingElementFamilyFromImpactCatalogMatch,
@@ -58,6 +62,7 @@ export type ResolvedImpactLane = {
   floorSystemRecommendations: readonly FloorSystemRecommendation[];
   impactCatalogMatch: ImpactCatalogMatchResult | null;
   narrowImpact: ImpactCalculation | null;
+  predictorDeltaLwCompanion: ImpactCalculation | null;
   predictorSpecificFloorSystemEstimate: FloorSystemEstimateResult | null;
 };
 
@@ -68,6 +73,7 @@ type ResolveLayerBasedImpactLaneInput = {
   predictorInput?: ImpactPredictorInput | null;
   officialFloorSystemId?: string | null;
   resolvedLayers: readonly ResolvedLayer[];
+  targetOutputs?: readonly RequestedOutputId[];
 };
 
 export type FinalizedImpactLane = {
@@ -87,6 +93,7 @@ type FinalizeResolvedImpactLaneInput = {
   impactCatalogMatch?: ImpactCatalogMatchResult | null;
   impactFieldContext?: ImpactFieldContext | null;
   narrowImpact?: ImpactCalculation | null;
+  predictorDeltaLwCompanion?: ImpactCalculation | null;
   predictorInput?: ImpactPredictorInput | null;
   preferredSupplementaryImpact?: ImpactCalculation | null;
   resolvedLayers: readonly ResolvedLayer[];
@@ -184,6 +191,14 @@ export function resolveLayerBasedImpactLane(
     !explicitDeltaImpact
       ? estimateImpactFromPredictorInput(input.predictorInput)
       : null;
+  const predictorDeltaLwCompanion =
+    input.explicitPredictorInput &&
+    input.targetOutputs?.includes("DeltaLw") &&
+    !input.officialFloorSystemId &&
+    !impactCatalogMatch &&
+    !explicitDeltaImpact
+      ? estimateTimberCltDeltaLwFromPredictorInput(input.explicitPredictorInput)
+      : null;
   const predictorSpecificFloorSystemEstimate =
     input.predictorInput &&
     !input.officialFloorSystemId &&
@@ -234,6 +249,7 @@ export function resolveLayerBasedImpactLane(
     floorSystemRecommendations,
     impactCatalogMatch,
     narrowImpact,
+    predictorDeltaLwCompanion,
     predictorSpecificFloorSystemEstimate
   };
 }
@@ -251,14 +267,23 @@ export function finalizeResolvedImpactLane(
     input.preferredSupplementaryImpact ?? null,
     input.fallbackSupplementaryImpact ?? null
   );
+  const floorSystemMatchImpact = mergeTimberCltDeltaLwFormulaCompanion(
+    input.floorSystemMatch ? input.floorSystemMatch.impact : null,
+    input.floorSystemMatch ? input.predictorDeltaLwCompanion ?? null : null
+  );
+  const floorEstimateImpactWithTimberCltCompanion = mergeTimberCltDeltaLwFormulaCompanion(
+    floorEstimateImpact,
+    floorEstimateImpact ? input.predictorDeltaLwCompanion ?? null : null
+  );
   const baseImpact = exactImpact
     ? mergeImpactCalculations(exactImpact, exactSupplementaryImpact)
     : (
-        input.floorSystemMatch?.impact ??
+        floorSystemMatchImpact ??
         input.impactCatalogMatch?.impact ??
         input.explicitDeltaImpact ??
-        floorEstimateImpact ??
+        floorEstimateImpactWithTimberCltCompanion ??
         input.narrowImpact ??
+        input.predictorDeltaLwCompanion ??
         null
       );
   const baseLowerBoundImpact =

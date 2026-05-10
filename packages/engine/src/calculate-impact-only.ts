@@ -43,6 +43,10 @@ import {
   resolveImpactProductCatalogById
 } from "./impact-product-catalog";
 import {
+  inferImpactSupportingElementFamilyFromLayers,
+  inferImpactSupportingElementFamilyFromPredictorInput
+} from "./impact-supporting-element-family";
+import {
   buildResolvedImpactArtifacts,
   finalizeResolvedImpactLane,
   resolveLayerBasedImpactLane,
@@ -156,6 +160,7 @@ export function calculateImpactOnly(
   let floorSystemEstimate: FloorSystemEstimateResult | null = null;
   let boundFloorSystemEstimate: FloorSystemBoundEstimateResult | null = null;
   let narrowImpact: ImpactCalculation | null = null;
+  let predictorDeltaLwCompanion: ImpactCalculation | null = null;
   let directVisibleNarrowImpact: ImpactCalculation | null = null;
   let explicitDeltaImpact: ImpactCalculation | null = null;
   let visibleLayerPredictorBlockerWarning: string | null = null;
@@ -185,7 +190,8 @@ export function calculateImpactOnly(
         exactImpact,
         explicitPredictorInput: predictorInput,
         predictorInput,
-        resolvedLayers: resolvedSourceLayers
+        resolvedLayers: resolvedSourceLayers,
+        targetOutputs: options.targetOutputs
       });
 
       floorSystemMatch = predictorImpactLane.floorSystemMatch;
@@ -193,14 +199,40 @@ export function calculateImpactOnly(
       impactCatalogMatch = predictorImpactLane.impactCatalogMatch;
       explicitDeltaImpact = predictorImpactLane.explicitDeltaImpact;
       narrowImpact = predictorImpactLane.narrowImpact;
+      predictorDeltaLwCompanion = predictorImpactLane.predictorDeltaLwCompanion;
       boundFloorSystemEstimate = predictorImpactLane.boundFloorSystemEstimate;
       floorSystemEstimate = predictorImpactLane.floorSystemEstimate;
+      if (!floorSystemMatch && (predictorDeltaLwCompanion || options.targetOutputs?.includes("Ln,w"))) {
+        const visibleFamily = inferImpactSupportingElementFamilyFromLayers(resolvedVisibleLayers);
+        const predictorFamily = inferImpactSupportingElementFamilyFromPredictorInput(predictorInput);
+        const canUseVisibleAnchor = Boolean(
+          visibleFamily &&
+            predictorFamily &&
+            visibleFamily === predictorFamily &&
+            (predictorFamily === "timber_joists" || predictorFamily === "mass_timber_clt")
+        );
+
+        if (canUseVisibleAnchor) {
+          const visibleAnchorLane = resolveLayerBasedImpactLane({
+            catalog,
+            exactImpact,
+            resolvedLayers: resolvedVisibleLayers,
+            targetOutputs: options.targetOutputs
+          });
+
+          floorSystemMatch = visibleAnchorLane.floorSystemMatch;
+          floorSystemEstimate = visibleAnchorLane.floorSystemMatch
+            ? null
+            : floorSystemEstimate ?? visibleAnchorLane.floorSystemEstimate;
+        }
+      }
     }
   } else {
     const directImpactLane = resolveLayerBasedImpactLane({
       catalog,
       exactImpact,
-      resolvedLayers: resolvedSourceLayers
+      resolvedLayers: resolvedSourceLayers,
+      targetOutputs: options.targetOutputs
     });
 
     floorSystemMatch = directImpactLane.floorSystemMatch;
@@ -236,7 +268,8 @@ export function calculateImpactOnly(
           catalog: derivedCatalog,
           exactImpact,
           predictorInput: derivedPredictorInput,
-          resolvedLayers: derivedResolvedSourceLayers
+          resolvedLayers: derivedResolvedSourceLayers,
+          targetOutputs: options.targetOutputs
         });
         const shouldUseDerived =
           !blocksBoundOnlyUbiqOpenWebCarpetDerivedEstimate &&
@@ -271,6 +304,7 @@ export function calculateImpactOnly(
           impactCatalogMatch = derivedImpactLane.impactCatalogMatch;
           explicitDeltaImpact = derivedImpactLane.explicitDeltaImpact;
           narrowImpact = derivedImpactLane.narrowImpact;
+          predictorDeltaLwCompanion = derivedImpactLane.predictorDeltaLwCompanion;
           boundFloorSystemEstimate = derivedImpactLane.boundFloorSystemEstimate;
           floorSystemEstimate = derivedImpactLane.floorSystemEstimate;
         }
@@ -281,7 +315,8 @@ export function calculateImpactOnly(
       const fallbackImpactLane = resolveLayerBasedImpactLane({
         catalog,
         exactImpact,
-        resolvedLayers: resolvedSourceLayers
+        resolvedLayers: resolvedSourceLayers,
+        targetOutputs: options.targetOutputs
       });
       boundFloorSystemEstimate = fallbackImpactLane.boundFloorSystemEstimate;
       floorSystemEstimate = fallbackImpactLane.floorSystemEstimate;
@@ -311,6 +346,7 @@ export function calculateImpactOnly(
     impactCatalogMatch,
     impactFieldContext,
     narrowImpact,
+    predictorDeltaLwCompanion,
     predictorInput,
     preferredSupplementaryImpact: directVisibleNarrowImpact,
     resolvedLayers: resolvedSourceLayers

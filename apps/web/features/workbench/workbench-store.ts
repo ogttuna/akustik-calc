@@ -55,6 +55,12 @@ import {
 } from "./simple-workbench-wall-topology";
 import { getWorkbenchMaterialById } from "./workbench-materials";
 import type { WorkbenchSteelFloorFormulaLowerCeilingIsolationSupportForm } from "./steel-floor-formula-input-surface";
+import type {
+  WorkbenchTimberCltDeltaLwImpactSystemType,
+  WorkbenchTimberCltDeltaLwLowerAssemblyType,
+  WorkbenchTimberCltDeltaLwLowerSupportClass,
+  WorkbenchTimberCltDeltaLwStructuralSupportType
+} from "./timber-clt-delta-lw-input-surface";
 
 type LayerDraft = {
   densityKgM3?: string;
@@ -116,6 +122,23 @@ type ScenarioSnapshot = WorkbenchWallTopologyDraft & {
   impactSteelLowerCeilingIsolationSupportForm: WorkbenchSteelFloorFormulaLowerCeilingIsolationSupportForm;
   impactSteelResilientLayerDynamicStiffnessMNm3: string;
   impactSteelSupportForm: "" | ImpactPredictorSupportForm;
+  impactTimberCltBaseFloorDensityKgM3: string;
+  impactTimberCltBaseFloorThicknessMm: string;
+  impactTimberCltImpactSystemType: WorkbenchTimberCltDeltaLwImpactSystemType;
+  impactTimberCltLoadBasisKgM2: string;
+  impactTimberCltLowerAssemblyType: WorkbenchTimberCltDeltaLwLowerAssemblyType;
+  impactTimberCltLowerBoardLayerCount: string;
+  impactTimberCltLowerBoardThicknessMm: string;
+  impactTimberCltLowerCavityDepthMm: string;
+  impactTimberCltLowerCavityFillThicknessMm: string;
+  impactTimberCltLowerSupportClass: WorkbenchTimberCltDeltaLwLowerSupportClass;
+  impactTimberCltResilientLayerDynamicStiffnessMNm3: string;
+  impactTimberCltResilientLayerThicknessMm: string;
+  impactTimberCltStructuralSupportType: WorkbenchTimberCltDeltaLwStructuralSupportType;
+  impactTimberCltUpperFillDensityKgM3: string;
+  impactTimberCltUpperFillThicknessMm: string;
+  impactTimberCltUpperTreatmentDensityKgM3: string;
+  impactTimberCltUpperTreatmentThicknessMm: string;
   id: string;
   name: string;
   preparedBy: string;
@@ -189,6 +212,23 @@ type WorkbenchStore = WorkbenchWallTopologyDraft & {
   impactSteelLowerCeilingIsolationSupportForm: WorkbenchSteelFloorFormulaLowerCeilingIsolationSupportForm;
   impactSteelResilientLayerDynamicStiffnessMNm3: string;
   impactSteelSupportForm: "" | ImpactPredictorSupportForm;
+  impactTimberCltBaseFloorDensityKgM3: string;
+  impactTimberCltBaseFloorThicknessMm: string;
+  impactTimberCltImpactSystemType: WorkbenchTimberCltDeltaLwImpactSystemType;
+  impactTimberCltLoadBasisKgM2: string;
+  impactTimberCltLowerAssemblyType: WorkbenchTimberCltDeltaLwLowerAssemblyType;
+  impactTimberCltLowerBoardLayerCount: string;
+  impactTimberCltLowerBoardThicknessMm: string;
+  impactTimberCltLowerCavityDepthMm: string;
+  impactTimberCltLowerCavityFillThicknessMm: string;
+  impactTimberCltLowerSupportClass: WorkbenchTimberCltDeltaLwLowerSupportClass;
+  impactTimberCltResilientLayerDynamicStiffnessMNm3: string;
+  impactTimberCltResilientLayerThicknessMm: string;
+  impactTimberCltStructuralSupportType: WorkbenchTimberCltDeltaLwStructuralSupportType;
+  impactTimberCltUpperFillDensityKgM3: string;
+  impactTimberCltUpperFillThicknessMm: string;
+  impactTimberCltUpperTreatmentDensityKgM3: string;
+  impactTimberCltUpperTreatmentThicknessMm: string;
   approverTitle: string;
   preparedBy: string;
   proposalIssueCodePrefix: string;
@@ -283,6 +323,23 @@ type WorkbenchStore = WorkbenchWallTopologyDraft & {
   setImpactSteelLowerCeilingIsolationSupportForm: (value: WorkbenchSteelFloorFormulaLowerCeilingIsolationSupportForm) => void;
   setImpactSteelResilientLayerDynamicStiffnessMNm3: (value: string) => void;
   setImpactSteelSupportForm: (value: "" | ImpactPredictorSupportForm) => void;
+  setImpactTimberCltBaseFloorDensityKgM3: (value: string) => void;
+  setImpactTimberCltBaseFloorThicknessMm: (value: string) => void;
+  setImpactTimberCltImpactSystemType: (value: WorkbenchTimberCltDeltaLwImpactSystemType) => void;
+  setImpactTimberCltLoadBasisKgM2: (value: string) => void;
+  setImpactTimberCltLowerAssemblyType: (value: WorkbenchTimberCltDeltaLwLowerAssemblyType) => void;
+  setImpactTimberCltLowerBoardLayerCount: (value: string) => void;
+  setImpactTimberCltLowerBoardThicknessMm: (value: string) => void;
+  setImpactTimberCltLowerCavityDepthMm: (value: string) => void;
+  setImpactTimberCltLowerCavityFillThicknessMm: (value: string) => void;
+  setImpactTimberCltLowerSupportClass: (value: WorkbenchTimberCltDeltaLwLowerSupportClass) => void;
+  setImpactTimberCltResilientLayerDynamicStiffnessMNm3: (value: string) => void;
+  setImpactTimberCltResilientLayerThicknessMm: (value: string) => void;
+  setImpactTimberCltStructuralSupportType: (value: WorkbenchTimberCltDeltaLwStructuralSupportType) => void;
+  setImpactTimberCltUpperFillDensityKgM3: (value: string) => void;
+  setImpactTimberCltUpperFillThicknessMm: (value: string) => void;
+  setImpactTimberCltUpperTreatmentDensityKgM3: (value: string) => void;
+  setImpactTimberCltUpperTreatmentThicknessMm: (value: string) => void;
   setPreparedBy: (value: string) => void;
   setProposalIssueCodePrefix: (value: string) => void;
   setApproverTitle: (value: string) => void;
@@ -580,6 +637,23 @@ function makeDefaultState(input?: {
     impactSteelLowerCeilingIsolationSupportForm: "" as const,
     impactSteelResilientLayerDynamicStiffnessMNm3: "",
     impactSteelSupportForm: "" as const,
+    impactTimberCltBaseFloorDensityKgM3: "",
+    impactTimberCltBaseFloorThicknessMm: "",
+    impactTimberCltImpactSystemType: "" as const,
+    impactTimberCltLoadBasisKgM2: "",
+    impactTimberCltLowerAssemblyType: "" as const,
+    impactTimberCltLowerBoardLayerCount: "",
+    impactTimberCltLowerBoardThicknessMm: "",
+    impactTimberCltLowerCavityDepthMm: "",
+    impactTimberCltLowerCavityFillThicknessMm: "",
+    impactTimberCltLowerSupportClass: "" as const,
+    impactTimberCltResilientLayerDynamicStiffnessMNm3: "",
+    impactTimberCltResilientLayerThicknessMm: "",
+    impactTimberCltStructuralSupportType: "" as const,
+    impactTimberCltUpperFillDensityKgM3: "",
+    impactTimberCltUpperFillThicknessMm: "",
+    impactTimberCltUpperTreatmentDensityKgM3: "",
+    impactTimberCltUpperTreatmentThicknessMm: "",
     preparedBy: "DAC Operator",
     proposalIssueCodePrefix: "",
     proposalAttention: "Attention line not entered",
@@ -695,6 +769,24 @@ function buildLoadedScenarioState(
     impactSteelLowerCeilingIsolationSupportForm: scenario.impactSteelLowerCeilingIsolationSupportForm ?? "",
     impactSteelResilientLayerDynamicStiffnessMNm3: scenario.impactSteelResilientLayerDynamicStiffnessMNm3 ?? "",
     impactSteelSupportForm: scenario.impactSteelSupportForm ?? "",
+    impactTimberCltBaseFloorDensityKgM3: scenario.impactTimberCltBaseFloorDensityKgM3 ?? "",
+    impactTimberCltBaseFloorThicknessMm: scenario.impactTimberCltBaseFloorThicknessMm ?? "",
+    impactTimberCltImpactSystemType: scenario.impactTimberCltImpactSystemType ?? "",
+    impactTimberCltLoadBasisKgM2: scenario.impactTimberCltLoadBasisKgM2 ?? "",
+    impactTimberCltLowerAssemblyType: scenario.impactTimberCltLowerAssemblyType ?? "",
+    impactTimberCltLowerBoardLayerCount: scenario.impactTimberCltLowerBoardLayerCount ?? "",
+    impactTimberCltLowerBoardThicknessMm: scenario.impactTimberCltLowerBoardThicknessMm ?? "",
+    impactTimberCltLowerCavityDepthMm: scenario.impactTimberCltLowerCavityDepthMm ?? "",
+    impactTimberCltLowerCavityFillThicknessMm: scenario.impactTimberCltLowerCavityFillThicknessMm ?? "",
+    impactTimberCltLowerSupportClass: scenario.impactTimberCltLowerSupportClass ?? "",
+    impactTimberCltResilientLayerDynamicStiffnessMNm3:
+      scenario.impactTimberCltResilientLayerDynamicStiffnessMNm3 ?? "",
+    impactTimberCltResilientLayerThicknessMm: scenario.impactTimberCltResilientLayerThicknessMm ?? "",
+    impactTimberCltStructuralSupportType: scenario.impactTimberCltStructuralSupportType ?? "",
+    impactTimberCltUpperFillDensityKgM3: scenario.impactTimberCltUpperFillDensityKgM3 ?? "",
+    impactTimberCltUpperFillThicknessMm: scenario.impactTimberCltUpperFillThicknessMm ?? "",
+    impactTimberCltUpperTreatmentDensityKgM3: scenario.impactTimberCltUpperTreatmentDensityKgM3 ?? "",
+    impactTimberCltUpperTreatmentThicknessMm: scenario.impactTimberCltUpperTreatmentThicknessMm ?? "",
     preparedBy: scenario.preparedBy ?? "DAC Operator",
     proposalIssueCodePrefix: scenario.proposalIssueCodePrefix ?? "",
     proposalAttention: scenario.proposalAttention ?? "Attention line not entered",
@@ -955,6 +1047,24 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
               impactSteelLowerCeilingIsolationSupportForm: state.impactSteelLowerCeilingIsolationSupportForm,
               impactSteelResilientLayerDynamicStiffnessMNm3: state.impactSteelResilientLayerDynamicStiffnessMNm3,
               impactSteelSupportForm: state.impactSteelSupportForm,
+              impactTimberCltBaseFloorDensityKgM3: state.impactTimberCltBaseFloorDensityKgM3,
+              impactTimberCltBaseFloorThicknessMm: state.impactTimberCltBaseFloorThicknessMm,
+              impactTimberCltImpactSystemType: state.impactTimberCltImpactSystemType,
+              impactTimberCltLoadBasisKgM2: state.impactTimberCltLoadBasisKgM2,
+              impactTimberCltLowerAssemblyType: state.impactTimberCltLowerAssemblyType,
+              impactTimberCltLowerBoardLayerCount: state.impactTimberCltLowerBoardLayerCount,
+              impactTimberCltLowerBoardThicknessMm: state.impactTimberCltLowerBoardThicknessMm,
+              impactTimberCltLowerCavityDepthMm: state.impactTimberCltLowerCavityDepthMm,
+              impactTimberCltLowerCavityFillThicknessMm: state.impactTimberCltLowerCavityFillThicknessMm,
+              impactTimberCltLowerSupportClass: state.impactTimberCltLowerSupportClass,
+              impactTimberCltResilientLayerDynamicStiffnessMNm3:
+                state.impactTimberCltResilientLayerDynamicStiffnessMNm3,
+              impactTimberCltResilientLayerThicknessMm: state.impactTimberCltResilientLayerThicknessMm,
+              impactTimberCltStructuralSupportType: state.impactTimberCltStructuralSupportType,
+              impactTimberCltUpperFillDensityKgM3: state.impactTimberCltUpperFillDensityKgM3,
+              impactTimberCltUpperFillThicknessMm: state.impactTimberCltUpperFillThicknessMm,
+              impactTimberCltUpperTreatmentDensityKgM3: state.impactTimberCltUpperTreatmentDensityKgM3,
+              impactTimberCltUpperTreatmentThicknessMm: state.impactTimberCltUpperTreatmentThicknessMm,
               name: makeScenarioName(state),
               preparedBy: state.preparedBy,
               proposalIssueCodePrefix: state.proposalIssueCodePrefix,
@@ -1037,6 +1147,24 @@ export const useWorkbenchStore = create<WorkbenchStore>()(
       setImpactSteelLowerCeilingIsolationSupportForm: (value) => set({ impactSteelLowerCeilingIsolationSupportForm: value }),
       setImpactSteelResilientLayerDynamicStiffnessMNm3: (value) => set({ impactSteelResilientLayerDynamicStiffnessMNm3: value }),
       setImpactSteelSupportForm: (value) => set({ impactSteelSupportForm: value }),
+      setImpactTimberCltBaseFloorDensityKgM3: (value) => set({ impactTimberCltBaseFloorDensityKgM3: value }),
+      setImpactTimberCltBaseFloorThicknessMm: (value) => set({ impactTimberCltBaseFloorThicknessMm: value }),
+      setImpactTimberCltImpactSystemType: (value) => set({ impactTimberCltImpactSystemType: value }),
+      setImpactTimberCltLoadBasisKgM2: (value) => set({ impactTimberCltLoadBasisKgM2: value }),
+      setImpactTimberCltLowerAssemblyType: (value) => set({ impactTimberCltLowerAssemblyType: value }),
+      setImpactTimberCltLowerBoardLayerCount: (value) => set({ impactTimberCltLowerBoardLayerCount: value }),
+      setImpactTimberCltLowerBoardThicknessMm: (value) => set({ impactTimberCltLowerBoardThicknessMm: value }),
+      setImpactTimberCltLowerCavityDepthMm: (value) => set({ impactTimberCltLowerCavityDepthMm: value }),
+      setImpactTimberCltLowerCavityFillThicknessMm: (value) => set({ impactTimberCltLowerCavityFillThicknessMm: value }),
+      setImpactTimberCltLowerSupportClass: (value) => set({ impactTimberCltLowerSupportClass: value }),
+      setImpactTimberCltResilientLayerDynamicStiffnessMNm3: (value) =>
+        set({ impactTimberCltResilientLayerDynamicStiffnessMNm3: value }),
+      setImpactTimberCltResilientLayerThicknessMm: (value) => set({ impactTimberCltResilientLayerThicknessMm: value }),
+      setImpactTimberCltStructuralSupportType: (value) => set({ impactTimberCltStructuralSupportType: value }),
+      setImpactTimberCltUpperFillDensityKgM3: (value) => set({ impactTimberCltUpperFillDensityKgM3: value }),
+      setImpactTimberCltUpperFillThicknessMm: (value) => set({ impactTimberCltUpperFillThicknessMm: value }),
+      setImpactTimberCltUpperTreatmentDensityKgM3: (value) => set({ impactTimberCltUpperTreatmentDensityKgM3: value }),
+      setImpactTimberCltUpperTreatmentThicknessMm: (value) => set({ impactTimberCltUpperTreatmentThicknessMm: value }),
       setApproverTitle: (value) => set({ approverTitle: value }),
       setPreparedBy: (value) => set({ preparedBy: value }),
       setProposalIssueCodePrefix: (value) => set({ proposalIssueCodePrefix: value }),

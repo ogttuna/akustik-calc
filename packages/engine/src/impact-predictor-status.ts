@@ -43,7 +43,9 @@ const FORMULA_BASIS_LABELS = new Set<string>([
   "predictor_bare_massive_floor_iso12354_annexc_estimate",
   "predictor_heavy_floating_floor_iso12354_annexc_estimate",
   "predictor_heavy_concrete_published_upper_treatment_estimate",
-  "predictor_lightweight_steel_mass_spring_holdout_corridor_estimate"
+  "predictor_lightweight_steel_mass_spring_holdout_corridor_estimate",
+  "predictor_mass_timber_clt_delta_lw_formula_corridor_estimate",
+  "predictor_timber_joist_delta_lw_formula_corridor_estimate"
 ]);
 
 function hasFormulaMetricBasis(impact: ImpactCalculation | null): boolean {

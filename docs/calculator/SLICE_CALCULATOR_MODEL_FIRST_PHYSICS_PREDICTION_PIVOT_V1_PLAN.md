@@ -2,7 +2,7 @@
 
 Slice id: `calculator_model_first_physics_prediction_pivot_v1`
 
-Status: SELECTED / GATE BH LANDED / GATE BI MINIMAL GOVERNANCE NEXT / POST-GATE-BI PERSONAL-USE MVP COVERAGE SPRINT SELECTED
+Status: SELECTED / PERSONAL-USE MVP COVERAGE SPRINT GATE F LANDED / GATE G NEXT
 
 Selected by:
 
@@ -12,25 +12,326 @@ queue.
 
 Selection status:
 
-`gate_bh_same_stack_iso_delta_lw_residual_policy_closed_owner_revalidation_landed_no_runtime_selected_tighten_candidate_governance_gate_bi`
+`gate_f_personal_use_mvp_timber_clt_floor_impact_delta_lw_input_surface_landed_selected_wall_multicavity_gate_g`
 
 Latest strategic ROI replan:
 
 `docs/calculator/CHECKPOINT_2026-05-08_STRATEGIC_ROI_REPLAN_HANDOFF.md`
 
-Latest Gate BH checkpoint:
+Latest strategic ROI revalidation:
+
+`docs/calculator/CHECKPOINT_2026-05-10_STRATEGIC_ROI_REVALIDATION_AND_GATE_G_PLAN_HANDOFF.md`
+
+Latest Personal-Use MVP Coverage Sprint Gate F checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-08_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_F_HANDOFF.md`
+
+Previous Personal-Use MVP Coverage Sprint Gate E checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-08_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_E_HANDOFF.md`
+
+Previous Personal-Use MVP Coverage Sprint Gate D checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-08_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_D_HANDOFF.md`
+
+Previous Personal-Use MVP Coverage Sprint Gate C checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-08_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_C_HANDOFF.md`
+
+Previous Personal-Use MVP Coverage Sprint Gate B checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-08_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_B_HANDOFF.md`
+
+Previous Personal-Use MVP Coverage Sprint Gate A checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-08_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_A_HANDOFF.md`
+
+Latest Gate BI checkpoint:
+
+`docs/calculator/CHECKPOINT_2026-05-08_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_BI_HANDOFF.md`
+
+Previous Gate BH checkpoint:
 
 `docs/calculator/CHECKPOINT_2026-05-08_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_BH_HANDOFF.md`
 
-Gate BI scope after replan:
+Gate BI landed summary:
 
-Gate BI remains selected only as a no-runtime governance guard for Gate
-BH's policy-only `tighten` candidate. It must prove no runtime value,
-tolerance, formula coefficient, exact source row, source text/document,
+Gate BI landed as a no-runtime governance guard for Gate BH's
+policy-only `tighten` candidate. It proves no runtime value, tolerance,
+formula coefficient, exact source row, source text/document,
 card/report/API surface, or lab/field/building alias moves at Gate BI.
-After that guard, the selected lane is
+The `tighten` label remains governance-only until a future runtime gate
+owns independent measured residual packets, topology diversity,
+rights/citation posture, exact-source boundaries, basis owners,
+tolerance-delta proposal, and visible/API parity. The selected lane is
 `personal_use_mvp_coverage_sprint_after_gate_bi`, starting with an
 executable wall/floor scenario matrix.
+
+Personal-Use MVP Coverage Sprint Gate A landed summary:
+
+Gate A turns that coverage sprint into executable evidence. It adds a
+24-row wall/floor matrix covering current exact, source-anchored,
+family-physics, bounded/screening, `needs_input`, and `unsupported`
+postures through current public engine entry points. Numeric rows pin
+current values and basis without moving runtime behavior; blocked rows
+pin exact missing fields or unsupported basis. The selected next lane is
+the timber/CLT floor-impact `DeltaLw` input and physics contract because
+timber and CLT floor rows can already produce useful `Ln,w` posture but
+still lack an owned `DeltaLw` route.
+
+Gate A landed file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-a-scenario-matrix-contract.test.ts`
+
+Gate A landed action:
+
+`gate_a_personal_use_mvp_coverage_matrix_plan`
+
+Gate A selected Gate B file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-b-timber-clt-floor-impact-delta-lw-contract.test.ts`
+
+Gate A selected Gate B action:
+
+`gate_b_personal_use_mvp_timber_clt_floor_impact_delta_lw_input_contract_plan`
+
+Gate A validation result:
+
+Focused Gate A validation completed on 2026-05-08: Gate A passed 1 file
+/ 7 tests, focused Gate BI/Gate A continuity passed 2 files / 14 tests,
+engine typecheck passed, and full `pnpm calculator:gate:current` passed
+with engine 342 files / 1979 tests, web 66 files / 286 passed + 18
+skipped, repo build 5/5 successful, and whitespace guard clean.
+
+Personal-Use MVP Coverage Sprint Gate B landed summary:
+
+Gate B defines the timber/CLT floor-impact `DeltaLw` input and
+formula-readiness contract without runtime movement. It requires
+`baseSlabOrFloor`, `toppingOrFloatingLayer`,
+`resilientLayerDynamicStiffnessMNm3`, `loadBasisKgM2`, and
+`ceilingOrLowerAssembly`. Complete timber joist and CLT/mass-timber
+inputs are ready for a formula corridor, but current runtime stays
+unchanged: timber exact `Ln,w 51` and CLT family `Ln,w 50` still leave
+`DeltaLw` unsupported. Missing physical fields prompt `needs_input`;
+ASTM, field, steel, and exact-`Ln,w` precedence boundaries do not alias
+or promote lab `DeltaLw`.
+
+Gate B landed file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-b-timber-clt-floor-impact-delta-lw-contract.test.ts`
+
+Gate B landed action:
+
+`gate_b_personal_use_mvp_timber_clt_floor_impact_delta_lw_input_contract_plan`
+
+Gate B selected Gate C file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-c-timber-clt-floor-impact-delta-lw-formula-corridor-contract.test.ts`
+
+Gate B selected Gate C action:
+
+`gate_c_personal_use_mvp_timber_clt_floor_impact_delta_lw_formula_corridor_plan`
+
+Gate B validation result:
+
+Focused Gate B validation completed on 2026-05-08: Gate B passed 1 file
+/ 8 tests, focused Gate A/Gate B continuity passed 2 files / 15 tests,
+focused Gate BI/Gate A/Gate B continuity passed 3 files / 22 tests,
+engine typecheck passed, and full `pnpm calculator:gate:current` passed
+with engine 343 files / 1987 tests, web 66 files / 286 passed + 18
+skipped, repo build 5/5 successful, and whitespace guard clean.
+
+Personal-Use MVP Coverage Sprint Gate C landed summary:
+
+Gate C defines the timber/CLT floor-impact `DeltaLw` formula-corridor
+contract without runtime movement. It names separate source-absent
+formula corridors for timber joist and mass-timber CLT routes, with
+physical terms for reference-floor `Ln,w`, loaded upper mass, resilient
+dynamic stiffness, lower-assembly coupling, and structural-family
+correction. Current runtime remains timber exact `Ln,w 51` and CLT
+family `Ln,w 50`, both with `DeltaLw` unsupported. Both corridors carry
+`+/-7.5 dB` source-absent design budgets marked as not measured
+evidence, and Gate B missing-input / ASTM / field / building / steel /
+exact-`Ln,w` boundaries stay blocked.
+
+Gate C landed file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-c-timber-clt-floor-impact-delta-lw-formula-corridor-contract.test.ts`
+
+Gate C landed action:
+
+`gate_c_personal_use_mvp_timber_clt_floor_impact_delta_lw_formula_corridor_plan`
+
+Gate C selected Gate D file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-d-timber-clt-floor-impact-delta-lw-runtime-corridor-contract.test.ts`
+
+Gate C selected Gate D action:
+
+`gate_d_personal_use_mvp_timber_clt_floor_impact_delta_lw_runtime_corridor_plan`
+
+Gate C validation result:
+
+Focused Gate C validation completed on 2026-05-08: Gate C passed 1 file
+/ 7 tests, focused Gate B/Gate C continuity passed 2 files / 15 tests,
+focused Gate BI/Gate A/Gate B/Gate C continuity passed 4 files / 29
+tests, engine typecheck passed, and full `pnpm calculator:gate:current`
+passed with engine 344 files / 1994 tests, web 66 files / 286 passed +
+18 skipped, repo build 5/5 successful, and whitespace guard clean.
+
+Personal-Use MVP Coverage Sprint Gate D landed summary:
+
+Gate D promotes the timber/CLT floor-impact `DeltaLw` formula corridor
+into runtime for explicit complete predictor input. Timber joist now
+returns exact `Ln,w 51` plus source-absent lab `DeltaLw 25.2` on
+`predictor_timber_joist_delta_lw_formula_corridor_estimate`; CLT now
+returns family `Ln,w 50` plus source-absent lab `DeltaLw 22.6` on
+`predictor_mass_timber_clt_delta_lw_formula_corridor_estimate`. Both
+`DeltaLw` values carry `+/-7.5 dB` structured
+`source_absent_formula_error_budget` payloads marked not measured
+evidence. Missing physical inputs, `Ln,w`-only, ASTM, field, and
+wrong-family steel requests stay blocked.
+
+Gate D landed file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-d-timber-clt-floor-impact-delta-lw-runtime-corridor-contract.test.ts`
+
+Gate D landed action:
+
+`gate_d_personal_use_mvp_timber_clt_floor_impact_delta_lw_runtime_corridor_plan`
+
+Gate D selected Gate E file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-e-timber-clt-floor-impact-delta-lw-surface-parity-contract.test.ts`
+
+Gate D selected Gate E action:
+
+`gate_e_personal_use_mvp_timber_clt_floor_impact_delta_lw_surface_parity_plan`
+
+Gate D validation result:
+
+Validation completed on 2026-05-08: focused Gate D runtime contract
+passed 1 file / 7 tests, focused Gate B/C/D continuity passed 3 files /
+22 tests, focused Gate BI/A/B/C/D continuity passed 5 files / 36 tests,
+engine typecheck passed, and final `pnpm calculator:gate:current`
+passed with engine 345 files / 2001 tests, web 66 files / 286 passed +
+18 skipped, repo build 5/5 successful, and whitespace guard clean.
+`git diff --check` passed after the validation-result doc updates.
+Known warnings were the existing Zustand unavailable test-storage
+warnings and optional sharp package resolution warnings during web
+build.
+
+Personal-Use MVP Coverage Sprint Gate E landed summary:
+
+Gate E proves the timber/CLT floor-impact `DeltaLw` runtime corridor on
+the user-visible surfaces without changing Gate D values. Timber exact
+`Ln,w 51` remains exact while timber `DeltaLw 25.2` is labelled as the
+source-absent timber joist formula corridor; CLT family `Ln,w 50`
+remains family-estimated while CLT `DeltaLw 22.6` is labelled as the
+source-absent mass-timber CLT formula corridor. Output cards, output
+posture, metric-basis copy, corridor/method dossiers, dynamic trace
+panel, Markdown report, calculator API, and impact-only API keep the
+same `DeltaLw` basis and `+/-7.5 dB` not-measured error budget. Missing
+physical inputs, ASTM, field, `Ln,w`-only, and wrong-family steel
+requests remain budget-free.
+
+Gate E landed file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-e-timber-clt-floor-impact-delta-lw-surface-parity-contract.test.ts`
+
+Gate E landed action:
+
+`gate_e_personal_use_mvp_timber_clt_floor_impact_delta_lw_surface_parity_plan`
+
+Gate E selected Gate F file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-f-timber-clt-floor-impact-delta-lw-input-surface-contract.test.ts`
+
+Gate E selected Gate F action:
+
+`gate_f_personal_use_mvp_timber_clt_floor_impact_delta_lw_input_surface_plan`
+
+Gate E validation result:
+
+Validation completed on 2026-05-08: focused Gate E engine contract
+passed 1 file / 4 tests, focused Gate E web surface/API contract passed
+1 file / 4 tests, Gate D/E continuity passed 2 files / 11 tests,
+Gate BI/A/B/C/D/E continuity passed 6 files / 40 tests, web
+steel/timber parity continuity passed 3 files / 7 tests, engine
+typecheck passed, and final `pnpm calculator:gate:current` passed with
+engine 346 files / 2005 tests, web 67 files / 290 passed + 18 skipped,
+repo build 5/5 successful, and whitespace guard clean.
+`git diff --check` passed after the validation-result doc updates.
+Known non-fatal
+warnings remain the existing Zustand unavailable test-storage warnings
+and optional `sharp/@img` package resolution warnings during the Next
+build.
+
+Personal-Use MVP Coverage Sprint Gate F landed summary:
+
+Gate F proves that the timber/CLT floor-impact `DeltaLw` formula
+corridor can be driven from the first-class Dynamic Calculator input
+surface, not only explicit engine predictor input. Workbench floor
+controls now expose structural support type, impact system type, load
+basis, resilient dynamic stiffness, upper topping/floating mass, base
+overrides, and lower assembly fields. Live evaluation, local saved
+replay, server snapshot replay, calculator API payload, and impact-only
+API payload feed the same Gate D/E predictor input. Complete UI-derived
+timber returns exact `Ln,w 51` plus formula `DeltaLw 25.2`; complete
+UI-derived CLT returns family `Ln,w 50` plus formula `DeltaLw 22.6`.
+Partial or invalid input remains `needs_input` with precise missing
+fields and no `DeltaLw` budget. Exact-source precedence, field/ASTM
+non-aliasing, wrong-family steel boundaries, duplicate timber/CLT
+carrier refusal, and safe reorder stability remain guarded.
+
+Gate F landed file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-f-timber-clt-floor-impact-delta-lw-input-surface-contract.test.ts`
+
+Gate F landed action:
+
+`gate_f_personal_use_mvp_timber_clt_floor_impact_delta_lw_input_surface_plan`
+
+Gate F selected Gate G file:
+
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-g-generalized-wall-multicavity-route-readiness-contract.test.ts`
+
+Gate F selected Gate G action:
+
+`gate_g_personal_use_mvp_generalized_wall_multicavity_route_readiness_plan`
+
+Gate F validation result:
+
+Validation completed on 2026-05-10 after post-doc revalidation:
+focused Gate F engine
+contract passed 1 file / 4 tests, focused Gate F web input-surface
+acceptance passed 1 file / 4 tests, Gate E/F engine continuity passed 2
+files / 8 tests, web Gate E/F/snapshot continuity passed 3 files / 12
+tests, engine typecheck passed, web typecheck passed, final
+`pnpm calculator:gate:current` passed with engine 347 files / 2009
+tests, web 68 files / 294 passed + 18 skipped, repo build 5/5
+successful, and whitespace guard clean. `git diff --check` passed.
+
+Gate BI landed file:
+
+`packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-bi-steel-floor-formula-same-stack-iso-delta-lw-tighten-candidate-governance-contract.test.ts`
+
+Gate BI landed action:
+
+`gate_bi_steel_floor_formula_same_stack_iso_delta_lw_tighten_candidate_governance_plan`
+
+Gate BI validation result:
+
+Focused Gate BI validation completed on 2026-05-08. Gate BI passed 1
+file / 7 tests, focused Gate BH/BI continuity passed 2 files / 15
+tests, focused Gate BD/BE/BF/BG/BH/BI closure continuity passed 6 files
+/ 52 tests, engine typecheck passed, engine build/DTS passed, and full
+`pnpm calculator:gate:current` passed with engine 341 files / 1972
+tests, web 66 files / 286 passed + 18 skipped, repo build 5/5
+successful, and whitespace guard clean. Known warnings were the existing
+Zustand unavailable test-storage warnings and optional sharp package
+resolution warnings during web build. Broad `pnpm check` was not rerun
+because Gate BI has no runtime/API/UI surface change.
 
 Post-Gate-BI first file:
 

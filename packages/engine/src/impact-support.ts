@@ -21,6 +21,11 @@ import {
   STEEL_FLOOR_FORMULA_DELTA_LW_TOLERANCE_DB,
   STEEL_FLOOR_FORMULA_LN_W_TOLERANCE_DB
 } from "./steel-floor-impact-formula-corridor";
+import {
+  MASS_TIMBER_CLT_DELTA_LW_FORMULA_BASIS,
+  TIMBER_CLT_DELTA_LW_FORMULA_TOLERANCE_DB,
+  TIMBER_JOIST_DELTA_LW_FORMULA_BASIS
+} from "./timber-clt-floor-impact-delta-lw-runtime-corridor";
 
 type BuildImpactSupportInput = {
   boundFloorSystemEstimate?: FloorSystemBoundEstimateResult | null;
@@ -60,6 +65,16 @@ function buildSteelFormulaErrorBudgetFormulaNote(impact: ImpactCalculation): str
   return `Gate AN error budgets are structured: ${budgets
     .map((budget) => `${budget.metricId} ${formatErrorBudgetRange(budget)}`)
     .join("; ")}; origin source_absent_formula_error_budget; not measured evidence.`;
+}
+
+function buildTimberCltFormulaErrorBudgetFormulaNote(impact: ImpactCalculation): string | null {
+  const budget = (impact.errorBudgets ?? []).find((item) => item.metricId === "DeltaLw");
+
+  if (!budget) {
+    return null;
+  }
+
+  return `Timber/CLT DeltaLw error budget is structured: DeltaLw ${formatErrorBudgetRange(budget)}; origin source_absent_formula_error_budget; not measured evidence.`;
 }
 
 function hasMetricBasis(impact: ImpactCalculation | null, label: string): boolean {
@@ -169,6 +184,28 @@ export function buildImpactSupport(input: BuildImpactSupportInput): ImpactSuppor
     pushUnique(
       formulaNotes,
       `Corridor tolerance remains +/-${STEEL_FLOOR_FORMULA_LN_W_TOLERANCE_DB} dB for Ln,w and +/-${STEEL_FLOOR_FORMULA_DELTA_LW_TOLERANCE_DB} dB for DeltaLw.`
+    );
+  }
+
+  if (
+    input.impact?.basis === TIMBER_JOIST_DELTA_LW_FORMULA_BASIS ||
+    input.impact?.basis === MASS_TIMBER_CLT_DELTA_LW_FORMULA_BASIS ||
+    hasMetricBasis(input.impact, TIMBER_JOIST_DELTA_LW_FORMULA_BASIS) ||
+    hasMetricBasis(input.impact, MASS_TIMBER_CLT_DELTA_LW_FORMULA_BASIS)
+  ) {
+    notes.push("Timber/CLT DeltaLw formula corridor is active; exact or published Ln,w stays on its own metric basis.");
+    pushUnique(
+      formulaNotes,
+      "Timber/CLT DeltaLw uses 13 log10(m'load) - 14.2 log10(s') + 20.8 plus structural-family and lower-assembly coupling corrections."
+    );
+    pushUnique(formulaNotes, "Timber/CLT DeltaLw corridor is source-absent lab evidence, not a measured row.");
+    const errorBudgetNote = input.impact ? buildTimberCltFormulaErrorBudgetFormulaNote(input.impact) : null;
+    if (errorBudgetNote) {
+      pushUnique(formulaNotes, errorBudgetNote);
+    }
+    pushUnique(
+      formulaNotes,
+      `Corridor tolerance remains +/-${TIMBER_CLT_DELTA_LW_FORMULA_TOLERANCE_DB} dB for DeltaLw.`
     );
   }
 

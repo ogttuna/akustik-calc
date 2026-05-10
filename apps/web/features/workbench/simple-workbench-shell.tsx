@@ -148,6 +148,11 @@ const STEEL_FLOOR_FORMULA_BASE_MATERIAL_IDS = new Set([
   "open_web_steel_joist",
   "steel_joist_floor"
 ]);
+const TIMBER_CLT_DELTA_LW_BASE_MATERIAL_IDS = new Set([
+  "clt_panel",
+  "timber_frame_floor",
+  "timber_joist_floor"
+]);
 
 function isObjectRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
@@ -312,6 +317,23 @@ export function SimpleWorkbenchShell() {
   const impactSteelLowerCeilingIsolationSupportForm = useWorkbenchStore((state) => state.impactSteelLowerCeilingIsolationSupportForm);
   const impactSteelResilientLayerDynamicStiffnessMNm3 = useWorkbenchStore((state) => state.impactSteelResilientLayerDynamicStiffnessMNm3);
   const impactSteelSupportForm = useWorkbenchStore((state) => state.impactSteelSupportForm);
+  const impactTimberCltBaseFloorDensityKgM3 = useWorkbenchStore((state) => state.impactTimberCltBaseFloorDensityKgM3);
+  const impactTimberCltBaseFloorThicknessMm = useWorkbenchStore((state) => state.impactTimberCltBaseFloorThicknessMm);
+  const impactTimberCltImpactSystemType = useWorkbenchStore((state) => state.impactTimberCltImpactSystemType);
+  const impactTimberCltLoadBasisKgM2 = useWorkbenchStore((state) => state.impactTimberCltLoadBasisKgM2);
+  const impactTimberCltLowerAssemblyType = useWorkbenchStore((state) => state.impactTimberCltLowerAssemblyType);
+  const impactTimberCltLowerBoardLayerCount = useWorkbenchStore((state) => state.impactTimberCltLowerBoardLayerCount);
+  const impactTimberCltLowerBoardThicknessMm = useWorkbenchStore((state) => state.impactTimberCltLowerBoardThicknessMm);
+  const impactTimberCltLowerCavityDepthMm = useWorkbenchStore((state) => state.impactTimberCltLowerCavityDepthMm);
+  const impactTimberCltLowerCavityFillThicknessMm = useWorkbenchStore((state) => state.impactTimberCltLowerCavityFillThicknessMm);
+  const impactTimberCltLowerSupportClass = useWorkbenchStore((state) => state.impactTimberCltLowerSupportClass);
+  const impactTimberCltResilientLayerDynamicStiffnessMNm3 = useWorkbenchStore((state) => state.impactTimberCltResilientLayerDynamicStiffnessMNm3);
+  const impactTimberCltResilientLayerThicknessMm = useWorkbenchStore((state) => state.impactTimberCltResilientLayerThicknessMm);
+  const impactTimberCltStructuralSupportType = useWorkbenchStore((state) => state.impactTimberCltStructuralSupportType);
+  const impactTimberCltUpperFillDensityKgM3 = useWorkbenchStore((state) => state.impactTimberCltUpperFillDensityKgM3);
+  const impactTimberCltUpperFillThicknessMm = useWorkbenchStore((state) => state.impactTimberCltUpperFillThicknessMm);
+  const impactTimberCltUpperTreatmentDensityKgM3 = useWorkbenchStore((state) => state.impactTimberCltUpperTreatmentDensityKgM3);
+  const impactTimberCltUpperTreatmentThicknessMm = useWorkbenchStore((state) => state.impactTimberCltUpperTreatmentThicknessMm);
 
   const appendRows = useWorkbenchStore((state) => state.appendRows);
   const clearRows = useWorkbenchStore((state) => state.clearRows);
@@ -368,6 +390,23 @@ export function SimpleWorkbenchShell() {
   const setImpactSteelLowerCeilingIsolationSupportForm = useWorkbenchStore((state) => state.setImpactSteelLowerCeilingIsolationSupportForm);
   const setImpactSteelResilientLayerDynamicStiffnessMNm3 = useWorkbenchStore((state) => state.setImpactSteelResilientLayerDynamicStiffnessMNm3);
   const setImpactSteelSupportForm = useWorkbenchStore((state) => state.setImpactSteelSupportForm);
+  const setImpactTimberCltBaseFloorDensityKgM3 = useWorkbenchStore((state) => state.setImpactTimberCltBaseFloorDensityKgM3);
+  const setImpactTimberCltBaseFloorThicknessMm = useWorkbenchStore((state) => state.setImpactTimberCltBaseFloorThicknessMm);
+  const setImpactTimberCltImpactSystemType = useWorkbenchStore((state) => state.setImpactTimberCltImpactSystemType);
+  const setImpactTimberCltLoadBasisKgM2 = useWorkbenchStore((state) => state.setImpactTimberCltLoadBasisKgM2);
+  const setImpactTimberCltLowerAssemblyType = useWorkbenchStore((state) => state.setImpactTimberCltLowerAssemblyType);
+  const setImpactTimberCltLowerBoardLayerCount = useWorkbenchStore((state) => state.setImpactTimberCltLowerBoardLayerCount);
+  const setImpactTimberCltLowerBoardThicknessMm = useWorkbenchStore((state) => state.setImpactTimberCltLowerBoardThicknessMm);
+  const setImpactTimberCltLowerCavityDepthMm = useWorkbenchStore((state) => state.setImpactTimberCltLowerCavityDepthMm);
+  const setImpactTimberCltLowerCavityFillThicknessMm = useWorkbenchStore((state) => state.setImpactTimberCltLowerCavityFillThicknessMm);
+  const setImpactTimberCltLowerSupportClass = useWorkbenchStore((state) => state.setImpactTimberCltLowerSupportClass);
+  const setImpactTimberCltResilientLayerDynamicStiffnessMNm3 = useWorkbenchStore((state) => state.setImpactTimberCltResilientLayerDynamicStiffnessMNm3);
+  const setImpactTimberCltResilientLayerThicknessMm = useWorkbenchStore((state) => state.setImpactTimberCltResilientLayerThicknessMm);
+  const setImpactTimberCltStructuralSupportType = useWorkbenchStore((state) => state.setImpactTimberCltStructuralSupportType);
+  const setImpactTimberCltUpperFillDensityKgM3 = useWorkbenchStore((state) => state.setImpactTimberCltUpperFillDensityKgM3);
+  const setImpactTimberCltUpperFillThicknessMm = useWorkbenchStore((state) => state.setImpactTimberCltUpperFillThicknessMm);
+  const setImpactTimberCltUpperTreatmentDensityKgM3 = useWorkbenchStore((state) => state.setImpactTimberCltUpperTreatmentDensityKgM3);
+  const setImpactTimberCltUpperTreatmentThicknessMm = useWorkbenchStore((state) => state.setImpactTimberCltUpperTreatmentThicknessMm);
   const setApproverTitle = useWorkbenchStore((state) => state.setApproverTitle);
   const setPreparedBy = useWorkbenchStore((state) => state.setPreparedBy);
   const setProposalIssueCodePrefix = useWorkbenchStore((state) => state.setProposalIssueCodePrefix);
@@ -399,6 +438,14 @@ export function SimpleWorkbenchShell() {
       (row) =>
         row.floorRole === "base_structure" &&
         STEEL_FLOOR_FORMULA_BASE_MATERIAL_IDS.has(row.materialId)
+    );
+  const timberCltDeltaLwInputSurfaceActive =
+    studyMode === "floor" &&
+    automaticOutputs.some((output) => output === "Ln,w" || output === "DeltaLw") &&
+    rows.some(
+      (row) =>
+        row.floorRole === "base_structure" &&
+        TIMBER_CLT_DELTA_LW_BASE_MATERIAL_IDS.has(row.materialId)
     );
   const totalThickness = sumThickness(rows);
   const { collapsedLiveRowCount, liveRowCount, parkedRowCount, solverLayerCount } = getRowActivityCounts(rows, materials);
@@ -581,7 +628,28 @@ export function SimpleWorkbenchShell() {
         }
       : null,
     studyMode,
-    targetOutputs: automaticOutputs
+    targetOutputs: automaticOutputs,
+    timberCltDeltaLwInputSurface: timberCltDeltaLwInputSurfaceActive
+      ? {
+          impactTimberCltBaseFloorDensityKgM3,
+          impactTimberCltBaseFloorThicknessMm,
+          impactTimberCltImpactSystemType,
+          impactTimberCltLoadBasisKgM2,
+          impactTimberCltLowerAssemblyType,
+          impactTimberCltLowerBoardLayerCount,
+          impactTimberCltLowerBoardThicknessMm,
+          impactTimberCltLowerCavityDepthMm,
+          impactTimberCltLowerCavityFillThicknessMm,
+          impactTimberCltLowerSupportClass,
+          impactTimberCltResilientLayerDynamicStiffnessMNm3,
+          impactTimberCltResilientLayerThicknessMm,
+          impactTimberCltStructuralSupportType,
+          impactTimberCltUpperFillDensityKgM3,
+          impactTimberCltUpperFillThicknessMm,
+          impactTimberCltUpperTreatmentDensityKgM3,
+          impactTimberCltUpperTreatmentThicknessMm
+        }
+      : null
   });
 
   const result = scenario.result;
@@ -610,6 +678,7 @@ export function SimpleWorkbenchShell() {
   }
   if (studyMode === "floor") {
     if (steelFloorFormulaInputSurfaceActive) contextNotes.push("Steel floor formula inputs are active for the source-absent lab impact lane.");
+    if (timberCltDeltaLwInputSurfaceActive) contextNotes.push("Timber/CLT DeltaLw formula inputs are active for the source-absent lab impact lane.");
     if (!impactFieldActive) contextNotes.push("Field K and floor-side room-volume corrections stay hidden until field impact outputs are requested.");
     else if (!standardizedImpactOutputsActive) contextNotes.push("Floor field volume is optional right now because only L'n,w is active; standardized L'nT outputs are not requested yet.");
   }
@@ -771,6 +840,23 @@ export function SimpleWorkbenchShell() {
       impactSteelLowerCeilingIsolationSupportForm,
       impactSteelResilientLayerDynamicStiffnessMNm3,
       impactSteelSupportForm,
+      impactTimberCltBaseFloorDensityKgM3,
+      impactTimberCltBaseFloorThicknessMm,
+      impactTimberCltImpactSystemType,
+      impactTimberCltLoadBasisKgM2,
+      impactTimberCltLowerAssemblyType,
+      impactTimberCltLowerBoardLayerCount,
+      impactTimberCltLowerBoardThicknessMm,
+      impactTimberCltLowerCavityDepthMm,
+      impactTimberCltLowerCavityFillThicknessMm,
+      impactTimberCltLowerSupportClass,
+      impactTimberCltResilientLayerDynamicStiffnessMNm3,
+      impactTimberCltResilientLayerThicknessMm,
+      impactTimberCltStructuralSupportType,
+      impactTimberCltUpperFillDensityKgM3,
+      impactTimberCltUpperFillThicknessMm,
+      impactTimberCltUpperTreatmentDensityKgM3,
+      impactTimberCltUpperTreatmentThicknessMm,
       name: `${projectName.trim() || "Untitled project"} server snapshot`,
       preparedBy,
       proposalAttention,
@@ -1215,6 +1301,23 @@ export function SimpleWorkbenchShell() {
           impactSteelLowerCeilingIsolationSupportForm={impactSteelLowerCeilingIsolationSupportForm}
           impactSteelResilientLayerDynamicStiffnessMNm3={impactSteelResilientLayerDynamicStiffnessMNm3}
           impactSteelSupportForm={impactSteelSupportForm}
+          impactTimberCltBaseFloorDensityKgM3={impactTimberCltBaseFloorDensityKgM3}
+          impactTimberCltBaseFloorThicknessMm={impactTimberCltBaseFloorThicknessMm}
+          impactTimberCltImpactSystemType={impactTimberCltImpactSystemType}
+          impactTimberCltLoadBasisKgM2={impactTimberCltLoadBasisKgM2}
+          impactTimberCltLowerAssemblyType={impactTimberCltLowerAssemblyType}
+          impactTimberCltLowerBoardLayerCount={impactTimberCltLowerBoardLayerCount}
+          impactTimberCltLowerBoardThicknessMm={impactTimberCltLowerBoardThicknessMm}
+          impactTimberCltLowerCavityDepthMm={impactTimberCltLowerCavityDepthMm}
+          impactTimberCltLowerCavityFillThicknessMm={impactTimberCltLowerCavityFillThicknessMm}
+          impactTimberCltLowerSupportClass={impactTimberCltLowerSupportClass}
+          impactTimberCltResilientLayerDynamicStiffnessMNm3={impactTimberCltResilientLayerDynamicStiffnessMNm3}
+          impactTimberCltResilientLayerThicknessMm={impactTimberCltResilientLayerThicknessMm}
+          impactTimberCltStructuralSupportType={impactTimberCltStructuralSupportType}
+          impactTimberCltUpperFillDensityKgM3={impactTimberCltUpperFillDensityKgM3}
+          impactTimberCltUpperFillThicknessMm={impactTimberCltUpperFillThicknessMm}
+          impactTimberCltUpperTreatmentDensityKgM3={impactTimberCltUpperTreatmentDensityKgM3}
+          impactTimberCltUpperTreatmentThicknessMm={impactTimberCltUpperTreatmentThicknessMm}
           impactKSanityWarning={impactKSanityWarning}
           impactVolumeSanityWarning={impactVolumeSanityWarning}
           isServerProjectBusy={serverProjectBusy}
@@ -1279,8 +1382,26 @@ export function SimpleWorkbenchShell() {
           setImpactSteelLowerCeilingIsolationSupportForm={setImpactSteelLowerCeilingIsolationSupportForm}
           setImpactSteelResilientLayerDynamicStiffnessMNm3={setImpactSteelResilientLayerDynamicStiffnessMNm3}
           setImpactSteelSupportForm={setImpactSteelSupportForm}
+          setImpactTimberCltBaseFloorDensityKgM3={setImpactTimberCltBaseFloorDensityKgM3}
+          setImpactTimberCltBaseFloorThicknessMm={setImpactTimberCltBaseFloorThicknessMm}
+          setImpactTimberCltImpactSystemType={setImpactTimberCltImpactSystemType}
+          setImpactTimberCltLoadBasisKgM2={setImpactTimberCltLoadBasisKgM2}
+          setImpactTimberCltLowerAssemblyType={setImpactTimberCltLowerAssemblyType}
+          setImpactTimberCltLowerBoardLayerCount={setImpactTimberCltLowerBoardLayerCount}
+          setImpactTimberCltLowerBoardThicknessMm={setImpactTimberCltLowerBoardThicknessMm}
+          setImpactTimberCltLowerCavityDepthMm={setImpactTimberCltLowerCavityDepthMm}
+          setImpactTimberCltLowerCavityFillThicknessMm={setImpactTimberCltLowerCavityFillThicknessMm}
+          setImpactTimberCltLowerSupportClass={setImpactTimberCltLowerSupportClass}
+          setImpactTimberCltResilientLayerDynamicStiffnessMNm3={setImpactTimberCltResilientLayerDynamicStiffnessMNm3}
+          setImpactTimberCltResilientLayerThicknessMm={setImpactTimberCltResilientLayerThicknessMm}
+          setImpactTimberCltStructuralSupportType={setImpactTimberCltStructuralSupportType}
+          setImpactTimberCltUpperFillDensityKgM3={setImpactTimberCltUpperFillDensityKgM3}
+          setImpactTimberCltUpperFillThicknessMm={setImpactTimberCltUpperFillThicknessMm}
+          setImpactTimberCltUpperTreatmentDensityKgM3={setImpactTimberCltUpperTreatmentDensityKgM3}
+          setImpactTimberCltUpperTreatmentThicknessMm={setImpactTimberCltUpperTreatmentThicknessMm}
           showSteelBoundSupportFormActions={showSteelBoundSupportFormActions}
           steelFloorFormulaInputSurfaceActive={steelFloorFormulaInputSurfaceActive}
+          timberCltDeltaLwInputSurfaceActive={timberCltDeltaLwInputSurfaceActive}
           showTimberImpactOnlyGuidedActions={showTimberImpactOnlyGuidedActions}
           standardizedAirborneActive={standardizedAirborneActive}
           standardizedImpactOutputsActive={standardizedImpactOutputsActive}

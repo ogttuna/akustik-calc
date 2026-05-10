@@ -24,6 +24,10 @@ import {
   getSteelFloorFormulaCorridorOutputDetail,
   isSteelFloorFormulaCorridorImpact
 } from "./steel-floor-formula-corridor-view";
+import {
+  getTimberCltDeltaLwFormulaCorridorOutputDetail,
+  isTimberCltDeltaLwFormulaCorridorImpact
+} from "./timber-clt-delta-lw-corridor-view";
 import { getDoubleLeafFramedBridgeAirbornePromptDetail } from "./airborne-physical-input-prompt";
 import {
   getRockwoolSplitTripleLeafWithheldOutputDetail,
@@ -220,6 +224,7 @@ export function buildOutputCard(input: {
   const isReinforcedConcreteLowConfidenceLane =
     isReinforcedConcreteLowConfidenceFloorLane(result);
   const isSteelFloorFormulaCorridor = isSteelFloorFormulaCorridorImpact(result);
+  const isTimberCltDeltaLwFormulaCorridor = isTimberCltDeltaLwFormulaCorridorImpact(result);
   const rockwoolTripleLeafScreeningPolicy = getRockwoolTripleLeafScreeningPolicyCopy(result);
 
   if (isExplicitlyUnsupportedOutput(result, output)) {
@@ -512,6 +517,9 @@ export function buildOutputCard(input: {
         return {
           detail: isSteelFloorFormulaCorridor
             ? getSteelFloorFormulaCorridorOutputDetail("DeltaLw", result.impact) ?? "DeltaLw from the active steel formula corridor."
+            : isTimberCltDeltaLwFormulaCorridor
+              ? getTimberCltDeltaLwFormulaCorridorOutputDetail("DeltaLw", result.impact) ??
+                "DeltaLw from the active timber/CLT formula corridor."
             : "Heavy-reference improvement term from the active impact lane.",
           label: "DeltaLw",
           output,

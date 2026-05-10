@@ -42,6 +42,10 @@ import {
   STEEL_FLOOR_FORMULA_LOWER_ISOLATION_OPTIONS,
   STEEL_FLOOR_FORMULA_SUPPORT_FORM_OPTIONS,
   STUD_TYPE_OPTIONS,
+  TIMBER_CLT_DELTA_LW_LOWER_ASSEMBLY_OPTIONS,
+  TIMBER_CLT_DELTA_LW_LOWER_SUPPORT_OPTIONS,
+  TIMBER_CLT_DELTA_LW_SUPPORT_OPTIONS,
+  TIMBER_CLT_DELTA_LW_SYSTEM_OPTIONS,
   TIMBER_IMPACT_ONLY_GUIDED_ACTIONS,
   TRACK_OPTIONS,
   WALL_CAVITY_ABSORPTION_OPTIONS,
@@ -68,6 +72,12 @@ import {
 } from "./simple-workbench-primitives";
 import { getEnvironmentLabel, getTextInputClassName } from "./simple-workbench-utils";
 import type { WorkbenchSteelFloorFormulaLowerCeilingIsolationSupportForm } from "./steel-floor-formula-input-surface";
+import type {
+  WorkbenchTimberCltDeltaLwImpactSystemType,
+  WorkbenchTimberCltDeltaLwLowerAssemblyType,
+  WorkbenchTimberCltDeltaLwLowerSupportClass,
+  WorkbenchTimberCltDeltaLwStructuralSupportType
+} from "./timber-clt-delta-lw-input-surface";
 
 const EMPTY_EXAMPLE_VALUE = "__start_empty__";
 
@@ -120,6 +130,23 @@ type SimpleWorkbenchRoutePanelProps = {
   impactSteelLowerCeilingIsolationSupportForm: WorkbenchSteelFloorFormulaLowerCeilingIsolationSupportForm;
   impactSteelResilientLayerDynamicStiffnessMNm3: string;
   impactSteelSupportForm: "" | ImpactPredictorSupportForm;
+  impactTimberCltBaseFloorDensityKgM3: string;
+  impactTimberCltBaseFloorThicknessMm: string;
+  impactTimberCltImpactSystemType: WorkbenchTimberCltDeltaLwImpactSystemType;
+  impactTimberCltLoadBasisKgM2: string;
+  impactTimberCltLowerAssemblyType: WorkbenchTimberCltDeltaLwLowerAssemblyType;
+  impactTimberCltLowerBoardLayerCount: string;
+  impactTimberCltLowerBoardThicknessMm: string;
+  impactTimberCltLowerCavityDepthMm: string;
+  impactTimberCltLowerCavityFillThicknessMm: string;
+  impactTimberCltLowerSupportClass: WorkbenchTimberCltDeltaLwLowerSupportClass;
+  impactTimberCltResilientLayerDynamicStiffnessMNm3: string;
+  impactTimberCltResilientLayerThicknessMm: string;
+  impactTimberCltStructuralSupportType: WorkbenchTimberCltDeltaLwStructuralSupportType;
+  impactTimberCltUpperFillDensityKgM3: string;
+  impactTimberCltUpperFillThicknessMm: string;
+  impactTimberCltUpperTreatmentDensityKgM3: string;
+  impactTimberCltUpperTreatmentThicknessMm: string;
   impactKSanityWarning: string | null;
   impactVolumeSanityWarning: string | null;
   isServerProjectBusy: boolean;
@@ -187,8 +214,26 @@ type SimpleWorkbenchRoutePanelProps = {
   setImpactSteelLowerCeilingIsolationSupportForm: (value: WorkbenchSteelFloorFormulaLowerCeilingIsolationSupportForm) => void;
   setImpactSteelResilientLayerDynamicStiffnessMNm3: (value: string) => void;
   setImpactSteelSupportForm: (value: "" | ImpactPredictorSupportForm) => void;
+  setImpactTimberCltBaseFloorDensityKgM3: (value: string) => void;
+  setImpactTimberCltBaseFloorThicknessMm: (value: string) => void;
+  setImpactTimberCltImpactSystemType: (value: WorkbenchTimberCltDeltaLwImpactSystemType) => void;
+  setImpactTimberCltLoadBasisKgM2: (value: string) => void;
+  setImpactTimberCltLowerAssemblyType: (value: WorkbenchTimberCltDeltaLwLowerAssemblyType) => void;
+  setImpactTimberCltLowerBoardLayerCount: (value: string) => void;
+  setImpactTimberCltLowerBoardThicknessMm: (value: string) => void;
+  setImpactTimberCltLowerCavityDepthMm: (value: string) => void;
+  setImpactTimberCltLowerCavityFillThicknessMm: (value: string) => void;
+  setImpactTimberCltLowerSupportClass: (value: WorkbenchTimberCltDeltaLwLowerSupportClass) => void;
+  setImpactTimberCltResilientLayerDynamicStiffnessMNm3: (value: string) => void;
+  setImpactTimberCltResilientLayerThicknessMm: (value: string) => void;
+  setImpactTimberCltStructuralSupportType: (value: WorkbenchTimberCltDeltaLwStructuralSupportType) => void;
+  setImpactTimberCltUpperFillDensityKgM3: (value: string) => void;
+  setImpactTimberCltUpperFillThicknessMm: (value: string) => void;
+  setImpactTimberCltUpperTreatmentDensityKgM3: (value: string) => void;
+  setImpactTimberCltUpperTreatmentThicknessMm: (value: string) => void;
   showSteelBoundSupportFormActions: boolean;
   steelFloorFormulaInputSurfaceActive: boolean;
+  timberCltDeltaLwInputSurfaceActive: boolean;
   showTimberImpactOnlyGuidedActions: boolean;
   standardizedAirborneActive: boolean;
   standardizedImpactOutputsActive: boolean;
@@ -250,6 +295,23 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
     impactSteelLowerCeilingIsolationSupportForm,
     impactSteelResilientLayerDynamicStiffnessMNm3,
     impactSteelSupportForm,
+    impactTimberCltBaseFloorDensityKgM3,
+    impactTimberCltBaseFloorThicknessMm,
+    impactTimberCltImpactSystemType,
+    impactTimberCltLoadBasisKgM2,
+    impactTimberCltLowerAssemblyType,
+    impactTimberCltLowerBoardLayerCount,
+    impactTimberCltLowerBoardThicknessMm,
+    impactTimberCltLowerCavityDepthMm,
+    impactTimberCltLowerCavityFillThicknessMm,
+    impactTimberCltLowerSupportClass,
+    impactTimberCltResilientLayerDynamicStiffnessMNm3,
+    impactTimberCltResilientLayerThicknessMm,
+    impactTimberCltStructuralSupportType,
+    impactTimberCltUpperFillDensityKgM3,
+    impactTimberCltUpperFillThicknessMm,
+    impactTimberCltUpperTreatmentDensityKgM3,
+    impactTimberCltUpperTreatmentThicknessMm,
     impactKSanityWarning,
     impactVolumeSanityWarning,
     isServerProjectBusy,
@@ -314,8 +376,26 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
     setImpactSteelLowerCeilingIsolationSupportForm,
     setImpactSteelResilientLayerDynamicStiffnessMNm3,
     setImpactSteelSupportForm,
+    setImpactTimberCltBaseFloorDensityKgM3,
+    setImpactTimberCltBaseFloorThicknessMm,
+    setImpactTimberCltImpactSystemType,
+    setImpactTimberCltLoadBasisKgM2,
+    setImpactTimberCltLowerAssemblyType,
+    setImpactTimberCltLowerBoardLayerCount,
+    setImpactTimberCltLowerBoardThicknessMm,
+    setImpactTimberCltLowerCavityDepthMm,
+    setImpactTimberCltLowerCavityFillThicknessMm,
+    setImpactTimberCltLowerSupportClass,
+    setImpactTimberCltResilientLayerDynamicStiffnessMNm3,
+    setImpactTimberCltResilientLayerThicknessMm,
+    setImpactTimberCltStructuralSupportType,
+    setImpactTimberCltUpperFillDensityKgM3,
+    setImpactTimberCltUpperFillThicknessMm,
+    setImpactTimberCltUpperTreatmentDensityKgM3,
+    setImpactTimberCltUpperTreatmentThicknessMm,
     showSteelBoundSupportFormActions,
     steelFloorFormulaInputSurfaceActive,
+    timberCltDeltaLwInputSurfaceActive,
     showTimberImpactOnlyGuidedActions,
     standardizedAirborneActive,
     standardizedImpactOutputsActive,
@@ -480,7 +560,7 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
             </details>
           </section>
 
-          {geometryActive || impactFieldActive || steelFloorFormulaInputSurfaceActive ? (
+          {geometryActive || impactFieldActive || steelFloorFormulaInputSurfaceActive || timberCltDeltaLwInputSurfaceActive ? (
             <section className={`rounded border px-3 py-3 ${workbenchSectionCardClass("route")}`}>
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="text-[0.84rem] font-semibold text-[color:var(--ink)]">Input map</div>
@@ -490,7 +570,7 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
               <div className="mt-3 grid gap-3">
                 <ContextBucket
                   description="Directly gates the live read."
-                  hasContent={geometryActive || impactFieldActive || steelFloorFormulaInputSurfaceActive}
+                  hasContent={geometryActive || impactFieldActive || steelFloorFormulaInputSurfaceActive || timberCltDeltaLwInputSurfaceActive}
                   title="Required now"
                   tone="required"
                 >
@@ -604,6 +684,310 @@ export function SimpleWorkbenchRoutePanel(props: SimpleWorkbenchRoutePanelProps)
                               </option>
                             ))}
                           </select>
+                        </FieldShell>
+                      </div>
+                    </ContextSubsection>
+                  ) : null}
+
+                  {timberCltDeltaLwInputSurfaceActive ? (
+                    <ContextSubsection
+                      note="These fields feed the source-absent timber/CLT DeltaLw formula lane."
+                      title="Timber/CLT DeltaLw formula"
+                    >
+                      <div className="grid gap-3">
+                        <FieldShell
+                          label="Support family"
+                          note="Structural family for the timber or CLT reference floor."
+                          relevance="required"
+                          usage="Ln,w and DeltaLw"
+                        >
+                          <select
+                            aria-label="Timber CLT support family"
+                            className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                            onChange={(event) =>
+                              setImpactTimberCltStructuralSupportType(
+                                event.target.value as WorkbenchTimberCltDeltaLwStructuralSupportType
+                              )
+                            }
+                            value={impactTimberCltStructuralSupportType}
+                          >
+                            <option value="">Infer from base layer</option>
+                            {TIMBER_CLT_DELTA_LW_SUPPORT_OPTIONS.map((option) => (
+                              <option key={option.value} value={option.value}>
+                                {option.label}
+                              </option>
+                            ))}
+                          </select>
+                        </FieldShell>
+
+                        <FieldShell
+                          label="Impact system"
+                          note="Formula route for upper-only CLT or combined timber joist build-up."
+                          relevance="required"
+                          usage="DeltaLw"
+                        >
+                          <select
+                            aria-label="Timber CLT impact system"
+                            className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                            onChange={(event) =>
+                              setImpactTimberCltImpactSystemType(
+                                event.target.value as WorkbenchTimberCltDeltaLwImpactSystemType
+                              )
+                            }
+                            value={impactTimberCltImpactSystemType}
+                          >
+                            <option value="">Use family default</option>
+                            {TIMBER_CLT_DELTA_LW_SYSTEM_OPTIONS.map((option) => (
+                              <option key={option.value} value={option.value}>
+                                {option.label}
+                              </option>
+                            ))}
+                          </select>
+                        </FieldShell>
+
+                        <FieldShell
+                          label="Load basis (kg/m²)"
+                          note="Surface mass carried by the resilient layer."
+                          relevance="required"
+                          usage="DeltaLw"
+                        >
+                          <input
+                            className={getTextInputClassName(false)}
+                            inputMode="decimal"
+                            onChange={(event) => setImpactTimberCltLoadBasisKgM2(event.target.value)}
+                            placeholder="e.g. 72"
+                            value={impactTimberCltLoadBasisKgM2}
+                          />
+                        </FieldShell>
+
+                        <FieldShell
+                          label="Dynamic stiffness (MN/m³)"
+                          note="Upper resilient layer stiffness."
+                          relevance="required"
+                          usage="DeltaLw"
+                        >
+                          <input
+                            className={getTextInputClassName(false)}
+                            inputMode="decimal"
+                            onChange={(event) => setImpactTimberCltResilientLayerDynamicStiffnessMNm3(event.target.value)}
+                            placeholder="e.g. 30"
+                            value={impactTimberCltResilientLayerDynamicStiffnessMNm3}
+                          />
+                        </FieldShell>
+
+                        <FieldShell
+                          label="Resilient thickness (mm)"
+                          note="Precision field for the upper resilient layer."
+                          relevance="required"
+                          usage="DeltaLw"
+                        >
+                          <input
+                            className={getTextInputClassName(false)}
+                            inputMode="decimal"
+                            onChange={(event) => setImpactTimberCltResilientLayerThicknessMm(event.target.value)}
+                            placeholder="e.g. 30"
+                            value={impactTimberCltResilientLayerThicknessMm}
+                          />
+                        </FieldShell>
+
+                        <FieldShell
+                          label="Upper layer thickness (mm)"
+                          note="Thickness of dry board, topping, or equivalent upper treatment."
+                          relevance="required"
+                          usage="DeltaLw"
+                        >
+                          <input
+                            className={getTextInputClassName(false)}
+                            inputMode="decimal"
+                            onChange={(event) => setImpactTimberCltUpperTreatmentThicknessMm(event.target.value)}
+                            placeholder="e.g. 25"
+                            value={impactTimberCltUpperTreatmentThicknessMm}
+                          />
+                        </FieldShell>
+
+                        <FieldShell
+                          label="Upper layer density (kg/m³)"
+                          note="Density for the upper treatment mass."
+                          relevance="required"
+                          usage="DeltaLw"
+                        >
+                          <input
+                            className={getTextInputClassName(false)}
+                            inputMode="decimal"
+                            onChange={(event) => setImpactTimberCltUpperTreatmentDensityKgM3(event.target.value)}
+                            placeholder="e.g. 1150"
+                            value={impactTimberCltUpperTreatmentDensityKgM3}
+                          />
+                        </FieldShell>
+
+                        <FieldShell
+                          label="Upper fill thickness (mm)"
+                          note="Use for CLT dry fill; leave empty for timber joist packages without fill."
+                          relevance="required"
+                          usage="DeltaLw"
+                        >
+                          <input
+                            className={getTextInputClassName(false)}
+                            inputMode="decimal"
+                            onChange={(event) => setImpactTimberCltUpperFillThicknessMm(event.target.value)}
+                            placeholder="e.g. 70"
+                            value={impactTimberCltUpperFillThicknessMm}
+                          />
+                        </FieldShell>
+
+                        <FieldShell
+                          label="Upper fill density (kg/m³)"
+                          note="Use with upper fill thickness when the CLT route includes dry fill."
+                          relevance="required"
+                          usage="DeltaLw"
+                        >
+                          <input
+                            className={getTextInputClassName(false)}
+                            inputMode="decimal"
+                            onChange={(event) => setImpactTimberCltUpperFillDensityKgM3(event.target.value)}
+                            placeholder="e.g. 500"
+                            value={impactTimberCltUpperFillDensityKgM3}
+                          />
+                        </FieldShell>
+
+                        <FieldShell
+                          label="Base density (kg/m³)"
+                          note="Precision field for CLT or timber reference floor mass."
+                          relevance="required"
+                          usage="Ln,w"
+                        >
+                          <input
+                            className={getTextInputClassName(false)}
+                            inputMode="decimal"
+                            onChange={(event) => setImpactTimberCltBaseFloorDensityKgM3(event.target.value)}
+                            placeholder="e.g. 470"
+                            value={impactTimberCltBaseFloorDensityKgM3}
+                          />
+                        </FieldShell>
+
+                        <FieldShell
+                          label="Base thickness override (mm)"
+                          note="Leave empty to use the base_structure layer thickness."
+                          relevance="required"
+                          usage="Ln,w"
+                        >
+                          <input
+                            className={getTextInputClassName(false)}
+                            inputMode="decimal"
+                            onChange={(event) => setImpactTimberCltBaseFloorThicknessMm(event.target.value)}
+                            placeholder="e.g. 145"
+                            value={impactTimberCltBaseFloorThicknessMm}
+                          />
+                        </FieldShell>
+
+                        <FieldShell
+                          label="Lower assembly"
+                          note="Explicitly choose none for upper-only CLT; timber joists need a lower package."
+                          relevance="required"
+                          usage="DeltaLw"
+                        >
+                          <select
+                            aria-label="Timber CLT lower assembly"
+                            className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                            onChange={(event) =>
+                              setImpactTimberCltLowerAssemblyType(
+                                event.target.value as WorkbenchTimberCltDeltaLwLowerAssemblyType
+                              )
+                            }
+                            value={impactTimberCltLowerAssemblyType}
+                          >
+                            <option value="">Select lower assembly</option>
+                            {TIMBER_CLT_DELTA_LW_LOWER_ASSEMBLY_OPTIONS.map((option) => (
+                              <option key={option.value} value={option.value}>
+                                {option.label}
+                              </option>
+                            ))}
+                          </select>
+                        </FieldShell>
+
+                        <FieldShell
+                          label="Lower support class"
+                          note="Support class for the lower ceiling package."
+                          relevance="required"
+                          usage="DeltaLw"
+                        >
+                          <select
+                            aria-label="Timber CLT lower support class"
+                            className="focus-ring touch-target rounded border hairline bg-[color:var(--paper)] px-3 py-2.5"
+                            onChange={(event) =>
+                              setImpactTimberCltLowerSupportClass(
+                                event.target.value as WorkbenchTimberCltDeltaLwLowerSupportClass
+                              )
+                            }
+                            value={impactTimberCltLowerSupportClass}
+                          >
+                            <option value="">Select support class</option>
+                            {TIMBER_CLT_DELTA_LW_LOWER_SUPPORT_OPTIONS.map((option) => (
+                              <option key={option.value} value={option.value}>
+                                {option.label}
+                              </option>
+                            ))}
+                          </select>
+                        </FieldShell>
+
+                        <FieldShell
+                          label="Lower cavity depth (mm)"
+                          note="Cavity depth for the lower ceiling package."
+                          relevance="required"
+                          usage="DeltaLw"
+                        >
+                          <input
+                            className={getTextInputClassName(false)}
+                            inputMode="decimal"
+                            onChange={(event) => setImpactTimberCltLowerCavityDepthMm(event.target.value)}
+                            placeholder="e.g. 27"
+                            value={impactTimberCltLowerCavityDepthMm}
+                          />
+                        </FieldShell>
+
+                        <FieldShell
+                          label="Lower fill thickness (mm)"
+                          note="Cavity absorption thickness; zero is parked, use the actual fill thickness."
+                          relevance="required"
+                          usage="DeltaLw"
+                        >
+                          <input
+                            className={getTextInputClassName(false)}
+                            inputMode="decimal"
+                            onChange={(event) => setImpactTimberCltLowerCavityFillThicknessMm(event.target.value)}
+                            placeholder="e.g. 100"
+                            value={impactTimberCltLowerCavityFillThicknessMm}
+                          />
+                        </FieldShell>
+
+                        <FieldShell
+                          label="Lower board thickness (mm)"
+                          note="Thickness of each lower board layer."
+                          relevance="required"
+                          usage="DeltaLw"
+                        >
+                          <input
+                            className={getTextInputClassName(false)}
+                            inputMode="decimal"
+                            onChange={(event) => setImpactTimberCltLowerBoardThicknessMm(event.target.value)}
+                            placeholder="e.g. 12.5"
+                            value={impactTimberCltLowerBoardThicknessMm}
+                          />
+                        </FieldShell>
+
+                        <FieldShell
+                          label="Lower board layers"
+                          note="Number of lower board layers."
+                          relevance="required"
+                          usage="DeltaLw"
+                        >
+                          <input
+                            className={getTextInputClassName(false)}
+                            inputMode="numeric"
+                            onChange={(event) => setImpactTimberCltLowerBoardLayerCount(event.target.value)}
+                            placeholder="e.g. 2"
+                            value={impactTimberCltLowerBoardLayerCount}
+                          />
                         </FieldShell>
                       </div>
                     </ContextSubsection>

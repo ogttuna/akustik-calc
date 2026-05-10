@@ -5,8 +5,14 @@ import type { StudyMode } from "./preset-definitions";
 import { getScenarioCorridorSummary, getValidationPostureTone } from "./scenario-corridor-summary";
 import {
   formatSteelFloorFormulaErrorBudgetSummary,
-  formatSteelFloorFormulaErrorBudgetTerms
+  formatSteelFloorFormulaErrorBudgetTerms,
+  isSteelFloorFormulaCorridorImpact
 } from "./steel-floor-formula-corridor-view";
+import {
+  formatTimberCltDeltaLwFormulaErrorBudgetSummary,
+  formatTimberCltDeltaLwFormulaErrorBudgetTerms,
+  isTimberCltDeltaLwFormulaCorridorImpact
+} from "./timber-clt-delta-lw-corridor-view";
 import {
   describeAirborneValidationPosture,
   describeImpactValidationPosture,
@@ -108,8 +114,12 @@ function mapSolverSpreadTone(value: number): SimpleWorkbenchCorridorDossierCard[
 }
 
 function buildSteelFormulaErrorBudgetCards(result: AssemblyCalculation): SimpleWorkbenchCorridorDossierCard[] {
+  const isTimberCltFormula = isTimberCltDeltaLwFormulaCorridorImpact(result);
+
   return (result.impact?.errorBudgets ?? []).map((budget: ImpactErrorBudget) => ({
-    detail: `${formatSteelFloorFormulaErrorBudgetSummary(budget)}. Terms: ${formatSteelFloorFormulaErrorBudgetTerms(budget)}.`,
+    detail: isTimberCltFormula
+      ? `${formatTimberCltDeltaLwFormulaErrorBudgetSummary(budget)}. Terms: ${formatTimberCltDeltaLwFormulaErrorBudgetTerms(budget)}.`
+      : `${formatSteelFloorFormulaErrorBudgetSummary(budget)}. Terms: ${formatSteelFloorFormulaErrorBudgetTerms(budget)}.`,
     label: `${budget.metricId} error budget`,
     tone: "warning",
     value: `+/-${budget.toleranceDb.toFixed(1)} dB`
@@ -189,6 +199,14 @@ function buildFloorCorridorDossier(result: AssemblyCalculation): SimpleWorkbench
   const impactPosture = describeImpactValidationPosture(result);
   const toleranceLabel = formatImpactValidationTolerance(activeFamily?.maxToleranceDb ?? IMPACT_VALIDATION_CORPUS_SUMMARY.toleranceBandMaxDb);
   const errorBudgetCards = buildSteelFormulaErrorBudgetCards(result);
+  const errorBudgetHeadline =
+    errorBudgetCards.length === 0
+      ? ""
+      : isSteelFloorFormulaCorridorImpact(result)
+        ? " Source-absent steel formula budgets are structured and marked not measured evidence."
+        : isTimberCltDeltaLwFormulaCorridorImpact(result)
+          ? " Source-absent timber/CLT DeltaLw formula budget is structured and marked not measured evidence."
+          : " Source-absent formula budgets are structured and marked not measured evidence.";
   const primaryRouteLabel =
     activeMode?.label ??
     (impactPosture.posture !== "inactive" ? corridorSummary.impactLabel : corridorSummary.airborneLabel);
@@ -234,7 +252,7 @@ function buildFloorCorridorDossier(result: AssemblyCalculation): SimpleWorkbench
       `${primaryRouteLabel} is the active benchmark mode${activeFamily ? ` on ${activeFamily.label}` : ""}. ` +
       `${activeFamily ? `${toleranceLabel} family tolerance remains attached to this route.` : `${toleranceLabel} repo-wide fallback guardrail is active because no tracked family corridor is attached.`} ` +
       `${corridorSummary.fieldContinuationLabel ? `${corridorSummary.fieldContinuationLabel} is live on the field-side chain.` : corridorSummary.airborneProvenanceLabel ? `${corridorSummary.airborneProvenanceLabel} remains explicit on the airborne side.` : "Field continuation is currently lab-side only or still staged."}` +
-      `${errorBudgetCards.length > 0 ? " Source-absent steel formula budgets are structured and marked not measured evidence." : ""}`
+      errorBudgetHeadline
   };
 }
 

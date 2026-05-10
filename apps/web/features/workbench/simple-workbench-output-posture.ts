@@ -13,6 +13,10 @@ import {
   getSteelFloorFormulaCorridorPosture,
   isSteelFloorFormulaCorridorImpact
 } from "./steel-floor-formula-corridor-view";
+import {
+  getTimberCltDeltaLwFormulaCorridorPosture,
+  isTimberCltDeltaLwFormulaCorridorImpact
+} from "./timber-clt-delta-lw-corridor-view";
 
 export type SimpleWorkbenchOutputPostureTone = "accent" | "neutral" | "success" | "warning";
 
@@ -146,6 +150,10 @@ export function buildSimpleWorkbenchOutputPosture(input: {
   if (studyMode === "floor") {
     if (isSteelFloorFormulaCorridorImpact(result) && (output === "Ln,w" || output === "DeltaLw")) {
       return getSteelFloorFormulaCorridorPosture();
+    }
+
+    if (output === "DeltaLw" && isTimberCltDeltaLwFormulaCorridorImpact(result)) {
+      return getTimberCltDeltaLwFormulaCorridorPosture();
     }
 
     const posture = describeImpactValidationPosture(result);

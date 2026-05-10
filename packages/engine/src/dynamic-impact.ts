@@ -27,6 +27,10 @@ import {
 } from "./impact-supporting-element-family";
 import { maybeBuildImpactPredictorInputFromLayerStack } from "./impact-predictor-input";
 import { STEEL_FLOOR_FORMULA_BASIS } from "./steel-floor-impact-formula-corridor";
+import {
+  MASS_TIMBER_CLT_DELTA_LW_FORMULA_BASIS,
+  TIMBER_JOIST_DELTA_LW_FORMULA_BASIS
+} from "./timber-clt-floor-impact-delta-lw-runtime-corridor";
 
 type BuildDynamicImpactTraceInput = {
   boundFloorSystemEstimate?: FloorSystemBoundEstimateResult | null;
@@ -97,6 +101,14 @@ function getScopedFormulaSelectionLabel(
 
   if (basisLabels.has(STEEL_FLOOR_FORMULA_BASIS)) {
     return "Lightweight-steel formula corridor";
+  }
+
+  if (basisLabels.has(TIMBER_JOIST_DELTA_LW_FORMULA_BASIS)) {
+    return "Timber joist DeltaLw formula corridor";
+  }
+
+  if (basisLabels.has(MASS_TIMBER_CLT_DELTA_LW_FORMULA_BASIS)) {
+    return "Mass-timber CLT DeltaLw formula corridor";
   }
 
   return null;
@@ -298,6 +310,10 @@ function formatImpactBasisLabel(value: ImpactCalculation["basis"] | ImpactBoundC
       return "Published family blend estimate";
     case "predictor_floor_system_low_confidence_estimate":
       return "Low-confidence family fallback";
+    case "predictor_mass_timber_clt_delta_lw_formula_corridor_estimate":
+      return "Mass-timber CLT DeltaLw formula corridor";
+    case "predictor_timber_joist_delta_lw_formula_corridor_estimate":
+      return "Timber joist DeltaLw formula corridor";
     case "predictor_lightweight_steel_fl28_interpolation_estimate":
       return "Lightweight-steel FL-28 interpolation";
     case "predictor_lightweight_steel_mass_spring_holdout_corridor_estimate":

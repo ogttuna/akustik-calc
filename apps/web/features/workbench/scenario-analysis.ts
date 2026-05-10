@@ -5,6 +5,7 @@ import type {
   AirborneContext,
   ExactImpactSource,
   ImpactFieldContext,
+  ImpactPredictorInput,
   LayerInput,
   MaterialDefinition,
   RequestedOutputId
@@ -21,6 +22,11 @@ import {
   formatWorkbenchSteelFloorFormulaMissingInputWarning,
   type WorkbenchSteelFloorFormulaInputSurfaceDraft
 } from "./steel-floor-formula-input-surface";
+import {
+  buildWorkbenchTimberCltDeltaLwInputSurface,
+  formatWorkbenchTimberCltDeltaLwMissingInputWarning,
+  type WorkbenchTimberCltDeltaLwInputSurfaceDraft
+} from "./timber-clt-delta-lw-input-surface";
 
 function collectInactiveOfficialProductWarnings(input: {
   layers: readonly LayerInput[];
@@ -93,6 +99,7 @@ export function evaluateScenario(input: {
   steelFloorFormulaInputSurface?: WorkbenchSteelFloorFormulaInputSurfaceDraft | null;
   studyMode: StudyMode;
   targetOutputs?: readonly RequestedOutputId[];
+  timberCltDeltaLwInputSurface?: WorkbenchTimberCltDeltaLwInputSurfaceDraft | null;
 }): EvaluatedScenario {
   const baseCatalog = buildWorkbenchMaterialCatalog(input.customMaterials ?? []);
   const normalized = normalizeRows(input.rows, baseCatalog);
@@ -116,11 +123,24 @@ export function evaluateScenario(input: {
           layers: normalized.layers,
           surface: input.steelFloorFormulaInputSurface,
           targetOutputs
+      })
+      : null;
+  const timberCltDeltaLwInputSurface =
+    input.studyMode === "floor" && input.timberCltDeltaLwInputSurface
+      ? buildWorkbenchTimberCltDeltaLwInputSurface({
+          layers: normalized.layers,
+          surface: input.timberCltDeltaLwInputSurface,
+          targetOutputs
         })
       : null;
   if (steelFloorFormulaInputSurface?.status === "unsafe_topology") {
     scenarioWarnings.push(
       "Steel-floor formula input surface is parked because the visible steel carrier topology is unsafe to collapse. Keep one explicit base_structure carrier before relying on the steel formula lane."
+    );
+  }
+  if (timberCltDeltaLwInputSurface?.status === "unsafe_topology") {
+    scenarioWarnings.push(
+      "Timber/CLT DeltaLw formula input surface is parked because the visible timber or CLT carrier topology is unsafe to collapse. Keep one explicit base_structure carrier before relying on the timber/CLT formula lane."
     );
   }
   const steelFormulaMissingInputWarning = steelFloorFormulaInputSurface
@@ -129,6 +149,23 @@ export function evaluateScenario(input: {
   if (steelFormulaMissingInputWarning) {
     scenarioWarnings.push(steelFormulaMissingInputWarning);
   }
+  const timberCltMissingInputWarning = timberCltDeltaLwInputSurface
+    ? formatWorkbenchTimberCltDeltaLwMissingInputWarning(timberCltDeltaLwInputSurface)
+    : null;
+  if (timberCltMissingInputWarning) {
+    scenarioWarnings.push(timberCltMissingInputWarning);
+  }
+  const activeInputSurfacePredictors = [
+    steelFloorFormulaInputSurface?.status !== "inactive" ? steelFloorFormulaInputSurface?.impactPredictorInput : null,
+    timberCltDeltaLwInputSurface?.status !== "inactive" ? timberCltDeltaLwInputSurface?.impactPredictorInput : null
+  ].filter((item): item is ImpactPredictorInput => item !== null && item !== undefined);
+  if (activeInputSurfacePredictors.length > 1) {
+    scenarioWarnings.push(
+      "Multiple floor formula input surfaces matched this stack, so DAC parked the explicit predictor input instead of choosing between conflicting carrier families."
+    );
+  }
+  const impactPredictorInput =
+    activeInputSurfacePredictors.length === 1 ? activeInputSurfacePredictors[0] : null;
   let result: AssemblyCalculation | null = null;
 
   if (normalized.layers.length > 0) {
@@ -139,7 +176,7 @@ export function evaluateScenario(input: {
         catalog: runtimeCatalog,
         exactImpactSource: input.exactImpactSource ?? null,
         impactFieldContext: input.impactFieldContext ?? null,
-        impactPredictorInput: steelFloorFormulaInputSurface?.impactPredictorInput ?? null,
+        impactPredictorInput,
         targetOutputs
       });
     } catch (error) {

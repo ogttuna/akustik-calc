@@ -202,12 +202,30 @@ export function getImpactConfidenceForBasis(basis: ImpactEstimateBasis): ImpactC
     };
   }
 
+  if (basis === "predictor_mass_timber_clt_delta_lw_formula_corridor_estimate") {
+    return {
+      level: "medium",
+      provenance: "formula_estimate_narrow_scope",
+      score: 0.64,
+      summary: "Mass-timber CLT DeltaLw formula corridor with explicit load basis, dynamic stiffness, and source-absent error budget."
+    };
+  }
+
   if (basis === "predictor_mass_timber_clt_dry_interaction_estimate") {
     return {
       level: "medium",
       provenance: "published_family_estimate",
       score: 0.76,
       summary: "Measured CLT dry interaction estimate blended from nearby rows with similar upper and lower treatment coupling."
+    };
+  }
+
+  if (basis === "predictor_timber_joist_delta_lw_formula_corridor_estimate") {
+    return {
+      level: "medium",
+      provenance: "formula_estimate_narrow_scope",
+      score: 0.63,
+      summary: "Timber joist DeltaLw formula corridor with explicit upper load, dynamic stiffness, lower assembly, and source-absent error budget."
     };
   }
 

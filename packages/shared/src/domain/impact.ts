@@ -27,7 +27,9 @@ export const ImpactEstimateBasisSchema = z.enum([
   "predictor_heavy_concrete_published_upper_treatment_estimate",
   "predictor_mass_timber_clt_bare_interpolation_estimate",
   "predictor_mass_timber_clt_dataholz_dry_estimate",
+  "predictor_mass_timber_clt_delta_lw_formula_corridor_estimate",
   "predictor_mass_timber_clt_dry_interaction_estimate",
+  "predictor_timber_joist_delta_lw_formula_corridor_estimate",
   "predictor_lightweight_steel_fl28_interpolation_estimate",
   "predictor_lightweight_steel_mass_spring_holdout_corridor_estimate",
   "predictor_lightweight_steel_bound_interpolation_estimate",
@@ -95,6 +97,7 @@ export const ImpactScopeSchema = z.enum([
   "exact_improvement_reference_floor",
   "narrow_heavy_concrete_only",
   "reference_heavy_floor_derived",
+  "timber_clt_floor_formula_corridor",
   "steel_floor_formula_corridor"
 ]);
 
@@ -214,10 +217,10 @@ export const ImpactCalculationSchema = z
     treatedReferenceLnW: z.number().positive().optional()
   })
   .superRefine((value, ctx) => {
-    if (!Number.isFinite(value.LnW) && !Number.isFinite(value.LPrimeNTw)) {
+    if (!Number.isFinite(value.LnW) && !Number.isFinite(value.LPrimeNTw) && !Number.isFinite(value.DeltaLw)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "Impact calculation requires either LnW or LPrimeNTw."
+        message: "Impact calculation requires LnW, LPrimeNTw, or DeltaLw."
       });
     }
   });

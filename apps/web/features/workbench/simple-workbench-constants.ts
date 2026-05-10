@@ -23,6 +23,12 @@ import type { CSSProperties } from "react";
 
 import type { PresetId, StudyMode } from "./preset-definitions";
 import type { WorkbenchSteelFloorFormulaLowerCeilingIsolationSupportForm } from "./steel-floor-formula-input-surface";
+import type {
+  WorkbenchTimberCltDeltaLwImpactSystemType,
+  WorkbenchTimberCltDeltaLwLowerAssemblyType,
+  WorkbenchTimberCltDeltaLwLowerSupportClass,
+  WorkbenchTimberCltDeltaLwStructuralSupportType
+} from "./timber-clt-delta-lw-input-surface";
 
 export type MaterialIdGroup = {
   ids: readonly string[];
@@ -163,6 +169,81 @@ export const STEEL_FLOOR_FORMULA_LOWER_ISOLATION_OPTIONS: readonly ControlOption
     label: "Direct to joists",
     note: "Direct fixed ceiling support. Use only when the visible layers still carry the board and cavity dimensions.",
     value: "direct_to_joists"
+  }
+] as const;
+
+export const TIMBER_CLT_DELTA_LW_SUPPORT_OPTIONS: readonly ControlOption<
+  Exclude<WorkbenchTimberCltDeltaLwStructuralSupportType, "">
+>[] = [
+  {
+    label: "Timber joists",
+    note: "Use for framed timber joist floors with an explicit lower assembly.",
+    value: "timber_joists"
+  },
+  {
+    label: "Mass-timber CLT",
+    note: "Use for CLT or mass-timber panels with dry floating upper treatment.",
+    value: "mass_timber_clt"
+  }
+] as const;
+
+export const TIMBER_CLT_DELTA_LW_SYSTEM_OPTIONS: readonly ControlOption<
+  Exclude<WorkbenchTimberCltDeltaLwImpactSystemType, "">
+>[] = [
+  {
+    label: "Combined upper + lower",
+    note: "Use when a timber joist floor has both upper treatment and lower ceiling package.",
+    value: "combined_upper_lower_system"
+  },
+  {
+    label: "Dry floating floor",
+    note: "Use for CLT dry floating-floor routes without a lower ceiling package.",
+    value: "dry_floating_floor"
+  }
+] as const;
+
+export const TIMBER_CLT_DELTA_LW_LOWER_ASSEMBLY_OPTIONS: readonly ControlOption<
+  Exclude<WorkbenchTimberCltDeltaLwLowerAssemblyType, "">
+>[] = [
+  {
+    label: "No lower assembly",
+    note: "Use only when the CLT route is explicitly upper-only.",
+    value: "none"
+  },
+  {
+    label: "Direct fixed ceiling",
+    note: "Ceiling board fixed directly to joists or battens.",
+    value: "direct_fixed_ceiling"
+  },
+  {
+    label: "Rigid furred ceiling",
+    note: "Suspended or furred ceiling without resilient isolation.",
+    value: "suspended_ceiling_rigid_hanger"
+  },
+  {
+    label: "Elastic furred ceiling",
+    note: "Suspended isolated ceiling with furred channels or equivalent resilient support.",
+    value: "suspended_ceiling_elastic_hanger"
+  },
+  {
+    label: "Spring hanger ceiling",
+    note: "Ceiling package hung from spring or comparable resilient hangers.",
+    value: "suspended_ceiling_spring_hanger"
+  }
+] as const;
+
+export const TIMBER_CLT_DELTA_LW_LOWER_SUPPORT_OPTIONS: readonly ControlOption<
+  Exclude<WorkbenchTimberCltDeltaLwLowerSupportClass, "">
+>[] = [
+  {
+    label: "Direct to joists",
+    note: "Use with direct fixed lower boards.",
+    value: "direct_to_joists"
+  },
+  {
+    label: "Furred channels",
+    note: "Use for furred, resilient, or suspended channel support.",
+    value: "furred_channels"
   }
 ] as const;
 

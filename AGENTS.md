@@ -242,21 +242,83 @@ paired-negative evidence, Gate BF open-web input ownership, and Gate BG
 field/building basis owners. The closed map revalidates as a
 policy-only `tighten` candidate, but no closure row becomes measured
 runtime evidence, no exact row is promoted, and `Ln,w 55.6` /
-`DeltaLw 22.4` with `+/-4.5 dB` / `+/-2.0 dB` remains frozen. Gate BI is
-next:
+`DeltaLw 22.4` with `+/-4.5 dB` / `+/-2.0 dB` remains frozen. Gate BI has
+now landed as the no-runtime tighten-candidate governance guard:
 `gate_bi_steel_floor_formula_same_stack_iso_delta_lw_tighten_candidate_governance_plan`.
-The 2026-05-08 strategic ROI replan is now authoritative after Gate BH:
-Gate BI should stay intentionally small and no-runtime, then work should
-pivot to `personal_use_mvp_coverage_sprint_after_gate_bi`. The first
-post-Gate-BI move is an executable wall/floor scenario matrix that
-shows which common calculator cases produce exact, source-anchored,
-calibrated, family-physics, bounded/screening, `needs_input`, or
-`unsupported` results. Use that matrix to pick the next algorithmic
-solver by coverage ROI and accuracy risk; do not keep adding narrow
-steel-floor source/packet gates unless the active matrix or a later
-runtime proposal names a specific source-owned unblocker.
+It keeps `tighten` as a proposal label only and freezes runtime,
+tolerance, source, exact-row, formula, card/report/API, and
+lab/field/building behavior. It selected
+`personal_use_mvp_coverage_sprint_after_gate_bi`. Personal-Use MVP
+Coverage Sprint Gate A has now landed the executable wall/floor scenario
+matrix:
+`gate_a_personal_use_mvp_coverage_matrix_plan`. It asserts route,
+family, requested metrics, basis, input completeness, current and
+expected posture, value or blocked reason, origin/support bucket,
+tolerance/error budget, visible-surface parity target, hostile variant,
+failure class, and next action for 24 common/hostile wall/floor
+scenarios through current public engine entry points. Personal-Use MVP
+Coverage Sprint Gate B has now landed the timber/CLT floor-impact
+`DeltaLw` input and formula-readiness contract:
+`gate_b_personal_use_mvp_timber_clt_floor_impact_delta_lw_input_contract_plan`.
+It names timber joist and CLT/mass-timber physical inputs, keeps current
+timber `Ln,w 51` and CLT `Ln,w 50` runtime behavior unchanged, blocks
+missing dynamic stiffness/load/topping/lower-assembly inputs, refuses
+ASTM and field aliases, and preserves exact `Ln,w` source precedence
+without inventing `DeltaLw`. Personal-Use MVP Coverage Sprint Gate C
+has now landed the timber/CLT floor-impact `DeltaLw` formula-corridor
+contract:
+`gate_c_personal_use_mvp_timber_clt_floor_impact_delta_lw_formula_corridor_plan`.
+It names separate timber-joist and mass-timber CLT source-absent
+formula corridors, required formula terms, `+/-7.5 dB` design budgets,
+and exact missing-input / basis-alias negative boundaries without moving
+runtime values. Personal-Use MVP Coverage Sprint Gate D has now landed
+the first runtime timber/CLT `DeltaLw` formula corridor:
+`gate_d_personal_use_mvp_timber_clt_floor_impact_delta_lw_runtime_corridor_plan`.
+Explicit complete timber joist input returns exact `Ln,w 51` plus
+source-absent lab `DeltaLw 25.2`; explicit complete CLT input returns
+family `Ln,w 50` plus source-absent lab `DeltaLw 22.6`. Both `DeltaLw`
+values carry `+/-7.5 dB` `source_absent_formula_error_budget` payloads
+and metric-specific basis labels. Personal-Use MVP Coverage Sprint Gate
+E has now landed visible/API/report parity for those values:
+`gate_e_personal_use_mvp_timber_clt_floor_impact_delta_lw_surface_parity_plan`.
+Cards, posture, dynamic trace, support notes, metric-basis copy,
+corridor/method dossiers, Markdown report, calculator API, and
+impact-only API preserve the same `DeltaLw` basis and `+/-7.5 dB`
+not-measured error budget. Personal-Use MVP Coverage Sprint Gate F has
+now landed the first-class Dynamic Calculator input surface for the same
+timber/CLT physical fields:
+`gate_f_personal_use_mvp_timber_clt_floor_impact_delta_lw_input_surface_plan`.
+Workbench controls, scenario analysis, local/server snapshots,
+calculator API payload, and impact-only API payload now feed the Gate
+D/E predictor input; complete UI-derived timber returns exact `Ln,w 51`
+plus formula `DeltaLw 25.2`, complete UI-derived CLT returns family
+`Ln,w 50` plus formula `DeltaLw 22.6`, and partial/hostile inputs stay
+parked. Gate G is next:
+`gate_g_personal_use_mvp_generalized_wall_multicavity_route_readiness_plan`.
+Do not keep adding narrow steel-floor source/packet gates unless the
+active matrix or a later runtime proposal names a specific source-owned
+unblocker.
 Selected Gate BI file:
 `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-bi-steel-floor-formula-same-stack-iso-delta-lw-tighten-candidate-governance-contract.test.ts`.
+Selected Gate A coverage matrix file:
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-a-scenario-matrix-contract.test.ts`.
+Selected Gate B timber/CLT DeltaLw file:
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-b-timber-clt-floor-impact-delta-lw-contract.test.ts`.
+Selected Gate C timber/CLT DeltaLw formula corridor file:
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-c-timber-clt-floor-impact-delta-lw-formula-corridor-contract.test.ts`.
+Selected Gate D timber/CLT DeltaLw runtime corridor file:
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-d-timber-clt-floor-impact-delta-lw-runtime-corridor-contract.test.ts`.
+Selected Gate E timber/CLT DeltaLw surface parity file:
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-e-timber-clt-floor-impact-delta-lw-surface-parity-contract.test.ts`.
+Selected Gate F timber/CLT DeltaLw input surface file:
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-f-timber-clt-floor-impact-delta-lw-input-surface-contract.test.ts`.
+Selected Gate G generalized wall multicavity route-readiness file:
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-g-generalized-wall-multicavity-route-readiness-contract.test.ts`.
+Latest strategic ROI revalidation:
+`docs/calculator/CHECKPOINT_2026-05-10_STRATEGIC_ROI_REVALIDATION_AND_GATE_G_PLAN_HANDOFF.md`.
+It confirms Gate G remains the first next action after Gate F, before
+lined masonry/CLT wall upgrades, field/building continuations, or any
+return to steel-floor tolerance tightening.
 Gate BH landed file:
 `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-bh-steel-floor-formula-same-stack-iso-delta-lw-residual-policy-closed-owner-revalidation-contract.test.ts`.
 Gate BH landed action:
@@ -277,9 +339,17 @@ expectations. Runtime values remain unchanged.
 ## Authority Order
 
 1. `docs/calculator/NEXT_IMPLEMENTATION_PLAN.md`
-2. `docs/calculator/CHECKPOINT_2026-05-08_STRATEGIC_ROI_REPLAN_HANDOFF.md`
-3. `docs/calculator/CHECKPOINT_2026-05-08_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_BH_HANDOFF.md`
-4. `docs/calculator/CHECKPOINT_2026-05-08_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_BG_HANDOFF.md`
+2. `docs/calculator/CHECKPOINT_2026-05-10_STRATEGIC_ROI_REVALIDATION_AND_GATE_G_PLAN_HANDOFF.md`
+3. `docs/calculator/CHECKPOINT_2026-05-08_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_F_HANDOFF.md`
+4. `docs/calculator/CHECKPOINT_2026-05-08_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_E_HANDOFF.md`
+5. `docs/calculator/CHECKPOINT_2026-05-08_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_D_HANDOFF.md`
+6. `docs/calculator/CHECKPOINT_2026-05-08_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_C_HANDOFF.md`
+7. `docs/calculator/CHECKPOINT_2026-05-08_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_B_HANDOFF.md`
+8. `docs/calculator/CHECKPOINT_2026-05-08_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_A_HANDOFF.md`
+9. `docs/calculator/CHECKPOINT_2026-05-08_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_BI_HANDOFF.md`
+4. `docs/calculator/CHECKPOINT_2026-05-08_STRATEGIC_ROI_REPLAN_HANDOFF.md`
+5. `docs/calculator/CHECKPOINT_2026-05-08_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_BH_HANDOFF.md`
+5. `docs/calculator/CHECKPOINT_2026-05-08_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_BG_HANDOFF.md`
 5. `docs/calculator/CHECKPOINT_2026-05-08_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_BF_HANDOFF.md`
 6. `docs/calculator/CHECKPOINT_2026-05-08_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_BE_HANDOFF.md`
 7. `docs/calculator/CHECKPOINT_2026-05-08_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_BD_HANDOFF.md`
@@ -640,19 +710,21 @@ plan.
 - current selected slice:
   `calculator_model_first_physics_prediction_pivot_v1`
 - current next decision inside the slice:
-  `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-bi-steel-floor-formula-same-stack-iso-delta-lw-tighten-candidate-governance-contract.test.ts`
-  should run
-  `gate_bi_steel_floor_formula_same_stack_iso_delta_lw_tighten_candidate_governance_plan`.
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-g-generalized-wall-multicavity-route-readiness-contract.test.ts`
+  should run `gate_g_personal_use_mvp_generalized_wall_multicavity_route_readiness_plan`.
 - current strategic replan:
   `docs/calculator/CHECKPOINT_2026-05-08_STRATEGIC_ROI_REPLAN_HANDOFF.md`.
-  Gate BI is a minimal no-runtime governance guard. After Gate BI, use
-  `personal_use_mvp_coverage_sprint_after_gate_bi`, starting with
-  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-a-scenario-matrix-contract.test.ts`
-  and action `gate_a_personal_use_mvp_coverage_matrix_plan`.
+  Gate BI and Personal-Use MVP Coverage Sprint Gates A/B/C/D/E/F have
+  landed through coverage matrix, timber/CLT input contract, formula
+  corridor, runtime corridor, visible/API/report parity, and
+  first-class input-surface parity. Gate G is selected for generalized
+  wall multi-cavity route readiness beyond fixture gates.
+- latest strategic ROI revalidation:
+  `docs/calculator/CHECKPOINT_2026-05-10_STRATEGIC_ROI_REVALIDATION_AND_GATE_G_PLAN_HANDOFF.md`.
 - latest checkpoint:
-  `docs/calculator/CHECKPOINT_2026-05-08_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_BH_HANDOFF.md`.
+  `docs/calculator/CHECKPOINT_2026-05-08_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_F_HANDOFF.md`.
 - latest landed calculator gate checkpoint:
-  `docs/calculator/CHECKPOINT_2026-05-08_MODEL_FIRST_PHYSICS_PREDICTION_PIVOT_GATE_BH_HANDOFF.md`.
+  `docs/calculator/CHECKPOINT_2026-05-08_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_F_HANDOFF.md`.
 - just landed model-first physics prediction pivot Gate BH:
   `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-bh-steel-floor-formula-same-stack-iso-delta-lw-residual-policy-closed-owner-revalidation-contract.test.ts`
   landed
@@ -4972,10 +5044,11 @@ plan.
   selected slice
 - use `pnpm check` only when you need the broad full-repo gate
 - latest focused validation: `pnpm calculator:gate:current` green on
-  2026-05-05 after Rockwool explicit screening-only policy Gate C;
-  engine 250 files / 1448 tests, web 53 files / 259 passed + 18
-  skipped, build 5/5 with the known non-fatal `sharp/@img` warnings,
-  whitespace guard clean.
+  2026-05-08 after Personal-Use MVP Coverage Sprint Gate E; engine 346
+  files / 2005 tests, web 67 files / 290 passed + 18 skipped, repo
+  build 5/5 with the known optional `sharp/@img` warnings, whitespace
+  guard clean, `git diff --check` clean after validation-result doc
+  updates.
 - latest broad validation: `pnpm check` green on 2026-05-05 after
   Rockwool explicit screening-only policy Gate B; lint/typecheck clean,
   engine tests passed 382 files / 2262 tests, web tests passed 165

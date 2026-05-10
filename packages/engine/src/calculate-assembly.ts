@@ -73,6 +73,10 @@ import {
   resolveLayerBasedImpactLane,
   shouldHideLowConfidenceProxyAirborne
 } from "./impact-lane";
+import {
+  inferImpactSupportingElementFamilyFromLayers,
+  inferImpactSupportingElementFamilyFromPredictorInput
+} from "./impact-supporting-element-family";
 import { computeLayerSurfaceMassKgM2 } from "./layer-surface-mass";
 import { getDefaultMaterialCatalog, resolveMaterial } from "./material-catalog";
 import {
@@ -1147,7 +1151,8 @@ export function calculateAssembly(
     explicitPredictorInput,
     predictorInput,
     officialFloorSystemId: predictorAdaptation?.officialFloorSystemId ?? null,
-    resolvedLayers: impactResolvedLayers
+    resolvedLayers: impactResolvedLayers,
+    targetOutputs: options.targetOutputs
   });
   const directNarrowImpact = directImpactLane.narrowImpact;
   let floorSystemMatch = directImpactLane.floorSystemMatch;
@@ -1158,6 +1163,32 @@ export function calculateAssembly(
   let boundFloorSystemEstimate = directImpactLane.boundFloorSystemEstimate;
   let floorSystemEstimate = directImpactLane.floorSystemEstimate;
   let explicitDeltaImpact = directImpactLane.explicitDeltaImpact;
+  let predictorDeltaLwCompanion = directImpactLane.predictorDeltaLwCompanion;
+  if (!floorSystemMatch && (predictorDeltaLwCompanion || options.targetOutputs?.includes("Ln,w"))) {
+    const visibleFamily = inferImpactSupportingElementFamilyFromLayers(resolvedLayers);
+    const predictorFamily = inferImpactSupportingElementFamilyFromPredictorInput(predictorInput);
+    const canUseVisibleAnchor = Boolean(
+      visibleFamily &&
+        predictorFamily &&
+        visibleFamily === predictorFamily &&
+        (predictorFamily === "timber_joists" || predictorFamily === "mass_timber_clt")
+    );
+
+    if (canUseVisibleAnchor) {
+      const visibleAnchorLane = resolveLayerBasedImpactLane({
+        catalog,
+        exactImpact,
+        resolvedLayers,
+        targetOutputs: options.targetOutputs
+      });
+
+      floorSystemMatch = visibleAnchorLane.floorSystemMatch;
+      floorSystemEstimate = visibleAnchorLane.floorSystemMatch
+        ? null
+        : floorSystemEstimate ?? visibleAnchorLane.floorSystemEstimate;
+      floorSystemRecommendations = visibleAnchorLane.floorSystemRecommendations;
+    }
+  }
   const visibleLayerPredictorBlockerWarning =
     !explicitPredictorInput &&
     !exactImpact &&
@@ -1193,7 +1224,8 @@ export function calculateAssembly(
         exactImpact,
         predictorInput: derivedPredictorInput,
         officialFloorSystemId: derivedPredictorAdaptation.officialFloorSystemId,
-        resolvedLayers: derivedImpactResolvedLayers
+        resolvedLayers: derivedImpactResolvedLayers,
+        targetOutputs: options.targetOutputs
       });
       const shouldUseDerived =
         !blocksBoundOnlyUbiqOpenWebCarpetDerivedEstimate &&
@@ -1229,6 +1261,7 @@ export function calculateAssembly(
         boundFloorSystemEstimate = derivedImpactLane.boundFloorSystemEstimate;
         floorSystemEstimate = derivedImpactLane.floorSystemEstimate;
         explicitDeltaImpact = derivedImpactLane.explicitDeltaImpact;
+        predictorDeltaLwCompanion = derivedImpactLane.predictorDeltaLwCompanion;
       }
     }
   }
@@ -1251,6 +1284,7 @@ export function calculateAssembly(
     boundFloorSystemEstimate = null;
     narrowImpact = null;
     explicitDeltaImpact = null;
+    predictorDeltaLwCompanion = null;
   }
 
   const rawFloorRolePromptGuard =
@@ -1265,7 +1299,8 @@ export function calculateAssembly(
               floorSystemEstimate ||
               boundFloorSystemEstimate ||
               explicitDeltaImpact ||
-              narrowImpact
+              narrowImpact ||
+              predictorDeltaLwCompanion
           ),
           inferredLayers: inferredImpactLayers,
           rawLayers: layers,
@@ -1291,6 +1326,7 @@ export function calculateAssembly(
     impactCatalogMatch,
     impactFieldContext,
     narrowImpact,
+    predictorDeltaLwCompanion,
     predictorInput,
     preferredSupplementaryImpact: directNarrowImpact,
     resolvedLayers: impactResolvedLayers
