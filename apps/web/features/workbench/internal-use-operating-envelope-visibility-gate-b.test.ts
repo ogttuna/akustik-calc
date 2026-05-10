@@ -32,7 +32,7 @@ const FLOOR_OUTPUTS = [
 ] as const satisfies readonly RequestedOutputId[];
 
 const WALL_BUILDING_CONTEXT: AirborneContext = {
-  contextMode: "building_prediction",
+  contextMode: "field_between_rooms",
   panelHeightMm: 2800,
   panelWidthMm: 3600,
   receivingRoomRt60S: 0.6,
@@ -48,7 +48,7 @@ const TIMBER_WALL_CONTEXT: AirborneContext = {
 };
 
 const FLOOR_AIRBORNE_CONTEXT: AirborneContext = {
-  contextMode: "building_prediction",
+  contextMode: "field_between_rooms",
   panelHeightMm: 3000,
   panelWidthMm: 4200,
   receivingRoomRt60S: 0.7,
@@ -227,7 +227,11 @@ describe("internal use operating envelope Gate B visibility", () => {
       expect(rwPrimeCard.status).toBe("live");
       expect(dnTwCard.status).toBe("live");
       expect(snapshot.validation.value).toBe("Scoped estimate");
-      expect(snapshot.validation.detail).toContain("formula-owned/source-gated scoped estimate");
+      const expectedPostureDetail =
+        testCase.id === "wall_lined_heavy_core_screening"
+          ? "Airborne field-context prediction is active"
+          : "formula-owned/source-gated scoped estimate";
+      expect(snapshot.validation.detail).toContain(expectedPostureDetail);
       expect(snapshot.validation.detail).toContain("not as a measured claim");
       expect(snapshot.branch.value).toBe(scenario.result.dynamicAirborneTrace?.detectedFamilyLabel);
       expect(dynamicCitation).toEqual(
@@ -238,7 +242,7 @@ describe("internal use operating envelope Gate B visibility", () => {
       );
       expect(dynamicCitation?.detail).toContain("No exact wall source row is active");
       expect(dynamicCitation?.tone).not.toBe("success");
-      expect(evidencePosture?.detail).toContain("formula-owned/source-gated scoped estimate");
+      expect(evidencePosture?.detail).toContain(expectedPostureDetail);
       expect(activeRoute?.detail).toContain(scenario.result.dynamicAirborneTrace?.selectedLabel ?? "");
       expect(recommendation?.detail).toContain("avoid lab-claim or field-measurement language");
     }

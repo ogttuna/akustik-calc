@@ -11,6 +11,7 @@ import {
 
 import { getDefaultMaterialCatalog, resolveMaterial } from "./material-catalog";
 import { buildGateQDoubleLeafFramedBridgeInputContract } from "./dynamic-calculator-double-leaf-framed-bridge-input-contract";
+import { GATE_L_AIRBORNE_BUILDING_PREDICTION_MISSING_INPUTS } from "./dynamic-airborne-gate-l-building-prediction-boundary";
 import { validateWallTripleLeafLayerGroups } from "./wall-triple-leaf-topology-readiness";
 
 export type DynamicCalculatorRoute = "wall" | "floor";
@@ -510,6 +511,7 @@ function addFieldContextContract(input: {
   const requiresStandardizedField = input.targetOutputs.some((output) =>
     ["DnT,w", "DnT,A", "DnT,A,k", "L'nT,w", "L'nT,50", "LnT,A"].includes(output)
   );
+  const requiresBuildingPredictionOwner = input.outputBasis === "building_prediction";
 
   if (!context?.contextMode || context.contextMode === "element_lab") {
     missing.push("contextMode");
@@ -567,21 +569,40 @@ function addFieldContextContract(input: {
     );
   }
 
-  if (
-    input.outputBasis === "building_prediction" &&
-    (!context?.junctionQuality || context.junctionQuality === "unknown")
-  ) {
-    missing.push("flankingJunctionClass");
+  if (requiresBuildingPredictionOwner) {
+    for (const fieldId of GATE_L_AIRBORNE_BUILDING_PREDICTION_MISSING_INPUTS) {
+      missing.push(fieldId);
+    }
     addPrompt(
       input.prompts,
       makePrompt({
-        detail: "Enter junction/flanking quality or choose an explicit conservative flanking assumption.",
+        detail:
+          "Building prediction needs a named flanking/junction owner before it can leave the room-to-room field boundary.",
         fieldId: "flankingJunctionClass",
         label: "Flanking junction class",
         source: "field_context",
         targetOutputs: input.targetOutputs
       })
     );
+    addPrompt(
+      input.prompts,
+      makePrompt({
+        detail:
+          "Choose an explicit conservative flanking assumption before any building-prediction output is promoted.",
+        fieldId: "conservativeFlankingAssumption",
+        label: "Conservative flanking assumption",
+        source: "field_context",
+        targetOutputs: input.targetOutputs
+      })
+    );
+  }
+
+  const requiredFields: AcousticInputFieldId[] = requiresStandardizedField
+    ? ["contextMode", "partitionAreaM2", "receivingRoomVolumeM3", "receivingRoomRt60S"]
+    : ["contextMode", "partitionAreaM2", "receivingRoomVolumeM3"];
+
+  if (requiresBuildingPredictionOwner) {
+    requiredFields.push(...GATE_L_AIRBORNE_BUILDING_PREDICTION_MISSING_INPUTS);
   }
 
   return buildInputCompleteness({
@@ -595,9 +616,7 @@ function addFieldContextContract(input: {
     id: "gate_k_field_building_context_route_inputs",
     missingPhysicalInputs: missing,
     missingSourceEvidence: input.missingSourceEvidence,
-    requiredFields: requiresStandardizedField
-      ? ["contextMode", "partitionAreaM2", "receivingRoomVolumeM3", "receivingRoomRt60S"]
-      : ["contextMode", "partitionAreaM2", "receivingRoomVolumeM3"],
+    requiredFields,
     routeFamily: "field_apparent_output_context",
     targetOutputs: input.targetOutputs
   });
@@ -1039,15 +1058,20 @@ export function buildDynamicCalculatorRouteInputTopologyAssessment(
       outputBasis !== "element_lab" ||
       input.targetOutputs.some((output) => FIELD_OR_APPARENT_OUTPUTS.has(output))
     ) {
+      const fieldContextTargetOutputs =
+        outputBasis === "building_prediction"
+          ? input.targetOutputs
+          : input.targetOutputs.filter((output) =>
+              FIELD_CONTEXT_OUTPUTS.includes(output as (typeof FIELD_CONTEXT_OUTPUTS)[number])
+            );
+
       inputCompletenessSet.push(
         addFieldContextContract({
           context: input.airborneContext,
           missingSourceEvidence,
           outputBasis,
           prompts,
-          targetOutputs: input.targetOutputs.filter((output) =>
-            FIELD_CONTEXT_OUTPUTS.includes(output as (typeof FIELD_CONTEXT_OUTPUTS)[number])
-          )
+          targetOutputs: fieldContextTargetOutputs
         })
       );
     }
@@ -1079,15 +1103,20 @@ export function buildDynamicCalculatorRouteInputTopologyAssessment(
       outputBasis !== "element_lab" ||
       input.targetOutputs.some((output) => FIELD_OR_APPARENT_OUTPUTS.has(output))
     ) {
+      const fieldContextTargetOutputs =
+        outputBasis === "building_prediction"
+          ? input.targetOutputs
+          : input.targetOutputs.filter((output) =>
+              FIELD_CONTEXT_OUTPUTS.includes(output as (typeof FIELD_CONTEXT_OUTPUTS)[number])
+            );
+
       inputCompletenessSet.push(
         addFieldContextContract({
           context: input.airborneContext,
           missingSourceEvidence,
           outputBasis,
           prompts,
-          targetOutputs: input.targetOutputs.filter((output) =>
-            FIELD_CONTEXT_OUTPUTS.includes(output as (typeof FIELD_CONTEXT_OUTPUTS)[number])
-          )
+          targetOutputs: fieldContextTargetOutputs
         })
       );
     }
@@ -1115,7 +1144,9 @@ export function buildDynamicCalculatorRouteInputTopologyAssessment(
     missingSourceEvidence,
     notes: [
       "Source absence blocks exact or calibrated-source promotion only; it does not become a physical-input prompt.",
-      "This Gate K contract is no-runtime and does not move calculator values."
+      outputBasis === "building_prediction"
+        ? "Gate L keeps building-prediction outputs parked until flanking/junction ownership exists."
+        : "This Gate K contract is no-runtime and does not move calculator values."
     ],
     outputBasis,
     prompts,

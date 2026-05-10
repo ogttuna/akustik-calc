@@ -153,7 +153,7 @@ const WALL_LAB_CONTEXT: AirborneContext = {
 const TRIPLE_LEAF_FIELD_CONTEXT: AirborneContext = {
   airtightness: "good",
   connectionType: "line_connection",
-  contextMode: "building_prediction",
+  contextMode: "field_between_rooms",
   panelHeightMm: 2800,
   panelWidthMm: 3600,
   receivingRoomRt60S: 0.6,
@@ -473,12 +473,12 @@ describe("Rockwool triple-leaf explicit screening-only policy Gate B visible gua
       strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
     });
     expect(rwPrime).toMatchObject({
-      postureLabel: "Field continuation",
+      postureLabel: "Airborne field-context prediction",
       status: "live",
       value: "49 dB"
     });
     expect(dnTw).toMatchObject({
-      postureLabel: "Field continuation",
+      postureLabel: "Airborne field-context prediction",
       status: "live",
       value: "50 dB"
     });
@@ -488,7 +488,7 @@ describe("Rockwool triple-leaf explicit screening-only policy Gate B visible gua
       expect(card.detail).toContain(FIELD_OUTPUT_OWNER_POLICY_GUARD);
       expect(card.detail).toContain("not exact");
       expect(card.detail).toContain("not design-grade");
-      expect(card.postureDetail).toContain(FIELD_OUTPUT_DESIGN_GRADE_POSTURE_GUARD);
+      expect(card.postureDetail).toContain("not measured field evidence");
     }
   });
 
@@ -526,8 +526,8 @@ describe("Rockwool triple-leaf explicit screening-only policy Gate B visible gua
     expect(labText).toContain("not measured exact");
     expect(labText).toContain("not source-validated");
     expect(labText).toContain("not design-grade");
-    expect(fieldText).toContain("R'w: Live now | Field continuation | 49 dB");
-    expect(fieldText).toContain("DnT,w: Live now | Field continuation | 50 dB");
+    expect(fieldText).toContain("R'w: Live now | Airborne field-context prediction | 49 dB");
+    expect(fieldText).toContain("DnT,w: Live now | Airborne field-context prediction | 50 dB");
     expect(fieldText).toContain(ROCKWOOL_TRIPLE_LEAF_FIELD_CONTINUATION_GUARD);
     expect(fieldText).toContain(FIELD_OUTPUT_OWNER_POLICY_GUARD);
     expect(fieldText).toContain("does not replace accredited laboratory, site, or design-grade field measurements");

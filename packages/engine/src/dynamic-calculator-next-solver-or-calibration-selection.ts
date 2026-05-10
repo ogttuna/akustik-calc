@@ -151,6 +151,7 @@ const GATE_U_SCORING_SEEDS = {
       "receivingRoomVolumeM3",
       "receivingRoomRt60S",
       "flankingJunctionClass",
+      "conservativeFlankingAssumption",
       "labToFieldBasisDeltaOwner"
     ],
     riskPenalty: 4,

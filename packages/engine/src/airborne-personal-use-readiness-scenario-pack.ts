@@ -145,7 +145,13 @@ export const GATE_J_PERSONAL_USE_READINESS_SCENARIOS = [
     acceptedCandidateOrigins: ["needs_input"],
     description:
       "Wall field and building-prediction outputs require room, area, reverberation, and flanking context instead of borrowing lab Rw.",
-    expectedMissingInputPrompts: ["contextMode", "partitionAreaM2", "receivingRoomVolumeM3", "flankingJunctionClass"],
+    expectedMissingInputPrompts: [
+      "contextMode",
+      "partitionAreaM2",
+      "receivingRoomVolumeM3",
+      "flankingJunctionClass",
+      "conservativeFlankingAssumption"
+    ],
     id: "gate_j_wall_field_building_outputs_need_context_not_lab_alias",
     rejectedCandidateOrigins: ["family_physics_prediction", "screening_fallback"],
     route: "wall",

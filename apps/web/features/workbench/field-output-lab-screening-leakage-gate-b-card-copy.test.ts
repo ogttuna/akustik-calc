@@ -76,7 +76,7 @@ const COMPLETE_TRIPLE_LEAF_TOPOLOGY_DRAFT: WorkbenchWallTopologyDraft = {
 const TRIPLE_LEAF_BUILDING_CONTEXT: AirborneContext = {
   airtightness: "good",
   connectionType: "line_connection",
-  contextMode: "building_prediction",
+  contextMode: "field_between_rooms",
   panelHeightMm: 2800,
   panelWidthMm: 3600,
   receivingRoomRt60S: 0.6,
@@ -109,7 +109,7 @@ const UBIQ_EXACT_OPEN_WEB_200_ROWS: readonly Omit<LayerDraft, "id">[] = [
 ];
 
 const FLOOR_BUILDING_CONTEXT: AirborneContext = {
-  contextMode: "building_prediction",
+  contextMode: "field_between_rooms",
   panelHeightMm: 3000,
   panelWidthMm: 4200,
   receivingRoomRt60S: 0.7,
@@ -412,9 +412,9 @@ describe("field-output lab/screening leakage Gate B visible copy guard", () => {
 
     expect(fieldCoverage).toHaveLength(2);
     for (const item of fieldCoverage) {
-      expect(item.postureLabel).toBe("Field continuation");
-      expect(item.postureDetail).toContain(FIELD_POSTURE_GUARD);
-      expect(item.postureDetail).toContain("measured field result");
+      expect(item.postureLabel).toBe("Airborne field-context prediction");
+      expect(item.postureDetail).toContain("not measured field evidence");
+      expect(item.postureDetail).toContain("not a measured field row");
     }
 
     const evidence = buildSimpleWorkbenchEvidencePacket({
@@ -442,10 +442,10 @@ describe("field-output lab/screening leakage Gate B visible copy guard", () => {
       snapshot
     });
 
-    expect(proposalText).toContain(`R'w: Live now | Field continuation | 49 dB`);
-    expect(proposalText).toContain("DnT,w: Live now | Field continuation | 50 dB");
+    expect(proposalText).toContain(`R'w: Live now | Airborne field-context prediction | 49 dB`);
+    expect(proposalText).toContain("DnT,w: Live now | Airborne field-context prediction | 50 dB");
     expect(proposalText).toContain(FIELD_COPY_GUARD);
-    expect(proposalText).toContain(FIELD_POSTURE_GUARD);
+    expect(proposalText).toContain("not measured field evidence");
     expect(proposalText).toContain("does not replace accredited laboratory or site measurements");
   });
 

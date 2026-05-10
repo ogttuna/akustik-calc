@@ -172,6 +172,7 @@ const GATE_X_SCORING_SEEDS = {
       "receivingRoomVolumeM3",
       "receivingRoomRt60S",
       "flankingJunctionClass",
+      "conservativeFlankingAssumption",
       "buildingPredictionBasisOwner"
     ],
     riskPenalty: 5,

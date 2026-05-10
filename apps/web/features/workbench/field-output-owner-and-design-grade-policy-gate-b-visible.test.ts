@@ -129,7 +129,7 @@ const COMPLETE_TRIPLE_LEAF_TOPOLOGY_DRAFT: WorkbenchWallTopologyDraft = {
 const TRIPLE_LEAF_BUILDING_CONTEXT: AirborneContext = {
   airtightness: "good",
   connectionType: "line_connection",
-  contextMode: "building_prediction",
+  contextMode: "field_between_rooms",
   panelHeightMm: 2800,
   panelWidthMm: 3600,
   receivingRoomRt60S: 0.6,
@@ -162,7 +162,7 @@ const UBIQ_EXACT_OPEN_WEB_200_ROWS: readonly Omit<LayerDraft, "id">[] = [
 ];
 
 const FLOOR_BUILDING_CONTEXT: AirborneContext = {
-  contextMode: "building_prediction",
+  contextMode: "field_between_rooms",
   panelHeightMm: 3000,
   panelWidthMm: 4200,
   receivingRoomRt60S: 0.7,
@@ -477,8 +477,8 @@ describe("field-output owner and design-grade policy Gate B visible guard", () =
 
       expect(card.status, output).toBe("live");
       expect(card.detail, output).toContain(FIELD_OUTPUT_OWNER_POLICY_GUARD);
-      expect(posture.label, output).toBe("Field continuation");
-      expect(posture.detail, output).toContain(FIELD_OUTPUT_DESIGN_GRADE_POSTURE_GUARD);
+      expect(posture.label, output).toBe("Airborne field-context prediction");
+      expect(posture.detail, output).toContain("not measured field evidence");
     }
 
     expect(getCard(snapshot.cards, "R'w")).toMatchObject({ value: "49 dB" });
@@ -490,8 +490,8 @@ describe("field-output owner and design-grade policy Gate B visible guard", () =
       snapshot
     });
 
-    expect(proposalText).toContain("R'w: Live now | Field continuation | 49 dB");
-    expect(proposalText).toContain("DnT,w: Live now | Field continuation | 50 dB");
+    expect(proposalText).toContain("R'w: Live now | Airborne field-context prediction | 49 dB");
+    expect(proposalText).toContain("DnT,w: Live now | Airborne field-context prediction | 50 dB");
     expect(proposalText).toContain(FIELD_OUTPUT_OWNER_POLICY_GUARD);
     expect(proposalText).toContain(FIELD_OUTPUT_DESIGN_GRADE_POSTURE_GUARD);
     expect(proposalText).toContain("do not replace accredited laboratory, site, or design-grade field measurements");

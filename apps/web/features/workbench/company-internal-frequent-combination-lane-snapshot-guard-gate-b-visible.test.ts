@@ -90,7 +90,7 @@ const WALL_LAB_CONTEXT: AirborneContext = {
 const WALL_FIELD_CONTEXT: AirborneContext = {
   airtightness: "good",
   connectionType: "line_connection",
-  contextMode: "building_prediction",
+  contextMode: "field_between_rooms",
   panelHeightMm: 2800,
   panelWidthMm: 3600,
   receivingRoomRt60S: 0.6,
@@ -649,17 +649,17 @@ describe("company-internal frequent-combination lane snapshot guard Gate B visib
       strategy: "triple_leaf_two_cavity_frequency_solver_family_physics_prediction"
     });
     expect(rwPrime).toMatchObject({
-      postureLabel: "Field continuation",
+      postureLabel: "Airborne field-context prediction",
       status: "live",
       value: "49 dB"
     });
     expect(dnTw).toMatchObject({
-      postureLabel: "Field continuation",
+      postureLabel: "Airborne field-context prediction",
       status: "live",
       value: "50 dB"
     });
-    expect(rwPrime.postureDetail).toContain("not being framed as an independent exact source row");
-    expect(dnTw.postureDetail).toContain("not being framed as an independent exact source row");
+    expect(rwPrime.postureDetail).toContain("not measured field evidence");
+    expect(dnTw.postureDetail).toContain("not measured field evidence");
     expect(rwPrime.detail).toContain("not an independent exact field measurement");
     expect(dnTw.detail).toContain("not an independent exact field measurement");
   });

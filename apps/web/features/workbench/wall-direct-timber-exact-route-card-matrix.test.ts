@@ -201,11 +201,11 @@ const CASES: readonly ExactWallCase[] = [
       c: -0.1,
       cards: {
         Rw: { status: "unsupported", value: "Not ready" },
-        "R'w": { status: "live", value: "28 dB" },
-        "Dn,w": { status: "live", value: "27 dB" },
-        "Dn,A": { status: "live", value: "26.9 dB" },
-        "DnT,w": { status: "live", value: "30 dB" },
-        "DnT,A": { status: "live", value: "29.4 dB" },
+        "R'w": { status: "needs_input", value: "Not ready" },
+        "Dn,w": { status: "needs_input", value: "Not ready" },
+        "Dn,A": { status: "needs_input", value: "Not ready" },
+        "DnT,w": { status: "needs_input", value: "Not ready" },
+        "DnT,A": { status: "needs_input", value: "Not ready" },
         STC: { status: "live", value: "28 dB" },
         C: { status: "live", value: "-0.1 dB" },
         Ctr: { status: "live", value: "-3.9 dB" }
@@ -335,11 +335,11 @@ const CASES: readonly ExactWallCase[] = [
       c: -1.1,
       cards: {
         Rw: { status: "unsupported", value: "Not ready" },
-        "R'w": { status: "live", value: "36 dB" },
-        "Dn,w": { status: "live", value: "35 dB" },
-        "Dn,A": { status: "live", value: "33.9 dB" },
-        "DnT,w": { status: "live", value: "37 dB" },
-        "DnT,A": { status: "live", value: "36.4 dB" },
+        "R'w": { status: "needs_input", value: "Not ready" },
+        "Dn,w": { status: "needs_input", value: "Not ready" },
+        "Dn,A": { status: "needs_input", value: "Not ready" },
+        "DnT,w": { status: "needs_input", value: "Not ready" },
+        "DnT,A": { status: "needs_input", value: "Not ready" },
         STC: { status: "live", value: "36 dB" },
         C: { status: "live", value: "-1.1 dB" },
         Ctr: { status: "live", value: "-5.9 dB" }

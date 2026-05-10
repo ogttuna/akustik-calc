@@ -36,6 +36,7 @@ import {
 import { applyApproximateAirborneFieldCompanion, applyVerifiedAirborneCatalogAnchor } from "./airborne-verified-catalog";
 import { classifyLayerRole, materialText } from "./airborne-topology";
 import { calculateDynamicAirborneResult } from "./dynamic-airborne";
+import { GATE_L_AIRBORNE_BUILDING_PREDICTION_BOUNDARY_WARNING } from "./dynamic-airborne-gate-l-building-prediction-boundary";
 import {
   buildDynamicCalculatorCandidateResolverRuntime,
   inferDynamicCalculatorRuntimeRoute
@@ -1461,8 +1462,13 @@ export function calculateAssembly(
       })
     : null;
   const warnings = buildEstimateWarnings(resolvedLayers, selectedCalculatorLabel);
+  const suppressParkedBuildingPredictionOverlayWarnings =
+    dynamicCandidateResolverRuntime?.routeInputAssessment.outputBasis === "building_prediction" &&
+    dynamicCandidateResolverRuntime.resolution.selectedOrigin === "needs_input";
   warnings.push(...(dynamicAirborneResult?.warnings ?? []));
-  warnings.push(...airborneOverlayResult.warnings);
+  if (!suppressParkedBuildingPredictionOverlayWarnings) {
+    warnings.push(...airborneOverlayResult.warnings);
+  }
   warnings.push(...verifiedAirborneAnchorResult.warnings);
   warnings.push(...approximateAirborneFieldCompanionResult.warnings);
   if (rockwoolSplitTripleLeafExactOutputWithhold.warning) {
@@ -1470,6 +1476,12 @@ export function calculateAssembly(
   }
   warnings.push(...buildTargetOutputWarnings(targetOutputSupport));
   warnings.push(...floorFamilySourceGuardWarnings);
+  if (
+    dynamicCandidateResolverRuntime?.routeInputAssessment.outputBasis === "building_prediction" &&
+    dynamicCandidateResolverRuntime.resolution.selectedOrigin === "needs_input"
+  ) {
+    warnings.push(GATE_L_AIRBORNE_BUILDING_PREDICTION_BOUNDARY_WARNING);
+  }
 
   if (shouldWithholdUnreadyDynamicFloorImpactRuntime && gateWFloorImpactContract) {
     const gateZFieldWarning = buildGateZFieldImpactRuntimeWarning(gateZFloorImpactFieldAssessment);

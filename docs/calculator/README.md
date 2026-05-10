@@ -17,8 +17,9 @@ override or anchor known assemblies, but missing source packets must
 not block a labelled family-specific physics prediction when the
 required topology and material inputs are present.
 
-As of 2026-05-10, Personal-Use MVP Coverage Sprint Gate K has landed
-first-class airborne field-context input-surface wiring for owned
+As of 2026-05-10, Personal-Use MVP Coverage Sprint Gate L has landed
+the airborne `building_prediction` boundary after first-class airborne
+field-context input-surface wiring for owned
 lab-family wall routes
 after Gate H lined massive/masonry and CLT wall lab family-physics
 promotion and Gate G generalized wall multi-cavity / triple-leaf route
@@ -39,8 +40,14 @@ proves cards, posture, provenance, dossiers, saved replay, Markdown
 report text, and calculator API payloads expose that basis honestly;
 Gate K now makes `field_between_rooms`, panel geometry, receiving-room
 volume, and RT60 first-class workbench inputs and keeps partial field
-contexts parked as `needs_input` without a field budget. The current
-selected next lane is Gate L airborne building-prediction boundary.
+contexts parked as `needs_input` without a field budget; Gate L now
+parks every airborne `building_prediction` request until
+`flankingJunctionClass` and `conservativeFlankingAssumption` are
+explicit flanking/junction owners, including the conservative flanking
+assumption, suppresses legacy building overlay warnings while parked,
+and keeps building cards out of Gate I field posture. The current
+selected next lane is Gate M airborne building-prediction input
+contract.
 Gate A
 landed in
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-a-scenario-matrix-contract.test.ts`
@@ -102,11 +109,18 @@ and selected
 `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-l-airborne-building-prediction-boundary-contract.test.ts`
 with action
 `gate_l_personal_use_mvp_airborne_building_prediction_boundary_plan`.
+Gate L landed in that file with selection status
+`gate_l_personal_use_mvp_airborne_building_prediction_boundary_landed_selected_building_prediction_input_contract_gate_m`
+and selected
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-m-airborne-building-prediction-input-contract.test.ts`
+with action
+`gate_m_personal_use_mvp_airborne_building_prediction_input_contract_plan`.
 Gate BI landed in
 `packages/engine/src/calculator-model-first-physics-prediction-pivot-gate-bi-steel-floor-formula-same-stack-iso-delta-lw-tighten-candidate-governance-contract.test.ts`
 with action
 `gate_bi_steel_floor_formula_same_stack_iso_delta_lw_tighten_candidate_governance_plan`.
 See
+[CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_L_HANDOFF.md](./CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_L_HANDOFF.md),
 [CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_K_HANDOFF.md](./CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_K_HANDOFF.md),
 [CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_J_HANDOFF.md](./CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_J_HANDOFF.md),
 [CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_I_HANDOFF.md](./CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_I_HANDOFF.md),
@@ -124,20 +138,24 @@ and
 
 The 2026-05-10 ROI revalidation selected Gate G after Gate F, Gate G
 then selected Gate H, Gate H selected Gate I, Gate I selected Gate J,
-Gate J selected Gate K, and Gate K has now selected Gate L. Gate K keeps
+Gate J selected Gate K, Gate K selected Gate L, and Gate L has now
+selected Gate M. Gate K keeps
 the new airborne field-context basis first-class on the wall input
 surface and makes RT60 a visible blocker before `DnT,w` / `DnT,A` can be
-defended. Gate L is next: an explicit building-prediction/flanking
-boundary so `building_prediction` cannot borrow Gate I field budgets.
+defended. Gate L adds the explicit building-prediction flanking/junction
+boundary and conservative flanking assumption blocker so
+`building_prediction` cannot borrow Gate I field budgets; Gate M is next
+to define the complete building-prediction input owner contract.
 Steel-floor tolerance tightening stays deferred until
 independent source-owned same-stack ISO `DeltaLw` packets exist.
-Gate K validation completed on 2026-05-10: focused Gate K engine/web
-packs, Gate I/J/K continuity, web surface continuity, engine/web
-typechecks, targeted field-output route-card regressions, final
-`pnpm calculator:gate:current`, and whitespace guard all passed. Final
-current-gate totals were engine 352 files / 2039 tests, web 70 files /
-303 passed + 18 skipped, repo build 5/5 successful, and whitespace guard
-clean.
+Gate L validation completed on 2026-05-10: focused Gate L engine
+boundary contract, Gate L/K workbench input and card surface coverage,
+targeted route-card regressions, Gate I/J/K/L engine continuity,
+Gate J/K/L web continuity, targeted legacy engine/web regressions,
+engine/web typechecks, final `pnpm calculator:gate:current`, and
+whitespace guard all passed. Final current-gate totals were engine 353
+files / 2044 tests, web 71 files / 306 passed + 18 skipped, repo build
+5/5 successful, and whitespace guard clean.
 
 Gate A, Gate B, Gate C, Gate D, Gate E, Gate G, Gate H, Gate I,
 Gate J, Gate K, Gate L, Gate M, Gate N, Gate O, Gate P, Gate Q, Gate R,
@@ -147,8 +165,9 @@ Gate AJ, Gate AK, Gate AL, Gate AM, Gate AN, Gate AO, Gate AP, Gate AQ,
 Gate AR, Gate AS, Gate AT, Gate AU, Gate AV, Gate AW, Gate AX, Gate AY,
 Gate AZ, Gate BA, Gate BB, Gate BC, Gate BD, Gate BE, Gate BF, Gate BG,
 Gate BH, Gate BI, and Personal-Use MVP Coverage Sprint Gate A, Gate B,
-Gate C, Gate D, Gate E, Gate F, Gate G, Gate H, Gate I, and Gate J for this
-pivot have landed. The original pivot Gate A made the corrected rule
+Gate C, Gate D, Gate E, Gate F, Gate G, Gate H, Gate I, Gate J,
+Gate K, and Gate L for this pivot have landed. The original pivot Gate A
+made the corrected rule
 executable: source absence
 blocks exact/calibration promotion only, not formula-backed prediction.
 Gate B added shared airborne `airborneBasis` / `airborneCandidateSet`

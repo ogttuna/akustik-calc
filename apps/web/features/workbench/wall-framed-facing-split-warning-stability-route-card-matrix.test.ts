@@ -26,7 +26,7 @@ type CardSnapshot = {
 
 const LSF_FIELD_CONTEXT: AirborneContext = {
   connectionType: "line_connection",
-  contextMode: "building_prediction",
+  contextMode: "field_between_rooms",
   panelHeightMm: 2800,
   panelWidthMm: 3600,
   receivingRoomRt60S: 0.6,

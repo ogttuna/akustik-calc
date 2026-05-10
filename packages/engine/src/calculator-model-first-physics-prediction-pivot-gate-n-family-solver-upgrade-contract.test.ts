@@ -212,7 +212,8 @@ describe("calculator model-first physics prediction pivot Gate N", () => {
       "partitionAreaM2",
       "receivingRoomVolumeM3",
       "receivingRoomRt60S",
-      "flankingJunctionClass"
+      "flankingJunctionClass",
+      "conservativeFlankingAssumption"
     ]);
     expect(
       selection.candidates.every((candidate) => candidate.sourceRowsRequiredForRuntimeSelection === false)

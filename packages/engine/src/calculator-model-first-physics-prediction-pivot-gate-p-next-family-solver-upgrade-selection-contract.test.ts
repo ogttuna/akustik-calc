@@ -255,6 +255,7 @@ describe("calculator model-first physics prediction pivot Gate P", () => {
       "receivingRoomVolumeM3",
       "receivingRoomRt60S",
       "flankingJunctionClass",
+      "conservativeFlankingAssumption",
       "labToFieldBasisDeltaOwner"
     ]);
     expect(byId.get("lined_massive_masonry_clt_solver")).toMatchObject({

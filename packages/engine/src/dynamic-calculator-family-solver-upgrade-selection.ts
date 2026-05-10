@@ -318,7 +318,13 @@ const CANDIDATE_SEEDS = [
     ],
     delegateMethods: ["mass_law", "sharp"],
     dynamicAirborneFamilies: ["single_leaf_panel", "double_leaf", "multileaf_multicavity"],
-    hardBlockersBeforeGate: ["partitionAreaM2", "receivingRoomVolumeM3", "receivingRoomRt60S", "flankingJunctionClass"],
+    hardBlockersBeforeGate: [
+      "partitionAreaM2",
+      "receivingRoomVolumeM3",
+      "receivingRoomRt60S",
+      "flankingJunctionClass",
+      "conservativeFlankingAssumption"
+    ],
     id: "field_building_prediction_context_solver",
     implementationBlastRadius: "high",
     materialScenarioIds: [],
@@ -329,7 +335,8 @@ const CANDIDATE_SEEDS = [
       "partitionAreaM2",
       "receivingRoomVolumeM3",
       "receivingRoomRt60S",
-      "flankingJunctionClass"
+      "flankingJunctionClass",
+      "conservativeFlankingAssumption"
     ],
     route: "wall",
     sourceRowsRequiredForRuntimeSelection: false,

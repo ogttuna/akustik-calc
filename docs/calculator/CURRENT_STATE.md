@@ -22,7 +22,10 @@ read
 If you need the current Personal-Use MVP Coverage Sprint Gate H
 checkpoint read
 [CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_H_HANDOFF.md](./CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_H_HANDOFF.md).
-If you need the current Personal-Use MVP Coverage Sprint Gate K
+If you need the current Personal-Use MVP Coverage Sprint Gate L
+checkpoint read
+[CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_L_HANDOFF.md](./CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_L_HANDOFF.md).
+If you need the preceding Personal-Use MVP Coverage Sprint Gate K
 checkpoint read
 [CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_K_HANDOFF.md](./CHECKPOINT_2026-05-10_PERSONAL_USE_MVP_COVERAGE_SPRINT_GATE_K_HANDOFF.md).
 If you need the preceding Personal-Use MVP Coverage Sprint Gate J
@@ -72,15 +75,15 @@ path was found too narrow for the user's calculator-first goal.
 
 Current selected status:
 
-`gate_k_personal_use_mvp_airborne_field_context_input_surface_landed_selected_building_prediction_boundary_gate_l`
+`gate_l_personal_use_mvp_airborne_building_prediction_boundary_landed_selected_building_prediction_input_contract_gate_m`
 
 Selected next implementation file:
 
-`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-l-airborne-building-prediction-boundary-contract.test.ts`
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-m-airborne-building-prediction-input-contract.test.ts`
 
 Selected next action:
 
-`gate_l_personal_use_mvp_airborne_building_prediction_boundary_plan`
+`gate_m_personal_use_mvp_airborne_building_prediction_input_contract_plan`
 
 Strategic ROI replan:
 
@@ -148,6 +151,13 @@ Current strategy:
   triple-leaf wall contexts feed Gate I/J values unchanged; partial
   field contexts block as `needs_input` with precise missing input copy
   and no field budget.
+- Gate L has now landed the airborne `building_prediction` boundary.
+  Building-prediction requests, including lab-looking `Rw` / `STC`
+  target sets made under building context, select `needs_input` until
+  `flankingJunctionClass` and `conservativeFlankingAssumption` are
+  explicit flanking/junction owners. The conservative flanking assumption
+  is required before promotion. Gate L suppresses parked building overlay warnings and
+  keeps workbench building cards out of Gate I field posture.
 - The 2026-05-10 ROI revalidation selected Gate G first because it moved
   the broadest user-visible wall coverage blocker before lined
   masonry/CLT wall upgrades, field/building continuations, or any return
@@ -168,18 +178,57 @@ Current strategy:
 - Partial explicit lined or mass-timber wall intent is `needs_input`;
   ordinary single leaf, double/framed, grouped triple-leaf, and field
   outputs remain outside the Gate H lab corridor.
-- Gate L is now selected to keep airborne building prediction explicit
-  and blocked until flanking/junction ownership exists.
+- Gate M is now selected to define the complete airborne
+  building-prediction input owner contract before any runtime adapter is
+  allowed.
 - Broad source crawling remains blocked unless the active matrix names a
   specific source or holdout as the highest-impact unblocker.
 
-Current Gate K result:
+Current Gate L result:
+
+- Gate L adds
+  `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-l-airborne-building-prediction-boundary-contract.test.ts`
+  and
+  `packages/engine/src/dynamic-airborne-gate-l-building-prediction-boundary.ts`.
+- Complete building-prediction wall requests now select
+  `candidate_dynamic_needs_input` with missing
+  `flankingJunctionClass` and `conservativeFlankingAssumption`.
+- The calculator API warning is the Gate L building-prediction boundary
+  warning; legacy field-side overlay warnings are not shown while the
+  route is parked.
+- Workbench cards for `R'w` / `DnT,w` remain `Not ready` under
+  building-prediction mode until the flanking/junction and conservative
+  assumption owners exist.
+- Complete `field_between_rooms` Gate I/J/K cases remain live and
+  numeric-stable, and lab element `Rw` / `STC` routes remain unaffected.
+- Gate L selected Gate M:
+  `gate_m_personal_use_mvp_airborne_building_prediction_input_contract_plan`.
+
+Gate L validation result:
+
+Validation completed on 2026-05-10: focused Gate L engine boundary
+contract passed 1 file / 5 tests; focused Gate L/K workbench input and
+card surface coverage passed 2 files / 8 tests; targeted route-card
+regression pack passed 4 files / 34 tests; Gate I/J/K/L engine
+continuity passed 4 files / 20 tests; Gate J/K/L web continuity passed
+3 files / 12 tests; targeted legacy engine regression pack passed 4
+files / 20 tests; targeted legacy web regression pack passed 8 files /
+40 tests; engine and web typechecks passed; final
+`pnpm calculator:gate:current` passed with engine 353 files / 2044
+tests, web 71 files / 306 passed + 18 skipped, repo build 5/5
+successful, and whitespace guard clean. Known non-fatal warnings remain
+the existing Zustand unavailable test-storage warnings and optional
+`sharp/@img` package resolution warnings during the Next build.
+
+Previous Gate K result:
 
 - Gate K adds
   `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-k-airborne-field-context-input-surface-contract.test.ts`,
   `apps/web/features/workbench/airborne-field-context-input-surface.ts`,
   and
   `apps/web/features/workbench/airborne-field-context-input-surface.test.ts`;
+- Gate K selection status was
+  `gate_k_personal_use_mvp_airborne_field_context_input_surface_landed_selected_building_prediction_boundary_gate_l`;
 - workbench route controls now treat field airborne `R'w`, `Dn,w`,
   `Dn,A`, `DnT,w`, and `DnT,A` as requiring `field_between_rooms`, panel
   width/height, receiving-room volume, and receiving-room RT60 before

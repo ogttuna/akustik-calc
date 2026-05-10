@@ -13,7 +13,9 @@ export const WORKBENCH_AIRBORNE_FIELD_CONTEXT_INPUT_SURFACE_ID =
   "gate_k_personal_use_mvp_airborne_field_context_input_surface";
 
 export const WORKBENCH_AIRBORNE_FIELD_CONTEXT_INPUT_LABELS: Partial<Record<AcousticInputFieldId, string>> = {
+  conservativeFlankingAssumption: "Conservative flanking assumption",
   contextMode: "Context mode",
+  flankingJunctionClass: "Flanking/junction class",
   partitionAreaM2: "Partition width and height",
   receivingRoomRt60S: "Receiving-room RT60 (s)",
   receivingRoomVolumeM3: "Receiving-room volume (m3)"
@@ -77,8 +79,8 @@ export function buildWorkbenchAirborneFieldContextInputSurface(input: {
     return {
       airborneContext,
       id: WORKBENCH_AIRBORNE_FIELD_CONTEXT_INPUT_SURFACE_ID,
-      missingPhysicalInputs: ["flankingJunctionClass"],
-      status: "unsupported"
+      missingPhysicalInputs: ["flankingJunctionClass", "conservativeFlankingAssumption"],
+      status: "needs_input"
     };
   }
 
@@ -119,5 +121,5 @@ export function formatWorkbenchAirborneFieldContextMissingInputWarning(
     (field) => WORKBENCH_AIRBORNE_FIELD_CONTEXT_INPUT_LABELS[field] ?? field
   );
 
-  return `Airborne field-context route needs these physical inputs before calculating R'w / DnT,w: ${missingLabels.join(", ")}.`;
+  return `Airborne field/building-context route needs these physical inputs before calculating R'w / DnT,w: ${missingLabels.join(", ")}.`;
 }

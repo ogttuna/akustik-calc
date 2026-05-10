@@ -6,6 +6,7 @@ import type { LayerInput, RequestedOutputId } from "@dynecho/shared";
 import { describe, expect, it } from "vitest";
 
 import { calculateAssembly } from "./calculate-assembly";
+import { GATE_L_AIRBORNE_BUILDING_PREDICTION_BOUNDARY_WARNING } from "./dynamic-airborne-gate-l-building-prediction-boundary";
 import {
   applySplitPlans,
   ENGINE_MIXED_GENERATED_CASES,
@@ -78,10 +79,7 @@ const COMMON_FRAMED_WARNINGS = [
 
 const LSF_EXACT_LAB_WARNING =
   "Curated exact airborne lab match active: Knauf accredited lab report 416889. DynEcho anchored the dynamic curve to official Rw 55.0 dB.";
-const LSF_FIELD_FLANKING_WARNING =
-  "Airborne field-side overlay active. The current building prediction context is carrying a conservative flanking penalty of 7.4 dB.";
-const TIMBER_FIELD_FLANKING_WARNING =
-  "Airborne field-side overlay active. The current building prediction context is carrying a conservative flanking penalty of 6.6 dB.";
+const BUILDING_PREDICTION_BOUNDARY_WARNING = GATE_L_AIRBORNE_BUILDING_PREDICTION_BOUNDARY_WARNING;
 const MONOTONIC_FLOOR_WARNING =
   "A framed reinforcement monotonic floor was applied because one-face board reinforcement unexpectedly scored below its lighter sibling variant.";
 const UNSUPPORTED_LAB_WARNING =
@@ -99,15 +97,15 @@ const LSF_LAB_WARNINGS = [
 
 const LSF_FIELD_WARNINGS = [
   ...COMMON_FRAMED_WARNINGS,
-  LSF_FIELD_FLANKING_WARNING,
   UNSUPPORTED_FIELD_WARNING,
+  BUILDING_PREDICTION_BOUNDARY_WARNING,
   NO_EXACT_FLOOR_WARNING
 ] as const;
 
 const TIMBER_FIELD_WARNINGS = [
   ...COMMON_FRAMED_WARNINGS,
-  TIMBER_FIELD_FLANKING_WARNING,
   UNSUPPORTED_FIELD_WARNING,
+  BUILDING_PREDICTION_BOUNDARY_WARNING,
   NO_EXACT_FLOOR_WARNING
 ] as const;
 

@@ -11,6 +11,7 @@ export const STANDARDIZED_AIRBORNE_OUTPUTS = new Set<RequestedOutputId>(["DnT,w"
 const AREA_NORMALIZED_AIRBORNE_OUTPUTS = new Set<RequestedOutputId>(["Dn,w", "Dn,A"]);
 
 type FieldAirborneBlockingRequirement =
+  | "building_prediction_owner"
   | "curated_field_source"
   | "field_mode"
   | "partition_geometry"
@@ -122,6 +123,12 @@ export function getFieldAirborneBlockingRequirement(
   if (selectedMissingInputs.includes("receivingRoomRt60S")) {
     return "rt60";
   }
+  if (
+    selectedMissingInputs.includes("flankingJunctionClass") ||
+    selectedMissingInputs.includes("conservativeFlankingAssumption")
+  ) {
+    return "building_prediction_owner";
+  }
 
   if (output === "R'w") {
     return null;
@@ -151,6 +158,8 @@ export function getFieldAirbornePendingLabel(
   result: AssemblyCalculation | null
 ): string {
   switch (getFieldAirborneBlockingRequirement(output, result)) {
+    case "building_prediction_owner":
+      return "Need flanking owner";
     case "curated_field_source":
       return "Need curated field source";
     case "field_mode":
@@ -173,6 +182,8 @@ export function getFieldAirbornePendingDetail(
   const routeLabel = getFieldAirborneRouteLabel(result);
 
   switch (getFieldAirborneBlockingRequirement(output, result)) {
+    case "building_prediction_owner":
+      return `Building prediction route is active, but ${output} stays parked until flanking/junction class and a conservative flanking assumption are owned. DAC will not reuse Gate I field budgets or lab values as building-prediction evidence.`;
     case "curated_field_source":
       return `${output} stays unavailable until a curated official field source publishes it for the current airborne assembly.`;
     case "field_mode":

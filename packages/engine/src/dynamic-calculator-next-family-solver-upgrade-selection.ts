@@ -205,6 +205,7 @@ const GATE_P_SCORING_SEEDS = {
       "receivingRoomVolumeM3",
       "receivingRoomRt60S",
       "flankingJunctionClass",
+      "conservativeFlankingAssumption",
       "labToFieldBasisDeltaOwner"
     ],
     riskPenalty: 5,

@@ -189,21 +189,56 @@ Fresh external checks still support this direction:
   that scope with stricter candidate rejection and basis/error-budget
   transparency.
 
-Gate K has now landed from that decision chain. The immediate next
-action is:
+Gate L has now landed from that decision chain:
 
 `gate_l_personal_use_mvp_airborne_building_prediction_boundary_plan`
 
+The immediate next action is:
+
+`gate_m_personal_use_mvp_airborne_building_prediction_input_contract_plan`
+
 Target:
 
-`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-l-airborne-building-prediction-boundary-contract.test.ts`
+`packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-m-airborne-building-prediction-input-contract.test.ts`
 
-Gate L should lock the airborne `building_prediction` boundary before
-any later field/building expansion. Gate I/J/K now own complete
-`field_between_rooms` wall outputs with explicit room context; Gate L
-must prove `building_prediction` cannot borrow those field budgets or
-lab values until flanking/junction ownership, propagation basis, and
-building-prediction output contracts exist.
+Gate M should define the first positive input contract for airborne
+`building_prediction`. Gate L now blocks all building-prediction
+requests as `needs_input` until the flanking/junction class and
+conservative flanking assumption are owned; Gate M must decide the
+minimum complete owner set, without promoting runtime values yet.
+
+Gate L landed execution summary:
+
+1. Created
+   `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-l-airborne-building-prediction-boundary-contract.test.ts`.
+2. Added
+   `packages/engine/src/dynamic-airborne-gate-l-building-prediction-boundary.ts`
+   to centralize the Gate L plan id, status, missing physical fields,
+   and warning copy.
+3. Dynamic route input topology now treats every airborne
+   `building_prediction` request as a physical-input blocker until
+   `flankingJunctionClass` and `conservativeFlankingAssumption` are
+   explicit. This applies even when legacy `junctionQuality` is `good`,
+   and also applies to lab-looking `Rw` / `STC` requests made under
+   `building_prediction` context.
+4. Calculator warnings suppress legacy building-context overlay warnings
+   while the building route is parked, and instead expose the Gate L
+   building-prediction boundary warning.
+5. Workbench building-prediction field cards now show `Not ready` /
+   `needs_input` with flanking/junction and conservative-assumption copy
+   instead of showing Gate I field card posture or field budgets.
+6. Complete `field_between_rooms` Gate I/J/K cases remain live and
+   numeric-stable; lab element `Rw` / `STC` routes remain unaffected.
+7. Next selected gate:
+   `gate_m_personal_use_mvp_airborne_building_prediction_input_contract_plan`.
+8. Validation completed on 2026-05-10: focused Gate L engine boundary
+   contract, Gate L/K workbench coverage, targeted route-card
+   regressions, Gate I/J/K/L engine continuity, Gate J/K/L web
+   continuity, targeted legacy engine/web regressions, engine/web
+   typechecks, final `pnpm calculator:gate:current`, and whitespace
+   guard all passed. Final current-gate totals were engine 353 files /
+   2044 tests, web 71 files / 306 passed + 18 skipped, repo build 5/5
+   successful, and whitespace guard clean.
 
 Gate K landed execution summary:
 
@@ -3076,41 +3111,39 @@ Zustand unavailable test-storage warnings and optional sharp package
 resolution warnings during web build. Broad `pnpm check` was not rerun
 because Gate BI has no runtime/API/UI surface change.
 
-## Next Implementation Order - Personal-Use MVP Coverage Sprint Gate L Airborne Building-Prediction Boundary
+## Next Implementation Order - Personal-Use MVP Coverage Sprint Gate M Airborne Building-Prediction Input Contract
 
-Gate K has landed first-class input-surface wiring for the Gate I/J
-field-between-rooms airborne basis. The next highest-risk user-facing
-gap is `building_prediction`: the UI already exposes the mode, but there
-is no owned flanking/junction propagation route. Gate L should therefore
-land as a boundary and readiness contract, not a broad runtime
-prediction gate.
+Gate L has landed the no-runtime boundary: airborne
+`building_prediction` is parked as `needs_input` until
+flanking/junction ownership and a conservative flanking assumption are
+explicit. Gate M should define the first complete building-prediction
+input contract without promoting a numeric building-prediction runtime.
 
-Gate L order:
+Gate M order:
 
 1. Add
-   `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-l-airborne-building-prediction-boundary-contract.test.ts`.
-2. Re-read Gate I/J/K contracts, `dynamic-calculator-route-input-topology.ts`,
-   `airborne-field-context-input-surface.ts`, route panel mode copy, cards,
-   report builders, and estimate API payload handling before changing
-   behavior.
-3. Assert `building_prediction` requests cannot reuse Gate I
-   `field_between_rooms` budgets, selected candidates, warnings, or field
-   card posture.
-4. Define the minimum future physical owner set for airborne building
-   prediction: separating element area, sending/receiving room geometry,
-   flanking junction class, junction dimensions or coupling class,
-   receiver absorption/reverberation basis, and output-basis owner for
-   apparent/standardized building metrics.
-5. Keep complete `field_between_rooms` Gate I/J/K cases live and
-   numeric-stable while building requests return `unsupported` or
-   `needs_input` with named missing physical owners.
-6. Assert lab `Rw` / `STC` cards, field `R'w` / `DnT,w` cards, and future
-   building-prediction cards remain separate basis families. No
-   field-to-building or lab-to-building alias is allowed.
-7. Preserve exact-source precedence and all Gate G/H/I/K numeric pins.
-8. Run focused Gate L validation, Gate I/J/K continuity, relevant web
-   boundary/card tests, engine/web typecheck as needed, final
-   `pnpm calculator:gate:current`, and `git diff --check`.
+   `packages/engine/src/calculator-personal-use-mvp-coverage-sprint-gate-m-airborne-building-prediction-input-contract.test.ts`.
+2. Re-read Gate I/J/K/L contracts, `dynamic-calculator-route-input-topology.ts`,
+   `apply-airborne-context.ts`, `calculate-assembly.ts`, workbench
+   field/building cards, report/API payloads, and current ISO 12354
+   basis notes before changing behavior.
+3. Define the minimum complete owner set for airborne building
+   prediction: separating element area, sending and receiving room
+   geometry or basis owner, receiver absorption/reverberation basis,
+   flanking/junction class, conservative flanking assumption, junction
+   coupling/length owner, and output-basis owner for apparent versus
+   standardized building metrics.
+4. Assert that partial owner sets remain `needs_input` with exact fields
+   and that complete owner sets still do not promote runtime until a
+   later solver/adapter gate owns the formula.
+5. Keep Gate I/J/K `field_between_rooms` values and Gate L parked
+   building cards stable while adding only contract metadata and
+   missing-input readiness.
+6. Preserve exact-source precedence, lab/field/building separation, and
+   all Gate G/H/I/K numeric pins.
+7. Run focused Gate M validation, Gate L continuity, Gate I/J/K field
+   continuity, relevant web card/API tests, `pnpm calculator:gate:current`,
+   and `git diff --check`.
 
 ## Consumed Gate K Implementation Order - Personal-Use MVP Coverage Sprint Airborne Field-Context Input Surface
 

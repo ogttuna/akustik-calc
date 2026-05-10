@@ -283,9 +283,13 @@ describe("calculator model-first physics prediction pivot Gate K", () => {
     ]);
 
     expect(building.outputBasis).toBe("building_prediction");
-    expect(building.missingPhysicalInputs).toEqual(["flankingJunctionClass"]);
+    expect(building.missingPhysicalInputs).toEqual(["flankingJunctionClass", "conservativeFlankingAssumption"]);
     expect(building.prompts[0]).toMatchObject({
       fieldId: "flankingJunctionClass",
+      source: "field_context"
+    });
+    expect(building.prompts[1]).toMatchObject({
+      fieldId: "conservativeFlankingAssumption",
       source: "field_context"
     });
   });

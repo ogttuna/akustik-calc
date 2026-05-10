@@ -29,6 +29,14 @@ type CardSnapshot = {
   value: string;
 };
 
+const BUILDING_PREDICTION_FIELD_CARDS = {
+  "R'w": { status: "needs_input", value: "Not ready" },
+  "Dn,w": { status: "needs_input", value: "Not ready" },
+  "Dn,A": { status: "needs_input", value: "Not ready" },
+  "DnT,w": { status: "needs_input", value: "Not ready" },
+  "DnT,A": { status: "needs_input", value: "Not ready" }
+} as const satisfies Pick<Record<WallOutputId, CardSnapshot>, "R'w" | "Dn,w" | "Dn,A" | "DnT,w" | "DnT,A">;
+
 type PairContextCase = {
   branchDetail: string;
   cards: Record<WallOutputId, CardSnapshot>;
@@ -133,11 +141,7 @@ const LEGACY_AUTO_CASES: readonly PairContextCase[] = [
     warningPattern: /No curated exact floor-system landed/i,
     cards: {
       Rw: { status: "unsupported", value: "Not ready" },
-      "R'w": { status: "live", value: "55 dB" },
-      "Dn,w": { status: "live", value: "54 dB" },
-      "Dn,A": { status: "live", value: "53.1 dB" },
-      "DnT,w": { status: "live", value: "57 dB" },
-      "DnT,A": { status: "live", value: "55.6 dB" },
+      ...BUILDING_PREDICTION_FIELD_CARDS,
       STC: { status: "live", value: "55 dB" },
       C: { status: "live", value: "-0.9 dB" },
       Ctr: { status: "live", value: "-6 dB" }
@@ -228,11 +232,7 @@ const LEGACY_AUTO_CASES: readonly PairContextCase[] = [
     warningPattern: /No curated exact floor-system landed/i,
     cards: {
       Rw: { status: "unsupported", value: "Not ready" },
-      "R'w": { status: "live", value: "50 dB" },
-      "Dn,w": { status: "live", value: "49 dB" },
-      "Dn,A": { status: "live", value: "48 dB" },
-      "DnT,w": { status: "live", value: "51 dB" },
-      "DnT,A": { status: "live", value: "50.5 dB" },
+      ...BUILDING_PREDICTION_FIELD_CARDS,
       STC: { status: "live", value: "50 dB" },
       C: { status: "live", value: "-1 dB" },
       Ctr: { status: "live", value: "-5.8 dB" }
@@ -388,11 +388,7 @@ const EXPLICIT_SIDE_COUNT_CASES: readonly PairContextCase[] = [
     warningPattern: /No curated exact floor-system landed/i,
     cards: {
       Rw: { status: "unsupported", value: "Not ready" },
-      "R'w": { status: "live", value: "50 dB" },
-      "Dn,w": { status: "live", value: "49 dB" },
-      "Dn,A": { status: "live", value: "47.7 dB" },
-      "DnT,w": { status: "live", value: "52 dB" },
-      "DnT,A": { status: "live", value: "50.2 dB" },
+      ...BUILDING_PREDICTION_FIELD_CARDS,
       STC: { status: "live", value: "50 dB" },
       C: { status: "live", value: "-1.3 dB" },
       Ctr: { status: "live", value: "-6.4 dB" }
@@ -421,11 +417,7 @@ const EXPLICIT_SIDE_COUNT_CASES: readonly PairContextCase[] = [
     warningPattern: /No curated exact floor-system landed/i,
     cards: {
       Rw: { status: "unsupported", value: "Not ready" },
-      "R'w": { status: "live", value: "53 dB" },
-      "Dn,w": { status: "live", value: "52 dB" },
-      "Dn,A": { status: "live", value: "50.7 dB" },
-      "DnT,w": { status: "live", value: "55 dB" },
-      "DnT,A": { status: "live", value: "53.2 dB" },
+      ...BUILDING_PREDICTION_FIELD_CARDS,
       STC: { status: "live", value: "53 dB" },
       C: { status: "live", value: "-1.3 dB" },
       Ctr: { status: "live", value: "-6.4 dB" }
@@ -578,11 +570,7 @@ const EXPLICIT_SIDE_COUNT_CASES: readonly PairContextCase[] = [
     warningPattern: /No curated exact floor-system landed/i,
     cards: {
       Rw: { status: "unsupported", value: "Not ready" },
-      "R'w": { status: "live", value: "50 dB" },
-      "Dn,w": { status: "live", value: "49 dB" },
-      "Dn,A": { status: "live", value: "48.2 dB" },
-      "DnT,w": { status: "live", value: "51 dB" },
-      "DnT,A": { status: "live", value: "50.7 dB" },
+      ...BUILDING_PREDICTION_FIELD_CARDS,
       STC: { status: "live", value: "50 dB" },
       C: { status: "live", value: "-0.8 dB" },
       Ctr: { status: "live", value: "-5.6 dB" }
@@ -611,11 +599,7 @@ const EXPLICIT_SIDE_COUNT_CASES: readonly PairContextCase[] = [
     warningPattern: /No curated exact floor-system landed/i,
     cards: {
       Rw: { status: "unsupported", value: "Not ready" },
-      "R'w": { status: "live", value: "53 dB" },
-      "Dn,w": { status: "live", value: "52 dB" },
-      "Dn,A": { status: "live", value: "51.2 dB" },
-      "DnT,w": { status: "live", value: "54 dB" },
-      "DnT,A": { status: "live", value: "53.7 dB" },
+      ...BUILDING_PREDICTION_FIELD_CARDS,
       STC: { status: "live", value: "53 dB" },
       C: { status: "live", value: "-0.8 dB" },
       Ctr: { status: "live", value: "-5.6 dB" }

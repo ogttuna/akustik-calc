@@ -229,8 +229,8 @@ describe("airborne field-context input surface", () => {
       "Context mode, Partition width and height, Receiving-room volume (m3), Receiving-room RT60 (s)"
     );
     expect(building).toMatchObject({
-      missingPhysicalInputs: ["flankingJunctionClass"],
-      status: "unsupported"
+      missingPhysicalInputs: ["flankingJunctionClass", "conservativeFlankingAssumption"],
+      status: "needs_input"
     });
     expect(getAutomaticOutputs("wall", "field_between_rooms")).toEqual(
       expect.arrayContaining(["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A"])
@@ -306,7 +306,7 @@ describe("airborne field-context input surface", () => {
     expect(scenario.result.airborneBasis?.missingPhysicalInputs).toEqual(["receivingRoomRt60S"]);
     expect(scenario.warnings).toEqual(
       expect.arrayContaining([
-        expect.stringContaining("Airborne field-context route needs these physical inputs before calculating R'w / DnT,w: Receiving-room RT60 (s).")
+        expect.stringContaining("Airborne field/building-context route needs these physical inputs before calculating R'w / DnT,w: Receiving-room RT60 (s).")
       ])
     );
     for (const card of [rwPrimeCard, dntCard]) {
@@ -395,6 +395,14 @@ describe("airborne field-context input surface", () => {
     expect(getGateIAirborneFieldContextSurface(lab.result)).toBeNull();
     expect(lab.result.airborneBasis?.method).not.toBe(GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD);
     expect(getGateIAirborneFieldContextSurface(building.result)).toBeNull();
+    expect(building.result.airborneCandidateResolution).toMatchObject({
+      selectedCandidateId: "candidate_dynamic_needs_input",
+      selectedOrigin: "needs_input"
+    });
+    expect(building.result.airborneBasis?.missingPhysicalInputs).toEqual([
+      "flankingJunctionClass",
+      "conservativeFlankingAssumption"
+    ]);
     expect(building.result.airborneBasis?.method).not.toBe(GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD);
   });
 });
