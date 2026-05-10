@@ -6,7 +6,10 @@ import type { AirborneContext, LayerInput, RequestedOutputId } from "@dynecho/sh
 import { describe, expect, it } from "vitest";
 
 import { calculateAssembly } from "./calculate-assembly";
-import { buildDynamicCalculatorRouteInputTopologyAssessment } from "./dynamic-calculator-route-input-topology";
+import {
+  buildDynamicCalculatorRouteInputTopologyAssessment,
+  GATE_M_AIRBORNE_BUILDING_PREDICTION_REQUIRED_PHYSICAL_INPUTS
+} from "./dynamic-calculator-route-input-topology";
 import {
   GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD,
   GATE_I_AIRBORNE_FIELD_CONTEXT_SELECTED_CANDIDATE_ID,
@@ -64,6 +67,12 @@ const CURRENT_SELECTION_DOCS = [
 
 const WALL_FIELD_OUTPUTS = ["R'w", "DnT,w"] as const satisfies readonly RequestedOutputId[];
 const WALL_LAB_OUTPUTS = ["Rw", "STC"] as const satisfies readonly RequestedOutputId[];
+const GATE_M_BUILDING_PREDICTION_MISSING_INPUTS = [
+  "sourceRoomVolumeM3",
+  ...GATE_L_AIRBORNE_BUILDING_PREDICTION_MISSING_INPUTS,
+  "junctionCouplingLengthM",
+  "buildingPredictionOutputBasis"
+] as const;
 
 const WALL_FIELD_CONTEXT: AirborneContext = {
   airtightness: "good",
@@ -139,7 +148,7 @@ describe("Personal-Use MVP Coverage Sprint Gate L airborne building-prediction b
     });
     expect(result.airborneBasis).toMatchObject({
       method: "dynamic_calculator_route_input_contract_missing_physical_fields",
-      missingPhysicalInputs: [...GATE_L_AIRBORNE_BUILDING_PREDICTION_MISSING_INPUTS],
+      missingPhysicalInputs: [...GATE_M_BUILDING_PREDICTION_MISSING_INPUTS],
       origin: "needs_input"
     });
     expect(result.warnings).toContain(GATE_L_AIRBORNE_BUILDING_PREDICTION_BOUNDARY_WARNING);
@@ -151,20 +160,16 @@ describe("Personal-Use MVP Coverage Sprint Gate L airborne building-prediction b
     expect(result.airborneBasis?.method).not.toBe(GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD);
 
     expect(assessment).toMatchObject({
-      missingPhysicalInputs: [...GATE_L_AIRBORNE_BUILDING_PREDICTION_MISSING_INPUTS],
+      missingPhysicalInputs: [...GATE_M_BUILDING_PREDICTION_MISSING_INPUTS],
       outputBasis: "building_prediction",
-      routeFamilies: ["field_apparent_output_context"],
+      routeFamilies: ["building_prediction_airborne_context"],
       status: "needs_input"
     });
     expect(assessment.inputCompletenessSet[0]?.requiredFields).toEqual([
-      "contextMode",
-      "partitionAreaM2",
-      "receivingRoomVolumeM3",
-      "receivingRoomRt60S",
-      ...GATE_L_AIRBORNE_BUILDING_PREDICTION_MISSING_INPUTS
+      ...GATE_M_AIRBORNE_BUILDING_PREDICTION_REQUIRED_PHYSICAL_INPUTS
     ]);
     expect(assessment.prompts.map((prompt) => prompt.fieldId)).toEqual([
-      ...GATE_L_AIRBORNE_BUILDING_PREDICTION_MISSING_INPUTS
+      ...GATE_M_BUILDING_PREDICTION_MISSING_INPUTS
     ]);
   });
 
@@ -187,11 +192,11 @@ describe("Personal-Use MVP Coverage Sprint Gate L airborne building-prediction b
       selectedOrigin: "needs_input"
     });
     expect(result.airborneBasis?.missingPhysicalInputs).toEqual([
-      ...GATE_L_AIRBORNE_BUILDING_PREDICTION_MISSING_INPUTS
+      ...GATE_M_BUILDING_PREDICTION_MISSING_INPUTS
     ]);
     expect(result.warnings).toContain(GATE_L_AIRBORNE_BUILDING_PREDICTION_BOUNDARY_WARNING);
     expect(assessment).toMatchObject({
-      missingPhysicalInputs: [...GATE_L_AIRBORNE_BUILDING_PREDICTION_MISSING_INPUTS],
+      missingPhysicalInputs: [...GATE_M_BUILDING_PREDICTION_MISSING_INPUTS],
       outputBasis: "building_prediction",
       status: "needs_input"
     });

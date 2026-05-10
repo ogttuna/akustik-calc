@@ -13,12 +13,15 @@ export const WORKBENCH_AIRBORNE_FIELD_CONTEXT_INPUT_SURFACE_ID =
   "gate_k_personal_use_mvp_airborne_field_context_input_surface";
 
 export const WORKBENCH_AIRBORNE_FIELD_CONTEXT_INPUT_LABELS: Partial<Record<AcousticInputFieldId, string>> = {
+  buildingPredictionOutputBasis: "Building output basis",
   conservativeFlankingAssumption: "Conservative flanking assumption",
   contextMode: "Context mode",
   flankingJunctionClass: "Flanking/junction class",
+  junctionCouplingLengthM: "Junction coupling length",
   partitionAreaM2: "Partition width and height",
   receivingRoomRt60S: "Receiving-room RT60 (s)",
-  receivingRoomVolumeM3: "Receiving-room volume (m3)"
+  receivingRoomVolumeM3: "Receiving-room volume (m3)",
+  sourceRoomVolumeM3: "Source-room volume (m3)"
 };
 
 const AIRBORNE_FIELD_OUTPUTS = new Set<RequestedOutputId>(["R'w", "Dn,w", "Dn,A", "DnT,w", "DnT,A", "DnT,A,k"]);
@@ -76,10 +79,29 @@ export function buildWorkbenchAirborneFieldContextInputSurface(input: {
   }
 
   if (input.surface.contextMode === "building_prediction") {
+    const missingPhysicalInputs: AcousticInputFieldId[] = [];
+
+    if (typeof panelWidthMm !== "number" || typeof panelHeightMm !== "number") {
+      missingPhysicalInputs.push("partitionAreaM2");
+    }
+    if (typeof receivingRoomVolumeM3 !== "number") {
+      missingPhysicalInputs.push("receivingRoomVolumeM3");
+    }
+    if (typeof receivingRoomRt60S !== "number") {
+      missingPhysicalInputs.push("receivingRoomRt60S");
+    }
+    missingPhysicalInputs.push(
+      "sourceRoomVolumeM3",
+      "flankingJunctionClass",
+      "conservativeFlankingAssumption",
+      "junctionCouplingLengthM",
+      "buildingPredictionOutputBasis"
+    );
+
     return {
       airborneContext,
       id: WORKBENCH_AIRBORNE_FIELD_CONTEXT_INPUT_SURFACE_ID,
-      missingPhysicalInputs: ["flankingJunctionClass", "conservativeFlankingAssumption"],
+      missingPhysicalInputs,
       status: "needs_input"
     };
   }

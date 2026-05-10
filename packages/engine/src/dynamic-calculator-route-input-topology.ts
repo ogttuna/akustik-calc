@@ -11,7 +11,6 @@ import {
 
 import { getDefaultMaterialCatalog, resolveMaterial } from "./material-catalog";
 import { buildGateQDoubleLeafFramedBridgeInputContract } from "./dynamic-calculator-double-leaf-framed-bridge-input-contract";
-import { GATE_L_AIRBORNE_BUILDING_PREDICTION_MISSING_INPUTS } from "./dynamic-airborne-gate-l-building-prediction-boundary";
 import { validateWallTripleLeafLayerGroups } from "./wall-triple-leaf-topology-readiness";
 
 export type DynamicCalculatorRoute = "wall" | "floor";
@@ -21,6 +20,25 @@ export type DynamicCalculatorRouteInputStatus =
   | "complete_with_defaults"
   | "needs_input"
   | "unsupported";
+
+export const GATE_M_AIRBORNE_BUILDING_PREDICTION_REQUIRED_PHYSICAL_INPUTS = [
+  "contextMode",
+  "partitionAreaM2",
+  "sourceRoomVolumeM3",
+  "receivingRoomVolumeM3",
+  "receivingRoomRt60S",
+  "flankingJunctionClass",
+  "conservativeFlankingAssumption",
+  "junctionCouplingLengthM",
+  "buildingPredictionOutputBasis"
+] as const satisfies readonly AcousticInputFieldId[];
+
+export const GATE_M_AIRBORNE_BUILDING_PREDICTION_OWNER_INPUTS = [
+  "ISO_12354_1_flanking_transmission_adapter_owner",
+  "junctionCouplingLengthOwner",
+  "apparentBuildingMetricBasisOwner",
+  "standardizedBuildingMetricBasisOwner"
+] as const;
 
 export type DynamicCalculatorPromptSource =
   | "field_context"
@@ -570,54 +588,101 @@ function addFieldContextContract(input: {
   }
 
   if (requiresBuildingPredictionOwner) {
-    for (const fieldId of GATE_L_AIRBORNE_BUILDING_PREDICTION_MISSING_INPUTS) {
-      missing.push(fieldId);
+    if (typeof context?.sourceRoomVolumeM3 !== "number") {
+      missing.push("sourceRoomVolumeM3");
+      addPrompt(
+        input.prompts,
+        makePrompt({
+          detail:
+            "Enter source-room volume or an equivalent owned source-room geometry basis before building prediction can leave the field boundary.",
+          fieldId: "sourceRoomVolumeM3",
+          label: "Source-room volume",
+          source: "field_context",
+          targetOutputs: input.targetOutputs
+        })
+      );
     }
-    addPrompt(
-      input.prompts,
-      makePrompt({
-        detail:
-          "Building prediction needs a named flanking/junction owner before it can leave the room-to-room field boundary.",
-        fieldId: "flankingJunctionClass",
-        label: "Flanking junction class",
-        source: "field_context",
-        targetOutputs: input.targetOutputs
-      })
-    );
-    addPrompt(
-      input.prompts,
-      makePrompt({
-        detail:
-          "Choose an explicit conservative flanking assumption before any building-prediction output is promoted.",
-        fieldId: "conservativeFlankingAssumption",
-        label: "Conservative flanking assumption",
-        source: "field_context",
-        targetOutputs: input.targetOutputs
-      })
-    );
+
+    if (!context?.flankingJunctionClass || context.flankingJunctionClass === "unknown") {
+      missing.push("flankingJunctionClass");
+      addPrompt(
+        input.prompts,
+        makePrompt({
+          detail:
+            "Building prediction needs a named flanking/junction owner before it can leave the room-to-room field boundary.",
+          fieldId: "flankingJunctionClass",
+          label: "Flanking junction class",
+          source: "field_context",
+          targetOutputs: input.targetOutputs
+        })
+      );
+    }
+
+    if (!context?.conservativeFlankingAssumption || context.conservativeFlankingAssumption === "unknown") {
+      missing.push("conservativeFlankingAssumption");
+      addPrompt(
+        input.prompts,
+        makePrompt({
+          detail:
+            "Choose an explicit conservative flanking assumption before any building-prediction output is promoted.",
+          fieldId: "conservativeFlankingAssumption",
+          label: "Conservative flanking assumption",
+          source: "field_context",
+          targetOutputs: input.targetOutputs
+        })
+      );
+    }
+
+    if (typeof context?.junctionCouplingLengthM !== "number") {
+      missing.push("junctionCouplingLengthM");
+      addPrompt(
+        input.prompts,
+        makePrompt({
+          detail:
+            "Enter the owned junction coupling length or equivalent path-length basis before any ISO 12354-1 building adapter can be selected.",
+          fieldId: "junctionCouplingLengthM",
+          label: "Junction coupling length",
+          source: "field_context",
+          targetOutputs: input.targetOutputs
+        })
+      );
+    }
+
+    if (!context?.buildingPredictionOutputBasis || context.buildingPredictionOutputBasis === "unknown") {
+      missing.push("buildingPredictionOutputBasis");
+      addPrompt(
+        input.prompts,
+        makePrompt({
+          detail:
+            "Choose whether the building prediction owns apparent, standardized, or apparent-and-standardized output basis before cards/API/report can show it as ready.",
+          fieldId: "buildingPredictionOutputBasis",
+          label: "Building output basis",
+          source: "output_basis",
+          targetOutputs: input.targetOutputs
+        })
+      );
+    }
   }
 
-  const requiredFields: AcousticInputFieldId[] = requiresStandardizedField
+  const requiredFields: AcousticInputFieldId[] = requiresBuildingPredictionOwner
+    ? [...GATE_M_AIRBORNE_BUILDING_PREDICTION_REQUIRED_PHYSICAL_INPUTS]
+    : requiresStandardizedField
     ? ["contextMode", "partitionAreaM2", "receivingRoomVolumeM3", "receivingRoomRt60S"]
     : ["contextMode", "partitionAreaM2", "receivingRoomVolumeM3"];
 
-  if (requiresBuildingPredictionOwner) {
-    requiredFields.push(...GATE_L_AIRBORNE_BUILDING_PREDICTION_MISSING_INPUTS);
-  }
-
   return buildInputCompleteness({
     conditionalFields: [
-      "receivingRoomRt60S",
-      "sourceRoomVolumeM3",
-      "flankingJunctionClass",
-      "conservativeFlankingAssumption",
       "impactFieldContext"
     ],
-    id: "gate_k_field_building_context_route_inputs",
+    id: requiresBuildingPredictionOwner
+      ? "gate_m_building_prediction_airborne_context_route_inputs"
+      : "gate_k_field_building_context_route_inputs",
     missingPhysicalInputs: missing,
     missingSourceEvidence: input.missingSourceEvidence,
     requiredFields,
-    routeFamily: "field_apparent_output_context",
+    routeFamily: requiresBuildingPredictionOwner
+      ? "building_prediction_airborne_context"
+      : "field_apparent_output_context",
     targetOutputs: input.targetOutputs
   });
 }
@@ -1145,7 +1210,7 @@ export function buildDynamicCalculatorRouteInputTopologyAssessment(
     notes: [
       "Source absence blocks exact or calibrated-source promotion only; it does not become a physical-input prompt.",
       outputBasis === "building_prediction"
-        ? "Gate L keeps building-prediction outputs parked until flanking/junction ownership exists."
+        ? "Gate M defines building-prediction input ownership, but runtime building values stay parked until a later ISO 12354-1 adapter gate."
         : "This Gate K contract is no-runtime and does not move calculator values."
     ],
     outputBasis,

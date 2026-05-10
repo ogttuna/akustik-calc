@@ -24,6 +24,12 @@ import type { LayerDraft } from "./workbench-store";
 
 const AUTH_ENV_KEYS = ["DYNECHO_AUTH_USERNAME", "DYNECHO_AUTH_PASSWORD", "DYNECHO_AUTH_SECRET"] as const;
 const WALL_FIELD_OUTPUTS = ["R'w", "DnT,w"] as const satisfies readonly RequestedOutputId[];
+const GATE_M_BUILDING_PREDICTION_MISSING_INPUTS = [
+  "sourceRoomVolumeM3",
+  ...GATE_L_AIRBORNE_BUILDING_PREDICTION_MISSING_INPUTS,
+  "junctionCouplingLengthM",
+  "buildingPredictionOutputBasis"
+] as const;
 
 let originalEnv: Record<string, string | undefined>;
 
@@ -127,7 +133,7 @@ describe("airborne building-prediction boundary", () => {
     });
 
     expect(surface).toMatchObject({
-      missingPhysicalInputs: [...GATE_L_AIRBORNE_BUILDING_PREDICTION_MISSING_INPUTS],
+      missingPhysicalInputs: [...GATE_M_BUILDING_PREDICTION_MISSING_INPUTS],
       status: "needs_input"
     });
     expect(surface.airborneContext).toMatchObject({
@@ -138,7 +144,7 @@ describe("airborne building-prediction boundary", () => {
       receivingRoomVolumeM3: 42
     });
     expect(formatWorkbenchAirborneFieldContextMissingInputWarning(surface)).toContain(
-      "Flanking/junction class, Conservative flanking assumption"
+      "Source-room volume (m3), Flanking/junction class, Conservative flanking assumption, Junction coupling length, Building output basis"
     );
   });
 
@@ -155,7 +161,7 @@ describe("airborne building-prediction boundary", () => {
       selectedOrigin: "needs_input"
     });
     expect(scenario.result.airborneBasis?.missingPhysicalInputs).toEqual([
-      ...GATE_L_AIRBORNE_BUILDING_PREDICTION_MISSING_INPUTS
+      ...GATE_M_BUILDING_PREDICTION_MISSING_INPUTS
     ]);
     expect(scenario.result.warnings).toContain(GATE_L_AIRBORNE_BUILDING_PREDICTION_BOUNDARY_WARNING);
     expect(scenario.result.warnings).not.toContain(GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING);
@@ -206,7 +212,7 @@ describe("airborne building-prediction boundary", () => {
       selectedOrigin: "needs_input"
     });
     expect(body.result?.airborneBasis?.missingPhysicalInputs).toEqual([
-      ...GATE_L_AIRBORNE_BUILDING_PREDICTION_MISSING_INPUTS
+      ...GATE_M_BUILDING_PREDICTION_MISSING_INPUTS
     ]);
     expect(body.result?.warnings).toContain(GATE_L_AIRBORNE_BUILDING_PREDICTION_BOUNDARY_WARNING);
     expect(body.result?.warnings).not.toContain(GATE_I_AIRBORNE_FIELD_CONTEXT_WARNING);

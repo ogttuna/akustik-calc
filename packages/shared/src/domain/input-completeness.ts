@@ -10,7 +10,8 @@ export const AcousticInputRouteFamilySchema = z.enum([
   "triple_leaf_multicavity_airborne",
   "porous_fill_cavity_modifier",
   "floating_floor_impact",
-  "field_apparent_output_context"
+  "field_apparent_output_context",
+  "building_prediction_airborne_context"
 ]);
 export type AcousticInputRouteFamily = z.infer<typeof AcousticInputRouteFamilySchema>;
 
@@ -61,6 +62,8 @@ export const AcousticInputFieldIdSchema = z.enum([
   "receivingRoomRt60S",
   "flankingJunctionClass",
   "conservativeFlankingAssumption",
+  "junctionCouplingLengthM",
+  "buildingPredictionOutputBasis",
   "impactFieldContext"
 ]);
 export type AcousticInputFieldId = z.infer<typeof AcousticInputFieldIdSchema>;

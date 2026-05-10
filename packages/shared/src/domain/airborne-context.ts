@@ -43,6 +43,36 @@ export type AirborneStudType = z.infer<typeof AirborneStudTypeSchema>;
 export const AirborneResilientBarSideCountSchema = z.enum(["auto", "one_side", "both_sides"]);
 export type AirborneResilientBarSideCount = z.infer<typeof AirborneResilientBarSideCountSchema>;
 
+export const AirborneFlankingJunctionClassSchema = z.enum([
+  "unknown",
+  "rigid_cross_junction",
+  "rigid_t_junction",
+  "lightweight_junction",
+  "isolated_junction",
+  "mixed_junction"
+]);
+export type AirborneFlankingJunctionClass = z.infer<typeof AirborneFlankingJunctionClassSchema>;
+
+export const AirborneConservativeFlankingAssumptionSchema = z.enum([
+  "unknown",
+  "single_conservative_path",
+  "multi_path_conservative",
+  "worst_case_screening"
+]);
+export type AirborneConservativeFlankingAssumption = z.infer<
+  typeof AirborneConservativeFlankingAssumptionSchema
+>;
+
+export const AirborneBuildingPredictionOutputBasisSchema = z.enum([
+  "unknown",
+  "apparent",
+  "standardized",
+  "apparent_and_standardized"
+]);
+export type AirborneBuildingPredictionOutputBasis = z.infer<
+  typeof AirborneBuildingPredictionOutputBasisSchema
+>;
+
 export const WallTopologyModeSchema = z.enum([
   "auto",
   "flat_layer_order",
@@ -113,11 +143,16 @@ const AirborneContextShape = {
   junctionQuality: JunctionQualitySchema.optional(),
   panelHeightMm: z.number().positive().optional(),
   panelWidthMm: z.number().positive().optional(),
+  sourceRoomVolumeM3: z.number().positive().optional(),
   penetrationState: PenetrationStateSchema.optional(),
   perimeterSeal: PerimeterSealClassSchema.optional(),
   receivingRoomRt60S: z.number().positive().optional(),
   receivingRoomVolumeM3: z.number().positive().optional(),
   resilientBarSideCount: AirborneResilientBarSideCountSchema.optional(),
+  flankingJunctionClass: AirborneFlankingJunctionClassSchema.optional(),
+  conservativeFlankingAssumption: AirborneConservativeFlankingAssumptionSchema.optional(),
+  junctionCouplingLengthM: z.number().positive().optional(),
+  buildingPredictionOutputBasis: AirborneBuildingPredictionOutputBasisSchema.optional(),
   sharedTrack: SharedTrackClassSchema.optional(),
   studSpacingMm: z.number().positive().optional(),
   studType: AirborneStudTypeSchema.optional(),

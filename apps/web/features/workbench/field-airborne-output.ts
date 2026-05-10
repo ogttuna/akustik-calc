@@ -106,6 +106,13 @@ export function getFieldAirborneBlockingRequirement(
     return "field_mode";
   }
 
+  if (
+    result?.airborneOverlay?.contextMode === "building_prediction" &&
+    result.airborneCandidateResolution?.selectedOrigin === "unsupported"
+  ) {
+    return "building_prediction_owner";
+  }
+
   const selectedMissingInputs = getSelectedMissingPhysicalInputs(result);
   if (selectedMissingInputs.includes("contextMode")) {
     return "field_mode";
@@ -124,8 +131,11 @@ export function getFieldAirborneBlockingRequirement(
     return "rt60";
   }
   if (
+    selectedMissingInputs.includes("sourceRoomVolumeM3") ||
     selectedMissingInputs.includes("flankingJunctionClass") ||
-    selectedMissingInputs.includes("conservativeFlankingAssumption")
+    selectedMissingInputs.includes("conservativeFlankingAssumption") ||
+    selectedMissingInputs.includes("junctionCouplingLengthM") ||
+    selectedMissingInputs.includes("buildingPredictionOutputBasis")
   ) {
     return "building_prediction_owner";
   }
@@ -183,7 +193,7 @@ export function getFieldAirbornePendingDetail(
 
   switch (getFieldAirborneBlockingRequirement(output, result)) {
     case "building_prediction_owner":
-      return `Building prediction route is active, but ${output} stays parked until flanking/junction class and a conservative flanking assumption are owned. DAC will not reuse Gate I field budgets or lab values as building-prediction evidence.`;
+      return `Building prediction route is active, but ${output} stays parked until source-room volume, flanking/junction class, conservative flanking assumption, junction coupling length, and building output basis are owned. DAC will not reuse Gate I field budgets or lab values as building-prediction evidence.`;
     case "curated_field_source":
       return `${output} stays unavailable until a curated official field source publishes it for the current airborne assembly.`;
     case "field_mode":

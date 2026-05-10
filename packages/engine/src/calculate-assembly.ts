@@ -37,6 +37,7 @@ import { applyApproximateAirborneFieldCompanion, applyVerifiedAirborneCatalogAnc
 import { classifyLayerRole, materialText } from "./airborne-topology";
 import { calculateDynamicAirborneResult } from "./dynamic-airborne";
 import { GATE_L_AIRBORNE_BUILDING_PREDICTION_BOUNDARY_WARNING } from "./dynamic-airborne-gate-l-building-prediction-boundary";
+import { GATE_M_AIRBORNE_BUILDING_PREDICTION_RUNTIME_BOUNDARY_WARNING } from "./dynamic-airborne-gate-m-building-prediction-input-contract";
 import {
   buildDynamicCalculatorCandidateResolverRuntime,
   inferDynamicCalculatorRuntimeRoute
@@ -1464,7 +1465,10 @@ export function calculateAssembly(
   const warnings = buildEstimateWarnings(resolvedLayers, selectedCalculatorLabel);
   const suppressParkedBuildingPredictionOverlayWarnings =
     dynamicCandidateResolverRuntime?.routeInputAssessment.outputBasis === "building_prediction" &&
-    dynamicCandidateResolverRuntime.resolution.selectedOrigin === "needs_input";
+    (
+      dynamicCandidateResolverRuntime.resolution.selectedOrigin === "needs_input" ||
+      dynamicCandidateResolverRuntime.resolution.selectedOrigin === "unsupported"
+    );
   warnings.push(...(dynamicAirborneResult?.warnings ?? []));
   if (!suppressParkedBuildingPredictionOverlayWarnings) {
     warnings.push(...airborneOverlayResult.warnings);
@@ -1481,6 +1485,12 @@ export function calculateAssembly(
     dynamicCandidateResolverRuntime.resolution.selectedOrigin === "needs_input"
   ) {
     warnings.push(GATE_L_AIRBORNE_BUILDING_PREDICTION_BOUNDARY_WARNING);
+  }
+  if (
+    dynamicCandidateResolverRuntime?.routeInputAssessment.outputBasis === "building_prediction" &&
+    dynamicCandidateResolverRuntime.resolution.selectedOrigin === "unsupported"
+  ) {
+    warnings.push(GATE_M_AIRBORNE_BUILDING_PREDICTION_RUNTIME_BOUNDARY_WARNING);
   }
 
   if (shouldWithholdUnreadyDynamicFloorImpactRuntime && gateWFloorImpactContract) {

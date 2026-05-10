@@ -29,6 +29,13 @@ import type { LayerDraft } from "./workbench-store";
 const AUTH_ENV_KEYS = ["DYNECHO_AUTH_USERNAME", "DYNECHO_AUTH_PASSWORD", "DYNECHO_AUTH_SECRET"] as const;
 const WALL_FIELD_OUTPUTS = ["R'w", "DnT,w"] as const satisfies readonly RequestedOutputId[];
 const WALL_LAB_OUTPUTS = ["Rw", "STC"] as const satisfies readonly RequestedOutputId[];
+const GATE_M_BUILDING_PREDICTION_MISSING_INPUTS = [
+  "sourceRoomVolumeM3",
+  "flankingJunctionClass",
+  "conservativeFlankingAssumption",
+  "junctionCouplingLengthM",
+  "buildingPredictionOutputBasis"
+] as const;
 
 let originalEnv: Record<string, string | undefined>;
 
@@ -229,7 +236,7 @@ describe("airborne field-context input surface", () => {
       "Context mode, Partition width and height, Receiving-room volume (m3), Receiving-room RT60 (s)"
     );
     expect(building).toMatchObject({
-      missingPhysicalInputs: ["flankingJunctionClass", "conservativeFlankingAssumption"],
+      missingPhysicalInputs: [...GATE_M_BUILDING_PREDICTION_MISSING_INPUTS],
       status: "needs_input"
     });
     expect(getAutomaticOutputs("wall", "field_between_rooms")).toEqual(
@@ -400,8 +407,7 @@ describe("airborne field-context input surface", () => {
       selectedOrigin: "needs_input"
     });
     expect(building.result.airborneBasis?.missingPhysicalInputs).toEqual([
-      "flankingJunctionClass",
-      "conservativeFlankingAssumption"
+      ...GATE_M_BUILDING_PREDICTION_MISSING_INPUTS
     ]);
     expect(building.result.airborneBasis?.method).not.toBe(GATE_I_AIRBORNE_FIELD_CONTEXT_RUNTIME_METHOD);
   });

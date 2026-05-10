@@ -379,6 +379,29 @@ function needsInputBasis(input: {
 function unsupportedBasis(input: {
   assessment: DynamicCalculatorRouteInputTopologyAssessment;
 }): AirborneResultBasis {
+  if (input.assessment.outputBasis === "building_prediction") {
+    return {
+      assumptions: [
+        "building-prediction physical inputs are separated from runtime adapter ownership",
+        "complete Gate M inputs do not promote R'w/DnT,w until a later ISO 12354-1 flanking adapter owns the formula"
+      ],
+      calculationStandard: "none",
+      curveBasis: "no_curve",
+      kind: "airborne_unsupported",
+      method: "dynamic_calculator_building_prediction_runtime_owner_missing",
+      missingPhysicalInputs: [],
+      missingSourceEvidence: [],
+      origin: "unsupported",
+      propertyDefaults: [],
+      ratingStandard: "none",
+      requiredInputs: [
+        "ISO_12354_1_flanking_transmission_adapter_owner",
+        "junctionCouplingLengthOwner",
+        "buildingMetricBasisOwner"
+      ]
+    };
+  }
+
   return {
     assumptions: ["requested output has no runtime adapter owner for the current Dynamic Calculator route"],
     calculationStandard: "none",
@@ -438,6 +461,10 @@ function selectLane(input: {
     input.assessment.status === "needs_input"
   ) {
     return "needs_input";
+  }
+
+  if (input.assessment.outputBasis === "building_prediction") {
+    return "unsupported";
   }
 
   if (

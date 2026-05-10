@@ -8,7 +8,8 @@ import { describe, expect, it } from "vitest";
 import { calculateAssembly } from "./calculate-assembly";
 import {
   buildDynamicCalculatorRouteInputTopologyAssessment,
-  buildGateKRouteInputTopologyScenarioPack
+  buildGateKRouteInputTopologyScenarioPack,
+  GATE_M_AIRBORNE_BUILDING_PREDICTION_REQUIRED_PHYSICAL_INPUTS
 } from "./dynamic-calculator-route-input-topology";
 import { getDefaultMaterialCatalog } from "./material-catalog";
 
@@ -283,15 +284,43 @@ describe("calculator model-first physics prediction pivot Gate K", () => {
     ]);
 
     expect(building.outputBasis).toBe("building_prediction");
-    expect(building.missingPhysicalInputs).toEqual(["flankingJunctionClass", "conservativeFlankingAssumption"]);
-    expect(building.prompts[0]).toMatchObject({
-      fieldId: "flankingJunctionClass",
-      source: "field_context"
-    });
-    expect(building.prompts[1]).toMatchObject({
-      fieldId: "conservativeFlankingAssumption",
-      source: "field_context"
-    });
+    expect(building.routeFamilies).toEqual(
+      expect.arrayContaining(["triple_leaf_multicavity_airborne", "building_prediction_airborne_context"])
+    );
+    expect(
+      building.inputCompletenessSet.find((entry) => entry.routeFamily === "building_prediction_airborne_context")
+        ?.requiredFields
+    ).toEqual([
+      ...GATE_M_AIRBORNE_BUILDING_PREDICTION_REQUIRED_PHYSICAL_INPUTS
+    ]);
+    expect(building.missingPhysicalInputs).toEqual([
+      "sourceRoomVolumeM3",
+      "flankingJunctionClass",
+      "conservativeFlankingAssumption",
+      "junctionCouplingLengthM",
+      "buildingPredictionOutputBasis"
+    ]);
+    expect(building.prompts.map((prompt) => prompt.fieldId)).toEqual([
+      "sourceRoomVolumeM3",
+      "flankingJunctionClass",
+      "conservativeFlankingAssumption",
+      "junctionCouplingLengthM",
+      "buildingPredictionOutputBasis"
+    ]);
+    expect(building.prompts.map((prompt) => prompt.source)).toEqual([
+      "field_context",
+      "field_context",
+      "field_context",
+      "field_context",
+      "output_basis"
+    ]);
+    expect(building.prompts.map((prompt) => prompt.label)).toEqual([
+      "Source-room volume",
+      "Flanking junction class",
+      "Conservative flanking assumption",
+      "Junction coupling length",
+      "Building output basis"
+    ]);
   });
 
   it("keeps floor impact high-accuracy prompts explicit and unsupported IIC/AIIC out of runtime", () => {
